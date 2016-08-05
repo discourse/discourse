@@ -16,6 +16,10 @@ ru:
   date:
     month_names: [null, Январь, Февраль, Март, Апрель, Май, Июнь, Июль, Август, Сентябрь, Октябрь, Ноябрь, Декабрь]
     <<: *datetime_formats
+  time:
+    am: "до полудня"
+    pm: "после полудня"
+    <<: *datetime_formats
   title: "Discourse"
   topics: "Темы"
   posts: "сообщения"
@@ -35,6 +39,7 @@ ru:
         no_message_id_error: "Происходит, когда письмо не имеет заголовка 'Message-Id'."
         inactive_user_error: "Происходит, когда отправитель неактивен."
         blocked_user_error: "Происходит, когда отправитель заблокирован."
+        strangers_not_allowed_error: "Возникает,когда пользователь пытается создать новую тему в разделе,членом которой он не является"
         topic_not_found_error: "Случается, когда ответ пришел, но связанная тема уже удалена."
         topic_closed_error: "Случается, когда ответ пришел, но связанная тема уже закрыта."
   errors: &errors
@@ -1535,8 +1540,6 @@ ru:
   performance_report:
     initial_post_raw: Эта тема содержит ежедневные отчеты активности форума.
     initial_topic_title: Отчеты активности форума
-  time:
-    <<: *datetime_formats
   activemodel:
     errors:
       <<: *errors

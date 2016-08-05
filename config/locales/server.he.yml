@@ -15,8 +15,13 @@ he:
       short: "%m-%d-%Y"
       short_no_year: "%B %-d"
       date_only: "%B %-d, %Y"
+      long: "%B %-d, %Y, %l:%M%P"
   date:
     month_names: [null, ינואר, פברואר, מרס, אפריל, מאי, יוני, יוני, אוגוסט, ספטמבר, אוקטובר, נובמבר, דצמבר]
+    <<: *datetime_formats
+  time:
+    am: "am"
+    pm: "pm"
     <<: *datetime_formats
   title: "Discourse"
   topics: "נושאים"
@@ -24,8 +29,12 @@ he:
   loading: "טוען"
   powered_by_html: 'מונע ע"י <a href="http://www.discourse.org">Discourse</a>, פועל מיטבית עם Javascript'
   log_in: "התחברות"
+  purge_reason: "נחמק אוטומטית כחשבון נטוש ולא פעיל"
   disable_remote_images_download_reason: "הורדת תמונות מרחוק נחסמה בשל היעדר מספיק שטח אכסון פנוי."
   anonymous: "אנונימי"
+  emails:
+    incoming:
+      default_subject: "התקבל מייל מ %{email}"
   errors: &errors
     format: '%{attribute} %{message}'
     messages:
@@ -78,7 +87,7 @@ he:
       max_username_length_exists: "לא ניתן לקבוע את אורך שם המשתמש המקסימלי  לקצר יותר משם משתמש שקיים כבר.  "
       max_username_length_range: "לא ניתן לקבוע את המקסימום מתחת למינימום."
       default_categories_already_selected: "לא ניתן לבחור קטגוריה שהשתמשו בה ברשימה אחרת"
-      s3_upload_bucket_is_required: "אינך יכול להעלות ל-S3 ללא 's3_upload_bucket'."
+      s3_upload_bucket_is_required: "אינכם יכולים להעלות ל-S3 ללא 's3_upload_bucket'."
   bulk_invite:
     file_should_be_csv: "הקובץ המועלה צריך להיות בפורמט csv או txt."
   backup:
@@ -87,8 +96,10 @@ he:
     not_enough_space_on_disk: "אין מספיק מקום על הדיסק כדי להעלות את הגיבוי הזה."
   not_logged_in: "אתה צריך להיות מחובר כדי לעשות את זה."
   not_found: "המשאב או כתובת ה-URL המבוקשת לא נמצא/ה."
-  invalid_access: "אינך מורשה/מורשית לצפות במשאב שביקשת."
+  invalid_access: "אינכם מורשים לצפות במשאב שביקשתם."
   read_only_mode_enabled: "האתר הזה במצב קריאה בלבד. פעולות אין אפשריות."
+  reading_time: "זמן קריאה"
+  likes: "לייקים"
   too_many_replies:
     one: "אנחנו מצטערים, אבל משתמשים חדשים מוגבלים זמנים לתגובה אחת לאותו הנושא."
     other: "אנחנו מצטערים, אבל משתמשים חדשים מוגבלים זמנים ל-%{count} תגובות לאותו הנושא."
@@ -109,13 +120,14 @@ he:
   too_many_mentions:
     one: "מצטערים, אתם יכולים לאזכר רק משתמש אחד בפוסט"
     other: "מצטערים, אתם יכולים לאזכר רק %{count} משתמשים בהודעה"
+  no_mentions_allowed_newuser: "מצטערים, משתמשים חדשים לא יכולים להזכיר משתמשים אחרים."
   too_many_mentions_newuser:
     one: "מצטערים, משתמשים חדשים יכולים לאזכר רק משתמש אחד בהודעה."
     other: "מצטערים, משתמשים חדשים יכולים להזכיר רק %{count} משתמשים אחרים בהודעה. "
   no_images_allowed: "מצטערים, משתמשים חדשים לא יכולים להוסיף תמונות להודעות."
   no_attachments_allowed: "מצטערים, משתמשים חדשים לא יכולים להוסיף קבצים להודעות."
   no_links_allowed: "מצטערים, משתמשים חדשים לא יכולים להוסיף קישורים להודעות. "
-  spamming_host: "סליחה אך אינך יכול להוסיף קישור לאתר זה."
+  spamming_host: "סליחה אך אינכם יכולים להוסיף קישור לאתר זה."
   user_is_suspended: "משתמשים מושעים אינפ  מורשים לפרסם"
   topic_not_found: "משהו השתבש אולי נושא זה נסגר או נמחק בזמן שקראת אותו?"
   just_posted_that: "דומה מידי למה שפורסם לאחרונה"
@@ -136,8 +148,12 @@ he:
   rss_description:
     latest: "נושאים מדוברים"
     hot: "נושאים חמים"
+    top: "הנושאים המובילים"
     posts: "פרסומים אחרונים"
+    private_posts: "הודעות פרטיות אחרונות"
+    tag: "נושאים מתוייגים"
   too_late_to_edit: "ההודעה הזו נוצרה לפני זמן רב מידי. לא ניתן יותר לערוך או למחוק אותה."
+  revert_version_same: "הגרסה הנוכחית זהה לגרסה אליה אתם מנסים לחזור."
   excerpt_image: "תמונה"
   queue:
     delete_reason: "נמחק באמצעות בקרה על תור הפרסומים"
@@ -211,6 +227,8 @@ he:
     attributes:
       category:
         name: "שם קטגוריה"
+      topic:
+        title: 'כותרת'
       post:
         raw: "גוף"
       user_profile:
@@ -291,6 +309,8 @@ he:
       title: "חבר"
     regular:
       title: "רגיל"
+    leader:
+      title: "מוביל"
     change_failed_explanation: "ניסיתם להוריד בדרגה %{user_name} ל- '%{new_trust_level}'. אולם רמת האמון שלהם היא כבר '%{current_trust_level}'. %{user_name} ישאר/תישאר ב-'%{current_trust_level}' - אם ברצונכם להוריד את המשתמש/ת נעלו קודם את רמת האמון"
   rate_limiter:
     slow_down: "ביצעת פעולה זו מספר רב מדי של פעמים. נסה שוב מאוחר יותר."
@@ -386,7 +406,7 @@ he:
         one: "לפני כמעט שנה"
         other: "לפני כמעט %{count} שנים"
   password_reset:
-    no_token: "מצטערים, הקישור לשינוי הסיסמא ישן מדי. לחץ על כפתור הכניסה ובחר ב\"שכחתי את הסיסמא שלי\" כדי לקבל קישור חדש."
+    no_token: "מצטערים, הקישור לשינוי הסיסמא ישן מדי. לחצו על כפתור הכניסה ובחרו ב\"שכחתי את הסיסמה שלי\" כדי לקבל קישור חדש."
     choose_new: "אנא בחר סיסמה חדשה"
     choose: "אנא בחר סיסמה"
     update: 'עדכן סיסמה'
@@ -399,8 +419,12 @@ he:
     confirmed: "כתובת הדואר האלקטרוני שלך עודכנה"
     please_continue: "המשך ל-%{site_name}"
     error: "הייתה שגאיה בעדכון כתובת הדואר האלקטרוני. אולי היא כבר בשימוש?"
+    already_done: "מצטערים, לינק אישור זה כבר אינו בתוקף. אולי המייל שלכם כבר השתנה?"
+    authorizing_old:
+      title: "תודה על אישור כתובת הדואר הנוכחית שלכם"
+      description: "אנחנו שולחים כעת דואר לכתובתכם החדשה לאישור."
   activation:
-    action: "לחץ כאן להפעיל את חשבונך"
+    action: "לחצו כאן להפעיל את חשבונכם"
     already_done: "סליחה, כתובת אישור החשבון הזו אינה זמינה יותר. אולי החשבון שלך כבר פעיל?"
     please_continue: "חשבונך החדש אושר; הנכם מועברים לעמוד הבית."
     continue_button: "המשך ל-%{site_name}"
@@ -422,11 +446,14 @@ he:
       description: 'פרסום זה מכיל תוכן שאדם סביר היה רואה כפוגעני, מתעלל או הפרה של <a href="/guidelines"> כללי הקהילה </a>.'
       long_form: 'דוגלל כלא ראוי'
     notify_user:
+      description: 'אנו מעוניינים לדבר עם אדם זה ישירות ובפרטיות בנוגע לפוסט שלו.'
       long_form: 'הודעה נשלחה למשתמש/ת'
       email_title: 'הפרסום שלךב"%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: "משהו אחר"
+      description: 'פוסט זה דורש את תשומת לב הצוות מסיבה שאינה מצויינת למעלה.'
+      long_form: 'סומן לטיפול על ידי הצוות'
       email_body: "%{link}\n\n%{message}"
     bookmark:
       title: 'מועדפים'
@@ -465,6 +492,8 @@ he:
       message:
         make: "נושא זה הוא כעת באנר. הוא יופיע בראש כל עמוד עד שישוחרר על ידי המשתמשים."
         remove: "נושא זה כבר אינו באנר. הוא לא יופיע יותר בראש כל עמוד."
+  unsubscribe:
+    log_out: "התנתקות"
   reports:
     visits:
       title: "ביקורי משתמש"
@@ -889,6 +918,7 @@ he:
     allow_animated_thumbnails: "יצירת תמונות אנימציה מוקטנות קטנות של קבצי אנימציית gif."
     default_avatars: "כתובות URL לאווטרים אשר ישמשו כברירת מחדל למשתמשים חדשים עד אשר ישנו אותם."
     automatically_download_gravatars: "הורדת גראווטרים למשתמשים בעת יצירת החשבון או שינוי כתובת הדוא\"ל."
+    disable_digest_emails: "בטל סיכומי מיילים לכל המשתמשים."
     detect_custom_avatars: "Whether or not to check that users have uploaded custom profile pictures."
     max_daily_gravatar_crawls: "מספר הפעמים המקסימלי ש-Discourse יבדוק אווטרים ב-Gravatar ביום"
     public_user_custom_fields: "רשימה לבנה (whitelist) של שדות מותאמים למשתמש שיכולים להיות מוצגים באופן פומבי."
@@ -1229,9 +1259,11 @@ he:
   subject_pm: "[PM] "
   user_notifications:
     previous_discussion: "Previous Replies"
+    in_reply_to: "בתגובה ל"
     unsubscribe:
       title: "Unsubscribe"
       description: "Not interested in getting these emails? No problem! Click below to unsubscribe instantly:"
+    only_reply_by_email: "השיבו למייל זה כדי לענות."
     posted_by: "Posted by %{username} on %{post_date}"
     user_invited_to_private_message_pm:
       subject_template: "[%{site_name}] %{username} הזמין אותך להודעה '%{topic_title}'"
@@ -1372,6 +1404,33 @@ he:
     title: "תנאי השימוש"
   privacy_topic:
     title: "מדיניות פרטיות"
+  badges:
+    regular:
+      name: רגיל
+    leader:
+      name: מוביל
+    welcome:
+      name: ברוכים הבאים
+    nice_post:
+      name: תשובה נחמדה
+    good_post:
+      name: תשובה טובה
+    great_post:
+      name: תשובה מעולה
+    nice_topic:
+      name: נושא נחמד
+    good_topic:
+      name: נושא טוב
+    great_topic:
+      name: נושא מעולה
+    nice_share:
+      name: שיתוף נחמד
+    good_share:
+      name: שיתוף טוב
+    great_share:
+      name: שיטוף מעולה
+    first_mention:
+      name: אזכור ראשון
   admin_login:
     success: "דוא\"ל נשלח"
     error: "שגיאה!"
@@ -1382,8 +1441,10 @@ he:
   performance_report:
     initial_post_raw: 'נושא זה כולל דוחות פעילות יומיים עבור האתר שלך. '
     initial_topic_title: דוחות פעילות לאתר
-  time:
-    <<: *datetime_formats
+  topic_invite:
+    user_exists: "מצטערים, המשתמש/ת כבר הוזמנו. ניתן להזמין משתמשים לנושא רק פעם אחת."
+  tags:
+    title: "תגיות"
   activemodel:
     errors:
       <<: *errors

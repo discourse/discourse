@@ -455,7 +455,6 @@ sv:
       dismiss_notifications_tooltip: "Markera alla olästa aviseringar som lästa"
       disable_jump_reply: "Hoppa inte till mitt inlägg efter att jag har svarat"
       dynamic_favicon: "Visa antal nya / uppdaterade ämnen på webbläsarikon"
-      edit_history_public: "Låt andra användare se mina ändringar"
       external_links_in_new_tab: "Öppna alla externa länkar i en ny flik"
       enable_quoting: "Aktivera citatsvar för markerad text"
       change: "ändra"
@@ -482,13 +481,11 @@ sv:
       watched_tags: "Bevakade"
       watched_tags_instructions: "Du kommer automatiskt att bevaka alla ämnen med de här taggarna. Du blir notifierad om alla nya inlägg och ämnen, och en räknare över antalet nya inlägg visas bredvid ämnet. "
       tracked_tags: "Följda"
-      tracked_tags_instructions: "Du kommer automatiskt att följa alla nya ämnen med de här taggarna. Antalet nya inlägg visas bredvid ämnet."
       muted_tags: "Tystad"
       muted_tags_instructions: "Du kommer inte att få notifieringar om nya ämnen som har de här taggarna, och de kommer inte att visas bland dina olästa ämnen."
       watched_categories: "Tittade på"
       watched_categories_instructions: "Du kommer automatiskt att bevaka alla ämnen i de här kategorierna. Du blir notifierad om alla nya inlägg och ämnen, och en räknare över antalet nya inlägg visas bredvid ämnet. "
       tracked_categories: "Bevakade"
-      tracked_categories_instructions: "Du kommer automatiskt att följa alla nya ämnen i dessa kategorier. Antalet nya inlägg visas bredvid ämnet."
       watched_first_post_categories: "Bevakar första inlägget"
       watched_first_post_categories_instructions: "Du kommer att bli notifierad om första inlägget i varje nytt ämne i den här kategorin."
       muted_categories: "Tystad"
@@ -894,10 +891,6 @@ sv:
       github:
         title: "med GitHub"
         message: "Autentiserar med GitHub (kolla så att pop up-blockare inte är aktiverade)"
-    apple_international: "Apple/International"
-    google: "Google"
-    twitter: "Twitter"
-    emoji_one: "Emoji Ett"
     shortcut_modifier_key:
       shift: 'Shift'
       ctrl: 'Ctrl'
@@ -1641,13 +1634,11 @@ sv:
       notifications:
         watching:
           title: "Bevakar"
-          description: "Du kommer automatiskt att bevaka alla nya ämnen i de här kategorierna. Du blir notifierad om alla nya inlägg och ämnen, och en räknare över alla nya inlägg kommer att visas."
         watching_first_post:
           title: "Bevakar första inlägget"
           description: "Du kommer att bli notifierad om första inlägget i varje nytt ämne i de här kategorierna."
         tracking:
           title: "Följer"
-          description: "Du kommer automatiskt att följa alla nya ämnen i de här kategorierna. Du kommer att notifieras om någon nämner ditt @namn eller svarar dig och en räknare över nya inlägg kommer att visas."
         regular:
           title: "Normal"
           description: "Du notifieras om någon nämner ditt @namn eller svarar på ditt inlägg."
@@ -1687,7 +1678,6 @@ sv:
       title: "Sammanfattning av ämne"
       participants_title: "Flitiga skribenter"
       links_title: "Populära länkar"
-      links_shown: "visa alla {{totalLinks}} länkar..."
       clicks:
         one: "1 klick"
         other: "%{count} klick"
@@ -1947,13 +1937,11 @@ sv:
       notifications:
         watching:
           title: "Bevakar"
-          description: "Du kommer automatiskt att bevaka alla nya ämnen i den här taggen. Du kommer att få notifieringar om alla nya inlägg och ämnen, och en räknare över olästa och nya inlägg kommer att visas bredvid ämnen. "
         watching_first_post:
           title: "Bevakar första inlägget"
           description: "Du kommer endast att bli notifierad om första inlägget i varje nytt ämne i den här taggen."
         tracking:
           title: "Bevakade"
-          description: "Du kommer automatiskt följa alla nya ämnen i den här taggen. En räknare över olästa och nya inlägg kommer att visas bredvid ämnen."
         regular:
           title: "Vanlig"
           description: "Du kommer att få en notifiering om någon nämner ditt @namn eller svarar på ditt inlägg."

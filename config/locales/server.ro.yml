@@ -336,7 +336,7 @@ ro:
     error: "S-a semnalat o eroare la schimbarea adresei de Email. Poate adresa deja e folosită?"
   activation:
     already_done: "Ne pare rău, această adresă pentru confirmarea contului nu mai este valabilă. Poate contul dvs este deja activ?"
-    please_continue: "Noul dvs cont este confirmat, iar acum sunteți autentificat."
+    please_continue: "Contul este confirmat. Vei fi redirectat spre prima pagină."
     continue_button: "Continuă cu %{site_name}"
     welcome_to: "Bine ați venit la %{site_name}!"
     approval_required: "Un moderator trebuie să aprobe manual contul înaine să puteți accesa forumul. Vei primi un email când acesta a fost aprobat!"

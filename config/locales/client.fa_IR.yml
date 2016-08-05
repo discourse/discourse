@@ -388,7 +388,6 @@ fa_IR:
       dismiss_notifications_tooltip: "علامت گذاری همه اطلاعیه های خوانده نشده به عنوان خوانده شده"
       disable_jump_reply: "بعد از پاسخ من به پست من پرش نکن"
       dynamic_favicon: " تعداد موضوعات جدید یا بروز شده را روی آیکون مرورگر نمایش بده"
-      edit_history_public: "اجازه بده کاربران دیگر اصلاحات نوشته مرا ببینند"
       external_links_in_new_tab: "همهٔ پیوندهای برون‌رو را در یک تب جدید باز کن"
       enable_quoting: "فعال کردن نقل قول گرفتن از متن انتخاب شده"
       change: "تغییر"
@@ -402,7 +401,6 @@ fa_IR:
       github_profile: "Github"
       watched_categories: "تماشا شده"
       tracked_categories: "پی‌گیری شده"
-      tracked_categories_instructions: "شما به صورت خودکار تمام عناوین جدید در این دسته را پیگیری خواهید کرد. تعداد نوشته های جدید در کنار عنواین نمایش داده می‌شود."
       muted_categories: "بی صدا شد"
       muted_categories_instructions: "شما از هیچ چیز مباحث جدید این دسته بندی ها آگاه نمیشوید, و آن ها در آخرین ها نمایش داده نمیشوند."
       delete_account: "حساب من را پاک کن"
@@ -726,10 +724,6 @@ fa_IR:
       github:
         title: "با GitHub"
         message: "اعتبارسنجی با گیت‌هاب (مطمئن شوید که بازدارنده‌های pop up فعال نباشند)"
-    apple_international: "اپل / بین المللی"
-    google: "گوگل"
-    twitter: "تویتر"
-    emoji_one: "یک شکلک"
     shortcut_modifier_key:
       shift: 'Shift'
       ctrl: 'Ctrl'
@@ -1370,10 +1364,8 @@ fa_IR:
       notifications:
         watching:
           title: "در حال تماشا"
-          description: "شما به صورت خودکار تمامی مباحث تازه در این دسته بندی ها را نگاه میکنید. اگر ارسال تازه ای در هرکدام از مباحث فرستاده شد شما مطلع میشود, و همچنین تعدادی از پاسخ های تازه نیز نمایش داده میشوند."
         tracking:
           title: "پیگیری"
-          description: "شما به صورت خودکار تمامی مبحث های تازه در این دسته بندی ها را دنبال میکنید, و اگر کسی @اسم شما را بیاورد و یا به شما پاسخ دهد به شما اطلاع داده خواهد شد, و همچنین تعدادی از پاسخ های تازه نیز نمایش داده میشوند."
         regular:
           title: "معمولی"
           description: "در صورتی که فردی با @name به شما اشاره کند یا به شما پاسخی دهد به شما اطلاع داده خواهد شد."
@@ -1411,7 +1403,6 @@ fa_IR:
       title: "چکیدهٔ موضوع"
       participants_title: "نویسنده‌های فعال"
       links_title: "لینک‌های محبوب"
-      links_shown: "نمایش همه {{totalLinks}} پیوند ها..."
       clicks:
         other: "%{count} کلیک ها"
     topic_statuses:

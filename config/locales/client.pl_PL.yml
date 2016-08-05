@@ -464,7 +464,6 @@ pl_PL:
       dismiss_notifications_tooltip: "Oznacz wszystkie powiadomienia jako przeczytane"
       disable_jump_reply: "Po odpowiedzi nie przechodź do nowego wpisu"
       dynamic_favicon: "Pokazuj licznik powiadomień na karcie jako dynamiczny favicon"
-      edit_history_public: "Pozwól innym oglądać historię edycji moich wpisów"
       external_links_in_new_tab: "Otwieraj wszystkie zewnętrzne odnośniki w nowej karcie"
       enable_quoting: "Włącz cytowanie zaznaczonego tekstu"
       change: "zmień"
@@ -478,7 +477,6 @@ pl_PL:
       github_profile: "Github"
       watched_categories: "Obserwowane"
       tracked_categories: "Śledzone"
-      tracked_categories_instructions: "Będziesz automatycznie śledzić wszystkie nowe tematy w tych kategoriach. Licznik nowych wpisów pojawi się obok tytułu na liście tematów."
       muted_categories: "Wyciszone"
       muted_categories_instructions: "Nie będziesz powiadamiany o nowych tematach w tych kategoriach. Nie pojawią się na liście nieprzeczytanych."
       delete_account: "Usuń moje konto"
@@ -834,10 +832,6 @@ pl_PL:
       github:
         title: "przez GitHub"
         message: "Uwierzytelnianie przez GitHub (upewnij się, że blokada wyskakujących okienek nie jest włączona)"
-    apple_international: "Apple/International"
-    google: "Google"
-    twitter: "Twitter"
-    emoji_one: "Emoji One"
     shortcut_modifier_key:
       shift: 'Shift'
       ctrl: 'Ctrl'
@@ -1582,10 +1576,8 @@ pl_PL:
       notifications:
         watching:
           title: "Obserwuj wszystko"
-          description: "Będziesz automatycznie śledzić wszystkie nowe tematy w tych kategoriach. Otrzymasz powiadomienie o każdym nowym wpisie i temacie. Wyświetlimy liczbę nowych odpowiedzi na liście tematów."
         tracking:
           title: "Śledzona"
-          description: "Będziesz automatycznie śledzić wszystkie tematy w tych kategoriach. Otrzymasz powiadomienie jeśli ktoś wspomni twój @login lub odpowie na twój wpis. Licznik nowych odpowiedzi pojawi się na liście tematów."
         regular:
           title: "Normalny"
           description: "Dostaniesz powiadomienie jedynie, gdy ktoś wspomni twoją @nazwę lub odpowie na twój wpis."
@@ -1623,7 +1615,6 @@ pl_PL:
       title: "Podsumowanie tematu"
       participants_title: "Najczęściej piszą"
       links_title: "Popularne linki"
-      links_shown: "pokaż wszystkie {{totalLinks}} odnośników…"
       clicks:
         one: "1 kliknięcie"
         few: "%{count} kliknięć"

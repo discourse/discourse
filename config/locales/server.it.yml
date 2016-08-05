@@ -36,11 +36,22 @@ it:
     incoming:
       default_subject: "Email in arrivo da %{email}"
       show_trimmed_content: "Mostra contenuto tagliato"
+      maximum_staged_user_per_email_reached: "Raggiunto il numero massimo di utenti temporanei creati via email."
       errors:
         empty_email_error: "Succede quando l'email ricevuta era vuota."
         no_message_id_error: "Succede quando l'email non ha l'intestazione 'Message-Id'."
+        auto_generated_email_error: "Succede quando l'intestazione 'precedence' è impostata su: list, junk, bulk oppure auto_reply, oppure quando qualunque altra intestazione contiene: auto-submitted, auto-replied o auto-generated."
+        no_body_detected_error: "Succede quando non si riesce ad estrapolare il corpo del messaggio e non ci sono allegati. "
         inactive_user_error: "Succede quando il mittente non è attivo."
         blocked_user_error: "Succede quando il mittente è stato bloccato."
+        bad_destination_address: "Succede quando nessuno degli indirizzi email presente nei campi A/Cc/Bcc corrisponde ad alcun indirizzo email entrante tra quelli configurati."
+        strangers_not_allowed_error: "Succede quando un utente tenta di creare uno nuovo argomento in una categoria della quale non è membro."
+        insufficient_trust_level_error: "Succede quando un utente tenta di creare un nuovo argomento in una categoria per la quale non ha il livello di esperienza richiesto."
+        reply_user_not_matching_error: "Succede quando arriva una risposta da un indirizzo email diverso da quello cui la notifica era stata inviata."
+        topic_not_found_error: "Succede quando arriva una risposta ma l'argomento relativo è stato cancellato."
+        topic_closed_error: "Succede quando arriva una risposta ma l'argomento relativo è stato chiuso."
+        bounced_email_error: "L'email rappresenta un rapporto di email tornata indietro."
+        screened_email_error: "Succede quando l'indirizzo email del mittente era stato già vagliato."
   errors: &errors
     format: '%{attribute} %{message}'
     messages:
@@ -182,6 +193,8 @@ it:
       member_already_exist: "'%{username}' è già membro di questo gruppo."
       invalid_domain: "'%{domain}' non è un dominio valido."
       invalid_incoming_email: "'%{email}' non è un indirizzo email valido."
+      email_already_used_in_group: "L'indirizzo '%{email}' è stato già usato dal gruppo '%{group_name}'."
+      email_already_used_in_category: "L'indirizzo '%{email}' è stato già usato dalla categoria '%{category_name}'."
     default_names:
       everyone: "chiunque"
       admins: "amministratori"
@@ -281,6 +294,9 @@ it:
           attributes:
             hex:
               invalid: "non è un colore valido"
+        post_reply:
+          base:
+            different_topic: "Il messaggio e la risposta devono appartenere allo stesso argomento."
       <<: *errors
   user_profile:
     no_info_me: "<div class='missing-profile'>il campo \"Su di me\" del tuo profilo è vuoto, <a href='/users/%{username_lower}/preferences/about-me'>vuoi compilarlo?</a></div>"
@@ -323,6 +339,9 @@ it:
       uncategorized_parent: "La categoria \"Non classificato\" non può avere una categoria superiore."
       self_parent: "La categoria-genitore di una sottocategoria non può essere se stessa."
       depth: "Non puoi annidare una sottocategoria sotto un'altra"
+      invalid_email_in: "'%{email}' non è un indirizzo email valido."
+      email_already_used_in_group: "L'indirizzo '%{email}' è stato già usato dal gruppo '%{group_name}'."
+      email_already_used_in_category: "L'indirizzo '%{email}' è stato già usato dalla categoria '%{category_name}'."
     cannot_delete:
       uncategorized: "Non puoi eliminare la categoria \"Non classificato\""
       has_subcategories: "Non puoi cancellare questa categoria perché ha sotto-categorie."
@@ -351,6 +370,7 @@ it:
       first_day_topics_per_day: "Hai raggiunto il massimo numero di argomenti che può creare un nuovo utente il suo primo giorno. Per favore attendi %{time_left} prima di riprovare."
       create_topic: "Stai creando argomenti troppo rapidamente. Attendi %{time_left} prima di riprovare."
       create_post: "Stai rispondendo troppo rapidamente. Attendi %{time_left} prima di riprovare."
+      delete_post: "Stai cancellando i messaggi troppo velocemente. Per favore attendi %{time_left} prima di riprovare."
       topics_per_day: "Hai raggiunto il massimo numero di nuovi argomenti per oggi. Per favore attendi %{time_left} prima di riprovare."
       pms_per_day: "Hai raggiunto il massimo numero di messaggi per oggi. Per favore attendi %{time_left} prima di riprovare."
       create_like: "Hai raggiunto il massimo numero di \"Mi piace\" per oggi. Per favore attendi %{time_left} prima di riprovare."
@@ -522,6 +542,11 @@ it:
       message:
         make: "Questo argomento è ora uno striscione. Apparirà in cima ad ogni pagina finché non viene chiuso dall'utente."
         remove: "Questo argomento non è più uno striscione. Non apparirà più in cima ad ogni pagina."
+  unsubscribed:
+    title: "Iscrizione annullata!"
+    description: "La tua iscrizione è stata annullata. Per cambiare le tue impostazioni email <a href='%{url}'>vai alle preferenze utente</a>."
+  unsubscribe:
+    title: "Annulla iscrizione"
   reports:
     visits:
       title: "Visite Utente"
@@ -874,7 +899,7 @@ it:
     min_title_similar_length: "Lunghezza minima di un titolo che attiva il controllo su argomenti simili."
     min_body_similar_length: "Lunghezza minima del corpo di un messaggio che attiva il controllo su argomenti simili."
     category_colors: "Un elenco di valori esadecimali di colori permessi per le categorie."
-    category_style: "Stile grafico per le etichette di categoria."
+    category_style: "Stile grafico delle targhette relative alle categorie."
     max_image_size_kb: "Dimensione massima in kB per caricare immagini degli utenti. Deve essere configurata anche in nginx (client_max_body_size) / apache o nel proxy."
     max_attachment_size_kb: "Dimensione massima dei file che gli utenti possono caricare, in kB. Configura il limite anche in nginx (client_max_body_size) / apache o nel proxy."
     authorized_extensions: "Una lista di estensioni dei file che è permesso caricare (usa '*' per permettere tutti i tipi di file) "
@@ -944,6 +969,7 @@ it:
     default_categories_watching: "Elenco di categorie osservate per default."
     default_categories_tracking: "Elenco di categorie seguite per default."
     default_categories_muted: "Elenco di categorie silenziate per default."
+    tag_style: "Stile grafico delle targhette relative alle etichette."
     errors:
       invalid_email: "Indirizzo email non valido."
       invalid_username: "Non c'è alcun utente con quel nome."
@@ -1221,6 +1247,7 @@ it:
       new_activity: "Nuove attività nei tuoi argomenti e messaggi:"
       top_topics: "Messaggi di successo"
       other_new_topics: "Argomenti più attivi"
+      unsubscribe: "Questo riepilogo viene inviato da %{site_link} se non ti si vede da un po'. Per annullare l'iscrizione %{unsubscribe_link}."
       click_here: "clicca qui"
       read_more: "Leggi Altro"
       more_topics: "Ci sono stati %{new_topics_since_seen} altri nuovi argomenti."

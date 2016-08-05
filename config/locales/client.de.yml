@@ -140,7 +140,7 @@ de:
         disabled: 'unsichtbar gemacht, %{when}'
     topic_admin_menu: "Thema administrieren"
     emails_are_disabled: "Die ausgehende E-Mail-Kommunikation wurde von einem Administrator global deaktiviert. Es werden keinerlei Benachrichtigungen per E-Mail verschickt."
-    bootstrap_mode_enabled: "Damit du mit deiner Seite einfacher loslegen kannst, bist du im Bootstrapping-Modus. Alle neuen Benutzer erhalten die Vertrauensstufe 1 und bekommen tägliche Zusammenfassungen per E-Mail. Der Modus wird automatisch deaktiviert, sobald sich mindestens %{min_users} angemeldet haben."
+    bootstrap_mode_enabled: "Damit du mit deiner Seite einfacher loslegen kannst, befindest du dich im Bootstrapping-Modus. Alle neuen Benutzer erhalten die Vertrauensstufe 1 und bekommen eine tägliche Zusammenfassung per E-Mail. Der Modus wird automatisch deaktiviert, sobald sich mindestens %{min_users} angemeldet haben."
     bootstrap_mode_disabled: "Der Bootstrapping-Modus wird innerhalb der nächsten 24 Stunden deaktiviert."
     s3:
       regions:
@@ -458,7 +458,6 @@ de:
       dismiss_notifications_tooltip: "Alle ungelesenen Benachrichtigungen als gelesen markieren"
       disable_jump_reply: "Springe nicht zu meinem Beitrag, nachdem ich geantwortet habe"
       dynamic_favicon: "Zeige die Anzahl der neuen und geänderten Themen im Browser-Symbol an"
-      edit_history_public: "Andere Benutzer dürfen in Beiträgen meine Überarbeitungen sehen."
       external_links_in_new_tab: "Öffne alle externen Links in einem neuen Tab"
       enable_quoting: "Aktiviere Zitatantwort mit dem hervorgehobenen Text"
       change: "ändern"
@@ -485,15 +484,17 @@ de:
       watched_tags: "Beobachtet"
       watched_tags_instructions: "Du wirst automatisch alle neuen Themen imit diesen Schlagwörtern beobachten. Du wirst über alle neuen Beiträge und Themen benachrichtigt und die Anzahl der neuen Antworten wird bei den betroffenen Themen angezeigt."
       tracked_tags: "Verfolgt"
-      tracked_tags_instructions: "Du wirst automatisch allen neuen Themen mit diesen Schlagwörtern folgen. Die Anzahl der neuen Antworten wird bei den betroffenen Themen angezeigt."
+      tracked_tags_instructions: "Du wirst automatisch alle Themen mit diesen Schlagwörtern verfolgen. Die Anzahl der neuen Antworten wird bei den betroffenen Themen angezeigt."
       muted_tags: "Stummgeschaltet"
       muted_tags_instructions: "Du erhältst keine Benachrichtigungen über neue Themen mit diesen Schlagwörtern und die Themen werden auch nicht in der Liste der aktuellen Themen erscheinen."
       watched_categories: "Beobachtet"
       watched_categories_instructions: "Du wirst automatisch alle neuen Themen in diesen Kategorien beobachten. Du wirst über alle neuen Beiträge und Themen benachrichtigt und die Anzahl der neuen Antworten wird bei den betroffenen Themen angezeigt."
       tracked_categories: "Verfolgt"
-      tracked_categories_instructions: "Du wirst automatisch allen neuen Themen in diesen Kategorien folgen. Die Anzahl der neuen Antworten wird bei den betroffenen Themen angezeigt."
+      tracked_categories_instructions: "Du wirst automatisch alle Themen in diesen Kategorien verfolgen. Die Anzahl der neuen Beiträge wird neben dem Thema erscheinen."
       watched_first_post_categories: "Ersten Beitrag beobachten"
       watched_first_post_categories_instructions: "Du erhältst eine Benachrichtigung für den ersten Beitrag in jedem neuen Thema in diesen Kategorien."
+      watched_first_post_tags: "Ersten Beitrag beobachten"
+      watched_first_post_tags_instructions: "Du erhältst eine Benachrichtigung für den ersten Beitrag in jedem neuen Thema mit diesen Schlagwörtern."
       muted_categories: "Stummgeschaltet"
       muted_categories_instructions: "Du erhältst keine Benachrichtigungen über neue Themen in dieser Kategorie und die Themen werden auch nicht in der Liste der aktuellen Themen erscheinen."
       delete_account: "Lösche mein Benutzerkonto"
@@ -790,7 +791,7 @@ de:
       reached: "<b>[%{relativeAge}]</b> Aktuelle Rate von <a href='%{url}' target='_blank'>%{rate}</a> hat die eingestellte Grenze der Seite von %{siteSettingRate} erreicht."
       exceeded: "<b>[%{relativeAge}]</b> Aktuelle Rate vpm <a href='%{url}' target='_blank'>%{rate}</a> hhat die eingestellte Grenze der Seite von %{siteSettingRate} erreicht."
       rate:
-        one: "1 Fehler/%{duration}"
+        one: "ein Fehler/%{duration}"
         other: "%{count} Fehler/%{duration}"
     learn_more: "mehr erfahren..."
     year: 'Jahr'
@@ -1205,6 +1206,8 @@ de:
         go_bottom: "Ende"
         go: "Los"
         jump_bottom: "springe zum letzten Beitrag"
+        jump_prompt: "Springe zu Beitrag"
+        jump_prompt_long: "Zu welchem Beitrag möchtest du springen?"
         jump_bottom_with_number: "springe zu Beitrag %{post_number}"
         total: Beiträge insgesamt
         current: aktueller Beitrag
@@ -1361,6 +1364,10 @@ de:
         instructions:
           one: "Bitte wähle das Thema, in welches du den Beitrag verschieben möchtest."
           other: "Bitte wähle das Thema, in welches du die <b>{{count}}</b> Beiträge verschieben möchtest."
+      merge_posts:
+        title: "Ausgewählte Beiträge zusammenführen"
+        action: "ausgewählte Beiträge zusammenführen"
+        error: "Es gab einen Fehler beim Zusammenführen der ausgewählten Beiträge."
       change_owner:
         title: "Eigentümer der Beiträge ändern"
         action: "Eigentümer ändern"
@@ -1445,7 +1452,7 @@ de:
         about: "dieser Beitrag ist ein Wiki"
       archetypes:
         save: 'Speicheroptionen'
-      few_likes_left: "Danke fürs teilen der Liebe! Du hast für heute nur noch wenige Likes übrig."
+      few_likes_left: "Danke für’s Teilen der Liebe! Du hast für heute nur noch wenige „Gefällt mir“-Angaben übrig."
       controls:
         reply: "verfasse eine Antwort auf diesen Beitrag"
         like: "dieser Beitrag gefällt mir"
@@ -1564,6 +1571,10 @@ de:
         confirm:
           one: "Möchtest du wirklich diesen Beitrag löschen?"
           other: "Möchtest du wirklich all diese Beiträge löschen?"
+      merge:
+        confirm:
+          one: "Möchtest du diese Beiträge wirklich zusammenführen?"
+          other: "Möchtest du diese {{count}} Beiträge wirklich zusammenführen?"
       revisions:
         controls:
           first: "Erste Überarbeitung"
@@ -1646,13 +1657,13 @@ de:
       notifications:
         watching:
           title: "Beobachten"
-          description: "Du wirst automatisch alle neuen Themen in diesen Kategorien beobachten. Du wirst über jeden neuen Beitrag in jedem Thema benachrichtigt und die Anzahl neuer Antworten wird angezeigt."
+          description: "Du wirst automatisch alle neuen Themen in diesen Kategorien beobachten. Du wirst über alle neuen Beiträge in allen Themen benachrichtigt und die Anzahl der neuen Antworten wird angezeigt."
         watching_first_post:
           title: "Ersten Beitrag beobachten"
           description: "Du erhältst eine Benachrichtigung fnur ür den ersten Beitrag in jedem neuen Thema in diesen Kategorien."
         tracking:
           title: "Verfolgen"
-          description: "Du wirst automatisch allen neuen Themen in diesen Kategorien folgen. Du wirst benachrichtigt, wenn jemand deinen @Namen erwähnt oder auf deinen Beitrag antwortet, und die Anzahl neuer Antworten wird angezeigt."
+          description: "Du wirst automatisch alle neuen Themen in diesen Kategorien verfolgen. Du wirst benachrichtigt, wenn jemand deinen @name erwähnt oder dir antwortet, und die Anzahl der neuen Antworten wird angezeigt."
         regular:
           title: "Normal"
           description: "Du wirst benachrichtigt, wenn jemand deinen @Namen erwähnt oder auf deinen Beitrag antwortet."
@@ -1692,7 +1703,7 @@ de:
       title: "Zusammenfassung des Themas"
       participants_title: "Autoren vieler Beiträge"
       links_title: "Beliebte Links"
-      links_shown: "zeige alle {{totalLinks}} Links..."
+      links_shown: "mehr Links anzeigen..."
       clicks:
         one: "1 Klick"
         other: "%{count} Klicks"
@@ -1835,7 +1846,7 @@ de:
     lightbox:
       download: "herunterladen"
     search_help:
-      title: 'Hilfe durchsuchen'
+      title: 'Suche'
     keyboard_shortcuts_help:
       title: 'Tastenkombinationen'
       jump_to:
@@ -1930,6 +1941,7 @@ de:
     tagging:
       all_tags: "Alle Schlagwörter"
       selector_all_tags: "Alle Schlagwörter"
+      selector_no_tags: "keine Schlagwörter"
       changed: "Geänderte Schlagwörter:"
       tags: "Schlagwörter"
       choose_for_topic: "Optionale Schlagwörter für dieses Thema wählen"
@@ -1945,16 +1957,18 @@ de:
       filters:
         without_category: "%{filter} %{tag} Themen"
         with_category: "%{filter} %{tag} Themen in %{category}"
+        untagged_without_category: "%{filter} Themen ohne Schlagwörter"
+        untagged_with_category: "%{filter} ohne Schlagwörter in %{category}"
       notifications:
         watching:
           title: "Beobachten"
-          description: "Du wirst automatisch alle neuen Themen mit diesem Schlagwort beobachten. Du wirst über alle neuen Beiträge und Themen benachrichtigt werden. Außerdem wird die Anzahl der ungelesenen und neuen Beiträge neben dem Thema erscheinen."
+          description: "Du wirst automatisch alle Themen mit diesem Schlagwort beobachten. Du wirst über alle neuen Beiträge und Themen benachrichtigt werden. Außerdem wird die Anzahl der ungelesenen und neuen Beiträge neben dem Thema erscheinen."
         watching_first_post:
           title: "Ersten Beitrag beobachten"
           description: "Du erhältst nur eine Benachrichtigung für den ersten Beitrag in jedem neuen Thema mit diesem Schlagwort."
         tracking:
           title: "Verfolgen"
-          description: "Du wirst automatisch alle neuen Themen mit diesem Schlagwort folgen. Die Anzahl der ungelesenen und neuen Beiträge wird neben dem Thema erscheinen."
+          description: "Du wirst automatisch allen Themen mit diesem Schlagwort folgen. Die Anzahl der ungelesenen und neuen Beiträge wird neben dem Thema erscheinen."
         regular:
           title: "Allgemein"
           description: "Du wirst benachrichtigt, wenn jemand deinen @Namen erwähnt oder auf deinen Beitrag antwortet."

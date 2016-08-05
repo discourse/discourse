@@ -27,6 +27,7 @@ pt:
         millions: "{{number}}M"
     dates:
       time: "hh:mm"
+      timeline_date: "MMM YYYY"
       long_no_year: "DD MMM hh:mm"
       long_no_year_no_time: "DD MMM"
       full_no_year_no_time: "Do MMMM"
@@ -38,6 +39,7 @@ pt:
       long_date_with_year_without_time: "DD MMM, 'YY"
       long_date_without_year_with_linebreak: "DD MMM <br/>LT"
       long_date_with_year_with_linebreak: "DD MMM, 'YY <br/>LT"
+      wrap_ago: "%{date} atrás"
       tiny:
         half_a_minute: "< 1m"
         less_than_x_seconds:
@@ -115,7 +117,9 @@ pt:
       private_topic: "tornei este tópico privado %{when}"
       split_topic: "dividir este tópico %{when}"
       invited_user: "Convidou %{who} %{when}"
+      invited_group: "convidou %{who} %{when}"
       removed_user: "Removeu %{who} %{when}"
+      removed_group: "removeu %{who} %{when}"
       autoclosed:
         enabled: 'fechado %{when}'
         disabled: 'aberto %{when}'
@@ -151,6 +155,7 @@ pt:
         ap_northeast_1: "Ásia-Pacífico (Tóquio)"
         ap_northeast_2: "Ásia-Pacífico (Seoul)"
         sa_east_1: "América do Sul (São Paulo)"
+        cn_north_1: "China (Beijing)"
     edit: 'editar o título e a categoria deste tópico'
     not_implemented: "Essa funcionalidade ainda não foi implementada, pedimos desculpa!"
     no_value: "Não"
@@ -251,6 +256,8 @@ pt:
     undo: "Desfazer"
     revert: "Reverter"
     failed: "Falhou"
+    switch_to_anon: "Entrar em modo Anónimo"
+    switch_from_anon: "Sair de modo Anónimo"
     banner:
       close: "Destituir esta faixa."
       edit: "Editar esta faixa >>"
@@ -300,6 +307,8 @@ pt:
       title: "Utilizadores"
       likes_given: "Dado"
       likes_received: "Recebido"
+      topics_entered: "Visto"
+      topics_entered_long: "Tópicos Visualizados"
       time_read: "Tempo Lido"
       topic_count: "Tópicos"
       topic_count_long: "Tópicos Criados"
@@ -324,6 +333,7 @@ pt:
       selector_placeholder: "Adicionar membros"
       owner: "proprietário"
       visible: "O grupo é visível para todos os utilizadores"
+      index: "Grupos"
       title:
         one: "grupo"
         other: "grupos"
@@ -443,7 +453,6 @@ pt:
       dismiss_notifications_tooltip: "Marcar como lidas todas as notificações por ler"
       disable_jump_reply: "Não voltar para a minha mensagem após ter respondido"
       dynamic_favicon: "Mostrar contagem de tópicos novos / atualizados no ícone do browser."
-      edit_history_public: "Permitir que outros utilizadores vejam as minhas revisões de publicação"
       external_links_in_new_tab: "Abrir todas as hiperligações externas num novo separador"
       enable_quoting: "Ativar resposta usando citação de texto destacado"
       change: "alterar"
@@ -455,9 +464,10 @@ pt:
       suspended_notice: "Este utilizador está suspenso até {{date}}."
       suspended_reason: "Motivo: "
       github_profile: "Github"
+      tag_settings: "Etiquetas"
+      muted_tags: "Silenciado"
       watched_categories: "Vigiado"
       tracked_categories: "Acompanhado"
-      tracked_categories_instructions: "Irá acompanhar automaticamente todos os novos tópicos nestas categorias. Uma contagem de novas mensagens irá aparecer junto ao tópico."
       muted_categories: "Silenciado"
       muted_categories_instructions: "Não será notificado de nada acerca de novos tópicos nestas categorias, e estes não irão aparecer nos recentes."
       delete_account: "Eliminar A Minha Conta"
@@ -850,10 +860,6 @@ pt:
       github:
         title: "com GitHub"
         message: "A autenticar com GitHub (certifique-se de que os bloqueadores de popup estão desativados)"
-    apple_international: "Apple/International"
-    google: "Google"
-    twitter: "Twitter"
-    emoji_one: "Emoji One"
     shortcut_modifier_key:
       shift: 'Shift'
       ctrl: 'Ctrl'
@@ -1575,10 +1581,8 @@ pt:
       notifications:
         watching:
           title: "A vigiar"
-          description: "Irá vigiar automaticamente todos os novos tópicos nestas categorias. Irá ser notificado de cada nova mensagem em cada tópico, e uma contagem de novas respostas será exibida."
         tracking:
           title: "Acompanhar"
-          description: "Irá acompanhar automaticamente todos os novos tópicos nestas categorias. Irá ser notificado se alguém mencionar o seu @nome ou lhe responder, e uma contagem de novas respostas será exibida."
         regular:
           title: "Normal"
           description: "Será notificado se alguém mencionar o seu @nome ou responder-lhe."
@@ -1618,7 +1622,6 @@ pt:
       title: "Sumário do Tópico"
       participants_title: "Autores Frequentes"
       links_title: "Hiperligações Populares"
-      links_shown: "mostrar todas as {{totalLinks}} hiperligações..."
       clicks:
         one: "1 clique"
         other: "%{count} cliques"

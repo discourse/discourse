@@ -389,7 +389,6 @@ zh_TW:
       dismiss_notifications_tooltip: "標記所有未讀通知為已讀"
       disable_jump_reply: "不要在回覆之後直接跳到我的文章"
       dynamic_favicon: "在瀏覽器小圖示上顯示新主題/更新的主題數"
-      edit_history_public: "讓其他用戶檢視我的文章修訂紀錄"
       external_links_in_new_tab: "以新分頁開啟所有外部連結"
       enable_quoting: "允許引用已標註的文字"
       change: "修改"
@@ -693,10 +692,6 @@ zh_TW:
       github:
         title: "使用 GitHub"
         message: "使用 GitHub 認証 (請確定你的網頁瀏覽器未阻擋彈出視窗)"
-    apple_international: "Apple/International"
-    google: "Google"
-    twitter: "Twitter"
-    emoji_one: "Emoji One"
     shortcut_modifier_key:
       shift: 'Shift'
       ctrl: 'Ctrl'
@@ -1288,7 +1283,6 @@ zh_TW:
       title: "討論話題摘要"
       participants_title: "頻繁發文者"
       links_title: "熱門連結"
-      links_shown: "顯示所有 {{totalLinks}} 個連結..."
       clicks:
         other: "%{count} 點擊"
     topic_statuses:

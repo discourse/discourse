@@ -939,9 +939,9 @@ fi:
     s3_cdn_url: "CDN URL, jota käytetään S3:ssa sijaitseville tiedostoille (esimerkiksi https://cdn.jossain.com). VAROITUS: tämän asetuksen muuttamisen jälkeen sinun täytyy rakentaa uudelleen kaikki vanhat viestit."
     avatar_sizes: "Profiilikuvista automaattisesti luotavat koot."
     external_system_avatars_enabled: "Käytä ulkopuolista avatarpalvelua."
-    external_system_avatars_url: "Ulkoisen avatarpalvelun URL. Sallitut vaihdokset ovat {username} {first_letter} {color} {size}"
     default_opengraph_image_url: "Oletuksena käytettävän opengraph-kuvan URL."
     allow_all_attachments_for_group_messages: "Sali kaikki sähköpostiliitteet ryhmäviestessä."
+    convert_pasted_images_to_hq_jpg: "Muuta liitetyt kuvat korkealaatuisiksi JPG-tiedostoiksi"
     enable_flash_video_onebox: "Ota käyttöön swf- ja flv-linkkien (Adobe Flash) onebox-tuki. VAROITUS: saattaa lisätä tietoturvariskejä."
     default_invitee_trust_level: "Oletus luottamustaso (0-4) kutsutuille käyttäjille."
     default_trust_level: "Uusien käyttäjien oletusarvoinen luottamustaso (0-4). VAROITUS! Tämän muuttaminen altistaa roskapostille."
@@ -1033,7 +1033,6 @@ fi:
     auto_block_first_post_regex: "Merkkikokoriippumaton regex joka aiheuttaa käyttäjän ensimmäisen viestin estämisen ja lisäämisen hyväksymisjonoon. Esimerkiksi raivoaminen|a[bc]a aiheuttaa kaikkien viestien, joissa on sanat raivoava, aba tai aca estämisen. Vaikuttaa vain ensimmäiseen viestiin."
     reply_by_email_enabled: "Ota käyttöön vastaukset sähköpostin avulla."
     reply_by_email_address: "Saapuvan sähköpostin sapluuna sähköpostivastauksiin, esimerkiksi: %{reply_key}@reply.example.com tai replies+%{reply_key}@example.com"
-    incoming_email_prefer_html: "käytä HTMLää tekstin sijaan saapuville sähköposteille. Voi aiheuttaa odottamattomia ongelmia ulkoasussa!"
     disable_emails: "Estä Discoursea lähettämästä mitään sähköpostia"
     strip_images_from_short_emails: "Poista kuvat sähköposteista, joiden koko on alle 2800 tavua"
     short_email_length: "Lyhyen sähköpostin pituus tavuissa"
@@ -1046,9 +1045,10 @@ fi:
     maximum_staged_users_per_email: "Maksimimäärä automaattisesti luotavia tilejä, kun käsitellään saapuvaa sähköpostia."
     auto_generated_whitelist: "Lista sähköpostiosoitteista, joiden viestejä ei tarkasteta automaattisesti luodun sisällön osalta."
     block_auto_generated_emails: "Estä saapuvat sähköpostit, jotka tunnistetaan automaattisesti luoduiksi."
-    bounce_score_threshold: "Pistemäärä, jonka jälkeen lakamme lähettämästä sähköpostia käyttäjälle. Soft bounce lisää 1, hard bounce 2, pistemäärä nollataan 30 päivää viimeisen palautuksen jälkeen."
     ignore_by_title: "Jätä sähköpostit huomiotta niiden otsikon perusteella."
     mailgun_api_key: "Mailgunin Secret API key, jolla verifioidaan webhook-viestit."
+    bounce_score_threshold: "Pistemäärä, jonka ylityttyä käyttäjälle ei lähetetä sähköpostia."
+    bounce_score_threshold_deactivate: "Pistemäärä, jonka ylityttyä käyttäjätili poistetaan käytöstä."
     manual_polling_enabled: "Työnnä sähköpostit käyttäen sähköpostivastausten APIa."
     pop3_polling_enabled: "Pollaa sähköpostivastaukset POP3:lla."
     pop3_polling_ssl: "Käytä SSL-salausta yhdistettäessä POP3-palvelimeen. (Suositellaan)"
@@ -1068,7 +1068,7 @@ fi:
     delete_all_posts_max: "Kerralla poistettavien viestien maksimimäärä Poista kaikki viestit-painikkeella. Jos käyttäjällä on enemmän viestejä, niitä ei voi poistaa kerralla eikä käyttäjää voi poistaa."
     username_change_period: "Montako päivää aikaa käyttäjällä on vaihtaa käyttäjänimeä tilin luomisen jälkeen (0 poistaa nimen vaihdon käytöstä)."
     email_editable: "Salli käyttäjien vaihtaa sähköpostiosoitteensa tilin luomisen jälkeen."
-    logout_redirect: "Sivu, jonne selain ohjataan uloskirjautumisen jälkeen, esim: (http://sivusto.com/logout)"
+    logout_redirect: "Sivu, jonne selain ohjataan uloskirjautumisen jälkeen, esim: (http://somesite.com/logout)"
     allow_uploaded_avatars: "Salli käyttäjien ladata oma profiilikuva."
     allow_animated_avatars: "Salli käyttäjien valita animoituja gif-profiilikuvia. VAROITUS: aja avatars:refresh rake task tämän asetuksen muuttamisen jälkeen."
     allow_animated_thumbnails: "Luo animoidut esikatselukuvat animoiduista gif-tiedostoista."
@@ -1093,7 +1093,6 @@ fi:
     enable_mobile_theme: "Mobiililaitteet käyttävät erillistä teemaa ja kahden välillä on mahdollista vaihtaa. Poista asetus käytöstä, jos haluat käyttää omaa tyylitiedostoa, joka on mukautuva eri laitteille."
     dominating_topic_minimum_percent: "Kuinka monta prosenttia ketjun viesteistä käyttäjän täytyy kirjoittaa, ennen kuin tulee muistutetuksi ketjun dominoinnista."
     disable_avatar_education_message: "Piilota opastusviesti, joka näytetään kun profiilikuvaa vaihdetaan."
-    daily_performance_report: "Analysoi NGINX lokit päivittäin ja julkaise vain henkilökunnalle näkyvä ketju yksityiskohdista"
     suppress_uncategorized_badge: "Älä näytä alueettomille ketjuille tunnusta ketjujen listauksissa."
     global_notice: "Näytä KIIREELLISESTÄ HÄTÄTAPAUKSESTA kertova banneri kaikilla sivuilla kaikille käyttäjille, vaihda tyhjäksi piilottaaksesi sen (HTML sallittu)."
     disable_edit_notifications: "Poista muokkausilmoitukset system-käyttäjältä, kun 'download_remote_images_to_local' on asetettu."
@@ -1109,7 +1108,6 @@ fi:
     default_code_lang: "Oletusarvoinen ohjelmointikieli syntaksin korostukseen Github koodiblokeissa (lang-auto, ruby, python jne.)"
     warn_reviving_old_topic_age: "Kun käyttäjä alkaa kirjoittamaan vastausta ketjuun, jonka uusin viesti on tätä vanhempi päivissä, näytetään varoitus. Poista käytöstä asettamalla arvoksi 0."
     autohighlight_all_code: "Pakota koodin korostus kaikkiin esimuotoiltuihin tekstiblokkeihin, vaikka käyttäjä ei määrittelisi kieltä."
-    highlighted_languages: "Syntaksin korostamisen säännöt. (Varoitus: liian monen kielen sisällyttäminen voi vaikuttaa suorituskykyyn) katso demo: https://highlightjs.org/static/demo/"
     feed_polling_enabled: "VAIN UPOTUS: Upotetaanko RSS/ATOM syöte viesteinä."
     feed_polling_url: "VAIN UPOTUS: RSS/ATOM syötteen URL."
     embed_by_username: "Sen käyttäjän Discourse käyttäjänimi, joka luo upotetut ketjut."
@@ -1152,7 +1150,6 @@ fi:
     default_other_enable_quoting: "Ota oletuksena käyttöön lainaaminen valitsemalla tekstiä."
     default_other_dynamic_favicon: "Näytä oletuksena uusien/päivittyneiden ketjujen määrä selaimen ikonissa."
     default_other_disable_jump_reply: "Älä hyppää oletuksena uuteen vastaukseen käyttäjän lähetettyä sen."
-    default_other_edit_history_public: "Tee oletuksena viestien versioista julkisia."
     default_other_like_notification_frequency: "Ilmoita käyttäjiä tykkäyksistä oletuksena"
     default_topics_automatic_unpin: "Aseta oletukseksi, että ketjun kiinnitys poistuu automaattisesti, jos käyttäjä selaa keskustelun loppuun"
     default_categories_watching: "Lista oletuksena tarkkailtavista alueista."
@@ -1162,11 +1159,11 @@ fi:
     min_trust_to_create_tag: "Vähimmäisluottamustaso, jolla voi luoda tunnisteita."
     max_tags_per_topic: "Suurin tunnisteiden määrä, joka voi liittyä ketjuun."
     max_tag_length: "Enimmäismerkkimäärä tunnisteen nimelle."
-    max_tag_search_results: "Näytettävien tulosten enimmäismäärä, kun etsitään tunnisteita."
+    max_tag_search_results: "Kun haetaan tunnisteita, enintään näin monta hakutulosta näytetään."
     show_filter_by_tag: "Näytä pudotusvalikko, jolla voi suodattaa ketjulistausta tunnisteen mukaan."
     max_tags_in_filter_list: "Enimmäismäärä tunnisteita, joka näytetään suodatuspudotusvalikossa. Käytetyimmät tunnisteet näytetään."
     tags_sort_alphabetically: "Näytä tunnisteet aakkosjärjestyksessä. Oletusasetus on näyttäminen suosion mukaan."
-    tag_style: "Tunnistearvomerkkien visuaalinen tyyli."
+    tag_style: "Tunnisteiden visuaalinen tyyli."
     staff_tags: "Lista tunnisteista, joita vain henkilökunta voi lisätä"
     min_trust_level_to_tag_topics: "Vähimmäisluottamustaso, jolla voi lisätä tunnisteita ketjuihin"
     suppress_overlapping_tags_in_list: "Piilota tunnisteet listanäkymistä, jos ne menevät otsikon kanssa päällekkäin"
@@ -1211,6 +1208,13 @@ fi:
   redirected_to_top_reasons:
     new_user: "Tervetuloa yhteisöömme! Nämä ovat suosituimmat viimeaikaiset viestiketjut."
     not_seen_in_a_month: "Tervetuloa takaisin! Emme ole nähneet sinua vähään aikaan. Tässä ovat suosituimmat viestiketjut sitten viime näkemän."
+  merge_posts:
+    edit_reason:
+      one: "%{username} yhdisti viestin"
+      other: "%{username} yhdisti %{count} viestiä"
+    errors:
+      different_topics: "Eri ketjuissa olevia viestejä ei voi yhdistää."
+      different_users: "Eri käyttäjien viestejä ei voi yhdistää."
   move_posts:
     new_topic_moderator_post:
       one: "Yksi viesti siirrettiin uuteen ketjuun: %{topic_link}"
@@ -1287,6 +1291,7 @@ fi:
     already_logged_in: "Hups, näyttää siltä, että yrität hyväksyä kutsun käyttäjänä, jolle sitä ei lähetetty. Jos et ole %{current_user}, kirjaudu ulos ja yritä uudestaan."
   user:
     no_accounts_associated: "Ei liittyviä käyttäjätilejä"
+    deactivated: "Käyttäjätili poistettiin käytöstä osoitteesta '%{email}' palautettujen sähköpostien vuoksi."
     username:
       short: "täytyy olla vähintään %{min} merkkiä"
       long: "ei saa olla yli %{max} merkkiä"
@@ -1300,6 +1305,7 @@ fi:
     email:
       not_allowed: "ei sallita tältä sähköpostin palvelunatarjoajalta. Ole hyvä, ja käytä toista sähköpostiosoitetta."
       blocked: "ei ole sallittu."
+      revoked: "Sähköpostia ei lähetetä osoitteeseen '%{email}' ennen %{date}."
     ip_address:
       blocked: "Uusien tilien luonti tästä IP-osoitteesta ei ole sallittu."
       max_new_accounts_per_registration_ip: "Rekisteröitymisiä ei oteta vastaan IP-osoitteestasi (maksimimäärä saavutettu). Ota yhteyttä henkilökuntaan."
@@ -1402,6 +1408,47 @@ fi:
       (jos yllä oleva linkki on vanhentunut, valitse "unohdin salasanani" kirjautuessasi sisään sähköpostiosoitteellasi)
   test_mailer:
     subject_template: "[%{site_name}] Sähköpostin toimitettavuustesti"
+    text_body_template: |
+      Tämä on testisähköposti osoitteesta
+
+      [**%{base_url}**][0]
+
+      Sähköpostien toimittaminen on monimutkaista. Tässä joitakin tärkeitä seikkoja, jotka sinun tulisi tarkistaa ensimmäisenä:
+
+      - *Varmista*, että `ilmoitusten sähköpostiosoitteen` from: kenttä on asetettu oikein sivuston asetuksissa. **Sähköpostin validointi tapahtuu "from"-kentän sähköpostiosoitteen verkkotunnusta vastaan**.
+
+      - Selvitä, miten sähköpostiohjelmassasi saa näkyville sähköpostin raakadatan, jotta voit tutkia viestin tunnistetiedot. Gmailissa tämä tapahtuu "näytä kokonaan" valinnalla viestin oikeassa yläkulmassa olevasta valikosta.
+
+      - **TÄRKEÄÄ:** Onko palveluntarjoajallasi syötettynä reverse DNS -kenttä verkkotunnuksille ja IP-osoitteille, joista lähetät sähköpostia? [Kokeile Reverse PTR -tietuetta][2] täällä. Jos palveluntarjoajasi ei tarjoa kunnollista reverse DNS pointer -tietuetta, on hyvin epätodennäköistä, että mikään sähköpostisi menee perille.
+
+      - Onko verkkotunnuksesi [SPF-tietue][8] oikein? [Kokeile SPF-tietuetta][1] täällä. Huomaa, että TXT on oikea tietuetyyppi SPF-tietueelle.
+
+      - Onko verkkotunnuksesi [DKIM-tietue][3] oikein? Tämä parantaa merkittävästi sähköpostin toimitettavuutta. [Kokeile DKIM-tietuetta][7] täällä.
+
+      - Jos käytät omaa sähköpostipalvelinta, tarkista että palvelimen IP-osoite [ei ole millään sähköpostin mustalla listalla][4]. Tarkista myös, että se varmasti lähettää oikean muotoisen isäntänimen HELO-viestissään, joka palauttaa oikean DNS-tietueen. Jos näin ei ole, monet sähköpostipalvelut hylkäävät viestin.
+
+      - Suosittelemme vahvasti, että **lähetät testisähköpostin osoitteeseen [mail-tester.com][mt]** varmistaaksesi, että kaikki yllä mainittu toimii kunnolla.
+
+      (*Helpoin* tapa on luoda ilmainen tili [Sendgridiin][md], [SparkPostiin][sp][Mailguniin][mg] tai [Mailjetiin][mj], joiden ilmaiset palvelut riittävät hyvin pienen yhteisön käyttöön. Muista silti asettaa SPF- ja DKIM-tietueet DNS:ään!)
+
+      Toivottavasti tämä testisähköposti saapui perille OK!
+
+      Onnea matkaan,
+
+      Ystäväsi [Discourselta](http://www.discourse.org)
+
+      [0]: %{base_url}
+      [1]: http://www.kitterman.com/spf/validate.html
+      [2]: http://mxtoolbox.com/ReverseLookup.aspx
+      [3]: http://www.dkim.org/
+      [4]: http://whatismyipaddress.com/blacklist-check
+      [7]: https://www.mail-tester.com/spf-dkim-check
+      [8]: http://www.openspf.org/SPF_Record_Syntax
+      [sg]: https://goo.gl/r1WMF6
+      [sp]: https://www.sparkpost.com/
+      [mg]: http://www.mailgun.com/
+      [mj]: https://www.mailjet.com/pricing
+      [mt]: http://www.mail-tester.com/
   new_version_mailer:
     subject_template: "[%{site_name}] Uusi Discourse-versio, päivitys saatavilla"
     text_body_template: |
@@ -2474,7 +2521,7 @@ fi:
       name: Kuuluisa linkki
       description: Linkitti ulkoiselle sivustolle, ja linkkiä klikattiin 1000 kertaa
       long_description: |
-        Tämä arvomerkki myönnetään, kun linkkisi saa 1000 klikkausta. Vau! Sen sisältämä tieto paransi keskustelua merkittävästi. Hyvin tehty!
+        Tämä arvomerkki myönnetään, kun linkkisi saa 1000 klikkausta. Vau! Sen sisältö paransi keskustelua merkittävästi. Hyvin tehty!
     appreciated:
       name: Arvostettu
       description: 20 viestiä sai tykkäyksen

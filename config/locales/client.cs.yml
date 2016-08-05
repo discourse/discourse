@@ -481,7 +481,6 @@ cs:
       dismiss_notifications_tooltip: "Označit všechny nepřečtené notifikace jako přečtené"
       disable_jump_reply: "Po odpovědi nepřeskakovat na nový příspěvek"
       dynamic_favicon: "Zobrazit počet nových témat v ikoně prohlížeče"
-      edit_history_public: "Povolit ostatním zobrazení všech verzí mého příspěvku"
       external_links_in_new_tab: "Otevírat všechny externí odkazy do nové záložky"
       enable_quoting: "Povolit odpověď s citací z označeného textu"
       change: "změnit"
@@ -508,13 +507,11 @@ cs:
       watched_tags: "Hlídané"
       watched_tags_instructions: "Budete automaticky hlídat všechna nová témata s těmito štítky. Na všechny nové příspěvky a témata budete upozorněni. Počet nových příspěvků se zobrazí vedle tématu."
       tracked_tags: "Sledované"
-      tracked_tags_instructions: "Všechna nová témata s těmito štítky budou automaticky sledovaná. Počet nových příspěvků se zobrazí vedle tématu."
       muted_tags: "Ztišené"
       muted_tags_instructions: "Nikdy nebudete dostávat upozornění na nová témata s těmito štítky a neobjeví se v aktuálních."
       watched_categories: "Hlídané"
       watched_categories_instructions: "Budete automaticky sledovat všechna nová témata v těchto kategoriích. Na všechny nové příspěvky budete upozorněni. Počet nových příspěvků se zobrazí vedle tématu."
       tracked_categories: "Sledované"
-      tracked_categories_instructions: "Všechna nová témata v této kategorii budou automaticky hlídaná. Počet nových příspěvků se zobrazí vedle tématu."
       watched_first_post_categories: "Hlídané první příspěvky"
       watched_first_post_categories_instructions: "Budete informováni o prvním novém příspěvku v každém novém tématu vytvořeném v těchto kategoriích."
       muted_categories: "Ztišené"
@@ -919,10 +916,6 @@ cs:
       github:
         title: "přes GitHub"
         message: "Autentizuji přes GitHub (ujistěte se, že nemáte zablokovaná popup okna)"
-    apple_international: "Apple/Mezinárodní"
-    google: "Google"
-    twitter: "Twitter"
-    emoji_one: "Emoji One"
     shortcut_modifier_key:
       shift: 'Shift'
       ctrl: 'Ctrl'
@@ -1655,10 +1648,8 @@ cs:
       notifications:
         watching:
           title: "Hlídání"
-          description: "Budete automaticky sledovat všechna nová témata v těchto kategoriích. Budete dostávat upozornění na všechny nové příspěvky ve všech tématech a zobrazí se počet nových odpovědí."
         tracking:
           title: "Sledování"
-          description: "Budete automaticky sledovat všechna nová témata v těchto kategorích. Budete dostávat upozornění pokud vám někdo odpoví, nebo zmíní vaše @jméno a zobrazí se počet nových odpovědí. "
         regular:
           title: "Normální"
           description: "Budete informováni pokud někdo zmíní vaše @jméno nebo odpoví na váš příspěvek."
@@ -1696,7 +1687,6 @@ cs:
       title: "Souhrn tématu"
       participants_title: "Častí přispěvatelé"
       links_title: "Populární odkazy"
-      links_shown: "zobrazit všech {{totalLinks}} odkazů..."
       clicks:
         one: "1 kliknutí"
         few: "%{count} kliknutí"

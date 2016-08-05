@@ -422,7 +422,6 @@ tr_TR:
       dismiss_notifications_tooltip: "Tüm okunmamış bildirileri okunmuş olarak işaretle"
       disable_jump_reply: "Cevapladıktan sonra gönderime atlama"
       dynamic_favicon: "Tarayıcı simgesinde yeni / güncellenen konu sayısını göster"
-      edit_history_public: "Gönderimde yaptığım revizyonları diğer kullanıcıların görmesine izin ver"
       external_links_in_new_tab: "Tüm dış bağlantıları yeni sekmede aç"
       enable_quoting: "Vurgulanan yazıyı alıntılayarak cevaplama özelliğini etkinleştir"
       change: "değiştir"
@@ -447,7 +446,6 @@ tr_TR:
       tag_settings: "Etiketler"
       watched_categories: "Gözlendi"
       tracked_categories: "Takip edildi"
-      tracked_categories_instructions: "Bu kategorilerdeki tüm yeni konuları otomatik olarak takip edeceksiniz. Okunmamış ve yeni gönderilerin sayısı ilgili konunun yanında belirecek."
       muted_categories: "Susturuldu"
       muted_categories_instructions: "Bu kategorilerdeki yeni konular hakkında herhangi bir bildiri almayacaksınız ve en son gönderilerde belirmeyecekler. "
       delete_account: "Hesabımı Sil"
@@ -825,10 +823,6 @@ tr_TR:
       github:
         title: "GitHub ile"
         message: "GitHub ile kimlik doğrulaması yapılıyor (pop-up engelleyicilerin etkinleştirilmediğinden emin olun)"
-    apple_international: "Apple/Uluslararası"
-    google: "Google"
-    twitter: "Twitter"
-    emoji_one: "Emoji One"
     shortcut_modifier_key:
       shift: 'Shift'
       ctrl: 'Ctrl'
@@ -1508,10 +1502,8 @@ tr_TR:
       notifications:
         watching:
           title: "Gözleniyor"
-          description: "Bu kategorilerdeki tüm yeni konuları otomatik olarak gözleyeceksiniz. Tüm yeni gönderi ve konular size bildirilecek. Ayrıca, okunmamış ve yeni gönderilerin sayısı ilgili konunun yanında belirecek."
         tracking:
           title: "Takip Ediliyor"
-          description: "Bu kategorilerdeki tüm yeni konuları otomatik olarak gözleyeceksiniz. Biri @isim şeklinde sizden bahsederse ya da gönderinize cevap verirse bildirim alacaksınız. Ayrıca, okunmamış ve yeni cevapların sayısı ilgili konunun yanında belirecek."
         regular:
           title: "Normal"
           description: "Birisi @isim şeklinde sizden bahsederse ya da gönderinize cevap verirse bildirim alacaksınız."
@@ -1550,7 +1542,6 @@ tr_TR:
       title: "Konu Özeti"
       participants_title: "Sıkça Yazanlar"
       links_title: "Popüler bağlantılar"
-      links_shown: "tüm {{totalLinks}} bağlantıları göster..."
       clicks:
         other: "%{count} tıklama"
     post_links:
@@ -1779,13 +1770,11 @@ tr_TR:
       notifications:
         watching:
           title: "İzleniyor"
-          description: "Bu etiketteki tüm yeni konuları takip ediyor olacaksınız. Bu etikete ait yeni tüm konularda ve gönderilerde  bildirim alacaksınız, ayrıca yeni gönderiler konuların yanında görünecektir"
         watching_first_post:
           title: "İlk gönderi izlemeniz"
           description: "Bu etikette bulunan tüm konuların sadece ilk gönderilerinde bildirim alacaksınız."
         tracking:
           title: "İzleme"
-          description: "Bu etiketteki tüm konuları otomatik olarak takip ediyor olacaksınız. Okunmamış yeni gönderilerin bir kısmı konunun yanında görünecektir."
         regular:
           title: "Düzenli"
           description: "Eğer bir kişi adınızın tagini kullanırsa (@isminiz gibi) veya oluşturduğunuz konuya cevap yazarsa bildirim alacaksınız."

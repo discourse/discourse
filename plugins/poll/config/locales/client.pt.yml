@@ -15,6 +15,11 @@ pt:
         one: "total da votação"
         other: "total de votos"
       average_rating: "Classificação média: <strong>%{average}</strong>."
+      public:
+        title: "Votos são públicos"
+      multiple:
+        help:
+          between_min_and_max_options: "Escolha entre <strong>%{min}</strong> e <strong>%{max}</strong> opções"
       cast-votes:
         title: "Votar"
         label: "Vote agora!"
@@ -32,3 +37,24 @@ pt:
         title: "Fechar a votação"
         label: "Fechar"
         confirm: "Tem a certeza que quer fechar esta votação?"
+      error_while_toggling_status: "Pedimos desculpa, ocorreu um erro ao mudar o estado deste inquérito."
+      error_while_casting_votes: "Pedimos desculpa, ocorreu um erro ao submeter os seus votos."
+      error_while_fetching_voters: "Pedimos desculpa, ocorreu um erro ao apresentar os eleitores."
+      ui_builder:
+        title: Criar Votação
+        insert: Inserir votação
+        help:
+          options_count: Indique pelo menos 2 opções
+        poll_type:
+          label: Tipo
+          regular: Escolha Única
+          multiple: Multipla escolha
+          number: Cotação numérica
+        poll_config:
+          max: Máximo
+          min: Mínimo
+          step: Passo
+        poll_public:
+          label: Mostre quem votou
+        poll_options:
+          label: Escreva uma opção de votação por linha

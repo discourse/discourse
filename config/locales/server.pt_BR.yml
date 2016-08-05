@@ -1432,6 +1432,12 @@ pt_BR:
       name: Aniversário
     champion:
       name: Campeão
+    first_link:
+      name: Primeiro Link
+      description: Adicionou um link para outro tópico
+    first_quote:
+      name: Primeira Citação
+      description: Citou um post
     reader:
       name: Leitor
       description: Leu todas as respostas em um tópico com mais de 100 respostas
@@ -1444,10 +1450,21 @@ pt_BR:
     famous_link:
       name: Link Famoso
       description: Postou um link externo com 1000 clicks
+    admired:
+      name: Admirado
     out_of_love:
       name: Por Amor
+      description: Usou 50 likes no mesmo dia
+    higher_love:
+      description: Usou 50 likes em um dia 5 vezes
     crazy_in_love:
       name: Apaixonado
+      description: Usou 50 likes em um dia 20 vezes
+    thank_you:
+      description: Teve 20 posts curtidos e deu 10 likes
+    empathetic:
+      name: Empático
+      description: Teve 500 posts curtidos e deu 1000 likes
     first_emoji:
       name: Primeiro emoji
       description: Utilizou um emoji em uma publicação
@@ -1455,6 +1472,9 @@ pt_BR:
       name: Primeira menção
       description: Mencionou um usuário em uma publicação
       long_description: Este emblema é concedido na primeira vez em que você menciona o @nomedeusuaio de alguém em uma publicação. Cada menção gera uma notificação para a pessoa de forma que ela saiba o que você publicou. Simplesmente comece a digitar "@" (arroba) para mencionar qualquer usuário ou, caso permitido, um grupo -- é uma maneira conveniente de chamar a atenção de alguém.
+    first_reply_by_email:
+      name: Primeira Resposta por email
+      description: Respondeu um post por email
   admin_login:
     success: "Email Enviado"
     error: "Erro!"

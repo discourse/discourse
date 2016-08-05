@@ -550,6 +550,16 @@ pt:
       message:
         make: "Este tópico é agora uma faixa. Aparecerá no topo de cada página até ser dispensado pelo utilizador."
         remove: "Este tópico já não é uma faixa. Deixará de aparecer no topo de cada página."
+  unsubscribed:
+    title: "Subscrição cancelada!"
+    description: "A sua subscrição foi cancelada. Para mudar as suas definições de email <a href='%{url}'>visite as suas preferências de utilizador</a>."
+  unsubscribe:
+    title: "Cancelar subscrição"
+    mute_topic: "Silenciar todas as notificações para este tópico, %{link}"
+    unwatch_category: "Parar de seguir todos os tópicos em %{category}"
+    mailing_list_mode: "Desligar modo de lista de distribuição"
+    disable_digest_emails: "Parar envio de emails de resumo"
+    log_out: "Sair"
   reports:
     visits:
       title: "Visitas do Utilizador"

@@ -135,7 +135,7 @@ ja:
     not_implemented: "この機能はまだ実装されていません！"
     no_value: "いいえ"
     yes_value: "はい"
-    generic_error: "申し訳ありませんが、エラーが発生しました"
+    generic_error: "申し訳ありません、エラーが発生しました。"
     generic_error_with_reason: "エラーが発生しました: %{error}"
     sign_up: "サインアップ"
     log_in: "ログイン"
@@ -409,7 +409,6 @@ ja:
       dismiss_notifications_tooltip: "全ての未読の通知を既読にします"
       disable_jump_reply: "返信した後に投稿へ移動しない"
       dynamic_favicon: "新規または更新されたトピックのカウントをブラウザアイコンに表示する"
-      edit_history_public: "投稿の編集履歴を公開する"
       external_links_in_new_tab: "外部リンクをすべて別のタブで開く"
       enable_quoting: "選択したテキストを引用して返信する"
       change: "変更"
@@ -432,7 +431,6 @@ ja:
         individual: "新しい投稿がある場合にメールで送る"
       watched_categories: "ウォッチ中"
       tracked_categories: "追跡中"
-      tracked_categories_instructions: "カテゴリの新しいトピックを自動的に追跡します。トピックに対して新しい投稿があった場合、トピック一覧に新しい投稿数がつきます。"
       muted_categories: "ミュート中"
       delete_account: "アカウントを削除する"
       delete_account_confirm: "アカウントを削除してもよろしいですか？削除されたアカウントは復元できません。"
@@ -658,7 +656,7 @@ ja:
         the_topic: "トピック"
     loading: "読み込み中..."
     errors:
-      prev_page: "ロード中に"
+      prev_page: "右記の項目をロード中に発生: "
       reasons:
         network: "ネットワークエラー"
         server: "サーバーエラー"
@@ -782,10 +780,6 @@ ja:
       github:
         title: "with GitHub"
         message: "Github による認証 (ポップアップがブロックされていないことを確認してください)"
-    apple_international: "Apple/International"
-    google: "Google"
-    twitter: "Twitter"
-    emoji_one: "Emoji One"
     shortcut_modifier_key:
       shift: 'Shift'
       ctrl: 'Ctrl'
@@ -1041,13 +1035,17 @@ ja:
       auto_close_title: 'オートクローズの設定'
       auto_close_save: "保存"
       auto_close_remove: "このトピックを自動でクローズしない"
+      timeline:
+        back_description: "未読の最終投稿へ戻る"
       progress:
         title: トピック進捗
         go_top: "上"
         go_bottom: "下"
         go: "へ"
         jump_bottom: "最後の投稿へ"
-        jump_bottom_with_number: "投稿%{post_number}にジャンプ"
+        jump_prompt: "投稿へジャンプ"
+        jump_prompt_long: "どの投稿へジャンプしますか？"
+        jump_bottom_with_number: "%{post_number}番へジャンプ"
         total: 投稿の合計
         current: 現在の投稿
         position: "投稿: %{current}/%{total}"
@@ -1150,7 +1148,7 @@ ja:
         email_or_username_placeholder: "メールアドレスまたはユーザ名"
         action: "招待"
         success: "ユーザにメッセージへの参加を招待しました。"
-        error: "申し訳ありませんが、ユーザ招待中にエラーが発生しました。"
+        error: "申し訳ありません、ユーザ招待中にエラーが発生しました。"
         group_name: "グループ名"
       controls: "オプション"
       invite_reply:
@@ -1238,7 +1236,7 @@ ja:
       errors:
         create: "申し訳ありませんが、投稿中にエラーが発生しました。もう一度やり直してください。"
         edit: "申し訳ありませんが、投稿の編集中にエラーが発生しました。もう一度やり直してください。"
-        upload: "申し訳ありませんが、ファイルアップロード中にエラーが発生しました。もう一度やり直してください。"
+        upload: "申し訳ありません、ファイルのアップロード中にエラーが発生しました。再度お試しください。"
         too_many_uploads: "申し訳ありませんが、複数のファイルは同時にアップロードできません。"
         upload_not_authorized: "申し訳ありませんが、対象ファイルをアップロードする権限がありません (利用可能な拡張子: {{authorized_extensions}})."
         image_upload_not_allowed_for_new_user: "申し訳ありませんが、新規ユーザは画像のアップロードができません。"
@@ -1388,7 +1386,7 @@ ja:
       description: "カテゴリ内容"
       topic: "カテゴリトピック"
       logo: "カテゴリロゴ画像"
-      background_image: "カテゴリ背景画像"
+      background_image: "カテゴリの背景画像"
       badge_colors: "バッジの色"
       background_color: "背景色"
       foreground_color: "文字表示色"
@@ -1458,7 +1456,6 @@ ja:
       title: "トピックの情報"
       participants_title: "よく投稿する人"
       links_title: "人気のリンク"
-      links_shown: "全{{totalLinks}}リンクを表示..."
       clicks:
         other: "%{count} クリック"
     topic_statuses:
@@ -1584,6 +1581,61 @@ ja:
       full: "作成 / 返信 / 閲覧"
       create_post: "返信 / 閲覧"
       readonly: "閲覧できる"
+    keyboard_shortcuts_help:
+      title: 'ショートカットキー'
+      jump_to:
+        title: 'ページ移動'
+        home: '<b>g</b>, <b>h</b> ホーム'
+        latest: '<b>g</b>, <b>l</b> 最新'
+        new: '<b>g</b>, <b>n</b> 新着'
+        unread: '<b>g</b>, <b>u</b> 未読'
+        categories: '<b>g</b>, <b>c</b> カテゴリ'
+        top: '<b>g</b>, <b>t</b> トップ'
+        bookmarks: '<b>g</b>, <b>b</b> ブックマーク'
+        profile: '<b>g</b>, <b>p</b> プロフィール'
+        messages: '<b>g</b>, <b>m</b> メッセージ'
+      navigation:
+        jump: '<b>#</b> # 投稿へ'
+        back: '<b>u</b> 戻る'
+        open: '<b>o</b> or <b>Enter</b> トピックへ'
+      application:
+        create: '<b>c</b> 新しいトピックを作成'
+        notifications: '<b>n</b> お知らせを開く'
+        hamburger_menu: '<b>=</b> メニューを開く'
+        user_profile_menu: '<b>p</b> ユーザメニュを開く'
+        show_incoming_updated_topics: '<b>.</b> 更新されたトピックを表示する'
+        search: '<b>/</b> 検索'
+        help: '<b>?</b> キーボードヘルプを表示する'
+        dismiss_new_posts: '<b>x</b>, <b>r</b> 新しい投稿を非表示にする'
+        dismiss_topics: 'Dismiss Topics'
+        log_out: '<b>shift</b>+<b>j</b>/<b>shift</b>+<b>k</b> 次のセクション/前のセクション'
+      actions:
+        bookmark_topic: '<b>f</b> トピックのブックマークを切り替え'
+        pin_unpin_topic: '<b>shift</b>+<b>p</b>トピックを ピン留め/ピン留め解除'
+        share_topic: '<b>shift</b>+<b>s</b> トピックをシェア'
+        share_post: '<b>s</b> 投稿をシェアする'
+        reply_as_new_topic: '<b>t</b> トピックへリンクして返信'
+        reply_topic: '<b>shift</b>+<b>r</b> トピックに返信'
+        reply_post: '<b>r</b> 投稿に返信'
+        quote_post: '<b>q</b> 投稿を引用する'
+        like: '<b>l</b> 投稿を「いいね！」する'
+        flag: '<b>!</b> 投稿を通報'
+        bookmark: '<b>b</b> 投稿をブックマークする'
+        edit: '<b>e</b> 投稿を編集'
+        mark_muted: '<b>m</b>, <b>m</b> トピックをミュートする'
+        mark_regular: '<b>m</b>, <b>r</b> レギュラー(デフォルト)トピックにする'
+        mark_tracking: '<b>m</b>, <b>t</b> トピックを追跡する'
+        mark_watching: '<b>m</b>, <b>w</b> トピックをウォッチする'
+    badges:
+      title: バッジ
+      badge_count:
+        other: "%{count}個のバッジ"
+    tagging:
+      topics:
+        none:
+          latest: "最新のトピックはありません。"
+        bottom:
+          latest: "最新のトピックは以上です。"
   admin_js:
     type_to_filter: "設定項目を検索..."
     admin:
@@ -1599,7 +1651,7 @@ ja:
         please_upgrade: "今すぐアップデートしてください!"
         no_check_performed: "アップデートの確認が正しく動作していません。sidekiq が起動していることを確認してください。"
         stale_data: "最近アップデートの確認が正しく動作していません。sidekiq が起動していることを確認してください。"
-        version_check_pending: "まるでアップデート直後のようです。素晴らしい！"
+        version_check_pending: "アップロードしたてです。素晴らしいです！   "
         installed_version: "インストール済み"
         latest_version: "最新"
         problems_found: "Discourse のインストールにいくつか問題が発見されました:"
@@ -1772,7 +1824,7 @@ ja:
         upload:
           label: "アップロード"
           title: "このインスタンスにバックアップをアップロード"
-          uploading: "アップロード中"
+          uploading: "アップロード中..."
           success: "ファイル'{{filename}}' がアップロードされました。"
           error: "ファイル '{{filename}}'アップロードエラー: {{message}}"
         operations:
@@ -1837,7 +1889,7 @@ ja:
         undo_preview: "プレビューを削除"
         rescue_preview: "既定スタイル"
         explain_preview: "カスタムスタイルシートでサイトを表示する"
-        explain_undo_preview: "有効しているカスタムスタイルシートに戻る"
+        explain_undo_preview: "有効中のカスタムスタイルシートへ戻る"
         explain_rescue_preview: "既定スタイルシートでサイトを表示する"
         save: "保存"
         new: "新規"
@@ -1851,9 +1903,10 @@ ja:
         opacity: "透明度"
         copy: "コピー"
         email_templates:
-          title: "メールのテンプレート"
+          title: "メールテンプレート"
           subject: "件名"
           multiple_subjects: "このメールのテンプレートは複数の件名があります。"
+          none_selected: "編集するメールテンプレートを選択してください。"
         css_html:
           title: "CSS, HTML"
           long_title: "CSS と HTML のカスタマイズ"
@@ -1918,7 +1971,7 @@ ja:
         send_test: "テストメールを送る"
         sent_test: "送信完了!"
         delivery_method: "送信方法"
-        preview_digest_desc: "長い間ログインしていないユーザーに送られるまとめメールのプレビューです。"
+        preview_digest_desc: "しばらくログインしていないユーザーに送られるまとめメールです。"
         refresh: "更新"
         format: "フォーマット"
         html: "html"
@@ -2103,7 +2156,7 @@ ja:
         save_title: "タイトルを保存"
         refresh_browsers: "ブラウザを強制リフレッシュ"
         refresh_browsers_message: "全てのクライアントにメッセージが送信されました！"
-        show_public_profile: "公開プロフィールを見る"
+        show_public_profile: "パブリックプロフィールを見る"
         impersonate: 'このユーザになりすます'
         ip_lookup: "IPアドレスを検索"
         log_out: "ログアウト"
@@ -2146,7 +2199,7 @@ ja:
         cant_delete_all_too_many_posts:
           other: "全ての投稿を削除できませんでした。ユーザは%{count} 件以上投稿しています。(delete_all_posts_max)"
         delete_confirm: "このユーザを削除してもよろしいですか？"
-        delete_and_block: " 削除する。このメールとIPアドレスからのサインアップを以後<b>ブロック</b>"
+        delete_and_block: "アカウントを削除し、同一メールアドレス及びIPアドレスからのサインアップを<b>ブロックします</b>"
         delete_dont_block: "削除する"
         deleted: "ユーザが削除されました。"
         delete_failed: "ユーザの削除中にエラーが発生しました。このユーザの全投稿を削除したことを確認してください。"
@@ -2206,7 +2259,7 @@ ja:
           external_avatar_url: "プロフィール画像URL"
       user_fields:
         title: "ユーザフィールド"
-        help: "ユーザが記入するフィールドを追加します"
+        help: "ユーザが記入する項目(フィールド)を追加します"
         create: "ユーザフィールド作成"
         untitled: "無題"
         name: "フィールド名"
@@ -2219,17 +2272,19 @@ ja:
         delete_confirm: "ユーザフィールドを削除してもよいですか？"
         options: "オプション"
         required:
-          title: "サインアップ時に必須？"
+          title: "サインアップ時の必須にしますか？"
           enabled: "必須"
           disabled: "任意"
         editable:
-          title: "サインアップ後に編集可能？"
+          title: "サインアップ後に編集可能にしますか？"
           enabled: "編集可能"
           disabled: "編集不可"
         show_on_profile:
-          title: "パブリックプロフィールに表示？"
+          title: "パブリックプロフィールに表示しますか？"
           enabled: "プロフィールに表示"
           disabled: "プロフィール非表示"
+        show_on_user_card:
+          title: "ユーザカードに表示しますか？"
         field_types:
           text: 'テキストフィールド'
           confirm: '確認'
@@ -2295,7 +2350,7 @@ ja:
         grant_badge: バッジを付与
         granted_badges: 付けられたバッジ
         grant: 付ける
-        no_user_badges: "%{name} はバッジを付けられていません。"
+        no_user_badges: "%{name}はバッジを付けられていません。"
         no_badges: 付けられるバッジがありません
         none_selected: "バッジを選択して開始"
         allow_title: バッジをタイトルとして使用されることを許可する
@@ -2326,6 +2381,9 @@ ja:
           bad_count_warning:
             header: "WARNING!"
             text: "There are missing grant samples. This happens when the badge query returns user IDs or post IDs that do not exist. This may cause unexpected results later on - please double-check your query."
+          no_grant_count: "付与されたバッジはありません"
+          grant_count:
+            other: "<b>%{count}</b>個のバッジが付与されています"
           sample: "サンプル："
           grant:
             with: <span class="username">%{username}</span>
@@ -2334,7 +2392,7 @@ ja:
             with_time: <span class="username">%{username}</span> at <span class="time">%{time}</span>
       emoji:
         title: "絵文字"
-        help: "Add new emoji that will be available to everyone. (PROTIP: drag & drop multiple files at once)"
+        help: "各ユーザが利用できる絵文字を追加します。 (ちょっとしたコツ: ドラッグアンドドロップで複数のファイルを一度にアップロードできます)"
         add: "新しい絵文字を追加"
         name: "名前"
         image: "画像"

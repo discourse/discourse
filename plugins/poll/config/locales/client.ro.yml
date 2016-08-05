@@ -28,9 +28,9 @@ ro:
         label: "Ascunde rezultate"
       open:
         title: "Deschide sondaj"
-        label: "Deschis"
+        label: "Redeschide sondajul"
         confirm: "Sunteţi sigur că doriţi să deschideţi acest sondaj?"
       close:
-        title: "Închideți sondajul"
-        label: "Închideți"
+        title: "Închide sondajul"
+        label: "Închide sondajul"
         confirm: "Sunteţi sigur că vreţi să închideţi acest sondaj?"

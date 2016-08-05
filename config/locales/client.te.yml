@@ -285,7 +285,6 @@ te:
       notifications: "ప్రకటనలు"
       dismiss_notifications_tooltip: "అన్ని చదవని ప్రకటనలూ చదివినట్టు గుర్తించు"
       disable_jump_reply: "నేను జవాబిచ్చాక నా టపాకు వెళ్లవద్దు"
-      edit_history_public: "ఇతర సభ్యలను నా టపా దిద్దుబాట్లను చూడనివ్వు"
       external_links_in_new_tab: "అన్ని బాహ్య లంకెలనూ కొత్త ట్యాబులో తెరువు"
       enable_quoting: "హైలైట్ అయిన పాఠ్యానికి కోట్ జవాబు చేతనం చేయి"
       change: "మార్చు"
@@ -552,10 +551,6 @@ te:
       github:
         title: "గిట్ హబ్ తో"
         message: "గిట్ హబ్ ద్వారా లాగిన్ (పాపప్ లు అనుమతించుట మర్చిపోకండి)"
-    apple_international: "యాపిల్ , అంతర్జాతీయ"
-    google: "గూగుల్"
-    twitter: "ట్విట్టరు"
-    emoji_one: "ఇమెజి వన్"
     composer:
       add_warning: "ఇది ఒక అధికారిక హెచ్చరిక"
       posting_not_on_topic: "ఏ విషయానికి మీరు జవాబివ్వాలనుకుంటున్నారు? "
@@ -1086,7 +1081,6 @@ te:
       action: "విషయాన్ని కేతనించు"
     topic_map:
       title: "విషయ సారం"
-      links_shown: "అన్ని {{totalLinks}} లంకెలూ చూపు..."
       clicks:
         one: "ఒక నొక్కు"
         other: "%{count} నొక్కులు"

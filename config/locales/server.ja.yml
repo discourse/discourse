@@ -59,7 +59,7 @@ ja:
       not_a_number: は数値で入力してください
       not_an_integer: は整数で入力してください
       odd: は奇数にしてください
-      record_invalid: 'バリデーションに失敗しました： %{errors}'
+      record_invalid: '検証に失敗しました： %{errors}'
       restrict_dependent_destroy:
         one: "%{record}が存在しているので削除できません"
         many: "%{record}が存在しているので削除できません。"
@@ -128,6 +128,10 @@ ja:
     hot: "ホットトピック"
     posts: "最近の投稿"
     private_posts: "最新のプライベートメッセージ"
+    group_posts: "%{group_name}からの最新投稿"
+    group_mentions: "%{group_name}からの最新メンション"
+    user_posts: "@%{username}からの最新投稿"
+    user_topics: "@%{username}からの最新トピック"
   too_late_to_edit: "この投稿の編集・削除期間が過ぎました。編集・削除が出来ません。"
   excerpt_image: "画像"
   queue:
@@ -232,6 +236,26 @@ ja:
   assets_topic_body: "これはパーマネントトピックです。スタッフのみが閲覧でき、サイトデザインに使用する画像とファイルを保存するために使用します。削除しないでください！\n\n利用方法:\n\n\n1. このトピックに回答\n2. ロゴやファビコンなどに使用する全ての画像をアップロード(エディタのアップロードアイコンか、ドラッグアンドドロップで画像を貼付ける)\n3. 回答を投稿\n4. 新しい投稿の画像を右クリックしてアップロード済み画像のパスを取得するか、編集アイコンをクリックして画像のパスを探し、画像パスをコピーする\n5. 画像パスを[基本設定](/admin/site_settings/category/required)に貼付ける\n\nもし、別のファイルタイプが必要な場合、[ファイル設定](/admin/site_settings/category/files)の`サポートするファイルの拡張` を編集してください"
   lounge_welcome:
     title: "ラウンジへようこそ"
+    body: |
+
+      素晴らしい! :confetti_ball:
+
+      このトピックが見えるという事は、**レギュラー**へ昇格したようですね！(トラストレベル3)。
+
+      これであなたは.... &hellip;
+
+      * トピックのタイトルを好きに編集する事ができます。
+      * トピックのカテゴリを好きに変更する事ができます。
+      * Have all your links followed ([automatic nofollow](http://en.wikipedia.org/wiki/Nofollow) is removed)
+      * トラストレベルが3以上が利用出来るプライベートラウンジへのアクセス
+      * 一度の報告でスパムを非表示にできます
+
+      [現在レギュラーに所属している人の一覧](/badges/3/regular)からリストを確認する事ができます。
+
+      コミュニティを支えていただき、ありがとうございます！
+      (トラストレベルに関する詳しい説明は [こちら][trust]をご覧ください。 レギュラーの条件を満たし続けることで維持する事ができます。)
+
+      [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
   category:
     topic_prefix: "%{category}カテゴリについて"
     errors:
@@ -320,7 +344,7 @@ ja:
   change_email:
     confirmed: "メールアドレスが更新されました。"
     please_continue: "%{site_name}へ"
-    error: "メールアドレスの更新に失敗しました。アドレスが既に使用されているかもしれません。"
+    error: "メールアドレスの変更中にエラーが発生しました。このアドレスはすでに使われている可能性があります。"
   activation:
     action: "クリックしてアカウントを認証する"
     already_done: "申し訳ありませんが、このアカウント認証リンクは無効です。既にアカウントがアクティブになっていませんか?"
@@ -841,7 +865,7 @@ ja:
     feed_polling_enabled: "EMBEDDING ONLY:  ポストとしてRSS/Atomフィードを埋め込むかどうか"
     feed_polling_url: "EMBEDDING ONLY: RSS/ATOMフィードのURLを埋め込む事が出来ます"
     embed_by_username: "embedされたトピックの作成者として表示されるDiscourseユーザー名"
-    embed_username_key_from_feed: "フィードからDsicourseユーザ名をプルするキー"
+    embed_username_key_from_feed: "フィードからDiscourseユーザ名をプルするキー"
     embed_truncate: "embedされた投稿をtruncateする"
     embed_post_limit: "表示可能な投稿の最大数を埋め込む"
     embed_whitelist_selector: "embedを許可するエレメントのCSS Selector"
@@ -857,6 +881,7 @@ ja:
     enforce_square_emoji: "絵文字のアスペクト比を強制的に揃える"
     approve_unless_trust_level: "トラストレベル以下のユーザーの投稿には承認が必要"
     default_email_previous_replies: "デフォルトでメールの文章に以前の返信を含める"
+    tag_style: "カテゴリバッジのスタイル"
     errors:
       invalid_email: "不正なメールアドレスです"
       invalid_username: "そのユーザ名のユーザは存在しません"
@@ -1129,6 +1154,10 @@ ja:
         メールから回答を見つける事ができませんでした。返信はメールのトップにあることを確認してください。インライン回答を見つける事はできません。
     email_reject_invalid_access:
       subject_template: "[%{site_name}] Email issue -- 不正なアクセス"
+    email_reject_invalid_post:
+      subject_template: "[%{site_name}] Email issue -- 投稿エラー"
+    email_reject_invalid_post_specified:
+      subject_template: "[%{site_name}] Email issue -- 投稿エラー"
     email_reject_reply_key:
       subject_template: "[%{site_name}] Email issue -- 不明なReply Key"
     email_reject_topic_not_found:

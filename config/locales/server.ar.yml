@@ -8,23 +8,26 @@
 ar:
   dates:
     short_date_no_year: "D MMM"
-    short_date: "D MMM، YYYY"
-    long_date: "D MMMM, YYYY h:mma"
+    short_date: "D MMM YYYY"
+    long_date: "D MMMM YYYY h:mma"
   datetime_formats: &datetime_formats
     formats:
       short: "%d-%m-%Y"
       short_no_year: "%-d %B"
-      date_only: "%-d %B، %Y"
+      date_only: "%-d %B %Y"
+      long: "%-d %B %Y، %l:%M%P"
   date:
     month_names: [null, كانون الثاني, شباط, آذار, نيسان, آيار, حزيران, تموز, أب, أيلول, تشرين الأول, تشرين الثاني, كانون الأول]
     <<: *datetime_formats
   time:
+    am: "ص"
+    pm: "م"
     <<: *datetime_formats
   title: "دسكورس"
   topics: "المواضيع"
   posts: "منشورات."
   loading: "يحمّل"
-  powered_by_html: 'تدعمه <a href="http://www.discourse.org">دسكورس </a>، يفضّل عرضه وجافاسكرِبت مفعّل'
+  powered_by_html: 'تدعمه <a href="http://www.discourse.org">دسكورس </a>، يفضّل عرضه وجافاسكربت مفعّل'
   log_in: "تسجيل الدخول"
   purge_reason: "تم حذفه تلقائيا كحساب مهمل وغير مُفعل"
   disable_remote_images_download_reason: "عُطّل تنزيل الصور عن بعد بسبب نفاذ مساحة القرص الحرّة."
@@ -115,9 +118,6 @@ ar:
       max_username_length_range: "لا يمكن أن تكون القيمة العليا أصغر من الدنيا."
       default_categories_already_selected: "لا يمكنك تحديد فئة تستخدم في قائمة أخرى."
       s3_upload_bucket_is_required: "لا يمكنك تفعيل الرفع إلى S3 حتّى توفّر 's3_upload_bucket'."
-  activemodel:
-    errors:
-      <<: *errors
   bulk_invite:
     file_should_be_csv: "على نسق الملف الملف المرفوع أن يكون إمّا csv أو txt."
   backup:
@@ -317,7 +317,6 @@ ar:
       user_profile:
         bio_raw: "معلومات عنّي"
     errors:
-      <<: *errors
       models:
         topic:
           attributes:
@@ -918,8 +917,6 @@ ar:
     post_undo_action_window_mins: "عدد الدقائق التي يسمح فيها للأعضاء بالتراجع عن آخر إجراءاتهم على المنشور (إعجاب، اشارة، إلخ...)"
     must_approve_users: "يجب أن الموظفين يوافق على جميع حسابات المستخدم الجديدة قبل أن يتم السماح لهم للوصول إلى الموقع. تحذير: تمكين هذا لموقع الحية إلغاء وصول المستخدمين الحاليين غير الموظفين!"
     pending_users_reminder_delay: "نبه المشرفين إذا وجد اعضاء ينتظرون الموافقة لمدة اطول من الساعات ، قم بوضع الخيار -1 لايقاف التنبيهات ."
-    ga_tracking_code: "تحليلات Google (ga.js) تتعقب رمز الشيفرة، مثال: UA-12345678-9; انظر http://google.com/analytics"
-    ga_domain_name: "تحليلات Google (ga.js) تتعقب اسم المجال، مثال: mysite.com; انظر http://google.com/analytics"
     ga_universal_tracking_code: "تحليلات Google العالمية (analytics.js) تتعقب رمز الشيفرة، مثال: UA-12345678-9; انظر http://google.com/analytics"
     ga_universal_domain_name: "تحليلات Google العالمية (analytics.js) تتعقب اسم المجال، مثال: mysite.com; انظر http://google.com/analytics"
     enable_noscript_support: "فعل دعم محرك بحث webcrawler عبر علامة غير نصية."
@@ -1030,7 +1027,6 @@ ar:
     s3_cdn_url: "URL لـCDN يستخدم لكل أصول s3 (مثال: https://cdn.somewhere.com). تحذير : بعد تغيير هذا الإعداد يجب عمل rebake لكل المشاركات القديمة."
     avatar_sizes: "قائمة أحجام الرمزية إنشاؤه تلقائيا."
     external_system_avatars_enabled: "استخدم خدمات الهه النظام الخارجي "
-    external_system_avatars_url: "عنوان URL لخدمة الصور الرمزية النظام الخارجي. الاستعمال المسموح بها {username} {first_letter} {color} {size}"
     default_opengraph_image_url: "عنوان رابط صورة ال اوبن جراف الثابتة"
     allow_all_attachments_for_group_messages: "اسمح بجميع ملحقات البريد  للرسائل الجماعيه "
     enable_flash_video_onebox: "تمكين التضمين من swf  و FLV (أدوبي فلاش) وصلات في مربع واحد. تحذير: قد يعرض المخاطر الأمنية."
@@ -1135,7 +1131,6 @@ ar:
     delete_all_posts_max: "العدد الاقص للمشاركات التي يمكن مسحها مره واحده بزر مسح كل المشاركات.اذا المستخدم لديه اكثر من هذا العدد من المشاركات, المشاركات لا يمكن مسح جميعها مره واحدهو المستخدم لا يمكن حذفه"
     username_change_period: "عدد الايام بعد التسجيل التي يستطيع فيها الحسابات بتغير اسم المستخدم الخاص بهم(0 لكي لا تسمح بتغير اسم المستخدم)"
     email_editable: "يُسمح للأعضاء بتغيير بريدهم الألكتروني بعد التسجيل."
-    logout_redirect: "الموقع لاعاده توجيه المتصفح بعد تسجيل الخروج  EG: (http://somesite.com/logout)"
     allow_uploaded_avatars: "اسمح للمستخدمين بتحميل صور شخصيه مخصصه"
     allow_animated_avatars: "يُسمح للمستخدمين باستخدام صور متحركة GIF كصورة شخصية.\nتحذير:يُمنع استخدام صور رمزية خليعة:سيتم تحديث الصورة فور تغييرها."
     allow_animated_thumbnails: "يولد الصور المصغرة المتحركة للرسوم المتحركة. "
@@ -1155,7 +1150,6 @@ ar:
     enable_mobile_theme: "اجهزه الموبايل تستخدم ثيم مناسب للجوال,امكانيه التحويل للموقع الكامل .الغي هذا اذا اردت استخدام انماط سريعه الاستجابه"
     dominating_topic_minimum_percent: "ما هي النسبه المئويه للمشاركات التي يجب علي المستخدم عملها في الموضوع قبل تلقيه لتنبيه عن خروجه لنطاق الموضوع"
     disable_avatar_education_message: "عطل الرسالة التعليمية لتغيير الصورة الرمزية."
-    daily_performance_report: "تحليل سجلات NGINX يومي ونشر موضوع \"قاقم فقط\" مع التفاصيل"
     suppress_uncategorized_badge: "لا تظهر الوسام  للمواضيع غير المصنفة في قائمة الموضوع."
     global_notice: "اعرض تنبيه, شعار عام طارئ ملاحظه لكل الزوار, غير الفراغ لاخفاء(HTML مسموح)"
     disable_edit_notifications: "لتعطيل تحرير الاشعارات بواسطة العضو النظام عندما يكون نشطاً 'download_remote_images_to_local'."
@@ -1170,7 +1164,6 @@ ar:
     default_code_lang: "تسليط الضوء علي تركيب جمله اللغه البرمجيه يطبق الي مكعبات اكواد GitHub (lang-auto, ruby, python etc.)"
     warn_reviving_old_topic_age: "عندما يبدا احدهم بالرد علي الموضوع و اخر كان اقدم من هذه الايام, سوف يظهر تحذير, عطل عن طريق الضبط الي 0"
     autohighlight_all_code: "تطبيق تسليط الضوء الاجباري علي الاكواد  لكل مكعبات الاكواد لمهياه مسبقا . عندما لا تحدد اللغه بشكل صريح"
-    highlighted_languages: "يتضمن قوانين تسليط الضوء علي تركيب الجمله.(تنبيه: ادخال كثير من اللغات قد يؤثر علي الاداء) تفقد: https://highlightjs.org/static/demo/  للعرض"
     feed_polling_enabled: "فقط التضمين : تضمين مغذي RSS/ATOM كمشاركات."
     feed_polling_url: "فقط التضمين : URL  لمغذي RSS/ATOM مضمن."
     embed_by_username: "اسم مستخدم Discourse للعضو الذي ينشأ المواضيع المضمنة."
@@ -1204,7 +1197,6 @@ ar:
     default_other_enable_quoting: "فعل إقتباس الردود لتحديد النص إفتراضيا."
     default_other_dynamic_favicon: "إعرض عدد المواضيع الجديدة/الحديثة في أيقونة المتصفح إفتراضيا."
     default_other_disable_jump_reply: "لا تتجاوز إلى مشاركة الضو بعد ردهم إفتراضيا."
-    default_other_edit_history_public: "أنشئ مشاركة المراجعات العامة إفتراضيا."
     default_other_like_notification_frequency: "أشعر المستخدمين بالاستحسان على المشورات افتراضياً"
     default_topics_automatic_unpin: "تلقائياً قم إزالة تثبيت المواضيع عندما يصل العضو إلى الأسفل \"إفتراضيا\"."
     default_categories_watching: "قائمة الفئات التي تشاهد إفتراضيا."
@@ -2097,8 +2089,6 @@ ar:
     initial_topic_title: التبليغ عن اداء الموقع
   topic_invite:
     user_exists: "آسف، ذلك المستخدم قد تمت دعوته من قبل. تستطيع فقط أن تدعوا عضواً لموضوعِ مرة واحدة."
-  time:
-    <<: *datetime_formats
   activemodel:
     errors:
       <<: *errors

@@ -429,7 +429,6 @@ da:
       dismiss_notifications_tooltip: "Marker alle ulæste notifikationer som læst"
       disable_jump_reply: "Ikke hop til mit indlæg efter jeg svarer"
       dynamic_favicon: "Vis nyt / opdateret emnetal på browserikon"
-      edit_history_public: "Lad andre brugere se mine tidligere revisioner"
       external_links_in_new_tab: "Åbn alle eksterne links i en ny fane"
       enable_quoting: "Tillad citering af markeret tekst"
       change: "skift"
@@ -443,7 +442,6 @@ da:
       github_profile: "Github"
       watched_categories: "Overvåget"
       tracked_categories: "Fulgt"
-      tracked_categories_instructions: "Du vil automatisk følge alle nye emner i disse kategorier. En optælling af nye indlæg vises ved emnet."
       muted_categories: "Ignoreret"
       muted_categories_instructions: "Du får ikke beskeder om nye emner i disse kategorier og de fremstår ikke i seneste."
       delete_account: "Slet min konto"
@@ -801,10 +799,6 @@ da:
       github:
         title: "med GitHub"
         message: "Logger ind med GitHub (kontrollér at pop-op-blokering ikke er aktiv)"
-    apple_international: "Apple/International"
-    google: "Google"
-    twitter: "Twitter"
-    emoji_one: "Emoji One"
     shortcut_modifier_key:
       shift: 'Skift'
       ctrl: 'Ctrl'
@@ -1511,10 +1505,8 @@ da:
       notifications:
         watching:
           title: "Overvåger"
-          description: "Du overvåger automatisk alle emner i disse kategorier. Du vil få en notifikation ved alle nye indlæg i alle emner, og antallet af nye svar vil blive vist."
         tracking:
           title: "Følger"
-          description: "Du følger automatisk alle nye emner i disse kategorier. Du vil blive underrettet hvis nogen nævner dit navn eller svarer dig, og antallet af nye svar vil blive vist."
         regular:
           title: "Normal"
           description: "Du vil modtage en notifikation, hvis nogen nævner dit @name eller svarer dig."
@@ -1553,7 +1545,6 @@ da:
       title: "Emne-resumé"
       participants_title: "Hyppige forfattere"
       links_title: "Populære Links"
-      links_shown: "vis alle {{totalLinks}} links..."
       clicks:
         one: "1 klik"
         other: "%{count} klik"
