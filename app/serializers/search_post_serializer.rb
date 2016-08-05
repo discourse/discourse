@@ -1,5 +1,4 @@
 class SearchPostSerializer < PostSerializer
-
   has_one :topic, serializer: TopicListItemSerializer
 
   attributes :like_count
