@@ -72,22 +72,16 @@ body {
   $grippie-border-color: dark-light-choose(scale-color($primary, $lightness: 70%), scale-color($secondary, $lightness: 50%));
 
   .grippie {
-    position: relative;
     cursor: row-resize;
-    margin: auto;
-    height: 4.5px;
-    width: 27px;
-    border-top: 1px solid $grippie-border-color;
-    border-bottom: 1px solid $grippie-border-color;
-    top: 4px;
-    box-sizing: border-box;
+    padding: 4px 0px;
   }
 
   .grippie:before {
     content: '';
     display: block;
-    border-top: 1px solid $grippie-border-color;
-    margin-top: 0.5px;
+    width: 27px;
+    margin: auto;
+    border-top: 3px double $grippie-border-color;
   }
 }
 
