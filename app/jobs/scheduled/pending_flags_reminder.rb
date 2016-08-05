@@ -13,7 +13,7 @@ module Jobs
 
         PostCreator.create(
           Discourse.system_user,
-          target_group_names: ["staff"],
+          target_group_names: Group[:staff].name,
           archetype: Archetype.private_message,
           subtype: TopicSubtype.system_message,
           title: I18n.t('flags_reminder.subject_template', { count: PostAction.flagged_posts_count }),
