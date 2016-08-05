@@ -3,5 +3,5 @@
 </div>
 
 {{#if isPublic}}
-  {{poll-results-number-voters poll=poll}}
+  {{poll-voters-number voterIds=voterIds poll=poll fetch='fetchUsers'}}
 {{/if}}

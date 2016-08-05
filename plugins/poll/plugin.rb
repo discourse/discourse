@@ -211,20 +211,24 @@ after_initialize do
     end
 
     def voters
-      user_ids = params.require(:user_ids)
+      options = params.require(:options)
+      user_ids = options.values.flatten.uniq
+      users = Hash[User.where(id: user_ids).map { |user| [user.id.to_s, UserNameSerializer.new(user).serializable_hash] }]
 
-      users = User.where(id: user_ids).map do |user|
-        UserNameSerializer.new(user).serializable_hash
+      voters = {}
+
+      options.each do |key, value|
+        voters[key] = value.map { |user_id| users[user_id] }
       end
 
-      render json: { users: users }
+      render json: { voters: voters }
     end
   end
 
   DiscoursePoll::Engine.routes.draw do
     put "/vote" => "polls#vote"
     put "/toggle_status" => "polls#toggle_status"
-    get "/voters" => 'polls#voters'
+    put "/voters" => 'polls#voters'
   end
 
   Discourse::Application.routes.append do
