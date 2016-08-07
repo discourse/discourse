@@ -4,17 +4,17 @@ module Jobs
   class EmitWebHookEvent < Jobs::Base
     def execute(args)
       raise Discourse::InvalidParameters.new(:web_hook_id) unless args[:web_hook_id].present?
-      unless args[:event_type].present? && WebHookEventType.find_by(name: args[:event_type])
-        raise Discourse::InvalidParameters.new(:event_type)
-      end
+      raise Discourse::InvalidParameters.new(:event_type) unless args[:event_type].present?
 
       @web_hook = WebHook.find(args[:web_hook_id])
 
-      return unless @web_hook.active?
-      return if @web_hook.group_ids.present? && (args[:group_id].present? ||
-        !@web_hook.group_ids.include?(args[:group_id]))
-      return if @web_hook.category_ids.present? && (!args[:category_id].present? ||
-        !@web_hook.category_ids.include?(args[:category_id]))
+      unless args[:event_type] == 'ping'
+        return unless @web_hook.active?
+        return if @web_hook.group_ids.present? && (args[:group_id].present? ||
+          !@web_hook.group_ids.include?(args[:group_id]))
+        return if @web_hook.category_ids.present? && (!args[:category_id].present? ||
+          !@web_hook.category_ids.include?(args[:category_id]))
+      end
 
       @opts = args
 
@@ -83,6 +83,8 @@ module Jobs
         user = User.find(@opts[:user_id])
         body[:user] = WebHooksUserSerializer.new(user, scope: guardian, root: false).as_json
       end
+
+      body[:ping] = 'OK' if @opts[:event_type] == 'ping'
 
       raise Discourse::InvalidParameters.new if body.empty?
 
