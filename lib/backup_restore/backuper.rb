@@ -52,7 +52,7 @@ module BackupRestore
       @success = false
     else
       @success = true
-      @backup_filename
+      File.join(@archive_directory, @backup_filename)
     ensure
       begin
         notify_user
