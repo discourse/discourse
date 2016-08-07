@@ -2451,8 +2451,6 @@ en:
         group_filters_instructions: "Relevant webhooks will only be triggered if the event is related with specified groups. Leave blank to trigger webhooks for all groups."
         group_filters: "Triggered Groups"
         delete_confirm: "Delete this webhook?"
-        go_list: "Go to list"
-        go_details: "Edit webhook"
         topic_event:
           name: "Topic Event"
           details: "When there is a new topic, revised, changed or deleted."
@@ -2480,6 +2478,10 @@ en:
           headers: "Headers"
           payload: "Payload"
           body: "Body"
+          go_list: "Go to list"
+          go_details: "Edit webhook"
+          go_events: "Go to events"
+          ping: "Ping"
       plugins:
         title: "Plugins"
         installed: "Installed Plugins"
