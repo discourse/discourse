@@ -12,6 +12,7 @@ import { h } from 'virtual-dom';
 import { addFlagProperty } from 'discourse/components/site-header';
 import { addPopupMenuOptionsCallback } from 'discourse/controllers/composer';
 import { emojiUrlFor } from 'discourse/lib/text';
+import { escapeExpression } from 'discourse/lib/utilities';
 
 class PluginApi {
   constructor(version, container) {
@@ -331,6 +332,76 @@ class PluginApi {
    **/
   addStorePluralization(thing, plural) {
     this.container.lookup("store:main").addPluralization(thing, plural);
+  }
+
+  /**
+   * addTopicStatusIcon(callback)
+   *
+   * This function can be used to add a status icon beside a topic's name.
+   * The `callback` is called with the topic. A status icon will be rendered
+   * if the callback returns an object with the appropriate attributes.
+   *
+   * The returned object can have the following attributes:
+   *
+   *   icon        the font awesome icon to render
+   *   emoji       an emoji icon to render
+   *   className   (optional) a css class to apply to the icon
+   *   url         (optional) where to link the icon
+   *   title       (optional) the tooltip title for the icon on hover
+   *   titleKey    (optional) the i18n key of the tooltip title
+   *
+   * ```
+   * api.addTopicStatusIcon((topic) => {
+   *   if (topic.get('alarm')) {
+   *     return { icon: 'bell', titleKey: 'topic_statuses.topic.bell.help' };
+   *   }
+   * });
+   * ```
+   **/
+  addTopicStatusIcon(cb) {
+    const site = this.container.lookup('site:main');
+    const loc = site && site.mobileView ? 'before' : 'after';
+
+    decorateWidget(`topic-status:${loc}`, dec => {
+      const attrs = dec.attrs;
+      const result = cb(attrs.topic || {});
+
+      if (result) {
+        let iconBody;
+
+        if (result.icon) {
+          iconBody = iconNode(result.icon);
+        } else if (result.emoji) {
+          iconBody = result.emoji.split('|').map(emoji => {
+            const src = Discourse.Emoji.urlFor(emoji);
+            return dec.h('img', { className: 'emoji', attributes: { src } });
+          });
+
+          iconBody = result.emoji.split('|').map(name => dec.attach('emoji', { name }));
+        }
+
+        if (result.text) {
+          iconBody = [iconBody, result.text];
+        }
+
+        if (result.url) {
+          iconBody = dec.h('a', { attributes: { href: result.url } }, iconBody);
+        }
+
+        let title;
+        if (result.titleKey) {
+          title = I18n.t(result.titleKey);
+        } else {
+          title = result.title;
+        }
+
+        return dec.h('span.topic-status',
+                     { className: result.className,
+                       attributes: { title: escapeExpression(title) }
+                     },
+                     iconBody);
+      }
+    });
   }
 }
 
