@@ -86,12 +86,7 @@
     position: relative;
     top: -1px;
     font-size: 1.071em;
-    line-height: 20px;
-    min-width: 14px;
-    height: 20px;
-    border-radius: 10px;
-    padding: 0px 3px;
-
+    padding: 4px 6px 3px 6px;
     i {color: $secondary;}
 
     &.new-topic::before {
@@ -146,10 +141,6 @@
     box-sizing: inherit;
   }
 
-  .topic-post-badges {
-    box-sizing: border-box;
-  }
-
   .posts {
     width: 10%;
     vertical-align: top;
@@ -157,12 +148,6 @@
 
   .age {
     margin-left: 5px;
-  }
-
-  td.posts {
-    .badge-notification {
-      padding: 0px 6px;
-    }
   }
 }
 
