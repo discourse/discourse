@@ -2054,13 +2054,6 @@ en:
 
         If you can correct the problem, please try again.
 
-    email_reject_rate_limit_specified:
-      subject_template: "[%{site_name}] Email issue -- Rate limited"
-      text_body_template: |
-        We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
-
-        Reason: %{rate_limit_description}
-
     email_reject_invalid_post_action:
       subject_template: "[%{site_name}] Email issue -- Invalid Post Action"
       text_body_template: |
