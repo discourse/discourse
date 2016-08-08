@@ -113,12 +113,12 @@ export default Ember.Component.extend(StringBuffer, {
     }
   },
 
-  highlight(isLastViewedTopic = false) {
+  highlight(opts = { isLastViewedTopic: false }) {
     const $topic = this.$();
     const originalCol = $topic.css('backgroundColor');
     $topic
       .addClass('highlighted')
-      .attr('data-islastviewedtopic', isLastViewedTopic)
+      .attr('data-islastviewedtopic', opts.isLastViewedTopic)
       .stop()
       .animate({ backgroundColor: originalCol }, 2500, 'swing', function() {
         $topic.removeClass('highlighted');
@@ -129,7 +129,7 @@ export default Ember.Component.extend(StringBuffer, {
     // highlight the last topic viewed
     if (this.session.get('lastTopicIdViewed') === this.get('topic.id')) {
       this.session.set('lastTopicIdViewed', null);
-      this.highlight(true);
+      this.highlight({ isLastViewedTopic: true });
     } else if (this.get('topic.highlight')) {
       // highlight new topics that have been loaded from the server or the one we just created
       this.set('topic.highlight', false);
