@@ -1,11 +1,17 @@
 import computed from 'ember-addons/ember-computed-decorators';
 
+export const OFFSET_SIZE = 20;
+
 export default Ember.Component.extend({
   layoutName: "components/poll-voters",
   classNames: ["poll-voters"],
-  offset: 1,
   loading: false,
   voters: Ember.computed.alias('poll.pollVoters'),
+
+  @computed('poll.voters')
+  offset(voters) {
+    return voters > OFFSET_SIZE ? 1 : 0;
+  },
 
   @computed('poll.voters', 'poll.pollVoters')
   canLoadMore(voters, pollVoters) {
@@ -15,15 +21,21 @@ export default Ember.Component.extend({
   actions: {
     loadMore() {
       this.set('loading', true);
+      const offset = this.get('offset');
+
+      const voterIds = this.get('voterIds').slice(
+        OFFSET_SIZE * offset,
+        OFFSET_SIZE * (offset + 1)
+      );
+
       const defer = Em.RSVP.defer();
 
       defer.promise.then(() => {
         this.set('loading', false);
-        this.incrementProperty('offset');
+        if (voterIds.length === OFFSET_SIZE)  this.incrementProperty('offset');
       });
 
-      const offset = this.get('offset');
-      this.sendAction('fetch', this.get('voterIds').slice(20 * offset, 20 * (offset + 1)), defer);
+      this.sendAction('fetch', voterIds, defer);
     }
   }
 });

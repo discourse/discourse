@@ -1,6 +1,7 @@
 import round from "discourse/lib/round";
 import computed from 'ember-addons/ember-computed-decorators';
 import { ajax } from 'discourse/lib/ajax';
+import { OFFSET_SIZE } from 'discourse/plugins/poll/components/poll-voters-number';
 
 export default Em.Component.extend({
   didInsertElement() {
@@ -10,7 +11,7 @@ export default Em.Component.extend({
 
   _fetchUsers() {
     if (!this.get('isPublic')) return;
-    this.send("fetchUsers", this.get('voterIds').slice(0, 20));
+    this.send("fetchUsers", this.get('voterIds').slice(0, OFFSET_SIZE));
   },
 
   @computed('poll.options', 'poll.options.[]')
