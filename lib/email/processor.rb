@@ -2,18 +2,21 @@ module Email
 
   class Processor
 
-    def initialize(mail)
+    def initialize(mail, retry_on_rate_limit=true)
       @mail = mail
+      @retry_on_rate_limit = retry_on_rate_limit
     end
 
-    def self.process!(mail)
-      Email::Processor.new(mail).process!
+    def self.process!(mail, retry_on_rate_limit=true)
+      Email::Processor.new(mail, retry_on_rate_limit).process!
     end
 
     def process!
       begin
         receiver = Email::Receiver.new(@mail)
         receiver.process!
+      rescue RateLimiter::LimitExceeded
+        @retry_on_rate_limit ? Jobs.enqueue(:process_email, mail: @mail) : raise
       rescue Email::Receiver::BouncedEmailError => e
         # never reply to bounced emails
         log_email_process_failure(@mail, e)
@@ -49,7 +52,6 @@ module Email
         when ActiveRecord::Rollback                       then :email_reject_invalid_post
         when Email::Receiver::InvalidPostAction           then :email_reject_invalid_post_action
         when Discourse::InvalidAccess                     then :email_reject_invalid_access
-        when RateLimiter::LimitExceeded                   then :email_reject_rate_limit_specified
       end
 
       template_args = {}
@@ -59,10 +61,6 @@ module Email
       if message_template == :email_reject_invalid_post && e.message.size > 6
         message_template = :email_reject_invalid_post_specified
         template_args[:post_error] = e.message
-      end
-
-      if message_template == :email_reject_rate_limit_specified
-        template_args[:rate_limit_description] = e.description
       end
 
       if message_template
