@@ -16,7 +16,7 @@ createWidget('hamburger-category', {
     }
 
     if (!this.currentUser) {
-      results.push(h('b.topics-count', c.get('topic_count').toString()));
+      results.push(h('b.topics-count', number(c.get('topic_count'))));
     }
 
     return results;
