@@ -1830,15 +1830,19 @@ table#user-badges {
   margin-top: 15px;
 
   li {
-    height: 36px;
+    padding: 2px 0;
   }
 
   .col {
     display: inline-block;
-    padding-top: 9px;
+    padding-top: 6px;
     vertical-align: top;
     overflow-y: auto;
     overflow-x: hidden;
+  }
+
+  .col.first {
+    width: 30px;
   }
 
   .col.event-id {
@@ -1849,17 +1853,21 @@ table#user-badges {
     width: 150px;
   }
 
+  .col.completion {
+    width: 220px;
+  }
+
   .col.actions {
     width: 305px;
-    padding-top: 3px;
+    padding-top: 0;
     a {
       text-decoration: underline;
     }
   }
 
   .details {
+    display: block;
     margin-top: 10px;
-    float: left;
   }
   label {
     font-size: 1.05em;
