@@ -144,7 +144,7 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
   @computed('model')
   suggestedTitle(model) {
     return model.get('isPrivateMessage') ?
-      `<i class='private-message-glyph fa fa-envelope'></i> ${I18n.t("suggested_topics.pm_title")}` :
+      `<a href="${this.get('pmPath')}"><i class='private-message-glyph fa fa-envelope'></i></a> ${I18n.t("suggested_topics.pm_title")}` :
       I18n.t("suggested_topics.title");
   },
 
