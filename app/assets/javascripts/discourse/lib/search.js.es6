@@ -70,7 +70,7 @@ export function translateResults(results, opts) {
   return noResults ? null : Em.Object.create(results);
 }
 
-function searchForTerm(term, opts) {
+export function searchForTerm(term, opts) {
   if (!opts) opts = {};
 
   // Only include the data we have
@@ -94,7 +94,7 @@ function searchForTerm(term, opts) {
   return promise;
 }
 
-const searchContextDescription = function(type, name){
+export function searchContextDescription(type, name) {
   if (type) {
     switch(type) {
       case 'topic':
@@ -109,17 +109,15 @@ const searchContextDescription = function(type, name){
   }
 };
 
-const getSearchKey = function(args){
+export function getSearchKey(args) {
   return args.q + "|" + ((args.searchContext && args.searchContext.type) || "") + "|" +
                       ((args.searchContext && args.searchContext.id) || "");
 };
 
-const isValidSearchTerm = function(searchTerm) {
+export function isValidSearchTerm(searchTerm) {
   if (searchTerm) {
     return searchTerm.trim().length >= Discourse.SiteSettings.min_search_term_length;
   } else {
     return false;
   }
 };
-
-export { searchForTerm, searchContextDescription, getSearchKey, isValidSearchTerm };

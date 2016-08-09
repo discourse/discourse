@@ -61,8 +61,31 @@ describe Search do
   end
 
   it 'does not search when the search term is too small' do
-    ActiveRecord::Base.expects(:exec_sql).never
-    Search.execute('evil', min_search_term_length: 5)
+    search = Search.new('evil', min_search_term_length: 5)
+    search.execute
+    expect(search.valid?).to eq(false)
+    expect(search.term).to eq('')
+  end
+
+  it 'does not search for multiple small terms' do
+    search = Search.new('a b c d', min_search_term_length: 5)
+    search.execute
+    expect(search.valid?).to eq(false)
+    expect(search.term).to eq('')
+  end
+
+  it 'searches for quoted short terms' do
+    search = Search.new('"a b c d"', min_search_term_length: 5)
+    search.execute
+    expect(search.valid?).to eq(true)
+    expect(search.term).to eq('"a b c d"')
+  end
+
+  it 'discards short terms' do
+    search = Search.new('a b c okaylength', min_search_term_length: 5)
+    search.execute
+    expect(search.valid?).to eq(true)
+    expect(search.term).to eq('okaylength')
   end
 
   it 'escapes non alphanumeric characters' do
