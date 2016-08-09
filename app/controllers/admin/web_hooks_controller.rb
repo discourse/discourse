@@ -1,5 +1,5 @@
 class Admin::WebHooksController < Admin::AdminController
-  before_filter :fetch_web_hook, only: %i(show update destroy list_events)
+  before_filter :fetch_web_hook, only: %i(show update destroy list_events ping)
 
   def index
     limit = 50
@@ -90,6 +90,12 @@ class Admin::WebHooksController < Admin::AdminController
     else
       render json: failed_json
     end
+  end
+
+  def ping
+    Jobs.enqueue(:emit_web_hook_event, web_hook_id: @web_hook.id, event_type: 'ping')
+
+    render json: success_json
   end
 
   private
