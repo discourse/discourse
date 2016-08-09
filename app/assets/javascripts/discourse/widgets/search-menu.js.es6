@@ -161,6 +161,8 @@ export default createWidget('search-menu', {
   fullSearch() {
     if (!isValidSearchTerm(searchData.term)) { return; }
 
+    searchData.results = [];
+    searchData.loading = false;
     SearchHelper.cancel();
     const url = this.fullSearchUrl();
     if (url) {
