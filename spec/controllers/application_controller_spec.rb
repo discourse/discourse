@@ -88,10 +88,6 @@ describe TopicsController do
     render_views
 
     context "when the SiteSetting is enabled" do
-      before do
-        SiteSetting.stubs(:max_prints_per_hour_per_user).returns(10)
-      end
-
       it "uses the application layout when there's no param" do
         get :show, topic_id: topic.id, slug: topic.slug
         expect(response).to render_template(layout: 'application')

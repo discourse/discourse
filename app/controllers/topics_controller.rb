@@ -72,7 +72,7 @@ class TopicsController < ApplicationController
     if opts[:print]
       raise Discourse::InvalidAccess unless SiteSetting.max_prints_per_hour_per_user > 0
       begin
-        RateLimiter.new(current_user, "print-topic-per-hour", 10, 1.hour).performed! unless @guardian.is_admin?
+        RateLimiter.new(current_user, "print-topic-per-hour", SiteSetting.max_prints_per_hour_per_user, 1.hour).performed! unless @guardian.is_admin?
       rescue RateLimiter::LimitExceeded
         render_json_error(I18n.t("rate_limiter.slow_down"))
       end
