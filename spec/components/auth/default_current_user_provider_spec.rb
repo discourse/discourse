@@ -86,6 +86,10 @@ describe Auth::DefaultCurrentUserProvider do
   end
 
   it "can only try 10 bad cookies a minute" do
+
+    user = Fabricate(:user)
+    provider('/').log_on_user(user, {}, {})
+
     RateLimiter.stubs(:disabled?).returns(false)
 
     RateLimiter.new(nil, "cookie_auth_10.0.0.1", 10, 60).clear!
@@ -97,8 +101,14 @@ describe Auth::DefaultCurrentUserProvider do
     10.times do
       provider('/', env).current_user
     end
+
     expect {
       provider('/', env).current_user
+    }.to raise_error(Discourse::InvalidAccess)
+
+    expect {
+      env["HTTP_COOKIE"] = "_t=#{user.auth_token}"
+      provider("/", env).current_user
     }.to raise_error(Discourse::InvalidAccess)
 
     env["REMOTE_ADDR"] = "10.0.0.2"
