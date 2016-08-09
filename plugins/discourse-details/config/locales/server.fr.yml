@@ -1,0 +1,3 @@
+fr:
+  site_settings:
+    details_enabled: "Activer le plugin details. Si vous modifiez ceci, vous devez exécuter la commande  \"rake posts:rebake\"."
