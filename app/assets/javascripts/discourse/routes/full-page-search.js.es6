@@ -2,13 +2,13 @@ import { ajax } from 'discourse/lib/ajax';
 import { translateResults, getSearchKey, isValidSearchTerm } from "discourse/lib/search";
 import Composer from 'discourse/models/composer';
 import PreloadStore from 'preload-store';
+import { getTransient, setTransient } from 'discourse/lib/page-tracker';
 
 export default Discourse.Route.extend({
   queryParams: { q: {}, context_id: {}, context: {}, skip_context: {} },
 
   model(params) {
-    const router = Discourse.__container__.lookup('router:main');
-    var cached = router.transientCache('lastSearch');
+    const cached = getTransient('lastSearch');
     var args = { q: params.q };
     if (params.context_id && !args.skip_context) {
       args.search_context = {
@@ -21,7 +21,7 @@ export default Discourse.Route.extend({
 
     if (cached && cached.data.searchKey === searchKey) {
       // extend expiry
-      router.transientCache('lastSearch', { searchKey, model: cached.data.model }, 5);
+      setTransient('lastSearch', { searchKey, model: cached.data.model }, 5);
       return cached.data.model;
     }
 
@@ -33,7 +33,7 @@ export default Discourse.Route.extend({
       }
     }).then(results => {
       const model = (results && translateResults(results)) || {};
-      router.transientCache('lastSearch', { searchKey, model }, 5);
+      setTransient('lastSearch', { searchKey, model }, 5);
       return model;
     });
   },
