@@ -122,7 +122,7 @@ class ImportScripts::Muut < ImportScripts::Base
 
         # create replies
         if thread["replies"].present? && thread["replies"].count > 0
-          thread["replies"].reverse.each do |post|
+          thread["replies"].reverse_each do |post|
 
             if post_id_from_imported_post_id(post["id"])
               next # already imported this post

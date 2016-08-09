@@ -131,8 +131,8 @@ class BadgeGranter
     items = items.group_by{|i| i["type"]}
 
     items.each do |type, list|
-      post_ids = list.map{|i| i["post_ids"]}.flatten.compact.uniq
-      user_ids = list.map{|i| i["user_ids"]}.flatten.compact.uniq
+      post_ids = list.flat_map(&:i["post_ids"]).compact.uniq
+      user_ids = list.flat_map(&:i["user_ids"]).compact.uniq
 
       next unless post_ids.present? || user_ids.present?
       find_by_type(type).each{ |badge|
