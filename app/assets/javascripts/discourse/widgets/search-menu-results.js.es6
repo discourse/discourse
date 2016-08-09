@@ -71,6 +71,10 @@ createWidget('search-menu-results', {
   tagName: 'div.results',
 
   html(attrs) {
+    if (attrs.invalidTerm) {
+      return h('div.no-results', I18n.t('search.too_short'));
+    }
+
     if (attrs.noResults) {
       return h('div.no-results', I18n.t('search.no_results'));
     }
