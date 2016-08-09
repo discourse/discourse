@@ -41,24 +41,26 @@ export function translateResults(results, opts) {
   results.resultTypes = [];
 
   // TODO: consider refactoring front end to take a better structure
-  [['topic','posts'],['user','users'],['category','categories']].forEach(function(pair){
-    const type = pair[0], name = pair[1];
-    if (results[name].length > 0) {
-      var result = {
-        results: results[name],
-        componentName: "search-result-" + ((opts.searchContext && opts.searchContext.type === 'topic' && type === 'topic') ? 'post' : type),
-        type,
-        more: r['more_' + name]
-      };
+  if (r) {
+    [['topic','posts'],['user','users'],['category','categories']].forEach(function(pair){
+      const type = pair[0], name = pair[1];
+      if (results[name].length > 0) {
+        var result = {
+          results: results[name],
+          componentName: "search-result-" + ((opts.searchContext && opts.searchContext.type === 'topic' && type === 'topic') ? 'post' : type),
+          type,
+          more: r['more_' + name]
+        };
 
-      if (result.more && name === "posts" && opts.fullSearchUrl) {
-        result.more = false;
-        result.moreUrl = opts.fullSearchUrl;
+        if (result.more && name === "posts" && opts.fullSearchUrl) {
+          result.more = false;
+          result.moreUrl = opts.fullSearchUrl;
+        }
+
+        results.resultTypes.push(result);
       }
-
-      results.resultTypes.push(result);
-    }
-  });
+    });
+  }
 
   const noResults = !!(results.topics.length === 0 &&
                      results.posts.length === 0 &&
