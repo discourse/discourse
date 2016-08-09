@@ -910,7 +910,7 @@ rate_limits:
     shadowed_by_global: true
     default: 0
   max_prints_per_hour_per_user:
-    default: 0
+    default: 5
     client: true
 
 developer:
