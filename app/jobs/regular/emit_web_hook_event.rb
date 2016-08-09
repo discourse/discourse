@@ -32,30 +32,35 @@ module Jobs
       body = build_web_hook_body
       web_hook_event = WebHookEvent.create!(web_hook_id: @web_hook.id)
 
-      content_type = case @web_hook.content_type
-                     when WebHook.content_types['application/x-www-form-urlencoded']
-                       'application/x-www-form-urlencoded'
-                     else
-                       'application/json'
-                     end
-      headers = {
-        'Accept' => '*/*',
-        'Connection' => 'close',
-        'Content-Length' => body.size,
-        'Content-Type' => content_type,
-        'Host' => uri.host,
-        'User-Agent' => "Discourse/" + Discourse::VERSION::STRING,
-        'X-Discourse-Event-Id' => web_hook_event.id,
-        'X-Discourse-Event-Type' => @opts[:event_type]
-      }
-      headers['X-Discourse-Event'] = @opts[:event_name] if @opts[:event_name].present?
+      begin
+        content_type = case @web_hook.content_type
+                       when WebHook.content_types['application/x-www-form-urlencoded']
+                         'application/x-www-form-urlencoded'
+                       else
+                         'application/json'
+                       end
+        headers = {
+          'Accept' => '*/*',
+          'Connection' => 'close',
+          'Content-Length' => body.size,
+          'Content-Type' => content_type,
+          'Host' => uri.host,
+          'User-Agent' => "Discourse/" + Discourse::VERSION::STRING,
+          'X-Discourse-Event-Id' => web_hook_event.id,
+          'X-Discourse-Event-Type' => @opts[:event_type]
+        }
+        headers['X-Discourse-Event'] = @opts[:event_name] if @opts[:event_name].present?
 
-      if @web_hook.secret.present?
-        headers['X-Discourse-Event-Signature'] = "sha256=" + OpenSSL::HMAC.hexdigest("sha256", @web_hook.secret, body)
+        if @web_hook.secret.present?
+          headers['X-Discourse-Event-Signature'] = "sha256=" + OpenSSL::HMAC.hexdigest("sha256", @web_hook.secret, body)
+        end
+
+        now = Time.zone.now
+        response = conn.post(headers: headers, body: body)
+      rescue
+        web_hook_event.destroy!
       end
 
-      now = Time.zone.now
-      response = conn.post(headers: headers, body: body)
       web_hook_event.update_attributes!(headers: MultiJson.dump(headers),
                                         payload: body,
                                         status: response.status,
