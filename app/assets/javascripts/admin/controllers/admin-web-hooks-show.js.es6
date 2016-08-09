@@ -1,5 +1,5 @@
 import { popupAjaxError } from 'discourse/lib/ajax-error';
-import { urlValid } from 'discourse/lib/utilities';
+import { urlValid, extractDomainFromUrl } from 'discourse/lib/utilities';
 import computed from 'ember-addons/ember-computed-decorators';
 import InputValidation from 'discourse/models/input-validation';
 
@@ -80,12 +80,24 @@ export default Ember.Controller.extend({
   actions: {
     save() {
       this.set('saved', false);
-
+      const url = extractDomainFromUrl(this.get('model.payload_url'));
       const model = this.get('model');
-      return model.save().then(() => {
-        this.set('saved', true);
-        this.get('controllers.adminWebHooks').get('model').addObject(model);
-      }).catch(popupAjaxError);
+      const saveWebHook = () => {
+        return model.save().then(() => {
+          this.set('saved', true);
+          this.get('controllers.adminWebHooks').get('model').addObject(model);
+        }).catch(popupAjaxError);
+      };
+
+      if (url === 'localhost' || url.match(/192\.168\.\d+\.\d+/) || url.match(/127\.\d+\.\d+\.\d+/) || url === Discourse.BaseUrl) {
+        return bootbox.confirm(I18n.t('admin.web_hooks.warn_local_payload_url'), I18n.t('no_value'), I18n.t('yes_value'), result => {
+          if (result) {
+            return saveWebHook();
+          }
+        });
+      }
+
+      return saveWebHook();
     },
 
     destroy() {

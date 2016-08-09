@@ -81,6 +81,15 @@ export function urlValid(url) {
   return re.test(url);
 }
 
+export function extractDomainFromUrl(url) {
+  if (url.indexOf("://") > -1) {
+    url = url.split('/')[2];
+  } else {
+    url = url.split('/')[0];
+  }
+  return url.split(':')[0];
+}
+
 export function selectedText() {
   var html = '';
 
