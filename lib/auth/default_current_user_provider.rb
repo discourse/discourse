@@ -38,14 +38,18 @@ class Auth::DefaultCurrentUserProvider
     current_user = nil
 
     if auth_token && auth_token.length == 32
-      current_user = User.where(auth_token: auth_token)
+      limiter = RateLimiter.new(nil, "cookie_auth_#{request.ip}", COOKIE_ATTEMPTS_PER_MIN ,60)
+
+      if limiter.can_perform?
+        current_user = User.where(auth_token: auth_token)
                          .where('auth_token_updated_at IS NULL OR auth_token_updated_at > ?',
                                   SiteSetting.maximum_session_age.hours.ago)
                          .first
+      end
 
       unless current_user
         begin
-          RateLimiter.new(nil, "cookie_auth_#{request.ip}", COOKIE_ATTEMPTS_PER_MIN ,60).performed!
+          limiter.performed!
         rescue RateLimiter::LimitExceeded
           raise Discourse::InvalidAccess
         end
