@@ -663,6 +663,7 @@ class Search
       post_sql = "SELECT *, row_number() over() row_number FROM (#{post_sql}) xxx"
 
       posts = Post.includes(:topic => :category)
+                  .includes(:user)
                   .joins("JOIN (#{post_sql}) x ON x.id = posts.topic_id AND x.post_number = posts.post_number")
                   .order('row_number')
 
@@ -679,7 +680,9 @@ class Search
 
     def topic_search
       if @search_context.is_a?(Topic)
-        posts = posts_query(@limit).where('posts.topic_id = ?', @search_context.id).includes(:topic => :category)
+        posts = posts_query(@limit).where('posts.topic_id = ?', @search_context.id)
+                                   .includes(:topic => :category)
+                                   .includes(:user)
         posts.each do |post|
           @results.add(post)
         end
