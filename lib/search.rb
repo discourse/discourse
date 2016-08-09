@@ -128,6 +128,8 @@ class Search
     end
   end
 
+  attr_accessor :term
+
   def initialize(term, opts=nil)
     @opts = opts || {}
     @guardian = @opts[:guardian] || Guardian.new
@@ -135,6 +137,7 @@ class Search
     @include_blurbs = @opts[:include_blurbs] || false
     @blurb_length = @opts[:blurb_length]
     @limit = Search.per_facet
+    @valid = true
 
     term = process_advanced_search!(term)
 
@@ -155,14 +158,27 @@ class Search
     @results = GroupedSearchResults.new(@opts[:type_filter], term, @search_context, @include_blurbs, @blurb_length)
   end
 
+  def valid?
+    @valid
+  end
+
   def self.execute(term, opts=nil)
     self.new(term, opts).execute
   end
 
   # Query a term
   def execute
-    if @term.blank? || @term.length < (@opts[:min_search_term_length] || SiteSetting.min_search_term_length)
-      return nil unless @filters.present?
+
+    unless @filters.present?
+      min_length = @opts[:min_search_term_length] || SiteSetting.min_search_term_length
+      terms = (@term || '').split(/\s(?=(?:[^"]|"[^"]*")*$)/).reject {|t| t.length < min_length }
+
+      if terms.blank?
+        @term = ''
+        @valid = false
+        return
+      end
+      @term = terms.join(' ')
     end
 
     # If the term is a number or url to a topic, just include that topic
