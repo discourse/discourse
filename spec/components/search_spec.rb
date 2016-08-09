@@ -413,6 +413,7 @@ describe Search do
       skip("skipped until pg app installs the db correctly") if RbConfig::CONFIG["arch"] =~ /darwin/
 
       SiteSetting.default_locale = 'zh_TW'
+      SiteSetting.min_search_term_length = 1
       topic = Fabricate(:topic, title: 'My Title Discourse社區指南')
       post = Fabricate(:post, topic: topic)
 
@@ -424,6 +425,7 @@ describe Search do
       skip("skipped until pg app installs the db correctly") if RbConfig::CONFIG["arch"] =~ /darwin/
 
       SiteSetting.search_tokenize_chinese_japanese_korean = true
+      SiteSetting.min_search_term_length = 1
 
       topic = Fabricate(:topic, title: 'My Title Discourse社區指南')
       post = Fabricate(:post, topic: topic)
