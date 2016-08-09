@@ -1185,6 +1185,7 @@ en:
       most_liked: "Most Liked"
       select_all: "Select All"
       clear_all: "Clear All"
+      too_short: "Sorry, your search term is too short. Please try a longer query."
       result_count:
         one: "1 result for <span class='term'>\"{{term}}\"</span>"
         other: "{{count}} results for <span class='term'>\"{{term}}\"</span>"
