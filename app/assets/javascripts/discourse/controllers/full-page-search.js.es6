@@ -26,6 +26,7 @@ export default Ember.Controller.extend({
   searching: false,
   sortOrder: 0,
   sortOrders: SortOrders,
+  invalidSearch: false,
 
   @computed('model.posts')
   resultCount(posts) {
@@ -69,11 +70,6 @@ export default Ember.Controller.extend({
     return isValidSearchTerm(q);
   },
 
-  @computed('searchTerm', 'searching')
-  searchButtonDisabled(searchTerm, searching) {
-    return !!(searching || !isValidSearchTerm(searchTerm));
-  },
-
   @computed('q')
   noSortQ(q) {
     if (q) {
@@ -107,7 +103,7 @@ export default Ember.Controller.extend({
   @observes('sortOrder')
   triggerSearch() {
     if (this._searchOnSortChange) {
-      this.search();
+      this._search();
     }
   },
 
@@ -147,14 +143,21 @@ export default Ember.Controller.extend({
     return this.currentUser && !this.site.mobileView;
   },
 
-  search(){
-    if (this.get("searching")) return;
-    this.set("searching", true);
+  _search() {
+    if (this.get("searching")) { return; }
 
+    this.set('invalidSearch', false);
+    const searchTerm = this.get('searchTerm');
+    if (!isValidSearchTerm(searchTerm)) {
+      this.set('invalidSearch', true);
+      return;
+    }
+
+    this.set("searching", true);
     this.set('bulkSelectEnabled', false);
     this.get('selected').clear();
 
-    var args = { q: this.get("searchTerm") };
+    var args = { q: searchTerm };
 
     const sortOrder = this.get("sortOrder");
     if (sortOrder && SortOrders[sortOrder].term) {
@@ -203,18 +206,13 @@ export default Ember.Controller.extend({
       this.get('selected').clear();
     },
 
-    refresh() {
-      this.search();
-    },
-
     showSearchHelp() {
       // TODO: dupe code should be centralized
       ajax("/static/search_help.html", { dataType: 'html' }).then(model => showModal('searchHelp', { model }));
     },
 
     search() {
-      if (this.get("searchButtonDisabled")) return;
-      this.search();
+      this._search();
     }
   }
 });
