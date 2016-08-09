@@ -6,16 +6,16 @@ test("perform various searches", assert => {
 
   andThen(() => {
     assert.ok(find('input.search').length > 0);
-    assert.ok(find('.topic').length === 0);
+    assert.ok(find('.fps-topic').length === 0);
   });
 
   fillIn('.search input', 'none');
   click('.search .btn-primary');
 
-  andThen(() => assert.ok(find('.topic').length === 0), 'has no results');
+  andThen(() => assert.ok(find('.fps-topic').length === 0), 'has no results');
 
   fillIn('.search input', 'posts');
   click('.search .btn-primary');
 
-  andThen(() => assert.ok(find('.topic').length === 1, 'has one post'));
+  andThen(() => assert.ok(find('.fps-topic').length === 1, 'has one post'));
 });
