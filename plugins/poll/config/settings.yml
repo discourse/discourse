@@ -5,3 +5,5 @@ plugins:
   poll_maximum_options:
     default: 20
     client: true
+  poll_edit_window_mins:
+    default: 5

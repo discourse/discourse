@@ -114,7 +114,7 @@ describe PostsController do
 
       end
 
-      describe "after the first 5 minutes" do
+      describe "after the poll edit window has expired" do
 
         let(:poll) { "[poll]\n- A\n- B[/poll]" }
         let(:new_option) { "[poll]\n- A\n- C[/poll]" }
@@ -125,6 +125,12 @@ describe PostsController do
             xhr :post, :create, { title: title, raw: poll }
             ::JSON.parse(response.body)["id"]
           end
+        end
+
+        let(:poll_edit_window_mins) { 6 }
+
+        before do
+          SiteSetting.poll_edit_window_mins = poll_edit_window_mins
         end
 
         describe "with no vote" do
@@ -163,7 +169,10 @@ describe PostsController do
             xhr :put, :update, { id: post_id, post: { raw: new_option } }
             expect(response).not_to be_success
             json = ::JSON.parse(response.body)
-            expect(json["errors"][0]).to eq(I18n.t("poll.op_cannot_edit_options_after_5_minutes"))
+            expect(json["errors"][0]).to eq(I18n.t(
+              "poll.edit_window_expired.op_cannot_edit_options",
+              minutes: poll_edit_window_mins
+            ))
           end
 
           it "staff can change the options and votes are merged" do
