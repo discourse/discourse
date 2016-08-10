@@ -570,7 +570,7 @@ class Search
           min_id = Search.min_post_id
           if min_id > 0
             fast_query = posts.dup.where("post_search_data.post_id >= #{min_id}")
-            posts = fast_query if fast_query.dup.count >= 20
+            posts = fast_query if fast_query.dup.count >= 50
           end
 
           exact_terms = @term.scan(/"([^"]+)"/).flatten
