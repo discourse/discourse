@@ -1028,7 +1028,9 @@ en:
       similar_topics: "Your topic is similar to..."
       drafts_offline: "drafts offline"
 
-      group_mentioned: "By mentioning {{group}}, you are about to notify <a href='{{group_link}}'>{{count}} people</a> – are you sure?"
+      group_mentioned:
+        one: "By mentioning {{group}}, you are about to notify <a href='{{group_link}}'>1 person</a> – are you sure?"
+        other: "By mentioning {{group}}, you are about to notify <a href='{{group_link}}'>{{count}} people</a> – are you sure?"
       duplicate_link: "It looks like your link to <b>{{domain}}</b> was already posted in the topic by <b>@{{username}}</b> in <a href='{{post_url}}'>a reply {{ago}}</a> – are you sure you want to post it again?"
 
       error:
@@ -1263,7 +1265,9 @@ en:
       unsubscribe:
         stop_notifications: "You will now receive less notifications for <strong>{{title}}</strong>"
         change_notification_state: "Your current notification state is "
-      filter_to: "{{post_count}} posts in topic"
+      filter_to:
+        one: "1 posts in topic"
+        other: "{{count}} posts in topic"
       create: 'New Topic'
       create_long: 'Create a new Topic'
       private_message: 'Start a message'
@@ -1341,7 +1345,9 @@ en:
       auto_close_title: 'Auto-Close Settings'
       auto_close_save: "Save"
       auto_close_remove: "Don't Auto-Close This Topic"
-      auto_close_immediate: "The last post in the topic is already %{hours} hours old, so the topic will be closed immediately."
+      auto_close_immediate:
+        one: "The last post in the topic is already 1 hour old, so the topic will be closed immediately."
+        other: "The last post in the topic is already %{count} hours old, so the topic will be closed immediately."
 
       timeline:
         back: "Back"
@@ -1864,7 +1870,9 @@ en:
       notify_action: 'Message'
       official_warning: 'Official Warning'
       delete_spammer: "Delete Spammer"
-      delete_confirm: "You are about to delete <b>%{posts}</b> posts and <b>%{topics}</b> topics from this user, remove their account, block signups from their IP address <b>%{ip_address}</b>, and add their email address <b>%{email}</b> to a permanent block list. Are you sure this user is really a spammer?"
+
+      # keys ending with _MF use message format, see /spec/components/js_local_helper_spec.rb for samples
+      delete_confirm_MF: "You are about to delete {POSTS, plural, one {<b>1</b> post} other {<b>#</b> posts}} and {TOPICS, plural, one {<b>1</b> topic} other {<b>#</b> topics}} from this user, remove their account, block signups from their IP address <b>%{ip_address}</b>, and add their email address <b>%{email}</b> to a permanent block list. Are you sure this user is really a spammer?"
       yes_delete_spammer: "Yes, Delete Spammer"
       ip_address_missing: "(N/A)"
       hidden_email_address: "(hidden)"
@@ -1879,9 +1887,15 @@ en:
       custom_placeholder_notify_user: "Be specific, be constructive, and always be kind."
       custom_placeholder_notify_moderators: "Let us know specifically what you are concerned about, and provide relevant links and examples where possible."
       custom_message:
-        at_least: "enter at least {{n}} characters"
-        more: "{{n}} to go..."
-        left: "{{n}} remaining"
+        at_least:
+          one: "enter at least 1 character"
+          other: "enter at least {{count}} characters"
+        more:
+          one: "1 to go..."
+          other: "{{count}} to go..."
+        left:
+          one: "1 remaining"
+          other: "{{count}} remaining"
 
     flagging_topic:
       title: "Thanks for helping to keep our community civil!"
@@ -1928,6 +1942,8 @@ en:
     posts: "Posts"
     posts_lowercase: "posts"
     posts_long: "there are {{number}} posts in this topic"
+
+    # keys ending with _MF use message format, see /spec/components/js_local_helper_spec.rb for samples
     posts_likes_MF: |
       This topic has {count, plural, one {1 reply} other {# replies}} {ratio, select,
         low {with a high like to post ratio}
@@ -2798,7 +2814,9 @@ en:
         suspend_reason: "Reason"
         suspended_by: "Suspended by"
         delete_all_posts: "Delete all posts"
-        delete_all_posts_confirm: "You are about to delete %{posts} posts and %{topics} topics. Are you sure?"
+
+        # keys ending with _MF use message format, see /spec/components/js_local_helper_spec.rb for samples
+        delete_all_posts_confirm_MF: "You are about to delete {POSTS, plural, one {1 post} other {# posts}} and {TOPICS, plural, one {1 topic} other {# topics}}. Are you sure?"
         suspend: "Suspend"
         unsuspend: "Unsuspend"
         suspended: "Suspended?"
@@ -2894,7 +2912,9 @@ en:
         unlock_trust_level: "Unlock Trust Level"
         tl3_requirements:
           title: "Requirements for Trust Level 3"
-          table_title: "In the last %{time_period} days:"
+          table_title:
+            one: "In the last day:"
+            other: "In the last %{count} days:"
           value_heading: "Value"
           requirement_heading: "Requirement"
           visits: "Visits"

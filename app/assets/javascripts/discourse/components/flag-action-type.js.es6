@@ -36,12 +36,12 @@ export default Ember.Component.extend({
     const len = messageLength || 0;
     const minLen = Discourse.SiteSettings.min_private_message_post_length;
     if (len === 0) {
-      return I18n.t("flagging.custom_message.at_least", { n: minLen });
+      return I18n.t("flagging.custom_message.at_least", { count: minLen });
     } else if (len < minLen) {
-      return I18n.t("flagging.custom_message.more", { n: minLen - len });
+      return I18n.t("flagging.custom_message.more", { count: minLen - len });
     } else {
       return I18n.t("flagging.custom_message.left", {
-        n: MAX_MESSAGE_LENGTH - len
+        count: MAX_MESSAGE_LENGTH - len
       });
     }
   },
