@@ -17,6 +17,14 @@ pl_PL:
         few: "oddanych głosów"
         other: "oddanych głosów"
       average_rating: "Średnia ocena: <strong>%{average}</strong>."
+      public:
+        title: "Głosy są jawne."
+      multiple:
+        help:
+          at_least_min_options:
+            one: "Wybierz co najmniej <strong>1</strong> opcję"
+            few: "Wybierz co najmniej <strong>%{count}</strong> opcji"
+            other: "Wybierz co najmniej <strong>%{count}</strong> opcji"
       cast-votes:
         title: "Oddaj głos"
         label: "Oddaj głos!"
@@ -34,3 +42,7 @@ pl_PL:
         title: "Zamknij ankietę"
         label: "Zamknij"
         confirm: "Czy na pewno chcesz zamknąć tę ankietę?"
+      ui_builder:
+        title: Utwórz ankietę
+        help:
+          options_count: Wprowadź przynajmniej 2 opcje
