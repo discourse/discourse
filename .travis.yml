@@ -39,6 +39,7 @@ cache:
 before_install:
   - gem install bundler
   - npm i -g eslint babel-eslint
+  - npm version
   - eslint app/assets/javascripts
   - eslint --ext .es6 app/assets/javascripts
   - eslint --ext .es6 test/javascripts

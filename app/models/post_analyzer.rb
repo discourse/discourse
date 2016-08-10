@@ -15,6 +15,7 @@ class PostAnalyzer
   # What we use to cook posts
   def cook(*args)
     cooked = PrettyText.cook(*args)
+    puts "cooked: #{cooked}"
 
     result = Oneboxer.apply(cooked, topic_id: @topic_id) do |url, _|
       @found_oneboxes = true
@@ -22,6 +23,7 @@ class PostAnalyzer
       Oneboxer.cached_onebox url
     end
 
+    puts "second cooked: #{cooked}"
     cooked = result.to_html if result.changed?
     cooked
   end
@@ -48,17 +50,33 @@ class PostAnalyzer
   end
 
   def raw_mentions
+    puts "START RAW MENTION"
+    puts "raw: #{@raw}"
+    puts "raw blank: #{@raw.blank?}"
     return [] if @raw.blank?
+
+    puts "raw_mentions: #{@raw_mentions}"
+    puts "raw_mentions present: #{@raw_mentions.present?}"
     return @raw_mentions if @raw_mentions.present?
 
+    puts "cooked_document: #{cooked_document}"
     # strip quotes, code blocks and oneboxes
     cooked_stripped = cooked_document
+    puts "cooked_stripped: #{cooked_stripped}"
     cooked_stripped.css("aside.quote").remove
+
+    puts "cooked_stripped: #{cooked_stripped}"
     cooked_stripped.css("pre").remove
+    puts "cooked_stripped: #{cooked_stripped}"
+
     cooked_stripped.css("code").remove
+    puts "cooked_stripped: #{cooked_stripped}"
+
     cooked_stripped.css(".onebox").remove
+    puts "cooked_stripped: #{cooked_stripped}"
 
     raw_mentions = cooked_stripped.css('.mention, .mention-group').map do |e|
+       puts "name: #{e.inner_text}"
        if name = e.inner_text
          name = name[1..-1]
          name.downcase! if name
