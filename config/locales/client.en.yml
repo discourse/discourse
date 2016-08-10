@@ -1266,7 +1266,7 @@ en:
         stop_notifications: "You will now receive less notifications for <strong>{{title}}</strong>"
         change_notification_state: "Your current notification state is "
       filter_to:
-        one: "1 posts in topic"
+        one: "1 post in topic"
         other: "{{count}} posts in topic"
       create: 'New Topic'
       create_long: 'Create a new Topic'
@@ -1316,7 +1316,7 @@ en:
       read_more_in_category: "Want to read more? Browse other topics in {{catLink}} or {{latestLink}}."
       read_more: "Want to read more? {{catLink}} or {{latestLink}}."
 
-      # keys ending with _MF use message format, see /spec/components/js_local_helper_spec.rb for samples
+      # keys ending with _MF use message format, see https://meta.discourse.org/t/message-format-support-for-localization/7035 for details
       read_more_MF: "There {
         UNREAD, plural,
         =0 {}
@@ -1871,7 +1871,7 @@ en:
       official_warning: 'Official Warning'
       delete_spammer: "Delete Spammer"
 
-      # keys ending with _MF use message format, see /spec/components/js_local_helper_spec.rb for samples
+      # keys ending with _MF use message format, see https://meta.discourse.org/t/message-format-support-for-localization/7035 for details
       delete_confirm_MF: "You are about to delete {POSTS, plural, one {<b>1</b> post} other {<b>#</b> posts}} and {TOPICS, plural, one {<b>1</b> topic} other {<b>#</b> topics}} from this user, remove their account, block signups from their IP address <b>%{ip_address}</b>, and add their email address <b>%{email}</b> to a permanent block list. Are you sure this user is really a spammer?"
       yes_delete_spammer: "Yes, Delete Spammer"
       ip_address_missing: "(N/A)"
@@ -1943,7 +1943,7 @@ en:
     posts_lowercase: "posts"
     posts_long: "there are {{number}} posts in this topic"
 
-    # keys ending with _MF use message format, see /spec/components/js_local_helper_spec.rb for samples
+    # keys ending with _MF use message format, see https://meta.discourse.org/t/message-format-support-for-localization/7035 for details
     posts_likes_MF: |
       This topic has {count, plural, one {1 reply} other {# replies}} {ratio, select,
         low {with a high like to post ratio}
@@ -2815,7 +2815,7 @@ en:
         suspended_by: "Suspended by"
         delete_all_posts: "Delete all posts"
 
-        # keys ending with _MF use message format, see /spec/components/js_local_helper_spec.rb for samples
+        # keys ending with _MF use message format, see https://meta.discourse.org/t/message-format-support-for-localization/7035 for details
         delete_all_posts_confirm_MF: "You are about to delete {POSTS, plural, one {1 post} other {# posts}} and {TOPICS, plural, one {1 topic} other {# topics}}. Are you sure?"
         suspend: "Suspend"
         unsuspend: "Unsuspend"
