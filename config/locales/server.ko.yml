@@ -377,7 +377,7 @@ ko:
       email_title: '"%{title}" 내의 당신의 글'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
-      title: "뭔가 다른것"
+      title: "기타"
       long_form: '주의를 위해 운영진에게 신고했습니다'
       email_body: "%{link}\n\n%{message}"
     bookmark:
@@ -404,7 +404,8 @@ ko:
         <a href="/guidelines">커뮤니티 가이드라인</a>에 맞지 않습니다.'
       long_form: '부적절함으로 신고하였습니다.'
     notify_moderators:
-      title: "뭔가 다른것"
+      title: "기타"
+      description: '이 주제는 <a href="/guidelines">가이드라인</a>, <a href="%{tos_url}">이용약관</a>, 위에서 언급되지 않은 기타 사유로 인해 운영진이 검토할 필요가 있습니다.'
       long_form: '관리자의 주의를 위해 신고'
       email_title: '글타래 "%{title}" 은 운영자의 확인이 필요합니다'
       email_body: "%{link}\n\n%{message}"
@@ -586,7 +587,7 @@ ko:
     min_private_message_title_length: "메세지 제목의 최소 길이"
     min_search_term_length: "검색을 하기 위한 최소 글자 수"
     allow_uncategorized_topics: "카테고리 없이 게시 허용. 주의: 카테고리 없는 글은 이 항목을 비활성화에 하기전에 카테고리 설정을 해야 합니다."
-    allow_duplicate_topic_titles: "같은 제목의 동일한 글타래 허용"
+    allow_duplicate_topic_titles: "같은 제목의 동일한 주제 허용"
     unique_posts_mins: "같은 컨텐츠를 다시 글 할 수 있는 기간(분)"
     educate_until_posts: "새로운 사용자가 글를 작성할 시 글 작성 방법에 대한 교육패널을 보여주는데, 해당 패널이 보여지는 초기 글 개수"
     title: "타이틀 태그에 쓰일 이 사이트의 이름"
@@ -657,11 +658,11 @@ ko:
     max_reply_history: "덧글 확장해서 보여지는 최대 갯수"
     topics_per_period_in_top_summary: "인기 글타래 요약에 기본으로 보여질 글타래 수"
     topics_per_period_in_top_page: "인기 글타래에서 '더 보기'를 요청할 시 보여질 글타래 수"
-    redirect_users_to_top_page: "자동으로 신규 사용자와 오래간만에 들어온 사용자를 탑 페이지로 리다이렉트 시킴"
-    show_email_on_profile: "사용자 프로필에서 자신의 이메일 주소 보기( 오직 본인과 관리자만 볼 수 있음)"
+    redirect_users_to_top_page: "신규 사용자와 오랜만에 방문한 사용자를 인기글 페이지로 리다이렉트."
+    show_email_on_profile: "사용자 프로필에서 자신의 이메일 주소 보기(본인과 관리자만 볼 수 있음)"
     email_token_valid_hours: "비밀번호 찾기, 계정 활성화에 사용되는 토큰의 유효 기간(시간)"
     email_token_grace_period_hours: "비밀번호 찾기, 계정 활성화에 사용되는 토큰은 사용되어진 이후 유효한 기간(시간)"
-    enable_badges: "훈장 시스템 활성화"
+    enable_badges: "배지 기능 사용"
     allow_index_in_robots_txt: "이 사이트가 검색엔진에 의해 인덱스되는 것을 허용합니다.(robots.txt 수정)"
     email_domains_blacklist: "가입 금지된 이메일 도메인 목록, 파이프 기호로 구분. 예: mailinator.com|trashmail.net"
     email_domains_whitelist: "가입하려면 반드시 사용해야하는 이메일 도메인 목록, 파이프 기호로 구분. 경고: 이 목록외의 도메인으로는 가입이 안됩니다!"
@@ -752,7 +753,7 @@ ko:
     tl3_requires_posts_read_all_time: "VIP 사용자-3 이 되기 위해 꼭 보아야 하는 글타래의 전체 개수"
     tl3_promotion_min_duration: "회원등급이 2로 떨어진 후 다시 VIP 사용자-3 이 될 수 있는 최소 일 수"
     tl3_links_no_follow: "VIP 사용자-3 의 글에 있는 링크에서 rel=nofollow 를 제거하지 마시오."
-    min_trust_to_create_topic: "새로운 글타래를 생성하기 위한 최소 회원등급"
+    min_trust_to_create_topic: "새로운 주제를 생성하기 위한 최소 회원등급"
     min_trust_to_edit_wiki_post: "위키로 설정된 글 수정할 수 있는 최소 회원등급"
     newuser_max_links: "새로운 사용자가 글에 붙일 수 있는 최대 링크 개수"
     newuser_max_images: "새로운 사용자가 글에 붙일 수 있는 최대 이미지 개수"
@@ -803,7 +804,7 @@ ko:
     num_flaggers_to_close_topic: "추후 중재를 위해 자동으로 글타래를 일시정지시킬 최소 신고자 수"
     num_flags_to_close_topic: "추후 중재를 위해 자동으로 글타래를 일시정지시킬 최소 신고 횟수"
     auto_respond_to_flag_actions: "신고 기각 시 자동 답변 활성화"
-    reply_by_email_enabled: "이메일을 통해 글타래에 댓글을 달 수 있음."
+    reply_by_email_enabled: "이메일을 통해 주제에 답글을 달 수 있음."
     reply_by_email_address: "이메일 주소로 답글을 다는 템플릿. 예: %{reply_key}@reply.myforum.com"
     disable_emails: "Discourse가 어떤 메일로 보내지 못하도록 합니다."
     strip_images_from_short_emails: "2800바이트, 즉 2.73 KB 이내 사이즈를 가지도록 이미지를 빼주세요."
@@ -824,7 +825,7 @@ ko:
     delete_user_max_post_age: "(x)일 이전의 첫 글가 있는 유저는 삭제할 수 없음."
     delete_all_posts_max: "전체 글 지우기 버튼을 통해 한번에 삭제할 수 있는 최대 글 수. 만약 사용자가 이것보다 많은 글을 가지고 있으면 한번에 삭제 할 수 없다."
     username_change_period: "등록 후 사용자 이름 최소 유지 일 수(0은 사용자 이름 변경을 막음)"
-    email_editable: "등록 후 이메일 주소를 바꿀수 있는 있음"
+    email_editable: "가입 후 이메일 주소 변경 허용"
     allow_animated_thumbnails: "움직이는 gif로 썸네일을 만듭니다."
     default_avatars: "신규가입자가 받게될 기본 아바타 URL"
     automatically_download_gravatars: "사용자가 계정을 만들거나 이메일을 변경하자마자 Gravatar를 다운로드합니다."
@@ -841,8 +842,8 @@ ko:
     suppress_uncategorized_badge: "글타래 리스트에서 카테고리가 없는 글타래에 대한 훈장을 보여주지 않는다."
     global_notice: "긴급, 비상 전체 배너를 모든 방문자에게 표시합니다. 숨기려면 빈칸으로 바꾸면 됩니다(HTML 허용)."
     disable_edit_notifications: "'download_remote_images_to_local'가 활성화되있으면 시스템 사용자에 의한 수정 알림을 비활성화합니다."
-    full_name_required: "사용자 정보에서 실명은 필수입니다."
-    enable_names: "사용자의 실명을 프로필, 사용자카드, 이메일에서 보여줍니다. 실명을 아무데서도 안보이게 하려면 비활성화하세요."
+    full_name_required: "사용자 프로필에서 실명을 필수 입력 항목으로 설정"
+    enable_names: "사용자의 실명을 프로필, 사용자카드, 이메일에서 표시함. 실명을 표시하지 않으려면 체크를 해제하세요."
     display_name_on_posts: "글에 @username 뿐만 아니라 사용자의 전체 이름도 보여준다."
     show_time_gap_days: "두 글의 일차를 보여주기 위해 두 글이 떨어져 있어야 할 일수"
     invites_per_page: "사용자 페이지에 방문자를 표시합니다."
@@ -1206,13 +1207,14 @@ ko:
 
         (새 사용자로서 할말이 있으시면 이글에 답변함으로써 [스태프](%{base_url}/about)들에게 이야기해주세요.)
     signup:
+      subject_template: "[%{site_name}] 새 계정 확인"
       text_body_template: |
         %{site_name}에 오신것을 환영합니다!
 
-        당신의 계정 인증을 위해 아래 링크를 클릭해주세요:
+        사용자 계정 인증을 위해 아래 링크를 클릭해주세요:
         %{base_url}/users/activate-account/%{email_token}
 
-        만약 위의 링크를 클릭 할 수 없으면 주소를 복사하여 당신의 웹브라우저에 붙여넣으세요.
+        만약 위의 링크를 클릭 할 수 없으면 위 주소를 복사하여 웹브라우저에 붙여 넣으세요.
   page_not_found:
     popular_topics: "인기"
     recent_topics: "최근"
@@ -1256,7 +1258,7 @@ ko:
     base_theme_name: "기본 테마 색상"
   about: "소개"
   guidelines: "가이드라인"
-  privacy: "개인정보 취급방침"
+  privacy: "개인정보처리방침"
   edit_this_page: "이 페이지 수정"
   csv_export:
     boolean_yes: "네"
@@ -1269,7 +1271,7 @@ ko:
   tos_topic:
     title: "서비스 이용약관"
   privacy_topic:
-    title: "개인정보취급방침"
+    title: "개인정보처리방침"
   admin_login:
     success: "이메일 보냄"
     error: "에러!"

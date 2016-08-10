@@ -133,9 +133,11 @@ tr_TR:
         eu_central_1: "EU (Frankfurt)"
         ap_southeast_1: "Asia Pacific (Singapore)"
         ap_southeast_2: "Asia Pacific (Sydney)"
+        ap_south_1: "Asia Pacific (Mumbai)"
         ap_northeast_1: "Asia Pacific (Tokyo)"
         ap_northeast_2: "Asia Pacific (Seoul)"
         sa_east_1: "South America (Sao Paulo)"
+        cn_north_1: "China (Beijing)"
     edit: 'bu konunun başlığını ve kategorisini düzenleyin'
     not_implemented: "Bu özellik henüz geliştirilmedi, üzgünüz!"
     no_value: "Hayır"
@@ -305,6 +307,7 @@ tr_TR:
       selector_placeholder: "Üye ekle"
       owner: "sahip"
       visible: "Grup tüm kullanıcılar tarafından görüntülenebiliyor"
+      index: "Gruplar"
       title:
         other: "gruplar"
       members: "Üyeler"
@@ -326,6 +329,9 @@ tr_TR:
         watching:
           title: "Gözleniyor"
           description: "Tüm mesajlardaki her yazı hakkında bilgilendirileceksiniz ve yeni cevap sayısı gösterilecek."
+        watching_first_post:
+          title: "İlk gönderi izlemeniz"
+          description: "Bu grupta bulunan tüm konuların sadece ilk gönderilerinde bildirim alacaksınız."
         tracking:
           title: "Takip ediliyor"
           description: "Biri @isim şeklinde sizden bahsederse ya da gönderinize cevap verirse bildirim alacaksınız ve yeni cevap sayısı gösterilecek."
@@ -443,9 +449,18 @@ tr_TR:
         daily: "Günlük güncellemeleri gönder"
         individual: "Her yazı için bir eposta gönder"
         many_per_day: " ({{dailyEmailEstimate}} konusu hakkında) tüm yeni gönderilerde bana mail gönder"
+        few_per_day: "Her yeni gönderi için bana email gönder ( 2 günlük )"
       tag_settings: "Etiketler"
+      watched_tags: "Gözlendi"
+      tracked_tags: "Takip edildi"
+      muted_tags: "Susturuldu"
+      muted_tags_instructions: "Bu etiketler ile yeni konular hakkında herhangi bir bildiri almayacaksınız ve en son gönderilerde belirmeyecekler."
       watched_categories: "Gözlendi"
       tracked_categories: "Takip edildi"
+      tracked_categories_instructions: "Bu kategorilerdeki tüm konuları otomatik olarak takip edeceksiniz. Yeni gönderilerin sayısı ilgili konunun yanında belirecek."
+      watched_first_post_categories: "İlk gönderi izlemeniz"
+      watched_first_post_categories_instructions: "Bu kategorilerde bulunan tüm konuların ilk gönderilerinde bildirim alacaksınız."
+      watched_first_post_tags: "İlk gönderi izlemeniz"
       muted_categories: "Susturuldu"
       muted_categories_instructions: "Bu kategorilerdeki yeni konular hakkında herhangi bir bildiri almayacaksınız ve en son gönderilerde belirmeyecekler. "
       delete_account: "Hesabımı Sil"
@@ -485,8 +500,10 @@ tr_TR:
         set_password: "Parola Belirle"
       change_about:
         title: "Hakkımda'yı Değiştir"
+        error: "Bu değeri değiştirirken bir hata oluştu."
       change_username:
         title: "Kullanıcı Adını Değiştir"
+        confirm: "Kullanıcı adınızı değiştirmeniz halinde, eski gönderilerinizden yapılan tüm alıntılar ve @eskiadınızdaki bahsedilenler bozulacak. Bunu yapmak istediğinize gerçekten emin misiniz?"
         taken: "Üzgünüz, bu kullanıcı adı alınmış."
         error: "Kullanıcı adınızı değiştirirken bir hata oluştu."
         invalid: "Bu kullanıcı adı geçersiz. Sadece sayı ve harf içermelidir."
@@ -649,6 +666,10 @@ tr_TR:
           other: "oluşturulan konular"
         post_count:
           other: "oluşturmuş gönderiler"
+        likes_given:
+          other: "<i class='fa fa-heart'></i> verilen"
+        likes_received:
+          other: "<i class='fa fa-heart'></i> alınan "
         days_visited:
           other: "ziyaret edilen günler"
         posts_read:
@@ -666,7 +687,9 @@ tr_TR:
         more_badges: "Diğer Rozetleri"
         top_links: "Önemli Bağlantılar"
         no_links: "Henüz bir bağlantı bulunmuyor."
+        most_liked_by: "Tarafından en çok beğenilen"
         most_liked_users: "Popüler Beğenmeler"
+        most_replied_to_users: "En çok cevaplanan"
         no_likes: "Henüz bir beğeni bulunmuyor."
       associated_accounts: "Girişler"
       ip_address:
@@ -823,6 +846,12 @@ tr_TR:
       github:
         title: "GitHub ile"
         message: "GitHub ile kimlik doğrulaması yapılıyor (pop-up engelleyicilerin etkinleştirilmediğinden emin olun)"
+    emoji_set:
+      apple_international: "Apple/Uluslararası"
+      google: "Google"
+      twitter: "Twitter"
+      emoji_one: "Emoji One"
+      win10: "Win10"
     shortcut_modifier_key:
       shift: 'Shift'
       ctrl: 'Ctrl'
@@ -1016,6 +1045,7 @@ tr_TR:
         selected:
           other: "<b>{{count}}</b> konu seçtiniz."
         change_tags: "Etiketleri Değiştir"
+        choose_new_tags: "Konular için yeni etiketler seçin:"
       none:
         unread: "Okunmamış konunuz yok."
         new: "Yeni konunuz yok."
@@ -1102,13 +1132,16 @@ tr_TR:
       auto_close_immediate: "Son konudaki mesaj %{hours} saat olmuş, bu yüzden konu hemen kapanacak"
       timeline:
         back: "Geri"
+        back_description: "Okunmamış son gönderine dön"
         replies: "%{current} / %{total} Cevap"
+        replies_short: "%{current} / %{total}"
       progress:
         title: konu gidişatı
         go_top: "en üst"
         go_bottom: "en alt"
         go: "git"
         jump_bottom: "son gönderiye geç"
+        jump_prompt: "Gönderiye git"
         jump_bottom_with_number: "%{post_number} numaralı gönderiye geç"
         total: tüm gönderiler
         current: şu anki gönderi
@@ -1167,6 +1200,7 @@ tr_TR:
         invisible: "Gizle"
         visible: "Görünür Yap"
         reset_read: "Görüntüleme Verilerini Sıfırla"
+        make_private: "Özel mesaj oluştur"
       feature:
         pin: "Başa Tuttur"
         unpin: "Baştan Kaldır"
@@ -1311,7 +1345,9 @@ tr_TR:
         create: "Üzgünüz, gönderiniz oluşturulurken bir hata oluştu. Lütfen tekrar deneyin."
         edit: "Üzgünüz, gönderiniz düzenlenirken bir hata oluştu. Lütfen tekrar deneyin. "
         upload: "Üzgünüz, dosya yüklenirken bir hata oluştu. Lütfen tekrar deneyin."
+        file_too_large: "Üzgünüz, bu dosya çok büyük (maximum size is {{max_size_kb}}kb) Niçin büyük boyutlu dosyanı bir paylaşım servisine yükleyip, sonra bağlantını paylaşmıyorsun ?"
         too_many_uploads: "Üzgünüz, aynı anda birden fazla dosya yükleyemezsiniz."
+        too_many_dragged_and_dropped_files: "Üzgünüz, aynı anda 10'dan fazla dosya yükleyemezsiniz."
         upload_not_authorized: "Üzgünüz, yüklemeye çalıştığınız dosya tipine izin verilmiyor. (izin verilen uzantılar: {{authorized_extensions}})."
         image_upload_not_allowed_for_new_user: "Üzgünüz, yeni kullanıcılar resim yükleyemiyorlar."
         attachment_upload_not_allowed_for_new_user: "Üzgünüz, yeni kullanıcılar dosya ekleyemiyorlar."
@@ -1456,6 +1492,8 @@ tr_TR:
       settings: 'Ayarlar'
       topic_template: "Konu Şablonu"
       tags: "Etiketler"
+      tags_allowed_tags: "Sadece bu kategoride kullanılabilir etiketler:"
+      tags_allowed_tag_groups: "Yalnızca bu kategoride kullanılabilir etiket grupları:"
       delete: 'Kategoriyi Sil'
       create: 'Yeni Kategori'
       create_long: 'Yeni bir kategori oluştur'
@@ -1502,6 +1540,9 @@ tr_TR:
       notifications:
         watching:
           title: "Gözleniyor"
+        watching_first_post:
+          title: "İlk gönderi izlemeniz"
+          description: "Bu kategorilerde bulunan tüm konuların sadece ilk gönderilerinde bildirim alacaksınız."
         tracking:
           title: "Takip Ediliyor"
         regular:
@@ -1515,6 +1556,7 @@ tr_TR:
       action: 'Gönderiyi Bayrakla'
       take_action: "Harekete Geç"
       notify_action: 'Mesaj'
+      official_warning: 'Resmi uyarı'
       delete_spammer: "Spamcıyı Sil"
       delete_confirm: "Bu kullanıcının <b>%{posts}</b> gönderisini ve <b>%{topics}</b> konusunu silmek, hesabını kapatmak, kullandığı IP Adresi <b>%{ip_address}</b> üzerinden hesap açılmasını engellemek, ve  <b>%{email}</b> e-posta adresini kalıcı engellenenler listesine eklemek üzeresiniz. Bu kullanıcının gerçekten spamci olduğuna emin misiniz?"
       yes_delete_spammer: "Evet, spamcıyı sil"
@@ -1542,6 +1584,7 @@ tr_TR:
       title: "Konu Özeti"
       participants_title: "Sıkça Yazanlar"
       links_title: "Popüler bağlantılar"
+      links_shown: "Daha fazla bağlantı göster"
       clicks:
         other: "%{count} tıklama"
     post_links:
@@ -1706,6 +1749,7 @@ tr_TR:
         show_incoming_updated_topics: '<b>.</b> Güncellenmiş konuları göster'
         search: '<b>/</b> Ara'
         help: '<b>?</b> Klavye yardım sayfasını aç'
+        dismiss_new_posts: '<b>x</b>, <b>r</b> Yeni Konuları/Gönderileri Yoksay'
         dismiss_topics: '<b>x</b>, <b>t</b> Konuları anımsatma'
         log_out: '<b>shift</b>+<b>z</b> <b>shift</b>+<b>z</b> Çıkış'
       actions:
@@ -1725,8 +1769,13 @@ tr_TR:
         delete: '<b>d</b> Gönderiyi sil'
         mark_muted: '<b>m</b>, <b>m</b> Konuyu sustur'
         mark_regular: '<b>m</b>, <b>r</b> Varsayılan konu'
+        mark_tracking: '<b>m</b>, <b>t</b> Konuyu takip et'
         mark_watching: '<b>m</b>, <b>w</b> Konuyu Takip Et'
     badges:
+      earned_n_times:
+        other: "Bu rozet %{count} defa kazanılmış"
+      granted_on: "%{date} Tarihinde Verildi"
+      others_count: "Bu rozete sahip diğer kişiler (%{count})"
       title: Rozetler
       allow_title: "başlık girin"
       multiple_grant: "birden fazla ödüllendirilmiş"

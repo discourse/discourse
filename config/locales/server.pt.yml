@@ -250,14 +250,12 @@ pt:
       Este tópico é claramente importante para si &ndash; publicou mais de %{percent}% das respostas aqui.
 
       Tem a certeza de que está a fornecer o tempo adequado para que outras pessoas também possam partilhar os seus pontos de vista?
-
     too_many_replies: |
       ### Chegou ao limite de respostas para este tópico
 
       Pedimos desculpa mas novos utilizadores estão temporariamente limitados a %{newuser_max_replies_per_topic} respostas no mesmo tópico.
 
       Em vez de adicionar outra resposta, por favor considere editar as suas respostas anteriores, ou visitar outros tópicos.
-
     reviving_old_topic: |
       ### Reavivar este tópico?
 
@@ -329,7 +327,6 @@ pt:
       (Para mais informação acerca dos Níveis de Confiança, [veja este tópico][confiança]. Por favor tenha conhecimento que apenas membros que continuam a corresponder aos requisitos ao longo do tempo, irão manter-se habituais.)
 
       [confiança]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
-
   category:
     topic_prefix: "Acerca da categoria %{category}"
     replace_paragraph: "(Substitua este primeiro parágrafo com uma breve descrição da sua nova categoria. Este guia irá aparecer na área de seleção da categoria, por isso tente mantê-lo abaixo dos 200 caracteres. **Até editar esta descrição ou criar tópicos, esta categoria não irá aparecer na página das categorias.**)"
@@ -1423,21 +1420,18 @@ pt:
         Pedimos desculpa mas a sua mensagem de email %{destination} (titled %{former_title}) não funcionou.
 
         A sua conta associada com este endereço de email foi bloqueada.
-
     email_reject_reply_user_not_matching:
       subject_template: "[%{site_name}] Problema de email -- Utilizador de resposta não encontrado"
       text_body_template: |
         Pedimos desculpa mas a sua mensagem de email %{destination} (titled %{former_title}) não funcionou.
 
         A sua resposta foi enviada de um email diferente daquele que esperávamos, por esta razão não temos a certeza que seja a mesma pessoa. Tente enviar de outro endereço de email ou contacte um membro do pessoal.
-
     email_reject_no_account:
       subject_template: "[%{site_name}] Problema de email -- Conta Desconhecida"
       text_body_template: |
         Pedimos desculpa mas a sua mensagem de email %{destination} (titled %{former_title}) não funcionou.
 
         Não conseguimos encontrar nenhuma conta com combine com o seu endereço de email. Tente enviar de outro endereço de email ou contacte um membro do pessoal.
-
     email_reject_empty:
       subject_template: "[%{site_name}]  Problema de email -- Sem Conteúdo"
       text_body_template: |

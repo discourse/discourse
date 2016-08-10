@@ -170,8 +170,6 @@ pl_PL:
       - Postaraj się umieścić słowa kluczowe w tytule, dzięki czemu inni będą mogli łatwo *wyszukać* temat. Przypisz go do kategorii o pokrewnej tematyce.
 
       Aby dowiedzieć się więcej, [zobacz przewodnik społeczności](/guidelines). Ten panel pojawi się tylko przy pierwszym %{education_posts_text}.
-
-
     new-reply: |
       Witaj na %{site_name} &mdash; **dziękujemy za zaangażowanie!**
 
@@ -938,7 +936,6 @@ pl_PL:
 
 
       (Jeśli powyższy link wygasł, wybierz "Zapomniałem hasła", logując się za pomocą adresu email.)
-
   test_mailer:
     subject_template: "[%{site_name}] Test dostarczania poczty"
   new_version_mailer:
@@ -999,8 +996,6 @@ pl_PL:
         ```
         %{logs}
         ```
-
-
     csv_export_succeeded:
       subject_template: "Zakończono eksport danych"
       text_body_template: |
@@ -1009,7 +1004,6 @@ pl_PL:
         <a class="attachment" href="%{download_link}">%{file_name}</a> (%{file_size})
 
         Powyższy link będzie aktywny przez 48 godzin.
-
     csv_export_failed:
       subject_template: "Nieudany eksport danych"
       text_body_template: "Przepraszamy, ale eksport danych zakończył się niepowodzeniem. Sprawdź logi lub skontaktuj się z operatorami serwisu."
@@ -1086,7 +1080,6 @@ pl_PL:
         Baw się dobrze!
 
         (Jeśli potrzebujesz skontaktować się z [członkiem zespołu](%{base_url}/about) jako nowy użytkownik, odpowiedz na tę wiadomość.)
-
     signup:
       subject_template: "[%{site_name}] Potwierdź swoje nowe konto"
       text_body_template: |
