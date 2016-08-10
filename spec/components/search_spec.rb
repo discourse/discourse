@@ -644,4 +644,21 @@ describe Search do
     end
   end
 
+  context "#min_post_id" do
+    it "returns 0 when prefer_recent_posts is disabled" do
+      SiteSetting.search_prefer_recent_posts = false
+      expect(Search.min_post_id_no_cache).to eq(0)
+    end
+
+    it "returns a value when prefer_recent_posts is enabled" do
+      SiteSetting.search_prefer_recent_posts = true
+      SiteSetting.search_recent_posts_size = 1
+
+      Fabricate(:post)
+      p2 = Fabricate(:post)
+
+      expect(Search.min_post_id_no_cache).to eq(p2.id)
+    end
+  end
+
 end
