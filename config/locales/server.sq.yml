@@ -15,6 +15,9 @@ sq:
       short: "%m-%d-%Y"
       short_no_year: "%B %-d"
       date_only: "%B %-d, %Y"
+  date:
+    month_names: [null, Janar, Shkurt, Mars, Prill, Maj, Qershor, Korrik, Gusht, Shtator, Tetor, Nëntor, Dhjetor]
+    <<: *datetime_formats
   title: "Discourse"
   topics: "Tema"
   posts: "postime"
@@ -262,12 +265,12 @@ sq:
       self_parent: "A subcategory's parent cannot be itself"
       depth: "You can't nest a subcategory under another"
     cannot_delete:
-      uncategorized: "Can't delete Uncategorized"
-      has_subcategories: "Can't delete this category because it has sub-categories."
+      uncategorized: "Nuk fshij dot kategorinë \"Uncategorized\""
+      has_subcategories: "Nuk e fshini dot këtë kategori sepse ajo ka nënkategori. "
       topic_exists:
-        one: "Can't delete this category because is has 1 topic. Oldest topic is %{topic_link}."
-        other: "Can't delete this category because it has %{count} topics. Oldest topic is %{topic_link}."
-      topic_exists_no_oldest: "Can't delete this category because topic count is %{count}."
+        one: "Nuk e fshini dot këtë kategori sepse këtu ka 1 temë. Tema më e vjetër është %{topic_link}."
+        other: "Nuk e fshini dot këtë kategori sepse këtu ka %{count} tema. Tema më e vjetër është %{topic_link}."
+      topic_exists_no_oldest: "Nuk e fshini dot këtë kategori sepse numri i temave është %{count}."
   trust_levels:
     newuser:
       title: "anëtar i ri"
@@ -846,7 +849,6 @@ sq:
     minimum_topics_similar: "How many topics need to exist before similar topics are presented when composing new topics."
     relative_date_duration: "Number of days after posting where post dates will be shown as relative (7d) instead of absolute (20 Feb)."
     delete_user_max_post_age: "Don't allow deleting users whose first post is older than (x) days."
-    delete_all_posts_max: "The maximum number of posts that can be deleted at once with the Delete All Posts button. If a user has more than this many posts, the posts cannot all be deleted at once and the user can't be deleted."
     username_change_period: "The number of days after registration that accounts can change their username (0 to disallow username change)."
     email_editable: "Allow users to change their e-mail address after registration."
     allow_uploaded_avatars: "Allow users to upload custom profile pictures."
@@ -1677,8 +1679,6 @@ sq:
   performance_report:
     initial_post_raw: This topic includes daily performance reports for your site.
     initial_topic_title: Raportet e performancës se faqes
-  date:
-    <<: *datetime_formats
   time:
     <<: *datetime_formats
   activemodel:

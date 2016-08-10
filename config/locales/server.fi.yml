@@ -247,8 +247,6 @@ fi:
       Tämä ketju on selvästikin tärkeä sinulle &ndash; olet kirjoittanut yli %{percent}% vastauksista.
 
       Oletko varma, että annat myös muille riittävästi aikaa jakaa omia näkökulmiaan?
-
-
     too_many_replies: |
       ### Olet saavuttanut rajoituksen uusien vastausten määrästä
 
@@ -1712,7 +1710,6 @@ fi:
         Pahoittelemme, mutta sähköpostin lähettäminen tänne %{destination} (otsikolla %{former_title}) ei onnistunut.
 
         Viestisi lähetettiin estetystä sähköpostiosoitteesta. Yritä lähettää viesti toisesta sähköpostiosoitteesta tai ota yhteyttä henkilökuntaan.
-
     email_reject_inactive_user:
       subject_template: "[%{site_name}]  Sähköpostiongelma -- Aktivoimaton käyttäjä"
       text_body_template: |
@@ -1745,7 +1742,6 @@ fi:
         Emme löytäneet sähköpostiviestistäsi sisältöä.
 
         Jos saat tämän viestin ja viestisi _sisälsi_ sisältöä, yritä uudestaan yksinkertaisemmalla muotoilulla.
-
     email_reject_parsing:
       subject_template: "[%{site_name}] Sähköpostiongelma -- Tunnistamaton sisältö"
       text_body_template: |
@@ -2138,7 +2134,6 @@ fi:
         Vahvista sähköpostiosoitteesti sivustolle %{site_name} klikkaamalla linkkiä:
 
         %{base_url}/users/authorize-email/%{email_token}
-
     notify_old_email:
       subject_template: "[%{site_name}] Sähköpostiosoitteesi on vaihdettu"
       text_body_template: |
@@ -2368,7 +2363,6 @@ fi:
       <li><code>rainbows category:"parks and gardens" in:bookmarks</code> etsii alueelta "parks and gardens" kirjanmerkkeihin lisäämiäsi ketjuja, joissa esiintyy sana "rainbows".</li>
       </ul>
       </p>
-
   badges:
     editor:
       name: Muokkaaja
@@ -2440,13 +2434,11 @@ fi:
       description: Ketjunavaus sai 50 tykkäystä
       long_description: |
         Tämä arvomerkki myönnetään, kun luomasi ketju saa 50 tykkäystä. Aloitit kiehtovan keskustelun, jossa vaihdetuista ajatuksista yhteisö nautti!
-
     nice_share:
       name: Hyvä jako
       description: Jakoi viestin, ja linkin kautta saapui 25 vierailijaa
       long_description: |
         Tämä arvomerkki myönnetään, kun jaat linkin, jota klikkaa 25 ulkopuolista vierailijaa. Kiitos kun levität sanaa palstan keskusteluista ja yhteisöstä.
-
     good_share:
       name: Erinomainen jako
       description: Jakoi viestin, ja linkin kautta saapui 300 vierailijaa

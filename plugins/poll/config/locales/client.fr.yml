@@ -50,14 +50,14 @@ fr:
       error_while_casting_votes: "Désolé, il y a eu une erreur lors de l'envoi de vos votes."
       error_while_fetching_voters: "Désolé, il y a eu une erreur lors de l'affichage des votants."
       ui_builder:
-        title: Construire Sondage
-        insert: Insérer Sondage
+        title: Créer un sondage
+        insert: Insérer le sondage
         help:
           options_count: Entrez au moins 2 options
         poll_type:
           label: Type
-          regular: Choix Unique
-          multiple: Choix Multiple
+          regular: Choix unique
+          multiple: Choix multiple
           number: Nombre
         poll_config:
           max: Max

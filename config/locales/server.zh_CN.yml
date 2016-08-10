@@ -1725,7 +1725,6 @@ zh_CN:
         我们非常抱歉，但是你发送至%{destination}（名为%{former_title}）的邮件出问题了。
 
         邮件发至的分类只接受来自合法帐户且邮件地址已确认的用户的有邮件。如果你有异议，联系管理人员。
-
     email_reject_invalid_post:
       subject_template: "[%{site_name}] 邮件问题 -- 发布时错误"
       text_body_template: |
@@ -2629,7 +2628,6 @@ zh_CN:
       description: 分享了一个有 1000 个独立访问者的帖子
       long_description: |
         该徽章授予给分享链接给 1000 个其他访客的你。哇！你把一个有意思的讨论推广给了广大的读者们，并且帮助社群前进了一大步！
-
     first_like:
       name: 首次赞
       description: 已赞过了一个帖子
@@ -2650,7 +2648,6 @@ zh_CN:
       description: 已邀请了 3 个初级用户
       long_description: |
         该徽章授予给邀请了 3 人加入社群的你，你的朋友在站点上度过了很长的时间，已经成为了基础用户。活跃的社区需要新鲜的血液日常参与，并为交流带来多元视点。
-
     champion:
       name: 外交官
       description: 已邀请了 5 个成员

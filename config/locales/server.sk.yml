@@ -1444,7 +1444,6 @@ sk:
     boolean_no: "Nie"
   static_topic_first_reply: |
     Upravte prvý príspevok v téme pre zmenu obsahu %{page_name} stránky.
-
   guidelines_topic:
     title: "FAQ/Pravidlá"
     body: |
