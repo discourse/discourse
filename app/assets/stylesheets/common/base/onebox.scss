@@ -110,6 +110,7 @@ aside.onebox {
   @include onebox-favicon('githubissue', 'github');
   @include onebox-favicon('githubgist', 'github');
   @include onebox-favicon('amazon', 'amazon');
+  @include onebox-favicon('googledocs', 'google_branding/logo_drive_48px');
 
 
   .onebox-body {
@@ -153,10 +154,23 @@ aside.onebox {
 
 @mixin gdocs-logo($type) {
   &.g-#{$type}-logo {
-    background: image-url("favicons/google_branding/logo_#{$type}_128px.png") no-repeat;
+    background: image-url("favicons/google_branding/logo_#{$type}_48px.png") no-repeat;
   }
 }
 
+.googledocs-onebox-logo {
+  width: 60px;
+  height: 50px;
+  float: left;
+  @include gdocs-logo('docs');
+  @include gdocs-logo('forms');
+  @include gdocs-logo('sheets');
+  @include gdocs-logo('slides');
+  @include gdocs-logo('calendar');
+  @include gdocs-logo('drive');
+}
+
+// Google Calendar Placeholder
 .gdocs-onebox-splash {
   background-color: blend-primary-secondary(30%);
   color: $primary;
@@ -165,12 +179,9 @@ aside.onebox {
     display: inline-block;
     width: 128px;
     height: 128px;
-    @include gdocs-logo('docs');
-    @include gdocs-logo('forms');
-    @include gdocs-logo('sheets');
-    @include gdocs-logo('slides');
-    @include gdocs-logo('calendar');
-    @include gdocs-logo('drive');
+    &.g-calendar-logo {
+      background: image-url("favicons/google_branding/logo_calendar_128px.png") no-repeat;
+    }
   }
 }
 
