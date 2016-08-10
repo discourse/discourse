@@ -27,9 +27,9 @@ class PostMerger
       edit_reason: I18n.t("merge_posts.edit_reason", count: posts.length, username: @user.username)
     }
 
-    Post.transaction do
-      revisor = PostRevisor.new(post, post.topic)
-      revisor.revise!(@user, changes, {})
+    revisor = PostRevisor.new(post, post.topic)
+
+    revisor.revise!(@user, changes) do
       posts.each { |p| PostDestroyer.new(@user, p).destroy }
     end
   end
