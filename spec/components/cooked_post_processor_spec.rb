@@ -541,19 +541,20 @@ describe CookedPostProcessor do
   end
 
   context "extracts links" do
-      let(:post) { Fabricate(:post, raw: "sam has a blog at https://samsaffron.com") }
-      it "always re-extracts links on post process" do
-        TopicLink.destroy_all
-        CookedPostProcessor.new(post).post_process
-        expect(TopicLink.count).to eq(1)
-      end
+    let(:post) { Fabricate(:post, raw: "sam has a blog at https://samsaffron.com") }
+
+    it "always re-extracts links on post process" do
+      TopicLink.destroy_all
+      CookedPostProcessor.new(post).post_process
+      expect(TopicLink.count).to eq(1)
+    end
   end
 
   context "grant badges" do
+    let(:cpp) { CookedPostProcessor.new(post) }
 
     context "emoji inside a quote" do
       let(:post) { Fabricate(:post, raw: "time to eat some sweet [quote]:candy:[/quote] mmmm") }
-      let(:cpp) { CookedPostProcessor.new(post) }
 
       it "doesn't award a badge when the emoji is in a quote" do
         cpp.grant_badges
@@ -563,7 +564,6 @@ describe CookedPostProcessor do
 
     context "emoji in the text" do
       let(:post) { Fabricate(:post, raw: "time to eat some sweet :candy: mmmm") }
-      let(:cpp) { CookedPostProcessor.new(post) }
 
       it "awards a badge for using an emoji" do
         cpp.grant_badges
@@ -572,18 +572,23 @@ describe CookedPostProcessor do
     end
 
     context "onebox" do
-      let(:user) { Fabricate(:user) }
-      let(:post) { Fabricate.build(:post, user: user, raw: "onebox me:\n\nhttps://www.youtube.com/watch?v=Wji-BZ0oCwg\n") }
-      let(:cpp) { CookedPostProcessor.new(post) }
+      let(:post) { Fabricate(:post, raw: "onebox me:\n\nhttps://www.youtube.com/watch?v=Wji-BZ0oCwg\n") }
 
-      before do
-        Oneboxer.stubs(:onebox)
-      end
+      before { Oneboxer.stubs(:onebox) }
 
       it "awards a badge for using an emoji" do
         cpp.post_process_oneboxes
         cpp.grant_badges
         expect(post.user.user_badges.where(badge_id: Badge::FirstOnebox).exists?).to eq(true)
+      end
+    end
+
+    context "reply_by_email" do
+      let(:post) { Fabricate(:post, raw: "This is a **reply** via email ;)", via_email: true, post_number: 2) }
+
+      it "awards a badge for replying via email" do
+        cpp.grant_badges
+        expect(post.user.user_badges.where(badge_id: Badge::FirstReplyByEmail).exists?).to eq(true)
       end
     end
 

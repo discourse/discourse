@@ -362,6 +362,10 @@ class Post < ActiveRecord::Base
       post_number == 1
   end
 
+  def is_reply_by_email?
+    via_email && post_number.present? && post_number > 1
+  end
+
   def is_flagged?
     post_actions.where(post_action_type_id: PostActionType.flag_types.values, deleted_at: nil).count != 0
   end
