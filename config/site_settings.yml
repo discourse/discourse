@@ -1047,6 +1047,9 @@ uncategorized:
     default: 3
 
   search_tokenize_chinese_japanese_korean: false
+  search_prefer_recent_posts: false
+  search_recent_posts_size: 100000
+
   max_similar_results: 5
   minimum_topics_similar: 50
 

@@ -128,6 +128,24 @@ class Search
     end
   end
 
+  def self.min_post_id_no_cache
+    return 0 unless SiteSetting.search_prefer_recent_posts?
+
+    offset = Post.count - SiteSetting.search_recent_posts_size
+    return 0 if offset <= 0
+
+    Post.order(:id).offset(offset).limit(1).pluck(:id)[0]
+  end
+
+  def self.min_post_id(opts=nil)
+    return 0 unless SiteSetting.search_prefer_recent_posts?
+
+    # It can be quite slow to count all the posts so let's cache it
+    Rails.cache.fetch("search-min-post-id:#{SiteSetting.search_recent_posts_size}", expires_in: 1.day) do
+      min_post_id_no_cache
+    end
+  end
+
   attr_accessor :term
 
   def initialize(term, opts=nil)
@@ -545,7 +563,16 @@ class Search
           posts = posts.joins('JOIN users u ON u.id = posts.user_id')
           posts = posts.where("posts.raw  || ' ' || u.username || ' ' || COALESCE(u.name, '') ilike ?", "%#{term_without_quote}%")
         else
+
+
           posts = posts.where("post_search_data.search_data @@ #{ts_query}")
+
+          min_id = Search.min_post_id
+          if min_id > 0
+            fast_query = posts.dup.where("post_search_data.post_id >= #{min_id}")
+            posts = fast_query if fast_query.dup.count >= 20
+          end
+
           exact_terms = @term.scan(/"([^"]+)"/).flatten
           exact_terms.each do |exact|
             posts = posts.where("posts.raw ilike ?", "%#{exact}%")
@@ -669,7 +696,7 @@ class Search
             .to_sql
         else
           posts_query(@limit, aggregate_search: true,
-                                     private_messages: opts[:private_messages])
+                              private_messages: opts[:private_messages])
             .select('topics.id', "#{min_or_max}(post_number) post_number")
             .group('topics.id')
             .to_sql
