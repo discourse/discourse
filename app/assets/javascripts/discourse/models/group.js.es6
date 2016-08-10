@@ -143,7 +143,7 @@ const Group = Discourse.Model.extend({
       data: { notification_level },
       type: "POST"
     });
-  },
+  }
 });
 
 Group.reopenClass({
