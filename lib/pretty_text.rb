@@ -156,7 +156,14 @@ module PrettyText
       Emoji.custom.map {|e| custom_emoji[e.name] = e.url}
       context.eval("__optInput.customEmoji = #{custom_emoji.to_json};")
 
-      opts = context.eval("__pt = new __PrettyText(__buildOptions(__optInput));")
+      context.eval('__textOptions = __buildOptions(__optInput);')
+
+      # Be careful disabling sanitization. We allow for custom emails
+      if opts[:sanitize] == false
+        context.eval('__textOptions.sanitize = false;')
+      end
+
+      opts = context.eval("__pt = new __PrettyText(__textOptions);")
 
       DiscourseEvent.trigger(:markdown_context, context)
       baked = context.eval("__pt.cook(#{text.inspect})")
