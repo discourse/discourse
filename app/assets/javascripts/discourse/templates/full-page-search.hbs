@@ -63,7 +63,9 @@
   {{#each model.posts as |result|}}
     <div class='fps-result'>
       <div class='author'>
-        {{avatar result imageSize="large"}}
+        <a href={{result.userPath}} data-user-card="{{unbound result.username}}">
+          {{avatar result imageSize="large"}}
+        </a>
       </div>
 
       <div class='fps-topic'>
