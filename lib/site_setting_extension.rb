@@ -119,6 +119,7 @@ module SiteSettingExtension
 
       if opts[:shadowed_by_global] && GlobalSetting.respond_to?(name)
         val = GlobalSetting.send(name)
+
         unless val.nil? || (val == ''.freeze)
           hidden_settings << name
           shadowed_settings << name

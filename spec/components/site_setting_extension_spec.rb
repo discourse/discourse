@@ -498,6 +498,17 @@ describe SiteSettingExtension do
         expect(settings.trout_api_key).to eq('purringcat')
       end
 
+      it "should add the key to the hidden_settings collection" do
+        expect(settings.hidden_settings.include?(:trout_api_key)).to eq(true)
+
+        ['', nil].each_with_index do |setting, index|
+          GlobalSetting.stubs(:"trout_api_key_#{index}").returns(setting)
+          settings.setting(:"trout_api_key_#{index}", 'evil', shadowed_by_global: true)
+          settings.refresh!
+          expect(settings.hidden_settings.include?(:"trout_api_key_#{index}")).to eq(false)
+        end
+      end
+
       it "should add the key to the shadowed_settings collection" do
         expect(settings.shadowed_settings.include?(:trout_api_key)).to eq(true)
       end
