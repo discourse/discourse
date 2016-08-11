@@ -67,7 +67,7 @@ describe Search do
     expect(search.term).to eq('')
   end
 
-  it 'does not search for multiple small terms' do
+  it 'needs at least one term that hits the length' do
     search = Search.new('a b c d', min_search_term_length: 5)
     search.execute
     expect(search.valid?).to eq(false)
@@ -81,11 +81,11 @@ describe Search do
     expect(search.term).to eq('"a b c d"')
   end
 
-  it 'discards short terms' do
+  it 'searches for short terms if one hits the length' do
     search = Search.new('a b c okaylength', min_search_term_length: 5)
     search.execute
     expect(search.valid?).to eq(true)
-    expect(search.term).to eq('okaylength')
+    expect(search.term).to eq('a b c okaylength')
   end
 
   it 'escapes non alphanumeric characters' do

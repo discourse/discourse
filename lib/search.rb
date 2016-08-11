@@ -196,7 +196,6 @@ class Search
         @valid = false
         return
       end
-      @term = terms.join(' ') if @term.include?(' ')
     end
 
     # If the term is a number or url to a topic, just include that topic
