@@ -23,7 +23,9 @@ export function translateResults(results, opts) {
   });
 
   results.posts = results.posts.map(post => {
-    post.userPath = Discourse.getURL(`/users/${post.username.toLowerCase()}`);
+    if (post.username) {
+      post.userPath = Discourse.getURL(`/users/${post.username.toLowerCase()}`);
+    }
     post = Post.create(post);
     post.set('topic', topicMap[post.topic_id]);
     return post;
