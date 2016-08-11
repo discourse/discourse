@@ -2,7 +2,6 @@ import { ajax } from 'discourse/lib/ajax';
 import computed from 'ember-addons/ember-computed-decorators';
 
 export default Ember.Controller.extend({
-
   needs: ['application'],
 
   showLoginButton: Em.computed.equal("model.path", "login"),
