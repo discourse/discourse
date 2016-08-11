@@ -14,6 +14,8 @@ export default Discourse.Route.extend({
     var tag = this.store.createRecord("tag", { id: Handlebars.Utils.escapeExpression(params.tag_id) }),
         f = '';
 
+    this.set("secondaryTagId", params.secondary_tag_id)
+
     if (params.category) {
       f = 'c/';
       if (params.parent_category) { f += params.parent_category + '/'; }
@@ -43,6 +45,7 @@ export default Discourse.Route.extend({
     const params = controller.getProperties('order', 'ascending');
 
     const categorySlug = this.get('categorySlug');
+    const secondaryTagId = this.get('secondaryTagId')
     const parentCategorySlug = this.get('parentCategorySlug');
     const filter = this.get('navMode');
     const tag_id = (tag ? tag.id : 'none');
@@ -56,6 +59,9 @@ export default Discourse.Route.extend({
       }
 
       this.set('category', category);
+    } else if (secondaryTagId) {
+      params.filter = `tags/intersection/${tag_id}/${secondaryTagId}`;
+      this.set('category', null);
     } else {
       params.filter = `tags/${tag_id}/l/${filter}`;
       this.set('category', null);

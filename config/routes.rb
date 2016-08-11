@@ -630,6 +630,7 @@ Discourse::Application.routes.draw do
       get '/:tag_id' => 'tags#show', as: 'tag_show'
       get '/c/:category/:tag_id' => 'tags#show', as: 'tag_category_show'
       get '/c/:parent_category/:category/:tag_id' => 'tags#show', as: 'tag_parent_category_category_show'
+      get '/intersection/:tag_id/:secondary_tag_id' => 'tags#show', as: 'tag_intersection'
       get '/:tag_id/notifications' => 'tags#notifications'
       put '/:tag_id/notifications' => 'tags#update_notifications'
       put '/:tag_id' => 'tags#update'
