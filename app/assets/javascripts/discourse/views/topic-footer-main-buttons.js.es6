@@ -32,10 +32,6 @@ export default ContainerView.extend({
       this.attachViewClass('invite-reply-button');
     }
 
-    if (!mobileView && this.siteSettings.max_prints_per_hour_per_user > 0) {
-      this.attachViewClass('print-button');
-    }
-
     if (topic.get('isPrivateMessage')) {
       this.attachViewClass('archive-button');
     }
