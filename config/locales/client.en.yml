@@ -3024,6 +3024,7 @@ en:
           plugins: "Plugins"
           user_preferences: "User Preferences"
           tags: "Tags"
+          search: "Search"
 
       badges:
         title: Badges
