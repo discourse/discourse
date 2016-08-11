@@ -31,7 +31,7 @@
     {{/if}}
 
     {{#if showFilter}}
-      <li><a class='btn' href {{action "togglePosts" user}}>{{fa-icon "filter"}}{{i18n 'topic.filter_to' username=username post_count=topicPostCount}}</a></li>
+      <li><a class='btn' href {{action "togglePosts" user}}>{{fa-icon "filter"}}{{i18n 'topic.filter_to' username=username count=topicPostCount}}</a></li>
     {{/if}}
 
     {{#if hasUserFilters}}
