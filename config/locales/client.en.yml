@@ -2122,6 +2122,7 @@ en:
         mark_regular: '<b>m</b>, <b>r</b> Regular (default) topic'
         mark_tracking: '<b>m</b>, <b>t</b> Track topic'
         mark_watching: '<b>m</b>, <b>w</b> Watch topic'
+        print: '<b>ctrl</b>+<b>p</b> Print topic'
 
     badges:
       earned_n_times:

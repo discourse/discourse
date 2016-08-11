@@ -687,6 +687,12 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
     this.send('togglePinnedForUser');
   },
 
+  print() {
+    if (this.siteSettings.max_prints_per_hour_per_user > 0) {
+      window.open(this.get('model.printUrl'), '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,width=600,height=315');
+    }
+  },
+
   canMergeTopic: function() {
     if (!this.get('model.details.can_move_posts')) return false;
     return this.get('selectedPostsCount') > 0;

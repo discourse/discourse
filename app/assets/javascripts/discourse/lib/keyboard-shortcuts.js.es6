@@ -13,6 +13,8 @@ const bindings = {
   'c':               {handler: 'createTopic'},
   'ctrl+f':          {handler: 'showPageSearch', anonymous: true},
   'command+f':       {handler: 'showPageSearch', anonymous: true},
+  'ctrl+p':          {handler: 'printTopic', anonymous: true},
+  'command+p':       {handler: 'printTopic', anonymous: true},
   'd':               {postAction: 'deletePost'},
   'e':               {postAction: 'editPost'},
   'end':             {handler: 'goToLastPost', anonymous: true},
@@ -148,6 +150,15 @@ export default {
   showPageSearch(event) {
     Ember.run(() => {
       this.appEvents.trigger('header:keyboard-trigger', {type: 'page-search', event});
+    });
+  },
+
+  printTopic(event) {
+    Ember.run(() => {
+      if ($('.container.posts').length) {
+        event.preventDefault(); // We need to stop printing the current page in Firefox
+        this.container.lookup('controller:topic').print();
+      }
     });
   },
 
