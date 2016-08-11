@@ -141,7 +141,7 @@ class Search
     return 0 unless SiteSetting.search_prefer_recent_posts?
 
     # It can be quite slow to count all the posts so let's cache it
-    Rails.cache.fetch("search-min-post-id:#{SiteSetting.search_recent_posts_size}", expires_in: 1.day) do
+    Rails.cache.fetch("search-min-post-id:#{SiteSetting.search_recent_posts_size}", expires_in: 1.week) do
       min_post_id_no_cache
     end
   end
