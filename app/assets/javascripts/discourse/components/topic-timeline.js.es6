@@ -55,5 +55,6 @@ export default MountWidget.extend(Docking, {
   didInsertElement() {
     this._super();
     this.dispatch('topic:current-post-scrolled', 'timeline-scrollarea');
+    this.dispatch('topic-notifications-button:keyboard-trigger', 'topic-notifications-button');
   }
 });
