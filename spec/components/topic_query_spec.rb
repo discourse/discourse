@@ -145,6 +145,10 @@ describe TopicQuery do
         # expect(TopicQuery.new(moderator, tags: [tag.id, other_tag.id]).list_latest.topics.map(&:id)).to eq([tagged_topic3.id].sort)
       end
 
+      it "can return topics with all specified tags" do
+        expect(TopicQuery.new(moderator, tags: [tag.name, other_tag.name], match_all_tags: true).list_latest.topics.map(&:id)).to eq([tagged_topic3.id])
+      end
+
       it "can return topics with no tags" do
         expect(TopicQuery.new(moderator, no_tags: true).list_latest.topics.map(&:id)).to eq([no_tags_topic.id])
       end
