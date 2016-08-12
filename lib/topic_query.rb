@@ -462,8 +462,8 @@ class TopicQuery
         if @options[:tags] && @options[:tags].size > 0
           result = result.joins(:tags)
 
-          # ALL of the given tags:
           if @options[:match_all_tags]
+            # ALL of the given tags:
             @options[:tags] = Tag.where(name: @options[:tags]).pluck(:id) unless @options[:tags][0].is_a?(Integer)
             @options[:tags].each_with_index do |tag, index|
               sql_alias = ['t', index].join
