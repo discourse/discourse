@@ -17,11 +17,25 @@ if `which tx`.strip.empty?
   exit 1
 end
 
-languages = Dir.glob(File.expand_path('../../config/locales/client.*.yml', __FILE__))
-              .map { |x| x.split('.')[-2] }.select { |x| x != 'en' }.sort
+if ARGV.include?('force')
+  STDERR.puts 'Usage:   ruby pull_translations.rb [languages]'
+  STDERR.puts 'Example: ruby pull_translations.rb de it', ''
+  exit 1
+end
+
+def get_languages
+  if ARGV.empty?
+    Dir.glob(File.expand_path('../../config/locales/client.*.yml', __FILE__))
+      .map { |x| x.split('.')[-2] }
+  else
+    ARGV
+  end
+end
+
+languages = get_languages.select { |x| x != 'en' }.sort
 
 puts 'Pulling new translations...', ''
-command = "tx pull --mode=developer --language=#{languages.join(',')} #{ARGV.include?('force') ? '-f' : ''}"
+command = "tx pull --mode=developer --language=#{languages.join(',')} --force"
 
 Open3.popen2e(command) do |stdin, stdout_err, wait_thr|
   while (line = stdout_err.gets)
