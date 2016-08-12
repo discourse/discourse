@@ -21,11 +21,17 @@ const dropdown = {
 };
 
 createWidget('header-notifications', {
+  settings: {
+    avatarSize: 'medium'
+  },
+
   html(attrs) {
     const { currentUser } = this;
 
-    const contents = [ avatarImg('medium', { template: currentUser.get('avatar_template'),
-                                             username: currentUser.get('username') }) ];
+    const contents = [ avatarImg(this.settings.avatarSize, {
+      template: currentUser.get('avatar_template'),
+      username: currentUser.get('username')
+    }) ];
 
     const unreadNotifications = currentUser.get('unread_notifications');
     if (!!unreadNotifications) {
