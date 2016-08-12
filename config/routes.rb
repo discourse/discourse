@@ -315,9 +315,7 @@ Discourse::Application.routes.draw do
   get "users/:username/preferences/card-badge" => "users#card_badge", constraints: {username: USERNAME_ROUTE_FORMAT}
   put "users/:username/preferences/card-badge" => "users#update_card_badge", constraints: {username: USERNAME_ROUTE_FORMAT}
   get "users/:username/staff-info" => "users#staff_info", constraints: {username: USERNAME_ROUTE_FORMAT}
-
   get "users/:username/summary" => "users#summary", constraints: {username: USERNAME_ROUTE_FORMAT}
-
   get "users/:username/invited" => "users#invited", constraints: {username: USERNAME_ROUTE_FORMAT}
   get "users/:username/invited_count" => "users#invited_count", constraints: {username: USERNAME_ROUTE_FORMAT}
   get "users/:username/invited/:filter" => "users#invited", constraints: {username: USERNAME_ROUTE_FORMAT}
@@ -339,6 +337,9 @@ Discourse::Application.routes.draw do
   get "users/by-external/:external_id" => "users#show", constraints: {external_id: /[^\/]+/}
   get "users/:username/flagged-posts" => "users#show", constraints: {username: USERNAME_ROUTE_FORMAT}
   get "users/:username/deleted-posts" => "users#show", constraints: {username: USERNAME_ROUTE_FORMAT}
+
+  get "users/:username/topic-tracking-state" => "users#topic_tracking_state", constraints: {username: USERNAME_ROUTE_FORMAT}
+
   get "user-badges/:username.json" => "user_badges#username", constraints: {username: USERNAME_ROUTE_FORMAT}, defaults: {format: :json}
   get "user-badges/:username" => "user_badges#username", constraints: {username: USERNAME_ROUTE_FORMAT}
 
