@@ -12,11 +12,10 @@ export default Discourse.Route.extend({
 
   model(params) {
     var tag = this.store.createRecord("tag", { id: Handlebars.Utils.escapeExpression(params.tag_id) }),
-        secondaryTag = null,
         f = '';
 
     if (params.secondary_tag_id) {
-      this.set("secondaryTag", this.store.createRecord("tag", { id: Handlebars.Utils.escapeExpression(params.secondary_tag_id) }))
+      this.set("secondaryTag", this.store.createRecord("tag", { id: Handlebars.Utils.escapeExpression(params.secondary_tag_id) }));
     }
 
     if (params.category) {
@@ -51,7 +50,7 @@ export default Discourse.Route.extend({
     const parentCategorySlug = this.get('parentCategorySlug');
     const filter = this.get('navMode');
     const tag_id = (tag ? tag.id : 'none');
-    const secondary_tag_id = this.get('secondaryTag.id')
+    const secondary_tag_id = this.get('secondaryTag.id');
 
     if (categorySlug) {
       var category = Discourse.Category.findBySlug(categorySlug, parentCategorySlug);
