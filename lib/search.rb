@@ -131,10 +131,14 @@ class Search
   def self.min_post_id_no_cache
     return 0 unless SiteSetting.search_prefer_recent_posts?
 
-    offset = Post.unscoped.count - SiteSetting.search_recent_posts_size
-    return 0 if offset <= 0
 
-    Post.unscoped.order(:id).offset(offset).limit(1).pluck(:id)[0]
+    offset, has_more = Post.unscoped
+                           .order('id desc')
+                           .offset(SiteSetting.search_recent_posts_size-1)
+                           .limit(2)
+                           .pluck(:id)
+
+    has_more ? offset : 0
   end
 
   def self.min_post_id(opts=nil)
