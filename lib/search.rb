@@ -721,8 +721,13 @@ class Search
     def aggregate_search(opts = {})
       post_sql = aggregate_post_sql(opts)
 
-      aggregate_posts(post_sql[:default]).each {|p| @results.add(p)}
-      if @results.posts.size < @limit
+      added = 0
+      aggregate_posts(post_sql[:default]).each do |p|
+        @results.add(p)
+        added += 1
+      end
+
+      if added < @limit
         aggregate_posts(post_sql[:remaining]).each {|p| @results.add(p) }
       end
     end
