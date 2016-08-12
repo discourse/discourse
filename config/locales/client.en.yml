@@ -1352,7 +1352,6 @@ en:
       timeline:
         back: "Back"
         back_description: "Go back to your last unread post"
-        replies: "%{current} / %{total} replies"
         replies_short: "%{current} / %{total}"
 
       progress:
@@ -1366,7 +1365,6 @@ en:
         jump_bottom_with_number: "jump to post %{post_number}"
         total: total posts
         current: current post
-        position: "post %{current} of %{total}"
 
       notifications:
         title: change how often you get notified about this topic
@@ -1592,7 +1590,6 @@ en:
       gap:
         one: "view 1 hidden reply"
         other: "view {{count}} hidden replies"
-      more_links: "{{count}} more..."
 
       unread: "Post is unread"
       has_replies:
@@ -1672,14 +1669,6 @@ en:
         defer_flags:
           one: "Defer flag"
           other: "Defer flags"
-        it_too:
-          off_topic: "Flag it too"
-          spam: "Flag it too"
-          inappropriate: "Flag it too"
-          custom_flag: "Flag it too"
-          bookmark: "Bookmark it too"
-          like: "Like it too"
-          vote: "Vote for it too"
         undo:
           off_topic: "Undo flag"
           spam: "Undo flag"
@@ -1940,7 +1929,6 @@ en:
         help: "This topic is unlisted; it will not be displayed in topic lists, and can only be accessed via a direct link"
 
     posts: "Posts"
-    posts_lowercase: "posts"
     posts_long: "there are {{number}} posts in this topic"
 
     # keys ending with _MF use message format, see https://meta.discourse.org/t/message-format-support-for-localization/7035 for details
