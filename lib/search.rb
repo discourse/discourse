@@ -566,15 +566,7 @@ class Search
           posts = posts.joins('JOIN users u ON u.id = posts.user_id')
           posts = posts.where("posts.raw  || ' ' || u.username || ' ' || COALESCE(u.name, '') ilike ?", "%#{term_without_quote}%")
         else
-
-
           posts = posts.where("post_search_data.search_data @@ #{ts_query}")
-
-          min_id = Search.min_post_id
-          if min_id > 0
-            fast_query = posts.dup.where("post_search_data.post_id >= #{min_id}")
-            posts = fast_query if fast_query.dup.count >= 50
-          end
 
           exact_terms = @term.scan(/"([^"]+)"/).flatten
           exact_terms.each do |exact|
@@ -687,34 +679,51 @@ class Search
       @ts_query_cache[(locale || query_locale) + " " + @term] ||= Search.ts_query(@term, locale)
     end
 
-    def aggregate_search(opts = {})
+    def wrap_rows(query)
+      "SELECT *, row_number() over() row_number FROM (#{query.to_sql}) xxx"
+    end
 
+    def aggregate_post_sql(opts)
       min_or_max = @order == :latest ? "max" : "min"
 
-      post_sql =
+      query =
         if @order == :likes
           # likes are a pain to aggregate so skip
           posts_query(@limit, private_messages: opts[:private_messages])
             .select('topics.id', "post_number")
-            .to_sql
         else
-          posts_query(@limit, aggregate_search: true,
-                              private_messages: opts[:private_messages])
+          posts_query(@limit, aggregate_search: true, private_messages: opts[:private_messages])
             .select('topics.id', "#{min_or_max}(post_number) post_number")
             .group('topics.id')
-            .to_sql
         end
 
+      min_id = Search.min_post_id
+      if min_id > 0
+        low_set = query.dup.where("post_search_data.post_id < #{min_id}")
+        high_set = query.where("post_search_data.post_id >= #{min_id}")
+
+        return { default: wrap_rows(high_set), remaining: wrap_rows(low_set) }
+      end
+
       # double wrapping so we get correct row numbers
-      post_sql = "SELECT *, row_number() over() row_number FROM (#{post_sql}) xxx"
+      { default: wrap_rows(query) }
+    end
 
-      posts = Post.includes(:topic => :category)
-                  .includes(:user)
-                  .joins("JOIN (#{post_sql}) x ON x.id = posts.topic_id AND x.post_number = posts.post_number")
-                  .order('row_number')
+    def aggregate_posts(post_sql)
+      return [] unless post_sql
 
-      posts.each do |post|
-        @results.add(post)
+      Post.includes(:topic => :category)
+        .includes(:user)
+        .joins("JOIN (#{post_sql}) x ON x.id = posts.topic_id AND x.post_number = posts.post_number")
+        .order('row_number')
+    end
+
+    def aggregate_search(opts = {})
+      post_sql = aggregate_post_sql(opts)
+
+      aggregate_posts(post_sql[:default]).each {|p| @results.add(p)}
+      if @results.posts.size < @limit
+        aggregate_posts(post_sql[:remaining]).each {|p| @results.add(p) }
       end
     end
 
