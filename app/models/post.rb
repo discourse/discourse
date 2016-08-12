@@ -188,6 +188,14 @@ class Post < ActiveRecord::Base
     end
   end
 
+  def add_nofollow?
+    return user.blank? || SiteSetting.tl3_links_no_follow? || !user.has_trust_level?(TrustLevel[3])
+  end
+
+  def omit_nofollow?
+    return !add_nofollow?
+  end
+
   def cook(*args)
     # For some posts, for example those imported via RSS, we support raw HTML. In that
     # case we can skip the rendering pipeline.
@@ -203,7 +211,7 @@ class Post < ActiveRecord::Base
       post_user = self.user
       cloned[1][:user_id] = post_user.id if post_user
 
-      cooked = if !post_user || SiteSetting.tl3_links_no_follow || !post_user.has_trust_level?(TrustLevel[3])
+      cooked = if add_nofollow?
                  post_analyzer.cook(*args)
                else
                  # At trust level 3, we don't apply nofollow to links
