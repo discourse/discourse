@@ -7,16 +7,34 @@ require_dependency "file_helper"
 module FileStore
 
   class S3Store < BaseStore
+    attr_reader :s3_bucket, :s3_bucket_folder_path
 
     TOMBSTONE_PREFIX ||= "tombstone/"
 
     def initialize(s3_helper=nil)
-      @s3_helper = s3_helper || S3Helper.new(s3_bucket, TOMBSTONE_PREFIX)
+      @s3_bucket, @s3_bucket_folder_path = begin
+        raise Discourse::SiteSettingMissing.new("s3_upload_bucket") if SiteSetting.s3_upload_bucket.blank?
+        SiteSetting.s3_upload_bucket.downcase.split("/".freeze, 2)
+      end
+
+      tombstone_prefix =
+        if @s3_bucket_folder_path
+          File.join(@s3_bucket_folder_path, TOMBSTONE_PREFIX)
+        else
+          TOMBSTONE_PREFIX
+        end
+
+      @s3_helper = s3_helper || S3Helper.new(s3_bucket, tombstone_prefix)
     end
 
     def store_upload(file, upload, content_type = nil)
-      path = get_path_for_upload(upload)
+      path = get_path_for_s3_upload(get_path_for_upload(upload))
       store_file(file, path, filename: upload.original_filename, content_type: content_type, cache_locally: true)
+    end
+
+    def store_optimized_image(file, optimized_image)
+      path = get_path_for_s3_upload(get_path_for_optimized_image(optimized_image))
+      store_file(file, path)
     end
 
     # options
@@ -43,7 +61,7 @@ module FileStore
     def remove_file(url, path)
       return unless has_been_uploaded?(url)
       # copy the removed file to tombstone
-      @s3_helper.remove(path, true)
+      @s3_helper.remove(get_path_for_s3_upload(path), path)
     end
 
     def has_been_uploaded?(url)
@@ -97,11 +115,9 @@ module FileStore
       UserAvatar.external_avatar_url(user_id, avatar.upload_id, avatar.width)
     end
 
-    def s3_bucket
-      @s3_bucket ||= begin
-        raise Discourse::SiteSettingMissing.new("s3_upload_bucket") if SiteSetting.s3_upload_bucket.blank?
-        SiteSetting.s3_upload_bucket.downcase
-      end
+    def get_path_for_s3_upload(path)
+      path = File.join(@s3_bucket_folder_path, path) if @s3_bucket_folder_path
+      path
     end
 
   end

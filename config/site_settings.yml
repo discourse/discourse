@@ -690,7 +690,7 @@ files:
     enum: 'S3RegionSiteSetting'
   s3_upload_bucket:
     default: ''
-    regex: "^[a-z0-9-]+$" # can't use '.' when using HTTPS
+    regex: '^[a-z0-9\-\/]+$' # can't use '.' when using HTTPS
   s3_cdn_url:
     default: ''
     regex: '^https?:\/\/.+[^\/]$'
