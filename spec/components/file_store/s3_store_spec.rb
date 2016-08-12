@@ -19,25 +19,7 @@ describe FileStore::S3Store do
     SiteSetting.s3_secret_access_key = "s3-secret-access-key"
   end
 
-  describe ".store_upload" do
-
-    it "returns an absolute schemaless url" do
-      s3_helper.expects(:upload)
-      expect(store.store_upload(uploaded_file, upload)).to match(/\/\/s3-upload-bucket\.s3\.amazonaws\.com\/original\/.+#{upload.sha1}\.png/)
-    end
-
-  end
-
-  describe ".store_optimized_image" do
-
-    it "returns an absolute schemaless url" do
-      s3_helper.expects(:upload)
-      expect(store.store_optimized_image(optimized_image_file, optimized_image)).to match(/\/\/s3-upload-bucket\.s3\.amazonaws\.com\/optimized\/.+#{optimized_image.upload.sha1}_#{OptimizedImage::VERSION}_100x200\.png/)
-    end
-
-  end
-
-  context 'removal from s3' do
+  shared_context 's3 helpers' do
     let(:store) { FileStore::S3Store.new }
     let(:client) { Aws::S3::Client.new(stub_responses: true) }
     let(:resource) { Aws::S3::Resource.new(client: client) }
@@ -45,10 +27,84 @@ describe FileStore::S3Store do
     let(:s3_helper) { store.instance_variable_get(:@s3_helper) }
 
     before do
-      SiteSetting.s3_region = 'us-west-1'
+      SiteSetting.s3_region ='us-west-1'
+    end
+  end
+
+  context 'uploading to s3' do
+    include_context "s3 helpers"
+
+    describe "#store_upload" do
+      it "returns an absolute schemaless url" do
+        s3_helper.expects(:s3_bucket).returns(s3_bucket)
+        s3_object = stub
+
+        s3_bucket.expects(:object).with("original/1X/#{upload.sha1}.png").returns(s3_object)
+        s3_object.expects(:upload_file)
+
+        expect(store.store_upload(uploaded_file, upload)).to eq(
+          "//s3-upload-bucket.s3-us-west-1.amazonaws.com/original/1X/#{upload.sha1}.png"
+        )
+      end
+
+      describe "when s3_upload_bucket includes folders path" do
+        before do
+          SiteSetting.s3_upload_bucket = "s3-upload-bucket/discourse-uploads"
+        end
+
+        it "returns an absolute schemaless url" do
+          s3_helper.expects(:s3_bucket).returns(s3_bucket)
+          s3_object = stub
+
+          s3_bucket.expects(:object).with("discourse-uploads/original/1X/#{upload.sha1}.png").returns(s3_object)
+          s3_object.expects(:upload_file)
+
+          expect(store.store_upload(uploaded_file, upload)).to eq(
+            "//s3-upload-bucket.s3-us-west-1.amazonaws.com/discourse-uploads/original/1X/#{upload.sha1}.png"
+          )
+        end
+      end
     end
 
-    describe ".remove_upload" do
+    describe "#store_optimized_image" do
+      it "returns an absolute schemaless url" do
+        s3_helper.expects(:s3_bucket).returns(s3_bucket)
+        s3_object = stub
+        path = "optimized/1X/#{optimized_image.upload.sha1}_#{OptimizedImage::VERSION}_100x200.png"
+
+        s3_bucket.expects(:object).with(path).returns(s3_object)
+        s3_object.expects(:upload_file)
+
+        expect(store.store_optimized_image(optimized_image_file, optimized_image)).to eq(
+          "//s3-upload-bucket.s3-us-west-1.amazonaws.com/#{path}"
+        )
+      end
+
+      describe "when s3_upload_bucket includes folders path" do
+        before do
+          SiteSetting.s3_upload_bucket = "s3-upload-bucket/discourse-uploads"
+        end
+
+        it "returns an absolute schemaless url" do
+          s3_helper.expects(:s3_bucket).returns(s3_bucket)
+          s3_object = stub
+          path = "discourse-uploads/optimized/1X/#{optimized_image.upload.sha1}_#{OptimizedImage::VERSION}_100x200.png"
+
+          s3_bucket.expects(:object).with(path).returns(s3_object)
+          s3_object.expects(:upload_file)
+
+          expect(store.store_optimized_image(optimized_image_file, optimized_image)).to eq(
+            "//s3-upload-bucket.s3-us-west-1.amazonaws.com/#{path}"
+          )
+        end
+      end
+    end
+  end
+
+  context 'removal from s3' do
+    include_context "s3 helpers"
+
+    describe "#remove_upload" do
       it "removes the file from s3 with the right paths" do
         s3_helper.expects(:s3_bucket).returns(s3_bucket)
         upload.update_attributes!(url: "//s3-upload-bucket.s3-us-west-1.amazonaws.com/original/1X/#{upload.sha1}.png")
@@ -61,9 +117,28 @@ describe FileStore::S3Store do
 
         store.remove_upload(upload)
       end
+
+      describe "when s3_upload_bucket includes folders path" do
+        before do
+          SiteSetting.s3_upload_bucket = "s3-upload-bucket/discourse-uploads"
+        end
+
+        it "removes the file from s3 with the right paths" do
+          s3_helper.expects(:s3_bucket).returns(s3_bucket)
+          upload.update_attributes!(url: "//s3-upload-bucket.s3-us-west-1.amazonaws.com/discourse-uploads/original/1X/#{upload.sha1}.png")
+          s3_object = stub
+
+          s3_bucket.expects(:object).with("discourse-uploads/tombstone/original/1X/#{upload.sha1}.png").returns(s3_object)
+          s3_object.expects(:copy_from).with(copy_source: "s3-upload-bucket/discourse-uploads/original/1X/#{upload.sha1}.png")
+          s3_bucket.expects(:object).with("discourse-uploads/original/1X/#{upload.sha1}.png").returns(s3_object)
+          s3_object.expects(:delete)
+
+          store.remove_upload(upload)
+        end
+      end
     end
 
-    describe ".remove_optimized_image" do
+    describe "#remove_optimized_image" do
       let(:optimized_image) do
         Fabricate(:optimized_image,
           url: "//s3-upload-bucket.s3-us-west-1.amazonaws.com/optimized/1X/#{upload.sha1}_1_100x200.png",
@@ -81,6 +156,24 @@ describe FileStore::S3Store do
         s3_object.expects(:delete)
 
         store.remove_optimized_image(optimized_image)
+      end
+
+      describe "when s3_upload_bucket includes folders path" do
+        before do
+          SiteSetting.s3_upload_bucket = "s3-upload-bucket/discourse-uploads"
+        end
+
+        it "removes the file from s3 with the right paths" do
+          s3_helper.expects(:s3_bucket).returns(s3_bucket)
+          s3_object = stub
+
+          s3_bucket.expects(:object).with("discourse-uploads/tombstone/optimized/1X/#{upload.sha1}_1_100x200.png").returns(s3_object)
+          s3_object.expects(:copy_from).with(copy_source: "s3-upload-bucket/discourse-uploads/optimized/1X/#{upload.sha1}_1_100x200.png")
+          s3_bucket.expects(:object).with("discourse-uploads/optimized/1X/#{upload.sha1}_1_100x200.png").returns(s3_object)
+          s3_object.expects(:delete)
+
+          store.remove_optimized_image(optimized_image)
+        end
       end
     end
   end
@@ -152,4 +245,29 @@ describe FileStore::S3Store do
     end
   end
 
+  describe "#s3_bucket" do
+    it "should return the right bucket name" do
+      expect(store.s3_bucket).to eq('s3-upload-bucket')
+    end
+
+    it "should return the right bucket name when folders is included" do
+      SiteSetting.s3_upload_bucket = 's3-upload-bucket/this-site-upload-folder'
+      expect(store.s3_bucket).to eq('s3-upload-bucket')
+    end
+  end
+
+  describe "s3_bucket_folder_path" do
+    context "when no folder path is specified" do
+      it "should return the right folder path" do
+        expect(store.s3_bucket_folder_path).to eq(nil)
+      end
+    end
+
+    context "when site setting contains a folder path" do
+      it "should return the right folder path" do
+        SiteSetting.s3_upload_bucket = 's3-upload-bucket/this-site-upload-folder'
+        expect(store.s3_bucket_folder_path).to eq("this-site-upload-folder")
+      end
+    end
+  end
 end

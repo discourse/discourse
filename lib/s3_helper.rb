@@ -16,18 +16,18 @@ class S3Helper
     obj.upload_file(file, options)
   end
 
-  def remove(path, copy_to_tombstone=false)
+  def remove(s3_filename, tombstone_filename=false)
     bucket = s3_bucket
 
     # copy the file in tombstone
-    if copy_to_tombstone && @tombstone_prefix.present?
+    if tombstone_filename && @tombstone_prefix.present?
       bucket
-        .object(File.join(@tombstone_prefix, path))
-        .copy_from(copy_source: File.join(@s3_bucket, path))
+        .object(File.join(@tombstone_prefix, tombstone_filename))
+        .copy_from(copy_source: File.join(@s3_bucket, s3_filename))
     end
 
     # delete the file
-    bucket.object(path).delete
+    bucket.object(s3_filename).delete
   rescue Aws::S3::Errors::NoSuchKey
   end
 
