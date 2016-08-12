@@ -43,6 +43,7 @@ export default Ember.Controller.extend(BulkTopicSelection, {
   needs: ["application"],
 
   tag: null,
+  secondaryTag: null,
   list: null,
   canAdminTag: Ember.computed.alias("currentUser.staff"),
   filterMode: null,
@@ -72,7 +73,7 @@ export default Ember.Controller.extend(BulkTopicSelection, {
   }.property(),
 
   showAdminControls: function() {
-    return this.get('canAdminTag') && !this.get('category');
+    return !this.get('secondaryTag') && this.get('canAdminTag') && !this.get('category');
   }.property('canAdminTag', 'category'),
 
   loadMoreTopics() {

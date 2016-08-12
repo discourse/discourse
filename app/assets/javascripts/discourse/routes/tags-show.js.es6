@@ -12,9 +12,12 @@ export default Discourse.Route.extend({
 
   model(params) {
     var tag = this.store.createRecord("tag", { id: Handlebars.Utils.escapeExpression(params.tag_id) }),
+        secondaryTag = null,
         f = '';
 
-    this.set("secondaryTagId", params.secondary_tag_id)
+    if (params.secondary_tag_id) {
+      this.set("secondaryTag", this.store.createRecord("tag", { id: Handlebars.Utils.escapeExpression(params.secondary_tag_id) }))
+    }
 
     if (params.category) {
       f = 'c/';
@@ -45,10 +48,10 @@ export default Discourse.Route.extend({
     const params = controller.getProperties('order', 'ascending');
 
     const categorySlug = this.get('categorySlug');
-    const secondaryTagId = this.get('secondaryTagId')
     const parentCategorySlug = this.get('parentCategorySlug');
     const filter = this.get('navMode');
     const tag_id = (tag ? tag.id : 'none');
+    const secondary_tag_id = this.get('secondaryTag.id')
 
     if (categorySlug) {
       var category = Discourse.Category.findBySlug(categorySlug, parentCategorySlug);
@@ -59,8 +62,8 @@ export default Discourse.Route.extend({
       }
 
       this.set('category', category);
-    } else if (secondaryTagId) {
-      params.filter = `tags/intersection/${tag_id}/${secondaryTagId}`;
+    } else if (secondary_tag_id) {
+      params.filter = `tags/intersection/${tag_id}/${secondary_tag_id}`;
       this.set('category', null);
     } else {
       params.filter = `tags/${tag_id}/l/${filter}`;
@@ -100,6 +103,7 @@ export default Discourse.Route.extend({
     this.controllerFor('tags.show').setProperties({
       model,
       tag: model,
+      secondaryTag: this.get('secondaryTag'),
       category: this.get('category'),
       filterMode: this.get('filterMode'),
       navMode: this.get('navMode'),
@@ -129,7 +133,7 @@ export default Discourse.Route.extend({
         // Pre-fill the tags input field
         if (controller.get('model.id')) {
           var c = self.controllerFor('composer').get('model');
-          c.set('tags', [controller.get('model.id')]);
+          c.set('tags', _.compact([controller.get('model.id'), controller.get('secondaryTag.id')]));
         }
       });
     },
