@@ -204,7 +204,11 @@ const ApplicationRoute = Discourse.Route.extend(OpenComposer, {
   },
 
   _autoLogin(modal, modalClass, notAuto) {
-    const methods = findAll(this.siteSettings);
+
+    const methods = findAll(this.siteSettings,
+                            this.container.lookup('capabilities:main'),
+                            this.site.isMobileDevice);
+
     if (!this.siteSettings.enable_local_logins && methods.length === 1) {
       this.controllerFor('login').send('externalLogin', methods[0]);
     } else {

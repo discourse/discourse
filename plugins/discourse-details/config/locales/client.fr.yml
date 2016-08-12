@@ -1,0 +1,7 @@
+fr:
+  js:
+    details:
+      title: Cacher le texte
+    composer:
+      details_title: Résumé
+      details_text: "Ce texte sera caché"

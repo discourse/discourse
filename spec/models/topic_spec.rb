@@ -1364,6 +1364,24 @@ describe Topic do
       expect(Topic.for_digest(u, 1.year.ago, top_order: true)).to eq([topic])
     end
 
+    it "doesn't return topics with only muted tags" do
+      user = Fabricate(:user)
+      tag = Fabricate(:tag)
+      TagUser.change(user.id, tag.id, TagUser.notification_levels[:muted])
+      topic = Fabricate(:topic, tags: [tag])
+
+      expect(Topic.for_digest(user, 1.year.ago, top_order: true)).to be_blank
+    end
+
+    it "returns topics with both muted and not muted tags" do
+      user = Fabricate(:user)
+      muted_tag, other_tag = Fabricate(:tag), Fabricate(:tag)
+      TagUser.change(user.id, muted_tag.id, TagUser.notification_levels[:muted])
+      topic = Fabricate(:topic, tags: [muted_tag, other_tag])
+
+      expect(Topic.for_digest(user, 1.year.ago, top_order: true)).to eq([topic])
+    end
+
   end
 
   describe 'secured' do

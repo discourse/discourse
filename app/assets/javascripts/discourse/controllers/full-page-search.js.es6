@@ -4,6 +4,7 @@ import showModal from 'discourse/lib/show-modal';
 import { default as computed, observes } from 'ember-addons/ember-computed-decorators';
 import Category from 'discourse/models/category';
 import { escapeExpression } from 'discourse/lib/utilities';
+import { setTransient } from 'discourse/lib/page-tracker';
 
 const SortOrders = [
   {name: I18n.t('search.relevance'), id: 0},
@@ -14,6 +15,7 @@ const SortOrders = [
 
 export default Ember.Controller.extend({
   needs: ["application"],
+  bulkSelectEnabled: null,
 
   loading: Em.computed.not("model"),
   queryParams: ["q", "context_id", "context", "skip_context"],
@@ -24,10 +26,16 @@ export default Ember.Controller.extend({
   searching: false,
   sortOrder: 0,
   sortOrders: SortOrders,
+  invalidSearch: false,
 
   @computed('model.posts')
-  resultCount(posts){
+  resultCount(posts) {
     return posts && posts.length;
+  },
+
+  @computed('resultCount')
+  hasResults(resultCount) {
+    return (resultCount || 0) > 0;
   },
 
   @computed('q')
@@ -62,11 +70,6 @@ export default Ember.Controller.extend({
     return isValidSearchTerm(q);
   },
 
-  @computed('searchTerm', 'searching')
-  searchButtonDisabled(searchTerm, searching) {
-    return !!(searching || !isValidSearchTerm(searchTerm));
-  },
-
   @computed('q')
   noSortQ(q) {
     if (q) {
@@ -85,7 +88,7 @@ export default Ember.Controller.extend({
   setSearchTerm(term) {
     this._searchOnSortChange = false;
     if (term) {
-      SortOrders.forEach((order) => {
+      SortOrders.forEach(order => {
         if (term.indexOf(order.term) > -1){
           this.set('sortOrder', order.id);
           term = term.replace(order.term, "");
@@ -98,9 +101,9 @@ export default Ember.Controller.extend({
   },
 
   @observes('sortOrder')
-  triggerSearch(){
+  triggerSearch() {
     if (this._searchOnSortChange) {
-      this.search();
+      this._search();
     }
   },
 
@@ -130,15 +133,31 @@ export default Ember.Controller.extend({
     this.set("controllers.application.showFooter", !this.get("loading"));
   },
 
-  canBulkSelect: Em.computed.alias('currentUser.staff'),
+  @computed('hasResults')
+  canBulkSelect(hasResults) {
+    return this.currentUser && this.currentUser.staff && hasResults;
+  },
 
-  search(){
-    if (this.get("searching")) return;
+  @computed
+  canCreateTopic() {
+    return this.currentUser && !this.site.mobileView;
+  },
+
+  _search() {
+    if (this.get("searching")) { return; }
+
+    this.set('invalidSearch', false);
+    const searchTerm = this.get('searchTerm');
+    if (!isValidSearchTerm(searchTerm)) {
+      this.set('invalidSearch', true);
+      return;
+    }
+
     this.set("searching", true);
+    this.set('bulkSelectEnabled', false);
+    this.get('selected').clear();
 
-    const router = Discourse.__container__.lookup('router:main');
-
-    var args = { q: this.get("searchTerm") };
+    var args = { q: searchTerm };
 
     const sortOrder = this.get("sortOrder");
     if (sortOrder && SortOrders[sortOrder].term) {
@@ -160,9 +179,9 @@ export default Ember.Controller.extend({
 
     ajax("/search", { data: args }).then(results => {
       const model = translateResults(results) || {};
-      router.transientCache('lastSearch', { searchKey, model }, 5);
+      setTransient('lastSearch', { searchKey, model }, 5);
       this.set("model", model);
-    }).finally(() => { this.set("searching",false); });
+    }).finally(() => this.set("searching", false));
   },
 
   actions: {
@@ -187,22 +206,13 @@ export default Ember.Controller.extend({
       this.get('selected').clear();
     },
 
-    refresh() {
-      this.set('bulkSelectEnabled', false);
-      this.get('selected').clear();
-      this.search();
-    },
-
     showSearchHelp() {
       // TODO: dupe code should be centralized
-      ajax("/static/search_help.html", { dataType: 'html' }).then((model) => {
-        showModal('searchHelp', { model });
-      });
+      ajax("/static/search_help.html", { dataType: 'html' }).then(model => showModal('searchHelp', { model }));
     },
 
     search() {
-      if (this.get("searchButtonDisabled")) return;
-      this.search();
+      this._search();
     }
   }
 });

@@ -22,7 +22,7 @@ export default Ember.Controller.extend({
 
   @computed('problems.length')
   foundProblems(problemsLength) {
-    return this.currentUser.get('admin') && (problemsLength || 0) > 1;
+    return this.currentUser.get('admin') && (problemsLength || 0) > 0;
   },
 
   @computed('foundProblems')

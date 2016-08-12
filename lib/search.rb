@@ -128,6 +128,30 @@ class Search
     end
   end
 
+  def self.min_post_id_no_cache
+    return 0 unless SiteSetting.search_prefer_recent_posts?
+
+
+    offset, has_more = Post.unscoped
+                           .order('id desc')
+                           .offset(SiteSetting.search_recent_posts_size-1)
+                           .limit(2)
+                           .pluck(:id)
+
+    has_more ? offset : 0
+  end
+
+  def self.min_post_id(opts=nil)
+    return 0 unless SiteSetting.search_prefer_recent_posts?
+
+    # It can be quite slow to count all the posts so let's cache it
+    Rails.cache.fetch("search-min-post-id:#{SiteSetting.search_recent_posts_size}", expires_in: 1.week) do
+      min_post_id_no_cache
+    end
+  end
+
+  attr_accessor :term
+
   def initialize(term, opts=nil)
     @opts = opts || {}
     @guardian = @opts[:guardian] || Guardian.new
@@ -135,6 +159,7 @@ class Search
     @include_blurbs = @opts[:include_blurbs] || false
     @blurb_length = @opts[:blurb_length]
     @limit = Search.per_facet
+    @valid = true
 
     term = process_advanced_search!(term)
 
@@ -155,14 +180,26 @@ class Search
     @results = GroupedSearchResults.new(@opts[:type_filter], term, @search_context, @include_blurbs, @blurb_length)
   end
 
+  def valid?
+    @valid
+  end
+
   def self.execute(term, opts=nil)
     self.new(term, opts).execute
   end
 
   # Query a term
   def execute
-    if @term.blank? || @term.length < (@opts[:min_search_term_length] || SiteSetting.min_search_term_length)
-      return nil unless @filters.present?
+
+    unless @filters.present?
+      min_length = @opts[:min_search_term_length] || SiteSetting.min_search_term_length
+      terms = (@term || '').split(/\s(?=(?:[^"]|"[^"]*")*$)/).reject {|t| t.length < min_length }
+
+      if terms.blank?
+        @term = ''
+        @valid = false
+        return
+      end
     end
 
     # If the term is a number or url to a topic, just include that topic
@@ -529,7 +566,16 @@ class Search
           posts = posts.joins('JOIN users u ON u.id = posts.user_id')
           posts = posts.where("posts.raw  || ' ' || u.username || ' ' || COALESCE(u.name, '') ilike ?", "%#{term_without_quote}%")
         else
+
+
           posts = posts.where("post_search_data.search_data @@ #{ts_query}")
+
+          min_id = Search.min_post_id
+          if min_id > 0
+            fast_query = posts.dup.where("post_search_data.post_id >= #{min_id}")
+            posts = fast_query if fast_query.dup.count >= 50
+          end
+
           exact_terms = @term.scan(/"([^"]+)"/).flatten
           exact_terms.each do |exact|
             posts = posts.where("posts.raw ilike ?", "%#{exact}%")
@@ -653,7 +699,7 @@ class Search
             .to_sql
         else
           posts_query(@limit, aggregate_search: true,
-                                     private_messages: opts[:private_messages])
+                              private_messages: opts[:private_messages])
             .select('topics.id', "#{min_or_max}(post_number) post_number")
             .group('topics.id')
             .to_sql
@@ -663,6 +709,7 @@ class Search
       post_sql = "SELECT *, row_number() over() row_number FROM (#{post_sql}) xxx"
 
       posts = Post.includes(:topic => :category)
+                  .includes(:user)
                   .joins("JOIN (#{post_sql}) x ON x.id = posts.topic_id AND x.post_number = posts.post_number")
                   .order('row_number')
 
@@ -679,7 +726,9 @@ class Search
 
     def topic_search
       if @search_context.is_a?(Topic)
-        posts = posts_query(@limit).where('posts.topic_id = ?', @search_context.id).includes(:topic => :category)
+        posts = posts_query(@limit).where('posts.topic_id = ?', @search_context.id)
+                                   .includes(:topic => :category)
+                                   .includes(:user)
         posts.each do |post|
           @results.add(post)
         end

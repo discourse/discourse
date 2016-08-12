@@ -69,7 +69,9 @@ export default Ember.Controller.extend({
   focusTarget(replyingToTopic, creatingPM, usernames) {
     if (this.capabilities.isIOS) { return "none"; }
 
-    if (creatingPM && usernames === this.currentUser.get('username')) {
+    // Focus on usernames if it's blank or if it's just you
+    usernames = usernames || "";
+    if (creatingPM && usernames.length === 0 || usernames === this.currentUser.get('username')) {
       return 'usernames';
     }
 

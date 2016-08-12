@@ -1296,8 +1296,6 @@ nl:
         We konden geen bruikbare tekst in je e-mail vinden.
 
         Als je deze melding krijgt en _wel_ een reactie had gestuurd, kan je het opnieuw proberen met een eenvoudigere opmaak.
-
-
     email_reject_parsing:
       subject_template: "[%{site_name}] E-mailprobleem -- Inhoud niet herkend"
       text_body_template: |

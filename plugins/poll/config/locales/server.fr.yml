@@ -16,7 +16,7 @@ fr:
     named_poll_must_have_at_least_2_options: "Le sondage <strong>%{name}</strong> doit contenir au moins deux options."
     default_poll_must_have_less_options:
       one: "Un sondage peut contenir une option."
-      other: "Un sondage peut contenir jusque %{count} options."
+      other: "Un sondage peut contenir jusqu'à %{count} options."
     named_poll_must_have_less_options:
       one: "Le sondage <strong>% {name} </ strong> peut contenir une option."
       other: "Le sondage <strong>% {name} </ strong> peut contenir jusqu’à % {count} options."
@@ -38,4 +38,4 @@ fr:
     topic_must_be_open_to_toggle_status: "Le sujet doit être ouvert pour modifier le statut."
     only_staff_or_op_can_toggle_status: "Seuls les responsables ou l'utilisateur qui a créé ce sujet peuvent modifier le statut d'un sondage."
     email:
-      link_to_poll: "Cliquez ici pour voir le sondage."
+      link_to_poll: "Cliquer pour voir le sondage."

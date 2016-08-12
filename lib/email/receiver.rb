@@ -77,7 +77,7 @@ module Email
       body, @elided = select_body
       body ||= ""
 
-      raise NoBodyDetectedError if body.blank? && !@mail.has_attachments?
+      raise NoBodyDetectedError if body.blank? && attachments.empty?
 
       if is_auto_generated?
         @incoming_email.update_columns(is_auto_generated: true)
@@ -436,15 +436,17 @@ module Email
       raise InvalidPostAction.new(e)
     end
 
-
+    def attachments
+      # strip blacklisted attachments (mostly signatures)
+      @attachments ||= @mail.attachments.select do |attachment|
+        attachment.content_type !~ SiteSetting.attachment_content_type_blacklist_regex &&
+        attachment.filename !~ SiteSetting.attachment_filename_blacklist_regex
+      end
+    end
 
     def create_post_with_attachments(options={})
       # deal with attachments
-      @mail.attachments.each do |attachment|
-        # strip blacklisted attachments (mostly signatures)
-        next if attachment.content_type =~ SiteSetting.attachment_content_type_blacklist_regex
-        next if attachment.filename =~ SiteSetting.attachment_filename_blacklist_regex
-
+      attachments.each do |attachment|
         tmp = Tempfile.new("discourse-email-attachment")
         begin
           # read attachment

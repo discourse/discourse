@@ -13,6 +13,7 @@ module FileStore
     end
 
     def store_file(file, path, opts = {})
+      not_implemented
     end
 
     def remove_upload(upload)
@@ -24,24 +25,31 @@ module FileStore
     end
 
     def remove_file(url)
+      not_implemented
     end
 
     def has_been_uploaded?(url)
+      not_implemented
     end
 
     def download_url(upload)
+      not_implemented
     end
 
     def cdn_url(url)
+      not_implemented
     end
 
     def absolute_base_url
+      not_implemented
     end
 
     def relative_base_url
+      not_implemented
     end
 
     def external?
+      not_implemented
     end
 
     def internal?
@@ -49,6 +57,7 @@ module FileStore
     end
 
     def path_for(upload)
+      not_implemented
     end
 
     def download(upload)
@@ -109,6 +118,12 @@ module FileStore
       FileUtils.cp(file.path, path)
       # keep latest 500 files
       `ls -tr #{CACHE_DIR} | head -n +#{CACHE_MAXIMUM_SIZE} | xargs rm -f`
+    end
+
+    private
+
+    def not_implemented
+      raise "Not implemented."
     end
 
   end

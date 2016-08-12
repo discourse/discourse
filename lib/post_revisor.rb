@@ -137,6 +137,7 @@ class PostRevisor
     Post.transaction do
       revise_post
 
+      yield if block_given?
       # TODO: these callbacks are being called in a transaction
       # it is kind of odd, because the callback is called "before_edit"
       # but the post is already edited at this point

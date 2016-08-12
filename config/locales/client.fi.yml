@@ -476,7 +476,6 @@ fi:
         instructions: |
           Asetus syrjäyttää koosteet tapahtumista.<br />
           Vaimennettujen ketjujen ja alueiden viestejä ei sisällytetä sähköposteihin.
-
         daily: "Lähetä päivittäin"
         individual: "Lähetä sähköpostia jokaisesta uudesta viestistä"
         many_per_day: "Lähetä minulle sähköpostia jokaisesta uudesta viestistä (noin {{dailyEmailEstimate}} päivässä)"
