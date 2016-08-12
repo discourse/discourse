@@ -45,6 +45,24 @@
     padding: 2px 4px;
     float: left;
     margin-right: 6px;
+    min-width: 20px;
+  }
+
+  .btn:not(.no-text) {
+    font-size: 1.2em;
+  }
+
+  .btn.bold {
+    font-weight: bolder;
+  }
+
+  .btn.italic {
+    font-style: italic;
+  }
+
+  .btn.heading {
+    font-family: Palatino, Cambria, Georgia, "Times New Roman", serif;
+    font-weight: bold;
   }
 }
 
