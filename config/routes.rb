@@ -45,6 +45,9 @@ Discourse::Application.routes.draw do
     get "banner"
     get "emoji"
   end
+
+  get "site/basic-info" => 'site#basic_info'
+
   get "site_customizations/:key" => "site_customizations#show"
 
   resources :forums
