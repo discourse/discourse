@@ -49,7 +49,7 @@ class LogAnalyzer
     private
 
     def self.sanitize_url(url)
-      url.gsub(/(api_key|api_username)=(\w+)/, '\1=[FILTERED]')
+      url.gsub(/(api_key|api_username)=([\w.\-]+)/, '\1=[FILTERED]')
     end
   end
 
