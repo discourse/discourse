@@ -464,10 +464,16 @@ class TopicQuery
 
           if @options[:match_all_tags]
             # ALL of the given tags:
+            tags_count = @options[:tags].length
             @options[:tags] = Tag.where(name: @options[:tags]).pluck(:id) unless @options[:tags][0].is_a?(Integer)
-            @options[:tags].each_with_index do |tag, index|
-              sql_alias = ['t', index].join
-              result = result.joins("INNER JOIN topic_tags #{sql_alias} ON #{sql_alias}.topic_id = topics.id AND #{sql_alias}.tag_id = #{tag}")
+
+            if tags_count == @options[:tags].length
+              @options[:tags].each_with_index do |tag, index|
+                sql_alias = ['t', index].join
+                result = result.joins("INNER JOIN topic_tags #{sql_alias} ON #{sql_alias}.topic_id = topics.id AND #{sql_alias}.tag_id = #{tag}")
+              end
+            else
+              result = result.none # don't return any results unless all tags exist in the database
             end
           else
             # ANY of the given tags:

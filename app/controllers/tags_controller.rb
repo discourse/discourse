@@ -44,7 +44,7 @@ class TagsController < ::ApplicationController
   Discourse.filters.each do |filter|
     define_method("show_#{filter}") do
       @tag_id = DiscourseTagging.clean_tag(params[:tag_id])
-      @secondary_tag_id = DiscourseTagging.clean_tag(params[:secondary_tag_id]) if params[:secondary_tag_id]
+      @additional_tags = params[:additional_tag_ids].to_s.split('/').map { |tag| DiscourseTagging.clean_tag(tag) }
 
       page = params[:page].to_i
       list_opts = build_topic_list_options
@@ -72,7 +72,7 @@ class TagsController < ::ApplicationController
       @list.more_topics_url = construct_url_with(:next, list_opts)
       @list.prev_topics_url = construct_url_with(:prev, list_opts)
       @rss = "tag"
-      @description_meta = I18n.t("rss_by_tag", tag: [@tag_id, @secondary_tag_id].compact.join(' & '))
+      @description_meta = I18n.t("rss_by_tag", tag: tag_params.join(' & '))
       @title = @description_meta
 
       canonical_url "#{Discourse.base_url_no_prefix}#{public_send(url_method(params.slice(:category, :parent_category)))}"
@@ -298,7 +298,7 @@ class TagsController < ::ApplicationController
       if params[:tag_id] == 'none'
         options[:no_tags] = true
       else
-        options[:tags] = [params[:tag_id], params[:secondary_tag_id]].compact
+        options[:tags] = tag_params
         options[:match_all_tags] = true
       end
 
@@ -316,5 +316,9 @@ class TagsController < ::ApplicationController
         # redirect to 404
         raise Discourse::NotFound
       end
+    end
+
+    def tag_params
+      [@tag_id].concat(Array(@additional_tags))
     end
 end
