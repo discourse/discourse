@@ -222,6 +222,47 @@ describe DiscourseSingleSignOn do
     end
   end
 
+  context 'setting bio for a user' do
+    let(:sso) {
+      sso = DiscourseSingleSignOn.new
+      sso.username = "test"
+      sso.name = "test"
+      sso.email = "test@test.com"
+      sso.external_id = "100"
+      sso.bio = "This **is** the bio"
+      sso
+    }
+
+    it 'can set bio if supplied on new users or users with empty bio' do
+      # new account
+      user = sso.lookup_or_create_user(ip_address)
+      expect(user.user_profile.bio_cooked).to match_html("<p>This <strong>is</strong> the bio</p>")
+
+
+      # no override by default
+      sso.bio = "new profile"
+      user = sso.lookup_or_create_user(ip_address)
+
+      expect(user.user_profile.bio_cooked).to match_html("<p>This <strong>is</strong> the bio</p>")
+
+      # yes override for blank
+      user.user_profile.bio_raw = " "
+      user.user_profile.save!
+
+      user = sso.lookup_or_create_user(ip_address)
+      expect(user.user_profile.bio_cooked).to match_html("<p>new profile</p>")
+
+
+      # yes override if site setting
+      sso.bio = "new profile 2"
+      SiteSetting.sso_overrides_bio = true
+
+      user = sso.lookup_or_create_user(ip_address)
+      expect(user.user_profile.bio_cooked).to match_html("<p>new profile 2</p>")
+    end
+
+  end
+
   context 'when sso_overrides_avatar is enabled' do
     let!(:sso_record) { Fabricate(:single_sign_on_record, external_avatar_url: "http://example.com/an_image.png") }
     let!(:sso) {

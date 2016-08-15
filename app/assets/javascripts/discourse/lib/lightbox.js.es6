@@ -1,4 +1,5 @@
 import loadScript from 'discourse/lib/load-script';
+import { escapeExpression } from 'discourse/lib/utilities';
 
 export default function($elem) {
   $("a.lightbox", $elem).each(function(i, e) {
@@ -33,7 +34,7 @@ export default function($elem) {
         image: {
           titleSrc(item) {
             const href = item.el.data("download-href") || item.src;
-            let src = [item.el.attr("title"), $("span.informations", item.el).text().replace('x', '&times;')];
+            let src = [escapeExpression(item.el.attr("title")), $("span.informations", item.el).text().replace('x', '&times;')];
             if (!Discourse.SiteSettings.prevent_anons_from_downloading_files || Discourse.User.current()) {
               src.push('<a class="image-source-link" href="' + href + '">' + I18n.t("lightbox.download") + '</a>');
             }

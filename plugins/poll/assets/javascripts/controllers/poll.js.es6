@@ -4,7 +4,6 @@ import { default as computed, observes } from "ember-addons/ember-computed-decor
 export default Ember.Controller.extend({
   isMultiple: Ember.computed.equal("poll.type", "multiple"),
   isNumber: Ember.computed.equal("poll.type", "number"),
-  isRandom : Ember.computed.equal("poll.order", "random"),
   isClosed: Ember.computed.equal("poll.status", "closed"),
   isPublic: Ember.computed.equal("poll.public", "true"),
 
@@ -106,6 +105,11 @@ export default Ember.Controller.extend({
   },
 
   castVotesDisabled: Em.computed.not("canCastVotes"),
+
+  @computed("castVotesDisabled")
+  castVotesButtonClass(castVotesDisabled) {
+    return `cast-votes ${castVotesDisabled ? '' : 'btn-primary'}`;
+  },
 
   @computed("loading", "post.user_id", "post.topic.archived")
   canToggleStatus(loading, userId, topicArchived) {

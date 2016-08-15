@@ -277,7 +277,9 @@ export default {
       return;
     }
 
-    const $selected = $articles.filter('.selected');
+    const $selected = ($articles.filter('.selected').length !== 0)
+      ? $articles.filter('.selected')
+      : $articles.filter('[data-islastviewedtopic=true]');
     let index = $articles.index($selected);
 
     if ($selected.length !== 0) { //boundries check

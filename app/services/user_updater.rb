@@ -8,6 +8,7 @@ class UserUpdater
   }
 
   TAG_NAMES = {
+    watching_first_post_tags: :watching_first_post,
     watched_tags: :watching,
     tracked_tags: :tracking,
     muted_tags: :muted
@@ -44,7 +45,9 @@ class UserUpdater
     user_profile.location = attributes.fetch(:location) { user_profile.location }
     user_profile.dismissed_banner_key = attributes[:dismissed_banner_key] if attributes[:dismissed_banner_key].present?
     user_profile.website = format_url(attributes.fetch(:website) { user_profile.website })
-    user_profile.bio_raw = attributes.fetch(:bio_raw) { user_profile.bio_raw }
+    unless SiteSetting.enable_sso && SiteSetting.sso_overrides_bio
+      user_profile.bio_raw = attributes.fetch(:bio_raw) { user_profile.bio_raw }
+    end
     user_profile.profile_background = attributes.fetch(:profile_background) { user_profile.profile_background }
     user_profile.card_background = attributes.fetch(:card_background) { user_profile.card_background }
 

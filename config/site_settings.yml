@@ -101,9 +101,6 @@ basic:
     client: true
     default: ''
     regex: "^GTM-"
-  gtm_ua_domain_name:
-    client: true
-    default: 'auto'
   top_menu:
     client: true
     refresh: true
@@ -199,17 +196,19 @@ basic:
   fixed_category_positions:
     client: true
     default: false
-
   fixed_category_positions_on_create:
     client: true
     default: false
-
   show_subcategory_list:
     default: false
     client: true
   enable_badges:
     client: true
     default: true
+  enable_badge_sql:
+    client: true
+    default: false
+    hidden: true
   enable_whispers:
     client: true
     default: false
@@ -286,6 +285,7 @@ login:
     default: ''
     regex: '^https?:\/\/.+[^\/]$'
   sso_secret: ''
+  sso_overrides_bio: false
   sso_overrides_email: false
   sso_overrides_username: false
   sso_overrides_name: false
@@ -304,7 +304,10 @@ login:
   pending_users_reminder_delay:
     min: -1
     default: 8
-  permanent_session_cookie: true
+  maximum_session_age:
+    default: 1440
+    min: 1
+    max: 175200
 
 users:
   min_username_length:
@@ -609,16 +612,30 @@ email:
     default: ''
     type: list
   block_auto_generated_emails: true
-  bounce_score_threshold:
-    client: true
-    default: 4
-    min: 1
   ignore_by_title:
     type: list
     default: ''
   mailgun_api_key:
     default: ''
     regex: '^key-\h{32}$'
+  bounce_score_threshold:
+    client: true
+    default: 4
+    min: 1
+  bounce_score_threshold_deactivate: 30
+  soft_bounce_score:
+    default: 1
+    min: 1
+  hard_bounce_score:
+    default: 2
+    min: 2
+  reset_bounce_score_after_days: 30
+  attachment_content_type_blacklist:
+    type: list
+    default: "pkcs7"
+  attachment_filename_blacklist:
+    type: list
+    default: "smime.p7s|signature.asc"
 
 
 files:
@@ -657,7 +674,7 @@ files:
     default: ''
   create_thumbnails: true
   clean_up_uploads: true
-  clean_orphan_uploads_grace_period_hours: 1
+  clean_orphan_uploads_grace_period_hours: 48
   purge_deleted_uploads_grace_period_days: 30
   prevent_anons_from_downloading_files:
     default: false
@@ -673,7 +690,7 @@ files:
     enum: 'S3RegionSiteSetting'
   s3_upload_bucket:
     default: ''
-    regex: "^[a-z0-9-]+$" # can't use '.' when using HTTPS
+    regex: '^[a-z0-9\-\/]+$' # can't use '.' when using HTTPS
   s3_cdn_url:
     default: ''
     regex: '^https?:\/\/.+[^\/]$'
@@ -706,6 +723,11 @@ files:
     shadowed_by_global: true
   default_opengraph_image_url: ''
   allow_all_attachments_for_group_messages: false
+  convert_pasted_images_to_hq_jpg: true
+  convert_pasted_images_quality:
+    default: 95
+    min: 1
+    max: 100
 
 trust:
   default_trust_level:
@@ -920,6 +942,9 @@ developer:
   top_topics_formula_least_likes_per_post_multiplier:
     default: 3
     min: 0
+  rebake_old_posts_count:
+    default: 250
+    min: 1
   migrate_to_new_scheme:
     hidden: true
     default: false
@@ -991,7 +1016,7 @@ backups:
     shadowed_by_global: true
   s3_backup_bucket:
     default: ''
-    regex: "^[a-z0-9-]+$" # can't use '.' when using HTTPS
+    regex: '^[a-z0-9\-\/]+$' # can't use '.' when using HTTPS
     shadowed_by_global: true
   s3_disable_cleanup:
     default: false
@@ -999,6 +1024,15 @@ backups:
     default: '3:30'
     regex: "^((0?(0|1|2|3|4|5|6|7|8|9)|(10|11|12|13|14|15|16|17|18|19|20|21|22|23))):\\d\\d$"
   backup_with_uploads: true
+
+search:
+  min_search_term_length:
+    client: true
+    default: 3
+
+  search_tokenize_chinese_japanese_korean: false
+  search_prefer_recent_posts: false
+  search_recent_posts_size: 100000
 
 uncategorized:
   version_checks:
@@ -1019,12 +1053,6 @@ uncategorized:
     default: ''
     type: list
 
-  # Search
-  min_search_term_length:
-    client: true
-    default: 3
-
-  search_tokenize_chinese_japanese_korean: false
   max_similar_results: 5
   minimum_topics_similar: 50
 
@@ -1217,6 +1245,28 @@ user_preferences:
   default_categories_muted:
     type: category_list
     default: ''
+
+user_api:
+  max_user_api_reqs_per_day:
+    default: 2880
+  max_user_api_reqs_per_minute:
+    default: 12
+  allow_read_user_api_keys:
+    default: true
+  allow_write_user_api_keys:
+    default: false
+  allow_push_user_api_keys:
+    default: true
+  max_api_keys_per_user:
+    default: 10
+  min_trust_level_for_user_api_key:
+    default: 1
+  allowed_user_api_push_urls:
+    default: ''
+    type: list
+  allowed_user_api_auth_redirects:
+    default: 'https://api.discourse.org/api/auth_redirect'
+    type: list
 
 tags:
   tagging_enabled:

@@ -8,6 +8,7 @@ import computed from 'ember-addons/ember-computed-decorators';
 import Composer from 'discourse/models/composer';
 import DiscourseURL from 'discourse/lib/url';
 import { categoryBadgeHTML } from 'discourse/helpers/category-link';
+import Post from 'discourse/models/post';
 
 export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
   needs: ['modal', 'composer', 'quote-button', 'application'],
@@ -143,7 +144,7 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
   @computed('model')
   suggestedTitle(model) {
     return model.get('isPrivateMessage') ?
-      `<i class='private-message-glyph fa fa-envelope'></i> ${I18n.t("suggested_topics.pm_title")}` :
+      `<a href="${this.get('pmPath')}"><i class='private-message-glyph fa fa-envelope'></i></a> ${I18n.t("suggested_topics.pm_title")}` :
       I18n.t("suggested_topics.title");
   },
 
@@ -517,6 +518,16 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
       });
     },
 
+    mergePosts() {
+      bootbox.confirm(I18n.t("post.merge.confirm", { count: this.get('selectedPostsCount') }), result => {
+        if (result) {
+          const selectedPosts = this.get('selectedPosts');
+          Post.mergePosts(selectedPosts);
+          this.send('toggleMultiSelect');
+        }
+      });
+    },
+
     expandHidden(post) {
       post.expandHidden();
     },
@@ -691,6 +702,13 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
     if (!Discourse.User.current() || !Discourse.User.current().admin) return false;
     return this.get('selectedPostsUsername') !== undefined;
   }.property('selectedPostsUsername'),
+
+  @computed('selectedPosts', 'selectedPostsCount', 'selectedPostsUsername')
+  canMergePosts(selectedPosts, selectedPostsCount, selectedPostsUsername) {
+    if (selectedPostsCount < 2) return false;
+    if (!selectedPosts.every(p => p.get('can_delete'))) return false;
+    return selectedPostsUsername !== undefined;
+  },
 
   categories: function() {
     return Discourse.Category.list();

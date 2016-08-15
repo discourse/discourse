@@ -139,6 +139,9 @@ module Email
       result['X-Discourse-Post-Id']  = @opts[:post_id].to_s  if @opts[:post_id]
       result['X-Discourse-Topic-Id'] = @opts[:topic_id].to_s if @opts[:topic_id]
 
+      # please, don't send us automatic responses...
+      result['X-Auto-Response-Suppress'] = 'All'
+
       if allow_reply_by_email?
         result['X-Discourse-Reply-Key'] = reply_key
         result['Reply-To'] = reply_by_email_address

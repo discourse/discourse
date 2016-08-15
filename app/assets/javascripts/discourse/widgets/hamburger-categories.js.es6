@@ -1,5 +1,6 @@
 import { createWidget } from 'discourse/widgets/widget';
 import { h } from 'virtual-dom';
+import { number } from 'discourse/lib/formatter';
 
 createWidget('hamburger-category', {
   tagName: 'li.category-link',
@@ -9,11 +10,13 @@ createWidget('hamburger-category', {
 
     const unreadTotal = parseInt(c.get('unreadTopics'), 10) + parseInt(c.get('newTopics'), 10);
     if (unreadTotal) {
-      results.push(h('a.badge.badge-notification', { attributes: { href: c.get('url') } }, unreadTotal.toString()));
+      results.push(h('a.badge.badge-notification', {
+        attributes: { href: c.get('url') }
+      }, number(unreadTotal)));
     }
 
     if (!this.currentUser) {
-      results.push(h('b.topics-count', c.get('topic_count').toString()));
+      results.push(h('b.topics-count', number(c.get('topic_count'))));
     }
 
     return results;

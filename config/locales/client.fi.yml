@@ -69,7 +69,7 @@ fi:
         almost_x_years:
           one: "1 v"
           other: "%{count} v"
-        date_month: "D. MMMM[ta]"
+        date_month: "D. MMM"
         date_year: "MMM -YY"
       medium:
         x_minutes:
@@ -117,7 +117,9 @@ fi:
       private_topic: "teki ketjusta yksityisen %{when}"
       split_topic: "pilkkoi tämän ketjun %{when}"
       invited_user: "kutsui käyttäjän %{who} %{when}"
+      invited_group: "kutsui käyttäjän %{who} %{when}"
       removed_user: "poisti käyttäjän %{who} %{when}"
+      removed_group: "poisti käyttäjän %{who} %{when}"
       autoclosed:
         enabled: 'sulki %{when}'
         disabled: 'avasi %{when}'
@@ -150,9 +152,11 @@ fi:
         eu_central_1: "EU (Frankfurt)"
         ap_southeast_1: "Aasia ja Tyynimeri (Singapore)"
         ap_southeast_2: "Aasia ja Tyynimeri (Sydney)"
+        ap_south_1: "Aasia ja Tyynimeri (Mumbai)"
         ap_northeast_1: "Aasia ja Tyynimeri (Tokio)"
         ap_northeast_2: "Aasia ja Tyynimeri (Soul)"
         sa_east_1: "Etelä-Amerikka (Sao Paulo)"
+        cn_north_1: "Kiina (Peking)"
     edit: 'muokkaa ketjun otsikkoa ja aluetta'
     not_implemented: "Tätä toimintoa ei ole vielä toteutettu, pahoittelut!"
     no_value: "Ei"
@@ -244,7 +248,7 @@ fi:
     save: "Tallenna muutokset"
     saving: "Tallennetaan..."
     saved: "Tallennettu!"
-    upload: "Lähetä"
+    upload: "Liitä"
     uploading: "Lähettää..."
     uploading_filename: "Lähettää {{filename}}..."
     uploaded: "Lähetetty!"
@@ -253,7 +257,7 @@ fi:
     undo: "Peru"
     revert: "Palauta"
     failed: "Epäonnistui"
-    switch_to_anon: "Anonyymi tila"
+    switch_to_anon: "Siirry anonyymitilaan"
     switch_from_anon: "Poistu anonyymitilasta"
     banner:
       close: "Sulje tämä banneri."
@@ -280,7 +284,7 @@ fi:
       delete_prompt: "Haluatko todella poistaa käyttäjän <b>%{username}</b>? Kaikki hänen kirjoittamansa viestit poistetaan. Lisäksi hänen sähköposti- ja IP-osoitteillensa laitetaan esto."
       approval:
         title: "Viesti odottaa hyväksyntää"
-        description: "Olemme vastaanottaneet viestisi, mutta se täytyy vielä hyväksyä ennen, kuin se näytetään sivustolla. Ole kärsivällinen."
+        description: "Viestisi saapui perille, mutta valvojan on vielä hyväksyttävä se, jotta se näkyy sivustolla. Ole kärsivällinen."
         pending_posts:
           one: "Sinulla on <strong>1</strong> odottava viesti."
           other: "Sinulla on <strong>{{count}}</strong> odottavaa viestiä."
@@ -330,6 +334,7 @@ fi:
       selector_placeholder: "Lisää jäseniä"
       owner: "omistaja"
       visible: "Ryhmä näkyy kaikille käyttäjille"
+      index: "Ryhmät"
       title:
         one: "ryhmä"
         other: "ryhmät"
@@ -352,6 +357,9 @@ fi:
         watching:
           title: "Tarkkaillut"
           description: "Saat ilmoituksen uusista viesteistä jokaisessa viestiketjussa, ja uusien vastausten lukumäärä näytetään."
+        watching_first_post:
+          title: "Tarkkaillaan uusia ketjuja"
+          description: "Saat ilmoituksen vain ketjujen ensimmäisistä viesteistä tässä ryhmässä."
         tracking:
           title: "Seurannassa"
           description: "Saat ilmoituksen, jos joku mainitsee @nimesi tai vastaa sinulle, ja uusien vastausten lukumäärä näytetään."
@@ -446,7 +454,7 @@ fi:
         disable: "Poista ilmoitukset käytöstä"
         enable: "Näytä ilmoituksia"
         each_browser_note: "Huom: Sinun täytyy vaihtaa tämä asetus kaikissa selaimista, joita käytät."
-      dismiss_notifications: "Merkitse kaikki luetuiksi"
+      dismiss_notifications: "Unohda kaikki"
       dismiss_notifications_tooltip: "Merkitse kaikki lukemattomat ilmoitukset luetuiksi"
       disable_jump_reply: "Älä siirry uuteen viestiini lähetettyäni sen"
       dynamic_favicon: "Näytä uusien / päivittyneiden ketjujen määrä selaimen ikonissa"
@@ -465,18 +473,28 @@ fi:
       mailing_list_mode:
         label: "Postituslistatila"
         enabled: "Ota käyttöön postituslistatila"
-        instructions: |+
+        instructions: |
           Asetus syrjäyttää koosteet tapahtumista.<br />
           Vaimennettujen ketjujen ja alueiden viestejä ei sisällytetä sähköposteihin.
-
         daily: "Lähetä päivittäin"
         individual: "Lähetä sähköpostia jokaisesta uudesta viestistä"
-        many_per_day: "Lähetä sähköpostia jokaisesta uudesta viestistä (noin {{dailyEmailEstimate}} päivässä)."
-        few_per_day: "Lähetä sähköpostia jokaisesta uudesta viestistä (alle 2 päivässä)."
+        many_per_day: "Lähetä minulle sähköpostia jokaisesta uudesta viestistä (noin {{dailyEmailEstimate}} päivässä)"
+        few_per_day: "Lähetä minulle sähköpostia jokaisesta uudesta viestistä (noin 2 päivässä)"
+      tag_settings: "Tunnisteet"
+      watched_tags: "Tarkkailtavat"
+      watched_tags_instructions: "Ketjut joilla on joku näistä tunnisteista asetetaan automaattisesti tarkkailuun. Saat ilmoituksen kaikista uusista viesteistä ja ketjuista, ja uusien viestien lukumäärä näytetään ketjun otsikon vieressä. "
+      tracked_tags: "Seurattavat"
+      tracked_tags_instructions: "Ketjut, joilla on joku näistä tunnisteista, asetetaan automaattisesti seurantaan. Uusien viestien lukumäärä näytetään ketjun otsikon vieressä. "
+      muted_tags: "Vaimennettavat"
+      muted_tags_instructions: "Et saa ilmoituksia ketjuista, joilla on joku näistä tunnisteista, eivätkä ne näy tuoreimmissa."
       watched_categories: "Tarkkaillut"
-      watched_categories_instructions: "Näiden alueiden kaikki uudet ketjut asetetaan automaattisesti tarkkailuun. Saat ilmoituksen kaikista uusista viesteistä ja ketjuista ja uusien viestien lukumäärä näytetään ketjun otsikon vieressä. "
+      watched_categories_instructions: "Näiden alueiden kaikki uudet ketjut asetetaan automaattisesti tarkkailuun. Saat ilmoituksen kaikista uusista viesteistä ja ketjuista, ja uusien viestien lukumäärä näytetään ketjun otsikon vieressä. "
       tracked_categories: "Seuratut"
-      tracked_categories_instructions: "Näiden alueiden kaikki uudet ketjut asetetaan automaattisesti seurantaan. Uusien viestien lukumäärä näytetään ketjun otsikon vieressä."
+      tracked_categories_instructions: "Näiden alueiden ketjut asetetaan automaattisesti seurantaan. Uusien viestien lukumäärä näytetään ketjun yhteydessä."
+      watched_first_post_categories: "Tarkkaillaan uusia ketjuja"
+      watched_first_post_categories_instructions: "Saat ilmoituksen näiden alueiden ketjujen ensimmäisistä viesteistä."
+      watched_first_post_tags: "Tarkkaillaan uusia ketjuja"
+      watched_first_post_tags_instructions: "Saat ilmoituksen uusista ketjuista, joilla on joku näistä tunnisteista."
       muted_categories: "Vaimennetut"
       muted_categories_instructions: "Et saa imoituksia uusista viesteistä näillä alueilla, eivätkä ne näy tuoreimmissa."
       delete_account: "Poista tilini"
@@ -489,6 +507,7 @@ fi:
       muted_users: "Vaimennetut"
       muted_users_instructions: "Älä näytä ilmoituksia näiltä käyttäjiltä"
       muted_topics_link: "Näytä vaimennetut ketjut"
+      watched_topics_link: "Näytä tarkkaillut ketjut"
       automatically_unpin_topics: "Poista kiinnitetyn ketjun kiinnitys automaattisesti, kun olen selannut sen loppuun."
       staff_counters:
         flags_given: "hyödyllistä liputusta"
@@ -518,7 +537,7 @@ fi:
         error: "Arvon muuttamisessa tapahtui virhe."
       change_username:
         title: "Vaihda käyttäjätunnus"
-        confirm: "Jos vaihdat käyttäjätunnustasi, kaikki tähän astiset lainaukset viesteistäsi ja @nimen maininnat menevät rikki. Oletko ehdottoman varma, että haluat tehdä näin?"
+        confirm: "Jos vaihdat käyttäjätunnustasi, kaikki aiemmat lainaukset viesteistäsi ja @nimen maininnat menevät rikki. Oletko ehdottoman varma, että haluat tehdä näin?"
         taken: "Pahoittelut, tuo nimi on jo käytössä."
         error: "Käyttäjätunnuksen vaihdossa tapahtui virhe."
         invalid: "Käyttäjätunnus ei kelpaa. Siinä saa olla ainoastaan numeroita ja kirjaimia."
@@ -580,7 +599,7 @@ fi:
         default: "(oletus)"
       password_confirmation:
         title: "Salasana uudelleen"
-      last_posted: "Viimeinen viesti"
+      last_posted: "Viimeisin viesti"
       last_emailed: "Viimeksi lähetetty sähköpostitse"
       last_seen: "Nähty"
       created: "Liittynyt"
@@ -602,7 +621,7 @@ fi:
         always: "aina"
         never: "ei koskaan"
       email_digests:
-        title: "Jos en käy sivustolla, lähetä minulle kooste suosituista ketjuista ja vastauksista osoitteeseen:"
+        title: "Jos en käy sivustolla, lähetä minulle kooste suosituista ketjuista ja vastauksista"
         every_30_minutes: "puolen tunnin välein"
         every_hour: "tunneittain"
         daily: "päivittäin"
@@ -686,7 +705,7 @@ fi:
         time_read: "lukenut palstaa"
         topic_count:
           one: "avattu ketju"
-          other: "avattua ketjua"
+          other: "luotua ketjua"
         post_count:
           one: "kirjoitettu viesti"
           other: "kirjoitettua viestiä"
@@ -765,9 +784,9 @@ fi:
       enabled: "Sivusto on vain luku -tilassa. Voit jatkaa selailua, mutta vastaaminen, tykkääminen ja muita toimintoja on toistaiseksi poissa käytöstä."
       login_disabled: "Et voi kirjautua sisään, kun sivusto on vain luku -tilassa."
       logout_disabled: "Et voi kirjautua ulos, kun sivusto on vain luku -tilassa."
-    too_few_topics_and_posts_notice: "Laitetaanpa <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>keskustelu alulle!</a> Tällä hetkellä palstalla on <strong>%{currentTopics} / %{requiredTopics}</strong> ketjua ja <strong>%{currentPosts} / %{requiredPosts}</strong> viestiä. Uudet kävijät tarvitsevat keskusteluita, joita lukea ja joihin vastata."
-    too_few_topics_notice: "Laitetaanpa <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>keskustelu alulle!</a> Tällä hetkellä palstalla on <strong>%{currentTopics} / %{requiredTopics}</strong> ketjua. Uudet kävijät tarvitsevat keskusteluita, joita lukea ja joihin vastata."
-    too_few_posts_notice: "Laitetaanpa <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>keskustelu alulle!</a> Tällä hetkellä palstalla on <strong>%{currentPosts} / %{requiredPosts}</strong> viestiä. Uudet kävijät tarvitsevat keskusteluita, joita lukea ja joihin vastata."
+    too_few_topics_and_posts_notice: "Laitetaanpa <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>keskustelu alulle!</a> Tällä hetkellä palstalla on <strong>%{currentTopics} / %{requiredTopics}</strong> ketjua ja <strong>%{currentPosts} / %{requiredPosts}</strong> viestiä. Uusia kävijöitä varten tarvitaan keskusteluita, joita voivat lukea ja joihin vastata."
+    too_few_topics_notice: "Laitetaanpa <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>keskustelu alulle!</a> Tällä hetkellä palstalla on <strong>%{currentTopics} / %{requiredTopics}</strong> ketjua. Uusia kävijöitä varten tarvitaan keskusteluita, joita voivat lukea ja joihin vastata."
+    too_few_posts_notice: "Laitetaanpa <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>keskustelu alulle!</a> Tällä hetkellä palstalla on <strong>%{currentPosts} / %{requiredPosts}</strong> viestiä. Uusia kävijöitä varten tarvitaan keskusteluita, joita voivat lukea ja joihin vastata."
     logs_error_rate_notice:
       reached: "<b>[%{relativeAge}]</b> Virheiden määrä <a href='%{url}' target='_blank'>%{rate}</a> on saavuttanut sivuston asetuksissa määritellyn rajan %{siteSettingRate}."
       exceeded: "<b>[%{relativeAge}]</b> Virheiden määrä <a href='%{url}' target='_blank'>%{rate}</a> on ylittänyt sivuston asetuksissa määritellyn rajan %{siteSettingRate}."
@@ -812,6 +831,7 @@ fi:
       title: "Viesti"
       invite: "Kutsu muita..."
       remove_allowed_user: "Haluatko varmasti poistaa käyttäjän {{name}} tästä keskustelusta?"
+      remove_allowed_group: "Haluatko varmasti poistaa käyttäjän {{name}} tästä viestiketjusta?"
     email: 'Sähköposti'
     username: 'Käyttäjätunnus'
     last_seen: 'Nähty'
@@ -878,10 +898,12 @@ fi:
       github:
         title: "GitHubilla"
         message: "Todennetaan Githubin kautta (varmista, että ponnahdusikkunoiden esto ei ole päällä)"
-    apple_international: "Apple/kansainvälinen"
-    google: "Google"
-    twitter: "Twitter"
-    emoji_one: "Emoji One"
+    emoji_set:
+      apple_international: "Apple/Kansainvälinen"
+      google: "Google"
+      twitter: "Twitter"
+      emoji_one: "Emoji One"
+      win10: "Win10"
     shortcut_modifier_key:
       shift: 'Shift'
       ctrl: 'Ctrl'
@@ -943,7 +965,8 @@ fi:
       quote_text: "Lainaus"
       code_title: "Teksti ilman muotoiluja"
       code_text: "Sisennä teksti neljällä välilyönnillä poistaaksesi automaattisen muotoilun"
-      upload_title: "Liitä"
+      paste_code_text: "kirjoita tai liitä koodia tähän"
+      upload_title: "Lähetä"
       upload_description: "kirjoita ladatun tiedoston kuvaus tähän"
       olist_title: "Numeroitu lista"
       ulist_title: "Luettelomerkillinen luettelo"
@@ -960,7 +983,7 @@ fi:
       auto_close:
         label: "Sulje ketju automaattisesti tämän ajan jälkeen:"
         error: "Ole hyvä ja syötä kelpaava arvo."
-        based_on_last_post: "Älä sulje ennen kuin viimeinen viesti ketjussa on vähintään näin vanha."
+        based_on_last_post: "Älä sulje ennen kuin viimeisin viesti ketjussa on vähintään näin vanha."
         all:
           examples: 'Syötä aika tunteina (24), absoluuttisena aikana (17:30) tai aikaleimana (2013-11-22 14:00).'
         limited:
@@ -969,6 +992,7 @@ fi:
     notifications:
       title: "ilmoitukset @nimeen viittauksista, vastauksista omiin viesteihin ja ketjuihin, viesteistä ym."
       none: "Ilmoitusten lataaminen ei onnistunut."
+      empty: "Ilmoituksia ei löydetty."
       more: "vanhat ilmoitukset"
       total_flagged: "yhteensä liputettuja viestejä"
       mentioned: "<i title='viittasi' class='fa fa-at'></i><p><span>{{username}}</span> {{description}}</p>"
@@ -989,6 +1013,7 @@ fi:
       moved_post: "<i title='siirsi viestin' class='fa fa-sign-out'></i><p><span>{{username}}</span> siirsi {{description}}</p>"
       linked: "<i title='linkkasi viestiin' class='fa fa-link'></i><p><span>{{username}}</span> {{description}}</p>"
       granted_badge: "<i title='arvomerkki myönnetty' class='fa fa-certificate'></i><p>Ansaitsit '{{description}}'</p>"
+      watching_first_post: "<i title='new topic' class='fa fa-dot-circle-o'></i><p><span>Uusi ketju</span> {{description}}</p>"
       group_message_summary:
         one: "<i title='messages in group inbox' class='fa fa-group'></i><p> {{count}} viesti ryhmän {{group_name}} saapuneissa</p>"
         other: "<i title='messages in group inbox' class='fa fa-group'></i><p> {{count}} viestiä ryhmän {{group_name}} saapuneissa</p>"
@@ -1155,7 +1180,7 @@ fi:
       options: "Ketjun asetukset"
       show_links: "näytä tämän ketjun linkit"
       toggle_information: "näytä/kätke ketjun tiedot"
-      read_more_in_category: "Haluatko lukea lisää? Selaile muita ketjuja alueella {{catLink}} tai katsella {{latestLink}}."
+      read_more_in_category: "Haluatko lukea lisää? Selaile muita alueen {{catLink}} ketjuja tai {{latestLink}}."
       read_more: "Haluatko lukea lisää? Selaa aluetta {{catLink}} tai katsele {{latestLink}}."
       read_more_MF: "Sinulla on { UNREAD, plural, =0 {} one { <a href='/unread'>1 ketju</a>, jossa on viestejä } other { <a href='/unread'># ketjua</a>, joissa on viestejä }} { NEW, plural, =0 {} one { {BOTH, select, true{ja } false { } other{}} <a href='/new'>1 uusi</a> ketju} other { {BOTH, select, true{ja } false { } other{}} <a href='/new'># uutta ketjua</a>} } lukematta. Tai {CATEGORY, select, true {selaile aluetta {catLink}} false {katsele {latestLink}.} other {}}"
       browse_all_categories: Selaa keskustelualueita
@@ -1181,6 +1206,8 @@ fi:
         go_bottom: "loppuun"
         go: "siirry"
         jump_bottom: "hyppää viimeisimpään viestiin"
+        jump_prompt: "hyppää viestiin"
+        jump_prompt_long: "Mihin viestiin haluat siirtyä?"
         jump_bottom_with_number: "hyppää viestiin %{post_number}"
         total: yhteensä viestejä
         current: tämänhetkinen viesti
@@ -1189,6 +1216,7 @@ fi:
         title: muuta sitä, kuinka usein saat muistutuksia tästä ketjusta
         reasons:
           mailing_list_mode: "Olet postituslistatilassa, joten saat sähköpostia tähän ketjuun lähetyistä vastauksista."
+          '3_10': 'Saat ilmoituksia, koska tarkkailet tähän ketjuun liittyvää tunnistetta.'
           '3_6': 'Saat ilmoituksia, koska olet asettanut tämän alueen tarkkailuun.'
           '3_5': 'Saat ilmoituksia, koska ketju on asetettu tarkkailuun automaattisesti.'
           '3_2': 'Saat ilmoituksia, koska olet asettanut ketjun tarkkailuun.'
@@ -1197,7 +1225,7 @@ fi:
           '2_8': 'Saat ilmoituksia, koska olet asettanut tämän alueen seurantaan.'
           '2_4': 'Saat ilmoituksia, koska olet kirjoittanut ketjuun.'
           '2_2': 'Saat ilmoituksia, koska olet asettanut ketjun seurantaan.'
-          '2': 'Saat ilmoituksia, koska <a href="/users/{{username}}/preferences">luet tätä ketjua</a>.'
+          '2': 'Saat ilmoituksia, koska <a href="/users/{{username}}/preferences">luit ketjua aiemmin</a>.'
           '1_2': 'Saat ilmoituksen jos joku mainitsee @nimesi tai vastaa sinulle.'
           '1': 'Saat ilmoituksen jos joku mainitsee @nimesi tai vastaa sinulle.'
           '0_7': 'Et saa mitään ilmoituksia tältä alueelta.'
@@ -1296,6 +1324,7 @@ fi:
         email_or_username_placeholder: "sähköpostiosoite tai käyttäjänimi"
         action: "Kutsu"
         success: "Käyttäjä on kutsuttu osallistumaan tähän yksityiseen keskusteluun."
+        success_group: "Ryhmä on kutsuttu osallistumaan tähän yksityiseen keskusteluun."
         error: "Pahoittelut, kutsuttaessa tapahtui virhe."
         group_name: "ryhmän nimi"
       controls: "Ketjun hallinta"
@@ -1335,6 +1364,10 @@ fi:
         instructions:
           one: "Valitse ketju, johon haluat siirtää viestin."
           other: "Valitse ketju, johon haluat siirtää<b>{{count}}</b> viestiä."
+      merge_posts:
+        title: "Yhdistä valitut viestit"
+        action: "yhdistä valitut viestit"
+        error: "Valittuja viestejä yhdistettäessä tapahtui virhe."
       change_owner:
         title: "Vaihda viestin omistajaa"
         action: "muokkaa omistajuutta"
@@ -1369,7 +1402,7 @@ fi:
       edit: "Muokataan {{link}} {{replyAvatar}} {{username}}"
       edit_reason: "Syy:"
       post_number: "viesti {{number}}"
-      last_edited_on: "viestin viimeinen muokkausaika"
+      last_edited_on: "viestin viimeisin muokkausaika"
       reply_as_new_topic: "Vastaa aihetta sivuavassa ketjussa"
       continue_discussion: "Jatkoa ketjulle {{postLink}}:"
       follow_quote: "siirry lainattuun viestiin"
@@ -1383,7 +1416,7 @@ fi:
         one: "näytä 1 piilotettu vastaus"
         other: "näytä {{count}} piilotettua vastausta"
       more_links: "{{count}} lisää..."
-      unread: "Viesti on lukematon"
+      unread: "Viesti on lukematta"
       has_replies:
         one: "{{count}} vastaus"
         other: "{{count}} vastausta"
@@ -1538,6 +1571,10 @@ fi:
         confirm:
           one: "Oletko varma, että haluat poistaa tämän viestin?"
           other: "Oletko varma, että haluat poistaa kaikki nämä viestit?"
+      merge:
+        confirm:
+          one: "Oletko varma, että haluat yhdistää viestit?"
+          other: "Oletko varma, että haluat yhdistää {{count}} viestiä?"
       revisions:
         controls:
           first: "Ensimmäinen revisio"
@@ -1620,10 +1657,11 @@ fi:
       notifications:
         watching:
           title: "Tarkkaile"
-          description: "Tarkkailet automaattisesti kaikkia uusia ketjuja näillä alueilla. Saat ilmoituksen jokaisesta uudesta viestistä jokaisessa ketjussa ja uusien vastausten lukumäärä näytetään. "
+        watching_first_post:
+          title: "Tarkkaillaan uusia ketjuja"
+          description: "Saat ilmoituksen näille alueille luoduista ketjuista."
         tracking:
           title: "Seuraa"
-          description: "Seuraat automaattisesti kaikkia uusia ketjuja näillä alueilla. Saat ilmoituksen, jos joku mainitsee @nimesi tai vastaa sinulle ja uusien vastauksien lukumäärä näytetään."
         regular:
           title: "Tavallinen"
           description: "Saat ilmoituksen jos joku mainitsee @nimesi tai vastaa sinulle."
@@ -1663,7 +1701,7 @@ fi:
       title: "Ketjun tiivistelmä"
       participants_title: "Useimmin kirjoittaneet"
       links_title: "Suositut linkit"
-      links_shown: "Näytä kaikki {{totalLinks}} linkkiä..."
+      links_shown: "näytä enemmän linkkejä..."
       clicks:
         one: "1 klikkaus"
         other: "%{count} klikkausta"
@@ -1905,6 +1943,7 @@ fi:
     tagging:
       all_tags: "Kaikki tunnisteet"
       selector_all_tags: "kaikki tunnisteet"
+      selector_no_tags: "ei tunnisteita"
       changed: "muutetut tunnisteet"
       tags: "Tunnisteet"
       choose_for_topic: "valitse valinnaiset tunnisteet tälle ketjulle"
@@ -1920,13 +1959,17 @@ fi:
       filters:
         without_category: "%{filter} %{tag} ketjut"
         with_category: "%{filter} %{tag} ketjut alueella %{category}"
+        untagged_without_category: "%{filter} ketjut joilla ei tunnisteita"
+        untagged_with_category: "%{filter} ketjut joilla ei tunnisteita alueella %{category}"
       notifications:
         watching:
           title: "Tarkkaile"
-          description: "Tämän tunnisteen ketjut asetetaan automaattisesti tarkkailuun. Saat ilmoituksen kaikista uusista viesteistä ja ketjuista ja uusien ja lukemattomien viestien lukumäärä näytetään ketjujen yhteydessä. "
+          description: "Ketjut, joilla on tämä tunniste, asetetaan automaattisesti tarkkailuun. Saat ilmoituksen kaikista uusista viesteistä ja ketjuista, ja uusien ja lukemattomien viestien lukumäärä näytetään ketjujen yhteydessä. "
+        watching_first_post:
+          title: "Tarkkaillaan uusia ketjuja"
+          description: "Saat ilmoituksen luoduista ketjuista, joilla on joku näistä tunnisteista."
         tracking:
           title: "Seuraa"
-          description: "Tämän tunnisteen ketjut asetetaan automaattisesti seurantaan. Uusien ja lukemattomien viestien lukumäärä näytetään ketjun yhteydessä."
         regular:
           title: "Tavallinen"
           description: "Saat ilmoituksen jos joku mainitsee @nimesi tai vastaa viestiisi."
@@ -2098,7 +2141,7 @@ fi:
         refresh: "Lataa uudelleen"
         new: "Uusi"
         selector_placeholder: "syötä käyttäjätunnus"
-        name_placeholder: "Ryhmän nimi, ei välilyöntejä, samt säännöt kuin käyttäjänimillä"
+        name_placeholder: "Ryhmän nimi, ei välilyöntejä, samat säännöt kuin käyttäjänimillä"
         about: "Muokkaa ryhmien jäsenyyksiä ja nimiä täällä"
         group_members: "Ryhmään kuuluvat"
         delete: "Poista"
@@ -2571,7 +2614,7 @@ fi:
         delete_posts_forbidden_because_staff: "Ylläpitäjien ja valvojien kaikkia viestejä ei voi poistaa."
         delete_forbidden:
           one: "Käyttäjiä ei voi poistaa jos heillä on kirjoitettuja viestejä. Poista ensin viestit ennen käyttäjätilin poistamista. (Vanhempia viestejä, kuin %{count} päivä ei voi poistaa)"
-          other: "Käyttäjiä ei voi poistaa jos heillä on kirjoitettuja viestejä. Poista ensin viestit ennen käyttäjätilin poistamista. (Vanhempia viestejä, kuin %{count} päivää ei voi poistaa)"
+          other: "Käyttäjää ei voi poistaa jos hänellä on kirjoitettuja viestejä. Poista viestit ennen käyttäjätilin poistamista. (Yli %{count} päivää vanhoja viestejä ei voi poistaa.)"
         cant_delete_all_posts:
           one: "Kaikkia viestejä ei voi poistaa. Jotkin viestit ovat enemmän kuin %{count} päivän vanhoja. (Asetus delete_user_max_post_age)"
           other: "Kaikkia viestejä ei voi poistaa. Jotkin viestit ovat enemmän kuin %{count} päivää vanhoja. (Asetus delete_user_max_post_age)"

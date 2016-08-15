@@ -16,6 +16,16 @@ describe AdminUserIndexQuery do
       query = ::AdminUserIndexQuery.new({ query: "active" })
       expect(query.find_users_query.to_sql).to match("last_seen_at")
     end
+
+    it "can't be injected" do
+      query = ::AdminUserIndexQuery.new({ order: "wat, no" })
+      expect(query.find_users_query.to_sql).not_to match("wat, no")
+    end
+
+    it "allows custom ordering" do
+      query = ::AdminUserIndexQuery.new({ order: "trust_level DESC" })
+      expect(query.find_users_query.to_sql).to match("trust_level DESC")
+    end
   end
 
   describe "no users with trust level" do

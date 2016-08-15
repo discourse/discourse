@@ -27,6 +27,7 @@ pt:
         millions: "{{number}}M"
     dates:
       time: "hh:mm"
+      timeline_date: "MMM YYYY"
       long_no_year: "DD MMM hh:mm"
       long_no_year_no_time: "DD MMM"
       full_no_year_no_time: "Do MMMM"
@@ -38,6 +39,7 @@ pt:
       long_date_with_year_without_time: "DD MMM, 'YY"
       long_date_without_year_with_linebreak: "DD MMM <br/>LT"
       long_date_with_year_with_linebreak: "DD MMM, 'YY <br/>LT"
+      wrap_ago: "%{date} atrás"
       tiny:
         half_a_minute: "< 1m"
         less_than_x_seconds:
@@ -115,7 +117,9 @@ pt:
       private_topic: "tornei este tópico privado %{when}"
       split_topic: "dividir este tópico %{when}"
       invited_user: "Convidou %{who} %{when}"
+      invited_group: "convidou %{who} %{when}"
       removed_user: "Removeu %{who} %{when}"
+      removed_group: "removeu %{who} %{when}"
       autoclosed:
         enabled: 'fechado %{when}'
         disabled: 'aberto %{when}'
@@ -151,6 +155,7 @@ pt:
         ap_northeast_1: "Ásia-Pacífico (Tóquio)"
         ap_northeast_2: "Ásia-Pacífico (Seoul)"
         sa_east_1: "América do Sul (São Paulo)"
+        cn_north_1: "China (Beijing)"
     edit: 'editar o título e a categoria deste tópico'
     not_implemented: "Essa funcionalidade ainda não foi implementada, pedimos desculpa!"
     no_value: "Não"
@@ -251,8 +256,8 @@ pt:
     undo: "Desfazer"
     revert: "Reverter"
     failed: "Falhou"
-    switch_to_anon: "Modo Anónimo"
-    switch_from_anon: "Sair de Anónimo"
+    switch_to_anon: "Entrar em modo Anónimo"
+    switch_from_anon: "Sair de modo Anónimo"
     banner:
       close: "Destituir esta faixa."
       edit: "Editar esta faixa >>"
@@ -302,6 +307,8 @@ pt:
       title: "Utilizadores"
       likes_given: "Dado"
       likes_received: "Recebido"
+      topics_entered: "Visto"
+      topics_entered_long: "Tópicos Visualizados"
       time_read: "Tempo Lido"
       topic_count: "Tópicos"
       topic_count_long: "Tópicos Criados"
@@ -326,6 +333,7 @@ pt:
       selector_placeholder: "Adicionar membros"
       owner: "proprietário"
       visible: "O grupo é visível para todos os utilizadores"
+      index: "Grupos"
       title:
         one: "grupo"
         other: "grupos"
@@ -442,7 +450,6 @@ pt:
         disable: "Desativar Notificações"
         enable: "Ativar Notificações"
         each_browser_note: "Nota: Tem que alterar esta configuração em todos os navegadores de internet que utiliza."
-      dismiss_notifications: "Marcar tudo como lido"
       dismiss_notifications_tooltip: "Marcar como lidas todas as notificações por ler"
       disable_jump_reply: "Não voltar para a minha mensagem após ter respondido"
       dynamic_favicon: "Mostrar contagem de tópicos novos / atualizados no ícone do browser."
@@ -457,10 +464,10 @@ pt:
       suspended_notice: "Este utilizador está suspenso até {{date}}."
       suspended_reason: "Motivo: "
       github_profile: "Github"
+      tag_settings: "Etiquetas"
+      muted_tags: "Silenciado"
       watched_categories: "Vigiado"
-      watched_categories_instructions: "Irá acompanhar automaticamente todos os novos tópicos nestas categorias. Será notificado de todas as novas mensagens e tópicos, e uma contagem de novas mensagens irá aparecer junto ao tópico."
       tracked_categories: "Acompanhado"
-      tracked_categories_instructions: "Irá acompanhar automaticamente todos os novos tópicos nestas categorias. Uma contagem de novas mensagens irá aparecer junto ao tópico."
       muted_categories: "Silenciado"
       muted_categories_instructions: "Não será notificado de nada acerca de novos tópicos nestas categorias, e estes não irão aparecer nos recentes."
       delete_account: "Eliminar A Minha Conta"
@@ -746,8 +753,6 @@ pt:
     too_few_topics_notice: "Vamos <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>começar esta discussão!</a> Atualmente existem <strong>%{currentTopics} / %{requiredTopics}</strong> tópios. Novos visitantes precisam de algumas conversações para ler e responder a."
     too_few_posts_notice: "Vamos <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>começar esta discussão!</a> Atualmente existem <strong>%{currentPosts} / %{requiredPosts}</strong> mensagens. Novos visitantes precisam de algumas conversações para ler e responder a."
     logs_error_rate_notice:
-      reached: "%{timestamp}: Velocidade corrente de <a href='%{url}' target='_blank'>%{rate}</a> alcançou o limite definido nas configurações do site de %{siteSettingRate}."
-      exceeded: "%{timestamp}: Velocidade corrente de <a href='%{url}' target='_blank'>%{rate}</a> excedeu o limite definido nas configurações do site de %{siteSettingRate}."
       rate:
         one: "1 erro/%{duration}"
         other: "%{count} erros/%{duration}"
@@ -855,10 +860,6 @@ pt:
       github:
         title: "com GitHub"
         message: "A autenticar com GitHub (certifique-se de que os bloqueadores de popup estão desativados)"
-    apple_international: "Apple/International"
-    google: "Google"
-    twitter: "Twitter"
-    emoji_one: "Emoji One"
     shortcut_modifier_key:
       shift: 'Shift'
       ctrl: 'Ctrl'
@@ -876,7 +877,6 @@ pt:
       saved_local_draft_tip: "guardado localmente"
       similar_topics: "O seu tópico é similar a..."
       drafts_offline: "rascunhos offline"
-      group_mentioned: "Ao usar {{group}}, estará a notificar <a href='{{group_link}}'>{{count}} pessoas</a>."
       error:
         title_missing: "O título é obrigatório"
         title_too_short: "O título tem que ter pelo menos {{min}} caracteres."
@@ -963,7 +963,6 @@ pt:
       invited_to_topic: "<i title='invited to topic' class='fa fa-hand-o-right'></i><p><span>{{username}}</span> {{description}}</p>"
       invitee_accepted: "<i title='accepted your invitation' class='fa fa-user'></i><p><span>{{username}}</span> aceitou o seu convite</p>"
       moved_post: "<i title='moved post' class='fa fa-sign-out'></i><p><span>{{username}}</span> moveu {{description}}</p>"
-      linked: "<i title='linked post' class='fa fa-arrow-left'></i><p><span>{{username}}</span> {{description}}</p>"
       granted_badge: "<i title='badge granted' class='fa fa-certificate'></i><p>Ganhou '{{description}}'</p>"
       group_message_summary:
         one: "<i title='messages in group inbox' class='fa fa-group'></i><p> {{count}} mensagem na caixa de entrada do seu grupo {{group_name}}</p>"
@@ -1257,8 +1256,6 @@ pt:
         no_banner_exists: "Não existe tópico de faixa."
         banner_exists: "<strong class='badge badge-notification unread'>Existe</strong> atualmente um tópico de faixa."
       inviting: "A Convidar..."
-      automatically_add_to_groups_optional: "Este convite também inclui acesso a estes grupos: (opcional, apenas Administração)"
-      automatically_add_to_groups_required: "Esse convite também inclui acesso a estes grupos: (<b>Obrigatório<b>, apenas Administração)"
       invite_private:
         title: 'Convidar para Mensagem'
         email_or_username: "Email ou Nome de Utilizador do Convidado"
@@ -1584,10 +1581,8 @@ pt:
       notifications:
         watching:
           title: "A vigiar"
-          description: "Irá vigiar automaticamente todos os novos tópicos nestas categorias. Irá ser notificado de cada nova mensagem em cada tópico, e uma contagem de novas respostas será exibida."
         tracking:
           title: "Acompanhar"
-          description: "Irá acompanhar automaticamente todos os novos tópicos nestas categorias. Irá ser notificado se alguém mencionar o seu @nome ou lhe responder, e uma contagem de novas respostas será exibida."
         regular:
           title: "Normal"
           description: "Será notificado se alguém mencionar o seu @nome ou responder-lhe."
@@ -1627,7 +1622,6 @@ pt:
       title: "Sumário do Tópico"
       participants_title: "Autores Frequentes"
       links_title: "Hiperligações Populares"
-      links_shown: "mostrar todas as {{totalLinks}} hiperligações..."
       clicks:
         one: "1 clique"
         other: "%{count} cliques"
@@ -2618,148 +2612,3 @@ pt:
           label: "Novo:"
           add: "Adicionar"
           filter: "Pesquisar (URL ou URL Externo)"
-    lightbox:
-      download: "descarregar"
-    search_help:
-      title: 'Pesquisar Ajuda'
-    keyboard_shortcuts_help:
-      title: 'Atalhos de Teclado'
-      jump_to:
-        title: 'Ir Para'
-        home: '<b>g</b>, <b>h</b> Página Principal'
-        latest: '<b>g</b>, <b>l</b> Recentes'
-        new: '<b>g</b>, <b>n</b> Novo'
-        unread: '<b>g</b>, <b>u</b> Não lido'
-        categories: '<b>g</b>, <b>c</b> Categorias'
-        top: '<b>g</b>, <b>t</b> Os Melhores'
-        bookmarks: '<b>g</b>, <b>b</b> Marcadores'
-        profile: '<b>g</b>, <b>p</b> Perfil'
-        messages: '<b>g</b>, <b>m</b> Mensagens'
-      navigation:
-        title: 'Navegação'
-        jump: '<b>#</b> Ir para o post #'
-        back: '<b>u</b> Retroceder'
-        up_down: '<b>k</b>/<b>j</b> Mover seleção &uarr; &darr;'
-        open: '<b>o</b> ou <b>Enter</b> Abrir tópico selecionado'
-        next_prev: '<b>shift</b>+<b>j</b>/<b>shift</b>+<b>k</b> Secção Seguinte/Anterior'
-      application:
-        title: 'Aplicação'
-        create: '<b>c</b> Criar um novo tópico'
-        notifications: '<b>n</b> Abrir notificações'
-        hamburger_menu: '<b>=</b> Abrir menu hamburger'
-        user_profile_menu: '<b>p</b> Abrir menu do utilizador'
-        show_incoming_updated_topics: '<b>.</b> Mostrar tópicos atualizados'
-        search: '<b>/</b> Pesquisar'
-        help: '<b>?</b> Abrir ajuda do teclado'
-        dismiss_new_posts: '<b>x</b>, <b>r</b> Destituir Novos/Mensagens'
-        dismiss_topics: '<b>x</b>, <b>t</b> Destituir Tópicos'
-        log_out: '<b>shift</b>+<b>z</b> <b>shift</b>+<b>z</b> Terminar Sessão'
-      actions:
-        title: 'Ações'
-        bookmark_topic: '<b>f</b> Alternar marcador de tópico'
-        pin_unpin_topic: '<b>shift</b>+<b>p</b> Tópico Fixado/Desafixado'
-        share_topic: '<b>shift</b>+<b>s</b> Partilhar tópico'
-        share_post: '<b>s</b> Partilhar mensagem'
-        reply_as_new_topic: '<b>t</b> Responder como tópico hiperligado'
-        reply_topic: '<b>shift</b>+<b>r</b> Responder ao tópico'
-        reply_post: '<b>r</b> Responder à mensagem'
-        quote_post: '<b>q</b> Citar mensagem'
-        like: '<b>l</b> Gostar da mensagem'
-        flag: '<b>!</b> Sinalizar mensagem'
-        bookmark: '<b>b</b> Adicionar mensagem aos marcadores'
-        edit: '<b>e</b> Editar mensagem'
-        delete: '<b>d</b> Eliminar mensagem'
-        mark_muted: '<b>m</b>, <b>m</b> Silenciar tópico'
-        mark_regular: '<b>m</b>, <b>r</b> Tópico Habitual (por defeito)'
-        mark_tracking: '<b>m</b>, <b>t</b> Acompanhar tópico'
-        mark_watching: '<b>m</b>, <b>w</b> Vigiar este tópico'
-    badges:
-      earned_n_times:
-        one: "Ganhou esta medalha 1 vez"
-        other: "Ganhou esta medalha %{count} vezes"
-      granted_on: "Ganho %{date}"
-      others_count: "Outras pessoas com esta medalha (%{count})"
-      title: Distintivos
-      allow_title: "título disponivel"
-      multiple_grant: "atribuido multiplas vezes"
-      badge_count:
-        one: "1 Distintivo"
-        other: "%{count} Distintivos"
-      more_badges:
-        one: "+1 Mais"
-        other: "+%{count} Mais"
-      granted:
-        one: "1 concedida"
-        other: "%{count} concedidas"
-      select_badge_for_title: Selecionar um distintivo para usar como título
-      none: "<none>"
-      badge_grouping:
-        getting_started:
-          name: Dar Início
-        community:
-          name: Comunidade
-        trust_level:
-          name: Nível de Confiança
-        other:
-          name: Outro
-        posting:
-          name: A publicar
-    google_search: |
-      <h3>Pesquise com o Google</h3>
-      <p>
-      <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:' + window.location.host + ' ' + document.getElementById('user-query').value; return true;">
-      <input type="text" id='user-query' value="">
-      <input type='hidden' id='google-query' name="q">
-      <button class="btn btn-primary">Google</button>
-      </form>
-      </p>
-    tagging:
-      all_tags: "Todas as Etiquetas"
-      selector_all_tags: "todas as etiquetas"
-      changed: "etiquetas modificadas:"
-      tags: "Etiquetas"
-      choose_for_topic: "escolha etiquetas opcionais para este tópico"
-      delete_tag: "Remover Etiqueta"
-      delete_confirm: "Tem a certeza que deseja remover esta etiqueta?"
-      rename_tag: "Renomear Etiqueta"
-      rename_instructions: "Escolha o novo nome para a etiqueta:"
-      sort_by: "Ordenar por:"
-      sort_by_count: "contagem"
-      sort_by_name: "nome"
-      filters:
-        without_category: "%{filter} %{tag} tópicos"
-        with_category: "%{filter} %{tag} tópicos em %{category}"
-      notifications:
-        watching:
-          title: "A vigiar"
-          description: "Vigiará automaticamente todos os tópicos novos nesta etiqueta. Será notificado acerca de todas as novas mensagens e tópicos,bem como lhe será apresentada a contagem de mensagens por ler e novas ao lado do tópico."
-        tracking:
-          title: "A seguir"
-          description: "Irá automaticamente seguir todos os novos tópicos nesta etiqueta. Uma contagem de mensagens não lidas e novas aparecerá ao lado to tópico."
-        regular:
-          title: "Regular"
-          description: "Será notificado quando alguém mencione o seu @nome ou responda à sua mensagem."
-        muted:
-          title: "Silenciado"
-          description: "Não será notificado acerca de novos tópicos sob esta etiqueta, não aparecendo eles no seu separador de não lidos."
-      topics:
-        none:
-          unread: "Não tem tópicos por ler."
-          new: "Não tem nenhum tópico novo."
-          read: "Ainda não leu quaisquer tópicos."
-          posted: "Ainda não publicou nada em um tópico qualquer."
-          latest: "Não há tópicos recentes."
-          hot: "Não há tópicos quentes."
-          bookmarks: "Não marcou qualquer tópico ainda."
-          top: "Não há quaisquer tópicos de topo."
-          search: "Não há resultados para a procura."
-        bottom:
-          latest: "Não há mais tópicos recentes."
-          hot: "Não há mais tópicos quentes."
-          posted: "Não existem mais tópicos publicados."
-          read: "Não existem mais tópicos lidos."
-          new: "Não existem mais tópicos novos."
-          unread: "Não existem mais tópicos por ler."
-          top: "Não existem mais tópicos de topo."
-          bookmarks: "Não existem mais tópicos marcados."
-          search: "Não existem mais resultados de pesquisa."

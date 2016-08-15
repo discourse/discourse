@@ -270,8 +270,6 @@ pl_PL:
     disable: "Wyłącz"
     undo: "Cofnij"
     failed: "Niepowodzenie"
-    switch_to_anon: "Tryb anonimowy"
-    switch_from_anon: "Zakończ tryb anonimowy"
     banner:
       close: "Zamknij ten baner."
       edit: "Edytuj ten baner >>"
@@ -463,7 +461,6 @@ pl_PL:
         disable: "Wyłącz powiadomienia"
         enable: "Włącz powiadomienia"
         each_browser_note: "Uwaga: to ustawienie musisz zmienić w każdej przeglądarce której używasz."
-      dismiss_notifications: "Oznacz jako przeczytane"
       dismiss_notifications_tooltip: "Oznacz wszystkie powiadomienia jako przeczytane"
       disable_jump_reply: "Po odpowiedzi nie przechodź do nowego wpisu"
       dynamic_favicon: "Pokazuj licznik powiadomień na karcie jako dynamiczny favicon"
@@ -479,9 +476,7 @@ pl_PL:
       suspended_reason: "Powód: "
       github_profile: "Github"
       watched_categories: "Obserwowane"
-      watched_categories_instructions: "Będziesz automatycznie śledzić wszystkie nowe tematy w tych kategoriach. Będziesz otrzymywać powiadomienie o każdym nowym wpisie i temacie, a liczba nieprzeczytanych i nowych wpisów będzie wyświetlana obok tytułów na liście tematów. "
       tracked_categories: "Śledzone"
-      tracked_categories_instructions: "Będziesz automatycznie śledzić wszystkie nowe tematy w tych kategoriach. Licznik nowych wpisów pojawi się obok tytułu na liście tematów."
       muted_categories: "Wyciszone"
       muted_categories_instructions: "Nie będziesz powiadamiany o nowych tematach w tych kategoriach. Nie pojawią się na liście nieprzeczytanych."
       delete_account: "Usuń moje konto"
@@ -837,10 +832,6 @@ pl_PL:
       github:
         title: "przez GitHub"
         message: "Uwierzytelnianie przez GitHub (upewnij się, że blokada wyskakujących okienek nie jest włączona)"
-    apple_international: "Apple/International"
-    google: "Google"
-    twitter: "Twitter"
-    emoji_one: "Emoji One"
     shortcut_modifier_key:
       shift: 'Shift'
       ctrl: 'Ctrl'
@@ -1585,10 +1576,8 @@ pl_PL:
       notifications:
         watching:
           title: "Obserwuj wszystko"
-          description: "Będziesz automatycznie śledzić wszystkie nowe tematy w tych kategoriach. Otrzymasz powiadomienie o każdym nowym wpisie i temacie. Wyświetlimy liczbę nowych odpowiedzi na liście tematów."
         tracking:
           title: "Śledzona"
-          description: "Będziesz automatycznie śledzić wszystkie tematy w tych kategoriach. Otrzymasz powiadomienie jeśli ktoś wspomni twój @login lub odpowie na twój wpis. Licznik nowych odpowiedzi pojawi się na liście tematów."
         regular:
           title: "Normalny"
           description: "Dostaniesz powiadomienie jedynie, gdy ktoś wspomni twoją @nazwę lub odpowie na twój wpis."
@@ -1626,7 +1615,6 @@ pl_PL:
       title: "Podsumowanie tematu"
       participants_title: "Najczęściej piszą"
       links_title: "Popularne linki"
-      links_shown: "pokaż wszystkie {{totalLinks}} odnośników…"
       clicks:
         one: "1 kliknięcie"
         few: "%{count} kliknięć"

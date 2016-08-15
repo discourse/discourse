@@ -1,7 +1,7 @@
 import { emoji, aliases, translations } from 'pretty-text/emoji/data';
 
 // bump up this number to expire all emojis
-export const IMAGE_VERSION = "2";
+export const IMAGE_VERSION = "3";
 
 const extendedEmoji = {};
 

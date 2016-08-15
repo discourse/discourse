@@ -271,8 +271,6 @@ sk:
     undo: "Späť"
     revert: "Vrátiť zmeny"
     failed: "Nepodarilo sa"
-    switch_to_anon: "Anonymný mód"
-    switch_from_anon: "Opustiť anonymný mód"
     banner:
       close: "Zamietnuť tento banner."
       edit: "Upraviť tento banner >>"
@@ -465,7 +463,6 @@ sk:
         disable: "Zakázať upozornenia"
         enable: "Povoliť upozornenia"
         each_browser_note: "Poznámka: Toto nastavenie musíte zmeniť v každom používanom prehliadači."
-      dismiss_notifications: "Označiť všetky ako prečítané"
       dismiss_notifications_tooltip: "Označiť všetky neprečítané upozornenia ako prečítané"
       disable_jump_reply: "Neskočiť na môj príspevok po odpovedi"
       dynamic_favicon: "Zobraziť počet nových/upravených tém na ikone prehliadača"
@@ -481,9 +478,7 @@ sk:
       suspended_reason: "Dôvod:"
       github_profile: "Github"
       watched_categories: "Sledované"
-      watched_categories_instructions: "Budete automaticky sledovať všetky nové témy v týchto kategóriách. Budete upozornený na všetky nové príspevky a témy, a zároveň bude vedľa témy zobrazený počet nových príspevkov."
       tracked_categories: "Sledované"
-      tracked_categories_instructions: "Budete automaticky sledovať všetky nové témy v týchto kategóriách. Počet nových príspevkov sa bude zobraziť vedľa témy."
       muted_categories: "Ignorovaný"
       muted_categories_instructions: "Nebudete informovaní o udalostiach v nových témach týchto kategórií. Tieto témy sa zároveň nebudú zobrazovať v zozname posledných udalostí."
       delete_account: "Vymazať môj účet"
@@ -837,10 +832,6 @@ sk:
       github:
         title: "pomocou GitHub"
         message: "Prihlásenie pomocou GitHub účtu (prosím uistite sa, že vyskakovacie okná sú povolené)"
-    apple_international: "Apple/Medzinárodné"
-    google: "Google"
-    twitter: "Twitter"
-    emoji_one: "Emoji One"
     shortcut_modifier_key:
       shift: 'Shift'
       ctrl: 'Ctrl'
@@ -858,7 +849,6 @@ sk:
       saved_local_draft_tip: "uložené lokálne"
       similar_topics: "Vaša téma je podobná..."
       drafts_offline: "offline koncepty"
-      group_mentioned: "Použitím tejto  {{group}} , upozorníte <a href='{{group_link}}'>{{count}} ľudí</a>."
       error:
         title_missing: "Názov je povinný"
         title_too_short: "Názov musí mať minimálne {{min}} znakov"
@@ -939,7 +929,6 @@ sk:
       invited_to_topic: "<i title='invited to topic' class='fa fa-hand-o-right'></i><p><span>{{username}}</span> {{description}}</p>"
       invitee_accepted: "<i title='accepted your invitation' class='fa fa-user'></i><p><span>{{username}}</span> prijal Vaše pozvanie</p>"
       moved_post: "<i title='moved post' class='fa fa-sign-out'></i><p><span>{{username}}</span> presunul {{description}}</p>"
-      linked: "<i title='linked post' class='fa fa-arrow-left'></i><p><span>{{username}}</span> {{description}}</p>"
       granted_badge: "<i title='badge granted' class='fa fa-certificate'></i><p>Získal '{{description}}'</p>"
       group_message_summary:
         one: "<i title='messages in group inbox' class='fa fa-group'></i><p> {{count}} správa vo vašej {{group_name}} schránke</p>"
@@ -1236,8 +1225,6 @@ sk:
         no_banner_exists: "Neexistuje žiadna banerová téma."
         banner_exists: "Banerová téma <strong class='badge badge-notification unread'>je</strong> aktuálne nastavená."
       inviting: "Pozývam..."
-      automatically_add_to_groups_optional: "Táto pozvánka obsahuje taktiež prístup do týchto skupín: ( nepovinné, iba správca) "
-      automatically_add_to_groups_required: "Táto pozvánka obsahuje taktiež prístup do týchto skupín: ( <b>Povinné</b>, iba správca) "
       invite_private:
         title: 'Pozvať do konverzácie'
         email_or_username: "Email, alebo užívateľské meno pozvaného"
@@ -1581,10 +1568,8 @@ sk:
       notifications:
         watching:
           title: "Pozerať"
-          description: "Budete automaticky pozerať všetky nové témy v týchto kategóriách. Budete upozornený na všetky nové príspevky vo všetkých témach. Zároveň bude zobrazený počet nových odpovedí."
         tracking:
           title: "Sledovať"
-          description: "Budete automaticky sledovať všetky nové témy v týchto kategóriách. Budete upozornený ak niekto uvedie vaše @meno alebo Vám odpovie. Zároveň bude zobrazený počet nových odpovedí."
         regular:
           title: "Bežný"
           description: "Budete upozornený ak niekto spomenie Vaše @meno alebo Vám odpovie."
@@ -1622,7 +1607,6 @@ sk:
       title: "Zhrnutie článku"
       participants_title: "Častí prispievatelia"
       links_title: "Populárne odkazy"
-      links_shown: "ukázať všetkých {{totalLinks}} odkazov..."
       clicks:
         one: "%{count} kilk"
         few: "%{count} kliky"
@@ -1654,10 +1638,10 @@ sk:
     posts_long: "v tejto téme je {{number}} príspevkov"
     posts_likes_MF: |
       Táto téma obsahuje {count, plural, one {1 odpoveď} other {# odpovedí}} {ratio, select,
-        low {s vysokým pomerom "Páči sa" na príspevok}
-        med {s veľmi vysokým pomerom "Páči sa" na príspevok}
-        high {s extrémne vysokým pomerom "Páči sa" na príspevok}
-        other {}}
+      low {s vysokým pomerom "Páči sa" na príspevok}
+      med {s veľmi vysokým pomerom "Páči sa" na príspevok}
+      high {s extrémne vysokým pomerom "Páči sa" na príspevok}
+      other {}}
     original_post: "Pôvodný príspevok"
     views: "Zobrazenia"
     views_lowercase:
@@ -2609,98 +2593,3 @@ sk:
           label: "Nový:"
           add: "Pridať"
           filter: "Hľadať (URL alebo externá URL)"
-    lightbox:
-      download: "stiahnuť"
-    search_help:
-      title: 'Pomoc pri vyhľadávaní'
-    keyboard_shortcuts_help:
-      title: 'Klávesové skratky'
-      jump_to:
-        title: 'Preskočiť na'
-        home: '<b>g</b>, <b>h</b> Domov'
-        latest: '<b>g</b>, <b>l</b> Najnovšie'
-        new: '<b>g</b>, <b>n</b> Nové'
-        unread: '<b>g</b>, <b>u</b> Neprečítané'
-        categories: '<b>g</b>, <b>c</b> Kategórie'
-        top: '<b>g</b>, <b>t</b> Hore'
-        bookmarks: '<b>g</b>, <b>b</b> Záložky'
-        profile: '<b>g</b>, <b>p</b> Profil'
-        messages: '<b>g</b>, <b>m</b> Správy'
-      navigation:
-        title: 'Navigácia'
-        jump: '<b>#</b> Choď na príspevok #'
-        back: '<b>u</b> Späť'
-        up_down: '<b>k</b>/<b>j</b> Presuň označené &uarr; &darr;'
-        open: '<b>o</b> or <b>Enter</b>Otvoriť zvolenú tému'
-        next_prev: '<b>shift</b>+<b>j</b>/<b>shift</b>+<b>k</b> Nasledujúca/predchádzajúca sekcia'
-      application:
-        title: 'Aplikácia'
-        create: '<b>c</b> Vytvoriť novú tému'
-        notifications: '<b>n</b> Otvor upozornenia'
-        hamburger_menu: '<b>=</b> Otvoriť hamburger menu'
-        user_profile_menu: '<b>p</b> Otvor užívateľské menu'
-        show_incoming_updated_topics: '<b>.</b> Zobraz aktualizované témy'
-        search: '<b>/</b> Hľadať'
-        help: '<b>?</b> Pomoc s klávesovými skratkami'
-        dismiss_new_posts: '<b>x</b>, <b>r</b> Zahodiť Nové/Príspevky'
-        dismiss_topics: '<b>x</b>, <b>t</b> Zahodiť témy'
-        log_out: '<b>shift</b>+<b>z</b> <b>shift</b>+<b>z</b> Odhlásiť sa'
-      actions:
-        title: 'Akcie'
-        bookmark_topic: '<b>f</b> Zmeniť tému záložky'
-        pin_unpin_topic: '<b>shift</b>+<b>p</b> Pripnúť/Odopnúť tému'
-        share_topic: '<b>shift</b>+<b>s</b> Zdielať tému'
-        share_post: '<b>s</b> Zdielať príspevok'
-        reply_as_new_topic: '<b>t</b> Odpoveď ako súvisiaca téma'
-        reply_topic: '<b>shift</b>+<b>r</b> Odpovedať na tému'
-        reply_post: '<b>r</b> Odpovedať na príspevok'
-        quote_post: '<b>q</b> Citovať príspevok'
-        like: '<b>l</b> Označiť príspevok "Páči sa"'
-        flag: '<b>!</b> Označiť príspevok '
-        bookmark: '<b>b</b> Pridať príspevok do záložiek'
-        edit: '<b>e</b> Editovat príspevok'
-        delete: '<b>d</b> Zmazať príspevok'
-        mark_muted: '<b>m</b>, <b>m</b> Umlčať tému'
-        mark_regular: '<b>m</b>, <b>r</b> Obyčajná (preddefinovaná) téma'
-        mark_tracking: '<b>m</b>, <b>w</b> Sledovať tému'
-        mark_watching: '<b>m</b>, <b>w</b> Sledovať tému'
-    badges:
-      earned_n_times:
-        one: "Získal tento odkaz 1 krát"
-        few: "Získal tento odkaz %{count} krát"
-        other: "Získal tento odkaz %{count} krát"
-      title: Odznaky
-      badge_count:
-        one: "1 Odznak"
-        few: "%{count} Odznaky"
-        other: "%{count} Odznakov"
-      more_badges:
-        one: "+1 Viac"
-        few: "+%{count} Viac"
-        other: "+%{count} Viac"
-      granted:
-        one: "1 povolené"
-        few: "%{count} povolené"
-        other: "%{count} povolených"
-      select_badge_for_title: Vyberte odznak, ktorý chcete použiť ako Váš titul
-      none: "<none>"
-      badge_grouping:
-        getting_started:
-          name: Začíname
-        community:
-          name: Komunita
-        trust_level:
-          name: Stupeň dôvery
-        other:
-          name: Ostatné
-        posting:
-          name: Prispievam
-    google_search: |
-      <h3>Vyhľadávať pomocou Google</h3>
-      <p>
-        <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:' + window.location.host + ' ' + document.getElementById('user-query').value; return true;">
-          <input type="text" id='user-query' value="">
-          <input type='hidden' id='google-query' name="q">
-          <button class="btn btn-primary">Google</button>
-        </form>
-      </p>

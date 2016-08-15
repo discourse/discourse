@@ -207,8 +207,6 @@ fa_IR:
     undo: "برگردانی"
     revert: "برگشت"
     failed: "ناموفق"
-    switch_to_anon: "حالت ناشناس "
-    switch_from_anon: "از حالت ناشناس خارج شدن"
     banner:
       close: "این سردر را رد بده."
       edit: "این بنر را ویرایش کنید >>"
@@ -387,7 +385,6 @@ fa_IR:
         disable: "غیرفعال کردن اعلانات"
         enable: "فعال کردن اعلانات"
         each_browser_note: "نکته: شما باید این تنظیمات را در هر مرورگری که استفاده میکنید تغییر دهید."
-      dismiss_notifications: "علامت گذاری همه به عنوان خوانده شده"
       dismiss_notifications_tooltip: "علامت گذاری همه اطلاعیه های خوانده نشده به عنوان خوانده شده"
       disable_jump_reply: "بعد از پاسخ من به پست من پرش نکن"
       dynamic_favicon: " تعداد موضوعات جدید یا بروز شده را روی آیکون مرورگر نمایش بده"
@@ -403,9 +400,7 @@ fa_IR:
       suspended_reason: "دلیل: "
       github_profile: "Github"
       watched_categories: "تماشا شده"
-      watched_categories_instructions: "شما به صورت خودکار تمام نوشته‌های این دسته را مشاهده‌ خواهید کرد. به شما تمام عناوین و نوشته‌‌های جدید اطلاع رسانی خواهد شد، و تعداد نوشته‌های جدید هر عنوان در کنار آن نمایش داده می‌شود."
       tracked_categories: "پی‌گیری شده"
-      tracked_categories_instructions: "شما به صورت خودکار تمام عناوین جدید در این دسته را پیگیری خواهید کرد. تعداد نوشته های جدید در کنار عنواین نمایش داده می‌شود."
       muted_categories: "بی صدا شد"
       muted_categories_instructions: "شما از هیچ چیز مباحث جدید این دسته بندی ها آگاه نمیشوید, و آن ها در آخرین ها نمایش داده نمیشوند."
       delete_account: "حساب من را پاک کن"
@@ -729,10 +724,6 @@ fa_IR:
       github:
         title: "با GitHub"
         message: "اعتبارسنجی با گیت‌هاب (مطمئن شوید که بازدارنده‌های pop up فعال نباشند)"
-    apple_international: "اپل / بین المللی"
-    google: "گوگل"
-    twitter: "تویتر"
-    emoji_one: "یک شکلک"
     shortcut_modifier_key:
       shift: 'Shift'
       ctrl: 'Ctrl'
@@ -749,7 +740,6 @@ fa_IR:
       saved_local_draft_tip: "ذخیره سازی به صورت محلی"
       similar_topics: "موضوع شما شبیه است به..."
       drafts_offline: "پیش نویس آنلاین"
-      group_mentioned: "با استفاده از {{group}}, شما اگاه میکنید <a href='{{group_link}}'>{{count}} اشخاص</a>."
       error:
         title_missing: "سرنویس الزامی است"
         title_too_short: "سرنویس دست‌کم باید {{min}} نویسه باشد"
@@ -830,7 +820,6 @@ fa_IR:
       invited_to_topic: "<i title='invited to topic' class='fa fa-hand-o-right'></i><p><span>{{username}}</span> {{description}}</p>"
       invitee_accepted: "<i title='accepted your invitation' class='fa fa-user'></i><p><span>{{username}}</span> accepted your invitation</p>"
       moved_post: "<i title='moved post' class='fa fa-sign-out'></i><p><span>{{username}}</span> moved {{description}}</p>"
-      linked: "<i title='linked post' class='fa fa-arrow-left'></i><p><span>{{username}}</span> {{description}}</p>"
       granted_badge: "<i title='badge granted' class='fa fa-certificate'></i><p>Earned '{{description}}'</p>"
       alt:
         mentioned: "اشاره شده توسط"
@@ -1096,8 +1085,6 @@ fa_IR:
         no_banner_exists: "هیچ مبحث سرصفحه ای وجود ندارد."
         banner_exists: "یک مبحث سرصفحه ای <strong class='badge badge-notification unread'> هست </strong> در حال حاضر."
       inviting: "فراخوانی..."
-      automatically_add_to_groups_optional: "این دعوتنامه دارای دسترسی به این گروه ها است : (اختیاری٬ فقط ادمین)"
-      automatically_add_to_groups_required: "این دعوتنامه دارای دسترسی به این گروه ها است : (<b>Required</b>, admin only)"
       invite_private:
         title: 'دعوت به پیام خصوصی'
         email_or_username: "دعوتنامه ی ایمیل یا نام کاربر"
@@ -1377,10 +1364,8 @@ fa_IR:
       notifications:
         watching:
           title: "در حال تماشا"
-          description: "شما به صورت خودکار تمامی مباحث تازه در این دسته بندی ها را نگاه میکنید. اگر ارسال تازه ای در هرکدام از مباحث فرستاده شد شما مطلع میشود, و همچنین تعدادی از پاسخ های تازه نیز نمایش داده میشوند."
         tracking:
           title: "پیگیری"
-          description: "شما به صورت خودکار تمامی مبحث های تازه در این دسته بندی ها را دنبال میکنید, و اگر کسی @اسم شما را بیاورد و یا به شما پاسخ دهد به شما اطلاع داده خواهد شد, و همچنین تعدادی از پاسخ های تازه نیز نمایش داده میشوند."
         regular:
           title: "معمولی"
           description: "در صورتی که فردی با @name به شما اشاره کند یا به شما پاسخی دهد به شما اطلاع داده خواهد شد."
@@ -1418,7 +1403,6 @@ fa_IR:
       title: "چکیدهٔ موضوع"
       participants_title: "نویسنده‌های فعال"
       links_title: "لینک‌های محبوب"
-      links_shown: "نمایش همه {{totalLinks}} پیوند ها..."
       clicks:
         other: "%{count} کلیک ها"
     topic_statuses:
@@ -1448,10 +1432,10 @@ fa_IR:
     posts_long: "این موضوع {{number}} نوشته دارد"
     posts_likes_MF: |
       این موضوع است {count, plural, one {1 reply} other {# replies}} {ratio, select,
-        low {with a high like to post ratio}
-        med {with a very high like to post ratio}
-        high {with an extremely high like to post ratio}
-        other {}}
+      low {with a high like to post ratio}
+      med {with a very high like to post ratio}
+      high {with an extremely high like to post ratio}
+      other {}}
     original_post: "نوشته اصلی"
     views: "نمایش‌ها"
     views_lowercase:
@@ -2330,95 +2314,3 @@ fa_IR:
           label: "جدید:"
           add: "افزودن"
           filter: "جستجو (آدرس یا آدرس خارجی)"
-    lightbox:
-      download: "دریافت"
-    search_help:
-      title: 'کمک جستجو'
-    keyboard_shortcuts_help:
-      title: 'میانبر‌های صفحه کلید'
-      jump_to:
-        title: 'بپر به'
-        home: '<b>g</b>, <b>h</b> خانه'
-        latest: '<b>g</b>, <b>l</b>آخرین'
-        new: '<b>g</b>, <b>n</b> جدید'
-        unread: '<b>g</b>, <b>u</b> خوانده نشده'
-        categories: '<b>g</b>, <b>c</b> دسته بندی ها'
-        top: '<b>g</b>, <b>t</b> بالا ترین'
-        bookmarks: '<b>g</b>, <b>h</b> نشانک‌ها'
-        profile: '<b>g</b>, <b>p</b> پروفایل'
-        messages: '<b>g</b>, <b>m</b> پیام ها'
-      navigation:
-        title: 'راهبری'
-        jump: '<b>#</b> رفتن به نوشته #'
-        back: 'برگشت'
-        up_down: '<b>k</b>/<b>j</b> انتقال انتخاب شده &uarr; &darr;'
-        open: '<b>o</b> or <b>Enter</b> باز کردن موضوع انتخاب شده'
-        next_prev: '<b>shift</b>+<b>j</b>/<b>shift</b>+<b>k</b> بخش قبلی/بعدی'
-      application:
-        title: 'نرم‌افزار'
-        create: '<b>c</b> ساختن یک موضوع جدید'
-        notifications: '<b>n</b> باز کردن آگاه‌سازی‌ها'
-        hamburger_menu: '<b>=</b> باز کردن منوی همبرگری'
-        user_profile_menu: '<b>p</b> باز کردن منوی کاربران'
-        show_incoming_updated_topics: '<b>.</b> نمایش موضوعات بروز شده'
-        search: '<b>/</b> جستجو'
-        help: '<b>?</b> باز کردن راهنمای کیبورد'
-        dismiss_new_posts: '<b>x</b>, <b>r</b>بستن جدید/نوشته ها '
-        dismiss_topics: '<b>x</b>, <b>t</b> بستن موضوعات'
-        log_out: '<b>shift</b>+<b>z</b> <b>shift</b>+<b>z</b> خروج'
-      actions:
-        title: 'اقدامات'
-        bookmark_topic: '<b>f</b> تعویض نشانک موضوع'
-        pin_unpin_topic: '<b>shift</b>+<b>p</b> سنجاق /لغو سنجاق موضوع'
-        share_topic: '<b>shift</b>+<b>s</b> اشتراک گذاری نوشته'
-        share_post: 'به اشتراک‌گذاری نوشته'
-        reply_as_new_topic: '<b>t</b> پاسخگویی به عنوان یک موضوع لینک شده'
-        reply_topic: '<b>shift</b>+<b>r</b> پاسخ به موضوع'
-        reply_post: '<b>r</b> پاسخ به نوشته'
-        quote_post: 'نقل‌قول نوشته'
-        like: '<b>l</b> پسندیدن نوشته'
-        flag: '<b>!</b> پرچم‌گذاری نوشته'
-        bookmark: '<b>b</b> نشانک‌گذاری نوشته'
-        edit: '<b>e</b> ویرایش نوشته'
-        delete: '<b>d</b> پاک کردن نوشته'
-        mark_muted: '<b>m</b>, <b>m</b> بی صدا کردن موضوع'
-        mark_regular: '<b>m</b>, <b>r</b> تنظیم ( پیش فرض) موضوع'
-        mark_tracking: 'b>m</b>, <b>t</b> پیگری جستار'
-        mark_watching: '<b>m</b>, <b>w</b> مشاهده موضوع'
-    badges:
-      title: مدال‌ها
-      badge_count:
-        other: "%{count} مدال"
-      more_badges:
-        other: "+%{count} بیش‌تر"
-      granted:
-        other: "%{count} اعطا شد"
-      select_badge_for_title: انتخاب یک مدال برای استفاده در عنوان خود
-      none: "<none>"
-      badge_grouping:
-        getting_started:
-          name: شروع
-        community:
-          name: انجمن
-        trust_level:
-          name: سطح اعتماد
-        other:
-          name: دیگر
-        posting:
-          name: در حال نوشتن
-    google_search: |
-      <h3>جستجو با گوگل</h3>
-
-      <p>
-
-      <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:' + window.location.host + ' ' + document.getElementById('user-query').value; return true;">
-
-      <input type="text" id='user-query' value="">
-
-      <input type='hidden' id='google-query' name="q">
-
-      <button class="btn btn-primary">گوگل</button>
-
-      </form>
-
-      </p>

@@ -18,6 +18,7 @@ en:
   site_settings:
     poll_enabled: "Allow users to create polls?"
     poll_maximum_options: "Maximum number of options allowed in a poll."
+    poll_edit_window_mins: "Number of minutes after post creation during which polls can be edited."
 
   poll:
     multiple_polls_without_name: "There are multiple polls without a name. Use the '<code>name</code>' attribute to uniquely identify your polls."
@@ -44,9 +45,10 @@ en:
     default_cannot_be_made_public: "Poll with votes cannot be made public."
     named_cannot_be_made_public: "Poll named <strong>%{name}</strong> has votes cannot be made public."
 
-    cannot_change_polls_after_5_minutes: "You cannot add, remove or rename polls after the first 5 minutes."
-    op_cannot_edit_options_after_5_minutes: "You cannot add or remove poll options after the first 5 minutes. Please contact a moderator if you need to edit a poll option."
-    staff_cannot_add_or_remove_options_after_5_minutes: "You cannot add or remove poll options after the first 5 minutes. You should close this topic and create a new one instead."
+    edit_window_expired:
+      cannot_change_polls: "You cannot add, remove or rename polls after the first %{minutes} minutes."
+      op_cannot_edit_options: "You cannot add or remove poll options after the first %{minutes} minutes. Please contact a moderator if you need to edit a poll option."
+      staff_cannot_add_or_remove_options: "You cannot add or remove poll options after the first %{minutes} minutes. You should close this topic and create a new one instead."
 
     no_polls_associated_with_this_post: "No polls are associated with this post."
     no_poll_with_this_name: "No poll named <strong>%{name}</strong> associated with this post."

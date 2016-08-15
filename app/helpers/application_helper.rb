@@ -15,9 +15,11 @@ module ApplicationHelper
   include ConfigurableUrls
   include GlobalPath
 
-  def google_universal_analytics_json(ua_domain_name)
-    cookie_domain = ua_domain_name.gsub(/^http(s)?:\/\//, '')
-    result = {cookieDomain: cookie_domain}
+  def google_universal_analytics_json(ua_domain_name=nil)
+    result = {}
+    if ua_domain_name
+      result[:cookieDomain] = ua_domain_name.gsub(/^http(s)?:\/\//, '')
+    end
     if current_user.present?
       result[:userId] = current_user.id
     end
@@ -29,7 +31,7 @@ module ApplicationHelper
   end
 
   def google_tag_manager_json
-    google_universal_analytics_json(SiteSetting.gtm_ua_domain_name)
+    google_universal_analytics_json
   end
 
   def shared_session_key

@@ -8,7 +8,8 @@ const searchData = {
   results: {},
   noResults: false,
   term: undefined,
-  typeFilter: null
+  typeFilter: null,
+  invalidTerm: false
 };
 
 // Helps with debouncing and cancelling promises
@@ -45,8 +46,11 @@ const SearchHelper = {
       searchData.noResults = true;
       searchData.results = [];
       searchData.loading = false;
+      searchData.invalidTerm = true;
+
       widget.scheduleRerender();
     } else {
+      searchData.invalidTerm = false;
       this._activeSearch = searchForTerm(term, { typeFilter, searchContext, fullSearchUrl });
       this._activeSearch.then(content => {
         searchData.noResults = content.resultTypes.length === 0;
@@ -98,7 +102,8 @@ export default createWidget('search-menu', {
     } else {
       results.push(this.attach('search-menu-results', { term: searchData.term,
                                                         noResults: searchData.noResults,
-                                                        results: searchData.results }));
+                                                        results: searchData.results,
+                                                        invalidTerm: searchData.invalidTerm }));
     }
 
     return results;
@@ -130,13 +135,9 @@ export default createWidget('search-menu', {
 
   triggerSearch() {
     searchData.noResults = false;
-    if (isValidSearchTerm(searchData.term)) {
-      this.searchService().set('highlightTerm', searchData.term);
-      searchData.loading = true;
-      Ember.run.debounce(SearchHelper, SearchHelper.perform, this, 400);
-    } else {
-      searchData.results = [];
-    }
+    this.searchService().set('highlightTerm', searchData.term);
+    searchData.loading = true;
+    Ember.run.debounce(SearchHelper, SearchHelper.perform, this, 400);
   },
 
   moreOfType(type) {
@@ -160,6 +161,8 @@ export default createWidget('search-menu', {
   fullSearch() {
     if (!isValidSearchTerm(searchData.term)) { return; }
 
+    searchData.results = [];
+    searchData.loading = false;
     SearchHelper.cancel();
     const url = this.fullSearchUrl();
     if (url) {

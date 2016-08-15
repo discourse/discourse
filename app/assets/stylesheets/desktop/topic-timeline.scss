@@ -30,6 +30,8 @@
   &.timeline-docked-bottom {
     .timeline-footer-controls {
       opacity: 0;
+      pointer-events: none;
+      cursor: default;
     }
   }
 

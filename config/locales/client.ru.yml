@@ -174,6 +174,7 @@ ru:
         disabled: 'Исключил из списков %{when}'
     topic_admin_menu: "действия администратора над темой"
     emails_are_disabled: "Все исходящие письма были глобально отключены администратором. Уведомления любого вида не будут отправляться на почту."
+    bootstrap_mode_disabled: "Bootstrap режим будет отключен в течение 24 часов."
     s3:
       regions:
         us_east_1: "US East (N. Virginia)"
@@ -296,8 +297,6 @@ ru:
     undo: "Отменить"
     revert: "Вернуть"
     failed: "Проблема"
-    switch_to_anon: "Анонимный режим"
-    switch_from_anon: "Выйти из анонимного режима"
     banner:
       close: "Больше не показывать это объявление."
       edit: "Редактировать это объявление >>"
@@ -500,7 +499,6 @@ ru:
         disable: "Отключить оповещения"
         enable: "Включить оповещения"
         each_browser_note: "Примечание: эта настройка устанавливается в каждом браузере индивидуально."
-      dismiss_notifications: "Пометить все прочитанными"
       dismiss_notifications_tooltip: "Пометить все непрочитанные уведомления прочитанными"
       disable_jump_reply: "Не переходить к вашему новому сообщению после ответа"
       dynamic_favicon: "Показывать колличество новых / обновленных тем на иконке сообщений"
@@ -516,11 +514,10 @@ ru:
       suspended_reason: "Причина:"
       github_profile: "Github"
       mailing_list_mode:
+        daily: "Отправить ежедневные обновления"
         individual: "Отправлять письмо каждый раз, когда появляется новое сообщение."
       watched_categories: "Наблюдение"
-      watched_categories_instructions: "Вы будете автоматически отслеживать все новые темы в этих разделах. Вам будут приходить уведомления о новых сообщениях и темах, плюс рядом со списком тем будет отображено количество  новых сообщений."
       tracked_categories: "Отслеживаемые разделы"
-      tracked_categories_instructions: "Автоматически следить за всеми новыми темами из следующих разделов. Счетчик новых и непрочитанных сообщений будет появляться рядом с названием темы."
       muted_categories: "Выключенные разделы"
       muted_categories_instructions: "Не уведомлять меня о новых темах в этих разделах и не показывать новые темы на странице «Непрочитанные»."
       delete_account: "Удалить мою учётную запись"
@@ -562,7 +559,6 @@ ru:
         error: "При изменении значения произошла ошибка."
       change_username:
         title: "Изменить псевдоним"
-        confirm: "Если вы измените свой псевдоним, то все существующие цитаты ваших сообщений и упоминания вас по @псевдониму в чужих сообщениях перестанут ссылаться на вас. Вы точно хотите изменить псевадоним?"
         taken: "Этот псевдоним уже занят."
         error: "При изменении псевдонима произошла ошибка."
         invalid: "Псевдоним должен состоять только из цифр и латинских букв"
@@ -643,7 +639,6 @@ ru:
         always: "всегда"
         never: "никогда"
       email_digests:
-        title: "В случае моего отсутствия на сайте присылайте мне сводку новостей по почте:"
         every_30_minutes: "каждые 30 минут"
         every_hour: "каждый час"
         daily: "ежедневно"
@@ -655,11 +650,6 @@ ru:
       email_always: "Присылать почтовое уведомление, даже если я присутствую на сайте"
       other_settings: "Прочее"
       categories_settings: "Разделы"
-      enable_mailing_list:
-        one: "Вы уверены, что хотите получать письма буквально о каждом новом сообщении на форуме?"
-        few: "Вы уверены, что хотите получать письма буквально о каждом новом сообщении на форуме?<br><br>Это будет в среднем <b>{{count}} письма</b> в день, а иногда больше."
-        many: "Вы уверены, что хотите получать письма буквально о каждом новом сообщении на форуме?<br><br>Это будет в среднем <b>{{count}} писем</b> в день, а иногда больше."
-        other: "Вы уверены, что хотите получать письма буквально о каждом новом сообщении на форуме?<br><br>Это будет в среднем <b>{{count}} писем</b> в день, а иногда больше."
       new_topic_duration:
         label: "Считать темы новыми, если"
         not_viewed: "ещё не просмотрены"
@@ -918,10 +908,6 @@ ru:
       github:
         title: "С помощью GitHub"
         message: "Вход с помощью учетной записи GitHub (убедитесь, что блокировщик всплывающих окон отключен)"
-    apple_international: "Apple/International"
-    google: "Google"
-    twitter: "Twitter"
-    emoji_one: "Emoji One"
     shortcut_modifier_key:
       shift: 'Shift'
       ctrl: 'Ctrl'
@@ -939,7 +925,6 @@ ru:
       saved_local_draft_tip: "Сохранено локально"
       similar_topics: "Ваша тема похожа на..."
       drafts_offline: "Черновики, сохраненные в офлайн"
-      group_mentioned: "При использовании {{group}}, <a href='{{group_link}}'>{{count}} людям</a> будут отправлены уведомления."
       error:
         title_missing: "Требуется название темы"
         title_too_short: "Название темы должно быть не короче {{min}} символов"
@@ -1025,7 +1010,6 @@ ru:
       invited_to_topic: "<i title='приглашен в тему' class='fa fa-hand-o-right'></i><p><span>{{username}}</span> {{description}}</p>"
       invitee_accepted: "<i title='accepted your invitation' class='fa fa-user'></i><p><span>{{username}}</span> принял(а) ваше приглашение</p>"
       moved_post: "<i title='moved post' class='fa fa-sign-out'></i><p><span>{{username}}</span> переместил(а) {{description}}</p>"
-      linked: "<i title='linked post' class='fa fa-arrow-left'></i><p><span>{{username}}</span> {{description}}</p>"
       granted_badge: "<i title='badge granted' class='fa fa-certificate'></i><p>Вы награждены: {{description}}</p>"
       alt:
         mentioned: "Упомянуто"
@@ -1315,8 +1299,6 @@ ru:
         banner_note: "Пользователи могут отклонить объявление, закрыв его. Только одну тему можно сделать текущим объявлением."
         no_banner_exists: "Нет текущих объявлений."
       inviting: "Высылаю приглашение..."
-      automatically_add_to_groups_optional: "Это приглашение также включает в себя доступ к следующим группам: (опционально, только для администратора)"
-      automatically_add_to_groups_required: "Это приглашение также включает в себя доступ к следующим группам: (<b>Обязательно</b>, только для администратора)"
       invite_private:
         title: 'Пригласить в беседу'
         email_or_username: "Адрес электронной почты или псевдоним того, кого вы хотите пригласить"
@@ -1686,10 +1668,8 @@ ru:
       notifications:
         watching:
           title: "Наблюдать"
-          description: "Наблюдать за каждой новой темой в этом разделе. Уведомлять о всех ответах в темах и показывать счетчик новых непрочитанных ответов."
         tracking:
           title: "Следить"
-          description: "Следить за каждой новой темой в этом разделе и показывать счетчик новых непрочитанных ответов. Вам придет уведомление, если кто-нибудь упомянет ваш @псевдоним или ответит на ваше сообщение."
         regular:
           title: "Уведомлять"
           description: "Уведомлять, если кто-нибудь упомянет мой @псевдоним или ответит на мое сообщение."
@@ -1727,7 +1707,6 @@ ru:
       title: "Сводка по теме"
       participants_title: "Частые авторы"
       links_title: "Популярные ссылки"
-      links_shown: "показать все {{totalLinks}} ссылок..."
       clicks:
         one: "1 клик"
         few: "%{count} клика"
@@ -2730,118 +2709,3 @@ ru:
           label: "Новая постоянная ссылка:"
           add: "Добавить"
           filter: "Поиск по ссылке или внешней ссылке (URL)"
-    lightbox:
-      download: "загрузить"
-    search_help:
-      title: 'Справка по поиску'
-    keyboard_shortcuts_help:
-      title: 'Сочетания клавиш'
-      jump_to:
-        title: 'Перейти к'
-        home: '<b>g</b>, <b>h</b> Домой'
-        latest: '<b>g</b>, <b>l</b> Последние'
-        new: '<b>g</b>, <b>n</b> Новые'
-        unread: '<b>g</b>, <b>u</b> Непрочитанные'
-        categories: '<b>g</b>, <b>c</b> Разделы'
-        top: '<b>g</b>, <b>t</b> Вверх'
-        bookmarks: '<b>g</b>, <b>b</b> Закладки'
-        profile: '<b>g</b>, <b>p</b> Профиль'
-        messages: '<b>g</b>, <b>m</b> Сообщения'
-      navigation:
-        title: 'Навигация'
-        jump: '<b>#</b> Перейти к сообщение №'
-        back: '<b>u</b> Назад'
-        up_down: '<b>k</b>/<b>j</b> Переместить выделение &uarr; &darr;'
-        open: '<b>o</b> или <b>Enter</b> Открыть выбранную тему'
-        next_prev: '<b>shift</b>+<b>j</b>/<b>shift</b>+<b>k</b> Следующая/предыдущая секция'
-      application:
-        title: 'Приложение'
-        create: '<b>c</b> Создать новую тему'
-        notifications: '<b>n</b> Открыть уведомления'
-        hamburger_menu: '<b>=</b> Открыть меню'
-        user_profile_menu: '<b>p</b> Открыть меню моего профиля'
-        show_incoming_updated_topics: '<b>.</b> Показать обновленные темы'
-        search: '<b>/</b> Поиск'
-        help: '<b>?</b> Открыть помощь по горячим клавишам'
-        dismiss_new_posts: '<b>x</b>, <b>r</b> Отложить новые сообщения'
-        dismiss_topics: '<b>x</b>, <b>t</b> Отложить темы'
-        log_out: '<b>shift</b>+<b>z</b> <b>shift</b>+<b>z</b> Выйти'
-      actions:
-        title: 'Действия'
-        bookmark_topic: '<b>f</b> Добавить в Избранное'
-        pin_unpin_topic: '<b>shift</b>+<b>p</b> Закрепить/Открепить тему'
-        share_topic: '<b>shift</b>+<b>s</b> Поделиться темой'
-        share_post: '<b>s</b> Поделиться сообщением'
-        reply_as_new_topic: '<b>t</b> Ответить в новой связанной теме'
-        reply_topic: '<b>shiftr</b>+<b>r</b> Ответить на тему'
-        reply_post: '<b>r</b> Ответить на сообщение'
-        quote_post: '<b>q</b> Цитировать сообщение'
-        like: '<b>l</b> Лайкнуть сообщение'
-        flag: '<b>!</b> Пожаловаться на сообщение'
-        bookmark: '<b>b</b> Добавить сообщение в избранные'
-        edit: '<b>e</b> Изменить сообщение'
-        delete: '<b>d</b> Удалить сообщение'
-        mark_muted: '<b>m</b>, <b>m</b> Отключить уведомления в теме'
-        mark_regular: '<b>m</b>, <b>r</b> Включить уведомления в теме'
-        mark_tracking: '<b>m</b>, <b>t</b> Отслеживать тему'
-        mark_watching: '<b>m</b>, <b>w</b> Наблюдать за темой'
-    badges:
-      others_count: "Другие с этой наградой (%{count})"
-      title: Награды
-      multiple_grant: "Выдаётся многократно"
-      badge_count:
-        one: "1 награда"
-        few: "%{count} награды"
-        many: "%{count} наград"
-        other: "%{count} наград"
-      more_badges:
-        one: "+ еще 1"
-        few: "+ еще %{count}"
-        many: "+ еще %{count}"
-        other: "+ еще %{count}"
-      granted:
-        one: "выдан %{count}"
-        few: "выдано %{count}"
-        many: "выдано %{count}"
-        other: "выдано %{count}"
-      select_badge_for_title: Использовать награду в качестве вашего титула
-      none: "<отсутствует>"
-      badge_grouping:
-        getting_started:
-          name: Начало
-        community:
-          name: Сообщество
-        trust_level:
-          name: Уровень доверия
-        other:
-          name: Прочее
-        posting:
-          name: Темы и сообщения
-    google_search: |
-      <h3>Поиск через Google</h3>
-      <p>
-      <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:' + window.location.host + ' ' + document.getElementById('user-query').value; return true;">
-      <input type="text" id='user-query' value="">
-      <input type='hidden' id='google-query' name="q">
-      <button class="btn btn-primary">Google</button>
-      </form>
-      </p>
-    tagging:
-      all_tags: "Все тэги"
-      selector_all_tags: "все тэги"
-      changed: "тэги изменились:"
-      tags: "Тэги"
-      delete_tag: "Удалить тэг"
-      delete_confirm: "Вы уверены, что хотите удалить этот тэг?"
-      rename_tag: "Переименовать тэг"
-      rename_instructions: "Выберите новое имя для тэга:"
-      sort_by: "Сортировать:"
-      sort_by_count: "количество"
-      sort_by_name: "имя"
-      notifications:
-        watching:
-          title: "Наблюдение"
-        tracking:
-          title: "Следить"
-        muted:
-          title: "Игнорируется"

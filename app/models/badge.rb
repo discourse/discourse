@@ -66,14 +66,14 @@ class Badge < ActiveRecord::Base
     PostRevision = 2
     TrustLevelChange = 4
     UserChange = 8
-    PostProcessed = 16
+    PostProcessed = 16 # deprecated
 
     def self.is_none?(trigger)
       [None].include? trigger
     end
 
     def self.uses_user_ids?(trigger)
-      [TrustLevelChange, UserChange, PostProcessed].include? trigger
+      [TrustLevelChange, UserChange].include? trigger
     end
 
     def self.uses_post_ids?(trigger)

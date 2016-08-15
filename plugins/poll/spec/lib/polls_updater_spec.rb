@@ -130,12 +130,12 @@ describe DiscoursePoll::PollsUpdater do
       let(:user) { Fabricate(:user) }
 
       before do
-        DiscoursePoll::Poll.vote(post.id, "poll", ["5c24fc1df56d764b550ceae1b9319125"], user.id)
+        DiscoursePoll::Poll.vote(post.id, "poll", ["5c24fc1df56d764b550ceae1b9319125"], user)
         post.reload
       end
 
       it "should not allow a private poll with votes to be made public" do
-        DiscoursePoll::Poll.vote(private_poll_post.id, "poll", ["5c24fc1df56d764b550ceae1b9319125"], user.id)
+        DiscoursePoll::Poll.vote(private_poll_post.id, "poll", ["5c24fc1df56d764b550ceae1b9319125"], user)
         private_poll_post.reload
 
         messages = MessageBus.track_publish do
@@ -217,12 +217,14 @@ describe DiscoursePoll::PollsUpdater do
       end
     end
 
-    describe "when post has been created more than 5 minutes ago" do
-      let(:another_post) { Fabricate(:post, created_at: Time.zone.now - 5.minutes) }
+    describe "when poll edit window has expired" do
+      let(:poll_edit_window_mins) { 6 }
+      let(:another_post) { Fabricate(:post, created_at: Time.zone.now - poll_edit_window_mins.minutes) }
 
       before do
         polls.each { |key, value| value["voters"] = 2 }
         described_class.update(another_post, polls)
+        SiteSetting.poll_edit_window_mins = poll_edit_window_mins
       end
 
       it "should not allow new polls to be added" do
@@ -231,8 +233,9 @@ describe DiscoursePoll::PollsUpdater do
         end
 
         expect(another_post.errors[:base]).to include(I18n.t(
-          "poll.cannot_change_polls_after_5_minutes")
-        )
+          "poll.edit_window_expired.cannot_change_polls",
+          minutes: poll_edit_window_mins
+        ))
 
         expect(messages).to eq([])
       end
@@ -243,7 +246,8 @@ describe DiscoursePoll::PollsUpdater do
         end
 
         expect(another_post.errors[:base]).to include(I18n.t(
-          "poll.op_cannot_edit_options_after_5_minutes"
+          "poll.edit_window_expired.op_cannot_edit_options",
+          minutes: poll_edit_window_mins
         ))
 
         expect(messages).to eq([])
@@ -258,7 +262,8 @@ describe DiscoursePoll::PollsUpdater do
           end
 
           expect(another_post.errors[:base]).to include(I18n.t(
-            "poll.staff_cannot_add_or_remove_options_after_5_minutes"
+            "poll.edit_window_expired.staff_cannot_add_or_remove_options",
+            minutes: poll_edit_window_mins
           ))
 
           expect(messages).to eq([])

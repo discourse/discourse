@@ -7,7 +7,9 @@ class UsersController < ApplicationController
   skip_before_filter :authorize_mini_profiler, only: [:avatar]
   skip_before_filter :check_xhr, only: [:show, :password_reset, :update, :account_created, :activate_account, :perform_account_activation, :user_preferences_redirect, :avatar, :my_redirect, :toggle_anon, :admin_login]
 
-  before_filter :ensure_logged_in, only: [:username, :update, :user_preferences_redirect, :upload_user_image, :pick_avatar, :destroy_user_image, :destroy, :check_emails]
+  before_filter :ensure_logged_in, only: [:username, :update, :user_preferences_redirect, :upload_user_image,
+                                          :pick_avatar, :destroy_user_image, :destroy, :check_emails, :topic_tracking_state]
+
   before_filter :respond_to_suspicious_request, only: [:create]
 
   # we need to allow account creation with bad CSRF tokens, if people are caching, the CSRF token on the
@@ -138,6 +140,16 @@ class UsersController < ApplicationController
     }
   rescue Discourse::InvalidAccess
     render json: failed_json, status: 403
+  end
+
+  def topic_tracking_state
+    user = fetch_user_from_params
+    guardian.ensure_can_edit!(user)
+
+    report = TopicTrackingState.report(user.id)
+    serializer = ActiveModel::ArraySerializer.new(report, each_serializer: TopicTrackingStateSerializer)
+
+    render json: MultiJson.dump(serializer)
   end
 
   def badge_title
@@ -343,7 +355,7 @@ class UsersController < ApplicationController
         ),
         errors: user.errors.to_hash,
         values: user.attributes.slice('name', 'username', 'email'),
-        is_developer: UsernameCheckerService.new.is_developer?(user.email)
+        is_developer: UsernameCheckerService.is_developer?(user.email)
       }
     end
   rescue ActiveRecord::StatementInvalid
@@ -675,10 +687,21 @@ class UsersController < ApplicationController
     end
 
     def user_params
-      params.permit(:name, :email, :password, :username, :active, :staged)
-            .merge(ip_address: request.remote_ip,
-                   registration_ip_address: request.remote_ip,
-                   locale: user_locale)
+      result = params.permit(:name, :email, :password, :username)
+                     .merge(ip_address: request.remote_ip,
+                            registration_ip_address: request.remote_ip,
+                            locale: user_locale)
+
+      if !UsernameCheckerService.is_developer?(result['email']) &&
+          is_api? &&
+          current_user.present? &&
+          current_user.admin?
+
+        result.merge!(params.permit(:active, :staged))
+      end
+
+
+      result
     end
 
     def user_locale

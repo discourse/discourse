@@ -63,6 +63,24 @@ export default Ember.Controller.extend({
   isUploading: false,
   topic: null,
   linkLookup: null,
+  whisperOrUnlistTopic: Ember.computed.or('model.whisper', 'model.unlistTopic'),
+
+  @computed('model.replyingToTopic', 'model.creatingPrivateMessage', 'model.targetUsernames')
+  focusTarget(replyingToTopic, creatingPM, usernames) {
+    if (this.capabilities.isIOS) { return "none"; }
+
+    // Focus on usernames if it's blank or if it's just you
+    usernames = usernames || "";
+    if (creatingPM && usernames.length === 0 || usernames === this.currentUser.get('username')) {
+      return 'usernames';
+    }
+
+    if (replyingToTopic) {
+      return 'reply';
+    }
+
+    return 'title';
+  },
 
   showToolbar: Em.computed({
     get(){
@@ -94,10 +112,26 @@ export default Ember.Controller.extend({
             !creatingPrivateMessage;
   },
 
-  @computed('model.action')
-  canWhisper(action) {
+  @computed('model.whisper', 'model.unlistTopic')
+  whisperOrUnlistTopicText(whisper, unlistTopic) {
+    if (whisper) {
+      return I18n.t("composer.whisper");
+    } else if (unlistTopic) {
+      return I18n.t("composer.unlist");
+    }
+  },
+
+  @computed
+  isStaffUser() {
     const currentUser = this.currentUser;
-    return currentUser && currentUser.get('staff') && this.siteSettings.enable_whispers && action === Composer.REPLY;
+    return currentUser && currentUser.get('staff');
+  },
+
+  canUnlistTopic: Em.computed.and('model.creatingTopic', 'isStaffUser'),
+
+  @computed('model.action', 'isStaffUser')
+  canWhisper(action, isStaffUser) {
+    return isStaffUser && this.siteSettings.enable_whispers && action === Composer.REPLY;
   },
 
   @computed("popupMenuOptions")
@@ -117,10 +151,19 @@ export default Ember.Controller.extend({
     return option;
   },
 
-  @computed("model.composeState")
+  @computed("model.composeState", "model.creatingTopic")
   popupMenuOptions(composeState) {
     if (composeState === 'open') {
       let options = [];
+
+      options.push(this._setupPopupMenuOption(() => {
+        return {
+          action: 'toggleInvisible',
+          icon: 'eye-slash',
+          label: 'composer.toggle_unlisted',
+          condition: "canUnlistTopic"
+        };
+      }));
 
       options.push(this._setupPopupMenuOption(() => {
         return {
@@ -193,6 +236,10 @@ export default Ember.Controller.extend({
 
     toggleWhisper() {
       this.toggleProperty('model.whisper');
+    },
+
+    toggleInvisible() {
+      this.toggleProperty('model.unlistTopic');
     },
 
     toggleToolbar() {
@@ -488,7 +535,6 @@ export default Ember.Controller.extend({
       this.set('scopedCategoryId', opts.categoryId);
     }
 
-
     this.setProperties({ showEditReason: false, editReason: null });
 
     // If we want a different draft than the current composer, close it and clear our model.
@@ -528,6 +574,12 @@ export default Ember.Controller.extend({
           opts.draft = data.draft;
           self._setModel(composerModel, opts);
         }).then(resolve, reject);
+      }
+
+      if (composerModel) {
+        if (composerModel.get('action') !== opts.action) {
+          composerModel.setProperties({ unlistTopic: false, whisper: false });
+        }
       }
 
       self._setModel(composerModel, opts);

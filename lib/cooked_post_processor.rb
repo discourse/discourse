@@ -7,6 +7,8 @@ require_dependency 'pretty_text'
 class CookedPostProcessor
   include ActionView::Helpers::NumberHelper
 
+  attr_reader :cooking_options
+
   def initialize(post, opts={})
     @dirty = false
     @opts = opts
@@ -17,6 +19,7 @@ class CookedPostProcessor
     @cooking_options = post.cooking_options || opts[:cooking_options] || {}
     @cooking_options[:topic_id] = post.topic_id
     @cooking_options = @cooking_options.symbolize_keys
+    @cooking_options[:omit_nofollow] = true if post.omit_nofollow?
 
     analyzer = post.post_analyzer
     @doc = Nokogiri::HTML::fragment(analyzer.cook(post.raw, @cooking_options))
@@ -51,6 +54,7 @@ class CookedPostProcessor
 
     BadgeGranter.grant(Badge.find(Badge::FirstEmoji), @post.user, post_id: @post.id) if has_emoji?
     BadgeGranter.grant(Badge.find(Badge::FirstOnebox), @post.user, post_id: @post.id) if @has_oneboxes
+    BadgeGranter.grant(Badge.find(Badge::FirstReplyByEmail), @post.user, post_id: @post.id) if @post.is_reply_by_email?
   end
 
   def keep_reverse_index_up_to_date
@@ -269,9 +273,9 @@ class CookedPostProcessor
     informations = "#{original_width}x#{original_height}"
     informations << " #{number_to_human_size(upload.filesize)}" if upload
 
-    a["title"] = img["title"] || filename
+    a["title"] = CGI.escapeHTML(img["title"] || filename)
 
-    meta.add_child create_span_node("filename", img["title"] || filename)
+    meta.add_child create_span_node("filename", a["title"])
     meta.add_child create_span_node("informations", informations)
     meta.add_child create_span_node("expand")
   end

@@ -15,6 +15,9 @@ sq:
       short: "%m-%d-%Y"
       short_no_year: "%B %-d"
       date_only: "%B %-d, %Y"
+  date:
+    month_names: [null, Janar, Shkurt, Mars, Prill, Maj, Qershor, Korrik, Gusht, Shtator, Tetor, Nëntor, Dhjetor]
+    <<: *datetime_formats
   title: "Discourse"
   topics: "Tema"
   posts: "postime"
@@ -234,7 +237,7 @@ sq:
   assets_topic_body: "This is a permanent topic, visible only to staff, for storing images and files used in the site design. Don't delete it!\n\n\nHere's how:\n\n\n1. Reply to this topic.\n2. Upload all the images you wish to use for logos, favicons, and so forth here. (Use the upload toolbar icon in the post editor, or drag-and-drop or paste images.)\n3. Submit your reply to post it.\n4. Right click the images in your new post to get the path to the uploaded images, or click the edit icon to edit your post and retrieve the path to the images. Copy the image paths.\n5. Paste those image paths into [basic settings](/admin/site_settings/category/required).\n\n\nIf you need to enable different file type uploads, edit `authorized_extensions` in the [file settings](/admin/site_settings/category/files)."
   lounge_welcome:
     title: "Mirë se vini në Lounge"
-    body: |2
+    body: |
 
       Congratulations! :confetti_ball:
 
@@ -262,12 +265,12 @@ sq:
       self_parent: "A subcategory's parent cannot be itself"
       depth: "You can't nest a subcategory under another"
     cannot_delete:
-      uncategorized: "Can't delete Uncategorized"
-      has_subcategories: "Can't delete this category because it has sub-categories."
+      uncategorized: "Nuk fshij dot kategorinë \"Uncategorized\""
+      has_subcategories: "Nuk e fshini dot këtë kategori sepse ajo ka nënkategori. "
       topic_exists:
-        one: "Can't delete this category because is has 1 topic. Oldest topic is %{topic_link}."
-        other: "Can't delete this category because it has %{count} topics. Oldest topic is %{topic_link}."
-      topic_exists_no_oldest: "Can't delete this category because topic count is %{count}."
+        one: "Nuk e fshini dot këtë kategori sepse këtu ka 1 temë. Tema më e vjetër është %{topic_link}."
+        other: "Nuk e fshini dot këtë kategori sepse këtu ka %{count} tema. Tema më e vjetër është %{topic_link}."
+      topic_exists_no_oldest: "Nuk e fshini dot këtë kategori sepse numri i temave është %{count}."
   trust_levels:
     newuser:
       title: "anëtar i ri"
@@ -441,18 +444,6 @@ sq:
       message:
         make: "This topic is now a banner. It will appear at the top of every page until it is dismissed by the user."
         remove: "This topic is no longer a banner. It will no longer appear at the top of every page."
-  unsubscribed:
-    title: 'Unsubscribed'
-    description: "You have been unsubscribed. We won't contact you again!"
-    oops: "In case you didn't mean to do this, click below."
-    error: "Error Unsubscribing"
-    preferences_link: "You can also unsubscribe from digest emails on your <a href='/my/preferences'>preferences page</a>"
-    different_user_description: "You are currently logged in as a different user than the one who the digest was mailed to. Please log out and try again."
-    not_found_description: "Sorry, we couldn't unsubscribe you. It's possible the link in your email has expired."
-  resubscribe:
-    action: "Ri-abonohu"
-    title: "Re-Subscribed!"
-    description: "You have been re-subscribed."
   reports:
     visits:
       title: "User Visits"
@@ -585,7 +576,6 @@ sq:
       yaxis: "Number of visits"
   dashboard:
     rails_env_warning: "Your server is running in %{env} mode."
-    ruby_version_warning: "You are running a version of Ruby 2.0.0 that is known to have problems. Upgrade to patch level 247 or later."
     host_names_warning: "Your config/database.yml file is using the default localhost hostname. Update it to use your site's hostname."
     gc_warning: 'Your server is using default ruby garbage collection parameters, which will not give you the best performance. Read this topic on performance tuning: <a href="http://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126" target="_blank">Tuning Ruby and Rails for Discourse</a>.'
     sidekiq_warning: 'Sidekiq is not running. Many tasks, like sending emails, are executed asynchronously by sidekiq. Please ensure at least one sidekiq process is running. <a href="https://github.com/mperham/sidekiq" target="_blank">Learn about Sidekiq here</a>.'
@@ -665,20 +655,14 @@ sq:
     anon_polling_interval: "How often should anonymous clients poll in milliseconds"
     background_polling_interval: "How often should the clients poll in milliseconds (when the window is in the background)"
     cooldown_minutes_after_hiding_posts: "Number of minutes a user must wait before they can edit a post hidden via community flagging"
-    max_topics_in_first_day: "The maximum number of topics a user is allowed to create in their first day on the site"
-    max_replies_in_first_day: "The maximum number of replies a user is allowed to create in their first day on the site"
     tl2_additional_likes_per_day_multiplier: "Increase limit of likes per day for tl2 (member) by multiplying with this number"
     tl3_additional_likes_per_day_multiplier: "Increase limit of likes per day for tl3 (regular) by multiplying with this number"
     tl4_additional_likes_per_day_multiplier: "Increase limit of likes per day for tl4 (leader) by multiplying with this number"
-    num_flags_to_block_new_user: "If a new user's posts get this many spam flags from num_users_to_block_new_user different users, hide all their posts and prevent future posting. 0 to disable."
-    num_users_to_block_new_user: "If a new user's posts get num_flags_to_block_new_user spam flags from this many different users, hide all their posts and prevent future posting. 0 to disable."
     notify_mods_when_user_blocked: "If a user is automatically blocked, send a message to all moderators."
     flag_sockpuppets: "If a new user replies to a topic from the same IP address as the new user who started the topic, flag both of their posts as potential spam."
     traditional_markdown_linebreaks: "Use traditional linebreaks in Markdown, which require two trailing spaces for a linebreak."
     post_undo_action_window_mins: "Number of minutes users are allowed to undo recent actions on a post (like, flag, etc)."
     must_approve_users: "Staff must approve all new user accounts before they are allowed to access the site. WARNING: enabling this for a live site will revoke access for existing non-staff users!"
-    ga_tracking_code: "Google analytics (ga.js) tracking code code, eg: UA-12345678-9; see http://google.com/analytics"
-    ga_domain_name: "Google analytics (ga.js) domain name, eg: mysite.com; see http://google.com/analytics"
     ga_universal_tracking_code: "Google Universal Analytics (analytics.js) tracking code code, eg: UA-12345678-9; see http://google.com/analytics"
     ga_universal_domain_name: "Google Universal Analytics (analytics.js) domain name, eg: mysite.com; see http://google.com/analytics"
     enable_noscript_support: "Enable standard webcrawler search engine support via the noscript tag"
@@ -865,18 +849,13 @@ sq:
     minimum_topics_similar: "How many topics need to exist before similar topics are presented when composing new topics."
     relative_date_duration: "Number of days after posting where post dates will be shown as relative (7d) instead of absolute (20 Feb)."
     delete_user_max_post_age: "Don't allow deleting users whose first post is older than (x) days."
-    delete_all_posts_max: "The maximum number of posts that can be deleted at once with the Delete All Posts button. If a user has more than this many posts, the posts cannot all be deleted at once and the user can't be deleted."
     username_change_period: "The number of days after registration that accounts can change their username (0 to disallow username change)."
     email_editable: "Allow users to change their e-mail address after registration."
-    logout_redirect: "Location to redirect browser to after logout EG: (http://somesite.com/logout)"
     allow_uploaded_avatars: "Allow users to upload custom profile pictures."
     allow_animated_avatars: "Allow users to use animated gif profile pictures. WARNING: run the avatars:refresh rake task after changing this setting."
     allow_animated_thumbnails: "Generates animated thumbnails of animated gifs."
     default_avatars: "URLs to avatars that will be used by default for new users until they change them."
     automatically_download_gravatars: "Download Gravatars for users upon account creation or email change."
-    digest_topics: "The maximum number of topics to display in the email digest."
-    digest_min_excerpt_length: "Minimum post excerpt in the email digest, in characters."
-    disable_digest_emails: "Disable digest emails for all users."
     detect_custom_avatars: "Whether or not to check that users have uploaded custom profile pictures."
     max_daily_gravatar_crawls: "Maximum number of times Discourse will check Gravatar for custom avatars in a day"
     public_user_custom_fields: "A whitelist of custom fields for a user that can be shown publicly."
@@ -900,7 +879,6 @@ sq:
     default_code_lang: "Default programming language syntax highlighting applied to GitHub code blocks (lang-auto, ruby, python etc.)"
     warn_reviving_old_topic_age: "When someone starts replying to a topic where the last reply is older than this many days, a warning will be displayed. Disable by setting to 0."
     autohighlight_all_code: "Force apply code highlighting to all preformatted code blocks even when they didn't explicitly specify the language."
-    highlighted_languages: "Included syntax highlighting rules. (Warning: including too many langauges may impact performance) see: https://highlightjs.org/static/demo/ for a demo"
     feed_polling_enabled: "EMBEDDING ONLY: Whether to embed a RSS/ATOM feed as posts."
     feed_polling_url: "EMBEDDING ONLY: URL of RSS/ATOM feed to embed."
     embed_by_username: "Discourse username of the user who creates the embedded topics."
@@ -933,19 +911,6 @@ sq:
       invalid_string_min: "Must be at least %{min} characters."
       invalid_string_max: "Must be no more than %{max} characters."
       invalid_reply_by_email_address: "Value must contain '%{reply_key}' and be different from the notification email."
-  notification_types:
-    mentioned: "%{display_username} mentioned you in %{link}"
-    liked: "%{display_username} liked your post in %{link}"
-    replied: "%{display_username} replied to your post in %{link}"
-    quoted: "%{display_username} quoted your post in %{link}"
-    edited: "%{display_username} edited your post in %{link}"
-    posted: "%{display_username} posted in %{link}"
-    moved_post: "%{display_username} moved your post to %{link}"
-    private_message: "%{display_username} sent you a message: %{link}"
-    invited_to_private_message: "%{display_username} invited you to a message: %{link}"
-    invitee_accepted: "%{display_username} accepted your invitation"
-    linked: "%{display_username} linked you in %{link}"
-    granted_badge: "You earned %{link}"
   search:
     within_post: "#%{post_number} by %{username}"
     types:
@@ -1064,18 +1029,6 @@ sq:
       This invitation is from a trusted user, so you can reply to the discussion immediately.
   invite_forum_mailer:
     subject_template: "%{invitee_name} invited you to join %{site_domain_name}"
-    text_body_template: |
-      %{invitee_name} invited you to join
-
-      > **%{site_title}**
-      >
-      > %{site_description}
-
-      If you're interested, click the link below:
-
-      %{invite_link}
-
-      This invitation is from a trusted user, so you won't need to log in.
   invite_password_instructions:
     subject_template: "Set password for your %{site_name} account"
     text_body_template: |
@@ -1095,10 +1048,6 @@ sq:
     subject_template:
       one: "[%{site_name}] 1 post waiting to be reviewed"
       other: "[%{site_name}] %{count} posts waiting to be reviewed"
-    text_body_template: |
-      Hello,
-
-      There are posts from new users that are waiting to be reviewed. [They can be approved or rejected here](%{base_url}/queued-posts).
   flag_reasons:
     off_topic: "Your post was flagged as **off-topic**: the community feels it is not a good fit for the topic, as currently defined by the title and the first post."
     inappropriate: "Your post was flagged as **inappropriate**: the community feels it is offensive, abusive, or a violation of [our community guidelines](/guidelines)."
@@ -1112,8 +1061,6 @@ sq:
     deferred_and_deleted: "Thanks for letting us know. We've removed the post."
   temporarily_closed_due_to_flags: "This topic is temporarily closed due to a large number of community flags."
   system_messages:
-    post_hidden:
-      subject_template: "Post hidden due to community flagging"
     welcome_user:
       subject_template: "Mirë se vini tek %{site_name}!"
       text_body_template: |
@@ -1220,8 +1167,6 @@ sq:
       subject_template: "[%{site_name}] Email issue -- Auto Generated Reply"
     email_error_notification:
       subject_template: "[%{site_name}] Email issue -- POP authentication error"
-    user_automatically_blocked:
-      subject_template: "New user %{username} blocked due to community flags"
     spam_post_blocked:
       subject_template: "New user %{username} posts blocked due to repeated links"
     pending_users_reminder:
@@ -1350,18 +1295,15 @@ sq:
         %{respond_instructions}
     user_posted_pm_staged:
       subject_template: "%{optional_re}%{topic_title}"
-      text_body_template: |2
+      text_body_template: |
 
         %{message}
     digest:
       why: "A brief summary of %{site_link} since your last visit on %{last_seen_at}"
-      subject_template: "[%{site_name}] Digest"
       new_activity: "New activity on your topics and posts:"
       top_topics: "Popular posts"
       other_new_topics: "Popular topics"
-      unsubscribe: "This digest is sent from %{site_link} when we haven't seen you in a while. To unsubscribe %{unsubscribe_link}."
       click_here: "click here"
-      from: "%{site_name} përmbledhje"
       read_more: "Read More"
       more_topics: "There were %{new_topics_since_seen} other new topics."
       more_topics_category: "More new topics:"
@@ -1737,8 +1679,6 @@ sq:
   performance_report:
     initial_post_raw: This topic includes daily performance reports for your site.
     initial_topic_title: Raportet e performancës se faqes
-  date:
-    <<: *datetime_formats
   time:
     <<: *datetime_formats
   activemodel:

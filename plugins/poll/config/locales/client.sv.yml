@@ -15,18 +15,20 @@ sv:
         one: "totalt antal röst"
         other: "totalt antal röster"
       average_rating: "Medelbetyg: <strong>%{average}</strong>."
+      public:
+        title: "Omröstningar är allmänna."
       multiple:
         help:
           at_least_min_options:
-            one: "Du måste välja minst <strong>1</strong> alternativ."
-            other: "Du måste välja minst <strong>%{count}</strong> alternativ."
+            one: "Välj minst <strong>1</strong> alternativ"
+            other: "Välj minst <strong>%{count}</strong> alternativ"
           up_to_max_options:
-            one: "Du kan välja upp till <strong>1</strong> alternativ"
-            other: "Du kan välja upp till <strong>%{count}</strong> alternativ."
+            one: "Välj upp till <strong>1</strong> alternativ"
+            other: "Välj upp till <strong>%{count}</strong> alternativ"
           x_options:
-            one: "Du måste välja <strong>1</strong> alternativ."
-            other: "Du måste välja <strong>%{count}</strong> alternativ."
-          between_min_and_max_options: "Du kan välja mellan <strong>%{min}</strong> och <strong>%{max}</strong> alternativ."
+            one: "Välj <strong>1</strong> alternativ"
+            other: "Välj <strong>%{count}</strong> alternativ"
+          between_min_and_max_options: "Välj mellan <strong>%{min}</strong> och <strong>%{max}</strong> alternativ"
       cast-votes:
         title: "Lägg dina röster"
         label: "Rösta nu!"
@@ -44,5 +46,24 @@ sv:
         title: "Stäng omröstningen"
         label: "Stäng"
         confirm: "Är du säker på att du vill stänga denna omröstning?"
-      error_while_toggling_status: "Ett fel uppstod vid ändring av status för denna omröstning."
-      error_while_casting_votes: "Ett fel uppstod vid röstningen."
+      error_while_toggling_status: "Tyvärr, ett fel uppstod vid ändring av status för den här omröstningen."
+      error_while_casting_votes: "Tyvärr, ett fel uppstod vid röstningen."
+      error_while_fetching_voters: "Tyvärr, ett fel uppstod vid visningen av röster."
+      ui_builder:
+        title: Skapa omröstning
+        insert: Lägg till omröstning
+        help:
+          options_count: Ange minst 2 alternativ
+        poll_type:
+          label: Typ
+          regular: Ett val
+          multiple: Flera val
+          number: Sifferbetyg
+        poll_config:
+          max: Max
+          min: Min
+          step: Steg
+        poll_public:
+          label: Visa vilka som röstat
+        poll_options:
+          label: Ange ett omröstningsalternativ per rad

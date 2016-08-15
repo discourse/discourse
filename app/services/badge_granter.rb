@@ -76,7 +76,7 @@ class BadgeGranter
     end
   end
 
-  def self.queue_badge_grant(type,opt)
+  def self.queue_badge_grant(type, opt)
     return unless SiteSetting.enable_badges
     payload = nil
 
@@ -105,12 +105,6 @@ class BadgeGranter
         type: "PostAction",
         post_ids: [action.post_id, action.related_post_id].compact!
       }
-    when Badge::Trigger::PostProcessed
-      user = opt[:user]
-      payload = {
-        type: "PostProcessed",
-        user_ids: [user.id]
-      }
     end
 
     $redis.lpush queue_key, payload.to_json if payload
@@ -128,16 +122,17 @@ class BadgeGranter
       limit -= 1
     end
 
-    items = items.group_by{|i| i["type"]}
+    items = items.group_by { |i| i["type"] }
 
     items.each do |type, list|
-      post_ids = list.map{|i| i["post_ids"]}.flatten.compact.uniq
-      user_ids = list.map{|i| i["user_ids"]}.flatten.compact.uniq
+      post_ids = list.flat_map { |i| i["post_ids"] }.compact.uniq
+      user_ids = list.flat_map { |i| i["user_ids"] }.compact.uniq
 
       next unless post_ids.present? || user_ids.present?
-      find_by_type(type).each{ |badge|
+
+      find_by_type(type).each do |badge|
         backfill(badge, post_ids: post_ids, user_ids: user_ids)
-      }
+      end
     end
   end
 
@@ -229,10 +224,10 @@ class BadgeGranter
   MAX_ITEMS_FOR_DELTA = 200
   def self.backfill(badge, opts=nil)
     return unless SiteSetting.enable_badges
-    return unless badge.query.present? && badge.enabled
+    return unless badge.enabled
+    return unless badge.query.present?
 
     post_ids = user_ids = nil
-
     post_ids = opts[:post_ids] if opts
     user_ids = opts[:user_ids] if opts
 
@@ -330,7 +325,6 @@ class BadgeGranter
     Rails.logger.error("Failed to backfill '#{badge.name}' badge: #{opts}")
     raise ex
   end
-
 
   def self.revoke_ungranted_titles!
     Badge.exec_sql("UPDATE users SET title = ''

@@ -117,7 +117,9 @@ it:
       private_topic: "ha reso questo argomento privato %{when}"
       split_topic: "ha separato questo argomento %{when}"
       invited_user: "Invitato %{who} %{when}"
+      invited_group: "invitato %{who} %{when}"
       removed_user: "rimosso %{who} %{when}"
+      removed_group: "cancellato %{who} %{when}"
       autoclosed:
         enabled: 'chiuso %{when}'
         disabled: 'aperto %{when}'
@@ -150,9 +152,11 @@ it:
         eu_central_1: "Europa (Francoforte)"
         ap_southeast_1: "Asia Pacifico (Singapore)"
         ap_southeast_2: "Asia Pacifico (Sidney)"
+        ap_south_1: "Asia Pacifico (Mumbai)"
         ap_northeast_1: "Asia Pacifico (Tokyo)"
         ap_northeast_2: "Asia Pacifico (Seoul)"
         sa_east_1: "America del Sud (San Paolo)"
+        cn_north_1: "Cina (Beijing)"
     edit: 'modifica titolo e categoria dell''argomento'
     not_implemented: "Spiacenti! Questa funzione non è stata ancora implementata."
     no_value: "No"
@@ -253,8 +257,8 @@ it:
     undo: "Annulla"
     revert: "Ripristina"
     failed: "Fallito"
-    switch_to_anon: "Modalità Anonima"
-    switch_from_anon: "Abbandona Anonimato"
+    switch_to_anon: "Avvia Modalità Anonima"
+    switch_from_anon: "Esci Modalità Anonima"
     banner:
       close: "Nascondi questo banner."
       edit: "Modifica questo annuncio >>"
@@ -330,6 +334,7 @@ it:
       selector_placeholder: "Aggiungi membri"
       owner: "proprietario"
       visible: "Il Gruppo è visibile a tutti gli utenti"
+      index: "Gruppi"
       title:
         one: "gruppo"
         other: "gruppi"
@@ -352,6 +357,9 @@ it:
         watching:
           title: "In osservazione"
           description: "Verrai avvertito per ogni nuovo messaggio, e verrà mostrato il conteggio delle nuove risposte."
+        watching_first_post:
+          title: "Osservando Primo Messaggio"
+          description: "Sarai avvertito soltanto per il primo messaggio in ogni nuovo argomento in questo gruppo."
         tracking:
           title: "Seguendo"
           description: "Verrai avvertito se qualcuno menziona il tuo @nome o ti risponde, e verrà mostrato un conteggio delle nuove risposte."
@@ -446,7 +454,6 @@ it:
         disable: "Disabilita Notifiche"
         enable: "Abilita Notifiche"
         each_browser_note: "Nota: devi modificare questa impostazione per ogni browser che utilizzi."
-      dismiss_notifications: "Imposta tutti come Letti"
       dismiss_notifications_tooltip: "Imposta tutte le notifiche non lette come lette "
       disable_jump_reply: "Non saltare al mio messaggio dopo la mia risposta"
       dynamic_favicon: "Visualizza il conteggio degli argomenti nuovi / aggiornati sull'icona del browser"
@@ -461,10 +468,10 @@ it:
       suspended_notice: "Questo utente è sospeso fino al {{date}}."
       suspended_reason: "Motivo: "
       github_profile: "Github"
+      tag_settings: "Etichette"
+      muted_tags: "Silenziati"
       watched_categories: "Osservate"
-      watched_categories_instructions: "Osserverai automaticamente tutti i nuovi argomenti in queste categorie. Riceverai notifiche su tutti i nuovi messaggi e argomenti e, accanto all'argomento, apparirà il conteggio dei nuovi messaggi."
       tracked_categories: "Seguite"
-      tracked_categories_instructions: "Seguirai automaticamente tutti i nuovi argomenti appartenenti a queste categorie. Di fianco all'argomento comparirà il conteggio dei nuovi messaggi."
       muted_categories: "Silenziate"
       muted_categories_instructions: "Non ti verrà notificato nulla sui nuovi argomenti in queste categorie, e non compariranno nell'elenco Ultimi."
       delete_account: "Cancella il mio account"
@@ -852,10 +859,6 @@ it:
       github:
         title: "con GitHub"
         message: "Autenticazione con GitHub (assicurati che il blocco pop up non sia attivo)"
-    apple_international: "Apple/Internazionale"
-    google: "Google"
-    twitter: "Twitter"
-    emoji_one: "Emoji One"
     shortcut_modifier_key:
       shift: 'Maiusc'
       ctrl: 'Ctrl'
@@ -915,6 +918,7 @@ it:
       quote_text: "Citazione"
       code_title: "Testo preformattato"
       code_text: "rientra il testo preformattato di 4 spazi"
+      paste_code_text: "digita o incolla il codice qui"
       upload_title: "Carica"
       upload_description: "inserisci qui la descrizione del caricamento"
       olist_title: "Elenco Numerato"
@@ -1562,10 +1566,8 @@ it:
       notifications:
         watching:
           title: "In osservazione"
-          description: "Osserverai automaticamente tutti i nuovi argomenti presenti in queste categorie. Riceverai notifiche per ogni nuovo messaggio inserito in ogni argomento e apparirà il conteggio delle nuove risposte."
         tracking:
           title: "Seguendo"
-          description: "Seguirai automaticamente tutti i nuovi argomenti in tali categorie. Ti verrà inviata una notifica se qualcuno menziona il tuo @nome o ti risponde, e apparirà un conteggio delle nuove risposte."
         regular:
           title: "Normale"
           description: "Riceverai una notifica se qualcuno menziona il tuo @nome o ti risponde."
@@ -1604,7 +1606,6 @@ it:
       title: "Riassunto Argomento"
       participants_title: "Autori Assidui"
       links_title: "Collegamenti Di Successo"
-      links_shown: "mostra tutti i {{totalLinks}} collegamenti..."
       clicks:
         one: "1 click"
         other: "%{count} click"
@@ -1739,6 +1740,54 @@ it:
       full: "Crea / Rispondi / Visualizza"
       create_post: "Rispondi / Visualizza"
       readonly: "Visualizza"
+    lightbox:
+      download: "scarica"
+    search_help:
+      title: 'Aiuto Ricerca'
+    keyboard_shortcuts_help:
+      title: 'Scorciatorie Tastiera'
+      jump_to:
+        title: 'Salta A'
+        home: '<b>g</b>, <b>h</b> Home'
+        latest: '<b>g</b>, <b>l</b> Ultimi'
+        new: '<b>g</b>, <b>n</b> Nuovi'
+        unread: '<b>g</b>, <b>u</b> Non letti'
+        categories: '<b>g</b>, <b>c</b> Categorie'
+        bookmarks: '<b>g</b>, <b>b</b> Segnalibri'
+        profile: '<b>g</b>, <b>p</b> Profilo'
+        messages: '<b>g</b>, <b>m</b> Messaggi'
+      navigation:
+        title: 'Navigazione'
+        jump: '<b>#</b> Vai al messaggio n°'
+        back: '<b>u</b> Indietro'
+        up_down: '<b>k</b>/<b>j</b> Sposta la selezione &uarr; &darr;'
+        open: '<b>o</b> o <b>Enter</b> Apri l''argomento selezionato'
+        next_prev: '<b>shift</b>+<b>j</b>/<b>shift</b>+<b>k</b> Prossima/precedente sezione'
+      application:
+        title: 'Applicazione'
+        create: '<b>c</b> Crea un nuovo argomento'
+        notifications: '<b>n</b> Apri notifiche'
+        hamburger_menu: '<b>=</b> Apri il menu hamburger'
+        user_profile_menu: '<b>p</b> Apri menu utente'
+        show_incoming_updated_topics: '<b>.</b> Mostra argomenti aggiornati'
+        search: '<b>/</b> Cerca'
+        help: '<b>?</b> Apri la legenda tasti'
+        dismiss_new_posts: '<b>x</b>, <b>r</b> Chiudi Nuovi Messaggi'
+        dismiss_topics: '<b>x</b>, <b>t</b> Chiudi Argomenti'
+        log_out: '<b>shift</b>+<b>z</b> <b>shift</b>+<b>z</b> Esci'
+      actions:
+        title: 'Azioni'
+    badges:
+      earned_n_times:
+        one: "Guadagnato questa targhetta 1 volta"
+        other: "Guadagnato questa targhetta %{count} volte"
+      granted_on: "Assegnata %{date}"
+      others_count: "Altri con questa targhetta (%{count})"
+      title: Targhette
+      allow_title: "titolo disponibile"
+      badge_count:
+        one: "1 Targhetta"
+        other: "%{count} Targhette"
   admin_js:
     type_to_filter: "digita per filtrare..."
     admin:

@@ -223,8 +223,6 @@ vi:
     undo: "Hoàn tác"
     revert: "Phục hồi"
     failed: "Thất bại"
-    switch_to_anon: "Chế độ Ẩn danh"
-    switch_from_anon: "Thoát ẩn danh"
     banner:
       close: "Xóa biểu ngữ này."
       edit: "Sửa banner này >>"
@@ -408,7 +406,6 @@ vi:
         disable: "Khóa Notification"
         enable: "Cho phép Notification"
         each_browser_note: "Lưu ý: Bạn phải thay đổi trong cấu hình mỗi trình duyệt bạn sử dụng."
-      dismiss_notifications: "Đánh dấu đã đọc cho tất cả"
       dismiss_notifications_tooltip: "Đánh dấu đã đọc cho tất cả các thông báo chưa đọc"
       disable_jump_reply: "Đừng tới bài viết của tôi sau khi tôi trả lời"
       dynamic_favicon: "Hiện số chủ đề mới / cập nhật vào biểu tượng trình duyệt"
@@ -424,9 +421,7 @@ vi:
       suspended_reason: "Lý do: "
       github_profile: "Github"
       watched_categories: "Xem"
-      watched_categories_instructions: "Bạn sẽ tự động xem tất cả các chủ đề mới trong các chuyên mục này. Bạn sẽ được thông báo về tất các các bài viết mới, và một số các bài viết mới cũng sẽ xuất hiện ở chủ đề kế tiếp."
       tracked_categories: "Theo dõi"
-      tracked_categories_instructions: "Bạn sẽ tự động theo dõi tất cả các chủ đề trong các chuyên mục này. Một số bài viết mới sẽ xuất hiện ở chủ đề kế tiếp."
       muted_categories: "Im lặng"
       muted_categories_instructions: "Bạn sẽ không bao giờ được thông báo về bất cứ điều gì về các chủ đề mới trong các chuyên mục này, và chúng sẽ không hiển thị mới nhất"
       delete_account: "Xoá Tài khoản của tôi"
@@ -693,8 +688,6 @@ vi:
     too_few_topics_notice: "Hãy <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>bắt đầu thảo luận!</a> Hiện có <strong>%{currentTopics} / %{requiredTopics}</strong> chủ đề. Khách ghé thăm cần một số chủ đề để đọc và trả lời."
     too_few_posts_notice: "Hãy <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>bắt đầu thảo luận!</a> Hiện có <strong>%{currentPosts} / %{requiredPosts}</strong> bài viết. Khách ghé thăm cần một số chủ đề để đọc và trả lời."
     logs_error_rate_notice:
-      reached: "%{timestamp}: Tỷ lệ hiện tại <a href='%{url}' target='_blank'>%{rate}</a> đã đạt tới giới hạn thiết lập %{siteSettingRate} của website."
-      exceeded: "%{timestamp}: Tỷ lệ hiện tại <a href='%{url}' target='_blank'>%{rate}</a> đã vượt quá giới hạn thiết lập %{siteSettingRate} của website."
       rate:
         other: "%{count} lỗi/%{duration}"
     learn_more: "tìm hiểu thêm..."
@@ -800,10 +793,6 @@ vi:
       github:
         title: "với GitHub"
         message: "Chứng thực với GitHub (chắc chắn chặn popup không bật)"
-    apple_international: "Apple/International"
-    google: "Google"
-    twitter: "Twitter"
-    emoji_one: "Emoji One"
     shortcut_modifier_key:
       shift: 'Shift'
       ctrl: 'Ctrl'
@@ -821,7 +810,6 @@ vi:
       saved_local_draft_tip: "Đã lưu locally"
       similar_topics: "Bài viết của bạn tương tự với "
       drafts_offline: "Nháp offline"
-      group_mentioned: "Bằng cách sử dụng {{group}}, bạn có thể thông báo tới <a href='{{group_link}}'>{{count}} người</a>."
       error:
         title_missing: "Tiêu đề là bắt buộc"
         title_too_short: "Tiêu để phải có ít nhất {{min}} ký tự"
@@ -907,7 +895,6 @@ vi:
       invited_to_topic: "<i title='invited to topic' class='fa fa-hand-o-right'></i><p><span>{{username}}</span> {{description}}</p>"
       invitee_accepted: "<i title='accepted your invitation' class='fa fa-user'></i><p><span>{{username}}</span> chấp nhận lời mời của bạn</p>"
       moved_post: "<i title='moved post' class='fa fa-sign-out'></i><p><span>{{username}}</span> chuyển {{description}}</p>"
-      linked: "<i title='linked post' class='fa fa-arrow-left'></i><p><span>{{username}}</span> {{description}}</p>"
       granted_badge: "<i title='badge granted' class='fa fa-certificate'></i><p>Thu được '{{description}}'</p>"
       group_message_summary:
         other: "<i title='messages in group inbox' class='fa fa-group'></i><p> {{count}} tin nhắn trong {{group_name}} của bạn</p>"
@@ -1185,8 +1172,6 @@ vi:
         no_banner_exists: "Không có chủ đề banner nào."
         banner_exists: "Có <strong class='badge badge-notification unread'>is</strong> đang là chủ đề banner."
       inviting: "Đang mời..."
-      automatically_add_to_groups_optional: "Lời mời này cũng bao gồm quyền truy cập vào các nhóm: (optional, admin only)"
-      automatically_add_to_groups_required: "Lời mời này cũng bao gồm quyền truy cập vào các nhóm: (<b>Required</b>, admin only)"
       invite_private:
         title: 'Mời thảo luận'
         email_or_username: "Email hoặc username người được mời"
@@ -1479,10 +1464,8 @@ vi:
       notifications:
         watching:
           title: "Theo dõi"
-          description: "Bạn sẽ tự động xem tất cả các chủ đề mới trong các chuyên mục này. Bạn sẽ được thông báo về tất các các chủ đề mới, và một số bài viết mới sẽ được hiển thị."
         tracking:
           title: "Đang theo dõi"
-          description: "Bạn sẽ tự động theo dõi tất cả các chủ đề mới trong các chuyên mục này. Bạn sẽ được thông báo nếu ai đó đề cập đến @tên của bạn hoặc trả lời bạn, và một số bài viết mới sẽ được hiển thị."
         regular:
           title: "Bình thường"
           description: "Bạn sẽ được thông báo nếu ai đó đề cập đến @tên bạn hoặc trả lời bạn"
@@ -1521,7 +1504,6 @@ vi:
       title: "Tóm tắt Chủ đề"
       participants_title: "Poster thường xuyên"
       links_title: "Liên kết phổ biến"
-      links_shown: "hiện tất cả {{totalLinks}} liên kết..."
       clicks:
         other: "%{count} nhấp chuột"
     topic_statuses:
@@ -1551,10 +1533,10 @@ vi:
     posts_long: "Có {{number}} bài đăng trong chủ đề này"
     posts_likes_MF: |
       Chủ đề này có {count, plural, one {1 reply} other {# replies}} {ratio, select,
-        low {with a high like to post ratio}
-        med {with a very high like to post ratio}
-        high {with an extremely high like to post ratio}
-        other {}}
+      low {with a high like to post ratio}
+      med {with a very high like to post ratio}
+      high {with an extremely high like to post ratio}
+      other {}}
     original_post: "Bài viết gốc"
     views: "Lượt xem"
     views_lowercase:
@@ -2484,94 +2466,3 @@ vi:
           label: "Mới:"
           add: "Thêm"
           filter: "Tìm kiếm (URL hoặc External URL)"
-    lightbox:
-      download: "tải"
-    search_help:
-      title: 'Tìm giúp đỡ'
-    keyboard_shortcuts_help:
-      title: 'Phím tắt'
-      jump_to:
-        title: 'Chuyển đến'
-        home: '<b>g</b>, <b>h</b> Trang chủ'
-        latest: '<b>g</b>, <b>l</b> Cuối cùng'
-        new: '<b>g</b>, <b>n</b> Mới'
-        unread: '<b>g</b>, <b>u</b> Chưa đọc'
-        categories: '<b>g</b>, <b>c</b> Danh mục'
-        top: '<b>g</b>, <b>t</b> Trên'
-        bookmarks: '<b>g</b>, <b>b</b> Đánh dấu'
-        profile: '<b>g</b>, <b>p</b> Hồ sơ'
-        messages: '<b>g</b>, <b>m</b> Tin nhắn'
-      navigation:
-        title: 'Điều hướng'
-        jump: '<b>#</b> Đến bài viết #'
-        back: '<b>u</b> Quay lại'
-        up_down: '<b>k</b>/<b>j</b> Move selection &uarr; &darr;'
-        open: '<b>o</b> or <b>Enter</b> Mở chủ để đã chọn'
-        next_prev: '<b>shift</b>+<b>j</b>/<b>shift</b>+<b>k</b> Next/previous section'
-      application:
-        title: 'Ứng dụng'
-        create: '<b>c</b> Tạo mới chủ đề'
-        notifications: '<b>n</b> Mở thông báo'
-        hamburger_menu: '<b>=</b> Mở menu mobile'
-        user_profile_menu: '<b>p</b> Mở trình đơn thành viên'
-        show_incoming_updated_topics: '<b>.</b> Show updated topics'
-        search: '<b>/</b> Tìm kiếm'
-        help: '<b>?</b> Mở trợ giúp bàn phím'
-        dismiss_new_posts: '<b>x</b>, <b>r</b> Dismiss New/Posts'
-        dismiss_topics: '<b>x</b>, <b>t</b> Bỏ qua bài viết'
-        log_out: '<b>shift</b>+<b>z</b> <b>shift</b>+<b>z</b> Đăng xuất'
-      actions:
-        title: 'Hành động'
-        bookmark_topic: '<b>f</b> Chuyển chủ đề đánh dấu'
-        pin_unpin_topic: '<b>shift</b>+<b>p</b> Pin/Unpin bài viết'
-        share_topic: '<b>shift</b>+<b>s</b> Chia sẻ bài viết'
-        share_post: '<b>s</b> Chia sẻ bài viết'
-        reply_as_new_topic: '<b>t</b> Trả lời như là một liên kết đến bài viết'
-        reply_topic: '<b>shift</b>+<b>r</b> Trả lời bài viết'
-        reply_post: '<b>r</b> Trả lời bài viết'
-        quote_post: '<b>q</b> Trích dẫn bài viết'
-        like: '<b>l</b> Thích bài viết'
-        flag: '<b>!</b> Đánh dấu bài viết'
-        bookmark: '<b>b</b> Đánh dấu bài viết'
-        edit: '<b>e</b> Sửa bài viết'
-        delete: '<b>d</b> Xóa bài viết'
-        mark_muted: '<b>m</b>, <b>m</b> Mute topic'
-        mark_regular: '<b>m</b>, <b>r</b> Chủ đề thông thường (mặc định)'
-        mark_tracking: '<b>m</b>, <b>t</b> Theo dõi chủ đề'
-        mark_watching: '<b>m</b>, <b>w</b> theo dõi chủ đề'
-    badges:
-      earned_n_times:
-        other: "Đạt được huy hiệu này %{count} lần"
-      granted_on: "Cấp ngày %{date}"
-      others_count: "Người có huy hiệu này (%{count})"
-      title: Huy hiệu
-      allow_title: "tiêu đề có sẵn"
-      multiple_grant: "trao tặng nhiều lần"
-      badge_count:
-        other: "%{count} Huy hiệu"
-      more_badges:
-        other: "+%{count} Thêm"
-      granted:
-        other: "%{count} được cấp"
-      select_badge_for_title: Chọn huy hiệu để sử dụng như là tên
-      none: "<none>"
-      badge_grouping:
-        getting_started:
-          name: Bắt đầu
-        community:
-          name: Cộng đồng
-        trust_level:
-          name: Độ tin cậy
-        other:
-          name: Khác
-        posting:
-          name: Đang đăng bài
-    google_search: |
-      <h3>Tìm kiếm với Google</h3>
-      <p>
-        <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:' + window.location.host + ' ' + document.getElementById('user-query').value; return true;">
-          <input type="text" id='user-query' value="">
-          <input type='hidden' id='google-query' name="q">
-          <button class="btn btn-primary">Google</button>
-        </form>
-      </p>

@@ -9,7 +9,7 @@ module FileStore
       "#{Discourse.base_uri}#{path}"
     end
 
-    def remove_file(url)
+    def remove_file(url, _)
       return unless is_relative?(url)
       source = "#{public_dir}#{url}"
       return unless File.exists?(source)

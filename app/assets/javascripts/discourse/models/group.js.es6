@@ -1,5 +1,5 @@
 import { ajax } from 'discourse/lib/ajax';
-import computed from 'ember-addons/ember-computed-decorators';
+import computed from "ember-addons/ember-computed-decorators";
 
 const Group = Discourse.Model.extend({
   limit: 50,

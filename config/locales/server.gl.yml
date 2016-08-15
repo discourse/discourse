@@ -262,13 +262,6 @@ gl:
       title: "Tema normal"
     banner:
       title: "Tema do báner"
-  unsubscribed:
-    title: 'Dado de baixa'
-    description: "Démoste de baixa. Non contactaremos contigo de novo."
-  resubscribe:
-    action: "Re-subscribir"
-    title: "Subscrito de novo"
-    description: "Subscribícheste de novo"
   reports:
     visits:
       title: "Visitas de usuarios"
@@ -413,8 +406,6 @@ gl:
     full_name_required: "O nome completo no perfil do usuario é obrigatorio."
     embed_username_key_from_feed: "Clave para recuperar o nome do usuario desde a fonte."
     enable_emoji: "Activar emojis"
-  notification_types:
-    liked: "A %{display_username} gustoulle a túa publicación en %{link}"
   search:
     types:
       category: 'Categorías'
@@ -435,8 +426,6 @@ gl:
     deferred_and_deleted: "Grazas por comunicárnolo. Xa eliminamos a publicación."
   temporarily_closed_due_to_flags: "Este tema está pechado temporalmente polo gran número de denuncias da comunidade."
   system_messages:
-    post_hidden:
-      subject_template: "Publicación oculta polas denuncias da comunidade."
     welcome_user:
       subject_template: "Benvido/a a %{site_name}!"
       text_body_template: |

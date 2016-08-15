@@ -36,6 +36,9 @@ class Category < ActiveRecord::Base
 
   validate :email_in_validator
 
+  validates :logo_url, upload_url: true
+  validates :background_url, upload_url: true
+
   validate :ensure_slug
   before_save :apply_permissions
   before_save :downcase_email
@@ -61,8 +64,8 @@ class Category < ActiveRecord::Base
   has_many :category_tag_groups, dependent: :destroy
   has_many :tag_groups, through: :category_tag_groups
 
-  after_save :clear_topic_ids_cache
-  after_destroy :clear_topic_ids_cache
+  after_save :reset_topic_ids_cache
+  after_destroy :reset_topic_ids_cache
 
   scope :latest, -> { order('topic_count DESC') }
 
@@ -86,16 +89,18 @@ class Category < ActiveRecord::Base
   # we may consider wrapping this in another spot
   attr_accessor :displayable_topics, :permission, :subcategory_ids, :notification_level, :has_children
 
+  @topic_id_cache = DistributedCache.new('category_topic_ids')
+
   def self.topic_ids
-    @topic_ids ||= Set.new(Category.pluck(:topic_id).compact)
+    @topic_id_cache['ids'] || reset_topic_ids_cache
   end
 
-  def self.clear_topic_ids_cache
-    @topic_ids = nil
+  def self.reset_topic_ids_cache
+    @topic_id_cache['ids'] = Set.new(Category.pluck(:topic_id).compact)
   end
 
-  def clear_topic_ids_cache
-    Category.clear_topic_ids_cache
+  def reset_topic_ids_cache
+    Category.reset_topic_ids_cache
   end
 
   def self.last_updated_at
@@ -327,12 +332,14 @@ SQL
   def email_in_validator
     return if self.email_in.blank?
     email_in.split("|").each do |email|
+
+      escaped = Rack::Utils.escape_html(email)
       if !Email.is_valid?(email)
-        self.errors.add(:base, I18n.t('category.errors.invalid_email_in', email: email))
+        self.errors.add(:base, I18n.t('category.errors.invalid_email_in', email: escaped))
       elsif group = Group.find_by_email(email)
-        self.errors.add(:base, I18n.t('category.errors.email_already_used_in_group', email: email, group_name: group.name))
+        self.errors.add(:base, I18n.t('category.errors.email_already_used_in_group', email: escaped, group_name: Rack::Utils.escape_html(group.name)))
       elsif category = Category.where.not(id: self.id).find_by_email(email)
-        self.errors.add(:base, I18n.t('category.errors.email_already_used_in_category', email: email, category_name: category.name))
+        self.errors.add(:base, I18n.t('category.errors.email_already_used_in_category', email: escaped, category_name: Rack::Utils.escape_html(category.name)))
       end
     end
   end

@@ -103,7 +103,7 @@ const TopicTrackingState = Discourse.Model.extend({
 
   notify(data) {
     if (!this.newIncoming) { return; }
-    if (data.archetype === "private_message") { return; }
+    if (data.payload && data.payload.archetype === "private_message") { return; }
 
     const filter = this.get("filter");
     const filterCategory = this.get("filterCategory");

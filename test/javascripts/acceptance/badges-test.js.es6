@@ -12,5 +12,6 @@ test("Visit Badge Pages", () => {
   andThen(() => {
     ok(exists('.badge-card'), "has the badge in the listing");
     ok(exists('.user-info'), "has the list of users with that badge");
+    ok(!exists('.badge-card:eq(0) script'));
   });
 });

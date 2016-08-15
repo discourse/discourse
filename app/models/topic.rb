@@ -325,6 +325,7 @@ class Topic < ActiveRecord::Base
               .visible
               .secured(Guardian.new(user))
               .joins("LEFT OUTER JOIN topic_users ON topic_users.topic_id = topics.id AND topic_users.user_id = #{user.id.to_i}")
+              .joins("LEFT OUTER JOIN category_users ON category_users.category_id = topics.category_id AND category_users.user_id = #{user.id.to_i}")
               .joins("LEFT OUTER JOIN users ON users.id = topics.user_id")
               .where(closed: false, archived: false)
               .where("COALESCE(topic_users.notification_level, 1) <> ?", TopicUser.notification_levels[:muted])
@@ -338,7 +339,7 @@ class Topic < ActiveRecord::Base
 
     if !!opts[:top_order]
       topics = topics.joins("LEFT OUTER JOIN top_topics ON top_topics.topic_id = topics.id")
-                     .order(TopicQuerySQL.order_top_for(score))
+                     .order(TopicQuerySQL.order_top_with_notification_levels(score))
     end
 
     if opts[:limit]
@@ -359,6 +360,13 @@ class Topic < ActiveRecord::Base
     end
     if muted_category_ids.present?
       topics = topics.where("topics.category_id NOT IN (?)", muted_category_ids)
+    end
+
+    # Remove muted categories
+    muted_tag_ids = TagUser.lookup(user, :muted).pluck(:tag_id)
+    unless muted_tag_ids.empty?
+      topics = topics.joins("LEFT OUTER JOIN topic_tags ON topic_tags.topic_id = topics.id")
+                     .where("topic_tags.tag_id NOT IN (?)", muted_tag_ids)
     end
 
     topics

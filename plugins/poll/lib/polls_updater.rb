@@ -14,11 +14,16 @@ module DiscoursePoll
       if polls_updated?(polls, previous_polls) || (current_option_ids != previous_option_ids)
         has_votes = total_votes(previous_polls) > 0
 
-        # outside of the 5-minute edit window?
-        if post.created_at < 5.minutes.ago && has_votes
+        # outside of the edit window?
+        poll_edit_window_mins = SiteSetting.poll_edit_window_mins
+
+        if post.created_at < poll_edit_window_mins.minutes.ago && has_votes
           # cannot add/remove/rename polls
           if polls.keys.sort != previous_polls.keys.sort
-            post.errors.add(:base, I18n.t("poll.cannot_change_polls_after_5_minutes"))
+            post.errors.add(:base, I18n.t(
+              "poll.edit_window_expired.cannot_change_polls", minutes: poll_edit_window_mins
+            ))
+
             return
           end
 
@@ -27,13 +32,21 @@ module DiscoursePoll
             # staff can only edit options
             polls.each_key do |poll_name|
               if polls[poll_name]["options"].size != previous_polls[poll_name]["options"].size && previous_polls[poll_name]["voters"].to_i > 0
-                post.errors.add(:base, I18n.t("poll.staff_cannot_add_or_remove_options_after_5_minutes"))
+                post.errors.add(:base, I18n.t(
+                  "poll.edit_window_expired.staff_cannot_add_or_remove_options",
+                  minutes: poll_edit_window_mins
+                ))
+
                 return
               end
             end
           else
             # OP cannot edit poll options
-            post.errors.add(:base, I18n.t("poll.op_cannot_edit_options_after_5_minutes"))
+            post.errors.add(:base, I18n.t(
+              "poll.edit_window_expired.op_cannot_edit_options",
+              minutes: poll_edit_window_mins
+            ))
+
             return
           end
         end

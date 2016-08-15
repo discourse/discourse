@@ -407,10 +407,16 @@ describe SessionController do
 
       describe 'suspended user' do
         it 'should return an error' do
-          User.any_instance.stubs(:suspended?).returns(true)
-          User.any_instance.stubs(:suspended_till).returns(2.days.from_now)
+          user.suspended_till = 2.days.from_now
+          user.suspended_at = Time.now
+          user.save!
+          StaffActionLogger.new(user).log_user_suspend(user, "<strike>banned</strike>")
           xhr :post, :create, login: user.username, password: 'myawesomepassword'
-          expect(::JSON.parse(response.body)['error']).to be_present
+
+          error = ::JSON.parse(response.body)['error']
+          expect(error).to be_present
+          expect(error).to match(/banned/)
+          expect(error).not_to match(/<strike>/)
         end
       end
 

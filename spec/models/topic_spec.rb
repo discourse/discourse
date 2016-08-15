@@ -1364,6 +1364,34 @@ describe Topic do
       expect(Topic.for_digest(u, 1.year.ago, top_order: true)).to eq([topic])
     end
 
+    it "doesn't return topics with only muted tags" do
+      user = Fabricate(:user)
+      tag = Fabricate(:tag)
+      TagUser.change(user.id, tag.id, TagUser.notification_levels[:muted])
+      topic = Fabricate(:topic, tags: [tag])
+
+      expect(Topic.for_digest(user, 1.year.ago, top_order: true)).to be_blank
+    end
+
+    it "returns topics with both muted and not muted tags" do
+      user = Fabricate(:user)
+      muted_tag, other_tag = Fabricate(:tag), Fabricate(:tag)
+      TagUser.change(user.id, muted_tag.id, TagUser.notification_levels[:muted])
+      topic = Fabricate(:topic, tags: [muted_tag, other_tag])
+
+      expect(Topic.for_digest(user, 1.year.ago, top_order: true)).to eq([topic])
+    end
+
+    it "sorts by category notification levels" do
+      category1, category2 = Fabricate(:category), Fabricate(:category)
+      2.times {|i| Fabricate(:topic, category: category1) }
+      topic1 = Fabricate(:topic, category: category2)
+      2.times {|i| Fabricate(:topic, category: category1) }
+      CategoryUser.create(user: user, category: category2, notification_level: CategoryUser.notification_levels[:watching])
+      for_digest = Topic.for_digest(user, 1.year.ago, top_order: true)
+      expect(for_digest.first).to eq(topic1)
+    end
+
   end
 
   describe 'secured' do

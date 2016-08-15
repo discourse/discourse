@@ -342,8 +342,15 @@ describe PostAlerter do
     it "notifies the user who is following the first post category" do
       level = CategoryUser.notification_levels[:watching_first_post]
       CategoryUser.set_notification_level_for_category(user, level, category.id)
-      PostAlerter.post_created(post)
+      PostAlerter.new.after_save_post(post, true)
       expect(user.notifications.where(notification_type: Notification.types[:watching_first_post]).count).to eq(1)
+    end
+
+    it "doesn't notify when the record is not new" do
+      level = CategoryUser.notification_levels[:watching_first_post]
+      CategoryUser.set_notification_level_for_category(user, level, category.id)
+      PostAlerter.new.after_save_post(post, false)
+      expect(user.notifications.where(notification_type: Notification.types[:watching_first_post]).count).to eq(0)
     end
 
     it "notifies the user who is following the first post tag" do
@@ -356,6 +363,7 @@ describe PostAlerter do
     it "notifies the user who is following the first post group" do
       GroupUser.create(group_id: group.id, user_id: user.id)
       GroupUser.create(group_id: group.id, user_id: post.user.id)
+      topic.topic_allowed_groups.create(group_id: group.id)
 
       level = GroupUser.notification_levels[:watching_first_post]
       GroupUser.where(user_id: user.id, group_id: group.id).update_all(notification_level: level)

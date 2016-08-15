@@ -284,6 +284,7 @@ end
 #  mobile_header_baked     :text
 #  footer_baked            :text
 #  mobile_footer_baked     :text
+#  compiler_version        :integer          default(0), not null
 #
 # Indexes
 #

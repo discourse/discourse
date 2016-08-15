@@ -42,6 +42,9 @@ export default class LockOn {
   clearLock(interval) {
     $('body,html').off(SCROLL_EVENTS);
     clearInterval(interval);
+    if (this.options.finished) {
+      this.options.finished();
+    }
   }
 
   lock() {

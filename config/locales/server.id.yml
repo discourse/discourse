@@ -280,10 +280,6 @@ id:
       blocked: "Registrasi baru dari alamat IP Anda tidak diijinkan."
       max_new_accounts_per_registration_ip: "Registrasi baru dari alamat IP Anda tidak diijinkan (telah mencapai batas maksimum). Silahkan hubungi staff."
   system_messages:
-    too_many_spam_flags:
-      subject_template: "Akun baru disuspensi atas alasan laporan dari komunitas"
-    user_automatically_blocked:
-      subject_template: "Pengguna baru %{username} disuspensi atas laporan komunitas"
     spam_post_blocked:
       subject_template: "Pengguna baru %{username} disuspensi atas penulisan tautan yang berulang-ulang kali"
     pending_users_reminder:
@@ -298,14 +294,13 @@ id:
       more_topics_category: "Topik baru lebih banyak:"
     account_created:
       subject_template: "[%{site_name}] Akun Baru Anda"
-      text_body_template: |+
+      text_body_template: |
         Anda mendapatkan akun baru di %{site_name}
 
 
         Silahkan sentuh tautan dibawah ini untuk menentukan sandi dari akun baru Anda:
 
         %{base_url}/users/password-reset/%{email_token}
-
     confirm_new_email:
       subject_template: "[%{site_name}] Konfirmasi email baru Anda"
       text_body_template: |

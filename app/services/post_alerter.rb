@@ -108,7 +108,7 @@ class PostAlerter
 
     sync_group_mentions(post, mentioned_groups)
 
-    if post.post_number == 1
+    if new_record && post.post_number == 1
       topic = post.topic
 
       if topic.present?
@@ -120,7 +120,7 @@ class PostAlerter
                             .where(notification_level: TagUser.notification_levels[:watching_first_post])
                             .pluck(:user_id)
 
-        group_ids = post.user.groups.pluck(:id)
+        group_ids = topic.allowed_groups.pluck(:group_id)
         group_watchers = GroupUser.where(group_id: group_ids,
                                          notification_level: GroupUser.notification_levels[:watching_first_post])
                                   .pluck(:user_id)

@@ -229,8 +229,6 @@ id:
     undo: "Batalkan perintah"
     revert: "Kembali ke awal"
     failed: "Gagal"
-    switch_to_anon: "Mode Anonim"
-    switch_from_anon: "Keluar Anonim"
     banner:
       close: "Abaikan banner ini."
       edit: "Ubah banner ini >>"
@@ -414,7 +412,6 @@ id:
         disable: "Tidak membolehkan Notifikasi"
         enable: "Membolehkan Notifikasi"
         each_browser_note: "Catatan : Anda  harus mengubah pengaturan ini pada setiap browser yang Anda gunakan."
-      dismiss_notifications: "Tandai semua telah dibaca"
       dismiss_notifications_tooltip: "Tandai semua notifikasi belum dibaca telah dibaca"
       disable_jump_reply: "Jangan pindah ke kiriman saya setelah saya balas"
       dynamic_favicon: "Tampilkan jumlah topik baru / pembaharuan pada icon browser."
@@ -435,12 +432,8 @@ id:
         enabled: "Aktifkan mode milis"
         daily: "mengirim pembaharuan harian"
         individual: "Kirim email untuk setiap pesan baru"
-        many_per_day: "Kirimi saya email untuk setiap pesan baru (tentang {{PerkiraanEmailHarian}} per hari)."
-        few_per_day: "Kirimi saya email untuk setiap pesan baru (kurang dari 2 per hari)."
       watched_categories: "Dilihat"
-      watched_categories_instructions: "Anda secara otomatis akan melihat semua topik dalam kategori ini. Anda akan diberitahu dari semua posting baru dan topik, dan jumlah posting baru juga akan muncul di topik selanjutnya."
       tracked_categories: "Dilacak"
-      tracked_categories_instructions: "Anda akan melacak semua topik dalam kategori ini secara otomatis. sejumlah pesan baru akan muncul di topik selanjutnya."
       muted_categories: "Diredam"
       muted_categories_instructions: "Anda tidak akan diberitahu apapun tentang topik baru di kategori ini, dan mereka tidak akan muncul diterbarunya. "
       delete_account: "Hapus Akun Saya"
@@ -585,6 +578,7 @@ id:
         rescind: "Hapus"
         rescinded: "Undangan dihapus"
         reinvite: "Kirim Ulang Undangan"
+        reinvite_all: "Kirim ulang semua Undangan"
         reinvited: "Undangan sudah dikirim ulang"
         reinvited_all: "Semua Undangan sudah dikirim ulang"
         time_read: "Waktu Baca"
@@ -593,15 +587,18 @@ id:
         create: "Kirim Undangan"
         generate_link: "Salin Tautan Undangan"
         bulk_invite:
+          text: "Undangan Massal dari Berkas"
           uploading: "Mengunggah..."
       password:
-        title: "Password"
+        title: "Kata sandi"
         too_short: "Password kamu terlalu pendek."
         common: "Password terlalu umum"
         same_as_username: "Password dan nama pengguna kamu sama"
         same_as_email: "Password dan email kamu sama"
+        ok: "Kata sandi Anda terlihat baik."
       summary:
         title: "Ringkasan"
+        stats: "Statistik"
         days_visited:
           other: "hari berkunjung"
         top_replies: "Balasan Teratas"
@@ -824,37 +821,3 @@ id:
       badges:
         new_badge: Badge Baru
         new: Baru
-    lightbox:
-      download: "unduh"
-    keyboard_shortcuts_help:
-      navigation:
-        title: 'Navigasi'
-      application:
-        title: 'Aplikasi'
-        create: '<b>c</b> Buat topik baru'
-        notifications: '<b>n</b> Buka notifikasi'
-        search: '<b>/</b> Cari'
-      actions:
-        title: 'Aksi'
-    badges:
-      badge_grouping:
-        trust_level:
-          name: Tingkat Kepercayaan
-        other:
-          name: Lainnya
-    google_search: |
-      <h3>Cari dengan Google</h3>
-      <p>
-        <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:' + window.location.host + ' ' + document.getElementById('user-query').value; return true;">
-          <input type="text" id='user-query' value="">
-          <input type='hidden' id='google-query' name="q">
-          <button class="btn btn-primary">Google</button>
-        </form>
-      </p>
-    tagging:
-      sort_by_name: "nama"
-      topics:
-        none:
-          new: "Anda tidak memiliki topik baru."
-        bottom:
-          new: "Tidak ada topik baru lainnya."

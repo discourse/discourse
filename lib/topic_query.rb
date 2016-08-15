@@ -20,6 +20,8 @@ class TopicQuery
                      visible
                      category
                      tags
+                     match_all_tags
+                     no_tags
                      order
                      ascending
                      no_subcategories
@@ -459,12 +461,31 @@ class TopicQuery
 
         if @options[:tags] && @options[:tags].size > 0
           result = result.joins(:tags)
-          # ANY of the given tags:
-          if @options[:tags][0].is_a?(Integer)
-            result = result.where("tags.id in (?)", @options[:tags])
+
+          if @options[:match_all_tags]
+            # ALL of the given tags:
+            tags_count = @options[:tags].length
+            @options[:tags] = Tag.where(name: @options[:tags]).pluck(:id) unless @options[:tags][0].is_a?(Integer)
+
+            if tags_count == @options[:tags].length
+              @options[:tags].each_with_index do |tag, index|
+                sql_alias = ['t', index].join
+                result = result.joins("INNER JOIN topic_tags #{sql_alias} ON #{sql_alias}.topic_id = topics.id AND #{sql_alias}.tag_id = #{tag}")
+              end
+            else
+              result = result.none # don't return any results unless all tags exist in the database
+            end
           else
-            result = result.where("tags.name in (?)", @options[:tags])
+            # ANY of the given tags:
+            if @options[:tags][0].is_a?(Integer)
+              result = result.where("tags.id in (?)", @options[:tags])
+            else
+              result = result.where("tags.name in (?)", @options[:tags])
+            end
           end
+        elsif @options[:no_tags]
+          # the following will do: ("topics"."id" NOT IN (SELECT DISTINCT "topic_tags"."topic_id" FROM "topic_tags"))
+          result = result.where.not(:id => TopicTag.select(:topic_id).uniq)
         end
       end
 
@@ -593,8 +614,7 @@ class TopicQuery
       if user.nil? || !SiteSetting.tagging_enabled || !SiteSetting.remove_muted_tags_from_latest
         list
       else
-        muted_tags = DiscourseTagging.muted_tags(user)
-        if muted_tags.empty?
+        if !TagUser.lookup(user, :muted).exists?
           list
         else
           showing_tag = if opts[:filter]
@@ -604,17 +624,17 @@ class TopicQuery
             nil
           end
 
-          if muted_tags.include?(showing_tag)
+          if TagUser.lookup(user, :muted).joins(:tag).where('tags.name = ?', showing_tag).exists?
             list # if viewing the topic list for a muted tag, show all the topics
           else
-            arr = muted_tags.map{ |z| "'#{z}'" }.join(',')
-            list.where("EXISTS (
-       SELECT 1
-         FROM topic_custom_fields tcf
-        WHERE tcf.name = 'tags'
-          AND tcf.value NOT IN (#{arr})
-          AND tcf.topic_id = topics.id
-       ) OR NOT EXISTS (select 1 from topic_custom_fields tcf where tcf.name = 'tags' and tcf.topic_id = topics.id)")
+            muted_tag_ids = TagUser.lookup(user, :muted).pluck(:tag_id)
+            list = list.where("
+              EXISTS (
+                SELECT 1
+                  FROM topic_tags tt
+                 WHERE tt.tag_id NOT IN (:tag_ids)
+                   AND tt.topic_id = topics.id
+              ) OR NOT EXISTS (SELECT 1 FROM topic_tags tt WHERE tt.topic_id = topics.id)", tag_ids: muted_tag_ids)
           end
         end
       end

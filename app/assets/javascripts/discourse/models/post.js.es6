@@ -328,6 +328,15 @@ Post.reopenClass({
     });
   },
 
+  mergePosts(selectedPosts) {
+    return ajax("/posts/merge_posts", {
+      type: 'PUT',
+      data: { post_ids: selectedPosts.map(p => p.get('id')) }
+    }).catch(() => {
+      self.flash(I18n.t('topic.merge_posts.error'));
+    });
+  },
+
   loadRevision(postId, version) {
     return ajax("/posts/" + postId + "/revisions/" + version + ".json")
                     .then(result => Ember.Object.create(result));

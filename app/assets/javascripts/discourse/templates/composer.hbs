@@ -29,8 +29,8 @@
           <div class='reply-to'>
             {{{model.actionTitle}}}
             {{#unless site.mobileView}}
-            {{#if model.whisper}}
-              <span class='whisper'>({{i18n "composer.whisper"}})</span>
+            {{#if whisperOrUnlistTopicText}}
+              <span class='whisper'>({{whisperOrUnlistTopicText}})</span>
             {{/if}}
             {{/unless}}
 
@@ -49,9 +49,9 @@
             <div class='form-element clearfix'>
               {{#if model.creatingPrivateMessage}}
                 {{composer-user-selector topicId=topicModel.id
-                                usernames=model.targetUsernames
-                                hasGroups=model.hasTargetGroups
-                                }}
+                                         usernames=model.targetUsernames
+                                         hasGroups=model.hasTargetGroups
+                                         focusTarget=focusTarget}}
                 {{#if showWarning}}
                   <div class='add-warning'>
                     <label>
@@ -62,7 +62,7 @@
                 {{/if}}
               {{/if}}
 
-              {{composer-title composer=model lastValidatedAt=lastValidatedAt}}
+              {{composer-title composer=model lastValidatedAt=lastValidatedAt focusTarget=focusTarget}}
 
               {{#if model.showCategoryChooser}}
                 <div class="category-input">
@@ -106,8 +106,8 @@
             <a href {{action "cancel"}} class='cancel' tabindex="6">{{i18n 'cancel'}}</a>
 
             {{#if site.mobileView}}
-            {{#if model.whisper}}
-            <span class='whisper'><i class='fa fa-eye-slash'></i></span>
+            {{#if whisperOrUnlistTopic}}
+              <span class='whisper'><i class='fa fa-eye-slash'></i></span>
             {{/if}}
             {{/if}}
           </div>

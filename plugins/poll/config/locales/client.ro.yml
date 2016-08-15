@@ -17,21 +17,6 @@ ro:
         few: "total voturi"
         other: "total voturi"
       average_rating: "Media: <strong>%{average}</strong>."
-      multiple:
-        help:
-          at_least_min_options:
-            one: "Trebuie să selectați cel puțin <strong>1</strong> opțiune."
-            few: "Trebuie să selectați cel puțin <strong>%{count}</strong> opțiuni."
-            other: "Trebuie să selectați cel puțin <strong>%{count}</strong> opțiuni."
-          up_to_max_options:
-            one: "Puteţi alege cel mult o <strong>%{count}</strong> opţiune."
-            few: "Puteţi selecta cel mult <strong>1</strong> opţiune."
-            other: "Puteți selecta până la <strong>%{count}</strong> opțiuni."
-          x_options:
-            one: "Trebuie să selectați <strong>1</strong> opțiune."
-            few: "Trebuie să selectați <strong>%{count}</strong> opțiuni."
-            other: "Trebuie să alegeți <strong>%{count}</strong> opțiuni."
-          between_min_and_max_options: "Puteţi alege între <strong>%{min}</strong> şi <strong>%{max}</strong> opţiuni."
       cast-votes:
         title: "Exprimaţi-vă votul"
         label: "Votează acum!"
@@ -43,11 +28,9 @@ ro:
         label: "Ascunde rezultate"
       open:
         title: "Deschide sondaj"
-        label: "Deschis"
+        label: "Redeschide sondajul"
         confirm: "Sunteţi sigur că doriţi să deschideţi acest sondaj?"
       close:
-        title: "Închideți sondajul"
-        label: "Închideți"
+        title: "Închide sondajul"
+        label: "Închide sondajul"
         confirm: "Sunteţi sigur că vreţi să închideţi acest sondaj?"
-      error_while_toggling_status: "A apărut o eroare în timpul schimbării stării acestui sondaj."
-      error_while_casting_votes: "A apărut o eroare în timpul exprimării votului dvs."

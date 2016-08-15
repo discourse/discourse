@@ -189,7 +189,7 @@ export default Ember.Component.extend({
       this.setProperties({ uploadProgress: 0, isUploading: false, isCancellable: false });
     }
     if (removePlaceholder) {
-      this.set('composer.reply', this.get('composer.reply').replace(this.get('uploadPlaceholder'), ""));
+      this.appEvents.trigger('composer:replace-text', this.get('uploadPlaceholder'), "");
     }
   },
 
@@ -219,7 +219,6 @@ export default Ember.Component.extend({
 
     $element.on("fileuploadsend", (e, data) => {
       this._validUploads++;
-      // add upload placeholders
       this.appEvents.trigger('composer:insert-text', uploadPlaceholder);
 
       if (data.xhr && data.originalFiles.length === 1) {
@@ -244,7 +243,7 @@ export default Ember.Component.extend({
       if (upload && upload.url) {
         if (!this._xhr || !this._xhr._userCancelled) {
           const markdown = getUploadMarkdown(upload);
-          this.set('composer.reply', this.get('composer.reply').replace(uploadPlaceholder, markdown));
+          this.appEvents.trigger('composer:replace-text', uploadPlaceholder, markdown);
           this._resetUpload(false);
         } else {
           this._resetUpload(true);
@@ -297,7 +296,13 @@ export default Ember.Component.extend({
   // Believe it or not pasting an image in Firefox doesn't work without this code
   _firefoxPastingHack() {
     const uaMatch = navigator.userAgent.match(/Firefox\/(\d+)\.\d/);
-    if (uaMatch && parseInt(uaMatch[1]) >= 24) {
+    if (uaMatch) {
+      let uaVersion = parseInt(uaMatch[1]);
+      if (uaVersion < 24 || 50 <= uaVersion) {
+        // The hack is no longer required in FF 50 and later.
+        // See: https://bugzilla.mozilla.org/show_bug.cgi?id=906420
+        return;
+      }
       this.$().append( Ember.$("<div id='contenteditable' contenteditable='true' style='height: 0; width: 0; overflow: hidden'></div>") );
       this.$("textarea").off('keydown.contenteditable');
       this.$("textarea").on('keydown.contenteditable', event => {

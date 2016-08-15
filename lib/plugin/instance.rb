@@ -3,6 +3,21 @@ require 'fileutils'
 require_dependency 'plugin/metadata'
 require_dependency 'plugin/auth_provider'
 
+class Plugin::CustomEmoji
+  def self.cache_key
+    @@cache_key ||= "plugin-emoji"
+  end
+
+  def self.emojis
+    @@emojis ||= {}
+  end
+
+  def self.register(name, url)
+    @@cache_key = Digest::SHA1.hexdigest(cache_key + name)[0..10]
+    emojis[name] = url
+  end
+end
+
 class Plugin::Instance
 
   attr_accessor :path, :metadata
@@ -17,13 +32,8 @@ class Plugin::Instance
     }
   end
 
-  # Memoized hash readers
-  [:seed_data, :emojis].each do |att|
-    class_eval %Q{
-      def #{att}
-        @#{att} ||= HashWithIndifferentAccess.new({})
-      end
-    }
+  def seed_data
+    @seed_data ||= HashWithIndifferentAccess.new({})
   end
 
   def self.find_all(parent_path)
@@ -225,7 +235,7 @@ class Plugin::Instance
   end
 
   def register_emoji(name, url)
-    emojis[name] = url
+    Plugin::CustomEmoji.register(name, url)
   end
 
   def automatic_assets

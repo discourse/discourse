@@ -34,6 +34,10 @@ class Tag < ActiveRecord::Base
   def self.include_tags?
     SiteSetting.tagging_enabled && SiteSetting.show_filter_by_tag
   end
+
+  def full_url
+    "#{Discourse.base_url}/tags/#{self.name}"
+  end
 end
 
 # == Schema Information

@@ -48,9 +48,30 @@ test("sanitize", function() {
 
   cooked("<kbd>Ctrl</kbd>+<kbd>C</kbd>", "<p><kbd>Ctrl</kbd>+<kbd>C</kbd></p>");
   cooked("it has been <strike>1 day</strike> 0 days since our last test failure", "<p>it has been <strike>1 day</strike> 0 days since our last test failure</p>");
+  cooked(`it has been <s>1 day</s> 0 days since our last test failure`, `<p>it has been <s>1 day</s> 0 days since our last test failure</p>`);
+
+  cooked(`<div align="center">hello</div>`, `<div align="center">hello</div>`);
+
+  cooked(`1 + 1 is <del>3</del> <ins>2</ins>`, `<p>1 + 1 is <del>3</del> <ins>2</ins></p>`);
+  cooked(`<abbr title="JavaScript">JS</abbr>`, `<p><abbr title="JavaScript">JS</abbr></p>`);
+  cooked(`<dl><dt>Forum</dt><dd>Software</dd></dl>`, `<dl><dt>Forum</dt><dd>Software</dd></dl>`);
+  cooked(`<sup>high</sup> <sub>low</sub> <big>HUGE</big>`, `<p><sup>high</sup> <sub>low</sub> <big>HUGE</big></p>`);
+
+  cooked(`<div dir="rtl">RTL text</div>`, `<div dir="rtl">RTL text</div>`);
 });
 
-test("urlAllowed", function() {
+test("ids on headings", () => {
+  const pt = new PrettyText(buildOptions({ siteSettings: {} }));
+  equal(pt.sanitize("<h3>Test Heading</h3>"), "<h3>Test Heading</h3>");
+  equal(pt.sanitize(`<h1 id="test-heading">Test Heading</h1>`), `<h1 id="test-heading">Test Heading</h1>`);
+  equal(pt.sanitize(`<h2 id="test-heading">Test Heading</h2>`), `<h2 id="test-heading">Test Heading</h2>`);
+  equal(pt.sanitize(`<h3 id="test-heading">Test Heading</h3>`), `<h3 id="test-heading">Test Heading</h3>`);
+  equal(pt.sanitize(`<h4 id="test-heading">Test Heading</h4>`), `<h4 id="test-heading">Test Heading</h4>`);
+  equal(pt.sanitize(`<h5 id="test-heading">Test Heading</h5>`), `<h5 id="test-heading">Test Heading</h5>`);
+  equal(pt.sanitize(`<h6 id="test-heading">Test Heading</h6>`), `<h6 id="test-heading">Test Heading</h6>`);
+});
+
+test("urlAllowed", () => {
   const allowed = (url, msg) => equal(hrefAllowed(url), url, msg);
 
   allowed("/foo/bar.html", "allows relative urls");

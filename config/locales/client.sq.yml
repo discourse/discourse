@@ -27,6 +27,7 @@ sq:
         millions: "{{number}}M"
     dates:
       time: "h:mm a"
+      timeline_date: "MMM YYYY"
       long_no_year: "MMM D h:mm a"
       long_no_year_no_time: "MMM D"
       full_no_year_no_time: "MMMM Do"
@@ -38,6 +39,7 @@ sq:
       long_date_with_year_without_time: "MMM D, 'YY"
       long_date_without_year_with_linebreak: "MMM D <br/>LT"
       long_date_with_year_with_linebreak: "MMM D, 'YY <br/>LT"
+      wrap_ago: "%{date} më parë"
       tiny:
         half_a_minute: "< 1m"
         less_than_x_seconds:
@@ -115,7 +117,9 @@ sq:
       private_topic: "e bëri këtë temë private %{when}"
       split_topic: "ndaje këtë teme %{when}"
       invited_user: "ka ftuar %{who} %{when}"
+      invited_group: "ka ftuar %{who} %{when}"
       removed_user: "hequr %{who} %{when}"
+      removed_group: "hequr %{who} %{when}"
       autoclosed:
         enabled: 'mbylli %{when}'
         disabled: 'hapur %{when}'
@@ -136,6 +140,7 @@ sq:
         disabled: 'ç''listuar %{when}'
     topic_admin_menu: "veprimet administrative mbi temën"
     emails_are_disabled: "Emailat janë çaktivizuar globalisht nga administratori i faqes. Asnjë njoftim me email nuk do të dërgohet. "
+    bootstrap_mode_enabled: "Për të thjeshtuar nisjen e komunitetit, jeni në formatin \"bootstrap\". Të gjithë anëtarët e rinj do të kenë nivelin e besimit 1 dhe emailat e përditshëm të aktivizuar. Këto opsione do të çaktivizohen automatikisht kur numri total i anëtarëve të kalojë numrin %{min_users}."
     s3:
       regions:
         us_east_1: "US East (N. Virginia)"
@@ -146,9 +151,11 @@ sq:
         eu_central_1: "EU (Frankfurt)"
         ap_southeast_1: "Asia Pacific (Singapore)"
         ap_southeast_2: "Asia Pacific (Sydney)"
+        ap_south_1: "Asia Pacific (Mumbai)"
         ap_northeast_1: "Asia Pacific (Tokyo)"
         ap_northeast_2: "Asia Pacific (Seoul)"
         sa_east_1: "South America (Sao Paulo)"
+        cn_north_1: "China (Beijing)"
     edit: 'redakto titullin dhe kategorinë e kësaj teme'
     not_implemented: "Kjo veçori nuk është implementuar akoma, na vjen keq!"
     no_value: "Jo"
@@ -249,8 +256,8 @@ sq:
     undo: "Çbëj"
     revert: "Rikthe"
     failed: "Dështoi"
-    switch_to_anon: "Mënyrë anonime"
-    switch_from_anon: "Shkëputu si anonim"
+    switch_to_anon: "Filloni sesionin anonim"
+    switch_from_anon: "Dilni nga sesioni anonim"
     banner:
       close: "Hiq këtë banderolë."
       edit: "Modifiko këtë banderolë >>"
@@ -300,6 +307,8 @@ sq:
       title: "Anëtarët"
       likes_given: "Dhënë"
       likes_received: "Marrë"
+      topics_entered: "Shikuar"
+      topics_entered_long: "Temat e shikuara"
       time_read: "Koha e leximit"
       topic_count: "Tema"
       topic_count_long: "Topics Created"
@@ -324,6 +333,7 @@ sq:
       selector_placeholder: "Shto anëtarë"
       owner: "autori"
       visible: "Grupi është i dukshëm për të gjithë përdoruesit"
+      index: "Grupet"
       title:
         one: "grupë"
         other: "grupet"
@@ -346,6 +356,9 @@ sq:
         watching:
           title: "Në vëzhgim"
           description: "Ju do të njoftoheni për çdo postim të ri në çdo mesazh, dhe numri i ri i përgjigjeve të reja do të tregohet."
+        watching_first_post:
+          title: "Postimi i parë nën vëzhgim"
+          description: "Ju do të njoftoheni vetëm për postimin e parë të çdo teme nën këtë etiketë."
         tracking:
           title: "Në gjurmim"
           description: "Ju do të njoftoheni në qoftë se dikush ju pëmend me @emri ose ju përgjigjet, gjithashtu numri i përgjigjeve të reja do të tregohet."
@@ -386,12 +399,11 @@ sq:
       topics: "Tema"
       latest: "Të fundit"
       latest_by: "të fundit sipas"
-      toggle_ordering: "toggle ordering control"
       subcategories: "Nënkategori"
       topic_stats: "Numri i temave të reja."
       topic_stat_sentence:
-        one: "%{count} new topic in the past %{unit}."
-        other: "%{count} new topics in the past %{unit}."
+        one: "%{count} temë e re gjatë %{unit} të fundit."
+        other: "%{count} tema të reja gjatë %{unit} të fundit."
       post_stats: "Numri i postimeve të reja."
       post_stat_sentence:
         one: "%{count} postim i ri këto %{unit}."
@@ -440,9 +452,8 @@ sq:
         disable: "Çaktivizoni njoftimet"
         enable: "Aktivizoni njoftimet"
         each_browser_note: "Shënim: Duhet të ndryshoni këtë rregullim (setting) në çdo shfletues që përdorni. "
-      dismiss_notifications: "Shëno të gjitha si të lexuara"
+      dismiss_notifications: "Hiqini të gjitha"
       dismiss_notifications_tooltip: "Shëno njoftimet e palexuara si të lexuara"
-      disable_jump_reply: "Don't jump to my post after I reply"
       dynamic_favicon: "Tregoni numrin e temave të reja e azhornuara në ikonën e shfletuesit"
       external_links_in_new_tab: "Hap të gjitha lidhjet e jashtme në një tab të ri"
       enable_quoting: "Aktivizo citimin në përgjigje për tekstin e përzgjedhur"
@@ -455,23 +466,36 @@ sq:
       suspended_notice: "Ky anëtarë është përjashtuar deri më {{date}}."
       suspended_reason: "Arsyeja:"
       github_profile: "Github"
+      email_activity_summary: "Përmbledhja e aktivitetit"
+      mailing_list_mode:
+        daily: "Dërgo njoftime të përditshme"
+        individual: "Dërgo një email për çdo postim të ri"
+        many_per_day: "Më dërgo një email për çdo postim të ri (rreth {{dailyEmailEstimate}} në ditë)"
+        few_per_day: "Më dërgo një email për çdo postim të ri (rreth 2 në ditë)"
+      tag_settings: "Etiketat"
+      watched_tags: "Vëzhguar"
+      watched_tags_instructions: "Ju do të vëzhgoni automatikisht të gjitha temat nën këtë etiketë. Do të njoftoheni për çdo postim e temë të re, dhe numri i postimeve të reja të palexuara do të afishohet ngjitur me titullin e temës përgjatë listave të faqes. "
+      tracked_tags: "Gjurmuar"
+      tracked_tags_instructions: "Ju do të gjurmoni automatikisht të gjitha temat nën këtë etiketë. Numri i përgjigjeve të palexuara do të afishohet ngjitur me titullin e temës. "
+      muted_tags_instructions: "Ju nuk do të njoftoheni për asgjë nga temat e reja të këtyre etiketave, dhe këto tema nuk do të afishohen në faqen \"Më të fundit\" për ju. "
       watched_categories: "Shikuar"
-      watched_categories_instructions: "You will automatically watch all new topics in these categories. You will be notified of all new posts and topics, and a count of new posts will also appear next to the topic."
+      watched_categories_instructions: "Ju do të vëzhgoni automatikisht të gjitha temat nën këtë kategori. Do të njoftoheni për çdo postim e temë të re, dhe numri i postimeve të reja të palexuara do të afishohet ngjitur me titullin e temës. "
       tracked_categories: "Gjurmuar"
-      tracked_categories_instructions: "You will automatically track all new topics in these categories. A count of new posts will appear next to the topic."
+      tracked_categories_instructions: "Ju do të gjurmoni automatikisht të gjitha temat nën këtë kategori. Numri i përgjigjeve të palexuara do të afishohet ngjitur me titullin e temës. "
+      watched_first_post_categories: "Postimi i parë nën vëzhgim"
+      watched_first_post_categories_instructions: "Ju do të njoftoheni vetëm për postimin e parë të çdo teme nën këto kategori."
+      watched_first_post_tags: "Postimi i parë nën vëzhgim"
+      watched_first_post_tags_instructions: "Ju do të njoftoheni vetëm për postimin e parë të çdo teme nën këto etiketa."
       muted_categories: "Pa njoftime"
-      muted_categories_instructions: "You will not be notified of anything about new topics in these categories, and they will not appear in latest."
       delete_account: "Fshi llogarinë time"
-      delete_account_confirm: "Are you sure you want to permanently delete your account? This action cannot be undone!"
       deleted_yourself: "Llogaria juaj u fshi me sukses."
-      delete_yourself_not_allowed: "You cannot delete your account right now. Contact an admin to do delete your account for you."
       unread_message_count: "Mesazhet"
       admin_delete: "Fshi"
       users: "Anëtarët"
       muted_users: "Të heshtur"
       muted_users_instructions: "Çaktivizo të gjitha njoftimet nga këta anëtarë."
       muted_topics_link: "Trego temat e heshtura"
-      automatically_unpin_topics: "Automatically unpin topics when I reach the bottom."
+      watched_topics_link: "Trego temat e vëzhguara"
       staff_counters:
         flags_given: "sinjalizime të dobishme"
         flagged_posts: "postimet e raportuara"
@@ -500,6 +524,7 @@ sq:
         error: "Pati një gabim gjatë ndryshimit të kësaj të dhëne."
       change_username:
         title: "Ndrysho emrin e përdoruesit"
+        confirm: "Nëse ndryshoni emrin e përdoruesit të gjitha citimet e mëparshme dhe përmendjet @emër do të prishen. A jeni 100% të sigurtë që doni të ndryshoni emrin?"
         taken: "Na vjen keq, por ky emër është i zënë."
         error: "Ndodhi një gabim gjatë ndryshimit të emrit."
         invalid: "Emri i përdoruesit nuk është i vlefshëm. Duhet të përmbaje vetëm shkronja ose numra"
@@ -532,7 +557,6 @@ sq:
         ok: "Do ju nisim emailin e konfirmimit"
         invalid: "Ju lutemi të vendosni një email të vlefshëm"
         authenticated: "Emaili juaj është verifikuar nga {{provider}}"
-        frequency_immediately: "We'll email you immediately if you haven't read the thing we're emailing you about."
         frequency:
           one: "Do t'ju dërgojmë një email vetëm nëse nuk të kemi parë në faqe në minutën e fundit."
           other: "Do t'ju dërgojmë një email vetëm nëse nuk të kemi parë në faqe në {{count}} minutat e fundit."
@@ -547,14 +571,12 @@ sq:
         instructions: "Unik, pa hapësira, i shkurtër"
         short_instructions: "Anëtarët e tjerë mund t'ju përmendin si @{{username}}"
         available: "Emri është i disponueshëm"
-        global_match: "Email matches the registered username"
         global_mismatch: "Jeni regjistruar më parë. Provoni {{suggestion}}?"
         not_available: "Nuk është i disponueshëm. Provoni {{suggestion}}?"
         too_short: "Emri juaj është shumë i shkurtër"
         too_long: "Emri juaj është shumë i gjatë"
         checking: "Duke verifikuar disponibilitetin e emrit të përdoruesit...."
         enter_email: 'Emri i përdoruesit u gjet; vendosni emailin përkatës'
-        prefilled: "Email matches this registered username"
       locale:
         title: "Gjuha e faqes"
         instructions: "Gjuha e faqes për përdoruesin. Do tue ndryshoj pasi të rifreskoni faqen. "
@@ -578,21 +600,20 @@ sq:
         first_time: "Herën e parë që një postim pëlqehet"
         never: "Asnjëherë"
       email_previous_replies:
-        title: "Include previous replies at the bottom of emails"
         unless_emailed: "nëse ishin dërguar më parë"
         always: "gjithmonë"
         never: "asnjëherë"
       email_digests:
+        title: "Kur nuk vij shpesh në faqe, më dërgoni një përmbledhje me email të diskutimeve më popullore"
         every_30_minutes: "çdo 30 minuta"
         every_hour: "çdo orë"
         daily: "çdo ditë"
         every_three_days: "çdo 3 ditë"
         weekly: "çdo javë"
         every_two_weeks: "çdo 2 javë"
+      include_tl0_in_digests: "Përfshini dhe postime nga anëtarët e rinj"
       email_in_reply_to: "Përfshi një copëz të përgjigjeve ndaj postimit në email"
       email_direct: "Më dërgo një email kur dikush më citon, i përgjigjet një postimi tim, më përmend me @username, ose më fton në një temë"
-      email_private_messages: "Send me an email when someone messages me"
-      email_always: "Send me email notifications even when I am active on the site"
       other_settings: "Tjetër"
       categories_settings: "Kategoritë"
       new_topic_duration:
@@ -624,9 +645,6 @@ sq:
           one: "Po afishohet ftesa e parë."
           other: "Po afishohen {{count}} ftesat e para."
         redeemed: "Ridërgo ftesat"
-        redeemed_tab: "Redeemed"
-        redeemed_tab_with_count: "Redeemed ({{count}})"
-        redeemed_at: "Redeemed"
         pending: "Ftesat në pritje"
         pending_tab: "Në pritje"
         pending_tab_with_count: "Në pritje ({{count}})"
@@ -636,9 +654,10 @@ sq:
         rescind: "Hiq"
         rescinded: "Ftesa u hoq"
         reinvite: "Ridërgo ftesën"
+        reinvite_all: "Ridërgo të gjitha ftesat"
         reinvited: "Ftesa u ri-dërgua"
+        reinvited_all: "Tê gjitha ftesat u dërguan sërish!"
         time_read: "Koha e leximit"
-        days_visited: "Days Visited"
         account_age_days: "Jetëgjatësia e llogarisë (ditë)"
         create: "Dërgo një ftesë"
         generate_link: "Kopjo lidhjen e ftesës"
@@ -647,8 +666,6 @@ sq:
           none: "Ju nuk keni ftuar askënd deri tani. Mund të dërgoni ftesa individuale ose mund të ftoni një grup personash duke <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>ngarkuar skedarin</a>."
           text: "Skedari për ftesat në grup"
           uploading: "Duke ngarkuar..."
-          success: "File uploaded successfully, you will be notified via message when the process is complete."
-          error: "There was an error uploading '{{filename}}': {{message}}"
       password:
         title: "Fjalëkalimi"
         too_short: "Fjalëkalimi është shumë i shkurër."
@@ -688,12 +705,11 @@ sq:
         top_topics: "Temat popullore"
         no_topics: "Nuk ka ende tema."
         more_topics: "Më shumë tema"
-        top_badges: "Top Badges"
-        no_badges: "No badges yet."
-        more_badges: "More Badges"
         top_links: "Lidhjet Top"
         no_links: "Nuk ka ende lidhje."
         most_liked_by: "Pëlqyer më shumë nga"
+        most_liked_users: "Më të pëlqyer"
+        most_replied_to_users: "Me më shumë përgjigje"
         no_likes: "Nuk ka ende asnjë pëlqim."
       associated_accounts: "Identifikime"
       ip_address:
@@ -738,14 +754,7 @@ sq:
     refresh: "Rifresko"
     read_only_mode:
       enabled: "Faqja lejon vetëm leximet per momentin. Mund të vazhdoni të shfletoni, por përgjigjet, pëlqimet dhe veprime të tjera janë të çaktivizuara përkohësisht."
-      login_disabled: "Login is disabled while the site is in read only mode."
-      logout_disabled: "Logout is disabled while the site is in read only mode."
-    too_few_topics_and_posts_notice: "Let's <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>get this discussion started!</a> There are currently <strong>%{currentTopics} / %{requiredTopics}</strong> topics and <strong>%{currentPosts} / %{requiredPosts}</strong> posts. New visitors need some conversations to read and respond to."
-    too_few_topics_notice: "Let's <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>get this discussion started!</a> There are currently <strong>%{currentTopics} / %{requiredTopics}</strong> topics. New visitors need some conversations to read and respond to."
-    too_few_posts_notice: "Let's <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>get this discussion started!</a> There are currently <strong>%{currentPosts} / %{requiredPosts}</strong> posts. New visitors need some conversations to read and respond to."
     logs_error_rate_notice:
-      reached: "%{timestamp}: Current rate of <a href='%{url}' target='_blank'>%{rate}</a> has reached site settings's limit of %{siteSettingRate}."
-      exceeded: "%{timestamp}: Current rate of <a href='%{url}' target='_blank'>%{rate}</a> has exceeded site settings's limit of %{siteSettingRate}."
       rate:
         one: "1 gabim/%{duration}"
         other: "%{count} gabime/%{duration}"
@@ -758,8 +767,6 @@ sq:
     week_desc: 'temat e krijuara në 7 ditët e fundit'
     day: 'ditë'
     first_post: Postimi i parë
-    mute: Mute
-    unmute: Unmute
     last_post: Postimi i fundit
     last_reply_lowercase: përgjigja e fundit
     replies_lowercase:
@@ -786,7 +793,7 @@ sq:
     private_message_info:
       title: "Mesazh"
       invite: "Fto të tjerë..."
-      remove_allowed_user: "Do you really want to remove {{name}} from this message?"
+      remove_allowed_group: "Doni me të vërtetë të hiqni {{name}} nga ky mesazh? "
     email: 'Email'
     username: 'Emri i përdoruesit'
     last_seen: 'Shikuar'
@@ -800,14 +807,7 @@ sq:
     forgot_password:
       title: "Rivendos fjalëkalimin"
       action: "Kam harruar fjalëkalimin"
-      invite: "Enter your username or email address, and we'll send you a password reset email."
       reset: "Rivendos fjalëkalimin"
-      complete_username: "If an account matches the username <b>%{username}</b>, you should receive an email with instructions on how to reset your password shortly."
-      complete_email: "If an account matches <b>%{email}</b>, you should receive an email with instructions on how to reset your password shortly."
-      complete_username_found: "We found an account that matches the username <b>%{username}</b>, you should receive an email with instructions on how to reset your password shortly."
-      complete_email_found: "We found an account that matches <b>%{email}</b>, you should receive an email with instructions on how to reset your password shortly."
-      complete_username_not_found: "No account matches the username <b>%{username}</b>"
-      complete_email_not_found: "No account matches <b>%{email}</b>"
     login:
       title: "Identifikohu"
       username: "Anëtari"
@@ -824,39 +824,26 @@ sq:
       awaiting_confirmation: "Llogaria juaj është në pritje të aktivizimit, përdorni butonin e fjalëkalimit të humbur që të merrni një email të ri me kodin e aktivizimit."
       awaiting_approval: "Llogaria juaj nuk është aprovuar ende nga një admin. Do t'ju dërgojmë një email kur të aprovohet. "
       requires_invite: "Na vjen keq, ky forum është vetëm për anëtarë të ftuar. "
-      not_activated: "You can't log in yet. We previously sent an activation email to you at <b>{{sentTo}}</b>. Please follow the instructions in that email to activate your account."
-      not_allowed_from_ip_address: "You can't login from that IP address."
-      admin_not_allowed_from_ip_address: "You can't log in as admin from that IP address."
-      resend_activation_email: "Click here to send the activation email again."
-      sent_activation_email_again: "We sent another activation email to you at <b>{{currentEmail}}</b>. It might take a few minutes for it to arrive; be sure to check your spam folder."
       to_continue: "Ju lutemi, identifikohuni"
-      preferences: "You need to be logged in to change your user preferences."
       forgot: "Nuk i mbaj mend detajet e llogarisë"
       google:
         title: "me Google"
-        message: "Authenticating with Google (make sure pop up blockers are not enabled)"
       google_oauth2:
         title: "me Google"
-        message: "Authenticating with Google (make sure pop up blockers are not enabled)"
       twitter:
         title: "me Twitter"
-        message: "Authenticating with Twitter (make sure pop up blockers are not enabled)"
-      instagram:
-        title: "with Instagram"
-        message: "Authenticating with Instagram (make sure pop up blockers are not enabled)"
       facebook:
         title: "me Facebook"
-        message: "Authenticating with Facebook (make sure pop up blockers are not enabled)"
       yahoo:
         title: "me Yahoo"
-        message: "Authenticating with Yahoo (make sure pop up blockers are not enabled)"
       github:
         title: "me GitHub"
-        message: "Authenticating with GitHub (make sure pop up blockers are not enabled)"
-    apple_international: "Apple/International"
-    google: "Google"
-    twitter: "Twitter"
-    emoji_one: "Emoji One"
+    emoji_set:
+      apple_international: "Apple/International"
+      google: "Google"
+      twitter: "Twitter"
+      emoji_one: "Emoji One"
+      win10: "Win10"
     shortcut_modifier_key:
       shift: 'Shift'
       ctrl: 'Ctrl'
@@ -874,7 +861,8 @@ sq:
       saved_local_draft_tip: "ruajtur lokalisht"
       similar_topics: "Tema juaj është e ngjashme me..."
       drafts_offline: "draftet offline"
-      group_mentioned: "Duke qënë se po përdorni {{group}}, jeni duke njoftuar <a href='{{group_link}}'>{{count}} anëtarë</a>."
+      group_mentioned: "Ju përmendët grupin {{group}}, që do të thotë se do të njoftoni <a href='{{group_link}}'>{{count}} persona</a> – a jeni të sigurtë?"
+      duplicate_link: "Lidhja drejt <b>{{domain}}</b> duket sikur u postua më par¨´nga <b>@{{username}}</b> në <a href='{{post_url}}'>këtë përgjigje {{ago}}</a> – a doni ta postoni sërish?"
       error:
         title_missing: "Titulli është i nevojshëm"
         title_too_short: "Titulli duhet të ketë të paktën {{min} shkronja."
@@ -892,10 +880,10 @@ sq:
       create_pm: "Mesazh"
       title: "Ose shtyp Ctrl+Enter"
       users_placeholder: "Shto një anëtar"
-      title_placeholder: "Në një fjali të shkurtër shpjegoni për çfarë bën fjalë tema?"
+      title_placeholder: "Në një fjali të shkurtër shpjegoni për çfarë bën fjalë tema"
       edit_reason_placeholder: "pse jeni duke e redaktuar?"
       show_edit_reason: "(vendosni arsyen e redaktimit)"
-      reply_placeholder: "Shkruani këtu. Mund të përdorni Markdown, BBCode, ose kod HTML për formatimin. Tërhiqni ose ngjisni imazhet. "
+      reply_placeholder: "Shkruani këtu. Mund të përdorni Markdown, BBCode, ose kod HTML për formatimin. Tërhiqni (drag and drop) ose kopjoni dhe ngjisni imazhet. "
       view_new_post: "Shikoni postimin tuaj të ri."
       saving: "Duke e ruajtur"
       saved: "U ruajt!"
@@ -917,6 +905,7 @@ sq:
       quote_text: "Citim"
       code_title: "Tekst i paraformatuar"
       code_text: "shkruani 4 hapësira (space) për të filluar tekstin e paraformatuar"
+      paste_code_text: "shkruani ose ngjisni kodin këtu"
       upload_title: "Ngarko"
       upload_description: "shkruaj përshkrimin e skedarit të ngarkuar këtu"
       olist_title: "Listë e numëruar"
@@ -943,6 +932,7 @@ sq:
     notifications:
       title: "njoftimet për përmendjet @emri, përgjigjet ndaj postime dhe temave, mesazhet, etj."
       none: "Nuk i hapëm dot njoftimet."
+      empty: "Nuk u gjet asnjë njoftim. "
       more: "shiko njoftimet e kaluara"
       total_flagged: "totali i postimeve të sinjalizuar"
       mentioned: "<i title='mentioned' class='fa fa-at'></i><p><span>{{username}}</span> {{description}}</p>"
@@ -961,8 +951,8 @@ sq:
       invited_to_topic: "<i title='invited to topic' class='fa fa-hand-o-right'></i><p><span>{{username}}</span> {{description}}</p>"
       invitee_accepted: "<i title='accepted your invitation' class='fa fa-user'></i><p><span>{{username}}</span> pranoi ftesën tuaj</p>"
       moved_post: "<i title='moved post' class='fa fa-sign-out'></i><p><span>{{username}}</span> transferoi {{description}}</p>"
-      linked: "<i title='linked post' class='fa fa-arrow-left'></i><p><span>{{username}}</span> {{description}}</p>"
-      granted_badge: "<i title='badge granted' class='fa fa-certificate'></i><p>Earned '{{description}}'</p>"
+      linked: "<i title='linked post' class='fa fa-link'></i><p><span>{{username}}</span> {{description}}</p>"
+      watching_first_post: "<i title='new topic' class='fa fa-dot-circle-o'></i><p><span>Temë e re</span> {{description}}</p>"
       group_message_summary:
         one: "<i title='messages in group inbox' class='fa fa-group'></i><p> {{count}} message in your {{group_name}} inbox</p>"
         other: "<i title='messages in group inbox' class='fa fa-group'></i><p> {{count}} mesazhe në inboxin e {{group_name}}</p>"
@@ -979,7 +969,6 @@ sq:
         invitee_accepted: "Ftesa u pranua nga"
         moved_post: "Postimi juaj u transferua nga"
         linked: "Lidhja drejt postimit tuaj"
-        granted_badge: "Badge granted"
         group_message_summary: "Mesazhet në inboxin e grupit"
       popup:
         mentioned: '{{username}} ju përmendi në "{{topic}}" - {{site_title}}'
@@ -995,61 +984,31 @@ sq:
       from_my_computer: "Nga kompiuteri im"
       from_the_web: "Nga Interneti"
       remote_tip: "lidhje tek imazhi"
-      remote_tip_with_attachments: "link to image or file {{authorized_extensions}}"
-      local_tip: "select images from your device"
-      local_tip_with_attachments: "select images or files from your device {{authorized_extensions}}"
-      hint: "(you can also drag & drop into the editor to upload them)"
-      hint_for_supported_browsers: "you can also drag and drop or paste images into the editor"
       uploading: "Duke ngarkuar"
-      select_file: "Select File"
-      image_link: "link your image will point to"
     search:
       sort_by: "Rendit sipas"
-      relevance: "Relevance"
-      latest_post: "Latest Post"
-      most_viewed: "Most Viewed"
       most_liked: "Më të pëlqyer"
-      select_all: "Select All"
-      clear_all: "Clear All"
       result_count:
         one: "1 rezultat për <span class='term'>\"{{term}}\"</span>"
         other: "{{count}} rezultate për <span class='term'>\"{{term}}\"</span>"
-      title: "search topics, posts, users, or categories"
+      title: "kërko në faqe"
       no_results: "Nuk u gjet asnjë rezultat."
-      no_more_results: "No more results found."
-      search_help: Search help
       searching: "Duke kërkuar..."
-      post_format: "#{{post_number}} by {{username}}"
       context:
         user: "Kërko postime nga @{{username}}"
+        category: "Kërkoni kategorinë #{{category}}"
         topic: "Kërko tek kjo temë"
-        private_messages: "Search messages"
-    hamburger_menu: "go to another topic list or category"
     new_item: "e re"
     go_back: 'kthehu mbrapa'
-    not_logged_in_user: 'user page with summary of current activity and preferences'
-    current_user: 'go to your user page'
     topics:
       bulk:
-        unlist_topics: "Unlist Topics"
         reset_read: "Reseto leximet"
         delete: "Fshi temat"
-        dismiss: "Dismiss"
-        dismiss_read: "Dismiss all unread"
-        dismiss_button: "Dismiss…"
-        dismiss_tooltip: "Dismiss just new posts or stop tracking topics"
-        also_dismiss_topics: "Stop tracking these topics so they never show up as unread for me again"
-        dismiss_new: "Dismiss New"
-        toggle: "toggle bulk selection of topics"
         actions: "Veprime në masë"
         change_category: "Ndrysho kategori"
         close_topics: "Mbyll temat"
         archive_topics: "Arkivo temat"
         notification_level: "Ndrysho nivelin e njoftimeve"
-        choose_new_category: "Choose the new category for the topics:"
-        selected:
-          one: "You have selected <b>1</b> topic."
-          other: "You have selected <b>{{count}}</b> topics."
         change_tags: "Ndrysho etiketat"
         choose_new_tags: "Zgjidh etiketa të reja për këto tema:"
         changed_tags: "Etiketat e temave u ndryshuan. "
@@ -1063,10 +1022,8 @@ sq:
         bookmarks: "Nuk keni ende tema të preferuara. "
         category: "Nuk ka tema në: {{category}}."
         top: "Nuk ka tema popullore."
-        search: "There are no search results."
         educate:
           new: '<p>Temat e reja shfaqen këtu.</p><p>Automatikisht, temat cilësohen si të reja dhe kanë një shënim <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">i ri</span> nëse janë krijuar gjatë dy ditëve të fundit.</p><p>Vizitoni <a href="%{userPrefsUrl}">preferencat</a> për t''a ndryshuar këtë parametër.</p>'
-          unread: '<p>Your unread topics appear here.</p><p>By default, topics are considered unread and will show unread counts <span class="badge new-posts badge-notification">1</span> if you:</p><ul><li>Created the topic</li><li>Replied to the topic</li><li>Read the topic for more than 4 minutes</li></ul><p>Or if you have explicitly set the topic to Tracked or Watched via the notification control at the bottom of each topic.</p><p>Visit your <a href="%{userPrefsUrl}">preferences</a> to change this.</p>'
       bottom:
         latest: "Nuk ka më tema të reja."
         hot: "Nuk ka më tema të nxehta."
@@ -1074,27 +1031,16 @@ sq:
         read: "Nuk ka më tema të lexuara."
         new: "Nuk ka më tema të reja."
         unread: "Nuk ka më tema të palexuara."
-        category: "Nuk ka me tema nga {{category}}."
+        category: "Nuk ka më tema nga {{category}}."
         top: "Nuk ka më tema popullore."
         bookmarks: "Nuk ka më tema të preferuara."
-        search: "There are no more search results."
     topic:
       unsubscribe:
         stop_notifications: "Tani ju do të merrni më pak njoftime për <strong>{{title}}</strong>"
-        change_notification_state: "Your current notification state is "
-      filter_to: "{{post_count}} posts in topic"
       create: 'Temë e re'
       create_long: 'Hap një temë të re'
-      private_message: 'Start a message'
-      archive_message:
-        help: 'Move message to your archive'
-        title: 'Archive'
-      move_to_inbox:
-        title: 'Move to Inbox'
-        help: 'Move message back to Inbox'
       list: 'Temat'
       new: 'temë e re'
-      unread: 'unread'
       new_topics:
         one: '1 temë e re'
         other: '{{count}} tema të reja'
@@ -1104,57 +1050,42 @@ sq:
       title: 'Tema'
       invalid_access:
         title: "Tema është private"
-        description: "Sorry, you don't have access to that topic!"
-        login_required: "You need to log in to see that topic."
-      server_error:
-        title: "Topic failed to load"
-        description: "Sorry, we couldn't load that topic, possibly due to a connection problem. Please try again. If the problem persists, let us know."
       not_found:
         title: "Tema nuk u gjet"
-        description: "Sorry, we couldn't find that topic. Perhaps it was removed by a moderator?"
-      total_unread_posts:
-        one: "you have 1 unread post in this topic"
-        other: "you have {{count}} unread posts in this topic"
-      unread_posts:
-        one: "you have 1 unread old post in this topic"
-        other: "you have {{count}} unread old posts in this topic"
       new_posts:
-        one: "there is 1 new post in this topic since you last read it"
-        other: "there are {{count}} new posts in this topic since you last read it"
+        one: "ka 1 postim të ri në këtë temë që nga hera e fundit që ishit këtu"
+        other: "ka {{count}} postime të reja në këtë temë që nga hera e fundit që ishit këtu"
       likes:
         one: "ka 1 pëlqim në këtë temë"
         other: "ka {{count}} pëlqime në këtë temë"
       back_to_list: "Kthehu tek lista e temave"
       options: "Opsionet e temës"
-      show_links: "show links within this topic"
       toggle_information: "më shumë mbi temën"
       read_more_in_category: "Dëshironi të lexoni më shumë? Shfleto temat në {{catLink}} ose {{latestLink}}."
       read_more: "Dëshironi të lexoni më shumë? {{catLink}} ose {{latestLink}}."
-      read_more_MF: "There { UNREAD, plural, =0 {} one { is <a href='/unread'>1 unread</a> } other { are <a href='/unread'># unread</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{and } false {is } other{}} <a href='/new'>1 new</a> topic} other { {BOTH, select, true{and } false {are } other{}} <a href='/new'># new</a> topics} } remaining, or {CATEGORY, select, true {browse other topics in {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: Shfleto kategoritë
       view_latest_topics: shiko temat më të fundit
       suggest_create_topic: Pse nuk hapni një temë të re?
-      jump_reply_up: jump to earlier reply
-      jump_reply_down: jump to later reply
-      deleted: "The topic has been deleted"
-      auto_close_notice: "This topic will automatically close %{timeLeft}."
-      auto_close_notice_based_on_last_post: "This topic will close %{duration} after the last reply."
-      auto_close_title: 'Auto-Close Settings'
       auto_close_save: "Ruaj"
-      auto_close_remove: "Don't Auto-Close This Topic"
-      auto_close_immediate: "The last post in the topic is already %{hours} hours old, so the topic will be closed immediately."
+      timeline:
+        back: "Kthehu mbrapa"
+        back_description: "Kthehu mbrapa tek postimi i fundit i palexuar"
+        replies: "%{current} / %{total} përgjigje"
+        replies_short: "%{current} / %{total}"
       progress:
         title: progresi i temës
         go_top: "sipër"
         go_bottom: "poshtë"
         go: "shko"
-        jump_bottom: "jump to last post"
-        jump_bottom_with_number: "jump to post %{post_number}"
+        jump_prompt: "hidhu tek tema"
+        jump_prompt_long: "Tek cila temë doni të shkoni?"
         total: totali i postimeve
         current: postimi aktual
         position: "tema %{current} nga %{total}"
       notifications:
+        title: ndryshoni sa shpesh njoftoheni mbi këtë temë
         reasons:
+          '3_10': 'Ju do të njoftoheni duke qënë se jeni duke vëzhguar etiketën e kësaj teme. '
           '3_6': 'Ju do të merrni njoftime sepse jeni duke vëzhguar këtë kategori. '
           '3_5': 'Ju do të njoftoheni duke qënë se jeni duke gjurmuar këtë temë automatikisht. '
           '3_2': 'Ju do të njoftoheni duke qënë se jeni duke vëzhguar këtë temë. '
@@ -1194,82 +1125,33 @@ sq:
           title: "Pa njoftime"
           description: "Ju nuk do të njoftoheni për asgjë mbi këtë temë, dhe tema nuk do të shfaqet në listën e temave më të fundit. "
       actions:
-        recover: "Un-Delete Topic"
         delete: "Fshi temën"
         open: "Hap temën"
         close: "Mbyll temën"
-        multi_select: "Select Posts…"
-        auto_close: "Auto Close…"
-        pin: "Pin Topic…"
-        unpin: "Un-Pin Topic…"
-        unarchive: "Unarchive Topic"
-        archive: "Archive Topic"
-        invisible: "Make Unlisted"
-        visible: "Make Listed"
-        reset_read: "Reset Read Data"
         make_public: "Bëje temën publike"
         make_private: "Bëje mesazh privat"
-      feature:
-        pin: "Pin Topic"
-        unpin: "Un-Pin Topic"
-        pin_globally: "Pin Topic Globally"
-        make_banner: "Banner Topic"
-        remove_banner: "Remove Banner Topic"
       reply:
         title: 'Përgjigju'
         help: 'shkruaj një përgjigje tek kjo temë'
-      clear_pin:
-        title: "Clear pin"
-        help: "Clear the pinned status of this topic so it no longer appears at the top of your topic list"
       share:
         title: 'Shpërndaje'
         help: 'shpërndani një lidhje mbi temën'
       flag_topic:
         title: 'Sinjalizo'
         help: 'sinjalizo privatisht këtë temë ose dërgo një njoftim privat'
-        success_message: 'You successfully flagged this topic.'
-      feature_topic:
-        title: "Feature this topic"
-        pin: "Make this topic appear at the top of the {{categoryLink}} category until"
-        confirm_pin: "You already have {{count}} pinned topics. Too many pinned topics may be a burden for new and anonymous users. Are you sure you want to pin another topic in this category?"
-        unpin: "Remove this topic from the top of the {{categoryLink}} category."
-        unpin_until: "Remove this topic from the top of the {{categoryLink}} category or wait until <strong>%{until}</strong>."
-        pin_note: "Users can unpin the topic individually for themselves."
-        pin_validation: "A date is required to pin this topic."
-        not_pinned: "There are no topics pinned in {{categoryLink}}."
-        pin_globally: "Make this topic appear at the top of all topic lists until"
-        confirm_pin_globally: "You already have {{count}} globally pinned topics. Too many pinned topics may be a burden for new and anonymous users. Are you sure you want to pin another topic globally?"
-        unpin_globally: "Remove this topic from the top of all topic lists."
-        unpin_globally_until: "Remove this topic from the top of all topic lists or wait until <strong>%{until}</strong>."
-        global_pin_note: "Users can unpin the topic individually for themselves."
-        not_pinned_globally: "There are no topics pinned globally."
-        make_banner: "Make this topic into a banner that appears at the top of all pages."
-        remove_banner: "Remove the banner that appears at the top of all pages."
-        banner_note: "Users can dismiss the banner by closing it. Only one topic can be bannered at any given time."
-        no_banner_exists: "There is no banner topic."
-        banner_exists: "There <strong class='badge badge-notification unread'>is</strong> currently a banner topic."
-      inviting: "Inviting..."
-      automatically_add_to_groups_optional: "Kjo ftesë përfshin edhe akses për këto grupe: (fakultative, vetëm për adminët)"
-      automatically_add_to_groups_required: "Kjo ftesë përfshin edhe akses për këto grupe: (<b>e detyrueshme</b>, vetëm për adminët)"
       invite_private:
         title: 'Ftoje në këtë mesazh'
         email_or_username: "Emaili ose emri i përdoruesit të të ftuarit"
-        email_or_username_placeholder: "email address or username"
         action: "Ftoni"
         success: "Anëtari u ftua të marrë pjesë në këtë mesazh. "
-        error: "Sorry, there was an error inviting that user."
         group_name: "emri grupit"
-      controls: "Topic Controls"
       invite_reply:
         title: 'Ftoni'
         username_placeholder: "emri i përdoruesit"
         action: 'Dërgoni ftesën'
         help: 'ftoni të tjerë në këtë temë nëpërmjet emailit ose njoftimeve'
-        to_forum: "We'll send a brief email allowing your friend to immediately join by clicking a link, no login required."
         sso_enabled: "Vendosni emrin e përdoruesit që dëshironi të ftoni në këtë temë"
         to_topic_blank: "Vendosni emrin e përdoruesit ose adresën email të personit që dëshironi të ftoni në këtë temë"
-        to_topic_email: "You've entered an email address. We'll email an invitation that allows your friend to immediately reply to this topic."
-        to_topic_username: "You've entered a username. We'll send a notification with a link inviting them to this topic."
         to_username: "Vendosni emrin e përdoruesit që dëshironi të ftoni. Sistemi do i dërgojë një njoftim me një lidhje drejt kësaj teme. "
         email_placeholder: 'emri@adresa.com'
         success_email: "Sistemi dërgoi një ftesë për <b>{{emailOrUsername}}</b>. Do t'ju njoftojmë kur ftesa të jetë pranuar. Shikoni edhe faqen Ftesat nën profilin tuaj të anëtarit për të parë statusin e ftesave. "
@@ -1281,51 +1163,14 @@ sq:
           one: "1 postim"
           other: "{{count}} postime"
         cancel: "Hiq filtrin"
-      split_topic:
-        title: "Move to New Topic"
-        action: "move to new topic"
-        topic_name: "New Topic Name"
-        error: "There was an error moving posts to the new topic."
-        instructions:
-          one: "You are about to create a new topic and populate it with the post you've selected."
-          other: "You are about to create a new topic and populate it with the <b>{{count}}</b> posts you've selected."
-      merge_topic:
-        title: "Move to Existing Topic"
-        action: "move to existing topic"
-        error: "There was an error moving posts into that topic."
-        instructions:
-          one: "Please choose the topic you'd like to move that post to."
-          other: "Please choose the topic you'd like to move those <b>{{count}}</b> posts to."
       change_owner:
-        title: "Change Owner of Posts"
         action: "ndrysho zotëruesin"
-        error: "There was an error changing the ownership of the posts."
-        label: "New Owner of Posts"
-        placeholder: "username of new owner"
-        instructions:
-          one: "Please choose the new owner of the post by <b>{{old_user}}</b>."
-          other: "Please choose the new owner of the {{count}} posts by <b>{{old_user}}</b>."
-        instructions_warn: "Note that any notifications about this post will not be transferred to the new user retroactively.<br>Warning: Currently, no post-dependent data is transferred over to the new user. Use with caution."
-      change_timestamp:
-        title: "Change Timestamp"
-        action: "change timestamp"
-        invalid_timestamp: "Timestamp cannot be in the future."
-        error: "There was an error changing the timestamp of the topic."
-        instructions: "Please select the new timestamp of the topic. Posts in the topic will be updated to have the same time difference."
       multi_select:
         select: 'zgjidh'
-        selected: 'selected ({{count}})'
-        select_replies: 'select +replies'
         delete: fshij të përzgjedhurat
         cancel: anulo përzgjedhjen
         select_all: përzgjidhi të gjitha
-        deselect_all: deselect all
-        description:
-          one: You have selected <b>1</b> post.
-          other: You have selected <b>{{count}}</b> posts.
     post:
-      reply: "<i class='fa fa-mail-forward'></i> {{replyAvatar}} {{usernameLink}}"
-      reply_topic: "<i class='fa fa-mail-forward'></i> {{link}}"
       quote_reply: "cito përgjigjen"
       edit: "Duke modifikuar {{link}} {{replyAvatar}} {{username}}"
       edit_reason: "Arsyeja:"
@@ -1333,13 +1178,11 @@ sq:
       last_edited_on: "redaktimi i fundit u krye më"
       reply_as_new_topic: "Përgjigju në një temë të re të ndërlidhur"
       continue_discussion: "Vazhdim i diskutimit nga tema {{postLink}}:"
-      follow_quote: "go to the quoted post"
       show_full: "Shfaq postimin e plotë"
       show_hidden: 'Shfaq materialin e fshehur.'
       deleted_by_author:
         one: "(post withdrawn by author, will be automatically deleted in %{count} hour unless flagged)"
         other: "(postim i tërhequr nga autori, do të fshihet automatikisht në %{count} orë nëse nuk sinjalizohet)"
-      expand_collapse: "expand/collapse"
       gap:
         one: "shiko 1 përgjigje të fshehur"
         other: "shiko {{count}} përgjigje të fshehura"
@@ -1361,23 +1204,13 @@ sq:
       errors:
         create: "Na vjen keq, por ndodhi një gabim gjatë hapjes së temës. Provojeni përsëri."
         edit: "Na vjen keq, ndodhi një gabim gjatë redaktimit të temës. Provojeni përsëri."
-        upload: "Sorry, there was an error uploading that file. Please try again."
         file_too_large: "Na vjen keq, skedari është shumë i madh (maksimumi i lejuar është {{max_size_kb}}kb). Mund t'a vendosni këtë skedar të madh në një faqe tjetër dhe të vendosni këtu vetëm lidhjen."
         too_many_uploads: "Na vjen keq, por duhet t'i ngarkoni skedarët një nga një."
-        too_many_dragged_and_dropped_files: "Na vjen keq, por ju lejohet të ngarkoni vetëm 10 skedarë njëkohësisht."
-        upload_not_authorized: "Sorry, the file you are trying to upload is not authorized (authorized extension: {{authorized_extensions}})."
-        image_upload_not_allowed_for_new_user: "Sorry, new users can not upload images."
-        attachment_upload_not_allowed_for_new_user: "Sorry, new users can not upload attachments."
-        attachment_download_requires_login: "Sorry, you need to be logged in to download attachments."
       abandon:
-        confirm: "Are you sure you want to abandon your post?"
         no_value: "Jo, mbaji"
         yes_value: "Po, braktise"
-      via_email: "this post arrived via email"
-      via_auto_generated_email: "ky posit u krijua nga një email automatik"
-      whisper: "this post is a private whisper for moderators"
-      wiki:
-        about: "this post is a wiki"
+      via_email: "ky postim u dërgua me email"
+      via_auto_generated_email: "ky postim u krijua nga një email automatik"
       archetypes:
         save: 'Ruaj opsionet'
       few_likes_left: "Ju falenderojmë! Ju kanë ngelur edhe disa pëlqime për sot."
@@ -1405,181 +1238,69 @@ sq:
         convert_to_moderator: "Shto ngjyrë stafi"
         revert_to_regular: "Hiq ngjyrën e stafit"
         rebake: "Rindërtoni HTML"
-        unhide: "Unhide"
         change_owner: "Ndrysho zotëruesin"
       actions:
         flag: 'Sinjalizoni'
-        defer_flags:
-          one: "Defer flag"
-          other: "Defer flags"
         it_too:
-          off_topic: "Flag it too"
-          spam: "Flag it too"
-          inappropriate: "Flag it too"
-          custom_flag: "Flag it too"
           bookmark: "Shtoje edhe tek Të preferuarat"
           like: "E pëlqejnë"
-          vote: "Vote for it too"
         undo:
-          off_topic: "Undo flag"
-          spam: "Undo flag"
-          inappropriate: "Undo flag"
           bookmark: "Hiqe nga të preferuarat"
           like: "Anulo pëlqimin"
           vote: "Rikthe votën"
         people:
-          off_topic: "flagged this as off-topic"
-          spam: "flagged this as spam"
-          inappropriate: "flagged this as inappropriate"
-          notify_moderators: "notified moderators"
-          notify_user: "sent a message"
-          bookmark: "bookmarked this"
           like: "pëlqyen këtë"
-          vote: "voted for this"
         by_you:
-          off_topic: "You flagged this as off-topic"
-          spam: "You flagged this as spam"
-          inappropriate: "You flagged this as inappropriate"
-          notify_moderators: "You flagged this for moderation"
-          notify_user: "You sent a message to this user"
-          bookmark: "You bookmarked this post"
           like: "Ju e pëlqyet këtë"
-          vote: "You voted for this post"
         by_you_and_others:
-          off_topic:
-            one: "You and 1 other flagged this as off-topic"
-            other: "You and {{count}} other people flagged this as off-topic"
-          spam:
-            one: "You and 1 other flagged this as spam"
-            other: "You and {{count}} other people flagged this as spam"
-          inappropriate:
-            one: "You and 1 other flagged this as inappropriate"
-            other: "You and {{count}} other people flagged this as inappropriate"
-          notify_moderators:
-            one: "You and 1 other flagged this for moderation"
-            other: "You and {{count}} other people flagged this for moderation"
-          notify_user:
-            one: "You and 1 other sent a message to this user"
-            other: "You and {{count}} other people sent a message to this user"
-          bookmark:
-            one: "You and 1 other bookmarked this post"
-            other: "You and {{count}} other people bookmarked this post"
           like:
             one: "Ju dhe 1 person tjetër pëlqyet këtë "
             other: "Ju dhe {{count}} të tjerë pëlqyen këtë postim"
-          vote:
-            one: "You and 1 other voted for this post"
-            other: "You and {{count}} other people voted for this post"
         by_others:
-          off_topic:
-            one: "1 person flagged this as off-topic"
-            other: "{{count}} people flagged this as off-topic"
-          spam:
-            one: "1 person flagged this as spam"
-            other: "{{count}} people flagged this as spam"
-          inappropriate:
-            one: "1 person flagged this as inappropriate"
-            other: "{{count}} people flagged this as inappropriate"
-          notify_moderators:
-            one: "1 person flagged this for moderation"
-            other: "{{count}} people flagged this for moderation"
-          notify_user:
-            one: "1 person sent a message to this user"
-            other: "{{count}} sent a message to this user"
-          bookmark:
-            one: "1 person bookmarked this post"
-            other: "{{count}} people bookmarked this post"
           like:
             one: "1 person pëlqeu këtë postim"
             other: "{{count}} vetë pëlqyen këtë postim"
-          vote:
-            one: "1 person voted for this post"
-            other: "{{count}} people voted for this post"
-      delete:
-        confirm:
-          one: "Are you sure you want to delete that post?"
-          other: "Are you sure you want to delete all those posts?"
       revisions:
         controls:
-          first: "First revision"
-          previous: "Previous revision"
-          next: "Next revision"
-          last: "Last revision"
-          hide: "Hide revision"
-          show: "Show revision"
-          revert: "Revert to this revision"
           comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> <i class='fa fa-arrows-h'></i> <strong>{{current}}</strong> / {{total}}"
         displays:
           inline:
-            title: "Show the rendered output with additions and removals inline"
             button: '<i class="fa fa-square-o"></i> HTML'
           side_by_side:
-            title: "Show the rendered output diffs side-by-side"
             button: '<i class="fa fa-columns"></i> HTML'
-          side_by_side_markdown:
-            title: "Show the raw source diffs side-by-side"
-            button: '<i class="fa fa-columns"></i> Raw'
     category:
-      can: 'can&hellip; '
       none: '(pa kategori)'
       all: 'Të gjitha kategoritë'
-      choose: 'Select a category&hellip;'
       edit: 'redakto'
       edit_long: "Redakto"
-      view: 'View Topics in Category'
       general: 'I përgjithshëm'
       settings: 'Rregullimet'
-      topic_template: "Topic Template"
+      tags: "Etiketat"
       delete: 'Fshini kategorinë'
       create: 'Kategori e re'
-      create_long: 'Create a new category'
+      create_long: 'Krijo një kategori të re'
       save: 'Ruaj kategorinë'
-      slug: 'Category Slug'
-      slug_placeholder: '(Optional) dashed-words for url'
-      creation_error: There has been an error during the creation of the category.
-      save_error: There was an error saving the category.
       name: "Emri i kategorisë"
       description: "Përshkrimi"
-      topic: "category topic"
-      logo: "Category Logo Image"
-      background_image: "Category Background Image"
-      badge_colors: "Badge colors"
       background_color: " Ngjyra e sfondit"
-      foreground_color: "Foreground color"
-      name_placeholder: "One or two words maximum"
       color_placeholder: "Çdo ngjyrë web"
-      delete_confirm: "Are you sure you want to delete this category?"
-      delete_error: "There was an error deleting the category."
       list: "Shfaq kategoritë"
-      no_description: "Please add a description for this category."
       change_in_category_topic: "Redakto përshkrimin"
-      already_used: 'This color has been used by another category'
       security: "Siguria"
-      special_warning: "Warning: This category is a pre-seeded category and the security settings cannot be edited. If you do not wish to use this category, delete it instead of repurposing it."
       images: "Imazhet"
-      auto_close_label: "Auto-close topics after:"
       auto_close_units: "orë"
-      email_in: "Custom incoming email address:"
-      email_in_allow_strangers: "Accept emails from anonymous users with no accounts"
-      email_in_disabled: "Posting new topics via email is disabled in the Site Settings. To enable posting new topics via email, "
-      email_in_disabled_click: 'enable the "email in" setting.'
-      suppress_from_homepage: "Suppress this category from the homepage."
-      allow_badges_label: "Allow badges to be awarded in this category"
       edit_permissions: "Ndryshoni autorizimet"
       add_permission: "Shtoni autorizim"
       this_year: "këtë vit"
       position: "pozicion"
-      default_position: "Default Position"
-      position_disabled: "Categories will be displayed in order of activity. To control the order of categories in lists, "
-      position_disabled_click: 'enable the "fixed category positions" setting.'
-      parent: "Parent Category"
       notifications:
         watching:
           title: "Në vëzhgim"
-          description: "Ju do të vëzhgoni automatikisht të gjitha temat e reja nën këto kategori. Do të njoftoheni për çdo postim të ri, dhe numri i përgjigjeve të reja të palexuara do të afishohet ngjitur me titullin e temës përgjatë listave të faqes. "
+        watching_first_post:
+          title: "Postimi i parë nën vëzhgim"
+          description: "Ju do të njoftoheni vetëm për postimin e parë të çdo teme nën këto kategori."
         tracking:
           title: "Në gjurmim"
-          description: "Ju do të gjurmoni automatikisht çdo temë të re nën këto kategori. Do të njoftoheni nëse dikush ju përmend @emrin apo ju përgjigjet. Numri i përgjigjeve të palexuara do të afishohet ngjitur me titullin e temës në listat e faqes. "
         regular:
           title: "Normal"
           description: "Ju do të njoftoheni nëse dikush përmend @emrin tuaj ose nëse dikush ju përgjigjet. "
@@ -1617,50 +1338,22 @@ sq:
       notify_action: "Message"
     topic_map:
       title: "Përmbledhja e Temës"
-      participants_title: "Frequent Posters"
-      links_title: "Popular Links"
-      links_shown: "show all {{totalLinks}} links..."
+      links_shown: "trego më shumë lidhje..."
       clicks:
         one: "1 klik"
         other: "%{count} klikime"
+    post_links:
+      title:
+        one: "edhe 1"
+        other: "edhe %{count}"
     topic_statuses:
       warning:
         help: "Ky është një paralajmërim zyrtar."
-      bookmarked:
-        help: "You bookmarked this topic"
-      locked:
-        help: "This topic is closed; it no longer accepts new replies"
-      archived:
-        help: "This topic is archived; it is frozen and cannot be changed"
-      locked_and_archived:
-        help: "This topic is closed and archived; it no longer accepts new replies and cannot be changed"
-      unpinned:
-        title: "Unpinned"
-        help: "This topic is unpinned for you; it will display in regular order"
-      pinned_globally:
-        title: "Pinned Globally"
-        help: "This topic is pinned globally; it will display at the top of latest and its category"
-      pinned:
-        title: "Pinned"
-        help: "This topic is pinned for you; it will display at the top of its category"
-      invisible:
-        help: "This topic is unlisted; it will not be displayed in topic lists, and can only be accessed via a direct link"
     posts: "Postime"
     posts_lowercase: "postime"
-    posts_long: "there are {{number}} posts in this topic"
-    posts_likes_MF: |
-      This topic has {count, plural, one {1 reply} other {# replies}} {ratio, select,
-        low {with a high like to post ratio}
-        med {with a very high like to post ratio}
-        high {with an extremely high like to post ratio}
-        other {}}
     original_post: "Postimi Origjinal"
     views: "Shikimet"
-    views_lowercase:
-      one: "view"
-      other: "views"
     replies: "Përgjigjet"
-    views_long: "this topic has been viewed {{number}} times"
     activity: "Aktiviteti"
     likes: "Pëlqimet"
     likes_lowercase:
@@ -1676,11 +1369,8 @@ sq:
     changed_by: "nga {{author}}"
     raw_email:
       title: "Raw Email"
-      not_available: "Not available!"
     categories_list: "Lista Kategorive"
     filters:
-      with_topics: "%{filter} topics"
-      with_category: "%{filter} %{category} topics"
       latest:
         title: "Më të fundit"
         title_with_count:
@@ -1689,7 +1379,7 @@ sq:
         help: "temat me postime të fundit"
       hot:
         title: "Të nxehta"
-        help: "a selection of the hottest topics"
+        help: "disa nga temat më të nxehta"
       read:
         title: "Lexo"
         help: "temat që keni lexuar, radhitur sipas datës më të fundit të leximit"
@@ -1718,10 +1408,10 @@ sq:
         title_with_count:
           one: "Të reja (1)"
           other: "Të reja ({{count}})"
-        help: "topics created in the last few days"
+        help: "temat e krijuar gjatë ditëve të fundit"
       posted:
         title: "Postimet e Mia"
-        help: "topics you have posted in"
+        help: "temat ku keni dërguar pêrgjigje"
       bookmarks:
         title: "Të preferuarat"
         help: "tema që keni preferuar"
@@ -1730,16 +1420,14 @@ sq:
         title_with_count:
           one: "{{categoryName}} (1)"
           other: "{{categoryName}} ({{count}})"
-        help: "latest topics in the {{categoryName}} category"
+        help: "temat e fundit në kategorinë {{categoryName}}"
       top:
         title: "Top"
-        help: "the most active topics in the last year, month, week or day"
+        help: "temat më aktive të vitit, muajit, javës apo ditës së shkuar"
         all:
           title: "Gjithë Kohës"
         yearly:
           title: "Vjetore"
-        quarterly:
-          title: "Quarterly"
         monthly:
           title: "Mujore"
         weekly:
@@ -1748,924 +1436,46 @@ sq:
           title: "Ditore"
         all_time: "Gjithë Kohës"
         this_year: "Vit"
-        this_quarter: "Quarter"
-        this_month: "Month"
         this_week: "javë"
         today: "Sot"
-        other_periods: "see top"
     browser_update: 'Fatkeqësisht, <a href="http://www.discourse.org/faq/#browser">shfletuesi juaj është shumë i vjetër për këtë faqe</a>. Ju lutemi, <a href="http://browsehappy.com">azhornoni shfletuesin</a>.'
     permission_types:
       full: "Krijo / Përgjigju / Shiko"
       create_post: "Përgjigju / Shiko"
       readonly: "Shiko"
-  admin_js:
-    type_to_filter: "shkruaj për kërkim"
-    admin:
-      title: 'Administrator'
-      moderator: 'Moderator'
-      dashboard:
-        title: "Paneli i kontrollit"
-        last_updated: "Dashboard last updated:"
-        version: "Versioni"
-        up_to_date: "Jeni të azhurnuar!"
-        critical_available: "Përditësim i rëndësishëm."
-        updates_available: "Ka përditësime."
-        please_upgrade: "Ju lutem, azhornoje!"
-        no_check_performed: "A check for updates has not been performed. Ensure sidekiq is running."
-        stale_data: "A check for updates has not been performed lately. Ensure sidekiq is running."
-        version_check_pending: "Me sa shohim keni rinovuar faqen se fundmi. Fantastike!"
-        installed_version: "Instaluar"
-        latest_version: "Të fundit"
-        problems_found: "Some problems have been found with your installation of Discourse:"
-        last_checked: "Last checked"
-        refresh_problems: "Rifresko"
-        no_problems: "Nuk u gjet asnjë gabim."
-        moderators: 'Moderatorët:'
-        admins: 'Administratorët:'
-        blocked: 'Bllokuar:'
-        suspended: 'Përjashtuar:'
-        private_messages_short: "Msgs"
-        private_messages_title: "Mesazhet"
-        mobile_title: "Mobile"
-        space_free: "{{size}} lirë"
-        uploads: "uploads"
-        backups: "backups"
-        traffic_short: "Trafik"
-        traffic: "Application web requests"
-        page_views: "API Requests"
-        page_views_short: "API Requests"
-        show_traffic_report: "Show Detailed Traffic Report"
-        reports:
-          today: "Sot"
-          yesterday: "Dje"
-          last_7_days: "7 Ditët e Fundit"
-          last_30_days: "30 Ditët e Fundit"
-          all_time: "Gjithë Kohës"
-          7_days_ago: "7 Ditë më parë"
-          30_days_ago: "30 Ditë më parë"
-          all: "Të Gjithë"
-          view_table: "tabelë"
-          view_graph: "grafik"
-          refresh_report: "Refresh Report"
-          start_date: "Start Date"
-          end_date: "End Date"
-          groups: "All groups"
-      commits:
-        latest_changes: "Latest changes: please update often!"
-        by: "nga"
-      flags:
-        title: "Flags"
-        old: "Të Vjetër"
-        active: "Aktive"
-        agree: "Pranoj"
-        agree_title: "Confirm this flag as valid and correct"
-        agree_flag_modal_title: "Prano dhe..."
-        agree_flag_hide_post: "Agree (hide post + send PM)"
-        agree_flag_hide_post_title: "Hide this post and automatically send the user a message urging them to edit it"
-        agree_flag_restore_post: "Agree (restore post)"
-        agree_flag_restore_post_title: "Rikthe këtë postim"
-        agree_flag: "Agree with flag"
-        agree_flag_title: "Dakord me sinjalizimin dhe lini postimin të pandryshuar"
-        defer_flag: "Defer"
-        defer_flag_title: "Remove this flag; it requires no action at this time."
-        delete: "Fshij"
-        delete_title: "Fshini postimin e sinjalizuar."
-        delete_post_defer_flag: "Fshini postimin dhe shtyni për më vonë sinjalizimin"
-        delete_post_defer_flag_title: "Delete post; if the first post, delete the topic"
-        delete_post_agree_flag: "Fshini postimin dhe bini dakord me sinjalizimin"
-        delete_post_agree_flag_title: "Delete post; if the first post, delete the topic"
-        delete_flag_modal_title: "Delete and..."
-        delete_spammer: "Elimino Spammer"
-        delete_spammer_title: "Remove the user and all posts and topics by this user."
-        disagree_flag_unhide_post: "Disagree (unhide post)"
-        disagree_flag_unhide_post_title: "Hiqni të gjitha sinjalizimet mbi këtë postim dhe ripublikojeni postimin"
-        disagree_flag: "Disagree"
-        disagree_flag_title: "Deny this flag as invalid or incorrect"
-        clear_topic_flags: "U krye"
-        clear_topic_flags_title: "The topic has been investigated and issues have been resolved. Click Done to remove the flags."
-        more: "(më shumë përgjigje...)"
-        dispositions:
-          agreed: "dakort"
-          disagreed: "disagreed"
-          deferred: "deferred"
-        flagged_by: "Flagged by"
-        resolved_by: "Zgjidhur nga"
-        took_action: "Took action"
-        system: "Sistemi"
-        error: "Something went wrong"
-        reply_message: "Përgjigju"
-        no_results: "Nuk ka sinjalizime."
-        topic_flagged: "This <strong>topic</strong> has been flagged."
-        visit_topic: "Visit the topic to take action"
-        was_edited: "Postimi është redaktuar pas sinjalizimit të parë"
-        previous_flags_count: "Ky postim është sinjalizuar {{count}} herë."
-        summary:
-          action_type_3:
-            one: "off-topic"
-            other: "off-topic x{{count}}"
-          action_type_4:
-            one: "inappropriate"
-            other: "inappropriate x{{count}}"
-          action_type_6:
-            one: "custom"
-            other: "custom x{{count}}"
-          action_type_7:
-            one: "custom"
-            other: "custom x{{count}}"
-          action_type_8:
-            one: "spam"
-            other: "spam x{{count}}"
-      groups:
-        primary: "Grupi Parësor"
-        no_primary: "(no primary group)"
-        title: "Grupet"
-        edit: "Redakto Grup"
-        refresh: "Rifresko"
-        new: "I Ri"
-        selector_placeholder: "enter username"
-        name_placeholder: "Group name, no spaces, same as username rule"
-        about: "Edit your group membership and names here"
-        group_members: "Anëtarët e grupit"
-        delete: "Fshij"
-        delete_confirm: "Delete this group?"
-        delete_failed: "Unable to delete group. If this is an automatic group, it cannot be destroyed."
-        delete_member_confirm: "Remove '%{username}' from the '%{group}' group?"
-        delete_owner_confirm: "Remove owner privilege for '%{username}'?"
-        name: "Emri"
-        add: "Shto"
-        add_members: "Shto Anëtar"
-        custom: "Custom"
-        bulk_complete: "The users have been added to the group."
-        bulk: "Bulk Add to Group"
-        bulk_paste: "Paste a list of usernames or emails, one per line:"
-        bulk_select: "(select a group)"
-        automatic: "Automatik"
-        automatic_membership_email_domains: "Users who register with an email domain that exactly matches one in this list will be automatically added to this group:"
-        automatic_membership_retroactive: "Apply the same email domain rule to add existing registered users"
-        default_title: "Default title for all users in this group"
-        primary_group: "Automatically set as primary group"
-        group_owners: Owners
-        add_owners: Add owners
-        incoming_email: "Custom incoming email address"
-        incoming_email_placeholder: "enter email address"
-      api:
-        generate_master: "Gjenero Master API Key"
-        none: "There are no active API keys right now."
-        user: "Anëtarë"
-        title: "API"
-        key: "API Key"
-        generate: "Gjenero"
-        regenerate: "Rigjenero"
-        revoke: "Revoko"
-        confirm_regen: "Are you sure you want to replace that API Key with a new one?"
-        confirm_revoke: "Are you sure you want to revoke that key?"
-        info_html: "Your API key will allow you to create and update topics using JSON calls."
-        all_users: "Gjithë Anëtarët"
-        note_html: "Keep this key <strong>secret</strong>, all users that have it may create arbitrary posts as any user."
-      plugins:
-        title: "Shtojca"
-        installed: "Shtojcat e Instaluara"
-        name: "Emri"
-        none_installed: "You don't have any plugins installed."
-        version: "Versioni"
-        enabled: "Aktivizuar?"
-        is_enabled: "Y"
-        not_enabled: "N"
-        change_settings: "Ndrysho Rregullimet"
-        change_settings_short: "Rregullimet"
-        howto: "How do I install plugins?"
-      backups:
-        title: "Backups"
-        menu:
-          backups: "Backups"
-          logs: "Logs"
-        none: "No backup available."
-        read_only:
-          enable:
-            title: "Enable read-only mode"
-            label: "Enable read-only"
-            confirm: "Are you sure you want to enable read-only mode?"
-          disable:
-            title: "Disable read-only mode"
-            label: "Disable read-only"
-        logs:
-          none: "No logs yet..."
-        columns:
-          filename: "Filename"
-          size: "Size"
-        upload:
-          label: "Upload"
-          title: "Upload a backup to this instance"
-          uploading: "Duke ngarkuar..."
-          success: "'{{filename}}' has successfully been uploaded."
-          error: "There has been an error while uploading '{{filename}}': {{message}}"
-        operations:
-          is_running: "An operation is currently running..."
-          failed: "The {{operation}} failed. Please check the logs."
-          cancel:
-            label: "Anulo"
-            title: "Cancel the current operation"
-            confirm: "Are you sure you want to cancel the current operation?"
-          backup:
-            label: "Backup"
-            title: "Create a backup"
-            confirm: "Do you want to start a new backup?"
-            without_uploads: "Yes (do not include files)"
-          download:
-            label: "Shkarko"
-            title: "Download the backup"
-          destroy:
-            title: "Remove the backup"
-            confirm: "Are you sure you want to destroy this backup?"
-          restore:
-            is_disabled: "Restore is disabled in the site settings."
-            label: "Rikthe"
-            title: "Restore the backup"
-            confirm: "Are you sure you want to restore this backup?"
-          rollback:
-            label: "Rollback"
-            title: "Rollback the database to previous working state"
-            confirm: "Are you sure you want to rollback the database to the previous working state?"
-      export_csv:
-        user_archive_confirm: "Are you sure you want to download your posts?"
-        success: "Export initiated, you will be notified via message when the process is complete."
-        failed: "Export failed. Please check the logs."
-        rate_limit_error: "Posts can be downloaded once per day, please try again tomorrow."
-        button_text: "Eksport"
-        button_title:
-          user: "Export full user list in CSV format."
-          staff_action: "Export full staff action log in CSV format."
-          screened_email: "Export full screened email list in CSV format."
-          screened_ip: "Export full screened IP list in CSV format."
-          screened_url: "Export full screened URL list in CSV format."
-      export_json:
-        button_text: "Eksport"
-      invite:
-        button_text: "Dërgo ftesa"
-        button_title: "Dërgo ftesa"
-      customize:
-        title: "Personalizo"
-        long_title: "Site Customizations"
-        css: "CSS"
-        header: "Header"
-        top: "Top"
-        footer: "Footer"
-        embedded_css: "Embedded CSS"
-        head_tag:
-          text: "</head>"
-          title: "HTML that will be inserted before the </head> tag"
-        body_tag:
-          text: "</body>"
-          title: "HTML that will be inserted before the </body> tag"
-        override_default: "Do not include standard style sheet"
-        enabled: "Aktivizuar?"
-        preview: "shqyrto"
-        undo_preview: "remove preview"
-        rescue_preview: "default style"
-        explain_preview: "See the site with this custom stylesheet"
-        explain_undo_preview: "Go back to the currently enabled custom stylesheet"
-        explain_rescue_preview: "See the site with the default stylesheet"
-        save: "Ruaj"
-        new: "E Re"
-        new_style: "Veshje e Re"
-        import: "Import"
-        import_title: "Select a file or paste text"
-        delete: "Fshij"
-        delete_confirm: "Delete this customization?"
-        about: "Modify CSS stylesheets and HTML headers on the site. Add a customization to start."
-        color: "Ngjyra"
-        opacity: "Opaciteti"
-        copy: "Kopjo"
-        email_templates:
-          title: "Email Templates"
-          subject: "Subject"
-          multiple_subjects: "This email template has multiple subjects."
-          body: "Body"
-          none_selected: "Zgjidhni një shabllon emaili për të filluar redaktimin. "
-          revert: "Revert Changes"
-          revert_confirm: "Are you sure you want to revert your changes?"
-        css_html:
-          title: "CSS/HTML"
-          long_title: "CSS and HTML Customizations"
-        colors:
-          title: "Ngjyrat"
-          long_title: "Color Schemes"
-          about: "Modify the colors used on the site without writing CSS. Add a scheme to start."
-          new_name: "New Color Scheme"
-          copy_name_prefix: "Kopje e"
-          delete_confirm: "Delete this color scheme?"
-          undo: "rikthe"
-          undo_title: "Undo your changes to this color since the last time it was saved."
-          revert: "rikthe"
-          revert_title: "Reset this color to Discourse's default color scheme."
-          primary:
-            name: 'parësor'
-            description: 'Most text, icons, and borders.'
-          secondary:
-            name: 'dytësor'
-            description: 'The main background color, and text color of some buttons.'
-          tertiary:
-            name: 'tertiary'
-            description: 'Links, some buttons, notifications, and accent color.'
-          quaternary:
-            name: "quaternary"
-            description: "Navigation links."
-          header_background:
-            name: "header background"
-            description: "Background color of the site's header."
-          header_primary:
-            name: "header primary"
-            description: "Text and icons in the site's header."
-          highlight:
-            name: 'highlight'
-            description: 'The background color of highlighted elements on the page, such as posts and topics.'
-          danger:
-            name: 'rrezik'
-            description: 'Highlight color for actions like deleting posts and topics.'
-          success:
-            name: 'sukses'
-            description: 'Used to indicate an action was successful.'
-          love:
-            name: 'love'
-            description: "Ngjyra e butonit të pëlqimeve."
-      email:
-        title: "Emails"
-        settings: "Rregullimet"
-        preview_digest: "Preview Digest"
-        sending_test: "Sending test Email..."
-        error: "<b>ERROR</b> - %{server_error}"
-        test_error: "There was a problem sending the test email. Please double-check your mail settings, verify that your host is not blocking mail connections, and try again."
-        sent: "Dërguar"
-        skipped: "Skipped"
-        received: "Received"
-        rejected: "Rejected"
-        sent_at: "Sent At"
-        time: "Koha"
-        user: "User"
-        email_type: "Email Type"
-        to_address: "To Address"
-        test_email_address: "email address to test"
-        send_test: "Send Test Email"
-        sent_test: "u dërgua!"
-        delivery_method: "Delivery Method"
-        preview_digest_desc: "Preview the content of the digest emails sent to inactive users."
-        refresh: "Rifresko"
-        format: "Formati"
-        html: "html"
-        text: "tekst"
-        last_seen_user: "Last Seen User:"
-        reply_key: "Reply Key"
-        skipped_reason: "Skip Reason"
-        incoming_emails:
-          from_address: "From"
-          to_addresses: "To"
-          cc_addresses: "Cc"
-          subject: "Subject"
-          error: "Error"
-          none: "Nuk u gieten emaila hyrës."
-          modal:
-            title: "Incoming Email Details"
-            error: "Error"
-            headers: "Headers"
-            subject: "Subject"
-            body: "Body"
-            rejection_message: "Rejection Mail"
-          filters:
-            from_placeholder: "from@example.com"
-            to_placeholder: "to@example.com"
-            cc_placeholder: "cc@example.com"
-            subject_placeholder: "Subjekti..."
-            error_placeholder: "Gabim"
-        logs:
-          none: "No logs found."
-          filters:
-            title: "Filter"
-            user_placeholder: "username"
-            address_placeholder: "emri@shembull.com"
-            type_placeholder: "digest, signup..."
-            reply_key_placeholder: "reply key"
-            skipped_reason_placeholder: "arsye"
-      logs:
-        title: "Logs"
-        action: "Action"
-        created_at: "Krijuar"
-        last_match_at: "Last Matched"
-        match_count: "Matches"
-        ip_address: "IP"
-        topic_id: "Topic ID"
-        post_id: "Post ID"
-        category_id: "Category ID"
-        delete: 'Fshij'
-        edit: 'Redakto'
-        save: 'Ruaj'
-        screened_actions:
-          block: "blloko"
-          do_nothing: "do nothing"
-        staff_actions:
-          title: "Staff Actions"
-          instructions: "Click usernames and actions to filter the list. Click profile pictures to go to user pages."
-          clear_filters: "Show Everything"
-          staff_user: "Staff User"
-          target_user: "Target User"
-          subject: "Subject"
-          when: "Kur"
-          context: "Context"
-          details: "Detaje"
-          previous_value: "Previous"
-          new_value: "I Ri"
-          diff: "Diff"
-          show: "Show"
-          modal_title: "Detaje"
-          no_previous: "There is no previous value."
-          deleted: "No new value. The record was deleted."
-          actions:
-            delete_user: "delete user"
-            change_trust_level: "change trust level"
-            change_username: "change username"
-            change_site_setting: "change site setting"
-            change_site_customization: "change site customization"
-            delete_site_customization: "delete site customization"
-            change_site_text: "change site text"
-            suspend_user: "suspend user"
-            unsuspend_user: "unsuspend user"
-            grant_badge: "grant badge"
-            revoke_badge: "revoke badge"
-            check_email: "check email"
-            delete_topic: "delete topic"
-            delete_post: "delete post"
-            impersonate: "impersonate"
-            anonymize_user: "anonymize user"
-            roll_up: "roll up IP blocks"
-            change_category_settings: "ndrysho rregullimet e kategorisë"
-            delete_category: "delete category"
-            create_category: "create category"
-            block_user: "block user"
-            unblock_user: "unblock user"
-            grant_admin: "grant admin"
-            revoke_admin: "revoke admin"
-            grant_moderation: "grant moderation"
-            deleted_tag: "etiketë e fshirë"
-            renamed_tag: "etiketë e riemëruar"
-        screened_emails:
-          title: "Screened Emails"
-          description: "When someone tries to create a new account, the following email addresses will be checked and the registration will be blocked, or some other action performed."
-          email: "Email Address"
-          actions:
-            allow: "Lejo"
-        screened_urls:
-          title: "Screened URLs"
-          description: "The URLs listed here were used in posts by users who have been identified as spammers."
-          url: "URL"
-          domain: "Domain"
-        screened_ips:
-          title: "Screened IPs"
-          description: 'IP addresses that are being watched. Use "Allow" to whitelist IP addresses.'
-          delete_confirm: "Are you sure you want to remove the rule for %{ip_address}?"
-          roll_up_confirm: "Are you sure you want to roll up commonly screened IP addresses into subnets?"
-          rolled_up_some_subnets: "Successfully rolled up IP ban entries to these subnets: %{subnets}."
-          rolled_up_no_subnet: "There was nothing to roll up."
-          actions:
-            block: "Blloko"
-            do_nothing: "Lejo"
-            allow_admin: "Allow Admin"
-          form:
-            label: "E Re:"
-            ip_address: "Adresa IP"
-            add: "Shto"
-            filter: "Kërko"
-          roll_up:
-            text: "Roll up"
-            title: "Creates new subnet ban entries if there are at least 'min_ban_entries_for_roll_up' entries."
-        logster:
-          title: "Error Logs"
-      impersonate:
-        title: "Personifiko"
-        help: "Use this tool to impersonate a user account for debugging purposes. You will have to log out once finished."
-        not_found: "That user can't be found."
-        invalid: "Sorry, you may not impersonate that user."
-      users:
-        title: 'Users'
-        create: 'Add Admin User'
-        last_emailed: "Last Emailed"
-        not_found: "Sorry, that username doesn't exist in our system."
-        id_not_found: "Sorry, that user id doesn't exist in our system."
-        active: "Aktivë"
-        show_emails: "Show Emails"
-        nav:
-          new: "New"
-          active: "Aktiv"
-          pending: "Pezulluar"
-          staff: 'Stafi'
-          suspended: 'Suspended'
-          blocked: 'Blocked'
-          suspect: 'Suspect'
-        approved: "Aprovuar?"
-        approved_selected:
-          one: "approve user"
-          other: "approve users ({{count}})"
-        reject_selected:
-          one: "reject user"
-          other: "reject users ({{count}})"
-        titles:
-          active: 'Active Users'
-          new: 'New Users'
-          pending: 'Users Pending Review'
-          newuser: 'Users at Trust Level 0 (New User)'
-          basic: 'Users at Trust Level 1 (Basic User)'
-          staff: "Stafi"
-          admins: 'Admin Users'
-          moderators: 'Moderators'
-          blocked: 'Blocked Users'
-          suspended: 'Suspended Users'
-          suspect: 'Suspect Users'
-        reject_successful:
-          one: "Successfully rejected 1 user."
-          other: "Successfully rejected %{count} users."
-        reject_failures:
-          one: "Failed to reject 1 user."
-          other: "Failed to reject %{count} users."
-        not_verified: "I pa verifikuar"
-        check_email:
-          title: "Reveal this user's email address"
-          text: "Shfaq"
-      user:
-        suspend_failed: "Something went wrong suspending this user {{error}}"
-        unsuspend_failed: "Something went wrong unsuspending this user {{error}}"
-        suspend_duration: "How long will the user be suspended for?"
-        suspend_duration_units: "(ditë)"
-        suspend_reason_label: "Why are you suspending? This text <b>will be visible to everyone</b> on this user's profile page, and will be shown to the user when they try to log in. Keep it short."
-        suspend_reason: "Arsye"
-        suspended_by: "Përjashtuar nga:"
-        delete_all_posts: "Fshi gjithë postimet"
-        delete_all_posts_confirm: "You are about to delete %{posts} posts and %{topics} topics. Are you sure?"
-        suspend: "Suspend"
-        unsuspend: "Unsuspend"
-        suspended: "Suspended?"
-        moderator: "Moderator?"
-        admin: "Admin?"
-        blocked: "Bllokuar?"
-        show_admin_profile: "Admin"
-        edit_title: "Redakto Titullin"
-        save_title: "Ruaj Titullin"
-        refresh_browsers: "Forco rifreskimin e shfletuesit"
-        refresh_browsers_message: "Mesazhi u dërgua tek të gjithë klientët!"
-        show_public_profile: "Shfaq Profilin Publik"
-        impersonate: 'Impersonate'
-        ip_lookup: "Shiko IP"
-        log_out: "Dilni"
-        logged_out: "User was logged out on all devices"
-        revoke_admin: 'Revoko Admin'
-        grant_admin: 'Grant Admin'
-        revoke_moderation: 'Revoke Moderation'
-        grant_moderation: 'Grant Moderation'
-        unblock: 'Unblock'
-        block: 'Blloko'
-        reputation: Reputation
-        permissions: Permissions
-        activity: Aktiviteti
-        like_count: Pëlqime të dhëna / të marra
-        last_100_days: 'në 100 ditët e fundit'
-        private_topics_count: Diskutime Private
-        posts_read_count: Posts Read
-        post_count: Posts Created
-        topics_entered: Topics Viewed
-        flags_given_count: Flags Given
-        flags_received_count: Flags Received
-        warnings_received_count: Warnings Received
-        flags_given_received_count: 'Flags Given / Received'
-        approve: 'Aprovo'
-        approved_by: "aprovuar nga"
-        approve_success: "User approved and email sent with activation instructions."
-        approve_bulk_success: "Success! All selected users have been approved and notified."
-        time_read: "Koha e Leximit"
-        anonymize: "Anonymize User"
-        anonymize_confirm: "Are you SURE you want to anonymize this account? This will change the username and email, and reset all profile information."
-        anonymize_yes: "Yes, anonymize this account"
-        anonymize_failed: "There was a problem anonymizing the account."
-        delete: "Fshij Anëtarë"
-        delete_forbidden_because_staff: "Admins and moderators can't be deleted."
-        delete_posts_forbidden_because_staff: "Can't delete all posts of admins and moderators."
-        delete_forbidden:
-          one: "Users can't be deleted if they have posts. Delete all posts before trying to delete a user. (Posts older than %{count} day old can't be deleted.)"
-          other: "Users can't be deleted if they have posts. Delete all posts before trying to delete a user. (Posts older than %{count} days old can't be deleted.)"
-        cant_delete_all_posts:
-          one: "Can't delete all posts. Some posts are older than %{count} day old. (The delete_user_max_post_age setting.)"
-          other: "Can't delete all posts. Some posts are older than %{count} days old. (The delete_user_max_post_age setting.)"
-        cant_delete_all_too_many_posts:
-          one: "Can't delete all posts because the user has more than 1 post. (delete_all_posts_max)"
-          other: "Can't delete all posts because the user has more than %{count} posts.  (delete_all_posts_max)"
-        delete_confirm: "Are you SURE you want to delete this user? This is permanent!"
-        delete_and_block: "Delete and <b>block</b> this email and IP address"
-        delete_dont_block: "Fshij vetëm"
-        deleted: "Anëtari u fshi."
-        delete_failed: "There was an error deleting that user. Make sure all posts are deleted before trying to delete the user."
-        send_activation_email: "Dërgo Emailin e Aktivizimit"
-        activation_email_sent: "An activation email has been sent."
-        send_activation_email_failed: "There was a problem sending another activation email. %{error}"
-        activate: "Aktivizoni llogarinë"
-        activate_failed: "There was a problem activating the user."
-        deactivate_account: "Deactivate Account"
-        deactivate_failed: "There was a problem deactivating the user."
-        unblock_failed: 'There was a problem unblocking the user.'
-        block_failed: 'There was a problem blocking the user.'
-        block_confirm: 'A jeni të sigurtë që doni të bllokoni këtë anëtar? Anëtari nuk do të ketë më të drejtën të krijojë postime ose tema të reja.'
-        block_accept: 'Po, blloko anëtarin'
-        deactivate_explanation: "A deactivated user must re-validate their email."
-        suspended_explanation: "A suspended user can't log in."
-        block_explanation: "A blocked user can't post or start topics."
-        trust_level_change_failed: "There was a problem changing the user's trust level."
-        suspend_modal_title: "Suspend User"
-        trust_level_2_users: "Trust Level 2 Users"
-        trust_level_3_requirements: "Trust Level 3 Requirements"
-        trust_level_locked_tip: "trust level is locked, system will not promote or demote user"
-        trust_level_unlocked_tip: "trust level is unlocked, system will may promote or demote user"
-        lock_trust_level: "Lock Trust Level"
-        unlock_trust_level: "Unlock Trust Level"
-        tl3_requirements:
-          title: "Requirements for Trust Level 3"
-          table_title: "Në %{time_period} ditët e fundit:"
-          value_heading: "Vlera"
-          requirement_heading: "Requirement"
-          visits: "Vizita"
-          days: "ditë"
-          topics_replied_to: "Topics Replied To"
-          topics_viewed: "Topics Viewed"
-          topics_viewed_all_time: "Topics Viewed (all time)"
-          posts_read: "Posts Read"
-          posts_read_all_time: "Posts Read (all time)"
-          flagged_posts: "Postimet e sinjalizuara"
-          flagged_by_users: "Users Who Flagged"
-          likes_given: "Pëlqime të dhëna"
-          likes_received: "Pëlqime të marra"
-          likes_received_days: "Pëlqime të marra: ditë unike"
-          likes_received_users: "Pëlqime të marra: anëtarë unikë"
-          qualifies: "Qualifies for trust level 3."
-          does_not_qualify: "Doesn't qualify for trust level 3."
-          will_be_promoted: "Will be promoted soon."
-          will_be_demoted: "Will be demoted soon."
-          on_grace_period: "Currently in promotion grace period, will not be demoted."
-          locked_will_not_be_promoted: "Trust level locked. Will never be promoted."
-          locked_will_not_be_demoted: "Trust level locked. Will never be demoted."
-        sso:
-          title: "Single Sign On"
-          external_id: "External ID"
-          external_username: "Emri i përdoruesit"
-          external_name: "Emri"
-          external_email: "Email"
-          external_avatar_url: "Profile Picture URL"
-      user_fields:
-        title: "User Fields"
-        help: "Add fields that your users can fill out."
-        create: "Create User Field"
-        untitled: "Pa Titull"
-        name: "Field Name"
-        type: "Field Type"
-        description: "Field Description"
-        save: "Ruaj"
-        edit: "Redakto"
-        delete: "Fshij"
-        cancel: "Anulo"
-        delete_confirm: "Are you sure you want to delete that user field?"
-        options: "Opsione"
-        required:
-          title: "Required at signup?"
-          enabled: "i nevojshëm"
-          disabled: "fakultativ"
-        editable:
-          title: "Editable after signup?"
-          enabled: "editable"
-          disabled: "not editable"
-        show_on_profile:
-          title: "Show on public profile?"
-          enabled: "shown on profile"
-          disabled: "not shown on profile"
-        show_on_user_card:
-          title: "Trego në kartën e anëtarit?"
-          enabled: "e treguar në kartën e anëtarit"
-          disabled: "nuk tregohet në kartën e anëtarit"
-        field_types:
-          text: 'Text Field'
-          confirm: 'Confirmation'
-          dropdown: "Dropdown"
-      site_text:
-        description: "Mund të adaptoni çdo tekst në këtë faqe. Filloni duke bërë një kërkim më poshtë: "
-        search: "Kërkoni për tekstin që dëshironi të redaktoni"
-        title: 'Text Content'
-        edit: 'redakto'
-        revert: "Rikthe ndryshimet"
-        revert_confirm: "A jeni të sigurtë se doni të riktheni mbrapsht ndryshimet e bëra?"
-        go_back: "Kthehu tek Kërkimi"
-        recommended: "Ju rekomandojmë të ndryshoni tekstin më poshtë sipas nevojave tuaja: "
-      site_settings:
-        show_overriden: 'Only show overridden'
-        title: 'Rregullimet'
-        reset: 'reseto'
-        none: 'asnjë'
-        no_results: "Nuk u gjet asnjë rezultat."
-        clear_filter: "Pastro"
-        add_url: "add URL"
-        add_host: "add host"
-        categories:
-          all_results: 'All'
-          required: 'Required'
-          basic: 'Basic Setup'
-          users: 'Users'
-          posting: 'Posting'
-          email: 'Email'
-          files: 'Skedarë'
-          trust: 'Niveli Besimit'
-          security: 'Siguria'
-          onebox: "Onebox"
-          seo: 'SEO'
-          spam: 'Spam'
-          rate_limits: 'Rate Limits'
-          developer: 'Developer'
-          embedding: "Embedding"
-          legal: "Legale"
-          uncategorized: 'Të tjerë'
-          backups: "Backups"
-          login: "Idetifikohu"
-          plugins: "Plugins"
-          user_preferences: "Rregullimet e Përdoruesit"
-          tags: "Etiketat"
-      badges:
-        title: Badges
-        new_badge: New Badge
-        new: I Ri
-        name: Emri
-        badge: Badge
-        display_name: Emri Shfaqur
-        description: Description
-        long_description: Përshkrim i gjatë
-        badge_type: Badge Type
-        badge_grouping: Grupi
-        badge_groupings:
-          modal_title: Badge Groupings
-        granted_by: Granted By
-        granted_at: Granted At
-        reason_help: (A link to a post or topic)
-        save: Ruaj
-        delete: Fshij
-        delete_confirm: Are you sure you want to delete this badge?
-        revoke: Revoke
-        reason: Arsye
-        expand: Expand &hellip;
-        revoke_confirm: Are you sure you want to revoke this badge?
-        edit_badges: Edit Badges
-        grant_badge: Grant Badge
-        granted_badges: Granted Badges
-        grant: Grant
-        no_user_badges: "%{name} has not been granted any badges."
-        no_badges: There are no badges that can be granted.
-        none_selected: "Select a badge to get started"
-        allow_title: Allow badge to be used as a title
-        multiple_grant: Can be granted multiple times
-        listable: Show badge on the public badges page
-        enabled: Enable badge
-        icon: Icon
-        image: Imazh
-        icon_help: "Use either a Font Awesome class or URL to an image"
-        query: Badge Query (SQL)
-        target_posts: Query targets posts
-        auto_revoke: Run revocation query daily
-        show_posts: Show post granting badge on badge page
-        trigger: Trigger
-        trigger_type:
-          none: "Update daily"
-          post_action: "When a user acts on post"
-          post_revision: "When a user edits or creates a post"
-          trust_level_change: "When a user changes trust level"
-          user_change: "When a user is edited or created"
-        preview:
-          link_text: "Preview granted badges"
-          plan_text: "Preview with query plan"
-          modal_title: "Badge Query Preview"
-          sql_error_header: "There was an error with the query."
-          error_help: "See the following links for help with badge queries."
-          bad_count_warning:
-            header: "KUJDES!"
-            text: "There are missing grant samples. This happens when the badge query returns user IDs or post IDs that do not exist. This may cause unexpected results later on - please double-check your query."
-          sample: "Shëmbull:"
-          grant:
-            with: <span class="username">%{username}</span>
-            with_post: <span class="username">%{username}</span> for post in %{link}
-            with_post_time: <span class="username">%{username}</span> for post in %{link} at <span class="time">%{time}</span>
-            with_time: <span class="username">%{username}</span> at <span class="time">%{time}</span>
-      emoji:
-        title: "Emoji"
-        help: "Add new emoji that will be available to everyone. (PROTIP: drag & drop multiple files at once)"
-        add: "Add New Emoji"
-        name: "Emri"
-        image: "Imazh"
-        delete_confirm: "Are you sure you want to delete the :%{name}: emoji?"
-      embedding:
-        edit: "redakto"
-      permalink:
-        title: "Permalinks"
-        url: "URL"
-        topic_id: "Topic ID"
-        topic_title: "Temë"
-        post_id: "Post ID"
-        post_title: "Postim"
-        category_id: "Category ID"
-        category_title: "Kategoria"
-        external_url: "External URL"
-        delete_confirm: Are you sure you want to delete this permalink?
-        form:
-          label: "New:"
-          add: "Add"
-          filter: "Search (URL or External URL)"
     lightbox:
       download: "shkarko"
     search_help:
-      title: 'Ndihma'
+      title: 'Kërko faqet e ndihmës'
     keyboard_shortcuts_help:
-      title: 'Shkurtimet e Tastierës '
+      title: 'Shkurtimet e tastierës '
       jump_to:
         title: 'Kalo tek'
-        home: '<b>g</b>, <b>h</b> Home'
-        latest: '<b>g</b>, <b>l</b> Latest'
-        new: '<b>g</b>, <b>n</b> New'
-        unread: '<b>g</b>, <b>u</b> Unread'
+        home: '<b>g</b>, <b>h</b> Faqja e parë'
+        latest: '<b>g</b>, <b>l</b> Më të fundit'
+        new: '<b>g</b>, <b>n</b> Të rejat'
+        unread: '<b>g</b>, <b>u</b> Të palexuarat'
         categories: '<b>g</b>, <b>c</b> Kategoritë'
-        top: '<b>g</b>, <b>t</b> Top'
-        bookmarks: '<b>g</b>, <b>b</b> Bookmarks'
+        top: '<b>g</b>, <b>t</b> Populloret'
+        bookmarks: '<b>g</b>, <b>b</b> Të preferuarat'
         profile: '<b>g</b>, <b>p</b> Profili'
         messages: '<b>g</b>, <b>m</b> Mesazhet'
       navigation:
         title: 'Shfletimi'
         jump: '<b>#</b> Shko tek postimi #'
         back: '<b>u</b> Mbrapa'
-        up_down: '<b>k</b>/<b>j</b> Move selection &uarr; &darr;'
-        open: '<b>o</b> or <b>Enter</b> Open selected topic'
-        next_prev: '<b>shift</b>+<b>j</b>/<b>shift</b>+<b>k</b> Next/previous section'
       application:
-        title: 'Aplikacion'
-        create: '<b>c</b> Filloni një diskutim të ri'
-        notifications: '<b>n</b> Hap njoftimet'
-        hamburger_menu: '<b>=</b> Hap menunë hamburger'
-        user_profile_menu: '<b>p</b> Open user menu'
-        show_incoming_updated_topics: '<b>.</b> Show updated topics'
-        search: '<b>/</b> Kërko'
-        help: '<b>?</b> Open keyboard help'
-        dismiss_new_posts: '<b>x</b>, <b>r</b> Dismiss New/Posts'
-        dismiss_topics: '<b>x</b>, <b>t</b> Dismiss Topics'
-        log_out: '<b>shift</b>+<b>z</b> <b>shift</b>+<b>z</b> Shkëputu'
-      actions:
-        title: 'Actions'
-        bookmark_topic: '<b>f</b> Toggle bookmark topic'
-        pin_unpin_topic: '<b>shift</b>+<b>p</b> Pin/Unpin topic'
-        share_topic: '<b>shift</b>+<b>s</b> Share topic'
-        share_post: '<b>s</b> Share post'
-        reply_as_new_topic: '<b>t</b> Përgjigju në një temë të re të ndërlidhur'
-        reply_topic: '<b>shift</b>+<b>r</b> Reply to topic'
-        reply_post: '<b>r</b> Reply to post'
-        quote_post: '<b>q</b> Quote post'
-        like: '<b>l</b> Like post'
-        flag: '<b>!</b> Sinjalizo postimin'
-        bookmark: '<b>b</b> Bookmark post'
-        edit: '<b>e</b> Edit post'
-        delete: '<b>d</b> Delete post'
-        mark_muted: '<b>m</b>, <b>m</b> Mute topic'
-        mark_regular: '<b>m</b>, <b>r</b> Regular (default) topic'
-        mark_tracking: '<b>m</b>, <b>t</b> Track topic'
-        mark_watching: '<b>m</b>, <b>w</b> Watch topic'
+        create: '<b>c</b> Hap një temë të re'
     badges:
-      title: Badges
-      badge_count:
-        one: "1 Badge"
-        other: "%{count} Badges"
-      more_badges:
-        one: "+1 More"
-        other: "+%{count} More"
-      granted:
-        one: "1 granted"
-        other: "%{count} granted"
-      select_badge_for_title: Select a badge to use as your title
-      none: "<asnjë>"
       badge_grouping:
-        getting_started:
-          name: Getting Started
-        community:
-          name: Komuniteti
         trust_level:
           name: Niveli i besimit
         other:
-          name: Të tjerë
-        posting:
-          name: Posting
-    google_search: |
-      <h3>Kerko me Google</h3>
-      <p>
-        <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:' + window.location.host + ' ' + document.getElementById('user-query').value; return true;">
-          <input type="text" id='user-query' value="">
-          <input type='hidden' id='google-query' name="q">
-          <button class="btn btn-primary">Google</button>
-        </form>
-      </p>
+          name: Tjetër
     tagging:
       all_tags: "Të gjitha etiketat"
-      selector_all_tags: "të gjithat etiketat"
+      selector_all_tags: "të gjitha etiketat"
+      selector_no_tags: "asnjë etiketë"
       changed: "etiketat e ndryshuara:"
       tags: "Etiketat"
       choose_for_topic: "zgjidhni etiketat fakultative për këtë temë"
@@ -2674,29 +1484,46 @@ sq:
       rename_tag: "Riemëro etiketën"
       rename_instructions: "Zgjidhni një emër të ri për këtë etiketë"
       sort_by: "Rendit sipas:"
+      sort_by_count: "numri"
       sort_by_name: "emër"
       filters:
         without_category: "%{filter} %{tag} temat"
         with_category: "%{filter} %{tag} temat në %{category}"
+        untagged_without_category: "%{filter} temat pa etiketë"
+        untagged_with_category: "%{filter} temat pa etiketë në %{category}"
       notifications:
         watching:
           title: "Në vëzhgim"
-          description: "Ju do të vëzhgoni automatikisht të gjitha temat e reja nën këtë etiketë. Do të njoftoheni për çdo postim e temë të re, dhe numri i postimeve të reja të palexuara do të afishohet ngjitur me titullin e temës përgjatë listave të faqes. "
+          description: "Ju do të vëzhgoni automatikisht të gjitha temat nën këtë etiketë. Do të njoftoheni për çdo postim e temë të re, dhe numri i postimeve të reja të palexuara do të afishohet ngjitur me titullin e temës përgjatë listave të faqes. "
+        watching_first_post:
+          title: "Postimi i parë nën vëzhgim"
+          description: "Ju do të njoftoheni vetëm për postimin e parë të çdo teme nën këtë etiketë."
         tracking:
           title: "Në gjurmim"
-          description: "Ju do të gjurmoni automatikisht çdo temë të re nën këtë etiketë. Numri i përgjigjeve të palexuara do të afishohet ngjitur me titullin e temës në listat e faqes. "
+          description: "Ju do të gjurmoni automatikisht të gjitha temat nën këtë etiketë. Numri i përgjigjeve të palexuara do të afishohet ngjitur me titullin e temës në listat e faqes. "
         regular:
           title: "Normal"
           description: "Ju do të njoftoheni nëse dikush përmend @emrin tuaj ose i përgjigjet postimeve tuaja. "
         muted:
-          title: "Pa njoftime"
-          description: "Ju nuk do të njoftoheni për asgjë nga temat e reja të kësaj etikete, dhe këto tema nuk do të afishohen në faqen \"Të palexuara\" për ju. "
+          title: "Të heshtur"
+      groups:
+        title: "Grupe etiketash"
+        about: "Organizoni etiketat nëpër grupe për të thjeshtuar mirëmbajtjen."
+        new: "Grup i ri"
+        tags_label: "Etiketat në këtë grup:"
+        parent_tag_label: "Etiketa prind:"
+        parent_tag_placeholder: "Fakultative"
+        parent_tag_description: "Etiketat nga ky grup mund të përdoren vetëm në etiketa prind është prezente."
+        one_per_topic_label: "Vetëm 1 etiketë për temë nga ky grup"
+        new_name: "Grup i ri etiketash"
+        save: "Ruaj"
+        confirm_delete: "Jeni të sigurtë që doni të fshini këtë grup etiketash?"
       topics:
         none:
           unread: "Nuk keni tema të palexuara."
-          new: "Nuk keni tema të palexuara."
+          new: "Nuk ka tema të reja."
           read: "Nuk keni lexuar asnjë temë deri tani."
-          posted: "Nuk keni shkruar tek asnjë temë deri tani."
+          posted: "Nuk keni shkruajtur tek asnjë temë deri tani."
           latest: "Nuk ka tema të reja."
           hot: "Nuk ka tema të nxehta."
           bookmarks: "Nuk keni ende tema të preferuara. "
@@ -2712,3 +1539,384 @@ sq:
           top: "Nuk ka më tema popullore."
           bookmarks: "Nuk ka më tema të preferuara."
           search: "Kërkimi nuk ka më rezultate."
+    invite:
+      custom_message: "Personalizojeni ftesën paksa duke shkruar një"
+      custom_message_link: "mesazh të veçantë"
+      custom_message_placeholder: "Vendosni mesazhin"
+      custom_message_template_forum: "Hej, hajde bashkoju këtij forumi!"
+      custom_message_template_topic: "Hej, besoj se do të të pelqejë kjo temë!"
+  admin_js:
+    type_to_filter: "shkruaj për kërkim"
+    admin:
+      title: 'Administrator'
+      moderator: 'Moderator'
+      dashboard:
+        title: "Paneli i kontrollit"
+        version: "Versioni"
+        up_to_date: "Jeni të azhurnuar!"
+        critical_available: "Përditësim i rëndësishëm."
+        updates_available: "Ka përditësime."
+        please_upgrade: "Ju lutem, azhornoje!"
+        version_check_pending: "Me sa shohim keni rinovuar faqen se fundmi. Fantastike!"
+        installed_version: "Instaluar"
+        latest_version: "Të fundit"
+        refresh_problems: "Rifresko"
+        no_problems: "Nuk u gjet asnjë gabim."
+        moderators: 'Moderatorët:'
+        admins: 'Administratorët:'
+        blocked: 'Bllokuar:'
+        suspended: 'Përjashtuar:'
+        private_messages_short: "Msgs"
+        private_messages_title: "Mesazhet"
+        mobile_title: "Mobile"
+        space_free: "{{size}} lirë"
+        uploads: "ngarkime"
+        traffic_short: "Trafik"
+        reports:
+          today: "Sot"
+          yesterday: "Dje"
+          last_7_days: "7 Ditët e Fundit"
+          last_30_days: "30 Ditët e Fundit"
+          all_time: "Gjithë Kohës"
+          7_days_ago: "7 Ditë më parë"
+          30_days_ago: "30 Ditë më parë"
+          all: "Të Gjithë"
+          view_table: "tabelë"
+          view_graph: "grafik"
+      commits:
+        by: "nga"
+      flags:
+        old: "Të Vjetër"
+        active: "Aktive"
+        agree: "Pranoj"
+        agree_flag_modal_title: "Prano dhe..."
+        agree_flag_restore_post_title: "Rikthe këtë postim"
+        agree_flag_title: "Dakord me sinjalizimin dhe lini postimin të pandryshuar"
+        delete: "Fshij"
+        delete_title: "Fshini postimin e sinjalizuar."
+        delete_post_defer_flag: "Fshini postimin dhe shtyni për më vonë sinjalizimin"
+        delete_post_agree_flag: "Fshini postimin dhe bini dakord me sinjalizimin"
+        delete_spammer: "Elimino Spammer"
+        disagree_flag_unhide_post_title: "Hiqni të gjitha sinjalizimet mbi këtë postim dhe ripublikojeni postimin"
+        clear_topic_flags: "U krye"
+        more: "(më shumë përgjigje...)"
+        dispositions:
+          agreed: "dakort"
+        resolved_by: "Zgjidhur nga"
+        system: "Sistemi"
+        reply_message: "Përgjigju"
+        no_results: "Nuk ka sinjalizime."
+        was_edited: "Postimi është redaktuar pas sinjalizimit të parë"
+        previous_flags_count: "Ky postim është sinjalizuar {{count}} herë."
+        summary:
+          action_type_8:
+            one: "spam"
+            other: "spam x{{count}}"
+      groups:
+        primary: "Grupi Parësor"
+        title: "Grupet"
+        edit: "Redakto Grup"
+        refresh: "Rifresko"
+        new: "I Ri"
+        group_members: "Anëtarët e grupit"
+        delete: "Fshij"
+        name: "Emri"
+        add: "Shto"
+        add_members: "Shto Anëtar"
+        automatic: "Automatik"
+      api:
+        generate_master: "Gjenero Master API Key"
+        user: "Anëtarë"
+        title: "API"
+        key: "API Key"
+        generate: "Gjenero"
+        regenerate: "Rigjenero"
+        revoke: "Revoko"
+        all_users: "Gjithë Anëtarët"
+      plugins:
+        title: "Shtojca"
+        installed: "Shtojcat e Instaluara"
+        name: "Emri"
+        version: "Versioni"
+        enabled: "Aktivizuar?"
+        is_enabled: "Y"
+        not_enabled: "N"
+        change_settings: "Ndrysho Rregullimet"
+        change_settings_short: "Rregullimet"
+      backups:
+        title: "Backups"
+        menu:
+          backups: "Backups"
+          logs: "Logs"
+        columns:
+          filename: "Filename"
+        upload:
+          uploading: "Duke ngarkuar..."
+        operations:
+          cancel:
+            label: "Anulo"
+          backup:
+            label: "Backup"
+            confirm: "Do you want to start a new backup?"
+          download:
+            label: "Shkarko"
+          restore:
+            label: "Rikthe"
+      export_csv:
+        failed: "Eksporti dështoi. Kontrolloni log-et. "
+        button_text: "Eksporto"
+        button_title:
+          user: "Eksporto listën e plotë të anëtarëve në CSV. "
+          staff_action: "Eksporto logun e veprimeve të stafit në format CSV. "
+          screened_email: "Eksporto listën e plotë të emailave në format CSV. "
+          screened_ip: "Eksporto listën e plotë të adresave IP në format CSV. "
+          screened_url: "Eksporto listën e plotë të URLve në format CSV. "
+      export_json:
+        button_text: "Eksporto"
+      invite:
+        button_text: "Dërgo ftesa"
+        button_title: "Dërgo ftesa"
+      customize:
+        title: "Personalizo"
+        css: "CSS"
+        head_tag:
+          text: "</head>"
+        body_tag:
+          text: "</body>"
+        enabled: "Aktivizuar?"
+        save: "Ruaj"
+        new: "E Re"
+        new_style: "Veshje e Re"
+        delete: "Fshij"
+        color: "Ngjyra"
+        opacity: "Opaciteti"
+        copy: "Kopjo"
+        email_templates:
+          none_selected: "Zgjidhni një shabllon emaili për të filluar redaktimin. "
+        css_html:
+          title: "CSS/HTML"
+        colors:
+          title: "Ngjyrat"
+          copy_name_prefix: "Kopje e"
+          undo: "rikthe"
+          revert: "rikthe"
+          primary:
+            name: 'parësor'
+          secondary:
+            name: 'dytësor'
+          danger:
+            name: 'rrezik'
+          success:
+            name: 'sukses'
+          love:
+            description: "Ngjyra e butonit të pëlqimeve."
+      email:
+        settings: "Rregullimet"
+        error: "<b>ERROR</b> - %{server_error}"
+        sent: "Dërguar"
+        time: "Koha"
+        sent_test: "u dërgua!"
+        refresh: "Rifresko"
+        format: "Formati"
+        html: "html"
+        text: "tekst"
+        incoming_emails:
+          none: "Nuk u gjetën emaila hyrës."
+          filters:
+            from_placeholder: "from@example.com"
+            to_placeholder: "to@example.com"
+            cc_placeholder: "cc@example.com"
+            subject_placeholder: "Subjekti..."
+            error_placeholder: "Gabim"
+        logs:
+          filters:
+            address_placeholder: "emri@shembull.com"
+            skipped_reason_placeholder: "arsye"
+      logs:
+        created_at: "Krijuar"
+        ip_address: "IP"
+        delete: 'Fshij'
+        edit: 'Redakto'
+        save: 'Ruaj'
+        screened_actions:
+          block: "blloko"
+        staff_actions:
+          when: "Kur"
+          details: "Detaje"
+          new_value: "I Ri"
+          modal_title: "Detaje"
+          actions:
+            change_trust_level: "ndrysho nivelin e besimit"
+            deleted_tag: "etiketë e fshirë"
+            renamed_tag: "etiketë e riemëruar"
+        screened_emails:
+          actions:
+            allow: "Lejo"
+        screened_urls:
+          url: "URL"
+          domain: "Domain"
+        screened_ips:
+          actions:
+            block: "Blloko"
+            do_nothing: "Lejo"
+          form:
+            label: "E Re:"
+            ip_address: "Adresa IP"
+            add: "Shto"
+            filter: "Kërko"
+        logster:
+          title: "Error Logs"
+      impersonate:
+        title: "Personifiko"
+      users:
+        active: "Aktivë"
+        show_emails: "Trego adresat email"
+        nav:
+          new: "E Re"
+          active: "Aktiv"
+          pending: "Pezulluar"
+          staff: 'Stafi'
+        approved: "Aprovuar?"
+        titles:
+          active: 'Anëtarët aktivë'
+          new: 'Anëtarët e rinj'
+          newuser: 'Anëtarët me nivel besimi 0 (anëtar i ri)'
+          basic: 'Anëtarët me nivel besimi 1 (anëtar bazë)'
+          member: 'Anëtarët me nivel besimi 2 (member)'
+          regular: 'Anëtarët me nivel besimi 3 (të rregullt)'
+          leader: 'Anëtarët me nivel besimi 4 (lidera)'
+          staff: "Stafi"
+          admins: 'Administratorë'
+          moderators: 'Moderatorë'
+          blocked: 'Anëtarët e bllokuar'
+          suspended: 'Anëtarët e pezulluar'
+          suspect: 'Anëtarët e dyshimtë'
+        not_verified: "I pa verifikuar"
+        check_email:
+          text: "Shfaq"
+      user:
+        suspend_duration_units: "(ditë)"
+        suspend_reason: "Arsye"
+        suspended_by: "Përjashtuar nga:"
+        delete_all_posts: "Fshi gjithë postimet"
+        admin: "Admin?"
+        blocked: "Bllokuar?"
+        show_admin_profile: "Admin"
+        edit_title: "Redakto Titullin"
+        save_title: "Ruaj Titullin"
+        refresh_browsers: "Forco rifreskimin e shfletuesit"
+        refresh_browsers_message: "Mesazhi u dërgua tek të gjithë klientët!"
+        show_public_profile: "Shfaq Profilin Publik"
+        ip_lookup: "Shiko IP"
+        log_out: "Dilni"
+        revoke_admin: 'Revoko Admin'
+        block: 'Blloko'
+        activity: Aktiviteti
+        like_count: Pëlqime të dhëna / të marra
+        last_100_days: 'në 100 ditët e fundit'
+        private_topics_count: Diskutime Private
+        approve: 'Aprovo'
+        approved_by: "aprovuar nga"
+        time_read: "Koha e Leximit"
+        delete: "Fshij Anëtarë"
+        delete_dont_block: "Fshij vetëm"
+        deleted: "Anëtari u fshi."
+        send_activation_email: "Dërgo Emailin e Aktivizimit"
+        activate: "Aktivizoni llogarinë"
+        block_confirm: 'A jeni të sigurtë që doni të bllokoni këtë anëtar? Anëtari nuk do të ketë më të drejtën të krijojë postime ose tema të reja.'
+        block_accept: 'Po, blloko anëtarin'
+        trust_level_change_failed: "Nuk e ndryshuam dot nivelin e këtij anëtari. "
+        tl3_requirements:
+          table_title: "Në %{time_period} ditët e fundit:"
+          value_heading: "Vlera"
+          visits: "Vizita"
+          days: "ditë"
+          flagged_posts: "Postimet e sinjalizuara"
+          likes_given: "Pëlqime të dhëna"
+          likes_received: "Pëlqime të marra"
+          likes_received_days: "Pëlqime të marra: ditë unike"
+          likes_received_users: "Pëlqime të marra: anëtarë unikë"
+        sso:
+          title: "Single Sign On"
+          external_username: "Emri i përdoruesit"
+          external_name: "Emri"
+          external_email: "Email"
+      user_fields:
+        untitled: "Pa Titull"
+        save: "Ruaj"
+        edit: "Redakto"
+        delete: "Fshij"
+        cancel: "Anulo"
+        options: "Opsione"
+        required:
+          enabled: "i nevojshëm"
+          disabled: "fakultativ"
+        show_on_user_card:
+          title: "Trego në kartën e anëtarit?"
+          enabled: "e treguar në kartën e anëtarit"
+          disabled: "nuk tregohet në kartën e anëtarit"
+      site_text:
+        description: "Mund të adaptoni çdo tekst në këtë faqe. Filloni duke bërë një kërkim më poshtë: "
+        search: "Kërkoni për tekstin që dëshironi të redaktoni"
+        edit: 'redakto'
+        revert: "Rikthe ndryshimet"
+        revert_confirm: "A jeni të sigurtë se doni të riktheni mbrapsht ndryshimet e bëra?"
+        go_back: "Kthehu tek kërkimi"
+        recommended: "Ju rekomandojmë të ndryshoni tekstin më poshtë sipas nevojave tuaja: "
+      site_settings:
+        title: 'Rregullimet'
+        reset: 'reseto'
+        none: 'asnjë'
+        no_results: "Nuk u gjet asnjë rezultat."
+        clear_filter: "Pastro"
+        categories:
+          email: 'Email'
+          files: 'Skedarë'
+          trust: 'Nivelet e besimit'
+          security: 'Siguria'
+          onebox: "Onebox"
+          seo: 'SEO'
+          spam: 'Spam'
+          developer: 'Developer'
+          embedding: "Embedding"
+          legal: "Legale"
+          uncategorized: 'Të tjerë'
+          backups: "Backups"
+          login: "Idetifikohu"
+          user_preferences: "Rregullimet e përdoruesit"
+          tags: "Etiketat"
+      badges:
+        new: I Ri
+        name: Emri
+        display_name: Emri Shfaqur
+        long_description: Përshkrim i gjatë
+        badge_grouping: Grupi
+        save: Ruaj
+        delete: Fshij
+        reason: Arsye
+        image: Imazh
+        trigger_type:
+          trust_level_change: "Kur një përdorues ndryshon nivelin e besimit"
+        preview:
+          bad_count_warning:
+            header: "KUJDES!"
+          sample: "Shëmbull:"
+          grant:
+            with: <span class="username">%{username}</span>
+      emoji:
+        title: "Emoji"
+        name: "Emri"
+        image: "Imazh"
+      embedding:
+        edit: "redakto"
+      permalink:
+        url: "URL"
+        topic_id: "ID e temës"
+        topic_title: "Temë"
+        post_id: "ID e postimit"
+        post_title: "Postim"
+        category_id: "ID e kategorisë"
+        category_title: "Kategoria"
+        external_url: "URL e jashtme"
+        form:
+          label: "E Re:"

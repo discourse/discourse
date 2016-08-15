@@ -49,7 +49,7 @@ class CategoryUser < ActiveRecord::Base
   def self.set_notification_level_for_category(user, level, category_id)
     record = CategoryUser.where(user: user, category_id: category_id).first
 
-    return if record && record.notification_level = level
+    return if record && record.notification_level == level
 
     if record.present?
       record.notification_level = level

@@ -146,39 +146,39 @@ const User = RestModel.extend({
 
   save() {
     const data = this.getProperties(
-            'bio_raw',
-            'website',
-            'location',
-            'name',
-            'locale',
-            'custom_fields',
-            'user_fields',
-            'muted_usernames',
-            'profile_background',
-            'card_background',
-            'muted_tags',
-            'tracked_tags',
-            'watched_tags'
-          );
+      'bio_raw',
+      'website',
+      'location',
+      'name',
+      'locale',
+      'custom_fields',
+      'user_fields',
+      'muted_usernames',
+      'profile_background',
+      'card_background',
+      'muted_tags',
+      'tracked_tags',
+      'watched_tags',
+      'watching_first_post_tags');
 
-    [       'email_always',
-            'mailing_list_mode',
-            'mailing_list_mode_frequency',
-            'external_links_in_new_tab',
-            'email_digests',
-            'email_direct',
-            'email_in_reply_to',
-            'email_private_messages',
-            'email_previous_replies',
-            'dynamic_favicon',
-            'enable_quoting',
-            'disable_jump_reply',
-            'automatically_unpin_topics',
-            'digest_after_minutes',
-            'new_topic_duration_minutes',
-            'auto_track_topics_after_msecs',
-            'like_notification_frequency',
-            'include_tl0_in_digests'
+    ['email_always',
+     'mailing_list_mode',
+     'mailing_list_mode_frequency',
+     'external_links_in_new_tab',
+     'email_digests',
+     'email_direct',
+     'email_in_reply_to',
+     'email_private_messages',
+     'email_previous_replies',
+     'dynamic_favicon',
+     'enable_quoting',
+     'disable_jump_reply',
+     'automatically_unpin_topics',
+     'digest_after_minutes',
+     'new_topic_duration_minutes',
+     'auto_track_topics_after_msecs',
+     'like_notification_frequency',
+     'include_tl0_in_digests'
     ].forEach(s => {
       data[s] = this.get(`user_option.${s}`);
     });
@@ -245,7 +245,7 @@ const User = RestModel.extend({
 
   @computed("groups.[]")
   displayGroups() {
-    const groups = this.get('groups');
+    const groups = this.get('groups') || [];
     const filtered = groups.filter(group => {
       return !group.automatic || group.name === "moderators";
     });
@@ -394,7 +394,6 @@ const User = RestModel.extend({
 
   checkEmail() {
     return ajax(`/users/${this.get("username_lower")}/emails.json`, {
-      type: "PUT",
       data: { context: window.location.pathname }
     }).then(result => {
       if (result) {

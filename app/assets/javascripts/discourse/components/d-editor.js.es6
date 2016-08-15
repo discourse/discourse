@@ -21,6 +21,11 @@ function getHead(head, prev) {
   }
 }
 
+function getButtonLabel(labelKey, defaultLabel) {
+  // use the Font Awesome icon if the label matches the default
+  return I18n.t(labelKey) === defaultLabel ? null : labelKey;
+}
+
 const OP = {
   NONE: 0,
   REMOVED: 1,
@@ -44,6 +49,8 @@ class Toolbar {
       trimLeading: true,
       id: 'bold',
       group: 'fontStyles',
+      icon: 'bold',
+      label: getButtonLabel('composer.bold_label', 'B'),
       shortcut: 'B',
       perform: e => e.applySurround('**', '**', 'bold_text')
     });
@@ -52,6 +59,8 @@ class Toolbar {
       trimLeading: true,
       id: 'italic',
       group: 'fontStyles',
+      icon: 'italic',
+      label: getButtonLabel('composer.italic_label', 'I'),
       shortcut: 'I',
       perform: e => e.applySurround('_', '_', 'italic_text')
     });
@@ -89,7 +98,8 @@ class Toolbar {
     this.addButton({
       id: 'heading',
       group: 'extras',
-      icon: 'font',
+      icon: 'header',
+      label: getButtonLabel('composer.heading_label', 'H'),
       shortcut: 'Alt+1',
       perform: e => e.applyList('## ', 'heading_text')
     });
@@ -119,7 +129,8 @@ class Toolbar {
     const createdButton = {
       id: button.id,
       className: button.className || button.id,
-      icon: button.icon || button.id,
+      label: button.label,
+      icon: button.label ? null : button.icon || button.id,
       action: button.action || 'toolbarButton',
       perform: button.perform || Ember.K,
       trimLeading: button.trimLeading
@@ -211,13 +222,14 @@ export default Ember.Component.extend({
 
     // disable clicking on links in the preview
     this.$('.d-editor-preview').on('click.preview', e => {
-      e.preventDefault();
-      return false;
+      if ($(e.target).is("a")) {
+        e.preventDefault();
+        return false;
+      }
     });
 
-    this.appEvents.on('composer:insert-text', text => {
-      this._addText(this._getSelected(), text);
-    });
+    this.appEvents.on('composer:insert-text', text => this._addText(this._getSelected(), text));
+    this.appEvents.on('composer:replace-text', (oldVal, newVal) => this._replaceText(oldVal, newVal));
 
     this._mouseTrap = mouseTrap;
   },
@@ -225,6 +237,7 @@ export default Ember.Component.extend({
   @on('willDestroyElement')
   _shutDown() {
     this.appEvents.off('composer:insert-text');
+    this.appEvents.off('composer:replace-text');
 
     const mouseTrap = this._mouseTrap;
     Object.keys(this.get('toolbar.shortcuts')).forEach(sc => mouseTrap.unbind(sc));
@@ -472,6 +485,15 @@ export default Ember.Component.extend({
 
       this.set('value', `${preLines}${number}${post}`);
       this._selectText(preLines.length, number.length);
+    }
+  },
+
+  _replaceText(oldVal, newVal) {
+    const val = this.get('value');
+    const loc = val.indexOf(oldVal);
+    if (loc !== -1) {
+      this.set('value', val.replace(oldVal, newVal));
+      this._selectText(loc + newVal.length, 0);
     }
   },
 

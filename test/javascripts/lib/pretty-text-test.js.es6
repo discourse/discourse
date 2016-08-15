@@ -551,6 +551,7 @@ test('basic bbcode', function() {
 
 test('urls', function() {
   cookedPara("[url]not a url[/url]", "not a url", "supports [url] that isn't a url");
+  cookedPara("[url]abc.com[/url]", "abc.com", "no error when a url has no protocol and begins with a");
   cookedPara("[url]http://bettercallsaul.com[/url]", "<a href=\"http://bettercallsaul.com\">http://bettercallsaul.com</a>", "supports [url] without parameter");
   cookedPara("[url=http://example.com]example[/url]", "<a href=\"http://example.com\">example</a>", "supports [url] with given href");
   cookedPara("[url=http://www.example.com][img]http://example.com/logo.png[/img][/url]",

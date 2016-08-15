@@ -122,25 +122,40 @@ describe TopicQuery do
       SiteSetting.tagging_enabled = true
     end
 
-    it "returns topics with the tag when filtered to it" do
-      tagged_topic1 = Fabricate(:topic, {tags: [tag]})
-      tagged_topic2 = Fabricate(:topic, {tags: [other_tag]})
-      tagged_topic3 = Fabricate(:topic, {tags: [tag, other_tag]})
-      no_tags_topic = Fabricate(:topic)
+    context "no category filter" do
+      # create some topics before each test:
+      let!(:tagged_topic1) { Fabricate(:topic, {tags: [tag]}) }
+      let!(:tagged_topic2) { Fabricate(:topic, {tags: [other_tag]}) }
+      let!(:tagged_topic3) { Fabricate(:topic, {tags: [tag, other_tag]}) }
+      let!(:no_tags_topic) { Fabricate(:topic) }
 
-      expect(TopicQuery.new(moderator, tags: [tag.name]).list_latest.topics.map(&:id).sort).to eq([tagged_topic1.id, tagged_topic3.id].sort)
-      expect(TopicQuery.new(moderator, tags: [tag.id]).list_latest.topics.map(&:id).sort).to eq([tagged_topic1.id, tagged_topic3.id].sort)
+      it "returns topics with the tag when filtered to it" do
+        expect(TopicQuery.new(moderator, tags: [tag.name]).list_latest.topics.map(&:id).sort).to eq([tagged_topic1.id, tagged_topic3.id].sort)
+        expect(TopicQuery.new(moderator, tags: [tag.id]).list_latest.topics.map(&:id).sort).to eq([tagged_topic1.id, tagged_topic3.id].sort)
 
-      two_tag_topic = TopicQuery.new(moderator, tags: [tag.name]).list_latest.topics.find { |t| t.id == tagged_topic3.id }
-      expect(two_tag_topic.tags.size).to eq(2)
+        two_tag_topic = TopicQuery.new(moderator, tags: [tag.name]).list_latest.topics.find { |t| t.id == tagged_topic3.id }
+        expect(two_tag_topic.tags.size).to eq(2)
 
-      # topics with ANY of the given tags:
-      expect(TopicQuery.new(moderator, tags: [tag.name, other_tag.name]).list_latest.topics.map(&:id).sort).to eq([tagged_topic1.id, tagged_topic2.id, tagged_topic3.id].sort)
-      expect(TopicQuery.new(moderator, tags: [tag.id, other_tag.id]).list_latest.topics.map(&:id).sort).to eq([tagged_topic1.id, tagged_topic2.id, tagged_topic3.id].sort)
+        # topics with ANY of the given tags:
+        expect(TopicQuery.new(moderator, tags: [tag.name, other_tag.name]).list_latest.topics.map(&:id).sort).to eq([tagged_topic1.id, tagged_topic2.id, tagged_topic3.id].sort)
+        expect(TopicQuery.new(moderator, tags: [tag.id, other_tag.id]).list_latest.topics.map(&:id).sort).to eq([tagged_topic1.id, tagged_topic2.id, tagged_topic3.id].sort)
 
-      # TODO: topics with ALL of the given tags:
-      # expect(TopicQuery.new(moderator, tags: [tag.name, other_tag.name]).list_latest.topics.map(&:id)).to eq([tagged_topic3.id].sort)
-      # expect(TopicQuery.new(moderator, tags: [tag.id, other_tag.id]).list_latest.topics.map(&:id)).to eq([tagged_topic3.id].sort)
+        # TODO: topics with ALL of the given tags:
+        # expect(TopicQuery.new(moderator, tags: [tag.name, other_tag.name]).list_latest.topics.map(&:id)).to eq([tagged_topic3.id].sort)
+        # expect(TopicQuery.new(moderator, tags: [tag.id, other_tag.id]).list_latest.topics.map(&:id)).to eq([tagged_topic3.id].sort)
+      end
+
+      it "can return topics with all specified tags" do
+        expect(TopicQuery.new(moderator, tags: [tag.name, other_tag.name], match_all_tags: true).list_latest.topics.map(&:id)).to eq([tagged_topic3.id])
+      end
+
+      it "returns an empty relation when an invalid tag is passed" do
+        expect(TopicQuery.new(moderator, tags: [tag.name, 'notatag'], match_all_tags: true).list_latest.topics).to be_empty
+      end
+
+      it "can return topics with no tags" do
+        expect(TopicQuery.new(moderator, no_tags: true).list_latest.topics.map(&:id)).to eq([no_tags_topic.id])
+      end
     end
 
     context "and categories too" do
@@ -168,6 +183,33 @@ describe TopicQuery do
                            notification_level: CategoryUser.notification_levels[:muted])
       expect(topic_query.list_new.topics.map(&:id)).not_to include(topic.id)
       expect(topic_query.list_latest.topics.map(&:id)).not_to include(topic.id)
+    end
+  end
+
+  context 'muted tags' do
+    it 'is removed from new and latest lists' do
+      SiteSetting.tagging_enabled = true
+      SiteSetting.remove_muted_tags_from_latest = true
+
+      muted_tag, other_tag = Fabricate(:tag), Fabricate(:tag)
+
+      muted_topic = Fabricate(:topic, tags: [muted_tag])
+      tagged_topic = Fabricate(:topic, tags: [other_tag])
+      untagged_topic = Fabricate(:topic)
+
+      TagUser.create!(user_id: user.id,
+                      tag_id: muted_tag.id,
+                      notification_level: CategoryUser.notification_levels[:muted])
+
+      topic_ids = topic_query.list_latest.topics.map(&:id)
+      expect(topic_ids).not_to include(muted_topic.id)
+      expect(topic_ids).to include(tagged_topic.id)
+      expect(topic_ids).to include(untagged_topic.id)
+
+      topic_ids = topic_query.list_new.topics.map(&:id)
+      expect(topic_ids).not_to include(muted_topic.id)
+      expect(topic_ids).to include(tagged_topic.id)
+      expect(topic_ids).to include(untagged_topic.id)
     end
   end
 

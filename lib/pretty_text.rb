@@ -68,7 +68,7 @@ module PrettyText
         apply_es6_file(ctx, root_path, Regexp.last_match[2])
       elsif l =~ /\/\/= require_tree (\.\/)?(.*)$/
         path = Regexp.last_match[2]
-        Dir["#{root_path}/#{path}/**"].each do |f|
+        Dir["#{root_path}/#{path}/**"].sort.each do |f|
           apply_es6_file(ctx, root_path, f.sub(root_path, '')[1..-1].sub(/\.js.es6$/, ''))
         end
       end
@@ -156,7 +156,14 @@ module PrettyText
       Emoji.custom.map {|e| custom_emoji[e.name] = e.url}
       context.eval("__optInput.customEmoji = #{custom_emoji.to_json};")
 
-      opts = context.eval("__pt = new __PrettyText(__buildOptions(__optInput));")
+      context.eval('__textOptions = __buildOptions(__optInput);')
+
+      # Be careful disabling sanitization. We allow for custom emails
+      if opts[:sanitize] == false
+        context.eval('__textOptions.sanitize = false;')
+      end
+
+      opts = context.eval("__pt = new __PrettyText(__textOptions);")
 
       DiscourseEvent.trigger(:markdown_context, context)
       baked = context.eval("__pt.cook(#{text.inspect})")

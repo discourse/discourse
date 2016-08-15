@@ -26,6 +26,29 @@ describe EmbeddableHost do
     expect(eh.host).to eq('192.168.0.1')
   end
 
+  it "supports localhost" do
+    eh = EmbeddableHost.new(host: 'localhost')
+    expect(eh).to be_valid
+    expect(eh.host).to eq('localhost')
+  end
+
+  it "supports ports of localhost" do
+    eh = EmbeddableHost.new(host: 'localhost:8080')
+    expect(eh).to be_valid
+    expect(eh.host).to eq('localhost:8080')
+  end
+
+  it "supports subdomains of localhost" do
+    eh = EmbeddableHost.new(host: 'discourse.localhost')
+    expect(eh).to be_valid
+    expect(eh.host).to eq('discourse.localhost')
+  end
+
+  it "rejects misspellings of localhost" do
+    eh = EmbeddableHost.new(host: 'alocalhost')
+    expect(eh).not_to be_valid
+  end
+
   describe "allows_embeddable_host" do
     let!(:host) { Fabricate(:embeddable_host) }
 

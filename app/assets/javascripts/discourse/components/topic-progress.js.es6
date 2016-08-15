@@ -168,17 +168,29 @@ export default Ember.Component.extend({
     }
   },
 
+  _jumpTo(postIndex) {
+    postIndex = parseInt(postIndex, 10);
+
+    // Validate the post index first
+    if (isNaN(postIndex) || postIndex < 1) {
+      postIndex = 1;
+    }
+    if (postIndex > this.get('postStream.filteredPostsCount')) {
+      postIndex = this.get('postStream.filteredPostsCount');
+    }
+    this.set('toPostIndex', postIndex);
+    this._beforeJump();
+    this.sendAction('jumpToIndex', postIndex);
+  },
+
   actions: {
     toggleExpansion(opts) {
       this.toggleProperty('expanded');
       if (this.get('expanded')) {
         this.set('userWantsToJump', false);
         this.set('toPostIndex', this.get('progressPosition'));
-        if(opts && opts.highlight){
-          // TODO: somehow move to view?
-          Em.run.next(function(){
-            $('.jump-form input').select().focus();
-          });
+        if (opts && opts.highlight) {
+          Ember.run.next(() => $('.jump-form input').select().focus());
         }
         if (!this.site.mobileView && !this.capabilities.isIOS) {
           Ember.run.schedule('afterRender', () => this.$('input').focus());
@@ -186,19 +198,14 @@ export default Ember.Component.extend({
       }
     },
 
-    jumpPost() {
-      let postIndex = parseInt(this.get('toPostIndex'), 10);
+    jumpPrompt() {
+      const postIndex = prompt(I18n.t('topic.progress.jump_prompt_long'));
+      if (postIndex === null) { return; }
+      this._jumpTo(postIndex);
+    },
 
-      // Validate the post index first
-      if (isNaN(postIndex) || postIndex < 1) {
-        postIndex = 1;
-      }
-      if (postIndex > this.get('postStream.filteredPostsCount')) {
-        postIndex = this.get('postStream.filteredPostsCount');
-      }
-      this.set('toPostIndex', postIndex);
-      this._beforeJump();
-      this.sendAction('jumpToIndex', postIndex);
+    jumpPost() {
+      this._jumpTo(this.get('toPostIndex'));
     },
 
     jumpTop() {

@@ -223,8 +223,6 @@ zh_TW:
     undo: "復原"
     revert: "回復"
     failed: "失敗"
-    switch_to_anon: "匿名模式"
-    switch_from_anon: "登出匿名模式"
     banner:
       close: "關閉此橫幅"
       edit: "編輯此橫幅 >>"
@@ -388,7 +386,6 @@ zh_TW:
         perm_denied_btn: "權限被拒絕"
         disable: "停用通知"
         enable: "啟用通知"
-      dismiss_notifications: "全部標記為已讀"
       dismiss_notifications_tooltip: "標記所有未讀通知為已讀"
       disable_jump_reply: "不要在回覆之後直接跳到我的文章"
       dynamic_favicon: "在瀏覽器小圖示上顯示新主題/更新的主題數"
@@ -695,10 +692,6 @@ zh_TW:
       github:
         title: "使用 GitHub"
         message: "使用 GitHub 認証 (請確定你的網頁瀏覽器未阻擋彈出視窗)"
-    apple_international: "Apple/International"
-    google: "Google"
-    twitter: "Twitter"
-    emoji_one: "Emoji One"
     shortcut_modifier_key:
       shift: 'Shift'
       ctrl: 'Ctrl'
@@ -791,7 +784,6 @@ zh_TW:
       invited_to_private_message: "<i title='private message' class='fa fa-envelope-o'></i><p><span>{{username}}</span> {{description}}</p>"
       invitee_accepted: "<i title='accepted your invitation' class='fa fa-user'></i><p><span>{{username}}</span>已接受你的邀請</p>"
       moved_post: "<i title='moved post' class='fa fa-sign-out'></i><p><span>{{username}}</span> 移動了 {{description}}</p>"
-      linked: "<i title='linked post' class='fa fa-arrow-left'></i><p><span>{{username}}</span> {{description}}</p>"
       granted_badge: "<i title='badge granted' class='fa fa-certificate'></i><p>獲得徽章「{{description}}」</p>"
       alt:
         linked: "連結到你的討論"
@@ -986,8 +978,6 @@ zh_TW:
         unpin: "取消此主題在{{categoryLink}}類別的置頂狀態"
         not_pinned: "沒有主題被釘選在 {{categoryLink}} ."
       inviting: "正在邀請..."
-      automatically_add_to_groups_optional: "邀請時同時加入以下群組: (選填, 此為管理員設定)"
-      automatically_add_to_groups_required: "邀請時同時加入以下群組: (<b>必填</b>, 此為管理員設定)"
       invite_private:
         title: '邀請訊息交流'
         email_or_username: "受邀請者的電子郵件地址或用戶名稱"
@@ -1293,7 +1283,6 @@ zh_TW:
       title: "討論話題摘要"
       participants_title: "頻繁發文者"
       links_title: "熱門連結"
-      links_shown: "顯示所有 {{totalLinks}} 個連結..."
       clicks:
         other: "%{count} 點擊"
     topic_statuses:
@@ -1320,10 +1309,10 @@ zh_TW:
     posts_long: "此討論話題有 {{number}} 篇文章"
     posts_likes_MF: |
       This topic has {count, plural, one {1 reply} other {# replies}} {ratio, select,
-        low {with a high like to post ratio}
-        med {with a very high like to post ratio}
-        high {with an extremely high like to post ratio}
-        other {}}
+      low {with a high like to post ratio}
+      med {with a very high like to post ratio}
+      high {with an extremely high like to post ratio}
+      other {}}
     original_post: "原始文章"
     views: "觀看"
     views_lowercase:
@@ -2175,79 +2164,3 @@ zh_TW:
           label: "新增："
           add: "新增"
           filter: "搜尋 (網址或外部網址)"
-    lightbox:
-      download: "下載"
-    search_help:
-      title: '搜尋幫助'
-    keyboard_shortcuts_help:
-      title: '快捷鍵'
-      jump_to:
-        title: '跳到'
-        home: '<b>g</b>, <b>h</b> 首頁'
-        latest: '<b>g</b>, <b>l</b> 最新'
-        new: '<b>g</b> , <b>n</b> 新'
-        unread: '<b>g</b> , <b>u</b> 未讀'
-        categories: '<b>g</b>, <b>c</b> 分類'
-        top: '<b>g</b>, <b>t</b> 頂端'
-        bookmarks: '<b>g</b>, <b>b</b> 書籤'
-        profile: '<b>g</b>, <b>p</b> 個人檔案'
-        messages: '<b>g</b>, <b>m</b> 私人訊息'
-      navigation:
-        title: '導航'
-        jump: '<b>#</b> 前往文章 #'
-        back: '<b>u</b> 返回'
-        up_down: '<b>k</b>/<b>j</b> 移動選區 &uarr; &darr;'
-        open: '<b>o</b> 或 <b>Enter</b> 開啟已選擇討論話題'
-        next_prev: '<b>shift j</b>/<b>shift k</b> 下一個/上一個段落'
-      application:
-        title: 'Application'
-        create: '<b>c</b> 表示新討論話題'
-        notifications: '<b>n</b> 開啟通知'
-        hamburger_menu: '<b>=</b> 打開漢堡選單'
-        user_profile_menu: '<b>p</b> 打開使用者選單'
-        show_incoming_updated_topics: '<b>.</b> 顯示有更新的討論話題'
-        search: '<b>/</b> 搜尋'
-        help: '<b>?</b> 打開按鍵說明'
-        dismiss_new_posts: '<b>x</b>, <b>r</b> 解除新文章或回覆的提示'
-        dismiss_topics: '<b>x</b>, <b>t</b> 解除主題的提示'
-        log_out: '<b>shift</b>+<b>z</b> <b>shift</b>+<b>z</b> 登出'
-      actions:
-        title: '行動'
-        bookmark_topic: '<b>f</b> 加入/移除書籤'
-        pin_unpin_topic: '<b>shift p</b> 置頂/取消置頂'
-        share_topic: '<b>shift s</b> 分享討論話題'
-        share_post: '<b>s</b> 分享文章'
-        reply_as_new_topic: '<b>t</b> 回覆為關聯主題'
-        reply_topic: '<b>shift r</b> 回覆討論話題'
-        reply_post: '<b>r</b> 回覆文章'
-        quote_post: '<b>q</b> 引用文章'
-        like: '<b>l</b> 按讚'
-        flag: '<b>!</b> 投訴文章'
-        bookmark: '<b>b</b> 將文章加上書籤'
-        edit: '<b>e</b> 編輯文章'
-        delete: '<b>d</b> 刪除文章'
-        mark_muted: '<b>m</b>, <b>m</b> 消音討論話題'
-        mark_regular: '<b>m</b> , <b>r</b> 正常(預設)討論話題'
-        mark_tracking: '<b>m</b>, <b>t</b> 追蹤討論話題'
-        mark_watching: '<b>m</b>, <b>w</b> 關注討論話題'
-    badges:
-      title: 徽章
-      badge_count:
-        other: "%{count} 徽章"
-      more_badges:
-        other: "+%{count} 以上"
-      granted:
-        other: "%{count} 升級"
-      select_badge_for_title: 選擇一枚徽章作為你的稱號
-      none: "<none>"
-      badge_grouping:
-        getting_started:
-          name: 開始入門
-        community:
-          name: 社群
-        trust_level:
-          name: 信任等級
-        other:
-          name: 其他
-        posting:
-          name: 文章

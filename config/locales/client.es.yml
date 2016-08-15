@@ -117,7 +117,9 @@ es:
       private_topic: "hizo este tema privado %{when}"
       split_topic: "separó este tema %{when}"
       invited_user: "invitó a %{who} %{when}"
+      invited_group: "invitó a %{who} %{when}"
       removed_user: "eliminó a %{who} %{when}"
+      removed_group: "eliminó a %{who} %{when}"
       autoclosed:
         enabled: 'cerrado %{when}'
         disabled: 'abierto %{when}'
@@ -150,9 +152,11 @@ es:
         eu_central_1: "UE (Frankfurt)"
         ap_southeast_1: "Asia Pacific (Singapur)"
         ap_southeast_2: "Asia Pacific (Sydney)"
+        ap_south_1: "Asia Pacific (Bombay)"
         ap_northeast_1: "Asia Pacific (Tokyo)"
         ap_northeast_2: "Asia Pacific (Seúl)"
         sa_east_1: "Sudamérica (São Paulo)"
+        cn_north_1: "China (Pekín)"
     edit: 'editar el título y la categoría de este tema'
     not_implemented: "Esta característica no ha sido implementada aún, ¡lo sentimos!"
     no_value: "No"
@@ -253,7 +257,7 @@ es:
     undo: "Deshacer"
     revert: "Revertir"
     failed: "Falló"
-    switch_to_anon: "Modo Anónimo"
+    switch_to_anon: "Entrar al Modo Anónimo"
     switch_from_anon: "Salir del Modo Anónimo"
     banner:
       close: "Descartar este banner."
@@ -330,6 +334,7 @@ es:
       selector_placeholder: "Añadir miembros"
       owner: "propietario"
       visible: "El grupo es visible para todos los usuarios"
+      index: "Grupos"
       title:
         one: "grupo"
         other: "grupos"
@@ -352,6 +357,9 @@ es:
         watching:
           title: "Vigilando"
           description: "e te notificará de cada nuevo post en este mensaje y se mostrará un contador de nuevos posts."
+        watching_first_post:
+          title: "Vigilar Primer Post"
+          description: "Sólo se te notificará del primer post en cada nuevo tema en este grupo."
         tracking:
           title: "Siguiendo"
           description: "Se te notificará si alguien menciona tu @nombre o te responde, y un contador de nuevos mensajes será mostrado."
@@ -446,7 +454,7 @@ es:
         disable: "Desactivar notificaciones"
         enable: "Activar notificaciones"
         each_browser_note: "Nota: Tendrás que cambiar esta opción para cada navegador que uses."
-      dismiss_notifications: "Marcador todos como leídos"
+      dismiss_notifications: "Descartar todos"
       dismiss_notifications_tooltip: "Marcar todas las notificaciones no leídas como leídas"
       disable_jump_reply: "No dirigirme a mi post cuando responda"
       dynamic_favicon: "Mostrar contador de temas nuevos/actualizados en el favicon"
@@ -470,12 +478,23 @@ es:
           Los temas y categorías silenciadas no se incluyen en estos emails.
         daily: "Enviar actualizaciones diariamente"
         individual: "Enviar un email por cada nuevo post"
-        many_per_day: "Enviarme un correo por cada nuevo post  (en torno a {{dailyEmailEstimate}} por día)."
-        few_per_day: "Enviarme un correo por cada nuevo post (menos de 2 por día)."
+        many_per_day: "Enviarme un email por cada nuevo post (unos {{dailyEmailEstimate}} por día)"
+        few_per_day: "Enviarme un email por cada nuevo post (unos 2 por día)"
+      tag_settings: "Etiquetas"
+      watched_tags: "Vigiladas"
+      watched_tags_instructions: "Vigilarás automáticamente todos los temas con estas etiquetas. Se te notificará de todos los nuevos posts y temas y aparecerá un contador de nuevos posts al lado del tema."
+      tracked_tags: "Siguiendo"
+      tracked_tags_instructions: "Seguirás automáticamente todos los temas con estas etiquetas. Aparecerá un contador de nuevos posts al lado del tema."
+      muted_tags: "Silenciadas"
+      muted_tags_instructions: "No serás notificado de ningún tema con estas etiquetas y no aparecerán en la pestaña Recientes."
       watched_categories: "Vigiladas"
-      watched_categories_instructions: "Seguirás automáticamente todos los nuevos temas en estas categorías. Se te notificará de cada nuevo post y tema, y además, se añadirá un contador de posts nuevos y sin leer al lado del tema."
+      watched_categories_instructions: "Vigilarás automáticamente todos los temas en estas categorías. Se te notificará de todos los nuevos posts y temas, y aparecerá un contador de nuevos posts al lado del tema."
       tracked_categories: "Siguiendo"
-      tracked_categories_instructions: "Seguirás automáticamente todos los nuevos temas en estas categorías. Se añadirá un contador de posts nuevos y sin leer al lado del tema."
+      tracked_categories_instructions: "Seguirás automáticamente todos los temas en estas categorías. Aparecerá un contador de nuevos posts al lado del tema."
+      watched_first_post_categories: "Vigilar Primer Post"
+      watched_first_post_categories_instructions: "Se te notificará del primer post de cada nuevo tema en estas categorías."
+      watched_first_post_tags: "Vigilando Primer Post"
+      watched_first_post_tags_instructions: "Se te notificará del primer post en cada nuevo tema con estas etiquetas."
       muted_categories: "Silenciado"
       muted_categories_instructions: "No serás notificado de ningún tema en estas categorías, y no aparecerán en la página de mensajes recientes."
       delete_account: "Borrar Mi Cuenta"
@@ -488,6 +507,7 @@ es:
       muted_users: "Silenciados"
       muted_users_instructions: "Omite todas las notificaciones de estos usuarios."
       muted_topics_link: "Mostrar temas silenciados"
+      watched_topics_link: "Mostrar temas vigilados"
       automatically_unpin_topics: "Dejar de destacar temas automáticamente cuando los leo por completo."
       staff_counters:
         flags_given: "reportes útiles"
@@ -517,7 +537,7 @@ es:
         error: "Hubo un error al cambiar este valor."
       change_username:
         title: "Cambiar Nombre de Usuario"
-        confirm: "Si cambias tu nombre de usuario, todas las citas de tus posts y @menciones se romperán, y tu parte de tu historial será interrumpido. ¿Seguro que quieres cambiarlo?"
+        confirm: "Si cambias tu nombre de usuario, todas las citas anteriores a tus posts y menciones a tu @nombre se romperán. ¿Seguro que quieres hacerlo?"
         taken: "Lo sentimos, ese nombre de usuario ya está siendo usado."
         error: "Ha ocurrido un error al cambiar tu nombre de usuario."
         invalid: "Este nombre de usuario no es válido. Debe incluir sólo números y letras"
@@ -601,7 +621,7 @@ es:
         always: "siempre"
         never: "nunca"
       email_digests:
-        title: "Cuando no visite el sitio, envíame un resumen por email de los temas populares y las respuestas a:"
+        title: "Cuando no visite el sitio, envíame un email con un resumen de los temas y respuestas populares"
         every_30_minutes: "cada 30 minutos"
         every_hour: "cada hora"
         daily: "diariamente"
@@ -811,6 +831,7 @@ es:
       title: "Mensaje"
       invite: "Invitar a Otros..."
       remove_allowed_user: "¿Seguro que quieres eliminar a {{name}} de este mensaje?"
+      remove_allowed_group: "¿Seguro que quieres eliminar a {{name}} de este mensaje?"
     email: 'E-mail'
     username: 'Nombre de usuario'
     last_seen: 'Visto por última vez'
@@ -877,10 +898,12 @@ es:
       github:
         title: "con GitHub"
         message: "Autenticando con GitHub (asegúrate de desactivar cualquier bloqueador de pop ups)"
-    apple_international: "Apple/Internacional"
-    google: "Google"
-    twitter: "Twitter"
-    emoji_one: "Emoji One"
+    emoji_set:
+      apple_international: "Apple/Internacional"
+      google: "Google"
+      twitter: "Twitter"
+      emoji_one: "Emoji One"
+      win10: "Win10"
     shortcut_modifier_key:
       shift: 'Shift'
       ctrl: 'Ctrl'
@@ -942,6 +965,7 @@ es:
       quote_text: "Cita"
       code_title: "Texto preformateado"
       code_text: "texto preformateado precedido por 4 espacios"
+      paste_code_text: "escribe o pega el código aquí"
       upload_title: "Subir"
       upload_description: "introduce una descripción de la imagen aquí"
       olist_title: "Lista numerada"
@@ -968,6 +992,7 @@ es:
     notifications:
       title: "notificaciones por menciones a tu @nombre, respuestas a tus posts y temas, mensajes, etc"
       none: "No se han podido cargar las notificaciones."
+      empty: "No se han encontrado notificaciones."
       more: "ver notificaciones antiguas"
       total_flagged: "total de posts reportados"
       mentioned: "<i title='mentioned' class='fa fa-at'></i><p><span>{{username}}</span> {{description}}</p>"
@@ -988,6 +1013,7 @@ es:
       moved_post: "<i title='moved post' class='fa fa-sign-out'></i><p><span>{{username}}</span> movió {{description}}</p>"
       linked: "<i title='linked post' class='fa fa-link'></i><p><span>{{username}}</span> {{description}}</p>"
       granted_badge: "<i title='badge granted' class='fa fa-certificate'></i><p>Se te ha concedido '{{description}}'</p>"
+      watching_first_post: "<i title='new topic' class='fa fa-dot-circle-o'></i><p><span>Nuevo Tema</span> {{description}}</p>"
       group_message_summary:
         one: "<i title='mensaje en tu bandeja de grupo' class='fa fa-group'></i><p> {{count}} mensaje en la bandeja del grupo {{group_name}}</p>"
         other: "<i title='mensajes en tu bandeja de grupo' class='fa fa-group'></i><p> {{count}} mensajes en la bandeja del grupo {{group_name}}</p>"
@@ -1180,6 +1206,8 @@ es:
         go_bottom: "abajo"
         go: "ir"
         jump_bottom: "salta al último post"
+        jump_prompt: "saltar al post"
+        jump_prompt_long: "¿Hacia qué post quieres saltar?"
         jump_bottom_with_number: "saltar al post %{post_number}"
         total: posts totales
         current: post actual
@@ -1188,6 +1216,7 @@ es:
         title: cambiar con qué frecuencia se te notifica de este tema
         reasons:
           mailing_list_mode: "El modo lista de correo se encuentra activado, por lo que se te notificará de las respuestas a este tema vía email."
+          '3_10': 'Recibirás notificaciones porque estás vigilando una etiqueta de este tema.'
           '3_6': 'Recibirás notificaciones porque estás vigilando esta categoría.'
           '3_5': 'Recibirás notificaciones porque has empezado a vigilar este tema automáticamente.'
           '3_2': 'Recibirás notificaciones porque estás vigilando este tema.'
@@ -1295,6 +1324,7 @@ es:
         email_or_username_placeholder: "dirección de email o nombre de usuario"
         action: "Invitar"
         success: "Hemos invitado a ese usuario a participar en este hilo de mensajes."
+        success_group: "Hemos invitado a ese grupo a participar en este mensaje."
         error: "Lo sentimos, hubo un error al invitar a ese usuario."
         group_name: "nombre del grupo"
       controls: "Controles del tema"
@@ -1334,6 +1364,10 @@ es:
         instructions:
           one: "Por favor escoge el tema al que quieres mover ese post."
           other: "Por favor escoge el tema al que quieres mover esos <b>{{count}}</b> posts."
+      merge_posts:
+        title: "Unir posts seleccionados"
+        action: "unir posts seleccionados"
+        error: "Hubo un error al unir los posts seleccionados."
       change_owner:
         title: "Cambiar dueño de los posts"
         action: "cambiar dueño"
@@ -1537,6 +1571,10 @@ es:
         confirm:
           one: "¿Seguro que quieres eliminar ese post?"
           other: "¿Seguro que quieres eliminar todos esos posts?"
+      merge:
+        confirm:
+          one: "¿Seguro que quieres unir esos posts?"
+          other: "¿Seguro que quieres unir esos {{count}} posts?"
       revisions:
         controls:
           first: "Primera revisión"
@@ -1619,10 +1657,13 @@ es:
       notifications:
         watching:
           title: "Vigilar"
-          description: "Vigilarás automáticamente todos los nuevos temas en estas categorías. Serás notificado por cada nuevo mensaje en cada tema, y verás una cuenta de las nuevas respuestas."
+          description: "Vigilarás automáticamente todos los temas en estas categorías. Se te notificará de cada nuevo post en cada tema, y se mostrará un contador de nuevas respuestas."
+        watching_first_post:
+          title: "Vigilar Primer Post"
+          description: "Se te notificará del primer post de cada nuevo tema en estas categorías."
         tracking:
           title: "Seguir"
-          description: "Seguirás automáticamente todos los nuevos temas en estas categorías. Serás notificado si alguien menciona tu @nombre o te responde, y verás una cuenta de las nuevas respuestas."
+          description: "Seguirás automáticamente todos los temas en estas categorías. Se te notificará si alguien menciona tu @nombre o te responde, y se mostrará un contador de nuevas respuestas."
         regular:
           title: "Normal"
           description: "Se te notificará solo si alguien menciona tu @nombre o te responde a un post."
@@ -1662,7 +1703,7 @@ es:
       title: "Resumen de temas"
       participants_title: "Autores frecuentes"
       links_title: "Enlaces populares"
-      links_shown: "mostrar los {{totalLinks}} enlaces..."
+      links_shown: "mostrar más enlaces..."
       clicks:
         one: "1 clic"
         other: "%{count} clics"
@@ -1698,10 +1739,10 @@ es:
     posts_long: "{{number}} posts en este tema"
     posts_likes_MF: |
       Este tema tiene {count, plural, one {1 respuesta} other {# respuestas}} {ratio, select,
-        low {con una ratio de me gusta por post elevada}
-        med {con una ratio de me gusta por post bastante elevada}
-        high {con una ratio de me gusta por post elevadísima}
-        other {}}
+      low {con una ratio de me gusta por post elevada}
+      med {con una ratio de me gusta por post bastante elevada}
+      high {con una ratio de me gusta por post elevadísima}
+      other {}}
     original_post: "Post Original"
     views: "Visitas"
     views_lowercase:
@@ -1895,15 +1936,16 @@ es:
     google_search: |
       <h3>Buscar con Google</h3>
       <p>
-        <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:' + window.location.host + ' ' + document.getElementById('user-query').value; return true;">
-          <input type="text" id='user-query' value="">
-          <input type='hidden' id='google-query' name="q">
-          <button class="btn btn-primary">Google</button>
-        </form>
+      <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:' + window.location.host + ' ' + document.getElementById('user-query').value; return true;">
+      <input type="text" id='user-query' value="">
+      <input type='hidden' id='google-query' name="q">
+      <button class="btn btn-primary">Google</button>
+      </form>
       </p>
     tagging:
       all_tags: "Etiquetas"
       selector_all_tags: "etiquetas"
+      selector_no_tags: "sin etiquetas"
       changed: "etiquetas cambiadas:"
       tags: "Etiquetas"
       choose_for_topic: "elegir etiquetas para este tema (opcional)"
@@ -1919,13 +1961,18 @@ es:
       filters:
         without_category: "%{filter} %{tag} temas"
         with_category: "%{filter} %{tag} temas en %{category}"
+        untagged_without_category: "%{filter} temas sin etiquetas"
+        untagged_with_category: "%{filter} temas sin etiquetas en %{category}"
       notifications:
         watching:
           title: "Vigilar"
-          description: "Vigilarás automáticamente todos los nuevos temas con esta etiqueta. Se añadirá un contador de posts nuevos y sin leer al lado del tema y además, se te notificará de cada nuevo tema y post."
+          description: "Vigilarás todos los temas en esta etiqueta. Se te notificará de todos los nuevos temas y posts, y además aparecerá el contador de posts sin leer y nuevos posts al lado del tema."
+        watching_first_post:
+          title: "Vigilar Primer Post"
+          description: "Se te notificará del primer post de cada nuevo tema en esta etiqueta."
         tracking:
           title: "Seguir"
-          description: "Seguirás automáticamente todos los nuevos temas con esta etiqueta. Se añadirá un contador de posts nuevos y sin leer al lado del tema."
+          description: "Seguirás automáticamente todos los temas en esta etiqueta. Aparecerá un contador de posts sin leer y nuevos posts al lado del tema."
         regular:
           title: "Normal"
           description: "Se te notificará solo si alguien te menciona con tu @usuario o responde a algún post tuyo."
@@ -2835,148 +2882,3 @@ es:
           label: "Nuevo:"
           add: "Añadir"
           filter: "Buscar (URL o URL externa)"
-    lightbox:
-      download: "descargar"
-    search_help:
-      title: 'Ayuda para búsquedas'
-    keyboard_shortcuts_help:
-      title: 'Atajos de teclado'
-      jump_to:
-        title: 'Saltar a'
-        home: '<b>g</b>, <b>h</b> Inicio'
-        latest: '<b>g</b>, <b>l</b> Recientes'
-        new: '<b>g</b>, <b>n</b> Nuevos'
-        unread: '<b>g</b>, <b>u</b> No leídos'
-        categories: '<b>g</b>, <b>c</b> Categorías'
-        top: '<b>g</b>, <b>t</b> Arriba'
-        bookmarks: '<b>g</b>, <b>b</b> Marcadores'
-        profile: '<b>g</b>, <b>p</b> Perfil'
-        messages: '<b>g</b>, <b>m</b> Mensajes'
-      navigation:
-        title: 'Navegación'
-        jump: '<b>#</b> Ir al post #'
-        back: '<b>u</b> Atrás'
-        up_down: '<b>k</b>/<b>j</b> Desplazar selección &uarr; &darr;'
-        open: '<b>o</b> or <b>Entrar</b> Abrir tema seleccionado'
-        next_prev: '<b>shift</b>+<b>j</b>/<b>shift</b>+<b>k</b> Siguiente/anterior sección'
-      application:
-        title: 'Aplicación'
-        create: '<b>c</b> Crear un tema nuevo'
-        notifications: '<b>n</b> Abrir notificaciones'
-        hamburger_menu: '<b>=</b> Abrir Menú'
-        user_profile_menu: '<b>p</b> Abrir menú de usuario'
-        show_incoming_updated_topics: '<b>.</b> Mostrar temas actualizados'
-        search: '<b>/</b> Buscar'
-        help: '<b>?</b> Abrir la guía de atajos de teclado'
-        dismiss_new_posts: '<b>x</b>, <b>r</b> Descartar Nuevo/Posts'
-        dismiss_topics: '<b>x</b>, <b>t</b> Descartar Temas'
-        log_out: '<b>shift</b>+<b>z</b> <b>shift</b>+<b>z</b> Cerrar sesión'
-      actions:
-        title: 'Acciones'
-        bookmark_topic: '<b>f</b> Guardar/Quitar el tema de marcadores'
-        pin_unpin_topic: '<b>shift</b>+<b>p</b> Seleccionar/Deseleccionar como destacado'
-        share_topic: '<b>shift</b>+<b>s</b> Compartir tema'
-        share_post: '<b>s</b> Compartir post'
-        reply_as_new_topic: '<b>t</b> Responder como un tema enlazado.'
-        reply_topic: '<b>shift</b>+<b>r</b> Responder al tema'
-        reply_post: '<b>r</b> Responder al post'
-        quote_post: '<b>q</b> Citar post'
-        like: '<b>l</b> Me gusta el post'
-        flag: '<b>!</b> Reportar post'
-        bookmark: '<b>b</b> Marcar post'
-        edit: '<b>e</b> Editar post'
-        delete: '<b>d</b> Borrar post'
-        mark_muted: '<b>m</b>, <b>m</b> Silenciar tema'
-        mark_regular: '<b>m</b>, <b>r</b> Marcar este tema como normal (por defecto)'
-        mark_tracking: '<b>m</b>, <b>t</b> Seguir tema'
-        mark_watching: '<b>m</b>, <b>w</b> Vigilar Tema'
-    badges:
-      earned_n_times:
-        one: "Ganó este distintivo 1 vez"
-        other: "Ganó este distintivo %{count} veces"
-      granted_on: "Concedido el %{date}"
-      others_count: "Otras personas con este distintivo (%{count})"
-      title: Distintivos
-      allow_title: "título disponible"
-      multiple_grant: "puede ser concedido varias veces"
-      badge_count:
-        one: "1 distintivo"
-        other: "%{count} distintivos"
-      more_badges:
-        one: "+1 más"
-        other: "+%{count} Más"
-      granted:
-        one: "1 concedido"
-        other: "%{count} concedido"
-      select_badge_for_title: Seleccionar un distintivo para utilizar como tu título
-      none: "<none>"
-      badge_grouping:
-        getting_started:
-          name: Primeros pasos
-        community:
-          name: Comunidad
-        trust_level:
-          name: Nivel de confianza
-        other:
-          name: Miscelánea
-        posting:
-          name: Escritura
-    google_search: |
-      <h3>Buscar con Google</h3>
-      <p>
-        <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:' + window.location.host + ' ' + document.getElementById('user-query').value; return true;">
-          <input type="text" id='user-query' value="">
-          <input type='hidden' id='google-query' name="q">
-          <button class="btn btn-primary">Google</button>
-        </form>
-      </p>
-    tagging:
-      all_tags: "Etiquetas"
-      selector_all_tags: "etiquetas"
-      changed: "etiquetas cambiadas:"
-      tags: "Etiquetas"
-      choose_for_topic: "elegir etiquetas para este tema (opcional)"
-      delete_tag: "Eliminar etiqueta"
-      delete_confirm: "¿Seguro que quieres eliminar esa etiqueta?"
-      rename_tag: "Renombrar etiqueta"
-      rename_instructions: "Elige un nuevo nombre para la etiqueta:"
-      sort_by: "Ordenar por:"
-      sort_by_count: "contador"
-      sort_by_name: "nombre"
-      filters:
-        without_category: "%{filter} %{tag} temas"
-        with_category: "%{filter} %{tag} temas en %{category}"
-      notifications:
-        watching:
-          title: "Vigilar"
-          description: "Vigilarás automáticamente todos los nuevos temas con esta etiqueta. Se añadirá un contador de posts nuevos y sin leer al lado del tema y además, se te notificará de cada nuevo tema y post."
-        tracking:
-          title: "Seguir"
-          description: "Seguirás automáticamente todos los nuevos temas con esta etiqueta. Se añadirá un contador de posts nuevos y sin leer al lado del tema."
-        regular:
-          title: "Normal"
-          description: "Se te notificará solo si alguien te menciona con tu @usuario o responde a algún post tuyo."
-        muted:
-          title: "Silenciar"
-          description: "No se te notificará de nuevos temas con esta etiqueta, ni aparecerán en tu pestaña de temas no leídos."
-      topics:
-        none:
-          unread: "No tienes temas sin leer."
-          new: "No tienes nuevos temas."
-          read: "Aún no has leído ningún tema."
-          posted: "Aún no has publicado ningún tema."
-          latest: "No hay temas recientes."
-          hot: "No hay temas populares."
-          bookmarks: "No hay temas guardados en marcadores aún."
-          top: "No hay temas top."
-          search: "No hay resultados de búsqueda."
-        bottom:
-          latest: "No hay más temas recientes."
-          hot: "No hay más temas populares."
-          posted: "No hay más temas publicados."
-          read: "No hay más temas leídos."
-          new: "No hay más temas nuevos."
-          unread: "No hay más temas sin leer."
-          top: "No hay más temas top."
-          bookmarks: "No hay más temas guardados en marcadores."
-          search: "No hay más resultados de búsqueda."
