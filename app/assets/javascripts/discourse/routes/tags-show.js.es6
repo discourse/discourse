@@ -15,10 +15,9 @@ export default Discourse.Route.extend({
         f = '';
 
     if (params.additional_tags) {
-      this.set("additionalTags", _.compact(params.additional_tags.split('/')).map((tag) => {
-        return this.store.createRecord("tag", { id: Handlebars.Utils.escapeExpression(tag) });
+      this.set("additionalTags", params.additional_tags.split('/').map((tag) => {
+        return this.store.createRecord("tag", { id: Handlebars.Utils.escapeExpression(tag) }).id;
       }));
-      this.set("additionalTagIds", _.pluck(this.get("additionalTags"), 'id'));
     }
 
     if (params.category) {
@@ -63,8 +62,8 @@ export default Discourse.Route.extend({
       }
 
       this.set('category', category);
-    } else if (_.any(this.get("additionalTags"))) {
-      params.filter = `tags/intersection/${tag_id}/${this.get('additionalTagIds').join('/')}`;
+    } else if (this.get("additionalTags")) {
+      params.filter = `tags/intersection/${tag_id}/${this.get('additionalTags').join('/')}`;
       this.set('category', null);
     } else {
       params.filter = `tags/${tag_id}/l/${filter}`;
@@ -134,7 +133,7 @@ export default Discourse.Route.extend({
         // Pre-fill the tags input field
         if (controller.get('model.id')) {
           var c = self.controllerFor('composer').get('model');
-          c.set('tags', _.flatten([controller.get('model.id')], controller.get('additionalTagIds')));
+          c.set('tags', _.flatten([controller.get('model.id')], controller.get('additionalTags')));
         }
       });
     },
