@@ -942,6 +942,9 @@ developer:
   top_topics_formula_least_likes_per_post_multiplier:
     default: 3
     min: 0
+  rebake_old_posts_count:
+    default: 250
+    min: 1
   migrate_to_new_scheme:
     hidden: true
     default: false
