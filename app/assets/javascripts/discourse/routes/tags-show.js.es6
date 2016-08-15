@@ -14,6 +14,12 @@ export default Discourse.Route.extend({
     var tag = this.store.createRecord("tag", { id: Handlebars.Utils.escapeExpression(params.tag_id) }),
         f = '';
 
+    if (params.additional_tags) {
+      this.set("additionalTags", params.additional_tags.split('/').map((t) => {
+        return this.store.createRecord("tag", { id: Handlebars.Utils.escapeExpression(t) }).id;
+      }));
+    }
+
     if (params.category) {
       f = 'c/';
       if (params.parent_category) { f += params.parent_category + '/'; }
@@ -56,6 +62,9 @@ export default Discourse.Route.extend({
       }
 
       this.set('category', category);
+    } else if (this.get("additionalTags")) {
+      params.filter = `tags/intersection/${tag_id}/${this.get('additionalTags').join('/')}`;
+      this.set('category', null);
     } else {
       params.filter = `tags/${tag_id}/l/${filter}`;
       this.set('category', null);
@@ -94,6 +103,7 @@ export default Discourse.Route.extend({
     this.controllerFor('tags.show').setProperties({
       model,
       tag: model,
+      additionalTags: this.get('additionalTags'),
       category: this.get('category'),
       filterMode: this.get('filterMode'),
       navMode: this.get('navMode'),
@@ -123,7 +133,7 @@ export default Discourse.Route.extend({
         // Pre-fill the tags input field
         if (controller.get('model.id')) {
           var c = self.controllerFor('composer').get('model');
-          c.set('tags', [controller.get('model.id')]);
+          c.set('tags', _.flatten([controller.get('model.id')], controller.get('additionalTags')));
         }
       });
     },
