@@ -20,6 +20,10 @@ describe FileStore::S3Store do
   end
 
   shared_context 's3 helpers' do
+    let(:upload) do
+      Fabricate(:upload, sha1: Digest::SHA1.hexdigest('secreet image string'))
+    end
+
     let(:store) { FileStore::S3Store.new }
     let(:client) { Aws::S3::Client.new(stub_responses: true) }
     let(:resource) { Aws::S3::Resource.new(client: client) }
@@ -36,6 +40,7 @@ describe FileStore::S3Store do
 
     describe "#store_upload" do
       it "returns an absolute schemaless url" do
+        store.expects(:get_depth_for).with(upload.id).returns(0)
         s3_helper.expects(:s3_bucket).returns(s3_bucket)
         s3_object = stub
 
@@ -53,6 +58,7 @@ describe FileStore::S3Store do
         end
 
         it "returns an absolute schemaless url" do
+          store.expects(:get_depth_for).with(upload.id).returns(0)
           s3_helper.expects(:s3_bucket).returns(s3_bucket)
           s3_object = stub
 
@@ -68,6 +74,7 @@ describe FileStore::S3Store do
 
     describe "#store_optimized_image" do
       it "returns an absolute schemaless url" do
+        store.expects(:get_depth_for).with(optimized_image.upload.id).returns(0)
         s3_helper.expects(:s3_bucket).returns(s3_bucket)
         s3_object = stub
         path = "optimized/1X/#{optimized_image.upload.sha1}_#{OptimizedImage::VERSION}_100x200.png"
@@ -86,6 +93,7 @@ describe FileStore::S3Store do
         end
 
         it "returns an absolute schemaless url" do
+          store.expects(:get_depth_for).with(optimized_image.upload.id).returns(0)
           s3_helper.expects(:s3_bucket).returns(s3_bucket)
           s3_object = stub
           path = "discourse-uploads/optimized/1X/#{optimized_image.upload.sha1}_#{OptimizedImage::VERSION}_100x200.png"
@@ -106,6 +114,7 @@ describe FileStore::S3Store do
 
     describe "#remove_upload" do
       it "removes the file from s3 with the right paths" do
+        store.expects(:get_depth_for).with(upload.id).returns(0)
         s3_helper.expects(:s3_bucket).returns(s3_bucket)
         upload.update_attributes!(url: "//s3-upload-bucket.s3-us-west-1.amazonaws.com/original/1X/#{upload.sha1}.png")
         s3_object = stub
@@ -124,6 +133,7 @@ describe FileStore::S3Store do
         end
 
         it "removes the file from s3 with the right paths" do
+          store.expects(:get_depth_for).with(upload.id).returns(0)
           s3_helper.expects(:s3_bucket).returns(s3_bucket)
           upload.update_attributes!(url: "//s3-upload-bucket.s3-us-west-1.amazonaws.com/discourse-uploads/original/1X/#{upload.sha1}.png")
           s3_object = stub
@@ -147,6 +157,7 @@ describe FileStore::S3Store do
       end
 
       it "removes the file from s3 with the right paths" do
+        store.expects(:get_depth_for).with(optimized_image.upload.id).returns(0)
         s3_helper.expects(:s3_bucket).returns(s3_bucket)
         s3_object = stub
 
@@ -164,6 +175,7 @@ describe FileStore::S3Store do
         end
 
         it "removes the file from s3 with the right paths" do
+          store.expects(:get_depth_for).with(optimized_image.upload.id).returns(0)
           s3_helper.expects(:s3_bucket).returns(s3_bucket)
           s3_object = stub
 
@@ -248,26 +260,6 @@ describe FileStore::S3Store do
   describe "#s3_bucket" do
     it "should return the right bucket name" do
       expect(store.s3_bucket).to eq('s3-upload-bucket')
-    end
-
-    it "should return the right bucket name when folders is included" do
-      SiteSetting.s3_upload_bucket = 's3-upload-bucket/this-site-upload-folder'
-      expect(store.s3_bucket).to eq('s3-upload-bucket')
-    end
-  end
-
-  describe "s3_bucket_folder_path" do
-    context "when no folder path is specified" do
-      it "should return the right folder path" do
-        expect(store.s3_bucket_folder_path).to eq(nil)
-      end
-    end
-
-    context "when site setting contains a folder path" do
-      it "should return the right folder path" do
-        SiteSetting.s3_upload_bucket = 's3-upload-bucket/this-site-upload-folder'
-        expect(store.s3_bucket_folder_path).to eq("this-site-upload-folder")
-      end
     end
   end
 end
