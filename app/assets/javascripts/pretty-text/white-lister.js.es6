@@ -124,6 +124,7 @@ whiteListFeature('default', [
   'div.quote-controls',
   'div.title',
   'div[align]',
+  'div[dir]',
   'dl',
   'dt',
   'em',
