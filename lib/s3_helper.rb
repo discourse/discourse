@@ -11,19 +11,23 @@ class S3Helper
     check_missing_site_settings
   end
 
-  def upload(file, unique_filename, options={})
-    obj = s3_bucket.object(unique_filename)
+  def upload(file, path, options={})
+    obj = s3_bucket.object(path)
     obj.upload_file(file, options)
   end
 
-  def remove(unique_filename, copy_to_tombstone=false)
+  def remove(path, copy_to_tombstone=false)
     bucket = s3_bucket
+
     # copy the file in tombstone
     if copy_to_tombstone && @tombstone_prefix.present?
-      bucket.object(@tombstone_prefix + unique_filename).copy_from(copy_source: "#{@s3_bucket}/#{unique_filename}")
+      bucket
+        .object(File.join(@tombstone_prefix, path))
+        .copy_from(copy_source: File.join(@s3_bucket, path))
     end
+
     # delete the file
-    bucket.object(unique_filename).delete
+    bucket.object(path).delete
   rescue Aws::S3::Errors::NoSuchKey
   end
 
