@@ -661,5 +661,9 @@ Discourse::Application.routes.draw do
   # special case for top
   root to: "list#top", constraints: HomePageConstraint.new("top"), :as => "top_lists"
 
+  get "/user-api-key/new" => "user_api_keys#new"
+  post "/user-api-key/new" => "user_api_keys#create"
+
   get "*url", to: 'permalinks#show', constraints: PermalinkConstraint.new
+
 end

@@ -5,6 +5,7 @@ class Auth::DefaultCurrentUserProvider
 
   CURRENT_USER_KEY ||= "_DISCOURSE_CURRENT_USER".freeze
   API_KEY ||= "api_key".freeze
+  USER_API_KEY ||= "USER_API_KEY".freeze
   API_KEY_ENV ||= "_DISCOURSE_API".freeze
   TOKEN_COOKIE ||= "_t".freeze
   PATH_INFO ||= "PATH_INFO".freeze
@@ -75,10 +76,35 @@ class Auth::DefaultCurrentUserProvider
       @env[API_KEY_ENV] = true
     end
 
+    # user api key handling
+    if api_key = @env[USER_API_KEY]
+
+      limiter_min = RateLimiter.new(nil, "user_api_min_#{api_key}", SiteSetting.max_user_api_reqs_per_minute, 60)
+      limiter_day = RateLimiter.new(nil, "user_api_day_#{api_key}", SiteSetting.max_user_api_reqs_per_day, 86400)
+
+      unless limiter_day.can_perform?
+        raise RateLimiter::LimitExceeded, "User API calls per minute exceeded"
+      end
+
+      unless  limiter_min.can_perform?
+        raise RateLimiter::LimitExceeded, "User API calls per day exceeded"
+      end
+
+      current_user = lookup_user_api_user(api_key)
+      raise Discourse::InvalidAccess unless current_user
+
+      limiter_min.performed!
+      limiter_day.performed!
+
+      @env[API_KEY_ENV] = true
+    end
+
     @env[CURRENT_USER_KEY] = current_user
   end
 
   def refresh_session(user, session, cookies)
+    return if is_api?
+
     if user && (!user.auth_token_updated_at || user.auth_token_updated_at <= 1.hour.ago)
       user.update_column(:auth_token_updated_at, Time.zone.now)
       cookies[TOKEN_COOKIE] = { value: user.auth_token, httponly: true, expires: SiteSetting.maximum_session_age.hours.from_now }
@@ -149,6 +175,16 @@ class Auth::DefaultCurrentUserProvider
   end
 
   protected
+
+  def lookup_user_api_user(user_api_key)
+    if api_key = UserApiKey.where(key: user_api_key).includes(:user).first
+      if !api_key.write && @env["REQUEST_METHOD"] != "GET"
+        raise Discourse::InvalidAccess
+      end
+
+      api_key.user
+    end
+  end
 
   def lookup_api_user(api_key_value, request)
     if api_key = ApiKey.where(key: api_key_value).includes(:user).first

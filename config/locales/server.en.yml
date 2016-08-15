@@ -1365,6 +1365,16 @@ en:
     default_categories_tracking: "List of categories that are tracked by default."
     default_categories_muted: "List of categories that are muted by default."
 
+    max_user_api_reqs_per_day: "Maximum number of user API requests per key per day"
+    max_user_api_reqs_per_minute: "Maximum number of user API requests per key per minute"
+    allow_read_user_api_keys: "Allow generation of readonly user API keys"
+    allow_write_user_api_keys: "Allow generation of write user API keys"
+    allow_push_user_api_keys: "Allow generation of push user API keys"
+    max_api_keys_per_user: "Maximum number of user API keys per user"
+    min_trust_level_for_user_api_key: "Trust level required for generation of user API keys"
+    allowed_user_api_auth_redirects: "Allowed URL for authentication redirect for user API keys"
+    allowed_user_api_push_urls: "Allowed URLs for server push to user API"
+
     tagging_enabled: "Enable tags on topics?"
     min_trust_to_create_tag: "The minimum trust level required to create a tag."
     max_tags_per_topic: "The maximum tags that can be applied to a topic."
