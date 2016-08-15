@@ -66,7 +66,7 @@ class S3Helper
     path
   end
 
-  def s3_resource
+  def s3_options
     opts = { region: SiteSetting.s3_region }
 
     unless SiteSetting.s3_use_iam_profile
@@ -74,7 +74,11 @@ class S3Helper
       opts[:secret_access_key] = SiteSetting.s3_secret_access_key
     end
 
-    Aws::S3::Resource.new(opts)
+    opts
+  end
+
+  def s3_resource
+    Aws::S3::Resource.new(s3_options)
   end
 
   def s3_bucket
