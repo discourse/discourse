@@ -2457,7 +2457,7 @@ en:
           details: "When there is a new topic, revised, changed or deleted."
         post_event:
           name: "Post Event"
-          details: "When there is a new reply or edit."
+          details: "When there is a new reply, edit, deleted or recovered."
         invitation_event:
           name: "Invitation Event"
           details: "When a invitation is sent or accepted."
