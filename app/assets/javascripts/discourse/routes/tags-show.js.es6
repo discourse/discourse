@@ -15,8 +15,8 @@ export default Discourse.Route.extend({
         f = '';
 
     if (params.additional_tags) {
-      this.set("additionalTags", params.additional_tags.split('/').map((tag) => {
-        return this.store.createRecord("tag", { id: Handlebars.Utils.escapeExpression(tag) }).id;
+      this.set("additionalTags", params.additional_tags.split('/').map((t) => {
+        return this.store.createRecord("tag", { id: Handlebars.Utils.escapeExpression(t) }).id;
       }));
     }
 
