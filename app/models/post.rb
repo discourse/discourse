@@ -189,11 +189,11 @@ class Post < ActiveRecord::Base
   end
 
   def add_nofollow?
-    return user.blank? || SiteSetting.tl3_links_no_follow? || !user.has_trust_level?(TrustLevel[3])
+    user.blank? || SiteSetting.tl3_links_no_follow? || !user.has_trust_level?(TrustLevel[3])
   end
 
   def omit_nofollow?
-    return !add_nofollow?
+    !add_nofollow?
   end
 
   def cook(*args)
