@@ -40,11 +40,10 @@ module FileStore
       "#{absolute_base_url}/#{path}"
     end
 
-    def remove_file(url)
+    def remove_file(url, path)
       return unless has_been_uploaded?(url)
-      filename = File.basename(url)
       # copy the removed file to tombstone
-      @s3_helper.remove(filename, true)
+      @s3_helper.remove(path, true)
     end
 
     def has_been_uploaded?(url)
