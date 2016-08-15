@@ -56,6 +56,8 @@ test("sanitize", function() {
   cooked(`<abbr title="JavaScript">JS</abbr>`, `<p><abbr title="JavaScript">JS</abbr></p>`);
   cooked(`<dl><dt>Forum</dt><dd>Software</dd></dl>`, `<dl><dt>Forum</dt><dd>Software</dd></dl>`);
   cooked(`<sup>high</sup> <sub>low</sub> <big>HUGE</big>`, `<p><sup>high</sup> <sub>low</sub> <big>HUGE</big></p>`);
+
+  cooked(`<div dir="rtl">RTL text</div>`, `<div dir="rtl">RTL text</div>`);
 });
 
 test("ids on headings", () => {
