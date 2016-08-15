@@ -1,6 +1,5 @@
 require "uri"
 require_dependency "file_store/base_store"
-require_dependency "file_store/local_store"
 require_dependency "s3_helper"
 require_dependency "file_helper"
 
