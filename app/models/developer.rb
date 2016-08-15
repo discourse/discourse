@@ -20,3 +20,11 @@ class Developer < ActiveRecord::Base
     Developer.rebuild_cache
   end
 end
+
+# == Schema Information
+#
+# Table name: developers
+#
+#  id      :integer          not null, primary key
+#  user_id :integer          not null
+#
