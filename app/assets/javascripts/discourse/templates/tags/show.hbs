@@ -5,7 +5,7 @@
 <div class="list-controls">
   <div class="container">
     {{#if tagNotification}}
-      {{#unless secondaryTag}}
+      {{#unless additionalTags}}
         {{tag-notifications-button action="changeTagNotification"
                                    notificationLevel=tagNotification.notification_level}}
       {{/unless}}
@@ -33,10 +33,10 @@
         {{#link-to 'tags'}}{{i18n "tagging.tags"}}{{/link-to}}
         {{fa-icon "angle-right"}}
         {{discourse-tag-bound tagRecord=tag style="simple"}}
-        {{#if secondaryTag}}
+        {{#each additionalTags as |tag|}}
           <span>&amp;</span>
-          {{discourse-tag-bound tagRecord=secondaryTag style="simple"}}
-        {{/if}}
+          {{discourse-tag-bound tagRecord=tag style="simple"}}
+        {{/each}}
       </h2>
     {{/if}}
   </div>

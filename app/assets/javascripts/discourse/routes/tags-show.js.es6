@@ -14,8 +14,11 @@ export default Discourse.Route.extend({
     var tag = this.store.createRecord("tag", { id: Handlebars.Utils.escapeExpression(params.tag_id) }),
         f = '';
 
-    if (params.secondary_tag_id) {
-      this.set("secondaryTag", this.store.createRecord("tag", { id: Handlebars.Utils.escapeExpression(params.secondary_tag_id) }));
+    if (params.additional_tags) {
+      this.set("additionalTags", _.compact(params.additional_tags.split('/')).map((tag) => {
+        return this.store.createRecord("tag", { id: Handlebars.Utils.escapeExpression(tag) });
+      }));
+      this.set("additionalTagIds", _.pluck(this.get("additionalTags"), 'id'));
     }
 
     if (params.category) {
@@ -50,7 +53,6 @@ export default Discourse.Route.extend({
     const parentCategorySlug = this.get('parentCategorySlug');
     const filter = this.get('navMode');
     const tag_id = (tag ? tag.id : 'none');
-    const secondary_tag_id = this.get('secondaryTag.id');
 
     if (categorySlug) {
       var category = Discourse.Category.findBySlug(categorySlug, parentCategorySlug);
@@ -61,8 +63,8 @@ export default Discourse.Route.extend({
       }
 
       this.set('category', category);
-    } else if (secondary_tag_id) {
-      params.filter = `tags/intersection/${tag_id}/${secondary_tag_id}`;
+    } else if (_.any(this.get("additionalTags"))) {
+      params.filter = `tags/intersection/${tag_id}/${this.get('additionalTagIds').join('/')}`;
       this.set('category', null);
     } else {
       params.filter = `tags/${tag_id}/l/${filter}`;
@@ -102,7 +104,7 @@ export default Discourse.Route.extend({
     this.controllerFor('tags.show').setProperties({
       model,
       tag: model,
-      secondaryTag: this.get('secondaryTag'),
+      additionalTags: this.get('additionalTags'),
       category: this.get('category'),
       filterMode: this.get('filterMode'),
       navMode: this.get('navMode'),
@@ -132,7 +134,7 @@ export default Discourse.Route.extend({
         // Pre-fill the tags input field
         if (controller.get('model.id')) {
           var c = self.controllerFor('composer').get('model');
-          c.set('tags', _.compact([controller.get('model.id'), controller.get('secondaryTag.id')]));
+          c.set('tags', _.flatten([controller.get('model.id')], controller.get('additionalTagIds')));
         }
       });
     },
