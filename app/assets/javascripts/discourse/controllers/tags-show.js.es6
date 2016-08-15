@@ -73,7 +73,7 @@ export default Ember.Controller.extend(BulkTopicSelection, {
   }.property(),
 
   showAdminControls: function() {
-    return this.get('additionalTags') && this.get('canAdminTag') && !this.get('category');
+    return !this.get('additionalTags') && this.get('canAdminTag') && !this.get('category');
   }.property('additionalTags', 'canAdminTag', 'category'),
 
   loadMoreTopics() {
