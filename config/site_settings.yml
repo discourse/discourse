@@ -1243,6 +1243,28 @@ user_preferences:
     type: category_list
     default: ''
 
+user_api:
+  max_user_api_reqs_per_day:
+    default: 2880
+  max_user_api_reqs_per_minute:
+    default: 12
+  allow_read_user_api_keys:
+    default: true
+  allow_write_user_api_keys:
+    default: false
+  allow_push_user_api_keys:
+    default: true
+  max_api_keys_per_user:
+    default: 10
+  min_trust_level_for_user_api_key:
+    default: 1
+  allowed_user_api_push_urls:
+    default: ''
+    type: list
+  allowed_user_api_auth_redirects:
+    default: 'https://api.discourse.org/api/auth_redirect'
+    type: list
+
 tags:
   tagging_enabled:
     client: true
