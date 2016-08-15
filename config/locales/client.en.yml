@@ -2416,6 +2416,7 @@ en:
         payload_url: "Payload URL"
         payload_url_placeholder: "https://example.com/postreceive"
         payload_url_invalid: "URL is invalid. URL should includes http:// or https://. And no blank is allowed."
+        warn_local_payload_url: "It seems you are trying to set up the webhook to a local url. Event delivered to a local address may cause side-effect or unexpected behaviours. Continue?"
         secret_invalid: "Secret must not have any blank characters."
         secret_too_short: "Secret should be at least 12 characters."
         secret_placeholder: "A optional string, used for generating signature"

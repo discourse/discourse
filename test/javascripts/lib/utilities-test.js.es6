@@ -3,6 +3,7 @@ import { blank } from 'helpers/qunit-helpers';
 import {
   emailValid,
   urlValid,
+  extractDomainFromUrl,
   isAnImage,
   avatarUrl,
   allowsAttachments,
@@ -30,6 +31,13 @@ test("urlValid", function() {
   not(urlValid('ftp://meta.discourse.org/'), "disallows ftp url");
   not(urlValid(' http://meta.discourse.org/'), "disallows blanks in the preceding string");
   not(urlValid('http://meta.discourse.org/ '), "disallows blanks in the succeeding string");
+});
+
+test("extractDomainFromUrl", function() {
+  equal(extractDomainFromUrl('http://meta.discourse.org:443/random'), 'meta.discourse.org', "extract domain name from url");
+  equal(extractDomainFromUrl('meta.discourse.org:443/random'), 'meta.discourse.org', "extract domain regardless of scheme presence");
+  equal(extractDomainFromUrl('http://192.168.0.1:443/random'), '192.168.0.1', "works for IP address");
+  equal(extractDomainFromUrl('http://localhost:443/random'), 'localhost', "works for localhost");
 });
 
 var validUpload = validateUploadedFiles;
