@@ -56,7 +56,7 @@ export default RestModel.extend({
   createProperties() {
     const types = this.get('web_hook_event_types');
     const categories = this.get('categoriesFilter');
-    const groupNames = this.get('groupsFilterInName').split(',');
+    const groupNames = (this.get('groupsFilterInName') || '').split(',');
 
     return {
       payload_url: this.get('payload_url'),
