@@ -3,8 +3,14 @@ require 'rails_helper'
 describe TagsController do
   describe 'show_latest' do
     let(:tag)         { Fabricate(:tag) }
+    let(:other_tag)   { Fabricate(:tag) }
+    let(:third_tag)   { Fabricate(:tag) }
     let(:category)    { Fabricate(:category) }
     let(:subcategory) { Fabricate(:category, parent_category_id: category.id) }
+
+    let(:single_tag_topic) { Fabricate(:topic, tags: [tag]) }
+    let(:multi_tag_topic)  { Fabricate(:topic, tags: [tag, other_tag]) }
+    let(:all_tag_topic)    { Fabricate(:topic, tags: [tag, other_tag, third_tag]) }
 
     context 'tagging disabled' do
       it "returns 404" do
@@ -21,6 +27,31 @@ describe TagsController do
       it "can filter by tag" do
         xhr :get, :show_latest, tag_id: tag.name
         expect(response).to be_success
+      end
+
+      it "can filter by two tags" do
+        single_tag_topic; multi_tag_topic; all_tag_topic
+        xhr :get, :show_latest, tag_id: tag.name, additional_tag_ids: other_tag.name
+        expect(response).to be_success
+        expect(assigns(:list).topics).to include all_tag_topic
+        expect(assigns(:list).topics).to include multi_tag_topic
+        expect(assigns(:list).topics).to_not include single_tag_topic
+      end
+
+      it "can filter by multiple tags" do
+        single_tag_topic; multi_tag_topic; all_tag_topic
+        xhr :get, :show_latest, tag_id: tag.name, additional_tag_ids: "#{other_tag.name}/#{third_tag.name}"
+        expect(response).to be_success
+        expect(assigns(:list).topics).to include all_tag_topic
+        expect(assigns(:list).topics).to_not include multi_tag_topic
+        expect(assigns(:list).topics).to_not include single_tag_topic
+      end
+
+      it "does not find any tags when a tag which doesn't exist is passed" do
+        single_tag_topic
+        xhr :get, :show_latest, tag_id: tag.name, additional_tag_ids: "notatag"
+        expect(response).to be_success
+        expect(assigns(:list).topics).to_not include single_tag_topic
       end
 
       it "can filter by category and tag" do
