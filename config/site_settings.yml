@@ -1013,7 +1013,7 @@ backups:
     shadowed_by_global: true
   s3_backup_bucket:
     default: ''
-    regex: "^[a-z0-9-]+$" # can't use '.' when using HTTPS
+    regex: '^[a-z0-9\-\/]+$' # can't use '.' when using HTTPS
     shadowed_by_global: true
   s3_disable_cleanup:
     default: false

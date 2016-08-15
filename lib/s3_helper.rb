@@ -2,32 +2,41 @@ require "aws-sdk"
 
 class S3Helper
 
-  def initialize(s3_bucket, tombstone_prefix=nil)
-    raise Discourse::InvalidParameters.new("s3_bucket") if s3_bucket.blank?
+  def initialize(s3_upload_bucket, tombstone_prefix='')
+    @s3_bucket, @s3_bucket_folder_path = begin
+      raise Discourse::InvalidParameters.new("s3_bucket") if s3_upload_bucket.blank?
+      s3_upload_bucket.downcase.split("/".freeze, 2)
+    end
 
-    @s3_bucket = s3_bucket
-    @tombstone_prefix = tombstone_prefix
+    @tombstone_prefix =
+      if @s3_bucket_folder_path
+        File.join(@s3_bucket_folder_path, tombstone_prefix)
+      else
+        tombstone_prefix
+      end
 
     check_missing_site_settings
   end
 
   def upload(file, path, options={})
+    path = get_path_for_s3_upload(path)
     obj = s3_bucket.object(path)
     obj.upload_file(file, options)
+    path
   end
 
-  def remove(s3_filename, tombstone_filename=false)
+  def remove(s3_filename, copy_to_tombstone=false)
     bucket = s3_bucket
 
     # copy the file in tombstone
-    if tombstone_filename && @tombstone_prefix.present?
+    if copy_to_tombstone && @tombstone_prefix.present?
       bucket
-        .object(File.join(@tombstone_prefix, tombstone_filename))
-        .copy_from(copy_source: File.join(@s3_bucket, s3_filename))
+        .object(File.join(@tombstone_prefix, s3_filename))
+        .copy_from(copy_source: File.join(@s3_bucket, get_path_for_s3_upload(s3_filename)))
     end
 
     # delete the file
-    bucket.object(s3_filename).delete
+    bucket.object(get_path_for_s3_upload(s3_filename)).delete
   rescue Aws::S3::Errors::NoSuchKey
   end
 
@@ -52,28 +61,32 @@ class S3Helper
 
   private
 
-    def s3_resource
-      opts = { region: SiteSetting.s3_region }
+  def get_path_for_s3_upload(path)
+    path = File.join(@s3_bucket_folder_path, path) if @s3_bucket_folder_path
+    path
+  end
 
-      unless SiteSetting.s3_use_iam_profile
-        opts[:access_key_id] = SiteSetting.s3_access_key_id
-        opts[:secret_access_key] = SiteSetting.s3_secret_access_key
-      end
+  def s3_resource
+    opts = { region: SiteSetting.s3_region }
 
-      Aws::S3::Resource.new(opts)
+    unless SiteSetting.s3_use_iam_profile
+      opts[:access_key_id] = SiteSetting.s3_access_key_id
+      opts[:secret_access_key] = SiteSetting.s3_secret_access_key
     end
 
-    def s3_bucket
-      bucket = s3_resource.bucket(@s3_bucket)
-      bucket.create unless bucket.exists?
-      bucket
-    end
+    Aws::S3::Resource.new(opts)
+  end
 
-    def check_missing_site_settings
-      unless SiteSetting.s3_use_iam_profile
-        raise Discourse::SiteSettingMissing.new("s3_access_key_id") if SiteSetting.s3_access_key_id.blank?
-        raise Discourse::SiteSettingMissing.new("s3_secret_access_key") if SiteSetting.s3_secret_access_key.blank?
-      end
-    end
+  def s3_bucket
+    bucket = s3_resource.bucket(@s3_bucket)
+    bucket.create unless bucket.exists?
+    bucket
+  end
 
+  def check_missing_site_settings
+    unless SiteSetting.s3_use_iam_profile
+      raise Discourse::SiteSettingMissing.new("s3_access_key_id") if SiteSetting.s3_access_key_id.blank?
+      raise Discourse::SiteSettingMissing.new("s3_secret_access_key") if SiteSetting.s3_secret_access_key.blank?
+    end
+  end
 end
