@@ -256,10 +256,4 @@ describe FileStore::S3Store do
       assert_path("https://hello", nil)
     end
   end
-
-  describe "#s3_bucket" do
-    it "should return the right bucket name" do
-      expect(store.s3_bucket).to eq('s3-upload-bucket')
-    end
-  end
 end
