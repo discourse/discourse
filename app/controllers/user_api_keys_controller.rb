@@ -6,7 +6,15 @@ class UserApiKeysController < ApplicationController
   skip_before_filter :check_xhr, :preload_json
   before_filter :ensure_logged_in, only: [:create, :revoke, :undo_revoke]
 
+  AUTH_API_VERSION ||= 1
+
   def new
+
+    if request.head?
+      head :ok, auth_api_version: AUTH_API_VERSION
+      return
+    end
+
     require_params
     validate_params
 
@@ -30,7 +38,6 @@ class UserApiKeysController < ApplicationController
   def create
 
     require_params
-
 
     unless SiteSetting.allowed_user_api_auth_redirects
                       .split('|')

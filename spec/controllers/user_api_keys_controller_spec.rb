@@ -44,6 +44,14 @@ TXT
     }
   end
 
+  context 'new' do
+    it "supports a head request cleanly" do
+      head :new
+      expect(response.code).to eq("200")
+      expect(response.headers["Auth-Api-Version"]).to eq("1")
+    end
+  end
+
   context 'create' do
 
     it "does not allow anon" do
