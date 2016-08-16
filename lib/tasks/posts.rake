@@ -26,6 +26,35 @@ task 'posts:fix_letter_avatars' => :environment do
   puts "", "#{rebaked} posts done!", ""
 end
 
+desc 'Rebake all posts matching string/regex'
+task 'posts:rebake_match', [:pattern, :type] => [:environment] do |_,args|
+  pattern = args[:pattern]
+  type = args[:type]
+  if !pattern
+    puts "ERROR: Expecting rake posts:rebake_match[pattern,type]"
+    exit 1
+  end
+
+  if type.downcase == "regex"
+    search = Post.where("raw ~ ?", pattern)
+  elsif type.downcase == "string" || !type
+    search = Post.where("raw ILIKE ?", "%#{pattern}%")
+  else
+    puts "ERROR: Expecting rake posts:rebake_match[pattern,type] where type is string or regex"
+    exit 1
+  end
+
+  rebaked = 0
+  total = search.count
+
+  search.order(updated_at: :asc).find_each do |post|
+    rebake_post(post)
+    print_status(rebaked += 1, total)
+  end
+
+  puts "", "#{rebaked} posts done!", ""
+end
+
 def rebake_posts_all_sites(opts = {})
   RailsMultisite::ConnectionManagement.each_connection do |db|
     rebake_posts(opts)
