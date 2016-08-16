@@ -2402,6 +2402,11 @@ en:
         add_owners: Add owners
         incoming_email: "Custom incoming email address"
         incoming_email_placeholder: "enter email address"
+        flair_url: "Avatar Flair URL"
+        flair_url_placeholder: "(Optional) Image URL"
+        flair_bg_color: "Avatar Flair Background Color"
+        flair_bg_color_placeholder: "(Optional) Hex color value"
+        flair_preview: "Preview"
 
 
       api:

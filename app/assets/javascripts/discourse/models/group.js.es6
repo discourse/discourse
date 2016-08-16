@@ -90,6 +90,11 @@ const Group = Discourse.Model.extend({
     });
   },
 
+  @computed('flair_bg_color')
+  flairBackgroundHexColor() {
+    return this.get('flair_bg_color') ? this.get('flair_bg_color').replace(new RegExp("[^0-9a-fA-F]", "g"), "") : null;
+  },
+
   asJSON() {
     return {
       name: this.get('name'),
@@ -101,6 +106,8 @@ const Group = Discourse.Model.extend({
       primary_group: !!this.get('primary_group'),
       grant_trust_level: this.get('grant_trust_level'),
       incoming_email: this.get("incoming_email"),
+      flair_url: this.get('flair_url'),
+      flair_bg_color: this.get('flairBackgroundHexColor'),
     };
   },
 
