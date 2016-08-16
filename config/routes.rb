@@ -663,7 +663,7 @@ Discourse::Application.routes.draw do
   root to: "list#top", constraints: HomePageConstraint.new("top"), :as => "top_lists"
 
   get "/user-api-key/new" => "user_api_keys#new"
-  post "/user-api-key/new" => "user_api_keys#create"
+  post "/user-api-key" => "user_api_keys#create"
 
   get "*url", to: 'permalinks#show', constraints: PermalinkConstraint.new
 

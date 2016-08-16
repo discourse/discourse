@@ -1,22 +1,36 @@
 class UserApiKeysController < ApplicationController
 
+  layout 'no_ember'
+
   skip_before_filter :redirect_to_login_if_required, only: [:new]
-  skip_before_filter :check_xhr
+  skip_before_filter :check_xhr, :preload_json
   before_filter :ensure_logged_in, only: [:create]
 
   def new
+    require_params
+    validate_params
+
+    unless current_user
+      cookies[:destination_url] = request.fullpath
+      redirect_to path('/login')
+      return
+    end
+
+    @access_description = params[:access].include?("w") ? t("user_api_key.read_write") : t("user_api_key.read")
+    @application_name = params[:application_name]
+    @public_key = params[:public_key]
+    @nonce = params[:nonce]
+    @access = params[:access]
+    @client_id = params[:client_id]
+    @auth_redirect = params[:auth_redirect]
+    @application_name = params[:application_name]
+    @push_url = params[:push_url]
   end
 
   def create
 
-    [
-     :public_key,
-     :nonce,
-     :access,
-     :client_id,
-     :auth_redirect,
-     :application_name
-    ].each{|p| params.require(p)}
+    require_params
+
 
     unless SiteSetting.allowed_user_api_auth_redirects
                       .split('|')
@@ -31,14 +45,7 @@ class UserApiKeysController < ApplicationController
     request_push = params[:access].include? 'p'
     request_write = params[:access].include? 'w'
 
-    raise Discourse::InvalidAccess unless request_read || request_push
-    raise Discourse::InvalidAccess if request_read && !SiteSetting.allow_read_user_api_keys
-    raise Discourse::InvalidAccess if request_write && !SiteSetting.allow_write_user_api_keys
-    raise Discourse::InvalidAccess if request_push && !SiteSetting.allow_push_user_api_keys
-
-    if request_push && !SiteSetting.allowed_user_api_push_urls.split('|').any?{|u| params[:push_url] == u}
-      raise Discourse::InvalidAccess
-    end
+    validate_params
 
     key = UserApiKey.create!(
       application_name: params[:application_name],
@@ -63,6 +70,35 @@ class UserApiKeysController < ApplicationController
     payload = Base64.encode64(public_key.public_encrypt(payload))
 
     redirect_to "#{params[:auth_redirect]}?payload=#{CGI.escape(payload)}"
+  end
+
+  def require_params
+    [
+     :public_key,
+     :nonce,
+     :access,
+     :client_id,
+     :auth_redirect,
+     :application_name
+    ].each{|p| params.require(p)}
+  end
+
+  def validate_params
+    request_read = params[:access].include? 'r'
+    request_push = params[:access].include? 'p'
+    request_write = params[:access].include? 'w'
+
+    raise Discourse::InvalidAccess unless request_read || request_push
+    raise Discourse::InvalidAccess if request_read && !SiteSetting.allow_read_user_api_keys
+    raise Discourse::InvalidAccess if request_write && !SiteSetting.allow_write_user_api_keys
+    raise Discourse::InvalidAccess if request_push && !SiteSetting.allow_push_user_api_keys
+
+    if request_push && !SiteSetting.allowed_user_api_push_urls.split('|').any?{|u| params[:push_url] == u}
+      raise Discourse::InvalidAccess
+    end
+
+    # our pk has got to parse
+    OpenSSL::PKey::RSA.new(params[:public_key])
   end
 
 end
