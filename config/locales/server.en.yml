@@ -640,6 +640,13 @@ en:
     not_found_description: "Sorry, we couldn't find this unsubscribe. It's possible the link in your email has expired?"
     log_out: "Log Out"
 
+  user_api_key:
+    title: "Authorize application access"
+    authorize: "Authorize"
+    read: "read"
+    read_write: "read/write"
+    description: "Would you like to grant \"%{application_name}\" %{access} access to your account?"
+
   reports:
     visits:
       title: "User Visits"
