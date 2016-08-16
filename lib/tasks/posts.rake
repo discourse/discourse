@@ -30,14 +30,15 @@ desc 'Rebake all posts matching string/regex'
 task 'posts:rebake_match', [:pattern, :type] => [:environment] do |_,args|
   pattern = args[:pattern]
   type = args[:type]
+  type = type.downcase if type
   if !pattern
     puts "ERROR: Expecting rake posts:rebake_match[pattern,type]"
     exit 1
   end
 
-  if type.downcase == "regex"
+  if type == "regex"
     search = Post.where("raw ~ ?", pattern)
-  elsif type.downcase == "string" || !type
+  elsif type == "string" || !type
     search = Post.where("raw ILIKE ?", "%#{pattern}%")
   else
     puts "ERROR: Expecting rake posts:rebake_match[pattern,type] where type is string or regex"
