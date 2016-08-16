@@ -73,6 +73,46 @@ const User = RestModel.extend({
     return Discourse.getURL(`/users/${this.get('username_lower')}`);
   },
 
+  @computed()
+  userApiKeys() {
+    const keys = this.get('user_api_keys');
+    if (keys) {
+      return keys.map((raw)=>{
+        let obj = Em.Object.create(
+          raw
+        );
+
+        obj.revoke = () => {
+          this.revokeApiKey(obj);
+        };
+
+        obj.undoRevoke = () => {
+          this.undoRevokeApiKey(obj);
+        };
+
+        return obj;
+      });
+    }
+  },
+
+  revokeApiKey(key) {
+    return ajax("/user-api-key/revoke", {
+      type: 'POST',
+      data: { id: key.get('id') }
+    }).then(()=>{
+      key.set('revoked', true);
+    });
+  },
+
+  undoRevokeApiKey(key){
+    return ajax("/user-api-key/undo-revoke", {
+      type: 'POST',
+      data: { id: key.get('id') }
+    }).then(()=>{
+      key.set('revoked', false);
+    });
+  },
+
   pmPath(topic) {
     const userId = this.get('id');
     const username = this.get('username_lower');
