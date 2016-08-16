@@ -1,5 +1,6 @@
 import { popupAjaxError } from 'discourse/lib/ajax-error';
 import { propertyEqual } from 'discourse/lib/computed';
+import { escapeExpression } from 'discourse/lib/utilities';
 
 export default Ember.Controller.extend({
   needs: ['adminGroupsType'],
@@ -34,6 +35,23 @@ export default Ember.Controller.extend({
       { name: 1, value: 1 }, { name: 2, value: 2 }, { name: 3, value: 3 }, { name: 4, value: 4 }
     ];
   }.property(),
+
+  flairPreviewStyle: function() {
+    var style = '';
+    if (this.get('model.flair_url')) {
+      style += 'background-image: url(' + escapeExpression(this.get('model.flair_url')) + '); ';
+    }
+    if (this.get('model.flairBackgroundHexColor')) {
+      style += 'background-color: #' + this.get('model.flairBackgroundHexColor') + ';';
+    }
+    return style;
+  }.property('model.flair_url', 'model.flairBackgroundHexColor'),
+
+  flairPreviewClasses: function() {
+    if (this.get('model.flairBackgroundHexColor')) {
+      return 'rounded';
+    }
+  }.property('model.flairBackgroundHexColor'),
 
   actions: {
     next() {

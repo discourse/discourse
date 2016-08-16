@@ -77,6 +77,29 @@ createWidget('reply-to-tab', {
   }
 });
 
+createWidget('post-avatar-flair', {
+  tagName: 'div.avatar-flair',
+
+  title(attrs) {
+    return attrs.primaryGroupName;
+  },
+
+  buildClasses(attrs) {
+    return 'avatar-flair-' + attrs.primaryGroupName + (attrs.primaryGroupFlairBgColor ? ' rounded' : '');
+  },
+
+  buildAttributes(attrs) {
+    var style = '';
+    if (attrs.primaryGroupFlairUrl) {
+      style += 'background-image: url(' + attrs.primaryGroupFlairUrl + '); ';
+    }
+    if (attrs.primaryGroupFlairBgColor) {
+      style += 'background-color: #' + attrs.primaryGroupFlairBgColor + '; ';
+    }
+    return {style: style};
+  }
+});
+
 createWidget('post-avatar', {
   tagName: 'div.topic-avatar',
 
@@ -93,11 +116,21 @@ createWidget('post-avatar', {
         template: attrs.avatar_template,
         username: attrs.username,
         url: attrs.usernameUrl,
-        className: 'main-avatar'
+        className: 'main-avatar',
+        flairUrl: attrs.primaryGroupFlairUrl,
+        flairBgColor: attrs.primaryGroupFlairBgColor
       });
     }
 
-    return [body, h('div.poster-avatar-extra')];
+    const result = [body];
+
+    if (attrs.primaryGroupFlairUrl || attrs.primaryGroupFlairBgColor) {
+      result.push(this.attach('post-avatar-flair', attrs));
+    }
+
+    result.push(h('div.poster-avatar-extra'));
+
+    return result;
   }
 });
 
@@ -406,7 +439,7 @@ export default createWidget('post', {
     if (attrs.topicOwner) { classNames.push('topic-owner'); }
     if (attrs.hidden) { classNames.push('post-hidden'); }
     if (attrs.deleted) { classNames.push('deleted'); }
-    if (attrs.primary_group_name) { classNames.push(`group-${attrs.primary_group_name}`); }
+    if (attrs.primaryGroupName) { classNames.push(`group-${attrs.primaryGroupName}`); }
     if (attrs.wiki) { classNames.push(`wiki`); }
     if (attrs.isWhisper) { classNames.push('whisper'); }
     if (attrs.isModeratorAction || (attrs.isWarning && attrs.firstPost)) {

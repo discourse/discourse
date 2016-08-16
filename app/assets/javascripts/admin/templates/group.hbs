@@ -101,6 +101,38 @@
     {{/if}}
   {{/unless}}
 
+  {{#unless model.automatic}}
+    <div class="flair_inputs">
+      <div class="flair_left">
+        <div>
+          <label for="flair_url">{{i18n 'admin.groups.flair_url'}}</label>
+          {{text-field name="flair_url" value=model.flair_url placeholderKey="admin.groups.flair_url_placeholder"}}
+        </div>
+
+        <div>
+          <label for="flair_bg_color">{{i18n 'admin.groups.flair_bg_color'}}</label>
+          {{text-field name="flair_bg_color" class="flair_bg_color" value=model.flair_bg_color placeholderKey="admin.groups.flair_bg_color_placeholder"}}
+        </div>
+      </div>
+
+      {{#if flairPreviewStyle}}
+        <div class="flair_right">
+          <div>
+            <label>{{i18n 'admin.groups.flair_preview'}}</label>
+            <div class="avatar-flair-preview">
+              <div class="avatar-wrapper">
+                <img alt width="45" height="45" src="https://avatars.discourse.org/v3/letter/a/a3d4f5/45.png" class="avatar actor" title="demo">
+              </div>
+              <div class="avatar-flair demo {{flairPreviewClasses}}" style={{flairPreviewStyle}}></div>
+            </div>
+          </div>
+        </div>
+      {{/if}}
+
+      <div class="clearfix"></div>
+    </div>
+  {{/unless}}
+
   <div class='buttons'>
     <button {{action "save"}} disabled={{disableSave}} class='btn btn-primary'>{{i18n 'admin.customize.save'}}</button>
     {{#unless model.automatic}}
