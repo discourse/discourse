@@ -18,6 +18,8 @@ export default Discourse.Route.extend({
       this.set("additionalTags", params.additional_tags.split('/').map((t) => {
         return this.store.createRecord("tag", { id: Handlebars.Utils.escapeExpression(t) }).id;
       }));
+    } else {
+      this.set('additionalTags', null);
     }
 
     if (params.category) {
