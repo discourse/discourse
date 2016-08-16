@@ -127,6 +127,11 @@ TXT
       uri.query = ""
       expect(uri.to_s).to eq(args[:auth_redirect] + "?")
 
+      # should overwrite if needed
+      args["access"] = "pr"
+      post :create, args
+
+      expect(response.code).to eq("302")
     end
 
   end

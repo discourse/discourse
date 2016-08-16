@@ -177,7 +177,7 @@ class Auth::DefaultCurrentUserProvider
   protected
 
   def lookup_user_api_user(user_api_key)
-    if api_key = UserApiKey.where(key: user_api_key).includes(:user).first
+    if api_key = UserApiKey.where(key: user_api_key, revoked_at: nil).includes(:user).first
       if !api_key.write && @env["REQUEST_METHOD"] != "GET"
         raise Discourse::InvalidAccess
       end

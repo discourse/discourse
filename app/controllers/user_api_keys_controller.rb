@@ -4,7 +4,7 @@ class UserApiKeysController < ApplicationController
 
   skip_before_filter :redirect_to_login_if_required, only: [:new]
   skip_before_filter :check_xhr, :preload_json
-  before_filter :ensure_logged_in, only: [:create]
+  before_filter :ensure_logged_in, only: [:create, :revoke, :undo_revoke]
 
   def new
     require_params
@@ -47,6 +47,9 @@ class UserApiKeysController < ApplicationController
 
     validate_params
 
+    # destroy any old keys we had
+    UserApiKey.where(user_id: current_user.id, client_id: params[:client_id]).destroy_all
+
     key = UserApiKey.create!(
       application_name: params[:application_name],
       client_id: params[:client_id],
@@ -70,6 +73,22 @@ class UserApiKeysController < ApplicationController
     payload = Base64.encode64(public_key.public_encrypt(payload))
 
     redirect_to "#{params[:auth_redirect]}?payload=#{CGI.escape(payload)}"
+  end
+
+  def revoke
+    find_key.update_columns(revoked_at: Time.zone.now)
+    render json: success_json
+  end
+
+  def undo_revoke
+    find_key.update_columns(revoked_at: nil)
+    render json: success_json
+  end
+
+  def find_key
+    key = UserApiKey.find(params[:id])
+    raise Discourse::InvalidAccess unless current_user.admin || key.user_id = current_user.id
+    key
   end
 
   def require_params

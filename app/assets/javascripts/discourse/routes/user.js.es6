@@ -19,7 +19,15 @@ export default Discourse.Route.extend({
       const isIndexStream = INDEX_STREAM_ROUTES.indexOf(transition.targetName) !== -1;
       this.controllerFor('user').set('indexStream', isIndexStream);
       return true;
-    }
+    },
+
+    undoRevokeApiKey(key) {
+      key.undoRevoke();
+    },
+
+    revokeApiKey(key) {
+      key.revoke();
+    },
   },
 
   beforeModel() {
