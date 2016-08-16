@@ -5,6 +5,8 @@
 .composer-open {
   .topic-timeline {
     opacity: 0;
+    pointer-events: none;
+    cursor: default;
   }
 }
 
