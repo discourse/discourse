@@ -50,8 +50,23 @@ class Backup
 
   def upload_to_s3
     return unless s3
-    File.open(@path) do |file|
-      s3.upload(file, @filename)
+
+    if SiteSetting.s3_enable_encryption
+      if (s3_gnupg_public_key = SiteSetting.s3_gnupg_public_key).blank?
+        raise Discourse::SiteSettingMissing.new("s3_gnupg_public_key")
+      end
+
+      encrypted_filename = "#{@filename}.gpg"
+      encrypted_path = "/tmp/#{encrypted_filename}"
+
+      `echo '#{s3_gnupg_public_key}' | gpg --import`
+      gnupg_user_id = `echo '#{s3_gnupg_public_key}' | gpg --list-keys --with-colons | awk -F: '/^pub:/ { print $5 }'`.chomp
+      `gpg --encrypt --output #{encrypted_path} --batch --yes --verbose --recipient #{gnupg_user_id} #{@path}`
+
+      File.open(encrypted_path) { |file| s3.upload(file, encrypted_filename) }
+      File.delete(encrypted_path)
+    else
+      File.open(path) { |file| s3.upload(file, filename) }
     end
   end
 

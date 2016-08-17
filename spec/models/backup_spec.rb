@@ -30,9 +30,8 @@ describe Backup do
   end
 
   shared_context 's3 helpers' do
-    let(:client) { Aws::S3::Client.new(stub_responses: true) }
-    let(:resource) { Aws::S3::Resource.new(client: client) }
-    let!(:s3_bucket) { resource.bucket("s3-upload-bucket") }
+    let(:s3_bucket) { stub }
+    let(:s3_object) { stub }
     let(:s3_helper) { b1.s3 }
 
     before(:each) do
@@ -55,8 +54,6 @@ describe Backup do
         File.expects(:open).with(b1.path).yields(stub)
 
         s3_helper.expects(:s3_bucket).returns(s3_bucket)
-        s3_object = stub
-
         s3_bucket.expects(:object).with(b1.filename).returns(s3_object)
         s3_object.expects(:upload_file)
 
@@ -73,9 +70,30 @@ describe Backup do
           File.expects(:open).with(b1.path).yields(stub)
 
           s3_helper.expects(:s3_bucket).returns(s3_bucket)
-          s3_object = stub
-
           s3_bucket.expects(:object).with("discourse-backups/#{b1.filename}").returns(s3_object)
+          s3_object.expects(:upload_file)
+
+          b1.after_create_hook
+        end
+      end
+
+      context "when encryption is enabled" do
+        before do
+          SiteSetting.s3_enable_encryption = true
+          SiteSetting.s3_gnupg_public_key = "Some public key"
+        end
+
+        it "should upload the back to S3 with the right path" do
+          filename = "#{b1.filename}.gpg"
+          path = "/tmp/#{filename}"
+          b1.path = path
+
+          b1.expects(:`).returns("some output").at_least_once
+          File.expects(:open).with(path).yields(stub)
+          File.expects(:delete).with(path)
+
+          s3_helper.expects(:s3_bucket).returns(s3_bucket)
+          s3_bucket.expects(:object).with(filename).returns(s3_object)
           s3_object.expects(:upload_file)
 
           b1.after_create_hook
@@ -100,8 +118,6 @@ describe Backup do
 
       it "should upload the backup to S3 with the right paths" do
         s3_helper.expects(:s3_bucket).returns(s3_bucket)
-        s3_object = stub
-
         s3_bucket.expects(:object).with(b1.filename).returns(s3_object)
         s3_object.expects(:delete)
 
@@ -115,8 +131,6 @@ describe Backup do
 
         it "should upload the backup to S3 with the right paths" do
           s3_helper.expects(:s3_bucket).returns(s3_bucket)
-          s3_object = stub
-
           s3_bucket.expects(:object).with("discourse-backups/#{b1.filename}").returns(s3_object)
           s3_object.expects(:delete)
 
