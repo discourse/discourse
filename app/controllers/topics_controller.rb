@@ -620,6 +620,12 @@ class TopicsController < ApplicationController
   end
 
   def perform_show_response
+
+    if request.head?
+      head :ok
+      return
+    end
+
     topic_view_serializer = TopicViewSerializer.new(@topic_view, scope: guardian, root: false, include_raw: !!params[:include_raw])
 
     respond_to do |format|
