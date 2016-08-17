@@ -688,6 +688,10 @@ section.details {
     position: relative;
     width: 45px;
 
+    .avatar-wrapper {
+      background-color: #f4f4f4;
+    }
+
     .avatar-flair.demo {
       top: 25px;
       &.rounded {

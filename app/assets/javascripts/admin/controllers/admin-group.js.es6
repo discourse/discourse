@@ -36,6 +36,10 @@ export default Ember.Controller.extend({
     ];
   }.property(),
 
+  demoAvatarUrl: function() {
+    return Discourse.getURL('/images/avatar.png');
+  }.property(),
+
   flairPreviewStyle: function() {
     var style = '';
     if (this.get('model.flair_url')) {
