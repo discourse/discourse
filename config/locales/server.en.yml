@@ -1909,7 +1909,7 @@ en:
       text_body_template: |
         The backup was successful.
 
-        Visit the [admin > backup section](%{base_url}/admin/backups) to download your new backup."
+        Visit the [admin > backup section](%{base_url}/admin/backups) to download your new backup.
 
         Here's the log:
 
