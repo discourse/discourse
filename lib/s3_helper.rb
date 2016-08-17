@@ -2,8 +2,10 @@ require "aws-sdk"
 
 class S3Helper
 
-  def initialize(s3_upload_bucket, tombstone_prefix='', s3_options=default_s3_options)
-    @s3_options = s3_options
+  class SettingMissing < StandardError; end
+
+  def initialize(s3_upload_bucket, tombstone_prefix='', options={})
+    @s3_options = default_s3_options.merge(options)
 
     @s3_bucket, @s3_bucket_folder_path = begin
       raise Discourse::InvalidParameters.new("s3_bucket") if s3_upload_bucket.blank?
@@ -16,6 +18,8 @@ class S3Helper
       else
         tombstone_prefix
       end
+
+    check_missing_options
   end
 
   def upload(file, path, options={})
@@ -70,9 +74,6 @@ class S3Helper
     opts = { region: SiteSetting.s3_region }
 
     unless SiteSetting.s3_use_iam_profile
-      raise Discourse::SiteSettingMissing.new("s3_access_key_id") if SiteSetting.s3_access_key_id.blank?
-      raise Discourse::SiteSettingMissing.new("s3_secret_access_key") if SiteSetting.s3_secret_access_key.blank?
-
       opts[:access_key_id] = SiteSetting.s3_access_key_id
       opts[:secret_access_key] = SiteSetting.s3_secret_access_key
     end
@@ -88,5 +89,12 @@ class S3Helper
     bucket = s3_resource.bucket(@s3_bucket)
     bucket.create unless bucket.exists?
     bucket
+  end
+
+  def check_missing_options
+    unless SiteSetting.s3_use_iam_profile
+      raise SettingMissing.new("access_key_id") if @s3_options[:access_key_id].blank?
+      raise SettingMissing.new("secret_access_key") if @s3_options[:secret_access_key].blank?
+    end
   end
 end
