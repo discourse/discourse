@@ -27,7 +27,7 @@ page.onInitialized = function() {
 
 page.onConsoleMessage = function(msg) {
   console.log(msg);
-}
+};
 
 page.waitFor = function(desc, fn, cb) {
   var start = +new Date();
@@ -63,9 +63,9 @@ function test(desc, fn) {
   actions.push({ test: fn, desc: desc });
 };
 
-function wait(delay) {
-  actions.push({ wait: delay });
-}
+// function wait(delay) {
+//   actions.push({ wait: delay });
+// }
 
 function exec(desc, fn) {
   actions.push({ exec: fn, desc: desc });
@@ -75,13 +75,13 @@ function execAsync(desc, delay, fn) {
   actions.push({ execAsync: fn, delay: delay, desc: desc });
 };
 
-function upload(input, path) {
-  actions.push({ upload: path, input: input });
-};
+// function upload(input, path) {
+//   actions.push({ upload: path, input: input });
+// };
 
-function screenshot(filename) {
-  actions.push({ screenshot: filename });
-}
+// function screenshot(filename) {
+//   actions.push({ screenshot: filename });
+// }
 
 function run() {
   var allPassed = true;
@@ -143,11 +143,7 @@ var runTests = function() {
   });
 
   execAsync("navigate to 1st topic", 500, function() {
-    if ($(".main-link > a:first").length > 0) {
-      $(".main-link > a:first").click(); // topic list page
-    } else {
-      $(".featured-topic a.title:first").click(); // categories page
-    }
+    $(".main-link a.title:first").click();
   });
 
   test("at least one post body", function() {
