@@ -16,7 +16,7 @@ class UserApiKeysController < ApplicationController
     end
 
     require_params
-    validate_params
+    validate_params(_skip_push=true)
 
     unless current_user
       cookies[:destination_url] = request.fullpath
@@ -33,6 +33,14 @@ class UserApiKeysController < ApplicationController
     @auth_redirect = params[:auth_redirect]
     @application_name = params[:application_name]
     @push_url = params[:push_url]
+
+    if @access.include?("p")
+      if !SiteSetting.allow_push_user_api_keys ||
+         !SiteSetting.allowed_user_api_push_urls.split('|').any?{|u| params[:push_url] == u}
+        @access.gsub!("p","")
+        @push_url = nil
+      end
+    end
   end
 
   def create
@@ -109,7 +117,7 @@ class UserApiKeysController < ApplicationController
     ].each{|p| params.require(p)}
   end
 
-  def validate_params
+  def validate_params(skip_push_check = false)
     request_read = params[:access].include? 'r'
     request_push = params[:access].include? 'p'
     request_write = params[:access].include? 'w'
@@ -117,10 +125,13 @@ class UserApiKeysController < ApplicationController
     raise Discourse::InvalidAccess unless request_read || request_push
     raise Discourse::InvalidAccess if request_read && !SiteSetting.allow_read_user_api_keys
     raise Discourse::InvalidAccess if request_write && !SiteSetting.allow_write_user_api_keys
-    raise Discourse::InvalidAccess if request_push && !SiteSetting.allow_push_user_api_keys
 
-    if request_push && !SiteSetting.allowed_user_api_push_urls.split('|').any?{|u| params[:push_url] == u}
-      raise Discourse::InvalidAccess
+    unless skip_push_check
+      raise Discourse::InvalidAccess if request_push && !SiteSetting.allow_push_user_api_keys
+
+      if request_push && !SiteSetting.allowed_user_api_push_urls.split('|').any?{|u| params[:push_url] == u}
+        raise Discourse::InvalidAccess
+      end
     end
 
     # our pk has got to parse
