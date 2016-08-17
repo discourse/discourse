@@ -110,3 +110,27 @@ task 'posts:normalize_code' => :environment do
   puts
   puts "#{i} posts normalized!"
 end
+
+desc 'Remap all posts matching specific string'
+task 'posts:remap', [:find, :replace] => [:environment] do |_,args|
+  find = args[:find]
+  replace = args[:replace]
+  if !find || !replace
+    puts "ERROR: Expecting rake posts:rebake_match[find,replace]"
+    exit 1
+  end
+
+  puts "Remapping"
+  i = 0
+  Post.where("raw LIKE ?", "%#{find}%").each do |p|
+    new_raw = p.raw.dup
+    new_raw = new_raw.gsub!(/#{Regexp.escape(find)}/, replace) || new_raw
+
+    if new_raw != p.raw
+      p.revise(Discourse.system_user, { raw: new_raw }, { bypass_bump: true })
+      putc "."
+      i += 1
+    end
+  end
+  puts "", "#{i} posts remapped!", ""
+end
