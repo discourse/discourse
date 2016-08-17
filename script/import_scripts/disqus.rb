@@ -3,63 +3,107 @@ require 'optparse'
 require File.expand_path(File.dirname(__FILE__) + "/base")
 
 class ImportScripts::Disqus < ImportScripts::Base
-  def initialize(options)
-    verify_file(options[:file])
-    @post_as_user = get_post_as_user(options[:post_as])
-    @dry_run = options[:dry_run]
-    @parser = DisqusSAX.new(options[:strip], options[:no_deleted])
+  # CHANGE THESE BEFORE RUNNING THE IMPORTER
+
+  IMPORT_FILE = File.expand_path("~/import/site/export.xml")
+  IMPORT_CATEGORY = "Front page"
+
+  def initialize
+    abort("File '#{IMPORT_FILE}' not found") if !File.exist?(IMPORT_FILE)
+
+    @category = Category.where(name: IMPORT_CATEGORY).first 
+    abort("Category #{IMPORT_CATEGORY} not found") if @category.blank?
+
+    @parser = DisqusSAX.new
     doc = Nokogiri::XML::SAX::Parser.new(@parser)
-    doc.parse_file(options[:file])
+    doc.parse_file(IMPORT_FILE)
     @parser.normalize
-    super()
+
+    super
   end
 
   def execute
+    import_users
+    import_topics_and_posts
+  end
+
+  def import_users
+    puts "", "importing users..."
+
+    by_email = {}
+
+    @parser.posts.each do |id, p|
+      next if p[:is_spam] == 'true' || p[:is_deleted] == 'true'
+      by_email[p[:author_email]] = { name: p[:author_name], username: p[:author_username] }
+    end
+
     @parser.threads.each do |id, t|
-      puts "Creating #{t[:title]}... (#{t[:posts].size} posts)"
+      by_email[t[:author_email]] = { name: t[:author_name], username: t[:author_username] }
+    end
 
-      if !@dry_run
-        post = TopicEmbed.import_remote(@post_as_user, t[:link], title: t[:title])
+    create_users(by_email.keys) do |email|
+      user = by_email[email]
+      {
+        id: email,
+        email: email,
+        username: user[:username],
+        name: user[:name],
+        merge: true
+      }
+    end
+  end
 
-        if post.present?
-          t[:posts].each do |p|
-            post_user = @post_as_user
+  def import_topics_and_posts
+    puts "", "importing topics..."
 
-            if p[:author_email]
-              post_user = create_user({ id: nil, email: p[:author_email] }, nil)
+    @parser.threads.each do |id, t|
+
+      title = t[:title]
+      title.gsub!(/&#8220;/, '"')
+      title.gsub!(/&#8221;/, '"')
+      title.gsub!(/&#8217;/, "'")
+      title.gsub!(/&#8212;/, "--")
+      title.gsub!(/&#8211;/, "-")
+
+      puts "Creating #{title}... (#{t[:posts].size} posts)"
+
+      topic_user = User.where('email = ? OR username = ?', t[:author_email].downcase, t[:author_username]).first
+      begin
+        post = TopicEmbed.import_remote(topic_user, t[:link], title: title)
+        post.topic.update_column(:category_id, @category.id)
+      rescue OpenURI::HTTPError
+        post = nil
+      end
+
+      if post.present? && post.topic.posts_count <= 1
+        (t[:posts] || []).each do |p|
+          post_user = User.where('email = ? OR username = ?', (p[:author_email] || '').downcase, p[:author_username]).first
+          next unless post_user.present?
+
+          attrs = {
+            user_id: post_user.id,
+            topic_id: post.topic_id,
+            raw: p[:cooked],
+            cooked: p[:cooked],
+            created_at: Date.parse(p[:created_at])
+          }
+
+          if p[:parent_id]
+            parent = @parser.posts[p[:parent_id]]
+
+            if parent && parent[:discourse_number]
+              attrs[:reply_to_post_number] = parent[:discourse_number]
             end
-
-            attrs = {
-              user_id: post_user.id,
-              topic_id: post.topic_id,
-              raw: p[:cooked],
-              cooked: p[:cooked],
-              created_at: Date.parse(p[:created_at])
-            }
-
-            if p[:parent_id]
-              parent = @parser.posts[p[:parent_id]]
-
-              if parent && parent[:discourse_number]
-                attrs[:reply_to_post_number] = parent[:discourse_number]
-              end
-            end
-
-            post = create_post(attrs, p[:id])
-            p[:discourse_number] = post.post_number
           end
 
-          TopicFeaturedUsers.new(post.topic).choose
+          post = create_post(attrs, p[:id])
+          p[:discourse_number] = post.post_number
         end
       end
     end
   end
 
   private
-
-  def verify_file(file)
-    abort("File '#{file}' not found") if !File.exist?(file)
-  end
 
   def get_post_as_user(username)
     user = User.find_by_username_lower(username.downcase)
@@ -69,26 +113,25 @@ class ImportScripts::Disqus < ImportScripts::Base
 end
 
 class DisqusSAX < Nokogiri::XML::SAX::Document
-  attr_accessor :posts, :threads
+  attr_accessor :posts, :threads, :users
 
-  def initialize(strip, no_deleted = false)
+  def initialize
     @inside = {}
     @posts = {}
     @threads = {}
-    @no_deleted = no_deleted
-    @strip = strip
+    @users = {}
   end
 
   def start_element(name, attrs = [])
+
+    hashed = Hash[attrs]
     case name
     when 'post'
       @post = {}
-      @post[:id] = Hash[attrs]['dsq:id'] if @post
+      @post[:id] = hashed['dsq:id'] if @post
     when 'thread'
-      id = Hash[attrs]['dsq:id']
+      id = hashed['dsq:id']
       if @post
-        # Skip this post if it's deleted and no_deleted is true
-        return if @no_deleted && @post[:is_deleted].to_s == 'true'
         thread = @threads[id]
         thread[:posts] << @post
       else
@@ -96,7 +139,7 @@ class DisqusSAX < Nokogiri::XML::SAX::Document
       end
     when 'parent'
       if @post
-        id = Hash[attrs]['dsq:id']
+        id = hashed['dsq:id']
         @post[:parent_id] = id
       end
     end
@@ -122,13 +165,19 @@ class DisqusSAX < Nokogiri::XML::SAX::Document
   def characters(str)
     record(@post, :author_email, str, 'author', 'email')
     record(@post, :author_name, str, 'author', 'name')
+    record(@post, :author_username, str, 'author', 'username')
     record(@post, :author_anonymous, str, 'author', 'isAnonymous')
     record(@post, :created_at, str, 'createdAt')
     record(@post, :is_deleted, str, 'isDeleted')
+    record(@post, :is_spam, str, 'isSpam')
 
     record(@thread, :link, str, 'link')
     record(@thread, :title, str, 'title')
     record(@thread, :created_at, str, 'createdAt')
+    record(@thread, :author_email, str, 'author', 'email')
+    record(@thread, :author_name, str, 'author', 'name')
+    record(@thread, :author_username, str, 'author', 'username')
+    record(@thread, :author_anonymous, str, 'author', 'isAnonymous')
   end
 
   def cdata_block(str)
@@ -154,8 +203,7 @@ class DisqusSAX < Nokogiri::XML::SAX::Document
         # Remove any threads that have no posts
         @threads.delete(id)
       else
-        # Normalize titles
-        t[:title] = [:title].gsub(@strip, '').strip if @strip.present?
+        t[:posts].delete_if {|p| p[:is_spam] == 'true' || p[:is_deleted] == 'true'}
       end
     end
 
@@ -174,32 +222,4 @@ class DisqusSAX < Nokogiri::XML::SAX::Document
   end
 end
 
-options = {
-  dry_run: false
-}
-
-OptionParser.new do |opts|
-  opts.banner = 'Usage: RAILS_ENV=production ruby disqus.rb [OPTIONS]'
-
-  opts.on('-f', '--file=FILE_PATH', 'The disqus XML file to import') do |value|
-    options[:file] = value
-  end
-
-  opts.on('-d', '--dry_run', 'Just output what will be imported rather than doing it') do
-    options[:dry_run] = true
-  end
-
-  opts.on('-p', '--post_as=USERNAME', 'The Discourse username to post as') do |value|
-    options[:post_as] = value
-  end
-
-  opts.on('-D', '--no_deleted', 'Do not post deleted comments') do
-    options[:no_deleted] = true
-  end
-
-  opts.on('-s', '--strip=TEXT', 'Text to strip from titles') do |value|
-    options[:strip] = value
-  end
-end.parse!
-
-ImportScripts::Disqus.new(options).perform
+ImportScripts::Disqus.new.perform
