@@ -91,10 +91,10 @@ createWidget('post-avatar-flair', {
   buildAttributes(attrs) {
     var style = '';
     if (attrs.primaryGroupFlairUrl) {
-      style += 'background-image: url(' + attrs.primaryGroupFlairUrl + '); ';
+      style += 'background-image: url(' + Handlebars.Utils.escapeExpression(attrs.primaryGroupFlairUrl) + '); ';
     }
     if (attrs.primaryGroupFlairBgColor) {
-      style += 'background-color: #' + attrs.primaryGroupFlairBgColor + '; ';
+      style += 'background-color: #' + Handlebars.Utils.escapeExpression(attrs.primaryGroupFlairBgColor) + '; ';
     }
     return {style: style};
   }
