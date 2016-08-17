@@ -12,28 +12,29 @@ class CategoriesController < ApplicationController
   end
 
   def index
-    @description = SiteSetting.site_description
-
-    options = {}
-    options[:latest_posts] = params[:latest_posts] || SiteSetting.category_featured_topics
-    options[:parent_category_id] = params[:parent_category_id]
-    options[:is_homepage] = current_homepage == "categories".freeze
-
-    @list = CategoryList.new(guardian, options)
-    @list.draft_key = Draft::NEW_TOPIC
-    @list.draft_sequence = DraftSequence.current(current_user, Draft::NEW_TOPIC)
-    @list.draft = Draft.get(current_user, @list.draft_key, @list.draft_sequence) if current_user
-
     discourse_expires_in 1.minute
 
-    unless current_homepage == "categories"
-      @title = I18n.t('js.filters.categories.title')
-    end
+    @description = SiteSetting.site_description
 
-    store_preloaded("categories_list", MultiJson.dump(CategoryListSerializer.new(@list, scope: guardian)))
+    category_options = { is_homepage: current_homepage == "categories".freeze }
+
+    @category_list = CategoryList.new(guardian, category_options)
+    @category_list.draft_key = Draft::NEW_TOPIC
+    @category_list.draft_sequence = DraftSequence.current(current_user, Draft::NEW_TOPIC)
+    @category_list.draft = Draft.get(current_user, @category_list.draft_key, @category_list.draft_sequence) if current_user
+
+    @title = I18n.t('js.filters.categories.title') unless category_options[:is_homepage]
+
     respond_to do |format|
-      format.html { render }
-      format.json { render_serialized(@list, CategoryListSerializer) }
+      format.html do
+        topic_options = { per_page: SiteSetting.categories_topics, no_definitions: true }
+        topic_list = TopicQuery.new(current_user, topic_options).list_latest
+        store_preloaded(topic_list.preload_key, MultiJson.dump(TopicListSerializer.new(topic_list, scope: guardian)))
+        store_preloaded(@category_list.preload_key, MultiJson.dump(CategoryListSerializer.new(@category_list, scope: guardian)))
+        render
+      end
+
+      format.json { render_serialized(@category_list, CategoryListSerializer) }
     end
   end
 

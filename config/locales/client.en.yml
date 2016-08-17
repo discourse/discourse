@@ -458,14 +458,12 @@ en:
       latest_by: "latest by"
       toggle_ordering: "toggle ordering control"
       subcategories: "Subcategories"
-      topic_stats: "The number of new topics."
+      topic_sentence:
+        one: "1 topic"
+        other: "%{count} topics"
       topic_stat_sentence:
         one: "%{count} new topic in the past %{unit}."
         other: "%{count} new topics in the past %{unit}."
-      post_stats: "The number of new posts."
-      post_stat_sentence:
-        one: "%{count} new post in the past %{unit}."
-        other: "%{count} new posts in the past %{unit}."
 
     ip_lookup:
       title: IP Address Lookup
@@ -1940,6 +1938,10 @@ en:
 
     posts: "Posts"
     posts_long: "there are {{number}} posts in this topic"
+
+    posts_likes:
+      one: "This topic has 1 reply."
+      other: "This topic has {{count}} replies."
 
     # keys ending with _MF use message format, see https://meta.discourse.org/t/message-format-support-for-localization/7035 for details
     posts_likes_MF: |

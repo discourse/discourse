@@ -1,5 +1,6 @@
 import { ajax } from 'discourse/lib/ajax';
 import RestModel from 'discourse/models/rest';
+import computed from 'ember-addons/ember-computed-decorators';
 import { on } from 'ember-addons/ember-computed-decorators';
 import PermissionType from 'discourse/models/permission-type';
 
@@ -17,56 +18,64 @@ const Category = RestModel.extend({
         availableGroups.removeObject(elem.group_name);
         return {
           group_name: elem.group_name,
-          permission: PermissionType.create({id: elem.permission_type})
+          permission: PermissionType.create({ id: elem.permission_type })
         };
       }));
     }
   },
 
-  availablePermissions: function(){
-    return [  PermissionType.create({id: PermissionType.FULL}),
-              PermissionType.create({id: PermissionType.CREATE_POST}),
-              PermissionType.create({id: PermissionType.READONLY})
-           ];
-  }.property(),
+  @computed
+  availablePermissions() {
+    return [
+      PermissionType.create({ id: PermissionType.FULL }),
+      PermissionType.create({ id: PermissionType.CREATE_POST }),
+      PermissionType.create({ id: PermissionType.READONLY })
+    ];
+  },
 
-  searchContext: function() {
-    return ({ type: 'category', id: this.get('id'), category: this });
-  }.property('id'),
+  @computed("id")
+  searchContext(id) {
+    return { type: 'category', id, category: this };
+  },
 
-  url: function() {
+  @computed("name")
+  url() {
     return Discourse.getURL("/c/") + Category.slugFor(this);
-  }.property('name'),
+  },
 
-  fullSlug: function() {
-    return this.get("url").slice(3).replace("/", "-");
-  }.property("url"),
+  @computed("url")
+  fullSlug(url) {
+    return url.slice(3).replace("/", "-");
+  },
 
-  nameLower: function() {
-    return this.get('name').toLowerCase();
-  }.property('name'),
+  @computed("name")
+  nameLower(name) {
+    return name.toLowerCase();
+  },
 
-  unreadUrl: function() {
-    return this.get('url') + '/l/unread';
-  }.property('url'),
+  @computed("url")
+  unreadUrl(url) {
+    return `${url}/l/unread`;
+  },
 
-  newUrl: function() {
-    return this.get('url') + '/l/new';
-  }.property('url'),
+  @computed("url")
+  newUrl(url) {
+    return `${url}/l/new`;
+  },
 
-  style: function() {
-    return "background-color: #" + this.get('category.color') + "; color: #" + this.get('category.text_color') + ";";
-  }.property('color', 'text_color'),
+  @computed("color", "text_color")
+  style(color, textColor) {
+    return `background-color: #${color}; color: #${textColor}`;
+  },
 
-  moreTopics: function() {
-    return this.get('topic_count') > Discourse.SiteSettings.category_featured_topics;
-  }.property('topic_count'),
+  @computed("topic_count")
+  moreTopics(topicCount) {
+    return topicCount > Discourse.SiteSettings.category_featured_topics;
+  },
 
-  save: function() {
-    var url = "/categories";
-    if (this.get('id')) {
-      url = "/categories/" + this.get('id');
-    }
+  save() {
+    const id = this.get("id");
+    const url = id ? `/categories/${id}` : "/categories";
 
     return ajax(url, {
       data: {
@@ -91,111 +100,74 @@ const Category = RestModel.extend({
         allowed_tags: this.get('allowed_tags'),
         allowed_tag_groups: this.get('allowed_tag_groups')
       },
-      type: this.get('id') ? 'PUT' : 'POST'
+      type: id ? 'PUT' : 'POST'
     });
   },
 
-  permissionsForUpdate: function(){
-    var rval = {};
-    _.each(this.get("permissions"),function(p){
-      rval[p.group_name] = p.permission.id;
-    });
+  @computed("permissions")
+  permissionsForUpdate(permissions) {
+    let rval = {};
+    permissions.forEach(p => rval[p.group_name] = p.permission.id);
     return rval;
-  }.property("permissions"),
-
-  destroy: function() {
-    return ajax("/categories/" + (this.get('id') || this.get('slug')), { type: 'DELETE' });
   },
 
-  addPermission: function(permission){
+  destroy() {
+    return ajax(`/categories/${this.get('id') || this.get('slug')}`, { type: 'DELETE' });
+  },
+
+  addPermission(permission) {
     this.get("permissions").addObject(permission);
     this.get("availableGroups").removeObject(permission.group_name);
   },
 
-
-  removePermission: function(permission){
+  removePermission(permission) {
     this.get("permissions").removeObject(permission);
     this.get("availableGroups").addObject(permission.group_name);
   },
 
-  permissions: function(){
+  @computed
+  permissions() {
     return Em.A([
-      {group_name: "everyone", permission: PermissionType.create({id: 1})},
-      {group_name: "admins", permission: PermissionType.create({id: 2}) },
-      {group_name: "crap", permission: PermissionType.create({id: 3}) }
+      { group_name: "everyone", permission: PermissionType.create({id: 1}) },
+      { group_name: "admins", permission: PermissionType.create({id: 2}) },
+      { group_name: "crap", permission: PermissionType.create({id: 3}) }
     ]);
-  }.property(),
+  },
 
-  latestTopic: function(){
-    var topics = this.get('topics');
+  @computed("topics")
+  latestTopic(topics) {
     if (topics && topics.length) {
       return topics[0];
     }
-  }.property("topics"),
+  },
 
-  featuredTopics: function() {
-    var topics = this.get('topics');
+  @computed("topics")
+  featuredTopics(topics) {
     if (topics && topics.length) {
       return topics.slice(0, Discourse.SiteSettings.category_featured_topics || 2);
     }
-  }.property('topics'),
+  },
 
-  unreadTopics: function() {
-    return this.topicTrackingState.countUnread(this.get('id'));
-  }.property('topicTrackingState.messageCount'),
+  @computed("id", "topicTrackingState.messageCount")
+  unreadTopics(id) {
+    return this.topicTrackingState.countUnread(id);
+  },
 
-  newTopics: function() {
-    return this.topicTrackingState.countNew(this.get('id'));
-  }.property('topicTrackingState.messageCount'),
+  @computed("id", "topicTrackingState.messageCount")
+  newTopics(id) {
+    return this.topicTrackingState.countNew(id);
+  },
 
-  topicStatsTitle: function() {
-    var string = I18n.t('categories.topic_stats');
-    _.each(this.get('topicCountStats'), function(stat) {
-      string += ' ' + I18n.t('categories.topic_stat_sentence', {count: stat.value, unit: stat.unit});
-    }, this);
-    return string;
-  }.property('post_count'),
-
-  postStatsTitle: function() {
-    var string = I18n.t('categories.post_stats');
-    _.each(this.get('postCountStats'), function(stat) {
-      string += ' ' + I18n.t('categories.post_stat_sentence', {count: stat.value, unit: stat.unit});
-    }, this);
-    return string;
-  }.property('post_count'),
-
-  topicCountStats: function() {
-    return this.countStats('topics');
-  }.property('topics_year', 'topics_month', 'topics_week', 'topics_day'),
-
-  setNotification: function(notification_level) {
-    var url = "/category/" + this.get('id')+"/notifications";
+  setNotification(notification_level) {
     this.set('notification_level', notification_level);
-    return ajax(url, {
-      data: {
-        notification_level: notification_level
-      },
-      type: 'POST'
-    });
+    const url = `/category/${this.get('id')}/notifications`;
+    return ajax(url, { data: { notification_level }, type: 'POST' });
   },
 
-  postCountStats: function() {
-    return this.countStats('posts');
-  }.property('posts_year', 'posts_month', 'posts_week', 'posts_day'),
-
-  countStats: function(prefix) {
-    var stats = [], val;
-    _.each(['day', 'week', 'month', 'year'], function(unit) {
-      val = this.get(prefix + '_' + unit);
-      if (val > 0) stats.pushObject({value: val, unit: I18n.t(unit)});
-      if (stats.length === 2) return false;
-    }, this);
-    return stats;
-  },
-
-  isUncategorizedCategory: function() {
-    return this.get('id') === Discourse.Site.currentProp("uncategorized_category_id");
-  }.property('id')
+  @computed("id")
+  isUncategorizedCategory(id) {
+    return id === Discourse.Site.currentProp("uncategorized_category_id");
+  }
 });
 
 var _uncategorized;

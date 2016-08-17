@@ -14,6 +14,17 @@ CategoryList.reopenClass({
     const users = Discourse.Model.extractByKey(result.featured_users, Discourse.User);
     const list = Discourse.Category.list();
 
+    let statPeriod;
+    const minCategories = result.category_list.categories.length * 0.8;
+
+    ["week", "month"].some(period => {
+      const filteredCategories = result.category_list.categories.filter(c => c[`topics_${period}`] > 0);
+      if (filteredCategories.length >= minCategories) {
+        statPeriod = period;
+        return true;
+      }
+    });
+
     result.category_list.categories.forEach(c => {
       if (c.parent_category_id) {
         c.parentCategory = list.findBy('id', c.parent_category_id);
@@ -29,6 +40,22 @@ CategoryList.reopenClass({
 
       if (c.topics) {
         c.topics = c.topics.map(t => Discourse.Topic.create(t));
+      }
+
+      switch(statPeriod) {
+        case "week":
+        case "month":
+          const stat = c[`topics_${statPeriod}`];
+          const unit = I18n.t(statPeriod);
+          if (stat > 0) {
+            c.stat = `<span class="value">${stat}</span> / <span class="unit">${unit}</span>`;
+            c.statTitle = I18n.t("categories.topic_stat_sentence", { count: stat, unit: unit });
+            break;
+          }
+        default:
+          c.stat = `<span class="value">${c.topic_count}</span>`;
+          c.statTitle = I18n.t("categories.topic_sentence", { count: c.topic_count });
+          break;
       }
 
       categories.pushObject(store.createRecord('category', c));
