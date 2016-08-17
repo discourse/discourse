@@ -140,6 +140,7 @@ export default Discourse.Route.extend({
 
     didTransition() {
       this.controllerFor("tags.show")._showFooter();
+      this.set('additionalTags', null);
       return true;
     },
 
