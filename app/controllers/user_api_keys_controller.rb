@@ -31,7 +31,6 @@ class UserApiKeysController < ApplicationController
     @access = params[:access]
     @client_id = params[:client_id]
     @auth_redirect = params[:auth_redirect]
-    @application_name = params[:application_name]
     @push_url = params[:push_url]
 
     if @access.include?("p")
