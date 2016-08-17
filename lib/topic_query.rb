@@ -297,7 +297,6 @@ class TopicQuery
     end
 
     topics.each do |t|
-
       t.allowed_user_ids = filter == :private_messages ? t.allowed_users.map{|u| u.id} : []
     end
 

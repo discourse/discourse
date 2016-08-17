@@ -71,6 +71,11 @@ const Topic = RestModel.extend({
            I18n.t('last_post') + ": " + longDate(this.get('bumpedAt'));
   }.property('bumpedAt'),
 
+  @computed('replyCount')
+  replyTitle(count) {
+    return I18n.t("posts_likes", { count });
+  },
+
   createdAt: function() {
     return new Date(this.get('created_at'));
   }.property('created_at'),

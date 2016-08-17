@@ -1,24 +1,12 @@
 <div class='category-list' itemscope itemtype='http://schema.org/ItemList'>
   <meta itemprop='itemListOrder' content='http://schema.org/ItemListOrderDescending'>
-  <% @list.categories.each do |c| %>
+  <% @category_list.categories.each do |c| %>
     <div class='category' itemprop='itemListElement' itemscope itemtype='http://schema.org/ListItem'>
       <meta itemprop='url' content='<%= c.url %>'>
       <h2><a href='<%= c.url %>' itemprop='item'>
         <span itemprop='name'><%= c.name %></span>
       </a></h2>
       <span itemprop='description'><%= c.description %></span>
-      <div class='topic-list' itemscope itemtype='http://schema.org/ItemList'>
-        <%- if c.displayable_topics.present? %>
-          <% c.displayable_topics.each do |t| %>
-            <div itemprop='itemListElement' itemscope itemtype='http://schema.org/ListItem'>
-              <meta itemprop='url' content='<%= t.url %>'>
-              <a href='<%= t.relative_url %>' itemprop='item'>
-                <span itemprop='name'><%= t.title %></span>
-              </a> <span title='<%= t 'posts' %>'>(<%= t.posts_count %>)</span>
-            </div>
-          <% end %>
-        <%- end %>
-      </div>
     </div>
   <% end %>
 </div>

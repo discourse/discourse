@@ -71,6 +71,9 @@ basic:
   set_locale_from_accept_language_header:
     default: false
     validator: "AllowUserLocaleEnabledValidator"
+  categories_topics:
+    default: 20
+    min: 5
   suggested_topics:
     client: true
     default: 5

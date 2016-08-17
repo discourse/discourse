@@ -2,7 +2,7 @@ import showModal from "discourse/lib/show-modal";
 import OpenComposer from "discourse/mixins/open-composer";
 import CategoryList from "discourse/models/category-list";
 import { defaultHomepage } from 'discourse/lib/utilities';
-import PreloadStore from 'preload-store';
+import TopicList from "discourse/models/topic-list";
 
 const DiscoveryCategoriesRoute = Discourse.Route.extend(OpenComposer, {
   renderTemplate() {
@@ -15,10 +15,6 @@ const DiscoveryCategoriesRoute = Discourse.Route.extend(OpenComposer, {
   },
 
   model() {
-    // TODO: Remove this and ensure server side does not supply `topic_list`
-    // if default page is categories
-    PreloadStore.remove("topic_list");
-
     return CategoryList.list(this.store, 'categories').then(list => {
       const tracking = this.topicTrackingState;
       if (tracking) {
@@ -35,6 +31,8 @@ const DiscoveryCategoriesRoute = Discourse.Route.extend(OpenComposer, {
   },
 
   setupController(controller, model) {
+    TopicList.find("latest").then(result => model.set("topicList", result));
+
     controller.set("model", model);
 
     this.controllerFor("navigation/categories").setProperties({

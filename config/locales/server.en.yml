@@ -1055,6 +1055,7 @@ en:
     alert_admins_if_errors_per_minute: "Number of errors per minute in order to trigger an admin alert. A value of 0 disables this feature. NOTE: requires restart."
     alert_admins_if_errors_per_hour: "Number of errors per hour in order to trigger an admin alert. A value of 0 disables this feature. NOTE: requires restart."
 
+    categories_topics: "Number of topics to show in /categories page."
     suggested_topics: "Number of suggested topics shown at the bottom of a topic."
     limit_suggested_to_category: "Only show topics from the current category in suggested topics."
     suggested_topics_max_days_old: "Suggested topics should not be more than n days old."

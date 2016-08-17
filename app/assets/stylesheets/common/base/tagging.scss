@@ -169,6 +169,7 @@ header .discourse-tag {color: $tag-color !important; }
 
 .bullet + .list-tags {
   display: block;
+  line-height: 15px;
 }
 
 .bar + .list-tags {

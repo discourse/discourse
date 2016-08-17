@@ -1,10 +1,9 @@
 {{#if model.categories}}
   {{#discovery-categories refresh="refresh"}}
-    <table class='topic-list categories'>
+    <table class='categories topic-list'>
       <thead>
         <tr>
           <th class='category'>{{i18n 'categories.category'}}</th>
-          <th class='latest'>{{i18n 'categories.latest'}}</th>
           <th class='stats topics'>{{i18n 'categories.topics'}}</th>
         </tr>
       </thead>
@@ -18,7 +17,6 @@
                 {{#if c.logo_url}}
                   {{category-logo-link category=c}}
                 {{/if}}
-
                 <div class="category-description">
                   {{{c.description_excerpt}}}
                 </div>
@@ -33,27 +31,66 @@
                 </div>
               {{/if}}
             </td>
-            <td class="{{if c.archived 'archived'}} latest">
-              {{#each c.featuredTopics as |f|}}
-                {{featured-topic topic=f latestTopicOnly=latestTopicOnly action="showTopicEntrance"}}
-              {{/each}}
-            </td>
-            <td class='stats' title={{c.topicStatsTitle}}>
-              <table class="categoryStats">
-                <tbody>
-                {{#each c.topicCountStats as |s|}}
-                  <tr>
-                    <td class="value">{{s.value}}</td>
-                    <td class="unit"> / {{s.unit}}</td>
-                  </tr>
-                {{/each}}
-                </tbody>
-              </table>
+            <td class='stats' title={{c.statTitle}}>
+              {{{c.stat}}}
             </td>
           </tr>
         {{/each}}
       </tbody>
     </table>
   {{/discovery-categories}}
-  <footer class='topic-list-bottom'></footer>
 {{/if}}
+<table class="topic-list topic-list-latest">
+  <thead>
+    <tr>
+      <th class='category'>{{i18n "filters.latest.title"}}</th>
+    </tr>
+  </thead>
+  <tbody>
+  {{#each model.topicList.topics as |t|}}
+    <tr>
+      <table>
+        <tbody>
+          <tr class="{{if t.archived 'archived'}}" data-topic-id={{unbound t.id}}>
+            <td class="topic-poster">
+              {{#with t.posters.lastObject.user as |lastPoster|}}
+                {{#user-link user=lastPoster}}
+                  {{avatar lastPoster imageSize="large"}}
+                {{/user-link}}
+              {{/with}}
+            </td>
+            <td class="main-link">
+              <tr>
+                {{topic-status topic=t}}
+                {{topic-link t}}
+                {{#if t.unseen}}
+                  <span class="badge-notification new-topic"></span>
+                {{/if}}
+              </tr>
+              <tr>
+                {{category-link t.category}}
+                {{#if t.tags}}
+                  {{#each t.visibleListTags as |tag|}}
+                    {{discourse-tag tag}}
+                  {{/each}}
+                {{/if}}
+              </tr>
+            </td>
+            <td class="topic-stats">
+              <div class="topic-replies">
+                <a href="{{t.lastPostUrl}}" title="{{t.replyTitle}}">{{number t.replyCount noTitle="true"}}</a>
+              </div>
+              <div class="topic-last-activity">
+                <a href="{{t.lastPostUrl}}" title="{{t.bumpedAtTitle}}">{{format-date t.bumpedAt format="tiny" noTitle="true"}}</a>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </tr>
+  {{else}}
+    {{loading-spinner}}
+  {{/each}}
+  </tbody>
+</table>
+<div class="clearfix"></div>

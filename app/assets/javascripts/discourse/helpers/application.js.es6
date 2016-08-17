@@ -24,7 +24,7 @@ registerUnbound('number', (orig, params) => {
 
   // Round off the thousands to one decimal place
   const n = number(orig);
-  if (n !== title) {
+  if (n.toString() !== title.toString() && !params.noTitle) {
     result += " title='" + Handlebars.Utils.escapeExpression(title) + "'";
   }
   result += ">" + n + "</span>";
