@@ -10,6 +10,12 @@ class CategoryDetailedSerializer < BasicCategorySerializer
              :is_uncategorized,
              :subcategory_ids
 
+  has_many :displayable_topics, serializer: ListableTopicSerializer, embed: :objects, key: :topics
+
+  def include_displayable_topics?
+    displayable_topics.present?
+  end
+
   def is_uncategorized
     object.id == SiteSetting.uncategorized_category_id
   end

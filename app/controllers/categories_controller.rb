@@ -16,7 +16,10 @@ class CategoriesController < ApplicationController
 
     @description = SiteSetting.site_description
 
-    category_options = { is_homepage: current_homepage == "categories".freeze }
+    category_options = {
+      is_homepage: current_homepage == "categories".freeze,
+      include_topics: view_context.mobile_view? || params[:include_topics]
+    }
 
     @category_list = CategoryList.new(guardian, category_options)
     @category_list.draft_key = Draft::NEW_TOPIC

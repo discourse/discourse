@@ -87,7 +87,7 @@ class Category < ActiveRecord::Base
 
   # permission is just used by serialization
   # we may consider wrapping this in another spot
-  attr_accessor :permission, :subcategory_ids, :notification_level, :has_children
+  attr_accessor :displayable_topics, :permission, :subcategory_ids, :notification_level, :has_children
 
   @topic_id_cache = DistributedCache.new('category_topic_ids')
 
