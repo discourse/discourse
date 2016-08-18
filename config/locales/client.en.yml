@@ -74,9 +74,6 @@ en:
         x_seconds:
           one:   "1s"
           other: "%{count}s"
-        less_than_x_minutes:
-          one:   "< 1m"
-          other: "< %{count}m"
         x_minutes:
           one:   "1m"
           other: "%{count}m"
