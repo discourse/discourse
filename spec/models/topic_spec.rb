@@ -1392,6 +1392,16 @@ describe Topic do
       expect(for_digest.first).to eq(topic1)
     end
 
+    it "sorts by topic notification levels" do
+      topics = []
+      3.times {|i| topics << Fabricate(:topic) }
+      user = Fabricate(:user)
+      TopicUser.create(user_id: user.id, topic_id: topics[0].id, notification_level: TopicUser.notification_levels[:tracking])
+      TopicUser.create(user_id: user.id, topic_id: topics[2].id, notification_level: TopicUser.notification_levels[:watching])
+      for_digest = Topic.for_digest(user, 1.year.ago, top_order: true).pluck(:id)
+      expect(for_digest).to eq([topics[2].id, topics[0].id, topics[1].id])
+    end
+
   end
 
   describe 'secured' do

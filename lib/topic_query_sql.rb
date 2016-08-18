@@ -52,7 +52,7 @@ module TopicQuerySQL
     end
 
     def order_top_with_notification_levels(score)
-      "COALESCE(category_users.notification_level, 1) DESC, COALESCE(top_topics.#{score}, 0) DESC, topics.bumped_at DESC"
+      "COALESCE(topic_users.notification_level, 1) DESC, COALESCE(category_users.notification_level, 1) DESC, COALESCE(top_topics.#{score}, 0) DESC, topics.bumped_at DESC"
     end
 
   end
