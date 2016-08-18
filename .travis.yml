@@ -38,6 +38,7 @@ cache:
 
 before_install:
   - gem install bundler
+  - git clone --depth=1 https://github.com/discourse/discourse-backup-uploads-to-s3.git plugins/discourse-backup-uploads-to-s3
   - npm i -g eslint babel-eslint
   - eslint app/assets/javascripts
   - eslint --ext .es6 app/assets/javascripts
