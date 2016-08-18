@@ -174,7 +174,7 @@ describe Auth::DefaultCurrentUserProvider do
     it "allows user API access correctly" do
       params = {
         "REQUEST_METHOD" => "GET",
-        "USER_API_KEY" => api_key.key,
+        "HTTP_USER_API_KEY" => api_key.key,
       }
 
       expect(provider("/", params).current_user.id).to eq(user.id)
@@ -198,7 +198,7 @@ describe Auth::DefaultCurrentUserProvider do
 
       params = {
         "REQUEST_METHOD" => "GET",
-        "USER_API_KEY" => api_key.key,
+        "HTTP_USER_API_KEY" => api_key.key,
       }
 
       3.times do
