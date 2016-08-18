@@ -31,11 +31,14 @@ const DiscoveryCategoriesRoute = Discourse.Route.extend(OpenComposer, {
   },
 
   setupController(controller, model) {
-    model.set("loadingTopics", true);
+    // only load latest topics in desktop view
+    if (!this.site.mobileView) {
+      model.set("loadingTopics", true);
 
-    TopicList.find("latest")
-             .then(result => model.set("topicList", result))
-             .finally(() => model.set("loadingTopics", false));
+      TopicList.find("latest")
+               .then(result => model.set("topicList", result))
+               .finally(() => model.set("loadingTopics", false));
+    }
 
     controller.set("model", model);
 
