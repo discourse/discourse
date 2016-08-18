@@ -1,5 +1,5 @@
 import { popupAjaxError } from 'discourse/lib/ajax-error';
-import { urlValid, extractDomainFromUrl } from 'discourse/lib/utilities';
+import { extractDomainFromUrl } from 'discourse/lib/utilities';
 import computed from 'ember-addons/ember-computed-decorators';
 import InputValidation from 'discourse/models/input-validation';
 
@@ -24,23 +24,6 @@ export default Ember.Controller.extend({
   @computed('model.isNew')
   saveButtonText(isNew) {
     return isNew ? I18n.t('admin.web_hooks.create') : I18n.t('admin.web_hooks.save');
-  },
-
-  @computed('model.payload_url')
-  urlValidation(url) {
-    // If blank, fail without a reason
-    if (Ember.isEmpty(url)) {
-      return InputValidation.create({
-        failed: true
-      });
-    }
-
-    if (!urlValid(url)) {
-      return InputValidation.create({
-        failed: true,
-        reason: I18n.t('admin.web_hooks.payload_url_invalid')
-      });
-    }
   },
 
   @computed('model.secret')
@@ -72,9 +55,9 @@ export default Ember.Controller.extend({
     }
   },
 
-  @computed('model.isSaving', 'urlValidation', 'secretValidation', 'eventTypeValidation')
-  saveButtonDisabled(isSaving, urlValidation, secretValidation, eventTypeValidation) {
-    return isSaving ? false : urlValidation || secretValidation || eventTypeValidation;
+  @computed('model.isSaving', 'secretValidation', 'eventTypeValidation')
+  saveButtonDisabled(isSaving, secretValidation, eventTypeValidation) {
+    return isSaving ? false : secretValidation || eventTypeValidation;
   },
 
   actions: {
