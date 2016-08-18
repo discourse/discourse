@@ -124,12 +124,24 @@ html.anon .topic-list a.title:visited:not(.badge-notification) {color: dark-ligh
       color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 40%));
     }
   }
-  .topic-replies {
-    font-weight: bold;
+  .num.posts {
+    text-align: right;
+    a {
+      padding: 0;
+    }
+  }
+  .posts-map.posts {
     margin-bottom: 10px;
+    width: 100%;
+    .badge-posts {
+      font-weight: bold;
+    }
   }
   .topic-list-latest {
     margin-left: 4%;
+    .new-posts {
+      margin-left: 5px;
+    }
   }
   .topic-list.categories {
     th.stats {
@@ -138,6 +150,16 @@ html.anon .topic-list a.title:visited:not(.badge-notification) {color: dark-ligh
     .stats {
       vertical-align: top;
       text-align: center;
+      .value {
+        font-size: 1.2em;
+      }
+    }
+  }
+  .no-topics, .more-topics {
+    border-bottom: none;
+    td {
+      padding-right: 0 !important;
+      color: $primary;
     }
   }
 }
