@@ -153,6 +153,10 @@ aside.quote {
   }
 }
 
+.topic-avatar {
+  position: relative;
+}
+
 .topic-avatar .avatar-flair, .avatar-flair-preview .avatar-flair {
   display: block;
   background-size: 20px 20px;
@@ -161,14 +165,14 @@ aside.quote {
   width: 20px;
   height: 20px;
   position: absolute;
-  top: 40px;
+  bottom: 0;
   right: -6px;
   &.rounded {
     background-size: 18px 18px;
     border-radius: 12px;
     width: 24px;
     height: 24px;
-    top: 38px;
+    bottom: -2px;
     right: -8px;
   }
 }
