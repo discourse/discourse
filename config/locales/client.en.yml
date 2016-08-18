@@ -1936,10 +1936,6 @@ en:
     posts: "Posts"
     posts_long: "there are {{number}} posts in this topic"
 
-    posts_likes:
-      one: "This topic has 1 reply."
-      other: "This topic has {{count}} replies."
-
     # keys ending with _MF use message format, see https://meta.discourse.org/t/message-format-support-for-localization/7035 for details
     posts_likes_MF: |
       This topic has {count, plural, one {1 reply} other {# replies}} {ratio, select,

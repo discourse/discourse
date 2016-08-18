@@ -47,50 +47,61 @@
     </tr>
   </thead>
   <tbody>
-  {{#each model.topicList.topics as |t|}}
-    <tr>
-      <table>
-        <tbody>
-          <tr class="{{if t.archived 'archived'}}" data-topic-id={{unbound t.id}}>
-            <td class="topic-poster">
-              {{#with t.posters.lastObject.user as |lastPoster|}}
-                {{#user-link user=lastPoster}}
-                  {{avatar lastPoster imageSize="large"}}
-                {{/user-link}}
-              {{/with}}
-            </td>
-            <td class="main-link">
-              <tr>
-                {{topic-status topic=t}}
-                {{topic-link t}}
-                {{#if t.unseen}}
-                  <span class="badge-notification new-topic"></span>
-                {{/if}}
-              </tr>
-              <tr>
-                {{category-link t.category}}
-                {{#if t.tags}}
-                  {{#each t.visibleListTags as |tag|}}
-                    {{discourse-tag tag}}
-                  {{/each}}
-                {{/if}}
-              </tr>
-            </td>
-            <td class="topic-stats">
-              <div class="topic-replies">
-                <a href="{{t.lastPostUrl}}" title="{{t.replyTitle}}">{{number t.replyCount noTitle="true"}}</a>
-              </div>
-              <div class="topic-last-activity">
-                <a href="{{t.lastPostUrl}}" title="{{t.bumpedAtTitle}}">{{format-date t.bumpedAt format="tiny" noTitle="true"}}</a>
-              </div>
-            </td>
+    {{#if model.loadingTopics}}
+      {{loading-spinner}}
+    {{else}}
+      {{#if model.topicList.topics}}
+        {{#each model.topicList.topics as |t|}}
+          <tr>
+            <table>
+              <tbody>
+                <tr class="{{if t.archived 'archived'}}" data-topic-id={{unbound t.id}}>
+                  <td class="topic-poster">
+                    {{#with t.posters.firstObject.user as |originalPoster|}}
+                      {{#user-link user=originalPoster}}
+                        {{avatar originalPoster imageSize="large"}}
+                      {{/user-link}}
+                    {{/with}}
+                  </td>
+                  <td class="main-link">
+                    <tr>
+                      {{topic-status topic=t}}
+                      {{topic-link t}}
+                      {{topic-post-badges newPosts=t.totalUnread unseen=t.unseen url=t.lastUnreadUrl}}
+                    </tr>
+                    <tr>
+                      {{category-link t.category}}
+                      {{#if t.tags}}
+                        {{#each t.visibleListTags as |tag|}}
+                          {{discourse-tag tag}}
+                        {{/each}}
+                      {{/if}}
+                    </tr>
+                  </td>
+                  <td class="topic-stats">
+                    {{raw "list/posts-count-column" topic=t tagName="div"}}
+                    <div class="topic-last-activity">
+                      <a href="{{t.lastPostUrl}}" title="{{t.bumpedAtTitle}}">{{format-date t.bumpedAt format="tiny" noTitle="true"}}</a>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
           </tr>
-        </tbody>
-      </table>
-    </tr>
-  {{else}}
-    {{loading-spinner}}
-  {{/each}}
+        {{/each}}
+        <tr class="more-topics">
+          <td>
+            <a href="/latest" class="btn pull-right">{{i18n "more"}}</a>
+          </td>
+        </tr>
+      {{else}}
+        <tr class="no-topics">
+          <td>
+            <h3>{{i18n "topics.none.latest"}}</h3>
+          </td>
+        </tr>
+      {{/if}}
+    {{/if}}
   </tbody>
 </table>
 <div class="clearfix"></div>

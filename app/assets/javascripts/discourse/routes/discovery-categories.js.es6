@@ -31,7 +31,11 @@ const DiscoveryCategoriesRoute = Discourse.Route.extend(OpenComposer, {
   },
 
   setupController(controller, model) {
-    TopicList.find("latest").then(result => model.set("topicList", result));
+    model.set("loadingTopics", true);
+
+    TopicList.find("latest")
+             .then(result => model.set("topicList", result))
+             .finally(() => model.set("loadingTopics", false));
 
     controller.set("model", model);
 
@@ -44,6 +48,28 @@ const DiscoveryCategoriesRoute = Discourse.Route.extend(OpenComposer, {
   },
 
   actions: {
+
+    refresh() {
+      const controller = this.controllerFor("discovery/categories");
+
+      // Don't refresh if we're still loading
+      if (!controller || controller.get("loading")) { return; }
+
+      // If we `send('loading')` here, due to returning true it bubbles up to the
+      // router and ember throws an error due to missing `handlerInfos`.
+      // Lesson learned: Don't call `loading` yourself.
+      controller.set("loading", true);
+
+      const parentCategory = this.get("model.parentCategory");
+      const promise = parentCategory ? CategoryList.listForParent(this.store, parentCategory) :
+                                       CategoryList.list(this.store);
+
+      promise.then(list => {
+        this.setupController(controller, list);
+        controller.send("loadingComplete");
+      });
+    },
+
     createCategory() {
       const groups = this.site.groups,
             everyoneName = groups.findBy("id", 0).name;

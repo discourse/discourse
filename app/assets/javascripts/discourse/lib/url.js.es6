@@ -154,14 +154,14 @@ const DiscourseURL = Ember.Object.extend({
     // Schedule a DOM cleanup event
     Em.run.scheduleOnce('afterRender', Discourse.Route, 'cleanDOM');
 
-    // TODO: Extract into rules we can inject into the URL handler
-    if (this.navigatedToHome(oldPath, path, opts)) { return; }
-
     if (oldPath === path) {
       // If navigating to the same path send an app event. Views can watch it
       // and tell their controllers to refresh
       this.appEvents.trigger('url:refresh');
     }
+
+    // TODO: Extract into rules we can inject into the URL handler
+    if (this.navigatedToHome(oldPath, path, opts)) { return; }
 
     return this.handleURL(path, opts);
   },
