@@ -8,9 +8,8 @@ module FileStore
   class S3Store < BaseStore
     TOMBSTONE_PREFIX ||= "tombstone/"
 
-    def initialize(s3_helper=nil, s3_bucket=get_s3_bucket)
-      @s3_bucket = s3_bucket
-      @s3_helper = s3_helper || S3Helper.new(@s3_bucket, TOMBSTONE_PREFIX)
+    def initialize(s3_helper=nil)
+      @s3_helper = s3_helper || S3Helper.new(s3_bucket, TOMBSTONE_PREFIX)
     end
 
     def store_upload(file, upload, content_type = nil)
@@ -62,7 +61,7 @@ module FileStore
     end
 
     def absolute_base_url
-      bucket = @s3_bucket.split("/".freeze, 2).first
+      bucket = @s3_helper.s3_bucket_name
 
       # cf. http://docs.aws.amazon.com/general/latest/gr/rande.html#s3_region
       @absolute_base_url ||= if SiteSetting.s3_region == "us-east-1"
@@ -103,7 +102,7 @@ module FileStore
       UserAvatar.external_avatar_url(user_id, avatar.upload_id, avatar.width)
     end
 
-    def get_s3_bucket
+    def s3_bucket
       raise Discourse::SiteSettingMissing.new("s3_upload_bucket") if SiteSetting.s3_upload_bucket.blank?
       SiteSetting.s3_upload_bucket.downcase
     end
