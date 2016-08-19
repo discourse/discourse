@@ -323,6 +323,20 @@ describe PostRevisor do
           expect(post.revisions.size).to eq(1)
         end
       end
+
+      context 'passing skip_revision as true' do
+        before do
+          SiteSetting.stubs(:editing_grace_period).returns(1.minute.to_i)
+          subject.revise!(changed_by, { raw: 'yet another updated body' }, { revised_at: post.updated_at + 10.hours, skip_revision: true })
+          post.reload
+        end
+
+        it 'does not create new revision ' do
+          expect(post.version).to eq(2)
+          expect(post.public_version).to eq(2)
+          expect(post.revisions.size).to eq(1)
+        end
+      end
     end
 
     describe "topic excerpt" do
