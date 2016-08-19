@@ -53,7 +53,7 @@ module ImportScripts::PhpBB3
     def bbcode_to_md(text)
       begin
         text.bbcode_to_md(false)
-      rescue e
+      rescue => e
         puts "Problem converting \n#{text}\n using ruby-bbcode-to-md"
         text
       end
