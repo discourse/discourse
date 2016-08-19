@@ -4,9 +4,8 @@ require 'file_store/local_store'
 
 describe FileStore::S3Store do
 
-  let(:s3_helper) { stub }
-  let(:store) { FileStore::S3Store.new(s3_helper) }
-
+  let(:store) { FileStore::S3Store.new }
+  let(:s3_helper) { store.instance_variable_get(:@s3_helper) }
   let(:upload) { Fabricate(:upload) }
   let(:uploaded_file) { file_from_fixtures("logo.png") }
 
@@ -205,7 +204,6 @@ describe FileStore::S3Store do
   end
 
   describe ".absolute_base_url" do
-
     it "returns a lowercase schemaless absolute url" do
       expect(store.absolute_base_url).to eq("//s3-upload-bucket.s3.amazonaws.com")
     end

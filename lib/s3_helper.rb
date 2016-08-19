@@ -4,10 +4,12 @@ class S3Helper
 
   class SettingMissing < StandardError; end
 
+  attr_reader :s3_bucket_name
+
   def initialize(s3_upload_bucket, tombstone_prefix='', options={})
     @s3_options = default_s3_options.merge(options)
 
-    @s3_bucket, @s3_bucket_folder_path = begin
+    @s3_bucket_name, @s3_bucket_folder_path = begin
       raise Discourse::InvalidParameters.new("s3_bucket") if s3_upload_bucket.blank?
       s3_upload_bucket.downcase.split("/".freeze, 2)
     end
@@ -36,7 +38,7 @@ class S3Helper
     if copy_to_tombstone && @tombstone_prefix.present?
       bucket
         .object(File.join(@tombstone_prefix, s3_filename))
-        .copy_from(copy_source: File.join(@s3_bucket, get_path_for_s3_upload(s3_filename)))
+        .copy_from(copy_source: File.join(@s3_bucket_name, get_path_for_s3_upload(s3_filename)))
     end
 
     # delete the file
@@ -49,7 +51,7 @@ class S3Helper
 
     # cf. http://docs.aws.amazon.com/AmazonS3/latest/dev/object-lifecycle-mgmt.html
     s3_resource.client.put_bucket_lifecycle({
-      bucket: @s3_bucket,
+      bucket: @s3_bucket_name,
       lifecycle_configuration: {
         rules: [
           {
@@ -86,7 +88,7 @@ class S3Helper
   end
 
   def s3_bucket
-    bucket = s3_resource.bucket(@s3_bucket)
+    bucket = s3_resource.bucket(@s3_bucket_name)
     bucket.create unless bucket.exists?
     bucket
   end
