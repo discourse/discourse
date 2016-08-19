@@ -299,7 +299,7 @@ class TagsController < ::ApplicationController
         options[:no_tags] = true
       else
         options[:tags] = tag_params
-        options[:match_all_tags] = true if tag_params.size > 1
+        options[:match_all_tags] = true
       end
 
       options
