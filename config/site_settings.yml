@@ -974,7 +974,7 @@ embedding:
     default: 100
     hidden: true
   embed_truncate:
-    default: false
+    default: true
     hidden: true
   embed_whitelist_selector:
     default: ''
