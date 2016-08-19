@@ -13,7 +13,6 @@
             <td class='category' style={{border-color c.color}}>
               <div>
                 {{category-title-link category=c}}
-                {{category-unread category=c}}
                 {{#if c.logo_url}}
                   {{category-logo-link category=c}}
                 {{/if}}
@@ -31,8 +30,11 @@
                 </div>
               {{/if}}
             </td>
-            <td class='stats' title={{c.statTitle}}>
-              {{{c.stat}}}
+            <td class='stats'>
+              <div title={{c.statTitle}}>
+                {{{c.stat}}}
+              </div>
+              {{category-unread category=c tagName="div" class="unread-new"}}
             </td>
           </tr>
         {{/each}}

@@ -237,6 +237,14 @@
 }
 
 .navigation-categories {
+  .unread-new {
+    a {
+      display: inline-block;
+      margin-top: 5px;
+      background-color: transparent;
+      color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 40%));
+    }
+  }
   .topic-list {
     width: 48%;
     float: left;
