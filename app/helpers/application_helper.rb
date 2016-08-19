@@ -148,6 +148,8 @@ module ApplicationHelper
       opts[:image] = "#{uri.scheme}:#{opts[:image]}"
     elsif opts[:image].present? && opts[:image].start_with?("/uploads/")
       opts[:image] = "#{Discourse.base_url}#{opts[:image]}"
+    elsif SiteSetting.default_opengraph_image_url.present?
+      opts[:image] = SiteSetting.default_opengraph_image_url
     end
 
     # Add opengraph tags

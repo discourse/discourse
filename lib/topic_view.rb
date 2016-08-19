@@ -174,7 +174,7 @@ class TopicView
       # show poster avatar
       @desired_post.user.avatar_template_url.gsub("{size}", "100") if @desired_post.user
     else
-      @topic.image_url || SiteSetting.default_opengraph_image_url
+      @topic.image_url
     end
   end
 
