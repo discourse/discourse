@@ -12,6 +12,7 @@ class BadgeGranter
 
   def grant
     return if @granted_by and !Guardian.new(@granted_by).can_grant_badges?(@user)
+    return unless @badge.enabled?
 
     find_by = { badge_id: @badge.id, user_id: @user.id }
 
