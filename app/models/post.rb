@@ -461,15 +461,14 @@ class Post < ActiveRecord::Base
     new_cooked != old_cooked
   end
 
-  def set_owner(new_user, actor)
+  def set_owner(new_user, actor, skip_revision=false)
     return if user_id == new_user.id
 
     edit_reason = I18n.t('change_owner.post_revision_text',
       old_user: (self.user.username_lower rescue nil) || I18n.t('change_owner.deleted_user'),
       new_user: new_user.username_lower
     )
-
-    revise(actor, {raw: self.raw, user_id: new_user.id, edit_reason: edit_reason}, bypass_bump: true)
+    revise(actor, {raw: self.raw, user_id: new_user.id, edit_reason: edit_reason}, {bypass_bump: true, skip_revision: skip_revision})
 
     if post_number == topic.highest_post_number
       topic.update_columns(last_post_user_id: new_user.id)
