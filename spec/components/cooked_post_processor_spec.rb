@@ -604,10 +604,17 @@ describe CookedPostProcessor do
 
       before { Oneboxer.stubs(:onebox) }
 
-      it "awards a badge for using an emoji" do
+      it "awards a badge for using an onebox" do
         cpp.post_process_oneboxes
         cpp.grant_badges
         expect(post.user.user_badges.where(badge_id: Badge::FirstOnebox).exists?).to eq(true)
+      end
+
+      it "doesn't award the badge when the badge is disabled" do
+        Badge.where(id: Badge::FirstOnebox).update_all(enabled: false)
+        cpp.post_process_oneboxes
+        cpp.grant_badges
+        expect(post.user.user_badges.where(badge_id: Badge::FirstOnebox).exists?).to eq(false)
       end
     end
 

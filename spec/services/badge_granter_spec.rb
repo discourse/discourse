@@ -106,7 +106,14 @@ describe BadgeGranter do
 
       expect(user_badge.granted_at).to eq(time)
       expect(Notification.where(user_id: user.id).count).to eq(0)
+    end
 
+    it "doesn't grant disabled badges" do
+      badge = Fabricate(:badge, badge_type_id: BadgeType::Bronze, enabled: false)
+      time = 1.year.ago
+
+      user_badge = BadgeGranter.grant(badge, user, created_at: time)
+      expect(user_badge).to eq(nil)
     end
 
     it 'grants multiple badges' do
