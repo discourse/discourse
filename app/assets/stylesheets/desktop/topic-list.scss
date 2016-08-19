@@ -241,6 +241,7 @@
     a {
       display: inline-block;
       margin-top: 5px;
+      padding-right: 0;
       background-color: transparent;
       color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 40%));
     }
@@ -286,7 +287,7 @@
     }
     .stats {
       vertical-align: top;
-      text-align: center;
+      text-align: right;
       .value {
         font-size: 1.2em;
       }
