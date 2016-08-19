@@ -33,13 +33,20 @@ export default Ember.Component.extend({
 
   @computed('topics.@each')
   lastVisitedTopic() {
+    if (!this.get('highlightLastVisited')) { return; }
+
     let user = Discourse.User.current();
     if (!user || !user.previous_visit_at) {
       return;
     }
 
-    let prevVisit = user.get('previousVisitAt');
     let prevTopic, topic;
+    prevTopic = this.get('prevTopic');
+    if (prevTopic) {
+      return prevTopic;
+    }
+
+    let prevVisit = user.get('previousVisitAt');
     let skipPinned = true;
 
     this.get('topics').any(t => {
@@ -53,11 +60,16 @@ export default Ember.Component.extend({
       return t.get('bumpedAt') < prevVisit;
     });
 
-
     if (!prevTopic || !topic) {
       return;
     }
 
+    // end of list that was scanned
+    if (topic.get('bumpedAt') > prevVisit) {
+      return;
+    }
+
+    this.set('prevTopic', prevTopic);
     return prevTopic;
   },
 
