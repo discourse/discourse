@@ -49,7 +49,7 @@ class WebHook < ActiveRecord::Base
   end
 
   POST_HOOK = Proc.new do |post, _, user|
-    WebHook.enqueue_hooks(:post, post_id: post.id, user_id: user&.id, category_id: post.topic&.category&.id)
+    WebHook.enqueue_hooks(:post, post_id: post.id, topic_id: post&.topic&.id, user_id: user&.id, category_id: post.topic&.category&.id)
   end
 
   %i(topic_destroyed topic_recovered).each { |event| DiscourseEvent.on(event, &TOPIC_HOOK_2_ARGS) }

@@ -56,7 +56,10 @@ export default RestModel.extend({
   createProperties() {
     const types = this.get('web_hook_event_types');
     const categories = this.get('categoriesFilter');
-    const groupNames = this.get('groupsFilterInName').split(',');
+    // Hack as {{group-selector}} accepts a comma-separated string as data source, but
+    // we use an array to populate the datasource above.
+    const groupsFilter = this.get('groupsFilterInName');
+    const groupNames = typeof groupsFilter === 'string' ? groupsFilter.split(',') : groupsFilter;
 
     return {
       payload_url: this.get('payload_url'),
@@ -67,7 +70,7 @@ export default RestModel.extend({
       active: this.get('active'),
       web_hook_event_type_ids: Ember.isEmpty(types) ? [null] : types.map(type => type.id),
       category_ids: Ember.isEmpty(categories) ? [null] : categories.map(c => c.id),
-      group_ids: Ember.isEmpty(groupNames) ? [null] : Discourse.Site.currentProp('groups')
+      group_ids: Ember.isEmpty(groupNames) || Ember.isEmpty(groupNames[0]) ? [null] : Discourse.Site.currentProp('groups')
         .reduce((groupIds, g) => {
           if (groupNames.includes(g.name)) { groupIds.push(g.id); }
           return groupIds;
