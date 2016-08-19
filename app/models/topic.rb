@@ -255,7 +255,7 @@ class Topic < ActiveRecord::Base
   end
 
   def best_post
-    posts.where(post_type: Post.types[:regular]).order('score desc nulls last').limit(1).first
+    posts.where(post_type: Post.types[:regular], user_deleted: false).order('score desc nulls last').limit(1).first
   end
 
   def has_flags?
