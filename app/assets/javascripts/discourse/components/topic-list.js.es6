@@ -1,10 +1,11 @@
+import computed from 'ember-addons/ember-computed-decorators';
 
 export default Ember.Component.extend({
   tagName: 'table',
   classNames: ['topic-list'],
   showTopicPostBadges: true,
 
-  _observeHideCategory: function(){
+  _init: function(){
     this.addObserver('hideCategory', this.rerender);
     this.addObserver('order', this.rerender);
     this.addObserver('ascending', this.rerender);
@@ -29,6 +30,36 @@ export default Ember.Component.extend({
   showOpLikes: function(){
     return this.get('order') === "op_likes";
   }.property('order'),
+
+  @computed('topics.@each')
+  lastVisitedTopic() {
+    let user = Discourse.User.current();
+    if (!user || !user.previous_visit_at) {
+      return;
+    }
+
+    let prevVisit = user.get('previousVisitAt');
+    let prevTopic, topic;
+    let skipPinned = true;
+
+    this.get('topics').any(t => {
+      if (skipPinned && t.get('pinned')) {
+        return false;
+      }
+      skipPinned = false;
+
+      prevTopic = topic;
+      topic = t;
+      return t.get('bumpedAt') < prevVisit;
+    });
+
+
+    if (!prevTopic || !topic) {
+      return;
+    }
+
+    return prevTopic;
+  },
 
   click(e) {
     var self = this;
