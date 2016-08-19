@@ -436,6 +436,9 @@ class Search
         elsif word == 'in:private'
           @search_pms = true
           nil
+        elsif word =~ /^private_messages:(.+)$/
+          @search_pms = true
+          nil
         else
           found ? nil : word
         end
