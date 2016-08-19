@@ -47,6 +47,10 @@ export default Ember.Component.extend(StringBuffer, {
       }
     });
 
+    if (topic === this.get('lastVisitedTopic')) {
+      classes.push('last-visit');
+    }
+
     return classes.join(' ');
   }.property(),
 

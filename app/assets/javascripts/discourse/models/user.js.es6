@@ -156,6 +156,11 @@ const User = RestModel.extend({
 
   isSuspended: Em.computed.equal('suspended', true),
 
+  @computed("previous_visit_at")
+  previousVisitAt(previous_visit_at) {
+    return new Date(previous_visit_at);
+  },
+
   @computed("suspended_till")
   suspended(suspendedTill) {
     return suspendedTill && moment(suspendedTill).isAfter();
