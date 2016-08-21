@@ -1,4 +1,4 @@
-import computed from 'ember-addons/ember-computed-decorators';
+import {default as computed, observes} from 'ember-addons/ember-computed-decorators';
 
 export default Ember.Component.extend({
   tagName: 'table',
@@ -31,9 +31,18 @@ export default Ember.Component.extend({
     return this.get('order') === "op_likes";
   }.property('order'),
 
-  @computed('topics.@each')
-  lastVisitedTopic() {
+  @observes('category')
+  categoryChanged: function(){
+    this.set('prevTopic', null);
+  },
+
+
+  @computed('topics.@each', 'order', 'ascending')
+  lastVisitedTopic(topics, order, ascending) {
     if (!this.get('highlightLastVisited')) { return; }
+    if (order !== "default" && order !== "activity") { return; }
+    if (!topics || topics.length === 1) { return; }
+    if (ascending) { return; }
 
     let user = Discourse.User.current();
     if (!user || !user.previous_visit_at) {
@@ -41,24 +50,30 @@ export default Ember.Component.extend({
     }
 
     let prevTopic, topic;
+
     prevTopic = this.get('prevTopic');
+
     if (prevTopic) {
       return prevTopic;
     }
 
     let prevVisit = user.get('previousVisitAt');
-    let skipPinned = true;
 
-    this.get('topics').any(t => {
-      if (skipPinned && t.get('pinned')) {
-        return false;
+    // this is more efficient cause we keep appending to list
+    // work backwards
+    let start = 0;
+    while(topics[start] && topics[start].get('pinned')) {
+      start++;
+    }
+
+    let i;
+    for(i=topics.length-1;i>=start;i--){
+      if (topics[i].get('bumpedAt') > prevVisit) {
+        prevTopic = topics[i];
+        break;
       }
-      skipPinned = false;
-
-      prevTopic = topic;
-      topic = t;
-      return t.get('bumpedAt') < prevVisit;
-    });
+      topic = topics[i];
+    }
 
     if (!prevTopic || !topic) {
       return;
@@ -70,6 +85,7 @@ export default Ember.Component.extend({
     }
 
     this.set('prevTopic', prevTopic);
+
     return prevTopic;
   },
 
