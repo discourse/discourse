@@ -16,7 +16,7 @@
 
 {{#if categories}}
   <a href {{action "expand"}} class={{dropdownButtonClass}} style={{badgeStyle}}><i class={{iconClass}}></i></a>
-  <section class="{{unless expanded 'hidden'}} category-dropdown-menu chooser}}">
+  <section class="{{unless expanded 'hidden'}} category-dropdown-menu chooser">
     <div class='cat'><a href={{allCategoriesUrl}} data-drop-close="true" class='badge-category home'>{{allCategoriesLabel}}</a></div>
     {{#if subCategory}}
       <div class='cat'><a href={{noCategoriesUrl}} data-drop-close="true" class='badge-category home'>{{i18n 'categories.no_subcategory'}}</a></div>
