@@ -157,7 +157,7 @@ basic:
      - facebook
      - google+
      - email
-  category_page_style:
+  desktop_category_page_style:
     client: true
     enum: 'CategoryPageStyle'
     default: 'categories_and_latest_topics'

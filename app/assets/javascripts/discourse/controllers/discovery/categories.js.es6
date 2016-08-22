@@ -19,7 +19,7 @@ export default DiscoveryController.extend({
 
   @computed("model.parentCategory")
   categoryPageStyle(parentCategory) {
-    const style = this.siteSettings.category_page_style;
+    const style = this.siteSettings.desktop_category_page_style;
     return parentCategory && style === "categories_and_latest_topics" ? "categories_only" : style;
   }
 

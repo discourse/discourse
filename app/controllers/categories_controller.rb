@@ -18,7 +18,7 @@ class CategoriesController < ApplicationController
 
     include_topics = view_context.mobile_view? ||
                      params[:include_topics] ||
-                     SiteSetting.category_page_style == "categories_with_featured_topics".freeze
+                     SiteSetting.desktop_category_page_style == "categories_with_featured_topics".freeze
 
     category_options = {
       is_homepage: current_homepage == "categories".freeze,
@@ -37,7 +37,7 @@ class CategoriesController < ApplicationController
       format.html do
         store_preloaded(@category_list.preload_key, MultiJson.dump(CategoryListSerializer.new(@category_list, scope: guardian)))
 
-        if SiteSetting.category_page_style == "categories_and_latest_topics".freeze
+        if SiteSetting.desktop_category_page_style == "categories_and_latest_topics".freeze
           topic_options = { per_page: SiteSetting.categories_topics, no_definitions: true }
           topic_list = TopicQuery.new(current_user, topic_options).list_latest
           store_preloaded(topic_list.preload_key, MultiJson.dump(TopicListSerializer.new(topic_list, scope: guardian)))

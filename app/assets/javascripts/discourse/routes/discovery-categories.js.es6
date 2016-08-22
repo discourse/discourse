@@ -31,7 +31,7 @@ const DiscoveryCategoriesRoute = Discourse.Route.extend(OpenComposer, {
   },
 
   setupController(controller, model) {
-    const style = this.siteSettings.category_page_style;
+    const style = this.siteSettings.desktop_category_page_style;
     if (style === "categories_and_latest_topics" && !this.get("model.parentCategory")) {
       model.set("loadingTopics", true);
 
