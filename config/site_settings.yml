@@ -219,9 +219,11 @@ basic:
 
 login:
   invite_only:
+    refresh: true
     client: true
     default: false
   login_required:
+    refresh: true
     client: true
     default: false
   must_approve_users:
