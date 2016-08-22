@@ -16,9 +16,9 @@ class CategoriesController < ApplicationController
 
     @description = SiteSetting.site_description
 
-    include_topics   = view_context.mobile_view?
-    include_topics ||= SiteSetting.category_page_style == "categories_with_featured_topics".freeze
-    include_topics ||= params[:include_topics]
+    include_topics = view_context.mobile_view? ||
+                     params[:include_topics] ||
+                     SiteSetting.category_page_style == "categories_with_featured_topics".freeze
 
     category_options = {
       is_homepage: current_homepage == "categories".freeze,
