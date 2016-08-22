@@ -11,7 +11,6 @@ const CategoryList = Ember.ArrayProxy.extend({
 CategoryList.reopenClass({
   categoriesFrom(store, result) {
     const categories = CategoryList.create();
-    const users = Discourse.Model.extractByKey(result.featured_users, Discourse.User);
     const list = Discourse.Category.list();
 
     let statPeriod;
@@ -32,10 +31,6 @@ CategoryList.reopenClass({
 
       if (c.subcategory_ids) {
         c.subcategories = c.subcategory_ids.map(scid => list.findBy('id', parseInt(scid, 10)));
-      }
-
-      if (c.featured_user_ids) {
-        c.featured_users = c.featured_user_ids.map(u => users[u]);
       }
 
       if (c.topics) {

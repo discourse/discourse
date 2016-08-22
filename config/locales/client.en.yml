@@ -1008,6 +1008,11 @@ en:
       emoji_one: "Emoji One"
       win10: "Win10"
 
+    category_page_style:
+      categories_only: "Categories Only"
+      categories_with_featured_topics: "Categories with Featured Topics"
+      categories_and_latest_topics: "Categories and Latest Topics"
+
     shortcut_modifier_key:
       shift: 'Shift'
       ctrl: 'Ctrl'
