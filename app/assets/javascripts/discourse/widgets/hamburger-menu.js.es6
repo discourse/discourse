@@ -143,7 +143,8 @@ export default createWidget('hamburger-menu', {
                    label: this.site.mobileView ? "desktop_view" : "mobile_view" });
     }
 
-    return links.map(l => this.attach('link', l));
+    const extraLinks = applyDecorators(this, 'footerLinks', this.attrs, this.state);
+    return links.concat(extraLinks).map(l => this.attach('link', l));
   },
 
   panelContents() {
