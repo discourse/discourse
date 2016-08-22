@@ -116,12 +116,12 @@ class ImportScripts::Nabble < ImportScripts::Base
   end
 
   def parse_email(msg)
-    receiver = Email::Receiver.new(msg, skip_sanity_check: true)
+    receiver = Email::Receiver.new(msg)
     mail = Mail.read_from_string(msg)
     mail.body
 
-    selected = receiver.select_body(mail)
-    selected.force_encoding(selected.encoding).encode("UTF-8")
+    body, elided = receiver.select_body
+    body.force_encoding(body.encoding).encode("UTF-8")
   end
 
   def create_forum_topics
