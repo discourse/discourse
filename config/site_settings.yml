@@ -55,6 +55,7 @@ required:
     client: true
     default: '/images/default-favicon.ico'
   apple_touch_icon_url: '/images/default-apple-touch-icon.png'
+  default_opengraph_image_url: ''
   exclude_rel_nofollow_domains:
     default: ''
     type: list
@@ -724,7 +725,6 @@ files:
     client: true
     regex: '^((https?:)?\/)?\/.+[^\/]'
     shadowed_by_global: true
-  default_opengraph_image_url: ''
   allow_all_attachments_for_group_messages: false
   convert_pasted_images_to_hq_jpg: true
   convert_pasted_images_quality:
