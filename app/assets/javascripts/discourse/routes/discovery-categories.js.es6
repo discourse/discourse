@@ -15,18 +15,14 @@ const DiscoveryCategoriesRoute = Discourse.Route.extend(OpenComposer, {
   },
 
   model() {
-    console.log("ENTERING MODEL");
     return CategoryList.list(this.store, 'categories').then(list => {
-      console.log("GOT THE LIST");
       const tracking = this.topicTrackingState;
       if (tracking) {
         tracking.sync(list, "categories");
         tracking.trackIncoming("categories");
       }
-      console.log("RETURNING LIST");
       return list;
     });
-    console.log("LEAVING MODEL");
   },
 
   titleToken() {
