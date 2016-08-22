@@ -27,7 +27,7 @@ export default function interceptClick(e) {
       (!$currentTarget.hasClass('d-link') && $currentTarget.hasClass('ember-view')) ||
       $currentTarget.hasClass('lightbox') ||
       href.indexOf("mailto:") === 0 ||
-      (href.match(/^http[s]?:\/\//i) && !href.match(new RegExp("^http:\\/\\/" + window.location.hostname, "i")))) {
+      (href.match(/^http[s]?:\/\//i) && !href.match(new RegExp("^https?:\\/\\/" + window.location.hostname, "i")))) {
     return;
   }
 
