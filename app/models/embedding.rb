@@ -6,6 +6,7 @@ class Embedding < OpenStruct
   def self.settings
     %i(embed_by_username
        embed_post_limit
+       embed_title_scrubber
        embed_truncate
        embed_whitelist_selector
        embed_blacklist_selector
