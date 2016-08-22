@@ -164,5 +164,9 @@ before_fork do |server, worker|
 end
 
 after_fork do |server, worker|
+  # warm up v8 after fork, that way we do not fork a v8 context
+  # it may cause issues if bg threads in a v8 isolate randomly stop
+  # working due to fork
   Discourse.after_fork
+  PrettyText.cook("warm up **pretty text**")
 end

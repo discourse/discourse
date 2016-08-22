@@ -14,7 +14,8 @@ class SessionController < ApplicationController
     return_path = if params[:return_path]
       params[:return_path]
     elsif session[:destination_url]
-      URI::parse(session[:destination_url]).path
+      uri = URI::parse(session[:destination_url])
+      "#{uri.path}#{uri.query ? "?" << uri.query : ""}"
     else
       path('/')
     end
@@ -126,6 +127,14 @@ class SessionController < ApplicationController
         render text: I18n.t("sso.not_found"), status: 500
       end
     rescue ActiveRecord::RecordInvalid => e
+      if SiteSetting.verbose_sso_logging
+        Rails.logger.warn(<<-EOF)
+          Verbose SSO log: Record was invalid: #{e.record.class.name} #{e.record.id}\n
+          #{e.record.errors.to_h}\n
+          \n
+          #{sso.diagnostics}
+        EOF
+      end
       render text: I18n.t("sso.unknown_error"), status: 500
     rescue => e
       message = "Failed to create or lookup user: #{e}."
@@ -283,7 +292,8 @@ class SessionController < ApplicationController
     message = user.suspend_reason ? "login.suspended_with_reason" : "login.suspended"
 
     render json: {
-      error: I18n.t(message, { date: I18n.l(user.suspended_till, format: :date_only), reason: user.suspend_reason}),
+      error: I18n.t(message, { date: I18n.l(user.suspended_till, format: :date_only),
+                               reason: Rack::Utils.escape_html(user.suspend_reason) }),
       reason: 'suspended'
     }
   end

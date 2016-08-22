@@ -25,7 +25,7 @@ class Topic < ActiveRecord::Base
   def_delegator :notifier, :mute!, :notify_muted!
   def_delegator :notifier, :toggle_mute, :toggle_mute
 
-  attr_accessor :allowed_user_ids
+  attr_accessor :allowed_user_ids, :tags_changed
 
   def self.max_sort_order
     @max_sort_order ||= (2 ** 31) - 1
@@ -79,6 +79,7 @@ class Topic < ActiveRecord::Base
   end
 
   belongs_to :category
+  has_many :category_users, through: :category
   has_many :posts
   has_many :ordered_posts, -> { order(post_number: :asc) }, class_name: "Post"
   has_many :topic_allowed_users
@@ -94,6 +95,7 @@ class Topic < ActiveRecord::Base
 
   has_many :topic_tags, dependent: :destroy
   has_many :tags, through: :topic_tags
+  has_many :tag_users, through: :tags
 
   has_one :top_topic
   belongs_to :user
@@ -185,6 +187,12 @@ class Topic < ActiveRecord::Base
     if archetype_was == banner || archetype == banner
       ApplicationController.banner_json_cache.clear
     end
+
+    if tags_changed
+      TagUser.auto_watch(topic_id: id)
+      TagUser.auto_track(topic_id: id)
+      self.tags_changed = false
+    end
   end
 
   def initialize_default_values
@@ -247,7 +255,7 @@ class Topic < ActiveRecord::Base
   end
 
   def best_post
-    posts.where(post_type: Post.types[:regular]).order('score desc nulls last').limit(1).first
+    posts.where(post_type: Post.types[:regular], user_deleted: false).order('score desc nulls last').limit(1).first
   end
 
   def has_flags?
@@ -317,6 +325,7 @@ class Topic < ActiveRecord::Base
               .visible
               .secured(Guardian.new(user))
               .joins("LEFT OUTER JOIN topic_users ON topic_users.topic_id = topics.id AND topic_users.user_id = #{user.id.to_i}")
+              .joins("LEFT OUTER JOIN category_users ON category_users.category_id = topics.category_id AND category_users.user_id = #{user.id.to_i}")
               .joins("LEFT OUTER JOIN users ON users.id = topics.user_id")
               .where(closed: false, archived: false)
               .where("COALESCE(topic_users.notification_level, 1) <> ?", TopicUser.notification_levels[:muted])
@@ -330,7 +339,7 @@ class Topic < ActiveRecord::Base
 
     if !!opts[:top_order]
       topics = topics.joins("LEFT OUTER JOIN top_topics ON top_topics.topic_id = topics.id")
-                     .order(TopicQuerySQL.order_top_for(score))
+                     .order(TopicQuerySQL.order_top_with_notification_levels(score))
     end
 
     if opts[:limit]
@@ -351,6 +360,13 @@ class Topic < ActiveRecord::Base
     end
     if muted_category_ids.present?
       topics = topics.where("topics.category_id NOT IN (?)", muted_category_ids)
+    end
+
+    # Remove muted tags
+    muted_tag_ids = TagUser.lookup(user, :muted).pluck(:tag_id)
+    unless muted_tag_ids.empty?
+      topics = topics.joins("LEFT OUTER JOIN topic_tags ON topic_tags.topic_id = topics.id")
+                     .where("topic_tags.tag_id NOT IN (?)", muted_tag_ids)
     end
 
     topics
@@ -516,13 +532,16 @@ class Topic < ActiveRecord::Base
         self.category_id = new_category.id
         self.update_column(:category_id, new_category.id)
         Category.where(id: old_category.id).update_all("topic_count = topic_count - 1") if old_category
+
+        # when a topic changes category we may have to start watching it
+        # if we happen to have read state for it
+        CategoryUser.auto_watch(category_id: new_category.id, topic_id: self.id)
+        CategoryUser.auto_track(category_id: new_category.id, topic_id: self.id)
       end
 
       Category.where(id: new_category.id).update_all("topic_count = topic_count + 1")
       CategoryFeaturedTopic.feature_topics_for(old_category) unless @import_mode
       CategoryFeaturedTopic.feature_topics_for(new_category) unless @import_mode || old_category.id == new_category.id
-      CategoryUser.auto_watch_new_topic(self, new_category)
-      CategoryUser.auto_track_new_topic(self, new_category)
     end
 
     true

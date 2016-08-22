@@ -382,12 +382,15 @@ describe UsersController do
       @user.password = "strongpassword"
     end
 
-    def post_user
-      xhr :post, :create,
-        name: @user.name,
+    let(:post_user_params) do
+      { name: @user.name,
         username: @user.username,
         password: "strongpassword",
-        email: @user.email
+        email: @user.email }
+    end
+
+    def post_user
+      xhr :post, :create, post_user_params
     end
 
     context 'when creating a user' do
@@ -449,6 +452,79 @@ describe UsersController do
         it "shows the 'waiting approval' message" do
           post_user
           expect(JSON.parse(response.body)['message']).to eq(I18n.t 'login.wait_approval')
+        end
+      end
+    end
+
+    context "creating as active" do
+      it "won't create the user as active" do
+        xhr :post, :create, post_user_params.merge(active: true)
+        expect(JSON.parse(response.body)['active']).to be_falsey
+      end
+
+      context "with a regular api key" do
+        let(:user) { Fabricate(:user) }
+        let(:api_key) { Fabricate(:api_key, user: user) }
+
+        it "won't create the user as active with a regular key" do
+          xhr :post, :create, post_user_params.merge(active: true, api_key: api_key.key)
+          expect(JSON.parse(response.body)['active']).to be_falsey
+        end
+      end
+
+      context "with an admin api key" do
+        let(:user) { Fabricate(:admin) }
+        let(:api_key) { Fabricate(:api_key, user: user) }
+
+        it "creates the user as active with a regular key" do
+          xhr :post, :create, post_user_params.merge(active: true, api_key: api_key.key)
+          expect(JSON.parse(response.body)['active']).to be_truthy
+        end
+
+        it "won't create the developer as active" do
+          UsernameCheckerService.expects(:is_developer?).returns(true)
+
+          xhr :post, :create, post_user_params.merge(active: true, api_key: api_key.key)
+          expect(JSON.parse(response.body)['active']).to be_falsy
+        end
+      end
+    end
+
+    context "creating as staged" do
+      it "won't create the user as staged" do
+        xhr :post, :create, post_user_params.merge(staged: true)
+        new_user = User.where(username: post_user_params[:username]).first
+        expect(new_user.staged?).to eq(false)
+      end
+
+      context "with a regular api key" do
+        let(:user) { Fabricate(:user) }
+        let(:api_key) { Fabricate(:api_key, user: user) }
+
+        it "won't create the user as staged with a regular key" do
+          xhr :post, :create, post_user_params.merge(staged: true, api_key: api_key.key)
+          new_user = User.where(username: post_user_params[:username]).first
+          expect(new_user.staged?).to eq(false)
+        end
+      end
+
+      context "with an admin api key" do
+        let(:user) { Fabricate(:admin) }
+        let(:api_key) { Fabricate(:api_key, user: user) }
+
+        it "creates the user as staged with a regular key" do
+          xhr :post, :create, post_user_params.merge(staged: true, api_key: api_key.key)
+
+          new_user = User.where(username: post_user_params[:username]).first
+          expect(new_user.staged?).to eq(true)
+        end
+
+        it "won't create the developer as staged" do
+          UsernameCheckerService.expects(:is_developer?).returns(true)
+          xhr :post, :create, post_user_params.merge(staged: true, api_key: api_key.key)
+
+          new_user = User.where(username: post_user_params[:username]).first
+          expect(new_user.staged?).to eq(false)
         end
       end
     end
@@ -1549,7 +1625,32 @@ describe UsersController do
 
   end
 
-  context '#summary' do
+  describe '.topic_tracking_state' do
+    let(:user){Fabricate(:user)}
+
+    context 'anon' do
+      it "raises an error on anon for topic_tracking_state" do
+        expect{
+          xhr :get, :topic_tracking_state, username: user.username, format: :json
+        }.to raise_error(Discourse::NotLoggedIn)
+      end
+    end
+
+    context 'logged on' do
+      it "detects new topic" do
+        log_in_user(user)
+
+        topic = Fabricate(:topic)
+        xhr :get, :topic_tracking_state, username: user.username, format: :json
+
+        states = JSON.parse(response.body)
+
+        expect(states[0]["topic_id"]).to eq(topic.id)
+      end
+    end
+  end
+
+  describe '.summary' do
 
     it "generates summary info" do
       user = Fabricate(:user)

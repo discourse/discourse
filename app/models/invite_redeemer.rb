@@ -112,8 +112,10 @@ InviteRedeemer = Struct.new(:invite, :username, :name) do
   end
 
   def notify_invitee
-    invite.invited_by.notifications.create(notification_type: Notification.types[:invitee_accepted],
-                                           data: {display_username: invited_user.username}.to_json)
+    if inviter = invite.invited_by
+        inviter.notifications.create(notification_type: Notification.types[:invitee_accepted],
+                                     data: {display_username: invited_user.username}.to_json)
+    end
   end
 
   def delete_duplicate_invites

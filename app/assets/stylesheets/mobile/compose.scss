@@ -252,6 +252,13 @@ input {
       display: none;
     }
 
+    .btn.hide-preview {
+      position: fixed;
+      right: 5px;
+      bottom: 5px;
+      z-index: 1000001;
+    }
+
     .d-editor-preview-wrapper.force-preview {
       display: block;
       position: fixed;
@@ -267,13 +274,6 @@ input {
         height: calc(100% - 60px);
         border: 0;
         overflow: auto;
-      }
-
-      .hide-preview {
-        position: fixed;
-        right: 5px;
-        bottom: 5px;
-        z-index: 1000001;
       }
     }
     .d-editor-textarea-wrapper {

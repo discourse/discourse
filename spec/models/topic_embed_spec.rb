@@ -62,6 +62,31 @@ describe TopicEmbed do
 
   describe '.find_remote' do
 
+    context ".title_scrub" do
+
+      let(:url) { 'http://eviltrout.com/123' }
+      let(:contents) { "<title>Through the Looking Glass - Classic Books</title><body>some content here</body>" }
+      let!(:embeddable_host) { Fabricate(:embeddable_host) }
+      let!(:file) { StringIO.new }
+
+      before do
+        file.stubs(:read).returns contents
+        TopicEmbed.stubs(:open).returns file
+      end
+
+      it "doesn't scrub the title by default" do
+        title, _ = TopicEmbed.find_remote(url)
+        expect(title).to eq("Through the Looking Glass - Classic Books")
+      end
+
+      it "scrubs the title when the option is enabled" do
+        SiteSetting.embed_title_scrubber = " - Classic Books$"
+        title, _ = TopicEmbed.find_remote(url)
+        expect(title).to eq("Through the Looking Glass")
+      end
+
+    end
+
     context 'post with allowed classes "foo" and "emoji"' do
 
       let(:user) { Fabricate(:user) }
@@ -76,7 +101,7 @@ describe TopicEmbed do
         SiteSetting.stubs(:embed_classname_whitelist).returns 'emoji , foo'
         file.stubs(:read).returns contents
         TopicEmbed.stubs(:open).returns file
-        title, content = TopicEmbed.find_remote(url)
+        _, content = TopicEmbed.find_remote(url)
       end
 
       it 'img node has emoji class' do
@@ -111,7 +136,7 @@ describe TopicEmbed do
         SiteSetting.stubs(:embed_classname_whitelist).returns ' '
         file.stubs(:read).returns contents
         TopicEmbed.stubs(:open).returns file
-        title, content = TopicEmbed.find_remote(url)
+        _, content = TopicEmbed.find_remote(url)
       end
 
       it 'img node doesn\'t have emoji class' do

@@ -86,13 +86,12 @@ function buildConnectorCache() {
   });
 
   findOutlets(Ember.TEMPLATES, function(outletName, resource, uniqueName) {
-    _connectorCache[outletName] = _connectorCache[outletName] || [];
-
     const mixin = {templateName: resource.replace('javascripts/', '')};
     let viewClass = uniqueViews[uniqueName];
 
     if (viewClass) {
       // We are going to add it back with the proper template
+      _connectorCache[outletName] = _connectorCache[outletName] || [];
       _connectorCache[outletName].removeObject(viewClass);
     } else {
       if (!/\.raw$/.test(uniqueName)) {
@@ -101,6 +100,7 @@ function buildConnectorCache() {
     }
 
     if (viewClass) {
+      _connectorCache[outletName] = _connectorCache[outletName] || [];
       _connectorCache[outletName].pushObject(viewClass.extend(mixin));
     } else {
       // we have a raw template
@@ -160,7 +160,9 @@ registerHelper('plugin-outlet', function(params, hash, options, env) {
     const newHash = $.extend({}, viewInjections(env.data.view.container));
     if (hash.tagName) { newHash.tagName = hash.tagName; }
 
-    delete options.fn;  // we don't need the default template since we have a connector
+    // we don't need the default template since we have a connector
+    delete options.fn;
+    delete options.template;
     env.helpers.view.helperFunction.call(this, [viewClass], newHash, options, env);
 
     const cvs = env.data.view._childViews;
@@ -172,6 +174,13 @@ registerHelper('plugin-outlet', function(params, hash, options, env) {
         });
       }
     }
+  } else if (options.isBlock) {
+    const virtualView = Ember.View.extend({
+      isVirtual: true,
+      tagName: hash.tagName || '',
+      template: options.template
+    });
+    env.helpers.view.helperFunction.call(this, [virtualView], hash, options, env);
   }
 });
 

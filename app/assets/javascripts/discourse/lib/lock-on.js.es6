@@ -42,6 +42,9 @@ export default class LockOn {
   clearLock(interval) {
     $('body,html').off(SCROLL_EVENTS);
     clearInterval(interval);
+    if (this.options.finished) {
+      this.options.finished();
+    }
   }
 
   lock() {
@@ -50,11 +53,7 @@ export default class LockOn {
 
     $(window).scrollTop(previousTop);
 
-    let i = 0;
-
     const interval = setInterval(() => {
-      i = i + 1;
-
       let top = this.elementTop();
       const scrollTop = $(window).scrollTop();
 

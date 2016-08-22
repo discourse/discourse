@@ -100,6 +100,7 @@ describe UserNotifications do
         expect(subject.from).to eq([SiteSetting.notification_email])
         expect(subject.html_part.body.to_s).to include topic.title
         expect(subject.text_part.body.to_s).to be_present
+        expect(subject.header["List-Unsubscribe"].to_s).to match(/\/email\/unsubscribe\/\h{64}/)
       end
 
       it "includes posts less than 24 hours old" do
@@ -164,6 +165,7 @@ describe UserNotifications do
         expect(subject.from).to eq([SiteSetting.notification_email])
         expect(subject.html_part.body.to_s).to be_present
         expect(subject.text_part.body.to_s).to be_present
+        expect(subject.header["List-Unsubscribe"].to_s).to match(/\/email\/unsubscribe\/\h{64}/)
       end
 
       it "includes email_prefix in email subject instead of site title" do
@@ -475,6 +477,14 @@ describe UserNotifications do
   end
 
   describe "user invited to a topic" do
+    include_examples "notification email building" do
+      let(:notification_type) { :invited_to_topic }
+      include_examples "no reply by email"
+      include_examples "sets user locale"
+    end
+  end
+
+  describe "watching first post" do
     include_examples "notification email building" do
       let(:notification_type) { :invited_to_topic }
       include_examples "no reply by email"

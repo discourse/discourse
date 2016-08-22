@@ -74,9 +74,6 @@ en:
         insert: Insert Poll
         help:
           options_count: Enter at least 2 options
-        poll_name:
-          label: Name
-          placeholder: Enter Name
         poll_type:
           label: Type
           regular: Single Choice

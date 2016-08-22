@@ -43,9 +43,9 @@ can <a href="/projects/markdown/syntax.text">see the source for it by adding '.t
 
 <hr />
 
-<h2>Overview</h2>
+<h2 id="overview">Overview</h2>
 
-<h3>Philosophy</h3>
+<h3 id="philosophy">Philosophy</h3>
 
 <p>Markdown is intended to be as easy-to-read and easy-to-write as is feasible.</p>
 
@@ -64,7 +64,7 @@ look like *emphasis*. Markdown lists look like, well, lists. Even
 blockquotes look like quoted passages of text, assuming you've ever
 used email.</p>
 
-<h3>Inline HTML</h3>
+<h3 id="html">Inline HTML</h3>
 
 <p>Markdown's syntax is intended for one purpose: to be used as a
 format for <em>writing</em> for the web.</p>
@@ -115,7 +115,7 @@ link or image syntax, go right ahead.</p>
 <p>Unlike block-level HTML tags, Markdown syntax <em>is</em> processed within
 span-level tags.</p>
 
-<h3>Automatic Escaping for Special Characters</h3>
+<h3 id="autoescape">Automatic Escaping for Special Characters</h3>
 
 <p>In HTML, there are two characters that demand special treatment: <code>&lt;</code>
 and <code>&amp;</code>. Left angle brackets are used to start tags; ampersands are
@@ -179,9 +179,9 @@ and <code>&amp;</code> in your example code needs to be escaped.)</p>
 
 <hr />
 
-<h2>Block Elements</h2>
+<h2 id="block">Block Elements</h2>
 
-<h3>Paragraphs and Line Breaks</h3>
+<h3 id="p">Paragraphs and Line Breaks</h3>
 
 <p>A paragraph is simply one or more consecutive lines of text, separated
 by one or more blank lines. (A blank line is any line that looks like a
@@ -202,7 +202,7 @@ end a line with two or more spaces, then type return.</p>
 Markdown's email-style <a href="#blockquote">blockquoting</a> and multi-paragraph <a href="#list">list items</a>
 work best -- and look better -- when you format them with hard breaks.</p>
 
-<h3>Headers</h3>
+<h3 id="header">Headers</h3>
 
 <p>Markdown supports two styles of headers, <a href="http://docutils.sourceforge.net/mirror/setext.html">Setext</a> and <a href="http://www.aaronsw.com/2002/atx/">atx</a>.</p>
 
@@ -241,7 +241,7 @@ determines the header level.) :</p>
 ### This is an H3 ######
 </code></pre>
 
-<h3>Blockquotes</h3>
+<h3 id="blockquote">Blockquotes</h3>
 
 <p>Markdown uses email-style <code>&gt;</code> characters for blockquoting. If you're
 familiar with quoting passages of text in an email message, then you
@@ -296,7 +296,7 @@ and code blocks:</p>
 example, with BBEdit, you can make a selection and choose Increase
 Quote Level from the Text menu.</p>
 
-<h3>Lists</h3>
+<h3 id="list">Lists</h3>
 
 <p>Markdown supports ordered (numbered) and unordered (bulleted) lists.</p>
 
@@ -472,7 +472,7 @@ line. To avoid this, you can backslash-escape the period:</p>
 <pre><code>1986\. What a great season.
 </code></pre>
 
-<h3>Code Blocks</h3>
+<h3 id="precode">Code Blocks</h3>
 
 <p>Pre-formatted code blocks are used for writing about programming or
 markup source code. Rather than forming normal paragraphs, the lines
@@ -541,7 +541,7 @@ ampersands and angle brackets. For example, this:</p>
 asterisks are just literal asterisks within a code block. This means
 it's also easy to use Markdown to write about Markdown's own syntax.</p>
 
-<h3>Horizontal Rules</h3>
+<h3 id="hr">Horizontal Rules</h3>
 
 <p>You can produce a horizontal rule tag (<code>&lt;hr /&gt;</code>) by placing three or
 more hyphens, asterisks, or underscores on a line by themselves. If you
@@ -563,9 +563,9 @@ _ _ _
 
 <hr />
 
-<h2>Span Elements</h2>
+<h2 id="span">Span Elements</h2>
 
-<h3>Links</h3>
+<h3 id="link">Links</h3>
 
 <p>Markdown supports two style of links: <em>inline</em> and <em>reference</em>.</p>
 
@@ -727,7 +727,7 @@ allowing you to move the markup-related metadata out of the paragraph,
 you can add links without interrupting the narrative flow of your
 prose.</p>
 
-<h3>Emphasis</h3>
+<h3 id="em">Emphasis</h3>
 
 <p>Markdown treats asterisks (<code>*</code>) and underscores (<code>_</code>) as indicators of
 emphasis. Text wrapped with one <code>*</code> or <code>_</code> will be wrapped with an
@@ -772,7 +772,7 @@ escape it:</p>
 <pre><code>\*this text is surrounded by literal asterisks\*
 </code></pre>
 
-<h3>Code</h3>
+<h3 id="code">Code</h3>
 
 <p>To indicate a span of code, wrap it with backtick quotes (<code>&#x60;</code>).
 Unlike a pre-formatted code block, a code span indicates code within a
@@ -836,7 +836,7 @@ tags. Markdown will turn this:</p>
 equivalent of &lt;code&gt;&amp;amp;mdash;&lt;/code&gt;.&lt;/p&gt;
 </code></pre>
 
-<h3>Images</h3>
+<h3 id="img">Images</h3>
 
 <p>Admittedly, it's fairly difficult to devise a "natural" syntax for
 placing images into a plain text document format.</p>
@@ -879,9 +879,9 @@ use regular HTML <code>&lt;img&gt;</code> tags.</p>
 
 <hr />
 
-<h2>Miscellaneous</h2>
+<h2 id="misc">Miscellaneous</h2>
 
-<h3>Automatic Links</h3>
+<h3 id="autolink">Automatic Links</h3>
 
 <p>Markdown supports a shortcut style for creating "automatic" links for URLs and email addresses: simply surround the URL or email address with angle brackets. What this means is that if you want to show the actual text of a URL or email address, and also have it be a clickable link, you can do this:</p>
 
@@ -916,7 +916,7 @@ most, address-harvesting bots, but it definitely won't fool all of
 them. It's better than nothing, but an address published in this way
 will probably eventually start receiving spam.)</p>
 
-<h3>Backslash Escapes</h3>
+<h3 id="backslash">Backslash Escapes</h3>
 
 <p>Markdown allows you to use backslash escapes to generate literal
 characters which would otherwise have special meaning in Markdown's

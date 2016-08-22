@@ -1,3 +1,4 @@
+import { ajax } from 'discourse/lib/ajax';
 import { observes } from "ember-addons/ember-computed-decorators";
 import ModalFunctionality from 'discourse/mixins/modal-functionality';
 
@@ -32,7 +33,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
   setAutoClose(time) {
     const self = this;
     this.set('loading', true);
-    Discourse.ajax({
+    ajax({
       url: `/t/${this.get('model.id')}/autoclose`,
       type: 'PUT',
       dataType: 'json',
@@ -68,7 +69,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
   willCloseI18n: function() {
     if (this.get('model.details.auto_close_based_on_last_post')) {
-      return I18n.t('topic.auto_close_immediate', {hours: this.get('model.auto_close_time')});
+      return I18n.t('topic.auto_close_immediate', {count: this.get('model.auto_close_time')});
     }
   }.property('model.details.auto_close_based_on_last_post', 'model.auto_close_time')
 

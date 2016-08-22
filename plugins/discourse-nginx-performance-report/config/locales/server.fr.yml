@@ -1,0 +1,3 @@
+fr:
+  site_settings:
+    daily_performance_report: "Analyser les logs de NGINX quotidiennement et poster un sujet Responsables Uniquement avec les détails"

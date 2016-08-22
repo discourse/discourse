@@ -160,8 +160,27 @@ pl_PL:
       one: "1 wpis"
       few: "%{count} wpisy"
       other: "%{count} wpisów"
-    new-topic: "Witaj na %{site_name} &mdash; **dziękujemy za rozpoczęcie nowej dyskusji!**\n\n- Czy tytuł brzmi interesująco, gdy przeczytasz go na głos? Czy jest dobrym podsumowaniem treści?\n\n- Kto będzie tym zainteresowany? Dlaczego temat jest istotny?  Jakiego rodzaju odpowiedzi oczekujesz? \n\n- Postaraj się umieścić słowa kluczowe w tytule, dzięki czemu inni będą mogli łatwo *wyszukać* temat. Przypisz go do kategorii o pokrewnej tematyce. \n\nAby dowiedzieć się więcej, [zobacz przewodnik społeczności](/guidelines). Ten panel pojawi się tylko przy pierwszym %{education_posts_text}.\n\n\n"
-    new-reply: "Witaj na %{site_name} &mdash; **dziękujemy za zaangażowanie!**\n\n- Czy twoja odpowiedź wnosi coś pozytywnego do dyskusji?\n\n- Zachowuj się przyjaźnie w stosunku do innych.\n\n- Konstruktywna krytyka jest mile widziana, ale krytykujemy *pomysły*, a nie ludzi.\n\nWięcej informacji znajdziesz [w przewodniku społeczności](/guidelines). \nTen panel pojawi się tylko przy pisaniu pierwszych %{education_posts_text}.\n"
+    new-topic: |
+      Witaj na %{site_name} &mdash; **dziękujemy za rozpoczęcie nowej dyskusji!**
+
+      - Czy tytuł brzmi interesująco, gdy przeczytasz go na głos? Czy jest dobrym podsumowaniem treści?
+
+      - Kto będzie tym zainteresowany? Dlaczego temat jest istotny?  Jakiego rodzaju odpowiedzi oczekujesz?
+
+      - Postaraj się umieścić słowa kluczowe w tytule, dzięki czemu inni będą mogli łatwo *wyszukać* temat. Przypisz go do kategorii o pokrewnej tematyce.
+
+      Aby dowiedzieć się więcej, [zobacz przewodnik społeczności](/guidelines). Ten panel pojawi się tylko przy pierwszym %{education_posts_text}.
+    new-reply: |
+      Witaj na %{site_name} &mdash; **dziękujemy za zaangażowanie!**
+
+      - Czy twoja odpowiedź wnosi coś pozytywnego do dyskusji?
+
+      - Zachowuj się przyjaźnie w stosunku do innych.
+
+      - Konstruktywna krytyka jest mile widziana, ale krytykujemy *pomysły*, a nie ludzi.
+
+      Więcej informacji znajdziesz [w przewodniku społeczności](/guidelines).
+      Ten panel pojawi się tylko przy pisaniu pierwszych %{education_posts_text}.
     avatar: |
       ### A może dodasz zdjęcie profilowe do swojego konta?
 
@@ -238,7 +257,7 @@ pl_PL:
   assets_topic_body: "Ten temat jest widoczny tylko dla członków zespołu. Służy do przechowywania obrazów i plików wykorzystywanych w wyglądzie serwisu. Nie usuwaj go!\n\n\nJak go używać:\n\n\n1. Odpowiedz na ten temat.\n2. Dodaj wszystkie grafiki jakich chcesz użyć jako logo, favicon itd. (Użyj ikony wysyłania w edytorze wpisu lub przeciągnij i upuść.)\n3. Wyślij odpowiedź, aby je zachować.\n4. Kliknij prawym przyciskiem myszy na grafice i skopiuj jej adres URL.\n5. Wklej adres w [ogólnych ustawieniach](/admin/site_settings/category/required).\n\nJeśli chcesz włączyć możliwość przesyłania dodatkowych typów plików, zmień  `authorized_extensions` w [ustawieniach plików](/admin/site_settings/category/files)."
   lounge_welcome:
     title: "Witaj w Salonie"
-    body: |2
+    body: |
 
       Gratulacje! :confetti_ball:
 
@@ -477,18 +496,6 @@ pl_PL:
       message:
         make: "Ten temat został ustawiony jako baner. Będzie pojawiać się na górze każdej strony do czasu zamknięcia przez użytkownika."
         remove: "Ten temat nie jest już banerem. Nie będzie pojawiać się na górze każdej strony."
-  unsubscribed:
-    title: 'Wypisano'
-    description: "Zostałeś wypisany. Nie skontaktujemy się z Tobą więcej!"
-    oops: "Jeśli nie chciałeś tego zrobić, kliknij poniżej."
-    error: "Błąd podczas wypisywania"
-    preferences_link: "Możesz zrezygnować z podsumowań email w <a href='/my/preferences'>ustawieniach konta</a>"
-    different_user_description: "Jesteś zalogowany jako inny użytkownik niż ten do którego wysłano to podsumowanie. Wyloguj się i spróbuj ponownie."
-    not_found_description: "Przepraszamy: nie mogliśmy Cię wypisać. Możliwe, że link wysłany w wiadomości email wygasł."
-  resubscribe:
-    action: "Zapisz ponownie"
-    title: "Zapisano ponownie!"
-    description: "Zostałeś zapisany ponownie."
   reports:
     visits:
       title: "Wizyty użytkowników"
@@ -623,7 +630,6 @@ pl_PL:
       yaxis: "Liczba wizyt"
   dashboard:
     rails_env_warning: "Twój serwer działa w trybie %{env}"
-    ruby_version_warning: "Używasz Ruby w wersji 2.0.0, która może powodować problemy. Zaktualizuj się do patch level 247 lub późniejszej. "
     host_names_warning: "Twój plik config/database.yml używa domyślnej nazwy serwera localhost. Zmień go by używał nazwy serwera Twojej strony."
     gc_warning: 'Twój serwer wykorzystuje domyślne ustawienia odśmiecacza ruby, który nie da Ci optymalnej wydajności. Przeczytaj ten temat o optymalizacji wydajności: <a href="http://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126" target="_blank">Tuning Ruby and Rails for Discourse</a>.'
     sidekiq_warning: 'Sidekiq nie działa. Wiele zadań, takich jak wysyłanie emaili, jest wykonywane asynchronicznie przez sidekiqa. Zagwarantuj, że przynajmniej jeden proces sidekiqa działa. <a href="https://github.com/mperham/sidekiq" target="_blank">Dowiedz się więcej o Sidekiqu</a>.'
@@ -694,16 +700,12 @@ pl_PL:
     enable_long_polling: "Message bus used for notification can use long polling"
     anon_polling_interval: "How often should anonymous clients poll in milliseconds"
     cooldown_minutes_after_hiding_posts: "Liczba minut, ile musi odczekać użytkownik, zanim będzie mógł edytować post ukryty w wyniku oflagowania przez społeczność"
-    max_topics_in_first_day: "Maksymalna liczba tematów, jakie może stworzyć użytkownik pierwszego dnia na tej stronie."
-    max_replies_in_first_day: "Maksymalna liczba odpowiedzi, jakie może napisać użytkownik pierwszego dnia na tej stronie."
     tl2_additional_likes_per_day_multiplier: "Zwiększ limit lajków na dzień dla tl2 (członek), mnożąc przez tę liczbę"
     tl3_additional_likes_per_day_multiplier: "Zwiększ limit lajków na dzień dla tl3 (użytkownik stały), mnożąc przez tę liczbę"
     tl4_additional_likes_per_day_multiplier: "Zwiększ limit lajków na dzień dla tl4 (lider), mnożąc przez tę liczbę"
     notify_mods_when_user_blocked: "If a user is automatically blocked, send a message to all moderators."
     flag_sockpuppets: "Jeśli nowy użytkownik odpowiada na dany temat z tego samego adresu IP co nowy użytkownik, który założył temat, oznacz ich posty jako potencjalny spam."
     post_undo_action_window_mins: "Przez tyle minut użytkownicy mogą cofnąć swoje ostatnie działania przy danym poście (lajki, flagowanie, itd.)."
-    ga_tracking_code: "Identyfikator Google analytics (ga.js), np: UA-12345678-9; zobacz http://google.com/analytics"
-    ga_domain_name: "Google analytics (ga.js) domain name, eg: mysite.com; see http://google.com/analytics"
     ga_universal_tracking_code: "Identyfikator Google Universal Analytics (analytics.js), np: UA-12345678-9; zobacz http://google.com/analytics"
     ga_universal_domain_name: "Domena dla Google Universal Analytics (analytics.js), np: mysite.com; zobacz http://google.com/analytics"
     enable_noscript_support: "Enable standard webcrawler search engine support via the noscript tag"
@@ -797,9 +799,6 @@ pl_PL:
     relative_date_duration: "Liczba dni od wysłania wpisu gdy wyświetlana jest data relatywna (7d) zamiast absolutnej (20 Lut)."
     delete_all_posts_max: "The maximum number of posts that can be deleted at once with the Delete All Posts button. If a user has more than this many posts, the posts cannot all be deleted at once and the user can't be deleted."
     email_editable: "Allow users to change their e-mail address after registration."
-    digest_topics: "Maksymalna liczba tematów w podsumowaniu e-mail."
-    digest_min_excerpt_length: "Minimalny wycinek wpisu (liczba znaków) w podsumowaniu e-mail."
-    disable_digest_emails: "Wyłącz wysyłanie podsumowania e-mail wszystkim uzytkownikom. "
     allow_anonymous_posting: "Zezwól użytkownikom na przechodzenie w tryb anonimowości."
     allow_profile_backgrounds: "Zezwól użytkownikom na przesyłanie obrazu tła dla profilu."
     enable_mobile_theme: "Urządzenia mobilne używają dedykowanego mobilnego szablonu. Wyłącz to, jeśli chcesz użyć własnego, pojedynczego i responsywnego szablonu stylów. "
@@ -825,19 +824,6 @@ pl_PL:
       invalid_string_min: "Musi być co najmniej %{min} znaków."
       invalid_string_max: "Musi być nie więcej niż %{max} znaków."
       invalid_reply_by_email_address: "Wartość musi zawierać '%{reply_key}' i musi być inna niż mail z powiadomieniem."
-  notification_types:
-    mentioned: "%{display_username} wspomina o Tobie w %{link}"
-    liked: "%{display_username} polubił(-a) Twój wpis w %{link}"
-    replied: "%{display_username} odpowiada na Twój wpis w %{link}"
-    quoted: "%{display_username} cytuje Twój wpis w %{link}"
-    edited: "%{display_username} edytuje Twój wpis w %{link}"
-    posted: "%{display_username} pisze w %{link}"
-    moved_post: "%{display_username} przenosi twój wpis do %{link}"
-    private_message: "%{display_username} wysłał ci wiadomość: %{link}"
-    invited_to_private_message: "%{display_username} zaprosił cię do wiadomości: %{link}"
-    invitee_accepted: "%{display_username} przyjął(-ęła) Twoje zaproszenie"
-    linked: "%{display_username} powiązał cię z %{link}"
-    granted_badge: "Zdobywasz %{link}"
   search:
     within_post: "#%{post_number} przez %{username}"
     types:
@@ -936,21 +922,9 @@ pl_PL:
     subject_template: "%{invitee_name} zaprosił cię do '%{topic_title}' na %{site_domain_name}"
   invite_forum_mailer:
     subject_template: "%{invitee_name} zaprosił cię do dołączenia do %{site_domain_name}"
-    text_body_template: |
-      %{invitee_name} wysłał Tobie zaproszenie
-
-      > **%{site_title}**
-      >
-      > %{site_description}
-
-      Kliknij link poniżej by dowiedzieć się więcej:
-
-      %{invite_link}
-
-      To zaproszenie zostało wysłane przez zaufanego użytkownika, nie musisz się logować.
   invite_password_instructions:
     subject_template: "Ustaw hasło dla swojego konta na %{site_name}"
-    text_body_template: |+
+    text_body_template: |
       Dziękujemy za zaakceptowanie zaproszenia do %{site_name} -- witamy!
 
 
@@ -962,7 +936,6 @@ pl_PL:
 
 
       (Jeśli powyższy link wygasł, wybierz "Zapomniałem hasła", logując się za pomocą adresu email.)
-
   test_mailer:
     subject_template: "[%{site_name}] Test dostarczania poczty"
   new_version_mailer:
@@ -981,8 +954,6 @@ pl_PL:
     deferred_and_deleted: "Dziękujemy za zwrócenie uwagi. Wpis został usunięty."
   temporarily_closed_due_to_flags: "Ten temat został tymczasowo zamknięty z uwagi na wysoką liczbę oflagowań wykonanych przez społeczność."
   system_messages:
-    post_hidden:
-      subject_template: "Wpis został ukryty z powodu oflagowania przez społeczność"
     welcome_user:
       subject_template: "Witaj na %{site_name}!"
     welcome_invite:
@@ -1017,7 +988,7 @@ pl_PL:
       text_body_template: "Plik z zaproszeniami został przetworzony. Wysłanych zaproszeń: %{sent}."
     bulk_invite_failed:
       subject_template: "Plik z zaproszeniami został przetworzony z błędami."
-      text_body_template: |+
+      text_body_template: |
         Plik z zaproszeniami został przetworzony -- wysłanych: %{sent}, błędów: %{failed}.
 
         Dziennik operacji:
@@ -1025,22 +996,17 @@ pl_PL:
         ```
         %{logs}
         ```
-
-
     csv_export_succeeded:
       subject_template: "Zakończono eksport danych"
-      text_body_template: |+
+      text_body_template: |
         Eksport danych zakończył się sukcesem! :dvd:
 
         <a class="attachment" href="%{download_link}">%{file_name}</a> (%{file_size})
 
         Powyższy link będzie aktywny przez 48 godzin.
-
     csv_export_failed:
       subject_template: "Nieudany eksport danych"
       text_body_template: "Przepraszamy, ale eksport danych zakończył się niepowodzeniem. Sprawdź logi lub skontaktuj się z operatorami serwisu."
-    user_automatically_blocked:
-      subject_template: "Nowy użytkownik %{username} został zablokowany z powodu oflagowania przez społeczność"
     pending_users_reminder:
       subject_template:
         one: "1 użytkownik czeka na zatwierdzenie"
@@ -1065,12 +1031,10 @@ pl_PL:
     user_posted_pm:
       subject_template: "[%{site_name}] [PW] %{topic_title}"
     digest:
-      subject_template: "[%{site_name}] Podsumowanie"
       new_activity: "Nowa aktywność w twoich tematach i wpisach:"
       top_topics: "Popularne wpisy"
       other_new_topics: "Popularne wątki"
       click_here: "kliknij tutaj"
-      from: "podsumowanie %{site_name} "
       read_more: "Czytaj więcej"
     forgot_password:
       subject_template: "[%{site_name}] Reset hasła"
@@ -1099,7 +1063,7 @@ pl_PL:
         %{base_url}/users/password-reset/%{email_token}
     signup_after_approval:
       subject_template: "Zostałeś zaakceptowany na forum %{site_name}!"
-      text_body_template: |+
+      text_body_template: |
         Witamy na %{site_name}!
 
         Nasz personel zatwierdził twoje konto na %{site_name}.
@@ -1116,7 +1080,6 @@ pl_PL:
         Baw się dobrze!
 
         (Jeśli potrzebujesz skontaktować się z [członkiem zespołu](%{base_url}/about) jako nowy użytkownik, odpowiedz na tę wiadomość.)
-
     signup:
       subject_template: "[%{site_name}] Potwierdź swoje nowe konto"
       text_body_template: |

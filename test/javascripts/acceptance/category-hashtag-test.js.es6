@@ -1,21 +1,6 @@
 import { acceptance } from "helpers/qunit-helpers";
 
-acceptance("Category hashtag", {
-  loggedIn: true,
-  setup() {
-    const response = (object) => {
-      return [
-        200,
-        {"Content-Type": "application/json"},
-        object
-      ];
-    };
-
-    server.get('/category_hashtags/check', () => { //eslint-disable-line
-      return response({ valid: [{ slug: "bug", url: '/c/bugs' }] });
-    });
-  }
-});
+acceptance("Category hashtag", { loggedIn: true });
 
 test("category hashtag is cooked properly", () => {
   visit("/t/internationalization-localization/280");

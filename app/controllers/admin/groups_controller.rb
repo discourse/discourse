@@ -65,6 +65,9 @@ class Admin::GroupsController < Admin::AdminController
     title = params[:title] if params[:title].present?
     group.title = group.automatic ? nil : title
 
+    group.flair_url      = params[:flair_url].presence
+    group.flair_bg_color = params[:flair_bg_color].presence
+
     if group.save
       Group.reset_counters(group.id, :group_users)
       render_serialized(group, BasicGroupSerializer)

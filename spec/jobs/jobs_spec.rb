@@ -87,12 +87,18 @@ describe Jobs do
 
         expect(scheduled_jobs.size).to eq(0)
 
-        Jobs.enqueue_in(1.year, :run_heartbeat, topic_id: 1234)
-        Jobs.enqueue_in(2.years, :run_heartbeat, topic_id: 5678)
+        Jobs.enqueue_in(1.year, :run_heartbeat, topic_id: 123)
+        Jobs.enqueue_in(2.years, :run_heartbeat, topic_id: 456)
+        Jobs.enqueue_in(3.years, :run_heartbeat, topic_id: 123, current_site_id: 'foo')
+        Jobs.enqueue_in(4.years, :run_heartbeat, topic_id: 123, current_site_id: 'bar')
 
-        expect(scheduled_jobs.size).to eq(2)
+        expect(scheduled_jobs.size).to eq(4)
 
-        Jobs.cancel_scheduled_job(:run_heartbeat, topic_id: 1234)
+        Jobs.cancel_scheduled_job(:run_heartbeat, topic_id: 123)
+
+        expect(scheduled_jobs.size).to eq(3)
+
+        Jobs.cancel_scheduled_job(:run_heartbeat, topic_id: 123, all_sites: true)
 
         expect(scheduled_jobs.size).to eq(1)
       end

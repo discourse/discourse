@@ -1,3 +1,4 @@
+require "backup_restore/utils"
 require "backup_restore/backuper"
 require "backup_restore/restorer"
 
@@ -5,6 +6,7 @@ module BackupRestore
 
   class OperationRunningError < RuntimeError; end
 
+  VERSION_PREFIX = "v".freeze
   DUMP_FILE = "dump.sql"
   METADATA_FILE = "meta.json"
   LOGS_CHANNEL = "/admin/backups/logs"

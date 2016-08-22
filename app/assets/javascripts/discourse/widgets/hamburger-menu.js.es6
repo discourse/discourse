@@ -1,16 +1,34 @@
 import { createWidget, applyDecorators } from 'discourse/widgets/widget';
 import { h } from 'virtual-dom';
+import DiscourseURL from 'discourse/lib/url';
+import { ajax } from 'discourse/lib/ajax';
+
+createWidget('priority-faq-link', {
+  tagName: 'a.faq-priority.widget-link',
+
+  buildAttributes(attrs) {
+    return { href: attrs.href };
+  },
+
+  html() {
+    return [ I18n.t('faq'), ' ', h('span.badge.badge-notification', I18n.t('new_item')) ];
+  },
+
+  click(e) {
+    e.preventDefault();
+    if (this.siteSettings.faq_url === this.attrs.href) {
+      ajax("/users/read-faq", { method: "POST" }).then(() => {
+        this.currentUser.set('read_faq', true);
+        DiscourseURL.routeToTag($(e.target).closest('a')[0]);
+      });
+    } else {
+      DiscourseURL.routeToTag($(e.target).closest('a')[0]);
+    }
+  }
+});
 
 export default createWidget('hamburger-menu', {
   tagName: 'div.hamburger-panel',
-
-  faqLink(href) {
-    return h('a.faq-priority', { attributes: { href } }, [
-             I18n.t('faq'),
-             ' ',
-             h('span.badge.badge-notification', I18n.t('new_item'))
-           ]);
-  },
 
   adminLinks() {
     const { currentUser } = this;
@@ -125,7 +143,8 @@ export default createWidget('hamburger-menu', {
                    label: this.site.mobileView ? "desktop_view" : "mobile_view" });
     }
 
-    return links.map(l => this.attach('link', l));
+    const extraLinks = applyDecorators(this, 'footerLinks', this.attrs, this.state);
+    return links.concat(extraLinks).map(l => this.attach('link', l));
   },
 
   panelContents() {
@@ -139,7 +158,9 @@ export default createWidget('hamburger-menu', {
 
     const prioritizeFaq = this.currentUser && !this.currentUser.read_faq;
     if (prioritizeFaq) {
-      results.push(this.attach('menu-links', { heading: true, contents: () => this.faqLink(faqUrl) }));
+      results.push(this.attach('menu-links', { heading: true, contents: () => {
+        return this.attach('priority-faq-link', { href: faqUrl });
+      }}));
     }
 
     if (currentUser && currentUser.staff) {

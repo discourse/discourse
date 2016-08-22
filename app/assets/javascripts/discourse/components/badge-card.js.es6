@@ -1,9 +1,10 @@
 import computed from 'ember-addons/ember-computed-decorators';
 import DiscourseURL from 'discourse/lib/url';
+import { sanitize, emojiUnescape } from 'discourse/lib/text';
 
 export default Ember.Component.extend({
   size: 'medium',
-  classNameBindings: [':badge-card', 'size', 'navigateOnClick:hyperlink'],
+  classNameBindings: [':badge-card', 'size', 'badge.slug', 'navigateOnClick:hyperlink'],
 
   click(e){
     if (e.target && e.target.nodeName === "A") {
@@ -38,10 +39,10 @@ export default Ember.Component.extend({
     if (size === 'large') {
       const longDescription = this.get('badge.long_description');
       if (!_.isEmpty(longDescription)) {
-        return Discourse.Emoji.unescape(longDescription);
+        return emojiUnescape(sanitize(longDescription));
       }
     }
-    return this.get('badge.description');
+    return sanitize(this.get('badge.description'));
   }
 
 });

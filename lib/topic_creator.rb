@@ -90,21 +90,16 @@ class TopicCreator
         topic.notifier.send(action, gu.user_id)
       end
     end
-
-    unless topic.private_message?
-      # In order of importance:
-      CategoryUser.auto_watch_new_topic(topic)
-      CategoryUser.auto_track_new_topic(topic)
-      TagUser.auto_watch_new_topic(topic)
-      TagUser.auto_track_new_topic(topic)
-    end
   end
 
   def setup_topic_params
+    @opts[:visible] = true if @opts[:visible].nil?
+
     topic_params = {
       title: @opts[:title],
       user_id: @user.id,
-      last_post_user_id: @user.id
+      last_post_user_id: @user.id,
+      visible: @opts[:visible]
     }
 
     [:subtype, :archetype, :meta_data, :import_mode].each do |key|

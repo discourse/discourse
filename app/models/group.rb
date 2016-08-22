@@ -28,6 +28,7 @@ class Group < ActiveRecord::Base
   validates_uniqueness_of :name, case_sensitive: false
   validate :automatic_membership_email_domains_format_validator
   validate :incoming_email_validator
+  validates :flair_url, url: true
 
   AUTO_GROUPS = {
     :everyone => 0,
@@ -82,13 +83,15 @@ class Group < ActiveRecord::Base
 
   def incoming_email_validator
     return if self.automatic || self.incoming_email.blank?
+
     incoming_email.split("|").each do |email|
+      escaped = Rack::Utils.escape_html(email)
       if !Email.is_valid?(email)
-        self.errors.add(:base, I18n.t('groups.errors.invalid_incoming_email', email: email))
+        self.errors.add(:base, I18n.t('groups.errors.invalid_incoming_email', email: escaped))
       elsif group = Group.where.not(id: self.id).find_by_email(email)
-        self.errors.add(:base, I18n.t('groups.errors.email_already_used_in_group', email: email, group_name: group.name))
+        self.errors.add(:base, I18n.t('groups.errors.email_already_used_in_group', email: escaped, group_name: Rack::Utils.escape_html(group.name)))
       elsif category = Category.find_by_email(email)
-        self.errors.add(:base, I18n.t('groups.errors.email_already_used_in_category', email: email, category_name: category.name))
+        self.errors.add(:base, I18n.t('groups.errors.email_already_used_in_category', email: escaped, category_name: Rack::Utils.escape_html(category.name)))
       end
     end
   end

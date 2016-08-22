@@ -1,3 +1,4 @@
+import { ajax } from 'discourse/lib/ajax';
 import Badge from 'discourse/models/badge';
 
 const UserBadge = Discourse.Model.extend({
@@ -8,7 +9,7 @@ const UserBadge = Discourse.Model.extend({
   }.property(), // avoid the extra bindings for now
 
   revoke() {
-    return Discourse.ajax("/user_badges/" + this.get('id'), {
+    return ajax("/user_badges/" + this.get('id'), {
       type: "DELETE"
     });
   }
@@ -89,7 +90,7 @@ UserBadge.reopenClass({
     if (options && options.grouped) {
       url += "?grouped=true";
     }
-    return Discourse.ajax(url).then(function(json) {
+    return ajax(url).then(function(json) {
       return UserBadge.createFromJson(json);
     });
   },
@@ -105,7 +106,7 @@ UserBadge.reopenClass({
     if (!options) { options = {}; }
     options.badge_id = badgeId;
 
-    return Discourse.ajax("/user_badges.json", {
+    return ajax("/user_badges.json", {
       data: options
     }).then(function(json) {
       return UserBadge.createFromJson(json);
@@ -121,7 +122,7 @@ UserBadge.reopenClass({
     @returns {Promise} a promise that resolves to an instance of `UserBadge`.
   **/
   grant: function(badgeId, username, reason) {
-    return Discourse.ajax("/user_badges", {
+    return ajax("/user_badges", {
       type: "POST",
       data: {
         username: username,

@@ -15,13 +15,23 @@ module ApplicationHelper
   include ConfigurableUrls
   include GlobalPath
 
-  def ga_universal_json
-    cookie_domain = SiteSetting.ga_universal_domain_name.gsub(/^http(s)?:\/\//, '')
-    result = {cookieDomain: cookie_domain}
+  def google_universal_analytics_json(ua_domain_name=nil)
+    result = {}
+    if ua_domain_name
+      result[:cookieDomain] = ua_domain_name.gsub(/^http(s)?:\/\//, '')
+    end
     if current_user.present?
       result[:userId] = current_user.id
     end
     result.to_json.html_safe
+  end
+
+  def ga_universal_json
+    google_universal_analytics_json(SiteSetting.ga_universal_domain_name)
+  end
+
+  def google_tag_manager_json
+    google_universal_analytics_json
   end
 
   def shared_session_key
@@ -57,6 +67,12 @@ module ApplicationHelper
 
   def html_classes
     "#{mobile_view? ? 'mobile-view' : 'desktop-view'} #{mobile_device? ? 'mobile-device' : 'not-mobile-device'} #{rtl_class} #{current_user ? '' : 'anon'}"
+  end
+
+  def body_classes
+    if @category && @category.url.present?
+      "category-#{@category.url.sub(/^\/c\//, '').gsub(/\//, '-')}"
+    end
   end
 
   def rtl_class
@@ -126,7 +142,13 @@ module ApplicationHelper
     opts ||= {}
     opts[:url] ||= "#{Discourse.base_url_no_prefix}#{request.fullpath}"
 
-    # Use the correct scheme for open graph
+    if opts[:image].blank? && SiteSetting.default_opengraph_image_url.present?
+      opts[:image] = SiteSetting.default_opengraph_image_url
+    elsif opts[:image].blank? && SiteSetting.apple_touch_icon_url.present?
+      opts[:image] = SiteSetting.apple_touch_icon_url
+    end
+
+    # Use the correct scheme for open graph image
     if opts[:image].present? && opts[:image].start_with?("//")
       uri = URI(Discourse.base_url)
       opts[:image] = "#{uri.scheme}:#{opts[:image]}"

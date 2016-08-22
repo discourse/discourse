@@ -1,9 +1,43 @@
+require_dependency 'notification_levels'
+
 class TagUser < ActiveRecord::Base
   belongs_to :tag
   belongs_to :user
 
   def self.notification_levels
-    TopicUser.notification_levels
+    NotificationLevels.all
+  end
+
+  def self.lookup(user, level)
+    where(user: user, notification_level: notification_levels[level])
+  end
+
+  def self.batch_set(user, level, tags)
+    tags ||= []
+    changed = false
+
+    records = TagUser.where(user: user, notification_level: notification_levels[level])
+    old_ids = records.pluck(:tag_id)
+
+    tag_ids = tags.empty? ? [] : Tag.where('name in (?)', tags).pluck(:id)
+
+    remove = (old_ids - tag_ids)
+    if remove.present?
+      records.where('tag_id in (?)', remove).destroy_all
+      changed = true
+    end
+
+    (tag_ids - old_ids).each do |id|
+      TagUser.create!(user: user, tag_id: id, notification_level: notification_levels[level])
+      changed = true
+    end
+
+    if changed
+      auto_watch(user_id: user.id)
+      auto_track(user_id: user.id)
+    end
+
+    changed
   end
 
   def self.change(user_id, tag_id, level)
@@ -23,75 +57,100 @@ class TagUser < ActiveRecord::Base
       tag_user = TagUser.create(user_id: user_id, tag_id: tag_id, notification_level: level)
     end
 
+    auto_watch(user_id: user_id)
+    auto_track(user_id: user_id)
+
     tag_user
   rescue ActiveRecord::RecordNotUnique
     # In case of a race condition to insert, do nothing
   end
 
-  %w{watch track}.each do |s|
-    define_singleton_method("auto_#{s}_new_topic") do |topic, new_tags=nil|
-      tag_ids = topic.tags.pluck(:id)
-      if !new_tags.nil? && topic.created_at && topic.created_at > 5.days.ago
-        tag_ids = new_tags.map(&:id)
-        remove_default_from_topic( topic.id, tag_ids,
-                                   TopicUser.notification_levels[:"#{s}ing"],
-                                   TopicUser.notification_reasons[:"auto_#{s}_tag"] )
-      end
+  def self.auto_watch(opts)
+    builder = SqlBuilder.new <<SQL
 
-      apply_default_to_topic( topic.id, tag_ids,
-                              TopicUser.notification_levels[:"#{s}ing"],
-                              TopicUser.notification_reasons[:"auto_#{s}_tag"])
-    end
-  end
+    UPDATE topic_users
+    SET notification_level = CASE WHEN should_watch THEN :watching ELSE :tracking END,
+        notifications_reason_id = CASE WHEN should_watch THEN :auto_watch_tag ELSE NULL END
+    FROM
+    (
+    SELECT tu.topic_id, tu.user_id, CASE
+        WHEN MAX(tag_users.notification_level) = :watching THEN true
+        ELSE false
+        END
+      should_watch,
 
-  def self.apply_default_to_topic(topic_id, tag_ids, level, reason)
-    sql = <<-SQL
-      INSERT INTO topic_users(user_id, topic_id, notification_level, notifications_reason_id)
-           SELECT user_id, :topic_id, :level, :reason
-             FROM tag_users
-            WHERE notification_level = :level
-              AND tag_id in (:tag_ids)
-              AND NOT EXISTS(SELECT 1 FROM topic_users WHERE topic_id = :topic_id AND user_id = tag_users.user_id)
-            LIMIT 1
-    SQL
+        CASE WHEN MAX(tag_users.notification_level) IS NULL AND
+          tu.notification_level = :watching AND
+          tu.notifications_reason_id = :auto_watch_tag
+        THEN true
+        ELSE false
+        END
+      should_track
 
-    exec_sql(sql,
-      topic_id: topic_id,
-      tag_ids: tag_ids,
-      level: level,
-      reason: reason
-    )
-  end
+    FROM topic_users tu
+    LEFT JOIN topic_tags ON tu.topic_id = topic_tags.topic_id
+    LEFT JOIN tag_users ON tag_users.user_id = tu.user_id
+                        AND topic_tags.tag_id = tag_users.tag_id
+                        AND tag_users.notification_level = :watching
+    /*where*/
+    GROUP BY tu.topic_id, tu.user_id, tu.notification_level, tu.notifications_reason_id
+    ) AS X
+    WHERE X.topic_id = topic_users.topic_id AND
+          X.user_id = topic_users.user_id AND
+          (should_track OR should_watch)
 
-  def self.remove_default_from_topic(topic_id, tag_ids, level, reason)
-    sql = <<-SQL
-      DELETE FROM topic_users
-            WHERE topic_id = :topic_id
-              AND notifications_changed_at IS NULL
-              AND notification_level = :level
-              AND notifications_reason_id = :reason
-    SQL
+SQL
 
-    if !tag_ids.empty?
-      sql << <<-SQL
-                AND NOT EXISTS(
-                  SELECT 1
-                    FROM tag_users
-                   WHERE tag_users.tag_id in (:tag_ids)
-                     AND tag_users.notification_level = :level
-                     AND tag_users.user_id = topic_users.user_id)
-      SQL
+    builder.where("tu.notification_level in (:tracking, :regular, :watching)")
+
+    if topic_id = opts[:topic_id]
+      builder.where("tu.topic_id = :topic_id", topic_id: topic_id)
     end
 
-    exec_sql(sql,
-      topic_id: topic_id,
-      level: level,
-      reason: reason,
-      tag_ids: tag_ids
-    )
+    if user_id = opts[:user_id]
+      builder.where("tu.user_id = :user_id", user_id: user_id)
+    end
+
+    builder.exec(watching: notification_levels[:watching],
+                 tracking: notification_levels[:tracking],
+                 regular: notification_levels[:regular],
+                 auto_watch_tag:  TopicUser.notification_reasons[:auto_watch_tag])
+
   end
 
-  private_class_method :apply_default_to_topic, :remove_default_from_topic
+  def self.auto_track(opts)
+
+    builder = SqlBuilder.new <<SQL
+  UPDATE topic_users
+  SET notification_level = :tracking, notifications_reason_id = :auto_track_tag
+  FROM (
+      SELECT DISTINCT tu.topic_id, tu.user_id
+      FROM topic_users tu
+      JOIN topic_tags ON tu.topic_id = topic_tags.topic_id
+      JOIN tag_users ON tag_users.user_id = tu.user_id
+                          AND topic_tags.tag_id = tag_users.tag_id
+                          AND tag_users.notification_level = :tracking
+      /*where*/
+  ) as X
+  WHERE
+    topic_users.notification_level = :regular AND
+    topic_users.topic_id = X.topic_id AND
+    topic_users.user_id = X.user_id
+SQL
+
+    if topic_id = opts[:topic_id]
+      builder.where("tu.topic_id = :topic_id", topic_id: topic_id)
+    end
+
+    if user_id = opts[:user_id]
+      builder.where("tu.user_id = :user_id", user_id: user_id)
+    end
+
+    builder.exec(tracking: notification_levels[:tracking],
+                 regular: notification_levels[:regular],
+                 auto_track_tag:  TopicUser.notification_reasons[:auto_track_tag])
+  end
+
 end
 
 # == Schema Information

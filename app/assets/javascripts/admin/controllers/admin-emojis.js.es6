@@ -1,3 +1,4 @@
+import { ajax } from 'discourse/lib/ajax';
 export default Ember.ArrayController.extend({
   sortProperties: ["name"],
 
@@ -15,7 +16,7 @@ export default Ember.ArrayController.extend({
         I18n.t("yes_value"),
         function(destroy) {
           if (destroy) {
-            return Discourse.ajax("/admin/customize/emojis/" + emoji.get("name"), { type: "DELETE" }).then(function() {
+            return ajax("/admin/customize/emojis/" + emoji.get("name"), { type: "DELETE" }).then(function() {
               self.removeObject(emoji);
             });
           }

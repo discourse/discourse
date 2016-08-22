@@ -2,6 +2,18 @@ const PageTracker = Ember.Object.extend(Ember.Evented);
 let _pageTracker = PageTracker.create();
 
 let _started = false;
+
+const cache = {};
+let transitionCount = 0;
+
+export function setTransient(key, data, count) {
+  cache[key] = {data, target: transitionCount + count};
+}
+
+export function getTransient(key) {
+  return cache[key];
+}
+
 export function startPageTracking(router) {
   if (_started) { return; }
 
@@ -11,8 +23,13 @@ export function startPageTracking(router) {
 
     // Refreshing the title is debounced, so we need to trigger this in the
     // next runloop to have the correct title.
-    Em.run.next(() => {
-      _pageTracker.trigger('change', url, Discourse.get('_docTitle'));
+    Em.run.next(() => _pageTracker.trigger('change', url, Discourse.get('_docTitle')));
+
+    transitionCount++;
+    _.each(cache, (v,k) => {
+      if (v && v.target && v.target < transitionCount) {
+        delete cache[k];
+      }
     });
   });
   _started = true;

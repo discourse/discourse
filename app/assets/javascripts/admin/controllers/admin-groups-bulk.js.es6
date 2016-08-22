@@ -1,3 +1,4 @@
+import { ajax } from 'discourse/lib/ajax';
 import computed from 'ember-addons/ember-computed-decorators';
 import { popupAjaxError } from 'discourse/lib/ajax-error';
 
@@ -20,7 +21,7 @@ export default Ember.Controller.extend({
                                       .reject(x => x.length === 0);
 
       this.set('saving', true);
-      Discourse.ajax('/admin/groups/bulk', {
+      ajax('/admin/groups/bulk', {
         data: { users, group_id: this.get('groupId') },
         method: 'PUT'
       }).then(() => {

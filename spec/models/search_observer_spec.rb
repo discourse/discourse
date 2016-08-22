@@ -2,14 +2,6 @@ require 'rails_helper'
 
 describe SearchObserver do
 
-  def get_row(post_id)
-    SqlBuilder.map_exec(
-      OpenStruct,
-      "select * from post_search_data where post_id = :post_id",
-      post_id: post_id
-    ).first
-  end
-
   it 'correctly indexes chinese' do
     SiteSetting.default_locale = 'zh_CN'
     data = "你好世界"
@@ -17,8 +9,8 @@ describe SearchObserver do
 
     SearchObserver.update_posts_index(99, "你好世界", "", nil)
 
-    row = get_row(99)
-    expect(row.raw_data.split(' ').length).to eq(2)
+    raw_data = PostSearchData.where(post_id: 99).pluck(:raw_data)[0]
+    expect(raw_data.split(' ').length).to eq(2)
   end
 
   it 'correctly indexes a post' do
@@ -26,15 +18,13 @@ describe SearchObserver do
 
     SearchObserver.update_posts_index(99, data, "", nil)
 
-    row = get_row(99)
-
-    expect(row.raw_data).to eq("This is a test")
-    expect(row.locale).to eq("en")
+    raw_data, locale = PostSearchData.where(post_id: 99).pluck(:raw_data, :locale)[0]
+    expect(raw_data).to eq("This is a test")
+    expect(locale).to eq("en")
 
     SearchObserver.update_posts_index(99, "tester", "", nil)
 
-    row = get_row(99)
-
-    expect(row.raw_data).to eq("tester")
+    raw_data = PostSearchData.where(post_id: 99).pluck(:raw_data)[0]
+    expect(raw_data).to eq("tester")
   end
 end

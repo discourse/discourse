@@ -20,6 +20,26 @@ describe CookedPostProcessor do
 
   end
 
+  context "cooking options" do
+    context "regular user" do
+      let(:post) { Fabricate(:post) } 
+
+      it "doesn't omit nofollow" do
+        cpp = CookedPostProcessor.new(post)
+        expect(cpp.cooking_options[:omit_nofollow]).to eq(nil)
+      end
+    end
+
+    context "admin user" do
+      let(:post) { Fabricate(:post, user: Fabricate(:admin) ) }
+
+      it "omits nofollow" do
+        cpp = CookedPostProcessor.new(post)
+        expect(cpp.cooking_options[:omit_nofollow]).to eq(true)
+      end
+    end
+  end
+
   context ".keep_reverse_index_up_to_date" do
 
     let(:post) { build(:post_with_uploads, id: 123) }
@@ -59,7 +79,8 @@ describe CookedPostProcessor do
       context "valid" do
         let(:image_sizes) { {"http://foo.bar/image.png" => {"width" => 111, "height" => 222}} }
 
-        it "use them" do
+        it "uses them" do
+
           # adds the width from the image sizes provided when no dimension is provided
           expect(cpp.html).to match(/src="http:\/\/foo.bar\/image.png" width="111" height="222"/)
           # adds the width from the image sizes provided
@@ -120,9 +141,9 @@ describe CookedPostProcessor do
 
       it "generates overlay information" do
         cpp.post_process_images
-        expect(cpp.html).to match_html '<p><div class="lightbox-wrapper"><a data-download-href="/uploads/default/e9d71f5ee7c92d6dc9e92ffdad17b8bd49418f98" href="/uploads/default/1/1234567890123456.jpg" class="lightbox" title="logo.png"><img src="/uploads/default/optimized/1X/e9d71f5ee7c92d6dc9e92ffdad17b8bd49418f98_1_690x788.png" width="690" height="788"><div class="meta">
-<span class="filename">logo.png</span><span class="informations">1750x2000 1.21 KB</span><span class="expand"></span>
-</div></a></div></p>'
+        expect(cpp.html).to match_html "<p><div class=\"lightbox-wrapper\"><a data-download-href=\"/uploads/default/#{upload.sha1}\" href=\"/uploads/default/1/1234567890123456.jpg\" class=\"lightbox\" title=\"logo.png\"><img src=\"/uploads/default/optimized/1X/#{upload.sha1}_1_690x788.png\" width=\"690\" height=\"788\"><div class=\"meta\">
+<span class=\"filename\">logo.png</span><span class=\"informations\">1750x2000 1.21 KB</span><span class=\"expand\"></span>
+</div></a></div></p>"
         expect(cpp).to be_dirty
       end
 
@@ -153,10 +174,18 @@ describe CookedPostProcessor do
 
       it "generates overlay information" do
         cpp.post_process_images
-        expect(cpp.html).to match_html '<p><div class="lightbox-wrapper"><a data-download-href="/subfolder/uploads/default/e9d71f5ee7c92d6dc9e92ffdad17b8bd49418f98" href="/subfolder/uploads/default/1/1234567890123456.jpg" class="lightbox" title="logo.png"><img src="/subfolder/uploads/default/optimized/1X/e9d71f5ee7c92d6dc9e92ffdad17b8bd49418f98_1_690x788.png" width="690" height="788"><div class="meta">
-<span class="filename">logo.png</span><span class="informations">1750x2000 1.21 KB</span><span class="expand"></span>
-</div></a></div></p>'
+        expect(cpp.html).to match_html "<p><div class=\"lightbox-wrapper\"><a data-download-href=\"/subfolder/uploads/default/#{upload.sha1}\" href=\"/subfolder/uploads/default/1/1234567890123456.jpg\" class=\"lightbox\" title=\"logo.png\"><img src=\"/subfolder/uploads/default/optimized/1X/#{upload.sha1}_1_690x788.png\" width=\"690\" height=\"788\"><div class=\"meta\">
+<span class=\"filename\">logo.png</span><span class=\"informations\">1750x2000 1.21 KB</span><span class=\"expand\"></span>
+</div></a></div></p>"
         expect(cpp).to be_dirty
+      end
+
+      it "should escape the filename" do
+        upload.update_attributes!(original_filename: "><img src=x onerror=alert('haha')>.png")
+        cpp.post_process_images
+        expect(cpp.html).to match_html "<p><div class=\"lightbox-wrapper\"><a data-download-href=\"/subfolder/uploads/default/#{upload.sha1}\" href=\"/subfolder/uploads/default/1/1234567890123456.jpg\" class=\"lightbox\" title=\"&amp;gt;&amp;lt;img src=x onerror=alert(&amp;#39;haha&amp;#39;)&amp;gt;.png\"><img src=\"/subfolder/uploads/default/optimized/1X/#{upload.sha1}_1_690x788.png\" width=\"690\" height=\"788\"><div class=\"meta\">
+<span class=\"filename\">&amp;gt;&amp;lt;img src=x onerror=alert(&amp;#39;haha&amp;#39;)&amp;gt;.png</span><span class=\"informations\">1750x2000 1.21 KB</span><span class=\"expand\"></span>
+</div></a></div></p>"
       end
 
     end
@@ -181,9 +210,9 @@ describe CookedPostProcessor do
 
       it "generates overlay information" do
         cpp.post_process_images
-        expect(cpp.html).to match_html '<p><div class="lightbox-wrapper"><a data-download-href="/uploads/default/e9d71f5ee7c92d6dc9e92ffdad17b8bd49418f98" href="/uploads/default/1/1234567890123456.jpg" class="lightbox" title="WAT"><img src="/uploads/default/optimized/1X/e9d71f5ee7c92d6dc9e92ffdad17b8bd49418f98_1_690x788.png" title="WAT" width="690" height="788"><div class="meta">
-       <span class="filename">WAT</span><span class="informations">1750x2000 1.21 KB</span><span class="expand"></span>
-       </div></a></div></p>'
+        expect(cpp.html).to match_html "<p><div class=\"lightbox-wrapper\"><a data-download-href=\"/uploads/default/#{upload.sha1}\" href=\"/uploads/default/1/1234567890123456.jpg\" class=\"lightbox\" title=\"WAT\"><img src=\"/uploads/default/optimized/1X/#{upload.sha1}_1_690x788.png\" title=\"WAT\" width=\"690\" height=\"788\"><div class=\"meta\">
+       <span class=\"filename\">WAT</span><span class=\"informations\">1750x2000 1.21 KB</span><span class=\"expand\"></span>
+       </div></a></div></p>"
         expect(cpp).to be_dirty
       end
 
@@ -383,7 +412,7 @@ describe CookedPostProcessor do
 
     it "uses schemaless url for uploads" do
       cpp.optimize_urls
-      expect(cpp.html).to match_html '<p><a href="//test.localhost/uploads/default/2/2345678901234567.jpg">Link</a><br><img src="//test.localhost/uploads/default/1/1234567890123456.jpg"><br><a href="http://www.google.com" rel="nofollow">Google</a><br><img src="http://foo.bar/image.png"><br><a class="attachment" href="//test.localhost/uploads/default/original/1X/af2c2618032c679333bebf745e75f9088748d737.txt">text.txt</a> (20 Bytes)</p>'
+      expect(cpp.html).to match_html '<p><a href="//test.localhost/uploads/default/2/2345678901234567.jpg">Link</a><br><img src="//test.localhost/uploads/default/1/1234567890123456.jpg"><br><a href="http://www.google.com" rel="nofollow">Google</a><br><img src="http://foo.bar/image.png"><br><a class="attachment" href="//test.localhost/uploads/default/original/1X/af2c2618032c679333bebf745e75f9088748d737.txt">text.txt</a> (20 Bytes)<br><img src="//test.localhost/images/emoji/emoji_one/smile.png?v=3" title=":smile:" class="emoji" alt=":smile:"></p>'
     end
 
     context "when CDN is enabled" do
@@ -391,20 +420,20 @@ describe CookedPostProcessor do
       it "does use schemaless CDN url for http uploads" do
         Rails.configuration.action_controller.stubs(:asset_host).returns("http://my.cdn.com")
         cpp.optimize_urls
-        expect(cpp.html).to match_html '<p><a href="//my.cdn.com/uploads/default/2/2345678901234567.jpg">Link</a><br><img src="//my.cdn.com/uploads/default/1/1234567890123456.jpg"><br><a href="http://www.google.com" rel="nofollow">Google</a><br><img src="http://foo.bar/image.png"><br><a class="attachment" href="//my.cdn.com/uploads/default/original/1X/af2c2618032c679333bebf745e75f9088748d737.txt">text.txt</a> (20 Bytes)</p>'
+        expect(cpp.html).to match_html '<p><a href="//my.cdn.com/uploads/default/2/2345678901234567.jpg">Link</a><br><img src="//my.cdn.com/uploads/default/1/1234567890123456.jpg"><br><a href="http://www.google.com" rel="nofollow">Google</a><br><img src="http://foo.bar/image.png"><br><a class="attachment" href="//my.cdn.com/uploads/default/original/1X/af2c2618032c679333bebf745e75f9088748d737.txt">text.txt</a> (20 Bytes)<br><img src="//my.cdn.com/images/emoji/emoji_one/smile.png?v=3" title=":smile:" class="emoji" alt=":smile:"></p>'
       end
 
       it "does not use schemaless CDN url for https uploads" do
         Rails.configuration.action_controller.stubs(:asset_host).returns("https://my.cdn.com")
         cpp.optimize_urls
-        expect(cpp.html).to match_html '<p><a href="https://my.cdn.com/uploads/default/2/2345678901234567.jpg">Link</a><br><img src="https://my.cdn.com/uploads/default/1/1234567890123456.jpg"><br><a href="http://www.google.com" rel="nofollow">Google</a><br><img src="http://foo.bar/image.png"><br><a class="attachment" href="https://my.cdn.com/uploads/default/original/1X/af2c2618032c679333bebf745e75f9088748d737.txt">text.txt</a> (20 Bytes)</p>'
+        expect(cpp.html).to match_html '<p><a href="https://my.cdn.com/uploads/default/2/2345678901234567.jpg">Link</a><br><img src="https://my.cdn.com/uploads/default/1/1234567890123456.jpg"><br><a href="http://www.google.com" rel="nofollow">Google</a><br><img src="http://foo.bar/image.png"><br><a class="attachment" href="https://my.cdn.com/uploads/default/original/1X/af2c2618032c679333bebf745e75f9088748d737.txt">text.txt</a> (20 Bytes)<br><img src="https://my.cdn.com/images/emoji/emoji_one/smile.png?v=3" title=":smile:" class="emoji" alt=":smile:"></p>'
       end
 
       it "does not use CDN when login is required" do
         SiteSetting.login_required = true
         Rails.configuration.action_controller.stubs(:asset_host).returns("http://my.cdn.com")
         cpp.optimize_urls
-        expect(cpp.html).to match_html '<p><a href="//my.cdn.com/uploads/default/2/2345678901234567.jpg">Link</a><br><img src="//my.cdn.com/uploads/default/1/1234567890123456.jpg"><br><a href="http://www.google.com" rel="nofollow">Google</a><br><img src="http://foo.bar/image.png"><br><a class="attachment" href="//test.localhost/uploads/default/original/1X/af2c2618032c679333bebf745e75f9088748d737.txt">text.txt</a> (20 Bytes)</p>'
+        expect(cpp.html).to match_html '<p><a href="//my.cdn.com/uploads/default/2/2345678901234567.jpg">Link</a><br><img src="//my.cdn.com/uploads/default/1/1234567890123456.jpg"><br><a href="http://www.google.com" rel="nofollow">Google</a><br><img src="http://foo.bar/image.png"><br><a class="attachment" href="//test.localhost/uploads/default/original/1X/af2c2618032c679333bebf745e75f9088748d737.txt">text.txt</a> (20 Bytes)<br><img src="//my.cdn.com/images/emoji/emoji_one/smile.png?v=3" title=":smile:" class="emoji" alt=":smile:"></p>'
       end
 
     end
@@ -413,7 +442,7 @@ describe CookedPostProcessor do
 
   context ".pull_hotlinked_images" do
 
-    let(:post) { build(:post) }
+    let(:post) { build(:post, created_at: 20.days.ago) }
     let(:cpp) { CookedPostProcessor.new(post) }
 
     before { cpp.stubs(:available_disk_space).returns(90) }
@@ -467,7 +496,7 @@ describe CookedPostProcessor do
 
   context ".disable_if_low_on_disk_space" do
 
-    let(:post) { build(:post) }
+    let(:post) { build(:post, created_at: 20.days.ago) }
     let(:cpp) { CookedPostProcessor.new(post) }
 
     before { cpp.expects(:available_disk_space).returns(50) }
@@ -493,6 +522,34 @@ describe CookedPostProcessor do
 
   end
 
+  context ".download_remote_images_max_days_old" do
+
+    let(:post) { build(:post, created_at: 20.days.ago) }
+    let(:cpp) { CookedPostProcessor.new(post) }
+
+    before do
+      SiteSetting.download_remote_images_to_local = true
+      cpp.expects(:disable_if_low_on_disk_space).returns(false)
+    end
+
+    it "does not run when download_remote_images_max_days_old is not satisfied" do
+      SiteSetting.download_remote_images_max_days_old = 15
+      Jobs.expects(:cancel_scheduled_job).never
+      cpp.pull_hotlinked_images
+    end
+
+    it "runs when download_remote_images_max_days_old is satisfied" do
+      SiteSetting.download_remote_images_max_days_old = 30
+
+      Jobs.expects(:cancel_scheduled_job).with(:pull_hotlinked_images, post_id: post.id).once
+
+      delay = SiteSetting.editing_grace_period + 1
+      Jobs.expects(:enqueue_in).with(delay.seconds, :pull_hotlinked_images, post_id: post.id, bypass_bump: false).once
+
+      cpp.pull_hotlinked_images
+    end
+  end
+
   context ".is_a_hyperlink?" do
 
     let(:post) { build(:post) }
@@ -512,19 +569,20 @@ describe CookedPostProcessor do
   end
 
   context "extracts links" do
-      let(:post) { Fabricate(:post, raw: "sam has a blog at https://samsaffron.com") }
-      it "always re-extracts links on post process" do
-        TopicLink.destroy_all
-        CookedPostProcessor.new(post).post_process
-        expect(TopicLink.count).to eq(1)
-      end
+    let(:post) { Fabricate(:post, raw: "sam has a blog at https://samsaffron.com") }
+
+    it "always re-extracts links on post process" do
+      TopicLink.destroy_all
+      CookedPostProcessor.new(post).post_process
+      expect(TopicLink.count).to eq(1)
+    end
   end
 
   context "grant badges" do
+    let(:cpp) { CookedPostProcessor.new(post) }
 
     context "emoji inside a quote" do
       let(:post) { Fabricate(:post, raw: "time to eat some sweet [quote]:candy:[/quote] mmmm") }
-      let(:cpp) { CookedPostProcessor.new(post) }
 
       it "doesn't award a badge when the emoji is in a quote" do
         cpp.grant_badges
@@ -534,7 +592,6 @@ describe CookedPostProcessor do
 
     context "emoji in the text" do
       let(:post) { Fabricate(:post, raw: "time to eat some sweet :candy: mmmm") }
-      let(:cpp) { CookedPostProcessor.new(post) }
 
       it "awards a badge for using an emoji" do
         cpp.grant_badges
@@ -543,18 +600,30 @@ describe CookedPostProcessor do
     end
 
     context "onebox" do
-      let(:user) { Fabricate(:user) }
-      let(:post) { Fabricate.build(:post, user: user, raw: "onebox me:\n\nhttps://www.youtube.com/watch?v=Wji-BZ0oCwg\n") }
-      let(:cpp) { CookedPostProcessor.new(post) }
+      let(:post) { Fabricate(:post, raw: "onebox me:\n\nhttps://www.youtube.com/watch?v=Wji-BZ0oCwg\n") }
 
-      before do
-        Oneboxer.stubs(:onebox)
-      end
+      before { Oneboxer.stubs(:onebox) }
 
-      it "awards a badge for using an emoji" do
+      it "awards a badge for using an onebox" do
         cpp.post_process_oneboxes
         cpp.grant_badges
         expect(post.user.user_badges.where(badge_id: Badge::FirstOnebox).exists?).to eq(true)
+      end
+
+      it "doesn't award the badge when the badge is disabled" do
+        Badge.where(id: Badge::FirstOnebox).update_all(enabled: false)
+        cpp.post_process_oneboxes
+        cpp.grant_badges
+        expect(post.user.user_badges.where(badge_id: Badge::FirstOnebox).exists?).to eq(false)
+      end
+    end
+
+    context "reply_by_email" do
+      let(:post) { Fabricate(:post, raw: "This is a **reply** via email ;)", via_email: true, post_number: 2) }
+
+      it "awards a badge for replying via email" do
+        cpp.grant_badges
+        expect(post.user.user_badges.where(badge_id: Badge::FirstReplyByEmail).exists?).to eq(true)
       end
     end
 

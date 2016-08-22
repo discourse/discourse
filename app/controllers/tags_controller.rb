@@ -15,10 +15,17 @@ class TagsController < ::ApplicationController
     categories = Category.where("id in (select category_id from category_tags)")
                          .where("id in (?)", guardian.allowed_category_ids)
                          .preload(:tags)
-    category_tag_counts = categories.map { |c| {id: c.id, tags: self.class.tag_counts_json(Tag.category_tags_by_count_query(c, limit: 300).count)} }
+    category_tag_counts = categories.map do |c|
+      h = Tag.category_tags_by_count_query(c, limit: 300).count
+      h.merge!(c.tags.where.not(name: h.keys).inject({}) { |sum,t| sum[t.name] = 0; sum }) # unused tags
+      {id: c.id, tags: self.class.tag_counts_json(h)}
+    end
 
     tag_counts = self.class.tags_by_count(guardian, limit: 300).count
     @tags = self.class.tag_counts_json(tag_counts)
+
+    @description_meta = I18n.t("tags.title")
+    @title = @description_meta
 
     respond_to do |format|
       format.html do
@@ -33,18 +40,26 @@ class TagsController < ::ApplicationController
     end
   end
 
+  # TODO: move all this to ListController
   Discourse.filters.each do |filter|
     define_method("show_#{filter}") do
       @tag_id = DiscourseTagging.clean_tag(params[:tag_id])
+      @additional_tags = params[:additional_tag_ids].to_s.split('/').map { |tag| DiscourseTagging.clean_tag(tag) }
 
       page = params[:page].to_i
+      list_opts = build_topic_list_options
 
-      query = TopicQuery.new(current_user, build_topic_list_options)
+      query = TopicQuery.new(current_user, list_opts)
 
       results = query.send("#{filter}_results")
 
       if @filter_on_category
-        category_ids = [@filter_on_category.id] + @filter_on_category.subcategories.pluck(:id)
+        category_ids = [@filter_on_category.id]
+
+        unless list_opts[:no_subcategories]
+          category_ids += @filter_on_category.subcategories.pluck(:id)
+        end
+
         results = results.where(category_id: category_ids)
       end
 
@@ -54,10 +69,15 @@ class TagsController < ::ApplicationController
       @list.draft_sequence = DraftSequence.current(current_user, Draft::NEW_TOPIC)
       @list.draft = Draft.get(current_user, @list.draft_key, @list.draft_sequence) if current_user
 
-      @list.more_topics_url = list_by_tag_path(tag_id: @tag_id, page: page + 1)
+      @list.more_topics_url = construct_url_with(:next, list_opts)
+      @list.prev_topics_url = construct_url_with(:prev, list_opts)
       @rss = "tag"
+      @description_meta = I18n.t("rss_by_tag", tag: tag_params.join(' & '))
+      @title = @description_meta
 
-      if @list.topics.size == 0 && !Tag.where(name: @tag_id).exists?
+      canonical_url "#{Discourse.base_url_no_prefix}#{public_send(url_method(params.slice(:category, :parent_category)))}"
+
+      if @list.topics.size == 0 && params[:tag_id] != 'none' && !Tag.where(name: @tag_id).exists?
         raise Discourse::NotFound
       else
         respond_with_list(@list)
@@ -137,7 +157,15 @@ class TagsController < ::ApplicationController
       tags << { id: t.name, text: t.name, count: 0 }
     end
 
-    render json: { results: tags }
+    json_response = { results: tags }
+
+    t = DiscourseTagging.clean_tag(params[:q])
+    if Tag.where(name: t).exists? && !tags.find { |h| h[:id] == t }
+      # filter_allowed_tags determined that the tag entered is not allowed
+      json_response[:forbidden] = t
+    end
+
+    render json: json_response
   end
 
   def notifications
@@ -158,8 +186,8 @@ class TagsController < ::ApplicationController
   def check_hashtag
     tag_values = params[:tag_values].each(&:downcase!)
 
-    valid_tags = TopicCustomField.where(name: DiscourseTagging::TAGS_FIELD_NAME, value: tag_values).map do |tag|
-      { value: tag.value, url: "#{Discourse.base_url}/tags/#{tag.value}" }
+    valid_tags = Tag.where(name: tag_values).map do |tag|
+      { value: tag.name, url: tag.full_url }
     end.compact
 
     render json: { valid: valid_tags }
@@ -183,18 +211,69 @@ class TagsController < ::ApplicationController
       slug_or_id = params[:category]
       return true if slug_or_id.nil?
 
-      parent_slug_or_id = params[:parent_category]
+      if slug_or_id == 'none' && params[:parent_category]
+        @filter_on_category = Category.query_category(params[:parent_category], nil)
+        params[:no_subcategories] = 'true'
+      else
+        parent_slug_or_id = params[:parent_category]
 
-      parent_category_id = nil
-      if parent_slug_or_id.present?
-        parent_category_id = Category.query_parent_category(parent_slug_or_id)
-        redirect_or_not_found and return if parent_category_id.blank?
+        parent_category_id = nil
+        if parent_slug_or_id.present?
+          parent_category_id = Category.query_parent_category(parent_slug_or_id)
+          redirect_or_not_found and return if parent_category_id.blank?
+        end
+
+        @filter_on_category = Category.query_category(slug_or_id, parent_category_id)
       end
 
-      @filter_on_category = Category.query_category(slug_or_id, parent_category_id)
       redirect_or_not_found and return if !@filter_on_category
 
       guardian.ensure_can_see!(@filter_on_category)
+    end
+
+    # TODO: this is duplication of ListController
+    def page_params(opts = nil)
+      opts ||= {}
+      route_params = { format: 'json' }
+      route_params[:category]        = @filter_on_category.slug_for_url                 if @filter_on_category
+      route_params[:parent_category] = @filter_on_category.parent_category.slug_for_url if @filter_on_category && @filter_on_category.parent_category
+      route_params[:order]           = opts[:order]      if opts[:order].present?
+      route_params[:ascending]       = opts[:ascending]  if opts[:ascending].present?
+      route_params
+    end
+
+    def next_page_params(opts = nil)
+      page_params(opts).merge(page: params[:page].to_i + 1)
+    end
+
+    def prev_page_params(opts = nil)
+      pg = params[:page].to_i
+      if pg > 1
+        page_params(opts).merge(page: pg - 1)
+      else
+        page_params(opts).merge(page: nil)
+      end
+    end
+
+    def url_method(opts={})
+      if opts[:parent_category] && opts[:category]
+        "tag_parent_category_category_#{action_name}_path"
+      elsif opts[:category]
+        "tag_category_#{action_name}_path"
+      else
+        "tag_#{action_name}_path"
+      end
+    end
+
+    def construct_url_with(action, opts)
+      method = url_method(opts)
+
+      url = if action == :prev
+        public_send(method, opts.merge(prev_page_params(opts)))
+      else # :next
+        public_send(method, opts.merge(next_page_params(opts)))
+      end
+      url.sub('.json?','?')
     end
 
     def build_topic_list_options
@@ -203,7 +282,6 @@ class TagsController < ::ApplicationController
         topic_ids: param_to_integer_list(:topic_ids),
         exclude_category_ids: params[:exclude_category_ids],
         category: params[:category],
-        tags: [params[:tag_id]],
         order: params[:order],
         ascending: params[:ascending],
         min_posts: params[:min_posts],
@@ -216,6 +294,13 @@ class TagsController < ::ApplicationController
       }
       options[:no_subcategories] = true if params[:no_subcategories] == 'true'
       options[:slow_platform] = true if slow_platform?
+
+      if params[:tag_id] == 'none'
+        options[:no_tags] = true
+      else
+        options[:tags] = tag_params
+        options[:match_all_tags] = true if tag_params.size > 1
+      end
 
       options
     end
@@ -231,5 +316,9 @@ class TagsController < ::ApplicationController
         # redirect to 404
         raise Discourse::NotFound
       end
+    end
+
+    def tag_params
+      [@tag_id].concat(Array(@additional_tags))
     end
 end

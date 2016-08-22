@@ -22,13 +22,15 @@
       window.EmberENV['FORCE_JQUERY'] = true;
     </script>
 
-    <%= script "preload_store" %>
     <%= script "locales/#{I18n.locale}" %>
     <%= script "ember_jquery" %>
+    <%= script "preload-store" %>
     <%= script "vendor" %>
+    <%= script "pretty-text-bundle" %>
     <%= script "application" %>
+
     <%- if staff? %>
-      <%= script "admin"%>
+      <%= script "admin" %>
     <%- end %>
 
     <%- unless customization_disabled? %>
@@ -41,7 +43,9 @@
     <%= yield :head %>
   </head>
 
-  <body>
+  <body class="<%= body_classes %>">
+    <%= render_google_tag_manager_code %>
+
     <div class='debug-eyeline'></div>
 
     <noscript data-path="<%= request.env['PATH_INFO'] %>">
@@ -87,9 +91,12 @@
 
     <%- if @preloaded.present? %>
       <script>
-      <%- @preloaded.each do |key, json| %>
-        PreloadStore.store("<%= key %>",<%= escape_unicode(json) %>);
-      <% end %>
+      (function() {
+        var ps = require('preload-store').default;
+        <%- @preloaded.each do |key, json| %>
+          ps.store("<%= key %>", <%= escape_unicode(json) %>);
+        <% end %>
+      })();
       </script>
     <%- end %>
 

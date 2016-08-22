@@ -1,4 +1,6 @@
 import { blank } from 'helpers/qunit-helpers';
+import PreloadStore from 'preload-store';
+
 module("helper:custom-html");
 
 import { getCustomHTML, setCustomHTML } from 'discourse/helpers/custom-html';
@@ -11,5 +13,4 @@ test("customHTML", function() {
 
   PreloadStore.store('customHTML', {cookie: 'monster'});
   equal(getCustomHTML('cookie'), 'monster', 'it returns HTML fragments from the PreloadStore');
-
 });

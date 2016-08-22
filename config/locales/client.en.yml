@@ -74,9 +74,6 @@ en:
         x_seconds:
           one:   "1s"
           other: "%{count}s"
-        less_than_x_minutes:
-          one:   "< 1m"
-          other: "< %{count}m"
         x_minutes:
           one:   "1m"
           other: "%{count}m"
@@ -183,9 +180,11 @@ en:
         eu_central_1: "EU (Frankfurt)"
         ap_southeast_1: "Asia Pacific (Singapore)"
         ap_southeast_2: "Asia Pacific (Sydney)"
+        ap_south_1: "Asia Pacific (Mumbai)"
         ap_northeast_1: "Asia Pacific (Tokyo)"
         ap_northeast_2: "Asia Pacific (Seoul)"
         sa_east_1: "South America (Sao Paulo)"
+        cn_north_1: "China (Beijing)"
 
     edit: 'edit the title and category of this topic'
     not_implemented: "That feature hasn't been implemented yet, sorry!"
@@ -386,6 +385,7 @@ en:
       selector_placeholder: "Add members"
       owner: "owner"
       visible: "Group is visible to all users"
+      index: "Groups"
       title:
         one: "group"
         other: "groups"
@@ -408,6 +408,9 @@ en:
         watching:
           title: "Watching"
           description: "You will be notified of every new post in every message, and a count of new replies will be shown."
+        watching_first_post:
+          title: "Watching First Post"
+          description: "You will only be notified of the first post in each new topic in this group."
         tracking:
           title: "Tracking"
           description: "You will be notified if someone mentions your @name or replies to you, and a count of new replies will be shown."
@@ -452,14 +455,12 @@ en:
       latest_by: "latest by"
       toggle_ordering: "toggle ordering control"
       subcategories: "Subcategories"
-      topic_stats: "The number of new topics."
+      topic_sentence:
+        one: "1 topic"
+        other: "%{count} topics"
       topic_stat_sentence:
         one: "%{count} new topic in the past %{unit}."
         other: "%{count} new topics in the past %{unit}."
-      post_stats: "The number of new posts."
-      post_stat_sentence:
-        one: "%{count} new post in the past %{unit}."
-        other: "%{count} new posts in the past %{unit}."
 
     ip_lookup:
       title: IP Address Lookup
@@ -513,7 +514,6 @@ en:
       dismiss_notifications_tooltip: "Mark all unread notifications as read"
       disable_jump_reply: "Don't jump to my post after I reply"
       dynamic_favicon: "Show new / updated topic count on browser icon"
-      edit_history_public: "Let other users view my post revisions"
       external_links_in_new_tab: "Open all external links in a new tab"
       enable_quoting: "Enable quote reply for highlighted text"
       change: "change"
@@ -536,10 +536,22 @@ en:
         individual: "Send an email for every new post"
         many_per_day: "Send me an email for every new post (about {{dailyEmailEstimate}} per day)"
         few_per_day: "Send me an email for every new post (about 2 per day)"
+      tag_settings: "Tags"
+      watched_tags: "Watched"
+      watched_tags_instructions: "You will automatically watch all topics with these tags. You will be notified of all new posts and topics, and a count of new posts will also appear next to the topic."
+      tracked_tags: "Tracked"
+      tracked_tags_instructions: "You will automatically track all topics with these tags. A count of new posts will appear next to the topic."
+      muted_tags: "Muted"
+      muted_tags_instructions: "You will not be notified of anything about new topics with these tags, and they will not appear in latest."
       watched_categories: "Watched"
-      watched_categories_instructions: "You will automatically watch all new topics in these categories. You will be notified of all new posts and topics, and a count of new posts will also appear next to the topic."
+      watched_categories_instructions: "You will automatically watch all topics in these categories. You will be notified of all new posts and topics, and a count of new posts will also appear next to the topic."
       tracked_categories: "Tracked"
-      tracked_categories_instructions: "You will automatically track all new topics in these categories. A count of new posts will appear next to the topic."
+      tracked_categories_instructions: "You will automatically track all topics in these categories. A count of new posts will appear next to the topic."
+      watched_first_post_categories: "Watching First Post"
+      watched_first_post_categories_instructions: "You will be notified of the first post in each new topic in these categories."
+      watched_first_post_tags: "Watching First Post"
+      watched_first_post_tags_instructions: "You will be notified of the first post in each new topic with these tags."
+
       muted_categories: "Muted"
       muted_categories_instructions: "You will not be notified of anything about new topics in these categories, and they will not appear in latest."
       delete_account: "Delete My Account"
@@ -554,6 +566,13 @@ en:
       muted_topics_link: "Show muted topics"
       watched_topics_link: "Show watched topics"
       automatically_unpin_topics: "Automatically unpin topics when I reach the bottom."
+      apps: "Apps"
+      revoke_access: "Revoke Access"
+      undo_revoke_access: "Undo Revoke Access"
+      api_permissions: "Permissions:"
+      api_approved: "Approved:"
+      api_read: "read"
+      api_read_write: "read and write"
 
       staff_counters:
         flags_given: "helpful flags"
@@ -574,13 +593,6 @@ en:
         failed_to_move: "Failed to move selected messages (perhaps your network is down)"
         select_all: "Select All"
 
-      warn_unwatch:
-        message: "Also stop watching previously watched topics in {{categories}}?"
-        yes_value: "Yes, unwatch topics"
-        no_value:
-          one: "No, only unwatch category"
-          other: "No, only unwatch categories"
-
       change_password:
         success: "(email sent)"
         in_progress: "(sending email)"
@@ -594,7 +606,7 @@ en:
 
       change_username:
         title: "Change Username"
-        confirm: "If you change your username, all prior quotes of your posts and @name mentions will be broken, and your post history will be interrupted. Are you absolutely sure you want to?"
+        confirm: "If you change your username, all prior quotes of your posts and @name mentions will be broken. Are you absolutely sure you want to?"
         taken: "Sorry, that username is taken."
         error: "There was an error changing your username."
         invalid: "That username is invalid. It must only include numbers and letters"
@@ -867,8 +879,8 @@ en:
     too_few_topics_notice: "Let's <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>get this discussion started!</a> There are currently <strong>%{currentTopics} / %{requiredTopics}</strong> topics. New visitors need some conversations to read and respond to."
     too_few_posts_notice: "Let's <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>get this discussion started!</a> There are currently <strong>%{currentPosts} / %{requiredPosts}</strong> posts. New visitors need some conversations to read and respond to."
     logs_error_rate_notice:
-      reached: "<b>[%{relativeAge}]</b> Current rate of <a href='%{url}' target='_blank'>%{rate}</a> has reached site settings's limit of %{siteSettingRate}."
-      exceeded: "<b>[%{relativeAge}]</b> Current rate of <a href='%{url}' target='_blank'>%{rate}</a> has exceeded site settings's limit of %{siteSettingRate}."
+      reached: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> reached site setting limit of %{siteSettingRate}."
+      exceeded: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> exceeds site setting limit of %{siteSettingRate}."
       rate:
         one: "1 error/%{duration}"
         other: "%{count} errors/%{duration}"
@@ -989,10 +1001,17 @@ en:
         title: "with GitHub"
         message: "Authenticating with GitHub (make sure pop up blockers are not enabled)"
 
-    apple_international: "Apple/International"
-    google: "Google"
-    twitter: "Twitter"
-    emoji_one: "Emoji One"
+    emoji_set:
+      apple_international: "Apple/International"
+      google: "Google"
+      twitter: "Twitter"
+      emoji_one: "Emoji One"
+      win10: "Win10"
+
+    category_page_style:
+      categories_only: "Categories Only"
+      categories_with_featured_topics: "Categories with Featured Topics"
+      categories_and_latest_topics: "Categories and Latest Topics"
 
     shortcut_modifier_key:
       shift: 'Shift'
@@ -1004,9 +1023,11 @@ en:
       more_emoji: "more..."
       options: "Options"
       whisper: "whisper"
+      unlist: "unlisted"
 
       add_warning: "This is an official warning."
       toggle_whisper: "Toggle Whisper"
+      toggle_unlisted: "Toggle Unlisted"
       posting_not_on_topic: "Which topic do you want to reply to?"
       saving_draft_tip: "saving..."
       saved_draft_tip: "saved"
@@ -1014,7 +1035,9 @@ en:
       similar_topics: "Your topic is similar to..."
       drafts_offline: "drafts offline"
 
-      group_mentioned: "By mentioning {{group}}, you are about to notify <a href='{{group_link}}'>{{count}} people</a> – are you sure?"
+      group_mentioned:
+        one: "By mentioning {{group}}, you are about to notify <a href='{{group_link}}'>1 person</a> – are you sure?"
+        other: "By mentioning {{group}}, you are about to notify <a href='{{group_link}}'>{{count}} people</a> – are you sure?"
       duplicate_link: "It looks like your link to <b>{{domain}}</b> was already posted in the topic by <b>@{{username}}</b> in <a href='{{post_url}}'>a reply {{ago}}</a> – are you sure you want to post it again?"
 
       error:
@@ -1049,8 +1072,10 @@ en:
       hide_preview: '&laquo; hide preview'
 
       quote_post_title: "Quote whole post"
+      bold_label: "B"
       bold_title: "Strong"
       bold_text: "strong text"
+      italic_label: "I"
       italic_title: "Emphasis"
       italic_text: "emphasized text"
       link_title: "Hyperlink"
@@ -1068,6 +1093,7 @@ en:
       olist_title: "Numbered List"
       ulist_title: "Bulleted List"
       list_item: "List item"
+      heading_label: "H"
       heading_title: "Heading"
       heading_text: "Heading"
       hr_title: "Horizontal Rule"
@@ -1076,6 +1102,9 @@ en:
       modal_ok: "OK"
       modal_cancel: "Cancel"
       cant_send_pm: "Sorry, you can't send a message to %{username}."
+      yourself_confirm:
+        title: "Did you forget to add recipients?"
+        body: "Right now this message is only being sent to yourself!"
 
       admin_options_title: "Optional staff settings for this topic"
       auto_close:
@@ -1092,6 +1121,7 @@ en:
     notifications:
       title: "notifications of @name mentions, replies to your posts and topics, messages, etc"
       none: "Unable to load notifications at this time."
+      empty: "No notifications found."
       more: "view older notifications"
       total_flagged: "total flagged posts"
       mentioned: "<i title='mentioned' class='fa fa-at'></i><p><span>{{username}}</span> {{description}}</p>"
@@ -1112,6 +1142,8 @@ en:
       moved_post: "<i title='moved post' class='fa fa-sign-out'></i><p><span>{{username}}</span> moved {{description}}</p>"
       linked: "<i title='linked post' class='fa fa-link'></i><p><span>{{username}}</span> {{description}}</p>"
       granted_badge: "<i title='badge granted' class='fa fa-certificate'></i><p>Earned '{{description}}'</p>"
+
+      watching_first_post: "<i title='new topic' class='fa fa-dot-circle-o'></i><p><span>New Topic</span> {{description}}</p>"
 
       group_message_summary:
           one: "<i title='messages in group inbox' class='fa fa-group'></i><p> {{count}} message in your {{group_name}} inbox</p>"
@@ -1165,6 +1197,7 @@ en:
       most_liked: "Most Liked"
       select_all: "Select All"
       clear_all: "Clear All"
+      too_short: "Your search term is too short."
       result_count:
         one: "1 result for <span class='term'>\"{{term}}\"</span>"
         other: "{{count}} results for <span class='term'>\"{{term}}\"</span>"
@@ -1242,7 +1275,9 @@ en:
       unsubscribe:
         stop_notifications: "You will now receive less notifications for <strong>{{title}}</strong>"
         change_notification_state: "Your current notification state is "
-      filter_to: "{{post_count}} posts in topic"
+      filter_to:
+        one: "1 post in topic"
+        other: "{{count}} posts in topic"
       create: 'New Topic'
       create_long: 'Create a new Topic'
       private_message: 'Start a message'
@@ -1291,7 +1326,7 @@ en:
       read_more_in_category: "Want to read more? Browse other topics in {{catLink}} or {{latestLink}}."
       read_more: "Want to read more? {{catLink}} or {{latestLink}}."
 
-      # keys ending with _MF use message format, see /spec/components/js_local_helper_spec.rb for samples
+      # keys ending with _MF use message format, see https://meta.discourse.org/t/message-format-support-for-localization/7035 for details
       read_more_MF: "There {
         UNREAD, plural,
         =0 {}
@@ -1320,12 +1355,13 @@ en:
       auto_close_title: 'Auto-Close Settings'
       auto_close_save: "Save"
       auto_close_remove: "Don't Auto-Close This Topic"
-      auto_close_immediate: "The last post in the topic is already %{hours} hours old, so the topic will be closed immediately."
+      auto_close_immediate:
+        one: "The last post in the topic is already 1 hour old, so the topic will be closed immediately."
+        other: "The last post in the topic is already %{count} hours old, so the topic will be closed immediately."
 
       timeline:
         back: "Back"
         back_description: "Go back to your last unread post"
-        replies: "%{current} / %{total} replies"
         replies_short: "%{current} / %{total}"
 
       progress:
@@ -1334,15 +1370,17 @@ en:
         go_bottom: "bottom"
         go: "go"
         jump_bottom: "jump to last post"
+        jump_prompt: "jump to post"
+        jump_prompt_long: "What post would you like to jump to?"
         jump_bottom_with_number: "jump to post %{post_number}"
         total: total posts
         current: current post
-        position: "post %{current} of %{total}"
 
       notifications:
         title: change how often you get notified about this topic
         reasons:
           mailing_list_mode: "You have mailing list mode enabled, so you will be notified of replies to this topic via email."
+          "3_10": 'You will receive notifications because you are watching a tag on this topic.'
           "3_6": 'You will receive notifications because you are watching this category.'
           "3_5": 'You will receive notifications because you started watching this topic automatically.'
           "3_2": 'You will receive notifications because you are watching this topic.'
@@ -1507,6 +1545,11 @@ en:
           one: "Please choose the topic you'd like to move that post to."
           other: "Please choose the topic you'd like to move those <b>{{count}}</b> posts to."
 
+      merge_posts:
+        title: "Merge Selected Posts"
+        action: "merge selected posts"
+        error: "There was an error merging the selected posts."
+
       change_owner:
         title: "Change Owner of Posts"
         action: "change ownership"
@@ -1557,7 +1600,6 @@ en:
       gap:
         one: "view 1 hidden reply"
         other: "view {{count}} hidden replies"
-      more_links: "{{count}} more..."
 
       unread: "Post is unread"
       has_replies:
@@ -1637,14 +1679,6 @@ en:
         defer_flags:
           one: "Defer flag"
           other: "Defer flags"
-        it_too:
-          off_topic: "Flag it too"
-          spam: "Flag it too"
-          inappropriate: "Flag it too"
-          custom_flag: "Flag it too"
-          bookmark: "Bookmark it too"
-          like: "Like it too"
-          vote: "Vote for it too"
         undo:
           off_topic: "Undo flag"
           spam: "Undo flag"
@@ -1725,6 +1759,11 @@ en:
         confirm:
           one: "Are you sure you want to delete that post?"
           other: "Are you sure you want to delete all those posts?"
+
+      merge:
+        confirm:
+          one: "Are you sure you want merge those posts?"
+          other: "Are you sure you want to merge those {{count}} posts?"
 
       revisions:
         controls:
@@ -1809,10 +1848,13 @@ en:
       notifications:
         watching:
           title: "Watching"
-          description: "You will automatically watch all new topics in these categories. You will be notified of every new post in every topic, and a count of new replies will be shown."
+          description: "You will automatically watch all topics in these categories. You will be notified of every new post in every topic, and a count of new replies will be shown."
+        watching_first_post:
+          title: "Watching First Post"
+          description: "You will only be notified of the first post in each new topic in these categories."
         tracking:
           title: "Tracking"
-          description: "You will automatically track all new topics in these categories. You will be notified if someone mentions your @name or replies to you, and a count of new replies will be shown."
+          description: "You will automatically track all topics in these categories. You will be notified if someone mentions your @name or replies to you, and a count of new replies will be shown."
         regular:
           title: "Normal"
           description: "You will be notified if someone mentions your @name or replies to you."
@@ -1827,7 +1869,9 @@ en:
       notify_action: 'Message'
       official_warning: 'Official Warning'
       delete_spammer: "Delete Spammer"
-      delete_confirm: "You are about to delete <b>%{posts}</b> posts and <b>%{topics}</b> topics from this user, remove their account, block signups from their IP address <b>%{ip_address}</b>, and add their email address <b>%{email}</b> to a permanent block list. Are you sure this user is really a spammer?"
+
+      # keys ending with _MF use message format, see https://meta.discourse.org/t/message-format-support-for-localization/7035 for details
+      delete_confirm_MF: "You are about to delete {POSTS, plural, one {<b>1</b> post} other {<b>#</b> posts}} and {TOPICS, plural, one {<b>1</b> topic} other {<b>#</b> topics}} from this user, remove their account, block signups from their IP address <b>{ip_address}</b>, and add their email address <b>{email}</b> to a permanent block list. Are you sure this user is really a spammer?"
       yes_delete_spammer: "Yes, Delete Spammer"
       ip_address_missing: "(N/A)"
       hidden_email_address: "(hidden)"
@@ -1842,9 +1886,15 @@ en:
       custom_placeholder_notify_user: "Be specific, be constructive, and always be kind."
       custom_placeholder_notify_moderators: "Let us know specifically what you are concerned about, and provide relevant links and examples where possible."
       custom_message:
-        at_least: "enter at least {{n}} characters"
-        more: "{{n}} to go..."
-        left: "{{n}} remaining"
+        at_least:
+          one: "enter at least 1 character"
+          other: "enter at least {{count}} characters"
+        more:
+          one: "1 to go..."
+          other: "{{count}} to go..."
+        left:
+          one: "1 remaining"
+          other: "{{count}} remaining"
 
     flagging_topic:
       title: "Thanks for helping to keep our community civil!"
@@ -1855,7 +1905,7 @@ en:
       title: "Topic Summary"
       participants_title: "Frequent Posters"
       links_title: "Popular Links"
-      links_shown: "show all {{totalLinks}} links..."
+      links_shown: "show more links..."
       clicks:
         one: "1 click"
         other: "%{count} clicks"
@@ -1889,8 +1939,9 @@ en:
         help: "This topic is unlisted; it will not be displayed in topic lists, and can only be accessed via a direct link"
 
     posts: "Posts"
-    posts_lowercase: "posts"
     posts_long: "there are {{number}} posts in this topic"
+
+    # keys ending with _MF use message format, see https://meta.discourse.org/t/message-format-support-for-localization/7035 for details
     posts_likes_MF: |
       This topic has {count, plural, one {1 reply} other {# replies}} {ratio, select,
         low {with a high like to post ratio}
@@ -2110,6 +2161,7 @@ en:
     tagging:
       all_tags: "All Tags"
       selector_all_tags: "all tags"
+      selector_no_tags: "no tags"
       changed: "tags changed:"
       tags: "Tags"
       choose_for_topic: "choose optional tags for this topic"
@@ -2126,14 +2178,19 @@ en:
       filters:
         without_category: "%{filter} %{tag} topics"
         with_category: "%{filter} %{tag} topics in %{category}"
+        untagged_without_category: "%{filter} untagged topics"
+        untagged_with_category: "%{filter} untagged topics in %{category}"
 
       notifications:
         watching:
           title: "Watching"
-          description: "You will automatically watch all new topics in this tag. You will be notified of all new posts and topics, plus the count of unread and new posts will also appear next to the topic."
+          description: "You will automatically watch all topics in this tag. You will be notified of all new posts and topics, plus the count of unread and new posts will also appear next to the topic."
+        watching_first_post:
+          title: "Watching First Post"
+          description: "You will only be notified of the first post in each new topic in this tag."
         tracking:
           title: "Tracking"
-          description: "You will automatically track all new topics in this tag. A count of unread and new posts will appear next to the topic."
+          description: "You will automatically track all topics in this tag. A count of unread and new posts will appear next to the topic."
         regular:
           title: "Regular"
           description: "You will be notified if someone mentions your @name or replies to your post."
@@ -2345,6 +2402,11 @@ en:
         add_owners: Add owners
         incoming_email: "Custom incoming email address"
         incoming_email_placeholder: "enter email address"
+        flair_url: "Avatar Flair URL"
+        flair_url_placeholder: "(Optional) Image URL"
+        flair_bg_color: "Avatar Flair Background Color"
+        flair_bg_color_placeholder: "(Optional) Hex color value"
+        flair_preview: "Preview"
 
 
       api:
@@ -2755,7 +2817,9 @@ en:
         suspend_reason: "Reason"
         suspended_by: "Suspended by"
         delete_all_posts: "Delete all posts"
-        delete_all_posts_confirm: "You are about to delete %{posts} posts and %{topics} topics. Are you sure?"
+
+        # keys ending with _MF use message format, see https://meta.discourse.org/t/message-format-support-for-localization/7035 for details
+        delete_all_posts_confirm_MF: "You are about to delete {POSTS, plural, one {1 post} other {# posts}} and {TOPICS, plural, one {1 topic} other {# topics}}. Are you sure?"
         suspend: "Suspend"
         unsuspend: "Unsuspend"
         suspended: "Suspended?"
@@ -2851,7 +2915,9 @@ en:
         unlock_trust_level: "Unlock Trust Level"
         tl3_requirements:
           title: "Requirements for Trust Level 3"
-          table_title: "In the last %{time_period} days:"
+          table_title:
+            one: "In the last day:"
+            other: "In the last %{count} days:"
           value_heading: "Value"
           requirement_heading: "Requirement"
           visits: "Visits"
@@ -2955,12 +3021,14 @@ en:
           developer: 'Developer'
           embedding: "Embedding"
           legal: "Legal"
+          user_api: 'User API'
           uncategorized: 'Other'
           backups: "Backups"
           login: "Login"
           plugins: "Plugins"
           user_preferences: "User Preferences"
           tags: "Tags"
+          search: "Search"
 
       badges:
         title: Badges
@@ -3057,6 +3125,7 @@ en:
         embed_by_username: "Username for topic creation"
         embed_post_limit: "Maximum number of posts to embed"
         embed_username_key_from_feed: "Key to pull discourse username from feed"
+        embed_title_scrubber: "Regular expression used to scrub the title of posts"
         embed_truncate: "Truncate the embedded posts"
         embed_whitelist_selector: "CSS selector for elements that are allowed in embeds"
         embed_blacklist_selector: "CSS selector for elements that are removed from embeds"

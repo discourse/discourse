@@ -36,11 +36,22 @@ it:
     incoming:
       default_subject: "Email in arrivo da %{email}"
       show_trimmed_content: "Mostra contenuto tagliato"
+      maximum_staged_user_per_email_reached: "Raggiunto il numero massimo di utenti temporanei creati via email."
       errors:
         empty_email_error: "Succede quando l'email ricevuta era vuota."
         no_message_id_error: "Succede quando l'email non ha l'intestazione 'Message-Id'."
+        auto_generated_email_error: "Succede quando l'intestazione 'precedence' è impostata su: list, junk, bulk oppure auto_reply, oppure quando qualunque altra intestazione contiene: auto-submitted, auto-replied o auto-generated."
+        no_body_detected_error: "Succede quando non si riesce ad estrapolare il corpo del messaggio e non ci sono allegati. "
         inactive_user_error: "Succede quando il mittente non è attivo."
         blocked_user_error: "Succede quando il mittente è stato bloccato."
+        bad_destination_address: "Succede quando nessuno degli indirizzi email presente nei campi A/Cc/Bcc corrisponde ad alcun indirizzo email entrante tra quelli configurati."
+        strangers_not_allowed_error: "Succede quando un utente tenta di creare uno nuovo argomento in una categoria della quale non è membro."
+        insufficient_trust_level_error: "Succede quando un utente tenta di creare un nuovo argomento in una categoria per la quale non ha il livello di esperienza richiesto."
+        reply_user_not_matching_error: "Succede quando arriva una risposta da un indirizzo email diverso da quello cui la notifica era stata inviata."
+        topic_not_found_error: "Succede quando arriva una risposta ma l'argomento relativo è stato cancellato."
+        topic_closed_error: "Succede quando arriva una risposta ma l'argomento relativo è stato chiuso."
+        bounced_email_error: "L'email rappresenta un rapporto di email tornata indietro."
+        screened_email_error: "Succede quando l'indirizzo email del mittente era stato già vagliato."
   errors: &errors
     format: '%{attribute} %{message}'
     messages:
@@ -182,6 +193,8 @@ it:
       member_already_exist: "'%{username}' è già membro di questo gruppo."
       invalid_domain: "'%{domain}' non è un dominio valido."
       invalid_incoming_email: "'%{email}' non è un indirizzo email valido."
+      email_already_used_in_group: "L'indirizzo '%{email}' è stato già usato dal gruppo '%{group_name}'."
+      email_already_used_in_category: "L'indirizzo '%{email}' è stato già usato dalla categoria '%{category_name}'."
     default_names:
       everyone: "chiunque"
       admins: "amministratori"
@@ -196,7 +209,16 @@ it:
     until_posts:
       one: "1 messaggio"
       other: "%{count} messaggi"
-    new-topic: "Benvenuto in %{site_name} &mdash; **grazie per iniziare una nuova conversazione!**\n\n- Il titolo sembra interessante? E' un buon riassunto?\n\n- Chi potrebbe essere interessato a questo argomento? Perché è importante? Che risposte speri di ricevere? \n\n- Includi delle buone parole di ricerca nell'argomento così gli altri lo potranno *trovare*. Per raggruppare questo argomento con altri argomenti correlati, seleziona una categoria. \n\nPer maggiori informazioni, [leggi le linee guida della comunità](/guidelines). Questo pannello sarà visualizzato solo per i primi %{education_posts_text}.\n"
+    new-topic: |
+      Benvenuto in %{site_name} &mdash; **grazie per iniziare una nuova conversazione!**
+
+      - Il titolo sembra interessante? E' un buon riassunto?
+
+      - Chi potrebbe essere interessato a questo argomento? Perché è importante? Che risposte speri di ricevere?
+
+      - Includi delle buone parole di ricerca nell'argomento così gli altri lo potranno *trovare*. Per raggruppare questo argomento con altri argomenti correlati, seleziona una categoria.
+
+      Per maggiori informazioni, [leggi le linee guida della comunità](/guidelines). Questo pannello sarà visualizzato solo per i primi %{education_posts_text}.
     new-reply: |
       Benvenuto in %{site_name} &mdash; **grazie per il tuo contributo !**
 
@@ -207,8 +229,22 @@ it:
       - Le critiche costruttive sono benvenute, ma critica le *idee* non le persone.
 
       Per maggiori informazioni, [leggi le linee guida della nostra comunità](/guidelines). Questo pannello sarà visualizzato soltanto per i primi %{education_posts_text}.
-    avatar: "### Che ne dici di un'immagine per il tuo account? \n\nHai pubblicato alcuni argomenti e risposte, ma l'immagine del tuo profilo non è speciale quanto te -- è solo una lettera. \n\nPerché non **[accedi al tuo profilo utente](%{profile_path})** e carichi un'immagine che ti rappresenta? \n\nÈ più facile seguire le discussioni e trovare persone interessanti nelle conversazioni se tutti hanno un'immagine profilo univoca!\n"
-    sequential_replies: "### Considera la possibilità di rispondere a più messaggi contemporaneamente\n\nPiuttosto che inviare più risposte di seguito ad un messaggio, considera la possibilità di inserire un'unica risposta con citazioni o riferimenti @nome ai messaggi precedenti. \n\nPuoi modificare la tua precedente risposta per aggiungere una citazione evidenziando il testo e selezionando il bottone <b>Rispondi citando<b> che compare. \n\nE' più facile per chiunque leggere argomenti che hanno poche risposte più dettagliate, rispetto a molte brevi risposte individuali.\n"
+    avatar: |
+      ### Che ne dici di un'immagine per il tuo account?
+
+      Hai pubblicato alcuni argomenti e risposte, ma l'immagine del tuo profilo non è speciale quanto te -- è solo una lettera.
+
+      Perché non **[accedi al tuo profilo utente](%{profile_path})** e carichi un'immagine che ti rappresenta?
+
+      È più facile seguire le discussioni e trovare persone interessanti nelle conversazioni se tutti hanno un'immagine profilo univoca!
+    sequential_replies: |
+      ### Considera la possibilità di rispondere a più messaggi contemporaneamente
+
+      Piuttosto che inviare più risposte di seguito ad un messaggio, considera la possibilità di inserire un'unica risposta con citazioni o riferimenti @nome ai messaggi precedenti.
+
+      Puoi modificare la tua precedente risposta per aggiungere una citazione evidenziando il testo e selezionando il bottone <b>Rispondi citando<b> che compare.
+
+      E' più facile per chiunque leggere argomenti che hanno poche risposte più dettagliate, rispetto a molte brevi risposte individuali.
     dominating_topic: |
       ### Permetti agli altri di partecipare alla conversazione
 
@@ -258,6 +294,9 @@ it:
           attributes:
             hex:
               invalid: "non è un colore valido"
+        post_reply:
+          base:
+            different_topic: "Il messaggio e la risposta devono appartenere allo stesso argomento."
       <<: *errors
   user_profile:
     no_info_me: "<div class='missing-profile'>il campo \"Su di me\" del tuo profilo è vuoto, <a href='/users/%{username_lower}/preferences/about-me'>vuoi compilarlo?</a></div>"
@@ -271,7 +310,27 @@ it:
   assets_topic_body: "Questo è un argomento permanente, visibile solo allo staff, per salvare immagini e file utilizzati nel design del sito. Non eliminarlo!\n\n\nEcco come fare:\n\n\n1. Rispondi a questo argomento.\n2. Carica qui tutte le immagini che desideri usare per loghi, favicon e così via (usa l'icona di caricamento nell'editor del messaggio o trascina direttamente le immagini).\n3. Invia la risposta per creare il messaggio.\n4. Fai click con il tasto destro sulle immagini nel tuo nuovo messaggio per prelevare il percorso delle immagini caricate, o clicca l'icona di modifica messaggio e ottieni il percorso alle immagini. Copia il percorso delle immagini.\n5. Incolla i percorsi nella sezione [impostazioni di base](/admin/site_settings/category/required).\n\nSe vuoi permettere di caricare file di diverso tipo, modifica `authorized_extensions` nelle [impostazioni file](/admin/site_settings/category/files)."
   lounge_welcome:
     title: "Benvenuto nel Lounge"
-    body: "\nCongratulazioni! :confetti_ball: \n\nSe vedi questo argomento, sei stato recentemente promosso a **esperto** (livello di esperienza 3). \n\nAdesso puoi &hellip; \n\n* Modificare il titolo di qualunque argomento \n* Cambiare la categoria di qualunque argomento \n* Seguire tutti i tuoi collegamenti (è rimosso il [nofollow automatico](http://it.wikipedia.org/wiki/Nofollow) ) \n* Accedere alla categoria privata Lounge visibile solo agli utenti con livello di esperienza 3 o superiore \n* Cancellare i messaggi spam con un singolo clic\n\nEcco l'elenco degli altri [utenti esperti](/badges/3/regular). Vai a salutarli. \n\nGrazie per essere una parte importante di questa comunità! \n\n(Per maggiori informazioni sui livelli di esperienza, [leggi questa discussione][trust]. Nota che possono rimanere utenti esperti solo quegli utenti che continuano a soddisfare i criteri di selezione)\n\n[trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924\n"
+    body: |
+
+      Congratulazioni! :confetti_ball:
+
+      Se vedi questo argomento, sei stato recentemente promosso a **esperto** (livello di esperienza 3).
+
+      Adesso puoi &hellip;
+
+      * Modificare il titolo di qualunque argomento
+      * Cambiare la categoria di qualunque argomento
+      * Seguire tutti i tuoi collegamenti (è rimosso il [nofollow automatico](http://it.wikipedia.org/wiki/Nofollow) )
+      * Accedere alla categoria privata Lounge visibile solo agli utenti con livello di esperienza 3 o superiore
+      * Cancellare i messaggi spam con un singolo clic
+
+      Ecco l'elenco degli altri [utenti esperti](/badges/3/regular). Vai a salutarli.
+
+      Grazie per essere una parte importante di questa comunità!
+
+      (Per maggiori informazioni sui livelli di esperienza, [leggi questa discussione][trust]. Nota che possono rimanere utenti esperti solo quegli utenti che continuano a soddisfare i criteri di selezione)
+
+      [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
   category:
     topic_prefix: "Definizione della categoria %{category}"
     replace_paragraph: "(Sostituisci questo primo paragrafo con una breve descrizione della nuova categoria. Questa guida apparirà nell'area di selezione della categoria, perciò cerca di stare sotto i 200 caratteri. **Finché non modifichi questo testo o non crei argomenti, questa categoria non apparirà sulla pagina delle categorie.**)"
@@ -280,6 +339,9 @@ it:
       uncategorized_parent: "La categoria \"Non classificato\" non può avere una categoria superiore."
       self_parent: "La categoria-genitore di una sottocategoria non può essere se stessa."
       depth: "Non puoi annidare una sottocategoria sotto un'altra"
+      invalid_email_in: "'%{email}' non è un indirizzo email valido."
+      email_already_used_in_group: "L'indirizzo '%{email}' è stato già usato dal gruppo '%{group_name}'."
+      email_already_used_in_category: "L'indirizzo '%{email}' è stato già usato dalla categoria '%{category_name}'."
     cannot_delete:
       uncategorized: "Non puoi eliminare la categoria \"Non classificato\""
       has_subcategories: "Non puoi cancellare questa categoria perché ha sotto-categorie."
@@ -308,6 +370,7 @@ it:
       first_day_topics_per_day: "Hai raggiunto il massimo numero di argomenti che può creare un nuovo utente il suo primo giorno. Per favore attendi %{time_left} prima di riprovare."
       create_topic: "Stai creando argomenti troppo rapidamente. Attendi %{time_left} prima di riprovare."
       create_post: "Stai rispondendo troppo rapidamente. Attendi %{time_left} prima di riprovare."
+      delete_post: "Stai cancellando i messaggi troppo velocemente. Per favore attendi %{time_left} prima di riprovare."
       topics_per_day: "Hai raggiunto il massimo numero di nuovi argomenti per oggi. Per favore attendi %{time_left} prima di riprovare."
       pms_per_day: "Hai raggiunto il massimo numero di messaggi per oggi. Per favore attendi %{time_left} prima di riprovare."
       create_like: "Hai raggiunto il massimo numero di \"Mi piace\" per oggi. Per favore attendi %{time_left} prima di riprovare."
@@ -480,17 +543,10 @@ it:
         make: "Questo argomento è ora uno striscione. Apparirà in cima ad ogni pagina finché non viene chiuso dall'utente."
         remove: "Questo argomento non è più uno striscione. Non apparirà più in cima ad ogni pagina."
   unsubscribed:
-    title: 'Iscrizione annullata'
-    description: "La tua iscrizione è stata annullata. Non ti contatteremo più!"
-    oops: "Se non intendevi farlo, clicca sotto."
-    error: "Errore nell'annullamento dell'iscrizione"
-    preferences_link: "Puoi anche annullare l'iscrizione alle email di riepilogo nella tua <a href='/my/preferences'>pagina delle preferenze</a>"
-    different_user_description: "Sei attualmente collegato con un utente diverso da quello che ha ricevuto il riepilogo. Per favore scollegati e riprova."
-    not_found_description: "Spiacenti, non è stato possibile annullare l'iscrizione. E' possibile che il collegamento nella email sia scaduto."
-  resubscribe:
-    action: "Iscriviti di nuovo"
-    title: "Iscritto di nuovo!"
-    description: "Sei stato iscritto di nuovo."
+    title: "Iscrizione annullata!"
+    description: "La tua iscrizione è stata annullata. Per cambiare le tue impostazioni email <a href='%{url}'>vai alle preferenze utente</a>."
+  unsubscribe:
+    title: "Annulla iscrizione"
   reports:
     visits:
       title: "Visite Utente"
@@ -625,7 +681,6 @@ it:
       yaxis: "Numero di visite"
   dashboard:
     rails_env_warning: "Il tuo server è in modalità %{env}."
-    ruby_version_warning: "Stai eseguendo la versione 2.0.0 di Ruby che ha problemi noti. Effettua l'upgrade alla patch livello 247 o seguenti."
     host_names_warning: "Il tuo file config/database.yml usa l'hostname di default: localhost. Aggiornalo con l'hostname del tuo sito."
     gc_warning: 'Il tuo server usa i parametri di garbage collection di default di ruby, che potrebbero non garantirti le migliori prestazioni. Leggi questo argomento sulla taratura delle prestazioni: <a href="http://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126">Tuning Ruby and Rails for Discourse</a>.'
     sidekiq_warning: 'Sidekiq non è in esecuzione. Molte attività, come l''invio di email, sono eseguite in maniera asincrona da sidekiq. Assicurati che almeno un processo sidekiq sia in esecuzione. <a href="https://github.com/mperham/sidekiq"  target="_blank">Leggi altro su sidekiq qui</a>.'
@@ -708,19 +763,13 @@ it:
     anon_polling_interval: "Frequenza in millisecondi con cui client anonimi effettuano il poll"
     background_polling_interval: "Quanto spesso i client devono fare poll in millisecondi (quando la finestra è in background)"
     cooldown_minutes_after_hiding_posts: "Quanti minuti l'utente deve attendere prima di poter modificare un messaggio che è stato nascosto a causa di segnalazioni"
-    max_topics_in_first_day: "Numero massimo di argomenti che l'utente può creare nel suo primo giorno di forum"
-    max_replies_in_first_day: "Numero massimo di risposte che un utente può pubblicare nel suo primo giorno sul sito"
     tl2_additional_likes_per_day_multiplier: "Aumenta il limite di \"Mi piace\" al giorno ammessi per gli utenti con livello di esperienza 2 (Assiduo), moltiplicando per questo numero"
     tl3_additional_likes_per_day_multiplier: "Aumenta il limite di \"Mi piace\" al giorno ammessi per gli utenti con livello di esperienza 3 (Esperto) moltiplicando per questo numero"
     tl4_additional_likes_per_day_multiplier: "Aumenta il limite di \"Mi piace\" al giorno ammessi per gli utenti con livello di esperienza 4 (Veterano), moltiplicando per questo numero"
-    num_flags_to_block_new_user: "Se i messaggi di un nuovo utente ricevono segnalazioni di spam da num_users_to_block_new_user diversi utenti, nascondi tutti i messaggi dell'utente e impediscigli ulteriori invii. 0 per disabilitare questa funzionalità."
-    num_users_to_block_new_user: "Se i messaggi di un nuovo utente ricevono num_flags_to_block_new_user segnalazioni di spam da così tanti utenti diversi, nascondi tutti i messaggi dell'utente e impediscigli ulteriori invii. 0 per disabilitare questa funzionalità."
     notify_mods_when_user_blocked: "Se un utente è bloccato automaticamente, manda un messaggio ai moderatori."
     flag_sockpuppets: "Se un nuovo utente risponde ad un argomento dallo stesso indirizzo IP dell'utente che ha aperto l'argomento stesso, segnala entrambi i messaggi come potenziale spam."
     traditional_markdown_linebreaks: "Usa l'accapo tradizionale in Markdown, cioè due spazi a fine riga per andare a capo."
     post_undo_action_window_mins: "Numero di minuti durante i quali gli utenti possono annullare le loro azioni recenti su un messaggio (segnalazioni, Mi piace, ecc.)."
-    ga_tracking_code: "Codice Google Analytics per il tracking, es: UA-12345678-9; vedi http://google.com/analytics"
-    ga_domain_name: "Nome del dominio Google analytics (ga.js), esempio: miosito.com; vedi http://google.com/analytics"
     ga_universal_tracking_code: "Codice di tracking Google Universal Analytics (analytics.js), es: UA-12345678-9; vedi http://google.com/analytics"
     ga_universal_domain_name: "Nome di dominio Google Universal Analytics (analytics.js), es: miosito.com; vedi http://google.com/analytics"
     enable_noscript_support: "Abilita il supporto standard ai webcrawler dei motori di ricerca attraverso il tag noscript"
@@ -850,7 +899,7 @@ it:
     min_title_similar_length: "Lunghezza minima di un titolo che attiva il controllo su argomenti simili."
     min_body_similar_length: "Lunghezza minima del corpo di un messaggio che attiva il controllo su argomenti simili."
     category_colors: "Un elenco di valori esadecimali di colori permessi per le categorie."
-    category_style: "Stile grafico per le etichette di categoria."
+    category_style: "Stile grafico delle targhette relative alle categorie."
     max_image_size_kb: "Dimensione massima in kB per caricare immagini degli utenti. Deve essere configurata anche in nginx (client_max_body_size) / apache o nel proxy."
     max_attachment_size_kb: "Dimensione massima dei file che gli utenti possono caricare, in kB. Configura il limite anche in nginx (client_max_body_size) / apache o nel proxy."
     authorized_extensions: "Una lista di estensioni dei file che è permesso caricare (usa '*' per permettere tutti i tipi di file) "
@@ -897,13 +946,11 @@ it:
     delete_all_posts_max: "Numero massimo di messaggi che possono essere eliminati contemporaneamente con il pulsante Cancella Tutti. Se un utente ha un numero maggiore di tali messaggi, questi non possono essere eliminati contemporaneamente e l'utente non può essere cancellato."
     username_change_period: "Numero di giorni dall'iscrizione dopo i quali è possibile modificare il nome utente (imposta a 0 per non permettere il cambio del nome utente)."
     email_editable: "Permetti agli utenti di cambiare l'indirizzo email dopo la registrazione."
-    logout_redirect: "Dove redirigere il browser dopo aver effettuato il logout, es.: (http://qualchesito.com/logout)"
     allow_uploaded_avatars: "Permetti agli utenti di caricare immagini di profilo personalizzate."
     allow_animated_avatars: "Permetti agli utenti di utilizzare gif animate come immagini di profilo. ATTENZIONE: lanciare il comando rake \"avatars:refresh\" dopo aver cambiato questa impostazione."
     allow_animated_thumbnails: "Genera miniature animate delle gif animate."
     default_avatars: "URL degli avatar che verranno utilizzati come predefiniti per i nuovi utenti, fintanto che non li cambieranno esplicitamente."
     automatically_download_gravatars: "Scarica i Gravatars per gli utenti quando viene creato l'account o quando viene modificata l'email"
-    digest_topics: "Numero massimo di argomenti da mostrare nelle email riepilogative."
     allow_profile_backgrounds: "Permetti agli utenti di caricare immagini di sfondo per il profilo."
     enable_mobile_theme: "I dispositivi mobili usano un tema apposito, con possibilità di passare alla visualizzazione completa. Disabilita questa opzione se vuoi usare un foglio di stile personalizzato che sia completamente reattivo."
     suppress_uncategorized_badge: "Non mostrare la targhetta per gli argomenti senza categoria nell'elenco degli argomenti."
@@ -922,6 +969,7 @@ it:
     default_categories_watching: "Elenco di categorie osservate per default."
     default_categories_tracking: "Elenco di categorie seguite per default."
     default_categories_muted: "Elenco di categorie silenziate per default."
+    tag_style: "Stile grafico delle targhette relative alle etichette."
     errors:
       invalid_email: "Indirizzo email non valido."
       invalid_username: "Non c'è alcun utente con quel nome."
@@ -934,17 +982,6 @@ it:
       invalid_string_min_max: "Il numero di caratteri deve essere tra %{min} e %{max}."
       invalid_string_min: "Il numero di caratteri deve essere di almeno %{min}."
       invalid_string_max: "Il numero di caratteri non deve eccedere %{max}."
-  notification_types:
-    mentioned: "%{display_username} ti ha menzionato in %{link}"
-    liked: "a %{display_username} è piaciuto il tuo messaggio in %{link}"
-    replied: "%{display_username} ha risposto al tuo messaggio in %{link}"
-    quoted: "%{display_username} ha citato il tuo messaggio in %{link}"
-    edited: "%{display_username} ha modificato il tuo messaggio in %{link}"
-    posted: "%{display_username} ha commentato in %{link}"
-    moved_post: "%{display_username} ha spostato il tuo messaggio in %{link}"
-    invitee_accepted: "%{display_username} ha accettato il tuo invito"
-    linked: "%{display_username} ti ha collegato in %{link}"
-    granted_badge: "Hai guadagnato %{link}"
   search:
     within_post: "n°%{post_number} di %{username}"
     types:
@@ -1031,10 +1068,24 @@ it:
       other: "%{count} segnalazioni in attesa di essere revisionate"
   invite_mailer:
     subject_template: "%{invitee_name} ti ha invitato a '%{topic_title}' su %{site_domain_name}"
-    text_body_template: "%{invitee_name} ti invita ad una discussione\n\n> **%{topic_title}**\n>\n> %{topic_excerpt}\n\nsu\n\n> %{site_title} -- %{site_description}\n\nSe sei interessato, clicca il collegamento qui sotto:\n\n%{invite_link}\n\nL'invito è da parte di un utente affidabile, perciò puoi rispondere alla discussione immediatamente. \n"
+    text_body_template: |
+      %{invitee_name} ti invita ad una discussione
+
+      > **%{topic_title}**
+      >
+      > %{topic_excerpt}
+
+      su
+
+      > %{site_title} -- %{site_description}
+
+      Se sei interessato, clicca il collegamento qui sotto:
+
+      %{invite_link}
+
+      L'invito è da parte di un utente affidabile, perciò puoi rispondere alla discussione immediatamente.
   invite_forum_mailer:
     subject_template: "%{invitee_name} ti invita a partecipare su %{site_domain_name}"
-    text_body_template: "%{invitee_name} ti invita a partecipare a \n\n> **%{site_title}**\n>\n> %{site_description}\n\nSe sei interessato, clicca il collegamento in basso:\n\n%{invite_link}\n\nQuesto invito è da parte di un utente affidabile, perciò non dovrai effettuare un login.\n"
   invite_password_instructions:
     subject_template: "Imposta la password per il tuo account su %{site_name}"
   test_mailer:
@@ -1056,11 +1107,30 @@ it:
     deferred_and_deleted: "Grazie per averci informato. Abbiamo rimosso il messaggio."
   system_messages:
     post_hidden:
-      subject_template: "Messaggio nascosto a causa di segnalazioni dalla comunità"
-      text_body_template: "Salve,\n\nquesto è un messaggio automatico da parte di %{site_name} per informarti che il tuo messaggio è stato nascosto. \n\n%{base_url}%{url} \n\n%{flag_reason} \n\nVari membri della comunità hanno segnalato il messaggio prima che venisse nascosto, quindi per favore pensa come modificarlo alla luce di queste osservazioni. **Puoi modificare il messaggio dopo %{edit_delay} minuti, e verrà automaticamente ripubblicato.** \n\nTuttavia, se il messaggio dovesse venire nascosto dalla comunità una seconda volta, rimarrà nascosto fino a che un membro dello staff se ne occuperà – e saranno possibili ulteriori sanzioni, compresa la sospensione del tuo account. \n\nPer ulteriori informazioni, puoi far riferimento alle nostre [linee guida della comunità](%{base_url}/guidelines).\n"
+      text_body_template: |
+        Salve,
+
+        questo è un messaggio automatico da parte di %{site_name} per informarti che il tuo messaggio è stato nascosto.
+
+        %{base_url}%{url}
+
+        %{flag_reason}
+
+        Vari membri della comunità hanno segnalato il messaggio prima che venisse nascosto, quindi per favore pensa come modificarlo alla luce di queste osservazioni. **Puoi modificare il messaggio dopo %{edit_delay} minuti, e verrà automaticamente ripubblicato.**
+
+        Tuttavia, se il messaggio dovesse venire nascosto dalla comunità una seconda volta, rimarrà nascosto fino a che un membro dello staff se ne occuperà – e saranno possibili ulteriori sanzioni, compresa la sospensione del tuo account.
+
+        Per ulteriori informazioni, puoi far riferimento alle nostre [linee guida della comunità](%{base_url}/guidelines).
     welcome_user:
       subject_template: "Benvenuto su %{site_name}!"
-      text_body_template: "Grazie per esserti unito a %{site_name}, e benvenuto!\n\n%{new_user_tips} \n\nNoi crediamo in un [comportamento comunitario civile](%{base_url}/guidelines), sempre. Buona permanenza!\n\n(Se desideri comunicare con [i membri dello staff](%{base_url}/about) come nuovo utente, rispondi semplicemente a questo messaggio.)\n"
+      text_body_template: |
+        Grazie per esserti unito a %{site_name}, e benvenuto!
+
+        %{new_user_tips}
+
+        Noi crediamo in un [comportamento comunitario civile](%{base_url}/guidelines), sempre. Buona permanenza!
+
+        (Se desideri comunicare con [i membri dello staff](%{base_url}/about) come nuovo utente, rispondi semplicemente a questo messaggio.)
     welcome_invite:
       subject_template: "Benvenuto su %{site_name}!"
     backup_succeeded:
@@ -1107,6 +1177,12 @@ it:
       subject_template: "[%{site_name}] Problema relativo all'email -- Accesso non valido"
     email_reject_reply_key:
       subject_template: "[%{site_name}] Problema relativo all'email -- Chiave di risposta sconosciuta"
+    email_reject_bad_destination_address:
+      subject_template: "[%{site_name}] Problema email -- Destinatario sconosciuto"
+      text_body_template: |
+        Spiacenti, ma il tuo messaggio email a %{destination} (intitolato %{former_title}) non è stato inviato.
+
+        Non è stato riconosciuto alcuno degli indirizzi email di destinazione. Assicurati di inviare a indirizzi email validi.
     email_reject_topic_not_found:
       subject_template: "[%{site_name}] Problema relativo all'email -- Argomento Non Trovato"
     email_reject_topic_closed:
@@ -1116,16 +1192,24 @@ it:
     email_error_notification:
       subject_template: "[%{site_name}] Problema relativo all'email -- Errore di autenticazione POP"
     too_many_spam_flags:
-      text_body_template: "Salve, \n\nquesto è un messaggio automatico da %{site_name} per informarti che i tuoi messaggi sono stati temporaneamente nascosti perché segnalati dalla comunità. \n\nCome misura precauzionale, il tuo nuovo account non può creare altre risposte o argomenti finché il tuo account non verrà revisionato da un membro dello staff. Ci scusiamo per il disagio.\n\nPer ulteriori informazioni, ti rimandiamo alle [linee guida della comunità](%{base_url}/guidelines).\n"
-    user_automatically_blocked:
-      subject_template: "Nuovo utente %{username} bloccato a causa delle segnalazioni"
+      text_body_template: |
+        Salve,
+
+        questo è un messaggio automatico da %{site_name} per informarti che i tuoi messaggi sono stati temporaneamente nascosti perché segnalati dalla comunità.
+
+        Come misura precauzionale, il tuo nuovo account non può creare altre risposte o argomenti finché il tuo account non verrà revisionato da un membro dello staff. Ci scusiamo per il disagio.
+
+        Per ulteriori informazioni, ti rimandiamo alle [linee guida della comunità](%{base_url}/guidelines).
     spam_post_blocked:
       subject_template: "Il messaggi del nuovo utente %{username} sono stati bloccati a causa dell'invio di ripetuti collegamenti."
     pending_users_reminder:
       subject_template:
         one: "1 utente in attesa di approvazione"
         other: "%{count} utenti in attesa di approvazione"
-      text_body_template: "Ci sono nuove iscrizioni in attesa di essere approvate (o rifiutate) prima che possano accedere a questo forum. \n\n[Per favore valutale nella sezione di amministrazione](%{base_url}/admin/users/list/pending).\n"
+      text_body_template: |
+        Ci sono nuove iscrizioni in attesa di essere approvate (o rifiutate) prima che possano accedere a questo forum.
+
+        [Per favore valutale nella sezione di amministrazione](%{base_url}/admin/users/list/pending).
     download_remote_images_disabled:
       subject_template: "Lo scaricamento delle immagini remote è disabilitato"
       text_body_template: "L'impostazione `download_remote_images_to_local` è stata disabilitata perché è stato raggiunto il limite di spazio su disco definito in `download_remote_images_threshold`."
@@ -1159,13 +1243,11 @@ it:
       subject_template: "%{optional_re}%{topic_title}"
     digest:
       why: "Un breve sommario di %{site_link} dalla tua ultima visita il %{last_seen_at}"
-      subject_template: "[%{site_name}] Riepilogo"
       new_activity: "Nuove attività nei tuoi argomenti e messaggi:"
       top_topics: "Messaggi di successo"
       other_new_topics: "Argomenti più attivi"
       unsubscribe: "Questo riepilogo viene inviato da %{site_link} se non ti si vede da un po'. Per annullare l'iscrizione %{unsubscribe_link}."
       click_here: "clicca qui"
-      from: "%{site_name} riepilogo"
       read_more: "Leggi Altro"
       more_topics: "Ci sono stati %{new_topics_since_seen} altri nuovi argomenti."
       more_topics_category: "Ulteriori nuovi argomenti:"
@@ -1180,7 +1262,13 @@ it:
         %{base_url}/users/password-reset/%{email_token}
     set_password:
       subject_template: "[%{site_name}] Imposta Password"
-      text_body_template: "Qualcuno ha richiesto di aggiungere una password al tuo account su [%{site_name}](%{base_url}). In alternativa, puoi collegarti usando uno dei servizi online supportati (Google, Facebook ecc.) associato con questo indirizzo email validato. \n\nSe non hai fatto tu questa richiesta, ignora tranquillamente questa email.\n\nClicca sul seguente collegamento per scegliere una password:\n%{base_url}/users/password-reset/%{email_token}\n"
+      text_body_template: |
+        Qualcuno ha richiesto di aggiungere una password al tuo account su [%{site_name}](%{base_url}). In alternativa, puoi collegarti usando uno dei servizi online supportati (Google, Facebook ecc.) associato con questo indirizzo email validato.
+
+        Se non hai fatto tu questa richiesta, ignora tranquillamente questa email.
+
+        Clicca sul seguente collegamento per scegliere una password:
+        %{base_url}/users/password-reset/%{email_token}
     admin_login:
       subject_template: "[%{site_name}] Login"
     account_created:
@@ -1192,7 +1280,23 @@ it:
         %{base_url}/users/password-reset/%{email_token}
     signup_after_approval:
       subject_template: "Sei stato ammesso su %{site_name}!"
-      text_body_template: "Benvenuto su %{site_name}! \n\nUn membro dello staff ha approvato il tuo account su %{site_name}. \n\nClicca sul seguente collegamento per confermare e attivare il tuo nuovo account:\n%{base_url}/users/activate-account/%{email_token} \n\nSe il collegamento qui sopra non è cliccabile, prova a copiarlo e incollarlo nella barra degli indirizzi del tuo browser. \n\n%{new_user_tips}\n\nNoi crediamo in un [comportamento comunitario civile](%{base_url}/guidelines), sempre.\n\nBuona permanenza!\n\nps: se vuoi comunicare privatamente con i [membri dello staff](%{base_url}/about) come nuovo utente, rispondi semplicemente a questo messaggio.\n"
+      text_body_template: |
+        Benvenuto su %{site_name}!
+
+        Un membro dello staff ha approvato il tuo account su %{site_name}.
+
+        Clicca sul seguente collegamento per confermare e attivare il tuo nuovo account:
+        %{base_url}/users/activate-account/%{email_token}
+
+        Se il collegamento qui sopra non è cliccabile, prova a copiarlo e incollarlo nella barra degli indirizzi del tuo browser.
+
+        %{new_user_tips}
+
+        Noi crediamo in un [comportamento comunitario civile](%{base_url}/guidelines), sempre.
+
+        Buona permanenza!
+
+        ps: se vuoi comunicare privatamente con i [membri dello staff](%{base_url}/about) come nuovo utente, rispondi semplicemente a questo messaggio.
     signup:
       subject_template: "[%{site_name}] Conferma il tuo nuovo account"
       text_body_template: |

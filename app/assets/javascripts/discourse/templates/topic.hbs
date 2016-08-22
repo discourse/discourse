@@ -98,6 +98,7 @@
               showFlags="showFlags"
               editPost="editPost"
               showHistory="showHistory"
+              showLogin="showLogin"
               showRawEmail="showRawEmail"
               deletePost="deletePost"
               recoverPost="recoverPost"
@@ -124,6 +125,8 @@
               fillGapBefore="fillGapBefore"
               fillGapAfter="fillGapAfter"}}
           {{/unless}}
+
+          {{conditional-loading-spinner condition=model.postStream.loadingBelow}}
         </div>
         <div id="topic-bottom"></div>
 

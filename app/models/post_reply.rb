@@ -3,6 +3,18 @@ class PostReply < ActiveRecord::Base
   belongs_to :reply, class_name: 'Post'
 
   validates_uniqueness_of :reply_id, scope: :post_id
+  validate :ensure_same_topic
+
+  private
+
+  def ensure_same_topic
+    if post.topic_id != reply.topic_id
+      self.errors.add(
+        :base,
+        I18n.t("activerecord.errors.models.post_reply.base.different_topic")
+      )
+    end
+  end
 end
 
 # == Schema Information

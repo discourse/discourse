@@ -3,7 +3,6 @@ import computed from 'ember-addons/ember-computed-decorators';
 export default Ember.Controller.extend({
   showTop: true,
   showFooter: false,
-  styleCategory: null,
 
   @computed
   canSignUp() {

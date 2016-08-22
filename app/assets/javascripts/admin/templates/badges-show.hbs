@@ -60,42 +60,44 @@
       {{/if}}
     </div>
 
-    <div>
-      <label for="query">{{i18n 'admin.badges.query'}}</label>
-      {{textarea name="query" value=buffered.query disabled=readOnly}}
-    </div>
+    {{#if siteSettings.enable_badge_sql}}
+      <div>
+        <label for="query">{{i18n 'admin.badges.query'}}</label>
+        {{textarea name="query" value=buffered.query disabled=readOnly}}
+      </div>
 
-    {{#if hasQuery}}
-      <a href {{action "preview" buffered "false"}}>{{i18n 'admin.badges.preview.link_text'}}</a>
-      |
-      <a href {{action "preview" buffered "true"}}>{{i18n 'admin.badges.preview.plan_text'}}</a>
-      {{#if preview_loading}}
-        {{i18n 'loading'}}...
+      {{#if hasQuery}}
+        <a href {{action "preview" buffered "false"}}>{{i18n 'admin.badges.preview.link_text'}}</a>
+        |
+        <a href {{action "preview" buffered "true"}}>{{i18n 'admin.badges.preview.plan_text'}}</a>
+        {{#if preview_loading}}
+          {{i18n 'loading'}}...
+        {{/if}}
+
+        <div>
+          <label>
+            {{input type="checkbox" checked=buffered.auto_revoke disabled=readOnly}}
+            {{i18n 'admin.badges.auto_revoke'}}
+          </label>
+        </div>
+
+        <div>
+          <label>
+            {{input type="checkbox" checked=buffered.target_posts disabled=readOnly}}
+            {{i18n 'admin.badges.target_posts'}}
+          </label>
+        </div>
+
+        <div>
+          <label for="trigger">{{i18n 'admin.badges.trigger'}}</label>
+          {{combo-box name="trigger"
+                      value=buffered.trigger
+                      content=badgeTriggers
+                      optionValuePath="content.id"
+                      optionLabelPath="content.name"
+                      disabled=readOnly}}
+        </div>
       {{/if}}
-
-      <div>
-        <label>
-          {{input type="checkbox" checked=buffered.auto_revoke disabled=readOnly}}
-          {{i18n 'admin.badges.auto_revoke'}}
-        </label>
-      </div>
-
-      <div>
-        <label>
-          {{input type="checkbox" checked=buffered.target_posts disabled=readOnly}}
-          {{i18n 'admin.badges.target_posts'}}
-        </label>
-      </div>
-
-      <div>
-        <label for="trigger">{{i18n 'admin.badges.trigger'}}</label>
-        {{combo-box name="trigger"
-                    value=buffered.trigger
-                    content=badgeTriggers
-                    optionValuePath="content.id"
-                    optionLabelPath="content.name"
-                    disabled=readOnly}}
-      </div>
     {{/if}}
 
     <div>

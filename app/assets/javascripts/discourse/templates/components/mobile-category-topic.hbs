@@ -1,0 +1,11 @@
+<td class='main-link'>
+  <div class='topic-inset'>
+    {{topic-status topic=topic}}
+    {{topic-link topic}}
+    {{#if topic.unseen}}
+      <span class="badge-notification new-topic"></span>
+    {{/if}}
+    <span class="{{cold-age-class topic.last_posted_at}}" title='{{raw-date topic.last_posted_at}}'>{{{format-age topic.last_posted_at}}}</span>
+  </div>
+</td>
+<td class='num posts'>{{raw "list/post-count-or-badges" topic=topic postBadgesEnabled="true"}}</td>

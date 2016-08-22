@@ -37,19 +37,15 @@ test('updateFromJson', function() {
 });
 
 test('save', function() {
-  sandbox.stub(Discourse, 'ajax').returns(Ember.RSVP.resolve({}));
+  expect(0);
   const badge = Badge.create({name: "New Badge", description: "This is a new badge.", badge_type_id: 1});
-  // TODO: clean API
-  badge.save(["name", "description", "badge_type_id"]);
-  ok(Discourse.ajax.calledOnce, "saved badge");
+  return badge.save(["name", "description", "badge_type_id"]);
 });
 
 test('destroy', function() {
-  sandbox.stub(Discourse, 'ajax');
+  expect(0);
   const badge = Badge.create({name: "New Badge", description: "This is a new badge.", badge_type_id: 1});
   badge.destroy();
-  ok(!Discourse.ajax.calledOnce, "no AJAX call for a new badge");
   badge.set('id', 3);
-  badge.destroy();
-  ok(Discourse.ajax.calledOnce, "AJAX call was made");
+  return badge.destroy();
 });

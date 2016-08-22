@@ -9,7 +9,7 @@
     {{else}}
       <ul>
         {{#each poll.options as |option|}}
-          {{poll-option option=option toggle="toggleOption"}}
+          {{poll-option option=option toggle="toggleOption" isMultiple=isMultiple}}
         {{/each}}
       </ul>
     {{/if}}
@@ -41,7 +41,7 @@
 <div class="poll-buttons">
   {{#if isMultiple}}
     {{#unless hideResultsDisabled}}
-      {{d-button class="cast-votes" title="poll.cast-votes.title" label="poll.cast-votes.label" disabled=castVotesDisabled action="castVotes"}}
+      {{d-button class=castVotesButtonClass title="poll.cast-votes.title" label="poll.cast-votes.label" disabled=castVotesDisabled action="castVotes"}}
     {{/unless}}
   {{/if}}
 

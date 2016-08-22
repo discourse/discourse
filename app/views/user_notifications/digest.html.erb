@@ -26,7 +26,7 @@
           <%= category_badge(t.category, inline_style: true, absolute_url: true) %>
         </div>
 
-        <%- if t.best_post.present? %>
+        <%- if t.best_post.present? && !t.best_post.user_deleted %>
           <div class='digest-post'>
             <%= email_excerpt(t.best_post.cooked, @featured_topics.size) %>
           </div>

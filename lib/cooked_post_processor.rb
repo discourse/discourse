@@ -7,6 +7,8 @@ require_dependency 'pretty_text'
 class CookedPostProcessor
   include ActionView::Helpers::NumberHelper
 
+  attr_reader :cooking_options
+
   def initialize(post, opts={})
     @dirty = false
     @opts = opts
@@ -17,6 +19,7 @@ class CookedPostProcessor
     @cooking_options = post.cooking_options || opts[:cooking_options] || {}
     @cooking_options[:topic_id] = post.topic_id
     @cooking_options = @cooking_options.symbolize_keys
+    @cooking_options[:omit_nofollow] = true if post.omit_nofollow?
 
     analyzer = post.post_analyzer
     @doc = Nokogiri::HTML::fragment(analyzer.cook(post.raw, @cooking_options))
@@ -51,6 +54,7 @@ class CookedPostProcessor
 
     BadgeGranter.grant(Badge.find(Badge::FirstEmoji), @post.user, post_id: @post.id) if has_emoji?
     BadgeGranter.grant(Badge.find(Badge::FirstOnebox), @post.user, post_id: @post.id) if @has_oneboxes
+    BadgeGranter.grant(Badge.find(Badge::FirstReplyByEmail), @post.user, post_id: @post.id) if @post.is_reply_by_email?
   end
 
   def keep_reverse_index_up_to_date
@@ -127,6 +131,7 @@ class CookedPostProcessor
     w, h = get_size_from_attributes(img) ||
            get_size_from_image_sizes(img["src"], @opts[:image_sizes]) ||
            get_size(img["src"])
+
     # limit the size of the thumbnail
     img["width"], img["height"] = ImageSizer.resize(w, h)
   end
@@ -268,9 +273,9 @@ class CookedPostProcessor
     informations = "#{original_width}x#{original_height}"
     informations << " #{number_to_human_size(upload.filesize)}" if upload
 
-    a["title"] = img["title"] || filename
+    a["title"] = CGI.escapeHTML(img["title"] || filename)
 
-    meta.add_child create_span_node("filename", img["title"] || filename)
+    meta.add_child create_span_node("filename", a["title"])
     meta.add_child create_span_node("informations", informations)
     meta.add_child create_span_node("expand")
   end
@@ -325,20 +330,20 @@ class CookedPostProcessor
       end
     end
 
-    use_s3_cdn = SiteSetting.s3_cdn_url.present? && SiteSetting.enable_s3_uploads
+    use_s3_cdn = SiteSetting.enable_s3_uploads && SiteSetting.s3_cdn_url.present?
 
     %w{href data-download-href}.each do |selector|
       @doc.css("a[#{selector}]").each do |a|
         href = a[selector].to_s
         a[selector] = UrlHelper.schemaless UrlHelper.absolute(href) if UrlHelper.is_local(href)
-        a[selector] = a[selector].sub(Discourse.store.absolute_base_url, SiteSetting.s3_cdn_url) if use_s3_cdn
+        a[selector] = Discourse.store.cdn_url(a[selector]) if use_s3_cdn
       end
     end
 
     @doc.css("img[src]").each do |img|
       src = img["src"].to_s
       img["src"] = UrlHelper.schemaless UrlHelper.absolute(src) if UrlHelper.is_local(src)
-      img["src"] = img["src"].sub(Discourse.store.absolute_base_url, SiteSetting.s3_cdn_url) if use_s3_cdn
+      img["src"] = Discourse.store.cdn_url(img["src"]) if use_s3_cdn
     end
   end
 
@@ -347,6 +352,8 @@ class CookedPostProcessor
     return unless SiteSetting.download_remote_images_to_local?
     # have we enough disk space?
     return if disable_if_low_on_disk_space
+    # don't download remote images for posts that are more than n days old
+    return unless @post.created_at > (Date.today - SiteSetting.download_remote_images_max_days_old)
     # we only want to run the job whenever it's changed by a user
     return if @post.last_editor_id == Discourse.system_user.id
     # make sure no other job is scheduled

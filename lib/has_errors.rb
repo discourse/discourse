@@ -1,6 +1,7 @@
 # Helper functions for dealing with errors and objects that have
 # child objects with errors
 module HasErrors
+  attr_reader :errors
 
   def errors
     @errors ||= ActiveModel::Errors.new(self)

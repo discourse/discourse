@@ -132,11 +132,15 @@ module Email
     def header_args
       result = {}
       if @opts[:add_unsubscribe_link]
-        result['List-Unsubscribe'] = "<#{template_args[:user_preferences_url]}>"
+        unsubscribe_url = @template_args[:unsubscribe_url].presence || @template_args[:user_preferences_url]
+        result['List-Unsubscribe'] = "<#{unsubscribe_url}>"
       end
 
-      result['X-Discourse-Post-Id'] = @opts[:post_id].to_s if @opts[:post_id]
+      result['X-Discourse-Post-Id']  = @opts[:post_id].to_s  if @opts[:post_id]
       result['X-Discourse-Topic-Id'] = @opts[:topic_id].to_s if @opts[:topic_id]
+
+      # please, don't send us automatic responses...
+      result['X-Auto-Response-Suppress'] = 'All'
 
       if allow_reply_by_email?
         result['X-Discourse-Reply-Key'] = reply_key

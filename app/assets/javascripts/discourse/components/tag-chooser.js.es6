@@ -36,7 +36,14 @@ export default Ember.TextField.extend({
     const site = this.site,
           self = this,
           filterRegexp = new RegExp(this.site.tags_filter_regexp, "g");
+
     var limit = this.siteSettings.max_tags_per_topic;
+
+    if (this.get('allowCreate') !== false) {
+      this.set('allowCreate', site.get('can_create_tag'));
+    }
+
+    this.set('termMatchesForbidden', false);
 
     if (this.get('unlimitedTagCount')) {
       limit = null;
@@ -46,7 +53,7 @@ export default Ember.TextField.extend({
 
     this.$().select2({
       tags: true,
-      placeholder: I18n.t(this.get('placeholderKey') || 'tagging.choose_for_topic'),
+      placeholder: this.get('placeholder') === "" ? "" : I18n.t(this.get('placeholderKey') || 'tagging.choose_for_topic'),
       maximumInputLength: this.siteSettings.max_tag_length,
       maximumSelectionSize: limit,
       initSelection(element, callback) {
@@ -73,7 +80,7 @@ export default Ember.TextField.extend({
         term = term.replace(filterRegexp, '').trim();
 
         // No empty terms, make sure the user has permission to create the tag
-        if (!term.length || !site.get('can_create_tag')) { return; }
+        if (!term.length || !self.get('allowCreate') || self.get('termMatchesForbidden')) return;
 
         if ($(data).filter(function() {
           return this.text.localeCompare(term) === 0;
@@ -114,6 +121,7 @@ export default Ember.TextField.extend({
           if (self.siteSettings.tags_sort_alphabetically) {
             data.results = data.results.sort(function(a,b) { return a.id > b.id; });
           }
+          self.set('termMatchesForbidden', data.forbidden ? true : false);
           return data;
         }
       },

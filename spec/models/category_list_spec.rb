@@ -5,9 +5,10 @@ describe CategoryList do
 
   let(:user) { Fabricate(:user) }
   let(:admin) { Fabricate(:admin) }
-  let(:category_list) { CategoryList.new(Guardian.new user) }
+  let(:category_list) { CategoryList.new(Guardian.new(user), include_topics: true) }
 
   context "security" do
+
     it "properly hide secure categories" do
       cat = Fabricate(:category)
       Fabricate(:topic, category: cat)
@@ -36,15 +37,16 @@ describe CategoryList do
 
       CategoryFeaturedTopic.feature_topics
 
-      expect(CategoryList.new(Guardian.new(admin)).categories.find { |x| x.name == public_cat.name }.displayable_topics.count).to eq(2)
-      expect(CategoryList.new(Guardian.new(admin)).categories.find { |x| x.name == private_cat.name }.displayable_topics.count).to eq(1)
+      expect(CategoryList.new(Guardian.new(admin), include_topics: true).categories.find { |x| x.name == public_cat.name }.displayable_topics.count).to eq(2)
+      expect(CategoryList.new(Guardian.new(admin), include_topics: true).categories.find { |x| x.name == private_cat.name }.displayable_topics.count).to eq(1)
 
-      expect(CategoryList.new(Guardian.new(user)).categories.find { |x| x.name == public_cat.name }.displayable_topics.count).to eq(1)
-      expect(CategoryList.new(Guardian.new(user)).categories.find { |x| x.name == private_cat.name }).to eq(nil)
+      expect(CategoryList.new(Guardian.new(user), include_topics: true).categories.find { |x| x.name == public_cat.name }.displayable_topics.count).to eq(1)
+      expect(CategoryList.new(Guardian.new(user), include_topics: true).categories.find { |x| x.name == private_cat.name }).to eq(nil)
 
-      expect(CategoryList.new(Guardian.new(nil)).categories.find { |x| x.name == public_cat.name }.displayable_topics.count).to eq(1)
-      expect(CategoryList.new(Guardian.new(nil)).categories.find { |x| x.name == private_cat.name }).to eq(nil)
+      expect(CategoryList.new(Guardian.new(nil), include_topics: true).categories.find { |x| x.name == public_cat.name }.displayable_topics.count).to eq(1)
+      expect(CategoryList.new(Guardian.new(nil), include_topics: true).categories.find { |x| x.name == private_cat.name }).to eq(nil)
     end
+
   end
 
   context "with a category" do
@@ -60,7 +62,6 @@ describe CategoryList do
         expect(category.id).to eq(topic_category.id)
         expect(category.featured_topics.include?(topic)).to eq(true)
       end
-
     end
 
     context "with pinned topics in a category" do

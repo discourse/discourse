@@ -1,3 +1,4 @@
+import { ajax } from 'discourse/lib/ajax';
 export default Ember.Component.extend({
   layoutName: "components/poll-voters",
   tagName: 'ul',
@@ -16,7 +17,7 @@ export default Ember.Component.extend({
   _fetchUsers() {
     this.set("loading", true);
 
-    Discourse.ajax("/polls/voters.json", {
+    ajax("/polls/voters.json", {
       type: "get",
       data: { user_ids: this.get("voterIds") }
     }).then(result => {
@@ -39,10 +40,8 @@ export default Ember.Component.extend({
   didInsertElement() {
     this._super();
 
-    Ember.run.schedule("afterRender", () => {
-      this.set("numOfVotersToShow", Math.round(this.$().width() / 25) * 2);
-      if (this.get("voterIds").length > 0) this._fetchUsers();
-    });
+    this.set("numOfVotersToShow", Math.round(this.$().width() / 25) * 2);
+    if (this.get("voterIds").length > 0) this._fetchUsers();
   },
 
   actions: {

@@ -28,8 +28,7 @@ const LogsNotice = Ember.Object.extend({
 
       this.set('text',
         I18n.t(`logs_error_rate_notice.${translationKey}`, {
-          relativeAge: autoUpdatingRelativeAge(new Date),
-          timestamp: moment().format("YYYY-MM-DD H:mm:ss"),
+          relativeAge: autoUpdatingRelativeAge(new Date(data.publish_at * 1000)),
           siteSettingRate: I18n.t('logs_error_rate_notice.rate', { count: siteSettingLimit, duration: duration }),
           rate: I18n.t('logs_error_rate_notice.rate', { count: rate, duration: duration }),
           url: Discourse.getURL('/logs')

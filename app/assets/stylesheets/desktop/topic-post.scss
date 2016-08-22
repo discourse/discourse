@@ -578,10 +578,6 @@ video {
   margin-top: -20px;
 }
 
-.popup-menu {
-  h3 {margin-top: 0;}
-}
-
 .deleted-user-avatar {
   font-size: 2.571em;
 }
@@ -640,8 +636,7 @@ $topic-avatar-width: 45px;
   padding-top: 15px;
   width: $topic-avatar-width;
   float: left;
-  position: relative;
-  z-index: 2;
+  z-index: 3;
 }
 
 .gap {

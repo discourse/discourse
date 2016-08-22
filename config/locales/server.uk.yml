@@ -162,16 +162,6 @@ uk:
   archetypes:
     regular:
       title: "Звичайна тема"
-  unsubscribed:
-    title: 'Unsubscribed'
-    description: "You have been unsubscribed. We won't contact you again!"
-    oops: "In case you didn't mean to do this, click below."
-    error: "Помилка при Відписуванні"
-    not_found_description: "Sorry, we couldn't unsubscribe you. It's possible the link in your email has expired."
-  resubscribe:
-    action: "Re-Subscribe"
-    title: "Re-Subscribed!"
-    description: "You have been re-subscribed."
   reports:
     visits:
       title: "Відвідини користувачів"
@@ -244,7 +234,6 @@ uk:
       num_clicks: "Переходи"
   dashboard:
     rails_env_warning: "Your server is running in %{env} mode."
-    ruby_version_warning: "You are running a version of Ruby 2.0.0 that is known to have problems. Upgrade to patch level 247 or later."
     host_names_warning: "Your config/database.yml file is using the default localhost hostname. Update it to use your site's hostname."
     gc_warning: 'Your server is using default ruby garbage collection parameters, which will not give you the best performance. Read this topic on performance tuning: <a href="http://meta.discourse.org/t/tuning-ruby-and-rails-for-discourse/4126" target="_blank">Tuning Ruby and Rails for Discourse</a>.'
     sidekiq_warning: 'Sidekiq is not running. Many tasks, like sending emails, are executed asynchronously by sidekiq. Please ensure at least one sidekiq process is running. <a href="https://github.com/mperham/sidekiq" target="_blank">Learn about Sidekiq here</a>.'
@@ -269,11 +258,7 @@ uk:
     email_custom_headers: "Список заголовків електронної пошти, розділених вертикальною рискою"
     enable_long_polling: "Message bus used for notification can use long polling"
     anon_polling_interval: "How often should anonymous clients poll in milliseconds"
-    max_topics_in_first_day: "Максимальна кількість тем, які користувач може створити на сайті в перший день"
-    max_replies_in_first_day: "Максимальна кільість відповідей, які користувач може створити на сайті в перший день"
     notify_mods_when_user_blocked: "Якщо користувача автоматично заблоковано, надіслати повідомлення всім модераторам."
-    ga_tracking_code: "Код відстеження Google аналітики (ga.js), напр.: UA-12345678-9; див. http://google.com/analytics"
-    ga_domain_name: "Доменне ім'я Google аналітики (ga.js), напр.: mysite.com; див. http://google.com/analytics"
     ga_universal_tracking_code: "Код відстеження Google Universal Analytics (analytics.js), напр.: UA-12345678-9; див. http://google.com/analytics"
     ga_universal_domain_name: "Доменне ім'я Google Universal Analytics (analytics.js), напр.: mysite.com; див. http://google.com/analytics"
     enable_noscript_support: "Увімкнути стандартну підтримку пошукових роботів через теґ noscript"
@@ -325,15 +310,6 @@ uk:
       invalid_string_min_max: "Має бути між %{min} та %{max} символів."
       invalid_string_min: "Має бути не менше %{max} символів."
       invalid_string_max: "Має бути не більше ніж %{max} символів."
-  notification_types:
-    mentioned: "%{display_username} mentioned you in %{link}"
-    liked: "%{display_username} liked your post in %{link}"
-    replied: "%{display_username} replied to your post in %{link}"
-    quoted: "%{display_username} quoted your post in %{link}"
-    edited: "%{display_username} edited your post in %{link}"
-    posted: "%{display_username} posted in %{link}"
-    moved_post: "%{display_username} moved your post to %{link}"
-    invitee_accepted: "%{display_username} accepted your invitation"
   search:
     types:
       category: 'Categories'
@@ -377,8 +353,6 @@ uk:
   new_version_mailer_with_notes:
     subject_template: "оновлення [%{site_name}] доступно"
   system_messages:
-    post_hidden:
-      subject_template: "Допис приховано через скарги спільноти"
     welcome_user:
       subject_template: "Ласкаво просимо до сайта %{site_name}!"
     welcome_invite:
@@ -415,7 +389,6 @@ uk:
       top_topics: "Популярні дописи"
       other_new_topics: "Популярні теми"
       click_here: "натисніть тут"
-      from: "Стислий виклад новин від %{site_name}"
       read_more: "Читати більше"
     forgot_password:
       subject_template: "[%{site_name}] Скидання пароля"

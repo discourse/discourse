@@ -195,10 +195,7 @@ describe PostDestroyer do
   describe 'basic destroying' do
 
     it "as the creator of the post, doesn't delete the post" do
-      SiteSetting.stubs(:unique_posts_mins).returns(5)
-      SiteSetting.stubs(:delete_removed_posts_after).returns(24)
-
-      post2 = create_post # Create it here instead of with "let" so unique_posts_mins can do its thing
+      post2 = create_post
 
       @orig = post2.cooked
       PostDestroyer.new(post2.user, post2).destroy
@@ -216,6 +213,7 @@ describe PostDestroyer do
       expect(post2.version).to eq(3)
       expect(post2.user_deleted).to eq(false)
       expect(post2.cooked).to eq(@orig)
+
     end
 
     context "as a moderator" do

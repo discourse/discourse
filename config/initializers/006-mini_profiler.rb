@@ -4,7 +4,7 @@ if Rails.configuration.respond_to?(:load_mini_profiler) && Rails.configuration.l
   require 'flamegraph'
 
   begin
-    require 'memory_profiler' if RUBY_VERSION >= "2.1.0"
+    require 'memory_profiler'
   rescue => e
      STDERR.put "#{e} failed to require mini profiler"
   end

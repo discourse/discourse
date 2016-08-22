@@ -369,6 +369,7 @@ describe Post do
     end
 
     it "finds links from HTML" do
+
       expect(post_two_links.link_count).to eq(2)
     end
 
@@ -870,6 +871,27 @@ describe Post do
       expect(post.baked_at).not_to eq(first_baked)
       expect(post.cooked).to eq(first_cooked)
       expect(result).to eq(true)
+    end
+  end
+
+  describe "#set_owner" do
+    let(:post) { Fabricate(:post) }
+    let(:coding_horror) { Fabricate(:coding_horror) }
+
+    it "will change owner of a post correctly" do
+      post.set_owner(coding_horror, Discourse.system_user)
+      post.reload
+
+      expect(post.user).to eq(coding_horror)
+      expect(post.revisions.size).to eq(1)
+    end
+
+    it "skips creating new post revision if skip_revision is true" do
+      post.set_owner(coding_horror, Discourse.system_user, true)
+      post.reload
+
+      expect(post.user).to eq(coding_horror)
+      expect(post.revisions.size).to eq(0)
     end
   end
 

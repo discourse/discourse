@@ -57,11 +57,11 @@ test("pollOptionsCount", function() {
   const controller = this.subject();
   controller.siteSettings = Discourse.SiteSettings;
 
-  controller.set("pollOptions", "1\n2\n")
+  controller.set("pollOptions", "1\n2\n");
 
   equal(controller.get("pollOptionsCount"), 2, "it should equal 2");
 
-  controller.set("pollOptions", "")
+  controller.set("pollOptions", "");
 
   equal(controller.get("pollOptionsCount"), 0, "it should equal 0");
 });
@@ -210,7 +210,7 @@ test("multiple pollOutput", function() {
     isMultiple: true,
     pollType: controller.get("multiplePollType"),
     pollMin: 1,
-    pollOptions: "1\n2"
+    pollOptions: "\n\n1\n\n2"
   });
 
   equal(controller.get("pollOutput"), "[poll type=multiple min=1 max=2]\n* 1\n* 2\n[/poll]", "it should return the right output");

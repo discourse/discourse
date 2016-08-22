@@ -1,0 +1,79 @@
+import { sanitize } from 'pretty-text/sanitizer';
+import { default as PrettyText, buildOptions } from 'pretty-text/pretty-text';
+import { hashString } from 'discourse/lib/hash';
+
+// Run the MDTest spec
+module("MDTest");
+
+// This is cheating, but the trivial differences between sanitization
+// do not affect formatting.
+function normalize(str) {
+  return str.replace(/\n\s*/g, '').
+             replace(/ \/\>/g, '>').
+             replace(/    ?/g, "\t").
+             replace(/&#34;/g, '&quot;');
+}
+
+// We use a custom sanitizer for MD test that hoists out comments. In Discourse
+// they are stripped, but to be compliant with the spec they should not be.
+function sanitizer(result, whiteLister) {
+  let hoisted;
+  const m = result.match(/<!--[\s\S]*?-->/g);
+  if (m && m.length) {
+    hoisted = [];
+    for (let i=0; i<m.length; i++) {
+      const c = m[i];
+      const id = hashString("discourse:hoisted-comment:" + i).toString();
+      result = result.replace(c, id);
+      hoisted.push([c, id]);
+    }
+  }
+
+  result = sanitize(result, whiteLister);
+  if (hoisted) {
+    hoisted.forEach(tuple => result = result.replace(tuple[1], tuple[0]));
+  }
+
+  return result;
+}
+
+function md(input, expected, text) {
+
+  const opts = buildOptions({ siteSettings: {} });
+  opts.traditionalMarkdownLinebreaks = true;
+  opts.sanitizer = sanitizer;
+
+  const cooker = new PrettyText(opts);
+  const result = cooker.cook(input);
+  const resultNorm = normalize(result);
+  const expectedNorm = normalize(expected);
+  const same = (result === expected) || (resultNorm === expectedNorm);
+
+  if (same) {
+    ok(same, text);
+  } else {
+    equal(resultNorm, expectedNorm, text);
+  }
+};
+
+test("first", function(){
+  equal(1, 1, "cool")
+});
+
+<%
+  def mdtest_suite
+    result = ""
+    Dir.glob("#{Rails.root}/test/javascripts/mdtest/fixtures/*.text").each do |f|
+
+      filename_no_ext = f.sub(/\.text$/, '')
+      filename = Pathname.new(filename_no_ext)
+
+      text = File.read(f)
+      html = File.read("#{filename_no_ext}.xhtml");
+      result << "test(\"#{filename}\", function() { md(#{text.to_json}, #{html.to_json}, 'passes MDTest'); });\n"
+    end
+    result
+  end
+%>
+
+<%= mdtest_suite %>

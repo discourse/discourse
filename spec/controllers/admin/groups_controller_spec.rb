@@ -34,7 +34,10 @@ describe Admin::GroupsController do
         "incoming_email"=>nil,
         "notification_level"=>2,
         "has_messages"=>false,
-        "mentionable"=>false
+        "is_member"=>true,
+        "mentionable"=>false,
+        "flair_url"=>nil,
+        "flair_bg_color"=>nil
       }])
     end
 

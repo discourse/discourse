@@ -104,3 +104,7 @@
 <br/>
 
 <% end %>
+
+<% content_for :head do %>
+  <%= raw crawlable_meta_data(title: SiteSetting.title, description: SiteSetting.site_description) %>
+<% end %>

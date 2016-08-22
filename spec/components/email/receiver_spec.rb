@@ -129,6 +129,11 @@ describe Email::Receiver do
       expect { process(:reply_user_matching) }.to raise_error(Email::Receiver::TopicClosedError)
     end
 
+    it "does not raise TopicClosedError when performing a like action" do
+      topic.update_columns(closed: true)
+      expect { process(:like) }.to change(PostAction, :count)
+    end
+
     it "raises an InvalidPost when there was an error while creating the post" do
       expect { process(:too_small) }.to raise_error(Email::Receiver::InvalidPost)
     end
@@ -431,6 +436,27 @@ describe Email::Receiver do
     it "ignores by title" do
       SiteSetting.ignore_by_title = "foo"
       expect { process(:ignored) }.to_not change(Topic, :count)
+    end
+
+  end
+
+  context "new topic in a category that allows strangers" do
+
+    let!(:category) { Fabricate(:category, email_in: "category@bar.com|category@foo.com", email_in_allow_strangers: true) }
+
+    it "lets an email in from a stranger" do
+      expect { process(:new_user) }.to change(Topic, :count)
+    end
+
+    it "lets an email in from a high-TL user" do
+      Fabricate(:user, email: "tl4@bar.com", trust_level: TrustLevel[4])
+      expect { process(:tl4_user) }.to change(Topic, :count)
+    end
+
+    it "fails on email from a low-TL user" do
+      SiteSetting.email_in_min_trust = 4
+      Fabricate(:user, email: "tl3@bar.com", trust_level: TrustLevel[3])
+      expect { process(:tl3_user) }.to raise_error(Email::Receiver::InsufficientTrustLevelError)
     end
 
   end

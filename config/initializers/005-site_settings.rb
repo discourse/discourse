@@ -16,9 +16,9 @@ reload_settings = lambda {
   end
 }
 
-if Rails.configuration.cache_classes
-  reload_settings.call
-else
+reload_settings.call
+
+if !Rails.configuration.cache_classes
   ActionDispatch::Reloader.to_prepare do
     reload_settings.call
   end

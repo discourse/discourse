@@ -19,27 +19,9 @@ ru:
         many: "голосов"
         other: "голосов"
       average_rating: "Средний рейтинг: <strong>%{average}</strong>."
-      multiple:
-        help:
-          at_least_min_options:
-            one: "Необходимо выбрать хотя бы <strong>1</strong> ответ."
-            few: "Необходимо выбрать хотя бы <strong>%{count}</strong> ответа."
-            many: "Необходимо выбрать хотя бы <strong>%{count}</strong> ответов."
-            other: "Необходимо выбрать хотя бы <strong>%{count}</strong> ответов."
-          up_to_max_options:
-            one: "Можно выбрать только <strong>1</strong> ответ."
-            few: "Можно выбрать до <strong>%{count}</strong> ответов."
-            many: "Можно выбрать до <strong>%{count}</strong> ответов."
-            other: "Можно выбрать до <strong>%{count}</strong> ответов."
-          x_options:
-            one: "Необходимо выбрать <strong>1</strong> ответ."
-            few: "Необходимо выбрать <strong>%{count}</strong> ответа."
-            many: "Необходимо выбрать <strong>%{count}</strong> ответов."
-            other: "Необходимо выбрать <strong>%{count}</strong> ответов."
-          between_min_and_max_options: "Можно выбрать от <strong>%{min}</strong> до <strong>%{max}</strong> ответов."
       cast-votes:
         title: "Проголосуйте"
-        label: "Голосовать!"
+        label: "Проголосовать!"
       show-results:
         title: "Показать результаты"
         label: "Показать результаты"
@@ -47,12 +29,14 @@ ru:
         title: "Вернуться к опросу"
         label: "Скрыть результаты"
       open:
-        title: "Открыть опрос"
+        title: "Снова начать принимать новые голоса"
         label: "Открыть"
-        confirm: "Вы уверены, что хотите открыть этот опрос?"
+        confirm: "Вы уверены, что хотите открыть этот опрос и принимать новые голоса?"
       close:
-        title: "Закрыть опрос"
-        label: "Закрыть"
-        confirm: "Вы уверены, что хотите закрыть этот опрос?"
-      error_while_toggling_status: "Произошла ошибка при смене статуса опроса."
-      error_while_casting_votes: "Произошла ошибка во время обработки вашего голоса."
+        title: "Завершить этот опрос, не принимать новые голоса"
+        label: "Завершить"
+        confirm: "Вы уверены, что хотите завершить этот опрос и больше не принимать голоса?"
+      ui_builder:
+        poll_type:
+          regular: Одиночный выбор
+          multiple: Множественный выбор

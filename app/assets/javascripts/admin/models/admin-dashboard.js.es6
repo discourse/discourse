@@ -1,3 +1,4 @@
+import { ajax } from 'discourse/lib/ajax';
 
 const AdminDashboard = Discourse.Model.extend({});
 
@@ -11,7 +12,7 @@ AdminDashboard.reopenClass({
     @return {jqXHR} a jQuery Promise object
   **/
   find: function() {
-    return Discourse.ajax("/admin/dashboard.json").then(function(json) {
+    return ajax("/admin/dashboard.json").then(function(json) {
       var model = AdminDashboard.create(json);
       model.set('loaded', true);
       return model;
@@ -26,7 +27,7 @@ AdminDashboard.reopenClass({
     @return {jqXHR} a jQuery Promise object
   **/
   fetchProblems: function() {
-    return Discourse.ajax("/admin/dashboard/problems.json", {
+    return ajax("/admin/dashboard/problems.json", {
       type: 'GET',
       dataType: 'json'
     }).then(function(json) {

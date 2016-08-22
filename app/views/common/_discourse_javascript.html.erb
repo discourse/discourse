@@ -1,11 +1,4 @@
 <script>
-  window.assetPath = (function(){
-    var map = <%= deferred_scripts %>;
-    return function(asset) { return map[asset]; };
-  })();
-</script>
-
-<script>
   Ember.RSVP.configure('onerror', function(e) {
     // Ignore TransitionAborted exceptions that bubble up
     if (e && e.message === "TransitionAborted") { return; }
@@ -45,26 +38,28 @@
       }
     });
   <%- end %>
-  Discourse.CDN = '<%= Rails.configuration.action_controller.asset_host %>';
-  Discourse.BaseUrl = '<%= RailsMultisite::ConnectionManagement.current_hostname %>'.replace(/:[\d]*$/,"");
-  Discourse.BaseUri = '<%= Discourse::base_uri %>';
-  Discourse.Environment = '<%= Rails.env %>';
-  Discourse.SiteSettings = PreloadStore.get('siteSettings');
-  Discourse.LetterAvatarVersion = '<%= LetterAvatar.version %>';
-  I18n.defaultLocale = '<%= SiteSetting.default_locale %>';
-  PreloadStore.get("customEmoji").forEach(function(emoji) {
-    Discourse.Dialect.registerEmoji(emoji.name, emoji.url);
-  });
-  Discourse.start();
-  Discourse.set('assetVersion','<%= Discourse.assets_digest %>');
-  Discourse.Session.currentProp("disableCustomCSS", <%= loading_admin? %>);
-  Discourse.HighlightJSPath = <%= HighlightJs.path.inspect.html_safe %>;
-  <%- if SiteSetting.enable_s3_uploads %>
-    <%- if SiteSetting.s3_cdn_url.present? %>
-      Discourse.S3CDN = '<%= SiteSetting.s3_cdn_url %>';
+
+  (function() {
+    var ps = require('preload-store').default;
+
+    Discourse.CDN = '<%= Rails.configuration.action_controller.asset_host %>';
+    Discourse.BaseUrl = '<%= RailsMultisite::ConnectionManagement.current_hostname %>'.replace(/:[\d]*$/,"");
+    Discourse.BaseUri = '<%= Discourse::base_uri %>';
+    Discourse.Environment = '<%= Rails.env %>';
+    Discourse.SiteSettings = ps.get('siteSettings');
+    Discourse.LetterAvatarVersion = '<%= LetterAvatar.version %>';
+    I18n.defaultLocale = '<%= SiteSetting.default_locale %>';
+    Discourse.start();
+    Discourse.set('assetVersion','<%= Discourse.assets_digest %>');
+    Discourse.Session.currentProp("disableCustomCSS", <%= loading_admin? %>);
+    Discourse.HighlightJSPath = <%= HighlightJs.path.inspect.html_safe %>;
+    <%- if SiteSetting.enable_s3_uploads %>
+      <%- if SiteSetting.s3_cdn_url.present? %>
+        Discourse.S3CDN = '<%= SiteSetting.s3_cdn_url %>';
+      <%- end %>
+      Discourse.S3BaseUrl = '<%= Discourse.store.absolute_base_url %>';
     <%- end %>
-    Discourse.S3BaseUrl = '<%= Discourse.store.absolute_base_url %>';
-  <%- end %>
+  })();
 </script>
 
 <%= script 'browser-update' %>

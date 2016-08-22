@@ -2,8 +2,11 @@ import { withPluginApi } from 'discourse/lib/plugin-api';
 import showModal from 'discourse/lib/show-modal';
 
 function initializePollUIBuilder(api) {
-  const ComposerController = api.container.lookup("controller:composer");
+  const siteSettings = api.container.lookup('site-settings:main');
 
+  if (!siteSettings.poll_enabled && (api.getCurrentUser() && !api.getCurrentUser().staff)) return;
+
+  const ComposerController = api.container.lookupFactory("controller:composer");
   ComposerController.reopen({
     actions: {
       showPollBuilder() {
@@ -25,6 +28,6 @@ export default {
   name: "add-poll-ui-builder",
 
   initialize() {
-    withPluginApi('0.1', initializePollUIBuilder);
+    withPluginApi('0.5', initializePollUIBuilder);
   }
 };

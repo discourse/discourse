@@ -57,11 +57,6 @@
   display: none;
 }
 
-.notification-buttons {
-  margin: 10px 0;
-  text-align: right;
-}
-
 .user-navigation {
 
   .map {
@@ -279,4 +274,17 @@ and (max-width : 600px) {
     float: none;
     width: 100%;
   }
+}
+
+.user-preferences .tags .select2-container-multi {
+  border: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
+  width: 540px;
+  border-radius: 0;
+  .select2-choices {
+    border: none;
+  }
+}
+
+.user-preferences .watching-first-post.fa-dot-circle-o {
+  color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
 }

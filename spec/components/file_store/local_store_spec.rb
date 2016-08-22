@@ -14,7 +14,7 @@ describe FileStore::LocalStore do
 
     it "returns a relative url" do
       store.expects(:copy_file)
-      expect(store.store_upload(uploaded_file, upload)).to match(/\/uploads\/default\/original\/.+e9d71f5ee7c92d6dc9e92ffdad17b8bd49418f98\.png/)
+      expect(store.store_upload(uploaded_file, upload)).to match(/\/uploads\/default\/original\/.+#{upload.sha1}\.png/)
     end
 
   end
@@ -23,7 +23,7 @@ describe FileStore::LocalStore do
 
     it "returns a relative url" do
       store.expects(:copy_file)
-      expect(store.store_optimized_image({}, optimized_image)).to match(/\/uploads\/default\/optimized\/.+e9d71f5ee7c92d6dc9e92ffdad17b8bd49418f98_#{OptimizedImage::VERSION}_100x200\.png/)
+      expect(store.store_optimized_image({}, optimized_image)).to match(/\/uploads\/default\/optimized\/.+#{optimized_image.upload.sha1}_#{OptimizedImage::VERSION}_100x200\.png/)
     end
 
   end
@@ -32,8 +32,6 @@ describe FileStore::LocalStore do
 
     it "does not delete non uploaded" do
       FileUtils.expects(:mkdir_p).never
-      upload = Upload.new
-      upload.stubs(:url).returns("/path/to/file")
       store.remove_upload(upload)
     end
 
@@ -41,22 +39,19 @@ describe FileStore::LocalStore do
       FileUtils.expects(:mkdir_p)
       FileUtils.expects(:move)
       File.expects(:exists?).returns(true)
-      upload = Upload.new
-      upload.stubs(:url).returns("/uploads/default/42/253dc8edf9d4ada1.png")
       store.remove_upload(upload)
     end
 
   end
 
   describe ".remove_optimized_image" do
+    let(:optimized_image) { Fabricate(:optimized_image, url: "/uploads/default/_optimized/42/253dc8edf9d4ada1.png") }
 
     it "moves the file to the tombstone" do
       FileUtils.expects(:mkdir_p)
       FileUtils.expects(:move)
       File.expects(:exists?).returns(true)
-      oi = OptimizedImage.new
-      oi.stubs(:url).returns("/uploads/default/_optimized/42/253dc8edf9d4ada1.png")
-      store.remove_optimized_image(upload)
+      store.remove_optimized_image(optimized_image)
     end
 
   end

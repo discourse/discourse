@@ -5,6 +5,8 @@
 .composer-open {
   .topic-timeline {
     opacity: 0;
+    pointer-events: none;
+    cursor: default;
   }
 }
 
@@ -30,6 +32,8 @@
   &.timeline-docked-bottom {
     .timeline-footer-controls {
       opacity: 0;
+      pointer-events: none;
+      cursor: default;
     }
   }
 

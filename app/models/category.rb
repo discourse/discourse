@@ -17,6 +17,7 @@ class Category < ActiveRecord::Base
   belongs_to :latest_post, class_name: "Post"
 
   has_many :topics
+  has_many :category_users
   has_many :category_featured_topics
   has_many :featured_topics, through: :category_featured_topics, source: :topic
 
@@ -34,6 +35,9 @@ class Category < ActiveRecord::Base
   validate :parent_category_validator
 
   validate :email_in_validator
+
+  validates :logo_url, upload_url: true
+  validates :background_url, upload_url: true
 
   validate :ensure_slug
   before_save :apply_permissions
@@ -60,6 +64,9 @@ class Category < ActiveRecord::Base
   has_many :category_tag_groups, dependent: :destroy
   has_many :tag_groups, through: :category_tag_groups
 
+  after_save :reset_topic_ids_cache
+  after_destroy :reset_topic_ids_cache
+
   scope :latest, -> { order('topic_count DESC') }
 
   scope :secured, -> (guardian = nil) {
@@ -81,6 +88,20 @@ class Category < ActiveRecord::Base
   # permission is just used by serialization
   # we may consider wrapping this in another spot
   attr_accessor :displayable_topics, :permission, :subcategory_ids, :notification_level, :has_children
+
+  @topic_id_cache = DistributedCache.new('category_topic_ids')
+
+  def self.topic_ids
+    @topic_id_cache['ids'] || reset_topic_ids_cache
+  end
+
+  def self.reset_topic_ids_cache
+    @topic_id_cache['ids'] = Set.new(Category.pluck(:topic_id).compact)
+  end
+
+  def reset_topic_ids_cache
+    Category.reset_topic_ids_cache
+  end
 
   def self.last_updated_at
     order('updated_at desc').limit(1).pluck(:updated_at).first.to_i
@@ -166,9 +187,7 @@ SQL
     self.topic_id ? query.where(['topics.id <> ?', self.topic_id]) : query
   end
 
-
-  # Internal: Generate the text of post prompting to enter category
-  # description.
+  # Internal: Generate the text of post prompting to enter category description.
   def self.post_template
     I18n.t("category.post_template", replace_paragraph: I18n.t("category.replace_paragraph"))
   end
@@ -198,7 +217,6 @@ SQL
     @@cache.getset(self.description) do
       Nokogiri::HTML(self.description).text
     end
-
   end
 
   def duplicate_slug?
@@ -297,7 +315,7 @@ SQL
   end
 
   def allowed_tags=(tag_names_arg)
-    DiscourseTagging.add_or_create_tags_by_name(self, tag_names_arg)
+    DiscourseTagging.add_or_create_tags_by_name(self, tag_names_arg, {unlimited: true})
   end
 
   def allowed_tag_groups=(group_names)
@@ -311,12 +329,14 @@ SQL
   def email_in_validator
     return if self.email_in.blank?
     email_in.split("|").each do |email|
+
+      escaped = Rack::Utils.escape_html(email)
       if !Email.is_valid?(email)
-        self.errors.add(:base, I18n.t('category.errors.invalid_email_in', email: email))
+        self.errors.add(:base, I18n.t('category.errors.invalid_email_in', email: escaped))
       elsif group = Group.find_by_email(email)
-        self.errors.add(:base, I18n.t('category.errors.email_already_used_in_group', email: email, group_name: group.name))
+        self.errors.add(:base, I18n.t('category.errors.email_already_used_in_group', email: escaped, group_name: Rack::Utils.escape_html(group.name)))
       elsif category = Category.where.not(id: self.id).find_by_email(email)
-        self.errors.add(:base, I18n.t('category.errors.email_already_used_in_category', email: email, category_name: category.name))
+        self.errors.add(:base, I18n.t('category.errors.email_already_used_in_category', email: escaped, category_name: Rack::Utils.escape_html(category.name)))
       end
     end
   end

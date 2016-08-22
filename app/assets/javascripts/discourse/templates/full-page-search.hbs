@@ -1,67 +1,71 @@
 <div class="search row clearfix">
   {{search-text-field value=searchTerm class="full-page-search input-xxlarge search no-blur" action="search" hasAutofocus=hasAutofocus}}
-  {{d-button action="search" icon="search" class="btn-primary" disabled=searchButtonDisabled}}
-  {{#if currentUser}}
-    {{#unless site.mobileView}}
-      <span class="new-topic-btn">{{d-button id="create-topic" class="btn-default" action="createTopic" actionParam=searchTerm icon="plus" label="topic.create"}}</span>
-    {{/unless}}
+  {{d-button action="search" icon="search" class="btn-primary" disabled=searching}}
+
+  {{#if canCreateTopic}}
+    <span class="new-topic-btn">{{d-button id="create-topic" class="btn-default" action="createTopic" actionParam=searchTerm icon="plus" label="topic.create"}}</span>
   {{/if}}
+
   {{#if canBulkSelect}}
-    {{#if model.posts}}
-      {{d-button icon="list" class="bulk-select" title="topics.bulk.toggle" action="toggleBulkSelect"}}
-      {{bulk-select-button selected=selected action="refresh"}}
-    {{/if}}
+    {{d-button icon="list" class="bulk-select" title="topics.bulk.toggle" action="toggleBulkSelect"}}
+    {{bulk-select-button selected=selected action="search"}}
   {{/if}}
 </div>
 
-{{#if model.posts}}
-  {{#if bulkSelectEnabled}}
+{{#if bulkSelectEnabled}}
   <div class='fps-select'>
-  <a href {{action "selectAll"}}>{{i18n "search.select_all"}}</a>
-  <a href {{action "clearAll"}}>{{i18n "search.clear_all"}}</a>
+    {{d-link action="selectAll" label="search.select_all"}}
+    {{d-link action="clearAll" label="search.clear_all"}}
   </div>
-  {{/if}}
+{{/if}}
+
+{{#if invalidSearch}}
+  <div class='fps-invalid'>
+    {{i18n "search.too_short"}}
+  </div>
 {{/if}}
 
 {{#if context}}
-<div class='fps-search-context'>
-<label>
-  {{input type="checkbox" name="searchContext" checked=searchContextEnabled}} {{searchContextDescription}}
-</label>
-</div>
+  <div class='fps-search-context'>
+    <label>
+      {{input type="checkbox" name="searchContext" checked=searchContextEnabled}} {{searchContextDescription}}
+    </label>
+  </div>
 {{/if}}
 
 {{#conditional-loading-spinner condition=loading}}
 
-  {{#unless model.posts}}
+  {{#unless hasResults}}
     <h3>
       {{#if searchActive}}
-      {{i18n "search.no_results"}}
+        {{i18n "search.no_results"}}
       {{/if}}
       <a href class="show-help" {{action "showSearchHelp" bubbles=false}}>{{i18n "search.search_help"}}</a>
     </h3>
   {{/unless}}
 
-  {{#if model.posts}}
-  <div class='search-title clearfix'>
-    <div class='result-count'>
-      <span>
-        {{{i18n "search.result_count" count=resultCount term=noSortQ}}}
-      </span>
+  {{#if hasResults}}
+    <div class='search-title clearfix'>
+      <div class='result-count'>
+        <span>
+          {{{i18n "search.result_count" count=resultCount term=noSortQ}}}
+        </span>
+      </div>
+      <div class='sort-by'>
+        <span class='desc'>
+          {{i18n "search.sort_by"}}
+        </span>
+        {{combo-box value=sortOrder content=sortOrders castInteger="true"}}
+      </div>
     </div>
-    <div class='sort-by'>
-      <span class='desc'>
-        {{i18n "search.sort_by"}}
-      </span>
-      {{combo-box value=sortOrder content=sortOrders castInteger="true"}}
-    </div>
-  </div>
   {{/if}}
 
   {{#each model.posts as |result|}}
     <div class='fps-result'>
       <div class='author'>
-        {{avatar result imageSize="large"}}
+        <a href={{result.userPath}} data-user-card="{{unbound result.username}}">
+          {{avatar result imageSize="large"}}
+        </a>
       </div>
 
       <div class='fps-topic'>
@@ -101,7 +105,7 @@
         {{#if showLikeCount}}
           {{#if result.like_count}}
             <span class='like-count'>
-              {{result.like_count}} <i class="icon fa fa-heart"></i>
+              {{result.like_count}} {{fa-icon "heart"}}
             </span>
           {{/if}}
         {{/if}}
@@ -109,11 +113,11 @@
     </div>
   {{/each}}
 
-  {{#if model.posts}}
-  <h3 class="search-footer">
-    {{i18n "search.no_more_results"}}
-    <a href class="show-help" {{action "showSearchHelp" bubbles=false}}>{{i18n "search.search_help"}}</a>
-  </h3>
+  {{#if hasResults}}
+    <h3 class="search-footer">
+      {{i18n "search.no_more_results"}}
+      <a href class="show-help" {{action "showSearchHelp" bubbles=false}}>{{i18n "search.search_help"}}</a>
+    </h3>
   {{/if}}
 
 {{/conditional-loading-spinner}}

@@ -20,20 +20,22 @@
 </section>
 
 {{#if emailInEnabled}}
-  <section class='field'>
-    <label>
-      {{input type="checkbox" checked=category.email_in_allow_strangers}}
-      {{i18n 'category.email_in_allow_strangers'}}
-    </label>
-  </section>
+  {{#plugin-outlet "category-email-in"}}
+    <section class='field'>
+      <label>
+        {{input type="checkbox" checked=category.email_in_allow_strangers}}
+        {{i18n 'category.email_in_allow_strangers'}}
+      </label>
+    </section>
 
-  <section class='field'>
-    <label>
-      {{fa-icon "envelope-o"}}
-      {{i18n 'category.email_in'}}
-      {{text-field value=category.email_in}}
-    </label>
-  </section>
+    <section class='field'>
+      <label>
+        {{fa-icon "envelope-o"}}
+        {{i18n 'category.email_in'}}
+        {{text-field class="email-in" value=category.email_in}}
+      </label>
+    </section>
+  {{/plugin-outlet}}
 {{/if}}
 
 {{#if showPositionInput}}

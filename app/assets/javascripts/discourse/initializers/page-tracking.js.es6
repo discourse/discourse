@@ -1,37 +1,19 @@
 import { cleanDOM } from 'discourse/routes/discourse';
 import { startPageTracking, onPageChange } from 'discourse/lib/page-tracker';
+import { viewTrackingRequired } from 'discourse/lib/ajax';
 
 export default {
   name: "page-tracking",
 
   initialize(container) {
 
-    const cache = {};
-    var transitionCount = 0;
-
     // Tell our AJAX system to track a page transition
     const router = container.lookup('router:main');
-    router.on('willTransition', function() {
-      Discourse.viewTrackingRequired();
-    });
+    router.on('willTransition', viewTrackingRequired);
 
     router.on('didTransition', function() {
       Em.run.scheduleOnce('afterRender', Ember.Route, cleanDOM);
-      transitionCount++;
-      _.each(cache, (v,k) => {
-        if (v && v.target && v.target < transitionCount) {
-           delete cache[k];
-        }
-      });
     });
-
-    router.transientCache = function(key, data, count) {
-      if (data === undefined) {
-        return cache[key];
-      } else {
-        return cache[key] = {data, target: transitionCount + count};
-      }
-    };
 
     startPageTracking(router);
 
@@ -49,6 +31,19 @@ export default {
     if (typeof window.ga !== 'undefined') {
       onPageChange((url, title) => {
         window.ga('send', 'pageview', {page: url, title: title});
+      });
+    }
+
+    // And Google Tag Manager too
+    if (typeof window.dataLayer !== 'undefined') {
+      onPageChange((url, title) => {
+        window.dataLayer.push({
+          'event': 'virtualPageView',
+          'page': {
+            'title': title,
+            'url': url
+          }
+        });
       });
     }
   }
