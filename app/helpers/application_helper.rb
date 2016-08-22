@@ -142,14 +142,18 @@ module ApplicationHelper
     opts ||= {}
     opts[:url] ||= "#{Discourse.base_url_no_prefix}#{request.fullpath}"
 
-    # Use the correct scheme for open graph
+    if opts[:image].blank? && SiteSetting.default_opengraph_image_url.present?
+      opts[:image] = SiteSetting.default_opengraph_image_url
+    elsif opts[:image].blank? && SiteSetting.apple_touch_icon_url.present?
+      opts[:image] = SiteSetting.apple_touch_icon_url
+    end
+
+    # Use the correct scheme for open graph image
     if opts[:image].present? && opts[:image].start_with?("//")
       uri = URI(Discourse.base_url)
       opts[:image] = "#{uri.scheme}:#{opts[:image]}"
     elsif opts[:image].present? && opts[:image].start_with?("/uploads/")
       opts[:image] = "#{Discourse.base_url}#{opts[:image]}"
-    elsif SiteSetting.default_opengraph_image_url.present?
-      opts[:image] = SiteSetting.default_opengraph_image_url
     end
 
     # Add opengraph tags
