@@ -79,7 +79,14 @@ class TopicEmbed < ActiveRecord::Base
     doc = Readability::Document.new(open(url).read, opts)
 
     tags = {'img' => 'src', 'script' => 'src', 'a' => 'href'}
-    title = doc.title
+    title = doc.title || ''
+    title.strip!
+
+    if SiteSetting.embed_title_scrubber.present?
+      title.sub!(Regexp.new(SiteSetting.embed_title_scrubber), '')
+      title.strip!
+    end
+
     doc = Nokogiri::HTML(doc.content)
     doc.search(tags.keys.join(',')).each do |node|
       url_param = tags[node.name]

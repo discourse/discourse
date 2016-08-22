@@ -973,6 +973,9 @@ embedding:
   embed_post_limit:
     default: 100
     hidden: true
+  embed_title_scrubber:
+    default: ''
+    hidden: true
   embed_truncate:
     default: true
     hidden: true

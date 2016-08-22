@@ -1317,6 +1317,7 @@ en:
     feed_polling_url: "EMBEDDING ONLY: URL of RSS/ATOM feed to embed."
     embed_by_username: "Discourse username of the user who creates the embedded topics."
     embed_username_key_from_feed: "Key to pull discourse username from feed."
+    embed_title_scrubber: "Regular expression for scrubbing embeddable titles."
     embed_truncate: "Truncate the embedded posts."
     embed_post_limit: "Maximum number of posts to embed."
     embed_username_required: "The username for topic creation is required."
