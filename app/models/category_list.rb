@@ -35,7 +35,12 @@ class CategoryList
       category_featured_topics = CategoryFeaturedTopic.select([:category_id, :topic_id]).order(:rank)
 
       @all_topics = Topic.where(id: category_featured_topics.map(&:topic_id))
-      @all_topics.each { |t| @topics_by_id[t.id] = t }
+      @all_topics = @all_topics.includes(:last_poster) if @options[:include_topics]
+      @all_topics.each do |t|
+        # hint for the serializer
+        t.include_last_poster = true if @options[:include_topics]
+        @topics_by_id[t.id] = t
+      end
 
       category_featured_topics.each do |cft|
         @topics_by_category_id[cft.category_id] ||= []
@@ -46,6 +51,7 @@ class CategoryList
     def find_categories
       @categories = Category.includes(:topic_only_relative_url, subcategories: [:topic_only_relative_url]).secured(@guardian)
       @categories = @categories.where(suppress_from_homepage: false) if @options[:is_homepage]
+      @categories = @categories.where("categories.parent_category_id = ?", @options[:parent_category_id].to_i) if @options[:parent_category_id].present?
 
       if SiteSetting.fixed_category_positions
         @categories = @categories.order(:position, :id)
@@ -70,18 +76,19 @@ class CategoryList
         category.has_children = category.subcategories.present?
       end
 
-      subcategories = {}
-      to_delete = Set.new
-      @categories.each do |c|
-        if c.parent_category_id.present?
-          subcategories[c.parent_category_id] ||= []
-          subcategories[c.parent_category_id] << c.id
-          to_delete << c
+      if @options[:parent_category_id].blank?
+        subcategories = {}
+        to_delete = Set.new
+        @categories.each do |c|
+          if c.parent_category_id.present?
+            subcategories[c.parent_category_id] ||= []
+            subcategories[c.parent_category_id] << c.id
+            to_delete << c
+          end
         end
+        @categories.each { |c| c.subcategory_ids = subcategories[c.id] }
+        @categories.delete_if { |c| to_delete.include?(c) }
       end
-
-      @categories.each { |c| c.subcategory_ids = subcategories[c.id] }
-      @categories.delete_if { |c| to_delete.include?(c) }
 
       if @topics_by_category_id
         @categories.each do |c|

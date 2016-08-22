@@ -15,14 +15,18 @@ const DiscoveryCategoriesRoute = Discourse.Route.extend(OpenComposer, {
   },
 
   model() {
+    console.log("ENTERING MODEL");
     return CategoryList.list(this.store, 'categories').then(list => {
+      console.log("GOT THE LIST");
       const tracking = this.topicTrackingState;
       if (tracking) {
         tracking.sync(list, "categories");
         tracking.trackIncoming("categories");
       }
+      console.log("RETURNING LIST");
       return list;
     });
+    console.log("LEAVING MODEL");
   },
 
   titleToken() {
@@ -31,8 +35,8 @@ const DiscoveryCategoriesRoute = Discourse.Route.extend(OpenComposer, {
   },
 
   setupController(controller, model) {
-    // only load latest topics in desktop view
-    if (!this.site.mobileView) {
+    const style = this.siteSettings.category_page_style;
+    if (style === "categories_and_latest_topics" && !this.get("model.parentCategory")) {
       model.set("loadingTopics", true);
 
       TopicList.find("latest")
