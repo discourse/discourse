@@ -549,6 +549,8 @@ posting:
     choices:
      - 4-spaces-indent
      - code-fences
+  embed_truncate:
+    default: true
 
 email:
   email_time_window_mins:
@@ -977,9 +979,6 @@ embedding:
     hidden: true
   embed_title_scrubber:
     default: ''
-    hidden: true
-  embed_truncate:
-    default: true
     hidden: true
   embed_whitelist_selector:
     default: ''
