@@ -259,11 +259,13 @@ componentTest('advanced code', {
   setup() {
     this.siteSettings.code_formatting_style = '4-spaces-indent';
     this.set('value',
-`function xyz(x, y, z) {
+`
+function xyz(x, y, z) {
   if (y === z) {
     return true;
   }
-}`);
+}
+`   );
   },
 
   test(assert) {
@@ -274,11 +276,14 @@ componentTest('advanced code', {
     click('button.code');
     andThen(() => {
       assert.equal(this.get('value'),
-`    function xyz(x, y, z) {
+`
+    function xyz(x, y, z) {
       if (y === z) {
         return true;
       }
-    }`);
+    }
+`
+      );
     });
   }
 
@@ -337,6 +342,122 @@ componentTest('code button', {
     });
   }
 });
+
+componentTest('code fences', {
+  template: '{{d-editor value=value}}',
+  setup() {
+    this.set('value', '');
+  },
+
+  test(assert) {
+    const textarea = jumpEnd(this.$('textarea.d-editor-input')[0]);
+
+    click('button.code');
+    andThen(() => {
+      assert.equal(this.get('value'),
+`\`\`\`
+${I18n.t("composer.paste_code_text")}
+\`\`\`
+`
+      );
+
+      assert.equal(textarea.selectionStart, 4);
+      assert.equal(textarea.selectionEnd, 27);
+
+      this.set('value', 'first line\nsecond line\nthird line');
+
+      textarea.selectionStart = 0;
+      textarea.selectionEnd = textarea.value.length;
+    });
+
+    click('button.code');
+    andThen(() => {
+      assert.equal(this.get('value'),
+`\`\`\`
+first line
+second line
+third line
+\`\`\`
+`
+      );
+
+      assert.equal(textarea.selectionStart, textarea.value.length);
+      assert.equal(textarea.selectionEnd, textarea.value.length);
+
+      this.set('value', 'first line\nsecond line\nthird line');
+
+      textarea.selectionStart = 0;
+      textarea.selectionEnd = 0;
+    });
+
+    click('button.code');
+    andThen(() => {
+      assert.equal(this.get('value'),
+`\`\`\`
+${I18n.t('composer.paste_code_text')}
+\`\`\`
+first line
+second line
+third line`
+      );
+
+      assert.equal(textarea.selectionStart, 4);
+      assert.equal(textarea.selectionEnd, 27);
+
+      this.set('value', 'first line\nsecond line\nthird line');
+
+      textarea.selectionStart = 0;
+      textarea.selectionEnd = 10;
+    });
+
+    click('button.code');
+    andThen(() => {
+      assert.equal(this.get('value'),
+`\`\`\`
+first line
+\`\`\`
+second line
+third line`
+      );
+
+      assert.equal(textarea.selectionStart, 4);
+      assert.equal(textarea.selectionEnd, 14);
+
+      this.set('value', 'first line\nsecond line\nthird line');
+
+      textarea.selectionStart = 0;
+      textarea.selectionEnd = 23;
+    });
+
+    click('button.code');
+    andThen(() => {
+      assert.equal(this.get('value'),
+`\`\`\`
+first line
+second line
+\`\`\`
+third line`
+      );
+
+      assert.equal(textarea.selectionStart, 30);
+      assert.equal(textarea.selectionEnd, 30);
+
+      this.set('value', 'first line\nsecond line\nthird line');
+
+      textarea.selectionStart = 6;
+      textarea.selectionEnd = 17;
+    });
+
+    click('button.code');
+    andThen(() => {
+      assert.equal(this.get('value'), `first \n\`\`\`\nline\nsecond\n\`\`\`\n line\nthird line`);
+
+      assert.equal(textarea.selectionStart, 27);
+      assert.equal(textarea.selectionEnd, 27);
+    });
+  }
+});
+
 
 testCase('quote button', function(assert, textarea) {
   click('button.quote');
