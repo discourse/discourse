@@ -16,11 +16,16 @@ class UserApiKeysController < ApplicationController
     end
 
     require_params
-    validate_params(_skip_push=true)
+    validate_params
 
     unless current_user
       cookies[:destination_url] = request.fullpath
       redirect_to path('/login')
+      return
+    end
+
+    if current_user.trust_level < SiteSetting.min_trust_level_for_user_api_key
+      @no_trust_level = true
       return
     end
 
@@ -40,6 +45,8 @@ class UserApiKeysController < ApplicationController
         @push_url = nil
       end
     end
+  rescue Discourse::InvalidAccess
+    @generic_error = true
   end
 
   def create
@@ -56,7 +63,7 @@ class UserApiKeysController < ApplicationController
     raise Discourse::InvalidAccess if current_user.trust_level < SiteSetting.min_trust_level_for_user_api_key
 
     request_read = params[:access].include? 'r'
-    request_push = params[:access].include? 'p'
+    request_read ||= params[:access].include? 'p'
     request_write = params[:access].include? 'w'
 
     validate_params
@@ -68,11 +75,11 @@ class UserApiKeysController < ApplicationController
       application_name: params[:application_name],
       client_id: params[:client_id],
       read: request_read,
-      push: request_push,
+      push: params[:push_url].present?,
       user_id: current_user.id,
       write: request_write,
       key: SecureRandom.hex,
-      push_url: request_push ? params[:push_url] : nil
+      push_url: params[:push_url]
     )
 
     # we keep the payload short so it encrypts easily with public key
@@ -118,20 +125,12 @@ class UserApiKeysController < ApplicationController
 
   def validate_params(skip_push_check = false)
     request_read = params[:access].include? 'r'
-    request_push = params[:access].include? 'p'
+    request_read ||= params[:access].include? 'p'
     request_write = params[:access].include? 'w'
 
     raise Discourse::InvalidAccess unless request_read || request_push
     raise Discourse::InvalidAccess if request_read && !SiteSetting.allow_read_user_api_keys
     raise Discourse::InvalidAccess if request_write && !SiteSetting.allow_write_user_api_keys
-
-    unless skip_push_check
-      raise Discourse::InvalidAccess if request_push && !SiteSetting.allow_push_user_api_keys
-
-      if request_push && !SiteSetting.allowed_user_api_push_urls.split('|').any?{|u| params[:push_url] == u}
-        raise Discourse::InvalidAccess
-      end
-    end
 
     # our pk has got to parse
     OpenSSL::PKey::RSA.new(params[:public_key])
