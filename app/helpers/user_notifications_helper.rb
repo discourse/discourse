@@ -70,4 +70,16 @@ module UserNotificationsHelper
     PrettyText.format_for_email(html, post).html_safe
   end
 
+  def digest_custom_html(position_key)
+    digest_custom "user_notifications.digest.custom.html.#{position_key}"
+  end
+
+  def digest_custom_text(position_key)
+    digest_custom "user_notifications.digest.custom.text.#{position_key}"
+  end
+
+  def digest_custom(i18n_key)
+    PrettyText.format_for_email(I18n.t(i18n_key)).html_safe
+  end
+
 end
