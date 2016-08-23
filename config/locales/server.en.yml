@@ -2412,6 +2412,28 @@ en:
       read_more: "Read More"
       more_topics: "There were %{new_topics_since_seen} other new topics."
       more_topics_category: "More new topics:"
+      custom:
+        html:
+          header: ''
+          below_post_1: ''
+          below_post_2: ''
+          below_post_3: ''
+          below_post_4: ''
+          below_post_5: ''
+          above_popular_topics: ''
+          below_popular_topics: ''
+          above_footer: ''
+          below_footer: ''
+        text:
+          below_post_1: ''
+          below_post_2: ''
+          below_post_3: ''
+          below_post_4: ''
+          below_post_5: ''
+          above_popular_topics: ''
+          below_popular_topics: ''
+          above_footer: ''
+          below_footer: ''
 
     mailing_list:
       why: "All activity on %{site_link} for %{date}"
