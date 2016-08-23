@@ -33,7 +33,7 @@ class TopicEmbed < ActiveRecord::Base
     # If there is no embed, create a topic, post and the embed.
     if embed.blank?
       Topic.transaction do
-        eh = EmbeddableHost.record_for_host(url)
+        eh = EmbeddableHost.record_for_url(url)
 
         creator = PostCreator.new(user,
                                   title: title,
