@@ -27,7 +27,12 @@ class TopicLinkClick < ActiveRecord::Base
     end
     urls << UrlHelper.absolute_without_cdn(url)
     urls << uri.path if uri.try(:host) == Discourse.current_hostname
-    urls << url.sub(/\?.*$/, '') if url.include?('?')
+
+    query = url.index('?')
+    unless query.nil?
+      endpos = url.index('#') || url.size
+      urls << url[0..query-1] + url[endpos..-1]
+    end
 
     # add a cdn link
     if uri
