@@ -71,6 +71,9 @@ task "uploads:backfill_shas" => :environment do
         u.sha1 = Digest::SHA1.file(path).hexdigest
         u.save!
         putc "."
+      rescue ActiveRecord::RecordInvalid
+        puts "#{u.extension} is not valid"
+        putc "X"
       rescue Errno::ENOENT
         putc "X"
       end
