@@ -1200,35 +1200,12 @@ tr_TR:
         [prefs]: %{user_preferences_url}
     backup_succeeded:
       subject_template: "Yedekleme başarıyla tamamlandı"
-      text_body_template: "Yedekleme işlemi başarıyla tamamlandı.\nYeni yedeğinizi [Yönetici Paneli > Yedekler](%{base_url}/admin/backups) adresinden indirebilirsiniz."
     backup_failed:
       subject_template: "Yedekleme başarısız"
-      text_body_template: |
-        Yedekleme başarısız oldu.
-
-        Kayıtlar burada:
-
-        ```
-
-        %{logs}
-
-        ```
-
     restore_succeeded:
       subject_template: "Geri alma başarıyla tamamlandı"
-      text_body_template: "Geri alma başarıyla tamamlandı."
     restore_failed:
       subject_template: "Geri alma başarısız"
-      text_body_template: |
-        Geri alma başarısız oldu.
-
-        Kayıtlar burada:
-
-        ```
-
-        %{logs}
-
-        ```
     bulk_invite_succeeded:
       subject_template: "Toplu davet gönderimi başarıyla tamamlandı"
       text_body_template: "Toplu davet dosyanız işlendi, %{sent} davetiye gönderildi. "

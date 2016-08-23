@@ -15,6 +15,20 @@ sq:
         one: "total vota"
         other: "totali votave"
       average_rating: "Vlerësimi mesatar: <strong>%{average}</strong>."
+      public:
+        title: "Votat janë publike."
+      multiple:
+        help:
+          at_least_min_options:
+            one: "Zgjidhni të paktën <strong>1</strong> alternativë"
+            other: "Zgjidhni të paktën <strong>%{count}</strong> alternativa"
+          up_to_max_options:
+            one: "Zgjidhni deri në <strong>1</strong> alternativë"
+            other: "Zgjidhni deri në <strong>%{count}</strong> alternativa"
+          x_options:
+            one: "Zgjidhni <strong>1</strong> alternativë"
+            other: "Zgjidhni <strong>%{count}</strong> alternativa"
+          between_min_and_max_options: "Zgjidhni midis <strong>%{min}</strong> dhe <strong>%{max}</strong> alternativash"
       cast-votes:
         title: "Jepni votën tuaj"
         label: "Voto Tani"
@@ -23,7 +37,7 @@ sq:
         label: "Shfaq rezultatet"
       hide-results:
         title: "Back to your votes"
-        label: "Hide results"
+        label: "Fshihni rezultatet"
       open:
         title: "Fillo një Sondazh"
         label: "Fillo"
@@ -32,3 +46,24 @@ sq:
         title: "Mbyll sondazhin"
         label: "Mbyll"
         confirm: "Jeni të sigurt për të mbyllur këtë sondazh?"
+      error_while_toggling_status: "Ndjesë, u has në një gabim kur u ndryshua gjendja e këtij sondazhi."
+      error_while_casting_votes: "Ndjesë, u has në një gabim duke mbledhur votat tuaja."
+      error_while_fetching_voters: "Ndjesë, u has në një gabim duke shfaqur votuesit."
+      ui_builder:
+        title: Krijo Sondazh
+        insert: Shto Sondazh
+        help:
+          options_count: Zgjidh të paktën 2 alternativa
+        poll_type:
+          label: Lloji
+          regular: Pa Alternativa
+          multiple: Me Alternativa
+          number: Vlerësim Numrash
+        poll_config:
+          max: Maksimumi
+          min: Minimumi
+          step: Hapi
+        poll_public:
+          label: Shfaq votuesit
+        poll_options:
+          label: Shto një alternativë për çdo rresht

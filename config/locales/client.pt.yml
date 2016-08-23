@@ -152,6 +152,7 @@ pt:
         eu_central_1: "U.E. (Francoforte)"
         ap_southeast_1: "Ásia-Pacífico (Singapura)"
         ap_southeast_2: "Ásia-Pacífico (Sydney)"
+        ap_south_1: "Ásia Pacifico (Bombaim)"
         ap_northeast_1: "Ásia-Pacífico (Tóquio)"
         ap_northeast_2: "Ásia-Pacífico (Seoul)"
         sa_east_1: "América do Sul (São Paulo)"
@@ -356,6 +357,9 @@ pt:
         watching:
           title: "A vigiar"
           description: "Será notificado de cada nova publicação em todas as mensagens, e uma contagem de novas respostas será exibida."
+        watching_first_post:
+          title: "A vigiar a primeira entrada"
+          description: "Será apenas notificado acerca da primeira entrada em cada tópico deste grupo."
         tracking:
           title: "A Acompanhar"
           description: "Será notificado se alguém mencionar o seu @nome ou lhe responder, e uma contagem de novas respostas será exibida."
@@ -450,6 +454,7 @@ pt:
         disable: "Desativar Notificações"
         enable: "Ativar Notificações"
         each_browser_note: "Nota: Tem que alterar esta configuração em todos os navegadores de internet que utiliza."
+      dismiss_notifications: "Dispensar tudo"
       dismiss_notifications_tooltip: "Marcar como lidas todas as notificações por ler"
       disable_jump_reply: "Não voltar para a minha mensagem após ter respondido"
       dynamic_favicon: "Mostrar contagem de tópicos novos / atualizados no ícone do browser."
@@ -464,10 +469,22 @@ pt:
       suspended_notice: "Este utilizador está suspenso até {{date}}."
       suspended_reason: "Motivo: "
       github_profile: "Github"
+      email_activity_summary: "Sumário de actividade"
+      mailing_list_mode:
+        label: "Modo de lista de distribuição"
+        enabled: "Ativar modo de lista de distribuição"
+        instructions: |
+          Esta configuração sobrepõe o sumário de actividade.<br />
+          Tópicos e categorias mudos não são incluídos nestes correios electrónicos.
+        daily: "Enviar actualizações diárias"
+        individual: "Enviar um correio electrónico por cada nova mensage"
       tag_settings: "Etiquetas"
+      watched_tags: "Visto"
+      tracked_tags: "Vigiado"
       muted_tags: "Silenciado"
       watched_categories: "Vigiado"
       tracked_categories: "Acompanhado"
+      watched_first_post_categories: "A ver a primeira mensage"
       muted_categories: "Silenciado"
       muted_categories_instructions: "Não será notificado de nada acerca de novos tópicos nestas categorias, e estes não irão aparecer nos recentes."
       delete_account: "Eliminar A Minha Conta"

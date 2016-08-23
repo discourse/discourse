@@ -404,8 +404,8 @@ fr:
       subcategories: "Sous-catégories"
       topic_stats: "Le nombre de nouveaux sujets."
       topic_stat_sentence:
-        one: "%{count} nouveau sujet depuis %{unit}."
-        other: "%{count} nouveaux sujets depuis %{unit}."
+        one: "%{count} nouveau sujet par %{unit}."
+        other: "%{count} nouveaux sujets par %{unit}."
       post_stats: "Le nombre de nouveaux messages."
       post_stat_sentence:
         one: "%{count} nouveau message depuis %{unit}."
@@ -508,7 +508,7 @@ fr:
       muted_users_instructions: "Cacher toutes les notifications de ces utilisateurs."
       muted_topics_link: "Afficher les sujets en sourdine"
       watched_topics_link: "Afficher les sujets surveillés"
-      automatically_unpin_topics: "Desépingler automatiquement quand j'arrive à la fin."
+      automatically_unpin_topics: "Désépingler automatiquement les sujets quand j'arrive à la fin."
       staff_counters:
         flags_given: "signalements utiles"
         flagged_posts: "messages signalés"
@@ -519,7 +519,7 @@ fr:
         all: "Tous"
         inbox: "Boîte de réception"
         sent: "Envoyé"
-        archive: "Archiver"
+        archive: "Archive"
         groups: "Mes groupes"
         bulk_select: "Sélectionner des messages"
         move_to_inbox: "Déplacer dans la boîte de réception"
@@ -559,11 +559,11 @@ fr:
         image_is_not_a_square: "Attention : nous avons découpé votre image ; la largeur et la hauteur n'étaient pas égales."
         cache_notice: "Votre photo de profil a bien été modifié, mais il se peut qu'il mette un certain temps à apparaître à cause des caches de navigateur."
       change_profile_background:
-        title: "Arrière plan du profil"
+        title: "Arrière-plan du profil"
         instructions: "L'arrière-plan du profil sera centré avec une largeur par défaut de 850 pixels."
       change_card_background:
-        title: "Arrière plan de la carte de l'utilisateur"
-        instructions: "Les images d'arrière plan seront centrées avec une taille par défaut de 590 pixels."
+        title: "Arrière-plan de la carte de l'utilisateur"
+        instructions: "Les images d'arrière-plan seront centrées avec une taille par défaut de 590 pixels."
       email:
         title: "Courriel"
         instructions: "Ne sera jamais visible publiquement"
@@ -659,12 +659,12 @@ fr:
         title: "Invitations"
         user: "Utilisateurs"
         sent: "Envoyé"
-        none: "Il n'y a pas d'invitation en attente à afficher."
+        none: "Il n'y a pas d'invitations en attente à afficher."
         truncated:
           one: "Afficher la première invitation."
           other: "Afficher les {{count}} premières invitations."
         redeemed: "Invitations acceptées"
-        redeemed_tab: "Utilisés"
+        redeemed_tab: "Utilisées"
         redeemed_tab_with_count: "Invitations acceptées ({{count}})"
         redeemed_at: "Acceptée le"
         pending: "Invitations en attente"
@@ -720,7 +720,7 @@ fr:
           other: "jours visités"
         posts_read:
           one: "message lu"
-          other: "Messages lus"
+          other: "messages lus"
         bookmark_count:
           one: "signet"
           other: "signets"
@@ -788,8 +788,8 @@ fr:
     too_few_topics_notice: "<a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>Démarrons cette discussion !</a> Il y a actuellement <strong>%{currentTopics} / %{requiredTopics}</strong> sujets. Les nouveaux visiteurs ont besoin de quelques conversations à lire et répondre."
     too_few_posts_notice: "<a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>Démarrons cette discussion !</a> Il y a actuellement <strong>%{currentPosts} / %{requiredPosts}</strong> messages. Les nouveaux visiteurs ont besoin de quelques conversations à lire et répondre."
     logs_error_rate_notice:
-      reached: "<b>[%{relativeAge}]</b> Le taux actuel de <a href='%{url}' target='_blank'>%{rate}</a> a atteint la limite de %{siteSettingRate} définie dans les paramètres du site."
-      exceeded: "<b>[%{relativeAge}]</b> Le taux actuel de <a href='%{url}' target='_blank'>%{rate}</a> a dépassé la limite de %{siteSettingRate} définie dans les paramètres du site."
+      reached: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> a atteint la limite de %{siteSettingRate} définie dans les paramètres du site."
+      exceeded: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> a dépassé la limite de %{siteSettingRate} définie dans les paramètres du site."
       rate:
         one: "1 erreur/%{duration}"
         other: "%{count} erreurs/%{duration}"
@@ -913,8 +913,10 @@ fr:
       more_emoji: "plus..."
       options: "Options"
       whisper: "murmure"
+      unlist: "non listé"
       add_warning: "Ceci est un avertissement officiel."
-      toggle_whisper: "Activer/Désactiver Whisper"
+      toggle_whisper: "Modifier le murmure"
+      toggle_unlisted: "Modifier la visibilité"
       posting_not_on_topic: "À quel sujet voulez-vous répondre ?"
       saving_draft_tip: "sauvegarde en cours..."
       saved_draft_tip: "sauvegardé"
@@ -943,7 +945,7 @@ fr:
       title_placeholder: "Quel est votre sujet en une phrase descriptive ?"
       edit_reason_placeholder: "pourquoi éditez-vous ?"
       show_edit_reason: "(ajouter la raison de l'édition)"
-      reply_placeholder: "Écrivez ici. Utilisez Markdown, BBCode, ou HTML pour formatter. Glissez ou collez des images."
+      reply_placeholder: "Écrivez ici. Utilisez Markdown, BBCode, ou HTML pour mettre en forme. Glissez ou collez des images."
       view_new_post: "Voir votre nouveau message."
       saving: "Sauvegarde"
       saved: "Sauvegardé !"
@@ -979,6 +981,9 @@ fr:
       modal_ok: "OK"
       modal_cancel: "Annuler"
       cant_send_pm: "Désolé, vous ne pouvez pas envoyer de message à l'utilisateur %{username}."
+      yourself_confirm:
+        title: "Avez-vous oublié d'ajouter des destinataires ?"
+        body: "Pour le moment, ce message est uniquement envoyé à vous-même !"
       admin_options_title: "Paramètres optionnels pour ce sujet"
       auto_close:
         label: "Heure de fermeture automatique de ce sujet :"
@@ -1044,7 +1049,7 @@ fr:
       title: "Ajouter une image"
       title_with_attachments: "Ajouter une image ou un fichier"
       from_my_computer: "Depuis mon appareil"
-      from_the_web: "Depuis le web"
+      from_the_web: "Depuis le Web"
       remote_tip: "lien vers l'image"
       remote_tip_with_attachments: "lien vers l'image ou le fichier {{authorized_extensions}}"
       local_tip: "sélectionnez des images depuis votre appareil"
@@ -1053,22 +1058,23 @@ fr:
       hint_for_supported_browsers: "vous pouvez aussi glisser/déposer ou coller des images dans l'éditeur"
       uploading: "Fichier en cours d'envoi"
       select_file: "Sélectionner Fichier"
-      image_link: "lien vers lequel pointe l'image"
+      image_link: "lien vers lequel l'image pointera"
     search:
       sort_by: "Trier par"
       relevance: "Pertinence"
-      latest_post: "Dernier Message"
-      most_viewed: "Plus Vu"
-      most_liked: "Plus Aimé"
+      latest_post: "Dernier message"
+      most_viewed: "Plus vu"
+      most_liked: "Plus aimé"
       select_all: "Sélectionner tout"
       clear_all: "Tout désélectionner"
+      too_short: "Votre terme de recherche est trop court."
       result_count:
         one: "1 résultat pour <span class='term'>\"{{term}}\"</span>"
         other: "{{count}} résultats pour <span class='term'>\"{{term}}\"</span>"
       title: "rechercher des sujets, messages, utilisateurs ou catégories"
       no_results: "Aucun résultat."
-      no_more_results: "Pas davantage de résultats."
-      search_help: Aide pour la recherche
+      no_more_results: "Aucun résultat supplémentaire."
+      search_help: Aide à la recherche
       searching: "Recherche en cours…"
       post_format: "#{{post_number}} par {{username}}"
       context:
@@ -1076,7 +1082,7 @@ fr:
         category: "Rechercher dans la catégorie #{{category}}"
         topic: "Rechercher dans ce sujet"
         private_messages: "Rechercher des messages"
-    hamburger_menu: "se rendre dans une autre liste de sujet ou catégorie"
+    hamburger_menu: "aller à une autre catégorie ou liste de sujets"
     new_item: "nouveau"
     go_back: 'retour'
     not_logged_in_user: 'page utilisateur avec un résumé de l''activité en cours et les préférences '
@@ -1090,7 +1096,7 @@ fr:
         dismiss_read: "Ignorer tous les sujets non lus"
         dismiss_button: "Ignorer..."
         dismiss_tooltip: "Ignorer les nouveaux messages ou arrêter des suivre les sujets"
-        also_dismiss_topics: "Arrêter de suivre ces sujets, ils ne s'afficheront donc plus en \"non lu\" pour moi"
+        also_dismiss_topics: "Arrêter de suivre ces sujets pour qu'ils ne soient plus jamais marqués comme non lus"
         dismiss_new: "Ignorer les nouveaux"
         toggle: "activer la sélection multiple des sujets"
         actions: "Actions sur sélection multiple"
@@ -1120,12 +1126,12 @@ fr:
           new: '<p>Vos nouveaux sujets apparaissent ici.</p><p>Par défaut, les sujets sont considérés comme nouveaux et affichent l''indicateur <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">nouveau</span> lorsqu''ils ont été créés depuis moins de 2 jours.</p><p>Vous pouvez modifier cela dans vos <a href="%{userPrefsUrl}">préférences</a>.</p>'
           unread: '<p>Vos sujets non lus apparaissent ici.</p><p>Par défaut, les sujets considérés comme non lus et qui affichent le nombre de messages non lus <span class="badge new-posts badge-notification">1</span> sont ceux :</p> <ul><li>que vous avez crées</li><li>auxquels vous avez répondus</li><li>que vous avez lus plus de 4 minutes</li></ul><p>ou que vous avez explicitement suivis ou surveillés.</p><p>Vous pouvez modifier cela dans vos <a href="%{userPrefsUrl}">préférences</a>.</p>'
       bottom:
-        latest: "Il n'y a plus de sujet à lire."
-        hot: "Il n'y a plus de sujet populaire à lire."
-        posted: "Il n'y a plus de sujet à lire."
-        read: "Il n'y a plus de sujet à lire."
-        new: "Il n'y a plus de nouveau sujet."
-        unread: "Il n'y a plus de sujet à lire."
+        latest: "Il n'y a plus de sujets à lire."
+        hot: "Il n'y a plus de sujets populaires à lire."
+        posted: "Il n'y a plus de sujets à lire."
+        read: "Il n'y a plus de sujets à lire."
+        new: "Il n'y a plus de nouveaux sujets."
+        unread: "Il n'y a plus de sujets à lire."
         category: "Il n'y a plus de sujets dans {{category}} à lire."
         top: "Il n'y a plus de meilleurs sujets."
         bookmarks: "Il n'y a plus de sujets dans vos signets."
@@ -1140,7 +1146,7 @@ fr:
       private_message: 'Écrire un message'
       archive_message:
         help: 'Transférer message dans votre archive'
-        title: 'Archiver'
+        title: 'Archive'
       move_to_inbox:
         title: 'Déplacer dans la boîte de réception'
         help: 'Redéplacer dans la boîte de réception'
@@ -1216,7 +1222,7 @@ fr:
         title: modifier la fréquence des notifications concernant ce sujet
         reasons:
           mailing_list_mode: "Vous avez activé la liste de diffusion, vous serez donc notifié des réponses à ce sujet par courriel."
-          '3_10': 'Vous recevrez des notifications sur ce sujet car vous surveillez ce tag.'
+          '3_10': 'Vous recevrez des notifications car vous surveillez un tag de ce sujet.'
           '3_6': 'Vous recevrez des notifications parce que vous surveillez cette catégorie.'
           '3_5': 'Vous recevrez des notifications parce que vous avez commencé à surveiller ce sujet automatiquement.'
           '3_2': 'Vous recevrez des notifications car vous surveillez ce sujet.'
@@ -1270,7 +1276,7 @@ fr:
         visible: "Afficher dans la liste des sujets"
         reset_read: "Réinitialiser les lectures"
         make_public: "Rendre sujet publique"
-        make_private: "Rendre sujet privé"
+        make_private: "Rendre le sujet privé"
       feature:
         pin: "Épingler la discussion"
         unpin: "Désépingler la discussion"
@@ -1350,7 +1356,7 @@ fr:
           other: "{{count}} messages"
         cancel: "Supprimer le filtre"
       split_topic:
-        title: "Déplacer vers Nouveau Sujet"
+        title: "Déplacer vers un nouveau sujet"
         action: "déplacer vers un nouveau sujet"
         topic_name: "Titre du nouveau sujet"
         error: "Il y a eu une erreur en déplaçant les messages vers un nouveau sujet."
@@ -1457,19 +1463,19 @@ fr:
         reply: "Rédiger une réponse à ce message"
         like: "J'aime ce message"
         has_liked: "vous avez aimé ce message"
-        undo_like: "annuler j'aime"
+        undo_like: "annuler J'aime"
         edit: "Éditer ce message"
         edit_anonymous: "Désolé, mais vous devez être connecté pour éditer ce message."
         flag: "signaler secrètement ce message pour attirer l'attention ou envoyer une notification privée à son sujet"
         delete: "Supprimer ce message"
         undelete: "Annuler la suppression de ce message"
-        share: "Partager ce message"
+        share: "partager ce message"
         more: "Plus"
         delete_replies:
           confirm:
             one: "Voulez-vous aussi supprimer la réponse qui suit directement ce message ?"
-            other: "Voulez-vous aussi supprimer les  {{count}} réponse qui suivent directement ce message ?"
-          yes_value: "Oui, supprimer les réponses égalements"
+            other: "Voulez-vous aussi supprimer les  {{count}} réponses qui suivent directement ce message ?"
+          yes_value: "Oui, supprimer les réponses également"
           no_value: "Non, juste ce message"
         admin: "action sur message d'administrateur"
         wiki: "Basculer en mode wiki"
@@ -1497,7 +1503,7 @@ fr:
           spam: "Annuler le signalement"
           inappropriate: "Annuler le signalement"
           bookmark: "Retirer de vos signets"
-          like: "Annuler j'aime"
+          like: "Annuler J'aime"
           vote: "Retirer votre vote"
         people:
           off_topic: "signalé comme hors-sujet."
@@ -1718,7 +1724,7 @@ fr:
       bookmarked:
         help: "Vous avez ajouté ce sujet à vos signets"
       locked:
-        help: "Ce sujet est fermé; il n'accepte plus de nouvelles réponses"
+        help: "Ce sujet est fermé ; il n'accepte plus de nouvelles réponses"
       archived:
         help: "Ce sujet est archivé; il est gelé et ne peut être modifié"
       locked_and_archived:
@@ -1755,7 +1761,7 @@ fr:
     likes_lowercase:
       one: "J'aime"
       other: "J'aime"
-    likes_long: "il y a {{number}} j'aime dans ce sujet"
+    likes_long: "il y a {{number}} J'aime dans ce sujet"
     users: "Utilisateurs"
     users_lowercase:
       one: "utilisateur"
@@ -1794,7 +1800,7 @@ fr:
         title_with_count:
           one: "1 non lu"
           other: " ({{count}}) non lus"
-        help: "sujets que vous suivez ou suivez attentivement actuiellement avec des messages non lus"
+        help: "sujets avec des messages non lus que vous suivez ou surveillez"
         lower_title_with_count:
           one: "1 non lu"
           other: "{{count}} non lus"
@@ -1824,7 +1830,7 @@ fr:
         title: "Top"
         help: "les meilleurs sujets de l'année, du mois, de la semaine ou du jour"
         all:
-          title: "depuis toujours"
+          title: "Depuis toujours"
         yearly:
           title: "Annuel"
         quarterly:
@@ -1886,7 +1892,7 @@ fr:
       actions:
         title: 'Actions'
         bookmark_topic: '<b>f</b> Modifier le signet du sujet'
-        pin_unpin_topic: '<b>MAJ.</b>+<b>p</b> Épingler/desépingler le sujet'
+        pin_unpin_topic: '<b>MAJ.</b>+<b>p</b> Épingler/désépingler le sujet'
         share_topic: '<b>MAJ.</b>+<b>s</b> Partager le sujet'
         share_post: '<b>s</b> Partager le message'
         reply_as_new_topic: '<b>t</b> Répondre en tant que sujet lié'
@@ -1924,7 +1930,7 @@ fr:
       none: "<none>"
       badge_grouping:
         getting_started:
-          name: Pour commencer
+          name: Initiation
         community:
           name: Communauté
         trust_level:
@@ -1932,7 +1938,7 @@ fr:
         other:
           name: Autre
         posting:
-          name: En train d'écrire un message
+          name: Contribution
     google_search: |
       <h3>Rechercher avec Google</h3>
       <p>
@@ -2061,7 +2067,7 @@ fr:
           yesterday: "Hier"
           last_7_days: "les 7 derniers jours"
           last_30_days: "les 30 derniers jours"
-          all_time: "depuis toujours"
+          all_time: "Depuis toujours"
           7_days_ago: "il y a 7 jours"
           30_days_ago: "il y a 30 jours"
           all: "Tous"
@@ -2598,7 +2604,7 @@ fr:
         private_topics_count: Messages privés
         posts_read_count: Messages lus
         post_count: Messages crées
-        topics_entered: Sujets consultés
+        topics_entered: Sujets vus
         flags_given_count: Signalements effectués
         flags_received_count: Signalements reçus
         warnings_received_count: Avertissements reçus
@@ -2667,7 +2673,7 @@ fr:
           requirement_heading: "Pré-requis"
           visits: "Visites"
           days: "jours"
-          topics_replied_to: "Sujets auquels l'utilisateur a répondu"
+          topics_replied_to: "Sujets auxquels l'utilisateur a répondu"
           topics_viewed: "Sujets vus"
           topics_viewed_all_time: "Sujets vus (depuis le début)"
           posts_read: "Messages lus"

@@ -788,8 +788,6 @@ nl:
     too_few_topics_notice: "Laten <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>we de discussie starten!</a> Er zijn al <strong>%{currentTopics} / %{requiredTopics}</strong> topics. Nieuwe bezoekers hebben conversaties nodig om te lezen en reageren."
     too_few_posts_notice: "Laten <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>we de discussie starten!</a>. Er zijn op dit moment <strong>%{currentPosts} / %{requiredPosts}</strong> berichten. Nieuwe bezoekers hebben conversaties nodig om te lezen en reageren."
     logs_error_rate_notice:
-      reached: "<b>[%{relativeAge}]</b> Huidige waarde van <a href='%{url}' target='_blank'>%{rate}</a> heeft de limiet van %{siteSettingRate} bereikt, zoals ingesteld in de site-instellingen."
-      exceeded: "<b>[%{relativeAge}]</b> Huidige waarde van <a href='%{url}' target='_blank'>%{rate}</a> heeft de limiet van %{siteSettingRate} overschreden, zoals ingesteld in de site-instellingen."
       rate:
         one: "1 fout/%{duration}"
         other: "%{count} fouten/%{duration}"
@@ -979,6 +977,9 @@ nl:
       modal_ok: "OK"
       modal_cancel: "Annuleer"
       cant_send_pm: "Sorry, je kan geen bericht sturen naar %{username}."
+      yourself_confirm:
+        title: "Ben je vergeten om ontvangers toe te voegen?"
+        body: "Het bericht wordt nu alleen naar jezelf verzonden!"
       admin_options_title: "Optionele stafinstellingen voor deze topic"
       auto_close:
         label: "Tijd waarna topic automatisch wordt gesloten:"
@@ -1062,6 +1063,7 @@ nl:
       most_liked: "Meest geliked"
       select_all: "Alles selecteren"
       clear_all: "Wis Alles"
+      too_short: "Je zoekterm is te kort."
       result_count:
         one: "1 resultaat voor <span class='term'>\"{{term}}\"</span>"
         other: "{{count}} resultaat voor <span class='term'>\"{{term}}\"</span>"
@@ -1216,7 +1218,6 @@ nl:
         title: verander de frequentie van notificaties over deze topic
         reasons:
           mailing_list_mode: "De mailinglijstmodus staat ingeschakeld, dus zul je via e-mail notificaties ontvangen bij nieuwe antwoorden in deze topic."
-          '3_10': 'Je zal notificaties ontvangen omdat je een tag op deze topic in de gaten houdt.'
           '3_6': 'Je ontvangt notificaties omdat je deze categorie in de gaten houdt.'
           '3_5': 'Je ontvangt notificaties omdat je deze topic automatisch in de gaten houdt.'
           '3_2': 'Je ontvangt notificaties omdat je deze topic in de gaten houdt.'

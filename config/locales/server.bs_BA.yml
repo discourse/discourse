@@ -748,27 +748,10 @@ bs_BA:
       subject_template: "Backup completed successfully"
     backup_failed:
       subject_template: "Backup failed"
-      text_body_template: |
-        The backup has failed.
-
-        Here's the log:
-
-        ```
-        %{logs}
-        ```
     restore_succeeded:
       subject_template: "Restore completed successfully"
-      text_body_template: "The restore was successful."
     restore_failed:
       subject_template: "Restore failed"
-      text_body_template: |
-        The restore has failed.
-
-        Here's the log:
-
-        ```
-        %{logs}
-        ```
     bulk_invite_succeeded:
       subject_template: "Bulk user invite processed successfully"
       text_body_template: "Your bulk user invite file was processed, %{sent} invites mailed."

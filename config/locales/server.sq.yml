@@ -15,8 +15,13 @@ sq:
       short: "%m-%d-%Y"
       short_no_year: "%B %-d"
       date_only: "%B %-d, %Y"
+      long: "%B %-d, %Y, %l:%M%P"
   date:
     month_names: [null, Janar, Shkurt, Mars, Prill, Maj, Qershor, Korrik, Gusht, Shtator, Tetor, Nëntor, Dhjetor]
+    <<: *datetime_formats
+  time:
+    am: "pd"
+    pm: "md"
     <<: *datetime_formats
   title: "Discourse"
   topics: "Tema"
@@ -70,6 +75,8 @@ sq:
         other: '%{count} errors prohibited this %{model} from being saved'
     embed:
       load_from_remote: "Postimi nuk mundi të ngarkohet. Riprovoheni!"
+    site_settings:
+      default_categories_already_selected: "Nuk mund të zgjidhni një kategori të përdorur në një tjetër listë."
   bulk_invite:
     file_should_be_csv: "Skedari duhet të jete i formatit csv ose txt"
   backup:
@@ -142,17 +149,17 @@ sq:
       one: "1 postim"
       other: "%{count} postime"
     new-topic: |
-      Welcome to %{site_name} &mdash; **thanks for starting a new conversation!**
+      Mirë se vini te %{site_name} &mdash; **faleminderit që nisët një bisedë të re!**
 
-      - Does the title sound interesting if you read it out loud? Is it a good summary?
+      - A ju duket tërheqës titulli nëse e lexoni me zë të lartë? A është e mirë përmbledhja?
 
-      - Who would be interested in this? Why does it matter? What kind of responses do you want?
+      - Kush do të tërhiqej nga kjo temë? Përse ka rëndësi? Çfarë reagimi prisni?
 
-      - Include commonly used words in your topic so others can *find* it. To group your topic with related topics, select a category.
+      - Përfshini fjalë të përdorura zakonisht në temën tuaj kështu që të tjerët mund **ta gjejnë** atë. Për të grupuar temën tuaj me të ngjashmet, zgjidhni një kategori.
 
-      For more, [see our community guidelines](/guidelines). This panel will only appear for your first %{education_posts_text}.
+      Për më tepër, [lexoni porositë e bashkësisë](/guidelines). Ky panel do t'ju shfaqet vetëm gjatë %{education_posts_text} tuaj të parë.
     new-reply: |
-      Mirë se vini tek %{site_name} &mdash; **faleminderit për kontributin!**
+      Mirë se vini tek %{site_name} &mdash; **faleminderit për ndihmën!**
 
       - Does your reply improve the conversation in some way?
 
@@ -316,11 +323,11 @@ sq:
         one: "1d"
         other: "%{count}d"
       about_x_months:
-        one: "1mon"
-        other: "%{count}mon"
+        one: "1muaj"
+        other: "%{count}muaj"
       x_months:
-        one: "1mon"
-        other: "%{count}mon"
+        one: "1muaj"
+        other: "%{count}muaj"
       about_x_years:
         one: "1y"
         other: "%{count}y"
@@ -351,11 +358,11 @@ sq:
         one: "1 day ago"
         other: "%{count} days ago"
       about_x_months:
-        one: "about 1 month ago"
-        other: "about %{count} months ago"
+        one: "rreth 1 muaj më parë"
+        other: "rreth %{count} muaj më parë"
       x_months:
-        one: "1 month ago"
-        other: "%{count} months ago"
+        one: "1 muaj më parë"
+        other: "%{count} muaj më parë"
       about_x_years:
         one: "about 1 year ago"
         other: "about %{count} years ago"
@@ -371,7 +378,7 @@ sq:
     choose: "Ju lutem, zgjidhni një fjalëkalim"
     update: 'Rifresko Fjalëkalimin'
     save: 'Vendos Fjalëkalim'
-    title: 'Reseto Fjalëkalimin'
+    title: 'Rivendos Fjalëkalimin'
     success: "You successfully changed your password and are now logged in."
     success_unapproved: "You successfully changed your password."
     continue: "Vazhdo tek %{site_name}"
@@ -380,8 +387,9 @@ sq:
     please_continue: "Vazhdo tek %{site_name}"
     error: "There was an error changing your email address. Perhaps the address is already in use?"
   activation:
+    action: "Klikoni këtu për të aktivizuar llogarinë tuaj"
     already_done: "Sorry, this account confirmation link is no longer valid. Perhaps your account is already active?"
-    please_continue: "Your new account is confirmed; you will be redirected to the home page."
+    please_continue: "Llogaria juaj e re u konfirumua; ju po ridrejtoheni për tek faqja kryesore."
     continue_button: "Vazhdo tek %{site_name}"
     welcome_to: "Mirë se vini tek %{site_name}!"
     approval_required: "A moderator must manually approve your new account before you can access this forum. You'll get an email when your account is approved!"
@@ -468,9 +476,9 @@ sq:
       xaxis: "Ditë"
       yaxis: "Number of new likes"
     flags:
-      title: "Flags"
+      title: "Sinjalizime"
       xaxis: "Ditë"
-      yaxis: "Number of flags"
+      yaxis: "Numri i sinjalizimeve"
     bookmarks:
       title: "Bookmarks"
       xaxis: "Ditë"
@@ -700,7 +708,7 @@ sq:
     login_required: "Require authentication to read content on this site, disallow anonymous access."
     reserved_usernames: "Usernames for which signup is not allowed."
     min_password_length: "Minimum password length."
-    block_common_passwords: "Don't allow passwords that are in the 10,000 most common passwords."
+    block_common_passwords: "Mos lejo fjalëkalimet që gjenden në 10,000 fjalëkalimet më të përdorshme."
     enable_sso: "Enable single sign on via an external site (WARNING: USERS' EMAIL ADDRESSES *MUST* BE VALIDATED BY THE EXTERNAL SITE!)"
     enable_sso_provider: "Implement Discourse SSO provider protocol at the /session/sso_provider endpoint, requires sso_secret to be set"
     sso_secret: "Secret string used to cryptographically authenticate SSO information, be sure it is 10 characters or longer"
@@ -870,6 +878,8 @@ sq:
     suppress_uncategorized_badge: "Don't show the badge for uncategorized topics in topic lists."
     global_notice: "Display an URGENT, EMERGENCY global banner notice to all visitors, change to blank to hide it (HTML allowed)."
     disable_edit_notifications: "Disables edit notifications by the system user when 'download_remote_images_to_local' is active."
+    automatically_unpin_topics: "Çngjiti temat automatikisht kur përdoruesi arrin fundin e faqes."
+    read_time_word_count: "Numërimi i fjalëve për minutë për të llogaritur kohën e vlerësuar të leximit."
     full_name_required: "Full name is a required field of a user's profile."
     enable_names: "Show the user's full name on their profile, user card, and emails. Disable to hide full name everywhere."
     display_name_on_posts: "Show a user's full name on their posts in addition to their @username."
@@ -897,6 +907,9 @@ sq:
     emoji_set: "How would you like your emoji?"
     enforce_square_emoji: "Force a square aspect ratio to all emojis."
     approve_unless_trust_level: "Posts for users below this trust level must be approved"
+    auto_close_messages_post_count: "Numri më i lartë i lejueshëm i postimeve të lejuara në një mesazh përpara se të mbyllet automatikisht (0 për ta çaktivizuar)"
+    auto_close_topics_post_count: "Numri më i lartë i lejueshëm i postimeve të lejuara në një temë përpara se të mbyllet automatikisht (0 për ta çaktivizuar)"
+    default_topics_automatic_unpin: "Çngjiti temat automatikisht kur përdoruesi arrin fundin e faqes, e paracaktuar."
     errors:
       invalid_email: "Invalid email address."
       invalid_username: "There's no user with that username."
@@ -943,6 +956,12 @@ sq:
     archived_disabled: "This topic is now unarchived. It is no longer frozen, and can be changed."
     closed_enabled: "This topic is now closed. New replies are no longer allowed."
     closed_disabled: "This topic is now opened. New replies are allowed."
+    autoclosed_message_max_posts:
+      one: "Ky mesazh u mbyll automatikisht pasi arriti kufirin e lejueshëm të 1 përgjigjeje."
+      other: "Ky mesazh u mbyll automatikisht pasi arriti kufirin e lejueshëm të %{count} përgjigjeve."
+    autoclosed_topic_max_posts:
+      one: "Kjo temë është mbyllur automatikisht pasi arriti kufirin e lejueshëm të 1 përgjigjeje."
+      other: "Kjo temë është mbyllur automatikisht pasi arriti kufirin e lejueshëm të %{count} përgjigjeve."
     autoclosed_enabled_days:
       one: "This topic was automatically closed after 1 day. New replies are no longer allowed."
       other: "This topic was automatically closed after %{count} days. New replies are no longer allowed."
@@ -1007,8 +1026,8 @@ sq:
       max_new_accounts_per_registration_ip: "New registrations are not allowed from your IP address (maximum limit reached). Contact a staff member."
   flags_reminder:
     subject_template:
-      one: "1 flag waiting to be handled"
-      other: "%{count} flags waiting to be handled"
+      one: "1 sinjalizim në pritje për t'u trajtuar"
+      other: "%{count} sinjalizime në pritje për t'u trajtuar"
   invite_mailer:
     subject_template: "%{invitee_name} invited you to '%{topic_title}' on %{site_domain_name}"
     text_body_template: |
@@ -1028,16 +1047,43 @@ sq:
 
       This invitation is from a trusted user, so you can reply to the discussion immediately.
   invite_forum_mailer:
-    subject_template: "%{invitee_name} invited you to join %{site_domain_name}"
+    subject_template: "%{invitee_name} ju ka ftuar të bëheni pjesë e %{site_domain_name}"
+    text_body_template: |
+      %{invitee_name} ju ka ftuar të bëheni pjesë e
+      > **%{site_title}**
+      >
+      > %{site_description}
+
+      Nëse jeni i interesuar, klikoni lidhjen e mëposhtme:
+      %{invite_link}
+
+      Kjo ftesë vjen nga një përdorues i besuar, si rrjedhojë një llogari do të krijohet automatikisht për ju.
+  custom_invite_forum_mailer:
+    subject_template: "%{invitee_name} ju ka ftuar të bëheni pjesë e %{site_domain_name}"
+    text_body_template: |
+      %{invitee_name} ju ka ftuar të bëheni pjesë e
+      > **%{site_title}**
+      >
+      > %{site_description}
+
+      Mesazhi nga %{invitee_name}:
+
+      %{user_custom_message}
+
+      Nëse jeni i interesuar, klikoni lidhjen e mëposhtme:
+      %{invite_link}
+
+      Kjo ftesë vjen nga një përdorues i besuar, si rrjedhojë një llogari do të krijohet automatikisht për ju.
   invite_password_instructions:
     subject_template: "Set password for your %{site_name} account"
     text_body_template: |
-      Thanks for accepting your invitation to %{site_name} -- welcome!
+      Faleminderit që pranuat ftesën tek %{site_name} -- mirësevini!
 
-      Click this link to choose a password now:
+      Klikoni këtë lidhje për të zgjedhur një fjalëkalim tani:
       %{base_url}/users/password-reset/%{email_token}
 
-      (If the link above has expired, choose "I forgot my password" when logging in with your email address.)
+      (Nëse lidhjes së mësipërme i ka mbaruar afati, zgjidhni "Kam harruar fjalëkalimin" kur të hyni me adresën tuaj email.)
+
   test_mailer:
     subject_template: "[%{site_name}] Email Deliverability Test"
   new_version_mailer:
@@ -1059,20 +1105,113 @@ sq:
     disagreed: "Thanks for letting us know. We're looking into it."
     deferred: "Thanks for letting us know. We're looking into it."
     deferred_and_deleted: "Thanks for letting us know. We've removed the post."
-  temporarily_closed_due_to_flags: "This topic is temporarily closed due to a large number of community flags."
+  temporarily_closed_due_to_flags: "Kjo temë është përkohësisht e mbyllur për shkak të një numri të madh sinjalizimesh nga bashkësia."
   system_messages:
+    usage_tips:
+      text_body_template: |
+        Ja ca këshilla të shpejta sa për t'ia filluar:
+
+        ## Leximi
+
+        Për të lexuar më shumë, **thjesht vazhdo të zbresësh poshtë!**
+
+        Ndërsa përgjigje apo tema të reja vazhdojnë të vinë, ato do të shfaqen automatikisht - pa nevojën për të rifreskuar faqen.
+
+        ## Lundrimi
+
+        Për kërkimin, faqen tënde të përdoruesit, apo <kbd>☰</kbd> menunë, përdor **butonat ikonë lart në të djathtë**.
+
+        - Kur zgjedh një titull teme do të shkosh gjithmonë tek **përgjigja jote e radhës e palexuar** në atë temë. Për të kaluar në krye apo në fund, zgjidh numrin e përgjigjeve ose datën e përgjigjes së fundit.
+
+        <img src="%{base_url}/images/welcome/topic-list-select-areas-2x.png" width="593" height="59">
+
+        - Ndërkohë që lexon një temë, përdor treguesin kohor në të djathtë për të kaluar në krye, fund apo në vendndodhjen e fundit të leximit. Në ekranë të vegjël, zgjidh shiritin e progresit në fund djathtas për ta shpalosur atë:
+
+        <img src="%{base_url}/images/welcome/progress-bar-2x.png" width="153" height="181">
+
+        Gjithashtu mund të shtypni <kbd>?</kbd> në tastierën tuaj për një listë shkurtoresh super-të-shpejta.
+
+        ## Përgjigjet
+
+        Për të shtuar një citim, zgjidhni tekstin që dëshironi të citoni, pastaj shtypni një nga butonat Përgjigju <img src="%{base_url}/images/welcome/reply-post-2x.png" width="25" height="23"> për të hapur kutinë e shkrimit. Përsëriteni për citime të shumta.
+
+        <img src="%{base_url}/images/welcome/quote-reply-2x.png" width="326" height="128">
+
+        Mund të vazhdoni të lexoni sa herë që shkruani përgjigjen tuaj, ne do të ruajmë boca sa herë që shtypni.
+
+        Për të njoftuar dikë rreth përgjigjes tuaj, përmendni emrin e tyre. Shtypni `@` për të vazhduar me përzgjedhjen e emrit të përdoruesit.
+
+        <img src="%{base_url}/images/welcome/username-completion-2x.png" width="191" height="125">
+
+        Për të përdorur [standard Emoji](http://www.emoji.codes/), thjesht shtypni `:` për ta gjetur sipas emrit, ose përdorni ikonat e zakonshme `;)`
+
+        <img src="%{base_url}/images/welcome/emoji-completion-2x.png" width="144" height="153">
+
+        Për të nxjerrë një përmbledhje për një lidhje, ngjiteni atë në një rresht të vetin:
+
+        <img src="%{base_url}/images/welcome/link-oneboxing-animation.gif" width="480" height="228">
+
+        Përgjigjja juaj mund të trajtohet duke përdorur HTML të thjeshtë, BBCode, ose [Markdown](http://commonmark.org/help/):
+
+        Kjo është **me gërma të trasha**.
+        Kjo është <b>me gërma të trasha</b>.
+        Kjo është [b]me gërma të trasha[/b].
+
+        Për më tepër këshilla trajtimi teksti, [provo praktikën tonë ndërvepruese dhe argëtuese veç 10 minuta!](http://commonmark.org/help/tutorial/)
+
+        ## Veprimet
+
+        Gjenden butona veprimi në fund të çdo postimi:
+
+        <img src="%{base_url}/images/welcome/like-link-flag-bookmark-2x.png" width="162" height="42">
+
+        - Për t'ia bërë të ditur dikujt që ju pëlqeu apo e vlerësuat postimin e tyre, përdorni butonin **pëlqen**. Shpërndaj dashuri!
+
+        - Kap një lidhje të kopjueshme dhe të ngjitshme të secilës përgjigje apo temë me anë të butonit **lidhje**.
+
+        - Përdor butonin <kbd>&hellip;</kbd> më shumë për të shfaqur veprime të tjera.**Sinjalizo** që t'ia bësh të ditur privatish autorit, apo [stafit tonë](%{base_url}/about), rreth ndonjë problemi. **Shëno** për ta gjetur këtë postim më vonë në faqen tënde të profilit.
+
+        ## Njoftimet
+
+        Kur dikush të përgjigjet, citon postimin tënd, përmend `@username` tënd, apo dhe vetëm bën një lidhje tek postimi yt, një numër do të shfaqet menjëherë lart në të djathtë të faqes. Zgjidhe për t'iu qasur **njoftimeve** të tua.
+
+        <img src="%{base_url}/images/welcome/notification-panel-2x.png" width="160" height="54">
+
+        Mos u shqetësoni për ndonjë përgjigje të palexuar - do të njoftoheni me email për çdo njoftim që mbërrin kur jeni larg faqes.
+
+        ## Pëlqimet
+
+        - Të gjitha temat më të vjetra se sa **2 ditë** quhen të reja.
+
+        - Çdo temë ku keni marrë pjesë në mënyrë aktive (duke e krijuar atë, duke u përgjigjur, apo duke e lexuar për një periudhë të gjatë) do të gjurmohen për ju.
+
+        Do të shihni numrat tregues për të rejat dhe të palexuarat krahas këtyre temave:
+
+        <img src="%{base_url}/images/welcome/topics-new-unread-2x.png" width="341" height="106">
+
+        Ju mund t'i ndryshoni këto njoftime për cilëndo temë me anë të butonit të kontrollit të njoftimeve në fund, dhe në të djathtë të secilës temë.
+
+        <img src="%{base_url}/images/welcome/topic-notification-control-2x.png" width="608" height="312">
+
+        Gjithashtu mund të caktoni gjendjen e njoftimit për kategorinë, nëse dëshironi të heshtur çdo temë në një kategori të veçantë.
+
+        Për të ndryshuar ndonjë nga këto rregullime, shikoni [pëlqimet tuaja të përdoruesit](%{base_url}/my/preferences).
+
+        ## Mirëbesim Komuniteti
+
+        Është kënaqësi t'ju takoj! Ndërsa merrni pjesë këtu, me kalimin e kohës do kemi mundësi t'ju njohim, dhe kufizimet e përkohshme si përdorues i ri do të hiqen. Vazhdoni merrni pjesë, dhe me kalimin e kohës ju do të fitoni [nivele të reja mirëbesimi](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924) që përfshijnë mundësi të veçanta për të na ndihmuar në drejtimin e komunitetit tonë së bashku.
     welcome_user:
       subject_template: "Mirë se vini tek %{site_name}!"
       text_body_template: |
-        Thanks for joining %{site_name}, and welcome!
+        Faleminderit që iu bashkuat %{site_name}, dhe mirësevini!
 
         %{new_user_tips}
 
-        We believe in [civilized community behavior](%{base_url}/guidelines) at all times.
+        Ne besojmë në [sjelljen e qytetëruar të komunitetit](%{base_url}/guidelines) kurdoherë.
 
-        Enjoy your stay!
+        Shijojeni qëndrimin tuaj!
 
-        (If you need to communicate with [staff members](%{base_url}/about) as a new user, just reply to this message.)
+        (Nëse ju duhet të komunikoni me [anëtarët e stafit](%{base_url}/about) si një anëtar i ri, thjesht përgjigjuni këtij mesazhi.)
     welcome_invite:
       subject_template: "Mirë se vini tek %{site_name}!"
       text_body_template: |
@@ -1097,30 +1236,12 @@ sq:
         [prefs]: %{user_preferences_url}
     backup_succeeded:
       subject_template: "Backup completed successfully"
-      text_body_template: "The backup was successful.\nVisit the [admin > backup section](%{base_url}/admin/backups) to download your new backup."
     backup_failed:
       subject_template: "Backup failed"
-      text_body_template: |
-        The backup has failed.
-
-        Here's the log:
-
-        ```
-        %{logs}
-        ```
     restore_succeeded:
       subject_template: "Restore completed successfully"
-      text_body_template: "The restore was successful."
     restore_failed:
       subject_template: "Restore failed"
-      text_body_template: |
-        The restore has failed.
-
-        Here's the log:
-
-        ```
-        %{logs}
-        ```
     bulk_invite_succeeded:
       subject_template: "Bulk user invite processed successfully"
       text_body_template: "Your bulk user invite file was processed, %{sent} invites mailed."
@@ -1304,26 +1425,26 @@ sq:
       top_topics: "Popular posts"
       other_new_topics: "Popular topics"
       click_here: "click here"
-      read_more: "Read More"
+      read_more: "Më Shumë"
       more_topics: "There were %{new_topics_since_seen} other new topics."
       more_topics_category: "More new topics:"
     forgot_password:
-      subject_template: "[%{site_name}] Password reset"
+      subject_template: "[%{site_name}] Rivendosje fjalëkalimi"
       text_body_template: |
-        Somebody asked to reset your password on [%{site_name}](%{base_url}).
+        Dikush kërkoi për të rivendosur fjalëkalimin tuaj tek [%{site_name}](%{base_url}).
 
-        If it was not you, you can safely ignore this email.
+        Nëse nuk ishit ju, mund të mos e merrni parasysh këtë email pa asnjë problem.
 
-        Click the following link to choose a new password:
+        Klikoni lidhjen e mëtejshme për të zgjedhur një fjalëkalim të ri:
         %{base_url}/users/password-reset/%{email_token}
     set_password:
       subject_template: "[%{site_name}] Set Password"
       text_body_template: |
-        Somebody asked to add a password to your account on [%{site_name}](%{base_url}). Alternatively, you can log in using any supported online service (Google, Facebook, etc) that is associated with this validated email address.
+        Dikush kërkoi për të shtuar një fjalëkalim tek [%{site_name}](%{base_url}). Nga ana tjetër, mund të hyni në sistem duke përdorur një nga shërbimet online që mbështeten (Google, Facebook, etj) i cili është i lidhur me këtë adresë email.
 
-        If you did not make this request, you can safely ignore this email.
+        Nëse nuk e bëtë ju këtë kërkesë, mund të mos e merrni parasysh këtë email pa asnjë problem.
 
-        Click the following link to choose a password:
+        Klikoni lidhjen e mëtejshme për të zgjedhur një fjalëkalim:
         %{base_url}/users/password-reset/%{email_token}
     admin_login:
       subject_template: "[%{site_name}] Login"
@@ -1337,38 +1458,47 @@ sq:
     account_created:
       subject_template: "[%{site_name}] Your New Account"
       text_body_template: |
-        A new account was created for you at %{site_name}
+        Një llogari e re u krijua për ju tek %{site_name}
 
-        Click the following link to choose a password for your new account:
+        Klikoni lidhjen e mëtejshme për të zgjedhur një fjalëkalim për llogarinë tuaj të re:
         %{base_url}/users/password-reset/%{email_token}
+    confirm_old_email:
+      text_body_template: |
+        Përpara se sa ta ndryshoni adresën tuaj email, nevojitet të konfirmoni që jeni i
+        zoti i saj. Pasi ta përmbushni këtë hap, ne
+        do të miratojmë adresën tuaj të re email.
+
+        Konfirmoni adresën tuaj të tanishme email për %{site_name} duke klikuar lidhjen e mëtejshme:
+
+        %{base_url}/users/authorize-email/%{email_token}
     signup_after_approval:
       subject_template: "You've been approved on %{site_name}!"
       text_body_template: |
-        Welcome to %{site_name}!
+        Mirësevini tek %{site_name}!
 
-        A staff member approved your account on %{site_name}.
+        Një anëtar stafi miratoi llogarinë tuaj në %{site_name}.
 
-        Click the following link to confirm and activate your new account:
+        Klikoni lidhjen e mëtejshme për të konfirmuar dhe aktivizuar llogarinë tuaj të re:
         %{base_url}/users/activate-account/%{email_token}
 
-        If the above link is not clickable, try copying and pasting it into the address bar of your web browser.
+        Nëse lidhja e mësipërme nuk punon, mundohuni ta kopjoni dhe hapni atë në shfletuesin tuaj web.
 
         %{new_user_tips}
 
-        We believe in [civilized community behavior](%{base_url}/guidelines) at all times.
+        Ne besojmë në [sjelljen e qytetëruar të komunitetit](%{base_url}/guidelines) kurdoherë.
 
-        Enjoy your stay!
+        Shijojeni qëndrimin tuaj!
 
-        (If you need to communicate with [staff members](%{base_url}/about) as a new user, just reply to this message.)
+        (Nëse ju duhet të komunikoni me [anëtarët e stafit](%{base_url}/about) si një anëtar i ri, thjesht përgjigjuni këtij mesazhi.)
     signup:
-      subject_template: "[%{site_name}] Confirm your new account"
+      subject_template: "[%{site_name}] Konfirmoni llogarinë tuaj të re"
       text_body_template: |
-        Welcome to %{site_name}!
+        Mirësevini tek %{site_name}!
 
-        Click the following link to confirm and activate your new account:
+        Klikoni lidhjen e mëtejshme dhe aktivizoni llogarinë tuaj të re:
         %{base_url}/users/activate-account/%{email_token}
 
-        If the above link is not clickable, try copying and pasting it into the address bar of your web browser.
+        Nëse lidhja e mësipërme nuk punon, mundohuni ta kopjoni dhe hapni atë në shfletuesin tuaj web.
   page_not_found:
     popular_topics: "Popular"
     recent_topics: "Recent"
@@ -1679,8 +1809,6 @@ sq:
   performance_report:
     initial_post_raw: This topic includes daily performance reports for your site.
     initial_topic_title: Raportet e performancës se faqes
-  time:
-    <<: *datetime_formats
   activemodel:
     errors:
       <<: *errors

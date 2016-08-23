@@ -630,7 +630,6 @@ et:
       subject_template: "Varundamine ebaõnnestus"
     restore_succeeded:
       subject_template: "Taastamine õnnelikult lõpetatud"
-      text_body_template: "Taastamine õnnestus."
     restore_failed:
       subject_template: "Taastamine ebaõnnestus"
     csv_export_failed:
@@ -650,11 +649,51 @@ et:
     title: "Teenuse tingimused"
   privacy_topic:
     title: "Puutumatusnormid"
+  badges:
+    first_share:
+      name: Esimene jagamine
+      description: Jagas postitust
+    first_link:
+      name: Esimene viide
+      description: Lisas teise postitusele viite
+    first_quote:
+      name: Esimene tsitaat
+      description: Tsiteeris postitust
+    read_guidelines:
+      name: Luges juhiseid
+    reader:
+      name: Lugeja
+    popular_link:
+      name: Populaarne viide
+    hot_link:
+      name: Kuum viide
+    famous_link:
+      name: Kuulus viide
+    appreciated:
+      name: Hinnatud
+    respected:
+      name: Respekteeritud
+    admired:
+      name: Imetletud
+    out_of_love:
+      name: Armastus on otsas
+    higher_love:
+      name: Suurem armastus
+    crazy_in_love:
+      name: Hullult armunud
+    thank_you:
+      name: Tänamine
+    first_emoji:
+      name: Esimene emotikon
+    first_mention:
+      name: Esimene mainimine
   admin_login:
     success: "Kiri saadetud"
     error: "Viga!"
     email_input: "Admini kiri"
     submit_button: "Saada kiri"
+  tags:
+    title: "Sildid"
   activemodel:
     errors:
       <<: *errors

@@ -9,6 +9,7 @@ es:
   site_settings:
     poll_enabled: "¿Permitir la creación de encuestas?"
     poll_maximum_options: "Número máximo de opciones permitidas en una encuesta."
+    poll_edit_window_mins: "Número de minutos tras la creación del mensaje durante los cuales las encuestas pueden ser editadas."
   poll:
     multiple_polls_without_name: "Hay varias encuestas sin nombre. Usa la etiqueta '<code>name</code>' para diferenciar tus encuestas."
     multiple_polls_with_same_name: "Hay varias encuestas con el mismo nombre: <strong>%{name}</strong>. Usa la etiqueta '<code>name</code>' para diferenciar tus encuestas."
@@ -27,9 +28,10 @@ es:
     requires_at_least_1_valid_option: "Debes escoger al menos 1 opción válida."
     default_cannot_be_made_public: "La encuesta con votos ya registrados no puede hacerse pública."
     named_cannot_be_made_public: "La encuesta llamada <strong>%{name}</strong> tiene votos ya registrados por lo que no puede hacerse pública."
-    cannot_change_polls_after_5_minutes: "No se puede modificar, eliminar o renombrar una encuesta una vez transcurridos 5 minutos después de su creación. "
-    op_cannot_edit_options_after_5_minutes: "No se puede modificar, eliminar o renombrar una encuesta una vez transcurridos 5 minutos después de su creación. Por favor, contacta un moderador si necesitas editar las opciones de la encuesta."
-    staff_cannot_add_or_remove_options_after_5_minutes: "No se pueden añadir o eliminar opciones de una encuesta después de los primeros 5 minutos. Podrías cerrar este tema y crear uno nuevo."
+    edit_window_expired:
+      cannot_change_polls: "No se puede modificar, quitar o renombrar encuestas transcurridos %{minutes} minutos."
+      op_cannot_edit_options: "No se puede modificar o eliminar las opciones de la encuesta transcurridos %{minutes} minutos. Por favor, contacta con un moderador si necesitas editar las opciones de la encuesta."
+      staff_cannot_add_or_remove_options: "No se puede modificar o eliminar las opciones de la encuesta transcurridos %{minutes} minutos. En su lugar, deberías cerrar este tema y abrir uno nuevo."
     no_polls_associated_with_this_post: "No hay encuestas asociadas a este post."
     no_poll_with_this_name: "No hay ninguna encuesta llamada <strong>%{name}</strong> asociada con este post."
     post_is_deleted: "No se puede actuar en un post eliminado."

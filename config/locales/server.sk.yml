@@ -1243,30 +1243,12 @@ sk:
       subject_template: "Vitajte na %{site_name}!"
     backup_succeeded:
       subject_template: "Záloha skončila úspešne"
-      text_body_template: "Záloha bola úspešná.\nNavštívte [admin > sekcia záloha](%{base_url}/admin/backups) na stiahnutie Vašej novej zálohy."
     backup_failed:
       subject_template: "Záloha sa nepodarila"
-      text_body_template: |
-        Zaloha sa nepodarila.
-
-        Tu je zápis:
-
-        ```
-        %{logs}
-        ```
     restore_succeeded:
       subject_template: "Obnova skončila úspešne"
-      text_body_template: "Obnova bola úspešná."
     restore_failed:
       subject_template: "Obnova zlyhala"
-      text_body_template: |
-        Obnova zlyhala.
-
-        Tu je zápis:
-
-        ```
-        %{logs}
-        ```
     bulk_invite_succeeded:
       subject_template: "Zpracovanie pozvania viacerých používateľov bolo úspešné"
       text_body_template: "Váš súbor na hromadné pozvanie používateľov bol zpracovaný, emailom bolo poslaných %{sent} prihlášok."
@@ -1444,6 +1426,7 @@ sk:
     boolean_no: "Nie"
   static_topic_first_reply: |
     Upravte prvý príspevok v téme pre zmenu obsahu %{page_name} stránky.
+
   guidelines_topic:
     title: "FAQ/Pravidlá"
     body: |

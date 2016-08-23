@@ -781,8 +781,6 @@ sv:
     too_few_topics_notice: "Låt oss <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>få igång den här diskussionen!</a> Det finns för närvarande <strong>%{currentTopics} / %{requiredTopics}</strong> ämnen. Nya användare behöver några konversationer att läsa och svara på."
     too_few_posts_notice: "Låt oss <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>få igång den här diskussionen!</a> Det finns för närvarande <strong>%{currentPosts} / %{requiredPosts}</strong> inlägg. Nya användare behöver några konversationer att läsa och svara på."
     logs_error_rate_notice:
-      reached: "<b>[%{relativeAge}]</b> Aktuell takt av <a href='%{url}' target='_blank'>%{rate}</a> har nått webbplatsinställningarnas gräns på %{siteSettingRate}."
-      exceeded: "<b>[%{relativeAge}]</b> Aktuell takt av <a href='%{url}' target='_blank'>%{rate}</a> har överträffat webbplatsinställningarnas gräns på %{siteSettingRate}."
       rate:
         one: "1 fel/%{duration}"
         other: "%{count} fel/%{duration}"
@@ -1201,7 +1199,6 @@ sv:
         title: ändra hur ofta du får notifieringar om det här ämnet
         reasons:
           mailing_list_mode: "Du har utskicksläge aktiverat, så du kommer notifieras om inlägg till det här ämnet via e-post."
-          '3_10': 'Du kommer att ta emot notifikationer för att du bevakar en tagg i det här ämnet.'
           '3_6': 'Du kommer att få notifikationer för att du bevakar denna kategori.'
           '3_5': 'Du kommer att ta emot notifikationer för att du automatiskt började följa det här ämnet.'
           '3_2': 'Du kommer att ta emot notifikationer för att du bevakar detta ämne.'

@@ -358,7 +358,7 @@ fi:
           title: "Tarkkaillut"
           description: "Saat ilmoituksen uusista viesteistä jokaisessa viestiketjussa, ja uusien vastausten lukumäärä näytetään."
         watching_first_post:
-          title: "Tarkkaillaan uusia ketjuja"
+          title: "Tarkkaile uusia ketjuja"
           description: "Saat ilmoituksen vain ketjujen ensimmäisistä viesteistä tässä ryhmässä."
         tracking:
           title: "Seurannassa"
@@ -476,6 +476,7 @@ fi:
         instructions: |
           Asetus syrjäyttää koosteet tapahtumista.<br />
           Vaimennettujen ketjujen ja alueiden viestejä ei sisällytetä sähköposteihin.
+
         daily: "Lähetä päivittäin"
         individual: "Lähetä sähköpostia jokaisesta uudesta viestistä"
         many_per_day: "Lähetä minulle sähköpostia jokaisesta uudesta viestistä (noin {{dailyEmailEstimate}} päivässä)"
@@ -788,8 +789,6 @@ fi:
     too_few_topics_notice: "Laitetaanpa <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>keskustelu alulle!</a> Tällä hetkellä palstalla on <strong>%{currentTopics} / %{requiredTopics}</strong> ketjua. Uusia kävijöitä varten tarvitaan keskusteluita, joita voivat lukea ja joihin vastata."
     too_few_posts_notice: "Laitetaanpa <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>keskustelu alulle!</a> Tällä hetkellä palstalla on <strong>%{currentPosts} / %{requiredPosts}</strong> viestiä. Uusia kävijöitä varten tarvitaan keskusteluita, joita voivat lukea ja joihin vastata."
     logs_error_rate_notice:
-      reached: "<b>[%{relativeAge}]</b> Virheiden määrä <a href='%{url}' target='_blank'>%{rate}</a> on saavuttanut sivuston asetuksissa määritellyn rajan %{siteSettingRate}."
-      exceeded: "<b>[%{relativeAge}]</b> Virheiden määrä <a href='%{url}' target='_blank'>%{rate}</a> on ylittänyt sivuston asetuksissa määritellyn rajan %{siteSettingRate}."
       rate:
         one: "1 virhe/%{duration}"
         other: "%{count} virhettä/%{duration}"
@@ -913,8 +912,10 @@ fi:
       more_emoji: "lisää..."
       options: "Asetukset"
       whisper: "kuiskaus"
+      unlist: "listaamaton"
       add_warning: "Tämä on virallinen varoitus."
       toggle_whisper: "Vaihda kuiskaus"
+      toggle_unlisted: "Listauksissa näkyminen"
       posting_not_on_topic: "Mihin ketjuun haluat vastata?"
       saving_draft_tip: "tallennetaan..."
       saved_draft_tip: "tallennettu"
@@ -979,6 +980,9 @@ fi:
       modal_ok: "OK"
       modal_cancel: "Peruuta"
       cant_send_pm: "Et voi lähettää viestiä käyttäjälle  %{username}."
+      yourself_confirm:
+        title: "Unohditko lisätä vastaanottajia?"
+        body: "Olet lähettämässä viestiä vain itsellesi!"
       admin_options_title: "Tämän ketjun vain henkilökunnalle näytettävät asetukset"
       auto_close:
         label: "Sulje ketju automaattisesti tämän ajan jälkeen:"
@@ -1062,6 +1066,7 @@ fi:
       most_liked: "Tykätyin"
       select_all: "Valitse kaikki"
       clear_all: "Tyhjennä kaikki"
+      too_short: "Hakusana on liian lyhyt."
       result_count:
         one: "1 tulos haulle <span class='term'>\"{{term}}\"</span>"
         other: "{{count}} tulosta haulle <span class='term'>\"{{term}}\"</span>"
@@ -1076,7 +1081,7 @@ fi:
         category: "Etsi alueelta #{{category}}"
         topic: "Etsi tästä ketjusta"
         private_messages: "Etsi viesteistä"
-    hamburger_menu: "siirry toiseen ketjuun tai alueelle"
+    hamburger_menu: "vaihda ketjulistausta tai siirry toiselle alueelle"
     new_item: "uusi"
     go_back: 'mene takaisin'
     not_logged_in_user: 'käyttäjäsivu, jossa on tiivistelmä käyttäjän viimeaikaisesta toiminnasta sekä käyttäjäasetukset'
@@ -1644,7 +1649,7 @@ fi:
       email_in_allow_strangers: "Hyväksy viestejä anonyymeiltä käyttäjiltä joilla ei ole tiliä"
       email_in_disabled: "Uusien ketjujen luominen sähköpostitse on otettu pois käytöstä sivuston asetuksissa. Salliaksesi uusien ketjujen luomisen sähköpostilla, "
       email_in_disabled_click: 'ota käyttöön "email in" asetus.'
-      suppress_from_homepage: "Vaimenna tämä ketju kotisivulta."
+      suppress_from_homepage: "Vaimenna alue kotisivulta."
       allow_badges_label: "Salli arvomerkkien myöntäminen tältä alueelta"
       edit_permissions: "Muokkaa oikeuksia"
       add_permission: "Lisää oikeus"
@@ -1657,11 +1662,13 @@ fi:
       notifications:
         watching:
           title: "Tarkkaile"
+          description: "Tarkkailet kaikkia ketjuja näillä alueilla. Saat ilmoituksen jokaisesta uudesta viestistä missä tahansa ketjussa, ja uusien vastausten määrä näytetään."
         watching_first_post:
-          title: "Tarkkaillaan uusia ketjuja"
+          title: "Tarkkaile uusia ketjuja"
           description: "Saat ilmoituksen näille alueille luoduista ketjuista."
         tracking:
           title: "Seuraa"
+          description: "Seuraat kaikkia ketjuja näillä alueilla. Saat ilmoituksen jos joku mainitsee @nimesi tai vastaa sinulle, ja uusien vastausten määrä näytetään."
         regular:
           title: "Tavallinen"
           description: "Saat ilmoituksen jos joku mainitsee @nimesi tai vastaa sinulle."
@@ -1771,7 +1778,7 @@ fi:
       latest:
         title: "Tuoreimmat"
         title_with_count:
-          one: "Tuoremmat (1)"
+          one: "Tuoreimmat (1)"
           other: "Tuoreimmat ({{count}})"
         help: "ketjut, joissa on viimeaikaisia viestejä"
       hot:
@@ -1948,7 +1955,7 @@ fi:
       tags: "Tunnisteet"
       choose_for_topic: "valitse valinnaiset tunnisteet tälle ketjulle"
       delete_tag: "Poista tunniste"
-      delete_confirm: "Oletko varma, että haluat poistaa tämän tunnisteen"
+      delete_confirm: "Oletko varma, että haluat poistaa tunnisteen?"
       rename_tag: "Uudelleennimeä tunniste"
       rename_instructions: "Valitse uusi nimi tälle tunnisteelle:"
       sort_by: "Järjestä:"
@@ -1966,10 +1973,11 @@ fi:
           title: "Tarkkaile"
           description: "Ketjut, joilla on tämä tunniste, asetetaan automaattisesti tarkkailuun. Saat ilmoituksen kaikista uusista viesteistä ja ketjuista, ja uusien ja lukemattomien viestien lukumäärä näytetään ketjujen yhteydessä. "
         watching_first_post:
-          title: "Tarkkaillaan uusia ketjuja"
+          title: "Tarkkaile uusia ketjuja"
           description: "Saat ilmoituksen luoduista ketjuista, joilla on joku näistä tunnisteista."
         tracking:
           title: "Seuraa"
+          description: "Seuraat kaikkia ketjuja, joilla on tämä tunniste. Lukemattomien ja uusien viestien lukumäärä näytetään ketjun yhteydessä."
         regular:
           title: "Tavallinen"
           description: "Saat ilmoituksen jos joku mainitsee @nimesi tai vastaa viestiisi."
@@ -2103,8 +2111,8 @@ fi:
         clear_topic_flags_title: "Tämä ketju on tutkittu ja sitä koskeneet ongelmat ratkaistu. Klikkaa Valmis poistaaksesi liput."
         more: "(lisää vastauksia...)"
         dispositions:
-          agreed: "olet samaa mieltä"
-          disagreed: "olet eri mieltä"
+          agreed: "samaa mieltä"
+          disagreed: "eri mieltä"
           deferred: "lykätty"
         flagged_by: "Liputtajat"
         resolved_by: "Selvittäjä"

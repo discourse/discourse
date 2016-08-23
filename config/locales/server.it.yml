@@ -547,6 +547,7 @@ it:
     description: "La tua iscrizione è stata annullata. Per cambiare le tue impostazioni email <a href='%{url}'>vai alle preferenze utente</a>."
   unsubscribe:
     title: "Annulla iscrizione"
+    stop_watching_topic: "Smetti di osservare questo argomento, %{link}"
   reports:
     visits:
       title: "Visite Utente"
@@ -1137,27 +1138,10 @@ it:
       subject_template: "Backup completato correttamente"
     backup_failed:
       subject_template: "Backup fallito"
-      text_body_template: |
-        Il backup è fallito.
-
-        Questo è il log:
-
-        ```
-        %{logs}
-        ```
     restore_succeeded:
       subject_template: "Il ripristino è avvenuto con successo."
-      text_body_template: "Il ripristino è avvenuto con successo."
     restore_failed:
       subject_template: "Ripristino fallito"
-      text_body_template: |
-        Il ripristino è fallito.
-
-        Ecco il log:
-
-        ```
-        %{logs}
-        ```
     bulk_invite_succeeded:
       subject_template: "Invito di massa processato con successo"
       text_body_template: "Il tuo file con l'invito di massa è stato processato, %{sent} inviti spediti."
@@ -1183,6 +1167,7 @@ it:
         Spiacenti, ma il tuo messaggio email a %{destination} (intitolato %{former_title}) non è stato inviato.
 
         Non è stato riconosciuto alcuno degli indirizzi email di destinazione. Assicurati di inviare a indirizzi email validi.
+
     email_reject_topic_not_found:
       subject_template: "[%{site_name}] Problema relativo all'email -- Argomento Non Trovato"
     email_reject_topic_closed:
@@ -1227,30 +1212,106 @@ it:
       subject_template: "[%{site_name}] %{topic_title}"
     user_replied_pm:
       subject_template: "[%{site_name}] [PM] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
     user_quoted:
       subject_template: "[%{site_name}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
     user_linked:
       subject_template: "[%{site_name}] %{topic_title} "
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
     user_mentioned:
       subject_template: "[%{site_name}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
     user_group_mentioned:
       subject_template: "[%{site_name}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
     user_posted:
       subject_template: "[%{site_name}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
+    user_watching_first_post:
+      subject_template: "[%{site_name}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
     user_posted_pm:
       subject_template: "[%{site_name}] [PM] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
     user_posted_pm_staged:
       subject_template: "%{optional_re}%{topic_title}"
+      text_body_template: |
+
+        %{message}
     digest:
       why: "Un breve sommario di %{site_link} dalla tua ultima visita il %{last_seen_at}"
+      subject_template: "[%{site_name}] Riepilogo"
       new_activity: "Nuove attività nei tuoi argomenti e messaggi:"
       top_topics: "Messaggi di successo"
       other_new_topics: "Argomenti più attivi"
       unsubscribe: "Questo riepilogo viene inviato da %{site_link} se non ti si vede da un po'. Per annullare l'iscrizione %{unsubscribe_link}."
       click_here: "clicca qui"
+      from: "%{site_name} riepilogo"
       read_more: "Leggi Altro"
       more_topics: "Ci sono stati %{new_topics_since_seen} altri nuovi argomenti."
       more_topics_category: "Ulteriori nuovi argomenti:"
+    mailing_list:
+      from: "%{site_name} riepilogo"
+      new_topics: "Nuovi argomenti"
+      view_this_topic: "Vedi questo argomento"
+      back_to_top: "Torna in cima"
     forgot_password:
       subject_template: "[%{site_name}] Reimposta password"
       text_body_template: |

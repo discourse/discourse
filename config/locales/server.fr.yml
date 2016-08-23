@@ -671,7 +671,7 @@ fr:
       xaxis: "Jour"
       yaxis: "Nombre de vues par les utilisateurs non connectés sur mobile"
     http_background_reqs:
-      title: "Arrière plan"
+      title: "Arrière-plan"
       xaxis: "Jour"
       yaxis: "Requêtes de mise à jour en temps réel ou de suivi"
     http_2xx_reqs:
@@ -829,7 +829,6 @@ fr:
     ga_universal_tracking_code: "Code de suivi Google Universal Analytics (analytics.js), par exemple : UA-12345678-9 ; voir http://google.com/analytics"
     ga_universal_domain_name: "Nom de domaine Google Universal Analytics (analytics.js), par exemple : monsite.com ; voir http://google.com/analytics"
     gtm_container_id: "ID du conteneur Google Tag Manager, par exemple : GTM-ABCDEF"
-    gtm_ua_domain_name: "Nom de domaine Universal Analytics via Google Tag Manager. La valeur 'auto' est recommandée."
     enable_escaped_fragments: "Utiliser l'API Ajax-Crawling de Google si aucun robot n'est détecté. Voir https://developers.google.com/webmasters/ajax-crawling/docs/learn-more"
     enable_noscript_support: "Activer le support des moteurs de recherches standards via le tag noscript"
     allow_moderators_to_create_categories: "Autoriser les modérateurs à créer de nouvelles catégories"
@@ -954,6 +953,7 @@ fr:
     default_opengraph_image_url: "URL de l'image par défaut pour les balises Open Graph."
     allow_all_attachments_for_group_messages: "Autorise toutes les pièces-jointes pour les messages de groupes."
     convert_pasted_images_to_hq_jpg: "Convertir les images copiées en fichier JPEG haute qualité."
+    convert_pasted_images_quality: "Qualité du fichier JPEG converti (1 est la plus faible, 100 est la meilleure)."
     enable_flash_video_onebox: "Activer l'utilisation de swf et flv (Adobe Flash) dans les boites imbriquées. ATTENTION : cela pourrait introduire un risque de sécurité."
     default_invitee_trust_level: "Niveau de confiance par défaut (0-4) pour les invités."
     default_trust_level: "Niveau de confiance par défaut (entre 0 et 4) pour tous les nouveaux utilisateurs. ATTENTION ! Changer ce paramètre peut vous exposer à des spams."
@@ -1038,14 +1038,14 @@ fr:
     max_age_unmatched_ips: "Effacer les adresses IP sous surveillenace sans correspondance après (N) jours"
     num_flaggers_to_close_topic: "Nombre minimum de signalements uniques requis pour automatiquement suspendre un sujet pour intervention"
     num_flags_to_close_topic: "Nombre minimum de signalements uniques requis pour automatiquement suspendre un sujet pour intervention"
-    auto_respond_to_flag_actions: "Activer réponse automatique lors du traitement d'un signalement."
+    auto_respond_to_flag_actions: "Activer la réponse automatique lors du traitement d'un signalement."
     min_first_post_typing_time: "Minimum de temps en millisecondes qu'un utilisateur doit passer à la saisie de son premier commentaire, si le seuil n'est pas atteint, il rejoindra automatiquement la file des commentaires en cours d'approbation. Mettre à 0 pour désactiver (non recommandé)"
     auto_block_fast_typers_on_first_post: "Bloque automatiquement les utilisateurs qui n'ont pas respecté min_first_post_typing_time"
     auto_block_fast_typers_max_trust_level: "Niveau de confiance maximum pour bloquer automatiquement les 'dactylo rapides'"
     auto_block_first_post_regex: "Regex non sensible à la casse qui, si elle est déclenchée, bloquera le premier message de l'utilisateur et l'enverra dans la file d'attente d'approbation.\nExemple: rageux|a[bc]a bloquera les premiers messages contenant rageux ou aba ou aca."
     reply_by_email_enabled: "Activer les réponses aux sujets via courriel."
     reply_by_email_address: "Modèle pour la réponse par courriel entrant; exemple : %{reply_key}@reply.example.com ou replies+%{reply_key}@example.com"
-    alternative_reply_by_email_addresses: "Liste des templates alternatifs pour les adresses des courriels entrants de la réponse par courriel."
+    alternative_reply_by_email_addresses: "Liste des templates alternatifs pour les adresses des courriels entrants de la réponse par courriel. Exemple : %{reply_key}@reply.example.com|replies+%{reply_key}@example.com"
     incoming_email_prefer_html: "Utiliser le HTML au lieu du texte pour les courriels entrants. Peut causer des problèmes de formatage inattendus !"
     disable_emails: "Désactiver l'envoi de les courriels depuis Discourse."
     strip_images_from_short_emails: "Retirer les images des courriels dont la taille est inférieur à 2800 Octets"
@@ -1057,15 +1057,17 @@ fr:
     max_emails_per_day_per_user: "Nombre maximum de courriels à envoyer aux utilisateurs par jour. 0 pour désactiver la limite"
     enable_staged_users: "Créer automatiquement les utilisateurs en attente lors du traitement des courriels entrants."
     maximum_staged_users_per_email: "Nombre maximum d'utilisateurs créés lors du traitement d'un courriel entrant."
-    auto_generated_whitelist: "Liste des adresses courriel qui ne seront pas vérifiées pour du contenu généré automatiquement."
+    auto_generated_whitelist: "Liste des adresses courriel qui ne seront pas vérifiées pour du contenu généré automatiquement. Exemple : foo@bar.com|discourse@bar.com"
     block_auto_generated_emails: "Bloquer les courriels entrants identifiés comme générés automatiquement."
     ignore_by_title: "Ignorer les courriels entrants selon leur titre."
     mailgun_api_key: "Clé API secrète de Mailgun utilisée pour vérifier les messages du webhook."
-    soft_bounce_score: "Score ajouté à l'utilisateur lorsqu'un rejet temporaire se produit."
-    hard_bounce_score: "Score ajouté à l'utilisateur lorsqu'un rejet permanent se produit."
-    bounce_score_threshold: "Score maximum à partir duquel nous allons arrêter d'envoyer des courriel à un utilisateur."
-    bounce_score_threshold_deactivate: "Score maximum à partir duquel nous allons désactiver un utilisateur."
+    soft_bounce_score: "Score de rejet ajouté à l'utilisateur lorsqu'un rejet temporaire se produit."
+    hard_bounce_score: "Score de rejet ajouté à l'utilisateur lorsqu'un rejet permanent se produit."
+    bounce_score_threshold: "Score de rejet maximum à partir duquel nous allons arrêter d'envoyer des courriels à un utilisateur."
+    bounce_score_threshold_deactivate: "Score de rejet maximum à partir duquel nous allons désactiver un utilisateur."
     reset_bounce_score_after_days: "Rétablir automatiquement le score de rejet après X jours."
+    attachment_content_type_blacklist: "Liste des mots-clés utilisés pour filtrer les pièces jointes en fonction du type de contenu."
+    attachment_filename_blacklist: "Liste des mots-clés utilisés pour filtrer les pièces jointes en fonction du nom de fichier."
     manual_polling_enabled: "Envoyer les courriels en utilisant l'API des réponses par courriel."
     pop3_polling_enabled: "Utiliser POP3 pour les réponses via courriel."
     pop3_polling_ssl: "Utiliser SSL pour les connections au serveur POP3. (Recommandé)"
@@ -1481,7 +1483,8 @@ fr:
 
       - Consultez les nouveautés sur l'historique [GitHub](https://github.com/discourse/discourse/commits/master).
 
-      - Visitez [meta.discourse.org](http://meta.discourse.org) pour des nouvelles, des discussions, et de l'aide concernant Discourse.
+      - Visitez [meta.discourse.org](https://meta.discourse.org) pour des nouvelles, des discussions, et de l'aide concernant Discourse.
+
   new_version_mailer_with_notes:
     subject_template: "[%{site_name}] mise à jour disponible"
     text_body_template: |
@@ -1494,7 +1497,7 @@ fr:
 
       - Consultez les nouveautés sur l'historique [GitHub](https://github.com/discourse/discourse/commits/master).
 
-      - Visitez [meta.discourse.org](http://meta.discourse.org) pour des nouvelles, des discussions, et de l'aide concernant Discourse.
+      - Visitez [meta.discourse.org](https://meta.discourse.org) pour des nouvelles, des discussions, et de l'aide concernant Discourse.
 
       ### Notes de version
 
@@ -1522,7 +1525,7 @@ fr:
   system_messages:
     post_hidden:
       subject_template: "Message caché suite à des signalements de la communauté"
-      text_body_template: |+
+      text_body_template: |
         Bonjour,
 
         Ceci est un message automatique de %{site_name} pour vous informer que votre message a été caché.
@@ -1666,28 +1669,44 @@ fr:
         [prefs]: %{user_preferences_url}
     backup_succeeded:
       subject_template: "Sauvegarde terminée avec succès"
-      text_body_template: "La sauvegarde a bien réussie.\nVisitez [la section admin > sauvegarde](%{base_url}/admin/backups) pour télécharger votre nouvelle sauvegarde."
+      text_body_template: |
+        La sauvegarde a réussi.
+
+        Visitez [la section admin > sauvegarde](%{base_url}/admin/backups) pour télécharger votre nouvelle sauvegarde.
+
+        Voici le détail :
+
+        ```text
+        %{logs}
+        ```
     backup_failed:
       subject_template: "Échec de la sauvegarde"
       text_body_template: |
-        La sauvegarde a échouée.
+        La sauvegarde a échoué.
 
-        Voici le détail:
+        Voici le détail :
 
-        ```
+        ```text
         %{logs}
         ```
     restore_succeeded:
       subject_template: "Restauration terminée avec succès"
-      text_body_template: "La restauration a été un succès."
+      text_body_template: |
+        La restauration a réussi.
+
+        Voici le détail :
+
+        ```text
+        %{logs}
+        ```
     restore_failed:
       subject_template: "Échec de la restauration"
       text_body_template: |
-        La restauration a échouée.
+        La restauration a échoué.
 
-        Voici le détail:
+        Voici le détail :
 
-        ```
+        ```text
         %{logs}
         ```
     bulk_invite_succeeded:
@@ -1798,13 +1817,6 @@ fr:
         %{post_error}
 
         Si vous pouvez corriger les erreurs, veuillez réessayer.
-    email_reject_rate_limit_specified:
-      subject_template: "[%{site_name}] Problème de courriel -- Limitation du débit"
-      text_body_template: |+
-        Nous sommes désolés, mais l'envoi de votre courriel à %{destination} (intitulé %{former_title}) n'a pas fonctionné.
-
-        Raison : %{rate_limit_description}
-
     email_reject_invalid_post_action:
       subject_template: "[%{site_name}] Problème de courriel -- Action Post invalide"
       text_body_template: |
@@ -1929,7 +1941,7 @@ fr:
   unsubscribe_link_and_mail: |
     Pour se désabonner de ces courriels, [cliquer ici](%{unsubscribe_url}).
   unsubscribe_mailing_list: |
-    Vous recevez ces courriels car vous avez activé la liste de diffusion.
+    Vous recevez ce courriel car vous avez activé la liste de diffusion.
 
     Pour se désabonner de ces courriels, [cliquer ici](%{unsubscribe_url}).
   subject_re: "Re:"
@@ -2460,7 +2472,7 @@ fr:
       <tr><td><code>posts_count:num</code></td><td><code>before:days or date</code></td><td><code>after:days or date</code></td><td><code>tags:one,two</code></td><td></td></tr>
       </table>
       </p>
-      <h3>Examples</h3>
+      <h3>Exemples</h3>
       <p>
       <ul>
       <li><code>rainbows #parks</code> cherchera les sujets dans la catégorie "parks" qui contiennent le mot "rainbows".</li>
@@ -2470,7 +2482,7 @@ fr:
       </p>
   badges:
     editor:
-      name: Editeur
+      name: Éditeur
       description: Première édition d'un message
       long_description: |
         Ce badge est accordé après la première édition d'un de vos messages. Bien que la possibilité d'éditer un message soit limitée dans le temps, l'édition est toujours une bonne idée — vous pouvez améliorer vos messages, réparer des petites erreurs, ou ajouter des éléments que vous avez oubliés lors de la rédaction. Éditer vos messages pour les rendre encore meilleurs !
@@ -2496,7 +2508,7 @@ fr:
         Ce badge est accordé lorsque vous atteignez le niveau de confiance 4. Vous êtes un meneur choisi par l'équipe dans cette communauté, et vous montrez l'exemple dans vos actions et vos mots. Vous avez la capacité d'éditer tous les messages, utiliser les actions de modérations telles qu'épingler, fermer, cacher, archiver, scinder et fusionner, ainsi que des tonnes de "J'aime" par jour.
     welcome:
       name: Bienvenue
-      description: A reçu un j'aime.
+      description: A reçu un J'aime
       long_description: |
         Ce badge est accordé lorsque vous recevez votre premier "J'aime" sur un de vos messages. Félicitations, vous avez écrit quelque chose que les membres de votre communauté ont trouvé intéressant, cool, ou utile !
     autobiographer:
@@ -2511,32 +2523,32 @@ fr:
         Ce badge est accordé après avoir été membre du site pendant une année, avec au moins un message crée dans cette année. Merci d'être resté avec nous et de contribuer ainsi à notre communauté ! Nous n'aurions pas pu le faire sans vous.
     nice_post:
       name: Jolie réponse
-      description: A reçu 10 j'aime sur une réponse.
+      description: A reçu 10 J'aime sur une réponse.
       long_description: |
         Ce badge est accordé quand une réponse obtient 10 j'aime. Votre réponse a vraiment fait impression sur la communauté et a aidé à faire progresser la conversation.
     good_post:
-      name: Bonne Réponse
-      description: A reçu 25 j'aime sur une réponse
+      name: Bonne réponse
+      description: A reçu 25 J'aime sur une réponse
       long_description: |
         Ce badge est accordé quand votre réponse obtient 25 j'aime. Votre réponse est exceptionnel et a rendu la conversation bien mieux pour tout le monde.
     great_post:
-      name: Super Réponse
-      description: A reçu 50 j'aime sur une réponse
+      name: Super réponse
+      description: A reçu 50 J'aime sur une réponse
       long_description: |
         Ce badge est accordé quand une réponse obtient 50 j'aime. Votre réponse était inspirante, fascinante, hilarante, ou pertinente et la communauté l'a adorée.
     nice_topic:
       name: Sujet intéressant
-      description: A reçu 10 j'aime sur un sujet.
+      description: A reçu 10 J'aime sur un sujet.
       long_description: |
         Ce badge est accordé quand un sujet obtient 10 j'aime.  Vous avez commencé une conversation intéressante que la communauté a apprécié !
     good_topic:
       name: Bon sujet
-      description: A reçu 25 j'aime sur un sujet
+      description: A reçu 25 J'aime sur un sujet
       long_description: |
         Ce badge est accordé quand un sujet obtient 25 j'aime. Vous avez lancé une conversation vibrante autour de laquelle la communauté s'est ralliée et elle l'a adorée.
     great_topic:
       name: Super sujet
-      description: A reçu 50 j'aime sur un sujet
+      description: A reçu 50 J'aime sur un sujet
       long_description: |
         Ce badge est accordé quand un sujet obtient 50 j'aime. Vous avez initié une fascinante conversation et la communauté a apprécié la discussion dynamique qui en a résulté !
     nice_share:
@@ -2555,7 +2567,7 @@ fr:
       long_description: |
         Ce badge est accordé après le partage d'un lien qui a été cliqué par 1000 visiteurs extérieurs. Whaou ! Vous avez fait la promotion d'une discussion intéressante auprès d'une nouvelle audience d'envergure et avez aidé notre communauté à grandir de manière significative !
     first_like:
-      name: Premier j'aime
+      name: Premier J'aime
       description: A aimé un message
       long_description: |
         Ce badge est accordé la première fois que vous aimez un message en utilisant le bouton :heart:. Aimer des messages est le moyen parfait pour dire aux autres membres de la communauté que ce qu'ils ont posté était intéressant, utile, cool, ou amusant.
@@ -2621,22 +2633,22 @@ fr:
         Ce badge est accordé quand un lien que vous avez partagé obtient 1000 clics. Whaou ! Vous avez posté un lien qui a notablement amélioré la discussion en ajoutant des détails et des informations essentielles. Bon travail !
     appreciated:
       name: Apprécié
-      description: A recu 1 j'aime sur 20 messages
+      description: A recu 1 J'aime sur 20 messages
       long_description: |
         Ce badge est accordé lorsque vous recevez au moins un J'aime sur 20 messages différents. La communauté apprécie vos contributions aux conversations !
     respected:
       name: Respecté
-      description: A reçu 2 j'aime sur 100 messages
+      description: A reçu 2 J'aime sur 100 messages
       long_description: |
         Ce badge est accordé lorsque vous recevez au moins 2 J'aime sur 100 messages différents. La communauté a de plus en plus de respect pour vos nombreuses contributions aux conversations.
     admired:
       name: Admiré
-      description: A reçu 5 j'aime sur 300 messages
+      description: A reçu 5 J'aime sur 300 messages
       long_description: |
         Ce badge est accordé lorsque vous recevez au moins 5 J'aime sur 300 messages différents. Whaou ! La communauté admire vos fréquentes contributions de haute qualité aux conversations.
     out_of_love:
       name: Trop d'amour
-      description: A utilisé 50 j'aime en une journée
+      description: A utilisé 50 J'aime en une journée
       long_description: |
         Ce badge est accordé lorsque vous utilisez la totalité de vos 50 J'aime quotidiens. Rappelez-vous de prendre un moment pour aimer les messages qui vous plaisent et que vous appréciez. Cela encourage les autres membres de la communauté à créer encore plus de discussions de qualité à l'avenir.
     higher_love:
@@ -2651,17 +2663,17 @@ fr:
         Ce badge est accordé lorsque vous utilisez la totalité vos 50 J'aime par jour pendant 20 jours. Whaou ! Vous êtes un modèle d'encouragement régulier des membres de la communauté !
     thank_you:
       name: 'Merci '
-      description: A 20 messages ayant reçu un j'aime et a donné 10 j'aime
+      description: A 20 messages ayant reçu un J'aime et a donné 10 j'aime
       long_description: |
         Ce badge est accordé quand vous avez reçu 20 J'aime sur vos messages et en avez donné 10 ou plus en retour. Quand quelqu'un aime vos messages, vous trouvez le temps d'aimer ce que les autres postent à leur tour.
     gives_back:
       name: Redonne
-      description: A 100 messages ayant reçu un j'aime et a donné 100 j'aime
+      description: A 100 messages ayant reçu un J'aime et a donné 100 J'aime
       long_description: |
         Ce badge est accordé quand vous avez reçu 100 J'aime et en avez donné 100 ou plus en retour. Whaou ! Merci de rendre ce lieu meilleur !
     empathetic:
       name: Empathique
-      description: A 500 messages ayant reçu un j'aime et a donné 1000 j'aime
+      description: A 500 messages ayant reçu un J'aime et a donné 1000 J'aime
       long_description: |
         Ce badge est accordé quand vous avez reçu 500 J'aime et en avez donné 1000 ou plus en retour. Whaou ! Vous êtes un modèle de générosité et d'amour mutuel :two_hearts:.
     first_emoji:
