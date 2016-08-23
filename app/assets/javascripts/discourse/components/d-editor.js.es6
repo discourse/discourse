@@ -32,6 +32,8 @@ const OP = {
   ADDED: 2
 };
 
+const FOUR_SPACES_INDENT = '4-spaces-indent';
+
 const _createCallbacks = [];
 
 class Toolbar {
@@ -534,14 +536,21 @@ export default Ember.Component.extend({
 
     formatCode() {
       const sel = this._getSelected();
-      if (sel.value.indexOf("\n") !== -1) {
-        return (this.siteSettings.code_formatting_style === "4-spaces-indent") ?
+      const hasNewLine = sel.value.indexOf("\n") !== -1
+
+      if (this.siteSettings.code_formatting_style === FOUR_SPACES_INDENT) {
+        return (hasNewLine ?
                 this._applySurround(sel, '    ', '', 'code_text') :
-                this._addText(sel, '```\n' + sel.value + '\n```');
+                this._applySurround(sel, '`', '`', 'code_text'));
       } else {
-        return (this.siteSettings.code_formatting_style === "4-spaces-indent") ?
-                this._applySurround(sel, '`', '`', 'code_text') :
-                this._applySurround(sel, '```\n', '\n```', 'paste_code_text');
+        const preNewline = (sel.pre[-1] !== "\n" && sel.pre !== "") ? "\n" : "";
+        const postNewline = sel.post[0] !== "\n" ? "\n" : "";
+
+        if (hasNewLine) {
+          return this._addText(sel, `${preNewline}\`\`\`\n${sel.value}\n\`\`\`${postNewline}`);
+        } else {
+          return this._applySurround(sel, `${preNewline}\`\`\`\n`, `\n\`\`\`${postNewline}`, 'paste_code_text');
+        }
       }
     },
 
