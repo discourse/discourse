@@ -536,7 +536,7 @@ export default Ember.Component.extend({
 
     formatCode() {
       const sel = this._getSelected();
-      const hasNewLine = sel.value.indexOf("\n") !== -1
+      const hasNewLine = sel.value.indexOf("\n") !== -1;
 
       if (this.siteSettings.code_formatting_style === FOUR_SPACES_INDENT) {
         return (hasNewLine ?
