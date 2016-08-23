@@ -102,6 +102,7 @@ module Discourse
     config.filter_parameters += [
         :password,
         :pop3_polling_password,
+        :api_key,
         :s3_secret_access_key,
         :twitter_consumer_secret,
         :facebook_app_secret,
