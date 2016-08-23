@@ -145,7 +145,7 @@ class PostCreator
       publish
 
       track_latest_on_category
-      enqueue_jobs
+      enqueue_jobs unless @opts[:skip_jobs]
       BadgeGranter.queue_badge_grant(Badge::Trigger::PostRevision, post: @post)
 
       trigger_after_events(@post)
@@ -168,6 +168,11 @@ class PostCreator
     end
 
     @post
+  end
+
+  def enqueue_jobs
+    return unless @post && !@post.errors.present?
+    PostJobsEnqueuer.new(@post, @topic, new_topic?, {import_mode: @opts[:import_mode]}).enqueue_jobs
   end
 
   def self.track_post_stats
@@ -447,11 +452,6 @@ class PostCreator
     else
       TopicUser.auto_track(@user.id, @topic.id, TopicUser.notification_reasons[:created_post])
     end
-  end
-
-  def enqueue_jobs
-    return unless @post && !@post.errors.present?
-    PostJobsEnqueuer.new(@post, @topic, new_topic?, {import_mode: @opts[:import_mode]}).enqueue_jobs
   end
 
   def new_topic?

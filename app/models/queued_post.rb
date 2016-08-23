@@ -61,19 +61,22 @@ class QueuedPost < ActiveRecord::Base
 
   def approve!(approved_by)
     created_post = nil
+
+    creator = PostCreator.new(user, create_options.merge(skip_validations: true, skip_jobs: true))
     QueuedPost.transaction do
       change_to!(:approved, approved_by)
 
       UserBlocker.unblock(user, approved_by) if user.blocked?
 
-      creator = PostCreator.new(user, create_options.merge(skip_validations: true))
       created_post = creator.create
 
       unless created_post && creator.errors.blank?
         raise StandardError.new(creator.errors.full_messages.join(" "))
       end
-
     end
+
+    # Do sidekiq work outside of the transaction
+    creator.enqueue_jobs
 
     DiscourseEvent.trigger(:approved_post, self)
     created_post
