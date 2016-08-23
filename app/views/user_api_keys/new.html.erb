@@ -1,5 +1,14 @@
 <h1><%= t "user_api_key.title" %></h1>
 <div>
+<% if @no_trust_level %>
+  <h3>
+  <%= t("user_api_key.no_trust_level") %>
+  </h3>
+<% elsif @generic_error %>
+  <h3>
+  <%= t("user_api_key.generic_error") %>
+  </h3>
+<% else %>
 <p>
   <%= t("user_api_key.description", application_name: @application_name, access: @access_description) %>
 </p>
@@ -14,5 +23,6 @@
   <%= submit_tag t('user_api_key.authorize'), class: 'btn btn-danger' %>
 <% end %>
 </div>
+<% end %>
 
 

@@ -646,6 +646,8 @@ en:
     read: "read"
     read_write: "read/write"
     description: "Would you like to grant \"%{application_name}\" %{access} access to your account?"
+    no_trust_level: "Sorry, you do not have the required trust level to access the user API"
+    generic_error: "Sorry, we are unable to issue user API keys, this feature may be disabled by the site admin"
 
   reports:
     visits:
