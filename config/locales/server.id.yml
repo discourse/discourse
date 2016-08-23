@@ -301,6 +301,7 @@ id:
         Silahkan sentuh tautan dibawah ini untuk menentukan sandi dari akun baru Anda:
 
         %{base_url}/users/password-reset/%{email_token}
+
     confirm_new_email:
       subject_template: "[%{site_name}] Konfirmasi email baru Anda"
       text_body_template: |

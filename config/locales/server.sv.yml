@@ -1036,7 +1036,6 @@ sv:
     auto_block_first_post_regex: "Skriftlägeskänsligt regex som om godkänt kommer att orsaka att första inlägget av en användare blockeras och skickas till kön för saker som behöver granskas. Exempel: raging|a[bc]a kommer att orsaka att alla inlägg som börjar med raging eller aba eller aca blockeras vid första försöket. Gäller endast användarens första inlägg. "
     reply_by_email_enabled: "Aktivera möjlighet att svara på ämnen via e-post."
     reply_by_email_address: "Mall för inkommande e-postadress för svar via e-post, till exempel: %{reply_key}@svar.exempel.se eller svar+%{reply_key}@exempel.se"
-    alternative_reply_by_email_addresses: "Lista av alternativa mallar för inkommande e-postadresser för svar via e-post."
     incoming_email_prefer_html: "Använd HTML istället för texten för inkommande e-post. Kan orsaka oväntade formatteringsproblem!"
     disable_emails: "Förhindra Discourse från att skicka någon form av e-post"
     strip_images_from_short_emails: "Rensa bilder från e-post som har mindre storlek än 2800 bytes."
@@ -1048,10 +1047,11 @@ sv:
     max_emails_per_day_per_user: "Högsta antal e-postmeddelanden att skicka till användare per dag. Ange 0 för att inaktivera gränsen"
     enable_staged_users: "Skapa automatiskt arrangerade användare vid bearbetning av inkommande e-post."
     maximum_staged_users_per_email: "Högsta antal arrangerade användare skapade vid bearbetning av inkommande e-post."
-    auto_generated_whitelist: "Lista av e-postadresser som inte undersöks för autogenererat innehåll."
     block_auto_generated_emails: "Blockera inkommande e-post som identifieras som autogenererat."
     ignore_by_title: "Ignorera inkommande e-post baserat på dess rubrik."
     mailgun_api_key: "Mailgun Secret API-nyckel att använda för att verifiera webhook-meddelanden."
+    attachment_content_type_blacklist: "lista av fraser som används till att svartlista bilagor baserade på innehållstyper"
+    attachment_filename_blacklist: "Lista över fraser som används till att svartlista bilagor baserade på filnamnet"
     pop3_polling_enabled: "Poll via POP3 för e-postsvar."
     pop3_polling_ssl: "Använd SSL vid anslutning till POP3-servern. (Rekommenderat)"
     pop3_polling_period_mins: "Tidsintervall i minuter mellan varje kontroll av POP3-kontot för e-post. OBS: kräver omstart."
@@ -1403,34 +1403,8 @@ sv:
     subject_template: "[%{site_name}] E-postlevereringstest"
   new_version_mailer:
     subject_template: "[%{site_name}] Ny version av Discourse, uppdatering tillgänglig"
-    text_body_template: |
-      Hurra, en ny version av [Discourse](http://www.discourse.org) är tillgänglig!
-
-      Din version: %{installed_version}
-      Ny version: **%{new_version}**
-
-      - Uppgradera genom att använda den enkla **[uppgraderingsknappen](%{base_url}/admin/upgrade)** i din webbläsare.
-
-      - Se uppdateringarna i [GitHubs ändringslogg](https://github.com/discourse/discourse/commits/master)
-
-      - Besök [meta.discourse.org](http://meta.discourse.org) för att läsa de senaste nyheterna, diskutera och besöka kundtjänsten för Discourse
   new_version_mailer_with_notes:
     subject_template: "[%{site_name}] uppdatering tillgänglig"
-    text_body_template: |
-      Hurra, en ny version av [Discourse](http://www.discourse.org) är tillgänglig!
-
-      Din version: %{installed_version}
-      Ny version: **%{new_version}**
-
-      - Uppgradera genom att använda den enkla **[uppgraderingsknappen](%{base_url}/admin/upgrade)** i din webbläsare.
-
-      - Se uppdateringarna i [GitHubs ändringslogg](https://github.com/discourse/discourse/commits/master)
-
-      - Besök [meta.discourse.org](http://meta.discourse.org) för att läsa de senaste nyheterna, diskutera och få support för Discourse
-
-      ### Versionsinformation
-
-      %{notes}
   queued_posts_reminder:
     subject_template:
       one: "[%{site_name}] 1 användare väntar på att granskas"
@@ -1595,29 +1569,12 @@ sv:
         [prefs]: %{user_preferences_url}
     backup_succeeded:
       subject_template: "Säkerhetskopia skapades utan problem"
-      text_body_template: "Säkerhetskopieringen lyckades.\nBesök [admin > säkerhetskopiering](%{base_url}/admin/backups) för att hämta den nya säkerhetskopian."
     backup_failed:
       subject_template: "Säkerhetskopiering misslyckades"
-      text_body_template: |
-        Säkerhetskopieringen misslyckades.
-
-        Här är loggen:
-
-        ```
-        %{logs}
-        ```
     restore_succeeded:
       subject_template: "Återställningen lyckades!"
-      text_body_template: "Återställningen lyckades."
     restore_failed:
       subject_template: "Återställningen misslyckades"
-      text_body_template: |
-        Återställningen misslyckades.
-
-        Här är loggen:
-        ```
-        %{logs}
-        ```
     bulk_invite_succeeded:
       subject_template: "Massinbjudning av användare behandlades utan fel "
       text_body_template: "Din massinbjudning av användare behandlades, %{sent} inbjudningar skickades."
@@ -1726,12 +1683,6 @@ sv:
         %{post_error}
 
         Om du kan åtgärda problemet, var vänlig försök igen.
-    email_reject_rate_limit_specified:
-      subject_template: "[%{site_name}] E-postfel -- Begränsningsgrad"
-      text_body_template: |
-        Tyvärr har ditt e-postmeddelande till %{destination} (med ämnet %{former_title}) inte kunnat skickas.
-
-        Orsak: %{rate_limit_description}
     email_reject_invalid_post_action:
       subject_template: "[%{site_name}] E-postfel -- Ogiltig poståtgärd"
       text_body_template: |
@@ -1855,10 +1806,6 @@ sv:
     [Klicka här ](%{unsubscribe_url}) för att avprenumerera från de här e-postmeddelandena.
   unsubscribe_link_and_mail: |
     [Klicka här ](%{unsubscribe_url}) för att avprenumerera från de här e-postmeddelandena.
-  unsubscribe_mailing_list: |
-    Du mottar de här e-postmeddelandena för att du har aktiverat utskicksläge.
-
-    [Klicka här](%{unsubscribe_url}) för att avprenumerera från de här e-postmeddelandena.
   subject_re: "Sv:"
   subject_pm: "[PM]"
   user_notifications:
@@ -2280,6 +2227,8 @@ sv:
       ## [Användarvillkor](#tos)
 
       Ja, vi vet att juristspråk är tråkigt men vi måste skydda oss själva &ndash; och i förlängningen du och din data &ndash; mot otrevliga människor. Vi har [användarvillkor](/tos) som beskriver din (och våra) uppföranden och rättigheter relaterat till innehåll, integritet och lagar. För att använda den här tjänsten måste du samtycka till våra [användarvillkor](/tos).
+
+
   tos_topic:
     title: "Villkor"
   privacy_topic:
@@ -2462,6 +2411,8 @@ sv:
     famous_link:
       name: Berömd länk
       description: Lade upp en extern länk med 1000 klick
+      long_description: |
+        Den här utmärkelsen beviljas när en länk som du har delat får 1000 klick. Wow! Du delade en länk som förbättrade konversationen avsevärt genom att addera en väsentlig detalj, ett bra sammanhang och bättre informering. Bra jobbat!
     appreciated:
       name: Uppskattad
       description: Fick 1 gillning på 20 inlägg

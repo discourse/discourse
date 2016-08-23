@@ -10,10 +10,13 @@ ro:
     short_date_no_year: "D MMM"
     short_date: "D MMM, YYYY"
     long_date: "MMMM D, YYYY h:mma"
+  time:
+    am: "AM"
+    pm: "PM"
   title: "Discourse"
   topics: "Discuții"
   posts: "postări"
-  loading: "Încarcă"
+  loading: "Se încarcă"
   powered_by_html: 'Prin intermediul <a href="http://www.discourse.org">Discourse</a>, Vizualizare optimă cu JavaScript activat'
   log_in: "Autentificare"
   disable_remote_images_download_reason: "Descărcarea de imagini la distanţă a fost dezactivată deoarece nu mai era spaţiu pe disc suficient."
@@ -23,7 +26,7 @@ ro:
     messages:
       too_long_validation: "este limitat la %{max} de caractere; ați introdus %{length}."
       invalid_boolean: "Valoare logică invalidă."
-      taken: "a fost deja luat."
+      taken: "nu este disponibil"
       accepted: trebuie să fie acceptat
       blank: nu poate fi gol
       present: trebuie să fie gol
@@ -35,7 +38,7 @@ ro:
       greater_than: trebuie să fie mai mare decât %{count}
       greater_than_or_equal_to: trebuie să fie mai mare sau egal cu %{count}
       inclusion: nu este inclus in listă
-      invalid: este invalid
+      invalid: nu este valid
       less_than: trebuie să fie mai mic decât %{count}
       less_than_or_equal_to: trebuie să fie mai mic sau egal cu %{count}
       not_a_number: nu este un număr
@@ -66,8 +69,8 @@ ro:
     file_should_be_csv: "Fișierul încărcat ar trebuii să fie de formatul csv sau txt."
   backup:
     operation_already_running: "O operație este în plină desfășurare. Nu puteți începe alta nouă."
-    backup_file_should_be_tar_gz: "Fișierul de rezervă ar trebuii să fie arhivat cu extensia .tar.gz."
-    not_enough_space_on_disk: "Nu este suficient spațiu pt a încărca aceast fișier de rezervă."
+    backup_file_should_be_tar_gz: "Copia de siguranță ar trebui să fie arhivată cu extensia .tar.gz."
+    not_enough_space_on_disk: "Nu este suficient spațiu pe disc pentru a încărca această copie de siguranță."
   not_logged_in: "trebuie să fii autentificat pentru a executa această acțiune."
   not_found: "Adresa URL sau resursă cerută nu pot fi găsite."
   invalid_access: "Nu aveţi permisiunea să vedeţi această resursă."
@@ -85,15 +88,15 @@ ro:
     imported_from: "Acesta este un subiect de discuție adăugat la discuția originală de la %{link}"
     in_reply_to: "▶ %{username}"
     replies:
-      one: "1 răspuns"
-      few: "răspunsuri"
-      other: "%{count} răspunsuri"
-  spamming_host: "Ne pare rău, nu puteți adăuga o adresă acestei gazde."
+      one: "Un răspuns"
+      few: "%{count} răspunsuri"
+      other: "%{count} de răspunsuri"
+  spamming_host: "Nu poți adăuga un link pentru acest domeniu."
   user_is_suspended: "Utilizatorii suspendați nu au dreptul de a posta."
   just_posted_that: "este prea similar cu ceea ce ați postat recent"
   invalid_characters: "conține caractere invalide"
   is_invalid: "este invalid; încercați o descriere mai detaliată"
-  next_page: "urmatoarea pagină →"
+  next_page: "pagina următoare →"
   prev_page: "← pagina precedentă"
   page_num: "Pagina %{num}"
   home_title: "Acasă"
@@ -117,19 +120,19 @@ ro:
       member_already_exist: "'%{username}' este deja membru al acestui grup"
     default_names:
       everyone: "toată lumea"
-      admins: "admini"
+      admins: "administratori"
       moderators: "moderatori"
       staff: "personal"
-      trust_level_0: "trust_level_0"
+      trust_level_0: "nivel_de_încredere_0"
       trust_level_1: "nivel_de_încredere_1"
       trust_level_2: "nivel_de_încredere_2"
       trust_level_3: "nivel_de_încredere_3"
       trust_level_4: "nivel_de_încredere_4"
   education:
     until_posts:
-      one: "1 mesaj"
+      one: "O postare"
       few: "%{count} postări"
-      other: "%{count} postări"
+      other: "%{count} de postări"
     new-reply: |
       Bine ai venit la %{site_name} &mdash; **Mulțumim pentru contribuție!**
 
@@ -155,7 +158,7 @@ ro:
     reviving_old_topic: |
       ### Reînvie această discuție?
 
-      Ultimul răspuns la această discuție a fost dat acum %{days} de zile. Răspunsul tăuva merge în capătul listei și toată lumea ce a fost implicată în discuție va fi notificată.
+      Ultimul răspuns la această discuție a fost dat acum %{days} de zile. Toată lumea ce a fost implicată în discuție va fi notificată iar discuția va fi ajunge pe prima pagină.
 
       Ești sigur că dorești să continui această conversație?
   activerecord:
@@ -543,7 +546,7 @@ ro:
     fixed_category_positions: "Dacă e bifat, veți putea aranja categoriile într-o ordine fixă. Dacă e nebifat, categoriile sunt listate în ordinea activității."
     add_rel_nofollow_to_user_content: "Adaugă atributul rel nofollow la contextul acceptat de utilizator, în afară de adresele de uz intern (incluzând domeniile părinte). Dacă se schimbă, postările trebuiesc refăcute cu: \"rake posts:rebake\""
     post_excerpt_maxlength: "Lungimea maximă a unui extras / sumar dintr-o postare."
-    post_onebox_maxlength: "Lungimea maximă a postării discursului-scurt în caractere."
+    post_onebox_maxlength: "Limgimea maximă a unui post afișat în Onebox (în caractere)"
     onebox_domains_whitelist: "O listă de domenii permise pentru discursul-scurt; aceste domenii ar trebuii să permită OpenGraph sau oEmbed. Testați-le la http://iframely.com/debug"
     apple_touch_icon_url: "Iconiță folosită pentru dispozitivele Apple. Mărimea recomandată este 144px pe 144px."
     notification_email: "Adresa autorului emailu-ului este folosită când se trimit emailuri esențiale de sistem. Domeniul specificat aici trebuie să aibă SPF, DKIM și rapoarte PTR inversate, setate corect pentru că email-ul să ajungă la destinație."
@@ -552,10 +555,6 @@ ro:
     summary_posts_required: "Minimul de postări într-o discuție înainte de 'Sumarul acestei discuții' este activat"
     summary_likes_required: "Minimul de aprecieri într-o discuție înainte de 'Sumarul acestei discuții' este activat"
     summary_percent_filter: "Când un utilizator face click pe 'Sumarul acestei discuții', arată primele % de postări"
-    enable_long_polling: "Indicatorul de mesaje folosit pentru notificări poate folosi sondaj"
-    long_polling_interval: "Intervalul înainte de sondaj este dat în milisecunde "
-    polling_interval: "Cât de des e intervalul de sondaj în milisecunde al utilizatorilor autentificați"
-    anon_polling_interval: "Cat de des e intervalul de sondaj în milisecunde al clienților anonimi"
     cooldown_minutes_after_hiding_posts: "Numărul de minute pr care un utilizator trebuie să le aștepte până când poate edita sau ascunde o postare prin marcajele comune"
     notify_mods_when_user_blocked: "Dacă un utilizator este blocat automat , trimite un mesaj tuturor moderatorilor."
     flag_sockpuppets: "Dacă un utilizator nou răspunde unei discuții de la același IP ca utilizatorul ce a pornit discuția, marchează ambele postări ca potențial spam."
@@ -575,7 +574,7 @@ ro:
     email_token_valid_hours: "Parola uitată / activează tokenii de cont valizi pentru (n) ore."
     email_token_grace_period_hours: "Parola uitată / activează tokenii de cont ce sunt încă valizi pe o perioadă de (n) ore după ce au fost redobândiți."
     enable_badges: "Activează sistemul insigna (experimental)"
-    version_checks: "Permite actualizarea Discourse Hub pentru versiuni mai noi și arată mesajele de versiune pe /spațiul de lucru admin"
+    version_checks: "Verifică Hub-ul Discourse pentru actualizări și arată mesaje pentru versiuni mai noi în Spatiul de lucru"
     new_version_emails: "Trimite un email la adresa de contact_email când o nouă versiune de Discourse este disponibilă."
     port: "PENTRU DEVELOPER! ATENȚIE! Folosiți acest port HTTP decât cel din oficiu , portul 80. lăsați liber pentru portul 80."
     force_hostname: "PENTRU DEVELOPER! ATENȚIE! Specificați un nume de gazdă âne URL. Lăsați liber pentru cel din oficiu."
@@ -600,10 +599,9 @@ ro:
     enable_github_logins: "Activează autentificarea cu Github, requires github_client_id and github_client_secret"
     github_client_id: "ID-ul clientului pentru autentificarea cu Github, înregistrat la https://github.com/settings/applications"
     github_client_secret: "Secretul clientului pentru autentificarea cu Github, înregistrat la https://github.com/settings/applications"
-    allow_restore: "Permite rescrierea, ceea ce poate înlocuii TOATE datele din site! Lasăți necompletat decât dacă doriți să reluați o rezervă"
-    maximum_backups: "Maximul de rezerve de pe disc. Rezervele vechi sunt șterse automat"
-    enable_s3_backups: "Încarcă rezervele pe s3 când sunt complete. Fiți sigur că ați completat acreditarea s3."
-    s3_backup_bucket: "Folosește compartimentul de legătură pentru a ține rezerve. Atenție: Asigurați-vă că este un compartiment privat."
+    allow_restore: "Bifează-l doar dacă dorești să restaurezi o copie de siguranță. Atenție, restaurarea poate șterge/înlocui TOATE datele din site!"
+    maximum_backups: "Maximul de copii de siguranță păstrate. Copiile de siguranță vechi sunt șterse automat"
+    enable_s3_backups: "Încarcă copiile de siguranță pe s3 când sunt complete. IMPORTANT: sunt necesare date de autentificare valide pentru S3 în secțiunea FIȘIERE."
     active_user_rate_limit_secs: "Cât de de se actializează câmpul 'last_seen_at', în secunde"
     previous_visit_timeout_hours: "Cât de mult durează o vizită până când e considerată vizita'precedentă', în ore"
     rate_limit_create_topic: "După crearea unei discuții, utilizatorul trebuie să aștepte (n) secunde înainte de a începe una nouă."
@@ -617,7 +615,6 @@ ro:
     max_topics_per_day: "Numărul maxim de discuții pe care un utilizator le poare crea zilnic."
     suggested_topics: "Numărul de discuții sugerate la sfârșitul unei discuții."
     limit_suggested_to_category: "Arată doar discuțiile din aceiași categoriie în cele sugerate."
-    clean_up_uploads: "eliminați încărcările orfane și fără referință pentru a prevenii găzduirea ilegală. ATENȚIE: Poate ați dorii să creați o rezervă a /directorului de încărcări înainte de a activa opțiunea."
     clean_orphan_uploads_grace_period_hours: "Perioada de grație (în ore) înainte ca o reîncarcare orfană să fie ștearsă."
     purge_deleted_uploads_grace_period_days: "Perioada de grație (în zile) înainte ca o încărcare ștearsă să fie eliminată."
     enable_s3_uploads: "Pune încărcările pe spațiul Amazon S3."
@@ -648,7 +645,7 @@ ro:
     max_image_size_kb: "Mărimea maximă a unei imagini încărcate în kB. Aceasta trebuie configurată în nginx (client_max_body_size) / apache sau proxy."
     max_attachment_size_kb: "arimea maximă a unui atașament de fișiere încărcate în Kb. Aceasta trebuie configurata în nginx (client_max_body_size) / apache sau proxy."
     authorized_extensions: "O listă de extensii de fișiere permise pentru încărcare (folosiți '*' to pentru activarea tuturor tipurilor de fișiere)"
-    max_similar_results: "Câte discuții similare să apară deasupra editorului la compunerea unei noi discuții? Comparația se face pe titlu și conținut."
+    max_similar_results: "Câte discuții similare vor fi afișate atunci când se începe o discuție nouă? Comparația se face pe titlu și pe conținut."
     title_prettify: "Preveniți greșelile comune și erorile , incluzând toate majuscule, literă mică pentru primul caracter, multtiple ! și ?, extra . la sfârșit, etc."
     topic_views_heat_low: "După atât de multe vizualizări, discuția este parțial luminată."
     topic_views_heat_medium: "După atât de multe vizualizări, discuția este moderat luminată."

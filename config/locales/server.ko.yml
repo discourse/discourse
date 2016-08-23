@@ -1044,30 +1044,12 @@ ko:
         [사용자 정보 설정]: %{user_preferences_url}
     backup_succeeded:
       subject_template: "백업 성공"
-      text_body_template: "백업이 성공적으로 끝났습니다..\n[관리 > 백업](%{base_url}/admin/backups)에서 새 백업본을 다운로드 받으세요."
     backup_failed:
       subject_template: "백업에 실패했습니다."
-      text_body_template: |
-        백업이 실패하였습니다.
-
-        로그:
-
-        ```
-        %{logs}
-        ```
     restore_succeeded:
       subject_template: "복원 성공"
-      text_body_template: "복원에 성공했습니다."
     restore_failed:
       subject_template: "복원 실패"
-      text_body_template: |
-        복구가 실패하였습니다.
-
-        로그:
-
-        ```
-        %{logs}
-        ```
     bulk_invite_succeeded:
       subject_template: "대량 사용자 초대가 성공적으로 진행되었습니다."
       text_body_template: "대량 사용자 초대가 진행되어 %{sent}개의 초대장을 보냈습니다."

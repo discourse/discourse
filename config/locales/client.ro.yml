@@ -130,7 +130,7 @@ ro:
       google+: 'distribuie pe Google+'
       email: 'trimite această adresă pe email'
     action_codes:
-      split_topic: "desparte acest topic %{when}"
+      split_topic: "desparte această discuție %{when}"
       autoclosed:
         enabled: 'închis %{when}'
         disabled: 'deschis %{when}'
@@ -149,7 +149,7 @@ ro:
       visible:
         enabled: 'listat %{when}'
         disabled: 'retras %{when}'
-    topic_admin_menu: "acțiuni subiect administrator"
+    topic_admin_menu: "Opțiuni administrare discuție"
     emails_are_disabled: "Trimiterea de emailuri a fost dezactivată global de către un administrator. Nu vor fi trimise notificări email de nici un fel."
     s3:
       regions:
@@ -176,7 +176,7 @@ ro:
     joined: "Înregistrat"
     admin_title: "Admin"
     flags_title: "Semnalare"
-    show_more: "Detaliază"
+    show_more: "Mai mult"
     show_help: "Opțiuni"
     links: "Adrese"
     links_lowercase:
@@ -594,7 +594,7 @@ ro:
         weekly: "săptămânal"
         every_two_weeks: "la fiecare două săptămâni"
       email_direct: "Trimite un email când cineva mă citează, îmi răspunde la un post, menţionează @username meu, sau mă invită la o discuţie."
-      email_private_messages: "Trimite-mi un mesaj când cineva îmi răspunde."
+      email_private_messages: "Trimite-mi un emai când cineva îmi răspunde."
       email_always: "Trimite-mi notificarile de email atunci cand sunt activ pe site."
       other_settings: "Altele"
       categories_settings: "Categorii"
@@ -890,10 +890,10 @@ ro:
       show_preview: 'arată previzualizare &raquo;'
       hide_preview: '&laquo; ascunde previzualizare'
       quote_post_title: "Citează întreaga postare"
-      bold_title: "Gros"
-      bold_text: "text gros"
-      italic_title: "Aplecare"
-      italic_text: "text aplecat"
+      bold_title: "Aldin"
+      bold_text: "text aldin"
+      italic_title: "Italic"
+      italic_text: "text italic"
       link_title: "Adresă Hyper"
       link_description: "adaugă aici descrierea adresei hyper"
       link_dialog_title: "Introdu adresă hyper"
@@ -1092,8 +1092,9 @@ ro:
       options: "Opțiunile discuției"
       show_links: "arată link-urile din această discuție"
       toggle_information: "activează detaliile discuției"
-      read_more_in_category: "Vreți să citiți mai mult? Priviți alte discuții din {{catLink}} sau {{latestLink}}."
-      read_more: "Vreți să citiți mai mult? {{catLink}} sau {{latestLink}}."
+      read_more_in_category: "Vrei să citești mai mult? Răsfoiește alte discuții din {{catLink}} sau {{latestLink}}."
+      read_more: "Vrei să citești mai multe discuții? {{catLink}} sau {{latestLink}}."
+      read_more_MF: "{ UNREAD, plural, =0 {} one { Este <a href='/unread'>o discuție necitită</a> } other { Sunt <a href='/unread'># discuții necitite</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{și } false {este } other{}} <a href='/new'>o discuție nouă</a>} other { {BOTH, select, true{și } false {sunt } other{}} <a href='/new'># discuții noi</a>} } remaining, or {CATEGORY, select, true {răsfoiește alte discuții în {catLink}} false {{latestLink}} other {} }"
       browse_all_categories: Priviți toate categoriile
       view_latest_topics: arată ultimele discuții
       suggest_create_topic: De ce să nu creați o discuție?
@@ -1170,20 +1171,20 @@ ro:
         visible: "Fă vizibil"
         reset_read: "Resetează informația citită"
       feature:
-        pin: "Promovează discuţia pe pagină..."
+        pin: "Promovează discuţia"
         unpin: "Anulează promovarea discuției"
-        pin_globally: "Promovează discuţia pe site..."
-        make_banner: "Marchează discuție"
-        remove_banner: "Demarchează discuție"
+        pin_globally: "Promovează discuţia global"
+        make_banner: "Adaugă statutul de banner"
+        remove_banner: "Șterge statutul de banner"
       reply:
         title: 'Răspunde'
         help: 'începe să compui un răspuns pentru această discuție'
       clear_pin:
-        title: "Înlătură promovarea"
-        help: "Înlătură promovarea acestei discuții pentru a nu mai apărea la începutul listei de discuții"
+        title: "Șterge promovarea"
+        help: "Șterge promovarea acestei discuții pentru a nu mai apărea la începutul listei de discuții"
       share:
         title: 'Distribuie'
-        help: 'distribuie o adresă acestei discuții'
+        help: 'distribuie o adresă spre această discuție'
       flag_topic:
         title: 'Marcheză'
         help: 'marchează privat această discuție pentru atenție sau trimite o notificare privată despre ea'
@@ -1360,9 +1361,9 @@ ro:
       actions:
         flag: 'Semnal'
         defer_flags:
-          one: "Marcat pentru amânare."
-          few: "Marcate pentru amânare."
-          other: "Marcate pentru amânare."
+          one: "Amână marcarea"
+          few: "Amână marcările"
+          other: "Amână marcările"
         it_too:
           off_topic: "Semnalează și tu"
           spam: "Semnalează și tu"
@@ -1386,7 +1387,7 @@ ro:
           off_topic: "Ați marcat ca fiind în afara discuției"
           spam: "Ați marcat ca fiind spam"
           inappropriate: "Ați marcat ca nepotrivit"
-          notify_moderators: "Ați marcat pentru a fi moderată"
+          notify_moderators: "Ai marcat discuția pentru moderare"
           notify_user: "Aţi trimis un mesaj către acest utilizator"
           bookmark: "Ați marcat ca semn de carte această postare"
           like: "Ați apreciat"
@@ -1736,7 +1737,7 @@ ro:
         mobile_title: "Mobil"
         space_free: "{{size}} liber"
         uploads: "încărcări"
-        backups: "backups"
+        backups: "copii de siguranță"
         traffic_short: "trafic"
         traffic: "Cereri web"
         page_views: "Cereri API"
@@ -1885,11 +1886,11 @@ ro:
         change_settings_short: "Setări"
         howto: "Cum instalez un plugin?"
       backups:
-        title: "Backups"
+        title: "Copii de siguranță"
         menu:
-          backups: "Backups"
+          backups: "Copii de siguranță"
           logs: "Rapoarte"
-        none: "Nicio rezervare valabilă."
+        none: "Nici o copie de siguranță disponibilă."
         logs:
           none: "Nu există rapoarte..."
         columns:
@@ -1910,19 +1911,19 @@ ro:
             confirm: "Sunteți sigur că doriți să anulați operația curentă?"
           backup:
             label: "Salvare de siguranţă"
-            title: "Creați o rezervă"
-            confirm: "Sunteți sigur că doriți să creați o nouă rezervă?"
+            title: "Creați o copie de siguranță"
+            confirm: "Ești sigur că vrei să faci o nouă copie de siguranță?"
             without_uploads: "Da (nu include fişierele)"
           download:
             label: "Descarcă"
-            title: "Downloadează brezervă"
+            title: "Downloadează copia de siguranță"
           destroy:
-            title: "Sterge rezervă"
-            confirm: "Sunteți sigur că doriți să distrugeți această rezervă ?"
+            title: "Sterge copie de siguranță"
+            confirm: "Ești sigur ca vrei să ștergi această copie de siguranță?"
           restore:
             is_disabled: "Restabilirea este dezactivată din setările siteului."
             label: "Restaurează"
-            title: "Restabilește rezervă"
+            title: "Restaurează copia de siguranță"
           rollback:
             label: "Revenire la situaţia anterioară"
             title: "Restabilește baza de date în stadiul anterior"
@@ -1944,7 +1945,7 @@ ro:
         button_text: "Trimite o invitație"
         button_title: "Trimite o invitație"
       customize:
-        title: "Modifică"
+        title: "Personalizări"
         long_title: "Modificarea Site-ului"
         css: "Foaie de stil"
         header: "Titlu"
@@ -2390,7 +2391,7 @@ ro:
         reset: 'resetează'
         none: 'nimic'
         no_results: "Nu s-au găsit rezultate."
-        clear_filter: "Golește"
+        clear_filter: "Șterge"
         add_url: "adaugă URL"
         categories:
           all_results: 'Toate'
@@ -2405,12 +2406,12 @@ ro:
           onebox: "Onebox"
           seo: 'SEO'
           spam: 'Spam'
-          rate_limits: 'Limita rată'
+          rate_limits: 'Limite'
           developer: 'Developer'
           embedding: "Includere"
           legal: "Legal"
           uncategorized: 'Altele'
-          backups: "Rezervări"
+          backups: "Copii de siguranță"
           login: "Autentificare"
           plugins: "Plugin-uri"
           user_preferences: "Preferințe"
@@ -2420,18 +2421,18 @@ ro:
         new: Nou
         name: Nume
         badge: Insignă
-        display_name: Afițeaza numele
-        description: Descrierea
+        display_name: Afișeaza numele
+        description: Descriere
         badge_type: Tipul insignei
         badge_grouping: Grup
         badge_groupings:
           modal_title: Insigne de grup
         granted_by: Acordat de
         granted_at: Acordat la
-        reason_help: (O legătură către un mesaj sau o discuţie)
+        reason_help: (O legătură către o postare sau o discuţie)
         save: Salvează
         delete: Șterge
-        delete_confirm: Sunteți sigur că stergeți insigna?
+        delete_confirm: Ești sigur că vrei să ștergi această insignă?
         revoke: Revocă
         reason: Motiv
         expand: Extinde &hellip;
@@ -2447,29 +2448,29 @@ ro:
         multiple_grant: Poate sa fie acordată de mai multe ori
         listable: Arată insignă pe pagina publică a insignelor
         enabled: Activează insignă
-        icon: Iconită
+        icon: Pictogramă
         image: Imagine
         icon_help: "Folosiţi o clasă Font Awesome sau un URL pentru imagine"
-        query: Verificare insignă (SQL)
+        query: Interogare insignă (SQL)
         target_posts: Interogarea mesajelor ţintă
         auto_revoke: Pornește verificarea de revocare î fiecare zi
         show_posts: Arata mesaje ce acordă insigne pe pagina de insigne
         trigger: Declanșator
         trigger_type:
-          none: "reinprospatează zilnic"
+          none: "Actualizare zilnică"
           post_action: "Când un utilizator reacționează la un mesaj"
           post_revision: "Când un utlizator creează sau editează un mesaj"
           trust_level_change: "Când un utilizator schimbă nivelul de încredere"
           user_change: "Când un utilizator este editat sau creat"
         preview:
-          link_text: "Vedeţi insignele acordate"
-          plan_text: "Vedeţi cu plan de execuţie"
-          modal_title: "Interogare Previzualizare Insignă"
+          link_text: "Previzualizare insigne acordate"
+          plan_text: "Previzualizare cu interogare"
+          modal_title: "Previzualizare Interogare Insignă"
           sql_error_header: "A apărut o eroare la executarea interogării."
           error_help: "Vezi legăturile următoare pentru ajutor referitor la interogări pentru insigne."
           bad_count_warning:
             header: "ATENȚIE!"
-          sample: "Specimen:"
+          sample: "Exemplu:"
           grant:
             with: <span class="username">%{username}</span>
             with_post: <span class="username">%{username}</span> pentru mesajul în %{link}
@@ -2478,12 +2479,12 @@ ro:
       emoji:
         title: "Emoji"
         help: "Adaugă un nou \"emoji\" care va fi disponibil pentru toţi. (PROTIP: trage şi adaugă mai multe fişiere odată)"
-        add: "Adaugă un Nou Emoji"
+        add: "Adaugă un emoji nou"
         name: "Nume"
         image: "Imagine"
-        delete_confirm: "Sunteţi sigur că doriţi să ștergeți :%{name}: emoji?"
+        delete_confirm: "Ești sigur că vrei să ștergi emoji-ul :%{name}:?"
       embedding:
-        confirm_delete: "Sunteți sigur că vreți să ștergeți acest host?"
+        confirm_delete: "Ești sigur că vrei să ștergi acest host?"
         sample: "Folosiți următorul cod HTML în site-ul dvs. pentru a crea și pentru a embed-ui topic-uri discourse. Înlocuiți <b>REPLACE_ME</b> cu URL-ul canonic al paginii pe care doriți să o embed-uiți."
         title: "Embedding"
         host: "Host-uri permise"
@@ -2495,7 +2496,7 @@ ro:
         embed_post_limit: "Numărul maxim de postări de încorporat."
         save: "Salvați setările pentru embeding"
       permalink:
-        title: "Link-uri"
+        title: "Adrese permanente"
         url: "URL"
         topic_id: "ID discuție"
         topic_title: "Discuție"
@@ -2504,8 +2505,8 @@ ro:
         category_id: "ID categorie"
         category_title: "Categorie"
         external_url: "URL extern"
-        delete_confirm: Sigur doriți să ștergeți acest link ?
+        delete_confirm: Ești sigur că vrei să ștergi această adresă permanentă?
         form:
           label: "Nou:"
-          add: "Adăugați"
+          add: "Adaugă"
           filter: "Căutare (URL sau URL extern)"

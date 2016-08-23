@@ -86,7 +86,7 @@ zh_CN:
       previous_month: '上个月'
       next_month: '下个月'
     share:
-      topic: '分享内容链接'
+      topic: '分享指向这个主题的链接'
       post: '#%{postNumber} 楼'
       close: '关闭'
       twitter: '分享至 Twitter'
@@ -102,11 +102,11 @@ zh_CN:
       removed_user: "于%{when}移除了%{who}"
       removed_group: "于%{when}移除了%{who}"
       autoclosed:
-        enabled: '于%{when}锁定'
-        disabled: '于%{when}解除锁定'
+        enabled: '于%{when}关闭'
+        disabled: '于%{when}打开'
       closed:
-        enabled: '于%{when}锁定'
-        disabled: '于%{when}解除锁定'
+        enabled: '于%{when}关闭'
+        disabled: '于%{when}打开'
       archived:
         enabled: '于%{when}存档'
         disabled: '于%{when}解除存档'
@@ -249,7 +249,7 @@ zh_CN:
       reject: '否决'
       delete_user: '删除用户'
       title: "需要审核"
-      none: "没有帖子可以审核。"
+      none: "没有帖子需要审核。"
       edit: "编辑"
       cancel: "取消"
       view_pending: "查看待审核帖子"
@@ -333,13 +333,13 @@ zh_CN:
           title: "跟踪"
           description: "你只会收到此组中每个新主题的第一帖的通知。"
         tracking:
-          title: "关注"
+          title: "跟踪"
           description: "你会在别人@你或回复你时收到通知，并且新帖数量也将在这些主题后显示。"
         regular:
           title: "常规"
-          description: "如果某人@你或者回复你，你将收到通知。"
+          description: "如果有人@名字提及你或回复你，你将会收到通知。"
         muted:
-          title: "屏蔽"
+          title: "静音"
           description: "你不会收到组内关于新主题中的任何通知。"
     user_action_groups:
       '1': "送出的赞"
@@ -445,28 +445,28 @@ zh_CN:
         enabled: "启用邮件列表模式"
         instructions: |
           此设置将覆盖活动摘要。<br />
-          屏蔽的主题和分类不包含在这些邮件中。
+          静音主题和分类不包含在这些邮件中。
         daily: "发送每日更新"
         individual: "为每个新帖发送一封邮件通知"
         many_per_day: "为每个新帖给我发送邮件 (大约每天 {{dailyEmailEstimate}} 封)"
         few_per_day: "为每个新帖给我发送邮件 (大约每天 2 封 )"
       tag_settings: "标签"
-      watched_tags: "关注"
-      watched_tags_instructions: "自动关注有这些标签的主题，有新内容时提醒我，并在列表中显示新帖数量。"
-      tracked_tags: "跟随"
-      tracked_tags_instructions: "自动跟随有这些标签的主题，并在列表中显示新帖数量。"
-      muted_tags: "屏蔽"
-      muted_tags_instructions: "不会收到有这些标签的主题的提醒，并且他们将不会出现在最新主题中。"
-      watched_categories: "关注"
-      watched_categories_instructions: "自动关注这些分类中的所有主题，有新内容时提醒我，并在列表中显示新帖数量。"
-      tracked_categories: "跟随"
-      tracked_categories_instructions: "自动跟随这些分类中的所有主题，并在列表中显示新帖数量。"
-      watched_first_post_categories: "关注首贴"
-      watched_first_post_categories_instructions: "在这些分类中，新主题发表时提醒我。"
-      watched_first_post_tags: "关注首贴"
-      watched_first_post_tags_instructions: "有这些标签的新主题发表时提醒我。"
-      muted_categories: "屏蔽"
-      muted_categories_instructions: "不会收到这些分类中新主题提醒，并且他们将不会出现在最新主题中。"
+      watched_tags: "监看"
+      watched_tags_instructions: "你将自动监看有了这些标签的所有主题。你将会收到所有新的帖子和主题通知，并且新帖数量也将出现在主题旁边。"
+      tracked_tags: "跟踪"
+      tracked_tags_instructions: "你将自动跟踪有了这些标签的所有主题，新帖的数量将出现在主题旁边。"
+      muted_tags: "静音"
+      muted_tags_instructions: "你将不会收到任何关于这些标签的新主题通知，他们也不会出现在最新主题列表。"
+      watched_categories: "监看"
+      watched_categories_instructions: "你将自动监看这些分类中的所有主题。你将会收到所有新的帖子和主题通知，并且新帖数量也将出现在主题旁边。"
+      tracked_categories: "跟踪"
+      tracked_categories_instructions: "你将自动跟踪这些分类中的所有主题。新帖的数量将出现在主题旁边。"
+      watched_first_post_categories: "监看头一帖"
+      watched_first_post_categories_instructions: "在这些分类中的每一个新主题，你将会收到头一帖通知。"
+      watched_first_post_tags: "监看头一帖"
+      watched_first_post_tags_instructions: "在有了这些标签的每一个新主题，你将会收到头一帖通知。"
+      muted_categories: "静音"
+      muted_categories_instructions: "在这些分类里面，你将不会收到任何新主题通知，他们也不会出现在最新主题列表。"
       delete_account: "删除我的帐号"
       delete_account_confirm: "你真的要永久删除自己的账号吗？删除之后无法恢复！"
       deleted_yourself: "你的帐号已被删除。"
@@ -474,10 +474,10 @@ zh_CN:
       unread_message_count: "消息"
       admin_delete: "删除"
       users: "用户"
-      muted_users: "屏蔽"
-      muted_users_instructions: "屏蔽任何关于这些用户的通知。"
-      muted_topics_link: "显示已屏蔽的主题"
-      watched_topics_link: "显示已关注的主题"
+      muted_users: "静音"
+      muted_users_instructions: "抑制来自这些用户的所有通知。"
+      muted_topics_link: "显示已静音的主题"
+      watched_topics_link: "显示已监看的主题"
       automatically_unpin_topics: "当我完整阅读了主题时自动解除置顶。"
       staff_counters:
         flags_given: "采纳标记"
@@ -532,7 +532,7 @@ zh_CN:
         title: "个人资料背景"
         instructions: "显示在个人资料页面中，上传的图片将被居中且默认宽度为 850px。"
       change_card_background:
-        title: "用户资料背景"
+        title: "用户卡片背景"
         instructions: "显示在用户卡片中，上传的图片将被居中且默认宽度为 590px。"
       email:
         title: "邮箱"
@@ -612,7 +612,7 @@ zh_CN:
         after_2_days: "两天内发布"
         after_1_week: "一周内发布"
         after_2_weeks: "两周内发布"
-      auto_track_topics: "自动关注我浏览的主题"
+      auto_track_topics: "自动跟踪我浏览的主题"
       auto_track_options:
         never: "从不"
         immediately: "立即"
@@ -749,8 +749,6 @@ zh_CN:
     too_few_topics_notice: "让我们<a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>开始讨论！</a>目前有 <strong>%{currentTopics} / %{requiredTopics}</strong> 个主题。新访客需要能够阅读和回复一些讨论。"
     too_few_posts_notice: "让我们<a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>开始讨论！</a>目前有 <strong>%{currentPosts} / %{requiredPosts}</strong> 个帖子。新访客需要能够阅读和回复一些讨论。"
     logs_error_rate_notice:
-      reached: "<b>[%{relativeAge}]</b> 目前的错误率 <a href='%{url}' target='_blank'>%{rate}</a> 已达到了站点设置中的 %{siteSettingRate}。"
-      exceeded: "<b>[%{relativeAge}]</b> 目前的错误率 <a href='%{url}' target='_blank'>%{rate}</a> 已超出了站点设置中的 %{siteSettingRate}。"
       rate:
         other: "%{count} 错误/%{duration}"
     learn_more: "了解更多..."
@@ -761,10 +759,10 @@ zh_CN:
     week: '周'
     week_desc: '7 天内创建的主题'
     day: '天'
-    first_post: 首次发帖
-    mute: 屏蔽
-    unmute: 解除屏蔽
-    last_post: 最后发帖
+    first_post: 头一帖
+    mute: 静音
+    unmute: 取消静音
+    last_post: 最后帖
     last_reply_lowercase: 最后回复
     replies_lowercase:
       other: 回复
@@ -816,7 +814,7 @@ zh_CN:
       title: "登录"
       username: "用户"
       password: "密码"
-      email_placeholder: "邮箱地址或用户名"
+      email_placeholder: "电子邮件或者用户名"
       caps_lock_warning: "大写锁定开启"
       error: "出错了"
       rate_limit: "请请稍后再重试"
@@ -899,10 +897,10 @@ zh_CN:
       create_pm: "消息"
       title: "或 Ctrl + 回车"
       users_placeholder: "添加用户"
-      title_placeholder: "一句话阐述要说什么..."
+      title_placeholder: "一句话告诉讨论什么..."
       edit_reason_placeholder: "编辑理由"
       show_edit_reason: "添加理由"
-      reply_placeholder: "支持直接拖拽或粘贴图片，使用 Markdown/BBCode/HTML 语法。"
+      reply_placeholder: "在此键入。使用Markdown，BBCode，或HTML格式。可拖拽或粘贴图片。"
       view_new_post: "浏览新帖。"
       saving: "保存中"
       saved: "已保存！"
@@ -940,7 +938,7 @@ zh_CN:
       cant_send_pm: "抱歉，你不能向 %{username} 发送私信。"
       admin_options_title: "本主题可选设置"
       auto_close:
-        label: "自动关闭主题："
+        label: "自动关闭主题时间："
         error: "请输入一个有效值。"
         based_on_last_post: "以最后回复的时间开始计时"
         all:
@@ -1019,6 +1017,7 @@ zh_CN:
       most_liked: "最多赞"
       select_all: "全选"
       clear_all: "清除所有"
+      too_short: "你的搜索词太短。"
       result_count:
         other: "搜索<span class='term'>“{{term}}”</span>有 {{count}} 条相关结果"
       title: "搜索主题、帖子、用户或分类"
@@ -1051,7 +1050,7 @@ zh_CN:
         toggle: "切换至批量选择"
         actions: "批量操作"
         change_category: "更改分类"
-        close_topics: "锁定主题"
+        close_topics: "关闭主题"
         archive_topics: "存档主题"
         notification_level: "更改通知等级"
         choose_new_category: "选择新分类："
@@ -1073,7 +1072,7 @@ zh_CN:
         search: "没有搜索结果。"
         educate:
           new: '<p>这里显示了近期主题列表。</p><p>默认情况下，以下主题将显示在近期列表。如果是最近 2 天内创建的，还会显示一个<span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">近期</span>标志。<p>你可以在<a href="%{userPrefsUrl}">用户设置</a>中更改要显示哪些内容。</p>'
-          unread: '<p>这里显示你的未读主题。</p><p>默认情况下，下述主题会被放在未读中。并且会在旁边显示未读的数量<span class="badge new-posts badge-notification">1</span>。如果你：</p><ul><li>创建了该主题</li><li>回复了该主题</li><li>阅读该主题超过 4 分钟</li></ul><p>或者你在主题底部的通知控制中选择了跟随或关注。</p><p>你可以在<a href="%{userPrefsUrl}">用户设置</a>中修改未读设置。</p>'
+          unread: '<p>这里显示你的未读主题。</p><p>默认情况下，下述主题会被放在未读中。并且会在旁边显示未读的数量<span class="badge new-posts badge-notification">1</span>。如果你：</p><ul><li>创建了该主题</li><li>回复了该主题</li><li>阅读该主题超过 4 分钟</li></ul><p>或者你在主题底部的通知控制中选择了跟踪或监看。</p><p>你可以在<a href="%{userPrefsUrl}">用户设置</a>中修改未读设置。</p>'
       bottom:
         latest: "没有更多主题可看了。"
         hot: "没有更多热门主题可看了。"
@@ -1090,8 +1089,8 @@ zh_CN:
         stop_notifications: "你将收到更少的关于<strong>{{title}}</strong>的通知"
         change_notification_state: "你现在的通知状态是"
       filter_to: "本主题中的 {{post_count}} 帖"
-      create: '新主题'
-      create_long: '创建主题'
+      create: '发新主题'
+      create_long: '创建新的主题'
       private_message: '发送消息'
       archive_message:
         help: '移动消息到存档'
@@ -1129,11 +1128,11 @@ zh_CN:
       options: "主题选项"
       show_links: "显示此主题中的链接"
       toggle_information: "切换主题详情"
-      read_more_in_category: "想阅读更多内容？浏览{{catLink}}或{{latestLink}}里的其它主题。"
-      read_more: "想阅读更多内容？{{catLink}} 或 {{latestLink}}。"
+      read_more_in_category: "想阅读更多？浏览{{catLink}}的其他主题或者{{latestLink}}。"
+      read_more: "想阅读更多？{{catLink}} 或 {{latestLink}}。"
       read_more_MF: "还有 { UNREAD, plural, =0 {} one { <a href='/unread'>1 个未读主题</a>} other { <a href='/unread'># 个未读主题</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{和 } false {} other{}} <a href='/new'>1 个新</a>主题} other { {BOTH, select, true{和 } false {} other{}} <a href='/new'># 个新</a>主题} }可以阅读，或者{CATEGORY, select, true {浏览{catLink}中的其他主题} false {{latestLink}} other {}}"
       browse_all_categories: 查看所有分类
-      view_latest_topics: 浏览最新主题
+      view_latest_topics: 查阅最新主题
       suggest_create_topic: 创建一个新的主题吧！
       jump_reply_up: 转到更早的回复
       jump_reply_down: 转到更新的回复
@@ -1165,50 +1164,50 @@ zh_CN:
         title: 改变你收到本主题通知的频率
         reasons:
           mailing_list_mode: "邮件列表模式已启用，将以邮件通知你关于该主题的回复。"
-          '3_10': '因为你关注该主题上的标签，所以你将收到相关通知。'
-          '3_6': '因为你关注该分类，所以你将收到相关通知。'
-          '3_5': '因为你自动关注了该主题，所以你将收到相关通知。'
-          '3_2': '因为你在关注该主题，所以你将收到相关通知。'
+          '3_10': '因为你正监看该主题上的标签，你将会收到通知。'
+          '3_6': '因为你正在监看该分类，你将收到通知。'
+          '3_5': '因为你开始自动监看该主题，你将收到通知。'
+          '3_2': '因为你正在监看该主题，你将收到通知。'
           '3_1': '因为你创建了该主题，所以你将收到相关通知。'
-          '3': '因为你在关注该主题，所以你将收到相关通知。'
-          '2_8': '因为你在跟随该分类，所以你将收到相关通知。'
+          '3': '因为你正在监看该主题，你将收到通知。'
+          '2_8': '因为你正在跟踪该分类，你将收到通知。'
           '2_4': '因为你在该主题内发表了回复，所以你将收到相关通知。'
-          '2_2': '因为你在跟随该主题，所以你将收到相关通知。'
+          '2_2': '因为你正在跟踪该主题，你将收到通知。'
           '2': '因为你<a href="/users/{{username}}/preferences">阅读了该主题</a>，所以你将收到相关通知。'
-          '1_2': '如果某人@你或者回复你，你将收到通知。'
-          '1': '如果某人@你或者回复你，你将收到通知。'
+          '1_2': '如果有人@名字提及你或回复你，你将会收到通知。'
+          '1': '如果有人@名字提及你或回复你，你将会收到通知。'
           '0_7': '你将忽略关于该分类的所有通知。'
           '0_2': '你将忽略关于该主题的所有通知。'
           '0': '你将忽略关于该主题的所有通知。'
         watching_pm:
-          title: "关注"
+          title: "监看"
           description: "消息有新回复时提醒我，并显示新回复数量。"
         watching:
-          title: "关注"
+          title: "监看"
           description: "主题有新回复时提醒我，并显示新回复数量。"
         tracking_pm:
-          title: "跟随"
+          title: "跟踪"
           description: "在消息标题后显示新回复数量。你只会在别人@你或回复你的帖子时才会收到通知。"
         tracking:
-          title: "跟随"
+          title: "跟踪"
           description: "在主题标题后显示新回复数量。你只会在别人@你或回复你的帖子时才会收到通知。"
         regular:
           title: "普通"
-          description: "如果某人@你或者回复你，你将收到通知。"
+          description: "如果有人@名字提及你或回复你，你将会收到通知。"
         regular_pm:
           title: "普通"
-          description: "如果某人@你或者回复你，你将收到通知。"
+          description: "如果有人@名字提及你或回复你，你将会收到通知。"
         muted_pm:
-          title: "屏蔽"
+          title: "静音"
           description: "不会收到该消息的任何通知。"
         muted:
-          title: "屏蔽"
+          title: "静音"
           description: "不会收到该主题的任何通知，也不会出现在最新主题中。"
       actions:
         recover: "撤销删除主题"
         delete: "删除主题"
-        open: "解除锁定主题"
-        close: "锁定主题"
+        open: "打开主题"
+        close: "关闭主题"
         multi_select: "选择帖子..."
         auto_close: "自动关闭..."
         pin: "置顶主题..."
@@ -1234,10 +1233,10 @@ zh_CN:
         help: "取消本主题的置顶状态，将不再固定显示在主题列表顶部。"
       share:
         title: '分享'
-        help: '分享内容的链接'
+        help: '分享指向这个主题的链接'
       flag_topic:
         title: '标记'
-        help: '私下标记本帖以引起管理员注意或者发送匿名通知'
+        help: '背地里标记该帖以示警示，或发送关于它的私下通知'
         success_message: '你已经成功标记该主题。'
       feature_topic:
         title: "置顶主题"
@@ -1268,7 +1267,7 @@ zh_CN:
       invite_private:
         title: '邀请至消息'
         email_or_username: "受邀人的邮箱或用户名"
-        email_or_username_placeholder: "邮箱地址或用户名"
+        email_or_username_placeholder: "电子邮件地址或者用户名"
         action: "邀请"
         success: "成功邀请了用户至该消息。"
         success_group: "成功邀请了小组至该消息。"
@@ -1279,10 +1278,10 @@ zh_CN:
         title: '邀请'
         username_placeholder: "用户名"
         action: '发送邀请'
-        help: '邮件或通知邀请其他人至主题'
+        help: '通过电子邮件或通知邀请其他人到该主题'
         to_forum: "将发送一封简洁的邮件，让你的朋友无需注册即可用链接参与讨论。"
-        sso_enabled: "输入你想邀请的人的用户名，以邀请他至该主题。"
-        to_topic_blank: "输入你想邀请的人的用户名或邮件，以邀请他至该主题。"
+        sso_enabled: "输入其用户名，邀请其人到本主题。"
+        to_topic_blank: "输入其用户名或者 Email 地址，邀请其人到本主题。"
         to_topic_email: "你输入了邮箱地址。我们将发送一封邮件邀请，让你的朋友可直接回复该主题。"
         to_topic_username: "你输入了用户名。我们将发送一个至该主题链接的邀请通知。"
         to_username: "输入你想邀请的人的用户名。我们将发送一个至该主题链接的邀请通知。"
@@ -1340,7 +1339,7 @@ zh_CN:
     post:
       reply: "<i class='fa fa-mail-forward'></i> {{replyAvatar}} {{usernameLink}}"
       reply_topic: "<i class='fa fa-mail-forward'></i> {{link}}"
-      quote_reply: "引用"
+      quote_reply: "引述回复"
       edit: "编辑 {{replyAvatar}} {{username}}发表的{{link}}"
       edit_reason: "理由："
       post_number: "帖子 {{number}}"
@@ -1396,10 +1395,10 @@ zh_CN:
         undo_like: "取消赞"
         edit: "编辑本帖"
         edit_anonymous: "抱歉，需要登录后才能编辑该贴。"
-        flag: "私下标记本帖以提醒管理人员关注或发送私信"
+        flag: "背地里标记该帖以示警示，或发送关于它的私下通知"
         delete: "删除本帖"
         undelete: "恢复本帖"
-        share: "分享本帖的链接"
+        share: "分享指向这个帖子的链接"
         more: "更多"
         delete_replies:
           confirm:
@@ -1407,7 +1406,7 @@ zh_CN:
           yes_value: "是，一并删除相关回复"
           no_value: "否，仅删除该帖"
         admin: "帖子管理"
-        wiki: "开启多人协作"
+        wiki: "成为维基"
         unwiki: "关闭多人协作"
         convert_to_moderator: "添加管理人员颜色标识"
         revert_to_regular: "移除管理人员颜色标识"
@@ -1572,20 +1571,20 @@ zh_CN:
       parent: "上级分类"
       notifications:
         watching:
-          title: "关注"
-          description: "自动关注这些分类中的主题，有新内容时提醒我，并在列表中显示新帖数量。"
+          title: "监看"
+          description: "你将自动监看这些分类中的所有主题。你将会收到每一个主题的每一个新帖子的通知，并且将显示新回复的数量。"
         watching_first_post:
-          title: "关注首贴"
-          description: "在这些分类中，新主题发表时提醒我。"
+          title: "监看头一帖"
+          description: "在这些分类里面，你将仅会收到每一个新主题的头一帖的通知。"
         tracking:
-          title: "跟随"
-          description: "自动跟随这些分类中的所有主题，并在列表中显示新帖数量。如果某人@你或者回复你，你将收到通知。"
+          title: "跟踪"
+          description: "你将自动跟踪这些分类中的所有主题。如果有人@名字提及你或回复你，你将会收到通知，并且将显示新回复的数量。"
         regular:
           title: "普通"
-          description: "如果某人@你或者回复你，你将收到通知。"
+          description: "如果有人@名字提及你或回复你，你将会收到通知。"
         muted:
-          title: "屏蔽"
-          description: "不会收到这些分类中的主题的提醒，并且他们将不会出现在最新主题中。"
+          title: "静音"
+          description: "在这些分类里面，你将永远不会收到任何有关新主题的通知，他们也不会出现在最新主题列表。"
     flagging:
       title: '感谢你帮助我们建设文明社群！'
       action: '标记帖子'
@@ -1632,11 +1631,11 @@ zh_CN:
       bookmarked:
         help: "你已经收藏了此主题"
       locked:
-        help: "本主题已关闭；不再接受新的回复"
+        help: "这个主题被关闭；不再允许新的回复"
       archived:
         help: "本主题已归档；即已经冻结，无法修改"
       locked_and_archived:
-        help: "本主题已经关闭并且存档；不再接受新回复且无法修改"
+        help: "这个主题被关闭并存档；不再允许新的回复，并不能改变"
       unpinned:
         title: "解除置顶"
         help: "主题已经解除置顶；它将以默认顺序显示"
@@ -1685,7 +1684,7 @@ zh_CN:
         title: "最新"
         title_with_count:
           other: "最新（{{count}}）"
-        help: "最新发布的帖子"
+        help: "有了新帖的活动主题"
       hot:
         title: "热门"
         help: "最近最受欢迎的主题"
@@ -1698,12 +1697,12 @@ zh_CN:
       categories:
         title: "分类"
         title_in: "分类 - {{categoryName}}"
-        help: "归属于不同分类的所有主题"
+        help: "归入各种类别的所有主题"
       unread:
         title: "未读"
         title_with_count:
           other: "未读（{{count}}）"
-        help: "你正在关注或跟随的主题中有未阅帖子的主题"
+        help: "你目前监看或跟踪有了未读帖子的主题"
         lower_title_with_count:
           other: "{{count}} 条未读"
       new:
@@ -1713,7 +1712,7 @@ zh_CN:
         title: "近期"
         title_with_count:
           other: "近期（{{count}}）"
-        help: "最近几天创建的主题"
+        help: "最近几天里创建的主题"
       posted:
         title: "我的帖子"
         help: "你发表过帖子的主题"
@@ -1727,7 +1726,7 @@ zh_CN:
         help: "{{categoryName}}分类中热门的主题"
       top:
         title: "热门"
-        help: "最近一年、一月、一周或一天的最活跃主题"
+        help: "在最近的一年，一月，一周或一天最活跃的主题"
         all:
           title: "不限时间"
         yearly:
@@ -1860,25 +1859,25 @@ zh_CN:
       manage_groups: "管理标签组"
       manage_groups_description: "管理标签的小组"
       filters:
-        without_category: "%{filter} %{tag} 主题"
+        without_category: "%{tag}的%{filter}主题"
         with_category: "%{filter} %{tag} 主题 在 %{category}"
         untagged_without_category: "无标签的%{filter}主题"
         untagged_with_category: "%{category}无标签的%{filter}主题"
       notifications:
         watching:
-          title: "关注"
-          description: "自动关注有该标签的主题，有新内容时提醒我，并在列表中显示未读和新帖数量。"
+          title: "监看"
+          description: "你将自动监看该标签中的所有主题。你会收到新的帖子和主题的通知，外加未读和新帖的数量也将出现在主题旁边。"
         watching_first_post:
-          title: "关注首贴"
-          description: "有该标签的新主题发表时提醒我。"
+          title: "监看头一帖"
+          description: "在该标签里的每一个新主题，你仅会收到头一帖通知。"
         tracking:
-          title: "跟随"
-          description: "自动跟随有该标签的所有主题，并在列表中显示新帖数量。"
+          title: "跟踪"
+          description: "你将自动跟踪该标签中的所有主题。未读和新帖的数量将会出现在主题旁边。"
         regular:
           title: "普通"
           description: "当有人@你或者回复你的帖子时，你才会收到通知。"
         muted:
-          title: "屏蔽"
+          title: "静音"
           description: "不会收到有该标签的主题的提醒，并且他们将不会出现在未读主题中。"
       groups:
         title: "标签组"

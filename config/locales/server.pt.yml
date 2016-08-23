@@ -250,12 +250,14 @@ pt:
       Este tópico é claramente importante para si &ndash; publicou mais de %{percent}% das respostas aqui.
 
       Tem a certeza de que está a fornecer o tempo adequado para que outras pessoas também possam partilhar os seus pontos de vista?
+
     too_many_replies: |
       ### Chegou ao limite de respostas para este tópico
 
       Pedimos desculpa mas novos utilizadores estão temporariamente limitados a %{newuser_max_replies_per_topic} respostas no mesmo tópico.
 
       Em vez de adicionar outra resposta, por favor considere editar as suas respostas anteriores, ou visitar outros tópicos.
+
     reviving_old_topic: |
       ### Reavivar este tópico?
 
@@ -327,6 +329,7 @@ pt:
       (Para mais informação acerca dos Níveis de Confiança, [veja este tópico][confiança]. Por favor tenha conhecimento que apenas membros que continuam a corresponder aos requisitos ao longo do tempo, irão manter-se habituais.)
 
       [confiança]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
+
   category:
     topic_prefix: "Acerca da categoria %{category}"
     replace_paragraph: "(Substitua este primeiro parágrafo com uma breve descrição da sua nova categoria. Este guia irá aparecer na área de seleção da categoria, por isso tente mantê-lo abaixo dos 200 caracteres. **Até editar esta descrição ou criar tópicos, esta categoria não irá aparecer na página das categorias.**)"
@@ -1016,7 +1019,6 @@ pt:
     unsubscribe_via_email: "Permitir aos utilizadores cancelar a subscrição de emails enviando um email com \"unsubscribe\" no assunto ou no corpo do email"
     delete_email_logs_after_days: "Apagar registos de email após (N) dias. 0 para os manter indefinidamente"
     max_emails_per_day_per_user: "Número máximo de emails para enviar aos utilizadores. 0 para desligar o limite"
-    auto_generated_whitelist: "Lista de endereços de email que não serão verificados para conteúdo gerado automáticamente."
     block_auto_generated_emails: "Bloquear emails recebidos que sejam identificados como gerados automáticamente."
     ignore_by_title: "Ignorar emails recebidos com base no seu título."
     manual_polling_enabled: "Enviar emails utilizando a API de resposta por email."
@@ -1358,30 +1360,12 @@ pt:
         [prefs]: %{user_preferences_url}
     backup_succeeded:
       subject_template: "Cópia de segurança completa corretamente"
-      text_body_template: "A cópia de segurança foi bem-sucedida.\nVisite [admin > secção de cópias de segurança](%{base_url}/admin/backups) para descarregar a sua nova cópia de segurança."
     backup_failed:
       subject_template: "A cópia de segurança falhou"
-      text_body_template: |
-        A cópia de segurança falhou.
-
-        Aqui está o registo do log:
-
-        ```
-        %{logs}
-        ```
     restore_succeeded:
       subject_template: "Restauração completa corretamente"
-      text_body_template: "A restauração foi bem sucedida."
     restore_failed:
       subject_template: "A restauração falhou"
-      text_body_template: |
-        A restauração falhou.
-
-        Aqui está o registo:
-
-        ```
-        %{logs}
-        ```
     bulk_invite_succeeded:
       subject_template: "Convites de utilizadores em massa processados com sucesso"
       text_body_template: "O seu ficheiro de convites de utilizadores em massa foi processado, %{sent} convites enviados."
@@ -1420,18 +1404,21 @@ pt:
         Pedimos desculpa mas a sua mensagem de email %{destination} (titled %{former_title}) não funcionou.
 
         A sua conta associada com este endereço de email foi bloqueada.
+
     email_reject_reply_user_not_matching:
       subject_template: "[%{site_name}] Problema de email -- Utilizador de resposta não encontrado"
       text_body_template: |
         Pedimos desculpa mas a sua mensagem de email %{destination} (titled %{former_title}) não funcionou.
 
         A sua resposta foi enviada de um email diferente daquele que esperávamos, por esta razão não temos a certeza que seja a mesma pessoa. Tente enviar de outro endereço de email ou contacte um membro do pessoal.
+
     email_reject_no_account:
       subject_template: "[%{site_name}] Problema de email -- Conta Desconhecida"
       text_body_template: |
         Pedimos desculpa mas a sua mensagem de email %{destination} (titled %{former_title}) não funcionou.
 
         Não conseguimos encontrar nenhuma conta com combine com o seu endereço de email. Tente enviar de outro endereço de email ou contacte um membro do pessoal.
+
     email_reject_empty:
       subject_template: "[%{site_name}]  Problema de email -- Sem Conteúdo"
       text_body_template: |
@@ -1466,12 +1453,6 @@ pt:
         %{post_error}
 
         Se conseguir corrigir o problema, tente novamente.
-    email_reject_rate_limit_specified:
-      subject_template: "[%{site_name}] Problema de email -- Envios limitados"
-      text_body_template: |
-        Pedimos desculpa mas a sua mensagem de email %{destination} (titled %{former_title}) não funcionou.
-
-        Razão: %{rate_limit_description}
     email_reject_invalid_post_action:
       subject_template: "[%{site_name}] Problema de email -- Acção de Post inválida"
       text_body_template: |

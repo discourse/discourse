@@ -140,7 +140,7 @@ de:
         disabled: 'unsichtbar gemacht, %{when}'
     topic_admin_menu: "Thema administrieren"
     emails_are_disabled: "Die ausgehende E-Mail-Kommunikation wurde von einem Administrator global deaktiviert. Es werden keinerlei Benachrichtigungen per E-Mail verschickt."
-    bootstrap_mode_enabled: "Damit du mit deiner Seite einfacher loslegen kannst, befindest du dich im Bootstrapping-Modus. Alle neuen Benutzer erhalten die Vertrauensstufe 1 und bekommen eine tägliche Zusammenfassung per E-Mail. Der Modus wird automatisch deaktiviert, sobald sich mindestens %{min_users} angemeldet haben."
+    bootstrap_mode_enabled: "Damit du mit deiner Site einfacher loslegen kannst, befindest du dich im Bootstrapping-Modus. Alle neuen Benutzer erhalten die Vertrauensstufe 1 und bekommen eine tägliche Zusammenfassung per E-Mail. Der Modus wird automatisch deaktiviert, sobald sich mindestens %{min_users} Benutzer angemeldet haben."
     bootstrap_mode_disabled: "Der Bootstrapping-Modus wird innerhalb der nächsten 24 Stunden deaktiviert."
     s3:
       regions:
@@ -788,8 +788,8 @@ de:
     too_few_topics_notice: "Lass' <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>die Diskussionen starten!</a> Es existieren bisher <strong>%{currentTopics} von %{requiredTopics}</strong> benötigten Themen. Neue Besucher benötigen bestehende Konversationen, die sie lesen und auf die sie antworten können."
     too_few_posts_notice: "Lass' <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>die Diskussionen starten!</a> Es existieren bisher <strong>%{currentPosts} von %{requiredPosts}</strong> benötigten Beiträgen. Neue Besucher benötigen bestehende Konversationen, die sie lesen und auf die sie antworten können."
     logs_error_rate_notice:
-      reached: "<b>[%{relativeAge}]</b> Aktuelle Rate von <a href='%{url}' target='_blank'>%{rate}</a> hat die eingestellte Grenze der Seite von %{siteSettingRate} erreicht."
-      exceeded: "<b>[%{relativeAge}]</b> Aktuelle Rate vpm <a href='%{url}' target='_blank'>%{rate}</a> hhat die eingestellte Grenze der Seite von %{siteSettingRate} erreicht."
+      reached: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> hat die eingestellte Grenze für die Site von %{siteSettingRate} erreicht."
+      exceeded: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> hat die eingestellte Grenze für die Site von %{siteSettingRate} überschritten."
       rate:
         one: "ein Fehler/%{duration}"
         other: "%{count} Fehler/%{duration}"
@@ -815,7 +815,7 @@ de:
       hide_forever: "Nein danke"
       hidden_for_session: "In Ordnung, ich frag dich morgen wieder. Du kannst dir auch jederzeit unter „Anmelden“ ein Benutzerkonto erstellen."
       intro: "Hallo! :heart_eyes: Es sieht so aus, als würde dir die Diskussion gefallen. Du hast aber noch kein Benutzerkonto."
-      value_prop: "Wenn du ein Benutzerkonto anlegst, merken wir uns, was du gelesen hast, damit du immer dort fortsetzten kannst, wo du aufgehört hast. Du kannst auch Benachrichtigungen – hier oder per E-Mail – erhalten, wenn neue Beiträge verfasst werden. Beiträge, die dir gefallen, kannst du mit einem Like versehen und diese Freude mit allen teilen. :heartbeat:"
+      value_prop: "Wenn du ein Benutzerkonto anlegst, merken wir uns, was du gelesen hast, damit du immer dort fortsetzen kannst, wo du aufgehört hast. Du kannst auch Benachrichtigungen – hier oder per E-Mail – erhalten, wenn neue Beiträge verfasst werden. Beiträge, die dir gefallen, kannst du mit einem Like versehen und diese Freude mit allen teilen. :heartbeat:"
     summary:
       enabled_description: "Du siehst gerade eine Zusammenfassung des Themas: die interessantesten Beiträge, die von der Community bestimmt wurden."
       description: "Es gibt <b>{{replyCount}}</b> Antworten."
@@ -913,8 +913,10 @@ de:
       more_emoji: "mehr..."
       options: "Optionen"
       whisper: "flüstern"
+      unlist: "unsichtbar"
       add_warning: "Dies ist eine offizielle Warnung."
       toggle_whisper: "Flüstermodus umschalten"
+      toggle_unlisted: "Unsichtbar umschalten"
       posting_not_on_topic: "Auf welches Thema möchtest du antworten?"
       saving_draft_tip: "wird gespeichert..."
       saved_draft_tip: "gespeichert"
@@ -979,6 +981,9 @@ de:
       modal_ok: "OK"
       modal_cancel: "Abbrechen"
       cant_send_pm: "Entschuldige, aber du kannst keine Nachricht an %{username} senden."
+      yourself_confirm:
+        title: "Hast du vergessen Empfänger hinzuzufügen?"
+        body: "Im Augenblick wird diese Nachricht nur an dich selbst gesendet!"
       admin_options_title: "Optionale Mitarbeiter-Einstellungen für dieses Thema"
       auto_close:
         label: "Zeitpunkt der automatischen Schließung:"
@@ -1062,6 +1067,7 @@ de:
       most_liked: "Anzahl der Likes"
       select_all: "Alle auswählen"
       clear_all: "Auswahl aufheben"
+      too_short: "Der Suchbegriff ist zu kurz."
       result_count:
         one: "1 Ergebnis für <span class='term'>\"{{term}}\"</span>"
         other: "{{count}} Ergebnisse für <span class='term'>\"{{term}}\"</span>"
@@ -1182,7 +1188,7 @@ de:
       toggle_information: "Details zum Thema ein- oder ausblenden"
       read_more_in_category: "Möchtest du mehr lesen? Entdecke andere Themen in {{catLink}} oder {{latestLink}}."
       read_more: "Möchtest du mehr lesen? {{catLink}} oder {{latestLink}}."
-      read_more_MF: "Du {UNREAD, plural, =0 {} one {hast <a href='/unread'>ein ungelesenes</a> Thema } other {hast <a href='/unread'># ungelesene</a> Themen } } {NEW, plural, =0 {} one { {BOTH, select, true{und } false {hast } other{}} <a href='/new'>ein neues</a> Thema} other { {BOTH, select, true{und } false {hast } other{}} <a href='/new'># neue</a> Themen} } übrig. Oder {CATEGORY, select, true {entdecke andere Themen in {catLink}} false {{latestLink}} other {}}"
+      read_more_MF: "Du {UNREAD, plural, =0 {} one {hast <a href='/unread'>ein ungelesenes</a> Thema } other {hast <a href='/unread'># ungelesene</a> Themen } } {NEW, plural, =0 {} one { {BOTH, select, true{und } false {hast } other{}} <a href='/new'>ein neues</a> Thema} other { {BOTH, select, true{und } false {hast } other{}} <a href='/new'># neue</a> Themen} }. Oder {CATEGORY, select, true {entdecke andere Themen in {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: Alle Kategorien durchsehen
       view_latest_topics: aktuelle Themen anzeigen
       suggest_create_topic: Möchtest du ein neues Thema erstellen?
@@ -1452,7 +1458,7 @@ de:
         about: "dieser Beitrag ist ein Wiki"
       archetypes:
         save: 'Speicheroptionen'
-      few_likes_left: "Danke für’s Teilen der Liebe! Du hast für heute nur noch wenige „Gefällt mir“-Angaben übrig."
+      few_likes_left: "Danke fürs Teilen der Liebe! Du hast für heute nur noch wenige „Gefällt mir“-Angaben übrig."
       controls:
         reply: "verfasse eine Antwort auf diesen Beitrag"
         like: "dieser Beitrag gefällt mir"
@@ -1902,7 +1908,7 @@ de:
       earned_n_times:
         one: "Abzeichen 1-mal erhalten"
         other: "Abzeichen %{count}-mal erhalten"
-      granted_on: "Verliehen am %{date}"
+      granted_on: "Verliehen %{date}"
       others_count: "Andere mit diesem Abzeichen (%{count})"
       title: Abzeichen
       allow_title: "kann als Titel verwendet werden"

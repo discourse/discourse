@@ -901,7 +901,7 @@ vi:
     email_time_window_mins: "Chờ (n) phút trước khi gửi bất kỳ một email thông báo nào, để cung cấp cho người dùng cơ hội để chỉnh sửa và hoàn tất bài viết của họ."
     private_email_time_window_seconds: "Đợi (n) giây trước khi gửi bất kỳ thông báo email nào, để cho thành viên cơ hội để chỉnh sửa và hoàn thiện các thông điệp của họ."
     email_posts_context: "Có bao nhiêu trả lời trước được kèm theo như là bối cảnh trong email thông báo."
-    flush_timings_secs: "Tần suất tuôn dữ liệu thời gan tới server, theo giây."
+    flush_timings_secs: "Tần suất tuôn dữ liệu thời gian tới server, theo giây."
     title_max_word_length: "Chiều dài tối đa chữ cho phép, tính theo ký tự, trong một tiêu đề chủ đề."
     title_min_entropy: "Entropy tối thiểu (ký tự độc đáo, số từ phi tiếng Anh) cần thiết cho tên chủ đề."
     body_min_entropy: "Entropy tối thiểu (ký tự độc đáo, số từ phi tiếng Anh) cần thiết cho nội dung bài viết."
@@ -1269,30 +1269,12 @@ vi:
         [prefs]: %{user_preferences_url}
     backup_succeeded:
       subject_template: "Sản sao lưu hoàn tất thành công"
-      text_body_template: "Bản sao lưu đã được tạo thành công.\nTruy cập [admin > backup section](%{base_url}/admin/backups) để download bản sao lưu mới."
     backup_failed:
       subject_template: "Sao lưu lỗi."
-      text_body_template: |
-        Sao lưu lỗi.
-
-        Đây là log:
-
-        ```
-        %{logs}
-        ```
     restore_succeeded:
       subject_template: "Phục hồi thành công"
-      text_body_template: "Phục hồi đã thành công."
     restore_failed:
       subject_template: "Phục hồi thất bại."
-      text_body_template: |
-        Phục hồi thất bại.
-
-        Đây là log:
-
-        ```
-        %{logs}
-        ```
     bulk_invite_succeeded:
       subject_template: "Mời thành viên hàng loạt đã được thực hiện thành công"
       text_body_template: "File mời thành viên hàng loạt của bạn đã được thực hiện, %{sent} lời mời đã được gửi."
@@ -1395,12 +1377,6 @@ vi:
         %{post_error}
 
         Nếu bạn có thể khắc phục sự cố, xin hãy thử lại.
-    email_reject_rate_limit_specified:
-      subject_template: "[%{site_name}] Sự cố email -- Tỷ lệ giới hạn"
-      text_body_template: |
-        Xin lỗi, tin nhắn email bạn gửi tới %{destination} (tiêu đề %{former_title}) không được thực hiện.
-
-        Lý do: %{rate_limit_description}
     email_reject_invalid_post_action:
       subject_template: "[%{site_name}] Sự cố email -- Hành động gửi bài không hợp lệ"
       text_body_template: |

@@ -49,7 +49,7 @@ zh_CN:
         insufficient_trust_level_error: "用户尝试在用户等级不满足分类要求时发帖。"
         reply_user_not_matching_error: "回复邮箱地址与通知发送至的邮件地址不同。"
         topic_not_found_error: "回复到已经删除的主题。"
-        topic_closed_error: "回复到已经关闭的主题。"
+        topic_closed_error: "回复到已经锁定的主题。"
         bounced_email_error: "邮件是投递失败的错误报告。"
         screened_email_error: "发件人邮箱已经被封禁。"
   errors: &errors
@@ -518,9 +518,9 @@ zh_CN:
     topic_description: "点击链接 %{link} 重新订阅，或是使用主题底部或右侧的通知控制。"
   unsubscribe:
     title: "退订"
-    stop_watching_topic: "停止关注该主题，%{link}"
-    mute_topic: "屏蔽该主题的所有通知，%{link}"
-    unwatch_category: "停止关注%{category}分类中的所有主题"
+    stop_watching_topic: "停止监看该主题，%{link}"
+    mute_topic: "关闭此主题的所有通知，%{link}"
+    unwatch_category: "停止监看%{category}分类中的所有主题"
     mailing_list_mode: "停用邮件列表模式"
     disable_digest_emails: "不要给我发送摘要邮件"
     all: "不要从%{sitename}给我发送任何邮件"
@@ -782,14 +782,13 @@ zh_CN:
     allow_html_tables: "允许在输入 Markdown 文本时使用表格 HTML 标签。标签 TABLE、THEAD、TD、TR、TH 将被允许使用，即白名单这些标签（需要重置所有包含表格的老帖子的 HTML）"
     post_undo_action_window_mins: "允许用户在帖子上进行撤销操作（赞、标记等）所需等待的间隔分钟数"
     must_approve_users: "新用户在被允许访问站点前需要由管理人员批准。警告：在运行的站点中启用将解除所有非管理人员用户的访问权限！"
-    pending_users_reminder_delay: "如果新用户等待批准时间超过此小时设置则通知版主。设置-1关闭通知。"
+    pending_users_reminder_delay: "如果新用户等待批准时间超过此小时设置则通知版主。设置 -1 关闭通知。"
     maximum_session_age: "用户自访问后可维持登录 n 小时"
     ga_tracking_code: "废弃：Google 分析追踪代码（ga.js），例如：UA-12345678-9。参考 http://google.com/analytics"
     ga_domain_name: "废弃：Google 分析域名（ga.js），例如：mysite.com；参考 http://google.com/analytics"
     ga_universal_tracking_code: "Google 通用分析追踪代码（analytics.js）追踪代码，例如：UA-12345678-9；参考 http://google.com/analytics"
     ga_universal_domain_name: "Google 通用分析域名（analytics.js）追踪代码，例如：mysite.com；参考 http://google.com/analytics"
     gtm_container_id: "Google Tag Manager 容器 id。例如：GTM-ABCDEF"
-    gtm_ua_domain_name: "在 Google Tag manager 域名下的 Universal Analytics。推荐使用 “auto”。"
     enable_escaped_fragments: "如未侦测到爬虫回退到使用 Google Ajax-Crawling API。参见 https://developers.google.com/webmasters/ajax-crawling/docs/learn-more"
     enable_noscript_support: "通过 no script 标签启用对标准爬虫的支持。"
     allow_moderators_to_create_categories: "允许版主创建新的分类"
@@ -1005,7 +1004,6 @@ zh_CN:
     auto_block_first_post_regex: "大小写不相关的正则表达式，如果匹配成功，会导致该用户不能发表第一帖，而是进入审核队列。例如：求下载|谢谢楼[主猪]，会阻止包含求下载、谢谢楼主或谢谢楼猪的帖子。该选项只适用于首贴。"
     reply_by_email_enabled: "启用通过邮件回复。"
     reply_by_email_address: "通过邮件回复的回复地址模板，例如：%{reply_key}@reply.example.com 或 replies+%{reply_key}@example.com"
-    alternative_reply_by_email_addresses: "其他通过邮件回复的回复地址模板列表。例如：%{reply_key}@reply.example.com|replies+%{reply_key}@example.com。"
     incoming_email_prefer_html: "对进站邮件优先使用 HTML 而不是纯文本。可能导致格式问题。"
     disable_emails: "禁止 Discourse 发送任何邮件"
     strip_images_from_short_emails: "忽略邮件中小于 2800 字节的图片"
@@ -1017,14 +1015,9 @@ zh_CN:
     max_emails_per_day_per_user: "每日发送给用户的最大帖子数量。设置为 0 禁止限制"
     enable_staged_users: "处理进站邮件时自动创建暂存用户。"
     maximum_staged_users_per_email: "处理进站邮件时可创建的最大暂存用户量。"
-    auto_generated_whitelist: "跳过自动生成内容检测的邮件类别。例如：foo@bar.com|discourse@bar.com"
     block_auto_generated_emails: "阻止被检测为自动生成的进站邮件。"
     ignore_by_title: "使用正则表达式根据标题忽略进站邮件。"
     mailgun_api_key: "用以验证 webhook 消息的 Mailgun 密钥 API。"
-    soft_bounce_score: "当临时拒信时，增加用户的累计退信分值。"
-    hard_bounce_score: "当长时拒信时，增加用户的累计退信分值。"
-    bounce_score_threshold: "停止给用户发信的累计退信分值。"
-    bounce_score_threshold_deactivate: "取消激活用户的累计退信分值。"
     reset_bounce_score_after_days: "自动在 X 天后重置累计退信分值。"
     manual_polling_enabled: "用 API 推送邮件回复。"
     pop3_polling_enabled: "轮询 POP3 收取邮件回复。"
@@ -1111,7 +1104,7 @@ zh_CN:
     approve_unless_trust_level: "该信任等级之下的用户的帖子必须被审核"
     notify_about_queued_posts_after: "如果帖子在设定的小时数后仍在等候处理，发送一封邮件至 contact_email。设为 0 将禁用这些邮件。"
     auto_close_messages_post_count: "消息中贴子数上限，达到后自动关闭消息（0 为禁用）"
-    auto_close_topics_post_count: "主题中贴子数上限，达到后自动关闭主题（0 为禁用）"
+    auto_close_topics_post_count: "主题中贴子数上限，达到后自动关闭主题 ( 0 为禁用 )"
     code_formatting_style: "编辑器中的代码格式化按钮设置的默认格式"
     default_email_digest_frequency: "用户收到摘要邮件的默认频率。"
     default_include_tl0_in_digests: "在摘要邮件中默认包含新用户帖子。用户可以自行在参数设置中更改这个设置。"
@@ -1146,7 +1139,7 @@ zh_CN:
     staff_tags: "只可由管理人员使用的标签列表"
     min_trust_level_to_tag_topics: "给主题加标签的最小信任等级"
     suppress_overlapping_tags_in_list: "如果在列表视图中，主题标题包含标签，则隐藏标签"
-    remove_muted_tags_from_latest: "最新主题列表中不显示包含已屏蔽标签的主题。"
+    remove_muted_tags_from_latest: "在最新主题列表中，不显示有静音标签的主题。"
     errors:
       invalid_email: "电子邮箱地址无效。"
       invalid_username: "没有这个用户名的用户。"
@@ -1208,24 +1201,24 @@ zh_CN:
   topic_statuses:
     archived_enabled: "本主题已归档，即已经冻结，无法修改。"
     archived_disabled: "本主题已被解除归档，即不再冻结，可以修改。"
-    closed_enabled: "本主题已关闭，不再接受新的回复。"
+    closed_enabled: "该主题现已关闭，不再允许新的回复。"
     closed_disabled: "本主题已开放，可以发表新的回复。"
     autoclosed_message_max_posts:
-      other: "消息中回复已经达到上限 %{count}，自动关闭。"
+      other: "消息中回复已经达到上限 %{count}，自动锁定。"
     autoclosed_topic_max_posts:
       other: "主题中回复已经达到上限 %{count}，自动关闭。"
     autoclosed_enabled_days:
-      other: "本主题在创建%{count}天后自动关闭。不再允许添加新回复。"
+      other: "该主题在创建%{count}天后自动关闭。不再允许添加新回复。"
     autoclosed_enabled_hours:
-      other: "本主题在创建%{count}小时后自动关闭。不再允许添加新回复。"
+      other: "该主题在创建%{count}小时后自动关闭。不再允许新的回复。"
     autoclosed_enabled_minutes:
-      other: "本主题在创建%{count}分钟后自动关闭。不再允许添加新回复。"
+      other: "该主题在创建%{count}分钟后自动关闭。不再允许新的回复。"
     autoclosed_enabled_lastpost_days:
-      other: "本主题在最后一个回复创建后%{count}天后自动关闭。不再允许添加新回复。"
+      other: "该主题在最后一个回复创建后%{count}天后自动关闭。不再允许新的回复。"
     autoclosed_enabled_lastpost_hours:
-      other: "本主题在最后一个回复创建后%{count}小时后自动关闭。不再允许添加新回复。"
+      other: "该主题在最后一个回复创建后%{count}小时后自动关闭。不再允许添加新回复。"
     autoclosed_enabled_lastpost_minutes:
-      other: "本主题在最后一个回复创建后%{count}分钟后自动关闭。不再允许添加新回复。"
+      other: "本主题在最后一个回复创建后%{count}分钟后自动锁定。不再允许添加新回复。"
     autoclosed_disabled: "本主题是开放的，可以添加新的回复。"
     autoclosed_disabled_lastpost: "本主题现在开放了。可以添加新的回复。"
     pinned_enabled: "本主题已置顶，它将始终显示在它所属分类的顶部。可由管理人员对所有人解除置顶，或者由用户自己取消置顶。"
@@ -1418,34 +1411,8 @@ zh_CN:
       [mt]: http://www.mail-tester.com/
   new_version_mailer:
     subject_template: "[%{site_name}] 有新的 Discourse 版本，可供升级"
-    text_body_template: |
-      哇哦，有新版本的 [Discourse](http://www.discourse.org) 可以升级！
-
-      你的版本：%{installed_version}
-      新的版本：**%{new_version}**
-
-      - 浏览器访问[浏览器更新工具](%{base_url}/admin/upgrade) 升级。
-
-      - 查看[GitHub 改动日志（英文）](https://github.com/discourse/discourse/commits/master)中更新的内容。
-
-      - 访问 [meta.discourse.org（英文）](https://meta.discourse.org) 获取 Discourse 的最新资讯、讨论和支持。也可访问 [meta.discoursecn.org 非官方的中文支持论坛](https://meta.discoursecn.org) 获得支持。
   new_version_mailer_with_notes:
     subject_template: "[%{site_name}] 可以升级"
-    text_body_template: |
-      哇哦，有新版本的 [Discourse](http://www.discourse.org) 可以升级！
-
-      你的版本：%{installed_version}
-      新的版本：**%{new_version}**
-
-      - 浏览器访问[浏览器更新工具](%{base_url}/admin/upgrade) 升级。
-
-      - 查看[GitHub 改动日志（英文）](https://github.com/discourse/discourse/commits/master)中更新的内容。
-
-      - 访问 [meta.discourse.org（英文）](https://meta.discourse.org) 获取 Discourse 的最新资讯、讨论和支持。也可访问 [meta.discoursecn.org 非官方的中文支持论坛](https://meta.discoursecn.org) 获得支持。
-
-      ### 发行注记
-
-      %{notes}
   queued_posts_reminder:
     subject_template:
       other: "[%{site_name}] %{count} 个帖子等待审核"
@@ -1609,30 +1576,12 @@ zh_CN:
         [prefs]: %{user_preferences_url}
     backup_succeeded:
       subject_template: "备份成功完成"
-      text_body_template: "备份成功。\n\n访问[管理 > 备份](%{base_url}/admin/backups)下载你的新备份文件。"
     backup_failed:
       subject_template: "备份失败"
-      text_body_template: |
-        备份已经失败了。
-
-        以下是日志：
-
-        ```
-        %{logs}
-        ```
     restore_succeeded:
       subject_template: "恢复成功完成"
-      text_body_template: "恢复已经成功。"
     restore_failed:
       subject_template: "恢复失败"
-      text_body_template: |
-        恢复失败。
-
-        以下是日志：
-
-        ```
-        %{logs}
-        ```
     bulk_invite_succeeded:
       subject_template: "批量用户邀请成功完成"
       text_body_template: "你的批量邀请用户已经完成，发送了 %{sent} 个邀请。"
@@ -1725,6 +1674,7 @@ zh_CN:
         我们非常抱歉，但是你发送至%{destination}（名为%{former_title}）的邮件出问题了。
 
         邮件发至的分类只接受来自合法帐户且邮件地址已确认的用户的有邮件。如果你有异议，联系管理人员。
+
     email_reject_invalid_post:
       subject_template: "[%{site_name}] 邮件问题 -- 发布时错误"
       text_body_template: |
@@ -1741,12 +1691,6 @@ zh_CN:
         %{post_error}
 
         如果你能解决错误，请再试一次。
-    email_reject_rate_limit_specified:
-      subject_template: "[%{site_name}] 电子邮件错误 -- 频率限制"
-      text_body_template: |
-        我们很抱歉，但是你发送至%{destination}（名为%{former_title}）的邮件出问题了。
-
-        原因： %{rate_limit_description}
     email_reject_invalid_post_action:
       subject_template: "[%{site_name}] 电子邮件错误 -- 无发表权限"
       text_body_template: |
@@ -1774,9 +1718,9 @@ zh_CN:
     email_reject_topic_closed:
       subject_template: "[%{site_name}] 邮件问题 -- 主题已关闭"
       text_body_template: |
-        我们很抱歉，但是你发送至%{destination}（名为 %{former_title}）的邮件出问题了。
+        我们很抱歉，但是你发送至 %{destination} ( 名为 %{former_title} )的邮件出问题了。
 
-        你回复的主题已经被锁定，不允许回复。如果你有异议，联系管理人员。
+        你回复的主题已经被关闭，不允许回复。如果你有异议，联系管理人员。
     email_reject_auto_generated:
       subject_template: "[%{site_name}] 邮件问题 -- 自动生成的回复"
       text_body_template: |
@@ -1868,10 +1812,6 @@ zh_CN:
   unsubscribe_link: |
     要退订这些邮件，[点击这里](%{unsubscribe_url})。
   unsubscribe_link_and_mail: |
-    要退订这些邮件，[点击这里](%{unsubscribe_url})。
-  unsubscribe_mailing_list: |
-    你启用了邮件列表模式，所以收到了这些邮件。
-
     要退订这些邮件，[点击这里](%{unsubscribe_url})。
   subject_re: "回复："
   subject_pm: "[私信]"
@@ -2565,9 +2505,9 @@ zh_CN:
         该徽章授予给达到用户等级 3 的你。感谢你在这几个月持续地参与社群。你现在是我们之中最活跃的读者之一了，你持续的贡献极大地帮助了我们的社群。你现在可以社群待了几周，真正融入到了社群中。你现在可以重新分类或者重命名主题、使用能力强大的垃圾标记功能以及访问隐藏的贵宾分类了。而且每天你可以点更多次赞了。
     leader:
       name: 资深
-      description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/7">授予</a>全局编辑、固定、关闭、存档、分割、合并和更多的赞
+      description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/7">授予</a>全局编辑、固定、锁定、存档、分割、合并和更多的赞
       long_description: |
-        该徽章授予给达到用户等级 4 的你。你被管理人员选作了社群的领导力量，你用你的行动和言辞为社群树立了正面的形象。你现在可以修改所有帖子，使用常见的版主的主题管理功能，比如置顶、关闭、隐藏、存档、分割和合并功能。你每天可以点更多的赞了。
+        该徽章授予给达到用户等级 4 的你。你被管理人员选作了社群的领导力量，你用你的行动和言辞为社群树立了正面的形象。你现在可以修改所有帖子，使用常见的版主的主题管理功能，比如置顶、锁定、隐藏、存档、分割和合并功能。你每天可以点更多的赞了。
     welcome:
       name: 欢迎
       description: 得到一个赞
@@ -2628,6 +2568,7 @@ zh_CN:
       description: 分享了一个有 1000 个独立访问者的帖子
       long_description: |
         该徽章授予给分享链接给 1000 个其他访客的你。哇！你把一个有意思的讨论推广给了广大的读者们，并且帮助社群前进了一大步！
+
     first_like:
       name: 首次赞
       description: 已赞过了一个帖子
@@ -2648,6 +2589,7 @@ zh_CN:
       description: 已邀请了 3 个初级用户
       long_description: |
         该徽章授予给邀请了 3 人加入社群的你，你的朋友在站点上度过了很长的时间，已经成为了基础用户。活跃的社区需要新鲜的血液日常参与，并为交流带来多元视点。
+
     champion:
       name: 外交官
       description: 已邀请了 5 个成员
@@ -2659,7 +2601,7 @@ zh_CN:
       long_description: |
         该徽章授予给第一次用分享按钮分享了回复或者主题的链接的成员。分享链接是一个极好的方式向外部世界展示有趣的讨论的方法，并且能推动社群增长。
     first_link:
-      name: 首次链接
+      name: 首个链接
       description: 已链接了另一个主题
       long_description: |
         该徽章授予给第一次链接到另一个主题的你。联结主题会在各个主题的右侧显示链接和标题，这可以帮助阅读者迅速地找到相关讨论。多链接一些主题吧！

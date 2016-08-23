@@ -149,7 +149,7 @@ ko:
     faq: "FAQ"
     guidelines: "가이드라인"
     privacy_policy: "개인보호 정책"
-    privacy: "개인정보 취급방침"
+    privacy: "개인정보처리방침"
     terms_of_service: "서비스 이용약관"
     mobile_view: "모바일로 보기"
     desktop_view: "PC로 보기"
@@ -683,9 +683,9 @@ ko:
     read_only_mode:
       enabled: "이 사이트는 현재 읽기전용 모드입니다. 브라우징은 가능하지만, 댓글달기, 좋아요 등 다른 행위들은 현재 비활성화 되어있습니다."
       login_disabled: "사이트가 읽기 전용모드로 되면서 로그인은 비활성화되었습니다."
-    too_few_topics_and_posts_notice: "<a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>토론을 시작하시죠!</a> 현재 <strong>%{currentTopics} / %{requiredTopics}</strong> 주제와 <strong>%{currentPosts} / %{requiredPosts}</strong> 글이 있습니다. 새 방문자는 읽고 응답할 대화꺼리가 좀 필요해요."
-    too_few_topics_notice: "<a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>토론을 시작하시죠!</a> 현재 <strong>%{currentTopics} / %{requiredTopics}</strong> 주제가 있습니다. 새 방문자는 읽고 응답할 대화꺼리가 좀 필요해요."
-    too_few_posts_notice: "<a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>토론을 시작하시죠!</a> 현재 <strong>%{currentPosts} / %{requiredPosts}</strong> 글이 있습니다. 새 방문자는 읽고 응답할 대화꺼리가 좀 필요해요."
+    too_few_topics_and_posts_notice: "<a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>토론을 시작하시죠!</a> 현재 <strong>%{currentTopics} / %{requiredTopics}</strong> 주제와 <strong>%{currentPosts} / %{requiredPosts}</strong> 글이 있습니다. 새 방문자에게는 읽고 응답할 대화거리가 필요합니다."
+    too_few_topics_notice: "<a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>토론을 시작하시죠!</a> 현재 <strong>%{currentTopics} / %{requiredTopics}</strong> 주제가 있습니다. 새 방문자에게는 읽고 응답할 대화거리가 필요합니다."
+    too_few_posts_notice: "<a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>토론을 시작하시죠!</a> 현재 <strong>%{currentPosts} / %{requiredPosts}</strong> 글이 있습니다. 새 방문자에게는 읽고 응답할 대화거리가 필요합니다."
     learn_more: "더 배우기"
     year: '년'
     year_desc: '지난 365일간 생성된 주제'
@@ -1399,7 +1399,7 @@ ko:
       edit: '편집'
       edit_long: "카테고리 편집"
       view: '카테고리 안의 주제 보기'
-      general: '장군'
+      general: '일반'
       settings: '설정'
       topic_template: "주제 템플릿"
       delete: '카테고리 삭제'
@@ -2186,7 +2186,7 @@ ko:
         anonymize_failed: "There was a problem anonymizing the account."
         delete: "사용자 삭제"
         delete_forbidden_because_staff: "관리자 및 운영자 계정은 삭제할 수 없습니다."
-        delete_posts_forbidden_because_staff: "어드민와 운영자들의 포스트는 삭제할 수 없습니다."
+        delete_posts_forbidden_because_staff: "관리자와 운영자의 글은 삭제할 수 없습니다."
         delete_forbidden:
           other: "사용자가 작성한 글이 있으면 사용자를 삭제 할 수 없습니다. 사용자를 삭제 하기 전에 사용자가 작성한 글을 모두 삭제해야 합니다. (%{count}일 이전에 작성한 글은 삭제할 수 없습니다.)"
         cant_delete_all_posts:

@@ -84,12 +84,12 @@ vi:
       previous_month: 'Tháng Trước'
       next_month: 'Tháng Sau'
     share:
-      topic: 'chia sẽ chủ đề này'
+      topic: 'chia sẻ chủ đề này'
       post: 'đăng #%{Bài đăng số}'
       close: 'đóng lại'
-      twitter: 'chia sẽ lên Twitter'
-      facebook: 'chia sẽ lên Facebook'
-      google+: 'chia sẽ lên Google+'
+      twitter: 'chia sẻ lên Twitter'
+      facebook: 'chia sẻ lên Facebook'
+      google+: 'chia sẻ lên Google+'
       email: 'Gửi liên kết này qua thư điện tử'
     action_codes:
       split_topic: "chìa chủ đề này lúc %{when}"
@@ -2181,7 +2181,7 @@ vi:
         show_public_profile: "Hiển thị hồ sơ công khai"
         impersonate: 'Mạo danh'
         ip_lookup: "Tìm kiếm địa chỉ IP"
-        log_out: "Đăng suất"
+        log_out: "Đăng xuất"
         logged_out: "Thành viên đã đăng xuất trên tất cả thiết bị"
         revoke_admin: 'Thu hồi quản trị'
         grant_admin: 'Cấp quản trị'

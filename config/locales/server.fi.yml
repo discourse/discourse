@@ -247,6 +247,8 @@ fi:
       Tämä ketju on selvästikin tärkeä sinulle &ndash; olet kirjoittanut yli %{percent}% vastauksista.
 
       Oletko varma, että annat myös muille riittävästi aikaa jakaa omia näkökulmiaan?
+
+
     too_many_replies: |
       ### Olet saavuttanut rajoituksen uusien vastausten määrästä
 
@@ -290,6 +292,9 @@ fi:
           attributes:
             hex:
               invalid: "ei ole sallittu väri"
+        post_reply:
+          base:
+            different_topic: "Viestin ja siihen liittyvän vastauksen tulee olla samassa ketjussa."
       <<: *errors
   user_profile:
     no_info_me: "<div class='missing-profile'>Minusta -kohta käyttäjäprofiilissasi on vielä täyttämättä,<a href='/users/%{username_lower}/preferences/about-me'>haluaisitko täyttää sen nyt?</a></div>"
@@ -867,6 +872,7 @@ fi:
     enable_sso_provider: "Ota käyttöön Discourse SSO provider -protokolla /session/sso_provider päätepisteessä, vaatii asetuksen sso_secret asettamista."
     sso_url: "Kertakirjautumisen päätepisteen URL (täytyy sisältää http:// tai https://)"
     sso_secret: "Salausavain, jolla todennetaan SSO tiedot, varmista että se on vähintään 10 merkkiä pitkä"
+    sso_overrides_bio: "Syrjäyttää käyttäjän kuvauksen itsestään käyttäjäprofiilissa ja estää sen muokkaamisen"
     sso_overrides_email: "Ohittaa paikallisen sähköpostiosoitteen SSO:n kautta saatavalla ulkopuolisella osoitteella ja estää paikalliset muutokset (VAROITUS: eroavuuksia saattaa syntyä johtuen paikallisten sähköpostiosoitteiden normalisoinnista)"
     sso_overrides_username: "Ohittaa paikallisen käyttäjänimen SSO:n kautta saatavalla ulkopuolisella nimellä ja estää paikalliset muutokset (VAROITUS: eroavuuksia saattaa syntyä johtuen erilaisista vaatimuksista ja pituudesta)"
     sso_overrides_name: "Ohittaa paikallisen koko nimen SSO:n kautta saatavalla ulkopuolisella nimellä jokaisella kirjautumiskerralla ja estää paikalliset muutokset"
@@ -937,9 +943,11 @@ fi:
     s3_cdn_url: "CDN URL, jota käytetään S3:ssa sijaitseville tiedostoille (esimerkiksi https://cdn.jossain.com). VAROITUS: tämän asetuksen muuttamisen jälkeen sinun täytyy rakentaa uudelleen kaikki vanhat viestit."
     avatar_sizes: "Profiilikuvista automaattisesti luotavat koot."
     external_system_avatars_enabled: "Käytä ulkopuolista avatarpalvelua."
+    external_system_avatars_url: "Ulkoisen avatarpalvelun URL. Sallitut vaihdokset ovat {username} {first_letter} {color} {size}"
     default_opengraph_image_url: "Oletuksena käytettävän opengraph-kuvan URL."
     allow_all_attachments_for_group_messages: "Sali kaikki sähköpostiliitteet ryhmäviestessä."
     convert_pasted_images_to_hq_jpg: "Muuta liitetyt kuvat korkealaatuisiksi JPG-tiedostoiksi"
+    convert_pasted_images_quality: "Muunnetun JPG-tiedoston laatu (1 on huonoin laatu, 100 on paras laatu)."
     enable_flash_video_onebox: "Ota käyttöön swf- ja flv-linkkien (Adobe Flash) onebox-tuki. VAROITUS: saattaa lisätä tietoturvariskejä."
     default_invitee_trust_level: "Oletus luottamustaso (0-4) kutsutuille käyttäjille."
     default_trust_level: "Uusien käyttäjien oletusarvoinen luottamustaso (0-4). VAROITUS! Tämän muuttaminen altistaa roskapostille."
@@ -1031,6 +1039,7 @@ fi:
     auto_block_first_post_regex: "Merkkikokoriippumaton regex joka aiheuttaa käyttäjän ensimmäisen viestin estämisen ja lisäämisen hyväksymisjonoon. Esimerkiksi raivoaminen|a[bc]a aiheuttaa kaikkien viestien, joissa on sanat raivoava, aba tai aca estämisen. Vaikuttaa vain ensimmäiseen viestiin."
     reply_by_email_enabled: "Ota käyttöön vastaukset sähköpostin avulla."
     reply_by_email_address: "Saapuvan sähköpostin sapluuna sähköpostivastauksiin, esimerkiksi: %{reply_key}@reply.example.com tai replies+%{reply_key}@example.com"
+    incoming_email_prefer_html: "Käytä HTMLää tekstin sijaan saapuville sähköposteille. Voi aiheuttaa odottamattomia ongelmia ulkoasussa!"
     disable_emails: "Estä Discoursea lähettämästä mitään sähköpostia"
     strip_images_from_short_emails: "Poista kuvat sähköposteista, joiden koko on alle 2800 tavua"
     short_email_length: "Lyhyen sähköpostin pituus tavuissa"
@@ -1041,12 +1050,15 @@ fi:
     max_emails_per_day_per_user: "Käyttäjälle päivässä lähetettävien sähköpostien enimmäismäärä. Aseta 0, jos et halua rajoittaa."
     enable_staged_users: "Luo automaattisesti käyttäjiä, kun saapuvia sähköposteja käsitellään."
     maximum_staged_users_per_email: "Maksimimäärä automaattisesti luotavia tilejä, kun käsitellään saapuvaa sähköpostia."
-    auto_generated_whitelist: "Lista sähköpostiosoitteista, joiden viestejä ei tarkasteta automaattisesti luodun sisällön osalta."
+    auto_generated_whitelist: "Lista sähköpostiosoitteista, joiden viestejä ei tarkasteta automaattisesti luodun sisällön osalta. Esimerkki: foo@bar.com|discourse@bar.com"
     block_auto_generated_emails: "Estä saapuvat sähköpostit, jotka tunnistetaan automaattisesti luoduiksi."
     ignore_by_title: "Jätä sähköpostit huomiotta niiden otsikon perusteella."
     mailgun_api_key: "Mailgunin Secret API key, jolla verifioidaan webhook-viestit."
-    bounce_score_threshold: "Pistemäärä, jonka ylityttyä käyttäjälle ei lähetetä sähköpostia."
-    bounce_score_threshold_deactivate: "Pistemäärä, jonka ylityttyä käyttäjätili poistetaan käytöstä."
+    soft_bounce_score: "Lisättävät palautuspisteet, kun hetkellinen palautus tapahtuu."
+    hard_bounce_score: "Lisättävät palautuspisteet, kun pysyvä palautus tapahtuu."
+    bounce_score_threshold: "Palautuspistemäärä, jonka ylityttyä käyttäjälle ei lähetetä sähköpostia."
+    bounce_score_threshold_deactivate: "Palautuspistemäärä, jonka ylityttyä käyttäjätili poistetaan käytöstä."
+    reset_bounce_score_after_days: "Nollaa palautuspisteet X päivä kuluttua."
     manual_polling_enabled: "Työnnä sähköpostit käyttäen sähköpostivastausten APIa."
     pop3_polling_enabled: "Pollaa sähköpostivastaukset POP3:lla."
     pop3_polling_ssl: "Käytä SSL-salausta yhdistettäessä POP3-palvelimeen. (Suositellaan)"
@@ -1450,29 +1462,29 @@ fi:
   new_version_mailer:
     subject_template: "[%{site_name}] Uusi Discourse-versio, päivitys saatavilla"
     text_body_template: |
-      Huraa, uusi versio [Discoursesta](http://www.discourse.org) on saatavilla!
+      Hurraa, uusi versio [Discoursesta](http://www.discourse.org) on saatavilla!
 
       Sinun versiosi: %{installed_version}
       Uusi versio: **%{new_version}**
 
-      - Päivitä käyttäen helppoa **[yhden klikkauksen päivitystä](%{base_url}/admin/upgrade)** selaimessa
+      - Päivitä käyttäen helppoa **[yhden klikkauksen päivitystä selaimessa](%{base_url}/admin/upgrade)**
 
       - Tarkastele muutoksia [GitHubin muutoslokissa](https://github.com/discourse/discourse/commits/master)
 
-      - Vieraile osoitteessa [meta.discourse.org](http://meta.discourse.org) saadaksesi englanninkielisiä uutisia, keskustelua ja tukea Discourselle.
+      - Käy osoitteessa [meta.discourse.org](https://meta.discourse.org) lukemassa uutisia ja keskustelua, tai hae apua Discourseen liittyen
   new_version_mailer_with_notes:
     subject_template: "[%{site_name}] päivitys saatavilla"
     text_body_template: |
-      Huraa, uusi versio [Discoursesta](http://www.discourse.org) on saatavilla!
+      Hurraa, uusi versio [Discoursesta](http://www.discourse.org) on saatavilla!
 
       Sinun versiosi: %{installed_version}
       Uusi versio: **%{new_version}**
 
-      - Päivitä käyttäen helppoa **[yhden klikkauksen päivitystä](%{base_url}/admin/upgrade)** selaimessa
+      - Päivitä käyttäen helppoa **[yhden klikkauksen päivitystä selaimessa](%{base_url}/admin/upgrade)**
 
       - Tarkastele muutoksia [GitHubin muutoslokissa](https://github.com/discourse/discourse/commits/master)
 
-      - Vieraile osoitteessa [meta.discourse.org](http://meta.discourse.org) saadaksesi englanninkielisiä uutisia, keskustelua ja tukea Discourselle.
+      - Käy osoitteessa [meta.discourse.org](https://meta.discourse.org) lukemassa uutisia ja keskustelua, tai hae apua Discourseen liittyen
 
       ### Julkaisutiedot
 
@@ -1644,28 +1656,44 @@ fi:
         [prefs]: %{user_preferences_url}
     backup_succeeded:
       subject_template: "Varmuuskopiointi suoritettu onnistuneesti"
-      text_body_template: "Varmuuskopiointi onnistui.\nSiirry [ylläpito > varmuuskopiot](%{base_url}/admin/backups) ladataksesi varmuuskopion."
+      text_body_template: |
+        Varmuuskopiointi onnistui.
+
+        Lataa varmuuskopio siirtymällä [ylläpito > varmuuskopiot](%{base_url}/admin/backups).
+
+        Tässä loki:
+
+        ```text
+        %{logs}
+        ```
     backup_failed:
       subject_template: "Varmmuskopiointi epäonnistui"
       text_body_template: |
         Varmuuskopiointi epäonnistui.
 
-        Tässä on loki:
+        Tässä loki:
 
-        ```
+        ```text
         %{logs}
         ```
     restore_succeeded:
       subject_template: "Palauttaminen suoritettu onnistuneesti"
-      text_body_template: "Palauttaminen onnistui."
+      text_body_template: |
+        Palauttaminen onnistui.
+
+        Tässä loki:
+
+        ```text
+        %{logs}
+        ```
     restore_failed:
       subject_template: "Palauttaminen epäonnistui"
       text_body_template: |
         Palauttaminen epäonnistui.
 
-        Tässä on loki:
+        Tässä loki:
 
-        ```
+        ```text
         %{logs}
         ```
     bulk_invite_succeeded:
@@ -1710,6 +1738,7 @@ fi:
         Pahoittelemme, mutta sähköpostin lähettäminen tänne %{destination} (otsikolla %{former_title}) ei onnistunut.
 
         Viestisi lähetettiin estetystä sähköpostiosoitteesta. Yritä lähettää viesti toisesta sähköpostiosoitteesta tai ota yhteyttä henkilökuntaan.
+
     email_reject_inactive_user:
       subject_template: "[%{site_name}]  Sähköpostiongelma -- Aktivoimaton käyttäjä"
       text_body_template: |
@@ -1742,6 +1771,7 @@ fi:
         Emme löytäneet sähköpostiviestistäsi sisältöä.
 
         Jos saat tämän viestin ja viestisi _sisälsi_ sisältöä, yritä uudestaan yksinkertaisemmalla muotoilulla.
+
     email_reject_parsing:
       subject_template: "[%{site_name}] Sähköpostiongelma -- Tunnistamaton sisältö"
       text_body_template: |
@@ -1776,12 +1806,6 @@ fi:
         %{post_error}
 
         Jos voit korjata ongelman, yritä uudelleen.
-    email_reject_rate_limit_specified:
-      subject_template: "[%{site_name}] Sähköpostiongelma -- Rajat"
-      text_body_template: |
-        Pahoittelemme, mutta sähköpostiviesetisi tänne  %{destination} (otsikolla %{former_title}) ei onnistunut.
-
-        Syy: %{rate_limit_description}
     email_reject_invalid_post_action:
       subject_template: "[%{site_name}] Sähköpostiongelma -- Kielletty viestitoiminto"
       text_body_template: |
@@ -1906,7 +1930,7 @@ fi:
   unsubscribe_link_and_mail: |
     Jos et enää halua näitä viestejä, [klikkaa tästä](%{unsubscribe_url}).
   unsubscribe_mailing_list: |
-    Saat näitä viestejä, koska olet postituslistatilassa.
+    Sait tämän viestin, koska olet postituslistatilassa.
 
     Jos et enää halua näitä viestejä, [klikkaa tästä](%{unsubscribe_url}).
   subject_re: "VS:"
@@ -2134,6 +2158,7 @@ fi:
         Vahvista sähköpostiosoitteesti sivustolle %{site_name} klikkaamalla linkkiä:
 
         %{base_url}/users/authorize-email/%{email_token}
+
     notify_old_email:
       subject_template: "[%{site_name}] Sähköpostiosoitteesi on vaihdettu"
       text_body_template: |
@@ -2363,6 +2388,7 @@ fi:
       <li><code>rainbows category:"parks and gardens" in:bookmarks</code> etsii alueelta "parks and gardens" kirjanmerkkeihin lisäämiäsi ketjuja, joissa esiintyy sana "rainbows".</li>
       </ul>
       </p>
+
   badges:
     editor:
       name: Muokkaaja
@@ -2434,11 +2460,13 @@ fi:
       description: Ketjunavaus sai 50 tykkäystä
       long_description: |
         Tämä arvomerkki myönnetään, kun luomasi ketju saa 50 tykkäystä. Aloitit kiehtovan keskustelun, jossa vaihdetuista ajatuksista yhteisö nautti!
+
     nice_share:
       name: Hyvä jako
       description: Jakoi viestin, ja linkin kautta saapui 25 vierailijaa
       long_description: |
         Tämä arvomerkki myönnetään, kun jaat linkin, jota klikkaa 25 ulkopuolista vierailijaa. Kiitos kun levität sanaa palstan keskusteluista ja yhteisöstä.
+
     good_share:
       name: Erinomainen jako
       description: Jakoi viestin, ja linkin kautta saapui 300 vierailijaa

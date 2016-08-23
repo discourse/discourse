@@ -24,7 +24,7 @@ pt_BR:
     <<: *datetime_formats
   title: "Discourse"
   topics: "Tópicos"
-  posts: "postagens"
+  posts: "mensagens"
   loading: "Carregando"
   powered_by_html: 'Movido a <a href="http://www.discourse.org">Discourse</a>, melhor visualizado com JavaScript ativado'
   log_in: "Entrar"
@@ -125,7 +125,7 @@ pt_BR:
       other: "%{count} respostas a mais"
     loading: "Carregando Discussão..."
     permalink: "Permalink"
-    imported_from: "Este é um tópico de discussão companheiro para a postagem original em %{link}"
+    imported_from: "Este é um tópico de discussão companheiro para a mensagem original em %{link}"
     in_reply_to: "▶ %{username}"
     replies:
       one: "1 resposta"
@@ -133,19 +133,19 @@ pt_BR:
   no_mentions_allowed: "Desculpe, você não pode mencionar outros usuários."
   too_many_mentions:
     one: "Desculpe, você pode mencionar apenas %{count} usuário em um post."
-    other: "Desculpe, você pode mencionar apenas %{count} usuários em um post."
+    other: "Desculpe, você pode mencionar apenas %{count} usuários em uma mensagem."
   no_mentions_allowed_newuser: "Desculpe, usuários novos não podem mencionar outros usuários."
   too_many_mentions_newuser:
-    one: "Desculpe, usuários novos podem mencionar apenas %{count} usuário em uma postagem."
-    other: "Desculpe, usuários novos podem mencionar apenas %{count} usuários em uma postagem."
-  no_images_allowed: "Desculpe, usuários novos não podem colocar imagens nas postagens."
+    one: "Desculpe, usuários novos podem mencionar apenas um usuário em uma mensagem."
+    other: "Desculpe, usuários novos podem mencionar apenas %{count} usuários em uma mensagem."
+  no_images_allowed: "Desculpe, usuários novos não podem colocar imagens nas mensagens."
   too_many_images:
     one: "Desculpe, usuários novos podem colocar apenas %{count} imagem nas postagens."
-    other: "Desculpe, usuários novos podem colocar apenas %{count} imagens nas postagens."
-  no_attachments_allowed: "Desculpe, novos usuários não podem colocar anexos nas postagens."
+    other: "Desculpe, usuários novos podem colocar apenas %{count} imagens nas mensagens."
+  no_attachments_allowed: "Desculpe, novos usuários não podem colocar anexos nas mensagens."
   too_many_attachments:
     one: "Desculpe, novos usuários podem colocar apenas %{count} anexo nas suas postagens."
-    other: "Desculpe, novos usuários podem colocar apenas %{count} anexos nas suas postagens."
+    other: "Desculpe, novos usuários podem colocar apenas %{count} anexos nas suas mensagens."
   no_links_allowed: "Desculpe, usuários novos não podem colocar links nas postagens."
   too_many_links:
     one: "Desculpe, usuários novos podem colocar apenas %{count} link nas postagens."
@@ -368,6 +368,7 @@ pt_BR:
       create_like: "Você atingiu o número máximo de curtidas hoje. Por favor aguarde% {time_left} antes de tentar novamente."
       create_bookmark: "Você atingiu o número máximo de marcadores hoje. Por favor aguarde% {time_left} antes de tentar novamente."
       edit_post: "Você atingiu o número máximo de edições hoje. Por favor aguarde% {tempo} esquerda antes de tentar novamente."
+      topic_invitations_per_day: "Você atingiu o número máximo de convites para tópicos hoje. Por favor aguarde %{time_left} antes de tentar novamente."
     hours:
       one: "1 hora"
       other: "%{count} horas"
@@ -538,6 +539,15 @@ pt_BR:
       message:
         make: "Este tópico é agora um banner. Ele aparecerá no topo de cada página até que seja julgado improcedente pelo usuário."
         remove: "Este tópico não é mais um banner. Ela deixará de aparecer no topo de todas as páginas."
+  unsubscribed:
+    title: "Desinscrito!"
+    description: "You have been unsubscribed. To change your email settings <a href='%{url}'>visit your user preferences</a>.\n\nVocê se desinscreveu. Para alterar as suas configurações de email"
+  unsubscribe:
+    title: "Desinscrever"
+    stop_watching_topic: "Parar de observar este tópico, %{link}"
+    unwatch_category: "Parar de observar todos os tópicos na categoria  %{category}"
+    mailing_list_mode: "Desativar o modo lista de discussão"
+    log_out: "Sair"
   reports:
     visits:
       title: "Visitas do Usuário"
@@ -645,7 +655,7 @@ pt_BR:
     http_background_reqs:
       title: "Background"
       xaxis: "Dia"
-      yaxis: "Pedidos utilizados para atualização ao vivo e rastreamento"
+      yaxis: "Pedidos utilizados para monitoramento e atualização ao vivo"
     http_2xx_reqs:
       title: "Status 2xx (OK)"
       xaxis: "Dia"
@@ -772,7 +782,7 @@ pt_BR:
     post_menu: "A ordem dos items no menu da postagem."
     post_menu_hidden_items: "Os items de menu a ser escondidos por padrão no menu de postagem, a menos que uma elipse de expansão seja clicada."
     share_links: "Determine quais itens aparecem na caixa de diálogo de compartilhamento, e em qual ordem."
-    track_external_right_clicks: "Rastrear cliques externos que são clicados com o botão direito (ex: abrir em nova aba) desativado por padrão, pois tem que reescrever urls, quebrando a usabilidade"
+    track_external_right_clicks: "Monitorar cliques externos que são clicados com o botão direito (ex: abrir em nova aba) desativado por padrão, pois tem que reescrever urls, quebrando a usabilidade"
     site_contact_username: "Um nome de usuário válido de membro da equipe para enviar todas mensagens automáticas por ele. Se deixado em branco a conta padrão System será utilizada."
     send_welcome_message: "Enviar a todos novos usuários uma mensagem de boas vindas com um guia de início rápido."
     suppress_reply_directly_below: "Não mostrar a contagem de respostas expansível em um post quando há apenas uma única resposta diretamente abaixo deste post."
@@ -785,7 +795,7 @@ pt_BR:
     show_email_on_profile: "Mostrar o email de um usuário em seus perfis (apenas visível a eles mesmos e staff)"
     email_token_valid_hours: "Tokens de Esqueceu senha / ativar conta são válidas por (n) horas."
     email_token_grace_period_hours: "Tokens de esqueceu senha / ativar conta ainda serão válidas por um período extra de (n) horas depois de serem resgatados."
-    enable_badges: "Habilita o sistema de emblemas (experimental)"
+    enable_badges: "Habilita o sistema de emblemas"
     allow_index_in_robots_txt: "Especificar no robots.txt que este site é permitido de ser indexado por sistemas de busca na web."
     email_domains_blacklist: "Lista delimitada por barras (|) de domínios de email que não são permitidos registros de contas. Exemplo: mailinator.com|trashmail.net"
     email_domains_whitelist: "Lista separada por barra (|) de domínios de email que usuários DEVEM usar para registrar contas. CUIDADO: Usuário com domínio de email diferentes da lista não serão permitidos!"
@@ -998,6 +1008,10 @@ pt_BR:
     emoji_set: "Como você gostaria do seu emoji?"
     enforce_square_emoji: "Forçar proporção quadrangular para todos emojis."
     approve_unless_trust_level: "Mensagens para os usuários abaixo deste nível de confiança devem ser aprovados"
+    default_categories_watching: "Lista de categorias que são observadas por padrão."
+    default_categories_tracking: "Lista de categorias que são monitoradas por padrão."
+    default_categories_muted: "Lista de categorias que são silenciadas por padrão."
+    remove_muted_tags_from_latest: "Não exibir na lista de tópicos recentes os tópicos com a etiqueta de Silenciado."
     errors:
       invalid_email: "Endereço de email inválido"
       invalid_username: "Não há nenhum usuário com esse nome de usuário."
@@ -1195,30 +1209,12 @@ pt_BR:
         [prefs]: %{user_preferences_url}
     backup_succeeded:
       subject_template: "Backup completado com sucesso"
-      text_body_template: "O backup foi bem sucedido. Visite a [admin > seção backup](%{base_url}/admin/backups) para baixar seu novo backup."
     backup_failed:
       subject_template: "O backup falhou"
-      text_body_template: |
-        O backup falhou.
-
-        Aqui está o log:
-
-        ```
-        %{logs}
-        ```
     restore_succeeded:
       subject_template: "Restauração terminada com sucesso"
-      text_body_template: "A restauração foi bem sucedida."
     restore_failed:
       subject_template: "A restauração falhou"
-      text_body_template: |
-        A restauração falhou.
-
-        Aqui está o log:
-
-        ```
-        %{logs}
-        ```
     bulk_invite_succeeded:
       subject_template: "Seus convites foram enviados com sucesso."
       text_body_template: "Seus convites foram enviados com sucesso: %{sent}."
@@ -1421,23 +1417,82 @@ pt_BR:
   badges:
     editor:
       name: Editor
+      description: Primeira edição de mensagem
+    basic_user:
+      name: Básico
+      description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/4">Concedido</a> o acesso a todas as funções essenciais da comunidade
     member:
       name: Membro
+      description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/5">Concedido</a> o acesso a enviar convites, mensagens em grupo e mais curtidas
+    regular:
+      name: Habitual
+      description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/6">Concedido</a> o acesso a recategorizar, renomear, seguir links, wiki e mais curtidas
     leader:
       name: Líder
+      description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/7">Concedido</a> o acesso para editar globalmente, fixar, fechar, arquivar, desmembrar e unificar tópicos, além de mais curtidas
     welcome:
-      name: Boas-vindas
+      name: Bem-Vindo
       description: Recebeu uma curtida
+    autobiographer:
+      name: Autobiógrafo
+      description: Preencheu as informações do <a href="/my/preferences">perfil</a>
     anniversary:
       name: Aniversário
+      description: Membro ativo por um ano, postou ao menos uma vez
+    nice_post:
+      name: Resposta Interessante
+      description: Recebeu 10 curtidas em uma resposta
+    good_post:
+      name: Boa Resposta
+      description: Recebeu 25 curtidas em uma resposta
+    great_post:
+      name: Excelente Resposta
+      description: Recebeu 50 curtidas em uma resposta
+    nice_topic:
+      name: Tópico Interessante
+      description: Recebeu 10 curtidas em um tópico
+    good_topic:
+      name: Bom Tópico
+      description: Recebeu 25 curtidas em um tópico
+    great_topic:
+      name: Excelente Tópico
+      description: Recebeu 50 curtidas em um tópico
+    nice_share:
+      name: Compartilhamento Interessante
+      description: Compartilhou uma postagem com 25 visitas únicas
+    good_share:
+      name: Bom Compartilhamento
+      description: Compartilhou uma postagem com 300 visitas únicas
+    great_share:
+      name: Excelente Compartilhamento
+      description: Compartilhou uma postagem com 1000 visitas únicas
+    first_like:
+      name: Primeira Curtida
+      description: Curtiu uma mensagem
+    first_flag:
+      name: Primeira Sinalização
+      description: Sinalizou uma mensagem
+    promoter:
+      name: Promotor
+      description: Convidou um usuário
+    campaigner:
+      name: Ativista
+      description: Convidou 3 usuários básicos
     champion:
       name: Campeão
+      description: Convidou 5 membros
+    first_share:
+      name: Primeiro Compartilhamento
+      description: Compartilhou uma mensagem
     first_link:
       name: Primeiro Link
       description: Adicionou um link para outro tópico
     first_quote:
       name: Primeira Citação
-      description: Citou um post
+      description: Citou uma mensagem
+    read_guidelines:
+      name: Leu as regras
+      description: Leu as <a href="/guidelines">regras da comunidade</a>
     reader:
       name: Leitor
       description: Leu todas as respostas em um tópico com mais de 100 respostas
@@ -1450,21 +1505,33 @@ pt_BR:
     famous_link:
       name: Link Famoso
       description: Postou um link externo com 1000 clicks
+    appreciated:
+      name: Agradecido
+      description: Teve 20 mensagens curtidas
+    respected:
+      name: Respeitado
+      description: Recebeu 2 curtidas em 100 mensagens
     admired:
       name: Admirado
+      description: Recebeu 5 curtidas em 300 mensagens
     out_of_love:
       name: Por Amor
       description: Usou 50 likes no mesmo dia
     higher_love:
-      description: Usou 50 likes em um dia 5 vezes
+      name: Amor Maior
+      description: Deu 50 curtidas no mesmo dia 5 vezes
     crazy_in_love:
       name: Apaixonado
-      description: Usou 50 likes em um dia 20 vezes
+      description: Deu 50 curtidas no mesmo dia 20 vezes
     thank_you:
-      description: Teve 20 posts curtidos e deu 10 likes
+      name: Obrigado
+      description: Teve 20 mensagens curtidas e curtiu 10 mensagens
+    gives_back:
+      name: Retribuidor
+      description: Curtiu 100 mensagens e teve 100 mensagens curtidas
     empathetic:
       name: Empático
-      description: Teve 500 posts curtidos e deu 1000 likes
+      description: Curtiu 1000 mensagens e teve 500 mensagens curtidas
     first_emoji:
       name: Primeiro emoji
       description: Utilizou um emoji em uma publicação
@@ -1472,9 +1539,13 @@ pt_BR:
       name: Primeira menção
       description: Mencionou um usuário em uma publicação
       long_description: Este emblema é concedido na primeira vez em que você menciona o @nomedeusuaio de alguém em uma publicação. Cada menção gera uma notificação para a pessoa de forma que ela saiba o que você publicou. Simplesmente comece a digitar "@" (arroba) para mencionar qualquer usuário ou, caso permitido, um grupo -- é uma maneira conveniente de chamar a atenção de alguém.
+    first_onebox:
+      name: Primeiro Onebox
+      description: Postou um link que foi embutido na mensagem
+      long_description: 'Esse emblema é concedido na primeira vez em que você posta um link que é convertido automaticamente em uma caixa com um título, sumário e uma imagem (se disponível) sumarizando o link. '
     first_reply_by_email:
       name: Primeira Resposta por email
-      description: Respondeu um post por email
+      description: Respondeu uma mensagem por email
   admin_login:
     success: "Email Enviado"
     error: "Erro!"

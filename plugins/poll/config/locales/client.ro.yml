@@ -17,19 +17,21 @@ ro:
         few: "total voturi"
         other: "total voturi"
       average_rating: "Media: <strong>%{average}</strong>."
+      public:
+        title: "Voturile sunt publice."
       cast-votes:
-        title: "Exprimaţi-vă votul"
+        title: "Exprimă-ți votul"
         label: "Votează acum!"
       show-results:
         title: "Afişează rezultatele sondajului"
-        label: "Afișare rezultate"
+        label: "Afișează rezultate"
       hide-results:
-        title: "Înapoi la votul dvs."
+        title: "Înapoi la voturile tale"
         label: "Ascunde rezultate"
       open:
-        title: "Deschide sondaj"
-        label: "Redeschide sondajul"
-        confirm: "Sunteţi sigur că doriţi să deschideţi acest sondaj?"
+        title: "Deschide sondajul"
+        label: "Deschide sondajul"
+        confirm: "Ești sigur că vrei să deschizi acest sondaj?"
       close:
         title: "Închide sondajul"
         label: "Închide sondajul"

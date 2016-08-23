@@ -18,14 +18,33 @@ da:
   date:
     month_names: [null, Januar, Februar, Marts, April, Maj, Juni, Juli, August, September, Oktober, November, December]
     <<: *datetime_formats
+  time:
+    am: "am"
+    pm: "pm"
+    <<: *datetime_formats
   title: "Discourse"
   topics: "Emner"
   posts: "indlæg"
   loading: "Indlæser"
   powered_by_html: 'Siden er lavet med <a href="http://www.discourse.org">Discourse</a>, opleves bedst med JavaScript slået til'
   log_in: "Log ind"
+  purge_reason: "Automatisk slettet som forladt, deaktiveret konto"
   disable_remote_images_download_reason: "Fjerndownload af billeder deaktiveret grundet utilstrækkelig diskplads"
   anonymous: "Anonym"
+  emails:
+    incoming:
+      default_subject: "Indgående email fra %{email}"
+      show_trimmed_content: "Vis trimmet indhold"
+      maximum_staged_user_per_email_reached: "Maksimalt antal af brugere oprettet pr. email."
+      errors:
+        empty_email_error: "Dette sker når den rå email der modtages er tom."
+        no_message_id_error: "Dette sker når emailen ikke har nogen 'Message-Id' header."
+        inactive_user_error: "Dette sker når afsenderen ikke er aktiv."
+        blocked_user_error: "Dette sker når afsenderen er blevet blokeret."
+        bad_destination_address: "Dette sker når ingen af email adresserne i To/Cc/Bcc felterne matcher en opsat indgående email adresse."
+        topic_not_found_error: "Dette sker når et svar er kommet, men det relaterede emne er blevet slettet."
+        topic_closed_error: "Dette sker når et svar er kommet, men det relaterede emne er blevet lukket."
+        bounced_email_error: "Emailen er en \"bounced email\" rapport"
   errors: &errors
     format: '%{attribute} %{message}'
     messages:
@@ -89,6 +108,8 @@ da:
   not_found: "Den anmodede URL eller ressource kunne ikke findes."
   invalid_access: "Du har ikke tilladelse til at se den anmodede ressource."
   read_only_mode_enabled: "Forummet er i \"kun læsning\" tilstand. Interaktioner er deaktiverede."
+  reading_time: "Læsetid"
+  likes: "Synes godt om"
   too_many_replies:
     one: "Beklager, men nye brugere kan kun skrive 1 svar i hvert emne til at starte med."
     other: "Beklager, men nye brugere kan kun skrive %{count} svar i hvert emne til at starte med."
@@ -105,6 +126,19 @@ da:
     replies:
       one: "1 svar"
       other: "%{count} svar"
+  no_mentions_allowed: "Beklager, du kan ikke nævne andre brugere."
+  too_many_mentions:
+    one: "Beklager, men du kan kun nævne %{count} brugere i et indlæg."
+    other: "Beklager, men du kan kun nævne %{count} brugere i et indlæg."
+  no_mentions_allowed_newuser: "Beklager, nye brugere kan ikke nævne andre brugere."
+  too_many_mentions_newuser:
+    one: "Beklager, nye brugere kan kun nævne en bruger i et indlæg."
+    other: "Beklager, nye brugere kan kun nævne %{count} brugere i et indlæg."
+  no_attachments_allowed: "Beklager, nye brugere kan ikke vedhæfte filer i et indlæg."
+  too_many_attachments:
+    one: "Beklager, nye brugere kan kun vedhæfte en fil i et indlæg."
+    other: "Beklager, nye brugere kan kun vedhæfte %{count} filer i et indlæg."
+  no_links_allowed: "Beklager, nye brugere kan ikke bruge links i indlæg."
   spamming_host: "Beklager, du kan ikke indsætte et link til det pågældende domæne."
   user_is_suspended: "Suspenderede brugere tilllades ikke at oprette indlæg."
   topic_not_found: "Der er gået noget galt. Måske er emnet blevet lukket eller slettet mens du kiggede på det?"
@@ -126,14 +160,26 @@ da:
   rss_description:
     latest: "Seneste emner"
     hot: "Populære emner"
+    top: "Populære emner"
     posts: "Seneste indlæg"
+    private_posts: "Seneste private beskeder"
+    group_posts: "Seneste indlæg fra %{group_name}"
+    group_mentions: "Seneste nævnelser fra %{group_name}"
+    user_posts: "Seneste indlæg af @%{username}"
+    tag: "Markerede emner"
   too_late_to_edit: "Dette indlæg er gammelt og kan ikke længere redigeres eller slettes."
+  revert_version_same: "Den nuværende udgave er den samme udgave/version som den du prøver at vende tilbage til."
   excerpt_image: "billede"
   queue:
     delete_reason: "Slettet via køen til moderation af indlæg."
   groups:
     errors:
+      can_not_modify_automatic: "Du kan ikke modificere en automatisk gruppe"
       member_already_exist: "'%{username}' er allerede medlem af denne gruppe."
+      invalid_domain: "'%{domain}' er ikke et gyldigt domæne."
+      invalid_incoming_email: "'%{email}' er ikke en gyldig email adresse."
+      email_already_used_in_group: "'%{email}' er allerede brugt af en bruger i gruppen '%{group_name}'."
+      email_already_used_in_category: "'%{email}' er allerede brugt af en bruger i kategorien '%{category_name}'."
     default_names:
       everyone: "Alle"
       admins: "admins"
@@ -148,6 +194,14 @@ da:
     until_posts:
       one: "indlæg"
       other: "%{count} indlæg"
+    new-topic: |
+      Velkommen til %{site_name} &mdash; **Tak fordi du starter en ny samtale!**
+
+      -  Lyder title interessant hvis du læser den højt? Er det et godt resumé?
+      -  Hvem ville være interesseret i dette? Hvorfor er det vigtigt? Hvilken type svar ønsker du?
+      -  Inkludér relevante ord i dit emne så andre kan *finde* det. For at gruppere dit emne med relaterede emner, så vælg en kategori.
+
+      For mere info, [se vores retningslinjer](/guidelines). Dette panel vil kun vises første gang for %{education_posts_text}.
     new-reply: |
       Velkommen til %{site_name} &mdash; **tak for at du deltager i samtalen!**
 
@@ -168,6 +222,14 @@ da:
       Har du overvejet at **[gå til din brugerprofil](%{profile_path})** og uploade et billede, der repræsenterer dig?
 
       Det er lettere at følge diskussioner og finde interessant mennesker i samtaler, hvor alle har en unik avatar!
+    sequential_replies: |
+      ### Overvej at svare på flere indlæg på en gang
+
+      Istedet for at lave mange små individuelle kommentarer, overvej at lave et enkelt svar som inkluderer "citater" fra tidligere indlæg eller ved at nævne andre brugere med et @.
+
+      Benyt et citat fra et tidligere svar ved at markere den ønskede tekst og herefter vælge <b>opret citat</b> knappen som vises.
+
+      Det er nemmere for alle at læse om emner som har færre svar som går i dybden, end mange små individuelle svar.
     dominating_topic: |
       ### Lad andre deltage i samtalen
 
@@ -190,6 +252,8 @@ da:
     attributes:
       category:
         name: "Kategorinavn"
+      topic:
+        title: 'Titel'
       post:
         raw: "Brødtekst"
       user_profile:
@@ -670,12 +734,19 @@ da:
     download_remote_images_disabled:
       subject_template: "Download af eksterne billeder er slået fra"
       text_body_template: "Indstillingen `download_remote_images_to_local` blev slået fra fordi grænsen for bug af diskplads i `download_remote_images_threshold` blev nået."
+  unsubscribe_link: |
+    [Klik her](%{unsubscribe_url}) hvis du ikke længere vil modtage disse emails.
+  unsubscribe_link_and_mail: |
+    [Klik her](%{unsubscribe_url}) hvis du ikke længere vil modtage disse emails.
   subject_re: "Re:"
   user_notifications:
     previous_discussion: "Forrige svar"
+    in_reply_to: "Som svar på"
     unsubscribe:
       title: "Frameld"
       description: "Ønsker du ikke at modtage disse e-mails? Intet problem! Klik herunder for at framelde med det samme:"
+    reply_by_email: "[Besøg emnet](%{base_url}%{url}) eller svar på denne email for at svare."
+    reply_by_email_pm: "[Gå til besked](%{base_url}%{url}) eller svar på denne email for at svare."
     posted_by: "Oprettet af %{username} den %{post_date}"
     user_replied:
       subject_template: "[%{site_name}] %{username} svarede på dit indlæg i emnet '%{topic_title}'"
@@ -812,13 +883,30 @@ da:
     empathetic:
       name: Empatisk
       description: Har 500 likede indlæg og givet 1000 likes
+    first_mention:
+      description: Nævnte en bruger i et indlæg
+    first_reply_by_email:
+      name: Første svar via email
+      description: Svarede på et indlæg via email
+      long_description: |
+        Dette emblem gives første gang du svarer til et indlæg via email  :e-mail:.
   admin_login:
     success: "Email sendt"
     error: "Fejl!"
     email_input: "Admin email"
     submit_button: "Send email"
-  time:
-    <<: *datetime_formats
+  discourse_hub:
+    access_token_problem: "Fortæl en admin: Venligst opdater indstillingerne så de inkluderer den korrekte  discourse_org_access_key."
+  performance_report:
+    initial_post_raw: Dette emne inkluderer daglige præstationsrapporter for dit site.
+    initial_topic_title: Website præstationsrapport
+  topic_invite:
+    user_exists: "Beklager, men brugeren er allerede inviteret. Du kan kun invitere en bruger til et emne én gang."
+  tags:
+    title: "Tags"
+    staff_tag_disallowed: "Tagget \"%{tag}\" kan kun tildeles af personalet."
+    staff_tag_remove_disallowed: "Tagget \"%{tag}\" kan kun fjernes af personalet."
+  rss_by_tag: "Emner tagget %{tag}"
   activemodel:
     errors:
       <<: *errors

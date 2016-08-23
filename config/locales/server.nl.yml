@@ -1239,17 +1239,8 @@ nl:
       subject_template: "Backup succesvol uitgevoerd"
     backup_failed:
       subject_template: "Backup mislukt"
-      text_body_template: |
-        De backup is mislukt.
-
-        Hier is het log:
-
-        ```
-        %{logs}
-        ```
     restore_succeeded:
       subject_template: "Het terugzetten van de backup is geslaagd."
-      text_body_template: "Het terugzetten van de backup is geslaagd."
     restore_failed:
       subject_template: "Terugzetten van backup is mislukt"
     bulk_invite_succeeded:
@@ -1296,6 +1287,8 @@ nl:
         We konden geen bruikbare tekst in je e-mail vinden.
 
         Als je deze melding krijgt en _wel_ een reactie had gestuurd, kan je het opnieuw proberen met een eenvoudigere opmaak.
+
+
     email_reject_parsing:
       subject_template: "[%{site_name}] E-mailprobleem -- Inhoud niet herkend"
       text_body_template: |
@@ -1322,12 +1315,6 @@ nl:
         %{post_error}
 
         Probeer het opnieuw als je het probleem kan oplossen.
-    email_reject_rate_limit_specified:
-      subject_template: "[%{site_name}] E-mailprobleem -- Gelimiteerde snelheid"
-      text_body_template: |
-        Het spijt ons, maar het plaatsen van je e-mail op %{destination} (met onderwerp %{former_title}) is niet gelukt.
-
-        Reden: %{rate_limit_description}
     email_reject_invalid_post_action:
       subject_template: "[%{site_name}] E-mailprobleem -- Ongeldige plaatsingsactie"
       text_body_template: |

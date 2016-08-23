@@ -322,6 +322,7 @@ de:
       * Themen in andere Kategorien verschieben
       * Links veröffentlichen, die von Suchmaschinen weiterverfolgt werden (das automatische [nofollow](http://de.wikipedia.org/wiki/Nofollow) wird entfernt)
       * auf die private Lounge-Kategorie zugreifen, die für Benutzer mit Vertrauensstufe 3 oder höher sichtbar ist
+      * Spam durch eine einzige Meldung ausblenden
 
       Hier ist die [aktuelle Liste aller Stammgäste](/badges/3/regular). Vergiss nicht, hallo zu sagen!
 
@@ -783,15 +784,15 @@ de:
     post_onebox_maxlength: "Maximale Länge eines Onebox-Discourse-Beitrags in Zeichen."
     onebox_domains_whitelist: "Liste von Domains, deren Inhalte für Oneboxen erlaubt sind; diese Domains sollten OpenGraph oder oEmbed unterstützen. Teste ihre Kompatibilität unter http://iframely.com/debug"
     logo_url: "Das Logo oben links auf deiner Site sollte eine breite, rechteckige Form haben. Wenn du kein Logo auswählst, wird stattdessen `title` angezeigt."
-    digest_logo_url: "Das alternative Logo oben in den E-Mail-Zusammenfassungen deiner Webseite. Sollte eine breite, rechteckige Form haben. Sollte kein SVG-Bild sein. Wenn leer, wird `logo_url` verwendet."
-    logo_small_url: "Dein Logo in klein für die obere linke Seite deiner Website, in Form eines rechteckigen Quadrates. Es wird angezeigt, wenn der Benutzer scrollt. Wenn du dieses Feld frei lässt, wird stattdessen ein Haus-Symbol angezeigt."
+    digest_logo_url: "Das alternative Logo oben in den E-Mail-Zusammenfassungen deiner Site. Sollte eine breite, rechteckige Form haben. Sollte kein SVG-Bild sein. Wenn leer, wird `logo_url` verwendet."
+    logo_small_url: "Dein Logo in klein für die obere linke Seite deiner Site, in Form eines rechteckigen Quadrates. Es wird angezeigt, wenn der Benutzer scrollt. Wenn du dieses Feld frei lässt, wird stattdessen ein Haus-Symbol angezeigt."
     favicon_url: "Das Favicon deiner Site. Besuche http://de.wikipedia.org/wiki/Favicon um weitere Informationen zu erhalten. Damit das Favicon korrekt über einen CDN-Service funktioniert, muss es eine .png Datei sein."
     mobile_logo_url: "Das fixierte Logo in der oberen linken Hälfte der mobilen Siteversion. Es sollte eine quadratische Form haben. Wenn du dieses Feld frei lässt, wird `logo_url` benutzt. Z.B. http://example.com/uploads/default/logo.png"
     apple_touch_icon_url: "Icon für berührungsempfindliche Apple-Geräte. Empfohlene Grösse ist 144px auf 144px."
     notification_email: "Die E-Mail-Adresse die als \"From:\" Absender aller wichtiger System-E-Mails benutzt wird. Die benutzte Domain sollte über korrekte SPF, DKIM und PTR Einträge verfügen, damit E-Mails sicher zugestellt werden können."
     email_custom_headers: "Eine durch senkrechte Striche getrennte Liste von eigenen E-Mail Headerzeilen"
     email_subject: "Format der Betreffzeile in Standard-E-Mails. Siehe https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801"
-    force_https: "Erzwinge HTTPS für deine Seite. ACHTUNG: aktiviere dies nicht, bevor HTTPS nicht vollständig eingerichtet ist und auf jeden Fall überall funktioniert! Hast du alle CDN-Netzwerke, alle Logins über Soziale Netzwerke, alle externe Logos / Abhängigkeiten geprüft, um sicherzustellen, dass sie auch alle HTTPS-kompatibel sind?"
+    force_https: "Erzwinge HTTPS für deine Site. ACHTUNG: Aktiviere dies nicht, bevor HTTPS nicht vollständig eingerichtet ist und auf jeden Fall überall funktioniert! Hast du alle CDN-Netzwerke, alle Logins über Soziale Netzwerke, alle externe Logos / Abhängigkeiten geprüft, um sicherzustellen, dass sie auch alle HTTPS-kompatibel sind?"
     summary_score_threshold: "Mindestpunktzahl, die ein Beitrag benötigt, um in der \"Thema zusammenfassen\"-Ansicht zu erscheinen."
     summary_posts_required: "Mindestanzahl an Beiträgen in einem Thema, bevor die \"Thema zusammenfassen\"-Funktion aktiviert wird."
     summary_likes_required: "Mindestanzahl an \"Gefällt mir\" Wertungen in einem Thema, bevor die \"Thema zusammenfassen\" Funktion aktiviert wird."
@@ -828,7 +829,6 @@ de:
     ga_universal_tracking_code: "Google Universal Analytics (analytics.js) tracking code code, beispielsweise: UA-12345678-9; Siehe http://google.com/analytics"
     ga_universal_domain_name: "Google Universal Analytics (analytics.js) domain name, eg: mysite.com; Siehe http://google.com/analytics"
     gtm_container_id: "Google Tag Manager Container-ID, z.B.: GTM-ABCDEF"
-    gtm_ua_domain_name: "Universal Analytics per Google Tag Manager Domain-Name. 'auto' wird empfohlen."
     enable_escaped_fragments: "Als Fallback die Ajax-Crawling-API von Google verwenden, wenn keine Suchmaschine deaktiviert wurde. Siehe https://developers.google.com/webmasters/ajax-crawling/docs/learn-more"
     enable_noscript_support: "Aktiviere Standard-Suchmaschinen-Webcrawler-Unterstützung durch den noscript-Tag"
     allow_moderators_to_create_categories: "Erlaube Moderatoren neue Kategorien zu erstellen"
@@ -879,6 +879,7 @@ de:
     enable_sso_provider: "Aktiviere das Discourse SSO Anbieter Protokoll unter /session/sso_provider; benötigt sso_secret."
     sso_url: "URL des Single Sign-On-Endpunkts (muss http:// oder https:// enthalten)"
     sso_secret: "Geheimer Schlüssel für die Authentifizierung von SSO-Informationen. Sollte unbedingt 10 Zeichen oder länger sein."
+    sso_overrides_bio: "Überschreibt \"Über mich\" im Benutzerprofil und verhindert Änderungen durch den Benutzer"
     sso_overrides_email: "Überschreibt lokale E-Mail mit E-Mail der externen Site aus dem SSO-Payload (WARNUNG: Diskrepanzen können aufgrund der Normalisierung lokaler E-Mail-Adressen auftreten.)"
     sso_overrides_username: "Überschreibt lokalen Benutzernamen mit dem Benutzernamen der externen Site aus dem SSO-Payload (WARNUNG: Diskrepanzen können aufgrund von Normalisierung von lokalen Benutzernamen auftreten)"
     sso_overrides_name: "Überschreibt den vollen Namen des Benutzers mit den Daten von der externen Site aus dem SSO-Payload bei jedem Login. Außerdem werden lokale Änderungen verhindert."
@@ -953,6 +954,7 @@ de:
     default_opengraph_image_url: "URL des standardmäßigen Open-Graph-Bildes."
     allow_all_attachments_for_group_messages: "Erlaube alle E-Mail-Anhänge für Gruppen-Nachrichten."
     convert_pasted_images_to_hq_jpg: "Konvertiert eingefügte Bilder in JPG-Dateien mit hoher Qualität."
+    convert_pasted_images_quality: "Qualität der umgewandelten JPG Datei (1 ist die niedrigste, 100 die beste Qualität)."
     enable_flash_video_onebox: "Aktiviere das Einbinden von swf und flv (Adobe Flash) Links in einer Onebox. ACHTUNG: Kann ein Sicherheitsrisiko sein."
     default_invitee_trust_level: "Standardwert für die Vertrauensstufe eines eingeladenen Benutzers (0-4)."
     default_trust_level: "Standardwert für die Vertrauensstufe (0-4) für alle neuen Benutzer. ACHTUNG! Diesen Wert anzuheben kann zu erhöhtem Spam-Aufkommen führen!"
@@ -1044,7 +1046,7 @@ de:
     auto_block_first_post_regex: "Regulärer Ausdruck der dafür sorgt dass passende erste Beiträge von Benutzern genehmigt werden müssen. Groß- und Kleinschreibung wird nicht beachtet.\nBeispiel: raging|a[bc]a blockiert alle ersten Beiträge, die raging, aba oder aca beinhalten. Wird nur auf den ersten Beitrag angewendet."
     reply_by_email_enabled: "Aktviere das Antworten auf Themen via E-Mail."
     reply_by_email_address: "Vorlage für die Antwort einer per E-Mail eingehender E-Mail-Adresse, zum Beispiel: %{reply_key}@reply.example.com oder replies+%{reply_key}@example.com"
-    alternative_reply_by_email_addresses: "Liste alternativer Vorlagen für eingehende E-Mail-Adressen für das Antworten per E-Mail"
+    alternative_reply_by_email_addresses: "Liste alternativer Vorlagen für eingehende E-Mail-Adressen für das Antworten per E-Mail. Beispiel: %{reply_key}@antwort.example.com|antworten+%{reply_key}@example.com"
     incoming_email_prefer_html: "Verwende die HTML-Version statt der Text-Version für eingehende E-Mails. Kann unerwartete Formatierungsprobleme verursachen!"
     disable_emails: "Discourse daran hindern jegliche E-Mails zu verschicken"
     strip_images_from_short_emails: "Entferne Bilder aus E-Mails kleiner als 2800 Bytes."
@@ -1056,15 +1058,17 @@ de:
     max_emails_per_day_per_user: "Maximale Zahl an E-Mails, die Benutzern gesendet werden. 0 zum Deaktivieren der Grenze."
     enable_staged_users: "Erstelle automatisch vorbereitete Benutzer, wenn eingehende E-Mails verarbeitet werden."
     maximum_staged_users_per_email: "Maximale Anzahl vorbereiteter Benutzer, wenn eine eingehende E-Mail bearbeitet wird."
-    auto_generated_whitelist: "Liste von E-Mail-Adressen, die nicht auf automatisch generierte Inhalte überprüft werden."
+    auto_generated_whitelist: "Liste von E-Mail-Adressen, die nicht auf automatisch generierte Inhalte überprüft werden. Beispiel: foo@bar.com|discourse@example.com"
     block_auto_generated_emails: "Eingehende E-Mails blockieren, die als automatisch generiert erkannt werden."
     ignore_by_title: "Ignoriere eingehende E-Mails basierend auf ihrem Betreff."
     mailgun_api_key: "Geheimer Mailgun-API-Schlüssel, um Webhook-Nachrichten zu überprüfen"
-    soft_bounce_score: "Bounce-Score, der einem Benutzer hinzugefügt wird, wenn eine E-Mail vorübergehend nicht zugestellt werden kann."
-    hard_bounce_score: "Bounce-Score, der einem Benutzer hinzugefügt werden, wenn eine E-Mail dauerhaft nicht zugestellt werden konnte."
+    soft_bounce_score: "Der Bounce-Score des Benutzers wird um diesen Wert erhöht, wenn eine E-Mail vorübergehend nicht zugestellt werden kann."
+    hard_bounce_score: "Der Bounce-Score des Benutzers wird um diesen Wert erhöht, wenn eine E-Mail dauerhaft nicht zugestellt werden konnte."
     bounce_score_threshold: "Bounce-Score, ab dem wir einem Benutzer keine E-Mails mehr senden."
     bounce_score_threshold_deactivate: "Bounce-Score, ab dem wir einen Benutzer deaktivieren."
     reset_bounce_score_after_days: "Bounce-Score automatisch nach X Tagen zurücksetzen."
+    attachment_content_type_blacklist: "Liste der Schlüsselwörter für die Ablehnung von Anhängen basierend auf Inhaltstypen."
+    attachment_filename_blacklist: "Liste der Schlüsselwörter für die Ablehnung von Anhängen basierend auf dem Dateinamen."
     manual_polling_enabled: "Eingehende E-Mails über die API für E-Mail-Antworten annehmen."
     pop3_polling_enabled: "E-Mail-Antworten über POP3 abholen."
     pop3_polling_ssl: "SSL für die Verbindung zum POP3-Server verwenden. (Empfohlen)"
@@ -1092,7 +1096,7 @@ de:
     automatically_download_gravatars: "Profilbilder von Gravatar herunterladen, wenn ein Benutzer sich registriert oder seine E-Mail-Adresse ändert."
     digest_topics: "Maximale Anzahl von Themen, die in der E-Mail-Zusammenfassung angezeigt werden."
     digest_min_excerpt_length: "Minimale Zeichenlänge für Auszüge von Beiträgen in der E-Mail-Zusammenfassung."
-    delete_digest_email_after_days: "Unterdrücke E-Mail-Zusammenfassungen für Benutzer, die länger als (n) Tage nicht auf der Seite gesehen wurden."
+    delete_digest_email_after_days: "Unterdrücke E-Mail-Zusammenfassungen für Benutzer, die länger als (n) Tage nicht auf der Site gesehen wurden."
     digest_suppress_categories: "Unterdrücke diese Kategorien in E-Mail-Zusammenfassungen."
     disable_digest_emails: "Deaktiviere E-Mail-Zusammenfassungen für alle Benutzer."
     detect_custom_avatars: "Aktiviere diese Option, um zu überprüfen, ob Benutzer eigene Profilbilder hochgeladen haben."
@@ -1478,7 +1482,7 @@ de:
 
       - Schaue dir im [GitHub-Changelog](https://github.com/discourse/discourse/commits/master) an, was neu ist
 
-      - Besuche [meta.discourse.org](http://meta.discourse.org) ffür Neuigkeiten, Diskussionen und Support für Discourse
+      - Besuche [meta.discourse.org](https://meta.discourse.org) für Neuigkeiten, Diskussionen und Support für Discourse
   new_version_mailer_with_notes:
     subject_template: "[%{site_name}] Update verfügbar"
     text_body_template: |
@@ -1491,7 +1495,7 @@ de:
 
       - Schaue dir im [GitHub-Changelog](https://github.com/discourse/discourse/commits/master) an, was neu ist
 
-      - Besuche [meta.discourse.org](http://meta.discourse.org) ffür Neuigkeiten, Diskussionen und Support für Discourse
+      - Besuche [meta.discourse.org](https://meta.discourse.org) für Neuigkeiten, Diskussionen und Support für Discourse
 
       ### Versionshinweise
 
@@ -1662,7 +1666,16 @@ de:
         [prefs]: %{user_preferences_url}
     backup_succeeded:
       subject_template: "Sicherung erfolgreich abgeschlossen"
-      text_body_template: "Backup erfolgreich erstellt.\nBesuche [admin > backup section](%{base_url}/admin/backups) um das neue Backup herunterzuladen."
+      text_body_template: |
+        Backup erfolgreich erstellt.
+
+        Besuche [admin > backup section](%{base_url}/admin/backups) um das neue Backup herunterzuladen.
+
+        Hier ist das Protokoll:
+
+        ```text
+        %{logs}
+        ```
     backup_failed:
       subject_template: "Sicherung fehlgeschlagen"
       text_body_template: |
@@ -1670,12 +1683,19 @@ de:
 
         Hier ist das Protokoll:
 
-        ```
+        ```text
         %{logs}
         ```
     restore_succeeded:
       subject_template: "Wiederherstellung erfolgreich abgeschlossen"
-      text_body_template: "Die Wiederherstellung war erfolgreich."
+      text_body_template: |
+        Die Wiederherstellung war erfolgreich.
+
+        Hier ist das Protokoll:
+
+        ```text
+        %{logs}
+        ```
     restore_failed:
       subject_template: "Wiederherstellung fehlgeschlagen"
       text_body_template: |
@@ -1683,7 +1703,7 @@ de:
 
         Hier ist das Protokoll:
 
-        ```
+        ```text
         %{logs}
         ```
     bulk_invite_succeeded:
@@ -1794,12 +1814,6 @@ de:
         %{post_error}
 
         Bitte versuch es erneut, wenn du das Problem beheben kannst.
-    email_reject_rate_limit_specified:
-      subject_template: "[%{site_name}] E-Mail-Problem -- Begrenzung"
-      text_body_template: |
-        Es tut uns leid, aber deine E-Mail-Nachricht an %{destination} (betitelt mit %{former_title}) hat nicht funktioniert.
-
-        Grund: %{rate_limit_description}
     email_reject_invalid_post_action:
       subject_template: "[%{site_name}] E-Mail-Problem -- Fehlerhafte Beitragsaktion"
       text_body_template: |
@@ -1919,6 +1933,7 @@ de:
         Es wurden Probleme in deinem Admin-Dashboard gemeldet.
 
         [Bitte überprüfe und behebe sie](%{base_url}/admin).
+
   unsubscribe_link: |
     Um diese E-Mails abzubestellen, [klicke hier](%{unsubscribe_url}).
   unsubscribe_link_and_mail: |
@@ -2255,7 +2270,7 @@ de:
 
       ## [Dies ist ein zivilisierter Platz für öffentliche Diskussionen](#civilized)
 
-      Bitte behandle dieses Diskussionsforum mit dem gleichen Respekt wie einen öffentlichen Park. Auch wir sind eine gemeinsame Community-Ressource &mdash; ein Platz, um Fähigkeiten, Wissen und Interessen durch eine fortlaufenden Dialog zu teilen.
+      Bitte behandle dieses Diskussionsforum mit dem gleichen Respekt wie einen öffentlichen Park. Auch wir sind eine gemeinsame Community-Ressource &mdash; ein Platz, um Fähigkeiten, Wissen und Interessen durch einen fortlaufenden Dialog zu teilen.
 
       Dies sind keine harten oder schnelle Regeln, sondern vielmehr Hilfen für die menschliche Einschätzung unserer Community. Folge diesen Richtlinien, damit dies ein sauberer, gut beleuchteter Platz für zivilisierten, öffentlichen Diskurs bleibt.
 
@@ -2263,11 +2278,11 @@ de:
 
       ## [Verbessere die Diskussion](#improve)
 
-      Hilf uns, dies zu einem großartiger Platz für Diskussionen zu machen, indem du stets daran arbeitest, die Diskussion in irgendeiner, noch so geringen Art zu verbessern. Wenn du dir nicht sicher bist, ob dein Beitrag zum Dialog beiträgt, denke darüber nach, was du sagen möchtest und probiere es später noch einmal.
+      Hilf uns, dies zu einem großartigen Platz für Diskussionen zu machen, indem du stets daran arbeitest, die Diskussion in irgendeiner Art zu verbessern, egal wie geringfügig. Wenn du dir nicht sicher bist, ob dein Beitrag zum Dialog beiträgt, denke darüber nach, was du sagen möchtest und probiere es später noch einmal.
 
-      Die Themen, die hier diskutiert werden, sind uns wichtig, und wir möchten, dass du dich so verhältst, als wären sie auch genauso für dich wichtig. Respektiere die Themen und die Personen, die diese diskutieren, auch wenn du mit etwas, was gesagt wird, nicht einverstanden bist.
+      Die hier diskutierten Themen sind uns wichtig und wir möchten, dass du dich so verhältst, als wären sie auch genauso wichtig für dich. Respektiere die Themen und die Personen, die diese diskutieren, auch wenn du mit dem was gesagt wird, nicht einverstanden bist.
 
-      Ein Weg, die Diskussion zu verbessern, besteht darin zu entdecken, was schon passiert ist. Bitte verbringe etwas Zeit damit, die Themen hier zu durchsuchen, bevor du antwortest oder deine eigenen startest, und du wirst eine bessere Chance haben, andere zu treffen, die deine Interessen teilen.
+      Ein Weg, die Diskussion zu verbessern, besteht darin zu entdecken, was schon passiert ist. Bitte verbringe etwas Zeit damit, die Themen hier zu durchsuchen, bevor du antwortest oder deine eigenen startest, und du wirst eine bessere Chance haben andere zu treffen, die deine Interessen teilen.
 
       <a name="agreeable"></a>
 
@@ -2275,20 +2290,20 @@ de:
 
       Du magst auf etwas antworten möchten, indem du widersprichst. Das ist in Ordnung. Aber denke daran, _Ideen zu kritisieren, nicht Personen_. Bitte vermeide:
 
-      *   Beschimpfungen.
-      *   Persönliche Angriffe.
-      *   Antworten auf den Tonfall einen Beitrag statt auf dessen Inhalt.
+      *   Beschimpfungen
+      *   Persönliche Angriffe
+      *   Antworten auf den Tonfall eines Beitrags statt auf dessen Inhalt
       *   Reflexartiges Widersprechen
 
-      Biete stattdessen vernünftige Gegenargument, die den Dialog verbessern.
+      Biete stattdessen vernünftige Gegenargumente, die den Dialog verbessern.
 
       <a name="participate"></a>
 
       ## [Deine Beteiligung zählt](#participate)
 
-      Die Dialoge, die wir führen, geben den Ton für alle an. Hilf uns dabei, die Zukunft dieser Community zu beeinflussen, indem wir uns bewusst für Dialoge entscheiden, die dieses Forum zu einem interessanten Aufenthaltsraum zu machen &mdash; und jene vermeiden, die das nicht tun
+      Die hier geführten Dialoge geben den Ton für alle an. Hilf uns dabei, die Zukunft dieser Community zu beeinflussen, indem wir uns bewusst für Dialoge entscheiden, die dieses Forum zu einem interessanten Aufenthaltsraum machen &mdash; und jene vermeiden, die das nicht tun.
 
-      Discourse bietet Werkzeuge, die der Community ermöglichen, gemeinsam die besten (und schlechtesten) Beiträge zu identifzieren: Favoriten, Lesezeichen, „Gefällt mir“-Angaben, Meldungen, Antworten, Bearbeitungen, und so weiter. Benutze diese Werkzeuge, um deine eigene Erfahrung zu verbessern, und die von allen anderen ebenso.
+      Discourse bietet Werkzeuge, die der Community ermöglichen, gemeinsam die besten (und schlechtesten) Beiträge zu identifizieren: Favoriten, Lesezeichen, „Gefällt mir“-Angaben, Meldungen, Antworten, Bearbeitungen, und so weiter. Benutze diese Werkzeuge, um deine eigene Erfahrung zu verbessern, und die von allen anderen ebenso.
 
       Lass uns versuchen, den Park besser zu verlassen als wir ihn vorgefunden haben.
 
@@ -2300,7 +2315,7 @@ de:
 
       Wenn du schlechtes Verhalten siehst, antworte nicht. Schlechtes Verhalten wird gefördert, indem es anerkannt wird, es verbraucht deine Energie und verbraucht die Zeit von allen. _Melde es einfach_. Wenn genügend Meldungen zusammenkommen, werden Maßnahmen eingeleitet, entweder automatisch oder durch das Eingreifen eines Moderators.
 
-      Um unsere Community aufrechtzuerhalten, behalten sich Moderatoren das Recht vor, jeden Inhalten und jedes Benutzerkonto jederzeit aus irgendeinem Grund zu entfernen. Moderatoren sehen neue Beiträge in keiner Weise früher; die Moderatoren und die Seitenbetreiber übernehmen keine Verantwortung für jeglichen Inhalt, der in der Community geschrieben wird.
+      Um unsere Community aufrechtzuerhalten, behalten sich Moderatoren das Recht vor, jeden Inhalten und jedes Benutzerkonto jederzeit aus irgendeinem Grund zu entfernen. Moderatoren sehen neue Beiträge in keiner Weise früher; die Moderatoren und die Sitebetreiber übernehmen keine Verantwortung für jeglichen Inhalt, der in der Community geschrieben wird.
 
       <a name="be-civil"></a>
 
@@ -2308,26 +2323,26 @@ de:
 
       Nichts sabotiert einen gesunden Dialog so sehr wie Unhöflichkeit.
 
-      *   Sei höflich. Schreibe nicht, das eine vernünftige Person als anstößig, beleidigend oder, als Hasstirade auffassen würde.
-      *   Halte den Platz sauber. Schreibe nichts, was obszön oder sexuell expizit ist.
+      *   Sei höflich. Schreibe nichts, was eine vernünftige Person als anstößig, beleidigend oder als Hasstirade auffassen würde.
+      *   Halte den Platz sauber. Schreibe nichts, was obszön oder sexuell explizit ist.
       *   Lasst uns gegenseitig respektieren. Belästige niemanden, füge niemandem Kummer zu, gib dich nicht als jemand anderes aus und veröffentliche niemandes persönliche Informationen.
       *   Respektiere unser Forum. Schreibe keinen Spam und beschädige das Forum auch sonst in keiner Weise.
 
       Dies sind keine konkreten Bedingungen mit präzisen Definitionen &mdash; vermeide sogar den _Anschein_ von jedem dieser Dinge. Wenn du dir nicht sicher bist, frage dich selbst, wie du dich fühlen würdest, wenn dein Beitrag auf der Titelseite der Frankfurter Allgemeinen Zeitung erscheinen würde.
 
-      Dies ist ein öffentliches Forum, und Suchmaschinen indizieren diese Diskussionen. Halte die Sprache, Links und Bilder sicher für Familie und Freunde.
+      Dies ist ein öffentliches Forum und Suchmaschinen indizieren diese Diskussionen. Halte die Sprache, Links und Bilder sicher für Familie und Freunde.
 
       <a name="keep-tidy"></a>
 
       ## [Halte den Platz sauber](#keep-tidy)
 
-      Betreibe die nötigen Anstrengungen, um Dinge an der richtigen Stelle zu platzieren, damit wir mehr Zeit mit Diskussionen und weniger mit Aufräumen verbringen kann. Daher:
+      Betreibe die nötigen Anstrengungen, um Dinge an der richtigen Stelle zu platzieren, damit wir mehr Zeit mit Diskussionen und weniger mit Aufräumen verbringen können. Daher:
 
-      *   Erstelle keine Themen in der falschen Kategorie.
-      *   Schreibe Beiträge nicht gleichzeitig in mehreren Themen.
-      *   Schreibe keine leeren Antworten.
-      *   Lenke nicht vom Thema ab, indem du es mitten drin änderst.
-      *   Signiere deine Beiträge nicht &mdash; jedem Beitrag sind deine Profilinformationen beigefügt.
+      *   Erstelle keine Themen in der falschen Kategorie
+      *   Schreibe Beiträge nicht gleichzeitig in mehreren Themen
+      *   Schreibe keine leeren Antworten
+      *   Lenke nicht vom Thema ab, indem du es mitten drin änderst
+      *   Signiere deine Beiträge nicht &mdash; jedem Beitrag sind deine Profilinformationen beigefügt
 
       Verwende die „Gefällt mir“-Schaltfläche statt „+1“ oder „Einverstanden“ zu schreiben. Statt ein bestehendes Thema in eine völlig andere Richtung zu lenken, verwende die Funktion „Mit verknüpftem Thema antworten“.
 
@@ -2335,19 +2350,19 @@ de:
 
       ## [Poste nur deine eigenen Sachen](#stealing)
 
-      Du darfst nichts ohne Erlaubnis nichts posten, was jemand anderem gehört. Du darfst keine Beschreibungen, Links oder Methoden schreiben, die geistiges Eigentum verletzen oder gegen geltendes Gesetz verstoßen.
+      Du darfst ohne Erlaubnis nichts schreiben, was jemand anderem gehört. Du darfst keine Beschreibungen von, Links zu oder Methoden beschreiben, die geistiges Eigentum verletzen (Software, Video, Audio, Bilder) oder gegen geltendes Gesetz verstoßen.
 
       <a name="power"></a>
 
       ## [Betrieben von Euch](#power)
 
-      Diese Seite wird von euren [freundlichen Mitarbeitern](/about) und *euch* betrieben, der Community. Wenn du irgendwelche weiteren Fragen dazu hast, wie Dinge hier funktionieren sollten, öffne ein neues Thema in der Kategorie [Feedback zur Seite](/c/site-feedback) und lass es uns diskutieren! Wenn es ein kritisches oder dringendes Problem gibt, dass nicht mit einem Meta-Thema oder einer Meldung behandelt werden, kontaktiere uns über die [Mitarbeiter-Seite](/about).
+      Diese Site wird von euren [freundlichen Mitarbeitern](/about) und *euch* betrieben, der Community. Wenn du irgendwelche weiteren Fragen dazu hast, wie Dinge hier funktionieren sollten, öffne ein neues Thema in der Kategorie [Feedback zur Site](/c/site-feedback) und lass es uns diskutieren! Wenn es ein kritisches oder dringendes Problem gibt, dass nicht mit einem Meta-Thema oder einer Meldung behandelt werden kann, kontaktiere uns über die [Mitarbeiter-Seite](/about).
 
       <a name="tos"></a>
 
       ## [Nutzungsbedingungen](#tos)
 
-      Ja, die rechtliche Seite ist langweilig, aber wir müssen uns selbst schützen &ndash; und im erweiterten Sinne auch dich und deine Daten &ndash; vor unfreundlichen Leuten. Wir haben [Nutzungsbedinugngen](/tos), die deines (und unser) Verhalten und unsere Rechte bezüglich des Inhalts, der Privatsphäre und den Gesetzen beschreiben. Um diesen Dienst zu nutzen, musst du dich mit unseren [Nutzungsbedingungen](/tos) einverstanden erklären.
+      Ja, die rechtliche Seite ist langweilig, aber wir müssen uns selbst schützen &ndash; und im erweiterten Sinne auch dich und deine Daten &ndash; vor unfreundlichen Leuten. Wir haben [Nutzungsbedingungen](/tos), die deines (und unser) Verhalten und unsere Rechte bezüglich des Inhalts, der Privatsphäre und den Gesetzen beschreiben. Um diesen Dienst zu nutzen, musst du dich mit unseren [Nutzungsbedingungen](/tos) einverstanden erklären.
   tos_topic:
     title: "Nutzungsbedingungen"
     body: |
@@ -2705,12 +2720,12 @@ de:
       name: Aktivist
       description: Hat 3 Anwärter (Vertrauensstufe 1) eingeladen
       long_description: |
-        Das Abzeichen wird verliehen, wenn du 3 Leute eingeladen hast, die daraufhin genug Zeit auf der Seite verbracht haben, um Anwärter zu werden. Eine lebendige Community benötigt eine regelmäßige Infusion mit Neulingen, die sich regelmäßig beteiligen und neue Stimmen zum Dialog ergänzen.
+        Das Abzeichen wird verliehen, wenn du 3 Leute eingeladen hast, die daraufhin genug Zeit auf der Site verbracht haben, um Anwärter zu werden. Eine lebendige Community benötigt eine regelmäßige Infusion mit Neulingen, die sich regelmäßig beteiligen und neue Stimmen zum Dialog ergänzen.
     champion:
       name: Verfechter
       description: Hat 5 Mitglieder (Vertrauensstufe 2) eingeladen
       long_description: |
-        Das Abzeichen wird verliehen, wenn du 5 Leute eingeladen hast, die daraufhin genug Zeit auf der Seite verbracht haben, um vollwertige Mitglieder zu werden. Wow! Danke dafür, dass du die Vielfalt unserer Community mit neuen Mitgliedern erweiterst!
+        Das Abzeichen wird verliehen, wenn du 5 Leute eingeladen hast, die daraufhin genug Zeit auf der Site verbracht haben, um vollwertige Mitglieder zu werden. Wow! Danke dafür, dass du die Vielfalt unserer Community mit neuen Mitgliedern erweiterst!
     first_share:
       name: Erste Weitergabe
       description: Hat einen Beitrag geteilt
@@ -2767,17 +2782,17 @@ de:
       long_description: |
         Das Abzeichen wird verliehen, wenn 300 deiner Beiträge mindestens 5 „Gefällt mir“-Angaben erhalten. Wow! Die Community bewundert deine regelmäßigen, hochwertigen Beiträge zu den Dialogen!
     out_of_love:
-      name: Aus Liebe
+      name: Out of Love
       description: Hat 50 „Gefällt mir“-Angaben an einem Tag vergeben
       long_description: |
         Das Abzeichen wird verliehen, wenn du alle deiner 50 täglichen „Gefällt mir“-Angaben nutzt. Daran zu denken, sich einen Moment zu nehmen und die Beiträge mit „Gefällt mir“ zu markieren, die du genießt und schätzt, ermuntert deine Community-Kollegen, in der Zukunft noch großartigere Diskussionen zu erstellen.
     higher_love:
-      name: Mehr als Liebe
+      name: Higher Love
       description: Hat fünfmal je 50 „Gefällt mir“-Angaben an einem Tag vergeben
       long_description: |
         Das Abzeichen wird verliehen, wenn du fünf Tage lang alle deiner 50 täglichen „Gefällt mir“-Angaben nutzt. Danke, dass du dir die Zeit nimmst, die besten Dialoge täglich zu fördern!
     crazy_in_love:
-      name: Total verliebt
+      name: Crazy in Love
       description: Hat 20-mal je 50 „Gefällt mir“-Angaben an einem Tag vergeben
       long_description: |
         Das Abzeichen wird verliehen, wenn du 20 Tage lang alle deiner 50 täglichen „Gefällt mir“-Angaben nutzt. Wow! Du bist ein Vorbild für die regelmäßige Ermunterung deiner Community-Kollegen!

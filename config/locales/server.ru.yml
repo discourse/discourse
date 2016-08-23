@@ -1274,30 +1274,12 @@ ru:
         [prefs]: %{user_preferences_url}
     backup_succeeded:
       subject_template: "Резервное копирование успешно завершено"
-      text_body_template: "Резервная копия создана.\nПерейдите в [Админку > Резервные копии](%{base_url}/admin/backups), чтобы её скачать."
     backup_failed:
       subject_template: "Резервное копирование не удалось"
-      text_body_template: |
-        Не удалось сделать резервную копию.
-
-        Детали:
-
-        ```
-        %{logs}
-        ```
     restore_succeeded:
       subject_template: "Восстановление данных успешно завершено"
-      text_body_template: "Восстановление выполнено успешно."
     restore_failed:
       subject_template: "Восстановление данных не удалось"
-      text_body_template: |
-        Восстановление не удалось.
-
-        Детали:
-
-        ```
-        %{logs}
-        ```
     bulk_invite_succeeded:
       subject_template: "Массовое приглашение пользователей успешно выполнено"
       text_body_template: "Ваш файл для массового приглашения пользователей был успешно обработан, отослано приглашений - %{sent}."

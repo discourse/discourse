@@ -788,8 +788,8 @@ es:
     too_few_topics_notice: "¡Vamos a <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>dar por comenzada la comunidad!</a> Hay <strong>%{currentTopics} / %{requiredTopics}</strong> temas. Los nuevos visitantes necesitan algo que leer y a lo que responder."
     too_few_posts_notice: "¡Vamos a <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>dar por empezada la comunidad!</a> Hay <strong>%{currentPosts} / %{requiredPosts}</strong> mensajes. Los nuevos visitantes necesitan algo que leer y a lo que responder."
     logs_error_rate_notice:
-      reached: "<b>[%{relativeAge}]</b> La tasa actual <a href='%{url}' target='_blank'>%{rate}</a> ha alcanzado el límite establecido en las opciones del sitio en el %{siteSettingRate}."
-      exceeded: "<b>[%{relativeAge}]</b> La tasa actual <a href='%{url}' target='_blank'>%{rate}</a> ha excedido el límite establecido en las opciones del sitio en el %{siteSettingRate}."
+      reached: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> alcanzó el límite establecido en las opciones del sitio del %{siteSettingRate}."
+      exceeded: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> excedió el límite establecido en las opciones del sitio del %{siteSettingRate}."
       rate:
         one: "1 error/%{duration}"
         other: "%{count} errores/%{duration}"
@@ -913,8 +913,10 @@ es:
       more_emoji: "más..."
       options: "Opciones"
       whisper: "susurrar"
+      unlist: "invisible"
       add_warning: "Ésta es una advertencia oficial."
       toggle_whisper: "Activar/desactivar Susurro"
+      toggle_unlisted: "Visible / Invisible"
       posting_not_on_topic: "¿A qué tema quieres responder?"
       saving_draft_tip: "guardando..."
       saved_draft_tip: "guardado"
@@ -979,6 +981,9 @@ es:
       modal_ok: "OK"
       modal_cancel: "Cancelar"
       cant_send_pm: "Lo sentimos, no puedes enviar un mensaje a %{username}."
+      yourself_confirm:
+        title: "¿Olvidaste añadir destinatarios?"
+        body: "¡Vas a enviarte este mensaje a ti mismo!"
       admin_options_title: "Opciones de moderación para este tema"
       auto_close:
         label: "Tiempo para cierre automático del tema"
@@ -1062,6 +1067,7 @@ es:
       most_liked: "Más \"Me gusta\" recibidos"
       select_all: "Seleccionar todo"
       clear_all: "Limpiar todo"
+      too_short: "El término de búsqueda es demasiado corto."
       result_count:
         one: "1 resultado para <span class='term'>\"{{term}}\"</span>"
         other: "{{count}} resultados para <span class='term'>\"{{term}}\"</span>"
@@ -2168,7 +2174,7 @@ es:
         group_owners: Propietarios
         add_owners: Añadir propietarios
         incoming_email: "Correos electrónicos entrantes personalizados"
-        incoming_email_placeholder: "introducir dirección de emai"
+        incoming_email_placeholder: "introducir dirección de email"
       api:
         generate_master: "Generar clave maestra de API"
         none: "No hay ninguna clave de API activa en este momento."

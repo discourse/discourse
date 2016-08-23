@@ -813,6 +813,7 @@ es:
     tl3_additional_likes_per_day_multiplier: "Incrementar el límite de likes por día para el nivel de confianza 3 (habitual) multiplicando por este número"
     tl4_additional_likes_per_day_multiplier: "Incrementar el límite de likes por día para el nivel de confianza 4 (líder) multiplicando por este número"
     num_spam_flags_to_block_new_user: "Si los posts de un nuevo usuario obtienen este número de reportes por spam de num_users_to_block_new_user diferentes usuarios, se ocultarán todos sus posts y no podrá publicar más en un futuro. Pon 0 para deshabilitar esto."
+    num_users_to_block_new_user: "Si los posts de un nuevo usuario son reportados como spam por num_spam_flags_to_block_new_user usuarios diferentes, ocultar todos sus posts y evitar que publique en el futuro. Poner 0 para desactivar."
     num_tl3_flags_to_block_new_user: "Si los posts de un nuevo usuario obtienen este número de reportes por spam de num_users_to_block_new_user diferentes usuarios, se ocultarán todos sus posts y no podrá publicar más en un futuro. Pon 0 para deshabilitar esto."
     notify_mods_when_user_blocked: "Si un usuario es bloqueado automáticamente, enviar un mensaje a todos los moderadores."
     flag_sockpuppets: "Si un nuevo usuario responde a un tema desde la misma dirección de IP que el nuevo usuario que inició el tema, reportar los posts de los dos como spam en potencia."
@@ -821,8 +822,11 @@ es:
     post_undo_action_window_mins: "Número de minutos durante los cuales los usuarios pueden deshacer sus acciones recientes en un post (me gusta, reportes, etc)."
     must_approve_users: "Los miembros administración deben aprobar todas las nuevas cuentas antes de que se les permita el acceso al sitio. AVISO: ¡habilitar esta opción en un sitio activo revocará el acceso a los usuarios que no sean moderadores o admin!"
     pending_users_reminder_delay: "Notificar a los moderadores si hay nuevos usuarios que hayan estado esperando aprbación durante más estas horas. Usa -1 para desactivar estas notificaciones."
+    ga_tracking_code: "El código \"Google analytics (ga.js)\", por ejemplo: UA-12345678-9 es OBSOLETO; leer  http://google.com/analytics"
+    ga_domain_name: "El nombre del dominio para \"Google analytics (ga.js)\" es OBSOLETO, ejemplo: mysite.com; ver http://google.com/analytics"
     ga_universal_tracking_code: "Código de seguimiento de Google Universal Analytics (analytics.js), ejemplo: UA-12345678-9; visita http://google.com/analytics"
     ga_universal_domain_name: "Nombre del dominio establecido en Google Universal Analytics (analytics.js), ejemplo: misitio.com; visita http://google.com/analytics"
+    gtm_container_id: "Google Tag Manager container id. ejempo: GTM-ABCDEF"
     enable_escaped_fragments: "Ir a la API Ajax-Crawling de Google si no se detecta ningún webcrawler. Mira https://developers.google.com/webmasters/ajax-crawling/docs/learn-more"
     enable_noscript_support: "Habilitar el soporte de motor de búsqueda estándar webcrawler mediante la etiqueta noscript"
     allow_moderators_to_create_categories: "Permitir a los moderadores crear nuevas categorías"
@@ -844,6 +848,7 @@ es:
     redirect_users_to_top_page: "Redirigir automáticamente a los nuevos usuarios y a los ausentes de larga duración a la página de mejores temas."
     top_page_default_timeframe: "Período de tiempo por defecto para la página de temas top"
     show_email_on_profile: "Mostrar el e-mail los usuarios en su perfil (solamente visibles para ellos mismos y el staff)"
+    prioritize_username_in_ux: "Mostrar username primero en la página de usuario, tarjeta de usuario y mensajes (cuando el nombre ha sido desactivado se muestra primero)"
     email_token_valid_hours: "Los tokens para restablecer contraseña olvidada / activar cuenta son válidos durante (n) horas."
     email_token_grace_period_hours: "Los tokens para restablecer contraseña olvidada / activar cuenta son válidos durante (n) horas de periodo de gracia, después de ser redimidos."
     enable_badges: "Activar el sistema de distintivos"
@@ -895,6 +900,7 @@ es:
     enable_github_logins: "Activar autenticación por Github, requiere una github_client_id y un github_client_secret"
     github_client_id: "Client id para la autenticación por Github, registrado en https://github.com/settings/applications"
     github_client_secret: "Client secret para la autenticación por Github, registrado en https://github.com/settings/applications"
+    readonly_mode_during_backup: "Habilitar el modo de 'solo-lectura' mientras se hace el backup"
     allow_restore: "Permitir restauración, la cual puede sobreescribir TODOS los datos del sitio! Dejela en falso a menos que tenga planeado recuperar sus datos desde una copia de respaldo. "
     maximum_backups: "La cantidad máxima de copias de seguridad a tener en el disco. Las copias de seguridad más antiguas se eliminan automáticamente"
     automatic_backups_enabled: "Ejecutar backups automáticos definidos por la opción de frecuencia de backups"
@@ -926,6 +932,7 @@ es:
     alert_admins_if_errors_per_hour: "Número de errores por hora que activa la alerta a administración. Un valor de 0 desactiva esta funcionalidad. NOTA: requiere reiniciar la instancia."
     suggested_topics: "Número de temas sugeridos mostrados al pie del tema."
     limit_suggested_to_category: "Solo mostrar temas de la categoría actual en los temas sugeridos."
+    suggested_topics_max_days_old: "Los temas sugeridos no deben ser más antiguos de n días."
     clean_up_uploads: "Eliminar subidas huérfanas sin referencia para prevenir hosting ilegal. AVISO: antes de habilitar esta opción quizá quieres hacer un backup de tu directorio de /uploads"
     clean_orphan_uploads_grace_period_hours: "Período de gracia (en horas) antes de que una subida huérfana sea eliminada."
     purge_deleted_uploads_grace_period_days: "Período de gracia (en días) antes de que una subida eliminada sea borrada totalmente."
@@ -939,8 +946,11 @@ es:
     s3_cdn_url: "URL de un CDN a utilizar para todos los activos s3 (por ejemplo: https://cdn.somewhere.com). AVISO: después de cambiar esta opción debes hacer un rebake de todos los posts antiguos."
     avatar_sizes: "Lista de tamaños de avatar generados automáticamente."
     external_system_avatars_enabled: "Usar un servicio externo para los avatares."
+    external_system_avatars_url: "Dirección URL del servicio externo para los avatares. Sustituciones permitidas: {username} {first_letter} {color} {size}"
     default_opengraph_image_url: "URL de la imagen opengraph por defecto."
     allow_all_attachments_for_group_messages: "Permitir todos los archivos adjuntos de email para los mensajes a grupos."
+    convert_pasted_images_to_hq_jpg: "Convertir imágenes pegadas en archivos JPG de alta calidad."
+    convert_pasted_images_quality: "Calidad del archivo JPG convertido  (1 es calidad mínima, 100 es máxima calidad)."
     enable_flash_video_onebox: "Habilitar el embebido de enlaces swf y flv (Adobe Flash) en formato Onebox. AVISO: podría introducir riesgos de seguridad."
     default_invitee_trust_level: "Nivel de confianza por defecto (0-4) para usuarios invitados."
     default_trust_level: "Nivel de confianza por defecto (0-4) para los nuevos usuarios. ¡AVISO! Cambiar esto puede resultar en riesgo por spam."
@@ -958,7 +968,9 @@ es:
     tl3_requires_days_visited: "Mínimo número de días que un usuario necesita haber visitado el sitio en los últimos (tl3 time period) días para poder ser promocionado a nivel de confianza 3. Establece un valor superior para desactivar la posibilidad de subir a nivel de confianza 3. (0 o más)"
     tl3_requires_topics_replied_to: "Mínimo número de temas que un usuario necesita haber respondido en los últimos (tl3 time period) días para poder ser promocionado a nivel de confianza 3. (0 o más)"
     tl3_requires_topics_viewed: "Porcentaje de temas creados en los últimos (tl3 time period) días para que un usuario sea tenido en cuenta para promocionar a nivel de confianza 3. (0 a 100)"
+    tl3_requires_topics_viewed_cap: "El número máximo requerido de temas vistos en los últimos días (tener en cuenta el periodo que usan los usuarios de nivel de confianza 3)."
     tl3_requires_posts_read: "El porcentaje de posts creados en los últimos (tl3 time period) días para que un usuario sea tenido en cuenta para promocionar a nivel de confianza 3. (0 a 100)"
+    tl3_requires_posts_read_cap: "El número máximo requerido de mensajes leídos en los últimos días (tener en cuenta el periodo que usan los usuarios de nivel de confianza 3)."
     tl3_requires_topics_viewed_all_time: "El número total mínimo de temas que un usuario debió de haber visto para calificar a promoción de nivel de confianza 3."
     tl3_requires_posts_read_all_time: "El número mínimo total de posts que un usuario debió de haber leído para calificar a nivel de confianza 3."
     tl3_requires_max_flagged: "El usuario no debe haber tenido más de x posts reportados por x diferentes usuarios en los últimos (tl3 time period) días para poder ser promocionado a nivel de confianza 3, donde x es el valor de esta opción. (0 o más)"
@@ -976,6 +988,7 @@ es:
     newuser_max_mentions_per_post: "Máximo número de menciones a @usuarios que un nuevo usuario puede usar en un post."
     newuser_max_replies_per_topic: "Máximo número de respuestas que un nuevo usuario puede realizar en el mismo tema antes de que alguien responda a su vez a alguna de ellas."
     max_mentions_per_post: "Máximo número de menciones a @usuarios que alguien puede usar en un post."
+    max_users_notified_per_group_mention: "Número de usuarios máximos que serán notificados si un grupo es mencionado (si se llega al límite no se mandarán las notificaciones)"
     create_thumbnails: "Crear miniaturas de imágenes y lightbox cuando estas son demasiado grandes para encajar en un post."
     email_time_window_mins: "Esperar (n) minutos antes de enviar cualquier email de notificación, para dar a los usuarios margen con el que editar y finalizar sus posts."
     private_email_time_window_seconds: "Espera (n) segundos antes de enviar cualquier email de notificación, para dar a los usuarios margen con el que editar y finalizar sus mensajes."
@@ -1034,11 +1047,11 @@ es:
     short_email_length: "e-mail corto longitud en Bytes"
     display_name_on_email_from: "Mostrar nombres completos en los campos de remitente de emails"
     unsubscribe_via_email: "Permitir a los usuarios darse de baja de los emails respondiendo con el texto 'unsubscribe' en el asunto o el cuerpo del mensaje"
+    unsubscribe_via_email_footer: "Adjuntar un enlace para darse de baja al pie de los emails enviados"
     delete_email_logs_after_days: "Eliminar logs de email después de (N) días. Si es 0 permanecerán de forma indefinida."
     max_emails_per_day_per_user: "Máximo número de emails a enviar a los usuarios por día. Establece 0 para desactivar el límite"
     enable_staged_users: "Crear cuentas provisionales automáticamente al procesar emails entrantes."
     maximum_staged_users_per_email: "Máximo número de usuarios provisionales creados al procesar un email entrante."
-    auto_generated_whitelist: "Lista de direcciones de email que no serán revisadas para contenido auto-generado."
     block_auto_generated_emails: "Bloquear emails entrantes identificadas como auto generados."
     ignore_by_title: "Ignorar emails entrantes por su título."
     mailgun_api_key: "Mailgun Secret API key utilizada para verificar mensajes vía webhook."
@@ -1486,30 +1499,12 @@ es:
         [prefs]: %{user_preferences_url}
     backup_succeeded:
       subject_template: "La copia de seguridad se completo exitosamente"
-      text_body_template: "La copia de seguridad se completó con éxito.\nVisita la sección [admin > backup](%{base_url}/admin/backups) para descargar una nueva copia de seguridad."
     backup_failed:
       subject_template: "La copia de seguridad falló"
-      text_body_template: |
-        La copia de seguridad ha fallado.
-
-        Aquí esta el log:
-
-        ```
-        %{logs}
-        ```
     restore_succeeded:
       subject_template: "Restauración completada exitosamente."
-      text_body_template: "La restauración fue exitosa."
     restore_failed:
       subject_template: "La restauración falló."
-      text_body_template: |
-        La restauración ha fallado.
-
-        Aquí esta el log:
-
-        ```
-        %{logs}
-        ```
     bulk_invite_succeeded:
       subject_template: "Invitación masiva procesada con éxito"
       text_body_template: "Tu archivo de invitación masiva ha sido procesado, se han enviado %{sent} invitaciones."
@@ -1573,6 +1568,7 @@ es:
     email_error_notification:
       subject_template: "[%{site_name}] Problema con el correo electrónico -- Error de autenticación POP"
     user_automatically_blocked:
+      subject_template: "Nuevo usuario %{username} bloqueado por las \"banderas\" de la comunidad."
       text_body_template: |
         Este es un mensaje automático.
 
@@ -1591,6 +1587,14 @@ es:
         Por favor, [echa un vistazo al usuario](%{user_url}).
 
         Esto puede ser modificado con los ajustes`newuser_spam_host_threshold` y`white_listed_spam_host_domains`.
+    unblocked:
+      subject_template: "Cuenta no retenida"
+      text_body_template: |
+        Hola,
+
+        Este es un mensaje automático desde %{site_name} para informarte que tu cuenta no se encuentra retenida debido a la revisión de miembros del staff.
+
+        Ahora puedes crear temas, y responder a otros usuarios. Gracias por tu paciencia.
     pending_users_reminder:
       subject_template:
         one: "1 usuario esperando aprobación"
@@ -1602,14 +1606,27 @@ es:
     download_remote_images_disabled:
       subject_template: "Inhabilitar la descarga de imágenes remotas"
       text_body_template: "La opción `download_remote_images_to_local` ha sido inhabilitada porque se ha llegado al límite de espacio en disco configurado en `download_remote_images_threshold`."
+    dashboard_problems:
+      subject_template: "Se han encontrado problemas"
+      text_body_template: |
+        Algunos problemas han sido reportados en el panel de administración.
+
+        [Por favor revisar y corregir](%{base_url}/admin).
   unsubscribe_link: |
     Para darte de baja de estos emails, [haz clic aquí](%{unsubscribe_url}).
   unsubscribe_link_and_mail: |
     Para darte de baja de estos emails, [haz clic aquí](%{unsubscribe_url}).
+  unsubscribe_mailing_list: |
+    Estás recibiendo esto porque has activado el modo listado de emails.
+
+    Para cancelar estos emails, [clic aquí](%{unsubscribe_url}).
   subject_re: "Re:"
   subject_pm: "[MP]"
   user_notifications:
     previous_discussion: "Respuestas anteriores"
+    reached_limit:
+      one: "ADVERTENCIA: has superado el límite diario de emails. Las próximas notificaciones de emails serán suprimidas."
+      other: "ADVERTENCIA: has superado el límite de %{count} emails diarios. Las próximas notificaciones de emails serán suprimidas."
     in_reply_to: "En respuesta a"
     unsubscribe:
       title: "Darse de baja"
@@ -1734,6 +1751,16 @@ es:
         %{context}
 
         %{respond_instructions}
+    user_watching_first_post:
+      subject_template: "[%{site_name}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
     user_posted_pm:
       subject_template: "[%{site_name}] [MP] %{topic_title}"
       text_body_template: |
@@ -1812,8 +1839,20 @@ es:
         %{base_url}/users/authorize-email/%{email_token}
     confirm_old_email:
       subject_template: "[%{site_name}] Confirma tu dirección actual de email"
+      text_body_template: |
+        Antes de cambiar tu dirección de correo electrónico, necesitamos que confirmes que tienes acceso a dicho email. Después de completar este paso, podrás confirmar la nueva dirección de correo electrónico.
+
+        Confirma tu actual correo electrónico para %{site_name} haciendo clic en el siguiente enlace:
+
+        %{base_url}/users/authorize-email/%{email_token}
     notify_old_email:
       subject_template: "[%{site_name}] Tu dirección de email ha sido cambiada"
+      text_body_template: |
+        Este es un mensaje automático que se ha generado para comunicarte que tu email para el sitio %{site_name} ha sido modificado. Si ha habido un error, por favor contacta al administrador.
+
+        Tu email ha sido modificado por:
+
+        %{new_email}
     signup_after_approval:
       subject_template: "¡Tu solicitud ha sido aprobada en %{site_name}!"
       text_body_template: |
@@ -1870,6 +1909,9 @@ es:
       size_not_found: "Lo sentimos, pero no hemos podido determinar el tamaño de la imagen. ¿Quizás el archivo está corrupto?"
   avatar:
     missing: "Lo sentimos, no hemos encontrado un avatar asociado a esa dirección de email. ¿Puedes intentar subirlo de nuevo?"
+  flag_reason:
+    sockpuppet: "Un nuevo usuario ha creado un tema, y otro nuevo usuario con la misma dirección IP  (%{ip_address})  le ha respondido. Mira la opción  <a href='/admin/site_settings/category/spam'>\"flag_sockpuppets\"</a> en la configuración del sitio."
+    spam_hosts: "Un nuevo usuario intentó crear varios temas con enlaces al mismo dominio (%{domain}). Mira la opción  <a href='/admin/site_settings/category/spam'>\"newuser_spam_host_threshold\"</a> en la configuración del sitio."
   email_log:
     post_user_deleted: "El autor de la publicación ha sido eliminado."
     no_user: "No se puede encontrar al usuario con id %{user_id}"
