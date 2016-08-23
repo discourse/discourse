@@ -30,10 +30,11 @@ export default Ember.Component.extend(bufferedProperty('host'), {
     save() {
       if (this.get('cantSave')) { return; }
 
-      const props = this.get('buffered').getProperties('host');
+      const props = this.get('buffered').getProperties('host', 'path_whitelist');
       props.category_id = this.get('categoryId');
 
       const host = this.get('host');
+
       host.save(props).then(() => {
         host.set('category', Discourse.Category.findById(this.get('categoryId')));
         this.set('editToggled', false);

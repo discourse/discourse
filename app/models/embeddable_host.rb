@@ -7,8 +7,11 @@ class EmbeddableHost < ActiveRecord::Base
     self.host.sub!(/\/.*$/, '')
   end
 
-  def self.record_for_host(host)
-    uri = URI(host) rescue nil
+  def self.record_for_url(uri)
+
+    if uri.is_a?(String)
+      uri = URI(uri) rescue nil
+    end
     return false unless uri.present?
 
     host = uri.host
@@ -17,8 +20,13 @@ class EmbeddableHost < ActiveRecord::Base
     where("lower(host) = ?", host).first
   end
 
-  def self.host_allowed?(host)
-    record_for_host(host).present?
+  def self.url_allowed?(url)
+    uri = URI(url) rescue nil
+    return false unless uri.present?
+
+    host = record_for_url(uri)
+    return host.present? &&
+           (host.path_whitelist.blank? || !Regexp.new(host.path_whitelist).match(uri.path).nil?)
   end
 
   private
