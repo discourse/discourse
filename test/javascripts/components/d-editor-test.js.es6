@@ -293,7 +293,6 @@ componentTest('code button', {
   template: '{{d-editor value=value}}',
   setup() {
     this.siteSettings.code_formatting_style = '4-spaces-indent';
-    this.set('value', "first line\n\nsecond line\n\nthird line");
   },
 
   test(assert) {
@@ -301,7 +300,56 @@ componentTest('code button', {
 
     click('button.code');
     andThen(() => {
-      assert.equal(this.get('value'), "first line\n\nsecond line\n\nthird line`" + I18n.t('composer.code_text') + "`");
+      assert.equal(this.get('value'),
+`    ${I18n.t('composer.code_text')}`
+      );
+
+      this.set('value', "first line\n\nsecond line\n\nthird line");
+
+      textarea.selectionStart = 11;
+      textarea.selectionEnd = 11;
+    });
+
+    click('button.code');
+    andThen(() => {
+      assert.equal(this.get('value'),
+`first line
+    ${I18n.t('composer.code_text')}
+second line
+
+third line`
+      );
+
+      this.set('value', "first line\n\nsecond line\n\nthird line");
+    });
+
+
+    click('button.code');
+    andThen(() => {
+      assert.equal(this.get('value'),
+`first line
+
+second line
+
+third line\`${I18n.t('composer.code_title')}\``
+      );
+      this.set('value', "first line\n\nsecond line\n\nthird line");
+    });
+
+    andThen(() => {
+      textarea.selectionStart = 5;
+      textarea.selectionEnd = 5;
+    });
+
+    click('button.code');
+    andThen(() => {
+      assert.equal(this.get('value'),
+`first\`${I18n.t('composer.code_title')}\` line
+
+second line
+
+third line`
+      );
       this.set('value', "first line\n\nsecond line\n\nthird line");
     });
 
@@ -357,8 +405,7 @@ componentTest('code fences', {
       assert.equal(this.get('value'),
 `\`\`\`
 ${I18n.t("composer.paste_code_text")}
-\`\`\`
-`
+\`\`\``
       );
 
       assert.equal(textarea.selectionStart, 4);
@@ -393,16 +440,13 @@ third line
     click('button.code');
     andThen(() => {
       assert.equal(this.get('value'),
-`\`\`\`
-${I18n.t('composer.paste_code_text')}
-\`\`\`
-first line
+`\`${I18n.t('composer.code_title')}\`first line
 second line
 third line`
       );
 
-      assert.equal(textarea.selectionStart, 4);
-      assert.equal(textarea.selectionEnd, 27);
+      assert.equal(textarea.selectionStart, 1);
+      assert.equal(textarea.selectionEnd, I18n.t('composer.code_title').length + 1);
 
       this.set('value', 'first line\nsecond line\nthird line');
 
@@ -413,15 +457,13 @@ third line`
     click('button.code');
     andThen(() => {
       assert.equal(this.get('value'),
-`\`\`\`
-first line
-\`\`\`
+`\`first line\`
 second line
 third line`
       );
 
-      assert.equal(textarea.selectionStart, 4);
-      assert.equal(textarea.selectionEnd, 14);
+      assert.equal(textarea.selectionStart, 1);
+      assert.equal(textarea.selectionEnd, 11);
 
       this.set('value', 'first line\nsecond line\nthird line');
 
