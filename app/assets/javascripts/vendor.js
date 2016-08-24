@@ -1,5 +1,6 @@
 //= require logster
 //= require ./env
+//= require ./discourse-objects
 //= require probes.js
 
 //= require template_include.js

@@ -1,0 +1,31 @@
+@import "vendor/normalize";
+@import "vendor/font_awesome/font-awesome";
+
+body {
+  background-color: rgb(231,238,247);
+  background-image: url('/images/wizard/bubbles.png');
+  background-repeat: repeat;
+  background-position: left top;
+}
+
+.wizard-column {
+  background-color: white;
+  border-radius: 2px;
+  box-shadow: 0 5px 10px rgba(0,0,0,0.2);
+  box-sizing: border-box;
+  margin: 0.75rem auto;
+  padding: 0;
+  max-width: 700px;
+  min-width: 280px;
+  width: 100%;
+  border: 1px solid #ccc;
+
+  .wizard-column-contents {
+    padding: 1em;
+
+    h1 {
+      margin: 0;
+    }
+  }
+}
+
