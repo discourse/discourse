@@ -25,6 +25,12 @@
     width: 45%;
   }
 
+  .topics .badge-notification,
+  .category .badge-notification {
+    background-color: transparent;
+    color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 40%));
+  }
+
   .topics {
     width: 80px;
     text-align: right;
@@ -37,8 +43,6 @@
     }
     .badge-notification {
       display: block;
-      background-color: transparent;
-      color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 40%));
       text-align: right;
       padding-right: 0;
       margin-top: 5px;
@@ -48,6 +52,13 @@
   .category-description,
   .subcategories {
     margin-top: 10px;
+  }
+
+  .subcategories {
+    .badge-notification.new-posts {
+      padding: 0;
+      margin: 0 5px 0 0;
+    }
   }
 
   .featured-topic {
