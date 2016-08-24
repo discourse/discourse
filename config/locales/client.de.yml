@@ -1140,7 +1140,7 @@ de:
       unsubscribe:
         stop_notifications: "Du wirst in Zukunft weniger Benachrichtigungen für <strong>{{title}}</strong> erhalten"
         change_notification_state: "Dein aktueller Benachrichtigungsstatus ist"
-      filter_to: "{{post_count}} Beiträge im Thema"
+      filter_to: "{{count}} Beiträge im Thema"
       create: 'Neues Thema'
       create_long: 'Ein neues Thema erstellen'
       private_message: 'Eine Unterhaltung beginnen'
