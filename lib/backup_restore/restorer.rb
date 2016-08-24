@@ -115,10 +115,10 @@ module BackupRestore
       # For backwards compatibility
       @dump_filename =
         if @is_archive
-          if system("tar --list --file #{@source_filename} #{BackupRestore::DUMP_FILE}")
-            File.join(@tmp_directory, BackupRestore::DUMP_FILE)
+          if system("tar --list --file #{@source_filename} #{BackupRestore::OLD_DUMP_FILE}")
+            File.join(@tmp_directory, BackupRestore::OLD_DUMP_FILE)
           else
-            File.join(@tmp_directory, "#{BackupRestore::DUMP_FILE}.gz")
+            File.join(@tmp_directory, BackupRestore::DUMP_FILE)
           end
         else
           File.join(@tmp_directory, @filename)
