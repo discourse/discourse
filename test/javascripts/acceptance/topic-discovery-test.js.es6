@@ -18,9 +18,7 @@ test("Visit Discovery Pages", () => {
   visit("/categories");
   andThen(() => {
     ok($('body.category-bug').length === 0, "removes the custom category class");
-
-    // TODO: NEED TO FIX THIS
-    // ok(exists('.category'), "has a list of categories");
+    ok(exists('.category'), "has a list of categories");
     ok($('body.categories-list').length, "has a custom class to indicate categories");
   });
 
