@@ -136,6 +136,10 @@
     color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 40%));
   }
 
+  .discourse-tag {
+    font-size: 0.75em;
+  }
+
   .topic-list {
     .posts {
       width: 100%;
