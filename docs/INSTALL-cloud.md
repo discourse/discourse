@@ -68,7 +68,7 @@ This will generate an `app.yml` configuration file on your behalf, and then kick
 
 - For proper email deliverability, add valid SPF and DKIM records in your DNS. See your email provider instructions for specifics.
 
-If you need to change or fix your email settings after bootstrapping, edit your `app.yml` file (vi containers/app.yml) and `./launcher rebuild app`, otherwise your changes will not take effect.
+If you need to change or fix your email settings after bootstrapping, edit your `app.yml` file (vi /var/discourse/containers/app.yml) and `./launcher rebuild app`, otherwise your changes will not take effect.
 
 ### Start Discourse
 
