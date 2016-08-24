@@ -2819,7 +2819,7 @@ de:
     first_mention:
       name: Erste Erwähnung
       description: Hat einen Benutzer in einem Beitrag erwähnt
-      long_description: Das Abzeichen wird verliehen, wenn du das erste Mal den @Benutzernamen von jemandem in deinem Beitrag erwähnst. Jede Erwähnung erzeugt eine Benachrichtigung an die Person, sodass sie über deinen Beitrag informiert wird. Gib einfach ein @ (At-Zeichien) ein und erwähne einen beliebigen Benutzer oder, sofern erlaubt, eine Gruppe – es ist ein komfortabler Weg, die Aufmerksamkeit von jemandem auf etwas zu lenken.
+      long_description: Das Abzeichen wird verliehen, wenn du das erste Mal den @Benutzernamen von jemandem in deinem Beitrag erwähnst. Jede Erwähnung erzeugt eine Benachrichtigung an die Person, sodass sie über deinen Beitrag informiert wird. Gib einfach ein @ (At-Zeichen) ein und erwähne einen beliebigen Benutzer oder, sofern erlaubt, eine Gruppe – es ist ein komfortabler Weg, die Aufmerksamkeit von jemandem auf etwas zu lenken.
     first_onebox:
       name: Erste Onebox
       description: Hat einen Link geteilt, der in eine Onebox umgewandelt wurde
