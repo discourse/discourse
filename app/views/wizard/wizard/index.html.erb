@@ -1,0 +1,21 @@
+<html>
+  <head>
+    <%= stylesheet_link_tag 'wizard' %>
+    <%= javascript_include_tag 'wizard-vendor' %>
+    <%= javascript_include_tag 'ember_jquery' %>
+    <%= javascript_include_tag 'wizard-application' %>
+  </head>
+
+  <body>
+    <div id='wizard-main'>
+    </div>
+
+
+  <script>
+    (function() {
+      require('wizard/wizard').default.create();
+    })();
+  </script>
+
+  </body>
+</html>
