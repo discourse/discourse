@@ -1,0 +1,34 @@
+<table>
+  <tbody>
+    <tr data-topic-id={{topic.id}} class="{{if topic.archived 'archived'}}">
+      <td class="topic-poster">
+        {{#with topic.creator as |op|}}
+          {{#user-link user=op}}
+            {{avatar op imageSize="large"}}
+          {{/user-link}}
+        {{/with}}
+      </td>
+      <td class="main-link">
+        <tr>
+          {{topic-status topic=topic}}
+          {{topic-link topic}}
+          {{topic-post-badges newPosts=topic.totalUnread unseen=topic.unseen url=topic.lastUnreadUrl}}
+        </tr>
+        <tr>
+          {{category-link topic.category}}
+          {{#if topic.tags}}
+            {{#each topic.visibleListTags as |tag|}}
+              {{discourse-tag tag}}
+            {{/each}}
+          {{/if}}
+        </tr>
+      </td>
+      <td class="topic-stats">
+        {{raw "list/posts-count-column" topic=topic tagName="div"}}
+        <div class="topic-last-activity">
+          <a href="{{topic.lastPostUrl}}" title="{{topic.bumpedAtTitle}}">{{format-date topic.bumpedAt format="tiny" noTitle="true"}}</a>
+        </div>
+      </td>
+    </tr>
+  </tbody>
+</table>

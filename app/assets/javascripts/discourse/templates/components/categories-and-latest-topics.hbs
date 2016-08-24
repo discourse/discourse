@@ -12,42 +12,7 @@
     {{else}}
       {{#if topics}}
         {{#each topics as |t|}}
-          <tr>
-            <table>
-              <tbody>
-                <tr data-topic-id={{t.id}} class="{{if t.archived 'archived'}}">
-                  <td class="topic-poster">
-                    {{#with t.creator as |op|}}
-                      {{#user-link user=op}}
-                        {{avatar op imageSize="large"}}
-                      {{/user-link}}
-                    {{/with}}
-                  </td>
-                  <td class="main-link">
-                    <tr>
-                      {{topic-status topic=t}}
-                      {{topic-link t}}
-                      {{topic-post-badges newPosts=t.totalUnread unseen=t.unseen url=t.lastUnreadUrl}}
-                    </tr>
-                    <tr>
-                      {{category-link t.category}}
-                      {{#if t.tags}}
-                        {{#each t.visibleListTags as |tag|}}
-                          {{discourse-tag tag}}
-                        {{/each}}
-                      {{/if}}
-                    </tr>
-                  </td>
-                  <td class="topic-stats">
-                    {{raw "list/posts-count-column" topic=t tagName="div"}}
-                    <div class="topic-last-activity">
-                      <a href="{{t.lastPostUrl}}" title="{{t.bumpedAtTitle}}">{{format-date t.bumpedAt format="tiny" noTitle="true"}}</a>
-                    </div>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </tr>
+          {{latest-topic-list-item topic=t}}
         {{/each}}
         <tr class="more-topics">
           <td>
