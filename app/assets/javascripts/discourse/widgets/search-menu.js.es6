@@ -97,6 +97,7 @@ export default createWidget('search-menu', {
     const results = [this.attach('search-term', { value: searchData.term, contextEnabled }),
                      this.attach('search-context', { contextEnabled })];
 
+    if (searchData.term)
     if (searchData.loading) {
       results.push(h('div.searching', h('div.spinner')));
     } else {
