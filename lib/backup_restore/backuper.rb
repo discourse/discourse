@@ -81,7 +81,7 @@ module BackupRestore
       @current_db = RailsMultisite::ConnectionManagement.current_db
       @timestamp = Time.now.strftime("%Y-%m-%d-%H%M%S")
       @tmp_directory = File.join(Rails.root, "tmp", "backups", @current_db, @timestamp)
-      @dump_filename = "#{File.join(@tmp_directory, BackupRestore::DUMP_FILE)}.gz"
+      @dump_filename = File.join(@tmp_directory, BackupRestore::DUMP_FILE)
       @archive_directory = File.join(Rails.root, "public", "backups", @current_db)
       @archive_basename = File.join(@archive_directory, "#{SiteSetting.title.parameterize}-#{@timestamp}-#{BackupRestore::VERSION_PREFIX}#{BackupRestore.current_version}")
 
