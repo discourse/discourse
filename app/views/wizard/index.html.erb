@@ -1,0 +1,25 @@
+<html>
+  <head>
+    <%= stylesheet_link_tag 'wizard' %>
+    <%= script 'wizard-vendor' %>
+    <%= script 'ember_jquery' %>
+    <%= script 'wizard-application' %>
+    <%= script "locales/#{I18n.locale}" %>
+    <%= render partial: "common/special_font_face" %>
+    <script src="/extra-locales/wizard"></script>
+    <%= csrf_meta_tags %>
+
+    <title><%= t 'wizard.title' %></title>
+  </head>
+
+  <body>
+    <div id='wizard-main'></div>
+
+    <script>
+      (function() {
+        var wizard = require('wizard/wizard').default.create();
+        wizard.start();
+      })();
+    </script>
+  </body>
+</html>

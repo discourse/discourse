@@ -1,0 +1,37 @@
+{{#if step.title}}
+  <h1 class='wizard-step-title'>{{step.title}}</h1>
+{{/if}}
+
+{{#if step.description}}
+  <p class='wizard-step-description'>{{step.description}}</p>
+{{/if}}
+
+{{#wizard-step-form step=step}}
+  {{#each step.fields as |field|}}
+    {{wizard-field field=field}}
+  {{/each}}
+{{/wizard-step-form}}
+
+<div class='wizard-step-footer'>
+  <div class='wizard-progress'>
+    <div class='text'>{{i18n "wizard.step" current=step.displayIndex total=wizard.totalSteps}}</div>
+    <div class='bar-container'>
+      <div class='bar-contents' style={{barStyle}}></div>
+    </div>
+  </div>
+
+  {{#if showBackButton}}
+    <button class='wizard-btn back' {{action "backStep"}} disabled={{saving}}>
+      <i class='fa fa-chevron-left'></i>
+      {{i18n "wizard.back"}}
+    </button>
+  {{/if}}
+
+  {{#if showNextButton}}
+    <button class='wizard-btn next' {{action "nextStep"}} disabled={{saving}}>
+      {{i18n "wizard.next"}}
+      <i class='fa fa-chevron-right'></i>
+    </button>
+  {{/if}}
+
+</div>

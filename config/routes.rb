@@ -53,10 +53,10 @@ Discourse::Application.routes.draw do
   resources :forums
   get "srv/status" => "forums#status"
 
-  namespace :wizard, constraints: StaffConstraint.new do
-    get "" => "wizard#index"
-    get "qunit" => "wizard#qunit"
-  end
+  get "wizard" => "wizard#index"
+  get "wizard/qunit" => "wizard#qunit"
+  get 'wizard/steps' => 'steps#index'
+  put 'wizard/steps/:id' => "steps#update"
 
   namespace :admin, constraints: StaffConstraint.new do
     get "" => "admin#index"
