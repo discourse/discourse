@@ -201,7 +201,9 @@ module BackupRestore
             )
           end
 
-          Oj.load_file(@meta_filename)
+          data = Oj.load_file(@meta_filename)
+          raise "Failed to load metadata file." if !data
+          data
         else
           if @filename =~ /-#{BackupRestore::VERSION_PREFIX}(\d{14})/
             { "version" => Regexp.last_match[1].to_i }
@@ -214,6 +216,9 @@ module BackupRestore
     def validate_metadata
       log "Validating metadata..."
       log "  Current version: #{@current_version}"
+
+      raise "Metadata has not been extracted correctly." if !@metadata
+
       log "  Restored version: #{@metadata["version"]}"
 
       error = "You're trying to restore a more recent version of the schema. You should migrate first!"
