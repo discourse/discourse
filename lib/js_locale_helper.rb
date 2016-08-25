@@ -20,15 +20,6 @@ module JsLocaleHelper
       # merge translations (plugin translations overwrite default translations)
       translations[locale_str]['js'].deep_merge!(plugin_translations[locale_str]['js']) if translations[locale_str] && plugin_translations[locale_str] && plugin_translations[locale_str]['js']
 
-      # We used to split the admin versus the client side, but it's much simpler to just
-      # include both for now due to the small size of the admin section.
-      #
-      # For now, let's leave it split out in the translation file in case we want to split
-      # it again later, so we'll merge the JSON ourselves.
-      admin_contents = translations[locale_str].delete('admin_js')
-      translations[locale_str]['js'].deep_merge!(admin_contents) if admin_contents.present?
-      translations[locale_str]['js'].deep_merge!(plugin_translations[locale_str]['admin_js']) if translations[locale_str] && plugin_translations[locale_str] && plugin_translations[locale_str]['admin_js']
-
       translations
     end
   end
@@ -72,9 +63,8 @@ module JsLocaleHelper
     end
   end
 
-  def self.output_locale(locale)
-    locale_sym = locale.to_sym
-    locale_str = locale.to_s
+  def self.translations_for(locale_str)
+    locale_sym = locale_str.to_sym
 
     current_locale = I18n.locale
     I18n.locale = locale_sym
@@ -93,6 +83,19 @@ module JsLocaleHelper
       end
     end
 
+    I18n.locale = current_locale
+
+    translations
+  end
+
+  def self.output_locale(locale)
+    locale_str = locale.to_s
+    translations = translations_for(locale_str).dup
+
+    translations[locale_str].keys.each do |k|
+      translations[locale_str].delete(k) unless k == "js"
+    end
+
     message_formats = strip_out_message_formats!(translations[locale_str]['js'])
 
     result = generate_message_format(message_formats, locale_str)
@@ -103,8 +106,6 @@ module JsLocaleHelper
     result << File.read("#{Rails.root}/lib/javascripts/moment.js")
     result << moment_locale(locale_str)
     result << moment_formats
-
-    I18n.locale = current_locale
 
     result
   end
