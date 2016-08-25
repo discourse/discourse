@@ -61,6 +61,14 @@ MessageBus.is_admin_lookup do |env|
   env["__mb"][:is_admin]
 end
 
+MessageBus.on_middleware_error do |env, e|
+  if Discourse::InvalidAccess === e
+    [403, {}, ["Invalid Access"]]
+  elsif RateLimiter::LimitExceeded === e
+    [429, {}, [e.description]]
+  end
+end
+
 MessageBus.on_connect do |site_id|
   RailsMultisite::ConnectionManagement.establish_connection(db: site_id)
 end
