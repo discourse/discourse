@@ -340,6 +340,7 @@ en:
               common: "is one of the 10000 most common passwords. Please use a more secure password."
               same_as_username: "is the same as your username. Please use a more secure password."
               same_as_email: "is the same as your email. Please use a more secure password."
+              same_as_current: "is the same as your current password."
             ip_address:
               signup_not_allowed: "Signup is not allowed from this account."
         color_scheme_color:
@@ -639,6 +640,15 @@ en:
     different_user_description: "You are currently logged in as a different user than the one we emailed. Please log out, or enter anonymous mode, and try again."
     not_found_description: "Sorry, we couldn't find this unsubscribe. It's possible the link in your email has expired?"
     log_out: "Log Out"
+
+  user_api_key:
+    title: "Authorize application access"
+    authorize: "Authorize"
+    read: "read"
+    read_write: "read/write"
+    description: "Would you like to grant \"%{application_name}\" %{access} access to your account?"
+    no_trust_level: "Sorry, you do not have the required trust level to access the user API"
+    generic_error: "Sorry, we are unable to issue user API keys, this feature may be disabled by the site admin"
 
   reports:
     visits:
@@ -1029,6 +1039,8 @@ en:
     top_topics_formula_first_post_likes_multiplier: "value of first post likes multiplier (n) in top topics formula: `log(views_count) * 2 + op_likes_count * (n) + LEAST(likes_count / posts_count, 3) + 10 + log(posts_count)`"
     top_topics_formula_least_likes_per_post_multiplier: "value of least likes per post multiplier (n) in top topics formula: `log(views_count) * 2 + op_likes_count * 0.5 + LEAST(likes_count / posts_count, (n)) + 10 + log(posts_count)`"
 
+    rebake_old_posts_count: "Number of old posts to be rebaked every 15 minutes."
+
     rate_limit_create_topic: "After creating a topic, users must wait (n) seconds before creating another topic."
     rate_limit_create_post: "After posting, users must wait (n) seconds before creating another post."
     rate_limit_new_user_create_topic: "After creating a topic, new users must wait (n) seconds before creating another topic."
@@ -1046,6 +1058,7 @@ en:
     alert_admins_if_errors_per_minute: "Number of errors per minute in order to trigger an admin alert. A value of 0 disables this feature. NOTE: requires restart."
     alert_admins_if_errors_per_hour: "Number of errors per hour in order to trigger an admin alert. A value of 0 disables this feature. NOTE: requires restart."
 
+    categories_topics: "Number of topics to show in /categories page."
     suggested_topics: "Number of suggested topics shown at the bottom of a topic."
     limit_suggested_to_category: "Only show topics from the current category in suggested topics."
     suggested_topics_max_days_old: "Suggested topics should not be more than n days old."
@@ -1138,6 +1151,7 @@ en:
     min_title_similar_length: "The minimum length of a title before it will be checked for similar topics."
     min_body_similar_length: "The minimum length of a post's body before it will be checked for similar topics."
 
+    desktop_category_page_style: "Visual style for the /categories page."
     category_colors: "A list of hexadecimal color values allowed for categories."
     category_style: "Visual style for category badges."
 
@@ -1307,6 +1321,7 @@ en:
     feed_polling_url: "EMBEDDING ONLY: URL of RSS/ATOM feed to embed."
     embed_by_username: "Discourse username of the user who creates the embedded topics."
     embed_username_key_from_feed: "Key to pull discourse username from feed."
+    embed_title_scrubber: "Regular expression for scrubbing embeddable titles."
     embed_truncate: "Truncate the embedded posts."
     embed_post_limit: "Maximum number of posts to embed."
     embed_username_required: "The username for topic creation is required."
@@ -1364,6 +1379,16 @@ en:
     default_categories_watching: "List of categories that are watched by default."
     default_categories_tracking: "List of categories that are tracked by default."
     default_categories_muted: "List of categories that are muted by default."
+
+    max_user_api_reqs_per_day: "Maximum number of user API requests per key per day"
+    max_user_api_reqs_per_minute: "Maximum number of user API requests per key per minute"
+    allow_read_user_api_keys: "Allow generation of readonly user API keys"
+    allow_write_user_api_keys: "Allow generation of write user API keys"
+    allow_push_user_api_keys: "Allow generation of push user API keys"
+    max_api_keys_per_user: "Maximum number of user API keys per user"
+    min_trust_level_for_user_api_key: "Trust level required for generation of user API keys"
+    allowed_user_api_auth_redirects: "Allowed URL for authentication redirect for user API keys"
+    allowed_user_api_push_urls: "Allowed URLs for server push to user API"
 
     tagging_enabled: "Enable tags on topics?"
     min_trust_to_create_tag: "The minimum trust level required to create a tag."
@@ -1890,7 +1915,7 @@ en:
       text_body_template: |
         The backup was successful.
 
-        Visit the [admin > backup section](%{base_url}/admin/backups) to download your new backup."
+        Visit the [admin > backup section](%{base_url}/admin/backups) to download your new backup.
 
         Here's the log:
 
@@ -2388,6 +2413,28 @@ en:
       read_more: "Read More"
       more_topics: "There were %{new_topics_since_seen} other new topics."
       more_topics_category: "More new topics:"
+      custom:
+        html:
+          header: ''
+          below_post_1: ''
+          below_post_2: ''
+          below_post_3: ''
+          below_post_4: ''
+          below_post_5: ''
+          above_popular_topics: ''
+          below_popular_topics: ''
+          above_footer: ''
+          below_footer: ''
+        text:
+          below_post_1: ''
+          below_post_2: ''
+          below_post_3: ''
+          below_post_4: ''
+          below_post_5: ''
+          above_popular_topics: ''
+          below_popular_topics: ''
+          above_footer: ''
+          below_footer: ''
 
     mailing_list:
       why: "All activity on %{site_link} for %{date}"

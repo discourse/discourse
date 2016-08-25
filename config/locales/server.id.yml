@@ -294,13 +294,14 @@ id:
       more_topics_category: "Topik baru lebih banyak:"
     account_created:
       subject_template: "[%{site_name}] Akun Baru Anda"
-      text_body_template: |
+      text_body_template: |+
         Anda mendapatkan akun baru di %{site_name}
 
 
         Silahkan sentuh tautan dibawah ini untuk menentukan sandi dari akun baru Anda:
 
         %{base_url}/users/password-reset/%{email_token}
+
     confirm_new_email:
       subject_template: "[%{site_name}] Konfirmasi email baru Anda"
       text_body_template: |

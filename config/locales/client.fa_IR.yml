@@ -45,8 +45,6 @@ fa_IR:
           other: "< %{count} ثانیه"
         x_seconds:
           other: "%{count} ثانیه"
-        less_than_x_minutes:
-          other: "< %{count} دقیقه"
         x_minutes:
           other: "%{count} دقیقه"
         about_x_hours:
@@ -336,12 +334,8 @@ fa_IR:
       latest_by: "آخرین توسط"
       toggle_ordering: "ضامن کنترل مرتب سازی"
       subcategories: "زیر دسته‌ بندی ها"
-      topic_stats: "شمار موضوعات تازه."
       topic_stat_sentence:
         other: "%{count} موضوعات تازه در %{unit} گذشته."
-      post_stats: "تعداد نوشته های جدید."
-      post_stat_sentence:
-        other: "%{count} نوشته تازه در %{unit} گذشته."
     ip_lookup:
       title: جستجوی نشانی IP
       hostname: نام میزبان
@@ -928,7 +922,6 @@ fa_IR:
       unsubscribe:
         stop_notifications: "حالا شما اعلانات کمتری برای <strong>{{title}}</strong> دریافت میکنید"
         change_notification_state: "وضعیت فعلی اعلانات شما این هست"
-      filter_to: "نوشته در موضوع {{post_count}}  "
       create: 'موضوع جدید'
       create_long: 'ساخت یک موضوع جدید'
       private_message: 'شروع یک پیام'
@@ -976,7 +969,6 @@ fa_IR:
       auto_close_title: 'تنضیمات قفل خوکار'
       auto_close_save: "‌ذخیره"
       auto_close_remove: "این موضوع را خوکار قفل نکن"
-      auto_close_immediate: "زمان ارسال آخرین پست در موضوع برای %{hours} ساعت پیش است، بنابر این موضوع بلافاصله بسته می‌شود."
       progress:
         title: نوشته ی در حال اجرا
         go_top: "بالا"
@@ -986,7 +978,6 @@ fa_IR:
         jump_bottom_with_number: "رفتن به نوشته ی %{post_number}"
         total: همهٔ نوشته‌ها
         current: نوشته کنونی
-        position: "نوشته %{current} از %{total}"
       notifications:
         reasons:
           '3_6': 'شما آگاه‌سازی‌ها را دریافت خواهید کرد، زیرا شما در حال مشاهده ی این  دسته بندی هستید.'
@@ -1170,7 +1161,6 @@ fa_IR:
       expand_collapse: "باز کردن/گستردن"
       gap:
         other: "{{count}} پاسخ پنهان را مشاهده کنید"
-      more_links: "{{count}} مورد دیگر..."
       unread: "نوشته خوانده نشده است"
       has_replies:
         other: "{{count}} پاسخ"
@@ -1227,14 +1217,6 @@ fa_IR:
         flag: 'پرچم'
         defer_flags:
           other: "پرچم تسلیم"
-        it_too:
-          off_topic: "هم‌چنین آن یکی را پرچم بزنید"
-          spam: "هم‌چنین آن یکی را پرچم بزنید"
-          inappropriate: "هم‌چنین آن یکی را پرچم بزنید"
-          custom_flag: "هم‌چنین آن یکی را پرچم بزنید"
-          bookmark: "هم‌چنین نشانک‌گذاری آن یکی"
-          like: "همچنین آن یکی را پسند کنید"
-          vote: "هم‌چنین به آن یکی رأی دهید"
         undo:
           off_topic: "برداشتن پرچم"
           spam: "برداشتن پرچم"
@@ -1378,7 +1360,6 @@ fa_IR:
       take_action: "اقدام"
       notify_action: 'پیام'
       delete_spammer: "پاک کردن هرزنگار"
-      delete_confirm: "شما در مورد حذف <b>%{posts}</b> نوشته ها و  <b>%{topics}</b> موضوغات این کاربر،و حذف حساب کاربری وی، مسدود شدن ثبت نام از این آدرس آی پی<b>%{ip_address}</b> و اضافه شدن ایمیل <b>%{email}</b> به لیست مسدودیت دائمی.\nآیا اطمینان دارید که این کاربر یک اسپمر است ؟"
       yes_delete_spammer: "بله، پاک‌کردن هرزنگار"
       ip_address_missing: "(N/A)"
       hidden_email_address: "(مخفی)"
@@ -1391,10 +1372,6 @@ fa_IR:
         spam: "آن هرزنامه است"
       custom_placeholder_notify_user: "خاص، سودمند باشید و همیشه مهربان."
       custom_placeholder_notify_moderators: "به ما اجازه دهید بدانیم  شما در مورد چه چیز آن نگران هستید، و ارائه لینک مربوطه و نمونه آن امکان پذیر است."
-      custom_message:
-        at_least: "دست‌کم {{n}} نویسه بنویسید"
-        more: "{{n}} نویسهٔ دیگر تا..."
-        left: "{{n}} مانده"
     flagging_topic:
       title: "تشکر برای کمک به جامعه مدنی انجمن ما!"
       action: "پرچم‌گذاری موضوع"
@@ -1428,7 +1405,6 @@ fa_IR:
       invisible:
         help: "این موضوع از لیست خارج شد: آن درلیست موضوعات نمایش داده نخواهد شد، و فقط از طریق لینک مستقیم در دسترس خواهد بود. "
     posts: "نوشته‌ها"
-    posts_lowercase: "نوشته ها"
     posts_long: "این موضوع {{number}} نوشته دارد"
     posts_likes_MF: |
       این موضوع است {count, plural, one {1 reply} other {# replies}} {ratio, select,
@@ -2022,7 +1998,6 @@ fa_IR:
         suspend_reason: "دلیل"
         suspended_by: "تعلیق شده توسط"
         delete_all_posts: "پاک کردن همهٔ نوشته‌ها"
-        delete_all_posts_confirm: "شما می خواهید تعداد %{posts}  نوشته و تعداد %{topics} موضوع خذف کنید،آیا مطمئن هستید؟"
         suspend: "تعلیق"
         unsuspend: "خارج کردن از تعلیق"
         suspended: "تعلیق شد ؟"
@@ -2103,7 +2078,6 @@ fa_IR:
         unlock_trust_level: "باز کردن سطح اعتماد"
         tl3_requirements:
           title: "شرایط لازم برای سطح اعتماد 3."
-          table_title: "در %{time_period} روز گذشته:"
           value_heading: "مقدار"
           requirement_heading: "نیازمندی‌ها"
           visits: "بازدیدها"

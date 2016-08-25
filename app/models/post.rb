@@ -188,6 +188,14 @@ class Post < ActiveRecord::Base
     end
   end
 
+  def add_nofollow?
+    user.blank? || SiteSetting.tl3_links_no_follow? || !user.has_trust_level?(TrustLevel[3])
+  end
+
+  def omit_nofollow?
+    !add_nofollow?
+  end
+
   def cook(*args)
     # For some posts, for example those imported via RSS, we support raw HTML. In that
     # case we can skip the rendering pipeline.
@@ -203,7 +211,7 @@ class Post < ActiveRecord::Base
       post_user = self.user
       cloned[1][:user_id] = post_user.id if post_user
 
-      cooked = if !post_user || SiteSetting.tl3_links_no_follow || !post_user.has_trust_level?(TrustLevel[3])
+      cooked = if add_nofollow?
                  post_analyzer.cook(*args)
                else
                  # At trust level 3, we don't apply nofollow to links
@@ -453,15 +461,14 @@ class Post < ActiveRecord::Base
     new_cooked != old_cooked
   end
 
-  def set_owner(new_user, actor)
+  def set_owner(new_user, actor, skip_revision=false)
     return if user_id == new_user.id
 
     edit_reason = I18n.t('change_owner.post_revision_text',
       old_user: (self.user.username_lower rescue nil) || I18n.t('change_owner.deleted_user'),
       new_user: new_user.username_lower
     )
-
-    revise(actor, {raw: self.raw, user_id: new_user.id, edit_reason: edit_reason}, bypass_bump: true)
+    revise(actor, {raw: self.raw, user_id: new_user.id, edit_reason: edit_reason}, {bypass_bump: true, skip_revision: skip_revision})
 
     if post_number == topic.highest_post_number
       topic.update_columns(last_post_user_id: new_user.id)

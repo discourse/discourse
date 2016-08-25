@@ -4,7 +4,7 @@ import DiscourseURL from 'discourse/lib/url';
 import { ajax } from 'discourse/lib/ajax';
 
 createWidget('priority-faq-link', {
-  tagName: 'a.faq-priority',
+  tagName: 'a.faq-priority.widget-link',
 
   buildAttributes(attrs) {
     return { href: attrs.href };
@@ -15,12 +15,14 @@ createWidget('priority-faq-link', {
   },
 
   click(e) {
+    e.preventDefault();
     if (this.siteSettings.faq_url === this.attrs.href) {
-      e.preventDefault();
       ajax("/users/read-faq", { method: "POST" }).then(() => {
         this.currentUser.set('read_faq', true);
-        return DiscourseURL.routeToTag($(e.target).closest('a')[0]);
+        DiscourseURL.routeToTag($(e.target).closest('a')[0]);
       });
+    } else {
+      DiscourseURL.routeToTag($(e.target).closest('a')[0]);
     }
   }
 });
@@ -141,7 +143,8 @@ export default createWidget('hamburger-menu', {
                    label: this.site.mobileView ? "desktop_view" : "mobile_view" });
     }
 
-    return links.map(l => this.attach('link', l));
+    const extraLinks = applyDecorators(this, 'footerLinks', this.attrs, this.state);
+    return links.concat(extraLinks).map(l => this.attach('link', l));
   },
 
   panelContents() {

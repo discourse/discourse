@@ -17,14 +17,14 @@ module FileStore
     end
 
     def remove_upload(upload)
-      remove_file(upload.url)
+      remove_file(upload.url, get_path_for_upload(upload))
     end
 
     def remove_optimized_image(optimized_image)
-      remove_file(optimized_image.url)
+      remove_file(optimized_image.url, get_path_for_optimized_image(optimized_image))
     end
 
-    def remove_file(url)
+    def remove_file(url, path)
       not_implemented
     end
 

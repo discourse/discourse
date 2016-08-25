@@ -92,6 +92,7 @@ Discourse.SiteSettingsOriginal = {
   "available_locales":"cs|da|de|en|es|fr|he|id|it|ja|ko|nb_NO|nl|pl_PL|pt|pt_BR|ru|sv|uk|zh_CN|zh_TW",
   "highlighted_languages":"apache|bash|cs|cpp|css|coffeescript|diff|xml|http|ini|json|java|javascript|makefile|markdown|nginx|objectivec|ruby|perl|php|python|sql|handlebars",
   "enable_emoji":true,
-  "emoji_set":"emoji_one"
+  "emoji_set":"emoji_one",
+  "desktop_category_page_style":"categories_and_latest_topics"
 };
 Discourse.SiteSettings = jQuery.extend(true, {}, Discourse.SiteSettingsOriginal);

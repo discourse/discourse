@@ -20,6 +20,26 @@ describe CookedPostProcessor do
 
   end
 
+  context "cooking options" do
+    context "regular user" do
+      let(:post) { Fabricate(:post) } 
+
+      it "doesn't omit nofollow" do
+        cpp = CookedPostProcessor.new(post)
+        expect(cpp.cooking_options[:omit_nofollow]).to eq(nil)
+      end
+    end
+
+    context "admin user" do
+      let(:post) { Fabricate(:post, user: Fabricate(:admin) ) }
+
+      it "omits nofollow" do
+        cpp = CookedPostProcessor.new(post)
+        expect(cpp.cooking_options[:omit_nofollow]).to eq(true)
+      end
+    end
+  end
+
   context ".keep_reverse_index_up_to_date" do
 
     let(:post) { build(:post_with_uploads, id: 123) }
@@ -584,10 +604,17 @@ describe CookedPostProcessor do
 
       before { Oneboxer.stubs(:onebox) }
 
-      it "awards a badge for using an emoji" do
+      it "awards a badge for using an onebox" do
         cpp.post_process_oneboxes
         cpp.grant_badges
         expect(post.user.user_badges.where(badge_id: Badge::FirstOnebox).exists?).to eq(true)
+      end
+
+      it "doesn't award the badge when the badge is disabled" do
+        Badge.where(id: Badge::FirstOnebox).update_all(enabled: false)
+        cpp.post_process_oneboxes
+        cpp.grant_badges
+        expect(post.user.user_badges.where(badge_id: Badge::FirstOnebox).exists?).to eq(false)
       end
     end
 

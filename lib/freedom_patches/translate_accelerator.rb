@@ -90,7 +90,6 @@ module I18n
       key      = args.shift
       locale   = options[:locale] || config.locale
 
-
       @cache ||= LruRedux::ThreadSafeCache.new(LRU_CACHE_SIZE)
       k = "#{key}#{locale}#{config.backend.object_id}"
 
@@ -122,7 +121,7 @@ module I18n
         end
       end
 
-      by_site[locale]
+      by_site[locale].with_indifferent_access
     end
 
     def client_overrides_json(locale)
@@ -138,8 +137,7 @@ module I18n
       load_locale(locale) unless @loaded_locales.include?(locale)
 
       if @overrides_enabled
-        by_locale = overrides_by_locale(locale)
-        if by_locale
+        if by_locale = overrides_by_locale(locale)
           if options.present?
             options[:overrides] = by_locale
 
@@ -152,9 +150,9 @@ module I18n
               return result
             end
           end
-
         end
       end
+
       translate_no_override(key, options)
     end
 

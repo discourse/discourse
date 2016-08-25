@@ -74,9 +74,6 @@ en:
         x_seconds:
           one:   "1s"
           other: "%{count}s"
-        less_than_x_minutes:
-          one:   "< 1m"
-          other: "< %{count}m"
         x_minutes:
           one:   "1m"
           other: "%{count}m"
@@ -458,14 +455,12 @@ en:
       latest_by: "latest by"
       toggle_ordering: "toggle ordering control"
       subcategories: "Subcategories"
-      topic_stats: "The number of new topics."
+      topic_sentence:
+        one: "1 topic"
+        other: "%{count} topics"
       topic_stat_sentence:
         one: "%{count} new topic in the past %{unit}."
         other: "%{count} new topics in the past %{unit}."
-      post_stats: "The number of new posts."
-      post_stat_sentence:
-        one: "%{count} new post in the past %{unit}."
-        other: "%{count} new posts in the past %{unit}."
 
     ip_lookup:
       title: IP Address Lookup
@@ -571,6 +566,13 @@ en:
       muted_topics_link: "Show muted topics"
       watched_topics_link: "Show watched topics"
       automatically_unpin_topics: "Automatically unpin topics when I reach the bottom."
+      apps: "Apps"
+      revoke_access: "Revoke Access"
+      undo_revoke_access: "Undo Revoke Access"
+      api_permissions: "Permissions:"
+      api_approved: "Approved:"
+      api_read: "read"
+      api_read_write: "read and write"
 
       staff_counters:
         flags_given: "helpful flags"
@@ -1006,6 +1008,11 @@ en:
       emoji_one: "Emoji One"
       win10: "Win10"
 
+    category_page_style:
+      categories_only: "Categories Only"
+      categories_with_featured_topics: "Categories with Featured Topics"
+      categories_and_latest_topics: "Categories and Latest Topics"
+
     shortcut_modifier_key:
       shift: 'Shift'
       ctrl: 'Ctrl'
@@ -1065,8 +1072,10 @@ en:
       hide_preview: '&laquo; hide preview'
 
       quote_post_title: "Quote whole post"
+      bold_label: "B"
       bold_title: "Strong"
       bold_text: "strong text"
+      italic_label: "I"
       italic_title: "Emphasis"
       italic_text: "emphasized text"
       link_title: "Hyperlink"
@@ -1084,6 +1093,7 @@ en:
       olist_title: "Numbered List"
       ulist_title: "Bulleted List"
       list_item: "List item"
+      heading_label: "H"
       heading_title: "Heading"
       heading_text: "Heading"
       hr_title: "Horizontal Rule"
@@ -1352,7 +1362,6 @@ en:
       timeline:
         back: "Back"
         back_description: "Go back to your last unread post"
-        replies: "%{current} / %{total} replies"
         replies_short: "%{current} / %{total}"
 
       progress:
@@ -1366,7 +1375,6 @@ en:
         jump_bottom_with_number: "jump to post %{post_number}"
         total: total posts
         current: current post
-        position: "post %{current} of %{total}"
 
       notifications:
         title: change how often you get notified about this topic
@@ -1592,7 +1600,6 @@ en:
       gap:
         one: "view 1 hidden reply"
         other: "view {{count}} hidden replies"
-      more_links: "{{count}} more..."
 
       unread: "Post is unread"
       has_replies:
@@ -1672,14 +1679,6 @@ en:
         defer_flags:
           one: "Defer flag"
           other: "Defer flags"
-        it_too:
-          off_topic: "Flag it too"
-          spam: "Flag it too"
-          inappropriate: "Flag it too"
-          custom_flag: "Flag it too"
-          bookmark: "Bookmark it too"
-          like: "Like it too"
-          vote: "Vote for it too"
         undo:
           off_topic: "Undo flag"
           spam: "Undo flag"
@@ -1872,7 +1871,7 @@ en:
       delete_spammer: "Delete Spammer"
 
       # keys ending with _MF use message format, see https://meta.discourse.org/t/message-format-support-for-localization/7035 for details
-      delete_confirm_MF: "You are about to delete {POSTS, plural, one {<b>1</b> post} other {<b>#</b> posts}} and {TOPICS, plural, one {<b>1</b> topic} other {<b>#</b> topics}} from this user, remove their account, block signups from their IP address <b>%{ip_address}</b>, and add their email address <b>%{email}</b> to a permanent block list. Are you sure this user is really a spammer?"
+      delete_confirm_MF: "You are about to delete {POSTS, plural, one {<b>1</b> post} other {<b>#</b> posts}} and {TOPICS, plural, one {<b>1</b> topic} other {<b>#</b> topics}} from this user, remove their account, block signups from their IP address <b>{ip_address}</b>, and add their email address <b>{email}</b> to a permanent block list. Are you sure this user is really a spammer?"
       yes_delete_spammer: "Yes, Delete Spammer"
       ip_address_missing: "(N/A)"
       hidden_email_address: "(hidden)"
@@ -1940,7 +1939,6 @@ en:
         help: "This topic is unlisted; it will not be displayed in topic lists, and can only be accessed via a direct link"
 
     posts: "Posts"
-    posts_lowercase: "posts"
     posts_long: "there are {{number}} posts in this topic"
 
     # keys ending with _MF use message format, see https://meta.discourse.org/t/message-format-support-for-localization/7035 for details
@@ -2404,6 +2402,11 @@ en:
         add_owners: Add owners
         incoming_email: "Custom incoming email address"
         incoming_email_placeholder: "enter email address"
+        flair_url: "Avatar Flair URL"
+        flair_url_placeholder: "(Optional) Image URL"
+        flair_bg_color: "Avatar Flair Background Color"
+        flair_bg_color_placeholder: "(Optional) Hex color value"
+        flair_preview: "Preview"
 
 
       api:
@@ -3018,6 +3021,7 @@ en:
           developer: 'Developer'
           embedding: "Embedding"
           legal: "Legal"
+          user_api: 'User API'
           uncategorized: 'Other'
           backups: "Backups"
           login: "Login"
@@ -3109,6 +3113,7 @@ en:
         sample: "Use the following HTML code into your site to create and embed discourse topics. Replace <b>REPLACE_ME</b> with the canonical URL of the page you are embedding it on."
         title: "Embedding"
         host: "Allowed Hosts"
+        path_whitelist: "Path Whitelist"
         edit: "edit"
         category: "Post to Category"
         add_host: "Add Host"
@@ -3121,6 +3126,7 @@ en:
         embed_by_username: "Username for topic creation"
         embed_post_limit: "Maximum number of posts to embed"
         embed_username_key_from_feed: "Key to pull discourse username from feed"
+        embed_title_scrubber: "Regular expression used to scrub the title of posts"
         embed_truncate: "Truncate the embedded posts"
         embed_whitelist_selector: "CSS selector for elements that are allowed in embeds"
         embed_blacklist_selector: "CSS selector for elements that are removed from embeds"

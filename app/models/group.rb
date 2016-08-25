@@ -28,6 +28,7 @@ class Group < ActiveRecord::Base
   validates_uniqueness_of :name, case_sensitive: false
   validate :automatic_membership_email_domains_format_validator
   validate :incoming_email_validator
+  validates :flair_url, url: true
 
   AUTO_GROUPS = {
     :everyone => 0,

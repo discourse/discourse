@@ -304,7 +304,7 @@ http://b.com/#{'a'*500}
         expect(counts_for[post.id].first[:clicks]).to eq(1)
 
         array = TopicLink.topic_map(Guardian.new, post.topic_id)
-        expect(array.length).to eq(5)
+        expect(array.length).to eq(6)
         expect(array[0]["clicks"]).to eq("1")
       end
 

@@ -46,9 +46,6 @@ gl:
         x_seconds:
           one: "1s"
           other: "%{count}s"
-        less_than_x_minutes:
-          one: "< 1m"
-          other: "< %{count}m"
         x_minutes:
           one: "1m"
           other: "%{count}m"
@@ -384,14 +381,9 @@ gl:
       latest_by: "últimos de"
       toggle_ordering: "trocar o control de ordenación"
       subcategories: "Subcategorías"
-      topic_stats: "Número de temas novos."
       topic_stat_sentence:
         one: "%{count} tema novo no último %{unit}."
         other: "%{count} temas novos no último %{unit}."
-      post_stats: "O número de publicacións novas."
-      post_stat_sentence:
-        one: "%{count} nova publicación na última %{unit}."
-        other: "%{count} novas publicacións na última %{unit}."
     ip_lookup:
       title: Busca do enderezo IP
       hostname: Nome do servidor
@@ -1029,7 +1021,6 @@ gl:
       unsubscribe:
         stop_notifications: "Agora recibirás menos notificacións sobre <strong>{{title}}</strong>"
         change_notification_state: "O estado actual das túas notificacións é"
-      filter_to: "{{post_count}} publicacións no tema"
       create: 'Novo tema'
       create_long: 'Crear un novo tema'
       private_message: 'Iniciar unha mensaxe'
@@ -1089,7 +1080,6 @@ gl:
       auto_close_title: 'Axustes do peche automático'
       auto_close_save: "Gardar"
       auto_close_remove: "arriba"
-      auto_close_immediate: "A última publicación deste tema xa ten %{hours} horas. O tema pecharase inmediatamente."
       progress:
         title: progreso do tema
         go_top: "principio"
@@ -1099,7 +1089,6 @@ gl:
         jump_bottom_with_number: "ir á publicación %{post_number}"
         total: publicacións totais
         current: publicación actual
-        position: "publicación %{current} de %{total}"
       notifications:
         reasons:
           '3_6': 'Recibirás notificacións porque estás vendo esta categoría.'
@@ -1292,7 +1281,6 @@ gl:
       gap:
         one: "ver unha resposta oculta"
         other: "ver {{count}} respostas ocultas"
-      more_links: "{{count}} máis..."
       unread: "Publicación sen ler"
       has_replies:
         one: "{{count}} resposta"
@@ -1357,14 +1345,6 @@ gl:
         defer_flags:
           one: "Pospor denuncia"
           other: "Pospor denuncias"
-        it_too:
-          off_topic: "Denuncialo tamén"
-          spam: "Denuncialo tamén"
-          inappropriate: "Denuncialo tamén"
-          custom_flag: "Denuncialo tamén"
-          bookmark: "Marcalo tamén"
-          like: "Gústame tamén"
-          vote: "Votalo tamén"
         undo:
           off_topic: "Desfacer denuncia"
           spam: "Desfacer denuncia"
@@ -1535,7 +1515,6 @@ gl:
       take_action: "Tomar medidas"
       notify_action: 'Mensaxe'
       delete_spammer: "Eliminar spammer"
-      delete_confirm: "Vas borrar <b>%{posts}</b> publicacións e <b>%{topics}</b> temas deste usuario, eliminar a súa conta, bloquear o rexistro desde os seus enderezos IP <b>%{ip_address}</b> e engadir o seu correo-e <b>%{email}</b> a unha lista de bloqueos permanentes. Confirmas que este usuario é un spammer?"
       yes_delete_spammer: "Si, eliminar o spammer"
       ip_address_missing: "(N/D)"
       hidden_email_address: "(oculto)"
@@ -1549,10 +1528,6 @@ gl:
         spam: "É spam"
       custom_placeholder_notify_user: "Se específico, construtivo e sempre amábel."
       custom_placeholder_notify_moderators: "Especifícanos sobre o que estás preocupado e proporciónanos ligazóns relevantes e exemplos cando sexa posíbel."
-      custom_message:
-        at_least: "introduce cando menos {{n}} caracteres"
-        more: "{{n}} restantes..."
-        left: "{{n}} restantes"
     flagging_topic:
       title: "Grazas por axudar a manter a nosa comunidade."
       action: "Denunciar tema"
@@ -1587,7 +1562,6 @@ gl:
       invisible:
         help: "Este tema non está listado. Non se presentará nas listas de temas e só estará accesíbel vía ligazón directa"
     posts: "Publicacións"
-    posts_lowercase: "publicacións"
     posts_long: "hai {{number}} publicacións neste tema"
     posts_likes_MF: |
       Este tema ten {count, plural, one {1 resposta} other {# respostas}} {ratio, select,
@@ -2232,7 +2206,6 @@ gl:
         suspend_reason: "Razón"
         suspended_by: "Suspendido por"
         delete_all_posts: "Eliminar todas as publicacións"
-        delete_all_posts_confirm: "Confirmas a eliminación de %{posts} publicacións e %{topics} temas?"
         suspend: "Suspender"
         unsuspend: "Non suspender"
         suspended: "Suspendido?"
@@ -2319,7 +2292,6 @@ gl:
         unlock_trust_level: "Desbloquear o nivel de confianza"
         tl3_requirements:
           title: "Requerimentos para o nivel 3 de confianza"
-          table_title: "Nos últimos %{time_period} días:"
           value_heading: "Valor"
           requirement_heading: "Requirimento"
           visits: "Visitas"

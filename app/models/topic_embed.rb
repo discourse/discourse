@@ -33,7 +33,7 @@ class TopicEmbed < ActiveRecord::Base
     # If there is no embed, create a topic, post and the embed.
     if embed.blank?
       Topic.transaction do
-        eh = EmbeddableHost.record_for_host(url)
+        eh = EmbeddableHost.record_for_url(url)
 
         creator = PostCreator.new(user,
                                   title: title,
@@ -79,7 +79,14 @@ class TopicEmbed < ActiveRecord::Base
     doc = Readability::Document.new(open(url).read, opts)
 
     tags = {'img' => 'src', 'script' => 'src', 'a' => 'href'}
-    title = doc.title
+    title = doc.title || ''
+    title.strip!
+
+    if SiteSetting.embed_title_scrubber.present?
+      title.sub!(Regexp.new(SiteSetting.embed_title_scrubber), '')
+      title.strip!
+    end
+
     doc = Nokogiri::HTML(doc.content)
     doc.search(tags.keys.join(',')).each do |node|
       url_param = tags[node.name]

@@ -11,7 +11,7 @@
   <div class='d-editor-button-bar'>
     {{#each toolbar.groups as |group|}}
       {{#each group.buttons as |b|}}
-        {{d-button action=b.action actionParam=b translatedTitle=b.title icon=b.icon class=b.className}}
+        {{d-button action=b.action actionParam=b translatedTitle=b.title label=b.label icon=b.icon class=b.className}}
       {{/each}}
       {{#unless group.lastGroup}}
         <div class='d-editor-spacer'></div>

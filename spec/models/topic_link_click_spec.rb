@@ -177,6 +177,36 @@ describe TopicLinkClick do
         end
       end
 
+      context 'with a google analytics tracking code' do
+        before do
+          @url = TopicLinkClick.create_from(url: 'http://twitter.com?_ga=1.16846778.221554446.1071987018',
+                                            topic_id: @topic.id,
+                                            ip: '127.0.0.3')
+          @click = TopicLinkClick.last
+        end
+
+        it 'creates a click' do
+          expect(@click).to be_present
+          expect(@click.topic_link).to eq(@topic_link)
+          expect(@url).to eq('http://twitter.com?_ga=1.16846778.221554446.1071987018')
+        end
+      end
+
+      context 'with a google analytics tracking code and a hash' do
+        before do
+          @url = TopicLinkClick.create_from(url: 'http://discourse.org?_ga=1.16846778.221554446.1071987018#faq',
+                                            topic_id: @topic.id,
+                                            ip: '127.0.0.3')
+          @click = TopicLinkClick.last
+        end
+
+        it 'creates a click' do
+          expect(@click).to be_present
+          expect(@url).to eq('http://discourse.org?_ga=1.16846778.221554446.1071987018#faq')
+        end
+      end
+
+
       context 'with a valid url and topic_id' do
         before do
           @url = TopicLinkClick.create_from(url: @topic_link.url, topic_id: @topic.id, ip: '127.0.0.3')

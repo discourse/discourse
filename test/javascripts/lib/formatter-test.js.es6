@@ -88,7 +88,8 @@ test("formating tiny dates", function() {
   };
 
   format = "tiny";
-  equal(formatMins(0), "< 1m");
+  equal(formatMins(0), "1m");
+  equal(formatMins(1), "1m");
   equal(formatMins(2), "2m");
   equal(formatMins(60), "1h");
   equal(formatHours(4), "4h");
@@ -114,7 +115,8 @@ test("formating tiny dates", function() {
   equal(formatDays(2), shortDate(2));
 
   Discourse.SiteSettings.relative_date_duration = 0;
-  equal(formatMins(0), "< 1m");
+  equal(formatMins(0), "1m");
+  equal(formatMins(1), "1m");
   equal(formatMins(2), "2m");
   equal(formatMins(60), "1h");
   equal(formatDays(1), shortDate(1));

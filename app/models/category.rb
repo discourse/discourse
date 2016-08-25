@@ -187,9 +187,7 @@ SQL
     self.topic_id ? query.where(['topics.id <> ?', self.topic_id]) : query
   end
 
-
-  # Internal: Generate the text of post prompting to enter category
-  # description.
+  # Internal: Generate the text of post prompting to enter category description.
   def self.post_template
     I18n.t("category.post_template", replace_paragraph: I18n.t("category.replace_paragraph"))
   end
@@ -219,7 +217,6 @@ SQL
     @@cache.getset(self.description) do
       Nokogiri::HTML(self.description).text
     end
-
   end
 
   def duplicate_slug?

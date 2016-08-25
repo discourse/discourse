@@ -14,7 +14,8 @@ class SessionController < ApplicationController
     return_path = if params[:return_path]
       params[:return_path]
     elsif session[:destination_url]
-      URI::parse(session[:destination_url]).path
+      uri = URI::parse(session[:destination_url])
+      "#{uri.path}#{uri.query ? "?" << uri.query : ""}"
     else
       path('/')
     end

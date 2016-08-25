@@ -310,7 +310,7 @@ fr:
   assets_topic_body: "Ceci est un sujet permanent, visible uniquement par l'équipe, pour stocker les images et fichiers utilisés pour le design du site. Ne pas le supprimer !\n\n\nMarche à suivre:\n\n1. Répondre à ce sujet\n2. Envoyer toutes les images que vous voulez utilisés comme logos, favicons, et tout ce que vous souhaitez. (Utiliser l'icone dans la barre d'édition ou glisser-déposer ou coller les images)\n3. Envoyer votre réponse\n4. Afin d'obtenir le chemin complet de votre image, faites un clic-droit dessus ou éditer votre message et copier le chemin.\n5. Coller le chemin de l'image dans les [paramètres requis](/admin/site_settings/category/required).\n\nDe plus, si vous souhaitez envoyer d'autres formats de fichier, modifier l'option `authorized_extensions` dans les [paramètres de fichier](/admin/site_settings/category/files)."
   lounge_welcome:
     title: "Bienvenue dans le salon"
-    body: |
+    body: |2
 
       Félicitation ! :confetti_ball:
 
@@ -566,6 +566,14 @@ fr:
     different_user_description: "Vous êtes actuellement connecté avec un utilisateur différent de celui à qui le courriel est adressé. Veuillez vous déconnecter, ou utiliser le mode anonyme, et essayer à nouveau."
     not_found_description: "Désolé, nous ne pouvons pas vous désabonner. Il est possible que le lien de votre courriel soit expiré."
     log_out: "Déconnexion"
+  user_api_key:
+    title: "Autoriser l'accès d'application"
+    authorize: "Autoriser"
+    read: "lecture"
+    read_write: "lecture/écriture"
+    description: "Voulez-vous autoriser à \"%{application_name}\" l'accès en %{access} à votre compte ?"
+    no_trust_level: "Désolé, vous n'avez pas le niveau de confiance requis pour accéder à l'API utilisateur"
+    generic_error: "Désolé, nous n'avons pu générer de clés pour l'API utilisateur, cette fonctionnalité peut être désactivée par l'administrateur"
   reports:
     visits:
       title: "Visites utilisateur"
@@ -671,7 +679,7 @@ fr:
       xaxis: "Jour"
       yaxis: "Nombre de vues par les utilisateurs non connectés sur mobile"
     http_background_reqs:
-      title: "Arrière plan"
+      title: "Arrière-plan"
       xaxis: "Jour"
       yaxis: "Requêtes de mise à jour en temps réel ou de suivi"
     http_2xx_reqs:
@@ -752,6 +760,8 @@ fr:
     min_private_message_title_length: "Longueur minimale pour un titre de message en nombre de caractères"
     min_search_term_length: "Longueur minimale autorisée du texte saisie avant de lancer une recherche en nombre de caractères"
     search_tokenize_chinese_japanese_korean: "Forcer la tokenisation dans la recherche chinois/japonais/koréen, même sur des sites non-CJK."
+    search_prefer_recent_posts: "Si la recherche dans votre forum est lente, cette option tente l'indéxation des messages les plus récents en premier"
+    search_recent_posts_size: "Combien de messages récents à garder dans l'index"
     allow_uncategorized_topics: "Autorise la création de sujets sans catégorie. ATTENTION : S'il existe des sujets non-catégorisés, vous devez les catégoriser avant de désactiver cette fonction."
     allow_duplicate_topic_titles: "Autoriser la création de sujet avec le même titre."
     unique_posts_mins: "Combien de temps avant qu'un utilisateur puisse poster le même contenu à nouveau"
@@ -829,7 +839,6 @@ fr:
     ga_universal_tracking_code: "Code de suivi Google Universal Analytics (analytics.js), par exemple : UA-12345678-9 ; voir http://google.com/analytics"
     ga_universal_domain_name: "Nom de domaine Google Universal Analytics (analytics.js), par exemple : monsite.com ; voir http://google.com/analytics"
     gtm_container_id: "ID du conteneur Google Tag Manager, par exemple : GTM-ABCDEF"
-    gtm_ua_domain_name: "Nom de domaine Universal Analytics via Google Tag Manager. La valeur 'auto' est recommandée."
     enable_escaped_fragments: "Utiliser l'API Ajax-Crawling de Google si aucun robot n'est détecté. Voir https://developers.google.com/webmasters/ajax-crawling/docs/learn-more"
     enable_noscript_support: "Activer le support des moteurs de recherches standards via le tag noscript"
     allow_moderators_to_create_categories: "Autoriser les modérateurs à créer de nouvelles catégories"
@@ -920,6 +929,7 @@ fr:
     top_topics_formula_log_views_multiplier: "formule pour la valeur de multiplicateur de vues de journal (n) dans les sujets tendance : `log(views_count) * (n) + op_likes_count * 0.5 + LEAST(likes_count / posts_count, 3) + 10 + log(posts_count)`"
     top_topics_formula_first_post_likes_multiplier: "formule pour la valeur de multiplicateur de premiers J'aime (n) dans les sujets tendance: `log(views_count) * 2 + op_likes_count * (n) + LEAST(likes_count / posts_count, 3) + 10 + log(posts_count)`"
     top_topics_formula_least_likes_per_post_multiplier: "formule pour la valeur de multiplicateur de moins de J'aime par message (n) dans les sujets tendance: `log(views_count) * 2 + op_likes_count * 0.5 + LEAST(likes_count / posts_count, (n)) + 10 + log(posts_count)`"
+    rebake_old_posts_count: "Nombre d'anciens messages à être régénéré toutes les 15 minutes."
     rate_limit_create_topic: "Après la création d'un sujet, les utilisateurs doivent attendre (n) secondes avant de pouvoir en créer un nouveau."
     rate_limit_create_post: "Après avoir posté un message, les utilisateurs doivent attendre (n) secondes avant de pouvoir en poster un nouveau."
     rate_limit_new_user_create_topic: "Après la création d'un sujet, les nouveaux utilisateurs doivent attendre (n) secondes avant de pouvoir en créer un nouveau."
@@ -934,6 +944,7 @@ fr:
     max_topic_invitations_per_day: "Nombre maximum d'invitations à un sujet qu'un utilisateur peut envoyer par jour."
     alert_admins_if_errors_per_minute: "Nombre d'erreurs par minute nécessaires pour déclencher une alerte administrateur. Une valeur de 0 désactive cette fonctionnalité. NB : nécessite un redémarrage."
     alert_admins_if_errors_per_hour: "Nombre d'erreurs par heure nécessaires pour déclencher une alerte administrateur. Une valeur de 0 désactive cette fonctionnalité. NB : Nécessite un redémarrage."
+    categories_topics: "Nombre de sujets à afficher dans la page /categories."
     suggested_topics: "Nombre de sujets suggérés affichés en bas d'un sujet."
     limit_suggested_to_category: "Afficher uniquement les sujets de la catégorie courante dans les sujets similaires."
     suggested_topics_max_days_old: "Les sujets suggérés ne devraient pas être plus anciens que n jours."
@@ -954,6 +965,7 @@ fr:
     default_opengraph_image_url: "URL de l'image par défaut pour les balises Open Graph."
     allow_all_attachments_for_group_messages: "Autorise toutes les pièces-jointes pour les messages de groupes."
     convert_pasted_images_to_hq_jpg: "Convertir les images copiées en fichier JPEG haute qualité."
+    convert_pasted_images_quality: "Qualité du fichier JPEG converti (1 est la plus faible, 100 est la meilleure)."
     enable_flash_video_onebox: "Activer l'utilisation de swf et flv (Adobe Flash) dans les boites imbriquées. ATTENTION : cela pourrait introduire un risque de sécurité."
     default_invitee_trust_level: "Niveau de confiance par défaut (0-4) pour les invités."
     default_trust_level: "Niveau de confiance par défaut (entre 0 et 4) pour tous les nouveaux utilisateurs. ATTENTION ! Changer ce paramètre peut vous exposer à des spams."
@@ -1004,6 +1016,7 @@ fr:
     title_fancy_entities: "Convertir les caractères ASCII commun en jolies entitées HTML dans les titres des sujets, comme SmartyPants http://daringfireball.net/projects/smartypants/"
     min_title_similar_length: "La taille minimale d'un titre avant que l'on vérifie l'existence de sujets identiques."
     min_body_similar_length: "La taille minimale d'un message avant que l'on vérifie l'existence de sujets identiques."
+    desktop_category_page_style: "Style visuel de la page /categories."
     category_colors: "Une liste de couleurs en hexadécimale autorisées pour les catégories."
     category_style: "Style visuel pour les badges de catégorie."
     max_image_size_kb: "La taille maximale des images en Ko. Doit être configuré dans nginx (client_max_body_size) / apache ou proxy aussi."
@@ -1038,14 +1051,14 @@ fr:
     max_age_unmatched_ips: "Effacer les adresses IP sous surveillenace sans correspondance après (N) jours"
     num_flaggers_to_close_topic: "Nombre minimum de signalements uniques requis pour automatiquement suspendre un sujet pour intervention"
     num_flags_to_close_topic: "Nombre minimum de signalements uniques requis pour automatiquement suspendre un sujet pour intervention"
-    auto_respond_to_flag_actions: "Activer réponse automatique lors du traitement d'un signalement."
+    auto_respond_to_flag_actions: "Activer la réponse automatique lors du traitement d'un signalement."
     min_first_post_typing_time: "Minimum de temps en millisecondes qu'un utilisateur doit passer à la saisie de son premier commentaire, si le seuil n'est pas atteint, il rejoindra automatiquement la file des commentaires en cours d'approbation. Mettre à 0 pour désactiver (non recommandé)"
     auto_block_fast_typers_on_first_post: "Bloque automatiquement les utilisateurs qui n'ont pas respecté min_first_post_typing_time"
     auto_block_fast_typers_max_trust_level: "Niveau de confiance maximum pour bloquer automatiquement les 'dactylo rapides'"
     auto_block_first_post_regex: "Regex non sensible à la casse qui, si elle est déclenchée, bloquera le premier message de l'utilisateur et l'enverra dans la file d'attente d'approbation.\nExemple: rageux|a[bc]a bloquera les premiers messages contenant rageux ou aba ou aca."
     reply_by_email_enabled: "Activer les réponses aux sujets via courriel."
     reply_by_email_address: "Modèle pour la réponse par courriel entrant; exemple : %{reply_key}@reply.example.com ou replies+%{reply_key}@example.com"
-    alternative_reply_by_email_addresses: "Liste des templates alternatifs pour les adresses des courriels entrants de la réponse par courriel."
+    alternative_reply_by_email_addresses: "Liste des templates alternatifs pour les adresses des courriels entrants de la réponse par courriel. Exemple : %{reply_key}@reply.example.com|replies+%{reply_key}@example.com"
     incoming_email_prefer_html: "Utiliser le HTML au lieu du texte pour les courriels entrants. Peut causer des problèmes de formatage inattendus !"
     disable_emails: "Désactiver l'envoi de les courriels depuis Discourse."
     strip_images_from_short_emails: "Retirer les images des courriels dont la taille est inférieur à 2800 Octets"
@@ -1057,15 +1070,17 @@ fr:
     max_emails_per_day_per_user: "Nombre maximum de courriels à envoyer aux utilisateurs par jour. 0 pour désactiver la limite"
     enable_staged_users: "Créer automatiquement les utilisateurs en attente lors du traitement des courriels entrants."
     maximum_staged_users_per_email: "Nombre maximum d'utilisateurs créés lors du traitement d'un courriel entrant."
-    auto_generated_whitelist: "Liste des adresses courriel qui ne seront pas vérifiées pour du contenu généré automatiquement."
+    auto_generated_whitelist: "Liste des adresses courriel qui ne seront pas vérifiées pour du contenu généré automatiquement. Exemple : foo@bar.com|discourse@bar.com"
     block_auto_generated_emails: "Bloquer les courriels entrants identifiés comme générés automatiquement."
     ignore_by_title: "Ignorer les courriels entrants selon leur titre."
     mailgun_api_key: "Clé API secrète de Mailgun utilisée pour vérifier les messages du webhook."
-    soft_bounce_score: "Score ajouté à l'utilisateur lorsqu'un rejet temporaire se produit."
-    hard_bounce_score: "Score ajouté à l'utilisateur lorsqu'un rejet permanent se produit."
-    bounce_score_threshold: "Score maximum à partir duquel nous allons arrêter d'envoyer des courriel à un utilisateur."
-    bounce_score_threshold_deactivate: "Score maximum à partir duquel nous allons désactiver un utilisateur."
+    soft_bounce_score: "Score de rejet ajouté à l'utilisateur lorsqu'un rejet temporaire se produit."
+    hard_bounce_score: "Score de rejet ajouté à l'utilisateur lorsqu'un rejet permanent se produit."
+    bounce_score_threshold: "Score de rejet maximum à partir duquel nous allons arrêter d'envoyer des courriels à un utilisateur."
+    bounce_score_threshold_deactivate: "Score de rejet maximum à partir duquel nous allons désactiver un utilisateur."
     reset_bounce_score_after_days: "Rétablir automatiquement le score de rejet après X jours."
+    attachment_content_type_blacklist: "Liste des mots-clés utilisés pour filtrer les pièces jointes en fonction du type de contenu."
+    attachment_filename_blacklist: "Liste des mots-clés utilisés pour filtrer les pièces jointes en fonction du nom de fichier."
     manual_polling_enabled: "Envoyer les courriels en utilisant l'API des réponses par courriel."
     pop3_polling_enabled: "Utiliser POP3 pour les réponses via courriel."
     pop3_polling_ssl: "Utiliser SSL pour les connections au serveur POP3. (Recommandé)"
@@ -1131,6 +1146,7 @@ fr:
     feed_polling_url: "EMBARQUER UNIQUEMENT: Url du flux RSS/ATOM à embarqué."
     embed_by_username: "Pseudo de l'utilisateur Discourse qui crée les sujets embarqués."
     embed_username_key_from_feed: "Clé pour extraire le pseudo du flux."
+    embed_title_scrubber: "Expression régulière pour nettoyer les titres intégrables."
     embed_truncate: "Tronquer les messages embarqués."
     embed_post_limit: "Nombre maximum de messages à embarquer."
     embed_username_required: "Un pseudo d'utilisateur pour la création du sujet est nécessaire."
@@ -1174,6 +1190,13 @@ fr:
     default_categories_watching: "Liste de catégories surveillées par défaut."
     default_categories_tracking: "Liste de catégories suivies par défaut."
     default_categories_muted: "Liste de catégories silencées par défaut."
+    max_user_api_reqs_per_day: "Nombre maximum de requêtes de l'API utilisateur par clé et par jour"
+    max_user_api_reqs_per_minute: "Nombre maximum de requêtes de l'API utilisateur par clé et par minute"
+    allow_read_user_api_keys: "Autoriser la génération de clés en lecture seule pour l'API utilisateur"
+    allow_write_user_api_keys: "Autoriser la génération de clés en écriture pour l'API utilisateur"
+    allow_push_user_api_keys: "Autoriser la génération de clés pour utiliser le service push pour l'API utilisateur"
+    max_api_keys_per_user: "Nombre maximum de clés de l'API utilisateur par utilisateur"
+    min_trust_level_for_user_api_key: "Niveau de confiance requis pour générer des clés pour l'API utilisateur"
     tagging_enabled: "Activer les tags sur les sujets ?"
     min_trust_to_create_tag: "Le niveau de confiance minimum requis pour créer un tag."
     max_tags_per_topic: "Le nombre maximum de tags pouvant être ajoutés à un sujet."
@@ -1185,7 +1208,7 @@ fr:
     tag_style: "Style visuel pour tag badges."
     staff_tags: "Une liste de tags qui ne peuvent être appliqués que par des responsables."
     min_trust_level_to_tag_topics: "Niveau de confiance minimum requis pour taguer des sujets"
-    suppress_overlapping_tags_in_list: "Cacher les tags de la liste s'ils recouvrent le titre"
+    suppress_overlapping_tags_in_list: "Si des tags correspondent exactement à des mots du titre d'un sujet, ne pas afficher ces tags"
     remove_muted_tags_from_latest: "Ne pas afficher les sujets avec des tags silencieux dans la liste des sujets récents."
     errors:
       invalid_email: "Adresse de courriel invalide."
@@ -1471,7 +1494,7 @@ fr:
       [mt]: http://www.mail-tester.com/
   new_version_mailer:
     subject_template: "[%{site_name}] Nouvelle version de Discourse, mise à jour disponible"
-    text_body_template: |
+    text_body_template: |+
       Hourra, une nouvelle version de [Discourse](http://www.discourse.org) est disponible !
 
       Votre version : %{installed_version}
@@ -1481,7 +1504,8 @@ fr:
 
       - Consultez les nouveautés sur l'historique [GitHub](https://github.com/discourse/discourse/commits/master).
 
-      - Visitez [meta.discourse.org](http://meta.discourse.org) pour des nouvelles, des discussions, et de l'aide concernant Discourse.
+      - Visitez [meta.discourse.org](https://meta.discourse.org) pour des nouvelles, des discussions, et de l'aide concernant Discourse.
+
   new_version_mailer_with_notes:
     subject_template: "[%{site_name}] mise à jour disponible"
     text_body_template: |
@@ -1494,7 +1518,7 @@ fr:
 
       - Consultez les nouveautés sur l'historique [GitHub](https://github.com/discourse/discourse/commits/master).
 
-      - Visitez [meta.discourse.org](http://meta.discourse.org) pour des nouvelles, des discussions, et de l'aide concernant Discourse.
+      - Visitez [meta.discourse.org](https://meta.discourse.org) pour des nouvelles, des discussions, et de l'aide concernant Discourse.
 
       ### Notes de version
 
@@ -1666,28 +1690,44 @@ fr:
         [prefs]: %{user_preferences_url}
     backup_succeeded:
       subject_template: "Sauvegarde terminée avec succès"
-      text_body_template: "La sauvegarde a bien réussie.\nVisitez [la section admin > sauvegarde](%{base_url}/admin/backups) pour télécharger votre nouvelle sauvegarde."
+      text_body_template: |
+        La sauvegarde a réussi.
+
+        Visitez [la section admin > sauvegarde](%{base_url}/admin/backups) pour télécharger votre nouvelle sauvegarde.
+
+        Voici le détail :
+
+        ```text
+        %{logs}
+        ```
     backup_failed:
       subject_template: "Échec de la sauvegarde"
       text_body_template: |
-        La sauvegarde a échouée.
+        La sauvegarde a échoué.
 
-        Voici le détail:
+        Voici le détail :
 
-        ```
+        ```text
         %{logs}
         ```
     restore_succeeded:
       subject_template: "Restauration terminée avec succès"
-      text_body_template: "La restauration a été un succès."
+      text_body_template: |
+        La restauration a réussi.
+
+        Voici le détail :
+
+        ```text
+        %{logs}
+        ```
     restore_failed:
       subject_template: "Échec de la restauration"
       text_body_template: |
-        La restauration a échouée.
+        La restauration a échoué.
 
-        Voici le détail:
+        Voici le détail :
 
-        ```
+        ```text
         %{logs}
         ```
     bulk_invite_succeeded:
@@ -1798,13 +1838,6 @@ fr:
         %{post_error}
 
         Si vous pouvez corriger les erreurs, veuillez réessayer.
-    email_reject_rate_limit_specified:
-      subject_template: "[%{site_name}] Problème de courriel -- Limitation du débit"
-      text_body_template: |+
-        Nous sommes désolés, mais l'envoi de votre courriel à %{destination} (intitulé %{former_title}) n'a pas fonctionné.
-
-        Raison : %{rate_limit_description}
-
     email_reject_invalid_post_action:
       subject_template: "[%{site_name}] Problème de courriel -- Action Post invalide"
       text_body_template: |
@@ -1929,7 +1962,7 @@ fr:
   unsubscribe_link_and_mail: |
     Pour se désabonner de ces courriels, [cliquer ici](%{unsubscribe_url}).
   unsubscribe_mailing_list: |
-    Vous recevez ces courriels car vous avez activé la liste de diffusion.
+    Vous recevez ce courriel car vous avez activé la liste de diffusion.
 
     Pour se désabonner de ces courriels, [cliquer ici](%{unsubscribe_url}).
   subject_re: "Re:"
@@ -2085,7 +2118,7 @@ fr:
         %{respond_instructions}
     user_posted_pm_staged:
       subject_template: "%{optional_re}%{topic_title}"
-      text_body_template: |
+      text_body_template: |2
 
         %{message}
     digest:
@@ -2460,7 +2493,7 @@ fr:
       <tr><td><code>posts_count:num</code></td><td><code>before:days or date</code></td><td><code>after:days or date</code></td><td><code>tags:one,two</code></td><td></td></tr>
       </table>
       </p>
-      <h3>Examples</h3>
+      <h3>Exemples</h3>
       <p>
       <ul>
       <li><code>rainbows #parks</code> cherchera les sujets dans la catégorie "parks" qui contiennent le mot "rainbows".</li>
@@ -2470,7 +2503,7 @@ fr:
       </p>
   badges:
     editor:
-      name: Editeur
+      name: Éditeur
       description: Première édition d'un message
       long_description: |
         Ce badge est accordé après la première édition d'un de vos messages. Bien que la possibilité d'éditer un message soit limitée dans le temps, l'édition est toujours une bonne idée — vous pouvez améliorer vos messages, réparer des petites erreurs, ou ajouter des éléments que vous avez oubliés lors de la rédaction. Éditer vos messages pour les rendre encore meilleurs !
@@ -2496,7 +2529,7 @@ fr:
         Ce badge est accordé lorsque vous atteignez le niveau de confiance 4. Vous êtes un meneur choisi par l'équipe dans cette communauté, et vous montrez l'exemple dans vos actions et vos mots. Vous avez la capacité d'éditer tous les messages, utiliser les actions de modérations telles qu'épingler, fermer, cacher, archiver, scinder et fusionner, ainsi que des tonnes de "J'aime" par jour.
     welcome:
       name: Bienvenue
-      description: A reçu un j'aime.
+      description: A reçu un J'aime
       long_description: |
         Ce badge est accordé lorsque vous recevez votre premier "J'aime" sur un de vos messages. Félicitations, vous avez écrit quelque chose que les membres de votre communauté ont trouvé intéressant, cool, ou utile !
     autobiographer:
@@ -2511,32 +2544,32 @@ fr:
         Ce badge est accordé après avoir été membre du site pendant une année, avec au moins un message crée dans cette année. Merci d'être resté avec nous et de contribuer ainsi à notre communauté ! Nous n'aurions pas pu le faire sans vous.
     nice_post:
       name: Jolie réponse
-      description: A reçu 10 j'aime sur une réponse.
+      description: A reçu 10 J'aime sur une réponse.
       long_description: |
         Ce badge est accordé quand une réponse obtient 10 j'aime. Votre réponse a vraiment fait impression sur la communauté et a aidé à faire progresser la conversation.
     good_post:
-      name: Bonne Réponse
-      description: A reçu 25 j'aime sur une réponse
+      name: Bonne réponse
+      description: A reçu 25 J'aime sur une réponse
       long_description: |
         Ce badge est accordé quand votre réponse obtient 25 j'aime. Votre réponse est exceptionnel et a rendu la conversation bien mieux pour tout le monde.
     great_post:
-      name: Super Réponse
-      description: A reçu 50 j'aime sur une réponse
+      name: Super réponse
+      description: A reçu 50 J'aime sur une réponse
       long_description: |
         Ce badge est accordé quand une réponse obtient 50 j'aime. Votre réponse était inspirante, fascinante, hilarante, ou pertinente et la communauté l'a adorée.
     nice_topic:
       name: Sujet intéressant
-      description: A reçu 10 j'aime sur un sujet.
+      description: A reçu 10 J'aime sur un sujet.
       long_description: |
         Ce badge est accordé quand un sujet obtient 10 j'aime.  Vous avez commencé une conversation intéressante que la communauté a apprécié !
     good_topic:
       name: Bon sujet
-      description: A reçu 25 j'aime sur un sujet
+      description: A reçu 25 J'aime sur un sujet
       long_description: |
         Ce badge est accordé quand un sujet obtient 25 j'aime. Vous avez lancé une conversation vibrante autour de laquelle la communauté s'est ralliée et elle l'a adorée.
     great_topic:
       name: Super sujet
-      description: A reçu 50 j'aime sur un sujet
+      description: A reçu 50 J'aime sur un sujet
       long_description: |
         Ce badge est accordé quand un sujet obtient 50 j'aime. Vous avez initié une fascinante conversation et la communauté a apprécié la discussion dynamique qui en a résulté !
     nice_share:
@@ -2555,7 +2588,7 @@ fr:
       long_description: |
         Ce badge est accordé après le partage d'un lien qui a été cliqué par 1000 visiteurs extérieurs. Whaou ! Vous avez fait la promotion d'une discussion intéressante auprès d'une nouvelle audience d'envergure et avez aidé notre communauté à grandir de manière significative !
     first_like:
-      name: Premier j'aime
+      name: Premier J'aime
       description: A aimé un message
       long_description: |
         Ce badge est accordé la première fois que vous aimez un message en utilisant le bouton :heart:. Aimer des messages est le moyen parfait pour dire aux autres membres de la communauté que ce qu'ils ont posté était intéressant, utile, cool, ou amusant.
@@ -2621,22 +2654,22 @@ fr:
         Ce badge est accordé quand un lien que vous avez partagé obtient 1000 clics. Whaou ! Vous avez posté un lien qui a notablement amélioré la discussion en ajoutant des détails et des informations essentielles. Bon travail !
     appreciated:
       name: Apprécié
-      description: A recu 1 j'aime sur 20 messages
+      description: A recu 1 J'aime sur 20 messages
       long_description: |
         Ce badge est accordé lorsque vous recevez au moins un J'aime sur 20 messages différents. La communauté apprécie vos contributions aux conversations !
     respected:
       name: Respecté
-      description: A reçu 2 j'aime sur 100 messages
+      description: A reçu 2 J'aime sur 100 messages
       long_description: |
         Ce badge est accordé lorsque vous recevez au moins 2 J'aime sur 100 messages différents. La communauté a de plus en plus de respect pour vos nombreuses contributions aux conversations.
     admired:
       name: Admiré
-      description: A reçu 5 j'aime sur 300 messages
+      description: A reçu 5 J'aime sur 300 messages
       long_description: |
         Ce badge est accordé lorsque vous recevez au moins 5 J'aime sur 300 messages différents. Whaou ! La communauté admire vos fréquentes contributions de haute qualité aux conversations.
     out_of_love:
       name: Trop d'amour
-      description: A utilisé 50 j'aime en une journée
+      description: A utilisé 50 J'aime en une journée
       long_description: |
         Ce badge est accordé lorsque vous utilisez la totalité de vos 50 J'aime quotidiens. Rappelez-vous de prendre un moment pour aimer les messages qui vous plaisent et que vous appréciez. Cela encourage les autres membres de la communauté à créer encore plus de discussions de qualité à l'avenir.
     higher_love:
@@ -2651,17 +2684,17 @@ fr:
         Ce badge est accordé lorsque vous utilisez la totalité vos 50 J'aime par jour pendant 20 jours. Whaou ! Vous êtes un modèle d'encouragement régulier des membres de la communauté !
     thank_you:
       name: 'Merci '
-      description: A 20 messages ayant reçu un j'aime et a donné 10 j'aime
+      description: A 20 messages ayant reçu un J'aime et a donné 10 j'aime
       long_description: |
         Ce badge est accordé quand vous avez reçu 20 J'aime sur vos messages et en avez donné 10 ou plus en retour. Quand quelqu'un aime vos messages, vous trouvez le temps d'aimer ce que les autres postent à leur tour.
     gives_back:
       name: Redonne
-      description: A 100 messages ayant reçu un j'aime et a donné 100 j'aime
+      description: A 100 messages ayant reçu un J'aime et a donné 100 J'aime
       long_description: |
         Ce badge est accordé quand vous avez reçu 100 J'aime et en avez donné 100 ou plus en retour. Whaou ! Merci de rendre ce lieu meilleur !
     empathetic:
       name: Empathique
-      description: A 500 messages ayant reçu un j'aime et a donné 1000 j'aime
+      description: A 500 messages ayant reçu un J'aime et a donné 1000 J'aime
       long_description: |
         Ce badge est accordé quand vous avez reçu 500 J'aime et en avez donné 1000 ou plus en retour. Whaou ! Vous êtes un modèle de générosité et d'amour mutuel :two_hearts:.
     first_emoji:

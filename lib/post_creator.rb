@@ -32,6 +32,10 @@ class PostCreator
   #   via_email               - Mark this post as arriving via email
   #   raw_email               - Full text of arriving email (to store)
   #   action_code             - Describes a small_action post (optional)
+  #   skip_jobs               - Don't enqueue jobs when creation succeeds. This is needed if you
+  #                             wrap `PostCreator` in a transaction, as the sidekiq jobs could
+  #                             dequeue before the commit finishes. If you do this, be sure to
+  #                             call `enqueue_jobs` after the transaction is comitted.
   #
   #   When replying to a topic:
   #     topic_id              - topic we're replying to
@@ -145,7 +149,7 @@ class PostCreator
       publish
 
       track_latest_on_category
-      enqueue_jobs
+      enqueue_jobs unless @opts[:skip_jobs]
       BadgeGranter.queue_badge_grant(Badge::Trigger::PostRevision, post: @post)
 
       trigger_after_events(@post)
@@ -168,6 +172,11 @@ class PostCreator
     end
 
     @post
+  end
+
+  def enqueue_jobs
+    return unless @post && !@post.errors.present?
+    PostJobsEnqueuer.new(@post, @topic, new_topic?, {import_mode: @opts[:import_mode]}).enqueue_jobs
   end
 
   def self.track_post_stats
@@ -447,11 +456,6 @@ class PostCreator
     else
       TopicUser.auto_track(@user.id, @topic.id, TopicUser.notification_reasons[:created_post])
     end
-  end
-
-  def enqueue_jobs
-    return unless @post && !@post.errors.present?
-    PostJobsEnqueuer.new(@post, @topic, new_topic?, {import_mode: @opts[:import_mode]}).enqueue_jobs
   end
 
   def new_topic?

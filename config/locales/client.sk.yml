@@ -49,10 +49,6 @@ sk:
           one: "1s"
           few: "1s"
           other: "%{count}s"
-        less_than_x_minutes:
-          one: "< 1m"
-          few: "< 1m"
-          other: "< %{count}m"
         x_minutes:
           one: "1m"
           few: "%{count}m"
@@ -409,16 +405,10 @@ sk:
       latest_by: "najnovšie podľa"
       toggle_ordering: "zmeniť radenie"
       subcategories: "Podkategórie"
-      topic_stats: "Počet nových tém."
       topic_stat_sentence:
         one: "%{count} nová téma za posledných %{unit}."
         few: "%{count} nové témy za posledných %{unit}."
         other: "%{count} nových tém za posledných %{unit}."
-      post_stats: "Počet nových príspevkov."
-      post_stat_sentence:
-        one: "%{count} nový príspevok za posledných %{unit}."
-        few: "%{count} nové príspevky za posledných %{unit}."
-        other: "%{count} nových príspevkov za posledných %{unit}."
     ip_lookup:
       title: Vyhľadávanie podľa IP adresy
       hostname: Hostname
@@ -1046,7 +1036,6 @@ sk:
       unsubscribe:
         stop_notifications: "Teraz budete dostávať menej upozornení na <strong>{{title}}</strong>"
         change_notification_state: "Váš súčasný stav upozornení je"
-      filter_to: "{{post_count}} príspevkov k téme"
       create: 'Nová téma'
       create_long: 'Vytvoriť novú tému'
       private_message: 'Vytvoríť správu'
@@ -1112,7 +1101,6 @@ sk:
       auto_close_title: 'Nastavenia automatického zatvárania'
       auto_close_save: "Uložiť"
       auto_close_remove: "Neuzatvárať túto tému automaticky"
-      auto_close_immediate: "Posledný príspevok k téme je starý už %{hours} hodín, takže téma bude okamžite uzavretá. "
       progress:
         title: pozícia v téme
         go_top: "na začiatok"
@@ -1122,7 +1110,6 @@ sk:
         jump_bottom_with_number: "choď na príspevok číslo %{post_number}"
         total: Všetkých príspevkov
         current: tento príspevok
-        position: "%{current}  príspevok z %{total}"
       notifications:
         reasons:
           '3_6': 'Budete dostávať upozornenia, pretože sa pozeráte na túto kategóriu.'
@@ -1324,7 +1311,6 @@ sk:
         one: "zobraziť skrytú odpoveď"
         few: "zobraziť {{count}} skryté odpovede"
         other: "zobraziť {{count}} skrytých odpovedí"
-      more_links: "ešte {{count}} "
       unread: "Príspevok je neprečítaný."
       has_replies:
         one: "{{count}} Odpoveď"
@@ -1395,14 +1381,6 @@ sk:
           one: "Zrušiť označenie"
           few: "Zrušiť označenia"
           other: "Zrušiť označenia"
-        it_too:
-          off_topic: "Tiež označ"
-          spam: "Tiež označ"
-          inappropriate: "Tiež označ"
-          custom_flag: "Tiež označ"
-          bookmark: "Tiež vytvoriť záložku"
-          like: "Tiež sa mi páči"
-          vote: "Tiež hlasujem za"
         undo:
           off_topic: "Zruš označenie"
           spam: "Zruš označenie"
@@ -1582,7 +1560,6 @@ sk:
       take_action: "Vykonať akciu"
       notify_action: 'Správa'
       delete_spammer: "Zmazať spammera"
-      delete_confirm: "Idete vymazať <b>%{posts}</b> príspevky a <b>%{topics}</b> témy tohto užívateľa, zmazať jeho účet, zakázať prihlásenia z jeho IP adresy <b>%{ip_address}</b>, a pridať jeho email <b>%{email}</b> na zoznam trvalo zakázaných. Ste si istý, že tento užívateľ je skutočne spamer?"
       yes_delete_spammer: "Áno, zmazať spammera"
       ip_address_missing: "(nedostupné)"
       hidden_email_address: "(skryté)"
@@ -1595,10 +1572,6 @@ sk:
         spam: "Je to spam"
       custom_placeholder_notify_user: "Buďte konkrétny, buďte konštruktívny a buďte vždy milý."
       custom_placeholder_notify_moderators: "Dajte nám vedieť, z čoho konkrétne máte obavy, a priložte príslušné odkazy a príklady, ak je to možné."
-      custom_message:
-        at_least: "zadajte aspoň {{n}} znakov"
-        more: "zostáva ešte {{n}} ..."
-        left: "{{n}} zostáva"
     flagging_topic:
       title: "Ďakujeme, že pomáhate udržiavať slušnosť v našej komunite!"
       action: "Označ príspevok"
@@ -1634,7 +1607,6 @@ sk:
       invisible:
         help: "Táto téma je skrytá. Nebude zobrazená v zozname tém a prístup k nej bude možný len prostrednictvom priameho odkazu na ňu"
     posts: "Príspevky"
-    posts_lowercase: "príspevky"
     posts_long: "v tejto téme je {{number}} príspevkov"
     posts_likes_MF: |
       Táto téma obsahuje {count, plural, one {1 odpoveď} other {# odpovedí}} {ratio, select,
@@ -2290,7 +2262,6 @@ sk:
         suspend_reason: "Dôvod"
         suspended_by: "Práva odobraté"
         delete_all_posts: "Zmazať všetky príspevky"
-        delete_all_posts_confirm: "Chystáte sa zmazať %{posts} príspevkov a %{topics} tém. Ste si istý?"
         suspend: "Odobrať"
         unsuspend: "Obnoviť"
         suspended: "Odobrate práva?"
@@ -2380,7 +2351,6 @@ sk:
         unlock_trust_level: "Odomknúť stupeň dôvery"
         tl3_requirements:
           title: "Požiadavky pre stupeň dôvery 3"
-          table_title: "Za posledných %{time_period} dní:"
           value_heading: "Hodnota"
           requirement_heading: "Požiadavka"
           visits: "Návštev"

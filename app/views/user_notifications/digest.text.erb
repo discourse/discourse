@@ -6,7 +6,7 @@
 <%- if @featured_topics.present? %>
 ### <%=t 'user_notifications.digest.top_topics' %>
 
-<%- @featured_topics.each do |t| %>
+<%- @featured_topics.each_with_index do |t,i| %>
 <%= raw(@markdown_linker.create(t.title, t.relative_url)) %>
 
 <%- if t.best_post.present? %>
@@ -14,10 +14,10 @@
 --------------------------------------------------------------------------------
 
 <%- end %>
-
+<%= digest_custom_text("below_post_#{i+1}") %>
 <%- end %>
 <%- end %>
-
+<%= digest_custom_text("above_popular_topics") %>
 <%- if @new_topics.present? %>
 **<%=t 'user_notifications.digest.other_new_topics' %>**
 
@@ -27,12 +27,15 @@
 
 <%- end -%>
 
-
+<%= digest_custom_text("below_popular_topics") %>
 
 <%= raw(@markdown_linker.references) %>
 
+<%= digest_custom_text("above_footer") %>
 <%=raw(t :'user_notifications.digest.unsubscribe',
      site_link: site_link,
      unsubscribe_link: raw(@markdown_linker.create(t('user_notifications.digest.click_here'), email_unsubscribe_url(key: @unsubscribe_key, only_path: true))))  %>
 
 <%= raw(@markdown_linker.references) %>
+
+<%= digest_custom_text("below_footer") %>

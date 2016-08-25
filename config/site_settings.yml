@@ -55,6 +55,7 @@ required:
     client: true
     default: '/images/default-favicon.ico'
   apple_touch_icon_url: '/images/default-apple-touch-icon.png'
+  default_opengraph_image_url: ''
   exclude_rel_nofollow_domains:
     default: ''
     type: list
@@ -71,6 +72,9 @@ basic:
   set_locale_from_accept_language_header:
     default: false
     validator: "AllowUserLocaleEnabledValidator"
+  categories_topics:
+    default: 20
+    min: 5
   suggested_topics:
     client: true
     default: 5
@@ -153,6 +157,10 @@ basic:
      - facebook
      - google+
      - email
+  desktop_category_page_style:
+    client: true
+    enum: 'CategoryPageStyle'
+    default: 'categories_and_latest_topics'
   category_colors:
     client: true
     type: list
@@ -215,9 +223,11 @@ basic:
 
 login:
   invite_only:
+    refresh: true
     client: true
     default: false
   login_required:
+    refresh: true
     client: true
     default: false
   must_approve_users:
@@ -543,6 +553,8 @@ posting:
     choices:
      - 4-spaces-indent
      - code-fences
+  embed_truncate:
+    default: true
 
 email:
   email_time_window_mins:
@@ -690,7 +702,7 @@ files:
     enum: 'S3RegionSiteSetting'
   s3_upload_bucket:
     default: ''
-    regex: "^[a-z0-9-]+$" # can't use '.' when using HTTPS
+    regex: '^[a-z0-9\-\/]+$' # can't use '.' when using HTTPS
   s3_cdn_url:
     default: ''
     regex: '^https?:\/\/.+[^\/]$'
@@ -721,7 +733,6 @@ files:
     client: true
     regex: '^((https?:)?\/)?\/.+[^\/]'
     shadowed_by_global: true
-  default_opengraph_image_url: ''
   allow_all_attachments_for_group_messages: false
   convert_pasted_images_to_hq_jpg: true
   convert_pasted_images_quality:
@@ -942,6 +953,9 @@ developer:
   top_topics_formula_least_likes_per_post_multiplier:
     default: 3
     min: 0
+  rebake_old_posts_count:
+    default: 250
+    min: 1
   migrate_to_new_scheme:
     hidden: true
     default: false
@@ -967,8 +981,8 @@ embedding:
   embed_post_limit:
     default: 100
     hidden: true
-  embed_truncate:
-    default: false
+  embed_title_scrubber:
+    default: ''
     hidden: true
   embed_whitelist_selector:
     default: ''
@@ -1013,7 +1027,7 @@ backups:
     shadowed_by_global: true
   s3_backup_bucket:
     default: ''
-    regex: "^[a-z0-9-]+$" # can't use '.' when using HTTPS
+    regex: '^[a-z0-9\-\/]+$' # can't use '.' when using HTTPS
     shadowed_by_global: true
   s3_disable_cleanup:
     default: false
@@ -1242,6 +1256,28 @@ user_preferences:
   default_categories_muted:
     type: category_list
     default: ''
+
+user_api:
+  max_user_api_reqs_per_day:
+    default: 2880
+  max_user_api_reqs_per_minute:
+    default: 12
+  allow_read_user_api_keys:
+    default: true
+  allow_write_user_api_keys:
+    default: false
+  allow_push_user_api_keys:
+    default: true
+  max_api_keys_per_user:
+    default: 10
+  min_trust_level_for_user_api_key:
+    default: 1
+  allowed_user_api_push_urls:
+    default: ''
+    type: list
+  allowed_user_api_auth_redirects:
+    default: 'https://api.discourse.org/api/auth_redirect|discourse://auth_redirect'
+    type: list
 
 tags:
   tagging_enabled:

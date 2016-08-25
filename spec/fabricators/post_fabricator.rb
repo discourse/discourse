@@ -114,6 +114,7 @@ And a link to google: http://google.com
 And a secure link to google: https://google.com
 And a markdown link: [forumwarz](http://forumwarz.com)
 And a markdown link with a period after it [codinghorror](http://www.codinghorror.com/blog).
+And one with a hash http://discourse.org#faq
   "
 end
 

@@ -46,9 +46,6 @@ nb_NO:
         x_seconds:
           one: "1s"
           other: "%{count}s"
-        less_than_x_minutes:
-          one: "< 1m"
-          other: "< %{count}m"
         x_minutes:
           one: "1m"
           other: "%{count}m"
@@ -354,14 +351,9 @@ nb_NO:
       latest_by: "siste av"
       toggle_ordering: "veksle rekkefølge"
       subcategories: "Underkategorier"
-      topic_stats: "Antall nye emner."
       topic_stat_sentence:
         one: "%{count} nytt emner de siste %{unit}."
         other: "%{count} nye emner de siste %{unit}."
-      post_stats: "Antall nye innlegg."
-      post_stat_sentence:
-        one: "%{count} nye innlegg den siste %{unit}."
-        other: "%{count} nye innlegg de siste %{unit}."
     ip_lookup:
       title: Slå opp IP-adresse
       hostname: Vertsnavn
@@ -919,7 +911,6 @@ nb_NO:
         bookmarks: "Det er ingen bokmerkede emner."
         search: "Det er ingen flere søkeresultater"
     topic:
-      filter_to: "{{post_count}} innlegg i dette emnet."
       create: 'Nytt emne'
       create_long: 'Opprett et nytt emne'
       private_message: 'Begynn en melding'
@@ -987,7 +978,6 @@ nb_NO:
         jump_bottom_with_number: "hopp til innlegg %{post_number}"
         total: innlegg totalt
         current: gjeldende innlegg
-        position: "innlegg %{current} av %{total}"
       notifications:
         reasons:
           '3_6': 'Du vil motta varsler fordi du følger denne kategorien'
@@ -1156,7 +1146,6 @@ nb_NO:
       gap:
         one: "vis 1 skjult svar"
         other: "vis {{count}} skjulte svar"
-      more_links: "{{count}} flere..."
       unread: "Innlegget er ulest"
       has_replies:
         one: "{{count}} Svar"
@@ -1217,14 +1206,6 @@ nb_NO:
         defer_flags:
           one: "Utsett rapportering"
           other: "Utsett rapporteringer"
-        it_too:
-          off_topic: "Rapporter det også"
-          spam: "Rapporter det også"
-          inappropriate: "Rapporter det også"
-          custom_flag: "Rapporter det også"
-          bookmark: "Bokmerk det også"
-          like: "Lik det også"
-          vote: "Stem for det også"
         undo:
           off_topic: "Angre rapportering"
           spam: "Angre rapportering"
@@ -1390,7 +1371,6 @@ nb_NO:
       notify_action: 'Melding'
       official_warning: 'Offisiell Advarsel'
       delete_spammer: "Slett spammer"
-      delete_confirm: "Du er i ferd med å slette <b>%{posts}</b> innlegg og <b>%{topics}</b> emner av denne brukeren, slette brukerens konto, blokkere registrering fra brukerens IP-adresse <b>%{ip_address}</b>, og legge brukerens e-postadresse <b>%{email}</b> i en permanent svarteliste. Er du sikker på at denne brukeren virkelig er en spammer?"
       yes_delete_spammer: "Ja, slett spammer"
       ip_address_missing: "(N/A)"
       hidden_email_address: "(skjult)"
@@ -1403,10 +1383,6 @@ nb_NO:
         spam: "Det er reklame"
       custom_placeholder_notify_user: "Vær spesifikk, konstruktiv og snill."
       custom_placeholder_notify_moderators: "La oss vite nøyaktig hva problemet er, og del relevante lenker og eksempler hvorvidt det er mulig."
-      custom_message:
-        at_least: "skriv minst {{n}} bokstaver"
-        more: "{{n}} igjen..."
-        left: "{{n}} gjenstående"
     flagging_topic:
       title: "Takk for at du hjelper med å vedlikeholde god skikk i samfundet vårt!"
       action: "Rapporter emne"
@@ -1438,7 +1414,6 @@ nb_NO:
       invisible:
         help: "Dette emnet er ikke listet; det vil ikke vises i emnelister, og kan kun leses via en direktelenke"
     posts: "Innlegg"
-    posts_lowercase: "innlegg"
     posts_long: "{{number}} innlegg i dette emnet"
     posts_likes_MF: |
       This topic has {count, plural, one {1 reply} other {# replies}} {ratio, select,
@@ -2041,7 +2016,6 @@ nb_NO:
         suspend_reason: "Begrunnelse"
         suspended_by: "Bannlyst av"
         delete_all_posts: "Slett alle innlegg"
-        delete_all_posts_confirm: "Du skal til å slette %{posts} innlegg og %{topics} emner. Er du sikker?"
         suspend: "Bannlyst"
         unsuspend: "Gjeninnsett\""
         suspended: "Bannlyst?"

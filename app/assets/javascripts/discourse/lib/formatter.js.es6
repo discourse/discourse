@@ -132,7 +132,8 @@ function wrapAgo(dateStr) {
 function relativeAgeTiny(date, ageOpts) {
   const format = "tiny";
   const distance = Math.round((new Date() - date) / 1000);
-  const distanceInMinutes = Math.round(distance / 60.0);
+  const dividedDistance = Math.round(distance / 60.0);
+  const distanceInMinutes = (dividedDistance < 1) ? 1 : dividedDistance;
 
   let formatted;
   const t = function(key, opts) {
@@ -140,11 +141,9 @@ function relativeAgeTiny(date, ageOpts) {
     return (ageOpts && ageOpts.addAgo) ? wrapAgo(result) : result;
   };
 
+
   switch(true) {
-    case(distanceInMinutes < 1):
-      formatted = t("less_than_x_minutes", {count: 1});
-      break;
-    case(distanceInMinutes >= 1 && distanceInMinutes <= 44):
+    case(distanceInMinutes >= 0 && distanceInMinutes <= 44):
       formatted = t("x_minutes", {count: distanceInMinutes});
       break;
     case(distanceInMinutes >= 45 && distanceInMinutes <= 89):

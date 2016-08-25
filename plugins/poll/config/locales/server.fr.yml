@@ -9,6 +9,7 @@ fr:
   site_settings:
     poll_enabled: "Autoriser les utilisateurs à créer des sondages ?"
     poll_maximum_options: "Nombre maximum d'options autorisées dans un sondage."
+    poll_edit_window_mins: "Nombre de minutes après la création du message durant lesquelles les sondages peuvent être modifiés."
   poll:
     multiple_polls_without_name: "Plusieurs sondages n'ont pas de nom. Utilisez l'attribut '<code>name</code>' pour donner un identifiant unique aux sondages."
     multiple_polls_with_same_name: "Plusieurs sondages ont le même noms : <strong>%{name}</strong>. Utilisez l'attribut '<code>name</code>' pour donner un identifiant unique aux sondages."
@@ -27,9 +28,10 @@ fr:
     requires_at_least_1_valid_option: "Vous devez sélectionner au moins une des options valables."
     default_cannot_be_made_public: "Un sondage avec des votes ne peut pas être rendu public."
     named_cannot_be_made_public: "Le sondage <strong>%{name}</strong> a des votes et ne peut être rendu public."
-    cannot_change_polls_after_5_minutes: "Vous ne pouvez pas ajouter, supprimer ou renommer les sondages après cinq minutes."
-    op_cannot_edit_options_after_5_minutes: "Vous ne pouvez pas ajouter ou supprimer les options d'un sondage après cinq minutes. Merci de contacter un modérateur si vous avez besoin de le faire."
-    staff_cannot_add_or_remove_options_after_5_minutes: "Vous ne pouvez pas ajouter ou supprimer des options dans un sondage après cinq minutes. Vous devez fermer ce sujet et en créer un nouveau à la place."
+    edit_window_expired:
+      cannot_change_polls: "Vous ne pouvez pas ajouter, supprimer ou renommer les sondages après les %{minutes} premières minutes."
+      op_cannot_edit_options: "Vous nous pouvez pas ajouter ou supprimer d'options de sondage après les %{minutes} premières minutes. Veuillez contacter un modérateur si vous avez besoin de le faire."
+      staff_cannot_add_or_remove_options: "Vous nous pouvez pas ajouter ou supprimer d'options de sondage après les %{minutes} premières minutes. Vous devriez plutôt fermer ce sujet et en créer un nouveau."
     no_polls_associated_with_this_post: "Aucun sondage n'est associé à ce message."
     no_poll_with_this_name: "Aucun sondage nommé <strong>%{name}</strong> n'est associé avec ce message."
     post_is_deleted: "Impossible d'agir sur un message supprimé."

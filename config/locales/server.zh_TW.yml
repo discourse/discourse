@@ -796,7 +796,6 @@ zh_TW:
       subject_template: "備份失敗"
     restore_succeeded:
       subject_template: "恢復成功完成"
-      text_body_template: "這次恢復成功。"
     restore_failed:
       subject_template: "復原失敗"
     bulk_invite_succeeded:

@@ -7,6 +7,8 @@ require_dependency 'pretty_text'
 class CookedPostProcessor
   include ActionView::Helpers::NumberHelper
 
+  attr_reader :cooking_options
+
   def initialize(post, opts={})
     @dirty = false
     @opts = opts
@@ -17,6 +19,7 @@ class CookedPostProcessor
     @cooking_options = post.cooking_options || opts[:cooking_options] || {}
     @cooking_options[:topic_id] = post.topic_id
     @cooking_options = @cooking_options.symbolize_keys
+    @cooking_options[:omit_nofollow] = true if post.omit_nofollow?
 
     analyzer = post.post_analyzer
     @doc = Nokogiri::HTML::fragment(analyzer.cook(post.raw, @cooking_options))

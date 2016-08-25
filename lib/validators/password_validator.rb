@@ -14,6 +14,8 @@ class PasswordValidator < ActiveModel::EachValidator
       record.errors.add(attribute, :same_as_username)
     elsif record.email.present? && value == record.email
       record.errors.add(attribute, :same_as_email)
+    elsif record.confirm_password?(value)
+      record.errors.add(attribute, :same_as_current)
     elsif SiteSetting.block_common_passwords && CommonPasswords.common_password?(value)
       record.errors.add(attribute, :common)
     end

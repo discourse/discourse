@@ -20,6 +20,7 @@ class TopicQuery
                      visible
                      category
                      tags
+                     match_all_tags
                      no_tags
                      order
                      ascending
@@ -296,7 +297,6 @@ class TopicQuery
     end
 
     topics.each do |t|
-
       t.allowed_user_ids = filter == :private_messages ? t.allowed_users.map{|u| u.id} : []
     end
 
@@ -459,12 +459,28 @@ class TopicQuery
         result = result.preload(:tags)
 
         if @options[:tags] && @options[:tags].size > 0
-          result = result.joins(:tags)
-          # ANY of the given tags:
-          if @options[:tags][0].is_a?(Integer)
-            result = result.where("tags.id in (?)", @options[:tags])
+
+          if @options[:match_all_tags]
+            # ALL of the given tags:
+            tags_count = @options[:tags].length
+            @options[:tags] = Tag.where(name: @options[:tags]).pluck(:id) unless @options[:tags][0].is_a?(Integer)
+
+            if tags_count == @options[:tags].length
+              @options[:tags].each_with_index do |tag, index|
+                sql_alias = ['t', index].join
+                result = result.joins("INNER JOIN topic_tags #{sql_alias} ON #{sql_alias}.topic_id = topics.id AND #{sql_alias}.tag_id = #{tag}")
+              end
+            else
+              result = result.none # don't return any results unless all tags exist in the database
+            end
           else
-            result = result.where("tags.name in (?)", @options[:tags])
+            # ANY of the given tags:
+            result = result.joins(:tags)
+            if @options[:tags][0].is_a?(Integer)
+              result = result.where("tags.id in (?)", @options[:tags])
+            else
+              result = result.where("tags.name in (?)", @options[:tags])
+            end
           end
         elsif @options[:no_tags]
           # the following will do: ("topics"."id" NOT IN (SELECT DISTINCT "topic_tags"."topic_id" FROM "topic_tags"))

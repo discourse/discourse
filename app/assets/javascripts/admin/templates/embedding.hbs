@@ -2,9 +2,10 @@
   {{#if embedding.embeddable_hosts}}
     <table class='embedding'>
       <tr>
-        <th style='width: 50%'>{{i18n "admin.embedding.host"}}</th>
+        <th style='width: 30%'>{{i18n "admin.embedding.host"}}</th>
+        <th style='width: 30%'>{{i18n "admin.embedding.path_whitelist"}}</th>
         <th style='width: 30%'>{{i18n "admin.embedding.category"}}</th>
-        <th style='width: 20%'>&nbsp;</th>
+        <th style='width: 10%'>&nbsp;</th>
       </tr>
       {{#each embedding.embeddable_hosts as |host|}}
         {{embeddable-host host=host deleteHost="deleteHost"}}
@@ -30,6 +31,9 @@
 
     {{embedding-setting field="embed_by_username" value=embedding.embed_by_username}}
     {{embedding-setting field="embed_post_limit" value=embedding.embed_post_limit}}
+    {{embedding-setting field="embed_title_scrubber"
+                        value=embedding.embed_title_scrubber
+                        placeholder="- site.com$"}}
     {{embedding-setting field="embed_truncate" value=embedding.embed_truncate type="checkbox"}}
   </div>
 

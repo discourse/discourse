@@ -1,13 +1,11 @@
 require "uri"
 require_dependency "file_store/base_store"
-require_dependency "file_store/local_store"
 require_dependency "s3_helper"
 require_dependency "file_helper"
 
 module FileStore
 
   class S3Store < BaseStore
-
     TOMBSTONE_PREFIX ||= "tombstone/"
 
     def initialize(s3_helper=nil)
@@ -17,6 +15,11 @@ module FileStore
     def store_upload(file, upload, content_type = nil)
       path = get_path_for_upload(upload)
       store_file(file, path, filename: upload.original_filename, content_type: content_type, cache_locally: true)
+    end
+
+    def store_optimized_image(file, optimized_image)
+      path = get_path_for_optimized_image(optimized_image)
+      store_file(file, path)
     end
 
     # options
@@ -35,16 +38,15 @@ module FileStore
       # add a "content type" header when provided
       options[:content_type] = content_type if content_type
       # if this fails, it will throw an exception
-      @s3_helper.upload(file, path, options)
+      path = @s3_helper.upload(file, path, options)
       # return the upload url
       "#{absolute_base_url}/#{path}"
     end
 
-    def remove_file(url)
+    def remove_file(url, path)
       return unless has_been_uploaded?(url)
-      filename = File.basename(url)
       # copy the removed file to tombstone
-      @s3_helper.remove(filename, true)
+      @s3_helper.remove(path, true)
     end
 
     def has_been_uploaded?(url)
@@ -59,13 +61,15 @@ module FileStore
     end
 
     def absolute_base_url
+      bucket = @s3_helper.s3_bucket_name
+
       # cf. http://docs.aws.amazon.com/general/latest/gr/rande.html#s3_region
       @absolute_base_url ||= if SiteSetting.s3_region == "us-east-1"
-        "//#{s3_bucket}.s3.amazonaws.com"
+        "//#{bucket}.s3.amazonaws.com"
       elsif SiteSetting.s3_region == 'cn-north-1'
-        "//#{s3_bucket}.s3.cn-north-1.amazonaws.com.cn"
+        "//#{bucket}.s3.cn-north-1.amazonaws.com.cn"
       else
-        "//#{s3_bucket}.s3-#{SiteSetting.s3_region}.amazonaws.com"
+        "//#{bucket}.s3-#{SiteSetting.s3_region}.amazonaws.com"
       end
     end
 
@@ -99,12 +103,8 @@ module FileStore
     end
 
     def s3_bucket
-      @s3_bucket ||= begin
-        raise Discourse::SiteSettingMissing.new("s3_upload_bucket") if SiteSetting.s3_upload_bucket.blank?
-        SiteSetting.s3_upload_bucket.downcase
-      end
+      raise Discourse::SiteSettingMissing.new("s3_upload_bucket") if SiteSetting.s3_upload_bucket.blank?
+      SiteSetting.s3_upload_bucket.downcase
     end
-
   end
-
 end

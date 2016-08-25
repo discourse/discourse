@@ -25,6 +25,15 @@ pl_PL:
             one: "Wybierz co najmniej <strong>1</strong> opcję"
             few: "Wybierz co najmniej <strong>%{count}</strong> opcji"
             other: "Wybierz co najmniej <strong>%{count}</strong> opcji"
+          up_to_max_options:
+            one: "Wybierz co najwyżej <strong>1</strong> opcję"
+            few: "Wybierz co najwyżej <strong>%{count}</strong> opcji"
+            other: "Wybierz co najwyżej <strong>%{count}</strong> opcji"
+          x_options:
+            one: "Wybierz <strong>1</strong> opcję"
+            few: "Wybierz <strong>%{count}</strong> opcji"
+            other: "Wybierz <strong>%{count}</strong> opcji"
+          between_min_and_max_options: "Wybierz pomiędzy <strong>%{min}</strong> a <strong>%{max}</strong> opcjami"
       cast-votes:
         title: "Oddaj głos"
         label: "Oddaj głos!"
@@ -42,7 +51,24 @@ pl_PL:
         title: "Zamknij ankietę"
         label: "Zamknij"
         confirm: "Czy na pewno chcesz zamknąć tę ankietę?"
+      error_while_toggling_status: "Przepraszamy, wystąpił błąd podczas przełączania statusu w tej ankiecie."
+      error_while_casting_votes: "Przepraszamy, wystąpił błąd podczas oddawania głosów."
+      error_while_fetching_voters: "Przepraszamy, wystąpił błąd podczas wyświetlania głosujących."
       ui_builder:
         title: Utwórz ankietę
+        insert: Wstaw ankietę
         help:
           options_count: Wprowadź przynajmniej 2 opcje
+        poll_type:
+          label: Typ
+          regular: Pojedynczy wybór
+          multiple: Wielokrotny wybór
+          number: Liczba ocen
+        poll_config:
+          max: Max
+          min: Min
+          step: Krok
+        poll_public:
+          label: Pokaż kto głosował
+        poll_options:
+          label: Wprowadź jedną opcję ankiety w jednej linii

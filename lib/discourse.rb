@@ -235,7 +235,7 @@ module Discourse
   end
 
   def self.readonly_mode?
-    recently_readonly? || !!$redis.get(READONLY_MODE_KEY)
+    recently_readonly? || !!$redis.get(READONLY_MODE_KEY) || !!$redis.get(USER_READONLY_MODE_KEY)
   end
 
   def self.request_refresh!
