@@ -3225,5 +3225,9 @@ en:
           add: "Add"
           filter: "Search (URL or External URL)"
 
-# WARNING! Keys added here will be in the admin_js section.
-#          Keys that don't belong in admin should be placed earlier in the file.
+  wizard_js:
+    wizard:
+      back: "Back"
+      next: "Next"
+      step: "Step %{current} of %{total}"
+

@@ -98,7 +98,9 @@ function checkExtras(origScope, sep, extras) {
   for (var i=0; i<extras.length; i++) {
     var messages = extras[i];
     scope = origScope.split(sep);
-    scope.shift();
+    if (scope[0] === 'js') {
+      scope.shift();
+    }
 
     while (messages && scope.length > 0) {
       currentScope = scope.shift();

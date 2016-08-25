@@ -8,15 +8,15 @@ function resolveType(parsedName) {
   }
 }
 
+function customResolve(parsedName) {
+  return resolveType(parsedName) || this._super(parsedName);
+}
+
 export default Ember.DefaultResolver.extend({
 
-  resolveRoute(parsedName) {
-    return resolveType(parsedName) || this._super(parsedName);
-  },
-
-  resolveController(parsedName) {
-    return resolveType(parsedName) || this._super(parsedName);
-  },
+  resolveRoute: customResolve,
+  resolveController: customResolve,
+  resolveComponent: customResolve,
 
   resolveTemplate(parsedName) {
     const templates = Ember.TEMPLATES;

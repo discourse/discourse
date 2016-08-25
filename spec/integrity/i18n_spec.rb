@@ -29,7 +29,6 @@ describe "i18n integrity checks" do
       client = YAML.load_file("#{Rails.root}/config/locales/client.#{locale}.yml")
       expect(client.count).to eq(1)
       expect(client[locale]).not_to eq(nil)
-      expect(client[locale].count).to eq(2)
       expect(client[locale]["js"]).not_to eq(nil)
       expect(client[locale]["admin_js"]).not_to eq(nil)
     end

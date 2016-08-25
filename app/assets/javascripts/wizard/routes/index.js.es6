@@ -1,5 +1,6 @@
 export default Ember.Route.extend({
   beforeModel() {
-    this.replaceWith('step', 'welcome');
+    const appModel = this.modelFor('application');
+    this.replaceWith('step', appModel.start);
   }
 });

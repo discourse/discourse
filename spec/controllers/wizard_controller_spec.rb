@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe Wizard::WizardController do
+describe WizardController do
 
   context 'index' do
     render_views
@@ -20,6 +20,14 @@ describe Wizard::WizardController do
       xhr :get, :index
       expect(response).to be_success
     end
+
+    it "returns JSON when the mime type is appropriate" do
+      log_in(:admin)
+      xhr :get, :index, format: 'json'
+      expect(response).to be_success
+      expect(::JSON.parse(response.body).has_key?('wizard')).to eq(true)
+    end
+
   end
 
 end

@@ -2,18 +2,21 @@
 @import "vendor/font_awesome/font-awesome";
 
 body {
-  background-color: rgb(231,238,247);
+  background-color: #fff;
   background-image: url('/images/wizard/bubbles.png');
   background-repeat: repeat;
   background-position: left top;
+
+  color: #444;
+
+  line-height: 1.4em;
 }
 
 .wizard-column {
   background-color: white;
-  border-radius: 2px;
   box-shadow: 0 5px 10px rgba(0,0,0,0.2);
   box-sizing: border-box;
-  margin: 0.75rem auto;
+  margin: 1.5em auto;
   padding: 0;
   max-width: 700px;
   min-width: 280px;
@@ -21,11 +24,144 @@ body {
   border: 1px solid #ccc;
 
   .wizard-column-contents {
-    padding: 1em;
+    padding: 1.2em;
 
     h1 {
-      margin: 0;
+      margin: 0 0 1em 0;
     }
+  }
+
+  .wizard-step-description {
+    margin-bottom: 2em;
+  }
+
+  .wizard-footer {
+    border-top: 1px solid #ccc;
+    background-color: #eee;
+    padding: 0.5em;
+    img.logo {
+      height: 30px;
+    }
+  }
+
+  .wizard-progress {
+    .text {
+      font-size: 0.8em;
+    }
+    .bar-container {
+      border: 1px solid #ff6600;
+      border-radius: 3px;
+      height: 0.5em;
+      width: 15em;
+
+      .bar-contents {
+        background-color: #ff6600;
+        width: 0;
+        height: 0.5em;
+        transition: width .3s;
+      }
+    }
+  }
+
+
+  .wizard-step-footer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+
+    button.wizard-btn {
+      border-radius: 2px;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, .6);
+      font-size: 1.0em;
+      background-color: #6699ff;
+      color: white;
+      border: 0px;
+      float: right;
+      padding: 0.5em;
+      outline: 0;
+      transition: background-color .3s;
+
+      &:hover {
+        background-color: #80B3FF;
+      }
+
+      &:active {
+        background-color: #4D80E6;
+      }
+
+      &:disabled {
+        background-color: #000167;
+      }
+
+      i.fa-chevron-right {
+        margin-left: 0.25em;
+        font-size: 0.8em;
+      }
+      i.fa-chevron-left {
+        margin-right: 0.25em;
+        font-size: 0.8em;
+      }
+    }
+
+    button.wizard-btn.next {
+      min-width: 70px;
+
+      i.fa-chevron-right {
+        margin-left: 0.25em;
+        font-size: 0.8em;
+      }
+    }
+
+    button.wizard-btn.back {
+      background-color: #fff;
+      color: #333;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, .4);
+
+      &:hover {
+        background-color: #eee;
+      }
+
+      &:active {
+        background-color: #ddd;
+      }
+
+      &:disabled {
+        background-color: #ccc;
+      }
+    }
+
+  }
+
+  .wizard-field {
+    label .label-value {
+      font-weight: bold;
+    }
+
+    .input-area {
+      margin-top: 0.5em;
+    }
+
+    &.text-field {
+      input {
+        width: 100%;
+        font-size: 1.2em;
+        padding: 6px;
+        border: 1px solid #ccc;
+        transition: border-color .5s;
+        outline: none;
+      }
+
+      &.invalid {
+        input {
+          padding: 3px;
+          border: 4px solid red;
+          border-radius: 3px;
+        }
+      }
+    }
+
+    margin-bottom: 2em;
   }
 }
 

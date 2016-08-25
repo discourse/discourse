@@ -3212,3 +3212,25 @@ en:
     staff_tag_disallowed: "The tag \"%{tag}\" may only be applied by staff."
     staff_tag_remove_disallowed: "The tag \"%{tag}\" may only be removed by staff."
   rss_by_tag: "Topics tagged %{tag}"
+
+  wizard:
+    title: "Discourse Setup Wizard"
+    step:
+      forum_title:
+        title: "Welcome to your Discourse forum!"
+        description: "There are a few things you'll need to configure before inviting more people to the party. Don't worry, you can come back and change these settings at any time, so don't overthink it."
+
+        fields:
+          title:
+            label: "Enter a title for your forum"
+            placeholder: "Jane's Hangout"
+          site_description:
+            label: "Describe your forum in one sentence"
+            placeholder: "A place for Jane and her friends to discuss cool stuff"
+      contact:
+        title: "Don't be a Stranger"
+        fields:
+          contact_email:
+            label: "Contact E-mail"
+            placeholder: "name@example.com"
+
