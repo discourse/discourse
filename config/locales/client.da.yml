@@ -48,9 +48,6 @@ da:
         x_seconds:
           one: "1s"
           other: "%{count}s"
-        less_than_x_minutes:
-          one: "< 1m"
-          other: "< %{count}m"
         x_minutes:
           one: "1m"
           other: "%{count}m"
@@ -385,14 +382,9 @@ da:
       latest_by: "seneste af"
       toggle_ordering: "vis/skjul rækkefølgeskifter"
       subcategories: "Underkategorier:"
-      topic_stats: "Antallet af nye emner."
       topic_stat_sentence:
         one: "%{count} nyt emne i den/det seneste %{unit}."
         other: "%{count} nye emner i den/det seneste %{unit}."
-      post_stats: "Antallet af nye indlæg."
-      post_stat_sentence:
-        one: "%{count} nyt indlæg i den seneste %{unit}."
-        other: "%{count} nye indlæg i den seneste %{unit}."
     ip_lookup:
       title: IP-adresse opslag
       hostname: Værtsnavn
@@ -1038,7 +1030,6 @@ da:
       unsubscribe:
         stop_notifications: "Du vil nu modtage færre notifikationer for <strong>{{title}}</strong>"
         change_notification_state: "Din nuværende notifikationstilstand er"
-      filter_to: "Vis {{post_count}} indlæg i emnet"
       create: 'Nyt emne'
       create_long: 'Opret et nyt emne i debatten'
       private_message: 'Start en besked'
@@ -1098,7 +1089,6 @@ da:
       auto_close_title: 'Indstillinger for automatisk lukning'
       auto_close_save: "Gem"
       auto_close_remove: "Luk ikke dette emne automatisk"
-      auto_close_immediate: "Seneste indlæg i emnet er allerede %{hours} timer gammelt så emnet bliver lukket med det samme."
       progress:
         title: emnestatus
         go_top: "top"
@@ -1108,7 +1098,6 @@ da:
         jump_bottom_with_number: "hop til indlæg %{post_number}"
         total: antal indlæg
         current: nuværende indlæg
-        position: "indlæg %{current} af %{total}"
       notifications:
         reasons:
           '3_6': 'Du får notifikationer fordi du overvåger denne kategori.'
@@ -1301,7 +1290,6 @@ da:
       gap:
         one: "se 1 udeladt indlæg "
         other: "se {{count}} udeladte indlæg "
-      more_links: "{{count}} endnu..."
       unread: "Indlæg er ulæst"
       has_replies:
         one: "{{count}} svar"
@@ -1367,14 +1355,6 @@ da:
         defer_flags:
           one: "Udsæt markering"
           other: "Udsæt markeringer"
-        it_too:
-          off_topic: "Flag det også"
-          spam: "Flag det også"
-          inappropriate: "Flag det også"
-          custom_flag: "Flag det også"
-          bookmark: "Bogmærk det også"
-          like: "Like det også"
-          vote: "Stem på det også"
         undo:
           off_topic: "Undo flag"
           spam: "Undo flag"
@@ -1547,7 +1527,6 @@ da:
       take_action: "Reagér"
       notify_action: 'Besked'
       delete_spammer: "Slet spammer"
-      delete_confirm: "Du er ved at slette <b>%{posts}</b> indlæg og <b>%{topics}</b> emner oprettet af denne bruger, fjerne deres konto, blokere tilmeldinger fra deres IP-adresse <b>%{ip_address}</b> og tilføje deres e-mail-adresse <b>%{email}</b> til en permanent blokeringsliste. Er du sikker på, at denne bruger virkelig er en spammer?"
       yes_delete_spammer: "Ja, slet spammer"
       ip_address_missing: "(Ikke tilgængelig)"
       hidden_email_address: "(skjult)"
@@ -1561,10 +1540,6 @@ da:
         spam: "Det er spam"
       custom_placeholder_notify_user: "Vær præcis, vær kontruktiv og vær altid venlig."
       custom_placeholder_notify_moderators: "Lad os vide præcis hvad du er bekymret over og giv relevante links og eksempler hvor det er muligt."
-      custom_message:
-        at_least: "indtast mindst {{n}} tegn"
-        more: "{{n}} flere..."
-        left: "{{n}} tilbage"
     flagging_topic:
       title: "Tak fordi du hjælper med at holde vores forum civiliseret!"
       action: "Rapporter emne"
@@ -1599,7 +1574,6 @@ da:
       invisible:
         help: "Dette emne er ulistet; det vil ikke blive vist i listen over emner og kan kun tilgås med et direkte link"
     posts: "Indlæg"
-    posts_lowercase: "indlæg"
     posts_long: "{{number}} indlæg i dette emne"
     posts_likes_MF: |
       Dette emne har {count, plural, one {1 svar} other {# svar}} {ratio, select,
@@ -2337,7 +2311,6 @@ da:
         suspend_reason: "Begrundelse"
         suspended_by: "Suspenderet af"
         delete_all_posts: "Slet alle indlæg"
-        delete_all_posts_confirm: "Du er ved at slette %{posts} indlæg og %{topics} emner. Er du sikker?"
         suspend: "Suspendér"
         unsuspend: "Ophæv suspendering"
         suspended: "Suspenderet?"
@@ -2423,7 +2396,6 @@ da:
         unlock_trust_level: "Lås tillidsniveau op"
         tl3_requirements:
           title: "Krav for fortrolighedsniveau 3"
-          table_title: "I de sidste %{time_period} dage:"
           value_heading: "værdi"
           requirement_heading: "Obligatoriske"
           visits: "Besøg"

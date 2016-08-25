@@ -49,10 +49,6 @@ ro:
           one: "1s"
           few: "%{count}s"
           other: "%{count}s"
-        less_than_x_minutes:
-          one: "< 1m"
-          few: "< %{count}m"
-          other: "< %{count}m"
         x_minutes:
           one: "1m"
           few: "%{count}m"
@@ -403,16 +399,10 @@ ro:
       latest_by: "recente dupa"
       toggle_ordering: "Control comandă comutare"
       subcategories: "Subcategorie"
-      topic_stats: "Numărul de discuții noi."
       topic_stat_sentence:
         one: "%{count} subiect în %{unit}."
         few: "%{count} subiecte noi în %{unit}."
         other: "%{count} subiecte noi în %{unit}."
-      post_stats: "Numărul de postări noi."
-      post_stat_sentence:
-        one: "%{count} mesaj nou in ultimele %{unit}."
-        few: "%{count} mesaje noi in ultimele %{unit}."
-        other: "%{count} mesaje noi in ultimele %{unit}."
     ip_lookup:
       title: Căutare adresă IP
       hostname: Nume gazdă
@@ -1040,7 +1030,6 @@ ro:
     topic:
       unsubscribe:
         stop_notifications: "Vei primi mai puține notificări pentru <strong>{{title}}</strong>"
-      filter_to: "{{post_count}} postări în discuție"
       create: 'Discuție Nouă'
       create_long: 'Creează discuție nouă'
       private_message: 'Scrie un mesaj.'
@@ -1102,7 +1091,7 @@ ro:
       jump_reply_down: sări la un răspuns mai nou
       deleted: "Discuția a fost ștearsă"
       auto_close_notice: "Această discuție va fi inchisă în %{timeLeft}."
-      auto_close_notice_based_on_last_post: "Această discuţie se va închide %{duration} după ultimul răspuns."
+      auto_close_notice_based_on_last_post: "Această discuţie se va închide după %{duration} de la ultimul răspuns."
       auto_close_title: 'Setările de auto-închidere'
       auto_close_save: "Salvează"
       auto_close_remove: "nu închide automat această discuție"
@@ -1115,7 +1104,6 @@ ro:
         jump_bottom_with_number: "sări la mesajul %{post_number}"
         total: toate postările
         current: Postarea curentă
-        position: "postarea %{current} din %{total}"
       notifications:
         reasons:
           '3_6': 'Vei primi notificări deoarece urmărești activ această categorie.'
@@ -1297,7 +1285,6 @@ ro:
         one: "vezi un răspuns ascuns"
         few: "vezi {{count}} răspunsuri ascunse"
         other: "vezi {{count}} de răspunsuri ascunse"
-      more_links: "{{count}} mai multe..."
       unread: "postarea nu a fost citită"
       has_replies:
         one: "Un răspuns"
@@ -1364,14 +1351,6 @@ ro:
           one: "Amână marcarea"
           few: "Amână marcările"
           other: "Amână marcările"
-        it_too:
-          off_topic: "Semnalează și tu"
-          spam: "Semnalează și tu"
-          inappropriate: "Semnalează și tu"
-          custom_flag: "Semnalează și tu"
-          bookmark: "Adaugă-l și tu la favorite"
-          like: "Apreciază și tu"
-          vote: "Votează și tu"
         undo:
           off_topic: "Retrage semnalare"
           spam: "Retrage semnalare"
@@ -1549,7 +1528,6 @@ ro:
       notify_action: 'Mesaj'
       official_warning: 'Avertismen Oficial'
       delete_spammer: "Șterge spammer"
-      delete_confirm: "Sunteți pe punctul de a șterge postarea <b>%{posts}</b> și postările <b>%{topics}</b> ale acestui uitilizator, de a-i anula contul, de a-i bloca autentificarea de la adresa IP <b>%{ip_address}</b>, adresa de email <b>%{email}</b> și de a bloca listarea permanent. Sunteți sigur ca acest utilizator este un spammer?"
       yes_delete_spammer: "Da, Șterge spammer"
       ip_address_missing: "(N/A)"
       hidden_email_address: "(ascuns)"
@@ -1563,10 +1541,6 @@ ro:
         spam: "Este Spam"
       custom_placeholder_notify_user: "De ce această postare necesită comunicarea cu utilizatorul directă sau privată? Fiți specific, constructiv și intotdeauna amabil."
       custom_placeholder_notify_moderators: "De ce această postare necesită atenția moderatorului? Spuneți-ne exact ceea ce vă nelamurește, și oferiți adrese relevante de câte ori e posibil."
-      custom_message:
-        at_least: "introduce-ți cel puțin {{n}} de caractere"
-        more: "încă...{{n}} caractere"
-        left: "au mai rămas {{n}} caractere"
     flagging_topic:
       title: "De ce marcați privat această discuție?"
       action: "Marchează discuție"
@@ -1599,7 +1573,6 @@ ro:
       invisible:
         help: "Această discuție este invizibilă; nu va fi afișată în listele de discuții și va fi accesată numai prin adresa directă"
     posts: "Postări"
-    posts_lowercase: "postări"
     posts_long: "sunt {{number}} de postări în această discuție"
     original_post: "Postări originale"
     views: "Vizualizări"
@@ -2231,7 +2204,6 @@ ro:
         suspend_reason: "Motiv"
         suspended_by: "Suspendat de"
         delete_all_posts: "Șterge toate postările"
-        delete_all_posts_confirm: "Sunteți pe cale să ștergeți %{posts} de postări și %{topics} de discuții. Sunteți sigur?"
         suspend: "Suspendat"
         unsuspend: "Activat"
         suspended: "Suspendat?"

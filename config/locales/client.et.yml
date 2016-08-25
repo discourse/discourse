@@ -48,9 +48,6 @@ et:
         x_seconds:
           one: "1s"
           other: "%{count}s"
-        less_than_x_minutes:
-          one: "< 1m"
-          other: "< %{count}m"
         x_minutes:
           one: "1m"
           other: "%{count}m"
@@ -402,14 +399,9 @@ et:
       latest_by: "viimased kasutajalt"
       toggle_ordering: "lülita järjestus"
       subcategories: "Alamliigid"
-      topic_stats: "Uute teemade arv."
       topic_stat_sentence:
         one: "%{count} uus teema viimase %{unit} jooksul."
         other: "%{count} uut teemat viimase %{unit} jooksul."
-      post_stats: "Uute postituste arv."
-      post_stat_sentence:
-        one: "%{count} uus postitus viimase %{unit} jooksul."
-        other: "%{count} uut postitust viimase %{unit} jooksul."
     ip_lookup:
       title: IP-aadressi Otsing
       hostname: Hostinimi
@@ -923,7 +915,6 @@ et:
       saved_local_draft_tip: "salvestatud lokaalselt"
       similar_topics: "Sinu teema sarnaneb..."
       drafts_offline: "mustandid vallasrežiimis"
-      group_mentioned: "Mainides {{group}}, oled teavitamas <a href='{{group_link}}'>{{count}} inimest</a> – oled selles kindel?"
       duplicate_link: "Näib, et sinu viide <b>{{domain}}</b> oli juba postitatud teemasse kasutaja <b>@{{username}}</b> poolt postituse <a href='{{post_url}}'>vastuses {{ago}}</a> – oled kindel, et soovid selle uuesti postitada?"
       error:
         title_missing: "Pealkiri on kohustuslik"
@@ -1140,7 +1131,6 @@ et:
       unsubscribe:
         stop_notifications: "Sulle saabub nüüd <strong>{{title}}</strong> kohta vähem teavitusi"
         change_notification_state: "Sinu teavituste olek on"
-      filter_to: "{{post_count}} postitust teemas"
       create: 'Uus Teema'
       create_long: 'Loo uus Teema'
       private_message: 'Alusta sõnumit'
@@ -1200,11 +1190,9 @@ et:
       auto_close_title: 'Automaatse sulgumise sätted'
       auto_close_save: "Salvesta"
       auto_close_remove: "Ära lase sel teemal automaatselt sulguda"
-      auto_close_immediate: "Viimane postitus selles teemas on juba %{hours} tundi vana, seega sulgub see teema nüüd."
       timeline:
         back: "Tagasi"
         back_description: "Mine tagasi oma viimase lugemata postituse juurde"
-        replies: "%{current} / %{total} vastust"
         replies_short: "%{current} / %{total}"
       progress:
         title: teema edenemine
@@ -1217,7 +1205,6 @@ et:
         jump_bottom_with_number: "hüppa postituse %{post_number} juurde"
         total: postitusi kokku
         current: käesolev postitus
-        position: "postitus %{current} koguarvust %{total}"
       notifications:
         title: muuda kui tihti sind sellest teemast teavitatakse
         reasons:
@@ -1421,7 +1408,6 @@ et:
       gap:
         one: "vaata 1 peidetud vastust"
         other: "vaata {{count}} peidetud vastust"
-      more_links: "{{count}} veel..."
       unread: "Postitus on lugemata"
       has_replies:
         one: "{{count}} vastus"
@@ -1490,14 +1476,6 @@ et:
         defer_flags:
           one: "Lükka tähis edasi"
           other: "Lükka tähised edasi"
-        it_too:
-          off_topic: "Tähista see ka"
-          spam: "Tähista see ka"
-          inappropriate: "Tähista see ka"
-          custom_flag: "Tähista see ka"
-          bookmark: "Lisa siia ka järjehoidja"
-          like: "Lisa siia ka meeldimine"
-          vote: "Hääleta selle poolt ka"
         undo:
           off_topic: "Tühista tähise andmine"
           spam: "Tühista tähise andmine"
@@ -1683,7 +1661,6 @@ et:
       notify_action: 'Sõnum'
       official_warning: 'Ametlik hoiatus'
       delete_spammer: "Kustuta spämmija"
-      delete_confirm: "Oled kustutamas <b>%{posts}</b> postitust ja <b>%{topics}</b> teemat sellelt kasutajalt, eemaldamas tema kontot, blokeerimas registreerumisi tema IP-aadressilt <b>%{ip_address}</b>, ja lisamas tema meiliaddressi <b>%{email}</b> püsiva blokeeringu loetellu. Oled kindel, et see kasutaja on tõesti spämmija?"
       yes_delete_spammer: "Jah, kustuta spämmija"
       ip_address_missing: "(asjassepuutumatu)"
       hidden_email_address: "(peidetud)"
@@ -1697,10 +1674,6 @@ et:
         spam: "See on spämm"
       custom_placeholder_notify_user: "Ole täpne, konstruktiivne ja alati lahke."
       custom_placeholder_notify_moderators: "Anna meile teada, mis Sulle täpsemalt muret teeb ja võimalusel lisa asjassepuutuvaid viiteid ning näiteid."
-      custom_message:
-        at_least: "sisesta vähemalt {{n}} sümbolit"
-        more: "{{n}} veel jäänud..."
-        left: "{{n}} järele jäänud"
     flagging_topic:
       title: "Täname, et aitad meie kogukonna viisakust säilitada!"
       action: "Tähista teema"
@@ -1741,7 +1714,6 @@ et:
       invisible:
         help: "See teema on salastatud; teda ei kuvata teemade loendites ning on kättesaadav vaid otseviite kaudu"
     posts: "Postitused"
-    posts_lowercase: "postitused"
     posts_long: "selles teemas on {{number}} postitust"
     posts_likes_MF: |
       Selles teemas on {count, plural, one {1 vastus} other {# vastust}} {ratio, select,
@@ -2574,7 +2546,6 @@ et:
         suspend_reason: "Põhjus"
         suspended_by: "Peatati kasutaja poolt"
         delete_all_posts: "Kustuta kõik postitused"
-        delete_all_posts_confirm: "Sa oled kustutamas %{posts} postitust ja %{topics} teemat. Oled Sa kindel?"
         suspend: "Peata"
         unsuspend: "Taasluba"
         suspended: "Peatatud?"
@@ -2670,7 +2641,6 @@ et:
         unlock_trust_level: "Eemalda usaldustaseme lukustus"
         tl3_requirements:
           title: "Usaldustaseme 3 nõuded"
-          table_title: "Viimasel %{time_period} päeval:"
           value_heading: "Väärtus"
           requirement_heading: "Nõue"
           visits: "Külastusi"

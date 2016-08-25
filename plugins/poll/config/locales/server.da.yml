@@ -31,6 +31,7 @@ da:
     edit_window_expired:
       cannot_change_polls: "Du kan ikke tilføje, slette eller omdøbe en afstemning efter de første %{minutes} minutter."
       op_cannot_edit_options: "Du kan ikke tilføje eller slette afstemnings indstillinger efter de første %{minutes} minutter. Venligst kontakt en moderator hvis du har behov for at redigere en afstemning."
+      staff_cannot_add_or_remove_options: "Du kan ikke tilføje eller fjerne afstemningsmuligheder efter de første %{minutes} minutter. Du bør lukke dette emne og oprette et nyt istedet."
     no_polls_associated_with_this_post: "Ingen afstemninger er associeret med dette indlæg."
     no_poll_with_this_name: "Ingen afstemning med navnet <strong>%{name}</strong> er associeret med dette indlæg."
     post_is_deleted: "Kan ikke gøres på et slettet indlæg."

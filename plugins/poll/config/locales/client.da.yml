@@ -28,6 +28,7 @@ da:
           x_options:
             one: "Vælg <strong>1</strong> mulighed"
             other: "Vælg <strong>%{count}</strong> muligheder"
+          between_min_and_max_options: "Vælg imellem <strong>%{min}</strong> og <strong>%{max}</strong> valgmuligheder"
       cast-votes:
         title: "Afgiv dine stemmer"
         label: "Stem nu!"

@@ -244,14 +244,14 @@ pt:
       Pode editar a sua resposta anterior para adicionar uma citação ao destacar o texto e selecionar o botão  <b>resposta com citação</b> que aparece.
 
       É mais fácil para todos ler tópicos que tenham poucas respostas em profundidade em vez de muitas mas pequenas respostas individuais.
-    dominating_topic: |
+    dominating_topic: |+
       ### Deixe que os outros se juntem à conversa
 
       Este tópico é claramente importante para si &ndash; publicou mais de %{percent}% das respostas aqui.
 
       Tem a certeza de que está a fornecer o tempo adequado para que outras pessoas também possam partilhar os seus pontos de vista?
 
-    too_many_replies: |
+    too_many_replies: |+
       ### Chegou ao limite de respostas para este tópico
 
       Pedimos desculpa mas novos utilizadores estão temporariamente limitados a %{newuser_max_replies_per_topic} respostas no mesmo tópico.
@@ -308,7 +308,7 @@ pt:
   assets_topic_body: "Este é um tópico permanente, visível apenas ao pessoal, para armazenar imagens e ficheiros usados no design do sítio. Não o apague!\n\n\nVeja como:\n\n\n1. Responda a este tópico.\n2. Carregue todas as imagens que deseja usar para os logótipos, favicons, e tudo o mais. (Use o ícone da ferramenta de carregamento neste editor de mensagens, arraste ou cole imagens).\n3. Submeta a sua resposta.\n4. Clique com o botão direito do rato nas imagens da sua nova mensagem para obter o caminho das imagens submetidas, ou carregue no ícone de edição para editar a sua mensagem e recuperar o caminho para as imagens. Copie os caminhos das imagens.\n5. Cole esses caminhos em [configurações básicas](/admin/site_settings/category/required).\n\n\nSe precisar de ativar o carregamento de diferentes tipos de ficheiros, edite `authorized_extensions` em [configurações de ficheiros](/admin/site_settings/category/files)."
   lounge_welcome:
     title: "Bem-vindo ao Salão"
-    body: |
+    body: |2+
 
       Parabéns! :confetti_ball:
 
@@ -1129,7 +1129,6 @@ pt:
     tag_style: "Estilo visual dos distintivos de tags."
     staff_tags: "Lista de tags que só pode ser aplicadas por membros do staff."
     min_trust_level_to_tag_topics: "Nível de confiança mínimo necessário para atribuir tags a tópicos."
-    suppress_overlapping_tags_in_list: "Esconder tags das listagens, caso se sobreponham ao título."
     errors:
       invalid_email: "Endereço de email inválido."
       invalid_username: "Não existe nenhum utilizador com esse nome de utilizador."
@@ -1400,21 +1399,21 @@ pt:
         A sua conta associada com este email não está activa. Por favor active a sua conta antes de enviar emails.
     email_reject_blocked_user:
       subject_template: "[%{site_name}] Problema de email -- Utilizador bloqueado"
-      text_body_template: |
+      text_body_template: |+
         Pedimos desculpa mas a sua mensagem de email %{destination} (titled %{former_title}) não funcionou.
 
         A sua conta associada com este endereço de email foi bloqueada.
 
     email_reject_reply_user_not_matching:
       subject_template: "[%{site_name}] Problema de email -- Utilizador de resposta não encontrado"
-      text_body_template: |
+      text_body_template: |+
         Pedimos desculpa mas a sua mensagem de email %{destination} (titled %{former_title}) não funcionou.
 
         A sua resposta foi enviada de um email diferente daquele que esperávamos, por esta razão não temos a certeza que seja a mesma pessoa. Tente enviar de outro endereço de email ou contacte um membro do pessoal.
 
     email_reject_no_account:
       subject_template: "[%{site_name}] Problema de email -- Conta Desconhecida"
-      text_body_template: |
+      text_body_template: |+
         Pedimos desculpa mas a sua mensagem de email %{destination} (titled %{former_title}) não funcionou.
 
         Não conseguimos encontrar nenhuma conta com combine com o seu endereço de email. Tente enviar de outro endereço de email ou contacte um membro do pessoal.
@@ -1551,7 +1550,7 @@ pt:
       subject_template: "[%{site_name}] [MP] %{topic_title}"
     user_posted_pm_staged:
       subject_template: "%{optional_re}%{topic_title}"
-      text_body_template: |
+      text_body_template: |2
 
         %{message}
     digest:

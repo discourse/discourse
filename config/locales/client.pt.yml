@@ -48,9 +48,6 @@ pt:
         x_seconds:
           one: "1s"
           other: "%{count}s"
-        less_than_x_minutes:
-          one: "< 1m"
-          other: "< %{count}m"
         x_minutes:
           one: "1m"
           other: "%{count}m"
@@ -402,14 +399,9 @@ pt:
       latest_by: "recentes por"
       toggle_ordering: "alternar o controlo de ordenação"
       subcategories: "Subcategorias"
-      topic_stats: "Número de tópicos novos."
       topic_stat_sentence:
         one: "%{count} novo tópico no passado %{unit}."
         other: "%{count} novos tópicos no passado %{unit}."
-      post_stats: "Número de mensagens novas."
-      post_stat_sentence:
-        one: "%{count} nova mensagem no passado %{unit}."
-        other: "%{count} novas mensagens no passado %{unit}."
     ip_lookup:
       title: Pesquisa de Endereço IP
       hostname: Nome do Servidor
@@ -1100,7 +1092,6 @@ pt:
       unsubscribe:
         stop_notifications: "Irá passar a receber menos notificações para <strong>{{title}}</strong>"
         change_notification_state: "O seu estado de notificação atual é"
-      filter_to: "{{post_count}} mensagens no tópico"
       create: 'Novo Tópico'
       create_long: 'Criar um novo Tópico'
       private_message: 'Iniciar uma mensagem'
@@ -1160,7 +1151,6 @@ pt:
       auto_close_title: 'Configurações para Fechar Automaticamente'
       auto_close_save: "Guardar"
       auto_close_remove: "Não Fechar Este Tópico Automaticamente"
-      auto_close_immediate: "A última mensagem neste tópico já tem %{hours} horas, por isso o tópico será fechado imediatamente."
       progress:
         title: progresso do tópico
         go_top: "topo"
@@ -1170,7 +1160,6 @@ pt:
         jump_bottom_with_number: "avançar para a mensagem %{post_number}"
         total: total de mensagens
         current: mensagem atual
-        position: "mensagem %{current} de %{total}"
       notifications:
         reasons:
           '3_6': 'Receberá notificações porque está a vigiar esta categoria.'
@@ -1365,7 +1354,6 @@ pt:
       gap:
         one: "ver 1 resposta oculta"
         other: "ver {{count}} respostas ocultas"
-      more_links: "{{count}} mais..."
       unread: "Mensagem não lida"
       has_replies:
         one: "{{count}} Resposta"
@@ -1434,14 +1422,6 @@ pt:
         defer_flags:
           one: "Diferir sinalização"
           other: "Diferir sinalizações"
-        it_too:
-          off_topic: "Sinalizar também"
-          spam: "Sinalizar também"
-          inappropriate: "Sinalizar também"
-          custom_flag: "Sinalizar também"
-          bookmark: "Também adicionar marcador"
-          like: "Também adicionar um Gosto"
-          vote: "Também adicionar um voto"
         undo:
           off_topic: "Retirar sinalização"
           spam: "Retirar sinalização"
@@ -1613,7 +1593,6 @@ pt:
       notify_action: 'Mensagem'
       official_warning: 'Aviso Oficial'
       delete_spammer: "Eliminar Spammer"
-      delete_confirm: "Está prestes a apagar <b>%{posts}</b> mensagens e <b>%{topics}</b> tópicos deste utilizador, remover a sua conta, bloquear acessos do seu endereço IP <b>%{ip_address}</b>, e adicionar o seu endereço de email <b>%{email}</b> a uma lista negra. Tem a certeza que este utilizador é de facto um spammer?"
       yes_delete_spammer: "Sim, Eliminar Spammer"
       ip_address_missing: "(N/A)"
       hidden_email_address: "(escondido)"
@@ -1627,10 +1606,6 @@ pt:
         spam: "É Spam"
       custom_placeholder_notify_user: "Seja específico, seja construtivo e seja sempre amável."
       custom_placeholder_notify_moderators: "Diga-nos especificamente quais são as suas preocupações, e forneça-nos hiperligações relevantes e exemplo se possível."
-      custom_message:
-        at_least: "insira pelo menos {{n}} caracteres"
-        more: "{{n}} em falta..."
-        left: "{{n}} remanescentes"
     flagging_topic:
       title: "Obrigado por ajudar a manter a nossa comunidade cívica!"
       action: "Sinalizar Tópico"
@@ -1665,7 +1640,6 @@ pt:
       invisible:
         help: "Este tópico não está listado; não será apresentado na lista de tópicos e poderá ser acedido apenas através de uma hiperligação direta"
     posts: "Mensagens"
-    posts_lowercase: "mensagens"
     posts_long: "existem {{number}} mensagens neste tópico"
     posts_likes_MF: |
       Este tópico tem {count, plural, one {1 resposta} other {# respostas}} {ratio, select,
@@ -2323,7 +2297,6 @@ pt:
         suspend_reason: "Motivo"
         suspended_by: "Suspendido por"
         delete_all_posts: "Eliminar todas as mensagens"
-        delete_all_posts_confirm: "Está prestes a eliminar %{posts} mensagens e %{topics} tópicos. Tem a certeza de que quer continuar?"
         suspend: "Suspender"
         unsuspend: "Retirar a suspensão"
         suspended: "Suspendido?"
@@ -2410,7 +2383,6 @@ pt:
         unlock_trust_level: "Desbloquear Nível de Confiança"
         tl3_requirements:
           title: "Requisitos para o Nível de Confiança 3"
-          table_title: "Nos últimos %{time_period} dias:"
           value_heading: "Valor"
           requirement_heading: "Requisito"
           visits: "Visitas"

@@ -43,8 +43,6 @@ zh_TW:
           other: "< %{count} 秒"
         x_seconds:
           other: "%{count} 秒"
-        less_than_x_minutes:
-          other: "< %{count} 分鐘"
         x_minutes:
           other: "%{count} 分鐘"
         about_x_hours:
@@ -339,12 +337,8 @@ zh_TW:
       latest_by: "最近由"
       toggle_ordering: "顯示/隱藏排序控制"
       subcategories: "次分類"
-      topic_stats: "新討論話題的數目。"
       topic_stat_sentence:
         other: "在過去一%{unit}內有 %{count} 個新討論話題。"
-      post_stats: "新文章的數目。"
-      post_stat_sentence:
-        other: "在過去一%{unit}內有 %{count} 篇新文章。"
     ip_lookup:
       title: 最近的 IP 位址
       hostname: 伺服器名稱
@@ -850,7 +844,6 @@ zh_TW:
         top: "沒有更多精選討論話題。"
         bookmarks: "書籤裡沒有更多的討論話題了。"
     topic:
-      filter_to: "在討論話題裡顯示 {{post_count}} 文章"
       create: '新討論話題'
       create_long: '建立新討論話題'
       private_message: '發送訊息'
@@ -908,7 +901,6 @@ zh_TW:
         jump_bottom_with_number: "跳至第 %{post_number} 篇文章"
         total: 所有文章
         current: 目前的文章
-        position: "第 %{current}/%{total} 篇文章"
       notifications:
         reasons:
           '3_6': '你將會收到通知，因為你正在關注此分類。'
@@ -1050,7 +1042,6 @@ zh_TW:
       expand_collapse: "展開/收合"
       gap:
         other: "檢視 {{count}} 則隱藏回應"
-      more_links: "{{count}} 更多..."
       unread: "文章未讀"
       has_replies:
         other: "{{count}} 個回覆"
@@ -1104,14 +1095,6 @@ zh_TW:
         flag: '投訴'
         defer_flags:
           other: "暫緩投訴"
-        it_too:
-          off_topic: "一起投訴"
-          spam: "一起投訴"
-          inappropriate: "一起投訴"
-          custom_flag: "一起投訴"
-          bookmark: "一起加上書籤"
-          like: "一起按讚"
-          vote: "一起投票支持"
         undo:
           off_topic: "撤回投訴"
           spam: "撤回投訴"
@@ -1258,7 +1241,6 @@ zh_TW:
       take_action: "執行動作"
       notify_action: '訊息'
       delete_spammer: "刪除垃圾文章發送者"
-      delete_confirm: "您將刪除此用戶的 <b>%{posts}</b> 則文章與 <b>%{topics}</b> 個討論話題、移除他的帳號、封鎖從他使用的 IP <b>%{ip_address}</b> 登入、將他的電子郵件地址 <b>%{email}</b> 加入永久封鎖名稱，你確定此人真的發送垃圾文章嗎?"
       yes_delete_spammer: "是的，刪除垃圾文章發送者"
       ip_address_missing: "(N/A)"
       hidden_email_address: "( 隱藏) "
@@ -1271,10 +1253,6 @@ zh_TW:
         spam: "垃圾內容"
       custom_placeholder_notify_user: "請具體說明出有建設性且溫和的意見。"
       custom_placeholder_notify_moderators: "讓我們知道您的意見，並請盡可能地提供相關連結和例子。"
-      custom_message:
-        at_least: "請至少輸入 {{n}} 個字"
-        more: "還需要 {{n}} 個字..."
-        left: "還剩下 {{n}} 個字"
     flagging_topic:
       title: "感謝幫助社群遠離邪惡！"
       action: "投訴討論話題"
@@ -1305,7 +1283,6 @@ zh_TW:
       invisible:
         help: "此討論話題已隱藏，將不會出現在討論話題列表，只能以直接連結開啟。"
     posts: "文章"
-    posts_lowercase: "文章"
     posts_long: "此討論話題有 {{number}} 篇文章"
     posts_likes_MF: |
       This topic has {count, plural, one {1 reply} other {# replies}} {ratio, select,
@@ -1891,7 +1868,6 @@ zh_TW:
         suspend_reason: "原因"
         suspended_by: "將其停權者"
         delete_all_posts: "刪除所有文章"
-        delete_all_posts_confirm: "你確定要刪除 %{posts} 篇文章與 %{topics} 個討論話題嗎?"
         suspend: "停權"
         unsuspend: "恢復權限"
         suspended: "已停權?"

@@ -200,7 +200,7 @@ ro:
   assets_topic_body: "Aceasta e o discuție permanentă, vizibilă doar pentru admini și personal, pentru stocat imaginile folosite la designul forumului. Vă rugăm nu ștergeți!\n\n\nIată cum:\n\n\n1. Răspunde la această discuție.\n2. Încărcați toate imaginile dorite pentru logouri , iconițe și așa mai departe. (Folosiți iconița de încarcare din bara editorului de discuție, sau trageți și aruncați sau lipiți imaginile.)\n3. Aprobați răspunsul pentru a-l posta.\n4. Click dreapta pe imaginile din noua postare pt a ajunge la sursa imaginii încărcate, sau click icoana de editare pt a edita postarea și a obține calea la imagini. Copiază adrsa imaginii.\n5. Lipiți imaginile acelea în [Setări principale](/admin/site_settings/category/required).\n\n\n și dacă doriți să activați diferite feluri de fișiere încărcate, editați `extensii_autorizate` în secțiunea [setări fișiere](/admin/site_settings/category/files)."
   lounge_welcome:
     title: "Bine ați venit în Lounge"
-    body: |
+    body: |2
 
       Congratulations! :confetti_ball:
 

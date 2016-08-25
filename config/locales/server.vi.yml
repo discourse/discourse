@@ -288,7 +288,7 @@ vi:
   assets_topic_body: "Chủ đề này tồn tại vĩnh viễn, chỉ xem được bởi nhân viên, dùng để chứa ảnh và file dành cho việc thiết kế. Vui lòng đừng xóa.\n\n\nHướng dẫn:\n\n\n1. Trả lời chủ đề này.\n2. Tải lên tất cả ảnh bạn cần cho logo, favicon, và các thứ khác. (Dùng nút tải lên trong công cụ viết bài, hoặc kéo-và-thả hoặc dán ảnh vào) \n3. Gửi trả lời của bạn.\n4. Bấm chuột phải lên ảnh trong bài đăng mới để chép đường dẫn của các ảnh đã được tải lên, hoặc sửa bài viết của bạn để lấy đường dẫn của ảnh. Sao chép các đường dẫn này.\n5. Dán các đường dẫn này vào [thiết lập chung](/admin/site_settings/category/required).\n\n\nNếu bạn cần tải lên các loại file khác, sửa `authorized_extensions` trong [thiết lập file](/admin/site_settings/category/files)."
   lounge_welcome:
     title: "Chào mừng bạn đến với Phòng khách"
-    body: |
+    body: |2
 
       Chúc mừng! :confetti_ball:
 

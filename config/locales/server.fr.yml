@@ -310,7 +310,7 @@ fr:
   assets_topic_body: "Ceci est un sujet permanent, visible uniquement par l'équipe, pour stocker les images et fichiers utilisés pour le design du site. Ne pas le supprimer !\n\n\nMarche à suivre:\n\n1. Répondre à ce sujet\n2. Envoyer toutes les images que vous voulez utilisés comme logos, favicons, et tout ce que vous souhaitez. (Utiliser l'icone dans la barre d'édition ou glisser-déposer ou coller les images)\n3. Envoyer votre réponse\n4. Afin d'obtenir le chemin complet de votre image, faites un clic-droit dessus ou éditer votre message et copier le chemin.\n5. Coller le chemin de l'image dans les [paramètres requis](/admin/site_settings/category/required).\n\nDe plus, si vous souhaitez envoyer d'autres formats de fichier, modifier l'option `authorized_extensions` dans les [paramètres de fichier](/admin/site_settings/category/files)."
   lounge_welcome:
     title: "Bienvenue dans le salon"
-    body: |
+    body: |2
 
       Félicitation ! :confetti_ball:
 
@@ -566,6 +566,14 @@ fr:
     different_user_description: "Vous êtes actuellement connecté avec un utilisateur différent de celui à qui le courriel est adressé. Veuillez vous déconnecter, ou utiliser le mode anonyme, et essayer à nouveau."
     not_found_description: "Désolé, nous ne pouvons pas vous désabonner. Il est possible que le lien de votre courriel soit expiré."
     log_out: "Déconnexion"
+  user_api_key:
+    title: "Autoriser l'accès d'application"
+    authorize: "Autoriser"
+    read: "lecture"
+    read_write: "lecture/écriture"
+    description: "Voulez-vous autoriser à \"%{application_name}\" l'accès en %{access} à votre compte ?"
+    no_trust_level: "Désolé, vous n'avez pas le niveau de confiance requis pour accéder à l'API utilisateur"
+    generic_error: "Désolé, nous n'avons pu générer de clés pour l'API utilisateur, cette fonctionnalité peut être désactivée par l'administrateur"
   reports:
     visits:
       title: "Visites utilisateur"
@@ -752,6 +760,8 @@ fr:
     min_private_message_title_length: "Longueur minimale pour un titre de message en nombre de caractères"
     min_search_term_length: "Longueur minimale autorisée du texte saisie avant de lancer une recherche en nombre de caractères"
     search_tokenize_chinese_japanese_korean: "Forcer la tokenisation dans la recherche chinois/japonais/koréen, même sur des sites non-CJK."
+    search_prefer_recent_posts: "Si la recherche dans votre forum est lente, cette option tente l'indéxation des messages les plus récents en premier"
+    search_recent_posts_size: "Combien de messages récents à garder dans l'index"
     allow_uncategorized_topics: "Autorise la création de sujets sans catégorie. ATTENTION : S'il existe des sujets non-catégorisés, vous devez les catégoriser avant de désactiver cette fonction."
     allow_duplicate_topic_titles: "Autoriser la création de sujet avec le même titre."
     unique_posts_mins: "Combien de temps avant qu'un utilisateur puisse poster le même contenu à nouveau"
@@ -919,6 +929,7 @@ fr:
     top_topics_formula_log_views_multiplier: "formule pour la valeur de multiplicateur de vues de journal (n) dans les sujets tendance : `log(views_count) * (n) + op_likes_count * 0.5 + LEAST(likes_count / posts_count, 3) + 10 + log(posts_count)`"
     top_topics_formula_first_post_likes_multiplier: "formule pour la valeur de multiplicateur de premiers J'aime (n) dans les sujets tendance: `log(views_count) * 2 + op_likes_count * (n) + LEAST(likes_count / posts_count, 3) + 10 + log(posts_count)`"
     top_topics_formula_least_likes_per_post_multiplier: "formule pour la valeur de multiplicateur de moins de J'aime par message (n) dans les sujets tendance: `log(views_count) * 2 + op_likes_count * 0.5 + LEAST(likes_count / posts_count, (n)) + 10 + log(posts_count)`"
+    rebake_old_posts_count: "Nombre d'anciens messages à être régénéré toutes les 15 minutes."
     rate_limit_create_topic: "Après la création d'un sujet, les utilisateurs doivent attendre (n) secondes avant de pouvoir en créer un nouveau."
     rate_limit_create_post: "Après avoir posté un message, les utilisateurs doivent attendre (n) secondes avant de pouvoir en poster un nouveau."
     rate_limit_new_user_create_topic: "Après la création d'un sujet, les nouveaux utilisateurs doivent attendre (n) secondes avant de pouvoir en créer un nouveau."
@@ -933,6 +944,7 @@ fr:
     max_topic_invitations_per_day: "Nombre maximum d'invitations à un sujet qu'un utilisateur peut envoyer par jour."
     alert_admins_if_errors_per_minute: "Nombre d'erreurs par minute nécessaires pour déclencher une alerte administrateur. Une valeur de 0 désactive cette fonctionnalité. NB : nécessite un redémarrage."
     alert_admins_if_errors_per_hour: "Nombre d'erreurs par heure nécessaires pour déclencher une alerte administrateur. Une valeur de 0 désactive cette fonctionnalité. NB : Nécessite un redémarrage."
+    categories_topics: "Nombre de sujets à afficher dans la page /categories."
     suggested_topics: "Nombre de sujets suggérés affichés en bas d'un sujet."
     limit_suggested_to_category: "Afficher uniquement les sujets de la catégorie courante dans les sujets similaires."
     suggested_topics_max_days_old: "Les sujets suggérés ne devraient pas être plus anciens que n jours."
@@ -1004,6 +1016,7 @@ fr:
     title_fancy_entities: "Convertir les caractères ASCII commun en jolies entitées HTML dans les titres des sujets, comme SmartyPants http://daringfireball.net/projects/smartypants/"
     min_title_similar_length: "La taille minimale d'un titre avant que l'on vérifie l'existence de sujets identiques."
     min_body_similar_length: "La taille minimale d'un message avant que l'on vérifie l'existence de sujets identiques."
+    desktop_category_page_style: "Style visuel de la page /categories."
     category_colors: "Une liste de couleurs en hexadécimale autorisées pour les catégories."
     category_style: "Style visuel pour les badges de catégorie."
     max_image_size_kb: "La taille maximale des images en Ko. Doit être configuré dans nginx (client_max_body_size) / apache ou proxy aussi."
@@ -1133,6 +1146,7 @@ fr:
     feed_polling_url: "EMBARQUER UNIQUEMENT: Url du flux RSS/ATOM à embarqué."
     embed_by_username: "Pseudo de l'utilisateur Discourse qui crée les sujets embarqués."
     embed_username_key_from_feed: "Clé pour extraire le pseudo du flux."
+    embed_title_scrubber: "Expression régulière pour nettoyer les titres intégrables."
     embed_truncate: "Tronquer les messages embarqués."
     embed_post_limit: "Nombre maximum de messages à embarquer."
     embed_username_required: "Un pseudo d'utilisateur pour la création du sujet est nécessaire."
@@ -1176,6 +1190,13 @@ fr:
     default_categories_watching: "Liste de catégories surveillées par défaut."
     default_categories_tracking: "Liste de catégories suivies par défaut."
     default_categories_muted: "Liste de catégories silencées par défaut."
+    max_user_api_reqs_per_day: "Nombre maximum de requêtes de l'API utilisateur par clé et par jour"
+    max_user_api_reqs_per_minute: "Nombre maximum de requêtes de l'API utilisateur par clé et par minute"
+    allow_read_user_api_keys: "Autoriser la génération de clés en lecture seule pour l'API utilisateur"
+    allow_write_user_api_keys: "Autoriser la génération de clés en écriture pour l'API utilisateur"
+    allow_push_user_api_keys: "Autoriser la génération de clés pour utiliser le service push pour l'API utilisateur"
+    max_api_keys_per_user: "Nombre maximum de clés de l'API utilisateur par utilisateur"
+    min_trust_level_for_user_api_key: "Niveau de confiance requis pour générer des clés pour l'API utilisateur"
     tagging_enabled: "Activer les tags sur les sujets ?"
     min_trust_to_create_tag: "Le niveau de confiance minimum requis pour créer un tag."
     max_tags_per_topic: "Le nombre maximum de tags pouvant être ajoutés à un sujet."
@@ -1187,7 +1208,7 @@ fr:
     tag_style: "Style visuel pour tag badges."
     staff_tags: "Une liste de tags qui ne peuvent être appliqués que par des responsables."
     min_trust_level_to_tag_topics: "Niveau de confiance minimum requis pour taguer des sujets"
-    suppress_overlapping_tags_in_list: "Cacher les tags de la liste s'ils recouvrent le titre"
+    suppress_overlapping_tags_in_list: "Si des tags correspondent exactement à des mots du titre d'un sujet, ne pas afficher ces tags"
     remove_muted_tags_from_latest: "Ne pas afficher les sujets avec des tags silencieux dans la liste des sujets récents."
     errors:
       invalid_email: "Adresse de courriel invalide."
@@ -1473,7 +1494,7 @@ fr:
       [mt]: http://www.mail-tester.com/
   new_version_mailer:
     subject_template: "[%{site_name}] Nouvelle version de Discourse, mise à jour disponible"
-    text_body_template: |
+    text_body_template: |+
       Hourra, une nouvelle version de [Discourse](http://www.discourse.org) est disponible !
 
       Votre version : %{installed_version}
@@ -1525,7 +1546,7 @@ fr:
   system_messages:
     post_hidden:
       subject_template: "Message caché suite à des signalements de la communauté"
-      text_body_template: |
+      text_body_template: |+
         Bonjour,
 
         Ceci est un message automatique de %{site_name} pour vous informer que votre message a été caché.
@@ -2097,7 +2118,7 @@ fr:
         %{respond_instructions}
     user_posted_pm_staged:
       subject_template: "%{optional_re}%{topic_title}"
-      text_body_template: |
+      text_body_template: |2
 
         %{message}
     digest:

@@ -48,9 +48,6 @@ sq:
         x_seconds:
           one: "1s"
           other: "%{count}s"
-        less_than_x_minutes:
-          one: "< 1m"
-          other: "< %{count}m"
         x_minutes:
           one: "1m"
           other: "%{count}m"
@@ -400,14 +397,9 @@ sq:
       latest: "Të fundit"
       latest_by: "të fundit sipas"
       subcategories: "Nënkategori"
-      topic_stats: "Numri i temave të reja."
       topic_stat_sentence:
         one: "%{count} temë e re gjatë %{unit} të fundit."
         other: "%{count} tema të reja gjatë %{unit} të fundit."
-      post_stats: "Numri i postimeve të reja."
-      post_stat_sentence:
-        one: "%{count} postim i ri këto %{unit}."
-        other: "%{count} postime të reja këto %{unit}."
     ip_lookup:
       title: Shiko adresën IP
       hostname: Hostname
@@ -881,7 +873,6 @@ sq:
       saved_local_draft_tip: "ruajtur lokalisht"
       similar_topics: "Tema juaj është e ngjashme me..."
       drafts_offline: "draftet offline"
-      group_mentioned: "Ju përmendët grupin {{group}}, që do të thotë se do të njoftoni <a href='{{group_link}}'>{{count}} persona</a> – a jeni të sigurtë?"
       duplicate_link: "Lidhja drejt <b>{{domain}}</b> duket sikur u postua më par¨´nga <b>@{{username}}</b> në <a href='{{post_url}}'>këtë përgjigje {{ago}}</a> – a doni ta postoni sërish?"
       error:
         title_missing: "Titulli është i nevojshëm"
@@ -1072,7 +1063,6 @@ sq:
     topic:
       unsubscribe:
         stop_notifications: "Tani ju do të merrni më pak njoftime për <strong>{{title}}</strong>"
-      filter_to: "{{post_count}} postime në temë"
       create: 'Temë e re'
       create_long: 'Hap një temë të re'
       private_message: 'Fillo një mesazh'
@@ -1131,7 +1121,6 @@ sq:
       timeline:
         back: "Kthehu mbrapa"
         back_description: "Kthehu mbrapa tek postimi i fundit i palexuar"
-        replies: "%{current} / %{total} përgjigje"
         replies_short: "%{current} / %{total}"
       progress:
         title: progresi i temës
@@ -1142,7 +1131,6 @@ sq:
         jump_prompt_long: "Tek cila temë doni të shkoni?"
         total: totali i postimeve
         current: postimi aktual
-        position: "tema %{current} nga %{total}"
       notifications:
         title: ndryshoni sa shpesh njoftoheni mbi këtë temë
         reasons:
@@ -1301,7 +1289,6 @@ sq:
       gap:
         one: "shiko 1 përgjigje të fshehur"
         other: "shiko {{count}} përgjigje të fshehura"
-      more_links: "{{count}} më shumë..."
       unread: "Postimi është i palexuar"
       has_replies:
         one: "{{count}} Përgjigje"
@@ -1356,9 +1343,6 @@ sq:
         change_owner: "Ndrysho zotëruesin"
       actions:
         flag: 'Sinjalizoni'
-        it_too:
-          bookmark: "Shtoje edhe tek Të preferuarat"
-          like: "E pëlqejnë"
         undo:
           bookmark: "Hiqe nga të preferuarat"
           like: "Anulo pëlqimin"
@@ -1441,7 +1425,6 @@ sq:
       notify_action: 'Mesazh'
       official_warning: 'Paralajmërim zyrtar'
       delete_spammer: "Elimino Spammer"
-      delete_confirm: "Jeni duke fshirë <b>%{posts}</b> postime dhe <b>%{topics}</b> tema nga ky anëtar. Gjithashtu, po fshini llogarinë e tij/saj, po bllokoni regjistrime të reja nga adresa IP <b>%{ip_address}</b>, dhe po shtoni adresën email <b>%{email}</b> në një listë adresash të bllokuara. A jeni të sigurtë që ky anëtar është spammer?"
       yes_delete_spammer: "Po, Elimino Spammer"
       ip_address_missing: "(N/A)"
       hidden_email_address: "(fshehur)"
@@ -1455,10 +1438,6 @@ sq:
         spam: "Është Spam"
       custom_placeholder_notify_user: "Jini specifikë, konstruktiv dhe gjithmonë të sjellshëm."
       custom_placeholder_notify_moderators: "Na thoni specifikisht se çfarë ju shqetëson dhe na jepni lidhje dhe shembuj konkretë brenda mundësive. "
-      custom_message:
-        at_least: "shkruaj të pakën {{n}} karaktere "
-        more: "{{n}} shko tek..."
-        left: "mund të shkruani edhe {{n}} shkronja"
     flagging_topic:
       title: "Faleminderit për ndihmën që i jepni këtij komuniteti!"
       action: "Raporto Temën"
@@ -1496,7 +1475,6 @@ sq:
       invisible:
         help: "Kjo temë nuk është e listuar, pra nuk do të paraqitet nue listat e temave të faqes dhe mund të shikohet vetëm me lidhje direkte"
     posts: "Postime"
-    posts_lowercase: "postime"
     posts_long: "ka {{number}} postime në temë"
     original_post: "Postimi Origjinal"
     views: "Shikimet"
@@ -2010,7 +1988,6 @@ sq:
         block_accept: 'Po, blloko anëtarin'
         trust_level_change_failed: "Nuk e ndryshuam dot nivelin e këtij anëtari. "
         tl3_requirements:
-          table_title: "Në %{time_period} ditët e fundit:"
           value_heading: "Vlera"
           visits: "Vizita"
           days: "ditë"

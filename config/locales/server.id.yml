@@ -294,7 +294,7 @@ id:
       more_topics_category: "Topik baru lebih banyak:"
     account_created:
       subject_template: "[%{site_name}] Akun Baru Anda"
-      text_body_template: |
+      text_body_template: |+
         Anda mendapatkan akun baru di %{site_name}
 
 

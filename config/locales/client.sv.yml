@@ -48,9 +48,6 @@ sv:
         x_seconds:
           one: "1s"
           other: "%{count}s"
-        less_than_x_minutes:
-          one: "< 1m"
-          other: "< %{count}m"
         x_minutes:
           one: "1m"
           other: "%{count}m"
@@ -399,14 +396,9 @@ sv:
       latest_by: "senast av"
       toggle_ordering: "slå av/på sorteringskontroll"
       subcategories: "Underkategorier"
-      topic_stats: "Antalet nya ämnen."
       topic_stat_sentence:
         one: "%{count} nytt ämne under den senaste %{unit}."
         other: "%{count} nya ämnen under den senaste %{unit}."
-      post_stats: "Antalet nya inlägg."
-      post_stat_sentence:
-        one: "%{count} nytt inlägg under den senaste %{unit}."
-        other: "%{count} nya inlägg under den senaste %{unit}."
     ip_lookup:
       title: Kolla upp IP-adress
       hostname: Värdnamn
@@ -906,7 +898,6 @@ sv:
       saved_local_draft_tip: "sparat lokalt"
       similar_topics: "Ditt ämne liknar..."
       drafts_offline: "utkast offline"
-      group_mentioned: "Genom att nämna {{group}}, så kommer du att notifiera <a href='{{group_link}}'>{{count}} medlemmar</a> – är du säker?"
       duplicate_link: "Det ser ut som att din länk till <b>{{domain}}</b> redan har delats i ämnet av <b>@{{username}}</b> i <a href='{{post_url}}'>ett svar {{ago}} sedan</a> – är du säker på att du vill dela den igen?"
       error:
         title_missing: "Du måste ange en rubrik"
@@ -1119,7 +1110,6 @@ sv:
       unsubscribe:
         stop_notifications: "Du kommer du att motta färre notifieringar från <strong>{{title}}</strong>"
         change_notification_state: "Ditt aktuella notifieringstillstånd är "
-      filter_to: "{{post_count}} inlägg i ämne"
       create: 'Nytt ämne'
       create_long: 'Skapa ett nytt ämne'
       private_message: 'Skriv meddelande'
@@ -1179,11 +1169,9 @@ sv:
       auto_close_title: 'Inställningar för automatisk stängning'
       auto_close_save: "Spara"
       auto_close_remove: "Stäng inte det här ämnet automatiskt"
-      auto_close_immediate: "Senaste inlägget i det här ämnet är redan %{hours} timmar gammal, så ämnet kommer att stängas omedelbart. "
       timeline:
         back: "Tillbaka"
         back_description: "Gå tillbaka till det senaste olästa meddelandet"
-        replies: "%{current} / %{total} svar"
         replies_short: "%{current} / %{total}"
       progress:
         title: ämnesframsteg
@@ -1194,7 +1182,6 @@ sv:
         jump_bottom_with_number: "hoppa till inlägg %{post_number}"
         total: antal inlägg
         current: nuvarande inlägg
-        position: "inlägg %{current} av %{total}"
       notifications:
         title: ändra hur ofta du får notifieringar om det här ämnet
         reasons:
@@ -1393,7 +1380,6 @@ sv:
       gap:
         one: "visa 1 dolt svar"
         other: "visa {{count}} dolda svar"
-      more_links: "{{count}} till..."
       unread: "Inlägget är oläst"
       has_replies:
         one: "{{count}} svar"
@@ -1462,14 +1448,6 @@ sv:
         defer_flags:
           one: "Skjut upp"
           other: "Skjut upp"
-        it_too:
-          off_topic: "Flagga det också"
-          spam: "Flagga det också"
-          inappropriate: "Flagga det också"
-          custom_flag: "Flagga det också"
-          bookmark: "Bokmärk det också"
-          like: "Gilla det också"
-          vote: "Rösta för det också"
         undo:
           off_topic: "Ångra flaggning"
           spam: "Ångra flaggning"
@@ -1649,7 +1627,6 @@ sv:
       notify_action: 'Meddelande'
       official_warning: 'Officiell varning'
       delete_spammer: "Radera spammare"
-      delete_confirm: "Du håller på att radera <b>%{posts}</b> inlägg och <b>%{topics}</b> ämnen från denna användare, radera hans/hennes konto, blockera IP-adressen <b>%{ip_address}</b>, och lägga till e-postadressen <b>%{email}</b> till en permanent blockeringslista. Är du säker på att denna användare verkligen är en spammare?"
       yes_delete_spammer: "Ja, radera spammare"
       ip_address_missing: "(N/A)"
       hidden_email_address: "(gömd)"
@@ -1663,10 +1640,6 @@ sv:
         spam: "Det är spam"
       custom_placeholder_notify_user: "Var specifik, var konstruktiv och var alltid trevlig."
       custom_placeholder_notify_moderators: "Låt oss veta i detalj vad du är bekymrad över, och skicka med relevanta länkar och exempel om möjligt."
-      custom_message:
-        at_least: "skriv åtminstone {{n}} tecken"
-        more: "{{n}} fler..."
-        left: "{{n}} kvar"
     flagging_topic:
       title: "Tack för att du hjälper oss hålla forumet civiliserat!"
       action: "Flagga ämne"
@@ -1706,7 +1679,6 @@ sv:
       invisible:
         help: "Det här ämnet är olistat; det kommer inte visas i ämneslistorna och kan bara nås via en direktlänk"
     posts: "Inlägg"
-    posts_lowercase: "inlägg"
     posts_long: "det finns {{number}} inlägg i detta ämne"
     posts_likes_MF: |
       Detta ämne har {count, plural, one {1 svar} other {# svar}} {ratio, select,
@@ -2532,7 +2504,6 @@ sv:
         suspend_reason: "Anledning"
         suspended_by: "Avstängd av"
         delete_all_posts: "Radera alla inlägg"
-        delete_all_posts_confirm: "Du är påväg att radera %{posts} inlägg och %{topics} ämnen. Är du säker?"
         suspend: "Stäng av användare"
         unsuspend: "Lås upp användare"
         suspended: "Avstängd?"
@@ -2628,7 +2599,6 @@ sv:
         unlock_trust_level: "Lås upp förtroendenivå"
         tl3_requirements:
           title: "Krav för förtroendenivå 3"
-          table_title: "Under de senaste %{time_period} dagarna:"
           value_heading: "Värde"
           requirement_heading: "Krav"
           visits: "Besök"

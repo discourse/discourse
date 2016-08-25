@@ -149,7 +149,7 @@ zh_CN:
   is_invalid: "无效；请描述得更清楚一点"
   next_page: "下一页 →"
   prev_page: "← 上一页"
-  page_num: "%{num} 页"
+  page_num: "第%{num}页"
   home_title: "首页"
   topics_in_category: "“%{category}”分类中的主题"
   rss_posts_in_topic: "“%{topic}”的 RSS 内容聚合"
@@ -158,7 +158,7 @@ zh_CN:
   num_posts: "帖子："
   num_participants: "参与者："
   read_full_topic: "阅读整个主题"
-  private_message_abbrev: "消息"
+  private_message_abbrev: "私信"
   rss_description:
     latest: "最新主题"
     hot: "最热主题"
@@ -297,7 +297,7 @@ zh_CN:
   assets_topic_body: "这是一个永久主题，仅对管理人员可见，用于存储论坛设计使用的图像和文件。不要删除它！\n\n\n详细教程：\n\n\n1. 回复到这个主题。\n2. 上传你想用作站点标志、图标和其他所有图片到这儿。（使用帖子编辑器工具栏中的上传图标，或者拖拽或者粘贴图像。）\n3. 提交你的回复添加帖子。\n4. 在你的新帖子里右键点击图片获得这些已上传图片的链接，或者点击编辑按钮来编辑帖子，获得到图片的相对地址。复制这些相对地址。\n5. 粘贴这些图像的路径到[基础设置](/admin/site_settings/category/required)。\n\n\n如果你需要运行额外的上传文件类型，在[文件设置](/admin/site_settings/category/files)中编辑 `authorized_extensions`。"
   lounge_welcome:
     title: "欢迎来到贵宾室"
-    body: |
+    body: |2
 
       恭喜！ :confetti_ball:
 
@@ -527,6 +527,9 @@ zh_CN:
     different_user_description: "你登录的帐户与邮件不符。请登出，或进入隐私模式，然后再重试。"
     not_found_description: "对不起，我们找不到这个退订链接。有可能你的邮件中的链接已经过期？"
     log_out: "退出"
+  user_api_key:
+    read: "阅读"
+    read_write: "读/写"
   reports:
     visits:
       title: "用户访问量"
@@ -1138,7 +1141,6 @@ zh_CN:
     tag_style: "标签的视觉样式。"
     staff_tags: "只可由管理人员使用的标签列表"
     min_trust_level_to_tag_topics: "给主题加标签的最小信任等级"
-    suppress_overlapping_tags_in_list: "如果在列表视图中，主题标题包含标签，则隐藏标签"
     remove_muted_tags_from_latest: "在最新主题列表中，不显示有静音标签的主题。"
     errors:
       invalid_email: "电子邮箱地址无效。"
@@ -1304,7 +1306,7 @@ zh_CN:
 
       这封邀请来组于受信任的用户，所以你可以立即回复。
   custom_invite_mailer:
-    subject_template: "%{invitee_name} 邀请你 '%{topic_title}' 在 %{site_domain_name}"
+    subject_template: "%{invitee_name}邀请你'%{topic_title}'在%{site_domain_name}"
     text_body_template: |
       %{invitee_name}邀请你参与
 
@@ -1340,7 +1342,7 @@ zh_CN:
 
       这封邀请发自受信任的用户，所以你的帐户将被自动创建。
   custom_invite_forum_mailer:
-    subject_template: "%{invitee_name} 邀请你加入 %{site_domain_name}"
+    subject_template: "%{invitee_name}邀请你加入%{site_domain_name}"
     text_body_template: |
       %{invitee_name}邀请你加入
 
@@ -1670,7 +1672,7 @@ zh_CN:
         你的账户没有达到足够的信任等级在该分类发布新主题。如果你有异议，联系管理人员。
     email_reject_strangers_not_allowed:
       subject_template: "[%{site_name}] 电子邮件错误 -- 无权限"
-      text_body_template: |
+      text_body_template: |+
         我们非常抱歉，但是你发送至%{destination}（名为%{former_title}）的邮件出问题了。
 
         邮件发至的分类只接受来自合法帐户且邮件地址已确认的用户的有邮件。如果你有异议，联系管理人员。
@@ -1826,8 +1828,8 @@ zh_CN:
     reply_by_email: "[访问主题](%{base_url}%{url})或者发邮件回复。"
     reply_by_email_pm: "[访问消息](%{base_url}%{url})或者发邮件回复。"
     only_reply_by_email: "发邮件回复。"
-    visit_link_to_respond: "[访问主题](%{base_url}%{url}) 以回复."
-    visit_link_to_respond_pm: "[访问消息](%{base_url}%{url}) 以回复."
+    visit_link_to_respond: "[访问主题](%{base_url}%{url})以回复."
+    visit_link_to_respond_pm: "[访问消息](%{base_url}%{url})以回复."
     posted_by: "%{username}发表于%{post_date}"
     invited_to_private_message_body: |
       %{username} 邀请你至消息交流：
@@ -1965,7 +1967,7 @@ zh_CN:
         %{respond_instructions}
     user_posted_pm_staged:
       subject_template: "%{optional_re}%{topic_title}"
-      text_body_template: |
+      text_body_template: |2
 
         %{message}
     digest:
@@ -2566,7 +2568,7 @@ zh_CN:
     great_share:
       name: 精彩的分享
       description: 分享了一个有 1000 个独立访问者的帖子
-      long_description: |
+      long_description: |+
         该徽章授予给分享链接给 1000 个其他访客的你。哇！你把一个有意思的讨论推广给了广大的读者们，并且帮助社群前进了一大步！
 
     first_like:
@@ -2587,7 +2589,7 @@ zh_CN:
     campaigner:
       name: 活动家
       description: 已邀请了 3 个初级用户
-      long_description: |
+      long_description: |+
         该徽章授予给邀请了 3 人加入社群的你，你的朋友在站点上度过了很长的时间，已经成为了基础用户。活跃的社区需要新鲜的血液日常参与，并为交流带来多元视点。
 
     champion:

@@ -48,9 +48,6 @@ fi:
         x_seconds:
           one: "1 s"
           other: "%{count} s"
-        less_than_x_minutes:
-          one: "< 1 min"
-          other: "< %{count} min"
         x_minutes:
           one: "1 min"
           other: "%{count} min"
@@ -402,14 +399,12 @@ fi:
       latest_by: "tuorein"
       toggle_ordering: "vaihda järjestystä"
       subcategories: "Tytäralueet"
-      topic_stats: "Uusien ketjujen lukumäärä."
+      topic_sentence:
+        one: "1 ketju"
+        other: "%{count} ketjua"
       topic_stat_sentence:
         one: "%{count} uusi ketju viimeisen %{unit} aikana."
         other: "%{count} uutta ketjua viimeisen %{unit} aikana."
-      post_stats: "Uusien viestien lukumäärä."
-      post_stat_sentence:
-        one: "%{count} uusi viesti viimeisen %{unit} aikana."
-        other: "%{count} uutta viestiä viimeisen %{unit} aikana."
     ip_lookup:
       title: IP osoitteen haku
       hostname: Isäntänimi
@@ -473,7 +468,7 @@ fi:
       mailing_list_mode:
         label: "Postituslistatila"
         enabled: "Ota käyttöön postituslistatila"
-        instructions: |
+        instructions: |+
           Asetus syrjäyttää koosteet tapahtumista.<br />
           Vaimennettujen ketjujen ja alueiden viestejä ei sisällytetä sähköposteihin.
 
@@ -922,7 +917,6 @@ fi:
       saved_local_draft_tip: "tallennettu omalla koneella"
       similar_topics: "Tämä ketju vaikuttaa samalta kuin.."
       drafts_offline: "offline luonnokset"
-      group_mentioned: "Jos viittaat ryhmään {{group}}, <a href='{{group_link}}'>{{count}} käyttäjää</a> saa ilmoituksen – oletko varma?"
       duplicate_link: "Näyttää siltä, että <b>@{{username}}</b> on jo lähettänyt saman linkin kohteeseen <b>{{domain}}</b> ketjun <a href='{{post_url}}'>aiemmassa viestissä {{ago}}</a> – oletko varma, että haluat lähettää sen uudestaan?"
       error:
         title_missing: "Otsikko on pakollinen"
@@ -1139,7 +1133,6 @@ fi:
       unsubscribe:
         stop_notifications: "Saat tästä lähtien vähemmän ilmoituksia aiheesta <strong>{{title}}</strong>"
         change_notification_state: "Nykyinen ilmoitusasetuksesti on"
-      filter_to: "{{post_count}} viestiä ketjussa"
       create: 'Uusi ketju'
       create_long: 'Luo uusi ketju'
       private_message: 'Luo viesti'
@@ -1199,11 +1192,9 @@ fi:
       auto_close_title: 'Automaattisen sulkemisen asetukset'
       auto_close_save: "Tallenna"
       auto_close_remove: "Älä sulje tätä ketjua automaattisesti"
-      auto_close_immediate: "Viimeisin viesti tässä ketjussa on jo %{hours} tuntia vanha, joten ketju suljetaan heti."
       timeline:
         back: "Takaisin"
         back_description: "Siirry takaisin viimeisimpään lukemattomaan viestiin"
-        replies: "%{current} / %{total} vastausta"
         replies_short: "%{current} / %{total}"
       progress:
         title: ketjun edistyminen
@@ -1216,7 +1207,6 @@ fi:
         jump_bottom_with_number: "hyppää viestiin %{post_number}"
         total: yhteensä viestejä
         current: tämänhetkinen viesti
-        position: "viesti %{current} / %{total}"
       notifications:
         title: muuta sitä, kuinka usein saat muistutuksia tästä ketjusta
         reasons:
@@ -1420,7 +1410,6 @@ fi:
       gap:
         one: "näytä 1 piilotettu vastaus"
         other: "näytä {{count}} piilotettua vastausta"
-      more_links: "{{count}} lisää..."
       unread: "Viesti on lukematta"
       has_replies:
         one: "{{count}} vastaus"
@@ -1489,14 +1478,6 @@ fi:
         defer_flags:
           one: "Lykkää lippua"
           other: "Lykkää lippuja"
-        it_too:
-          off_topic: "Liputa sinäkin"
-          spam: "Liputa sinäkin"
-          inappropriate: "Liputa sinäkin"
-          custom_flag: "Liputa sinäkin"
-          bookmark: "Lisää oma kirjanmerkki"
-          like: "Tykkää sinäkin"
-          vote: "Äänestä sinäkin"
         undo:
           off_topic: "Peru lippu"
           spam: "Peru lippu"
@@ -1682,7 +1663,6 @@ fi:
       notify_action: 'Viesti'
       official_warning: 'Virallinen varoitus'
       delete_spammer: "Poista roskapostittaja"
-      delete_confirm: "Olet aikeissa poistaa <b>%{posts}</b> viestiä ja <b>%{topics}</b> ketjua tältä käyttäjältä, sekä käyttäjätilin, estää tunnuksen luomisen tästä IP osoitteesta <b>%{ip_address}</b>, ja lisätä sähköpostiosoitteen <b>%{email}</b> pysyvästi estolistalle. Oletko varma, että tämä käyttäjä todella on roskapostittaja?"
       yes_delete_spammer: "Kyllä, poista roskapostittaja"
       ip_address_missing: "-"
       hidden_email_address: "(piilotettu)"
@@ -1696,10 +1676,6 @@ fi:
         spam: "Se on roskapostia"
       custom_placeholder_notify_user: "Esitä asiasi ymmärrettäväsi, ole rakentava ja kohtelias."
       custom_placeholder_notify_moderators: "Kerro ymmärrettävästi ja selvästi, mistä olet huolestunut ja lisää viestiin oleelliset esimerkit ja linkit, jos mahdollista."
-      custom_message:
-        at_least: "kirjoita vähintään {{n}} merkkiä"
-        more: "vielä {{n}}..."
-        left: "{{n}} jäljellä"
     flagging_topic:
       title: "Kiitos avustasi yhteisön hyväksi!"
       action: "Liputa ketju"
@@ -1740,7 +1716,6 @@ fi:
       invisible:
         help: "Tämä ketju on poistettu listauksista; sitä ei näytetä ketjujen listauksissa ja siihen pääsee vain suoralla linkillä"
     posts: "Viestejä"
-    posts_lowercase: "viestejä"
     posts_long: "tässä ketjussa on {{number}} viestiä"
     posts_likes_MF: |
       Tässä ketjussa on {count, plural, one {1 vastaus} other {# vastausta}} {ratio, select,
@@ -2571,7 +2546,6 @@ fi:
         suspend_reason: "Syy"
         suspended_by: "Käyttäjän hyllytti"
         delete_all_posts: "Poista kaikki viestit"
-        delete_all_posts_confirm: "Olet poistamassa %{posts} viestiä ja %{topics} ketjua. Oletko varma? "
         suspend: "Hyllytä"
         unsuspend: "Poista hyllytys"
         suspended: "Hyllytetty?"
@@ -2667,7 +2641,6 @@ fi:
         unlock_trust_level: "Avaa luottamustason lukitus"
         tl3_requirements:
           title: "Vaatimukset luottamustasolle 3."
-          table_title: "Edellisen %{time_period} päivän aikana:"
           value_heading: "Arvo"
           requirement_heading: "Vaatimus"
           visits: "Vierailua"

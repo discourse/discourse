@@ -45,8 +45,6 @@ id:
           other: "< %{count}s"
         x_seconds:
           other: "%{count}s"
-        less_than_x_minutes:
-          other: "< %{count}m"
         x_minutes:
           other: "%{count}m"
         about_x_hours:
@@ -362,12 +360,8 @@ id:
       latest_by: "Terbaru oleh"
       toggle_ordering: "beralih memesan kontrol"
       subcategories: "Subkategori"
-      topic_stats: "Banyaknya topik baru."
       topic_stat_sentence:
         other: "%{count} topik baru dalam %{unit} terakhir."
-      post_stats: "Banyaknya pos baru."
-      post_stat_sentence:
-        other: "%{count} pos baru dalam %{unit} terakhir."
     ip_lookup:
       title: Pencarian Alamat IP
       hostname: nama host

@@ -48,9 +48,6 @@ fr:
         x_seconds:
           one: "1s"
           other: "%{count}s"
-        less_than_x_minutes:
-          one: "< 1m"
-          other: "< %{count}m"
         x_minutes:
           one: "1m"
           other: "%{count}m"
@@ -201,8 +198,8 @@ fr:
       one: "{{count}} caractère"
       other: "{{count}} caractères"
     suggested_topics:
-      title: "Sujets similaires"
-      pm_title: "Messages similaires"
+      title: "Sujets suggérés"
+      pm_title: "Messages suggérés"
     about:
       simple_title: "À propos"
       title: "À propos de %{title}"
@@ -402,14 +399,12 @@ fr:
       latest_by: "dernier sujet de"
       toggle_ordering: "modifier le mode du tri"
       subcategories: "Sous-catégories"
-      topic_stats: "Le nombre de nouveaux sujets."
+      topic_sentence:
+        one: "1 sujet"
+        other: "%{count} sujets"
       topic_stat_sentence:
         one: "%{count} nouveau sujet par %{unit}."
         other: "%{count} nouveaux sujets par %{unit}."
-      post_stats: "Le nombre de nouveaux messages."
-      post_stat_sentence:
-        one: "%{count} nouveau message depuis %{unit}."
-        other: "%{count} nouveaux messages depuis %{unit}."
     ip_lookup:
       title: Rechercher l'adresse IP
       hostname: Nom de l'hôte
@@ -509,6 +504,13 @@ fr:
       muted_topics_link: "Afficher les sujets en sourdine"
       watched_topics_link: "Afficher les sujets surveillés"
       automatically_unpin_topics: "Désépingler automatiquement les sujets quand j'arrive à la fin."
+      apps: "Applications"
+      revoke_access: "Révoquer l'accès"
+      undo_revoke_access: "Annuler la révocation d'accès"
+      api_permissions: "Permissions :"
+      api_approved: "Approuvé :"
+      api_read: "lecture"
+      api_read_write: "lecture et écriture"
       staff_counters:
         flags_given: "signalements utiles"
         flagged_posts: "messages signalés"
@@ -904,6 +906,10 @@ fr:
       twitter: "Twitter"
       emoji_one: "Emoji One"
       win10: "Win10"
+    category_page_style:
+      categories_only: "Catégories seules"
+      categories_with_featured_topics: "Catégories et sujets sélectionnés"
+      categories_and_latest_topics: "Catégories et sujets récents"
     shortcut_modifier_key:
       shift: 'Shift'
       ctrl: 'Ctrl'
@@ -923,7 +929,9 @@ fr:
       saved_local_draft_tip: "sauvegardé en local"
       similar_topics: "Votre message est similaire à..."
       drafts_offline: "sauvegardé hors ligne"
-      group_mentioned: "En mentionnant {{group}}, vous êtes sur le point de notifier <a href='{{group_link}}'>{{count}} personnes</a> – êtes-vous sûr ?"
+      group_mentioned:
+        one: "En mentionnant {{group}}, vous êtes sur le point de notifier <a href='{{group_link}}'>1 personne</a> – êtes-vous sûr ?"
+        other: "En mentionnant {{group}}, vous êtes sur le point de notifier <a href='{{group_link}}'>{{count}} personnes</a> – êtes-vous sûr ?"
       duplicate_link: "Il semblerait que votre lien vers <b>{{domain}}</b> a déjà été partagé par <b>@{{username}}</b> dans <a href='{{post_url}}'>une réponse {{ago}}</a> – êtes vous sûr de vouloir le partager à nouveau ?"
       error:
         title_missing: "Le titre est obligatoire."
@@ -954,8 +962,10 @@ fr:
       show_preview: 'afficher la prévisualisation &raquo;'
       hide_preview: '&laquo; cacher la prévisualisation'
       quote_post_title: "Citer le message en entier"
+      bold_label: "G"
       bold_title: "Gras"
       bold_text: "texte en gras"
+      italic_label: "I"
       italic_title: "Italique"
       italic_text: "texte en italique"
       link_title: "Lien"
@@ -973,6 +983,7 @@ fr:
       olist_title: "Liste numérotée"
       ulist_title: "Liste à puces"
       list_item: "Élément"
+      heading_label: "T"
       heading_title: "Titre"
       heading_text: "Titre"
       hr_title: "Barre horizontale"
@@ -1140,7 +1151,9 @@ fr:
       unsubscribe:
         stop_notifications: "Vous recevrez moins de notifications pour <strong>{{title}}</strong>"
         change_notification_state: "Votre statut de notification est"
-      filter_to: "{{post_count}} messages sur ce sujet"
+      filter_to:
+        one: "1 message dans le sujet"
+        other: "{{count}} messages dans le sujet"
       create: 'Créer votre sujet'
       create_long: 'Créer un nouveau sujet'
       private_message: 'Écrire un message'
@@ -1200,11 +1213,12 @@ fr:
       auto_close_title: 'Paramètres de fermeture automatique'
       auto_close_save: "Sauvegarder"
       auto_close_remove: "Ne pas fermer automatiquement ce sujet"
-      auto_close_immediate: "Le dernier message dans ce sujet a déjà %{hours} heures, alors le sujet sera fermé immédiatement."
+      auto_close_immediate:
+        one: "Le dernier message dans ce sujet est déjà vieux de 1 heure donc le sujet sera immédiatement fermé."
+        other: "Le dernier message dans ce sujet est déjà vieux de %{count} heures donc le sujet sera immédiatement fermé."
       timeline:
         back: "Retour"
         back_description: "Revenir sur le dernier message non lu"
-        replies: "%{current} / %{total} réponses"
         replies_short: "%{current} / %{total}"
       progress:
         title: progression dans le sujet
@@ -1217,7 +1231,6 @@ fr:
         jump_bottom_with_number: "aller au message %{post_number}"
         total: total messages
         current: message courant
-        position: "message %{current} sur %{total}"
       notifications:
         title: modifier la fréquence des notifications concernant ce sujet
         reasons:
@@ -1275,7 +1288,7 @@ fr:
         invisible: "Retirer de la liste des sujets"
         visible: "Afficher dans la liste des sujets"
         reset_read: "Réinitialiser les lectures"
-        make_public: "Rendre sujet publique"
+        make_public: "Rendre le sujet public"
         make_private: "Rendre le sujet privé"
       feature:
         pin: "Épingler la discussion"
@@ -1421,7 +1434,6 @@ fr:
       gap:
         one: "voir 1 réponse cachée"
         other: "voir {{count}} réponses cachées"
-      more_links: "{{count}} de plus..."
       unread: "Ce message est non lu"
       has_replies:
         one: "{{count}} Réponse"
@@ -1490,14 +1502,6 @@ fr:
         defer_flags:
           one: "Reporter le signalement"
           other: "Reporter les signalements"
-        it_too:
-          off_topic: "Le signaler également"
-          spam: "Le signaler également"
-          inappropriate: "Le signaler également"
-          custom_flag: "Le signaler également"
-          bookmark: "L'ajouter également en signet"
-          like: "L'aimer également"
-          vote: "Votez pour lui également"
         undo:
           off_topic: "Annuler le signalement"
           spam: "Annuler le signalement"
@@ -1683,7 +1687,6 @@ fr:
       notify_action: 'Message'
       official_warning: 'Avertissement officiel'
       delete_spammer: "Supprimer le spammeur"
-      delete_confirm: "Vous vous apprêtez à supprimer <b>%{posts}</b> messages et  <b>%{topics}</b> sujets de cet utilisateur, supprimer son compte, bloquer les inscriptions depuis son adresse IP <b>%{ip_address}</b> et à ajouter son adresse de courriel <b>%{email}</b> à la liste des utilisateurs bloqués. Etes-vous sûr que cet utilisateur est un spammeur ?"
       yes_delete_spammer: "Oui, supprimer le spammeur"
       ip_address_missing: "(N/A)"
       hidden_email_address: "(masqué)"
@@ -1698,9 +1701,15 @@ fr:
       custom_placeholder_notify_user: "Soyez précis, constructif, et toujours respectueux."
       custom_placeholder_notify_moderators: "Dites-nous ce qui vous dérange spécifiquement, et fournissez des liens pertinents et exemples si possible."
       custom_message:
-        at_least: "saisir au moins {{n}} caractères"
-        more: "{{n}} restants..."
-        left: "{{n}} restants"
+        at_least:
+          one: "saisir au moins 1 caractère"
+          other: "saisir au moins {{count}} caractères"
+        more:
+          one: "1 restant..."
+          other: "{{count}} restants..."
+        left:
+          one: "1 restant"
+          other: "{{count}} restants"
     flagging_topic:
       title: "Merci de nous aider à garder notre communauté civilisé !"
       action: "Signaler Sujet"
@@ -1741,7 +1750,6 @@ fr:
       invisible:
         help: "Ce sujet n'apparait plus dans la liste des sujets et sera seulement accessible via un lien direct"
     posts: "Messages"
-    posts_lowercase: "messages"
     posts_long: "il y a {{number}} messages dans ce sujet"
     posts_likes_MF: |
       Ce sujet a {count, plural, one {1 réponse} other {# réponses}}  {ratio, select,
@@ -1798,8 +1806,8 @@ fr:
       unread:
         title: "Non lus"
         title_with_count:
-          one: "1 non lu"
-          other: " ({{count}}) non lus"
+          one: "Non lu (1)"
+          other: "Non lus ({{count}})"
         help: "sujets avec des messages non lus que vous suivez ou surveillez"
         lower_title_with_count:
           one: "1 non lu"
@@ -2175,6 +2183,11 @@ fr:
         add_owners: Ajouter des propriétaires
         incoming_email: "Adresse e-mail d'expédition personnalisée"
         incoming_email_placeholder: "Entrer une adresse e-mail"
+        flair_url: "URL de la vignette d'avatar"
+        flair_url_placeholder: "(Facultatif) URL de l'image"
+        flair_bg_color: "Couleur de l'arrière-plan de la vignette d'avatar"
+        flair_bg_color_placeholder: "(Facultatif) Couleur en héxadécimal"
+        flair_preview: "Prévisualiser"
       api:
         generate_master: "Générer une clé Maître pour l'API"
         none: "Il n'y a pas de clés API actives en ce moment."
@@ -2572,7 +2585,6 @@ fr:
         suspend_reason: "Raison"
         suspended_by: "Suspendu par"
         delete_all_posts: "Supprimer tous les messages"
-        delete_all_posts_confirm: "Vous allez supprimer %{posts} messages et %{topics} sujets. Êtes-vous sûr ?"
         suspend: "Suspendre"
         unsuspend: "Retirer la suspension"
         suspended: "Suspendu ?"
@@ -2668,7 +2680,9 @@ fr:
         unlock_trust_level: "Déverrouiller le niveau de confiance"
         tl3_requirements:
           title: "Pré-requis pour le niveau de confiance 3"
-          table_title: "Dans les %{time_period} derniers jours:"
+          table_title:
+            one: "Lors du dernier jour :"
+            other: "Lors des %{count} derniers jours :"
           value_heading: "Valeur"
           requirement_heading: "Pré-requis"
           visits: "Visites"
@@ -2768,12 +2782,14 @@ fr:
           developer: 'Développeur'
           embedding: "Externe"
           legal: "Légal"
+          user_api: 'API utilisateur'
           uncategorized: 'Autre'
           backups: "Sauvegardes"
           login: "Connexion"
           plugins: "Plugins"
           user_preferences: "Préférences"
           tags: "Tags"
+          search: "Rechercher"
       badges:
         title: Badges
         new_badge: Nouveau Badge
@@ -2866,6 +2882,7 @@ fr:
         embed_by_username: "Pseudo pour création de sujet"
         embed_post_limit: "Le nombre maximum de messages à intégrer"
         embed_username_key_from_feed: "Clé pour extraire le pseudo du flux."
+        embed_title_scrubber: "Expression régulière utilisée pour nettoyer le titre des messages"
         embed_truncate: "Tronquer les messages intégrés"
         embed_whitelist_selector: "Sélecteur CSS pour les éléments qui seront autorisés dans les contenus intégrés"
         embed_blacklist_selector: "Sélecteur CSS pour les éléments qui seront interdits dans les contenus intégrés"

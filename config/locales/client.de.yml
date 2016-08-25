@@ -48,9 +48,6 @@ de:
         x_seconds:
           one: "1s"
           other: "%{count}s"
-        less_than_x_minutes:
-          one: "< 1min"
-          other: "< %{count}min"
         x_minutes:
           one: "1min"
           other: "%{count}min"
@@ -246,11 +243,11 @@ de:
     preview: "Vorschau"
     cancel: "Abbrechen"
     save: "Änderungen speichern"
-    saving: "Speichere..."
+    saving: "Speichere…"
     saved: "Gespeichert!"
     upload: "Hochladen"
-    uploading: "Wird hochgeladen..."
-    uploading_filename: "{{filename}} wird hochgeladen..."
+    uploading: "Wird hochgeladen…"
+    uploading_filename: "{{filename}} wird hochgeladen…"
     uploaded: "Hochgeladen!"
     enable: "Aktivieren"
     disable: "Deaktivieren"
@@ -402,14 +399,12 @@ de:
       latest_by: "neuester Beitrag von"
       toggle_ordering: "Reihenfolge ändern"
       subcategories: "Unterkategorien"
-      topic_stats: "Die Anzahl der neuen Themen."
+      topic_sentence:
+        one: "1 Thema"
+        other: "%{count} Themen"
       topic_stat_sentence:
         one: "1 neues Thema seit 1 %{unit}."
         other: "%{count} neue Themen seit 1 %{unit}."
-      post_stats: "Die Anzahl der neuen Beiträge."
-      post_stat_sentence:
-        one: "1 neuer Beitrag seit 1 %{unit}."
-        other: "%{count} neue Beiträge seit 1 %{unit}."
     ip_lookup:
       title: IP-Adressen-Abfrage
       hostname: Hostname
@@ -509,6 +504,9 @@ de:
       muted_topics_link: "Zeige stummgeschaltete Themen"
       watched_topics_link: "Zeige beobachtete Themen"
       automatically_unpin_topics: "Angeheftete Themen automatisch loslösen, wenn ich deren letzten Beitrag gelesen habe."
+      api_permissions: "Berechtigungen:"
+      api_read: "Lesen"
+      api_read_write: "Lesen und Schreiben"
       staff_counters:
         flags_given: "hilfreiche Meldungen"
         flagged_posts: "gemeldete Beiträge"
@@ -590,7 +588,7 @@ de:
         not_available: "Nicht verfügbar. Wie wäre es mit {{suggestion}}?"
         too_short: "Dein Benutzername ist zu kurz"
         too_long: "Dein Benutzername ist zu lang"
-        checking: "Verfügbarkeit wird geprüft..."
+        checking: "Verfügbarkeit wird geprüft…"
         enter_email: 'Benutzername gefunden; gib die zugehörige E-Mail-Adresse ein'
         prefilled: "E-Mail-Adresse entspricht diesem registrierten Benutzernamen"
       locale:
@@ -655,7 +653,7 @@ de:
         after_5_minutes: "nach 5 Minuten"
         after_10_minutes: "nach 10 Minuten"
       invited:
-        search: "zum Suchen nach Einladungen hier eingeben..."
+        search: "zum Suchen nach Einladungen hier eingeben…"
         title: "Einladungen"
         user: "Eingeladener Benutzer"
         sent: "Gesendet"
@@ -688,7 +686,7 @@ de:
         bulk_invite:
           none: "Du hast noch niemanden hierher eingeladen. Du kannst individuelle Einladungen verschicken oder eine Masseneinladung an eine Gruppe von Leuten verschicken indem du <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>eine Datei für Masseneinladung</a> hochlädst."
           text: "Masseneinladung aus Datei"
-          uploading: "Wird hochgeladen..."
+          uploading: "Wird hochgeladen…"
           success: "Die Datei wurde erfolgreich hochgeladen. Du erhältst eine Nachricht, sobald der Vorgang abgeschlossen ist."
           error: "Beim Hochladen der Datei '{{filename}}' ist ein Fehler aufgetreten: {{message}}"
       password:
@@ -756,7 +754,7 @@ de:
         sent_by: "Gesendet von"
         private_message: "Nachricht"
         the_topic: "das Thema"
-    loading: "Wird geladen..."
+    loading: "Wird geladen…"
     errors:
       prev_page: "während des Ladens"
       reasons:
@@ -793,7 +791,7 @@ de:
       rate:
         one: "ein Fehler/%{duration}"
         other: "%{count} Fehler/%{duration}"
-    learn_more: "mehr erfahren..."
+    learn_more: "mehr erfahren…"
     year: 'Jahr'
     year_desc: 'Themen, die in den letzten 365 Tagen erstellt wurden'
     month: 'Monat'
@@ -829,7 +827,7 @@ de:
       disable: "Gelöschte Beiträge anzeigen"
     private_message_info:
       title: "Nachricht"
-      invite: "Andere einladen..."
+      invite: "Andere einladen…"
       remove_allowed_user: "Willst du {{name}} wirklich aus dieser Unterhaltung entfernen?"
       remove_allowed_group: "Willst du {{name}} wirklich aus dieser Unterhaltung entfernen?"
     email: 'E-Mail-Adresse'
@@ -863,9 +861,9 @@ de:
       rate_limit: "Warte bitte ein wenig, bevor du erneut versuchst dich anzumelden."
       blank_username_or_password: "Bitte gib deine E-Mail-Adresse oder deinen Benutzernamen und dein Passwort ein."
       reset_password: 'Passwort zurücksetzen'
-      logging_in: "Anmeldung läuft..."
+      logging_in: "Anmeldung läuft…"
       or: "Oder"
-      authenticating: "Authentifiziere..."
+      authenticating: "Authentifiziere…"
       awaiting_confirmation: "Dein Konto ist noch nicht aktiviert. Verwende den 'Passwort vergessen'-Link, um eine weitere E-Mail mit Anweisungen zur Aktivierung zu erhalten."
       awaiting_approval: "Dein Konto wurde noch nicht von einem Mitarbeiter genehmigt. Du bekommst eine E-Mail, sobald das geschehen ist."
       requires_invite: "Entschuldige, der Zugriff auf dieses Forum ist nur mit einer Einladung möglich."
@@ -904,13 +902,16 @@ de:
       twitter: "Twitter"
       emoji_one: "Emoji One"
       win10: "Windows 10"
+    category_page_style:
+      categories_only: "nur Kategorien"
+      categories_and_latest_topics: "Kategorien und aktuelle Themen"
     shortcut_modifier_key:
       shift: 'Umschalt'
       ctrl: 'Strg'
       alt: 'Alt'
     composer:
       emoji: "Emoji :)"
-      more_emoji: "mehr..."
+      more_emoji: "mehr…"
       options: "Optionen"
       whisper: "flüstern"
       unlist: "unsichtbar"
@@ -918,12 +919,11 @@ de:
       toggle_whisper: "Flüstermodus umschalten"
       toggle_unlisted: "Unsichtbar umschalten"
       posting_not_on_topic: "Auf welches Thema möchtest du antworten?"
-      saving_draft_tip: "wird gespeichert..."
+      saving_draft_tip: "wird gespeichert…"
       saved_draft_tip: "gespeichert"
       saved_local_draft_tip: "lokal gespeichert"
-      similar_topics: "Dein Thema hat Ähnlichkeit mit..."
+      similar_topics: "Dein Thema hat Ähnlichkeit mit…"
       drafts_offline: "Entwürfe offline"
-      group_mentioned: "Indem du {{group}} erwähnst, bist du dabei, <a href='{{group_link}}'>{{count}} Personen</a> zu benachrichtigen – bist du dir sicher?"
       duplicate_link: "Es sieht so aus als wäre dein Link zu <b>{{domain}}</b> in dem Thema bereits von <b>@{{username}}</b> in <a href='{{post_url}}'>einer Antwort vor {{ago}}</a> geteilt worden – möchtest du ihn wirklich erneut teilen? "
       error:
         title_missing: "Titel ist erforderlich"
@@ -950,12 +950,14 @@ de:
       saving: "Wird gespeichert"
       saved: "Gespeichert!"
       saved_draft: "Ein Beitrag ist in Arbeit. Zum Fortsetzen hier klicken."
-      uploading: "Wird hochgeladen..."
+      uploading: "Wird hochgeladen…"
       show_preview: 'Vorschau anzeigen &raquo;'
       hide_preview: '&laquo; Vorschau ausblenden'
       quote_post_title: "Ganzen Beitrag zitieren"
+      bold_label: "F"
       bold_title: "Fettgedruckt"
       bold_text: "Fettgedruckter Text"
+      italic_label: "K"
       italic_title: "Betonung"
       italic_text: "Betonter Text"
       link_title: "Hyperlink"
@@ -973,6 +975,7 @@ de:
       olist_title: "Nummerierte Liste"
       ulist_title: "Liste mit Aufzählungszeichen"
       list_item: "Listenelement"
+      heading_label: "Ü"
       heading_title: "Überschrift"
       heading_text: "Überschrift"
       hr_title: "Horizontale Linie"
@@ -1075,7 +1078,7 @@ de:
       no_results: "Keine Ergebnisse gefunden."
       no_more_results: "Es wurde keine weiteren Ergebnisse gefunden."
       search_help: Hilfe zur Suche
-      searching: "Suche ..."
+      searching: "Suche …"
       post_format: "#{{post_number}} von {{username}}"
       context:
         user: "Beiträge von @{{username}} durchsuchen"
@@ -1140,7 +1143,9 @@ de:
       unsubscribe:
         stop_notifications: "Du wirst in Zukunft weniger Benachrichtigungen für <strong>{{title}}</strong> erhalten"
         change_notification_state: "Dein aktueller Benachrichtigungsstatus ist"
-      filter_to: "{{post_count}} Beiträge im Thema"
+      filter_to:
+        one: "1 Beitrag im Thema"
+        other: "{{count}} Beiträge im Thema"
       create: 'Neues Thema'
       create_long: 'Ein neues Thema erstellen'
       private_message: 'Eine Unterhaltung beginnen'
@@ -1200,11 +1205,9 @@ de:
       auto_close_title: 'Automatisches Schließen'
       auto_close_save: "Speichern"
       auto_close_remove: "Dieses Thema nicht automatisch schließen"
-      auto_close_immediate: "Der letzte Beitrag in diesem Thema ist bereits %{hours} Stunden alt. Das Thema wird daher sofort geschlossen."
       timeline:
         back: "Zurück"
         back_description: "Gehe zurück zum letzten ungelesenen Beitrag"
-        replies: "%{current} / %{total} Antworten"
         replies_short: "%{current} / %{total}"
       progress:
         title: Themen-Fortschritt
@@ -1217,7 +1220,6 @@ de:
         jump_bottom_with_number: "springe zu Beitrag %{post_number}"
         total: Beiträge insgesamt
         current: aktueller Beitrag
-        position: "Beitrag %{current} von %{total}"
       notifications:
         title: Ändere wie häufig du zu diesem Thema benachrichtigt wirst
         reasons:
@@ -1322,7 +1324,7 @@ de:
         banner_note: "Benutzer können das Ankündigungsbanner schließen und so für sich selbst dauerhaft ausblenden. Es kann zu jeder Zeit höchstens ein Thema ein Banner sein."
         no_banner_exists: "Es gibt kein Ankündigungsbanner."
         banner_exists: "Es <strong class='badge badge-notification unread'>gibt bereits</strong> ein anderes Ankündigungsbanner."
-      inviting: "Einladungen werden gesendet..."
+      inviting: "Einladungen werden gesendet…"
       automatically_add_to_groups: "Diese Einladung beinhaltet auch Zugang zu den folgenden Gruppen:"
       invite_private:
         title: 'Zu einer Unterhaltung einladen'
@@ -1421,7 +1423,6 @@ de:
       gap:
         one: "einen versteckten Beitrag anzeigen"
         other: "{{count}} versteckte Beiträge anzeigen"
-      more_links: "{{count}} weitere..."
       unread: "Beitrag ist ungelesen"
       has_replies:
         one: "{{count}} Antwort"
@@ -1490,14 +1491,6 @@ de:
         defer_flags:
           one: "Meldung ignorieren"
           other: "Meldungen ignorieren"
-        it_too:
-          off_topic: "Melde es auch"
-          spam: "Melde es auch"
-          inappropriate: "Melde es auch"
-          custom_flag: "Melde es auch"
-          bookmark: "Setze auch ein Lesezeichen"
-          like: "Gefällt mir auch"
-          vote: "Stimme auch dafür"
         undo:
           off_topic: "Meldung widerrufen"
           spam: "Meldung widerrufen"
@@ -1683,7 +1676,6 @@ de:
       notify_action: 'Nachricht'
       official_warning: 'Offizielle Warnung'
       delete_spammer: "Spammer löschen"
-      delete_confirm: "Du wirst <b>%{posts}</b> Beiträge und <b>%{topics}</b> Themen von diesem Benutzer löschen, sein Konto entfernen, seine IP-Adresse <b>%{ip_address}</b> für Neuanmeldungen sperren und die E-Mail-Adresse <b>%{ip_address}</b> auf eine permanente Sperrliste setzen. Bist du dir sicher, dass dieser Benutzer wirklich ein Spammer ist?"
       yes_delete_spammer: "Ja, lösche den Spammer"
       ip_address_missing: "(nicht verfügbar)"
       hidden_email_address: "(versteckt)"
@@ -1698,9 +1690,12 @@ de:
       custom_placeholder_notify_user: "Sei konkret, konstruktiv und immer freundlich."
       custom_placeholder_notify_moderators: "Bitte lass uns wissen, was genau dich beunruhigt. Verweise, wenn möglich, auf relevante Links und Beispiele."
       custom_message:
-        at_least: "gib mindestens {{n}} Zeichen ein"
-        more: "{{n}} weitere..."
-        left: "{{n}} übrig"
+        at_least:
+          one: "gib mindestens ein Zeichen ein"
+          other: "gib mindestens {{count}} Zeichen ein"
+        more:
+          one: "eine weitere…"
+          other: "{{count}} weitere…"
     flagging_topic:
       title: "Danke für deine Mithilfe!"
       action: "Thema melden"
@@ -1709,7 +1704,7 @@ de:
       title: "Zusammenfassung des Themas"
       participants_title: "Autoren vieler Beiträge"
       links_title: "Beliebte Links"
-      links_shown: "mehr Links anzeigen..."
+      links_shown: "mehr Links anzeigen…"
       clicks:
         one: "1 Klick"
         other: "%{count} Klicks"
@@ -1741,7 +1736,6 @@ de:
       invisible:
         help: "Dieses Thema ist unsichtbar. Es wird in keiner Themenliste angezeigt und kann nur mit einem direkten Link betrachtet werden."
     posts: "Beiträge"
-    posts_lowercase: "Beiträge"
     posts_long: "dieses Thema enthält {{number}} Beiträge"
     posts_likes_MF: |
       Dieses Thema hat {count, plural, one {1 Antwort} other {# Antworten}} {ratio, select, low {mit einem hohen Verhältnis von Likes zu Beiträgen} med {mit einem sehr hohen Verhältnis von Likes zu Beiträgen} high {mit einem extrem hohen Verhältnis von Likes zu Beiträgen} other {}}
@@ -2022,7 +2016,7 @@ de:
       custom_message_template_forum: "Hey, du solltest diesem Forum beitreten!"
       custom_message_template_topic: "Hey, ich dachte, dir könnte dieses Thema gefallen!"
   admin_js:
-    type_to_filter: "zum Filtern hier eingeben..."
+    type_to_filter: "zum Filtern hier eingeben…"
     admin:
       title: 'Discourse-Administrator'
       moderator: 'Moderator'
@@ -2082,7 +2076,7 @@ de:
         active: "Aktiv"
         agree: "Zustimmen"
         agree_title: "Meldung bestätigen, weil diese gültig und richtig ist"
-        agree_flag_modal_title: "Zustimmen und..."
+        agree_flag_modal_title: "Zustimmen und…"
         agree_flag_hide_post: "Zustimmen (Beitrag ausblenden + PN senden)"
         agree_flag_hide_post_title: "Diesen Beitrag ausblenden und den Benutzer mit einer automatisch gesendeten Nachricht zum Bearbeiten des Beitrags auffordern."
         agree_flag_restore_post: "Zustimmen (Beitrag wiederherstellen)"
@@ -2097,7 +2091,7 @@ de:
         delete_post_defer_flag_title: "Beitrag löschen; das Thema löschen, wenn es sich um den ersten Beitrag handelt"
         delete_post_agree_flag: "Beitrag löschen und der Meldung zustimmen"
         delete_post_agree_flag_title: "Beitrag löschen; das Thema löschen, wenn es sich um den ersten Beitrag handelt"
-        delete_flag_modal_title: "Löschen und..."
+        delete_flag_modal_title: "Löschen und…"
         delete_spammer: "Spammer löschen"
         delete_spammer_title: "Lösche den Benutzer und alle seine Beiträge und Themen."
         disagree_flag_unhide_post: "Ablehnen (Beitrag einblenden)"
@@ -2106,7 +2100,7 @@ de:
         disagree_flag_title: "Meldung ablehnen, weil diese ungültig oder falsch ist"
         clear_topic_flags: "Erledigt"
         clear_topic_flags_title: "Das Thema wurde untersucht und Probleme wurden beseitigt. Klicke auf „Erledigt“, um die Meldungen zu entfernen."
-        more: "(weitere Antworten...)"
+        more: "(weitere Antworten…)"
         dispositions:
           agreed: "zugestimmt"
           disagreed: "abgelehnt"
@@ -2171,6 +2165,7 @@ de:
         add_owners: Eigentümer hinzufügen
         incoming_email: "Benutzerdefinierte Adresse für eingehende E-Mails"
         incoming_email_placeholder: "E-Mail-Adresse eingeben"
+        flair_preview: "Vorschau"
       api:
         generate_master: "Master API Key erzeugen"
         none: "Es gibt momentan keine aktiven API-Keys"
@@ -2212,18 +2207,18 @@ de:
             title: "Nur-Lesen-Modus deaktivieren"
             label: "Nur-Lesen-Modus deaktivieren"
         logs:
-          none: "Noch keine Protokolleinträge verfügbar..."
+          none: "Noch keine Protokolleinträge verfügbar…"
         columns:
           filename: "Dateiname"
           size: "Größe"
         upload:
           label: "Hochladen"
           title: "Eine Sicherung zu dieser Instanz hochladen"
-          uploading: "Wird hochgeladen..."
+          uploading: "Wird hochgeladen…"
           success: "'{{filename}}' wurde erfolgreich hochgeladen."
           error: "Beim Hochladen der Datei '{{filename}}' ist ein Fehler aufgetreten: {{message}}"
         operations:
-          is_running: "Ein Vorgang läuft gerade..."
+          is_running: "Ein Vorgang läuft gerade…"
           failed: "Der Vorgang '{{operation}}' ist fehlgeschlagen. Bitte überprüfe die Logs."
           cancel:
             label: "Abbrechen"
@@ -2356,7 +2351,7 @@ de:
         settings: "Einstellungen"
         templates: "Vorlagen"
         preview_digest: "Vorschau auf Neuigkeiten anzeigen"
-        sending_test: "Versende Test-E-Mail..."
+        sending_test: "Versende Test-E-Mail…"
         error: "<b>FEHLER</b> - %{server_error}"
         test_error: "Es gab ein Problem beim Senden der Test-E-Mail. Bitte überprüfe nochmals deine E-Mail-Einstellungen, stelle sicher dass dein Anbieter keine E-Mail-Verbindungen blockiert und probiere es erneut."
         sent: "Gesendet"
@@ -2399,7 +2394,7 @@ de:
             from_placeholder: "von@example.com"
             to_placeholder: "an@example.com"
             cc_placeholder: "cc@example.com"
-            subject_placeholder: "Betreff..."
+            subject_placeholder: "Betreff…"
             error_placeholder: "Fehler"
         logs:
           none: "Keine Protokolleinträge gefunden."
@@ -2407,7 +2402,7 @@ de:
             title: "Filter"
             user_placeholder: "Benutzername"
             address_placeholder: "name@example.com"
-            type_placeholder: "zusammenfassen, registrieren..."
+            type_placeholder: "zusammenfassen, registrieren…"
             reply_key_placeholder: "Antwort-Schlüssel"
             skipped_reason_placeholder: "Grund"
       logs:
@@ -2568,7 +2563,6 @@ de:
         suspend_reason: "Grund"
         suspended_by: "Gesperrt von"
         delete_all_posts: "Lösche alle Beiträge"
-        delete_all_posts_confirm: "Du wirst %{posts} Beiträge und %{topics} Themen löschen. Bist du dir sicher?"
         suspend: "Sperren"
         unsuspend: "Entsperren"
         suspended: "Gesperrt?"
@@ -2664,7 +2658,9 @@ de:
         unlock_trust_level: "Vertrauensstufe entsperren"
         tl3_requirements:
           title: "Anforderungen für Vertrauensstufe 3"
-          table_title: "In den letzten %{time_period} Tagen:"
+          table_title:
+            one: "Innerhalb des letzten Tages:"
+            other: "In den letzten %{count} Tagen:"
           value_heading: "Wert"
           requirement_heading: "Anforderung"
           visits: "Aufrufe"

@@ -45,8 +45,6 @@ ja:
           other: "%{count}秒前"
         x_seconds:
           other: "%{count}秒"
-        less_than_x_minutes:
-          other: "%{count}分以内"
         x_minutes:
           other: "%{count}分前"
         about_x_hours:
@@ -356,12 +354,8 @@ ja:
       latest_by: "最新投稿: "
       toggle_ordering: "カテゴリの並び替えモードを切り替え"
       subcategories: "サブカテゴリ:"
-      topic_stats: "新しいトピックの数"
       topic_stat_sentence:
         other: "過去 %{unit} 間 %{count} 個の新着トピック。"
-      post_stats: "新しい投稿の数"
-      post_stat_sentence:
-        other: "過去 %{unit} 間 %{count} 個の新しい投稿。"
     ip_lookup:
       title: IPアドレスを検索
       hostname: ホスト名
@@ -984,7 +978,6 @@ ja:
         bookmarks: "ブックマーク済みのトピックはこれ以上ありません。"
         search: "検索結果は以上です。"
     topic:
-      filter_to: "トピック内の{{post_count}}個のポストを表示"
       create: '新規トピック'
       create_long: '新しいトピックの作成'
       private_message: 'メッセージを書く'
@@ -1049,7 +1042,6 @@ ja:
         jump_bottom_with_number: "%{post_number}番へジャンプ"
         total: 投稿の合計
         current: 現在の投稿
-        position: "投稿: %{current}/%{total}"
       notifications:
         reasons:
           '3_6': 'このカテゴリに参加中のため通知されます'
@@ -1225,7 +1217,6 @@ ja:
       expand_collapse: "開く/折りたたみ"
       gap:
         other: "{{count}}個の返信をすべて表示する"
-      more_links: "{{count}} つのリンク..."
       unread: "未読の投稿"
       has_replies:
         other: "{{count}} 件の返信"
@@ -1280,14 +1271,6 @@ ja:
         flag: '通報'
         defer_flags:
           other: "取り下げた通報"
-        it_too:
-          off_topic: "通報する"
-          spam: "通報する"
-          inappropriate: "通報する"
-          custom_flag: "通報する"
-          bookmark: "ブックマークする"
-          like: "あなたも「いいね！」する"
-          vote: "投票する"
         undo:
           off_topic: "通報を取り消す"
           spam: "通報を取り消す"
@@ -1432,7 +1415,6 @@ ja:
       take_action: "アクションをする"
       notify_action: 'メッセージ'
       delete_spammer: "スパムの削除"
-      delete_confirm: "このユーザのアカウントと、<b>%{posts}</b>個の投稿、<b>%{topics}</b>個のトピックを削除し、メールアドレス <b>%{email}</b> をブロックリストに追加しようとしています。本当にこのユーザをスパムユーザーとして認識してもよろしいですか?"
       yes_delete_spammer: "はい、スパムを削除する"
       ip_address_missing: "(N/A)"
       hidden_email_address: "(hidden)"
@@ -1445,10 +1427,6 @@ ja:
         spam: "スパム"
       custom_placeholder_notify_user: "具体的に、建設的に、そして常に親切にしましょう。"
       custom_placeholder_notify_moderators: "特にどのような問題が発生しているか記入して下さい。可能なら、関連するリンクなどを教えて下さい。"
-      custom_message:
-        at_least: "少なくとも{{n}}文字入力してください"
-        more: "あと{{n}}文字..."
-        left: "残り{{n}}文字"
     flagging_topic:
       title: "報告していただきありがとうございます。"
       action: "トピックを通報"
@@ -1481,7 +1459,6 @@ ja:
       invisible:
         help: "このトピックはリストされていません。トピックリストには表示されません。直接リンクでのみアクセス可能です"
     posts: "投稿"
-    posts_lowercase: "投稿"
     posts_long: "このトピックには{{number}}個の投稿があります"
     posts_likes_MF: |
       This topic has {count, plural, one {1 reply} other {# replies}} {ratio, select,
@@ -2146,7 +2123,6 @@ ja:
         suspend_reason: "理由"
         suspended_by: "凍結したユーザ"
         delete_all_posts: "全ての投稿を削除"
-        delete_all_posts_confirm: "%{posts}件の投稿と%{topics}個のトピックが削除されます。よろしいですか?"
         suspend: "凍結"
         unsuspend: "凍結解除"
         suspended: "凍結状態"
@@ -2230,7 +2206,6 @@ ja:
         unlock_trust_level: "トラストレベルをアンロック"
         tl3_requirements:
           title: "トラストレベル3の条件"
-          table_title: "過去%{time_period} 日間に"
           value_heading: "値"
           requirement_heading: "条件"
           visits: "訪問"

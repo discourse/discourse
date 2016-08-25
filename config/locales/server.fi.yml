@@ -241,7 +241,7 @@ fi:
       Voit muokata edellistä viestiäsi ja lisätä siihen lainauksen korostamalla osan lainattavan viestin tekstiä ja klikkaamalla näkyviin ilmestyvää <b>lainaa</b>-painiketta.
 
       On kaikille helpompaa lukea ketjua, jossa on vähemmän pidempiä vastauksia, kuin paljon lyhyitä yksittäisiä vastauksia.
-    dominating_topic: |
+    dominating_topic: |+
       ### Anna muidenkin osallistua keskusteluun
 
       Tämä ketju on selvästikin tärkeä sinulle &ndash; olet kirjoittanut yli %{percent}% vastauksista.
@@ -308,7 +308,7 @@ fi:
   assets_topic_body: "Tämä on pysyvä ketju, joka näkyy ainoastaan henkilökunnalle. Se on tarkoitettu sivuston käyttämien kuvien ja muiden tiedostojen tallentamiseen. Älä poista sitä!\n\n\nTässä ova ohjeet sen käyttämiseen:\n\n\n1. Vastaa tähän ketjuun.\n2. Lataa kaikki kuvat, joita haluat käyttää logoina, faviconina jne tänne. (Käytä viestieditorin työkalupalkin painiketta, tai raahaa tai liitä kuvat).\n3. Lähetä viesti\n4. Klikkaa hiiren oikealla näppäimellä, tai klikkaa muokkaa-näppäintä muokataksesi viestiäsi, jotta saat kuvien polun näkyviin. Kopioi talteen polut kuviin.\n5. Liitä kuvien polut [perusasetuksiin](/admin/site_settings/category/required).\n\n\nLisäksi, jos sinun täytyy sallia uusia tiedostomuotoja, muokkaa `sallitut tiedostopäätteet` listaa [tiedostojen asetuksissa](/admin/site_settings/category/files)."
   lounge_welcome:
     title: "Tervetuloa Loungeen"
-    body: |
+    body: |2
 
       Onnittelut! :confetti_ball:
 
@@ -1176,7 +1176,6 @@ fi:
     tag_style: "Tunnisteiden visuaalinen tyyli."
     staff_tags: "Lista tunnisteista, joita vain henkilökunta voi lisätä"
     min_trust_level_to_tag_topics: "Vähimmäisluottamustaso, jolla voi lisätä tunnisteita ketjuihin"
-    suppress_overlapping_tags_in_list: "Piilota tunnisteet listanäkymistä, jos ne menevät otsikon kanssa päällekkäin"
     remove_muted_tags_from_latest: "Jos tunniste on vaimennettu, älä näytä ketjua Tuoreimmissa."
     errors:
       invalid_email: "Sähköpostiosoite ei kelpaa."
@@ -1656,16 +1655,6 @@ fi:
         [prefs]: %{user_preferences_url}
     backup_succeeded:
       subject_template: "Varmuuskopiointi suoritettu onnistuneesti"
-      text_body_template: |
-        Varmuuskopiointi onnistui.
-
-        Lataa varmuuskopio siirtymällä [ylläpito > varmuuskopiot](%{base_url}/admin/backups).
-
-        Tässä loki:
-
-        ```text
-        %{logs}
-        ```
     backup_failed:
       subject_template: "Varmmuskopiointi epäonnistui"
       text_body_template: |
@@ -1734,7 +1723,7 @@ fi:
         Vastauksesi lähetettiin tuntemattomasta sähköpostiosoitteesta. Yritä lähettää viesti toisesta osoitteesta, tai ota yhteyttä henkilökuntaan.
     email_reject_screened_email:
       subject_template: "[%{site_name}] Sähköpostiongelma-- Estetty sähköpostiosoite"
-      text_body_template: |
+      text_body_template: |+
         Pahoittelemme, mutta sähköpostin lähettäminen tänne %{destination} (otsikolla %{former_title}) ei onnistunut.
 
         Viestisi lähetettiin estetystä sähköpostiosoitteesta. Yritä lähettää viesti toisesta sähköpostiosoitteesta tai ota yhteyttä henkilökuntaan.
@@ -1765,7 +1754,7 @@ fi:
         Sähköpostiosoitteesi ei vastaa yhtäkään käyttäjistä. Kokeile lähettää viestisi toisesta sähköpostiosoitteesta tai ota yhteyttä henkilökuntaan.
     email_reject_empty:
       subject_template: "[%{site_name}] Sähköpostiongelma -- Ei sisältöä"
-      text_body_template: |
+      text_body_template: |+
         Pahoittelemme, mutta sähköpostin lähettäminen tänne %{destination} (otsikolla %{former_title}) ei onnistunut.
 
         Emme löytäneet sähköpostiviestistäsi sisältöä.
@@ -2086,7 +2075,7 @@ fi:
         %{respond_instructions}
     user_posted_pm_staged:
       subject_template: "%{optional_re}%{topic_title}"
-      text_body_template: |
+      text_body_template: |2
 
         %{message}
     digest:
@@ -2152,7 +2141,7 @@ fi:
         %{base_url}/users/authorize-email/%{email_token}
     confirm_old_email:
       subject_template: "[%{site_name}] Vahvista nykyinen sähköpostiosoiteesi"
-      text_body_template: |
+      text_body_template: |+
         Ennen kuin voit vaihtaa sähköpostiosoitteesti, meidän täytyy varmistaa, että hallinnoit nykyistä sähköpostiosoitetta. Kun olet suorittanut tämän, varmistamme vielä uuden sähköpostiosoitteenkin.
 
         Vahvista sähköpostiosoitteesti sivustolle %{site_name} klikkaamalla linkkiä:
@@ -2360,7 +2349,7 @@ fi:
   privacy_topic:
     title: "Rekisteriseloste"
   static:
-    search_help: |
+    search_help: |+
       <h3>Vinkkejä</h3>
       <p>
       <ul>
@@ -2458,13 +2447,13 @@ fi:
     great_topic:
       name: Loistava ketju
       description: Ketjunavaus sai 50 tykkäystä
-      long_description: |
+      long_description: |+
         Tämä arvomerkki myönnetään, kun luomasi ketju saa 50 tykkäystä. Aloitit kiehtovan keskustelun, jossa vaihdetuista ajatuksista yhteisö nautti!
 
     nice_share:
       name: Hyvä jako
       description: Jakoi viestin, ja linkin kautta saapui 25 vierailijaa
-      long_description: |
+      long_description: |+
         Tämä arvomerkki myönnetään, kun jaat linkin, jota klikkaa 25 ulkopuolista vierailijaa. Kiitos kun levität sanaa palstan keskusteluista ja yhteisöstä.
 
     good_share:

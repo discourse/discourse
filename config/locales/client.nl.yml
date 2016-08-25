@@ -48,9 +48,6 @@ nl:
         x_seconds:
           one: "1s"
           other: "%{count}s"
-        less_than_x_minutes:
-          one: "< 1m"
-          other: "< %{count}m"
         x_minutes:
           one: "1m"
           other: "%{count}m"
@@ -402,14 +399,9 @@ nl:
       latest_by: "Laatste door"
       toggle_ordering: "schakel sorteermethode"
       subcategories: "Subcategorieën"
-      topic_stats: "Het aantal nieuwe topics."
       topic_stat_sentence:
         one: "%{count} nieuw topic in de afgelopen %{unit}."
         other: "%{count} nieuwe topics in de afgelopen %{unit}."
-      post_stats: "Het aantal nieuwe berichten."
-      post_stat_sentence:
-        one: "%{count} nieuw bericht in de afgelopen %{unit}."
-        other: "%{count} nieuwe berichten in de afgelopen %{unit}."
     ip_lookup:
       title: IP-adres lookup
       hostname: Hostname
@@ -919,7 +911,6 @@ nl:
       saved_local_draft_tip: "lokaal opgeslagen"
       similar_topics: "Jouw topic lijkt op..."
       drafts_offline: "concepten offline"
-      group_mentioned: "Door het noemen van {{group}}, sta je op het punt om <a href='{{group_link}}'>{{count}} mensen</a> op de hoogte te brengen - weet je dit zeker?"
       duplicate_link: "Het ziet er naar uit dat je link naar <b>{{domain}}</b> al genoemd is in deze topic door <b>@{{username}}</b> in <a href='{{post_url}}'>een bericht {{ago}}</a> – weet je zeker dat je dit opnieuw wilt posten?"
       error:
         title_missing: "Titel is verplicht"
@@ -1136,7 +1127,6 @@ nl:
       unsubscribe:
         stop_notifications: "Je zal nu minder notificaties ontvangen voor <strong>{{title}}</strong>"
         change_notification_state: "Je huidige notificatiestatus is"
-      filter_to: "{{post_count}} berichten in topic"
       create: 'Nieuw topic'
       create_long: 'Maak een nieuw topic'
       private_message: 'Stuur een bericht'
@@ -1196,11 +1186,9 @@ nl:
       auto_close_title: 'Instellingen voor automatisch sluiten'
       auto_close_save: "Opslaan"
       auto_close_remove: "Sluit deze topic niet automatisch"
-      auto_close_immediate: "De laatste post in deze topic is al %{hours} uur oud, dus deze topic wordt meteen gesloten."
       timeline:
         back: "Terug"
         back_description: "Keer terug naar je laatste ongelezen bericht"
-        replies: "%{current} / %{total} antwoorden"
         replies_short: "%{current} / %{total}"
       progress:
         title: topicvoortgang
@@ -1213,7 +1201,6 @@ nl:
         jump_bottom_with_number: "spring naar bericht %{post_number}"
         total: totaal aantal berichten
         current: huidige bericht
-        position: "bericht %{current} van %{total}"
       notifications:
         title: verander de frequentie van notificaties over deze topic
         reasons:
@@ -1416,7 +1403,6 @@ nl:
       gap:
         one: "bekijk 1 verborgen reactie"
         other: "bekijk {{count}} verborgen reacties"
-      more_links: "{{count}} meer..."
       unread: "Bericht is ongelezen"
       has_replies:
         one: "{{count}} Reactie"
@@ -1485,14 +1471,6 @@ nl:
         defer_flags:
           one: "Markering negeren"
           other: "Markeringen negeren"
-        it_too:
-          off_topic: "Markeer het ook"
-          spam: "Markeer het ook"
-          inappropriate: "Markeer deze ook"
-          custom_flag: "Markeer het ook"
-          bookmark: "Voeg ook toe aan favorieten"
-          like: "Like het ook"
-          vote: "Stem ook"
         undo:
           off_topic: "Verwijder markering"
           spam: "Verwijder markering"
@@ -1678,7 +1656,6 @@ nl:
       notify_action: 'Bericht'
       official_warning: 'Officiële waarschuwing'
       delete_spammer: "Verwijder spammer"
-      delete_confirm: "Je gaat nu <b>%{posts}</b> berichten en <b>%{topics}</b> topics van deze gebruiker verwijderen, het account verwijderen, nieuwe aanmeldingen vanaf het IP-adres <b>%{ip_address}</b> blokkeren en het e-mailadres <b>%{email}</b> op een permanente blokkeerlijst zetten. Weet je zeker dat dit een spammer is?"
       yes_delete_spammer: "Ja, verwijder spammer"
       ip_address_missing: "(N.V.T.)"
       hidden_email_address: "(verborgen)"
@@ -1692,10 +1669,6 @@ nl:
         spam: "Dit is spam"
       custom_placeholder_notify_user: "Wees specifiek, opbouwend en blijf altijd beleefd."
       custom_placeholder_notify_moderators: "Laat ons specifiek weten waar je je zorgen om maakt en stuur relevante links en voorbeelden mee waar mogelijk."
-      custom_message:
-        at_least: "Gebruik ten minste {{n}} tekens"
-        more: "Nog {{n}} te gaan..."
-        left: "Nog {{n}}"
     flagging_topic:
       title: "Bedankt voor het helpen beleefd houden van onze gemeenschap!"
       action: "Markeer topic"
@@ -1736,7 +1709,6 @@ nl:
       invisible:
         help: "Dit topic is niet zichtbaar; het zal niet verschijnen in de topiclijst en kan alleen bekeken worden met een directe link"
     posts: "Berichten"
-    posts_lowercase: "berichten"
     posts_long: "er zijn {{number}} berichten in deze topic"
     posts_likes_MF: |
       Dit topic heeft {count, plural, one {1 antwoord} other {# antwoorden}} {ratio, select,
@@ -2567,7 +2539,6 @@ nl:
         suspend_reason: "Reden"
         suspended_by: "Geschorst door"
         delete_all_posts: "Verwijder alle berichten"
-        delete_all_posts_confirm: "Je staat op het punt om %{posts} berichten en %{topics} topics verwijderen. Weet je het zeker?"
         suspend: "Schors"
         unsuspend: "Herstel schorsing"
         suspended: "Geschorst?"
@@ -2663,7 +2634,6 @@ nl:
         unlock_trust_level: "Geef trustlevel vrij"
         tl3_requirements:
           title: "Vereisten voor trustlevel 3"
-          table_title: "In de laatste %{time_period} dagen:"
           value_heading: "Waarde"
           requirement_heading: "Vereiste"
           visits: "Bezoeken"

@@ -286,7 +286,7 @@ sk:
   assets_topic_body: "Toto je permanentná téma, viditeľná len pre redaktorov, na uchovávanie obrázkov a súborov použitých v dizajne tohto webu. Nezmazávajte ju!\n\n\nTu je návod:\n\n\n1. Odpovedzte na túto tému.\n2. Nahrajte sem všetky obrázky, ktoré si prajete použit pre logá, favikony a pod. (Použite ikonku „nahrať“ v paneli nástrojov editora, alebo obrázky potiahnite alebo „vložte“)\n3. Odošlite svoju odpoveď.\n4. Pre získanie adresy k nahratým obrázkom kliknite pravým tlačítkom na obrázky vo svojom novom príspevku, alebo kliknite na ikonku úpravy príspevku a následne si adresu skopírujte. \n5. Cesty k obrázkom vložte do [základného nastavenia](/admin/site_settings/category/required).\n\n\nAk potrebujete povoliť nahratie pre iné typy súborov, upravte `authorized_extensions` v [nastavení súborov](/admin/site_settings/category/files)."
   lounge_welcome:
     title: "Vítajte v Salóne"
-    body: |
+    body: |2
 
       Gratulácia! :confetti_ball:
 
@@ -1424,7 +1424,7 @@ sk:
   csv_export:
     boolean_yes: "Áno"
     boolean_no: "Nie"
-  static_topic_first_reply: |
+  static_topic_first_reply: |+
     Upravte prvý príspevok v téme pre zmenu obsahu %{page_name} stránky.
 
   guidelines_topic:

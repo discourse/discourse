@@ -310,7 +310,7 @@ sv:
   assets_topic_body: "Detta är ett permanent ämne, endast synligt för personal, med syfte att lagra bilder och filer som ska användas till webbplatsens design. Radera ej detta ämne!\n\n\nSå här fungerar det:\n\n\n1. Svara på detta ämne.\n2. Ladda upp alla bilder du vill använda som logotyp, favicon och så vidare här. (Använd verktygfältets uppladdningsikon i inläggsredigeraren, eller dra-och-släpp eller klistra in bilder)\n3. Skicka ditt svar för att posta det.\n4. Högerklicka på bilderna i ditt nya inlägg för att få sökvägen till de uppladdade bilderna, eller klicka på redigera-ikonen för att redigera inlägget och på så sätt hämta sökvägen till bilderna. Kopiera bildernas sökväg. \n5. Klistra in bildernas sökvägar i de [grundläggande inställningarna](/admin/site_settings/category/required).\n\n\nOm du behöver möjliggöra uppladdning av flera olika filtyper, redigera `authorized_extensions` i [inställningarna för filer](/admin/site_settings/category/files)."
   lounge_welcome:
     title: "Välkommen till loungen"
-    body: |
+    body: |2
 
       Grattis! :confetti_ball:
 
@@ -1167,7 +1167,6 @@ sv:
     tag_style: "Visuell stil för tagg-utmärkelser."
     staff_tags: "En lista av taggar som endast kan användas av personalen"
     min_trust_level_to_tag_topics: "Lägsta förtroendenivå som krävs för att tagga ämnen"
-    suppress_overlapping_tags_in_list: "Dölj taggar från listvyer om de överlappar med titeln"
     remove_muted_tags_from_latest: "Visa inte ämnen som taggats med dolda taggar i listan med senaste ämnen."
     errors:
       invalid_email: "Felaktig e-postadress."
@@ -1959,7 +1958,7 @@ sv:
         %{respond_instructions}
     user_posted_pm_staged:
       subject_template: "%{optional_re}%{topic_title}"
-      text_body_template: |
+      text_body_template: |2
 
         %{message}
     digest:
@@ -2129,7 +2128,7 @@ sv:
     Redigera det första inlägget i det här ämnet för att ändra innehållet i %{page_name} sidan.
   guidelines_topic:
     title: "FAQ/Riktlinjer"
-    body: |
+    body: |+
       <a name="civilized"></a>
 
       ## [Det här är ett civiliserat forum för allmän diskussion](#civilized)
