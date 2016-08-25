@@ -18,7 +18,7 @@ task 'posts:fix_letter_avatars' => :environment do
   rebaked = 0
   total = search.count
 
-  search.order(updated_at: :asc).find_each do |post|
+  search.find_each do |post|
     rebake_post(post)
     print_status(rebaked += 1, total)
   end
@@ -48,7 +48,7 @@ task 'posts:rebake_match', [:pattern, :type] => [:environment] do |_,args|
   rebaked = 0
   total = search.count
 
-  search.order(updated_at: :asc).find_each do |post|
+  search.find_each do |post|
     rebake_post(post)
     print_status(rebaked += 1, total)
   end
@@ -71,7 +71,7 @@ def rebake_posts(opts = {})
   total = Post.count
   rebaked = 0
 
-  Post.order(updated_at: :asc).find_each do |post|
+  Post.find_each do |post|
     rebake_post(post, opts)
     print_status(rebaked += 1, total)
   end
