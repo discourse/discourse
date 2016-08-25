@@ -64,6 +64,7 @@ module PrettyText
     manifest = File.read("#{Rails.root}/app/assets/javascripts/pretty-text-bundle.js")
     root_path = "#{Rails.root}/app/assets/javascripts/"
     manifest.each_line do |l|
+      l = l.chomp
       if l =~ /\/\/= require (\.\/)?(.*)$/
         apply_es6_file(ctx, root_path, Regexp.last_match[2])
       elsif l =~ /\/\/= require_tree (\.\/)?(.*)$/
