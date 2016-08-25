@@ -86,11 +86,11 @@ module Jobs
       end
 
       def content
-        @article_rss_item.content.try(:scrub) || @article_rss_item.description.try(:scrub)
+        @article_rss_item.content.try(:force_encoding, "UTF-8").try(:scrub) || @article_rss_item.description.try(:force_encoding, "UTF-8").try(:scrub)
       end
 
       def title
-        @article_rss_item.title.scrub
+        @article_rss_item.title.force_encoding("UTF-8").scrub
       end
 
       def user
