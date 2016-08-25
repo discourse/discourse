@@ -163,6 +163,7 @@ Discourse::Application.routes.draw do
     get "customize/permalinks" => "permalinks#index", constraints: AdminConstraint.new
     get "customize/embedding" => "embedding#show", constraints: AdminConstraint.new
     put "customize/embedding" => "embedding#update", constraints: AdminConstraint.new
+
     get "flags" => "flags#index"
     get "flags/:filter" => "flags#index"
     post "flags/agree/:id" => "flags#agree"
@@ -250,6 +251,8 @@ Discourse::Application.routes.draw do
   get "email/unsubscribe/:key" => "email#unsubscribe", as: "email_unsubscribe"
   get "email/unsubscribed" => "email#unsubscribed", as: "email_unsubscribed"
   post "email/unsubscribe/:key" => "email#perform_unsubscribe", as: "email_perform_unsubscribe"
+
+  get "extra-locales/:bundle" => "extra_locales#show"
 
   resources :session, id: USERNAME_ROUTE_FORMAT, only: [:create, :destroy, :become] do
     get 'become'
