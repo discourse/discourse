@@ -49,10 +49,6 @@ bs_BA:
           one: "1 sekunda"
           few: "%{count} sekundi"
           other: "%{count} sekundi"
-        less_than_x_minutes:
-          one: "<1 minuta"
-          few: "%{count} minuta"
-          other: "%{count} minuta"
         date_month: "MMM D"
         date_year: "MMM 'YY"
       medium:
@@ -368,8 +364,6 @@ bs_BA:
       latest_by: "zadnje od"
       toggle_ordering: "toggle ordering control"
       subcategories: "Podkategorije"
-      topic_stats: "Broj novih tema."
-      post_stats: "Broj novih postova."
     ip_lookup:
       title: IP Address Lookup
       hostname: Hostname
@@ -911,7 +905,6 @@ bs_BA:
         category: "Nema više tema na kategoriji {{category}}."
         top: "Nema više popularnih tema."
     topic:
-      filter_to: "{{post_count}} odgovora u temi"
       create: 'Započni Temu'
       create_long: 'Započni novu Temu'
       private_message: 'Započni privatnu konverzaciju'
@@ -955,7 +948,6 @@ bs_BA:
         jump_bottom_with_number: "skoči na post %{post_number}"
         total: ukupan broj
         current: trenutni post
-        position: "post %{current} od %{total}"
       notifications:
         reasons:
           '3_6': 'Dobijat ćete notifikacije zato što motrite ovu temu.'
@@ -1078,7 +1070,6 @@ bs_BA:
       show_full: "Pogledaj Cijeli Post"
       show_hidden: 'Pogledaj sakriven sadržaj.'
       expand_collapse: "digni/spusti"
-      more_links: "{{count}} više..."
       unread: "Post je nepročitan"
       errors:
         create: "Sorry, there was an error creating your post. Please try again."
@@ -1120,14 +1111,6 @@ bs_BA:
         unhide: "Unhide"
       actions:
         flag: 'Opomena'
-        it_too:
-          off_topic: "Opomeni i ti"
-          spam: "Opomeni i ti"
-          inappropriate: "Opomeni i ti"
-          custom_flag: "Opomeni i ti"
-          bookmark: "Bookmark it too"
-          like: "Lajkuj i ti"
-          vote: "Glasaj i ti"
         undo:
           off_topic: "Otkaži opomenu"
           spam: "Otkaži opomenu"
@@ -1225,7 +1208,6 @@ bs_BA:
       take_action: "Poduzmi Akciju"
       notify_action: 'Privatna Poruka'
       delete_spammer: "Obriši Spamera"
-      delete_confirm: "You are about to delete <b>%{posts}</b> posts and <b>%{topics}</b> topics from this user, remove their account, block signups from their IP address <b>%{ip_address}</b>, and add their email address <b>%{email}</b> to a permanent block list. Are you sure this user is really a spammer?"
       yes_delete_spammer: "Da, Obriši Spamera"
       ip_address_missing: "(N/A)"
       hidden_email_address: "(hidden)"
@@ -1234,10 +1216,6 @@ bs_BA:
       cant: "Nažalost, ne možete opomenuti ovaj post trenutno."
       custom_placeholder_notify_user: "Zašto ovaj post nalaže da kontaktirate korisnika privatno. Budite detaljni, pristojni i korektni."
       custom_placeholder_notify_moderators: "Zašto ovaj post zaslužuje pažnju moderatora. Navedite vaš razlog po mogućnosti ostavite link ako je nužno."
-      custom_message:
-        at_least: "enter at least {{n}} characters"
-        more: "{{n}} to go..."
-        left: "{{n}} remaining"
     flagging_topic:
       title: "Zašto privatno opominjete ovu temu?"
       action: "Opomeni Temu"
@@ -1262,7 +1240,6 @@ bs_BA:
       invisible:
         help: "Ovu temu sajt ne lista među najnovijim temama. Neće biti prisutna ni među listama tema unutar kategorija. Jedini način da se dođe do ove teme je direktan link"
     posts: "Odgovori"
-    posts_lowercase: "odgovori"
     posts_long: "postoji {{number}} odgovora u ovoj temi"
     posts_likes_MF: |
       This topic has {count, plural, one {1 post} other {# posts}} {ratio, select,
@@ -1688,7 +1665,6 @@ bs_BA:
         suspend_reason: "Reason"
         suspended_by: "Suspended by"
         delete_all_posts: "Delete all posts"
-        delete_all_posts_confirm: "You are about to delete %{posts} posts and %{topics} topics. Are you sure?"
         suspend: "Suspend"
         unsuspend: "Unsuspend"
         suspended: "Suspended?"

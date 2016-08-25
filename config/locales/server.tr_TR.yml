@@ -277,7 +277,7 @@ tr_TR:
   assets_topic_body: "Bu kalıcı bir konudur, sadece görevlilere gözükür, site tasarımında kullanılan resim ve dosyaların depolanması için kullanılır. Sakın silmeyin!\n\n\nİşleyiş aşağıdaki gibidir:\n\n\n1. Bu konuyu cevaplayın.\n2. Logolar, favicon'lar vb. için kullanmak istediğiniz resimleri buraya yükleyin. (Gönderi düzenleyicisindeki yükleme düğmesini kullanabilir, veya resimleri sürükleyip bırakabilir veya kopyalayıp yapıştırabilirsiniz.)\n3. Cevabı gönderin.\n4. Yeni gönderinizdeki resimlere sağ tıklayarak ya da düzenleme ikonuna tıklayıp gönderinizi düzenleyerek resimlerin bağlantılarına ulaşabilirsiniz. Bağlantıları kopyalayın.\n5. Bağlantıları [basit ayarlar](/admin/site_settings/category/required) ilgili bölümlere yapıştırın.\n\n\nEğer farklı dosya tipleri yükleyebilmek istiyorsanız, [dosya ayarları](/admin/site_settings/category/files) sayfasındaki `authorized_extensions` ayarını düzenleyin."
   lounge_welcome:
     title: "Lobiye hoşgeldiniz"
-    body: |
+    body: |2
 
       Tebrikler! :confetti_ball:
 
@@ -1238,7 +1238,7 @@ tr_TR:
       subject_template: "[%{site_name}] E-posta sorunu -- Bilinmeyen Hesap"
     email_reject_empty:
       subject_template: "[%{site_name}] E-posta sorunu -- İçerik Yok"
-      text_body_template: |
+      text_body_template: |+
         Üzgünüz, ama %{destination} (titled %{former_title}) adresine göndermeye çalıştığınız e-posta başırısız oldu.
 
         E-postada herhangi bir cevap bulamadık.
@@ -1391,7 +1391,7 @@ tr_TR:
         %{respond_instructions}
     user_posted_pm_staged:
       subject_template: "%{optional_re}%{topic_title}"
-      text_body_template: |
+      text_body_template: |2
 
         %{message}
     digest:

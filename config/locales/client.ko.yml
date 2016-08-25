@@ -44,8 +44,6 @@ ko:
           other: "< %{count}초"
         x_seconds:
           other: "%{count}초 전"
-        less_than_x_minutes:
-          other: "< %{count}분"
         x_minutes:
           other: "%{count}분 전"
         about_x_hours:
@@ -359,12 +357,8 @@ ko:
       latest_by: "가장 최근"
       toggle_ordering: "정렬 컨트롤 토글"
       subcategories: "하위 카테고리"
-      topic_stats: "새로운 주제 수"
       topic_stat_sentence:
         other: "지난 %{unit} 동안 %{count}개의 새로운 주제가 있습니다."
-      post_stats: "새 게시글 수"
-      post_stat_sentence:
-        other: "지난 %{unit} 동안 %{count}개의 새로운 게시글이 있습니다."
     ip_lookup:
       title: IP Address Lookup
       hostname: Hostname
@@ -997,7 +991,6 @@ ko:
       unsubscribe:
         stop_notifications: "<strong>{{title}}</strong>에 대한 알림은 이제 덜 받게 됩니다."
         change_notification_state: "현재 당신의 알림 설정 : "
-      filter_to: "이 주제에 {{post_count}}개의 글이 있습니다"
       create: '새 주제 만들기'
       create_long: '새로운 주제 만들기'
       private_message: '메시지 시작'
@@ -1051,7 +1044,6 @@ ko:
       auto_close_title: '자동으로 닫기 설정'
       auto_close_save: "저장"
       auto_close_remove: "이 주제를 자동으로 닫지 않기"
-      auto_close_immediate: "주제에 마지막 글이 올라온 지 %{hours} 시간 지났기 때문에 이 주제는 즉시 닫힐 예정입니다."
       progress:
         title: 진행 중인 주제
         go_top: "맨위"
@@ -1061,7 +1053,6 @@ ko:
         jump_bottom_with_number: "jump to post %{post_number}"
         total: 총 글
         current: 현재 글
-        position: "post %{current} of %{total}"
       notifications:
         reasons:
           '3_6': '이 카테고리를 보고 있어서 알림을 받게 됩니다.'
@@ -1243,7 +1234,6 @@ ko:
       expand_collapse: "확장/축소"
       gap:
         other: "{{count}}개의 숨겨진 답글 보기"
-      more_links: "{{count}}개 더..."
       unread: "읽지 않은 포스트"
       has_replies:
         other: "{{count}} 답글"
@@ -1302,14 +1292,6 @@ ko:
         flag: '신고하기'
         defer_flags:
           other: "신고 보류하기"
-        it_too:
-          off_topic: "나도 신고하기"
-          spam: "나도 신고하기"
-          inappropriate: "나도 신고하기"
-          custom_flag: "나도 신고하기"
-          bookmark: "나도 북마크하기"
-          like: "나도 좋아해요"
-          vote: "나도 투표하기"
         undo:
           off_topic: "신고 취소"
           spam: "신고 취소"
@@ -1460,7 +1442,6 @@ ko:
       take_action: "조치하기"
       notify_action: '메시지 보내기'
       delete_spammer: "네, 스패머 회원을 삭제합니다"
-      delete_confirm: "이 회원의 글 %{posts}개 및 주제 %{topics}개를 삭제하고 IP주소 %{ip_address}와 이메일 %{email}을 영구 차단하려고 합니다. 이 회원이 정말 스패머가 확실합니까?"
       yes_delete_spammer: "예, 스팸 회원을 삭제합니다"
       ip_address_missing: "(알 수 없음)"
       hidden_email_address: "(숨김)"
@@ -1473,10 +1454,6 @@ ko:
         spam: "스팸입니다"
       custom_placeholder_notify_user: "구체적이고, 건설적이며, 항상 친절하세요."
       custom_placeholder_notify_moderators: "구체적으로 회원님이 걱정하는 내용과 가능한 모든 관련된 링크를 제공해주세요."
-      custom_message:
-        at_least: "최소한 {{n}}자를 입력하세요"
-        more: "{{n}} 이동합니다"
-        left: "{{n}} 나머지"
     flagging_topic:
       title: "우리 커뮤니티 질서를 지키는데 도와주셔서 감사합니다!"
       action: "주제 신고하기"
@@ -1507,7 +1484,6 @@ ko:
       invisible:
         help: "이 주제는 목록에서 제외됩니다. 주제 목록에 표시되지 않으며 링크를 통해서만 접근 할 수 있습니다."
     posts: "글"
-    posts_lowercase: "글"
     posts_long: "이 주제의 글 수는 {{number}}개 입니다."
     posts_likes_MF: |
       This topic has {count, plural, one {1 reply} other {# replies}} {ratio, select,
@@ -2138,7 +2114,6 @@ ko:
         suspend_reason: "Reason"
         suspended_by: "접근 금지자"
         delete_all_posts: "모든 글을 삭제합니다"
-        delete_all_posts_confirm: "%{posts}개의 글과 %{topics}개의 주제를 지우려고 합니다. 확실합니까?"
         suspend: "접근 금지"
         unsuspend: "접근 허용"
         suspended: "접근 금지?"
@@ -2222,7 +2197,6 @@ ko:
         unlock_trust_level: "회원등급 고정 해제"
         tl3_requirements:
           title: "3등급 회원이 되기 위한 자격"
-          table_title: "지난 %{time_period} 일간"
           value_heading: "값"
           requirement_heading: "자격요건"
           visits: "방문횟수"

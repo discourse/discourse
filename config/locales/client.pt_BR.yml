@@ -48,9 +48,6 @@ pt_BR:
         x_seconds:
           one: "1s"
           other: "%{count}s"
-        less_than_x_minutes:
-          one: "< 1m"
-          other: "< %{count}m"
         x_minutes:
           one: "1m"
           other: "%{count}m"
@@ -402,14 +399,9 @@ pt_BR:
       latest_by: "recentes por"
       toggle_ordering: "alternar controle de ordenação"
       subcategories: "Subcategorias"
-      topic_stats: "O número de novos tópicos."
       topic_stat_sentence:
         one: "%{count} novo tópico nos últimos %{unit}."
         other: "%{count} novos tópicos nos últimos %{unit}."
-      post_stats: "O número de mensagens novas."
-      post_stat_sentence:
-        one: "%{count} nova mensagem nos últimos %{unit}."
-        other: "%{count} novas mensagens nos últimos %{unit}."
     ip_lookup:
       title: Pesquisa do endereço de IP
       hostname: Nome do host
@@ -923,7 +915,6 @@ pt_BR:
       saved_local_draft_tip: "salvo localmente"
       similar_topics: "Seu tópico é parecido com..."
       drafts_offline: "rascunhos offline"
-      group_mentioned: "Ao mencionar {{group}}, você irá notificar <a href='{{group_link}}'>{{count}} pessoas</a> – tem certeza?"
       duplicate_link: "Parece que o seu link para <b>{{domain}}</b> já foi postado no tópico por <b>@{{username}}</b> em <a href='{{post_url}}'>uma resposta {{ago}}</a> – tem certeza que deseja postá-lo novamente?"
       error:
         title_missing: "Título é obrigatório"
@@ -1140,7 +1131,6 @@ pt_BR:
       unsubscribe:
         stop_notifications: "Você agora vai receber menos notificações de <strong>{{title}}</strong>"
         change_notification_state: "Seu estado de notificação atual é"
-      filter_to: "{{post_count}} mensagens no tópico"
       create: 'Novo tópico'
       create_long: 'Criar um novo tópico'
       private_message: 'Iniciar uma mensagem'
@@ -1200,11 +1190,9 @@ pt_BR:
       auto_close_title: 'Configurações para fechar automaticamente'
       auto_close_save: "Salvar"
       auto_close_remove: "Não fechar automaticamente este tópico"
-      auto_close_immediate: "O último tópico postado foi há %{hours} horas, então o tópico será fechado imadiatamente.."
       timeline:
         back: "Voltar"
         back_description: "Volte para a sua última postagem não lida"
-        replies: "%{current} / %{total} respostas"
         replies_short: "%{current} / %{total}"
       progress:
         title: progresso do tópico
@@ -1217,7 +1205,6 @@ pt_BR:
         jump_bottom_with_number: "ir para a mensagem %{post_number}"
         total: total de mensagens
         current: resposta atual
-        position: "mensagem %{current} de %{total}"
       notifications:
         title: altere a frequência de notificações deste tópico
         reasons:
@@ -1421,7 +1408,6 @@ pt_BR:
       gap:
         one: "ver 1 resposta oculta"
         other: "ver {{count}} respostas ocultas"
-      more_links: "{{count}} mais..."
       unread: "Resposta não lida"
       has_replies:
         one: "{{count}} Resposta"
@@ -1490,14 +1476,6 @@ pt_BR:
         defer_flags:
           one: "Delegar denuncia"
           other: "Delegar denúncias"
-        it_too:
-          off_topic: "Sinalizar também"
-          spam: "Sinalizar também"
-          inappropriate: "Sinalizar também"
-          custom_flag: "Sinalizar também"
-          bookmark: "Favoritar também"
-          like: "Curtir também"
-          vote: "Vote neste também"
         undo:
           off_topic: "Desfazer sinalização"
           spam: "Desfazer sinalização"
@@ -1683,7 +1661,6 @@ pt_BR:
       notify_action: 'Mensagem'
       official_warning: 'Aviso Oficial'
       delete_spammer: "Apagar Spammer"
-      delete_confirm: "Você está prestes a excluir <b>%{posts}</b> mensagens e <b>%{topics}</b> tópicos deste usuário, removendo a conta, bloqueando cadastro a partir do endereço IP <b>%{ip_address}</b> e adicionando o e-mail dele <b>%{email}</b> em uma lista de bloqueio permanente. Você tem certeza que este usuário é realmente um spammer?"
       yes_delete_spammer: "Sim, Apagar Spammer"
       ip_address_missing: "(N/D)"
       hidden_email_address: "(escondido)"
@@ -1697,10 +1674,6 @@ pt_BR:
         spam: "É spam"
       custom_placeholder_notify_user: "Seja específico, construtivo e sempre seja gentil."
       custom_placeholder_notify_moderators: "Deixe-nos saber especificamente com o que você está preocupado, e nos forneça links relevantes e exemplos quando possível."
-      custom_message:
-        at_least: "insira pelo menos {{n}} caracteres"
-        more: "{{n}} em falta..."
-        left: "{{n}} restantes"
     flagging_topic:
       title: "Obrigado por ajudar a manter a civilidade da nossa comunidade!"
       action: "Sinalizar Tópico"
@@ -1741,7 +1714,6 @@ pt_BR:
       invisible:
         help: "Este tópico está invisível; não aparecerá na listagem dos tópicos, e pode apenas ser acessado por link direto"
     posts: "Postagens"
-    posts_lowercase: "postagens"
     posts_long: "há {{number}} mensagens neste tópico"
     posts_likes_MF: |
       Este tópico tem {count, plural, one {1 resposta} other {# respostas}} {ratio, select,
@@ -2572,7 +2544,6 @@ pt_BR:
         suspend_reason: "Motivo"
         suspended_by: "Suspenso por"
         delete_all_posts: "Apagar todas mensagens"
-        delete_all_posts_confirm: "Você está prestes a apagar %{posts} mensagens e %{topics} tópicos. Tem certeza que quer continuar?"
         suspend: "Suspender"
         unsuspend: "Readmitir"
         suspended: "Suspenso?"
@@ -2668,7 +2639,6 @@ pt_BR:
         unlock_trust_level: "Destravar Nível de Confiança"
         tl3_requirements:
           title: "Requisitos para o Nível de Confiança 3"
-          table_title: "Nos últimos %{time_period} dias:"
           value_heading: "Valor"
           requirement_heading: "Requisito"
           visits: "Visitas"

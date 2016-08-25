@@ -54,16 +54,11 @@ ru:
           few: "%{count}с"
           many: "%{count}с"
           other: "%{count}с"
-        less_than_x_minutes:
-          one: "< 1мин"
-          few: "< %{count}мин"
-          many: "< %{count}мин"
-          other: "< %{count}мин"
         x_minutes:
           one: "1мин"
-          few: "< %{count}мин"
-          many: "< %{count}мин"
-          other: "< %{count}мин"
+          few: "%{count}мин"
+          many: "%{count}мин"
+          other: "%{count}мин"
         about_x_hours:
           one: "1ч"
           few: "%{count}ч"
@@ -455,18 +450,11 @@ ru:
       latest_by: "последние по"
       toggle_ordering: "изменить сортировку"
       subcategories: "Подразделы"
-      topic_stats: "Количество новых тем."
       topic_stat_sentence:
         one: "%{count} новая тема за предыдущий %{unit}."
         few: "%{count} новые темы за предыдущий %{unit}."
         many: "%{count} новых тем за предыдущий %{unit}."
         other: "%{count} новых тем за предыдущий %{unit}."
-      post_stats: "Количество новых сообщений."
-      post_stat_sentence:
-        one: "%{count} новое сообщение за предыдущий %{unit}."
-        few: "%{count} новых сообщения за предыдущий %{unit}."
-        many: "%{count} новых сообщений за предыдущий %{unit}."
-        other: "%{count} новых сообщений за предыдущий %{unit}."
     ip_lookup:
       title: Поиск IP адреса
       hostname: Название хоста
@@ -1165,7 +1153,6 @@ ru:
     topic:
       unsubscribe:
         change_notification_state: "Ваше текущее состояние уведомлений"
-      filter_to: "{{post_count}} сообщений в теме"
       create: 'Создать Тему'
       create_long: 'Создать новую тему'
       private_message: 'Написать сообщение'
@@ -1246,7 +1233,6 @@ ru:
         jump_bottom_with_number: "перейти к сообщению %{post_number}"
         total: всего сообщений
         current: текущее сообщение
-        position: "%{current} сообщение из %{total}"
       notifications:
         reasons:
           '3_6': 'Вы будете получать уведомления, т.к. наблюдаете за этим разделом.'
@@ -1461,7 +1447,6 @@ ru:
         few: "просмотреть {{count}} скрытых ответов"
         many: "просмотреть {{count}} скрытых ответов"
         other: "просмотреть {{count}} скрытых ответов"
-      more_links: "еще {{count}}..."
       unread: "Сообщение не прочитано"
       has_replies:
         one: "{{count}} Ответ"
@@ -1531,14 +1516,6 @@ ru:
           few: "Отложить жалобы"
           many: "Отложить жалобы"
           other: "Отложить жалобы"
-        it_too:
-          off_topic: "Пожаловаться"
-          spam: "Пожаловаться"
-          inappropriate: "Пожаловаться"
-          custom_flag: "Пожаловаться"
-          bookmark: "Добавить в закладки"
-          like: "Мне тоже нравится"
-          vote: "Проголосовать"
         undo:
           off_topic: "Отозвать жалобу"
           spam: "Отозвать жалобу"
@@ -1739,7 +1716,6 @@ ru:
       notify_action: 'Сообщение'
       official_warning: 'Официальное предупреждение'
       delete_spammer: "Удалить спамера"
-      delete_confirm: "Вы собираетесь удалить <b>%{posts}</b> сообщений и <b>%{topics}</b> тем этого пользователя, а так же удалить его учетную запись, добавить его IP адрес <b>%{ip_address}</b> и его почтовый адрес <b>%{email}</b> в черный список. Вы действительно уверены, что ваши помыслы чисты и действия не продиктованы гневом?"
       yes_delete_spammer: "Да, удалить спамера"
       ip_address_missing: "(не доступно)"
       hidden_email_address: "(скрыто)"
@@ -1752,10 +1728,6 @@ ru:
         spam: "Это спам"
       custom_placeholder_notify_user: "Будьте точны, конструктивны и всегда доброжелательны."
       custom_placeholder_notify_moderators: "Сообщите нам, чем конкретно вы обеспокоены и предоставьте соответствующие ссылки, если это возможно."
-      custom_message:
-        at_least: "введите как минимум {{n}} символов"
-        more: "Нужно ещё {{n}} cимволов..."
-        left: "Осталось {{n}} символов"
     flagging_topic:
       title: "Спасибо за вашу помощь!"
       action: "Пометить тему"
@@ -1792,7 +1764,6 @@ ru:
       invisible:
         help: "Тема исключена из всех списков тем и доступна только по прямой ссылке"
     posts: "Сообщ."
-    posts_lowercase: "сообщения"
     posts_long: "{{number}} сообщений в теме"
     posts_likes_MF: |
       В этой теме {count, plural, one {1 сообщение} other {# сообщений}} {ratio, select,
@@ -2582,7 +2553,6 @@ ru:
         suspend_reason: "Причина"
         suspended_by: "Заморожен"
         delete_all_posts: "Удалить все сообщения"
-        delete_all_posts_confirm: "Вы собираетесь удалить %{posts} сообщений и %{topics} тем. Вы уверены?"
         suspend: "Заморозить"
         unsuspend: "Разморозить"
         suspended: "Заморожен?"

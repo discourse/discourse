@@ -310,7 +310,7 @@ es:
   assets_topic_body: "Este es un tema permanente, visible únicamente para miembros del staff, con el fin de almacenar las imágenes y archivos utilizados en el diseño del sitio. ¡No lo elimines!\n\n\nCómo hacerlo:\n\n\n1. Responde a este tema.\n2. Sube todas las imágenes que desees para los logos, favicons y demás aquí. (Usa el icono de la barra de herramientas en el editor o arrastra y suelta las imágenes o pégalas). \n3. Publica tu respuesta.\n4. Haz clic con el botón derecho en las imágenes de tu nuevo post para obtener la ruta donde están subidas, o haz clic en el icono de editar para ver estas rutas en el panel de edición. Copia las rutas.\n5. Pega las rutas a las imágenes en [ajustes básicos](/admin/site_settings/category/required).\n\n\nSi necesitas habilitar la subida de diferentes tipos de archivo, edita `authorized_extensions` en las opciones de [archivos](/admin/site_settings/category/files)."
   lounge_welcome:
     title: "Bienvenido a la Sala VIP"
-    body: |
+    body: |2
 
       ¡Enhorabuena! :confetti_ball:
 
@@ -1168,7 +1168,6 @@ es:
     tag_style: "Estilo visual de las etiquetas."
     staff_tags: "Una lista de etiquetas que sólo pueden ser aplicadas por administradores o moderadores"
     min_trust_level_to_tag_topics: "Nivel mínimo requerido para etiquetar temas"
-    suppress_overlapping_tags_in_list: "Ocultar etiquetas de la vista de lista si se solapan con el título"
     remove_muted_tags_from_latest: "No mostrar temas con etiquetas silenciadas en la lista de temas recientes."
     errors:
       invalid_email: "Dirección de correo electrónico inválida. "
@@ -1773,7 +1772,7 @@ es:
         %{respond_instructions}
     user_posted_pm_staged:
       subject_template: "%{optional_re}%{topic_title}"
-      text_body_template: |
+      text_body_template: |2
 
         %{message}
     digest:

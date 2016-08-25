@@ -45,8 +45,6 @@ tr_TR:
           other: "< %{count}s"
         x_seconds:
           other: "%{count}s"
-        less_than_x_minutes:
-          other: "< %{count}d"
         x_minutes:
           other: "%{count}d"
         about_x_hours:
@@ -374,12 +372,8 @@ tr_TR:
       latest_by: "son gönderen"
       toggle_ordering: "sıralama kontrolünü aç/kapa"
       subcategories: "Alt kategoriler"
-      topic_stats: "Yeni konuların sayısı."
       topic_stat_sentence:
         other: "%{unit} beri %{count} yeni konu."
-      post_stats: "Yeni gönderilerin sayısı."
-      post_stat_sentence:
-        other: "%{unit} beri %{count} yeni gönderi."
     ip_lookup:
       title: IP Adresi Ara
       hostname: Sunucu ismi
@@ -882,7 +876,6 @@ tr_TR:
       saved_local_draft_tip: "yerele kaydedildi"
       similar_topics: "Konunuz şunlara çok benziyor..."
       drafts_offline: "çevrimdışı taslaklar"
-      group_mentioned: "{{grup}} hakkında konuşarak <a href='{{grup_linki}}'>{{sayı}} kişilerini bilgilendirmek üzeresin </a> – bunu yapmak istediğine emin misin?"
       duplicate_link: "It looks like your link to <b>{{etki_alanı}}</b> 'nına bağlanan linkiniz <b>@{{kullanıcı_adı}}</b> tarafından <a href='{{post_url}}'>a yanıtı içerisinde çoktan yayınlanmış görünüyor. {{önce}}</a> – tekrar yayınlamak istediğinize emin misiniz?"
       error:
         title_missing: "Başlık gerekli"
@@ -1095,7 +1088,6 @@ tr_TR:
       unsubscribe:
         stop_notifications: "Artık <strong>{{title}}</strong> için daha az bildirim alacaksınız."
         change_notification_state: "Geçerli bildirim durumunuz"
-      filter_to: "Bu konuda {{post_count}} gönderi"
       create: 'Yeni Konu'
       create_long: 'Yeni bir konu oluştur'
       private_message: 'Mesajlaşma başlat'
@@ -1149,11 +1141,9 @@ tr_TR:
       auto_close_title: 'Otomatik Kapatma Ayarları'
       auto_close_save: "Kaydet"
       auto_close_remove: "Bu Konuyu Otomatik Olarak Kapatma"
-      auto_close_immediate: "Son konudaki mesaj %{hours} saat olmuş, bu yüzden konu hemen kapanacak"
       timeline:
         back: "Geri"
         back_description: "Okunmamış son gönderine dön"
-        replies: "%{current} / %{total} Cevap"
         replies_short: "%{current} / %{total}"
       progress:
         title: konu gidişatı
@@ -1166,7 +1156,6 @@ tr_TR:
         jump_bottom_with_number: "%{post_number} numaralı gönderiye geç"
         total: tüm gönderiler
         current: şu anki gönderi
-        position: "%{total} gönderi arasından %{current}."
       notifications:
         title: bu konu hakkında ne sıklıkla bildirim almak istediğini değiştir
         reasons:
@@ -1361,7 +1350,6 @@ tr_TR:
       expand_collapse: "aç/kapat"
       gap:
         other: "gizlenen {{count}} yorumu gör"
-      more_links: "{{count}} tane daha..."
       unread: "Gönderi okunmamış"
       has_replies:
         other: "{{count}} Yanıt"
@@ -1424,14 +1412,6 @@ tr_TR:
         flag: 'Bayrakla'
         defer_flags:
           other: "Bayrağı ertele"
-        it_too:
-          off_topic: "Bir de bayrakla"
-          spam: "Bir de rapor et"
-          inappropriate: "Bir de rapor et"
-          custom_flag: "Bir de bayrakla"
-          bookmark: "Bir de işaretle"
-          like: "Sen de beğen"
-          vote: "Bir de oyla"
         undo:
           off_topic: "Bayrağı geri al"
           spam: "Bayrağı geri al"
@@ -1599,7 +1579,6 @@ tr_TR:
       notify_action: 'Mesaj'
       official_warning: 'Resmi uyarı'
       delete_spammer: "Spamcıyı Sil"
-      delete_confirm: "Bu kullanıcının <b>%{posts}</b> gönderisini ve <b>%{topics}</b> konusunu silmek, hesabını kapatmak, kullandığı IP Adresi <b>%{ip_address}</b> üzerinden hesap açılmasını engellemek, ve  <b>%{email}</b> e-posta adresini kalıcı engellenenler listesine eklemek üzeresiniz. Bu kullanıcının gerçekten spamci olduğuna emin misiniz?"
       yes_delete_spammer: "Evet, spamcıyı sil"
       ip_address_missing: "(uygulanamaz)"
       hidden_email_address: "(gizli)"
@@ -1613,10 +1592,6 @@ tr_TR:
         spam: "Spam"
       custom_placeholder_notify_user: "Açıklayıcı, yapıcı ve her zaman nazik olun."
       custom_placeholder_notify_moderators: "Sizi neyin endişelendirdiğini açıklayıcı bir dille bize bildirin ve mümkün olan yerlerde konu ile alakalı bağlantıları paylaşın."
-      custom_message:
-        at_least: "en az {{n}} karakter girin"
-        more: "{{n}} tane daha var.."
-        left: "{{n}} kaldı"
     flagging_topic:
       title: "Topluluğumuzun medeni kalmasına yardımcı olduğunuz için teşekkürler!"
       action: "Konuyu Bayrakla"
@@ -1655,7 +1630,6 @@ tr_TR:
       invisible:
         help: "Bu konu gizli; konu listelerinde görünmeyecek, ve sadece doğrudan bağlantı aracılığıyla erişilebilecek"
     posts: "Gönderi"
-    posts_lowercase: "gönderi"
     posts_long: "bu konuda {{number}} gönderi var"
     posts_likes_MF: |
       Bu konuda {count, plural, one {1} other {#}} {ratio, select,
@@ -2464,7 +2438,6 @@ tr_TR:
         suspend_reason: "Neden"
         suspended_by: "Uzaklaştıran"
         delete_all_posts: "Tüm gönderileri sil"
-        delete_all_posts_confirm: "%{posts} gönderi ve %{topics} konu silmek üzeresiniz. Emin misiniz?"
         suspend: "Uzaklaştır"
         unsuspend: "Uzaklaştırmayı geri al"
         suspended: "Uzaklaştırıldı mı?"
@@ -2557,7 +2530,6 @@ tr_TR:
         unlock_trust_level: "Güvenlik Seviyesi Kilidini Aç"
         tl3_requirements:
           title: "Güven Seviyesi 3 için Gerekenler"
-          table_title: "Son %{time_period} günde"
           value_heading: "Değer"
           requirement_heading: "Gereksinim"
           visits: "Ziyaretler"

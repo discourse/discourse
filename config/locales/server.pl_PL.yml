@@ -186,7 +186,7 @@ pl_PL:
       one: "1 wpis"
       few: "%{count} wpisy"
       other: "%{count} wpisów"
-    new-topic: |
+    new-topic: |+
       Witaj na %{site_name} &mdash; **dziękujemy za rozpoczęcie nowej dyskusji!**
 
       - Czy tytuł brzmi interesująco, gdy przeczytasz go na głos? Czy jest dobrym podsumowaniem treści?
@@ -290,7 +290,7 @@ pl_PL:
   assets_topic_body: "Ten temat jest widoczny tylko dla członków zespołu. Służy do przechowywania obrazów i plików wykorzystywanych w wyglądzie serwisu. Nie usuwaj go!\n\n\nJak go używać:\n\n\n1. Odpowiedz na ten temat.\n2. Dodaj wszystkie grafiki jakich chcesz użyć jako logo, favicon itd. (Użyj ikony wysyłania w edytorze wpisu lub przeciągnij i upuść.)\n3. Wyślij odpowiedź, aby je zachować.\n4. Kliknij prawym przyciskiem myszy na grafice i skopiuj jej adres URL.\n5. Wklej adres w [ogólnych ustawieniach](/admin/site_settings/category/required).\n\nJeśli chcesz włączyć możliwość przesyłania dodatkowych typów plików, zmień  `authorized_extensions` w [ustawieniach plików](/admin/site_settings/category/files)."
   lounge_welcome:
     title: "Witaj w Salonie"
-    body: |
+    body: |2
 
       Gratulacje! :confetti_ball:
 
@@ -346,6 +346,7 @@ pl_PL:
       first_day_topics_per_day: "Osiągnąłeś maksymalną liczbę tematów, jakie może napisać nowy użytkownik pierwszego dnia. Musisz odczekać %{time_left}, zanim znów spróbujesz."
       create_topic: "Zbyt szybko tworzysz tematy. Musisz poczekać %{time_left}, zanim znów spróbujesz."
       create_post: "Odpowiadasz zbyt szybko. Musisz poczekać %{time_left}, zanim znów spróbujesz."
+      delete_post: "Zbyt szybko usuwasz posty. Musisz poczekać %{time_left}, zanim znów spróbujesz."
       topics_per_day: "Osiągnąłeś maksymalną liczbę nowych tematów na dziś. Musisz poczekać %{time_left}, zanim znów spróbujesz."
       pms_per_day: "Osiągnąłeś maksymalną liczbę wiadomości na dziś. Musisz poczekać %{time_left}, zanim znów spróbujesz."
       create_like: "Osiągnąłeś maksymalną liczbę lajków na dziś. Musisz poczekać %{time_left}, zanim znów spróbujesz."
@@ -546,7 +547,12 @@ pl_PL:
     unwatch_category: "Przestań obserwować wszystkie tematy w %{category}"
     mailing_list_mode: "Wyłącz tryb listy mailingowej"
     disable_digest_emails: "Przestań wysyłać mi e-maile z podsumowaniem"
+    all: "Nie wysyłaj mi żadnych wiadomości z %{sitename}"
     log_out: "Wyloguj"
+  user_api_key:
+    title: "Zezwolić na dostęp aplikacji"
+    read: "odczyt"
+    read_write: "odzczyt/zapis"
   reports:
     visits:
       title: "Wizyty użytkowników"
@@ -726,6 +732,7 @@ pl_PL:
     crawl_images: "Pobieraj grafiki ze zdalnych URLi aby ustawić poprawną wysokość i szerokość w tagu img."
     download_remote_images_to_local: "Pobieraj zdalne grafiki i twórz ich lokalne kopie aby zapobiegać uszkodzonym/brakującym obrazkom na stronach."
     download_remote_images_threshold: "Minimalna ilość wolnego miejsca na dysku wymagana przez funkcję pobierania zdalnych grafik (w procentach)"
+    download_remote_images_max_days_old: "Nie pobieraj zdalnych obrazów dla postów które mają więcej niż n dni."
     disabled_image_download_domains: "Zdalne grafiki z tych domen nie będą pobierane."
     post_edit_time_limit: "Autor może edytować lub usunąć swój wpis przez tyle minut po jego utworzeniu. Ustawienie 0 oznacza 'zawsze'."
     edit_history_visible_to_public: "Pozwól wszystkim przeglądać poprzednie wersje edytowanych wpisów. Gdy wyłączone, jedynie obsługa/staff może."
@@ -988,7 +995,7 @@ pl_PL:
     subject_template: "%{invitee_name} zaprosił cię do dołączenia do %{site_domain_name}"
   invite_password_instructions:
     subject_template: "Ustaw hasło dla swojego konta na %{site_name}"
-    text_body_template: |
+    text_body_template: |+
       Dziękujemy za zaakceptowanie zaproszenia do %{site_name} -- witamy!
 
 
@@ -1036,7 +1043,7 @@ pl_PL:
       text_body_template: "Plik z zaproszeniami został przetworzony. Wysłanych zaproszeń: %{sent}."
     bulk_invite_failed:
       subject_template: "Plik z zaproszeniami został przetworzony z błędami."
-      text_body_template: |
+      text_body_template: |+
         Plik z zaproszeniami został przetworzony -- wysłanych: %{sent}, błędów: %{failed}.
 
         Dziennik operacji:
@@ -1048,7 +1055,7 @@ pl_PL:
 
     csv_export_succeeded:
       subject_template: "Zakończono eksport danych"
-      text_body_template: |
+      text_body_template: |+
         Eksport danych zakończył się sukcesem! :dvd:
 
         <a class="attachment" href="%{download_link}">%{file_name}</a> (%{file_size})
@@ -1114,7 +1121,7 @@ pl_PL:
         %{base_url}/users/password-reset/%{email_token}
     signup_after_approval:
       subject_template: "Zostałeś zaakceptowany na forum %{site_name}!"
-      text_body_template: |
+      text_body_template: |+
         Witamy na %{site_name}!
 
         Nasz personel zatwierdził twoje konto na %{site_name}.

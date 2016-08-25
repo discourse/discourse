@@ -48,9 +48,6 @@ it:
         x_seconds:
           one: "1s"
           other: "%{count}s"
-        less_than_x_minutes:
-          one: "< 1m"
-          other: "< %{count}m"
         x_minutes:
           one: "1m"
           other: "%{count}m"
@@ -402,14 +399,12 @@ it:
       latest_by: "i più recenti di"
       toggle_ordering: "inverti l'ordinamento"
       subcategories: "Sottocategorie"
-      topic_stats: "Numero di nuovi argomenti."
+      topic_sentence:
+        one: "1 argomento"
+        other: "%{count} argomenti"
       topic_stat_sentence:
         one: "%{count} nuovo argomento nell'ultimo %{unit}."
         other: "%{count} nuovi argomenti nell'ultimo %{unit}."
-      post_stats: "Numero di nuovi messaggi."
-      post_stat_sentence:
-        one: "%{count} nuovo messaggio nell'ultimo %{unit}."
-        other: "%{count} nuovi messaggi nell'ultimo %{unit}."
     ip_lookup:
       title: Ricerca Indirizzo IP
       hostname: Hostname
@@ -454,6 +449,7 @@ it:
         disable: "Disabilita Notifiche"
         enable: "Abilita Notifiche"
         each_browser_note: "Nota: devi modificare questa impostazione per ogni browser che utilizzi."
+      dismiss_notifications: "Chiudi Tutti"
       dismiss_notifications_tooltip: "Imposta tutte le notifiche non lette come lette "
       disable_jump_reply: "Non saltare al mio messaggio dopo la mia risposta"
       dynamic_favicon: "Visualizza il conteggio degli argomenti nuovi / aggiornati sull'icona del browser"
@@ -469,6 +465,7 @@ it:
       suspended_reason: "Motivo: "
       github_profile: "Github"
       tag_settings: "Etichette"
+      watched_tags: "Osservate"
       muted_tags: "Silenziati"
       watched_categories: "Osservate"
       tracked_categories: "Seguite"
@@ -581,7 +578,7 @@ it:
       log_out: "Esci"
       location: "Località"
       card_badge:
-        title: "Targhetta Scheda Utente"
+        title: "Distintivo Scheda Utente"
       website: "Sito Web"
       email_settings: "Email"
       like_notification_frequency:
@@ -701,9 +698,9 @@ it:
         top_topics: "Migliori Argomenti"
         no_topics: "Ancora nessun argomento."
         more_topics: "Altri Argomenti"
-        top_badges: "Migliori Targhette"
-        no_badges: "Ancora nessuna targhetta."
-        more_badges: "Altre Targhette"
+        top_badges: "Migliori Distintivi"
+        no_badges: "Ancora nessun distintivo."
+        more_badges: "Altri Distintivi"
         top_links: "Migliori Collegamenti"
         no_links: "Ancora nessun collegamento."
         no_likes: "Ancora nessun \"Mi piace\"."
@@ -972,7 +969,7 @@ it:
         invitee_accepted: "Invito accettato da"
         moved_post: "Il tuo messaggio è stato spostato da"
         linked: "Collegamento al tuo messaggio"
-        granted_badge: "Targhetta assegnata"
+        granted_badge: "Distintivo assegnato"
         group_message_summary: "Messaggi nel gruppo in arrivo"
       popup:
         mentioned: '{{username}} ti ha menzionato in "{{topic}}" - {{site_title}}'
@@ -1043,6 +1040,9 @@ it:
         selected:
           one: "Hai selezionato <b>1</b> argomento."
           other: "Hai selezionato <b>{{count}}</b> argomenti."
+        change_tags: "Cambia Etichette"
+        choose_new_tags: "Scegli nuove etichette per i seguenti argomenti:"
+        changed_tags: "Le etichette per quegli argomenti sono state cambiate."
       none:
         unread: "Non ci sono argomenti non letti."
         new: "Non ci sono nuovi argomenti."
@@ -1072,7 +1072,6 @@ it:
       unsubscribe:
         stop_notifications: "Da ora riceverai meno notifiche per <strong>{{title}}</strong>"
         change_notification_state: "Lo stato delle tue notifiche è"
-      filter_to: "{{post_count}} suoi messaggi"
       create: 'Nuovo Argomento'
       create_long: 'Crea un nuovo Argomento'
       private_message: 'Inizia a scrivere un messaggio'
@@ -1132,7 +1131,6 @@ it:
       auto_close_title: 'Impostazioni di auto-chiusura'
       auto_close_save: "Salva"
       auto_close_remove: "Non chiudere automaticamente questo argomento"
-      auto_close_immediate: "L'ultimo messaggio in questo argomento ha già %{hours}, pertanto l'argomento verrà chiuso immediatamente."
       progress:
         title: Avanzamento dell'argomento
         go_top: "alto"
@@ -1142,7 +1140,6 @@ it:
         jump_bottom_with_number: "Passa al messaggio %{post_number}"
         total: totale messaggi
         current: messaggio corrente
-        position: "messaggio %{current} di %{total}"
       notifications:
         reasons:
           '3_6': 'Riceverai notifiche perché stai osservando questa categoria.'
@@ -1335,7 +1332,6 @@ it:
       gap:
         one: "visualizza 1 risposta nascosta"
         other: "visualizza {{count}} riposte nascoste"
-      more_links: "{{count}} altri..."
       unread: "Messaggio non letto"
       has_replies:
         one: "{{count}} Risposta"
@@ -1402,14 +1398,6 @@ it:
         defer_flags:
           one: "Ignora segnalazione"
           other: "Annulla segnalazioni"
-        it_too:
-          off_topic: "Segnalalo anche tu"
-          spam: "Segnalalo anche tu"
-          inappropriate: "Segnalalo anche tu"
-          custom_flag: "Segnalalo anche tu"
-          bookmark: "Aggiungi un segnalibro anche tu"
-          like: "Assegnagli un \"Mi piace\" anche tu"
-          vote: "Votalo anche tu"
         undo:
           off_topic: "Rimuovi segnalazione"
           spam: "Rimuovi segnalazione"
@@ -1521,6 +1509,7 @@ it:
       settings: 'Impostazioni'
       topic_template: "Modello di Argomento"
       tags: "Etichette"
+      tags_allowed_tags: "Etichette che si possono usare soltanto in questa categoria:"
       delete: 'Elimina Categoria'
       create: 'Crea Categoria'
       create_long: 'Crea una nuova categoria'
@@ -1534,7 +1523,7 @@ it:
       topic: "argomento della categoria"
       logo: "Immagine Categoria"
       background_image: "Immagine di sfondo della categoria"
-      badge_colors: "Colori delle targhette"
+      badge_colors: "Colori dei distintivi"
       background_color: "Colore di sfondo"
       foreground_color: "Colore in primo piano"
       name_placeholder: "Una o due parole al massimo"
@@ -1555,7 +1544,7 @@ it:
       email_in_disabled: "Le Impostazioni Sito non permettono di creare nuovi argomenti via email. Per abilitare la creazione di argomenti via email,"
       email_in_disabled_click: 'abilita l''impostazione "email entrante".'
       suppress_from_homepage: "Elimina questa categoria dalla homepage."
-      allow_badges_label: "Permetti che le targhette vengano assegnate in questa categoria"
+      allow_badges_label: "Permetti l'assegnazione di distintivi in questa categoria"
       edit_permissions: "Modifica Permessi"
       add_permission: "Aggiungi Permesso"
       this_year: "quest'anno"
@@ -1581,7 +1570,6 @@ it:
       take_action: "Procedi"
       notify_action: 'Messaggio'
       delete_spammer: "Cancella Spammer"
-      delete_confirm: "Stai per eliminare <b>%{posts}</b> messaggi e <b>%{topics}</b> argomenti di questo utente, rimuovere il suo account, bloccare le iscrizioni da questo indirizzo IP <b>%{ip_address}</b>, e aggiungere il suo indirizzo email <b>%{email}</b> all'elenco di quelli bloccati. Sei sicuro che questo utente sia davvero uno spammer?"
       yes_delete_spammer: "Sì, cancella lo spammer"
       ip_address_missing: "(N/D)"
       hidden_email_address: "(nascosto)"
@@ -1595,10 +1583,6 @@ it:
         spam: "E' Spam"
       custom_placeholder_notify_user: "Sii dettagliato, costruttivo e sempre gentile."
       custom_placeholder_notify_moderators: "Facci sapere esattamente cosa ti preoccupa, fornendo collegamenti pertinenti ed esempi ove possibile."
-      custom_message:
-        at_least: "inserisci almeno {{n}} caratteri"
-        more: "{{n}} alla fine..."
-        left: "{{n}} rimanenti"
     flagging_topic:
       title: "Grazie per aiutarci a mantenere la nostra comunità civile!"
       action: "Segnala Argomento"
@@ -1633,7 +1617,6 @@ it:
       invisible:
         help: "Questo argomento è invisibile; non verrà mostrato nella liste di argomenti ed è possibile accedervi solo tramite collegamento diretto"
     posts: "Messaggi"
-    posts_lowercase: "messaggi"
     posts_long: "ci sono {{number}} messaggi in questo argomento"
     posts_likes_MF: |
       Questo argomento ha {count, plural, one {1 risposta} other {# risposte}} {ratio, select, low {con un alto rapporto "mi piace" / messaggi} med {con un altissimo rapporto "mi piace" / messaggi} high {con un estremamente alto rapporto "mi piace" / messaggi} other {}}
@@ -1780,15 +1763,43 @@ it:
         title: 'Azioni'
     badges:
       earned_n_times:
-        one: "Guadagnato questa targhetta 1 volta"
-        other: "Guadagnato questa targhetta %{count} volte"
+        one: "Guadagnato questo distintivo 1 volta"
+        other: "Guadagnato questo distintivo %{count} volte"
       granted_on: "Assegnata %{date}"
-      others_count: "Altri con questa targhetta (%{count})"
-      title: Targhette
+      others_count: "Altri utenti con questo distintivo (%{count})"
+      title: Distintivi
       allow_title: "titolo disponibile"
       badge_count:
-        one: "1 Targhetta"
-        other: "%{count} Targhette"
+        one: "1 Distintivo"
+        other: "%{count} Distintivi"
+      select_badge_for_title: Seleziona un distintivo da usare come tuo titolo
+    tagging:
+      all_tags: "Etichette"
+      selector_all_tags: "tutte le etichette"
+      selector_no_tags: "nessuna etichetta"
+      changed: "etichette cambiate:"
+      tags: "Etichette"
+      choose_for_topic: "scegli delle etichette opzionali per questo argomento"
+      delete_tag: "Cancella Etichetta"
+      delete_confirm: "Sicuro di voler cancellare questa etichetta?"
+      rename_tag: "Rinomina Etichetta"
+      rename_instructions: "Scegli un altro nome per l'etichetta:"
+      manage_groups: "Gestisci Gruppi Etichette"
+      manage_groups_description: "Definisci gruppi per organizzare le etichette"
+      filters:
+        without_category: "%{filter} %{tag} argomenti"
+        with_category: "%{filter} %{tag} argomenti in %{category}"
+        untagged_without_category: "%{filter} argomenti non etichettati"
+        untagged_with_category: "%{filter} argomenti non etichettati in %{category}"
+      groups:
+        title: "Gruppi Etichette"
+        about: "Aggiungi etichette a gruppi per poterle gestire più facilmente."
+        tags_label: "Etichette in questo gruppo:"
+        parent_tag_label: "Etichetta padre:"
+        parent_tag_description: "Le etichette di questo gruppo non possono essere usate finché è presente l'etichetta padre."
+        one_per_topic_label: "Limita ad una sola etichetta per argomento in questo gruppo"
+        new_name: "Nuovo Gruppo Etichette"
+        confirm_delete: "Sicuro di voler cancellare questo gruppo di etichette?"
   admin_js:
     type_to_filter: "digita per filtrare..."
     admin:
@@ -2219,8 +2230,8 @@ it:
             change_site_text: "cambia il testo del sito"
             suspend_user: "utente sospeso"
             unsuspend_user: "utente riattivato"
-            grant_badge: "assegna targhetta"
-            revoke_badge: "revoca targhetta"
+            grant_badge: "assegna distintivo"
+            revoke_badge: "revoca distintivo"
             check_email: "controlla email"
             delete_topic: "cancella argomento"
             delete_post: "cancella messaggio"
@@ -2333,7 +2344,6 @@ it:
         suspend_reason: "Motivo"
         suspended_by: "Sospeso da"
         delete_all_posts: "Cancella tutti i messaggi"
-        delete_all_posts_confirm: "Stai per cancellare %{posts} messaggi e %{topics} argomenti. Sei sicuro?"
         suspend: "Sospendi"
         unsuspend: "Riabilita"
         suspended: "Sospeso?"
@@ -2420,7 +2430,6 @@ it:
         unlock_trust_level: "Sblocca Livello Esperienza"
         tl3_requirements:
           title: "Requisiti per Livello Esperienza 3"
-          table_title: "Negli ultimi %{time_period} giorni:"
           value_heading: "Valore"
           requirement_heading: "Requisito"
           visits: "Visite"
@@ -2527,46 +2536,46 @@ it:
           user_preferences: "Preferenze Utente"
           tags: "Etichette"
       badges:
-        title: Targhette
-        new_badge: Nuova Targhetta
+        title: Distintivi
+        new_badge: Nuovo Distintivo
         new: Nuovo
         name: Nome
-        badge: Targhetta
+        badge: Distintivo
         display_name: Nome Visualizzato
         description: Descrizione
         long_description: Descrizione Lunga
-        badge_type: Tipo Targhetta
+        badge_type: Tipo Distintivo
         badge_grouping: Gruppo
         badge_groupings:
-          modal_title: Raggruppamento Targhette
+          modal_title: Raggruppamento Distintivi
         granted_by: Assegnata Da
         granted_at: Assegnata in data
         reason_help: (Un collegamento a un messaggio o argomento)
         save: Salva
         delete: Cancella
-        delete_confirm: Sei sicuro di voler cancellare questa targhetta?
+        delete_confirm: Sei sicuro di voler cancellare questo distintivo?
         revoke: Revoca
         reason: Motivazione
         expand: Espandi &hellip;
-        revoke_confirm: Sei sicuro di voler revocare questa targhetta?
-        edit_badges: Modifica Targhette
-        grant_badge: Assegna Targhetta
-        granted_badges: Targhette Assegnate
+        revoke_confirm: Sei sicuro di voler revocare questo distintivo?
+        edit_badges: Modifica Distintivi
+        grant_badge: Assegna Distintivo
+        granted_badges: Distintivi Assegnati
         grant: Assegna
-        no_user_badges: "%{name} non ha ricevuto alcuna targhetta."
-        no_badges: Non ci sono targhette da assegnare.
-        none_selected: "Seleziona una targhetta per iniziare"
-        allow_title: Permetti di utilizzare le targhette come titoli
+        no_user_badges: "%{name} non ha ricevuto alcun distintivo."
+        no_badges: Non ci sono distintivi da assegnare.
+        none_selected: "Seleziona un distintivo per iniziare"
+        allow_title: Permetti di utilizzare un distintivo come titolo
         multiple_grant: Può essere assegnata più volte
-        listable: Mostra targhetta sulla pagina pubblica delle targhette
-        enabled: Attiva targhetta
+        listable: Mostra distintivo sulla pagina pubblica dei distintivi
+        enabled: Attiva distintivo
         icon: Icona
         image: Immagine
         icon_help: "Usa una classe Font Awesome o la URL di un'immagine"
-        query: Badge Query (SQL)
+        query: Query Distintivo (SQL)
         target_posts: Interroga i messaggi destinazione
         auto_revoke: Avvia l'istruzione di revoca giornalmente
-        show_posts: Visualizza i messaggi che assegnano le targhette sulla pagina delle targhette
+        show_posts: Visualizza i messaggi che assegnano distintivi sulla pagina dei distintivi
         trigger: Trigger
         trigger_type:
           none: "Aggiorna giornalmente"
@@ -2576,18 +2585,18 @@ it:
           user_change: "Quando un utente viene modificato o creato"
           post_processed: "Dopo che un messaggio viene elaborato"
         preview:
-          link_text: "Anteprima targhette guadagnate"
+          link_text: "Anteprima distintivi guadagnati"
           plan_text: "Anteprima con query plan"
-          modal_title: "Anteprima Query Targhetta"
+          modal_title: "Anteprima Query Distintivo"
           sql_error_header: "Si è verificato un errore con la query."
-          error_help: "Visita i seguenti collegamenti per un aiuto con le query delle targhette."
+          error_help: "Visita i seguenti collegamenti per un aiuto con le query dei distintivi."
           bad_count_warning:
             header: "ATTENZIONE!"
-            text: "Ci sono esempi di grant mancanti. Ciò accade quando la query delle targhette ritorna ID utenti o ID messaggi inesistenti. Successivamente ciò può causare risultati inattesi - controlla bene la tua query."
-          no_grant_count: "Nessuna targhetta da assegnare."
+            text: "Ci sono esempi di grant mancanti. Ciò accade quando la query dei distintivi ritorna ID utenti o ID messaggi inesistenti. Successivamente ciò può causare risultati inattesi - controlla bene la tua query."
+          no_grant_count: "Nessun distintivo da assegnare."
           grant_count:
-            one: "<b>1</b> targhetta da assegnare."
-            other: "<b>%{count}</b> targhette da assegnare."
+            one: "<b>1</b> distintivo da assegnare."
+            other: "<b>%{count}</b> distintivi da assegnare."
           sample: "Esempio:"
           grant:
             with: <span class="username">%{username}</span>

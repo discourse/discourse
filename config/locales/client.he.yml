@@ -48,9 +48,6 @@ he:
         x_seconds:
           one: "שנייה אחת"
           other: "%{count} שניות"
-        less_than_x_minutes:
-          one: "פחות מדקה"
-          other: "פחות מ-%{count} דקות"
         x_minutes:
           one: "דקה אחת"
           other: "%{count} דקות"
@@ -402,14 +399,12 @@ he:
       latest_by: "לאחרונה על ידי"
       toggle_ordering: "שנה בקר סדר"
       subcategories: "תתי קטגוריות"
-      topic_stats: "מספר הפוסטים החדשים."
+      topic_sentence:
+        one: "נושא אחד"
+        other: "%{count} נושאים"
       topic_stat_sentence:
         one: "נושא חדש אחד ב-%{unit}."
         other: "%{count} נושאים חדשים ב-%{unit}."
-      post_stats: "מספר ההודעות החדשות."
-      post_stat_sentence:
-        one: "פוסט חדש אחד ב-%{unit}."
-        other: "%{count} פוסטים חדשים ב-%{unit}."
     ip_lookup:
       title: חיפוש כתובת IP
       hostname: שם מארח (Hostname)
@@ -509,6 +504,13 @@ he:
       muted_topics_link: "הצג פוסטים שהוסתרו"
       watched_topics_link: "הצגת נושאים נצפים"
       automatically_unpin_topics: "בטל נעיצת נושאים באופן אוטומטי כאשר אני מגיע/ה לתחתית ההודעות בנושא."
+      apps: "אפליקציות"
+      revoke_access: "שלילת גישה"
+      undo_revoke_access: "ביטול שלילת גישה"
+      api_permissions: "הרשאות:"
+      api_approved: "אושרו:"
+      api_read: "קריאה"
+      api_read_write: "קריאה וכתיבה"
       staff_counters:
         flags_given: "דגלים שעוזרים"
         flagged_posts: "הודעות מדוגלות"
@@ -904,6 +906,10 @@ he:
       twitter: "טוויטר"
       emoji_one: "Emoji One"
       win10: "חלונות 10"
+    category_page_style:
+      categories_only: "קטגוריות בלבד"
+      categories_with_featured_topics: "קטגוריות עם נושאים מומלצים"
+      categories_and_latest_topics: "קטגוריות ונושאים אחרונים"
     shortcut_modifier_key:
       shift: 'Shift'
       ctrl: 'Ctrl'
@@ -922,7 +928,9 @@ he:
       saved_local_draft_tip: "נשמר מקומית"
       similar_topics: "הפוסט שלך דומה ל..."
       drafts_offline: "טיוטות מנותקות"
-      group_mentioned: "על ידי איזכור {{group}}, אתם הולכים להודיע ל <a href='{{group_link}}'>{{count}} אנשים</a> – האתם אתם בטוחים?"
+      group_mentioned:
+        one: "על ידי אזכור {{group}}, אתם עומדים ליידע <a href='{{group_link}}'>אדם אחד</a> – אתם בטוחים?"
+        other: "על ידי אזכור {{group}}, אתם עומדים ליידע <a href='{{group_link}}'>{{count}} אנשים</a> – אתם בטוחים?"
       duplicate_link: "נראה שהקישור שלכם ל <b>{{domain}}</b> כבר פורסם בנושא זה על ידי <b>@{{username}}</b> ב <a href='{{post_url}}'>תגובה {{ago}}</a> - האם אתם בטוחים שאתם מעוניינים לפרסם אותו שוב?"
       error:
         title_missing: "יש להזין כותרת."
@@ -953,8 +961,10 @@ he:
       show_preview: 'הראה תצוגה מקדימה &raquo;'
       hide_preview: '&laquo; הסתר תצוגה מקדימה'
       quote_post_title: "ציטוט הודעה בשלמותה"
+      bold_label: "B"
       bold_title: "מודגש"
       bold_text: "טקסט מודגש"
+      italic_label: "I"
       italic_title: "נטוי"
       italic_text: "טקסט נטוי"
       link_title: "קישור"
@@ -972,6 +982,7 @@ he:
       olist_title: "רשימה ממוספרת"
       ulist_title: "רשימת נקודות"
       list_item: "פריט ברשימה"
+      heading_label: "H"
       heading_title: "כותרת"
       heading_text: "כותרת"
       hr_title: "קו אופקי"
@@ -1141,7 +1152,9 @@ he:
       unsubscribe:
         stop_notifications: "תקבלו פחות התראות עבור <strong>{{title}}</strong>"
         change_notification_state: "מצב ההתראות הנוכחי שלך הוא"
-      filter_to: "{{post_count}} הודעות בפוסט"
+      filter_to:
+        one: "פוסט אחד בנושא"
+        other: "{{count}} פוסטים בנושא"
       create: 'פוסט חדש'
       create_long: 'יצירת פוסט חדש'
       private_message: 'תחילת הודעה'
@@ -1201,11 +1214,12 @@ he:
       auto_close_title: 'הגדרות נעילה אוטומטית'
       auto_close_save: "שמור"
       auto_close_remove: "אל תנעל פוסט זה אוטומטית"
-      auto_close_immediate: "הפוסט האחרון בנושא כבר בן %{hours} שעות, אז הנושא ייסגר מיידית."
+      auto_close_immediate:
+        one: "הפוסט האחרון בנושא הוא כבר בן שעה, אז הנושא ייסגר מיידית."
+        other: "הפוסט האחרון בנושא הוא כבר בן %{count} שעות, אז הנושא ייסגר אוטומטית."
       timeline:
         back: "חזרה"
         back_description: "חיזרו לפוסט האחרון שלא-נקרא על-ידיכם"
-        replies: "%{current} / %{total} תגובות"
         replies_short: "%{current} / %{total}"
       progress:
         title: התקדמות פוסט
@@ -1218,7 +1232,6 @@ he:
         jump_bottom_with_number: "קפיצה להודעה %{post_number}"
         total: סך הכל הודעות
         current: הודעה נוכחית
-        position: "הודעה %{current} מתוך %{total}"
       notifications:
         title: שנו את תדירות ההתראות על הנושא הזה
         reasons:
@@ -1422,7 +1435,6 @@ he:
       gap:
         one: "הצג הודעה אחת שהוסתרה"
         other: "הצג {{count}} הודעות שהוסתרו"
-      more_links: "עוד {{count}}..."
       unread: "הפוסט טרם נקרא"
       has_replies:
         one: "תגובה אחת"
@@ -1491,14 +1503,6 @@ he:
         defer_flags:
           one: "דחיית סימון"
           other: "דחיית דגלים"
-        it_too:
-          off_topic: "דגלו גם אתם"
-          spam: "דגלו גם אתם"
-          inappropriate: "דגלו גם אתם"
-          custom_flag: "דגלו גם אתם"
-          bookmark: "העדף גם את זה"
-          like: "תן לייק גם לזה"
-          vote: "הצבע גם לזה"
         undo:
           off_topic: "ביטול דיגול"
           spam: "ביטול דיגול"
@@ -1684,7 +1688,6 @@ he:
       notify_action: 'הודעה'
       official_warning: 'אזהרה רשמית'
       delete_spammer: "מחק ספאמר"
-      delete_confirm: "אתה עומד למחוק <b>%{posts}</b> הודעות ו-<b>%{topics}</b> פוסטים של המשתמש הזה, להסיר את החשבון שלהם, לחסור הרשמה מכתובת ה-IP שלהם <b>%{ip_address}</b>, ולהוסיף את כתובת הדואר האלקטרוני <b>%{email}</b> לרשימה שחורה. אתה בטוח שזה באמת ספאמר?"
       yes_delete_spammer: "כן, מחק ספאמר"
       ip_address_missing: "(N/A)"
       hidden_email_address: "(מוסתר)"
@@ -1699,9 +1702,15 @@ he:
       custom_placeholder_notify_user: "היה ממוקד, חיובי ואדיב תמיד."
       custom_placeholder_notify_moderators: "ספר לנו מה בדיוק מטריד אותך וצרף קישורים רלוונטיים ודוגמאות במידת האפשר."
       custom_message:
-        at_least: "הזן לפחות {{n}} תווים"
-        more: "{{n}} נשארו..."
-        left: "{{n}} נותרו"
+        at_least:
+          one: "הכניסו לפחות תו אחד"
+          other: "הכניסו לפחות {{count}} תווים"
+        more:
+          one: "נשאר אחד"
+          other: "{{count}} נשארו..."
+        left:
+          one: "נותר אחד"
+          other: "{{count}} נותרו"
     flagging_topic:
       title: "תודה על עזרתך לשמירה על תרבות הקהילה שלנו!"
       action: "דגלו נושא"
@@ -1742,7 +1751,6 @@ he:
       invisible:
         help: "פוסט זה מוסתר; הוא לא יוצג ברשימות הפוסטים, וזמין רק באמצעות קישור ישיר."
     posts: "הודעות"
-    posts_lowercase: "פרסומים"
     posts_long: "יש {{number}} הודעות בפוסט הזה"
     posts_likes_MF: |
       לנושא זה יש  {count, plural, one {פרסום אחד} other {# פרסומים}}
@@ -1920,6 +1928,9 @@ he:
       badge_count:
         one: "1 עיטורים"
         other: "%{count} עיטורים"
+      more_badges:
+        one: "+1 נוסף"
+        other: "+%{count} נוספים"
       granted:
         one: "הוענק"
         other: "%{count} הוענקו"
@@ -2170,6 +2181,9 @@ he:
         add_owners: הוספת מנהלים
         incoming_email: "התאימו אישית כתובת מייל נכנס"
         incoming_email_placeholder: "הכניסו כתובת מייל"
+        flair_url_placeholder: "(אופציונלי) URL של תמונה"
+        flair_bg_color_placeholder: "(אופציונלי) ערך צבע ב Hex"
+        flair_preview: "תצוגה מקדימה"
       api:
         generate_master: "ייצר מפתח מאסטר ל-API"
         none: "אין מפתחות API פעילים כרגע."
@@ -2567,7 +2581,6 @@ he:
         suspend_reason: "סיבה"
         suspended_by: "הושעה על ידי"
         delete_all_posts: "מחק את כל ההודעות"
-        delete_all_posts_confirm: "אתם עומדים למחוק %{posts} פוסטים ו-%{topics} נושאים. אתם בטוחים?"
         suspend: "השעה"
         unsuspend: "בטל השעייה"
         suspended: "מושעה?"
@@ -2661,7 +2674,9 @@ he:
         unlock_trust_level: "שחרור רמת אמון מנעילה"
         tl3_requirements:
           title: "דרישות עבור רמת אמון 3"
-          table_title: "ב %{time_period} הימים האחרונים:"
+          table_title:
+            one: "ביום האחרון:"
+            other: "ב %{count} הימים האחרונים:"
           value_heading: "ערך"
           requirement_heading: "דרישה"
           visits: "ביקורים"
@@ -2734,6 +2749,7 @@ he:
         revert_confirm: "האם אתם בטוחים שאתם מעוניינים לבטל את השינויים שלכם?"
         go_back: "חזרה לחיפוש"
         recommended: "אנחנו ממליצים להתאים את הטקסט הבא כדי להתאימו לצרכים שלכם:"
+        show_overriden: 'הציגו רק דרוסים'
       site_settings:
         show_overriden: 'הצג רק הגדרות ששונו'
         title: 'הגדרות'
@@ -2760,12 +2776,14 @@ he:
           developer: 'מפתח'
           embedding: "הטמעה"
           legal: "משפטי"
+          user_api: 'API של משתמש'
           uncategorized: 'אחר'
           backups: "גיבויים"
           login: "התחברות"
           plugins: "הרחבות"
           user_preferences: "הגדרות משתמש"
           tags: "תגיות"
+          search: "חיפוש"
       badges:
         title: עיטורים
         new_badge: עיטור חדש
@@ -2858,6 +2876,7 @@ he:
         embed_by_username: "שם משתמש ליצירת פוסט"
         embed_post_limit: "מספר מקסימלי של פרסומים להטמעה."
         embed_username_key_from_feed: "מפתח למשיכת שם המשתמש ב-discourse מהפיד."
+        embed_title_scrubber: "ביטוי רגולרי שמשמש כדי לנקות את הכותרת של פוסטים"
         embed_truncate: "חיתוך הפרסומים המוטמעים."
         embed_whitelist_selector: "בוררי CSS לאלמנטים שיותר להטמיע."
         embed_blacklist_selector: "בוררי CSS לאלמנטים שיוסרו מן ההטמעות."

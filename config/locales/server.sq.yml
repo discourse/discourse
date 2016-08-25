@@ -244,7 +244,7 @@ sq:
   assets_topic_body: "This is a permanent topic, visible only to staff, for storing images and files used in the site design. Don't delete it!\n\n\nHere's how:\n\n\n1. Reply to this topic.\n2. Upload all the images you wish to use for logos, favicons, and so forth here. (Use the upload toolbar icon in the post editor, or drag-and-drop or paste images.)\n3. Submit your reply to post it.\n4. Right click the images in your new post to get the path to the uploaded images, or click the edit icon to edit your post and retrieve the path to the images. Copy the image paths.\n5. Paste those image paths into [basic settings](/admin/site_settings/category/required).\n\n\nIf you need to enable different file type uploads, edit `authorized_extensions` in the [file settings](/admin/site_settings/category/files)."
   lounge_welcome:
     title: "Mirë se vini në Lounge"
-    body: |
+    body: |2
 
       Congratulations! :confetti_ball:
 
@@ -1076,7 +1076,7 @@ sq:
       Kjo ftesë vjen nga një përdorues i besuar, si rrjedhojë një llogari do të krijohet automatikisht për ju.
   invite_password_instructions:
     subject_template: "Set password for your %{site_name} account"
-    text_body_template: |
+    text_body_template: |+
       Faleminderit që pranuat ftesën tek %{site_name} -- mirësevini!
 
       Klikoni këtë lidhje për të zgjedhur një fjalëkalim tani:
@@ -1416,7 +1416,7 @@ sq:
         %{respond_instructions}
     user_posted_pm_staged:
       subject_template: "%{optional_re}%{topic_title}"
-      text_body_template: |
+      text_body_template: |2
 
         %{message}
     digest:

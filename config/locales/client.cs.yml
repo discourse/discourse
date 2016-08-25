@@ -51,10 +51,6 @@ cs:
           one: "1s"
           few: "%{count}s"
           other: "%{count}s"
-        less_than_x_minutes:
-          one: "< 1m"
-          few: "< %{count}m"
-          other: "< %{count}m"
         x_minutes:
           one: "1m"
           few: "%{count}m"
@@ -423,16 +419,10 @@ cs:
       latest_by: "latest by"
       toggle_ordering: "Přepnout editaci pořadí"
       subcategories: "Podkategorie"
-      topic_stats: "Počet nových témat."
       topic_stat_sentence:
         one: "%{count} nové téma za posledních %{unit}."
         few: "%{count} nová témata za posledních %{unit}."
         other: "%{count} nových témat za posledních %{unit}."
-      post_stats: "Počet nových příspěvků."
-      post_stat_sentence:
-        one: "%{count} nový příspěvěk za posledních %{unit}."
-        few: "%{count} nové příspěvky za posledních %{unit}."
-        other: "%{count} nových příspěvků za posledních %{unit}."
     ip_lookup:
       title: Vyhledávání podle IP adresy
       hostname: Hostname
@@ -1133,7 +1123,6 @@ cs:
       unsubscribe:
         stop_notifications: "Budete dostávat méně upozornění pro <strong>{{title}}</strong>"
         change_notification_state: "Váš momentální stav oznámení je"
-      filter_to: "{{post_count}} příspěvků v tématu"
       create: 'Nové téma'
       create_long: 'Vytvořit nové téma'
       private_message: 'Vytvořit zprávu'
@@ -1210,7 +1199,6 @@ cs:
         jump_bottom_with_number: "Skočit na příspěvěk %{post_number}"
         total: celkem příspěvků
         current: aktuální příspěvek
-        position: "příspěvek %{current} z %{total}"
       notifications:
         reasons:
           '3_6': 'Budete dostávat oznámení, protože hlídáte tuhle kategorii.'
@@ -1409,7 +1397,6 @@ cs:
         one: "zobrazit 1 skrytou odpověď"
         few: "zobrazit {{count}} skryté odpovědi"
         other: "zobrazit {{count}} skrytých odpovědí"
-      more_links: "{{count}} dalších..."
       unread: "Příspěvek je nepřečtený."
       has_replies:
         one: "{{count}} odpověď"
@@ -1478,14 +1465,6 @@ cs:
           one: "Odložit nahlášení"
           few: "Odložit nahlášení"
           other: "Odložit nahlášení"
-        it_too:
-          off_topic: "Také nahlásit"
-          spam: "Také nahlásit"
-          inappropriate: "Také nahlásit"
-          custom_flag: "Také nahlásit"
-          bookmark: "Také přidat do záložek"
-          like: "To se mi také líbí"
-          vote: "Hlasovat také"
         undo:
           off_topic: "Zrušit nahlášení"
           spam: "Zrušit nahlášení"
@@ -1662,7 +1641,6 @@ cs:
       take_action: "Zakročit"
       notify_action: 'Zpráva'
       delete_spammer: "Odstranit spamera"
-      delete_confirm: "Chystáte se odstranit <b>%{posts}</b> příspěvků a <b>%{topics}</b> témat od tohoto uživatele, smazat jeho účet, a vložit jeho emailovou adresu <b>%{email}</b> na seznam permanentně blokovaných. Jste si jistí, že je tento uživatel opravdu spamer?"
       yes_delete_spammer: "Ano, odstranit spamera"
       ip_address_missing: "(N/A)"
       hidden_email_address: "(skrytý)"
@@ -1675,10 +1653,6 @@ cs:
         spam: "Je to spam"
       custom_placeholder_notify_user: "Buďte věcný, konstruktivní a vždy zdvořilý."
       custom_placeholder_notify_moderators: "Sdělte nám, co vás přesně trápí a kde to bude možné, tak nám poskytněte související odkazy a příklady."
-      custom_message:
-        at_least: "zadejte alespoň {{n}} znaků"
-        more: "ještě {{n}}..."
-        left: "{{n}} zbývá"
     flagging_topic:
       title: "Děkujeme, že pomáháte udržovat komunitu zdvořilou!"
       action: "Nahlásit téma"
@@ -1714,7 +1688,6 @@ cs:
       invisible:
         help: "Toto téma je neviditelné; nebude se zobrazovat v seznamu témat a lze ho navštívit pouze přes přímý odkaz"
     posts: "Příspěvků"
-    posts_lowercase: "příspěvky"
     posts_long: "v tomto tématu je {{number}} příspěvků"
     posts_likes_MF: |
       Toto téma má {count, plural, one {1 příspěvek} other {# příspěvků}} {ratio, select,
@@ -2354,7 +2327,6 @@ cs:
         suspend_reason: "Reason"
         suspended_by: "Suspended by"
         delete_all_posts: "Smazat všechny příspěvky"
-        delete_all_posts_confirm: "You are about to delete %{posts} posts and %{topics} topics. Are you sure?"
         suspend: "Zakázat"
         unsuspend: "Povolit"
         suspended: "Zakázán?"

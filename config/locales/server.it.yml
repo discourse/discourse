@@ -310,7 +310,7 @@ it:
   assets_topic_body: "Questo è un argomento permanente, visibile solo allo staff, per salvare immagini e file utilizzati nel design del sito. Non eliminarlo!\n\n\nEcco come fare:\n\n\n1. Rispondi a questo argomento.\n2. Carica qui tutte le immagini che desideri usare per loghi, favicon e così via (usa l'icona di caricamento nell'editor del messaggio o trascina direttamente le immagini).\n3. Invia la risposta per creare il messaggio.\n4. Fai click con il tasto destro sulle immagini nel tuo nuovo messaggio per prelevare il percorso delle immagini caricate, o clicca l'icona di modifica messaggio e ottieni il percorso alle immagini. Copia il percorso delle immagini.\n5. Incolla i percorsi nella sezione [impostazioni di base](/admin/site_settings/category/required).\n\nSe vuoi permettere di caricare file di diverso tipo, modifica `authorized_extensions` nelle [impostazioni file](/admin/site_settings/category/files)."
   lounge_welcome:
     title: "Benvenuto nel Lounge"
-    body: |
+    body: |2
 
       Congratulazioni! :confetti_ball:
 
@@ -548,6 +548,8 @@ it:
   unsubscribe:
     title: "Annulla iscrizione"
     stop_watching_topic: "Smetti di osservare questo argomento, %{link}"
+    mute_topic: "Silenziare tutte le notifiche per questo argomento, %{link}"
+    unwatch_category: "Smetti di osservare tutti gli argomenti in %{category}"
   reports:
     visits:
       title: "Visite Utente"
@@ -793,7 +795,7 @@ it:
     show_email_on_profile: "Mostra l'email di un utente nel suo profilo (visibile solo a se stesso e allo staff)"
     email_token_valid_hours: "I messaggi di password dimenticata / attivazione account sono validi per (n) ore."
     email_token_grace_period_hours: "I messaggi di password dimenticata / attivazione account sono ancora validi per un periodo di grazia di (n) ore dopo essere stati convalidati."
-    enable_badges: "Attiva il sistema a targhette"
+    enable_badges: "Attiva il sistema a distintivi"
     allow_index_in_robots_txt: "Specifica nel file robots.txt che questo sito permette l'indicizzazione da parte dei motori di ricerca."
     email_domains_blacklist: "Una lista di domini email separati dal carattere pipe \"|\" con cui gli utenti non possono registrare un account. Ad esempio: mailinator.com/trashmail.net"
     log_out_strict: "Quando si fa logout, esci da TUTTE le sessioni dell'utente su tutti i dispositivi"
@@ -900,7 +902,7 @@ it:
     min_title_similar_length: "Lunghezza minima di un titolo che attiva il controllo su argomenti simili."
     min_body_similar_length: "Lunghezza minima del corpo di un messaggio che attiva il controllo su argomenti simili."
     category_colors: "Un elenco di valori esadecimali di colori permessi per le categorie."
-    category_style: "Stile grafico delle targhette relative alle categorie."
+    category_style: "Stile grafico dei distintivi relativi alle categorie."
     max_image_size_kb: "Dimensione massima in kB per caricare immagini degli utenti. Deve essere configurata anche in nginx (client_max_body_size) / apache o nel proxy."
     max_attachment_size_kb: "Dimensione massima dei file che gli utenti possono caricare, in kB. Configura il limite anche in nginx (client_max_body_size) / apache o nel proxy."
     authorized_extensions: "Una lista di estensioni dei file che è permesso caricare (usa '*' per permettere tutti i tipi di file) "
@@ -954,7 +956,7 @@ it:
     automatically_download_gravatars: "Scarica i Gravatars per gli utenti quando viene creato l'account o quando viene modificata l'email"
     allow_profile_backgrounds: "Permetti agli utenti di caricare immagini di sfondo per il profilo."
     enable_mobile_theme: "I dispositivi mobili usano un tema apposito, con possibilità di passare alla visualizzazione completa. Disabilita questa opzione se vuoi usare un foglio di stile personalizzato che sia completamente reattivo."
-    suppress_uncategorized_badge: "Non mostrare la targhetta per gli argomenti senza categoria nell'elenco degli argomenti."
+    suppress_uncategorized_badge: "Non mostrare il distintivo per gli argomenti senza categoria nell'elenco degli argomenti."
     global_notice: "Mostra a tutti i visitatori un avviso con striscione globale URGENTE, EMERGENZA, lascia vuoto per nasconderlo (HTML consentito)."
     full_name_required: "Il nome completo è un campo obbligatorio del profilo utente."
     invites_per_page: "Inviti predefiniti mostrati nella pagina utente."
@@ -970,7 +972,14 @@ it:
     default_categories_watching: "Elenco di categorie osservate per default."
     default_categories_tracking: "Elenco di categorie seguite per default."
     default_categories_muted: "Elenco di categorie silenziate per default."
-    tag_style: "Stile grafico delle targhette relative alle etichette."
+    tagging_enabled: "Abilitare le etichette per gli argomenti?"
+    min_trust_to_create_tag: "Il livello di esperienza minimo per creare un'etichetta."
+    max_tags_per_topic: "Il numero massimo di etichette che si possono applicare ad un argomento."
+    max_tag_search_results: "Il numero massimo di risultati da mostrare nella ricerca di etichette."
+    tags_sort_alphabetically: "Mostra le etichette in ordine alfabetico. Per default vengono mostrate in ordine di popolarità."
+    tag_style: "Stile grafico dei distintivi relativi alle etichette."
+    staff_tags: "Un elenco di etichette che possono essere usate soltanto dai membri dello staff"
+    min_trust_level_to_tag_topics: "Livello di esperienza minimo richiesto per etichettare argomenti"
     errors:
       invalid_email: "Indirizzo email non valido."
       invalid_username: "Non c'è alcun utente con quel nome."
@@ -1163,7 +1172,7 @@ it:
       subject_template: "[%{site_name}] Problema relativo all'email -- Chiave di risposta sconosciuta"
     email_reject_bad_destination_address:
       subject_template: "[%{site_name}] Problema email -- Destinatario sconosciuto"
-      text_body_template: |
+      text_body_template: |+
         Spiacenti, ma il tuo messaggio email a %{destination} (intitolato %{former_title}) non è stato inviato.
 
         Non è stato riconosciuto alcuno degli indirizzi email di destinazione. Assicurati di inviare a indirizzi email validi.
@@ -1292,7 +1301,7 @@ it:
         %{respond_instructions}
     user_posted_pm_staged:
       subject_template: "%{optional_re}%{topic_title}"
-      text_body_template: |
+      text_body_template: |2
 
         %{message}
     digest:
@@ -1426,6 +1435,12 @@ it:
   privacy_topic:
     title: "Politica della Privacy"
   badges:
+    editor:
+      long_description: |
+        Questo distintivo viene assegnato la prima volta che modifichi uno dei tuoi messaggi. Anche se non potrai modificare i tuoi messaggi indefinitamente, la modifica è sempre una buona idea — puoi migliorare i tuoi messaggi, correggere piccoli errori o aggiungere qualcosa che avevi tralasciato nel momento della prima stesura. Effettua modifiche per migliorare i tuoi messaggi!
+    basic_user:
+      long_description: |
+        Questo distintivo viene assegnato quando raggiungi il livello di esperienza 1. Grazie per essere stato nei paraggi per un po' a leggere qualche argomento e a imparare di cosa tratta la nostra comunità. Le restrizioni iniziali che avevi come nuovo utente sono state allentate; ti sono ora state assegnate tutte le capacità essenziali, come ad esempio i messaggi personali, le segnalazioni, la modifica delle wiki e la possibilità di inviare più immagini e collegamenti.
     member:
       name: Membro
     regular:
