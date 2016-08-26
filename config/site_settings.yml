@@ -1270,11 +1270,14 @@ user_api:
     default: true
   max_api_keys_per_user:
     default: 10
+  push_api_secret_key:
+    hidden: true
   min_trust_level_for_user_api_key:
     default: 1
   allowed_user_api_push_urls:
     default: ''
     type: list
+    shadowed_by_global: true
   allowed_user_api_auth_redirects:
     default: 'https://api.discourse.org/api/auth_redirect|discourse://auth_redirect'
     type: list
