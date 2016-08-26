@@ -83,11 +83,11 @@ class Auth::DefaultCurrentUserProvider
       limiter_day = RateLimiter.new(nil, "user_api_day_#{api_key}", SiteSetting.max_user_api_reqs_per_day, 86400)
 
       unless limiter_day.can_perform?
-        raise RateLimiter::LimitExceeded, "User API calls per minute exceeded"
+        limiter_day.performed!
       end
 
       unless  limiter_min.can_perform?
-        raise RateLimiter::LimitExceeded, "User API calls per day exceeded"
+        limiter_min.performed!
       end
 
       current_user = lookup_user_api_user(api_key)
