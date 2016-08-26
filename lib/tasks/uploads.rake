@@ -72,7 +72,7 @@ task "uploads:backfill_shas" => :environment do
         u.save!
         putc "."
       rescue => e
-        putc "Skipping #{upload.original_filename} (#{upload.url}) #{e.message}"
+        putc "Skipping #{u.original_filename} (#{u.url}) #{e.message}"
       end
     end
   end
