@@ -66,13 +66,17 @@ describe EmbeddableHost do
   end
 
   describe "path_whitelist" do
-    let!(:host) { Fabricate(:embeddable_host, path_whitelist: '^/fp/\d{4}/\d{2}/\d{2}/.*$') }
-
     it "matches the path" do
+      Fabricate(:embeddable_host, path_whitelist: '^/fp/\d{4}/\d{2}/\d{2}/.*$')
       expect(EmbeddableHost.url_allowed?('http://eviltrout.com')).to eq(false)
       expect(EmbeddableHost.url_allowed?('http://eviltrout.com/fp/2016/08/25/test-page')).to eq(true)
     end
 
+    it "respects query parameters" do
+      Fabricate(:embeddable_host, path_whitelist: '^/fp$')
+      expect(EmbeddableHost.url_allowed?('http://eviltrout.com/fp?test=1')).to eq(false)
+      expect(EmbeddableHost.url_allowed?('http://eviltrout.com/fp')).to eq(true)
+    end
   end
 
 end
