@@ -712,8 +712,10 @@ section.details {
     }
   }
 }
-.row.groups input[type='text'].flair_bg_color {
-  width: 200px;
+.row.groups {
+  input[type='text'].flair_bg_color, input[type='text'].flair_color {
+    width: 200px;
+  }
 }
 
 // Customise area

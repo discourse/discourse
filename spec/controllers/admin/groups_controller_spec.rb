@@ -37,7 +37,8 @@ describe Admin::GroupsController do
         "is_member"=>true,
         "mentionable"=>false,
         "flair_url"=>nil,
-        "flair_bg_color"=>nil
+        "flair_bg_color"=>nil,
+        "flair_color"=>nil
       }])
     end
 

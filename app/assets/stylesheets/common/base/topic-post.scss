@@ -158,7 +158,9 @@ aside.quote {
 }
 
 .topic-avatar .avatar-flair, .avatar-flair-preview .avatar-flair {
-  display: block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   background-size: 20px 20px;
   background-repeat: no-repeat;
   background-position: center;
