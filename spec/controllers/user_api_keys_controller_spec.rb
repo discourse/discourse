@@ -94,6 +94,35 @@ TXT
 
     end
 
+    it "will not return p access if not yet configured" do
+      SiteSetting.min_trust_level_for_user_api_key = 0
+      SiteSetting.allowed_user_api_auth_redirects = args[:auth_redirect]
+
+      args[:access] = "pr"
+      args[:push_url] = "https://push.it/here"
+
+      user = Fabricate(:user, trust_level: 0)
+
+      log_in_user(user)
+
+      post :create, args
+      expect(response.code).to eq("302")
+
+      uri = URI.parse(response.redirect_url)
+
+      query = uri.query
+      payload = query.split("payload=")[1]
+      encrypted = Base64.decode64(CGI.unescape(payload))
+
+      key = OpenSSL::PKey::RSA.new(private_key)
+
+      parsed = JSON.parse(key.private_decrypt(encrypted))
+
+      expect(parsed["nonce"]).to eq(args[:nonce])
+      expect(parsed["access"].split('').sort).to eq(['r'])
+
+    end
+
     it "will redirect correctly with valid token" do
 
       SiteSetting.min_trust_level_for_user_api_key = 0
@@ -122,6 +151,7 @@ TXT
       parsed = JSON.parse(key.private_decrypt(encrypted))
 
       expect(parsed["nonce"]).to eq(args[:nonce])
+      expect(parsed["access"].split('').sort).to eq(['p','r', 'w'])
 
       api_key = UserApiKey.find_by(key: parsed["key"])
 
