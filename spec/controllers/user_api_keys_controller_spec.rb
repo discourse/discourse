@@ -122,6 +122,7 @@ TXT
       expect(parsed["access"].split('').sort).to eq(['r'])
 
       key = user.user_api_keys.first
+      expect(key.push).to eq(true)
       expect(key.push_url).to eq("https://push.it/here")
 
     end
