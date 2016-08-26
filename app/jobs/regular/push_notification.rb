@@ -2,7 +2,7 @@ module Jobs
   class PushNotification < Jobs::Base
     def execute(args)
       notification = args["payload"]
-      notification["url"] = UrlHelper.absolute(notification["post_url"])
+      notification["url"] = UrlHelper.absolute_without_cdn(notification["post_url"])
       notification.delete("post_url")
 
       payload = {
