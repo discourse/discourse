@@ -121,6 +121,9 @@ TXT
       expect(parsed["nonce"]).to eq(args[:nonce])
       expect(parsed["access"].split('').sort).to eq(['r'])
 
+      key = user.user_api_keys.first
+      expect(key.push_url).to eq("https://push.it/here")
+
     end
 
     it "will redirect correctly with valid token" do
