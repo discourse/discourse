@@ -97,14 +97,15 @@ export default createWidget('search-menu', {
     const results = [this.attach('search-term', { value: searchData.term, contextEnabled }),
                      this.attach('search-context', { contextEnabled })];
 
-    if (searchData.term)
-    if (searchData.loading) {
-      results.push(h('div.searching', h('div.spinner')));
-    } else {
-      results.push(this.attach('search-menu-results', { term: searchData.term,
-                                                        noResults: searchData.noResults,
-                                                        results: searchData.results,
-                                                        invalidTerm: searchData.invalidTerm }));
+    if (searchData.term) {
+      if (searchData.loading) {
+        results.push(h('div.searching', h('div.spinner')));
+      } else {
+        results.push(this.attach('search-menu-results', { term: searchData.term,
+                                                          noResults: searchData.noResults,
+                                                          results: searchData.results,
+                                                          invalidTerm: searchData.invalidTerm }));
+      }
     }
 
     return results;
