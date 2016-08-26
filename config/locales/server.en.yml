@@ -2020,7 +2020,7 @@ en:
         Your account associated with this email address has been blocked.
 
     email_reject_reply_user_not_matching:
-      subject_template: "[%{site_name}] Email issue -- Reply User Not Matching"
+      subject_template: "[%{site_name}] Email issue -- Unexpected Reply Address"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
@@ -2043,7 +2043,7 @@ en:
         If you're getting this and you _did_ include a reply, try again with simpler formatting.
 
     email_reject_parsing:
-      subject_template: "[%{site_name}] Email issue -- Content unrecognized"
+      subject_template: "[%{site_name}] Email issue -- Content Unrecognized"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
