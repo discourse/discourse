@@ -16,7 +16,8 @@ class BasicGroupSerializer < ApplicationSerializer
              :is_member,
              :mentionable,
              :flair_url,
-             :flair_bg_color
+             :flair_bg_color,
+             :flair_color
 
   def include_incoming_email?
     scope.is_staff?

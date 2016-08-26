@@ -113,12 +113,35 @@
           <label for="flair_bg_color">{{i18n 'admin.groups.flair_bg_color'}}</label>
           {{text-field name="flair_bg_color" class="flair_bg_color" value=model.flair_bg_color placeholderKey="admin.groups.flair_bg_color_placeholder"}}
         </div>
+
+        {{#if flairPreviewIcon}}
+          <div>
+            <label for="flair_color">{{i18n 'admin.groups.flair_color'}}</label>
+            {{text-field name="flair_color" class="flair_color" value=model.flair_color placeholderKey="admin.groups.flair_color_placeholder"}}
+          </div>
+        {{/if}}
       </div>
 
-      {{#if flairPreviewStyle}}
+      {{#if flairPreviewIcon}}
         <div class="flair_right">
           <div>
-            <label>{{i18n 'admin.groups.flair_preview'}}</label>
+            <label>{{i18n 'admin.groups.flair_preview'}} Icon</label>
+            <div class="avatar-flair-preview">
+              <div class="avatar-wrapper">
+                <img alt width="45" height="45" src="{{demoAvatarUrl}}" class="avatar actor">
+              </div>
+              <div class="avatar-flair demo {{flairPreviewClasses}}" style={{flairPreviewStyle}}>
+                <i class="fa {{model.flair_url}}"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      {{/if}}
+
+      {{#if flairPreviewImage}}
+        <div class="flair_right">
+          <div>
+            <label>{{i18n 'admin.groups.flair_preview'}} Image</label>
             <div class="avatar-flair-preview">
               <div class="avatar-wrapper">
                 <img alt width="45" height="45" src="{{demoAvatarUrl}}" class="avatar actor">

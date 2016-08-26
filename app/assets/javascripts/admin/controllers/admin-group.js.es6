@@ -1,6 +1,7 @@
 import { popupAjaxError } from 'discourse/lib/ajax-error';
 import { propertyEqual } from 'discourse/lib/computed';
 import { escapeExpression } from 'discourse/lib/utilities';
+import computed from 'ember-addons/ember-computed-decorators';
 
 export default Ember.Controller.extend({
   needs: ['adminGroupsType'],
@@ -36,26 +37,42 @@ export default Ember.Controller.extend({
     ];
   }.property(),
 
-  demoAvatarUrl: function() {
+  @computed
+  demoAvatarUrl() {
     return Discourse.getURL('/images/avatar.png');
-  }.property(),
+  },
 
-  flairPreviewStyle: function() {
+  @computed('model.flair_url')
+  flairPreviewIcon() {
+    return this.get('model.flair_url') && this.get('model.flair_url').substr(0,3) === 'fa-';
+  },
+
+  @computed('flairPreviewIcon')
+  flairPreviewImage() {
+    return this.get('model.flair_url') && !this.get('flairPreviewIcon');
+  },
+
+  @computed('flairPreviewImage', 'model.flair_url', 'model.flairBackgroundHexColor', 'model.flairHexColor')
+  flairPreviewStyle() {
     var style = '';
-    if (this.get('model.flair_url')) {
+    if (this.get('flairPreviewImage')) {
       style += 'background-image: url(' + escapeExpression(this.get('model.flair_url')) + '); ';
     }
     if (this.get('model.flairBackgroundHexColor')) {
       style += 'background-color: #' + this.get('model.flairBackgroundHexColor') + ';';
     }
+    if (this.get('model.flairHexColor')) {
+      style += 'color: #' + this.get('model.flairHexColor') + ';';
+    }
     return style;
-  }.property('model.flair_url', 'model.flairBackgroundHexColor'),
+  },
 
-  flairPreviewClasses: function() {
+  @computed('model.flairBackgroundHexColor')
+  flairPreviewClasses() {
     if (this.get('model.flairBackgroundHexColor')) {
       return 'rounded';
     }
-  }.property('model.flairBackgroundHexColor'),
+  },
 
   actions: {
     next() {
