@@ -326,6 +326,64 @@ describe PostAlerter do
     end
   end
 
+  describe "push_notification" do
+    let(:mention_post) { create_post_with_alerts(user: user, raw: 'Hello @eviltrout')}
+    let(:topic) { mention_post.topic }
+
+    it "correctly pushes notifications if configured correctly" do
+      SiteSetting.allowed_user_api_push_urls = "https://site.com/push|https://site2.com/push"
+
+      2.times do |i|
+        UserApiKey.create!(user_id: evil_trout.id,
+                           client_id: "xxx#{i}",
+                           key: "yyy#{i}",
+                           application_name: "iPhone#{i}",
+                           read: true,
+                           write: true,
+                           push: true,
+                           push_url: "https://site2.com/push")
+      end
+
+      # I want to test payload ... but we have chicked egg problem
+      # if I test it then it makes the req and the the expects is not correct ...
+      # need to track all reqs in rest client and check after the fact
+
+      # payload = {
+      #   secret_key: SiteSetting.push_api_secret_key,
+      #   url: Discourse.base_url,
+      #   title: SiteSetting.title,
+      #   description: SiteSetting.site_description,
+      #   notifications: [
+      #   {
+      #     'notification_type' => 1,
+      #     'post_number' => 1,
+      #     'topic_title' => topic.title,
+      #     'topic_id' => topic.id,
+      #     'excerpt' => 'Hello @eviltrout',
+      #     'username' => user.username,
+      #     'url' => UrlHelper.absolute(mention_post.url),
+      #     'client_id' => 'xxx0'
+      #   },
+      #   {
+      #     'notification_type' => 1,
+      #     'post_number' => 1,
+      #     'topic_title' => topic.title,
+      #     'topic_id' => topic.id,
+      #     'excerpt' => 'Hello @eviltrout',
+      #     'username' => user.username,
+      #     'url' => UrlHelper.absolute(mention_post.url),
+      #     'client_id' => 'xxx1'
+      #   }
+      #   ]
+      # }
+
+      # should only happen once even though we are using 2 keys
+      RestClient.expects(:post).returns("OK")
+
+      mention_post
+    end
+  end
+
   describe "watching_first_post" do
     let(:group) { Fabricate(:group) }
     let(:user) { Fabricate(:user) }

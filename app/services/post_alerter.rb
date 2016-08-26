@@ -388,10 +388,24 @@ class PostAlerter
         }
 
         MessageBus.publish("/notification-alert/#{user.id}", payload, user_ids: [user.id])
+        push_notification(user, payload)
         DiscourseEvent.trigger(:post_notification_alert, user, payload)
      end
    end
 
+  end
+
+  def push_notification(user, payload)
+    if SiteSetting.allow_push_user_api_keys && SiteSetting.allowed_user_api_push_urls.present?
+      clients = user.user_api_keys
+          .where('push AND push_url IS NOT NULL AND position(push_url in ?) > 0 AND revoked_at IS NULL',
+                  SiteSetting.allowed_user_api_push_urls)
+          .pluck(:client_id, :push_url)
+
+      if clients.length > 0
+        Jobs.enqueue(:push_notification, clients: clients, payload: payload, user_id: user.id)
+      end
+    end
   end
 
   def expand_group_mentions(groups, post)
