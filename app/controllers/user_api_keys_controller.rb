@@ -38,13 +38,6 @@ class UserApiKeysController < ApplicationController
     @auth_redirect = params[:auth_redirect]
     @push_url = params[:push_url]
 
-    if @access.include?("p")
-      if !SiteSetting.allow_push_user_api_keys ||
-         !SiteSetting.allowed_user_api_push_urls.split('|').any?{|u| params[:push_url] == u}
-        @access.gsub!("p","")
-        @push_url = nil
-      end
-    end
   rescue Discourse::InvalidAccess
     @generic_error = true
   end
@@ -123,7 +116,7 @@ class UserApiKeysController < ApplicationController
     ].each{|p| params.require(p)}
   end
 
-  def validate_params(skip_push_check = false)
+  def validate_params
     request_read = params[:access].include? 'r'
     request_read ||= params[:access].include? 'p'
     request_write = params[:access].include? 'w'
