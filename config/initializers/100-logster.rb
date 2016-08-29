@@ -20,8 +20,8 @@ if Rails.env.production?
     #
     /(?m).*?Line: (?:\D|0).*?Column: (?:\D|0)/,
 
-    # also empty JS errors
-    /^Script error\..*Line: 0/m,
+    # suppress empty JS errors (covers MSIE 9, etc)
+    /^(Syntax|Script) error.*Line: (0|1)\b/m,
 
     # CSRF errors are not providing enough data
     # suppress unconditionally for now
@@ -37,10 +37,7 @@ if Rails.env.production?
     /^ActiveRecord::RecordNotFound/,
 
     # bad asset requested, no need to log
-    /^ActionController::BadRequest/,
-
-    # IE9 is *wildly* incompatible with Discourse in A.D. 2016
-    /MSIE 9.0;/
+    /^ActionController::BadRequest/
   ]
 end
 
