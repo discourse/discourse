@@ -57,7 +57,7 @@ class Users::OmniauthCallbacksController < ApplicationController
       @auth_result.authenticator_name = authenticator.name
       complete_response_data
 
-      if provider && (provider.full_screen_login || cookies['fsl'])
+      if (provider && provider.full_screen_login) || cookies['fsl']
         cookies.delete('fsl')
         cookies['_bypass_cache'] = true
         flash[:authentication_data] = @auth_result.to_client_hash.to_json
