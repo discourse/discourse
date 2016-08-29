@@ -48,8 +48,8 @@ CategoryList.reopenClass({
             break;
           }
         default:
-          c.stat = `<span class="value">${c.topic_count}</span>`;
-          c.statTitle = I18n.t("categories.topic_sentence", { count: c.topic_count });
+          c.stat = `<span class="value">${c.topics_all_time}</span>`;
+          c.statTitle = I18n.t("categories.topic_sentence", { count: c.topics_all_time });
           break;
       }
 
