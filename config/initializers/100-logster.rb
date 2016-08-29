@@ -7,7 +7,6 @@ if Rails.env.production?
 
     /^ActionController::UnknownFormat/,
     /^ActionController::UnknownHttpMethod/,
-
     /^AbstractController::ActionNotFound/,
 
     # alihack is really annoying, nothing really we can do about this
@@ -38,7 +37,10 @@ if Rails.env.production?
     /^ActiveRecord::RecordNotFound/,
 
     # bad asset requested, no need to log
-    /^ActionController::BadRequest/
+    /^ActionController::BadRequest/,
+
+    # IE9 is *wildly* incompatible with Discourse in A.D. 2016
+    /MSIE 9.0;/
   ]
 end
 
