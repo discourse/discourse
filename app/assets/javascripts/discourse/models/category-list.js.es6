@@ -14,7 +14,7 @@ CategoryList.reopenClass({
     const list = Discourse.Category.list();
 
     let statPeriod;
-    const minCategories = result.category_list.categories.length * 0.8;
+    const minCategories = result.category_list.categories.length * 0.66;
 
     ["week", "month"].some(period => {
       const filteredCategories = result.category_list.categories.filter(c => c[`topics_${period}`] > 0);
