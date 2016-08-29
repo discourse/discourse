@@ -1826,9 +1826,9 @@ en:
 
         Your reply can be formatted using simple HTML, BBCode, or [Markdown](http://commonmark.org/help/):
 
-            This is **bold**.
             This is <b>bold</b>.
             This is [b]bold[/b].
+            This is **bold**.
 
         For more formatting tips, [try our fun 10 minute interactive tutorial!](http://commonmark.org/help/tutorial/)
 
