@@ -87,8 +87,13 @@ export default Ember.Component.extend({
 
     const composer = this.get('composer');
     if (composer.get('privateMessage')) {
-      const usernames = composer.get('targetUsernames').split(',');
-      if (usernames.length === 1 && usernames[0] === this.currentUser.get('username')) {
+      let usernames = composer.get('targetUsernames');
+
+      if (usernames) {
+        usernames = usernames.split(',');
+      }
+
+      if (usernames && usernames.length === 1 && usernames[0] === this.currentUser.get('username')) {
 
         const message = this._yourselfConfirm || composer.store.createRecord('composer-message', {
           id: 'yourself_confirm',
