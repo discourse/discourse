@@ -454,6 +454,8 @@ Discourse::Application.routes.draw do
   post "category/:category_id/notifications" => "categories#set_notifications"
   put "category/:category_id/slug" => "categories#update_slug"
 
+  get "categories_and_latest" => "categories#categories_and_latest"
+
   get "c/:id/show" => "categories#show"
   get "c/:category_slug/find_by_slug" => "categories#find_by_slug"
   get "c/:parent_category_slug/:category_slug/find_by_slug" => "categories#find_by_slug"

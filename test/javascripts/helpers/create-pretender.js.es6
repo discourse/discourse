@@ -133,6 +133,8 @@ export default function() {
       return response({ valid: [{ slug: "bug", url: '/c/bugs' }] });
     });
 
+    this.get("/categories_and_latest", () => response(fixturesByUrl["/categories_and_latest.json"]));
+
     this.put('/categories/:category_id', request => {
 
       const category = parsePostData(request.requestBody);

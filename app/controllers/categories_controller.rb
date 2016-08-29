@@ -2,10 +2,10 @@ require_dependency 'category_serializer'
 
 class CategoriesController < ApplicationController
 
-  before_filter :ensure_logged_in, except: [:index, :show, :redirect, :find_by_slug]
+  before_filter :ensure_logged_in, except: [:index, :categories_and_latest, :show, :redirect, :find_by_slug]
   before_filter :fetch_category, only: [:show, :update, :destroy]
   before_filter :initialize_staff_action_logger, only: [:create, :update, :destroy]
-  skip_before_filter :check_xhr, only: [:index, :redirect]
+  skip_before_filter :check_xhr, only: [:index, :categories_and_latest, :redirect]
 
   def redirect
     redirect_to path("/c/#{params[:path]}")
@@ -16,10 +16,6 @@ class CategoriesController < ApplicationController
 
     @description = SiteSetting.site_description
 
-    include_topics = view_context.mobile_view? ||
-                     params[:include_topics] ||
-                     SiteSetting.desktop_category_page_style == "categories_with_featured_topics".freeze
-
     category_options = {
       is_homepage: current_homepage == "categories".freeze,
       parent_category_id: params[:parent_category_id],
@@ -29,7 +25,7 @@ class CategoriesController < ApplicationController
     @category_list = CategoryList.new(guardian, category_options)
     @category_list.draft_key = Draft::NEW_TOPIC
     @category_list.draft_sequence = DraftSequence.current(current_user, Draft::NEW_TOPIC)
-    @category_list.draft = Draft.get(current_user, @category_list.draft_key, @category_list.draft_sequence) if current_user
+    @category_list.draft = Draft.get(current_user, Draft::NEW_TOPIC, @category_list.draft_sequence) if current_user
 
     @title = I18n.t('js.filters.categories.title') unless category_options[:is_homepage]
 
@@ -48,6 +44,37 @@ class CategoriesController < ApplicationController
 
       format.json { render_serialized(@category_list, CategoryListSerializer) }
     end
+  end
+
+  def categories_and_latest
+    discourse_expires_in 1.minute
+
+    category_options = {
+      is_homepage: current_homepage == "categories".freeze,
+      parent_category_id: params[:parent_category_id],
+      include_topics: false
+    }
+
+    topic_options = {
+      per_page: SiteSetting.categories_topics,
+      no_definitions: true
+    }
+
+    result = CategoryAndTopicLists.new
+    result.category_list = CategoryList.new(guardian, category_options)
+    result.topic_list = TopicQuery.new(current_user, topic_options).list_latest
+
+    draft_key = Draft::NEW_TOPIC
+    draft_sequence = DraftSequence.current(current_user, draft_key)
+    draft = Draft.get(current_user, draft_key, draft_sequence) if current_user
+
+    %w{category topic}.each do |type|
+      result.send(:"#{type}_list").draft = draft
+      result.send(:"#{type}_list").draft_key = draft_key
+      result.send(:"#{type}_list").draft_sequence = draft_sequence
+    end
+
+    render_serialized(result, CategoryAndTopicListsSerializer, root: false)
   end
 
   def move
@@ -224,5 +251,11 @@ class CategoriesController < ApplicationController
 
     def initialize_staff_action_logger
       @staff_action_logger = StaffActionLogger.new(current_user)
+    end
+
+    def include_topics
+      view_context.mobile_view? ||
+      params[:include_topics] ||
+      SiteSetting.desktop_category_page_style == "categories_with_featured_topics".freeze
     end
 end
