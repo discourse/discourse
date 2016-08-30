@@ -350,6 +350,11 @@ en:
         post_reply:
           base:
             different_topic: "Post and reply must belong to the same topic."
+        web_hook:
+          attributes:
+            payload_url:
+              invalid: "URL is invalid. URL should includes http:// or https://. And no blank is allowed."
+
 
 
   user_profile:

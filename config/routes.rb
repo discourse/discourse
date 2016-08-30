@@ -206,6 +206,12 @@ Discourse::Application.routes.draw do
       end
     end
 
+    resources :web_hooks, constraints: AdminConstraint.new
+    get 'web_hook_events/:id' => 'web_hooks#list_events', constraints: AdminConstraint.new, as: :web_hook_events
+    get 'web_hooks/:id/events' => 'web_hooks#list_events', constraints: AdminConstraint.new
+    post 'web_hooks/:web_hook_id/events/:event_id/redeliver' => 'web_hooks#redeliver_event', constraints: AdminConstraint.new
+    post 'web_hooks/:id/ping' => 'web_hooks#ping', constraints: AdminConstraint.new
+
     resources :backups, only: [:index, :create], constraints: AdminConstraint.new do
       member do
         get "" => "backups#show", constraints: { id: BACKUP_ROUTE_FORMAT }
