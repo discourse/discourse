@@ -40,12 +40,13 @@ const DiscoveryCategoriesRoute = Discourse.Route.extend(OpenComposer, {
   },
 
   _loadCategoriesAndLatestTopics() {
-    const categoriesList = PreloadStore.get("categories_list");
+    const wrappedCategoriesList = PreloadStore.get("categories_list");
     const topicListLatest = PreloadStore.get("topic_list_latest");
+    const categoriesList = wrappedCategoriesList && wrappedCategoriesList.categories_list;
     if (categoriesList && topicListLatest) {
       return new Ember.RSVP.Promise(resolve => {
         const result = Ember.Object.create({
-          categories: CategoryList.categoriesFrom(this.store, categoriesList),
+          categories: CategoryList.categoriesFrom(this.store, wrappedCategoriesList),
           topics: TopicList.topicsFrom(this.store, topicListLatest),
           can_create_category: categoriesList.can_create_category,
           can_create_topic: categoriesList.can_create_topic,
