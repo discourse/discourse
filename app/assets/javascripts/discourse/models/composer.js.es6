@@ -651,6 +651,11 @@ const Composer = RestModel.extend({
         return result;
       }
 
+      // We sometimes want to hide the `reply_to_user` if the post contains a quote
+      if (result.responseJson && result.responseJson.post && !result.responseJson.post.reply_to_user) {
+        createdPost.set('reply_to_user', null);
+      }
+
       if (topic) {
         // It's no longer a new post
         topic.set('draft_sequence', result.target.draft_sequence);
