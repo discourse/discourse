@@ -34,6 +34,15 @@ html.anon .topic-list a.title:visited:not(.badge-notification) {color: dark-ligh
 
     &.last-visit {
       border-bottom: 1px solid scale-color($danger, $lightness: 60%);
+      + tr::after {
+        content: attr(data-last-visit-text);
+        color: scale-color($danger, $lightness: 50%);
+        position: absolute;
+        left: 50%;
+        margin-top: -10px;
+        padding: 0 10px;
+        background: $secondary;
+      }
     }
   }
 
