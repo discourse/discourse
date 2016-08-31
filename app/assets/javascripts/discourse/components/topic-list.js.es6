@@ -1,4 +1,4 @@
-import {default as computed, observes} from 'ember-addons/ember-computed-decorators';
+import { default as computed, observes, on } from 'ember-addons/ember-computed-decorators';
 
 export default Ember.Component.extend({
   tagName: 'table',
@@ -30,12 +30,6 @@ export default Ember.Component.extend({
   showOpLikes: function(){
     return this.get('order') === "op_likes";
   }.property('order'),
-
-  @observes('category')
-  categoryChanged: function(){
-    this.set('prevTopic', null);
-  },
-
 
   @computed('topics.@each', 'order', 'ascending')
   lastVisitedTopic(topics, order, ascending) {
@@ -84,9 +78,21 @@ export default Ember.Component.extend({
       return;
     }
 
+    prevTopic.set('isLastVisited', true);
     this.set('prevTopic', prevTopic);
 
     return prevTopic;
+  },
+
+  @observes('category')
+  @on('willDestroyElement')
+  _cleanLastVisitedTopic() {
+    const prevTopic = this.get('prevTopic');
+
+    if (prevTopic) {
+      prevTopic.set('isLastVisited', false);
+      this.set('prevTopic', null);
+    }
   },
 
   click(e) {
