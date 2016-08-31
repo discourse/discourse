@@ -1,10 +1,8 @@
-import Resolver from 'wizard/resolver';
-import Router from 'wizard/router';
+import { buildResolver } from 'discourse-common/resolver';
 
 export default Ember.Application.extend({
   rootElement: '#wizard-main',
-  Resolver,
-  Router,
+  Resolver: buildResolver('wizard'),
 
   start() {
     Object.keys(requirejs._eak_seen).forEach(key => {

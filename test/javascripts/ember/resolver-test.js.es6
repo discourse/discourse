@@ -1,4 +1,4 @@
-import DiscourseResolver from 'discourse/ember/resolver';
+import { buildResolver } from 'discourse-common/resolver';
 
 let originalTemplates;
 let resolver;
@@ -14,6 +14,8 @@ function setTemplates(lookupTemplateStrings) {
     Ember.TEMPLATES[lookupTemplateString] = lookupTemplateString;
   });
 }
+
+const DiscourseResolver = buildResolver('discourse');
 
 module("lib:resolver", {
   setup: function() {

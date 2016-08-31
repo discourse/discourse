@@ -1,4 +1,4 @@
-import { registerUnbound } from 'discourse/lib/helpers';
+import { registerUnbound } from 'discourse-common/lib/helpers';
 import renderTag from 'discourse/lib/render-tag';
 
 export default registerUnbound('discourse-tag', function(name, params) {

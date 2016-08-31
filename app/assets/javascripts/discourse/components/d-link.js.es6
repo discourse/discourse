@@ -1,5 +1,5 @@
 import computed from 'ember-addons/ember-computed-decorators';
-import { iconHTML } from 'discourse/helpers/fa-icon';
+import { iconHTML } from 'discourse-common/helpers/fa-icon';
 import interceptClick from 'discourse/lib/intercept-click';
 
 export default Ember.Component.extend({

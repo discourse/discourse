@@ -1,4 +1,4 @@
-import { htmlHelper } from 'discourse/lib/helpers';
+import { htmlHelper } from 'discourse-common/lib/helpers';
 
 export default htmlHelper(function(str) {
   if (Ember.isEmpty(str)) { return ""; }

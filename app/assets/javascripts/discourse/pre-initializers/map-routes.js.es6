@@ -1,4 +1,4 @@
-import { mapRoutes } from 'discourse/router';
+import { mapRoutes } from 'discourse/mapping-router';
 
 export default {
   name: "map-routes",

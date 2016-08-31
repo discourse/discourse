@@ -1,4 +1,4 @@
-import { registerHelper } from 'discourse/lib/helpers';
+import { registerHelper } from 'discourse-common/lib/helpers';
 import PreloadStore from 'preload-store';
 
 const _customizations = {};

@@ -1,4 +1,4 @@
-import { get } from 'discourse/lib/raw-handlebars';
+import { get } from 'discourse-common/lib/raw-handlebars';
 
 // `Ember.Helper` is only available in versions after 1.12
 export function htmlHelper(fn) {

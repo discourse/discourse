@@ -46,7 +46,7 @@
    The list of disabled plugins is returned via the `Site` singleton.
 
 **/
-import { registerHelper } from 'discourse/lib/helpers';
+import { registerHelper } from 'discourse-common/lib/helpers';
 
 let _connectorCache, _rawCache;
 

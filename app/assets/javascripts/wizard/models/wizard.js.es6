@@ -20,4 +20,3 @@ export function findWizard() {
     return Wizard.create(wizard);
   });
 }
-

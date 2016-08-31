@@ -1,7 +1,7 @@
 import { createWidget } from 'discourse/widgets/widget';
 import { h } from 'virtual-dom';
 import { relativeAge } from 'discourse/lib/formatter';
-import { iconNode } from 'discourse/helpers/fa-icon';
+import { iconNode } from 'discourse/helpers/fa-icon-node';
 
 const SCROLLAREA_HEIGHT = 300;
 const SCROLLER_HEIGHT = 50;

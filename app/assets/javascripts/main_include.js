@@ -2,6 +2,7 @@
 //= require ./ember-addons/decorator-alias
 //= require ./ember-addons/macro-alias
 //= require ./ember-addons/ember-computed-decorators
+//= require_tree ./discourse-common
 //= require ./discourse
 //= require ./deprecated
 
@@ -19,11 +20,6 @@
 //= require ./discourse/lib/debounce
 //= require ./discourse/lib/quote
 //= require ./discourse/lib/key-value-store
-//= require ./discourse/lib/helpers
-//= require ./discourse/helpers/i18n
-//= require ./discourse/helpers/fa-icon
-//= require ./discourse/lib/raw-handlebars
-//= require ./discourse/lib/helpers
 //= require ./discourse/lib/computed
 //= require ./discourse/lib/formatter
 //= require ./discourse/lib/eyeline
@@ -92,7 +88,7 @@
 //= require ./discourse/helpers/category-link
 //= require ./discourse/lib/export-result
 //= require_tree ./discourse/lib
-//= require ./discourse/router
+//= require ./discourse/mapping-router
 
 //= require_tree ./discourse/controllers
 //= require_tree ./discourse/models

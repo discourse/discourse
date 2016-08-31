@@ -1,5 +1,5 @@
 import ButtonView from 'discourse/views/button';
-import { iconHTML } from 'discourse/helpers/fa-icon';
+import { iconHTML } from 'discourse-common/helpers/fa-icon';
 
 export default ButtonView.extend({
   classNames: ['flag-topic'],

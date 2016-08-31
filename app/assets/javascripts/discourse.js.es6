@@ -1,4 +1,4 @@
-import DiscourseResolver from 'discourse/ember/resolver';
+import { buildResolver } from 'discourse-common/resolver';
 import { default as computed, observes } from 'ember-addons/ember-computed-decorators';
 
 const _pluginCallbacks = [];
@@ -31,7 +31,7 @@ const Discourse = Ember.Application.extend({
     return url;
   },
 
-  Resolver: DiscourseResolver,
+  Resolver: buildResolver('discourse'),
 
   @observes('_docTitle', 'hasFocus', 'notifyCount')
   _titleChanged() {
