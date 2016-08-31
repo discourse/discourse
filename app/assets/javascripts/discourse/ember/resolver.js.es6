@@ -116,6 +116,7 @@ export default Ember.DefaultResolver.extend({
 
   resolveTemplate(parsedName) {
     return this.findPluginTemplate(parsedName) ||
+           this.findPluginMobileTemplate(parsedName) ||
            this.findMobileTemplate(parsedName) ||
            this.findTemplate(parsedName) ||
            Ember.TEMPLATES.not_found;
@@ -136,6 +137,11 @@ export default Ember.DefaultResolver.extend({
 
   findPluginTemplate(parsedName) {
     var pluginParsedName = this.parseName(parsedName.fullName.replace("template:", "template:javascripts/"));
+    return this.findTemplate(pluginParsedName);
+  },
+
+  findPluginMobileTemplate(parsedName) {
+    var pluginParsedName = this.parseName(parsedName.fullName.replace("template:", "template:javascripts/mobile/"));
     return this.findTemplate(pluginParsedName);
   },
 
