@@ -3,6 +3,10 @@ require 'rails_helper'
 describe ExtraLocalesController do
 
   context 'show' do
+    before do
+      I18n.locale = :en
+      I18n.reload!
+    end
 
     it "needs a valid bundle" do
       get :show, bundle: 'made-up-bundle'

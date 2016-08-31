@@ -3,7 +3,7 @@
 {{/if}}
 
 {{#if step.description}}
-  <p class='wizard-step-description'>{{step.description}}</p>
+  <p class='wizard-step-description'>{{{step.description}}}</p>
 {{/if}}
 
 {{#wizard-step-form step=step}}
@@ -14,24 +14,33 @@
 
 <div class='wizard-step-footer'>
   <div class='wizard-progress'>
-    <div class='text'>{{i18n "wizard.step" current=step.displayIndex total=wizard.totalSteps}}</div>
+    <div class='text'>{{bound-i18n "wizard.step" current=step.displayIndex total=wizard.totalSteps}}</div>
     <div class='bar-container'>
       <div class='bar-contents' style={{barStyle}}></div>
     </div>
   </div>
 
-  {{#if showBackButton}}
-    <button class='wizard-btn back' {{action "backStep"}} disabled={{saving}}>
-      {{fa-icon "chevron-left"}}
-      {{i18n "wizard.back"}}
-    </button>
-  {{/if}}
+  <div class='wizard-buttons'>
+    {{#if showBackButton}}
+      <button class='wizard-btn back' {{action "backStep"}} disabled={{saving}}>
+        {{fa-icon "chevron-left"}}
+        {{i18n "wizard.back"}}
+      </button>
+    {{/if}}
 
-  {{#if showNextButton}}
-    <button class='wizard-btn next' {{action "nextStep"}} disabled={{saving}}>
-      {{i18n "wizard.next"}}
-      {{fa-icon "chevron-right"}}
-    </button>
-  {{/if}}
+    {{#if showNextButton}}
+      <button class='wizard-btn next' {{action "nextStep"}} disabled={{saving}}>
+        {{i18n "wizard.next"}}
+        {{fa-icon "chevron-right"}}
+      </button>
+    {{/if}}
+
+    {{#if showDoneButton}}
+      <button class='wizard-btn done' {{action "finished"}} disabled={{saving}}>
+        {{fa-icon "check"}}
+        {{i18n "wizard.done"}}
+      </button>
+    {{/if}}
+  </div>
 
 </div>

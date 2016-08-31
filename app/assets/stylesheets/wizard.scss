@@ -1,7 +1,8 @@
 @import "vendor/normalize";
 @import "vendor/font_awesome/font-awesome";
+@import "vendor/select2";
 
-body {
+body.wizard {
   background-color: #fff;
   background-image: url('/images/wizard/bubbles.png');
   background-repeat: repeat;
@@ -10,6 +11,10 @@ body {
   color: #444;
 
   line-height: 1.4em;
+}
+
+.select {
+  width: 400px;
 }
 
 .wizard-column {
@@ -77,10 +82,10 @@ body {
       background-color: #6699ff;
       color: white;
       border: 0px;
-      float: right;
       padding: 0.5em;
       outline: 0;
       transition: background-color .3s;
+      margin-right: 0.5em;
 
       &:hover {
         background-color: #80B3FF;
@@ -131,6 +136,25 @@ body {
       }
     }
 
+    button.wizard-btn:last-child {
+      margin-right: 0;
+    }
+
+    button.wizard-btn.done {
+      background-color: #33B333;
+
+      &:hover {
+        background-color: #4DCD4D;
+      }
+
+      &:active {
+        background-color: #66E666;
+      }
+
+      &:disabled {
+        background-color: #006700;
+      }
+    }
   }
 
   .wizard-field {
@@ -139,6 +163,16 @@ body {
     }
 
     .input-area {
+      margin-top: 0.5em;
+    }
+
+    .field-error-description {
+      color: red;
+      font-weight: bold;
+    }
+
+    .field-description {
+      color: #999;
       margin-top: 0.5em;
     }
 

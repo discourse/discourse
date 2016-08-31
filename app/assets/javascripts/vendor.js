@@ -1,5 +1,4 @@
 //= require logster
-//= require ./env
 //= require ./discourse-objects
 //= require probes.js
 
@@ -38,4 +37,3 @@
 //= require virtual-dom
 //= require virtual-dom-amd
 //= require highlight.js
-//= require_tree ./discourse/ember

@@ -12,6 +12,9 @@ export default Ember.Component.extend({
   @computed('step.displayIndex', 'wizard.totalSteps')
   showNextButton: (current, total) => current < total,
 
+  @computed('step.displayIndex', 'wizard.totalSteps')
+  showDoneButton: (current, total) => current === total,
+
   @computed('step.index')
   showBackButton: index => index > 0,
 

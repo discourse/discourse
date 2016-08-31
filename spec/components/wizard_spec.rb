@@ -16,7 +16,6 @@ describe Wizard do
     let(:step2) { wizard.create_step('second-step') }
 
     it "adds the step correctly" do
-
       expect(step1.index).to be_blank
 
       wizard.append_step(step1)

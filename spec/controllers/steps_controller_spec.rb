@@ -19,15 +19,15 @@ describe StepsController do
       log_in(:admin)
     end
 
-    it "raises an error with an invalid id" do
-      xhr :put, :update, id: 'made-up-id', fields: { forum_title: "updated title" }
-      expect(response).to_not be_success
+    it "updates properly if you are staff" do
+      xhr :put, :update, id: 'contact', fields: { contact_email: "eviltrout@example.com" }
+      expect(response).to be_success
+      expect(SiteSetting.contact_email).to eq("eviltrout@example.com")
     end
 
-    it "updates properly if you are staff" do
-      xhr :put, :update, id: 'forum-title', fields: { title: "updated title" }
-      expect(response).to be_success
-      expect(SiteSetting.title).to eq("updated title")
+    it "returns errors if the field has them" do
+      xhr :put, :update, id: 'contact', fields: { contact_email: "not-an-email" }
+      expect(response).to_not be_success
     end
   end
 
