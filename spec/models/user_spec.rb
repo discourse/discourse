@@ -433,6 +433,14 @@ describe User do
     it 'returns false when a username is taken' do
       expect(User.username_available?(Fabricate(:user).username)).to eq(false)
     end
+
+    it 'returns false when a username is reserved' do
+      SiteSetting.reserved_usernames = 'test|donkey'
+
+      expect(User.username_available?('donkey')).to eq(false)
+      expect(User.username_available?('DonKey')).to eq(false)
+      expect(User.username_available?('test')).to eq(false)
+    end
   end
 
   describe 'email_validator' do
