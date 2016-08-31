@@ -1,8 +1,7 @@
-import { h } from 'virtual-dom';
-import { registerUnbound } from 'discourse/lib/helpers';
+import { registerUnbound } from 'discourse-common/lib/helpers';
 
-function iconClasses(icon, params) {
-  var classes = "fa fa-" + icon;
+export function iconClasses(icon, params) {
+  let classes = "fa fa-" + icon;
   if (params.modifier) { classes += " fa-" + params.modifier; }
   if (params['class']) { classes += ' ' + params['class']; }
   return classes;
@@ -19,23 +18,6 @@ export function iconHTML(icon, params) {
     html += "<span class='sr-only'>" + I18n.t(params.label) + "</span>";
   }
   return html;
-}
-
-export function iconNode(icon, params) {
-  params = params ||  {};
-
-  const properties = {
-    className: iconClasses(icon, params),
-    attributes: { "aria-hidden": true }
-  };
-
-  if (params.title) { properties.attributes.title = params.title; }
-
-  if (params.label) {
-    return h('i', properties, h('span.sr-only', I18n.t(params.label)));
-  } else {
-    return h('i', properties);
-  }
 }
 
 registerUnbound('fa-icon', function(icon, params) {

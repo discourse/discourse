@@ -1,7 +1,7 @@
 import PostCooked from 'discourse/widgets/post-cooked';
 import DecoratorHelper from 'discourse/widgets/decorator-helper';
 import { createWidget, applyDecorators } from 'discourse/widgets/widget';
-import { iconNode } from 'discourse/helpers/fa-icon';
+import { iconNode } from 'discourse/helpers/fa-icon-node';
 import { transformBasicPost } from 'discourse/lib/transform-post';
 import { h } from 'virtual-dom';
 import DiscourseURL from 'discourse/lib/url';

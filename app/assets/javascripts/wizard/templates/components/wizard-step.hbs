@@ -22,7 +22,7 @@
 
   {{#if showBackButton}}
     <button class='wizard-btn back' {{action "backStep"}} disabled={{saving}}>
-      <i class='fa fa-chevron-left'></i>
+      {{fa-icon "chevron-left"}}
       {{i18n "wizard.back"}}
     </button>
   {{/if}}
@@ -30,7 +30,7 @@
   {{#if showNextButton}}
     <button class='wizard-btn next' {{action "nextStep"}} disabled={{saving}}>
       {{i18n "wizard.next"}}
-      <i class='fa fa-chevron-right'></i>
+      {{fa-icon "chevron-right"}}
     </button>
   {{/if}}
 

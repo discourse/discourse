@@ -1,5 +1,5 @@
 import StringBuffer from 'discourse/mixins/string-buffer';
-import { iconHTML } from 'discourse/helpers/fa-icon';
+import { iconHTML } from 'discourse-common/helpers/fa-icon';
 
 export default Ember.Component.extend(StringBuffer, {
   tagName: 'th',

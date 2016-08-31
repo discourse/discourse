@@ -1,5 +1,5 @@
-import { iconHTML } from 'discourse/helpers/fa-icon';
-import { htmlHelper } from 'discourse/lib/helpers';
+import { iconHTML } from 'discourse-common/helpers/fa-icon';
+import { htmlHelper } from 'discourse-common/lib/helpers';
 import { escapeExpression } from 'discourse/lib/utilities';
 
 export default htmlHelper((user, args) => {

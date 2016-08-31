@@ -44,6 +44,7 @@ QUnit.testDone(function() {
 var wizard = require('wizard/wizard').default.create({
   rootElement: '#ember-testing'
 });
+
 wizard.setupForTesting();
 wizard.injectTestHelpers();
 wizard.start();
