@@ -141,8 +141,10 @@ export default Ember.DefaultResolver.extend({
   },
 
   findPluginMobileTemplate(parsedName) {
-    var pluginParsedName = this.parseName(parsedName.fullName.replace("template:", "template:javascripts/mobile/"));
-    return this.findTemplate(pluginParsedName);
+    if (this.mobileView) {
+      var pluginParsedName = this.parseName(parsedName.fullName.replace("template:", "template:javascripts/mobile/"));
+      return this.findTemplate(pluginParsedName);
+    }
   },
 
   findMobileTemplate(parsedName) {
