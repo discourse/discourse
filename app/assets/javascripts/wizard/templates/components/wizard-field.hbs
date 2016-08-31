@@ -2,6 +2,14 @@
   <span class='label-value'>{{field.label}}</span>
 
   <div class='input-area'>
-    {{input value=field.value class=inputClassName placeholder=field.placeholder}}
+    {{component inputComponentName field=field inputClassName=inputClassName}}
   </div>
+
+  {{#if field.errorDescription}}
+    <div class='field-error-description'>{{field.errorDescription}}</div>
+  {{/if}}
+
+  {{#if field.description}}
+    <div class='field-description'>{{field.description}}</div>
+  {{/if}}
 </label>

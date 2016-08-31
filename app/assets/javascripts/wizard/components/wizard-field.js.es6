@@ -4,5 +4,8 @@ export default Ember.Component.extend({
   classNameBindings: [':wizard-field', ':text-field', 'field.invalid'],
 
   @computed('field.id')
-  inputClassName: id => `field-${Ember.String.dasherize(id)}`
+  inputClassName: id => `field-${Ember.String.dasherize(id)}`,
+
+  @computed('field.type')
+  inputComponentName: type => `wizard-field-${type}`
 });

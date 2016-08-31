@@ -3227,6 +3227,7 @@ en:
 
   wizard_js:
     wizard:
+      done: "Done"
       back: "Back"
       next: "Next"
       step: "Step %{current} of %{total}"

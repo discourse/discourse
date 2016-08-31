@@ -8,6 +8,7 @@ export const States = {
 
 export default {
   _validState: null,
+  errorDescription: null,
 
   init() {
     this._super();
@@ -23,8 +24,14 @@ export default {
   @computed('_validState')
   unchecked: state => state === States.UNCHECKED,
 
-  setValid(valid) {
+  setValid(valid, description) {
     this.set('_validState', valid ? States.VALID : States.INVALID);
+
+    if (!valid && description && description.length) {
+      this.set('errorDescription', description);
+    } else {
+      this.set('errorDescription', null);
+    }
   }
 
 };

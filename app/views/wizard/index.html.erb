@@ -1,8 +1,8 @@
 <html>
   <head>
     <%= stylesheet_link_tag 'wizard' %>
-    <%= script 'wizard-vendor' %>
     <%= script 'ember_jquery' %>
+    <%= script 'wizard-vendor' %>
     <%= script 'wizard-application' %>
     <%= script "locales/#{I18n.locale}" %>
     <%= render partial: "common/special_font_face" %>
@@ -12,7 +12,7 @@
     <title><%= t 'wizard.title' %></title>
   </head>
 
-  <body>
+  <body class='wizard'>
     <div id='wizard-main'></div>
 
     <script>

@@ -40,7 +40,10 @@ export default function() {
             title: 'hello there',
             index: 0,
             description: 'hello!',
-            fields: [{ id: 'full_name', type: 'text', required: true }],
+            fields: [{ id: 'full_name',
+                       type: 'text',
+                       required: true,
+                       description: "Your name" }],
             next: 'second-step'
           },
           {

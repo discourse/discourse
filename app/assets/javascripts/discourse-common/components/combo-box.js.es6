@@ -64,10 +64,11 @@ export default Ember.Component.extend({
     }
 
     const $elem = this.$();
-    const minimumResultsForSearch = this.capabilities.isIOS ? -1 : 5;
+    const caps = this.capabilities;
+    const minimumResultsForSearch = (caps && caps.isIOS) ? -1 : 5;
     $elem.select2({
       formatResult: this.comboTemplate, minimumResultsForSearch,
-      width: 'resolve',
+      width: this.get('width') || 'resolve',
       allowClear: true
     });
 
