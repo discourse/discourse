@@ -147,7 +147,9 @@ class User < ActiveRecord::Base
 
   def self.username_available?(username)
     lower = username.downcase
-    User.where(username_lower: lower).blank? && !SiteSetting.reserved_usernames.split("|").include?(username)
+
+    User.where(username_lower: lower).blank? &&
+      !SiteSetting.reserved_usernames.split("|").any? { |reserved| reserved.casecmp(username) == 0 }
   end
 
   def self.plugin_staff_user_custom_fields
