@@ -20,8 +20,9 @@ export default Ember.Component.extend(StringBuffer, {
   tagName: 'tr',
   rawTemplate: 'list/topic-list-item.raw',
   classNameBindings: [':topic-list-item', 'unboundClassNames'],
-  attributeBindings: ['data-topic-id'],
+  attributeBindings: ['data-topic-id', 'data-last-visit-text'],
   'data-topic-id': Em.computed.alias('topic.id'),
+  'data-last-visit-text': Em.computed.alias('lastVisitMessage'),
 
   actions: {
     toggleBookmark() {
@@ -52,6 +53,19 @@ export default Ember.Component.extend(StringBuffer, {
     }
 
     return classes.join(' ');
+  }.property(),
+
+  lastVisitMessage: function() {
+    if (this.get('lastVisitedTopic') == this.get('topic')) {
+      this.session.set('lastVisitedTopicAbove', true);
+      return;
+    }
+    if (!this.session.get('lastVisitedTopicAbove')) {
+      return;
+    } else {
+      this.session.set('lastVisitedTopicAbove', false);
+      return I18n.t('topics.new_messages_marker');
+    }
   }.property(),
 
   titleColSpan: function() {
