@@ -33,6 +33,8 @@ export default Ember.Component.extend({
 
   @observes('category')
   categoryChanged: function(){
+    const prevTopic = this.get('prevTopic');
+    prevTopic.set('isLastVisited', false);
     this.set('prevTopic', null);
   },
 
@@ -84,6 +86,7 @@ export default Ember.Component.extend({
       return;
     }
 
+    prevTopic.set('isLastVisited', true);
     this.set('prevTopic', prevTopic);
 
     return prevTopic;

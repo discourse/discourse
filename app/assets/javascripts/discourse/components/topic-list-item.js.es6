@@ -1,4 +1,5 @@
 import StringBuffer from 'discourse/mixins/string-buffer';
+import computed from 'ember-addons/ember-computed-decorators';
 
 export function showEntrance(e) {
   let target = $(e.target);
@@ -20,9 +21,8 @@ export default Ember.Component.extend(StringBuffer, {
   tagName: 'tr',
   rawTemplate: 'list/topic-list-item.raw',
   classNameBindings: [':topic-list-item', 'unboundClassNames'],
-  attributeBindings: ['data-topic-id', 'data-last-visit-text'],
+  attributeBindings: ['data-topic-id'],
   'data-topic-id': Em.computed.alias('topic.id'),
-  'data-last-visit-text': Em.computed.alias('lastVisitMessage'),
 
   actions: {
     toggleBookmark() {
@@ -30,9 +30,9 @@ export default Ember.Component.extend(StringBuffer, {
     }
   },
 
-  unboundClassNames: function() {
+  @computed('topic', 'lastVisitedTopic')
+  unboundClassNames(topic, lastVisitedTopic) {
     let classes = [];
-    const topic = this.get('topic');
 
     if (topic.get('category')) {
       classes.push("category-" + topic.get('category.fullSlug'));
@@ -48,25 +48,12 @@ export default Ember.Component.extend(StringBuffer, {
       }
     });
 
-    if (topic === this.get('lastVisitedTopic')) {
+    if (topic === lastVisitedTopic) {
       classes.push('last-visit');
     }
 
     return classes.join(' ');
-  }.property(),
-
-  lastVisitMessage: function() {
-    if (this.get('lastVisitedTopic') == this.get('topic')) {
-      this.session.set('lastVisitedTopicAbove', true);
-      return;
-    }
-    if (!this.session.get('lastVisitedTopicAbove')) {
-      return;
-    } else {
-      this.session.set('lastVisitedTopicAbove', false);
-      return I18n.t('topics.new_messages_marker');
-    }
-  }.property(),
+  },
 
   titleColSpan: function() {
     return (!this.get('hideCategory') &&
