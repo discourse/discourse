@@ -13,7 +13,7 @@ CategoryList.reopenClass({
     const categories = CategoryList.create();
     const list = Discourse.Category.list();
 
-    let statPeriod;
+    let statPeriod = "all";
     const minCategories = result.category_list.categories.length * 0.66;
 
     ["week", "month"].some(period => {
@@ -36,6 +36,8 @@ CategoryList.reopenClass({
       if (c.topics) {
         c.topics = c.topics.map(t => Discourse.Topic.create(t));
       }
+
+      c["pick" + statPeriod[0].toUpperCase() + statPeriod.slice(1)] = true;
 
       switch(statPeriod) {
         case "week":
