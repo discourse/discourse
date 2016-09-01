@@ -297,7 +297,7 @@ td.flaggers td {
   height: 150px;
 }
 
-.groups, .badges {
+.groups, .badges, .web-hook-container {
   .form-horizontal {
     label {
       font-weight: bold;
@@ -311,7 +311,7 @@ td.flaggers td {
       width: 350px;
     }
 
-    input[type="checkbox"] {
+    input[type="checkbox"], input[type="radio"] {
       width: 20px;
     }
   }
@@ -1246,6 +1246,39 @@ table.api-keys {
     bottom: 0;
   }
 
+}
+
+.hook-event {
+  display: inline-block;
+  width: 40%;
+
+  margin-left: 20px;
+
+  label {
+    display: inline-block;
+  }
+
+  p {
+    margin: 0 0 5px 25px;
+  }
+}
+
+.web-hook-container {
+  > p {
+    padding-bottom: 10px;
+    border-bottom: darken($secondary, 10%) 1px solid;
+  }
+  .filters {
+    margin: 5px 0;
+    padding-bottom: 5px;
+    border-bottom: darken($secondary, 5%) 1px solid;
+  }
+  .instructions {
+    margin-top: 5px;
+  }
+  .subscription-choice {
+    margin-bottom: 10px;
+  }
 }
 
 .email-template {
