@@ -16,7 +16,8 @@ vi:
           format: '%n %u'
           units:
             byte:
-              other: Byte
+              one: Byte
+              other: Bytes
             gb: GB
             kb: KB
             mb: MB
