@@ -4,7 +4,7 @@ require File.expand_path(File.dirname(__FILE__) + "/base.rb")
 
 class ImportScripts::Ning < ImportScripts::Base
 
-  JSON_FILES_DIR = "/path/to/json/archive/json/files"
+  JSON_FILES_DIR = "C:\Users\PC\Desktop\archive-Human Resource Management Philippines (HRM)"
   ATTACHMENT_PREFIXES = ["discussions", "pages", "blogs", "members", "photos"]
   EXTRA_AUTHORIZED_EXTENSIONS = ["bmp", "ico", "txt", "pdf"]
 
