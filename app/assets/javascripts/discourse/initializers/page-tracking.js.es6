@@ -33,5 +33,18 @@ export default {
         window.ga('send', 'pageview', {page: url, title: title});
       });
     }
+
+    // And Google Tag Manager too
+    if (typeof window.dataLayer !== 'undefined') {
+      onPageChange((url, title) => {
+        window.dataLayer.push({
+          'event': 'virtualPageView',
+          'page': {
+            'title': title,
+            'url': url
+          }
+        });
+      });
+    }
   }
 };
