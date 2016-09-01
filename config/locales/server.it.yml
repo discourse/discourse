@@ -707,7 +707,7 @@ it:
     notification_email_warning: "Le email di notifica non vengono inviate da un indirizzo email valido del tuo dominio; l'invio di email sarà inaffidabile. Definisci notification_email con un indirizzo email valido nelle <a href='/admin/site_settings'>Impostazioni Sito</a>."
     subfolder_ends_in_slash: "L'impostazione della sottocartella è errata; DISCOURSE_RELATIVE_URL_ROOT finisce con uno slash."
   site_settings:
-    censored_words: "Parole che saranno automaticamente sostituite con &#9632;&#9632;&#9632;&#9632;"
+    censored_words: "Parole che saranno automaticamente sostituite con ■■■■ (&#9632;)"
     delete_old_hidden_posts: "Cancella automaticamente tutti i messaggi nascosti che restano nascosti per più di 30 giorni."
     default_locale: "Il linguaggio di default di questa istanza Discourse (ISO 639-1 Code)"
     allow_user_locale: "Permetti agli utenti di personalizzare la lingua dell'interfaccia"

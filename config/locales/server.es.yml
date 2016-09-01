@@ -738,7 +738,7 @@ es:
     poll_pop3_timeout: "La conexión al servidor POP3 está rebasando el tiempo de espera. Los emails entrantes no han podido ser recogidos. Por favor revisa los <a href='/admin/site_settings/category/email'>ajustes de POP3</a> y tu proveedor de servicio."
     poll_pop3_auth_error: "La conexión al servidor POP3 está fallando debido a un error de autenticación. Por favor revisa los <a href='/admin/site_settings/category/email'>ajustes POP3</a>."
   site_settings:
-    censored_words: "Las palabras serán reemplazadas con &#9632;&#9632;&#9632;&#9632;"
+    censored_words: "Las palabras serán reemplazadas con ■■■■ (&#9632;)"
     delete_old_hidden_posts: "Auto-borrar cualquier post que se quede oculto por mas de 30 días."
     default_locale: "El idioma por defecto de Discourse (ISO 639-1 Code)"
     allow_user_locale: "Permitir que los usuarios escojan su propio idioma para la interfaz"

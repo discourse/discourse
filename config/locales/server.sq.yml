@@ -605,7 +605,7 @@ sq:
     site_contact_username_warning: "Enter the name of a friendly staff user account to send important automated messages from. Update site_contact_username in <a href='/admin/site_settings'>Site Settings</a>."
     notification_email_warning: "Notification emails are not being sent from a valid email address on your domain; email delivery will be erratic and unreliable. Please set notification_email to a valid local email address in <a href='/admin/site_settings'>Site Settings</a>."
   site_settings:
-    censored_words: "Fjalët do të zhvendosen automatikisht me &#9632;&#9632;&#9632;&#9632;"
+    censored_words: "Fjalët do të zhvendosen automatikisht me ■■■■ (&#9632;)"
     delete_old_hidden_posts: "Auto-delete any hidden posts that stay hidden for more than 30 days."
     default_locale: "The default language of this Discourse instance (ISO 639-1 Code)"
     allow_user_locale: "Allow users to choose their own language interface preference"

@@ -561,7 +561,7 @@ nb_NO:
     memory_warning: 'Serveren din kjører med mindre enn 1 GB med minne. Minst 1 GB RAM er anbefalt.'
     title_nag: "Oppgi navnet på nettstedet. Oppdater tittelen under <a href='/admin/site_settings'>Nettstedinstillinger</a>."
   site_settings:
-    censored_words: "Ord som automatisk vil bli erstattet med &#9632;&#9632;&#9632;&#9632;"
+    censored_words: "Ord som automatisk vil bli erstattet med ■■■■ (&#9632;)"
     delete_old_hidden_posts: "Auto-slett skjulte innlegg som er skjult i mer enn 30 dager."
     default_locale: "Standard språk for denne instansen av Discourse (ISO 639-1 Kode)"
     allow_user_locale: "Tillta at brukere velger eget språk"

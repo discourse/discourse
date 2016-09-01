@@ -487,7 +487,7 @@ zh_TW:
     consumer_email_warning: "您的網站正以Gmail或其他服務供應商郵件服務發送郵件。<a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>Gmail限制每日郵件發送數量</a>. 請考慮使用其他電郵服務商來保證郵件能成功發送，例如 mandrill.com。"
     notification_email_warning: "通知郵件不是從你域名的一個有效地址發出的；電郵發送將會變得危險和不可靠。請在<a href='/admin/site_settings'>設定</a>中將 notification_email 設定一個有效的本機電郵地址。"
   site_settings:
-    censored_words: "將被自動替換為 &#9632;&#9632;&#9632;&#9632;"
+    censored_words: "將被自動替換為 ■■■■ (&#9632;)"
     delete_old_hidden_posts: "自動刪除被隱藏超過 30 天的帖子。"
     default_locale: "Discourse 執行個體 (instance) 的預設語言編碼 (ISO 639-1)"
     allow_user_locale: "允許用戶選擇自己的語言介面"

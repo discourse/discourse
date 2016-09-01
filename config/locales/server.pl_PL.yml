@@ -708,7 +708,7 @@ pl_PL:
     site_contact_username_warning: "Wprowadź nazwę użytkownika zespołu, aby wysłać ważny szablon automatycznej wiadomości. Zaktualizuj site_contact_username w <a href='/admin/site_settings'> Ustawieniach Strony </a>"
     notification_email_warning: "Emaile z powiadomieniami nie zostały wysłane z prawidłowego adresu email na twojej domenie; dostawca usługi email może być niekonsekwentny i nierzetelny. Ustaw prawidłowy email w notification_email w <a href='/admin/site_settings'>Ustawieniach Strony</a>."
   site_settings:
-    censored_words: "Wskazane słowa będą automatycznie zamieniane na  &#9632;&#9632;&#9632;&#9632;"
+    censored_words: "Wskazane słowa będą automatycznie zamieniane na  ■■■■ (&#9632;)"
     delete_old_hidden_posts: "Automatycznie kasuj wpisy ukryte dłużej niż 30 dni."
     default_locale: "Domyślny język tej instancji Discourse (kod ISO 639-1)"
     allow_user_locale: "Zezwól użytkownikom na zmianę języka interfejsu we własnych  ustawieniach"

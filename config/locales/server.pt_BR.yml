@@ -710,7 +710,7 @@ pt_BR:
     site_contact_username_warning: "Digite o nome de um membro interno para enviar mensagens importantes automaticamente a partir dele. Atualize site_contact_username em <a href='/admin/site_settings'>Configurações do Site</a>."
     notification_email_warning: "Emails de notificação não estão sendo enviados por um endereço de email válido no seu domínio; entrega de email será errática e não confiável. Por favor configure notification_email com um endereço de email local válido nas <a href='/admin/site_settings'>Configurações do Site</a>."
   site_settings:
-    censored_words: "Palavras que serão substituídos automaticamente por &#9632;&#9632;&#9632;&#9632;"
+    censored_words: "Palavras que serão substituídos automaticamente por ■■■■ (&#9632;)"
     delete_old_hidden_posts: "Auto-apagar todas as mensagens ocultas que ficar oculta por mais de 30 dias."
     default_locale: "Idioma padrão para esta instância do Discourse (ISO 639-1 Code)"
     allow_user_locale: "Permitir que os usuários escolham suas próprias preferências de idioma de interface"
