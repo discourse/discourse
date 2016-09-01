@@ -887,6 +887,8 @@ en:
 
     learn_more: "learn more..."
 
+    all_time: 'total'
+    all_time_desc: 'total topics created'
     year: 'year'
     year_desc: 'topics created in the last 365 days'
     month: 'month'

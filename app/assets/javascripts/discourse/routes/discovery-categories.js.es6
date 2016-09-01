@@ -17,7 +17,7 @@ const DiscoveryCategoriesRoute = Discourse.Route.extend(OpenComposer, {
   },
 
   model() {
-    const style = this.siteSettings.desktop_category_page_style;
+    const style = !this.site.mobileView && this.siteSettings.desktop_category_page_style;
     const parentCategory = this.get("model.parentCategory");
 
     let promise;
