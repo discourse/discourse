@@ -364,4 +364,9 @@ describe Group do
     expect(u3.reload.trust_level).to eq(3)
   end
 
+  it 'provides a list of all groups (names), including automatic groups' do
+    group = Fabricate(:group)
+    Group.list_names.should == Group::AUTO_GROUPS.keys.unshift(group.name)
+  end
+
 end
