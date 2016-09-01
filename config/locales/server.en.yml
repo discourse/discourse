@@ -1028,6 +1028,8 @@ en:
     enable_s3_backups: "Upload backups to S3 when complete. IMPORTANT: requires valid S3 credentials entered in Files settings."
     s3_backup_bucket: "The remote bucket to hold backups. WARNING: Make sure it is a private bucket."
     s3_disable_cleanup: "Disable the removal of backups from S3 when removed locally."
+    s3_enable_encryption: "Enable encryption of backups before uploading to AWS S3."
+    s3_gnupg_public_key: "The public key used to encrypt the backups in ASCII-armored format."
     backup_time_of_day: "Time of day UTC when the backup should occur."
     backup_with_uploads: "Include uploads in scheduled backups. Disabling this will only backup the database."
 

@@ -32,7 +32,8 @@ module SiteSettingExtension
                         url_list: 9,
                         host_list: 10,
                         category_list: 11,
-                        value_list: 12)
+                        value_list: 12,
+                        text: 13)
   end
 
   def mutex

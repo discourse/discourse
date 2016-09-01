@@ -17,6 +17,10 @@ describe SiteSettingExtension do
       it "'value_list' should be at 12th position" do
         expect(@types[:value_list]).to eq(12)
       end
+
+      it "'text' should be at the 13th position" do
+        expect(@types[:text]).to eq(13)
+      end
     end
   end
 
