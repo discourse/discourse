@@ -209,9 +209,12 @@ module PrettyText
     options[:topicId] = opts[:topic_id]
 
     working_text = text.dup
+
     sanitized = markdown(working_text, options)
+    puts "sanitized: #{sanitized}"
 
     doc = Nokogiri::HTML.fragment(sanitized)
+    puts "doc: #{doc}"
 
     if !options[:omit_nofollow] && SiteSetting.add_rel_nofollow_to_user_content
       add_rel_nofollow_to_user_content(doc)

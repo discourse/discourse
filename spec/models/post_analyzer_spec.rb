@@ -179,8 +179,10 @@ describe PostAnalyzer do
     end
 
     it "catches content between pre tags" do
+      puts "STARTING!!!!!!!!!!!!! POST PostAnalyzer"
       post_analyzer = PostAnalyzer.new("<pre>hello</pre> @Finn <pre></pre>", default_topic_id)
       expect(post_analyzer.raw_mentions).to eq(['finn'])
+      puts "ENDING!!!!!!!!!!!!!"
     end
 
     it "ignores code" do

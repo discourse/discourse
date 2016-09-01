@@ -419,8 +419,10 @@ describe Post do
       end
 
       it "catches content between pre tags" do
-        post = Fabricate.build(:post, post_args.merge(raw: "<pre>hello</pre> @Finn <pre></pre>"))
+        puts "STARTING!!!!!!!!!!!!! POST SPEC"
+        post = Fabricate.build(:post, post_args.merge(raw: "<pre>hello</pre>@Finn<pre></pre>"))
         expect(post.raw_mentions).to eq(['finn'])
+        puts "ENDING!!!!!!!!!!!!!"
       end
 
       it "ignores code" do
