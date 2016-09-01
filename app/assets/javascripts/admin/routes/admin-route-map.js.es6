@@ -36,6 +36,9 @@ export default {
       });
     });
     this.route('api');
+    this.resource('adminWebHooks', { path: '/web_hooks' }, function() {
+      this.route('show', { path: '/:web_hook_id' });
+    });
 
     this.resource('admin.backups', { path: '/backups' }, function() {
       this.route('logs');

@@ -75,6 +75,12 @@ export function emailValid(email) {
   return re.test(email);
 }
 
+export function urlValid(url) {
+  // see: https://mathiasbynens.be/demo/url-regex
+  var re = /^https?:\/\/(-\.)?([^\s/?\.#-]+\.?)+(\/[^\s]*)?$/i;
+  return re.test(url);
+}
+
 export function selectedText() {
   var html = '';
 
