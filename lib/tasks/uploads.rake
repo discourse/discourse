@@ -465,3 +465,98 @@ task "uploads:stop_migration" => :environment do
   SiteSetting.migrate_to_new_scheme = false
   puts "Migration stoped!"
 end
+
+task "uploads:analyze", [:cache_path, :limit] => :environment do |_, args|
+  now = Time.zone.now
+  current_db = RailsMultisite::ConnectionManagement.current_db
+
+  puts "Analyzing uploads for '#{current_db}'... This may take awhile...\n"
+  cache_path = args[:cache_path]
+
+  current_db = RailsMultisite::ConnectionManagement.current_db
+  uploads_path = Rails.root.join('public', 'uploads', current_db)
+
+  path =
+    if cache_path
+      cache_path
+    else
+      path = "/tmp/#{current_db}-#{now.to_i}-paths.txt"
+      FileUtils.touch("/tmp/#{now.to_i}-paths.txt")
+      `find #{uploads_path} -type f -printf '%s %h/%f\n' > #{path}`
+      path
+    end
+
+  extensions = {}
+  paths_count = 0
+
+  File.readlines(path).each do |line|
+    size, file_path = line.split(" ", 2)
+
+    paths_count += 1
+    extension = File.extname(file_path).chomp.downcase
+    extensions[extension] ||= {}
+    extensions[extension]["count"] ||= 0
+    extensions[extension]["count"] += 1
+    extensions[extension]["size"] ||= 0
+    extensions[extension]["size"] += size.to_i
+  end
+
+  uploads_count = Upload.count
+  optimized_images_count = OptimizedImage.count
+
+  puts <<~REPORT
+  Report for '#{current_db}'
+  -----------#{'-' * current_db.length}
+  Number of `Upload` records in DB: #{uploads_count}
+  Number of `OptimizedImage` records in DB: #{optimized_images_count}
+  **Total DB records: #{uploads_count + optimized_images_count}**
+
+  Number of images in uploads folder: #{paths_count}
+  ------------------------------------#{'-' * paths_count.to_s.length}
+
+  REPORT
+
+  helper = Class.new do
+    include ActionView::Helpers::NumberHelper
+  end
+
+  helper = helper.new
+
+  printf "%-15s | %-15s | %-15s\n", 'extname', 'total size', 'count'
+  puts "-" * 45
+
+  extensions.sort_by { |_, value| value['size'] }.reverse.each do |extname, value|
+    printf "%-15s | %-15s | %-15s\n", extname, helper.number_to_human_size(value['size']), value['count']
+  end
+
+  puts "\n"
+
+  limit = args[:limit] || 10
+
+  sql = <<~SQL
+    SELECT
+      users.username,
+      COUNT(uploads.user_id) AS num_of_uploads,
+      SUM(uploads.filesize) AS total_size_of_uploads,
+      COUNT(optimized_images.id) AS num_of_optimized_images
+    FROM users
+    INNER JOIN uploads ON users.id = uploads.user_id
+    INNER JOIN optimized_images ON uploads.id = optimized_images.upload_id
+    GROUP BY users.id
+    ORDER BY total_size_of_uploads DESC
+    LIMIT #{limit}
+  SQL
+
+  puts "Users using the most disk space"
+  puts "-------------------------------\n"
+  printf "%-25s | %-25s | %-25s | %-25s\n", 'username', 'total size of uploads', 'number of uploads', 'number of optimized images'
+  puts "-" * 110
+
+  User.exec_sql(sql).values.each do |username, num_of_uploads, total_size_of_uploads, num_of_optimized_images|
+    printf "%-25s | %-25s | %-25s | %-25s\n", username, helper.number_to_human_size(total_size_of_uploads), num_of_uploads, num_of_optimized_images
+  end
+
+  puts "\n"
+  puts "List of file paths @ #{path}"
+  puts "Duration: #{Time.zone.now - now} seconds"
+end
