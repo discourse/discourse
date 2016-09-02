@@ -90,7 +90,16 @@ class UserApiKeysController < ApplicationController
   end
 
   def revoke
-    find_key.update_columns(revoked_at: Time.zone.now)
+    revoke_key = find_key
+    if current_key = request.env['HTTP_USER_API_KEY']
+      request_key = UserApiKey.find_by(key: current_key)
+      if request_key && request_key.id != revoke_key.id && !request_key.write
+        raise Discourse::InvalidAccess
+      end
+    end
+
+    revoke_key.update_columns(revoked_at: Time.zone.now)
+
     render json: success_json
   end
 

@@ -176,10 +176,16 @@ class Auth::DefaultCurrentUserProvider
 
   protected
 
+  WHITELISTED_WRITE_PATHS ||= [/^\/message-bus\/.*\/poll/, /^\/user-api-key\/revoke$/]
   def lookup_user_api_user(user_api_key)
     if api_key = UserApiKey.where(key: user_api_key, revoked_at: nil).includes(:user).first
-      if !api_key.write && (@env["REQUEST_METHOD"] != "GET" && @env["PATH_INFO"] !~ /^\/message-bus\/.*\/poll/)
-        raise Discourse::InvalidAccess
+      unless api_key.write
+        if @env["REQUEST_METHOD"] != "GET"
+          path = @env["PATH_INFO"]
+          unless WHITELISTED_WRITE_PATHS.any?{|whitelisted| path =~ whitelisted}
+            raise Discourse::InvalidAccess
+          end
+        end
       end
 
       api_key.user
