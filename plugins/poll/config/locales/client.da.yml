@@ -62,6 +62,7 @@ da:
         poll_config:
           max: Maks
           min: Min
+          step: Trin
         poll_public:
           label: Vis hvem der stemte
         poll_options:

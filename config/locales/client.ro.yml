@@ -1030,6 +1030,10 @@ ro:
     topic:
       unsubscribe:
         stop_notifications: "Vei primi mai puține notificări pentru <strong>{{title}}</strong>"
+      filter_to:
+        one: "Un mesaj în discuție"
+        few: "{{count}} mesaje în discuție"
+        other: "{{count}} de mesaje în discuție"
       create: 'Discuție Nouă'
       create_long: 'Creează discuție nouă'
       private_message: 'Scrie un mesaj.'

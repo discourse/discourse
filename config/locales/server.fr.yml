@@ -126,7 +126,7 @@ fr:
     more_replies:
       one: "1 réponse supplémentaire"
       other: "%{count} réponses supplémentaires"
-    loading: "Chargement de la discussion..."
+    loading: "Chargement de la discussion…"
     permalink: "Lien permanent"
     imported_from: "Il s'agit d'un sujet en provenance de l'article %{link}"
     in_reply_to: "▶ %{username}"
@@ -481,7 +481,7 @@ fr:
   activation:
     action: "Cliquer ici pour activer votre compte"
     already_done: "Désolé, ce lien de confirmation n'est plus valide. Votre compte est peut-être déjà activé ?"
-    please_continue: "Votre nouveau compte est confirmé; vous allez être redirigé vers la page d'accueil."
+    please_continue: "Votre nouveau compte est confirmé ; vous allez être redirigé vers la page d'accueil."
     continue_button: "Continuer vers %{site_name}"
     welcome_to: "Bienvenue sur %{site_name} !"
     approval_required: "Un modérateur doit approuver manuellement votre nouveau compte avant que vous accédiez au forum. Vous recevrez un courriel lorsque que votre compte sera approuvé !"
@@ -495,7 +495,7 @@ fr:
       title: 'Spam'
       description: 'Ce message est une publicité. Elle n''est pas utile ou pertinente dans ce sujet, mais est uniquement de nature promotionnelle.'
       long_form: 'signalé comme spam'
-      email_title: '"%{title}" a été signalé comme spam'
+      email_title: '« %{title} » a été signalé comme spam'
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: 'Inapproprié'
@@ -505,13 +505,13 @@ fr:
       title: 'Envoyer un message à @{{username}} '
       description: 'Je veux parler à cette personne directement et de manière privée à propos de son message.'
       long_form: 'utilisateur contacté'
-      email_title: 'Votre message sur "%{title}"'
+      email_title: 'Votre message sur « %{title} »'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: "Autre chose"
       description: 'Ce message nécessite l''attention des responsables pour une autre raison que celle(s) mentionnée(s) ci-dessus.'
       long_form: 'signalé aux responsables'
-      email_title: 'Un message dans "%{title}" nécessite l''attention des responsables'
+      email_title: 'Un message dans « %{title} » nécessite l''attention des responsables'
       email_body: "%{link}\n\n%{message}"
     bookmark:
       title: 'Signet'
@@ -538,7 +538,7 @@ fr:
       title: "Autre chose"
       description: 'Ce message requiert l''attention d''un responsable d''après la <a href=''/fguidelines''>charte de la communauté</a>, <a href=''%{tos_url}''>les conditions générales de service</a>, ou pour une autre raison indéterminée.'
       long_form: 'signalé pour modération'
-      email_title: 'Ce sujet "%{title}" requière l''attention d''un modérateur'
+      email_title: 'Le sujet « %{title} » nécessite l''attention d''un modérateur'
       email_body: "%{link}\n\n%{message}"
   flagging:
     you_must_edit: '<p>Votre message a été signalé par la communauté. Veuillez <a href="/my/messages">regarder vos messages directs</a>.</p>'
@@ -620,7 +620,7 @@ fr:
       xaxis: "Jour"
       yaxis: "Nombre de courriels"
     user_to_user_private_messages:
-      title: "Utilisateur à Utilisateur"
+      title: "Utilisateur à utilisateur"
       xaxis: "Jour"
       yaxis: "Nombre de messages"
     system_private_messages:
@@ -806,7 +806,7 @@ fr:
     summary_score_threshold: "Le score minimum requis pour qu'un message soit inclus dans le 'Résumé de ce sujet'"
     summary_posts_required: "Nombre minimum de messages dans un sujet avant que le 'Résumé du sujet' soit activé"
     summary_likes_required: "Nombre de J'aime minimum dans un sujet avant que le 'Résumé du sujet' soit activé"
-    summary_percent_filter: "Quand un utilisateur clique sur 'Résumé du sujet', montrer le top % des messages"
+    summary_percent_filter: "Quand un utilisateur clique sur « Résumer ce sujet », montrer le top % des messages"
     summary_max_results: "Nombre maximum de messages retournés par 'Résumé de ce sujet'"
     enable_private_messages: "Autoriser les utilisateurs de niveau de confiance 1 à créer des messages et à répondre (configurable via le niveau de confiance minimum pour envoyer des messages). Notez que les responsables peuvent toujours envoyer des messages."
     enable_long_polling: "Utiliser les requêtes longues pour le flux de notifications."
