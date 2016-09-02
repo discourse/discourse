@@ -201,18 +201,20 @@ class OptimizedImage < ActiveRecord::Base
     false
   end
 
-  def self.migrate_to_new_scheme(limit=50)
+  def self.migrate_to_new_scheme(limit=nil)
     problems = []
 
     if SiteSetting.migrate_to_new_scheme
       max_file_size_kb = SiteSetting.max_image_size_kb.kilobytes
       local_store = FileStore::LocalStore.new
 
-      OptimizedImage.includes(:upload)
-                    .where("url NOT LIKE '%/optimized/_X/%'")
-                    .limit(limit)
-                    .order(id: :desc)
-                    .each do |optimized_image|
+      scope = OptimizedImage.includes(:upload)
+        .where("url NOT LIKE '%/optimized/_X/%'")
+        .order(id: :desc)
+
+      scope.limit(limit) if limit
+
+      scope.each do |optimized_image|
         begin
           # keep track of the url
           previous_url = optimized_image.url.dup
