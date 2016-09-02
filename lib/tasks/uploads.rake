@@ -373,11 +373,11 @@ end
 
 # regenerate missing optimized images
 task "uploads:regenerate_missing_optimized" => :environment do
-  regenerate_missing_optimized
-end
-
-task "uploads:regenerate_missing_optimized_all_sites" => :environment do
-  RailsMultisite::ConnectionManagement.each_connection { regenerate_missing_optimized }
+  if ENV["RAILS_DB"]
+    regenerate_missing_optimized
+  else
+    RailsMultisite::ConnectionManagement.each_connection { regenerate_missing_optimized }
+  end
 end
 
 def regenerate_missing_optimized
