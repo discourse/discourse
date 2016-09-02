@@ -94,6 +94,17 @@ TXT
 
     end
 
+    it "allows for a revoke with no id" do
+      key = Fabricate(:readonly_user_api_key)
+      request.env['HTTP_USER_API_KEY'] = key.key
+      post :revoke
+
+      expect(response.status).to eq(200)
+
+      key.reload
+      expect(key.revoked_at).not_to eq(nil)
+    end
+
     it "will not allow readonly api keys to revoke others" do
       key1 = Fabricate(:readonly_user_api_key)
       key2 = Fabricate(:readonly_user_api_key)
