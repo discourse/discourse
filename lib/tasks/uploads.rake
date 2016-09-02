@@ -68,7 +68,7 @@ task "uploads:backfill_shas" => :environment do
     Upload.where(sha1: nil).find_each do |u|
       begin
         path = Discourse.store.path_for(u)
-        u.sha1 = Digest::SHA1.file(path).hexdigest
+        u.sha1 = Upload.generate_digest(path)
         u.save!
         putc "."
       rescue => e
@@ -238,78 +238,96 @@ end
 ################################################################################
 
 task "uploads:clean_up" => :environment do
+  if ENV["RAILS_DB"]
+    clean_up_uploads
+  else
+    RailsMultisite::ConnectionManagement.each_connection { clean_up_uploads }
+  end
+end
 
-  RailsMultisite::ConnectionManagement.each_connection do |db|
-    puts "Cleaning up uploads and thumbnails for '#{db}'..."
+def clean_up_uploads
+  db = RailsMultisite::ConnectionManagement.current_db
 
-    if Discourse.store.external?
-      puts "This task only works for internal storages."
-      next
-    end
+  puts "Cleaning up uploads and thumbnails for '#{db}'..."
 
-    public_directory = "#{Rails.root}/public"
-
-    ##
-    ## DATABASE vs FILE SYSTEM
-    ##
-
-    # uploads & avatars
-    Upload.find_each do |upload|
-      path = "#{public_directory}#{upload.url}"
-      if !File.exists?(path)
-        upload.destroy rescue nil
-        putc "#"
-      else
-        putc "."
-      end
-    end
-
-    # optimized images
-    OptimizedImage.find_each do |optimized_image|
-      path = "#{public_directory}#{optimized_image.url}"
-      if !File.exists?(path)
-        optimized_image.destroy rescue nil
-        putc "#"
-      else
-        putc "."
-      end
-    end
-
-    ##
-    ## FILE SYSTEM vs DATABASE
-    ##
-
-    uploads_directory = "#{public_directory}/uploads/#{db}"
-
-    # avatars (no avatar should be stored in that old directory)
-    FileUtils.rm_rf("#{uploads_directory}/avatars") rescue nil
-
-    # uploads
-    Dir.glob("#{uploads_directory}/*/*.*").each do |f|
-      url = "/uploads/#{db}/" << f.split("/uploads/#{db}/")[1]
-      if !Upload.where(url: url).exists?
-        FileUtils.rm(f) rescue nil
-        putc "#"
-      else
-        putc "."
-      end
-    end
-
-    # optimized images
-    Dir.glob("#{uploads_directory}/_optimized/*/*/*.*").each do |f|
-      url = "/uploads/#{db}/_optimized/" << f.split("/uploads/#{db}/_optimized/")[1]
-      if !OptimizedImage.where(url: url).exists?
-        FileUtils.rm(f) rescue nil
-        putc "#"
-      else
-        putc "."
-      end
-    end
-
-    puts
-
+  if Discourse.store.external?
+    puts "This task only works for internal storages."
+    exit 1
   end
 
+  puts <<~OUTPUT
+  This task will remove upload records and files permanently.
+
+  Would you like to take a full backup before the clean up? (Y/N)
+  OUTPUT
+
+  if STDIN.gets.chomp.downcase == 'y'
+    puts "Starting backup..."
+    backuper = BackupRestore::Backuper.new(Discourse.system_user.id)
+    backuper.run
+    exit 1 unless backuper.success
+  end
+
+  public_directory = Rails.root.join("public").to_s
+
+  ##
+  ## DATABASE vs FILE SYSTEM
+  ##
+
+  # uploads & avatars
+  Upload.find_each do |upload|
+    path = File.join(public_directory, upload.url)
+
+    if !File.exists?(path)
+      upload.destroy!
+      putc "#"
+    else
+      putc "."
+    end
+  end
+
+  # optimized images
+  OptimizedImage.find_each do |optimized_image|
+    path = File.join(public_directory, optimized_image.url)
+
+    if !File.exists?(path)
+      optimized_image.destroy!
+      putc "#"
+    else
+      putc "."
+    end
+  end
+
+  ##
+  ## FILE SYSTEM vs DATABASE
+  ##
+
+  uploads_directory = File.join(public_directory, 'uploads', db).to_s
+
+  # avatars (no avatar should be stored in that old directory)
+  FileUtils.rm_rf("#{uploads_directory}/avatars")
+
+  # uploads and optimized images
+  Dir.glob("#{uploads_directory}/**/*.*").each do |file_path|
+    sha1 = Upload.generate_digest(file_path)
+    url = file_path.split(public_directory, 2)[1]
+
+    if (Upload.where(sha1: sha1).empty? &&
+        Upload.where(url: url).empty?) &&
+       (OptimizedImage.where(sha1: sha1).empty? &&
+        OptimizedImage.where(url: url).empty?)
+
+      FileUtils.rm(file_path)
+      putc "#"
+    else
+      putc "."
+    end
+  end
+
+  puts "Removing empty directories..."
+  puts `find #{uploads_directory} -type d -empty -exec rmdir {} \\;`
+
+  puts "Done!"
 end
 
 ################################################################################

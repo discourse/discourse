@@ -1,4 +1,3 @@
-require "digest/sha1"
 require_dependency "file_helper"
 require_dependency "url_helper"
 require_dependency "db_helper"
@@ -54,7 +53,7 @@ class OptimizedImage < ActiveRecord::Base
         if resized
           thumbnail = OptimizedImage.create!(
             upload_id: upload.id,
-            sha1: Digest::SHA1.file(temp_path).hexdigest,
+            sha1: Upload.generate_digest(temp_path),
             extension: extension,
             width: width,
             height: height,
@@ -231,7 +230,7 @@ class OptimizedImage < ActiveRecord::Base
           end
           # compute SHA if missing
           if optimized_image.sha1.blank?
-            optimized_image.sha1 = Digest::SHA1.file(path).hexdigest
+            optimized_image.sha1 = Upload.generate_digest(path)
           end
           # optimize if image
           ImageOptim.new.optimize_image!(path)
