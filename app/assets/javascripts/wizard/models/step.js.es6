@@ -8,6 +8,13 @@ export default Ember.Object.extend(ValidState, {
   @computed('index')
   displayIndex: index => index + 1,
 
+  @computed('fields.[]')
+  fieldsById(fields) {
+    const lookup = {};
+    fields.forEach(field => lookup[field.get('id')] = field);
+    return lookup;
+  },
+
   checkFields() {
     let allValid = true;
     this.get('fields').forEach(field => {

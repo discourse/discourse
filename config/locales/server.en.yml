@@ -3247,8 +3247,8 @@ en:
           color_scheme:
             label: "Color Scheme"
             options:
-              default: "Default Scheme"
-              dark: "Dark Scheme"
+              default: "Simple"
+              dark: "Dark"
 
       finished:
         title: "Your Discourse Forum is Ready!"

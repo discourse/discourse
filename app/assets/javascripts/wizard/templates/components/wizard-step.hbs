@@ -8,7 +8,7 @@
 
 {{#wizard-step-form step=step}}
   {{#each step.fields as |field|}}
-    {{wizard-field field=field}}
+    {{wizard-field field=field step=step}}
   {{/each}}
 {{/wizard-step-form}}
 
