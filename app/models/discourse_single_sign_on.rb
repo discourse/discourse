@@ -49,7 +49,7 @@ class DiscourseSingleSignOn < SingleSignOn
   def lookup_or_create_user(ip_address=nil)
     sso_record = SingleSignOnRecord.find_by(external_id: external_id)
 
-    if sso_record && user = sso_record.user
+    if sso_record && (user = sso_record.user)
       sso_record.last_payload = unsigned_payload
     else
       user = match_email_or_create_user(ip_address)
@@ -145,9 +145,8 @@ class DiscourseSingleSignOn < SingleSignOn
       user.name = name || User.suggest_name(username.blank? ? email : username)
     end
 
-    if SiteSetting.sso_overrides_avatar && avatar_url.present? && (
-      avatar_force_update ||
-      sso_record.external_avatar_url != avatar_url)
+    if (SiteSetting.sso_overrides_avatar && avatar_url.present? && (
+      sso_record.external_avatar_url != avatar_url)) || avatar_force_update
 
       UserAvatar.import_url_for_user(avatar_url, user)
     end
