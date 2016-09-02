@@ -52,7 +52,17 @@ class WizardFieldSerializer < ApplicationSerializer
 
   def options
     object.options.map do |o|
-      {id: o, label: I18n.t("#{i18n_key}.options.#{o}")}
+
+      result = {id: o, label: I18n.t("#{i18n_key}.options.#{o}")}
+
+      data = object.option_data[o]
+      if data.present?
+        as_json = data.dup
+        as_json.delete(:id)
+        result[:data] = as_json
+      end
+
+      result
     end
   end
 

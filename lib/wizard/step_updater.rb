@@ -23,6 +23,34 @@ class Wizard
       update_setting(:site_contact_username, fields, :site_contact_username)
     end
 
+    def update_colors(fields)
+      scheme_name = fields[:color_scheme]
+
+      theme = ColorScheme.themes.find {|s| s[:id] == scheme_name }
+
+      colors = []
+      theme[:colors].each do |name, hex|
+        colors << {name: name, hex: hex[1..-1] }
+      end
+
+      attrs = {
+        enabled: true,
+        name: I18n.t("wizard.step.colors.fields.color_scheme.options.#{scheme_name}"),
+        colors: colors
+      }
+
+      scheme = ColorScheme.where(via_wizard: true).first
+      if scheme.present?
+        attrs[:colors] = colors
+        revisor = ColorSchemeRevisor.new(scheme, attrs)
+        revisor.revise
+      else
+        attrs[:via_wizard] = true
+        scheme = ColorScheme.new(attrs)
+        scheme.save!
+      end
+    end
+
     def success?
       @errors.blank?
     end

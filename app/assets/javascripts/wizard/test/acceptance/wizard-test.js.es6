@@ -8,7 +8,7 @@ test("Wizard starts", assert => {
   });
 });
 
-test("Forum Name Step", assert => {
+test("Going back and forth in steps", assert => {
   visit("/step/hello-world");
   andThen(() => {
     assert.ok(exists('.wizard-step'));
@@ -44,7 +44,10 @@ test("Forum Name Step", assert => {
     assert.ok(!exists('.wizard-field .field-error-description'));
     assert.ok(!exists('.wizard-step-title'));
     assert.ok(!exists('.wizard-step-description'));
-    assert.ok(exists('input.field-email'), "went to the next step");
+
+    assert.ok(exists('select.field-snack'), "went to the next step");
+    assert.ok(exists('.preview-area'), "renders the component field");
+
     assert.ok(!exists('.wizard-btn.next'));
     assert.ok(exists('.wizard-btn.done'), 'last step shows a done button');
     assert.ok(exists('.wizard-btn.back'), 'shows the back button');

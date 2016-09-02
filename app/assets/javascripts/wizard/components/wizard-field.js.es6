@@ -6,6 +6,9 @@ export default Ember.Component.extend({
   @computed('field.id')
   inputClassName: id => `field-${Ember.String.dasherize(id)}`,
 
-  @computed('field.type')
-  inputComponentName: type => `wizard-field-${type}`
+  @computed('field.type', 'field.id')
+  inputComponentName(type, id) {
+    return (type === 'component') ? Ember.String.dasherize(id) : `wizard-field-${type}`;
+  }
+
 });

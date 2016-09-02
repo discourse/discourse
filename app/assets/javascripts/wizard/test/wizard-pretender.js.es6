@@ -49,7 +49,10 @@ export default function() {
           {
             id: 'second-step',
             index: 1,
-            fields: [{ id: 'email', type: 'text', required: true }],
+            fields: [
+              { id: 'snack', type: 'dropdown', required: true },
+              { id: 'scheme-preview', type: 'component' }
+            ],
             previous: 'hello-world'
           }]
         }

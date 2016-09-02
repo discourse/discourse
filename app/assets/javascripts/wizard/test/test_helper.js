@@ -10,6 +10,7 @@
 //= require ember-qunit
 //= require ember-shim
 //= require wizard-application
+//= require wizard-vendor
 //= require helpers/assertions
 //= require_tree ./acceptance
 //= require_tree ./models
