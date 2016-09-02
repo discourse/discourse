@@ -1,5 +1,4 @@
 require 'rails_helper'
-require 'digest/sha1'
 
 describe Upload do
 
@@ -12,7 +11,7 @@ describe Upload do
   let(:image_filename) { "logo.png" }
   let(:image) { file_from_fixtures(image_filename) }
   let(:image_filesize) { File.size(image) }
-  let(:image_sha1) { Digest::SHA1.file(image).hexdigest }
+  let(:image_sha1) { Upload.generate_digest(image) }
 
   let(:image_svg_filename) { "image.svg" }
   let(:image_svg) { file_from_fixtures(image_svg_filename) }
@@ -136,6 +135,12 @@ describe Upload do
       Upload.get_from_url("http://my.cdn.com/uploads/default/1/02395732905.jpg")
     end
 
+  end
+
+  describe '.generate_digest' do
+    it "should return the right digest" do
+      expect(Upload.generate_digest(image.path)).to eq('bc975735dfc6409c1c2aa5ebf2239949bcbdbd65')
+    end
   end
 
 end
