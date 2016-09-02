@@ -149,9 +149,11 @@ sv:
         eu_central_1: "EU (Frankfurt)"
         ap_southeast_1: "Asien Stillahavsområdet (Singapore)"
         ap_southeast_2: "Asien Stillahavsområdet (Sydney)"
+        ap_south_1: "Asien Stillahavsområdet (Mumbai)"
         ap_northeast_1: "Asien Stillahavsområdet (Tokyo)"
         ap_northeast_2: "Asien Stillahavsområdet (Seoul)"
         sa_east_1: "Sydamerika (Sao Paulo)"
+        cn_north_1: "Kina (Peking)"
     edit: 'redigera rubrik och kategori för det här ämnet'
     not_implemented: "Denna funktion har inte implementerats än, vi beklagar!"
     no_value: "Nej"
@@ -329,6 +331,7 @@ sv:
       selector_placeholder: "Lägg till medlemmar"
       owner: "ägare"
       visible: "Gruppen är synlig för alla användare"
+      index: "Grupper"
       title:
         one: "grupp"
         other: "grupper"
@@ -396,6 +399,9 @@ sv:
       latest_by: "senast av"
       toggle_ordering: "slå av/på sorteringskontroll"
       subcategories: "Underkategorier"
+      topic_sentence:
+        one: "1 ämne"
+        other: "%{count} ämnen"
       topic_stat_sentence:
         one: "%{count} nytt ämne under den senaste %{unit}."
         other: "%{count} nya ämnen under den senaste %{unit}."
@@ -473,13 +479,17 @@ sv:
       watched_tags: "Bevakade"
       watched_tags_instructions: "Du kommer automatiskt att bevaka alla ämnen med de här taggarna. Du blir notifierad om alla nya inlägg och ämnen, och en räknare över antalet nya inlägg visas bredvid ämnet. "
       tracked_tags: "Följda"
+      tracked_tags_instructions: "Du kommer automatiskt följa alla ämnen med de här taggarna. Antalet nya inlägg visas bredvid ämnet."
       muted_tags: "Tystad"
       muted_tags_instructions: "Du kommer inte att få notifieringar om nya ämnen som har de här taggarna, och de kommer inte att visas bland dina olästa ämnen."
       watched_categories: "Tittade på"
       watched_categories_instructions: "Du kommer automatiskt att bevaka alla ämnen i de här kategorierna. Du blir notifierad om alla nya inlägg och ämnen, och en räknare över antalet nya inlägg visas bredvid ämnet. "
       tracked_categories: "Bevakade"
+      tracked_categories_instructions: "Du kommer automatiskt följa alla ämnen i de här kategorierna. En räknare över nya inlägg kommer att visas bredvid ämnen."
       watched_first_post_categories: "Bevakar första inlägget"
       watched_first_post_categories_instructions: "Du kommer att bli notifierad om första inlägget i varje nytt ämne i den här kategorin."
+      watched_first_post_tags: "Bevakar första inlägget"
+      watched_first_post_tags_instructions: "Du kommer att bli notifierad om första inlägget i varje nytt ämne med dessa taggar."
       muted_categories: "Tystad"
       muted_categories_instructions: "Du kommer inte att få notifieringar om nya ämnen inom dessa kategorier, och de kommer inte att visas under bland dina olästa ämnen. "
       delete_account: "Radera mitt konto"
@@ -494,6 +504,13 @@ sv:
       muted_topics_link: "Visa tystade ämnen"
       watched_topics_link: "Visa bevakade ämnen"
       automatically_unpin_topics: "Avklistra automatiskt ämnen när jag når botten."
+      apps: "Appar"
+      revoke_access: "Återkalla åtkomst"
+      undo_revoke_access: "Ångra återkallelse av åtkomst"
+      api_permissions: "Rättigheter:"
+      api_approved: "Godkända:"
+      api_read: "läs"
+      api_read_write: "läs och skriv"
       staff_counters:
         flags_given: "hjälpsamma flaggor"
         flagged_posts: "flaggade inlägg"
@@ -773,6 +790,8 @@ sv:
     too_few_topics_notice: "Låt oss <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>få igång den här diskussionen!</a> Det finns för närvarande <strong>%{currentTopics} / %{requiredTopics}</strong> ämnen. Nya användare behöver några konversationer att läsa och svara på."
     too_few_posts_notice: "Låt oss <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>få igång den här diskussionen!</a> Det finns för närvarande <strong>%{currentPosts} / %{requiredPosts}</strong> inlägg. Nya användare behöver några konversationer att läsa och svara på."
     logs_error_rate_notice:
+      reached: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> har uppnått webbplatsinställningarnas gräns på %{siteSettingRate}."
+      exceeded: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> har överträffat webbplatsinställningarnas gräns på %{siteSettingRate}."
       rate:
         one: "1 fel/%{duration}"
         other: "%{count} fel/%{duration}"
@@ -881,6 +900,15 @@ sv:
       github:
         title: "med GitHub"
         message: "Autentiserar med GitHub (kolla så att pop up-blockare inte är aktiverade)"
+    emoji_set:
+      apple_international: "Apple/International"
+      google: "Google"
+      twitter: "Twitter"
+      emoji_one: "Emoji One"
+      win10: "Win10"
+    category_page_style:
+      categories_only: "Endast kategorier"
+      categories_and_latest_topics: "Kategorier med senaste ämnen"
     shortcut_modifier_key:
       shift: 'Shift'
       ctrl: 'Ctrl'
@@ -890,14 +918,19 @@ sv:
       more_emoji: "mer..."
       options: "Alternativ"
       whisper: "viska"
+      unlist: "avlistad"
       add_warning: "Det här är en officiell varning."
       toggle_whisper: "Växla viskning"
+      toggle_unlisted: "Växla olistad"
       posting_not_on_topic: "Vilket ämne vill du svara på?"
       saving_draft_tip: "sparar…"
       saved_draft_tip: "sparat"
       saved_local_draft_tip: "sparat lokalt"
       similar_topics: "Ditt ämne liknar..."
       drafts_offline: "utkast offline"
+      group_mentioned:
+        one: "Genom att nämna {{group}}, så kommer du att notifiera <a href='{{group_link}}'>1 person</a> – är du säker?"
+        other: "Genom att nämna {{group}}, så kommer du att notifiera <a href='{{group_link}}'>{{count}} medlemmar</a> – är du säker?"
       duplicate_link: "Det ser ut som att din länk till <b>{{domain}}</b> redan har delats i ämnet av <b>@{{username}}</b> i <a href='{{post_url}}'>ett svar {{ago}} sedan</a> – är du säker på att du vill dela den igen?"
       error:
         title_missing: "Du måste ange en rubrik"
@@ -955,6 +988,9 @@ sv:
       modal_ok: "OK"
       modal_cancel: "Avbryt"
       cant_send_pm: "Tyvärr, du kan inte skicka ett meddelande till %{username}."
+      yourself_confirm:
+        title: "Glömde du lägga till mottagare?"
+        body: "Just nu skickas det här meddelandet bara till dig själv!"
       admin_options_title: "Valfria personalinställningar för detta ämne"
       auto_close:
         label: "Stäng automatiskt ämnet efter:"
@@ -1038,6 +1074,7 @@ sv:
       most_liked: "Mest omtyckt"
       select_all: "Markera alla"
       clear_all: "Rensa allt"
+      too_short: "Din sökterm är för kort."
       result_count:
         one: "1 resultat för <span class='term'>\"{{term}}\"</span>"
         other: "{{count}} resultat för <span class='term'>\"{{term}}\"</span>"
@@ -1110,6 +1147,9 @@ sv:
       unsubscribe:
         stop_notifications: "Du kommer du att motta färre notifieringar från <strong>{{title}}</strong>"
         change_notification_state: "Ditt aktuella notifieringstillstånd är "
+      filter_to:
+        one: "1 inlägg i ämnet"
+        other: "{{count}} inlägg i ämnet"
       create: 'Nytt ämne'
       create_long: 'Skapa ett nytt ämne'
       private_message: 'Skriv meddelande'
@@ -1169,6 +1209,9 @@ sv:
       auto_close_title: 'Inställningar för automatisk stängning'
       auto_close_save: "Spara"
       auto_close_remove: "Stäng inte det här ämnet automatiskt"
+      auto_close_immediate:
+        one: "Senaste inlägget i det här ämnet är redan 1 timme gammalt, så ämnet kommer att stängas omedelbart. "
+        other: "Senaste inlägget i det här ämnet är redan %{count} timmar gammal, så ämnet kommer att stängas omedelbart. "
       timeline:
         back: "Tillbaka"
         back_description: "Gå tillbaka till det senaste olästa meddelandet"
@@ -1179,6 +1222,8 @@ sv:
         go_bottom: "botten"
         go: "gå"
         jump_bottom: "hoppa till sista inlägget"
+        jump_prompt: "hoppa till inlägg"
+        jump_prompt_long: "Vilket inlägg vill du hoppa till?"
         jump_bottom_with_number: "hoppa till inlägg %{post_number}"
         total: antal inlägg
         current: nuvarande inlägg
@@ -1186,6 +1231,7 @@ sv:
         title: ändra hur ofta du får notifieringar om det här ämnet
         reasons:
           mailing_list_mode: "Du har utskicksläge aktiverat, så du kommer notifieras om inlägg till det här ämnet via e-post."
+          '3_10': 'Du kommer att ta emot notifikationer för att du bevakar en tagg i det här ämnet.'
           '3_6': 'Du kommer att få notifikationer för att du bevakar denna kategori.'
           '3_5': 'Du kommer att ta emot notifikationer för att du automatiskt började följa det här ämnet.'
           '3_2': 'Du kommer att ta emot notifikationer för att du bevakar detta ämne.'
@@ -1333,6 +1379,10 @@ sv:
         instructions:
           one: "Välj vilket ämne du vill flytta det inlägget till."
           other: "Välj vilket ämne du vill flytta de <br>{{count}}</b> inläggen till."
+      merge_posts:
+        title: "Sammanfoga markerade inlägg"
+        action: "sammanfoga markerade inlägg"
+        error: "Det uppstod ett fel vid sammanfogningen av de markerade inläggen."
       change_owner:
         title: "Ändra ägare av inlägg"
         action: "ändra ägare"
@@ -1527,6 +1577,10 @@ sv:
         confirm:
           one: "Är du säker på att du vill radera detta inlägg?"
           other: "Är du säker på att du vill radera alla dessa inlägg?"
+      merge:
+        confirm:
+          one: "Är du säker på att du vill sammanfoga inläggen?"
+          other: "Är du säker på att du vill sammanfoga de {{count}} inläggen?"
       revisions:
         controls:
           first: "Första revision"

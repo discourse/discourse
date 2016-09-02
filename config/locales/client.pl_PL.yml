@@ -128,6 +128,8 @@ pl_PL:
       google+: 'udostępnij ten odnośnik na Google+'
       email: 'wyślij ten odnośnik przez email'
     action_codes:
+      public_topic: "Upublicznij ten temat %{when}"
+      private_topic: "Uprywatnij ten temat %{when}"
       split_topic: "podziel ten temat %{when}"
       invited_user: "%{who} został zaproszony %{when}"
       invited_group: "%{who} został zaproszony %{when}"
@@ -153,6 +155,7 @@ pl_PL:
         disabled: 'odlistowanie %{when}'
     topic_admin_menu: "akcje administratora"
     emails_are_disabled: "Wysyłanie e-maili zostało globalnie wyłączone przez administrację. Powiadomienia e-mail nie będą dostarczane."
+    bootstrap_mode_enabled: "Aby ułatwić uruchomienie Twojego nowego serwisu, znajdujesz się w trybie bootstrap. Wszyscy nowi użytkownicy otrzymają 1. poziom zaufania i będą otrzymywać codzienne podsumowania drogą mailową. To się zmieni, gdy liczba użytkowników przekroczy liczbę %{min_users}."
     bootstrap_mode_disabled: "Tryb Bootstrap zostanie wyłączony w ciągu najbliższych 24 godzin."
     s3:
       regions:
@@ -423,6 +426,10 @@ pl_PL:
       latest_by: "najnowszy wpis: "
       toggle_ordering: "przełącz kolejność kontroli"
       subcategories: "Podkategorie"
+      topic_sentence:
+        one: "1 temat"
+        few: "Kilka tematów"
+        other: "%{count} tematów"
       topic_stat_sentence:
         one: "ostatni %{unit}: %{count} nowy temat."
         few: "ostatni %{unit}: %{count} nowe tematy."
