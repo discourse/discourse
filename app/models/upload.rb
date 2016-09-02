@@ -81,6 +81,10 @@ class Upload < ActiveRecord::Base
     use
   }
 
+  def self.generate_digest(path)
+    Digest::SHA1.file(path).hexdigest
+  end
+
   def self.svg_whitelist_xpath
     @@svg_whitelist_xpath ||= "//*[#{WHITELISTED_SVG_ELEMENTS.map { |e| "name()!='#{e}'" }.join(" and ") }]"
   end
@@ -145,7 +149,7 @@ class Upload < ActiveRecord::Base
       end
 
       # compute the sha of the file
-      sha1 = Digest::SHA1.file(file).hexdigest
+      sha1 = Upload.generate_digest(file)
 
       # do we already have that upload?
       upload = find_by(sha1: sha1)
@@ -259,7 +263,7 @@ class Upload < ActiveRecord::Base
           end
           # compute SHA if missing
           if upload.sha1.blank?
-            upload.sha1 = Digest::SHA1.file(path).hexdigest
+            upload.sha1 = Upload.generate_digest(path)
           end
           # optimize if image
           if FileHelper.is_image?(File.basename(path))
