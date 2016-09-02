@@ -37,7 +37,6 @@ CategoryList.reopenClass({
         c.topics = c.topics.map(t => Discourse.Topic.create(t));
       }
 
-      c["pick" + statPeriod[0].toUpperCase() + statPeriod.slice(1)] = true;
 
       switch(statPeriod) {
         case "week":
@@ -47,11 +46,13 @@ CategoryList.reopenClass({
           if (stat > 0) {
             c.stat = `<span class="value">${stat}</span> / <span class="unit">${unit}</span>`;
             c.statTitle = I18n.t("categories.topic_stat_sentence", { count: stat, unit: unit });
+            c["pick" + statPeriod[0].toUpperCase() + statPeriod.slice(1)] = true;
             break;
           }
         default:
           c.stat = `<span class="value">${c.topics_all_time}</span>`;
           c.statTitle = I18n.t("categories.topic_sentence", { count: c.topics_all_time });
+          c.pickAll = true;
           break;
       }
 

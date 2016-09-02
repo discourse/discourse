@@ -33,9 +33,8 @@
 
     </table>
     <footer class="clearfix">
-      {{#if c.pickAll}}
-        <figure title="{{i18n 'all_time_desc'}}">{{number c.topics_all_time}} <figcaption>{{i18n 'all_time'}}</figcaption></figure>
-      {{/if}}
+
+      <figure title="{{i18n 'all_time_desc'}}">{{number c.topics_all_time}} <figcaption>{{i18n 'all_time'}}</figcaption></figure>
 
       {{#if c.pickMonth}}
       <figure title="{{i18n 'month_desc'}}">{{number c.topics_month}} <figcaption>{{i18n 'month'}}</figcaption></figure>
