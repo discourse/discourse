@@ -115,8 +115,8 @@ export default Ember.DefaultResolver.extend({
   },
 
   resolveTemplate(parsedName) {
-    return this.findPluginTemplate(parsedName) ||
-           this.findPluginMobileTemplate(parsedName) ||
+    return this.findPluginMobileTemplate(parsedName) ||
+           this.findPluginTemplate(parsedName) ||
            this.findMobileTemplate(parsedName) ||
            this.findTemplate(parsedName) ||
            Ember.TEMPLATES.not_found;
