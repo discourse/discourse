@@ -233,17 +233,17 @@ class Upload < ActiveRecord::Base
     `convert #{path} -auto-orient #{path}`
   end
 
-  def self.migrate_to_new_scheme(limit=50)
+  def self.migrate_to_new_scheme(limit=nil)
     problems = []
 
     if SiteSetting.migrate_to_new_scheme
       max_file_size_kb = [SiteSetting.max_image_size_kb, SiteSetting.max_attachment_size_kb].max.kilobytes
       local_store = FileStore::LocalStore.new
 
-      Upload.where("url NOT LIKE '%/original/_X/%'")
-            .limit(limit)
-            .order(id: :desc)
-            .each do |upload|
+      scope = Upload.where("url NOT LIKE '%/original/_X/%'").order(id: :desc)
+      scope.limit(limit) if limit
+
+      scope.each do |upload|
         begin
           # keep track of the url
           previous_url = upload.url.dup
