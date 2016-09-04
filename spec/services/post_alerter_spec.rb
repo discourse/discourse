@@ -344,43 +344,50 @@ describe PostAlerter do
                            push_url: "https://site2.com/push")
       end
 
-      # I want to test payload ... but we have chicked egg problem
-      # if I test it then it makes the req and the the expects is not correct ...
-      # need to track all reqs in rest client and check after the fact
 
-      # payload = {
-      #   secret_key: SiteSetting.push_api_secret_key,
-      #   url: Discourse.base_url,
-      #   title: SiteSetting.title,
-      #   description: SiteSetting.site_description,
-      #   notifications: [
-      #   {
-      #     'notification_type' => 1,
-      #     'post_number' => 1,
-      #     'topic_title' => topic.title,
-      #     'topic_id' => topic.id,
-      #     'excerpt' => 'Hello @eviltrout',
-      #     'username' => user.username,
-      #     'url' => UrlHelper.absolute(mention_post.url),
-      #     'client_id' => 'xxx0'
-      #   },
-      #   {
-      #     'notification_type' => 1,
-      #     'post_number' => 1,
-      #     'topic_title' => topic.title,
-      #     'topic_id' => topic.id,
-      #     'excerpt' => 'Hello @eviltrout',
-      #     'username' => user.username,
-      #     'url' => UrlHelper.absolute(mention_post.url),
-      #     'client_id' => 'xxx1'
-      #   }
-      #   ]
-      # }
+
+      body = nil
+      headers = nil
 
       # should only happen once even though we are using 2 keys
-      RestClient.expects(:post).returns("OK")
+      RestClient.expects(:post).with{|_req,_body,_headers|
+        headers = _headers
+        body = _body
+      }.returns("OK")
 
       mention_post
+
+      payload = {
+        "secret_key" => SiteSetting.push_api_secret_key,
+        "url" => Discourse.base_url,
+        "title" => SiteSetting.title,
+        "description" => SiteSetting.site_description,
+        "notifications" => [
+        {
+          'notification_type' => 1,
+          'post_number' => 1,
+          'topic_title' => topic.title,
+          'topic_id' => topic.id,
+          'excerpt' => 'Hello @eviltrout',
+          'username' => user.username,
+          'url' => UrlHelper.absolute(mention_post.url),
+          'client_id' => 'xxx0'
+        },
+        {
+          'notification_type' => 1,
+          'post_number' => 1,
+          'topic_title' => topic.title,
+          'topic_id' => topic.id,
+          'excerpt' => 'Hello @eviltrout',
+          'username' => user.username,
+          'url' => UrlHelper.absolute(mention_post.url),
+          'client_id' => 'xxx1'
+        }
+        ]
+      }
+
+      expect(JSON.parse(body)).to eq(payload)
+      expect(headers[:content_type]).to eq(:json)
     end
   end
 
