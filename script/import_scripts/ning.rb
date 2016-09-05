@@ -4,9 +4,9 @@ require File.expand_path(File.dirname(__FILE__) + "/base.rb")
 
 class ImportScripts::Ning < ImportScripts::Base
 
-  JSON_FILES_DIR = "/path/to/json/archive/json/files"
+  JSON_FILES_DIR = "/Users/techapj/Downloads/ben/ADEM"
   ATTACHMENT_PREFIXES = ["discussions", "pages", "blogs", "members", "photos"]
-  EXTRA_AUTHORIZED_EXTENSIONS = ["bmp", "ico", "txt", "pdf"]
+  EXTRA_AUTHORIZED_EXTENSIONS = ["bmp", "ico", "txt", "pdf", "gif", "jpg", "jpeg", "html"]
 
   def initialize
     super
@@ -19,8 +19,11 @@ class ImportScripts::Ning < ImportScripts::Base
     # An example of a custom category from Ning:
     @blogs_json       = load_ning_json("ning-blogs-local.json")
 
-    #SiteSetting.max_image_size_kb = 3072
-    #SiteSetting.max_attachment_size_kb = 1024
+    @photos_json      = load_ning_json("ning-photos-local.json")
+    @pages_json       = load_ning_json("ning-pages-local.json")
+
+    SiteSetting.max_image_size_kb = 10240
+    SiteSetting.max_attachment_size_kb = 10240
     SiteSetting.authorized_extensions = (SiteSetting.authorized_extensions.split("|") + EXTRA_AUTHORIZED_EXTENSIONS).uniq.join("|")
 
     # Example of importing a custom profile field:
@@ -38,6 +41,9 @@ class ImportScripts::Ning < ImportScripts::Base
     import_discussions
 
     import_blogs # Remove this and/or add more as necessary
+
+    import_photos
+    import_pages
 
     suspend_users
     update_tl0
@@ -161,7 +167,7 @@ class ImportScripts::Ning < ImportScripts::Base
 
   def import_categories
     puts "", "Importing categories"
-    create_categories((["Blog", "Pages"] + @discussions_json.map { |d| d["category"] }).uniq.compact) do |name|
+    create_categories((["Blog", "Pages", "Photos"] + @discussions_json.map { |d| d["category"] }).uniq.compact) do |name|
       if name.downcase == "uncategorized"
         nil
       else
@@ -182,6 +188,16 @@ class ImportScripts::Ning < ImportScripts::Base
   def import_blogs
     puts "", "Importing blogs"
     import_topics(@blogs_json, "Blog")
+  end
+
+  def import_photos
+    puts "", "Importing photos"
+    import_topics(@photos_json, "Photos")
+  end
+
+  def import_pages
+    puts "", "Importing pages"
+    import_topics(@pages_json, "Pages")
   end
 
   def import_topics(topics_json, default_category=nil)
@@ -212,6 +228,14 @@ class ImportScripts::Ning < ImportScripts::Base
 
           if topic["fileAttachments"]
             mapped[:raw] = add_file_attachments(mapped[:raw], topic["fileAttachments"])
+          end
+
+          if topic["photoUrl"]
+            mapped[:raw] = add_photo(mapped[:raw], topic["photoUrl"])
+          end
+
+          if topic["embedCode"]
+            mapped[:raw] = add_video(mapped[:raw], topic["embedCode"])
           end
 
           parent_post = create_post(mapped, mapped[:id])
@@ -331,6 +355,45 @@ class ImportScripts::Ning < ImportScripts::Base
       raw += "\n" + attachment_html(upload, File.basename(filename))
     end
 
+    raw
+  end
+
+  def add_photo(arg, file_name)
+    raw = arg
+
+    # filename = File.join(JSON_FILES_DIR, file_name)
+    filename = file_full_path(file_name)
+    if File.exists?(filename)
+      upload = create_upload(@system_user.id, filename, File.basename(filename))
+
+      if upload.nil? || !upload.valid?
+        puts "Upload not valid :(  #{filename}"
+        puts upload.errors.inspect if upload
+        return
+      end
+
+      raw += "\n" + embedded_image_html(upload)
+    else
+      puts "Attachment file doesn't exist: #{filename}"
+    end
+
+    raw
+  end
+
+  def add_video(arg, embed_code)
+    raw = arg
+    youtube_regex = Regexp.new(%Q[<iframe(?:[^>]*)src="http:\/\/www.youtube.com\/embed\/([^"]+)"(?:[^>]*)><\/iframe>])
+
+    raw.gsub!(youtube_regex) do |s|
+      matches = youtube_regex.match(s)
+      video_id = matches[1].split("?").first
+
+      if video_id
+        raw += "\n\nhttps://www.youtube.com/watch?v=#{video_id}\n"
+      end
+    end
+
+    raw += "\n" + embed_code + "\n"
     raw
   end
 end
