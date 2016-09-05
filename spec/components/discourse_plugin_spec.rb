@@ -38,11 +38,11 @@ describe DiscoursePlugin do
   context 'registering for callbacks' do
     before do
       plugin.stubs(:hello)
-      plugin.listen_for(:hello)
+      @proc = plugin.listen_for(:hello).first
     end
 
     after do
-      DiscourseEvent.off(:hello)
+      DiscourseEvent.off(:hello, &@proc)
     end
 
     it "calls the method when it is triggered" do
