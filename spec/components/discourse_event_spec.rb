@@ -16,14 +16,6 @@ describe DiscourseEvent do
     end
   end
 
-  describe ".clear" do
-    it "clears out events" do
-      DiscourseEvent.events["event42"] << "test event"
-      DiscourseEvent.clear
-      expect(DiscourseEvent.events).to be_empty
-    end
-  end
-
   context 'when calling events' do
 
     let(:harvey) {

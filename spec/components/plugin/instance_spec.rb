@@ -56,7 +56,7 @@ describe Plugin::Instance do
       end
 
       after do
-        DiscourseEvent.clear
+        DiscourseEvent.off(:hello)
       end
 
       it "checks enabled/disabled functionality for extensions" do
