@@ -193,27 +193,50 @@ describe PostDestroyer do
   end
 
   describe 'basic destroying' do
-
     it "as the creator of the post, doesn't delete the post" do
-      post2 = create_post
+      begin
+        post2 = create_post
 
-      @orig = post2.cooked
-      PostDestroyer.new(post2.user, post2).destroy
-      post2.reload
+        called = 0
+        topic_destroyed = -> (topic, user) do
+          expect(topic).to eq(post2.topic)
+          expect(user).to eq(post2.user)
+          called += 1
+        end
 
-      expect(post2.deleted_at).to be_blank
-      expect(post2.deleted_by).to be_blank
-      expect(post2.user_deleted).to eq(true)
-      expect(post2.raw).to eq(I18n.t('js.post.deleted_by_author', {count: 24}))
-      expect(post2.version).to eq(2)
+        DiscourseEvent.on(:topic_destroyed, &topic_destroyed)
 
-      # lets try to recover
-      PostDestroyer.new(post2.user, post2).recover
-      post2.reload
-      expect(post2.version).to eq(3)
-      expect(post2.user_deleted).to eq(false)
-      expect(post2.cooked).to eq(@orig)
+        @orig = post2.cooked
+        PostDestroyer.new(post2.user, post2).destroy
+        post2.reload
 
+        expect(post2.deleted_at).to be_blank
+        expect(post2.deleted_by).to be_blank
+        expect(post2.user_deleted).to eq(true)
+        expect(post2.raw).to eq(I18n.t('js.post.deleted_by_author', {count: 24}))
+        expect(post2.version).to eq(2)
+        expect(called).to eq(1)
+
+        called = 0
+        topic_recovered = -> (topic, user) do
+          expect(topic).to eq(post2.topic)
+          expect(user).to eq(post2.user)
+          called += 1
+        end
+
+        DiscourseEvent.on(:topic_recovered, &topic_recovered)
+
+        # lets try to recover
+        PostDestroyer.new(post2.user, post2).recover
+        post2.reload
+        expect(post2.version).to eq(3)
+        expect(post2.user_deleted).to eq(false)
+        expect(post2.cooked).to eq(@orig)
+        expect(called).to eq(1)
+      ensure
+        DiscourseEvent.off(:topic_destroyed, &topic_destroyed)
+        DiscourseEvent.off(:topic_recovered, &topic_recovered)
+      end
     end
 
     context "as a moderator" do
