@@ -5,8 +5,13 @@ describe DiscourseEvent do
 
   describe "#events" do
     it "defaults to {}" do
-      DiscourseEvent.instance_variable_set(:@events, nil)
-      expect(DiscourseEvent.events).to eq({})
+      begin
+        original_events = DiscourseEvent.events
+        DiscourseEvent.instance_variable_set(:@events, nil)
+        expect(DiscourseEvent.events).to eq({})
+      ensure
+        DiscourseEvent.instance_variable_set(:@events, original_events)
+      end
     end
 
     describe "key value" do
