@@ -47,7 +47,10 @@ class PostDestroyer
       mark_for_deletion
     end
     DiscourseEvent.trigger(:post_destroyed, @post, @opts, @user)
-    DiscourseEvent.trigger(:topic_destroyed, @topic, @user) if @post.is_first_post?
+
+    if @post.is_first_post? && @post.topic
+      DiscourseEvent.trigger(:topic_destroyed, @post.topic, @user)
+    end
   end
 
   def recover
