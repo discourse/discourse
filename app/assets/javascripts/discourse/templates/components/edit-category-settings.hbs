@@ -20,7 +20,6 @@
 </section>
 
 {{#if emailInEnabled}}
-  {{#plugin-outlet "category-email-in"}}
     <section class='field'>
       <label>
         {{input type="checkbox" checked=category.email_in_allow_strangers}}
@@ -35,7 +34,8 @@
         {{text-field class="email-in" value=category.email_in}}
       </label>
     </section>
-  {{/plugin-outlet}}
+
+  {{plugin-outlet "category-email-in"}}
 {{/if}}
 
 {{#if showPositionInput}}

@@ -94,10 +94,9 @@
     </div>
 
     {{#if siteSettings.email_in}}
-      {{#plugin-outlet "group-email-in"}}
         <label for="incoming_email">{{i18n 'admin.groups.incoming_email'}}</label>
         {{text-field name="incoming_email" value=model.incoming_email placeholderKey="admin.groups.incoming_email_placeholder"}}
-      {{/plugin-outlet}}
+      {{plugin-outlet "group-email-in"}}
     {{/if}}
   {{/unless}}
 
