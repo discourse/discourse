@@ -12,9 +12,14 @@ class Auth::TwitterAuthenticator < Auth::Authenticator
 
     data = auth_token[:info]
 
+    result.email = data['email']
     result.username = screen_name = data["nickname"]
-    result.name = name = data["name"]
+    result.name = data["name"]
     twitter_user_id = auth_token["uid"]
+
+    if result.email.present?
+      result.email_valid = true
+    end
 
     result.extra_data = {
       twitter_user_id: twitter_user_id,
@@ -24,6 +29,13 @@ class Auth::TwitterAuthenticator < Auth::Authenticator
     user_info = TwitterUserInfo.find_by(twitter_user_id: twitter_user_id)
 
     result.user = user_info.try(:user)
+    if !result.user && result.email.present? && result.user = User.find_by_email(result.email)
+      TwitterUserInfo.create(
+        user_id: result.user.id,
+        screen_name: screen_name,
+        twitter_user_id: twitter_user_id
+      )
+    end
 
     result
   end
