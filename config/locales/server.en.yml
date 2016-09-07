@@ -3216,9 +3216,18 @@ en:
   wizard:
     title: "Discourse Setup Wizard"
     step:
-      forum_title:
+      locale:
         title: "Welcome to your Discourse forum!"
         description: "There are a few things you'll need to configure before inviting more people to the party. Don't worry, you can come back and change these settings at any time, so don't overthink it."
+
+        fields:
+          default_locale:
+            label: "Language"
+            description: "The default language for users browsing your forum"
+
+      forum_title:
+        title: "The Basics"
+        description: "Tell us a little bit about yourself."
 
         fields:
           title:
@@ -3242,10 +3251,10 @@ en:
             label: "Site Contact Username"
             description: "All automated messages will be sent from this user."
       colors:
-        title: "Choose a Color Scheme"
+        title: "Choose a Theme"
         fields:
-          color_scheme:
-            label: "Color Scheme"
+          theme_id:
+            label: "Theme"
             options:
               default: "Simple"
               dark: "Dark"

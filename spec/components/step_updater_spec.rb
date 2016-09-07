@@ -4,6 +4,24 @@ require_dependency 'wizard/step_updater'
 describe Wizard::StepUpdater do
   let(:user) { Fabricate(:admin) }
 
+  context "locale" do
+    let(:updater) { Wizard::StepUpdater.new(user, 'locale') }
+
+    it "does not require refresh when the language stays the same" do
+      updater.update(default_locale: 'en')
+      expect(updater.refresh_required?).to eq(false)
+    end
+
+    it "updates the locale and requires refresh when it does change" do
+      updater.update(default_locale: 'ru')
+      expect(SiteSetting.default_locale).to eq('ru')
+      expect(updater.refresh_required?).to eq(true)
+    end
+  end
+
+  it "updates the locale" do
+  end
+
   it "updates the forum title step" do
     updater = Wizard::StepUpdater.new(user, 'forum_title')
     updater.update(title: 'new forum title', site_description: 'neat place')
@@ -30,7 +48,7 @@ describe Wizard::StepUpdater do
     it "doesn't update when there are errors" do
       updater.update(contact_email: 'not-an-email',
                      site_contact_username: 'not-a-username')
-      expect(updater).to be_success
+      expect(updater).to_not be_success
       expect(updater.errors).to be_present
     end
   end

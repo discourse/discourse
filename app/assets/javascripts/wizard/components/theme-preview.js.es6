@@ -68,7 +68,7 @@ export default Ember.Component.extend({
   loaded: false,
   logo: null,
 
-  colorScheme: Ember.computed.alias('step.fieldsById.color_scheme.value'),
+  themeId: Ember.computed.alias('step.fieldsById.theme_id.value'),
 
   didInsertElement() {
     this._super();
@@ -84,7 +84,7 @@ export default Ember.Component.extend({
     });
   },
 
-  @observes('colorScheme')
+  @observes('themeId')
   triggerRepaint() {
     Ember.run.scheduleOnce('afterRender', this, 'repaint');
   },
@@ -95,10 +95,10 @@ export default Ember.Component.extend({
     const { ctx } = this;
     const headerHeight = HEIGHT * 0.15;
 
-    const colorScheme = this.get('colorScheme');
-    const options = this.get('step.fieldsById.color_scheme.options');
-    const option = options.findProperty('id', colorScheme);
-    if (!option) { return; }
+    const themeId = this.get('themeId');
+    const choices = this.get('step.fieldsById.theme_id.choices');
+    if (!choices) { return; }
+    const option = choices.findProperty('id', themeId);
 
     const colors = option.data.colors;
     if (!colors) { return; }

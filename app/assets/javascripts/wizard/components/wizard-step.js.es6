@@ -48,20 +48,6 @@ export default Ember.Component.extend({
     });
   },
 
-  saveStep() {
-    const step = this.get('step');
-    step.save()
-      .then(() => this.sendAction('goNext'))
-      .catch(response => {
-        const errors = response.responseJSON.errors;
-        if (errors && errors.length) {
-          errors.forEach(err => {
-            step.fieldError(err.field, err.description);
-          });
-        }
-      });
-  },
-
   actions: {
     backStep() {
       if (this.get('saving')) { return; }
@@ -77,7 +63,7 @@ export default Ember.Component.extend({
       if (step.get('valid')) {
         this.set('saving', true);
         step.save()
-          .then(() => this.sendAction('goNext'))
+          .then(response => this.sendAction('goNext', response))
           .catch(() => null) // we can swallow because the form is already marked as invalid
           .finally(() => this.set('saving', false));
       } else {

@@ -1,7 +1,18 @@
 class Wizard
-  class Field
 
-    attr_reader :id, :type, :required, :value, :options, :option_data
+  class Choice
+    attr_reader :id, :label, :data
+    attr_accessor :field
+
+    def initialize(id, opts)
+      @id = id
+      @data = opts[:data]
+      @label = opts[:label]
+    end
+  end
+
+  class Field
+    attr_reader :id, :type, :required, :value, :choices
     attr_accessor :step
 
     def initialize(attrs)
@@ -11,13 +22,15 @@ class Wizard
       @type = attrs[:type]
       @required = !!attrs[:required]
       @value = attrs[:value]
-      @options = []
-      @option_data = {}
+      @choices = []
     end
 
-    def add_option(id, data=nil)
-      @options << id
-      @option_data[id] = data
+    def add_choice(id, opts=nil)
+      choice = Choice.new(id, opts || {})
+      choice.field = self
+
+      @choices << choice
+      choice
     end
 
   end

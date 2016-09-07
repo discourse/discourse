@@ -9,7 +9,7 @@ test("Wizard starts", assert => {
 });
 
 test("Going back and forth in steps", assert => {
-  visit("/step/hello-world");
+  visit("/steps/hello-world");
   andThen(() => {
     assert.ok(exists('.wizard-step'));
     assert.ok(exists('.wizard-step-hello-world'), 'it adds a class for the step id');

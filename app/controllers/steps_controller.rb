@@ -11,7 +11,9 @@ class StepsController < ApplicationController
     updater.update(params[:fields])
 
     if updater.success?
-      render json: success_json
+      result = { success: 'OK' }
+      result[:refresh_required] = true if updater.refresh_required?
+      render json: result
     else
       errors = []
       updater.errors.messages.each do |field, msg|

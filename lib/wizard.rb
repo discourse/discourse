@@ -9,11 +9,15 @@ class Wizard
     @steps = []
   end
 
-  def create_step(args)
-    Step.new(args)
+  def create_step(step_name)
+    Step.new(step_name)
   end
 
   def append_step(step)
+    step = create_step(step) if step.is_a?(String)
+
+    yield step if block_given?
+
     last_step = @steps.last
 
     @steps << step
@@ -31,26 +35,40 @@ class Wizard
 
   def self.build
     wizard = Wizard.new
-    title = wizard.create_step('forum-title')
-    title.add_field(id: 'title', type: 'text', required: true, value: SiteSetting.title)
-    title.add_field(id: 'site_description', type: 'text', required: true, value: SiteSetting.site_description)
-    wizard.append_step(title)
 
-    contact = wizard.create_step('contact')
-    contact.add_field(id: 'contact_email', type: 'text', required: true, value: SiteSetting.contact_email)
-    contact.add_field(id: 'contact_url', type: 'text', value: SiteSetting.contact_url)
-    contact.add_field(id: 'site_contact_username', type: 'text', value: SiteSetting.site_contact_username)
-    wizard.append_step(contact)
+    wizard.append_step('locale') do |step|
+      languages = step.add_field(id: 'default_locale',
+                                 type: 'dropdown',
+                                 required: true,
+                                 value: SiteSetting.default_locale)
 
-    theme = wizard.create_step('colors')
-    scheme = theme.add_field(id: 'color_scheme', type: 'dropdown', required: true)
-    ColorScheme.themes.each {|t| scheme.add_option(t[:id], t) }
+      LocaleSiteSetting.values.each do |locale|
+        languages.add_choice(locale[:value], label: locale[:name])
+      end
+    end
 
-    theme.add_field(id: 'scheme_preview', type: 'component')
-    wizard.append_step(theme)
+    wizard.append_step('forum-title') do |step|
+      step.add_field(id: 'title', type: 'text', required: true, value: SiteSetting.title)
+      step.add_field(id: 'site_description', type: 'text', required: true, value: SiteSetting.site_description)
+    end
 
-    finished = wizard.create_step('finished')
-    wizard.append_step(finished);
+    wizard.append_step('contact') do |step|
+      step.add_field(id: 'contact_email', type: 'text', required: true, value: SiteSetting.contact_email)
+      step.add_field(id: 'contact_url', type: 'text', value: SiteSetting.contact_url)
+      step.add_field(id: 'site_contact_username', type: 'text', value: SiteSetting.site_contact_username)
+    end
+
+    wizard.append_step('colors') do |step|
+
+      theme_id = ColorScheme.where(via_wizard: true).pluck(:theme_id)
+      theme_id = theme_id.present? ? theme_id[0] : 'default'
+
+      themes = step.add_field(id: 'theme_id', type: 'dropdown', required: true, value: theme_id)
+      ColorScheme.themes.each {|t| themes.add_choice(t[:id], data: t) }
+      step.add_field(id: 'theme_preview', type: 'component')
+    end
+
+    wizard.append_step('finished')
 
     wizard
   end

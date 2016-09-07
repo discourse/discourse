@@ -1,9 +1,10 @@
 const Router = Ember.Router.extend({
-  location: Ember.testing ? 'none': 'hash'
+  rootURL: '/wizard',
+  location: Ember.testing ? 'none': 'history'
 });
 
-Router.map(function () {
-  this.route('step', { path: '/step/:step_id' });
+Router.map(function() {
+  this.route('step', { path: '/steps/:step_id' });
 });
 
 export default Router;
