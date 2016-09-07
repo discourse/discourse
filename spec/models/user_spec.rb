@@ -477,6 +477,13 @@ describe User do
       expect(Fabricate.build(:user, email: 'notgood@sub.domain.com')).not_to be_valid
     end
 
+    it 'skips the blacklist if skip_email_validation is set' do
+      SiteSetting.email_domains_blacklist = 'domain.com'
+      user = Fabricate.build(:user, email: 'notgood@sub.domain.com')
+      user.skip_email_validation = true
+      expect(user).to be_valid
+    end
+
     it 'blacklist should not reject developer emails' do
       Rails.configuration.stubs(:developer_emails).returns('developer@discourse.org')
       SiteSetting.email_domains_blacklist = 'discourse.org'
