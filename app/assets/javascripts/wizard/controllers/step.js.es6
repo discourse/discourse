@@ -3,8 +3,13 @@ export default Ember.Controller.extend({
   step: null,
 
   actions: {
-    goNext() {
-      this.transitionToRoute('step', this.get('step.next'));
+    goNext(response) {
+      const next = this.get('step.next');
+      if (response.refresh_required) {
+        document.location = `/wizard/steps/${next}`;
+      } else {
+        this.transitionToRoute('step', next);
+      }
     },
     goBack() {
       this.transitionToRoute('step', this.get('step.previous'));

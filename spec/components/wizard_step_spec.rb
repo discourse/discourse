@@ -12,12 +12,12 @@ describe Wizard::Step do
     expect(step.fields).to eq([text])
 
     dropdown = step.add_field(id: 'snacks', type: 'dropdown')
-    dropdown.add_option(id: 'candy')
-    dropdown.add_option(id: 'nachos')
-    dropdown.add_option(id: 'pizza')
+    dropdown.add_choice('candy')
+    dropdown.add_choice('nachos', data: {color: 'yellow'})
+    dropdown.add_choice('pizza', label: 'Pizza!')
 
     expect(step.fields).to eq([text, dropdown])
-    expect(dropdown.options.size).to eq(3)
+    expect(dropdown.choices.size).to eq(3)
   end
 
 end

@@ -15,6 +15,14 @@ describe Wizard do
     let(:step1) { wizard.create_step('first-step') }
     let(:step2) { wizard.create_step('second-step') }
 
+    it "works with a block format" do
+      wizard.append_step('wat') do |step|
+        expect(step).to be_present
+      end
+
+      expect(wizard.steps.size).to eq(1)
+    end
+
     it "adds the step correctly" do
       expect(step1.index).to be_blank
 

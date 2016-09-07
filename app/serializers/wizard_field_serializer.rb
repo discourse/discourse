@@ -1,6 +1,7 @@
 class WizardFieldSerializer < ApplicationSerializer
 
-  attributes :id, :type, :required, :value, :label, :placeholder, :description, :options
+  attributes :id, :type, :required, :value, :label, :placeholder, :description
+  has_many :choices, serializer: WizardFieldChoiceSerializer, embed: :objects
 
   def id
     object.id
@@ -48,26 +49,6 @@ class WizardFieldSerializer < ApplicationSerializer
 
   def include_description?
     description.present?
-  end
-
-  def options
-    object.options.map do |o|
-
-      result = {id: o, label: I18n.t("#{i18n_key}.options.#{o}")}
-
-      data = object.option_data[o]
-      if data.present?
-        as_json = data.dup
-        as_json.delete(:id)
-        result[:data] = as_json
-      end
-
-      result
-    end
-  end
-
-  def include_options?
-    object.options.present?
   end
 
 end

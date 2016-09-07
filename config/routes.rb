@@ -56,6 +56,7 @@ Discourse::Application.routes.draw do
   get "wizard" => "wizard#index"
   get "wizard/qunit" => "wizard#qunit"
   get 'wizard/steps' => 'steps#index'
+  get 'wizard/steps/:id' => "wizard#index"
   put 'wizard/steps/:id' => "steps#update"
 
   namespace :admin, constraints: StaffConstraint.new do

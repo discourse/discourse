@@ -5,11 +5,18 @@ class Wizard
     def initialize(current_user, id)
       @current_user = current_user
       @id = id
+      @refresh_required = false
     end
 
     def update(fields)
       updater_method = "update_#{@id.underscore}".to_sym
       send(updater_method, fields.symbolize_keys) if respond_to?(updater_method)
+    end
+
+    def update_locale(fields)
+      old_locale = SiteSetting.default_locale
+      update_setting(:default_locale, fields, :default_locale)
+      @refresh_required = true if old_locale != fields[:default_locale]
     end
 
     def update_forum_title(fields)
@@ -24,7 +31,7 @@ class Wizard
     end
 
     def update_colors(fields)
-      scheme_name = fields[:color_scheme]
+      scheme_name = fields[:theme_id]
 
       theme = ColorScheme.themes.find {|s| s[:id] == scheme_name }
 
@@ -36,7 +43,8 @@ class Wizard
       attrs = {
         enabled: true,
         name: I18n.t("wizard.step.colors.fields.color_scheme.options.#{scheme_name}"),
-        colors: colors
+        colors: colors,
+        theme_id: scheme_name
       }
 
       scheme = ColorScheme.where(via_wizard: true).first
@@ -53,6 +61,10 @@ class Wizard
 
     def success?
       @errors.blank?
+    end
+
+    def refresh_required?
+      @refresh_required
     end
 
     protected
