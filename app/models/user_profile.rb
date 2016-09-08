@@ -9,8 +9,8 @@ class UserProfile < ActiveRecord::Base
   before_save :cook
   after_save :trigger_badges
 
-  validates :profile_background, upload_url: true
-  validates :card_background, upload_url: true
+  validates :profile_background, upload_url: true, if: :profile_background_changed?
+  validates :card_background, upload_url: true, if: :card_background_changed?
 
   belongs_to :card_image_badge, class_name: 'Badge'
   has_many :user_profile_views, dependent: :destroy
