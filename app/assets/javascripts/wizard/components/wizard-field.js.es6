@@ -1,10 +1,13 @@
 import computed from 'ember-addons/ember-computed-decorators';
 
 export default Ember.Component.extend({
-  classNameBindings: [':wizard-field', ':text-field', 'field.invalid'],
+  classNameBindings: [':wizard-field', 'typeClass', 'field.invalid'],
+
+  @computed('field.type')
+  typeClass: type => `${Ember.String.dasherize(type)}-field`,
 
   @computed('field.id')
-  inputClassName: id => `field-${Ember.String.dasherize(id)}`,
+  fieldClass: id => `field-${Ember.String.dasherize(id)}`,
 
   @computed('field.type', 'field.id')
   inputComponentName(type, id) {

@@ -3258,6 +3258,21 @@ en:
             options:
               default: "Simple"
               dark: "Dark"
+      logos:
+        title: "Personalize your Forum"
+        fields:
+          logo_url:
+            label: "Site Logo"
+            description: "The logo image at the top left of your site, should be a wide rectangle shape."
+          logo_small_url:
+            label: "Small Logo"
+            description: "The small logo image at the top left of your site, should be a square shape, seen when scrolling down."
+          favicon_url:
+            label: "Small Icon"
+            description: "A <a href=\"http://en.wikipedia.org/wiki/Favicon\">favicon</a> for your site. To work correctly over a CDN it must be a png."
+          apple_touch_icon_url:
+            label: "Large Icon"
+            description: "Icon used for Apple touch devices. Recommended size is 144px by 144px."
 
       finished:
         title: "Your Discourse Forum is Ready!"

@@ -7,7 +7,7 @@ class UploadsController < ApplicationController
     file = params[:file] || params[:files].try(:first)
     url = params[:url]
     client_id = params[:client_id]
-    synchronous = is_api? && params[:synchronous]
+    synchronous = (current_user.staff? || is_api?) && params[:synchronous]
 
     if type == "avatar"
       if SiteSetting.sso_overrides_avatar || !SiteSetting.allow_uploaded_avatars
