@@ -71,6 +71,52 @@ body.wizard {
     }
   }
 
+  .wizard-btn {
+    border-radius: 2px;
+    font-size: 1.0em;
+    border: 0px;
+    padding: 0.5em;
+    outline: 0;
+    transition: background-color .3s;
+    margin-right: 0.5em;
+
+    background-color: #fff;
+    color: #333;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, .4);
+
+    &:hover {
+      background-color: #eee;
+    }
+
+    &:active {
+      background-color: #ddd;
+    }
+
+    &:disabled {
+      background-color: #ccc;
+    }
+
+    &.disabled {
+      background-color: #ccc;
+    }
+
+    i.fa-chevron-right {
+      margin-left: 0.25em;
+      font-size: 0.8em;
+    }
+    i.fa-chevron-left {
+      margin-right: 0.25em;
+      font-size: 0.8em;
+    }
+  }
+
+  .wizard-btn-upload {
+    clear: both;
+    display: inline-block;
+    .fa {
+      margin-left: 0.5em;
+    }
+  }
 
   .wizard-step-footer {
     display: flex;
@@ -78,17 +124,10 @@ body.wizard {
     justify-content: space-between;
     align-items: center;
 
-    button.wizard-btn {
-      border-radius: 2px;
-      box-shadow: 0 1px 4px rgba(0, 0, 0, .6);
-      font-size: 1.0em;
+    .wizard-btn.next {
       background-color: #6699ff;
       color: white;
-      border: 0px;
-      padding: 0.5em;
-      outline: 0;
-      transition: background-color .3s;
-      margin-right: 0.5em;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, .6);
 
       &:hover {
         background-color: #80B3FF;
@@ -102,17 +141,6 @@ body.wizard {
         background-color: #000167;
       }
 
-      i.fa-chevron-right {
-        margin-left: 0.25em;
-        font-size: 0.8em;
-      }
-      i.fa-chevron-left {
-        margin-right: 0.25em;
-        font-size: 0.8em;
-      }
-    }
-
-    button.wizard-btn.next {
       min-width: 70px;
 
       i.fa-chevron-right {
@@ -121,7 +149,7 @@ body.wizard {
       }
     }
 
-    button.wizard-btn.back {
+    .wizard-btn.back {
       background-color: #fff;
       color: #333;
       box-shadow: 0 1px 4px rgba(0, 0, 0, .4);
@@ -144,6 +172,7 @@ body.wizard {
     }
 
     button.wizard-btn.done {
+      color: #fff;
       background-color: #33B333;
 
       &:hover {
@@ -158,6 +187,34 @@ body.wizard {
         background-color: #006700;
       }
     }
+  }
+
+  .wizard-image-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .wizard-image-preview {
+    img.field-logo-url {
+      max-height: 40px;
+    }
+    img.field-logo-small-url {
+      max-height: 40px;
+      max-width: 80px;
+    }
+    img.field-favicon-url {
+      max-height: 16px;
+      max-width: 16px;
+    }
+    img.field-apple-touch-icon-url {
+      max-height: 40px;
+      max-width: 40px;
+    }
+
+    padding: 0.1em;
+    border: 1px dotted #bbb;
   }
 
   .wizard-field {
@@ -177,6 +234,10 @@ body.wizard {
     .field-description {
       color: #999;
       margin-top: 0.5em;
+
+      a {
+        color: #7B68EE;
+      }
     }
 
     &.text-field {

@@ -60,7 +60,7 @@ describe Wizard::StepUpdater do
       let!(:color_scheme) { Fabricate(:color_scheme, name: 'existing', via_wizard: true) }
 
       it "updates the scheme" do
-        updater.update(color_scheme: 'dark')
+        updater.update(theme_id: 'dark')
         expect(updater.success?).to eq(true)
 
         color_scheme.reload
@@ -72,7 +72,7 @@ describe Wizard::StepUpdater do
     context "without an existing scheme" do
 
       it "creates the scheme" do
-        updater.update(color_scheme: 'dark')
+        updater.update(theme_id: 'dark')
         expect(updater.success?).to eq(true)
 
         color_scheme = ColorScheme.where(via_wizard: true).first
@@ -82,5 +82,25 @@ describe Wizard::StepUpdater do
       end
     end
   end
+
+  context "logos step" do
+    let(:updater) { Wizard::StepUpdater.new(user, 'logos') }
+
+    it "updates the fields correctly" do
+      updater.update(
+        logo_url: '/uploads/logo.png',
+        logo_small_url: '/uploads/logo-small.png',
+        favicon_url: "/uploads/favicon.png",
+        apple_touch_icon_url: "/uploads/apple.png"
+      )
+
+      expect(updater).to be_success
+      expect(SiteSetting.logo_url).to eq('/uploads/logo.png')
+      expect(SiteSetting.logo_small_url).to eq('/uploads/logo-small.png')
+      expect(SiteSetting.favicon_url).to eq('/uploads/favicon.png')
+      expect(SiteSetting.apple_touch_icon_url).to eq('/uploads/apple.png')
+    end
+  end
+
 
 end

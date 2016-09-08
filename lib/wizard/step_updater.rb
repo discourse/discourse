@@ -59,6 +59,13 @@ class Wizard
       end
     end
 
+    def update_logos(fields)
+      update_setting(:logo_url, fields, :logo_url)
+      update_setting(:logo_small_url, fields, :logo_small_url)
+      update_setting(:favicon_url, fields, :favicon_url)
+      update_setting(:apple_touch_icon_url, fields, :apple_touch_icon_url)
+    end
+
     def success?
       @errors.blank?
     end

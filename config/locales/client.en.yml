@@ -3231,4 +3231,6 @@ en:
       back: "Back"
       next: "Next"
       step: "Step %{current} of %{total}"
+      upload: "Upload"
+      uploading: "Uploading..."
 
