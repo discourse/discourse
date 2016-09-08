@@ -38,8 +38,8 @@ class Category < ActiveRecord::Base
 
   validate :email_in_validator
 
-  validates :logo_url, upload_url: true
-  validates :background_url, upload_url: true
+  validates :logo_url, upload_url: true, if: :logo_url_changed?
+  validates :background_url, upload_url: true, if: :background_url_changed?
 
   validate :ensure_slug
   before_save :apply_permissions
