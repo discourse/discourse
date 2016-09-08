@@ -343,7 +343,8 @@ class ImportScripts::GetSatisfaction < ImportScripts::Base
       tcf = topic.first_post.custom_fields
       if tcf && tcf["import_id"]
         slug = @topic_slug[tcf["import_id"].to_i]
-        slug = slug.gsub("https://community.unbounce.com/", "")
+        # TODO: replace "http://community.example.com/" with the URL of your community
+        slug = slug.gsub("http://community.example.com/", "")
         Permalink.create(url: slug, topic_id: topic.id)
       end
     end
