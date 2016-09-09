@@ -233,16 +233,16 @@ describe NewPostManager do
       default = NewPostManager.new(u,{})
       expect(NewPostManager.user_needs_approval?(default)).to eq(false)
 
-      with_check = NewPostManager.new(u,{first_post_checks: true})
+      with_check = NewPostManager.new(u, first_post_checks: true)
       expect(NewPostManager.user_needs_approval?(with_check)).to eq(true)
 
       u.user_stat.post_count = 1
-      with_check_and_post = NewPostManager.new(u,{first_post_checks: true})
+      with_check_and_post = NewPostManager.new(u, first_post_checks: true)
       expect(NewPostManager.user_needs_approval?(with_check_and_post)).to eq(false)
 
       u.user_stat.post_count = 0
       u.trust_level = 1
-      with_check_tl1 = NewPostManager.new(u,{first_post_checks: true})
+      with_check_tl1 = NewPostManager.new(u, first_post_checks: true)
       expect(NewPostManager.user_needs_approval?(with_check_tl1)).to eq(false)
     end
   end

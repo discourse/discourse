@@ -584,7 +584,6 @@ describe PostsController do
       end
 
       it 'queues the post if min_first_post_typing_time is not met' do
-
         SiteSetting.min_first_post_typing_time = 3000
         # our logged on user here is tl1
         SiteSetting.auto_block_fast_typers_max_trust_level = 1
@@ -606,7 +605,23 @@ describe PostsController do
 
         user.reload
         expect(user.blocked).to eq(false)
+      end
 
+      it "doesn't enqueue replies when the topic is closed" do
+        SiteSetting.min_first_post_typing_time = 3000
+        SiteSetting.auto_block_fast_typers_max_trust_level = 1
+
+        topic = Fabricate(:closed_topic)
+
+        xhr :post, :create, {
+          raw: 'this is the test content',
+          title: 'this is the test title for the topic',
+          topic_id: topic.id
+        }
+
+        expect(response).not_to be_success
+        parsed = ::JSON.parse(response.body)
+        expect(parsed["action"]).not_to eq("enqueued")
       end
 
       it 'blocks correctly based on auto_block_first_post_regex' do
