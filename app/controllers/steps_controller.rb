@@ -1,4 +1,5 @@
 require_dependency 'wizard'
+require_dependency 'wizard/builder'
 require_dependency 'wizard/step_updater'
 
 class StepsController < ApplicationController
@@ -7,7 +8,8 @@ class StepsController < ApplicationController
   before_filter :ensure_staff
 
   def update
-    updater = Wizard::StepUpdater.new(current_user, params[:id])
+    wizard = Wizard::Builder.new(current_user).build
+    updater = wizard.create_updater(params[:id])
     updater.update(params[:fields])
 
     if updater.success?

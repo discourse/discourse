@@ -1,11 +1,14 @@
 require 'rails_helper'
+require_dependency 'wizard'
+require_dependency 'wizard/builder'
 require_dependency 'wizard/step_updater'
 
 describe Wizard::StepUpdater do
   let(:user) { Fabricate(:admin) }
+  let(:wizard) { Wizard::Builder.new(user).build }
 
   context "locale" do
-    let(:updater) { Wizard::StepUpdater.new(user, 'locale') }
+    let(:updater) { wizard.create_updater('locale') }
 
     it "does not require refresh when the language stays the same" do
       updater.update(default_locale: 'en')
@@ -20,7 +23,7 @@ describe Wizard::StepUpdater do
   end
 
   it "updates the forum title step" do
-    updater = Wizard::StepUpdater.new(user, 'forum_title')
+    updater = wizard.create_updater('forum_title')
     updater.update(title: 'new forum title', site_description: 'neat place')
 
     expect(updater.success?).to eq(true)
@@ -29,7 +32,7 @@ describe Wizard::StepUpdater do
   end
 
   context "privacy settings" do
-    let(:updater) { Wizard::StepUpdater.new(user, 'privacy') }
+    let(:updater) { wizard.create_updater('privacy') }
 
     it "updates to open correctly" do
       updater.update(privacy: 'open')
@@ -47,7 +50,7 @@ describe Wizard::StepUpdater do
   end
 
   context "contact step" do
-    let(:updater) { Wizard::StepUpdater.new(user, 'contact') }
+    let(:updater) { wizard.create_updater('contact') }
 
     it "updates the fields correctly" do
       updater.update(contact_email: 'eviltrout@example.com',
@@ -69,7 +72,7 @@ describe Wizard::StepUpdater do
   end
 
   context "colors step" do
-    let(:updater) { Wizard::StepUpdater.new(user, 'colors') }
+    let(:updater) { wizard.create_updater('colors') }
 
     context "with an existing color scheme" do
       let!(:color_scheme) { Fabricate(:color_scheme, name: 'existing', via_wizard: true) }
@@ -99,7 +102,7 @@ describe Wizard::StepUpdater do
   end
 
   context "logos step" do
-    let(:updater) { Wizard::StepUpdater.new(user, 'logos') }
+    let(:updater) { wizard.create_updater('logos') }
 
     it "updates the fields correctly" do
       updater.update(
