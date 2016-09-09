@@ -19,9 +19,6 @@ describe Wizard::StepUpdater do
     end
   end
 
-  it "updates the locale" do
-  end
-
   it "updates the forum title step" do
     updater = Wizard::StepUpdater.new(user, 'forum_title')
     updater.update(title: 'new forum title', site_description: 'neat place')
@@ -29,6 +26,24 @@ describe Wizard::StepUpdater do
     expect(updater.success?).to eq(true)
     expect(SiteSetting.title).to eq("new forum title")
     expect(SiteSetting.site_description).to eq("neat place")
+  end
+
+  context "privacy settings" do
+    let(:updater) { Wizard::StepUpdater.new(user, 'privacy') }
+
+    it "updates to open correctly" do
+      updater.update(privacy: 'open')
+      expect(updater.success?).to eq(true)
+      expect(SiteSetting.login_required?).to eq(false)
+      expect(SiteSetting.invite_only?).to eq(false)
+    end
+
+    it "updates to private correctly" do
+      updater.update(privacy: 'restricted')
+      expect(updater.success?).to eq(true)
+      expect(SiteSetting.login_required?).to eq(true)
+      expect(SiteSetting.invite_only?).to eq(true)
+    end
   end
 
   context "contact step" do

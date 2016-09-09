@@ -1,17 +1,37 @@
 class WizardFieldChoiceSerializer < ApplicationSerializer
-  attributes :id, :label, :data
+  attributes :id, :label, :description, :icon, :data
 
   def id
     object.id
+  end
+
+  def i18nkey
+    field = object.field
+    step = field.step
+    "wizard.step.#{step.id}.fields.#{field.id}.choices.#{id}"
   end
 
   def label
     return object.label if object.label.present?
 
     # Try getting one from a translation
-    field = object.field
-    step = field.step
-    I18n.t("wizard.step.#{step.id}.fields.#{field.id}.options.#{id}", default: id)
+    I18n.t("#{i18nkey}.label", default: id)
+  end
+
+  def description
+    I18n.t("#{i18nkey}.description", default: "")
+  end
+
+  def include_description?
+    description.present?
+  end
+
+  def icon
+    object.icon
+  end
+
+  def include_icon?
+    object.icon.present?
   end
 
   def data

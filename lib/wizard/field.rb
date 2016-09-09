@@ -1,13 +1,14 @@
 class Wizard
 
   class Choice
-    attr_reader :id, :label, :data
+    attr_reader :id, :label, :icon, :data
     attr_accessor :field
 
     def initialize(id, opts)
       @id = id
       @data = opts[:data]
       @label = opts[:label]
+      @icon = opts[:icon]
     end
   end
 
