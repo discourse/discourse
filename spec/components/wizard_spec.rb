@@ -3,11 +3,13 @@ require 'wizard'
 
 describe Wizard do
 
-  let(:wizard) { Wizard.new }
+  let(:user) { Fabricate.build(:user) }
+  let(:wizard) { Wizard.new(user) }
 
   it "has default values" do
     expect(wizard.start).to be_blank
     expect(wizard.steps).to be_empty
+    expect(wizard.user).to be_present
   end
 
   describe "append_step" do

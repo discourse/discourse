@@ -1,4 +1,5 @@
 require_dependency 'wizard'
+require_dependency 'wizard/builder'
 
 class WizardController < ApplicationController
 
@@ -12,7 +13,7 @@ class WizardController < ApplicationController
   def index
     respond_to do |format|
       format.json do
-        wizard = Wizard.build
+        wizard = Wizard::Builder.new(current_user).build
         render_serialized(wizard, WizardSerializer)
       end
       format.html {}
