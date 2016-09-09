@@ -20,6 +20,7 @@ module TopicGuardian
 
   def can_create_post_on_topic?(topic)
     # No users can create posts on deleted topics
+    return false if topic.blank?
     return false if topic.trashed?
     return true if is_admin?
 
