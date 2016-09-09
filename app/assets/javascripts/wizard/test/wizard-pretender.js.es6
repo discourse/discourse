@@ -51,7 +51,8 @@ export default function() {
             index: 1,
             fields: [
               { id: 'snack', type: 'dropdown', required: true },
-              { id: 'theme-preview', type: 'component' }
+              { id: 'theme-preview', type: 'component' },
+              { id: 'an-image', type: 'image' }
             ],
             previous: 'hello-world'
           }]

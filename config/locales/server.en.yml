@@ -3236,6 +3236,21 @@ en:
           site_description:
             label: "Describe your forum in one sentence"
             placeholder: "A place for Jane and her friends to discuss cool stuff"
+
+      privacy:
+        title: "Privacy Options"
+        description: "Feel free to set things up privately, then switch to public later!"
+
+        fields:
+          privacy:
+            choices:
+              open:
+                label: "Open Access"
+                description: "Anyone can access and sign up for your forum"
+              restricted:
+                label: "Restricted Access"
+                description: "Access will be restricted to those you've invited"
+
       contact:
         title: "Don't be a Stranger"
         fields:
@@ -3255,9 +3270,11 @@ en:
         fields:
           theme_id:
             label: "Theme"
-            options:
-              default: "Simple"
-              dark: "Dark"
+            choices:
+              default:
+                label: "Simple"
+              dark:
+                label: "Dark"
       logos:
         title: "Personalize your Forum"
         fields:

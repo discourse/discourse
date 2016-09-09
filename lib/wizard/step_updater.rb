@@ -15,19 +15,24 @@ class Wizard
 
     def update_locale(fields)
       old_locale = SiteSetting.default_locale
-      update_setting(:default_locale, fields, :default_locale)
+      update_setting_field(:default_locale, fields, :default_locale)
       @refresh_required = true if old_locale != fields[:default_locale]
     end
 
+    def update_privacy(fields)
+      update_setting(:login_required, fields[:privacy] == 'restricted')
+      update_setting(:invite_only, fields[:privacy] == 'restricted')
+    end
+
     def update_forum_title(fields)
-      update_setting(:title, fields, :title)
-      update_setting(:site_description, fields, :site_description)
+      update_setting_field(:title, fields, :title)
+      update_setting_field(:site_description, fields, :site_description)
     end
 
     def update_contact(fields)
-      update_setting(:contact_email, fields, :contact_email)
-      update_setting(:contact_url, fields, :contact_url)
-      update_setting(:site_contact_username, fields, :site_contact_username)
+      update_setting_field(:contact_email, fields, :contact_email)
+      update_setting_field(:contact_url, fields, :contact_url)
+      update_setting_field(:site_contact_username, fields, :site_contact_username)
     end
 
     def update_colors(fields)
@@ -60,10 +65,10 @@ class Wizard
     end
 
     def update_logos(fields)
-      update_setting(:logo_url, fields, :logo_url)
-      update_setting(:logo_small_url, fields, :logo_small_url)
-      update_setting(:favicon_url, fields, :favicon_url)
-      update_setting(:apple_touch_icon_url, fields, :apple_touch_icon_url)
+      update_setting_field(:logo_url, fields, :logo_url)
+      update_setting_field(:logo_small_url, fields, :logo_small_url)
+      update_setting_field(:favicon_url, fields, :favicon_url)
+      update_setting_field(:apple_touch_icon_url, fields, :apple_touch_icon_url)
     end
 
     def success?
@@ -76,11 +81,13 @@ class Wizard
 
     protected
 
-      def update_setting(id, fields, field_id)
-        value = fields[field_id]
+      def update_setting(id, value)
         value.strip! if value.is_a?(String)
-
         SiteSetting.set_and_log(id, value, @current_user) if SiteSetting.send(id) != value
+      end
+
+      def update_setting_field(id, fields, field_id)
+        update_setting(id, fields[field_id])
       rescue Discourse::InvalidParameters => e
         errors.add(field_id, e.message)
       end

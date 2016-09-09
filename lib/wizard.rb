@@ -52,6 +52,17 @@ class Wizard
       step.add_field(id: 'site_description', type: 'text', required: true, value: SiteSetting.site_description)
     end
 
+    wizard.append_step('privacy') do |step|
+
+      locked = SiteSetting.login_required? && SiteSetting.invite_only?
+      privacy = step.add_field(id: 'privacy',
+                               type: 'radio',
+                               required: true,
+                               value: locked ? 'restricted' : 'open')
+      privacy.add_choice('open', icon: 'unlock')
+      privacy.add_choice('restricted', icon: 'lock')
+    end
+
     wizard.append_step('contact') do |step|
       step.add_field(id: 'contact_email', type: 'text', required: true, value: SiteSetting.contact_email)
       step.add_field(id: 'contact_url', type: 'text', value: SiteSetting.contact_url)

@@ -263,3 +263,20 @@ body.wizard {
   }
 }
 
+.radio-field-choice {
+  margin-bottom: 1.5em;
+
+  input {
+    outline: 0;
+  }
+
+  .radio-label {
+    font-weight: bold;
+    margin-left: 0.5em;
+  }
+  .radio-description {
+    margin-top: 0.25em;
+    margin-left: 1.75em;
+    color: #777;
+  }
+}
