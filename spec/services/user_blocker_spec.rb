@@ -27,8 +27,6 @@ describe UserBlocker do
         SystemMessage.expects(:create).with(user, :blocked_by_staff).returns(true)
         UserBlocker.block(user, Fabricate.build(:admin))
       end
-
-      # TODO: it 'logs the action'
     end
 
     context 'not given a staff user argument' do
@@ -83,12 +81,10 @@ describe UserBlocker do
       SystemMessage.expects(:create).never
       unblock_user
     end
-
-    # TODO: it 'logs the action'
   end
 
   describe 'hide_posts' do
-    let(:user)    { Fabricate(:user) }
+    let(:user)    { Fabricate(:user, trust_level: 0) }
     let!(:post)   { Fabricate(:post, user: user) }
     subject       { UserBlocker.new(user) }
 
@@ -100,6 +96,13 @@ describe UserBlocker do
     it "hides the topic if the post was the first post" do
       subject.block
       expect(post.topic.reload).to_not be_visible
+    end
+
+    it "doesn't hide posts if user is TL1" do
+      user.trust_level = 1
+      subject.block
+      expect(post.reload).to_not be_hidden
+      expect(post.topic.reload).to be_visible
     end
   end
 
