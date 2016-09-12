@@ -66,6 +66,19 @@ TXT
       expect(response.code).to eq("403")
     end
 
+    it "will allow tokens for staff without TL" do
+
+      SiteSetting.min_trust_level_for_user_api_key = 2
+      SiteSetting.allowed_user_api_auth_redirects = args[:auth_redirect]
+
+      user = Fabricate(:user, trust_level: 1, moderator: true)
+
+      log_in_user(user)
+
+      post :create, args
+      expect(response.code).to eq("302")
+    end
+
     it "will not create token unless TL is met" do
       SiteSetting.min_trust_level_for_user_api_key = 2
       SiteSetting.allowed_user_api_auth_redirects = args[:auth_redirect]
