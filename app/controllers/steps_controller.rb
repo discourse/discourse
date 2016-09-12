@@ -9,8 +9,8 @@ class StepsController < ApplicationController
 
   def update
     wizard = Wizard::Builder.new(current_user).build
-    updater = wizard.create_updater(params[:id])
-    updater.update(params[:fields])
+    updater = wizard.create_updater(params[:id], params[:fields])
+    updater.update
 
     if updater.success?
       result = { success: 'OK' }

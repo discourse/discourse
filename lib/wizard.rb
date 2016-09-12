@@ -33,9 +33,9 @@ class Wizard
     end
   end
 
-  def create_updater(step_id)
+  def create_updater(step_id, fields)
     step = @steps.find {|s| s.id == step_id.dasherize}
-    Wizard::StepUpdater.new(@user, step)
+    Wizard::StepUpdater.new(@user, step, fields)
   end
 
 end

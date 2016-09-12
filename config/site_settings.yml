@@ -60,6 +60,12 @@ required:
   exclude_rel_nofollow_domains:
     default: ''
     type: list
+  company_short_name:
+    default: ''
+  company_full_name:
+    default: ''
+  company_domain:
+    default: ''
 
 basic:
   default_locale:
