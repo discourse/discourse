@@ -24,7 +24,7 @@ class UserApiKeysController < ApplicationController
       return
     end
 
-    if current_user.trust_level < SiteSetting.min_trust_level_for_user_api_key
+    unless meets_tl?
       @no_trust_level = true
       return
     end
@@ -53,7 +53,7 @@ class UserApiKeysController < ApplicationController
         raise Discourse::InvalidAccess
     end
 
-    raise Discourse::InvalidAccess if current_user.trust_level < SiteSetting.min_trust_level_for_user_api_key
+    raise Discourse::InvalidAccess unless meets_tl?
 
     request_read = params[:access].include? 'r'
     request_read ||= params[:access].include? 'p'
@@ -140,6 +140,10 @@ class UserApiKeysController < ApplicationController
 
     # our pk has got to parse
     OpenSSL::PKey::RSA.new(params[:public_key])
+  end
+
+  def meets_tl?
+    current_user.staff? || current_user.trust_level >= SiteSetting.min_trust_level_for_user_api_key
   end
 
 end
