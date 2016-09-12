@@ -583,45 +583,57 @@ describe PostsController do
 	      expect { xhr :post, :create }.to raise_error(ActionController::ParameterMissing)
       end
 
-      it 'queues the post if min_first_post_typing_time is not met' do
-        SiteSetting.min_first_post_typing_time = 3000
-        # our logged on user here is tl1
-        SiteSetting.auto_block_fast_typers_max_trust_level = 1
+      context "fast typing" do
+        before do
+          SiteSetting.min_first_post_typing_time = 3000
+          SiteSetting.auto_block_fast_typers_max_trust_level = 1
+        end
 
-        xhr :post, :create, {raw: 'this is the test content', title: 'this is the test title for the topic'}
+        it 'queues the post if min_first_post_typing_time is not met' do
+          xhr :post, :create, {raw: 'this is the test content', title: 'this is the test title for the topic'}
 
-        expect(response).to be_success
-        parsed = ::JSON.parse(response.body)
+          expect(response).to be_success
+          parsed = ::JSON.parse(response.body)
 
-        expect(parsed["action"]).to eq("enqueued")
+          expect(parsed["action"]).to eq("enqueued")
 
-        user.reload
-        expect(user.blocked).to eq(true)
+          user.reload
+          expect(user.blocked).to eq(true)
 
-        qp = QueuedPost.first
+          qp = QueuedPost.first
 
-        mod = Fabricate(:moderator)
-        qp.approve!(mod)
+          mod = Fabricate(:moderator)
+          qp.approve!(mod)
 
-        user.reload
-        expect(user.blocked).to eq(false)
-      end
+          user.reload
+          expect(user.blocked).to eq(false)
+        end
 
-      it "doesn't enqueue replies when the topic is closed" do
-        SiteSetting.min_first_post_typing_time = 3000
-        SiteSetting.auto_block_fast_typers_max_trust_level = 1
+        it "doesn't enqueue replies when the topic is closed" do
+          topic = Fabricate(:closed_topic)
 
-        topic = Fabricate(:closed_topic)
+          xhr :post, :create, {
+            raw: 'this is the test content',
+            title: 'this is the test title for the topic',
+            topic_id: topic.id
+          }
 
-        xhr :post, :create, {
-          raw: 'this is the test content',
-          title: 'this is the test title for the topic',
-          topic_id: topic.id
-        }
+          expect(response).not_to be_success
+          parsed = ::JSON.parse(response.body)
+          expect(parsed["action"]).not_to eq("enqueued")
+        end
 
-        expect(response).not_to be_success
-        parsed = ::JSON.parse(response.body)
-        expect(parsed["action"]).not_to eq("enqueued")
+        it "doesn't enqueue replies when the post is too long" do
+          SiteSetting.max_post_length = 10
+          xhr :post, :create, {
+            raw: 'this is the test content',
+            title: 'this is the test title for the topic',
+          }
+
+          expect(response).not_to be_success
+          parsed = ::JSON.parse(response.body)
+          expect(parsed["action"]).not_to eq("enqueued")
+        end
       end
 
       it 'blocks correctly based on auto_block_first_post_regex' do

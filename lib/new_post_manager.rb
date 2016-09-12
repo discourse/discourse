@@ -80,6 +80,15 @@ class NewPostManager
   def self.default_handler(manager)
     if user_needs_approval?(manager)
 
+      validator = Validators::PostValidator.new
+      post = Post.new(raw: manager.args[:raw])
+      validator.validate(post)
+      if post.errors[:raw].present?
+        result = NewPostResult.new(:created_post, false)
+        result.errors[:base] = post.errors[:raw]
+        return result
+      end
+
       # Can the user create the post in the first place?
       if manager.args[:topic_id]
         topic = Topic.unscoped.where(id: manager.args[:topic_id]).first
