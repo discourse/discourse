@@ -1410,6 +1410,10 @@ en:
     suppress_overlapping_tags_in_list: "If tags match exact words in topic titles, don't show the tag"
     remove_muted_tags_from_latest: "Don't show topics tagged with muted tags in the latest topic list."
 
+    company_short_name: "Company Name (short)"
+    company_full_name: "Company Name (full)"
+    company_domain: "Company Domain"
+
     errors:
       invalid_email: "Invalid email address."
       invalid_username: "There's no user with that username."
@@ -3265,6 +3269,22 @@ en:
           site_contact_username:
             label: "Site Contact Username"
             description: "All automated messages will be sent from this user."
+
+      corporate:
+        title: "About your Company"
+        description: "If you don't have a company, feel free to leave this step blank."
+
+        fields:
+          company_short_name:
+            label: "Company Name (short)"
+            placeholder: "PP Inc."
+          company_full_name:
+            label: "Company Name (full)"
+            placeholder: "Pied Piper Incorporated"
+          company_domain:
+            label: "Company Domain"
+            placeholder: "piedpiper.com"
+
       colors:
         title: "Choose a Theme"
         fields:

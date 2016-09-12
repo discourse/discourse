@@ -16,10 +16,10 @@ class Wizard
           languages.add_choice(locale[:value], label: locale[:name])
         end
 
-        step.on_update do |updater, fields|
+        step.on_update do |updater|
           old_locale = SiteSetting.default_locale
-          updater.update_setting_field(:default_locale, fields, :default_locale)
-          updater.refresh_required = true if old_locale != fields[:default_locale]
+          updater.apply_setting(:default_locale)
+          updater.refresh_required = true if old_locale != updater.fields[:default_locale]
         end
       end
 
@@ -27,9 +27,8 @@ class Wizard
         step.add_field(id: 'title', type: 'text', required: true, value: SiteSetting.title)
         step.add_field(id: 'site_description', type: 'text', required: true, value: SiteSetting.site_description)
 
-        step.on_update do |updater, fields|
-          updater.update_setting_field(:title, fields, :title)
-          updater.update_setting_field(:site_description, fields, :site_description)
+        step.on_update do |updater|
+          updater.apply_settings(:title, :site_description)
         end
       end
 
@@ -42,9 +41,9 @@ class Wizard
         privacy.add_choice('open', icon: 'unlock')
         privacy.add_choice('restricted', icon: 'lock')
 
-        step.on_update do |updater, fields|
-          updater.update_setting(:login_required, fields[:privacy] == 'restricted')
-          updater.update_setting(:invite_only, fields[:privacy] == 'restricted')
+        step.on_update do |updater|
+          updater.update_setting(:login_required, updater.fields[:privacy] == 'restricted')
+          updater.update_setting(:invite_only, updater.fields[:privacy] == 'restricted')
         end
       end
 
@@ -53,10 +52,31 @@ class Wizard
         step.add_field(id: 'contact_url', type: 'text', value: SiteSetting.contact_url)
         step.add_field(id: 'site_contact_username', type: 'text', value: SiteSetting.site_contact_username)
 
-        step.on_update do |updater, fields|
-          updater.update_setting_field(:contact_email, fields, :contact_email)
-          updater.update_setting_field(:contact_url, fields, :contact_url)
-          updater.update_setting_field(:site_contact_username, fields, :site_contact_username)
+        step.on_update do |updater|
+          updater.apply_settings(:contact_email, :contact_url, :site_contact_username)
+        end
+      end
+
+      @wizard.append_step('corporate') do |step|
+        step.add_field(id: 'company_short_name', type: 'text', value: SiteSetting.company_short_name)
+        step.add_field(id: 'company_full_name', type: 'text', value: SiteSetting.company_full_name)
+        step.add_field(id: 'company_domain', type: 'text', value: SiteSetting.company_domain)
+
+        step.on_update do |updater|
+
+          tos_post = Post.where(topic_id: SiteSetting.tos_topic_id, post_number: 1).first
+          if tos_post.present?
+            raw = tos_post.raw.dup
+
+            replace_company(updater, raw, 'company_full_name')
+            replace_company(updater, raw, 'company_short_name')
+            replace_company(updater, raw, 'company_domain')
+
+            revisor = PostRevisor.new(tos_post)
+            revisor.revise!(@wizard.user, raw: raw)
+          end
+
+          updater.apply_settings(:company_short_name, :company_full_name, :company_domain)
         end
       end
 
@@ -68,8 +88,8 @@ class Wizard
         ColorScheme.themes.each {|t| themes.add_choice(t[:id], data: t) }
         step.add_field(id: 'theme_preview', type: 'component')
 
-        step.on_update do |updater, fields|
-          scheme_name = fields[:theme_id]
+        step.on_update do |updater|
+          scheme_name = updater.fields[:theme_id]
 
           theme = ColorScheme.themes.find {|s| s[:id] == scheme_name }
 
@@ -104,18 +124,28 @@ class Wizard
         step.add_field(id: 'favicon_url', type: 'image', value: SiteSetting.favicon_url)
         step.add_field(id: 'apple_touch_icon_url', type: 'image', value: SiteSetting.apple_touch_icon_url)
 
-        step.on_update do |updater, fields|
-          updater.update_setting_field(:logo_url, fields, :logo_url)
-          updater.update_setting_field(:logo_small_url, fields, :logo_small_url)
-          updater.update_setting_field(:favicon_url, fields, :favicon_url)
-          updater.update_setting_field(:apple_touch_icon_url, fields, :apple_touch_icon_url)
+        step.on_update do |updater|
+          updater.apply_settings(:logo_url, :logo_small_url, :favicon_url, :apple_touch_icon_url)
         end
       end
+
+      DiscourseEvent.trigger(:build_wizard, @wizard)
 
       @wizard.append_step('finished')
       @wizard
     end
 
+  protected
+
+    def replace_company(updater, raw, field_name)
+      old_value = SiteSetting.send(field_name)
+      old_value = field_name if old_value.blank?
+
+      new_value = updater.fields[field_name.to_sym]
+      new_value = field_name if new_value.blank?
+
+      raw.gsub!(old_value, new_value)
+    end
   end
 end
 

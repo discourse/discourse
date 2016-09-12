@@ -2,16 +2,17 @@ class Wizard
   class StepUpdater
     include ActiveModel::Model
 
-    attr_accessor :refresh_required
+    attr_accessor :refresh_required, :fields
 
-    def initialize(current_user, step)
+    def initialize(current_user, step, fields)
       @current_user = current_user
       @step = step
       @refresh_required = false
+      @fields = fields
     end
 
-    def update(fields)
-      @step.updater.call(self, fields) if @step.updater.present?
+    def update
+      @step.updater.call(self) if @step.updater.present?
     end
 
     def success?
@@ -27,10 +28,14 @@ class Wizard
       SiteSetting.set_and_log(id, value, @current_user) if SiteSetting.send(id) != value
     end
 
-    def update_setting_field(id, fields, field_id)
-      update_setting(id, fields[field_id])
+    def apply_setting(id)
+      update_setting(id, @fields[id])
     rescue Discourse::InvalidParameters => e
-      errors.add(field_id, e.message)
+      errors.add(id, e.message)
+    end
+
+    def apply_settings(*ids)
+      ids.each {|id| apply_setting(id)}
     end
 
   end
