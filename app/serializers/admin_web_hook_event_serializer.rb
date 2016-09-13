@@ -10,7 +10,6 @@ class AdminWebHookEventSerializer < ApplicationSerializer
              :duration,
              :created_at
 
-
   def request_url
     object.web_hook.payload_url
   end
