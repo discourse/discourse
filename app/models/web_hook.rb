@@ -67,6 +67,12 @@ class WebHook < ActiveRecord::Base
       )
     end
   end
+
+  %i(user_created user_approved).each do |event|
+    DiscourseEvent.on(event) do |user|
+      WebHook.enqueue_hooks(:user_creation, user_id: user.id, event_name: event.to_s)
+    end
+  end
 end
 
 # == Schema Information

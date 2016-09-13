@@ -87,6 +87,7 @@ class User < ActiveRecord::Base
   after_create :ensure_in_trust_level_group
   after_create :automatic_group_membership
   after_create :set_default_categories_preferences
+  after_create :trigger_user_created_event
 
   before_save :update_username_lower
   before_save :ensure_password_is_hashed
@@ -267,6 +268,8 @@ class User < ActiveRecord::Base
     self.approved_at = Time.now
 
     send_approval_email if save and send_mail
+
+    DiscourseEvent.trigger(:user_approved, self)
   end
 
   def self.email_hash(email)
@@ -1000,6 +1003,11 @@ class User < ActiveRecord::Base
         # if for some reason the user can't be deleted, continue on to the next one
       end
     end
+  end
+
+  def trigger_user_created_event
+    DiscourseEvent.trigger(:user_created, self)
+    true
   end
 
   private

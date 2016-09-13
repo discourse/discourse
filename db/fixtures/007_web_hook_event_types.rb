@@ -7,3 +7,8 @@ WebHookEventType.seed do |b|
   b.id = WebHookEventType::POST
   b.name = "post"
 end
+
+WebHookEventType.seed do |b|
+  b.id = WebHookEventType::USER_CREATION
+  b.name = "user_creation"
+end
