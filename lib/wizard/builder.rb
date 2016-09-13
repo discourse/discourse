@@ -129,6 +129,18 @@ class Wizard
         end
       end
 
+      @wizard.append_step('invites') do |step|
+        step.add_field(id: 'invite_list', type: 'component')
+
+        step.on_update do |updater|
+          users = JSON.parse(updater.fields[:invite_list])
+
+          users.each do |u|
+            Invite.create_invite_by_email(u['email'], @wizard.user)
+          end
+        end
+      end
+
       DiscourseEvent.trigger(:build_wizard, @wizard)
 
       @wizard.append_step('finished')

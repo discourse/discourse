@@ -12,8 +12,10 @@
 //= require wizard-application
 //= require wizard-vendor
 //= require helpers/assertions
+//= require_tree ./helpers
 //= require_tree ./acceptance
 //= require_tree ./models
+//= require_tree ./components
 //= require locales/en
 //= require fake_xml_http_request
 //= require route-recognizer
@@ -42,13 +44,10 @@ QUnit.testDone(function() {
   server.shutdown();
 });
 
-var wizard = require('wizard/wizard').default.create({
-  rootElement: '#ember-testing'
-});
+require('wizard/test/helpers/start-app').default();
 
-wizard.setupForTesting();
-wizard.injectTestHelpers();
-wizard.start();
+var buildResolver = require('discourse-common/resolver').buildResolver;
+window.setResolver(buildResolver('wizard').create());
 
 Object.keys(requirejs.entries).forEach(function(entry) {
   if ((/\-test/).test(entry)) {

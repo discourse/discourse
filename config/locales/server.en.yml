@@ -3311,6 +3311,10 @@ en:
             label: "Large Icon"
             description: "Icon used for Apple touch devices. Recommended size is 144px by 144px."
 
+      invites:
+        title: "Invite Staff"
+        description: "We recommend you invite some staff members to help you get things started."
+
       finished:
         title: "Your Discourse Forum is Ready!"
         description: |

@@ -141,7 +141,6 @@ describe Wizard::StepUpdater do
   end
 
   context "logos step" do
-
     it "updates the fields correctly" do
       updater = wizard.create_updater('logos',
                                       logo_url: '/uploads/logo.png',
@@ -158,5 +157,22 @@ describe Wizard::StepUpdater do
     end
   end
 
+  context "invites step" do
+
+    let(:invites) {
+      return [{ email: 'regular@example.com', role: 'regular'},
+              { email: 'moderator@example.com', role: 'moderator'}]
+    }
+
+    it "updates the fields correctly" do
+      updater = wizard.create_updater('invites', invite_list: invites.to_json)
+      updater.update
+
+      expect(updater).to be_success
+
+      expect(Invite.where(email: 'regular@example.com')).to be_present
+      expect(Invite.where(email: 'moderator@example.com')).to be_present
+    end
+  end
 
 end
