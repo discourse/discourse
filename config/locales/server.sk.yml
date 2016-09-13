@@ -1281,7 +1281,6 @@ sk:
 
         Ak ste si istý, že ste obsah pridali, pokúste sa znovu a použite jednoduchšie formátovanie.
     email_reject_parsing:
-      subject_template: "[%{site_name}] Problém s emailom -- Nerozpoznaný obsah"
       text_body_template: |
         Prepáčte, ale Vaša emailová správa na %{destination} (titled %{former_title}) nefungovala.
 

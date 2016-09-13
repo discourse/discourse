@@ -288,6 +288,7 @@ it:
               common: "è una delle 10000 password più comuni. Usa una password più sicura."
               same_as_username: "è la stessa del tuo nome utente. Per favore usa una password più sicura."
               same_as_email: "coincide con la tua email. Per favore scegli una password più sicura."
+              same_as_current: "è la stessa della tua password attuale."
             ip_address:
               signup_not_allowed: "L'iscrizione non è permessa da questo account."
         color_scheme_color:
@@ -1191,8 +1192,6 @@ it:
       subject_template: "[%{site_name}] Problema relativo all'email -- Account Sconosciuto"
     email_reject_empty:
       subject_template: "[%{site_name}] Problema relativo all'email -- Nessun Contenuto"
-    email_reject_parsing:
-      subject_template: "[%{site_name}] Problema relativo all'email -- Contenuto non riconosciuto"
     email_reject_invalid_access:
       subject_template: "[%{site_name}] Problema relativo all'email -- Accesso non valido"
     email_reject_reply_key:

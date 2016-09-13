@@ -1555,7 +1555,6 @@ ar:
 
         إذا  حصل أنك لم تُشمِل الرد، حاول مرة أخرى مع التنسيق البسيط.
     email_reject_parsing:
-      subject_template: "[%{site_name}] بريد الكتروني -- محتواه غير معروف"
       text_body_template: |
         نحن آسفون ، ولكن رسالة البريد الإلكتروني إلى %{destination} (titled %{former_title})  لا تعمل.
 

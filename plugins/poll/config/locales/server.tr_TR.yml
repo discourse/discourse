@@ -9,6 +9,7 @@ tr_TR:
   site_settings:
     poll_enabled: "Kullanıcılar anket oluşturabilirler mi?"
     poll_maximum_options: "Bir ankette izin verilen en fazla seçenek sayısı."
+    poll_edit_window_mins: "Gönderinin oluşturulmasından sonra anketin düzenlenebileceği dakika sayısı"
   poll:
     multiple_polls_without_name: "İsimsiz birden fazla anket var. '<code>name</code>' atıfını kullanarak anketlerinizi özebir tanımlayabilirsiniz."
     multiple_polls_with_same_name: "Aynı isme sahip birden fazla anket var: <strong>%{name}</strong>. '<code>name</code>' atıfını kullanarak anketlerinizi özebir tanımlayabilirsiniz."
@@ -23,8 +24,12 @@ tr_TR:
     default_poll_with_multiple_choices_has_invalid_parameters: "Çoklu seçim seçeneği içeren anketinizde hatalar belirlendi."
     named_poll_with_multiple_choices_has_invalid_parameters: "<strong>%{name}</strong> ile adlandırılmış ve çoklu seçim seçeneği içeren anketinizde hatalar belirlendi."
     requires_at_least_1_valid_option: "En az 1 geçerli seçim yapmalısınız."
-    default_cannot_be_made_public: "Oy içeren oylamalar genel olamaz. "
+    default_cannot_be_made_public: "Oy içeren oylamalar herkese açık olamaz. "
     named_cannot_be_made_public: "<strong>%{name}</strong> isimli ankette oylamalar herkese açık yapılamaz."
+    edit_window_expired:
+      cannot_change_polls: "İlk %{minutes} dakikadan sonra anket ekleyemez, silemez veya yeniden isimlendiremezsiniz."
+      op_cannot_edit_options: "İlk %{minutes} dakikadan sonra anket ekleyemez veya silemezsiniz. Eğer anket seçeneklerini düzenlemeniz gerekiyorsa lütfen moderatör ile iletişime geçin."
+      staff_cannot_add_or_remove_options: "İlk %{minutes} dakikadan sonra anket ekleyemez veya silemezsiniz. Bu konuyu kapatıp, yerine yeni bir konu oluşturmalısınız."
     no_polls_associated_with_this_post: "Bu gönderiyle alakalı bir anket yok."
     no_poll_with_this_name: "Bu gönderiyle alakalı <strong>%{name}</strong> isimli bir anket yok."
     post_is_deleted: "Silinmiş konu üzerinde işlem yapamazsınız."

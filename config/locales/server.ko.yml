@@ -18,6 +18,10 @@ ko:
   date:
     month_names: []
     <<: *datetime_formats
+  time:
+    am: "오전"
+    pm: "오후"
+    <<: *datetime_formats
   title: "Discourse"
   topics: "글타래"
   posts: "글"
@@ -29,6 +33,7 @@ ko:
   emails:
     incoming:
       default_subject: "%{email} 으로부터 받은 이메일"
+      show_trimmed_content: "일부 내용만 보기"
   errors: &errors
     format: '%{attribute} %{message}'
     messages:
@@ -1079,7 +1084,6 @@ ko:
     email_reject_empty:
       subject_template: "[%{site_name}]  이메일 문제 -- 내용 없음"
     email_reject_parsing:
-      subject_template: "[%{site_name}]  이메일 문제 -- 내용 인식 불가"
       text_body_template: |
         죄송합니다, 이메일 메세지 %{destination} (titled %{former_title})가 안 됐습니다.
 
@@ -1264,8 +1268,6 @@ ko:
   performance_report:
     initial_post_raw: 이 글타래는 웹사이트의 일일 성능 보고를 포함하고 있습니다.
     initial_topic_title: 웹사이트 성능 보고
-  time:
-    <<: *datetime_formats
   activemodel:
     errors:
       <<: *errors

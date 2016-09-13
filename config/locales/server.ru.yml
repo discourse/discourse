@@ -1313,7 +1313,6 @@ ru:
     email_reject_empty:
       subject_template: "[%{site_name}] Неполадки с письмом - отсутствует текст"
     email_reject_parsing:
-      subject_template: "[%{site_name}] Неполадки с письмом - Недопустимый контент."
       text_body_template: |
         К сожалению, ваше письмо к %{destination} с заголовком %{former_title} не может быть обработано.
 

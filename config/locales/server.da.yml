@@ -507,7 +507,7 @@ da:
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: "Noget andet"
-      description: 'Dette indlæg kræver administratorens opmærksomhed, af andre årsager'
+      description: 'Dette indlæg kræver moderatorernes opmærksomhed baseret på <a href="/faq">Den Gode Tone</a>, <a href="%{tos_url}">Brugerbetingelser</a> eller en anden grund, som ikke er nævnt ovenfor.'
       long_form: 'Har flagged dette overfor administrator'
       email_title: 'Et indlæg i "%{title}" afkræver stillingtagen hos administrator'
       email_body: "%{link}\n\n%{message}"
@@ -530,11 +530,11 @@ da:
       long_form: 'markerede dette som spam'
     inappropriate:
       title: 'Upassende'
-      description: 'Dette emne har indlæg som en fornuftig person finder stødende, krænkende, eller som er i modstrid med <a href="/guidelines">our community guidelines</a>.'
+      description: 'Dette emne har indlæg som en fornuftig person finder stødende, krænkende, eller som er i modstrid med <a href="/guidelines">Den Gode Tone</a>.'
       long_form: 'markeret upassende'
     notify_moderators:
       title: "Noget andet"
-      description: 'Dette indlæg kræver moderatorernes opmærksomhed baseret på <a href="/faq">FAQen</a>, <a href="%{tos_url}">TOS</a> eller en anden grund, som ikke er nævnt ovenfor.'
+      description: 'Dette emne kræver moderatorernes opmærksomhed baseret på <a href="/faq">Den Gode Tone</a>, <a href="%{tos_url}">Brugerbetingelser</a> eller en anden grund, som ikke er nævnt ovenfor.'
       long_form: 'markerede dette til gennemsyn'
       email_title: 'Emnet "%{title}" kræver moderator-opmærksomhed'
       email_body: "%{link}\n\n%{message}"

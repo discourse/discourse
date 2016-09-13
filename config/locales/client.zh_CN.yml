@@ -90,7 +90,7 @@ zh_CN:
       twitter: '分享至 Twitter'
       facebook: '分享至 Facebook'
       google+: '分享至 Google+'
-      email: '通过邮件分享内容'
+      email: '在电子邮件里发送该链接'
     action_codes:
       public_topic: "于%{when}设置为公共主题"
       private_topic: "于%{when}设置为私密主题"
@@ -281,12 +281,12 @@ zh_CN:
       likes_given: "送出赞"
       likes_received: "获得赞"
       topics_entered: "浏览"
-      topics_entered_long: "浏览过的主题"
+      topics_entered_long: "浏览主题"
       time_read: "阅读时长"
       topic_count: "主题"
-      topic_count_long: "发布的主题"
+      topic_count_long: "创建主题"
       post_count: "回复"
-      post_count_long: "回复数"
+      post_count_long: "回帖数"
       no_results: "没有找到结果。"
       days_visited: "访问"
       days_visited_long: "访问天数"
@@ -668,9 +668,9 @@ zh_CN:
         stats: "统计"
         time_read: "阅读时间"
         topic_count:
-          other: "创建的主题"
+          other: "创建主题"
         post_count:
-          other: "发表的帖子"
+          other: "发表帖子"
         likes_given:
           other: "<i class='fa fa-heart'></i> 送出赞"
         likes_received:
@@ -755,10 +755,10 @@ zh_CN:
     week: '周'
     week_desc: '7 天内创建的主题'
     day: '天'
-    first_post: 头一帖
+    first_post: 最早帖子
     mute: 静音
     unmute: 取消静音
-    last_post: 最后帖
+    last_post: 最后帖子
     last_reply_lowercase: 最后回复
     replies_lowercase:
       other: 回复
@@ -1007,7 +1007,7 @@ zh_CN:
     search:
       sort_by: "排序"
       relevance: "最相关"
-      latest_post: "最后发帖"
+      latest_post: "最新发帖"
       most_viewed: "最多阅读"
       most_liked: "最多赞"
       select_all: "全选"
@@ -1067,7 +1067,7 @@ zh_CN:
         search: "没有搜索结果。"
         educate:
           new: '<p>这里显示了近期主题列表。</p><p>默认情况下，以下主题将显示在近期列表。如果是最近 2 天内创建的，还会显示一个<span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">近期</span>标志。<p>你可以在<a href="%{userPrefsUrl}">用户设置</a>中更改要显示哪些内容。</p>'
-          unread: '<p>这里显示你的未读主题。</p><p>默认情况下，下述主题会被放在未读中。并且会在旁边显示未读的数量<span class="badge new-posts badge-notification">1</span>。如果你：</p><ul><li>创建了该主题</li><li>回复了该主题</li><li>阅读该主题超过 4 分钟</li></ul><p>或者你在主题底部的通知控制中选择了跟踪或监看。</p><p>你可以在<a href="%{userPrefsUrl}">用户设置</a>中修改未读设置。</p>'
+          unread: '<p>这里显示你的未读主题。</p><p>默认情况下，下述主题会被放在未读中。并且会在旁边显示未读的数量<span class="badge new-posts badge-notification">1</span>。如果你：</p><ul><li>创建了该主题</li><li>回复了该主题</li><li>阅读该主题超过 4 分钟</li></ul><p>或者你在主题底部的通知控制中选择了跟随或关注。</p><p>你可以在<a href="%{userPrefsUrl}">用户设置</a>中修改未读设置。</p>'
       bottom:
         latest: "没有更多主题可看了。"
         hot: "没有更多热门主题可看了。"

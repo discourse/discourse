@@ -39,7 +39,7 @@ he:
       long_date_with_year_without_time: "MMM D, 'YY"
       long_date_without_year_with_linebreak: "MMM D <br/>LT"
       long_date_with_year_with_linebreak: "MMM D, 'YY <br/>LT"
-      wrap_ago: "לפני {date}%"
+      wrap_ago: "לפני %{date}"
       tiny:
         half_a_minute: "פחות מדקה"
         less_than_x_seconds:
@@ -82,17 +82,17 @@ he:
       medium_with_ago:
         x_minutes:
           one: "לפני דקה אחת"
-          other: "לפני {count}% דקות"
+          other: "לפני %{count} דקות"
         x_hours:
           one: "לפני שעה אחת"
-          other: "לפני {count}% שעות"
+          other: "לפני %{count} שעות"
         x_days:
           one: "אתמול"
-          other: "לפני {count}% ימים"
+          other: "לפני %{count} ימים"
       later:
         x_days:
           one: "אחרי יום אחד"
-          other: "אחרי {count}% ימים"
+          other: "אחרי %{count} ימים"
         x_months:
           one: "אחרי חודש אחד"
           other: "אחרי {{count}}% חודשים"
@@ -796,6 +796,8 @@ he:
         one: "שגיאה ל %{duration}"
         other: "%{count} שגיאות\\%{duration}"
     learn_more: "למד עוד..."
+    all_time: 'סך הכל'
+    all_time_desc: 'כל הנושאים שנוצרו'
     year: 'שנה'
     year_desc: 'נושאים שפורסמו ב-365 הימים האחרונים'
     month: 'חודש'
@@ -1203,6 +1205,7 @@ he:
       toggle_information: "הצגת פרטי פוסט"
       read_more_in_category: "רוצה לקרוא עוד? עיין פוסטים אחרים ב {{catLink}} או {{latestLink}}."
       read_more: "רוצה לקרוא עוד? {{catLink}} or {{latestLink}}."
+      read_more_MF: "There { UNREAD, plural, =0 {} one { is <a href='/unread'>1 unread</a> } other { are <a href='/unread'># unread</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{and } false {is } other{}} <a href='/new'>1 new</a> topic} other { {BOTH, select, true{and } false {are } other{}} <a href='/new'># new</a> topics} } remaining, or {CATEGORY, select, true {browse other topics in {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: עיין בכל הקטגוריות
       view_latest_topics: הצגת פוסטים מדוברים
       suggest_create_topic: לחצו כאן כדי ליצור פוסט חדש.
@@ -2189,6 +2192,8 @@ he:
         flair_url_placeholder: "(אופציונלי) URL של תמונה"
         flair_bg_color: "צבע רקע של פלייר לאווטר"
         flair_bg_color_placeholder: "(אופציונלי) ערך צבע ב Hex"
+        flair_color: "צבע פלייר אווטר"
+        flair_color_placeholder: "(אופציונלי) ערך צבע הקסדצימלי"
         flair_preview: "תצוגה מקדימה"
       api:
         generate_master: "ייצר מפתח מאסטר ל-API"
@@ -2479,6 +2484,7 @@ he:
             delete_post: "מחיקת פוסט"
             impersonate: "התחזה"
             anonymize_user: "הפיכת משתמש/ת לאנונימיים"
+            roll_up: "גלגול למעלה של בלוקים של IP"
             change_category_settings: "שינוי הגדרות קטגוריה"
             delete_category: "מחק קטגוריה"
             create_category: "יצירת קטגוריה"
@@ -2507,6 +2513,7 @@ he:
           title: "כתובות IP מסוננות"
           description: 'כתובות IP שנצפות כרגע. השתמש בכפתור "אפשר" בשביל לבטל חסימת כתובת'
           delete_confirm: "אתה בטוח שברצונך להסיר את הכלל עבור הכתובת %{ip_address}?"
+          roll_up_confirm: "האם אתם בטוחים שאתם מעוניינים לגלגל למעלה (roll up) כתובות IP שבדרך-כלל מסוננות לכדי subnets?"
           rolled_up_some_subnets: "ערכי IP אסורים גולגלו בהצלחה לרשתות המשנה הבאות: %{subnets}."
           rolled_up_no_subnet: "לא היה שום דבר לגלגל"
           actions:
@@ -2642,7 +2649,7 @@ he:
           other: "לא ניתן למחוק את כל ההודעות. חלק מההודעות ישנות יותר מ-%{count} ימים. (הגדרת delete_user_max_post_age.)"
         cant_delete_all_too_many_posts:
           one: "לא ניתן למחוק את כל הפוסטים מפני שלמשתמשים יותר מפוסט אחד. (delete_all_posts_max)"
-          other: "לא ניתן למחוק את כל הפוסטים בגלל שלמשתמשים יותר מ {count}% פוסטים. (delete_all_posts_max)"
+          other: "לא ניתן למחוק את כל הפוסטים בגלל שלמשתמשים יותר מ %{count} פוסטים. (delete_all_posts_max)"
         delete_confirm: "האם אתם ב-ט-ו-ח-י-ם שאתם רוצים למחוק משתמש זה? פעולה זו קבועה ובלתי הפיכה!"
         delete_and_block: "מחיקה ו<b>חסימת</b> כתובת דוא\"ל וכתובת IP אלה"
         delete_dont_block: "מחיקה בלבד"
@@ -2872,6 +2879,7 @@ he:
         sample: "השתמש בקוד HTML הבא באתר שלך על מנת ליצור נושאי דיסקורס משולבים. החלף <b>REPLACE_ME</b> בURL הקאנוני של העמוד שבו אתה מכניס נושא מכונן. "
         title: "שילוב (embedding)"
         host: "מארחים הורשו"
+        path_whitelist: "רשימה לבנה של נתיבים"
         edit: "ערוך"
         category: "פרסם לקטגוריה"
         add_host: "הוסיפו מארח"
