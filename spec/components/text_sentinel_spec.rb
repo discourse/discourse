@@ -117,6 +117,10 @@ describe TextSentinel do
       expect(TextSentinel.new("error in org.gradle.internal.graph.CachingDirectedGraphWalker", max_word_length: 30)).to be_valid
     end
 
+    it "allows a long string with colons" do
+      expect(TextSentinel.new("error in org.gradle.internal.graph.CachingDirectedGraphWalker:colon", max_word_length: 30)).to be_valid
+    end
+
   end
 
   context 'title_sentinel' do
