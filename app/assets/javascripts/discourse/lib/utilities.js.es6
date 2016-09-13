@@ -102,14 +102,18 @@ export function selectedText() {
     }
   }
 
+  html = html.replace(/<br>/g, "\n");
+
   // Strip out any .click elements from the HTML before converting it to text
-  var div = document.createElement('div');
+  const div = document.createElement('div');
   div.innerHTML = html;
-  var $div = $(div);
+
+  const $div = $(div);
+
   // Find all emojis and replace with its title attribute.
-  $div.find('img.emoji').replaceWith(function() { return this.title; });
+  $div.find('img.emoji').replaceWith(() => this.title);
   $('.clicks', $div).remove();
-  var text = div.textContent || div.innerText || "";
+  const text = div.textContent || div.innerText || "";
 
   return String(text).trim();
 }
