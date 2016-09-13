@@ -2478,6 +2478,9 @@ en:
         events:
           none: "There are no related events."
           redeliver: "Redeliver"
+          incoming:
+            one: "There is a new event."
+            other: "There are {{count}} new events."
           completion: "Completed in %{seconds} seconds."
           request: "Request"
           response: "Response"

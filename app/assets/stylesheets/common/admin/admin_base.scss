@@ -1859,8 +1859,6 @@ table#user-badges {
 }
 
 .web-hook-events {
-  margin-top: 15px;
-
   li {
     padding: 2px 0;
   }
@@ -1903,6 +1901,13 @@ table#user-badges {
   }
   label {
     font-size: 1.05em;
+  }
+}
+
+.web-hook-events-listing {
+  margin-top: 15px;
+  .alert {
+    margin: 15px 0 0 0;
   }
 }
 
