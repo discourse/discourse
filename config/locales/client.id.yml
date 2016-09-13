@@ -129,9 +129,11 @@ id:
         eu_central_1: "EU (Frankfurt)"
         ap_southeast_1: "Asia Pacific (Singapore)"
         ap_southeast_2: "Asia Pacific (Sydney)"
+        ap_south_1: "Asia Pasifik (Mumbai)"
         ap_northeast_1: "Asia Pacific (Tokyo)"
         ap_northeast_2: "Asia Pacific (Seoul)"
         sa_east_1: "South America (Sao Paulo)"
+        cn_north_1: "Cina (Beijing)"
     edit: 'Ubah judul dan kategori topik ini'
     not_implemented: "Maaf, fitur ini belum diimplementasikan."
     no_value: "Tidak"
@@ -227,6 +229,8 @@ id:
     undo: "Batalkan perintah"
     revert: "Kembali ke awal"
     failed: "Gagal"
+    switch_to_anon: "Masuki Mode Anonim"
+    switch_from_anon: "Keluar Mode Anonim"
     banner:
       close: "Abaikan banner ini."
       edit: "Ubah banner ini >>"
@@ -244,6 +248,7 @@ id:
       none: "Tidak ada pos untuk di pratinjau."
       edit: "Ubah"
       cancel: "Batal"
+      view_pending: "lihat postingan tertunda"
       has_pending_posts:
         other: "Bahasan ini <b>{{count}}</b> pesan menunggu persetujuan"
       confirm: "Simpan perubahan"
@@ -297,6 +302,7 @@ id:
       selector_placeholder: "Menambahkan anggota"
       owner: "pemilik"
       visible: "Grup terlihat oleh semua pengguna"
+      index: "Grup"
       title:
         other: "Grup"
       members: "Anggota"
@@ -360,6 +366,8 @@ id:
       latest_by: "Terbaru oleh"
       toggle_ordering: "beralih memesan kontrol"
       subcategories: "Subkategori"
+      topic_sentence:
+        other: "%{count} topik"
       topic_stat_sentence:
         other: "%{count} topik baru dalam %{unit} terakhir."
     ip_lookup:
@@ -426,6 +434,7 @@ id:
         enabled: "Aktifkan mode milis"
         daily: "mengirim pembaharuan harian"
         individual: "Kirim email untuk setiap pesan baru"
+        few_per_day: "Kirim saya surel untuk setiap postingan baru (sekitar 2 per hari)"
       watched_categories: "Dilihat"
       tracked_categories: "Dilacak"
       muted_categories: "Diredam"
@@ -440,6 +449,9 @@ id:
       muted_users: "Diredam"
       muted_users_instructions: "Menekan semua pemberitahuan dari semua pengguna."
       muted_topics_link: "Menampilkan topik yang diredam"
+      apps: "Aplikasi"
+      api_read: "baca"
+      api_read_write: "baca dan tulis"
       staff_counters:
         deleted_posts: "menghapus posting"
         suspensions: "penangguhan"
@@ -583,6 +595,7 @@ id:
         bulk_invite:
           text: "Undangan Massal dari Berkas"
           uploading: "Mengunggah..."
+          error: "Terdapat gangguan mengunggah '{{filename}}': {{message}}"
       password:
         title: "Kata sandi"
         too_short: "Password kamu terlalu pendek."
@@ -590,6 +603,7 @@ id:
         same_as_username: "Password dan nama pengguna kamu sama"
         same_as_email: "Password dan email kamu sama"
         ok: "Kata sandi Anda terlihat baik."
+        instructions: "Setidaknya %{count} karakter."
       summary:
         title: "Ringkasan"
         stats: "Statistik"
@@ -599,6 +613,7 @@ id:
         no_replies: "Belum ada balasan"
         more_replies: "Balasan lebih banyak"
         top_topics: "Topik teratas"
+        no_links: "Belum ada tautan."
       ip_address:
         title: "Alamat IP terakhir"
       registration_ip_address:
@@ -635,6 +650,8 @@ id:
     last_reply_lowercase: balasan terakhir
     signup_cta:
       hide_forever: "tidak, terima kasih"
+    summary:
+      disable: 'Tampilkan Semua Postingan'
     private_message_info:
       title: "Pesan"
     email: 'Surel'

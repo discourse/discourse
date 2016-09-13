@@ -1107,99 +1107,6 @@ sq:
     deferred_and_deleted: "Thanks for letting us know. We've removed the post."
   temporarily_closed_due_to_flags: "Kjo temë është përkohësisht e mbyllur për shkak të një numri të madh sinjalizimesh nga bashkësia."
   system_messages:
-    usage_tips:
-      text_body_template: |
-        Ja ca këshilla të shpejta sa për t'ia filluar:
-
-        ## Leximi
-
-        Për të lexuar më shumë, **thjesht vazhdo të zbresësh poshtë!**
-
-        Ndërsa përgjigje apo tema të reja vazhdojnë të vinë, ato do të shfaqen automatikisht - pa nevojën për të rifreskuar faqen.
-
-        ## Lundrimi
-
-        Për kërkimin, faqen tënde të përdoruesit, apo <kbd>☰</kbd> menunë, përdor **butonat ikonë lart në të djathtë**.
-
-        - Kur zgjedh një titull teme do të shkosh gjithmonë tek **përgjigja jote e radhës e palexuar** në atë temë. Për të kaluar në krye apo në fund, zgjidh numrin e përgjigjeve ose datën e përgjigjes së fundit.
-
-        <img src="%{base_url}/images/welcome/topic-list-select-areas-2x.png" width="593" height="59">
-
-        - Ndërkohë që lexon një temë, përdor treguesin kohor në të djathtë për të kaluar në krye, fund apo në vendndodhjen e fundit të leximit. Në ekranë të vegjël, zgjidh shiritin e progresit në fund djathtas për ta shpalosur atë:
-
-        <img src="%{base_url}/images/welcome/progress-bar-2x.png" width="153" height="181">
-
-        Gjithashtu mund të shtypni <kbd>?</kbd> në tastierën tuaj për një listë shkurtoresh super-të-shpejta.
-
-        ## Përgjigjet
-
-        Për të shtuar një citim, zgjidhni tekstin që dëshironi të citoni, pastaj shtypni një nga butonat Përgjigju <img src="%{base_url}/images/welcome/reply-post-2x.png" width="25" height="23"> për të hapur kutinë e shkrimit. Përsëriteni për citime të shumta.
-
-        <img src="%{base_url}/images/welcome/quote-reply-2x.png" width="326" height="128">
-
-        Mund të vazhdoni të lexoni sa herë që shkruani përgjigjen tuaj, ne do të ruajmë boca sa herë që shtypni.
-
-        Për të njoftuar dikë rreth përgjigjes tuaj, përmendni emrin e tyre. Shtypni `@` për të vazhduar me përzgjedhjen e emrit të përdoruesit.
-
-        <img src="%{base_url}/images/welcome/username-completion-2x.png" width="191" height="125">
-
-        Për të përdorur [standard Emoji](http://www.emoji.codes/), thjesht shtypni `:` për ta gjetur sipas emrit, ose përdorni ikonat e zakonshme `;)`
-
-        <img src="%{base_url}/images/welcome/emoji-completion-2x.png" width="144" height="153">
-
-        Për të nxjerrë një përmbledhje për një lidhje, ngjiteni atë në një rresht të vetin:
-
-        <img src="%{base_url}/images/welcome/link-oneboxing-animation.gif" width="480" height="228">
-
-        Përgjigjja juaj mund të trajtohet duke përdorur HTML të thjeshtë, BBCode, ose [Markdown](http://commonmark.org/help/):
-
-        Kjo është **me gërma të trasha**.
-        Kjo është <b>me gërma të trasha</b>.
-        Kjo është [b]me gërma të trasha[/b].
-
-        Për më tepër këshilla trajtimi teksti, [provo praktikën tonë ndërvepruese dhe argëtuese veç 10 minuta!](http://commonmark.org/help/tutorial/)
-
-        ## Veprimet
-
-        Gjenden butona veprimi në fund të çdo postimi:
-
-        <img src="%{base_url}/images/welcome/like-link-flag-bookmark-2x.png" width="162" height="42">
-
-        - Për t'ia bërë të ditur dikujt që ju pëlqeu apo e vlerësuat postimin e tyre, përdorni butonin **pëlqen**. Shpërndaj dashuri!
-
-        - Kap një lidhje të kopjueshme dhe të ngjitshme të secilës përgjigje apo temë me anë të butonit **lidhje**.
-
-        - Përdor butonin <kbd>&hellip;</kbd> më shumë për të shfaqur veprime të tjera.**Sinjalizo** që t'ia bësh të ditur privatish autorit, apo [stafit tonë](%{base_url}/about), rreth ndonjë problemi. **Shëno** për ta gjetur këtë postim më vonë në faqen tënde të profilit.
-
-        ## Njoftimet
-
-        Kur dikush të përgjigjet, citon postimin tënd, përmend `@username` tënd, apo dhe vetëm bën një lidhje tek postimi yt, një numër do të shfaqet menjëherë lart në të djathtë të faqes. Zgjidhe për t'iu qasur **njoftimeve** të tua.
-
-        <img src="%{base_url}/images/welcome/notification-panel-2x.png" width="160" height="54">
-
-        Mos u shqetësoni për ndonjë përgjigje të palexuar - do të njoftoheni me email për çdo njoftim që mbërrin kur jeni larg faqes.
-
-        ## Pëlqimet
-
-        - Të gjitha temat më të vjetra se sa **2 ditë** quhen të reja.
-
-        - Çdo temë ku keni marrë pjesë në mënyrë aktive (duke e krijuar atë, duke u përgjigjur, apo duke e lexuar për një periudhë të gjatë) do të gjurmohen për ju.
-
-        Do të shihni numrat tregues për të rejat dhe të palexuarat krahas këtyre temave:
-
-        <img src="%{base_url}/images/welcome/topics-new-unread-2x.png" width="341" height="106">
-
-        Ju mund t'i ndryshoni këto njoftime për cilëndo temë me anë të butonit të kontrollit të njoftimeve në fund, dhe në të djathtë të secilës temë.
-
-        <img src="%{base_url}/images/welcome/topic-notification-control-2x.png" width="608" height="312">
-
-        Gjithashtu mund të caktoni gjendjen e njoftimit për kategorinë, nëse dëshironi të heshtur çdo temë në një kategori të veçantë.
-
-        Për të ndryshuar ndonjë nga këto rregullime, shikoni [pëlqimet tuaja të përdoruesit](%{base_url}/my/preferences).
-
-        ## Mirëbesim Komuniteti
-
-        Është kënaqësi t'ju takoj! Ndërsa merrni pjesë këtu, me kalimin e kohës do kemi mundësi t'ju njohim, dhe kufizimet e përkohshme si përdorues i ri do të hiqen. Vazhdoni merrni pjesë, dhe me kalimin e kohës ju do të fitoni [nivele të reja mirëbesimi](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924) që përfshijnë mundësi të veçanta për të na ndihmuar në drejtimin e komunitetit tonë së bashku.
     welcome_user:
       subject_template: "Mirë se vini tek %{site_name}!"
       text_body_template: |
@@ -1271,7 +1178,6 @@ sq:
     email_reject_empty:
       subject_template: "[%{site_name}] Email issue -- No Content"
     email_reject_parsing:
-      subject_template: "[%{site_name}] Email issue -- Content unrecognized"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 

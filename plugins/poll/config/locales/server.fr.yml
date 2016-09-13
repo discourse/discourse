@@ -25,7 +25,7 @@ fr:
     named_poll_must_have_different_options: "Le sondage <strong>%{name}</strong> doit contenir des options différentes."
     default_poll_with_multiple_choices_has_invalid_parameters: "Le sondage à choix multiples possède des paramètres invalides."
     named_poll_with_multiple_choices_has_invalid_parameters: "Le sondage <strong>%{name}</strong> à choix multiples possède des paramètres invalides."
-    requires_at_least_1_valid_option: "Vous devez sélectionner au moins une des options valables."
+    requires_at_least_1_valid_option: "Vous devez sélectionner au moins 1 option valide."
     default_cannot_be_made_public: "Un sondage avec des votes ne peut pas être rendu public."
     named_cannot_be_made_public: "Le sondage <strong>%{name}</strong> a des votes et ne peut être rendu public."
     edit_window_expired:

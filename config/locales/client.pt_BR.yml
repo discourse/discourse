@@ -501,6 +501,8 @@ pt_BR:
       muted_topics_link: "Mostrar tópicos silenciados"
       watched_topics_link: "Mostrar tópicos observados"
       automatically_unpin_topics: "Desafixar automaticamente os tópicos quando eu chegar ao fundo."
+      api_permissions: "Permissões:"
+      api_read_write: "ler e escrever"
       staff_counters:
         flags_given: "sinalizadas úteis"
         flagged_posts: "posts sinalizados"
@@ -786,6 +788,7 @@ pt_BR:
         one: "1 erro/%{duration}"
         other: "%{count} erros/%{duration}"
     learn_more: "aprenda mais..."
+    all_time: 'total'
     year: 'ano'
     year_desc: 'tópicos criados nos últimos 365 dias'
     month: 'mês'
@@ -896,6 +899,9 @@ pt_BR:
       twitter: "Twitter"
       emoji_one: "Emoji One"
       win10: "Win10"
+    category_page_style:
+      categories_only: "Categorias Apenas"
+      categories_and_latest_topics: "Categorias e Últimos Tópicos"
     shortcut_modifier_key:
       shift: 'Shift'
       ctrl: 'Ctrl'
@@ -945,6 +951,7 @@ pt_BR:
       show_preview: 'mostrar pré-visualização &raquo;'
       hide_preview: '&laquo; esconder pré-visualização'
       quote_post_title: "Citar toda a resposta"
+      bold_label: "B"
       bold_title: "Negrito"
       bold_text: "texto em negrito"
       italic_title: "Itálico"

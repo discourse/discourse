@@ -1324,7 +1324,6 @@ vi:
 
         Tài khoản của bạn liên kết với địa chỉ email này đã bị chặn.
     email_reject_reply_user_not_matching:
-      subject_template: "[%{site_name}] Sự cố email -- Thành viên trả lời không khớp"
       text_body_template: |
         Xin lỗi, tin nhắn email bạn gửi tới %{destination} (tiêu đề %{former_title}) không được thực hiện.
 
@@ -1344,7 +1343,6 @@ vi:
 
         Nếu bạn tin _đã_kèm_theo nội dung trả lời, xin hãy thử lại với định dạng đơn giản hơn.
     email_reject_parsing:
-      subject_template: "[%{site_name}] Vấn đề Email-- Không nhận dạng được nội dung"
       text_body_template: |
         Xin lỗi, tin nhắn email bạn gửi tới %{destination} (tiêu đề %{former_title}) không được thực hiện.
 

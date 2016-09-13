@@ -91,8 +91,11 @@ ko:
       google+: 'Google+로 공유'
       email: '이메일로 공유'
     action_codes:
+      public_topic: "이 토픽을 %{when} 에 공개"
+      private_topic: "이 토픽을 %{when} 에 비공개"
       split_topic: "이 주제를 ${when} 분리"
       invited_user: "%{who}이(가) %{when}에 초대됨"
+      invited_group: "%{who} 이(가) %{when} 에 초대됨"
       removed_user: "%{who}이(가) %{when}에 삭제됨"
       autoclosed:
         enabled: '%{when}에 닫힘'
@@ -114,6 +117,8 @@ ko:
         disabled: '%{when} 목록에서 감춤'
     topic_admin_menu: "주제 관리자 기능"
     emails_are_disabled: "관리자가 이메일 송신을 전체 비활성화 했습니다. 어떤 종류의 이메일 알림도 보내지지 않습니다."
+    bootstrap_mode_enabled: "쉬운 시작을 위해 부트스트랩 모드로 구동 되었습니다. 모든 새로운 사용자에게 신뢰 수준 1이 부여되고 매일 이메일 다이제스트가 보내집니다. 이 기능은 총 사용자 수가% {min_users} 를 초과 할 때 자동으로 꺼집니다."
+    bootstrap_mode_disabled: "부트스트랩 모드는 24시간 뒤 비활성화 될 것입니다."
     s3:
       regions:
         us_east_1: "미국 동부 (N. 버지니아)"
@@ -124,9 +129,11 @@ ko:
         eu_central_1: "유럽연합 (프랑크푸르트)"
         ap_southeast_1: "아시아 태평양 (싱가폴)"
         ap_southeast_2: "아시아 태평양 (시드니)"
+        ap_south_1: "아시아 태평양 (뭄바이)"
         ap_northeast_1: "아시아 태평양 (토쿄)"
         ap_northeast_2: "아시아 태평양 (서울)"
         sa_east_1: "남 아메리카 (상파울로)"
+        cn_north_1: "중국 (북경)"
     edit: '이 주제의 제목과 카테고리 편집'
     not_implemented: "죄송합니다. 아직 사용할 수 없는 기능입니다."
     no_value: "아니오"
@@ -222,6 +229,8 @@ ko:
     undo: "실행 취소"
     revert: "되돌리기"
     failed: "실패"
+    switch_to_anon: "익명 모드 들어가기"
+    switch_from_anon: "익명 모드 나가기"
     banner:
       close: "배너 닫기"
       edit: "이 배너 수정 >>"
@@ -294,6 +303,7 @@ ko:
       selector_placeholder: "멤버 추가"
       owner: "소유자"
       visible: "모든 사용자에게 보이는 그룹입니다."
+      index: "그룹"
       title:
         other: "그룹"
       members: "멤버"
@@ -357,6 +367,8 @@ ko:
       latest_by: "가장 최근"
       toggle_ordering: "정렬 컨트롤 토글"
       subcategories: "하위 카테고리"
+      topic_sentence:
+        other: "%{count}개의 주제"
       topic_stat_sentence:
         other: "지난 %{unit} 동안 %{count}개의 새로운 주제가 있습니다."
     ip_lookup:
@@ -403,6 +415,7 @@ ko:
         disable: "알림 비활성화"
         enable: "알림 활성화"
         each_browser_note: "노트: 사용하시는 모든 브라우저에서 이 설정을 변경해야합니다."
+      dismiss_notifications: "모두 해지"
       dismiss_notifications_tooltip: "읽지 않은 알림을 모두 읽음으로 표시"
       disable_jump_reply: "댓글을 작성했을 때, 새로 작성한 댓글로 화면을 이동하지 않습니다."
       dynamic_favicon: "새 글이나 업데이트된 글 수를 브라우저 아이콘에 보이기"
@@ -418,6 +431,14 @@ ko:
       suspended_reason: "이유: "
       github_profile: "Github"
       email_activity_summary: "활동 요약"
+      mailing_list_mode:
+        individual: "모든 새로운 게시글에 대해 메일을 보내주세요."
+        few_per_day: "모든 새로운 게시글에 대해 메일을 보내주세요 (하루에 약 2개)."
+      tag_settings: "태그"
+      watched_tags: "지켜보기"
+      tracked_tags: "추적하기"
+      muted_tags: "알람 끄기"
+      muted_tags_instructions: "이 태그의 새 주제에 대해 어떠한 알림도 받을 수 없으며, 최근의 주제도 나타나지 않습니다."
       watched_categories: "지켜보기"
       tracked_categories: "추적하기"
       muted_categories: "알림 끄기"
@@ -433,6 +454,10 @@ ko:
       muted_users_instructions: "이 회원이 보낸 알림 모두 숨김"
       muted_topics_link: "알림을 끈 주제 보기"
       automatically_unpin_topics: "글 끝에 다다르면 자동으로 주제 고정을 해제합니다."
+      api_permissions: "사용 권한:"
+      api_approved: "승인됨:"
+      api_read: "읽기"
+      api_read_write: "읽기와 쓰기"
       staff_counters:
         flags_given: "유용한 신고"
         flagged_posts: "신고된 글"

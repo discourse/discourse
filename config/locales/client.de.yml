@@ -796,6 +796,7 @@ de:
         one: "ein Fehler/%{duration}"
         other: "%{count} Fehler/%{duration}"
     learn_more: "mehr erfahren…"
+    all_time_desc: 'Erstellte Themen'
     year: 'Jahr'
     year_desc: 'Themen, die in den letzten 365 Tagen erstellt wurden'
     month: 'Monat'
@@ -1470,7 +1471,7 @@ de:
         about: "dieser Beitrag ist ein Wiki"
       archetypes:
         save: 'Speicheroptionen'
-      few_likes_left: "Danke fürs Teilen der Liebe! Du hast für heute nur noch wenige „Gefällt mir“-Angaben übrig."
+      few_likes_left: "Danke fürs Teilen der Liebe! Du hast für heute nur noch wenige Likes übrig."
       controls:
         reply: "verfasse eine Antwort auf diesen Beitrag"
         like: "dieser Beitrag gefällt mir"
@@ -2180,8 +2181,6 @@ de:
         add_owners: Eigentümer hinzufügen
         incoming_email: "Benutzerdefinierte Adresse für eingehende E-Mails"
         incoming_email_placeholder: "E-Mail-Adresse eingeben"
-        flair_url: "Profilbild Dekor-Knopf URL"
-        flair_url_placeholder: "(Optional) Bild URL"
         flair_bg_color: "Profilbild Dekor-Knopf Hintergrundfarbe"
         flair_bg_color_placeholder: "(Optional) Hex Farbwert"
         flair_preview: "Vorschau"
@@ -2829,13 +2828,11 @@ de:
         target_posts: Abfrage betrifft Beiträge
         auto_revoke: Führe die Abfrage zum Widerruf täglich aus
         show_posts: Den für die Verleihung des Abzeichens verantwortlichen Beitrag auf der Abzeichenseite anzeigen
-        trigger: Auslöser
         trigger_type:
           none: "Täglich aktualisieren"
           post_action: "Wenn ein Benutzer auf einen Beitrag reagiert"
           post_revision: "Wenn ein Benutzer einen Beitrag bearbeitet oder erstellt"
           trust_level_change: "Wenn sich die Vertrauensstufe eines Benutzers ändert"
-          user_change: "Wenn ein Benutzer bearbeitet oder angelegt wird"
           post_processed: "Nach der Verarbeitung eines Beitrags"
         preview:
           link_text: "Vorschau auf verliehene Abzeichen"
