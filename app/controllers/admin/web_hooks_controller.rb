@@ -1,5 +1,5 @@
 class Admin::WebHooksController < Admin::AdminController
-  before_filter :fetch_web_hook, only: %i(show update destroy list_events ping)
+  before_filter :fetch_web_hook, only: %i(show update destroy list_events bulk_events ping)
 
   def index
     limit = 50
@@ -70,6 +70,13 @@ class Admin::WebHooksController < Admin::AdminController
     }
 
     render json: MultiJson.dump(json), status: 200
+  end
+
+  def bulk_events
+    event_ids = params[:ids].split(',').map(&:to_i)
+    @web_hook_events = @web_hook.web_hook_events.where('id IN (?)', event_ids)
+
+    render json: MultiJson.dump({ web_hook_events: @web_hook_events }), status: 200
   end
 
   def redeliver_event

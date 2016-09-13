@@ -2,7 +2,7 @@
   {{#link-to 'adminWebHooks' tagName='button' classNames='btn'}}
     {{fa-icon 'list'}} {{i18n 'admin.web_hooks.events.go_list'}}
   {{/link-to}}
-  {{d-button icon="send" label="admin.web_hooks.events.ping" action="ping"}}
+  {{d-button icon="send" label="admin.web_hooks.events.ping" action="ping" disabled=pingDisabled}}
   {{#link-to 'adminWebHooks.show' model.extras.web_hook_id tagName='button' classNames='btn'}}
     {{fa-icon 'edit'}} {{i18n 'admin.web_hooks.events.go_details'}}
   {{/link-to}}
@@ -10,6 +10,12 @@
 
 <div class='web-hook-events-listing'>
 {{#if model}}
+  {{#if hasIncoming}}
+    <div class='alert alert-info clickable' {{action "showInserted"}}>
+      {{count-i18n key="admin.web_hooks.events.incoming" count=incomingCount}}
+      {{i18n 'click_to_show'}}
+    </div>
+  {{/if}}
   {{#load-more selector=".web-hook-events li" action="loadMore"}}
     <div class='web-hook-events content-list'>
       <ul>

@@ -67,6 +67,10 @@ module Jobs
                                         response_headers: MultiJson.dump(response.headers),
                                         response_body: response.body,
                                         duration: ((Time.zone.now - now) * 1000).to_i)
+      MessageBus.publish("/web_hook_events/#{@web_hook.id}", {
+        web_hook_event_id: web_hook_event.id,
+        event_type: @opts[:event_type]
+      }, user_ids: User.staff.pluck(:id))
     end
 
     def build_web_hook_body
