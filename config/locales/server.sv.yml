@@ -1441,97 +1441,6 @@ sv:
         Om meddelandet flaggas av medlemmarna och döljs en andra gång så kommer det att fortsätta döljas tills det har hanterats av personal – och det är möjligt att det leder till andra åtgärder, bland annat avstängning av ditt konto.
 
         För ytterligare information, se våra [riktlinjer](%{base_url}/guidelines).
-    usage_tips:
-      text_body_template: |
-        Här är några snabba tips för att komma igång:
-
-        ## Att läsa
-
-        **Fortsätt bara bläddra** för att läsa mer!
-
-        När nya inlägg och ämnen skrivs så dyker de automatiskt upp - du behöver inte uppdatera sidan.
-
-        ## Navigering
-
-        - Använd **ikonerna i övre högra hörnet** för att söka, få tillgång till din användarsida eller <kbd>☰</kbd>-menyn.
-
-        - När du väljer ett ämne tas du alltid till ditt **senaste olästa inlägg** i ämnet. Välj antal svar-räknaren för att börja vid början eller slutet istället.
-
-        <img src="%{base_url}/images/welcome/topic-list-select-areas-2x.png" width="593" height="59">
-
-        - När du läser i ett ämne kan du använda tidslinjen på höger sida för att hoppa till början eller slutet, eller dit du senast läste. På mindre skärmar kan du välja förloppsmätaren i nedre högra hörnet för att utvidga den:
-
-        <img src="%{base_url}/images/welcome/progress-bar-2x.png" width="153" height="181">
-
-        Du kan också klicka på <kbd>?</kbd> på ditt tangentbord för att få en förteckning över alla snabbkommandon på tangentbordet.
-
-        För att lägga till ett citat, välj texten som du vill citera och klicka på någon <img src="%{base_url}/images/welcome/reply-post-2x.png" width="25" height="23"> Svarsknapp för att öpnna redigeraren. Upprepa för flera citeringar.
-
-        <img src="%{base_url}/images/welcome/quote-reply-2x.png" width="326" height="128">
-
-        Du kan alltid fortsätta läsa under tiden som du författar ditt svar och vi kommer automatiskt att spara utkast som du skriver.
-
-        För att notifiera någon om ditt svar, nämn deras namn. Skriv '@' för att börja välja användarnamn.
-
-        <img src="%{base_url}/images/welcome/username-completion-2x.png" width="191" height="125">
-
-        För att använda [standard Emojis](http://www.emoji.codes/), skriv bara `:` för att matcha med namn eller använd traditionella smileys `;)`.
-
-        <img src="%{base_url}/images/welcome/emoji-completion-2x.png" width="144" height="153">
-
-        För att generera en sammanfattning för en länk, klistra in den på en rad för sig själv:
-
-        <img src="%{base_url}/images/welcome/link-oneboxing-animation.gif" width="480" height="228">
-
-        Ditt svar kan formatteras med simpel HTML, BBCode eller [Markdown](http://commonmark.org/help/):
-
-        Det här är **fet stil**.
-        Det här är <b>fet stil</b>.
-        Det här är [b]fet stil[/b].
-
-        För fler tips om formattering, [testa vår roliga 10-minuters interaktiva tutorial!](http://commonmark.org/help/tutorial/)
-
-        ## Handlingar
-
-        Det finns handlingsknappar längst ned på varje inlägg:
-
-        <img src="%{base_url}/images/welcome/like-link-flag-bookmark-2x.png" width="162" height="42">
-
-        - Använd **gilla*-knappen för att visa för någon att du tyckte om och uppskattade deras inlägg. Sprid kärleken!
-
-        - Få en inklistringsbar länk till ett inlägg eller ett ämne via **länk**-knappen.
-
-        - Använd <kbd>&hellip;</kbd> knappen för att visa fler handlingar. **Flagga* för att på ett diskret sätt notifiera författaren eller [personalen](%{base_url}/about) om ett problem. **Bokmärk** för att hitta ett inlägg senare på din profilsida.
-
-        ## Notifieringar
-
-        När någon svarar dig, citerar ditt inlägg, nämner ditt `@användarnamn` eller länkar till ditt inlägg kommer ett nummer omedelbart dyka upp i övre högra hörnet av sidan. Välj den för att få tillgång till dina **notifieringar**.
-
-        <img src="%{base_url}/images/welcome/notification-panel-2x.png" width="160" height="54">
-
-        Oroa dig inte om att missa ett svar – du får e-post om alla notifieringar som kommer in när du är borta.
-
-        ## Preferenser
-
-        - Alla ämnen som är mindre än **två dagar gamla** anses nya.
-
-        - Alla ämnen som du **aktivt deltagit i** (genom att skapa det, svara i det eller läsa det en längre period) kommer automatiskt att bevakas å dina vägnar.
-
-        Du kommer att se notifieringar för nya och antal olästa bredvid sådana ämnen:
-
-        <img src="%{base_url}/images/welcome/topics-new-unread-2x.png" width="341" height="106">
-
-        Du kan ändra dina notifieringar för ämnen via notifieringskontrollen vid botten, och högra sidan, av varje ämne.
-
-        <img src="%{base_url}/images/welcome/topic-notification-control-2x.png" width="608" height="312">
-
-        Du kan också ställa in notifieringspreferenser per kategori, om du vill följa eller dölja varje nytt ämne i en specifik kategori.
-
-        För att ändra någon av dessa inställningar, se dina [användarinställningar](%{base_url}/my/preferences).
-
-        ## Gemenskapsförtroende
-
-        Det är fantastiskt att träffa dig! När du medverkar här kommer vi över tid att lära känna dig och dina temporära nya användarbegränsningar kommer att upphävas. Fortsätt delta så kommer du med tiden att förtjäna nya [förtroendenivåer](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924) som inkluderar specialförmågor som hjälper oss att ta hand om forumet tillsammans.
     welcome_user:
       subject_template: "Välkommen till %{site_name}!"
       text_body_template: |
@@ -1629,7 +1538,6 @@ sv:
 
         Kontot associerat till den här e-postadressen har blockerats.
     email_reject_reply_user_not_matching:
-      subject_template: "[%{site_name}] E-postfel -- Svar matchar inte användare"
       text_body_template: |
         Tyvärr har ditt e-postmeddelande till %{destination} (med ämnet %{former_title}) inte kunnat skickas.
 
@@ -1649,7 +1557,6 @@ sv:
 
         Om du har fått det här meddelandet och vet att du _har_ skrivit ett svar, försök igen med simplare formattering.
     email_reject_parsing:
-      subject_template: "[%{site_name}] E-postfel -- Innehåll oigenkänningsbart"
       text_body_template: |
         Tyvärr har ditt e-postmeddelande till %{destination} (med ämnet %{former_title}) inte kunnat skickas.
 

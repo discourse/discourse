@@ -73,7 +73,7 @@ class User < ActiveRecord::Base
   validates_presence_of :username
   validate :username_validator, if: :username_changed?
   validates :email, presence: true, uniqueness: true
-  validates :email, email: true, if: Proc.new { |u| !u.staged && u.email_changed? }
+  validates :email, email: true, if: :should_validate_email?
   validate :password_validator
   validates :name, user_full_name: true, if: :name_changed?
   validates :ip_address, allowed_ip_address: {on: :create, message: :signup_not_allowed}
@@ -101,6 +101,9 @@ class User < ActiveRecord::Base
     PostTiming.delete_all(user_id: self.id)
     TopicViewItem.delete_all(user_id: self.id)
   end
+
+  # Skip validating email, for example from a particular auth provider plugin
+  attr_accessor :skip_email_validation
 
   # Whether we need to be sending a system message after creation
   attr_accessor :send_welcome_message
@@ -147,7 +150,9 @@ class User < ActiveRecord::Base
 
   def self.username_available?(username)
     lower = username.downcase
-    User.where(username_lower: lower).blank? && !SiteSetting.reserved_usernames.split("|").include?(username)
+
+    User.where(username_lower: lower).blank? &&
+      !SiteSetting.reserved_usernames.split("|").any? { |reserved| reserved.casecmp(username) == 0 }
   end
 
   def self.plugin_staff_user_custom_fields
@@ -243,6 +248,10 @@ class User < ActiveRecord::Base
   def invited_by
     used_invite = invites.where("redeemed_at is not null").includes(:invited_by).first
     used_invite.try(:invited_by)
+  end
+
+  def should_validate_email?
+    return !skip_email_validation && !staged? && email_changed?
   end
 
   # Approve this user

@@ -14,7 +14,7 @@ tr_TR:
         other: "toplam oy"
       average_rating: "Ortalama oran: <strong>%{average}</strong>."
       public:
-        title: "Oylar Genel"
+        title: "Oylar herkese açık."
       multiple:
         help:
           at_least_min_options:
@@ -48,17 +48,17 @@ tr_TR:
         title: Anket Oluştur
         insert: Anket Ekle
         help:
-          options_count: En az 2 özellik ekleyin
+          options_count: En az 2 seçenek ekleyin
         poll_type:
           label: Tür
           regular: Tekli seçim
           multiple: Çoklu Seçim
           number: Sayısal Değerlendirme
         poll_config:
-          max: Max
-          min: Min
-          step: Basamak
+          max: En fazla
+          min: En az
+          step: Aralık
         poll_public:
-          label: Oyverenleri görüntüle
+          label: Kimlerin oy verdiğini göster
         poll_options:
           label: Her satıra bir anket seçeneği girin

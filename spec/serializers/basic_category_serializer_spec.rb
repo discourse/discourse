@@ -3,7 +3,7 @@ require_dependency "category"
 
 describe BasicCategorySerializer do
 
-  let(:cdn) { "//my.awesome.cdn" }
+  let(:cdn) { "https://my.awesome.cdn" }
   let(:upload) { Fabricate(:upload) }
   let(:json) { BasicCategorySerializer.new(category, scope: Guardian.new, root: false).as_json }
 

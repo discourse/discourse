@@ -504,7 +504,11 @@ de:
       muted_topics_link: "Zeige stummgeschaltete Themen"
       watched_topics_link: "Zeige beobachtete Themen"
       automatically_unpin_topics: "Angeheftete Themen automatisch loslösen, wenn ich deren letzten Beitrag gelesen habe."
+      apps: "Apps"
+      revoke_access: "Entziehe Zugriffsrecht"
+      undo_revoke_access: "Entziehe Zugriffsrecht widerrufen"
       api_permissions: "Berechtigungen:"
+      api_approved: "Genehmigt:"
       api_read: "Lesen"
       api_read_write: "Lesen und Schreiben"
       staff_counters:
@@ -792,6 +796,7 @@ de:
         one: "ein Fehler/%{duration}"
         other: "%{count} Fehler/%{duration}"
     learn_more: "mehr erfahren…"
+    all_time_desc: 'Erstellte Themen'
     year: 'Jahr'
     year_desc: 'Themen, die in den letzten 365 Tagen erstellt wurden'
     month: 'Monat'
@@ -904,6 +909,7 @@ de:
       win10: "Windows 10"
     category_page_style:
       categories_only: "nur Kategorien"
+      categories_with_featured_topics: "Kategorien mit empfohlenen Themen"
       categories_and_latest_topics: "Kategorien und aktuelle Themen"
     shortcut_modifier_key:
       shift: 'Umschalt'
@@ -924,6 +930,9 @@ de:
       saved_local_draft_tip: "lokal gespeichert"
       similar_topics: "Dein Thema hat Ähnlichkeit mit…"
       drafts_offline: "Entwürfe offline"
+      group_mentioned:
+        one: "Indem du {{group}} erwähnst, bist du dabei, <a href='{{group_link}}'>eine Person</a> zu benachrichtigen – bist du dir sicher?"
+        other: "Indem du {{group}} erwähnst, bist du dabei, <a href='{{group_link}}'>{{count}} Personen</a> zu benachrichtigen – bist du dir sicher?"
       duplicate_link: "Es sieht so aus als wäre dein Link zu <b>{{domain}}</b> in dem Thema bereits von <b>@{{username}}</b> in <a href='{{post_url}}'>einer Antwort vor {{ago}}</a> geteilt worden – möchtest du ihn wirklich erneut teilen? "
       error:
         title_missing: "Titel ist erforderlich"
@@ -1205,6 +1214,9 @@ de:
       auto_close_title: 'Automatisches Schließen'
       auto_close_save: "Speichern"
       auto_close_remove: "Dieses Thema nicht automatisch schließen"
+      auto_close_immediate:
+        one: "Der letzte Beitrag in diesem Thema ist bereits eine Stunde alt. Das Thema wird daher sofort geschlossen."
+        other: "Der letzte Beitrag in diesem Thema ist bereits %{count} Stunden alt. Das Thema wird daher sofort geschlossen."
       timeline:
         back: "Zurück"
         back_description: "Gehe zurück zum letzten ungelesenen Beitrag"
@@ -1459,7 +1471,7 @@ de:
         about: "dieser Beitrag ist ein Wiki"
       archetypes:
         save: 'Speicheroptionen'
-      few_likes_left: "Danke fürs Teilen der Liebe! Du hast für heute nur noch wenige „Gefällt mir“-Angaben übrig."
+      few_likes_left: "Danke fürs Teilen der Liebe! Du hast für heute nur noch wenige Likes übrig."
       controls:
         reply: "verfasse eine Antwort auf diesen Beitrag"
         like: "dieser Beitrag gefällt mir"
@@ -1676,6 +1688,7 @@ de:
       notify_action: 'Nachricht'
       official_warning: 'Offizielle Warnung'
       delete_spammer: "Spammer löschen"
+      delete_confirm_MF: "Du wirst {POSTS, plural, one {<b>einen</b> Beitrag} other {<b>#</b> Beiträge}} und {TOPICS, plural, one {<b>ein</b> Thema} other {<b>#</b> Themen}} von diesem Benutzer löschen, sein Konto entfernen, seine IP-Adresse <b>%{ip_address}</b> für Neuanmeldungen sperren und die E-Mail-Adresse <b>%{ip_address}</b> auf eine permanente Sperrliste setzen. Bist du dir sicher, dass dieser Benutzer wirklich ein Spammer ist?"
       yes_delete_spammer: "Ja, lösche den Spammer"
       ip_address_missing: "(nicht verfügbar)"
       hidden_email_address: "(versteckt)"
@@ -1696,6 +1709,9 @@ de:
         more:
           one: "eine weitere…"
           other: "{{count}} weitere…"
+        left:
+          one: "eine übrig"
+          other: "{{count}} übrig"
     flagging_topic:
       title: "Danke für deine Mithilfe!"
       action: "Thema melden"
@@ -2165,6 +2181,8 @@ de:
         add_owners: Eigentümer hinzufügen
         incoming_email: "Benutzerdefinierte Adresse für eingehende E-Mails"
         incoming_email_placeholder: "E-Mail-Adresse eingeben"
+        flair_bg_color: "Profilbild Dekor-Knopf Hintergrundfarbe"
+        flair_bg_color_placeholder: "(Optional) Hex Farbwert"
         flair_preview: "Vorschau"
       api:
         generate_master: "Master API Key erzeugen"
@@ -2563,6 +2581,7 @@ de:
         suspend_reason: "Grund"
         suspended_by: "Gesperrt von"
         delete_all_posts: "Lösche alle Beiträge"
+        delete_all_posts_confirm_MF: "Du wirst {POSTS, plural, one {einen Beitrag} other {# Beiträge}} und {TOPICS, plural, one {ein Thema} other {# Themen}} löschen. Bist du dir sicher?"
         suspend: "Sperren"
         unsuspend: "Entsperren"
         suspended: "Gesperrt?"
@@ -2760,12 +2779,14 @@ de:
           developer: 'Entwickler'
           embedding: "Einbettung"
           legal: "Rechtliches"
+          user_api: 'Benutzer API'
           uncategorized: 'Sonstiges'
           backups: "Backups"
           login: "Anmeldung"
           plugins: "Plug-ins"
           user_preferences: "Benutzereinstellungen"
           tags: "Schlagwörter"
+          search: "Suche"
       badges:
         title: Abzeichen
         new_badge: Neues Abzeichen
@@ -2807,13 +2828,11 @@ de:
         target_posts: Abfrage betrifft Beiträge
         auto_revoke: Führe die Abfrage zum Widerruf täglich aus
         show_posts: Den für die Verleihung des Abzeichens verantwortlichen Beitrag auf der Abzeichenseite anzeigen
-        trigger: Auslöser
         trigger_type:
           none: "Täglich aktualisieren"
           post_action: "Wenn ein Benutzer auf einen Beitrag reagiert"
           post_revision: "Wenn ein Benutzer einen Beitrag bearbeitet oder erstellt"
           trust_level_change: "Wenn sich die Vertrauensstufe eines Benutzers ändert"
-          user_change: "Wenn ein Benutzer bearbeitet oder angelegt wird"
           post_processed: "Nach der Verarbeitung eines Beitrags"
         preview:
           link_text: "Vorschau auf verliehene Abzeichen"
@@ -2858,6 +2877,7 @@ de:
         embed_by_username: "Benutzername für Beitragserstellung"
         embed_post_limit: "Maximale Anzahl der Beiträge, welche eingebettet werden"
         embed_username_key_from_feed: "Schlüssel, um Discourse-Benutzernamen aus Feed zu ermitteln."
+        embed_title_scrubber: "Regulärer Ausdruck (Regex) um den Titel eines Beitrags zu bereinigen"
         embed_truncate: "Kürze die eingebetteten Beiträge"
         embed_whitelist_selector: "CSS Selektor für Elemente, die in Einbettungen erlaubt sind."
         embed_blacklist_selector: "CSS Selektor für Elemente, die in Einbettungen entfernt werden."

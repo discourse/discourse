@@ -350,7 +350,10 @@ en:
         post_reply:
           base:
             different_topic: "Post and reply must belong to the same topic."
-
+        web_hook:
+          attributes:
+            payload_url:
+              invalid: "URL is invalid. URL should includes http:// or https://. And no blank is allowed."
 
   user_profile:
     no_info_me: "<div class='missing-profile'>the About Me field of your profile is currently blank, <a href='/users/%{username_lower}/preferences/about-me'>would you like to fill it out?</a></div>"
@@ -1826,9 +1829,9 @@ en:
 
         Your reply can be formatted using simple HTML, BBCode, or [Markdown](http://commonmark.org/help/):
 
-            This is **bold**.
             This is <b>bold</b>.
             This is [b]bold[/b].
+            This is **bold**.
 
         For more formatting tips, [try our fun 10 minute interactive tutorial!](http://commonmark.org/help/tutorial/)
 
@@ -2020,7 +2023,7 @@ en:
         Your account associated with this email address has been blocked.
 
     email_reject_reply_user_not_matching:
-      subject_template: "[%{site_name}] Email issue -- Reply User Not Matching"
+      subject_template: "[%{site_name}] Email issue -- Unexpected Reply Address"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
@@ -2043,7 +2046,7 @@ en:
         If you're getting this and you _did_ include a reply, try again with simpler formatting.
 
     email_reject_parsing:
-      subject_template: "[%{site_name}] Email issue -- Content unrecognized"
+      subject_template: "[%{site_name}] Email issue -- Content Unrecognized"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 

@@ -343,14 +343,18 @@ sk:
       selector_placeholder: "Pridať členov"
       owner: "vlastník"
       visible: "Skupina je viditeľná všetkým používateľom"
+      index: "Skupiny"
       title:
         one: "skupina"
         few: "skupiny"
         other: "skupiny"
       members: "Členovia"
+      topics: "Témy"
       posts: "Príspevky"
+      mentions: "Zmienky"
+      messages: "Správy"
       alias_levels:
-        title: "Kto môže poslať správu a @uváadzať túto skupinu?"
+        title: "Kto môže poslať správu a @spomenúť túto skupinu?"
         nobody: "Nikto"
         only_admins: "Iba administrátori"
         mods_and_admins: "Iba moderátori a administrátori"
@@ -453,6 +457,7 @@ sk:
         disable: "Zakázať upozornenia"
         enable: "Povoliť upozornenia"
         each_browser_note: "Poznámka: Toto nastavenie musíte zmeniť v každom používanom prehliadači."
+      dismiss_notifications: "Zahodiť všetko"
       dismiss_notifications_tooltip: "Označiť všetky neprečítané upozornenia ako prečítané"
       disable_jump_reply: "Neskočiť na môj príspevok po odpovedi"
       dynamic_favicon: "Zobraziť počet nových/upravených tém na ikone prehliadača"
@@ -467,6 +472,10 @@ sk:
       suspended_notice: "Tento  používateľ je suspendovaný do {{date}}"
       suspended_reason: "Dôvod:"
       github_profile: "Github"
+      mailing_list_mode:
+        individual: "Pošli email pri každom novom príspevku"
+        many_per_day: "Pošli mi email pri každom novom príspevku (cca {{dailyEmailEstimate}} denne)"
+        few_per_day: "Pošli mi email pri každom novom príspevku (cca 2 denne)"
       watched_categories: "Sledované"
       tracked_categories: "Sledované"
       muted_categories: "Ignorovaný"
@@ -481,6 +490,13 @@ sk:
       muted_users: "Ignorovaný"
       muted_users_instructions: "Pozastaviť všetky notifikácie od týchto užívateľov."
       muted_topics_link: "Zobraziť umlčané témy"
+      apps: "Appky"
+      revoke_access: "Odvolať prístup"
+      undo_revoke_access: "Zrušiť odvolanie prístupu"
+      api_permissions: "Práva:"
+      api_approved: "Schválený:"
+      api_read: "čítať"
+      api_read_write: "čítať a zapisovať"
       staff_counters:
         flags_given: "nápomocné značky"
         flagged_posts: "označkované príspevky"
@@ -506,6 +522,7 @@ sk:
         set_password: "Nastaviť heslo"
       change_about:
         title: "Upraviť O mne"
+        error: "Nastala chyba pri zmene tejto hodnoty."
       change_username:
         title: "Zmeniť užívateľské meno"
         taken: "Sorry, toto užívateľské meno je obsadené."
@@ -641,7 +658,9 @@ sk:
         rescind: "Odstrániť"
         rescinded: "Pozvánka odstránená"
         reinvite: "Poslať pozvánku znovu"
+        reinvite_all: "Poslať všetky pozvánky znovu"
         reinvited: "Poslať pozvánku znovu"
+        reinvited_all: "Všetky pozvánky boli znovu poslané!"
         time_read: "Doba čítania"
         days_visited: "Dní na stránke"
         account_age_days: "Vek účtu v dňoch"
@@ -665,12 +684,42 @@ sk:
       summary:
         title: "Sumarizácia"
         stats: "Štatistiky"
+        topic_count:
+          one: "vytvorená téma"
+          few: "vytvorené témy"
+          other: "vytvorených tém"
+        post_count:
+          one: "vytvorený príspevok"
+          few: "vytvorené príspevky"
+          other: "vytvorených príspevkov"
+        likes_given:
+          one: "<i class='fa fa-heart'></i> rozdaný"
+          few: "<i class='fa fa-heart'></i> rozdané"
+          other: "<i class='fa fa-heart'></i> rozdaných"
+        likes_received:
+          one: "<i class='fa fa-heart'></i> získaný"
+          few: "<i class='fa fa-heart'></i> získané"
+          other: "<i class='fa fa-heart'></i> získaných"
+        posts_read:
+          one: "prečítaný príspevok"
+          few: "prečítané príspevky"
+          other: "prečítaných príspevkov"
+        bookmark_count:
+          one: "záložka"
+          few: "záložky"
+          other: "záložiek"
         top_replies: "Najvýznamnejšie odpovede"
+        no_replies: "Zatiaľ žiadne odpovede."
         more_replies: "Viac odpovedí"
         top_topics: "Najvýznamnejšie témy"
+        no_topics: "Zatiaľ žiadne témy."
         more_topics: "Viac tém"
         top_badges: "Najvýznamnejšie odznaky"
+        no_badges: "Zatiaľ žiadne odznaky."
         more_badges: "Viac odznakov"
+        top_links: "Najvýznamnejšie linky"
+        no_links: "Zatiaľ žiadne linky."
+        no_likes: "Zatiaľ žiadne lajky."
       associated_accounts: "Prihlásenia"
       ip_address:
         title: "Posledná IP adresa"
@@ -1727,6 +1776,8 @@ sk:
       full: "Vytvor / Odpovedz / Zobraz"
       create_post: "Odpovedz / Zobraz"
       readonly: "Zobraz"
+    badges:
+      title: Odznaky
   admin_js:
     type_to_filter: "zadajte, čo chcete filtrovať ..."
     admin:
@@ -2551,7 +2602,7 @@ sk:
       permalink:
         title: "Trvalé odkazy"
         url: "URL"
-        topic_id: "IT témy"
+        topic_id: "ID témy"
         topic_title: "Témy"
         post_id: "ID príspevku"
         post_title: "Príspevok"

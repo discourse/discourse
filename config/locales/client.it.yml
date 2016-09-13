@@ -161,7 +161,7 @@ it:
     generic_error: "Spiacenti! C'è stato un problema."
     generic_error_with_reason: "Si è verificato un errore: %{error}"
     sign_up: "Iscriviti"
-    log_in: "Accedi"
+    log_in: "Connetti"
     age: "Età"
     joined: "Iscritto"
     admin_title: "Amministrazione"
@@ -466,9 +466,14 @@ it:
       github_profile: "Github"
       tag_settings: "Etichette"
       watched_tags: "Osservate"
+      tracked_tags: "Seguite"
+      tracked_tags_instructions: "Seguirai automaticamente tutti gli argomenti con queste etichette. Accanto all'argomento apparirà il conteggio dei nuovi messaggi."
       muted_tags: "Silenziati"
+      muted_tags_instructions: "Non riceverai notifiche circa i nuovi argomenti con queste etichette, inoltre non appariranno in \"Ultimi\"."
       watched_categories: "Osservate"
+      watched_categories_instructions: "Osserverai automaticamente tutti gli argomenti in queste categorie. Riceverai notifiche su tutti i nuovi messaggi e argomenti e, accanto all'argomento, apparirà il conteggio dei nuovi messaggi."
       tracked_categories: "Seguite"
+      tracked_categories_instructions: "Seguirai automaticamente tutti gli argomenti appartenenti a queste categorie. Accanto all'argomento comparirà il conteggio dei nuovi messaggi."
       muted_categories: "Silenziate"
       muted_categories_instructions: "Non ti verrà notificato nulla sui nuovi argomenti in queste categorie, e non compariranno nell'elenco Ultimi."
       delete_account: "Cancella il mio account"
@@ -482,6 +487,10 @@ it:
       muted_users_instructions: "Occulta tutte le notifiche da questi utenti."
       muted_topics_link: "Mostra argomenti silenziati"
       automatically_unpin_topics: "Spunta automaticamente gli argomenti quando arrivi in fondo."
+      api_permissions: "Permessi:"
+      api_approved: "Approvato:"
+      api_read: "lettura"
+      api_read_write: "lettura e scrittura"
       staff_counters:
         flags_given: "segnalazioni utili"
         flagged_posts: "messaggi segnalati"
@@ -510,6 +519,7 @@ it:
         error: "Si è verificato un errore durante la modifica del valore."
       change_username:
         title: "Cambia Utente"
+        confirm: "Se modifichi il nome utente, tutte le precedenti menzioni al tuo @nome non saranno più valide. Sei assolutamente sicuro di volerlo fare?"
         taken: "Spiacenti, questo nome utente è già riservato."
         error: "C'è stato un problema nel cambio del tuo nome utente."
         invalid: "Nome utente non valido: usa solo lettere e cifre"
@@ -575,7 +585,7 @@ it:
       last_emailed: "Ultima email inviata"
       last_seen: "Ultima visita"
       created: "Membro da"
-      log_out: "Esci"
+      log_out: "Disconnetti"
       location: "Località"
       card_badge:
         title: "Distintivo Scheda Utente"
@@ -704,7 +714,7 @@ it:
         top_links: "Migliori Collegamenti"
         no_links: "Ancora nessun collegamento."
         no_likes: "Ancora nessun \"Mi piace\"."
-      associated_accounts: "Login"
+      associated_accounts: "Connessioni"
       ip_address:
         title: "Ultimo indirizzo IP"
       registration_ip_address:
@@ -743,12 +753,12 @@ it:
         fixed: "Carica Pagina"
     close: "Chiudi"
     assets_changed_confirm: "Questo sito è stato aggiornato. Aggiornare ora alla nuova versione?"
-    logout: "Ti sei disconnesso."
+    logout: "Sei stato disconnesso."
     refresh: "Ricarica"
     read_only_mode:
       enabled: "Questo sito è in modalità di sola lettura. Puoi continuare a navigare nel sito, ma le risposte, i \"Mi piace\" e altre azioni sono per il momento disabilitate."
-      login_disabled: "L'accesso è disabilitato quando il sito è in modalità di sola lettura."
-      logout_disabled: "Il logout è disabilitato quando il sito è in modalità di sola lettura."
+      login_disabled: "La connessione è disabilitata quando il sito è in modalità di sola lettura."
+      logout_disabled: "La disconnessione è disabilitata quando il sito è in modalità di sola lettura."
     too_few_topics_and_posts_notice: "<a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>Cominciamo a discutere!</a> Ci sono al momento <strong>%{currentTopics} / %{requiredTopics}</strong> argomenti e <strong>%{currentPosts} / %{requiredPosts}</strong> messaggi. I nuovi visitatori vogliono qualche discussione da leggere e a cui rispondere."
     too_few_topics_notice: "<a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>Cominciamo a discutere!</a> Ci sono al momento <strong>%{currentTopics} / %{requiredTopics}</strong> argomenti. I nuovi visitatori vogliono qualche discussione da leggere e a cui rispondere."
     too_few_posts_notice: "<a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>Cominciamo a discutere!</a> Ci sono al momento <strong>%{currentTopics} / %{requiredTopics}</strong> argomenti e <strong>%{currentPosts} / %{requiredPosts}</strong> messaggi. I nuovi visitatori vogliono qualche discussione da leggere e a cui rispondere."
@@ -772,7 +782,7 @@ it:
       sign_up: "Iscriviti"
       hide_session: "Ricordamelo domani"
       hide_forever: "no grazie"
-      hidden_for_session: "Ok, te lo chiederò domani. Puoi sempre usare \"Accedi\" per creare un account."
+      hidden_for_session: "Ok, te lo chiederò domani. Puoi sempre usare \"Connetti\" per creare un account."
       intro: "Ciao! :heart_eyes: A quanto pare ti sta piacendo la discussione, ma non sei ancora iscritto."
       value_prop: "Quando hai un account ci ricordiamo esattamente cosa stavi leggendo, così potrai riprendere da dove ti eri fermato. Inoltre ricevi le notifiche, sia qui sia via email, ogni volta che ci saranno nuovi messaggi. Inoltre potrai metterei i \"Mi piace\" ai messaggi e condividerne l'apprezzamento. :heartbeat:"
     summary:
@@ -812,13 +822,13 @@ it:
       complete_username_not_found: "Nessun account corrisponde al nome utente <b>%{username}</b>"
       complete_email_not_found: "Nessun account corrisponde alla email <b>%{email}</b>"
     login:
-      title: "Accedi"
+      title: "Connetti"
       username: "Utente"
       password: "Password"
       email_placeholder: "email o nome utente"
       caps_lock_warning: "Il Blocco Maiuscole è attivo"
       error: "Errore sconosciuto"
-      rate_limit: "Per favore attendi prima di provare nuovamente ad accedere."
+      rate_limit: "Per favore attendi prima di provare nuovamente la connessione."
       blank_username_or_password: "Per favore inserisci la tua email o il tuo nome utente, e la password."
       reset_password: 'Azzera Password'
       logging_in: "Connessione in corso..."
@@ -827,13 +837,13 @@ it:
       awaiting_confirmation: "Il tuo account è in attesa di attivazione, usa il collegamento \"password dimenticata\" per ricevere una nuova email di attivazione."
       awaiting_approval: "Il tuo account non è stato ancora approvato da un membro dello staff. Ti invieremo un'email non appena verrà approvato."
       requires_invite: "Spiacenti, l'accesso a questo forum e solo ad invito."
-      not_activated: "Non puoi ancora effettuare l'accesso. Abbiamo inviato un'email di attivazione a <b>{{sentTo}}</b>. Per favore segui le istruzioni contenute nell'email per attivare l'account."
-      not_allowed_from_ip_address: "Non puoi collegarti con questo indirizzo IP."
-      admin_not_allowed_from_ip_address: "Non puoi collegarti come amministratore dal quell'indirizzo IP."
+      not_activated: "Non puoi ancora connetterti. Abbiamo inviato un'email di attivazione a <b>{{sentTo}}</b>. Per favore segui le istruzioni contenute nell'email per attivare l'account."
+      not_allowed_from_ip_address: "Non puoi connetterti con questo indirizzo IP."
+      admin_not_allowed_from_ip_address: "Non puoi connetterti come amministratore da quell'indirizzo IP."
       resend_activation_email: "Clicca qui per inviare nuovamente l'email di attivazione."
       sent_activation_email_again: "Ti abbiamo mandato un'altra email di attivazione su <b>{{currentEmail}}</b>. Potrebbero essere necessari alcuni minuti di attesa; assicurati di controllare anche la cartella dello spam."
-      to_continue: "Per favore accedi"
-      preferences: "Devi effettuare l'accesso per cambiare le impostazioni."
+      to_continue: "Per favore Connettiti"
+      preferences: "Devi essere connesso per cambiare le tue impostazioni."
       forgot: "Non ricordo i dettagli del mio account"
       google:
         title: "con Google"
@@ -1001,6 +1011,7 @@ it:
       most_liked: "Con più \"Mi Piace\""
       select_all: "Seleziona Tutto"
       clear_all: "Cancella Tutto"
+      too_short: "La tua chiave di ricerca è troppo corta."
       result_count:
         one: "1 risultato per <span class='term'>\"{{term}}\"</span>"
         other: "{{count}} risultati per <span class='term'>\"{{term}}\"</span>"
@@ -1131,16 +1142,23 @@ it:
       auto_close_title: 'Impostazioni di auto-chiusura'
       auto_close_save: "Salva"
       auto_close_remove: "Non chiudere automaticamente questo argomento"
+      timeline:
+        back: "Indietro"
+        back_description: "Torna indietro al tuo ultimo messaggio non letto"
+        replies_short: "%{current} / %{total}"
       progress:
         title: Avanzamento dell'argomento
         go_top: "alto"
         go_bottom: "basso"
         go: "vai"
         jump_bottom: "salta all'ultimo messaggio"
+        jump_prompt: "salta al messaggio"
+        jump_prompt_long: "A quale messaggio vuoi saltare?"
         jump_bottom_with_number: "Passa al messaggio %{post_number}"
         total: totale messaggi
         current: messaggio corrente
       notifications:
+        title: cambia la frequenza con cui sarai avvertito su questo argomento
         reasons:
           '3_6': 'Riceverai notifiche perché stai osservando questa categoria.'
           '3_5': 'Riceverai notifiche poiché hai iniziato ad osservare questo argomento automaticamente.'
@@ -1254,7 +1272,7 @@ it:
         username_placeholder: "nome utente"
         action: 'Invia Invito'
         help: 'invita altri su questo argomento via email o tramite notifiche'
-        to_forum: "Invieremo una breve email che permetterà al tuo amico di entrare subito cliccando un collegamento, senza bisogno di effettuare il collegamento."
+        to_forum: "Invieremo una breve email che permetterà al tuo amico di partecipare subito cliccando un collegamento, senza bisogno di connettersi."
         sso_enabled: "Inserisci il nome utente della persona che vorresti invitare su questo argomento."
         to_topic_blank: "Inserisci il nome utente o l'indirizzo email della persona che vorresti invitare su questo argomento."
         to_topic_email: "Hai inserito un indirizzo email. Invieremo una email di invito che permetterà al tuo amico di rispondere subito a questo argomento."
@@ -1264,7 +1282,7 @@ it:
         success_email: "Abbiamo inviato un invito via email a <b>{{emailOrUsername}}</b>. Ti avvertiremo quando l'invito verrà riscattato. Controlla la sezione \"inviti\" sulla tua pagina utente per tracciarne lo stato."
         success_username: "Abbiamo invitato l'utente a partecipare all'argomento."
         error: "Spiacenti, non siamo riusciti ad invitare questa persona. E' stata per caso già invitata (gli inviti sono limitati)? "
-      login_reply: 'Collegati per Rispondere'
+      login_reply: 'Connettiti per Rispondere'
       filters:
         n_posts:
           one: "1 post"
@@ -1355,7 +1373,7 @@ it:
         upload_not_authorized: "Spiacenti, il file che stai cercando di caricare non è autorizzato (estensioni autorizzate: {{authorized_extensions}})."
         image_upload_not_allowed_for_new_user: "Spiacenti, i nuovi utenti non possono caricare immagini."
         attachment_upload_not_allowed_for_new_user: "Spiacenti, i nuovi utenti non possono caricare allegati."
-        attachment_download_requires_login: "Spiacenti, devi essere collegato per poter scaricare gli allegati."
+        attachment_download_requires_login: "Spiacenti, devi essere connesso per poter scaricare gli allegati."
       abandon:
         confirm: "Sicuro di voler abbandonare il tuo messaggio?"
         no_value: "No, mantienilo"
@@ -1373,7 +1391,7 @@ it:
         has_liked: "ti è piaciuto questo messaggio"
         undo_like: "rimuovi il \"Mi piace\""
         edit: "modifica questo messaggio"
-        edit_anonymous: "Spiacente, effettua l'accesso per poter modificare questo messaggio."
+        edit_anonymous: "Spiacenti, devi essere connesso per poter modificare questo messaggio."
         flag: "segnala privatamente questo messaggio o invia una notifica privata"
         delete: "cancella questo messaggio"
         undelete: "recupera questo messaggio"
@@ -1510,6 +1528,8 @@ it:
       topic_template: "Modello di Argomento"
       tags: "Etichette"
       tags_allowed_tags: "Etichette che si possono usare soltanto in questa categoria:"
+      tags_placeholder: "Elenco (opzionale) delle etichette permesse"
+      tag_groups_placeholder: "Elenco (opzionale) dei gruppi di etichette permessi"
       delete: 'Elimina Categoria'
       create: 'Crea Categoria'
       create_long: 'Crea una nuova categoria'
@@ -1758,7 +1778,7 @@ it:
         help: '<b>?</b> Apri la legenda tasti'
         dismiss_new_posts: '<b>x</b>, <b>r</b> Chiudi Nuovi Messaggi'
         dismiss_topics: '<b>x</b>, <b>t</b> Chiudi Argomenti'
-        log_out: '<b>shift</b>+<b>z</b> <b>shift</b>+<b>z</b> Esci'
+        log_out: '<b>shift</b>+<b>z</b> <b>shift</b>+<b>z</b> Disconnetti'
       actions:
         title: 'Azioni'
     badges:
@@ -1794,12 +1814,37 @@ it:
       groups:
         title: "Gruppi Etichette"
         about: "Aggiungi etichette a gruppi per poterle gestire più facilmente."
+        new: "Nuovo Gruppo"
         tags_label: "Etichette in questo gruppo:"
         parent_tag_label: "Etichetta padre:"
+        parent_tag_placeholder: "Opzionale"
         parent_tag_description: "Le etichette di questo gruppo non possono essere usate finché è presente l'etichetta padre."
         one_per_topic_label: "Limita ad una sola etichetta per argomento in questo gruppo"
         new_name: "Nuovo Gruppo Etichette"
+        save: "Salva"
+        delete: "Elimina"
         confirm_delete: "Sicuro di voler cancellare questo gruppo di etichette?"
+      topics:
+        none:
+          unread: "Non hai argomenti non letti."
+          new: "Non hai nuovi argomenti."
+          read: "Non hai ancora letto nessun argomento."
+          posted: "Non hai ancora scritto in nessun argomento."
+          latest: "Non ci sono argomenti più recenti."
+          hot: "Non ci sono argomenti importanti."
+          bookmarks: "Non hai ancora argomenti nei segnalibri."
+          top: "Non ci sono argomenti di punta."
+          search: "Non ci sono risultati di ricerca."
+        bottom:
+          latest: "Non ci sono ulteriori argomenti più recenti."
+          hot: "Non ci sono ulteriori argomenti importanti."
+          posted: "Non ci sono ulteriori argomenti inseriti."
+          read: "Non ci sono ulteriori argomenti letti."
+          new: "Non ci sono ulteriori nuovi argomenti."
+          unread: "Non ci sono ulteriori argomenti non letti."
+          top: "Non ci sono ulteriori argomenti di punta."
+          bookmarks: "Non ci sono ulteriori argomenti nei segnalibri."
+          search: "Non ci sono ulteriori risultati di ricerca."
   admin_js:
     type_to_filter: "digita per filtrare..."
     admin:
@@ -2284,7 +2329,7 @@ it:
           title: "Log Errori"
       impersonate:
         title: "Impersona"
-        help: "Usa questo strumento per impersonare un account utente ai fini del debugging. Una volta finito dovrai scollegarti."
+        help: "Usa questo strumento per impersonare un account utente ai fini del debugging. Una volta finito dovrai disconnetterti."
         not_found: "Impossibile trovare questo utente."
         invalid: "Spiacenti, non puoi impersonare questo utente."
       users:
@@ -2340,7 +2385,7 @@ it:
         unsuspend_failed: "Si è verificato un errore riabilitando questo utente {{error}}"
         suspend_duration: "Per quanto tempo l'utente sarà sospeso?"
         suspend_duration_units: "(giorni)"
-        suspend_reason_label: "Perché lo stai sospendendo? Questo testo <b>sarà visibile a tutti</b> nella pagina del profilo dell'utente, e gli verrà mostrato tutte le volte che effettuerà il login. Scrivi il meno possibile."
+        suspend_reason_label: "Perché lo stai sospendendo? Questo testo <b>sarà visibile a tutti</b> nella pagina del profilo dell'utente, e gli verrà mostrato tutte le volte che si connetterà. Scrivi il meno possibile."
         suspend_reason: "Motivo"
         suspended_by: "Sospeso da"
         delete_all_posts: "Cancella tutti i messaggi"
@@ -2418,7 +2463,7 @@ it:
         block_confirm: 'Sei sicuro di voler bloccare questo utente? Non sarà più in grado di creare alcun nuovo argomento o messaggio.'
         block_accept: 'Sì, blocca questo utente'
         deactivate_explanation: "Un utente disattivato deve riconvalidare la propria email."
-        suspended_explanation: "Un utente sospeso non può fare il login."
+        suspended_explanation: "Un utente sospeso non può connettersi."
         block_explanation: "Un utente bloccato non può pubblicare messaggi o iniziare argomenti."
         trust_level_change_failed: "C'è stato un problema nel cambio di livello di esperienza di questo utente.  "
         suspend_modal_title: "Sospendi Utente"
@@ -2531,7 +2576,7 @@ it:
           legal: "Legale"
           uncategorized: 'Altro'
           backups: "Backup"
-          login: "Accesso"
+          login: "Connessione"
           plugins: "Plugin"
           user_preferences: "Preferenze Utente"
           tags: "Etichette"

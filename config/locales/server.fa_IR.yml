@@ -1109,8 +1109,6 @@ fa_IR:
       subject_template: "[%{site_name}]  مشکل ایمیل  -- حساب کاربری ناشناس "
     email_reject_empty:
       subject_template: "[%{site_name}] مشکل ایمیل -- بدون محتوا"
-    email_reject_parsing:
-      subject_template: "[%{site_name}]  مشکل ایمیل --  محتوا ناشناخته است"
     email_reject_invalid_access:
       subject_template: "[%{site_name}] مشکل ایمیل  -- دسترسی نامعتبر "
     email_reject_reply_key:

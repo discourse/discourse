@@ -38,7 +38,7 @@ zh_CN:
       long_date_with_year_without_time: "YY年MMMDo"
       long_date_without_year_with_linebreak: "MMMDo<br/>LT"
       long_date_with_year_with_linebreak: "YY年MMMDo<br/>LT"
-      wrap_ago: "%{date}前"
+      wrap_ago: "%{date}"
       tiny:
         half_a_minute: "1分钟内"
         less_than_x_seconds:
@@ -90,7 +90,7 @@ zh_CN:
       twitter: '分享至 Twitter'
       facebook: '分享至 Facebook'
       google+: '分享至 Google+'
-      email: '通过邮件分享内容'
+      email: '在电子邮件里发送该链接'
     action_codes:
       public_topic: "于%{when}设置为公共主题"
       private_topic: "于%{when}设置为私密主题"
@@ -215,7 +215,7 @@ zh_CN:
     topic_count_unread:
       other: "{{count}} 未读主题。"
     topic_count_new:
-      other: "近期有 {{count}} 个主题。"
+      other: " {{count}} 个近期主题。"
     click_to_show: "点击加载"
     preview: "预览"
     cancel: "取消"
@@ -281,12 +281,12 @@ zh_CN:
       likes_given: "送出赞"
       likes_received: "获得赞"
       topics_entered: "浏览"
-      topics_entered_long: "浏览过的主题"
+      topics_entered_long: "浏览主题"
       time_read: "阅读时长"
       topic_count: "主题"
-      topic_count_long: "发布的主题"
+      topic_count_long: "创建主题"
       post_count: "回复"
-      post_count_long: "回复数"
+      post_count_long: "回帖数"
       no_results: "没有找到结果。"
       days_visited: "访问"
       days_visited_long: "访问天数"
@@ -296,25 +296,25 @@ zh_CN:
         other: "%{count} 位用户"
     groups:
       empty:
-        posts: "小组的成员从未发表帖子。"
-        members: "小组没有成员。"
-        mentions: "小组从未被提及过。"
-        messages: "小组从未发送过消息。"
-        topics: "小组的成员从未发表主题。"
+        posts: "群组的成员从未发表帖子。"
+        members: "群组没有成员。"
+        mentions: "群组从未被提及过。"
+        messages: "群组从未发送过消息。"
+        topics: "群组的成员从未发表主题。"
       add: "添加"
       selector_placeholder: "添加成员"
       owner: "所有者"
-      visible: "小组对所有用户可见"
-      index: "小组"
+      visible: "群组对所有用户可见"
+      index: "群组"
       title:
-        other: "小组"
+        other: "群组"
       members: "成员"
       topics: "主题"
       posts: "帖子"
       mentions: "提及"
       messages: "消息"
       alias_levels:
-        title: "谁能@该小组和发送消息？"
+        title: "谁能@该群组和发送消息？"
         nobody: "没有人"
         only_admins: "管理员"
         mods_and_admins: "版主与管理员"
@@ -335,7 +335,7 @@ zh_CN:
           description: "你会在别人@你或回复你时收到通知，并且新帖数量也将在这些主题后显示。"
         regular:
           title: "常规"
-          description: "如果有人@名字提及你或回复你，将通知你。"
+          description: "如果有人@你或回复你，将通知你。"
         muted:
           title: "静音"
           description: "你不会收到组内关于新主题中的任何通知。"
@@ -346,7 +346,7 @@ zh_CN:
       '4': "主题"
       '5': "回复"
       '6': "回应"
-      '7': "提到"
+      '7': "@我的"
       '9': "引用"
       '11': "编辑"
       '12': "发送"
@@ -448,21 +448,21 @@ zh_CN:
         few_per_day: "为每个新帖给我发送邮件 (大约每天 2 封 )"
       tag_settings: "标签"
       watched_tags: "监看"
-      watched_tags_instructions: "你将自动监看有这些标签的所有主题。你将会收到所有新的帖子和主题的通知，新帖数量也会显示在主题旁边。"
+      watched_tags_instructions: "你将自动监看有这些标签的所有主题。所有新帖子和新主题会通知你，新帖数量也会显示在主题旁边。"
       tracked_tags: "跟踪"
       tracked_tags_instructions: "你将自动跟踪这些标签的所有主题，新帖数量将会显示在主题旁边。"
       muted_tags: "静音"
-      muted_tags_instructions: "你将不会收到有这些标签的任何新主题通知，它们也不会出现在最新主题列表。"
+      muted_tags_instructions: "你将不会收到有这些标签的新主题任何通知，它们也不会出现在“最新”主题列表。"
       watched_categories: "监看"
-      watched_categories_instructions: "你将自动监看这些分类中的所有主题。你将会收到所有新的帖子和主题通知，新帖数量也将显示在主题旁边。"
+      watched_categories_instructions: "你将自动监看这些分类中的所有主题。所有新帖子和新主题会通知你，新帖数量也将显示在主题旁边。"
       tracked_categories: "跟踪"
       tracked_categories_instructions: "你将自动跟踪这些分类中的所有主题。新帖数量将会显示在主题旁边。"
       watched_first_post_categories: "监看头一帖"
-      watched_first_post_categories_instructions: "在这些分类里面，每一个新主题的头一帖，将通知你。"
+      watched_first_post_categories_instructions: "在这些分类里面，每一个新主题的第一帖会通知你。"
       watched_first_post_tags: "监看头一帖"
-      watched_first_post_tags_instructions: "在有了这些标签的每一个新主题，你将会收到头一帖通知。"
+      watched_first_post_tags_instructions: "在有了这些标签的每一个新主题，第一帖会通知你。"
       muted_categories: "静音"
-      muted_categories_instructions: "在这些分类里面，你将不会收到任何新主题通知，它们也不会出现在最新主题列表。"
+      muted_categories_instructions: "在这些分类里面，你将不会收到新主题任何通知，它们也不会出现在“最新”主题列表。"
       delete_account: "删除我的帐号"
       delete_account_confirm: "你真的要永久删除自己的账号吗？删除之后无法恢复！"
       deleted_yourself: "你的帐号已被删除。"
@@ -486,7 +486,7 @@ zh_CN:
         inbox: "收件箱"
         sent: "已发送"
         archive: "存档"
-        groups: "我的小组"
+        groups: "我的群组"
         bulk_select: "选择消息"
         move_to_inbox: "移动到收件箱"
         move_to_archive: "存档"
@@ -668,9 +668,9 @@ zh_CN:
         stats: "统计"
         time_read: "阅读时间"
         topic_count:
-          other: "创建的主题"
+          other: "创建主题"
         post_count:
-          other: "发表的帖子"
+          other: "发表帖子"
         likes_given:
           other: "<i class='fa fa-heart'></i> 送出赞"
         likes_received:
@@ -755,10 +755,10 @@ zh_CN:
     week: '周'
     week_desc: '7 天内创建的主题'
     day: '天'
-    first_post: 头一帖
+    first_post: 最早帖子
     mute: 静音
     unmute: 取消静音
-    last_post: 最后帖
+    last_post: 最后帖子
     last_reply_lowercase: 最后回复
     replies_lowercase:
       other: 回复
@@ -948,7 +948,7 @@ zh_CN:
       more: "看历史通知"
       total_flagged: "被标记帖子的总数"
       mentioned: "<i title='被提及' class='fa fa-at'></i><p><span>{{username}}</span> {{description}}</p>"
-      group_mentioned: "<i title='小组被提及' class='fa fa-at'></i><p><span>{{username}}</span> {{description}}</p>"
+      group_mentioned: "<i title='群组被提及' class='fa fa-at'></i><p><span>{{username}}</span> {{description}}</p>"
       quoted: "<i title='引用' class='fa fa-quote-right'></i><p><span>{{username}}</span> {{description}}</p>"
       replied: "<i title='回复' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
       posted: "<i title='回复' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
@@ -966,7 +966,7 @@ zh_CN:
       granted_badge: "<i title='徽章授予' class='fa fa-certificate'></i><p>获得“{{description}}”</p>"
       watching_first_post: "<i title='新主题' class='fa fa-dot-circle-o'></i><p><span>新主题</span>{{description}}</p>"
       group_message_summary:
-        other: "<i title='小组收件箱中的消息' class='fa fa-group'></i><p> {{count}} 条消息在{{group_name}}组的收件箱中</p>"
+        other: "<i title='群组收件箱中的消息' class='fa fa-group'></i><p> {{count}} 条消息在{{group_name}}组的收件箱中</p>"
       alt:
         mentioned: "被提及"
         quoted: "被引用"
@@ -981,7 +981,7 @@ zh_CN:
         moved_post: "你的帖子被移动自"
         linked: "链接至你的帖子"
         granted_badge: "勋章授予"
-        group_message_summary: "在小组收件箱中的消息"
+        group_message_summary: "在群组收件箱中的消息"
       popup:
         mentioned: '{{username}}在“{{topic}}”提到了你 - {{site_title}}'
         group_mentioned: '{{username}}在“{{topic}}”提到了你 - {{site_title}}'
@@ -1007,7 +1007,7 @@ zh_CN:
     search:
       sort_by: "排序"
       relevance: "最相关"
-      latest_post: "最后发帖"
+      latest_post: "最新发帖"
       most_viewed: "最多阅读"
       most_liked: "最多赞"
       select_all: "全选"
@@ -1024,7 +1024,7 @@ zh_CN:
       context:
         user: "搜索 @{{username}} 的帖子"
         category: "搜索 #{{category}} 分类"
-        topic: "只搜索本主题"
+        topic: "搜索本主题"
         private_messages: "搜索消息"
     hamburger_menu: "转到另一个主题列表或分类"
     new_item: "新"
@@ -1067,7 +1067,7 @@ zh_CN:
         search: "没有搜索结果。"
         educate:
           new: '<p>这里显示了近期主题列表。</p><p>默认情况下，以下主题将显示在近期列表。如果是最近 2 天内创建的，还会显示一个<span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">近期</span>标志。<p>你可以在<a href="%{userPrefsUrl}">用户设置</a>中更改要显示哪些内容。</p>'
-          unread: '<p>这里显示你的未读主题。</p><p>默认情况下，下述主题会被放在未读中。并且会在旁边显示未读的数量<span class="badge new-posts badge-notification">1</span>。如果你：</p><ul><li>创建了该主题</li><li>回复了该主题</li><li>阅读该主题超过 4 分钟</li></ul><p>或者你在主题底部的通知控制中选择了跟踪或监看。</p><p>你可以在<a href="%{userPrefsUrl}">用户设置</a>中修改未读设置。</p>'
+          unread: '<p>这里显示你的未读主题。</p><p>默认情况下，下述主题会被放在未读中。并且会在旁边显示未读的数量<span class="badge new-posts badge-notification">1</span>。如果你：</p><ul><li>创建了该主题</li><li>回复了该主题</li><li>阅读该主题超过 4 分钟</li></ul><p>或者你在主题底部的通知控制中选择了跟随或关注。</p><p>你可以在<a href="%{userPrefsUrl}">用户设置</a>中修改未读设置。</p>'
       bottom:
         latest: "没有更多主题可看了。"
         hot: "没有更多热门主题可看了。"
@@ -1124,8 +1124,8 @@ zh_CN:
       options: "主题选项"
       show_links: "显示此主题中的链接"
       toggle_information: "切换主题详情"
-      read_more_in_category: "想阅读更多？浏览{{catLink}}中的其他主题，或{{latestLink}}。"
-      read_more: "想阅读更多？{{catLink}}或{{latestLink}}。"
+      read_more_in_category: "想阅读更多？浏览{{catLink}}的其他主题 或 {{latestLink}}。"
+      read_more: "想阅读更多？{{catLink}} 或 {{latestLink}}。"
       read_more_MF: "还有 { UNREAD, plural, =0 {} one { <a href='/unread'>1 个未读主题</a>} other { <a href='/unread'># 个未读主题</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{和 } false {} other{}} <a href='/new'>1 个新</a>主题} other { {BOTH, select, true{和 } false {} other{}} <a href='/new'># 个近期</a>主题} }可以阅读，或者{CATEGORY, select, true {浏览{catLink}中的其他主题} false {{latestLink}} other {}}"
       browse_all_categories: 浏览所有分类
       view_latest_topics: 查阅最新主题
@@ -1164,11 +1164,11 @@ zh_CN:
           '3_1': '因为你创建了这个主题，你将会收到通知。'
           '3': '因为你正在监看该主题，你将会收到通知。'
           '2_8': '因为你正在跟踪该分类，你将收到通知。'
-          '2_4': '因为你在该主题内发表了回复，所以你将收到相关通知。'
+          '2_4': '因为你发布了对该主题的回复，你将会收到通知。'
           '2_2': '因为你正在跟踪该主题，你将收到通知。'
-          '2': '因为你<a href="/users/{{username}}/preferences">阅读了该主题</a>，所以你将收到相关通知。'
-          '1_2': '如果有人提及你的 @名字或回复你，将通知你。'
-          '1': '如果有人提及你的 @名字或回复你，将通知你。'
+          '2': '因为你<a href="/users/{{username}}/preferences">阅读了该主题</a>，你将会收到通知。'
+          '1_2': '如果有人@你或回复你，将通知你。'
+          '1': '如果有人@你或回复你，将通知你。'
           '0_7': '你将忽略关于该分类的所有通知。'
           '0_2': '你将忽略关于该主题的所有通知。'
           '0': '你将忽略关于该主题的所有通知。'
@@ -1183,19 +1183,19 @@ zh_CN:
           description: "在消息标题后显示新回复数量。你只会在别人@你或回复你的帖子时才会收到通知。"
         tracking:
           title: "跟踪"
-          description: "将为该主题显示新回复的数量。如果有人提及你的 @名字或回复你，将通知你。"
+          description: "将为该主题显示新回复的数量。如果有人@你或回复你，将通知你。"
         regular:
           title: "普通"
-          description: "如果有人提及你的 @名字或回复你，将通知你。"
+          description: "如果有人@你或回复你，将通知你。"
         regular_pm:
           title: "普通"
-          description: "如果有人提及你的 @名字或回复你，将通知你。"
+          description: "如果有人@你或回复你，将通知你。"
         muted_pm:
           title: "静音"
           description: "不会收到该消息的任何通知。"
         muted:
           title: "静音"
-          description: "你不会收到此主题的任何通知，它也不会出现在最新主题列表。"
+          description: "你不会收到此主题的任何通知，它也不会出现在“最新”主题列表。"
       actions:
         recover: "撤销删除主题"
         delete: "删除主题"
@@ -1256,16 +1256,16 @@ zh_CN:
         no_banner_exists: "没有横幅主题。"
         banner_exists: "当前<strong class='badge badge-notification unread'>设置</strong>了横幅主题。"
       inviting: "邀请中..."
-      automatically_add_to_groups: "邀请将把用户加入小组："
+      automatically_add_to_groups: "邀请将把用户加入群组："
       invite_private:
         title: '邀请至消息'
         email_or_username: "受邀人的邮箱或用户名"
         email_or_username_placeholder: "电子邮件地址或者用户名"
         action: "邀请"
         success: "成功邀请了用户至该消息。"
-        success_group: "成功邀请了小组至该消息。"
+        success_group: "成功邀请了群组至该消息。"
         error: "抱歉，邀请时出了点小问题。"
-        group_name: "小组名"
+        group_name: "群组名"
       controls: "主题控制操作"
       invite_reply:
         title: '邀请'
@@ -1376,7 +1376,7 @@ zh_CN:
       via_auto_generated_email: "通过自动生成邮件发表的帖子"
       whisper: "设置帖子为密语，只对版主可见"
       wiki:
-        about: "这个帖子是可多人协作的帖子"
+        about: "此帖允许被公共编辑"
       archetypes:
         save: '保存选项'
       few_likes_left: "谢谢你的热情！你今天的赞快用完了。"
@@ -1398,8 +1398,8 @@ zh_CN:
           yes_value: "是，一并删除相关回复"
           no_value: "否，仅删除该帖"
         admin: "帖子管理"
-        wiki: "成为维基"
-        unwiki: "关闭多人协作"
+        wiki: "公共编辑"
+        unwiki: "限制公共编辑"
         convert_to_moderator: "添加管理人员颜色标识"
         revert_to_regular: "移除管理人员颜色标识"
         rebake: "重建 HTML"
@@ -1556,19 +1556,19 @@ zh_CN:
       notifications:
         watching:
           title: "监看"
-          description: "你将自动监看这些分类中的所有主题。每一个主题中的每一个新帖子，将通知你，还将显示新回复的数量。"
+          description: "你将自动监看这些分类中的所有主题。每一个主题的每一个新帖，将通知你，还将显示新回复的数量。"
         watching_first_post:
           title: "监看头一帖"
-          description: "在这些分类里面，只有每一个新主题的头一个帖子，将通知你。"
+          description: "在这些分类里面，只是每一个新主题的第一帖，才会通知你。"
         tracking:
           title: "跟踪"
-          description: "你将自动跟踪这些分类中的所有主题。如果有人提及你的 @名字或回复你，将通知你，还将显示新回复的数量。"
+          description: "你将自动跟踪这些分类中的所有主题。如果有人@你或回复你，将通知你，还将显示新回复的数量。"
         regular:
           title: "普通"
-          description: "如果有人提及你的 @名字或回复你，将通知你。"
+          description: "如果有人@你或回复你，将通知你。"
         muted:
           title: "静音"
-          description: "在这些分类里面，你将不会收到任何新主题通知，它们也不会出现在最新主题列表。"
+          description: "在这些分类里面，你将不会收到新主题任何通知，它们也不会出现在“最新”主题列表。 "
     flagging:
       title: '感谢你帮助我们建设文明社群！'
       action: '标记帖子'
@@ -1590,6 +1590,8 @@ zh_CN:
       custom_placeholder_notify_user: "请具体说明，有建设性的，再友好一些。"
       custom_placeholder_notify_moderators: "让我们知道你关心地是什么，并尽可能地提供相关链接和例子。"
       custom_message:
+        at_least:
+          other: "输入至少 {{count}} 个字符"
         more:
           other: "还差 {{count}} 个..."
         left:
@@ -1687,7 +1689,7 @@ zh_CN:
           other: "未读（{{count}}）"
         help: "你目前监看或跟踪有了未读帖子的主题"
         lower_title_with_count:
-          other: "{{count}} 条未读"
+          other: "{{count}} 未读"
       new:
         lower_title_with_count:
           other: "{{count}} 近期"
@@ -1811,7 +1813,7 @@ zh_CN:
         community:
           name: 社区
         trust_level:
-          name: Trust Level
+          name: 信任等级
         other:
           name: 其它
         posting:
@@ -1840,7 +1842,7 @@ zh_CN:
       sort_by_count: "总数"
       sort_by_name: "名称"
       manage_groups: "管理标签组"
-      manage_groups_description: "管理标签的小组"
+      manage_groups_description: "管理标签的群组"
       filters:
         without_category: "%{tag}的%{filter}主题"
         with_category: "%{filter} %{tag}主题在%{category}"
@@ -1849,19 +1851,19 @@ zh_CN:
       notifications:
         watching:
           title: "监看"
-          description: "你将自动监看该标签中的所有主题。新的帖子和主题将会通知你，未读和新帖的数量也将出现在主题旁边。"
+          description: "你将自动监看该标签中的所有主题。新帖子和新主题会通知你，再者未读和新帖的数量也将显示在主题旁边。"
         watching_first_post:
           title: "监看头一帖"
-          description: "在这个标签中，只有每一个新主题的头一个帖子，将通知你。"
+          description: "在这个标签中，只是每一个新主题的第一帖，才会通知你。"
         tracking:
           title: "跟踪"
           description: "你将自动跟踪这个标签里的所有主题。未读和新帖的数量将显示在主题旁边。"
         regular:
           title: "普通"
-          description: "如果有人提及你的 @名字或给你回帖，将通知你。"
+          description: "如果有人@你或回复你的帖子，将通知你。"
         muted:
           title: "静音"
-          description: "在这个标签中，你将不会收到任何新主题通知，它们也不会出现在你的未读列表上面。"
+          description: "在这个标签中，你将不会收到新主题任何通知，它们也不会出现在你的未读列表上面。"
       groups:
         title: "标签组"
         about: "将标签分组以便管理。"
@@ -1869,7 +1871,7 @@ zh_CN:
         tags_label: "标签组内标签："
         parent_tag_label: "上级标签："
         parent_tag_placeholder: "可选"
-        parent_tag_description: "未设置上级标签前小组内标签无法使用。"
+        parent_tag_description: "未设置上级标签前群组内标签无法使用。"
         one_per_topic_label: "只可给主题设置一个该组内的标签"
         new_name: "新标签组名"
         save: "保存"
@@ -1953,7 +1955,7 @@ zh_CN:
           refresh_report: "刷新报告"
           start_date: "开始日期"
           end_date: "结束日期"
-          groups: "所有小组"
+          groups: "所有群组"
       commits:
         latest_changes: "最近的更新：请经常升级！"
         by: "来自"
@@ -2015,34 +2017,34 @@ zh_CN:
           action_type_8:
             other: "广告 x{{count}}"
       groups:
-        primary: "主要小组"
-        no_primary: "(无主要小组)"
-        title: "小组"
-        edit: "编辑小组"
+        primary: "主要群组"
+        no_primary: "(无主要群组)"
+        title: "群组"
+        edit: "编辑群组"
         refresh: "刷新"
-        new: "新小组"
+        new: "新群组"
         selector_placeholder: "输入用户名"
-        name_placeholder: "小组名，不能含有空格，与用户名规则一致"
-        about: "在这里编辑小组的名字和成员"
-        group_members: "小组成员"
+        name_placeholder: "群组名，不能含有空格，与用户名规则一致"
+        about: "在这里编辑群组的名字和成员"
+        group_members: "群组成员"
         delete: "删除"
-        delete_confirm: "删除这个小组吗？"
-        delete_failed: "无法删除小组。如果该小组是自动生成的，则不可删除。"
-        delete_member_confirm: "从小组“%{group}”中移除“%{username}”？"
+        delete_confirm: "删除这个群组吗？"
+        delete_failed: "无法删除群组。如果该群组是自动生成的，则不可删除。"
+        delete_member_confirm: "从群组“%{group}”中移除“%{username}”？"
         delete_owner_confirm: "移除“%{username}”的权限？"
         name: "名字"
         add: "添加"
         add_members: "添加成员"
         custom: "定制"
-        bulk_complete: "用户已被添加到小组。"
-        bulk: "批量添加到小组"
+        bulk_complete: "用户已被添加到群组。"
+        bulk: "批量添加到群组"
         bulk_paste: "粘贴用户名邮件列表，一行一个："
-        bulk_select: "（选择一个小组）"
+        bulk_select: "( 选择一个群组 )"
         automatic: "自动"
-        automatic_membership_email_domains: "用户注册时邮箱域名若与列表完全匹配则自动添加至这个小组："
+        automatic_membership_email_domains: "用户注册时邮箱域名若与列表完全匹配则自动添加至这个群组："
         automatic_membership_retroactive: "应用同样的邮件域名规则添加已经注册的用户"
-        default_title: "小组内所有用户的默认头衔"
-        primary_group: "自动设置为主要小组"
+        default_title: "群组内所有用户的默认头衔"
+        primary_group: "自动设置为主要群组"
         group_owners: 所有者
         add_owners: 添加所有者
         incoming_email: "自定义进站电子邮件地址"
@@ -2650,7 +2652,7 @@ zh_CN:
         description: 描述
         long_description: 详情
         badge_type: 徽章分类
-        badge_grouping: 小组
+        badge_grouping: 群组
         badge_groupings:
           modal_title: 徽章组
         granted_by: 授予由

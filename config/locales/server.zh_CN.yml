@@ -177,11 +177,11 @@ zh_CN:
     delete_reason: "通过帖子审核队列删除"
   groups:
     errors:
-      can_not_modify_automatic: "你不能修改自动小组"
-      member_already_exist: "“%{username}”已经是小组成员了。"
+      can_not_modify_automatic: "你不能修改自动组"
+      member_already_exist: "“%{username}”已经是群组成员了。"
       invalid_domain: "“%{domain}”不是有效域名。"
       invalid_incoming_email: "“%{email}”不是有效邮箱地址。"
-      email_already_used_in_group: "“%{email}”已经被小组“%{group_name}”使用了。"
+      email_already_used_in_group: "“%{email}”已经被群组“%{group_name}”使用了。"
       email_already_used_in_category: "“%{email}”已经被分类“%{category_name}”使用了。"
     default_names:
       everyone: "任何人"
@@ -319,7 +319,7 @@ zh_CN:
 
       [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
   category:
-    topic_prefix: "关于分类：%{category}"
+    topic_prefix: "关于“%{category}”分类"
     replace_paragraph: "（将第一段话修改成你的新分类的简述。这段文字将出现在用户选择分类的地方，所以尝试保持在 200 个字符内。 **除非你编辑了这段文字或者在这分类中创建了主题，这个分类不会出现在分类页面中。**）"
     post_template: "%{replace_paragraph}\n\n在接下来的这段话中多写一些分类的用途，或者设定一个该分类的规则：\n\n- 为什么我们要用这个分类？它用来做什么？\n\n- 这个分类和我们已经有的分类究竟有什么不同？\n\n- 这个分类中一般会包含哪些主题？\n\n- 我们需要这个分类么？我们可以把它和别的分类、或者子分类合并吗？\n\n"
     errors:
@@ -327,7 +327,7 @@ zh_CN:
       self_parent: "一个子分类不能属于它自己。"
       depth: "你不能在一个子分类下再包含一个子分类。"
       invalid_email_in: "'%{email}'不是一个有效邮箱地址。"
-      email_already_used_in_group: "'%{email}' 已经被小组'%{group_name}'使用了。"
+      email_already_used_in_group: "'%{email}' 已经被群组'%{group_name}'使用了。"
       email_already_used_in_category: "'%{email}' 已经被分类'%{category_name}'使用了。"
     cannot_delete:
       uncategorized: "不能删除未分类。"
@@ -914,7 +914,7 @@ zh_CN:
     external_system_avatars_enabled: "使用外部系统头像服务。"
     external_system_avatars_url: "外部系统头像服务的 URL 地址。可选参数是 {username} {first_letter} {color} {size}"
     default_opengraph_image_url: "opengraph图像的缺省URL。"
-    allow_all_attachments_for_group_messages: "允许小组消息中包含任何邮件附近。"
+    allow_all_attachments_for_group_messages: "允许群组消息中包含任何邮件附近。"
     convert_pasted_images_to_hq_jpg: "将粘贴图片转为高质量 JPG 文件。"
     enable_flash_video_onebox: "在 Onebox 启用嵌入 swf 和 flv 链接（Adobe Flash）。警告：可能增加安全风险。"
     default_invitee_trust_level: "受邀用户的缺省信任等级（0-4）。"
@@ -953,7 +953,7 @@ zh_CN:
     newuser_max_mentions_per_post: "一个访问者可以在一个帖子里使用 @name 提及的最大数量。"
     newuser_max_replies_per_topic: "直至有人回复他们前，新用户在一个帖子里的最大回复数量。"
     max_mentions_per_post: "你可以在一个帖子里使用 @name 提及的最大数量。"
-    max_users_notified_per_group_mention: "当小组被提及时，接受提醒的最大用户数（超过阈值后将不发送提醒）"
+    max_users_notified_per_group_mention: "当群组被提及时，接受提醒的最大用户数 ( 超过阈值后将不发送提醒 )"
     create_thumbnails: "为太大而无法恰当地显示在帖子里的图片创建 lightbox 缩略图。"
     email_time_window_mins: "等待多少（n）分钟才给用户发送通知电子邮件，好让他们有机会自己来编辑和完善他们的帖子。"
     private_email_time_window_seconds: "等待多少（n）秒再给用户发送通知电子邮件，这可以让用户有时间来编辑和完善他们的消息。"
@@ -1451,97 +1451,6 @@ zh_CN:
         然而，如果帖子再次被社群成员标记并隐藏，它将被隐藏至版主处理后——并且可能导致进一步的措施，如封禁帐号。
 
         想了解更多，请查看我们的[社群指引](%{base_url}/guidelines)。
-    usage_tips:
-      text_body_template: |
-        这条消息包含了一些使用小技巧：
-
-        ## 阅读
-
-        要阅读更多，**只需要继续向下滚动页面！**
-
-        当有新的回复或者新主题时，他们将自动出现 —— 不用刷新页面。
-
-        ## 导航
-
-        - 想要搜索，前往你的用户页面，或者点<kbd>☰</kbd>菜单，这个在页面**右上角的图标**。
-
-        - 点击主题标题会跳转至这个主题中**你还没有读的**那帖子。转至主题顶部或底部，分别点击回复数量或者最后一次回复时间。
-
-        <img src="%{base_url}/images/welcome/topic-list-select-areas-2x.png" width="593" height="59">
-
-        - 当在阅读主题时，使用右侧的时间线跳转至顶部、底部或者你上次阅读到的帖子。在小屏幕上，点击右下角的进度条打开导航控制：
-
-        <img src="%{base_url}/images/welcome/progress-bar-2x.png" width="153" height="181">
-
-        按键盘上的 <kbd>?</kbd> 键查看键盘快捷键列表。
-
-        ## 回复
-
-        要插入引用，先选择想要引用的文字，然后点击任意<img src="%{base_url}/images/welcome/reply-post-2x.png" width="25" height="23">回复按钮打开编辑器。重复以上步骤可引用多次。
-
-        <img src="%{base_url}/images/welcome/quote-reply-2x.png" width="326" height="128">
-
-        要提醒某人关注你的回复，提及他们的名字。键入 `@` 以选择用户名。
-
-        <img src="%{base_url}/images/welcome/username-completion-2x.png" width="191" height="125">
-
-        想使用[标准绘文字（Emoji）](http://www.emoji.codes/)，只要键入 `:`，然后用名字匹配，或使用传统表情符 `;)`
-
-        <img src="%{base_url}/images/welcome/emoji-completion-2x.png" width="144" height="153">
-
-        要生成链接概要，直接将链接粘贴至单独的一行：
-
-        <img src="%{base_url}/images/welcome/link-oneboxing-animation-2x.png" width="480" height="228">
-
-        你可以用简单的 HTML 标签、BBCode 或者 [Markdown](http://commonmark.cn/help/) 来格式化：
-
-        这是**加粗**。
-        这是<b>加粗</b>。
-        这是[b]加粗[b]。
-
-        想学习更多格式化技巧，[试试我们有趣的 10 分钟交互教程！](http://commonmark.cn/help/tutorial/)
-
-        ## 操作
-
-        每一个帖子底部有几个操作按钮：
-
-        <img src="%{base_url}/images/welcome/like-link-flag-bookmark-2x.png" width="162" height="42">
-
-        - 要让别人知道你喜欢并且感谢他们的帖子，使用**赞**按钮。分享爱！
-
-        - 点击链接按钮获得可以粘贴的链接。
-
-        - 使用 <kbd>&hellip;</kbd> 显示更多操作按钮。如果你觉得某人的帖子有问题，使用**标记**按钮私下告诉他，或者[我们的管理人员](%{base_url}/about)。你还可以**收藏**该帖子，之后你可以在用户页查看。
-
-        ## 通知
-
-        当有人回复你、引用你的帖子、`@你`或者有人贴了前往你帖子的链接的时候，一个数字将会立即出现在页面右上角。使用它查看**通知**。
-
-        <img src="%{base_url}/images/welcome/notification-panel-2x.png" width="160" height="54">
-
-        不用担心错过别人的回复 —— 当你不访问站点的时候，你会收到邮件通知。
-
-        ## 设置
-
-        - 所有小于**两天**的主题算近期主题。
-
-        - 任何你**积极参与**（指你创建、回复或者阅读较长时间）的主题将被自动追踪。
-
-        你将会在主题名字后见到蓝色的近期主题提示和未读帖子数字指示：
-
-        <img src="%{base_url}/images/welcome/topics-new-unread-2x.png" width="341" height="106">
-
-        你可以通过主题下方、右侧的通知控制改变通知设置。
-
-        <img src="%{base_url}/images/welcome/topic-notification-control-2x.png" width="608" height="312">
-
-        你也可以设置各分类的通知状态，比如你可以监控或屏蔽特点分类中的近期主题。
-
-        要修改以上任何设置，见[你的用户设置页面](%{base_url}/my/preferences)。
-
-        ## 社群信任
-
-        很高兴见到你！只要你参与社群，随着时间推移你会慢慢获得社群信任，成为真正的一分子，那些针对新用户的限制将被移除。当达到了一个足够的[信任等级（英文）](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924)时，你将会得到适当的能力一起帮助管理社群，让它变得更好。
     welcome_user:
       subject_template: "欢迎来到 %{site_name}！"
       text_body_template: |
@@ -1563,9 +1472,9 @@ zh_CN:
 
         要再次登入，或者：
 
-        1. 永远 **使用收到邀请的邮箱地址**登录，。否则我们就无法分辨是不是你本人！
+        1. 永远 **使用收到邀请的邮箱地址**登录。否则我们就无法分辨是不是你本人！
 
-        2. 在 %{site_name} 的[用户设置][prefs]页面创建一个密码，然后使用该密码来登入。
+        2. 在 [你的用户设置][prefs]页面创建一个密码，然后使用该密码来登入。
 
         %{new_user_tips}
 
@@ -1573,7 +1482,7 @@ zh_CN:
 
         好好享受你在论坛的时光吧！
 
-        （如果你在新用户级别需要和[管理人员](%{base_url}/about)沟通的话，直接回复这个消息。）
+        ( 如果你在新用户级别需要和[管理人员](%{base_url}/about)沟通的话，直接回复这个消息。)
 
         [prefs]: %{user_preferences_url}
     backup_succeeded:
@@ -1639,7 +1548,6 @@ zh_CN:
 
         与你账户关联的邮件地址已经被封禁。
     email_reject_reply_user_not_matching:
-      subject_template: "[%{site_name}] 电子邮件错误 -- 回复用户不符"
       text_body_template: |
         我们非常抱歉，但是你发送至 %{destination}（名为%{former_title}） 的邮件出问题了。
 
@@ -1659,7 +1567,6 @@ zh_CN:
 
         如果你**确定**你的邮件中有回复内容，试试用更简单的格式。
     email_reject_parsing:
-      subject_template: "[%{site_name}] 电子邮件错误 -- 内容无法识别"
       text_body_template: |
         我们很抱歉，但是你发送至 %{destination}（名为 %{former_title}）的邮件无法发送。
 
@@ -2497,9 +2404,9 @@ zh_CN:
         该徽章授予给用户等级达到 1 的成员。感谢你在社群里花了一些时间并且阅读了一些帖子，了解了我们的社群。你的新用户限制已经被取消；并且你已经被授予了所有基本的社群权限，必须个人消息、标记、维基编辑和发布多张图片和多个链接的能力。
     member:
       name: 成员
-      description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/5">授予</a>邀请、小组消息和更多的赞
+      description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/5">授予</a>邀请、群组消息和更多的赞
       long_description: |
-        该徽章授予给达到用户等级 2 的你。感谢你在社群待了几周，真正融入到了社群中。你现在可以在你的用户页或者主题中邀请他人或者创建小组消息了。每天你也可以点更多次赞了。
+        该徽章授予给达到用户等级 2 的你。感谢你在社群待了几周，真正融入到了社群中。你现在可以在你的用户页或者主题中邀请他人或者创建群组消息了。每天你也可以点更多次赞了。
     regular:
       name: 活跃用户
       description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/6">授予</a>重分类、重命名、跟踪链接、维基功能和更多的赞
@@ -2690,7 +2597,7 @@ zh_CN:
     first_mention:
       name: 首次提及
       description: 在帖子中提到用户
-      long_description: 该徽章授予给第一次在帖子中@别人的你。每个提及都将通知对方，让他们知道你发了贴。输入 @ 提及任何用户，如果可以的话，也可以提及小组——这是个获得他们注意的好办法。
+      long_description: 该徽章授予给第一次在帖子中@别人的你。每个提及都将通知对方，让他们知道你发了贴。输入 @ 提及任何用户，如果可以的话，也可以提及群组——这是个获得他们注意的好办法。
     first_onebox:
       name: 首个Onebox
       description: 发布过 oneboxed 链接

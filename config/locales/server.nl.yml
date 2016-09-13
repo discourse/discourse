@@ -1268,7 +1268,6 @@ nl:
 
         Het account dat bij dit e-mailadres hoort, is geblokkeerd.
     email_reject_reply_user_not_matching:
-      subject_template: "[%{site_name}] E-mailprobleem -- Reagerende gebruiker komt niet overeen"
       text_body_template: |
         Het spijt ons, maar het plaatsen van je e-mail op %{destination} (met onderwerp %{former_title}) is niet gelukt.
 
@@ -1290,7 +1289,6 @@ nl:
 
 
     email_reject_parsing:
-      subject_template: "[%{site_name}] E-mailprobleem -- Inhoud niet herkend"
       text_body_template: |
         Het spijt ons, maar het plaatsen van je e-mail op %{destination} (met onderwerp %{former_title}) is niet gelukt.
 

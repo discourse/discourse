@@ -8,6 +8,10 @@ Fabricator(:deleted_topic, from: :topic) do
   deleted_at Time.now
 end
 
+Fabricator(:closed_topic, from: :topic) do
+  closed true
+end
+
 Fabricator(:topic_allowed_user) do
 end
 

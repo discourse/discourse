@@ -71,8 +71,17 @@ export function userUrl(username) {
 
 export function emailValid(email) {
   // see:  http://stackoverflow.com/questions/46155/validate-email-address-in-javascript
-  var re = /^[a-zA-Z0-9!#$%&'*+\/=?\^_`{|}~\-]+(?:\.[a-zA-Z0-9!#$%&'\*+\/=?\^_`{|}~\-]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9\-]*[a-zA-Z0-9])?\.)+[a-zA-Z0-9](?:[a-zA-Z0-9\-]*[a-zA-Z0-9])?$/;
+  const re = /^[a-zA-Z0-9!#$%&'*+\/=?\^_`{|}~\-]+(?:\.[a-zA-Z0-9!#$%&'\*+\/=?\^_`{|}~\-]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9\-]*[a-zA-Z0-9])?\.)+[a-zA-Z0-9](?:[a-zA-Z0-9\-]*[a-zA-Z0-9])?$/;
   return re.test(email);
+}
+
+export function extractDomainFromUrl(url) {
+  if (url.indexOf("://") > -1) {
+    url = url.split('/')[2];
+  } else {
+    url = url.split('/')[0];
+  }
+  return url.split(':')[0];
 }
 
 export function selectedText() {
@@ -93,14 +102,18 @@ export function selectedText() {
     }
   }
 
+  html = html.replace(/<br>/g, "\n");
+
   // Strip out any .click elements from the HTML before converting it to text
-  var div = document.createElement('div');
+  const div = document.createElement('div');
   div.innerHTML = html;
-  var $div = $(div);
+
+  const $div = $(div);
+
   // Find all emojis and replace with its title attribute.
-  $div.find('img.emoji').replaceWith(function() { return this.title; });
+  $div.find('img.emoji').replaceWith(() => this.title);
   $('.clicks', $div).remove();
-  var text = div.textContent || div.innerText || "";
+  const text = div.textContent || div.innerText || "";
 
   return String(text).trim();
 }

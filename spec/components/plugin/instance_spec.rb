@@ -48,7 +48,8 @@ describe Plugin::Instance do
 
         # DiscourseEvent
         @hello_count = 0
-        @plugin.on(:hello) { @hello_count += 1 }
+        @increase_count = -> { @hello_count += 1 }
+        @set = @plugin.on(:hello, &@increase_count)
 
         # Serializer
         @plugin.add_to_serializer(:trout, :scales) { 1024 }
@@ -56,7 +57,7 @@ describe Plugin::Instance do
       end
 
       after do
-        DiscourseEvent.clear
+        DiscourseEvent.off(:hello, &@set.first)
       end
 
       it "checks enabled/disabled functionality for extensions" do

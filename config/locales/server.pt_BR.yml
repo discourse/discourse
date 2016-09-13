@@ -290,6 +290,9 @@ pt_BR:
           attributes:
             hex:
               invalid: "Não é uma cor válida"
+        post_reply:
+          base:
+            different_topic: "Postagem e réplica precisam pertencer ao mesmo tópico."
       <<: *errors
   user_profile:
     no_info_me: "<div class='missing-profile'>o campo Sobre mim do seu perfil está em branco, <a href='/users/%{username_lower}/preferences/about-me'>quer completar?</a></div>"
@@ -547,7 +550,14 @@ pt_BR:
     stop_watching_topic: "Parar de observar este tópico, %{link}"
     unwatch_category: "Parar de observar todos os tópicos na categoria  %{category}"
     mailing_list_mode: "Desativar o modo lista de discussão"
+    disable_digest_emails: "Pare de me enviar emails de resumo"
+    all: "Não me envie nenhum email de %{sitename}"
     log_out: "Sair"
+  user_api_key:
+    title: "Autorizar acesso à aplicação"
+    authorize: "Autorizar"
+    read: "ler"
+    read_write: "ler/escrever"
   reports:
     visits:
       title: "Visitas do Usuário"
@@ -722,6 +732,7 @@ pt_BR:
     max_topic_title_length: "Comprimento máximo permitido para o título do post em caracteres"
     min_private_message_title_length: "Comprimento mínimo de caracteres permitido para o título de uma mensagem"
     min_search_term_length: "Comprimento mínimo válido para o termo de pesquisa em caracteres"
+    search_recent_posts_size: "Quantas postagens recentes a ser mantidas no íncide"
     allow_uncategorized_topics: "Permitir criação de tópicos sem uma categoria. NOTA: Se existe algum tópico sem nenhuma categoria, você deve movê-los para uma categoria antes de desabilitar esta opção."
     allow_duplicate_topic_titles: "Permitir tópicos com títulos duplicados, idênticos."
     unique_posts_mins: "Quantos minutos antes para um utilizador poder criar uma postagem com o mesmo conteúdo outra vez?"
@@ -1008,9 +1019,12 @@ pt_BR:
     emoji_set: "Como você gostaria do seu emoji?"
     enforce_square_emoji: "Forçar proporção quadrangular para todos emojis."
     approve_unless_trust_level: "Mensagens para os usuários abaixo deste nível de confiança devem ser aprovados"
+    default_other_external_links_in_new_tab: "Abrir links externos em uma nova aba por padrão."
+    default_other_like_notification_frequency: "Notificar usuários de curtidas por padrão"
     default_categories_watching: "Lista de categorias que são observadas por padrão."
     default_categories_tracking: "Lista de categorias que são monitoradas por padrão."
     default_categories_muted: "Lista de categorias que são silenciadas por padrão."
+    tagging_enabled: "Habilitar etiquetas em tópicos?"
     remove_muted_tags_from_latest: "Não exibir na lista de tópicos recentes os tópicos com a etiqueta de Silenciado."
     errors:
       invalid_email: "Endereço de email inválido"
@@ -1243,8 +1257,6 @@ pt_BR:
       subject_template: "[%{site_name}] Problema com Email -- Conta Desconhecida"
     email_reject_empty:
       subject_template: "[%{site_name}] Problema com email -- Sem conteúdo"
-    email_reject_parsing:
-      subject_template: "[%{site_name}] Problema com email -- Conteúdo não reconhecido"
     email_reject_invalid_access:
       subject_template: "[%{site_name}] Email -- Acesso Inválido"
     email_reject_reply_key:
@@ -1257,8 +1269,14 @@ pt_BR:
       subject_template: "[%{site_name}] Problema com email -- Resposta Gerada Automaticamente"
     email_error_notification:
       subject_template: "[%{site_name}] Problema com email -- Erro de autenticação POP"
+    too_many_tl3_flags:
+      subject_template: "Nova conta suspensa"
+    blocked_by_staff:
+      subject_template: "Conta temporariamente suspensa"
     spam_post_blocked:
       subject_template: "Novo usuário %{username} teve postagem bloqueada por repetidos links"
+    unblocked:
+      subject_template: "Conta não está mais suspensa"
     pending_users_reminder:
       subject_template:
         one: "1 usuário aguardando aprovação"
@@ -1270,10 +1288,13 @@ pt_BR:
     download_remote_images_disabled:
       subject_template: "Baixar imagens remotas desativado"
       text_body_template: "A configuração `download_remote_images_to_local` está desativada porque o espaço limite no disco configurado em `download_remote_images_threshold` foi alcançado."
+    dashboard_problems:
+      subject_template: "Problemas foram encontrados"
   subject_re: "Re:"
   subject_pm: "[PM]"
   user_notifications:
     previous_discussion: "Respostas Anteriores"
+    in_reply_to: "Em réplica a"
     unsubscribe:
       title: "Desinscrever"
       description: "Não está interessado em receber estes emails? Não tem problema! Clique em baixo para se desinscrever instantaneamente:"
@@ -1301,6 +1322,9 @@ pt_BR:
       read_more: "Leia Mais"
       more_topics: "Há %{new_topics_since_seen} outros novos tópicos."
       more_topics_category: "Mais tópicos novos:"
+    mailing_list:
+      topic_updates: "Atualizações do tópico"
+      back_to_top: "Voltar ao topo"
     forgot_password:
       subject_template: "[%{site_name}] Redefinição de senha"
       text_body_template: |

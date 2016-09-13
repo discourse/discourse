@@ -209,7 +209,7 @@ ar:
         disabled: 'أزال إدراجه في %{when}'
     topic_admin_menu: "عمليات المدير"
     emails_are_disabled: "لقد عطّل أحد المدراء الرّسائل الصادرة للجميع. لن تُرسل إشعارات عبر البريد الإلكتروني أيا كان نوعها."
-    bootstrap_mode_enabled: "الموقع اﻷن مفعل بالطريقة التمهيدية لكى تتمكن من اطلاق موقعك الجديد بسهولة. سيسجل كل الأعضاء الجدد بمستوى ثقة 1 وسيكون اختيار ارسال الملخص اليومى عن طريق البريد الالكترونى مفعل. سيتم الغاء تفعيل الطريقة التمهيدية تلقائيا عندما يتخطى عدد اﻷعضاء {min_users}% عضو."
+    bootstrap_mode_enabled: "الموقع اﻷن مفعل بالطريقة التمهيدية لكى تتمكن من اطلاق موقعك الجديد بسهولة. سيسجل كل الأعضاء الجدد بمستوى ثقة 1 وسيكون اختيار ارسال الملخص اليومى عن طريق البريد الالكترونى مفعل. سيتم الغاء تفعيل الطريقة التمهيدية تلقائيا عندما يتخطى عدد اﻷعضاء %{min_users} عضو."
     bootstrap_mode_disabled: "سيتم الغاء تفعيل الطريقة التمهيدية خلال ال 24 ساعة القادمة"
     s3:
       regions:
@@ -449,7 +449,7 @@ ar:
       mentions: "الإشارات"
       messages: "الرسائل"
       alias_levels:
-        title: "من يستطيع ارسال رسالة و تنبيه لهذه المجموعة ؟"
+        title: "مَن يمكنه مراسلة هذه المجموعة و@الإشارة إليها؟"
         nobody: "لا أحد"
         only_admins: "المدراء فقط"
         mods_and_admins: "المدراء والمشرفون فقط"
@@ -491,7 +491,7 @@ ar:
       all: "كل الفئات"
       all_subcategories: "جميع"
       no_subcategory: "لا شيء"
-      category: "تصنيف"
+      category: "الفئة"
       category_list: "أعرض قائمة الأقسام."
       reorder:
         title: "إعادة ترتيب الفئات"
@@ -691,7 +691,7 @@ ar:
       username:
         title: "اسم المستخدم"
         instructions: "فريد دون مسافات وقصير"
-        short_instructions: "يمكن للناس بمنادتك بـ @{{username}}."
+        short_instructions: "يمكن للغير الإشارة إليك ب‍@{{username}}"
         available: "اسم المستخدم متاح."
         global_match: "البريد الالكتروني مطابق لـ اسم المستخدم المسّجل."
         global_mismatch: "مسجل مسبقا ، جرّب {{suggestion}} ؟"
@@ -822,8 +822,8 @@ ar:
         no_topics: "لا مواضيع بعد."
         more_topics: "مواضيع أخرى"
         top_badges: "افضل الاوسمه"
-        no_badges: "لا أوسمة حتى الآن."
-        more_badges: "المزيد من الاوسمه"
+        no_badges: "لا شارات بعد."
+        more_badges: "شارات أخرى"
         top_links: "أفضل الروابط"
         no_links: "لا روابط بعد."
         most_liked_by: "أكثر المعجبين به"
@@ -832,9 +832,9 @@ ar:
         no_likes: "لا إعجابات بعد."
       associated_accounts: "جلسات الولوج"
       ip_address:
-        title: "أخر عنوان أيبي"
+        title: "عنوان IP الأخير"
       registration_ip_address:
-        title: "ايبي مسجل"
+        title: "عنوان IP التسجيل"
       avatar:
         title: "صورة الملف الشخصي"
         header_title: "الملف الشخصي، والرسائل، والعناوين والتفضيلات"
@@ -910,7 +910,7 @@ ar:
       description: "يوجد <b>{{replyCount}}</b> مشاركة."
       description_time: "يوجد <b>{{replyCount}}</b> مشاركة, والوقت المقدر للقراءة <b>{{readingTime}} minutes</b> دقيقة."
       enable: 'لخّص هذا الموضوع'
-      disable: 'عرض جميع المشاركات'
+      disable: 'أظهر كل المشاركات'
     deleted_filter:
       enabled_description: "هذا الموضوع يحوي على مشاركات محذوفة تم اخفائها "
       disabled_description: "المشاركات المحذوفة في هذا الموضوع  ممكن مشاهدتها "
@@ -1003,7 +1003,7 @@ ar:
       options: "خيارات"
       whisper: "همس"
       unlist: "غير مدرج"
-      add_warning: "هذا تحذير رسمي"
+      add_warning: "هذا تحذير رسمي."
       toggle_whisper: "تبديل الهمس"
       toggle_unlisted: "تبديل الغير مدرج"
       posting_not_on_topic: "أي موضوع تود الرد عليه؟"
@@ -1300,6 +1300,7 @@ ar:
       toggle_information: "إظهار/إخفاء تفاصيل الموضوع"
       read_more_in_category: "أتريد قراءة المزيد؟ تصفح المواضيع الأخرى في {{catLink}} أو {{latestLink}}."
       read_more: "أتريد قراءة المزيد؟ {{catLink}} أو {{latestLink}}."
+      read_more_MF: "{UNREAD, plural, zero {} one {تبقى {BOTH, select, true {<a href='/unread'>موضوع واحد غير مقروء</a> و} false {<a href='/unread'>موضوع واحد غير مقروء</a>} other {}}} two {تبقى {BOTH, select, true {<a href='/unread'>موضوعان غير مقروءان</a> و} false {<a href='/unread'>موضوعان غير مقروءان</a>} other {}}} few {تبقت {BOTH, select, true {<a href='/unread'># مواضيع غير مقروءة</a> و} false {<a href='/unread'># مواضيع غير مقروءة</a>} other {}}} many {تبقى {BOTH, select, true {<a href='/unread'># موضوعا غير مقروء</a> و} false {}{<a href='/unread'># موضوعا غير مقروء</a>} other {}}} other {تبقى {BOTH, select, true {<a href='/unread'># موضوع غير مقروء</a> و} false {<a href='/unread'># موضوع غير مقروء</a>} other {}}}}{NEW, plural, zero {} one {{UNREAD, plural, zero {تبقى } one {} two {} few {} many {} other {}}<a href='/new'>موضوع واحد جديد</a>} two {{UNREAD, plural, zero {تبقى } one {} two {} few {} many {} other {}}<a href='/new'>موضوعان جديدان</a>} few {{UNREAD, plural, zero {تبقت } one {} two {} few {} many {} other {}}<a href='/new'># مواضيع جديدة</a>} many {{UNREAD, plural, zero {تبقى } one {} two {} few {} many {} other {}}<a href='/new'># موضوعا جديدا</a>} other {{UNREAD, plural, zero {تبقى } one {} two {} few {} many {} other {}}<a href='/new'># موضوع جديد</a>}}، أو {CATEGORY, select, true {تصفّح المواضيع الأخرى في {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: تصفّح كل الفئات
       view_latest_topics: اعرض أحدث المواضيع
       suggest_create_topic: لمَ لا تكتب موضوعًا؟
@@ -1371,19 +1372,19 @@ ar:
           description: "لن تصلك أية إشعارات لهذا الموضوع، ولن يظهر في المواضيع الأخيرة."
       actions:
         recover: "استرجاع الموضوع"
-        delete: "حذف الموضوع"
-        open: "كتابة موضوع"
-        close: "إغلاق الموضوع"
+        delete: "احذف الموضوع"
+        open: "افتح موضوع"
+        close: "أغلق الموضوع"
         multi_select: "حدد مشاركات..."
         auto_close: "إغلاق تلقائي"
-        pin: "تثبيت الموضوع"
+        pin: "ثبّت الموضوع..."
         unpin: "إلغاء تثبيت الموضوع"
-        unarchive: "التراجع عن أرشفة الموضوع"
-        archive: "أرشفة الموضوع"
+        unarchive: "أخرج الموضوع من الأرشيف"
+        archive: "أرشف الموضوع"
         invisible: "إزالة من القائمة"
         visible: "إضافة ضمن القائمة"
         reset_read: "تصفير القراءات"
-        make_public: "اجغل الموضوع عاماً"
+        make_public: "اجعل الموضوع للعموم"
         make_private: "اجعل الرسالة خاصة"
       feature:
         pin: "تثبيت مواضيع"
@@ -1500,7 +1501,7 @@ ar:
           other: "الرجاء اختيار الموضوع الذي تود نقل الـ<b>{{count}}</b> مشاركة إليه."
       merge_posts:
         title: "قم بدمج المشاركات المختارة"
-        action: "قم بدمج المشاركات المختارة"
+        action: "ادمج المشاركات المحددة"
         error: "حدث خطأ في دمج المشاركات المحددة."
       change_owner:
         title: "تغيير صاحب المشاركة"
@@ -1523,13 +1524,13 @@ ar:
         error: "هناك خطأ في نغيير الطابع الزمني للموضوع."
         instructions: "من فضلك اختر الطابع الزمني الجديد للموضوع. ستُحدث المشاركات فيه لألا يختلف فرق تاريخ نشرها ووقته."
       multi_select:
-        select: 'تحديد'
-        selected: 'محدد ({{count}})'
-        select_replies: 'تحديد + ردود'
-        delete: حذف المحدد
-        cancel: الغاء التحديد
-        select_all: تحديد الكل
-        deselect_all: حذف الكل
+        select: 'حددها'
+        selected: 'محددة ({{count}})'
+        select_replies: 'حددها مع الردود عليها'
+        delete: احذف المحدد
+        cancel: ألغِ التحديد
+        select_all: حدد الكل
+        deselect_all: أزل تحديد الكل
         description:
           zero: لم تحدّد أي مشاركة.
           one: لقد حدّدت مشاركة <b>واحدة</b>.
@@ -1564,7 +1565,7 @@ ar:
         two: "اعرض الردين المخفيين"
         few: "اعرض ال‍{{count}} ردود المخفية"
         many: "اعرض ال‍{{count}} ردا المخفية"
-        other: "اعرض ال‍{{count}} رد المخفية"
+        other: "اعرض ال‍{{count}} رد المخفي"
       unread: "المشاركة غير مقروءة"
       has_replies:
         zero: "لا ردود"
@@ -1824,7 +1825,6 @@ ar:
           comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> <i class='fa fa-arrows-h'></i> <strong>{{current}}</strong> / {{total}}"
         displays:
           inline:
-            title: "اظهر النتيجة المعالجة مع الاضافات وازالة مابين السطور"
             button: '<i class="fa fa-square-o"></i> HTML'
           side_by_side:
             title: "أظهر فروقات الخرج المصيّر جنبًا إلى جنب"
@@ -1843,7 +1843,7 @@ ar:
       general: 'عام'
       settings: 'اعدادات'
       topic_template: "إطار الموضوع"
-      tags: "العلامات الوصفية "
+      tags: "الوسوم"
       tags_allowed_tags: "العلامات الوصفية التي تستخدم فقط في هذا القسم:"
       tags_allowed_tag_groups: "مجموعات العلامات الوصفية التي تستخدم فقط في هذا القسم:"
       tags_placeholder: "(اختياري) قائمة العلامات الوصفية المسموح بها"
@@ -1954,7 +1954,7 @@ ar:
         other: "%{count} أخرى"
     topic_statuses:
       warning:
-        help: "هذا تحذير رسمي"
+        help: "هذا تحذير رسمي."
       bookmarked:
         help: "قمت بتفضيل  هذا الموضوع"
       locked:
@@ -1977,7 +1977,7 @@ ar:
     posts: "مشاركات"
     posts_long: "هناك {{number}} مشاركات في هذا الموضوع"
     posts_likes_MF: |
-      {count, plural, zero {ليس في هذا الموضوع أي رد} one {في هذا الموضوع رد واحد} two {في هذا الموضوع ردان} few {في هذا الموضوع # ردود} many {في هذا الموضوع # ردا}} other {في هذا الموضوع # رد}} {ratio, select,
+      {count, plural, zero {ليس في هذا الموضوع أي رد} one {في هذا الموضوع رد واحد} two {في هذا الموضوع ردان} few {في هذا الموضوع # ردود} many {في هذا الموضوع # ردا} other {في هذا الموضوع # رد}} {ratio, select,
       low {ونسبة الإعجاب إلى المشاركة عالية}
       med {ونسبة الإعجاب إلى المشاركة عالية جدا}
       high {ونسبة الإعجاب إلى المشاركة مهولة}
@@ -2180,9 +2180,16 @@ ar:
     badges:
       granted_on: "ممنوح في  %{date}"
       others_count: "اخرون بنفس الدرع (%{count})"
-      title: أوسمة
+      title: الشارات
       allow_title: "عنوان متوفر"
       multiple_grant: "يمكن منحه عدة مرات. "
+      badge_count:
+        zero: "لا شارات"
+        one: "شارة واحدة"
+        two: "شارتان"
+        few: "%{count} شارات"
+        many: "%{count} شارة"
+        other: "%{count} شارة"
       select_badge_for_title: حدد وسام لتستخدمه كعنوانك
       none: "لا شئ"
       badge_grouping:
@@ -2206,11 +2213,11 @@ ar:
       </form>
       </p>
     tagging:
-      all_tags: "كل العلامات الوصفية"
+      all_tags: "كل الوسوم"
       selector_all_tags: "كل العلامات الوصفية"
-      selector_no_tags: "لا علامات وصفية "
+      selector_no_tags: "لا وسوم"
       changed: "العلامات الوصفية تم تغييرها:"
-      tags: "العلامات الوصفية"
+      tags: "الوسوم"
       choose_for_topic: "اختر علامات وصفية جديدة لهذه الموضوع"
       delete_tag: "حذف العلامة الوصفية"
       delete_confirm: "أمتأكد من حذف هذا الوسم؟"
@@ -2243,15 +2250,15 @@ ar:
           title: "مكتوم"
           description: "لن يتم إشعارك بأي جديد يخص هذا الموضوع ولن يظهرهذا الموضوع في تبويب المواضيع الغير مقروءة."
       groups:
-        title: "مجموعات العلامات الوصفية"
-        about: "اضف علامات وصفية للمجموعات ليسهل عليك ادارتها"
+        title: "مجموعات الوسوم"
+        about: "أضف وسوما للمجموعات ليسهل عليك إدارتها."
         new: "مجموعة جديدة"
-        tags_label: "علامات وصفية في هذه المجموعة:"
+        tags_label: "الوسوم في هذه المجموعة:"
         parent_tag_label: "التصنيف الأب"
         parent_tag_placeholder: "اختياري"
-        parent_tag_description: "العلامات الوصفية في هذه المجموعة لايمكن استخدامها الا في حالة وجود العلامة الوصفية الأساسية "
+        parent_tag_description: "لا يمكن استخدام الوسوم في هذه المجموعة ما لم يوجد الوسم الأب."
         one_per_topic_label: "اختر علامة وصفية واحدة لكل موضوع من هذه المجموعة"
-        new_name: "مجموعة علامة وصفية جديدة"
+        new_name: "مجموعة وسوم جديدة"
         save: "حفظ"
         delete: "حذف"
         confirm_delete: "أمتأكد من حذف هذا الوسم؟"
@@ -2283,14 +2290,14 @@ ar:
       custom_message_template_forum: "اهلا, يمكنك المشاركة في هذا المنتدى!"
       custom_message_template_topic: "اهلا, اظن انك ستستمتع يهذا الموضوع!"
   admin_js:
-    type_to_filter: "اكتب لتصفية"
+    type_to_filter: "اكتب للتّرشيح..."
     admin:
       title: 'مدير المجتمع'
       moderator: 'مراقب'
       dashboard:
-        title: "داشبورد"
+        title: "لوحة التحكم"
         last_updated: "أخر تحديث للوحة التحكم:"
-        version: "الاصدار"
+        version: "الإصدارة"
         up_to_date: "لديك أحدث إصدارة!"
         critical_available: "يتوفّر تحديث لمشاكل حرجة."
         updates_available: "التحديثات متوفرة."
@@ -2298,14 +2305,14 @@ ar:
         no_check_performed: "لم يتم التحقق من التحديثات. اضمن أن sidekiq يعمل."
         stale_data: "لم يتم التحقق من التحديثات مؤخراً. اضمن أن sidekiq يعمل."
         version_check_pending: "يبدو أنك رُقيت مؤخرا. رائع!"
-        installed_version: "مثبّت"
-        latest_version: "آخر"
+        installed_version: "المثبتة"
+        latest_version: "الأخيرة"
         problems_found: "يوجد بعض المشاكل عند تثبيت Discourse :"
         last_checked: "آخر فحص"
         refresh_problems: "تحديث"
-        no_problems: "لم يتم العثور على اي مشاكل."
+        no_problems: "لا مشاكل."
         moderators: 'المشرفون:'
-        admins: 'مدراء:'
+        admins: 'المدراء:'
         blocked: 'محظور:'
         suspended: 'موقوف:'
         private_messages_short: "الرسائل"
@@ -2427,9 +2434,9 @@ ar:
         refresh: "تحديث"
         new: "جديد"
         selector_placeholder: "أدخل اسم المستخدم"
-        name_placeholder: "اسم المجموعة, بدون مسافة, مثل قاعدة اسم المستخدم"
+        name_placeholder: "اسم المجموعة، بدون مسافات. يتبع قواعد اسم المستخدم"
         about: "هنا عدّل على عضوية المجموعة والاسماء"
-        group_members: "اعضاء المجموعة"
+        group_members: "أعضاء المجموعة"
         delete: "حذف"
         delete_confirm: "أأحذف هذه المجموعة؟"
         delete_failed: "تعذّر حذف المجموعة. إن كانت مجموعة آليّة، فلا يمكن تدميرها."
@@ -2446,7 +2453,7 @@ ar:
         automatic: "تلقائي"
         automatic_membership_email_domains: "المستخدمين الذين يمتلكون بريد الالكتروني عنوانه مطابق للعنوان الذي في القائمة سيتم تلقائيا اضافتهم للمجموعة."
         automatic_membership_retroactive: "اضافة الاعضاء الذين يمتكلون عنوان ايميل مطابق للعنوان الموجود في القائمة."
-        default_title: "عنوان افتراضي لكل أعضاء هذه المجموعة."
+        default_title: "العنوان الافتراضي لكل أعضاء هذه المجموعة"
         primary_group: "تلقيائاً ضعها كمجموعة أساسية."
         group_owners: الملّاك
         add_owners: اضف ملّاكً
@@ -2467,21 +2474,21 @@ ar:
         all_users: "جميع المستخدمين"
         note_html: "حافظ على <strong>سرية</strong> هذا المفتاح، اي شخص يحصل عليه يستطيع انشاء مواضيع باسم اي مستخدم اخر"
       plugins:
-        title: "اضافات"
-        installed: "اضافات مثيته"
+        title: "الإضافات"
+        installed: "الإضافات المثبتة"
         name: "الاسم"
-        none_installed: "لاتملك اي اضافة مثبته"
+        none_installed: "ليست هناك إضافات مثبّتة."
         version: "الاصدار"
         enabled: "مفعل؟"
         is_enabled: "Y"
         not_enabled: "N"
         change_settings: "تغيير الاعدادت"
         change_settings_short: "الاعدادات"
-        howto: "كيف اثبت اضافة؟"
+        howto: "كيف أثبّت إضافة؟"
       backups:
-        title: "نسخة احتياطية"
+        title: "النسخ الاحتياطية"
         menu:
-          backups: "نسخة احتياطية"
+          backups: "النسخ الاحتياطية"
           logs: "Logs"
         none: "لا نسخ احتياطية."
         read_only:
@@ -2511,21 +2518,21 @@ ar:
             title: "الغاء العملية الحالية"
             confirm: "أمتأكد من إلغاء العملية الحالية؟"
           backup:
-            label: "نسخة احتياطية"
-            title: "انشاء نسخة احتياطية"
+            label: "أجرِ نسخ احتياطي"
+            title: "أنشئ نسخة احتياطية"
             confirm: "هل تريد انشاء نسخة احتياطية جديدة ؟"
             without_uploads: "نعم (لا تضمن الملفات)"
           download:
             label: "تحميل"
-            title: "تحميل النسخة الاحتياطية"
+            title: "نزل النسخة الاحتياطية"
           destroy:
-            title: "حذف النسخة الاحتياطية"
+            title: "أزل النسخة الاحتياطية"
             confirm: "هل أنت متأكد من رغبتك في حذف النسخة الاحتياطية؟"
           restore:
             is_disabled: "الاستعادة معطّلة في إعدادات الموقع."
             label: "استعادة"
             title: "اعادة تخزين النسخة الاحتياطية"
-            confirm: "هل انت متاكد انك تريد استعاده هذه النسخه الاحتياطيه؟"
+            confirm: "أمتأكد من استعادة النسخة الاحتياطية هذه؟"
           rollback:
             label: "اعادة السنخة السابقة"
             title: "Rollback the database to previous working state"
@@ -2579,7 +2586,7 @@ ar:
           subject: "الموضوع"
           multiple_subjects: "قالب البريد الإلكتروني هذا لديه موضوعات متعددة."
           body: "المحتوى"
-          none_selected: "اختر قالب بريد الكتروني لتبدا بتعديله "
+          none_selected: "اختر أحد قوالب البريد لتعدله."
           revert: "اعاده التغيرات "
           revert_confirm: "هل انت متاكد من انك تريد اعاده التغيرات؟ "
         colors:
@@ -2853,6 +2860,7 @@ ar:
         suspend_reason: "سبب"
         suspended_by: "محظور من قبل"
         delete_all_posts: "حذف جميع المشاركات"
+        delete_all_posts_confirm_MF: "أنت على وشك {POSTS, plural, zero {عدم حذف شيء} one {حذف مشاركة واحدة} two {حذف مشاركتين} few {حذف # مشاركات} many {حذف # مشاركة} other {حذف # مشاركة}}{TOPICS, plural, zero {} one { وموضوع واحد} two { وموضوعين} few { و# مواضيع} many {و# موضوعا} other {و# موضوع}}. أمتأكد؟"
         suspend: "علّق"
         unsuspend: "إلقاء التعليق"
         suspended: "معلّق؟"
@@ -2863,7 +2871,7 @@ ar:
         show_admin_profile: "مدير"
         edit_title: "تعديل العنوان"
         save_title: "حفظ العنوان"
-        refresh_browsers: "تحديث المتصفحات اجبارياً"
+        refresh_browsers: "أجبر إنعاش المتصفح"
         refresh_browsers_message: "الرسالة أُرسلت إلى كل الأعضاء!"
         show_public_profile: "عرض الملف العام."
         impersonate: 'انتحال شخصية'
@@ -2902,12 +2910,12 @@ ar:
         delete_forbidden_because_staff: "لا يمكن حذف المدراء والمشرفين."
         delete_posts_forbidden_because_staff: "لا يمكن حذف جميع المشاركات للمدراء والمشرفين.  "
         delete_forbidden:
-          zero: "لا يمكن حذف الأعضاء إذا كان لديهم مشاركات. احذف جميع المشاركات قبل المحاولة بحذف العضو."
-          one: "لا يمكن للأعضاء الحذف إذا كان لديهم مشاركات. احذف جميع المشاركات قبل المحاولة بحذف العضو. (المشاركات الأقدم من يوم لا يمكن حذفها.)"
-          two: "لا يمكن حذف الأعضاء إذا كان لديهم مشاركات. احذف جميع المشاركات قبل المحاولة بحذف العضو. (المشاركات الأقدم من يومين لا يمكن حذفها.)"
-          few: "لا يمكن حذف الأعضاء إذا كان لديهم مشاركات. احذف جميع المشاركات قبل المحاولة بحذف العضو.\n(المشاركات الأقدم من أيام قليلة لا يمكن حذفها.)"
-          many: "لا يمكن حذف الأعضاء إذا كان لديهم مشاركات. احذف جميع المشاركات قبل المحاولة بحذف العضو. (المشاركات الأقدم من أيام %{كثيرة} لا يمكن حذفها.)"
-          other: "لا يمكن للأعضاء الحذف إذا كان لديهم مشاركات. احذف جميع المشاركات قبل المحاولة بحذف العضو. (المشاركات الأقدم من %{count} أيام لا يمكن حذفها.)"
+          zero: "لا يمكن حذف مَن لديه مشاركات. احذف كل المشاركات أولا قبل حذف المستخدم. (المشاركات الآن لا يمكن حذفها.)"
+          one: "لا يمكن حذف مَن لديه مشاركات. احذف كل المشاركات أولا قبل حذف المستخدم. (المشاركات الأقدم من يوم واحد لا يمكن حذفها.)"
+          two: "لا يمكن حذف مَن لديه مشاركات. احذف كل المشاركات أولا قبل حذف المستخدم. (المشاركات الأقدم من يومين لا يمكن حذفها.)"
+          few: "لا يمكن حذف مَن لديه مشاركات. احذف كل المشاركات أولا قبل حذف المستخدم. (المشاركات الأقدم من %{count} أيام لا يمكن حذفها.)"
+          many: "لا يمكن حذف مَن لديه مشاركات. احذف كل المشاركات أولا قبل حذف المستخدم. (المشاركات الأقدم من %{count} يوما لا يمكن حذفها.)"
+          other: "لا يمكن حذف مَن لديه مشاركات. احذف كل المشاركات أولا قبل حذف المستخدم. (المشاركات الأقدم من %{count} يوم لا يمكن حذفها.)"
         cant_delete_all_posts:
           zero: "لا تستطيع حذف جميع المشاركات. (The delete_user_max_post_age setting.)"
           one: "لا تستطيع حذف جميع المشاركات. بعض المشاركات أقدم من يوم. (The delete_user_max_post_age setting.)"
@@ -2991,12 +2999,12 @@ ar:
           external_avatar_url: "رابط الملف الشخصي"
       user_fields:
         title: "حقول المستخدم"
-        help: "إضافة الحقول التي يمكن للمستخدمين ملئها ."
+        help: "أضف حقولا يمكن للمستخدمين ملئها."
         create: "أضف حقل مستخدم"
         untitled: "بدون عنوان"
         name: "اسم الحقل"
         type: "نوع الحقل "
-        description: "حقل الوصف"
+        description: "وصف الحقل"
         save: "حفظ"
         edit: "تعديل"
         delete: "حذف"
@@ -3024,7 +3032,7 @@ ar:
           confirm: 'تأكيد'
           dropdown: "القائمة المنسدلة"
       site_text:
-        description: "يمكنك تخصيص أيّ من نصوص هذه المدونة. يمكنك استكشاف ذلك أدناه:"
+        description: "يمكنك تخصيص أيّ من نصوص هذا المنتدى. يمكنك استكشاف ذلك أدناه:"
         search: "ابحث عن النص الذي تريد تعديله"
         title: 'محتوى النص'
         edit: 'تعديل'
@@ -3034,8 +3042,7 @@ ar:
         recommended: "نوصيك بتخصيص النص التالي ليلائم احتياجاتك:"
         show_overriden: 'اظهر التجاوزات فقط'
       site_settings:
-        show_overriden: 'تظهر فقط تجاوز'
-        title: 'اعدادات'
+        title: 'إعدادات'
         reset: 'إعادة تعيين'
         none: 'لا شيء'
         no_results: "لا توجد نتائج."
@@ -3064,7 +3071,7 @@ ar:
           login: "تسجيل الدخول"
           plugins: "الإضافات "
           user_preferences: "تفضيلات العضو"
-          tags: "العلامات الوصفية "
+          tags: "الوسوم"
       badges:
         title: 'شعارات '
         new_badge: شعار جديد
@@ -3083,7 +3090,7 @@ ar:
         reason_help: ( رابط إلى مشاركة أو موضوع )
         save: حفظ
         delete: حذف
-        delete_confirm: هل أنت متأكد من أنك تريد حذف هذا الشعار ؟
+        delete_confirm: أمتأكد من حذف هذه الشارة؟
         revoke: تعطيل
         reason: السبب
         expand: توسيع &مساعدة;

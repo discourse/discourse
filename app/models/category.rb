@@ -27,6 +27,8 @@ class Category < ActiveRecord::Base
   has_many :category_groups, dependent: :destroy
   has_many :groups, through: :category_groups
 
+  has_and_belongs_to_many :web_hooks
+
   validates :user_id, presence: true
   validates :name, if: Proc.new { |c| c.new_record? || c.name_changed? },
                    presence: true,
@@ -36,8 +38,8 @@ class Category < ActiveRecord::Base
 
   validate :email_in_validator
 
-  validates :logo_url, upload_url: true
-  validates :background_url, upload_url: true
+  validates :logo_url, upload_url: true, if: :logo_url_changed?
+  validates :background_url, upload_url: true, if: :background_url_changed?
 
   validate :ensure_slug
   before_save :apply_permissions

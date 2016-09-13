@@ -796,6 +796,8 @@ es:
         one: "1 error/%{duration}"
         other: "%{count} errores/%{duration}"
     learn_more: "saber más..."
+    all_time: 'total'
+    all_time_desc: 'temas creados total'
     year: 'año'
     year_desc: 'temas creados en los últimos 365 días'
     month: 'mes'
@@ -1687,6 +1689,7 @@ es:
       notify_action: 'Mensaje'
       official_warning: 'Advertencia oficial'
       delete_spammer: "Borrar spammer"
+      delete_confirm_MF: "Estás a punto de eliminar {POSTS, plural, one {<b>1</b> post} other {<b>#</b> posts}} y {TOPICS, plural, one {<b>1</b> topic} other {<b>#</b> topics}} de este usuario, eliminar su cuenta, bloquear registros desde su dirección IP <b>{ip_address}</b>, y añadir su dirección de email <b>{email}</b> a la lista de bloqueo permanente. ¿Seguro que este usuario es un spammer?"
       yes_delete_spammer: "Sí, borrar spammer"
       ip_address_missing: "(N/D)"
       hidden_email_address: "(oculto)"
@@ -2183,10 +2186,12 @@ es:
         add_owners: Añadir propietarios
         incoming_email: "Correos electrónicos entrantes personalizados"
         incoming_email_placeholder: "introducir dirección de email"
-        flair_url: "URL de imagen distintiva"
-        flair_url_placeholder: "(Opcional) URL de imagen"
+        flair_url: "Imagen distintiva"
+        flair_url_placeholder: "(Opcional) URL de imagen o clase de Font Awesome"
         flair_bg_color: "Color de fondo de imagen distintiva"
         flair_bg_color_placeholder: "(Optional) Valor hexadecimal del color"
+        flair_color: "Color de la imagen distintiva"
+        flair_color_placeholder: "(Opcional) Color en valor hexadecimal"
         flair_preview: "Vista previa"
       api:
         generate_master: "Generar clave maestra de API"
@@ -2585,6 +2590,7 @@ es:
         suspend_reason: "Causa"
         suspended_by: "Suspendido por"
         delete_all_posts: "Eliminar todos los posts"
+        delete_all_posts_confirm_MF: "Estás a punto de eliminar {POSTS, plural, one {1 post} other {# posts}} y {TOPICS, plural, one {1 topic} other {# topics}}. ¿Seguro?"
         suspend: "Suspender"
         unsuspend: "Quitar suspensión"
         suspended: "¿Suspendido?"
@@ -2871,6 +2877,7 @@ es:
         sample: "Usa el siguiente código HTML en tu sitio para crear e insertar temas. Reempalza <b>REPLACE_ME</b> con la URL canónica de la página donde quieres insertar."
         title: "Insertado"
         host: "Hosts Permitidos"
+        path_whitelist: "Lista blanca de rutas"
         edit: "editar"
         category: "Publicar a Categoría"
         add_host: "Añadir Host"

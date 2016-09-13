@@ -2,9 +2,9 @@
   <tbody>
     <tr data-topic-id={{topic.id}} class="{{if topic.archived 'archived'}}">
       <td class="topic-poster">
-        {{#with topic.creator as |op|}}
-          {{#user-link user=op}}
-            {{avatar op imageSize="large"}}
+        {{#with topic.lastPoster as |lastPoster|}}
+          {{#user-link user=lastPoster}}
+            {{avatar lastPoster imageSize="large"}}
           {{/user-link}}
         {{/with}}
       </td>

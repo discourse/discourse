@@ -626,7 +626,7 @@ fi:
         every_two_weeks: "joka toinen viikko"
       include_tl0_in_digests: "Sisällytä uusien käyttäjien viestit sähköpostikoosteisiin"
       email_in_reply_to: "Liitä sähköpostiin lyhennelmä viestistä, johon vastataan"
-      email_direct: "Lähetä minulle sähköposti, jos joku lainaa viestiäni, vastaa viestiini, viittaa @nimeeni, tai kutsuu minut viestiketjuun"
+      email_direct: "Lähetä minulle sähköposti, jos joku lainaa viestiäni, vastaa viestiini, viittaa @nimeeni tai kutsuu minut viestiketjuun"
       email_private_messages: "Lähetä minulle sähköposti, kun joku lähettää minulle viestin"
       email_always: "Lähetä sähköposti-ilmoitukset, vaikka olen aktiivinen palstalla."
       other_settings: "Muut"
@@ -726,14 +726,14 @@ fi:
         top_topics: "Parhaat ketjut"
         no_topics: "Ei avattuja ketjuja toistaiseksi."
         more_topics: "Lisää ketjuja"
-        top_badges: "Parhaat arvomerkit"
-        no_badges: "Ei arvomerkkejä toistaiseksi."
-        more_badges: "Lisää arvomerkkejä"
+        top_badges: "Parhaat ansiomerkit"
+        no_badges: "Ei ansiomerkkejä toistaiseksi."
+        more_badges: "Lisää ansiomerkkejä"
         top_links: "Suosituimmat linkit"
         no_links: "Ei linkkejä toistaiseksi."
         most_liked_by: "Eniten tykkäyksiä saatu"
         most_liked_users: "Eniten tykkäyksiä annettu"
-        most_replied_to_users: "Useiten vastannut"
+        most_replied_to_users: "Useimmin vastannut"
         no_likes: "Ei tykkäyksiä toistaiseksi."
       associated_accounts: "Kirjautumiset"
       ip_address:
@@ -898,6 +898,10 @@ fi:
       twitter: "Twitter"
       emoji_one: "Emoji One"
       win10: "Win10"
+    category_page_style:
+      categories_only: "Vain alueet"
+      categories_with_featured_topics: "Alueet, joiden yhteydessä ketjuja"
+      categories_and_latest_topics: "Alueet ja tuoreimmat ketjut"
     shortcut_modifier_key:
       shift: 'Shift'
       ctrl: 'Ctrl'
@@ -917,6 +921,9 @@ fi:
       saved_local_draft_tip: "tallennettu omalla koneella"
       similar_topics: "Tämä ketju vaikuttaa samalta kuin.."
       drafts_offline: "offline luonnokset"
+      group_mentioned:
+        one: "Jos viittaat ryhmään {{group}},  <a href='{{group_link}}'>1 käyttäjä</a> saa ilmoituksen – oletko varma?"
+        other: "Jos viittaat ryhmään {{group}}, <a href='{{group_link}}'>{{count}} käyttäjää</a> saa ilmoituksen – oletko varma?"
       duplicate_link: "Näyttää siltä, että <b>@{{username}}</b> on jo lähettänyt saman linkin kohteeseen <b>{{domain}}</b> ketjun <a href='{{post_url}}'>aiemmassa viestissä {{ago}}</a> – oletko varma, että haluat lähettää sen uudestaan?"
       error:
         title_missing: "Otsikko on pakollinen"
@@ -942,13 +949,15 @@ fi:
       view_new_post: "Katsele uutta viestiäsi."
       saving: "Tallennetaan"
       saved: "Tallennettu!"
-      saved_draft: "Viestiluonnos kesken. Klikkaa tähän jatkaaksesi."
+      saved_draft: "Viestiluonnos kesken. Jatka klikkaamalla tästä."
       uploading: "Lähettää..."
       show_preview: 'näytä esikatselu &raquo;'
       hide_preview: '&laquo; piilota esikatselu'
       quote_post_title: "Lainaa koko viesti"
+      bold_label: "B"
       bold_title: "Lihavoitu"
       bold_text: "lihavoitu teksti"
+      italic_label: "I"
       italic_title: "Kursiivi"
       italic_text: "kursivoitu teksti"
       link_title: "Hyperlinkki"
@@ -966,6 +975,7 @@ fi:
       olist_title: "Numeroitu lista"
       ulist_title: "Luettelomerkillinen luettelo"
       list_item: "Listan alkio"
+      heading_label: "H"
       heading_title: "Otsikko"
       heading_text: "Otsikko"
       hr_title: "Vaakaviiva"
@@ -1010,7 +1020,7 @@ fi:
       invitee_accepted: "<i title='hyväksyi kutsusi' class='fa fa-user'></i><p><span>{{username}}</span> hyväksyi kutsusi</p>"
       moved_post: "<i title='siirsi viestin' class='fa fa-sign-out'></i><p><span>{{username}}</span> siirsi {{description}}</p>"
       linked: "<i title='linkkasi viestiin' class='fa fa-link'></i><p><span>{{username}}</span> {{description}}</p>"
-      granted_badge: "<i title='arvomerkki myönnetty' class='fa fa-certificate'></i><p>Ansaitsit '{{description}}'</p>"
+      granted_badge: "<i title='ansiomerkki myönnetty' class='fa fa-certificate'></i><p>Ansaitsit '{{description}}'</p>"
       watching_first_post: "<i title='new topic' class='fa fa-dot-circle-o'></i><p><span>Uusi ketju</span> {{description}}</p>"
       group_message_summary:
         one: "<i title='messages in group inbox' class='fa fa-group'></i><p> {{count}} viesti ryhmän {{group_name}} saapuneissa</p>"
@@ -1028,7 +1038,7 @@ fi:
         invitee_accepted: "Kutsun hyväksyi"
         moved_post: "Viestisi siirsi"
         linked: "Linkki viestiisi"
-        granted_badge: "Arvomerkki myönnetty"
+        granted_badge: "Ansiomerkki myönnetty"
         group_message_summary: "Viestejä ryhmän saapuneissa viesteissä."
       popup:
         mentioned: '{{username}} mainitsi sinut ketjussa "{{topic}}" - {{site_title}}'
@@ -1116,7 +1126,7 @@ fi:
         top: "Huippuketjuja ei ole."
         search: "Hakutuloksia ei löytynyt."
         educate:
-          new: '<p>Uuden ketjut näytetään tässä.</p><p>Ketjut tulkitaan uusiksi ja niiden yhteydessä näytetään <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">uusi</span>-merkki, kun ne on luotu edellisen kahden päivän aikana.</p><p>Voit muuttaa tätä <a href="%{userPrefsUrl}">käyttäjäasetuksistasi</a>.</p>'
+          new: '<p>Sinulle uudet ketjut näytetään tässä.</p><p>Ketjut tulkitaan uusiksi ja niiden yhteydessä näytetään <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">uusi</span>-merkintä, jos ne on luotu edellisten kahden päivän aikana.</p><p>Aikarajaa voit muuttaa <a href="%{userPrefsUrl}">käyttäjäasetuksissasi</a>.</p>'
           unread: '<p>Lukemattomia viestejä sisältävät ketjut näytetään tässä.</p><p>Ketjun yhteydessä näytetään lukemattomien viestien lukumäärä <span class="badge new-posts badge-notification">1</span> jos olet:</p><ul><li>luonut ketjun</li><li>vastannut ketjuun</li><li>lukenut ketjua pidempään, kuin 4 minuuttia</li></ul><p>tai, jos olet erikseen merkannut ketjun seurattavaksi tai tarkkailtavaksi ketjun lopusta löytyvästä painikkeesta.</p><p>Voit muuttaa tätä <a href="%{userPrefsUrl}">käyttäjäasetuksistasi</a>.</p>'
       bottom:
         latest: "Tuoreimpia ketjuja ei ole enempää."
@@ -1133,6 +1143,9 @@ fi:
       unsubscribe:
         stop_notifications: "Saat tästä lähtien vähemmän ilmoituksia aiheesta <strong>{{title}}</strong>"
         change_notification_state: "Nykyinen ilmoitusasetuksesti on"
+      filter_to:
+        one: "1 viesti ketjussa"
+        other: "{{count}} viestiä ketjussa"
       create: 'Uusi ketju'
       create_long: 'Luo uusi ketju'
       private_message: 'Luo viesti'
@@ -1192,6 +1205,9 @@ fi:
       auto_close_title: 'Automaattisen sulkemisen asetukset'
       auto_close_save: "Tallenna"
       auto_close_remove: "Älä sulje tätä ketjua automaattisesti"
+      auto_close_immediate:
+        one: "Ketjun viimeisin viesti on jo tunnin vanha, joten ketju suljetaan heti."
+        other: "Ketjun viimeisin viesti on jo %{hours} tuntia vanha, joten ketju suljetaan heti."
       timeline:
         back: "Takaisin"
         back_description: "Siirry takaisin viimeisimpään lukemattomaan viestiin"
@@ -1357,8 +1373,8 @@ fi:
         action: "siirrä olemassa olevaan ketjuun"
         error: "Viestien siirtämisessä ketjuun tapahtui virhe."
         instructions:
-          one: "Valitse ketju, johon haluat siirtää viestin."
-          other: "Valitse ketju, johon haluat siirtää<b>{{count}}</b> viestiä."
+          one: "Valitse ketju, johon haluat siirtää valitun viestin."
+          other: "Valitse ketju, johon haluat siirtää valitut <b>{{count}}</b> viestiä."
       merge_posts:
         title: "Yhdistä valitut viestit"
         action: "yhdistä valitut viestit"
@@ -1631,7 +1647,7 @@ fi:
       email_in_disabled: "Uusien ketjujen luominen sähköpostitse on otettu pois käytöstä sivuston asetuksissa. Salliaksesi uusien ketjujen luomisen sähköpostilla, "
       email_in_disabled_click: 'ota käyttöön "email in" asetus.'
       suppress_from_homepage: "Vaimenna alue kotisivulta."
-      allow_badges_label: "Salli arvomerkkien myöntäminen tältä alueelta"
+      allow_badges_label: "Salli ansiomerkkien myöntäminen tältä alueelta"
       edit_permissions: "Muokkaa oikeuksia"
       add_permission: "Lisää oikeus"
       this_year: "tänä vuonna"
@@ -1663,6 +1679,7 @@ fi:
       notify_action: 'Viesti'
       official_warning: 'Virallinen varoitus'
       delete_spammer: "Poista roskapostittaja"
+      delete_confirm_MF: "Olet poistamassa {POSTS, plural, one {<b>1</b> viestin} other {<b>#</b> viestiä}} ja {TOPICS, plural, one {<b>1</b> ketjun} other {<b>#</b> ketjua}} tältä käyttäjältä, poistamassa käyttäjätilin, estämässä uusien tunnusten luonnin IP-osoitteestaan <b>{ip_address}</b> ja lisäämässä sähköpostiosoitteensa <b>{email}</b> pysyvälle estolistalle. Oletko varma, että käyttäjä todella on roskapostittaja?"
       yes_delete_spammer: "Kyllä, poista roskapostittaja"
       ip_address_missing: "-"
       hidden_email_address: "(piilotettu)"
@@ -1676,6 +1693,16 @@ fi:
         spam: "Se on roskapostia"
       custom_placeholder_notify_user: "Esitä asiasi ymmärrettäväsi, ole rakentava ja kohtelias."
       custom_placeholder_notify_moderators: "Kerro ymmärrettävästi ja selvästi, mistä olet huolestunut ja lisää viestiin oleelliset esimerkit ja linkit, jos mahdollista."
+      custom_message:
+        at_least:
+          one: "syötä vähintään 1 merkki"
+          other: "syötä vähintään {{count}} merkkiä"
+        more:
+          one: "Vielä 1..."
+          other: "Vielä {{count}}..."
+        left:
+          one: "1 jäljellä"
+          other: "{{count}} jäljellä"
     flagging_topic:
       title: "Kiitos avustasi yhteisön hyväksi!"
       action: "Liputa ketju"
@@ -1884,23 +1911,23 @@ fi:
         mark_watching: '<b>m</b>, <b>w</b> Tarkkaile ketjua'
     badges:
       earned_n_times:
-        one: "Ansaitsi tämän arvomerkin yhden kerran"
-        other: "Ansaitsi tämän arvomerkin %{count} kertaa"
+        one: "Ansaitsi tämän ansiomerkin yhden kerran"
+        other: "Ansaitsi tämän ansiomerkin %{count} kertaa"
       granted_on: "Myönnetty %{date}"
-      others_count: "Muita, joilla on tämä arvomerkki (%{count})"
-      title: Arvomerkit
+      others_count: "Muita, joilla on tämä ansiomerkki (%{count})"
+      title: Ansiomerkit
       allow_title: "sallittu titteli"
       multiple_grant: "myönnettävissä useaan kertaan"
       badge_count:
-        one: "1 Arvomerkki"
-        other: "%{count} Arvomerkkiä"
+        one: "1 ansiomerkki"
+        other: "%{count} ansiomerkkiä"
       more_badges:
         one: "+1 Lisää"
         other: "+%{count} Lisää"
       granted:
         one: "1 myönnetty"
         other: "%{count} myönnettyä"
-      select_badge_for_title: Valitse tittelisi arvomerkeistä
+      select_badge_for_title: Valitse tittelisi ansiomerkeistä
       none: "<ei mitään>"
       badge_grouping:
         getting_started:
@@ -2149,6 +2176,9 @@ fi:
         add_owners: Lisää omistajia
         incoming_email: "Saapuvan sähköpostin osoite"
         incoming_email_placeholder: "aseta sähköpostiosoite"
+        flair_bg_color_placeholder: "(Valinnainen) värin Hex-arvo"
+        flair_color_placeholder: "(Valinnainen) värin Hex-arvo"
+        flair_preview: "Esikatselu"
       api:
         generate_master: "Luo rajapinnan pääavain"
         none: "Aktiivisia API avaimia ei ole määritelty."
@@ -2431,8 +2461,8 @@ fi:
             change_site_text: "muutos sivuston teksteissä"
             suspend_user: "hyllytä käyttäjä"
             unsuspend_user: "poista hyllytys"
-            grant_badge: "myönnä arvomerkki"
-            revoke_badge: "peru arvomerkki"
+            grant_badge: "myönnä ansiomerkki"
+            revoke_badge: "peru ansiomerkki"
             check_email: "tarkista sähköposti"
             delete_topic: "poista ketju"
             delete_post: "poista viesti"
@@ -2546,6 +2576,7 @@ fi:
         suspend_reason: "Syy"
         suspended_by: "Käyttäjän hyllytti"
         delete_all_posts: "Poista kaikki viestit"
+        delete_all_posts_confirm_MF: "Olet poistamassa {POSTS, plural, one {1 viestin} other {# viestiä}} ja {TOPICS, plural, one {1 ketjun} other {# ketjua}}. Oletko varma?"
         suspend: "Hyllytä"
         unsuspend: "Poista hyllytys"
         suspended: "Hyllytetty?"
@@ -2641,6 +2672,9 @@ fi:
         unlock_trust_level: "Avaa luottamustason lukitus"
         tl3_requirements:
           title: "Vaatimukset luottamustasolle 3."
+          table_title:
+            one: "Viimeisimmän päivän aikana"
+            other: "Viimeisimpien %{count} päivän aikana:"
           value_heading: "Arvo"
           requirement_heading: "Vaatimus"
           visits: "Vierailua"
@@ -2747,46 +2781,46 @@ fi:
           user_preferences: "Käyttäjäasetukset"
           tags: "Tunnisteet"
       badges:
-        title: Arvomerkit
-        new_badge: Uusi arvomerkki
+        title: Ansiomerkit
+        new_badge: Uusi ansiomerkki
         new: Uusi
         name: Nimi
-        badge: Arvomerkki
+        badge: Ansiomerkki
         display_name: Nimi
         description: Kuvaus
         long_description: Pitkä kuvaus
-        badge_type: Arvomerkin tyyppi
+        badge_type: Ansiomerkin tyyppi
         badge_grouping: Ryhmä
         badge_groupings:
-          modal_title: Arvomerkkien ryhmitys
+          modal_title: Ansiomerkkien ryhmitys
         granted_by: Myöntäjä
         granted_at: Myönnetty
         reason_help: (Linkki viestiin tai ketjuun)
         save: Tallenna
         delete: Poista
-        delete_confirm: Oletko varma, että haluat poistaa tämän arvomerkin?
+        delete_confirm: Oletko varma, että haluat poistaa tämän ansiomerkin?
         revoke: Peruuta
         reason: Syy
         expand: Laajenna &hellip;
-        revoke_confirm: Oletko varma, että haluat peruuttaa arvomerkin?
-        edit_badges: Muokkaa arvomerkkejä
-        grant_badge: Myönnä arvomerkki
-        granted_badges: Myönnetyt arvomerkit
+        revoke_confirm: Oletko varma, että haluat peruuttaa ansiomerkin?
+        edit_badges: Muokkaa ansiomerkkejä
+        grant_badge: Myönnä ansiomerkki
+        granted_badges: Myönnetyt ansiomerkit
         grant: Myönnä
-        no_user_badges: "%{name} ei ole saanut yhtään arvomerkkiä."
-        no_badges: Myönnettäviä arvomerkkejä ei ole.
-        none_selected: "Valitse arvomerkki aloittaaksesi"
-        allow_title: Salli arvomerkin käyttäminen tittelinä
+        no_user_badges: "%{name} ei ole saanut yhtään ansiomerkkiä."
+        no_badges: Myönnettäviä ansiomerkkejä ei ole.
+        none_selected: "Valitse ansiomerkki aloittaaksesi"
+        allow_title: Salli ansiomerkin käyttäminen tittelinä
         multiple_grant: Voidaan myöntää useita kertoja
-        listable: Näytä arvomerkki julkisella arvomerkkisivulla
-        enabled: Ota arvomerkki käyttöön
+        listable: Näytä ansiomerkki julkisella ansiomerkkisivulla
+        enabled: Ota ansiomerkki käyttöön
         icon: Ikoni
         image: Kuva
         icon_help: "Käytä joko Font Awesome -luokkaa tai kuvan URL-osoitetta"
-        query: Arvomerkkien haku tietokannasta (SQL)
+        query: Ansiomerkkien haku tietokannasta (SQL)
         target_posts: Tietokantakyselyn kohdeviestit
         auto_revoke: Aja kumoamis-ajo päivittäin
-        show_posts: Näytä arvomerkin tuonut viesti arvomerkkisivulla
+        show_posts: Näytä ansiomerkin tuonut viesti ansiomerkkisivulla
         trigger: Laukaisija
         trigger_type:
           none: "Päivitä päivittäin"
@@ -2796,18 +2830,18 @@ fi:
           user_change: "Kun käyttäjä luodaan tai sitä muokataan"
           post_processed: "Sen jälkeen, kun viesti on käsitelty"
         preview:
-          link_text: "Esikatsele myönnettäviä arvomerkkejä"
+          link_text: "Esikatsele myönnettäviä ansiomerkkejä"
           plan_text: "Esikatsele query plan"
-          modal_title: "Arvomerkin tietokantakyselyn esikatselu"
+          modal_title: "Ansiomerkin tietokantakyselyn esikatselu"
           sql_error_header: "Kyselyn käsittelyssä tapahtui virhe."
-          error_help: "Apua arvomerkkien tietokantakyselyihin saat seuraavista linkeistä-"
+          error_help: "Apua ansiomerkkien tietokantakyselyihin saat seuraavista linkeistä."
           bad_count_warning:
             header: "VAROITUS!"
-            text: "Myöntöjen näytteitä puuttuu. Tämä tapahtuu, kun arvomerkin kysely palauttaa käyttäjä ID:n tai viestin ID:n jota ei ole olemassa. Tämä voi johtaa odottamattomiin seurauksiin myöhemmin - tarkista kysely uudestaan."
-          no_grant_count: "Ei arvomerkkejä myönnettäväksi"
+            text: "Myöntöjen näytteitä puuttuu. Tämä tapahtuu, kun ansiomerkin kysely palauttaa käyttäjä-ID:n tai viesti-ID:n, jota ei ole olemassa. Tämä voi johtaa odottamattomiin seurauksiin myöhemmin - tarkista kysely uudestaan."
+          no_grant_count: "Ei ansiomerkkejä myönnettäväksi"
           grant_count:
-            one: "<b>1</b> arvomerkkiä odottaa myöntämistä."
-            other: "<b>%{count}</b> arvomerkkiä odottaa myöntämistä."
+            one: "<b>1</b> ansiomerkki odottaa myöntämistä."
+            other: "<b>%{count}</b> ansiomerkkiä odottaa myöntämistä."
           sample: "Esimerkki:"
           grant:
             with: <span class="username">%{username}</span>

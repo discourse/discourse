@@ -31,6 +31,7 @@ export function transformBasicPost(post) {
     primaryGroupName: post.primary_group_name,
     primaryGroupFlairUrl: post.primary_group_flair_url,
     primaryGroupFlairBgColor: post.primary_group_flair_bg_color,
+    primaryGroupFlairColor: post.primary_group_flair_color,
     wiki: post.wiki,
     firstPost: post.post_number === 1,
     post_number: post.post_number,

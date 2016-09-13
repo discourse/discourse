@@ -127,7 +127,7 @@ task 'posts:remap', [:find, :replace] => [:environment] do |_,args|
     new_raw = new_raw.gsub!(/#{Regexp.escape(find)}/, replace) || new_raw
 
     if new_raw != p.raw
-      p.revise(Discourse.system_user, { raw: new_raw }, { bypass_bump: true })
+      p.revise(Discourse.system_user, { raw: new_raw }, { bypass_bump: true, skip_revision: true })
       putc "."
       i += 1
     end

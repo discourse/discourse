@@ -128,6 +128,8 @@ pl_PL:
       google+: 'udostępnij ten odnośnik na Google+'
       email: 'wyślij ten odnośnik przez email'
     action_codes:
+      public_topic: "Upublicznij ten temat %{when}"
+      private_topic: "Uprywatnij ten temat %{when}"
       split_topic: "podziel ten temat %{when}"
       invited_user: "%{who} został zaproszony %{when}"
       invited_group: "%{who} został zaproszony %{when}"
@@ -153,6 +155,7 @@ pl_PL:
         disabled: 'odlistowanie %{when}'
     topic_admin_menu: "akcje administratora"
     emails_are_disabled: "Wysyłanie e-maili zostało globalnie wyłączone przez administrację. Powiadomienia e-mail nie będą dostarczane."
+    bootstrap_mode_enabled: "Aby ułatwić uruchomienie Twojego nowego serwisu, znajdujesz się w trybie bootstrap. Wszyscy nowi użytkownicy otrzymają 1. poziom zaufania i będą otrzymywać codzienne podsumowania drogą mailową. To się zmieni, gdy liczba użytkowników przekroczy liczbę %{min_users}."
     bootstrap_mode_disabled: "Tryb Bootstrap zostanie wyłączony w ciągu najbliższych 24 godzin."
     s3:
       regions:
@@ -423,6 +426,10 @@ pl_PL:
       latest_by: "najnowszy wpis: "
       toggle_ordering: "przełącz kolejność kontroli"
       subcategories: "Podkategorie"
+      topic_sentence:
+        one: "1 temat"
+        few: "Kilka tematów"
+        other: "%{count} tematów"
       topic_stat_sentence:
         one: "ostatni %{unit}: %{count} nowy temat."
         few: "ostatni %{unit}: %{count} nowe tematy."
@@ -799,6 +806,7 @@ pl_PL:
     too_few_topics_notice: "Pora <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>rozruszać dyskusję!</a> Aktualnie istnieje <strong>%{currentTopics} / %{requiredTopics}</strong> tematów. Odwiedzający potrzebują więcej tematów i konwersacji do czytania i pisania na ich temat."
     too_few_posts_notice: "Pora <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>rozruszać dyskusję!</a> Aktualnie istnieje <strong>%{currentPosts} / %{requiredPosts}</strong> wpisów. Odwiedzający potrzebują więcej tematów i konwersacji do czytania i pisania na ich temat."
     learn_more: "dowiedz się więcej…"
+    all_time: 'łącznie'
     year: 'rok'
     year_desc: 'tematy dodane w ciągu ostatnich 365 dni'
     month: 'miesiąc'
@@ -892,6 +900,7 @@ pl_PL:
         title: "przez Twitter"
         message: "Uwierzytelnianie przy pomocy konta na Twitterze (upewnij się, że blokada wyskakujących okienek nie jest włączona)"
       instagram:
+        title: "z Instagram"
         message: "Uwierzytelnianie przy pomocy konta na Instagramie (upewnij się, że blokada wyskakujących okienek nie jest włączona)"
       facebook:
         title: "przez Facebook"
@@ -1594,6 +1603,11 @@ pl_PL:
           one: "Jesteś pewny(-a), że chcesz usunąć ten wpis?"
           few: "Jesteś pewny(-a), że chcesz usunąć te wszystkie wpisy?"
           other: "Czy na pewno chcesz usunąć te wszystkie wpisy?"
+      merge:
+        confirm:
+          one: "Czy na pewno chcesz scalić te posty?"
+          few: "Czy na pewno chcesz scalić te {{count}} postów?"
+          other: "Czy na pewno chcesz scalić te {{count}} postów?"
       revisions:
         controls:
           first: "Pierwsza wersja"
@@ -1855,6 +1869,8 @@ pl_PL:
       readonly: "przeglądać"
     lightbox:
       download: "pobierz"
+    search_help:
+      title: 'Wyszukiwanie pomocy'
     keyboard_shortcuts_help:
       title: 'Skróty klawiszowe'
       jump_to:
@@ -1872,6 +1888,7 @@ pl_PL:
         jump: '<b>#</b> idź do postu #'
         back: '<b>u</b> wstecz'
         up_down: '<b>k</b>/<b>j</b> Przesuń zaznaczenie &uarr; &darr;'
+        open: '<b>o</b> or <b>Enter</b> Otwórz wybrany temat'
       application:
         title: 'Aplikacja'
         create: '<b>c</b> utwórz nowy temat'
@@ -1881,15 +1898,19 @@ pl_PL:
         show_incoming_updated_topics: '<b>.</b> Pokaż zaktualizowane tematy'
         search: '<b>/</b> Wyszukaj'
         dismiss_topics: '<b>x</b>, <b>t</b> wyczyść listę tematów'
+        log_out: '<b>shift</b>+<b>z</b> <b>shift</b>+<b>z</b> Wyloguj'
       actions:
         title: 'Akcje'
         bookmark_topic: '<b>f</b> dodaj/usuń zakładkę na temat'
         pin_unpin_topic: '<b>shift</b>+<b>p</b> przypnij/odepnij temat'
+        share_topic: '<b>shift</b>+<b>s</b> Udostępnij temat'
         share_post: '<b>s</b> Udostępnij post'
         reply_topic: '<b>shift</b>+<b>r</b> Odpowiedz w temacie'
         reply_post: '<b>r</b> Odpowiedz na post'
+        quote_post: '<b>q</b> cytuj post'
         like: '<b>l</b> Lajkuj post'
         flag: '<b>!</b> Oznacz post'
+        bookmark: '<b>b</b> Dodaj post do zakładek'
         edit: '<b>e</b> Edytuj post'
         delete: '<b>d</b> Usuń post'
         mark_tracking: '<b>m</b>, <b>t</b> śledź temat'
@@ -1903,6 +1924,10 @@ pl_PL:
       title: Odznaki
       allow_title: "dostępny tytuł"
       multiple_grant: "przyznana wielokrotnie"
+      badge_count:
+        one: "1 odznaka"
+        few: "%{count} odznak"
+        other: "%{count} odznak"
       more_badges:
         one: "+1 więcej"
         few: "+%{count} więcej"
@@ -1962,6 +1987,7 @@ pl_PL:
         tags_label: "Tagi w tej grupie:"
         parent_tag_label: "Nadrzędny tag:"
         parent_tag_placeholder: "Opcjonalnie"
+        one_per_topic_label: "Ogranicz jeden tag na temat z tej grupy"
         new_name: "Nowa grupa tagów"
         save: "Zapisz"
         delete: "Usuń"
@@ -1984,10 +2010,12 @@ pl_PL:
           new: "Nie ma więcej nowych tematów."
           unread: "Nie ma więcej nieprzeczytanych tematów."
           top: "Nie ma już więcej najlepszych tematów."
+          bookmarks: "Nie ma więcej dodanych tematów do zakładek."
           search: "Nie znaleziono więcej wyników wyszukiwania."
     invite:
       custom_message_link: "niestandardowa wiadomość"
       custom_message_placeholder: "Wpisz swoją niestandardową wiadomość"
+      custom_message_template_forum: "Hej, należy dołączyć do tego forum!"
   admin_js:
     type_to_filter: "pisz, aby filtrować…"
     admin:
@@ -2035,6 +2063,7 @@ pl_PL:
           30_days_ago: "30 dni temu"
           all: "Wszystkie"
           view_table: "tabela"
+          view_graph: "wykres"
           refresh_report: "Odśwież raport"
           start_date: "Data początkowa"
           end_date: "Data końcowa"
@@ -2142,6 +2171,7 @@ pl_PL:
         add_owners: Dodaj właścicieli
         incoming_email: "Niestandardowy adres poczty przychodzącej"
         incoming_email_placeholder: "podaj adres e-mail"
+        flair_preview: "Podgląd"
       api:
         generate_master: "Generuj Master API Key"
         none: "Nie ma teraz aktywnych kluczy API."
@@ -2621,6 +2651,10 @@ pl_PL:
         unlock_trust_level: "Odblokuj poziom zaufania"
         tl3_requirements:
           title: "Wymagania dla osiągnięcia 3. poziomu zaufania"
+          table_title:
+            one: "W ciągu ostatniego dnia:"
+            few: "W ciągu ostatnich %{count} dni:"
+            other: "W ciągu ostatnich %{count} dni:"
           value_heading: "Wartość"
           requirement_heading: "Wymaganie"
           visits: "Odwiedziny"
@@ -2719,12 +2753,14 @@ pl_PL:
           developer: 'Deweloperskie'
           embedding: "Osadzanie"
           legal: "Prawne"
+          user_api: 'API użytkownika'
           uncategorized: 'Inne'
           backups: "Kopie zapasowe"
           login: "Logowanie"
           plugins: "Wtyczki"
           user_preferences: "Ustawienia użytk."
           tags: "Tagi"
+          search: "Wyszukaj"
       badges:
         title: Odznaki
         new_badge: Nowa odznaka

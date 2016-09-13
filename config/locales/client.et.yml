@@ -154,7 +154,7 @@ et:
         ap_northeast_2: "Aasia ja Vaikne ookean (Seoul)"
         sa_east_1: "Lõuna-Ameerika (Sao Paulo)"
         cn_north_1: "Hiina (Beijing)"
-    edit: 'muuda teema pealkirja ja liiki'
+    edit: 'muuda teema pealkirja ja foorumit'
     not_implemented: "Seda omadust pole veel rakendatud, vabandame!"
     no_value: "Ei"
     yes_value: "Jah"
@@ -380,16 +380,16 @@ et:
       '13': "Postkast"
       '14': "Ootel"
     categories:
-      all: "kõik liigid"
+      all: "kõik foorumid"
       all_subcategories: "kõik"
       no_subcategory: "mitte ükski"
-      category: "Liik"
-      category_list: "Kuva liigid"
+      category: "Foorum"
+      category_list: "Kuva foorumid"
       reorder:
-        title: "Reasta liigid ümber"
-        title_long: "Reasta liigid ümber"
+        title: "Reasta foorumid ümber"
+        title_long: "Reasta foorumid ümber"
         fix_order: "Fikseeri asukohad"
-        fix_order_tooltip: "Osadel liikidel puudub unikaalne asukoha number, mis võib anda ettearvamatuid tulemusi."
+        fix_order_tooltip: "Osadel foorumitel puudub unikaalne asukoha number, mis võib anda ettearvamatuid tulemusi."
         save: "Salvesta järjestus"
         apply_all: "Rakenda"
         position: "Paiguta"
@@ -398,7 +398,10 @@ et:
       latest: "Viimased"
       latest_by: "viimased kasutajalt"
       toggle_ordering: "lülita järjestus"
-      subcategories: "Alamliigid"
+      subcategories: "Alamfoorumid"
+      topic_sentence:
+        one: "1 teema"
+        other: "%{count} teemat"
       topic_stat_sentence:
         one: "%{count} uus teema viimase %{unit} jooksul."
         other: "%{count} uut teemat viimase %{unit} jooksul."
@@ -488,7 +491,7 @@ et:
       watched_first_post_tags: "Vaatan esimest postitust"
       watched_first_post_tags_instructions: "Sind teavitatakse esimesest postitusest igas nende siltidega uues teemas."
       muted_categories: "Vaigistatud"
-      muted_categories_instructions: "Sind ei teavitata ühestki uuest teemast nendes liikides, samuti ei ilmu nad viimaste teemade alla."
+      muted_categories_instructions: "Sind ei teavitata ühestki uuest teemast nendes foorumites, samuti ei ilmu nad viimaste teemade alla."
       delete_account: "Kustuta minu konto"
       delete_account_confirm: "Kas oled kindel, et soovid oma konto jäädavalt kustutada? Seda toimingut ei ole võimalik tagasi võtta!"
       deleted_yourself: "Konto on edukalt kustutatud."
@@ -501,6 +504,13 @@ et:
       muted_topics_link: "Näita vaigistatud teemasid"
       watched_topics_link: "Näita vaatlusaluseid teemasid"
       automatically_unpin_topics: "Eemalda lõppu jõudmisel teemadelt automaatselt esiletõstmise märgistus."
+      apps: "Äpid"
+      revoke_access: "Tühista ligipääs"
+      undo_revoke_access: "Tühista ligipääsu tühistamine"
+      api_permissions: "Õigused:"
+      api_approved: "Heakskiidetud:"
+      api_read: "lugemine"
+      api_read_write: "lugemine ja kirjutamine"
       staff_counters:
         flags_given: "kasulikud tähised"
         flagged_posts: "tähistatud postitused"
@@ -626,7 +636,7 @@ et:
       email_private_messages: "Saada meilile teavitus, kui minuga kontakteerutakse sõnumi teel"
       email_always: "Saada mulle teavitused meilile, isegi kui ma olen siin aktiivne kasutaja"
       other_settings: "Muu"
-      categories_settings: "Liigid"
+      categories_settings: "Foorumid"
       new_topic_duration:
         label: "Loe teemad uuteks, kui"
         not_viewed: "Ma ei ole neid veel vaadanud"
@@ -786,6 +796,8 @@ et:
         one: "1 viga/%{duration}"
         other: "%{count} viga/%{duration}"
     learn_more: "uuri veel..."
+    all_time: 'kokku'
+    all_time_desc: 'kokku teemasid loodud'
     year: 'aasta'
     year_desc: 'teemat loodud viimase 365 päeva jooksul'
     month: 'kuu'
@@ -896,6 +908,10 @@ et:
       twitter: "Twitter"
       emoji_one: "Emoji One"
       win10: "Win10"
+    category_page_style:
+      categories_only: "Ainult foorumid"
+      categories_with_featured_topics: "Foorumid esiletõstetud teemadega"
+      categories_and_latest_topics: "Foorumid ja viimased teemad"
     shortcut_modifier_key:
       shift: 'Shift'
       ctrl: 'Ctrl'
@@ -915,6 +931,9 @@ et:
       saved_local_draft_tip: "salvestatud lokaalselt"
       similar_topics: "Sinu teema sarnaneb..."
       drafts_offline: "mustandid vallasrežiimis"
+      group_mentioned:
+        one: "Mainides {{group}}, oled teavitamas <a href='{{group_link}}'>1 inimest</a> – oled selles kindel?"
+        other: "Mainides {{group}}, oled teavitamas <a href='{{group_link}}'>{{count}} inimest</a> – oled selles kindel?"
       duplicate_link: "Näib, et sinu viide <b>{{domain}}</b> oli juba postitatud teemasse kasutaja <b>@{{username}}</b> poolt postituse <a href='{{post_url}}'>vastuses {{ago}}</a> – oled kindel, et soovid selle uuesti postitada?"
       error:
         title_missing: "Pealkiri on kohustuslik"
@@ -923,7 +942,7 @@ et:
         post_missing: "Positus ei saa olla tühi"
         post_length: "Postitus peab olema vähemalt {{min}} sümbolit pikk"
         try_like: 'Kas oled proovinud <i class="fa fa-heart"></i> nuppu?'
-        category_missing: "Pead valima liigi"
+        category_missing: "Pead valima foorumi"
       save_edit: "Salvesta muudatused"
       reply_original: "Vasta algsesse teemasse"
       reply_here: "Vasta siin"
@@ -945,8 +964,10 @@ et:
       show_preview: 'näita eelvaadet &raquo;'
       hide_preview: '&laquo; peida eelvaade'
       quote_post_title: "Tsiteeri kogu postitust"
+      bold_label: "B"
       bold_title: "Rasvane"
       bold_text: "rasvane tekst"
+      italic_label: "I"
       italic_title: "Esiletõstetud"
       italic_text: "esiletõstetud tekst"
       link_title: "Hüperlink"
@@ -964,6 +985,7 @@ et:
       olist_title: "Numberloend"
       ulist_title: "Täpploend"
       list_item: "Loendi element"
+      heading_label: "H"
       heading_title: "Päis"
       heading_text: "Päis"
       hr_title: "Rõhtjoon "
@@ -1062,7 +1084,7 @@ et:
       result_count:
         one: "1 tulemus <span class='term'>\"{{term}}\"</span> kohta"
         other: "{{count}} tulemust <span class='term'>\"{{term}}\"</span> kohta"
-      title: "otsi teemasid, postitusi, kasutajaid, või liike"
+      title: "otsi teemasid, postitusi, kasutajaid, või foorumeid"
       no_results: "Ei leidnud midagi."
       no_more_results: "Rohkem vasteid pole."
       search_help: Otsingu spikker
@@ -1073,7 +1095,7 @@ et:
         category: "Otsi #{{category}} foorumist"
         topic: "Otsi sellest teemast"
         private_messages: "Otsi sõnumeid"
-    hamburger_menu: "mine teise teemaloetelu või liigi juurde"
+    hamburger_menu: "mine teise teemaloetelu või foorumi juurde"
     new_item: "uus"
     go_back: 'tagasi'
     not_logged_in_user: 'kasutajaleht koos toimingute ja eelistuste kokkuvõttega'
@@ -1091,11 +1113,11 @@ et:
         dismiss_new: "Lükka tagasi uued"
         toggle: "lülita teemade massiline ära märkimine ümber"
         actions: "Masstoimingud"
-        change_category: "Muuda liiki"
+        change_category: "Muuda foorumit"
         close_topics: "Sulge Teemad"
         archive_topics: "Arhiveeri Teemad"
         notification_level: "Muuda Teavituste Taset"
-        choose_new_category: "Vali teemadele uus liik:"
+        choose_new_category: "Vali teemadele uus foorum:"
         selected:
           one: "Märkisid ära <b>1</b> teema."
           other: "Märkisid ära <b>{{count}}</b> teemat."
@@ -1110,7 +1132,7 @@ et:
         latest: "Ühtegi värsket teemat pole. Nukker."
         hot: "Ühtegi kuuma teemat pole."
         bookmarks: "Sul ei ole veel ühtegi järjehoidjaga teemal."
-        category: "Liigis {{category}} teemad puuduvad."
+        category: "Foorumis {{category}} teemad puuduvad."
         top: "Tippteemad puuduvad."
         search: "Otsing ei andnud tulemusi."
         educate:
@@ -1123,7 +1145,7 @@ et:
         read: "Rohkem loetud teemasid pole."
         new: "Rohkem uusi teemasid pole."
         unread: "Rohkem lugemata teemasid pole."
-        category: "Liigis {{category}} rohkem teemasid pole."
+        category: "Foorumis {{category}} rohkem teemasid pole."
         top: "Rohkem tippteemasid pole."
         bookmarks: "Rohkem järjehoidjaga teemasid pole."
         search: "Rohkem otsingutulemusi pole."
@@ -1131,6 +1153,9 @@ et:
       unsubscribe:
         stop_notifications: "Sulle saabub nüüd <strong>{{title}}</strong> kohta vähem teavitusi"
         change_notification_state: "Sinu teavituste olek on"
+      filter_to:
+        one: "1 postitus teemas"
+        other: "{{count}} postitust teemas"
       create: 'Uus Teema'
       create_long: 'Loo uus Teema'
       private_message: 'Alusta sõnumit'
@@ -1179,7 +1204,7 @@ et:
       read_more_in_category: "Soovid veel lugeda? Vaata teisi teemasid {{catLink}} või {{latestLink}}."
       read_more: "Soovid veel lugeda? {{catLink}} või {{latestLink}}."
       read_more_MF: "Teil on { UNREAD, plural, =0 {} one { is <a href='/unread'>1 lugemata</a> } other { are <a href='/unread'># lugemata </a> } } { NEW, plural, =0 {} one { {BOTH, select, true{and } false {is } other{}} <a href='/new'>1 uus</a> teema} other { {BOTH, select, true{and } false {are } other{}} <a href='/new'># uut</a> teemat} } jäänud, või {CATEGORY, select, true {browse other topics in {catLink}} false {{latestLink}} other {}}\nby priit.varik, a month ago"
-      browse_all_categories: Vaata kõiki liike
+      browse_all_categories: Vaata kõiki foorumeid
       view_latest_topics: vaata värskeid teemasid
       suggest_create_topic: Teeks äkki teema?
       jump_reply_up: hüppa varasema vastuse juurde
@@ -1210,20 +1235,20 @@ et:
         reasons:
           mailing_list_mode: "Sul on aktiveeritud postiloendi režiim, seega teavitatakse sind vastustest siia teemasse meili teel."
           '3_10': 'Sulle saabuvad teavitused, kuna jälgid selle teemaga seotud silti.'
-          '3_6': 'Sulle saabuvad teavitused, kuna vaatled seda liiki.'
+          '3_6': 'Sulle saabuvad teavitused, kuna vaatled seda foorumit.'
           '3_5': 'Sulle saabuvad teavitused kuna hakkasid seda teemat automaatselt jälgima.'
           '3_2': 'Sulle saabuvad teavitused kuna jälgid seda teemat.'
           '3_1': 'Sulle saabuvad teavitused kuna lõid selle teema.'
           '3': 'Sulle saabuvad teavitused kuna jälgid seda teemat.'
-          '2_8': 'Sulle saabuvad teavitused, kuna jälgid seda liiki.'
+          '2_8': 'Sulle saabuvad teavitused, kuna jälgid seda foorumit.'
           '2_4': 'Sulle saabuvad teavitused kuna postitasid siia teemasse vastuse.'
           '2_2': 'Sulle saabuvad teavitused kuna jälgid seda teemat.'
           '2': 'Sulle saabuvad teavitused kuna <a href="/users/{{username}}/preferences">luges seda teemat</a>.'
           '1_2': 'Sind teavitatakse, kui keegi Teie @name mainib või Teile vastab.'
           '1': 'Sind teavitatakse, kui keegi Sinu @name mainib või Sulle vastab.'
-          '0_7': 'Eirad kõiki teavitusi selles liigis.'
+          '0_7': 'Eirad kõiki teavitusi selles foorumis.'
           '0_2': 'Eirad kõiki teavitusi selle teema kohta.'
-          '0': 'Eirad kõiki teavitusi selles liigis.'
+          '0': 'Eirad kõiki teavitusi selles foorumis.'
         watching_pm:
           title: "Vaatleb"
           description: "Saad teavituse iga uue vastuse kohta sellele sõnumile koos uute vastuste koguarvu näitamisega."
@@ -1285,10 +1310,10 @@ et:
         success_message: 'Tähistasid selle teema edukalt.'
       feature_topic:
         title: "Kajasta seda teemat"
-        pin: "Lisa see teema liigi {{categoryLink}} tippu kuni"
-        confirm_pin: "Sul on juba {{count}} esiletõstetud teemat. Liiga palju esiletõstetud teemasid võib olla uutele või anonüümsetele kasutajatele koormav. Kas soovid kindlasti selles liigis veel ühe teema esile tõsta?"
-        unpin: "Eemalda see teema liigi {{categoryLink}} tipust."
-        unpin_until: "Eemalda see teema liigi {{categoryLink}} tipust või oota kuni <strong>%{until}</strong>."
+        pin: "Lisa see teema foorumi {{categoryLink}} tippu kuni"
+        confirm_pin: "Sul on juba {{count}} esiletõstetud teemat. Liiga palju esiletõstetud teemasid võib olla uutele või anonüümsetele kasutajatele koormav. Kas soovid kindlasti selles foorumis veel ühe teema esile tõsta?"
+        unpin: "Eemalda see teema foorumi {{categoryLink}} tipust."
+        unpin_until: "Eemalda see teema foorumi {{categoryLink}} tipust või oota kuni <strong>%{until}</strong>."
         pin_note: "Kasutajad saavad teema esiletõstmise enda jaoks individuaalselt eemaldada."
         pin_validation: "Selle teema esiletõstmiseks on kuupäev nõutav."
         not_pinned: "Liigis {{categoryLink}} ei ole ühtegi esiletõstetud teemat."
@@ -1296,7 +1321,7 @@ et:
           one: "Liigis {{categoryLink}} hetkel kinnitatud teemad: <strong class='badge badge-notification unread'>1</strong>"
           other: "Liigis {{categoryLink}} hetkel esiletõstetud teemad: <strong class='badge badge-notification unread'>{{count}}</strong>"
         pin_globally: "Lisa see teema kõikide teemaloetelude tippu kuni"
-        confirm_pin_globally: "Sul on juba {{count}} igal pool esiletõstetud teemat. Liiga palju esiletõstetud teemasid võib olla uutele või anonüümsetele kasutajatele koormav. Kas soovid kindlasti selles liigis veel ühe teema igal pool esile tõsta?"
+        confirm_pin_globally: "Sul on juba {{count}} igal pool esiletõstetud teemat. Liiga palju esiletõstetud teemasid võib olla uutele või anonüümsetele kasutajatele koormav. Kas soovid kindlasti selles foorumis veel ühe teema igal pool esile tõsta?"
         unpin_globally: "Eemalda see teema kõikide teemaloetelude tipust."
         unpin_globally_until: "Eemalda see teema kõikide teemaloetelude tipust või oota kuni <strong>%{until}</strong>."
         global_pin_note: "Kasutajad saavad teema esiletõstmise enda jaoks individuaalselt eemaldada."
@@ -1581,12 +1606,12 @@ et:
             button: '<i class="fa fa-columns"></i> Toores'
     category:
       can: 'saab&hellip; '
-      none: '(liik puudub)'
-      all: 'Kõik liigid'
-      choose: 'Vali liik&hellip;'
+      none: '(foorum puudub)'
+      all: 'Kõik foorumid'
+      choose: 'Vali foorum&hellip;'
       edit: 'muuda'
       edit_long: "Muuda"
-      view: 'Vaata teemasid liigis'
+      view: 'Vaata teemasid foorumis'
       general: 'Üldine'
       settings: 'Sätted'
       topic_template: "Teema mall"
@@ -1595,32 +1620,32 @@ et:
       tags_allowed_tag_groups: "Siltide grupid, mida saab kasutada vaid selles foorumis:"
       tags_placeholder: "(Valikuline) loetelu lubatud silte"
       tag_groups_placeholder: "(Valikuline) loetelu lubatud siltide gruppe"
-      delete: 'Kustuta liik'
-      create: 'Uus liik'
-      create_long: 'Loo uus liik'
-      save: 'Salvesta liik'
-      slug: 'Liigi toorik'
+      delete: 'Kustuta foorum'
+      create: 'Uus foorum'
+      create_long: 'Loo uus foorum'
+      save: 'Salvesta foorum'
+      slug: 'Foorumi toorik'
       slug_placeholder: '(Valikulised) sidekriipsuga-sõnad url-i jaoks'
-      creation_error: Liigi loomisel tekkis viga.
-      save_error: Liigi salvestamisel tekkis viga.
-      name: "Liigi nimetus"
+      creation_error: Foorumi loomisel tekkis viga.
+      save_error: Foorumi salvestamisel tekkis viga.
+      name: "Foorumi nimetus"
       description: "Kirjeldus"
-      topic: "liigi teema"
-      logo: "Liigi logo"
-      background_image: "Liigi taustapilt"
+      topic: "foorumi teema"
+      logo: "foorumi logo"
+      background_image: "Foorumi taustapilt"
       badge_colors: "Märgise värvid"
       background_color: "Tausta värv"
       foreground_color: "Esiplaani värv"
       name_placeholder: "Maksimaalselt üks või kaks sõna"
       color_placeholder: "Mistahes veebi-sobiv värv"
-      delete_confirm: "Oled kindel, et soovid seda liiki kustutada?"
-      delete_error: "Liigi kustutamisel tekkis viga."
-      list: "Loetle liigid"
-      no_description: "Palun lisa sellele liigile kirjeldus."
+      delete_confirm: "Oled kindel, et soovid seda foorumit kustutada?"
+      delete_error: "Foorumi kustutamisel tekkis viga."
+      list: "Loetle foorumid"
+      no_description: "Palun lisa sellele foorumile kirjeldus."
       change_in_category_topic: "Muuda kirjeldust"
-      already_used: 'Teine liik juba kasutab seda värvi'
+      already_used: 'Teine foorum juba kasutab seda värvi'
       security: "Turve"
-      special_warning: "Hoiatus: See on eelseadistatud liik mille turvasätteid muuta ei saa. Kui Sa seda liiki kasutada ei soovi, kustuta see ümberkohandamise asemel."
+      special_warning: "Hoiatus: See on eelseadistatud foorum mille turvasätteid muuta ei saa. Kui Sa seda foorumit kasutada ei soovi, kustuta see ümberkohandamise asemel."
       images: "Pildid"
       auto_close_label: "Sulge teema automaatselt peale:"
       auto_close_units: "tundi"
@@ -1628,16 +1653,16 @@ et:
       email_in_allow_strangers: "Aktsepteeri meile kontota anonüümsetelt kasutajatelt"
       email_in_disabled: "Uute teemade avamine meili teel on saidi sätetes välja lülitatud. Avamiseks"
       email_in_disabled_click: 'aktiveeri säte "sissetulev meil".'
-      suppress_from_homepage: "Eemalda see liik avalehelt."
-      allow_badges_label: "Luba selles liigis autasustamist märgistega"
+      suppress_from_homepage: "Eemalda see foorum avalehelt."
+      allow_badges_label: "Luba selles foorumis autasustamist märgistega"
       edit_permissions: "Muuda kasutusõigusi"
       add_permission: "Lisa kasutusõigus"
       this_year: "sel aastal"
       position: "positsioon"
       default_position: "Vaikepositsioon"
-      position_disabled: "Liigid kuvatakse aktiivsuse järjekorras. Liikide järjestuse seadistamiseks loeteludes"
-      position_disabled_click: 'aktiveeri säte "liikide positsioonid fikseeritud".'
-      parent: "Ülemliik"
+      position_disabled: "Foorumid kuvatakse aktiivsuse järjekorras. Foorumite järjestuse seadistamiseks loeteludes,"
+      position_disabled_click: 'aktiveeri säte "foorumite positsioonid fikseeritud".'
+      parent: "Emafoorum"
       notifications:
         watching:
           title: "Vaatleb"
@@ -1653,7 +1678,7 @@ et:
           description: "Sind teavitatakse, kui keegi Sinu @name mainib või Sulle vastab."
         muted:
           title: "Vaigistatud"
-          description: "Sind ei teavitata ühestki uuest teemast nendes liikides, samuti ei ilmu nad viimaste teemade alla."
+          description: "Sind ei teavitata ühestki uuest teemast nendes foorumites, samuti ei ilmu nad viimaste teemade alla."
     flagging:
       title: 'Täname, et aitad meie kogukonna viisakust säilitada!'
       action: 'Tähista postitus'
@@ -1710,7 +1735,7 @@ et:
         help: "See teema on globaalselt esiletõstetud; kuvatakse nii uusimate kui oma liigi esimeste seas"
       pinned:
         title: "Esiletõstetud"
-        help: "OIed selle teema on esile tõstnud; kuvatakse Sulle oma liigi esimeste seas"
+        help: "OIed selle teema on esile tõstnud; kuvatakse Sulle oma foorumi esimeste seas"
       invisible:
         help: "See teema on salastatud; teda ei kuvata teemade loendites ning on kättesaadav vaid otseviite kaudu"
     posts: "Postitused"
@@ -1738,13 +1763,13 @@ et:
     users_lowercase:
       one: "kasutaja"
       other: "kasutajad"
-    category_title: "Liik"
+    category_title: "Foorum"
     history: "Ajalugu"
     changed_by: "autor {{author}}"
     raw_email:
       title: "Täätlemata meil"
       not_available: "Pole saadaval!"
-    categories_list: "Liikide loend"
+    categories_list: "Foorumite loend"
     filters:
       with_topics: "%{filter} teemat"
       with_category: "%{filter} %{category} teemat"
@@ -1764,9 +1789,9 @@ et:
         title: "Otsi"
         help: "otsi kõigist teemadest"
       categories:
-        title: "Liigid"
-        title_in: "Liik - {{categoryName}}"
-        help: "kõik teemad liikide järgi rühmitatuna"
+        title: "Foorumid"
+        title_in: "Foorum - {{categoryName}}"
+        help: "kõik teemad foorumite järgi rühmitatuna"
       unread:
         title: "Lugemata"
         title_with_count:
@@ -1797,7 +1822,7 @@ et:
         title_with_count:
           one: "{{categoryName}} (1)"
           other: "{{categoryName}} ({{count}})"
-        help: "värskeimad teemad liigis {{categoryName}}"
+        help: "värskeimad teemad foorumis {{categoryName}}"
       top:
         title: "Juhtivad"
         help: "aktiivseimad teemad viimase aasta, kuu, nädala või päeva sees"
@@ -2345,7 +2370,7 @@ et:
         sent_at: "Saadetud"
         time: "Aeg"
         user: "Kasutaja"
-        email_type: "Meili liik"
+        email_type: "Meili tüüp"
         to_address: "Aadressile"
         test_email_address: "testitav meiliaadress"
         send_test: "Saada testmeil"
@@ -2397,7 +2422,7 @@ et:
         ip_address: "IP"
         topic_id: "Teema ID"
         post_id: "Postituse ID"
-        category_id: "Liigi ID"
+        category_id: "Foorumi ID"
         delete: 'Kustuta'
         edit: 'Muuda'
         save: 'Salvesta'
@@ -2439,9 +2464,9 @@ et:
             impersonate: "kehastu ümber"
             anonymize_user: "muuda kasutaja anonüümseks"
             roll_up: "Koonda IP-aadressi blokid kokku"
-            change_category_settings: "muuda liigi sätteid"
-            delete_category: "kustuta liik"
-            create_category: "loo liik"
+            change_category_settings: "muuda foorumi sätteid"
+            delete_category: "kustuta foorum"
+            create_category: "loo foorum"
             block_user: "blokeeri kasutaja"
             unblock_user: "vabasta kasutaja blokeeringust"
             grant_admin: "anna admin-õigus"
@@ -2828,7 +2853,7 @@ et:
         title: "Sängitamine"
         host: "Lubatud hostid"
         edit: "muuda"
-        category: "Postita liiki"
+        category: "Postita foorumisse"
         add_host: "Lisa host"
         settings: "Sängitamise sätted"
         feed_settings: "Voo sätted"
@@ -2852,8 +2877,8 @@ et:
         topic_title: "Teema"
         post_id: "Postituse ID"
         post_title: "Postitus"
-        category_id: "Liigi ID"
-        category_title: "Liik"
+        category_id: "Foorumi ID"
+        category_title: "Foorum"
         external_url: "Väline URL"
         delete_confirm: Oled Sa kindel, et soovid seda püsiviidet kustutada?
         form:

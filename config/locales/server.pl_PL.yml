@@ -674,7 +674,7 @@ pl_PL:
       xaxis: "Dzień"
       yaxis: "Razem zapytań"
     time_to_first_response:
-      title: "Czas na pierwszą odpowiedź. "
+      title: "Czas na pierwszą odpowiedź"
       xaxis: "Dzień"
       yaxis: "Średni czas (w godzinach)"
     topics_with_no_response:
@@ -779,8 +779,8 @@ pl_PL:
     email_token_valid_hours: "Tokeny resetujące hasło / aktywujące konto są ważne przez (n) godzin."
     enable_badges: "Włącz system odznak"
     log_out_strict: "Po wylogowaniu wyloguj WSZYSTKIE sesje użytkownika na wszystkich urządzeniach."
-    port: "DEVELOPER ONLY! WARNING! Use this HTTP port rather than the default of port 80. Leave blank for default of 80."
-    force_hostname: "DEVELOPER ONLY! WARNING! Specify a hostname in the URL. Leave blank for default."
+    port: "OSTRZEŻENIE! Tylko dla Developera! Użyj ten port HTTP zamiast domyślnego portu 80. Pozostaw puste pole, domyślnie port 80"
+    force_hostname: "OSTRZEŻENIE! Tylko dla Developera! Określ nazwę hosta w adresie URL. Pozostaw domyślnie puste."
     invite_expiry_days: "Jak długo klucz zaproszenie użytkownika jest ważny, w dniach."
     invite_only: "Publiczna rejestracja jest wyłączona: wszyscy nowi użytkownicy muszą zostać zaproszeni przez innych użytkowników lub zespół."
     login_required: "Wymagaj autoryzacji do wyświetlenia zawartości strony, zablokuj możliwość anonimowego dostępu."
@@ -792,18 +792,18 @@ pl_PL:
     block_common_passwords: "Nie zezwalaj na hasła znajdujące się w grupie 10 000 najpopularniejszych haseł."
     allow_new_registrations: "Zezwól na rejestrację nowych użytkowników. Odznacz opcję żeby uniemożliwić rejestrację nowych kont."
     enable_signup_cta: "Pokazuj wiadomość dla powracających użytkowników anonimowych, zachęcającą ich do założenia konta."
-    enable_yahoo_logins: "Enable Yahoo authentication"
+    enable_yahoo_logins: "Włącz autoryzację Yahoo"
     google_oauth2_client_id: "Client ID twojej aplikacji w Google"
     google_oauth2_client_secret: "Client Secret twojej aplikacji w Google"
-    enable_twitter_logins: "Enable Twitter authentication, requires twitter_consumer_key and twitter_consumer_secret"
+    enable_twitter_logins: "Włącz autoryzację Twitter, wymagane twitter_consumer_key oraz twitter_consumer_secret"
     twitter_consumer_key: "Consumer key for Twitter authentication, registered at http://dev.twitter.com"
     twitter_consumer_secret: "Consumer secret for Twitter authentication, registered at http://dev.twitter.com"
     enable_facebook_logins: "Enable Facebook authentication, requires facebook_app_id and facebook_app_secret"
     facebook_app_id: "App id for Facebook authentication, registered at https://developers.facebook.com/apps"
     facebook_app_secret: "App secret for Facebook authentication, registered at https://developers.facebook.com/apps"
-    enable_github_logins: "Enable Github authentication, requires github_client_id and github_client_secret"
-    github_client_id: "Client id for Github authentication, registered at https://github.com/settings/applications"
-    github_client_secret: "Client secret for Github authentication, registered at https://github.com/settings/applications"
+    enable_github_logins: "Włacz autoryzację Github, wymagane github_client_id oraz github_client_secret"
+    github_client_id: "Client id dla autoryzacji Github, zarejestrowany w https://github.com/settings/applications"
+    github_client_secret: "Client secret dla autoryzacji Github, zarejestrowany w https://github.com/settings/applications"
     readonly_mode_during_backup: "Włącz tryb tylko do odczytu podczas wykonywania kopii zapasowej"
     maximum_backups: "Maksymalna liczba kopii zapasowych do przechowywania na dysku. Starsze kopie zapasowe zostaną automatycznie usunięte."
     backup_frequency: "Jak często możemy utworzyć kopię zapasową strony, w dniach."
@@ -972,7 +972,7 @@ pl_PL:
   user:
     no_accounts_associated: "Brak powiązanych kont"
     username:
-      short: "music zawierać co najmniej %{min} znaków"
+      short: "musi zawierać co najmniej %{min} znaków"
       long: "nie może zawierać więcej niż %{max} znaków"
       characters: "może zawierać tylko litery, cyfry i podkreślenia"
       unique: "musi być unikalna"
@@ -980,7 +980,7 @@ pl_PL:
       must_not_contain_two_special_chars_in_seq: "nie może zawierać sekwencji 2 lub więcej znaków specjalnych (.-_)"
     email:
       not_allowed: "nie jest dopuszczany od tego dostawcy poczty. Użyj innego adresu email."
-      blocked: "is not allowed."
+      blocked: "nie jest dozwolony."
     ip_address:
       blocked: "Z twojego adresu IP nowe rejestracje nie są możliwe."
       max_new_accounts_per_registration_ip: "Z twojego adresu IP nowe rejestracje nie są możliwe (wyczerpany limit). Skonaktuj się z personelem."
@@ -1073,7 +1073,7 @@ pl_PL:
   subject_re: "Re: "
   subject_pm: "[PW] "
   user_notifications:
-    previous_discussion: "Previous Replies"
+    previous_discussion: "Poprzednie odpowiedzi"
     unsubscribe:
       title: "Wypisz"
       description: "Nie chcesz otrzymywać tych emaili? Nie ma problemu! Kliknij poniżej by wypisać się natychmiast:"
@@ -1161,9 +1161,9 @@ pl_PL:
   upload:
     edit_reason: "lokalne kopie pobranych obrazów"
     unauthorized: "Sorry, the file you are trying to upload is not authorized (authorized extensions: %{authorized_extensions})."
-    pasted_image_filename: "Pasted image"
+    pasted_image_filename: "Wklejone zdjęcie"
     images:
-      size_not_found: "Sorry, but we couldn't determine the size of the image. Maybe your image is corrupted?"
+      size_not_found: "Przepraszamy, ale nie udało się ustalić rozmiaru obrazu. Może twój obraz jest uszkodzony?"
   email_log:
     no_user: "Nie można znaleźć użytkownika z ID %{user_id}"
     post_deleted: "Wpis został usunięty przez autora"

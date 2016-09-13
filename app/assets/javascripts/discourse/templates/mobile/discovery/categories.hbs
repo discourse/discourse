@@ -33,9 +33,16 @@
 
     </table>
     <footer class="clearfix">
-      <figure title="{{i18n 'year_desc'}}">{{number c.topics_year}} <figcaption>{{i18n 'category.this_year'}}</figcaption></figure>
+
+      <figure title="{{i18n 'all_time_desc'}}">{{number c.topics_all_time}} <figcaption>{{i18n 'all_time'}}</figcaption></figure>
+
+      {{#if c.pickMonth}}
       <figure title="{{i18n 'month_desc'}}">{{number c.topics_month}} <figcaption>{{i18n 'month'}}</figcaption></figure>
-      <figure title="{{i18n 'week_desc'}}">{{number c.topics_week}} <figcaption>{{i18n 'week'}}</figcaption></figure>
+      {{/if}}
+
+      {{#if c.pickWeek}}
+        <figure title="{{i18n 'week_desc'}}">{{number c.topics_week}} <figcaption>{{i18n 'week'}}</figcaption></figure>
+      {{/if}}
 
       {{#if c.can_edit}}
         <a href {{action "editCategory" c}} class='btn btn-small'>{{i18n 'category.edit'}}</a>

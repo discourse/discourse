@@ -77,7 +77,7 @@ export default Ember.TextField.extend({
         callback(data);
       },
       createSearchChoice: function(term, data) {
-        term = term.replace(filterRegexp, '').trim();
+        term = term.replace(filterRegexp, '').trim().toLowerCase();
 
         // No empty terms, make sure the user has permission to create the tag
         if (!term.length || !self.get('allowCreate') || self.get('termMatchesForbidden')) return;

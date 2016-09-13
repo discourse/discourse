@@ -1405,7 +1405,6 @@ pt:
         A sua conta associada com este endereço de email foi bloqueada.
 
     email_reject_reply_user_not_matching:
-      subject_template: "[%{site_name}] Problema de email -- Utilizador de resposta não encontrado"
       text_body_template: |+
         Pedimos desculpa mas a sua mensagem de email %{destination} (titled %{former_title}) não funcionou.
 
@@ -1427,7 +1426,6 @@ pt:
 
         Se está a obter isto e _realmente_ incluiu uma resposta, tente novamente com um formato mais simples.
     email_reject_parsing:
-      subject_template: "[%{site_name}] Problema de email -- Conteúdo não reconhecido"
       text_body_template: |
         Pedimos desculpa, mas a sua mensagem de email para %{destination} (título %{former_title}) não funcionou.
 

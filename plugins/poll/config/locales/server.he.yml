@@ -13,7 +13,7 @@ he:
   poll:
     multiple_polls_without_name: "יש מספר סקרים ללא שם. השתמש במאפיין '<code>name</code>'  לזהות באופן יחודי את הסקרים שלך. "
     multiple_polls_with_same_name: "יש מספר סקרים עם אותו שם <strong>%{name}</strong>. השתמש במאפיין '<code>name</code>'  לזהות באופן יחודי את הסקרים שלך. "
-    default_poll_must_have_at_least_2_options: "לסקר צריך להיות לפחות שתי אפשרויות."
+    default_poll_must_have_at_least_2_options: "לסקר צריכות להיות לפחות שתי אפשרויות."
     named_poll_must_have_at_least_2_options: "לסקר בשם <strong>%{name}</strong>  צריך שיהיה לפחות שתי אפשרויות."
     default_poll_must_have_less_options:
       one: "לסקר חייב להיות פחות מאפשרות אחת."
@@ -32,12 +32,12 @@ he:
       cannot_change_polls: "אינכם יכולים להוסיף, להסיר, או לשנות שם לסקרים לאחר %{minutes} הדקות הראשונות."
       op_cannot_edit_options: "אינכם יכולים להוסיף או להסיר אופציות סקרים אחרי %{minutes} הדקות הראשונות. אנא פנו למנחה אם אתם צריכים לערוך אופציית סקר."
       staff_cannot_add_or_remove_options: "אינכם יכולים להוסיף או להסיר אופציית סקר לאחר %{minutes} הדקות הראשונות. עליכם לסגור את הנושא וליצור אחד חדש במקום."
-    no_polls_associated_with_this_post: "אין סקרים שמקושרים לפרסום הזה."
-    no_poll_with_this_name: "אין סקר בשם  <strong>%{name}</strong> שמקושר לפרסום הזה. "
-    post_is_deleted: "לא ניתן לפעול על הודעה שנמחקה."
+    no_polls_associated_with_this_post: "אין סקרים שמקושרים לפוסט הזה."
+    no_poll_with_this_name: "אין סקר בשם  <strong>%{name}</strong> שמקושר לפוסט הזה. "
+    post_is_deleted: "לא ניתן לפעול על פוסט שנמחק."
     topic_must_be_open_to_vote: "הנושא צריך להיות פתוח להצבעות."
-    poll_must_be_open_to_vote: "הסקר צריך להיות פתוח להזמנות."
-    topic_must_be_open_to_toggle_status: "הנושא צריך להיות פתוח לשינויים בסטטוס."
+    poll_must_be_open_to_vote: "הסקר צריך להיות פתוח להצבעות."
+    topic_must_be_open_to_toggle_status: "הנושא חייב להיות פתוח לשינויים בסטטוס."
     only_staff_or_op_can_toggle_status: "רק חבר צוות או המפרסם המקורי יכול לשנות סטטוס של סקר. "
     email:
       link_to_poll: "לחצו כדי לצפות בסקר."

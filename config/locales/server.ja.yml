@@ -1105,7 +1105,6 @@ ja:
     email_reject_empty:
       subject_template: "[%{site_name}] Email issue -- 本文なし"
     email_reject_parsing:
-      subject_template: "[%{site_name}] Email issue -- 認識されていないコンテンツ"
       text_body_template: |
         申し訳ありません,あなたの %{destination} へのメール(titled %{former_title}) は動きませんでした
         メールから回答を見つける事ができませんでした。返信はメールのトップにあることを確認してください。インライン回答を見つける事はできません。

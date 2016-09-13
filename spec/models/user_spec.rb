@@ -433,6 +433,14 @@ describe User do
     it 'returns false when a username is taken' do
       expect(User.username_available?(Fabricate(:user).username)).to eq(false)
     end
+
+    it 'returns false when a username is reserved' do
+      SiteSetting.reserved_usernames = 'test|donkey'
+
+      expect(User.username_available?('donkey')).to eq(false)
+      expect(User.username_available?('DonKey')).to eq(false)
+      expect(User.username_available?('test')).to eq(false)
+    end
   end
 
   describe 'email_validator' do
@@ -467,6 +475,13 @@ describe User do
     it 'should reject emails based on the email_domains_blacklist site setting matching subdomain' do
       SiteSetting.email_domains_blacklist = 'domain.com'
       expect(Fabricate.build(:user, email: 'notgood@sub.domain.com')).not_to be_valid
+    end
+
+    it 'skips the blacklist if skip_email_validation is set' do
+      SiteSetting.email_domains_blacklist = 'domain.com'
+      user = Fabricate.build(:user, email: 'notgood@sub.domain.com')
+      user.skip_email_validation = true
+      expect(user).to be_valid
     end
 
     it 'blacklist should not reject developer emails' do

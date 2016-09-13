@@ -10,6 +10,8 @@ class Group < ActiveRecord::Base
   has_many :categories, through: :category_groups
   has_many :users, through: :group_users
 
+  has_and_belongs_to_many :web_hooks
+
   before_save :downcase_incoming_email
 
   after_save :destroy_deletions
@@ -28,7 +30,7 @@ class Group < ActiveRecord::Base
   validates_uniqueness_of :name, case_sensitive: false
   validate :automatic_membership_email_domains_format_validator
   validate :incoming_email_validator
-  validates :flair_url, url: true
+  validates :flair_url, url: true, if: Proc.new { |g| g.flair_url && g.flair_url[0,3] != 'fa-' }
 
   AUTO_GROUPS = {
     :everyone => 0,

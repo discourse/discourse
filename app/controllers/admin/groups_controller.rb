@@ -67,6 +67,7 @@ class Admin::GroupsController < Admin::AdminController
 
     group.flair_url      = params[:flair_url].presence
     group.flair_bg_color = params[:flair_bg_color].presence
+    group.flair_color    = params[:flair_color].presence
 
     if group.save
       Group.reset_counters(group.id, :group_users)

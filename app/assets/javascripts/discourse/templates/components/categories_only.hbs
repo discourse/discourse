@@ -26,8 +26,10 @@
             {{#if c.subcategories}}
               <div class='subcategories'>
                 {{#each c.subcategories as |s|}}
-                  {{category-link s hideParent="true"}}
-                  {{category-unread category=s}}
+                  <span class='subcategory'>
+                    {{category-link s hideParent="true"}}
+                    {{category-unread category=s}}
+                  </span>
                 {{/each}}
               </div>
             {{/if}}

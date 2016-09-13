@@ -13,8 +13,8 @@ CategoryList.reopenClass({
     const categories = CategoryList.create();
     const list = Discourse.Category.list();
 
-    let statPeriod;
-    const minCategories = result.category_list.categories.length * 0.8;
+    let statPeriod = "all";
+    const minCategories = result.category_list.categories.length * 0.66;
 
     ["week", "month"].some(period => {
       const filteredCategories = result.category_list.categories.filter(c => c[`topics_${period}`] > 0);
@@ -37,6 +37,7 @@ CategoryList.reopenClass({
         c.topics = c.topics.map(t => Discourse.Topic.create(t));
       }
 
+
       switch(statPeriod) {
         case "week":
         case "month":
@@ -45,11 +46,13 @@ CategoryList.reopenClass({
           if (stat > 0) {
             c.stat = `<span class="value">${stat}</span> / <span class="unit">${unit}</span>`;
             c.statTitle = I18n.t("categories.topic_stat_sentence", { count: stat, unit: unit });
+            c["pick" + statPeriod[0].toUpperCase() + statPeriod.slice(1)] = true;
             break;
           }
         default:
-          c.stat = `<span class="value">${c.topic_count}</span>`;
-          c.statTitle = I18n.t("categories.topic_sentence", { count: c.topic_count });
+          c.stat = `<span class="value">${c.topics_all_time}</span>`;
+          c.statTitle = I18n.t("categories.topic_sentence", { count: c.topics_all_time });
+          c.pickAll = true;
           break;
       }
 

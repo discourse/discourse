@@ -80,6 +80,10 @@ createWidget('reply-to-tab', {
 createWidget('post-avatar-flair', {
   tagName: 'div.avatar-flair',
 
+  isIcon(attrs) {
+    return (attrs.primaryGroupFlairUrl && attrs.primaryGroupFlairUrl.substr(0,3) === 'fa-');
+  },
+
   title(attrs) {
     return attrs.primaryGroupName;
   },
@@ -90,13 +94,24 @@ createWidget('post-avatar-flair', {
 
   buildAttributes(attrs) {
     var style = '';
-    if (attrs.primaryGroupFlairUrl) {
+    if (!this.isIcon(attrs)) {
       style += 'background-image: url(' + Handlebars.Utils.escapeExpression(attrs.primaryGroupFlairUrl) + '); ';
     }
     if (attrs.primaryGroupFlairBgColor) {
       style += 'background-color: #' + Handlebars.Utils.escapeExpression(attrs.primaryGroupFlairBgColor) + '; ';
     }
+    if (attrs.primaryGroupFlairColor) {
+      style += 'color: #' + Handlebars.Utils.escapeExpression(attrs.primaryGroupFlairColor) + '; ';
+    }
     return {style: style};
+  },
+
+  html(attrs) {
+    if (this.isIcon(attrs)) {
+      return [h('i', { className: 'fa ' + attrs.primaryGroupFlairUrl })];
+    } else {
+      return [];
+    }
   }
 });
 

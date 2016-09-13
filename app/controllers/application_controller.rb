@@ -452,7 +452,7 @@ class ApplicationController < ActionController::Base
 
     def check_xhr
       # bypass xhr check on PUT / POST / DELETE provided api key is there, otherwise calling api is annoying
-      return if !request.get? && api_key_valid?
+      return if !request.get? && is_api?
       raise RenderEmpty.new unless ((request.format && request.format.json?) || request.xhr?)
     end
 
@@ -469,7 +469,7 @@ class ApplicationController < ActionController::Base
     end
 
     def redirect_to_login_if_required
-      return if current_user || (request.format.json? && api_key_valid?)
+      return if current_user || (request.format.json? && is_api?)
 
       # redirect user to the SSO page if we need to log in AND SSO is enabled
       if SiteSetting.login_required?
@@ -512,10 +512,6 @@ class ApplicationController < ActionController::Base
         post_serializer.post_actions = counts
       end
       render_json_dump(post_serializer)
-    end
-
-    def api_key_valid?
-      request["api_key"] && ApiKey.where(key: request["api_key"]).exists?
     end
 
     # returns an array of integers given a param key

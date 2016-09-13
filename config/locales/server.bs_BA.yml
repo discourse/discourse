@@ -780,8 +780,6 @@ bs_BA:
       subject_template: "Email issue -- No Account"
     email_reject_empty:
       subject_template: "Email issue -- No Content"
-    email_reject_parsing:
-      subject_template: "Email issue -- Content unrecognized"
     email_reject_reply_key:
       subject_template: "Email issue -- Bad Reply Key"
     email_error_notification:

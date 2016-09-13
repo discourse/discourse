@@ -24,9 +24,13 @@ class EmbeddableHost < ActiveRecord::Base
     uri = URI(url) rescue nil
     return false unless uri.present?
 
+    path = uri.path
+    path << "?" << uri.query if uri.query.present?
+
     host = record_for_url(uri)
+
     return host.present? &&
-           (host.path_whitelist.blank? || !Regexp.new(host.path_whitelist).match(uri.path).nil?)
+           (host.path_whitelist.blank? || !Regexp.new(host.path_whitelist).match(path).nil?)
   end
 
   private

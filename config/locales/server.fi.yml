@@ -477,7 +477,7 @@ fi:
       title: "Kiitos sähköpostiosoitteesi varmentamisesta"
       description: "Lähetämme sinulle sähköpostin varmennusta varten."
   activation:
-    action: "Klikkaa tähän aktivoidaksesi tilisi"
+    action: "Aktivoi tilisi klikkaamalla tästä"
     already_done: "Pahoittelut, tämän tilin varmennuslinkki ei ole enää voimassa. Ehkäpä tili on jo varmennettu?"
     please_continue: "Tilisi on nyt varmennettu; sivu ohjautuu palstan etusivulle."
     continue_button: "Jatka sivustolle %{site_name}"
@@ -846,7 +846,7 @@ fi:
     prioritize_username_in_ux: "Näytä käyttäjänimi ensimmäisenä käyttäjäsivulla, -kortissa ja viesteissä (jos poistetaan käytöstä, nimi näytetään ensin)"
     email_token_valid_hours: "Unohtuneen salasanan / tilin vahvistamisen tokenit ovat voimassa (n) tuntia."
     email_token_grace_period_hours: "Unohtuneen salasanan / tilin vahvistamisen tokenit ovat vielä voimassa (n) tuntia käyttämisen jälkeen."
-    enable_badges: "Ota käyttöön arvomerkkijärjestelmä"
+    enable_badges: "Ota käyttöön ansiomerkkijärjestelmä"
     enable_whispers: "Salli henkilökunnan keskustella yksityisestä ketjun sisällä. (kokeellinen)"
     allow_index_in_robots_txt: "Määrittele robots.txt-tiedostossa, että hakukoneet saavat luetteloida sivuston."
     email_domains_blacklist: "Pystyviivalla eroteltu lista sähköposti-verkkotunnuksista, joista käyttäjät eivät voi luoda tiliä. Esimerkiksi mailinator.com|trashmail.net"
@@ -917,16 +917,17 @@ fi:
     rate_limit_create_post: "Viestin luomisen jälkeen käyttäjän täytyy odottaa (n) sekuntia voidakseen luoda uuden viestin."
     rate_limit_new_user_create_topic: "Ketjun luomisen jälkeen uuden käyttäjän täytyy odottaa (n) sekuntia voidakseen luoda uuden ketjun."
     rate_limit_new_user_create_post: "Viestin luomisen jälkeen uuden käyttäjän täytyy odottaa (n) sekuntia voidakseen luoda uuden viestin."
-    max_likes_per_day: "Tykkäysten päivittäinen maksimäärä per käyttäjä."
-    max_flags_per_day: "Liputusten päivittäinen maksimäärä per käyttäjä."
-    max_bookmarks_per_day: "Kirjanmerkkien päivittäinen maksimäärä per käyttäjä."
-    max_edits_per_day: "Muokkausten päivittäinen maksimäärä per käyttäjä."
+    max_likes_per_day: "Tykkäysten päivittäinen maksimimäärä per käyttäjä."
+    max_flags_per_day: "Liputusten päivittäinen maksimimäärä per käyttäjä."
+    max_bookmarks_per_day: "Kirjanmerkkien päivittäinen maksimimäärä per käyttäjä."
+    max_edits_per_day: "Muokkausten päivittäinen maksimimäärä per käyttäjä."
     max_topics_per_day: "Luotujen ketjujen päivittäinen enimmäismäärä per käyttäjä."
-    max_private_messages_per_day: "Viestien päivittäinen maksimäärä per käyttäjä"
+    max_private_messages_per_day: "Viestien päivittäinen maksimimäärä per käyttäjä."
     max_invites_per_day: "Maksimimäärä kutsuja, jonka käyttäjä voi lähettää päivässä."
     max_topic_invitations_per_day: "Maksimimäärä ketjukutsuja, jonka yksittäinen käyttäjä voi lähettää päivässä"
     alert_admins_if_errors_per_minute: "Virheiden määrä minuutissa, jonka seurauksena hälytetään ylläpitäjä. 0 ottaa toiminnon pois käytöstä. HUOM: vaatii uudelleenkäynnistyksen."
     alert_admins_if_errors_per_hour: "Virheiden määrä tunnissa, jonka seurauksena hälytetään ylläpitäjä. 0 ottaa toiminnon pois käytöstä. HUOM: vaatii uudelleenkäynnistyksen."
+    categories_topics: "Kuinka monta ketjua näytetään /keskustelualueet-sivulla"
     suggested_topics: "Ehdotettujen ketjujen määrä ketjun alaosassa."
     limit_suggested_to_category: "Ehdota ketjuja vain nykyiseltä alueelta."
     suggested_topics_max_days_old: "Ehdotettujen ketjujen ei tulisi olla yli n päivää vanhoja."
@@ -998,6 +999,7 @@ fi:
     title_fancy_entities: "Muunna tavalliset ASCII merkit hienommiksi HTML merkinnöiksi ketjun otsikoissa, kuten SmartyPants http://daringfireball.net/projects/smartypants/"
     min_title_similar_length: "Ketjun otsikon minimipituus, kunnes sitä verrataan muihin samankaltaisiin ketjuihin."
     min_body_similar_length: "Viestin minimipituus, kunnes sitä verratataan muihin samankaltaisiin ketjuihin."
+    desktop_category_page_style: "/Keskustelualueet-sivun visuaalinen tyyli."
     category_colors: "Lista alueiden sallituista väriarvoista, heksadesimaaleina."
     category_style: "Aluemerkin tyyli."
     max_image_size_kb: "Liitetyn kuvan suurin sallittu koko kilotavuissa. Tämä pitää asettaa myös nginxin (client_max_body_size) / apachen tai proxyn asetuksista."
@@ -1176,6 +1178,7 @@ fi:
     tag_style: "Tunnisteiden visuaalinen tyyli."
     staff_tags: "Lista tunnisteista, joita vain henkilökunta voi lisätä"
     min_trust_level_to_tag_topics: "Vähimmäisluottamustaso, jolla voi lisätä tunnisteita ketjuihin"
+    suppress_overlapping_tags_in_list: "Jos tunniste esiintyy sanana täsmälleen ketjun otsikossa, älä näytä tunnistetta"
     remove_muted_tags_from_latest: "Jos tunniste on vaimennettu, älä näytä ketjua Tuoreimmissa."
     errors:
       invalid_email: "Sähköpostiosoite ei kelpaa."
@@ -1525,100 +1528,6 @@ fi:
         Kuitenkin, jos viesti piilotetaan toisen kerran, se pysyy piilotettuna, kunnes henkilökunta selvittää tilanteen – josta voi olla muita seuraumuksia, kuten tilisi hyllyttäminen.
 
         Saadaksesi lisätietoja, lue [yhteisön säännöt](%{base_url}/guidelines).
-    usage_tips:
-      text_body_template: |
-        Tässä muutama nopea ohje, joiden avulla pääset alkuun:
-
-        ## Lukeminen
-
-        Lukeaksesi lisää, **jatka vain sivun vierittämistä alaspäin!**
-
-        Kun uusia vastauksia tai ketjuja luodaan, ne ilmestyvät näkyviin automaattisesti - sivua ei tarvitse ladata uudelleen.
-
-        ## Navigointi
-
-        - Haku, käyttäjäprofiilisi ja palstan <kbd>☰</kbd> valikko avautuvat klikkaamalla **oikeassa yläkulmassa olevia painikkeita**.
-
-        - Ketjun otsikkoa klikkaamalla pääset aina ketjun **uusimpaan lukemattomaan viestiin**. Hypätäksesi ketjun alkuun tai loppuun, klikkaa sen sijaan uusinta toimintaa tai viestien lukumäärää.
-
-        <img src="%{base_url}/images/welcome/topic-list-select-areas-2x.png" width="593" height="59">
-
-        - Kun olet lukemassa viestiketjua, klikkaa aikajanaa oikealla siirtyäksesi ylös, alas ja edelliseen lukukohtaasi ketjussa. Pienemmällä ruudulla voit laajentaa navigointipainikkeet ruudun oikeasta alalaidasta.
-
-        <img src="%{base_url}/images/welcome/progress-bar-2x.png" width="153" height="181">
-
-        Näppäile <kbd>?</kbd> tuodaksesi esiin listan näppäimistöoikoteistä.
-
-        ## Vastaaminen
-
-        Lisätäksesi lainauksen, valitse ensin teksti jonka haluat lainata ja paina sitten mitä tahansa <img src="%{base_url}/images/welcome/reply-post-2x.png" width="25" height="23"> Vastaa-näppäintä avataksesi tekstieditorin. Toista lisätäksesi lisää lainauksia.
-
-        <img src="%{base_url}/images/welcome/quote-reply-2x.png" width="326" height="128">
-
-        Voit jatkaa lukemista samalla kun kirjoitat vastaustasi ja tallennamme jatkuvasti keskeneräiset vedokset.
-
-        Toinen käyttäjä saa ilmoituksen viestistäsi, jos mainitset hänet viestissäsi. Aloita kirjoittamaan `@` ja voit valita käyttäjänimen listasta.
-
-        <img src="%{base_url}/images/welcome/username-completion-2x.png" width="191" height="125">
-
-        [Emojia](http://www.emoji.codes/) voit lisätä nimeltä kirjoittamalla `:`  tai voit käyttä perinteisiä hymiöitä kuten `;)`
-
-        <img src="%{base_url}/images/welcome/emoji-completion-2x.png" width="144" height="153">
-
-        Luodaksesi esikatselun linkistä, liitä se omalle rivilleen:
-
-        <img src="%{base_url}/images/welcome/link-oneboxing-animation.gif" width="480" height="228">
-
-        Vastauksen muotoilussa voit käyttää yksinkertaisia HTML-, BBCode- tai [Markdown](http://commonmark.org/help/)-komentoja:
-
-        Tämä on **lihavoitu**.
-        Tämä on <b>lihavoitu</b>.
-        Tämä on [b]lihavoitu[/b].
-
-        Lisää muotoiluvinkkejä saat [kokeilemalla kymmenen minuuttia kestävää englanninkielistä tutoriaalia!](http://commonmark.org/help/tutorial/)
-
-        ## Toiminnot
-
-        Jokaisen viestin alalaidassa on joukko painikkeita:
-
-        <img src="%{base_url}/images/welcome/like-link-flag-bookmark-2x.png" width="162" height="42">
-
-        - Antaaksesi kirjoittajan tietää, että arvostit lukemaasi viestiä, käytä **tykkää**-painiketta. Laitetaan hyvä kiertämään!
-
-        - Nappaa tekstilinkki mihin tahansa ketjuun tai viestiin **linkki**-painikkeella
-
-        - Klikkaa <kbd>&hellip;</kbd>-painiketta avataksesi lisää toimintoja. **Lippu** antaa mahdollisuuden kertoa ongelmasta yksityisesti joko viestin kirjoittajalle tai [henkilökunnalle](%{base_url}/about). **Kirjanmerkin** avulla löydät viestin myöhemmin käyttäjäprofiilistasi.
-
-
-        ## Ilmoitukset
-
-        Kun joku vastaa viestiisi, lainaa viestiäsi tai mainitsee `@käyttäjänimesi`, ilmestyy sivun oikeaan yläkulmaan numero. Sieltä pääset tarkastelemaan **ilmoituksiasi**.
-
-        <img src="%{base_url}/images/welcome/notification-panel-2x.png" width="160" height="54">
-
-        Eikä tarvitse murehtia siitä, että et huomaisi uusia vastauksia. Saat sähköpostin uusista ilmoituksista jos et ole paikalla, kun ne saapuvat.
-
-        ## Omat asetukset
-
-        - Oletuksena kaikki alle kaksi päivää vanhat keskustelut ovat uusia.
-
-        - Kaikkia keskusteluita **joissa olet ollut mukana** (luomalla, vastaamalla tai lukemalla pitkään) seurataan automaattisesti.
-
-        Näet uusien ja lukemattomien lukumäärän ilmaisimet näiden ketjujen yhteydessä.
-
-        <img src="%{base_url}/images/welcome/topics-new-unread-2x.png" width="341" height="106">
-
-        Voit vaihtaa minkä tahansa viestiketjun ilmoitusasetuksia ketjun oikeassa- ja alalaidassa olevilla painikkeella.
-
-        <img src="%{base_url}/images/welcome/topic-notification-control-2x.png" width="608" height="312">
-
-        Voit myös asettaa ilmoitusasetuksen aluekohtaisesti, jos haluat hiljentää tai seurata jokaista ketjua tietyllä keskustelualueella.
-
-        Voit muuttaa näitä asetuksia [käyttäjäasetuksissasi](%{base_url}/my/preferences).
-
-        ## Yhteisön luottamus
-
-        Sitä mukaa kun osallistut palstan keskusteluihin, keräät yhteisön luottamusta ja uudelle käyttäjälle asetetut rajoitukset poistuvat automaattisesti. Korkeammilla [luottamustasoilla](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924) saat vielä enemmän valtuuksia, joiden avulla voit auttaa yhteisön ylläpitämisessä.
     welcome_user:
       subject_template: "Tervetuloa sivustolle %{site_name}!"
       text_body_template: |
@@ -1655,6 +1564,16 @@ fi:
         [prefs]: %{user_preferences_url}
     backup_succeeded:
       subject_template: "Varmuuskopiointi suoritettu onnistuneesti"
+      text_body_template: |
+        Varmuuskopiointi onnistui.
+
+        Lataa varmuuskopio siirtymällä [ylläpito > varmuuskopiot](%{base_url}/admin/backups).
+
+        Tässä loki:
+
+        ```text
+        %{logs}
+        ```
     backup_failed:
       subject_template: "Varmmuskopiointi epäonnistui"
       text_body_template: |
@@ -1741,7 +1660,6 @@ fi:
 
         Käyttäjätili tällä sähköpostiosoitteella on estetty.
     email_reject_reply_user_not_matching:
-      subject_template: "[%{site_name}] Sähköpostiongelma -- Käyttäjä ei täsmää"
       text_body_template: |
         Pahoittelut, sähköpostiviestisi lähetys kohteeseen %{destination} (titled %{former_title}) ei onnistunut.
 
@@ -1762,7 +1680,6 @@ fi:
         Jos saat tämän viestin ja viestisi _sisälsi_ sisältöä, yritä uudestaan yksinkertaisemmalla muotoilulla.
 
     email_reject_parsing:
-      subject_template: "[%{site_name}] Sähköpostiongelma -- Tunnistamaton sisältö"
       text_body_template: |
         Pahoittelemme, mutta sähköpostin lähettäminen tänne %{destination} (otsikolla %{former_title}) ei onnistunut.
 
@@ -2383,217 +2300,217 @@ fi:
       name: Muokkaaja
       description: Ensimmäinen viestin muokkaus
       long_description: |
-        Tämä arvomerkki myönnetään, kun ensimmäistä kertaa muokkaat viestiäsi. Viestiä ei voi muokata kuin määrätyn ajan viestin lähettämisen jälkeen, mutta sinä aikana muokkaaminen on aina hyvä ajatus. Voit parannella viestiä, korjata pieniä virheitä tai lisätä jotakin, mikä pääsi unohtumaan viestin kirjoittamisen hetkellä. Muokkaa viesteistäsi entistäkin parempia!
+        Tämä ansiomerkki myönnetään, kun ensimmäistä kertaa muokkaat viestiäsi. Viestiä ei voi muokata kuin määrätyn ajan viestin lähettämisen jälkeen, mutta sinä aikana muokkaaminen on aina hyvä ajatus. Voit parannella viestiä, korjata pieniä virheitä tai lisätä jotakin, mikä pääsi unohtumaan viestin kirjoittamisen hetkellä. Muokkaa viesteistäsi entistäkin parempia!
     basic_user:
       name: Haastaja
       description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/4">Myönnetty</a> kaikki palstan välttämättömimmät toiminnot
       long_description: |
-        Tämä arvomerkki myönnetään, kun nouset luottamustasolle 1. Kiitos siitä, että olet päättänyt antaa palstalle mahdollisuuden ja lukenut muutamaa ketjua ottaaksesi selvää, mistä yhteisössä on kyse. Uuden käyttäjän rajoituksia on nyt poistettu; sait käyttöösi välttämättömimmät palstan toiminnot kuten yksityisviestit, liputtamisen, wiki-viestien muokkaamisen ja oikeuden laittaa viestiin useampia kuvia ja linkkejä.
+        Tämä ansiomerkki myönnetään, kun nouset luottamustasolle 1. Kiitos siitä, että olet päättänyt antaa palstalle mahdollisuuden ja lukenut muutamaa ketjua ottaaksesi selvää, mistä yhteisössä on kyse. Uuden käyttäjän rajoituksia on nyt poistettu; sait käyttöösi välttämättömimmät palstan toiminnot kuten yksityisviestit, liputtamisen, wiki-viestien muokkaamisen ja oikeuden laittaa viestiin useampia kuvia ja linkkejä.
     member:
       name: Konkari
       description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/5">Myönnetty</a> kutsut, ryhmäviestit ja lisää tykkäyksiä
       long_description: |
-        Tämä arvomerkki myönnetään, kun nouset luottamustasolle 2. Kiitos siitä, että olet ollut keskuudessamme viikkojen ajan ja tullut osaksi yhteisöä. Voit nyt lähettää kutsuja käyttäjäsivultasi ja ketjuista, luoda ryhmäviestejä ja käytössäsi on muutama tykkäys enemmän päivää kohden.
+        Tämä ansiomerkki myönnetään, kun nouset luottamustasolle 2. Kiitos siitä, että olet ollut keskuudessamme viikkojen ajan ja tullut osaksi yhteisöä. Voit nyt lähettää kutsuja käyttäjäsivultasi ja ketjuista, luoda ryhmäviestejä ja käytössäsi on muutama tykkäys enemmän päivää kohden.
     regular:
       name: Mestari
       description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/6">Myönnetty</a> ketjujen siirto toiselle alueelle ja uudelleen nimeäminen, hakukoneiden seuraamat linkit, wiki-viestit ja lisää tykkäyksiä
       long_description: |
-        Tämä arvomerkki myönnetään, kun nouset luottamustasolle 3. Kiitos kun olet ollut tärkeä osa yhteisöä kuukausien ajan. Olet yksi innokkaimmista lukijoista ja luotettava sisällön tuottaja, ja olet tekemässä yhteisöstä niin hienoa kuin se on. Voit nyt siirtää alueelta toiselle ja uudelleennimetä ketjuja, roskapostiliputuksesi ovat tehokkaampia, pääset lounge-alueelle ja käytössäsi on selvästi enemmän tykkäyksiä päivää kohden.
+        Tämä ansiomerkki myönnetään, kun nouset luottamustasolle 3. Kiitos kun olet ollut tärkeä osa yhteisöä kuukausien ajan. Olet yksi innokkaimmista lukijoista ja luotettava sisällön tuottaja, ja olet tekemässä yhteisöstä niin hienoa kuin se on. Voit nyt siirtää alueelta toiselle ja uudelleennimetä ketjuja, roskapostiliputuksesi ovat tehokkaampia, pääset lounge-alueelle ja käytössäsi on selvästi enemmän tykkäyksiä päivää kohden.
     leader:
       name: Johtaja
       description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/7">Myönnetty</a> minkä tahansa viestin muokkaaminen, kiinnittäminen, sulkeminen, arkistoiminen, pilkkominen ja yhdistäminen ja lisää tykkäyksiä
       long_description: |
-        Tämä arvomerkki myönnetään, kun nouset luottamustasolle 4. Palstan henkilökunta on valinnut sinut johtajaksi. Näytät muille positiivista esimerkkiä sanoin ja teoin. Voit nyt muokata mitä tahansa viestiä ja käytössäsi on yleiset valvojatyökalut, joilla voit hallita ketjuja kuten kiinnittäminen, sulkeminen, listauksista poistaminen, arkistoiminen, pilkkominen ja yhdistäminen, ja käytössäsi on paljon enemmän tykkäyksiä päivää kohden.
+        Tämä ansiomerkki myönnetään, kun nouset luottamustasolle 4. Palstan henkilökunta on valinnut sinut johtajaksi. Näytät muille positiivista esimerkkiä sanoin ja teoin. Voit nyt muokata mitä tahansa viestiä ja käytössäsi on yleiset valvojatyökalut, joilla voit hallita ketjuja kuten kiinnittäminen, sulkeminen, listauksista poistaminen, arkistoiminen, pilkkominen ja yhdistäminen, ja käytössäsi on paljon enemmän tykkäyksiä päivää kohden.
     welcome:
       name: Tervetuloa
       description: Sai tykkäyksen
       long_description: |
-        Tämä arvomerkki myönnetään, kun viestistäsi tykätään ensi kertaa. Onnittelut, olet tuottanut jotakin, mitä toinen käyttäjä on pitänyt mielenkiintoisena, hauskana tai hyödyllisenä!
+        Tämä ansiomerkki myönnetään, kun viestistäsi tykätään ensi kertaa. Onnittelut, olet tuottanut jotakin, mitä toinen käyttäjä on pitänyt mielenkiintoisena, hauskana tai hyödyllisenä!
     autobiographer:
       name: Omaelämäkerta
       description: Täytti <a href="/my/preferences">käyttäjätiedot</a>
       long_description: |
-        Tämä arvomerkki myönnetään , kun täytät <a href="/my/preferences">käyttäjätiedot</a> ja valitset profiilikuvan. Kertomalla hieman itsestäsi ja kiinnostuksen kohteistasi edistät yhteisöllisyyttä. Liity meihin!
+        Tämä ansiomerkki myönnetään , kun täytät <a href="/my/preferences">käyttäjätiedot</a> ja valitset profiilikuvan. Kertomalla hieman itsestäsi ja kiinnostuksen kohteistasi edistät yhteisöllisyyttä. Liity meihin!
     anniversary:
       name: Vuosipäivä
       description: Aktiivinen jäsen vuoden ajan, kirjoittanut ainakin yhden viestin
       long_description: |
-        Tämä arvomerkki myönnetään, kun olet ollut jäsen vuoden ajan ja kirjoittanut sinä aikana ainakin yhden viestin. Kiitos, kun olet yhä keskuudessamme ja antanut panoksesi yhteisön hyväksi. Emme pärjäisi ilman sinua.
+        Tämä ansiomerkki myönnetään, kun olet ollut jäsen vuoden ajan ja kirjoittanut sinä aikana ainakin yhden viestin. Kiitos, kun olet yhä keskuudessamme ja antanut panoksesi yhteisön hyväksi. Emme pärjäisi ilman sinua.
     nice_post:
       name: Hyvä vastaus
       description: Vastaus sai 10 tykkäystä
       long_description: |
-        Tämä arvomerkki myönnetään, kun vastauksesi saa 10 tykkäykstä. Teit sillä todellisen vaikutuksen yhteisöön ja edistit keskustelua!
+        Tämä ansiomerkki myönnetään, kun vastauksesi saa 10 tykkäykstä. Teit sillä todellisen vaikutuksen yhteisöön ja edistit keskustelua!
     good_post:
       name: Erinomainen vastaus
       description: Vastaus sai 25 tykkäystä
       long_description: |
-        Tämä arvomerkki myönnetään, kun vastauksesi saa 25 tykkäystä. Vastauksesi oli poikkeuksellinen ja teki keskustelusta todella paljon paremman!
+        Tämä ansiomerkki myönnetään, kun vastauksesi saa 25 tykkäystä. Vastauksesi oli poikkeuksellinen ja teki keskustelusta todella paljon paremman!
     great_post:
       name: Loistava vastaus
       description: Vastaus sai 50 tykkäystä
       long_description: |
-        Tämä arvomerkki myönnetään, kun vastauksesi saa 50 tykkäystä. Vau! Vastauksesi oli innoittava, hulvaton tai oivaltava, ja yhteisö rakasti sitä.
+        Tämä ansiomerkki myönnetään, kun vastauksesi saa 50 tykkäystä. Vau! Vastauksesi oli innoittava, hulvaton tai oivaltava, ja yhteisö rakasti sitä.
     nice_topic:
       name: Hyvä ketju
       description: Ketjunavaus sai 10 tykkäystä
       long_description: |
-        Tämä arvomerkki myönnetään, kun luomasi ketju saa 10 tykkäystä. Aloitit kiintoisan keskustelun, josta yhteisö nautti!
+        Tämä ansiomerkki myönnetään, kun luomasi ketju saa 10 tykkäystä. Aloitit kiintoisan keskustelun, josta yhteisö nautti!
     good_topic:
       name: Erinomainen ketju
       description: Ketjunavaus sai 25 tykkäystä
       long_description: |
-        Tämä arvomerkki myönnetään, kun luomasi ketju saa 25 tykkäystä. Aloitit vilkkaan keskustelun, jota yhteisö rakasti!
+        Tämä ansiomerkki myönnetään, kun luomasi ketju saa 25 tykkäystä. Aloitit vilkkaan keskustelun, jota yhteisö rakasti!
     great_topic:
       name: Loistava ketju
       description: Ketjunavaus sai 50 tykkäystä
       long_description: |+
-        Tämä arvomerkki myönnetään, kun luomasi ketju saa 50 tykkäystä. Aloitit kiehtovan keskustelun, jossa vaihdetuista ajatuksista yhteisö nautti!
+        Tämä ansiomerkki myönnetään, kun luomasi ketju saa 50 tykkäystä. Aloitit kiehtovan keskustelun, jossa vaihdetuista ajatuksista yhteisö nautti!
 
     nice_share:
       name: Hyvä jako
       description: Jakoi viestin, ja linkin kautta saapui 25 vierailijaa
       long_description: |+
-        Tämä arvomerkki myönnetään, kun jaat linkin, jota klikkaa 25 ulkopuolista vierailijaa. Kiitos kun levität sanaa palstan keskusteluista ja yhteisöstä.
+        Tämä ansiomerkki myönnetään, kun jaat linkin, jota klikkaa 25 ulkopuolista vierailijaa. Kiitos kun levität sanaa palstan keskusteluista ja yhteisöstä.
 
     good_share:
       name: Erinomainen jako
       description: Jakoi viestin, ja linkin kautta saapui 300 vierailijaa
       long_description: |
-        Tämä arvomerkki myönnetään, kun jaat linkin, jota klikkaa 300 ulkopuolista vierailijaa. Hyvää työtä! Olet esitellyt upean keskustelun joukolle uusia ihmisiä ja siten auttanut yhteisöä kasvamaan.
+        Tämä ansiomerkki myönnetään, kun jaat linkin, jota klikkaa 300 ulkopuolista vierailijaa. Hyvää työtä! Olet esitellyt upean keskustelun joukolle uusia ihmisiä ja siten auttanut yhteisöä kasvamaan.
     great_share:
       name: Loistava jako
       description: Jakoi viestin, ja linkin kautta saapui 1000 vierailijaa
       long_description: |
-        Tämä arvomerkki myönnetään, kun jaat linkin, jota klikkaa 1000 ulkopuolista vierailijaa. Vau! Olet mainostanut kiinnostavaa keskustelua valtavalle joukolle uusia ihmisiä ja siten auttanut yhteisöä kasvamaan merkittävästi.
+        Tämä ansiomerkki myönnetään, kun jaat linkin, jota klikkaa 1000 ulkopuolista vierailijaa. Vau! Olet mainostanut kiinnostavaa keskustelua valtavalle joukolle uusia ihmisiä ja siten auttanut yhteisöä kasvamaan merkittävästi.
     first_like:
       name: Ensimmäinen tykkäys
       description: Tykkäsi viestistä
       long_description: |
-        Tämä arvomerkki myönnetään, kun ensimmäistä kertaa tykkäät viestistä käyttäen :heart: -nappia. Viestistä tykkääminen on hyvä tapa viestiä yhteisön toiselle jäsenelle, että hänen viestinsä oli kiintoisa, hyödyllinen, osuva tai hauska. Jaa rakkautta!
+        Tämä ansiomerkki myönnetään, kun ensimmäistä kertaa tykkäät viestistä käyttäen :heart: -nappia. Viestistä tykkääminen on hyvä tapa viestiä yhteisön toiselle jäsenelle, että hänen viestinsä oli kiintoisa, hyödyllinen, osuva tai hauska. Jaa rakkautta!
     first_flag:
       name: Ensimmäinen liputus
       description: Liputti viestin
       long_description: |
-        Tämä arvomerkki myönnetään, kun ensi kertaa liputat viestin. Liputtaminen on keino, jolla yhdessä pidämme palstan siistinä ja selkeänä. Jos huomaat viestin joka valvojien tulisi huomioida syystä tai toisesta, älä epäröi liputtaa. Liputuskuvakkeen kautta voit myös lähettää yksityisviestin kirjoittajalle, jos näet viestissä jotakin huomautettavaa. Kun näet ongelman, :flag_black: liputa!
+        Tämä ansiomerkki myönnetään, kun ensi kertaa liputat viestin. Liputtaminen on keino, jolla yhdessä pidämme palstan siistinä ja selkeänä. Jos huomaat viestin joka valvojien tulisi huomioida syystä tai toisesta, älä epäröi liputtaa. Liputuskuvakkeen kautta voit myös lähettää yksityisviestin kirjoittajalle, jos näet viestissä jotakin huomautettavaa. Kun näet ongelman, :flag_black: liputa!
     promoter:
       name: Markkinoija
       description: Kutsui käyttäjän
       long_description: |
-        Tämä arvomerkki myönnetään, kun kutsut jonkun yhteisöön käyttäjäsivusi kutsutoiminnolla tai ketjun alla sijaitsevan painikkeen avulla. Keskustelusta mahdollisesti kiinnostuneen ystävän kutsuminen on hyvä tapa esitellä yhteisöä uusille ihmisille, joten kiitos!
+        Tämä ansiomerkki myönnetään, kun kutsut jonkun yhteisöön käyttäjäsivusi kutsutoiminnolla tai ketjun alla sijaitsevan painikkeen avulla. Keskustelusta mahdollisesti kiinnostuneen ystävän kutsuminen on hyvä tapa esitellä yhteisöä uusille ihmisille, joten kiitos!
     campaigner:
       name: Kampanjoija
       description: Kutsui kolme haastajaa (luottamustaso 1)
       long_description: |
-        Tämä arvomerkki myönnetään, kun 3 kutsumaasi ihmistä viettää sen verran aikaa palstalla, että heidän luottamustasonsa nousee ja heistä tulee "haastajia". Elinvoimainen yhteisö tarvitsee säännöllisesti uusia jäseniä tuomaan tuoreita näkökulmia keskusteluihin.
+        Tämä ansiomerkki myönnetään, kun 3 kutsumaasi ihmistä viettää sen verran aikaa palstalla, että heidän luottamustasonsa nousee ja heistä tulee "haastajia". Elinvoimainen yhteisö tarvitsee säännöllisesti uusia jäseniä tuomaan tuoreita näkökulmia keskusteluihin.
     champion:
       name: Kampanjapäällikkö
       description: Kutsui viisi konkaria (luottamustaso 2)
       long_description: |
-        Tämä arvomerkki myönnetään, kun 5 kutsumaasi ihmistä viettää sen verran aikaa palstalla, että heistä tulee yhteisön täysivaltaisia jäseniä. Vau! Kiitos, kun edistät yhteisömme monimuotoisuutta tuomalla uusia jäseniä!
+        Tämä ansiomerkki myönnetään, kun 5 kutsumaasi ihmistä viettää sen verran aikaa palstalla, että heistä tulee yhteisön täysivaltaisia jäseniä. Vau! Kiitos, kun edistät yhteisömme monimuotoisuutta tuomalla uusia jäseniä!
     first_share:
       name: Ensimmäinen jako
       description: Jakoi viestin
       long_description: |
-        Tämä arvomerkki myönnetään, kun ensi kertaa jaat linkin vastaukseen tai ketjuun käyttämällä Jaa-nappia. Jakaminen on hyvä tapa esitellä kiintoisia keskusteluita muulle maailmalle ja siten kasvattaa yhteisöä.
+        Tämä ansiomerkki myönnetään, kun ensi kertaa jaat linkin vastaukseen tai ketjuun käyttämällä Jaa-nappia. Jakaminen on hyvä tapa esitellä kiintoisia keskusteluita muulle maailmalle ja siten kasvattaa yhteisöä.
     first_link:
       name: Ensimmäinen linkki
       description: Linkitti toiseen ketjuun
       long_description: |
-        Tämä arvomerkki myönnetään, kun ensi kerran linkität toiseen ketjuun. Linkittäminen auttaa kanssalukijoita löytämään kiintoisia asiaa sivuavia keskusteluita ja osoittaa yhteyksiä ketjujen välillä. Linkitä ahkerasti!
+        Tämä ansiomerkki myönnetään, kun ensi kerran linkität toiseen ketjuun. Linkittäminen auttaa kanssalukijoita löytämään kiintoisia asiaa sivuavia keskusteluita ja osoittaa yhteyksiä ketjujen välillä. Linkitä ahkerasti!
     first_quote:
       name: Ensimmäinen lainaus
       description: Lainasi viestiä
       long_description: |
-        Tämä arvomerkki myönnetään, kun ensi kerran lainaat viestiä vastauksessasi. Edellisten viestien olennaisten osien lainaaminen auttaa pitämään keskustelun yhtenäisenä ja aiheen mukaisena. Helpoin tapa on maalata viestin osa ja sitten painaa vastaa-painiketta. Lainaa runsaasti!
+        Tämä ansiomerkki myönnetään, kun ensi kerran lainaat viestiä vastauksessasi. Edellisten viestien olennaisten osien lainaaminen auttaa pitämään keskustelun yhtenäisenä ja aiheen mukaisena. Helpoin tapa on maalata viestin osa ja sitten painaa vastaa-painiketta. Lainaa runsaasti!
     read_guidelines:
       name: Luki ohjeet
       description: Luki <a href="/guidelines">palstan säännöt</a>
       long_description: |
-        Tämä arvomerkki myönnetään, kun <a href="/guidelines">luet yhteisön ohjeet </a>. Noudattamalla ja jakamalla näitä yksinkertaisia ohjeita edistät yhteisön turvallisuutta, viihtyisyyttä ja jatkuvuutta. Muista aina, että toisessa päässä on toinen ihminen, hyvin itsesi kaltainen. Ole kohtelias!
+        Tämä ansiomerkki myönnetään, kun <a href="/guidelines">luet yhteisön ohjeet </a>. Noudattamalla ja jakamalla näitä yksinkertaisia ohjeita edistät yhteisön turvallisuutta, viihtyisyyttä ja jatkuvuutta. Muista aina, että toisessa päässä on toinen ihminen, hyvin itsesi kaltainen. Ole kohtelias!
     reader:
       name: Lukutoukka
       description: Luki jokaisen viestin ketjusta, jossa on enemmän kuin 100 vastausta
       long_description: |
-        Tämä arvomerkki myönnetään, kun ensi kerran luet pitkän, vähintään 100 vastauksen ketjun. Keskustelua huolellisesti lukemilla tiedät missä mennään ja ymmärrät eri näkökulmia, mikä johtaa mielenkiintoisempiin keskusteluihin. Mitä enemmän luet, sitä parempaa on vuoropuhelu. Kuten tapaamme sanoa, lukeminen on kaiken A ja O! :slight_smile:
+        Tämä ansiomerkki myönnetään, kun ensi kerran luet pitkän, vähintään 100 vastauksen ketjun. Keskustelua huolellisesti lukemalla tiedät missä mennään ja ymmärrät eri näkökulmia, mikä johtaa mielenkiintoisempiin keskusteluihin. Mitä enemmän luet, sitä parempaa on vuoropuhelu. Kuten tapaamme sanoa, lukeminen on kaiken A ja O! :slight_smile:
     popular_link:
       name: Suosittu linkki
       description: Linkitti ulkoiselle sivustolle, ja linkkiä klikattiin 50 kertaa
       long_description: |
-        Tämä arvomerkki myönnetään, kun linkkiäsi klikataan 50 kertaa. Kiitos kun laitoit hyödyllisen linkin, joka toi mielenkiintoista sisältöä kekusteluun!
+        Tämä ansiomerkki myönnetään, kun linkkiäsi klikataan 50 kertaa. Kiitos kun laitoit hyödyllisen linkin, joka toi mielenkiintoista sisältöä kekusteluun!
     hot_link:
       name: Kuuma linkki
       description: Linkitti ulkoiselle sivustolle, ja linkkiä klikattiin 300 kertaa
       long_description: |
-        Tämä arvomerkki myönnetään, kun linkkiäsi klikataan 300 kertaa. Kiitos kun laitoit kiehtovan linkin, joka vei keskustelua eteenpäin ja todella edisti keskustelua!
+        Tämä ansiomerkki myönnetään, kun linkkiäsi klikataan 300 kertaa. Kiitos kun laitoit kiehtovan linkin, joka vei keskustelua eteenpäin ja todella edisti keskustelua!
     famous_link:
       name: Kuuluisa linkki
       description: Linkitti ulkoiselle sivustolle, ja linkkiä klikattiin 1000 kertaa
       long_description: |
-        Tämä arvomerkki myönnetään, kun linkkisi saa 1000 klikkausta. Vau! Sen sisältö paransi keskustelua merkittävästi. Hyvin tehty!
+        Tämä ansiomerkki myönnetään, kun linkkisi saa 1000 klikkausta. Vau! Sen sisältö paransi keskustelua merkittävästi. Hyvin tehty!
     appreciated:
       name: Arvostettu
       description: 20 viestiä sai tykkäyksen
       long_description: |
-        Tämä arvomerkki myönnetään, kun olet saanut tykkäyksen vähintään 20 viestistä. Yhteisö nauttii panoksestasi keskusteluun täällä!
+        Tämä ansiomerkki myönnetään, kun olet saanut tykkäyksen vähintään 20 viestistä. Yhteisö nauttii panoksestasi keskusteluun täällä!
     respected:
       name: Kunnioitettu
       description: 100 viestiä sai ainakin 2 tykkäystä
       long_description: |
-        Tämä arvomerkki myönnetään, kun olet saanut vähintään 2 tykkäystä 100 viestistä. Yhteisö alkaa arvostaa panostasi keskusteluihin täällä.
+        Tämä ansiomerkki myönnetään, kun olet saanut vähintään 2 tykkäystä 100 viestistä. Yhteisö alkaa arvostaa panostasi keskusteluihin täällä.
     admired:
       name: Ihailtu
       description: 300 viestiä sai ainakin 5 tykkäystä
       long_description: |
-        Tämä arvomerkki myönnetään, kun olet saanut vähintään 5 tykkäystä 300 viestistä. Wow! Yhteisö ihailee toistuvaa korkealaatuista panostasi keskusteluun täällä!
+        Tämä ansiomerkki myönnetään, kun olet saanut vähintään 5 tykkäystä 300 viestistä. Wow! Yhteisö ihailee toistuvaa korkealaatuista panostasi keskusteluun täällä!
     out_of_love:
       name: Rakkauden rajat
       description: Tykkäsi 50 kertaa päivän aikana
       long_description: |
-        Tämä arvomerkki myönnetään, kun olet käyttänyt kaikki 50 päivittäistä tykkäystäsi. Se, että muistaa pysähtyä hetkeksi tykkäämään viestistä, jota arvostaa kannustaa muita palstan kirjoittajia luomaan vielä enemmän hienoja keskusteluita jatkossa.
+        Tämä ansiomerkki myönnetään, kun olet käyttänyt kaikki 50 päivittäistä tykkäystäsi. Se, että muistaa pysähtyä hetkeksi tykkäämään viestistä, jota arvostaa kannustaa muita palstan kirjoittajia luomaan vielä enemmän hienoja keskusteluita jatkossa.
     higher_love:
       name: Lukkarinrakkautta
       description: Käytti 50 tykkäystä päivässä 5 kertaa
       long_description: |
-        Tämä arvomerkki myönnetään, kun olet käyttänyt 50 päivittäistä tykkäystäsi viitenä päivänä. Kiitos, kun aktiivisesti kannustat hyviin keskusteluihin joka päivä!
+        Tämä ansiomerkki myönnetään, kun olet käyttänyt 50 päivittäistä tykkäystäsi viitenä päivänä. Kiitos, kun aktiivisesti kannustat hyviin keskusteluihin joka päivä!
     crazy_in_love:
       name: Korviaan myöten rakastunut
       description: Käytti 50 päivittäistä tykkäystä 20 päivänä
       long_description: |
-        Tämä arvomerkki myönnetään, kun olet käyttänyt kaikki 50 päivittäistä tykkäystäsi 20 päivänä. Wow! Olet esimerkillinen kannustaessasi jatkuvasti muita käyttäjiä!
+        Tämä ansiomerkki myönnetään, kun olet käyttänyt kaikki 50 päivittäistä tykkäystäsi 20 päivänä. Wow! Olet esimerkillinen kannustaessasi jatkuvasti muita käyttäjiä!
     thank_you:
       name: Kiitos
       description: 20 viestistä on tykätty ja on tykännyt 10 viestistä
       long_description: |
-        Tämä arvomerkki myönnetään, kun olet sinulla on 20 tykättyä viestiä ja olet antanut 10 tykkäystä takaisin. Kun joku tykkää viestistäsi, löydät aikaa tykätä myös muiden viesteistä.
+        Tämä ansiomerkki myönnetään, kun olet sinulla on 20 tykättyä viestiä ja olet antanut 10 tykkäystä takaisin. Kun joku tykkää viestistäsi, löydät aikaa tykätä myös muiden viesteistä.
     gives_back:
       name: Vastavuoroinen
       description: 100 viestistä on tykätty ja on tykännyt 100 viestistä
       long_description: |
-        Tämä arvomerkki myönnetään, kun sinulla on 100 tykättyä viestiä ja olet antanut vähintään 100 tykkäystä takaisin. Kiitos kun laitat hyvän kiertämään!
+        Tämä ansiomerkki myönnetään, kun sinulla on 100 tykättyä viestiä ja olet antanut vähintään 100 tykkäystä takaisin. Kiitos kun laitat hyvän kiertämään!
     empathetic:
       name: Empaattinen
       description: 500 viestistä on tykätty ja on tykännyt 1000 viestistä
       long_description: |
-        Tämä arvomerkki myönnetään, kun sinulla on 500 tykättyä viestiä ja olet antanut vähintään 1000 tykkäystä takaisin. Wow! Olet esimerkki avokätisyydestä ja keskinäisestä arvostuksesta :two_hearts:.
+        Tämä ansiomerkki myönnetään, kun sinulla on 500 tykättyä viestiä ja olet antanut vähintään 1000 tykkäystä takaisin. Wow! Olet esimerkki avokätisyydestä ja keskinäisestä arvostuksesta :two_hearts:.
     first_emoji:
       name: Ensimmäinen Emoji
       description: Käytti Emojia viestissä
       long_description: |
-        Tämä arvomerkki myönnetään, kun ensimmäisen kerran lisäät Emojin viestiin :thumbsup:. Emojin avulla voit viestiä tunteita, ilosta :smiley: suruun :anguished: ja vihaan :angry: ja kaikkea siltä väliltä :sunglasses: . Kirjoita vain : (kaksoispiste) tai paina Emoji painiketta tekstieditorin valikossa valitaksesi sadoista vaihtoehdoista :ok_hand:
+        Tämä ansiomerkki myönnetään, kun ensimmäisen kerran lisäät emojin viestiisi :thumbsup:. Emojin avulla voit viestiä tunteita, ilosta :smiley: suruun :anguished: ja vihaan :angry: ja kaikkea siltä väliltä :sunglasses: . Kirjoita vain : (kaksoispiste) tai paina Emoji painiketta tekstieditorin valikossa valitaksesi sadoista vaihtoehdoista :ok_hand:
     first_mention:
       name: Ensimmäinen maininta
       description: Mainitsi käyttäjän viestissä
-      long_description: Tämä arvomerkki myönnetään, kun ensimmäistä kertaa mainitset jonkun @käyttäjänimen viestissäsi. Tämä käyttäjä saa ilmoituksen viestistäsi. Aloita vain kirjoittamaan @ (at-merkki) mainitaksesi käyttäjän tai, jos sallittua, ryhmän – se on helppo tapa tuoda jotain toisten huomioon.
+      long_description: Tämä ansiomerkki myönnetään, kun ensimmäistä kertaa mainitset jonkun @käyttäjänimen viestissäsi. Tämä käyttäjä saa ilmoituksen viestistäsi. Aloita vain kirjoittamaan @ (at-merkki) mainitaksesi käyttäjän tai, jos sallittua, ryhmän – se on helppo tapa tuoda jotain toisten huomioon.
     first_onebox:
       name: Ensimmäinen Onebox
       description: Lähetti linkin, josta tehtiin onebox
-      long_description: Tämä arvomerkki myönnetään, kun ensimmäistä kertaa lisäät linkin omalle rivilleen, josta sitten automaattisesti tehdään onebox esikatselu otsikolla, lyhyellä kuvauksella ja (jos saatavilla) kuvalla.
+      long_description: Tämä ansiomerkki myönnetään, kun ensimmäistä kertaa lisäät linkin omalle rivilleen, josta sitten automaattisesti tehdään onebox esikatselu otsikolla, lyhyellä kuvauksella ja (jos saatavilla) kuvalla.
     first_reply_by_email:
       name: Ensimmäinen vastaus sähköpostilla
       description: Vastasi sähköpostilla
       long_description: |
-        Tämä arvomerkki myönnetään, kun vastaat ensimmäistä kertaa sähköpostilla :e-mail:.
+        Tämä ansiomerkki myönnetään, kun vastaat ensimmäistä kertaa sähköpostilla :e-mail:.
   admin_login:
     success: "Sähköposti lähetetty"
     error: "Virhe!"

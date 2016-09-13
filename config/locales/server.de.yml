@@ -116,7 +116,7 @@ de:
   invalid_access: "Du hast nicht die Erlaubnis, die angeforderte Ressource zu betrachten."
   read_only_mode_enabled: "Die Seite befindet sich im Nur-Lesen Modus. Änderungen sind deaktiviert."
   reading_time: "Lesezeit"
-  likes: "„Gefällt mir“-Angaben"
+  likes: "Likes"
   too_many_replies:
     one: "Entschuldigung, aber neue Benutzer sind vorübergehend auf eine Antwort pro Thema beschränkt."
     other: "Entschuldigung, aber neue Benutzer sind vorübergehend auf %{count} Antworten pro Thema beschränkt."
@@ -566,6 +566,14 @@ de:
     different_user_description: "Du bist gerade als ein anderer Benutzer angemeldet als der, an den die Zusammenfassung gesendet wurde. Bitte melde dich ab oder beginne den anonymen Modus und versuche es erneut."
     not_found_description: "Entschuldige, wir konnten dein Abo nicht abbestellen. Kann es sein, dass der Link aus deiner E-Mail abgelaufen ist?"
     log_out: "Abmelden"
+  user_api_key:
+    title: "Genehmige Zugriff für Anwendung"
+    authorize: "Genehmigen"
+    read: "Lesen"
+    read_write: "Lesen/Schreiben"
+    description: "Möchtest du \"%{application_name}\" %{access} Zugriff auf dein Konto geben?"
+    no_trust_level: "Entschuldige, du hast nicht die erforderliche Vertrauensstufe, um die Benutzer API zu nutzen."
+    generic_error: "Entschuldige, wir können keinen Benutzer API Schlüssel erstellen. Dieses Feature ist möglicherweise vom Site Administrator deaktiviert worden."
   reports:
     visits:
       title: "Nutzerbesuche"
@@ -752,6 +760,8 @@ de:
     min_private_message_title_length: "Minimale zulässige Titellänge von Nachrichten in Zeichen."
     min_search_term_length: "Minimale zulässige Länge der Suche in Zeichen."
     search_tokenize_chinese_japanese_korean: "Zwinge die Suche Chinesisch, Japanisch und Koreanisch zu erkennen, auch wenn die Site keine dieser Sprachen nutzt"
+    search_prefer_recent_posts: "Wenn das Durchsuchen deines großen Forums langsam ist, dann versucht diese Option zuerst einen Index der letzten Beiträge."
+    search_recent_posts_size: "Wie viele letzte Beiträge im Index halten"
     allow_uncategorized_topics: "Erlaube Themen ohne Kategorie zu erstellen. ACHTUNG: Falls es unkategorisierte Themen gibt, musst du sie neu kategorisieren, bevor du diese Option abschaltest."
     allow_duplicate_topic_titles: "Erlaube Themen mit identischen und doppelten Titeln."
     unique_posts_mins: "Minuten, nach denen ein Benutzer denselben Inhalt noch einmal schreiben kann."
@@ -772,7 +782,7 @@ de:
     delete_removed_posts_after: "Beiträge, die deren Verfasser selbst entfernt hat, werden nach (n) Stunden automatisch gelöscht. Die Beiträge werden sofort gelöscht, wenn dieser Wert auf 0 gesetzt wird."
     max_image_width: "Maximale Breite von Thumbnails von Bildern in einem Beitrag."
     max_image_height: "Maximale Höhe von Vorschaubildern in einer Nachricht"
-    category_featured_topics: "Anzahl der angezeigten Themen je Kategorie auf der Kategorieseite /categories. Nachdem dieser Wert geändert wurde, dauert es bis zu 15 Minuten bis die Kategorieseite aktualisiert ist."
+    category_featured_topics: "Anzahl der angezeigten Themen je Kategorie auf der /categories Seite. Nachdem dieser Wert geändert wurde, dauert es bis zu 15 Minuten bis die Kategorieseite aktualisiert ist."
     show_subcategory_list: "Zeige Liste von Unterkategorien statt einer Liste von Themen wenn eine Kategorie ausgewählt wird."
     fixed_category_positions: "Falls aktiviert können Kategorien in einer fest vorgegebenen Reihenfolge angeordnet werden. Andernfalls werden Kategorien nach Aktivität sortiert aufgelistet."
     fixed_category_positions_on_create: "Wenn aktiviert wird die Kategoriezuordnung beim Erstellen eines Themas erhalten (benötigt fixed_category_positions)."
@@ -920,6 +930,7 @@ de:
     top_topics_formula_log_views_multiplier: "Wert von Log Ansichten Multiplikator (n) in Top Themen Formel: `log(views_count) * (n) + op_likes_count * 0.5 + LEAST(likes_count / posts_count, 3) + 10 + log(posts_count)`"
     top_topics_formula_first_post_likes_multiplier: "Wert für den Multiplikator (n) für die ersten „Gefällt mir“-Angaben pro Beitrag in der Formel für die besten Beiträge: `log(views_count) * 2 + op_likes_count * (n) + LEAST(likes_count / posts_count, 3) + 10 + log(posts_count)`"
     top_topics_formula_least_likes_per_post_multiplier: "Wert für den Multiplikator (n) für die wenigsten „Gefällt mir“-Angaben pro Beitrag in der Formel für die besten Beiträge: `log(views_count) * 2 + op_likes_count * 0.5 + LEAST(likes_count / posts_count, (n)) + 10 + log(posts_count)`"
+    rebake_old_posts_count: "Anzahl alter Beiträge, die im 15 Minuten-Intervall neu generiert werden sollen"
     rate_limit_create_topic: "Nach Erstellen eines Themas muss ein Benutzer (n) Sekunden warten, bevor ein weiteres Thema erstellt werden kann."
     rate_limit_create_post: "Nach Schreiben eines Beitrags muss ein Benutzer (n) Sekunden warten, bevor ein weiterer Beitrag erstellt werden kann."
     rate_limit_new_user_create_topic: "Nach Erstellen eines Themas muss ein neuer Benutzer (n) Sekunden warten, bevor ein weiteres Thema erstellt werden kann."
@@ -934,6 +945,7 @@ de:
     max_topic_invitations_per_day: "Maximale Zahl an Thema-Einladungen, die ein Benutzer pro Tag verschicken kann."
     alert_admins_if_errors_per_minute: "Anzahl der Fehler pro Minute, bei der ein Administrator benachrichtigt werden soll. Ein Wert von 0 deaktiviert diese Funktion. Achtung: Benötigt einen Neustart."
     alert_admins_if_errors_per_hour: "Anzahl der Fehler pro Stunde, bei der ein Administrator benachrichtigt werden soll. Ein Wert von 0 deaktiviert diese Funktion. Achtung: Benötigt einen Neustart."
+    categories_topics: "Anzahl der Themen auf der /categories Seite"
     suggested_topics: "Anzahl der empfohlenen Themen am Ende eines Themas."
     limit_suggested_to_category: "Zeige nur Themen der aktuellen Kategorie in vorgeschlagenen Themen."
     suggested_topics_max_days_old: "Vorgeschlagene Themen sollten nicht älter als (n) Tage alt sein."
@@ -958,7 +970,7 @@ de:
     enable_flash_video_onebox: "Aktiviere das Einbinden von swf und flv (Adobe Flash) Links in einer Onebox. ACHTUNG: Kann ein Sicherheitsrisiko sein."
     default_invitee_trust_level: "Standardwert für die Vertrauensstufe eines eingeladenen Benutzers (0-4)."
     default_trust_level: "Standardwert für die Vertrauensstufe (0-4) für alle neuen Benutzer. ACHTUNG! Diesen Wert anzuheben kann zu erhöhtem Spam-Aufkommen führen!"
-    tl1_requires_topics_entered: "Die Anzahl der Themen, die ein neuer Benutzer erstellen muss, bevor er in die Vertrauensstufe 1 befördert wird."
+    tl1_requires_topics_entered: "Die Anzahl der Themen, die ein neuer Benutzer betrachten muss, bevor er in die Vertrauensstufe 1 befördert wird."
     tl1_requires_read_posts: "Die Anzahl der Beiträge, die ein neuer Benutzer lesen muss, bevor er in die Vertrauensstufe 1 befördert wird."
     tl1_requires_time_spent_mins: "Die Anzahl der Minuten, die ein neuer Benutzer mit dem Lesen von Beiträgen verbringen muss, bevor er in die Vertrauensstufe 1 befördert wird."
     tl2_requires_topics_entered: "Die Anzahl der Themen, die ein Benutzer betrachten muss, bevor er in die Vertrauensstufe 2 befördert wird."
@@ -1005,6 +1017,7 @@ de:
     title_fancy_entities: "Konvertiere HTML-Entitys in Thementiteln."
     min_title_similar_length: "Minimale Länge eines Titels, bevor nach ähnlichen Titeln gesucht wird."
     min_body_similar_length: "Minimale Länge eines Beitragstextes, bevor nach ähnlichen Themen gesucht wird."
+    desktop_category_page_style: "Visueller Stil für die /categories Seite"
     category_colors: "Liste hexadezimaler Farbwerte, die als Kategoriefarben erlaubt sind."
     category_style: "Visueller Stil für Kategorie-Abzeichen."
     max_image_size_kb: "Maximale Größe eines hochgeladenen Bilds in kB. Dieser Wert muss auch in Nginx (client_max_body_size), Apache oder anderen Proxies entsprechend konfiguriert werden."
@@ -1134,6 +1147,7 @@ de:
     feed_polling_url: "NUR WENN EINGEBETTET: URL des einzubettenden RSS-/ATOM-Feeds."
     embed_by_username: "Discourse-Benutzername des Benutzers, der die eingebetteten Themen erstellt."
     embed_username_key_from_feed: "Schlüssel, um Discourse-Benutzernamen aus Feed zu ermitteln."
+    embed_title_scrubber: "Regulärer Ausdruck (Regex) um eingebettete Titel zu bereinigen"
     embed_truncate: "Kürze die eingebetteten Beiträge"
     embed_post_limit: "Maximale Anzahl der Beiträge die eingebettet werden."
     embed_username_required: "Der Benutzername ist für die Themenerstellung notwendig"
@@ -1177,6 +1191,15 @@ de:
     default_categories_watching: "Liste der standardmäßig beobachteten Kategorien."
     default_categories_tracking: "Liste der standardmäßig gefolgten Kategorien."
     default_categories_muted: "Liste der standardmäßig stummgeschalteten Kategorien."
+    max_user_api_reqs_per_day: "Maximale Zahl der Benutzer API Anfragen pro Schlüssel pro Tag"
+    max_user_api_reqs_per_minute: "Maximale Zahl der Benutzer API Anfragen pro Schlüssel pro Minute"
+    allow_read_user_api_keys: "Erlaube die Generierung von nur-lese-berechtigten Benutzer API Schlüsseln"
+    allow_write_user_api_keys: "Erlaube die Generierung von schreib-berechtigten Benutzer API Schlüsseln"
+    allow_push_user_api_keys: "Erlaube die Generierung von push-berechtigten Benutzer API Schlüsseln"
+    max_api_keys_per_user: "Maximale Zahl der Benutzer API Anfragen pro Benutzer"
+    min_trust_level_for_user_api_key: "Erforderliche Vertrauensstufe für die Generierung von Benutzer API Schlüsseln"
+    allowed_user_api_auth_redirects: "Erlaubte URL für die Authentifizierungs-Umleitung von Benutzer API Schlüsseln"
+    allowed_user_api_push_urls: "Erlaubte URL für Server-Push zur Benutzer API"
     tagging_enabled: "Schlagwörter für Themen aktivieren"
     min_trust_to_create_tag: "Minimale Vertrauensstufe, um ein Schlagwort zu erstellen."
     max_tags_per_topic: "Maximale Anzahl an Schlagwörtern, die einem Thema hinzugefügt werden können."
@@ -1188,6 +1211,7 @@ de:
     tag_style: "Visueller Stil für Schlagwort-Abzeichen."
     staff_tags: "Eine Liste von Schlagwörtern, die nur von Mitarbeitern angewendet werden können."
     min_trust_level_to_tag_topics: "Minimale Vertrauensstufe, um Schlagwörter zu Themen hinzuzufügen."
+    suppress_overlapping_tags_in_list: "Schlagwort nicht zeigen, wenn es genau so im Thementitel vorkommt"
     remove_muted_tags_from_latest: "Zeige in der Liste der neusten Beiträge keine Themen mit stummgeschalteten Schlagwörtern."
     errors:
       invalid_email: "Ungültige E-Mail-Ad­res­se"
@@ -1536,99 +1560,6 @@ de:
         Wenn der Beitrag jedoch von der Community erneut ausgeblendet wurde, wird er ausgeblendet bleiben, bis sich ein Mitarbeiter darum kümmert – und möglicherweise gibt es weitere Maßnahmen, einschließlich einer möglichen Sperrung deines Kontos.
 
         Weitre Hinweise findest du in unseren [Community-Richtlinien](%{base_url}/guidelines).
-    usage_tips:
-      text_body_template: |
-        Hier sind ein paar Tipps für deine ersten Schritt:
-
-        ## Lesen
-
-        Um mehr zu lesen, **scrolle einfach immer weiter nach unten!**
-
-        Wenn neue Beiträge oder neue Themen eintreffen, erscheinen sie automatisch – ein Neuladen der Seite ist dazu nicht nötig.
-
-        ## Navigation
-
-        - Für die Suche, dein Benutzerprofil, oder das <kbd>☰</kbd>-Menü, verwende die **Icon-Schaltflächen oben rechts**.
-
-        - Ein Klick auf den Titel eines Themas wird dich immer zum **nächsten ungelesenen Beitrag** im Thema bringen. Um stattdessen am Anfang oder am Ende einzusteigen, klicke auf die Anzahl an Antworten oder das Datum der letzten Aktivität.
-
-        <img src="%{base_url}/images/welcome/topic-list-select-areas-2x.png" width="593" height="59">
-
-        - Während du ein Thema liest, kannst du den Zeitstrahl auf der rechten Seite verwenden, um zum Anfang, zum Ende oder zu deiner letzten Leseposition zu springen. Auf kleineren Bildschirmen klicke auf den Fortschrittsbalken unten rechts, um ihn zu erweitern:
-
-        <img src="%{base_url}/images/welcome/progress-bar-2x.png" width="153" height="181">
-
-        Du kannst auch <kbd>?</kbd> auf deiner Tastatur drücken für eine Liste super-schneller Tastaturkombinationen.
-
-        ## Antworten
-
-        Um ein Zitat einzufügen, markiere den Text, den du zitieren möchtest und klicke auf eine <img src="%{base_url}/images/welcome/reply-post-2x.png" width="25" height="23"> Antworten-Schaltfläche, um den Editor zu öffnen. Wiederhole diese Schritte für mehrere Zitate.
-
-        <img src="%{base_url}/images/welcome/quote-reply-2x.png" width="326" height="128">
-
-        Du kannst immer weiter lesen, während du deine Antwort verfasst, und wir werden automatisch Entwürfe speichern, während du schreibst.
-
-        Um jemanden über deine Antwort zu benachrichtigen, erwähne seinen Namen. Tippe `@`, um mit der Auswahl eines Benutzernamens zu beginnen.
-
-        <img src="%{base_url}/images/welcome/username-completion-2x.png" width="191" height="125">
-
-        Um einen [Standard-Emoji](http://www.emoji.codes/) zu verwenden, tippe einfach `:` zur Suche nach Name oder verwende klassische Smileys `;)`
-
-        <img src="%{base_url}/images/welcome/emoji-completion-2x.png" width="144" height="153">
-
-        Um eine Zusammenfassung für einen Link zu generieren, füge in auf einer eigenen Zeile ein:
-
-        <img src="%{base_url}/images/welcome/link-oneboxing-animation.gif" width="480" height="228">
-
-        Deine Antwort kannst du mit einfachem HTML, BBCode oder [Markdown](http://commonmark.org/help/) formatieren:
-
-        Das ist **fett**.
-        Das ist <b>fett</b>.
-        Das ist [b]fett[/b].
-
-        Für weitere Formatierungstipps, [probiere unser 10-minütiges, interaktives Tutorial!](http://commonmark.org/help/tutorial/)
-
-        ## Aktionen
-
-        Es gibt Aktionsschaltflächen am Ende jedes Beitrags:
-
-        <img src="%{base_url}/images/welcome/like-link-flag-bookmark-2x.png" width="162" height="42">
-
-        - Um jemanden wissen zu lassen, dass du seinen/ihren Beitrag genossen und geschätzt hast, verwende die **Gefällt mir**-Schaltfläche. Teile etwas Liebe!
-
-        - Schnapp’ dir einen kopierbaren Link zu einem beliebigen Beitrag oder Thema über die **Link**-Schaltfläche.
-
-        - Verwende die <kbd>&hellip;</kbd> „Mehr anzeigen“-Schaltfläche, um weitere Aktionen anzuzeigen. **Melde**, um den Verfasser oder [unsere Mitarbeiter](%{base_url}/about) vertraulich über ein Problem zu informieren. Setze ein **Lesezeichen**, um den Beitrag später auf deinem Benutzerprofil wiederzufinden.
-
-        ## Benachrichtigungen
-
-        Wenn dir jemand antwortet, deinen Beitrag zitiert, deinen `@Benutzername` erwähnt oder auch auf deinen Beitrag verlinkt, wird oben rechts auf der Seite automatisch eine Zahl erscheinen. Klicke auf sie, um auf deine **Benachrichtigungen** zuzugreifen.
-
-        <img src="%{base_url}/images/welcome/notification-panel-2x.png" width="160" height="54">
-
-        Mach’ dir keine Sorgen, dass du einen Beitrag übersiehst – du wirst Benachrichtigungen per E-Mail erhalten, wenn du einmal weg bist.
-
-        ## Einstellungen
-
-        - Themen, die weniger als **zwei Tage alt** sind, werden als neu eingestuft.
-
-        - Jedes Thema, an dem du dich **aktiv beteiligt** hast (indem du es erstellst, darin antwortest oder lange genug liest) wird automatisch in deinem Namen verfolgt.
-
-        Du wirst bei diesen Themen die Anzahl neuer und ungelesener Beiträge sehen:
-
-        <img src="%{base_url}/images/welcome/topics-new-unread-2x.png" width="341" height="106">
-
-        Du kannst deine Benachrichtigungen zu jedem Thema über die Benachrichtigungseinstellungen am Ende und auf der rechten Seite jedes Themas verwalten.
-
-        <img src="%{base_url}/images/welcome/topic-notification-control-2x.png" width="608" height="312">
-
-        Du kannst auch Benachrichtigungen pro Kategorie einstellen, wenn du jedes Thema einer Kategorie beobachten oder stummschalten möchtest.
-
-        Um eine dieser Einstellungen zu ändern, gehe zu [deinen Benutzereinstellungen](%{base_url}/my/preferences).
-
-        ## Vertrauen in die Community
-
-        Es ist großartig, dich zu treffen! Während du dich hier beteiligst, werden wir dich besser kennenlernen und deine vorübergehenden Beschränkungen für neue Benutzer werden aufgehoben. Beteilige dich weiter und im Laufe der Zeit wirst du neue [Vertrauensstufen](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924) erhalten, die spezielle Fähigkeiten umfassen, die Community gemeinsam zu verwalten.
     welcome_user:
       subject_template: "Willkommen bei %{site_name}!"
       text_body_template: |
@@ -1665,6 +1596,16 @@ de:
         [prefs]: %{user_preferences_url}
     backup_succeeded:
       subject_template: "Sicherung erfolgreich abgeschlossen"
+      text_body_template: |
+        Backup erfolgreich erstellt.
+
+        Besuche [admin > backup section](%{base_url}/admin/backups) um das neue Backup herunterzuladen.
+
+        Hier ist das Protokoll:
+
+        ```text
+        %{logs}
+        ```
     backup_failed:
       subject_template: "Sicherung fehlgeschlagen"
       text_body_template: |
@@ -1750,7 +1691,7 @@ de:
 
         Dein mit dieser E-Mail-Adresse verbundenes Konto wurde blockiert.
     email_reject_reply_user_not_matching:
-      subject_template: "[%{site_name}] E-Mail-Problem -- Antwortender Benutzer stimmt nicht überein"
+      subject_template: "[%{site_name}] E-Mail-Problem -- Unerwartete Antwort-Adresse"
       text_body_template: |
         Es tut uns leid, aber deine E-Mail-Nachricht an %{destination} (betitelt mit %{former_title}) hat nicht funktioniert.
 
@@ -1918,11 +1859,10 @@ de:
       text_body_template: "Die `download_remote_images_to_local` Einstellung wurde deaktiviert, da das Speicherplatz Limit von `download_remote_images_threshold` erreicht wurde."
     dashboard_problems:
       subject_template: "Probleme wurden festgestellt"
-      text_body_template: |+
+      text_body_template: |
         Es wurden Probleme in deinem Admin-Dashboard gemeldet.
 
         [Bitte überprüfe und behebe sie](%{base_url}/admin).
-
   unsubscribe_link: |
     Um diese E-Mails abzubestellen, [klicke hier](%{unsubscribe_url}).
   unsubscribe_link_and_mail: |
@@ -1932,7 +1872,7 @@ de:
 
     Um diese E-Mails abzubestellen, [klicke hier](%{unsubscribe_url}).
   subject_re: "Re: "
-  subject_pm: "[PN]"
+  subject_pm: "[PN] "
   user_notifications:
     previous_discussion: "Vorangehende Antworten"
     reached_limit:

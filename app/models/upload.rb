@@ -81,6 +81,10 @@ class Upload < ActiveRecord::Base
     use
   }
 
+  def self.generate_digest(path)
+    Digest::SHA1.file(path).hexdigest
+  end
+
   def self.svg_whitelist_xpath
     @@svg_whitelist_xpath ||= "//*[#{WHITELISTED_SVG_ELEMENTS.map { |e| "name()!='#{e}'" }.join(" and ") }]"
   end
@@ -145,7 +149,7 @@ class Upload < ActiveRecord::Base
       end
 
       # compute the sha of the file
-      sha1 = Digest::SHA1.file(file).hexdigest
+      sha1 = Upload.generate_digest(file)
 
       # do we already have that upload?
       upload = find_by(sha1: sha1)
@@ -233,17 +237,17 @@ class Upload < ActiveRecord::Base
     `convert #{path} -auto-orient #{path}`
   end
 
-  def self.migrate_to_new_scheme(limit=50)
+  def self.migrate_to_new_scheme(limit=nil)
     problems = []
 
     if SiteSetting.migrate_to_new_scheme
       max_file_size_kb = [SiteSetting.max_image_size_kb, SiteSetting.max_attachment_size_kb].max.kilobytes
       local_store = FileStore::LocalStore.new
 
-      Upload.where("url NOT LIKE '%/original/_X/%'")
-            .limit(limit)
-            .order(id: :desc)
-            .each do |upload|
+      scope = Upload.where("url NOT LIKE '%/original/_X/%'").order(id: :desc)
+      scope.limit(limit) if limit
+
+      scope.each do |upload|
         begin
           # keep track of the url
           previous_url = upload.url.dup
@@ -259,7 +263,7 @@ class Upload < ActiveRecord::Base
           end
           # compute SHA if missing
           if upload.sha1.blank?
-            upload.sha1 = Digest::SHA1.file(path).hexdigest
+            upload.sha1 = Upload.generate_digest(path)
           end
           # optimize if image
           if FileHelper.is_image?(File.basename(path))
@@ -269,7 +273,7 @@ class Upload < ActiveRecord::Base
           File.open(path) do |f|
             upload.url = Discourse.store.store_upload(f, upload)
             upload.filesize = f.size
-            upload.save
+            upload.save!
           end
           # remap the URLs
           DbHelper.remap(UrlHelper.absolute(previous_url), upload.url) unless external

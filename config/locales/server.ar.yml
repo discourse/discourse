@@ -502,19 +502,19 @@ ar:
         many: "أيام كثيرة"
         other: "%{count} أيام"
       about_x_months:
-        zero: "لا يوجد شهور"
-        one: "شهر فقط"
+        zero: "لا أشهر"
+        one: "شهر واحد"
         two: "شهران"
-        few: "شهور قليلة"
-        many: "شهور كثيرة"
-        other: "%{count}شهر"
+        few: "%{count} أشهر"
+        many: "%{count} شهرا"
+        other: "%{count} شهر"
       x_months:
-        zero: "1 شهر"
-        one: "1 شهر"
-        two: "شهرين{count}%"
-        few: "شهور{count}%"
-        many: "شهور{count}%"
-        other: "شهور{count}%"
+        zero: "لا أشهر"
+        one: "شهر واحد"
+        two: "شهران"
+        few: "%{count} أشهر"
+        many: "%{count} شهرا"
+        other: "%{count} شهر"
       about_x_years:
         zero: "1 س"
         one: "1 س"
@@ -1175,6 +1175,10 @@ ar:
     display_name_on_email_from: "أعرض الاسماء كاملة في البريد الالكتروني من المجال."
     unsubscribe_via_email: "أسمح للمستخدمين بالغاء الاشتراك لرسائل البريد الالكتروني عن طريق أرسال بريد الكتروني يحتوي على 'unsubscribe' في العنوان او محتوى البريد"
     delete_email_logs_after_days: "حذف سجل البريد بعد (ن) يوم. 0 لحفظ السجل للابد"
+    max_emails_per_day_per_user: "العدد الأقصى لعدد الرسائل التي يتم إرسالها للأعضاء في اليوم. ضع 0 لإلغاء الحد."
+    block_auto_generated_emails: "منع رسائل البريد الإلكتروني الواردة التي تم تحديدها على أنها يتم إنشاؤها تلقائيا."
+    ignore_by_title: "تجاهل رسائل البريد الإلكتروني الواردة على أساس اللقب."
+    manual_polling_enabled: "دفع رسائل البريد الإلكتروني باستخدام API لردود البريد الإلكتروني."
     pop3_polling_enabled: "تصويت عبرPOP3 لردود البريد الإلكتروني."
     pop3_polling_ssl: "أستخدم SSL عند الأتصال بمخدم POP3.(مُستحسن)"
     pop3_polling_period_mins: "الفترة دقائق بين التحقق من حساب POP3 للبريد الإلكتروني. ملاحظة : تتطلب إعادة تشغيل."
@@ -1198,6 +1202,7 @@ ar:
     allow_animated_thumbnails: "يولد الصور المصغرة المتحركة للرسوم المتحركة. "
     default_avatars: "سيتم استخدام عناوين URL للصور الرمزية بشكل افتراضيًا للأعضاء الجدد حتى يغيروا صورهم."
     automatically_download_gravatars: "تحميل Gravatars للأعضاء عند تغيرهم البريد الإلكتروني الخاص بهم أو عند إنشائهم لحساب آخر."
+    disable_digest_emails: "تعطيل رسائل الملخص لجميع الأعضاء."
     detect_custom_avatars: "سواء او لا تفقد اذا كان المستخدم قام بتحميل صور شخصيه مخصصه"
     max_daily_gravatar_crawls: "العدد الاقصي من مرات Dicourse  سوف يتفقد Gravatar  لصور رمزيه مخصصه في اليوم"
     public_user_custom_fields: "حقول قائمه بيضاء مخصصه للمستدم يمكن رويتها علنا"
@@ -1550,7 +1555,6 @@ ar:
 
         إذا  حصل أنك لم تُشمِل الرد، حاول مرة أخرى مع التنسيق البسيط.
     email_reject_parsing:
-      subject_template: "[%{site_name}] بريد الكتروني -- محتواه غير معروف"
       text_body_template: |
         نحن آسفون ، ولكن رسالة البريد الإلكتروني إلى %{destination} (titled %{former_title})  لا تعمل.
 

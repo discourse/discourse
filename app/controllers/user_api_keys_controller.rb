@@ -24,7 +24,7 @@ class UserApiKeysController < ApplicationController
       return
     end
 
-    if current_user.trust_level < SiteSetting.min_trust_level_for_user_api_key
+    unless meets_tl?
       @no_trust_level = true
       return
     end
@@ -38,13 +38,6 @@ class UserApiKeysController < ApplicationController
     @auth_redirect = params[:auth_redirect]
     @push_url = params[:push_url]
 
-    if @access.include?("p")
-      if !SiteSetting.allow_push_user_api_keys ||
-         !SiteSetting.allowed_user_api_push_urls.split('|').any?{|u| params[:push_url] == u}
-        @access.gsub!("p","")
-        @push_url = nil
-      end
-    end
   rescue Discourse::InvalidAccess
     @generic_error = true
   end
@@ -60,7 +53,7 @@ class UserApiKeysController < ApplicationController
         raise Discourse::InvalidAccess
     end
 
-    raise Discourse::InvalidAccess if current_user.trust_level < SiteSetting.min_trust_level_for_user_api_key
+    raise Discourse::InvalidAccess unless meets_tl?
 
     request_read = params[:access].include? 'r'
     request_read ||= params[:access].include? 'p'
@@ -97,7 +90,20 @@ class UserApiKeysController < ApplicationController
   end
 
   def revoke
-    find_key.update_columns(revoked_at: Time.zone.now)
+    revoke_key = find_key if params[:id]
+
+    if current_key = request.env['HTTP_USER_API_KEY']
+      request_key = UserApiKey.find_by(key: current_key)
+      revoke_key ||= request_key
+      if request_key && request_key.id != revoke_key.id && !request_key.write
+        raise Discourse::InvalidAccess
+      end
+    end
+
+    raise Discourse::NotFound unless revoke_key
+
+    revoke_key.update_columns(revoked_at: Time.zone.now)
+
     render json: success_json
   end
 
@@ -123,7 +129,7 @@ class UserApiKeysController < ApplicationController
     ].each{|p| params.require(p)}
   end
 
-  def validate_params(skip_push_check = false)
+  def validate_params
     request_read = params[:access].include? 'r'
     request_read ||= params[:access].include? 'p'
     request_write = params[:access].include? 'w'
@@ -134,6 +140,10 @@ class UserApiKeysController < ApplicationController
 
     # our pk has got to parse
     OpenSSL::PKey::RSA.new(params[:public_key])
+  end
+
+  def meets_tl?
+    current_user.staff? || current_user.trust_level >= SiteSetting.min_trust_level_for_user_api_key
   end
 
 end

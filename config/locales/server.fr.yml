@@ -29,7 +29,7 @@ fr:
   loading: "Chargement"
   powered_by_html: 'Propulsé par <a href="http://www.discourse.org">Discourse</a>, le rendu est meilleur avec le JavaScript activé'
   log_in: "Se connecter"
-  purge_reason: "Supprimé automatiquement comme compte abandonné et désactivé"
+  purge_reason: "Supprimé automatiquement comme compte abandonné et non activé"
   disable_remote_images_download_reason: "Le téléchargement des images externes a été désactivé faute de place suffisante sur le disque."
   anonymous: "Anonyme"
   emails:
@@ -126,7 +126,7 @@ fr:
     more_replies:
       one: "1 réponse supplémentaire"
       other: "%{count} réponses supplémentaires"
-    loading: "Chargement de la discussion..."
+    loading: "Chargement de la discussion…"
     permalink: "Lien permanent"
     imported_from: "Il s'agit d'un sujet en provenance de l'article %{link}"
     in_reply_to: "▶ %{username}"
@@ -288,6 +288,7 @@ fr:
               common: "fait partie des 10000 mots de passe les plus utilisés. Veuillez utiliser un mot de passe plus sécurisé."
               same_as_username: "est aussi votre pseudo. Veuillez utiliser un mot de passe plus sécurisé."
               same_as_email: "est aussi votre adresse courriel. Veuillez utiliser un mot de passe plus sécurisé."
+              same_as_current: "est le même que votre mot de passe actuel."
             ip_address:
               signup_not_allowed: "L'inscription n'est pas autorisée à partir de ce compte."
         color_scheme_color:
@@ -481,7 +482,7 @@ fr:
   activation:
     action: "Cliquer ici pour activer votre compte"
     already_done: "Désolé, ce lien de confirmation n'est plus valide. Votre compte est peut-être déjà activé ?"
-    please_continue: "Votre nouveau compte est confirmé; vous allez être redirigé vers la page d'accueil."
+    please_continue: "Votre nouveau compte est confirmé ; vous allez être redirigé vers la page d'accueil."
     continue_button: "Continuer vers %{site_name}"
     welcome_to: "Bienvenue sur %{site_name} !"
     approval_required: "Un modérateur doit approuver manuellement votre nouveau compte avant que vous accédiez au forum. Vous recevrez un courriel lorsque que votre compte sera approuvé !"
@@ -495,7 +496,7 @@ fr:
       title: 'Spam'
       description: 'Ce message est une publicité. Elle n''est pas utile ou pertinente dans ce sujet, mais est uniquement de nature promotionnelle.'
       long_form: 'signalé comme spam'
-      email_title: '"%{title}" a été signalé comme spam'
+      email_title: '« %{title} » a été signalé comme spam'
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: 'Inapproprié'
@@ -505,18 +506,18 @@ fr:
       title: 'Envoyer un message à @{{username}} '
       description: 'Je veux parler à cette personne directement et de manière privée à propos de son message.'
       long_form: 'utilisateur contacté'
-      email_title: 'Votre message sur "%{title}"'
+      email_title: 'Votre message sur « %{title} »'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: "Autre chose"
       description: 'Ce message nécessite l''attention des responsables pour une autre raison que celle(s) mentionnée(s) ci-dessus.'
       long_form: 'signalé aux responsables'
-      email_title: 'Un message dans "%{title}" nécessite l''attention des responsables'
+      email_title: 'Un message dans « %{title} » nécessite l''attention des responsables'
       email_body: "%{link}\n\n%{message}"
     bookmark:
-      title: 'Signet'
-      description: 'Ajouter aux signets'
-      long_form: 'ajouté aux signets'
+      title: 'Mettre un signet'
+      description: 'Mettre un signet'
+      long_form: 'signet ajouté'
     like:
       title: 'J''aime'
       description: 'Aimer ce message'
@@ -538,7 +539,7 @@ fr:
       title: "Autre chose"
       description: 'Ce message requiert l''attention d''un responsable d''après la <a href=''/fguidelines''>charte de la communauté</a>, <a href=''%{tos_url}''>les conditions générales de service</a>, ou pour une autre raison indéterminée.'
       long_form: 'signalé pour modération'
-      email_title: 'Ce sujet "%{title}" requière l''attention d''un modérateur'
+      email_title: 'Le sujet « %{title} » nécessite l''attention d''un modérateur'
       email_body: "%{link}\n\n%{message}"
   flagging:
     you_must_edit: '<p>Votre message a été signalé par la communauté. Veuillez <a href="/my/messages">regarder vos messages directs</a>.</p>'
@@ -620,7 +621,7 @@ fr:
       xaxis: "Jour"
       yaxis: "Nombre de courriels"
     user_to_user_private_messages:
-      title: "Utilisateur à Utilisateur"
+      title: "Utilisateur à utilisateur"
       xaxis: "Jour"
       yaxis: "Nombre de messages"
     system_private_messages:
@@ -681,7 +682,7 @@ fr:
     http_background_reqs:
       title: "Arrière-plan"
       xaxis: "Jour"
-      yaxis: "Requêtes de mise à jour en temps réel ou de suivi"
+      yaxis: "Requêtes utilisées pour la mise à jour et le suivi en temps réel"
     http_2xx_reqs:
       title: "Statut 2xx (OK)"
       xaxis: "Jour"
@@ -750,7 +751,7 @@ fr:
     delete_old_hidden_posts: "Supprimer automatiquement les messages cachés plus de 30 jours."
     default_locale: "La langue par défaut de cette instance de Discourse (code ISO 639-1)"
     allow_user_locale: "Autoriser les utilisateurs à choisir la langue de l'interface dans leurs préférences"
-    set_locale_from_accept_language_header: "configurer la langue de l'interface pour les utilisateurs anonymes à partir des entêtes de langue de leur navigateur. (EXPÉRIMENTAL, ne fonctionne pas avec le cache anonyme)"
+    set_locale_from_accept_language_header: "configurer la langue de l'interface pour les visiteurs à partir des entêtes de langue de leur navigateur. (EXPÉRIMENTAL, ne fonctionne pas avec le cache anonyme)"
     min_post_length: "Longueur minimale autorisée des messages en nombre de caractères"
     min_first_post_length: "Longueur minimale d'un premier message (corps de sujet) en nombre de caractères"
     min_private_message_post_length: "Longueur minimale des messages en nombre de caractères"
@@ -776,7 +777,7 @@ fr:
     download_remote_images_threshold: "Quantité minimum d'espace disque requise pour télécharger localement des images distantes (en pourcentage)"
     download_remote_images_max_days_old: "Ne pas télécharger les images distantes pour les messages plus anciens que n jours."
     disabled_image_download_domains: "Les images distantes de ces domaines ne seront jamais téléchargées. Liste délimitée par des pipes (|)."
-    editing_grace_period: "Pendant (n) secondes après la publication d'un message, l'édition de ce dernier ne provoquera pas d'historisation."
+    editing_grace_period: "Pendant (n) secondes après la publication d'un message, la modification de ce dernier ne provoquera pas d'historisation."
     post_edit_time_limit: "L'auteur peut modifier ou supprimer ses messages pendant (n) minutes après leur publication. Mettre à 0 pour l'autoriser sans limite de temps."
     edit_history_visible_to_public: "Autoriser tout le monde à voir les versions précédentes d'un message modifié. Quand désactivé, seuls les responsables peuvent voir l'historique."
     delete_removed_posts_after: "Les messages retirés par leur auteur seront automatiquement supprimés après (n) heures. Pour une valeur renseignée à 0, les messages seront supprimés immédiatement."
@@ -806,14 +807,14 @@ fr:
     summary_score_threshold: "Le score minimum requis pour qu'un message soit inclus dans le 'Résumé de ce sujet'"
     summary_posts_required: "Nombre minimum de messages dans un sujet avant que le 'Résumé du sujet' soit activé"
     summary_likes_required: "Nombre de J'aime minimum dans un sujet avant que le 'Résumé du sujet' soit activé"
-    summary_percent_filter: "Quand un utilisateur clique sur 'Résumé du sujet', montrer le top % des messages"
+    summary_percent_filter: "Quand un utilisateur clique sur « Résumer ce sujet », montrer le top % des messages"
     summary_max_results: "Nombre maximum de messages retournés par 'Résumé de ce sujet'"
     enable_private_messages: "Autoriser les utilisateurs de niveau de confiance 1 à créer des messages et à répondre (configurable via le niveau de confiance minimum pour envoyer des messages). Notez que les responsables peuvent toujours envoyer des messages."
     enable_long_polling: "Utiliser les requêtes longues pour le flux de notifications."
     long_polling_base_url: "Racine de l'url utilisée pour les requêtes longues (dans le cas de l'utilisation d'un CDN pour fournir du contenu dynamique, pensez à le configurer en mode \"origin pull\") par exemple: http://origin.site.com"
     long_polling_interval: "Délai d'attente du serveur avant de répondre aux clients lorsqu'il n'y a pas de données à envoyer\n(réservé aux utilisateurs connectés)"
     polling_interval: "À quelle fréquence les clients connectés devraient-ils requêter le serveur, en millisecondes (sans utiliser les requêtes longues)"
-    anon_polling_interval: "À quelle fréquence les clients anonymes doivent-ils  requêter le serveur, en millisecondes"
+    anon_polling_interval: "À quelle fréquence en millisecondes les clients anonymes doivent requêter le serveur"
     background_polling_interval: "À quelle fréquence les clients devraient-ils requêter le serveur, en millisecondes (lorsque la fenêtre est en arrière-plan)"
     flags_required_to_hide_post: "Les messages seront automatiquement cachés lorsque le compteur de signalements atteint cette limite (0 pour jamais) et un avertissement sera envoyé à l'utilisateur"
     cooldown_minutes_after_hiding_posts: "Nombre de minutes qu'un utilisateur doit attendre avant de pouvoir modifier un message masqué suite à un signalement de la communauté"
@@ -843,7 +844,7 @@ fr:
     enable_noscript_support: "Activer le support des moteurs de recherches standards via le tag noscript"
     allow_moderators_to_create_categories: "Autoriser les modérateurs à créer de nouvelles catégories"
     cors_origins: "Requêtes cross-origin (CORS) autorisées. Chaque origine doit inclure http:// ou https://. la variable d'environnement DISCOURSE_ENABLE_CORS doit être renseignée à true pour activer CORS."
-    use_admin_ip_whitelist: "Les administrateurs ne peuvent se connecter que s'ils sont à une adresse IP définie dans la liste 'IP surveillés' (Admin > Journaux > IP surveillés)."
+    use_admin_ip_whitelist: "Les administrateurs ne peuvent se connecter que s'ils sont à une adresse IP définie dans la liste des IP surveillées (Admin > Journaux > IP surveillés)."
     top_menu: "Déterminer les éléments qui apparaissent dans la navigation de la page d'accueil, et dans quel ordre. Exemple latest|new|unread|categories|top|read|posted|bookmarks"
     post_menu: "L'ordre des éléments dans le menu de rédaction. Exemple like|edit|flag|delete|share|bookmark|reply"
     post_menu_hidden_items: "Les éléments du menu qui seront cachés par défaut jusqu’à extension du menu."
@@ -864,8 +865,8 @@ fr:
     email_token_valid_hours: "Les jetons (tokens) de Mot de passe oublié / Activation de comptes sont valides (n) jours."
     email_token_grace_period_hours: "Les jetons (tokens) de Mot de passe oublié / Activation de comptes sont encore valides pour une période de grâce de (n) heures après leur expiration."
     enable_badges: "Activer le système de badges"
-    enable_whispers: "Permettre communication privée entre responsables au sein du sujet (expérimental)."
-    allow_index_in_robots_txt: "Spécifier dans robots.txt que le site est autorisé à être indexer par les robots des moteurs de recherche."
+    enable_whispers: "Permettre la communication privée entre responsables au sein d'un sujet (expérimental)."
+    allow_index_in_robots_txt: "Préciser dans robots.txt que le site est autorisé à être indexé par les robots des moteurs de recherche."
     email_domains_blacklist: "Liste des domaines de courriel qui ne sont pas autorisé lors de la création de compte, délimités par un pipe. Exemple: mailinator.com|trashmail.net"
     email_domains_whitelist: "Liste des domaines de courriel avec lesquelles les utilisateurs DOIVENT s'enregistrer, délimités par un pipe. ATTENTION : les utilisateurs ayant une adresse de courriel sur un autre domaine ne pourront pas s'enregistrer."
     forgot_password_strict: "Ne pas mentionner l'existence d'un compte utilisateur quand un utilisateur utilise le formulaire d'oubli de mot de passe."
@@ -894,9 +895,9 @@ fr:
     sso_overrides_name: "Surcharger les noms complets locaux avec les noms complets externes d'un SSO à chaque connexion, et prévenir les modifications locales."
     sso_overrides_avatar: "Surcharge les avatars des utilisateurs avec les avatars d'un SSO. Si activé, il est fortement recommandé de désactiver allow_uploaded_avatars."
     sso_not_approved_url: "Rediriger les comptes SSO non validés vers cette URL"
-    enable_local_logins: "Activer l'authentification traditionnelle, avec pseudo local et mot de passe. (Note: Doit être activé pour que les invitations fonctionnent)"
+    enable_local_logins: "Activer les comptes locaux avec pseudo et mot de passe. (Note : ceci doit être activé pour que les invitations fonctionnent)"
     allow_new_registrations: "Autorise l'inscription des nouveaux utilisateurs. Décocher pour prévenir la création de nouveau compte."
-    enable_signup_cta: "Afficher un rappel aux utilisateurs anonymes pour les encourager à créer un compte."
+    enable_signup_cta: "Afficher un rappel aux visiteurs pour les encourager à créer un compte."
     enable_yahoo_logins: "Activer l'authentification Yahoo"
     enable_google_oauth2_logins: "Activer l'authentification Google Oauth2. C'est la méthode d'authentification que Google supporte désormais. Nécessite une clé et une phrase secrète."
     google_oauth2_client_id: "Client ID de votre application Google."
@@ -925,7 +926,7 @@ fr:
     backup_with_uploads: "Inclure les téléchargements dans les archivages. Si désactivé, seul la base de données sera archivée."
     active_user_rate_limit_secs: "A quelle fréquence mettre à jour le champ 'last_seen_at' (Dernière vu à), en secondes."
     verbose_localization: "Afficher des informations de debug sur l'interface à coté des textes traduits."
-    previous_visit_timeout_hours: "Combien de temps pour qu'une visite soit considérer comme la visite 'précédente', en heures."
+    previous_visit_timeout_hours: "Combien d'heures pour qu'une visite soit considérée comme la visite « précédente »."
     top_topics_formula_log_views_multiplier: "formule pour la valeur de multiplicateur de vues de journal (n) dans les sujets tendance : `log(views_count) * (n) + op_likes_count * 0.5 + LEAST(likes_count / posts_count, 3) + 10 + log(posts_count)`"
     top_topics_formula_first_post_likes_multiplier: "formule pour la valeur de multiplicateur de premiers J'aime (n) dans les sujets tendance: `log(views_count) * 2 + op_likes_count * (n) + LEAST(likes_count / posts_count, 3) + 10 + log(posts_count)`"
     top_topics_formula_least_likes_per_post_multiplier: "formule pour la valeur de multiplicateur de moins de J'aime par message (n) dans les sujets tendance: `log(views_count) * 2 + op_likes_count * 0.5 + LEAST(likes_count / posts_count, (n)) + 10 + log(posts_count)`"
@@ -942,8 +943,8 @@ fr:
     max_private_messages_per_day: "Nombre maximum de messages que les utilisateurs peuvent créer chaque jour."
     max_invites_per_day: "Nombre maximum d'invitations qu'un utilisateur peut envoyer par jour."
     max_topic_invitations_per_day: "Nombre maximum d'invitations à un sujet qu'un utilisateur peut envoyer par jour."
-    alert_admins_if_errors_per_minute: "Nombre d'erreurs par minute nécessaires pour déclencher une alerte administrateur. Une valeur de 0 désactive cette fonctionnalité. NB : nécessite un redémarrage."
-    alert_admins_if_errors_per_hour: "Nombre d'erreurs par heure nécessaires pour déclencher une alerte administrateur. Une valeur de 0 désactive cette fonctionnalité. NB : Nécessite un redémarrage."
+    alert_admins_if_errors_per_minute: "Nombre d'erreurs par minute nécessaires pour déclencher une alerte administrateur. Une valeur de 0 désactive cette fonctionnalité. N. B. : nécessite un redémarrage."
+    alert_admins_if_errors_per_hour: "Nombre d'erreurs par heure nécessaires pour déclencher une alerte administrateur. Une valeur de 0 désactive cette fonctionnalité. N. B. : nécessite un redémarrage."
     categories_topics: "Nombre de sujets à afficher dans la page /categories."
     suggested_topics: "Nombre de sujets suggérés affichés en bas d'un sujet."
     limit_suggested_to_category: "Afficher uniquement les sujets de la catégorie courante dans les sujets similaires."
@@ -970,7 +971,7 @@ fr:
     default_invitee_trust_level: "Niveau de confiance par défaut (0-4) pour les invités."
     default_trust_level: "Niveau de confiance par défaut (entre 0 et 4) pour tous les nouveaux utilisateurs. ATTENTION ! Changer ce paramètre peut vous exposer à des spams."
     tl1_requires_topics_entered: "A combien de sujet un nouvel utilisateur doit avoir participé pour être promu au niveau de confiance 1."
-    tl1_requires_read_posts: "Combien de message un nouvel utilisateur doit avoir lu pour être promu au niveau de confiance 1."
+    tl1_requires_read_posts: "Combien de messages un nouvel utilisateur doit avoir lu pour être promu au niveau de confiance 1."
     tl1_requires_time_spent_mins: "Combien de minutes un nouvel utilisateur doit avoir passées à lire des messages pour être promu au niveau de confiance 1."
     tl2_requires_topics_entered: "A combien de sujet un utilisateur doit avoir participé pour être promu au niveau de confiance 2."
     tl2_requires_read_posts: "Combien de message un utilisateur doit avoir lu pour être promu au niveau de confiance 2."
@@ -1008,7 +1009,7 @@ fr:
     email_time_window_mins: "Attendre (n) minutes avant l'envoi des courriels de notification, afin de laisser une chance aux utilisateurs de modifier ou finaliser leurs messages."
     private_email_time_window_seconds: "Attendre (n) secondes avant d'envoyer des courriels de notification privés, afin de donner aux utilisateurs la chance d'éditer et de finaliser leurs messages."
     email_posts_context: "Combien de réponses précédentes doit-on inclure dans les courriels de notifications pour situer le contexte."
-    flush_timings_secs: "A quelle fréquence les données de timing doivent être vider, en secondes."
+    flush_timings_secs: "À quelle fréquence les données de timing doivent être vider, en secondes."
     title_max_word_length: "Le nombre maximum de caractères dans le titre d'un sujet."
     title_min_entropy: "L'entropie minimale (caractères unique, les caractères en langues étrangères compte pour plus) requise pour le titre d'un sujet."
     body_min_entropy: "L'entropie minimale (caractères unique, les caractères en langues étrangères compte pour plus) requise pour le corps d'un message."
@@ -1021,7 +1022,7 @@ fr:
     category_style: "Style visuel pour les badges de catégorie."
     max_image_size_kb: "La taille maximale des images en Ko. Doit être configuré dans nginx (client_max_body_size) / apache ou proxy aussi."
     max_attachment_size_kb: "La taille maximale des fichiers envoyés en Ko. Doit être configurer dans nginx (client_max_body_size) / apache ou proxy aussi."
-    authorized_extensions: "Une liste d'extensions de fichier autorisés pour les envois sur le serveur (mettre '*' pour autoriser tout les types)"
+    authorized_extensions: "Une liste d'extensions de fichier autorisées pour les envois sur le serveur (mettre '*' pour autoriser tous les types)"
     max_similar_results: "Combien de sujets similaires sont afficher lorsqu'un utilisateur est en train de créer un nouveau sujet. La comparaison se base sur le titre et le contenu."
     title_prettify: "Corrige les coquilles les plus communes dans les titres (intégralité du titre en majuscule, première lettre en minuscule, de multiples ! et ?, un . inutile à la fin, etc.)"
     topic_views_heat_low: "Après ce nombre de vues, le champ Vues sera légèrement mis en évidence."
@@ -1119,7 +1120,7 @@ fr:
     allow_anonymous_posting: "Permettre aux utilisateurs de passer en mode anonyme"
     anonymous_posting_min_trust_level: "Le niveau de confiance minimum pour passer en mode anonyme."
     anonymous_account_duration_minutes: "Pour protéger l'anonymat, créer un nouveau compte anonyme tous les N minutes pour chaque utilisateur. Exemple: si 600 est choisi, dès 600 minutes après le dernier message ET que l'utilisateur passe en mode anonyme, un nouveau compte anonyme lui sera crée."
-    hide_user_profiles_from_public: "Désactive les cartes utilisateurs, les profils utilisateurs et les répertoires utilisateurs pour les utilisateurs anonymes."
+    hide_user_profiles_from_public: "Cacher les cartes, les profils et le répertoire d'utilisateurs aux visiteurs."
     allow_profile_backgrounds: "Autoriser les utilisateurs à envoyer des arrières-plans de profil."
     sequential_replies_threshold: "Nombre de messages successifs qu'un utilisateur peut poster dans un sujet avant d'être averti d'avoir posté un nombre excessif de réponses qui se suivent."
     enable_mobile_theme: "Les appareils mobiles utilisent un thème adapté aux mobiles, avec la possibilité de passer à la totalité du site. Désactivez cette option si vous voulez utiliser une feuille de style personnalisée qui répond à tous les types de client."
@@ -1158,7 +1159,7 @@ fr:
     delete_drafts_older_than_n_days: Supprimer les brouillons plus vieux que (n) jours.
     bootstrap_mode_min_users: "Nombre minimum d'utilisateurs nécessaire pour désactiver le mode de démarrage (mettre à 0 pour désactiver)"
     vacuum_db_days: "Exécuter VACUUM ANALYZE pour récupérer de l'espace dans la base de données après une migration (mettre à 0 pour désactiver)"
-    prevent_anons_from_downloading_files: "Refuser le téléchargement de pièces jointes aux utilisateurs anonymes. ATTENTION: cela empêchera de fonctionner les ressources envoyées en pièce jointe qui ne sont pas des images."
+    prevent_anons_from_downloading_files: "Refuser le téléchargement de pièces jointes aux visiteurs. ATTENTION : cela empêchera de fonctionner les ressources envoyées en pièce jointe qui ne sont pas des images."
     slug_generation_method: "Choisissez une méthode de génération d'identifiant. \"encodé\" générera des chaines de caractères encodées avec des pourcentages. \"aucune\" désactivera complètement les identifiants."
     enable_emoji: "Activer les emojis"
     emoji_set: "Comment aimeriez-vous vos emoji ?"
@@ -1359,15 +1360,15 @@ fr:
       one: "un signalement en attente de traitement"
       other: "%{count} signalements en attente de traitement."
   unsubscribe_mailer:
-    subject_template: "Confirmez que vous ne souhaitez plus recevoir d'email de mise à jour de %{site_title}"
+    subject_template: "Confirmez que vous ne souhaitez plus recevoir de courriels de mises à jour de %{site_title}"
     text_body_template: |
-      Quelqu’un (est-ce vous?) a demandé à ne plus envoyer d'email de mise à jour de %{site_domain_name} a cette adresse.
-      Pour confirmer, merci de cliquer sur ce lien:
+      Quelqu’un (est-ce vous ?) a demandé à ne plus envoyer de courriels de mises à jour de %{site_domain_name} à cette adresse.
+      Pour confirmer, merci de cliquer sur ce lien :
 
       %{confirm_unsubscribe_link}
 
 
-      Si vous souhaitez continuer à recevoir les emails, vous pouvez ignorer cet email.
+      Si vous souhaitez continuer à recevoir ces courriels, vous pouvez ignorer ce message.
   invite_mailer:
     subject_template: "%{invitee_name} vous a invité(e) à participer à '%{topic_title}' sur %{site_domain_name}"
     text_body_template: |
@@ -1561,99 +1562,6 @@ fr:
 
         Afin d'être guidé, merci de vous référer à notre [charte](%{base_url}/guidelines).
 
-    usage_tips:
-      text_body_template: |
-        Voici quelques astuces pour vous aider à démarrer :
-
-        ## Lire
-
-        Pour en lire plus, **faites défiler vers le bas !**
-
-        Lorsque de nouveaux sujets ou de nouvelles réponses sont publiés, ils apparaissent automatiquement ; inutile de rafraîchir la page.
-
-        ## Navigation
-
-        - Pour effectuer une recherche, accéder à votre profil ou utiliser le menu <kbd>☰</kbd>, cliquez sur les **icônes en haut à droite**.
-
-        - Sélectionner le titre d'un sujet, vous dirigera toujours vers **la nouvelle réponse non lue** dans celui-ci. Pour aller au début ou à la fin, sélectionnez le compteur de réponses ou la date de la dernière réponse.
-
-        <img src="%{base_url}/images/welcome/topic-list-select-areas-2x.png" width="593" height="59">
-
-        - Pendant la lecture d'un sujet, sélectionnez la barre de progression à droite pour aller au début, à la fin ou au dernier message lu. Sur les écrans plus petits, sélectionner le compteur en bas à droite pour le développer :
-
-        <img src="%{base_url}/images/welcome/progress-bar-2x.png" width="153" height="181">
-
-        Vous pouvez aussi appuyer sur <kbd>?</kbd> pour afficher la liste des raccourcis clavier.
-
-        ## Répondre
-
-        Pour insérer une citation, sélectionner le texte que vous souhaitez citer, puis appuyer sur n'importe quel bouton <img src="%{base_url}/images/welcome/reply-post-2x.png" width="25" height="23"> Répondre pour ouvrir l'éditeur de message. Répétez cette opération pour insérer plusieurs citations.
-
-        <img src="%{base_url}/images/welcome/quote-reply-2x.png" width="326" height="128">
-
-        Vous pouvez continuer la lecture pendant la rédaction de votre réponse et des brouillons seront automatiquement sauvegardés.
-
-        Pour signaler à quelqu'un votre réponse, mentionnez son nom. Tapez un `@` pour commencer à choisir un utilisateur.
-
-        <img src="%{base_url}/images/welcome/username-completion-2x.png" width="191" height="125">
-
-        Pour insérer un [émoticône standard Emoji](http://www.emoji.codes/), utilisez le caractère `:` et tapez son nom ou utilisez des émoticônes traditionnels comme `;)`.
-
-        <img src="%{base_url}/images/welcome/emoji-completion-2x.png" width="144" height="153">
-
-        Pour générer l'aperçu d'un lien, mettez le lien seul sur une ligne.
-
-        <img src="%{base_url}/images/welcome/link-oneboxing-animation.gif" width="480" height="228">
-
-        Votre réponse peut être mise en forme en utilisant du HTML basique, du BBCode ou du [Markdown](http://commonmark.org/help/) :
-
-        Ceci est **gras**.
-        Ceci est <b>gras</b>.
-        Ceci est [b]gras<[/b].
-
-        Pour plus d'astuces de mise en forme, [essayer notre tutoriel interactif !](http://commonmark.org/help/tutorial/)
-
-        ## Actions
-
-        Il y a des boutons d'actions en bas de chaque message :
-
-        <img src="%{base_url}/images/welcome/like-link-flag-bookmark-2x.png" width="162" height="42">
-
-        - Pour signifier à quelqu'un que vous appréciez son message, cliquez sur le **cœur**. Partagez votre amour !
-
-        - Obtenez un lien vers n'importe quelle réponse en cliquant sur le bouton **lien**.
-
-        - Utiliser le bouton <kbd>&hellip;</kbd> pour faire apparaître plus d'actions. **Signaler** pour porter un problème à la connaissance de l'auteur ou [des responsable](%{base_url}/about). **Ajouter aux signets** pour retrouver ultérieurement ce message dans votre profil.
-
-        ## Notifications
-
-        Quand quelqu'un vous répond, vous cite, mentionne votre `@pseudo` ou même crée un lien vers un de vos messages, un nombre apparaîtra immédiatement en haut à droite de la page. Cliquez dessus pour accéder à vos **notifications**.
-
-        <img src="%{base_url}/images/welcome/notification-panel-2x.png" width="160" height="54">
-
-        N'ayez pas la crainte de manquer une réponse ; vous serez notifié par courriel de toutes les notifications survenant durant votre absence.
-
-        ## Vos préférences
-
-        - Tout sujet vieux de **moins de 2 jours** est considéré comme nouveau.
-
-        - Tout sujet auquel vous avez **participé** (création, réponses ou lecture pendant une période prolongée) sera automatiquement suivi.
-
-        En face de ces sujets, vous verrez la mention "nouveau" ou bien le nombre de messages non lus :
-
-        <img src="%{base_url}/images/welcome/topics-new-unread-2x.png" width="341" height="106">
-
-        Vous pouvez changer les paramètres de notification de chaque sujet en utilisant la commande de notification, à droite de la page d'un sujet.
-
-        <img src="%{base_url}/images/welcome/topic-notification-control-2x.png" width="608" height="312">
-
-        Vous pouvez aussi configurer les notifications par catégorie, si vous voulez surveiller ou non chaque nouveau sujet d'une catégorie spécifique.
-
-        Pour changer n'importe lequel de ces paramètres, allez dans [vos préférences](%{base_url}/my/preferences).
-
-        ## Une communauté basée sur la confiance
-
-        C'est un plaisir de vous recevoir ! Au fur et à mesure de votre participation, vous allez progressivement gagner la confiance de la communauté. Vous deviendrez un membre à part entière et les limitations fonctionnelles propres à chaque nouvel utilisateur seront levées. À un niveau de confiance [suffisamment élevé](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924), vous aurez accès à de nouvelles fonctionnalités vous permettant de nous aider à gérer la communauté.
     welcome_user:
       subject_template: "Bienvenue sur %{site_name} !"
       text_body_template: |
@@ -1785,7 +1693,7 @@ fr:
 
         Le compte associé avec cette adresse a été bloqué.
     email_reject_reply_user_not_matching:
-      subject_template: "[%{site_name}] Problème de courriel - l'adresse de réponse ne correspond pas"
+      subject_template: "[%{site_name}] Problème de courriel -- Adresse de réponse inattendue"
       text_body_template: |
         Malheureusement votre courriel à %{destination} (titled %{former_title}) a échoué.
 
@@ -1805,7 +1713,7 @@ fr:
 
         Si vous obtenez ce message alors que vous _aviez_ inclus une réponse, réessayez avec un formatage plus simple.
     email_reject_parsing:
-      subject_template: "[%{site_name}] Problème de courriel - contenu non reconnu."
+      subject_template: "[%{site_name}] Problème de courriel -- Contenu non reconnu"
       text_body_template: |
         Nous sommes désolés, mais l'envoi de votre courriel à %{destination} (intitulé %{former_title}) n'a pas fonctionné.
 
@@ -2504,9 +2412,9 @@ fr:
   badges:
     editor:
       name: Éditeur
-      description: Première édition d'un message
+      description: Première modification d'un message
       long_description: |
-        Ce badge est accordé après la première édition d'un de vos messages. Bien que la possibilité d'éditer un message soit limitée dans le temps, l'édition est toujours une bonne idée — vous pouvez améliorer vos messages, réparer des petites erreurs, ou ajouter des éléments que vous avez oubliés lors de la rédaction. Éditer vos messages pour les rendre encore meilleurs !
+        Ce badge est accordé après la première modification d'un de vos messages. Bien que la possibilité d'éditer un message soit limitée dans le temps, l'édition est toujours une bonne idée — vous pouvez améliorer vos messages, réparer des petites erreurs, ou ajouter des éléments que vous avez oubliés lors de la rédaction. Éditer vos messages pour les rendre encore meilleurs !
     basic_user:
       name: Actif
       description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/4">Accès accordé</a> à toutes les fonctions communautaires essentielles
@@ -2526,7 +2434,7 @@ fr:
       name: Meneur
       description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/7">Accès accordé</a> à l'édition globale, l'épinglage, la fermeture, l'archivage, la séparation et la fusion, et toujours plus de "J'aime"
       long_description: |
-        Ce badge est accordé lorsque vous atteignez le niveau de confiance 4. Vous êtes un meneur choisi par l'équipe dans cette communauté, et vous montrez l'exemple dans vos actions et vos mots. Vous avez la capacité d'éditer tous les messages, utiliser les actions de modérations telles qu'épingler, fermer, cacher, archiver, scinder et fusionner, ainsi que des tonnes de "J'aime" par jour.
+        Ce badge est accordé lorsque vous atteignez le niveau de confiance 4. Vous êtes un meneur choisi par l'équipe dans cette communauté, et vous montrez l'exemple dans vos actions et vos mots. Vous avez la capacité de modifier tous les messages, utiliser les actions de modérations telles qu'épingler, fermer, cacher, archiver, scinder et fusionner, ainsi que des tonnes de "J'aime" par jour.
     welcome:
       name: Bienvenue
       description: A reçu un J'aime

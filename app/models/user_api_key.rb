@@ -2,7 +2,8 @@ class UserApiKey < ActiveRecord::Base
   belongs_to :user
 
   def access
-    "#{read ? "r" : ""}#{write ? "w" : ""}#{push ? "p" : ""}"
+    has_push = push && push_url.present? && SiteSetting.allowed_user_api_push_urls.include?(push_url)
+    "#{read ? "r" : ""}#{write ? "w" : ""}#{has_push ? "p" : ""}"
   end
 end
 

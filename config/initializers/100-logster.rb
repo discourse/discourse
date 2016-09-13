@@ -7,7 +7,6 @@ if Rails.env.production?
 
     /^ActionController::UnknownFormat/,
     /^ActionController::UnknownHttpMethod/,
-
     /^AbstractController::ActionNotFound/,
 
     # alihack is really annoying, nothing really we can do about this
@@ -21,8 +20,8 @@ if Rails.env.production?
     #
     /(?m).*?Line: (?:\D|0).*?Column: (?:\D|0)/,
 
-    # also empty JS errors
-    /^Script error\..*Line: 0/m,
+    # suppress empty JS errors (covers MSIE 9, etc)
+    /^(Syntax|Script) error.*Line: (0|1)\b/m,
 
     # CSRF errors are not providing enough data
     # suppress unconditionally for now

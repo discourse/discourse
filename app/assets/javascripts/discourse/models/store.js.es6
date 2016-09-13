@@ -49,9 +49,9 @@ export default Ember.Object.extend({
     this._plurals[thing] = plural;
   },
 
-  findAll(type) {
+  findAll(type, findArgs) {
     const self = this;
-    return this.adapterFor(type).findAll(this, type).then(function(result) {
+    return this.adapterFor(type).findAll(this, type, findArgs).then(function(result) {
       return self._resultSet(type, result);
     });
   },

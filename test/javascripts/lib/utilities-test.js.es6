@@ -2,6 +2,7 @@
 import { blank } from 'helpers/qunit-helpers';
 import {
   emailValid,
+  extractDomainFromUrl,
   isAnImage,
   avatarUrl,
   allowsAttachments,
@@ -19,6 +20,13 @@ module("lib:utilities");
 test("emailValid", function() {
   ok(emailValid('Bob@example.com'), "allows upper case in the first part of emails");
   ok(emailValid('bob@EXAMPLE.com'), "allows upper case in the email domain");
+});
+
+test("extractDomainFromUrl", function() {
+  equal(extractDomainFromUrl('http://meta.discourse.org:443/random'), 'meta.discourse.org', "extract domain name from url");
+  equal(extractDomainFromUrl('meta.discourse.org:443/random'), 'meta.discourse.org', "extract domain regardless of scheme presence");
+  equal(extractDomainFromUrl('http://192.168.0.1:443/random'), '192.168.0.1', "works for IP address");
+  equal(extractDomainFromUrl('http://localhost:443/random'), 'localhost', "works for localhost");
 });
 
 var validUpload = validateUploadedFiles;
