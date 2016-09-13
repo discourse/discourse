@@ -58,7 +58,7 @@ fa_IR:
         other: آیا خیلی کوتاه است (حداقل%{count} کاراکتر است)
       wrong_length:
         other: آیا طولش اشتباه است (باید %{count} کاراکتر باشد)
-      other_than: "باید غیر از {count}% باشد"
+      other_than: "باید غیر از %{count} باشد"
     template:
       body: 'مشکلاتی با زمینه های دنبال شده وجود دارد:'
       header:
@@ -83,7 +83,7 @@ fa_IR:
   invalid_access: "شما اجازه مشاهده منبع درخواست شده را ندارید."
   read_only_mode_enabled: "سایت در حالت فقط خواندنی است. تداخلات غیرفعال هستند."
   too_many_replies:
-    other: "متأسفیم، ولی کاربران جدید موقتا محدود به {count}% پاسخ در برخی از تاپیک ها هستند."
+    other: "متأسفیم، ولی کاربران جدید موقتا محدود به %{count} پاسخ در برخی از تاپیک ها هستند."
   embed:
     start_discussion: "مبحث جدید"
     continue: "ادامه این بحث"
@@ -263,7 +263,7 @@ fa_IR:
 
       [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
   category:
-    topic_prefix: "در رابطه با دسته بندی {category}% "
+    topic_prefix: "در رابطه با دسته بندی %{category} "
     errors:
       uncategorized_parent: "بدون دسته بندی نمی تواند طبقه خانواده داشته باشد"
       self_parent: "والد زیر شاخه نمی تواند خودش باشد."
@@ -394,7 +394,7 @@ fa_IR:
       title: 'فرستادن یک پیام به @{{username}}'
       description: 'من میخواهم با این شخص به صورت مستقیم و محرمانه درباره ارسالشان صحبت کنم.'
       long_form: 'به کاربر پیام داده شد'
-      email_title: 'نوشته ی شما در "{title}%"'
+      email_title: 'نوشته ی شما در "%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: "یک چیز دیگر"
@@ -912,11 +912,11 @@ fa_IR:
     new_user: "به انجمن ما خوش آمدید! اینها بهترین جستارهای ما هستند. "
     not_seen_in_a_month: "خوش آمدید دوباره!‌ شما را برای مدت طولانی ندیده ایم. اینها بهترین جستارهاست از  وقتی که شما نبودید."
   change_owner:
-    post_revision_text: "حق مالکیت از کاربر {old_user}% به کاربر {new_user}% منتقل شد"
+    post_revision_text: "حق مالکیت از کاربر %{old_user} به کاربر %{new_user} منتقل شد"
     deleted_user: "یک کاربر حذف شده"
   emoji:
     errors:
-      name_already_exists: "متأسفیم، در حال حاضر نام '{name}%' توسط ایموجی دیگری استفاده می‌شود."
+      name_already_exists: "متأسفیم، در حال حاضر نام '%{name}' توسط ایموجی دیگری استفاده می‌شود."
       error_while_storing_emoji: "متأسفیم، در هنگام ذخیره‌سازی ایموجی خطایی رخ داده است."
   topic_statuses:
     archived_enabled: "این جستار بایگانی شده است.  غیر قابل دسترسی است و قادر به تغییر آن نیستید."
@@ -950,11 +950,11 @@ fa_IR:
     active: "حساب کاربریتان فعال شده و آماده‌ی استفاده است."
     activate_email: "<p>تقریبا ثبت نام انجام شد! ما ایمیل فعال سازی را برای ما ارسال کردیم <b>%{email}</b>. لطفا به ایمیل خود برای فعال سازی حساب کاربر خود مراجعه نمایید.</p><p> اگر ایمل فعال سازی نبود، لطفا پوشه اسپم ایمیل خود را برسی نمایید،اگر ایمیل ارسال نشده است با ورود به سایت دوباره ایمیل فعال سازی ارسال نمایید. </p>"
     not_activated: "هنوز نمی توانید وارد سیستم شوید. ما ایمیل برای فعال سازی برای شما ارسال کردیم. لطفا دستور عمل را در ایمیل برای فعال سازی حساب کاربریتان دنبال کنید."
-    not_allowed_from_ip_address: "شما نمی‌توانید با این آی‌پی آدرس وارد حساب کاربری {username}% شوید."
+    not_allowed_from_ip_address: "شما نمی‌توانید با این آی‌پی آدرس وارد حساب کاربری %{username} شوید."
     admin_not_allowed_from_ip_address: "شما نمی تواند با این اپی آدرس به عنوان مدیر وارد سیستم شوید."
-    suspended: "شما تا تاریخ {date}% نمی‌توانید وارید سیستم شوید."
+    suspended: "شما تا تاریخ %{date} نمی‌توانید وارید سیستم شوید."
     suspended_with_reason: "این حساب تا تاریخ %{date} مسدود شده است:  %{reason}"
-    errors: "{errors}%"
+    errors: "%{errors}"
     not_available: "موجود نیست. این را امتحان کنید %{suggestion}?"
     something_already_taken: "ایرادی روی داد٬‌  شاید  نام کاربری و ایمیل قبلا ثبت نام شده است. از پیوند پیش رو برای بازیابی رمز عبور استفاده کنید."
     omniauth_error: "با عرض پوزش٬ یک ایراد برای تایید حساب کاربری شما وجود داشت. شاید شما مجوز تایید نگرفته اید ؟ "
@@ -1002,7 +1002,7 @@ fa_IR:
   invite_forum_mailer:
     subject_template: "%{invitee_name} دعوت شدید به عضویت در %{site_domain_name}"
   invite_password_instructions:
-    subject_template: "تنظیم رمز عبور برای حساب کاربری {site_name}%"
+    subject_template: "تنظیم رمز عبور برای حساب کاربری %{site_name}"
   test_mailer:
     subject_template: "[%{site_name}] ایمیل تست دهش"
   new_version_mailer:
@@ -1142,7 +1142,7 @@ fa_IR:
     unsubscribe:
       title: "لغو اشتراک"
       description: "آیا تمایلی به دریافت این ایمیل‌ها ندارید؟ مشکلی نیست! اینجا را کلیک کنید تا اشتراک آن هم‌اکنون حذف شود."
-    posted_by: "نوشته شده توسط {username}% در تاریخ {post_date}%"
+    posted_by: "نوشته شده توسط %{username} در تاریخ %{post_date}"
     user_invited_to_private_message_pm:
       subject_template: "[%{site_name}] %{username} شما را به یک پیام دعوت کرده است: '%{topic_title}'"
     user_replied:
@@ -1253,11 +1253,11 @@ fa_IR:
   deleted: 'حذف شد'
   upload:
     edit_reason: "کپی عکس های محلی دانلود شد"
-    unauthorized: "متأسفم، پرونده‌ای که می‌خواهید بارگذاری کنید معتبر نیست ( پسوندهای معتبر عبارتند از: {authorized_extensions}% )."
+    unauthorized: "متأسفم، پرونده‌ای که می‌خواهید بارگذاری کنید معتبر نیست ( پسوندهای معتبر عبارتند از: %{authorized_extensions} )."
     pasted_image_filename: "تصویر جایگذاری شد"
     store_failure: "برای ذخیره آپلود انجام نشد#%{upload_id} برای کاربر #%{user_id}."
     attachments:
-      too_large: "متأسفم، پرونده‌ای که می‌خواهید بارگذاری کنید بسیار بزرگ است! ( حداکثر حجم پرونده باید {max_size_kb}% کیلوبایت باشد. )"
+      too_large: "متأسفم، پرونده‌ای که می‌خواهید بارگذاری کنید بسیار بزرگ است! ( حداکثر حجم پرونده باید %{max_size_kb} کیلوبایت باشد. )"
     images:
       too_large: "با عرض پوزش٬ عکسی را که تلاش برای بارگزاری آن دارید بسیار بزرگ است ( حداکثر اندازه %{max_size_kb}KB ) لطفا آن را تغییر اندازه دهید و دوباره امتحان کنید. "
       size_not_found: "با عرض پوزش٬ ولی ما نتوانستیم اندازه عکس را مشخص کنیم. شاید عکس شما خراب است. "

@@ -39,7 +39,7 @@ he:
       long_date_with_year_without_time: "MMM D, 'YY"
       long_date_without_year_with_linebreak: "MMM D <br/>LT"
       long_date_with_year_with_linebreak: "MMM D, 'YY <br/>LT"
-      wrap_ago: "לפני {date}%"
+      wrap_ago: "לפני %{date}"
       tiny:
         half_a_minute: "פחות מדקה"
         less_than_x_seconds:
@@ -82,17 +82,17 @@ he:
       medium_with_ago:
         x_minutes:
           one: "לפני דקה אחת"
-          other: "לפני {count}% דקות"
+          other: "לפני %{count} דקות"
         x_hours:
           one: "לפני שעה אחת"
-          other: "לפני {count}% שעות"
+          other: "לפני %{count} שעות"
         x_days:
           one: "אתמול"
-          other: "לפני {count}% ימים"
+          other: "לפני %{count} ימים"
       later:
         x_days:
           one: "אחרי יום אחד"
-          other: "אחרי {count}% ימים"
+          other: "אחרי %{count} ימים"
         x_months:
           one: "אחרי חודש אחד"
           other: "אחרי {{count}}% חודשים"
@@ -2642,7 +2642,7 @@ he:
           other: "לא ניתן למחוק את כל ההודעות. חלק מההודעות ישנות יותר מ-%{count} ימים. (הגדרת delete_user_max_post_age.)"
         cant_delete_all_too_many_posts:
           one: "לא ניתן למחוק את כל הפוסטים מפני שלמשתמשים יותר מפוסט אחד. (delete_all_posts_max)"
-          other: "לא ניתן למחוק את כל הפוסטים בגלל שלמשתמשים יותר מ {count}% פוסטים. (delete_all_posts_max)"
+          other: "לא ניתן למחוק את כל הפוסטים בגלל שלמשתמשים יותר מ %{count} פוסטים. (delete_all_posts_max)"
         delete_confirm: "האם אתם ב-ט-ו-ח-י-ם שאתם רוצים למחוק משתמש זה? פעולה זו קבועה ובלתי הפיכה!"
         delete_and_block: "מחיקה ו<b>חסימת</b> כתובת דוא\"ל וכתובת IP אלה"
         delete_dont_block: "מחיקה בלבד"
