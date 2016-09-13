@@ -1,4 +1,15 @@
-module("Acceptance: wizard");
+import startApp from 'wizard/test/helpers/start-app';
+
+var wizard;
+module("Acceptance: wizard", {
+  beforeEach() {
+    wizard = startApp();
+  },
+
+  teardown() {
+    Ember.run(wizard, 'destroy');
+  }
+});
 
 test("Wizard starts", assert => {
   visit("/");

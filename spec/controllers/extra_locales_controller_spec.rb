@@ -18,12 +18,6 @@ describe ExtraLocalesController do
       get :show, bundle: '-invalid..character!!'
       expect(response).to_not be_success
     end
-
-    it "works with a valid bundle" do
-      get :show, bundle: 'admin'
-      expect(response).to be_success
-      expect(response.body).to be_present
-    end
   end
 
 end
