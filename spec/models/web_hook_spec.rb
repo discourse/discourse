@@ -103,9 +103,10 @@ describe WebHook do
     let!(:post_hook) { Fabricate(:web_hook) }
     let!(:topic_hook) { Fabricate(:topic_web_hook) }
     let(:user) { Fabricate(:user) }
+    let(:admin) { Fabricate(:admin) }
     let(:topic) { Fabricate(:topic, user: user) }
-    let(:post) { Fabricate(:post, topic: topic) }
-    let(:post2) { Fabricate(:post, topic: topic) }
+    let(:post) { Fabricate(:post, topic: topic, user: user) }
+    let(:post2) { Fabricate(:post, topic: topic, user: user) }
 
     it 'should enqueue the right hooks for topic events' do
       WebHook.expects(:enqueue_topic_hooks).once
@@ -119,6 +120,7 @@ describe WebHook do
     end
 
     it 'should enqueue the right hooks for post events' do
+      user # bypass a user_created event
       WebHook.expects(:enqueue_hooks).once
       PostCreator.create(user, { raw: 'post', topic_id: topic.id, reply_to_post_number: 1, skip_validations: true })
 
@@ -127,6 +129,17 @@ describe WebHook do
 
       WebHook.expects(:enqueue_hooks).once
       PostDestroyer.new(user, post2).recover
+    end
+
+    it 'should enqueue the right hooks for user creation events' do
+      WebHook.expects(:enqueue_hooks).once
+      user
+
+      WebHook.expects(:enqueue_hooks).once
+      admin
+
+      WebHook.expects(:enqueue_hooks).once
+      user.approve(admin)
     end
   end
 end

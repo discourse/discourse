@@ -58,6 +58,12 @@ describe User do
       user.approve(admin)
     end
 
+    it 'triggers a extensibility event' do
+      user && admin # bypass the user_created event
+      DiscourseEvent.expects(:trigger).with(:user_approved, user).once
+      user.approve(admin)
+    end
+
     context 'after approval' do
       before do
         user.approve(admin)
@@ -153,8 +159,13 @@ describe User do
       expect(subject.approved_by_id).to be_blank
     end
 
+    it 'triggers an extensibility event' do
+      DiscourseEvent.expects(:trigger).with(:user_created, subject).once
+      subject.save!
+    end
+
     context 'after_save' do
-      before { subject.save }
+      before { subject.save! }
 
       it "has correct settings" do
         expect(subject.email_tokens).to be_present

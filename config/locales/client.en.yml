@@ -2467,12 +2467,9 @@ en:
         post_event:
           name: "Post Event"
           details: "When there is a new reply, edit, deleted or recovered."
-        invitation_event:
-          name: "Invitation Event"
-          details: "When a invitation is sent or accepted."
         user_event:
-          name: "User Event"
-          details: "When there is a user is created or changed."
+          name: "User Creation Event"
+          details: "When a user is created or approved."
         delivery_status:
           title: "Delivery Status"
           inactive: "Inactive"
