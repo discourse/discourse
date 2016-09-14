@@ -973,7 +973,7 @@ developer:
     client: true
     hidden: true
   wizard_enabled:
-    default: false
+    default: true
     hidden: true
 
 embedding:
