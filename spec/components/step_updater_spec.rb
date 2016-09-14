@@ -4,15 +4,19 @@ require_dependency 'wizard/builder'
 require_dependency 'wizard/step_updater'
 
 describe Wizard::StepUpdater do
+  before do
+    SiteSetting.wizard_enabled = true
+  end
+
   let(:user) { Fabricate(:admin) }
   let(:wizard) { Wizard::Builder.new(user).build }
 
   context "locale" do
-
     it "does not require refresh when the language stays the same" do
       updater = wizard.create_updater('locale', default_locale: 'en')
       updater.update
       expect(updater.refresh_required?).to eq(false)
+      expect(wizard.completed_steps?('locale')).to eq(true)
     end
 
     it "updates the locale and requires refresh when it does change" do
@@ -20,6 +24,7 @@ describe Wizard::StepUpdater do
       updater.update
       expect(SiteSetting.default_locale).to eq('ru')
       expect(updater.refresh_required?).to eq(true)
+      expect(wizard.completed_steps?('locale')).to eq(true)
     end
   end
 
@@ -30,6 +35,7 @@ describe Wizard::StepUpdater do
     expect(updater.success?).to eq(true)
     expect(SiteSetting.title).to eq("new forum title")
     expect(SiteSetting.site_description).to eq("neat place")
+    expect(wizard.completed_steps?('forum-title')).to eq(true)
   end
 
   context "privacy settings" do
@@ -39,6 +45,7 @@ describe Wizard::StepUpdater do
       expect(updater.success?).to eq(true)
       expect(SiteSetting.login_required?).to eq(false)
       expect(SiteSetting.invite_only?).to eq(false)
+      expect(wizard.completed_steps?('privacy')).to eq(true)
     end
 
     it "updates to private correctly" do
@@ -47,6 +54,7 @@ describe Wizard::StepUpdater do
       expect(updater.success?).to eq(true)
       expect(SiteSetting.login_required?).to eq(true)
       expect(SiteSetting.invite_only?).to eq(true)
+      expect(wizard.completed_steps?('privacy')).to eq(true)
     end
   end
 
@@ -62,6 +70,7 @@ describe Wizard::StepUpdater do
       expect(SiteSetting.contact_email).to eq("eviltrout@example.com")
       expect(SiteSetting.contact_url).to eq("http://example.com/custom-contact-url")
       expect(SiteSetting.site_contact_username).to eq(user.username)
+      expect(wizard.completed_steps?('contact')).to eq(true)
     end
 
     it "doesn't update when there are errors" do
@@ -71,6 +80,7 @@ describe Wizard::StepUpdater do
       updater.update
       expect(updater).to_not be_success
       expect(updater.errors).to be_present
+      expect(wizard.completed_steps?('contact')).to eq(false)
     end
   end
 
@@ -109,6 +119,8 @@ describe Wizard::StepUpdater do
       updater.update
       raw = Post.where(topic_id: SiteSetting.tos_topic_id, post_number: 1).pluck(:raw).first
       expect(raw).to eq("company_domain - company_full_name - company_short_name template")
+
+      expect(wizard.completed_steps?('corporate')).to eq(true)
     end
   end
 
@@ -120,6 +132,7 @@ describe Wizard::StepUpdater do
         updater = wizard.create_updater('colors', theme_id: 'dark')
         updater.update
         expect(updater.success?).to eq(true)
+        expect(wizard.completed_steps?('colors')).to eq(true)
 
         color_scheme.reload
         expect(color_scheme).to be_enabled
@@ -131,6 +144,7 @@ describe Wizard::StepUpdater do
         updater = wizard.create_updater('colors', theme_id: 'dark')
         updater.update
         expect(updater.success?).to eq(true)
+        expect(wizard.completed_steps?('colors')).to eq(true)
 
         color_scheme = ColorScheme.where(via_wizard: true).first
         expect(color_scheme).to be_present
@@ -150,6 +164,7 @@ describe Wizard::StepUpdater do
       updater.update
 
       expect(updater).to be_success
+      expect(wizard.completed_steps?('logos')).to eq(true)
       expect(SiteSetting.logo_url).to eq('/uploads/logo.png')
       expect(SiteSetting.logo_small_url).to eq('/uploads/logo-small.png')
       expect(SiteSetting.favicon_url).to eq('/uploads/favicon.png')
@@ -158,7 +173,6 @@ describe Wizard::StepUpdater do
   end
 
   context "invites step" do
-
     let(:invites) {
       return [{ email: 'regular@example.com', role: 'regular'},
               { email: 'moderator@example.com', role: 'moderator'}]
@@ -169,6 +183,7 @@ describe Wizard::StepUpdater do
       updater.update
 
       expect(updater).to be_success
+      expect(wizard.completed_steps?('invites')).to eq(true)
 
       expect(Invite.where(email: 'regular@example.com')).to be_present
       expect(Invite.where(email: 'moderator@example.com')).to be_present

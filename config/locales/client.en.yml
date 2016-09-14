@@ -165,6 +165,7 @@ en:
 
     topic_admin_menu: "topic admin actions"
 
+    wizard_required: "It's time to configure your forum! <a href='/wizard/' data-auto-route='true'>Start the Setup Wizard</a>!"
     emails_are_disabled: "All outgoing email has been globally disabled by an administrator. No email notifications of any kind will be sent."
 
     bootstrap_mode_enabled: "To make launching your new site easier, you are in bootstrap mode. All new users will be granted trust level 1 and have daily email digest updates enabled. This will be automatically turned off when total user count exceeds %{min_users} users."
@@ -3233,6 +3234,7 @@ en:
       step: "Step %{current} of %{total}"
       upload: "Upload"
       uploading: "Uploading..."
+      quit: "Perform Setup Later"
 
       invites:
         add_user: "add"

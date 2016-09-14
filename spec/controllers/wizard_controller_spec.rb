@@ -2,8 +2,12 @@ require 'rails_helper'
 
 describe WizardController do
 
-  context 'index' do
+  context 'wizard enabled' do
     render_views
+
+    before do
+      SiteSetting.wizard_enabled = true
+    end
 
     it 'needs you to be logged in' do
       expect { xhr :get, :index }.to raise_error(Discourse::NotLoggedIn)
@@ -11,6 +15,13 @@ describe WizardController do
 
     it "raises an error if you aren't an admin" do
       log_in
+      xhr :get, :index
+      expect(response).to be_forbidden
+    end
+
+    it "raises an error if the wizard is disabled" do
+      SiteSetting.wizard_enabled = false
+      log_in(:admin)
       xhr :get, :index
       expect(response).to be_forbidden
     end
@@ -27,7 +38,6 @@ describe WizardController do
       expect(response).to be_success
       expect(::JSON.parse(response.body).has_key?('wizard')).to eq(true)
     end
-
   end
 
 end

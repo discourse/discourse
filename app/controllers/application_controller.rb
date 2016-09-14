@@ -461,6 +461,10 @@ class ApplicationController < ActionController::Base
       raise Discourse::InvalidAccess.new unless current_user && current_user.staff?
     end
 
+    def ensure_wizard_enabled
+      raise Discourse::InvalidAccess.new unless SiteSetting.wizard_enabled?
+    end
+
     def destination_url
       request.original_url unless request.original_url =~ /uploads/
     end

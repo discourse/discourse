@@ -6,6 +6,8 @@ class Wizard
     end
 
     def build
+      return @wizard unless SiteSetting.wizard_enabled? && @wizard.user.try(:staff?)
+
       @wizard.append_step('locale') do |step|
         languages = step.add_field(id: 'default_locale',
                                    type: 'dropdown',

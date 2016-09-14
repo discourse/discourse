@@ -972,6 +972,9 @@ developer:
     default: 500
     client: true
     hidden: true
+  wizard_enabled:
+    default: false
+    hidden: true
 
 embedding:
   feed_polling_enabled:

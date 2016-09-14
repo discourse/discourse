@@ -9,6 +9,9 @@ export default Ember.Component.extend({
     this.autoFocus();
   },
 
+  @computed('step.index')
+  showQuitButton: index => index === 0,
+
   @computed('step.displayIndex', 'wizard.totalSteps')
   showNextButton: (current, total) => current < total,
 
@@ -49,6 +52,10 @@ export default Ember.Component.extend({
   },
 
   actions: {
+    quit() {
+      document.location = "/";
+    },
+
     backStep() {
       if (this.get('saving')) { return; }
       this.sendAction('goBack');

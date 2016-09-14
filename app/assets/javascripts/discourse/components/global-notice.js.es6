@@ -17,6 +17,10 @@ export default Ember.Component.extend(StringBuffer, {
       notices.push([I18n.t("emails_are_disabled"), 'alert-emails-disabled']);
     }
 
+    if (this.site.get('wizard_required')) {
+      notices.push([I18n.t('wizard_required'), 'alert-wizard']);
+    }
+
     if (this.currentUser && this.currentUser.get('staff') && this.siteSettings.bootstrap_mode_enabled) {
       if (this.siteSettings.bootstrap_mode_min_users > 0) {
         notices.push([I18n.t("bootstrap_mode_enabled", {min_users: this.siteSettings.bootstrap_mode_min_users}), 'alert-bootstrap-mode']);
