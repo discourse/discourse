@@ -4,6 +4,7 @@ require_dependency 'wizard/step_updater'
 
 class StepsController < ApplicationController
 
+  before_filter :ensure_wizard_enabled
   before_filter :ensure_logged_in
   before_filter :ensure_staff
 

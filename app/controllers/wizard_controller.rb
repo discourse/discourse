@@ -2,7 +2,7 @@ require_dependency 'wizard'
 require_dependency 'wizard/builder'
 
 class WizardController < ApplicationController
-
+  before_filter :ensure_wizard_enabled, only: [:index]
   before_filter :ensure_logged_in
   before_filter :ensure_staff
 

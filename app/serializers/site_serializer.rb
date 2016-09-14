@@ -1,4 +1,6 @@
 require_dependency 'discourse_tagging'
+require_dependency 'wizard'
+require_dependency 'wizard/builder'
 
 class SiteSerializer < ApplicationSerializer
 
@@ -20,7 +22,8 @@ class SiteSerializer < ApplicationSerializer
              :can_create_tag,
              :can_tag_topics,
              :tags_filter_regexp,
-             :top_tags
+             :top_tags,
+             :wizard_required
 
   has_many :categories, serializer: BasicCategorySerializer, embed: :objects
   has_many :trust_levels, embed: :objects
@@ -109,5 +112,13 @@ class SiteSerializer < ApplicationSerializer
 
   def top_tags
     Tag.top_tags
+  end
+
+  def wizard_required
+    true
+  end
+
+  def include_wizard_required?
+    Wizard::Builder.new(scope.user).build.requires_completion?
   end
 end

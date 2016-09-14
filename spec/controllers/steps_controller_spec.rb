@@ -2,6 +2,10 @@ require 'rails_helper'
 
 describe StepsController do
 
+  before do
+    SiteSetting.wizard_enabled = true
+  end
+
   it 'needs you to be logged in' do
     expect {
       xhr :put, :update, id: 'made-up-id', fields: { forum_title: "updated title" }
@@ -17,6 +21,12 @@ describe StepsController do
   context "as an admin" do
     before do
       log_in(:admin)
+    end
+
+    it "raises an error if the wizard is disabled" do
+      SiteSetting.wizard_enabled = false
+      xhr :put, :update, id: 'contact', fields: { contact_email: "eviltrout@example.com" }
+      expect(response).to be_forbidden
     end
 
     it "updates properly if you are staff" do

@@ -12,7 +12,12 @@ class Wizard
     end
 
     def update
-      @step.updater.call(self) if @step.updater.present?
+      @step.updater.call(self) if @step.present? && @step.updater.present?
+
+      if success?
+        logger = StaffActionLogger.new(@current_user)
+        logger.log_wizard_step(@step)
+      end
     end
 
     def success?

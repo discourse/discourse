@@ -15,6 +15,10 @@ class Wizard
       field
     end
 
+    def has_fields?
+      @fields.present?
+    end
+
     def on_update(&block)
       @updater = block
     end
