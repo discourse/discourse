@@ -397,6 +397,7 @@ class ImportScripts::VBulletin < ImportScripts::Base
           parent_id = title_username_of_pm_first_post[[title[6..-1], participants]] unless parent_id
           parent_id = title_username_of_pm_first_post[[title[7..-1], participants]] unless parent_id
           parent_id = title_username_of_pm_first_post[[title[8..-1], participants]] unless parent_id
+          if parent_id
             if t = topic_lookup_from_imported_post_id("pm-#{parent_id}")
               topic_id = t[:topic_id]
             end
