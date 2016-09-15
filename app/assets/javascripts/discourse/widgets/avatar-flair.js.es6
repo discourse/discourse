@@ -1,4 +1,4 @@
-import { createWidget, applyDecorators } from 'discourse/widgets/widget';
+import { createWidget } from 'discourse/widgets/widget';
 import { h } from 'virtual-dom';
 
 createWidget('avatar-flair', {
