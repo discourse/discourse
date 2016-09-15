@@ -2411,6 +2411,7 @@ en:
         flair_color: "Avatar Flair Color"
         flair_color_placeholder: "(Optional) Hex color value"
         flair_preview: "Preview"
+        flair_note: "Note: Flair will only show for a user's primary group."
 
 
       api:
