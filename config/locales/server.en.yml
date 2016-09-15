@@ -3266,8 +3266,8 @@ en:
             label: "Contact URL"
             placeholder: "http://www.example.com/contact-us"
             description: "Will be displayed on your \"About\" page."
-          site_contact_username:
-            label: "Site Contact Username"
+          site_contact:
+            label: "Site Contact"
             description: "All automated messages will be sent from this user."
 
       corporate:

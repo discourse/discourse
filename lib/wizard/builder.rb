@@ -56,10 +56,16 @@ class Wizard
       @wizard.append_step('contact') do |step|
         step.add_field(id: 'contact_email', type: 'text', required: true, value: SiteSetting.contact_email)
         step.add_field(id: 'contact_url', type: 'text', value: SiteSetting.contact_url)
-        step.add_field(id: 'site_contact_username', type: 'text', value: SiteSetting.site_contact_username)
+
+        username = SiteSetting.site_contact_username
+        username = Discourse.system_user.username if username.blank?
+        contact = step.add_field(id: 'site_contact', type: 'dropdown', value: username)
+
+        User.where(admin: true).pluck(:username).each {|c| contact.add_choice(c) }
 
         step.on_update do |updater|
-          updater.apply_settings(:contact_email, :contact_url, :site_contact_username)
+          updater.apply_settings(:contact_email, :contact_url)
+          updater.update_setting(:site_contact_username, updater.fields[:site_contact])
         end
       end
 
