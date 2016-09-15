@@ -3,7 +3,9 @@
 
   <div class="user-card-avatar">
     <a href={{user.path}} {{action "showUser"}} class="card-huge-avatar">{{bound-avatar avatar "huge"}}</a>
-    {{mount-widget widget="avatar-flair" args=user}}
+    {{#if user.primary_group_name}}
+      {{mount-widget widget="avatar-flair" args=user}}
+    {{/if}}
   </div>
 
   <div class="names">
