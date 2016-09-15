@@ -3292,9 +3292,9 @@ en:
             label: "Theme"
             choices:
               default:
-                label: "Simple"
+                label: "Simple Light"
               dark:
-                label: "Dark"
+                label: "Simple Dark"
       logos:
         title: "Personalize your Forum"
         fields:
