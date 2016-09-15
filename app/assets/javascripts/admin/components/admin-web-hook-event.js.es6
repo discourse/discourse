@@ -26,7 +26,7 @@ export default Ember.Component.extend({
   @computed('model.duration')
   completion(duration) {
     const seconds = Math.floor(duration / 10.0) / 100.0;
-    return I18n.t('admin.web_hooks.events.completion', { seconds });
+    return I18n.t('admin.web_hooks.events.completed_in', { count: seconds });
   },
 
   actions: {

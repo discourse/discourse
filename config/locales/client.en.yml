@@ -2481,7 +2481,9 @@ en:
           incoming:
             one: "There is a new event."
             other: "There are {{count}} new events."
-          completion: "Completed in %{seconds} seconds."
+          completed_in:
+            one: "Completed in 1 second."
+            other: "Completed in {{count}} seconds."
           request: "Request"
           response: "Response"
           redeliver_confirm: "Are you sure you want to redeliver the same payload?"
@@ -2492,6 +2494,11 @@ en:
           go_details: "Edit webhook"
           go_events: "Go to events"
           ping: "Ping"
+          status: "Status Code"
+          event_id: "ID"
+          timestamp: "Created"
+          completion: "Completion Time"
+          actions: "Actions"
       plugins:
         title: "Plugins"
         installed: "Installed Plugins"
