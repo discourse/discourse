@@ -39,6 +39,10 @@ class Wizard
       errors.add(id, e.message)
     end
 
+    def ensure_changed(id)
+      errors.add(id, '') if @fields[id] == SiteSetting.defaults[id]
+    end
+
     def apply_settings(*ids)
       ids.each {|id| apply_setting(id)}
     end

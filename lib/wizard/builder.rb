@@ -30,7 +30,11 @@ class Wizard
         step.add_field(id: 'site_description', type: 'text', required: true, value: SiteSetting.site_description)
 
         step.on_update do |updater|
-          updater.apply_settings(:title, :site_description)
+          updater.ensure_changed(:title)
+
+          if updater.errors.blank?
+            updater.apply_settings(:title, :site_description)
+          end
         end
       end
 

@@ -1,5 +1,16 @@
 import { default as computed, observes } from 'ember-addons/ember-computed-decorators';
 
+jQuery.fn.wiggle = function (times, duration) {
+  if (times > 0) {
+    this.animate({
+      marginLeft: times-- % 2 === 0 ? -15 : 15
+    }, duration, 0, () => this.wiggle(times, duration));
+  } else {
+    this.animate({ marginLeft: 0 }, duration, 0);
+  }
+  return this;
+};
+
 export default Ember.Component.extend({
   classNames: ['wizard-step'],
   saving: null,
@@ -51,6 +62,10 @@ export default Ember.Component.extend({
     });
   },
 
+  animateInvalidFields() {
+    Ember.run.scheduleOnce('afterRender', () => $('.invalid input[type=text]').wiggle(2, 100));
+  },
+
   actions: {
     quit() {
       document.location = "/";
@@ -71,9 +86,10 @@ export default Ember.Component.extend({
         this.set('saving', true);
         step.save()
           .then(response => this.sendAction('goNext', response))
-          .catch(() => null) // we can swallow because the form is already marked as invalid
+          .catch(() => this.animateInvalidFields()) 
           .finally(() => this.set('saving', false));
       } else {
+        this.animateInvalidFields();
         this.autoFocus();
       }
     }

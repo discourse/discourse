@@ -38,6 +38,13 @@ describe Wizard::StepUpdater do
     expect(wizard.completed_steps?('forum-title')).to eq(true)
   end
 
+  it "won't allow updates to the default value, when required" do
+    updater = wizard.create_updater('forum_title', title: SiteSetting.title, site_description: 'neat place')
+    updater.update
+
+    expect(updater.success?).to eq(false)
+  end
+
   context "privacy settings" do
     it "updates to open correctly" do
       updater = wizard.create_updater('privacy', privacy: 'open')
