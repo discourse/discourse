@@ -3218,75 +3218,74 @@ en:
   rss_by_tag: "Topics tagged %{tag}"
 
   wizard:
-    title: "Discourse Setup Wizard"
+    title: "Discourse Setup"
     step:
       locale:
-        title: "Welcome to your Discourse forum!"
-        description: "There are a few things you'll need to configure before inviting more people to the party. Don't worry, you can come back and change these settings at any time, so don't overthink it."
+        title: "Welcome to your Discourse!"
 
         fields:
           default_locale:
             label: "Language"
-            description: "The default language for users browsing your forum"
+            description: "What’s the default language for your community?"
 
       forum_title:
-        title: "The Basics"
-        description: "Tell us a little bit about yourself."
+        title: "Name"
+        description: "If you put a sign in front of your community for people to discover, what would it say?"
 
         fields:
           title:
-            label: "Enter a title for your forum"
-            placeholder: "Jane's Hangout"
+            label: "What’s the name of your community?"
+            placeholder: "Jane’s Hangout"
           site_description:
-            label: "Describe your forum in one sentence"
+            label: "How would you describe your community in one sentence?"
             placeholder: "A place for Jane and her friends to discuss cool stuff"
 
       privacy:
-        title: "Privacy Options"
-        description: "Feel free to set things up privately, then switch to public later!"
+        title: "Access"
+        description: "Is your community open to everyone, or is it restricted by membership, invitation, or approval? If you prefer, you can set things up privately, then switch to public later."
 
         fields:
           privacy:
             choices:
               open:
-                label: "Open Access"
-                description: "Anyone can access and sign up for your forum"
+                label: "Public"
+                description: "Anyone can access this community and sign up for an account"
               restricted:
-                label: "Restricted Access"
-                description: "Access will be restricted to those you've invited"
+                label: "Private"
+                description: "Only people I have invited or approved can access this community"
 
       contact:
-        title: "Don't be a Stranger"
+        title: "Contact"
         fields:
           contact_email:
-            label: "Contact E-mail"
+            label: "E-mail"
             placeholder: "name@example.com"
-            description: "The key contact responsible for this site. This is used for critical notifications such as unhandled flags and on the \"About\" page for urgent matters."
+            description: "Email address for the person or group responsible for this community. Used for critical notifications such as unhandled flags, security updates, and on the \"About\" page for urgent community contact."
           contact_url:
-            label: "Contact URL"
+            label: "Web Page"
             placeholder: "http://www.example.com/contact-us"
-            description: "Will be displayed on your \"About\" page."
+            description: "General contact web page for you or your oganization. Will be displayed on your \"About\" page."
           site_contact:
-            label: "Site Contact"
-            description: "All automated messages will be sent from this user."
+            label: "User"
+            description: "All automated Discourse personal messages will be sent from this user."
 
       corporate:
-        title: "About your Company"
-        description: "If you don't have a company, feel free to leave this step blank."
+        title: "Company"
+        description: "These names will be entered in your <a href='/privacy' target='blank'>Privacy Policy</a> and <a href='/tos' target='blank'>Terms of Service</a>, which you can edit any time in the Staff category. If you don’t have a company, feel free to skip this step for now."
 
         fields:
           company_short_name:
             label: "Company Name (short)"
-            placeholder: "PP Inc."
+            placeholder: "Initech"
           company_full_name:
             label: "Company Name (full)"
-            placeholder: "Pied Piper Incorporated"
+            placeholder: "Initech, Inc."
           company_domain:
-            label: "Company Domain"
-            placeholder: "piedpiper.com"
+            label: "Company Domain Name"
+            placeholder: "initech.com"
 
       colors:
-        title: "Choose a Theme"
+        title: "Theme"
         fields:
           theme_id:
             label: "Theme"
@@ -3296,17 +3295,17 @@ en:
               dark:
                 label: "Simple Dark"
       logos:
-        title: "Personalize your Forum"
+        title: "Logos"
         fields:
           logo_url:
-            label: "Site Logo"
+            label: "Primary Logo"
             description: "The logo image at the top left of your site, should be a wide rectangle shape."
           logo_small_url:
             label: "Small Logo"
             description: "The small logo image at the top left of your site, should be a square shape, seen when scrolling down."
           favicon_url:
             label: "Small Icon"
-            description: "A <a href=\"http://en.wikipedia.org/wiki/Favicon\">favicon</a> for your site. To work correctly over a CDN it must be a png."
+            description: "A <a href='http://en.wikipedia.org/wiki/Favicon' target='blank'>favicon</a> for your site. To work correctly over a CDN it must be a png."
           apple_touch_icon_url:
             label: "Large Icon"
             description: "Icon used for Apple touch devices. Recommended size is 144px by 144px."
@@ -3316,7 +3315,7 @@ en:
         description: "We recommend you invite some staff members to help you get things started."
 
       finished:
-        title: "Your Discourse Forum is Ready!"
+        title: "Your Discourse is Ready!"
         description: |
           <p>If you ever feel like changing these settings, visit your admin section.</p>
 
