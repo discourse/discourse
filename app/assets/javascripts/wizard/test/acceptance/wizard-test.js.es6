@@ -61,10 +61,10 @@ test("Going back and forth in steps", assert => {
 
     assert.ok(!exists('.wizard-btn.next'));
     assert.ok(exists('.wizard-btn.done'), 'last step shows a done button');
-    assert.ok(exists('.wizard-btn.back'), 'shows the back button');
+    assert.ok(exists('.action-link.back'), 'shows the back button');
   });
 
-  click('.wizard-btn.back');
+  click('.action-link.back');
   andThen(() => {
     assert.ok(exists('.wizard-step-title'));
     assert.ok(exists('.wizard-btn.next'));
