@@ -294,6 +294,16 @@ describe DiscourseSingleSignOn do
       # initial creation ...
       expect(avatar_id).to_not eq(nil)
 
+      # junk avatar id should be updated
+      old_id = user.uploaded_avatar_id
+      Upload.destroy(old_id)
+
+      user = sso.lookup_or_create_user(ip_address)
+      avatar_id = user.uploaded_avatar_id
+
+      expect(avatar_id).to_not eq(nil)
+      expect(old_id).to_not eq(avatar_id)
+
       FileHelper.stubs(:download) { raise "should not be called" }
       sso.avatar_url = "https://some.new/avatar.png"
       user = sso.lookup_or_create_user(ip_address)
