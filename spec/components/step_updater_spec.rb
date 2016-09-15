@@ -70,7 +70,7 @@ describe Wizard::StepUpdater do
       updater = wizard.create_updater('contact',
                                       contact_email: 'eviltrout@example.com',
                                       contact_url: 'http://example.com/custom-contact-url',
-                                      site_contact_username: user.username)
+                                      site_contact: user.username)
 
       updater.update
       expect(updater).to be_success
