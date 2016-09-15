@@ -85,3 +85,7 @@ RailsMultisite::ConnectionManagement.each_connection do
     end
   end
 end
+
+if Rails.configuration.multisite
+  Rails.logger.instance_variable_get(:@chained).first.formatter = RailsMultisite::Formatter.new
+end
