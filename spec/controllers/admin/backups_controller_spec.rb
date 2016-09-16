@@ -212,7 +212,7 @@ describe Admin::BackupsController do
           described_class.any_instance.expects(:has_enough_space_on_disk?).returns(true)
 
           xhr :post, :upload_backup_chunk,
-            resumableFilename: 'test.tar.gz',
+            resumableFilename: 'test_Site-0123456789.tar.gz',
             resumableTotalSize: 1,
             resumableIdentifier: 'test',
             resumableChunkNumber: '1',
