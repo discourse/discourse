@@ -9,7 +9,7 @@
 
   {{#wizard-step-form step=step}}
     {{#each step.fields as |field|}}
-      {{wizard-field field=field step=step}}
+      {{wizard-field field=field step=step wizard=wizard}}
     {{/each}}
   {{/wizard-step-form}}
 </div>
