@@ -199,8 +199,8 @@ module BackupRestore
       log "Finalizing database dump file: #{@backup_filename}"
 
       execute_command(
-        "mv #{@dump_filename} #{File.join(@archive_directory, @backup_filename)}",
-        "Failed to move database dump file."
+        'mv', @dump_filename, File.join(@archive_directory, @backup_filename),
+        failure_message: "Failed to move database dump file."
       )
 
       remove_tmp_directory
@@ -212,17 +212,17 @@ module BackupRestore
       tar_filename = "#{@archive_basename}.tar"
 
       log "Making sure archive does not already exist..."
-      execute_command("rm -f #{tar_filename}")
-      execute_command("rm -f #{tar_filename}.gz")
+      execute_command('rm', '-f', tar_filename)
+      execute_command('rm', '-f', "#{tar_filename}.gz")
 
       log "Creating empty archive..."
-      execute_command("tar --create --file #{tar_filename} --files-from /dev/null")
+      execute_command('tar', '--create', '--file', tar_filename, '--files-from', '/dev/null')
 
       log "Archiving data dump..."
-      FileUtils.cd(File.dirname("#{@dump_filename}")) do
+      FileUtils.cd(File.dirname(@dump_filename)) do
         execute_command(
-          "tar --append --dereference --file #{tar_filename} #{File.basename(@dump_filename)}",
-          "Failed to archive data dump."
+          'tar', '--append', '--dereference', '--file', tar_filename, File.basename(@dump_filename),
+          failure_message: "Failed to archive data dump."
         )
       end
 
@@ -232,8 +232,8 @@ module BackupRestore
       FileUtils.cd(File.join(Rails.root, "public")) do
         if File.directory?(upload_directory)
           execute_command(
-            "tar --append --dereference --file #{tar_filename} #{upload_directory}",
-            "Failed to archive uploads."
+            'tar', '--append', '--dereference', '--file', tar_filename, upload_directory,
+            failure_message: "Failed to archive uploads."
           )
         else
           log "No uploads found, skipping archiving uploads..."
@@ -243,7 +243,7 @@ module BackupRestore
       remove_tmp_directory
 
       log "Gzipping archive, this may take a while..."
-      execute_command("gzip -5 #{tar_filename}", "Failed to gzip archive.")
+      execute_command('gzip', '-5', tar_filename, failure_message: "Failed to gzip archive.")
     end
 
     def after_create_hook
@@ -277,7 +277,7 @@ module BackupRestore
 
     def remove_tar_leftovers
       log "Removing '.tar' leftovers..."
-      `rm -f #{@archive_directory}/*.tar`
+      system('rm', '-f', "#{@archive_directory}/*.tar")
     end
 
     def remove_tmp_directory
