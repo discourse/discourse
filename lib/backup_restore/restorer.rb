@@ -1,3 +1,5 @@
+require_dependency "db_helper"
+
 module BackupRestore
 
   class RestoreDisabledError < RuntimeError; end
@@ -360,11 +362,31 @@ module BackupRestore
     def extract_uploads
       if system('tar', '--exclude=*/*', '--list', '--file', @tar_filename, 'uploads')
         log "Extracting uploads..."
-        FileUtils.cd(File.join(Rails.root, "public")) do
+
+        FileUtils.cd(@tmp_directory) do
           execute_command(
             'tar', '--extract', '--keep-newer-files', '--file', @tar_filename, 'uploads/',
             failure_message: "Failed to extract uploadsd."
           )
+        end
+
+        public_uploads_path = File.join(Rails.root, "public")
+
+        FileUtils.cd(public_uploads_path) do
+          FileUtils.mkdir_p("uploads")
+
+          tmp_uploads_path = Dir.glob(File.join(@tmp_directory, "uploads", "*")).first
+          previous_db_name = File.basename(tmp_uploads_path)
+          current_db_name = RailsMultisite::ConnectionManagement.current_db
+
+          execute_command(
+            'rsync', '-avp', "#{tmp_uploads_path}/", "uploads/#{current_db_name}/",
+            failure_message: "Failed to restore uploads."
+          )
+
+          if previous_db_name != current_db_name
+            DbHelper.remap("uploads/#{previous_db_name}", "uploads/#{current_db_name}")
+          end
         end
       end
     end
