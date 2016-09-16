@@ -209,8 +209,8 @@ describe Admin::BackupsController do
       describe "when filename is valid" do
         it "should upload the file successfully" do
           xhr :post, :upload_backup_chunk,
-            resumableFilename: 'test.tar.gz',
-            resumableTotalSize: '1',
+            resumableFilename: 'test_Site-0123456789.tar.gz',
+            resumableTotalSize: 1,
             resumableIdentifier: 'test',
             resumableChunkNumber: '1',
             resumableChunkSize: '1',
