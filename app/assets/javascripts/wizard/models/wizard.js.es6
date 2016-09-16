@@ -7,6 +7,12 @@ const Wizard = Ember.Object.extend({
   @computed('steps.length')
   totalSteps: length => length,
 
+  getTitle() {
+    const titleStep = this.get('steps').findProperty('id', 'forum-title');
+    if (!titleStep) { return; }
+    return titleStep.get('fieldsById.title.value');
+  },
+
   // A bit clunky, but get the current colors from the appropriate step
   getCurrentColors() {
     const colorStep = this.get('steps').findProperty('id', 'colors');
