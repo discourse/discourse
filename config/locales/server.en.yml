@@ -3222,6 +3222,7 @@ en:
     step:
       locale:
         title: "Welcome to your Discourse!"
+        description: "Before you launch your new Discourse community, we’ll need to configure a few things together first. You can come back and change these settings any time."
 
         fields:
           default_locale:
@@ -3288,12 +3289,14 @@ en:
         title: "Theme"
         fields:
           theme_id:
-            label: "Theme"
+            label: ""
+            description: "Do you prefer a light or dark design? You can always further customize the look and feel of your site via Admin, Customize."
             choices:
               default:
                 label: "Simple Light"
               dark:
                 label: "Simple Dark"
+
       logos:
         title: "Logos"
         fields:
@@ -3312,12 +3315,11 @@ en:
 
       invites:
         title: "Invite Staff"
-        description: "We recommend you invite some staff members to help you get things started."
+        description: "You’re almost ready! Let’s invite some staff members to help you <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>seed your discussions</a> with interesting topics and replies."
 
       finished:
         title: "Your Discourse is Ready!"
         description: |
-          <p>If you ever feel like changing these settings, visit your admin section.</p>
-
+          <p>Well done! You’ve finished setting up your Discourse community!</p>
+          <p>If you ever feel like changing these settings, visit your admin section – look for the wrench icon.</p>
           <p>Have fun and enjoy your new community!</p>
-
