@@ -329,8 +329,12 @@ class User < ActiveRecord::Base
   end
 
   def saw_notification_id(notification_id)
-    User.where("id = ? and seen_notification_id < ?", id, notification_id)
-        .update_all ["seen_notification_id = ?", notification_id]
+    if seen_notification_id.to_i < notification_id.to_i
+      update_columns(seen_notification_id: notification_id.to_i)
+      true
+    else
+      false
+    end
   end
 
   def publish_notifications_state
@@ -375,7 +379,8 @@ class User < ActiveRecord::Base
                         unread_private_messages: unread_private_messages,
                         total_unread_notifications: total_unread_notifications,
                         last_notification: json,
-                        recent: recent
+                        recent: recent,
+                        seen_notification_id: seen_notification_id
                        },
                        user_ids: [id] # only publish the notification to this user
     )
