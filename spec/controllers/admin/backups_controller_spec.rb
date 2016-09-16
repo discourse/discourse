@@ -194,6 +194,35 @@ describe Admin::BackupsController do
 
     end
 
+    describe "#upload_backup_chunk" do
+      describe "when filename contains invalid characters" do
+        it "should raise an error" do
+          ['灰色.tar.gz', '; echo \'haha\'.tar.gz'].each do |invalid_filename|
+            xhr :post, :upload_backup_chunk, resumableFilename: invalid_filename, resumableTotalSize: '1'
+
+            expect(response.status).to eq(415)
+            expect(response.body).to eq(I18n.t('backup.invalid_filename'))
+          end
+        end
+      end
+
+      describe "when filename is valid" do
+        it "should upload the file successfully" do
+          xhr :post, :upload_backup_chunk,
+            resumableFilename: 'test.tar.gz',
+            resumableTotalSize: '1',
+            resumableIdentifier: 'test',
+            resumableChunkNumber: '1',
+            resumableChunkSize: '1',
+            resumableCurrentChunkSize: '1',
+            file: fixture_file_upload(Tempfile.new)
+
+          expect(response.status).to eq(200)
+          expect(response.body).to eq("")
+        end
+      end
+    end
+
   end
 
 end
