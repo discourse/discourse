@@ -82,6 +82,7 @@ class NewPostManager
 
       validator = Validators::PostValidator.new
       post = Post.new(raw: manager.args[:raw])
+      post.user = manager.user
       validator.validate(post)
       if post.errors[:raw].present?
         result = NewPostResult.new(:created_post, false)
