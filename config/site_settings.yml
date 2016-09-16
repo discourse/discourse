@@ -1265,7 +1265,7 @@ user_api:
   allow_read_user_api_keys:
     default: true
   allow_write_user_api_keys:
-    default: false
+    default: true
   allow_push_user_api_keys:
     default: true
   max_api_keys_per_user:
