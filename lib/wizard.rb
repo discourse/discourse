@@ -76,7 +76,8 @@ class Wizard
   def requires_completion?
     return false unless SiteSetting.wizard_enabled?
 
-    admins = User.where("admin = true and id <> ?", Discourse.system_user.id).order(:created_at)
+    admins = User.where("admin = true AND id <> ? AND auth_token_updated_at IS NOT NULL", 
+                        Discourse.system_user.id).order(:auth_token_updated_at)
 
     # In development mode all admins are developers, so the logic is a bit screwy:
     unless Rails.env.development?

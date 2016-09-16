@@ -127,12 +127,12 @@ describe Wizard do
       expect(build_simple(admin).requires_completion?).to eq(false)
     end
 
-    it "it's true for the first admin" do
+    it "it's true for the first admin who logs in" do
       admin = Fabricate(:admin)
-      expect(build_simple(admin).requires_completion?).to eq(true)
+      second_admin = Fabricate(:admin, auth_token_updated_at: Time.now)
 
-      second_admin = Fabricate(:admin)
-      expect(build_simple(second_admin).requires_completion?).to eq(false)
+      expect(build_simple(admin).requires_completion?).to eq(false)
+      expect(build_simple(second_admin).requires_completion?).to eq(true)
     end
 
     it "is false for staff when complete" do
