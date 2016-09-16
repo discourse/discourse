@@ -3306,6 +3306,10 @@ en:
           logo_small_url:
             label: "Small Logo"
             description: "The small logo image at the top left of your site, should be a square shape, seen when scrolling down."
+
+      icons:
+        title: "Icons"
+        fields:
           favicon_url:
             label: "Small Icon"
             description: "A <a href='http://en.wikipedia.org/wiki/Favicon' target='blank'>favicon</a> for your site. To work correctly over a CDN it must be a png."

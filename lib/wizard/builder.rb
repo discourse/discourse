@@ -133,11 +133,18 @@ class Wizard
       @wizard.append_step('logos') do |step|
         step.add_field(id: 'logo_url', type: 'image', value: SiteSetting.logo_url)
         step.add_field(id: 'logo_small_url', type: 'image', value: SiteSetting.logo_small_url)
+
+        step.on_update do |updater|
+          updater.apply_settings(:logo_url, :logo_small_url)
+        end
+      end
+
+      @wizard.append_step('icons') do |step|
         step.add_field(id: 'favicon_url', type: 'image', value: SiteSetting.favicon_url)
         step.add_field(id: 'apple_touch_icon_url', type: 'image', value: SiteSetting.apple_touch_icon_url)
 
         step.on_update do |updater|
-          updater.apply_settings(:logo_url, :logo_small_url, :favicon_url, :apple_touch_icon_url)
+          updater.apply_settings(:favicon_url, :apple_touch_icon_url)
         end
       end
 
