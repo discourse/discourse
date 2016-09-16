@@ -11,14 +11,16 @@ class SessionController < ApplicationController
   end
 
   def sso
-    return_path = if params[:return_path]
-      params[:return_path]
-    elsif session[:destination_url]
-      uri = URI::parse(session[:destination_url])
-      "#{uri.path}#{uri.query ? "?" << uri.query : ""}"
-    else
-      path('/')
+    destination_url = cookies[:destination_url] || session[:destination_url]
+    return_path = params[:return_path] || path('/')
+
+    if destination_url && return_path == path('/')
+      uri = URI::parse(destination_url)
+      return_path = "#{uri.path}#{uri.query ? "?" << uri.query : ""}"
     end
+
+    session.delete(:destination_url)
+    cookies.delete(:destination_url)
 
     if SiteSetting.enable_sso?
       sso = DiscourseSingleSignOn.generate_sso(return_path)
