@@ -91,7 +91,7 @@ class Validators::PostValidator < ActiveModel::Validator
   def unique_post_validator(post)
     return if SiteSetting.unique_posts_mins == 0
     return if post.skip_unique_check
-    return if post.acting_user.staff?
+    return if post.acting_user.try(:staff?)
 
     # If the post is empty, default to the validates_presence_of
     return if post.raw.blank?
