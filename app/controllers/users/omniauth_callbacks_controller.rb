@@ -39,10 +39,15 @@ class Users::OmniauthCallbacksController < ApplicationController
     @auth_result = authenticator.after_authenticate(auth)
 
     origin = request.env['omniauth.origin']
+    if cookies[:destination_url].present?
+      origin = cookies[:destination_url]
+      cookies.delete(:destination_url)
+    end
+
     if origin.present?
-      parsed = URI.parse(@origin) rescue nil
+      parsed = URI.parse(origin) rescue nil
       if parsed
-        @origin = parsed.path
+        @origin = "#{parsed.path}?#{parsed.query}"
       end
     end
 
