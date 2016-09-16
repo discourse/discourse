@@ -1,3 +1,7 @@
+{{#if field.value}}
+  {{component previewComponent field=field fieldClass=fieldClass}}
+{{/if}}
+
 <label class="wizard-btn wizard-btn-upload {{if uploading 'disabled'}}">
   {{#if uploading}}
     {{i18n "wizard.uploading"}}
@@ -8,9 +12,3 @@
 
   <input disabled={{uploading}} type="file" accept="image/*" style="visibility: hidden; position: absolute;" />
 </label>
-
-{{#if field.value}}
-  <div class='wizard-image-preview {{fieldClass}}'>
-    <img src={{field.value}} class={{fieldClass}}>
-  </div>
-{{/if}}
