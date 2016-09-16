@@ -1,5 +1,18 @@
 /*eslint no-bitwise:0 */
 
+export const LOREM = `
+Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+Nullam eget sem non elit tincidunt rhoncus. Fusce velit nisl,
+porttitor sed nisl ac, consectetur interdum metus. Fusce in
+consequat augue, vel facilisis felis. Nunc tellus elit, and
+semper vitae orci nec, blandit pharetra enim. Aenean a ebus
+posuere nunc. Maecenas ultrices viverra enim ac commodo
+Vestibulum nec quam sit amet libero ultricies sollicitudin.
+Nulla quis scelerisque sem, eget volutpat velit. Fusce eget
+accumsan sapien, nec feugiat quam. Quisque non risus.
+placerat lacus vitae, lacinia nisi. Sed metus arcu, iaculis
+sit amet cursus nec, sodales at eros.`;
+
 export function createPreviewComponent(width, height, obj) {
   return Ember.Component.extend({
     layoutName: 'components/theme-preview',
