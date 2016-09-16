@@ -165,19 +165,30 @@ describe Wizard::StepUpdater do
     it "updates the fields correctly" do
       updater = wizard.create_updater('logos',
                                       logo_url: '/uploads/logo.png',
-                                      logo_small_url: '/uploads/logo-small.png',
-                                      favicon_url: "/uploads/favicon.png",
-                                      apple_touch_icon_url: "/uploads/apple.png")
+                                      logo_small_url: '/uploads/logo-small.png')
       updater.update
 
       expect(updater).to be_success
       expect(wizard.completed_steps?('logos')).to eq(true)
       expect(SiteSetting.logo_url).to eq('/uploads/logo.png')
       expect(SiteSetting.logo_small_url).to eq('/uploads/logo-small.png')
+    end
+  end
+
+  context "icons step" do
+    it "updates the fields correctly" do
+      updater = wizard.create_updater('icons',
+                                      favicon_url: "/uploads/favicon.png",
+                                      apple_touch_icon_url: "/uploads/apple.png")
+      updater.update
+
+      expect(updater).to be_success
+      expect(wizard.completed_steps?('icons')).to eq(true)
       expect(SiteSetting.favicon_url).to eq('/uploads/favicon.png')
       expect(SiteSetting.apple_touch_icon_url).to eq('/uploads/apple.png')
     end
   end
+
 
   context "invites step" do
     let(:invites) {
