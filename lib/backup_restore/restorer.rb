@@ -358,7 +358,7 @@ module BackupRestore
     end
 
     def extract_uploads
-      if system("tar --list --file '#{@tar_filename}' 'uploads'")
+      if system('tar', '--exclude=*/*', '--list', '--file', @tar_filename, 'uploads')
         log "Extracting uploads..."
         FileUtils.cd(File.join(Rails.root, "public")) do
           execute_command(
