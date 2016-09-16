@@ -31,6 +31,10 @@ body.wizard {
   width: 100%;
   border: 1px solid #ccc;
 
+  .wizard-step-contents {
+    min-height: 460px;
+  }
+
   .wizard-column-contents {
     padding: 1.2em;
 

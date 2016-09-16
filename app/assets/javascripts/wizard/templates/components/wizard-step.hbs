@@ -1,16 +1,18 @@
-{{#if step.title}}
-  <h1 class='wizard-step-title'>{{step.title}}</h1>
-{{/if}}
+<div class='wizard-step-contents'>
+  {{#if step.title}}
+    <h1 class='wizard-step-title'>{{step.title}}</h1>
+  {{/if}}
 
-{{#if step.description}}
-  <p class='wizard-step-description'>{{{step.description}}}</p>
-{{/if}}
+  {{#if step.description}}
+    <p class='wizard-step-description'>{{{step.description}}}</p>
+  {{/if}}
 
-{{#wizard-step-form step=step}}
-  {{#each step.fields as |field|}}
-    {{wizard-field field=field step=step}}
-  {{/each}}
-{{/wizard-step-form}}
+  {{#wizard-step-form step=step}}
+    {{#each step.fields as |field|}}
+      {{wizard-field field=field step=step}}
+    {{/each}}
+  {{/wizard-step-form}}
+</div>
 
 <div class='wizard-step-footer'>
   <div class='wizard-progress'>
