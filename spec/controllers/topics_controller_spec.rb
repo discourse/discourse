@@ -569,6 +569,15 @@ describe TopicsController do
       expect(response).to redirect_to(topic.relative_url)
     end
 
+    it 'can find a topic when a slug has a number in front' do
+      another_topic = Fabricate(:post).topic
+
+      topic.update_column(:slug, "#{another_topic.id}-reasons-discourse-is-awesome")
+      xhr :get, :show, id: "#{another_topic.id}-reasons-discourse-is-awesome"
+
+      expect(response).to redirect_to(topic.relative_url)
+    end
+
     it 'keeps the post_number parameter around when redirecting' do
       xhr :get, :show, id: topic.slug, post_number: 42
       expect(response).to redirect_to(topic.relative_url + "/42")
