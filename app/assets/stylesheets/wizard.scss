@@ -20,7 +20,16 @@ body.wizard {
   background: #ff9;
 }
 
+.wizard-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 10;
+}
+
 .wizard-column {
+  position: relative;
+  z-index: 11;
   background-color: white;
   box-shadow: 0 5px 10px rgba(0,0,0,0.2);
   box-sizing: border-box;

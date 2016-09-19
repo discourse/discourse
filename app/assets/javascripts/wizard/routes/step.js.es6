@@ -6,6 +6,8 @@ export default Ember.Route.extend({
   },
 
   setupController(controller, step) {
+    this.controllerFor('application').set('currentStepId', step.get('id'));
+
     controller.setProperties({
       step, wizard: this.modelFor('application')
     });
