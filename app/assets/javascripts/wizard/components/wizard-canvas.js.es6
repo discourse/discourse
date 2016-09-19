@@ -18,7 +18,7 @@ class Particle {
     this.origX = Math.random() * (width + SIZE);
     this.speed = 1 + Math.random();
     this.ang = Math.random() * 2 * Math.PI;
-    this.scale = (Math.random() * 0.4) + 0.1;
+    this.scale = (Math.random() * 0.4) + 0.2;
     this.radius = (Math.random() * 25) + 25;
     this.color = COLORS[Math.floor(Math.random() * COLORS.length)];
     this.flipped = (Math.random() > 0.5) ? 1 : -1;
