@@ -71,6 +71,7 @@ describe PostCreator do
       end
 
       it "triggers extensibility events" do
+        creator # bypass a user_created event, can be removed when there is a UserCreator
         DiscourseEvent.expects(:trigger).with(:before_create_post, anything).once
         DiscourseEvent.expects(:trigger).with(:validate_post, anything).once
         DiscourseEvent.expects(:trigger).with(:topic_created, anything, anything, user).once
