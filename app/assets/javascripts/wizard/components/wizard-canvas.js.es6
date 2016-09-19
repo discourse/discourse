@@ -1,10 +1,10 @@
-const MAX_PARTICLES = 100;
+const MAX_PARTICLES = 150;
 
 const SIZE = 144;
 
 let width, height;
 
-const COLORS = ['red', 'black', 'blue', 'purple', 'brown', 'green'];
+const COLORS = ['red', 'blue', 'purple', 'brown', 'green'];
 
 class Particle {
   constructor() {
@@ -17,7 +17,7 @@ class Particle {
     this.origX = Math.random() * (width + SIZE);
     this.speed = 1 + Math.random();
     this.ang = Math.random() * 2 * Math.PI;
-    this.scale = (Math.random() * 0.5);
+    this.scale = (Math.random() * 0.4) + 0.1;
     this.radius = (Math.random() * 25) + 25;
     this.color = COLORS[Math.floor(Math.random() * COLORS.length)];
   }
