@@ -4,7 +4,8 @@ const SIZE = 144;
 
 let width, height;
 
-const COLORS = ['red', 'blue', 'purple', 'brown', 'green'];
+const COLORS = ['#BF1E2E', '#F1592A', '#F7941D', '#9EB83B', '#3AB54A', '#12A89D', '#25AAE2', '#0E76BD', 
+                '#652D90', '#92278F', '#ED207B', '#8C6238'];
 
 class Particle {
   constructor() {
