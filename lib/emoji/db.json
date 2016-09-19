@@ -4143,6 +4143,46 @@
     {
       "code": "1f5e8",
       "name": "left_speech_bubble"
+    },
+    {
+      "code": "1f1e8-1f1f3",
+      "name": "cn"
+    },
+    {
+      "code": "1f1eb-1f1f7",
+      "name": "fr"
+    },
+    {
+      "code": "1f1e9-1f1ea",
+      "name": "de"
+    },
+    {
+      "code": "1f1ee-1f1f9",
+      "name": "it"
+    },
+    {
+      "code": "1f1ef-1f1f5",
+      "name": "jp"
+    },
+    {
+      "code": "1f1f7-1f1fa",
+      "name": "ru"
+    },
+    {
+      "code": "1f1f0-1f1f7",
+      "name": "kr"
+    },
+    {
+      "code": "1f1ea-1f1f8",
+      "name": "es"
+    },
+    {
+      "code": "1f1ec-1f1e7",
+      "name": "gb"
+    },
+    {
+      "code": "1f1fa-1f1f8",
+      "name": "us"
     }
   ],
   "aliases": {
@@ -4248,35 +4288,35 @@
     "flag_black": [
       "waving_black_flag"
     ],
-    "flag_cn": [
-      "cn"
+    "cn": [
+      "flag_cn"
     ],
-    "flag_de": [
-      "de"
+    "de": [
+      "flag_de"
     ],
-    "flag_es": [
-      "es"
+    "es": [
+      "flag_es"
     ],
-    "flag_fr": [
-      "fr"
+    "fr": [
+      "flag_fr"
     ],
-    "flag_gb": [
-      "gb"
+    "gb": [
+      "flag_gb"
     ],
-    "flag_it": [
-      "it"
+    "it": [
+      "flag_it"
     ],
-    "flag_jp": [
-      "jp"
+    "jp": [
+      "flag_jp"
     ],
-    "flag_kr": [
-      "kr"
+    "kr": [
+      "flag_kr"
     ],
-    "flag_ru": [
-      "ru"
+    "ru": [
+      "flag_ru"
     ],
-    "flag_us": [
-      "us"
+    "us": [
+      "flag_us"
     ],
     "flag_white": [
       "waving_white_flag"

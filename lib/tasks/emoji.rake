@@ -1,6 +1,9 @@
 EMOJI_LIST_URL = "http://unicode.org/emoji/charts/full-emoji-list.html"
 EMOJI_KEYWORDS_URL = "https://raw.githubusercontent.com/muan/emojilib/master/emojis.json"
 
+# until MS release the emoji flags, we'll use custom made flags
+WINDOWS_FLAGS = Set.new ["1f1e8_1f1f3", "1f1e9_1f1ea", "1f1ea_1f1f8", "1f1eb_1f1f7", "1f1ec_1f1e7", "1f1ee_1f1f9", "1f1ef_1f1f5", "1f1f0_1f1f7", "1f1f7_1f1fa", "1f1fa_1f1f8"]
+
 desc "update emoji images"
 task "emoji:update" => :environment do
   emojis = {}
@@ -18,9 +21,10 @@ task "emoji:update" => :environment do
     next unless char = keywords[k]["char"].presence
 
     code = char.codepoints
-             .map { |c| c.to_s(16).rjust(4, "0") }
-             .join("_")
-             .gsub(/_fe0f$/i, "")
+               .map { |c| c.to_s(16).rjust(4, "0") }
+               .join("_")
+               .downcase
+               .gsub(/_fe0f$/, "")
 
     emojis[code] ||= { name: k }
   end
@@ -42,7 +46,12 @@ task "emoji:update" => :environment do
     google = cell_to_image(cells[5])
     twitter = cell_to_image(cells[6])
     one = cell_to_image(cells[7])
-    windows = cell_to_image(cells[9])
+
+    if WINDOWS_FLAGS.include?(code)
+      windows = custom_windows_flag(code)
+    else
+      windows = cell_to_image(cells[9])
+    end
 
     if apple.blank? || google.blank? || twitter.blank? || one.blank? || windows.blank?
       emojis.delete(code)
@@ -77,6 +86,11 @@ end
 def cell_to_image(cell)
   return unless img = cell.at_css("img")
   Base64.decode64(img["src"][/base64,(.+)$/, 1])
+end
+
+def custom_windows_flag(code)
+  name = code.upcase.tr("_", "-")
+  open("https://github.com/discourse/discourse-emoji-extractor/raw/master/win10/72x72/windows_#{name}.png").read
 end
 
 def write_emojis(emojis, aliases, style, folder)
