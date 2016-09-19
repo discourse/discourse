@@ -1086,6 +1086,7 @@ en:
     external_system_avatars_url: "URL of the external system avatars service. Allowed substitutions are {username} {first_letter} {color} {size}"
 
     default_opengraph_image_url: "URL of the default opengraph image."
+    twitter_summary_large_image_url: "URL of the default Twitter summary card image (should be at least 280px in width, and at least 150px in height)."
 
     allow_all_attachments_for_group_messages: "Allow all email attachments for group messages."
 
