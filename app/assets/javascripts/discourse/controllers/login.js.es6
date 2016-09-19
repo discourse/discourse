@@ -130,7 +130,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
       if(customLogin){
         customLogin();
       } else {
-        const authUrl = loginMethod.get('customUrl') || Discourse.getURL("/auth/" + name);
+        let authUrl = loginMethod.get('customUrl') || Discourse.getURL("/auth/" + name);
         if (loginMethod.get("fullScreenLogin")) {
           document.cookie = "fsl=true";
           window.location = authUrl;
@@ -141,6 +141,11 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
           const height = loginMethod.get("frameHeight") || 400;
           const width = loginMethod.get("frameWidth") || 800;
+
+          if (loginMethod.get("displayPopup")) {
+            authUrl = authUrl + "?display=popup";
+          }
+
           const w = window.open(authUrl, "_blank",
               "menubar=no,status=no,height=" + height + ",width=" + width +  ",left=" + left + ",top=" + top);
           const self = this;

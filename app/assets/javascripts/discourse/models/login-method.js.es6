@@ -34,7 +34,9 @@ export function findAll(siteSettings, capabilities, isMobileDevice) {
         params.frameWidth = 850;
         params.frameHeight = 500;
       } else if (name === "facebook") {
-        params.frameHeight = 450;
+        params.frameWidth= 580;
+        params.frameHeight = 400;
+        params.displayPopup = true;
       }
 
       params.siteSettings = siteSettings;
