@@ -200,18 +200,19 @@ Discourse::Application.routes.draw do
 
     resources :api, only: [:index], constraints: AdminConstraint.new do
       collection do
+        get "keys" => "api#index"
         post "key" => "api#create_master_key"
         put "key" => "api#regenerate_key"
         delete "key" => "api#revoke_key"
+
+        resources :web_hooks
+        get 'web_hook_events/:id' => 'web_hooks#list_events', as: :web_hook_events
+        get 'web_hooks/:id/events' => 'web_hooks#list_events'
+        get 'web_hooks/:id/events/bulk' => 'web_hooks#bulk_events'
+        post 'web_hooks/:web_hook_id/events/:event_id/redeliver' => 'web_hooks#redeliver_event'
+        post 'web_hooks/:id/ping' => 'web_hooks#ping'
       end
     end
-
-    resources :web_hooks, constraints: AdminConstraint.new
-    get 'web_hook_events/:id' => 'web_hooks#list_events', constraints: AdminConstraint.new, as: :web_hook_events
-    get 'web_hooks/:id/events' => 'web_hooks#list_events', constraints: AdminConstraint.new
-    get 'web_hooks/:id/events/bulk' => 'web_hooks#bulk_events', constraints: AdminConstraint.new
-    post 'web_hooks/:web_hook_id/events/:event_id/redeliver' => 'web_hooks#redeliver_event', constraints: AdminConstraint.new
-    post 'web_hooks/:id/ping' => 'web_hooks#ping', constraints: AdminConstraint.new
 
     resources :backups, only: [:index, :create], constraints: AdminConstraint.new do
       member do
