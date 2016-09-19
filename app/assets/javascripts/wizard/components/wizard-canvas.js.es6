@@ -20,6 +20,7 @@ class Particle {
     this.scale = (Math.random() * 0.4) + 0.1;
     this.radius = (Math.random() * 25) + 25;
     this.color = COLORS[Math.floor(Math.random() * COLORS.length)];
+    this.flipped = (Math.random() > 0.5) ? 1 : -1;
   }
 
   move() {
@@ -97,7 +98,7 @@ export default Ember.Component.extend({
 
     c.save();
     c.translate(p.x - SIZE, p.y - SIZE);
-    c.scale(p.scale, p.scale);
+    c.scale(p.scale * p.flipped, p.scale);
     c.fillStyle = p.color;
     c.strokeStyle = p.color;
     c.globalAlpha = "1.0";
