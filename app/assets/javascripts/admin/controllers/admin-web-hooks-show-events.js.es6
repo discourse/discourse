@@ -41,7 +41,7 @@ export default Ember.Controller.extend({
     ping() {
       this.set('pingDisabled', true);
 
-      ajax(`/admin/web_hooks/${this.get('model.extras.web_hook_id')}/ping`, {
+      ajax(`/admin/api/web_hooks/${this.get('model.extras.web_hook_id')}/ping`, {
         type: 'POST'
       }).catch(error => {
         this.set('pingDisabled', false);
@@ -52,7 +52,7 @@ export default Ember.Controller.extend({
     showInserted() {
       const webHookId = this.get('model.extras.web_hook_id');
 
-      ajax(`/admin/web_hooks/${webHookId}/events/bulk`, {
+      ajax(`/admin/api/web_hooks/${webHookId}/events/bulk`, {
         type: 'GET',
         data: { ids: this.get('incomingEventIds') }
       }).then(data => {
