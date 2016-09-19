@@ -5,8 +5,8 @@ import {
   loadImage,
 } from 'wizard/lib/preview';
 
-export default createPreviewComponent(371, 124, {
-  tab: null,
+export default createPreviewComponent(325, 125, {
+  ios: null,
   image: null,
 
   @observes('field.value')
@@ -16,10 +16,10 @@ export default createPreviewComponent(371, 124, {
 
   load() {
     return Ember.RSVP.Promise.all([
-      loadImage('/images/wizard/tab.png'),
+      loadImage('/images/wizard/apple-mask.png'),
       loadImage(this.get('field.value'))
     ]).then(result => {
-      this.tab = result[0];
+      this.ios = result[0];
       this.image = result[1];
     });
 
@@ -29,17 +29,7 @@ export default createPreviewComponent(371, 124, {
   },
 
   paint(ctx, colors, width, height) {
-    ctx.drawImage(this.tab, 0, 0, width, height);
-    ctx.drawImage(this.image, 40, 25, 30, 30);
-
-    ctx.font = `20px 'Arial'`;
-    ctx.fillStyle = '#000';
-
-    let title = this.get('wizard').getTitle();
-    if (title.length > 20) {
-      title = title.substring(0, 20) + "...";
-    }
-
-    ctx.fillText(title, 80, 48);
+    ctx.drawImage(this.image, 10, 8, 87, 87);
+    ctx.drawImage(this.ios, 0, 0, width, height);
   }
 });
