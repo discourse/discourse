@@ -14,7 +14,7 @@ class Particle {
 
   reset() {
     this.y = -SIZE;
-    this.origX = Math.random() * width;
+    this.origX = Math.random() * (width + SIZE);
     this.speed = 1 + Math.random();
     this.ang = Math.random() * 2 * Math.PI;
     this.scale = (Math.random() * 0.5);
