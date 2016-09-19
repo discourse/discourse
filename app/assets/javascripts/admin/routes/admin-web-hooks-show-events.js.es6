@@ -13,6 +13,6 @@ export default Discourse.Route.extend({
   },
 
   renderTemplate() {
-    this.render('admin/templates/web-hooks-show-events', { into: 'admin' });
+    this.render('admin/templates/web-hooks-show-events', { into: 'adminApi' });
   }
 });

@@ -21,6 +21,6 @@ export default Discourse.Route.extend({
   },
 
   renderTemplate() {
-    this.render('admin/templates/web-hooks-show', { into: 'admin' });
+    this.render('admin/templates/web-hooks-show', { into: 'adminApi' });
   }
 });

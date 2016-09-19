@@ -63,7 +63,7 @@ class Admin::WebHooksController < Admin::AdminController
     json = {
       web_hook_events: serialize_data(@web_hook.web_hook_events.limit(limit).offset(offset), AdminWebHookEventSerializer),
       total_rows_web_hook_events: @web_hook.web_hook_events.count,
-      load_more_web_hook_events: admin_web_hook_events_path(limit: limit, offset: offset + limit, format: :json),
+      load_more_web_hook_events: web_hook_events_admin_api_index_path(limit: limit, offset: offset + limit, format: :json),
       extras: {
         web_hook_id: @web_hook.id
       }
