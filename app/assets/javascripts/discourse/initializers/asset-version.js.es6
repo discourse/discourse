@@ -12,13 +12,13 @@ export default {
       Discourse.set("assetVersion", version);
 
       if (!timeoutIsSet && Discourse.get("requiresRefresh")) {
-        // since we can do this transparently for people browsing the forum
-        //  hold back the message a couple of hours
+        // Since we can do this transparently for people browsing the forum
+        //  hold back the message 24 hours.
         setTimeout(function () {
           bootbox.confirm(I18n.lookup("assets_changed_confirm"), function (result) {
             if (result) { document.location.reload(); }
           });
-        }, 1000 * 60 * 120);
+        }, 1000 * 60 * 24 * 60);
         timeoutIsSet = true;
       }
 
