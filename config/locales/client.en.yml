@@ -2413,7 +2413,6 @@ en:
         flair_preview: "Preview"
         flair_note: "Note: Flair will only show for a user's primary group."
 
-
       api:
         generate_master: "Generate Master API Key"
         none: "There are no active API keys right now."

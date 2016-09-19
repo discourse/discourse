@@ -35,10 +35,14 @@ export default {
         this.route('edit', { path: '/:id' });
       });
     });
-    this.route('api');
-    this.resource('adminWebHooks', { path: '/web_hooks' }, function() {
-      this.route('show', { path: '/:web_hook_id' });
-      this.route('showEvents', { path: '/:web_hook_id/events' });
+
+    this.resource('adminApi', { path: '/api' }, function() {
+      this.resource('adminApiKeys', { path: '/keys' });
+
+      this.resource('adminWebHooks', { path: '/web_hooks' }, function() {
+        this.route('show', { path: '/:web_hook_id' });
+        this.route('showEvents', { path: '/:web_hook_id/events' });
+      });
     });
 
     this.resource('admin.backups', { path: '/backups' }, function() {
