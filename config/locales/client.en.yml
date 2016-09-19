@@ -2468,7 +2468,7 @@ en:
           name: "Post Event"
           details: "When there is a new reply, edit, deleted or recovered."
         user_event:
-          name: "User Creation Event"
+          name: "User Event"
           details: "When a user is created or approved."
         delivery_status:
           title: "Delivery Status"
