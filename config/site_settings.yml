@@ -277,6 +277,8 @@ login:
   facebook_app_secret:
     default: ''
     regex: "^[a-f0-9]+$"
+  facebook_request_extra_profile_details:
+    default: false
   enable_github_logins:
     client: true
     default: false
