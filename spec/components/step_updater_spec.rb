@@ -203,8 +203,13 @@ describe Wizard::StepUpdater do
       expect(updater).to be_success
       expect(wizard.completed_steps?('invites')).to eq(true)
 
-      expect(Invite.where(email: 'regular@example.com')).to be_present
-      expect(Invite.where(email: 'moderator@example.com')).to be_present
+      reg_invite = Invite.where(email: 'regular@example.com').first
+      expect(reg_invite).to be_present
+      expect(reg_invite.moderator?).to eq(false)
+
+      mod_invite = Invite.where(email: 'moderator@example.com').first
+      expect(mod_invite).to be_present
+      expect(mod_invite.moderator?).to eq(true)
     end
   end
 

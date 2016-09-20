@@ -73,19 +73,35 @@ class Invite < ActiveRecord::Base
   end
 
   def self.invite_by_email(email, invited_by, topic=nil, group_ids=nil, custom_message=nil)
-    create_invite_by_email(email, invited_by, topic, group_ids, true, custom_message)
+    create_invite_by_email(email, invited_by, {
+      topic: topic,
+      group_ids: group_ids,
+      custom_message: custom_message,
+      send_email: true
+    })
   end
 
   # generate invite link
   def self.generate_invite_link(email, invited_by, topic=nil, group_ids=nil)
-    invite = create_invite_by_email(email, invited_by, topic, group_ids, false)
+    invite = create_invite_by_email(email, invited_by, {
+      topic: topic,
+      group_ids: group_ids,
+      send_email: false
+    })
     return "#{Discourse.base_url}/invites/#{invite.invite_key}" if invite
   end
 
   # Create an invite for a user, supplying an optional topic
   #
   # Return the previously existing invite if already exists. Returns nil if the invite can't be created.
-  def self.create_invite_by_email(email, invited_by, topic=nil, group_ids=nil, send_email=true, custom_message=nil)
+  def self.create_invite_by_email(email, invited_by, opts=nil)
+    opts ||= {}
+
+    topic = opts[:topic]
+    group_ids = opts[:group_ids]
+    send_email = opts[:send_email] || true
+    custom_message = opts[:custom_message]
+
     lower_email = Email.downcase(email)
     user = User.find_by(email: lower_email)
 
@@ -105,7 +121,9 @@ class Invite < ActiveRecord::Base
     end
 
     if !invite
-      invite = Invite.create!(invited_by: invited_by, email: lower_email)
+      create_args = { invited_by: invited_by, email: lower_email }
+      create_args[:moderator] = true if opts[:moderator]
+      invite = Invite.create!(create_args)
     end
 
     if topic && !invite.topic_invites.pluck(:topic_id).include?(topic.id)
