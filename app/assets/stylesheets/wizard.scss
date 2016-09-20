@@ -78,6 +78,7 @@ body.wizard {
   }
   .wizard-step-banner {
     margin-bottom: 2em;
+    width: 660px;
   }
 
   .wizard-footer {
@@ -90,8 +91,7 @@ body.wizard {
   }
 
   .wizard-progress {
-    border: 1px solid #ff6600;
-    border-radius: 3px;
+    border: 1px solid #A3C1FF;
     width: 200px;
     height: 1.4em;
 
@@ -123,7 +123,7 @@ body.wizard {
     }
 
     .screen {
-      background-color: #ff6600;
+      background-color: #A3C1FF;
       mix-blend-mode: screen;
       width: 200px;
       z-index: 14;
