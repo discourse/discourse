@@ -26,7 +26,10 @@ export default Ember.Component.extend({
   },
 
   updateField() {
-    this.set('field.value', JSON.stringify(this.get('users')));
+    const users = this.get('users');
+
+    this.set('field.value', JSON.stringify(users));
+    this.set('field.warning', users.length ? null : 'invites.none_added');
   },
 
   actions: {

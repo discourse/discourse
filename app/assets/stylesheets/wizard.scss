@@ -1,6 +1,7 @@
 @import "vendor/normalize";
 @import "vendor/font_awesome/font-awesome";
 @import "vendor/select2";
+@import "vendor/sweetalert";
 
 body.wizard {
   background-color: #fff;
@@ -11,6 +12,26 @@ body.wizard {
   color: #444;
 
   line-height: 1.4em;
+}
+
+.wizard-warning {
+  font-family: sans-serif,
+
+  p {
+    margin-top: 0;
+  }
+
+
+  fieldset {
+    display: none;
+  }
+
+  h2 {
+    display: none;
+  }
+  .sa-icon {
+    display: none !important;
+  }
 }
 
 .select {

@@ -26,9 +26,9 @@ test('text - required - validation', assert => {
 });
 
 test('text - optional - validation', assert => {
-  const w = WizardField.create({ type: 'text' });
-  assert.ok(w.get('unchecked'));
+  const f = WizardField.create({ type: 'text' });
+  assert.ok(f.get('unchecked'));
 
-  w.check();
-  assert.ok(w.get('valid'));
+  f.check();
+  assert.ok(f.get('valid'));
 });

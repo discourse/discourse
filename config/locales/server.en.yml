@@ -3226,7 +3226,6 @@ en:
 
         fields:
           default_locale:
-            label: ""
             description: "What’s the default language for your community?"
 
       forum_title:
@@ -3289,7 +3288,6 @@ en:
         title: "Theme"
         fields:
           theme_id:
-            label: ""
             description: "Do you prefer a light or dark design? You can always further customize the look and feel of your site via Admin, Customize."
             choices:
               default:

@@ -11,6 +11,8 @@ jQuery.fn.wiggle = function (times, duration) {
   return this;
 };
 
+const alreadyWarned = {};
+
 export default Ember.Component.extend({
   classNames: ['wizard-step'],
   saving: null,
@@ -66,6 +68,14 @@ export default Ember.Component.extend({
     Ember.run.scheduleOnce('afterRender', () => $('.invalid input[type=text]').wiggle(2, 100));
   },
 
+  advance() {
+    this.set('saving', true);
+    this.get('step').save()
+      .then(response => this.sendAction('goNext', response))
+      .catch(() => this.animateInvalidFields())
+      .finally(() => this.set('saving', false));
+  },
+
   actions: {
     quit() {
       document.location = "/";
@@ -80,14 +90,29 @@ export default Ember.Component.extend({
       if (this.get('saving')) { return; }
 
       const step = this.get('step');
-      step.checkFields();
+      const result = step.validate();
+
+      if (result.warnings.length) {
+        const unwarned = result.warnings.filter(w => !alreadyWarned[w]);
+        if (unwarned.length) {
+          unwarned.forEach(w => alreadyWarned[w] = true);
+          return window.swal({
+            customClass: 'wizard-warning',
+            title: "",
+            text: unwarned.map(w => I18n.t(`wizard.${w}`)).join("\n"),
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: "#6699ff"
+          }, confirmed => {
+            if (confirmed) {
+              this.advance();
+            }
+          });
+        }
+      }
 
       if (step.get('valid')) {
-        this.set('saving', true);
-        step.save()
-          .then(response => this.sendAction('goNext', response))
-          .catch(() => this.animateInvalidFields()) 
-          .finally(() => this.set('saving', false));
+        this.advance();
       } else {
         this.animateInvalidFields();
         this.autoFocus();

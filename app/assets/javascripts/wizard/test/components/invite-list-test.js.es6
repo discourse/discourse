@@ -16,6 +16,8 @@ componentTest('can add users', {
     const firstVal = JSON.parse(this.get('field.value'));
     assert.equal(firstVal.length, 0, 'empty JSON at first');
 
+    assert.ok(this.get('field.warning'), 'it has a warning since no users were added');
+
     click('.add-user');
     andThen(() => {
       assert.ok(this.$('.users-list .invite-list-user').length === 0, "doesn't add a blank user");
@@ -33,6 +35,7 @@ componentTest('can add users', {
       assert.equal(val.length, 1);
       assert.equal(val[0].email, 'eviltrout@example.com', 'adds the email to the JSON');
       assert.ok(val[0].role.length, 'adds the role to the JSON');
+      assert.ok(!this.get('field.warning'), 'no warning once the user is added');
     });
 
     fillIn('.invite-email', 'eviltrout@example.com');

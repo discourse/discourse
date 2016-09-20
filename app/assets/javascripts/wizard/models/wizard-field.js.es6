@@ -5,13 +5,19 @@ export default Ember.Object.extend(ValidState, {
   type: null,
   value: null,
   required: null,
+  warning: null,
 
   check() {
     if (!this.get('required')) {
-      return this.setValid(true);
+      this.setValid(true);
+      return true;
     }
 
     const val = this.get('value');
-    this.setValid(val && val.length > 0);
+    const valid = val && val.length > 0;
+
+    this.setValid(valid);
+    return valid;
   }
+
 });
