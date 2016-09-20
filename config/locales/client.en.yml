@@ -3231,7 +3231,7 @@ en:
       done: "Done"
       back: "Back"
       next: "Next"
-      step: "Step %{current} of %{total}"
+      step: "%{current} of %{total}"
       upload: "Upload"
       uploading: "Uploading..."
       quit: "Maybe Later"
