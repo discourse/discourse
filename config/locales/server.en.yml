@@ -3226,7 +3226,7 @@ en:
 
         fields:
           default_locale:
-            label: "Language"
+            label: ""
             description: "What’s the default language for your community?"
 
       forum_title:
@@ -3259,7 +3259,7 @@ en:
         title: "Contact"
         fields:
           contact_email:
-            label: "E-mail"
+            label: "Mail"
             placeholder: "name@example.com"
             description: "Email address for the person or group responsible for this community. Used for critical notifications such as unhandled flags, security updates, and on the \"About\" page for urgent community contact."
           contact_url:
@@ -3267,11 +3267,11 @@ en:
             placeholder: "http://www.example.com/contact-us"
             description: "General contact web page for you or your oganization. Will be displayed on your \"About\" page."
           site_contact:
-            label: "User"
-            description: "All automated Discourse personal messages will be sent from this user."
+            label: "Automated Messages"
+            description: "All automated Discourse personal messages will be sent from this user. Most importantly, this user will be the designated sender of every welcome message automatically sent to new users."
 
       corporate:
-        title: "Company"
+        title: "Organization"
         description: "These names will be entered in your <a href='/privacy' target='blank'>Privacy Policy</a> and <a href='/tos' target='blank'>Terms of Service</a>, which you can edit any time in the Staff category. If you don’t have a company, feel free to skip this step for now."
 
         fields:
