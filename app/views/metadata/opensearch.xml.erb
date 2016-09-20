@@ -8,6 +8,7 @@
   <%- else -%>
   <Image type="image/png"><%= UrlHelper.absolute SiteSetting.favicon_url %></Image>
   <%- end %>
-  <Url type="text/html" method="get" template="<%= Discourse.base_url %>/search?q={searchTerms}"/>
+  <Url type="application/opensearchdescription+xml" rel="self" template="<%= Discourse.base_url %>/opensearch.xml"/>
+  <Url type="text/html" template="<%= Discourse.base_url %>/search?q={searchTerms}"/>
   <Query role="example" searchTerms="search term"/>
 </OpenSearchDescription>
