@@ -1264,7 +1264,7 @@ user_api:
   max_user_api_reqs_per_day:
     default: 2880
   max_user_api_reqs_per_minute:
-    default: 12
+    default: 20
   allow_read_user_api_keys:
     default: true
   allow_write_user_api_keys:
