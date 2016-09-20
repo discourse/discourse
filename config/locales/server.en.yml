@@ -3244,14 +3244,14 @@ en:
         fields:
           welcome:
             label: "Welcome Topic"
-            description: "<p>Your welcome topic is important because it is the first thing you visitors will see:</p>
-              <ol>
+            description: "<p>Your welcome topic is the first thing you visitors will see:</p>
+              <ul>
               <li>Where am I?</li>
               <li>Who are these discussions for?</li>
               <li>What can I find here?</li>
               <li>Why should I visit?</li>
-              </ol>
-            <p>Think of it as your 'elevator pitch' or 'mission statement' – how would you describe your community to a stranger on an elevator when you had about 1 minute to talk?</p>"
+              </ul>
+            <p>Think of it as your one paragraph 'elevator pitch' or 'mission statement' – how would you describe your community to a stranger on an elevator when you had about 1 minute to talk?</p>"
             one_paragraph: "Please restrict your welcome message to one paragraph."
 
       privacy:
@@ -3314,10 +3314,10 @@ en:
         fields:
           logo_url:
             label: "Primary Logo"
-            description: "The logo image at the top left of your site. Should be a wide rectangle shape."
+            description: "The logo image at the top left of your site. Use a wide rectangle shape."
           logo_small_url:
             label: "Small Logo"
-            description: "The small logo image at the top left of your site, seen when scrolling down. Should be a square shape."
+            description: "The small logo image at the top left of your site, seen when scrolling down. Use a square shape."
 
       icons:
         title: "Icons"
@@ -3337,5 +3337,5 @@ en:
         title: "Your Discourse is Ready!"
         description: |
           <p>Well done! You’ve finished setting up your Discourse community!</p>
-          <p>If you ever feel like changing these settings, visit your admin section – look for the wrench icon.</p>
+          <p>If you ever feel like changing these settings, visit <a href='/admin' target='_blank'>your admin section</a>.</p>
           <p>Have fun and enjoy your new community!</p>
