@@ -34,6 +34,12 @@ export default Ember.Component.extend({
   @computed('step.index')
   showBackButton: index => index > 0,
 
+  @computed('step.banner')
+  bannerImage(src) {
+    if (!src) { return; }
+    return `/images/wizard/${src}`;
+  },
+
   @observes('step.id')
   _stepChanged() {
     this.set('saving', false);

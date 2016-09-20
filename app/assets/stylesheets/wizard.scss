@@ -62,7 +62,7 @@ body.wizard {
   border: 1px solid #ccc;
 
   .wizard-step-contents {
-    min-height: 460px;
+    min-height: 480px;
   }
 
   .wizard-column-contents {
@@ -74,6 +74,9 @@ body.wizard {
   }
 
   .wizard-step-description {
+    margin-bottom: 2em;
+  }
+  .wizard-step-banner {
     margin-bottom: 2em;
   }
 
