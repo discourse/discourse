@@ -3234,7 +3234,7 @@ en:
       step: "Step %{current} of %{total}"
       upload: "Upload"
       uploading: "Uploading..."
-      quit: "Perform Setup Later"
+      quit: "Maybe Later"
 
       invites:
         add_user: "add"
