@@ -62,7 +62,7 @@ body.wizard {
   border: 1px solid #ccc;
 
   .wizard-step-contents {
-    min-height: 480px;
+    min-height: 510px;
   }
 
   .wizard-column-contents {
@@ -90,21 +90,43 @@ body.wizard {
   }
 
   .wizard-progress {
-    .text {
-      font-size: 0.8em;
-    }
-    .bar-container {
-      border: 1px solid #ff6600;
-      border-radius: 3px;
-      height: 0.5em;
-      width: 15em;
+    border: 1px solid #ff6600;
+    border-radius: 3px;
+    width: 200px;
+    height: 1.4em;
 
-      .bar-contents {
-        background-color: #ff6600;
-        width: 0;
-        height: 0.5em;
-        transition: width .3s;
-      }
+    div {
+      position: absolute;
+      height: 1.4em;
+    }
+
+    .white {
+      background: white;
+      width: 200px;
+      z-index: 11;
+    }
+
+    .black {
+      background: black;
+      transition: width .3s;
+      z-index: 12;
+    }
+
+    span {
+      position: absolute;
+      font-size: 15px;
+      mix-blend-mode: difference;
+      color: white;
+      z-index: 13;
+      font-size: 0.8em;
+      left: 2em;
+    }
+
+    .screen {
+      background-color: #ff6600;
+      mix-blend-mode: screen;
+      width: 200px;
+      z-index: 14;
     }
   }
 

@@ -20,11 +20,12 @@
 </div>
 
 <div class='wizard-step-footer'>
+
   <div class='wizard-progress'>
-    <div class='text'>{{bound-i18n "wizard.step" current=step.displayIndex total=wizard.totalSteps}}</div>
-    <div class='bar-container'>
-      <div class='bar-contents' style={{barStyle}}></div>
-    </div>
+    <div class='white'></div>
+    <div class='black' style={{barStyle}}></div>
+    <div class='screen'></div>
+    <span>{{bound-i18n "wizard.step" current=step.displayIndex total=wizard.totalSteps}}</span>
   </div>
 
   <div class='wizard-buttons'>
