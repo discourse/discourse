@@ -52,10 +52,13 @@ export default Ember.Component.extend({
     }
   },
 
-  @computed('step.displayIndex', 'wizard.totalSteps')
+  @computed('step.index', 'wizard.totalSteps')
   barStyle(displayIndex, totalSteps) {
-    const ratio = parseFloat(displayIndex) / parseFloat(totalSteps) * 100;
-    return Ember.String.htmlSafe(`width: ${ratio}%`);
+    let ratio = parseFloat(displayIndex) / parseFloat(totalSteps - 1);
+    if (ratio < 0) { ratio = 0; }
+    if (ratio > 1) { ratio = 1; }
+
+    return Ember.String.htmlSafe(`width: ${ratio * 200}px`);
   },
 
   autoFocus() {
