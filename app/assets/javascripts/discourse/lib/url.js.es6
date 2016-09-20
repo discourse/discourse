@@ -121,7 +121,7 @@ const DiscourseURL = Ember.Object.extend({
     }
 
     // Scroll to the same page, different anchor
-    const m = /#(.+)$/.exec(path);
+    const m = /^#(.+)$/.exec(path);
     if (m) {
       jumpToElement(m[1]);
       return this.replaceState(path);
