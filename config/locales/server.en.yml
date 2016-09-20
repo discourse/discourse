@@ -3244,7 +3244,14 @@ en:
         fields:
           welcome:
             label: "Welcome Topic"
-            description: 'Think of this as your "elevator pitch" – how would you describe this site to a stranger on an elevator when you had about 1 minute to talk?'
+            description: "<p>Your welcome topic is important because it is the first thing you visitors will see:</p>
+              <ol>
+              <li>Where am I?</li>
+              <li>Who are these discussions for?</li>
+              <li>What can I find here?</li>
+              <li>Why should I visit?</li>
+              </ol>
+            <p>Think of it as your 'elevator pitch' or 'mission statement' – how would you describe your community to a stranger on an elevator when you had about 1 minute to talk?</p>"
             one_paragraph: "Please restrict your welcome message to one paragraph."
 
       privacy:
@@ -3267,11 +3274,11 @@ en:
           contact_email:
             label: "Mail"
             placeholder: "name@example.com"
-            description: "Email address for the person or group responsible for this community. Used for critical notifications such as unhandled flags, security updates, and on the \"About\" page for urgent community contact."
+            description: "Email address for the person or group responsible for this community. Used for critical notifications such as unhandled flags, security updates, and on <a href='/about' target='_blank'>your about page</a> for urgent community contact."
           contact_url:
             label: "Web Page"
             placeholder: "http://www.example.com/contact-us"
-            description: "General contact web page for you or your oganization. Will be displayed on your \"About\" page."
+            description: "General contact web page for you or your oganization. Will be displayed on <a href='/about' target='_blank'>your about page</a>."
           site_contact:
             label: "Automated Messages"
             description: "All automated Discourse personal messages will be sent from this user. Most importantly, this user will be the designated sender of every welcome message automatically sent to new users."
@@ -3295,7 +3302,7 @@ en:
         title: "Theme"
         fields:
           theme_id:
-            description: "Do you prefer a light or dark design? You can always further customize the look and feel of your site via Admin, Customize."
+            description: "Do you prefer a light or dark design to start with? You can always further customize the look and feel of your site via Admin, Customize."
             choices:
               default:
                 label: "Simple Light"
@@ -3307,20 +3314,20 @@ en:
         fields:
           logo_url:
             label: "Primary Logo"
-            description: "The logo image at the top left of your site, should be a wide rectangle shape."
+            description: "The logo image at the top left of your site. Should be a wide rectangle shape."
           logo_small_url:
             label: "Small Logo"
-            description: "The small logo image at the top left of your site, should be a square shape, seen when scrolling down."
+            description: "The small logo image at the top left of your site, seen when scrolling down. Should be a square shape."
 
       icons:
         title: "Icons"
         fields:
           favicon_url:
             label: "Small Icon"
-            description: "A <a href='http://en.wikipedia.org/wiki/Favicon' target='blank'>favicon</a> for your site. To work correctly over a CDN it must be a png."
+            description: "A <a href='http://en.wikipedia.org/wiki/Favicon' target='blank'>favicon</a> for your site. Please use a JPG or PNG only, not an icon or SVG file."
           apple_touch_icon_url:
             label: "Large Icon"
-            description: "Icon used for Apple touch devices. Recommended size is 144px by 144px."
+            description: "Icon used to represent your site on mobile devices. Recommended size is 144px by 144px."
 
       invites:
         title: "Invite Staff"
