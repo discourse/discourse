@@ -49,7 +49,7 @@ module Jobs
           'X-Discourse-Event-Id' => web_hook_event.id,
           'X-Discourse-Event-Type' => @opts[:event_type]
         }
-        headers['X-Discourse-Event'] = @opts[:event_name] if @opts[:event_name].present?
+        headers['X-Discourse-Event'] = @opts[:event_name].to_s if @opts[:event_name].present?
 
         if @web_hook.secret.present?
           headers['X-Discourse-Event-Signature'] = "sha256=" + OpenSSL::HMAC.hexdigest("sha256", @web_hook.secret, body)
@@ -67,6 +67,10 @@ module Jobs
                                         response_headers: MultiJson.dump(response.headers),
                                         response_body: response.body,
                                         duration: ((Time.zone.now - now) * 1000).to_i)
+      MessageBus.publish("/web_hook_events/#{@web_hook.id}", {
+        web_hook_event_id: web_hook_event.id,
+        event_type: @opts[:event_type]
+      }, user_ids: User.staff.pluck(:id))
     end
 
     def build_web_hook_body

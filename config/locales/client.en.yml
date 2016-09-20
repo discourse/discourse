@@ -2413,7 +2413,6 @@ en:
         flair_preview: "Preview"
         flair_note: "Note: Flair will only show for a user's primary group."
 
-
       api:
         generate_master: "Generate Master API Key"
         none: "There are no active API keys right now."
@@ -2467,12 +2466,9 @@ en:
         post_event:
           name: "Post Event"
           details: "When there is a new reply, edit, deleted or recovered."
-        invitation_event:
-          name: "Invitation Event"
-          details: "When a invitation is sent or accepted."
         user_event:
           name: "User Event"
-          details: "When there is a user is created or changed."
+          details: "When a user is created or approved."
         delivery_status:
           title: "Delivery Status"
           inactive: "Inactive"
@@ -2481,7 +2477,12 @@ en:
         events:
           none: "There are no related events."
           redeliver: "Redeliver"
-          completion: "Completed in %{seconds} seconds."
+          incoming:
+            one: "There is a new event."
+            other: "There are {{count}} new events."
+          completed_in:
+            one: "Completed in 1 second."
+            other: "Completed in {{count}} seconds."
           request: "Request"
           response: "Response"
           redeliver_confirm: "Are you sure you want to redeliver the same payload?"
@@ -2492,6 +2493,11 @@ en:
           go_details: "Edit webhook"
           go_events: "Go to events"
           ping: "Ping"
+          status: "Status Code"
+          event_id: "ID"
+          timestamp: "Created"
+          completion: "Completion Time"
+          actions: "Actions"
       plugins:
         title: "Plugins"
         installed: "Installed Plugins"

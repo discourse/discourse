@@ -56,6 +56,7 @@ required:
     default: '/images/default-favicon.ico'
   apple_touch_icon_url: '/images/default-apple-touch-icon.png'
   default_opengraph_image_url: ''
+  twitter_summary_large_image_url: ''
   exclude_rel_nofollow_domains:
     default: ''
     type: list
@@ -277,6 +278,8 @@ login:
   facebook_app_secret:
     default: ''
     regex: "^[a-f0-9]+$"
+  facebook_request_extra_profile_details:
+    default: false
   enable_github_logins:
     client: true
     default: false
@@ -1261,11 +1264,11 @@ user_api:
   max_user_api_reqs_per_day:
     default: 2880
   max_user_api_reqs_per_minute:
-    default: 12
+    default: 20
   allow_read_user_api_keys:
     default: true
   allow_write_user_api_keys:
-    default: false
+    default: true
   allow_push_user_api_keys:
     default: true
   max_api_keys_per_user:

@@ -20,7 +20,12 @@ class UserApiKeysController < ApplicationController
 
     unless current_user
       cookies[:destination_url] = request.fullpath
-      redirect_to path('/login')
+
+      if SiteSetting.enable_sso?
+        redirect_to path('/session/sso')
+      else
+        redirect_to path('/login')
+      end
       return
     end
 

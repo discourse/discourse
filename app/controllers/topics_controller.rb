@@ -60,6 +60,13 @@ class TopicsController < ApplicationController
     opts[:slow_platform] = true if slow_platform?
     opts[:username_filters] = username_filters.split(',') if username_filters.is_a?(String)
 
+    # Special case: a slug with a number in front should look by slug first before looking
+    # up that particular number
+    if params[:id] && params[:id] =~ /^\d+[^\d\\]+$/
+      topic = Topic.find_by(slug: params[:id].downcase)
+      return redirect_to_correct_topic(topic, opts[:post_number]) if topic && topic.visible
+    end
+
     begin
       @topic_view = TopicView.new(params[:id] || params[:topic_id], current_user, opts)
     rescue Discourse::NotFound
