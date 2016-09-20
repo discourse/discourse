@@ -3238,7 +3238,7 @@ en:
 
       invites:
         add_user: "add"
-        none_added: "You haven't invited any users. Are you sure you want to continue?"
+        none_added: "You haven’t invited any staff. Are you sure you want to continue?"
         roles:
           admin: "Admin"
           moderator: "Moderator"
