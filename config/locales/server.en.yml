@@ -3222,8 +3222,6 @@ en:
     step:
       locale:
         title: "Welcome to your Discourse!"
-        description: "Before you launch your new Discourse community, we’ll need to configure a few things together first. You can come back and change these settings any time."
-
         fields:
           default_locale:
             description: "What’s the default language for your community?"

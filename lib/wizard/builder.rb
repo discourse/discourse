@@ -9,6 +9,8 @@ class Wizard
       return @wizard unless SiteSetting.wizard_enabled? && @wizard.user.try(:staff?)
 
       @wizard.append_step('locale') do |step|
+        step.banner = "welcome.png"
+
         languages = step.add_field(id: 'default_locale',
                                    type: 'dropdown',
                                    required: true,
@@ -164,7 +166,9 @@ class Wizard
 
       DiscourseEvent.trigger(:build_wizard, @wizard)
 
-      @wizard.append_step('finished')
+      @wizard.append_step('finished') do |step|
+        step.banner = "finished.png"
+      end
       @wizard
     end
 
