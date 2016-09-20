@@ -15,14 +15,21 @@ export default Ember.Object.extend(ValidState, {
     return lookup;
   },
 
-  checkFields() {
+  validate() {
     let allValid = true;
+    const result = { warnings: [] };
+
     this.get('fields').forEach(field => {
-      field.check();
-      allValid = allValid && field.get('valid');
+      allValid = allValid && field.check();
+      const warning = field.get('warning');
+      if (warning) {
+        result.warnings.push(warning);
+      }
     });
 
     this.setValid(allValid);
+
+    return result;
   },
 
   fieldError(id, description) {
