@@ -3238,6 +3238,15 @@ en:
             label: "How would you describe your community in one sentence?"
             placeholder: "A place for Jane and her friends to discuss cool stuff"
 
+      introduction:
+        title: "Introduction"
+
+        fields:
+          welcome:
+            label: "Welcome Topic"
+            description: 'Think of this as your "elevator pitch" – how would you describe this site to a stranger on an elevator when you had about 1 minute to talk?'
+            one_paragraph: "Please restrict your welcome message to one paragraph."
+
       privacy:
         title: "Access"
         description: "Is your community open to everyone, or is it restricted by membership, invitation, or approval? If you prefer, you can set things up privately, then switch to public later."

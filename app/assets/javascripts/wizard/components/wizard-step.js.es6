@@ -74,7 +74,7 @@ export default Ember.Component.extend({
   },
 
   animateInvalidFields() {
-    Ember.run.scheduleOnce('afterRender', () => $('.invalid input[type=text]').wiggle(2, 100));
+    Ember.run.scheduleOnce('afterRender', () => $('.invalid input[type=text], .invalid textarea').wiggle(2, 100));
   },
 
   advance() {

@@ -38,6 +38,21 @@ describe Wizard::StepUpdater do
     expect(wizard.completed_steps?('forum-title')).to eq(true)
   end
 
+  it "updates the introduction step" do
+    topic = Fabricate(:topic, title: "Welcome to Discourse")
+    welcome_post = Fabricate(:post, topic: topic, raw: "this will be the welcome topic post\n\ncool!")
+
+    updater = wizard.create_updater('introduction', welcome: "Welcome to my new awesome forum!")
+    updater.update
+
+    expect(updater.success?).to eq(true)
+    welcome_post.reload
+    expect(welcome_post.raw).to eq("Welcome to my new awesome forum!\n\ncool!")
+
+    expect(wizard.completed_steps?('introduction')).to eq(true)
+
+  end
+
   it "won't allow updates to the default value, when required" do
     updater = wizard.create_updater('forum_title', title: SiteSetting.title, site_description: 'neat place')
     updater.update
