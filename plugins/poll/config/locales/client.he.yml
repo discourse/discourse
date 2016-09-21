@@ -64,6 +64,6 @@ he:
           min: מינימום
           step: צעד
         poll_public:
-          label: הציג מי הצביעו
+          label: הצג מי הצביעו
         poll_options:
           label: הכניסו אפשרות בחירה אחת בכל שורה

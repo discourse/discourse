@@ -17,11 +17,28 @@ sk:
         few: "hlasy celkom"
         other: "hlasov celkom"
       average_rating: "Priemerné hodnotenie: <strong>%{average}</strong>."
+      public:
+        title: "Hlasy sú verejné."
+      multiple:
+        help:
+          at_least_min_options:
+            one: "Vyberte aspoň <strong>1</strong> možnosť"
+            few: "Vyberte aspoň <strong>%{count}</strong> možnosti"
+            other: "Vyberte aspoň <strong>%{count}</strong> možností"
+          up_to_max_options:
+            one: "Vyberte najviac <strong>1</strong> možnosť"
+            few: "Vyberte najviac <strong>%{count}</strong> možnosti"
+            other: "Vyberte najviac <strong>%{count}</strong> možností"
+          x_options:
+            one: "Vyberte <strong>1</strong> možnosť"
+            few: "Vyberte <strong>%{count}</strong> možnosti"
+            other: "Vyberte <strong>%{count}</strong> možností"
+          between_min_and_max_options: "Vyberte medzi <strong>%{min}</strong> a <strong>%{max}</strong> možnosťami"
       cast-votes:
         title: "Hlasovať"
         label: "Hlasuj teraz!"
       show-results:
-        title: "Zobraz výsledky hlasovania"
+        title: "Zobraiť výsledky hlasovania"
         label: "Zobraz výsledky"
       hide-results:
         title: "Návrat na odovzdané hlasy"
@@ -31,6 +48,27 @@ sk:
         label: "Zahájiť"
         confirm: "Ste si istý, že chcete zahájiť toto hlasovanie?"
       close:
-        title: "Zatvoriť hlasovanie"
-        label: "Zatvoriť"
-        confirm: "Ste si istý, že chcete zatvoriť toto hlasovanie?"
+        title: "Uzavrieť hlasovanie"
+        label: "Zavrieť"
+        confirm: "Ste si istý, že chcete uzavrieť toto hlasovanie?"
+      error_while_toggling_status: "Ľutujeme, nastala chyba pri prepínaní stavu tohto hlasovania."
+      error_while_casting_votes: "Ľutujeme, nastala chyba pri prideľovaní Vašich hlasov."
+      error_while_fetching_voters: "Ľutujeme, nastala chyba pri zobrazovaní voličov."
+      ui_builder:
+        title: Vytvoriť hlasovanie
+        insert: Vložiť hlasovanie
+        help:
+          options_count: Zadajte aspoň 2 možnosti
+        poll_type:
+          label: Typ
+          regular: Jedna možnosť
+          multiple: Viacero možností
+          number: Číselné hodnotenie
+        poll_config:
+          max: Max
+          min: Min
+          step: Krok
+        poll_public:
+          label: Ukázať kto hlasoval
+        poll_options:
+          label: Zadajte jednu možnosť voľby na riadok

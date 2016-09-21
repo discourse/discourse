@@ -9,6 +9,7 @@ sk:
   site_settings:
     poll_enabled: "Umožnit používaťeľom vytvárať hlasovania?"
     poll_maximum_options: "Maximálny počet povolených možností v hlasovaní."
+    poll_edit_window_mins: "Počet minút po vytvorení hlasovania počas ktorých môže byť hlasovanie upravené."
   poll:
     multiple_polls_without_name: "Existujú viaceré hlasovania bez mena. Použite atribút '<code>meno</code>', aby ste hlasovanie jednoznačne rozlíšili."
     multiple_polls_with_same_name: "Existujú viaceré hlasovania s rovnakým menom: <strong>%{name}</strong>. Použite atribút '<code>meno</code>', aby ste hlasovanie jednoznačne rozlíšili."
@@ -27,6 +28,12 @@ sk:
     default_poll_with_multiple_choices_has_invalid_parameters: "Hlasovanie s viac možnosťami má nesprávne parametre."
     named_poll_with_multiple_choices_has_invalid_parameters: "Hlasovanie s názvom <strong>%{name}</strong> s viac možnosťami má nesprávne parametre."
     requires_at_least_1_valid_option: "Musite vybrať aspoň 1 platnú možnosť."
+    default_cannot_be_made_public: "Hlasovanie s hlasmi nemôže byť zverejnené."
+    named_cannot_be_made_public: "Hlasovanie s názvom <strong>%{name}</strong> má hlasy, preto nemôže byť zverejnené."
+    edit_window_expired:
+      cannot_change_polls: "Po prvých %{minutes} minútach už nemôžete pridať, odstrániť alebo premenovať hlasovanie."
+      op_cannot_edit_options: "Po prvých %{minutes}  minútach už nemôžete pridať alebo odstrániť možnosti hlasovania. Ak potrebujete upraviť možnosti hlasovania prosím kontaktujte moderátora."
+      staff_cannot_add_or_remove_options: "Po prvých %{minutes}  minútach už nemôžete pridať alebo odstrániť možnosti hlasovania. Miesto toho by ste mali uzavrieť túto tému a miesto nej vytvoriť inú."
     no_polls_associated_with_this_post: "S týmto príspevkom nie sú spojené žiadne hlasovania."
     no_poll_with_this_name: "S týmto príspevkom nie je spojené žiadne hlasovanie s názvom <strong>%{name}</strong>."
     post_is_deleted: "Na vymazanom príspevku nie je možné vykonať."

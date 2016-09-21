@@ -42,7 +42,7 @@ tr_TR:
         label: "Bitir"
         confirm: "Bu anketi bitirmek istediğinize emin misiniz?"
       error_while_toggling_status: "Üzgünüz, anket durumunu değiştirme sırasında hata meydana geldi."
-      error_while_casting_votes: "Üzgünüz, oylarınızı dönüştürme sırasında hata meydana geldi"
+      error_while_casting_votes: "Üzgünüz, oylarınızı dönüştürme sırasında hata meydana geldi."
       error_while_fetching_voters: "Üzgünüz, oy verenleri görüntüleme sırasında hata meydana geldi"
       ui_builder:
         title: Anket Oluştur

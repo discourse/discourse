@@ -36,7 +36,7 @@ he:
     no_poll_with_this_name: "אין סקר בשם  <strong>%{name}</strong> שמקושר לפוסט הזה. "
     post_is_deleted: "לא ניתן לפעול על פוסט שנמחק."
     topic_must_be_open_to_vote: "הנושא צריך להיות פתוח להצבעות."
-    poll_must_be_open_to_vote: "הסקר צריך להיות פתוח להצבעות."
+    poll_must_be_open_to_vote: "הסקר חייב להיות פתוח להצבעות."
     topic_must_be_open_to_toggle_status: "הנושא חייב להיות פתוח לשינויים בסטטוס."
     only_staff_or_op_can_toggle_status: "רק חבר צוות או המפרסם המקורי יכול לשנות סטטוס של סקר. "
     email:
