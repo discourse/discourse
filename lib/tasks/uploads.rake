@@ -386,6 +386,49 @@ def list_missing_uploads
 end
 
 ################################################################################
+#                              Recover from tombstone                          #
+################################################################################
+
+task "uploads:recover_from_tombstone" => :environment do
+  if ENV["RAILS_DB"]
+    recover_from_tombstone
+  else
+    RailsMultisite::ConnectionManagement.each_connection { recover_from_tombstone }
+  end
+end
+
+def recover_from_tombstone
+  if Discourse.store.external?
+    puts "This task only works for internal storages."
+    return
+  end
+
+  public_path = Rails.root.join("public")
+
+  Post.find_each do |post|
+    doc = Nokogiri::HTML::fragment(post.raw)
+
+    doc.css("img[src]").each do |img|
+      url = img["src"]
+      upload = Upload.find_by(url: url)
+
+      if !upload
+        File.open(File.join(public_path, 'uploads', 'tombstone', url[9..-1])) do |file|
+          new_upload = Upload.create_for(Discourse::SYSTEM_USER_ID, file, File.basename(url), File.size(file))
+
+          if new_upload.persisted?
+            putc "."
+            DbHelper.remap(url, new_upload.url)
+          else
+            puts "Failed to create upload for #{url}."
+          end
+        end
+      end
+    end
+  end
+end
+
+################################################################################
 #                        regenerate_missing_optimized                          #
 ################################################################################
 
