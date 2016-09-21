@@ -170,7 +170,10 @@ class Wizard
       end
 
       @wizard.append_step('homepage') do |step|
-        style = step.add_field(id: 'homepage_style', type: 'dropdown', required: true)
+
+        current = SiteSetting.top_menu.starts_with?("categories") ? "categories" : "latest"
+
+        style = step.add_field(id: 'homepage_style', type: 'dropdown', required: true, value: current)
         style.add_choice('latest')
         style.add_choice('categories')
         step.add_field(id: 'homepage_preview', type: 'component')
