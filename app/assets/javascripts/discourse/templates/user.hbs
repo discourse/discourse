@@ -63,6 +63,7 @@
             {{#if model.title}}
               <h3>{{model.title}}</h3>
             {{/if}}
+            {{plugin-outlet "user-post-names"}}
             <h3>
             {{#if model.location}}{{fa-icon "map-marker"}} {{model.location}}{{/if}}
             {{#if model.website_name}}
