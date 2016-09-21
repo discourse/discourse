@@ -403,28 +403,44 @@ def recover_from_tombstone
     return
   end
 
-  public_path = Rails.root.join("public")
+  begin
+    original_setting = SiteSetting.max_image_size_kb
+    SiteSetting.max_image_size_kb = 10240
 
-  Post.find_each do |post|
-    doc = Nokogiri::HTML::fragment(post.raw)
+    public_path = Rails.root.join("public")
 
-    doc.css("img[src]").each do |img|
-      url = img["src"]
-      upload = Upload.find_by(url: url)
+    Post.find_each do |post|
+      doc = Nokogiri::HTML::fragment(post.raw)
 
-      if !upload
-        File.open(File.join(public_path, 'uploads', 'tombstone', url[9..-1])) do |file|
-          new_upload = Upload.create_for(Discourse::SYSTEM_USER_ID, file, File.basename(url), File.size(file))
+      doc.css("img[src]").each do |img|
+        url = img["src"]
 
-          if new_upload.persisted?
-            putc "."
-            DbHelper.remap(url, new_upload.url)
+        next unless url =~ /^\/uploads\//
+
+        upload = Upload.find_by(url: url)
+
+        if !upload && url
+          tombstone_path = File.join(public_path, 'uploads', 'tombstone', url.gsub(/^\/uploads\//, ""))
+
+          if File.exists?(tombstone_path)
+            File.open(tombstone_path) do |file|
+              new_upload = Upload.create_for(Discourse::SYSTEM_USER_ID, file, File.basename(url), File.size(file))
+
+              if new_upload.persisted?
+                putc "."
+                DbHelper.remap(url, new_upload.url)
+              else
+                puts "Failed to create upload for #{url}: #{new_upload.errors.full_messages}."
+              end
+            end
           else
-            puts "Failed to create upload for #{url}."
+            puts "Failed to find file (#{tombstone_path}) in tombstone."
           end
         end
       end
     end
+  ensure
+    SiteSetting.max_image_size_kb = original_setting
   end
 end
 
