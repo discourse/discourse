@@ -3228,7 +3228,7 @@ en:
 
       forum_title:
         title: "Name"
-        description: "If you put a sign in front of your community for people to discover, what would it say? When visitors ask 'Where am I?', what would you tell them?"
+        description: "Your name is the first thing potential visitors will discover, a sign visible in the distance. A good name gives people a rough idea of where they might possibly end up if they were to click or tap on a link to your community."
 
         fields:
           title:
@@ -3315,8 +3315,8 @@ en:
             label: "Primary Logo"
             description: "The logo image at the top left of your site. Use a wide rectangle shape."
           logo_small_url:
-            label: "Small Logo"
-            description: "The small logo image at the top left of your site, seen when scrolling down. Use a square shape."
+            label: "Compact Logo"
+            description: "A compact version of your logo, shown at the top left of your site when scrolling down. Use a square shape."
 
       icons:
         title: "Icons"
@@ -3346,7 +3346,7 @@ en:
 
       invites:
         title: "Invite Staff"
-        description: "You’re almost done! Let’s invite some staff members to <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>seed your discussions</a> with interesting topics and replies to help get your community started."
+        description: "You’re almost done! Let’s invite some staff members to help <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>seed your discussions</a> with interesting topics and replies to get your community started."
 
       finished:
         title: "Your Discourse is Ready!"
