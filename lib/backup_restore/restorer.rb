@@ -366,7 +366,7 @@ module BackupRestore
         FileUtils.cd(@tmp_directory) do
           execute_command(
             'tar', '--extract', '--keep-newer-files', '--file', @tar_filename, 'uploads/',
-            failure_message: "Failed to extract uploadsd."
+            failure_message: "Failed to extract uploads."
           )
         end
 
