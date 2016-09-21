@@ -13,6 +13,13 @@ const Wizard = Ember.Object.extend({
     return titleStep.get('fieldsById.title.value');
   },
 
+  getLogoUrl() {
+    const logoStep = this.get('steps').findProperty('id', 'logos');
+    if (!logoStep) { return; }
+    return logoStep.get('fieldsById.logo_url.value');
+
+  },
+
   // A bit clunky, but get the current colors from the appropriate step
   getCurrentColors() {
     const colorStep = this.get('steps').findProperty('id', 'colors');

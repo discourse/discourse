@@ -1,9 +1,5 @@
 import { observes } from 'ember-addons/ember-computed-decorators';
-
-import {
-  createPreviewComponent,
-  loadImage,
-} from 'wizard/lib/preview';
+import { createPreviewComponent } from 'wizard/lib/preview';
 
 export default createPreviewComponent(325, 125, {
   ios: null,
@@ -14,18 +10,8 @@ export default createPreviewComponent(325, 125, {
     this.reload();
   },
 
-  load() {
-    return Ember.RSVP.Promise.all([
-      loadImage('/images/wizard/apple-mask.png'),
-      loadImage(this.get('field.value'))
-    ]).then(result => {
-      this.ios = result[0];
-      this.image = result[1];
-    });
-
-    return loadImage(this.get('field.value')).then(image => {
-      this.image = image;
-    });
+  images() {
+    return { ios: '/images/wizard/apple-mask.png', image: this.get('field.value') };
   },
 
   paint(ctx, colors, width, height) {

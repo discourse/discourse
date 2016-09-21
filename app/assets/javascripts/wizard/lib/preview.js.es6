@@ -28,8 +28,20 @@ export function createPreviewComponent(width, height, obj) {
       this.reload();
     },
 
+    images() { },
+
+    loadImages() {
+      const images = this.images();
+      if (images) {
+        return Ember.RSVP.Promise.all(Object.keys(images).map(id => {
+          return loadImage(images[id]).then(img => this[id] = img);
+        }));
+      }
+      return Ember.RSVP.Promise.resolve();
+    },
+
     reload() {
-      this.load().then(() => {
+      this.loadImages().then(() => {
         this.loaded = true;
         this.triggerRepaint();
       });
@@ -57,14 +69,87 @@ export function createPreviewComponent(width, height, obj) {
       ctx.strokeStyle='rgba(0, 0, 0, 0.2)';
       ctx.rect(0, 0, width, height);
       ctx.stroke();
+    },
+
+    categories() {
+      return [{name: 'consecteteur', color: '#652D90'}, {name: 'ultrices', color: '#3AB54A'}];
+    },
+
+    drawFullHeader(colors) {
+      const { ctx } = this;
+
+      const headerHeight = height * 0.15;
+      drawHeader(ctx, colors, width, headerHeight);
+
+      const avatarSize = height * 0.1;
+
+      // Logo
+      const headerMargin = headerHeight * 0.2;
+      const logoHeight = headerHeight - (headerMargin * 2);
+      const logoWidth = (logoHeight / this.logo.height) * this.logo.width;
+      ctx.drawImage(this.logo, headerMargin, headerMargin, logoWidth, logoHeight);
+
+      // Top right menu
+      ctx.drawImage(this.avatar, width - avatarSize - headerMargin, headerMargin, avatarSize, avatarSize);
+      ctx.fillStyle = darkLightDiff(colors.primary, colors.secondary, 45, 55);
+
+      const headerFontSize = headerHeight / 44;
+
+      ctx.font = `${headerFontSize}em FontAwesome`;
+      ctx.fillText("\uf0c9", width - (avatarSize * 2) - (headerMargin * 0.5), avatarSize);
+      ctx.fillText("\uf002", width - (avatarSize * 3) - (headerMargin * 0.5), avatarSize);
+    },
+
+    drawPills(colors, headerHeight) {
+      const { ctx } = this;
+
+      const categoriesSize = headerHeight * 2;
+      const badgeHeight = categoriesSize * 0.25;
+      const headerMargin = headerHeight * 0.2;
+
+      ctx.beginPath();
+      ctx.fillStyle = darkLightDiff(colors.primary, colors.secondary, 90, -65);
+      ctx.rect(headerMargin, headerHeight + headerMargin, categoriesSize, badgeHeight);
+      ctx.fill();
+
+      const fontSize = Math.round(badgeHeight * 0.5);
+      ctx.font = `${fontSize}px 'Arial'`;
+      ctx.fillStyle = colors.primary;
+      ctx.fillText("all categories", headerMargin * 1.5, headerHeight + (headerMargin * 1.42) + fontSize);
+
+      ctx.font = "0.9em 'FontAwesome'";
+      ctx.fillStyle = colors.primary;
+      ctx.fillText("\uf0da", categoriesSize - (headerMargin / 4), headerHeight + (headerMargin * 1.6) + fontSize);
+
+      // pills
+      ctx.beginPath();
+      ctx.fillStyle = colors.quaternary;
+      ctx.rect((headerMargin * 2)+ categoriesSize, headerHeight + headerMargin, categoriesSize * 0.55, badgeHeight);
+      ctx.fill();
+
+      ctx.font = `${fontSize}px 'Arial'`;
+      ctx.fillStyle = colors.secondary;
+      let x = (headerMargin * 3.0) + categoriesSize;
+
+      ctx.fillText("Latest", x - (headerMargin * 0.1), headerHeight + (headerMargin * 1.5) + fontSize);
+
+      ctx.fillStyle = colors.primary;
+      x += categoriesSize * 0.6;
+      ctx.fillText("New", x, headerHeight + (headerMargin * 1.5) + fontSize);
+
+      x += categoriesSize * 0.4;
+      ctx.fillText("Unread", x, headerHeight + (headerMargin * 1.5) + fontSize);
+
+      x += categoriesSize * 0.6;
+      ctx.fillText("Top", x, headerHeight + (headerMargin * 1.5) + fontSize);
     }
+
   }, obj);
 }
 
-export function loadImage(src) {
+function loadImage(src) {
   const img = new Image();
   img.src = src;
-
   return new Ember.RSVP.Promise(resolve => img.onload = () => resolve(img));
 };
 
@@ -158,10 +243,10 @@ export function darkLightDiff(adjusted, comparison, lightness, darkness) {
 }
 
 
-export function drawHeader(ctx, colors, width, height) {
+export function drawHeader(ctx, colors, width, headerHeight) {
   ctx.save();
   ctx.beginPath();
-  ctx.rect(0, 0, width, height);
+  ctx.rect(0, 0, width, headerHeight);
   ctx.fillStyle = colors.header_background;
   ctx.shadowColor = "rgba(0, 0, 0, 0.25)";
   ctx.shadowBlur = 2;

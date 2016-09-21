@@ -215,6 +215,21 @@ describe Wizard::StepUpdater do
     end
   end
 
+  context "homepage step" do
+    it "updates the fields correctly" do
+      updater = wizard.create_updater('homepage', homepage_style: "categories")
+      updater.update
+
+      expect(updater).to be_success
+      expect(wizard.completed_steps?('homepage')).to eq(true)
+      expect(SiteSetting.top_menu).to eq('categories|latest|new|unread|top')
+
+      updater = wizard.create_updater('homepage', homepage_style: "latest")
+      updater.update
+      expect(updater).to be_success
+      expect(SiteSetting.top_menu).to eq('latest|new|unread|top|categories')
+    end
+  end
 
   context "invites step" do
     let(:invites) {

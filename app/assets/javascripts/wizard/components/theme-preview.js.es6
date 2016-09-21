@@ -2,10 +2,8 @@ import { observes } from 'ember-addons/ember-computed-decorators';
 
 import {
   createPreviewComponent,
-  loadImage,
   darkLightDiff,
   chooseBrighter,
-  drawHeader,
   LOREM
 } from 'wizard/lib/preview';
 
@@ -18,45 +16,27 @@ export default createPreviewComponent(659, 320, {
     this.triggerRepaint();
   },
 
-  load() {
-    return Ember.RSVP.Promise.all([loadImage('/images/wizard/discourse-small.png'),
-                            loadImage('/images/wizard/trout.png')]).then(result => {
-      this.logo = result[0];
-      this.avatar = result[1];
-    });
+  images() {
+    return { logo: this.get('wizard').getLogoUrl(), avatar: '/images/wizard/trout.png' };
   },
 
   paint(ctx, colors, width, height) {
     const headerHeight = height * 0.15;
 
-    drawHeader(ctx, colors, width, headerHeight);
+    this.drawFullHeader(colors);
 
     const margin = width * 0.02;
     const avatarSize = height * 0.1;
     const lineHeight = height / 19.0;
 
-    // Logo
-    const headerMargin = headerHeight * 0.2;
-    const logoHeight = headerHeight - (headerMargin * 2);
-    const logoWidth = (logoHeight / this.logo.height) * this.logo.width;
-    ctx.drawImage(this.logo, headerMargin, headerMargin, logoWidth, logoHeight);
-
-    // Top right menu
-    ctx.drawImage(this.avatar, width - avatarSize - headerMargin, headerMargin, avatarSize, avatarSize);
-    ctx.fillStyle = darkLightDiff(colors.primary, colors.secondary, 45, 55);
-
-    const headerFontSize = headerHeight / 44;
-
-    ctx.font = `${headerFontSize}em FontAwesome`;
-    ctx.fillText("\uf0c9", width - (avatarSize * 2) - (headerMargin * 0.5), avatarSize);
-    ctx.fillText("\uf002", width - (avatarSize * 3) - (headerMargin * 0.5), avatarSize);
-
     // Draw a fake topic
     ctx.drawImage(this.avatar, margin, headerHeight + (height * 0.17), avatarSize, avatarSize);
 
+    const titleFontSize = headerHeight / 44;
+
     ctx.beginPath();
     ctx.fillStyle = colors.primary;
-    ctx.font = `bold ${headerFontSize}em 'Arial'`;
+    ctx.font = `bold ${titleFontSize}em 'Arial'`;
     ctx.fillText("Welcome to Discourse", margin, (height * 0.25));
 
     const bodyFontSize = height / 440.0;

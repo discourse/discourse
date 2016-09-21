@@ -3329,6 +3329,18 @@ en:
             label: "Large Icon"
             description: "Icon used to represent your site on mobile devices. Recommended size is 144px by 144px."
 
+      homepage:
+        description: "We recommend showing the Latest topics by default, but some people prefer to show Categories."
+        title: "Homepage Style"
+
+        fields:
+          homepage_style:
+            choices:
+              latest:
+                label: "Latest Topics"
+              categories:
+                label: "Categories"
+
       emoji:
         title: "Emoji"
         description: "Which Emoji style do you prefer for your community? Staff members can also add more custom Emoji later via Admin, Customize, Emoji."

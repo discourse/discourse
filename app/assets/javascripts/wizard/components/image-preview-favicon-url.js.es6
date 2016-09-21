@@ -1,9 +1,6 @@
 import { observes } from 'ember-addons/ember-computed-decorators';
 
-import {
-  createPreviewComponent,
-  loadImage,
-} from 'wizard/lib/preview';
+import { createPreviewComponent, } from 'wizard/lib/preview';
 
 export default createPreviewComponent(371, 124, {
   tab: null,
@@ -14,18 +11,8 @@ export default createPreviewComponent(371, 124, {
     this.reload();
   },
 
-  load() {
-    return Ember.RSVP.Promise.all([
-      loadImage('/images/wizard/tab.png'),
-      loadImage(this.get('field.value'))
-    ]).then(result => {
-      this.tab = result[0];
-      this.image = result[1];
-    });
-
-    return loadImage(this.get('field.value')).then(image => {
-      this.image = image;
-    });
+  images() {
+    return { tab: "/images/wizard/tab.png", image: this.get('field.value') };
   },
 
   paint(ctx, colors, width, height) {
