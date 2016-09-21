@@ -29,7 +29,11 @@ export default Ember.Component.extend({
     const users = this.get('users');
 
     this.set('field.value', JSON.stringify(users));
-    this.set('field.warning', users.length ? null : 'invites.none_added');
+
+    const staffCount = this.get('step.fieldsById.staff_count.value');
+    const showWarning = (staffCount < 3 && users.length === 0);
+
+    this.set('field.warning', showWarning ? 'invites.none_added' : null);
   },
 
   actions: {
