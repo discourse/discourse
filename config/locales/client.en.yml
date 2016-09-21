@@ -3237,8 +3237,8 @@ en:
       quit: "Maybe Later"
 
       staff_count:
-        one: "Your forum currently has 1 staff member. "
-        other: "Your forum currently has %{count} staff members."
+        one: "Your community has 1 staff member. "
+        other: "Your community has %{count} staff members."
 
       invites:
         add_user: "add"
