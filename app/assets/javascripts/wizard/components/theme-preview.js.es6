@@ -9,9 +9,7 @@ import {
   LOREM
 } from 'wizard/lib/preview';
 
-const LINE_HEIGHT = 12.0;
-
-export default createPreviewComponent(375, 220, {
+export default createPreviewComponent(659, 320, {
   logo: null,
   avatar: null,
 
@@ -35,6 +33,7 @@ export default createPreviewComponent(375, 220, {
 
     const margin = width * 0.02;
     const avatarSize = height * 0.1;
+    const lineHeight = height / 19.0;
 
     // Logo
     const headerMargin = headerHeight * 0.2;
@@ -45,7 +44,10 @@ export default createPreviewComponent(375, 220, {
     // Top right menu
     ctx.drawImage(this.avatar, width - avatarSize - headerMargin, headerMargin, avatarSize, avatarSize);
     ctx.fillStyle = darkLightDiff(colors.primary, colors.secondary, 45, 55);
-    ctx.font = "0.75em FontAwesome";
+
+    const headerFontSize = headerHeight / 44;
+
+    ctx.font = `${headerFontSize}em FontAwesome`;
     ctx.fillText("\uf0c9", width - (avatarSize * 2) - (headerMargin * 0.5), avatarSize);
     ctx.fillText("\uf002", width - (avatarSize * 3) - (headerMargin * 0.5), avatarSize);
 
@@ -54,34 +56,34 @@ export default createPreviewComponent(375, 220, {
 
     ctx.beginPath();
     ctx.fillStyle = colors.primary;
-    ctx.font = "bold 0.75em 'Arial'";
+    ctx.font = `bold ${headerFontSize}em 'Arial'`;
     ctx.fillText("Welcome to Discourse", margin, (height * 0.25));
 
-    ctx.font = "0.5em 'Arial'";
+    const bodyFontSize = height / 440.0;
+    ctx.font = `${bodyFontSize}em 'Arial'`;
 
     let line = 0;
-
     const lines = LOREM.split("\n");
     for (let i=0; i<10; i++) {
-      line = (height * 0.3) + (i * LINE_HEIGHT);
+      line = (height * 0.3) + (i * lineHeight);
       ctx.fillText(lines[i], margin + avatarSize + margin, line);
     }
 
     // Reply Button
     ctx.beginPath();
-    ctx.rect(width * 0.57, line + LINE_HEIGHT, width * 0.1, height * 0.07);
+    ctx.rect(width * 0.57, line + lineHeight, width * 0.1, height * 0.07);
     ctx.fillStyle = colors.tertiary;
     ctx.fill();
     ctx.fillStyle = chooseBrighter(colors.primary, colors.secondary);
-    ctx.font = "8px 'Arial'";
-    ctx.fillText("Reply", width * 0.595, line + (LINE_HEIGHT * 1.8));
+    ctx.font = `${bodyFontSize}em 'Arial'`;
+    ctx.fillText("Reply", width * 0.595, line + (lineHeight * 1.85));
 
     // Icons
-    ctx.font = "0.5em FontAwesome";
+    ctx.font = `${bodyFontSize}em FontAwesome`;
     ctx.fillStyle = colors.love;
-    ctx.fillText("\uf004", width * 0.48, line + (LINE_HEIGHT * 1.8));
+    ctx.fillText("\uf004", width * 0.48, line + (lineHeight * 1.8));
     ctx.fillStyle = darkLightDiff(colors.primary, colors.secondary, 65, 55);
-    ctx.fillText("\uf040", width * 0.525, line + (LINE_HEIGHT * 1.8));
+    ctx.fillText("\uf040", width * 0.525, line + (lineHeight * 1.8));
 
     // Draw Timeline
     const timelineX = width * 0.8;
@@ -100,7 +102,7 @@ export default createPreviewComponent(375, 220, {
     ctx.lineTo(timelineX, height * 0.4);
     ctx.stroke();
 
-    ctx.font = "Bold 0.5em Arial";
+    ctx.font = `Bold ${bodyFontSize}em Arial`;
     ctx.fillStyle = colors.primary;
     ctx.fillText("1 / 20", timelineX + margin, (height * 0.3) + (margin * 1.5));
   }
