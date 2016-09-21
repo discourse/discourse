@@ -20,7 +20,7 @@ ja:
         title: "投票結果を表示"
         label: "結果を表示"
       hide-results:
-        title: "あなたの投票に戻る"
+        title: "投票に戻る"
         label: "結果を非表示にする"
       open:
         title: "投票を開く"

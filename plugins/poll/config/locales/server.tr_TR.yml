@@ -24,7 +24,7 @@ tr_TR:
     default_poll_with_multiple_choices_has_invalid_parameters: "Çoklu seçim seçeneği içeren anketinizde hatalar belirlendi."
     named_poll_with_multiple_choices_has_invalid_parameters: "<strong>%{name}</strong> ile adlandırılmış ve çoklu seçim seçeneği içeren anketinizde hatalar belirlendi."
     requires_at_least_1_valid_option: "En az 1 geçerli seçim yapmalısınız."
-    default_cannot_be_made_public: "Oy içeren oylamalar herkese açık olamaz. "
+    default_cannot_be_made_public: "Oy içeren anketler herkese açık olamaz. "
     named_cannot_be_made_public: "<strong>%{name}</strong> isimli ankette oylamalar herkese açık yapılamaz."
     edit_window_expired:
       cannot_change_polls: "İlk %{minutes} dakikadan sonra anket ekleyemez, silemez veya yeniden isimlendiremezsiniz."
@@ -35,7 +35,7 @@ tr_TR:
     post_is_deleted: "Silinmiş konu üzerinde işlem yapamazsınız."
     topic_must_be_open_to_vote: "Konu oylanabilmesi için açık olmalı."
     poll_must_be_open_to_vote: "Anket oylanabilmesi için açık olmalı."
-    topic_must_be_open_to_toggle_status: "Statüsün düzenlenebilmesi için konu açık olmalı."
-    only_staff_or_op_can_toggle_status: "Bir anketin statüsünü sadece o anketin orjinal sahibi ya da bir görevli değiştirebilir."
+    topic_must_be_open_to_toggle_status: "Durumun değiştirilebilmesi için konu açık olmalı."
+    only_staff_or_op_can_toggle_status: "Bir anketin durumunu sadece o anketin asıl sahibi ya da bir görevli değiştirebilir."
     email:
       link_to_poll: "Anketi görüntülemek için tıklayın."

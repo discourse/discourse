@@ -7,7 +7,6 @@
 
 sq:
   dates:
-    short_date_no_year: "D MMM"
     short_date: "D MMM, YYYY"
     long_date: "MMMM D, YYYY h:mma"
   datetime_formats: &datetime_formats
@@ -29,12 +28,10 @@ sq:
   loading: "Loading"
   powered_by_html: 'Mundësuar nga <a href="http://www.discourse.org">Discourse</a>, për një eksperience më të mirë aktivizoni JavaScript'
   log_in: "Identifikohu"
-  disable_remote_images_download_reason: "Remote images download was disabled because there wasn't enough disk space available."
   anonymous: "Anonim"
   errors: &errors
     format: '%{attribute} %{message}'
     messages:
-      too_long_validation: "is limited to %{max} characters; you entered %{length}."
       invalid_boolean: "Boolean jo i vlefshëm."
       taken: "është i marrë"
       accepted: duhet të pranohet
@@ -42,56 +39,19 @@ sq:
       present: mund të lihet bosh
       confirmation: "nuk përputhet %{attribute}"
       empty: nuk mund të lihet bosh
-      equal_to: must be equal to %{count}
-      even: must be even
       exclusion: është i rezervuar
-      greater_than: must be greater than %{count}
-      greater_than_or_equal_to: must be greater than or equal to %{count}
-      inclusion: is not included in the list
       invalid: është i pavlefshëm
-      less_than: must be less than %{count}
-      less_than_or_equal_to: must be less than or equal to %{count}
       not_a_number: nuk është një numër
-      not_an_integer: must be an integer
-      odd: must be odd
-      record_invalid: 'Validation failed: %{errors}'
-      restrict_dependent_destroy:
-        one: "Cannot delete record because a dependent %{record} exists"
-        many: "Cannot delete record because dependent %{record} exist"
-      too_long:
-        one: is too long (maximum is 1 character)
-        other: is too long (maximum is %{count} characters)
-      too_short:
-        one: is too short (minimum is 1 character)
-        other: is too short (minimum is %{count} characters)
-      wrong_length:
-        one: is the wrong length (should be 1 character)
-        other: is the wrong length (should be %{count} characters)
-      other_than: "must be other than %{count}"
-    template:
-      body: 'There were problems with the following fields:'
-      header:
-        one: 1 error prohibited this %{model} from being saved
-        other: '%{count} errors prohibited this %{model} from being saved'
     embed:
       load_from_remote: "Postimi nuk mundi të ngarkohet. Riprovoheni!"
     site_settings:
       default_categories_already_selected: "Nuk mund të zgjidhni një kategori të përdorur në një tjetër listë."
   bulk_invite:
     file_should_be_csv: "Skedari duhet të jete i formatit csv ose txt"
-  backup:
-    operation_already_running: "An operation is currently running. Can't start a new job right now."
-    backup_file_should_be_tar_gz: "The backup file should be a .tar.gz archive."
-    not_enough_space_on_disk: "There is not enough space on disk to upload this backup."
   not_logged_in: "Ju duhet të identifikoheni për këtë veprim."
-  not_found: "The requested URL or resource could not be found."
   invalid_access: "Ju nuk jeni të drejta për të parë burimin e kërkuar."
-  read_only_mode_enabled: "The site is in read only mode. Interactions are disabled."
   reading_time: "Koha e leximit"
   likes: "Pëlqime"
-  too_many_replies:
-    one: "We're sorry, but new users are temporarily limited to 1 reply in the same topic."
-    other: "We're sorry, but new users are temporarily limited to %{count} replies in the same topic."
   embed:
     start_discussion: "Fillo Diskutim"
     continue: "Vazhdo Diskutimin"
@@ -100,24 +60,17 @@ sq:
       other: "janë %{count} përgjigje"
     loading: "Duke Ngarkuar Diskutimin..."
     permalink: "Permalink"
-    imported_from: "This is a companion discussion topic for the original entry at %{link}"
     in_reply_to: "▶ %{username}"
     replies:
       one: "1 përgjigje"
       other: "%{count} përgjigje"
   spamming_host: "Na vjen keq, you cannot post a link to that host."
-  user_is_suspended: "Suspended users are not allowed to post."
-  topic_not_found: "Something has gone wrong. Perhaps this topic was closed or deleted while you were looking at it?"
-  just_posted_that: "is too similar to what you recently posted"
   invalid_characters: "përmban karaktere  jo të vlefshëm"
-  is_invalid: "is invalid; try to be a little more descriptive"
   next_page: "faqja tjetër →"
   prev_page: "← faqe mëparshme"
   page_num: "Faqe %{num}"
   home_title: "Kryefaqja"
-  topics_in_category: "Topics in the '%{category}' category"
   rss_posts_in_topic: "Burimi RSS i '%{topic}'"
-  rss_topics_in_category: "RSS feed of topics in the '%{category}' category"
   author_wrote: "%{author} shkruajti:"
   num_posts: "Postime:"
   num_participants: "Pjesëmarrësit:"
@@ -127,13 +80,9 @@ sq:
     latest: "Temat e fundit"
     hot: "Temat Kryesore"
     posts: "Postimet e fundit"
-  too_late_to_edit: "That post was created too long ago. It can no longer be edited or deleted."
+  too_late_to_edit: "Ky postim është fshirë para shumë kohësh. Nuk mund të ndryshohet apo fshihet më."
   excerpt_image: "imazh"
-  queue:
-    delete_reason: "Deleted via post moderation queue"
   groups:
-    errors:
-      member_already_exist: "'%{username}' is already a member of this group."
     default_names:
       everyone: "të gjithë"
       admins: "admins"
@@ -159,49 +108,47 @@ sq:
 
       Për më tepër, [lexoni porositë e bashkësisë](/guidelines). Ky panel do t'ju shfaqet vetëm gjatë %{education_posts_text} tuaj të parë.
     new-reply: |
-      Mirë se vini tek %{site_name} &mdash; **faleminderit për ndihmën!**
+      Mirë se vini tek %{site_name} &mdash; **faleminderit për pjesëmarrjen!**
 
-      - Does your reply improve the conversation in some way?
+      - Jini të sjellshëm me anëtarët e tjerë të faqes.
 
-      - Be kind to your fellow community members.
+      - Kritikat janë të mirëpritura, ama mundohuni të kritikoni *idetë* e jo anëtarët.
 
-      - Constructive criticism is welcome, but criticize *ideas*, not people.
+      - A i shton diçka diskutimit përgjigja juaj?
 
-      For more, [see our community guidelines](/guidelines). This panel will only appear for your first %{education_posts_text}.
+      Për më shumë, shikoni [udhëzimet e faqes](/guidelines). Ky njoftim do të shfaqet vetëm për %{education_posts_text}.
     avatar: |
-      ### How about a picture for your account?
+      ### Pse nuk i vendosni një foto ose avatar llogarisë tuaj?
 
+      Hej, ju keni dërguar disa tema dhe përgjigje në faqe, por nuk keni akoma foto profili.
       You've posted a few topics and replies, but your profile picture isn't as unique as you are -- it's just a letter.
 
-      Have you considered **[visiting your user profile](%{profile_path})** and uploading a picture that represents you?
-
-      It's easier to follow discussions and find interesting people in conversations when everyone has a unique profile picture!
+      A e dini se mund të shkoni tek **[profili juaj](%{profile_path})** dhe të ngarkoni një foto përfaqësuese?
     sequential_replies: |
-      ### Consider replying to several posts at once
+      ### Konsideroni t'i përgjigjeni disa komenteve njëkohësisht
 
-      Rather than many sequential replies to a topic, please consider a single reply that includes quotes from previous posts or @name references.
+      Është më mirë të postoni një përgjigje me disa citime sesa të dërgoni disa përgjigje njëra pas tjetrës.
 
-      You can edit your previous reply to add a quote by highlighting text and selecting the <b>quote reply</b> button that appears.
+      Mund të redaktoni përgjigjet tuaja dhe t'i shtoni citime.
 
-      It's easier for everyone to read topics that have fewer in-depth replies versus lots of small, individual replies.
-    dominating_topic: |
-      ### Let others join the conversation
+      Kështu do të jetë dhe më e lehtë për të gjithë të lexojnë tema që kanë disa përgjigje të thella në vend të shumë përgjigjeve individuale.
+    dominating_topic: |+
+      ### Lëri edhe të tjerët të marrin pjesë në diskutim
 
-      This topic is clearly important to you &ndash; you've posted more than %{percent}% of the replies here.
+      Duket që kjo temë është e rëndësishme për ju  &ndash;  ju keni postuar mbi %{percent}% të përgjigjeve këtu.
 
-      Are you sure you're providing adequate time for other people to share their points of view, too?
+      Ama, a po i lini hapësirë anëtarëve të tjerë të shprehen?
+
     too_many_replies: |
-      ### You have reached the reply limit for this topic
+      ### Keni arritur limitin e përgjigjeve tek kjo temë
 
-      We're sorry, but new users are temporarily limited to %{newuser_max_replies_per_topic} replies in the same topic.
-
-      Instead of adding another reply, please consider editing your previous replies, or visiting other topics.
+      Na vjen keq, por anëtarët e rinj nuk mund të postojnë më shumë se %{newuser_max_replies_per_topic} përgjigje në një temë.
     reviving_old_topic: |
-      ### Revive this topic?
+      ### Doni të rizgjoni këtë temë të vjetër?
 
-      The last reply to this topic is now over %{days} days old. Your reply will bump the topic to the top of its list and notify anyone previously involved in the conversation.
+      Përgjigja e fundit këtu është postuar mbi %{days} ditë më parë. Përgjigja juaj do t'a ngjisë këtë postim në majë të listave dhe do t'ju çojë një njoftim të gjithë pjesëmarrësve në diskutim.
 
-      Are you sure you want to continue this old conversation?
+      A jeni të sigurtë që doni të vazhdoni?
   activerecord:
     attributes:
       category:
@@ -215,32 +162,19 @@ sq:
         topic:
           attributes:
             base:
-              warning_requires_pm: "You can only attach warnings to private messages."
-              too_many_users: "You can only send warnings to one user at a time."
-              cant_send_pm: "Sorry, you cannot send a private message to that user."
+              cant_send_pm: "Ndjesë, nuk mund t'i dërgoni këtij përdoruesi një mesazh privat."
               no_user_selected: "Ju duhet të zgjidhni një përdorues të vlefshëm."
         user:
           attributes:
             password:
               common: "është një ndër 10000 fjalëkalimet më të përdorur. Ju ftojmë të përdorni një më të sigurtë."
-              same_as_username: "is the same as your username. Please use a more secure password."
-              same_as_email: "is the same as your email. Please use a more secure password."
-            ip_address:
-              signup_not_allowed: "Signup is not allowed from this account."
         color_scheme_color:
           attributes:
             hex:
               invalid: "nuk është një ngjyrë e vlefshme"
       <<: *errors
-  user_profile:
-    no_info_me: "<div class='missing-profile'>the About Me field of your profile is currently blank, <a href='/users/%{username_lower}/preferences/about-me'>would you like to fill it out?</a></div>"
-    no_info_other: "<div class='missing-profile'>%{name} hasn't entered anything in the About Me field of their profile yet</div>"
-  vip_category_name: "Lounge"
-  vip_category_description: "A category exclusive to members with trust level 3 and higher."
   meta_category_name: "Reagimet e Faqes"
-  meta_category_description: "Discussion about this site, its organization, how it works, and how we can improve it."
   staff_category_name: "Stafi"
-  staff_category_description: "Private category for staff discussions. Topics are only visible to admins and moderators."
   assets_topic_body: "This is a permanent topic, visible only to staff, for storing images and files used in the site design. Don't delete it!\n\n\nHere's how:\n\n\n1. Reply to this topic.\n2. Upload all the images you wish to use for logos, favicons, and so forth here. (Use the upload toolbar icon in the post editor, or drag-and-drop or paste images.)\n3. Submit your reply to post it.\n4. Right click the images in your new post to get the path to the uploaded images, or click the edit icon to edit your post and retrieve the path to the images. Copy the image paths.\n5. Paste those image paths into [basic settings](/admin/site_settings/category/required).\n\n\nIf you need to enable different file type uploads, edit `authorized_extensions` in the [file settings](/admin/site_settings/category/files)."
   lounge_welcome:
     title: "Mirë se vini në Lounge"
@@ -282,19 +216,17 @@ sq:
     newuser:
       title: "anëtar i ri"
     basic:
-      title: "anëtar basic"
+      title: "anëtar i thjeshtë"
     member:
       title: "anëtarë"
     regular:
-      title: "i rregullt"
+      title: "i zakonshëm"
     leader:
       title: "udhëheqës"
-    change_failed_explanation: "You attempted to demote %{user_name} to '%{new_trust_level}'. However their trust level is already '%{current_trust_level}'. %{user_name} will remain at '%{current_trust_level}' - if you wish to demote user lock trust level first"
   rate_limiter:
-    too_many_requests: "We have a daily limit on how many times that action can be taken. Please wait %{time_left} before trying again."
     hours:
-      one: "1 hour"
-      other: "%{count} hours"
+      one: "1 orë"
+      other: "%{count} orë"
     minutes:
       one: "1 minutë"
       other: "%{count} minuta"
@@ -346,32 +278,23 @@ sq:
         one: "1 sekondë më parë"
         other: "%{count} sekonda më parë"
       less_than_x_minutes:
-        one: "less than 1 minute ago"
-        other: "less than %{count} minutes ago"
+        one: "më pak se 1 minutë më parë"
+        other: "më pak se %{count} minuta më parë"
       x_minutes:
         one: "1 minutë më parë"
         other: "%{count} minuta më parë"
       about_x_hours:
-        one: "1 hour ago"
-        other: "%{count} hours ago"
+        one: "para 1 ore"
+        other: "para %{count} orësh"
       x_days:
-        one: "1 day ago"
-        other: "%{count} days ago"
+        one: "para 1 dite"
+        other: "para %{count} ditësh"
       about_x_months:
         one: "rreth 1 muaj më parë"
         other: "rreth %{count} muaj më parë"
       x_months:
         one: "1 muaj më parë"
         other: "%{count} muaj më parë"
-      about_x_years:
-        one: "about 1 year ago"
-        other: "about %{count} years ago"
-      over_x_years:
-        one: "over 1 year ago"
-        other: "over %{count} years ago"
-      almost_x_years:
-        one: "almost 1 year ago"
-        other: "almost %{count} years ago"
   password_reset:
     no_token: "Sorry, that password change link is too old. Select the Log In button and use 'I forgot my password' to get a new link."
     choose_new: "Zgjidhni një fjalëkalim të ri"
@@ -379,46 +302,47 @@ sq:
     update: 'Rifresko Fjalëkalimin'
     save: 'Vendos Fjalëkalim'
     title: 'Rivendos Fjalëkalimin'
-    success: "You successfully changed your password and are now logged in."
-    success_unapproved: "You successfully changed your password."
+    success: "Ndryshimi i fjalëkalimit u krye me sukses dhe tashmë ju jeni futur në faqe."
+    success_unapproved: "Ndryshimi i fjalëkalimit u krye me sukses."
     continue: "Vazhdo tek %{site_name}"
   change_email:
-    confirmed: "Adresa e postës u azhurnuar."
+    confirmed: "Adresa e postës u azhornua."
     please_continue: "Vazhdo tek %{site_name}"
-    error: "There was an error changing your email address. Perhaps the address is already in use?"
+    error: "Hasëm një gabim gjatë ndryshimit të adresës email. Mos vallë është në përdorim nga një llogari tjetër në faqe?"
   activation:
     action: "Klikoni këtu për të aktivizuar llogarinë tuaj"
-    already_done: "Sorry, this account confirmation link is no longer valid. Perhaps your account is already active?"
     please_continue: "Llogaria juaj e re u konfirumua; ju po ridrejtoheni për tek faqja kryesore."
     continue_button: "Vazhdo tek %{site_name}"
     welcome_to: "Mirë se vini tek %{site_name}!"
-    approval_required: "A moderator must manually approve your new account before you can access this forum. You'll get an email when your account is approved!"
   post_action_types:
     off_topic:
       title: 'Jashtë teme'
-      description: 'This post is not relevant to the current discussion as defined by the title and first post, and should probably be moved elsewhere.'
-      long_form: 'flagged this as off-topic'
+      description: 'Ky postim nuk i përshtatet bisedës në fjalë siç përcaktohet nga titulli dhe postimi i parë dhe duhet të zhvendoset diku tjetër.'
+      long_form: 'sinjalizoi këtë postim si jashtë teme'
     spam:
       title: 'Spam'
-      description: 'This post is an advertisement. It is not useful or relevant to the current topic, but promotional in nature.'
-      long_form: 'flagged this as spam'
-      email_title: '"%{title}" was flagged as spam'
+      description: 'Ky postim është një njoftim reklamues. Nuk është i vlefshëm dhe nuk ka lidhje me temën e tanishme, por ka natyrë promovuese.'
+      long_form: 'sinjalizoi këtë postim si spam'
+      email_title: '"%{title}" u sinjalizua si spam'
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: 'i papërshtatshëm'
-      description: 'This post contains content that a reasonable person would consider offensive, abusive, or a violation of <a href="/guidelines">our community guidelines</a>.'
-      long_form: 'flagged this as inappropriate'
+      description: 'Ky postim përmban pjesë që një person i arsyeshëm do ta quante ofenduese, fyese, ose kundër <a href="/guidelines">udhëzimeve të komunitetit tonë</a>.'
+      long_form: 'sinjalizoi këtë postim si të papërshtatshëm'
     notify_user:
+      title: 'Dërgoji @{{username}} një mesazh'
+      description: 'Dëshiroj të flas me këtë person drejtpërdrejt dhe privatish rreth këtij postimi.'
       long_form: 'messaged user'
       email_title: 'Postimi juaj në "%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: "Diçka tjetër"
+      description: 'Ky postim kërkon vëmendjen e stafit për një arsye që nuk është radhitur më lart.'
       email_body: "%{link}\n\n%{message}"
     bookmark:
       title: 'Bookmark'
       description: 'Bookmark this post'
-      long_form: 'bookmarked this post'
+      long_form: 'shtoi postimin tek të preferuarat'
     like:
       title: 'Pëlqe'
       description: 'Më pëlqen ky postim'
@@ -426,7 +350,7 @@ sq:
     vote:
       title: 'Voto'
       description: 'Voto për këtë postim'
-      long_form: 'voted for this post'
+      long_form: 'votoi për këtë postim'
   topic_flag_types:
     spam:
       title: 'Spam'
@@ -434,8 +358,8 @@ sq:
       long_form: 'flagged this as spam'
     inappropriate:
       title: 'I papërshtatshëm'
-      description: 'This topic contains content that a reasonable person would consider offensive, abusive, or a violation of <a href="/guidelines">our community guidelines</a>.'
-      long_form: 'flagged this as inappropriate'
+      description: 'Ky postim përmban pjesë që një person i arsyeshëm do ta quante ofenduese, fyese, ose kundër <a href="/guidelines">udhëzimeve të komunitetit tonë</a>.'
+      long_form: 'shënoje si të papërshtatshme'
     notify_moderators:
       title: "Diçka Tjetër"
       long_form: 'shënoje për vëmendjen e moderatorëve'
@@ -930,10 +854,10 @@ sq:
       category: 'Categories'
       topic: 'Results'
       user: 'Users'
-  original_poster: "Original Poster"
+  original_poster: "Postuesi fillestar"
   most_posts: "Most Posts"
-  most_recent_poster: "Most Recent Poster"
-  frequent_poster: "Frequent Poster"
+  most_recent_poster: "Postuesi i përgjigjes së fundit"
+  frequent_poster: "Postues i shpeshtë"
   redirected_to_top_reasons:
     new_user: "Welcome to our community! These are the most popular recent topics."
     not_seen_in_a_month: "Welcome back! We haven't seen you in a while. These are the most popular topics since you've been away."
@@ -998,16 +922,7 @@ sq:
     not_allowed_from_ip_address: "You can't log in as %{username} from that IP address."
     admin_not_allowed_from_ip_address: "You can't log in as admin from that IP address."
     suspended: "You can't log in until %{date}."
-    suspended_with_reason: "Account suspended until %{date}: %{reason}"
-    errors: "%{errors}"
-    not_available: "Not available. Try %{suggestion}?"
-    something_already_taken: "Something went wrong, perhaps the username or email is already registered. Try the forgot password link."
-    omniauth_error: "Sorry, there was an error authorizing your account. Perhaps you did not approve authorization?"
-    omniauth_error_unknown: "Something went wrong processing your log in, please try again."
-    new_registrations_disabled: "New account registrations are not allowed at this time."
-    password_too_long: "Passwords are limited to 200 characters."
-    email_too_long: "The email you provided is too long. Mailbox names must be no more than 254 characters, and domain names must be no more than 253 characters."
-    reserved_username: "That username is not allowed."
+    reserved_username: "Ky emër nuk lejohet."
     missing_user_field: "You have not completed all the user fields"
     close_window: "Authentication is complete. Close this window to continue."
   user:
@@ -1030,22 +945,43 @@ sq:
       other: "%{count} sinjalizime në pritje për t'u trajtuar"
   invite_mailer:
     subject_template: "%{invitee_name} invited you to '%{topic_title}' on %{site_domain_name}"
-    text_body_template: |
-      %{invitee_name} invited you to a discussion
-
+    text_body_template: |+
+      %{invitee_name} ju ftoi në një bisedë
       > **%{topic_title}**
       >
       > %{topic_excerpt}
 
-      at
+      tek
 
       > %{site_title} -- %{site_description}
 
-      If you're interested, click the link below:
+      Nëse jeni i interesuar, klikoni lidhjen e mëposhtme:
 
       %{invite_link}
 
-      This invitation is from a trusted user, so you can reply to the discussion immediately.
+      Kjo ftesë vjen nga një përdorues i besuar, ju mund të merrni pjesë në bisedë menjëherë.
+
+  custom_invite_mailer:
+    text_body_template: |+
+      %{invitee_name} ju ftoi në një bisedë
+      > **%{topic_title}**
+      >
+      > %{topic_excerpt}
+
+      tek
+
+      > %{site_title} -- %{site_description}
+
+      Mesazh nga %{invitee_name}:
+
+      %{user_custom_message}
+
+      Nëse jeni i interesuar, klikoni lidhjen e mëposhtme:
+
+      %{invite_link}
+
+      Kjo ftesë vjen nga një përdorues i besuar, ju mund të merrni pjesë në bisedë menjëherë.
+
   invite_forum_mailer:
     subject_template: "%{invitee_name} ju ka ftuar të bëheni pjesë e %{site_domain_name}"
     text_body_template: |
@@ -1105,7 +1041,7 @@ sq:
     disagreed: "Thanks for letting us know. We're looking into it."
     deferred: "Thanks for letting us know. We're looking into it."
     deferred_and_deleted: "Thanks for letting us know. We've removed the post."
-  temporarily_closed_due_to_flags: "Kjo temë është përkohësisht e mbyllur për shkak të një numri të madh sinjalizimesh nga bashkësia."
+  temporarily_closed_due_to_flags: "Kjo temë është përkohësisht e mbyllur për shkak të një numri të madh sinjalizimesh nga komuniteti."
   system_messages:
     welcome_user:
       subject_template: "Mirë se vini tek %{site_name}!"
@@ -1207,6 +1143,13 @@ sq:
     download_remote_images_disabled:
       subject_template: "Downloading remote images disabled"
       text_body_template: "The `download_remote_images_to_local` setting was disabled because the disk space limit at `download_remote_images_threshold` was reached."
+  unsubscribe_link: |
+    Për të mos marrë më njoftime të tilla, [klikoni këtu](%{unsubscribe_url}).
+  unsubscribe_link_and_mail: |
+    Për të mos marrë më njoftime të tilla, [klikoni këtu](%{unsubscribe_url}).
+  unsubscribe_mailing_list: |
+    Ju po njoftoheni sepse keni aktivizuar metodën e listave me email.
+    Për të mos marrë më njoftime të tilla, [klikoni këtu](%{unsubscribe_url}).
   subject_re: "Re: "
   subject_pm: "[PM] "
   user_notifications:
@@ -1215,7 +1158,22 @@ sq:
     unsubscribe:
       title: "Unsubscribe"
       description: "Not interested in getting these emails? No problem! Click below to unsubscribe instantly:"
+    reply_by_email: "[Shiko Temën](%{base_url}%{url}) ose përgjigjju këtij email-i për të postuar."
+    reply_by_email_pm: "[Shiko Mesazhin](%{base_url}%{url}) ose përgjigjju këtij email-i për të vazhduar bisedën."
+    only_reply_by_email: "Përgjigjju këtij email-i për të vazhduar."
+    visit_link_to_respond: "[Shiko Temën](%{base_url}%/{url}) për tu përgjigjur."
+    visit_link_to_respond_pm: "[Shiko Mesazhin](%{base_url}%/{url}) për tu përgjigjur."
     posted_by: "Posted by %{username} on %{post_date}"
+    invited_to_topic_body: |
+      %{username} ju ftoi në një bisedë
+
+      > **%{topic_title}**
+      >
+      > %{topic_excerpt}
+
+      tek
+
+      > %{site_title} -- %{site_description}
     user_invited_to_private_message_pm:
       subject_template: "[%{site_name}] %{username} invited you to a message '%{topic_title}'"
       text_body_template: |
@@ -1362,7 +1320,7 @@ sq:
         Click the following link to login:
         %{base_url}/users/admin-login/%{email_token}
     account_created:
-      subject_template: "[%{site_name}] Your New Account"
+      subject_template: "[%{site_name}] Llogaria Juaj e Re"
       text_body_template: |
         Një llogari e re u krijua për ju tek %{site_name}
 
@@ -1430,6 +1388,7 @@ sq:
       too_large: "Sorry, the image you are trying to upload is too big (maximum size is %{max_size_kb}KB), please resize it and try again."
       size_not_found: "Sorry, but we couldn't determine the size of the image. Maybe your image is corrupted?"
   email_log:
+    post_user_deleted: "Përdoruesi i këtij postimi është fshirë."
     no_user: "Can't find user with id %{user_id}"
     anonymous_user: "User is anonymous"
     suspended_not_pm: "User is suspended, not a message"
@@ -1437,26 +1396,26 @@ sq:
     post_not_found: "Can't find a post with id %{post_id}"
     notification_already_read: "The notification this email is about has already been read"
     topic_nil: "post.topic is nil"
-    post_deleted: "post was deleted by the author"
+    post_deleted: "autori e ka fshirë postimin"
     user_suspended: "user was suspended"
     already_read: "user has already read this post"
     message_blank: "message is blank"
     message_to_blank: "message.to is blank"
     text_part_body_blank: "text_part.body is blank"
-    body_blank: "body is blank"
+    body_blank: "përmbajtja është bosh"
   color_schemes:
     base_theme_name: "Baza"
   about: "Rreth"
-  guidelines: "Guidelines"
-  privacy: "Privacy"
-  edit_this_page: "Edit this page"
+  guidelines: "Udhëzimet"
+  privacy: "Privatësia"
+  edit_this_page: "Modifiko këtë faqe"
   csv_export:
     boolean_yes: "Po"
     boolean_no: "Jo"
   static_topic_first_reply: |
     Edit the first post in this topic to change the contents of the %{page_name} page.
   guidelines_topic:
-    title: "Pyetjet/Udhëzimet"
+    title: "Pyetje dhe Përgjigje/Udhëzime"
     body: |
       <a name="civilized"></a>
 
@@ -1695,16 +1654,161 @@ sq:
   privacy_topic:
     title: "Politika e Privatësisë"
   badges:
+    editor:
+      name: Redaktor
+      description: Redaktori i parë i postimit
+      long_description: |
+        Kjo stemë jepet kur ndryshoni një nga postimet tuaja për herë të parë. Ndërkohë që nuk do jetë e mundur të ndryshoni postimet tuaja përgjithmonë, ndryshimi është gjithmonë një ide e mirë - ju mund të përmirësoni postimet tuaja, të korigjoni gabime të vogla, apo të shtoni çdo gjë që mungonte nga postimi i parë. Ndryshojini postimet që t'i bëni akoma më të mira!
+    basic_user:
+      name: Anëtar i Thjeshtë
+      description: Ka të drejtat bazë të një anëtari në këtë komunitet <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/4">Informacion shtesë në anglisht</a>
+      long_description: |
+        Kjo stemë jepet kur ju arrini nivelin e bisedës 1. Falemindeit që jeni përreth prej ca kohësh dhe që lexoni disa tema për të mësuar më tepër rreth komunitetit tonë. Limitet e përdoruesit të ri janë hequr, keni mundësi të përdorni të gjitha aftësitë kryesore të komunitetit, si mesazhet private, sinjalizimet, ndryshim për wiki, dhe aftësinë për të postuar disa imazhe njëherazi dhe lidhje.
     member:
-      name: Anëtarë
+      name: Anëtar
+      description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/5">U dha</a> mundësia për ftesa, mesazhe në grup, më shumë pëlqime
+      long_description: |
+        Kjo stemë jepet kur ju arrini nivelin e bisimit 2. Faleminderit që jeni pjese prej më shumë se disa javësh e komunitetit tonë. Ju tashmë mund të dërgoni ftesa nga faqja juaj e përdoruesit ose nga tema të veçanta, të krijoni mesazhe në grup, dhe të keni ca pëlqime më shumë në ditë.
     regular:
-      name: I rregullt
+      name: I zakonshëm
+      description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/6">U dha</a> mundësia për ri-kategorizim, ri-emërtim, lidhje ndjekëse, wiki, dhe më shumë pëlqime
+      long_description: |
+        Kjo stemë jepet kur ju arrini nivelin e besimit 3. Faleminderit që jeni pjesë e komutetit tonë prej disa muajsh. Ju jeni tashmë një prej lexuesve më aktivë, dhe një bashkëpunëtor i besueshëm që përmirëson komunitetin tonë. Ju mundet tashmë të ri-kategorizoni dhe ri-emëroni temat, të keni cilësime të mëtejshme për sinjalizime spam-esh, të keni hyrje në zona private të faqes, gjithashtu dhe më tepër pëlqime ditore.
     leader:
       name: Udhëheqës
+      description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/7">Dhënë</a> mundësia për ndryshim të gjithanshëm, ngjitje në krye, mbyllje, arkivim, ndarje dhe ngjitje, më tepër pëlqime
+      long_description: |
+        Kjo stemë jepet kur ju arrini nivelin e besimit 4. Jeni një udhëheqës në këtë komunitet si i përzgjedhur nga stafi, dhe ju jeni një shembull për pjesën tjetër të anëtarëve me veprimet dhe fjalët tuaja këtu. Ju keni mundësinë të ndryshoni të gjitha postimet, të aftë për moderime të tjera siç janë ngjitja në krye, mbyllja, çlistimi, arkivimi, ndarja dhe ngjitja, dhe ju keni tonelata pëlqimesh ditore.
     welcome:
       name: Mirë se vini
+      long_description: |
+        Kjo stemë jepet kur merrni pëlqimin e parë për një postim. Urime, keni postuar diçka të cilën anëtarët e komunitetit e gjetën interesante, fantastike apo të dobishme!
+    autobiographer:
+      name: Autobiograf
+      description: Plotësoi <a href="/my/preferences">profilin</a> e anëtarit
+      long_description: |
+        Kjo stemë jepet kur mbushni <a href="/my/preferences">profilin tuaj</a> dhe zgjidhni një imazhi profili. Kur lejoni komunitetin t'ju njohë ca më shumë se kush jeni dhe çfarë ju intereson, ndihmon në përmirësimin dhe lidhjen e mëtejshme të komunitetit. Bashkohuni me ne!
     anniversary:
-      name: Përvjetori
+      name: Përvjetor
+      long_description: |
+        Kjo stemë jepet kur keni qenë një anëtar për një vit me të paktën një postim për atë vit. Faleminderit që jeni përreth dhe jepni ndihmën tuaj për komunitetin tonë. Ne nuk mund t'ia dilnim pa ju.
+    nice_post:
+      long_description: |
+        Kjo stemë jepet kur përgjigja juaj merr 10 pëlqime. Përgjigja juaj ishte vërtet e goditur për komunitetit dhe ndihmoi në ecjen e bisedës më tej!
+    good_post:
+      long_description: |
+        Kjo stemë jepet kur përgjigja juaj merr 25 pëlqime. Përgjigja juaj ishte e jashtëzakonshme dhe e shndërroi bisedën më të pëlqyeshme për këdo!
+    great_post:
+      long_description: |
+        Kjo stemë jepet kur përgjigja juaj merr 50 pëlqime. Uau! Përgjigja juaj ishte frymëzuese, interesante, për të qeshur, ose e mprehtë dhe komuniteti e pëlqeu jashtë mase!
+    nice_topic:
+      long_description: |
+        Kjo stemë jepet kur tema juaj merr 10 pëlqime. Hej, ju nisët një bisedë interesante që komuniteti e shijoi!
+    good_topic:
+      long_description: |
+        Kjo stemë jepet kur tema juaj merr 25 pëlqime. Ju nisët një bisedë të zjarrtë për të cilën komuniteti u mblodh përreth dhe e pëlqeu!
+    great_topic:
+      long_description: |
+        Kjo stemë jepet kur tema juaj merr 50 pëlqime. Ju nisët një bisedë interesante dhe komuniteti e shijoi bisedën dinamike që ndoqi!
+    nice_share:
+      long_description: |
+        Kjo stemë jepet kur shpërdan një lidhje që është klikuar nga 25 vizitorë të jashtëm. Faleminderit që keni përhapur fjalën rreth bisedave tona, dhe këtij komuniteti.
+    good_share:
+      long_description: |
+        Kjo stemë jepet kur shpërdan një lidhje që është klikuar nga 300 vizitorë të jashtëm. Punë e paqme! Keni reklamuar një diskutim të mire tek një grup njerëzish të panjohur dhe keni ndihmuar në rritjen e këtij komuniteti.
+    great_share:
+      long_description: |
+        Kjo stemë jepet kur shpërdan një lidhje që është klikuar nga 1000 vizitorë të jashtëm. Uau! Keni reklamuar një bisedë interesante tek një lexues i shumtë dhe i ri, dhe ndihmuat mjaft në rritjen e komunitetit!
+    first_like:
+      name: Pëlqimi i Parë
+      description: Pëlqeu një postim
+      long_description: |
+        Kjo stemë jepet kur për herë të parë ju pëlqeni një postim duke përdorur butonin :heart:. Të pëlqyerit e një postimi është një mënyrë shumë e mirë për t'u bërë të ditur anëtarëve të tjerë që postimi i tyre ishte interesant, i dobishëm, fantastik apo zbavitës. Shpërndaj dashuri!
+    first_flag:
+      long_description: |
+        Kjo stemë jepet kur për herë të parë sinjalizoni një postim. Sinjalizimi është mënyra se si ndihmojmë në mbajtjen pastër të faqes për këdo. Nëse vini re ndonjë postim që ka nevojë për vëmendjen e një moderatori për cilëndo arsye, ju lutem mos ngurroni të sinjalizoni. Gjithashtu mund të sinjalizoni duke u nisur një <b>mesazh personal</b> përdoruesve nëse shihni diçka që nuk shkon me postimin e tyre. Nëse shihni një problem, :flag_black: sinjalizojeni!
+    promoter:
+      long_description: |
+        Kjo stemë jepet kur ftoni dikë për t'u bërë pjesë e komunitetit nëpërmjet butonit të ftesave në faqen e përdoruesit, ose në fund të faqes. Duke ftuar miq që mund të jenë të interesuar në biseda të veçanta është një mënyrë shumë e mirë të paraqesësh njerëz të rinj në komunitet, kështu që faleminderit!
+    campaigner:
+      description: Ftoi 3 anëtarë të thjeshtë
+      long_description: |
+        Kjo stemë jepet kur ke ftuar 3 persona që në vazhdim, kanë shpenzuar kohë mjaftueshëm në faqe për t'u bërë anëtarë të thjeshtë. Një komunitet kumbues ka nevojë për anëtarë të rinj që marrin pjesë rregullisht dhe i shtojnë zëra të rinj bisedave.
+    champion:
+      long_description: |
+        Kjo stemë jepet kur ke ftuar 5 persona që në vazhdim, kanë shpenzuar kohë mjaftueshëm në faqe për t'u bërë anëtarë të plotë. Uau! Faleminderit për zgjerimin e komunitetit tonë me anëtarë të rinj!
+    first_share:
+      long_description: |
+        Kjo stemë jepet kur për herë të parë ju ndani një lidhje tek një përgjigje apo temë duke përdorur butonin e shpërndarjes. Të ndarët e lidhjeve është të tregosh biseda interesante me pjesën tjetër të botës dhe të rritësh komunitetitn tënd.
+    first_link:
+      long_description: |
+        Kjo stemë jepet kur për herë të parë shtoni një lidhje tek një temë tjetër. Duke lidhur tema ndihmoni lexuesit e tjerë të gjejnë biseda interesante që kanë lidhje, duke shfaqur lidhjen midisi temave nga të dyja anët. Shtoni lidhje lirisht!
+    first_quote:
+      long_description: |
+        Kjo stemë jepet kur për herë të parë citoni një postim në përgjigjen tuaj. Të cituarit në përgjigjen tuaj e pjesëve të rëndësishme prej postimeve të mëparshme, ndihmon në mbajtjen e bisedave të lidhura me njëra-tjetrën dhe brenda tematikës. Mënyra më e lehtë për të cituar është duke theksuar pjesë të një postimi, dhe duke shtypur më pas butonin përgjigju. Citoni me bollëk!
+    read_guidelines:
+      name: Lexoi Udhëzimet
+      description: Ka lexuar <a href="/guidelines">udhëzimet e komunitetit</a>
+      long_description: |
+        Kjo stemë jepet pasi <a href="/guidelines">lexon udhëzimet e komunitetit</a>. Duke ndjekur dhe ndarë këto udhëzime të thjeshta ndihmon në ndërtimin e një komuniteti të sigurtë, dëfryes dhe të qëndrueshëm. Gjithmonë kini parasysh që është një tjetër qënie njerëzore, dikush shumë i ngjashëm me ju, në anën tjetër të ekranit. Silluni mirë!
+    reader:
+      long_description: |
+        Kjo stemë jepet për herën e parë kur lexoni një temë të gjatë me më tepër se 100 përgjigje. Kur lexon një bisedë ndihmon në ndjekjen e diskutimit, kupton këndvështrimet e ndryshme, dhe çon në biseda më interesante. Sa më shumë lexon, aq më e mirë bëhet biseda. Siç na pëlqen ta themi, të Lexuarit është Themelore! :slight_smile:
+    popular_link:
+      description: Postoi një lidhje të jashtme që mori 50 klikime
+      long_description: |
+        Kjo stemë jepet kur një lidhje që ndatë merr 50 klikime. Faleminderit që postuat një lidhje të dobishme që rriti intersimin në bisedë.
+    hot_link:
+      description: Postoi një lidhje të jashtme që mori 300 klikime
+      long_description: |
+        Kjo stemë jepet kur një lidhje që shpërndatë merr 300 klikime. Faleminderit që postuat një lidhje interesante që e shpuri bisedën përpara dhe ndezi diskutimin!
+    famous_link:
+      description: Postoi një lidhje të jashtme që mori 1000 klikime
+      long_description: |
+        Kjo stemë jepet kur një lidhje që shpërndani merr 1000 klikime. Uau! Ju postuat një lidhje që ka përmirësuar bisedën duke shtuar detaje të rëndësishme, kontekst, dhe të dhëna. Punë e paqme!
+    appreciated:
+      long_description: |
+        Kjo stemë jepet kur merrni të paktën një pëlqim në 20 postime të ndryshme. Komunitetit i pëlqen mundi juaj nëpër bisedimet këtu!
+    respected:
+      long_description: |+
+        Kjo stemë jepet kur merrni të paktën 2 pëlqime në 100 postime të ndryshme. Po fitoni respektin e komunitetit për mundin e shumtë nëpër bisedimet këtu.
+
+    admired:
+      long_description: |
+        Kjo stemë jepet kur merrni të paktën 5 pëlqime në 300 postime të ndryshme. Uau! Komuniteti e admiron mundin e shpeshtë dhe të një cilësie të lartë për bisedimet këtu.
+    out_of_love:
+      long_description: |
+        Kjo stemë jepet kur ju përdorni të gjitha nga 50 pëlqimet tuaja ditore. Kur kujtohesh të gjesh kohë dhe të pelqesh postimet që ju pëlqejnë dhe vlerësoni, nxit anëtarët e komunitetit të krijojnë akoma më shumë biseda të mira në të ardhmen.
+    higher_love:
+      long_description: |
+        Kjo stemë jepet kur ju pëlqeni 50 postime në 5 ditë. Faleminderit që merrni nga koha juaj për të nxitur bisedat më të mira çdo ditë!
+    crazy_in_love:
+      long_description: |
+        Kjo stemë jepet kur ju pëlqeni 50 postime brenda 20 ditëve. Uau! Ju jeni një shembull nxitjeje të rregullt të anëtarëve të komunitetit!
+    thank_you:
+      description: Ka pëlqyer 20 postime dhe ka dhënë 10 pëlqime
+      long_description: |
+        Kjo stemë jepet kur keni 20 postime të pelqyera dhe jepni 10 apo më shumë pëlqime në këmbim. Kur dikush pëlqen postimet tuaja, ju gjeni kohën të pëlqeni çfarë të tjerët postojnë, gjithashtu.
+    gives_back:
+      description: Ka pëlqyer 100 postime dhe ka dhënë 100 pëlqime
+      long_description: |
+        Kjo stemë jepet kur keni 100 postime të pelqyera dhe jepni 100 apo më shumë pëlqime në këmbim. Faleminderit që parapaguani!
+    empathetic:
+      description: Ka pëlqyer 500 postime dhe ka dhënë 1000 pëlqime
+      long_description: |
+        Kjo stemë jepet kur ju keni 500 postime të pëlqyera dhe kur jepni 1000 apo më tepër pëlqime në këmbim. Uau! Qenkeni shembulli i zemërgjërit dhe vlerësimit të dyanshëm :two_hearts:.
+    first_emoji:
+      long_description: |
+        Kjo stemë jepet kur ju shtoni një Emoji në postimin tuaj për herë të parë :thumbsup:. Emoji ju lejon të përçoni emocionet në postimet tuaja, prej kënaqësisë :smiley: tek mërzitja :anguished: e deri tek inati :angry: dhe çdo gjë midis :sunglasses:. Thjesht filloni të shkruani : (dy pika) ose shtypni butonin Emoji në shiritin e veglave të fushës së shkrimit për të zgjedhur mes qindra llojesh :ok_hand:
+    first_mention:
+      long_description: Kjo stemë jepet herën e parë kur ju përmendni @username e dikujt në një postim. Secila përmendje krijon një njoftim për atë person, që të vihen në dijeni për postimin tuaj. Thjesht filloni të shtypni @ (simbolin te) për të përmendur çdo përdorues ose, nëse e mundur, çdo grup - është një mënyrë e volitshme për të patur vëmendjen e dikujt.
+    first_onebox:
+      name: Onebox i Parë
+      description: Postoi një lidhje në onebox
+      long_description: Kjo stemë jepet herën e parë kur postoni një lidhje në një rresht të vetëm, i cili shpaloset automatikisht në një onebox me një përmbledhje të shkurtër të lidhjes, një titull, dhe (kur është e mundur) një imazh.
+    first_reply_by_email:
+      long_description: |
+        Kjo stemë jepet herën e parë kur i përgjigjeni një postimi nëpërmjet email-it :e-mail:
   admin_login:
     success: "Email Sent"
     error: "Error!"
