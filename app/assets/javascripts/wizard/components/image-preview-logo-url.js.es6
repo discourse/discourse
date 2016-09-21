@@ -24,7 +24,7 @@ export default createPreviewComponent(400, 100, {
 
     const imageHeight = headerHeight - (headerMargin * 2);
     const ratio = imageHeight / image.height;
-    ctx.drawImage(image, headerMargin, headerMargin, image.width * ratio, imageHeight);
+    this.scaleImage(image, headerMargin, headerMargin, image.width * ratio, imageHeight);
 
     this.drawPills(colors, height / 2);
   }

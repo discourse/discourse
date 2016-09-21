@@ -13,6 +13,21 @@ accumsan sapien, nec feugiat quam. Quisque non risus.
 placerat lacus vitae, lacinia nisi. Sed metus arcu, iaculis
 sit amet cursus nec, sodales at eros.`;
 
+const scaled = {};
+
+function canvasFor(image, w, h) {
+  w = Math.ceil(w);
+  h = Math.ceil(h);
+
+  const can = document.createElement('canvas');
+  can.width = w;
+  can.height = h;
+
+  const ctx = can.getContext('2d');
+  ctx.drawImage(image, 0, 0, w, h);
+  return can;
+}
+
 export function createPreviewComponent(width, height, obj) {
   return Ember.Component.extend({
     layoutName: 'components/theme-preview',
@@ -75,6 +90,30 @@ export function createPreviewComponent(width, height, obj) {
       return [{name: 'consecteteur', color: '#652D90'}, {name: 'ultrices', color: '#3AB54A'}];
     },
 
+    scaleImage(image, x, y, w, h) {
+      w = Math.floor(w);
+      h = Math.floor(h);
+
+      const { ctx } = this;
+
+      const key = `${image.src}-${w}-${h}`;
+
+      if (!scaled[key]) {
+
+        let copy = image;
+        let ratio = copy.width / copy.height;
+        let newH = (copy.height * 0.5);
+        while (newH > h) {
+          copy = canvasFor(copy, ratio * newH, newH);
+          newH = newH * 0.5;
+        }
+
+        scaled[key] = copy;
+      }
+
+      ctx.drawImage(scaled[key], x, y, w, h);
+    },
+
     drawFullHeader(colors) {
       const { ctx } = this;
 
@@ -87,10 +126,10 @@ export function createPreviewComponent(width, height, obj) {
       const headerMargin = headerHeight * 0.2;
       const logoHeight = headerHeight - (headerMargin * 2);
       const logoWidth = (logoHeight / this.logo.height) * this.logo.width;
-      ctx.drawImage(this.logo, headerMargin, headerMargin, logoWidth, logoHeight);
+      this.scaleImage(this.logo, headerMargin, headerMargin, logoWidth, logoHeight);
 
       // Top right menu
-      ctx.drawImage(this.avatar, width - avatarSize - headerMargin, headerMargin, avatarSize, avatarSize);
+      this.scaleImage(this.avatar, width - avatarSize - headerMargin, headerMargin, avatarSize, avatarSize);
       ctx.fillStyle = darkLightDiff(colors.primary, colors.secondary, 45, 55);
 
       const headerFontSize = headerHeight / 44;
