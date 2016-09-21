@@ -42,7 +42,7 @@ module Jobs
         headers = {
           'Accept' => '*/*',
           'Connection' => 'close',
-          'Content-Length' => body.size,
+          'Content-Length' => body.bytesize,
           'Content-Type' => content_type,
           'Host' => uri.host,
           'User-Agent' => "Discourse/" + Discourse::VERSION::STRING,
