@@ -36,7 +36,7 @@ class Particle {
       this.ang = 0;
     }
 
-    this.x = this.origX + (this.radius * Math.sin(this.ang));
+    this.x = this.origX + (this.radius * Math.sin(this.ang)) + Math.floor(Math.random() * 3);
   }
 }
 
