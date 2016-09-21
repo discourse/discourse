@@ -169,6 +169,19 @@ class Wizard
         end
       end
 
+      @wizard.append_step('homepage') do |step|
+        style = step.add_field(id: 'homepage_style', type: 'dropdown', required: true)
+        style.add_choice('latest')
+        style.add_choice('categories')
+        step.add_field(id: 'homepage_preview', type: 'component')
+
+        step.on_update do |updater|
+          top_menu = "latest|new|unread|top|categories"
+          top_menu = "categories|latest|new|unread|top" if updater.fields[:homepage_style] == 'categories'
+          updater.update_setting(:top_menu, top_menu)
+        end
+      end
+
       @wizard.append_step('emoji') do |step|
         sets = step.add_field({
           id: 'emoji_set',
