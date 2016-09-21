@@ -3228,14 +3228,14 @@ en:
 
       forum_title:
         title: "Name"
-        description: "If you put a sign in front of your community for people to discover, what would it say?"
+        description: "If you put a sign in front of your community for people to discover, what would it say? When visitors ask 'Where am I?', what would you tell them?"
 
         fields:
           title:
             label: "What’s the name of your community?"
             placeholder: "Jane’s Hangout"
           site_description:
-            label: "How would you describe your community in one sentence?"
+            label: "How would you describe your community in one brief sentence?"
             placeholder: "A place for Jane and her friends to discuss cool stuff"
 
       introduction:
@@ -3244,19 +3244,18 @@ en:
         fields:
           welcome:
             label: "Welcome Topic"
-            description: "<p>Your welcome topic is the first thing you visitors will see:</p>
+            description: "<p>How would you describe your community to a stranger on an elevator when you had about 1 minute to talk?</p>
               <ul>
-              <li>Where am I?</li>
               <li>Who are these discussions for?</li>
               <li>What can I find here?</li>
               <li>Why should I visit?</li>
               </ul>
-            <p>Think of it as your one paragraph 'elevator pitch' or 'mission statement' – how would you describe your community to a stranger on an elevator when you had about 1 minute to talk?</p>"
+            <p>Your welcome topic is the first thing new visitors will see. Think of it as your <b>one paragraph</b> 'elevator pitch' or 'mission statement'. </p>"
             one_paragraph: "Please restrict your welcome message to one paragraph."
 
       privacy:
         title: "Access"
-        description: "Is your community open to everyone, or is it restricted by membership, invitation, or approval? If you prefer, you can set things up privately, then switch to public later."
+        description: "Is your community open to everyone, or is it restricted by membership, invitation, or approval? If you prefer, you can set things up privately, then switch over to public later."
 
         fields:
           privacy:
@@ -3302,7 +3301,7 @@ en:
         title: "Theme"
         fields:
           theme_id:
-            description: "Do you prefer a light or dark design to start with? You can always further customize the look and feel of your site via Admin, Customize."
+            description: "Do you prefer a light or dark color scheme to start with? You can always further customize the look and feel of your site via Admin, Customize."
             choices:
               default:
                 label: "Simple Light"
@@ -3324,14 +3323,14 @@ en:
         fields:
           favicon_url:
             label: "Small Icon"
-            description: "A <a href='http://en.wikipedia.org/wiki/Favicon' target='blank'>favicon</a> used to represent your site in web browsers. Please use a JPG or PNG only, not an icon or SVG file."
+            description: "A <a href='http://en.wikipedia.org/wiki/Favicon' target='blank'>favicon</a> used to represent your site in web browsers that will look good at small sizes such as 32px by 32px. Please use a JPG or PNG image only, not an icon file or SVG file."
           apple_touch_icon_url:
             label: "Large Icon"
-            description: "Icon used to represent your site on mobile devices. Recommended size is 144px by 144px."
+            description: "Icon used to represent your site on mobile devices. Recommended size is at least 144px by 144px."
 
       homepage:
-        description: "We recommend showing the Latest topics by default, but some people prefer to show Categories."
-        title: "Homepage Style"
+        description: "We recommend showing the latest topics on your homepage, but you can choose to show your categories on the homepage if you prefer."
+        title: "Homepage"
 
         fields:
           homepage_style:
@@ -3343,15 +3342,14 @@ en:
 
       emoji:
         title: "Emoji"
-        description: "Which Emoji style do you prefer for your community? Staff members can also add more custom Emoji later via Admin, Customize, Emoji."
+        description: "Which Emoji style do you prefer for your community? You can always add more custom Emoji later via Admin, Customize, Emoji."
 
       invites:
         title: "Invite Staff"
-        description: "You’re almost ready! Let’s invite some staff members to help you <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>seed your discussions</a> with interesting topics and replies."
+        description: "You’re almost done! Let’s invite some staff members to <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>seed your discussions</a> with interesting topics and replies to help get your community started."
 
       finished:
         title: "Your Discourse is Ready!"
         description: |
-          <p>Well done! You’ve finished setting up your Discourse community!</p>
-          <p>If you ever feel like changing these settings, visit <a href='/admin' target='_blank'>your admin section</a>.</p>
+          <p>If you ever feel like changing these settings, visit <a href='/admin' target='_blank'>your admin section</a>; find it next to the wrench icon in the site menu.</p>
           <p>Have fun and enjoy your new community!</p>
