@@ -48,6 +48,36 @@ body.wizard {
   z-index: 10;
 }
 
+.wizard-step-emoji {
+
+  .radio-area {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    input {
+      flex: 1 0 0;
+    }
+
+    span {
+      flex: 10 0 0;
+    }
+
+    span.extra-label {
+      flex: 20 0 0;
+    }
+  }
+
+  .emoji-preview {
+    margin-left: 1em;
+    img {
+      height: 20px;
+      width: 20px;
+      padding-right: 0.5em;
+    }
+  }
+}
+
 .wizard-column {
   position: relative;
   z-index: 11;
