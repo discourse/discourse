@@ -3330,8 +3330,8 @@ en:
             description: "Icon used to represent your site on mobile devices. Recommended size is 144px by 144px."
 
       emoji:
-        title: "Emoji Style"
-        description: "We offer several different ways to display emoji. Choose your favorite!"
+        title: "Emoji"
+        description: "Which Emoji style do you prefer for your community? Staff members can also add custom Emoji."
 
       invites:
         title: "Invite Staff"
