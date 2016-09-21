@@ -3331,6 +3331,7 @@ en:
 
       emoji:
         title: "Emoji"
+        description: "Which Emoji style do you prefer for your community? Staff members can also add more custom Emoji later via Admin, Customize, Emoji."
 
       invites:
         title: "Invite Staff"
