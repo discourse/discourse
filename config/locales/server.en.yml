@@ -3329,6 +3329,10 @@ en:
             label: "Large Icon"
             description: "Icon used to represent your site on mobile devices. Recommended size is 144px by 144px."
 
+      emoji:
+        title: "Emoji Style"
+        description: "We offer several different ways to display emoji. Choose your favorite!"
+
       invites:
         title: "Invite Staff"
         description: "You’re almost ready! Let’s invite some staff members to help you <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>seed your discussions</a> with interesting topics and replies."

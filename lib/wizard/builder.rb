@@ -1,4 +1,5 @@
 require_dependency 'introduction_updater'
+require_dependency 'emoji_set_site_setting'
 
 class Wizard
   class Builder
@@ -165,6 +166,32 @@ class Wizard
 
         step.on_update do |updater|
           updater.apply_settings(:favicon_url, :apple_touch_icon_url)
+        end
+      end
+
+      @wizard.append_step('emoji') do |step|
+        sets = step.add_field({
+          id: 'emoji_set',
+          type: 'radio',
+          required: true,
+          value: SiteSetting.emoji_set
+        })
+
+        emoji = ["smile", "+1", "tada", "poop"]
+
+        EmojiSetSiteSetting.values.each do |set|
+          imgs = emoji.map do |e|
+            "<img src='/images/emoji/#{set[:value]}/#{e}.png'>"
+          end
+
+          sets.add_choice(set[:value], {
+            label: I18n.t("js.#{set[:name]}"),
+            extra_label: "<span class='emoji-preview'>#{imgs.join}</span>"
+          })
+
+          step.on_update do |updater|
+            updater.apply_settings(:emoji_set)
+          end
         end
       end
 

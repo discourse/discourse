@@ -1,5 +1,5 @@
 class WizardFieldChoiceSerializer < ApplicationSerializer
-  attributes :id, :label, :description, :icon, :data
+  attributes :id, :label, :extra_label, :description, :icon, :data
 
   def id
     object.id
@@ -16,6 +16,14 @@ class WizardFieldChoiceSerializer < ApplicationSerializer
 
     # Try getting one from a translation
     I18n.t("#{i18nkey}.label", default: id)
+  end
+
+  def extra_label
+    object.extra_label
+  end
+
+  def include_extra_label?
+    object.extra_label.present?
   end
 
   def description
