@@ -409,32 +409,38 @@ def recover_from_tombstone
 
     public_path = Rails.root.join("public")
 
-    Post.find_each do |post|
-      doc = Nokogiri::HTML::fragment(post.raw)
+    Dir.glob("#{File.join(public_path, 'uploads', 'tombstone', '**', '*.*')}").each do |path|
+      filename = File.basename(path)
 
-      doc.css("img[src]").each do |img|
-        url = img["src"]
+      Post.where("raw LIKE ?", "%#{filename}%").each do |post|
+        doc = Nokogiri::HTML::fragment(post.raw)
 
-        next unless url =~ /^\/uploads\//
+        doc.css("img[src]").each do |img|
+          url = img["src"]
 
-        upload = Upload.find_by(url: url)
+          next unless url =~ /^\/uploads\//
 
-        if !upload && url
-          tombstone_path = File.join(public_path, 'uploads', 'tombstone', url.gsub(/^\/uploads\//, ""))
+          upload = Upload.find_by(url: url)
 
-          if File.exists?(tombstone_path)
-            File.open(tombstone_path) do |file|
-              new_upload = Upload.create_for(Discourse::SYSTEM_USER_ID, file, File.basename(url), File.size(file))
+          if !upload && url
+            printf "Restoring #{url}..."
 
-              if new_upload.persisted?
-                putc "."
-                DbHelper.remap(url, new_upload.url)
-              else
-                puts "Failed to create upload for #{url}: #{new_upload.errors.full_messages}."
+            tombstone_path = File.join(public_path, 'uploads', 'tombstone', url.gsub(/^\/uploads\//, ""))
+
+            if File.exists?(tombstone_path)
+              File.open(tombstone_path) do |file|
+                new_upload = Upload.create_for(Discourse::SYSTEM_USER_ID, file, File.basename(url), File.size(file))
+
+                if new_upload.persisted?
+                  printf "Restored into #{new_upload.url}\n"
+                  DbHelper.remap(url, new_upload.url)
+                else
+                  puts "Failed to create upload for #{url}: #{new_upload.errors.full_messages}."
+                end
               end
+            else
+              puts "Failed to find file (#{tombstone_path}) in tombstone."
             end
-          else
-            puts "Failed to find file (#{tombstone_path}) in tombstone."
           end
         end
       end
