@@ -139,7 +139,9 @@ export function createPreviewComponent(width, height, obj) {
       ctx.fillText("\uf002", width - (avatarSize * 3) - (headerMargin * 0.5), avatarSize);
     },
 
-    drawPills(colors, headerHeight) {
+    drawPills(colors, headerHeight, opts) {
+      opts = opts || {};
+
       const { ctx } = this;
 
       const categoriesSize = headerHeight * 2;
@@ -160,20 +162,21 @@ export function createPreviewComponent(width, height, obj) {
       ctx.fillStyle = colors.primary;
       ctx.fillText("\uf0da", categoriesSize - (headerMargin / 4), headerHeight + (headerMargin * 1.6) + fontSize);
 
-      // pills
+      const text = opts.categories ? "Categories" : "Latest";
+
+      const activeWidth = categoriesSize * (opts.categories ? 0.80 : 0.55);
       ctx.beginPath();
       ctx.fillStyle = colors.quaternary;
-      ctx.rect((headerMargin * 2)+ categoriesSize, headerHeight + headerMargin, categoriesSize * 0.55, badgeHeight);
+      ctx.rect((headerMargin * 2)+ categoriesSize, headerHeight + headerMargin, activeWidth, badgeHeight);
       ctx.fill();
 
       ctx.font = `${fontSize}px 'Arial'`;
       ctx.fillStyle = colors.secondary;
       let x = (headerMargin * 3.0) + categoriesSize;
-
-      ctx.fillText("Latest", x - (headerMargin * 0.1), headerHeight + (headerMargin * 1.5) + fontSize);
+      ctx.fillText(text, x - (headerMargin * 0.1), headerHeight + (headerMargin * 1.5) + fontSize);
 
       ctx.fillStyle = colors.primary;
-      x += categoriesSize * 0.6;
+      x += categoriesSize * (opts.categories ? 0.8 : 0.6);
       ctx.fillText("New", x, headerHeight + (headerMargin * 1.5) + fontSize);
 
       x += categoriesSize * 0.4;

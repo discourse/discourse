@@ -16,11 +16,12 @@ export default createPreviewComponent(659, 320, {
 
   paint(ctx, colors, width, height) {
     this.drawFullHeader(colors);
-    this.drawPills(colors, height * 0.15);
 
     if (this.get('step.fieldsById.homepage_style.value') === "latest") {
+      this.drawPills(colors, height * 0.15);
       this.renderLatest(ctx, colors, width, height);
     } else {
+      this.drawPills(colors, height * 0.15, { categories: true });
       this.renderCategories(ctx, colors, width, height);
     }
   },
@@ -52,10 +53,7 @@ export default createPreviewComponent(659, 320, {
     drawLine(0, y);
     drawLine(width / 2, y);
 
-
-
     const categoryHeight = height / 6;
-
     const titles = this.getTitles();
 
     // Categories
