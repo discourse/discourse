@@ -93,7 +93,7 @@ export default createPreviewComponent(659, 320, {
       ctx.font = `${bodyFontSize}em 'Arial'`;
       const textPos = y + (topicHeight * 0.45);
       ctx.fillStyle = textColor;
-      ctx.drawImage(this.avatar, cols[2], y + (margin * 0.6), avatarSize, avatarSize);
+      this.scaleImage(this.avatar, cols[2], y + (margin * 0.6), avatarSize, avatarSize);
       ctx.fillText(title, cols[3], textPos);
 
       ctx.font = `Bold ${bodyFontSize}em 'Arial'`;
@@ -174,7 +174,7 @@ export default createPreviewComponent(659, 320, {
 
       ctx.fillStyle = colors.primary;
       ctx.fillText(category.name, cols[1] + (badgeSize * 1.5), y + (rowHeight * 0.65));
-      ctx.drawImage(this.avatar, cols[2], y + rowHeight * 0.3, rowHeight * 0.5, rowHeight * 0.5);
+      this.scaleImage(this.avatar, cols[2], y + rowHeight * 0.3, rowHeight * 0.5, rowHeight * 0.5);
 
       ctx.fillStyle = textColor;
       ctx.font = `${bodyFontSize}em 'Arial'`;

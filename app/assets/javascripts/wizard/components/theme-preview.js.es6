@@ -30,7 +30,7 @@ export default createPreviewComponent(659, 320, {
     const lineHeight = height / 19.0;
 
     // Draw a fake topic
-    ctx.drawImage(this.avatar, margin, headerHeight + (height * 0.17), avatarSize, avatarSize);
+    this.scaleImage(this.avatar, margin, headerHeight + (height * 0.17), avatarSize, avatarSize);
 
     const titleFontSize = headerHeight / 44;
 

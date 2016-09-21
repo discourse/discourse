@@ -34,7 +34,7 @@ export default createPreviewComponent(375, 100, {
       imageWidth = maxWidth;
     }
 
-    ctx.drawImage(image, headerMargin, headerMargin, imageWidth, image.height * ratio);
+    this.scaleImage(image, headerMargin, headerMargin, imageWidth, image.height * ratio);
 
     const afterLogo = (headerMargin * 1.7) + imageWidth;
     const fontSize = Math.round(headerHeight * 0.4);

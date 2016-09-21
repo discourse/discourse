@@ -16,8 +16,8 @@ export default createPreviewComponent(371, 124, {
   },
 
   paint(ctx, colors, width, height) {
-    ctx.drawImage(this.tab, 0, 0, width, height);
-    ctx.drawImage(this.image, 40, 25, 30, 30);
+    this.scaleImage(this.tab, 0, 0, width, height);
+    this.scaleImage(this.image, 40, 25, 30, 30);
 
     ctx.font = `20px 'Arial'`;
     ctx.fillStyle = '#000';
