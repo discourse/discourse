@@ -18,7 +18,8 @@ export default Ember.Component.extend(StringBuffer, {
     }
 
     if (this.site.get('wizard_required')) {
-      notices.push([I18n.t('wizard_required'), 'alert-wizard']);
+      const requiredText = I18n.t('wizard_required', {url: Discourse.getURL('/wizard')});
+      notices.push([requiredText, 'alert-wizard']);
     }
 
     if (this.currentUser && this.currentUser.get('staff') && this.siteSettings.bootstrap_mode_enabled) {
