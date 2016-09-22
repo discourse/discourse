@@ -1,3 +1,4 @@
+import getUrl from 'discourse-common/lib/get-url';
 import { default as computed, observes } from 'ember-addons/ember-computed-decorators';
 
 jQuery.fn.wiggle = function (times, duration) {
@@ -37,7 +38,7 @@ export default Ember.Component.extend({
   @computed('step.banner')
   bannerImage(src) {
     if (!src) { return; }
-    return `/images/wizard/${src}`;
+    return getUrl(`/images/wizard/${src}`);
   },
 
   @observes('step.id')
@@ -91,7 +92,7 @@ export default Ember.Component.extend({
 
   actions: {
     quit() {
-      document.location = "/";
+      document.location = getUrl("/");
     },
 
     backStep() {

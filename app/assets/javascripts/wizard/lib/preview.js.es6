@@ -1,4 +1,5 @@
 /*eslint no-bitwise:0 */
+import getUrl from 'discourse-common/lib/get-url';
 
 export const LOREM = `
 Lorem ipsum dolor sit amet, consectetur adipiscing elit.
@@ -190,8 +191,10 @@ export function createPreviewComponent(width, height, obj) {
 }
 
 function loadImage(src) {
+  if (!src) { return Ember.RSVP.Promise.resolve(); }
+
   const img = new Image();
-  img.src = src;
+  img.src = getUrl(src);
   return new Ember.RSVP.Promise(resolve => img.onload = () => resolve(img));
 };
 

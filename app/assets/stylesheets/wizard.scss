@@ -5,13 +5,21 @@
 
 body.wizard {
   background-color: #fff;
-  background-image: url('/images/wizard/bubbles.png');
+  background-image: asset-url('/images/wizard/bubbles.png');
   background-repeat: repeat;
   background-position: left top;
 
   color: #444;
 
   line-height: 1.4em;
+}
+
+.discourse-logo {
+  background-image: asset-url('/images/wizard/discourse.png');
+  height: 30px;
+  width: 110px;
+  background-size: 110px 30px;
+  background-repeat: no-repeat;
 }
 
 .wizard-warning {
@@ -119,9 +127,6 @@ body.wizard {
     border-top: 1px solid #ccc;
     background-color: #eee;
     padding: 0.5em;
-    img.logo {
-      height: 30px;
-    }
   }
 
   .wizard-progress {
