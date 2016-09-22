@@ -204,6 +204,10 @@ HTML
       expect(extract_urls("<aside class=\"quote\" data-topic=\"321\">aside</aside>")).to eq(["/t/topic/321"])
     end
 
+    it "should lazyYT videos" do
+      expect(extract_urls("<div class=\"lazyYT\" data-youtube-id=\"yXEuEUQIP3Q\" data-youtube-title=\"Mister Rogers defending PBS to the US Senate\" data-width=\"480\" data-height=\"270\" data-parameters=\"feature=oembed&amp;wmode=opaque\"></div>")).to eq(["https://www.youtube.com/watch?v=yXEuEUQIP3Q"])
+    end
+
     it "should extract links to posts" do
       expect(extract_urls("<aside class=\"quote\" data-topic=\"1234\" data-post=\"4567\">aside</aside>")).to eq(["/t/topic/1234/4567"])
     end
