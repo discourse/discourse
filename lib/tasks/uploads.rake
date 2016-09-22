@@ -408,12 +408,16 @@ def recover_from_tombstone
     SiteSetting.max_image_size_kb = 10240
 
     public_path = Rails.root.join("public")
+    paths = Dir.glob("#{File.join(public_path, 'uploads', 'tombstone', '**', '*.*')}")
+    max = paths.length
 
-    Dir.glob("#{File.join(public_path, 'uploads', 'tombstone', '**', '*.*')}").each do |path|
+    paths.each_with_index do |path, index|
       filename = File.basename(path)
+      printf("%9d / %d (%5.1f%%)\n", (index + 1), max, (((index + 1).to_f / max.to_f) * 100).round(1))
 
       Post.where("raw LIKE ?", "%#{filename}%").each do |post|
         doc = Nokogiri::HTML::fragment(post.raw)
+        updated = false
 
         doc.css("img[src]").each do |img|
           url = img["src"]
@@ -424,7 +428,6 @@ def recover_from_tombstone
 
           if !upload && url
             printf "Restoring #{url}..."
-
             tombstone_path = File.join(public_path, 'uploads', 'tombstone', url.gsub(/^\/uploads\//, ""))
 
             if File.exists?(tombstone_path)
@@ -434,6 +437,7 @@ def recover_from_tombstone
                 if new_upload.persisted?
                   printf "Restored into #{new_upload.url}\n"
                   DbHelper.remap(url, new_upload.url)
+                  updated = true
                 else
                   puts "Failed to create upload for #{url}: #{new_upload.errors.full_messages}."
                 end
@@ -443,6 +447,8 @@ def recover_from_tombstone
             end
           end
         end
+
+        post.rebake! if updated
       end
     end
   ensure
