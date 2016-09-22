@@ -145,10 +145,15 @@ class DiscourseSingleSignOn < SingleSignOn
       user.name = name || User.suggest_name(username.blank? ? email : username)
     end
 
-    if (SiteSetting.sso_overrides_avatar && avatar_url.present? && (
-      sso_record.external_avatar_url != avatar_url)) || avatar_force_update
+    avatar_missing = user.uploaded_avatar_id.nil? || !Upload.exists?(user.uploaded_avatar_id)
 
-      UserAvatar.import_url_for_user(avatar_url, user)
+    if (avatar_missing || avatar_force_update || SiteSetting.sso_overrides_avatar) && avatar_url.present?
+
+        avatar_changed = sso_record.external_avatar_url != avatar_url
+
+        if avatar_force_update || avatar_changed || avatar_missing
+           UserAvatar.import_url_for_user(avatar_url, user)
+        end
     end
 
     # change external attributes for sso record

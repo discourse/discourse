@@ -9,7 +9,7 @@ class Barber::Precompiler
   def precompiler
     if !@precompiler
 
-      source = File.read("#{Rails.root}/app/assets/javascripts/discourse/lib/raw-handlebars.js.es6")
+      source = File.read("#{Rails.root}/app/assets/javascripts/discourse-common/lib/raw-handlebars.js.es6")
       template = Tilt::ES6ModuleTranspilerTemplate.new {}
       transpiled = template.babel_transpile(source)
 
@@ -40,11 +40,11 @@ module Discourse
     module Handlebars
       module Helper
         def precompile_handlebars(string)
-          "require('discourse/lib/raw-handlebars').template(#{Barber::Precompiler.compile(string)});"
+          "require('discourse-common/lib/raw-handlebars').template(#{Barber::Precompiler.compile(string)});"
         end
 
         def compile_handlebars(string)
-          "require('discourse/lib/raw-handlebars').compile(#{indent(string).inspect});"
+          "require('discourse-common/lib/raw-handlebars').compile(#{indent(string).inspect});"
         end
       end
     end

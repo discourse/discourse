@@ -1344,6 +1344,10 @@ ru:
     download_remote_images_disabled:
       subject_template: "Загрузка копий изображений выключена"
       text_body_template: "Настройка `download_remote_images_to_local` была отключена, т.к. диск заполнился до отменки, указанной в настройке `download_remote_images_threshold`."
+    dashboard_problems:
+      subject_template: "Обнаружены проблемы"
+      text_body_template: |
+        Некоторые проблемы требуют вашего внимания, более детально можно прочитать [в админке](%{base_url}/admin).
   subject_re: "Re:"
   subject_pm: "[PM]"
   user_notifications:

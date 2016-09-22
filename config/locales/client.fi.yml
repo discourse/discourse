@@ -492,7 +492,7 @@ fi:
       watched_first_post_tags: "Tarkkaillaan uusia ketjuja"
       watched_first_post_tags_instructions: "Saat ilmoituksen uusista ketjuista, joilla on joku näistä tunnisteista."
       muted_categories: "Vaimennetut"
-      muted_categories_instructions: "Et saa imoituksia uusista viesteistä näillä alueilla, eivätkä ne näy tuoreimmissa."
+      muted_categories_instructions: "Et saa ilmoituksia uusista viesteistä näillä alueilla, eivätkä ne näy tuoreimmissa."
       delete_account: "Poista tilini"
       delete_account_confirm: "Oletko varma, että haluat lopullisesti poistaa käyttäjätilisi? Tätä toimintoa ei voi perua!"
       deleted_yourself: "Käyttäjätilisi on poistettu."
@@ -788,6 +788,8 @@ fi:
         one: "1 virhe/%{duration}"
         other: "%{count} virhettä/%{duration}"
     learn_more: "opi lisää..."
+    all_time: 'yhteensä'
+    all_time_desc: 'ketjuja luotu yhteensä'
     year: 'vuosi'
     year_desc: 'viimeisen 365 päivän aikana luodut ketjut'
     month: 'kuukausi'
@@ -1985,7 +1987,7 @@ fi:
           description: "Saat ilmoituksen jos joku mainitsee @nimesi tai vastaa viestiisi."
         muted:
           title: "Vaimennettu"
-          description: "Et saa imoituksia uusista viesteistä tällä tunnisteella, eivätkä ne näy Lukematta-välilehdellä"
+          description: "Et saa ilmoituksia uusista viesteistä tällä tunnisteella, eivätkä ne näy Lukematta-välilehdellä"
       groups:
         title: "Tunnisteryhmät"
         about: "Lisää tunnisteita ryhmiin, jotta niitä on helpompi hallita"

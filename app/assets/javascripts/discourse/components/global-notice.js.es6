@@ -1,6 +1,6 @@
 import { on } from 'ember-addons/ember-computed-decorators';
 import StringBuffer from 'discourse/mixins/string-buffer';
-import { iconHTML } from 'discourse/helpers/fa-icon';
+import { iconHTML } from 'discourse-common/helpers/fa-icon';
 import LogsNotice from 'discourse/services/logs-notice';
 
 export default Ember.Component.extend(StringBuffer, {
@@ -15,6 +15,10 @@ export default Ember.Component.extend(StringBuffer, {
 
     if (this.siteSettings.disable_emails) {
       notices.push([I18n.t("emails_are_disabled"), 'alert-emails-disabled']);
+    }
+
+    if (this.site.get('wizard_required')) {
+      notices.push([I18n.t('wizard_required'), 'alert-wizard']);
     }
 
     if (this.currentUser && this.currentUser.get('staff') && this.siteSettings.bootstrap_mode_enabled) {

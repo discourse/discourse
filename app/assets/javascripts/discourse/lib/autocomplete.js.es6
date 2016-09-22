@@ -237,15 +237,19 @@ export default function(options) {
 
     me.parent().append(div);
 
-    if(!isInput){
+    if (!isInput) {
       vOffset = div.height();
-    }
 
-    if (Discourse.Site.currentProp('mobileView') && !isInput) {
-      div.css('width', 'auto');
+      if ((window.innerHeight - me.outerHeight() - $("header.d-header").innerHeight()) < vOffset) {
+        vOffset = -23;
+      }
 
-      if ((me.height() / 2) >= pos.top) { vOffset = -23; }
-      if ((me.width() / 2) <= pos.left) { hOffset = -div.width(); }
+      if (Discourse.Site.currentProp('mobileView')) {
+        div.css('width', 'auto');
+
+        if ((me.height() / 2) >= pos.top) { vOffset = -23; }
+        if ((me.width() / 2) <= pos.left) { hOffset = -div.width(); }
+      }
     }
 
     var mePos = me.position();

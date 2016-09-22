@@ -172,10 +172,7 @@ class ApplicationController < ActionController::Base
 
       if notifications.present?
         notification_ids = notifications.split(",").map(&:to_i)
-        count = Notification.where(user_id: current_user.id, id: notification_ids, read: false).update_all(read: true)
-        if count > 0
-          current_user.publish_notifications_state
-        end
+        Notification.read(current_user, notification_ids)
         cookies.delete('cn')
       end
     end
@@ -462,6 +459,14 @@ class ApplicationController < ActionController::Base
 
     def ensure_staff
       raise Discourse::InvalidAccess.new unless current_user && current_user.staff?
+    end
+
+    def ensure_admin
+      raise Discourse::InvalidAccess.new unless current_user && current_user.admin?
+    end
+
+    def ensure_wizard_enabled
+      raise Discourse::InvalidAccess.new unless SiteSetting.wizard_enabled?
     end
 
     def destination_url

@@ -1419,7 +1419,7 @@ table.api-keys {
   position: absolute;
 }
 
-.staff-actions, .screened-emails, .screened-urls, .screened-ip-addresses, .permalinks {
+.staff-actions, .screened-emails, .screened-urls, .screened-ip-addresses, .permalinks, .web-hook-events {
 
   border-bottom: dotted 1px dark-light-choose(scale-color($primary, $lightness: 75%), scale-color($secondary, $lightness: 25%));
 
@@ -1859,8 +1859,6 @@ table#user-badges {
 }
 
 .web-hook-events {
-  margin-top: 15px;
-
   li {
     padding: 2px 0;
   }
@@ -1874,7 +1872,7 @@ table#user-badges {
   }
 
   .col.first {
-    width: 30px;
+    width: 90px;
   }
 
   .col.event-id {
@@ -1897,12 +1895,23 @@ table#user-badges {
     }
   }
 
+  .col.heading.actions {
+    padding: 4px 0;
+  }
+
   .details {
     display: block;
     margin-top: 10px;
   }
   label {
     font-size: 1.05em;
+  }
+}
+
+.web-hook-events-listing {
+  margin-top: 15px;
+  .alert {
+    margin: 15px 0 0 0;
   }
 }
 

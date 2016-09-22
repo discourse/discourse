@@ -1,3 +1,8 @@
+.select2-results .select2-highlighted {
+    background: dark-light-diff($highlight, $secondary, 50%, -80%);
+    color: $primary;
+}
+
 .category-combobox, .select2-drop {
 
   .badge-category {

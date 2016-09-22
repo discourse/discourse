@@ -55,6 +55,7 @@ class UserHistory < ActiveRecord::Base
                           rate_limited_like: 37, # not used anymore
                           revoke_email: 38,
                           deactivate_user: 39,
+                          wizard_step: 40
                          )
   end
 

@@ -332,11 +332,6 @@ Version: @@ver@@ Timestamp: @@timestamp@@
 .select2-results-dept-6 .select2-result-label { padding-left: 110px }
 .select2-results-dept-7 .select2-result-label { padding-left: 120px }
 
-.select2-results .select2-highlighted {
-    background: dark-light-diff($highlight, $secondary, 50%, -80%);
-    color: $primary;
-}
-
 .select2-results li em {
     background: #feffde;
     font-style: normal;

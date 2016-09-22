@@ -165,6 +165,7 @@ en:
 
     topic_admin_menu: "topic admin actions"
 
+    wizard_required: "It's time to configure your forum! <a href='/wizard/' data-auto-route='true'>Start the Setup Wizard</a>!"
     emails_are_disabled: "All outgoing email has been globally disabled by an administrator. No email notifications of any kind will be sent."
 
     bootstrap_mode_enabled: "To make launching your new site easier, you are in bootstrap mode. All new users will be granted trust level 1 and have daily email digest updates enabled. This will be automatically turned off when total user count exceeds %{min_users} users."
@@ -2411,7 +2412,7 @@ en:
         flair_color: "Avatar Flair Color"
         flair_color_placeholder: "(Optional) Hex color value"
         flair_preview: "Preview"
-
+        flair_note: "Note: Flair will only show for a user's primary group."
 
       api:
         generate_master: "Generate Master API Key"
@@ -2466,12 +2467,9 @@ en:
         post_event:
           name: "Post Event"
           details: "When there is a new reply, edit, deleted or recovered."
-        invitation_event:
-          name: "Invitation Event"
-          details: "When a invitation is sent or accepted."
         user_event:
           name: "User Event"
-          details: "When there is a user is created or changed."
+          details: "When a user is created or approved."
         delivery_status:
           title: "Delivery Status"
           inactive: "Inactive"
@@ -2480,7 +2478,12 @@ en:
         events:
           none: "There are no related events."
           redeliver: "Redeliver"
-          completion: "Completed in %{seconds} seconds."
+          incoming:
+            one: "There is a new event."
+            other: "There are {{count}} new events."
+          completed_in:
+            one: "Completed in 1 second."
+            other: "Completed in {{count}} seconds."
           request: "Request"
           response: "Response"
           redeliver_confirm: "Are you sure you want to redeliver the same payload?"
@@ -2491,6 +2494,11 @@ en:
           go_details: "Edit webhook"
           go_events: "Go to events"
           ping: "Ping"
+          status: "Status Code"
+          event_id: "ID"
+          timestamp: "Created"
+          completion: "Completion Time"
+          actions: "Actions"
       plugins:
         title: "Plugins"
         installed: "Installed Plugins"
@@ -3218,5 +3226,26 @@ en:
           add: "Add"
           filter: "Search (URL or External URL)"
 
-# WARNING! Keys added here will be in the admin_js section.
-#          Keys that don't belong in admin should be placed earlier in the file.
+  wizard_js:
+    wizard:
+      done: "Done"
+      back: "Back"
+      next: "Next"
+      step: "%{current} of %{total}"
+      upload: "Upload"
+      uploading: "Uploading..."
+      quit: "Maybe Later"
+
+      staff_count:
+        one: "Your community has 1 staff member. "
+        other: "Your community has %{count} staff members."
+
+      invites:
+        add_user: "add"
+        none_added: "You haven’t invited any staff. Are you sure you want to continue?"
+        roles:
+          admin: "Admin"
+          moderator: "Moderator"
+          regular: "Regular User"
+
+

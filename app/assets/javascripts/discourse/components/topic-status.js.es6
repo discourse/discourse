@@ -1,4 +1,4 @@
-import { iconHTML } from 'discourse/helpers/fa-icon';
+import { iconHTML } from 'discourse-common/helpers/fa-icon';
 import StringBuffer from 'discourse/mixins/string-buffer';
 import { escapeExpression } from 'discourse/lib/utilities';
 

@@ -5,9 +5,14 @@ export default Discourse.Route.extend({
 
   setupController(controller, model) {
     controller.set('model', model);
+    controller.subscribe();
+  },
+
+  deactivate() {
+    this.controllerFor('adminWebHooks.showEvents').unsubscribe();
   },
 
   renderTemplate() {
-    this.render('admin/templates/web-hooks-show-events', { into: 'admin' });
+    this.render('admin/templates/web-hooks-show-events', { into: 'adminApi' });
   }
 });

@@ -26,14 +26,14 @@ export default Ember.Component.extend({
   @computed('model.duration')
   completion(duration) {
     const seconds = Math.floor(duration / 10.0) / 100.0;
-    return I18n.t('admin.web_hooks.events.completion', { seconds });
+    return I18n.t('admin.web_hooks.events.completed_in', { count: seconds });
   },
 
   actions: {
     redeliver() {
       return bootbox.confirm(I18n.t('admin.web_hooks.events.redeliver_confirm'), I18n.t('no_value'), I18n.t('yes_value'), result => {
         if (result) {
-          ajax(`/admin/web_hooks/${this.get('model.web_hook_id')}/events/${this.get('model.id')}/redeliver`, { type: 'POST' }).then(json => {
+          ajax(`/admin/api/web_hooks/${this.get('model.web_hook_id')}/events/${this.get('model.id')}/redeliver`, { type: 'POST' }).then(json => {
             this.set('model', json.web_hook_event);
           }).catch(popupAjaxError);
         }

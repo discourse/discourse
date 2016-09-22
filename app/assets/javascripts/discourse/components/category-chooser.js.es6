@@ -1,4 +1,4 @@
-import ComboboxView from 'discourse/components/combo-box';
+import ComboboxView from 'discourse-common/components/combo-box';
 import { categoryBadgeHTML } from 'discourse/helpers/category-link';
 import computed from 'ember-addons/ember-computed-decorators';
 import { observes, on } from 'ember-addons/ember-computed-decorators';

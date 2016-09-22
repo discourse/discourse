@@ -3,6 +3,32 @@ require_dependency 'distributed_cache'
 
 class ColorScheme < ActiveRecord::Base
 
+  def self.themes
+    base_with_hash = {}
+    base_colors.each do |name, color|
+      base_with_hash[name] = "##{color}"
+    end
+
+    [
+      { id: 'default', colors: base_with_hash },
+      {
+        id: 'dark',
+        colors: {
+          "primary" =>           '#dddddd',
+          "secondary" =>         '#222222',
+          "tertiary" =>          '#0f82af',
+          "quaternary" =>        '#c14924',
+          "header_background" => '#111111',
+          "header_primary" =>    '#333333',
+          "highlight" =>         '#a87137',
+          "danger" =>            '#e45735',
+          "success" =>           '#1ca551',
+          "love" =>              '#fa6c8d'
+        }
+      }
+    ]
+  end
+
   def self.hex_cache
     @hex_cache ||= DistributedCache.new("scheme_hex_for_name")
   end
@@ -30,16 +56,12 @@ class ColorScheme < ActiveRecord::Base
     @mutex.synchronize do
       return @base_colors if @base_colors
       @base_colors = {}
-      read_colors_file.each do |line|
+      File.readlines(BASE_COLORS_FILE).each do |line|
         matches = /\$([\w]+):\s*#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})(?:[;]|\s)/.match(line.strip)
         @base_colors[matches[1]] = matches[2] if matches
       end
     end
     @base_colors
-  end
-
-  def self.read_colors_file
-    File.readlines(BASE_COLORS_FILE)
   end
 
   def self.enabled
@@ -113,7 +135,6 @@ class ColorScheme < ActiveRecord::Base
     MessageBus.publish("/discourse_stylesheet", self.name)
     DiscourseStylesheets.cache.clear
   end
-
 
   def dump_hex_cache
     self.class.hex_cache.clear

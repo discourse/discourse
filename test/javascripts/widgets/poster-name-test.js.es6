@@ -32,7 +32,7 @@ widgetTest('extra classes and glyphs', {
       admin: true,
       moderator: true,
       new_user: true,
-      primaryGroupName: 'fish'
+      primary_group_name: 'fish'
    });
   },
   test(assert) {

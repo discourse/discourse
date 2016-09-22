@@ -47,7 +47,7 @@ PLUGIN_API_JS
       name = node["name"] || node["data-template-name"] || "broken"
       precompiled =
         if name =~ /\.raw$/
-          "require('discourse/lib/raw-handlebars').template(#{Barber::Precompiler.compile(node.inner_html)})"
+          "require('discourse-common/lib/raw-handlebars').template(#{Barber::Precompiler.compile(node.inner_html)})"
         else
           "Ember.HTMLBars.template(#{Barber::Ember::Precompiler.compile(node.inner_html)})"
         end

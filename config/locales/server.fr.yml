@@ -111,6 +111,7 @@ fr:
     operation_already_running: "Une opération est en cours d'exécution. Vous ne pouvez pas démarrer un nouveau processus pour l'instant."
     backup_file_should_be_tar_gz: "Le fichier de sauvegarde doit être une archive .tar.gz."
     not_enough_space_on_disk: "Il n'y a pas assez d'espace sur le disque pour charger cette sauvegarde."
+    invalid_filename: "Le nom du fichier de sauvegarde contient des caractères invalides. Sont autorisés : a-z 0-9 . - _."
   not_logged_in: "Vous devez être connecté pour faire cela."
   not_found: "L'URL ou ressource demandée n'a pas été retrouvé."
   invalid_access: "Vous n'avez pas la permission de voir cette ressource."
@@ -298,6 +299,10 @@ fr:
         post_reply:
           base:
             different_topic: "Message et réponse doivent appartenir au même sujet."
+        web_hook:
+          attributes:
+            payload_url:
+              invalid: "L'URL est invalide. Elle devrait inclure http:// ou https:// et aucun espace n'est autorisé."
       <<: *errors
   user_profile:
     no_info_me: "<div class='missing-profile'>Le champs À propos de moi de votre profil est vide, <a href='/users/%{username_lower}/preferences/about-me'>voulez vous le remplir ?</a></div>"
@@ -510,7 +515,7 @@ fr:
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
       title: "Autre chose"
-      description: 'Ce message nécessite l''attention des responsables pour une autre raison que celle(s) mentionnée(s) ci-dessus.'
+      description: 'Ce message demande l''attention des responsables pour une autre raison..'
       long_form: 'signalé aux responsables'
       email_title: 'Un message dans « %{title} » nécessite l''attention des responsables'
       email_body: "%{link}\n\n%{message}"
@@ -537,7 +542,7 @@ fr:
       long_form: 'signalé comme inapproprié'
     notify_moderators:
       title: "Autre chose"
-      description: 'Ce message requiert l''attention d''un responsable d''après la <a href=''/fguidelines''>charte de la communauté</a>, <a href=''%{tos_url}''>les conditions générales de service</a>, ou pour une autre raison indéterminée.'
+      description: 'Ce sujet demande l''attention des responsables d''après la <a href=''/fguidelines''>charte de la communauté</a>, <a href=''%{tos_url}''>les conditions générales de service</a> ou pour une autre raison.'
       long_form: 'signalé pour modération'
       email_title: 'Le sujet « %{title} » nécessite l''attention d''un modérateur'
       email_body: "%{link}\n\n%{message}"
@@ -890,6 +895,7 @@ fr:
     enable_sso_provider: "Implémenter le procotole Discourse de provider SSO à /session/sso_provider, requiert sso_secret"
     sso_url: "URL de l'authentification unique SSO (doit inclure http:// ou http://)"
     sso_secret: "Chaîne de caractères secrète utilisée pour authentifier les informations SSO par cryptographie, assurez-vous qu'elle est de 10 caractères ou plus"
+    sso_overrides_bio: "Écrase la biographie du profil utilisateur et empêche son changement"
     sso_overrides_email: "Surcharger les emails locaux avec les emails externes d'un SSO à chaque connexion, et prévenir les modifications locales. (ATTENTION : Des écarts peuvent se produire dus aux règles locales sur les emails)"
     sso_overrides_username: "Surcharger les pseudos locaux avec les pseudos externes d'un SSO à chaque connexion, et prévenir les modifications locales. (ATTENTION: Des écarts peuvent se produire dus aux différences de longueur et d'exigences sur les pseudos)"
     sso_overrides_name: "Surcharger les noms complets locaux avec les noms complets externes d'un SSO à chaque connexion, et prévenir les modifications locales."
@@ -911,6 +917,7 @@ fr:
     enable_facebook_logins: "Activer l'authentification Facebook, nécessite facebook_app_id et  facebook_app_secret"
     facebook_app_id: "App id pour l'authentification Facebook, enregistré sur https://developers.facebook.com/apps"
     facebook_app_secret: "App secret pour l'authentification Facebook, enregistré sur https://developers.facebook.com/apps"
+    facebook_request_extra_profile_details: "Remplir les champs À propos de moi, Localisation et Site internet depuis Facebook (nécessite que votre application soit autorisée par Facebook)."
     enable_github_logins: "Activer l'authentification GitHub, nécessite github_client_id et github_client_secret"
     github_client_id: "Id client pour l'authentification Github, enregistré sur https://github.com/settings/applications"
     github_client_secret: "Secret client  pour l'authentification Github, enregistré sur https://github.com/settings/applications"
@@ -964,6 +971,7 @@ fr:
     external_system_avatars_enabled: "Utilisez un service d'avatars externe."
     external_system_avatars_url: "URL du service d'avatars externe. Les remplacements autorisés sont {username} {first_letter} {color} {size}"
     default_opengraph_image_url: "URL de l'image par défaut pour les balises Open Graph."
+    twitter_summary_large_image_url: "URL de l'image par défaut de la carte de résumé Twitter (devrait au moins mesurer 280px en largeur et 150px en hauteur). "
     allow_all_attachments_for_group_messages: "Autorise toutes les pièces-jointes pour les messages de groupes."
     convert_pasted_images_to_hq_jpg: "Convertir les images copiées en fichier JPEG haute qualité."
     convert_pasted_images_quality: "Qualité du fichier JPEG converti (1 est la plus faible, 100 est la meilleure)."
@@ -1198,6 +1206,8 @@ fr:
     allow_push_user_api_keys: "Autoriser la génération de clés pour utiliser le service push pour l'API utilisateur"
     max_api_keys_per_user: "Nombre maximum de clés de l'API utilisateur par utilisateur"
     min_trust_level_for_user_api_key: "Niveau de confiance requis pour générer des clés pour l'API utilisateur"
+    allowed_user_api_auth_redirects: "URL autorisées pour la redirection d'authentification pour les clés de l'API utilisateur"
+    allowed_user_api_push_urls: "URL autorisées pour le service push du serveur vers l'API utilisateur"
     tagging_enabled: "Activer les tags sur les sujets ?"
     min_trust_to_create_tag: "Le niveau de confiance minimum requis pour créer un tag."
     max_tags_per_topic: "Le nombre maximum de tags pouvant être ajoutés à un sujet."
@@ -1536,7 +1546,7 @@ fr:
     off_topic: "Votre message a été signalé comme étant **hors sujet**: la communauté considère qu'il ne correspond au sujet en discussion, qui est fixé par son titre et son premier message."
     inappropriate: "Votre message a été signalé comme étant **inapproprié**: la communauté considère que son contenu est offensif, abusif ou enfreint notre [charte](/guidelines)."
     spam: "Votre message a été signalé comme étant du **spam**: la communauté considère qu'il s'agit d'une publicité, ou du contenu trop promotionnel au lieu d'être utile et à propos du sujet en discussion."
-    notify_moderators: "Votre message a été **signalé aux modérateurs**: la communauté considère que quelque chose requiert une intervention d'un des responsables."
+    notify_moderators: "Votre message a été **signalé aux modérateurs** : la communauté considère qu'il nécessite l'intervention d'un responsable."
   flags_dispositions:
     agreed: "Merci de nous en informer. Nous sommes en accord avec votre signalement et nous travaillons à sa résolution."
     agreed_and_deleted: "Merci de nous en informer. Nous sommes en accord avec votre signalement et avons supprimé le message."

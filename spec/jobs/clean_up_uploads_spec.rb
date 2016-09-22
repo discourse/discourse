@@ -23,6 +23,16 @@ describe Jobs::CleanUpUploads do
     expect(Upload.count).to be(0)
   end
 
+  it "does not clean up uploads in site settings" do
+    logo_upload = fabricate_upload
+    SiteSetting.logo_url = logo_upload.url
+
+    Jobs::CleanUpUploads.new.execute(nil)
+
+    expect(Upload.find_by(id: @upload.id)).to eq(nil)
+    expect(Upload.find_by(id: logo_upload.id)).to eq(logo_upload)
+  end
+
   it "does not delete profile background uploads" do
     profile_background_upload = fabricate_upload
     UserProfile.last.update_attributes!(profile_background: profile_background_upload.url)
@@ -45,7 +55,7 @@ describe Jobs::CleanUpUploads do
 
   it "does not delete category logo uploads" do
     category_logo_upload = fabricate_upload
-    category = Fabricate(:category, logo_url: category_logo_upload.url)
+    Fabricate(:category, logo_url: category_logo_upload.url)
 
     Jobs::CleanUpUploads.new.execute(nil)
 
@@ -55,7 +65,7 @@ describe Jobs::CleanUpUploads do
 
   it "does not delete category background url uploads" do
     category_background_url = fabricate_upload
-    category = Fabricate(:category, background_url: category_background_url.url)
+    Fabricate(:category, background_url: category_background_url.url)
 
     Jobs::CleanUpUploads.new.execute(nil)
 
@@ -65,7 +75,7 @@ describe Jobs::CleanUpUploads do
 
   it "does not delete post uploads" do
     upload = fabricate_upload
-    post = Fabricate(:post, uploads: [upload])
+    Fabricate(:post, uploads: [upload])
 
     Jobs::CleanUpUploads.new.execute(nil)
 
@@ -75,7 +85,7 @@ describe Jobs::CleanUpUploads do
 
   it "does not delete user uploaded avatar" do
     upload = fabricate_upload
-    user = Fabricate(:user, uploaded_avatar: upload)
+    Fabricate(:user, uploaded_avatar: upload)
 
     Jobs::CleanUpUploads.new.execute(nil)
 
@@ -85,7 +95,7 @@ describe Jobs::CleanUpUploads do
 
   it "does not delete user gravatar" do
     upload = fabricate_upload
-    user = Fabricate(:user, user_avatar: Fabricate(:user_avatar, gravatar_upload: upload))
+    Fabricate(:user, user_avatar: Fabricate(:user_avatar, gravatar_upload: upload))
 
     Jobs::CleanUpUploads.new.execute(nil)
 

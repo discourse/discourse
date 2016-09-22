@@ -1,4 +1,4 @@
-import { registerUnbound } from 'discourse/lib/helpers';
+import { registerUnbound } from 'discourse-common/lib/helpers';
 
 // see: https://github.com/emberjs/ember.js/issues/12634
 var missingViews = {};

@@ -218,7 +218,7 @@ fr:
       contact: "Nous contacter"
       contact_info: "En cas de problème critique ou urgent sur ce site, veuillez nous contacter : %{contact_info}"
     bookmarked:
-      title: "Signet"
+      title: "Mettre un signet"
       clear_bookmarks: "Retirer les signets"
       help:
         bookmark: "Cliquer pour mettre un signet sur le premier message de ce sujet"
@@ -823,7 +823,7 @@ fr:
     summary:
       enabled_description: "Vous visualisez un résumé de ce sujet : les messages les plus intéressants choisis par la communauté."
       description: "Il y a <b>{{replyCount}}</b> réponses."
-      description_time: "Il y a <b>{{replyCount}}</b> réponses avec un temps estimé de lecture de <b>{{readingTime}} minutes</b>."
+      description_time: "Il y a <b>{{replyCount}}</b> réponses avec un temps de lecture estimé à <b>{{readingTime}} minutes</b>."
       enable: 'Résumer ce sujet'
       disable: 'Afficher tous les messages'
     deleted_filter:
@@ -1203,7 +1203,7 @@ fr:
       toggle_information: "afficher les détails de ce sujet"
       read_more_in_category: "Vous voulez en lire plus ? Afficher d'autres sujets dans {{catLink}} ou {{latestLink}}."
       read_more: "Vous voulez en lire plus ? {{catLink}} or {{latestLink}}."
-      read_more_MF: "Il y { UNREAD, plural, =0 {} one { a <a href='/unread'>1 sujet non lu</a> } other { a <a href='/unread'># sujets non lus</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{et } false {a } other{}} <a href='/new'>1 nouveau</a> sujet} other { {BOTH, select, true{et } false {a } other{}} <a href='/new'># nouveaux</a> sujets} } restant, ou {CATEGORY, select, true {consulter les autres sujets dans {catLink}} false {{latestLink}} other {}}"
+      read_more_MF: "Il y { UNREAD, plural, =0 {} one { a <a href='/unread'>1 sujet non lu</a> } other { a <a href='/unread'># sujets non lus</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{et } false {a } other{}} <a href='/new'>1 nouveau sujet</a> } other { {BOTH, select, true{et } false {a } other{}} <a href='/new'># nouveaux sujets</a> } } restant, ou {CATEGORY, select, true {consulter les autres sujets dans {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: Voir toutes les catégories
       view_latest_topics: voir les derniers sujets
       suggest_create_topic: Pourquoi ne pas créer un sujet ?
@@ -1689,6 +1689,7 @@ fr:
       notify_action: 'Message'
       official_warning: 'Avertissement officiel'
       delete_spammer: "Supprimer le spammeur"
+      delete_confirm_MF: "Vous êtes sur le point de supprimer {POSTS, plural, one {<b>1</b> message} other {<b>#</b> messages}} et {TOPICS, plural, one {<b>1</b> sujet} other {<b>#</b> sujets}} de cet utilisateur, supprimer son compte, bloquer les inscriptions depuis son adresse IP <b>{ip_address}</b> et ajouter son adresse courriel <b>{email}</b> à une liste de blocage permanent. Êtes-vous sûr que cet utilisateur est réellement un spammeur ?"
       yes_delete_spammer: "Oui, supprimer le spammeur"
       ip_address_missing: "(N/A)"
       hidden_email_address: "(masqué)"
@@ -2206,6 +2207,76 @@ fr:
         info_html: "Cette clé vous permettra de créer et mettre à jour des sujets à l'aide d'appels JSON."
         all_users: "Tous les Utilisateurs"
         note_html: "Gardez cette clé <strong>secrète</strong> ! Tous les personnes qui la possède peuvent créer des messages au nom de n'import quel utilisateur."
+      web_hooks:
+        title: "Webhooks"
+        none: "Il n'y a aucun Webhook actuellement."
+        instruction: "Les Webhooks permettent à Discourse de notifier des services externes  lorsque certains événements se produisent sur votre site. Quand un Webhook est déclenché, une requête POST est envoyée aux URLs fournies."
+        detailed_instruction: "Une requête POST sera envoyée à l'URL fournie lorsque l'événement choisi se produira."
+        new: "Nouveau Webhook"
+        create: "Créer"
+        save: "Sauvegarder"
+        destroy: "Supprimer"
+        description: "Description"
+        controls: "Contrôles"
+        go_back: "Retour à la liste"
+        payload_url: "URL cible"
+        payload_url_placeholder: "https://example.com/postreceive"
+        warn_local_payload_url: "Il semble que vous essayez de configurer le Webhook vers une URL locale. Les événements délivrés à une adresse locale peuvent causer des effets de bords ou des comportements inattendus. Continuer ?"
+        secret_invalid: "La clé secrète ne doit pas contenir d'espaces."
+        secret_too_short: "La clé secrète doit contenir au moins 12 caractères."
+        secret_placeholder: "Une chaîne de caractères facultative pour générer la signature"
+        event_type_missing: "Vous devez configurer au moins un type d'évènement."
+        content_type: "Type de contenu"
+        secret: "Clé secrète"
+        event_chooser: "Quels événements doivent déclencher ce Webhook ?"
+        wildcard_event: "Tout m'envoyer."
+        individual_event: "Sélectionner des événements individuels."
+        verify_certificate: "Vérifier le certificat TLS de l'URL cible"
+        active: "Actif"
+        active_notice: "Nous delivrerons les détails de l'évènement quand il se produit."
+        categories_filter_instructions: "Les Webhooks appropriés seront uniquement déclenchés si les événements sont liés aux catégories définies. Laisser vide pour les déclencher pour toutes les catégories."
+        categories_filter: "Catégories"
+        groups_filter_instructions: "Les Webhooks appropriés seront uniquement déclenchés si les événements sont liés aux groupes définis. Laisser vide pour les déclencher pour tous les groupes."
+        groups_filter: "Groupes"
+        delete_confirm: "Supprimer ce Webhook ?"
+        topic_event:
+          name: "Événement de sujet"
+          details: "Quand il y a un sujet nouveau, modifié ou supprimé."
+        post_event:
+          name: "Événement de message"
+          details: "Quand il y a une réponse nouvelle, modifiée, supprimée ou rétablie."
+        user_event:
+          name: "Événement d'utilisateur"
+          details: "Quand un utilisateur est créé ou approuvé."
+        delivery_status:
+          title: "État de l'envoi"
+          inactive: "Inactif"
+          failed: "Échec"
+          successful: "Succès"
+        events:
+          none: "Il n'y aucun évènement lié."
+          redeliver: "Redélivrer"
+          incoming:
+            one: "Il y a un nouvel événement."
+            other: "Il y a {{count}} nouveaux événements."
+          completed_in:
+            one: "Terminé en 1 seconde."
+            other: "Terminé en {{count}} secondes."
+          request: "Requête"
+          response: "Réponse"
+          redeliver_confirm: "Êtes-vous sûr de vouloir redélivrer les mêmes données ?"
+          headers: "Entêtes"
+          payload: "Données"
+          body: "Corps"
+          go_list: "Aller à la liste"
+          go_details: "Modifier le Webhook"
+          go_events: "Aller aux événements"
+          ping: "Ping"
+          status: "Code de retour"
+          event_id: "ID"
+          timestamp: "Créé"
+          completion: "Temps d'exécution"
+          actions: "Actions"
       plugins:
         title: "Extensions"
         installed: "Extensions installées"
@@ -2589,6 +2660,7 @@ fr:
         suspend_reason: "Raison"
         suspended_by: "Suspendu par"
         delete_all_posts: "Supprimer tous les messages"
+        delete_all_posts_confirm_MF: "Vous êtes sur le point de supprimer {POSTS, plural, one {1 message} other {# messages}} et {TOPICS, plural, one {1 sujet} other {# sujets}}. Êtes-vous sûr ?"
         suspend: "Suspendre"
         unsuspend: "Annuler la suspension"
         suspended: "Suspendu ?"

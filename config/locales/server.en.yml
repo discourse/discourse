@@ -1019,6 +1019,7 @@ en:
     enable_facebook_logins: "Enable Facebook authentication, requires facebook_app_id and facebook_app_secret"
     facebook_app_id: "App id for Facebook authentication, registered at https://developers.facebook.com/apps"
     facebook_app_secret: "App secret for Facebook authentication, registered at https://developers.facebook.com/apps"
+    facebook_request_extra_profile_details: "Request about me, location and website from facebook. (requires that your auth application be approved by facebook)"
 
     enable_github_logins: "Enable Github authentication, requires github_client_id and github_client_secret"
     github_client_id: "Client id for Github authentication, registered at https://github.com/settings/applications"
@@ -1085,6 +1086,7 @@ en:
     external_system_avatars_url: "URL of the external system avatars service. Allowed substitutions are {username} {first_letter} {color} {size}"
 
     default_opengraph_image_url: "URL of the default opengraph image."
+    twitter_summary_large_image_url: "URL of the default Twitter summary card image (should be at least 280px in width, and at least 150px in height)."
 
     allow_all_attachments_for_group_messages: "Allow all email attachments for group messages."
 
@@ -1407,6 +1409,10 @@ en:
     min_trust_level_to_tag_topics: "Minimum trust level required to tag topics"
     suppress_overlapping_tags_in_list: "If tags match exact words in topic titles, don't show the tag"
     remove_muted_tags_from_latest: "Don't show topics tagged with muted tags in the latest topic list."
+
+    company_short_name: "Company Name (short)"
+    company_full_name: "Company Name (full)"
+    company_domain: "Company Domain"
 
     errors:
       invalid_email: "Invalid email address."
@@ -3210,3 +3216,141 @@ en:
     staff_tag_disallowed: "The tag \"%{tag}\" may only be applied by staff."
     staff_tag_remove_disallowed: "The tag \"%{tag}\" may only be removed by staff."
   rss_by_tag: "Topics tagged %{tag}"
+
+  wizard:
+    title: "Discourse Setup"
+    step:
+      locale:
+        title: "Welcome to your Discourse!"
+        fields:
+          default_locale:
+            description: "What’s the default language for your community?"
+
+      forum_title:
+        title: "Name"
+        description: "Your name is a sign visible in the distance, the <i>first</i> thing potential visitors will notice about your community. What does your name and title say about your community?"
+
+        fields:
+          title:
+            label: "Your community’s name"
+            placeholder: "Jane’s Hangout"
+          site_description:
+            label: "Describe your community in one short sentence"
+            placeholder: "A place for Jane and her friends to discuss cool stuff"
+
+      introduction:
+        title: "Introduction"
+
+        fields:
+          welcome:
+            label: "Welcome Topic"
+            description: "<p>How would you describe your community to a stranger on an elevator in about 1 minute?</p>
+              <ul>
+              <li>Who are these discussions for?</li>
+              <li>What can I find here?</li>
+              <li>Why should I visit?</li>
+              </ul>
+            <p>Your welcome topic is the first thing new visitors will see. Think of it as your <b>one paragraph</b> 'elevator pitch' or 'mission statement'. </p>"
+            one_paragraph: "Please restrict your welcome message to one paragraph."
+
+      privacy:
+        title: "Access"
+        description: "<p>Is your community open to everyone, or is it restricted by membership, invitation, or approval? If you prefer, you can set things up privately, then switch over to public later.</p>
+         <p>Remember you can always send invites from topics, or from your user profile page, too.</p>"
+
+        fields:
+          privacy:
+            choices:
+              open:
+                label: "Public"
+                description: "Anyone can access this community and sign up for an account"
+              restricted:
+                label: "Private"
+                description: "Only people I have invited or approved can access this community"
+
+      contact:
+        title: "Contact"
+        fields:
+          contact_email:
+            label: "Mail"
+            placeholder: "name@example.com"
+            description: "Email address for the person or group responsible for this community. Used for critical notifications such as unhandled flags, security updates, and on <a href='/about' target='_blank'>your about page</a> for urgent community contact."
+          contact_url:
+            label: "Web Page"
+            placeholder: "http://www.example.com/contact-us"
+            description: "General contact web page for you or your oganization. Will be displayed on <a href='/about' target='_blank'>your about page</a>."
+          site_contact:
+            label: "Automated Messages"
+            description: "All automated Discourse personal messages will be sent from this user. Most importantly, this user will be the designated sender of every welcome message automatically sent to new users."
+
+      corporate:
+        title: "Organization"
+        description: "These names will be entered in your <a href='/privacy' target='blank'>Privacy Policy</a> and <a href='/tos' target='blank'>Terms of Service</a>, which you can edit any time in the Staff category. If you don’t have a company, feel free to skip this step for now."
+
+        fields:
+          company_short_name:
+            label: "Company Name (short)"
+            placeholder: "Initech"
+          company_full_name:
+            label: "Company Name (full)"
+            placeholder: "Initech, Inc."
+          company_domain:
+            label: "Company Domain Name"
+            placeholder: "initech.com"
+
+      colors:
+        title: "Theme"
+        fields:
+          theme_id:
+            description: "Do you prefer a light or dark color scheme to start with? You can always further customize the look and feel of your site via Admin, Customize."
+            choices:
+              default:
+                label: "Simple Light"
+              dark:
+                label: "Simple Dark"
+
+      logos:
+        title: "Logos"
+        fields:
+          logo_url:
+            label: "Primary Logo"
+            description: "The logo image at the top left of your site. Use a wide rectangle shape."
+          logo_small_url:
+            label: "Compact Logo"
+            description: "A compact version of your logo, shown at the top left of your site when scrolling down. Use a square shape."
+
+      icons:
+        title: "Icons"
+        fields:
+          favicon_url:
+            label: "Small Icon"
+            description: "Icon image used to represent your site in web browsers that looks good at small sizes such as 32px by 32px."
+          apple_touch_icon_url:
+            label: "Large Icon"
+            description: "Icon image used to represent your site on modern devices that looks good at larger sizes. Recommended size is at least 144px by 144px."
+
+      homepage:
+        description: "We recommend showing the latest topics on your homepage, but you can choose to show categories (groups of topics) on the homepage if you prefer."
+        title: "Homepage"
+
+        fields:
+          homepage_style:
+            choices:
+              latest:
+                label: "Latest Topics"
+              categories:
+                label: "Categories"
+
+      emoji:
+        title: "Emoji"
+        description: "Which Emoji style do you prefer for your community? You can always add more custom Emoji later via Admin, Customize, Emoji."
+
+      invites:
+        title: "Invite Staff"
+        description: "You’re almost done! Let’s invite some staff members to help <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>seed your discussions</a> with interesting topics and replies to get your community started."
+
+      finished:
+        title: "Your Discourse is Ready!"
+        description: |
+          <p>If you ever feel like changing these settings, visit <a href='/admin' target='_blank'>your admin section</a>; find it next to the wrench icon in the site menu.</p>
+          <p>Have fun, and good luck <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'>building your new community!</a></p>

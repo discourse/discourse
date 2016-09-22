@@ -1,6 +1,7 @@
 class WebHookEventType < ActiveRecord::Base
   TOPIC = 1
   POST = 2
+  USER = 3
 
   has_and_belongs_to_many :web_hooks
 

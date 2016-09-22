@@ -1,4 +1,4 @@
-import { iconNode } from 'discourse/helpers/fa-icon';
+import { iconNode } from 'discourse/helpers/fa-icon-node';
 import { createWidget } from 'discourse/widgets/widget';
 import { h } from 'virtual-dom';
 
@@ -35,7 +35,7 @@ export default createWidget('poster-name', {
     if (attrs.moderator) { classNames.push('moderator'); }
     if (attrs.new_user) { classNames.push('new-user'); }
 
-    const primaryGroupName = attrs.primaryGroupName;
+    const primaryGroupName = attrs.primary_group_name;
     if (primaryGroupName && primaryGroupName.length) {
       classNames.push(primaryGroupName);
     }

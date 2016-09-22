@@ -52,7 +52,7 @@ ApiKey.reopenClass({
     @returns {Promise} a promise that resolves to the array of `ApiKey` instances
   **/
   find: function() {
-    return ajax("/admin/api").then(function(keys) {
+    return ajax("/admin/api/keys").then(function(keys) {
       return keys.map(function (key) {
         return ApiKey.create(key);
       });

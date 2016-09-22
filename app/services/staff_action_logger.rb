@@ -353,6 +353,15 @@ class StaffActionLogger
     }))
   end
 
+  def log_wizard_step(step, opts={})
+    raise Discourse::InvalidParameters.new(:step) unless step
+    UserHistory.create(params(opts).merge({
+      action: UserHistory.actions[:wizard_step],
+      acting_user_id: @admin.id,
+      context: step.id
+    }))
+  end
+
   private
 
     def params(opts=nil)

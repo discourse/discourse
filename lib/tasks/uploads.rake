@@ -386,6 +386,78 @@ def list_missing_uploads
 end
 
 ################################################################################
+#                              Recover from tombstone                          #
+################################################################################
+
+task "uploads:recover_from_tombstone" => :environment do
+  if ENV["RAILS_DB"]
+    recover_from_tombstone
+  else
+    RailsMultisite::ConnectionManagement.each_connection { recover_from_tombstone }
+  end
+end
+
+def recover_from_tombstone
+  if Discourse.store.external?
+    puts "This task only works for internal storages."
+    return
+  end
+
+  begin
+    original_setting = SiteSetting.max_image_size_kb
+    SiteSetting.max_image_size_kb = 10240
+    current_db = RailsMultisite::ConnectionManagement.current_db
+
+    public_path = Rails.root.join("public")
+    paths = Dir.glob(File.join(public_path, 'uploads', 'tombstone', current_db, '**', '*.*'))
+    max = paths.length
+
+    paths.each_with_index do |path, index|
+      filename = File.basename(path)
+      printf("%9d / %d (%5.1f%%)\n", (index + 1), max, (((index + 1).to_f / max.to_f) * 100).round(1))
+
+      Post.where("raw LIKE ?", "%#{filename}%").each do |post|
+        doc = Nokogiri::HTML::fragment(post.raw)
+        updated = false
+
+        doc.css("img[src]").each do |img|
+          url = img["src"]
+
+          next unless url =~ /^\/uploads\//
+
+          upload = Upload.find_by(url: url)
+
+          if !upload && url
+            printf "Restoring #{path}..."
+            tombstone_path = File.join(public_path, 'uploads', 'tombstone', url.gsub(/^\/uploads\//, ""))
+
+            if File.exists?(tombstone_path)
+              File.open(tombstone_path) do |file|
+                new_upload = Upload.create_for(Discourse::SYSTEM_USER_ID, file, File.basename(url), File.size(file))
+
+                if new_upload.persisted?
+                  printf "Restored into #{new_upload.url}\n"
+                  DbHelper.remap(url, new_upload.url)
+                  updated = true
+                else
+                  puts "Failed to create upload for #{url}: #{new_upload.errors.full_messages}."
+                end
+              end
+            else
+              puts "Failed to find file (#{tombstone_path}) in tombstone."
+            end
+          end
+        end
+
+        post.rebake! if updated
+      end
+    end
+  ensure
+    SiteSetting.max_image_size_kb = original_setting
+  end
+end
+
+################################################################################
 #                        regenerate_missing_optimized                          #
 ################################################################################
 

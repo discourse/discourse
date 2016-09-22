@@ -153,22 +153,24 @@ aside.quote {
   }
 }
 
-.topic-avatar {
+.topic-avatar, .user-card-avatar {
   position: relative;
 }
 
-.topic-avatar .avatar-flair, .avatar-flair-preview .avatar-flair {
+.topic-avatar .avatar-flair, .avatar-flair-preview .avatar-flair, .user-card-avatar .avatar-flair {
   display: flex;
   align-items: center;
   justify-content: center;
-  background-size: 20px 20px;
   background-repeat: no-repeat;
   background-position: center;
-  width: 20px;
-  height: 20px;
   position: absolute;
   bottom: 0;
   right: -6px;
+}
+.topic-avatar .avatar-flair, .avatar-flair-preview .avatar-flair {
+  background-size: 20px 20px;
+  width: 20px;
+  height: 20px;
   &.rounded {
     background-size: 18px 18px;
     border-radius: 12px;
@@ -176,6 +178,22 @@ aside.quote {
     height: 24px;
     bottom: -2px;
     right: -8px;
+  }
+}
+.user-card-avatar .avatar-flair {
+  background-size: 40px 40px;
+  width: 40px;
+  height: 40px;
+  &.rounded {
+    background-size: 30px 30px;
+    border-radius: 24px;
+    width: 40px;
+    height: 40px;
+    bottom: -2px;
+    right: -4px;
+  }
+  .fa {
+    font-size: 24px;
   }
 }
 .topic-avatar .poster-avatar-extra {

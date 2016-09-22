@@ -1,4 +1,4 @@
-import { registerUnbound } from 'discourse/lib/helpers';
+import { registerUnbound } from 'discourse-common/lib/helpers';
 import { longDate, autoUpdatingRelativeAge, number } from 'discourse/lib/formatter';
 
 const safe = Handlebars.SafeString;

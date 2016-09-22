@@ -270,10 +270,10 @@ he:
       reject: 'לדחות'
       delete_user: 'מחק משתמש'
       title: "זקוק לאישור"
-      none: "לא נותרו הודעות לבדיקה"
+      none: "לא נותרו פוסטים לבדיקה"
       edit: "ערוך"
       cancel: "ביטול"
-      view_pending: "הצג הודעות ממתינות"
+      view_pending: "הצג פוסטים ממתינים"
       has_pending_posts:
         one: " בנושא זה ישנו פוסט אחד הממתין לאישור"
         other: "בנושא זה ישנם <b>{{count}}</b> פוסטים הממתינים לאישור"
@@ -287,12 +287,12 @@ he:
           other: "יש לכם <strong>{{count}}</strong> פוסטים ממתינים."
         ok: "אשר"
     user_action:
-      user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a> פרסם <a href='{{topicUrl}}'>את הפוסט</a>"
-      you_posted_topic: "<a href='{{userUrl}}'>את/ה</a> פרסמת <a href='{{topicUrl}}'>את הפוסט</a>"
+      user_posted_topic: "<a href='{{userUrl}}'>{{user}}</a> פרסם <a href='{{topicUrl}}'>את הנושא</a>"
+      you_posted_topic: "<a href='{{userUrl}}'>את/ה</a> פרסמת <a href='{{topicUrl}}'>את הנושא</a>"
       user_replied_to_post: "<a href='{{userUrl}}'>{{user}}</a> הגיב ל: <a href='{{postUrl}}'>{{post_number}}</a>"
       you_replied_to_post: "<a href='{{userUrl}}'>את/ה</a> הגבת ל: <a href='{{postUrl}}'>{{post_number}}</a>"
-      user_replied_to_topic: "<a href='{{userUrl}}'>{{user}}</a> הגיב <a href='{{topicUrl}}'>לפוסט הזה</a>"
-      you_replied_to_topic: "<a href='{{userUrl}}'>את/ה</a> הגבת <a href='{{topicUrl}}'>לפוסט הזה</a>"
+      user_replied_to_topic: "<a href='{{userUrl}}'>{{user}}</a> הגיב <a href='{{topicUrl}}'>לנושא הזה</a>"
+      you_replied_to_topic: "<a href='{{userUrl}}'>את/ה</a> הגבת <a href='{{topicUrl}}'>לנושא הזה</a>"
       user_mentioned_user: "<a href='{{user1Url}}'>{{user}}</a> הזכיר את <a href='{{user2Url}}'>{{another_user}}</a>"
       user_mentioned_you: "<a href='{{user1Url}}'>{{user}}</a> הזכיר <a href='{{user2Url}}'>אותך</a>"
       you_mentioned_user: "<a href='{{user1Url}}'>את/ה</a> הזכרת את <a href='{{user2Url}}'>{{another_user}}</a>"
@@ -308,8 +308,8 @@ he:
       topics_entered: "נצפה"
       topics_entered_long: "נושאים שנצפו"
       time_read: "זמן קריאה"
-      topic_count: "פוסטים"
-      topic_count_long: "פוסטים שנוצרו"
+      topic_count: "נושאים"
+      topic_count_long: "נושאים שנוצרו"
       post_count: "תגובות"
       post_count_long: "תגובות שפורסמו"
       no_results: "לא נמצאו תוצאות"
@@ -337,7 +337,7 @@ he:
         other: "קבוצות"
       members: "חברים"
       topics: "נושאים"
-      posts: "הודעות"
+      posts: "פוסטים"
       mentions: "אזכורים"
       messages: "הודעות"
       alias_levels:
@@ -452,7 +452,7 @@ he:
       dismiss_notifications: "בטלו הכל"
       dismiss_notifications_tooltip: "סימון כל ההתראות שלא נקראו כהתראות שנקראו"
       disable_jump_reply: "אל תקפצו לפרסומים שלי לאחר שאני משיב/ה"
-      dynamic_favicon: "הצגת מספר פוסטים חדשים/מעודכנים על האייקון של הדפדפן"
+      dynamic_favicon: "הצגת מספר נושאים חדשים/מעודכנים על האייקון של הדפדפן"
       external_links_in_new_tab: "פתח את כל הקישורים החיצוניים בעמוד חדש"
       enable_quoting: "אפשרו תגובת ציטוט לטקסט מסומן"
       change: "שנה"
@@ -503,7 +503,7 @@ he:
       muted_users_instructions: "להשבית כל התראה ממשתמשים אלו"
       muted_topics_link: "הצג נושאים שהושתקו"
       watched_topics_link: "הצגת נושאים נצפים"
-      automatically_unpin_topics: "בטל נעיצת נושאים באופן אוטומטי כאשר אני מגיע/ה לתחתית ההודעות בנושא."
+      automatically_unpin_topics: "בטל נעיצת נושאים באופן אוטומטי כאשר אני מגיע/ה לתחתית."
       apps: "אפליקציות"
       revoke_access: "שלילת גישה"
       undo_revoke_access: "ביטול שלילת גישה"
@@ -513,8 +513,8 @@ he:
       api_read_write: "קריאה וכתיבה"
       staff_counters:
         flags_given: "דגלים שעוזרים"
-        flagged_posts: "הודעות מדוגלות"
-        deleted_posts: "הודעות שנמחקו"
+        flagged_posts: "פסטים מדוגלים"
+        deleted_posts: "פוסטים שנמחקו"
         suspensions: "השעיות"
         warnings_received: "אזהרות"
       messages:
@@ -673,7 +673,7 @@ he:
         pending_tab: "ממתין"
         pending_tab_with_count: "ממתינות ({{count}})"
         topics_entered: "נושאים נצפו"
-        posts_read_count: "הודעות נקראו"
+        posts_read_count: "פוסטים נקראו"
         expired: "פג תוקף ההזמנה."
         rescind: "הסרה"
         rescinded: "הזמנה הוסרה"
@@ -786,9 +786,9 @@ he:
       enabled: "אתר זה נמצא במצב קריאה בלבד. אנא המשיכו לשוטט, אך תגובות, לייקים, ופעולות נוספות כרגע אינם מאופשרים."
       login_disabled: "התחברות אינה מתאפשרת כשהאתר במצב קריאה בלבד."
       logout_disabled: "לא ניתן להתנתק בזמן שהאתר במצב של קריאה בלבד."
-    too_few_topics_and_posts_notice: "בואו <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>נתחיל את הדיון הזה!</a> יש כרגע <strong>%{currentTopics} / %{requiredTopics}</strong> נושאים ו-<strong>%{currentPosts} / %{requiredPosts}</strong> הודעות. אורחים חדשים צריכים כמה דיונים לקרוא ולהגיב אליהם."
+    too_few_topics_and_posts_notice: "בואו <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>נתחיל את הדיון הזה!</a> יש כרגע <strong>%{currentTopics} / %{requiredTopics}</strong> נושאים ו-<strong>%{currentPosts} / %{requiredPosts}</strong> פוסטים. אורחים חדשים צריכים כמה דיונים לקרוא ולהגיב אליהם."
     too_few_topics_notice: "בואו <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>נתחיל את הדיון הזה!</a> יש כרגע <strong>%{currentTopics} / %{requiredTopics}</strong> נושאים. אורחים חדשים צריכים כמה דיונים לקרוא ולהגיב אליהם."
-    too_few_posts_notice: "בואו <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>נתחיל את הדיון הזה!</a> יש כרגע <strong>%{currentPosts} / %{requiredPosts}</strong> הודעות. אורחים חדשים צריכים כמה דיונים לקרוא ולהגיב אליהם."
+    too_few_posts_notice: "בואו <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>נתחיל את הדיון הזה!</a> יש כרגע <strong>%{currentPosts} / %{requiredPosts}</strong> פוסטים. אורחים חדשים צריכים כמה דיונים לקרוא ולהגיב אליהם."
     logs_error_rate_notice:
       reached: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a>הגיע לגבול הגדרות האתר של %{siteSettingRate}."
       exceeded: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> עבר את הגבול של הגדרות האתר ב- %{siteSettingRate}."
@@ -825,7 +825,7 @@ he:
       description: "ישנן <b>{{replyCount}}</b> תגובות."
       description_time: "יש <b>{{replyCount}}</b> תגובות עם זמן קריאה מוערך של <b>{{readingTime}} דקות</b>."
       enable: 'סכם נושא זה'
-      disable: 'הצג את כל ההודעות'
+      disable: 'הצג את כל הפוסטים'
     deleted_filter:
       enabled_description: "נושא זה מכיל פוסטים שנמחקו ולכן אינם מוצגים."
       disabled_description: "פוסטים שנמחקו בנושא זה מוצגים כעת."
@@ -948,7 +948,7 @@ he:
       reply_here: "תגובה כאן"
       reply: "תגובה"
       cancel: "ביטול"
-      create_topic: "יצירת פוסט"
+      create_topic: "יצירת נושא"
       create_pm: "הודעה"
       title: "או לחצו Ctrl+Enter"
       users_placeholder: "הוספת משתמש"
@@ -993,7 +993,7 @@ he:
       toggler: "הסתר או הצג את פאנל העריכה"
       modal_ok: "אישור"
       modal_cancel: "ביטול"
-      cant_send_pm: "מצטערים, אינכם יכולים לשלוח הודעה ל %{username}."
+      cant_send_pm: "מצטערים, אינכם יכולים לשלוח הודעה ל-%{username}."
       yourself_confirm:
         title: "שחכתם להוסיף נמענים?"
         body: "כרגע ההודעה הזו נשלחת רק אליכם!"
@@ -1001,14 +1001,14 @@ he:
       auto_close:
         label: "מועד סגירה אוטומטית של נושא:"
         error: "הזינו בבקשה ערך תקין."
-        based_on_last_post: "לא לסגור עד שהפרסום האחרון בנושא זה יהיה לפחות בגיל זה."
+        based_on_last_post: "לא לסגור עד שהפוסט האחרון בנושא זה יהיה לפחות בגיל זה."
         all:
           examples: 'הזינו מספר שעות (24), שעה מדוייקת (17:30) או חותמת זמן (2013-11-22 14:00).'
         limited:
           units: "(# מספר שעות)"
           examples: 'הזינו מספר שעות (24).'
     notifications:
-      title: "התראות אודות אזכור @שם, תגובות לפוסטים ולנושאים שלכם, הודעות וכד'"
+      title: "התראות אודות אזכור @שם, תגובות לפוסטים ולנושאים שלכם, הודעות, וכד'"
       none: "לא ניתן לטעון כעת התראות."
       empty: "לא נמצאו התראות."
       more: "הצגת התראות ישנות יותר"
@@ -1095,7 +1095,7 @@ he:
         category: "חפשו את הקטגוריה #{{category}}"
         topic: "חפשו בנושא זה"
         private_messages: "חיפוש הודעות"
-    hamburger_menu: "עבור לרשימת נושאים אחרת או קטגוריה"
+    hamburger_menu: "עיברו לרשימת נושאים אחרת או קטגוריה"
     new_item: "חדש"
     go_back: 'חזור אחורה'
     not_logged_in_user: 'עמוד משתמש עם סיכום פעילות נוכחית והעדפות'
@@ -1104,7 +1104,7 @@ he:
       bulk:
         unlist_topics: "הסרת נושאים"
         reset_read: "איפוס נקראו"
-        delete: "מחיקת פוסטים"
+        delete: "מחיקת נושאים"
         dismiss: "ביטול"
         dismiss_read: "בטלו את כל אלו שלא-נקראו"
         dismiss_button: "ביטול..."
@@ -1119,19 +1119,19 @@ he:
         notification_level: "שינוי רמת התראה"
         choose_new_category: "בחרו את הקטגוריה עבור הנושאים:"
         selected:
-          one: "בחרת נושא <b>אחד</b>."
-          other: "בחרת <b>{{count}}</b> נושאים."
+          one: "בחרתם נושא <b>אחד</b>."
+          other: "בחרתם <b>{{count}}</b> נושאים."
         change_tags: "שנו תגיות"
         choose_new_tags: "בחרו בתגיות חדשות עבור נושאים אלו:"
         changed_tags: "התגיות של נושאים אלו השתנו."
       none:
         unread: "אין לכם נושאים שלא נקראו."
-        new: "אין לך נושאים חדשים."
-        read: "עדיין לא קראת אף נושא."
-        posted: "עדיין לא פרסמת באף נושא."
-        latest: "אין פוסטים מדוברים. זה עצוב."
-        hot: "אין פוסטים חמים."
-        bookmarks: "אין לך עדיין סימניות לפוסטים."
+        new: "אין לכם נושאים חדשים."
+        read: "עדיין לא קראתם אף נושא."
+        posted: "עדיין לא פרסמתם באף נושא."
+        latest: "אין נושאים אחרונים. זה עצוב."
+        hot: "אין נושאים חמים."
+        bookmarks: "אין לך עדיין סימניות לנושאים."
         category: "אין נושאים בקטגוריה {{category}}."
         top: "אין נושאים מובילים."
         search: "אין תוצאות חיפוש"
@@ -1183,10 +1183,10 @@ he:
         login_required: "עליכם להתחבר כדי לצפות בנושא זה."
       server_error:
         title: "שגיאה בטעינת הנושא"
-        description: "סליחה, לא יכולנו לטעון את הפוסט הזה, ייתכן שבשל תקלת תקשורת. אנא נסי שוב. אם הבעיה נמשכת, הודיעו לנו."
+        description: "סליחה, לא יכולנו לטעון את הנושא הזה, ייתכן שבשל תקלת תקשורת. אנא נסו שוב. אם הבעיה נמשכת, הודיעו לנו."
       not_found:
         title: "הנושא לא נמצא"
-        description: "סליחה, לא יכולנו למצוא את הנושא הזה. אולי הוא הוסר על ידי מנהל?"
+        description: "סליחה, לא יכולנו למצוא את הנושא הזה. אולי הוא הוסר על ידי מנחה?"
       total_unread_posts:
         one: "יש לכם פוסט אחד שלא נקרא בנושא זה"
         other: "יש לכם {{count}} פוסטים שלא נקראו בנושא זה"
@@ -1198,25 +1198,25 @@ he:
         other: "יש {{count}} פוסטים חדשים בנושא זה מאז שקראתם אותו לאחרונה"
       likes:
         one: "יש לייק אחד בנושא הזה"
-        other: "יש {{count}} לייקים בפוסט הזה"
-      back_to_list: "חזרה לרשימת הפוסטים"
-      options: "אפשרויות פוסט"
-      show_links: "הצג קישורים בתוך הפוסט הזה"
-      toggle_information: "הצגת פרטי פוסט"
-      read_more_in_category: "רוצה לקרוא עוד? עיין פוסטים אחרים ב {{catLink}} או {{latestLink}}."
+        other: "יש {{count}} לייקים בנושא זה"
+      back_to_list: "חזרה לרשימת הנושאים"
+      options: "אפשרויות נושא"
+      show_links: "הצג קישורים בתוך הנושא הזה"
+      toggle_information: "הצגת פרטי נושא"
+      read_more_in_category: "רוצים לקרוא עוד? עיינו בנושאים אחרים ב {{catLink}} או {{latestLink}}."
       read_more: "רוצה לקרוא עוד? {{catLink}} or {{latestLink}}."
       read_more_MF: "There { UNREAD, plural, =0 {} one { is <a href='/unread'>1 unread</a> } other { are <a href='/unread'># unread</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{and } false {is } other{}} <a href='/new'>1 new</a> topic} other { {BOTH, select, true{and } false {are } other{}} <a href='/new'># new</a> topics} } remaining, or {CATEGORY, select, true {browse other topics in {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: עיין בכל הקטגוריות
-      view_latest_topics: הצגת פוסטים מדוברים
-      suggest_create_topic: לחצו כאן כדי ליצור פוסט חדש.
+      view_latest_topics: הצגת נושאים אחרונים
+      suggest_create_topic: למה לא ליצור נושא חדש?
       jump_reply_up: קפיצה לתגובה קודמת
       jump_reply_down: קפיצה לתגובה מאוחרת
-      deleted: "הפוסט הזה נמחק"
-      auto_close_notice: "הפוסט הזה ינעל אוטומטית %{timeLeft}."
-      auto_close_notice_based_on_last_post: "פוסט זה ייסגר %{duration} אחר התגובה האחרונה."
+      deleted: "הנושא הזה נמחק"
+      auto_close_notice: "הנושא הזה ינעל אוטומטית %{timeLeft}."
+      auto_close_notice_based_on_last_post: "נושא זה ייסגר %{duration} אחר התגובה האחרונה."
       auto_close_title: 'הגדרות נעילה אוטומטית'
       auto_close_save: "שמור"
-      auto_close_remove: "אל תנעל פוסט זה אוטומטית"
+      auto_close_remove: "אל תנעל נושא זה אוטומטית"
       auto_close_immediate:
         one: "הפוסט האחרון בנושא הוא כבר בן שעה, אז הנושא ייסגר מיידית."
         other: "הפוסט האחרון בנושא הוא כבר בן %{count} שעות, אז הנושא ייסגר אוטומטית."
@@ -1225,7 +1225,7 @@ he:
         back_description: "חיזרו לפוסט האחרון שלא-נקרא על-ידיכם"
         replies_short: "%{current} / %{total}"
       progress:
-        title: התקדמות פוסט
+        title: התקדמות נושא
         go_top: "למעלה"
         go_bottom: "למטה"
         go: "קדימה"
@@ -1233,7 +1233,7 @@ he:
         jump_prompt: "קפיצה לפוסט"
         jump_prompt_long: "לאיזה פוסט הייתם רוצים לקפוץ?"
         jump_bottom_with_number: "קפיצה לפוסט %{post_number}"
-        total: סך הכל הודעות
+        total: סך הכל הפוסטים
         current: פוסט נוכחי
       notifications:
         title: שנו את תדירות ההתראות על הנושא הזה
@@ -1252,8 +1252,8 @@ he:
           '1_2': 'תקבלו התראה אם מישהו יזכיר את @שם_המשתמש/ת שלך או ישיב לפרסום שלך.'
           '1': 'תקבלו התראה אם מישהו יזכיר את @שם_המשתמש/ת שלך או ישיב לפרסום שלך.'
           '0_7': 'את/ה מתעלם/מתעלמת מכל ההתראות בקטגוריה זו.'
-          '0_2': 'אתם מתעלמים מכל ההתראות בפוסט זה.'
-          '0': 'אתם מתעלמים מכל ההתראות בפוסט זה.'
+          '0_2': 'אתם מתעלמים מכל ההתראות בנושא זה.'
+          '0': 'אתם מתעלמים מכל ההתראות בנושא זה.'
         watching_pm:
           title: "עוקב"
           description: "תקבלו התראה על כל תגובה חדשה בהודעה זו. בנוסף מספר התגובות שלא נקראו יופיעו ליד ההודעה."
@@ -1265,7 +1265,7 @@ he:
           description: "ספירה של תגובות חדשות תופיע עבור הודעה זו. אתם תיודעו אם מישהו מזכיר את @שמכם או עונה לכם."
         tracking:
           title: "רגיל+"
-          description: "כמו רגיל, בנוסף מספר התגובות שלא נקראו יוצג לפוסט זה. "
+          description: "כמו רגיל, בנוסף מספר התגובות שלא נקראו יוצג לנושא זה."
         regular:
           title: "רגיל"
           description: "תקבלו התראה אם מישהו יזכיר את @שם_המשתמש/ת שלך או ישיב לפרסום שלך."
@@ -1302,20 +1302,20 @@ he:
         remove_banner: "הסרת נושא באנר"
       reply:
         title: 'תגובה'
-        help: 'החל בכתיבת תגובה לנושא זה'
+        help: 'התחילו לכתוב תגובה לנושא זה'
       clear_pin:
         title: "נקה נעיצה"
-        help: "נקה סטטוס נעוץ של פוסט זה כדי שהוא לא יופיע עוד בראש רשימת הפוסטים שלך"
+        help: "נקה סטטוס נעוץ של נושא זה כדי שהוא לא יופיע עוד בראש רשימת הנושאים שלכם"
       share:
         title: 'שיתוף'
-        help: 'שתפו קישור לפוסט זה'
+        help: 'שתפו קישור לנושא זה'
       flag_topic:
         title: 'דגל'
-        help: 'דגלו פוסט זה באופן פרטי לתשומת לב או שלחו התראה פרטית בנוגע אליו'
+        help: 'דגלו נושא זה באופן פרטי לתשומת לב או שלחו התראה פרטית בנוגע אליו'
         success_message: 'דיגלתם נושא זה בהצלחה.'
       feature_topic:
         title: "המליצו על נושא זה"
-        pin: "גרמו לפוסט זה להופיע בראש קטגוריה  {{categoryLink}}  עד"
+        pin: "גרמו לנושא זה להופיע בראש קטגוריה {{categoryLink}} עד"
         confirm_pin: "יש לכם כבר {{count}} נושאים נעוצים. מספר גדול מידי של נושאים נעוצים עשויים להכביד על משתמשים חדשים או אנונימיים. האם אתם בטוחים שאתם רוצים לנעוץ נושא נוסף בקטגוריה זו? "
         unpin: "הסרת נושא זה מראש הקטגוריה {{categoryLink}}."
         unpin_until: "גרמו לנושא זה להופיע בראש הקטגוריה {{categoryLink}} או המתינו עד <strong>%{until}</strong>."
@@ -1325,16 +1325,16 @@ he:
         already_pinned:
           one: "נושא שננעצו, נכון לעכשיו בקטגוריה  {{categoryLink}}: <strong class='badge badge-notification unread'>1</strong>"
           other: "נושאים ננעצו, נכון לעכשיו, בקטגוריה  {{categoryLink}}.: <strong class='badge badge-notification unread'>{{count}}</strong>"
-        pin_globally: "גרמו לפוסט זה להופיע בראש כל רשימות הפוסטים עד"
-        confirm_pin_globally: "יש לך כבר {{count}} פוסטים המוצמדים באופן גלובאלי. עודף פוסטים מוצמדים עשוי להכביד על משתמשים חדשים או אנונימיים. האם את/ה בטוחים שאתם מעוניינים להצמיד פוסט גלובאלי נוסף?"
-        unpin_globally: "הסרת פוסט זה מראש כל רשימות הפוסטים."
-        unpin_globally_until: "הסרת פוסט זה מראש כל רשימות הפוסטים או המתינו עד <strong>%{until}</strong>."
-        global_pin_note: "משתמשים יכולים להסיר את הצמדת הפוסט באופן עצמאי לעצמם."
+        pin_globally: "גרמו לנושא זה להופיע בראש כל רשימות הנושאים עד"
+        confirm_pin_globally: "יש לך כבר {{count}} נושאים הנעוצים באופן גלובאלי. עודף נושאים נעוצים עשוי להכביד על משתמשים חדשים או אנונימיים. האם אתם בטוחים שאתם מעוניינים לנעוץ נושא גלובאלי נוסף?"
+        unpin_globally: "הסרת נושא זה מראש כל רשימות הנושאים."
+        unpin_globally_until: "הסירו נושא זה מראש כל רשימות הנושאים או המתינו עד <strong>%{until}</strong>."
+        global_pin_note: "משתמשים יכולים להסיר את הצמדת הנושא באופן עצמאי לעצמם."
         not_pinned_globally: "אין נושאים נעוצים גלובאלית."
         already_pinned_globally:
           one: "נושאים שכרגע נעוצים גלובאלית: <strong class='badge badge-notification unread'>1</strong>"
           other: "נושאים שכרגע נעוצים גלובאלית: <strong class='badge badge-notification unread'>{{count}}</strong>"
-        make_banner: "הפכו פוסט זה לבאנר אשר מופיע בראש כל העמודים."
+        make_banner: "הפכו נושא זה לבאנר אשר מופיע בראש כל העמודים."
         remove_banner: "הסרת הבאנר שמופיע בראש כל העמודים."
         banner_note: "משתמשים יכולים לבטל את הבאנר על ידי סגירתו. רק פוסט אחד יכול לשמש כבאנר בזמן נתון."
         no_banner_exists: "אין נושא באנר"
@@ -1355,16 +1355,16 @@ he:
         title: 'הזמנה'
         username_placeholder: "שם משתמש"
         action: 'שלח הזמנה'
-        help: 'הזמינו אנשים אחרים לפוסט זה דרך דואר אלקטרוני או התראות'
+        help: 'הזמינו אנשים אחרים לנושא זה דרך דואר אלקטרוני או התראות'
         to_forum: "נשלח מייל קצר המאפשר לחברך להצטרף באופן מיידי באמצעות לחיצה על קישור, ללא צורך בהתחברות למערכת הפורומים."
-        sso_enabled: "הכנס את שם המשתמש של האדם שברצונך להזמין לפוסט זה."
-        to_topic_blank: "הכנס את שם המשתמש או כתובת דואר האלקטרוני של האדם שברצונך להזמין לפוסט זה."
-        to_topic_email: "הזנת כתובת אימייל. אנחנו נשלח הזמנה שתאפשר לחברך להשיב לפוסט הזה."
-        to_topic_username: "הזנת שם משתמש/ת. נשלח התראה עם לינק הזמנה לפוסט הזה. "
-        to_username: "הכנסת את שם המשתמש של האדם שברצונך להזמין. אנו נשלח התראה למשתמש זה עם קישור המזמין אותו לפוסט זה."
+        sso_enabled: "הכניסו את שם המשתמש של האדם שברצונכם להזמין לנושא זה."
+        to_topic_blank: "הכניסו את שם המשתמש או כתובת הדואר האלקטרוני של האדם שברצונכם להזמין לנושא זה."
+        to_topic_email: "הזנת כתובת אימייל. אנחנו נשלח הזמנה שתאפשר לחברך להשיב לנושא הזה."
+        to_topic_username: "הזנת שם משתמש/ת. נשלח התראה עם לינק הזמנה לנושא הזה. "
+        to_username: "הכנסתם את שם המשתמש של האדם שברצונכם להזמין. אנו נשלח התראה למשתמש זה עם קישור המזמין אותו לנושא זה."
         email_placeholder: 'name@example.com'
         success_email: "שלחנו הזמנה ל:  <b>{{emailOrUsername}}</b>. נודיע לך כשהזמנה תענה. בדוק את טאב ההזמנות בעמוד המשתמש שלך בשביל לעקוב אחרי ההזמנות ששלחת. "
-        success_username: "הזמנו את המשתמש להשתתף בפוסט."
+        success_username: "הזמנו את המשתמש להשתתף בנושא."
         error: "מצטערים, לא יכלנו להזמין האיש הזה. אולי הוא כבר הוזמן בעבר? (תדירות שליחת ההזמנות מוגבלת)"
       login_reply: 'התחברו כדי להשיב'
       filters:
@@ -1373,17 +1373,17 @@ he:
           other: "{{count}} פוסטים"
         cancel: "הסרת הסינון"
       split_topic:
-        title: "העבר לפוסט חדש"
-        action: "העבר לפוסט חדש"
-        topic_name: "שם הפוסט החדש"
-        error: "הייתה שגיאה בהעברת ההודעות לפוסט החדש."
+        title: "העבר לנושא חדש"
+        action: "העבר לנושא חדש"
+        topic_name: "שם הנושא החדש"
+        error: "הייתה שגיאה בהעברת הפוסטים לנושא החדש."
         instructions:
           one: "אתם עומדים ליצור נושא חדש ולמלא אותו עם הפוסטים שבחרתם."
           other: "אתם עומדים ליצור נושא חדש ולמלא אותו עם <b>{{count}}</b> הפוסטים שבחרתם."
       merge_topic:
-        title: "העבר לפוסט קיים"
-        action: "העבר לפוסט קיים"
-        error: "התרחשה שגיאה בהעברת ההודעות לפוסט הזה."
+        title: "העבר לנושא קיים"
+        action: "העבר לנושא קיים"
+        error: "התרחשה שגיאה בהעברת הפוסטים לנושא הזה."
         instructions:
           one: "בבקשה בחרו נושא אליו הייתם רוצים להעביר את הפוסט."
           other: "בבקשה בחרו את הנושא אליו תרצה להעביר את <b>{{count}}</b> הפוסטים."
@@ -1392,14 +1392,14 @@ he:
         action: "מיזוג פוסטים שנבחרו"
         error: "ארעה שגיאה במיזוג הפוסטים שנבחרו."
       change_owner:
-        title: "שנה בעלים של הודעות"
+        title: "שנו בעלים של פוסטים"
         action: "שנה בעלות"
         error: "התרחשה שגיאה בשינוי הבעלות של ההדעות."
-        label: "בעלים חדש של ההודעות"
+        label: "בעלים חדשים של פוסטים"
         placeholder: "שם המשתמש של הבעלים החדש"
         instructions:
-          one: "אנא בחר את הבעלים החדש של ההודעות מאת <b>{{old_user}}</b>."
-          other: "אנא בחר את הבעלים החדש של {{count}} ההודעות מאת <b>{{old_user}}</b>."
+          one: "אנא בחר את הבעלים החדש של הפוסטים מאת <b>{{old_user}}</b>."
+          other: "אנא בחרו את הבעלים החדש של {{count}} הפוסטים מאת <b>{{old_user}}</b>."
         instructions_warn: "יש לשים לב שהתראות על פוסט זה יועברו למשתמש החדש רטרואקטיבית.<br>זהירות: כרגע, שום מידע תלוי-פוסט אינו מועבר למשתמש החדש. השתמשו בזהירות."
       change_timestamp:
         title: "שנה חותמת זמן"
@@ -1426,7 +1426,7 @@ he:
       edit_reason: "סיבה: "
       post_number: "פוסט {{number}}"
       last_edited_on: "הפוסט נערך לאחרונה ב"
-      reply_as_new_topic: "תגובה כפוסט מקושר"
+      reply_as_new_topic: "תגובה כנושא מקושר"
       continue_discussion: "ממשיך את הדיון מ {{postLink}}:"
       follow_quote: "מעבר לפוסט המצוטט"
       show_full: "הצגת פוסט מלא"
@@ -1493,7 +1493,7 @@ he:
             other: "אתם רוצים למחוק את {{count}} התגובות הישירות לפוסט זה?"
           yes_value: "כן, מחק גם את התגובות"
           no_value: "לא, רק את הפוסט"
-        admin: "פרסום פעולות מנהלים"
+        admin: "פעולות ניהול של הפוסט"
         wiki: "יצירת wiki"
         unwiki: "הסרת ה-Wiki"
         convert_to_moderator: "הוספת צבע צוות"
@@ -1598,7 +1598,7 @@ he:
           hide: "הסתרת שינויים"
           show: "הצגת שינויים"
           revert: "חזרה לגרסה זו"
-          comparing_previous_to_current_out_of_total: "<strong>{{קודם}}</strong> <i class='fa fa-arrows-h'></i> <strong>{{נוכחי}}</strong> / {כוללl}}"
+          comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> <i class='fa fa-arrows-h'></i> <strong>{{current}}</strong> / {{total}}"
         displays:
           inline:
             title: "הצג את הפלט עם תוספות והסרות בתוכו"
@@ -1616,10 +1616,10 @@ he:
       choose: 'בחר קטגוריה&hellip;'
       edit: 'ערוך'
       edit_long: "עריכה"
-      view: 'הצג פוסטים בקטגוריה'
+      view: 'הצגת נושאים בקטגוריה'
       general: 'כללי'
       settings: 'הגדרות'
-      topic_template: "תבנית פוסט"
+      topic_template: "תבנית נושא"
       tags: "תגיות"
       tags_allowed_tags: "תגיות שניתנות לשימוש בקטגוריה זו בלבד:"
       tags_allowed_tag_groups: "קבוצות תגים שניתנות לשימוש בקטגוריה זו:"
@@ -1720,7 +1720,7 @@ he:
       action: "דגלו נושא"
       notify_action: "הודעה"
     topic_map:
-      title: "סיכום פוסט"
+      title: "סיכום נושא"
       participants_title: "מפרסמים מתמידים"
       links_title: "לינקים פופלארים"
       links_shown: "הצגת קישורים נוספים..."
@@ -1736,26 +1736,26 @@ he:
       warning:
         help: "זוהי אזהרה רשמית."
       bookmarked:
-        help: "יצרת סימניה לפוסט זה"
+        help: "יצרתם סימניה לנושא זה"
       locked:
-        help: "הפוסט הזה נעול, הוא לא מקבל יותר תגובות חדשות"
+        help: "הנושא הזה נעול, הוא לא מקבל יותר תגובות חדשות"
       archived:
-        help: "הפוסט הזה אוכסן בארכיון; הוא הוקפא ולא ניתן לשנותו"
+        help: "הנושא הזה אוכסן בארכיון; הוא הוקפא ולא ניתן לשנותו"
       locked_and_archived:
-        help: "הפוסט הזה סגור ומאורכב. לא ניתן להגיב בו יותר או לשנות אותו. "
+        help: "הנושא הזה סגור ומאורכב. לא ניתן להגיב בו יותר או לשנות אותו. "
       unpinned:
         title: "הורד מנעיצה"
-        help: "פוסט זה אינו מקובע עבורך; הוא יופיע בסדר הרגיל"
+        help: "נושא זה אינו מקובע עבורכם; הוא יופיע בסדר הרגיל"
       pinned_globally:
         title: "נעוץ גלובאלית"
         help: "הנושא הזה נעוץ בכל האתר; הוא יוצג בראש הקטגוריה שלו כחדש ביותר"
       pinned:
         title: "נעוץ"
-        help: "פוסט זה מקובע עבורך, הוא יופיע בראש הקטגוריה"
+        help: "נושא זה ננעץ עבורכם, הוא יופיע בראש הקטגוריה"
       invisible:
-        help: "פוסט זה מוסתר; הוא לא יוצג ברשימות הפוסטים, וזמין רק באמצעות קישור ישיר."
-    posts: "הודעות"
-    posts_long: "יש {{number}} הודעות בפוסט הזה"
+        help: "נושא זה מוסתר; הוא לא יוצג ברשימות הנושאים, וזמין רק באמצעות קישור ישיר."
+    posts: "פוסטים"
+    posts_long: "יש {{number}} פוסטים בנושא הזה"
     posts_likes_MF: |
       לנושא זה יש  {count, plural, one {פרסום אחד} other {# פרסומים}}
       נמוך {עם יחס גבוה של לייקים לפרסום}
@@ -1768,13 +1768,13 @@ he:
       one: "צפיה"
       other: "צפיות"
     replies: "תגובות"
-    views_long: "הפוסט הזה נצפה {{number}} פעמים"
+    views_long: "הנושא הזה נצפה {{number}} פעמים"
     activity: "פעילות"
     likes: "לייקים"
     likes_lowercase:
       one: "לייק"
       other: "לייקים"
-    likes_long: "יש {{number}} לייקים לפוסט הזה"
+    likes_long: "יש {{number}} לייקים לנושא הזה"
     users: "משתמשים"
     users_lowercase:
       one: "משתמש"
@@ -1787,33 +1787,33 @@ he:
       not_available: "לא זמין!"
     categories_list: "רשימת קטגוריות"
     filters:
-      with_topics: "%{filter} פוסטים"
-      with_category: "%{filter} %{category} פוסטים"
+      with_topics: "%{filter} נושאים"
+      with_category: "%{filter} %{category} נושאים"
       latest:
         title: "פורסמו לאחרונה"
         title_with_count:
           one: "האחרון (1)"
           other: "({{count}}) פורסמו לאחרונה"
-        help: "פוסטים עם תגובות לאחרונה"
+        help: "נושאים עם תגובות לאחרונה"
       hot:
         title: "חם"
-        help: "מבחר הפוסטים החמים ביותר"
+        help: "מבחר הנושאים החמים ביותר"
       read:
         title: "נקרא"
-        help: "פוסטים שקראת, לפי סדר קריאתם"
+        help: "נושאים שקראתם, לפי סדר קריאתם"
       search:
         title: "חיפוש"
-        help: "חיפוש בכל הפוסטים"
+        help: "חיפוש בכל הנושאים"
       categories:
         title: "קטגוריות"
         title_in: "קטגוריה - {{categoryName}}"
-        help: "כל הפוסטים תחת הקטגוריה הזו"
+        help: "כל הנושאים תחת הקטגוריה הזו"
       unread:
         title: "לא-נקראו"
         title_with_count:
           one: "לא נקרא(1)"
           other: "לא-נקראו ({{count}})"
-        help: "פוסטים שאתם כרגע צופים או עוקבים אחריהם עם פרסומים שלא נקראו"
+        help: "נושאים שאתם כרגע צופים או עוקבים אחריהם עם פוסטים שלא נקראו"
         lower_title_with_count:
           one: "לא נקרא (1)"
           other: "לא-נקראו {{count}} "
@@ -1826,19 +1826,19 @@ he:
         title_with_count:
           one: "חדש (1)"
           other: "חדשים ({{count}})"
-        help: "פרסומים שנוצרו בימים האחרונים"
+        help: "נושאים שנוצרו בימים האחרונים"
       posted:
-        title: "ההודעות שלי"
-        help: "פוסטים בהם פרסמת"
+        title: "הפוסטים שלי"
+        help: "נושאים בהם פרסמת"
       bookmarks:
         title: "סימניות"
-        help: "פוסטים עבורם יצרת סימניות"
+        help: "נושאים עבורם יצרתם סימניות"
       category:
         title: "{{categoryName}}"
         title_with_count:
           one: "{{categoryName}} (1)"
           other: "{{categoryName}} ({{count}})"
-        help: "פוסטים מדוברים בקטגוריה {{categoryName}}"
+        help: "נושאים מדוברים בקטגוריה {{categoryName}}"
       top:
         title: "מובילים"
         help: "הפוסטים הפעילים ביותר בשנה, חודש, שבוע או יום האחרונים"
@@ -2116,13 +2116,13 @@ he:
         delete_post_agree_flag_title: "מחיקת פוסט; אם זהו הפוסט הראשון, מחיקת הנושא"
         delete_flag_modal_title: "מחיקה ו..."
         delete_spammer: "מחיקת ספאמר"
-        delete_spammer_title: "הסרת המשתמש/ת וכל הפרסומים והפוסטים של משתמש/ת אלו."
+        delete_spammer_title: "הסרת המשתמש/ת וכל הפוסטים והנושאים של משתמש/ת אלו."
         disagree_flag_unhide_post: "אי-קבלה (הצגה מחדש של הפוסט)"
         disagree_flag_unhide_post_title: "הסרה של כל הדגלים מהפוסט הזה והחזרתו למצב תצוגה"
         disagree_flag: "אי קבלה"
         disagree_flag_title: "התעלמות מהדגל היות שאינו תקין או אינו נכון"
         clear_topic_flags: "סיום"
-        clear_topic_flags_title: "הפוסט נבדק והבעיה נפתרה. לחצו על סיום כדי להסיר את הדגלים."
+        clear_topic_flags_title: "הנושא נבדק והבעיה נפתרה. לחצו על סיום כדי להסיר את הדגלים."
         more: "(עוד תגובות...)"
         dispositions:
           agreed: "התקבל"
@@ -2135,8 +2135,8 @@ he:
         error: "משהו השתבש"
         reply_message: "תגובה"
         no_results: "אין דגלים."
-        topic_flagged: "<strong>הפוסט</strong> הזה דוגל."
-        visit_topic: "בקרו בפוסט כדי לנקוט פעולה"
+        topic_flagged: "<strong>נושא</strong> זה דוגל."
+        visit_topic: "בקרו בנושא כדי לנקוט פעולה"
         was_edited: "הפוסט נערך לאחר הדיגול הראשון"
         previous_flags_count: "פוסט זה כבר דוגל {{count}} פעמים."
         summary:
@@ -2206,9 +2206,24 @@ he:
         revoke: "שלול"
         confirm_regen: "אתה בטוח שברצונך להחליף את מפתח ה-API באחד חדש?"
         confirm_revoke: "אתם בטוחים שברצונכם לשלול את המפתח הזה?"
-        info_html: "מפתח הAPI שלך יאפשר לך ליצור ולעדכן פוסטים בעזרת קריאות JSON."
+        info_html: "מפתח הAPI שלך יאפשר לך ליצור ולעדכן נושאים בעזרת קריאות JSON."
         all_users: "כל המשתמשים"
         note_html: "שמרו על מפתח זה <strong>סודי</strong>, כל משתמש שיחזיק בו יוכל לייצר פרסומים שרירותית, כאילו היה כל משתמש/ת אחרים."
+      web_hooks:
+        event_type_missing: "אתם צריכים לקבוע לפחות סוג אירועים אחד."
+        content_type: "סוג תוכן"
+        secret: "סוד"
+        events:
+          body: "גוף"
+          go_list: "לכו לרשימה"
+          go_details: "עריכת webhook"
+          go_events: "לכו לארועים"
+          ping: "פינג"
+          status: "קוד סטטוס"
+          event_id: "מזהה"
+          timestamp: "נוצר"
+          completion: "זמן השלמה"
+          actions: "פעולות"
       plugins:
         title: "הרחבות (Plugins)"
         installed: "הרחבות מותקנות"
@@ -2275,7 +2290,7 @@ he:
             confirm: "האם אתם בטוחים שאתם מעוניינים להשיב את בסיס הנתונים למצב קודם?"
       export_csv:
         user_archive_confirm: "האם אתם בטוחים שאתם רוצים להוריד את הפרסומים שלכם?"
-        success: "יצוא החל, תקבלו הודעה כשהתהליך יסתיים"
+        success: "יצוא החל, תקבלו התראה כשהתהליך יסתיים"
         failed: "הייצוא נכשל. אנא בדקו ברישומי הלוג."
         rate_limit_error: "ניתן להוריד פרסומים פעם ביום, אנא נסו שוב מחר."
         button_text: "ייצוא"
@@ -2365,10 +2380,10 @@ he:
             description: "טקסט ואייקונים בכותרת האתר."
           highlight:
             name: 'הדגשה'
-            description: 'צבע הרקע של אלמנטים מודגשים בעמוד, כמו הודעות ופוסטים.'
+            description: 'צבע הרקע של אלמנטים מודגשים בעמוד, כמו פוסטים ונושאים.'
           danger:
             name: 'זהירות'
-            description: 'צבע הדגשה של פעולות כמו מחיקת הודעות ופוסטים.'
+            description: 'צבע הדגשה של פעולות כמו מחיקת פוסטים ונושאים.'
           success:
             name: 'הצלחה'
             description: 'משמש כדי לסמן פעולה מוצלחת.'
@@ -2441,7 +2456,7 @@ he:
         last_match_at: "הותאם לאחרונה"
         match_count: "תואם"
         ip_address: "IP"
-        topic_id: "זהות (ID) פוסט"
+        topic_id: "זהות (ID) נושא"
         post_id: "מזהה פוסט"
         category_id: "מזהה קטגוריה"
         delete: 'מחק'
@@ -2480,7 +2495,7 @@ he:
             grant_badge: "העניקו עיטור"
             revoke_badge: "שללו עיטור"
             check_email: "בדיקת דוא\"ל"
-            delete_topic: "מחיקת פוסט"
+            delete_topic: "מחיקת נושא"
             delete_post: "מחיקת פוסט"
             impersonate: "התחזה"
             anonymize_user: "הפיכת משתמש/ת לאנונימיים"
@@ -2506,7 +2521,7 @@ he:
             allow: "לאפשר"
         screened_urls:
           title: "כתובות מסוננות"
-          description: "הכתובות הרשומות כאן היו בשימוש בהודעות  מאת משתמשים שזוהו כספאמרים."
+          description: "הכתובות הרשומות כאן היו בשימוש בפוסטים מאת משתמשים שזוהו כספאמרים."
           url: "כתובת"
           domain: "שם מתחם"
         screened_ips:
@@ -2591,7 +2606,7 @@ he:
         suspend_reason_label: "מדוע אתה משעה? הטקסט הזה <b>יהיה נראה לכולם</b> בעמוד המשתמש הזה, ויוצג למשתמש כשינסה להתחבר. נסה לשמור עליו קצר."
         suspend_reason: "סיבה"
         suspended_by: "הושעה על ידי"
-        delete_all_posts: "מחק את כל ההודעות"
+        delete_all_posts: "מחק את כל הפוסטים"
         delete_all_posts_confirm_MF: "אתם עומדים למחוק {POSTS, plural, one {פוסט אחד} other {# פסוטים}} ו{TOPICS, plural, one {נושא אחד} other {# נושאים}}. האם אתם בטוחים?"
         suspend: "השעה"
         unsuspend: "בטל השעייה"
@@ -2621,10 +2636,10 @@ he:
         activity: פעילות
         like_count: לייקים שהוענקו / התקבלו
         last_100_days: 'ב-100 הימים האחרונים'
-        private_topics_count: פוסטים פרטיים
-        posts_read_count: הודעות שנקראו
-        post_count: הודעות שנוצרו
-        topics_entered: פוסטים שנצפו
+        private_topics_count: נושאים פרטיים
+        posts_read_count: פוסטים שנקראו
+        post_count: פוסטים שנוצרו
+        topics_entered: נושאים שנצפו
         flags_given_count: דגלים שניתנו
         flags_received_count: דגלים שהתקבלו
         warnings_received_count: התקבלו אזהרות
@@ -2643,10 +2658,10 @@ he:
         delete_posts_forbidden_because_staff: "לא ניתן למחוק את כל הפרסומים של מנהלי מערכת ומפקחים."
         delete_forbidden:
           one: "לא ניתן למחוק משתמשים אם יש להם הודעות. מחקו את כל ההודעות לפני ניסיון מחיקה של משתמש. (הודעות ישנות יותר מיום אחד לא ניתן למחוק.)"
-          other: "לא ניתן למחוק משתמשים אם יש להם הודעות. מחקו את כל ההודעות לפני ניסיון מחיקה של משתמש. (הודעות ישנות יותר מ-%{count} ימים לא ניתן למחוק.)"
+          other: "לא ניתן למחוק משתמשים אם יש להם פוסטים. מחקו את כל הפוסטים לפני ניסיון מחיקה של משתמש. (פוסטים ישנים יותר מ-%{count} ימים לא ניתן למחוק.)"
         cant_delete_all_posts:
           one: "לא ניתן למחוק את כל ההודעות. חלק מההודעות ישנות יותר מ-%{count} ימים. (הגדרת delete_user_max_post_age.)"
-          other: "לא ניתן למחוק את כל ההודעות. חלק מההודעות ישנות יותר מ-%{count} ימים. (הגדרת delete_user_max_post_age.)"
+          other: "לא ניתן למחוק את כל הפוסטים. חלק מפוסטים ישנים יותר מ-%{count} ימים. (הגדרת delete_user_max_post_age.)"
         cant_delete_all_too_many_posts:
           one: "לא ניתן למחוק את כל הפוסטים מפני שלמשתמשים יותר מפוסט אחד. (delete_all_posts_max)"
           other: "לא ניתן למחוק את כל הפוסטים בגלל שלמשתמשים יותר מ %{count} פוסטים. (delete_all_posts_max)"
@@ -2654,7 +2669,7 @@ he:
         delete_and_block: "מחיקה ו<b>חסימת</b> כתובת דוא\"ל וכתובת IP אלה"
         delete_dont_block: "מחיקה בלבד"
         deleted: "המשתמש נמחק."
-        delete_failed: "הייתה שגיאה במחיקת המשתמש. יש לוודא שכל ההודעות נמחקו לפני ניסיון למחוק את המשתמש."
+        delete_failed: "הייתה שגיאה במחיקת המשתמש. יש לוודא שכל הפוסטים נמחקו לפני ניסיון למחוק את המשתמש."
         send_activation_email: "שלח הודעת הפעלת חשבון"
         activation_email_sent: "נשלחה הודעת הפעלת חשבון"
         send_activation_email_failed: "הייתה בעיה בשליחת הודעת האישור. %{error}"
@@ -2664,7 +2679,7 @@ he:
         deactivate_failed: "הייתה בעיה בנטרול חשבון המשתמש."
         unblock_failed: 'הייתה בעיה בביטול חסימת המשתמש.'
         block_failed: 'הייתה בעיה בחסימת המשתמש.'
-        block_confirm: 'האם אתם בטוחים שאתם מעוניינים לחסום משתמש זה? הם לא יוכלו ליצור נושאים או פוסטים נוספים.'
+        block_confirm: 'האם אתם בטוחים שאתם מעוניינים לחסום משתמש זה? הם לא יוכלו ליצור נושאים חדשים או פוסטים.'
         block_accept: 'כן, חסום משתמש זה'
         bounce_score: "ניקוד-החזר"
         reset_bounce_score:
@@ -2672,7 +2687,7 @@ he:
           title: "איפוס ניקוד-החזר"
         deactivate_explanation: "חשבון משתמש מנוטרל נדרש לוודא דואר אלקטרוני מחדש."
         suspended_explanation: "משתמש מושעה לא יכול להתחבר."
-        block_explanation: "משתמש חסום לא יכול לפרסם הודעות או פוסטים."
+        block_explanation: "משתמש חסום לא יכול לפרסם או להתחיל נושאים."
         staged_explanation: "משתמש מועמד יכול לפרסם רק באמצעות מייל בנושאים ספציפיים."
         bounce_score_explanation:
           none: "לא התקבלו החזרים לאחרונה מהמייל הזה."
@@ -2695,12 +2710,12 @@ he:
           requirement_heading: "דרישה"
           visits: "ביקורים"
           days: "ימים"
-          topics_replied_to: "פוסטים להם הגיבו"
-          topics_viewed: "פוסטים שנצפו"
-          topics_viewed_all_time: "פוסטים שנצפו (בכל זמן)"
+          topics_replied_to: "נושאים להם הגיבו"
+          topics_viewed: "נושאים שנצפו"
+          topics_viewed_all_time: "נושאים שנצפו (בכל זמן)"
           posts_read: "פרסומים שנקראו"
           posts_read_all_time: "פרסומים שנקראו (בכל זמן)"
-          flagged_posts: "הודעות מדוגלות"
+          flagged_posts: "פוסטים מדוגלים"
           flagged_by_users: "משתמשים שדיגלו"
           likes_given: "לייקים שהוענקו"
           likes_received: "לייקים שהתקבלו"
@@ -2888,7 +2903,7 @@ he:
         feed_description: "לספק פיד RSS/ATOM לאתרך יכול לשפר את היכולת של דיסקורס ליבא את התוכן שלך."
         crawling_settings: "הגדרות זחלן"
         crawling_description: "כאשר Discourse יוצר נושאים חדשים עבור פוסטים שלכם, אם לא קיים RSS/ATOM הוא ינסה לפענח את התוכן מתוך ה HTML שלכם. לפעמים זה מאתגר לחלץ את התכנים שלכם אז אנחנו מספקים את האפשרות להגדיר כללי CSS כדי שהחילוץ יהיה קל יותר."
-        embed_by_username: "שם משתמש ליצירת פוסט"
+        embed_by_username: "שם משתמש ליצירת נושא"
         embed_post_limit: "מספר מקסימלי של פרסומים להטמעה."
         embed_username_key_from_feed: "מפתח למשיכת שם המשתמש ב-discourse מהפיד."
         embed_title_scrubber: "ביטוי רגולרי שמשמש כדי לנקות את הכותרת של פוסטים"
@@ -2902,8 +2917,8 @@ he:
       permalink:
         title: "קישורים קבועים"
         url: "כתובת"
-        topic_id: "מזהה לפוסט"
-        topic_title: "פוסט"
+        topic_id: "מזהה נושא"
+        topic_title: "נושא"
         post_id: "מזהה פוסט"
         post_title: "פוסט"
         category_id: "מזהה לקטגוריה"

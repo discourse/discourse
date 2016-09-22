@@ -36,7 +36,10 @@ export default Ember.Component.extend({
 
   @computed()
   shouldSee() {
-    return Discourse.User.currentProp('admin') && this.siteSettings.show_create_topics_notice;
+    const user = this.currentUser;
+    return user && user.get('admin') &&
+           this.siteSettings.show_create_topics_notice &&
+           !this.site.get('wizard_required');
   },
 
   @computed('enabled', 'shouldSee', 'publicTopicCount', 'publicPostCount')

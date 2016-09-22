@@ -7,7 +7,7 @@
 
 sq:
   site_settings:
-    poll_enabled: "Lejo anëtarët të hapin sondazhe?"
+    poll_enabled: "Lejo përdoruesit të hapin sondazhe?"
     poll_maximum_options: "Numri maksimal i opsioneve të lejuara në një sondazh."
     poll_edit_window_mins: "Numri i minutave pas krijimit të postimit gjatë të cilave sondazhet mund të ndryshohen."
   poll:
@@ -34,7 +34,7 @@ sq:
       staff_cannot_add_or_remove_options: "Nuk mund të shtoni apo hiqni alternativat e një sondazhi pas %{minutes} minutave të para. Ju duhet ta mbyllni këtë temë dhe të krijoni një të re."
     no_polls_associated_with_this_post: "Asnjë sondazh nuk është bashkangjitur me këtë postim."
     no_poll_with_this_name: "No poll named <strong>%{name}</strong> associated with this post."
-    post_is_deleted: "S'mund të veproj në një postim të eliminuar."
+    post_is_deleted: "S'mund të veproj në një postim të fshirë."
     topic_must_be_open_to_vote: "Tema duhet të jetë e hapur për të votuar."
     poll_must_be_open_to_vote: "Sondazhi duhet të jetë i hapur për të votuar."
     topic_must_be_open_to_toggle_status: "Tema duhet të jetë e hapur për të ndryshuar statusin."

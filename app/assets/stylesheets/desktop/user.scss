@@ -178,7 +178,7 @@
   }
 
   .user-right {
-    max-width: 700px;
+    width: 900px;
     margin-top: 20px;
     display: table-cell;
   }
@@ -669,15 +669,9 @@
   }
 }
 
-
 .user-right .group-notification-menu {
   float: right;
   margin-bottom: 5px;
-}
-.user-right.messages .topic-list {
-  thead, th.views, td.views {
-    display: none;
-  }
 }
 
 .user-main .nav-stacked {

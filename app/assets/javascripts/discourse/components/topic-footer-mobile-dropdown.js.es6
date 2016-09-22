@@ -1,5 +1,5 @@
-import { iconHTML } from 'discourse/helpers/fa-icon';
-import Combobox from 'discourse/components/combo-box';
+import { iconHTML } from 'discourse-common/helpers/fa-icon';
+import Combobox from 'discourse-common/components/combo-box';
 import { on, observes } from 'ember-addons/ember-computed-decorators';
 
 export default Combobox.extend({

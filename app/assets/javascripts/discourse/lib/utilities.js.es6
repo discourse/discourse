@@ -111,7 +111,7 @@ export function selectedText() {
   const $div = $(div);
 
   // Find all emojis and replace with its title attribute.
-  $div.find('img.emoji').replaceWith(() => this.title);
+  $div.find('img.emoji').replaceWith(function() { return this.title; });
   $('.clicks', $div).remove();
   const text = div.textContent || div.innerText || "";
 

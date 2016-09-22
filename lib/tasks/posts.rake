@@ -26,13 +26,17 @@ task 'posts:fix_letter_avatars' => :environment do
   puts "", "#{rebaked} posts done!", ""
 end
 
-desc 'Rebake all posts matching string/regex'
-task 'posts:rebake_match', [:pattern, :type] => [:environment] do |_,args|
+desc 'Rebake all posts matching string/regex and optionally delay the loop'
+task 'posts:rebake_match', [:pattern, :type, :delay] => [:environment] do |_,args|
   pattern = args[:pattern]
   type = args[:type]
   type = type.downcase if type
+  delay = args[:delay].to_i if args[:delay]
   if !pattern
-    puts "ERROR: Expecting rake posts:rebake_match[pattern,type]"
+    puts "ERROR: Expecting rake posts:rebake_match[pattern,type,delay]"
+    exit 1
+  elsif delay && delay < 1
+    puts "ERROR: delay parameter should be an integer and greater than 0"
     exit 1
   end
 
@@ -51,6 +55,7 @@ task 'posts:rebake_match', [:pattern, :type] => [:environment] do |_,args|
   search.find_each do |post|
     rebake_post(post)
     print_status(rebaked += 1, total)
+    sleep(delay) if delay
   end
 
   puts "", "#{rebaked} posts done!", ""
