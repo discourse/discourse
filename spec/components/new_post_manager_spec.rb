@@ -115,6 +115,31 @@ describe NewPostManager do
       end
     end
 
+    context 'with a high trust level setting for new topics but post responds to existing topic' do
+      before do
+        SiteSetting.approve_new_topics_unless_trust_level = 4
+      end
+      it "doesn't return a result action" do
+        result = NewPostManager.default_handler(manager)
+        expect(result).to eq(nil)
+      end
+    end
+
+  end
+
+  context "new topic handler" do
+    let(:manager) { NewPostManager.new(topic.user, raw: 'this is new topic content', title: 'new topic title') }
+    context 'with a high trust level setting for new topics' do
+      before do
+        SiteSetting.approve_new_topics_unless_trust_level = 4
+      end
+      it "will return an enqueue result" do
+        result = NewPostManager.default_handler(manager)
+        expect(NewPostManager.queue_enabled?).to eq(true)
+        expect(result.action).to eq(:enqueued)
+      end
+    end
+
   end
 
   context "extensibility priority" do
