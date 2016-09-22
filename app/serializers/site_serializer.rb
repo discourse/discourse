@@ -111,7 +111,7 @@ class SiteSerializer < ApplicationSerializer
   end
 
   def top_tags
-    Tag.top_tags
+    Tag.top_tags(guardian: scope)
   end
 
   def wizard_required
