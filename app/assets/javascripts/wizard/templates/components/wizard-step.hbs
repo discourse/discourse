@@ -30,22 +30,22 @@
 
   <div class='wizard-buttons'>
     {{#if showQuitButton}}
-      <a href {{action "quit"}} class='action-link quit'>{{i18n "wizard.quit"}}</a>
+      <a href {{action "quit"}} class='action-link quit' tabindex="11">{{i18n "wizard.quit"}}</a>
     {{/if}}
 
     {{#if showBackButton}}
-      <a href {{action "backStep"}} class='action-link back'>{{i18n "wizard.back"}}</a>
+      <a href {{action "backStep"}} class='action-link back' tabindex="11">{{i18n "wizard.back"}}</a>
     {{/if}}
 
     {{#if showNextButton}}
-      <button class='wizard-btn next primary' {{action "nextStep"}} disabled={{saving}}>
+      <button class='wizard-btn next primary' {{action "nextStep"}} disabled={{saving}} tabindex="10">
         {{i18n "wizard.next"}}
         {{fa-icon "chevron-right"}}
       </button>
     {{/if}}
 
     {{#if showDoneButton}}
-      <button class='wizard-btn done' {{action "quit"}} disabled={{saving}}>
+      <button class='wizard-btn done' {{action "quit"}} disabled={{saving}} tabindex="10">
         {{i18n "wizard.done"}}
       </button>
     {{/if}}

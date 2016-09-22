@@ -9,7 +9,7 @@
 
 <div class="new-user">
   <div class="text-field {{if invalid 'invalid'}}">
-    {{input class="invite-email" value=inviteEmail placeholder="user@example.com"}}
+    {{input class="invite-email wizard-focusable" value=inviteEmail placeholder="user@example.com" tabindex="9"}}
   </div>
 
   {{combo-box value=inviteRole content=roles nameProperty="label" width="200px"}}

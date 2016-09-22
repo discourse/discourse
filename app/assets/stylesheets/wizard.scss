@@ -175,7 +175,6 @@ body.wizard {
     font-size: 1.0em;
     border: 0px;
     padding: 0.5em;
-    outline: 0;
     transition: background-color .3s;
     margin-right: 0.5em;
 
@@ -390,7 +389,6 @@ body.wizard {
     padding: 6px;
     border: 1px solid #ccc;
     transition: border-color .5s;
-    outline: none;
   }
 
   &.invalid {

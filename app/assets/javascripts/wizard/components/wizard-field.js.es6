@@ -7,7 +7,7 @@ export default Ember.Component.extend({
   typeClass: type => `${Ember.String.dasherize(type)}-field`,
 
   @computed('field.id')
-  fieldClass: id => `field-${Ember.String.dasherize(id)}`,
+  fieldClass: id => `field-${Ember.String.dasherize(id)} wizard-focusable`,
 
   @computed('field.type', 'field.id')
   inputComponentName(type, id) {

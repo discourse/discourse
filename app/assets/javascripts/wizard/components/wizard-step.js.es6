@@ -48,7 +48,11 @@ export default Ember.Component.extend({
 
   keyPress(key) {
     if (key.keyCode === 13) {
-      this.send('nextStep');
+      if (this.get('showDoneButton')) {
+        this.send('quit');
+      } else {
+        this.send('nextStep');
+      }
     }
   },
 
@@ -63,13 +67,13 @@ export default Ember.Component.extend({
 
   autoFocus() {
     Ember.run.scheduleOnce('afterRender', () => {
-      const $invalid = $('.wizard-field.invalid:eq(0) input');
+      const $invalid = $('.wizard-field.invalid:eq(0) .wizard-focusable');
 
       if ($invalid.length) {
         return $invalid.focus();
       }
 
-      $('input:eq(0)').focus();
+      $('.wizard-focusable:eq(0)').focus();
     });
   },
 
