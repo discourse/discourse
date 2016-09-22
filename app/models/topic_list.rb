@@ -31,6 +31,7 @@ class TopicList
 
   def tags
     opts = @category ? { category: @category } : {}
+    opts[:guardian] = Guardian.new(@current_user)
     Tag.top_tags(opts)
   end
 
