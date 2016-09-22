@@ -1538,6 +1538,7 @@ en:
     something_already_taken: "Something went wrong, perhaps the username or email is already registered. Try the forgot password link."
     omniauth_error: "Sorry, there was an error authorizing your account. Perhaps you did not approve authorization?"
     omniauth_error_unknown: "Something went wrong processing your log in, please try again."
+    authenticator_error_no_valid_email: "No email addresses associated with %{account} are allowed. You may need to configure your account with a different email address."
     new_registrations_disabled: "New account registrations are not allowed at this time."
     password_too_long: "Passwords are limited to 200 characters."
     email_too_long: "The email you provided is too long. Mailbox names must be no more than 254 characters, and domain names must be no more than 253 characters."
