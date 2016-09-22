@@ -583,15 +583,21 @@ class ImportScripts::Base
 
   def update_user_stats
     puts "", "Updating topic reply counts..."
+
+    start_time = Time.now
+    progress_count = 0
+    total_count = User.real.count
+
     User.find_each do |u|
       u.create_user_stat if u.user_stat.nil?
       us = u.user_stat
       us.update_topic_reply_count
       us.save
-      print "."
+      progress_count += 1
+      print_status(progress_count, total_count, start_time)
     end
 
-    puts "Updating first_post_created_at..."
+    puts "." "Updating first_post_created_at..."
 
     sql = <<-SQL
       WITH sub AS (
