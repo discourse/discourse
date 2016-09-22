@@ -14,7 +14,7 @@ describe WizardController do
     end
 
     it "raises an error if you aren't an admin" do
-      log_in
+      log_in(:moderator)
       xhr :get, :index
       expect(response).to be_forbidden
     end

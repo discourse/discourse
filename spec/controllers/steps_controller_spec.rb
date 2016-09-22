@@ -13,7 +13,7 @@ describe StepsController do
   end
 
   it "raises an error if you aren't an admin" do
-    log_in
+    log_in(:moderator)
     xhr :put, :update, id: 'made-up-id', fields: { forum_title: "updated title" }
     expect(response).to be_forbidden
   end
