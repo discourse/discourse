@@ -132,7 +132,7 @@ class CategoriesController < ApplicationController
 
       render_serialized(@category, CategorySerializer)
     else
-      render_json_error(@category) unless @category.save
+      return render_json_error(@category) unless @category.save
     end
   end
 
@@ -150,10 +150,6 @@ class CategoriesController < ApplicationController
       end
 
       old_permissions = cat.permissions_params
-
-      # remove asset host & cdn from both logo_url and background_url (never trust the client)
-      category_params[:logo_url] = fix_upload_url(category_params[:logo_url])
-      category_params[:background_url] = fix_upload_url(category_params[:background_url])
 
       if result = cat.update_attributes(category_params)
         Scheduler::Defer.later "Log staff action change category settings" do
@@ -262,24 +258,4 @@ class CategoriesController < ApplicationController
       params[:include_topics] ||
       SiteSetting.desktop_category_page_style == "categories_with_featured_topics".freeze
     end
-
-    def fix_upload_url(url)
-      return if url.blank?
-
-      if Discourse.asset_host.present?
-        asset_host = UrlHelper.schemaless(Discourse.asset_host)
-        url.sub!(/^(https?:)?#{Regexp.escape(asset_host)}/, "")
-      end
-
-      if SiteSetting.enable_s3_uploads? && SiteSetting.s3_cdn_url.present?
-        s3_cdn_url = UrlHelper.schemaless(SiteSetting.s3_cdn_url)
-        url.sub!(/^(https?:)?#{Regexp.escape(s3_cdn_url)}/, Discourse.store.absolute_base_url)
-      end
-
-      base_url = UrlHelper.schemaless(Discourse.base_url_no_prefix)
-      url.sub!(/^(https?:)?#{Regexp.escape(base_url)}/, "")
-
-      url
-    end
-
 end
