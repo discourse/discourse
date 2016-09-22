@@ -14,20 +14,19 @@ describe Category do
 
   context "url validation" do
     let(:user) { Fabricate(:user) }
+
     let(:upload) { Fabricate(:upload) }
 
     it "ensures logo_url is valid" do
       expect(Fabricate.build(:category, user: user, logo_url: "---%")).not_to be_valid
       expect(Fabricate.build(:category, user: user, logo_url: "http://example.com/made-up.jpg")).not_to be_valid
       expect(Fabricate.build(:category, user: user, logo_url: upload.url)).to be_valid
-      expect(Fabricate.build(:category, user: user, logo_url: UrlHelper.schemaless(UrlHelper.absolute(upload.url)))).to be_valid
     end
 
     it "ensures background_url is valid" do
       expect(Fabricate.build(:category, user: user, background_url: ";test")).not_to be_valid
       expect(Fabricate.build(:category, user: user, background_url: "http://example.com/no.jpg")).not_to be_valid
       expect(Fabricate.build(:category, user: user, background_url: upload.url)).to be_valid
-      expect(Fabricate.build(:category, user: user, background_url: UrlHelper.schemaless(UrlHelper.absolute(upload.url)))).to be_valid
     end
   end
 
