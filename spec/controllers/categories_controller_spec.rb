@@ -230,26 +230,6 @@ describe CategoriesController do
 
           expect(UserHistory.count).to eq(5) # 2 + 3 (bootstrap mode)
         end
-
-        it "fix both logo and background urls" do
-          Discourse.stubs(:asset_host).returns("http://foo.bar")
-          Discourse.stubs(:base_url_no_prefix).returns("http://bar.foo")
-
-          upload = build(:upload)
-
-          xhr :put, :update, id: @category.id,
-                             name: @category.name,
-                             color: @category.color,
-                             text_color: @category.text_color,
-                             slug: @category.slug,
-                             logo_url: UrlHelper.schemaless(UrlHelper.absolute(upload.url)),
-                             background_url: UrlHelper.absolute_without_cdn(upload.url)
-
-          @category.reload
-          expect(@category.logo_url).to eq(upload.url)
-          expect(@category.background_url).to eq(upload.url)
-        end
-
       end
     end
 
