@@ -40,14 +40,4 @@ class BasicCategorySerializer < ApplicationSerializer
   def notification_level
     object.notification_level
   end
-
-  def logo_url
-    url = object.logo_url
-    url.present? && UrlHelper.is_local(url) ? UrlHelper.schemaless(UrlHelper.absolute(url)) : url
-  end
-
-  def background_url
-    url = object.background_url
-    url.present? && UrlHelper.is_local(url) ? UrlHelper.schemaless(UrlHelper.absolute(url)) : url
-  end
 end
