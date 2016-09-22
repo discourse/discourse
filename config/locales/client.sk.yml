@@ -1843,7 +1843,7 @@ sk:
           few: "{{count}} nové"
           other: "{{count}} nových"
         lower_title: "nový"
-        title: "Nový"
+        title: "Nové"
         title_with_count:
           one: "Nová (1)"
           few: "Nové ({{count}})"

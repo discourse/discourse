@@ -288,6 +288,7 @@ de:
               common: "ist eines der 10000 meist verwendeten Passwörter. Bitte verwende ein sichereres Passwort."
               same_as_username: "ist mit deinem Benutzernamen identisch. Bitte verwende ein sichereres Passwort."
               same_as_email: "ist mit deiner E-Mail-Adresse identisch. Bitte verwende ein sichereres Passwort."
+              same_as_current: "entspricht deinem aktuellen Passwort."
             ip_address:
               signup_not_allowed: "Eine Registrierung ist von diesem Konto nicht erlaubt."
         color_scheme_color:
@@ -844,7 +845,7 @@ de:
     allow_moderators_to_create_categories: "Erlaube Moderatoren neue Kategorien zu erstellen"
     cors_origins: "Erlaubte Adressen für Cross-Origin-Requests (CORS). Jede Adresse muss http:// oder https:// enthalten. Die Umgebungsvariable DISCOURSE_ENABLE_CORS muss gesetzt sein, um CORS zu aktivieren."
     use_admin_ip_whitelist: "Administratoren können sich nur anmelden, wenn sie von einer IP-Adresse aus zugreifen, welcher unter den vertrauenswürden IP-Adressen gelistet ist (Admin > Logs > Screened Ips)."
-    top_menu: "Legt fest, welche Elemente in der Navigationsleiste der Homepage auftauchen sollen, und in welcher Reihenfolge. Beispiel: latest|new|unread|categories|top|read|posted|bookmarks"
+    top_menu: "Legt fest, welche Elemente in der Navigationsleiste der Startseite auftauchen sollen, und in welcher Reihenfolge. Beispiel: latest|new|unread|categories|top|read|posted|bookmarks"
     post_menu: "Legt fest, welche Funktionen in welcher Reihenfolge im Beitragsmenü auftauchen. Beispiel: like|edit|flag|delete|share|bookmark|reply"
     post_menu_hidden_items: "Die Einträge im Menü eines Beitrags, die standardmäßig hinter einer erweiterbaren Ellipse versteckt werden sollen."
     share_links: "Legt fest, welche Dienste in welcher Reihenfolge im Teilen-Dialog auftauchen."

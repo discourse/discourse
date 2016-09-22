@@ -107,6 +107,7 @@ fi:
     operation_already_running: "Tehtävä on parhaillaan käynnissä. Uutta tehtävää ei voi aloittaa juuri nyt."
     backup_file_should_be_tar_gz: "Varmuuskopion tulisi olla .tar.gz-pakattu tiedosto."
     not_enough_space_on_disk: "Ei tarpeeksi levytilaa."
+    invalid_filename: "Varmuuskopion nimi sisältää ei-sallittuja merkkejä. Sallittuja ovat a-z 0-9 . - _."
   not_logged_in: "Sinun täytyy kirjautua sisään ensin."
   not_found: "Pyydettyä osoitetta tai resurssia ei löytynyt."
   invalid_access: "Sinulla ei ole oikeutta nähdä pyydettyä resurssia."
@@ -286,6 +287,7 @@ fi:
               common: "on yksi 10 000 yleisimmästä salasanasta. Ole hyvä ja valitse turvallisempi salasana."
               same_as_username: "on sama kuin käyttäjätunnuksesi. Ole hyvä ja valitse turvallisempi salasana."
               same_as_email: "on sama kuin sähköpostiosoitteesi. Ole hyvä ja valitse turvallisempi salasana."
+              same_as_current: "on sama kuin nykyinen salasanasi."
             ip_address:
               signup_not_allowed: "Kirjautuminen ei ole sallittu tälle tilille."
         color_scheme_color:
@@ -295,6 +297,10 @@ fi:
         post_reply:
           base:
             different_topic: "Viestin ja siihen liittyvän vastauksen tulee olla samassa ketjussa."
+        web_hook:
+          attributes:
+            payload_url:
+              invalid: "URL ei kelpaa- URL:in tulee sisältää http:// tai https://. Välilyöntejä ei saa olla."
       <<: *errors
   user_profile:
     no_info_me: "<div class='missing-profile'>Minusta -kohta käyttäjäprofiilissasi on vielä täyttämättä,<a href='/users/%{username_lower}/preferences/about-me'>haluaisitko täyttää sen nyt?</a></div>"

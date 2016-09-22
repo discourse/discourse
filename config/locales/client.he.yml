@@ -2209,6 +2209,21 @@ he:
         info_html: "מפתח הAPI שלך יאפשר לך ליצור ולעדכן נושאים בעזרת קריאות JSON."
         all_users: "כל המשתמשים"
         note_html: "שמרו על מפתח זה <strong>סודי</strong>, כל משתמש שיחזיק בו יוכל לייצר פרסומים שרירותית, כאילו היה כל משתמש/ת אחרים."
+      web_hooks:
+        event_type_missing: "אתם צריכים לקבוע לפחות סוג אירועים אחד."
+        content_type: "סוג תוכן"
+        secret: "סוד"
+        events:
+          body: "גוף"
+          go_list: "לכו לרשימה"
+          go_details: "עריכת webhook"
+          go_events: "לכו לארועים"
+          ping: "פינג"
+          status: "קוד סטטוס"
+          event_id: "מזהה"
+          timestamp: "נוצר"
+          completion: "זמן השלמה"
+          actions: "פעולות"
       plugins:
         title: "הרחבות (Plugins)"
         installed: "הרחבות מותקנות"

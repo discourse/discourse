@@ -1626,8 +1626,8 @@ de:
       create: 'Neue Kategorie'
       create_long: 'Eine neue Kategorie erstellen'
       save: 'Kategorie speichern'
-      slug: 'Sprechender Name für URL'
-      slug_placeholder: '(Optional) mit Bindestrich getrennte Wörter für URL'
+      slug: 'Sprechender Name für URL (optional)'
+      slug_placeholder: 'Bindestrich getrennte Wörter für URL'
       creation_error: Beim Erstellen der Kategorie ist ein Fehler aufgetreten.
       save_error: Beim Speichern der Kategorie ist ein Fehler aufgetreten.
       name: "Name der Kategorie"
@@ -1645,18 +1645,18 @@ de:
       list: "Kategorien auflisten"
       no_description: "Bitte füge eine Beschreibung für diese Kategorie hinzu."
       change_in_category_topic: "Beschreibung bearbeiten"
-      already_used: 'Diese Farbe wird bereits für eine andere Kategorie verwendet'
+      already_used: 'Diese Farbe wird bereits für eine andere Kategorie verwendet.'
       security: "Sicherheit"
-      special_warning: "Warnung: Diese Kategorie is eine pre-seeded Kategorie und die Sicherheitseinstellungen können nicht bearbeitet werden. Wenn du wünschst nicht diese Kategorie zu benutzen dann lösche sie anstatt sie zu wiederverwenden"
+      special_warning: "Warnung: Diese Kategorie wurde bei der Installation angelegt. Die Sicherheitseinstellungen können daher nicht verändert werden. Wenn du diese Kategorie nicht benötigst, dann solltest du sie löschen anstatt sie für andere Zwecke zu verwenden."
       images: "Bilder"
       auto_close_label: "Themen automatisch schließen nach:"
       auto_close_units: "Stunden"
       email_in: "Benutzerdefinierte Adresse für eingehende E-Mails:"
-      email_in_allow_strangers: "Akzeptiere E-Mails von nicht registrierten, anonymen Benutzern"
+      email_in_allow_strangers: "Akzeptiere E-Mails von anonymen Benutzern."
       email_in_disabled: "Das Erstellen von neuen Themen per E-Mail ist in den Website-Einstellungen deaktiviert. Um das Erstellen von neuen Themen per E-Mail zu erlauben,"
       email_in_disabled_click: 'aktiviere die Einstellung „email in“.'
-      suppress_from_homepage: "Löse diese Kategorie von der Website."
-      allow_badges_label: "Erlaube das Verleihen von Abzeichen in dieser Kategorie"
+      suppress_from_homepage: "Löse diese Kategorie von der Startseite."
+      allow_badges_label: "Erlaube das Verleihen von Abzeichen in dieser Kategorie."
       edit_permissions: "Berechtigungen bearbeiten"
       add_permission: "Berechtigung hinzufügen"
       this_year: "dieses Jahr"
@@ -1671,7 +1671,7 @@ de:
           description: "Du wirst automatisch alle neuen Themen in diesen Kategorien beobachten. Du wirst über alle neuen Beiträge in allen Themen benachrichtigt und die Anzahl der neuen Antworten wird angezeigt."
         watching_first_post:
           title: "Ersten Beitrag beobachten"
-          description: "Du erhältst eine Benachrichtigung fnur ür den ersten Beitrag in jedem neuen Thema in diesen Kategorien."
+          description: "Du erhältst eine Benachrichtigung nur für den ersten Beitrag in jedem neuen Thema in diesen Kategorien."
         tracking:
           title: "Verfolgen"
           description: "Du wirst automatisch alle neuen Themen in diesen Kategorien verfolgen. Du wirst benachrichtigt, wenn jemand deinen @name erwähnt oder dir antwortet, und die Anzahl der neuen Antworten wird angezeigt."
@@ -2861,7 +2861,7 @@ de:
         image: "Bild"
         delete_confirm: "Möchtest du wirklich das :%{name}: Emoji löschen?"
       embedding:
-        get_started: "Wenn du Discourse in einer anderen Website einbetten möchtest, beginne mit dem hinzufügen des host. "
+        get_started: "Wenn du Discourse in einer anderen Website einbetten möchtest, beginne mit dem hinzufügen des Host. "
         confirm_delete: "Möchtest du wirklich  diesen Host löschen?"
         sample: "Benutze den folgenden HTML code für deine Site um Discourse Beiträge zu erstellen und einzubetten. Ersetze <b>REPLACE_ME</b> mit der URL der Site in die du sie einbetten möchtest."
         title: "Einbettung"

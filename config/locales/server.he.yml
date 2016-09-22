@@ -111,6 +111,7 @@ he:
     operation_already_running: "פעולה רצה כרגע. לא יכול להתחיל עבודה חדשה עכשיו."
     backup_file_should_be_tar_gz: "קובץ הגיוי צריך להיות .tar.gz."
     not_enough_space_on_disk: "אין מספיק מקום על הדיסק כדי להעלות את הגיבוי הזה."
+    invalid_filename: "שם קובץ הגיבוי מכיל תווים שגויים. תווים תקינים הם a-z 0-9 . - _."
   not_logged_in: "אתם צריכים להיות מחוברים כדי לעשות את זה."
   not_found: "המשאב או כתובת ה-URL המבוקשת לא נמצאו."
   invalid_access: "אינכם מורשים לצפות במשאב שביקשתם."
@@ -293,6 +294,10 @@ he:
         post_reply:
           base:
             different_topic: "פוסט ותגובה חייבים להיות באותו הנושא."
+        web_hook:
+          attributes:
+            payload_url:
+              invalid: "ה URL שגוי. צריך להכיל http:// או https://. ותווי רווח אינם מותרים."
       <<: *errors
   user_profile:
     no_info_me: "<div class='missing-profile'>שדה האודות של הפרופיל שלכם ריק כרגע, <a href='/users/%{username_lower}/preferences/about-me'>תרצו למלא אותו?</a></div>"
@@ -906,6 +911,7 @@ he:
     enable_facebook_logins: "Enable Facebook authentication, requires facebook_app_id and facebook_app_secret"
     facebook_app_id: "מזהה אפליקציה לאימות פייסבוק, רשום ב https://developers.facebook.com/apps"
     facebook_app_secret: "סוד אפליקציה לאימות פייסבוק, רשום ב https://developers.facebook.com/apps"
+    facebook_request_extra_profile_details: "בקשה עלי, מיקום ואתר מפייסבוק. (מצריך שאפליקציית האימות שלכם תאושר על ידי פייסבוק)"
     enable_github_logins: "אפשור אימות Github, מצריך github_client_id ו github_client_secret"
     github_client_id: "מזהה לקוח לאימות Github, רשום ב https://github.com/settings/applications"
     github_client_secret: "סוד לקוח לאימות Github, רשום ב https://github.com/settings/applications"
@@ -959,6 +965,7 @@ he:
     external_system_avatars_enabled: "שימוש בשירות של מערכת אווטארים חיצונית."
     external_system_avatars_url: "כתובת של שירות דמויות חיצוני. החלפות מותרות הן {username} {first_letter} {color} {size}"
     default_opengraph_image_url: "כתובת של תמונת opengraph בברירת המחדל."
+    twitter_summary_large_image_url: "URL של תמונה מסיכום ברירת המחדל מטוויטר (צריכה להיות ברוחב לפחות 280 פיקסלים ובגובה של לפחות 150 פיקסלים)."
     allow_all_attachments_for_group_messages: "אפשרו צירוף קבצים להודעות לקבוצות."
     convert_pasted_images_to_hq_jpg: "המירו תמונות מודבקות לקבצי JPG באיכות גבוהה."
     convert_pasted_images_quality: "איכות של קובץ ה JPG המומר (1 זו האיכות הנמוכה ביותר, 100 הטובה ביותר)."

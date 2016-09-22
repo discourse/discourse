@@ -1781,6 +1781,23 @@ it:
         log_out: '<b>shift</b>+<b>z</b> <b>shift</b>+<b>z</b> Disconnetti'
       actions:
         title: 'Azioni'
+        bookmark_topic: '<b>f</b> Aggiungi/togli argomento nei segnalibri'
+        pin_unpin_topic: '<b>shift</b>+<b>p</b> Appunta/Spunta argomento'
+        share_topic: '<b>shift</b>+<b>s</b> Condividi argomento'
+        share_post: '<b>s</b> Condividi messaggio'
+        reply_as_new_topic: '<b>t</b> Rispondi con argomento collegato'
+        reply_topic: '<b>shift</b>+<b>r</b> Rispondi all''argomento'
+        reply_post: '<b>r</b> Rispondi al messaggio'
+        quote_post: '<b>q</b> Quota messaggio'
+        like: '<b>l</b> Metti "Mi piace" al messaggio'
+        flag: '<b>!</b> Segnala il messaggio'
+        bookmark: '<b>b</b> Aggiungi un segnalibro al messaggio'
+        edit: '<b>e</b> Modifica il messaggio'
+        delete: '<b>d</b> Cancella il messaggio'
+        mark_muted: '<b>m</b>, <b>m</b> Ignora argomento'
+        mark_regular: '<b>m</b>, <b>r</b> Argomento normale (default)'
+        mark_tracking: '<b>m</b>, <b>t</b> Segui argomento'
+        mark_watching: '<b>m</b>, <b>w</b> Osserva argomento'
     badges:
       earned_n_times:
         one: "Guadagnato questo distintivo 1 volta"
@@ -1789,10 +1806,32 @@ it:
       others_count: "Altri utenti con questo distintivo (%{count})"
       title: Distintivi
       allow_title: "titolo disponibile"
+      multiple_grant: "assegnata più volte"
       badge_count:
         one: "1 Distintivo"
         other: "%{count} Distintivi"
       select_badge_for_title: Seleziona un distintivo da usare come tuo titolo
+      none: "<none>"
+      badge_grouping:
+        getting_started:
+          name: Inizia
+        community:
+          name: Community
+        trust_level:
+          name: Livello Esperienza
+        other:
+          name: Altro
+        posting:
+          name: Pubblicazione
+    google_search: |
+      <h3>Cerca con Google</h3>
+      <p>
+      <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:' + window.location.host + ' ' + document.getElementById('user-query').value; return true;">
+      <input type="text" id='user-query' value="">
+      <input type='hidden' id='google-query' name="q">
+      <button class="btn btn-primary">Google</button>
+      </form>
+      </p>
     tagging:
       all_tags: "Etichette"
       selector_all_tags: "tutte le etichette"
@@ -1804,6 +1843,7 @@ it:
       delete_confirm: "Sicuro di voler cancellare questa etichetta?"
       rename_tag: "Rinomina Etichetta"
       rename_instructions: "Scegli un altro nome per l'etichetta:"
+      sort_by_name: "nome"
       manage_groups: "Gestisci Gruppi Etichette"
       manage_groups_description: "Definisci gruppi per organizzare le etichette"
       filters:
@@ -1811,6 +1851,22 @@ it:
         with_category: "%{filter} %{tag} argomenti in %{category}"
         untagged_without_category: "%{filter} argomenti non etichettati"
         untagged_with_category: "%{filter} argomenti non etichettati in %{category}"
+      notifications:
+        watching:
+          title: "In osservazione"
+          description: "Visualizzerai automaticamente tutti gli argomenti di questa categoria. Riceverai una notifica per tutti i nuovi messaggi e argomenti. Inoltre, accanto all'argomento apparirà il conteggio dei messaggi non letti e di quelli nuovi."
+        watching_first_post:
+          title: "Osservando Primo Messaggio"
+          description: "Riceverai solo la notifica per il primo messaggio di ogni nuovo argomenti in questa categoria."
+        tracking:
+          title: "Tracking"
+          description: "Seguirai automaticamente tutti gli argomenti di questa categoria. Accanto all'argomento visualizzerai un conteggio dei messaggi non letti e di quelli nuovi."
+        regular:
+          title: "Normale"
+          description: "Riceverai una notifica se qualcuno tagga il tuo @nome o risponde ad un tuo messaggio."
+        muted:
+          title: "Silenziato"
+          description: "Non riceverai nessuna notifiche dei nuovi argomenti in questa categoria, e non comparirà il tab dei messaggi non letti."
       groups:
         title: "Gruppi Etichette"
         about: "Aggiungi etichette a gruppi per poterle gestire più facilmente."
@@ -1845,6 +1901,11 @@ it:
           top: "Non ci sono ulteriori argomenti di punta."
           bookmarks: "Non ci sono ulteriori argomenti nei segnalibri."
           search: "Non ci sono ulteriori risultati di ricerca."
+    invite:
+      custom_message: "Rendi il tuo invito un po' più personale scrivendo un"
+      custom_message_link: "messaggio personalizzato"
+      custom_message_placeholder: "Inserisci il tuo messaggio personalizzato"
+      custom_message_template_forum: "Hey, unisciti a questo forum!"
   admin_js:
     type_to_filter: "digita per filtrare..."
     admin:
@@ -1994,6 +2055,14 @@ it:
         add_owners: Aggiungi proprietari
         incoming_email: "Indirizzo email personalizzato"
         incoming_email_placeholder: "inserisci l'indirizzo e-mail"
+        flair_url: "Immagine Avatar"
+        flair_url_placeholder: "(Facoltativo) URL Immagine o categoria Font Awesome"
+        flair_bg_color: "Colore di sfondo Avatar"
+        flair_bg_color_placeholder: "(Facoltativo) Codice Hex colore"
+        flair_color: "Colore Avatar"
+        flair_color_placeholder: "(Facoltativo) Codice Hex colore"
+        flair_preview: "Anteprima"
+        flair_note: "Nota: l'Avatar verrà mostrato solo per il gruppo principale dell'utente."
       api:
         generate_master: "Genera una Master API Key"
         none: "Non ci sono chiavi API attive al momento."
@@ -2008,6 +2077,20 @@ it:
         info_html: "La tua chiave API ti permetterà di creare e aggiornare gli argomenti usando chiamate JSON."
         all_users: "Tutti gli Utenti"
         note_html: "Mantieni <strong>segreta</strong> questa chiave, tutti gli utenti che la possiedono possono creare messaggi per conto di altri."
+      web_hooks:
+        title: "Webhook"
+        none: "Non ci sono webhook disponibili adesso."
+        instruction: "Webhook consente a Discourse di notificare servizi esterni quando sul tuo sito si verificano determinati eventi. Quando un webhook viene innescato, una richiesta di MESSAGGIO viene inviata agli URL forniti."
+        detailed_instruction: "Una richiesta di MESSAGGIO verrà inviata agli URL forniti quando si verifica un evento scelto."
+        new: "Nuovo Webhook"
+        create: "Crea"
+        save: "Salva"
+        destroy: "Elimina"
+        description: "Descrizione"
+        controls: "Controlli"
+        go_back: "Torna all'elenco"
+        payload_url: "Aggiungi URL"
+        payload_url_placeholder: "https://example.com/postreceive"
       plugins:
         title: "Plugin"
         installed: "Plugin Installati"

@@ -198,18 +198,18 @@ tr_TR:
       contact: "Bize Ulaşın"
       contact_info: "Bu siteyi etkileyen kritik bir problem ya da acil bir durum oluştuğunda, lütfen %{contact_info} adresi üzerinden bizimle iletişime geçin."
     bookmarked:
-      title: "İşaretle"
-      clear_bookmarks: "İşaretlenenleri Temizle"
+      title: "İmle"
+      clear_bookmarks: "İmleneneri Temizle"
       help:
-        bookmark: "Bu konudaki ilk gönderiyi işaretlemek için tıklayın"
-        unbookmark: "Bu konudaki bütün işaretleri kaldırmak için tıklayın"
+        bookmark: "Bu konudaki ilk gönderiyi imlemek için tıklayın"
+        unbookmark: "Bu konudaki bütün imleri kaldırmak için tıklayın"
     bookmarks:
-      not_logged_in: "üzgünüz, gönderileri işaretleyebilmeniz için oturum açmanız gerekiyor."
-      created: "bu gönderiyi işaretlediniz"
-      not_bookmarked: "bu gönderiyi okudunuz; yer imlerinize eklemek için tıklayın"
-      last_read: "bu okuduğunuz son gönderi; yer imlerinize eklemek için tıklayın"
-      remove: "İşareti Kaldır"
-      confirm_clear: "Bu konuya ait tüm işaretleri kaldırmak istediğinize emin misiniz?"
+      not_logged_in: "üzgünüz, gönderileri imleyebilmeniz için oturum açmanız gerekiyor."
+      created: "bu gönderiyi imlediniz"
+      not_bookmarked: "bu gönderiyi okudunuz; imlerinize eklemek için tıklayın"
+      last_read: "bu okuduğunuz son gönderi; imlerinize eklemek için tıklayın"
+      remove: "İmi Kaldır"
+      confirm_clear: "Bu konuya ait tüm imleri kaldırmak istediğinize emin misiniz?"
     topic_count_latest:
       other: "{{count}} yeni ya da güncellenmiş konu."
     topic_count_unread:
@@ -342,7 +342,7 @@ tr_TR:
     user_action_groups:
       '1': "Verilen Beğeniler"
       '2': "Alınan Beğeniler"
-      '3': "İşaretlenenler"
+      '3': "İmlenenler"
       '4': "Konular"
       '5': "Cevaplar"
       '6': "Yanıtlar"
@@ -405,7 +405,7 @@ tr_TR:
       activity_stream: "Aktivite"
       preferences: "Tercihler"
       expand_profile: "Genişlet"
-      bookmarks: "İşaretlenenler"
+      bookmarks: "İmlenenler"
       bio: "Hakkımda"
       invited_by: "Tarafından Davet Edildi"
       trust_level: "Güven Seviyesi"
@@ -687,7 +687,7 @@ tr_TR:
         posts_read:
           other: "okunmuş gönderiler"
         bookmark_count:
-          other: "yer imleri"
+          other: "imler"
         top_replies: "Başlıca Cevapları"
         no_replies: "Henüz cevap bulunmuyor."
         more_replies: "Diğer Cevapları"
@@ -1086,7 +1086,7 @@ tr_TR:
         posted: "Henüz herhangi bir konuda gönderi oluşturmadınız."
         latest: "Son bir konu yok. Bu üzücü."
         hot: "Sıcak bir konu yok."
-        bookmarks: "Henüz bir konu işaretlememişsiniz."
+        bookmarks: "Henüz bir konu imlememişsiniz."
         category: "{{category}} konusu yok."
         top: "Popüler bir konu yok."
         search: "Arama sonuçları yok."
@@ -1102,7 +1102,7 @@ tr_TR:
         unread: "Daha fazla okunmamış konu yok."
         category: "Daha fazla {{category}} konusu yok."
         top: "Daha fazla popüler konu yok"
-        bookmarks: "Daha fazla işaretlenmiş konu yok."
+        bookmarks: "Daha fazla imlenmiş konu yok."
         search: "Daha fazla arama sonucu yok."
     topic:
       unsubscribe:
@@ -1440,7 +1440,7 @@ tr_TR:
           off_topic: "Bildirimi geri al"
           spam: "Bildirimi geri al"
           inappropriate: "Bildirimi geri al"
-          bookmark: "İşareti geri al"
+          bookmark: "İmlemeyi geri al"
           like: "Beğenini geri al"
           vote: "Oyunu geri al"
         people:
@@ -1449,7 +1449,7 @@ tr_TR:
           inappropriate: "uygunsuz olarak bildirildi"
           notify_moderators: "moderatörler bilgilendirdi"
           notify_user: "mesaj gönderdi"
-          bookmark: "işaretledi"
+          bookmark: "imlendi"
           like: "beğendi"
           vote: "oyladı"
         by_you:
@@ -1458,7 +1458,7 @@ tr_TR:
           inappropriate: "Bunu uygunsuz olarak bildirdiniz"
           notify_moderators: "Bunu moderasyon için bildirdiniz"
           notify_user: "Bu kullanıcıya mesaj yolladınız"
-          bookmark: "Bu gönderiyi işaretlediniz"
+          bookmark: "Bu gönderiyi imlediniz"
           like: "Bunu beğendiniz"
           vote: "Bu gönderiyi oyladınız"
         by_you_and_others:
@@ -1473,7 +1473,7 @@ tr_TR:
           notify_user:
             other: "Siz ve {{count}} diğer kişi bu kullanıcıya mesaj yolladı"
           bookmark:
-            other: "Siz ve {{count}} diğer kişi bu gönderiyi işaretledi"
+            other: "Siz ve {{count}} diğer kişi bu gönderiyi imledi"
           like:
             other: "Siz ve {{count}} başka kişi bunu beğendi"
           vote:
@@ -1490,7 +1490,7 @@ tr_TR:
           notify_user:
             other: "{{count}} bu kullanıcıya mesaj yolladı"
           bookmark:
-            other: "{{count}} kişi bu gönderiyi işaretledi"
+            other: "{{count}} kişi bu gönderiyi imledi"
           like:
             other: "{{count}} kişi bunu beğendi"
           vote:
@@ -1642,7 +1642,7 @@ tr_TR:
       warning:
         help: "Bu resmi bir uyarıdır."
       bookmarked:
-        help: "Bu konuyu işaretlediniz"
+        help: "Bu konuyu imlediniz"
       locked:
         help: "Bu konu kapatıldı; artık yeni cevaplar kabul edilmiyor"
       archived:
@@ -1729,8 +1729,8 @@ tr_TR:
         title: "Gönderilerim"
         help: "gönderi oluşturduğunuz konular"
       bookmarks:
-        title: "İşaretlenenler"
-        help: "işaretlediğiniz konular"
+        title: "İmler"
+        help: "imlerinize aldığınız konular"
       category:
         title: "{{categoryName}}"
         title_with_count:
@@ -1777,7 +1777,7 @@ tr_TR:
         unread: '<b>g</b>, <b>u</b> Okunmamış'
         categories: '<b>g</b>, <b>c</b> Kategoriler'
         top: '<b>g</b>, <b>t</b> En üst'
-        bookmarks: '<b>g</b>, <b>b</b> Yer imleri'
+        bookmarks: '<b>g</b>, <b>b</b> İmler'
         profile: '<b>g</b>, <b>p</b> Profil'
         messages: '<b>g</b>, <b>m</b> Mesajlar'
       navigation:
@@ -1801,7 +1801,7 @@ tr_TR:
         log_out: '<b>shift</b>+<b>z</b> <b>shift</b>+<b>z</b> Çıkış'
       actions:
         title: 'Eylemler'
-        bookmark_topic: '<b>f</b> Konu yer imini değiştir'
+        bookmark_topic: '<b>f</b> Konu imini değiştir'
         pin_unpin_topic: '<b>shift</b>+<b>p</b> Konuyu tuttur/kaldır'
         share_topic: '<b>shift</b>+<b>s</b> Konuyu paylaş'
         share_post: '<b>s</b> Gönderiyi paylaş'
@@ -1912,7 +1912,7 @@ tr_TR:
           posted: "Henüz herhangi bir konuya gönderim yapmadınız."
           latest: "Yeni eklenen konu bulunmuyor."
           hot: "Hareketli konu bulunmuyor."
-          bookmarks: "Henüz yer imi eklenmiş bir konunuz bulunmuyor."
+          bookmarks: "Henüz imlenmiş eklenmiş bir konunuz bulunmuyor."
           top: "Üst sırada bir konu bulunmuyor."
           search: "Arama sonucu hiçbirşey bulunamadı."
         bottom:
@@ -2093,6 +2093,24 @@ tr_TR:
         info_html: "API anahtarınız JSON çağrıları kullanarak konu oluşturup güncelleyebilmenize olanak sağlayacaktır."
         all_users: "Tüm Kullanıcılar"
         note_html: "Bu anahtarı <strong>gizli</strong> tutun, anahtara sahip kullanıcılar her hangi bir kullanıcı adı altında istedikleri gönderiyi oluşturabilirler."
+      web_hooks:
+        create: "Oluştur"
+        save: "Kaydet"
+        destroy: "Sil"
+        description: "Açıklama"
+        active: "Etkin"
+        delivery_status:
+          failed: "Başarısız"
+          successful: "Başarılı"
+        events:
+          completed_in:
+            other: "{{count}} saniyede tamamlandı."
+          response: "Yanıt"
+          headers: "Başlıklar"
+          status: "Durum Kodu"
+          timestamp: "Oluşturulma"
+          completion: "Tamamlanma Zamanı"
+          actions: "Eylemler"
       plugins:
         title: "Eklentiler"
         installed: "Yüklü Eklentiler"
