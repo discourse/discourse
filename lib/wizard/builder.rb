@@ -133,7 +133,7 @@ class Wizard
 
           attrs = {
             enabled: true,
-            name: I18n.t("wizard.step.colors.fields.color_scheme.options.#{scheme_name}"),
+            name: I18n.t("wizard.step.colors.fields.theme_id.choices.#{scheme_name}.label"),
             colors: colors,
             theme_id: scheme_name
           }
