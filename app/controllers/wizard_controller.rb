@@ -4,7 +4,7 @@ require_dependency 'wizard/builder'
 class WizardController < ApplicationController
   before_filter :ensure_wizard_enabled, only: [:index]
   before_filter :ensure_logged_in
-  before_filter :ensure_staff
+  before_filter :ensure_admin
 
   skip_before_filter :check_xhr, :preload_json
 
