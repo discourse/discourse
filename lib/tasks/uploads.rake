@@ -406,9 +406,10 @@ def recover_from_tombstone
   begin
     original_setting = SiteSetting.max_image_size_kb
     SiteSetting.max_image_size_kb = 10240
+    current_db = RailsMultisite::ConnectionManagement.current_db
 
     public_path = Rails.root.join("public")
-    paths = Dir.glob("#{File.join(public_path, 'uploads', 'tombstone', '**', '*.*')}")
+    paths = Dir.glob(File.join(public_path, 'uploads', 'tombstone', current_db, '**', '*.*'))
     max = paths.length
 
     paths.each_with_index do |path, index|
@@ -427,7 +428,7 @@ def recover_from_tombstone
           upload = Upload.find_by(url: url)
 
           if !upload && url
-            printf "Restoring #{url}..."
+            printf "Restoring #{path}..."
             tombstone_path = File.join(public_path, 'uploads', 'tombstone', url.gsub(/^\/uploads\//, ""))
 
             if File.exists?(tombstone_path)
