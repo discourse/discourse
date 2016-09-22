@@ -349,7 +349,7 @@ tr_TR:
       topics_per_day: "Bugün oluşturabileceğiniz en fazla konu sayısına ulaştınız. Lütfen tekrar denemek için %{time_left} bekleyin."
       pms_per_day: "Bugün oluşturabileceğiniz en fazla mesaj sayısına ulaştınız. Lütfen tekrar denemek için %{time_left} bekleyin."
       create_like: "Bugün yapabileceğiniz en fazla beğeni sayısına ulaştınız. Lütfen tekrar denemek için %{time_left} bekleyin."
-      create_bookmark: "Bugün yapabileceğiniz en fazla işaretleme sayısına ulaştınız. Lütfen tekrar denemek için %{time_left} bekleyin."
+      create_bookmark: "Bugün yapabileceğiniz en fazla imleme sayısına ulaştınız. Lütfen tekrar denemek için %{time_left} bekleyin."
       edit_post: "Bugün yapabileceğiniz en fazla düzenleme sayısına ulaştınız. Lütfen tekrar denemek için %{time_left} bekleyin."
       live_post_counts: "Canlı gönderi sayımları için çok hızlı istek yapıyorsunuz. Lütfen tekrar denemeden önce %{time_left} bekleyin."
     hours:
@@ -462,9 +462,9 @@ tr_TR:
       email_title: '"%{title}" konu başlığının moderatör tarafından kontrol edilmesi gerekiyor'
       email_body: "%{link}\n\n%{message}"
     bookmark:
-      title: 'İşaretle'
-      description: 'Bu gönderiyi işaretle'
-      long_form: 'bu gönderi işaretlendi'
+      title: 'İmle'
+      description: 'Bu gönderiyi imle'
+      long_form: 'bu gönderi imlendi'
     like:
       title: 'Beğen'
       description: 'Bu gönderiyi beğen'
@@ -546,9 +546,9 @@ tr_TR:
       xaxis: "Gün"
       yaxis: "Bildirilenlerin sayısı"
     bookmarks:
-      title: "İşaretlenenler"
+      title: "İmlenenler"
       xaxis: "Gün"
-      yaxis: "Yeni işaretlenenlerin sayısı"
+      yaxis: "Yeni imlenenlerin sayısı"
     starred:
       title: "Yıldızlı"
       xaxis: "Gün"
@@ -770,8 +770,8 @@ tr_TR:
     allow_moderators_to_create_categories: "Moderatörlerin yeni kategoriler oluşturmasına izin ver"
     cors_origins: "Cross-origin isteklerin (CORS) izin verilen originler. Her origin http:// veya https:// içermeli. CORS'u etkinleştirebilmek için DISCOURSE_ENABLE_CORS env değişkeni doğru olarak ayarlanmalı."
     use_admin_ip_whitelist: "Yöneticiler, sadece Taranmış IP listesinde tanımlanmış bir IP adresinden erişim sağlıyorlarsa giriş yapabilirler. (Yönetici > Kayıtlar > Taranmış IP'ler)"
-    top_menu: "Anasayfa navigasyonunda nelerin, hangi sırada yer alacağını belirleyin. Örneğin en sonIyeniIokunmamışIkategorilerIen popülerIokunmuşlarIgönderilenlerIişaretlenenler"
-    post_menu: "Gönderi menüsündeki öğelerin hangi sırada yer alacağını belirleyin. Örnek: beğen|düzenle|bildir|sil|paylaş|işaretle|cevapla"
+    top_menu: "Anasayfa navigasyonunda nelerin, hangi sırada yer alacağını belirleyin. Örneğin en sonIyeniIokunmamışIkategorilerIen popülerIokunmuşlarIgönderilenlerIimlenenler"
+    post_menu: "Gönderi menüsündeki öğelerin hangi sırada yer alacağını belirleyin. Örnek: beğen|düzenle|bildir|sil|paylaş|imle|cevapla"
     post_menu_hidden_items: "Gönderi menüsündeki maddeler, genişletme üç noktasına tıklanmadığı takdirde otomatik olarak gizlenir. "
     share_links: "Paylaşım penceresinde hangi maddelerin ne sırada gözükeceğini belirleyin."
     track_external_right_clicks: "URL'leri tekrar yazdığı için, sağ tıklanan dış bağlantıların (ör: yeni bir sekmede aç) takibi varsayılan ayarlarda devre dışı bırakılmıştır."
@@ -855,7 +855,7 @@ tr_TR:
     rate_limit_new_user_create_post: "Bir gönderi oluşturduktan sonra, başka bir gönderi oluşturmak için yeni kullanıcılar (n) saniye beklemeli. "
     max_likes_per_day: "Bir günde, bir kullanıcının verilebileceği en fazla beğeni sayısı."
     max_flags_per_day: "Bir günde, bir kullanıcının yapabileceği en fazla bildirme sayısı. "
-    max_bookmarks_per_day: "Kullanıcı başına düşen günlük en fazla işaretleme sayısı."
+    max_bookmarks_per_day: "Kullanıcı başına düşen günlük en fazla imleme sayısı."
     max_edits_per_day: "Bir günde, bir kullanıcının yapabileceği en fazla düzenleme sayısı."
     max_topics_per_day: "Bir günde, bir kullanıcının oluşturabileceği en fazla konu sayısı."
     max_private_messages_per_day: "Bir günde kullanıcıların oluşturabileceği en fazla mesaj sayısı"
@@ -1849,7 +1849,7 @@ tr_TR:
       <ul>
       <li><code>gökkuşağı #parklar</code> "parklar" kategorisi içerisinde bulunan konularda "gökkuşağı" kelimesini arar. </li>
       <li><code>gökkuşağı category:parklar status:open order:latest</code> "parklar" kategorisi içerisinde bulunan açık, arşivlenmemiş konularda "gökkuşağı" kelimesini arar, en son konuya göre sıralar</li>
-      <li><code>gökkuşağı category:"parklar ve bahçeler" in:bookmarks</code> sizin tarafınızdan "parklar ve bahçeler" kategorisinde işaretlenmiş konularda "gökkuşağı" kelimesini arar.</li>
+      <li><code>gökkuşağı category:"parklar ve bahçeler" in:bookmarks</code> sizin tarafınızdan "parklar ve bahçeler" kategorisinde imlenmiş konularda "gökkuşağı" kelimesini arar.</li>
       </ul>
       </p>
   badges:
