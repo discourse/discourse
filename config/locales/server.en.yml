@@ -3228,14 +3228,14 @@ en:
 
       forum_title:
         title: "Name"
-        description: "Your name is the first thing potential visitors will discover, a sign visible in the distance. A good name gives people a rough idea of where they might possibly end up if they were to click or tap on a link to your community."
+        description: "Your name is a sign visible in the distance, the <i>first</i> thing potential visitors will notice about your community. What does your name and title say about your community?"
 
         fields:
           title:
-            label: "What’s the name of your community?"
+            label: "Your community’s name"
             placeholder: "Jane’s Hangout"
           site_description:
-            label: "How would you describe your community in one brief sentence?"
+            label: "Describe your community in one short sentence"
             placeholder: "A place for Jane and her friends to discuss cool stuff"
 
       introduction:
@@ -3244,7 +3244,7 @@ en:
         fields:
           welcome:
             label: "Welcome Topic"
-            description: "<p>How would you describe your community to a stranger on an elevator when you had about 1 minute to talk?</p>
+            description: "<p>How would you describe your community to a stranger on an elevator in about 1 minute?</p>
               <ul>
               <li>Who are these discussions for?</li>
               <li>What can I find here?</li>
@@ -3255,7 +3255,8 @@ en:
 
       privacy:
         title: "Access"
-        description: "Is your community open to everyone, or is it restricted by membership, invitation, or approval? If you prefer, you can set things up privately, then switch over to public later."
+        description: "<p>Is your community open to everyone, or is it restricted by membership, invitation, or approval? If you prefer, you can set things up privately, then switch over to public later.</p>
+         <p>Remember you can always send invites from topics, or from your user profile page, too.</p>"
 
         fields:
           privacy:
@@ -3323,13 +3324,13 @@ en:
         fields:
           favicon_url:
             label: "Small Icon"
-            description: "A <a href='http://en.wikipedia.org/wiki/Favicon' target='blank'>favicon</a> used to represent your site in web browsers that will look good at small sizes such as 32px by 32px. Please use a JPG or PNG image only, not an icon file or SVG file."
+            description: "Icon image used to represent your site in web browsers that looks good at small sizes such as 32px by 32px."
           apple_touch_icon_url:
             label: "Large Icon"
-            description: "Icon used to represent your site on mobile devices. Recommended size is at least 144px by 144px."
+            description: "Icon image used to represent your site on modern devices that looks good at larger sizes. Recommended size is at least 144px by 144px."
 
       homepage:
-        description: "We recommend showing the latest topics on your homepage, but you can choose to show your categories on the homepage if you prefer."
+        description: "We recommend showing the latest topics on your homepage, but you can choose to show categories (groups of topics) on the homepage if you prefer."
         title: "Homepage"
 
         fields:
@@ -3352,4 +3353,4 @@ en:
         title: "Your Discourse is Ready!"
         description: |
           <p>If you ever feel like changing these settings, visit <a href='/admin' target='_blank'>your admin section</a>; find it next to the wrench icon in the site menu.</p>
-          <p>Have fun and enjoy your new community!</p>
+          <p>Have fun, and good luck <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'>building your new community!</a></p>
