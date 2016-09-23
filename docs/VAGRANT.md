@@ -147,6 +147,11 @@ Mailcatcher is already installed in the vm, and there's an alias to launch it:
 ```
 mailcatcher --http-ip=0.0.0.0
 ```
+Running the above command might throw out the `'method_missing'` error in the terminal. This can be fixed by upgrading rubygems to the latest version which can be done by running the following in the /vagrant directory:
+
+```
+gem update --system
+```
 
 Then in a browser, go to [http://localhost:4080](http://localhost:4080). Sent emails will be received by mailcatcher and shown in its web ui.
 
