@@ -1,39 +1,18 @@
 Congratulations, you are now the proud owner of your very own [Civilized Discourse Construction Kit](http://www.discourse.org). :hatching_chick:
 
+### Getting Started
+
+If you haven't already, launch the [setup wizard](/wizard) and go through the steps to configure your site. You can run the wizard as many times as you want, it's completely safe!
+
 ### Admin Dashboard
 
-As an admin you have total control over this Discourse instance. Exercise your admin superpowers via the admin dashboard at
+Exercise your admin superpowers any time via the admin dashboard at
 
 [**/admin**](/admin)
 
 You can also access it via the "hamburger" <kbd>☰</kbd> menu in the upper right: Admin functions are generally marked with the wrench :wrench:  icon, so look for that.
 
-### Enter Required Settings
-
-Go to the [Required tab](/admin/site_settings/category/required) of the site settings and enter all the required fields. **Until you set these required fields, _your Discourse is broken!_** Go ahead and do that now.
-
-We'll wait.
-
-### Customize Logos and Colors
-
-By default you get the standard "penciled in" Discourse logo. Look for the [**assets for the site design**](/t/assets-for-the-site-design) topic; follow the instructions there to upload your logos to that topic, and then paste the uploaded image paths into the required logo settings.
-
-To quickly give your Discourse a distinctive look, without having to edit or understand CSS, create a new color scheme via [**Customize, Colors**](/admin/customize/colors).
-
-You can also specify custom CSS and custom HTML headers/footers to further customize the look. One common request is a navigation header that takes you back to the parent site. Here is some example HTML to put in [**Customize, CSS/HTML**](/admin/customize/css_html) under "Header":
-
-```
-<div id="top-navbar" class="container" style="padding:5px 0 0 5px">
-  <a href="http://example.com">Home</a> |
-  <a href="http://example.com/about/">About</a> |
-  <a href="http://example.com/news/">News</a> |
-  <a href="http://example.com/products/">Products</a> |
-  <a href="http://blog.example.com/blog">Blog</a> |
-  <a href="http://forums.example.com/">Forums</a>
-</div>
-```
-
-### Establish Staff
+### Staff
 
 Staff members are official representatives of this community. There are two kinds of Staff:
 
@@ -46,17 +25,7 @@ To add additional staff members:
 - click the admin button :wrench: on their user page
 - look for the <kbd>Grant Admin</kbd> and <kbd>Grant Moderator</kbd> buttons there
 
-### Private or Public?
-
-Discourse assumes you want a public discussion area. If you prefer a private one, change these [login site settings](/admin/site_settings/category/login):
-
-- `must approve users`
-- `login required`
-- `invite only`
-
-If you only want some parts of your site to be private, edit category permissions. You already have one private category: this topic is in it!
-
-### Configure Login Methods
+### Social Logins
 
 Users can log in with traditional local username and password accounts. You may want to add:
 
@@ -65,7 +34,7 @@ Users can log in with traditional local username and password accounts. You may 
 - [Facebook logins](https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394)
 - [GitHub logins](https://meta.discourse.org/t/configuring-github-login-for-discourse/13745)
 
-If you want to get extra-fancy you can also [set up single-sign on](https://meta.discourse.org/t/official-single-sign-on-for-discourse/13045), or even [build your own login method](https://meta.discourse.org/t/login-to-discourse-with-custom-oauth2-provider/14717).
+You can also [set up single-sign on](https://meta.discourse.org/t/official-single-sign-on-for-discourse/13045), or even [build your own login method](https://meta.discourse.org/t/login-to-discourse-with-custom-oauth2-provider/14717).
 
 ### Test Your Email
 
@@ -76,60 +45,6 @@ Email is required for new account signups and notifications. **Test your email t
 - Email deliverability can be hard. Read [**Email Service Configuration**](https://github.com/discourse/discourse/blob/master/docs/INSTALL-email.md).
 
 If you'd like to enable *replying* to topics via email, [see this howto](https://meta.discourse.org/t/set-up-reply-via-email-support/14003).
-
-### What and Who is this site for?
-
-One of the default topics is [Welcome to Discourse](/t/welcome-to-discourse). This topic is pinned globally, so it will appear on the homepage, right at the top of the topic list, for all new users. Try viewing your site with incognito, inprivate, or anonymous mode enabled in your browser to see it how new users will.
-
-Your welcome topic is important because it is the first thing you visitors will see:
-
-- Where am I?
-- Who are these discussions for?
-- What can I [find here](https://www.youtube.com/watch?v=d0VNHe5fq30)?
-- Why should I visit?
-
-[Edit your welcome topic](/t/welcome-to-discourse) and write a **brief introduction to your community**. Think of it as your "elevator pitch" &ndash; how would you describe this site to a stranger on an elevator when you had about 1 minute to talk?
-
-Note that pinning topics works a little differently in Discourse:
-
-- Once someone reads to the bottom of a pinned topic, it is automatically unpinned for them specifically. They can change this via the personal pin controls at the bottom of the topic.
-- When staff pins a topic, they can pin it globally to all topic lists, or just within its category.
-
-If a pin isn't visible enough, you can also turn one single topic into a **banner**. The banner topic floats on top of all topics and all primary pages. Users can permanently dismiss this floating banner by clicking the &times; in the upper right corner.
-
-To make (or remove) a pin or a banner, use the admin wrench at the top right or bottom of the topic.
-
-### Set the Homepage
-
-By default your homepage is a simple list of the latest posts.
-
-We strongly recommend sticking with this homepage for small and medium communities until you start getting lots of new topics every day.
-
-You can change the homepage to the Categories list by editing `top menu` in the [Basic Setup](/admin/site_settings/category/basic) site settings. Change it from the default of
-
-`latest|new|unread|top|categories`
-
-to
-
-`categories|latest|new|unread|top`
-
-That is, move categories from the far right to the far left -- that leftmost top menu item is your default homepage.
-
-### Build Your Own FAQ
-
-Right now [your FAQ](/faq) is the same Creative Commons [universal rules of civilized discourse](http://blog.discourse.org/2013/03/the-universal-rules-of-civilized-discourse/) we provide to all Discourse installs. These built-in community guidelines are referenced a bunch of places; please *do* use them and refer to them often – they really work!
-
-However, if you want to set up a more detailed FAQ dealing with the specifics of *your* community, here's how:
-
-1. Create a new [site feedback topic](category/site-feedback), titled "Frequently Asked Questions (FAQ)" or similar.
-
-2. Use the admin wrench icon below the post to make it a wiki post. This means the post is now editable to any user with a trust level of 1 or higher.
-
-3. Note the URL to that topic.
-
-4. Paste that URL into the `faq url` setting in the admin site settings. This links your topic from the hamburger FAQ menu entry at the top right of every page.
-
-Now you have a community FAQ for your site that is collaboratively editable, and linked from every page on the site.
 
 ### Categories
 
@@ -145,14 +60,16 @@ To add a category, visit the [categories page](/categories), then click Create C
 
 Every category has an initial "About this category" topic. This topic will be pinned to the top of the category, and the description you enter will be used in a bunch of places. Be sure to give your new category a good, clear description, so people understand what belongs there!
 
-### File Uploads
+### Pinned Topics and Banners
 
-Basic image uploads work fine out of the box stored locally, provided you have adequate disk space.
+Note that pinning topics does work a little differently in Discourse:
 
-- If you'd like other sorts of files to be uploaded beyond just images, modify the [file settings](/admin/site_settings/category/files).
+- Once someone reads to the bottom of a pinned topic, it is automatically unpinned for them specifically. They can change this via the personal pin controls at the bottom of the topic.
+- When staff pins a topic, they can pin it globally to all topic lists, or just within its category.
 
-- If you'd rather store your images and files on Amazon S3, [follow this howto](http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229).
+If a pin isn't visible enough, you can also turn one single topic into a **banner**. The banner topic floats on top of all topics and all primary pages. Users can permanently dismiss this floating banner by clicking the &times; in the upper right corner.
 
+To make (or remove) a pin or a banner, use the admin wrench at the top right or bottom of the topic.
 
 ### New User Sandbox and the Trust System
 
@@ -171,35 +88,15 @@ All new users start out in a sandbox with restrictions for everyone's safety. **
 - have actual links in the "about me" field of their profile
 - @name mention more than 2 users in a post
 
-Virtually every action a user can take is rate limited for safety, and especially so for new users. But don't worry, new users can [transition to trust level 1](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/2) in about 15 minutes.
+Every action a user can take is rate limited for safety, and especially so for new users. But don't worry, new users can [transition to trust level 1](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/2) in about 10 minutes of reading.
 
-These defaults are safe, but they may be too conservative for your site:
-
-- If you are pre-vetting all users, or your site is private and you approve all new users manually, you can set everyone's `default trust level` to 1.
-
-- You can relax individual new user restrictions. Search settings for `newuser`. Ones commonly adjusted are `newuser max images`, `newuser max replies per topic`, `newuser max links`.
-
-### User Content Licensing
-
-Out of the box, Discourse defaults to [Creative Commons licensing](https://creativecommons.org/).
-
-> Your users will always retain copyright on their posts, and will always grant the site owner enough rights to include their content on the site.
->
-> Who is allowed to republish the content posted on this forum?
->
-> 1. Only the author
-> 2. Author and the owner of this forum
-> 3. Anybody\*
-
-Number 3 is the Discourse default &ndash; that's [Creative Commons BY-NC-SA 3.0](http://creativecommons.org/licenses/by-nc-sa/3.0/deed.en_US).
-
- If that's not what you want, edit the [Terms of Service](/tos) to taste via the edit link at the top.
+These defaults are safe, but note that while in "bootstrap mode" after you set up your site, all new users will be granted trust level 1 until you reach 50 users.
 
 ### Building Your Community
 
 Be patient; building communities is hard. Before launching, be sure to:
 
-1. Define your community's purpose in a pinned or banner topic.
+1. Clearly define your community's purpose in a pinned or banner topic.
 2. Seed the discussion with interesting topics.
 3. Commit to visiting and participating regularly.
 4. Link your community everywhere and promote it so people can find it.
@@ -219,7 +116,7 @@ The invite area on your profile page also includes advanced Staff methods of [se
 
 - One CPU and 1GB of memory, with swap, is the minimum for a basic Discourse community. As your community grows you may need more memory or CPU resources.
 
-- Hopefully you are running [in our Docker container install](https://github.com/discourse/discourse/blob/master/docs/INSTALL.md); it's the only one we officially support. It guarantees easy updates, and all recommended optimizations from the Discourse team.
+- [Our Docker container install](https://github.com/discourse/discourse/blob/master/docs/INSTALL.md) is the only one we officially support. It guarantees easy updates, and all recommended optimizations from the Discourse team.
 
 - You should get an email notification when new versions of Discourse are released. To update your instance via our easy one click upgrade process, visit [/admin/upgrade](/admin/upgrade).
 
