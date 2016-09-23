@@ -1,6 +1,13 @@
 var clock;
 
-import { relativeAge, autoUpdatingRelativeAge, updateRelativeAge, breakUp, number } from 'discourse/lib/formatter';
+import {
+  relativeAge,
+  autoUpdatingRelativeAge,
+  updateRelativeAge,
+  breakUp,
+  number,
+  numberToDelimited
+} from 'discourse/lib/formatter';
 
 module("lib:formatter", {
   setup: function() {
@@ -211,4 +218,20 @@ test("number", function() {
   equal(number(NaN), "0", "it returns 0 for NaN");
   equal(number(3333), "3.3k", "it abbreviates thousands");
   equal(number(2499999), "2.5M", "it abbreviates millions");
+});
+
+test("numberToDelimited", function() {
+  equal(numberToDelimited(123), "123", "it returns a string version of the number");
+  equal(numberToDelimited(1000), "1,000", "it returns a string version of the number with delimiters");
+  equal(numberToDelimited(1000.01), "1,000.01", "it returns a string version of the number with delimiters");
+  equal(numberToDelimited(1000.1234), "1,000.1234", "it returns a string version of the number with delimiters");
+  equal(numberToDelimited("123"), "123", "it works with a string");
+  equal(numberToDelimited("1000"), "1,000", "it works with a string");
+  equal(numberToDelimited("10000views1000"), "10000views1000", "it works with a string");
+
+  equal(
+    numberToDelimited("this 5000000 topic has 1000 views"),
+    "this 5,000,000 topic has 1,000 views",
+    "it works with multiple numbers in the string"
+  );
 });

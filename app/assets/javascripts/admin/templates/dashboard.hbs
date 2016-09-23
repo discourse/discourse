@@ -228,7 +228,7 @@
                   </div>
                 </div>
               </td>
-              <td class="value">{{data.num_clicks}}</td>
+              <td class="value">{{numberToDelimited data.num_clicks}}</td>
             </tr>
           </tbody>
         {{/each}}
@@ -248,8 +248,8 @@
           <tbody>
             <tr>
               <td class="title">{{s.domain}}</td>
-              <td class="value">{{s.num_clicks}}</td>
-              <td class="value">{{s.num_topics}}</td>
+              <td class="value">{{numberToDelimited s.num_clicks}}</td>
+              <td class="value">{{numberToDelimited s.num_topics}}</td>
             </tr>
           </tbody>
         {{/each}}
@@ -269,8 +269,8 @@
           <tbody>
             <tr>
               <td class="title">{{#link-to 'adminUser' r.user_id r.username}}{{unbound r.username}}{{/link-to}}</td>
-              <td class="value">{{r.num_clicks}}</td>
-              <td class="value">{{r.num_topics}}</td>
+              <td class="value">{{numberToDelimited r.num_clicks}}</td>
+              <td class="value">{{numberToDelimited r.num_topics}}</td>
             </tr>
           </tbody>
         {{/each}}

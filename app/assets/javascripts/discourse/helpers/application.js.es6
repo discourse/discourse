@@ -1,5 +1,5 @@
 import { registerUnbound } from 'discourse-common/lib/helpers';
-import { longDate, autoUpdatingRelativeAge, number } from 'discourse/lib/formatter';
+import { longDate, autoUpdatingRelativeAge, number, numberToDelimited } from 'discourse/lib/formatter';
 
 const safe = Handlebars.SafeString;
 
@@ -13,7 +13,7 @@ registerUnbound('number', (orig, params) => {
 
   let title = orig;
   if (params.numberKey) {
-    title = I18n.t(params.numberKey, { number: orig });
+    title = numberToDelimited(I18n.t(params.numberKey, { count: orig }));
   }
 
   let classNames = 'number';
@@ -32,4 +32,8 @@ registerUnbound('number', (orig, params) => {
   result += ">" + n + "</span>";
 
   return new safe(result);
+});
+
+registerUnbound('numberToDelimited', orig => {
+  return numberToDelimited(orig);
 });
