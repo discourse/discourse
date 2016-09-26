@@ -63,6 +63,8 @@ class ImportScripts::Mbox < ImportScripts::Base
 
     files.flatten!
 
+    files.sort!
+
     files.each_with_index do |f, idx|
       if SPLIT_AT.present?
         msg = ""
@@ -310,7 +312,8 @@ class ImportScripts::Mbox < ImportScripts::Base
                                     message,
                                     category
                             FROM emails
-                            WHERE reply_to IS NULL")
+                            WHERE reply_to IS NULL
+                            ORDER BY DATE(email_date)")
 
     topic_count = all_topics.size
 
@@ -376,7 +379,9 @@ class ImportScripts::Mbox < ImportScripts::Base
                                  message,
                                  reply_to
                           FROM emails
-                          WHERE reply_to IS NOT NULL")
+                          WHERE reply_to IS NOT NULL
+                          ORDER BY DATE(email_date)
+                          ")
 
     post_count = replies.size
 
