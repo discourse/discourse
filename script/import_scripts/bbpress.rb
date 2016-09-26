@@ -1,18 +1,29 @@
 require 'mysql2'
 require File.expand_path(File.dirname(__FILE__) + "/base.rb")
 
+
+# Before running this script, paste these lines into your shell,
+# then use arrow keys to edit the values
+=begin
+export BBPRESS_USER="root"
+export BBPRESS_DB="bbpress"
+export BBPRESS_PW=""
+=end
+
 class ImportScripts::Bbpress < ImportScripts::Base
 
   BB_PRESS_DB ||= ENV['BBPRESS_DB'] || "bbpress"
   BATCH_SIZE  ||= 1000
-
+  BB_PRESS_PW ||= ENV['BBPRESS_PW'] || ""
+  BB_PRESS_USER ||= ENV['BBPRESS_USER'] || "root"
   def initialize
     super
 
     @client = Mysql2::Client.new(
       host: "localhost",
-      username: "root",
+      username: BB_PRESS_USER,
       database: BB_PRESS_DB,
+      password: BB_PRESS_PW,
     )
   end
 
