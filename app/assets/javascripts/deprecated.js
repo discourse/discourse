@@ -2,7 +2,7 @@
   var Discourse = require('discourse').default;
 
   function deprecate(module, methods) {
-    const result = {};
+    var result = {};
 
     methods.forEach(function(m) {
       result[m] = function() {
