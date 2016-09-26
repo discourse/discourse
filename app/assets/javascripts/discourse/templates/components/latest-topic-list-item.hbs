@@ -17,9 +17,11 @@
         <tr>
           {{category-link topic.category}}
           {{#if topic.tags}}
-            {{#each topic.visibleListTags as |tag|}}
-              {{discourse-tag tag}}
-            {{/each}}
+            <div class="discourse-tags">
+              {{#each topic.visibleListTags as |tag|}}
+                {{discourse-tag tag}}
+              {{/each}}
+            </div>
           {{/if}}
         </tr>
       </td>
