@@ -674,6 +674,7 @@ en:
         title: "Interface language"
         instructions: "User interface language. It will change when you refresh the page."
         default: "(default)"
+        any: "any"
 
       password_confirmation:
         title: "Password Again"
@@ -1216,6 +1217,45 @@ en:
         category: "Search the #{{category}} category"
         topic: "Search this topic"
         private_messages: "Search messages"
+
+      advanced:
+        title: Advanced Search
+        posted_by:
+          label: Posted by
+        in_category:
+          label: In Category
+        in_group:
+          label: In Group
+        with_badge:
+          label: With Badge
+        with_tags:
+          label: With Tags
+        filters:
+          label: Only return topics/posts that...
+          likes: I liked
+          posted: I posted in
+          watching: I'm watching
+          tracking: I'm tracking
+          private: are in my messages
+          bookmarks: I've bookmarked
+          first: are the very first post
+          pinned: are pinned
+          unpinned: are not pinned
+          wiki: are wiki
+        statuses:
+          label: Where topics
+          open: are open
+          closed: are closed
+          archived: are archived
+          noreplies: have zero replies
+          single_user: contain a single user
+        post:
+          count:
+            label: Minimum Post Count
+          time:
+            label: Posted
+            before: before
+            after: after
 
     hamburger_menu: "go to another topic list or category"
     new_item: "new"

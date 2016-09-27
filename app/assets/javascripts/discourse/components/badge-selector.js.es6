@@ -6,7 +6,7 @@ export default Ember.Component.extend({
     return placeholderKey ? I18n.t(placeholderKey) : '';
   },
 
-  @observes('groupNames')
+  @observes('badgeNames')
   _update() {
     if (this.get('canReceiveUpdates') === 'true')
       this._initializeAutocomplete({updateData: true});
@@ -15,31 +15,30 @@ export default Ember.Component.extend({
   @on('didInsertElement')
   _initializeAutocomplete(opts) {
     var self = this;
-    var selectedGroups;
-    var groupNames = this.get('groupNames');
+    var selectedBadges;
 
-    var template = this.container.lookup('template:group-selector-autocomplete.raw');
+    var template = this.container.lookup('template:badge-selector-autocomplete.raw');
     self.$('input').autocomplete({
       allowAny: false,
-      items: _.isArray(groupNames) ? groupNames : (Ember.isEmpty(groupNames)) ? [] : [groupNames],
+      items: _.isArray(this.get('badgeNames')) ? this.get('badgeNames') : [this.get('badgeNames')],
       single: this.get('single'),
       updateData: (opts && opts.updateData) ? opts.updateData : false,
       onChangeItems: function(items){
-        selectedGroups = items;
-        self.set("groupNames", items.join(","));
+        selectedBadges = items;
+        self.set("badgeNames", items.join(","));
       },
       transformComplete: function(g) {
         return g.name;
       },
       dataSource: function(term) {
-        return self.get("groupFinder")(term).then(function(groups){
+        return self.get("badgeFinder")(term).then(function(badges){
 
-          if(!selectedGroups){
-            return groups;
+          if(!selectedBadges){
+            return badges;
           }
 
-          return groups.filter(function(group){
-            return !selectedGroups.any(function(s){return s === group.name;});
+          return badges.filter(function(badge){
+            return !selectedBadges.any(function(s){return s === badge.name;});
           });
         });
       },
