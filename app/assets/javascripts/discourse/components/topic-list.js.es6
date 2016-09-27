@@ -97,7 +97,7 @@ export default Ember.Component.extend({
 
   click(e) {
     var self = this;
-    var on = function(sel, callback){
+    var onClick = function(sel, callback){
       var target = $(e.target).closest(sel);
 
       if(target.length === 1){
@@ -105,12 +105,12 @@ export default Ember.Component.extend({
       }
     };
 
-    on('button.bulk-select', function(){
+    onClick('button.bulk-select', function(){
       this.sendAction('toggleBulkSelect');
       this.rerender();
     });
 
-    on('th.sortable', function(e2){
+    onClick('th.sortable', function(e2){
       this.sendAction('changeSort', e2.data('sort-order'));
       this.rerender();
     });
