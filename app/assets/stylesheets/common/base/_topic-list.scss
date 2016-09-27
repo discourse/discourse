@@ -52,7 +52,8 @@ html.anon .topic-list a.title:visited:not(.badge-notification) {color: dark-ligh
     td span {
       background-color: $secondary;
       color: scale-color($danger, $lightness: 60%);
-      padding: 0px 10px;
+      padding: 0px 8px;
+      font-size: 0.929em;
     }
   }
 
