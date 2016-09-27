@@ -33,9 +33,8 @@ export default Ember.Component.extend({
 
   @observes('category')
   categoryChanged: function(){
-    this.set('prevTopic', null);
+    this._cleanLastVisited();
   },
-
 
   @computed('topics.@each', 'order', 'ascending')
   lastVisitedTopic(topics, order, ascending) {
@@ -84,10 +83,24 @@ export default Ember.Component.extend({
       return;
     }
 
+    prevTopic.set('isLastVisited', true);
     this.set('prevTopic', prevTopic);
 
     return prevTopic;
   },
+
+  _cleanLastVisited: function () {
+    const prevTopic = this.get('prevTopic');
+    if (prevTopic) {
+      prevTopic.set('isLastVisited', false);
+      this.set('prevTopic', null);
+    }
+  },
+
+  // This view is being removed. Reset lastVisited marker
+  _destroyed: function() {
+    this._cleanLastVisited();
+  }.on('willDestroyElement'),
 
   click(e) {
     var self = this;
