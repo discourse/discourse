@@ -5,6 +5,12 @@ import { defaultHomepage } from 'discourse/lib/utilities';
 const rewrites = [];
 const TOPIC_REGEXP = /\/t\/([^\/]+)\/(\d+)\/?(\d+)?/;
 
+// We can add links here that have server side responses but not client side.
+const SERVER_SIDE_ONLY = [
+  /^\/posts\/\d+\/raw/,
+  /^\/posts\.rss/
+];
+
 let _jumpScheduled = false;
 export function jumpToElement(elementId) {
   if (_jumpScheduled || Ember.isEmpty(elementId)) { return; }
@@ -79,7 +85,7 @@ const DiscourseURL = Ember.Object.extend({
         // Always use replaceState in the next runloop to prevent weird routes changing
         // while URLs are loading. For example, while a topic loads it sets `currentPost`
         // which triggers a replaceState even though the topic hasn't fully loaded yet!
-        Em.run.next(function() {
+        Ember.run.next(() => {
           const location = DiscourseURL.get('router.location');
           if (location && location.replaceURL) {
             location.replaceURL(path);
@@ -113,6 +119,15 @@ const DiscourseURL = Ember.Object.extend({
       document.location.href = Discourse.getURL(path);
       return;
     }
+
+    const serverSide = SERVER_SIDE_ONLY.some(r => {
+      if (path.match(r)) {
+        document.location = path;
+        return true;
+      }
+    });
+
+    if (serverSide) { return; }
 
     // Protocol relative URLs
     if (path.indexOf('//') === 0) {
@@ -151,6 +166,7 @@ const DiscourseURL = Ember.Object.extend({
     rewrites.forEach(rw => path = path.replace(rw.regexp, rw.replacement));
 
     if (this.navigatedToPost(oldPath, path, opts)) { return; }
+
     // Schedule a DOM cleanup event
     Em.run.scheduleOnce('afterRender', Discourse.Route, 'cleanDOM');
 
@@ -256,7 +272,7 @@ const DiscourseURL = Ember.Object.extend({
     @param {String} oldPath the previous path we were on
     @param {String} path the path we're navigating to
   **/
-  navigatedToHome: function(oldPath, path) {
+  navigatedToHome(oldPath, path) {
     const homepage = defaultHomepage();
 
     if (window.history &&
@@ -271,7 +287,7 @@ const DiscourseURL = Ember.Object.extend({
   },
 
   // This has been extracted so it can be tested.
-  origin: function() {
+  origin() {
     return window.location.origin + (Discourse.BaseUri === "/" ? '' : Discourse.BaseUri);
   },
 
