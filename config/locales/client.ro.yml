@@ -28,6 +28,7 @@ ro:
         millions: "{{number}}M"
     dates:
       time: "HH:mm"
+      timeline_date: "MMM YYYY"
       long_no_year: "DD MMM HH:mm"
       long_no_year_no_time: "DD MMM"
       full_no_year_no_time: "Do MMMM "
@@ -39,6 +40,7 @@ ro:
       long_date_with_year_without_time: "DD MMM 'YY"
       long_date_without_year_with_linebreak: "DD MMM<br/>HH:mm"
       long_date_with_year_with_linebreak: "DD MMM 'YY<br/>HH:mm"
+      wrap_ago: "%{date} zile în urmă"
       tiny:
         half_a_minute: "< 1m"
         less_than_x_seconds:
@@ -126,7 +128,13 @@ ro:
       google+: 'distribuie pe Google+'
       email: 'trimite această adresă pe email'
     action_codes:
+      public_topic: "a făcut acest subiect public %{when}"
+      private_topic: "a făcut acest subiect privat %{when}"
       split_topic: "desparte această discuție %{when}"
+      invited_user: "a invitat pe %{who} pe %{when}"
+      invited_group: "a invitat pe %{who} pe %{when}"
+      removed_user: "a scos pe %{who} pe %{when}"
+      removed_group: "scos pe  %{who} pe %{when}"
       autoclosed:
         enabled: 'închis %{when}'
         disabled: 'deschis %{when}'
@@ -147,6 +155,8 @@ ro:
         disabled: 'retras %{when}'
     topic_admin_menu: "Opțiuni administrare discuție"
     emails_are_disabled: "Trimiterea de emailuri a fost dezactivată global de către un administrator. Nu vor fi trimise notificări email de nici un fel."
+    bootstrap_mode_enabled: "Pentru a ușura lansarea site-ul dvs., sunteți în modul bootstrap. Toți noii utilizatori vor primi nivelul 1 de încredere și avea activată primirea de email-uri cu rezumat zilnic.  Această setare va fi dezactivată automat de îndată ce numărul total de utilizatori depășește %{min_users}."
+    bootstrap_mode_disabled: "Modul bootstrap va fi dezactivat în următoarele 24 de ore."
     s3:
       regions:
         us_east_1: "US East (N. Virginia)"
@@ -157,9 +167,11 @@ ro:
         eu_central_1: "EU (Frankfurt)"
         ap_southeast_1: "Asia Pacific (Singapore)"
         ap_southeast_2: "Asia Pacific (Sydney)"
+        ap_south_1: "Asia Pacific (Mumbai)"
         ap_northeast_1: "Asia Pacific (Tokyo)"
         ap_northeast_2: "Asia Pacific (Seoul)"
         sa_east_1: "South America (Sao Paulo)"
+        cn_north_1: "China (Beijing)"
     edit: 'editează titlul și categoria acestui subiect'
     not_implemented: "Această funcționalitate nu a fost implementată încă."
     no_value: "Nu"
@@ -265,6 +277,8 @@ ro:
     undo: "Anulează acțiunea precedentă"
     revert: "Refacere"
     failed: "Eșuat"
+    switch_to_anon: "Intrați în Modul Anonim"
+    switch_from_anon: "Ieșiți din Modul Anonim"
     banner:
       close: "Ignoră acest banner."
       edit: "Editează acest banner >>"
@@ -334,12 +348,16 @@ ro:
         other: "%{count} utilizatori"
     groups:
       empty:
+        posts: "Nu există nici o postare a membrilor acestui grup."
+        members: "Nu există nici un membru în acest grup."
         mentions: "Nu sunt mențiuni ale acestui grup."
         messages: "Nu este nici un mesaj pentru acest grup."
+        topics: "Nu exista nici un subiect postat de membrii acestui grup."
       add: "Adaugă"
       selector_placeholder: "Adaugă membri"
       owner: "proprietar"
       visible: "Grupul este vizibil tuturor utilizatorilor"
+      index: "Grupuri"
       title:
         one: "grup"
         few: "grupuri"
@@ -350,23 +368,31 @@ ro:
       mentions: "Mențiuni"
       messages: "Mesaje"
       alias_levels:
+        title: "Cine poate trimite mesaje către acest grup sau să îl @menționeze?"
         nobody: "Nimeni"
         only_admins: "Doar Adminii"
         mods_and_admins: "Doar moderatorii și adminii"
         members_mods_and_admins: "Doar membri grupului, moderatorii și adminii"
         everyone: "Toată lumea"
       trust_levels:
+        title: "Nivel de încredere acordat automat membrilor atunci când sunt adăugați:"
         none: "Nimic"
       notifications:
         watching:
           title: "Urmărit"
+          description: "Veți fi notificat pentru fiecare nouă postare în fiecare mesaj, și va fi afișat un contor al noilor răspunsuri."
+        watching_first_post:
+          title: "Urmărind Prima Postare"
+          description: "Veți fi notificat doar cu pentru prima postare din fiecare nou subiect al acestui grup."
         tracking:
           title: "Urmărit"
+          description: "Veți fi notificat dacă cineva menționează @numele dvs. sau vă răspunde, și va fi afișat un contor al noilor răspunsuri."
         regular:
           title: "Normal"
           description: "Vei fi notificat dacă cineva îți menționează @numele sau îți va scrie un reply."
         muted:
           title: "Mut"
+          description: "Nu veți fi niciodată notificat despre nimic legat de noile subiecte din acest grup."
     user_action_groups:
       '1': "Aprecieri Date"
       '2': "Aprecieri Primite"
@@ -385,6 +411,7 @@ ro:
       all_subcategories: "toate"
       no_subcategory: "niciuna"
       category: "Categorie"
+      category_list: "Afișează lista de categorii"
       reorder:
         title: "Rearanjeaza Categoriile"
         title_long: "Rearanjeaza lista de categorii"
@@ -399,6 +426,10 @@ ro:
       latest_by: "recente dupa"
       toggle_ordering: "Control comandă comutare"
       subcategories: "Subcategorie"
+      topic_sentence:
+        one: "un subiect"
+        few: "%{count} subiecte"
+        other: "%{count} subiecte"
       topic_stat_sentence:
         one: "%{count} subiect în %{unit}."
         few: "%{count} subiecte noi în %{unit}."
@@ -443,9 +474,11 @@ ro:
         not_supported: "Notificarile nu sunt suportate in acest browser."
         perm_default: "Activeaza notificarile"
         perm_denied_btn: "Nu se permite accesul"
+        perm_denied_expl: "Ați ridicat permisiunea pentru notificări. Permiteți notificările prin setările browser-ului."
         disable: "Dezactiveaza notificarile"
         enable: "Activeaza Notificarile"
         each_browser_note: "Notati: Setarile vor fi modificate pe orice alt browser."
+      dismiss_notifications: "Anulează Tot"
       dismiss_notifications_tooltip: "Marchează cu citit toate notificările necitite"
       disable_jump_reply: "Nu sări la postarea mea după ce răspund"
       dynamic_favicon: "Arată subiectele noi/actualizate în iconiţă browserului."
@@ -463,8 +496,12 @@ ro:
       email_activity_summary: "Sumarul activității"
       mailing_list_mode:
         label: " "
+        enabled: "Activați modul mailing list"
         daily: "Trimite actualizări zilnice"
         individual: "Trimite un email pentru fiecare postare nouă"
+      tag_settings: "Etichete"
+      watched_tags: "Văzut"
+      tracked_tags: "Urmărit"
       watched_categories: "Văzut"
       tracked_categories: "Tracked"
       muted_categories: "Muted"
@@ -478,6 +515,13 @@ ro:
       muted_users: "Silențios"
       muted_users_instructions: "Suprimă toate notificările de la aceşti utilizatori"
       muted_topics_link: "Arata topicurile dezactivate."
+      apps: "Applicații"
+      revoke_access: "Revocați Accesul"
+      undo_revoke_access: "Anulați Revocarea Accesului"
+      api_permissions: "Permisiuni:"
+      api_approved: "Aprobate:"
+      api_read: "citire"
+      api_read_write: "citire și scriere"
       staff_counters:
         flags_given: "Semnale ajutătoare"
         flagged_posts: "postări semnalate"
@@ -572,6 +616,7 @@ ro:
       website: "Website"
       email_settings: "Email"
       like_notification_frequency:
+        title: "Notificați atunci când i se dă like"
         always: "Întotdeauna"
         never: "Niciodată"
       email_previous_replies:
@@ -579,6 +624,7 @@ ro:
         never: "niciodată"
       email_digests:
         every_30_minutes: "La fiecare 30 de minute "
+        every_hour: "în fiecare oră"
         daily: "zilnic"
         every_three_days: "la fiecare trei zile"
         weekly: "săptămânal"
@@ -737,6 +783,8 @@ ro:
     read_only_mode:
       login_disabled: "Autentificarea este dezactivată când siteul este în modul doar pentru citit."
     learn_more: "află mai multe..."
+    all_time: 'total'
+    all_time_desc: 'total subiecte create'
     year: 'an'
     year_desc: 'discuții create în ultimile 365 de zile'
     month: 'lună'

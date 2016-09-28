@@ -748,6 +748,8 @@ zh_CN:
       rate:
         other: "%{count} 错误/%{duration}"
     learn_more: "了解更多..."
+    all_time: '总量'
+    all_time_desc: '创建的主题总量'
     year: '年'
     year_desc: '365 天内创建的主题'
     month: '月'
@@ -904,8 +906,10 @@ zh_CN:
       show_preview: '显示预览 &raquo;'
       hide_preview: '&laquo; 隐藏预览'
       quote_post_title: "引用整个帖子"
+      bold_label: "B"
       bold_title: "加粗"
       bold_text: "加粗示例"
+      italic_label: "I"
       italic_title: "斜体"
       italic_text: "斜体示例"
       link_title: "链接"
@@ -923,6 +927,7 @@ zh_CN:
       olist_title: "数字列表"
       ulist_title: "符号列表"
       list_item: "列表条目"
+      heading_label: "H"
       heading_title: "标题"
       heading_text: "标题头"
       hr_title: "分割线"
@@ -1266,7 +1271,7 @@ zh_CN:
         success_group: "成功邀请了群组至该消息。"
         error: "抱歉，邀请时出了点小问题。"
         group_name: "群组名"
-      controls: "主题控制操作"
+      controls: "主题控件"
       invite_reply:
         title: '邀请'
         username_placeholder: "用户名"
@@ -2635,6 +2640,7 @@ zh_CN:
           developer: '开发者'
           embedding: "嵌入"
           legal: "法律信息"
+          user_api: '用户 API'
           uncategorized: '未分类'
           backups: "备份"
           login: "登录"

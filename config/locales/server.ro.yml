@@ -10,17 +10,48 @@ ro:
     short_date_no_year: "D MMM"
     short_date: "D MMM, YYYY"
     long_date: "MMMM D, YYYY h:mma"
+  datetime_formats: &datetime_formats
+    formats:
+      short: "%d.%m.%Y"
+      short_no_year: "%B %-d"
+      date_only: "%B %-d, %Y"
+      long: "%B %-d, %Y, %l:%M%P"
+  date:
+    month_names: [null, ianuarie, februarie, martie, aprilie, mai, iunie, iulie, august, septembrie, octombrie, noiembrie, decembrie]
+    <<: *datetime_formats
   time:
     am: "AM"
     pm: "PM"
+    <<: *datetime_formats
   title: "Discourse"
   topics: "Discuții"
   posts: "postări"
   loading: "Se încarcă"
   powered_by_html: 'Prin intermediul <a href="http://www.discourse.org">Discourse</a>, Vizualizare optimă cu JavaScript activat'
   log_in: "Autentificare"
+  purge_reason: "Cont șters automat, ca fiind abandonat, dezactivat."
   disable_remote_images_download_reason: "Descărcarea de imagini la distanţă a fost dezactivată deoarece nu mai era spaţiu pe disc suficient."
   anonymous: "Anonim"
+  emails:
+    incoming:
+      default_subject: "Email primit de la %{email}"
+      show_trimmed_content: "Arată conținut restrâns."
+      maximum_staged_user_per_email_reached: "Număr maxim de utilizatori tratați, pe email."
+      errors:
+        empty_email_error: "Apare atunci când mailul brut pe care l-am primit este gol."
+        no_message_id_error: "Apare atunci când mailul nu are header 'Message-Id'."
+        auto_generated_email_error: "Apare atunci când header-ul de 'precedență' este setat pe: list, junk, bulk sau auto_reply, sau atunci când orice alt header conține: auto-submitted, auto-replied sau auto-generated."
+        no_body_detected_error: "Apare atunci când nu am putut extrage corpul mesajului și nu existau fișiere atașate."
+        inactive_user_error: "Apare când expeditorul nu este activ."
+        blocked_user_error: "Apare când expeditorul a fost blocat."
+        bad_destination_address: "Apare atunci când nici una dintre adresele de email din câmpurile To/Cc/Bcc nu se potrivește cu o adresa de email expeditor configurată."
+        strangers_not_allowed_error: "Apare când un utilizator a încercat să creeze un nou subiect într-o categorie în care nu este membru. "
+        insufficient_trust_level_error: "Apare atunci când un utilizator a încercat să creeze un subiect nou într-o categorie pentru care nu are nivelul de încredere necesar."
+        reply_user_not_matching_error: "Apare atunci când un răspuns a venit de la o adresă de email diferită de cea la care a fost trimisă notificarea."
+        topic_not_found_error: "Apare atunci când un răspuns a venit dar subiectul aferent a fost șters."
+        topic_closed_error: "Apare atunci când un răspuns a venit dar subiectul aferent a fost închis."
+        bounced_email_error: "Emailul este un raport de email reflectat."
+        screened_email_error: "Apare atunci când adresa de email a expeditorului a fost deja trecută în revistă."
   errors: &errors
     format: '%{attribute} %{message}'
     messages:
@@ -37,8 +68,10 @@ ro:
       exclusion: este rezervat
       greater_than: trebuie să fie mai mare decât %{count}
       greater_than_or_equal_to: trebuie să fie mai mare sau egal cu %{count}
+      has_already_been_used: "deja este folosit"
       inclusion: nu este inclus in listă
       invalid: nu este valid
+      is_invalid: "este invalid; încercați o descriere mai detaliată"
       less_than: trebuie să fie mai mic decât %{count}
       less_than_or_equal_to: trebuie să fie mai mic sau egal cu %{count}
       not_a_number: nu este un număr
@@ -63,18 +96,31 @@ ro:
       other_than: "trebuie sa fie diferite de %{count}"
     template:
       body: 'Au apărut probleme cu următoarele câmpuri:'
+      header:
+        one: O eroare a împiedicat acest %{model} să fie salvat
+        few: '%{count} erori au împiedicat acest %{model} să fie salvat'
+        other: '%{count} erori au împiedicat acest %{model} să fie salvat'
     embed:
       load_from_remote: "S-a semnalat o eroare la încarcarea postării."
+    site_settings:
+      min_username_length_exists: "Nu puteți seta numărul minim de caractere din nume_utilizator la o valoare mai mare decât cea a celui mai scurt nume_utilizator."
+      min_username_length_range: "Nu puteți seta minimum cu o valoare mai mare decât a maximului."
+      max_username_length_exists: "Nu puteți seta numărul maxim de caractere pentru nume_utilizator la o valoare mai mică decât a celui mai lung nume_utilizator."
+      max_username_length_range: "Nu puteți seta maximum cu o valoare mai mică decât a minimului."
+      default_categories_already_selected: "Nu puteți selecta o categorie folosită într-o altă listă."
+      s3_upload_bucket_is_required: "Nu puteți activa încărcările pe S3 dacă nu ați introdus 's3_upload_bucket'."
   bulk_invite:
     file_should_be_csv: "Fișierul încărcat ar trebuii să fie de formatul csv sau txt."
   backup:
     operation_already_running: "O operație este în plină desfășurare. Nu puteți începe alta nouă."
     backup_file_should_be_tar_gz: "Copia de siguranță ar trebui să fie arhivată cu extensia .tar.gz."
     not_enough_space_on_disk: "Nu este suficient spațiu pe disc pentru a încărca această copie de siguranță."
+    invalid_filename: "Numele fișierului backup conține caractere invalide. Caracterele valide sunt a-z 0-9 . - _."
   not_logged_in: "trebuie să fii autentificat pentru a executa această acțiune."
   not_found: "Adresa URL sau resursă cerută nu pot fi găsite."
   invalid_access: "Nu aveţi permisiunea să vedeţi această resursă."
   read_only_mode_enabled: "Site-ul este în modul doar-citire. Interacțiunile sunt dezactivate."
+  reading_time: "Durata citirii"
   likes: "Aprecieri"
   too_many_replies:
     one: "Ne pare rău, dar utilizatori noi sunt limitaţi la 1 răspuns pe discuţie."
@@ -83,6 +129,10 @@ ro:
   embed:
     start_discussion: "Pornește Discuție"
     continue: "Continuă Discuție"
+    more_replies:
+      one: "Încă un răspuns"
+      few: "Încă %{count} răspunsuri"
+      other: "Încă %{count} răspunsuri"
     loading: "Încarcă discuția..."
     permalink: "Adresă permanentă"
     imported_from: "Acesta este un subiect de discuție adăugat la discuția originală de la %{link}"
@@ -91,8 +141,34 @@ ro:
       one: "Un răspuns"
       few: "%{count} răspunsuri"
       other: "%{count} de răspunsuri"
+  no_mentions_allowed: "Ne pare rău, nu puteți menționa alți utilizatori."
+  too_many_mentions:
+    one: "Ne pare rău, puteți menționa doar un utilizator într-o postare."
+    few: "Ne pare rău, puteți menționa doar %{count} utilizatori într-o postare."
+    other: "Ne pare rău, puteți menționa doar %{count} de utilizatori într-o postare."
+  no_mentions_allowed_newuser: "Ne pare rău, noii utilizatori nu pot menționa alți utilizatori."
+  too_many_mentions_newuser:
+    one: "Ne pare rău, noii utilizatori pot menționa doar un utilizator într-o postare."
+    few: "Ne pare rău, noii utilizatori pot menționa doar %{count} utilizatori într-o postare."
+    other: "Ne pare rău, noii utilizatori pot menționa doar %{count} utilizatori într-o postare."
+  no_images_allowed: "Ne pare rău, nu puteți pune imagini în postări."
+  too_many_images:
+    one: "Ne pare rău, noii utilizatori pot pune numai o imagine într-o postare."
+    few: "Ne pare rău, noii utilizatori pot pune numai %{count} imagini într-o postare."
+    other: "Ne pare rău, noii utilizatori pot pune numai %{count} imagini într-o postare."
+  no_attachments_allowed: "Ne pare rău, noii utilizatori nu pot pune atașamente la postări."
+  too_many_attachments:
+    one: "Ne pare rău, noii utilizatori pot pune doar un atașament la o postare."
+    few: "Ne pare rău, noii utilizatori pot pune doar %{count} atașamente la o postare."
+    other: "Ne pare rău, noii utilizatori pot pune doar %{count} atașamente la o postare."
+  no_links_allowed: "Ne pare rău, noii utilizatori nu pot pune link-uri în postări."
+  too_many_links:
+    one: "Ne pare rău, noii utilizatori pot pune doar un link într-o postare."
+    few: "Ne pare rău, noii utilizatori pot pune doar %{count} link-uri într-o postare."
+    other: "Ne pare rău, noii utilizatori pot pune doar %{count} link-uri într-o postare."
   spamming_host: "Nu poți adăuga un link pentru acest domeniu."
   user_is_suspended: "Utilizatorii suspendați nu au dreptul de a posta."
+  topic_not_found: "Ceva a mers greșit. Poate că acest subiect a fost închis sau șters în timp ce vă uitați la el?"
   just_posted_that: "este prea similar cu ceea ce ați postat recent"
   invalid_characters: "conține caractere invalide"
   is_invalid: "este invalid; încercați o descriere mai detaliată"
@@ -111,13 +187,26 @@ ro:
   rss_description:
     latest: "Ultimele discuții"
     hot: "Discuții interesante"
+    top: "Subiecte fierbinți"
+    posts: "Ultimele postări"
+    private_posts: "Ultimele mesaje private"
+    group_posts: "Ultimele postări de la %{group_name}"
+    group_mentions: "Ultimele menționări de la %{group_name}"
+    user_posts: "Ultimele postări ale lui @%{username}"
+    user_topics: "Ultimele subiecte ale lui @%{username}"
+    tag: "Subiecte etichetate"
   too_late_to_edit: "Acea discuție a fost creată acum prea mult timp. Nu mai poate fi editată sau ștearsă."
+  revert_version_same: "Versiunea curenta este identică cu cea la care încercați să reveniți."
   excerpt_image: "imagine"
   queue:
     delete_reason: "Şters via coadă de moderare"
   groups:
     errors:
+      can_not_modify_automatic: "Nu puteți modifica un grup automat"
       member_already_exist: "'%{username}' este deja membru al acestui grup"
+      invalid_domain: "'%{domain}' nu este un domeniu valid."
+      invalid_incoming_email: "'%{email}' nu este o adresa validă de email."
+      email_already_used_in_group: "'%{email}' este deja folosit de grupul '%{group_name}'."
     default_names:
       everyone: "toată lumea"
       admins: "administratori"
@@ -133,6 +222,16 @@ ro:
       one: "O postare"
       few: "%{count} postări"
       other: "%{count} de postări"
+    new-topic: |
+      Bun venit pe %{site_name} &mdash; **mulțumim că ați început o nouă conversație!**
+
+      - Titlul sună interesant atunci când îl citiți cu voce tare? Rezumă el bine conținutul?
+
+      - Cine ar fi interesat de subiectul ăsta? De ce e el important? Ce fel de răspunsuri așteptați?
+
+      - Includeți în subiect cuvinte folosite în mod obișnuit pentru a le da altora posibilitatea să îl *găsească*. Pentru a grupa subiectul dvs. laolaltă cu alte subiecte înrudite, selectați o anumită categorie.
+
+      Pentru mai multe îndrumări, [citiți ghidul comunității](/guidelines). Această secțiune de pagină va apare doar pentru prima %{education_posts_text}.
     new-reply: |
       Bine ai venit la %{site_name} &mdash; **Mulțumim pentru contribuție!**
 
@@ -143,6 +242,22 @@ ro:
       - Critica constructivă e binevenită, criticați *ideea*, nu oamenii.
 
       Pentru detalii, [verifică regulile comune](/reguli). Acest panel va apărea doar pentru prima %{education_posts_text}.
+    avatar: |
+      ### Ce părere aveți să adăugați o poză contului dvs.?
+
+      Ați postat câteva subiecte și răspunsuri, dar poza dvs. de profil nu este tot atât de unică pe cât sunteți dvs. - e doar o literă.
+
+      V-ați gândit să vă **[vizitați profilul utilizator](%{profile_path})** și să încărcați o poză care să vă reprezinte?
+
+      Când fiecare are o poză unică de profil, sunt mai ușor de urmărit discuțiile și de găsit oameni interesanți în conversații!
+    sequential_replies: |
+      ### Luați în considerare ideea de a răspunde la câteva postări simultan
+
+      În loc să răspundeți secvențial la un subiect, puteți să dați un singur răspuns care include citate din postări precedente sau referințe la @nume.
+
+      Vă puteți edita răspunsul precedent pentru a adăuga un citat, după cum urmează: selectați textul și apăsați butonul <b>citează replica</b> care apare.
+
+      E mai ușor pentru toată lumea să citească subiectele care au răspunsuri mai puține și de substanță, decât pe cele formate dintr-o grămadă de răspunsuri individuale, micuțe.
     dominating_topic: |
       ### Permite și altora să se alăture la conversație
 
@@ -165,6 +280,8 @@ ro:
     attributes:
       category:
         name: "Numele categoriei"
+      topic:
+        title: 'Titlu'
       post:
         raw: "Corp"
       user_profile:
@@ -182,18 +299,29 @@ ro:
           attributes:
             password:
               common: "Este una din 10.000 cele mai cunoscute parole. Folosiți vă rugăm o parolă mai sigură."
+              same_as_username: "este identic cu nume_utilizator. Vă rugăm să folosiți o parolă mai sigură."
+              same_as_email: "este identic cu emailul. Vă rugăm să folosiți o parolă mai sigură."
+              same_as_current: "este identică cu parola curentă."
             ip_address:
               signup_not_allowed: "Înscrierea de pe acest cont nu este permisă."
         color_scheme_color:
           attributes:
             hex:
               invalid: "nu este o culoare validă"
+        post_reply:
+          base:
+            different_topic: "Postarea și răspunsul trebuie să aparțină aceluiași subiect."
+        web_hook:
+          attributes:
+            payload_url:
+              invalid: "URL-ul este invalid. URL-ul trebuie să includă http:// sau https://. Și caracterul spațiu nu este permis."
       <<: *errors
   user_profile:
     no_info_me: "<div class='profil-lipsa'>câmpul despre mine din profilul dvs este gol momentan, <a href='/useri/%{username_lower}/preferințe/despre-mine'>Doriți să-l completați?</a></div>"
     no_info_other: "<div class='profil-lipsă'>%{name} nu a introdus înca nimic în câmpul despre mine din profil</div>"
   vip_category_name: "Lounge"
   vip_category_description: "O categorie dedicată exclusiv celor cu nivelul de încredere 3 sau mai mare"
+  meta_category_name: "Feedback Site"
   meta_category_description: "Discuții despre acest forum, organizare, funcționare și cum îl putem îmbunătății."
   staff_category_name: "Personalul"
   staff_category_description: "Categorie privată pentru discuțiile personalului. Discuțiile sunt vizibile doar adminilor și moderatorilor."
@@ -228,17 +356,46 @@ ro:
       uncategorized_parent: "ce nu este categorisit nu poate avea categorie părinte"
       self_parent: "Părintele unei subcategorii nu poate fi ea însăși"
       depth: "Nu poți așeza o subcategorie sub o altă"
+      invalid_email_in: "'%{email}' nu este o adresă validă de email."
+      email_already_used_in_group: "'%{email}' este deja folosit de grupul '%{group_name}'."
+      email_already_used_in_category: "'%{email}' este deja folosit de categoria '%{category_name}'."
     cannot_delete:
       uncategorized: "Nu pot șterge ceva necategorisit"
+      has_subcategories: "Nu putem șterge categoria aceasta pentru că are sub-categorii."
+      topic_exists:
+        one: "Nu putem șterge categoria aceasta pentru că are un subiect. Cel mai vechi subiect este %{topic_link}."
+        few: "Nu putem șterge categoria aceasta pentru că are %{count} subiecte. Cel mai vechi subiect este %{topic_link}."
+        other: "Nu putem șterge categoria aceasta pentru că are %{count} subiecte. Cel mai vechi subiect este %{topic_link}."
       topic_exists_no_oldest: "Nu pot șterge categoria fiindcă numărul discuțiilor este de %{count}."
+    uncategorized_description: "Subiecte care nu au nevoie de o categorie, sau care nu se potrivesc în nicio categorie deja existentă."
   trust_levels:
     newuser:
       title: "utilizator nou"
     basic:
       title: "utilizator de bază"
+    member:
+      title: "membru"
+    regular:
+      title: "obișnuit"
+    leader:
+      title: "lider"
     change_failed_explanation: "Ați încercat să retrogradați utilizatorul %{user_name} la nivelul '%{new_trust_level}'. Totuși nivelul este deja '%{current_trust_level}'. %{user_name} va rămâne la '%{current_trust_level}'"
   rate_limiter:
+    slow_down: "Ați executat această acțiune de prea multe ori. Încercați mai târziu."
     too_many_requests: "Există o limită zilnică de executare a acelei acțiuni. Vă rugăm așteptați %{time_left} până încercați iar."
+    by_type:
+      first_day_replies_per_day: "Ați atins numărul maxim de răspunsuri pe care un nou utilizator le poate crea în prima sa zi. Vă rugăm să așteptați %{time_left} înainte să încercați din nou."
+      create_topic: "Ați atins numărul maxim de subiecte. Vă rugăm să așteptați %{time_left} înainte să încercați din nou."
+      create_post: "Răspundeți prea rapid. Vă rugăm să așteptați %{time_left} înainte să încercați din nou."
+      delete_post: "Ștergeți postările prea rapid. Vă rugăm să așteptați %{time_left} înainte să încercați din nou."
+      topics_per_day: "Ați atins numărul maxim de subiecte noi pe ziua de azi. Vă rugăm să așteptați %{time_left} înainte să încercați din nou."
+      pms_per_day: "Ați atins numărul maxim de mesaje pe ziua de azi. Vă rugăm să așteptați %{time_left} înainte să încercați din nou."
+      create_like: "Ați atins numărul maxim de like-uri pe ziua de azi. Vă rugăm să așteptați %{time_left} înainte să încercați din nou."
+      create_bookmark: "Ați atins numărul maxim de semne de carte pe ziua de azi. Vă rugăm să așteptați %{time_left} înainte să încercați din nou."
+      edit_post: "Ați atins numărul maxim de editări pe ziua de azi. Vă rugăm să așteptați %{time_left} înainte să încercați din nou."
+      live_post_counts: "Cereți contorizarea live a numărului de posturi prea rapid. Vă rugăm să așteptați %{time_left} înainte să încercați din nou."
+      unsubscribe_via_email: "Ați atins numărul maxim de dezabonări prin email pe ziua de azi. Vă rugăm să așteptați %{time_left} înainte să încercați din nou."
+      topic_invitations_per_day: "Ați atins numărul maxim de invitații la subiecte pe ziua de azi. Vă rugăm să așteptați %{time_left} înainte să încercați din nou."
     hours:
       one: "1 oră"
       few: "%{count} ore"
@@ -324,6 +481,26 @@ ro:
         one: "acum o zi"
         few: "acum %{count} zile"
         other: "acum %{count} zile"
+      about_x_months:
+        one: "aproape o lună în urmă"
+        few: "aproape %{count} luni în urmă"
+        other: "aproape %{count} luni în urmă"
+      x_months:
+        one: "o lună în urmă"
+        few: "%{count} luni în urmă"
+        other: "%{count} luni în urmă"
+      about_x_years:
+        one: "aproape un an în urmă"
+        few: "aproape %{count} ani în urmă"
+        other: "aproape %{count} ani în urmă"
+      over_x_years:
+        one: "peste un an în urmă"
+        few: "peste %{count} ani în urmă"
+        other: "peste %{count} ani în urmă"
+      almost_x_years:
+        one: "aproape un an în urmă"
+        few: "aproape %{count} ani în urmă"
+        other: "aproape %{count} ani în urmă"
   password_reset:
     choose_new: "Alegeți o parolă nouă"
     choose: "Alegeți o parolă"
@@ -394,9 +571,22 @@ ro:
     regular:
       title: "Discuție normală"
     banner:
+      title: "Subiect Banner"
       message:
         make: "Această discuție este de acum o discuție cu stindard. Va apărea în capătul fiecărei ferestre până când va fi înlăturată de către utilizator."
         remove: "Această discuție nu mai este una cu stindard. Nu va mai apărea în capătul fiecărei pagini."
+  unsubscribed:
+    title: "V-ați dezabonat!"
+  unsubscribe:
+    title: "Dezabonare"
+    disable_digest_emails: "Nu îmi mai trimite emailuri rezumat"
+    all: "Nu îmi trimite nici un mail de la %{sitename}"
+    log_out: "Ieșire"
+  user_api_key:
+    title: "Autorizați accesul aplicației"
+    authorize: "Autorizați"
+    read: "citire"
+    read_write: "citire/scriere"
   reports:
     visits:
       title: "Vizite de utilizatori"
@@ -406,6 +596,8 @@ ro:
       title: "Utilizatori Noi"
       xaxis: "Zi"
       yaxis: "Număr de noi utilizatori"
+    profile_views:
+      xaxis: "Zi"
     topics:
       title: "Discuții"
       xaxis: "Zi"
@@ -444,15 +636,19 @@ ro:
     system_private_messages:
       title: "Sistem"
       xaxis: "Zi"
+      yaxis: "Număr de mesaje"
     moderator_warning_private_messages:
       title: "Avertismente moderatori"
       xaxis: "Zi"
+      yaxis: "Număr de mesaje"
     notify_moderators_private_messages:
       title: "Notifică moderatori"
       xaxis: "Zi"
+      yaxis: "Număr de mesaje"
     notify_user_private_messages:
       title: "Notifică utilizatori"
       xaxis: "Zi"
+      yaxis: "Număr de mesaje"
     top_referrers:
       title: "Top refernințe"
       xaxis: "Utilizatori"
@@ -479,6 +675,10 @@ ro:
     page_view_total_reqs:
       title: "Total"
       xaxis: "Zi"
+    page_view_logged_in_mobile_reqs:
+      xaxis: "Zi"
+    page_view_anon_mobile_reqs:
+      xaxis: "Zi"
     http_background_reqs:
       title: "Fundal"
       xaxis: "Zi"
@@ -500,6 +700,15 @@ ro:
       title: "Total"
       xaxis: "Zi"
       yaxis: "Total cereri"
+    time_to_first_response:
+      xaxis: "Zi"
+      yaxis: "Timp mediu (ore)"
+    topics_with_no_response:
+      xaxis: "Zi"
+      yaxis: "Total"
+    mobile_visits:
+      xaxis: "Zi"
+      yaxis: "Număr de vizite"
   dashboard:
     rails_env_warning: "Serverul funcționează în modul %{env}."
     host_names_warning: "Fișierul config/database.yml folosește din oficiu numele gazdei locale. Reactualizați pt a folosii numele de gazdă al site-ului."

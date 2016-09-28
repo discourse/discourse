@@ -2117,6 +2117,11 @@ da:
         info_html: "Din API-nøgle giver dig mulighed for at oprette og opdatere emner vha. JSON-kald."
         all_users: "Alle brugere"
         note_html: "Hold denne nøgle <strong>hemmelig</strong>, alle brugere som har den kan oprette vilkårlige indlæg, som enhver bruger."
+      web_hooks:
+        secret: "Hemmelig"
+        wildcard_event: "Send mig alt"
+        individual_event: "Vælg individuelle events"
+        active: "Aktiv"
       plugins:
         title: "Plugins"
         installed: "Installerede Plugins"

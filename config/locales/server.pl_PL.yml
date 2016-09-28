@@ -1154,6 +1154,12 @@ pl_PL:
     see_more: "Więcej"
     search_title: "Szukaj w serwisie"
     search_google: "Google"
+  login_required:
+    welcome_message: |+
+      #[Witamy na %{title}](#welcome)
+      Zarejestruj nowe konto lub przejdź do logowania.
+
+
   terms_of_service:
     title: "Warunki użytkowania"
     signup_form_message: 'Przeczytałem i zgadzam się z <a href="/tos" target="_blank">Regulaminem Serwisu</a>.'
