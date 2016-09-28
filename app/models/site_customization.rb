@@ -5,7 +5,7 @@ require_dependency 'distributed_cache'
 class SiteCustomization < ActiveRecord::Base
   ENABLED_KEY = '7e202ef2-56d7-47d5-98d8-a9c8d15e57dd'
 
-  COMPILER_VERSION = 1
+  COMPILER_VERSION = 2
 
   @cache = DistributedCache.new('site_customization')
 
