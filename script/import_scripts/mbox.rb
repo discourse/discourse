@@ -259,7 +259,7 @@ class ImportScripts::Mbox < ImportScripts::Base
   def clean_title(title)
     title ||= ""
     #Strip mailing list name from subject
-    title = title.gsub(/\[#{LIST_NAME}\]/, '').strip
+    title = title.gsub(/\[#{Regexp.escape(LIST_NAME)}\]/, '').strip
 
     original_length = title.length
 
