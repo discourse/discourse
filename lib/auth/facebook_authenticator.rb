@@ -1,5 +1,7 @@
 class Auth::FacebookAuthenticator < Auth::Authenticator
 
+  AVATAR_SIZE = 480
+
   def name
     "facebook"
   end
@@ -31,7 +33,8 @@ class Auth::FacebookAuthenticator < Auth::Authenticator
     user = result.user
     if user && (!user.user_avatar || user.user_avatar.custom_upload_id.nil?)
       if (avatar_url = facebook_hash[:avatar_url]).present?
-        UserAvatar.import_url_for_user(avatar_url, user, override_gravatar: false)
+        avatar_url_with_parameters = add_avatar_parameters(avatar_url)
+        UserAvatar.import_url_for_user(avatar_url_with_parameters, user, override_gravatar: false)
       end
     end
 
@@ -65,7 +68,8 @@ class Auth::FacebookAuthenticator < Auth::Authenticator
 
 
     if (avatar_url = data[:avatar_url]).present?
-      UserAvatar.import_url_for_user(avatar_url, user)
+      avatar_url_with_parameters = add_avatar_parameters(avatar_url)
+      UserAvatar.import_url_for_user(avatar_url_with_parameters, user)
       user.save
     end
 
@@ -130,5 +134,8 @@ class Auth::FacebookAuthenticator < Auth::Authenticator
 
   end
 
+  def add_avatar_parameters(avatar_url)
+    "#{avatar_url}?height=#{AVATAR_SIZE}&width=#{AVATAR_SIZE}"
+  end
 
 end
