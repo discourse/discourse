@@ -8,7 +8,8 @@ const TOPIC_REGEXP = /\/t\/([^\/]+)\/(\d+)\/?(\d+)?/;
 // We can add links here that have server side responses but not client side.
 const SERVER_SIDE_ONLY = [
   /^\/posts\/\d+\/raw/,
-  /^\/posts\.rss/
+  /\.rss$/,
+  /\.json/,
 ];
 
 let _jumpScheduled = false;
