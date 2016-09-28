@@ -1,6 +1,6 @@
 class Auth::FacebookAuthenticator < Auth::Authenticator
 
-  AVATAR_HEIGHT = 480
+  AVATAR_SIZE = 480
 
   def name
     "facebook"
@@ -135,7 +135,7 @@ class Auth::FacebookAuthenticator < Auth::Authenticator
   end
 
   def add_avatar_parameters(avatar_url)
-    "#{avatar_url}?height=#{AVATAR_HEIGHT}"
+    "#{avatar_url}?height=#{AVATAR_SIZE}&width=#{AVATAR_SIZE}"
   end
 
 end
