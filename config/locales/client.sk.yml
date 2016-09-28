@@ -1138,6 +1138,9 @@ sk:
         category: "V kategórii {{category}} nie je žiadna téma"
         top: "Nie sú žiadne populárne témy."
         search: "Nenašli sa žiadne výsledky"
+        educate:
+          new: '<p>Tu sa zobrazia Vaše nové témy.</p><p>V predvolenom nastavení sú témy považované za nové a zobrazí indikátor <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">nové</span> ak boli vytvorené za posledné 2 dni.</p><p>Môžete to zmeniť vo Vašich<a href="%{userPrefsUrl}">nastaveniach</a>.</p>'
+          unread: '<p>Tu sa zobrazia Vaše neprečítané témy.</p><p>V predvolenom nastavení sú témy považované za neprečítané a zobrazí sa počet neprečítaných <span class="badge new-posts badge-notification">1</span> ak ste:</p><ul><li>Vytvorili tému</li><li>Odpovedali na tému</li><li>Čítali tému viac ako 4 minúty</li></ul><p>Alebo ste explicitne nastavili sledovanie alebo pozeranie témy prostredníctvom ovládania upozornení na konci každej témy.</p><p>Môžte to zmeniť vo Vašich <a href="%{userPrefsUrl}">nastaveniach</a>.</p>'
       bottom:
         latest: "Nie je už viac najnovšich tém."
         hot: "Nie je už viac horúcich tém"

@@ -9,6 +9,7 @@ nl:
   site_settings:
     poll_enabled: "Toestaan dat gebruikers polls mogen maken?"
     poll_maximum_options: "Maximum aantal opties toegestaan in een poll."
+    poll_edit_window_mins: "Aantal minuten na het aanmaken van een bericht waarin polls bewerkt kunnen worden."
   poll:
     multiple_polls_without_name: "Er zijn meerdere polls zonder naam. Gebruik het '<code>naam</code>' attribuut om je polls te identificeren."
     multiple_polls_with_same_name: "Er zijn meerdere polls met dezelfde naam : <strong>%{name}</strong>. Gebruik het '<code>naam</code>' attribuut om je polls te identificeren."
@@ -27,6 +28,10 @@ nl:
     requires_at_least_1_valid_option: "Kies ten minste 1 geldige optie."
     default_cannot_be_made_public: "Poll met stemmen kan niet openbaar gemaakt worden."
     named_cannot_be_made_public: "De poll genaamd <strong>%{name}</strong> heeft stemmen die niet openbaar gemaakt kunnen worden"
+    edit_window_expired:
+      cannot_change_polls: "Je kunt na %{minutes} minuten geen polls meer toevoegen, verwijderen of hernoemen."
+      op_cannot_edit_options: "Je kunt na %{minutes} minuten geen polls meer toevoegen, verwijderen of hernoemen. Neem contact op met een moderator als je een poll optie wilt wijzigen."
+      staff_cannot_add_or_remove_options: "Je kunt na %{minutes} minuten geen polls meer toevoegen, verwijderen of hernoemen. Sluit deze topic en maak een nieuwe."
     no_polls_associated_with_this_post: "Er bestaan geen polls voor dit bericht."
     no_poll_with_this_name: "Er bestaat geen poll met de naam <strong>%{name}</strong> voor dit bericht."
     post_is_deleted: "Dit kan niet bij een verwijderd bericht."

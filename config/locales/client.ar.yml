@@ -613,6 +613,8 @@ ar:
       muted_topics_link: "أظهر المواضيع المكتومة"
       watched_topics_link: "أظهر المواضيع المراقبة"
       automatically_unpin_topics: "ألغِ تثبيت المواضيع آليا عندما أصل إلى أسفلها."
+      api_read: "اقرأ"
+      api_read_write: "اقرأ واكتب"
       staff_counters:
         flags_given: "علامات مساعدة"
         flagged_posts: "# مشاركات"
@@ -2473,6 +2475,11 @@ ar:
         info_html: "مفتاح API الخاص بك سيسمح لك بانشاء أو تعديل مواضيع باستخدام أليات رسائل JSON."
         all_users: "جميع المستخدمين"
         note_html: "حافظ على <strong>سرية</strong> هذا المفتاح، اي شخص يحصل عليه يستطيع انشاء مواضيع باسم اي مستخدم اخر"
+      web_hooks:
+        events:
+          go_list: "اذهب إلى القائمة"
+          go_events: "اذهب إلى الحدث"
+          event_id: "الرقم التعريفي"
       plugins:
         title: "الإضافات"
         installed: "الإضافات المثبتة"
@@ -3072,6 +3079,7 @@ ar:
           plugins: "الإضافات "
           user_preferences: "تفضيلات العضو"
           tags: "الوسوم"
+          search: "البحث"
       badges:
         title: 'شعارات '
         new_badge: شعار جديد

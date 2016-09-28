@@ -164,9 +164,9 @@ fr:
   prev_page: "← page précédente"
   page_num: "Page %{num}"
   home_title: "Accueil"
-  topics_in_category: "Sujets dans la catégorie '%{category}'"
-  rss_posts_in_topic: "Flux RSS de '%{topic}'"
-  rss_topics_in_category: "Flux RSS des sujets dans la catégorie '%{category}'"
+  topics_in_category: "Sujets dans la catégorie « %{category} »"
+  rss_posts_in_topic: "Flux RSS de « %{topic} »"
+  rss_topics_in_category: "Flux RSS des sujets dans la catégorie « %{category} »"
   author_wrote: "%{author} a écrit :"
   num_posts: "Messages :"
   num_participants: "Participants :"
@@ -191,11 +191,11 @@ fr:
   groups:
     errors:
       can_not_modify_automatic: "Vous ne pouvez pas modifier un groupe automatique"
-      member_already_exist: "'%{username}' est déjà membre de ce groupe."
+      member_already_exist: "« %{username} » est déjà membre de ce groupe."
       invalid_domain: "'%{domain}' n'est pas un domaine valide."
-      invalid_incoming_email: "'%{email}' n'est pas une adresse de courriel valide."
-      email_already_used_in_group: "'%{email}' est déjà utilisé par le groupe '%{group_name}'."
-      email_already_used_in_category: "'%{email}' est déjà utilisé par la catégorie '%{category_name}'."
+      invalid_incoming_email: "« %{email} » n'est pas une adresse de courriel valide."
+      email_already_used_in_group: "« %{email} » est déjà utilisé par le groupe « %{group_name} »."
+      email_already_used_in_category: "« %{email} » est déjà utilisé par la catégorie « %{category_name} »."
     default_names:
       everyone: "tous"
       admins: "administrateurs"
@@ -345,9 +345,9 @@ fr:
       uncategorized_parent: "Sans catégorie ne peut pas avoir de parent"
       self_parent: "Le parent d'une sous-catégorie ne peut pas être elle-même"
       depth: "Vous ne pouvez pas imbriquer une sous-catégorie sous une autre"
-      invalid_email_in: "'%{email}' n'est pas une adresse de courriel valide."
-      email_already_used_in_group: "'%{email}' est déjà utilisé par le groupe '%{group_name}'."
-      email_already_used_in_category: "'%{email}' est déjà utilisé par la catégorie '%{category_name}'."
+      invalid_email_in: "« %{email} » n'est pas une adresse de courriel valide."
+      email_already_used_in_group: "« %{email} » est déjà utilisé par le groupe « %{group_name} »."
+      email_already_used_in_category: "« %{email} » est déjà utilisé par la catégorie « %{category_name} »."
     cannot_delete:
       uncategorized: "Vous ne pouvez pas supprimer Sans Catégorie"
       has_subcategories: "Vous ne pouvez pas supprimer cette catégorie car elle a des sous-catégories."
@@ -369,7 +369,7 @@ fr:
       title: "meneur"
     change_failed_explanation: "Vous avez essayé de rétrograder %{user_name} au niveau '%{new_trust_level}'. Cependant son niveau de confiance est déjà '%{current_trust_level}'. %{user_name} restera au niveau  '%{current_trust_level}' -  Si vous souhaitez rétrograder un utilisateur vous devez verrouiller le niveau de confiance au préalable"
   rate_limiter:
-    slow_down: "Vous avez réalisé cette action un trop grand nombre de fois, essayez plus tard."
+    slow_down: "Vous avez réalisé cette action un trop grand nombre de fois, essayez à nouveau plus tard."
     too_many_requests: "Nous avons une limite journalière du nombre d'actions qui peuvent être effectuées. Veuillez patienter %{time_left} avant de recommencer."
     by_type:
       first_day_replies_per_day: "Vous avez atteint le nombre maximum de réponses qu'un nouvel utilisateur peut créer pour son premier jour. Patientez s'il vous plaît %{time_left} avant d'essayer à nouveau."
@@ -582,7 +582,7 @@ fr:
     generic_error: "Désolé, nous n'avons pu générer de clés pour l'API utilisateur, cette fonctionnalité peut être désactivée par l'administrateur"
   reports:
     visits:
-      title: "Visites utilisateur"
+      title: "Visites d'utilisateurs"
       xaxis: "Jour"
       yaxis: "Nombre de visites"
     signups:
@@ -590,7 +590,7 @@ fr:
       xaxis: "Jour"
       yaxis: "Nombre de nouveaux utilisateurs"
     profile_views:
-      title: "Vues du profil utilisateur"
+      title: "Vues des profils d'utilisateurs"
       xaxis: "Jour"
       yaxis: "Nombre de profils utilisateurs consultés"
     topics:
@@ -717,7 +717,7 @@ fr:
       xaxis: "Jour"
       yaxis: "Total"
     mobile_visits:
-      title: "Visites utilisateurs"
+      title: "Visites d'utilisateurs"
       xaxis: "Jour"
       yaxis: "Nombre de visites"
   dashboard:
@@ -836,7 +836,7 @@ fr:
     flag_sockpuppets: "Si un nouvel utilisateur répond à un sujet avec la même adresse IP que le nouvel utilisateur qui a commencé le sujet, alors leurs messages seront automatiquement marqués comme spam."
     traditional_markdown_linebreaks: "Utiliser le retour à la ligne traditionnel dans Markdown, qui nécessite deux espaces pour un saut de ligne."
     allow_html_tables: "Autoriser la saisie des tableaux dans le Markdown en utilisant les tags HTML : TABLE, THEAD, TD, TR, TH sont autorisés (nécessite un rebake de tous les anciens messages contenant des tableaux)"
-    post_undo_action_window_mins: "Nombre de minutes pendant lesquelles un utilisateur peut annuler une action sur un message (j'aime, signaler, etc.)"
+    post_undo_action_window_mins: "Nombre de minutes pendant lesquelles un utilisateur peut annuler une action sur un message (J'aime, signaler, etc.)"
     must_approve_users: "Les responsables doivent approuver les nouveaux utilisateurs afin qu'ils puissent accéder au site. ATTENTION : activer cette option sur un site en production suspendra l'accès des utilisateurs existants qui ne sont pas des responsables !"
     pending_users_reminder_delay: "Avertir les modérateurs si des nouveaux utilisateurs sont en attente d'approbation depuis x heures. Mettre -1 pour désactiver les notifications."
     maximum_session_age: "L'utilisateur restera connecté pour n heures après la dernière visite"
@@ -906,14 +906,14 @@ fr:
     enable_signup_cta: "Afficher un rappel aux visiteurs pour les encourager à créer un compte."
     enable_yahoo_logins: "Activer l'authentification Yahoo"
     enable_google_oauth2_logins: "Activer l'authentification Google Oauth2. C'est la méthode d'authentification que Google supporte désormais. Nécessite une clé et une phrase secrète."
-    google_oauth2_client_id: "Client ID de votre application Google."
-    google_oauth2_client_secret: "Client secret de votre application Google."
+    google_oauth2_client_id: "Identifiante du client de votre application Google."
+    google_oauth2_client_secret: "Clé secrète du client de votre application Google."
     enable_twitter_logins: "Activer l'authentification Twitter, nécessite twitter_consumer_key et  twitter_consumer_secret"
     twitter_consumer_key: "Clé utilisateur pour l'authentification Twitter, enregistrée sur http://dev.twitter.com"
     twitter_consumer_secret: "Secret utilisateur pour l'authentification Twitter, enregistré sur http://dev.twitter.com"
     enable_instagram_logins: "Activer l'authentification Instagram, nécessite instagram_consumer_key et  instagram_consumer_secret"
-    instagram_consumer_key: "\"Consumer key\" pour l'identification Instagram"
-    instagram_consumer_secret: "\"Consumer secret\" pour l'identification Instagram"
+    instagram_consumer_key: "« Consumer key » pour l'identification Instagram"
+    instagram_consumer_secret: "« Consumer secret » pour l'identification Instagram"
     enable_facebook_logins: "Activer l'authentification Facebook, nécessite facebook_app_id et  facebook_app_secret"
     facebook_app_id: "App id pour l'authentification Facebook, enregistré sur https://developers.facebook.com/apps"
     facebook_app_secret: "App secret pour l'authentification Facebook, enregistré sur https://developers.facebook.com/apps"
@@ -1042,9 +1042,9 @@ fr:
     history_hours_low: "Un message modifié durant ce nombre d'heures aura l'indicateur de modification légèrement mis en évidence"
     history_hours_medium: "Un message modifié durant ce nombre d'heures aura l'indicateur de modification modérément mis en évidence."
     history_hours_high: "Un message modifié durant ce nombre d'heures aura l'indicateur de modification fortement mis en évidence."
-    topic_post_like_heat_low: "Après le dépassement de ce ratio j'aime:message, le champ Messages de la liste des sujets sera légèrement mis en évidence."
-    topic_post_like_heat_medium: "Après le dépassement de ce ratio j'aime:message, le champ Messages de la liste des sujets sera modérément mis en évidence."
-    topic_post_like_heat_high: "Après le dépassement de ce ratio j'aime:message, le champ Messages de la liste des sujets sera fortement mis en évidence."
+    topic_post_like_heat_low: "Après le dépassement de ce ratio J'aime/message, le compteur de messages est légèrement mis en évidence."
+    topic_post_like_heat_medium: "Après le dépassement de ce ratio J'aime/message, le compteur de messages est modérément mis en évidence."
+    topic_post_like_heat_high: "Après le dépassement de ce ratio J'aime/message, le compteur de messages est fortement mis en évidence."
     faq_url: "Si vous disposez déjà d'une FAQ/Règles de la communauté, hébergée ailleurs, que vous souhaitez utiliser, vous pouvez renseigner l'URL complète ici."
     tos_url: "Si vous disposez déjà de CGU, hébergées ailleurs, que vous souhaitez utiliser, vous pouvez renseigner leur URL complète ici."
     privacy_policy_url: "Si vous disposez déjà d'une Politique de Confidentialité, hébergée ailleurs, que vous voulez utiliser, vous pouvez renseigner son URL complète ici."
@@ -1194,7 +1194,7 @@ fr:
     default_other_enable_quoting: "Par défaut, proposer la citation du texte surligné."
     default_other_dynamic_favicon: "Par défaut, faire apparaître le nombre de sujets récemment créés ou mis à jour sur l'icône navigateur."
     default_other_disable_jump_reply: "Par défaut, ne pas se déplacer au nouveau message après avoir répondu."
-    default_other_like_notification_frequency: "Notifier lors d'un J'aime par défaut"
+    default_other_like_notification_frequency: "Par défaut, notifier les utilisateurs d'un J'aime"
     default_topics_automatic_unpin: "Par défaut, désépingler automatiquement le sujet lorsque l'utilisateur atteint la fin."
     default_categories_watching: "Liste de catégories surveillées par défaut."
     default_categories_tracking: "Liste de catégories suivies par défaut."
@@ -1259,8 +1259,8 @@ fr:
   most_recent_poster: "Auteur le plus récent"
   frequent_poster: "Auteur fréquent"
   redirected_to_top_reasons:
-    new_user: "Bienvenue dans notre communauté ! Retrouvez ici nos sujets les plus populaires."
-    not_seen_in_a_month: "Bienvenue à nouveau! Nous ne vous avons pas vu depuis un moment. Voici les meilleurs sujets de discussions depuis votre absence."
+    new_user: "Bienvenue dans notre communauté ! Voici les sujets récents les plus populaires."
+    not_seen_in_a_month: "Heureux de vous revoir parmi nous ! Nous ne vous avons pas vu depuis un moment. Voici les sujets les plus populaires depuis votre absence."
   merge_posts:
     edit_reason:
       one: "Un message a été fusionné par %{username}"
@@ -1276,15 +1276,15 @@ fr:
       one: "Un message a été intégré dans un sujet existant : %{topic_link}"
       other: "%{count} messages ont été intégrés dans un sujet existant : %{topic_link}"
   change_owner:
-    post_revision_text: "Auteur du message modifié de %{old_user} vers %{new_user}"
+    post_revision_text: "Auteur du message changé de %{old_user} vers %{new_user}"
     deleted_user: "un utilisateur supprimé"
   emoji:
     errors:
-      name_already_exists: "Désolé, le nom '%{name}' est déjà utilisé par un autre emoji."
+      name_already_exists: "Désolé, le nom « %{name} » est déjà utilisé par un autre emoji."
       error_while_storing_emoji: "Désolé,  il y a eu une erreur lors de l'enregistrement de l'emoji."
   topic_statuses:
     archived_enabled: "Ce sujet est maintenant archivé. Il est gelé et ne peut plus être modifié d'aucune façon."
-    archived_disabled: "Ce sujet est maintenant dé-archivé. Il n'est plus gelé, et peut être modifié."
+    archived_disabled: "Ce sujet est maintenant désarchivé. Il n'est plus figé et peut être modifié."
     closed_enabled: "Ce sujet est maintenant fermé. Les nouvelles réponses ne sont plus autorisées."
     closed_disabled: "Ce sujet est maintenant ouvert. Les nouvelles réponses sont autorisées."
     autoclosed_message_max_posts:
@@ -1329,9 +1329,9 @@ fr:
     not_allowed_from_ip_address: "Vous ne pouvez pas vous connecter en tant que %{username} depuis cette adresse IP."
     admin_not_allowed_from_ip_address: "Vous ne pouvez pas vous connecter depuis cette adresse IP."
     suspended: "Vous ne pouvez pas vous connecter jusqu'au %{date}."
-    suspended_with_reason: "Compte suspendu jusqu'à %{date}: %{reason}"
+    suspended_with_reason: "Compte suspendu jusqu'à %{date} : %{reason}"
     errors: "%{errors}"
-    not_available: "Pas disponible. Essayez %{suggestion} ?"
+    not_available: "Indisponible. Essayez %{suggestion} ?"
     something_already_taken: "Quelque chose c'est mal passé. Peut-être que votre pseudo ou votre adresse de courriel est déjà enregistré ? Essayez le lien : j'ai oublié mon mot de passe."
     omniauth_error: "Désolé, une erreur est survenue lors de l'autorisation de votre compte. Vous n'avez peut-être pas approuvé l'autorisation ?"
     omniauth_error_unknown: "Quelque chose s'est mal passé lors de votre connexion, merci de réessayer."
@@ -1351,7 +1351,7 @@ fr:
       characters: "doit inclure uniquement des chiffres, lettres et caractères de soulignement"
       unique: "doit être unique"
       blank: "doit être présent"
-      must_begin_with_alphanumeric_or_underscore: "doit commencer par une lettre, un chiffre ou un tiret du bas."
+      must_begin_with_alphanumeric_or_underscore: "doit commencer par une lettre, un chiffre ou un tiret bas"
       must_end_with_alphanumeric: "doit finir par une lettre ou un chiffre"
       must_not_contain_two_special_chars_in_seq: "ne doit pas contenir une séquence de 2 caractères spéciaux ou plus (.-_)"
       must_not_end_with_confusing_suffix: "ne doit pas se terminer avec un suffixe déroutant comme .json ou .png etc."
@@ -1662,7 +1662,7 @@ fr:
         %{logs}
         ```
     csv_export_succeeded:
-      subject_template: "Exportation des données complétée"
+      subject_template: "Exportation des données terminée"
       text_body_template: |
         L'exportation de vos données a réussi!  :dvd:
 
@@ -1831,7 +1831,7 @@ fr:
 
         Pour plus d'informations, merci de vous référer à la [charte de la communauté](%{base_url}/guidelines).
     user_automatically_blocked:
-      subject_template: "Nouvel utilisateur %{username} bloqué suite à des signalements de la communauté."
+      subject_template: "Nouvel utilisateur %{username} bloqué suite à des signalements de la communauté"
       text_body_template: |
         Ceci est un message automatique
 
@@ -1870,7 +1870,7 @@ fr:
       subject_template: "Téléchargement d'images distantes désactivé"
       text_body_template: "Le paramètre `download_remote_images_to_local` a été désactivé car la limite (`download_remote_images_threshold`) d'espace disque utilisé par les images vient d'être dépassée."
     dashboard_problems:
-      subject_template: "Des problèmes ont été trouvé"
+      subject_template: "Des problèmes ont été trouvés"
       text_body_template: |
         Des problèmes ont été reportés dans votre panel d'administration.
 
@@ -1892,14 +1892,14 @@ fr:
       other: "ATTENTION : vous avez atteint la limite de %{count} courriels par jour. Les notifications par courriel suivantes seront supprimées."
     in_reply_to: "En réponse à"
     unsubscribe:
-      title: "Désabonnement"
+      title: "Se désabonner"
       description: "Ces courriels ne vous intéressent pas ? Aucun problème ! Cliquez ci-dessous pour vous désabonner immédiatement :"
     reply_by_email: "[Voir le sujet](%{base_url}%{url}) ou répondre à ce courriel pour répondre."
     reply_by_email_pm: "[Voir le message](%{base_url}%{url}) ou répondre à ce courriel pour répondre."
     only_reply_by_email: "Répondre à ce courriel pour répondre."
     visit_link_to_respond: "[Voir le sujet](%{base_url}%{url}) pour répondre."
     visit_link_to_respond_pm: "[Voir le message](%{base_url}%{url}) pour répondre."
-    posted_by: "Ecrit par %{username} le %{post_date}"
+    posted_by: "Redigé par %{username} le %{post_date}"
     invited_to_private_message_body: |
       %{username} vous a invité(e) à un message
 
@@ -2049,7 +2049,7 @@ fr:
       click_here: "cliquez ici"
       from: "résumé de %{site_name}"
       read_more: "Lire la suite"
-      more_topics: "Il y a eu %{new_topics_since_seen} nouveaux sujets."
+      more_topics: "Il y a eu %{new_topics_since_seen} autres nouveaux sujets."
       more_topics_category: "Plus de nouveaux sujets :"
     mailing_list:
       why: "Toute l'activité sur %{site_link} le %{date}"
@@ -2148,7 +2148,7 @@ fr:
 
         Si le lien ci-dessus n'est pas cliquable, essayez de le copier et coller dans la barre d'adresse de votre navigateur web.
   page_not_found:
-    title: "Oops! Cette page n'existe pas ou est privée."
+    title: "Oups ! Cette page n'existe pas ou est privée."
     popular_topics: "Populaires"
     recent_topics: "Récents"
     see_more: "Plus"
@@ -2167,11 +2167,11 @@ fr:
     unauthorized: "Désolé, le fichier que vous essayer d'envoyer n'est pas autorisé (extensions autorisés : %{authorized_extensions})."
     pasted_image_filename: "Image collée"
     store_failure: "Erreur lors du stockage de #%{upload_id} pour l'utilisateur #%{user_id}."
-    file_missing: "Désolé, il faut fournir un fichier à télécharger."
+    file_missing: "Désolé, il faut fournir un fichier à envoyer."
     attachments:
-      too_large: "Désolé, le fichier que vous essayez d'envoyer est trop gros (la taillle maximale est %{max_size_kb}Ko)."
+      too_large: "Désolé, le fichier que vous essayez d'envoyer est trop gros (taille maximale de %{max_size_kb} Ko)."
     images:
-      too_large: "Désolé, l'image que vous essayez d'envoyer est trop grande (taille maximum de %{max_size_kb}Ko), merci de le redimensionner et de réessayer."
+      too_large: "Désolé, l'image que vous essayez d'envoyer est trop grande (taille maximale de %{max_size_kb} Ko), merci de le redimensionner et de réessayer."
       size_not_found: "Désolé, mais nous n'avons pas pu déterminer la taille de votre image. Peut-être est-elle corrompue ?"
   avatar:
     missing: "Désolé, nous ne parvenons pas à trouver un avatar associé à cette adresse mail. Pouvez-vous essayer de la télécharger à nouveau ?"
@@ -2182,7 +2182,7 @@ fr:
     post_user_deleted: "L'auteur du message a été supprimé."
     no_user: "Impossible de trouver l'utilisateur avec l'id %{user_id}"
     anonymous_user: "L'utilisateur est anonyme"
-    suspended_not_pm: "L'utilisateur est suspendu, pas de message"
+    suspended_not_pm: "L'utilisateur est suspendu, pas un message"
     seen_recently: "L'utilisateur a été vu récemment"
     post_not_found: "Impossible de trouver le message avec l'id %{post_id}"
     notification_already_read: "La notification de ce courriel a déjà été lue"
@@ -2198,7 +2198,7 @@ fr:
     body_blank: "sans contenu"
   color_schemes:
     base_theme_name: "Base"
-  about: "A propos"
+  about: "À propos"
   guidelines: "Charte"
   privacy: "Protection des données"
   edit_this_page: "Modifier cette page"
@@ -2432,24 +2432,24 @@ fr:
         Ce badge est accordé lorsque vous atteignez le niveau de confiance 1. Merci d'être resté dans le coin un petit moment et d'avoir lu quelques sujets pour en apprendre plus sur notre communauté. Vos restrictions "nouvel utilisateur" ont été levées, et vous avez accès aux fonctionnalités essentielles telles que la messagerie personnelle, le signalement, l'édition des wikis, et la possibilité de poster des images et de multiples liens.
     member:
       name: Membre
-      description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/5">Accès accordé</a> aux invitations, messages de groupe, et plus de "J'aime"
+      description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/5">Accès accordé</a> aux invitations, aux messages de groupe et à plus de J'aime
       long_description: |
-        Ce badge est accordé lorsque vous atteignez le niveau de confiance 2. Merci d'avoir participé durant plusieurs semaines à notre communauté. Vous pouvez désormais envoyer des invitations personnelles depuis votre page utilisateur ou un sujet, envoyer des messages groupés, et avez quelques "J'aime" supplémentaires chaque jour.
+        Ce badge est accordé lorsque vous atteignez le niveau de confiance 2. Merci d'avoir participé durant plusieurs semaines à notre communauté. Vous pouvez désormais envoyer des invitations personnelles depuis votre page utilisateur ou un sujet, envoyer des messages groupés, et avez quelques J'aime supplémentaires chaque jour.
     regular:
       name: Habitué
-      description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/6">Accès accordé</a> à la re-catégorisation, le renommage, le suivi de lien, et plus de "J'aime"
+      description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/6">Accès accordé</a> à la re-catégorisation, au renommage, au suivi de liens, au Wiki et à plus de J'aime
       long_description: |
-        Ce badge est accordé lorsque vous atteignez le niveau de confiance 3. Merci d'avoir été un participant régulier à notre communauté pendant ces quelques mois, l'un de nos lecteurs les plus actifs et un contributeur sérieux à ce qui rend notre communauté si belle. Vous pouvez désormais recatégoriser et renommer des sujets, accéder à la section privée, signaler des spams, et vous avez plein de "J'aime" en plus chaque jour.
+        Ce badge est accordé lorsque vous atteignez le niveau de confiance 3. Merci d'avoir été un participant régulier à notre communauté pendant ces quelques mois, l'un de nos lecteurs les plus actifs et un contributeur sérieux à ce qui rend notre communauté si belle. Vous pouvez désormais re-catégoriser et renommer des sujets, accéder à la section privée, signaler des spams, et vous avez plein de J'aime en plus chaque jour.
     leader:
       name: Meneur
-      description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/7">Accès accordé</a> à l'édition globale, l'épinglage, la fermeture, l'archivage, la séparation et la fusion, et toujours plus de "J'aime"
+      description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/7">Accès accordé</a> à l'édition globale, l'épinglage, la fermeture, l'archivage, la séparation et la fusion de sujets, et toujours plus de J'aime
       long_description: |
-        Ce badge est accordé lorsque vous atteignez le niveau de confiance 4. Vous êtes un meneur choisi par l'équipe dans cette communauté, et vous montrez l'exemple dans vos actions et vos mots. Vous avez la capacité de modifier tous les messages, utiliser les actions de modérations telles qu'épingler, fermer, cacher, archiver, scinder et fusionner, ainsi que des tonnes de "J'aime" par jour.
+        Ce badge est accordé lorsque vous atteignez le niveau de confiance 4. Vous êtes un meneur choisi par l'équipe dans cette communauté, et vous montrez l'exemple dans vos actions et vos mots. Vous avez la capacité de modifier tous les messages, utiliser les actions de modérations telles qu'épingler, fermer, cacher, archiver, scinder et fusionner, ainsi que des tonnes de J'aime par jour.
     welcome:
       name: Bienvenue
       description: A reçu un J'aime
       long_description: |
-        Ce badge est accordé lorsque vous recevez votre premier "J'aime" sur un de vos messages. Félicitations, vous avez écrit quelque chose que les membres de votre communauté ont trouvé intéressant, cool, ou utile !
+        Ce badge est accordé lorsque vous recevez votre premier J'aime sur un de vos messages. Félicitations, vous avez écrit quelque chose que les membres de votre communauté ont trouvé intéressant, cool, ou utile !
     autobiographer:
       name: Autobiographe
       description: A rempli les informations de son <a href="/my/preferences">profil</a>
@@ -2462,34 +2462,34 @@ fr:
         Ce badge est accordé après avoir été membre du site pendant une année, avec au moins un message crée dans cette année. Merci d'être resté avec nous et de contribuer ainsi à notre communauté ! Nous n'aurions pas pu le faire sans vous.
     nice_post:
       name: Jolie réponse
-      description: A reçu 10 J'aime sur une réponse.
+      description: A reçu 10 J'aime sur une réponse
       long_description: |
-        Ce badge est accordé quand une réponse obtient 10 j'aime. Votre réponse a vraiment fait impression sur la communauté et a aidé à faire progresser la conversation.
+        Ce badge est accordé quand votre réponse obtient 10 J'aime. Votre réponse a fait bonne impression sur la communauté et a aidé la conversation à progresser.
     good_post:
       name: Bonne réponse
       description: A reçu 25 J'aime sur une réponse
       long_description: |
-        Ce badge est accordé quand votre réponse obtient 25 j'aime. Votre réponse est exceptionnel et a rendu la conversation bien mieux pour tout le monde.
+        Ce badge est accordé quand votre réponse obtient 25 J'aime. Votre réponse est exceptionnel et a rendu la conversation meilleur pour tout le monde !
     great_post:
       name: Super réponse
       description: A reçu 50 J'aime sur une réponse
       long_description: |
-        Ce badge est accordé quand une réponse obtient 50 j'aime. Votre réponse était inspirante, fascinante, hilarante, ou pertinente et la communauté l'a adorée.
+        Ce badge est accordé quand votre réponse obtient 50 J'aime. Votre réponse était inspirante, fascinante, hilarante, ou pertinente et la communauté l'a adorée.
     nice_topic:
       name: Sujet intéressant
-      description: A reçu 10 J'aime sur un sujet.
+      description: A reçu 10 J'aime sur un sujet
       long_description: |
-        Ce badge est accordé quand un sujet obtient 10 j'aime.  Vous avez commencé une conversation intéressante que la communauté a apprécié !
+        Ce badge est accordé quand votre sujet obtient 10 J'aime. Vous avez commencé une conversation intéressante que la communauté a apprécié !
     good_topic:
       name: Bon sujet
       description: A reçu 25 J'aime sur un sujet
       long_description: |
-        Ce badge est accordé quand un sujet obtient 25 j'aime. Vous avez lancé une conversation vibrante autour de laquelle la communauté s'est ralliée et elle l'a adorée.
+        Ce badge est accordé quand votre sujet obtient 25 J'aime. Vous avez lancé une conversation vibrante autour de laquelle la communauté s'est ralliée et elle l'a adorée !
     great_topic:
       name: Super sujet
       description: A reçu 50 J'aime sur un sujet
       long_description: |
-        Ce badge est accordé quand un sujet obtient 50 j'aime. Vous avez initié une fascinante conversation et la communauté a apprécié la discussion dynamique qui en a résulté !
+        Ce badge est accordé quand votre sujet obtient 50 J'aime. Vous avez initié une conversation fascinante et la communauté a apprécié la discussion dynamique résultante !
     nice_share:
       name: Partage sympa
       description: Message partagé avec 25 visiteurs uniques
@@ -2626,11 +2626,11 @@ fr:
       long_description: Ce badge est accordé la première fois que vous mentionnez le @pseudo de quelqu'un dans votre message. Chaque mention génère une notification à cette personne pour qu'elle soit informée de votre message. Il suffit de commencer à taper @ (arobase) pour mentionner un utilisateur ou, si autorisé, un groupe – c'est un moyen pratique de porter quelque chose à leur attention.
     first_onebox:
       name: Premier onebox
-      description: Écrit un message qui a été transformé en onebox
+      description: A inséré un lien qui a été transformé en onebox
       long_description: Ce badge est accordé la première fois que vous publiez un lien seul sur une ligne, qui a ensuite été développé automatiquement dans un onebox avec un bref résumé du lien, un titre, et (le cas échéant) une image.
     first_reply_by_email:
       name: Première réponse par courriel
-      description: Repondu à un message par courriel
+      description: A répondu à un message par courriel
       long_description: |
         Ce badge est accordé la première fois que vous répondez à un message par courriel :e-mail:.
   admin_login:

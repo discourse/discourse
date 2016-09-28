@@ -183,7 +183,7 @@ tr_TR:
     about:
       simple_title: "Hakkında"
       title: "%{title} Hakkında"
-      stats: "Site Sayımları"
+      stats: "Site Sayıtımları"
       our_admins: "Yöneticilerimiz"
       our_moderators: "Moderatörlerimiz"
       stat:
@@ -334,7 +334,7 @@ tr_TR:
           title: "Takip ediliyor"
           description: "Biri @isim şeklinde sizden bahsederse ya da gönderinize cevap verirse bildirim alacaksınız ve yeni cevap sayısı gösterilecek."
         regular:
-          title: "Normal"
+          title: "Olağan"
           description: "Birisi @isminizden bahsederse ya da gönderinize cevap verirse bildirim alacaksınız."
         muted:
           title: "Susturuldu"
@@ -410,7 +410,7 @@ tr_TR:
       invited_by: "Tarafından Davet Edildi"
       trust_level: "Güven Seviyesi"
       notifications: "Bildirimler"
-      statistics: "Sayımlar"
+      statistics: "Sayıtımlar"
       desktop_notifications:
         label: "Masaüstü Bildirimleri"
         not_supported: "Bildirimler bu tarayıcıda desteklenmiyor. Üzgünüz."
@@ -672,7 +672,7 @@ tr_TR:
         instructions: "En az %{count} karakter."
       summary:
         title: "Özet"
-        stats: "Sayımlar"
+        stats: "Sayıtımlar"
         time_read: "okuma süresi"
         topic_count:
           other: "oluşturulan konular"
@@ -900,7 +900,7 @@ tr_TR:
         title_too_long: "Başlık {{max}} karakterden daha uzun olamaz"
         post_missing: "Gönderiler boş olamaz"
         post_length: "Gönderi en az {{min}} karakter olmalı"
-        try_like: '<i class="fa fa-heart"></i> butonunu denediniz mi?'
+        try_like: '<i class="fa fa-heart"></i> düğmesini denediniz mi?'
         category_missing: "Bir kategori seçmelisiniz"
       save_edit: "Değişikliği Kaydet"
       reply_original: "Ana Konuyu Cevapla"
@@ -1591,7 +1591,7 @@ tr_TR:
           title: "Takip Ediliyor"
           description: "Bu kategorilerdeki tüm yeni konuları otomatik olarak takip edeceksiniz. Biri @isim şeklinde sizden bahsederse ya da gönderinize cevap verirse bildirim alacak, ayrıca yeni cevapların sayısını da konunun yanında görebileceksiniz."
         regular:
-          title: "Normal"
+          title: "Olağan"
           description: "Birisi @isim şeklinde sizden bahsederse ya da gönderinize cevap verirse bildirim alacaksınız."
         muted:
           title: "Susturuldu"
@@ -1651,7 +1651,7 @@ tr_TR:
         help: "Bu konu kapatıldı ve arşivlendi; yeni cevaplar kabul edemez ve değiştirilemez."
       unpinned:
         title: "Başa tutturma kaldırıldı"
-        help: "Bu konu sizin için başa tutturulmuyor; normal sıralama içerisinde görünecek"
+        help: "Bu konu sizin için başa tutturulmuyor; olağan sıralama içerisinde görünecek"
       pinned_globally:
         title: "Her Yerde Başa Tutturuldu"
         help: "Bu konu her yerde başa tutturuldu; gönderildiği kategori ve en son gönderilerin en üstünde görünecek"
@@ -1668,7 +1668,7 @@ tr_TR:
       med {ve çok yüksek beğeni/gönderi oranı}
       high {ve aşırı yüksek beğeni/gönderi oranı}
       other {}}var
-    original_post: "Orijinal Gönderi"
+    original_post: "Özgün Gönderi"
     views: "Gösterim"
     views_lowercase:
       other: "gösterim"
@@ -1967,7 +1967,7 @@ tr_TR:
         traffic: "Uygulama web istekleri"
         page_views: "API istekleri"
         page_views_short: "API istekleri"
-        show_traffic_report: "Detaylı Trafik Raporunu Görüntüle"
+        show_traffic_report: "Ayrıntılı Trafik Raporunu Görüntüle"
         reports:
           today: "Bugün"
           yesterday: "Dün"
@@ -2015,7 +2015,7 @@ tr_TR:
         disagree_flag: "Onaylama"
         disagree_flag_title: "Bu bildirimi geçersiz ya da yanlış sayarak reddet"
         clear_topic_flags: "Tamam"
-        clear_topic_flags_title: "Bu konu araştırıldı ve sorunlar çözüldü. Bildirimleri kaldırmak için Tamam butonuna basın. "
+        clear_topic_flags_title: "Bu konu araştırıldı ve sorunlar çözüldü. Bildirimleri kaldırmak için Tamam düğmesine basın. "
         more: "(daha fazla cevap...)"
         dispositions:
           agreed: "onaylandı"
@@ -2098,15 +2098,20 @@ tr_TR:
         save: "Kaydet"
         destroy: "Sil"
         description: "Açıklama"
+        go_back: "Listeye geri dön"
         active: "Etkin"
         delivery_status:
+          title: "Teslim Durumu"
+          inactive: "Etkin Değil"
           failed: "Başarısız"
           successful: "Başarılı"
         events:
           completed_in:
             other: "{{count}} saniyede tamamlandı."
+          request: "İstek"
           response: "Yanıt"
           headers: "Başlıklar"
+          body: "İçerik"
           status: "Durum Kodu"
           timestamp: "Oluşturulma"
           completion: "Tamamlanma Zamanı"
@@ -2252,10 +2257,10 @@ tr_TR:
             description: 'Çoğu yazı, ikon ve kenarların rengi.'
           secondary:
             name: 'ikincil'
-            description: 'Ana arkaplan ve bazı butonların yazı rengi.'
+            description: 'Ana arkaplan ve bazı düğmelerinin yazı rengi.'
           tertiary:
             name: 'üçüncül'
-            description: 'Bağlantı, bazı buton, bildiri ve vurguların rengi.'
+            description: 'Bağlantı, bazı düğmeler, bildirimler ve vurguların rengi.'
           quaternary:
             name: "dördüncül"
             description: "Navigasyon bağlantıları."
@@ -2276,7 +2281,7 @@ tr_TR:
             description: 'Eylemin başarılı olduğunu göstermek için kullanılır.'
           love:
             name: 'sevgi'
-            description: "Beğen butonunun rengi."
+            description: "Beğen düğmesinin rengi."
       email:
         title: "E-postalar"
         settings: "Ayarlar"
@@ -2315,7 +2320,7 @@ tr_TR:
           error: "Hata"
           none: "Gelen e-posta yok."
           modal:
-            title: "Gelen E-posta Detayları"
+            title: "Gelen E-posta Ayrıntıları"
             error: "Hata"
             headers: "Başlıklar"
             subject: "Konu"
@@ -2361,12 +2366,12 @@ tr_TR:
           subject: "Konu"
           when: "Ne zaman"
           context: "Durum"
-          details: "Detaylar"
+          details: "Ayrıntılar"
           previous_value: "Önceki"
           new_value: "Yeni"
           diff: "Diff"
           show: "Göster"
-          modal_title: "Detaylar"
+          modal_title: "Ayrıntılar"
           no_previous: "Bir önceki değer yok."
           deleted: "Yeni değer yok. Kayıt silindi."
           actions:
@@ -2533,7 +2538,7 @@ tr_TR:
         time_read: "Okunma Süresi"
         anonymize: "Kullanıcıyı Anonimleştir"
         anonymize_confirm: "Bu hesabı anonimleştirmek istediğinize EMİN misiniz? Kullanıcı adı ve e-posta değiştirilecek, ve tüm profil bilgileri sıfırlanacak."
-        anonymize_yes: "Evet, bu hesap anonimleştir"
+        anonymize_yes: "Evet, bu hesabı anonimleştir"
         anonymize_failed: "Hesap anonimleştirilirken bir hata oluştu."
         delete: "Kullanıcıyı Sil"
         delete_forbidden_because_staff: "Yöneticiler ve moderatörler silinemez."
