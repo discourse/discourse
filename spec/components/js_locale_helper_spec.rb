@@ -18,6 +18,7 @@ describe JsLocaleHelper do
   JsLocaleHelper.extend StubLoadTranslations
 
   after do
+    I18n.locale = :en
     JsLocaleHelper.clear_cache!
   end
 
