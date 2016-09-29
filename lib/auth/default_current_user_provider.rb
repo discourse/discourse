@@ -196,8 +196,8 @@ class Auth::DefaultCurrentUserProvider
     if api_key = ApiKey.where(key: api_key_value).includes(:user).first
       api_username = request["api_username"]
 
-      if api_key.allowed_ips.present? && !api_key.allowed_ips.any? { |ip| ip.include?(request.ip) }
-        Rails.logger.warn("[Unauthorized API Access] username: #{api_username}, IP address: #{request.ip}")
+      if api_key.allowed_ips.present? && !api_key.allowed_ips.any? { |ip| ip.include?(request.remote_ip) }
+        Rails.logger.warn("[Unauthorized API Access] username: #{api_username}, IP address: #{request.remote_ip}")
         return nil
       end
 
