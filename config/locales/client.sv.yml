@@ -2175,6 +2175,10 @@ sv:
         info_html: "Din API-nyckel kommer tillåta dig att skapa och uppdatera ämnen med hjälp av JSON-anrop."
         all_users: "Alla användare"
         note_html: "Håll denna nyckel <strong>hemlig</strong>, alla användare som har den kan skapa godtyckliga inlägg som alla användare."
+      web_hooks:
+        save: "Spara"
+        destroy: "Radera"
+        description: "Beskrivning"
       plugins:
         title: "Tillägg"
         installed: "Installerade tillägg"
@@ -2758,6 +2762,7 @@ sv:
           plugins: "Tillägg"
           user_preferences: "Användarinställningar"
           tags: "Taggar"
+          search: "Sök"
       badges:
         title: Utmärkelser
         new_badge: Ny utmärkelse

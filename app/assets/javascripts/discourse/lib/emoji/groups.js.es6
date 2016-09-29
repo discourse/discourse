@@ -171,7 +171,25 @@ const groups = [
       "vulcan",
       "wind_blowing_face",
       "writing_hand",
-      "zipper_mouth"
+      "zipper_mouth",
+      "female_couple_with_heart",
+      "male_couple_with_heart",
+      "female_couplekiss",
+      "male_couplekiss",
+      "family_man_woman_girl",
+      "family_man_woman_girl_boy",
+      "family_man_woman_boys",
+      "family_man_woman_girls",
+      "family_women_boy",
+      "family_women_girl",
+      "family_women_girl_boy",
+      "family_women_boys",
+      "family_women_girls",
+      "family_men_boy",
+      "family_men_girl",
+      "family_men_girl_boy",
+      "family_men_boys",
+      "family_men_girls"
     ]
   },
   {
@@ -913,6 +931,7 @@ const groups = [
       "eight",
       "nine",
       "keycap_ten",
+      "keycap_star",
       "1234",
       "hash",
       "abc",
@@ -1102,6 +1121,7 @@ const groups = [
       "wastebasket",
       "wheel_of_dharma",
       "yin_yang",
+      "left_speech_bubble"
     ]
   }
 ];

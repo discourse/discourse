@@ -23,6 +23,8 @@ ja:
     default_poll_with_multiple_choices_has_invalid_parameters: "複数の選択肢をもつ投票に無効なパラメータがあります。"
     named_poll_with_multiple_choices_has_invalid_parameters: "複数の選択肢をもつ投票 <strong>%{name}</strong> に無効なパラメータがあります。"
     requires_at_least_1_valid_option: "少なくとも1つの有効なオプションを選択する必要があります。"
+    edit_window_expired:
+      cannot_change_polls: "最初の%{minutes}分が経過するまで、投票の追加,  削除, 名前の変更はできません。"
     no_polls_associated_with_this_post: "この投稿に関連付けられた投票はありません。"
     no_poll_with_this_name: "この投稿に関連付けられた投票 <strong>%{name}</strong> はありません。"
     post_is_deleted: "削除された投稿を操作する事はできません。"

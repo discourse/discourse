@@ -19,6 +19,21 @@ ro:
       average_rating: "Media: <strong>%{average}</strong>."
       public:
         title: "Voturile sunt publice."
+      multiple:
+        help:
+          at_least_min_options:
+            one: "Puteţi alege cel puţin <strong>o{count}</strong> opţiune."
+            few: "Trebuie să alegeți cel puțin <strong>%{count}</strong> opțiuni."
+            other: "Trebuie să alegeți cel puțin <strong>%{count}</strong> opțiuni."
+          up_to_max_options:
+            one: "Trebuie să alegeți maxim <strong>o</strong> opțiune."
+            few: "Trebuie să alegeți maxim <strong>%{count}</strong> opțiuni."
+            other: "Trebuie să alegeți maxim <strong>%{count}</strong> opțiuni."
+          x_options:
+            one: "Trebuie să alegeți <strong>o</strong> opțiune."
+            few: "Trebuie să alegeți <strong>%{count}</strong> opțiuni."
+            other: "Trebuie să alegeți <strong>%{count}</strong> opțiuni."
+          between_min_and_max_options: "Trebuie să alegeți între minim <strong>%{min}</strong> și maxim <strong>%{max}</strong> opțiuni"
       cast-votes:
         title: "Exprimă-ți votul"
         label: "Votează acum!"
@@ -36,3 +51,24 @@ ro:
         title: "Închide sondajul"
         label: "Închide sondajul"
         confirm: "Sunteţi sigur că vreţi să închideţi acest sondaj?"
+      error_while_toggling_status: "Ne pare rău, a apărut o eroare la schimbarea stării acestui sondaj."
+      error_while_casting_votes: "Ne pare rău, a apărut o eroare la exercitarea voturilor dvs."
+      error_while_fetching_voters: "Ne pare rău, a apărut o eroare la afișarea votanților."
+      ui_builder:
+        title: Creați Sondaj
+        insert: Introduceți Sondaj
+        help:
+          options_count: Trebuie să introduceți cel puțin 2 opțiuni
+        poll_type:
+          label: Tip
+          regular: Alegere Unică
+          multiple: Alegere Multiplă
+          number: Ordonarea Numerelor
+        poll_config:
+          max: Maxim
+          min: Minim
+          step: Pas
+        poll_public:
+          label: Arată cine a votat
+        poll_options:
+          label: Arată o singură opțiune de sondaj pe linie

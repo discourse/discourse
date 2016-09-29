@@ -217,7 +217,7 @@ tr_TR:
 
       Aynı konuya ardı ardına cevaplar yazmak yerine, lütfen önceki gönderilerden alıntı veya @isim referansları içeren tek bir cevap yaz.
 
-      Herhangi bir yazıyı seçince çıkan <b>alıntılayarak cevapla</b> butonuna tıklayarak alıntı ekleyebilir, bir önceki cevabınızı düzenleyebilirsiniz.
+      Herhangi bir yazıyı seçince çıkan <b>alıntılayarak cevapla</b> düğmesine tıklayarak alıntı ekleyebilir, bir önceki cevabınızı düzenleyebilirsiniz.
 
       Az sayıda derinlemesine cevaplardan oluşan konuların okunması, çok fazla kısa ve tekil cevaplardan oluşan konulardan herkes için daha kolay oluyor.
     dominating_topic: |
@@ -756,7 +756,7 @@ tr_TR:
     tl4_additional_likes_per_day_multiplier: "Güvenlik seviyesi 4 (Lider) olanlar için günlük beğeni limitini bu rakamla çarparak artır"
     notify_mods_when_user_blocked: "Eğer bir kullanıcı otomatik olarak engellendiyse, tüm moderatörlere mesaj yolla."
     flag_sockpuppets: "Eğer, yeni kullanıcı konuya, konuyu başlatan yeni kullanıcı ile aynı IP adresinden cevap yazarsa, her iki gönderiyi de potansiyel istenmeyen olarak bildir. "
-    traditional_markdown_linebreaks: "Markdown'da, satır sonundan önce yazının sağında iki tane boşluk gerektiren, geleneksel satır sonu metodunu kullan kullan."
+    traditional_markdown_linebreaks: "Markdown'da, satır sonundan önce yazının sağında iki tane boşluk gerektiren, geleneksel satır sonu metodunu kullan."
     allow_html_tables: "Tabloların HTML etiketleri kullanılarak Markdown ile oluşturulmasına izin verin. TABLE, THEAD, TD, TR, TH kabul edilir (tablo içeren tüm eski gönderilerin yenilenmesini gerektirir) "
     post_undo_action_window_mins: "Bir gönderide yapılan yeni eylemlerin (beğenme, bildirme vb) geri alınabileceği zaman, dakika olarak"
     must_approve_users: "Siteye erişimlerine izin verilmeden önce tüm yeni kullanıcı hesaplarının görevliler tarafından onaylanması gerekir. UYARI: yayındaki bir site için bunu etkinleştirmek görevli olmayan hesapların erişimini iptal edecek."
@@ -813,7 +813,7 @@ tr_TR:
     enable_sso: "Dış bir site aracılığı ile tek oturum açma sistemini etkinleştir. (UYARI: etkinleştirildiği takdirde, doğru yapılandırılmamışsa bazı kişilerin, SİZ DAHİL, oturum açmasını engelleyebilir! Ayrıca davetiye sistemini de devre dışı bırakır.)"
     enable_sso_provider: "/session/sso_provider son noktasında Discourse SSO sağlayıcı protokolünü uygula, sso_secret değerinin seçilmiş olmasını gerektirir"
     sso_secret: "SSO bilgisinin kritopgrafik şekilde doğrulanması için kullanılan gizli string, 10 karakter veya daha uzun olduğundan emin olun"
-    sso_overrides_email: "SSO yararlı yükündeki dış sitedeki e-postayı, her giriş yapıldığında, yerel değişiklikleri engellemek için yerel e-postanın üzerine yazar (DİKKAT: yerel e-postaların normalizasyon sürecinde uyuşmazlıklar doğabilir)"
+    sso_overrides_email: "SSO yararlı yükündeki dış sitedeki e-postayı, her giriş yapıldığında, yerel değişiklikleri engellemek için yerel e-postanın üzerine yazar (DİKKAT: yerel e-postaların olağanaştırma sürecinde uyuşmazlıklar doğabilir)"
     sso_overrides_username: "SSO yararlı yükündeki dış sitedeki kullanıcı adını, her giriş yapıldığında, yerel değişiklikleri engellemek için yerel kullanıcı adının üzerine yazar. (DİKKAT: kullanıcı adı uzunluklarıyla ilgili kurallardaki farklılıklardan ötürü uyuşmazlıklar doğabilir)"
     sso_overrides_name: "SSO yararlı yükündeki dış sitedeki tam adı, her giriş yapıldığında, yerel değişiklikleri engellemek için yerel tam adın üzerine yazar."
     sso_overrides_avatar: "SSO yararlı yükündeki dış site avatarını kullanıcı avatarının üzerine yazar Eğer etkinleştirildiyse, allow_uploaded_avatars ayarının devre dışı bırakılması şiddetle önerilir"
@@ -955,7 +955,7 @@ tr_TR:
     user_profile_view_duration_hours: "Her N saatte IP/Kullanıcı başına bir kez yeni profil görüntülemesi say"
     levenshtein_distance_spammer_emails: "İstenmeyen e-postaları eşleştirilirken, bulanık eşleşme için tahammül edilecek karakter sayısı farklılığı."
     max_new_accounts_per_registration_ip: "Eğer bu IP'den güven seviyesi 0 olan halihazırda (n) hesap varsa (hiçbiri görevli, GS2 ya da daha yüksek seviyede biri değilse), bu IP'den yeni kayıt kabul etme. "
-    min_ban_entries_for_roll_up: "Topla butonuna tıklandığında, (N) adetten fazla giriş varsa yeni bir subnet engelleme girişi yaratılacak."
+    min_ban_entries_for_roll_up: "Topla düğmesine tıklandığında, (N) adetten fazla giriş varsa yeni bir subnet engelleme girişi yaratılacak."
     max_age_unmatched_emails: "Taranmış e-posta kayıtlarından karşılığı olmayanları (N) gün sonunda sil. "
     max_age_unmatched_ips: "Taranmış IP girişlerinden karşılığı olmayanları (N) gün sonunda sil."
     num_flaggers_to_close_topic: "Bir konunun moderatör müdahalesi için otomatik olarak durdurulmadan önce alması gereken en az tekil bildirim sayısı"
@@ -987,7 +987,7 @@ tr_TR:
     minimum_topics_similar: "Yeni konu oluşturulurken, benzer konuların gösterilmesi için sitede olması gereken konu sayısı."
     relative_date_duration: "Gönderinin üstünden bu kadar gün geçtikten sonra, gönderi tarihi mutlak şekilde değil (20 Şubat) göreceli şekilde (7g) gösterilecek."
     delete_user_max_post_age: "İlk gönderisini (x) günden eski olan kullanıcıların silinmesine izin verme."
-    delete_all_posts_max: "Tüm Gönderileri Sil butonuna basıldığında tek seferde silinebilecek en fazla gönderi sayısı. Eğer bir kullanıcının gönderi sayısı bu sayıdan fazlaysa, gönderilerin hepsi tek seferde silinemez ve bu kullanıcı silinemez."
+    delete_all_posts_max: "Tüm Gönderileri Sil düğmesine basıldığında tek seferde silinebilecek en fazla gönderi sayısı. Eğer bir kullanıcının gönderi sayısı bu sayıdan fazlaysa, gönderilerin hepsi tek seferde silinemez ve bu kullanıcı silinemez."
     username_change_period: "Kayıt sonrası, kullanıcı adınının değiştirilebileceği gün sayısı. (Kullanıcı adının değiştirilebilmesini devre dışı bırakmak için 0 girin)"
     email_editable: "Kullanıcıların kayıt olduktan sonra e-posta adreslerini değiştirmesine izin ver."
     logout_redirect: "Çıkış yaptıktan sonra tarayıcının yönlendirileceği adres (ör: http://bitanesite.com/cikis)"
@@ -1097,7 +1097,7 @@ tr_TR:
     account_not_approved: "Hesabınız onaylanma bekliyor. Onaylandığınızda e-posta ile bilgilendirileceksiniz."
     unknown_error: "Hesabınızda bir sorun var. Lütfen site yöneticisi ile iletişime geçin."
     timeout_expired: "Hesabınız zaman aşımına uğradı, lütfen tekrar giriş yapmayı deneyin."
-  original_poster: "Orjinal Poster"
+  original_poster: "Özgün Poster"
   most_posts: "En Çok Gönderi"
   most_recent_poster: "En Son Gönderen"
   frequent_poster: "En Sık Gönderen"
@@ -1474,6 +1474,8 @@ tr_TR:
       subject_template: "[%{site_name}] E-posta sorunu -- Geçersiz İzin"
     email_reject_reply_key:
       subject_template: "[%{site_name}] E-posta sorunu -- Bilinmeyen Cevap Anahtarı"
+    email_reject_bad_destination_address:
+      subject_template: "[%{site_name}] Eposta sorunu -- Bilinmeyen: Adres"
     email_reject_topic_not_found:
       subject_template: "[%{site_name}] E-posta sorunu -- Konu Bulunamadı"
     email_reject_topic_closed:
@@ -1677,6 +1679,7 @@ tr_TR:
       more_topics: "%{new_topics_since_seen} tane daha yeni konu vardı."
       more_topics_category: "Daha fazla yeni konu:"
     mailing_list:
+      subject_template: "[%{site_name}] %{date} Özeti "
       from: "%{site_name} özeti"
       new_topics: "Yeni konular"
       topic_updates: "Konu güncellemeleri"
@@ -1723,6 +1726,12 @@ tr_TR:
         %{base_url}/users/authorize-email/%{email_token}
     confirm_old_email:
       subject_template: "[%{site_name}] Şimdiki e-posta adresinizi doğrulayın"
+      text_body_template: |
+        E-posta adresinizi değiştirmeden önce, şu anki e-posta adresinizin kontrolünün sizde olduğunu doğrulamamız gerekiyor. Bu adımı tamamlandıktan sonra, yeni e-posta adresinizi doğrulayacaksınız.
+
+        %{site_name} sitesindeki şu anki e-posta adresinizi aşağıdaki bağlantıya tıklayıp doğrulayın:
+
+        %{base_url}/users/authorize-email/%{email_token}
     notify_old_email:
       subject_template: "[%{site_name}] E-posta adresiniz değiştirildi"
       text_body_template: |
@@ -1857,7 +1866,7 @@ tr_TR:
       name: Düzenleyici
       description: İlk gönderini düzenledin
       long_description: |
-        Bu rozet gönderilerinizden birini düzenlediğinizde verilecektir. Mesajlarınızı düzenlemek her zaman için iyidir — mesajlarınızı geliştirebilir, küçük hataları düzeltebilir, ya da unuttuğunuz detayları ekleyebilirsiniz. Daha iyi mesaj oluşturabilmek için düzenleyin.
+        Bu rozet gönderilerinizden birini düzenlediğinizde verilecektir. Mesajlarınızı düzenlemek her zaman için iyidir — mesajlarınızı geliştirebilir, küçük hataları düzeltebilir, ya da unuttuğunuz ayrıntıları ekleyebilirsiniz. Daha iyi mesaj oluşturabilmek için düzenleyin.
     basic_user:
       name: Acemi
       description: Bütün esas forum uygulamalarını kullanabilmeye <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/4">hak kazanılmıştır</a>
@@ -1952,7 +1961,7 @@ tr_TR:
       name: Destekçi
       description: Kullanıcı davet etme
       long_description: |
-        Bu rozet kullanıcı sayfanızdan ya da konularının altındaki butondan başka birini forumu kullanmaya davet ettiğiniz için verilmiştir. Arkadaşlarınızı ilgilerini çekebilecek konulara davet etmek forumun büyümesi için mükemmel bir yoldur. Teşekkürler!
+        Bu rozet kullanıcı sayfanızdan ya da konularının altındaki düğmeden başka birini forumu kullanmaya davet ettiğiniz için verilmiştir. Arkadaşlarınızı ilgilerini çekebilecek konulara davet etmek forumun büyümesi için mükemmel bir yoldur. Teşekkürler!
     campaigner:
       name: Mücadeleci
       description: 3 Acemi kullanıcı davet edildi
@@ -1977,7 +1986,7 @@ tr_TR:
       name: İlk Alıntı
       description: Bir gönderiyi alıntıladı
       long_description: |
-        Bu rozet cevabınızda başkasından alıntı yaptığınız için verilmiştir. Başka konulardan ve mesajlardan alıntı yapmak mesajlar arasındaki bağlantıyı kuvvetlendirir. En kolay alıntı yapma yolu alıntı yapacağınız bölümü seçip cevap butonuna basmaktır.
+        Bu rozet cevabınızda başkasından alıntı yaptığınız için verilmiştir. Başka konulardan ve mesajlardan alıntı yapmak mesajlar arasındaki bağlantıyı kuvvetlendirir. En kolay alıntı yapma yolu alıntı yapacağınız bölümü seçip cevap düğmesine basmaktır.
     read_guidelines:
       name: Yönergeleri Okuma
       description: <a href="/guidelines">Site yönergelerini</a> okuma
@@ -1987,7 +1996,7 @@ tr_TR:
       name: Okuyucu
       description: 100 cevaptan fazla cevabı olan bir konunun her cevabını okuma
       long_description: |
-        Bu rozet 100 den fazla cevaba sahip olan bir konuyu okuduğunuz için verilmiştir. Bir tartışmayı takip etmek o konu hakkında detaylı bilgi sahibi olmanızı ve görüş açınızı genişletmenizi sağlar.
+        Bu rozet 100 den fazla cevaba sahip olan bir konuyu okuduğunuz için verilmiştir. Bir tartışmayı takip etmek o konu hakkında ayrıntılı bilgi sahibi olmanızı ve görüş açınızı genişletmenizi sağlar.
     popular_link:
       name: Popüler Bağlantı
       description: 50 kere tıklanmış bir bağlantı paylaşma

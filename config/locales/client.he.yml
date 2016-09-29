@@ -270,7 +270,7 @@ he:
       reject: 'לדחות'
       delete_user: 'מחק משתמש'
       title: "זקוק לאישור"
-      none: "לא נותרו פוסטים לבדיקה"
+      none: "לא נותרו פוסטים לסקירה"
       edit: "ערוך"
       cancel: "ביטול"
       view_pending: "הצג פוסטים ממתינים"
@@ -685,7 +685,7 @@ he:
         days_visited: "מספר ימי ביקור"
         account_age_days: "גיל החשבון בימים"
         create: "שליחת הזמנה"
-        generate_link: "העתק קישור הזמנה"
+        generate_link: "העתקת קישור הזמנה"
         generated_link_message: '<p>הזמנה נוצרה בהצלחה</p><p><input class="invite-link-input" style="width: 75%;" type="text" value="%{inviteLink}"></p><p>לינק ההזמנה תקף רק למייל הזה:  <b>%{invitedEmail}</b></p>'
         bulk_invite:
           none: "נכון לעכשיו לא הזמנת לכאן אף אחד. תוכלו לשלוח הזמנות אישיות, או להזמין כמה אנשים בבת אחת באמצעות   <a href='https://meta.discourse.org/t/send-bulk-invites/16468'> העלאת קובץ הזמנה קבוצתית</a>."
@@ -955,7 +955,7 @@ he:
       title_placeholder: " במשפט אחד, במה עוסק הדיון הזה?"
       edit_reason_placeholder: "מדוע ערכת?"
       show_edit_reason: "(הוספת סיבת עריכה)"
-      reply_placeholder: "הקלד כאן. השתמש ב Markdown, BBCode או HTML לערוך. גרור או הדבק תמונות."
+      reply_placeholder: "הקלידו כאן. השתמשו ב Markdown, BBCode או HTML כדי לערוך. גררו או הדביקו תמונות."
       view_new_post: "צפו בפוסט החדש שלכם."
       saving: "שומר"
       saved: "נשמר!"
@@ -1206,7 +1206,7 @@ he:
       read_more_in_category: "רוצים לקרוא עוד? עיינו בנושאים אחרים ב {{catLink}} או {{latestLink}}."
       read_more: "רוצה לקרוא עוד? {{catLink}} or {{latestLink}}."
       read_more_MF: "There { UNREAD, plural, =0 {} one { is <a href='/unread'>1 unread</a> } other { are <a href='/unread'># unread</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{and } false {is } other{}} <a href='/new'>1 new</a> topic} other { {BOTH, select, true{and } false {are } other{}} <a href='/new'># new</a> topics} } remaining, or {CATEGORY, select, true {browse other topics in {catLink}} false {{latestLink}} other {}}"
-      browse_all_categories: עיין בכל הקטגוריות
+      browse_all_categories: עיינו בכל הקטגוריות
       view_latest_topics: הצגת נושאים אחרונים
       suggest_create_topic: למה לא ליצור נושא חדש?
       jump_reply_up: קפיצה לתגובה קודמת
@@ -1356,14 +1356,14 @@ he:
         username_placeholder: "שם משתמש"
         action: 'שלח הזמנה'
         help: 'הזמינו אנשים אחרים לנושא זה דרך דואר אלקטרוני או התראות'
-        to_forum: "נשלח מייל קצר המאפשר לחברך להצטרף באופן מיידי באמצעות לחיצה על קישור, ללא צורך בהתחברות למערכת הפורומים."
+        to_forum: "נשלח מייל קצר המאפשר לחבריכם להצטרף באופן מיידי באמצעות לחיצה על קישור, ללא צורך בהתחברות למערכת הפורומים."
         sso_enabled: "הכניסו את שם המשתמש של האדם שברצונכם להזמין לנושא זה."
         to_topic_blank: "הכניסו את שם המשתמש או כתובת הדואר האלקטרוני של האדם שברצונכם להזמין לנושא זה."
-        to_topic_email: "הזנת כתובת אימייל. אנחנו נשלח הזמנה שתאפשר לחברך להשיב לנושא הזה."
+        to_topic_email: "הזנת כתובת אימייל. אנחנו נשלח הזמנה שתאפשר לחבריכם להשיב לנושא הזה."
         to_topic_username: "הזנת שם משתמש/ת. נשלח התראה עם לינק הזמנה לנושא הזה. "
         to_username: "הכנסתם את שם המשתמש של האדם שברצונכם להזמין. אנו נשלח התראה למשתמש זה עם קישור המזמין אותו לנושא זה."
         email_placeholder: 'name@example.com'
-        success_email: "שלחנו הזמנה ל:  <b>{{emailOrUsername}}</b>. נודיע לך כשהזמנה תענה. בדוק את טאב ההזמנות בעמוד המשתמש שלך בשביל לעקוב אחרי ההזמנות ששלחת. "
+        success_email: "שלחנו הזמנה ל: <b>{{emailOrUsername}}</b>. נודיע לכם כשהזמנה תענה. בידקו את טאב ההזמנות בעמוד המשתמש שלכם בשביל לעקוב אחרי ההזמנות ששלחתם."
         success_username: "הזמנו את המשתמש להשתתף בנושא."
         error: "מצטערים, לא יכלנו להזמין האיש הזה. אולי הוא כבר הוזמן בעבר? (תדירות שליחת ההזמנות מוגבלת)"
       login_reply: 'התחברו כדי להשיב'
@@ -2033,7 +2033,7 @@ he:
           bookmarks: "אין יותר נושאים שסומנו."
           search: "אין יותר תוצאות חיפוש"
     invite:
-      custom_message: "הפכו את ההזמנה שלכם לקצת יותר אישי על ידי כתיבת"
+      custom_message: "הפכו את ההזמנה שלכם לקצת יותר אישית על ידי כתיבת"
       custom_message_link: "הודעה מותאמת-אישית"
       custom_message_placeholder: "הכניסו את הודעתכם האישית"
       custom_message_template_forum: "הי, כדאי לכם להצטרף לפורום הזה!"
@@ -2176,7 +2176,7 @@ he:
         add_members: "הוספת חברים וחברות"
         custom: "מותאם"
         bulk_complete: "המשתמשים התווספו לקבוצה."
-        bulk: "הוספ"
+        bulk: "הוספה מרוכזת לקבוצה"
         bulk_paste: "הדביקו רשימה של שמות משתמש או כתובות אימייל, אחת בכל שורה:"
         bulk_select: "(בחר קבוצה)"
         automatic: "אוטומטי"
@@ -2185,16 +2185,17 @@ he:
         default_title: "ברירת המחדל לכל המשתמשים בקבוצה זו"
         primary_group: "קבע כקבוצה ראשית באופן אוטומטי"
         group_owners: מנהלים
-        add_owners: הוספת מנהלים
+        add_owners: הוספת בעלים
         incoming_email: "התאימו אישית כתובת מייל נכנס"
         incoming_email_placeholder: "הכניסו כתובת מייל"
-        flair_url: "URL של פלייר לאווטר"
-        flair_url_placeholder: "(אופציונלי) URL של תמונה"
+        flair_url: "תמונת פלייר אווטר"
+        flair_url_placeholder: "(אופציונלי) URL של תמונה או Font Awesome class"
         flair_bg_color: "צבע רקע של פלייר לאווטר"
         flair_bg_color_placeholder: "(אופציונלי) ערך צבע ב Hex"
         flair_color: "צבע פלייר אווטר"
         flair_color_placeholder: "(אופציונלי) ערך צבע הקסדצימלי"
         flair_preview: "תצוגה מקדימה"
+        flair_note: "שימו לב: פלייר יופיע רק עבור הקבוצה הראשית של משתמשים."
       api:
         generate_master: "ייצר מפתח מאסטר ל-API"
         none: "אין מפתחות API פעילים כרגע."
@@ -2210,10 +2211,65 @@ he:
         all_users: "כל המשתמשים"
         note_html: "שמרו על מפתח זה <strong>סודי</strong>, כל משתמש שיחזיק בו יוכל לייצר פרסומים שרירותית, כאילו היה כל משתמש/ת אחרים."
       web_hooks:
+        title: "Webhooks"
+        none: "אין כרגע webhooks."
+        instruction: "Webhooks מאפשרים ל Discourse להודיע לשירותים חיצוניים שאירוע מסויים מתרחש באתר שלכם. כאשר מופעל webhook, נשלחת בקשת POST ל URLs שמוגדרים."
+        detailed_instruction: "בקשת POST תישלח ל URL שמוגדר כאשר מתרחש האירוע שנבחר."
+        new: "Webhook חדש"
+        create: "יצירה"
+        save: "שמירה"
+        destroy: "מחיקה"
+        description: "תיאור"
+        controls: "מכוונים"
+        go_back: "חזרה לרשימה"
+        payload_url: "URL של התוכן"
+        payload_url_placeholder: "https://example.com/postreceive"
+        warn_local_payload_url: "נראה שאתם מנסים להגדיר webhook ל url מקומי. אירוע שנשלח לכתובת מקומית עלול לגרום לתופעות בלתי-צפויות מראש. האם להמשיך?"
+        secret_invalid: "אסור שהסוד יכיל תווי רווח כלשהם."
+        secret_too_short: "הסוד אמור להכיל לפחות 12 תווים."
+        secret_placeholder: "מחרוזת אופציונלית, משמשת ליצירת חתימות"
         event_type_missing: "אתם צריכים לקבוע לפחות סוג אירועים אחד."
         content_type: "סוג תוכן"
         secret: "סוד"
+        event_chooser: "אילו ארועים תרצו שיפעילו את ה webhook הזה?"
+        wildcard_event: "שלחו אלי הכל."
+        individual_event: "בחרו אירועים ספציפיים."
+        verify_certificate: "בדיקה של סרטיפיקט TLS של ה url של התוכן"
+        active: "פעיל"
+        active_notice: "נשלח פרטי אירוע כאשר הוא מתרחש."
+        categories_filter_instructions: "webhooks רלוונטיים יופעלו רק אם האירוע קשור לקטגוריות שהוגדרו. השאירו ריק כדי להפעיל webhooks עבור כל הקטגוריות."
+        categories_filter: "קטגוריות מופעלות"
+        groups_filter_instructions: "webhooks רלוונטיים יופעלו רק אם האירוע קשור לקבוצות שהוגדרו. השאירו ריק כדי להפעיל webhooks לכל הקבוצות."
+        groups_filter: "קבוצות שהופעלו"
+        delete_confirm: "למחוק webhook זה?"
+        topic_event:
+          name: "אירוע נושא"
+          details: "כאשר יש נושא חדש, מעודכן, ששונה, או נמחק."
+        post_event:
+          name: "אירוע פוסט"
+          details: "כאשר יש תגובה חדשה, עריכה, מחיקה או שחזור."
+        user_event:
+          name: "אירוע משתמש"
+          details: "כאשר משתמש נוצר או מאושר."
+        delivery_status:
+          title: "מצב שליחה"
+          inactive: "לא פעיל"
+          failed: "נכשל"
+          successful: "הצליח"
         events:
+          none: "אין אירועים קשורים."
+          redeliver: "שליחה מחדש"
+          incoming:
+            one: "יש אירוע חדש."
+            other: "יש {{count}} ארועים חדשים."
+          completed_in:
+            one: "הושלמו בשנייה אחת."
+            other: "הושלמו ב {{count}} שניות."
+          request: "בקשה"
+          response: "תשובה"
+          redeliver_confirm: "האם אתם בטוחים שאתם רוצים לשלוח מחדש את אותו התוכן?"
+          headers: "כותרות"
+          payload: "תוכן"
           body: "גוף"
           go_list: "לכו לרשימה"
           go_details: "עריכת webhook"
@@ -2564,7 +2620,7 @@ he:
           pending: "ממתין"
           staff: 'צוות'
           suspended: 'מושעים'
-          blocked: 'חסום'
+          blocked: 'חסומים'
           suspect: 'חשודים'
         approved: "מאושר?"
         approved_selected:
@@ -2889,7 +2945,7 @@ he:
         image: "תמונה"
         delete_confirm: "האם אתם בטוחים שאתם רוצים למחוק את האמוג'י :%{name}:?"
       embedding:
-        get_started: "אם ברצונך לשלב את דיסקורס באתר אחר, התחל בהוספת המערך שלו (host). "
+        get_started: "אם ברצונכם לשלב את דיסקורס באתר אחר, התחילו בהוספת השרת שלו."
         confirm_delete: "האם אתם בטוחים שאתם רוצים למחוק את הhost הזה? "
         sample: "השתמש בקוד HTML הבא באתר שלך על מנת ליצור נושאי דיסקורס משולבים. החלף <b>REPLACE_ME</b> בURL הקאנוני של העמוד שבו אתה מכניס נושא מכונן. "
         title: "שילוב (embedding)"
