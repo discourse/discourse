@@ -1224,6 +1224,7 @@ en:
     current_user: 'go to your user page'
 
     topics:
+      new_messages_marker: "last visit"
       bulk:
         unlist_topics: "Unlist Topics"
         reset_read: "Reset Read"

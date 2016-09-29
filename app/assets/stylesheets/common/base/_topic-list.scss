@@ -23,8 +23,6 @@ html.anon .topic-list a.title:visited:not(.badge-notification) {color: dark-ligh
   width: 100%;
   border-collapse: collapse;
 
-
-
   > tbody > tr {
     &.has-excerpt .star {
       vertical-align: top;
@@ -33,16 +31,29 @@ html.anon .topic-list a.title:visited:not(.badge-notification) {color: dark-ligh
     border-bottom: 1px solid dark-light-diff($primary, $secondary, 90%, -75%);
 
     &.last-visit {
+      border-bottom: none;
+    }
+
+    .topic-list-separator {
+      text-align: center;
+    }
+  }
+
+  .topic-list-item-separator {
+    border: none;
+
+    td {
       border-bottom: 1px solid scale-color($danger, $lightness: 60%);
-      + tr::after {
-        content: attr(data-last-visit-text);
-        color: scale-color($danger, $lightness: 50%);
-        position: absolute;
-        left: 50%;
-        margin-top: -10px;
-        padding: 0 10px;
-        background: $secondary;
-      }
+      line-height: 0.1em;
+      padding: 0px;
+      text-align: center;
+    }
+
+    td span {
+      background-color: $secondary;
+      color: scale-color($danger, $lightness: 60%);
+      padding: 0px 8px;
+      font-size: 0.929em;
     }
   }
 
@@ -73,6 +84,7 @@ html.anon .topic-list a.title:visited:not(.badge-notification) {color: dark-ligh
     font-size: 1.143em;
     a.title {
       padding: 15px 0;
+      word-break: break-word;
     }
   }
 

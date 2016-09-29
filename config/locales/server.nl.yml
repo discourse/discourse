@@ -34,12 +34,12 @@ nl:
   anonymous: "Anoniem"
   emails:
     incoming:
-      default_subject: "Inkomende email van %{email}"
+      default_subject: "Inkomende e-mail van %{email}"
       show_trimmed_content: "Toon getrimde inhoud"
       maximum_staged_user_per_email_reached: "Het maximum aantal staged gebruikers dat per e-mail kan worden aangemaakt is bereikt."
       errors:
-        empty_email_error: "Gebeurt wanneer de mail die wij ontvangen hebben leeg is."
-        no_message_id_error: "Gebeurt wanneer de mail geen 'Message-Id' header heeft."
+        empty_email_error: "Gebeurt wanneer de e-mail die wij ontvangen hebben leeg is."
+        no_message_id_error: "Gebeurt wanneer de e-mail geen 'Message-Id' header heeft."
         auto_generated_email_error: "Gebeurt wanneer de 'voorrang' header is ingesteld op: lijst, ongewenst, bulk of auto_reply, of wanneer een andere header het volgende bevat: auto-submitted, auto-replied of auto-generated."
         no_body_detected_error: "Gebeurt wanneer er geen body uit de mail gehaald kan worden, en er geen bijlagen gevonden worden."
         inactive_user_error: "Gebeurt wanneer de afzender niet actief is."
@@ -287,7 +287,7 @@ nl:
             password:
               common: "is een van de 10000 meest gebruikte wachtwoorden. Gebruik een veiliger wachtwoord."
               same_as_username: "is hetzelfde als je gebruikersnaam. Gebruik een veiliger wachtwoord."
-              same_as_email: "is hetzelfde als je email. Gebruik een veiliger wachtwoord."
+              same_as_email: "is hetzelfde als je e-mailadres. Gebruik een veiliger wachtwoord."
             ip_address:
               signup_not_allowed: "Inschrijven vanaf dit account is niet toegestaan."
         color_scheme_color:

@@ -1775,6 +1775,9 @@ ja:
         info_html: "API キーを使うと、JSON 呼び出しでトピックの作成・更新を行うことが出来ます。"
         all_users: "全てのユーザ"
         note_html: "このキーは、秘密にしてください。このキーを持っている全てのユーザは任意のユーザとして、好きな投稿を作成できます"
+      web_hooks:
+        title: "Webhooks"
+        none: "現在、Webhooksはありません。"
       plugins:
         title: "プラグイン"
         installed: "インストール済みプラグイン"

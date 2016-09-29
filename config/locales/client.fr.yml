@@ -64,7 +64,7 @@ fr:
           one: "> 1a"
           other: "> %{count}a"
         almost_x_years:
-          one: "1y"
+          one: "1a"
           other: "%{count}a"
         date_month: "D MMM"
         date_year: "MMM 'YY"
@@ -263,7 +263,7 @@ fr:
       none_found: "Aucun sujet trouvé."
       title:
         search: "Rechercher un sujet par son nom, URL ou ID :"
-        placeholder: "renseignez ici le titre du sujet"
+        placeholder: "entrez ici le titre du sujet"
     queue:
       topic: "Sujet :"
       approve: 'Approuver'
@@ -729,13 +729,13 @@ fr:
         top_replies: "Réponses populaires"
         no_replies: "Pas encore de réponses."
         more_replies: "Plus de réponses"
-        top_topics: "Sujets populaires"
+        top_topics: "Meilleurs sujets"
         no_topics: "Pas encore de sujets."
         more_topics: "Plus de sujets"
         top_badges: "Meilleurs badges"
         no_badges: "Pas encore de badges."
         more_badges: "Plus de badges"
-        top_links: "Liens populaires"
+        top_links: "Meilleurs liens"
         no_links: "Pas encore de liens."
         most_liked_by: "Le plus aimé par"
         most_liked_users: "A le plus aimé"
@@ -1001,7 +1001,7 @@ fr:
       auto_close:
         label: "Heure de fermeture automatique de ce sujet :"
         error: "Merci d'entrer une valeur valide."
-        based_on_last_post: "Ne pas fermer tant que le dernier message dans ce sujet n'est pas plus ancien que ceci."
+        based_on_last_post: "Ne pas fermer tant que le dernier message du sujet n'a pas atteint cette ancienneté."
         all:
           examples: 'Saisir un nombre d''heures (24), une heure absolue (17:30) ou une date (2013-11-22 14:00).'
         limited:
@@ -1098,8 +1098,8 @@ fr:
     hamburger_menu: "aller à une autre catégorie ou liste de sujets"
     new_item: "nouveau"
     go_back: 'retour'
-    not_logged_in_user: 'page utilisateur avec un résumé de l''activité en cours et les préférences '
-    current_user: 'voir la page de l''utilisateur'
+    not_logged_in_user: 'page utilisateur avec un résumé de l''activité et les préférences '
+    current_user: 'aller à votre page utilisateur'
     topics:
       bulk:
         unlist_topics: "Ne plus lister les sujets"
@@ -1201,8 +1201,8 @@ fr:
       options: "Options du sujet"
       show_links: "afficher les liens dans ce sujet"
       toggle_information: "afficher les détails de ce sujet"
-      read_more_in_category: "Vous voulez en lire plus ? Afficher d'autres sujets dans {{catLink}} ou {{latestLink}}."
-      read_more: "Vous voulez en lire plus ? {{catLink}} or {{latestLink}}."
+      read_more_in_category: "Vous voulez en lire plus ? Découvrez d'autres sujets dans {{catLink}} ou {{latestLink}}."
+      read_more: "Vous voulez en lire plus ? {{catLink}} ou {{latestLink}}."
       read_more_MF: "Il y { UNREAD, plural, =0 {} one { a <a href='/unread'>1 sujet non lu</a> } other { a <a href='/unread'># sujets non lus</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{et } false {a } other{}} <a href='/new'>1 nouveau sujet</a> } other { {BOTH, select, true{et } false {a } other{}} <a href='/new'># nouveaux sujets</a> } } restant, ou {CATEGORY, select, true {consulter les autres sujets dans {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: Voir toutes les catégories
       view_latest_topics: voir les derniers sujets
@@ -1283,18 +1283,18 @@ fr:
         close: "Fermer le sujet"
         multi_select: "Sélectionner les messages…"
         auto_close: "Fermeture automatique…"
-        pin: "Épingler la discussion…"
-        unpin: "Désépingler la discussion…"
+        pin: "Épingler le sujet…"
+        unpin: "Désépingler le sujet…"
         unarchive: "Désarchiver le sujet"
         archive: "Archiver le sujet"
         invisible: "Retirer de la liste des sujets"
         visible: "Afficher dans la liste des sujets"
-        reset_read: "Réinitialiser les lectures"
+        reset_read: "Réinitialiser les données de lecture"
         make_public: "Rendre le sujet public"
         make_private: "Rendre le sujet privé"
       feature:
-        pin: "Épingler la discussion"
-        unpin: "Désépingler la discussion"
+        pin: "Épingler le sujet"
+        unpin: "Désépingler le sujet"
         pin_globally: "Épingler le sujet globalement"
         make_banner: "Sujet à la une"
         remove_banner: "Retirer le sujet à la une"
@@ -1325,7 +1325,7 @@ fr:
           other: "Sujets actuellement épinglés dans {{categoryLink}} : <strong class='badge badge-notification unread'>{{count}}</strong>"
         pin_globally: "Faire apparaître ce sujet en haut de toutes les listes de sujet jusqu'à "
         confirm_pin_globally: "Vous avez déjà {{count}} sujets épinglés. Trop de sujets épinglés peut être lourd pour les nouveaux utilisateurs et les visiteurs. Êtes-vous sûr de vouloir épingler globalement un autre sujet ?"
-        unpin_globally: "Enlever ce sujet du haut de toutes les listes de sujet."
+        unpin_globally: "Enlever ce sujet du haut de toutes les listes de sujets."
         unpin_globally_until: "Enlever ce sujet du haut de toutes les listes de sujet ou attendre jusqu'à <strong>%{until}</strong>."
         global_pin_note: "Les utilisateurs peuvent désépingler le sujet pour eux."
         not_pinned_globally: "Il n'y a aucun sujet épinglé globalement."
@@ -1392,7 +1392,7 @@ fr:
       change_owner:
         title: "Modifier l'auteur des messages"
         action: "modifier l'auteur"
-        error: "Il y a eu une erreur durant le changement d'auteur."
+        error: "Il y a eu une erreur lors du changement de l'auteur des messages."
         label: "Nouvel auteur des messages"
         placeholder: "pseudo du nouvel auteur"
         instructions:
@@ -1407,7 +1407,7 @@ fr:
         instructions: "Veuillez sélectionner la nouvelle date/heure du sujet. Les messages dans ce topic seront mis à jour pour maintenir la même différence d'heure."
       multi_select:
         select: 'sélectionner'
-        selected: '({{count}}) sélectionnés'
+        selected: 'sélectionnés ({{count}})'
         select_replies: 'selectionner +réponses'
         delete: supprimer la sélection
         cancel: annuler la sélection
@@ -1419,15 +1419,15 @@ fr:
     post:
       reply: "<i class='fa fa-mail-forward'></i> {{replyAvatar}} {{usernameLink}}"
       reply_topic: "<i class='fa fa-mail-forward'></i> {{link}}"
-      quote_reply: "Citer"
+      quote_reply: "citer"
       edit: "Modifier {{link}} par {{replyAvatar}} {{username}}"
       edit_reason: "Raison :"
       post_number: "message {{number}}"
       last_edited_on: "message dernièrement modifié le"
-      reply_as_new_topic: "Répondre en créant un sujet lié"
-      continue_discussion: "Suite du sujet {{postLink}}:"
-      follow_quote: "Voir le message cité"
-      show_full: "Voir le message en entier"
+      reply_as_new_topic: "Répondre par un nouveau sujet"
+      continue_discussion: "Suite du sujet {{postLink}} :"
+      follow_quote: "aller au message cité"
+      show_full: "Afficher le message complet"
       show_hidden: 'Afficher le contenu caché.'
       deleted_by_author:
         one: "(message supprimé par son auteur, sera supprimé automatiquement dans %{count} heure à moins qu'il ne soit signalé)"
@@ -1438,8 +1438,8 @@ fr:
         other: "voir {{count}} réponses cachées"
       unread: "Ce message est non lu"
       has_replies:
-        one: "{{count}} Réponse"
-        other: "{{count}} Réponses"
+        one: "{{count}} réponse"
+        other: "{{count}} réponses"
       has_likes:
         one: "{{count}} J'aime"
         other: "{{count}} J'aime"
@@ -1465,24 +1465,24 @@ fr:
         confirm: "Êtes-vous sûr de vouloir abandonner votre message ?"
         no_value: "Non, le conserver"
         yes_value: "Oui, abandonner"
-      via_email: "message depuis un courriel"
+      via_email: "ce message est arrivé par courriel"
       via_auto_generated_email: "ce message est arrivé via un courriel généré automatiquement"
       whisper: "ce message est un murmure privé pour les modérateurs"
       wiki:
         about: "ce message est un wiki"
       archetypes:
         save: 'Sauvegarder les options'
-      few_likes_left: "Merci de partager votre amour! Vous avez plus que quelques j'aime à distribuer pour aujourd'hui."
+      few_likes_left: "Merci de partager votre amour ! Vous n'avez plus que quelques J'aime à distribuer pour aujourd'hui."
       controls:
         reply: "commencez à répondre à ce message"
         like: "J'aime ce message"
         has_liked: "vous avez aimé ce message"
-        undo_like: "annuler J'aime"
+        undo_like: "annuler le J'aime"
         edit: "modifier ce message"
         edit_anonymous: "Désolé, mais vous devez être connecté pour modifier ce message."
         flag: "signaler secrètement ce message pour attirer l'attention ou envoyer une notification privée à son sujet"
-        delete: "Supprimer ce message"
-        undelete: "Annuler la suppression de ce message"
+        delete: "supprimer ce message"
+        undelete: "annuler la suppression de ce message"
         share: "partager ce message"
         more: "Plus"
         delete_replies:
@@ -1492,13 +1492,13 @@ fr:
           yes_value: "Oui, supprimer les réponses également"
           no_value: "Non, juste ce message"
         admin: "actions d'administration sur le message"
-        wiki: "Basculer en mode wiki"
-        unwiki: "Retirer le mode wiki"
+        wiki: "Basculer en mode Wiki"
+        unwiki: "Retirer le mode Wiki"
         convert_to_moderator: "Ajouter la couleur modérateur"
         revert_to_regular: "Retirer la couleur modérateur"
         rebake: "Reconstruire l'HTML"
         unhide: "Ré-afficher"
-        change_owner: "Modifier la propriété"
+        change_owner: "Modifier l'auteur"
       actions:
         flag: 'Signaler'
         defer_flags:
@@ -1509,7 +1509,7 @@ fr:
           spam: "Annuler le signalement"
           inappropriate: "Annuler le signalement"
           bookmark: "Retirer le signet"
-          like: "Annuler J'aime"
+          like: "Annuler le J'aime"
           vote: "Retirer le vote"
         people:
           off_topic: "signalé comme hors-sujet"
@@ -1519,7 +1519,7 @@ fr:
           notify_user: "a envoyé un message"
           bookmark: "signet ajouté"
           like: "a aimé ceci"
-          vote: "a voté pour ce message"
+          vote: "a voté pour ceci"
         by_you:
           off_topic: "Vous l'avez signalé comme étant hors-sujet"
           spam: "Vous l'avez signalé comme étant du spam"
@@ -1537,23 +1537,23 @@ fr:
             one: "Vous et 1 autre personne l'avez signalé comme étant du spam"
             other: "Vous et {{count}} autres personnes l'avez signalé comme étant du spam"
           inappropriate:
-            one: "Vous et 1 autre personne l'avez signalé comme inapproprié"
-            other: "Vous et {{count}} autres personnes l'avez signalé comme inapproprié"
+            one: "Vous et 1 autre personne l'ont signalé comme inapproprié"
+            other: "Vous et {{count}} autres personnes l'ont signalé comme inapproprié"
           notify_moderators:
-            one: "Vous et 1 autre personne l'avez signalé pour modération"
-            other: "Vous et {{count}} autres personnes l'avez signalé pour modération"
+            one: "Vous et 1 autre personne l'ont signalé pour modération"
+            other: "Vous et {{count}} autres personnes l'ont signalé pour modération"
           notify_user:
             one: "1 autre personne et vous avez envoyé un message à cet utilisateur"
             other: "{{count}} autres personnes et vous avez envoyé un message à cet utilisateur"
           bookmark:
-            one: "Vous et 1 autre personne avez mis un signet à ce message"
-            other: "Vous et {{count}} autres personnes avez mis un signet à ce message"
+            one: "Vous et 1 autre personne ont mis un signet à ce message"
+            other: "Vous et {{count}} autres personnes ont mis un signet à ce message"
           like:
-            one: "Vous et 1 autre personne l'avez aimé"
-            other: "Vous et {{count}} autres personnes l'avez aimé"
+            one: "Vous et 1 autre personne l'ont aimé"
+            other: "Vous et {{count}} autres personnes l'ont aimé"
           vote:
-            one: "Vous et 1 autre personne avez voté pour"
-            other: "Vous et {{count}} autres personnes avez voté pour"
+            one: "Vous et 1 autre personne ont voté pour"
+            other: "Vous et {{count}} autres personnes ont voté pour"
         by_others:
           off_topic:
             one: "1 personne l'a signalé comme étant hors-sujet"
@@ -1609,7 +1609,7 @@ fr:
             button: '<i class="fa fa-columns"></i> Brut'
     category:
       can: 'peut&hellip; '
-      none: '(pas de catégorie)'
+      none: '(aucun catégorie)'
       all: 'Toutes les catégories'
       choose: 'Sélectionner une catégorie&hellip;'
       edit: 'modifier'
@@ -1738,7 +1738,7 @@ fr:
       locked:
         help: "Ce sujet est fermé ; il n'accepte plus de nouvelles réponses"
       archived:
-        help: "Ce sujet est archivé ; il est gelé et ne peut être modifié"
+        help: "Ce sujet est archivé ; il est figé et ne peut être modifié"
       locked_and_archived:
         help: "Ce sujet est fermé et archivé ; il n'accepte plus de nouvelles réponses et ne peut plus être modifié"
       unpinned:
@@ -1756,9 +1756,9 @@ fr:
     posts_long: "il y a {{number}} messages dans ce sujet"
     posts_likes_MF: |
       Ce sujet a {count, plural, one {1 réponse} other {# réponses}}  {ratio, select,
-      low {avec un haut ratio de J'aime/Message}
-      med {avec un très haut ratio J'aime/Message}
-      high {avec un énorme ratio J'aime/Message}
+      low {avec un haut ratio J'aime/messages}
+      med {avec un très haut ratio J'aime/messages}
+      high {avec un énorme ratio J'aime/messages}
       other {}}
     original_post: "Message original"
     views: "Vues"
@@ -2194,7 +2194,7 @@ fr:
         flair_color_placeholder: "(Facultatif) Couleur en héxadécimal"
         flair_preview: "Prévisualiser"
       api:
-        generate_master: "Générer une clé Maître pour l'API"
+        generate_master: "Générer une clé d'API maître"
         none: "Il n'y a pas de clés API actives en ce moment."
         user: "Utilisateur"
         title: "API"
@@ -2205,8 +2205,8 @@ fr:
         confirm_regen: "Êtes-vous sûr de vouloir remplacer cette clé API par une nouvelle ?"
         confirm_revoke: "Êtes-vous sûr de vouloir révoquer cette clé ?"
         info_html: "Cette clé vous permettra de créer et mettre à jour des sujets à l'aide d'appels JSON."
-        all_users: "Tous les Utilisateurs"
-        note_html: "Gardez cette clé <strong>secrète</strong> ! Tous les personnes qui la possède peuvent créer des messages au nom de n'import quel utilisateur."
+        all_users: "Tous les utilisateurs"
+        note_html: "Gardez cette clé <strong>secrète</strong>. Tous les utilisateurs qui la possèdent peuvent créer des messages au nom de n'importe quel utilisateur."
       web_hooks:
         title: "Webhooks"
         none: "Il n'y a aucun Webhook actuellement."
@@ -2687,7 +2687,7 @@ fr:
         reputation: Réputation
         permissions: Permissions
         activity: Activité
-        like_count: J'aimes donnés / reçus
+        like_count: J'aime donnés / reçus
         last_100_days: 'dans les 100 derniers jours'
         private_topics_count: Sujets privés
         posts_read_count: Messages lus
@@ -2770,8 +2770,8 @@ fr:
           posts_read_all_time: "Messages lus (depuis le début)"
           flagged_posts: "Messages signalés"
           flagged_by_users: "Utilisateurs signalés"
-          likes_given: "J'aimes donnés"
-          likes_received: "J'aimes reçus"
+          likes_given: "J'aime donnés"
+          likes_received: "J'aime reçus"
           likes_received_days: "J'aime reçus : par jour"
           likes_received_users: "J'aime reçus : par utilisateur"
           qualifies: "Admissible au niveau de confiance 3."

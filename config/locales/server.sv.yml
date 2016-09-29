@@ -111,6 +111,7 @@ sv:
     operation_already_running: "En operation är redan igång. Kan inte starta ett nytt jobb just nu."
     backup_file_should_be_tar_gz: "Backup-filen ska vara ett .tar.gz arkiv."
     not_enough_space_on_disk: "Det finns inte tillräckligt mycket utrymme på disken för att ladda upp denna backup."
+    invalid_filename: "Backupfilnamnet innehåller ogiltiga tecken. Giltiga tecken är a-z 0-9 . - _."
   not_logged_in: "Du måste vara inloggad för att göra detta."
   not_found: "Den efterfrågade URL:en eller resursen kan inte hittas."
   invalid_access: "Du har inte behörighet att visa den efterfrågade resursen."
@@ -566,6 +567,9 @@ sv:
     different_user_description: "Du är för tillfället inloggad som en annan användare än den vi skickade e-post till. Var vänlig och logga ut, eller aktivera anonymt läge, och försök igen."
     not_found_description: "Tyvärr, vi kunde inte hitta den här avprenumerationen. Är det möjligt att länken i din e-post har löpt ut?"
     log_out: "Logga ut"
+  user_api_key:
+    read: "läs"
+    read_write: "läs/skriv"
   reports:
     visits:
       title: "Användarbesök"
