@@ -14,7 +14,7 @@ class Auth::DefaultCurrentUserProvider
   # do all current user initialization here
   def initialize(env)
     @env = env
-    @request = Rack::Request.new(env)
+    @request = ActionDispatch::Request.new(env)
   end
 
   # our current user, return nil if none is found
@@ -39,7 +39,7 @@ class Auth::DefaultCurrentUserProvider
     current_user = nil
 
     if auth_token && auth_token.length == 32
-      limiter = RateLimiter.new(nil, "cookie_auth_#{request.ip}", COOKIE_ATTEMPTS_PER_MIN ,60)
+      limiter = RateLimiter.new(nil, "cookie_auth_#{request.remote_ip}", COOKIE_ATTEMPTS_PER_MIN ,60)
 
       if limiter.can_perform?
         current_user = User.where(auth_token: auth_token)
@@ -65,7 +65,7 @@ class Auth::DefaultCurrentUserProvider
       u = current_user
       Scheduler::Defer.later "Updating Last Seen" do
         u.update_last_seen!
-        u.update_ip_address!(request.ip)
+        u.update_ip_address!(request.remote_ip)
       end
     end
 
