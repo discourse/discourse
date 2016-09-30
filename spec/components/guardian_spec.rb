@@ -972,6 +972,20 @@ describe Guardian do
         expect(Guardian.new(trust_level_4).can_edit?(post)).to be_truthy
       end
 
+      it 'returns false when trying to edit a post with no trust' do
+        SiteSetting.min_trust_to_edit_post = 2
+        post.user.trust_level = 1
+
+        expect(Guardian.new(post.user).can_edit?(post)).to be_falsey
+      end
+
+      it 'returns true when trying to edit a post with trust' do
+        SiteSetting.min_trust_to_edit_post = 1
+        post.user.trust_level = 1
+
+        expect(Guardian.new(post.user).can_edit?(post)).to be_truthy
+      end
+
       it 'returns false when another user has too low trust level to edit wiki post' do
         SiteSetting.stubs(:min_trust_to_edit_wiki_post).returns(2)
         post.wiki = true
