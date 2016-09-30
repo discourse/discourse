@@ -798,6 +798,42 @@ describe PostCreator do
     end
   end
 
+  context "topic tracking" do
+    it "automatically watches topic based on preference" do
+      user.user_option.notification_level_when_replying = 3
+
+      admin = Fabricate(:admin)
+      topic = PostCreator.create(admin,
+                                 title: "this is the title of a topic created by an admin for watching notification",
+                                 raw: "this is the content of a topic created by an admin for keeping a watching notification state on a topic ;)"
+      )
+
+      post = PostCreator.create(user,
+                                topic_id: topic.topic_id,
+                                raw: "this is a reply to set the tracking state to watching ;)"
+      )
+      topic_user = TopicUser.find_by(user_id: user.id, topic_id: post.topic_id)
+      expect(topic_user.notification_level).to eq(TopicUser.notification_levels[:watching])
+    end
+
+    it "topic notification level remains tracking based on preference" do
+      user.user_option.notification_level_when_replying = 2
+
+      admin = Fabricate(:admin)
+      topic = PostCreator.create(admin,
+                                 title: "this is the title of a topic created by an admin for tracking notification",
+                                 raw: "this is the content of a topic created by an admin for keeping a tracking notification state on a topic ;)"
+      )
+
+      post = PostCreator.create(user,
+                                topic_id: topic.topic_id,
+                                raw: "this is a reply to set the tracking state to tracking ;)"
+      )
+      topic_user = TopicUser.find_by(user_id: user.id, topic_id: post.topic_id)
+      expect(topic_user.notification_level).to eq(TopicUser.notification_levels[:tracking])
+    end
+  end
+
   describe '#create!' do
     it "should return the post if it was successfully created" do
       title = "This is a valid title"

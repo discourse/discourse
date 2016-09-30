@@ -13,6 +13,7 @@ class UserOptionSerializer < ApplicationSerializer
              :digest_after_minutes,
              :automatically_unpin_topics,
              :auto_track_topics_after_msecs,
+             :notification_level_when_replying,
              :new_topic_duration_minutes,
              :email_previous_replies,
              :email_in_reply_to,
@@ -22,6 +23,10 @@ class UserOptionSerializer < ApplicationSerializer
 
   def auto_track_topics_after_msecs
     object.auto_track_topics_after_msecs || SiteSetting.default_other_auto_track_topics_after_msecs
+  end
+
+  def notification_level_when_replying
+    object.notification_level_when_replying || SiteSetting.default_other_notification_level_when_replying
   end
 
   def new_topic_duration_minutes

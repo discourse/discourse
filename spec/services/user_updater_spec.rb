@@ -71,6 +71,7 @@ describe UserUpdater do
                      digest_after_minutes: "45",
                      new_topic_duration_minutes: 100,
                      auto_track_topics_after_msecs: 101,
+                     notification_level_when_replying: 3,
                      email_in_reply_to: false
                     )
       expect(val).to be_truthy
@@ -83,6 +84,7 @@ describe UserUpdater do
       expect(user.user_option.digest_after_minutes).to eq 45
       expect(user.user_option.new_topic_duration_minutes).to eq 100
       expect(user.user_option.auto_track_topics_after_msecs).to eq 101
+      expect(user.user_option.notification_level_when_replying).to eq 3
       expect(user.user_option.email_in_reply_to).to eq false
     end
 

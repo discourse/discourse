@@ -452,9 +452,11 @@ class PostCreator
     end
 
     if @user.staged
-      TopicUser.auto_watch(@user.id, @topic.id)
+      TopicUser.auto_notification_for_staging(@user.id, @topic.id, TopicUser.notification_reasons[:auto_watch])
+    elsif @user.user_option.notification_level_when_replying === NotificationLevels.topic_levels[:watching]
+      TopicUser.auto_notification(@user.id, @topic.id, TopicUser.notification_reasons[:created_post], NotificationLevels.topic_levels[:watching])
     else
-      TopicUser.auto_track(@user.id, @topic.id, TopicUser.notification_reasons[:created_post])
+      TopicUser.auto_notification(@user.id, @topic.id, TopicUser.notification_reasons[:created_post], NotificationLevels.topic_levels[:tracking])
     end
   end
 
