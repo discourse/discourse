@@ -10,24 +10,22 @@ class ExtraLocalesController < ApplicationController
     locale_str = I18n.locale.to_s
     translations = JsLocaleHelper.translations_for(locale_str)
     for_key = translations[locale_str]["#{bundle}_js"]
+    js = ""
 
-    if plugin_for_key = JsLocaleHelper.plugin_translations(locale_str)["#{bundle}_js"]
-      for_key.deep_merge!(plugin_for_key)
-    end
-
-    js =
-      if for_key.present?
-        <<~JS
-        (function() {
-          if (window.I18n) {
-            window.I18n.extras = window.I18n.extras || [];
-            window.I18n.extras.push(#{for_key.to_json});
-          }
-        })();
-        JS
-      else
-        ""
+    if for_key.present?
+      if plugin_for_key = JsLocaleHelper.plugin_translations(locale_str)["#{bundle}_js"]
+        for_key.deep_merge!(plugin_for_key)
       end
+
+      js = <<~JS
+      (function() {
+        if (window.I18n) {
+          window.I18n.extras = window.I18n.extras || [];
+          window.I18n.extras.push(#{for_key.to_json});
+        }
+      })();
+      JS
+    end
 
     render text: js, content_type: "application/javascript"
   end
