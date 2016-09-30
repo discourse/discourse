@@ -251,6 +251,7 @@ describe UsersController do
         user.reload
         expect(user.auth_token).to_not eq old_token
         expect(user.auth_token.length).to eq 32
+        expect(session["password-#{token}"]).to be_blank
       end
 
       it "doesn't invalidate the token when loading the page" do

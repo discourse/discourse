@@ -409,6 +409,7 @@ class UsersController < ApplicationController
         @user.auth_token = nil
         if @user.save
           Invite.invalidate_for_email(@user.email) # invite link can't be used to log in anymore
+          session["password-#{params[:token]}"] = nil
           logon_after_password_reset
         end
       end
