@@ -762,6 +762,9 @@ trust:
   min_trust_to_edit_wiki_post:
     default: 1
     enum: 'TrustLevelSetting'
+  min_trust_to_edit_post:
+    default: 0
+    enum: 'TrustLevelSetting'
   min_trust_to_allow_self_wiki:
     default: 3
     enum: 'TrustLevelSetting'

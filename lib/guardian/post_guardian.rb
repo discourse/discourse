@@ -103,6 +103,10 @@ module PostGuardian
       return true
     end
 
+    if @user.trust_level < SiteSetting.min_trust_to_edit_post
+      return false
+    end
+
     if is_my_own?(post)
       if post.hidden?
         return false if post.hidden_at.present? &&
