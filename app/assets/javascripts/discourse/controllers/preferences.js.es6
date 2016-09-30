@@ -3,6 +3,7 @@ import CanCheckEmails from 'discourse/mixins/can-check-emails';
 import { popupAjaxError } from 'discourse/lib/ajax-error';
 import computed from "ember-addons/ember-computed-decorators";
 import { cook } from 'discourse/lib/text';
+import { NotificationLevels } from 'discourse/lib/notification-levels';
 
 export default Ember.Controller.extend(CanCheckEmails, {
 
@@ -114,6 +115,10 @@ export default Ember.Controller.extend(CanCheckEmails, {
                        { name: I18n.t('user.auto_track_options.after_4_minutes'), value: 240000 },
                        { name: I18n.t('user.auto_track_options.after_5_minutes'), value: 300000 },
                        { name: I18n.t('user.auto_track_options.after_10_minutes'), value: 600000 }],
+
+  notificationLevelsForReplying: [{ name: I18n.t('topic.notifications.watching.title'), value: NotificationLevels.WATCHING },
+                                  { name: I18n.t('topic.notifications.tracking.title'), value: NotificationLevels.TRACKING }],
+
 
   considerNewTopicOptions: [{ name: I18n.t('user.new_topic_duration.not_viewed'), value: -1 },
                             { name: I18n.t('user.new_topic_duration.after_1_day'), value: 60 * 24 },
