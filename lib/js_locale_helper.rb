@@ -7,7 +7,9 @@ module JsLocaleHelper
       translations = {}
 
       Dir["#{Rails.root}/plugins/*/config/locales/client.#{locale_str}.yml"].each do |file|
-        translations.deep_merge! YAML::load(File.open(file))[locale_str]
+        if plugin_translations = YAML::load(File.open(file))[locale_str]
+          translations.deep_merge!(plugin_translations)
+        end
       end
 
       translations
