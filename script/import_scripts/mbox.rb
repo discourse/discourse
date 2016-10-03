@@ -1,16 +1,41 @@
 require 'sqlite3'
 require File.expand_path(File.dirname(__FILE__) + "/base.rb")
 
+# TODO: ignore ~ emacs backup files
+# DONE: sort filenames before processing
+
+# Paste these lines into your shell before running this:
+
+=begin
+export MBOX_SUBDIR="messages" # subdirectory with mbox files
+export LIST_NAME=LIST_NAME
+export DEFAULT_TRUST_LEVEL=1
+export DATA_DIR=~/data/import
+export SPLIT_AT="^From " # or "^From (.*)"
+=end
+
 class ImportScripts::Mbox < ImportScripts::Base
+  include ActiveModel::Validations
+
   # CHANGE THESE BEFORE RUNNING THE IMPORTER
 
+  MBOX_SUBDIR = ENV['MBOX_SUBDIR'] || "messages" # subdirectory with mbox files
+  LIST_NAME = ENV['LIST_NAME'] || "" # Will remove [LIST_NAME] from Subjects
+  DEFAULT_TRUST_LEVEL = ENV['DEFAULT_TRUST_LEVEL'] || 1
+  DATA_DIR = ENV['DATA_DIR'] || "~/data/import"
+  MBOX_DIR = File.expand_path(DATA_DIR) # where index.db will be created
   BATCH_SIZE = 1000
-  MBOX_DIR = File.expand_path("~/import/site")
 
-  # Remove to not split individual files
-  SPLIT_AT = /^From (.*) at/
+  # Site settings
+  SiteSetting.disable_emails = true
+
+  # Comment out if each file contains a single message
+  # Use formail to split yourself: http://linuxcommand.org/man_pages/formail1.html
+  # SPLIT_AT = /^From (.*) at/ # for Google Groups?
+  SPLIT_AT = /#{ENV['SPLIT_AT']}/ || /^From / # for standard MBOX files
 
   # Will create a category if it doesn't exist
+  # create subdirectories in MBOX_SUBDIR with categories
   CATEGORY_MAPPINGS = {
     "default" => "uncategorized",
     # ex: "jobs-folder" => "jobs"
@@ -55,7 +80,7 @@ class ImportScripts::Mbox < ImportScripts::Base
   end
 
   def all_messages
-    files = Dir["#{MBOX_DIR}/messages/*"]
+    files = Dir["#{MBOX_DIR}/#{MBOX_SUBDIR}/*"]
 
     CATEGORY_MAPPINGS.keys.each do |k|
       files << Dir["#{MBOX_DIR}/#{k}/*"]
@@ -236,7 +261,7 @@ class ImportScripts::Mbox < ImportScripts::Base
   def clean_title(title)
     title ||= ""
     #Strip mailing list name from subject
-    title = title.gsub(/\[[^\]]+\]+/, '').strip
+    title = title.gsub(/\[#{Regexp.escape(LIST_NAME)}\]/, '').strip
 
     original_length = title.length
 
@@ -283,7 +308,8 @@ class ImportScripts::Mbox < ImportScripts::Base
         {
           id:           u[1],
           email:        u[1],
-          name:         u[0]
+          name:         u[0],
+          trust_level:  DEFAULT_TRUST_LEVEL,
         }
       end
     end
