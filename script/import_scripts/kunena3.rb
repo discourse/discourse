@@ -1,15 +1,31 @@
 require "mysql2"
 require File.expand_path(File.dirname(__FILE__) + "/base.rb")
 
-# HOWTO: https://meta.discourse.org/t/importing-from-kunena-3/43776
+# If you change this script's functionality, please consider making a note here:
+# https://meta.discourse.org/t/importing-from-kunena-3/43776
+
+# Before running this script, paste these lines into your shell,
+# then use arrow keys to edit the values
+=begin
+export DB_HOST="localhost"
+export DB_NAME="kunena"
+export DB_USER="kunena"
+export DB_PW="kunena"
+export KUNENA_PREFIX="jos_" # "iff_" sometimes
+export IMAGE_PREFIX="http://EXAMPLE.com/media/kunena/attachments"
+export PARENT_FIELD="parent_id" # "parent" in some versions
+=end
 
 class ImportScripts::Kunena < ImportScripts::Base
 
-  KUNENA_DB    = "kunena"
-  KUNENA_PREFIX = "jos_" # "iff_" sometimes
-  # Path to [attachment]s
-  IMAGE_PREFIX = "http://EXAMPLE.com/media/kunena/attachments"
-  PARENT_FIELD = "parent_id" # try "parent" in case of "Unknown column 'parent_id'"
+  DB_HOST ||= ENV['DB_HOST'] || "localhost"
+  DB_NAME ||= ENV['DB_NAME'] || "kunena"
+  DB_USER ||= ENV['DB_USER'] || "kunena"
+  DB_PW   ||= ENV['DB_PW'] || "kunena"
+  KUNENA_PREFIX ||= ENV['KUNENA_PREFIX'] || "jos_" # "iff_" sometimes
+  IMAGE_PREFIX ||= ENV['IMAGE_PREFIX'] || "http://EXAMPLE.com/media/kunena/attachments"
+  PARENT_FIELD ||= ENV['PARENT_FIELD'] || "parent_id" # "parent" in some versions
+
   def initialize
 
     super
@@ -17,10 +33,10 @@ class ImportScripts::Kunena < ImportScripts::Base
     @users = {}
 
     @client = Mysql2::Client.new(
-      host: "HOSTNAME",
-      username: "DATABASE_USER_NAME",
-      password: "DATABASE_USER_PASSWORD",
-      database: KUNENA_DB
+      host: DB_HOST,
+      username: DB_USER,
+      password: DB_PW,
+      database: DB_NAME
     )
   end
 
