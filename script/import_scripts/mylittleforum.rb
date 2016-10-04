@@ -148,7 +148,7 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
     puts "", "importing topics..."
 
     total_count = mysql_query("SELECT count(*) count FROM #{TABLE_PREFIX}entries
-                               WHERE time > '{IMPORT_AFTER}'
+                               WHERE time > '#{IMPORT_AFTER}'
                                AND pid = 0;").first['count']
 
     print_warning ("IMPORT_AFTER: #{IMPORT_AFTER}, COUNT: #{total_count}")
@@ -314,21 +314,17 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
       end
     end
 
-    Topic.find_each do |post|
-      topic = post.topic
-      id = pcf["import_id"].split('#').last
+    Topic.find_each do |topic|
+      id = topic_lookup_from_imported_post_id(topic.id)
       Permalink.create( url: "#{BASE}/forum_entry-id-#{id}", topic_id: topic.id ) rescue nil
         print '.'
-      end
     end
 
     Category.find_each do |cat|
-      id = category_id_from_imported_category_id(cat[:id])
+      id = category_id_from_imported_category_id(cat.id)
       Permalink.create( url: "#{BASE}/forum_category--#{id}.html", category_id: id ) rescue nil
       print '.'
-      end
     end
-
   end
 
   def print_warning(message)
