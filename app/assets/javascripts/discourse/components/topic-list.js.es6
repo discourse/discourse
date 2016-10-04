@@ -1,4 +1,4 @@
-import { default as computed, observes, on } from 'ember-addons/ember-computed-decorators';
+import { default as computed, observes } from 'ember-addons/ember-computed-decorators';
 
 export default Ember.Component.extend({
   tagName: 'table',
