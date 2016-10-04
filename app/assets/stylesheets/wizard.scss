@@ -461,3 +461,23 @@ body.wizard {
     }
   }
 }
+
+/* fix wizard for mobile -- iPhone 5 default width */
+@media only screen and (max-device-width: 568px) {  
+  h1 { font-size: 1.3em !important; }
+  .wizard-column { margin: auto !important; }
+  .wizard-step-contents { min-height: auto !important; }
+  .wizard-step-banner { width: 100% !important; margin-bottom: 1em !important; }
+  .select2-container { width: 100% !important; }
+  .wizard-step-footer { display: block !important; }
+  .wizard-progress { margin-bottom: 10px !important; }  
+  .wizard-buttons { text-align: right !important; }
+  .wizard-footer { display: none !important; }
+  .wizard-field { margin-bottom: 1em !important; }
+  .wizard-step-description { margin-bottom: 1em !important; }  
+  .wizard-column-contents { padding: 1em !important; }
+  .emoji-preview img { width: 16px !important; height: 16px !important; }
+  .invite-list .new-user { flex-direction: column !important; align-items: inherit !important; }
+  .invite-list .new-user .invite-email { width: 100% !important; margin-bottom: 5px !important; }
+  .invite-list .add-user { margin-top: 5px !important; }
+}
