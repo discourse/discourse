@@ -6,16 +6,23 @@ require 'htmlentities'
 # Before running this script, paste these lines into your shell,
 # then use arrow keys to edit the values
 =begin
+export DB_HOST="localhost"
+export DB_NAME="mylittleforum"
+export DB_PW=""
+export DB_USER="root"
+export TABLE_PREFIX="forum_"
+export IMPORT_AFTER="1970-01-01"
 =end
 
 
 class ImportScripts::MylittleforumSQL < ImportScripts::Base
 
   DB_HOST ||= ENV['DB_HOST'] || "localhost"
-  DB_NAME ||= ENV['MYSQL_DB'] || "mylittleforum"
+  DB_NAME ||= ENV['DB_name'] || "mylittleforum"
   DB_PW ||= ENV['DB_PW'] || ""
   DB_USER ||= ENV['DB_USER'] || "root"
-  TABLE_PREFIX ||= ENV['TABLE_PREFIX'] = ""
+  TABLE_PREFIX ||= ENV['TABLE_PREFIX'] = "forum_"
+  IMPORT_AFTER ||= ENV['IMPORT_AFTER'] = "1970-01-01"
 
   BATCH_SIZE = 1000
   CONVERT_HTML = true
@@ -25,27 +32,14 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
     super
     @htmlentities = HTMLEntities.new
     @client = Mysql2::Client.new(
-      host: "localhost",
-      username: "root",
-      password: "pa$$word",
-      database: MYLITTLEFORUM_DB
+      host: DB_HOST,
+      username: DB_USER,
+      password: DB_PW,
+      database: DB_NAME
     )
-
-    @import_tags = false
-    begin
-      r = @client.query("select count(*) count from #{TABLE_PREFIX}Tag where countdiscussions > 0")
-      @import_tags = true if r.first["count"].to_i > 0
-    rescue => e
-      puts "Tags won't be imported. #{e.message}"
-    end
   end
 
   def execute
-    if @import_tags
-      SiteSetting.tagging_enabled = true
-      SiteSetting.max_tags_per_topic = 10
-    end
-
     import_users
     import_avatars
     import_categories
@@ -60,20 +54,30 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
   def import_users
     puts '', "creating users"
 
-    @user_is_deleted = false
-    @last_deleted_username = nil
     username = nil
 
-    total_count = mysql_query("SELECT count(*) count FROM #{TABLE_PREFIX}User;").first['count']
+    total_count = mysql_query("SELECT count(*) count FROM #{TABLE_PREFIX}userdata WHERE last_login > '#{IMPORT_AFTER};").first['count']
 
     batches(BATCH_SIZE) do |offset|
-      results = mysql_query(
-        "SELECT UserID, Name, Title, Location, About, Email,
-                DateInserted, DateLastActive, InsertIPAddress, Admin
-         FROM #{TABLE_PREFIX}User
-         ORDER BY UserID ASC
-         LIMIT #{BATCH_SIZE}
-         OFFSET #{offset};")
+      results = mysql_query("
+             SELECT user_id as UserID, user_name as username,
+                user_real_name as Name,
+                user_email as Email,
+                user_hp as website,
+                user_place as Location,
+                profile as bio_raw,
+                last_login as DateLastActive,
+                user_ip as InsertIPAddress,
+                user_pw as password,
+                logins as days_visited, # user_stats
+                registered as DateInserted,
+                user_pw as password,
+                user_type
+             FROM #{TABLE_PREFIX}userdata
+		 WHERE last_login > #{IMPORT_AFTER}
+                 order by UserID ASC;
+                 LIMIT #{BATCH_SIZE}
+                 OFFSET #{offset};")
 
       break if results.size < 1
 
@@ -84,33 +88,35 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
         next if user['Name'].blank?
         next if @lookup.user_id_from_imported_user_id(user['UserID'])
 
-        if user['Name'] == '[Deleted User]'
-          # EVERY deleted user record in Mylittleforum has the same username: [Deleted User]
-          # Save our UserNameSuggester some pain:
-          @user_is_deleted = true
-          username = @last_deleted_username || user['Name']
-        else
-          @user_is_deleted = false
-          username = user['Name']
-        end
+        username = fix_username(user['username'])
 
         { id: user['UserID'],
           email: user['Email'],
           username: username,
           name: user['Name'],
           created_at: user['DateInserted'] == nil ? 0 : Time.zone.at(user['DateInserted']),
-          bio_raw: user['About'],
+          bio_raw: user['bio_raw'],
           registration_ip_address: user['InsertIPAddress'],
+          website: user['user_hp'],
+          password: user['password'],
           last_seen_at: user['DateLastActive'] == nil ? 0 : Time.zone.at(user['DateLastActive']),
           location: user['Location'],
-          admin: user['Admin'] == 1,
-          post_create_action: proc do |newuser|
-            if @user_is_deleted
-              @last_deleted_username = newuser.username
-            end
-          end }
+          admin: user['user_type'] == "admin",
+          moderator: user['user_type'] == "mod",
+        }
       end
     end
+  end
+
+  def fix_username(username)
+    username.gsub!(/[ +!\/,*()?]/,"_") # can't have these
+    username.gsub!(/&/,"_and_") # no &
+    username.gsub!(/@/,"_at_") # no @
+    username.gsub!(/#/,"_hash_") # no &
+    username.gsub!(/\'/,"") # seriously?
+    username.gsub!(/_+/,"_") # could result in dupes, but wtf?
+    username.gsub!(/_$/,"") # could result in dupes, but wtf?
+    username
   end
 
   def import_avatars
