@@ -13,7 +13,7 @@ export DB_USER="root"
 export TABLE_PREFIX="forum_"
 export IMPORT_AFTER="1970-01-01"
 export IMAGE_BASE="http://www.example.com/forum/"
-export BASE="forum/"
+export BASE="forum"
 =end
 
 
@@ -322,7 +322,7 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
 
     Category.find_each do |cat|
       id = category_id_from_imported_category_id(cat.id)
-      Permalink.create( url: "#{BASE}/forum_category--#{id}.html", category_id: id ) rescue nil
+      Permalink.create( url: "#{BASE}/forum_category--#{id}.html", category_id: cat.id ) rescue nil
       print '.'
     end
   end
