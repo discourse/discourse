@@ -56,7 +56,7 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
 
     username = nil
 
-    total_count = mysql_query("SELECT count(*) count FROM #{TABLE_PREFIX}userdata WHERE last_login > '#{IMPORT_AFTER};").first['count']
+    total_count = mysql_query("SELECT count(*) count FROM #{TABLE_PREFIX}userdata WHERE last_login > '#{IMPORT_AFTER}';").first['count']
 
     batches(BATCH_SIZE) do |offset|
       results = mysql_query("
@@ -74,7 +74,7 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
                 user_pw as password,
                 user_type
              FROM #{TABLE_PREFIX}userdata
-		 WHERE last_login > #{IMPORT_AFTER}
+		 WHERE last_login > '#{IMPORT_AFTER}'
                  order by UserID ASC;
                  LIMIT #{BATCH_SIZE}
                  OFFSET #{offset};")
@@ -94,7 +94,7 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
           email: user['Email'],
           username: username,
           name: user['Name'],
-          created_at: user['DateInserted'] == nil ? 0 : Time.zone.at(user['DateInserted']),
+          created_at: user['DateInserted'] == nil ? 0 : Time.parse(user['DateInserted']),
           bio_raw: user['bio_raw'],
           registration_ip_address: user['InsertIPAddress'],
           website: user['user_hp'],
@@ -142,36 +142,37 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
   def import_topics
     puts "", "importing topics..."
 
-    tag_names_sql = "select t.name as tag_name from GDN_Tag t, GDN_TagDiscussion td where t.tagid = td.tagid and td.discussionid = {discussionid} and t.name != '';"
-
-    total_count = mysql_query("SELECT count(*) count FROM #{TABLE_PREFIX}Discussion;").first['count']
+    total_count = mysql_query("SELECT count(*) count FROM #{TABLE_PREFIX}entries where time > '{IMPORT_AFTER} and pid = 0';").first['count']
 
     batches(BATCH_SIZE) do |offset|
       discussions = mysql_query(
-        "SELECT DiscussionID, CategoryID, Name, Body,
-                DateInserted, InsertUserID
-         FROM #{TABLE_PREFIX}Discussion
-         ORDER BY DiscussionID ASC
+        "SELECT id as DiscussionID,
+                category as CategoryID,
+                subject as Name,
+                text as Body,
+                time as DateInserted,
+                youtube_link as youtube,
+                user_id as InsertUserID
+         FROM #{TABLE_PREFIX}entries
+         WHERE pid = 0
+	 AND time > '#{IMPORT_AFTER}'
+         ORDER BY time ASC
          LIMIT #{BATCH_SIZE}
          OFFSET #{offset};")
 
       break if discussions.size < 1
       next if all_records_exist? :posts, discussions.map {|t| "discussion#" + t['DiscussionID'].to_s}
 
+      youtube = discussion['youtube'].gsub(/.*(https?:\/\/\S+)\\".*/i) { "#{$1}"}
+      raw = clean_up(discussion['Body'] + "\n#{youtube}\n")
       create_posts(discussions, total: total_count, offset: offset) do |discussion|
         {
           id: "discussion#" + discussion['DiscussionID'].to_s,
           user_id: user_id_from_imported_user_id(discussion['InsertUserID']) || Discourse::SYSTEM_USER_ID,
           title: discussion['Name'],
           category: category_id_from_imported_category_id(discussion['CategoryID']),
-          raw: clean_up(discussion['Body']),
-          created_at: Time.zone.at(discussion['DateInserted']),
-          post_create_action: proc do |post|
-            if @import_tags
-              tag_names = @client.query(tag_names_sql.gsub('{discussionid}', discussion['DiscussionID'].to_s)).map {|row| row['tag_name']}
-              DiscourseTagging.tag_topic_by_names(post.topic, staff_guardian, tag_names)
-            end
-          end
+          raw: raw,
+          created_at: Time.parse(discussion['DateInserted']),
         }
       end
     end
