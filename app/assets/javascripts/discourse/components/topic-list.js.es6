@@ -33,6 +33,9 @@ export default Ember.Component.extend({
 
   @computed('topics.@each', 'order', 'ascending')
   lastVisitedTopic(topics, order, ascending) {
+
+    this._cleanLastVisitedTopic();
+
     if (!this.get('highlightLastVisited')) { return; }
     if (order !== "default" && order !== "activity") { return; }
     if (!topics || topics.length === 1) { return; }
@@ -85,7 +88,6 @@ export default Ember.Component.extend({
   },
 
   @observes('category')
-  @on('willDestroyElement')
   _cleanLastVisitedTopic() {
     const prevTopic = this.get('prevTopic');
 
