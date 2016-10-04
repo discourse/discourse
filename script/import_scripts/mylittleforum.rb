@@ -215,6 +215,24 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
     # decode HTML entities
     raw = @htmlentities.decode(raw)
 
+    raw = raw.gsub(/\[b\]/i, "<strong>")
+    raw = raw.gsub(/\[\/b\]/i, "</strong>")
+
+    raw = raw.gsub(/\[i\]/i, "<em>")
+    raw = raw.gsub(/\[\/i\]/i, "</em>")
+
+    raw = raw.gsub(/\[u\]/i, "<em>")
+    raw = raw.gsub(/\[\/u\]/i, "</em>")
+
+    raw = raw.gsub(/\[url\](\S+)\[\/url\]/i) { "#{$1}"}
+    raw = raw.gsub(/\[link\](\S+)\[\/link\]/i) { "#{$1}"}
+
+    # URL= is broken
+    raw = raw.gsub(/\[url=(\S+?)\]\[\/url\]/i) { "#{$1}"}
+
+    raw =
+    ### FROM VANILLA:
+
     # fix whitespaces
     raw = raw.gsub(/(\\r)?\\n/, "\n")
              .gsub("\\t", "\t")
