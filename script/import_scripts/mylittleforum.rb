@@ -185,15 +185,24 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
 
     batches(BATCH_SIZE) do |offset|
       comments = mysql_query(
-        "SELECT CommentID, DiscussionID, Body,
-                DateInserted, InsertUserID
-         FROM #{TABLE_PREFIX}Comment
-         ORDER BY CommentID ASC
+        "SELECT id as CommentID
+                pid as DiscussionID
+                text as Body,
+                time as DateInserted,
+                youtube_link as youtube,
+                user_id as InsertUserID
+         FROM #{TABLE_PREFIX}entries
+         WHERE pid > 0
+	 AND time > '#{IMPORT_AFTER}'
+         ORDER BY time ASC
          LIMIT #{BATCH_SIZE}
          OFFSET #{offset};")
 
       break if comments.size < 1
       next if all_records_exist? :posts, comments.map {|comment| "comment#" + comment['CommentID'].to_s}
+
+      youtube = discussion['youtube'].gsub(/.*(https?:\/\/\S+)\\".*/i) { "#{$1}"}
+      raw = clean_up(discussion['Body'] + "\n#{youtube}\n")
 
       create_posts(comments, total: total_count, offset: offset) do |comment|
         next unless t = topic_lookup_from_imported_post_id("discussion#" + comment['DiscussionID'].to_s)
@@ -202,8 +211,8 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
           id: "comment#" + comment['CommentID'].to_s,
           user_id: user_id_from_imported_user_id(comment['InsertUserID']) || Discourse::SYSTEM_USER_ID,
           topic_id: t[:topic_id],
-          raw: clean_up(comment['Body']),
-          created_at: Time.zone.at(comment['DateInserted'])
+          raw: clean_up(raw),
+          created_at: Time.parse(comment['DateInserted'])
         }
       end
     end
