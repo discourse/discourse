@@ -329,6 +329,25 @@ class ApplicationController < ActionController::Base
     request.session_options[:skip] = true
   end
 
+  def permalink_redirect_or_not_found
+    url = request.fullpath
+    permalink = Permalink.find_by_url(url)
+
+    if permalink.present?
+      # permalink present, redirect to that URL
+      if permalink.external_url
+        redirect_to permalink.external_url, status: :moved_permanently
+      elsif permalink.target_url
+        redirect_to "#{Discourse::base_uri}#{permalink.target_url}", status: :moved_permanently
+      else
+        raise Discourse::NotFound
+      end
+    else
+      # redirect to 404
+      raise Discourse::NotFound
+    end
+  end
+
   private
 
     def locale_from_header
