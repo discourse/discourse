@@ -215,6 +215,9 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
     # decode HTML entities
     raw = @htmlentities.decode(raw)
 
+    # don't \ quotes
+    raw = raw.gsub('\\"','"')
+
     raw = raw.gsub(/\[b\]/i, "<strong>")
     raw = raw.gsub(/\[\/b\]/i, "</strong>")
 
@@ -227,34 +230,26 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
     raw = raw.gsub(/\[url\](\S+)\[\/url\]/i) { "#{$1}"}
     raw = raw.gsub(/\[link\](\S+)\[\/link\]/i) { "#{$1}"}
 
-    # URL= is broken
-    raw = raw.gsub(/\[url=(\S+?)\]\[\/url\]/i) { "#{$1}"}
+    # URL & LINK with text
+    raw = raw.gsub(/\[url=(\S+?)\](.*?)\[\/url\]/i) { "<a href=\"#{$1}\">#{$2}</a>"}
+    raw = raw.gsub(/\[link=(\S+?)\](.*?)\[\/link\]/i) { "<a href=\"#{$1}\">#{$2}</a>"}
 
-    raw =
+    # images
+    raw = raw.gsub(/\[img\](.+?)\[\/img\]/i) { "<img src=\"#{$1}\">" }
+    raw = raw.gsub(/\[img=(.+?)\](.+?)\[\/img\]/i) { "<img src=\"#{$1}\" alt=\"#{$2}\">" }
+    # Convert image bbcode
+    raw.gsub!(/\[img=(\d+),(\d+)\]([^\]]*)\[\/img\]/i, '<img width="\1" height="\2" src="\3">')
+
+    # CODE (not tested)
+    raw = raw.gsub(/\[code\](\S+)\[\/code\]/i) { "```\n#{$1}\n```"}
+    raw = raw.gsub(/\[pre\](\S+)\[\/pre\]/i) { "```\n#{$1}\n```"}
+
+
     ### FROM VANILLA:
 
     # fix whitespaces
     raw = raw.gsub(/(\\r)?\\n/, "\n")
              .gsub("\\t", "\t")
-
-    # [HTML]...[/HTML]
-    raw = raw.gsub(/\[html\]/i, "\n```html\n")
-             .gsub(/\[\/html\]/i, "\n```\n")
-
-    # [PHP]...[/PHP]
-    raw = raw.gsub(/\[php\]/i, "\n```php\n")
-             .gsub(/\[\/php\]/i, "\n```\n")
-
-    # [HIGHLIGHT="..."]
-    raw = raw.gsub(/\[highlight="?(\w+)"?\]/i) { "\n```#{$1.downcase}\n" }
-
-    # [CODE]...[/CODE]
-    # [HIGHLIGHT]...[/HIGHLIGHT]
-    raw = raw.gsub(/\[\/?code\]/i, "\n```\n")
-             .gsub(/\[\/?highlight\]/i, "\n```\n")
-
-    # [SAMP]...[/SAMP]
-    raw.gsub!(/\[\/?samp\]/i, "`")
 
     unless CONVERT_HTML
       # replace all chevrons with HTML entities
@@ -270,46 +265,10 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
                .gsub("\u2603", ">")
     end
 
-    # [URL=...]...[/URL]
-    raw.gsub!(/\[url="?(.+?)"?\](.+)\[\/url\]/i) { "[#{$2}](#{$1})" }
-
-    # [IMG]...[/IMG]
-    raw.gsub!(/\[\/?img\]/i, "")
-
-    # [URL]...[/URL]
-    # [MP3]...[/MP3]
-    raw = raw.gsub(/\[\/?url\]/i, "")
-             .gsub(/\[\/?mp3\]/i, "")
-
-    # [QUOTE]...[/QUOTE]
-    raw.gsub!(/\[quote\](.+?)\[\/quote\]/im) { "\n> #{$1}\n" }
-
-    # [YOUTUBE]<id>[/YOUTUBE]
-    raw.gsub!(/\[youtube\](.+?)\[\/youtube\]/i) { "\nhttps://www.youtube.com/watch?v=#{$1}\n" }
-
-    # [youtube=425,350]id[/youtube]
-    raw.gsub!(/\[youtube="?(.+?)"?\](.+)\[\/youtube\]/i) { "\nhttps://www.youtube.com/watch?v=#{$2}\n" }
-
-    # [MEDIA=youtube]id[/MEDIA]
-    raw.gsub!(/\[MEDIA=youtube\](.+?)\[\/MEDIA\]/i) { "\nhttps://www.youtube.com/watch?v=#{$1}\n" }
-
-    # [VIDEO=youtube;<id>]...[/VIDEO]
-    raw.gsub!(/\[video=youtube;([^\]]+)\].*?\[\/video\]/i) { "\nhttps://www.youtube.com/watch?v=#{$1}\n" }
-
-    # Convert image bbcode
-    raw.gsub!(/\[img=(\d+),(\d+)\]([^\]]*)\[\/img\]/i, '<img width="\1" height="\2" src="\3">')
-
     # Remove the color tag
     raw.gsub!(/\[color=[#a-z0-9]+\]/i, "")
     raw.gsub!(/\[\/color\]/i, "")
-
-    # remove attachments
-    raw.gsub!(/\[attach[^\]]*\]\d+\[\/attach\]/i, "")
-
-    # sanitize img tags
-    # This regexp removes everything between the first and last img tag. The .* is too much.
-    # If it's needed, it needs to be fixed.
-    # raw.gsub!(/\<img.*src\="([^\"]+)\".*\>/i) {"\n<img src='#{$1}'>\n"}
+    ### END VANILLA:
 
     raw
   end
