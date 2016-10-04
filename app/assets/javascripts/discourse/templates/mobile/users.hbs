@@ -3,7 +3,7 @@
 
     <div class='clearfix user-controls'>
       {{period-chooser period=period}}
-      {{text-field value=nameInput placeholderKey="directory.filter_name" class="filter-name"}}
+      {{text-field value=nameInput placeholderKey="directory.filter_name" class="filter-name no-blur"}}
     </div>
 
     {{#conditional-loading-spinner condition=model.loading}}
