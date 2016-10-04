@@ -12,7 +12,7 @@ export DB_PW=""
 export DB_USER="root"
 export TABLE_PREFIX="forum_"
 export IMPORT_AFTER="1970-01-01"
-export IMAGE_BASE="http://www.example.com/forum/"
+export IMAGE_BASE="http://www.example.com/forum"
 export BASE="forum"
 =end
 
@@ -151,8 +151,6 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
                                WHERE time > '#{IMPORT_AFTER}'
                                AND pid = 0;").first['count']
 
-    print_warning ("IMPORT_AFTER: #{IMPORT_AFTER}, COUNT: #{total_count}")
-
     batches(BATCH_SIZE) do |offset|
       discussions = mysql_query(
         "SELECT id as DiscussionID,
@@ -178,7 +176,7 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
         {
           id: "discussion#" + discussion['DiscussionID'].to_s,
           user_id: user_id_from_imported_user_id(discussion['InsertUserID']) || Discourse::SYSTEM_USER_ID,
-          title: discussion['Name'],
+          title: discussion['Name'].gsub('\\"','"'),
           category: category_id_from_imported_category_id(discussion['CategoryID']),
           raw: raw,
           created_at: Time.zone.at(discussion['DateInserted']),
@@ -190,7 +188,11 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
   def import_posts
     puts "", "importing posts..."
 
-    total_count = mysql_query("SELECT count(*) count FROM #{TABLE_PREFIX}entries WHERE pid > 0 AND time > '{IMPORT_AFTER}';").first['count']
+    total_count = mysql_query(
+      "SELECT count(*) count
+       FROM #{TABLE_PREFIX}entries
+       WHERE pid > 0
+       AND time > '#{IMPORT_AFTER}';").first['count']
 
     batches(BATCH_SIZE) do |offset|
       comments = mysql_query(
@@ -234,6 +236,7 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
 
     # don't \ quotes
     raw = raw.gsub('\\"','"')
+    raw = raw.gsub("\\'","'")
 
     raw = raw.gsub(/\[b\]/i, "<strong>")
     raw = raw.gsub(/\[\/b\]/i, "</strong>")
@@ -244,27 +247,28 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
     raw = raw.gsub(/\[u\]/i, "<em>")
     raw = raw.gsub(/\[\/u\]/i, "</em>")
 
-    raw = raw.gsub(/\[url\](\S+)\[\/url\]/i) { "#{$1}"}
-    raw = raw.gsub(/\[link\](\S+)\[\/link\]/i) { "#{$1}"}
+    raw = raw.gsub(/\[url\](\S+)\[\/url\]/im) { "#{$1}"}
+    raw = raw.gsub(/\[link\](\S+)\[\/link\]/im) { "#{$1}"}
 
     # URL & LINK with text
-    raw = raw.gsub(/\[url=(\S+?)\](.*?)\[\/url\]/i) { "<a href=\"#{$1}\">#{$2}</a>"}
-    raw = raw.gsub(/\[link=(\S+?)\](.*?)\[\/link\]/i) { "<a href=\"#{$1}\">#{$2}</a>"}
+    raw = raw.gsub(/\[url=(\S+?)\](.*?)\[\/url\]/im) { "<a href=\"#{$1}\">#{$2}</a>"}
+    raw = raw.gsub(/\[link=(\S+?)\](.*?)\[\/link\]/im) { "<a href=\"#{$1}\">#{$2}</a>"}
 
     # remote images
-    raw = raw.gsub(/\[img\](https?:.+?)\[\/img\]/i) { "<img src=\"#{$1}\">" }
-    raw = raw.gsub(/\[img=(https?.+?)\](.+?)\[\/img\]/i) { "<img src=\"#{$1}\" alt=\"#{$2}\">" }
+    raw = raw.gsub(/\[img\](https?:.+?)\[\/img\]/im) { "<img src=\"#{$1}\">" }
+    raw = raw.gsub(/\[img=(https?.+?)\](.+?)\[\/img\]/im) { "<img src=\"#{$1}\" alt=\"#{$2}\">" }
     # local images
-    raw = raw.gsub(/\[img\](.+?)\[\/img\]/i) { "<img src=\"#{IMAGE_BASE}#{$1}\">" }
-    raw = raw.gsub(/\[img=(.+?)\](https?.+?)\[\/img\]/i) { "<img src=\"#{IMAGE_BASE}#{$1}\" alt=\"#{$2}\">" }
+    raw = raw.gsub(/\[img\](.+?)\[\/img\]/i) { "<img src=\"#{IMAGE_BASE}/#{$1}\">" }
+    raw = raw.gsub(/\[img=(.+?)\](https?.+?)\[\/img\]/im) { "<img src=\"#{IMAGE_BASE}/#{$1}\" alt=\"#{$2}\">" }
 
     # Convert image bbcode
-    raw.gsub!(/\[img=(\d+),(\d+)\]([^\]]*)\[\/img\]/i, '<img width="\1" height="\2" src="\3">')
+    raw.gsub!(/\[img=(\d+),(\d+)\]([^\]]*)\[\/img\]/im, '<img width="\1" height="\2" src="\3">')
 
     # CODE (not tested)
-    raw = raw.gsub(/\[code\](\S+)\[\/code\]/i) { "```\n#{$1}\n```"}
-    raw = raw.gsub(/\[pre\](\S+)\[\/pre\]/i) { "```\n#{$1}\n```"}
+    raw = raw.gsub(/\[code\](\S+)\[\/code\]/im) { "```\n#{$1}\n```"}
+    raw = raw.gsub(/\[pre\](\S+)\[\/pre\]/im) { "```\n#{$1}\n```"}
 
+    raw = raw.gsub(/(https:\/\/youtu\S+?)/) { "\n#{$1}\n" } #youtube links on line by themselves
 
     ### FROM VANILLA:
 
@@ -306,6 +310,7 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
   def create_permalinks
     puts '', 'Creating redirects...', ''
 
+    puts '', 'Users...', ''
     User.find_each do |u|
       ucf = u.custom_fields
       if ucf && ucf["import_id"] && ucf["import_username"]
@@ -314,15 +319,29 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
       end
     end
 
-    Topic.find_each do |topic|
-      id = topic_lookup_from_imported_post_id(topic.id)
-      Permalink.create( url: "#{BASE}/forum_entry-id-#{id}", topic_id: topic.id ) rescue nil
+    puts '', 'Posts...', ''
+    Post.find_each do |post|
+      pcf = post.custom_fields
+      if pcf && pcf["import_id"]
+        topic = post.topic
+        id = pcf["import_id"].split('#').last
+        if post.post_number == 1
+          Permalink.create( url: "#{BASE}forum_entry-id-#{id}.html", topic_id: topic.id ) rescue nil
+          print_warning("forum_entry-id-#{id}.html --> http://localhost:3000/t/#{topic.id}")
+        else
+          Permalink.create( url: "#{BASE}forum_entry-id-#{id}.html", post_id: post.id ) rescue nil
+          print_warning("forum_entry-id-#{id}.html --> http://localhost:3000/t/#{topic.id}/#{post.id}")
+        end
         print '.'
+      end
     end
 
+    puts '', 'Categories...', ''
     Category.find_each do |cat|
-      id = category_id_from_imported_category_id(cat.id)
-      Permalink.create( url: "#{BASE}/forum_category--#{id}.html", category_id: cat.id ) rescue nil
+      ccf = cat.custom_fields
+      next unless id = ccf["import_id"]
+      print_warning("forum-category-#{id}.html --> /t/#{cat.id}")
+      Permalink.create( url: "#{BASE}/forum-category-#{id}.html", category_id: cat.id ) rescue nil
       print '.'
     end
   end
