@@ -12,23 +12,29 @@ export DB_PW=""
 export DB_USER="root"
 export TABLE_PREFIX="forum_"
 export IMPORT_AFTER="1970-01-01"
+export IMAGE_BASE="http://www.example.com/forum/"
+export BASE="forum/"
 =end
 
 
 class ImportScripts::MylittleforumSQL < ImportScripts::Base
 
   DB_HOST ||= ENV['DB_HOST'] || "localhost"
-  DB_NAME ||= ENV['DB_name'] || "mylittleforum"
+  DB_NAME ||= ENV['DB_NAME'] || "mylittleforum"
   DB_PW ||= ENV['DB_PW'] || ""
   DB_USER ||= ENV['DB_USER'] || "root"
-  TABLE_PREFIX ||= ENV['TABLE_PREFIX'] = "forum_"
-  IMPORT_AFTER ||= ENV['IMPORT_AFTER'] = "1970-01-01"
-
+  TABLE_PREFIX ||= ENV['TABLE_PREFIX'] || "forum_"
+  IMPORT_AFTER ||= ENV['IMPORT_AFTER'] || "1970-01-01"
+  IMAGE_BASE ||= ENV['IMAGE_BASE'] || ""
+  BASE ||= ENV['BASE'] || "forum/"
   BATCH_SIZE = 1000
   CONVERT_HTML = true
 
 
   def initialize
+
+    print_warning("Importing data after #{IMPORT_AFTER}")
+
     super
     @htmlentities = HTMLEntities.new
     @client = Mysql2::Client.new(
@@ -41,7 +47,6 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
 
   def execute
     import_users
-    import_avatars
     import_categories
     import_topics
     import_posts
@@ -75,7 +80,7 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
                 user_type
              FROM #{TABLE_PREFIX}userdata
 		 WHERE last_login > '#{IMPORT_AFTER}'
-                 order by UserID ASC;
+                 order by UserID ASC
                  LIMIT #{BATCH_SIZE}
                  OFFSET #{offset};")
 
@@ -94,7 +99,7 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
           email: user['Email'],
           username: username,
           name: user['Name'],
-          created_at: user['DateInserted'] == nil ? 0 : Time.parse(user['DateInserted']),
+          created_at: user['DateInserted'] == nil ? 0 : Time.zone.at(user['DateInserted']),
           bio_raw: user['bio_raw'],
           registration_ip_address: user['InsertIPAddress'],
           website: user['user_hp'],
@@ -142,7 +147,11 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
   def import_topics
     puts "", "importing topics..."
 
-    total_count = mysql_query("SELECT count(*) count FROM #{TABLE_PREFIX}entries where time > '{IMPORT_AFTER} and pid = 0';").first['count']
+    total_count = mysql_query("SELECT count(*) count FROM #{TABLE_PREFIX}entries
+                               WHERE time > '{IMPORT_AFTER}'
+                               AND pid = 0;").first['count']
+
+    print_warning ("IMPORT_AFTER: #{IMPORT_AFTER}, COUNT: #{total_count}")
 
     batches(BATCH_SIZE) do |offset|
       discussions = mysql_query(
@@ -163,16 +172,16 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
       break if discussions.size < 1
       next if all_records_exist? :posts, discussions.map {|t| "discussion#" + t['DiscussionID'].to_s}
 
-      youtube = discussion['youtube'].gsub(/.*(https?:\/\/\S+)\\".*/i) { "#{$1}"}
-      raw = clean_up(discussion['Body'] + "\n#{youtube}\n")
       create_posts(discussions, total: total_count, offset: offset) do |discussion|
+        youtube = discussion['youtube'].to_s.gsub(/.*(https?:\/\/\S+)\\".*/i) { "#{$1}"}
+        raw = clean_up(discussion['Body'] + "\n#{youtube}\n")
         {
           id: "discussion#" + discussion['DiscussionID'].to_s,
           user_id: user_id_from_imported_user_id(discussion['InsertUserID']) || Discourse::SYSTEM_USER_ID,
           title: discussion['Name'],
           category: category_id_from_imported_category_id(discussion['CategoryID']),
           raw: raw,
-          created_at: Time.parse(discussion['DateInserted']),
+          created_at: Time.zone.at(discussion['DateInserted']),
         }
       end
     end
@@ -181,12 +190,12 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
   def import_posts
     puts "", "importing posts..."
 
-    total_count = mysql_query("SELECT count(*) count FROM #{TABLE_PREFIX}Comment;").first['count']
+    total_count = mysql_query("SELECT count(*) count FROM #{TABLE_PREFIX}entries WHERE pid > 0 AND time > '{IMPORT_AFTER}';").first['count']
 
     batches(BATCH_SIZE) do |offset|
       comments = mysql_query(
-        "SELECT id as CommentID
-                pid as DiscussionID
+        "SELECT id as CommentID,
+                pid as DiscussionID,
                 text as Body,
                 time as DateInserted,
                 youtube_link as youtube,
@@ -201,18 +210,17 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
       break if comments.size < 1
       next if all_records_exist? :posts, comments.map {|comment| "comment#" + comment['CommentID'].to_s}
 
-      youtube = discussion['youtube'].gsub(/.*(https?:\/\/\S+)\\".*/i) { "#{$1}"}
-      raw = clean_up(discussion['Body'] + "\n#{youtube}\n")
-
       create_posts(comments, total: total_count, offset: offset) do |comment|
         next unless t = topic_lookup_from_imported_post_id("discussion#" + comment['DiscussionID'].to_s)
         next if comment['Body'].blank?
+        youtube = comment['youtube'].to_s.gsub(/.*(https?:\/\/\S+)\\".*/i) { "#{$1}"}
+        raw = clean_up(comment['Body'] + "\n#{youtube}\n")
         {
           id: "comment#" + comment['CommentID'].to_s,
           user_id: user_id_from_imported_user_id(comment['InsertUserID']) || Discourse::SYSTEM_USER_ID,
           topic_id: t[:topic_id],
           raw: clean_up(raw),
-          created_at: Time.parse(comment['DateInserted'])
+          created_at: Time.zone.at(comment['DateInserted'])
         }
       end
     end
@@ -243,9 +251,13 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
     raw = raw.gsub(/\[url=(\S+?)\](.*?)\[\/url\]/i) { "<a href=\"#{$1}\">#{$2}</a>"}
     raw = raw.gsub(/\[link=(\S+?)\](.*?)\[\/link\]/i) { "<a href=\"#{$1}\">#{$2}</a>"}
 
-    # images
-    raw = raw.gsub(/\[img\](.+?)\[\/img\]/i) { "<img src=\"#{$1}\">" }
-    raw = raw.gsub(/\[img=(.+?)\](.+?)\[\/img\]/i) { "<img src=\"#{$1}\" alt=\"#{$2}\">" }
+    # remote images
+    raw = raw.gsub(/\[img\](https?:.+?)\[\/img\]/i) { "<img src=\"#{$1}\">" }
+    raw = raw.gsub(/\[img=(https?.+?)\](.+?)\[\/img\]/i) { "<img src=\"#{$1}\" alt=\"#{$2}\">" }
+    # local images
+    raw = raw.gsub(/\[img\](.+?)\[\/img\]/i) { "<img src=\"#{IMAGE_BASE}#{$1}\">" }
+    raw = raw.gsub(/\[img=(.+?)\](https?.+?)\[\/img\]/i) { "<img src=\"#{IMAGE_BASE}#{$1}\" alt=\"#{$2}\">" }
+
     # Convert image bbcode
     raw.gsub!(/\[img=(\d+),(\d+)\]([^\]]*)\[\/img\]/i, '<img width="\1" height="\2" src="\3">')
 
@@ -297,26 +309,33 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
     User.find_each do |u|
       ucf = u.custom_fields
       if ucf && ucf["import_id"] && ucf["import_username"]
-        Permalink.create( url: "profile/#{ucf['import_id']}/#{ucf['import_username']}", external_url: "/users/#{u.username}" ) rescue nil
+        Permalink.create( url: "#{BASE}/user-id-#{ucf['import_id']}.html", external_url: "/users/#{u.username}" ) rescue nil
         print '.'
       end
     end
 
-    Post.find_each do |post|
-      pcf = post.custom_fields
-      if pcf && pcf["import_id"]
-        topic = post.topic
-        id = pcf["import_id"].split('#').last
-        if post.post_number == 1
-          slug = Slug.for(topic.title) # probably matches what mylittleforum would do...
-          Permalink.create( url: "discussion/#{id}/#{slug}", topic_id: topic.id ) rescue nil
-        else
-          Permalink.create( url: "discussion/comment/#{id}", post_id: post.id ) rescue nil
-        end
+    Topic.find_each do |post|
+      topic = post.topic
+      id = pcf["import_id"].split('#').last
+      Permalink.create( url: "#{BASE}/forum_entry-id-#{id}", topic_id: topic.id ) rescue nil
         print '.'
       end
     end
+
+    Category.find_each do |cat|
+      id = category_id_from_imported_category_id(cat[:id])
+      Permalink.create( url: "#{BASE}/forum_category--#{id}.html", category_id: id ) rescue nil
+      print '.'
+      end
+    end
+
   end
+
+  def print_warning(message)
+    $stderr.puts "#{message}"
+  end
+
+
 
 end
 
