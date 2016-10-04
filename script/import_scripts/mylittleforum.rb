@@ -268,7 +268,7 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
     raw = raw.gsub(/\[code\](\S+)\[\/code\]/im) { "```\n#{$1}\n```"}
     raw = raw.gsub(/\[pre\](\S+)\[\/pre\]/im) { "```\n#{$1}\n```"}
 
-    raw = raw.gsub(/(https:\/\/youtu\S+?)/) { "\n#{$1}\n" } #youtube links on line by themselves
+    raw = raw.gsub(/(https:\/\/youtu\S+)/) { "\n#{$1}\n" } #youtube links on line by themselves
 
     ### FROM VANILLA:
 
@@ -326,10 +326,10 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
         topic = post.topic
         id = pcf["import_id"].split('#').last
         if post.post_number == 1
-          Permalink.create( url: "#{BASE}forum_entry-id-#{id}.html", topic_id: topic.id ) rescue nil
+          Permalink.create( url: "#{BASE}/forum_entry-id-#{id}.html", topic_id: topic.id ) rescue nil
           print_warning("forum_entry-id-#{id}.html --> http://localhost:3000/t/#{topic.id}")
         else
-          Permalink.create( url: "#{BASE}forum_entry-id-#{id}.html", post_id: post.id ) rescue nil
+          Permalink.create( url: "#{BASE}/forum_entry-id-#{id}.html", post_id: post.id ) rescue nil
           print_warning("forum_entry-id-#{id}.html --> http://localhost:3000/t/#{topic.id}/#{post.id}")
         end
         print '.'
