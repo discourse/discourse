@@ -38,7 +38,7 @@ export default ComboboxView.extend({
 
   @computed("rootNone")
   none(rootNone) {
-    if (Discourse.SiteSettings.allow_uncategorized_topics) {
+    if (Discourse.SiteSettings.allow_uncategorized_topics || this.get('allowUncategorized')) {
       if (rootNone) {
         return "category.none";
       } else {
