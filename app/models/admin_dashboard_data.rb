@@ -94,10 +94,8 @@ class AdminDashboardData
                       :ram_check, :google_oauth2_config_check,
                       :facebook_config_check, :twitter_config_check,
                       :github_config_check, :s3_config_check, :image_magick_check,
-                      :failing_emails_check, :default_logo_check, :contact_email_check,
-                      :send_consumer_email_check, :title_check,
-                      :site_description_check, :site_contact_username_check,
-                      :notification_email_check, :subfolder_ends_in_slash_check,
+                      :failing_emails_check, :send_consumer_email_check,
+                      :subfolder_ends_in_slash_check,
                       :pop3_polling_configuration, :email_polling_errored_recently
 
     add_problem_check do
@@ -216,37 +214,8 @@ class AdminDashboardData
     I18n.t('dashboard.failing_emails_warning', num_failed_jobs: num_failed_jobs) if num_failed_jobs > 0
   end
 
-  def default_logo_check
-    if SiteSetting.logo_url =~ /#{SiteSetting.defaults[:logo_url].split('/').last}/ or
-        SiteSetting.logo_small_url =~ /#{SiteSetting.defaults[:logo_small_url].split('/').last}/ or
-        SiteSetting.favicon_url =~ /#{SiteSetting.defaults[:favicon_url].split('/').last}/
-      I18n.t('dashboard.default_logo_warning')
-    end
-  end
-
-  def contact_email_check
-    return I18n.t('dashboard.contact_email_missing') if !SiteSetting.contact_email.present?
-    return I18n.t('dashboard.contact_email_invalid') if !(SiteSetting.contact_email =~ User::EMAIL)
-  end
-
-  def title_check
-    I18n.t('dashboard.title_nag') if SiteSetting.title == SiteSetting.defaults[:title]
-  end
-
-  def site_description_check
-    I18n.t('dashboard.site_description_missing') if !SiteSetting.site_description.present?
-  end
-
   def send_consumer_email_check
     I18n.t('dashboard.consumer_email_warning') if Rails.env.production? and ActionMailer::Base.smtp_settings[:address] =~ /gmail\.com|live\.com|yahoo\.com/
-  end
-
-  def site_contact_username_check
-    I18n.t('dashboard.site_contact_username_warning') if !SiteSetting.site_contact_username.present? || SiteSetting.site_contact_username == SiteSetting.defaults[:site_contact_username]
-  end
-
-  def notification_email_check
-    I18n.t('dashboard.notification_email_warning') if !SiteSetting.notification_email.present? || SiteSetting.notification_email == SiteSetting.defaults[:notification_email]
   end
 
   def subfolder_ends_in_slash_check
