@@ -79,7 +79,8 @@ export default Ember.Controller.extend(CanCheckEmails, {
   mailingListModeOptions() {
     return [
       {name: I18n.t('user.mailing_list_mode.daily'), value: 0},
-      {name: this.get('frequencyEstimate'), value: 1}
+      {name: this.get('frequencyEstimate'), value: 1},
+      {name: I18n.t('user.mailing_list_mode.individual_no_echo'), value: 2}
     ];
   },
 

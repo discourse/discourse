@@ -2614,6 +2614,7 @@ en:
     message_to_blank: "message.to is blank"
     text_part_body_blank: "text_part.body is blank"
     body_blank: "body is blank"
+    no_echo_mailing_list_mode: "Mailing list notifications disabled for user's own posts"
 
   color_schemes:
     base_theme_name: "Base"

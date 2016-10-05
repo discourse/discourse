@@ -47,12 +47,40 @@ describe Jobs::NotifyMailingListSubscribers do
       end
     end
 
-    context "with a valid post" do
+    context "with a valid post authored by same user" do
       let!(:post) { Fabricate(:post, user: user) }
+
+      it "doesn't send the email to the user if the frequency is set to 'always with no echo'" do
+        user.user_option.update(mailing_list_mode: true, mailing_list_mode_frequency: 2)
+        UserNotifications.expects(:mailing_list_notify).never
+        Jobs::NotifyMailingListSubscribers.new.execute(post_id: post.id)
+      end
 
       it "sends the email to the user if the frequency is set to 'always'" do
         user.user_option.update(mailing_list_mode: true, mailing_list_mode_frequency: 1)
         UserNotifications.expects(:mailing_list_notify).with(user, post).once
+        Jobs::NotifyMailingListSubscribers.new.execute(post_id: post.id)
+      end
+
+      it "does not send the email to the user if the frequency is set to 'daily'" do
+        user.user_option.update(mailing_list_mode: true, mailing_list_mode_frequency: 0)
+        UserNotifications.expects(:mailing_list_notify).never
+        Jobs::NotifyMailingListSubscribers.new.execute(post_id: post.id)
+      end
+    end
+
+    context "with a valid post created by someone other than the user" do
+      let!(:post) { Fabricate(:post, user: user, user_id: 'different') }
+
+      it "sends the email to the user if the frequency is set to 'always with no echo'" do
+        user.user_option.update(mailing_list_mode: true, mailing_list_mode_frequency: 2)
+        UserNotifications.expects(:mailing_list_notify).once
+        Jobs::NotifyMailingListSubscribers.new.execute(post_id: post.id)
+      end
+
+      it "sends the email to the user if the frequency is set to 'always'" do
+        user.user_option.update(mailing_list_mode: true, mailing_list_mode_frequency: 1)
+        UserNotifications.expects(:mailing_list_notify).once
         Jobs::NotifyMailingListSubscribers.new.execute(post_id: post.id)
       end
 
