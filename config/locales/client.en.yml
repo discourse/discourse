@@ -535,6 +535,7 @@ en:
           Muted topics and categories are not included in these emails.
         daily: "Send daily updates"
         individual: "Send an email for every new post"
+        individual_no_echo: "Send an email for every new post except my own"
         many_per_day: "Send me an email for every new post (about {{dailyEmailEstimate}} per day)"
         few_per_day: "Send me an email for every new post (about 2 per day)"
       tag_settings: "Tags"
