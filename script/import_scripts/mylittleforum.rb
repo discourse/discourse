@@ -177,8 +177,7 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
       create_posts(discussions, total: total_count, offset: offset) do |discussion|
 
         unless discussion['youtube'].blank?
-          youtube = discussion['youtube'].dup.to_s.gsub( /.+?(https?:\/\/\S+)".+/i) { "#{$1}" }
-          print_warning("\nYoutube: (#{discussion['Name']})#{discussion['youtube'].to_s} --> Link: #{youtube}")
+          youtube =
         end
 
         raw = clean_up(discussion['Body'] + "\n#{youtube}\n")
@@ -240,8 +239,13 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
     end
   end
 
-  def clean_youtube(youtube)
-
+  def clean_youtube(youtube_raw)
+    youtube_cooked = clean_up(youtube_raw.dup.to_s)
+    # get just src from <iframe> and put on a line by itself
+    re = /<iframe.+?src="(\S+?)".+?<\/iframe>/mix
+    youtube_cooked.gsub!(re) {"\n#{$1}\n"}
+      .gsub!(/^\/\//, "https://") # make sure it has a protocol
+    print_warning("\nYoutube: (#{youtube_raw}) --> \nLink: #{youtube_cooked}")
   end
 
   def clean_up(raw)
