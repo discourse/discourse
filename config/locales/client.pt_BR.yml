@@ -399,6 +399,9 @@ pt_BR:
       latest_by: "recentes por"
       toggle_ordering: "alternar controle de ordenação"
       subcategories: "Subcategorias"
+      topic_sentence:
+        one: "1 tópico"
+        other: "%{count} tópicos"
       topic_stat_sentence:
         one: "%{count} novo tópico nos últimos %{unit}."
         other: "%{count} novos tópicos nos últimos %{unit}."

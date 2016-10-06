@@ -46,6 +46,7 @@ sq:
   errors: &errors
     format: '%{attribute} %{message}'
     messages:
+      too_long_validation: "ka limit maksimumi %{max} shkronja; ju vendosët %{length}."
       invalid_boolean: "Boolean jo i vlefshëm."
       taken: "është i marrë"
       accepted: duhet të pranohet
@@ -53,6 +54,7 @@ sq:
       present: mund të lihet bosh
       confirmation: "nuk përputhet %{attribute}"
       empty: nuk mund të lihet bosh
+      equal_to: duhet të jetë baraz me %{count}
       exclusion: është i rezervuar
       invalid: është i pavlefshëm
       not_a_number: nuk është një numër
@@ -219,6 +221,7 @@ sq:
       uncategorized_parent: "Uncategorized can't have a parent category"
       self_parent: "A subcategory's parent cannot be itself"
       depth: "You can't nest a subcategory under another"
+      invalid_email_in: "'%{email}' nuk është një adresë e vlefshme emaili."
     cannot_delete:
       uncategorized: "Nuk fshij dot kategorinë \"Uncategorized\""
       has_subcategories: "Nuk e fshini dot këtë kategori sepse ajo ka nënkategori. "
@@ -238,6 +241,15 @@ sq:
     leader:
       title: "udhëheqës"
   rate_limiter:
+    slow_down: "E keni bërë këtë veprim shumë shpesh, prisni pak e provoni më vonë. "
+    too_many_requests: "Sistemi ka një limit për sa herë ai veprim mund të kryhet në një ditë. Prisni %{time_left} para se të provoni përsëri. "
+    by_type:
+      first_day_replies_per_day: "Keni arritur maksimumin e përgjigjeve që një përdorues i ri mund të postojë në ditën e parë. Prisni %{time_left} dhe provoni përsëri."
+      first_day_topics_per_day: "Keni postuar maksimumin e temave që një anëtar i ri mund të krijojë në ditën e parë. Prisni %{time_left} para se të provoni përsëri. "
+      create_topic: "Po nxitoheni shumë për të krijuar tema të reja. Prisni %{time_left} dhe provoni përsëri."
+      create_post: "Po përgjigjeni shumë shpejt. Prisni %{time_left} dhe provoni përsëri."
+      delete_post: "Po fshini postimet shumë shpejt. Prisni %{time_left} dhe provoni përsëri."
+      topics_per_day: "Keni arritur maksimumin e temave të reja për sot. Prisni %{time_left} dhe provoni përsëri."
     hours:
       one: "1 orë"
       other: "%{count} orë"
@@ -309,6 +321,15 @@ sq:
       x_months:
         one: "1 muaj më parë"
         other: "%{count} muaj më parë"
+      about_x_years:
+        one: "rreth 1 vit më parë"
+        other: "rreth %{count} vjet më parë"
+      over_x_years:
+        one: "mbi 1 vit më parë"
+        other: "mbi %{count} vite më parë"
+      almost_x_years:
+        one: "pothuajse 1 vit më parë"
+        other: "pothuajse %{count} vite më parë"
   password_reset:
     no_token: "Ndjesë, kjo lidhje për ndryshimin e fjalëkalimit është shumë e vjetër. Kliko butonin 'Identifikohu' dhe përdorni 'Kam harruar fjalëkalimin' për të marrë një lidhje të re."
     choose_new: "Zgjidhni një fjalëkalim të ri"
@@ -323,6 +344,8 @@ sq:
     confirmed: "Adresa e postës u azhornua."
     please_continue: "Vazhdo tek %{site_name}"
     error: "Hasëm një gabim gjatë ndryshimit të adresës email. Mos vallë është në përdorim nga një llogari tjetër në faqe?"
+    authorizing_old:
+      title: "Ju falënderojmë për konfirmimin e adresës tuaj email"
   activation:
     action: "Klikoni këtu për të aktivizuar llogarinë tuaj"
     please_continue: "Llogaria juaj e re u konfirumua; ju po ridrejtoheni për tek faqja kryesore."
@@ -390,6 +413,15 @@ sq:
       message:
         make: "Kjo temë është tani banderolë. Do të shfaqet në majë të gjithë faqes derisa përdoruesi t'a heqë vetë. "
         remove: "Kjo temë nuk është më banderolë. Nuk do të shfaqet më në majë të çdo faqeje të sitit. "
+  unsubscribed:
+    title: "U çregjistruat!"
+    description: "U çregjistruat. Për të ndryshuar rregullimet e email-it <a href='%{url}'> shkoni tek preferencat e përdoruesit</a>."
+    topic_description: "Për t'u ri-abonuar tek %{link}, përdorni kontrollin e njoftimeve në fund apo në të djathtë të temës."
+  unsubscribe:
+    title: "Çregjistrohuni"
+    stop_watching_topic: "Ndaloni së ndjekuri këtë temë, %{link}"
+    unwatch_category: "Ndaloni së ndjekuri të gjitha temat në %{category}"
+    all: "Mos më dërgoni më email nga %{sitename}"
   reports:
     visits:
       title: "Vizitat e përdoruesit"
@@ -599,6 +631,7 @@ sq:
     anon_polling_interval: "How often should anonymous clients poll in milliseconds"
     background_polling_interval: "How often should the clients poll in milliseconds (when the window is in the background)"
     cooldown_minutes_after_hiding_posts: "Number of minutes a user must wait before they can edit a post hidden via community flagging"
+    max_replies_in_first_day: "Numri maksimal i përgjigjeve që një përdorues ka të drejtë të krijojë në periudhën 24-orëshe pas postimit të tij të parë"
     tl2_additional_likes_per_day_multiplier: "Increase limit of likes per day for tl2 (member) by multiplying with this number"
     tl3_additional_likes_per_day_multiplier: "Increase limit of likes per day for tl3 (regular) by multiplying with this number"
     tl4_additional_likes_per_day_multiplier: "Increase limit of likes per day for tl4 (leader) by multiplying with this number"
@@ -1168,12 +1201,12 @@ sq:
     previous_discussion: "Përgjigjet e mëparshme"
     in_reply_to: "Në Përgjigje Të"
     unsubscribe:
-      title: "Anullo abonimin"
-      description: "Nuk të interesojnë këto emaila? S'ka problem! Kliko më poshtë për të anulluar abonimin:"
+      title: "Çregjistrohuni"
+      description: "Nuk të interesojnë këto emaila? S'ka problem! Kliko më poshtë për të anuluar abonimin:"
     reply_by_email: "[Shiko Temën](%{base_url}%{url}) ose përgjigjju këtij email-i për të postuar."
     reply_by_email_pm: "[Shiko Mesazhin](%{base_url}%{url}) ose përgjigjju këtij email-i për të vazhduar bisedën."
     only_reply_by_email: "Përgjigjju këtij email-i për të vazhduar."
-    visit_link_to_respond: "[Shiko Temën](%{base_url}%/{url}) për tu përgjigjur."
+    visit_link_to_respond: "[Shiko Temën](%{base_url}%{url}) për tu përgjigjur."
     visit_link_to_respond_pm: "[Shiko Mesazhin](%{base_url}%/{url}) për tu përgjigjur."
     posted_by: "Postuar nga %{username} më %{post_date}"
     invited_to_topic_body: |
@@ -1671,6 +1704,34 @@ sq:
       Originally adapted from the [WordPress Terms of Service](http://en.wordpress.com/tos/).
   privacy_topic:
     title: "Politika e Privatësisë"
+  static:
+    search_help: |
+      <h3>Ca sugjerime</h3>
+      <p>
+      <ul>
+      <li>Titujt kanë prioritet</li>
+      <li>Kur jeni brenda një kategorie, teme apo etikete, mund të kërkoni temat e atij konteksti</li>
+      </ul>
+      </p>
+      <h3>Opsionet</h3>
+      <p>
+      <table>
+      <tr><td><code>order:views</code></td><td><code>order:latest</code></td><td><code>order:likes</code></td><td><code>@username</code></td><td><code>user:foo</code></td></tr>
+      <tr><td><code>status:open</code></td><td><code>status:closed</code></td><td><code>status:archived</code></td><td><code>status:noreplies</code></td><td><code>status:single_user</code></td></tr>
+      <tr><td><code>#category-slug</code></td><td><code>category:foo</code></td><td><code>group:foo</code></td><td><code>badge:foo</code></td><td></td></tr>
+      <tr><td><code>in:likes</code></td><td><code>in:posted</code></td><td><code>in:watching</code></td><td><code>in:tracking</code></td><td><code>in:private</code></td></tr>
+      <tr><td><code>in:bookmarks</code></td><td><code>in:first</code></td><td><code>in:pinned</code></td><td><code>in:unpinned</code></td><td><code>in:wiki</code></td></tr>
+      <tr><td><code>posts_count:num</code></td><td><code>before:days or date</code></td><td><code>after:days or date</code></td><td><code>tags:one,two</code></td><td></td></tr>
+      </table>
+      </p>
+      <h3>Ca shembuj</h3>
+      <p>
+      <ul>
+      <li><code>rainbows #parks</code> do kërkojë fjalën "rainbows" në kategorinë "parks".</li>
+      <li><code>rainbows category:parks status:open order:latest</code> do kërkojë për tema me fjalën "rainbows" në kategorinë "parks" që nuk janë mbyllur apo arkivuar, renditur sipas datës së përgjigjes së fundit.</li>
+      <li><code>rainbows category:"parks and gardens" in:bookmarks</code> do kërkojë për tema me fjalën "rainbows" në kategorinë "parks and gardens" që ju keni shtuar tek të preferuarat.</li>
+      </ul>
+      </p>
   badges:
     editor:
       name: Redaktor
@@ -1896,6 +1957,10 @@ sq:
   performance_report:
     initial_post_raw: This topic includes daily performance reports for your site.
     initial_topic_title: Raportet e performancës se faqes
+  wizard:
+    step:
+      emoji:
+        title: "Emoji"
   activemodel:
     errors:
       <<: *errors

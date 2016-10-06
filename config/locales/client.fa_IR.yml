@@ -1664,6 +1664,19 @@ fa_IR:
         info_html: "موضوعات تازه پس از آخرین بازدید شما"
         all_users: "همه کاربران"
         note_html: "این کلید را <strong>امن</strong> نگهدارید، تمام  کاربرانی که آن را دارند می توانند نوشته های دلخواه بسازند به عنوان هر کاربری"
+      web_hooks:
+        active: "فعال"
+        delivery_status:
+          failed: "ناموفق"
+          successful: "موفق"
+        events:
+          request: "درخواست"
+          response: "پاسخ"
+          body: "بدنه"
+          go_list: "برو به لیست"
+          event_id: "آی دی"
+          timestamp: "ساخته شده"
+          actions: "کار ها"
       plugins:
         title: "افزونه ها"
         installed: "افزونه های نصب شده"
@@ -1715,6 +1728,7 @@ fa_IR:
             is_disabled: "بازگردانی در تنظیمات سایت از کار انداخته شده است."
             label: "بازیابی"
             title: "بازیابی  پشتیبان"
+            confirm: "آیا از بازگردانی این پشتیبان مطمئن هستید ؟"
           rollback:
             label: "عقبگرد"
             title: "عقب گرد پایگاه داده به حالت کار قبلی"
@@ -1821,13 +1835,17 @@ fa_IR:
             name: 'دوست داشتن'
             description: "رنگ دکمه های لایک"
       email:
+        title: "رایانامه ها "
         settings: "تنظیمات"
+        templates: "قالب ها"
         preview_digest: "پیشنمایش خلاصه"
         sending_test: "فرستادن ایمیل آزمایشی..."
         error: "<b>خطا</b> - %{server_error}"
         test_error: "در ارسال ایمیل آزمایشی مشکلی وجود داشته است. لطفاً مجدداً تنظیمات ایمیل خود را بررسی کنید، از این که هاستتان اتصالات ایمیل را مسدود نکرده اطمینان حاصل کرده و مجدداً تلاش کنید."
         sent: "فرستاده شده"
         skipped: "رد داده شده"
+        received: "دریافت شده"
+        rejected: "رد شده"
         sent_at: "ارسال شده در"
         time: "زمان"
         user: "کاربر"
@@ -1845,6 +1863,8 @@ fa_IR:
         last_seen_user: "آخرین مشاهده کاربر :"
         reply_key: "کلید پاسخ"
         skipped_reason: "رد دادن دلیل"
+        incoming_emails:
+          from_address: "از طرف"
         logs:
           none: "هیچ آماری یافت نشد."
           filters:

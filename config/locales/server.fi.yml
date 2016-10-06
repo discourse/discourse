@@ -19,6 +19,10 @@ fi:
   date:
     month_names: [null, Tammikuu, Helmikuu, Maaliskuu, Huhtikuu, Toukokuu, Kesäkuu, Heinäkuu, Elokuu, Syyskuu, Lokakuu, Marraskuu, Joulukuu]
     <<: *datetime_formats
+  time:
+    am: "am"
+    pm: "pm"
+    <<: *datetime_formats
   title: "Discourse"
   topics: "Ketjut"
   posts: "viestit"
@@ -2534,8 +2538,118 @@ fi:
     staff_tag_disallowed: "Tunnisteen \"%{tag}\" voi lisätä vain henkilökunta"
     staff_tag_remove_disallowed: "Tunnisteen \"%{tag}\" voi poistaa vain henkilökunta"
   rss_by_tag: "Ketjut tunnisteella %{tag}"
-  time:
-    <<: *datetime_formats
+  wizard:
+    title: "Discoursen asennus"
+    step:
+      locale:
+        title: "Tervetuloa Discourseesi!"
+        fields:
+          default_locale:
+            description: "Mikä on yhteisösi oletuskieli?"
+      forum_title:
+        title: "Nimi"
+        description: "Nimi on merkiitävä asia, sillä se on <i>ensimmäinen</i>asia  jonka potentiaalinen vierailija saa tietää yhteisöstäsi. Mitä valitsemasi nimi kertoo yhteisöstä?"
+        fields:
+          title:
+            label: "Yhteisösi nimi"
+            placeholder: "Jennin mesta"
+          site_description:
+            label: "Kuvaile yhteisöä yhdellä lyhyellä lauseella"
+            placeholder: "Paikka, jossa Jenni ja hänen ystävänsä voivat keskustella kivoista jutuista"
+      introduction:
+        title: "Johdanto"
+        fields:
+          welcome:
+            label: "Tervetuloa-ketju"
+            description: "<p>Kuinka kuvailisit yhteisöä hississä ventovieraalle, jos sinulla olisi minuutti aikaa?</p> <ul> <li>Keille nämä keskustelut on suunnattu?</li> <li>Mistä täällä puhutaan?</li> <li>Miksi täällä kannattaa käydä?</li> </ul> <p>Tervetuloa-ketju on ensimmäinen asia, jonka palstalle saapunut näkee. Ajattele sitä <b>yhden kappaleen mittaisena</b> \"hissipuheena\" tai \"perimmäisenä tavoitteena\". </p>"
+            one_paragraph: "Pidä tervetuloviesti yhden kappaleen mittaisena."
+      privacy:
+        description: "<p>Onko yhteisö avoin kaikille vai onko pääsy riippuvainen jäsenyydestä, kutsusta tai hyväksynnästä? Jos haluat, voit laittaa kaiken alulle yksityisesti ja muuttaa foorumin julkiseksi myöhemmin. </p> <p>Muista, että voit aina lähettää kutsuja ketjujen alalaidasta kuin myös omalta käyttäjäsivultasikin.</p>"
+        fields:
+          privacy:
+            choices:
+              open:
+                label: "Julkinen"
+                description: "Kenellä tahansa on pääsy yhteisöön ja mahdollisuus käyttäjätunnuksen luomiseen"
+              restricted:
+                label: "Yksityinen"
+                description: "Vain kutsutuilla ja hyväksytyillä on pääsy yhteisöön"
+      contact:
+        title: "Yhteystiedot"
+        fields:
+          contact_email:
+            label: "Sähköposti"
+            placeholder: "name@example.com"
+            description: "Sähköpostiosoite, josta tavoittaa henkilön tai ryhmän, joka vastaa palstan ylläpidosta. Siihen lähetetään kriittisiä huomautuksia käsittelemättömistä liputuksista ja turvallisuuspäivityksistä, ja se näkyy Tietoja-sivulla yhteysosoitteena kiireellisiä yhteydenottoja varten."
+          contact_url:
+            label: "Internet-sivu"
+            placeholder: "http://www.example.com/contact-us"
+            description: "Internet-sivu, jonka kautta sinuun tai organisaatioosi voi ottaa yhteyttä. Näytetään <a href='/about' target='_blank'>Tietoja-sivulla</a>."
+          site_contact:
+            label: "Automaattiset viestit"
+            description: "Tämän käyttäjän nimissä Discourse lähettää kaikki automaattiset yksityisviestit käyttäjälle. Tärkeimpänä, käyttäjä on uudelle käyttäjälle lähetettävän tervetuloviestin lähettäjä."
+      corporate:
+        title: "Organisaatio"
+        description: "Nämä nimet näkyvät <a href='/privacy' target='blank'>rekisteriselosteen</a> and <a href='/tos' target='blank'>käyttöehtojen</a> yhteydessä, joita voit milloin vain muokata henkilökunta-alueella. Jos taustalla ei ole yritystä, voit hypätä tämän vaiheen yli toistaiseksi."
+        fields:
+          company_short_name:
+            label: "Yrityksen nimi (lyhyesti)"
+            placeholder: "Initech"
+          company_full_name:
+            label: "Yrityksen nimi (kokonaan)"
+            placeholder: "Initech, Inc."
+          company_domain:
+            label: "Yrityksen verkkotunnuksen nimi"
+            placeholder: "initech.com"
+      colors:
+        title: "Värimaailma"
+        fields:
+          theme_id:
+            description: "Haluatko tumman vai vaalean värimaailman? Voit milloin vain muokata sivustosi ulkoasua navigoimalla Ylläpito --> Mukauta"
+            choices:
+              default:
+                label: "Yksinkertainen vaalea"
+              dark:
+                label: "Yksinkertainen tumma"
+      logos:
+        title: "Logot"
+        fields:
+          logo_url:
+            label: "Ensisijainen logo"
+            description: "Logo, joka näkyy sivustosi vasemmassa yläkulmassa. Tee siitä suorakulmion muotoinen."
+          logo_small_url:
+            label: "Tiivis logo"
+            description: "Tiivis versio sivustosi logosta, joka näkyy sivustosi vasemmassa yläkulmassa, kun vierittää alaspäin. Tee siitä neliön muotoinen."
+      icons:
+        title: "Ikonit"
+        fields:
+          favicon_url:
+            label: "Pieni ikoni"
+            description: "Ikoni, joka edustaa sivustoasi selaimissa ja joka näyttää hyvältä pienessäkin koossa kuten 32 px kertaa 32 px."
+          apple_touch_icon_url:
+            label: "Suuri ikoni"
+            description: "Ikoni, joka edustaa sivustoasi nykyaikaisemmilla laitteilla ja joka näyttää hyvältä isommassakin koossa. Suositeltu koko on vähintään 144 px kertaa 144 px."
+      homepage:
+        description: "Suosittelemme, että kotisivusi on Tuoreimmat-näkymä, mutta voit valita Keskustelualueet-näkymän (ketjut ryhmitelty aihepiirin mukaan) kotisivuksi, jos haluat."
+        title: "Kotisivu"
+        fields:
+          homepage_style:
+            choices:
+              latest:
+                label: "Tuoreimmat"
+              categories:
+                label: "Keskustelualueet"
+      emoji:
+        title: "Emojit"
+        description: "Minkä emojityylin haluat yhteisöösi? Voit milloin vain lisätä mukautettuja emojeita navigoimalla Ylläpito --> Mukauta --> Emoji."
+      invites:
+        title: "Kutsu henkiökuntaa"
+        description: "Melkein valmista! Kutsutaan muutama henkilökuntalainen auttamaan <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>pohjustamaan keskusteluita</a> kiintoisilla ketjunavauksilla ja vastauksilla, jotta yhteisö pääsee alkuun."
+      finished:
+        title: "Discoursesi on valmis!"
+        description: |
+          <p>Jos milloin tahansa haluat muuttaa asetuksia, käy <a href='/admin' target='_blank'>ylläpito-osiossa</a>; löydät sen jakoavainkuvakkeen vierestä sivuston valikosta.</p>
+          <p>Onnea ja menestystä <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'>uuden yhteisön rakentamiseen!</a></p>
   activemodel:
     errors:
       <<: *errors

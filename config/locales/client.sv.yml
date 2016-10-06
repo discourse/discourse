@@ -136,6 +136,7 @@ sv:
         enabled: 'listades %{when}'
         disabled: 'avlistades %{when}'
     topic_admin_menu: "administratörsåtgärder för ämne"
+    wizard_required: "Det är dags att konfigurera ditt forum! <a href='%{url}' data-auto-route='true'>Starta installationsguiden</a>!"
     emails_are_disabled: "All utgående e-post har blivit globalt inaktiverad av en administratör. Inga e-postnotifikationer av något slag kommer att skickas ut."
     bootstrap_mode_enabled: "Du är i bootstrap-läge för att göra lanseringen av din nya webbplats enklare. Alla nya användare kommer att beviljas förtroendenivå 1 och få dagliga sammanfattningar skickade via e-post. Det här stängs automatiskt av när det totala antalet användare överstiger %{min_users}."
     bootstrap_mode_disabled: "Bootstrap-läge otillgängliggörs i 24 timmar."
@@ -796,6 +797,8 @@ sv:
         one: "1 fel/%{duration}"
         other: "%{count} fel/%{duration}"
     learn_more: "lär dig mer..."
+    all_time: 'totalt'
+    all_time_desc: 'totalt antal ämnen skapade'
     year: 'år'
     year_desc: 'ämnen skapade de senaste 365 dagarna'
     month: 'månad'
@@ -908,6 +911,7 @@ sv:
       win10: "Win10"
     category_page_style:
       categories_only: "Endast kategorier"
+      categories_with_featured_topics: "Kategorier med framhävda ämnen"
       categories_and_latest_topics: "Kategorier med senaste ämnen"
     shortcut_modifier_key:
       shift: 'Shift'
@@ -961,8 +965,10 @@ sv:
       show_preview: 'visa förhandsgranskning &raquo;'
       hide_preview: '&laquo; dölj förhandsgranskning'
       quote_post_title: "Citera hela inlägget"
+      bold_label: "B"
       bold_title: "Fet"
       bold_text: "fet text"
+      italic_label: "I"
       italic_title: "Kursiv"
       italic_text: "kursiv text"
       link_title: "Hyperlänk"
@@ -980,6 +986,7 @@ sv:
       olist_title: "Numrerad lista"
       ulist_title: "Punktlista"
       list_item: "Listobjekt"
+      heading_label: "H"
       heading_title: "Rubrik"
       heading_text: "Rubrik"
       hr_title: "Horisontell linje"
@@ -1095,6 +1102,7 @@ sv:
     not_logged_in_user: 'användarsida med sammanställning av aktuell aktivitet och inställningar'
     current_user: 'gå till din användarsida'
     topics:
+      new_messages_marker: "senaste besök"
       bulk:
         unlist_topics: "Avlista ämnen"
         reset_read: "Återställ lästa"
@@ -1663,11 +1671,13 @@ sv:
       notifications:
         watching:
           title: "Bevakar"
+          description: "Du kommer automatiskt att bevaka alla ämnen i de här kategorierna. Du blir notifierad om varje nytt inlägg i alla ämnen, och en räknare över antalet nya inlägg visas. "
         watching_first_post:
           title: "Bevakar första inlägget"
           description: "Du kommer att bli notifierad om första inlägget i varje nytt ämne i de här kategorierna."
         tracking:
           title: "Följer"
+          description: "Du kommer automatiskt att följa alla ämnen i de här kategorierna. Du blir notifierad om någon nämner ditt @namn eller svarar på ditt inlägg, och en räknare över antalet nya inlägg visas."
         regular:
           title: "Normal"
           description: "Du notifieras om någon nämner ditt @namn eller svarar på ditt inlägg."
@@ -1681,6 +1691,7 @@ sv:
       notify_action: 'Meddelande'
       official_warning: 'Officiell varning'
       delete_spammer: "Radera spammare"
+      delete_confirm_MF: "Du håller på att radera {POSTS, plural, one {<b>1</b> inlägg} other {<b>#</b> inlägg}} och {TOPICS, plural, one {<b>1</b> ämne} other {<b>#</b> ämnen}} från den här användaren, ta bort användarens konto, blockera registreringar från användarens IP-adress <b>{ip_address}</b>, och lägga till användarens e-postadress <b>{email}</b> till en permanent blockeringslista. Är du säker på att den här användaren verkligen är en spammare?"
       yes_delete_spammer: "Ja, radera spammare"
       ip_address_missing: "(N/A)"
       hidden_email_address: "(gömd)"
@@ -1694,6 +1705,16 @@ sv:
         spam: "Det är spam"
       custom_placeholder_notify_user: "Var specifik, var konstruktiv och var alltid trevlig."
       custom_placeholder_notify_moderators: "Låt oss veta i detalj vad du är bekymrad över, och skicka med relevanta länkar och exempel om möjligt."
+      custom_message:
+        at_least:
+          one: "skriv åtminstone 1 tecken"
+          other: "skriv åtminstone {{count}} tecken"
+        more:
+          one: "1 till..."
+          other: "{{count}} till..."
+        left:
+          one: "1 kvar"
+          other: "{{count}} kvar"
     flagging_topic:
       title: "Tack för att du hjälper oss hålla forumet civiliserat!"
       action: "Flagga ämne"
@@ -1702,6 +1723,7 @@ sv:
       title: "Sammanfattning av ämne"
       participants_title: "Flitiga skribenter"
       links_title: "Populära länkar"
+      links_shown: "visa fler länkar..."
       clicks:
         one: "1 klick"
         other: "%{count} klick"
@@ -1942,6 +1964,7 @@ sv:
     tagging:
       all_tags: "Alla taggar"
       selector_all_tags: "alla taggar"
+      selector_no_tags: "inga taggar"
       changed: "taggar ändrade:"
       tags: "Taggar"
       choose_for_topic: "välj valfria taggar för det här ämnet"
@@ -1957,14 +1980,18 @@ sv:
       filters:
         without_category: "%{filter} %{tag} ämnen"
         with_category: "%{filter} %{tag} ämnen i %{category}"
+        untagged_without_category: "%{filter} otaggade ämnen"
+        untagged_with_category: "%{filter} otaggade ämnen i %{category}"
       notifications:
         watching:
           title: "Bevakar"
+          description: "Du kommer automatiskt att bevaka alla ämnen i den här taggen. Du kommer att få notifieringar om alla nya inlägg och ämnen, och en räknare över olästa och nya inlägg kommer att visas brevid ämnen."
         watching_first_post:
           title: "Bevakar första inlägget"
           description: "Du kommer endast att bli notifierad om första inlägget i varje nytt ämne i den här taggen."
         tracking:
           title: "Bevakade"
+          description: "Du kommer automatiskt följa alla nya ämnen i den här taggen. En räknare över olästa och nya inlägg kommer att visas bredvid ämnen."
         regular:
           title: "Vanlig"
           description: "Du kommer att få en notifiering om någon nämner ditt @namn eller svarar på ditt inlägg."
@@ -2161,6 +2188,9 @@ sv:
         add_owners: Lägg till ägare
         incoming_email: "Egenvald inkommande e-postadress"
         incoming_email_placeholder: "Ange e-postadress"
+        flair_bg_color_placeholder: "(Valfritt) Hexadecimal färgkod"
+        flair_color_placeholder: "(Valfritt) Hexadecimal färgkod"
+        flair_preview: "Förhandsgranska"
       api:
         generate_master: "Generera API-huvudnyckel"
         none: "Det finns inga aktiva API-nycklar just nu."
@@ -2176,9 +2206,68 @@ sv:
         all_users: "Alla användare"
         note_html: "Håll denna nyckel <strong>hemlig</strong>, alla användare som har den kan skapa godtyckliga inlägg som alla användare."
       web_hooks:
+        title: "Webhookar"
+        none: "Det finns inga webhookar just nu."
+        new: "Ny webhook"
+        create: "Skapa"
         save: "Spara"
         destroy: "Radera"
         description: "Beskrivning"
+        controls: "Kontroller"
+        go_back: "Tillbaka till listan"
+        secret_invalid: "Hemligheten får inte ha några blanka tecken."
+        secret_too_short: "Hemligheten bör vara minst 12 tecken."
+        secret_placeholder: "En valfri sträng, används för att generera signatur"
+        content_type: "Innehållstyp"
+        secret: "Hemlighet"
+        event_chooser: "Vilka event vill du ska utlösa den här webhooken?"
+        wildcard_event: "Skicka mig allt."
+        individual_event: "Välj enskilda event."
+        active: "Aktiva"
+        active_notice: "Vi kommer att leverera detaljerna kring eventet när det händer."
+        categories_filter_instructions: "Relevanta webhookar kommer endast att utlösas om eventet är relaterat med specifika kategorier. Lämna blank för att utlösa webhookar för alla kategorier. "
+        categories_filter: "Utlösta kategorier"
+        groups_filter_instructions: "Relevanta webhookar kommer endast att utlösas om eventet är relaterat med specifierade grupper. Lämna blank för att utlösa webhookar för alla grupper."
+        groups_filter: "Utlösta grupper"
+        delete_confirm: "Ta bort den här webhooken?"
+        topic_event:
+          name: "Ämnesevent"
+          details: "När det finns ett nytt ämne, granskat, ändrat eller borttaget."
+        post_event:
+          name: "Inläggsevent"
+          details: "När det finns ett nytt svar, redigerat, borttaget eller återskapat."
+        user_event:
+          name: "Användarevent"
+          details: "När en användare är skapad eller godkänd."
+        delivery_status:
+          title: "Leveransstatus"
+          inactive: "Inaktiv"
+          failed: "Misslyckad"
+          successful: "Lyckad"
+        events:
+          none: "Det finns inga relaterade event."
+          redeliver: "Leverera igen"
+          incoming:
+            one: "Det finns ett nytt event."
+            other: "Det finns {{count}} nya event."
+          completed_in:
+            one: "Färdigställd på 1 sekund."
+            other: "Färdigställd på {{count}} sekunder."
+          request: "Förfrågning"
+          response: "Svar"
+          redeliver_confirm: "Är du säker på att du vill leverera samma nyttolast igen?"
+          headers: "Sidhuvuden"
+          payload: "Nyttolast"
+          body: "Huvuddel"
+          go_list: "Gå till listan"
+          go_details: "Redigera webhook"
+          go_events: "Gå till events"
+          ping: "Ping"
+          status: "Statuskod"
+          event_id: "ID"
+          timestamp: "Skapad"
+          completion: "Sluttid"
+          actions: "Åtgärder"
       plugins:
         title: "Tillägg"
         installed: "Installerade tillägg"
@@ -2562,6 +2651,7 @@ sv:
         suspend_reason: "Anledning"
         suspended_by: "Avstängd av"
         delete_all_posts: "Radera alla inlägg"
+        delete_all_posts_confirm_MF: "Du håller på att radera {POSTS, plural, one {1 inlägg} other {# inlägg}} och {TOPICS, plural, one {1 ämne} other {# ämnen}}. Är du säker?"
         suspend: "Stäng av användare"
         unsuspend: "Lås upp användare"
         suspended: "Avstängd?"
@@ -2657,6 +2747,9 @@ sv:
         unlock_trust_level: "Lås upp förtroendenivå"
         tl3_requirements:
           title: "Krav för förtroendenivå 3"
+          table_title:
+            one: "Den senaste dagen:"
+            other: "De senaste %{count} dagarna:"
           value_heading: "Värde"
           requirement_heading: "Krav"
           visits: "Besök"
@@ -2756,6 +2849,7 @@ sv:
           developer: 'Utvecklare'
           embedding: "Inbäddning"
           legal: "Juridik"
+          user_api: 'Användar-API'
           uncategorized: 'Övrigt'
           backups: "Säkerhetskopior"
           login: "Inloggning"
@@ -2844,6 +2938,7 @@ sv:
         sample: "Använd följande HTML-kod på din webbplats för att skapa och bädda in discourse-ämnen. Byt ut <b>REPLACE_ME</b> med den kanoniska URL-en för sidan som du bäddar in den i. "
         title: "Inbäddning"
         host: "Tillåtna värdar"
+        path_whitelist: "Sökväg vitlista"
         edit: "ändra"
         category: "Inlägg till kategori"
         add_host: "Lägg till värd"
@@ -2855,6 +2950,7 @@ sv:
         embed_by_username: "Användarnamn för skapandet av ämne"
         embed_post_limit: "Högsta tillåtna antal inlägg att bädda in"
         embed_username_key_from_feed: "Nyckel för att hämta discourse användarnamn från flöde"
+        embed_title_scrubber: "Reguljära uttryck som används för att hitta och korrigera fel i inläggsrubriken"
         embed_truncate: "Trunkera de inbäddade inläggen"
         embed_whitelist_selector: "CSS-väljare för element som tillåts bäddas in"
         embed_blacklist_selector: "CSS-väljare för element som tas bort från inbäddningar"
@@ -2877,3 +2973,22 @@ sv:
           label: "Ny:"
           add: "Lägg till"
           filter: "Sök (URL eller Extern URL)"
+  wizard_js:
+    wizard:
+      done: "Klar"
+      back: "Tillbaka"
+      next: "Nästa"
+      step: "%{current} av %{total}"
+      upload: "Ladda upp"
+      uploading: "Laddar upp..."
+      quit: "Kanske senare"
+      staff_count:
+        one: "Ditt forum har 1 personalmedlem."
+        other: "Ditt forum har %{count} personalmedlemmar."
+      invites:
+        add_user: "lägg till"
+        none_added: "Du har inte bjudit in någon personal. Är du säker på att du vill fortsätta?"
+        roles:
+          admin: "Administratör"
+          moderator: "Moderator"
+          regular: "Regelbunden användare"
