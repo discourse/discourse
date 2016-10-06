@@ -177,7 +177,7 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
       create_posts(discussions, total: total_count, offset: offset) do |discussion|
 
         unless discussion['youtube'].blank?
-          youtube =
+          youtube = clean_youtube(discussion['youtube'])
         end
 
         raw = clean_up(discussion['Body'] + "\n#{youtube}\n")
@@ -224,8 +224,7 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
         next unless t = topic_lookup_from_imported_post_id("discussion#" + comment['DiscussionID'].to_s)
         next if comment['Body'].blank?
         unless comment['youtube'].blank?
-          youtube = comment['youtube'].dup.to_s.gsub( /.+?(https?:\/\/\S+)".+/i) { "#{$1}" }
-          print_warning("\nYoutube: (#{comment['Name']})#{comment['youtube'].to_s} --> Link: #{youtube}")
+          youtube = clean_youtube(comment['youtube'])
         end
         raw = clean_up(comment['Body'] + "\n#{youtube}\n")
         {
