@@ -31,10 +31,25 @@ class ImportScripts::FluxBB < ImportScripts::Base
   end
 
   def execute
+    import_groups
     import_users
     import_categories
     import_posts
     suspend_users
+  end
+
+  def import_groups
+    puts '', "creating groups"
+
+    results = mysql_query(
+      "SELECT g_id id, g_title name, g_user_title title
+       FROM groups")
+
+    create_groups(results) do |group|
+      { id: group['id'],
+        name: group['name'],
+        title: group['title'] }
+    end
   end
 
   def import_users
@@ -68,6 +83,17 @@ class ImportScripts::FluxBB < ImportScripts::Base
           location: user['location'],
           moderator: user['group_id'] == 2,
           admin: user['group_id'] == 1 }
+      end
+
+      create_group_members(results) do |user|
+        if user.group_id
+          user_id = user_id_from_imported_user_id(user.id)
+          group_id = group_id_from_imported_group_id(user.group_id)
+
+          if user_id && group_id
+            GroupUser.find_or_create_by(user_id: user_id, group_id: group_id)
+          end
+        end
       end
     end
   end
