@@ -48,13 +48,13 @@
       <div class="control-group pull-left">
         <label class="control-label" for="search-in-options">{{i18n "search.advanced.filters.label"}}</label>
         <div class="controls">
-          {{combo-box valueAttribute="value" content=inOptions value=searchedTerms.in none="user.locale.any"}}
+          {{combo-box id="in" valueAttribute="value" content=inOptions value=searchedTerms.in none="user.locale.any"}}
         </div>
       </div>
       <div class="control-group pull-left">
         <label class="control-label" for="search-status-options">{{i18n "search.advanced.statuses.label"}}</label>
         <div class="controls">
-          {{combo-box valueAttribute="value" content=statusOptions value=searchedTerms.status none="user.locale.any"}}
+          {{combo-box id="status" valueAttribute="value" content=statusOptions value=searchedTerms.status none="user.locale.any"}}
         </div>
       </div>
     </div>
@@ -63,7 +63,7 @@
       <div class="control-group pull-left">
         <label class="control-label" for="search-post-date">{{i18n "search.advanced.post.time.label"}}</label>
         <div class="controls">
-          {{combo-box valueAttribute="value" content=postTimeOptions value=searchedTerms.time.when}}
+          {{combo-box id="post-time" valueAttribute="value" content=postTimeOptions value=searchedTerms.time.when}}
           {{input type="text" value=searchedTerms.time.days class="input-small" id='search-post-date'}}
         </div>
       </div>
