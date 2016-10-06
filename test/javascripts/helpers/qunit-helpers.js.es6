@@ -109,6 +109,15 @@ function blank(obj, text) {
   ok(Ember.isEmpty(obj), text);
 }
 
+function waitFor(callback, timeout) {
+  timeout = timeout || 500;
+  stop();
+  Ember.run.later(() => {
+    callback();
+    start();
+  }, timeout);
+}
+
 export { acceptance,
          controllerFor,
          asyncTestDiscourse,
@@ -116,4 +125,5 @@ export { acceptance,
          logIn,
          currentUser,
          blank,
-         present };
+         present,
+         waitFor };

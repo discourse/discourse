@@ -1,6 +1,6 @@
 import { on, observes, default as computed } from 'ember-addons/ember-computed-decorators';
 
-const REGEXP_FILTER_PREFIXES   = /(user:|@|category:|#|group:|badge:|tags?:|in:|status:|posts_count:|(before|after):)/ig;
+const REGEXP_FILTER_PREFIXES   = /\s?(user:|@|category:|#|group:|badge:|tags?:|in:|status:|posts_count:|(before|after):)/ig;
 
 const REGEXP_USERNAME_PREFIX   = /\s?(user:|@)/ig;
 const REGEXP_CATEGORY_PREFIX   = /\s?(category:|#)/ig;
@@ -65,6 +65,9 @@ export default Em.Component.extend({
   },
 
   findSearchTerm(EXPRESSION, searchTerm) {
+    if (!searchTerm)
+      return "";
+
     const expression_location = searchTerm.search(EXPRESSION);
     if (expression_location === -1)
       return "";
