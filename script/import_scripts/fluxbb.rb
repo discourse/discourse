@@ -2,20 +2,30 @@ require "mysql2"
 
 require File.expand_path(File.dirname(__FILE__) + "/base.rb")
 
+# Before running this script, paste these lines into your shell,
+# then use arrow keys to edit the values
+=begin
+export FLUXBB_USER="root"
+export FLUXBB_DB="fluxbb"
+export FLUXBB_PW=""
+=end
+
 # Call it like this:
 #   RAILS_ENV=production bundle exec ruby script/import_scripts/fluxbb.rb
 class ImportScripts::FluxBB < ImportScripts::Base
 
-  FLUXBB_DB = "fluxbb_db"
-  BATCH_SIZE = 1000
+  FLUXBB_DB ||= ENV['FLUXBB_DB'] || "fluxbb"
+  BATCH_SIZE ||= 1000
+  FLUXBB_PW ||= ENV['FLUXBB_PW'] || ""
+  FLUXBB_USER ||= ENV['FLUXBB_USER'] || "root"
 
   def initialize
     super
 
     @client = Mysql2::Client.new(
       host: "localhost",
-      username: "root",
-      password: "pa$$word",
+      username: FLUXBB_USER,
+      password: FLUXBB_PW,
       database: FLUXBB_DB
     )
   end
