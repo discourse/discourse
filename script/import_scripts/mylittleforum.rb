@@ -114,13 +114,17 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
   end
 
   def fix_username(username)
+    olduser = username.dup
+    username.gsub!(/Dr\. /,"Dr") # no &
     username.gsub!(/[ +!\/,*()?]/,"_") # can't have these
     username.gsub!(/&/,"_and_") # no &
     username.gsub!(/@/,"_at_") # no @
     username.gsub!(/#/,"_hash_") # no &
     username.gsub!(/\'/,"") # seriously?
+    username.gsub!(/[._]+/,"_") # can't have 2 special in a row
     username.gsub!(/_+/,"_") # could result in dupes, but wtf?
     username.gsub!(/_$/,"") # could result in dupes, but wtf?
+    print_warning ("#{olduser} --> #{username}") unless olduser == username #JP
     username
   end
 
@@ -171,7 +175,12 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
       next if all_records_exist? :posts, discussions.map {|t| "discussion#" + t['DiscussionID'].to_s}
 
       create_posts(discussions, total: total_count, offset: offset) do |discussion|
-        youtube = discussion['youtube'].to_s.gsub(/.*(https?:\/\/\S+)\\".*/i) { "#{$1}"}
+
+        unless discussion['youtube'].blank?
+          youtube = discussion['youtube'].dup.to_s.gsub( /.+?(https?:\/\/\S+)".+/i) { "#{$1}" }
+          print_warning("\nYoutube: (#{discussion['Name']})#{discussion['youtube'].to_s} --> Link: #{youtube}")
+        end
+
         raw = clean_up(discussion['Body'] + "\n#{youtube}\n")
         {
           id: "discussion#" + discussion['DiscussionID'].to_s,
@@ -215,7 +224,10 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
       create_posts(comments, total: total_count, offset: offset) do |comment|
         next unless t = topic_lookup_from_imported_post_id("discussion#" + comment['DiscussionID'].to_s)
         next if comment['Body'].blank?
-        youtube = comment['youtube'].to_s.gsub(/.*(https?:\/\/\S+)\\".*/i) { "#{$1}"}
+        unless comment['youtube'].blank?
+          youtube = comment['youtube'].dup.to_s.gsub( /.+?(https?:\/\/\S+)".+/i) { "#{$1}" }
+          print_warning("\nYoutube: (#{comment['Name']})#{comment['youtube'].to_s} --> Link: #{youtube}")
+        end
         raw = clean_up(comment['Body'] + "\n#{youtube}\n")
         {
           id: "comment#" + comment['CommentID'].to_s,
@@ -226,6 +238,10 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
         }
       end
     end
+  end
+
+  def clean_youtube(youtube)
+
   end
 
   def clean_up(raw)
