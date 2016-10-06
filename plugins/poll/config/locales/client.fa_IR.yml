@@ -13,6 +13,8 @@ fa_IR:
       total_votes:
         other: "مجموع آرا"
       average_rating: "میانگین امتیاز:  <strong>%{average}</strong>."
+      public:
+        title: "آرا عمومی هستند"
       cast-votes:
         title: "انداختن رأی شما"
         label: "رای بدهید!"
@@ -30,3 +32,15 @@ fa_IR:
         title: "نظرسنجی را ببند"
         label: "بسته "
         confirm: "آیا از بستن این نظرسنجی اطمینان دارید ؟ "
+      ui_builder:
+        title: ساخت نظرسنجی
+        poll_type:
+          label: نوع
+          regular: یک انتخاب
+          multiple: انتخاب چندگانه
+        poll_config:
+          max: بیشترین
+          min: کمترین
+          step: مرحله
+        poll_public:
+          label: نشان دادن رای دهندگان

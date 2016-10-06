@@ -8,24 +8,24 @@
 he:
   site_settings:
     poll_enabled: "אפשר למשתמשים ליצור סקרים?"
-    poll_maximum_options: "מספר אפשרויות מירבי המותר בסקר"
+    poll_maximum_options: "מספר האפשרויות המירבי המותר בסקר"
     poll_edit_window_mins: "מספר דקות אחרי יצירת פוסט במהלכן ניתן לערוך סקרים."
   poll:
-    multiple_polls_without_name: "יש מספר סקרים ללא שם. השתמש במאפיין '<code>name</code>'  לזהות באופן יחודי את הסקרים שלך. "
-    multiple_polls_with_same_name: "יש מספר סקרים עם אותו שם <strong>%{name}</strong>. השתמש במאפיין '<code>name</code>'  לזהות באופן יחודי את הסקרים שלך. "
+    multiple_polls_without_name: "יש מספר סקרים ללא שם. השתמשו במאפיין '<code>name</code>' לזהות באופן יחודי את הסקרים שלכם."
+    multiple_polls_with_same_name: "יש מספר סקרים עם אותו שם <strong>%{name}</strong>. השתמשו במאפיין '<code>name</code>'  לזהות באופן יחודי את הסקרים שלכם."
     default_poll_must_have_at_least_2_options: "לסקר צריכות להיות לפחות שתי אפשרויות."
-    named_poll_must_have_at_least_2_options: "לסקר בשם <strong>%{name}</strong>  צריך שיהיה לפחות שתי אפשרויות."
+    named_poll_must_have_at_least_2_options: "לסקר בשם <strong>%{name}</strong> צריך שיהיו לפחות שתי אפשרויות."
     default_poll_must_have_less_options:
-      one: "לסקר חייב להיות פחות מאפשרות אחת."
-      other: "לסקר חייב להיות פחות מ-%{count} אפשרויות."
+      one: "לסקר חייבת להיות פחות מאפשרות אחת."
+      other: "לסקר חייבות להיות פחות מ-%{count} אפשרויות."
     named_poll_must_have_less_options:
       one: "לסקר בשם <strong>%{name}</strong> צריכה להיות פחות מאפשרות אחת."
       other: "לסקר בשם <strong>%{name}</strong> צריכות להיות פחות מ-%{count} אפשרויות."
-    default_poll_must_have_different_options: "לסקר צריך שיהיה אפשרויות שונות. "
-    named_poll_must_have_different_options: "לסקר בשם <strong>%{name}</strong>  צריך שיהיו אפשרויות שונות. "
-    default_poll_with_multiple_choices_has_invalid_parameters: "לסקר עם  בחירה מרובה יש פרמטרים לא תקינים. "
-    named_poll_with_multiple_choices_has_invalid_parameters: "לסקר בשם  <strong>%{name}</strong>  עם בחירה מרובה יש פרמטרים לא תקינים. "
-    requires_at_least_1_valid_option: "עליך לבחור לפחות אפשרות אחת תקינה. "
+    default_poll_must_have_different_options: "לסקר צריך שתהיינה אפשרויות שונות. "
+    named_poll_must_have_different_options: "לסקר בשם <strong>%{name}</strong> צריך שתהינה אפשרויות שונות."
+    default_poll_with_multiple_choices_has_invalid_parameters: "לסקר עם  בחירה מרובה יש פרמטרים לא תקינים."
+    named_poll_with_multiple_choices_has_invalid_parameters: "לסקר בשם <strong>%{name}</strong> עם בחירה מרובה יש פרמטרים לא תקינים."
+    requires_at_least_1_valid_option: "עליך לבחור לפחות אפשרות אחת תקינה."
     default_cannot_be_made_public: "לא ניתן להפוך סקרים עם הצבעות קיימות לפומביים."
     named_cannot_be_made_public: "הסקר <strong>%{name}</strong> מכיל הצבעות ולא יכול להפוך לפומבי."
     edit_window_expired:
@@ -35,9 +35,9 @@ he:
     no_polls_associated_with_this_post: "אין סקרים שמקושרים לפוסט הזה."
     no_poll_with_this_name: "אין סקר בשם  <strong>%{name}</strong> שמקושר לפוסט הזה. "
     post_is_deleted: "לא ניתן לפעול על פוסט שנמחק."
-    topic_must_be_open_to_vote: "הנושא צריך להיות פתוח להצבעות."
+    topic_must_be_open_to_vote: "הנושא חייב להיות פתוח להצבעות."
     poll_must_be_open_to_vote: "הסקר חייב להיות פתוח להצבעות."
     topic_must_be_open_to_toggle_status: "הנושא חייב להיות פתוח לשינויים בסטטוס."
-    only_staff_or_op_can_toggle_status: "רק חבר צוות או המפרסם המקורי יכול לשנות סטטוס של סקר. "
+    only_staff_or_op_can_toggle_status: "רק חבר צוות או המפרסם המקורי יכולים לשנות סטטוס של סקר."
     email:
       link_to_poll: "לחצו כדי לצפות בסקר."

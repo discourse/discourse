@@ -118,24 +118,25 @@ fr:
       removed_user: "a retiré %{who} %{when}"
       removed_group: "a retiré %{who} %{when}"
       autoclosed:
-        enabled: 'fermé %{when}'
-        disabled: 'ouvert %{when}'
+        enabled: 'fermé automatiquement %{when}'
+        disabled: 'ouvert automatiquement %{when}'
       closed:
-        enabled: 'fermé %{when}'
-        disabled: 'ouvert %{when}'
+        enabled: 'a fermé ce sujet %{when}'
+        disabled: 'a ouvert ce sujet %{when}'
       archived:
-        enabled: 'archivé %{when}'
-        disabled: 'désarchivé %{when}'
+        enabled: 'a archivé ce sujet %{when}'
+        disabled: 'a désarchivé ce sujet %{when}'
       pinned:
-        enabled: 'épinglé %{when}'
-        disabled: 'désépinglé %{when}'
+        enabled: 'a épinglé ce sujet %{when}'
+        disabled: 'a désépinglé ce sujet %{when}'
       pinned_globally:
-        enabled: 'épinglé globalement %{when}'
-        disabled: 'désépinglé %{when}'
+        enabled: 'a épinglé ce sujet globalement %{when}'
+        disabled: 'a désépinglé ce sujet %{when}'
       visible:
-        enabled: 'listé %{when}'
-        disabled: 'délisté %{when}'
+        enabled: 'a rendu ce sujet visible %{when}'
+        disabled: 'a rendu ce sujet invisible %{when}'
     topic_admin_menu: "actions d'administration sur le sujet"
+    wizard_required: "C'est le moment de configurer votre forum ! <a href='%{url}' data-auto-route='true'>Démarrer l'assistant de configuration</a>."
     emails_are_disabled: "Le courriel sortant a été désactivé par un administrateur. Aucune notification courriel ne sera envoyée."
     bootstrap_mode_enabled: "Pour rendre le lancement de votre site plus facile, vous êtes en mode 'bootstrap'. Tout nouveau utilisateur sera accordé le niveau de confirance 1 et aura les résumés par courriel hebdomadaires activés. Ceci cessera d'être le cas lorsque le nombre d'utilisateurs dépassera %{min_users}."
     bootstrap_mode_disabled: "Le mode Bootstrap sera désactivé dans les prochaines 24 heures."
@@ -176,7 +177,7 @@ fr:
     guidelines: "Charte"
     privacy_policy: "Politique de confidentialité"
     privacy: "Confidentialité"
-    terms_of_service: "Conditions Générales d'Utilisation"
+    terms_of_service: "Conditions générales d'utilisation"
     mobile_view: "Vue mobile"
     desktop_view: "Vue bureau"
     you: "Vous"
@@ -199,10 +200,10 @@ fr:
       other: "{{count}} caractères"
     suggested_topics:
       title: "À lire ensuite"
-      pm_title: "Messages suggérés"
+      pm_title: "À lire ensuite"
     about:
       simple_title: "À propos"
-      title: "À propos de %{title}"
+      title: "À propos du site %{title}"
       stats: "Statistiques du site"
       our_admins: "Nos administrateurs"
       our_moderators: "Nos modérateurs"
@@ -242,10 +243,10 @@ fr:
     click_to_show: "Cliquez pour afficher."
     preview: "prévisualiser"
     cancel: "annuler"
-    save: "Sauvegarder les modifications"
+    save: "Sauvegarder"
     saving: "Sauvegarde en cours…"
     saved: "Sauvegardé !"
-    upload: "Envoyer"
+    upload: "Joindre un fichier"
     uploading: "Envoi en cours…"
     uploading_filename: "Envoi de {{filename}}…"
     uploaded: "Envoyé !"
@@ -277,7 +278,7 @@ fr:
       has_pending_posts:
         one: "Ce sujet a <b>1</b> message en attente de validation"
         other: "Ce sujet a <b>{{count}}</b> messages en attente de validation"
-      confirm: "Sauvegarder les modifications"
+      confirm: "Sauvegarder"
       delete_prompt: "Êtes-vous sûr de vouloir supprimer <b>%{username}</b> ? Cela supprimera tous ses messages et bloquera son courriel et son adresse IP."
       approval:
         title: "Ce message doit être approuvé"
@@ -376,7 +377,7 @@ fr:
       '7': "Mentions"
       '9': "Citations"
       '11': "Modifications"
-      '12': "Eléments envoyés"
+      '12': "Éléments envoyés"
       '13': "Boîte de réception"
       '14': "En attente"
     categories:
@@ -428,7 +429,7 @@ fr:
       mute: "Silencieux"
       edit: "Modifier les préférences"
       download_archive: "Télécharger mes messages"
-      new_private_message: "Nouveau message privé"
+      new_private_message: "Créer un message privé"
       private_message: "Message privé"
       private_messages: "Messages privés"
       activity_stream: "Activité"
@@ -501,7 +502,7 @@ fr:
       users: "Utilisateurs"
       muted_users: "Silencieux"
       muted_users_instructions: "Cacher toutes les notifications de ces utilisateurs."
-      muted_topics_link: "Afficher les sujets en sourdine"
+      muted_topics_link: "Afficher les sujets en silencieux"
       watched_topics_link: "Afficher les sujets surveillés"
       automatically_unpin_topics: "Désépingler automatiquement les sujets quand j'arrive à la fin."
       apps: "Applications"
@@ -589,7 +590,7 @@ fr:
         available: "Votre pseudo est disponible"
         global_match: "L'adresse de courriel correspond au pseudo enregistré"
         global_mismatch: "Déjà enregistré. Essayez {{suggestion}} ?"
-        not_available: "Non disponible. Essayez {{suggestion}} ?"
+        not_available: "Indisponible. Essayez {{suggestion}} ?"
         too_short: "Votre pseudo est trop court"
         too_long: "Votre pseudo est trop long"
         checking: "Vérification de la disponibilité du pseudo…"
@@ -597,7 +598,7 @@ fr:
         prefilled: "L'adresse de courriel correspond à ce pseudo enregistré"
       locale:
         title: "Langue de l'interface"
-        instructions: "Langue de l'interface.  Le changement sera pris en compte lorsque vous actualiserez la page."
+        instructions: "Langue de l'interface utilisateur.  Le changement sera pris en compte lorsque vous actualiserez la page."
         default: "(par défaut)"
       password_confirmation:
         title: "Confirmation du mot de passe"
@@ -614,12 +615,12 @@ fr:
       like_notification_frequency:
         title: "Notifier lors d'un J'aime"
         always: "Toujours"
-        first_time_and_daily: "La première fois qu'un message est aimé et quotidiennement"
+        first_time_and_daily: "La première fois qu'un message est aimé puis quotidiennement"
         first_time: "La première fois qu'un message est aimé"
         never: "Jamais"
       email_previous_replies:
         title: "Inclure les réponses précédentes en bas des courriels"
-        unless_emailed: "sauf si déjà envoyé"
+        unless_emailed: "sauf si déjà envoyées"
         always: "toujours"
         never: "jamais"
       email_digests:
@@ -639,7 +640,7 @@ fr:
       categories_settings: "Catégories"
       new_topic_duration:
         label: "Considérer les sujets comme nouveaux quand"
-        not_viewed: "Je ne les ai pas encore vus"
+        not_viewed: "je ne les ai pas encore vus"
         last_here: "créés depuis ma dernière visite"
         after_1_day: "créés depuis hier"
         after_2_days: "créés durant les 2 derniers jours"
@@ -726,7 +727,7 @@ fr:
         bookmark_count:
           one: "signet"
           other: "signets"
-        top_replies: "Réponses populaires"
+        top_replies: "Meilleures réponses"
         no_replies: "Pas encore de réponses."
         more_replies: "Plus de réponses"
         top_topics: "Meilleurs sujets"
@@ -785,7 +786,7 @@ fr:
     read_only_mode:
       enabled: "Le site est en mode lecture seule. Vous pouvez continer à naviguer, mais les réponses, J'aime et autre interactions sont désactivées pour l'instant."
       login_disabled: "La connexion est désactivée quand le site est en mode lecture seule."
-      logout_disabled: "La déconnexion est désactivée quand le site est en mode lecture seule."
+      logout_disabled: "La déconnexion est désactivée quand le site est en lecture seule."
     too_few_topics_and_posts_notice: "<a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>Démarrons cette discussion!</a> Il y a actuellement <strong>%{currentTopics} / %{requiredTopics}</strong> sujets et <strong>%{currentPosts} / %{requiredPosts}</strong> messages. Les nouveaux visiteurs ont besoin de quelques conversations pour lire et répondre."
     too_few_topics_notice: "<a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>Démarrons cette discussion !</a> Il y a actuellement <strong>%{currentTopics} / %{requiredTopics}</strong> sujets. Les nouveaux visiteurs ont besoin de quelques conversations à lire et répondre."
     too_few_posts_notice: "<a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>Démarrons cette discussion !</a> Il y a actuellement <strong>%{currentPosts} / %{requiredPosts}</strong> messages. Les nouveaux visiteurs ont besoin de quelques conversations à lire et répondre."
@@ -828,7 +829,7 @@ fr:
       disable: 'Afficher tous les messages'
     deleted_filter:
       enabled_description: "Ce sujet contient des messages supprimés, qui ont été cachés."
-      disabled_description: "Les messages supprimés de ce sujet sont visibles."
+      disabled_description: "Les messages supprimés du sujet sont visibles."
       enable: "Cacher les messages supprimés"
       disable: "Afficher les messages supprimés"
     private_message_info:
@@ -921,7 +922,7 @@ fr:
       more_emoji: "plus…"
       options: "Options"
       whisper: "murmure"
-      unlist: "non listé"
+      unlist: "invisible"
       add_warning: "Ceci est un avertissement officiel."
       toggle_whisper: "Modifier le murmure"
       toggle_unlisted: "Modifier la visibilité"
@@ -1041,7 +1042,7 @@ fr:
         replied: "Répondu"
         posted: "Message par"
         edited: "Modifier votre message par"
-        liked: "Aime votre message"
+        liked: "A aimé votre message"
         private_message: "Message privé de"
         invited_to_private_message: "Invité pour un message privé par"
         invited_to_topic: "Invité à un sujet par"
@@ -1101,6 +1102,7 @@ fr:
     not_logged_in_user: 'page utilisateur avec un résumé de l''activité et les préférences '
     current_user: 'aller à votre page utilisateur'
     topics:
+      new_messages_marker: "dernière visite"
       bulk:
         unlist_topics: "Ne plus lister les sujets"
         reset_read: "Réinitialiser la lecture"
@@ -1132,7 +1134,7 @@ fr:
         latest: "Il n'y a aucun sujet pour le moment. C'est triste…"
         hot: "Il n'y a aucun sujet populaire pour le moment."
         bookmarks: "Vous n'avez pas encore mis de signets à des sujets."
-        category: "Il n'y a aucun sujet sur {{category}}."
+        category: "Il n'y a pas de sujets dans {{category}}."
         top: "Il n'y a pas de meilleurs sujets."
         search: "Votre recherche ne retourne aucun résultat."
         educate:
@@ -1398,7 +1400,7 @@ fr:
         instructions:
           one: "Veuillez choisir un nouvel auteur pour le message de <b>{{old_user}}</b>."
           other: "Veuillez choisir un nouvel auteur pour les {{count}} messages de <b>{{old_user}}</b>."
-        instructions_warn: "Aucune notification à propos de ce message ne seront transféré rétroactivement à ce nouvel auteur. <br>Attention: Actuellement, aucune donnée lié au message n'est transféré vers le nouvel auteur. À utiliser avec précaution."
+        instructions_warn: "Aucune notification à propos de ce message ne sera transférée rétroactivement au nouvel utilisateur. <br>Attention : actuellement, aucune donnée liée aux messages n'est transféré vers le nouvel utilisateur. À utiliser avec précaution."
       change_timestamp:
         title: "Modifier la date/heure"
         action: "modifier la date/heure"
@@ -1609,7 +1611,7 @@ fr:
             button: '<i class="fa fa-columns"></i> Brut'
     category:
       can: 'peut&hellip; '
-      none: '(aucun catégorie)'
+      none: '(aucune catégorie)'
       all: 'Toutes les catégories'
       choose: 'Sélectionner une catégorie&hellip;'
       edit: 'modifier'
@@ -1734,7 +1736,7 @@ fr:
       warning:
         help: "Ceci est un avertissement officiel."
       bookmarked:
-        help: "Vous avez mis un signet à ce topic"
+        help: "Vous avez mis un signet à ce sujet"
       locked:
         help: "Ce sujet est fermé ; il n'accepte plus de nouvelles réponses"
       archived:
@@ -2066,7 +2068,7 @@ fr:
         private_messages_title: "Messages"
         mobile_title: "Mobile"
         space_free: "{{size}} libre"
-        uploads: "téléchargements"
+        uploads: "fichiers envoyés"
         backups: "sauvegardes"
         traffic_short: "Trafic"
         traffic: "Requêtes Web Application"
@@ -2089,7 +2091,7 @@ fr:
           end_date: "Date de fin"
           groups: "Tous les groupes"
       commits:
-        latest_changes: "Dernières modifications: merci de mettre à jour régulièrement!"
+        latest_changes: "Dernières modifications : veuillez mettre à jour régulièrement !"
         by: "par"
       flags:
         title: "Signalements"
@@ -2100,7 +2102,7 @@ fr:
         agree_flag_modal_title: "Accepter et…"
         agree_flag_hide_post: "Accepter (cacher le message + envoi d'un MP)"
         agree_flag_hide_post_title: "Masquer ce message et envoyer automatiquement un message à l'utilisateur afin qu'il le modifie rapidement"
-        agree_flag_restore_post: "Accepter (restauré le message)"
+        agree_flag_restore_post: "Accepter (rétablir le message)"
         agree_flag_restore_post_title: "Restaurer ce message"
         agree_flag: "Accepter le signalement"
         agree_flag_title: "Accepter le signalement et garder le message inchangé"
@@ -2154,8 +2156,8 @@ fr:
             one: "spam"
             other: "spam x{{count}}"
       groups:
-        primary: "Groupe primaire"
-        no_primary: "(pas de groupe primaire)"
+        primary: "Groupe principal"
+        no_primary: "(pas de groupe principal)"
         title: "Groupes"
         edit: "Modifier les groupes"
         refresh: "Actualiser"
@@ -2193,6 +2195,7 @@ fr:
         flair_color: "Couleur de la vignette d'avatar"
         flair_color_placeholder: "(Facultatif) Couleur en héxadécimal"
         flair_preview: "Prévisualiser"
+        flair_note: "Note : la vignette d'avatar sera uniquement affichée pour le groupe principal d'un utilisateur."
       api:
         generate_master: "Générer une clé d'API maître"
         none: "Il n'y a pas de clés API actives en ce moment."
@@ -2426,11 +2429,11 @@ fr:
             name: "quaternaire"
             description: "Liens de navigation."
           header_background:
-            name: "fond du header"
-            description: "Couleur de fond du header."
+            name: "arrière-plan de l'entête"
+            description: "Couleur d'arrière-plan de l'entête du site."
           header_primary:
-            name: "header primaire"
-            description: "Textes et icônes du header. "
+            name: "primaire de l'entête"
+            description: "Textes et icônes dans l'entête du site. "
           highlight:
             name: 'accentuation'
             description: 'La couleur de fond des éléments accentués sur la page, comme les messages et sujets.'
@@ -2878,7 +2881,7 @@ fr:
         badge_type: Type de badge
         badge_grouping: Groupe
         badge_groupings:
-          modal_title: Regroupements de badge
+          modal_title: Groupes de badges
         granted_by: Décerné par
         granted_at: Décerné le
         reason_help: (Lien vers un message ou sujet)
@@ -2946,11 +2949,11 @@ fr:
         confirm_delete: "Êtes-vous sûr de vouloir supprimer cet hôte?"
         sample: "Introduire le code HTML suivant dans votre site pour créer et intégrer des sujets Discourse. Remplacer <b>REPLACE_ME</b> avec l'URL de la page dans laquelle vous l'intégrer."
         title: "Intégration externe"
-        host: "Hôtes permis"
+        host: "Hôtes autorisés"
         path_whitelist: "Chemins autorisés"
         edit: "modifier"
-        category: "Ajouter dans catégorie"
-        add_host: "Ajouter hôte"
+        category: "Écrire dans la catégorie"
+        add_host: "Ajouter un hôte"
         settings: "Paramètres d'intégration externe"
         feed_settings: "Paramètres de flux RSS/ATOM"
         feed_description: "Fournir un flux RSS/ATOM pour votre site peut améliorer la capacité de Discourse à importer votre contenu."
@@ -2966,7 +2969,7 @@ fr:
         embed_classname_whitelist: "Classes CSS autorisées"
         feed_polling_enabled: "Importer les messages via flux RSS/ATOM"
         feed_polling_url: "URL du flux RSS/ATOM à importer"
-        save: "Sauvegarder paramètres d'intégration"
+        save: "Sauvegarder les paramètres d'intégration"
       permalink:
         title: "Permaliens"
         url: "URL"
@@ -2982,3 +2985,22 @@ fr:
           label: "Nouveau :"
           add: "Ajouter"
           filter: "Rechercher (URL ou URL externe)"
+  wizard_js:
+    wizard:
+      done: "Terminer"
+      back: "Retour"
+      next: "Suivant"
+      step: "%{current} sur %{total}"
+      upload: "Envoi"
+      uploading: "Envoi en cours…"
+      quit: "Peut-être plus tard"
+      staff_count:
+        one: "Votre communauté a 1 responsable."
+        other: "Votre communauté a %{count} responsables."
+      invites:
+        add_user: "ajouter"
+        none_added: "Vous n'avez invité aucun responsable. Êtes-vous sûr de vouloir continuer ?"
+        roles:
+          admin: "Administrateur"
+          moderator: "Modérateur"
+          regular: "Utilisateur"

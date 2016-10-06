@@ -136,6 +136,7 @@ es:
         enabled: 'listado %{when}'
         disabled: 'quitado de la lista, invisible %{when}'
     topic_admin_menu: "acciones de administrador para el tema"
+    wizard_required: "¡Hora de configurar tu foro! ¡<a href='%{url}' data-auto-route='true'>Inicia el Asistente de Configuración</a>!"
     emails_are_disabled: "Todos los emails salientes han sido desactivados por un administrador. No se enviará ninguna notificación por email."
     bootstrap_mode_enabled: "Para lanzar tu nuevo sitio más fácilmente, estás en modo de arranque. A todos los nuevos usuarios se les concederá el nivel 1 de confianza y recibirán resúmenes diarios por email. Esto se desactivará automáticamente cuando el número total de usuarios exceda los %{min_users}."
     bootstrap_mode_disabled: "El modo de arranque se desactivará en las próximas 24 horas."
@@ -1101,6 +1102,7 @@ es:
     not_logged_in_user: 'página con el resumen de actividad y preferencias'
     current_user: 'ir a tu página de usuario'
     topics:
+      new_messages_marker: "última visita"
       bulk:
         unlist_topics: "Hacer invisibles"
         reset_read: "Restablecer leídos"
@@ -2983,3 +2985,22 @@ es:
           label: "Nuevo:"
           add: "Añadir"
           filter: "Buscar (URL o URL externa)"
+  wizard_js:
+    wizard:
+      done: "Hecho"
+      back: "Atrás"
+      next: "Siguiente"
+      step: "%{current} de %{total}"
+      upload: "Subir"
+      uploading: "Subiendo..."
+      quit: "Tal vez más tarde"
+      staff_count:
+        one: "Tu comunidad tiene 1 miembro como staff."
+        other: "Tu comunidad tiene %{count} miembros como staff."
+      invites:
+        add_user: "añadir"
+        none_added: "No has invitado a nadie como staff. ¿Seguro que quieres continuar?"
+        roles:
+          admin: "Admin"
+          moderator: "Moderador"
+          regular: "Usuario habitual"

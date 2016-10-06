@@ -1101,6 +1101,7 @@ et:
     not_logged_in_user: 'kasutajaleht koos toimingute ja eelistuste kokkuvõttega'
     current_user: 'mine oma kasutajalehele'
     topics:
+      new_messages_marker: "viimane visiit"
       bulk:
         unlist_topics: "Eemalda teemad loetelust"
         reset_read: "Nulli loetud"
@@ -1699,6 +1700,13 @@ et:
         spam: "See on spämm"
       custom_placeholder_notify_user: "Ole täpne, konstruktiivne ja alati lahke."
       custom_placeholder_notify_moderators: "Anna meile teada, mis Sulle täpsemalt muret teeb ja võimalusel lisa asjassepuutuvaid viiteid ning näiteid."
+      custom_message:
+        more:
+          one: "1 veel"
+          other: "{{count}} veel..."
+        left:
+          one: "1 jäänud"
+          other: "{{count}} jäänud"
     flagging_topic:
       title: "Täname, et aitad meie kogukonna viisakust säilitada!"
       action: "Tähista teema"
@@ -1812,7 +1820,7 @@ et:
           other: "Uusi ({{count}})"
         help: "viimase paari päeva jooksul loodud teemad"
       posted:
-        title: "Minu postitused"
+        title: "Minu"
         help: "minu postitustega teemad"
       bookmarks:
         title: "Järjehoidjad"
@@ -2174,6 +2182,7 @@ et:
         add_owners: Lisa omanikke
         incoming_email: "Individuaalne sissetuleva meili aadress"
         incoming_email_placeholder: "sisesta meiliaadress"
+        flair_preview: "Eelvaade"
       api:
         generate_master: "Genereeri API peavõti"
         none: "Hetkel aktiivsed API võtmed puuduvad."
@@ -2188,6 +2197,29 @@ et:
         info_html: "See API võti lubab Sul teemasid luua ja uuendada JSON kutsete kaudu."
         all_users: "Kõik kasutajad"
         note_html: "Hoia seda võtit <strong>salajas</strong>, iga kasutaja, kes seda omab, võib luua suvalisi postitusi suvalise kasutaja nime alt."
+      web_hooks:
+        create: "Loo"
+        save: "Salvesta"
+        destroy: "Kustuta"
+        description: "Kirjeldus"
+        go_back: "Tagasi nimekirja"
+        content_type: "Sisutüüp"
+        wildcard_event: "Saada mulle kõik."
+        delivery_status:
+          inactive: "Mitteaktiivne"
+          failed: "Ebaõnnestunud"
+          successful: "Edukas"
+        events:
+          response: "Vastus"
+          headers: "Päised"
+          body: "Sisu"
+          go_list: "Mine nimekirja"
+          go_events: "Mine sündmuste juurde"
+          ping: "Ping"
+          status: "Staatus"
+          event_id: "ID"
+          timestamp: "Loaded"
+          actions: "Tegevused"
       plugins:
         title: "Plugin"
         installed: "Paigaldatud pluginad"
@@ -2571,6 +2603,7 @@ et:
         suspend_reason: "Põhjus"
         suspended_by: "Peatati kasutaja poolt"
         delete_all_posts: "Kustuta kõik postitused"
+        delete_all_posts_confirm_MF: "Sa oled kustutamas {POSTS, plural, one {1 post} other {# posts}} and {TOPICS, plural, one {1 topic} other {# topics}}. Oled Sa kindel?"
         suspend: "Peata"
         unsuspend: "Taasluba"
         suspended: "Peatatud?"
@@ -2771,6 +2804,7 @@ et:
           plugins: "Pistikprogrammid"
           user_preferences: "Kasutaja seaded"
           tags: "Sildid"
+          search: "Otsi"
       badges:
         title: Märgised
         new_badge: Uus märgis
@@ -2863,6 +2897,7 @@ et:
         embed_by_username: "Kasutajanimi teema loomiseks"
         embed_post_limit: "Maksimaalne postituste arv, mida sängitada"
         embed_username_key_from_feed: "Võti discourse kasutajanime eraldamiseks voost"
+        embed_title_scrubber: "Regex postituste päiste puhastamiseks"
         embed_truncate: "Lühenda sängitatud postitused"
         embed_whitelist_selector: "CSS valik elementidele, mida lubada sängitamistes"
         embed_blacklist_selector: "CSS valik elementidele, mida eemaldada sängitamistes"
@@ -2885,3 +2920,20 @@ et:
           label: "Uus"
           add: "Lisa"
           filter: "Otsi (URL või väline URL)"
+  wizard_js:
+    wizard:
+      done: "Tehtud"
+      back: "Tagasi"
+      next: "Järgmine"
+      upload: "Lae üles"
+      quit: "Võib-olla hiljem"
+      staff_count:
+        one: "Sinu kommuunis on 1 tiimi liige."
+        other: "Sinu kommuunis on %{count} tiimi liiget."
+      invites:
+        add_user: "lisa"
+        none_added: "Sa ei ole kutsunud ühtegi tiimi liiget. Oled Sa kindel, et soovid jätkata?"
+        roles:
+          admin: "Admin"
+          moderator: "Moderator"
+          regular: "Tavakasutaja"

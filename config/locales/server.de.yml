@@ -111,6 +111,7 @@ de:
     operation_already_running: "Eine Arbeitsschritt wird momentan bearbeitet. Im Moment kann kein neuer Vorgang gestartet werden."
     backup_file_should_be_tar_gz: "Die Sicherungsdatei sollte ein .tar.gz-Archiv sein."
     not_enough_space_on_disk: "Es gibt nicht genügend freien Festplattenspeicher, um dieses Backup hochzuladen."
+    invalid_filename: "Der Dateiname für das Backup enthält ungültige Zeichen. Gültig sind: a-z 0-9 . - _."
   not_logged_in: "Dazu musst du angemeldet sein."
   not_found: "Die angeforderte URL oder Ressource konnte nicht gefunden werden."
   invalid_access: "Du hast nicht die Erlaubnis, die angeforderte Ressource zu betrachten."
@@ -298,6 +299,10 @@ de:
         post_reply:
           base:
             different_topic: "Beitrag und Antwort müssen zum gleichen Thema gehören."
+        web_hook:
+          attributes:
+            payload_url:
+              invalid: "URL ist ungültig. URL sollte http:// oder https:// enthalten, Leerzeichen sind nicht erlaubt."
       <<: *errors
   user_profile:
     no_info_me: "<div class='missing-profile'>Das 'Über mich'-Feld deines Profils ist aktuell leer, <a href='/users/%{username_lower}/preferences/about-me'>möchtest du es ausfüllen?</a></div>"
@@ -912,6 +917,7 @@ de:
     enable_facebook_logins: "Aktiviere Facebook-Authentifizierung (benötigt facebook_app_id und facebook_app_secret)."
     facebook_app_id: "App-ID für Facebook-Authentifizierung, registriert auf https://developers.facebook.com/apps"
     facebook_app_secret: "App Secret für Facebook-Authentifizierung, registriert auf https://developers.facebook.com/apps"
+    facebook_request_extra_profile_details: "Anfrage zu \"über mich\", Standort und Website von Facebook. (erfordert, dass Deine auth-Anwendung von Facebook genehmigt wurde)"
     enable_github_logins: "Aktiviere GitHub-Authentifizierung (benötigt github_client_id und github_client_secret)."
     github_client_id: "Client-ID für GitHub-uthentifizierung, registriert auf https://github.com/settings/applications"
     github_client_secret: "Client Secret für GitHub-Authentifizierung, registriert auf https://github.com/settings/applications"
