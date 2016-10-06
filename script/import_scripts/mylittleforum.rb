@@ -284,6 +284,13 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
     # Convert image bbcode
     raw.gsub!(/\[img=(\d+),(\d+)\]([^\]]*)\[\/img\]/im, '<img width="\1" height="\2" src="\3">')
 
+    # [div]s are really [quote]s
+    raw.gsub!(/\[div\]/mix, "[quote]")
+    raw.gsub!(/\[\/div\]/mix, "[/quote]")
+
+    # [postedby] -> link to @user
+    raw.gsub(/\[postedby\](.+?)\[b\](.+?)\[\/b\]\[\/postedby\]/) { "#{$1}@#{$2}" }
+
     # CODE (not tested)
     raw = raw.gsub(/\[code\](\S+)\[\/code\]/im) { "```\n#{$1}\n```"}
     raw = raw.gsub(/\[pre\](\S+)\[\/pre\]/im) { "```\n#{$1}\n```"}
