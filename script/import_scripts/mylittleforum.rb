@@ -243,8 +243,18 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
     # get just src from <iframe> and put on a line by itself
     re = /<iframe.+?src="(\S+?)".+?<\/iframe>/mix
     youtube_cooked.gsub!(re) {"\n#{$1}\n"}
-      .gsub!(/^\/\//, "https://") # make sure it has a protocol
+    re = /<object.+?src="(\S+?)".+?<\/iframe>/mix
+    youtube_cooked.gsub!(re) {"\n#{$1}\n"}
+    youtube_cooked.gsub!(/^\/\//, "https://") # make sure it has a protocol
+    unless /http/.match(youtube_cooked) # handle case of only youtube object number
+      if youtube_cooked.length < 8
+        # probably not a youtube id
+        youtube_cooked = ""
+      else
+        youtube_cooked = 'https://www.youtube.com/watch?v=' + youtube_cooked
+      end
     print_warning("\nYoutube: (#{youtube_raw}) --> \nLink: #{youtube_cooked}")
+    end
   end
 
   def clean_up(raw)
