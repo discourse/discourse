@@ -5,25 +5,29 @@ require File.expand_path(File.dirname(__FILE__) + "/base.rb")
 # Before running this script, paste these lines into your shell,
 # then use arrow keys to edit the values
 =begin
-export FLUXBB_USER="root"
+export FLUXBB_HOST="localhost"
 export FLUXBB_DB="fluxbb"
+export FLUXBB_USER="root"
 export FLUXBB_PW=""
+export FLUXBB_PREFIX=""
 =end
 
 # Call it like this:
 #   RAILS_ENV=production bundle exec ruby script/import_scripts/fluxbb.rb
 class ImportScripts::FluxBB < ImportScripts::Base
 
+  FLUXBB_HOST ||= ENV['FLUXBB_HOST'] || "localhost"
   FLUXBB_DB ||= ENV['FLUXBB_DB'] || "fluxbb"
   BATCH_SIZE ||= 1000
-  FLUXBB_PW ||= ENV['FLUXBB_PW'] || ""
   FLUXBB_USER ||= ENV['FLUXBB_USER'] || "root"
+  FLUXBB_PW ||= ENV['FLUXBB_PW'] || ""
+  FLUXBB_PREFIX ||= ENV['FLUXBB_PREFIX'] || ""
 
   def initialize
     super
 
     @client = Mysql2::Client.new(
-      host: "localhost",
+      host: FLUXBB_HOST,
       username: FLUXBB_USER,
       password: FLUXBB_PW,
       database: FLUXBB_DB
@@ -43,7 +47,7 @@ class ImportScripts::FluxBB < ImportScripts::Base
 
     results = mysql_query(
       "SELECT g_id id, g_title name, g_user_title title
-       FROM groups")
+       FROM #{FLUXBB_PREFIX}groups")
 
     create_groups(results) do |group|
       { id: group['id'],
@@ -62,7 +66,7 @@ class ImportScripts::FluxBB < ImportScripts::Base
         "SELECT id, username, realname name, url website, email email, registered created_at,
                 registration_ip registration_ip_address, last_visit last_visit_time,
                 last_email_sent last_emailed_at, location, group_id
-         FROM users
+         FROM #{FLUXBB_PREFIX}users
          LIMIT #{BATCH_SIZE}
          OFFSET #{offset};")
 
@@ -103,7 +107,7 @@ class ImportScripts::FluxBB < ImportScripts::Base
 
     categories = mysql_query("
                               SELECT id, cat_name name, disp_position position
-                              FROM categories
+                              FROM #{FLUXBB_PREFIX}categories
                               ORDER BY id ASC
                             ").to_a
 
@@ -118,7 +122,7 @@ class ImportScripts::FluxBB < ImportScripts::Base
 
     children_categories = mysql_query("
                                        SELECT id, forum_name name, forum_desc description, disp_position position, cat_id parent_category_id
-                                       FROM forums
+                                       FROM #{FLUXBB_PREFIX}forums
                                        ORDER BY id
                                       ").to_a
 
@@ -135,7 +139,7 @@ class ImportScripts::FluxBB < ImportScripts::Base
   def import_posts
     puts "", "creating topics and posts"
 
-    total_count = mysql_query("SELECT count(*) count from posts").first["count"]
+    total_count = mysql_query("SELECT count(*) count from #{FLUXBB_PREFIX}posts").first["count"]
 
     batches(BATCH_SIZE) do |offset|
       results = mysql_query("
@@ -147,8 +151,8 @@ class ImportScripts::FluxBB < ImportScripts::Base
                p.poster_id user_id,
                p.message raw,
                p.posted created_at
-        FROM posts p,
-             topics t
+        FROM #{FLUXBB_PREFIX}posts p,
+             #{FLUXBB_PREFIX}topics t
         WHERE p.topic_id = t.id
         ORDER BY p.posted
         LIMIT #{BATCH_SIZE}
@@ -190,11 +194,11 @@ class ImportScripts::FluxBB < ImportScripts::Base
 
     banned = 0
     failed = 0
-    total = mysql_query("SELECT count(*) count FROM bans").first['count']
+    total = mysql_query("SELECT count(*) count FROM #{FLUXBB_PREFIX}bans").first['count']
 
     system_user = Discourse.system_user
 
-    mysql_query("SELECT username, email FROM bans").each do |b|
+    mysql_query("SELECT username, email FROM #{FLUXBB_PREFIX}bans").each do |b|
       user = User.find_by_email(b['email'])
       if user
         user.suspended_at = Time.now
