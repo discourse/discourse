@@ -242,8 +242,7 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
         youtube = nil
         unless comment['youtube'].blank?
           youtube = clean_youtube(comment['youtube'])
-          raw += "\nLOOK IT'S A FREAKING VIDEO!!!! \n#{youtube}\n"
-          print_warning(raw)
+          raw += "\n#{youtube}\n"
         end
         {
           id: "comment#" + comment['CommentID'].to_s,
