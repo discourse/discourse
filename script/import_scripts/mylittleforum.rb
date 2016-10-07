@@ -187,12 +187,14 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
 
       create_posts(discussions, total: total_count, offset: offset) do |discussion|
 
+        raw = clean_up(discussion['Body'])
+
         youtube = nil
         unless discussion['youtube'].blank?
           youtube = clean_youtube(discussion['youtube'])
+          raw += "\n#{youtube}\n"
         end
 
-        raw = clean_up(discussion['Body'] + "\n#{youtube}\n")
         {
           id: "discussion#" + discussion['DiscussionID'].to_s,
           user_id: user_id_from_imported_user_id(discussion['InsertUserID']) || Discourse::SYSTEM_USER_ID,
@@ -235,11 +237,12 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
       create_posts(comments, total: total_count, offset: offset) do |comment|
         next unless t = topic_lookup_from_imported_post_id("discussion#" + comment['DiscussionID'].to_s)
         next if comment['Body'].blank?
+        raw = clean_up(comment['Body'])
         youtube = nil
         unless comment['youtube'].blank?
           youtube = clean_youtube(comment['youtube'])
+          raw += "\n#{youtube}\n"
         end
-        raw = clean_up(comment['Body'] + "\n#{youtube}\n")
         {
           id: "comment#" + comment['CommentID'].to_s,
           user_id: user_id_from_imported_user_id(comment['InsertUserID']) || Discourse::SYSTEM_USER_ID,
