@@ -323,6 +323,11 @@ describe Search do
     end
   end
 
+  it 'does not tokenize search term' do
+    Fabricate(:post, raw: 'thing is canned should still be found!')
+    expect(Search.execute('canned').posts).to be_present
+  end
+
   context 'categories' do
 
     let!(:category) { Fabricate(:category) }
