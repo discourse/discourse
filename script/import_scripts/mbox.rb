@@ -53,7 +53,6 @@ class ImportScripts::Mbox < ImportScripts::Base
     import_users
     create_forum_topics
     import_replies
-    # replace_email_addresses # uncomment to replace all email address with @username
   end
 
   def import_categories
