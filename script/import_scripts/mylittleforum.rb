@@ -29,11 +29,21 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
   BASE ||= ENV['BASE'] || "forum/"
   BATCH_SIZE = 1000
   CONVERT_HTML = true
+  QUIET = nil || ENV['VERBOSE'] == "TRUE"
+  FORCE_HOSTNAME = nil || ENV['FORCE_HOSTNAME']
+
+  # Site settings
+  SiteSetting.disable_emails = true
+  if FORCE_HOSTNAME
+    SiteSetting.force_hostname=FORCE_HOSTNAME
+  end
 
 
   def initialize
 
-    print_warning("Importing data after #{IMPORT_AFTER}")
+    if IMPORT_AFTER > "1970-01-01"
+      print_warning("Importing data after #{IMPORT_AFTER}")
+    end
 
     super
     @htmlentities = HTMLEntities.new
@@ -90,14 +100,13 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
 
       create_users(results, total: total_count, offset: offset) do |user|
         next if user['Email'].blank?
-        next if user['Name'].blank?
         next if @lookup.user_id_from_imported_user_id(user['UserID'])
 
-        username = fix_username(user['username'])
+        # username = fix_username(user['username'])
 
         { id: user['UserID'],
           email: user['Email'],
-          username: username,
+          username: user['username'],
           name: user['Name'],
           created_at: user['DateInserted'] == nil ? 0 : Time.zone.at(user['DateInserted']),
           bio_raw: user['bio_raw'],
@@ -124,7 +133,9 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
     username.gsub!(/[._]+/,"_") # can't have 2 special in a row
     username.gsub!(/_+/,"_") # could result in dupes, but wtf?
     username.gsub!(/_$/,"") # could result in dupes, but wtf?
-    print_warning ("#{olduser} --> #{username}") unless olduser == username #JP
+    if olduser != username
+      print_warning ("#{olduser} --> #{username}")
+    end
     username
   end
 
@@ -176,6 +187,7 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
 
       create_posts(discussions, total: total_count, offset: offset) do |discussion|
 
+        youtube = nil
         unless discussion['youtube'].blank?
           youtube = clean_youtube(discussion['youtube'])
         end
@@ -205,7 +217,7 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
     batches(BATCH_SIZE) do |offset|
       comments = mysql_query(
         "SELECT id as CommentID,
-                pid as DiscussionID,
+                tid as DiscussionID,
                 text as Body,
                 time as DateInserted,
                 youtube_link as youtube,
@@ -223,6 +235,7 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
       create_posts(comments, total: total_count, offset: offset) do |comment|
         next unless t = topic_lookup_from_imported_post_id("discussion#" + comment['DiscussionID'].to_s)
         next if comment['Body'].blank?
+        youtube = nil
         unless comment['youtube'].blank?
           youtube = clean_youtube(comment['youtube'])
         end
@@ -243,18 +256,18 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
     # get just src from <iframe> and put on a line by itself
     re = /<iframe.+?src="(\S+?)".+?<\/iframe>/mix
     youtube_cooked.gsub!(re) {"\n#{$1}\n"}
-    re = /<object.+?src="(\S+?)".+?<\/iframe>/mix
+    re = /<object.+?src="(\S+?)".+?<\/object>/mix
     youtube_cooked.gsub!(re) {"\n#{$1}\n"}
     youtube_cooked.gsub!(/^\/\//, "https://") # make sure it has a protocol
     unless /http/.match(youtube_cooked) # handle case of only youtube object number
-      if youtube_cooked.length < 8
+      if youtube_cooked.length < 8 || /[<>=]/.match(youtube_cooked)
         # probably not a youtube id
         youtube_cooked = ""
       else
         youtube_cooked = 'https://www.youtube.com/watch?v=' + youtube_cooked
       end
-    print_warning("\nYoutube: (#{youtube_raw}) --> \nLink: #{youtube_cooked}")
     end
+    print_warning("#{'-'*40}\nBefore: #{youtube_raw}\nAfter: #{youtube_cooked}")
   end
 
   def clean_up(raw)
@@ -298,13 +311,19 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
     raw.gsub!(/\[\/div\]/mix, "[/quote]")
 
     # [postedby] -> link to @user
-    raw.gsub(/\[postedby\](.+?)\[b\](.+?)\[\/b\]\[\/postedby\]/) { "#{$1}@#{$2}" }
+    raw.gsub(/\[postedby\](.+?)\[b\](.+?)\[\/b\]\[\/postedby\]/i) { "#{$1}@#{$2}" }
 
     # CODE (not tested)
     raw = raw.gsub(/\[code\](\S+)\[\/code\]/im) { "```\n#{$1}\n```"}
     raw = raw.gsub(/\[pre\](\S+)\[\/pre\]/im) { "```\n#{$1}\n```"}
 
-    raw = raw.gsub(/(https:\/\/youtu\S+)/) { "\n#{$1}\n" } #youtube links on line by themselves
+    raw = raw.gsub(/(https:\/\/youtu\S+)/i) { "\n#{$1}\n" } #youtube links on line by themselves
+
+    # no center
+    raw = raw.gsub(/\[\/?center\]/i,"")
+
+    # no size
+    raw = raw.gsub(/\[\/?size.*?\]/i,"")
 
     ### FROM VANILLA:
 
@@ -363,10 +382,14 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
         id = pcf["import_id"].split('#').last
         if post.post_number == 1
           Permalink.create( url: "#{BASE}/forum_entry-id-#{id}.html", topic_id: topic.id ) rescue nil
-          print_warning("forum_entry-id-#{id}.html --> http://localhost:3000/t/#{topic.id}")
+          unless QUIET
+            print_warning("forum_entry-id-#{id}.html --> http://localhost:3000/t/#{topic.id}")
+          end
         else
           Permalink.create( url: "#{BASE}/forum_entry-id-#{id}.html", post_id: post.id ) rescue nil
-          print_warning("forum_entry-id-#{id}.html --> http://localhost:3000/t/#{topic.id}/#{post.id}")
+          unless QUIET
+            print_warning("forum_entry-id-#{id}.html --> http://localhost:3000/t/#{topic.id}/#{post.id}")
+          end
         end
         print '.'
       end
@@ -389,6 +412,5 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
 
 
 end
-
 
 ImportScripts::MylittleforumSQL.new.perform
