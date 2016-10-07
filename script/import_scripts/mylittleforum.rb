@@ -192,7 +192,7 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
         youtube = nil
         unless discussion['youtube'].blank?
           youtube = clean_youtube(discussion['youtube'])
-          raw += "\nLOOK IT'S A FREAKING VIDEO!!!! \n#{youtube}\n"
+          raw += "\n#{youtube}\n"
           print_warning(raw)
         end
 
