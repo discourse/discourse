@@ -192,7 +192,8 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
         youtube = nil
         unless discussion['youtube'].blank?
           youtube = clean_youtube(discussion['youtube'])
-          raw += "\n#{youtube}\n"
+          raw += "\nLOOK IT'S A FREAKING VIDEO!!!! \n#{youtube}\n"
+          print_warning(raw)
         end
 
         {
@@ -241,7 +242,8 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
         youtube = nil
         unless comment['youtube'].blank?
           youtube = clean_youtube(comment['youtube'])
-          raw += "\n#{youtube}\n"
+          raw += "\nLOOK IT'S A FREAKING VIDEO!!!! \n#{youtube}\n"
+          print_warning(raw)
         end
         {
           id: "comment#" + comment['CommentID'].to_s,
@@ -270,7 +272,9 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
         youtube_cooked = 'https://www.youtube.com/watch?v=' + youtube_cooked
       end
     end
-    print_warning("#{'-'*40}\nBefore: #{youtube_raw}\nAfter: #{youtube_cooked}")
+    print_warning("#{'-'*40}\nBefore: #{youtube_raw}\nAfter: #{youtube_cooked}") unless QUIET
+
+    youtube_cooked
   end
 
   def clean_up(raw)
