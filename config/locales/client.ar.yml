@@ -3198,3 +3198,9 @@ ar:
           label: "جديد :"
           add: "أضف"
           filter: "بحث  ( رابط داخلي أو خارجي )"
+  wizard_js:
+    wizard:
+      back: "الى الخلف"
+      next: "التالي"
+      invites:
+        add_user: "أضف"

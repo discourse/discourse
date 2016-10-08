@@ -146,54 +146,6 @@ describe AdminDashboardData do
     end
   end
 
-  describe 'default_logo_check' do
-    subject { described_class.new.default_logo_check }
-
-    describe 'favicon_url check' do
-      before do
-        SiteSetting.logo_url = '/assets/my-logo.jpg'
-        SiteSetting.logo_small_url = '/assets/my-small-logo.jpg'
-      end
-
-      it 'returns a string when favicon_url is default' do
-        expect(subject).not_to be_nil
-      end
-
-      it 'returns a string when favicon_url contains default filename' do
-        SiteSetting.favicon_url = "/prefix#{SiteSetting.defaults[:favicon_url]}"
-        expect(subject).not_to be_nil
-      end
-
-      it 'returns nil when favicon_url does not match default-favicon.png' do
-        SiteSetting.favicon_url = '/assets/my-favicon.png'
-        expect(subject).to be_nil
-      end
-    end
-
-    describe 'logo_url check' do
-      before do
-        SiteSetting.favicon_url = '/assets/my-favicon.png'
-        SiteSetting.logo_small_url = '/assets/my-small-logo.jpg'
-      end
-
-      it 'returns a string when logo_url is default' do
-        expect(subject).not_to be_nil
-      end
-
-      it 'returns a string when logo_url contains default filename' do
-        SiteSetting.logo_url = "/prefix#{SiteSetting.defaults[:logo_url]}"
-        expect(subject).not_to be_nil
-      end
-
-      it 'returns nil when logo_url does not match d-logo-sketch.png' do
-        SiteSetting.logo_url = '/assets/my-logo.png'
-        expect(subject).to be_nil
-      end
-    end
-
-    # etc.
-  end
-
   describe 'auth_config_checks' do
 
     shared_examples 'problem detection for login providers' do

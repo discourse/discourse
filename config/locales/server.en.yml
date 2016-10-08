@@ -810,14 +810,7 @@ en:
     s3_backup_config_warning: 'The server is configured to upload backups to s3, but at least one the following setting is not set: s3_access_key_id, s3_secret_access_key or s3_backup_bucket. Go to <a href="/admin/site_settings">the Site Settings</a> and update the settings. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">See "How to set up image uploads to S3?" to learn more</a>.'
     image_magick_warning: 'The server is configured to create thumbnails of large images, but ImageMagick is not installed. Install ImageMagick using your favorite package manager or <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">download the latest release</a>.'
     failing_emails_warning: 'There are %{num_failed_jobs} email jobs that failed. Check your app.yml and ensure that the mail server settings are correct. <a href="/sidekiq/retries" target="_blank">See the failed jobs in Sidekiq</a>.'
-    default_logo_warning: "Set the graphic logos for your site. Update logo_url, logo_small_url, and favicon_url in <a href='/admin/site_settings'>Site Settings</a>."
-    contact_email_missing: "Enter a site contact email address so you can be reached for urgent matters regarding your site. Update it in <a href='/admin/site_settings'>Site Settings</a>."
-    contact_email_invalid: "The site contact email is invalid. Update it in <a href='/admin/site_settings'>Site Settings</a>."
-    title_nag: "Enter the name of your site. Update title in <a href='/admin/site_settings'>Site Settings</a>."
-    site_description_missing: "Enter a one sentence description of your site that will appear in search results. Update site_description in <a href='/admin/site_settings'>Site Settings</a>."
     consumer_email_warning: "Your site is configured to use Gmail (or another consumer email service) to send email. <a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>Gmail limits how many emails you can send</a>. Consider using an email service provider like mandrill.com to ensure email deliverability."
-    site_contact_username_warning: "Enter the name of a friendly staff user account to send important automated messages from. Update site_contact_username in <a href='/admin/site_settings'>Site Settings</a>."
-    notification_email_warning: "Notification emails are not being sent from a valid email address on your domain; email delivery will be erratic and unreliable. Please set notification_email to a valid local email address in <a href='/admin/site_settings'>Site Settings</a>."
     subfolder_ends_in_slash: "Your subfolder setup is incorrect; the DISCOURSE_RELATIVE_URL_ROOT ends in a slash."
     email_polling_errored_recently:
       one: "Email polling has generated an error in the past 24 hours. Look at <a href='/logs' target='_blank'>the logs</a> for more details."
@@ -1128,6 +1121,8 @@ en:
     min_trust_to_create_topic: "The minimum trust level required to create a new topic."
 
     min_trust_to_edit_wiki_post: "The minimum trust level required to edit post marked as wiki."
+
+    min_trust_to_edit_post: "The minimum trust level required to edit posts."
 
     min_trust_to_allow_self_wiki: "The minimum trust level required to make user's own post wiki."
 

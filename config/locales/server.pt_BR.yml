@@ -1188,6 +1188,100 @@ pt_BR:
     deferred_and_deleted: "Obrigado por nos avisar. Nós removemos o post."
   temporarily_closed_due_to_flags: "Este tópico foi temporariamente fechado devido a um grande número de sinalizações da comunidade."
   system_messages:
+    usage_tips:
+      text_body_template: |
+        Eis algumas dicas rápidas para iniciar:
+
+        ## Leitura
+
+        Para ler mais, **basta continuar rolando a página para baixo!**
+
+        À medida que novas respostas ou tópicos forem chegando, eles irão aparecer automaticamente -- não há necessidade de refrescar a página.
+
+        ## Navegação
+
+
+        - For search, your user page, or the <kbd>☰</kbd> menu, use the **icon buttons at upper right**.
+
+        - Selecting a topic title will always take you to your **next unread reply** in the topic. To enter at the top or bottom instead, select the reply count or last reply date.
+
+        <img src="%{base_url}/images/welcome/topic-list-select-areas-2x.png" width="593" height="59">
+
+        - While reading a topic, use the timeline on the right to jump to the top, bottom, or your last read position. On smaller screens, select the progress bar at bottom right to expand it:
+
+        <img src="%{base_url}/images/welcome/progress-bar-2x.png" width="153" height="181">
+
+        You can also press <kbd>?</kbd> on your keyboard for a list of super-speedy keyboard shortcuts.
+
+        ## Replying
+
+        To insert a quote, select the text you wish to quote, then press any <img src="%{base_url}/images/welcome/reply-post-2x.png" width="25" height="23"> Reply button to open the editor. Repeat for multiple quotes.
+
+        <img src="%{base_url}/images/welcome/quote-reply-2x.png" width="326" height="128">
+
+        You can always continue reading while you compose your reply, and we automatically save drafts as you write.
+
+        To notify someone about your reply, mention their name. Type `@` to begin selecting a username.
+
+        <img src="%{base_url}/images/welcome/username-completion-2x.png" width="191" height="125">
+
+        To use [standard Emoji](http://www.emoji.codes/), just type `:` to match by name, or use the traditional smileys `;)`
+
+        <img src="%{base_url}/images/welcome/emoji-completion-2x.png" width="144" height="153">
+
+        To generate a summary for a link, paste it on a line by itself:
+
+        <img src="%{base_url}/images/welcome/link-oneboxing-animation.gif" width="480" height="228">
+
+        Your reply can be formatted using simple HTML, BBCode, or [Markdown](http://commonmark.org/help/):
+
+        This is <b>bold</b>.
+        This is [b]bold[/b].
+        This is **bold**.
+
+        For more formatting tips, [try our fun 10 minute interactive tutorial!](http://commonmark.org/help/tutorial/)
+
+        ## Actions
+
+        There are action buttons at the bottom of each post:
+
+        <img src="%{base_url}/images/welcome/like-link-flag-bookmark-2x.png" width="162" height="42">
+
+        - To let someone know that you enjoyed and appreciated their post, use the **like** button. Share the love!
+
+        - Grab a copy-pasteable link to any reply or topic via the **link** button.
+
+        - Use the <kbd>&hellip;</kbd> show more button to reveal more actions. **Flag** to privately let the author, or [our staff](%{base_url}/about), know about a problem. **Bookmark** to find this post later on your profile page.
+
+        ## Notifications
+
+        When someone replies to you, quotes your post, mentions your `@username`, or even links to your post, a number will immediately appear at the top right of the page. Select it to access your **notifications**.
+
+        <img src="%{base_url}/images/welcome/notification-panel-2x.png" width="160" height="54">
+
+        Don't worry about missing a reply – you'll be emailed any notifications that arrive when you are away.
+
+        ## Preferences
+
+        - All topics less than **two days old** are considered new.
+
+        - Any topic you've **actively participated in** (by creating it, replying to it, or reading it for an extended period) will be automatically tracked on your behalf.
+
+        You will see the new and unread number indicators next to these topics:
+
+        <img src="%{base_url}/images/welcome/topics-new-unread-2x.png" width="341" height="106">
+
+        You can change your notifications for any topic via the notification control at the bottom, and right hand side, of each topic.
+
+        <img src="%{base_url}/images/welcome/topic-notification-control-2x.png" width="608" height="312">
+
+        You can also set notification state per category, if you want to watch or mute every new topic in a specific category.
+
+        To change any of these settings, see [your user preferences](%{base_url}/my/preferences).
+
+        ## Community Trust
+
+        It's great to meet you! As you participate here, over time we'll get to know you, and your temporary new user limitations will be lifted. Keep participating, and over time you'll gain new [trust levels](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924) that include special abilities to help us manage our community together.
     welcome_user:
       subject_template: "Bem-vindo ao %{site_name}!"
       text_body_template: |
@@ -1566,6 +1660,8 @@ pt_BR:
     welcome:
       name: Bem-Vindo
       description: Recebeu uma curtida
+      long_description: |
+        Este emblema é concedido quando você recebe sua primeira curtida numa mensagem. Parabéns, você postou algo que sua comunidade achou interessante, legal ou divertido!
     autobiographer:
       name: Autobiógrafo
       description: Preencheu as informações do <a href="/my/preferences">perfil</a>
@@ -1696,6 +1792,14 @@ pt_BR:
     staff_tag_disallowed: "A marcação \"%{tag}\" pode ser aplicada somente pelo pessoal de apoio."
     staff_tag_remove_disallowed: "A marcação \"%{tag}\" pode ser removida somente pelo pessoal de apoio."
   rss_by_tag: "Tópicos marcados com %{tag}"
+  wizard:
+    step:
+      locale:
+        title: "Bem-vindo ao seu Discourse!"
+      introduction:
+        fields:
+          welcome:
+            label: "Tópico de Boas Vindas"
   activemodel:
     errors:
       <<: *errors

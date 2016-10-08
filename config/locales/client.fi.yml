@@ -136,6 +136,7 @@ fi:
         enabled: 'listasi %{when}'
         disabled: 'poisti listauksista %{when}'
     topic_admin_menu: "ketjun ylläpitotoimet"
+    wizard_required: "Konfiguroidaan foorumisi! <a href='%{url}' data-auto-route='true'>Aloita ohjattu asennus</a>!"
     emails_are_disabled: "Ylläpitäjä on estänyt kaiken lähtevän sähköpostiliikenteen. Mitään sähköposti-ilmoituksia ei lähetetä."
     bootstrap_mode_enabled: "Jotta uuden palsta käynnistäminen olisi helpompaa, on sivusto asetettu aloitustilaan. Kaikki uudet käyttäjät siirretään automaattisesti luottamustasolle 1 ja heille lähetetään sähköpostitiivistelmät päivittäin. Tämä tila poistetaan automaattisesti, kun käyttäjien määrä ylittää %{min_users}."
     bootstrap_mode_disabled: "Aloitustila poistetaan seuraavan 24 tunnin aikana."
@@ -2896,3 +2897,22 @@ fi:
           label: "Uusi:"
           add: "Lisää"
           filter: "Etsi (URL tai ulkoinen URL)"
+  wizard_js:
+    wizard:
+      done: "Valmis"
+      back: "Edellinen"
+      next: "Seuraava"
+      step: "%{current}/%{total}"
+      upload: "Lataa"
+      uploading: "Ladataan..."
+      quit: "Ehkä myöhemmin"
+      staff_count:
+        one: "Yhteisöllä on 1 henkilökuntalainen."
+        other: "Yhteisöllä on %{count} henkilökuntalaista."
+      invites:
+        add_user: "lisää"
+        none_added: "Et ole kutsunut lainkaan henkilökuntaa. Haluatko todella jatkaa?"
+        roles:
+          admin: "Ylläpitäjä"
+          moderator: "Valvoja"
+          regular: "Tavallinen käyttäjä"

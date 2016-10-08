@@ -106,7 +106,7 @@ function checkExtras(origScope, sep, extras) {
       currentScope = scope.shift();
       messages = messages[currentScope];
     }
-    if (messages) {
+    if (messages !== undefined) {
       return messages;
     }
   }
@@ -139,23 +139,23 @@ I18n.lookup = function(scope, options) {
     messages = messages[currentScope];
   }
 
-  if (!messages) {
+  if (messages === undefined) {
     messages = checkExtras(origScope, this.defaultSeparator, this.extras);
   }
 
 
-  if (!messages) {
+  if (messages === undefined) {
     if (I18n.fallbacks) {
       var fallbacks = this.getFallbacks(locale);
       for (var fallback = 0; fallback < fallbacks.length; fallbacks++) {
         messages = I18n.lookup(lookupInitialScope, this.prepareOptions({locale: fallbacks[fallback]}, options));
-        if (messages) {
+        if (messages !== undefined) {
           break;
         }
       }
     }
 
-    if (!messages && this.isValidNode(options, "defaultValue")) {
+    if (messages === undefined && this.isValidNode(options, "defaultValue")) {
         messages = options.defaultValue;
     }
   }

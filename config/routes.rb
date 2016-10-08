@@ -516,7 +516,6 @@ Discourse::Application.routes.draw do
 
   # Topics resource
   get "t/:id" => "topics#show"
-  post "t" => "topics#create"
   put "t/:id" => "topics#update"
   delete "t/:id" => "topics#destroy"
   put "t/:id/archive-message" => "topics#archive_message"
