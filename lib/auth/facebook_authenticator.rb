@@ -39,7 +39,7 @@ class Auth::FacebookAuthenticator < Auth::Authenticator
     end
 
 
-    bio = facebook_hash[:about_me]
+    bio = facebook_hash[:about_me] || facebook_hash[:about]
     location = facebook_hash[:location]
     website = facebook_hash[:website]
 
@@ -94,7 +94,7 @@ class Auth::FacebookAuthenticator < Auth::Authenticator
               strategy = env["omniauth.strategy"]
               strategy.options[:client_id] = SiteSetting.facebook_app_id
               strategy.options[:client_secret] = SiteSetting.facebook_app_secret
-              strategy.options[:info_fields] = 'gender,email,name,bio,first_name,link,last_name,website,location'
+              strategy.options[:info_fields] = 'gender,email,name,about,first_name,link,last_name,website,location'
               if SiteSetting.facebook_request_extra_profile_details
                 strategy.options[:scope] = 'email,user_about_me,user_location,user_website'
               end
