@@ -740,6 +740,8 @@ en:
         after_5_minutes: "after 5 minutes"
         after_10_minutes: "after 10 minutes"
 
+      notification_level_when_replying: "When I post in a topic, set that topic to"
+
       invited:
         search: "type to search invites..."
         title: "Invites"

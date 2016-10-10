@@ -19,6 +19,7 @@ describe UserSerializer do
     it "serializes options correctly" do
       # so we serialize more stuff
       SiteSetting.default_other_auto_track_topics_after_msecs = 0
+      SiteSetting.default_other_notification_level_when_replying = 3
       SiteSetting.default_other_new_topic_duration_minutes = 60*24
 
       user = Fabricate.build(:user,
@@ -32,6 +33,7 @@ describe UserSerializer do
       expect(json[:user_option][:dynamic_favicon]).to eq(true)
       expect(json[:user_option][:new_topic_duration_minutes]).to eq(60*24)
       expect(json[:user_option][:auto_track_topics_after_msecs]).to eq(0)
+      expect(json[:user_option][:notification_level_when_replying]).to eq(3)
 
     end
   end

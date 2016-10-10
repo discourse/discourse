@@ -29,6 +29,7 @@ class UserUpdater
     :digest_after_minutes,
     :new_topic_duration_minutes,
     :auto_track_topics_after_msecs,
+    :notification_level_when_replying,
     :email_previous_replies,
     :email_in_reply_to,
     :like_notification_frequency,

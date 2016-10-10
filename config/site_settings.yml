@@ -1250,6 +1250,9 @@ user_preferences:
   default_other_auto_track_topics_after_msecs:
     enum: 'AutoTrackDurationSiteSetting'
     default: 240000
+  default_other_notification_level_when_replying:
+    enum: 'NotificationLevelWhenReplyingSiteSetting'
+    default: 2
   default_other_external_links_in_new_tab: false
   default_other_enable_quoting: true
   default_other_dynamic_favicon: false
