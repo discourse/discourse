@@ -550,6 +550,9 @@ posting:
   approve_unless_trust_level:
     default: 0
     enum: 'TrustLevelSetting'
+  approve_new_topics_unless_trust_level:
+    default: 0
+    enum: 'TrustLevelSetting'
   notify_about_queued_posts_after:
     default: 24
     min: 0

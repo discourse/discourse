@@ -73,6 +73,7 @@ class NewPostManager
 
     (user.trust_level <= TrustLevel.levels[:basic] && user.post_count < SiteSetting.approve_post_count) ||
     (user.trust_level < SiteSetting.approve_unless_trust_level.to_i) ||
+    (manager.args[:title].present? && user.trust_level < SiteSetting.approve_new_topics_unless_trust_level.to_i) ||
     is_fast_typer?(manager) ||
     matches_auto_block_regex?(manager)
   end
@@ -114,6 +115,7 @@ class NewPostManager
   def self.queue_enabled?
     SiteSetting.approve_post_count > 0 ||
     SiteSetting.approve_unless_trust_level.to_i > 0 ||
+    SiteSetting.approve_new_topics_unless_trust_level.to_i > 0 ||
     handlers.size > 1
   end
 
