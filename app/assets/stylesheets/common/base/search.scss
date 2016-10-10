@@ -101,8 +101,9 @@
   margin-bottom: 15px;
 
   .panel-title {
-    background-color: dark-light-diff($primary, $secondary, 90%, -75%);
-    padding: 5px 10px 5px 10px;
+    background-color: dark-light-diff($primary, $secondary, 94%, -80%);
+    padding: 8px 10px;
+    cursor: pointer;
   }
 
   .search-options {
