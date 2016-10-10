@@ -60,11 +60,6 @@ export default Ember.Controller.extend(CanCheckEmails, {
   },
 
   @computed()
-  canReceiveDigest() {
-    return !this.siteSettings.disable_digest_emails;
-  },
-
-  @computed()
   availableLocales() {
     return this.siteSettings.available_locales.split('|').map(s => ({ name: s, value: s }));
   },
