@@ -1,14 +1,74 @@
 #!/bin/bash
-
-pushd `dirname $0` > /dev/null
-SCRIPTPATH=`pwd -P`
-popd > /dev/null
-
-
-SOURCE_DIR=`(cd $SCRIPTPATH && cd ../../ && pwd)`
+SCRIPTPATH=$(cd "$(dirname "$0")"; pwd -P)
+SOURCE_DIR=$(cd "$SCRIPTPATH" && cd ../.. && pwd -P)
 DATA_DIR=$SOURCE_DIR/tmp/postgres
 
-echo $SOURCE_DIR
-echo $DATA_DIR
+show_help() {
+cat <<EOF
+Usage: ${0##*/} [-h] [--init [--patch DIR]]
 
-docker run -d -p 3000:3000 -v $DATA_DIR:/shared/postgres_data -v $SOURCE_DIR:/src --hostname=discourse_dev --name=discourse_dev --restart=always discourse/dev /sbin/boot
+    --init        perform first-time initialization
+
+    --patch DIR   patch ember-data-source with missing dist files from DIR
+                  (for example, "--patch ~/repos/ember-source-data/dist")
+                  requires --init to also be passed
+
+EOF
+}
+
+initialize=""
+patch_source=""
+
+while [ "${#@}" -ne "0" ]; do
+    case "$1" in
+        -h | --help)
+            show_help
+            exit 0
+            ;;
+        -i | --init)
+            initialize="initialize"
+            ;;
+        -p | --patch)
+            patch_source="$2"
+            shift
+            ;;
+        *)
+            echo "unexpected argument: $1" >& 2
+            show_help >& 2
+            exit 1
+            ;;
+    esac
+    shift
+done
+
+if [ -n "${patch_source}" ] && [ "${initialize}" != "initialize" ]; then
+    echo "error: the --init flag is required when using --patch" >& 2
+    show_help >& 2
+    exit 2
+fi
+
+echo "Using source in: ${SOURCE_DIR}"
+echo "Using data in:   ${DATA_DIR}"
+
+mkdir -p "${DATA_DIR}"
+
+docker run -d -p 3000:3000 -v $DATA_DIR:/shared/postgres_data -v $SOURCE_DIR:/src --hostname=discourse --name=discourse_dev --restart=always discourse/discourse_dev:latest /sbin/boot
+
+if [ "${initialize}" = "initialize" ]; then
+    echo "Installing gems..."
+    ${SCRIPTPATH}/bundle install
+
+    if [ -n "${patch_source}" ]; then
+        echo "Patching ember-data-source-2.3.0.beta.5 gems..."
+        docker exec discourse_dev /bin/bash -c "mkdir -p /usr/local/lib/ruby/gems/2.3.0/gems/ember-data-source-2.3.0.beta.5/dist"
+        for f in "${patch_source}"/globals/*.js; do
+            docker cp $f discourse_dev:/usr/local/lib/ruby/gems/2.3.0/gems/ember-data-source-2.3.0.beta.5/dist/$(basename $f)
+        done
+    fi
+
+    echo "Migrating database..."
+    ${SCRIPTPATH}/rake db:migrate
+
+    echo "Creating admin user..."
+    ${SCRIPTPATH}/rake admin:create
+fi

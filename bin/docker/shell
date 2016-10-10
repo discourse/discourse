@@ -1,0 +1,2 @@
+#!/bin/bash
+docker exec -it -u discourse:discourse discourse_dev /bin/bash
