@@ -189,9 +189,9 @@
       {{/unless}}
     </div>
 
-    <div class='control-group pref-activity-summary'>
-      <label class="control-label">{{i18n 'user.email_activity_summary'}}</label>
-      {{#if canReceiveDigest}}
+    {{#unless siteSettings.disable_digest_emails}}
+      <div class='control-group pref-activity-summary'>
+        <label class="control-label">{{i18n 'user.email_activity_summary'}}</label>
         {{preference-checkbox labelKey="user.email_digests.title" disabled=model.user_option.mailing_list_mode checked=model.user_option.email_digests}}
         {{#if model.user_option.email_digests}}
           <div class='controls controls-dropdown'>
@@ -199,8 +199,8 @@
           </div>
           {{preference-checkbox labelKey="user.include_tl0_in_digests" disabled=model.user_option.mailing_list_mode checked=model.user_option.include_tl0_in_digests}}
         {{/if}}
-      {{/if}}
-    </div>
+      </div>
+    {{/unless}}
 
     {{#unless siteSettings.disable_mailing_list_mode}}
       <div class='control-group pref-mailing-list-mode'>
