@@ -1348,6 +1348,7 @@ en:
 
     approve_post_count: "The amount of posts from a new or basic user that must be approved"
     approve_unless_trust_level: "Posts for users below this trust level must be approved"
+    approve_new_topics_unless_trust_level: "New topics for users below this trust level must be approved"
     notify_about_queued_posts_after: "If there are posts that have been waiting to be reviewed for more than this many hours, an email will be sent to the contact_email. Set to 0 to disable these emails."
     auto_close_messages_post_count: "Maximum number of posts allowed in a message before it is automatically closed (0 to disable)"
     auto_close_topics_post_count: "Maximum number of posts allowed in a topic before it is automatically closed (0 to disable)"
