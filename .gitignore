@@ -8,6 +8,8 @@
 ._.DS_Store
 dump.rdb
 
+bin/*
+
 .sass-cache/*
 public/csv/*
 public/plugins/*
