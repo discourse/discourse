@@ -2,6 +2,8 @@
   {{search-text-field value=searchTerm class="full-page-search input-xxlarge search no-blur" action="search" hasAutofocus=hasAutofocus}}
   {{d-button action="search" icon="search" class="btn-primary" disabled=searching}}
 
+  {{search-advanced-options searchTerm=searchTerm}}
+
   {{#if canCreateTopic}}
     <span class="new-topic-btn">{{d-button id="create-topic" class="btn-default" action="createTopic" actionParam=searchTerm icon="plus" label="topic.create"}}</span>
   {{/if}}

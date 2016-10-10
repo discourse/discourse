@@ -1,0 +1,78 @@
+<h3 class="panel-title" {{action "expandOptions"}}>
+  <i class="fa {{collapsedClassName}}"></i> {{i18n "search.advanced.title"}}
+</h3>
+{{#unless isCollapsed}}
+  <div class="search-options">
+    <div class="container">
+      <div class="control-group pull-left">
+        <label class="control-label" for="search-posted-by">{{i18n "search.advanced.posted_by.label"}}</label>
+        <div class="controls">
+          {{user-selector excludeCurrentUser=false usernames=searchedTerms.username class="user-selector" single="true" canReceiveUpdates="true"}}
+        </div>
+      </div>
+      <div class="control-group pull-left">
+        <label class="control-label" for="search-in-category">{{i18n "search.advanced.in_category.label"}}</label>
+        <div class="controls">
+          {{category-chooser value=searchedTerms.category}}
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="control-group pull-left">
+        <label class="control-label" for="search-in-group">{{i18n "search.advanced.in_group.label"}}</label>
+        <div class="controls">
+          {{group-selector groupFinder=groupFinder groupNames=searchedTerms.group single="true" canReceiveUpdates="true"}}
+        </div>
+      </div>
+      <div class="control-group pull-left">
+        <label class="control-label" for="search-with-badge">{{i18n "search.advanced.with_badge.label"}}</label>
+        <div class="controls">
+          {{badge-selector badgeFinder=badgeFinder badgeNames=searchedTerms.badge single="true" canReceiveUpdates="true"}}
+        </div>
+      </div>
+    </div>
+
+    {{#if siteSettings.tagging_enabled}}
+      <div class="container">
+        <div class="control-group">
+          <label class="control-label" for="search-with-tags">{{i18n "search.advanced.with_tags.label"}}</label>
+          <div class="controls">
+            {{tag-chooser tags=searchedTerms.tags blacklist=searchedTerms.tags allowCreate=false placeholder="" everyTag="true" unlimitedTagCount="true"}}
+          </div>
+        </div>
+      </div>
+    {{/if}}
+
+    <div class="container">
+      <div class="control-group pull-left">
+        <label class="control-label" for="search-in-options">{{i18n "search.advanced.filters.label"}}</label>
+        <div class="controls">
+          {{combo-box id="in" valueAttribute="value" content=inOptions value=searchedTerms.in none="user.locale.any"}}
+        </div>
+      </div>
+      <div class="control-group pull-left">
+        <label class="control-label" for="search-status-options">{{i18n "search.advanced.statuses.label"}}</label>
+        <div class="controls">
+          {{combo-box id="status" valueAttribute="value" content=statusOptions value=searchedTerms.status none="user.locale.any"}}
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="control-group pull-left">
+        <label class="control-label" for="search-post-date">{{i18n "search.advanced.post.time.label"}}</label>
+        <div class="controls">
+          {{combo-box id="postTime" valueAttribute="value" content=postTimeOptions value=searchedTerms.time.when}}
+          {{input type="text" value=searchedTerms.time.days class="input-small" id='search-post-date'}}
+        </div>
+      </div>
+      <div class="control-group pull-left">
+        <label class="control-label" for="search-posts-count">{{i18n "search.advanced.post.count.label"}}</label>
+        <div class="controls">
+          {{input type="number" value=searchedTerms.posts_count class="input-small" id='search-posts-count'}}
+        </div>
+      </div>
+    </div>
+  </div>
+{{/unless}}

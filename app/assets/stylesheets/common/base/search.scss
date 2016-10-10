@@ -97,6 +97,24 @@
   }
 }
 
+.search-advanced {
+  margin-bottom: 15px;
+
+  .panel-title {
+    background-color: dark-light-diff($primary, $secondary, 90%, -75%);
+    padding: 5px 10px 5px 10px;
+  }
+
+  .search-options {
+    border: 1px solid dark-light-diff($primary, $secondary, 90%, -75%);
+    padding: 10px;
+
+    .control-group.pull-left {
+      width: 50%;
+    }
+  }
+}
+
 .search-footer {
   margin-bottom: 30px;
 }
