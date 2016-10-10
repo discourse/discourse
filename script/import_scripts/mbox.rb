@@ -1,9 +1,6 @@
 require 'sqlite3'
 require File.expand_path(File.dirname(__FILE__) + "/base.rb")
 
-# TODO: ignore ~ emacs backup files
-# DONE: sort filenames before processing
-
 # Paste these lines into your shell before running this:
 
 =begin
@@ -40,6 +37,13 @@ class ImportScripts::Mbox < ImportScripts::Base
     "default" => "uncategorized",
     # ex: "jobs-folder" => "jobs"
   }
+
+  unless File.directory?(MBOX_DIR)
+    puts "Cannot find import directory #{MBOX_DIR}. Giving up."
+    exit
+  end
+
+  validates_format_of :email, :with => /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\Z/i, :on => :create
 
   def execute
     import_categories
@@ -91,16 +95,21 @@ class ImportScripts::Mbox < ImportScripts::Base
     files.sort!
 
     files.each_with_index do |f, idx|
+      print_warning "\nProcessing: #{f}"
+      start_time = Time.now
+
       if SPLIT_AT.present?
         msg = ""
+        message_count = 0
 
         each_line(f) do |line|
           line = line.scrub
           if line =~ SPLIT_AT
+p            message_count += 1
             if !msg.empty?
               mail = Mail.read_from_string(msg)
               yield mail, f
-              print_status(idx, files.size)
+              print_status(idx, files.size, start_time)
               msg = ""
             end
           end
@@ -110,14 +119,14 @@ class ImportScripts::Mbox < ImportScripts::Base
         if !msg.empty?
           mail = Mail.read_from_string(msg)
           yield mail, f
-          print_status(idx, files.size)
+          print_status(idx, files.size, start_time)
           msg = ""
         end
       else
         raw = File.read(f)
         mail = Mail.read_from_string(raw)
         yield mail, f
-        print_status(idx, files.size)
+        print_status(idx, files.size, start_time)
       end
 
     end
@@ -133,7 +142,9 @@ class ImportScripts::Mbox < ImportScripts::Base
     titles = {}
     rows.each do |row|
       msg_ids[row[0]] = true
-      titles[row[1]] = row[0]
+      if titles[row[1]].nil?
+        titles[row[1]] = row[0]
+      end
     end
 
     # First, any replies where the parent doesn't exist should have that field cleared
@@ -171,12 +182,18 @@ class ImportScripts::Mbox < ImportScripts::Base
     if mail.from.present?
       from_email = mail.from.dup
       if from_email.kind_of?(Array)
-        from_email = from_email.first.dup
+        if from_email[0].nil?
+          print_warning "Cannot find email address (ignoring)!\n#{mail}"
+        else
+          from_email = from_email.first.dup
+          from_email.gsub!(/ at /, '@')
+          from_email.gsub!(/ [at] /, '@')
+          # strip real names in ()s. Todo: read into name
+          from_email.gsub!(/ \(.*$/, '')
+          from_email.gsub!(/ /, '')
+        end
       end
-
-      from_email.gsub!(/ at /, '@')
-      from_email.gsub!(/ \(.*$/, '')
-    end
+p    end
 
     display_names = from.try(:display_names)
     if display_names.present?
@@ -189,6 +206,10 @@ class ImportScripts::Mbox < ImportScripts::Base
     from_name = from.to_s if from_name.blank?
 
     [from_email, from_name]
+  end
+
+  def print_warning(message)
+    $stderr.puts "#{message}"
   end
 
   def create_email_indices
@@ -228,7 +249,11 @@ class ImportScripts::Mbox < ImportScripts::Base
       email_date = mail['date'].to_s
       email_date = DateTime.parse(email_date).to_s unless email_date.blank?
 
-      db.execute "INSERT OR IGNORE INTO emails (msg_id,
+      if from_email.kind_of?(String)
+        unless from_email.match(/\A[\w+\-.]+@[a-z\d\-]+(\.[a-z\d\-]+)*\.[a-z]+\z/i)
+          print_warning "Ignoring bad email address #{from_email} in #{msg_id}"
+        else
+          db.execute "INSERT OR IGNORE INTO emails (msg_id,
                                                 from_email,
                                                 from_name,
                                                 title,
@@ -237,7 +262,9 @@ class ImportScripts::Mbox < ImportScripts::Base
                                                 message,
                                                 category)
                   VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-                 [msg_id, from_email, from_name, title, reply_to, email_date, mail.to_s, category]
+                     [msg_id, from_email, from_name, title, reply_to, email_date, mail.to_s, category]
+        end
+      end
     end
   ensure
     db.close
@@ -285,8 +312,8 @@ class ImportScripts::Mbox < ImportScripts::Base
   end
 
   def clean_raw(input)
-
     raw = input.dup
+    raw.scrub!
     raw.gsub!(/-- \nYou received this message because you are subscribed to the Google Groups "[^"]*" group.\nTo unsubscribe from this group and stop receiving emails from it, send an email to [^+@]+\+unsubscribe@googlegroups.com\.\nFor more options, visit https:\/\/groups\.google\.com\/groups\/opt_out\./, '')
 
     raw
@@ -411,9 +438,12 @@ class ImportScripts::Mbox < ImportScripts::Base
 
     post_count = replies.size
 
+    puts "Replies: #{post_count}"
+
     batches(BATCH_SIZE) do |offset|
       posts = replies[offset..offset+BATCH_SIZE-1]
       break if posts.nil?
+      break if posts.count < 1
 
       next if all_records_exist? :posts, posts.map {|p| p[0]}
 
