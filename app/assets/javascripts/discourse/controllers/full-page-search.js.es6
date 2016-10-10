@@ -138,9 +138,9 @@ export default Ember.Controller.extend({
     return this.currentUser && this.currentUser.staff && hasResults;
   },
 
-  @computed
+  @computed('isExpanded')
   canCreateTopic() {
-    return this.currentUser && !this.site.mobileView;
+    return this.currentUser && !this.site.mobileView && !this.get('isExpanded');
   },
 
   _search() {
