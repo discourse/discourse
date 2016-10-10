@@ -139,6 +139,8 @@ module Email
         @message.header['X-MJ-CustomID'] = @message.message_id
       when "smtp.mandrillapp.com"
         @message.header['X-MC-Metadata'] = { message_id: @message.message_id }.to_json
+      when "smtp.sparkpostmail.com"
+        @message.header['X-MSYS-API'] = { campaign_id: @message.message_id }.to_json
       end
 
       # Suppress images from short emails
