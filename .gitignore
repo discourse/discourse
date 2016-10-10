@@ -14,7 +14,6 @@ public/plugins/*
 public/tombstone/*
 
 # Ignore bundler config
-/bin
 /.bundle
 /.vagrant
 /.vagrantfile
