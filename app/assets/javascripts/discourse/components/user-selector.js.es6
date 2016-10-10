@@ -3,8 +3,13 @@ import TextField from 'discourse/components/text-field';
 import userSearch from 'discourse/lib/user-search';
 
 export default TextField.extend({
+  @observes('usernames')
+  _update() {
+    if (this.get('canReceiveUpdates') === 'true')
+      this.didInsertElement({updateData: true});
+  },
 
-  didInsertElement() {
+  didInsertElement(opts) {
     this._super();
     var self = this,
         selected = [],
@@ -29,6 +34,7 @@ export default TextField.extend({
       disabled: this.get('disabled'),
       single: this.get('single'),
       allowAny: this.get('allowAny'),
+      updateData: (opts && opts.updateData) ? opts.updateData : false,
 
       dataSource: function(term) {
         var results = userSearch({
