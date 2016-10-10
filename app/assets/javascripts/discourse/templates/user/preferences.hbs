@@ -235,6 +235,11 @@
       </div>
 
       <div class="controls controls-dropdown">
+        <label>{{i18n 'user.notification_level_when_replying'}}</label>
+        {{combo-box valueAttribute="value" content=notificationLevelsForReplying value=model.user_option.notification_level_when_replying}}
+      </div>
+
+      <div class="controls controls-dropdown">
         <label>{{i18n 'user.like_notification_frequency.title'}}</label>
         {{combo-box valueAttribute="value" content=likeNotificationFrequencies value=model.user_option.like_notification_frequency}}
       </div>
