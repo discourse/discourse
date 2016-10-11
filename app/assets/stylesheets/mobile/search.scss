@@ -2,6 +2,29 @@
   float: none;
 }
 
+.search-advanced {
+  h3.panel-title {
+    margin: 0;
+  }
+
+  .search-options {
+    .control-group {
+      padding-bottom: 10px;
+
+      &.pull-left {
+        float: none;
+        width: auto;
+      }
+
+      .controls {
+        input,select {
+          width: 75%;
+        }
+      }
+    }
+  }
+}
+
 .search.row {
   margin-top: 5px;
 }
