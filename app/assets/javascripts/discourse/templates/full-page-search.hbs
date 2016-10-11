@@ -42,9 +42,6 @@
       {{#if searchActive}}
         {{i18n "search.no_results"}}
       {{/if}}
-      {{#unless isExpanded}}
-        <a href class="show-help" {{action "showSearchHelp" bubbles=false}}>{{i18n "search.search_help"}}</a>
-      {{/unless}}
     </h3>
   {{/unless}}
 
@@ -120,9 +117,6 @@
   {{#if hasResults}}
     <h3 class="search-footer">
       {{i18n "search.no_more_results"}}
-      {{#unless isExpanded}}
-        <a href class="show-help" {{action "showSearchHelp" bubbles=false}}>{{i18n "search.search_help"}}</a>
-      {{/unless}}
     </h3>
   {{/if}}
 

@@ -1210,7 +1210,6 @@ en:
       title: "search topics, posts, users, or categories"
       no_results: "No results found."
       no_more_results: "No more results found."
-      search_help: Search help
       searching: "Searching ..."
       post_format: "#{{post_number}} by {{username}}"
 
@@ -2110,9 +2109,6 @@ en:
 
     lightbox:
       download: "download"
-
-    search_help:
-      title: 'Search Help'
 
     keyboard_shortcuts_help:
       title: 'Keyboard Shortcuts'
