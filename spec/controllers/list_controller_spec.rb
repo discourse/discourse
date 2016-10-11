@@ -226,63 +226,6 @@ describe ListController do
     end
   end
 
-  describe "best_period_for" do
-
-    context "has_top_topics_and_not_seen_recently" do
-
-      SiteSetting.topics_per_period_in_top_page = 2
-      SiteSetting.top_page_default_timeframe = 'daily'
-
-      let!(:t1) { Fabricate(:topic) }
-      let!(:t2) { Fabricate(:topic) }
-      let!(:t3) { Fabricate(:topic) }
-
-      before do
-        TopTopic.refresh!
-      end
-
-      it "should_return_a_time_period" do
-        expect(ListController.best_period_for(nil, nil, SiteSetting.top_page_default_timeframe.to_sym)).not_to eq(nil)
-      end
-
-    end
-
-    context "has_top_topics_and_seen_recently" do
-
-      SiteSetting.topics_per_period_in_top_page = 2
-      SiteSetting.top_page_default_timeframe = 'daily'
-
-      let!(:t1) { Fabricate(:topic) }
-      let!(:t2) { Fabricate(:topic) }
-      let!(:t3) { Fabricate(:topic) }
-
-      before do
-        TopTopic.refresh!
-      end
-
-      it "should_return_a_time_period" do
-        expect(ListController.best_period_for(1.month.ago, nil, SiteSetting.top_page_default_timeframe.to_sym)).not_to eq(nil)
-      end
-
-    end
-
-    context "does_not_have_top_topics" do
-
-      SiteSetting.topics_per_period_in_top_page = 2
-      SiteSetting.top_page_default_timeframe = 'daily'
-
-      before do
-        TopTopic.refresh!
-      end
-
-      it "should_not_return_a_time_period" do
-        expect(ListController.best_period_for(1.month.ago, nil, nil)).to eq(nil)
-      end
-
-    end
-
-  end
-
   describe "best_periods_for" do
 
     it "returns yearly for more than 180 days" do
