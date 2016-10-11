@@ -2950,36 +2950,6 @@ en:
 
       This document is CC-BY-SA. It was last updated May 31, 2013.
 
-  static:
-    search_help: |
-      <h3>Tips</h3>
-      <p>
-      <ul>
-        <li>Title matches are prioritized &ndash; when in doubt, search for titles</li>
-        <li>Unique, uncommon words will produce the best results</li>
-        <li>Try searching within a particular category, topic, or user</li>
-      </ul>
-      </p>
-      <h3>Options</h3>
-      <p>
-        <table>
-        <tr><td><code>order:views</code></td><td><code>order:latest</code></td><td><code>order:likes</code></td><td><code>@username</code></td><td><code>user:foo</code></td></tr>
-        <tr><td><code>status:open</code></td><td><code>status:closed</code></td><td><code>status:archived</code></td><td><code>status:noreplies</code></td><td><code>status:single_user</code></td></tr>
-        <tr><td><code>#category-slug</code></td><td><code>category:foo</code></td><td><code>group:foo</code></td><td><code>badge:foo</code></td><td></td></tr>
-        <tr><td><code>in:likes</code></td><td><code>in:posted</code></td><td><code>in:watching</code></td><td><code>in:tracking</code></td><td><code>in:private</code></td></tr>
-        <tr><td><code>in:bookmarks</code></td><td><code>in:first</code></td><td><code>in:pinned</code></td><td><code>in:unpinned</code></td><td><code>in:wiki</code></td></tr>
-        <tr><td><code>posts_count:num</code></td><td><code>before:days or date</code></td><td><code>after:days or date</code></td><td><code>tags:one,two</code></td><td></td></tr>
-        </table>
-      </p>
-      <h3>Examples</h3>
-      <p>
-        <ul>
-          <li><code>rainbows #parks</code> will search for topics containing the word "rainbows" in the category "parks".</li>
-          <li><code>rainbows category:parks status:open order:latest</code> will search for topics containing the word "rainbows" in the category "parks" that are not closed or archived, ordered by date of last post.</li>
-          <li><code>rainbows category:"parks and gardens" in:bookmarks</code> will search for topics containing the word "rainbows" in the category "parks and gardens" that are bookmarked by you.</li>
-        </ul>
-      </p>
-
   badges:
     editor:
       name: Editor

@@ -206,11 +206,6 @@ export default Ember.Controller.extend({
       this.get('selected').clear();
     },
 
-    showSearchHelp() {
-      // TODO: dupe code should be centralized
-      ajax("/static/search_help.html", { dataType: 'html' }).then(model => showModal('searchHelp', { model }));
-    },
-
     search() {
       this._search();
     }
