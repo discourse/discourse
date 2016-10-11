@@ -1502,6 +1502,10 @@ en:
         title: 'Share'
         help: 'share a link to this topic'
 
+      print:
+        title: 'Print'
+        help: 'Open a printer friendly version of this topic'
+
       flag_topic:
         title: 'Flag'
         help: 'privately flag this topic for attention or send a private notification about it'
@@ -2161,6 +2165,7 @@ en:
         mark_regular: '<b>m</b>, <b>r</b> Regular (default) topic'
         mark_tracking: '<b>m</b>, <b>t</b> Track topic'
         mark_watching: '<b>m</b>, <b>w</b> Watch topic'
+        print: '<b>ctrl</b>+<b>p</b> Print topic'
 
     badges:
       earned_n_times:

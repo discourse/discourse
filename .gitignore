@@ -109,3 +109,6 @@ bundler_stubs/*
 
 vendor/bundle/*
 *.db
+
+#ignore jetbrains ide file
+*.iml
