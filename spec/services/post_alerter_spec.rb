@@ -327,7 +327,7 @@ describe PostAlerter do
   end
 
   describe "push_notification" do
-    let(:mention_post) { create_post_with_alerts(user: user, raw: 'Hello @eviltrout')}
+    let(:mention_post) { create_post_with_alerts(user: user, raw: 'Hello @eviltrout :heart:')}
     let(:topic) { mention_post.topic }
 
     it "correctly pushes notifications if configured correctly" do
@@ -343,8 +343,6 @@ describe PostAlerter do
                            push: true,
                            push_url: "https://site2.com/push")
       end
-
-
 
       body = nil
       headers = nil
@@ -368,7 +366,7 @@ describe PostAlerter do
           'post_number' => 1,
           'topic_title' => topic.title,
           'topic_id' => topic.id,
-          'excerpt' => 'Hello @eviltrout',
+          'excerpt' => 'Hello @eviltrout ❤',
           'username' => user.username,
           'url' => UrlHelper.absolute(mention_post.url),
           'client_id' => 'xxx0'
@@ -378,7 +376,7 @@ describe PostAlerter do
           'post_number' => 1,
           'topic_title' => topic.title,
           'topic_id' => topic.id,
-          'excerpt' => 'Hello @eviltrout',
+          'excerpt' => 'Hello @eviltrout ❤',
           'username' => user.username,
           'url' => UrlHelper.absolute(mention_post.url),
           'client_id' => 'xxx1'
