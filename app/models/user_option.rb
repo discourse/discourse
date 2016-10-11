@@ -90,7 +90,7 @@ class UserOption < ActiveRecord::Base
     # top must be in the top_menu
     return unless SiteSetting.top_menu =~ /(^|\|)top(\||$)/i
     # not enough topics
-    return unless period = SiteSetting.min_redirected_to_top_period
+    return unless period = SiteSetting.min_redirected_to_top_period(1.days.ago)
 
     if !user.seen_before? || (user.trust_level == 0 && !redirected_to_top_yet?)
       update_last_redirected_to_top!
