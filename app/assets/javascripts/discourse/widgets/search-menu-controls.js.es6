@@ -44,7 +44,7 @@ createWidget('search-context', {
                   ]));
     }
 
-    result.push(this.attach('link', { href: '/search',
+    result.push(this.attach('link', { href: '/search?isExpanded=true',
                                       label: 'show_help',
                                       className: 'show-help' }));
     result.push(h('div.clearfix'));
