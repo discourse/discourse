@@ -312,6 +312,9 @@ class BadgeGranter
                               SiteSetting.default_locale
                             end
 
+      # Make this variable in this scope
+      notification = nil
+
       I18n.with_locale(notification_locale) do
         notification = Notification.create!(
                           user_id: row.user_id,
