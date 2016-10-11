@@ -69,6 +69,40 @@ describe SiteSetting do
     end
   end
 
+  describe "min_redirected_to_top_period" do
+
+    context "has_enough_top_topics" do
+
+      SiteSetting.topics_per_period_in_top_page = 2
+      SiteSetting.top_page_default_timeframe = 'daily'
+
+      before do
+        SiteSetting.expects(:min_redirected_to_top_period).returns(:daily)
+      end
+
+      it "should_return_a_time_period" do
+        expect(SiteSetting.min_redirected_to_top_period(1.days.ago)).not_to eq(nil)
+      end
+
+    end
+
+    context "does_not_have_enough_top_topics" do
+
+      SiteSetting.topics_per_period_in_top_page = 20
+      SiteSetting.top_page_default_timeframe = 'daily'
+
+      before do
+        SiteSetting.expects(:min_redirected_to_top_period).returns(nil)
+      end
+
+      it "should_return_nil" do
+        expect(SiteSetting.min_redirected_to_top_period(1.days.ago)).to eq(nil)
+      end
+
+    end
+
+  end
+
   describe "scheme" do
     before do
       SiteSetting.force_https = true
