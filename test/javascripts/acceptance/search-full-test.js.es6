@@ -105,7 +105,7 @@ test("update username through advanced search ui", assert => {
 
       andThen(() => {
         assert.ok(exists('.search-options span:contains("admin")'), 'has "admin" pre-populated');
-        assert.equal(find('.search input.full-page-search').val(), "none user:admin", 'has updated search term to "none user:admin"');
+        assert.equal(find('.search input.full-page-search').val(), "none @admin", 'has updated search term to "none user:admin"');
       });
     });
   });
