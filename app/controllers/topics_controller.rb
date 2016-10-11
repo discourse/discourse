@@ -3,6 +3,7 @@ require_dependency 'promotion'
 require_dependency 'url_helper'
 require_dependency 'topics_bulk_action'
 require_dependency 'discourse_event'
+require_dependency 'rate_limiter'
 
 class TopicsController < ApplicationController
   before_filter :ensure_logged_in, only: [:timings,
@@ -58,6 +59,7 @@ class TopicsController < ApplicationController
     username_filters = opts[:username_filters]
 
     opts[:slow_platform] = true if slow_platform?
+    opts[:print] = true if params[:print].present?
     opts[:username_filters] = username_filters.split(',') if username_filters.is_a?(String)
 
     # Special case: a slug with a number in front should look by slug first before looking
@@ -65,6 +67,15 @@ class TopicsController < ApplicationController
     if params[:id] && params[:id] =~ /^\d+[^\d\\]+$/
       topic = Topic.find_by(slug: params[:id].downcase)
       return redirect_to_correct_topic(topic, opts[:post_number]) if topic && topic.visible
+    end
+
+    if opts[:print]
+      raise Discourse::InvalidAccess unless SiteSetting.max_prints_per_hour_per_user > 0
+      begin
+        RateLimiter.new(current_user, "print-topic-per-hour", SiteSetting.max_prints_per_hour_per_user, 1.hour).performed! unless @guardian.is_admin?
+      rescue RateLimiter::LimitExceeded
+        render_json_error(I18n.t("rate_limiter.slow_down"))
+      end
     end
 
     begin

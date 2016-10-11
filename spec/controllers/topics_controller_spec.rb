@@ -747,6 +747,21 @@ describe TopicsController do
       expect(IncomingLink.count).to eq(1)
     end
 
+    context 'print' do
+
+      it "doesn't renders the print view when disabled" do
+        SiteSetting.max_prints_per_hour_per_user = 0
+        get :show, topic_id: topic.id, slug: topic.slug, print: true
+        expect(response).to be_forbidden
+      end
+
+      it 'renders the print view when enabled' do
+        SiteSetting.max_prints_per_hour_per_user = 10
+        get :show, topic_id: topic.id, slug: topic.slug, print: true
+        expect(response).to be_successful
+      end
+    end
+
     it 'records redirects' do
       @request.env['HTTP_REFERER'] = 'http://twitter.com'
       get :show, { id: topic.id }
