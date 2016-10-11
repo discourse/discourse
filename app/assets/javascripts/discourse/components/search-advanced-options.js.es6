@@ -99,9 +99,9 @@ export default Em.Component.extend({
     const userFilter = this.get('searchedTerms.username');
     if (userFilter && userFilter.length !== 0)
       if (match.length !== 0)
-        searchTerm = searchTerm.replace(match, ` user:${userFilter}`);
+        searchTerm = searchTerm.replace(match, ` @${userFilter}`);
       else
-        searchTerm += ` user:${userFilter}`;
+        searchTerm += ` @${userFilter}`;
     else if (match.length !== 0)
       searchTerm = searchTerm.replace(match, '');
 
