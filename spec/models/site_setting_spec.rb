@@ -73,29 +73,29 @@ describe SiteSetting do
 
     context "has_enough_top_topics" do
 
-      SiteSetting.topics_per_period_in_top_page = 2
-      SiteSetting.top_page_default_timeframe = 'daily'
-
       before do
-        SiteSetting.expects(:min_redirected_to_top_period).returns(:daily)
+        SiteSetting.topics_per_period_in_top_page = 2
+        SiteSetting.top_page_default_timeframe = 'daily'
+        TopTopic.stubs(:topics_per_period).with(:daily).returns(3)
+        TopTopic.refresh!
       end
 
       it "should_return_a_time_period" do
-        expect(SiteSetting.min_redirected_to_top_period(1.days.ago)).not_to eq(nil)
+        expect(SiteSetting.min_redirected_to_top_period(1.days.ago)).to eq(:daily)
       end
 
     end
 
     context "does_not_have_enough_top_topics" do
 
-      SiteSetting.topics_per_period_in_top_page = 20
-      SiteSetting.top_page_default_timeframe = 'daily'
-
       before do
-        SiteSetting.expects(:min_redirected_to_top_period).returns(nil)
+        SiteSetting.topics_per_period_in_top_page = 20
+        SiteSetting.top_page_default_timeframe = 'daily'
+        TopTopic.stubs(:topics_per_period).with(:daily).returns(1)
+        TopTopic.refresh!
       end
 
-      it "should_return_nil" do
+      it "should_return_a_time_period" do
         expect(SiteSetting.min_redirected_to_top_period(1.days.ago)).to eq(nil)
       end
 
