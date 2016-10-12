@@ -11,6 +11,9 @@ export DATA_DIR=~/data/import
 export SPLIT_AT="^From " # or "^From (.*)"
 =end
 
+# If you change the functionality of this script, please consider updating this HOWTO:
+# https://meta.discourse.org/t/howto-import-mbox-mailing-list-files/51233
+
 class ImportScripts::Mbox < ImportScripts::Base
   include ActiveModel::Validations
 
@@ -53,6 +56,7 @@ class ImportScripts::Mbox < ImportScripts::Base
     import_users
     create_forum_topics
     import_replies
+    # replace_email_addresses # uncomment to replace all email address with @username
   end
 
   def import_categories
@@ -344,6 +348,42 @@ p    end
     db.close
   end
 
+  def replace_email_addresses
+    puts "", "replacing email addresses with @usernames"
+    post = Post.new
+
+    total_count = User.real.count
+    progress_count = 0
+    start_time = Time.now
+
+    # from: https://meta.discourse.org/t/replace-a-string-in-all-posts/48729/17
+    # and https://github.com/discourse/discourse/blob/master/lib/tasks/posts.rake#L114-L136
+    User.find_each do |u|
+      i = 0
+      find = u.email.dup
+      replace = "@#{u.username}"
+      if !replace.include? "@"
+        puts "Skipping #{replace}"
+      end
+
+      found = Post.where("raw ILIKE ?", "%#{find}%")
+      next if found.nil?
+      next if found.count < 1
+
+      found.each do |p|
+        new_raw = p.raw.dup
+        new_raw = new_raw.gsub!(/#{Regexp.escape(find)}/i, replace) || new_raw
+        if new_raw != p.raw
+          p.revise(Discourse.system_user, { raw: new_raw }, { bypass_bump: true })
+          print_warning "\nReplaced #{find} with #{replace} in topic #{p.topic_id}"
+        end
+      end
+      progress_count += 1
+      puts ""
+      print_status(progress_count, total_count, start_time)
+    end
+  end
+
   def parse_email(msg)
     receiver = Email::Receiver.new(msg)
     mail = Mail.read_from_string(msg)
@@ -387,11 +427,12 @@ p    end
         next unless selected
         selected = selected.join('') if selected.kind_of?(Array)
 
-        raw = selected.force_encoding(selected.encoding).encode("UTF-8")
-
         title = mail.subject
 
+        username = User.find_by_email(from_email).username
+
         # import the attachments
+        raw = ""
         mail.attachments.each do |attachment|
           tmp = Tempfile.new("discourse-email-attachment")
           begin
@@ -407,9 +448,17 @@ p    end
           end
         end
 
+        user_id = user_id_from_imported_user_id(from_email) || Discourse::SYSTEM_USER_ID
+
+        raw = selected.force_encoding(selected.encoding).encode("UTF-8")
+        raw = clean_raw(raw)
+        raw = raw.dup.to_s
+        raw.gsub!(/#{from_email}/, "@#{username}")
+        cleaned_email = from_email.dup.sub(/@/,' at ')
+        raw.gsub!(/#{cleaned_email}/, "@#{username}")
         { id: t[0],
           title: clean_title(title),
-          user_id: user_id_from_imported_user_id(from_email) || Discourse::SYSTEM_USER_ID,
+          user_id: user_id,
           created_at: mail.date,
           category: t[6],
           raw: clean_raw(raw),
@@ -467,7 +516,13 @@ p    end
         next unless selected
 
         raw = selected.force_encoding(selected.encoding).encode("UTF-8")
+        username = User.find_by_email(from_email).username
 
+        user_id = user_id_from_imported_user_id(from_email) || Discourse::SYSTEM_USER_ID
+        raw = clean_raw(raw).to_s
+        raw.gsub!(/#{from_email}/, "@#{username}")
+        cleaned_email = from_email.dup.sub(/@/,' at ')
+        raw.gsub!(/#{cleaned_email}/, "@#{username}")
         # import the attachments
         mail.attachments.each do |attachment|
           tmp = Tempfile.new("discourse-email-attachment")
