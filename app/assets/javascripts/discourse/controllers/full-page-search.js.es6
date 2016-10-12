@@ -18,9 +18,10 @@ export default Ember.Controller.extend({
   bulkSelectEnabled: null,
 
   loading: Em.computed.not("model"),
-  queryParams: ["q", "context_id", "context", "skip_context"],
+  queryParams: ["q", "isExpanded", "context_id", "context", "skip_context"],
   q: null,
   selected: [],
+  isExpanded: false,
   context_id: null,
   context: null,
   searching: false,
