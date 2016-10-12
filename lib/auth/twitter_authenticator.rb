@@ -4,26 +4,20 @@ class Auth::TwitterAuthenticator < Auth::Authenticator
     "twitter"
   end
 
-  # TODO twitter provides all sorts of extra info, like website/bio etc.
-  #  it may be worth considering pulling some of it in.
   def after_authenticate(auth_token)
-
     result = Auth::Result.new
 
     data = auth_token[:info]
 
-    result.email = data['email']
-    result.username = screen_name = data["nickname"]
+    result.email = data["email"]
+    result.email_valid = result.email.present?
+    result.username = data["nickname"]
     result.name = data["name"]
     twitter_user_id = auth_token["uid"]
 
-    if result.email.present?
-      result.email_valid = true
-    end
-
     result.extra_data = {
       twitter_user_id: twitter_user_id,
-      twitter_screen_name: screen_name
+      twitter_screen_name: result.username
     }
 
     user_info = TwitterUserInfo.find_by(twitter_user_id: twitter_user_id)
@@ -32,9 +26,26 @@ class Auth::TwitterAuthenticator < Auth::Authenticator
     if !result.user && result.email.present? && result.user = User.find_by_email(result.email)
       TwitterUserInfo.create(
         user_id: result.user.id,
-        screen_name: screen_name,
+        screen_name: result.username,
         twitter_user_id: twitter_user_id
       )
+    end
+
+    user = result.user
+    if user && (!user.user_avatar || user.user_avatar.custom_upload_id.nil?)
+      if (avatar_url = data["image"]).present?
+        UserAvatar.import_url_for_user(avatar_url.sub("_normal", ""), user, override_gravatar: false)
+      end
+    end
+
+    bio = data["description"]
+    location = data["location"]
+
+    if user && (bio || location)
+      profile = user.user_profile
+      profile.bio_raw  = bio      unless profile.bio_raw.present?
+      profile.location = location unless profile.location.present?
+      profile.save
     end
 
     result
