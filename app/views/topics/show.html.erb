@@ -69,6 +69,17 @@
 
 <% if @topic_view.print %>
   <% content_for :after_body do %>
+      <%- if rtl? %>
+          <%= DiscourseStylesheets.stylesheet_link_tag(mobile_view? ? :mobile_rtl : :desktop_rtl, 'print') %>
+      <%- else %>
+          <%= DiscourseStylesheets.stylesheet_link_tag(mobile_view? ? :mobile : :desktop, 'print') %>
+      <%- end %>
+      <style media="print">
+        /* For readability */
+        a, a:visited {
+          color: #0088cc !important;
+        }
+      </style>
       <script>
         document.addEventListener("DOMContentLoaded", function() {
           window.print();
