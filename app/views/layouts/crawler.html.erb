@@ -10,46 +10,6 @@
     <%- end %>
     <%= render_google_universal_analytics_code %>
     <%= yield :head %>
-    <style>
-      header img {
-        max-width: 90% !important;
-        padding-bottom: 10px;
-      }
-
-      img { max-width: 100%; width: auto; height: auto; }
-
-      #main-outlet > div {
-        margin-bottom: 15px;
-      }
-
-      footer nav a {
-        margin-right: 15px;
-      }
-
-      footer nav {
-        line-height: 30px;
-      }
-
-      body {
-        max-width: 98%;
-        padding-left: 1%;
-      }
-      .topic-list > div > a {
-        margin-right: 10px;
-      }
-      .topic-list > div .posts {
-          margin-left: 10px;
-      }
-      .topic-list > div {
-        margin-bottom: 15px;
-      }
-      body img.emoji {
-        width: 20px;
-        height: 20px;
-        vertical-align: middle;
-      }
-
-    </style>
   </head>
   <body>
     <%- unless customization_disabled? %>

@@ -14,7 +14,7 @@ class DiscourseStylesheets
     @cache ||= DistributedCache.new("discourse_stylesheet")
   end
 
-  def self.stylesheet_link_tag(target = :desktop)
+  def self.stylesheet_link_tag(target = :desktop, media = 'all')
 
     tag = cache[target]
 
@@ -24,7 +24,7 @@ class DiscourseStylesheets
       builder = self.new(target)
       builder.compile unless File.exists?(builder.stylesheet_fullpath)
       builder.ensure_digestless_file
-      tag = %[<link href="#{Rails.env.production? ? builder.stylesheet_cdnpath : builder.stylesheet_relpath_no_digest + '?body=1'}" media="all" rel="stylesheet" />]
+      tag = %[<link href="#{Rails.env.production? ? builder.stylesheet_cdnpath : builder.stylesheet_relpath_no_digest + '?body=1'}" media="#{media}" rel="stylesheet" />]
 
       cache[target] = tag
 
