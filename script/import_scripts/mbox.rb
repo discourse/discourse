@@ -11,6 +11,9 @@ export DATA_DIR=~/data/import
 export SPLIT_AT="^From " # or "^From (.*)"
 =end
 
+# If you change the functionality of this script, please consider updating this HOWTO:
+# https://meta.discourse.org/t/howto-import-mbox-mailing-list-files/51233
+
 class ImportScripts::Mbox < ImportScripts::Base
   include ActiveModel::Validations
 
