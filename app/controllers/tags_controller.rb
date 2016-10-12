@@ -43,8 +43,8 @@ class TagsController < ::ApplicationController
   # TODO: move all this to ListController
   Discourse.filters.each do |filter|
     define_method("show_#{filter}") do
-      @tag_id = DiscourseTagging.clean_tag(params[:tag_id])
-      @additional_tags = params[:additional_tag_ids].to_s.split('/').map { |tag| DiscourseTagging.clean_tag(tag) }
+      @tag_id = params[:tag_id]
+      @additional_tags = params[:additional_tag_ids].to_s.split('/')
 
       page = params[:page].to_i
       list_opts = build_topic_list_options
@@ -118,7 +118,7 @@ class TagsController < ::ApplicationController
   def tag_feed
     discourse_expires_in 1.minute
 
-    tag_id = DiscourseTagging.clean_tag(params[:tag_id])
+    tag_id = params[:tag_id]
     @link = "#{Discourse.base_url}/tags/#{tag_id}"
     @description = I18n.t("rss_by_tag", tag: tag_id)
     @title = "#{SiteSetting.title} - #{@description}"
@@ -159,8 +159,7 @@ class TagsController < ::ApplicationController
 
     json_response = { results: tags }
 
-    t = DiscourseTagging.clean_tag(params[:q])
-    if Tag.where(name: t).exists? && !tags.find { |h| h[:id] == t }
+    if Tag.where(name: params[:q]).exists? && !tags.find { |h| h[:id] == t }
       # filter_allowed_tags determined that the tag entered is not allowed
       json_response[:forbidden] = t
     end
