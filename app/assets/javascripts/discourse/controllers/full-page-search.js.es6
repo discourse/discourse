@@ -1,6 +1,5 @@
 import { ajax } from 'discourse/lib/ajax';
 import { translateResults, searchContextDescription, getSearchKey, isValidSearchTerm } from "discourse/lib/search";
-import showModal from 'discourse/lib/show-modal';
 import { default as computed, observes } from 'ember-addons/ember-computed-decorators';
 import Category from 'discourse/models/category';
 import { escapeExpression } from 'discourse/lib/utilities';
