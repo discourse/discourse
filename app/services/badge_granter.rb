@@ -274,7 +274,7 @@ class BadgeGranter
             /*where*/
             RETURNING id, user_id, granted_at
             )
-            select w.*, username FROM w
+            select w.*, username, locale FROM w
             JOIN users u on u.id = w.user_id
             "
 
@@ -305,15 +305,27 @@ class BadgeGranter
       # old bronze badges do not matter
       next if badge.badge_type_id == BadgeType::Bronze and row.granted_at < 2.days.ago
 
-      notification = Notification.create!(
-                        user_id: row.user_id,
-                        notification_type: Notification.types[:granted_badge],
-                        data: {
-                          badge_id: badge.id,
-                          badge_name: badge.name,
-                          badge_slug: badge.slug,
-                          username: row.username
-      }.to_json )
+      # Try to use user locale in the badge notification if possible without too much resources
+      notification_locale = if SiteSetting.allow_user_locale && row.locale.present?
+                              row.locale
+                            else
+                              SiteSetting.default_locale
+                            end
+
+      # Make this variable in this scope
+      notification = nil
+
+      I18n.with_locale(notification_locale) do
+        notification = Notification.create!(
+                          user_id: row.user_id,
+                          notification_type: Notification.types[:granted_badge],
+                          data: {
+                            badge_id: badge.id,
+                            badge_name: badge.display_name,
+                            badge_slug: badge.slug,
+                            username: row.username
+        }.to_json )
+      end
 
       Badge.exec_sql("UPDATE user_badges SET notification_id = :notification_id WHERE id = :id",
                       notification_id: notification.id,

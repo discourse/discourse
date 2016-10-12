@@ -94,6 +94,23 @@ describe BadgeGranter do
       expect(Badge.find(Badge::NiceTopic).grant_count).to eq(1)
       expect(Badge.find(Badge::GoodTopic).grant_count).to eq(1)
     end
+
+    it 'should grant badges in the user locale' do
+
+      SiteSetting.allow_user_locale = true
+
+      nice_topic = Badge.find(Badge::NiceTopic)
+      name_english = nice_topic.name
+
+      user = Fabricate(:user, locale: 'fr')
+      post = Fabricate(:post, like_count: 10, user: user)
+
+      BadgeGranter.backfill(nice_topic)
+
+      notification_badge_name = JSON.parse(post.user.notifications.first.data)['badge_name']
+
+      expect(notification_badge_name).not_to eq(name_english)
+    end
   end
 
   describe 'grant' do
