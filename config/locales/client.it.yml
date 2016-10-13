@@ -465,9 +465,12 @@ it:
       suspended_reason: "Motivo: "
       github_profile: "Github"
       mailing_list_mode:
+        individual: "Invia una email per ogni nuovo messaggio"
+        many_per_day: "Inviamo una email per ogni nuovo messaggio (circa {{dailyEmailEstimate}} al giorno)"
         few_per_day: "Inviami una email per ogni nuovo messaggio (circa 2 al giorno)"
       tag_settings: "Etichette"
       watched_tags: "Osservate"
+      watched_tags_instructions: "Osserverai automaticamente tutti gli argomenti con queste etichette. Verrai notificato di tutti i  nuovi messaggi e argomenti, e accanto all'argomento apparirà anche un conteggio dei nuovi messaggi."
       tracked_tags: "Seguite"
       tracked_tags_instructions: "Seguirai automaticamente tutti gli argomenti con queste etichette. Accanto all'argomento apparirà il conteggio dei nuovi messaggi."
       muted_tags: "Silenziati"
@@ -1039,6 +1042,7 @@ it:
     not_logged_in_user: 'pagina utente con riassunto delle attività correnti e delle impostazioni'
     current_user: 'vai alla pagina utente'
     topics:
+      new_messages_marker: "ultima visita"
       bulk:
         unlist_topics: "Deselezione Topics"
         reset_read: "Reimposta Lettura"
@@ -1311,6 +1315,10 @@ it:
         instructions:
           one: "Per favore scegli l'argomento dove spostare il messaggio."
           other: "Per favore scegli l'argomento di destinazione dove spostare i <b>{{count}}</b> messaggi."
+      merge_posts:
+        title: "Unisci Messaggi Selezionati"
+        action: "unisci messaggi selezionati"
+        error: "Si è verificato un errore nell'unire i messaggi selezionati."
       change_owner:
         title: "Cambia Proprietario dei Messaggi"
         action: "cambia proprietà"
@@ -1503,6 +1511,10 @@ it:
         confirm:
           one: "Sei sicuro di voler cancellare questo messaggio?"
           other: "Sei sicuro di voler cancellare tutti questi messaggi?"
+      merge:
+        confirm:
+          one: "Sicuro di voler unire questi messaggi?"
+          other: "Sicuro di voler unire questi {{count}} messaggi?"
       revisions:
         controls:
           first: "Prima revisione"
@@ -2784,3 +2796,21 @@ it:
           label: "Nuovo:"
           add: "Aggiungi"
           filter: "Cerca (URL o URL Esterna)"
+  wizard_js:
+    wizard:
+      done: "Fatto"
+      back: "Indietro"
+      next: "Avanti"
+      step: "%{current} di %{total}"
+      upload: "Carica"
+      uploading: "Caricamento..."
+      quit: "Forse Dopo"
+      staff_count:
+        one: "La tua comunità ha 1 membro dello staff."
+        other: "La tua comunità ha %{count} membri dello staff."
+      invites:
+        add_user: "aggiungi"
+        roles:
+          admin: "Amministratore"
+          moderator: "Moderatore"
+          regular: "Utente Normale"

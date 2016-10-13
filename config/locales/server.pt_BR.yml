@@ -285,6 +285,7 @@ pt_BR:
               common: "é uma das 10000 senhas mais comuns. Por favor, use uma senha mais segura."
               same_as_username: "é igual o seu nome de usuário. Por favor use uma senha mais segura."
               same_as_email: "é igual o seu email. Por favor use uma senha mais segura."
+              same_as_current: "A senha inserida é a mesma que a sua atual senha. Favor inserir uma nova e mais segura."
             ip_address:
               signup_not_allowed: "Cadastro não é permitido a partir desta conta."
         color_scheme_color:
@@ -478,6 +479,7 @@ pt_BR:
     continue_button: "Continuar no %{site_name}"
     welcome_to: "Bem-vindo a %{site_name}!"
     approval_required: "Um moderador tem que aprovar a sua conta para que você possa acessar este fórum. Você receberá um email quando sua conta for aprovada!"
+    missing_session: "Não conseguimos detectar se sua conta foi criada. Por favor, certifique-se de que você está com os cookies do navegador habilitados."
   post_action_types:
     off_topic:
       title: 'Off-Topic'
@@ -549,6 +551,7 @@ pt_BR:
   unsubscribe:
     title: "Desinscrever"
     stop_watching_topic: "Parar de observar este tópico, %{link}"
+    mute_topic: "Silenciar todas as notificações para este tópico, %{link} "
     unwatch_category: "Parar de observar todos os tópicos na categoria  %{category}"
     mailing_list_mode: "Desativar o modo lista de discussão"
     disable_digest_emails: "Pare de me enviar emails de resumo"
@@ -712,14 +715,7 @@ pt_BR:
     s3_config_warning: 'O servidor está configurado para fazer upload de arquivos para o s3, mas pelo menos uma destas configurações não está definida: s3_access_key_id, s3_secret_access_key ou s3_upload_bucket. Vá até as <a href="/admin/site_settings">Configurações do Site</a> e atualize estas definições. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Veja "How to set up image uploads to S3?" para saber mais</a>.'
     s3_backup_config_warning: 'O servidor está configurado para fazer upload de arquivos para o s3, mas pelo menos uma destas configurações não está definida: s3_access_key_id, s3_secret_access_key ou s3_backup_bucket. Vá até as <a href="/admin/site_settings">Configurações</a> e atualize estas definições. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Veja "How to set up image uploads to S3?" para saber mais</a>.'
     image_magick_warning: 'O servidor está configurado para criar miniaturas de imagens grandes, mas o ImageMagick não está instalado. Instale o ImageMagick usando seu gerenciador de pacotes preferido ou acesse <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">para fazer download da última versão</a>.'
-    default_logo_warning: "Defina os logotipos gráficos para o seu site. Atualize logo_url, logo_small_url, e favicon_url nas <a href='/admin/site_settings'>Configurações do Site</a>."
-    contact_email_missing: "Digite um email de contato do site para que você possa ser encontrado para assuntos urgentes sobre o seu site. Atualize-o nas <a href='/admin/site_settings'>Configurações do Site</a>."
-    contact_email_invalid: "O email de contato do site é inválido. Atualize-o nas <a href='/admin/site_settings'>Configurações do Site</a>."
-    title_nag: "Digite o nome do seu site. Atualize o título nas <a href='/admin/site_settings'>Configurações do Site</a>."
-    site_description_missing: "Digite uma frase de descrição do seu site que aparecerá em resultados de busca. Atualize site_description nas <a href='/admin/site_settings'>Configurações do Site</a>."
     consumer_email_warning: "Seu site está configurado para usar Gmail (ou outro serviço de email para pessoas). <a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>Gmail limita a quantidade de emails que você pode enviar</a>. Considere o uso de um serviço de envio de emails como mandrill.com para assegurar a entregabilidade dos emails enviados."
-    site_contact_username_warning: "Digite o nome de um membro interno para enviar mensagens importantes automaticamente a partir dele. Atualize site_contact_username em <a href='/admin/site_settings'>Configurações do Site</a>."
-    notification_email_warning: "Emails de notificação não estão sendo enviados por um endereço de email válido no seu domínio; entrega de email será errática e não confiável. Por favor configure notification_email com um endereço de email local válido nas <a href='/admin/site_settings'>Configurações do Site</a>."
   site_settings:
     censored_words: "Palavras que serão substituídos automaticamente por &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Auto-apagar todas as mensagens ocultas que ficar oculta por mais de 30 dias."
@@ -761,6 +757,7 @@ pt_BR:
     post_excerpt_maxlength: "Limite de caracteres para o resumo de um post."
     post_onebox_maxlength: "Tamanho máximo para um Post em caracteres"
     onebox_domains_whitelist: "Uma lista de domínios para os quais permitir oneboxing; estes domínios devem suportar OpenGraph ou oEmbed. Teste-os em http://iframely.com/debug"
+    logo_url: "O logotipo ao lado superior esquerdo de seu site deve ser um retângulo largo. Se for deixado em branco, o que aparecerá será o nome do site. "
     apple_touch_icon_url: "Ícone usado para dispositivos Apple. Tamanho recomendado é 144px por 144px."
     notification_email: "O endereço de email utilizado quando enviado emails do sistema. O domínio especificado deve ter registros SPF, DKIM e PTR, devidamente configurados para que os email funcionem corretamente."
     email_custom_headers: "A lista delimitada por barras verticais de cabeçalhos de e-mail personalizados"
@@ -777,6 +774,7 @@ pt_BR:
     anon_polling_interval: "Com que frequencia os clientes não registrados podem solicitar o servidor em milisegundos"
     background_polling_interval: "Com que frequência os clientes podem solicitar o servidor em milisegundos ( em segundo plano )"
     cooldown_minutes_after_hiding_posts: "Número de minutos que um usuário deve esperar antes de poder editar uma publicação que foi ocultada devido a sinalização da comunidade."
+    max_replies_in_first_day: "O número máximo de respostas que um usuário está habilitado para criar é de 24 horas após a criação de sua primeira postagem. "
     tl2_additional_likes_per_day_multiplier: "Aumentar limite de likes por dia para tl2 (membros) multiplicando por esse número"
     tl3_additional_likes_per_day_multiplier: "Aumentar limite de likes por dia para tl3 (regular) multiplicando por esse número"
     tl4_additional_likes_per_day_multiplier: "Aumentar limite de likes por dia para tl4 (lideres) multiplicando por esse número"
@@ -883,6 +881,7 @@ pt_BR:
     s3_cdn_url: "O endereço do CDN para usar para todos artefatos do s3 (por exemplo: https://cdn.algumlugar.com). AVISO: depois de mudar esta configuração você deve reconverter todas mensagens antigas."
     avatar_sizes: "Lista de tamanhos de avatar gerados automaticamente."
     external_system_avatars_enabled: "Usar serviço de avatar externo."
+    allow_all_attachments_for_group_messages: "Permitir todos os anexos de e-mail para mensagens de grupo."
     enable_flash_video_onebox: "Habilitar o embutir de links swf e flv (Adobe Flash) em oneboxes. AVISO: pode introduzir riscos de segurança."
     default_invitee_trust_level: "Nível de confiança (0-4) padrão para usuários convidados."
     default_trust_level: "Nível de confiança (0-4) para todos novos usuários. CUIDADO! Mudar irá colocar em sérios riscos de spam."
@@ -902,6 +901,7 @@ pt_BR:
     tl3_links_no_follow: "Não remover rel=nofollow de links postados por usuários do nível de confiança 3."
     min_trust_to_create_topic: "O nível de confiança mínimo necessário para criar um novo tópico."
     min_trust_to_edit_wiki_post: "O nível de confiança mínimo necessário para editar uma postagem marcada como wiki."
+    min_trust_to_edit_post: "O nível mínimo de confiança requerido para editar posts. "
     newuser_max_links: "Quandos links um usuário novo pode adicionar a um post."
     newuser_max_images: "Quantas imagens um usuário novo pode adicionar a um post."
     newuser_max_attachments: "Quantos arquivos anexos um usuário novo pode adicionar a um post."
@@ -1609,6 +1609,8 @@ pt_BR:
     images:
       too_large: "Desculpe, a imagem que você está tentando enviar é muito grande (o tamanho máximo é %{max_size_kb}KB), por favor a redimensione e tente novamente."
       size_not_found: "Desculpe, mas não conseguimos determinar o tamanho da imagem. É possível que seu arquivo de imagem esteja corrompido?"
+  avatar:
+    missing: "Desculpe! Não conseguimos achar nenhum avatar associado a esse endereço de email. Você pode tentar novamente?"
   email_log:
     no_user: "Não foi possível encontrar usuário com id %{user_id}"
     anonymous_user: "Usuário é anônimo"
@@ -1657,6 +1659,8 @@ pt_BR:
     leader:
       name: Líder
       description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/7">Concedido</a> o acesso para editar globalmente, fixar, fechar, arquivar, desmembrar e unificar tópicos, além de mais curtidas
+      long_description: |
+        Este emblema é concedido quando você alcança o nível de confiança 4. Você é um líder desta comunidade selecionado pela equipe, e define um exemplo positivo em suas ações e palavras. Você tem habilidade de editar todos tópicos, agir como moderador nas ações como fixar, fechar, delistar, arquivar, separar, agrupar e vários curtidas a mais por dia.
     welcome:
       name: Bem-Vindo
       description: Recebeu uma curtida
@@ -1796,10 +1800,79 @@ pt_BR:
     step:
       locale:
         title: "Bem-vindo ao seu Discourse!"
+        fields:
+          default_locale:
+            description: "Qual é o idioma padrão para sua comunidade?"
+      forum_title:
+        title: "Nome"
+        fields:
+          title:
+            label: "O nome de sua comunidade"
+          site_description:
+            label: "Descreva sua comunidade numa frase curta."
+            placeholder: "Um lugar para Jane e seus amigos discutirem coisas legais."
       introduction:
+        title: "Introdução"
         fields:
           welcome:
             label: "Tópico de Boas Vindas"
+            one_paragraph: "Por favor, reduza sua mensagem de boas-vindas para um parágrafo."
+      privacy:
+        title: "Acesso"
+        fields:
+          privacy:
+            choices:
+              open:
+                label: "Público"
+                description: "Todos podem acessar essa comunidade e logar em uma conta. "
+              restricted:
+                label: "Privado"
+                description: "Apenas pessoas que eu convidei ou aprovei podem acessar essa comunidade."
+      contact:
+        title: "Contato"
+        fields:
+          contact_email:
+            label: "E-mail"
+            placeholder: "nome@exemplo.com"
+      corporate:
+        fields:
+          company_full_name:
+            label: "Nome da Companhia"
+      colors:
+        title: "Tema"
+        fields:
+          theme_id:
+            description: "Você prefere um esquema de cores claro ou escuro para começar? Você poderá, futuramente, trocar o esquema de cores do seu site através da Aba: Admin, Configurações."
+      logos:
+        title: "Logotipos"
+        fields:
+          logo_url:
+            label: "Logotipo Primário"
+            description: "O logotipo ao lado superior esquerdo de seu site. Use um formato de retângulo largo."
+          logo_small_url:
+            label: "Logotipo Compacto "
+            description: "Uma versão compacta de sua logo, mostrada na parte superior esquerda do site quando rolado para baixo. Use um formato quadrado."
+      icons:
+        title: "Ícones"
+        fields:
+          favicon_url:
+            label: "Ícone pequeno"
+          apple_touch_icon_url:
+            label: "Ícone Largo"
+      homepage:
+        title: "Página Inicial"
+        fields:
+          homepage_style:
+            choices:
+              latest:
+                label: "Últimos tópicos"
+              categories:
+                label: "Categorias"
+      emoji:
+        title: "Emoji"
+        description: "Qual estilo de Emoji se adequa melhor para sua comunidade? Você poderá sempre adicionar novas customizações de Emojis através da aba: Admin > Customizar > Emoji."
+      invites:
+        title: "Convidar um grupo"
   activemodel:
     errors:
       <<: *errors

@@ -735,14 +735,7 @@ fr:
     s3_backup_config_warning: 'Le serveur est configuré pour envoyer les sauvegardes sur S3, mais l''un des paramètres suivants n''est pas renseigné: s3_access_key_id, s3_secret_access_key or s3_backup_bucket. Allez dans les <a href="/admin/site_settings">Paramètres</a> et mettez les à jour. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Voir "Comment mettre en place une sauvegarde sur S3?" pour en savoir plus</a>.'
     image_magick_warning: 'Le serveur est configuré pour créer des aperçus des grandes images, mais ImageMagick n''est pas installé. Installez ImageMagick en utilisant votre gestionnaire de paquets favori ou bien allez ici <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">pour télécharger la dernière version</a>.'
     failing_emails_warning: 'Il y a %{num_failed_jobs} tâches d''envois de courriel en erreur. Vérifiez votre fichier app.yml et assurez-vous de la conformité des paramètres du serveur de courriel. <a href="/sidekiq/retries" target="_blank">Voir aussi les processus en échec dans Sidekiq</a>.'
-    default_logo_warning: "Modifier le logo de votre site. Mettez à jour les <a href='/admin/site_settings'>paramètres du site</a> suivant : logo_url, logo_small_url et favicon_url."
-    contact_email_missing: "Saisissez l'adresse courriel de contact pour votre site web afin qu'on puisse vous contacter pour des problèmes urgents sur votre site. Mettez-le à jour dans les <a href='/admin/site_settings'>Paramètres du site</a>."
-    contact_email_invalid: "L'adresse courriel de contact du site est invalide. Mettez-le à jour dans les <a href='/admin/site_settings'>paramètre du site</a>."
-    title_nag: "Saisissez le nom de votre site. Modifier le titre sous <a href='/admin/site_settings'>Paramètres du site</a>."
-    site_description_missing: "Saisissez une phrase courte décrivant votre site et qui apparaîtra dans les moteurs de recherche. Mettez site_description à jour dans les <a href='/admin/site_settings'>Paramètres du site</a>."
     consumer_email_warning: "Votre site est configuré pour envoyer les courriels en utilisant Gmail (ou un autre site de courriels pour utilisateur standard). <a href='http://support.google.com/a/bin/answer.py?hl=fr&answer=166852' target='_blank'>Gmail limite le nombre d'emails que vous pouvez envoyer</a>. Nous vous conseillons d'utiliser un autre service d'envoi de courriels afin d'assurer une meilleure délivrabilité."
-    site_contact_username_warning: "Saisissez le pseudo d'un responsable sympathique à partir duquel sera envoyé les messages importants. Mettez à jour site_contact_username dans les <a href='/admin/site_settings'>Paramètres du site</a>."
-    notification_email_warning: "Les courriels de notification ne serot pas envoyés depuis une adresse de courriel valide sur votre domaine ; l'envoie des courriels sera aléatoire et peu fiable. Veuillez saisir une adresse de courriel locale dans notification_email  dans les <a href='/admin/site_settings'>Paramètres du site</a>."
     subfolder_ends_in_slash: "Votre configuration de sous-répertoire est erronée; DISCOURSE_RELATIVE_URL_ROOT se termine avec une barre oblique ."
     email_polling_errored_recently:
       one: "La vérification des courriels a généré une erreur au cours des 24 dernières heures. Vérifiez <a href='/logs' target='_blank'>le journal</a> pour plus de détails."
@@ -1004,6 +997,7 @@ fr:
     tl3_links_no_follow: "Ne pas retirer rel=nofollow sur les liens des messages par les utilisateurs de niveau de confiance 3."
     min_trust_to_create_topic: "Le niveau de confiance minimum pour créer un nouveau sujet."
     min_trust_to_edit_wiki_post: "Le niveau de confiance minimum requis pour modifier les messages de type wiki."
+    min_trust_to_edit_post: "Le niveau de confiance minimum requis pour modifier des messages."
     min_trust_to_allow_self_wiki: "Le niveau de confiance minimum requis pour transformer ses propres messages en type wiki."
     min_trust_to_send_messages: "Le niveau de confiance minimum pour être autorisé à créer des nouveaux messages privés."
     newuser_max_links: "Combien de liens un nouvel utilisateur peut-il ajouter à un message."

@@ -13,6 +13,10 @@ ko:
       total_votes:
         other: "전체 투표"
       average_rating: "평균: <strong>%{average}</strong>."
+      multiple:
+        help:
+          at_least_min_options:
+            other: "최소 <strong>%{count}</strong>개의 옵션을 선택해야합니다."
       cast-votes:
         title: "표 던지기"
         label: "지금 투표!"

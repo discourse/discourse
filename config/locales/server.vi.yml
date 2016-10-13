@@ -655,14 +655,7 @@ vi:
     s3_backup_config_warning: 'Máy chủ được cấu hình để upload các bản sao lưu dữ liệu lên s3, tuy nhiên ít nhất một trong các tùy chỉnh sau đây không được thiết lập: s3_access_key_id, s3_secret_access_key hoặc s3_backup_bucket. Truy cập <a href="/admin/site_settings">Thiết lập Site</a> và  bổ sung các thiết lập đó. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Xem bài viết "How to set up image uploads to S3?" để biết thêm chi tiết</a>.'
     image_magick_warning: 'Máy chủ đã cấu hình để tạo hình đại diện nhỏ từ những hình lới, nhưng ImageMagick chưa được cài đặt. Cài ImageMagick sử dụng trình quản lý package yêu thích của bạn hoặc <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">tải về phiên bản mới nhất</a>.'
     failing_emails_warning: 'Có %{num_failed_jobs} email jobs thấ bại. Kiểm tra app.yml và chắc chắn rằng cấu hình máy chủ email đúng. <a href="/sidekiq/retries" target="_blank">Xem jobs thất bại ở Sidekiq</a>.'
-    default_logo_warning: "Cập nhập logo của trang. Cập nhập logo_url, logo_small_url, và favicon_url trong <a href='/admin/site_settings'>Thiết lập trang</a>."
-    contact_email_missing: "Điền địa chỉ email liên hệ để có thể nhận được các vấn đề cấp bách liên quan đến website của bạn, cập nhật trong <a href='/admin/site_settings'>Thiết lập website</a>."
-    contact_email_invalid: "Email liên lạc của trang không hợp lệ. Cập nhật trong <a href='/admin/site_settings'>Thiết lập trang/a>."
-    title_nag: "Nhập tên trang của bạn. Cập nhập tiêu đề trong <a href='/admin/site_settings'>Thiết lập trang</a>."
-    site_description_missing: "Điền một câu mô tả về website để hiển thị trên trang kết quả tìm kiếm, cập nhật site_description trong <a href='/admin/site_settings'>Thiết lập website</a>."
     consumer_email_warning: "Trang web của bạn được cài đặt sử dụng Gmail (hoặc một dịch vụ email khác) để gửi email. <a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>Gmail có giới hạn số lượng email bạn có thể gửi</a>. Hãy xem xét sử dụng một dịch vụ email khác như mandrill.com để đảm bảo khả năng vận chuyển tất cả các email."
-    site_contact_username_warning: "Điền tên tài khoản điều hành viên để gửi tin nhắn tự động, cập nhật site_contact_username trong <a href='/admin/site_settings'>Thiết lập website</a>."
-    notification_email_warning: "Email thông báo không thể gửi từ một địa chỉ email với tên miền của bạn, gửi email sẽ thất thường và không đáng tin cậy. Hãy thiết lập notification_email tới một địa chỉ tin cậy trong <a href='/admin/site_settings'>Thiết lập website</a>."
     subfolder_ends_in_slash: "Thư mục con của bạn được thiết lập không đúng, DISCOURSE_RELATIVE_URL_ROOT phải được kết thúc bằng dấu gạch chéo."
     email_polling_errored_recently:
       other: "Email đã tạo %{count} lỗi trong 24 giờ qua, xem <a href='/logs' target='_blank'>nhật ký</a> để biết thêm chi tiết."

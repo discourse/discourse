@@ -13,7 +13,12 @@
       }
 
       .controls {
-        input,select {
+        label {
+          display: block;
+          margin-bottom: 5px;
+        }
+
+        input:not([type="checkbox"]),select {
           width: 75%;
         }
       }

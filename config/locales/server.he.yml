@@ -165,7 +165,7 @@ he:
   page_num: "עמוד %{num}"
   home_title: "בית"
   topics_in_category: "נושאים בקטגוריה '%{category}'"
-  rss_posts_in_topic: "תזרים RSS '%{topic}'"
+  rss_posts_in_topic: "תזרים RSS של '%{topic}'"
   rss_topics_in_category: "תזרים RSS של נושאים בקטגוריה '%{category}'"
   author_wrote: "%{author} כתב/ה:"
   num_posts: "פוסטים:"
@@ -213,10 +213,10 @@ he:
     new-topic: |
       ברוכים באים ל%{site_name} &mdash; **תודה שהתחלתם שיחה חדשה! **
       -הכותרת נשמעת מעניינת כשאתם קוראים אותה בקול רם? האם היא תקציר טוב?
-      -מי יתעניין בזה? איזה סוג של תגובות את/ה רוצה?
-      -השתמשו במילים נפוצות בכותרת שלך כך שאחרים יוכלו למצוא אותה. כדי לשייך את הנושאים שלכם עם נושאים קשורים בחרו קטגוריה.
+      -מי יתעניין בזה? איזה סוג של תגובות אתם רוצים?
+      -השתמשו במילים נפוצות בכותרת שלכם כך שאחרים יוכלו למצוא אותה. כדי לשייך את הנושאים שלכם עם נושאים קשורים בחרו קטגוריה.
       -לעוד טיפים, [ראו את כללי התנהלות בקהילה] (/guidelines).
-      הפנל הזה יופיע רק עבור %{education_posts_text} הראשונים.
+      הפנל הזה יופיע רק עבור %{education_posts_text} הפוסטים הראשונים.
     new-reply: |
       ברוכים הבאים ל %{site_name} &mdash; ** תודה על תרומתך! **
 
@@ -357,7 +357,7 @@ he:
     newuser:
       title: "משתמש חדש"
     basic:
-      title: "משתמש בסיסי"
+      title: "משתמשים בסיסיים"
     member:
       title: "חבר"
     regular:
@@ -732,14 +732,7 @@ he:
     s3_backup_config_warning: 'השרת מכוון להעלות גיבויים ל s3, אבל לפחות אחת מההגדרות הבאות לא נקבעה: s3_access_key_id, s3_secret_access_key או s3_backup_bucket. לכו ל <a href="/admin/site_settings">הגדרות האתר</a> ועדכנו את ההגדרות. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">ראו ״כיצד לקבוע העלאות קבצים ל S3?״ כדי ללמוד עוד</a>.'
     image_magick_warning: 'השרת מכוון ליצור צלמיות לתמונות גדולות, אבל ImageMagick לא מותקן. התקינו ImageMagick באמצעות מנהל החבילות האהוב עליכם או <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">הורידו את הגרסה האחרונה</a>.'
     failing_emails_warning: 'יש %{num_failed_jobs} עבודות מייל שנכשלו. בידקו את app.yml שלכם כדי לוודא ששרת המייל מוגדר כיאות. <a href="/sidekiq/retries" target="_blank">ראו את העבודות שנכשלו ב Sidekiq</a>.'
-    default_logo_warning: "כוונו את הסמלילים הגרפיים לשימוש באתר שלך. עדכנו את כתובת ה-URL של הלוגו, כתובת ה-URL ללוגו המוקטן, וכתובת ה-URL של ה-favicon. "
-    contact_email_missing: "הזינו כתובת דוא\"ל ליצירת קשר, בה ניתן יהיה ליצור עמכם קשר בנושאים דחופים בנוגע לאתר שלכם. עדכנו אותה ב<a href='/admin/site_settings'>הגדרות האתר</a>."
-    contact_email_invalid: "כתובת הדוא\"ל ליצירת קשר של האתר אינה תקינה. עדכנו אותה ב <a href='/admin/site_settings'>הגדרות האתר</a>."
-    title_nag: "הזינו את השם של האתר שלך. עדכנו את הכותרת ב<a href='/admin/site_settings'>הגדרות האתר</a>."
-    site_description_missing: "הזינו משפט אחד לתיאור האתר שלך אשר יופיע בתוצאות מנועי חיפוש. עדכנו את תיאור האתר ב<a href='/admin/site_settings'>הגדרות האתר</a>."
     consumer_email_warning: "השרת שלכם מכוון להשתמש בג׳ימייל (או שירות מייל אחר שנועד לאנשים פרטיים) כדי לשלוח מייל. <a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>ג׳ימייל מגביל כמה מיילים ניתן לשלוח</a>. שיקלו להשתמש בשירות מייל כמו mandrill.com כדי להבטיח שליחה של מיילים."
-    site_contact_username_warning: "הזינו שם חשבון ידידותי של אי/אשת צוות ממנו ישלחו הודעות אוטומטיות חשובות. עדכנו את site_contact_username ב<a href='/admin/site_settings'>הגדרות האתר</a>."
-    notification_email_warning: "מיילים ליידוע אינם נשלחים מכתובת תקינה בדומיין שלכם; משלוח דוא\"ל יהיה בעייתי ולא אמין. אנא כוונו את כתובת המייל למשלוח התראות לכתובת מקומית תקינה ב<a href='/admin/site_settings'>הגדרות האתר</a>."
     subfolder_ends_in_slash: "הגדרות תיקיית המשנה שלכם לא נכונות, הנתיב DISCOURSE_RELATIVE_URL_ROOT צריך להסתיים בלוכסן."
     email_polling_errored_recently:
       one: "ניסיונות שליחת מיילים יצרו תקלה ב 24 השעות האחרונות. צפו ב<a href='/logs' target='_blank'>יומנים</a> לפרטים נוספים."
@@ -898,7 +891,7 @@ he:
     sso_overrides_name: "דורס שם מלא מקומי עם שם מלא מאתר חיצוני מתוכן SSO בכל התחברות, מונע שינויים מקומיים."
     sso_overrides_avatar: "מעקף אווטאר של משתמש בעזרת אווטר אתרחיצוני מ-SSO Payload. אם אפשרות זו מופעלת, מומלץ מאוד לבטל את האפשרות להעלאת אווטר."
     sso_not_approved_url: "SSO של חשבונות שלא אושרו יופנו ל URL זה"
-    enable_local_logins: "אפשרו שם חשבונות מבוססים על שן משתמש מקומי וסיסמת התחברות. (שימו לב: אפשרות זו חייבת להיות מותרת כדי שהזמנות להצטרפות יפעלו)"
+    enable_local_logins: "אפשרו התחברות שמבוססת על שמות משתמשים וסיסמאות מקומיים. (שימו לב: אפשרות זו חייבת להיות מותרת כדי שהזמנות להצטרפות יפעלו)"
     allow_new_registrations: "אפשרו הרשמות משתמשים חדשים. בטלו סימון זה כדי למנוע יצירת חשבונות חדשים."
     enable_signup_cta: "הציגו מודעה למשתמשים אנונימיים חוזרים שמציעה להם להרשם כדי לקבל חשבון."
     enable_yahoo_logins: "איפשור אימות של Yahoo"
@@ -1001,6 +994,7 @@ he:
     tl3_links_no_follow: "מניעת הסרת rel=nofollow מקישורים שמפורסמים על ידי משתמשים ברמת אמון 3."
     min_trust_to_create_topic: "רמת האמון המינימלית הנדרשת כדי לייצר נושא חדש."
     min_trust_to_edit_wiki_post: "רמת האמון המינימלי הנדרשת כדי לערוך פוסט שמסומן כ-wiki."
+    min_trust_to_edit_post: "רמת האמון המינימלית הנדרשת כדי לערוך פוסטים."
     min_trust_to_allow_self_wiki: "רמת האמון המינימלית הנדרשת כדי שמשתמש יוכל להפוך פוסט של עצמו לויקי."
     min_trust_to_send_messages: "רמת האמון המינימלית המדרשת כדי ליצור הודעות פרטיות חדשות."
     newuser_max_links: "כמה קישורים יכולים משתמשים חדשים להוסיף לפוסט."
@@ -1027,7 +1021,7 @@ he:
     category_style: "סגנון ויזואלי עבור עיטורי קטגוריות."
     max_image_size_kb: "גודל קובץ מקסימלי להעלאה בקילו-בייטים (kB). ערך זה חייב להיות מוגדרת גם ב-nginx (client_max_body_size) / apache או בפרוקסי."
     max_attachment_size_kb: "הגודל המקסימלי בקילובייטים (kBs) של קבצים להעלאה. הגדרה זו חייבת להיות מוגדרת ב-nginx (client_max_body_size) / apache או בפרוקסי."
-    authorized_extensions: "רשימה של הרחבות מותרות להעלאה (השתמשו ב '*' כדי לאפשר את כל סוגי הקבצים)"
+    authorized_extensions: "רשימה של סיומות מותרות להעלאה (השתמשו ב '*' כדי לאפשר את כל סוגי הקבצים)"
     max_similar_results: "כמה נושאים דומים להציג מעל לעורך כאשר מחברים נושא חדש. ההשוואה מבוססת על הכותרת וגוף הפוסט."
     title_prettify: "מניעת טעויות נפוצות בכותרת, בכללן טעויות עם אותיות גדולות באנגלית, מספר ! ו ?, נקודה מיותרת בסוף, וכד׳"
     topic_views_heat_low: "לאחר כמות זו של צפיות,שדה הצפיות יהיה קצת יותר בהיר."
@@ -1066,9 +1060,9 @@ he:
     reply_by_email_address: "תבנית עבור כתובות מייל של מענה באמצעות אימייל, למשל: {reply_key}@reply.example.com או  replies+%{reply_key}@example.com"
     alternative_reply_by_email_addresses: "רשימה של כמה תבניות לתגובות במייל באמצעות כתובות מייל נכנסות. למשל: %{reply_key}@reply.example.com|replies+%{reply_key}@example.com"
     incoming_email_prefer_html: "השתמשו ב HTML במקום בטקסט בשביל מייל נכנס. עלול ליצור בעיות עיצוב לא-צפויות!"
-    disable_emails: "מנעו מ-Discourse ממשלו דוא\"ל כלשהו."
+    disable_emails: "מנעו מ-Discourse ממשלוח דוא\"ל כלשהו"
     strip_images_from_short_emails: "הסרת תמונות מדוא\"ל בגודל של פחות מ-2800 בייטים"
-    short_email_length: "אורכו של דוא\"ל קצר בבייטים (Bytes)"
+    short_email_length: "אורכו של דוא\"ל קצר בבתים (Bytes)"
     display_name_on_email_from: "הצגת שמות מלאים בשדה ה״מאת״ במיילים"
     unsubscribe_via_email: "אפשרו למשתמשים לבטל מנוי אימייל באמצעות שליחת מייל עם המילה ״unsubscribe״ בנושא או גוף המייל"
     unsubscribe_via_email_footer: "צירוף ״ביטול מנוי באמצעות קישור מייל mailto:״ בתחתית מיילים נשלחים"
@@ -2024,7 +2018,7 @@ he:
 
         %{respond_instructions}
     user_invited_to_topic:
-      subject_template: "הוזמנת לדיון שכותרתו  '%{topic_title}' על ידי [%{site_name}] %{username}"
+      subject_template: "הוזמנת לדיון שכותרתו '%{topic_title}' על ידי [%{site_name}] %{username}"
       text_body_template: |
         %{header_instructions}
 
