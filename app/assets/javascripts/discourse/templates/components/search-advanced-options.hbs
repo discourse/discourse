@@ -1,7 +1,7 @@
 <h3 class="panel-title" {{action "expandOptions"}}>
   <i class="fa {{collapsedClassName}}"></i> {{i18n "search.advanced.title"}}
 </h3>
-{{#unless isCollapsed}}
+{{#if isExpanded}}
   <div class="search-options">
     <div class="container">
       <div class="control-group pull-left">
@@ -18,7 +18,7 @@
       </div>
     </div>
 
-    <!-- disable these super-advanced searches for now 
+    <!-- disable these super-advanced searches for now
     <div class="container">
       <div class="control-group pull-left">
         <label class="control-label" for="search-in-group">{{i18n "search.advanced.in_group.label"}}</label>
@@ -33,7 +33,7 @@
         </div>
       </div>
     </div>
-    --> 
+    -->
 
     {{#if siteSettings.tagging_enabled}}
       <div class="container">
@@ -77,4 +77,4 @@
       </div>
     </div>
   </div>
-{{/unless}}
+{{/if}}

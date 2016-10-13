@@ -388,11 +388,6 @@ export default Em.Component.extend({
     return (this.get('isExpanded')) ? "fa-caret-down" : "fa-caret-right";
   }.property('isExpanded'),
 
-  @computed('isExpanded')
-  isCollapsed(isExpanded){
-    return !isExpanded;
-  },
-
   actions: {
     expandOptions() {
       this.set('isExpanded', !this.get('isExpanded'));
