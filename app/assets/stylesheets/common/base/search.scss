@@ -100,13 +100,14 @@
 .search-advanced {
   margin-bottom: 15px;
 
-  .panel-title {
-    background-color: dark-light-diff($primary, $secondary, 94%, -80%);
+  .search-advanced-btn {
     padding: 8px 10px;
-    cursor: pointer;
+    width: 100%;
+    text-align: left;
+    font-weight: bold;
   }
 
-  .search-options {
+  .search-advanced-options {
     border: 1px solid dark-light-diff($primary, $secondary, 90%, -75%);
     padding: 10px;
 

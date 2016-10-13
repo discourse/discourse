@@ -17,8 +17,7 @@ const REGEXP_CATEGORY_ID    = /\s?(category:[0-9]+)/ig;
 const REGEXP_POST_TIME_WHEN = /(before|after)/ig;
 
 export default Em.Component.extend({
-  tagName: 'div',
-  classNames: ['search-advanced', 'row'],
+  classNames: ['search-advanced-options'],
   searchedTerms: {username: [], category: null, group: [], badge: [], tags: [],
     in: '', status: '', posts_count: '', time: {when: 'before', days: ''}},
   inOptions: [
@@ -45,8 +44,16 @@ export default Em.Component.extend({
     {name: I18n.t('search.advanced.post.time.after'),   value: "after"}
   ],
 
-  @on('init')
+  didInsertElement() {
+    this._super();
+    this._init();
+  },
+
   @observes('searchTerm')
+  _updateOptions() {
+    Ember.run.debounce(this, this._init, 250);
+  },
+
   _init() {
     let searchTerm = this.get('searchTerm');
 
@@ -382,18 +389,5 @@ export default Em.Component.extend({
   badgeFinder(term) {
     const Badge = require('discourse/models/badge').default;
     return Badge.findAll({search: term});
-  },
-
-  @computed('isExpanded')
-  collapsedClassName(isExpanded) {
-    return isExpanded ? "fa-caret-down" : "fa-caret-right";
-  },
-
-  actions: {
-    expandOptions() {
-      this.set('isExpanded', !this.get('isExpanded'));
-      if (this.get('isExpanded'))
-        this._init();
-    }
   }
 });
