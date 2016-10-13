@@ -1,4 +1,4 @@
-import { on, observes, default as computed } from 'ember-addons/ember-computed-decorators';
+import { observes } from 'ember-addons/ember-computed-decorators';
 
 const REGEXP_FILTER_PREFIXES   = /\s?(user:|@|category:|#|group:|badge:|tags?:|in:|status:|posts_count:|(before|after):)/ig;
 
