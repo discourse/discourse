@@ -384,9 +384,10 @@ export default Em.Component.extend({
     return Badge.findAll({search: term});
   },
 
-  collapsedClassName: function() {
-    return (this.get('isExpanded')) ? "fa-caret-down" : "fa-caret-right";
-  }.property('isExpanded'),
+  @computed('isExpanded')
+  collapsedClassName(isExpanded) {
+    return isExpanded ? "fa-caret-down" : "fa-caret-right";
+  },
 
   actions: {
     expandOptions() {
