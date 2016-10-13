@@ -5,7 +5,7 @@ import PreloadStore from 'preload-store';
 import { getTransient, setTransient } from 'discourse/lib/page-tracker';
 
 export default Discourse.Route.extend({
-  queryParams: { q: {}, isExpanded: false, context_id: {}, context: {}, skip_context: {} },
+  queryParams: { q: {}, expanded: false, context_id: {}, context: {}, skip_context: {} },
 
   model(params) {
     const cached = getTransient('lastSearch');
