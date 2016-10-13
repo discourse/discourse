@@ -17,10 +17,10 @@ export default Ember.Controller.extend({
   bulkSelectEnabled: null,
 
   loading: Em.computed.not("model"),
-  queryParams: ["q", "isExpanded", "context_id", "context", "skip_context"],
+  queryParams: ["q", "expanded", "context_id", "context", "skip_context"],
   q: null,
   selected: [],
-  isExpanded: false,
+  expanded: false,
   context_id: null,
   context: null,
   searching: false,
@@ -138,9 +138,9 @@ export default Ember.Controller.extend({
     return this.currentUser && this.currentUser.staff && hasResults;
   },
 
-  @computed('isExpanded')
-  canCreateTopic() {
-    return this.currentUser && !this.site.mobileView && !this.get('isExpanded');
+  @computed('expanded')
+  canCreateTopic(expanded) {
+    return this.currentUser && !this.site.mobileView && !expanded;
   },
 
   _search() {
