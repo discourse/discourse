@@ -18,8 +18,7 @@ const REGEXP_POST_TIME_WHEN = /(before|after)/ig;
 
 export default Em.Component.extend({
   classNames: ['search-advanced-options'],
-  searchedTerms: {username: [], category: null, group: [], badge: [], tags: [],
-    in: '', status: '', posts_count: '', time: {when: 'before', days: ''}},
+
   inOptions: [
     {name: I18n.t('search.advanced.filters.likes'),     value: "likes"},
     {name: I18n.t('search.advanced.filters.posted'),    value: "posted"},
@@ -47,18 +46,40 @@ export default Em.Component.extend({
   init() {
     this._super();
     this._init();
+    this._update();
   },
 
   @observes('searchTerm')
   _updateOptions() {
-    Ember.run.debounce(this, this._init, 250);
+    Ember.run.debounce(this, this._update, 250);
   },
 
   _init() {
+    this.setProperties({
+      searchedTerms: {
+        username: null,
+        category: null,
+        group: [],
+        badge: [],
+        tags: [],
+        in: '',
+        status: '',
+        posts_count: '',
+        time: {
+          when: 'before',
+          days: ''
+        }
+      }
+    })
+  },
+
+  _update() {
     let searchTerm = this.get('searchTerm');
 
-    if (!searchTerm)
+    if (!searchTerm) {
+      this._init();
       return;
+    }
 
     this.findUsername(searchTerm);
     this.findCategory(searchTerm);
@@ -90,12 +111,14 @@ export default Em.Component.extend({
   findUsername(searchTerm) {
     const match = this.findSearchTerm(REGEXP_USERNAME_PREFIX, searchTerm);
     if (match.length !== 0) {
-      let existingInput = _.isArray(this.get('searchedTerms.username')) ? this.get('searchedTerms.username')[0] : this.get('searchedTerms.username');
       let userInput = match.replace(REGEXP_USERNAME_PREFIX, '');
-      if (userInput.length !== 0 && existingInput !== userInput)
-        this.set('searchedTerms.username', [userInput]);
-    } else
+
+      if (userInput.length !== 0 && this.get('searchedTerms.username') !== userInput) {
+        this.set('searchedTerms.username', userInput);
+      }
+    } else {
       this.set('searchedTerms.username', []);
+    }
   },
 
   @observes('searchedTerms.username')
