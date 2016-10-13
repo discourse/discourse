@@ -7,9 +7,9 @@
 
 tr_TR:
   dates:
-    short_date_no_year: "G AAA"
+    short_date_no_year: "D MMM"
     short_date: "D MMM, YYYY"
-    long_date: "MMMM D, YYYY h:mma"
+    long_date: "D MMMM, YYYY h:mma"
   datetime_formats: &datetime_formats
     formats:
       short: "%d-%m-%Y"
@@ -37,6 +37,7 @@ tr_TR:
       default_subject: "%{email} adresinden gelen e-posta"
       show_trimmed_content: "Kısaltılmış olan içeriği göster"
       errors:
+        empty_email_error: "Bize ulaşan ham posta boş olduğunda olur."
         no_message_id_error: "E-postanın 'Message-Id' başlığı olmadığında olur"
         inactive_user_error: "Gönderici etkin olmadığında olur."
         blocked_user_error: "Gönderici engellendiğinde olur."
@@ -671,14 +672,7 @@ tr_TR:
     s3_backup_config_warning: 'Sunucu s3''e yedekleme yüklenebilmesi için yapılandırılmış, fakat şunlardan en az biri henüz ayarlanmamış: s3_access_key_id, s3_secret_access_key or s3_backup_bucket. <a href="/admin/site_settings">Site Ayarları</a> sayfasına gidin ve ayarları güncelleyin. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Daha fazla bilgi için "How to set up image uploads to S3?" konulu gönderiye bakın</a>.'
     image_magick_warning: 'Sunucu büyük resimlerin küçük boylarının oluşturulması için yapılandırılmış, fakat ImageMagick henüz kurulmamış. Favori paket yöneticinizi kullanarak ImageMagick kurun veya <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">son sürümünü indirin</a>.'
     failing_emails_warning: 'Başarısızlıkla sonuçlanmış %{num_failed_jobs} e-posta işlemi bulunuyor. app.yml dosyanızı kontrol edin ve e-posta sunucu ayarlarınızın doğru olduğundan emin olun. <a href="/sidekiq/retries" target="_blank">Sidekiq''deki başarısız işlemlere göz atın</a>.'
-    default_logo_warning: "Siteniz için logo grafikleri yükleyin.  <a href='/admin/site_settings'>Site Ayarları</a>'nda logo_url, logo_small_url, ve favicon_url güncellemelerini yapın."
-    contact_email_missing: "Sitenizle alakalı acil durumlar için size ulaşabileceğimiz bir iletişim e-postası girin. Lütfen <a href='/admin/site_settings'>Site Ayarları'nda</a> iletişim e-postanızı güncelleyin."
-    contact_email_invalid: "Site iletişim e-postası geçersiz. İletişim e-postanızı <a href='/admin/site_settings'>Site Ayarları</a> sayfasından güncelleyin."
-    title_nag: "Sitenizin ismini girin. Site ismini <a href='/admin/site_settings'>Site Ayarları</a> sayfasından güncelleyin."
-    site_description_missing: "Arama sonuçlarında gözükecek, sitenizi açıklayan tek bir cümle girin. <a href='/admin/site_settings'>Site Ayarları</a> sayfasından site açıklamasını güncelleyin."
     consumer_email_warning: "Sitenizde e-posta gönderimleri için Gmail (ya da başka bir e-posta hizmeti) kurulumu yapılmış. <a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>Gmail ile gönderebileceğiniz e-posta sayısı limitlidir</a>. Onun yerine, e-postalarınızın ulaştırılabildiğinden emin olmak için mandrill.com benzeri bir hizmet sağlayıcısını kullanın."
-    site_contact_username_warning: "Önemli otomatik mesajları gönderen kişi olarak gözükecek yetkili kullanıcı adını girin. <a href='/admin/site_settings'>Site Ayarları&amp;lt;/a> sayfasından site_contact_username parametresini güncelleyin."
-    notification_email_warning: "Bildiri e-postaları alan adınıza bağlı geçerli bir e-posta adresinden yollanmıyor; e-postalar düzenli ve güvenilir bir şekilde ulaşmayabilir. Lütfen <a href='/admin/site_settings'>Site Ayarları</a> sayfasından notification_email değeri için geçerli bir yerel e-posta adresi girin."
     subfolder_ends_in_slash: "Alt dizin kurulumunuz hatalı, DISCOURSE_RELATIVE_URL_ROOT sonunda yan çizgi bulunmalı."
     bad_favicon_url: "Minik simge yüklemesi başarısız oldu. <a href='/admin/site_settings'>Site Ayarları</a>ndan favicon_url alanını kontrol edin."
   site_settings:
@@ -803,7 +797,7 @@ tr_TR:
     force_hostname: "SADECE YAZILIMCILAR İÇİN! DİKKAT! URL'de bir bilgisayar adı belirleyin. Öntanımlı için boş bırakın."
     invite_expiry_days: "Kullanıcı davet anahtarlarının geçerlilik süresi, gün olarak"
     invite_passthrough_hours: "Daha önce kabul edilmiş davetiye anahtarının kullanım süresi, saat olarak"
-    invite_only: "Halka açık kayıt sistemi devre dışı bırakıldı, tüm yeni kullanıcıların bir üye ya da görevli tarafından davet edilmesi gerekir. "
+    invite_only: "Herkese açık kayıt sistemi devre dışı bırakıldı, tüm yeni kullanıcıların bir üye ya da görevli tarafından davet edilmesi gerekir. "
     login_required: "Bu sitede içerik görüntülenebilmesi için kimlik doğrulamayı zorunlu kıl, isimsiz girişe izin verme."
     min_username_length: "Karakter olarak en küçük kullanıcı adı uzunluğu."
     max_username_length: "Karakter olarak en büyük kullanıcı adı uzunluğu."
@@ -910,6 +904,7 @@ tr_TR:
     tl3_links_no_follow: "Güven seviyesi 3'teki kullanıcılar tarafından paylaşılan linklerdeki rel=nofollow'u kaldırma."
     min_trust_to_create_topic: "Yeni bir konu oluşturmak için gereken en az güven seviyesi. "
     min_trust_to_edit_wiki_post: "Wiki olarak işaretlenmiş bir gönderiyi düzenleyebilmek için gereken en az güven seviyesi."
+    min_trust_to_edit_post: "Gönderilerin düzenlenebilmesi için gereken en düşük güven seviyesi."
     min_trust_to_allow_self_wiki: "Kullanıcının kendi wiki gönderisini oluşturabilmesi için gereken güven seviyesi."
     min_trust_to_send_messages: "Özel bir mesaj oluşturabilmek için gerekli olan güven seviyesi."
     newuser_max_links: "Yeni bir kullanıcının bir gönderiye ekleyebileceği bağlantı sayısı."
@@ -1009,7 +1004,7 @@ tr_TR:
     max_daily_gravatar_crawls: "Discourse'un gün içinde özel avatarlar için Gravatar'ı en fazla kaç kere kontrol edeceği."
     public_user_custom_fields: "Kullanıcıların için, herkes tarafından görüntülenebilir özel alanların beyaz listesi."
     staff_user_custom_fields: "Kullanıcıların için, sadece görevlilere görüntülenebilir özel alanların beyaz listesi."
-    enable_user_directory: "Göz atılabilmesin için kullanıcıların olduğu bir veri dizini sağla"
+    enable_user_directory: "Göz atılabilmesi için kullanıcıların olduğu bir dizin sağla"
     allow_anonymous_posting: "Kullanıcıların anonim moda geçebilmelerine izin ver"
     anonymous_posting_min_trust_level: "Anonim gönderi oluşturabilmeyi etkinleştirebilmek için gereken en az güven seviyesi"
     anonymous_account_duration_minutes: "Anonimliği koruyabilmek için, her kulanıcı için her N dakikada bir yeni bir anonim hesap oluştur. Örnek: 600'e ayarlanırsa, son gönderi üzerinden 600 dakika geçer geçmez VE kullanıcı anonim moddaysa, yeni bir anonim hesap oluşturulur."
@@ -1071,6 +1066,10 @@ tr_TR:
     default_categories_watching: "Öntanımlı olarak gözlenen kategorilerin listesi."
     default_categories_tracking: "Öntanımlı olarak, takip edilen kategorilerin listesi."
     default_categories_muted: "Öntanımlı olarak, sesi kısılan kategorilerin listesi."
+    max_user_api_reqs_per_day: "Gün başına yapılabilecek en fazla kullanıcı API isteği"
+    max_user_api_reqs_per_minute: "Dakika başına yapılabilecek en fazla kullanıcı API isteği"
+    allow_read_user_api_keys: "Yalnızca okuma için kullanıcı API'leri oluşturulmasına izin ver"
+    allow_write_user_api_keys: "Yazma yetkili kullanıcı API'leri oluşturulmasına izin ver"
     max_api_keys_per_user: "Kullanıcı başına kullanılabilecek kullanıcı API anahtarı sayısı"
     min_trust_level_for_user_api_key: "Kullanıcı API'si oluşturmak için gereken güven seviyesi"
     tagging_enabled: "Konularda etiketleri etkinleştirin?"
@@ -1112,7 +1111,7 @@ tr_TR:
     account_not_approved: "Hesabınız onaylanma bekliyor. Onaylandığınızda e-posta ile bilgilendirileceksiniz."
     unknown_error: "Hesabınızda bir sorun var. Lütfen site yöneticisi ile iletişime geçin."
     timeout_expired: "Hesabınız zaman aşımına uğradı, lütfen tekrar giriş yapmayı deneyin."
-  original_poster: "Özgün Poster"
+  original_poster: "Özgün Gönderici"
   most_posts: "En Çok Gönderi"
   most_recent_poster: "En Son Gönderen"
   frequent_poster: "En Sık Gönderen"
@@ -1583,6 +1582,10 @@ tr_TR:
       subject_template: "[%{site_name}] E-posta sorunu -- Geçersiz İzin"
     email_reject_invalid_post:
       subject_template: "[%{site_name}] E-posta sorunu -- Gönderme hatası"
+    email_reject_invalid_post_specified:
+      subject_template: "[%{site_name}] E-posta sorunu -- Gönderim hatası"
+    email_reject_invalid_post_action:
+      subject_template: "[%{site_name}] E-posta sorunu -- Geçersiz Gönderi Eylemi"
     email_reject_reply_key:
       subject_template: "[%{site_name}] E-posta sorunu -- Bilinmeyen Cevap Anahtarı"
     email_reject_bad_destination_address:
@@ -1620,7 +1623,7 @@ tr_TR:
 
         Bu otomatik mesaj %{site_name} forumunda, görevli incelemesinin ardından hesabınızın artık askıda olmadığını bilmeniz amacıyla gönderilmiştir.
 
-        Şimdi tekrar cevaplar ve konular oluşturabilirsiniz. Sabrınız için teşekkürler.
+        Şimdi tekrar gönderi ve konular oluşturabilirsiniz. Sabrınız için teşekkürler.
     pending_users_reminder:
       subject_template:
         other: "%{count} kullanıcı onay bekliyor"
@@ -2191,6 +2194,8 @@ tr_TR:
       name: İlk Bahsetme
       description: 'Gönderide bir kullanıcıdan bahsetme '
       long_description: Bu rozet ilk defa mesajınızda başka bir kullanıcıdan bahsettiğiniz için verilmiştir. Her bahsetme bahsi geçen kullanıcıya bildirim gitmesini sağlar, böylece bu kullanıcı sizin mesajınızdan haberdar olur. Sadece bahsi geçen kullanıcı adına @ gerekir.
+    first_onebox:
+      name: İlk Kutulama
     first_reply_by_email:
       name: Mail İle İlk Cevap
       description: 'Gönderiye mail yoluyla cevap verme '
@@ -2226,6 +2231,8 @@ tr_TR:
         fields:
           title:
             label: "Topluluğunuzun ismi"
+          site_description:
+            label: "Topluluğunuzu kısa bir cümle ile tanımlayın"
       introduction:
         title: "Tanıtım"
         fields:
@@ -2259,13 +2266,13 @@ tr_TR:
         fields:
           company_short_name:
             label: "Şirket İsmi (kısa)"
-            placeholder: "Falanteknikbilim"
+            placeholder: "Falanteknik"
           company_full_name:
             label: "Şirket İsmi (tamamı)"
-            placeholder: "Falanteknikbilim A.Ş"
+            placeholder: "Falanteknik A.Ş"
           company_domain:
             label: "Şirket Alan Adı"
-            placeholder: "falanteknikbilim.com"
+            placeholder: "falanteknik.com"
       colors:
         title: "Tema"
         fields:

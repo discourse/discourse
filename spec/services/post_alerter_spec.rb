@@ -338,9 +338,7 @@ describe PostAlerter do
                            client_id: "xxx#{i}",
                            key: "yyy#{i}",
                            application_name: "iPhone#{i}",
-                           read: true,
-                           write: true,
-                           push: true,
+                           scopes: ['notifications'],
                            push_url: "https://site2.com/push")
       end
 

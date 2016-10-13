@@ -6,6 +6,7 @@ class Auth::DefaultCurrentUserProvider
   CURRENT_USER_KEY ||= "_DISCOURSE_CURRENT_USER".freeze
   API_KEY ||= "api_key".freeze
   USER_API_KEY ||= "HTTP_USER_API_KEY".freeze
+  USER_API_CLIENT_ID ||= "HTTP_USER_API_CLIENT_ID".freeze
   API_KEY_ENV ||= "_DISCOURSE_API".freeze
   TOKEN_COOKIE ||= "_t".freeze
   PATH_INFO ||= "PATH_INFO".freeze
@@ -90,7 +91,7 @@ class Auth::DefaultCurrentUserProvider
         limiter_min.performed!
       end
 
-      current_user = lookup_user_api_user(api_key)
+      current_user = lookup_user_api_user_and_update_key(api_key, @env[USER_API_CLIENT_ID])
       raise Discourse::InvalidAccess unless current_user
 
       limiter_min.performed!
@@ -176,16 +177,14 @@ class Auth::DefaultCurrentUserProvider
 
   protected
 
-  WHITELISTED_WRITE_PATHS ||= [/^\/message-bus\/.*\/poll/, /^\/user-api-key\/revoke$/]
-  def lookup_user_api_user(user_api_key)
+  def lookup_user_api_user_and_update_key(user_api_key, client_id)
     if api_key = UserApiKey.where(key: user_api_key, revoked_at: nil).includes(:user).first
-      unless api_key.write
-        if @env["REQUEST_METHOD"] != "GET"
-          path = @env["PATH_INFO"]
-          unless WHITELISTED_WRITE_PATHS.any?{|whitelisted| path =~ whitelisted}
-            raise Discourse::InvalidAccess
-          end
-        end
+      unless api_key.allow?(@env)
+        raise Discourse::InvalidAccess
+      end
+
+      if client_id.present? && client_id != api_key.client_id
+        api_key.update_columns(client_id: client_id)
       end
 
       api_key.user

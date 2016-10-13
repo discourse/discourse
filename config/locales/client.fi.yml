@@ -2179,9 +2179,13 @@ fi:
         add_owners: Lisää omistajia
         incoming_email: "Saapuvan sähköpostin osoite"
         incoming_email_placeholder: "aseta sähköpostiosoite"
+        flair_url: "Avatarpinssikuva"
+        flair_bg_color: "Avatarpinssin taustaväri"
         flair_bg_color_placeholder: "(Valinnainen) värin Hex-arvo"
+        flair_color: "Avatarpinssin väri"
         flair_color_placeholder: "(Valinnainen) värin Hex-arvo"
         flair_preview: "Esikatselu"
+        flair_note: "Huom: Pinssi määräytyy käyttäjän ensisijaisen ryhmän mukaan."
       api:
         generate_master: "Luo rajapinnan pääavain"
         none: "Aktiivisia API avaimia ei ole määritelty."

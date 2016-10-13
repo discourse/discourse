@@ -650,9 +650,16 @@ en:
     authorize: "Authorize"
     read: "read"
     read_write: "read/write"
-    description: "Would you like to grant \"%{application_name}\" %{access} access to your account?"
+    description: "\"%{application_name}\" is requesting the following access to your account:"
     no_trust_level: "Sorry, you do not have the required trust level to access the user API"
     generic_error: "Sorry, we are unable to issue user API keys, this feature may be disabled by the site admin"
+    scopes:
+      message_bus: "Live updates"
+      notifications: "Read and clear notifications"
+      push: "Push notifications to external services"
+      session_info: "Read user session info"
+      read: "Read all"
+      write: "Write all"
 
   reports:
     visits:
@@ -1387,9 +1394,8 @@ en:
 
     max_user_api_reqs_per_day: "Maximum number of user API requests per key per day"
     max_user_api_reqs_per_minute: "Maximum number of user API requests per key per minute"
-    allow_read_user_api_keys: "Allow generation of readonly user API keys"
-    allow_write_user_api_keys: "Allow generation of write user API keys"
-    allow_push_user_api_keys: "Allow generation of push user API keys"
+    allow_user_api_keys: "Allow generation of user API keys"
+    allow_user_api_key_scopes: "List of scopes allowed for user API keys"
     max_api_keys_per_user: "Maximum number of user API keys per user"
     min_trust_level_for_user_api_key: "Trust level required for generation of user API keys"
     allowed_user_api_auth_redirects: "Allowed URL for authentication redirect for user API keys"
