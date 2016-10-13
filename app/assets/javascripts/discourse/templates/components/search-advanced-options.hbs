@@ -2,7 +2,12 @@
   <div class="control-group pull-left">
     <label class="control-label" for="search-posted-by">{{i18n "search.advanced.posted_by.label"}}</label>
     <div class="controls">
-      {{user-selector excludeCurrentUser=false usernames=searchedTerms.username class="user-selector" single="true" canReceiveUpdates="true"}}
+      {{user-selector
+          excludeCurrentUser=false
+          usernames=searchedTerms.username
+          class="user-selector"
+          single="true"
+          canReceiveUpdates="true"}}
     </div>
   </div>
   <div class="control-group pull-left">
