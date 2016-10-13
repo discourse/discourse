@@ -479,13 +479,7 @@ zh_TW:
     s3_config_warning: '伺服器被設定為上傳文件到 s3，但是至少有一個值未被設定： s3_access_key_id, s3_secret_access_key 或 s3_upload_bucket。到<a href="/admin/site_settings">設定</a>更新此設定。<a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">參考如何設置圖片上傳至 S3</a>。'
     s3_backup_config_warning: '伺服器被設置為上傳備份到 s3，但是至少有一個值未被設定： s3_access_key_id, s3_secret_access_key 或 s3_upload_bucket。到<a href="/admin/site_settings">設定</a>更新此設定。<a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">參考如何設置圖片上傳至 S3</a>。'
     image_magick_warning: '伺服器被設置為給大圖片創建縮略圖，但是 ImageMagick 沒有被安裝。使用你喜愛的包裝管理器安裝 ImageMagick 或<a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">下載最新版</a>。'
-    default_logo_warning: "設置你網站的圖形logo。請在<a href='/admin/site_settings'>設定</a>中配置logo_url、logo_small_url和favicon_url。"
-    contact_email_missing: "輸入一個網站聯絡人的電郵地址，這樣在用戶在網站出現緊急狀況時能夠找到你。在<a href='/admin/site_settings'>設定</a>中更新它。"
-    contact_email_invalid: "網站聯絡電郵不正確。在<a href='/admin/site_settings'>設定</a>中修改。"
-    title_nag: "為網站給予一個名字。在<a href='/admin/site_settings'>設定</a>中更新標題。"
-    site_description_missing: "輸入一句話作為網站的簡介，將出現在搜索結果中。在<a href='/admin/site_settings'>設定</a>中更新 site_description。"
     consumer_email_warning: "您的網站正以Gmail或其他服務供應商郵件服務發送郵件。<a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>Gmail限制每日郵件發送數量</a>. 請考慮使用其他電郵服務商來保證郵件能成功發送，例如 mandrill.com。"
-    notification_email_warning: "通知郵件不是從你域名的一個有效地址發出的；電郵發送將會變得危險和不可靠。請在<a href='/admin/site_settings'>設定</a>中將 notification_email 設定一個有效的本機電郵地址。"
   site_settings:
     censored_words: "將被自動替換為 &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "自動刪除被隱藏超過 30 天的帖子。"

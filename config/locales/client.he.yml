@@ -178,7 +178,7 @@ he:
     privacy_policy: "מדיניות פרטיות"
     privacy: "פרטיות"
     terms_of_service: "תנאי השירות"
-    mobile_view: "תצוגת סלולרי"
+    mobile_view: "תצוגת נייד"
     desktop_view: "תצוגת מחשב"
     you: "אתם"
     or: "או"
@@ -259,7 +259,7 @@ he:
     switch_from_anon: "צאו ממצב אנונימי"
     banner:
       close: "בטלו באנר זה."
-      edit: "עירכו באנר זה"
+      edit: "עירכו באנר זה >>"
     choose_topic:
       none_found: "לא נמצאו נושאים."
       title:
@@ -278,7 +278,7 @@ he:
       has_pending_posts:
         one: " בנושא זה ישנו פוסט אחד הממתין לאישור"
         other: "בנושא זה ישנם <b>{{count}}</b> פוסטים הממתינים לאישור"
-      confirm: "שמור שינויים"
+      confirm: "שמירת שינויים"
       delete_prompt: "האם אתם בטוחים שאתם מעוניינים למחוק את <b>%{username}</b>? זה ימחוק את כל הפוסטים שלהם ויחסום את המייל וכתובת ה IP שלהם."
       approval:
         title: "הפוסט זקוק לאישור"
@@ -470,8 +470,8 @@ he:
         label: "מצב רשימת תפוצה"
         enabled: "אפשר מצב רשימת תפוצה"
         instructions: |
-          הגדרה זו מוחקת את סיכום הפעילות.<br />
-          נושאים מושתקים וקטוגריות לא יכללו בדוא"ל הללו.
+          הגדרה זו באה במקום ההגדרות של ״סיכום פעילות״.<br />
+          נושאים וקטגוריות שהושתקו לא יכללו במיילים אלו.
         daily: "שלח עדכונים יומיים"
         individual: "שליחת מייל עבור כל פוסט חדש"
         many_per_day: "שלחו לי מייל עבור כל פוסט חדש (בערך {{dailyEmailEstimate}} ביום)"
@@ -635,7 +635,7 @@ he:
       email_in_reply_to: "הכללת ציטוטים מתגובות לפרסומים שנשלחו בדוא\"ל"
       email_direct: "שלחו לי דוא\"ל כשמישהם מצטטים אותי, מגיבים לפוסט שלי, מזכירים את @שם-המשתמש/ת שלי, או מזמינים אותי לנושא"
       email_private_messages: "שלחו לי דוא\"ל כשמישהם שולחים לי הודעות"
-      email_always: "שלח לי התאות מייל גם כשאני פעיל/ה באתר. "
+      email_always: "שלח לי התראות מייל גם כשאני פעיל/ה באתר. "
       other_settings: "אחר"
       categories_settings: "קטגוריות"
       new_topic_duration:
@@ -1207,7 +1207,7 @@ he:
       toggle_information: "הצגת פרטי נושא"
       read_more_in_category: "רוצים לקרוא עוד? עיינו בנושאים אחרים ב {{catLink}} או {{latestLink}}."
       read_more: "רוצה לקרוא עוד? {{catLink}} or {{latestLink}}."
-      read_more_MF: "There { UNREAD, plural, =0 {} one { is <a href='/unread'>1 unread</a> } other { are <a href='/unread'># unread</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{and } false {is } other{}} <a href='/new'>1 new</a> topic} other { {BOTH, select, true{and } false {are } other{}} <a href='/new'># new</a> topics} } remaining, or {CATEGORY, select, true {browse other topics in {catLink}} false {{latestLink}} other {}}"
+      read_more_MF: "יש { UNREAD, plural, =0 {} one { <a href='/unread'>1 שלא נקרא</a> } other { <a href='/unread'># שלא נקראו</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{ו} false {} other{}} נושא חדש <a href='/new'>אחד</a>} other { {BOTH, select, true{ו} false {} other{}} <a href='/new'>#</a> נושאים חדשים} } נותרים, or {CATEGORY, select, true {עיין בנושאים אחרים ב {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: עיינו בכל הקטגוריות
       view_latest_topics: הצגת נושאים אחרונים
       suggest_create_topic: למה לא ליצור נושא חדש?
@@ -1969,7 +1969,7 @@ he:
       selector_no_tags: "ללא תגיות"
       changed: "תגיות ששונו:"
       tags: "תגיות"
-      choose_for_topic: "בחרו תגים אופציונציים לנושא זה"
+      choose_for_topic: "בחרו תגים אופציונליים לנושא זה"
       delete_tag: "מחק תגית"
       delete_confirm: "האם אתם בטוחים שאתם מעוניינים למחוק את התגית הזו?"
       rename_tag: "שנו תגית"
@@ -2041,7 +2041,7 @@ he:
       custom_message_template_forum: "הי, כדאי לכם להצטרף לפורום הזה!"
       custom_message_template_topic: "הי, חשבתי שנושא זה יעניין אתכם!"
   admin_js:
-    type_to_filter: "הקלד לסינון..."
+    type_to_filter: "הקלידו לסינון..."
     admin:
       title: 'ניהול Discourse'
       moderator: 'מנהל'
@@ -2563,9 +2563,9 @@ he:
             create_category: "יצירת קטגוריה"
             block_user: "חסום משתמש"
             unblock_user: "בטל חסימת משתמש"
-            grant_admin: "הענק ניהול"
+            grant_admin: "הענקת ניהול"
             revoke_admin: "שללו אדמיניסטרציה"
-            grant_moderation: "העניקו הנחיה"
+            grant_moderation: "הענקת הנחיה"
             revoke_moderation: "שללו הנחיה"
             backup_operation: "פעולת גיבוי"
             deleted_tag: "תגית נמחקה"
@@ -2635,8 +2635,8 @@ he:
           active: 'הפעל משתמשים'
           new: 'משתמשים חדשים'
           pending: 'משתמשים שממתינים לבדיקה'
-          newuser: 'משתמשים ברמת אמון 0 (משתמש חדש)'
-          basic: 'משתמשים ברמת אמון 1 (משתמש בסיסי)'
+          newuser: 'משתמשים ברמת אמון 0 (משתמשים חדשים)'
+          basic: 'משתמשים ברמת אמון 1 (משתמשים בסיסיים)'
           member: 'משתמשים ברמת אמון 2 (חברים)'
           regular: 'משתמשים ברמת אמון 3 (רגילים)'
           leader: 'משתמשים ברמת אמון 4 (מובילים)'
@@ -2684,9 +2684,9 @@ he:
         log_out: "התנתקות"
         logged_out: "המשתמש/ת התנתקו בכל המכשירים"
         revoke_admin: 'שלול ניהול ראשי'
-        grant_admin: 'הענק ניהול ראשי'
+        grant_admin: 'הענקת ניהול'
         revoke_moderation: 'שללו הנחיה'
-        grant_moderation: 'העניקו הנחיה'
+        grant_moderation: 'הענקת הנחיה'
         unblock: 'ביטול חסימה'
         block: 'חסום'
         reputation: מוניטין
@@ -2711,7 +2711,7 @@ he:
         anonymize_confirm: "האם אתם ב-ט-ו-ח-י-ם שאתם רוצים להפוך חשבון זה לאנונימי? פעולה זו תשנה את שם המשתמש וכתובת הדוא\"ל ותאתחל את כל המידע בפרופיל."
         anonymize_yes: "כן, הפיכת חשבון זה לאנונימי"
         anonymize_failed: "התרחשה בעיה בהפיכת חשבון זה לאנונימי."
-        delete: "מחק משתמש"
+        delete: "מחק משתמש/ת"
         delete_forbidden_because_staff: "לא ניתן למחוק מנהלים ומנחים."
         delete_posts_forbidden_because_staff: "לא ניתן למחוק את כל הפרסומים של מנהלי מערכת ומפקחים."
         delete_forbidden:
@@ -2911,7 +2911,7 @@ he:
         query: שאילתת עיטור (SQL)
         target_posts: פרסומי מטרות שאילתה
         auto_revoke: הפעלת שאילתת ביטול יומית
-        show_posts: הצגת הפוסט על הענקת העיטורים בעמוד העיטורים
+        show_posts: הצגת הפוסט שגרם להענקת העיטור, בעמוד העיטורים
         trigger: הפעלה
         trigger_type:
           none: "רענון יומי"

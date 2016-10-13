@@ -26,7 +26,7 @@ tr_TR:
         millions: "{{number}}M"
     dates:
       time: "h:mm a"
-      timeline_date: "AAA YYYY"
+      timeline_date: "MMM YYYY"
       long_no_year: "D MMM h:mm a"
       long_no_year_no_time: "D MMM"
       full_no_year_no_time: "MMMM Do"
@@ -94,7 +94,7 @@ tr_TR:
     action_codes:
       public_topic: "bu konuyu %{when} herkese açık yaptı"
       private_topic: "bu konuyu %{when} özel yaptı"
-      split_topic: "%{when} bu konuyu ayırdı "
+      split_topic: "bu konuyu şu zamanda ayır: %{when}"
       invited_user: "%{when} %{who} davet edildi"
       invited_group: "%{who} %{when} davet edildi"
       removed_user: "%{when} %{who} silindi"
@@ -118,6 +118,7 @@ tr_TR:
         enabled: '%{when} listelendi'
         disabled: '%{when} listelenmedi'
     topic_admin_menu: "konuyla alakalı yönetici eylemleri"
+    wizard_required: "Forumunuzu yapılandırma zamanı geldi! <a href='%{url}' data-auto-route='true'>Kur Sihirbazını çalıştırın</a>!"
     emails_are_disabled: "Tüm giden e-postalar yönetici tarafından evrensel olarak devre dışı bırakıldı. Herhangi bir e-posta bildirimi gönderilmeyecek."
     bootstrap_mode_enabled: "Yeni sitenizi kolayca çalıştırmak için bootstrap modundasınız. Tüm yeni kullanıcılar güven seviyesi 1den başlar ve e-posta uyarıcıları açıksa günlük mail alırlar. Bu özellik kullanıcı sayısı %{min_users} rakamına ulaştığında otomatik kapatılacaktır."
     bootstrap_mode_disabled: "Bootstrap modu önümüzdeki 24 saat içinde edilgen olacaktır."
@@ -357,7 +358,7 @@ tr_TR:
       all_subcategories: "hepsi"
       no_subcategory: "hiçbiri"
       category: "Kategori"
-      category_list: "Kategori ekranı listesi"
+      category_list: "Kategori listesini göster"
       reorder:
         title: "Kategorileri Yeniden Sırala"
         title_long: "Kategori listesini yeniden yapılandır"
@@ -483,7 +484,7 @@ tr_TR:
       api_read: "okuma"
       api_read_write: "okuma ve yazma"
       staff_counters:
-        flags_given: "yardımcı bildirimler"
+        flags_given: "yardımcı bayraklar"
         flagged_posts: "bildirilen gönderiler"
         deleted_posts: "silinen gönderiler"
         suspensions: "uzaklaştırmalar"
@@ -611,10 +612,10 @@ tr_TR:
         label: "Seçili durumdaki konular yeni sayılsın"
         not_viewed: "Onları henüz görüntülemedim"
         last_here: "son ziyaretimden beri oluşturulanlar"
-        after_1_day: "son 1 gün içinde oluşturuldu"
-        after_2_days: "son 2 gün içinde oluşturuldu"
-        after_1_week: "son 1 hafta içinde oluşturuldu"
-        after_2_weeks: "son 2 hafta içinde oluşturuldu"
+        after_1_day: "son 1 gün içinde oluşturulanlar"
+        after_2_days: "son 2 gün içinde oluşturulanlar"
+        after_1_week: "son 1 hafta içinde oluşturulanlar"
+        after_2_weeks: "son 2 hafta içinde oluşturulanlar"
       auto_track_topics: "Girdiğim konuları otomatik olarak takip et"
       auto_track_options:
         never: "asla"
@@ -693,7 +694,7 @@ tr_TR:
         more_replies: "Diğer Cevapları"
         top_topics: "Başlıca Konuları"
         no_topics: "Henüz konu bulunmuyor."
-        more_topics: "Diğer Konuları"
+        more_topics: "Diğer Konular"
         top_badges: "Başlıca Rozetleri"
         no_badges: "Henüz rozet bulunmuyor."
         more_badges: "Diğer Rozetleri"
@@ -987,7 +988,7 @@ tr_TR:
       invited_to_topic: "<i title='konuya davet edildi' class='fa fa-hand-o-right'></i><p><span>{{username}}</span> {{description}}</p>"
       invitee_accepted: "<i title='davetiyeni kabul etti' class='fa fa-user'></i><p><span>{{username}}</span> davetini kabul etti!</p>"
       moved_post: "<i title='gönderiyi taşıdı' class='fa fa-sign-out'></i><p><span>{{username}}</span> taşıdı {{description}}</p>"
-      linked: "<i title='linked post' class='fa fa-link'></i><p><span>{{username}}</span> {{description}}</p>"
+      linked: "<i title='bağlanmış gönderi' class='fa fa-link'></i><p><span>{{username}}</span> {{description}}</p>"
       granted_badge: "<i title='badge granted' class='fa fa-certificate'></i><p><strong>{{description}}</strong> rozeti kazandınız!</p>"
       watching_first_post: "<i title='yeni konu' class='fa fa-dot-circle-o'></i><p><span>Yeni Konu</span> {{description}}</p>"
       group_message_summary:
@@ -1079,7 +1080,7 @@ tr_TR:
           other: "<b>{{count}}</b> konu seçtiniz."
         change_tags: "Etiketleri Değiştir"
         choose_new_tags: "Konular için yeni etiketler seçin:"
-        changed_tags: "O konuların etiketleri değiştirildi."
+        changed_tags: "Bu konuların etiketleri değiştirildi."
       none:
         unread: "Okunmamış konunuz yok."
         new: "Yeni konunuz yok."
@@ -1598,12 +1599,13 @@ tr_TR:
           title: "Susturuldu"
           description: "Bu kategorilerdeki yeni konular hakkında herhangi bir bildiri almayacaksınız ve en son gönderilerde gözükmeyecekler. "
     flagging:
-      title: 'Topluluğumuzun medeni kalmasına desteğiniz için teşekkürler!'
+      title: 'Topluluğumuzun düzenli kalmasına desteğiniz için teşekkürler!'
       action: 'Gönderiyi Bildir'
       take_action: "Harekete Geç"
       notify_action: 'Mesaj'
       official_warning: 'Resmi uyarı'
       delete_spammer: "Spamcıyı Sil"
+      delete_confirm_MF: "Bu kullanıcının {POSTS, plural, one {<b>1</b> gönderisini} other {<b>#</b> gönderisini}} ve {TOPICS, plural, one {<b>1</b> konusunu} other {<b>#</b> konusunu}} silmek üzeresiniz, ayrıca kullanıcının hesabı kaldırılacak, giriş yaptığı  <b>{ip_address}</b> IP adresinden giriş yapması engellenecek ve <b>{email}</b> e-posta adresi kalıcı yasaklı listesine eklenecek. Bu kullanıcının gerçekten bir spamcı olduğuna emin misiniz?"
       yes_delete_spammer: "Evet, spamcıyı sil"
       ip_address_missing: "(uygulanamaz)"
       hidden_email_address: "(gizli)"
@@ -1625,7 +1627,7 @@ tr_TR:
         left:
           other: "{{count}} kaldı"
     flagging_topic:
-      title: "Topluluğumuzun medeni kalmasına desteğiniz için teşekkürler!"
+      title: "Topluluğumuzun düzenli kalmasına desteğiniz için teşekkürler!"
       action: "Konuyu Bildir"
       notify_action: "Mesaj"
     topic_map:
@@ -1668,7 +1670,7 @@ tr_TR:
       low {ve yüksek beğeni/gönderi oranı}
       med {ve çok yüksek beğeni/gönderi oranı}
       high {ve aşırı yüksek beğeni/gönderi oranı}
-      other {}}var
+      other {}} var
     original_post: "Özgün Gönderi"
     views: "Gösterim"
     views_lowercase:
@@ -1822,10 +1824,10 @@ tr_TR:
     badges:
       earned_n_times:
         other: "Bu rozet %{count} defa kazanılmış"
-      granted_on: "%{date} Tarihinde Verildi"
+      granted_on: "%{date} tarihinde verildi"
       others_count: "Bu rozete sahip diğer kişiler (%{count})"
       title: Rozetler
-      allow_title: "başlık girin"
+      allow_title: "uygun başlık"
       multiple_grant: "birden fazla ödüllendirilmiş"
       badge_count:
         other: "%{count} Rozet"
@@ -1913,13 +1915,13 @@ tr_TR:
           posted: "Henüz herhangi bir konuya gönderim yapmadınız."
           latest: "Yeni eklenen konu bulunmuyor."
           hot: "Hareketli konu bulunmuyor."
-          bookmarks: "Henüz imlenmiş eklenmiş bir konunuz bulunmuyor."
-          top: "Üst sırada bir konu bulunmuyor."
+          bookmarks: "Henüz imlenmiş bir konunuz bulunmuyor."
+          top: "Hareketli bir konu bulunmuyor."
           search: "Arama sonucu hiçbirşey bulunamadı."
         bottom:
           latest: "Daha fazla yeni eklenmiş konu bulunmuyor."
           hot: "Daha fazla hareketli konu bulunmuyor."
-          posted: "Daha fazla oluşturulmuş konu bulunmuyor."
+          posted: "Daha fazla gönderilmiş konu bulunmuyor."
           read: "Okunacak daha fazla konu bulunmuyor."
           new: "Daha fazla yeni konu bulunmuyor."
           unread: "Daha fazla okunmamış konu bulunmuyor."
@@ -2066,7 +2068,7 @@ tr_TR:
         custom: "Özel"
         bulk_complete: "Kullanıcılar gruba eklendi."
         bulk: "Topluca Gruba Ekle"
-        bulk_paste: "Kullanıcı adı ya da e-posta listesini yapıştırın, her satıra bir tane gelecek:"
+        bulk_paste: "Kullanıcı adı ya da e-posta listesini yapıştırın, her satıra bir tane gelecek şekilde:"
         bulk_select: "(bir grup seçin)"
         automatic: "Otomatik"
         automatic_membership_email_domains: "Bu listedeki bir e-posta alan adıyla kaydolan kullanıcılar otomatik olarak bu gruba eklenecekler:"
@@ -2077,9 +2079,14 @@ tr_TR:
         add_owners: Sahiplik ekle
         incoming_email: "Özel gelen e-posta adresi"
         incoming_email_placeholder: "e-posta adresi girin"
+        flair_url: "Avatar Kabiliyet Resmi"
+        flair_url_placeholder: "(Seçeneksel) Resim URL'i ya da Font Awesome sınıfı"
+        flair_bg_color: "Avatar Kabiliyet Arkaplan Rengi"
         flair_bg_color_placeholder: "(İsteğe bağlı) Hex renk değeri"
+        flair_color: "Avatar Kabiliyet Resmi"
         flair_color_placeholder: "(İsteğe bağlı) Hex renk değeri"
         flair_preview: "Önizleme"
+        flair_note: "Not: Kabiliyet sadece bir kullanıcının birincil grubu için gösterecek."
       api:
         generate_master: "Ana API Anahtarı Üret"
         none: "Şu an etkin API anahtarı bulunmuyor."
@@ -2097,6 +2104,8 @@ tr_TR:
       web_hooks:
         title: "Web Kancaları"
         none: "Şu anda bir web kancası yok."
+        instruction: "Web kancaları, sitenizde belirli olaylar meydana geldiğinde dış servisleri haberdar etmek için kullanılır. Bir web kancası tetiklendiğinde, belirtilen URL'e bir POST isteği gönderilir."
+        detailed_instruction: "Seçilen olay olduğunda bir POST isteği verilen URL'e gönderilecek."
         new: "Yeni Web Kancası"
         create: "Oluştur"
         save: "Kaydet"
@@ -2104,15 +2113,25 @@ tr_TR:
         description: "Açıklama"
         controls: "Kontroller"
         go_back: "Listeye geri dön"
+        payload_url: "Veri yükü URL'i"
         payload_url_placeholder: "https://ornek.com/gonderial"
+        warn_local_payload_url: "Öyle görünüyor ki, web kancasını yerel bir URL'e ayarlamaya çalışıyorsunuz. Yerel bir adrese iletilen olay yan etki veya beklenmedik davranışlara neden olabilir. Devam edilsin mi?"
         secret_invalid: "Gizli alanında boş karakter olamaz."
         secret_too_short: "Gizi en azından 12 karakter olmalı."
         secret_placeholder: "İsteğe bağlı bir kelime, imza oluşturmak için kullanılacak"
+        event_type_missing: "En az bir olay tipi ayarlamalısınız."
         content_type: "İçerik Türü"
         secret: "Gizli"
+        event_chooser: "Bu web kancasını tetikleyecek olayların neler olmasını isterdiniz?"
         wildcard_event: "Bana her şeyi gönder."
         individual_event: "Belirli olayları seç"
+        verify_certificate: "Veri yükü URL'inin TLS sertifikasını kontrol edin."
         active: "Etkin"
+        active_notice: "Olduğu zaman olay detaylarını ileteceğiz."
+        categories_filter_instructions: "Alakalı web kancaları, eğer olay belirtilen kategoriler ile alakalıysa tetiklenecektir. Bütün kategoriler için web kancalarını tetiklemek için boş bırakın."
+        categories_filter: "Tetiklenmiş Kategoriler"
+        groups_filter_instructions: "Alakalı web kancaları, eğer olay belirtilen gruplar ile alakalıysa tetiklenecektir. Bütün gruplar için web kancalarını tetiklemek için boş bırakın."
+        groups_filter: "Tetiklenmiş Gruplar"
         delete_confirm: "Bu web kancasını sil?"
         topic_event:
           name: "Konu Olayı"
@@ -2130,17 +2149,21 @@ tr_TR:
           successful: "Başarılı"
         events:
           none: "İlgili bir olay yok."
+          redeliver: "Yeniden ilet"
           incoming:
             other: "Şu anda {{count}} yeni olay var."
           completed_in:
             other: "{{count}} saniyede tamamlandı."
           request: "İstek"
           response: "Yanıt"
+          redeliver_confirm: "Aynı veri yükünü tekrar iletmek istediğinize emin misiniz?"
           headers: "Başlıklar"
+          payload: "Veri yükü"
           body: "İçerik"
           go_list: "Listeye git"
           go_details: "Web kancasını düzenle"
           go_events: "Olaylara git"
+          ping: "Ping"
           status: "Durum Kodu"
           event_id: "Kimlik"
           timestamp: "Oluşturulma"
@@ -2152,7 +2175,7 @@ tr_TR:
         name: "İsim"
         none_installed: "Yüklenmiş herhangi bir eklentiniz yok."
         version: "Sürüm"
-        enabled: "Etkin mi?"
+        enabled: "Etkin?"
         is_enabled: "E"
         not_enabled: "H"
         change_settings: "Ayarları Değiştir"
@@ -2434,7 +2457,7 @@ tr_TR:
             backup_operation: "yedekleme operasyonu"
             deleted_tag: "silinmiş etiket"
             renamed_tag: "yeniden adlandırılmış etiket"
-            revoke_email: "e-posta kaldır"
+            revoke_email: "e-postayı kaldır"
         screened_emails:
           title: "Taranmış E-postalar"
           description: "Biri yeni bir hesap oluşturmaya çalıştığında, aşağıdaki e-posta adresleri kontrol edilecek ve kayıt önlenecek veya başka bir eylem gerçekleşecek."
@@ -2552,7 +2575,7 @@ tr_TR:
         reputation: İtibar
         permissions: İzinler
         activity: Etkinlik
-        like_count: Beğenileri / Beğendikleri
+        like_count: Verilen / Alınan Beğeniler
         last_100_days: 'son 100 günde'
         private_topics_count: Özel Konular
         posts_read_count: Okuduğu Gönderiler
@@ -2561,7 +2584,7 @@ tr_TR:
         flags_given_count: Yapılan Bildirimler
         flags_received_count: Alınan Bildirimler
         warnings_received_count: Uyarılar Alındı
-        flags_given_received_count: 'Alınan / Yapılan Bildirimler'
+        flags_given_received_count: 'Yapılan / Alınan Bildirimler'
         approve: 'Onayla'
         approved_by: "onaylayan"
         approve_success: "Kullanıcı onaylandı ve etkinleştirme bilgilerini içeren bir e-posta yollandı."
@@ -2677,7 +2700,7 @@ tr_TR:
           disabled: "profilde gösterilmiyor"
         show_on_user_card:
           title: "Kullanıcı profilinde gösterilsin mi?"
-          enabled: "kullanıcı profilinde göster"
+          enabled: "kullanıcı profilinde gösterildi"
           disabled: "kullanıcı kartında gösterilmiyor"
         field_types:
           text: 'Yazı Alanı'
@@ -2712,7 +2735,7 @@ tr_TR:
           files: 'Dosyalar'
           trust: 'Güven Seviyeleri'
           security: 'Güvenlik'
-          onebox: "Tek Kutu"
+          onebox: "Kutulama"
           seo: 'SEO'
           spam: 'İstenmeyen '
           rate_limits: 'Oran Sınırları'
@@ -2775,7 +2798,7 @@ tr_TR:
           post_revision: "Bir kullanıcı bir gönderiyi düzenlediğinde veya yeni bir gönderi oluşturduğunda"
           trust_level_change: "Bir kullanıcı güven seviyesini değiştirdiğinde"
           user_change: "Bir kullanıcı düzenlendiğinde veya oluşturduğunda"
-          post_processed: "Gönderi işlendikten sonra"
+          post_processed: "Bir gönderi işlendikten sonra"
         preview:
           link_text: "Verilen rozetleri önizle"
           plan_text: "Sorgu planıyla önizle"
@@ -2819,10 +2842,11 @@ tr_TR:
         embed_by_username: "Konu oluşturmak için kullanıcı adı"
         embed_post_limit: "Gömmek için en büyük gönderi sayısı"
         embed_username_key_from_feed: "Discourse kullanıcı adını beslemeden çekmek için anahtar"
+        embed_title_scrubber: "Gönderilerin başlığını temizlemek için kullanılan düzenli ifade"
         embed_truncate: "Gömülü gönderileri buda"
         embed_whitelist_selector: "Gömülüler içinde izin verilen elementler için CSS seçici"
         embed_blacklist_selector: "Gömülülerden kaldırılan elementler için CSS seçici"
-        embed_classname_whitelist: "CSS sınıf isimlerine izin verildi"
+        embed_classname_whitelist: "İzin verilen CSS sınıf isimleri"
         feed_polling_enabled: "Konuları RSS/ATOM aracılığıyla içe aktar"
         feed_polling_url: "İstila etmek için RSS/ATOM beslemesi URL'i"
         save: "Gömme Ayarlarını Kaydet"

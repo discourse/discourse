@@ -479,7 +479,7 @@ ru:
       edit: "Настройки"
       download_archive: "Скачать архив сообщений"
       new_private_message: "Новое сообщение"
-      private_message: "Сообщение"
+      private_message: "Личное сообщение"
       private_messages: "Личные сообщения"
       activity_stream: "Активность"
       preferences: "Настройки"
@@ -965,7 +965,7 @@ ru:
       reply: "Ответить"
       cancel: "Отмена"
       create_topic: "Создать тему"
-      create_pm: "Личное сообщение"
+      create_pm: "Отправить личное сообщение"
       title: "Или нажмите Ctrl+Enter"
       users_placeholder: "Добавить пользователя"
       title_placeholder: "Название: суть темы коротким предложением"
@@ -1155,7 +1155,7 @@ ru:
         change_notification_state: "Ваше текущее состояние уведомлений"
       create: 'Создать Тему'
       create_long: 'Создать новую тему'
-      private_message: 'Написать сообщение'
+      private_message: 'Новое личное соощение'
       archive_message:
         help: 'Переместить сообщение в архив'
         title: 'Архив'

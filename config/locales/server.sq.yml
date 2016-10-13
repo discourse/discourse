@@ -564,14 +564,7 @@ sq:
     s3_config_warning: 'The server is configured to upload files to s3, but at least one the following setting is not set: s3_access_key_id, s3_secret_access_key or s3_upload_bucket. Go to <a href="/admin/site_settings">the Site Settings</a> and update the settings. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">See "How to set up image uploads to S3?" to learn more</a>.'
     s3_backup_config_warning: 'The server is configured to upload backups to s3, but at least one the following setting is not set: s3_access_key_id, s3_secret_access_key or s3_backup_bucket. Go to <a href="/admin/site_settings">the Site Settings</a> and update the settings. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">See "How to set up image uploads to S3?" to learn more</a>.'
     image_magick_warning: 'The server is configured to create thumbnails of large images, but ImageMagick is not installed. Install ImageMagick using your favorite package manager or <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">download the latest release</a>.'
-    default_logo_warning: "Set the graphic logos for your site. Update logo_url, logo_small_url, and favicon_url in <a href='/admin/site_settings'>Site Settings</a>."
-    contact_email_missing: "Enter a site contact email address so you can be reached for urgent matters regarding your site. Update it in <a href='/admin/site_settings'>Site Settings</a>."
-    contact_email_invalid: "The site contact email is invalid. Update it in <a href='/admin/site_settings'>Site Settings</a>."
-    title_nag: "Enter the name of your site. Update title in <a href='/admin/site_settings'>Site Settings</a>."
-    site_description_missing: "Enter a one sentence description of your site that will appear in search results. Update site_description in <a href='/admin/site_settings'>Site Settings</a>."
     consumer_email_warning: "Your site is configured to use Gmail (or another consumer email service) to send email. <a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>Gmail limits how many emails you can send</a>. Consider using an email service provider like mandrill.com to ensure email deliverability."
-    site_contact_username_warning: "Enter the name of a friendly staff user account to send important automated messages from. Update site_contact_username in <a href='/admin/site_settings'>Site Settings</a>."
-    notification_email_warning: "Notification emails are not being sent from a valid email address on your domain; email delivery will be erratic and unreliable. Please set notification_email to a valid local email address in <a href='/admin/site_settings'>Site Settings</a>."
   site_settings:
     censored_words: "Fjalët do të zhvendosen automatikisht me &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Auto-delete any hidden posts that stay hidden for more than 30 days."
@@ -1088,6 +1081,22 @@ sq:
     deferred_and_deleted: "Thanks for letting us know. We've removed the post."
   temporarily_closed_due_to_flags: "Kjo temë është përkohësisht e mbyllur për shkak të një numri të madh sinjalizimesh nga komuniteti."
   system_messages:
+    post_hidden:
+      subject_template: "Postimi u fsheh ngaqë u sinjalizua nga komuniteti"
+      text_body_template: |
+        Përshëndetje,
+
+        Ky është një mesazh automatik nga %{site_name} për t'ju njoftuar se postimi juaj u fsheh.
+
+        %{base_url}%{url}
+
+        %{flag_reason}
+
+        Disa anëtarë të faqes sinjalizuan këtë postim. **Mund t'a modifikoni postimin pas %{edit_delay} minutash, dhe do të shfaqet automatikisht.**
+
+        Sidoqoftë, nëse postimi fshihet nga komuniteti për një herë të dytë, postimi do të mbetet u fshehur derisa të ndërhyjë stafi. Stafi mund të vendosë edhe të pezullojë ose bllokojë llogarinë tuaj.
+
+        Për udhëzime të mëtejshme, shikoni [rregullat e komunitetit](%{base_url}/guidelines).
     welcome_user:
       subject_template: "Mirë se vini tek %{site_name}!"
       text_body_template: |
@@ -1154,6 +1163,8 @@ sq:
     csv_export_failed:
       subject_template: "Data export failed"
       text_body_template: "We're sorry, but your data export failed. Please check the logs or contact a staff member."
+    email_reject_insufficient_trust_level:
+      subject_template: "[%{site_name}] Problem emaili -- Niveli i Besimit nuk mjafton"
     email_reject_no_account:
       subject_template: "[%{site_name}] Email issue -- Unknown Account"
     email_reject_empty:
@@ -1188,6 +1199,12 @@ sq:
     download_remote_images_disabled:
       subject_template: "Downloading remote images disabled"
       text_body_template: "The `download_remote_images_to_local` setting was disabled because the disk space limit at `download_remote_images_threshold` was reached."
+    dashboard_problems:
+      subject_template: "Gjetëm ca probleme"
+      text_body_template: |
+        Në panelin e kontrollit keni disa probleme që duhen riparuar.
+
+        [Shikoji dhe rregulloji](%{base_url}/admin).
   unsubscribe_link: |
     Për të mos marrë më njoftime të tilla, [klikoni këtu](%{unsubscribe_url}).
   unsubscribe_link_and_mail: |

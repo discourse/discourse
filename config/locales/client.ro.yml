@@ -49,19 +49,19 @@ ro:
           other: "< %{count} s"
         x_seconds:
           one: "1s"
-          few: "%{count}s"
+          few: "%{count} s"
           other: "%{count} s"
         x_minutes:
           one: "1m"
-          few: "%{count}m"
+          few: "%{count} m"
           other: "%{count} m"
         about_x_hours:
           one: "1h"
-          few: "%{count}h"
+          few: "%{count} h"
           other: "%{count} h"
         x_days:
           one: "1z"
-          few: "%{count}z"
+          few: "%{count} z"
           other: "%{count} z"
         about_x_years:
           one: "1a"
@@ -73,7 +73,7 @@ ro:
           other: "> %{count} a"
         almost_x_years:
           one: "1a"
-          few: "%{count}a"
+          few: "%{count} a"
           other: "%{count} de a"
         date_month: "DD MMMM"
         date_year: "MMM 'YY"
@@ -184,7 +184,7 @@ ro:
     age: "Vârsta"
     joined: "Înregistrat"
     admin_title: "Admin"
-    flags_title: "Semnalare"
+    flags_title: "Marcaje"
     show_more: "Mai mult"
     show_help: "Opțiuni"
     links: "Adrese web"
@@ -572,7 +572,7 @@ ro:
         confirm: "Dacă îți schimbi numele de utilizator, toate citările anterioare ale posturilor tale și toate mențiunile @numelui se vor pierde. Ești absolut sigur că vrei asta?"
         taken: "Acest nume de utilizator este deja folosit."
         error: "A apărut o eroare la schimbarea numelui de utilizator."
-        invalid: "Acest nume de utilizator este nevalid. Trebuie să includă doar cifre și litere."
+        invalid: "Acest nume de utilizator este invalid. Trebuie să includă doar cifre și litere."
       change_email:
         title: "Schimbă email"
         taken: "Această adresă există deja în baza de date."
@@ -839,11 +839,11 @@ ro:
     all_time: 'total'
     all_time_desc: 'total subiecte create'
     year: 'an'
-    year_desc: 'subiecte create în ultimile 365 de zile'
+    year_desc: 'subiecte create în ultimele 365 de zile'
     month: 'lună'
-    month_desc: 'subiecte create în ultimile 30 de zile'
+    month_desc: 'subiecte create în ultimele 30 de zile'
     week: 'săptămană'
-    week_desc: 'subiecte create în ultimile 7 zile'
+    week_desc: 'subiecte create în ultimele 7 zile'
     day: 'zi'
     first_post: Prima postare
     mute: Blochează
@@ -899,7 +899,7 @@ ro:
       complete_username_not_found: "Nici un cont nu se potriveşte cu utilizatorul <b>%{username}</b>"
       complete_email_not_found: "Nici un cont nu se potrivește cu adresa  <b>%{email}</b>"
     login:
-      title: "Autentificare"
+      title: "Autentificare cu"
       username: "Utilizator"
       password: "Parolă"
       email_placeholder: "email sau nume de utilizator"
@@ -923,25 +923,25 @@ ro:
       preferences: "Trebuie să fii autentificat pentru a schimba preferințele."
       forgot: "Nu îmi amintesc detaliile contului meu."
       google:
-        title: "cu Google"
+        title: "Google"
         message: "Autentificare cu Google (Verifică browserul să nu blocheze ferestrele pop-up)"
       google_oauth2:
-        title: "cu Google"
+        title: "Google"
         message: "Autentificare cu Google (Verifică browserul să nu blocheze ferestrele pop-up)"
       twitter:
-        title: "cu Twitter"
+        title: "Twitter"
         message: "Autentificare cu Twitter (Verifică browserul să nu blocheze ferestrele pop-up)"
       instagram:
-        title: "cu Instagram"
+        title: "Instagram"
         message: "Autentificare cu Instagram (Verifică browserul să nu blocheze ferestrele pop-up)"
       facebook:
-        title: "cu Facebook"
+        title: "Facebook"
         message: "Autentificare cu Facebook (Verifică browserul să nu blocheze ferestrele pop-up)"
       yahoo:
-        title: "cu Yahoo"
+        title: "Yahoo"
         message: "Autentificare cu Yahoo (Verifică browserul să nu blocheze ferestrele pop-up)"
       github:
-        title: "cu GitHub"
+        title: "GitHub"
         message: "Autentificare cu GitHub (Verifică browserul să nu blocheze ferestrele pop-up)"
     emoji_set:
       apple_international: "Apple/International"
@@ -1450,15 +1450,15 @@ ro:
         action: "comasează postările selectate"
         error: "A apărut o eroare la comasarea postărilor selectate."
       change_owner:
-        title: "Schimbă proprietarul postărilor"
-        action: "Schimbă proprietarul"
-        error: "A apărut o eroare la schimbarea proprietarului postărilor."
-        label: "Noul proprietar al postărilor"
-        placeholder: "numele de utilizator al proprietarului"
+        title: "Schimbă autorul postărilor"
+        action: "Schimbă autorul"
+        error: "A apărut o eroare la schimbarea autorului postărilor."
+        label: "Noul autor al postărilor"
+        placeholder: "numele de utilizator al autorului"
         instructions:
-          one: "Alege noul proprietar pentru mesajul postat de <b>{{old_user}}</b>."
-          few: "Alege noul proprietar pentru cele {{count}} mesaje postate de <b>{{old_user}}</b>."
-          other: "Alege noul proprietar pentru cele {{count}} de mesaje postate de <b>{{old_user}}</b>."
+          one: "Alege noul autor pentru mesajul postat de <b>{{old_user}}</b>."
+          few: "Alege noul autor pentru cele {{count}} mesaje postate de <b>{{old_user}}</b>."
+          other: "Alege noul autor pentru cele {{count}} de mesaje postate de <b>{{old_user}}</b>."
         instructions_warn: "NB: nicio notificare ce privește această postare nu va fi transferabilă retroactiv către noul utilizator.<br>Avertisment: Acum, nicio informație ce depinde de postare nu va fi transferată noului utilizator. Folosește cu atenție."
       change_timestamp:
         title: "Schimbă data publicării"
@@ -1492,7 +1492,7 @@ ro:
       show_full: "Arată postarea în întregime"
       show_hidden: 'Arată conținut ascuns.'
       deleted_by_author:
-        one: "(post retras de autor, va fi şters automat în %{count} ore, cu excepţia cazului în care mesajul este marcat)"
+        one: "(post retras de autor, va fi şters automat într-o oră, cu excepţia cazului în care mesajul este marcat)"
         few: "(postări retrase de autor, vor fi şterse automat în %{count} ore, cu excepţia cazului în care mesajele sunt marcate)"
         other: "(postări retrase de autor, vor fi şterse automat în %{count} de ore, cu excepţia cazului în care mesajele sunt marcate)"
       expand_collapse: "extinde/restrânge"
@@ -1548,7 +1548,7 @@ ro:
         undo_like: "anulează aprecierea"
         edit: "editează această postare"
         edit_anonymous: "Ne pare rău, dar trebuie să fii autentificat pentru a edita această postare."
-        flag: "marchează această postare ca să-ți atragă atenția sau trimite o notificare privată despre ea"
+        flag: "marchează această postare ca mesaj privat sau trimite o notificare privată despre ea către un admin/moderator"
         delete: "șterge această postare"
         undelete: "restaurează această postare"
         share: "distribuie un link către această postare"
@@ -1560,11 +1560,11 @@ ro:
             other: "Vrei să ștergi cele {{count}} de răspunsuri directe la acest mesaj?"
           yes_value: "Da, șterge și răspunsurile"
           no_value: "Nu, doar postarea"
-        admin: "acțiuni administrative pentru postări"
+        admin: "acțiuni administrative pentru postare"
         wiki: "Fă postarea Wiki"
         unwiki: "Nu mai fă Wiki din postare"
-        convert_to_moderator: "Adaugă culoare pentru staff"
-        revert_to_regular: "Șterge culoarea pentru staff"
+        convert_to_moderator: "Adaugă culoare pentru membrii echipei"
+        revert_to_regular: "Șterge culoarea pentru membrii echipei"
         rebake: "Reconstruieşte HTML"
         unhide: "Arată"
         change_owner: "Schimbă proprietarul"
@@ -2173,7 +2173,7 @@ ro:
         mobile_title: "Mobil"
         space_free: "{{size}} liber"
         uploads: "încărcări"
-        backups: "copii de siguranță"
+        backups: "back-up"
         traffic_short: "Trafic"
         traffic: "Cereri web"
         page_views: "Cereri API"
@@ -2224,7 +2224,7 @@ ro:
         disagree_flag_unhide_post: "Nu sunt de acord (arată postarea)"
         disagree_flag_unhide_post_title: "Elimină orice marcaj de avertizare din postare și fă din nou vizibilă postarea"
         disagree_flag: "Nu sunt de acord"
-        disagree_flag_title: "Refuză marcaj ca fiind nevalid sau incorect"
+        disagree_flag_title: "Refuză marcaj ca fiind invalid sau incorect"
         clear_topic_flags: "Terminat"
         clear_topic_flags_title: "Subiectul a fost analizat iar problema rezolvată. Fă click pe Terminat pentru a înlătura marcajele."
         more: "(mai multe răspunsuri...)"
@@ -2408,7 +2408,7 @@ ro:
         menu:
           backups: "Backup-uri"
           logs: "Rapoarte"
-        none: "Nici o copie de siguranță disponibilă."
+        none: "Niciun backup disponibil."
         read_only:
           enable:
             title: "Activează modul exclusiv-citire"
@@ -2445,7 +2445,7 @@ ro:
             title: "Descarcă backup-ul"
           destroy:
             title: "Șterge backup-ul"
-            confirm: "Ești sigur că vrei să ștergi această copie de siguranță?"
+            confirm: "Ești sigur că vrei să ștergi acest backup?"
           restore:
             is_disabled: "Restabilirea este dezactivată din setările site-ului."
             label: "Restabilire"
@@ -2458,7 +2458,7 @@ ro:
       export_csv:
         user_archive_confirm: "Ești sigur că vrei să îți descarci mesajele?"
         success: "Exportul a fost inițiat. Vei primi un mesaj de notificare când procesul se va termina."
-        failed: "Exportul a eşuat. Verifică jurnalul."
+        failed: "Exportul a eşuat. Verifică raportul de erori."
         rate_limit_error: "Postările pot fi descărcate doar o singură dată pe zi. Te rugăm încearcă mâine."
         button_text: "Exportă"
         button_title:
@@ -2633,10 +2633,10 @@ ro:
           block: "blochează"
           do_nothing: "nu acționa"
         staff_actions:
-          title: "Acțiunile membrilor din staff"
+          title: "Acțiunile membrilor echipei"
           instructions: "Clic pe numele utilizatorului şi acţiuni pentru a filtra lista. Clic pe poza profilului pentru a vizita pagina utilizatorului."
           clear_filters: "Arată tot"
-          staff_user: "Utilizatorul din staff"
+          staff_user: "Utilizator-membru al echipei"
           target_user: "Utilizator țintă"
           subject: "Subiect"
           when: "Când"
@@ -2711,7 +2711,7 @@ ro:
             text: "Consolidează"
             title: "Crează noi înregistrari cu subrețele blocate dacă există cel puțin 'min_ban_entries_for_roll_up' înregistrări."
         logster:
-          title: "Jurnal de erori"
+          title: "Raport de erori"
       impersonate:
         title: "Joacă rolul utilizatorului"
         help: "Folosește această unealtă pentru a imita un cont de utilizator pentru depanare. Va trebui să te deconectezi după ce termini."
@@ -2726,14 +2726,14 @@ ro:
         active: "Activi"
         show_emails: "Arată email"
         nav:
-          new: "Nou"
-          active: "Active"
+          new: "Noi"
+          active: "Activi"
           pending: "În așteptare"
-          staff: 'Personalul'
-          suspended: 'Suspendate'
-          blocked: 'Blocate'
+          staff: 'Membrii echipei'
+          suspended: 'Suspendați'
+          blocked: 'Blocați'
           suspect: 'Suspecți'
-        approved: "Aprobate?"
+        approved: "Aprobați?"
         approved_selected:
           one: "aprobă utilizatorul"
           few: "aprobă utilizatorii ({{count}})"
@@ -2982,7 +2982,7 @@ ro:
           legal: "Legal"
           user_api: 'API Utilizator'
           uncategorized: 'Altele'
-          backups: "Copii de siguranță"
+          backups: "Back-up"
           login: "Autentificare"
           plugins: "Plugin-uri"
           user_preferences: "Preferințe"
