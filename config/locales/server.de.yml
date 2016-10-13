@@ -735,14 +735,7 @@ de:
     s3_backup_config_warning: 'Der Server ist so konfiguriert, dass Datensicherungen auf S3 geladen werden, aber mindestens eine der folgenden Einstellungen: s3_access_key_id, s3_secret_access_key oder s3_backup_bucket ist nicht festgelegt. Gehe zu <a href="/admin/site_settings">den Siteneinstellungen</a> und aktualisiere die Einstellungen. Um mehr darüber zu erfahren siehe <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">"Wie konfiguriere ich das Hochladen von Bildern zu S3?" (en)</a>.'
     image_magick_warning: 'Der Server wurde konfiguriert um Vorschaubilder von grossen Bildern zu erstellen, aber ImageMagick ist nicht installiertd. Installiere ImageMagick mit deinem bevorzugten Packetmanager oder besuche <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">um das aktuelle Paket herunterzuladen</a>.'
     failing_emails_warning: "%{num_failed_jobs} E-Mails konnten nicht versendet werden. Überprüfe deine app.yml und stelle sicher, dass die E-Mail Servereinstellungen korrekt gesetzt sind. \n<a href=\"/sidekiq/retries\" target=\"_blank\">Sieh dir hier die nicht versendeten E-Mails an.</a>"
-    default_logo_warning: "Richte das Logo für deine Site ein. Konfiguriere dafür logo_url, logo_small_url und favicon_url unter <a href='/admin/site_settings'>Website-Einstellungen</a>."
-    contact_email_missing: "Gib eine Kontakt-E-Mail-Adresse an, damit du dringende Meldungen bezüglich deiner Site erhalten kannst. Trage sie in den <a href='/admin/site_settings'>Einstellungen</a> ein."
-    contact_email_invalid: "Die Site-Kontakt E-Mail-Adresse ist ungültig. Ändere sie in den <a href='/admin/site_settings'>Einstellungen</a>."
-    title_nag: "Gib einen Namen für deine Website ein. Aktualisiere dazu den „title“ in den <a href='/admin/site_settings'>Einstellungen</a>."
-    site_description_missing: "Gib eine kurze Beschreibung deiner Website ein, die in Suchergebnissen angezeigt werden soll. Aktualisiere dazu die „site_description“ in den <a href='/admin/site_settings'>Einstellungen</a>."
     consumer_email_warning: "Deine Site verwendet Gmail (oder einen anderen für Endkunden gedachten E-Mailserver) um E-Mails zu versenden. <a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>Gmail hat einen Grenzwert bezüglich des Sendens von E-Mails</a>. Um die E-Mail-Zustellung zu gewährleisten, solltest du die Verwendung eines anderen E-Mail-Dienstes in Erwägung ziehen."
-    site_contact_username_warning: "Gib den Namen des Benutzerkontos eines freundlichen Mitarbeiters an, der als Absender für wichtige automatische Nachrichten verwendet wird. Aktualisiere site_contact_username in den <a href='/admin/site_settings'>Website-Einstellungen</a>."
-    notification_email_warning: "Benachrichtigungs-E-Mails werden nicht von einer gültigen, zu deiner Domain gehörenden E-Mail-Adresse versandt; der E-Mail-Versand wird unberechenbar und unzuverlässig sein. Bitte trage in den <a href='/admin/site_settings'>Einstellungen</a> unter notification_email eine gültige lokale E-Mail-Adresse ein."
     subfolder_ends_in_slash: "Deine Installation in einem Pfad ist nicht korrekt, DISCOURSE_RELATIVE_URL_ROOT endet mit einem Schrägstrich."
     email_polling_errored_recently:
       one: "Beim Abrufen von E-Mails ist in den letzten 24 Stunden ein Fehler aufgetreten. Weitere Informationen findest du <a href='/logs' target='_blank'>im Fehlerprotokoll</a>."
@@ -1567,6 +1560,78 @@ de:
         Wenn der Beitrag jedoch von der Community erneut ausgeblendet wurde, wird er ausgeblendet bleiben, bis sich ein Mitarbeiter darum kümmert – und möglicherweise gibt es weitere Maßnahmen, einschließlich einer möglichen Sperrung deines Kontos.
 
         Weitre Hinweise findest du in unseren [Community-Richtlinien](%{base_url}/guidelines).
+    usage_tips:
+      text_body_template: |
+        In dieser Nachricht findest du einige Tipps um dir den Einstieg zu erleichtern.
+
+        ## Einfach weiterscrollen
+
+        Es gibt keine Knöpfe um auf die nächste Seite zu gelangen oder Seitenzahlen – um mehr zu lesen, **scrolle einfach weiter nach unten!**
+
+        Wenn neue Beiträge eingebracht werden, erscheinen diese automatisch - ohne dass die Seite neu geladen werden muss.
+
+        ## Wo bin ich?
+
+        - Um die Suche, das Menü <kbd>☰</kbd> oder deine Profilseite aufzurufen, benutze die **Schaltflächen oben rechts**.
+
+        - Das Klicken auf den Titel eines Themas bringt dich zu **deinem nächsten ungelesenen Beitrag** in diesem Thema. Um stattdessen ganz oben oder ganz unten einzusteigen, klicke die Beitragszahl oder das Datum der letzten Antwort.
+
+        <img src="%{base_url}/images/welcome/topic-list-select-areas-2x.png" width="593" height="59">
+
+        - Während des Lesens eines Themas kannst du mit Hilfe dessen Titels zum &uarr; Anfang springen. Die grüne Fortschrittsanzeige unten rechts erlaubt weitere Navigation.
+
+        <img src="%{base_url}/images/welcome/progress-bar-2x.png" width="153" height="181">
+
+        Du kannst auch <kbd>?</kbd> auf der Tastatur drücken, für eine Liste super-schneller Tastaturkürzel.
+
+        ## Wie antworte ich?
+
+        - Um auf das gesamte Thema zu antworten, benutze den Antwortknopf <img src="%{base_url}/images/welcome/reply-topic.png" width="29" height="25"> ganz unten auf der Seite.
+
+        - Um auf einen bestimmten Beitrag zu antworten kannst du die Schaltfläche <img src="%{base_url}/images/welcome/reply-post.png" width="29" height="25"> direkt unter diesem Beitrag verwenden.
+
+        Das Zitieren eines Beitrags ist mit dem Auswählen des gewünschten Texts gefolgt von einem beliebigen Antwortknopf möglich.
+
+        <img src="%{base_url}/images/welcome/quote-reply.png" width="350" height="129">
+
+        Um jemanden in auf deinen Beitrag aufmerksam zu machen, erwähne ihn durch das Eingeben von `@` gefolgt von seinem Benutzernamen.
+
+        <img src="%{base_url}/images/welcome/username-completion.png" width="230" height="131">
+
+        - Um die Diskussion in eine andere Richtung zu lenken, die beiden Themen aber zu verknüpfen, benutze bitte <img src="%{base_url}/images/welcome/reply-as-linked-topic.png" width="15" height="25"> <kbd>Mit verknüpftem Thema antworten` rechts des passenden Beitrags.
+
+
+        ## Was kann ich sonst noch machen?
+
+        Unter jedem Beitrag befinden sich Aktionsbuttons:
+
+        <img src="%{base_url}/images/welcome/like-link-flag-bookmark.png" width="169" height="46">
+
+        Um zu Zeigen, dass dir der Beitrag gefallen hat, drücke den **❤**-Knopf. Wenn du ein Problem mit einem Beitrag feststellst, mach den Autor oder die Moderatoren durch **Melden** darauf aufmerksam.
+
+        Du kannst außerdem einen Link zu einem Beitrag **teilen**, oder ihn zum Merken mit einem [**Lesezeichen**](/my/activity/bookmarks) versehen.
+
+        ## Wer schreibt mir?
+
+        Wenn jemand auf deinen Beitrag antwortet, deinen Beitrag zitiert, oder deinen `@Benutzernamen` erwähnt, zeigt sich sofort eine Zahl oben rechts auf der Seite. Dort kannst du auch deine **Benachrichtigungen** abrufen.
+
+        <img src="%{base_url}/images/welcome/notification-panel.png" width="178" height="59">
+
+        Um das Verpassen von Antworten (und Nachrichten) musst du dir keine Sorgen machen – diese werden dir 3 Minuten nach ihrer Erstellung automatisch per E-Mail zugeschickt, für den Fall dass du nicht online sein solltest wenn sie ankommen.
+
+        ## Wann sind Themen neu?
+
+        Standardmäßig gelten alle Themen die weniger als zwei Tage alt sind als neu. Alle Themen an denen du teilgenommen hast (durch Antwort, eigene Erstellung, oder längeres Lesen) werden automatisch verfolgt.
+
+        Neben diesen Themen wirst du blaue Indikatoren finden, die dich über die Aktualität informieren:
+
+        <img src="%{base_url}/images/welcome/topics-new-unread.png" width="368" height="89">
+
+        Du kannst den Informationsmodus eines Themas mit dem Menü am Ende anpassen (auch für ganze Kategorien möglich). Du kannst damit Stummstellen, Verfolgen oder Benachrichtigungen über alles Neue erhalten. Um diese Funktion zu konfigurieren, gehe in [deine Einstellungen](/my/preferences).
+
+        ## Warum kann ich manche Sachen nicht machen?
+
+        Aus Sicherheitsgründen sind neue Benutzer etwas eingeschränkt in ihren Befugnissen. Mit dem Teilnehmen hier und dem Gewinnen von Vertrauen werden diese Einschränkungen automatisch aufgehoben. Wenn du eine höhere Vertrauensstufe erlangst, kannst du außerdem ein wenig beim Moderieren helfen.
     welcome_user:
       subject_template: "Willkommen bei %{site_name}!"
       text_body_template: |

@@ -570,14 +570,7 @@ ko:
     s3_config_warning: '파일을 Amazon S3로 업로드 하도록 설정하였습니다. 하지만 아직 Access key id(s3_access_key_id), Secret access key(s3_secret_access_key) 혹은 S3 bucket(s3_upload_bucketat) 중 하나를 설정하지 않았습니다. <a href="/admin/site_settings">사이트 세팅</a>에서 설정해주세요. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">자세히 알아보기("How to set up image uploads to S3?")</a>.'
     s3_backup_config_warning: 's3를 이용한 서버 설정이 완료 되지 않았습니다: s3_access_key_id, s3_secret_access_key, s3_secret_access_key 또는 s3_upload_bucket. <a href="/admin/site_settings">사이트 설정</a> 에 가셔서 업데이트 하세요. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">"How to set up image uploads to S3?" 읽어 보세요.</a>'
     image_magick_warning: '큰 이미지의 섬네일 만드는 설정이 있지만, ImageMagick가 설치되지 않았습니다. <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">최신버전 받기</a>.'
-    default_logo_warning: "사이트에 로고를 설정해 주세요. logo_url, logo_small_url, 와 favicon_url 를 <a href='/admin/site_settings'>사이트 설정</a> 에서 설정하세요."
-    contact_email_missing: "사이트에 이메일을 설정해서 사이트와 관련된 긴급사항을 받아보세요. contact_email 을 <a href='/admin/site_settings'>사이트 설정</a> 에서 설정해주세요."
-    contact_email_invalid: "이 사이트의 연락가능한 이메일이 부정확 합니다.  <a href='/admin/site_settings'>사이트 설정</a> 에서 업데이트 해주세요."
-    title_nag: "사이트 이름을 설정하세요. <a href='/admin/site_settings'>사이트 설정</a> 에서 사이트 이름을 업데이트 해주세요."
-    site_description_missing: "검색 결과에 나올 한줄 설명을 적어주세요. <a href='/admin/site_settings'>사이트 설정</a>에서 site_description 업데이트하세요."
     consumer_email_warning: "이메일 전송을 위해 Gmail(또는 다른 커스텀 이메일 서비스)을 사용하고 있습니다. <a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>Gmail의 이메일 전송 제한</a> 을 읽어보세요. mandrill.com을 이메일 서비스로 설정하는 것을 고려해보세요."
-    site_contact_username_warning: "중요 자동 메세지를 보낼 스태프 사용자 계정의 이름을 적으세요. <a href='/admin/site_settings'>사이트 설정</a>에서 site_contact_username을 업데이트하세요."
-    notification_email_warning: "알람 메일이 올바른 이 사이트의 도메인 내 이메일 주소로 전송되지 않고 있습니다; 이메일 전송이 안정적이지 않을 것입니다. <a href='/admin/site_settings'>사이트 설정</a>에서 올바른 도메인의 이메일 주소로 정해주세요."
   site_settings:
     censored_words: "단어는 자동적으로 `&#9632;&#9632;&#9632;&#9632;` 로 대체 됩니다."
     delete_old_hidden_posts: "30일이 지난 숨겨진 글은 자동으로 삭제됩니다."

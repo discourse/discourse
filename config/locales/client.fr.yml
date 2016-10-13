@@ -944,7 +944,7 @@ fr:
         post_length: "Le message doit avoir au moins {{min}} caractères"
         try_like: 'Avez-vous essayé le bouton <i class="fa fa-heart"></i> ?'
         category_missing: "Vous devez choisir une catégorie"
-      save_edit: "Sauvegarder la modification"
+      save_edit: "Sauvegarder"
       reply_original: "Répondre sur le sujet d'origine"
       reply_here: "Répondre ici"
       reply: "Répondre"
