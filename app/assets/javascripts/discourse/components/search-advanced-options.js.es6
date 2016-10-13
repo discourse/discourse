@@ -235,6 +235,8 @@ export default Em.Component.extend({
   },
 
   findTags(searchTerm) {
+    if (!this.siteSettings.tagging_enabled) return;
+
     const match = this.findSearchTerm(REGEXP_TAGS_PREFIX, searchTerm);
     if (match.length !== 0) {
       let existingInput = _.isArray(this.get('searchedTerms.tags')) ? this.get('searchedTerms.tags').join(',') : this.get('searchedTerms.tags');
