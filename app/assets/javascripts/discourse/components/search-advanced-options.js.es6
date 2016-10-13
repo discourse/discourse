@@ -70,7 +70,7 @@ export default Em.Component.extend({
           days: ''
         }
       }
-    })
+    });
   },
 
   _update() {
@@ -117,7 +117,7 @@ export default Em.Component.extend({
         this.set('searchedTerms.username', userInput);
       }
     } else {
-      this.set('searchedTerms.username', []);
+      this.set('searchedTerms.username', null);
     }
   },
 
