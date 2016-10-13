@@ -64,47 +64,47 @@ test("open advanced search", assert => {
   andThen(() => assert.ok(exists('.search .search-advanced'), 'shows advanced search panel'));
 
   fillIn('.search input.full-page-search', 'none');
-  click('.search-advanced h3.panel-title');
+  click('.search-advanced-btn');
 
-  andThen(() => assert.ok(visible('.search-advanced .search-options'), '"search-options" is visible'));
+  andThen(() => assert.ok(visible('.search-advanced .search-advanced-options'), '"search-advanced-options" is visible'));
 });
 
 test("validate population of advanced search", assert => {
   visit("/search");
   fillIn('.search input.full-page-search', 'test user:admin #bug group:moderators badge:Reader tags:monkey in:likes status:open after:5 posts_count:10');
-  click('.search-advanced h3.panel-title');
+  click('.search-advanced-btn');
 
   andThen(() => {
-    assert.ok(exists('.search-options span:contains("admin")'), 'has "admin" pre-populated');
-    assert.ok(exists('.search-options .category-combobox .select2-choice .select2-chosen:contains("bug")'), 'has "bug" pre-populated');
-    //assert.ok(exists('.search-options span:contains("moderators")'), 'has "moderators" pre-populated');
-    //assert.ok(exists('.search-options span:contains("Reader")'), 'has "Reader" pre-populated');
-    assert.ok(exists('.search-options .tag-chooser .tag-monkey'), 'has "monkey" pre-populated');
-    assert.ok(exists('.search-options .combobox .select2-choice .select2-chosen:contains("I liked")'), 'has "I liked" pre-populated');
-    assert.ok(exists('.search-options .combobox .select2-choice .select2-chosen:contains("are open")'), 'has "are open" pre-populated');
-    assert.ok(exists('.search-options .combobox .select2-choice .select2-chosen:contains("after")'), 'has "after" pre-populated');
-    assert.equal(find('.search-options #search-post-date').val(), "5", 'has "5" pre-populated');
-    assert.equal(find('.search-options #search-posts-count').val(), "10", 'has "10" pre-populated');
+    assert.ok(exists('.search-advanced-options span:contains("admin")'), 'has "admin" pre-populated');
+    assert.ok(exists('.search-advanced-options .category-combobox .select2-choice .select2-chosen:contains("bug")'), 'has "bug" pre-populated');
+    //assert.ok(exists('.search-advanced-options span:contains("moderators")'), 'has "moderators" pre-populated');
+    //assert.ok(exists('.search-advanced-options span:contains("Reader")'), 'has "Reader" pre-populated');
+    assert.ok(exists('.search-advanced-options .tag-chooser .tag-monkey'), 'has "monkey" pre-populated');
+    assert.ok(exists('.search-advanced-options .combobox .select2-choice .select2-chosen:contains("I liked")'), 'has "I liked" pre-populated');
+    assert.ok(exists('.search-advanced-options .combobox .select2-choice .select2-chosen:contains("are open")'), 'has "are open" pre-populated');
+    assert.ok(exists('.search-advanced-options .combobox .select2-choice .select2-chosen:contains("after")'), 'has "after" pre-populated');
+    assert.equal(find('.search-advanced-options #search-post-date').val(), "5", 'has "5" pre-populated');
+    assert.equal(find('.search-advanced-options #search-posts-count').val(), "10", 'has "10" pre-populated');
   });
 });
 
 test("update username through advanced search ui", assert => {
   visit("/search");
   fillIn('.search input.full-page-search', 'none');
-  click('.search-advanced h3.panel-title');
-  fillIn('.search-options .user-selector', 'admin');
-  click('.search-options .user-selector');
-  keyEvent('.search-options .user-selector', 'keydown', 8);
+  click('.search-advanced-btn');
+  fillIn('.search-advanced-options .user-selector', 'admin');
+  click('.search-advanced-options .user-selector');
+  keyEvent('.search-advanced-options .user-selector', 'keydown', 8);
 
   andThen(() => {
     waitFor(() => {
-      assert.ok(visible('.search-options .autocomplete'), '"autocomplete" popup is visible');
-      assert.ok(exists('.search-options .autocomplete ul li a span.username:contains("admin")'), '"autocomplete" popup has an entry for "admin"');
+      assert.ok(visible('.search-advanced-options .autocomplete'), '"autocomplete" popup is visible');
+      assert.ok(exists('.search-advanced-options .autocomplete ul li a span.username:contains("admin")'), '"autocomplete" popup has an entry for "admin"');
 
-      click('.search-options .autocomplete ul li a:first');
+      click('.search-advanced-options .autocomplete ul li a:first');
 
       andThen(() => {
-        assert.ok(exists('.search-options span:contains("admin")'), 'has "admin" pre-populated');
+        assert.ok(exists('.search-advanced-options span:contains("admin")'), 'has "admin" pre-populated');
         assert.equal(find('.search input.full-page-search').val(), "none @admin", 'has updated search term to "none user:admin"');
       });
     });
@@ -114,12 +114,12 @@ test("update username through advanced search ui", assert => {
 test("update category through advanced search ui", assert => {
   visit("/search");
   fillIn('.search input.full-page-search', 'none');
-  click('.search-advanced h3.panel-title');
-  selectDropdown('.search-options .category-combobox', 4);
-  click('.search-options'); // need to click off the combobox for the search-term to get updated
+  click('.search-advanced-btn');
+  selectDropdown('.search-advanced-options .category-combobox', 4);
+  click('.search-advanced-options'); // need to click off the combobox for the search-term to get updated
 
   andThen(() => {
-    assert.ok(exists('.search-options .category-combobox .select2-choice .select2-chosen:contains("faq")'), 'has "faq" populated');
+    assert.ok(exists('.search-advanced-options .category-combobox .select2-choice .select2-chosen:contains("faq")'), 'has "faq" populated');
     assert.equal(find('.search input.full-page-search').val(), "none #faq", 'has updated search term to "none #faq"');
   });
 });
@@ -127,20 +127,20 @@ test("update category through advanced search ui", assert => {
 // test("update group through advanced search ui", assert => {
 //   visit("/search");
 //   fillIn('.search input.full-page-search', 'none');
-//   click('.search-advanced h3.panel-title');
-//   fillIn('.search-options .group-selector', 'moderators');
-//   click('.search-options .group-selector');
-//   keyEvent('.search-options .group-selector', 'keydown', 8);
+//   click('.search-advanced-btn');
+//   fillIn('.search-advanced-options .group-selector', 'moderators');
+//   click('.search-advanced-options .group-selector');
+//   keyEvent('.search-advanced-options .group-selector', 'keydown', 8);
 //
 //   andThen(() => {
 //     waitFor(() => {
-//       assert.ok(visible('.search-options .autocomplete'), '"autocomplete" popup is visible');
-//       assert.ok(exists('.search-options .autocomplete ul li a:contains("moderators")'), '"autocomplete" popup has an entry for "moderators"');
+//       assert.ok(visible('.search-advanced-options .autocomplete'), '"autocomplete" popup is visible');
+//       assert.ok(exists('.search-advanced-options .autocomplete ul li a:contains("moderators")'), '"autocomplete" popup has an entry for "moderators"');
 //
-//       click('.search-options .autocomplete ul li a:first');
+//       click('.search-advanced-options .autocomplete ul li a:first');
 //
 //       andThen(() => {
-//         assert.ok(exists('.search-options span:contains("moderators")'), 'has "moderators" pre-populated');
+//         assert.ok(exists('.search-advanced-options span:contains("moderators")'), 'has "moderators" pre-populated');
 //         assert.equal(find('.search input.full-page-search').val(), "none group:moderators", 'has updated search term to "none group:moderators"');
 //       });
 //     });
@@ -150,20 +150,20 @@ test("update category through advanced search ui", assert => {
 // test("update badges through advanced search ui", assert => {
 //   visit("/search");
 //   fillIn('.search input.full-page-search', 'none');
-//   click('.search-advanced h3.panel-title');
-//   fillIn('.search-options .badge-names', 'Reader');
-//   click('.search-options .badge-names');
-//   keyEvent('.search-options .badge-names', 'keydown', 8);
+//   click('.search-advanced-btn');
+//   fillIn('.search-advanced-options .badge-names', 'Reader');
+//   click('.search-advanced-options .badge-names');
+//   keyEvent('.search-advanced-options .badge-names', 'keydown', 8);
 //
 //   andThen(() => {
 //     waitFor(() => {
-//       assert.ok(visible('.search-options .autocomplete'), '"autocomplete" popup is visible');
-//       assert.ok(exists('.search-options .autocomplete ul li a:contains("Reader")'), '"autocomplete" popup has an entry for "Reader"');
+//       assert.ok(visible('.search-advanced-options .autocomplete'), '"autocomplete" popup is visible');
+//       assert.ok(exists('.search-advanced-options .autocomplete ul li a:contains("Reader")'), '"autocomplete" popup has an entry for "Reader"');
 //
-//       click('.search-options .autocomplete ul li a:first');
+//       click('.search-advanced-options .autocomplete ul li a:first');
 //
 //       andThen(() => {
-//         assert.ok(exists('.search-options span:contains("Reader")'), 'has "Reader" pre-populated');
+//         assert.ok(exists('.search-advanced-options span:contains("Reader")'), 'has "Reader" pre-populated');
 //         assert.equal(find('.search input.full-page-search').val(), "none badge:Reader", 'has updated search term to "none badge:Reader"');
 //       });
 //     });
@@ -173,17 +173,17 @@ test("update category through advanced search ui", assert => {
 // test("update tags through advanced search ui", assert => {
 //   visit("/search");
 //   fillIn('.search input.full-page-search', 'none');
-//   click('.search-advanced h3.panel-title');
+//   click('.search-advanced-btn');
 //
-//   keyEvent('.search-options .tag-chooser input.select2-input', 'keydown', 110);
-//   fillIn('.search-options .tag-chooser input.select2-input', 'monkey');
-//   keyEvent('.search-options .tag-chooser input.select2-input', 'keyup', 110);
+//   keyEvent('.search-advanced-options .tag-chooser input.select2-input', 'keydown', 110);
+//   fillIn('.search-advanced-options .tag-chooser input.select2-input', 'monkey');
+//   keyEvent('.search-advanced-options .tag-chooser input.select2-input', 'keyup', 110);
 //
 //   andThen(() => {
 //     waitFor(() => {
 //       click('li.select2-result-selectable:first');
 //       andThen(() => {
-//         assert.ok(exists('.search-options .tag-chooser .tag-monkey'), 'has "monkey" pre-populated');
+//         assert.ok(exists('.search-advanced-options .tag-chooser .tag-monkey'), 'has "monkey" pre-populated');
 //         assert.equal(find('.search input.full-page-search').val(), "none tags:monkey", 'has updated search term to "none tags:monkey"');
 //       });
 //     });
@@ -193,12 +193,12 @@ test("update category through advanced search ui", assert => {
 test("update in filter through advanced search ui", assert => {
   visit("/search");
   fillIn('.search input.full-page-search', 'none');
-  click('.search-advanced h3.panel-title');
-  selectDropdown('.search-options #s2id_in', 'likes');
-  fillIn('.search-options #in', 'likes');
+  click('.search-advanced-btn');
+  selectDropdown('.search-advanced-options #s2id_in', 'likes');
+  fillIn('.search-advanced-options #in', 'likes');
 
   andThen(() => {
-    assert.ok(exists('.search-options #s2id_in .select2-choice .select2-chosen:contains("I liked")'), 'has "I liked" populated');
+    assert.ok(exists('.search-advanced-options #s2id_in .select2-choice .select2-chosen:contains("I liked")'), 'has "I liked" populated');
     assert.equal(find('.search input.full-page-search').val(), "none in:likes", 'has updated search term to "none in:likes"');
   });
 });
@@ -206,12 +206,12 @@ test("update in filter through advanced search ui", assert => {
 test("update status through advanced search ui", assert => {
   visit("/search");
   fillIn('.search input.full-page-search', 'none');
-  click('.search-advanced h3.panel-title');
-  selectDropdown('.search-options #s2id_status', 'closed');
-  fillIn('.search-options #status', 'closed');
+  click('.search-advanced-btn');
+  selectDropdown('.search-advanced-options #s2id_status', 'closed');
+  fillIn('.search-advanced-options #status', 'closed');
 
   andThen(() => {
-    assert.ok(exists('.search-options #s2id_status .select2-choice .select2-chosen:contains("are closed")'), 'has "are closed" populated');
+    assert.ok(exists('.search-advanced-options #s2id_status .select2-choice .select2-chosen:contains("are closed")'), 'has "are closed" populated');
     assert.equal(find('.search input.full-page-search').val(), "none status:closed", 'has updated search term to "none status:closed"');
   });
 });
@@ -219,14 +219,14 @@ test("update status through advanced search ui", assert => {
 test("update post time through advanced search ui", assert => {
   visit("/search");
   fillIn('.search input.full-page-search', 'none');
-  click('.search-advanced h3.panel-title');
+  click('.search-advanced-btn');
   fillIn('#search-post-date', '5');
-  selectDropdown('.search-options #s2id_postTime', 'after');
-  fillIn('.search-options #postTime', 'after');
+  selectDropdown('.search-advanced-options #s2id_postTime', 'after');
+  fillIn('.search-advanced-options #postTime', 'after');
 
   andThen(() => {
-    assert.ok(exists('.search-options #s2id_postTime .select2-choice .select2-chosen:contains("after")'), 'has "after" populated');
-    assert.equal(find('.search-options #search-post-date').val(), "5", 'has "5" populated');
+    assert.ok(exists('.search-advanced-options #s2id_postTime .select2-choice .select2-chosen:contains("after")'), 'has "after" populated');
+    assert.equal(find('.search-advanced-options #search-post-date').val(), "5", 'has "5" populated');
     assert.equal(find('.search input.full-page-search').val(), "none after:5", 'has updated search term to "none after:5"');
   });
 });
@@ -234,11 +234,11 @@ test("update post time through advanced search ui", assert => {
 test("update posts count through advanced search ui", assert => {
   visit("/search");
   fillIn('.search input.full-page-search', 'none');
-  click('.search-advanced h3.panel-title');
+  click('.search-advanced-btn');
   fillIn('#search-posts-count', '5');
 
   andThen(() => {
-    assert.equal(find('.search-options #search-posts-count').val(), "5", 'has "5" populated');
+    assert.equal(find('.search-advanced-options #search-posts-count').val(), "5", 'has "5" populated');
     assert.equal(find('.search input.full-page-search').val(), "none posts_count:5", 'has updated search term to "none posts_count:5"');
   });
 });

@@ -44,7 +44,7 @@ export default Em.Component.extend({
     {name: I18n.t('search.advanced.post.time.after'),   value: "after"}
   ],
 
-  didInsertElement() {
+  init() {
     this._super();
     this._init();
   },
