@@ -96,20 +96,21 @@ export default Em.Component.extend({
     if (!searchTerm)
       return "";
 
-    const expression_location = searchTerm.search(EXPRESSION);
-    if (expression_location === -1)
+    const expressionPosition = searchTerm.search(EXPRESSION);
+    if (expressionPosition === -1)
       return "";
 
-    const remaining_phrase = searchTerm.substring(expression_location + 2);
-    let next_expression_location = remaining_phrase.search(REGEXP_FILTER_PREFIXES);
-    if (next_expression_location === -1)
-      next_expression_location = remaining_phrase.length;
+    const remainingPhrases = searchTerm.substring(expressionPosition + 2);
+    let nextExpressionPosition = remainingPhrases.search(REGEXP_FILTER_PREFIXES);
+    if (nextExpressionPosition === -1)
+      nextExpressionPosition = remainingPhrases.length;
 
-    return searchTerm.substring(expression_location, next_expression_location + expression_location + 2);
+    return searchTerm.substring(expressionPosition, nextExpressionPosition + expressionPosition + 2).trim().split(' ')[0];
   },
 
   findUsername(searchTerm) {
     const match = this.findSearchTerm(REGEXP_USERNAME_PREFIX, searchTerm);
+
     if (match.length !== 0) {
       let userInput = match.replace(REGEXP_USERNAME_PREFIX, '');
 
@@ -124,16 +125,18 @@ export default Em.Component.extend({
   @observes('searchedTerms.username')
   updateUsername() {
     let searchTerm = this.get('searchTerm');
-
     const match = this.findSearchTerm(REGEXP_USERNAME_PREFIX, searchTerm);
     const userFilter = this.get('searchedTerms.username');
-    if (userFilter && userFilter.length !== 0)
-      if (match.length !== 0)
-        searchTerm = searchTerm.replace(match, ` @${userFilter}`);
-      else
+
+    if (userFilter && userFilter.length !== 0) {
+      if (match.length !== 0) {
+        searchTerm = searchTerm.replace(match, `@${userFilter}`);
+      } else {
         searchTerm += ` @${userFilter}`;
-    else if (match.length !== 0)
+      }
+    } else if (match.length !== 0) {
       searchTerm = searchTerm.replace(match, '');
+    }
 
     this.set('searchTerm', searchTerm);
   },
@@ -178,16 +181,16 @@ export default Em.Component.extend({
       if (categoryFilter && categoryFilter.parentCategory) {
         const parentSlug = categoryFilter.parentCategory.slug;
         if (slugCategoryMatches)
-          searchTerm = searchTerm.replace(slugCategoryMatches[0], ` #${parentSlug}:${slug}`);
+          searchTerm = searchTerm.replace(slugCategoryMatches[0], `#${parentSlug}:${slug}`);
         else if (idCategoryMatches)
-          searchTerm = searchTerm.replace(idCategoryMatches[0], ` category:${id}`);
+          searchTerm = searchTerm.replace(idCategoryMatches[0], `category:${id}`);
         else
           searchTerm += ` #${parentSlug}:${slug}`;
       } else if (categoryFilter) {
         if (slugCategoryMatches)
-          searchTerm = searchTerm.replace(slugCategoryMatches[0], ` #${slug}`);
+          searchTerm = searchTerm.replace(slugCategoryMatches[0], `#${slug}`);
         else if (idCategoryMatches)
-          searchTerm = searchTerm.replace(idCategoryMatches[0], ` category:${id}`);
+          searchTerm = searchTerm.replace(idCategoryMatches[0], `category:${id}`);
         else
           searchTerm += ` #${slug}`;
       }
@@ -264,26 +267,32 @@ export default Em.Component.extend({
     if (match.length !== 0) {
       let existingInput = _.isArray(this.get('searchedTerms.tags')) ? this.get('searchedTerms.tags').join(',') : this.get('searchedTerms.tags');
       let userInput = match.replace(REGEXP_TAGS_PREFIX, '');
-      if (userInput.length !== 0 && existingInput !== userInput)
+
+      if (userInput.length !== 0 && existingInput !== userInput) {
         this.set('searchedTerms.tags', userInput.split(','));
-    } else
+      }
+    } else {
       this.set('searchedTerms.tags', []);
+    }
   },
 
   @observes('searchedTerms.tags')
   updateTags() {
     let searchTerm = this.get('searchTerm');
-
     const match = this.findSearchTerm(REGEXP_TAGS_PREFIX, searchTerm);
     const tagFilter = this.get('searchedTerms.tags');
+
     if (tagFilter && tagFilter.length !== 0) {
       const tags = tagFilter.join(',');
-      if (match.length !== 0)
-        searchTerm = searchTerm.replace(match, ` tags:${tags}`);
-      else
+
+      if (match.length !== 0) {
+        searchTerm = searchTerm.replace(match, `tags:${tags}`);
+      } else {
         searchTerm += ` tags:${tags}`;
-    } else if (match.length !== 0)
+      }
+    } else if (match.length !== 0) {
       searchTerm = searchTerm.replace(match, '');
+    }
 
     this.set('searchTerm', searchTerm);
   },
@@ -302,16 +311,18 @@ export default Em.Component.extend({
   @observes('searchedTerms.in')
   updateIn() {
     let searchTerm = this.get('searchTerm');
-
     const match = this.findSearchTerm(REGEXP_IN_PREFIX, searchTerm);
     const inFilter = this.get('searchedTerms.in');
-    if (inFilter)
-      if (match.length !== 0)
-        searchTerm = searchTerm.replace(match, ` in:${inFilter}`);
-      else
+
+    if (inFilter) {
+      if (match.length !== 0) {
+        searchTerm = searchTerm.replace(match, `in:${inFilter}`);
+      } else {
         searchTerm += ` in:${inFilter}`;
-    else if (match.length !== 0)
+      }
+    } else if (match.length !== 0) {
       searchTerm = searchTerm.replace(match, '');
+    }
 
     this.set('searchTerm', searchTerm);
   },
@@ -330,16 +341,18 @@ export default Em.Component.extend({
   @observes('searchedTerms.status')
   updateStatus() {
     let searchTerm = this.get('searchTerm');
-
     const match = this.findSearchTerm(REGEXP_STATUS_PREFIX, searchTerm);
     const statusFilter = this.get('searchedTerms.status');
-    if (statusFilter)
-      if (match.length !== 0)
-        searchTerm = searchTerm.replace(match, ` status:${statusFilter}`);
-      else
+
+    if (statusFilter) {
+      if (match.length !== 0) {
+        searchTerm = searchTerm.replace(match, `status:${statusFilter}`);
+      } else {
         searchTerm += ` status:${statusFilter}`;
-    else if (match.length !== 0)
+      }
+    } else if (match.length !== 0) {
       searchTerm = searchTerm.replace(match, '');
+    }
 
     this.set('searchTerm', searchTerm);
   },
@@ -363,7 +376,7 @@ export default Em.Component.extend({
     const postsCountFilter = this.get('searchedTerms.posts_count');
     if (postsCountFilter)
       if (match.length !== 0)
-        searchTerm = searchTerm.replace(match, ` posts_count:${postsCountFilter}`);
+        searchTerm = searchTerm.replace(match, `posts_count:${postsCountFilter}`);
       else
         searchTerm += ` posts_count:${postsCountFilter}`;
     else if (match.length !== 0)
@@ -377,31 +390,38 @@ export default Em.Component.extend({
     if (match.length !== 0) {
       let existingInputWhen = this.get('searchedTerms.time.when');
       let userInputWhen = match.match(REGEXP_POST_TIME_WHEN)[0];
-      if (userInputWhen.length !== 0 && existingInputWhen !== userInputWhen)
-        this.set('searchedTerms.time.when', userInputWhen);
-
       let existingInputDays = this.get('searchedTerms.time.days');
       let userInputDays = match.replace(REGEXP_POST_TIME_PREFIX, '');
-      if (userInputDays.length !== 0 && existingInputDays !== userInputDays)
+
+      if (userInputWhen.length !== 0 && existingInputWhen !== userInputWhen) {
+        this.set('searchedTerms.time.when', userInputWhen);
+      }
+
+      if (userInputDays.length !== 0 && existingInputDays !== userInputDays) {
         this.set('searchedTerms.time.days', userInputDays);
-    } else
+      }
+
+    } else {
       this.set('searchedTerms.time.days', '');
+    }
   },
 
   @observes('searchedTerms.time.when', 'searchedTerms.time.days')
   updatePostTime() {
     let searchTerm = this.get('searchTerm');
-
     const match = this.findSearchTerm(REGEXP_POST_TIME_PREFIX, searchTerm);
     const timeDaysFilter = this.get('searchedTerms.time.days');
+
     if (timeDaysFilter) {
       const when = this.get('searchedTerms.time.when');
-      if (match.length !== 0)
-        searchTerm = searchTerm.replace(match, ` ${when}:${timeDaysFilter}`);
-      else
+      if (match.length !== 0) {
+        searchTerm = searchTerm.replace(match, `${when}:${timeDaysFilter}`);
+      } else {
         searchTerm += ` ${when}:${timeDaysFilter}`;
-    } else if (match.length !== 0)
+      }
+    } else if (match.length !== 0) {
       searchTerm = searchTerm.replace(match, '');
+    }
 
     this.set('searchTerm', searchTerm);
   },
