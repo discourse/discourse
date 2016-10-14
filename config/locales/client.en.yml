@@ -570,10 +570,7 @@ en:
       apps: "Apps"
       revoke_access: "Revoke Access"
       undo_revoke_access: "Undo Revoke Access"
-      api_permissions: "Permissions:"
       api_approved: "Approved:"
-      api_read: "read"
-      api_read_write: "read and write"
 
       staff_counters:
         flags_given: "helpful flags"
