@@ -12,6 +12,9 @@ export IMAGE_PREFIX="https://example.com/wp-content/uploads/"
 export BASE="forums/"
 =end
 
+# If you change how this script behaves, please consider making a note her:
+# https://meta.discourse.org/t/migrating-from-bbpress-wordpress-plugin-to-discourse/48876
+
 class ImportScripts::Bbpress < ImportScripts::Base
 
   DB_HOST ||= ENV['DB_HOST'] || "localhost"
