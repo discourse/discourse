@@ -1,9 +1,7 @@
-require_dependency 'slug'
-
 module DiscourseTagging
 
   TAGS_FIELD_NAME = "tags"
-  TAGS_FILTER_REGEXP = Slug::CHAR_FILTER_REGEXP
+  TAGS_FILTER_REGEXP = /[\/\?#\[\]@!\$&'\(\)\*\+,;=\.%\\`^\s|\{\}"<>]+/ # /?#[]@!$&'()*+,;=.%\`^|{}"<>
 
 
   def self.tag_topic_by_names(topic, guardian, tag_names_arg)
@@ -143,7 +141,9 @@ module DiscourseTagging
   end
 
   def self.clean_tag(tag)
-    Slug.sanitize(tag.downcase.strip)[0...SiteSetting.max_tag_length]
+    tag.downcase.strip
+       .gsub(/\s+/, '-').squeeze('-')
+       .gsub(TAGS_FILTER_REGEXP, '')[0...SiteSetting.max_tag_length]
   end
 
   def self.staff_only_tags(tags)
