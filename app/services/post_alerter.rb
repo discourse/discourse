@@ -398,7 +398,7 @@ class PostAlerter
   def push_notification(user, payload)
     if SiteSetting.allow_user_api_key_scopes.split("|").include?("push") && SiteSetting.allowed_user_api_push_urls.present?
       clients = user.user_api_keys
-          .where("'push' = ANY(scopes) AND push_url IS NOT NULL AND position(push_url in ?) > 0 AND revoked_at IS NULL",
+          .where("('push' = ANY(scopes) OR 'notifications' = ANY(scopes)) AND push_url IS NOT NULL AND position(push_url in ?) > 0 AND revoked_at IS NULL",
                   SiteSetting.allowed_user_api_push_urls)
           .pluck(:client_id, :push_url)
 
