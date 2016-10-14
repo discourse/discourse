@@ -71,7 +71,7 @@ test("open advanced search", assert => {
 
 test("validate population of advanced search", assert => {
   visit("/search");
-  fillIn('.search input.full-page-search', 'test user:admin #bug group:moderators badge:Reader tags:monkey in:likes status:open after:5 posts_count:10');
+  fillIn('.search input.full-page-search', 'test user:admin #bug group:moderators badge:Reader tags:monkey in:likes status:open after:2016-10-05 posts_count:10');
   click('.search-advanced-btn');
 
   andThen(() => {
@@ -83,7 +83,7 @@ test("validate population of advanced search", assert => {
     assert.ok(exists('.search-advanced-options .combobox .select2-choice .select2-chosen:contains("I liked")'), 'has "I liked" pre-populated');
     assert.ok(exists('.search-advanced-options .combobox .select2-choice .select2-chosen:contains("are open")'), 'has "are open" pre-populated');
     assert.ok(exists('.search-advanced-options .combobox .select2-choice .select2-chosen:contains("after")'), 'has "after" pre-populated');
-    assert.equal(find('.search-advanced-options #search-post-date').val(), "5", 'has "5" pre-populated');
+    assert.equal(find('.search-advanced-options #search-post-date').val(), "2016-10-05", 'has "2016-10-05" pre-populated');
     assert.equal(find('.search-advanced-options #search-posts-count').val(), "10", 'has "10" pre-populated');
   });
 });
@@ -220,14 +220,14 @@ test("update post time through advanced search ui", assert => {
   visit("/search");
   fillIn('.search input.full-page-search', 'none');
   click('.search-advanced-btn');
-  fillIn('#search-post-date', '5');
+  fillIn('#search-post-date', '2016-10-05');
   selectDropdown('.search-advanced-options #s2id_postTime', 'after');
   fillIn('.search-advanced-options #postTime', 'after');
 
   andThen(() => {
     assert.ok(exists('.search-advanced-options #s2id_postTime .select2-choice .select2-chosen:contains("after")'), 'has "after" populated');
-    assert.equal(find('.search-advanced-options #search-post-date').val(), "5", 'has "5" populated');
-    assert.equal(find('.search input.full-page-search').val(), "none after:5", 'has updated search term to "none after:5"');
+    assert.equal(find('.search-advanced-options #search-post-date').val(), "2016-10-05", 'has "2016-10-05" populated');
+    assert.equal(find('.search input.full-page-search').val(), "none after:2016-10-05", 'has updated search term to "none after:2016-10-05"');
   });
 });
 
