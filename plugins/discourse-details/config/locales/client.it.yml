@@ -3,5 +3,5 @@ it:
     details:
       title: Nascondi Dettagli
     composer:
-      details_title: Sommario
+      details_title: Summary
       details_text: "Questo testo verrà nascosto"
