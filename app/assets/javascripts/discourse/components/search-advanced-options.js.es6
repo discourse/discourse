@@ -62,7 +62,7 @@ export default Em.Component.extend({
   _init() {
     this.setProperties({
       searchedTerms: {
-        username: null,
+        username: '',
         category: null,
         group: [],
         badge: [],
@@ -111,20 +111,24 @@ export default Em.Component.extend({
     if (!searchTerm)
       return [];
 
-    let result = [];
     const blocks = searchTerm.match(REGEXP_BLOCKS);
-    _.each(blocks, function(block) {
-      if (block.length === 0) return;
+    if (!blocks) return [];
 
-      result.push(block);
+    let result = [];
+    blocks.forEach(block => {
+      if (block.length !== 0)
+        result.push(block);
     });
 
     this.set('searchTermBlocks', result);
   },
 
   filterBlocks(regexPrefix) {
+    const blocks = this.get('searchTermBlocks');
+    if (!blocks) return [];
+
     let result = [];
-    _.each(this.get('searchTermBlocks'), function(block) {
+    blocks.forEach(block => {
       if (block.search(regexPrefix) !== -1)
         result.push(block);
     });
@@ -141,14 +145,13 @@ export default Em.Component.extend({
       if (this.get(key) !== userInput) {
         this.set(key, userInput);
       }
-    } else if(this.get(key) !== null) {
-      this.set(key, null);
+    } else if(this.get(key).length !== 0) {
+      this.set(key, '');
     }
   },
 
-  setSearchedTermSpecialInValue(key, replaceRegEx, matchRegEx = null) {
-    matchRegEx = matchRegEx || replaceRegEx;
-    const match = this.filterBlocks(matchRegEx);
+  setSearchedTermSpecialInValue(key, replaceRegEx) {
+    const match = this.filterBlocks(replaceRegEx);
 
     if (match.length !== 0) {
       if (this.get(key) !== true) {
@@ -260,7 +263,7 @@ export default Em.Component.extend({
   updateSearchTermForUsername() {
     const match = this.filterBlocks(REGEXP_USERNAME_PREFIX);
     const userFilter = this.get('searchedTerms.username');
-    let searchTerm = this.get('searchTerm');
+    let searchTerm = this.get('searchTerm') || '';
 
     if (userFilter && userFilter.length !== 0) {
       if (match.length !== 0) {
@@ -280,7 +283,7 @@ export default Em.Component.extend({
   updateSearchTermForCategory() {
     const match = this.filterBlocks(REGEXP_CATEGORY_PREFIX);
     const categoryFilter = Discourse.Category.findById(this.get('searchedTerms.category'));
-    let searchTerm = this.get('searchTerm');
+    let searchTerm = this.get('searchTerm') || '';
 
     const slugCategoryMatches = (match.length !== 0) ? match[0].match(REGEXP_CATEGORY_SLUG) : null;
     const idCategoryMatches = (match.length !== 0) ? match[0].match(REGEXP_CATEGORY_ID) : null;
@@ -321,7 +324,7 @@ export default Em.Component.extend({
   updateSearchTermForGroup() {
     const match = this.filterBlocks(REGEXP_GROUP_PREFIX);
     const groupFilter = this.get('searchedTerms.group');
-    let searchTerm = this.get('searchTerm');
+    let searchTerm = this.get('searchTerm') || '';
 
     if (groupFilter && groupFilter.length !== 0) {
       if (match.length !== 0) {
@@ -339,10 +342,9 @@ export default Em.Component.extend({
 
   @observes('searchedTerms.badge')
   updateSearchTermForBadge() {
-    let searchTerm = this.get('searchTerm');
-
     const match = this.filterBlocks(REGEXP_BADGE_PREFIX);
     const badgeFilter = this.get('searchedTerms.badge');
+    let searchTerm = this.get('searchTerm') || '';
 
     if (badgeFilter && badgeFilter.length !== 0) {
       if (match.length !== 0) {
@@ -362,7 +364,7 @@ export default Em.Component.extend({
   updateSearchTermForTags() {
     const match = this.filterBlocks(REGEXP_TAGS_PREFIX);
     const tagFilter = this.get('searchedTerms.tags');
-    let searchTerm = this.get('searchTerm');
+    let searchTerm = this.get('searchTerm') || '';
 
     if (tagFilter && tagFilter.length !== 0) {
       const tags = tagFilter.join(',');
@@ -384,7 +386,7 @@ export default Em.Component.extend({
   updateSearchTermForIn() {
     const match = this.filterBlocks(REGEXP_IN_MATCH);
     const inFilter = this.get('searchedTerms.in');
-    let searchTerm = this.get('searchTerm');
+    let searchTerm = this.get('searchTerm') || '';
 
     if (inFilter) {
       if (match.length !== 0) {
@@ -404,7 +406,7 @@ export default Em.Component.extend({
   updateSearchTermForSpecialInLikes() {
     const match = this.filterBlocks(REGEXP_SPECIAL_IN_LIKES_MATCH);
     const inFilter = this.get('searchedTerms.special.in.likes');
-    let searchTerm = this.get('searchTerm');
+    let searchTerm = this.get('searchTerm') || '';
 
     if (inFilter) {
       if (match.length === 0) {
@@ -421,7 +423,7 @@ export default Em.Component.extend({
   updateSearchTermForSpecialInPrivate() {
     const match = this.filterBlocks(REGEXP_SPECIAL_IN_PRIVATE_MATCH);
     const inFilter = this.get('searchedTerms.special.in.private');
-    let searchTerm = this.get('searchTerm');
+    let searchTerm = this.get('searchTerm') || '';
 
     if (inFilter) {
       if (match.length === 0) {
@@ -438,7 +440,7 @@ export default Em.Component.extend({
   updateSearchTermForSpecialInWiki() {
     const match = this.filterBlocks(REGEXP_SPECIAL_IN_WIKI_MATCH);
     const inFilter = this.get('searchedTerms.special.in.wiki');
-    let searchTerm = this.get('searchTerm');
+    let searchTerm = this.get('searchTerm') || '';
 
     if (inFilter) {
       if (match.length === 0) {
@@ -455,7 +457,7 @@ export default Em.Component.extend({
   updateSearchTermForStatus() {
     const match = this.filterBlocks(REGEXP_STATUS_PREFIX);
     const statusFilter = this.get('searchedTerms.status');
-    let searchTerm = this.get('searchTerm');
+    let searchTerm = this.get('searchTerm') || '';
 
     if (statusFilter) {
       if (match.length !== 0) {
@@ -475,7 +477,7 @@ export default Em.Component.extend({
   updateSearchTermForPostTime() {
     const match = this.filterBlocks(REGEXP_POST_TIME_PREFIX);
     const timeDaysFilter = this.get('searchedTerms.time.days');
-    let searchTerm = this.get('searchTerm');
+    let searchTerm = this.get('searchTerm') || '';
 
     if (timeDaysFilter) {
       const when = this.get('searchedTerms.time.when');
@@ -496,7 +498,7 @@ export default Em.Component.extend({
   updateSearchTermForPostsCount() {
     const match = this.filterBlocks(REGEXP_POST_COUNT_PREFIX);
     const postsCountFilter = this.get('searchedTerms.posts_count');
-    let searchTerm = this.get('searchTerm');
+    let searchTerm = this.get('searchTerm') || '';
 
     if (postsCountFilter) {
       if (match.length !== 0) {

@@ -281,3 +281,13 @@ test("update posts count through advanced search ui", assert => {
     assert.equal(find('.search input.full-page-search').val(), "none posts_count:5", 'has updated search term to "none posts_count:5"');
   });
 });
+
+test("validate advanced search when initially empty", assert => {
+  visit("/search?expanded=true");
+  click('.search-advanced-options .in-likes');
+
+  andThen(() => {
+    assert.ok(exists('.search-advanced-options .in-likes:checked'), 'has "I liked" populated');
+    assert.equal(find('.search input.full-page-search').val(), "in:likes", 'has updated search term to "in:likes"');
+  });
+});
