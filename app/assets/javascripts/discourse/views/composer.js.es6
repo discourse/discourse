@@ -12,7 +12,8 @@ const ComposerView = Ember.View.extend({
                       'composer.loading',
                       'composer.canEditTitle:edit-title',
                       'composer.createdPost:created-post',
-                      'composer.creatingTopic:topic'],
+                      'composer.creatingTopic:topic',
+                      'composer.whisper:composing-whisper'],
 
   composer: Em.computed.alias('controller.model'),
 
