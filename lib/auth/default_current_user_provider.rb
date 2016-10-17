@@ -108,7 +108,7 @@ class Auth::DefaultCurrentUserProvider
 
     if user && (!user.auth_token_updated_at || user.auth_token_updated_at <= 1.hour.ago)
       user.update_column(:auth_token_updated_at, Time.zone.now)
-      cookies[TOKEN_COOKIE] = { value: user.auth_token, httponly: true, expires: SiteSetting.maximum_session_age.hours.from_now }
+      cookies[TOKEN_COOKIE] = cookie_hash(user)
     end
     if !user && cookies.key?(TOKEN_COOKIE)
       cookies.delete(TOKEN_COOKIE)
@@ -124,10 +124,19 @@ class Auth::DefaultCurrentUserProvider
                           auth_token_updated_at: Time.zone.now)
     end
 
-    cookies[TOKEN_COOKIE] = { value: user.auth_token, httponly: true, expires: SiteSetting.maximum_session_age.hours.from_now }
+    cookies[TOKEN_COOKIE] = cookie_hash(user)
     make_developer_admin(user)
     enable_bootstrap_mode(user)
     @env[CURRENT_USER_KEY] = user
+  end
+
+  def cookie_hash(user)
+    {
+      value: user.auth_token,
+      httponly: true,
+      expires: SiteSetting.maximum_session_age.hours.from_now,
+      secure: SiteSetting.force_https
+    }
   end
 
   def make_developer_admin(user)
