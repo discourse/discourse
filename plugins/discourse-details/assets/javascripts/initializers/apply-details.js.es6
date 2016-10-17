@@ -18,8 +18,9 @@ function initializeDetails(api) {
         this.get("toolbarEvent").applySurround(
           `[details=${I18n.t("composer.details_title")}]`,
           "[/details]",
-          "details_text")
-        ;
+          "details_text",
+          { multiline: false }
+        );
       }
     }
   });
