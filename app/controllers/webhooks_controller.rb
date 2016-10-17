@@ -91,7 +91,7 @@ class WebhooksController < ActionController::Base
   def sparkpost
     events = params["_json"] || [params]
     events.each do |event|
-      message_id = event["msys"]["message_event"]["campaign_id"] rescue nil
+      message_id = event["msys"]["message_event"]["message_id"] rescue nil
       bounce_class = event["msys"]["message_event"]["bounce_class"] rescue nil
       next unless message_id && bounce_class
 
