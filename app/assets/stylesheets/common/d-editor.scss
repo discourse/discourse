@@ -105,6 +105,13 @@
     width: 0;
     visibility: hidden;
   }
+
+}
+.composing-whisper {
+  .d-editor-preview {
+    font-style: italic;
+    color: dark-light-diff($primary, $secondary, 55%, -40%) !important;
+  }
 }
 
 .d-editor-preview > *:first-child {
