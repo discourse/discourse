@@ -114,6 +114,10 @@
     .control-group.pull-left {
       width: 50%;
     }
+
+    input[type="checkbox"] {
+      height: auto;
+    }
   }
 }
 
