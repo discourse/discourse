@@ -1,0 +1,3 @@
+it:
+  site_settings:
+    details_enabled: "Abilitare il plugin details. Se modifichi questa opzione devi aggiornare tutti i messaggi con: \"rake posts:rebake\"."
