@@ -25,16 +25,13 @@ export default Em.Component.extend({
   classNames: ['search-advanced-options'],
 
   inOptions: [
-    //{name: I18n.t('search.advanced.filters.likes'),     value: "likes"},
     {name: I18n.t('search.advanced.filters.posted'),    value: "posted"},
     {name: I18n.t('search.advanced.filters.watching'),  value: "watching"},
     {name: I18n.t('search.advanced.filters.tracking'),  value: "tracking"},
-    //{name: I18n.t('search.advanced.filters.private'),   value: "private"},
     {name: I18n.t('search.advanced.filters.bookmarks'), value: "bookmarks"},
     {name: I18n.t('search.advanced.filters.first'),     value: "first"},
     {name: I18n.t('search.advanced.filters.pinned'),    value: "pinned"},
     {name: I18n.t('search.advanced.filters.unpinned'),  value: "unpinned"},
-    //{name: I18n.t('search.advanced.filters.wiki'),      value: "wiki"}
   ],
   statusOptions: [
     {name: I18n.t('search.advanced.statuses.open'),        value: "open"},
