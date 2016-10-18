@@ -124,19 +124,52 @@ describe Upload do
 
   context ".get_from_url" do
     let(:url) { "/uploads/default/original/3X/1/0/10f73034616a796dfd70177dc54b6def44c4ba6f.png" }
-    let!(:upload) { Fabricate(:upload, url: url) }
+    let(:upload) { Fabricate(:upload, url: url) }
 
     it "works when the file has been uploaded" do
-      expect(Upload.get_from_url(url)).to eq(upload)
+      expect(Upload.get_from_url(upload.url)).to eq(upload)
     end
 
     it "works when using a cdn" do
       begin
         original_asset_host = Rails.configuration.action_controller.asset_host
         Rails.configuration.action_controller.asset_host = 'http://my.cdn.com'
-        expect(Upload.get_from_url(URI.join("http://my.cdn.com", url).to_s)).to eq(upload)
+
+        expect(Upload.get_from_url(
+          URI.join("http://my.cdn.com", upload.url).to_s
+        )).to eq(upload)
       ensure
         Rails.configuration.action_controller.asset_host = original_asset_host
+      end
+    end
+
+    it "should return the right upload when using the full URL" do
+      expect(Upload.get_from_url(
+        URI.join("http://discourse.some.com:3000/", upload.url).to_s
+      )).to eq(upload)
+    end
+
+    describe "s3 store" do
+      let(:path) { "/original/3X/1/0/10f73034616a796dfd70177dc54b6def44c4ba6f.png" }
+      let(:url) { "//#{SiteSetting.s3_upload_bucket}.s3.amazonaws.com#{path}" }
+
+      before do
+        SiteSetting.enable_s3_uploads = true
+        SiteSetting.s3_upload_bucket = "s3-upload-bucket"
+        SiteSetting.s3_access_key_id = "some key"
+        SiteSetting.s3_secret_access_key = "some secret key"
+      end
+
+      after do
+        SiteSetting.enable_s3_uploads = false
+      end
+
+      it "should return the right upload when using a CDN for s3" do
+        upload
+        s3_cdn_url = 'https://mycdn.slowly.net'
+        SiteSetting.s3_cdn_url = s3_cdn_url
+
+        expect(Upload.get_from_url(URI.join(s3_cdn_url, path).to_s)).to eq(upload)
       end
     end
   end
