@@ -123,18 +123,22 @@ describe Upload do
   end
 
   context ".get_from_url" do
+    let(:url) { "/uploads/default/original/3X/1/0/10f73034616a796dfd70177dc54b6def44c4ba6f.png" }
+    let!(:upload) { Fabricate(:upload, url: url) }
 
     it "works when the file has been uploaded" do
-      Upload.expects(:find_by).returns(nil).once
-      Upload.get_from_url("/uploads/default/1/10387531.jpg")
+      expect(Upload.get_from_url(url)).to eq(upload)
     end
 
     it "works when using a cdn" do
-      Rails.configuration.action_controller.stubs(:asset_host).returns("http://my.cdn.com")
-      Upload.expects(:find_by).with(url: "/uploads/default/1/02395732905.jpg").returns(nil).once
-      Upload.get_from_url("http://my.cdn.com/uploads/default/1/02395732905.jpg")
+      begin
+        original_asset_host = Rails.configuration.action_controller.asset_host
+        Rails.configuration.action_controller.asset_host = 'http://my.cdn.com'
+        expect(Upload.get_from_url(URI.join("http://my.cdn.com", url).to_s)).to eq(upload)
+      ensure
+        Rails.configuration.action_controller.asset_host = original_asset_host
+      end
     end
-
   end
 
   describe '.generate_digest' do
