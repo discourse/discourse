@@ -224,6 +224,13 @@ describe GroupsController do
         user.reload
         expect(user.primary_group_id).to eq(nil)
       end
+
+      it "removes by user_email" do
+        xhr :delete, :remove_member, id: group.id, user_email: user.email
+        expect(response).to be_success
+        group.reload
+        expect(group.users.count).to eq(0)
+      end
     end
 
   end
