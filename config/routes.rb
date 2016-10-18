@@ -37,6 +37,11 @@ Discourse::Application.routes.draw do
     end
   end
 
+  get "finish-installation" => "finish_installation#index"
+  get "finish-installation/register" => "finish_installation#register"
+  post "finish-installation/register" => "finish_installation#register"
+  get "finish-installation/confirm-email" => "finish_installation#confirm_email"
+
   resources :directory_items
 
   get "site" => "site#site"
@@ -686,6 +691,8 @@ Discourse::Application.routes.draw do
   root to: "categories#index", constraints: HomePageConstraint.new("categories"), :as => "categories_index"
   # special case for top
   root to: "list#top", constraints: HomePageConstraint.new("top"), :as => "top_lists"
+
+  root to: 'finish_installation#index', constraints: HomePageConstraint.new("finish_installation"), as: 'installation_redirect'
 
   get "/user-api-key/new" => "user_api_keys#new"
   post "/user-api-key" => "user_api_keys#create"

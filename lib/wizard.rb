@@ -76,13 +76,17 @@ class Wizard
   def requires_completion?
     return false unless SiteSetting.wizard_enabled?
 
+
     first_admin = User.where(admin: true)
                       .where.not(id: Discourse.system_user.id)
                       .where.not(auth_token_updated_at: nil)
                       .order(:auth_token_updated_at)
-                      .first
 
-    @user.present? && first_admin == @user && !completed? && (Topic.count < 15)
+    @user.present? && first_admin.first == @user && !completed? && (Topic.count < 15)
+  end
+
+  def self.user_requires_completion?(user)
+    Wizard::Builder.new(user).build.requires_completion?
   end
 
 end
