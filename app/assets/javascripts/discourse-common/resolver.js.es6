@@ -120,6 +120,10 @@ export function buildResolver(baseName) {
       return this.customResolve(parsedName) || this._super(parsedName);
     },
 
+    resolveService(parsedName) {
+      return this.customResolve(parsedName) || this._super(parsedName);
+    },
+
     resolveRoute(parsedName) {
       return this.findLoadingRoute(parsedName) || this.customResolve(parsedName) || this._super(parsedName);
     },
