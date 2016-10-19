@@ -47,12 +47,33 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
 
     super
     @htmlentities = HTMLEntities.new
-    @client = Mysql2::Client.new(
-      host: DB_HOST,
-      username: DB_USER,
-      password: DB_PW,
-      database: DB_NAME
-    )
+    begin
+      @client = Mysql2::Client.new(
+        host: DB_HOST,
+        username: DB_USER,
+        password: DB_PW,
+        database: DB_NAME
+      )
+    rescue
+      puts '='*50
+      puts <<EOM
+Cannot log in to database.
+
+You should set these variables:
+
+export DB_HOST="localhost"
+export DB_NAME="mylittleforum"
+export DB_PW=""
+export DB_USER="root"
+export TABLE_PREFIX="forum_"
+export IMPORT_AFTER="1970-01-01"
+export IMAGE_BASE="http://www.example.com/forum"
+export BASE="forum"
+
+Exiting.
+EOM
+      exit
+    end
   end
 
   def execute
