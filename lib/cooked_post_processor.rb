@@ -60,16 +60,8 @@ class CookedPostProcessor
   def keep_reverse_index_up_to_date
     upload_ids = Set.new
 
-    @doc.css("a[href]").each do |a|
-      href = a["href"].to_s
-      if upload = Upload.get_from_url(href)
-        upload_ids << upload.id
-      end
-    end
-
-    @doc.css("img[src]").each do |img|
-      src = img["src"].to_s
-      if upload = Upload.get_from_url(src)
+    @doc.css("a/@href", "img/@src").each do |media|
+      if upload = Upload.get_from_url(media.value)
         upload_ids << upload.id
       end
     end
