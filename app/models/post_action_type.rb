@@ -40,7 +40,7 @@ class PostActionType < ActiveRecord::Base
     end
 
     def flag_types
-      @flag_types ||= types.only(:off_topic, :spam, :inappropriate, :notify_user, :notify_moderators)
+      @flag_types ||= types.only(:off_topic, :spam, :inappropriate, :notify_moderators)
     end
 
     # flags resulting in mod notifications
