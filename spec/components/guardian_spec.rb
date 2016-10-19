@@ -248,6 +248,9 @@ describe Guardian do
       expect(guardian.can_see_post_actors?(topic, PostActionType.types[:off_topic])).to be_falsey
       expect(guardian.can_see_post_actors?(topic, PostActionType.types[:spam])).to be_falsey
       expect(guardian.can_see_post_actors?(topic, PostActionType.types[:vote])).to be_truthy
+      expect(guardian.can_see_post_actors?(topic, PostActionType.types[:notify_user])).to be_falsey
+
+      expect(Guardian.new(moderator).can_see_post_actors?(topic, PostActionType.types[:notify_user])).to be_truthy
     end
 
     it 'returns false for private votes' do

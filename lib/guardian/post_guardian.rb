@@ -55,7 +55,10 @@ module PostGuardian
     return false unless topic
 
     type_symbol = PostActionType.types[post_action_type_id]
+
     return false if type_symbol == :bookmark
+    return false if type_symbol == :notify_user && !is_moderator?
+
     return can_see_flags?(topic) if PostActionType.is_flag?(type_symbol)
 
     if type_symbol == :vote
