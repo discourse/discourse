@@ -1,33 +1,8 @@
-{{#unless hidden}}
-  {{#if expanded}}
-    <nav id='topic-progress-expanded'>
-      {{d-button action="jumpTop"
-                 disabled=jumpTopDisabled
-                 class="full no-text"
-                 icon="caret-up"
-                 label="topic.progress.go_top"}}
-      {{#unless capabilities.isIOS}}
-        <div class='jump-form'>
-          {{input value=toPostIndex}}
-          {{d-button action="jumpPost" label="topic.progress.go"}}
-        </div>
-      {{else}}
-        {{d-button action="jumpPrompt" class="full jump-prompt" label="topic.progress.jump_prompt"}}
-      {{/unless}}
-
-      {{d-button action="jumpBottom"
-                 disabled=jumpBottomDisabled
-                 class="full no-text jump-bottom"
-                 icon="caret-down"
-                 label="topic.progress.go_bottom"}}
-    </nav>
-  {{/if}}
-  <nav id='topic-progress' title="{{i18n 'topic.progress.title'}}" class="{{if hideProgress 'hidden'}}">
-    <div class='nums'>
-      <h4>{{progressPosition}}</h4><span class="{{if hugeNumberOfPosts 'hidden'}}">
-      <span>/</span>
-      <h4>{{postStream.filteredPostsCount}}</h4></span>
-    </div>
-    <i class="fa {{unless expanded 'fa-sort'}}"></i>
-  </nav>
-{{/unless}}
+<nav id='topic-progress' title="{{i18n 'topic.progress.title'}}" class="{{if hideProgress 'hidden'}}">
+  <div class='nums'>
+    <h4>{{progressPosition}}</h4><span class="{{if hugeNumberOfPosts 'hidden'}}">
+    <span>/</span>
+    <h4>{{postStream.filteredPostsCount}}</h4></span>
+  </div>
+  <i class="fa {{unless expanded 'fa-sort'}}"></i>
+</nav>

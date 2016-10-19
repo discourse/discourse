@@ -2,14 +2,6 @@
   width: 900px;
 }
 
-.composer-open {
-  .topic-timeline {
-    opacity: 0;
-    pointer-events: none;
-    cursor: default;
-  }
-}
-
 .timeline-container {
   box-sizing: border-box;
   z-index: 499;
@@ -35,6 +27,31 @@
       pointer-events: none;
       cursor: default;
     }
+  }
+
+  &.timeline-fullscreen.show {
+    max-height: 700px;
+    transition: max-height 0.4s ease-out;
+  }
+
+  &.timeline-fullscreen {
+    max-height: 0;
+    transition: max-height 0.3s ease-in;
+    position: fixed;
+    margin-left: 0;
+    background-color: $secondary;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    border-top: 1px solid dark-light-choose(scale-color($primary, $lightness: 90%), scale-color($secondary, $lightness: 90%));
+    padding-top: 15px;
+    z-index: 100000;
+    .topic-timeline {
+      width: auto;
+      margin-left: 1.5em;
+      margin-right: 1.5em;
+    }
+
   }
 
   .topic-timeline {

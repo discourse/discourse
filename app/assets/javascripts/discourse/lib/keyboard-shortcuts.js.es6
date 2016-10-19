@@ -4,7 +4,7 @@ import { scrollTopFor } from 'discourse/lib/offset-calculator';
 
 const bindings = {
   '!':               {postAction: 'showFlags'},
-  '#':               {handler: 'toggleProgress', anonymous: true},
+  '#':               {handler: 'goToPost', anonymous: true},
   '/':               {handler: 'toggleSearch', anonymous: true},
   '=':               {handler: 'toggleHamburgerMenu', anonymous: true},
   '?':               {handler: 'showHelpModal', anonymous: true},
@@ -170,8 +170,8 @@ export default {
     this.container.lookup('controller:topic').togglePinnedState();
   },
 
-  toggleProgress() {
-    this.appEvents.trigger('topic-progress:keyboard-trigger', { type: 'jump' });
+  goToPost() {
+    this.appEvents.trigger('topic:keyboard-trigger', { type: 'jump' });
   },
 
   toggleSearch(event) {

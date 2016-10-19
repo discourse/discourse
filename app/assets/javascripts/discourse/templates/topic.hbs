@@ -66,17 +66,26 @@
     <div class='selected-posts {{unless multiSelect 'hidden'}}'>
       {{partial "selected-posts"}}
     </div>
-    {{#topic-navigation as |info|}}
-      {{#if info.renderTimeline}}
-        {{topic-timeline topic=model
-                         enteredIndex=enteredIndex
-                         loading=model.postStream.loading
-                         delegated=topicDelegated}}
-      {{else}}
+
+    {{#topic-navigation jumpToIndex="jumpToIndex" as |info|}}
+
+      {{#if info.renderAdminMenuButton}}
         {{topic-admin-menu-button topic=model fixed="true" delegated=topicDelegated}}
       {{/if}}
 
-      {{topic-progress topic=model delegated=topicDelegated showTimeline=info.showTimeline}}
+      {{#if info.renderTimeline}}
+        {{topic-timeline topic=model
+                         prevEvent=info.prevEvent
+                         fullscreen=info.topicProgressExpanded
+                         enteredIndex=enteredIndex
+                         loading=model.postStream.loading
+                         delegated=topicDelegated}}
+
+      {{else}}
+        {{topic-progress prevEvent=info.prevEvent topic=model delegated=topicDelegated expanded=info.topicProgressExpanded}}
+      {{/if}}
+
+
     {{/topic-navigation}}
 
     <div class="row">
