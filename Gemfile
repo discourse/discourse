@@ -122,26 +122,26 @@ end
 group :test do
   gem 'fakeweb', '~> 1.3.0', require: false
   gem 'minitest', require: false
-end
-
-group :test, :development do
+  gem 'timecop'
   gem 'rspec'
   gem 'mock_redis'
-  gem 'listen', '0.7.3', require: false
-  gem 'certified', require: false
-  # later appears to break Fabricate(:topic, category: category)
   gem 'fabrication', '2.9.8', require: false
   gem 'discourse-qunit-rails', require: 'qunit-rails'
   gem 'mocha', require: false
-  gem 'rb-fsevent', require: RUBY_PLATFORM =~ /darwin/i ? 'rb-fsevent' : false
-  gem 'rb-inotify', '~> 0.9', require: RUBY_PLATFORM =~ /linux/i ? 'rb-inotify' : false
-  gem 'rspec-rails', require: false
   gem 'shoulda', require: false
-  gem 'simplecov', require: false
-  gem 'timecop'
-  gem 'rspec-given'
   gem 'rspec-html-matchers'
   gem 'spork-rails'
+  gem 'rspec-given'
+  gem 'rspec-rails', require: false
+end
+
+group :test, :development do
+  gem 'listen', '0.7.3', require: false
+  gem 'certified', require: false
+  # later appears to break Fabricate(:topic, category: category)
+  gem 'rb-fsevent', require: RUBY_PLATFORM =~ /darwin/i ? 'rb-fsevent' : false
+  gem 'rb-inotify', '~> 0.9', require: RUBY_PLATFORM =~ /linux/i ? 'rb-inotify' : false
+  gem 'simplecov', require: false
   gem 'pry-nav'
   gem 'byebug', require: ENV['RM_INFO'].nil?
 end
