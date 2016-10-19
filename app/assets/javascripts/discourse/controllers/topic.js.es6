@@ -670,6 +670,8 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
       return;
     }
 
+    this.appEvents.trigger('topic:jump-to-post', postId);
+
     const topic = this.get('model');
     const postStream = topic.get('postStream');
     const post = postStream.findLoadedPost(postId);

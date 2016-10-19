@@ -2,6 +2,7 @@ import { createWidget } from 'discourse/widgets/widget';
 import { h } from 'virtual-dom';
 import { relativeAge } from 'discourse/lib/formatter';
 import { iconNode } from 'discourse/helpers/fa-icon-node';
+import RawHtml from 'discourse/widgets/raw-html';
 
 const SCROLLAREA_HEIGHT = 300;
 const SCROLLER_HEIGHT = 50;
@@ -182,6 +183,13 @@ createWidget('timeline-scrollarea', {
 createWidget('topic-timeline-container', {
   tagName: 'div.timeline-container',
   buildClasses(attrs) {
+    if (attrs.fullScreen) {
+      if (attrs.addShowClass) {
+        return 'timeline-fullscreen show';
+      } else {
+        return 'timeline-fullscreen';
+      }
+    }
     if (attrs.dockAt) {
       const result = ['timeline-docked'];
       if (attrs.dockBottom) {
@@ -192,7 +200,9 @@ createWidget('topic-timeline-container', {
   },
 
   buildAttributes(attrs) {
-    return { style: `top: ${attrs.top}px` };
+    if (attrs.top) {
+      return { style: `top: ${attrs.top}px` };
+    }
   },
 
   html(attrs) {
@@ -209,9 +219,15 @@ export default createWidget('topic-timeline', {
     const stream = attrs.topic.get('postStream.stream');
     const { currentUser } = this;
 
-
     let result = [];
-    if (currentUser && currentUser.get('canManageTopic')) {
+
+    if (attrs.mobileView) {
+      const titleHTML = new RawHtml({ html: `<span>${topic.get('fancyTitle')}</span>` });
+      result.push(h('h3.title', titleHTML));
+    }
+
+
+    if (!attrs.fullScreen && currentUser && currentUser.get('canManageTopic')) {
       result.push(h('div.timeline-controls', this.attach('topic-admin-menu-button', { topic })));
     }
 
@@ -234,7 +250,7 @@ export default createWidget('topic-timeline', {
 
     if (currentUser) {
       const controls = [];
-      if (attrs.topic.get('details.can_create_post')) {
+      if (!attrs.fullScreen && attrs.topic.get('details.can_create_post')) {
         controls.push(this.attach('button', {
           className: 'btn create',
           icon: 'reply',
@@ -243,7 +259,7 @@ export default createWidget('topic-timeline', {
         }));
       }
 
-      if (currentUser) {
+      if (currentUser && !attrs.fullScreen) {
         controls.push(this.attach('topic-notifications-button', { topic }));
       }
       result.push(h('div.timeline-footer-controls', controls));
