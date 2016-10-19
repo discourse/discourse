@@ -73,6 +73,6 @@ export default Ember.Controller.extend(ModalFunctionality, {
       let diff = Math.round((new Date() - closeDate)/(1000*60*60));
       return I18n.t('topic.auto_close_immediate', {count: diff});
     }
-  }.property('model.details.auto_close_based_on_last_post', 'model.auto_close_time')
+  }.property('model.details.auto_close_based_on_last_post', 'model.last_posted_at')
 
 });
