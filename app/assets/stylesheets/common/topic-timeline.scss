@@ -46,6 +46,9 @@
     border-top: 1px solid dark-light-choose(scale-color($primary, $lightness: 90%), scale-color($secondary, $lightness: 90%));
     padding-top: 15px;
     z-index: 100000;
+    .timeline-scrollarea {
+      max-width: 200px;
+    }
     .topic-timeline {
       width: auto;
       margin-left: 1.5em;
