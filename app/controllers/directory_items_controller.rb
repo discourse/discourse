@@ -44,8 +44,7 @@ class DirectoryItemsController < ApplicationController
       end
     end
 
-    result = result.order('users.username')
-    result_count = result.dup.count
+    result_count = result.count
     result = result.limit(PAGE_SIZE).offset(PAGE_SIZE * page).to_a
 
     more_params = params.slice(:period, :order, :asc)
