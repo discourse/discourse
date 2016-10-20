@@ -94,7 +94,7 @@ class AdminDashboardData
                       :ram_check, :google_oauth2_config_check,
                       :facebook_config_check, :twitter_config_check,
                       :github_config_check, :s3_config_check, :image_magick_check,
-                      :failing_emails_check, :send_consumer_email_check,
+                      :failing_emails_check,
                       :subfolder_ends_in_slash_check,
                       :pop3_polling_configuration, :email_polling_errored_recently
 
@@ -212,10 +212,6 @@ class AdminDashboardData
   def failing_emails_check
     num_failed_jobs = Jobs.num_email_retry_jobs
     I18n.t('dashboard.failing_emails_warning', num_failed_jobs: num_failed_jobs) if num_failed_jobs > 0
-  end
-
-  def send_consumer_email_check
-    I18n.t('dashboard.consumer_email_warning') if Rails.env.production? and ActionMailer::Base.smtp_settings[:address] =~ /gmail\.com|live\.com|yahoo\.com/
   end
 
   def subfolder_ends_in_slash_check
