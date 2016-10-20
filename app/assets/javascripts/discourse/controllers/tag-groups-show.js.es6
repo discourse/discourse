@@ -1,5 +1,5 @@
 export default Ember.Controller.extend({
-  needs: ['tagGroups'],
+  tagGroups: Ember.inject.controller(),
 
   actions: {
     save() {
@@ -7,17 +7,16 @@ export default Ember.Controller.extend({
     },
 
     destroy() {
-      const self = this;
       return bootbox.confirm(
         I18n.t("tagging.groups.confirm_delete"),
         I18n.t("no_value"),
         I18n.t("yes_value"),
-        function(destroy) {
+        destroy => {
           if (destroy) {
-            const c = self.controllerFor('tagGroups');
-            return self.get('model').destroy().then(function() {
-              c.removeObject(self.get('model'));
-              self.transitionToRoute('tagGroups');
+            const c = this.get('tagGroups.model');
+            return this.get('model').destroy().then(() => {
+              c.removeObject(this.get('model'));
+              this.transitionToRoute('tagGroups');
             });
           }
         }

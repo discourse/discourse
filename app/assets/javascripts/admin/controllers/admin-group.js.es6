@@ -4,7 +4,7 @@ import { escapeExpression } from 'discourse/lib/utilities';
 import computed from 'ember-addons/ember-computed-decorators';
 
 export default Ember.Controller.extend({
-  needs: ['adminGroupsType'],
+  adminGroupsType: Ember.inject.controller(),
   disableSave: false,
   savingStatus: '',
 
@@ -131,13 +131,13 @@ export default Ember.Controller.extend({
 
     save() {
       const group = this.get('model'),
-            groupsController = this.get("controllers.adminGroupsType"),
+            groupsController = this.get("adminGroupsType"),
             groupType = groupsController.get("type");
 
       this.set('disableSave', true);
       this.set('savingStatus', I18n.t('saving'));
 
-      let promise = group.get("id") ? group.save() : group.create().then(() => groupsController.addObject(group));
+      let promise = group.get("id") ? group.save() : group.create().then(() => groupsController.get('model').addObject(group));
 
       promise.then(() => {
         this.transitionToRoute("adminGroup", groupType, group.get('name'));
@@ -148,7 +148,7 @@ export default Ember.Controller.extend({
 
     destroy() {
       const group = this.get('model'),
-            groupsController = this.get('controllers.adminGroupsType'),
+            groupsController = this.get('adminGroupsType'),
             self = this;
 
       if (!group.get('id')) {

@@ -17,7 +17,7 @@ addBulkButton('unlistTopics', 'unlist_topics');
 addBulkButton('showTagTopics', 'change_tags');
 
 // Modal for performing bulk actions on topics
-export default Ember.ArrayController.extend(ModalFunctionality, {
+export default Ember.Controller.extend(ModalFunctionality, {
   tags: null,
   buttonRows: null,
 

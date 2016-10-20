@@ -15,7 +15,7 @@ export default Discourse.Route.extend({
   _processLogMessage(log) {
     if (log.message === "[STARTED]") {
       this.controllerFor("adminBackups").set("model.isOperationRunning", true);
-      this.controllerFor("adminBackupsLogs").clear();
+      this.controllerFor("adminBackupsLogs").get('logs').clear();
     } else if (log.message === "[FAILED]") {
       this.controllerFor("adminBackups").set("model.isOperationRunning", false);
       bootbox.alert(I18n.t("admin.backups.operations.failed", { operation: log.operation }));
@@ -27,7 +27,7 @@ export default Discourse.Route.extend({
         window.location.pathname = Discourse.getURL("/");
       }
     } else {
-      this.controllerFor("adminBackupsLogs").pushObject(Em.Object.create(log));
+      this.controllerFor("adminBackupsLogs").get('logs').pushObject(Em.Object.create(log));
     }
   },
 
