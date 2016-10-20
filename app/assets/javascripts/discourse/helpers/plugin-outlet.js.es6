@@ -23,24 +23,15 @@
 
    Will insert <b>Hello World</b> at that point in the template.
 
-   Optionally you can also define a view class for the outlet as:
-
-   plugins/hello/assets/javascripts/discourse/views/connectors/evil-trout/hello.js.es6
-
-   And it will be wired up automatically.
-
    ## Disabling
 
    If a plugin returns a disabled status, the outlets will not be wired up for it.
    The list of disabled plugins is returned via the `Site` singleton.
 
 **/
-import { registerHelper } from 'discourse-common/lib/helpers';
-
-let _connectorCache, _rawCache;
+let _connectorCache, _rawCache, _templateCache;
 
 function findOutlets(collection, callback) {
-
   const disabledPlugins = Discourse.Site.currentProp('disabled_plugins') || [];
 
   Object.keys(collection).forEach(function(res) {
@@ -62,6 +53,7 @@ function findOutlets(collection, callback) {
 }
 
 export function clearCache() {
+  _templateCache = null;
   _connectorCache = null;
   _rawCache = null;
 }
@@ -69,57 +61,32 @@ export function clearCache() {
 function buildConnectorCache() {
   _connectorCache = {};
   _rawCache = {};
-
-  const uniqueViews = {};
-  findOutlets(requirejs._eak_seen, function(outletName, resource, uniqueName) {
-    _connectorCache[outletName] = _connectorCache[outletName] || [];
-
-    const viewClass = require(resource, null, null, true).default;
-    uniqueViews[uniqueName] = viewClass;
-    _connectorCache[outletName].pushObject(viewClass);
-  });
+  _templateCache = [];
 
   findOutlets(Ember.TEMPLATES, function(outletName, resource, uniqueName) {
-    const mixin = {templateName: resource.replace('javascripts/', '')};
-    let viewClass = uniqueViews[uniqueName];
-
-    if (viewClass) {
-      // We are going to add it back with the proper template
-      _connectorCache[outletName] = _connectorCache[outletName] || [];
-      _connectorCache[outletName].removeObject(viewClass);
-    } else {
-      if (!/\.raw$/.test(uniqueName)) {
-        viewClass = Ember.View.extend({ classNames: [outletName + '-outlet', uniqueName] });
-      }
-    }
-
-    if (viewClass) {
-      _connectorCache[outletName] = _connectorCache[outletName] || [];
-      _connectorCache[outletName].pushObject(viewClass.extend(mixin));
-    } else {
-      // we have a raw template
+    if (/\.raw$/.test(uniqueName)) {
       if (!_rawCache[outletName]) {
         _rawCache[outletName] = [];
       }
-
       _rawCache[outletName].push(Ember.TEMPLATES[resource]);
+    } else {
+      _connectorCache[outletName] = _connectorCache[outletName] || [];
+
+      _connectorCache[outletName].push({
+        templateName: resource.replace('javascripts/', ''),
+        template: Ember.TEMPLATES[resource],
+        classNames: `${outletName}-outlet ${uniqueName}`
+      });
     }
   });
 
-}
-
-var _viewInjections;
-function viewInjections(container) {
-  if (_viewInjections) { return _viewInjections; }
-
-  const injections = container._registry.getTypeInjections('view');
-
-  _viewInjections = {};
-  injections.forEach(function(i) {
-    _viewInjections[i.property] = container.lookup(i.fullName);
+  Object.keys(_connectorCache).forEach(outletName => {
+    const connector = _connectorCache[outletName];
+    (connector || []).forEach(s => {
+      _templateCache.push(s.template);
+      s.templateId = parseInt(_templateCache.length - 1);
+    });
   });
-
-  return _viewInjections;
 }
 
 // unbound version of outlets, only has a template
@@ -136,41 +103,50 @@ Handlebars.registerHelper('plugin-outlet', function(name) {
 
     return new Handlebars.SafeString(output.join(""));
   }
-
 });
 
-registerHelper('plugin-outlet', function([connectionName], hash, options, env) {
-  if (!_connectorCache) { buildConnectorCache(); }
+const { registerKeyword } = Ember.__loader.require("ember-htmlbars/keywords");
+const { internal } = Ember.__loader.require('htmlbars-runtime');
 
-  if (_connectorCache[connectionName]) {
-    const childViews = _connectorCache[connectionName];
+registerKeyword('plugin-outlet', {
+  setupState(state, env, scope, params) {
+    if (!_connectorCache) { buildConnectorCache(); }
+    return { outletName: env.hooks.getValue(params[0]) };
+  },
 
-    // If there is more than one view, create a container. Otherwise
-    // just shove it in.
-    const viewClass = (childViews.length > 1) ? Ember.ContainerView : childViews[0];
+  render(renderNode, env, scope, params, hash, template, inverse, visitor) {
+    let state = renderNode.getState();
+    if (!state.outletName) { return true; }
+    const connector = _connectorCache[state.outletName];
+    if (!connector || connector.length === 0) { return true; }
 
-    // TODO: Figure out how to do this without a container view
-    if (env) {
-      const newHash = $.extend({}, viewInjections(env.data.view.container));
-      if (hash.tagName) { newHash.tagName = hash.tagName; }
+    const listTemplate = Ember.TEMPLATES['outlet-list'];
+    listTemplate.raw.locals = ['templateId', 'outletClasses', 'tagName'];
 
-      // we don't need the default template since we have a connector
-      delete options.fn;
-      delete options.template;
-      env.helpers.view.helperFunction.call(this, [viewClass], newHash, options, env);
-
-      const cvs = env.data.view._childViews;
-      if (childViews.length > 1 && cvs && cvs.length) {
-        const inserted = cvs[cvs.length-1];
-        if (inserted) {
-          childViews.forEach(function(cv) {
-            inserted.pushObject(cv.create());
-          });
-        }
-      }
-    }
+    internal.hostBlock(renderNode, env, scope, listTemplate.raw, null, null, visitor, function(options) {
+      connector.forEach(source => {
+        const tid = source.templateId;
+        options.templates.template.yieldItem(`d-outlet-${tid}`, [
+          tid,
+          source.classNames,
+          hash.tagName || 'div'
+        ]);
+      });
+    });
+    return true;
   }
 });
 
-// No longer used
-export function rewire() { }
+registerKeyword('connector', function(morph, env, scope, params, hash, template, inverse, visitor) {
+  template = _templateCache[parseInt(env.hooks.getValue(hash.templateId))];
+
+  env.hooks.component(morph,
+      env,
+      scope,
+      'connector-container',
+      params,
+      hash,
+      { default: template.raw, inverse },
+      visitor);
+  return true;
+});
