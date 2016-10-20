@@ -1,5 +1,6 @@
 import computed from 'ember-addons/ember-computed-decorators';
 import { fmt } from 'discourse/lib/computed';
+import { numberToDelimited } from 'discourse/lib/formatter';
 
 export default Ember.Object.extend({
   tagName: "td",
@@ -16,7 +17,7 @@ export default Ember.Object.extend({
 
   @computed("topic.replyCount", "ratioText")
   title(count, ratio) {
-    return I18n.messageFormat('posts_likes_MF', { count, ratio }).trim();
+    return numberToDelimited(I18n.messageFormat('posts_likes_MF', { count, ratio }).trim());
   },
 
   @computed("ratio")

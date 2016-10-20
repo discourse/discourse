@@ -266,6 +266,18 @@ export function number(val) {
   return val.toString();
 }
 
+export function numberToDelimited(value) {
+  // Adapted from http://stackoverflow.com/a/2901298
+  return value.toString().replace(/\b(\d+\.?\d*)\b/g, num => {
+    let parts = num.split(".");
+    let fractionalDigits = parts[1];
+    let result = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+
+    if (fractionalDigits) result = `${result}.${fractionalDigits}`;
+    return result;
+  });
+}
+
 export function ensureJSON(json) {
   return typeof json === 'string' ? JSON.parse(json) : json;
 }
