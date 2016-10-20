@@ -1087,7 +1087,6 @@ nl:
       title: "zoek naar topics, berichten, gebruikers of categorieën"
       no_results: "Geen resultaten gevonden."
       no_more_results: "Geen resultaten meer gevonden."
-      search_help: Zoek in help
       searching: "Zoeken..."
       post_format: "#{{post_number}} door {{username}}"
       context:
@@ -1866,8 +1865,6 @@ nl:
       readonly: "Bekijk"
     lightbox:
       download: "download"
-    search_help:
-      title: 'Zoek in help'
     keyboard_shortcuts_help:
       title: 'Sneltoetsen'
       jump_to:

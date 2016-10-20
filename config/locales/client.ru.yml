@@ -1087,7 +1087,6 @@ ru:
       title: "Поиск по темам, сообщениям, псевдонимам и разделам"
       no_results: "Ничего не найдено."
       no_more_results: "Больше ничего не найдено."
-      search_help: Справка по поиску
       searching: "Поиск ..."
       post_format: "#{{post_number}} от {{username}}"
       context:

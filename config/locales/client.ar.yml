@@ -726,17 +726,17 @@ ar:
         first_time: "أول إعجاب بالمشاركة"
         never: "أبدا"
       email_previous_replies:
-        title: "تضمين مشاركات سابقة في أسفل البريد المرسل"
-        unless_emailed: "الا اذا تم ارساله موخراً"
-        always: "دائماً"
-        never: "ابداً"
+        title: "ضمّن الردود السابقة أسفل البُرد الإلكترونية"
+        unless_emailed: "في حال لم تُرسل"
+        always: "دائما"
+        never: "أبدا"
       email_digests:
-        title: "إرسال رسالة إلكترونية تحتوي على جديد الموقع عندما لا أزور الموقع"
-        every_30_minutes: "بعد 30 دقيقه"
-        every_hour: "كل ساعه "
-        daily: "يومي"
+        title: "إن لم أزر الموقع، أرسل إلي بريدا إلكترونيا يلخص المواضيع والردود الشعبية"
+        every_30_minutes: "كل 30 دقيقة"
+        every_hour: "كل ساعة"
+        daily: "يوميا"
         every_three_days: "كل ثلاثة أيام"
-        weekly: "اسبوعي"
+        weekly: "أسبوعيا"
         every_two_weeks: "كل أسبوعين"
       include_tl0_in_digests: "ارفق المشاركات للاعضاء الجدد في ملخص المراسلات"
       email_in_reply_to: "ارفق مقتبسات الرد على المنشور في رسائل البريد"
@@ -1022,7 +1022,7 @@ ar:
         post_missing: "لا يمكن للمشاركة أن تكون خالية"
         post_length: "التعليق يجب أن يكون أكثر  {{min}} حرف"
         try_like: 'هل جربت زر <i class="fa fa-heart"></i> ؟'
-        category_missing: "يجب عليك اختيارتصنيف"
+        category_missing: "عليك اختيار فئة"
       save_edit: "حفظ التحرير"
       reply_original: "التعليق على الموضوع الاصلي"
       reply_here: "الرد هنا"
@@ -1161,7 +1161,6 @@ ar:
       title: "ابحث في المواضيع أو المشاركات أو المستخدمين أو الفئات"
       no_results: "لا نتائج."
       no_more_results: "لا نتائج أخرى."
-      search_help: بحث عن المساعدة
       searching: "يبحث..."
       post_format: "#{{post_number}} بواسطة {{username}}"
       context:
@@ -1266,7 +1265,7 @@ ar:
         title: "فشل تحميل الموضوع"
         description: "آسفون، تعذر علينا تحميل هذا الموضوع، قد يرجع ذلك إلى مشكلة بالاتصال. من فضلك حاول مجددا. أخبرنا بالمشكلة إن استمر حدوثها."
       not_found:
-        title: "لم يتم العثور على الموضوع"
+        title: "لم يوجد الموضوع"
         description: "آسفون، لم نجد هذا الموضوع. ربما أزاله أحد المشرفين؟"
       total_unread_posts:
         zero: "لا مشاركات غير مقروءة في هذا الموضوع"
@@ -1296,18 +1295,18 @@ ar:
         few: "هناك {{count}} إعجابات في هذا الموضوع"
         many: "هناك {{count}} إعجابا في هذا الموضوع"
         other: "هناك {{count}} إعجاب في هذا الموضوع"
-      back_to_list: "العودة لقائمة المواضيع"
+      back_to_list: "عُد إلى قائمة المواضيع"
       options: "خيارات الموضوع"
-      show_links: "إظهار الروابط في هذا الموضوع"
-      toggle_information: "إظهار/إخفاء تفاصيل الموضوع"
+      show_links: "أظهر الوصلات في الموضوع"
+      toggle_information: "أظهر/أخف تفاصيل الموضوع"
       read_more_in_category: "أتريد قراءة المزيد؟ تصفح المواضيع الأخرى في {{catLink}} أو {{latestLink}}."
       read_more: "أتريد قراءة المزيد؟ {{catLink}} أو {{latestLink}}."
       read_more_MF: "{UNREAD, plural, zero {} one {تبقى {BOTH, select, true {<a href='/unread'>موضوع واحد غير مقروء</a> و} false {<a href='/unread'>موضوع واحد غير مقروء</a>} other {}}} two {تبقى {BOTH, select, true {<a href='/unread'>موضوعان غير مقروءان</a> و} false {<a href='/unread'>موضوعان غير مقروءان</a>} other {}}} few {تبقت {BOTH, select, true {<a href='/unread'># مواضيع غير مقروءة</a> و} false {<a href='/unread'># مواضيع غير مقروءة</a>} other {}}} many {تبقى {BOTH, select, true {<a href='/unread'># موضوعا غير مقروء</a> و} false {<a href='/unread'># موضوعا غير مقروء</a>} other {}}} other {تبقى {BOTH, select, true {<a href='/unread'># موضوع غير مقروء</a> و} false {<a href='/unread'># موضوع غير مقروء</a>} other {}}}}{NEW, plural, zero {} one {{UNREAD, plural, zero {تبقى } one {} two {} few {} many {} other {}}<a href='/new'>موضوع واحد جديد</a>} two {{UNREAD, plural, zero {تبقى } one {} two {} few {} many {} other {}}<a href='/new'>موضوعان جديدان</a>} few {{UNREAD, plural, zero {تبقت } one {} two {} few {} many {} other {}}<a href='/new'># مواضيع جديدة</a>} many {{UNREAD, plural, zero {تبقى } one {} two {} few {} many {} other {}}<a href='/new'># موضوعا جديدا</a>} other {{UNREAD, plural, zero {تبقى } one {} two {} few {} many {} other {}}<a href='/new'># موضوع جديد</a>}}، أو {CATEGORY, select, true {تصفّح المواضيع الأخرى في {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: تصفّح كل الفئات
       view_latest_topics: اعرض أحدث المواضيع
       suggest_create_topic: لمَ لا تكتب موضوعًا؟
-      jump_reply_up: الذهاب إلى أول رد
-      jump_reply_down: الذهاب إلى آخر رد
+      jump_reply_up: انتقل إلى أول رد
+      jump_reply_down: انتقل إلى آخر رد
       deleted: "الموضوع محذوف"
       auto_close_notice: "سيُغلق الموضوع آليا %{timeLeft}."
       auto_close_notice_based_on_last_post: "سيُغلق الموضوع بعد %{duration} من آخر رد."
@@ -1409,7 +1408,7 @@ ar:
         success_message: 'تم الإبلاغ عن الموضوع'
       feature_topic:
         title: "ترشيح هذا الموضوع"
-        pin: "جعل هذا الموضوع يظهر في أعلى فئة {{categoryLink}} حتى "
+        pin: "اجعل هذا الموضوع يظهر أعلى فئة {{categoryLink}} حتى"
         confirm_pin: "لديك مسبقاً {{count}} مواضيع معلقة. قد تكون كثرة المواضيع المعلقة عبئاً على لمستخدمين الجدد والزوار. هل أنت متأكد أنك تريد تعليق موضوع آخر في هذه الفئة؟"
         unpin: "أزل هذا الموضوع من أعلى فئة \"{{categoryLink}}\"."
         unpin_until: "أزل هذا الموضوع من أعلى فئة \"{{categoryLink}}\" أو انتظر حتى <strong>%{until}</strong>."
@@ -1617,7 +1616,7 @@ ar:
       via_auto_generated_email: "هذه المشاركة وصلت عبر بريد الكتروني منشىء تلقائياً"
       whisper: "هذه المشاركة همسة خاصة للمشرفين"
       wiki:
-        about: "هذه المشاركة تعتبر ويكي."
+        about: "هذه مشاركة ويكي"
       archetypes:
         save: 'حفظ الخيارات'
       few_likes_left: "نشكرك على مشاركة حبّك! تبقّت لديك بضعة إعجابات لليوم فقط."
@@ -1644,8 +1643,8 @@ ar:
           yes_value: "نعم، احذف الردود أيضا"
           no_value: "لا، المشاركة فحسب"
         admin: "عمليات المدير"
-        wiki: "تحويلها إلى ويكي"
-        unwiki: "إيقاف وضعية الويكي"
+        wiki: "اجعلها ويكي"
+        unwiki: "أزلها من الويكي"
         convert_to_moderator: "إضافة لون للموظف"
         revert_to_regular: "حذف اللون الوظيفي"
         rebake: "إعادة بناء HTML"
@@ -1960,7 +1959,7 @@ ar:
       bookmarked:
         help: "قمت بتفضيل  هذا الموضوع"
       locked:
-        help: "هذا الموضوع مغلق, لن يتم قبول اي رد "
+        help: "هذا الموضوع مغلق ولم يعد يستقبل ردودا"
       archived:
         help: "هذا الموضوع مؤرشف، لذا فهو مجمّد ولا يمكن تعديله"
       locked_and_archived:
@@ -2126,8 +2125,6 @@ ar:
       readonly: "مشاهدة"
     lightbox:
       download: "تحميل"
-    search_help:
-      title: 'مساعدة البحث'
     keyboard_shortcuts_help:
       title: 'اختصارات لوحة المفاتيح'
       jump_to:
@@ -2216,25 +2213,25 @@ ar:
       </p>
     tagging:
       all_tags: "كل الوسوم"
-      selector_all_tags: "كل العلامات الوصفية"
+      selector_all_tags: "كل الوسوم"
       selector_no_tags: "لا وسوم"
-      changed: "العلامات الوصفية تم تغييرها:"
+      changed: "الوسوم المعدلة:"
       tags: "الوسوم"
-      choose_for_topic: "اختر علامات وصفية جديدة لهذه الموضوع"
-      delete_tag: "حذف العلامة الوصفية"
+      choose_for_topic: "اختر (إن أردت) وسوما لهذا الموضوع"
+      delete_tag: "احذف الوسم"
       delete_confirm: "أمتأكد من حذف هذا الوسم؟"
-      rename_tag: "اعادة تسمية العلامة الوصفية"
-      rename_instructions: "اختر اسم جديد للعلامة الوصفية:"
+      rename_tag: "أعد تسمية الوسم"
+      rename_instructions: "اختر اسما جديدا للوسم:"
       sort_by: "افرز ب‍:"
       sort_by_count: "العدد"
       sort_by_name: "الاسم"
-      manage_groups: "تنظيم مجموعات العلامة الوصفية"
-      manage_groups_description: "حدد المجموعات لتنظيم العلامات الوصفية"
+      manage_groups: "أدر مجموعات الوسوم"
+      manage_groups_description: "اصنع مجموعات لتنظيم الوسوم"
       filters:
-        without_category: "%{filter} %{category} مواضيع"
-        with_category: "%{filter} %{category} مواضيع في"
-        untagged_without_category: "مواضيع غير موسومة %{filter} "
-        untagged_with_category: "%{filter} مواضيع بدون بطاقة فى %{category}"
+        without_category: "مواضيع %{tag} %{filter}"
+        with_category: "مواضيع %{tag} %{filter} في %{category}"
+        untagged_without_category: "مواضيع %{filter} غير الموسومة"
+        untagged_with_category: "مواضيع %{filter} غير الموسومة في %{category}"
       notifications:
         watching:
           title: "مُراقب"
@@ -2263,7 +2260,7 @@ ar:
         new_name: "مجموعة وسوم جديدة"
         save: "حفظ"
         delete: "حذف"
-        confirm_delete: "أمتأكد من حذف هذا الوسم؟"
+        confirm_delete: "أمتأكد من حذف مجموعة الوسوم هذه؟"
       topics:
         none:
           unread: "ليست هناك مواضيع غير مقروءة."
@@ -2289,8 +2286,8 @@ ar:
       custom_message: "اجعل دعوتك اكثر خصوصية  بكتابة"
       custom_message_link: "رسالة مخصصة"
       custom_message_placeholder: "ادخل رسالتك المخصصة"
-      custom_message_template_forum: "اهلا, يمكنك المشاركة في هذا المنتدى!"
-      custom_message_template_topic: "اهلا, اظن انك ستستمتع يهذا الموضوع!"
+      custom_message_template_forum: "مرحبا. عليك الانضمام إلى هذا المنتدى!"
+      custom_message_template_topic: "مرحبا. أظن أن هذا الموضوع سيسعدك!"
   admin_js:
     type_to_filter: "اكتب للتّرشيح..."
     admin:
@@ -2306,7 +2303,7 @@ ar:
         please_upgrade: "من فضلك رقّ البرمجية!"
         no_check_performed: "لم يتم التحقق من التحديثات. اضمن أن sidekiq يعمل."
         stale_data: "لم يتم التحقق من التحديثات مؤخراً. اضمن أن sidekiq يعمل."
-        version_check_pending: "يبدو أنك رُقيت مؤخرا. رائع!"
+        version_check_pending: "يبدو أنك رقّيت الموقع مؤخرا. مذهل!"
         installed_version: "المثبتة"
         latest_version: "الأخيرة"
         problems_found: "يوجد بعض المشاكل عند تثبيت Discourse :"
@@ -2527,10 +2524,10 @@ ar:
           backup:
             label: "أجرِ نسخ احتياطي"
             title: "أنشئ نسخة احتياطية"
-            confirm: "هل تريد انشاء نسخة احتياطية جديدة ؟"
+            confirm: "أتريد إجراء نسخة احتياطية جديدة؟"
             without_uploads: "نعم (لا تضمن الملفات)"
           download:
-            label: "تحميل"
+            label: "نزّل"
             title: "نزل النسخة الاحتياطية"
           destroy:
             title: "أزل النسخة الاحتياطية"
@@ -2597,65 +2594,65 @@ ar:
           revert: "اعاده التغيرات "
           revert_confirm: "هل انت متاكد من انك تريد اعاده التغيرات؟ "
         colors:
-          title: "اللون"
-          long_title: "نمط الألوان"
-          new_name: "نمط ألوان جديد"
+          title: "الألوان"
+          long_title: "مخططات الألوان"
+          new_name: "مخطط ألوان جديد"
           copy_name_prefix: "نسخة من"
-          delete_confirm: "حذف جميع الالوان؟"
+          delete_confirm: "أأحذف مخطط الألوان هذا؟"
           undo: "تراجع"
           undo_title: "التراجع عن تغيير اللن الى اللون السابق"
           revert: "تراجع"
           revert_title: "اعادة ضبط اللون الى اللون الافتراضي للموقع"
           primary:
-            name: 'اساسي'
+            name: 'الأساسي'
           secondary:
-            name: 'ثانوي'
-            description: 'اللون الاساسي للخلفية, والنص للايقونة'
+            name: 'الثانوي'
+            description: 'لون الخلفية الأساسي، ولون نصوص بعض الأزرار.'
           tertiary:
-            name: 'ثلاثي'
-            description: 'الروابط، الأزرار، الإشعارات و أشياء أخرى.'
+            name: 'الثلاثي'
+            description: 'الوصلات، وبعض الأزرار، والإشعارات ولون الإبراز.'
           quaternary:
-            name: "رباعي"
-            description: "الروابط"
+            name: "الرباعي"
+            description: "وصلات التنقل."
           header_background:
-            name: "خلفية رأس الصفحة"
-            description: "لون الخلفية لرأس الصفحة الخاصة بالموقع"
+            name: "خلفية الترويسة"
+            description: "لون خلفية ترويسة الموقع."
           header_primary:
             name: "رأس الصفحة الأساسي"
-            description: "لون و أيقونات رأس الصفحة الخاصة بالموقع."
+            description: "النص والأيقونات في ترويسة الموقع."
           highlight:
-            name: 'تحديد'
-            description: 'لون خلفية النصوص و العناصر المحددة في جسم الصفحة مثل المشاركات و المواضيع.'
+            name: 'الإبراز'
+            description: 'لون خلفية العناصر المُبرزة في الصفحة، كالمشاركات والمواضيع.'
           danger:
-            name: 'خطر'
-            description: 'لون  بعض الأوامر مثل حذف المشاركات و المواضيع'
+            name: 'الخطر'
+            description: 'لون إبراز إجراءات حذف المشاركات والمواضيع (مثلا).'
           success:
-            name: 'نجاح'
+            name: 'النجاح'
             description: 'يستخدم لإظهار نجاح عملية ما.'
           love:
             name: 'إعجاب'
             description: "لون زر الإعجاب."
       email:
-        title: "رسائل البريد الالكتروني"
-        settings: "اعدادات"
-        templates: "نماذج"
+        title: "البُرد الإلكترونية"
+        settings: "إعدادات"
+        templates: "القوالب"
         preview_digest: "ملخص المعاينة."
-        sending_test: "إرسال بريد إلكتروني للتجربة..."
+        sending_test: "يرسل بريدا إلكترونيا اختباريا..."
         error: "<b>خطأ</b> - %{server_error}"
         test_error: "حدث خطأ أثناء إرسال رسالة تجريبية. الرجاء فحص إعدادات البريد الإلكتروني و التأكد من أن الاستضافة لا تمنع مرور البريد الإلكتروني والمحاولة مرة أخرى."
-        sent: "تم الإرسال"
-        skipped: "تم التجاوز"
+        sent: "المُرسلة"
+        skipped: "المتخطّاة"
         bounced: "مروج"
-        received: "وارد"
+        received: "المُستلمة"
         rejected: "مرفوض"
-        sent_at: "أرسلت في"
+        sent_at: "أُرسلت في"
         time: "الوقت"
         user: "المستخدم"
         email_type: "نوع البريد الكتروني"
-        to_address: "الى العناوين"
-        test_email_address: "عنوان البريد الكتروني للتجربة"
-        send_test: "ارسل رسالة تجربة"
-        sent_test: "اٌرسلت!"
+        to_address: "إلى العنوان"
+        test_email_address: "عنوان البريد الإلكتروني للاختبار"
+        send_test: "أرسل رسالة اختبار"
+        sent_test: "أُرسلت!"
         delivery_method: "طريقة التسليم"
         preview_digest_desc: "معاينة محتوى رسائل البريد الإلكتروني الملخص المرسلة للأعضاء الغير متاحين."
         refresh: "تحديث"
@@ -2686,24 +2683,24 @@ ar:
             subject_placeholder: "موضوع..."
             error_placeholder: "خطأ"
         logs:
-          none: "لا يوجد سجلات."
+          none: "لا سجلات."
           filters:
-            title: "المنقي"
+            title: "رشّح"
             user_placeholder: "اسم المستخدم"
             address_placeholder: "name@example.com"
             type_placeholder: "الخلاصة، إنشاء حساب..."
             reply_key_placeholder: "مفتاح الرد"
             skipped_reason_placeholder: "السبب"
       logs:
-        title: "سجلات"
-        action: "عملية"
+        title: "السجلات"
+        action: "الإجراء"
         created_at: "مكتوبة"
         last_match_at: "اخر تطابق"
         match_count: "تطابقات"
         ip_address: "IP"
-        topic_id: "رقم معرّف الموضوع"
-        post_id: "رقم المشاركة"
-        category_id: "معرف الفئة"
+        topic_id: "معرّف الموضوع"
+        post_id: "معرّف المشاركة"
+        category_id: "معرّف الفئة"
         delete: 'حذف'
         edit: 'تعديل'
         save: 'حفظ'
@@ -2795,7 +2792,7 @@ ar:
         not_found: "تعذر إيجاد المستخدم."
         invalid: "عذراً , لايمكنك تمثل شخصية ذلك العضو."
       users:
-        title: 'مستخدمين'
+        title: 'المستخدمون'
         create: 'اضافة مدير'
         last_emailed: "آخر بريد الكتروني"
         not_found: "آسفون، اسم هذا المستخدم غير موجود في النظام."
@@ -2803,13 +2800,13 @@ ar:
         active: "نشط"
         show_emails: "عرض الرسائل"
         nav:
-          new: "جديد"
-          active: "نشط"
+          new: "الجدد"
+          active: "النشطون"
           pending: "قيد الانتظار"
-          staff: 'الإدارة'
+          staff: 'الطاقم'
           suspended: 'موقوف'
           blocked: 'محظور'
-          suspect: 'مريب'
+          suspect: 'المريبون'
         approved: "موافقة؟"
         approved_selected:
           zero: "وافق المستخدم"
@@ -2826,20 +2823,20 @@ ar:
           many: "رفض المستخدمين ({{count}})"
           other: "رفض المستخدمين ({{count}})"
         titles:
-          active: 'مستخدمين نشطين'
-          new: 'مستخدمين جدد '
+          active: 'المستخدمون النشطون'
+          new: 'المستخدمون الجدد'
           pending: 'أعضاء بانتظار المراجعة'
           newuser: 'أعضاء في مستوى الثقة 0 (عضو جديد)'
           basic: 'أعضاء في مستوى الثقة 1 (عضو أساسي)'
           member: 'الاعضاء في مستوى الثقة رقم 2 (أعضاء)'
           regular: 'الاعضاء في مستوى الثقة رقم 3 (عاديين)'
           leader: 'الاعضاء في مستوى الثقة رقم 4 (قادة)'
-          staff: "طاقم"
-          admins: 'مستخدمين مدراء'
+          staff: "الطاقم"
+          admins: 'المستخدمون المدراء'
           moderators: 'المشرفون'
           blocked: 'مستخدمين محظورين:'
           suspended: 'أعضاء موقوفين'
-          suspect: 'أعضاء مريبين'
+          suspect: 'المستخدمون المريبون'
         reject_successful:
           zero: "رفض بنجاح 1 مستخدم"
           one: "رفض بنجاح 1 مستخدم"
@@ -2856,7 +2853,7 @@ ar:
           other: "فشل لرفض %{count} مستخدمين."
         not_verified: "لم يتم التحقق"
         check_email:
-          title: "اظهار عوان البريد الالكتروني لهذا العضو."
+          title: "اكشف عنوان البريد الإلكتروني لهذا العضو"
           text: "إظهار"
       user:
         suspend_failed: "حدث خطأ ما أوقف هذا المستخدم {{error}}."
@@ -2866,7 +2863,7 @@ ar:
         suspend_reason_label: "لماذا هل أنت عالق؟ هذا النص <b>سيكون ظاهراً للكل</b> على صفحة تعريف هذا العضو, وسيكون ظاهراً للعضو عندما يحاول تسجل الدخول. احفظها قصيرة."
         suspend_reason: "سبب"
         suspended_by: "محظور من قبل"
-        delete_all_posts: "حذف جميع المشاركات"
+        delete_all_posts: "احذف كل مشاركاته"
         delete_all_posts_confirm_MF: "أنت على وشك {POSTS, plural, zero {عدم حذف شيء} one {حذف مشاركة واحدة} two {حذف مشاركتين} few {حذف # مشاركات} many {حذف # مشاركة} other {حذف # مشاركة}}{TOPICS, plural, zero {} one { وموضوع واحد} two { وموضوعين} few { و# مواضيع} many {و# موضوعا} other {و# موضوع}}. أمتأكد؟"
         suspend: "علّق"
         unsuspend: "إلقاء التعليق"
@@ -3052,7 +3049,7 @@ ar:
         title: 'إعدادات'
         reset: 'إعادة تعيين'
         none: 'لا شيء'
-        no_results: "لا توجد نتائج."
+        no_results: "لا نتائج."
         clear_filter: "مسح"
         add_url: "أضافة رابط"
         add_host: "أضافة نطاق"
@@ -3081,7 +3078,7 @@ ar:
           tags: "الوسوم"
           search: "البحث"
       badges:
-        title: 'شعارات '
+        title: الشارات
         new_badge: شعار جديد
         new: 'جديد '
         name: 'إسم '

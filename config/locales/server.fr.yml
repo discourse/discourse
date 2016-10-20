@@ -1135,6 +1135,7 @@ fr:
     automatically_unpin_topics: "Désépingler automatiquement le sujet lorsque l'utilisateur atteint la fin."
     read_time_word_count: "Nombre de mots par minute servant de base de calcul à l'estimation du temps de lecture."
     topic_page_title_includes_category: "Le titre de la page du sujet inclut le nom de la catégorie."
+    max_prints_per_hour_per_user: "Nombre maximum d'accès à la page /print (mettre à 0 pour désactiver)"
     full_name_required: "Le nom complet est requis dans le profil utilisateur."
     enable_names: "Autoriser l'affichage des noms complets des utilisateurs dans leur profil, sur leur carte d'utilisateur et dans les courriels. Décocher pour cacher les noms complets partout."
     display_name_on_posts: "Afficher le nom complet de l'utilisateur dans ses messages en plus de son @pseudo."
@@ -1168,6 +1169,7 @@ fr:
     enforce_square_emoji: "Forcer tous les Emojis à être carrés."
     approve_post_count: "Le nombre de messages d'un utilisateur nouveau ou basique devant être approuvés"
     approve_unless_trust_level: "Les messages des utilisateurs qui n'ont pas atteint ce niveau de confiance doivent être approuvés"
+    approve_new_topics_unless_trust_level: "Les nouveaux sujets des utilisateurs en dessous de ce niveau de confiance doivent être approuvés"
     notify_about_queued_posts_after: "Si des messages sont en attente de modération depuis ce nombre d'heures, un courriel sera envoyé à l'email de contact. Mettre 0 pour désactiver ces courriels."
     auto_close_messages_post_count: "Nombre maximum de messages dans un message privé avant qu'il ne soit automatiquement fermé (0 pour désactiver)"
     auto_close_topics_post_count: "Nombre maximum de messages dans un sujet avant qu'il ne soit automatiquement fermé (0 pour désactiver)"
@@ -1184,6 +1186,7 @@ fr:
     default_email_in_reply_to: "Inclure par défaut l'extrait du message auquel se fait la réponse dans les courriels."
     default_other_new_topic_duration_minutes: "Paramètre global de temps pendant lequel un sujet est considéré comme nouveau."
     default_other_auto_track_topics_after_msecs: "Paramètre global fixant le temps par défaut au bout duquel un sujet est suivi automatiquement."
+    default_other_notification_level_when_replying: "Niveau de notification global par défaut quand un utilisateur répond à un sujet."
     default_other_external_links_in_new_tab: "Par défaut, ouvrir tous les liens externes dans un nouvel onglet"
     default_other_enable_quoting: "Par défaut, proposer la citation du texte surligné."
     default_other_dynamic_favicon: "Par défaut, faire apparaître le nombre de sujets récemment créés ou mis à jour sur l'icône navigateur."
@@ -2388,35 +2391,6 @@ fr:
       ## [Changements à notre politique de confidentialité](#changes)
 
       Si nous décidons de changer notre politique de confidentialité, nous afficherons ces modifications sur cette page. Ce document est soumis à la licence creative commons CC-BY-SA. Il a été mis à jour le 31 mai 2013.
-  static:
-    search_help: |
-      <h3>Astuces</h3>
-      <p>
-      <ul>
-      <li>Les résultats dont le titre correspond à la recherche sont retournés en priorité &ndash; en cas de doutes, recherchez dans les titres</li>
-      <li>Pour obtenir de meilleurs résultats, utilisez toujours des mots rares ou peu fréquents</li>
-      <li>Dès que possible, limitez vos recherches à une catégorie en particulier, à un utilisateur ou à un sujet</li>
-      </ul>
-      </p>
-      <h3>Options</h3>
-      <p>
-      <table>
-      <tr><td><code>order:views</code></td><td><code>order:latest</code></td><td><code>order:likes</code></td><td><code>@username</code></td><td><code>user:foo</code></td></tr>
-      <tr><td><code>status:open</code></td><td><code>status:closed</code></td><td><code>status:archived</code></td><td><code>status:noreplies</code></td><td><code>status:single_user</code></td></tr>
-      <tr><td><code>#category-slug</code></td><td><code>category:foo</code></td><td><code>group:foo</code></td><td><code>badge:foo</code></td><td></td></tr>
-      <tr><td><code>in:likes</code></td><td><code>in:posted</code></td><td><code>in:watching</code></td><td><code>in:tracking</code></td><td><code>in:private</code></td></tr>
-      <tr><td><code>in:bookmarks</code></td><td><code>in:first</code></td><td><code>in:pinned</code></td><td><code>in:unpinned</code></td><td><code>in:wiki</code></td></tr>
-      <tr><td><code>posts_count:num</code></td><td><code>before:days or date</code></td><td><code>after:days or date</code></td><td><code>tags:one,two</code></td><td></td></tr>
-      </table>
-      </p>
-      <h3>Exemples</h3>
-      <p>
-      <ul>
-      <li><code>rainbows #parks</code> cherchera les sujets dans la catégorie "parks" qui contiennent le mot "rainbows".</li>
-      <li><code>rainbows category:parks status:open order:latest</code> cherchera les sujets dans la catégorie "parks" en ordre chronologique qui contiennent le mot "rainbows" et qui ne sont ni fermé ni archivé.
-      <li><code>rainbows category:"parks and gardens" in:bookmarks</code> cherchera les sujets dans la catégorie "parks and gardens" qui contiennent le mot "rainbows" et qui sont dans vos signets.</li>
-      </ul>
-      </p>
   badges:
     editor:
       name: Éditeur

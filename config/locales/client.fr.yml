@@ -81,14 +81,14 @@ fr:
         date_year: "D MMM 'YY"
       medium_with_ago:
         x_minutes:
-          one: "Il y a 1 min"
-          other: "Il y a %{count} mins"
+          one: "il y a 1 min"
+          other: "il y a %{count} mins"
         x_hours:
-          one: "Il y a 1 heure"
-          other: "Il y a %{count} heures"
+          one: "il y a 1 heure"
+          other: "il y a %{count} heures"
         x_days:
-          one: "Il y a 1 jour"
-          other: "Il y a %{count} jours"
+          one: "il y a 1 jour"
+          other: "il y a %{count} jours"
       later:
         x_days:
           one: "1 jour plus tard"
@@ -600,6 +600,7 @@ fr:
         title: "Langue de l'interface"
         instructions: "Langue de l'interface utilisateur.  Le changement sera pris en compte lorsque vous actualiserez la page."
         default: "(par défaut)"
+        any: "tous"
       password_confirmation:
         title: "Confirmation du mot de passe"
       last_posted: "Dernier message"
@@ -657,6 +658,7 @@ fr:
         after_4_minutes: "après 4 minutes"
         after_5_minutes: "après 5 minutes"
         after_10_minutes: "après 10 minutes"
+      notification_level_when_replying: "Quand j'ai répondu dans un sujet, le régler sur"
       invited:
         search: "commencer à saisir pour rechercher vos invitations…"
         title: "Invitations"
@@ -1088,7 +1090,6 @@ fr:
       title: "rechercher des sujets, messages, utilisateurs ou catégories"
       no_results: "Aucun résultat."
       no_more_results: "Aucun résultat supplémentaire."
-      search_help: Aide à la recherche
       searching: "Recherche en cours…"
       post_format: "#{{post_number}} par {{username}}"
       context:
@@ -1096,6 +1097,44 @@ fr:
         category: "Rechercher dans la catégorie #{{category}}"
         topic: "Rechercher dans ce sujet"
         private_messages: "Rechercher des messages privés"
+      advanced:
+        title: Recherche avancée
+        posted_by:
+          label: Rédigé par
+        in_category:
+          label: Dans la catégorie
+        in_group:
+          label: Dans le groupe
+        with_badge:
+          label: Avec le badge
+        with_tags:
+          label: Avec les tags
+        filters:
+          label: Seulement retourner les sujets/messages...
+          likes: que j'ai aimé
+          posted: auxquels j'ai participé
+          watching: que je surveille
+          tracking: que je suis
+          private: qui sont dans mes messages privés
+          bookmarks: auxquels j'ai mis un signet
+          first: qui sont les premiers messages
+          pinned: qui sont épinglés
+          unpinned: qui ne sont pas épinglés
+          wiki: qui sont des wikis
+        statuses:
+          label: Dont les sujets
+          open: sont ouverts
+          closed: sont fermés
+          archived: sont archivés
+          noreplies: n'ont aucune réponse
+          single_user: contiennent un unique utilisateur
+        post:
+          count:
+            label: Nombre minimum de messages
+          time:
+            label: Quand
+            before: avant
+            after: après
     hamburger_menu: "aller à une autre catégorie ou liste de sujets"
     new_item: "nouveau"
     go_back: 'retour'
@@ -1309,6 +1348,9 @@ fr:
       share:
         title: 'Partager'
         help: 'partager ce sujet'
+      print:
+        title: 'Imprimer'
+        help: 'Ouvrir une version de ce sujet adaptée à l''impression'
       flag_topic:
         title: 'Signaler'
         help: 'signaler secrètement ce sujet pour attirer l''attention ou envoyer une notification privée à son propos.'
@@ -1868,8 +1910,6 @@ fr:
       readonly: "Voir"
     lightbox:
       download: "télécharger"
-    search_help:
-      title: 'Aide à la recherche'
     keyboard_shortcuts_help:
       title: 'Raccourcis clavier'
       jump_to:
@@ -1921,6 +1961,7 @@ fr:
         mark_regular: '<b>m</b>, <b>r</b> Notifications par défaut pour le sujet'
         mark_tracking: '<b>m</b>, <b>t</b> Suivre le sujet'
         mark_watching: '<b>m</b>, <b>w</b> Surveiller le sujet'
+        print: '<b>Ctrl</b>+<b>p</b> Imprimer le sujet'
     badges:
       earned_n_times:
         one: "A reçu ce badge 1 fois"

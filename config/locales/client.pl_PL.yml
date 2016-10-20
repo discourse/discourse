@@ -1085,7 +1085,6 @@ pl_PL:
       title: "szukaj tematów, wpisów, użytkowników lub kategorii"
       no_results: "Brak wyników wyszukiwania"
       no_more_results: "Nie znaleziono więcej wyników."
-      search_help: Wyszukaj w pomocy
       searching: "Szukam…"
       post_format: "#{{post_number}} za {{username}}"
       context:
@@ -1869,8 +1868,6 @@ pl_PL:
       readonly: "przeglądać"
     lightbox:
       download: "pobierz"
-    search_help:
-      title: 'Wyszukiwanie pomocy'
     keyboard_shortcuts_help:
       title: 'Skróty klawiszowe'
       jump_to:

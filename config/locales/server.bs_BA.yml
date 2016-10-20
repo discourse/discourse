@@ -10,13 +10,32 @@ bs_BA:
     short_date_no_year: "D MMM"
     short_date: "D MMM, YYYY"
     long_date: "MMMM D, YYYY h:mma"
+  datetime_formats: &datetime_formats
+    formats:
+      short: "%d.%m.%Y."
+      short_no_year: "%B %-d"
+      date_only: "%B %-d, %Y"
+      long: "%B %-d, %Y, %l:%M%P"
+  date:
+    month_names: [null, Januar, Februar, Mart, April, Maj, Juni, Juli, August, Septembar, Oktobar, Novembar, Decembar]
+    <<: *datetime_formats
+  time:
+    am: "am"
+    pm: "pm"
+    <<: *datetime_formats
   title: "Discourse"
   topics: "Topics"
   posts: "posts"
   loading: "Loading"
   powered_by_html: 'Powered by <a href="http://www.discourse.org">Discourse</a>, best viewed with JavaScript enabled'
   log_in: "Log In"
+  purge_reason: "Automatski obrisan kao napušten, deaktiviran račun"
   disable_remote_images_download_reason: "Remote images download was disabled because there wasn't enough disk space available."
+  anonymous: "Anoniman"
+  emails:
+    incoming:
+      default_subject: "Dolazna poruka pošte %{email}"
+      show_trimmed_content: "Prikaži skraćeni sadržaj"
   errors: &errors
     messages:
       too_long_validation: "is limited to %{max} characters; you entered %{length}."
@@ -191,11 +210,19 @@ bs_BA:
     change_failed_explanation: "You attempted to demote %{user_name} to '%{new_trust_level}'. However their trust level is already '%{current_trust_level}'. %{user_name} will remain at '%{current_trust_level}' - if you wish to demote user lock trust level first"
   rate_limiter:
     too_many_requests: "We have a daily limit on how many times that action can be taken. Please wait %{time_left} before trying again."
+    hours:
+      one: "1 sat"
+      few: "Par sati"
+      other: "%{count} sati"
   datetime:
     distance_in_words:
       half_a_minute: "< 1m"
     distance_in_words_verbose:
       half_a_minute: "just now"
+      about_x_hours:
+        one: "Pred 1 sat"
+        few: "Pred par sati"
+        other: "Pred %{count} sata"
   password_reset:
     choose_new: "Odaberite novu šifru"
     choose: "Molimo vas odaberite šifru"
@@ -347,6 +374,8 @@ bs_BA:
       title: "Top Referred Topics"
       xaxis: "Topic"
       num_clicks: "Clicks"
+    time_to_first_response:
+      yaxis: "Prosječno vrijeme (hours)"
   dashboard:
     rails_env_warning: "Your server is running in %{env} mode."
     host_names_warning: "Your config/database.yml file is using the default localhost hostname. Update it to use your site's hostname."

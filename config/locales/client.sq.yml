@@ -753,7 +753,7 @@ sq:
         the_topic: "tema"
     loading: "Duke ngarkuar..."
     errors:
-      prev_page: "duku u munduar të ngarkohet"
+      prev_page: "duke u munduar të ngarkohet"
       reasons:
         network: "Gabim në rrjet"
         server: "Gabim në server"
@@ -1078,7 +1078,6 @@ sq:
       title: "kërko në faqe"
       no_results: "Nuk u gjet asnjë rezultat."
       no_more_results: "Nuk gjetëm rezultate të tjera. "
-      search_help: Ndihmë për kërkimin
       searching: "Duke kërkuar..."
       post_format: "#{{post_number}} nga {{username}}"
       context:
@@ -1825,8 +1824,6 @@ sq:
       readonly: "Shiko"
     lightbox:
       download: "shkarko"
-    search_help:
-      title: 'Opsionet e kërkimit'
     keyboard_shortcuts_help:
       title: 'Shkurtimet e tastierës '
       jump_to:

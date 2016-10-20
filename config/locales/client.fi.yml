@@ -1080,7 +1080,6 @@ fi:
       title: "etsi ketjuja, viestejä, käyttäjiä tai alueita"
       no_results: "Ei tuloksia."
       no_more_results: "Enempää tuloksia ei löytynyt."
-      search_help: Haun ohje
       searching: "Etsitään ..."
       post_format: "#{{post_number}} käyttäjältä {{username}}"
       context:
@@ -1088,6 +1087,44 @@ fi:
         category: "Etsi alueelta #{{category}}"
         topic: "Etsi tästä ketjusta"
         private_messages: "Etsi viesteistä"
+      advanced:
+        title: Tarkennettu haku
+        posted_by:
+          label: Kirjoittaja
+        in_category:
+          label: Alue
+        in_group:
+          label: Kirjoittajan ryhmä
+        with_badge:
+          label: Kirjoittajalla ansiomerkki
+        with_tags:
+          label: Tunniste
+        filters:
+          label: Tuloksiin vain ketjuja/viestejä, ...
+          likes: joista olen tykännyt
+          posted: joihin olen kirjoittanut
+          watching: joita tarkkailen
+          tracking: joita seuraan
+          private: jotka ovat yksityisviesteistäni
+          bookmarks: jotka olen lisännyt kirjanmerkkeihini
+          first: jotka ovat ketjun avausviestejä
+          pinned: jotka on kiinnitettyjä
+          unpinned: jotka eivät ole kiinnitettyjä
+          wiki: ovat wiki-viestejä
+        statuses:
+          label: Ketju/Ketjuun
+          open: on avoin
+          closed: on suljettu
+          archived: on arkistoitu
+          noreplies: ei ole vastattu
+          single_user: on kirjoittanut vain yksi käyttäjä
+        post:
+          count:
+            label: Viestejä vähintään
+          time:
+            label: Kirjoitettu
+            before: ennen
+            after: jälkeen
     hamburger_menu: "vaihda ketjulistausta tai siirry toiselle alueelle"
     new_item: "uusi"
     go_back: 'mene takaisin'
@@ -1300,6 +1337,9 @@ fi:
       share:
         title: 'Jaa'
         help: 'jaa linkki tähän ketjuun'
+      print:
+        title: 'Tulosta'
+        help: 'Avaa tulostettava versio tästä ketjusta'
       flag_topic:
         title: 'Liputa'
         help: 'liputa tämä ketju tai lähetä siitä yksityinen ilmoitus valvojalle'
@@ -1859,8 +1899,6 @@ fi:
       readonly: "Nähdä"
     lightbox:
       download: "lataa"
-    search_help:
-      title: 'Haun ohjeet'
     keyboard_shortcuts_help:
       title: 'Näppäinoikotiet'
       jump_to:
@@ -1912,6 +1950,7 @@ fi:
         mark_regular: '<b>m</b>, <b>r</b> Tavallinen (oletus) ketju'
         mark_tracking: '<b>m</b>, <b>t</b> Seuraa ketjua'
         mark_watching: '<b>m</b>, <b>w</b> Tarkkaile ketjua'
+        print: '<b>ctrl</b>+<b>p</b> Tulosta ketju'
     badges:
       earned_n_times:
         one: "Ansaitsi tämän ansiomerkin yhden kerran"

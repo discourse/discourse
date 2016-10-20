@@ -964,6 +964,7 @@ de:
     external_system_avatars_enabled: "Benutze einen externen Avatar Service"
     external_system_avatars_url: "URL des externen Profilbild-Dienstes. Erlaubte Platzhalter sind {username} {first_letter} {color} {size}"
     default_opengraph_image_url: "URL des standardmäßigen Open-Graph-Bildes."
+    twitter_summary_large_image_url: "URL des Bildes, das standardmäßig in Twitter-Cards angezeigt wird (sollte mindestens 280 Pixel breit und 150 Pixel hoch sein)."
     allow_all_attachments_for_group_messages: "Erlaube alle E-Mail-Anhänge für Gruppen-Nachrichten."
     convert_pasted_images_to_hq_jpg: "Konvertiert eingefügte Bilder in JPG-Dateien mit hoher Qualität."
     convert_pasted_images_quality: "Qualität der umgewandelten JPG Datei (1 ist die niedrigste, 100 die beste Qualität)."
@@ -996,6 +997,7 @@ de:
     tl3_links_no_follow: "rel=nofollow nicht von Links entfernen, die von Benutzern mit Vertrauensstufe 3 erstellt wurden."
     min_trust_to_create_topic: "Die minimale Vertrauensstufe wird benötigt um eine neues Thema zu erstellen."
     min_trust_to_edit_wiki_post: "Die minimal benötigte Vertrauensstufe, um als Wiki markierte Beiträge bearbeiten zu können."
+    min_trust_to_edit_post: "Die minimal benötigte Vertrauensstufe, um Beiträge bearbeiten zu können."
     min_trust_to_allow_self_wiki: "Die minimale Vertrauensstufe, die ein Benutzer haben muss, um einen eigenen Wiki Eintrag zu erstellen."
     min_trust_to_send_messages: "Benötigte Vertrauensstufe um neue private Nachrichten erstellen zu dürfen."
     newuser_max_links: "Maximale Anzahl der Links, die neue Benutzer Beiträgen hinzufügen dürfen."
@@ -1133,6 +1135,7 @@ de:
     automatically_unpin_topics: "Themen automatisch loslösen, wenn ein Benutzer das Ende erreicht."
     read_time_word_count: "Wörter pro Minute für die Berechnung der geschätzten Lesezeit."
     topic_page_title_includes_category: "Name des Themas enthält den Namen der Kategorie."
+    max_prints_per_hour_per_user: "Maximale Anzahl von Aufrufen der Druckansicht pro Nutzer pro Stunde (0 zum deaktivieren)"
     full_name_required: "Der voller Name wird für das Benutzerprofil benötigt."
     enable_names: "Zeigt den vollen Namen eines Benutzers auf dem Profil, der Benutzerkarte und in E-Mails an. Wenn deaktiviert wird der volle Name überall ausgeblendet."
     display_name_on_posts: "Zeige zusätzlich zum @Benutzernamen auch den vollen Namen des Benutzers bei seinen Beiträgen."
@@ -1166,6 +1169,7 @@ de:
     enforce_square_emoji: "Emojis immer mit quadratischem Seitenverhältnis darstellen."
     approve_post_count: "Anzahl der Beiträge eines neuen Benutzer oder Anwärters, die genehmigt werden müssen"
     approve_unless_trust_level: "Beiträge von Benutzer unterhalb dieser Vertrauensstufe müssen genehmigt werden"
+    approve_new_topics_unless_trust_level: "Beiträge von Benutzer unterhalb dieser Vertrauensstufe müssen genehmigt werden"
     notify_about_queued_posts_after: "Wenn es Beiträge gibt, die länger als diese Anzahl von Stunden auf ihre Überprüfung gewartet haben, sende eine E-Mail an contact_email. Setze sie auf 0, um diese E-Mails zu deaktivieren."
     auto_close_messages_post_count: "Maximale Anzahl von Beiträgen, die in einer Nachricht erlaubt sind, bevor sie automatisch geschlossen wird (0 = ausgeschaltet)"
     auto_close_topics_post_count: "Maximale Anzahl von Beiträgen, die in einem Thema erlaubt sind, bevor es automatisch geschlossen wird (0 = ausgeschaltet)"
@@ -2587,35 +2591,6 @@ de:
       Wenn wir uns dazu entscheiden, unsere Datenschutzbestimmungen zu ändern, werden wir diese Änderungen auf dieser Seite veröffentlichen.
 
       Dieses Dokument ist als CC-BY-SA lizensiert. Es wurde zuletzt aktualisiert am am 31. Mai 2013.
-  static:
-    search_help: |
-      <h3>Tipps</h3>
-      <p>
-      <ul>
-      <li>Suchtreffer in Titeln haben Vorrang &ndash; im Zweifel einfach nach Titeln suchen</li>
-      <li>Eindeutige, seltene Wörter erzielen die besten Suchergebnisse</li>
-      <li>Versuche, innerhalb einer bestimmten Kategorie, eines bestimmten Themas oder Benutzers zu suchen</li>
-      </ul>
-      </p>
-      <h3>Optionen</h3>
-      <p>
-      <table>
-      <tr><td><code>order:views</code></td><td><code>order:latest</code></td><td><code>order:likes</code></td><td><code>@username</code></td><td><code>user:foo</code></td></tr>
-      <tr><td><code>status:open</code></td><td><code>status:closed</code></td><td><code>status:archived</code></td><td><code>status:noreplies</code></td><td><code>status:single_user</code></td></tr>
-      <tr><td><code>#category-slug</code></td><td><code>category:foo</code></td><td><code>group:foo</code></td><td><code>badge:foo</code></td><td></td></tr>
-      <tr><td><code>in:likes</code></td><td><code>in:posted</code></td><td><code>in:watching</code></td><td><code>in:tracking</code></td><td><code>in:private</code></td></tr>
-      <tr><td><code>in:bookmarks</code></td><td><code>in:first</code></td><td><code>in:pinned</code></td><td><code>in:unpinned</code></td><td><code>in:wiki</code></td></tr>
-      <tr><td><code>posts_count:num</code></td><td><code>before:days or date</code></td><td><code>after:days or date</code></td><td><code>tags:one,two</code></td><td></td></tr>
-      </table>
-      </p>
-      <h3>Beispiele</h3>
-      <p>
-      <ul>
-      <li><code>Regenbogen #Parks</code> sucht nach Themen in der Kategorie "Parks", die das Wort "Regenbogen" enthalten.</li>
-      <li><code>Regenbogen category:parks status:open order:latest</code> sucht nach Themen in der Kategorie "Parks", die das Wort "Regenbogen" enthalten und die nicht geschlossen oder archiviert sind; die Treffer werden nach dem Datum des letzten Beitrags sortiert.</li>
-      <li><code>Regenbogen category:"Parks und Gärten" in:bookmarks</code> sucht nach Themen, die das Wort "Regenbogen" in der Kategorie "Parks und Gärten" erhalten und von dir mit einem Lesezeichen markiert sind.</li>
-      </ul>
-      </p>
   badges:
     editor:
       name: Bearbeiter

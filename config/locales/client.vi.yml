@@ -942,7 +942,6 @@ vi:
       title: "tìm kiếm chủ đề, bài viết, tài khoản hoặc các danh mục"
       no_results: "Không tìm thấy kết quả."
       no_more_results: "Không tìm thấy kết quả"
-      search_help: Giúp đỡ tìm kiếm
       searching: "Đang tìm ..."
       post_format: "#{{post_number}} bởi {{username}}"
       context:

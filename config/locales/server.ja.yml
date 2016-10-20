@@ -1278,35 +1278,6 @@ ja:
     title: "利用規約"
   privacy_topic:
     title: "プライバシーポリシー"
-  static:
-    search_help: |
-      <h3>Tips</h3>
-      <p>
-      <ul>
-      <li>タイトルが優先されます &ndash; わからない時はタイトルで調べてみましょう</li>
-      <li>かぶりにくい単語、調べたいものに近い言葉を使うとピッタリな検索結果が出てきます。</li>
-      <li>カテゴリ、トピック、またはユーザ単位で検索してみましょう</li>
-      </ul>
-      </p>
-      <h3>オプション</h3>
-      <p>
-      <table>
-      <tr><td><code>order:views</code></td><td><code>order:latest</code></td><td><code>order:likes</code></td><td><code>@username</code></td><td><code>user:foo</code></td></tr>
-      <tr><td><code>status:open</code></td><td><code>status:closed</code></td><td><code>status:archived</code></td><td><code>status:noreplies</code></td><td><code>status:single_user</code></td></tr>
-      <tr><td><code>#category-slug</code></td><td><code>category:foo</code></td><td><code>group:foo</code></td><td><code>badge:foo</code></td><td></td></tr>
-      <tr><td><code>in:likes</code></td><td><code>in:posted</code></td><td><code>in:watching</code></td><td><code>in:tracking</code></td><td><code>in:private</code></td></tr>
-      <tr><td><code>in:bookmarks</code></td><td><code>in:first</code></td><td><code>in:pinned</code></td><td><code>in:unpinned</code></td><td><code>in:wiki</code></td></tr>
-      <tr><td><code>posts_count:num</code></td><td><code>before:days or date</code></td><td><code>after:days or date</code></td><td><code>tags:one,two</code></td><td></td></tr>
-      </table>
-      </p>
-      <h3>例</h3>
-      <p>
-      <ul>
-      <li><code>rainbows #parks</code> では"parks"のカテゴリから"rainbows"という単語を検索します。</li>
-      <li><code>rainbows category:parks status:open order:latest</code> では"parks"のカテゴリ、"rainbows"という単語を検索し、最後の投稿の日付順に並べ、クローズ/アーカイブされていないトピックを検索します。</li>
-      <li><code>rainbows category:"parks and gardens" in:bookmarks</code> では、ブックマークしている"parks and gardens"カテゴリから、"rainbows"という単語を含むトピックを検索します。</li>
-      </ul>
-      </p>
   badges:
     editor:
       name: 編集者

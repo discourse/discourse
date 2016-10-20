@@ -1023,7 +1023,6 @@ zh_CN:
       title: "搜索主题、帖子、用户或分类"
       no_results: "没有找到结果。"
       no_more_results: "没有找到更多结果。"
-      search_help: 搜索帮助
       searching: "搜索中..."
       post_format: "#{{post_number}} 来自于 {{username}}"
       context:
@@ -1744,8 +1743,6 @@ zh_CN:
       readonly: "阅读"
     lightbox:
       download: "下载"
-    search_help:
-      title: '搜索帮助'
     keyboard_shortcuts_help:
       title: '键盘快捷键'
       jump_to:
