@@ -230,6 +230,11 @@ class Upload < ActiveRecord::Base
     url = url.sub(Discourse.asset_host, "") if Discourse.asset_host.present?
     # when using s3, we need to replace with the absolute base url
     url = url.sub(SiteSetting.s3_cdn_url, Discourse.store.absolute_base_url) if SiteSetting.s3_cdn_url.present?
+
+    # always try to get the path
+    uri = URI(url) rescue nil
+    url = uri.path if uri.try(:scheme)
+
     Upload.find_by(url: url)
   end
 

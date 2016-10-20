@@ -1,7 +1,7 @@
 module DiscourseTagging
 
   TAGS_FIELD_NAME = "tags"
-  TAGS_FILTER_REGEXP = /[<\\\/\>\#\?\&\s]/
+  TAGS_FILTER_REGEXP = /[\/\?#\[\]@!\$&'\(\)\*\+,;=\.%\\`^\s|\{\}"<>]+/ # /?#[]@!$&'()*+,;=.%\`^|{}"<>
 
 
   def self.tag_topic_by_names(topic, guardian, tag_names_arg)
@@ -141,7 +141,9 @@ module DiscourseTagging
   end
 
   def self.clean_tag(tag)
-    tag.downcase.strip[0...SiteSetting.max_tag_length].gsub(TAGS_FILTER_REGEXP, '')
+    tag.downcase.strip
+       .gsub(/\s+/, '-').squeeze('-')
+       .gsub(TAGS_FILTER_REGEXP, '')[0...SiteSetting.max_tag_length]
   end
 
   def self.staff_only_tags(tags)
@@ -155,19 +157,16 @@ module DiscourseTagging
     tag_diff.present? ? tag_diff : nil
   end
 
-  def self.tags_for_saving(tags, guardian, opts={})
+  def self.tags_for_saving(tags_arg, guardian, opts={})
 
-    return [] unless guardian.can_tag_topics?
+    return [] unless guardian.can_tag_topics? && tags_arg.present?
 
-    return unless tags.present?
+    tag_names = Tag.where(name: tags_arg).pluck(:name)
 
-    tag_names = tags.map {|t| clean_tag(t) }
-    tag_names.delete_if {|t| t.blank? }
-    tag_names.uniq!
-
-    # If the user can't create tags, remove any tags that don't already exist
-    unless guardian.can_create_tag?
-      tag_names = Tag.where(name: tag_names).pluck(:name)
+    if guardian.can_create_tag?
+      tag_names += (tags_arg - tag_names).map { |t| clean_tag(t) }
+      tag_names.delete_if { |t| t.blank? }
+      tag_names.uniq!
     end
 
     return opts[:unlimited] ? tag_names : tag_names[0...SiteSetting.max_tags_per_topic]

@@ -1,6 +1,6 @@
 import computed from 'ember-addons/ember-computed-decorators';
 import StringBuffer from 'discourse/mixins/string-buffer';
-import { iconHTML } from 'discourse/helpers/fa-icon';
+import { iconHTML } from 'discourse-common/helpers/fa-icon';
 
 export default Ember.Component.extend(StringBuffer, {
   classes: ["text-muted", "text-danger", "text-successful"],

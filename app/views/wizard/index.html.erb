@@ -6,8 +6,10 @@
     <%= script 'wizard-application' %>
     <%= script "locales/#{I18n.locale}" %>
     <%= render partial: "common/special_font_face" %>
-    <script src="/extra-locales/wizard"></script>
+    <script src="<%= Discourse.base_uri %>/extra-locales/wizard"></script>
     <%= csrf_meta_tags %>
+
+    <meta name="discourse-base-uri" content="<%= Discourse.base_uri %>">
 
     <%= render partial: "layouts/head" %>
     <title><%= t 'wizard.title' %></title>

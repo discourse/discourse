@@ -267,12 +267,12 @@ export function isAnImage(path) {
 
 export function allowsImages() {
   return authorizesAllExtensions() ||
-    (/(png|jpe?g|gif|bmp|tiff?|svg|webp|ico)/i).test(authorizedExtensions());
+    (/\.(png|jpe?g|gif|bmp|tiff?|svg|webp|ico)/i).test(authorizedExtensions());
 }
 
 export function allowsAttachments() {
   return authorizesAllExtensions() ||
-    !(/((png|jpe?g|gif|bmp|tiff?|svg|web|ico)(,\s)?)+$/i).test(authorizedExtensions());
+    !/^(\.(png|jpe?g|gif|bmp|tiff?|svg|webp|ico)(,\s)?)+$/i.test(authorizedExtensions());
 }
 
 export function displayErrorForUpload(data) {

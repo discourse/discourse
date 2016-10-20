@@ -663,7 +663,7 @@ class Search
     def self.ts_query(term, locale = nil, joiner = "&")
 
       data = Post.exec_sql("SELECT to_tsvector(:locale, :term)",
-                            locale: locale || long_locale,
+                            locale: 'simple',
                             term: term
                           ).values[0][0]
 

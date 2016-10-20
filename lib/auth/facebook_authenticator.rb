@@ -1,5 +1,7 @@
 class Auth::FacebookAuthenticator < Auth::Authenticator
 
+  AVATAR_SIZE = 480
+
   def name
     "facebook"
   end
@@ -31,12 +33,13 @@ class Auth::FacebookAuthenticator < Auth::Authenticator
     user = result.user
     if user && (!user.user_avatar || user.user_avatar.custom_upload_id.nil?)
       if (avatar_url = facebook_hash[:avatar_url]).present?
-        UserAvatar.import_url_for_user(avatar_url, user, override_gravatar: false)
+        avatar_url_with_parameters = add_avatar_parameters(avatar_url)
+        UserAvatar.import_url_for_user(avatar_url_with_parameters, user, override_gravatar: false)
       end
     end
 
 
-    bio = facebook_hash[:about_me]
+    bio = facebook_hash[:about_me] || facebook_hash[:about]
     location = facebook_hash[:location]
     website = facebook_hash[:website]
 
@@ -65,7 +68,8 @@ class Auth::FacebookAuthenticator < Auth::Authenticator
 
 
     if (avatar_url = data[:avatar_url]).present?
-      UserAvatar.import_url_for_user(avatar_url, user)
+      avatar_url_with_parameters = add_avatar_parameters(avatar_url)
+      UserAvatar.import_url_for_user(avatar_url_with_parameters, user)
       user.save
     end
 
@@ -90,7 +94,7 @@ class Auth::FacebookAuthenticator < Auth::Authenticator
               strategy = env["omniauth.strategy"]
               strategy.options[:client_id] = SiteSetting.facebook_app_id
               strategy.options[:client_secret] = SiteSetting.facebook_app_secret
-              strategy.options[:info_fields] = 'gender,email,name,bio,first_name,link,last_name,website,location'
+              strategy.options[:info_fields] = 'gender,email,name,about,first_name,link,last_name,website,location'
               if SiteSetting.facebook_request_extra_profile_details
                 strategy.options[:scope] = 'email,user_about_me,user_location,user_website'
               end
@@ -130,5 +134,8 @@ class Auth::FacebookAuthenticator < Auth::Authenticator
 
   end
 
+  def add_avatar_parameters(avatar_url)
+    "#{avatar_url}?height=#{AVATAR_SIZE}&width=#{AVATAR_SIZE}"
+  end
 
 end

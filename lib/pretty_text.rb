@@ -294,6 +294,11 @@ module PrettyText
       links << DetectedLink.new(url, true)
     end
 
+    # Extract Youtube links
+    doc.css("div[data-youtube-id]").each do |d|
+      links << DetectedLink.new("https://www.youtube.com/watch?v=#{d['data-youtube-id']}", false)
+    end
+
     links
   end
 

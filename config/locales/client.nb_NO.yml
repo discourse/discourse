@@ -861,7 +861,6 @@ nb_NO:
       title: "søk etter emner, innlegg, brukere eller kategorier"
       no_results: "Ingen resultater funnet."
       no_more_results: "Ingen flere resultater funnet."
-      search_help: Søkehjelp
       searching: "Søker ..."
       post_format: "#{{post_number}} av {{username}}"
       context:

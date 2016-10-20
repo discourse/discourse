@@ -14,9 +14,12 @@
 
   {{#if hasTopics}}
     {{topic-list
+        highlightLastVisited=true
         showPosters=true
         currentUser=currentUser
         hideCategory=model.hideCategory
+        order=order
+        ascending=ascending
         topics=model.topics
         expandGloballyPinned=expandGloballyPinned
         expandAllPinned=expandAllPinned

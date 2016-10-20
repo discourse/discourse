@@ -1,4 +1,4 @@
-import {default as computed, observes} from 'ember-addons/ember-computed-decorators';
+import { observes } from 'ember-addons/ember-computed-decorators';
 
 export default Ember.Component.extend({
   tagName: 'table',
@@ -9,6 +9,7 @@ export default Ember.Component.extend({
     this.addObserver('hideCategory', this.rerender);
     this.addObserver('order', this.rerender);
     this.addObserver('ascending', this.rerender);
+    this.refreshLastVisited();
   }.on('init'),
 
   toggleInTitle: function(){
@@ -31,31 +32,45 @@ export default Ember.Component.extend({
     return this.get('order') === "op_likes";
   }.property('order'),
 
-  @observes('category')
-  categoryChanged: function(){
-    this.set('prevTopic', null);
+  @observes('topics.@each')
+  topicsAdded() {
+    // special case so we don't keep scanning huge lists
+    if (!this.get('lastVisitedTopic')) {
+      this.refreshLastVisited();
+    }
   },
 
+  @observes('topics', 'order', 'ascending', 'category')
+  lastVisitedTopicChanged() {
+    this.refreshLastVisited();
+  },
 
-  @computed('topics.@each', 'order', 'ascending')
-  lastVisitedTopic(topics, order, ascending) {
-    if (!this.get('highlightLastVisited')) { return; }
-    if (order !== "default" && order !== "activity") { return; }
-    if (!topics || topics.length === 1) { return; }
-    if (ascending) { return; }
+  _updateLastVisitedTopic(topics, order, ascending) {
+
+    this.set('lastVisitedTopic', null);
+
+    if (!this.get('highlightLastVisited')) {
+      return;
+    }
+
+    if (order !== "default" && order !== "activity") {
+      return;
+    }
+
+    if (!topics || topics.length === 1) {
+      return;
+    }
+
+    if (ascending) {
+      return;
+    }
 
     let user = Discourse.User.current();
     if (!user || !user.previous_visit_at) {
       return;
     }
 
-    let prevTopic, topic;
-
-    prevTopic = this.get('prevTopic');
-
-    if (prevTopic) {
-      return prevTopic;
-    }
+    let lastVisitedTopic, topic;
 
     let prevVisit = user.get('previousVisitAt');
 
@@ -69,13 +84,13 @@ export default Ember.Component.extend({
     let i;
     for(i=topics.length-1;i>=start;i--){
       if (topics[i].get('bumpedAt') > prevVisit) {
-        prevTopic = topics[i];
+        lastVisitedTopic = topics[i];
         break;
       }
       topic = topics[i];
     }
 
-    if (!prevTopic || !topic) {
+    if (!lastVisitedTopic || !topic) {
       return;
     }
 
@@ -84,14 +99,16 @@ export default Ember.Component.extend({
       return;
     }
 
-    this.set('prevTopic', prevTopic);
+    this.set('lastVisitedTopic', lastVisitedTopic);
+  },
 
-    return prevTopic;
+  refreshLastVisited() {
+    this._updateLastVisitedTopic(this.get('topics'), this.get('order'), this.get('ascending'));
   },
 
   click(e) {
     var self = this;
-    var on = function(sel, callback){
+    var onClick = function(sel, callback){
       var target = $(e.target).closest(sel);
 
       if(target.length === 1){
@@ -99,12 +116,12 @@ export default Ember.Component.extend({
       }
     };
 
-    on('button.bulk-select', function(){
+    onClick('button.bulk-select', function(){
       this.sendAction('toggleBulkSelect');
       this.rerender();
     });
 
-    on('th.sortable', function(e2){
+    onClick('th.sortable', function(e2){
       this.sendAction('changeSort', e2.data('sort-order'));
       this.rerender();
     });

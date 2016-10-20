@@ -54,6 +54,43 @@ describe Tag do
       expect(described_class.top_tags.sort).to eq(@tags.map(&:name).sort)
     end
 
+    context "with categories" do
+      before do
+        make_some_tags(count: 4) # one tag that isn't used
+        @category1 = Fabricate(:category)
+        @private_category = Fabricate(:category)
+        @private_category.set_permissions(:admins => :full)
+        @private_category.save!
+        @topics = []
+        @topics << Fabricate(:topic, category: @category1, tags: [@tags[0]])
+        @topics << Fabricate(:topic, tags: [@tags[1]])
+        @topics << Fabricate(:topic, category: @private_category, tags: [@tags[2]])
+      end
+
+      it "doesn't return tags that have only been used in private category to anon" do
+        expect(described_class.top_tags.sort).to eq([@tags[0].name, @tags[1].name].sort)
+      end
+
+      it "returns tags used in private category to those who can see that category" do
+        expect(described_class.top_tags(guardian: Guardian.new(Fabricate(:admin))).sort).to eq([@tags[0].name, @tags[1].name, @tags[2].name].sort)
+      end
+
+      it "returns tags scoped to a given category" do
+        expect(described_class.top_tags(category: @category1).sort).to eq([@tags[0].name].sort)
+        expect(described_class.top_tags(category: @private_category, guardian: Guardian.new(Fabricate(:admin))).sort).to eq([@tags[2].name].sort)
+      end
+
+      it "returns tags from sub-categories too" do
+        sub_category = Fabricate(:category, parent_category_id: @category1.id)
+        Fabricate(:topic, category: sub_category, tags: [@tags[1]])
+        expect(described_class.top_tags(category: @category1).sort).to eq([@tags[0].name, @tags[1].name].sort)
+      end
+
+      it "returns nothing if category arg is private to you" do
+        expect(described_class.top_tags(category: @private_category)).to be_empty
+      end
+    end
+
     context "with category-specific tags" do
       before do
         make_some_tags(count: 3)

@@ -670,6 +670,8 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
       return;
     }
 
+    this.appEvents.trigger('topic:jump-to-post', postId);
+
     const topic = this.get('model');
     const postStream = topic.get('postStream');
     const post = postStream.findLoadedPost(postId);
@@ -685,6 +687,12 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
 
   togglePinnedState() {
     this.send('togglePinnedForUser');
+  },
+
+  print() {
+    if (this.siteSettings.max_prints_per_hour_per_user > 0) {
+      window.open(this.get('model.printUrl'), '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,width=600,height=315');
+    }
   },
 
   canMergeTopic: function() {

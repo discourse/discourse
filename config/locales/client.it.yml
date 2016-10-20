@@ -464,8 +464,13 @@ it:
       suspended_notice: "Questo utente è sospeso fino al {{date}}."
       suspended_reason: "Motivo: "
       github_profile: "Github"
+      mailing_list_mode:
+        individual: "Invia una email per ogni nuovo messaggio"
+        many_per_day: "Inviamo una email per ogni nuovo messaggio (circa {{dailyEmailEstimate}} al giorno)"
+        few_per_day: "Inviami una email per ogni nuovo messaggio (circa 2 al giorno)"
       tag_settings: "Etichette"
       watched_tags: "Osservate"
+      watched_tags_instructions: "Osserverai automaticamente tutti gli argomenti con queste etichette. Verrai notificato di tutti i  nuovi messaggi e argomenti, e accanto all'argomento apparirà anche un conteggio dei nuovi messaggi."
       tracked_tags: "Seguite"
       tracked_tags_instructions: "Seguirai automaticamente tutti gli argomenti con queste etichette. Accanto all'argomento apparirà il conteggio dei nuovi messaggi."
       muted_tags: "Silenziati"
@@ -474,6 +479,8 @@ it:
       watched_categories_instructions: "Osserverai automaticamente tutti gli argomenti in queste categorie. Riceverai notifiche su tutti i nuovi messaggi e argomenti e, accanto all'argomento, apparirà il conteggio dei nuovi messaggi."
       tracked_categories: "Seguite"
       tracked_categories_instructions: "Seguirai automaticamente tutti gli argomenti appartenenti a queste categorie. Accanto all'argomento comparirà il conteggio dei nuovi messaggi."
+      watched_first_post_categories: "Osservando Primo Messaggio"
+      watched_first_post_tags: "Osservando Primo Messaggio"
       muted_categories: "Silenziate"
       muted_categories_instructions: "Non ti verrà notificato nulla sui nuovi argomenti in queste categorie, e non compariranno nell'elenco Ultimi."
       delete_account: "Cancella il mio account"
@@ -486,7 +493,9 @@ it:
       muted_users: "Silenziati"
       muted_users_instructions: "Occulta tutte le notifiche da questi utenti."
       muted_topics_link: "Mostra argomenti silenziati"
+      watched_topics_link: "Mostra argomenti osservati"
       automatically_unpin_topics: "Spunta automaticamente gli argomenti quando arrivi in fondo."
+      revoke_access: "Revoca Accesso"
       api_permissions: "Permessi:"
       api_approved: "Approvato:"
       api_read: "lettura"
@@ -656,7 +665,9 @@ it:
         rescind: "Rimuovi"
         rescinded: "Invito revocato"
         reinvite: "Rinvia Invito"
+        reinvite_all: "Re-invia tutti gli Inviti"
         reinvited: "Invito rinviato"
+        reinvited_all: "Tutti gli inviti re-inviati"
         time_read: "Ora di Lettura"
         days_visited: "Presenza (giorni)"
         account_age_days: "Età dell'utente in giorni"
@@ -1018,7 +1029,6 @@ it:
       title: "cerca argomenti, messaggi, utenti o categorie"
       no_results: "Nessun risultato trovato."
       no_more_results: "Nessun altro risultato trovato."
-      search_help: Cerca aiuto
       searching: "Ricerca in corso..."
       post_format: "#{{post_number}} da {{username}}"
       context:
@@ -1031,6 +1041,7 @@ it:
     not_logged_in_user: 'pagina utente con riassunto delle attività correnti e delle impostazioni'
     current_user: 'vai alla pagina utente'
     topics:
+      new_messages_marker: "ultima visita"
       bulk:
         unlist_topics: "Deselezione Topics"
         reset_read: "Reimposta Lettura"
@@ -1303,6 +1314,10 @@ it:
         instructions:
           one: "Per favore scegli l'argomento dove spostare il messaggio."
           other: "Per favore scegli l'argomento di destinazione dove spostare i <b>{{count}}</b> messaggi."
+      merge_posts:
+        title: "Unisci Messaggi Selezionati"
+        action: "unisci messaggi selezionati"
+        error: "Si è verificato un errore nell'unire i messaggi selezionati."
       change_owner:
         title: "Cambia Proprietario dei Messaggi"
         action: "cambia proprietà"
@@ -1495,6 +1510,10 @@ it:
         confirm:
           one: "Sei sicuro di voler cancellare questo messaggio?"
           other: "Sei sicuro di voler cancellare tutti questi messaggi?"
+      merge:
+        confirm:
+          one: "Sicuro di voler unire questi messaggi?"
+          other: "Sicuro di voler unire questi {{count}} messaggi?"
       revisions:
         controls:
           first: "Prima revisione"
@@ -1746,8 +1765,6 @@ it:
       readonly: "Visualizza"
     lightbox:
       download: "scarica"
-    search_help:
-      title: 'Aiuto Ricerca'
     keyboard_shortcuts_help:
       title: 'Scorciatorie Tastiera'
       jump_to:
@@ -2776,3 +2793,21 @@ it:
           label: "Nuovo:"
           add: "Aggiungi"
           filter: "Cerca (URL o URL Esterna)"
+  wizard_js:
+    wizard:
+      done: "Fatto"
+      back: "Indietro"
+      next: "Avanti"
+      step: "%{current} di %{total}"
+      upload: "Carica"
+      uploading: "Caricamento..."
+      quit: "Forse Dopo"
+      staff_count:
+        one: "La tua comunità ha 1 membro dello staff."
+        other: "La tua comunità ha %{count} membri dello staff."
+      invites:
+        add_user: "aggiungi"
+        roles:
+          admin: "Amministratore"
+          moderator: "Moderatore"
+          regular: "Utente Normale"

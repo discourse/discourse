@@ -173,6 +173,19 @@ class Emoji
     @unicode_replacements
   end
 
+  def self.lookup_unicode(name)
+    @reverse_map ||= begin
+      map = {}
+      db['emojis'].each do |e|
+        next if e['name'] == 'tm'
+        code = replacement_code(e['code'])
+        map[e['name']] = code if code
+      end
+      map
+    end
+    @reverse_map[name]
+  end
+
   def self.unicode_replacements_json
     @unicode_replacements_json ||= unicode_replacements.to_json
   end

@@ -110,6 +110,10 @@ $tag-color: scale-color($primary, $lightness: 40%);
   }
 }
 
+.categories-list .topic-list-latest .discourse-tags {
+  display: inline-block;
+}
+
 .mobile-view .topic-list-item .discourse-tags {
   display: inline-block;
   font-size: 0.9em;

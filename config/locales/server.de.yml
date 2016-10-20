@@ -111,6 +111,7 @@ de:
     operation_already_running: "Eine Arbeitsschritt wird momentan bearbeitet. Im Moment kann kein neuer Vorgang gestartet werden."
     backup_file_should_be_tar_gz: "Die Sicherungsdatei sollte ein .tar.gz-Archiv sein."
     not_enough_space_on_disk: "Es gibt nicht genügend freien Festplattenspeicher, um dieses Backup hochzuladen."
+    invalid_filename: "Der Dateiname für das Backup enthält ungültige Zeichen. Gültig sind: a-z 0-9 . - _."
   not_logged_in: "Dazu musst du angemeldet sein."
   not_found: "Die angeforderte URL oder Ressource konnte nicht gefunden werden."
   invalid_access: "Du hast nicht die Erlaubnis, die angeforderte Ressource zu betrachten."
@@ -298,6 +299,10 @@ de:
         post_reply:
           base:
             different_topic: "Beitrag und Antwort müssen zum gleichen Thema gehören."
+        web_hook:
+          attributes:
+            payload_url:
+              invalid: "URL ist ungültig. URL sollte http:// oder https:// enthalten, Leerzeichen sind nicht erlaubt."
       <<: *errors
   user_profile:
     no_info_me: "<div class='missing-profile'>Das 'Über mich'-Feld deines Profils ist aktuell leer, <a href='/users/%{username_lower}/preferences/about-me'>möchtest du es ausfüllen?</a></div>"
@@ -730,14 +735,7 @@ de:
     s3_backup_config_warning: 'Der Server ist so konfiguriert, dass Datensicherungen auf S3 geladen werden, aber mindestens eine der folgenden Einstellungen: s3_access_key_id, s3_secret_access_key oder s3_backup_bucket ist nicht festgelegt. Gehe zu <a href="/admin/site_settings">den Siteneinstellungen</a> und aktualisiere die Einstellungen. Um mehr darüber zu erfahren siehe <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">"Wie konfiguriere ich das Hochladen von Bildern zu S3?" (en)</a>.'
     image_magick_warning: 'Der Server wurde konfiguriert um Vorschaubilder von grossen Bildern zu erstellen, aber ImageMagick ist nicht installiertd. Installiere ImageMagick mit deinem bevorzugten Packetmanager oder besuche <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">um das aktuelle Paket herunterzuladen</a>.'
     failing_emails_warning: "%{num_failed_jobs} E-Mails konnten nicht versendet werden. Überprüfe deine app.yml und stelle sicher, dass die E-Mail Servereinstellungen korrekt gesetzt sind. \n<a href=\"/sidekiq/retries\" target=\"_blank\">Sieh dir hier die nicht versendeten E-Mails an.</a>"
-    default_logo_warning: "Richte das Logo für deine Site ein. Konfiguriere dafür logo_url, logo_small_url und favicon_url unter <a href='/admin/site_settings'>Website-Einstellungen</a>."
-    contact_email_missing: "Gib eine Kontakt-E-Mail-Adresse an, damit du dringende Meldungen bezüglich deiner Site erhalten kannst. Trage sie in den <a href='/admin/site_settings'>Einstellungen</a> ein."
-    contact_email_invalid: "Die Site-Kontakt E-Mail-Adresse ist ungültig. Ändere sie in den <a href='/admin/site_settings'>Einstellungen</a>."
-    title_nag: "Gib einen Namen für deine Website ein. Aktualisiere dazu den „title“ in den <a href='/admin/site_settings'>Einstellungen</a>."
-    site_description_missing: "Gib eine kurze Beschreibung deiner Website ein, die in Suchergebnissen angezeigt werden soll. Aktualisiere dazu die „site_description“ in den <a href='/admin/site_settings'>Einstellungen</a>."
     consumer_email_warning: "Deine Site verwendet Gmail (oder einen anderen für Endkunden gedachten E-Mailserver) um E-Mails zu versenden. <a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>Gmail hat einen Grenzwert bezüglich des Sendens von E-Mails</a>. Um die E-Mail-Zustellung zu gewährleisten, solltest du die Verwendung eines anderen E-Mail-Dienstes in Erwägung ziehen."
-    site_contact_username_warning: "Gib den Namen des Benutzerkontos eines freundlichen Mitarbeiters an, der als Absender für wichtige automatische Nachrichten verwendet wird. Aktualisiere site_contact_username in den <a href='/admin/site_settings'>Website-Einstellungen</a>."
-    notification_email_warning: "Benachrichtigungs-E-Mails werden nicht von einer gültigen, zu deiner Domain gehörenden E-Mail-Adresse versandt; der E-Mail-Versand wird unberechenbar und unzuverlässig sein. Bitte trage in den <a href='/admin/site_settings'>Einstellungen</a> unter notification_email eine gültige lokale E-Mail-Adresse ein."
     subfolder_ends_in_slash: "Deine Installation in einem Pfad ist nicht korrekt, DISCOURSE_RELATIVE_URL_ROOT endet mit einem Schrägstrich."
     email_polling_errored_recently:
       one: "Beim Abrufen von E-Mails ist in den letzten 24 Stunden ein Fehler aufgetreten. Weitere Informationen findest du <a href='/logs' target='_blank'>im Fehlerprotokoll</a>."
@@ -912,6 +910,7 @@ de:
     enable_facebook_logins: "Aktiviere Facebook-Authentifizierung (benötigt facebook_app_id und facebook_app_secret)."
     facebook_app_id: "App-ID für Facebook-Authentifizierung, registriert auf https://developers.facebook.com/apps"
     facebook_app_secret: "App Secret für Facebook-Authentifizierung, registriert auf https://developers.facebook.com/apps"
+    facebook_request_extra_profile_details: "Anfrage zu \"über mich\", Standort und Website von Facebook. (erfordert, dass Deine auth-Anwendung von Facebook genehmigt wurde)"
     enable_github_logins: "Aktiviere GitHub-Authentifizierung (benötigt github_client_id und github_client_secret)."
     github_client_id: "Client-ID für GitHub-uthentifizierung, registriert auf https://github.com/settings/applications"
     github_client_secret: "Client Secret für GitHub-Authentifizierung, registriert auf https://github.com/settings/applications"
@@ -965,6 +964,7 @@ de:
     external_system_avatars_enabled: "Benutze einen externen Avatar Service"
     external_system_avatars_url: "URL des externen Profilbild-Dienstes. Erlaubte Platzhalter sind {username} {first_letter} {color} {size}"
     default_opengraph_image_url: "URL des standardmäßigen Open-Graph-Bildes."
+    twitter_summary_large_image_url: "URL des Bildes, das standardmäßig in Twitter-Cards angezeigt wird (sollte mindestens 280 Pixel breit und 150 Pixel hoch sein)."
     allow_all_attachments_for_group_messages: "Erlaube alle E-Mail-Anhänge für Gruppen-Nachrichten."
     convert_pasted_images_to_hq_jpg: "Konvertiert eingefügte Bilder in JPG-Dateien mit hoher Qualität."
     convert_pasted_images_quality: "Qualität der umgewandelten JPG Datei (1 ist die niedrigste, 100 die beste Qualität)."
@@ -997,6 +997,7 @@ de:
     tl3_links_no_follow: "rel=nofollow nicht von Links entfernen, die von Benutzern mit Vertrauensstufe 3 erstellt wurden."
     min_trust_to_create_topic: "Die minimale Vertrauensstufe wird benötigt um eine neues Thema zu erstellen."
     min_trust_to_edit_wiki_post: "Die minimal benötigte Vertrauensstufe, um als Wiki markierte Beiträge bearbeiten zu können."
+    min_trust_to_edit_post: "Die minimal benötigte Vertrauensstufe, um Beiträge bearbeiten zu können."
     min_trust_to_allow_self_wiki: "Die minimale Vertrauensstufe, die ein Benutzer haben muss, um einen eigenen Wiki Eintrag zu erstellen."
     min_trust_to_send_messages: "Benötigte Vertrauensstufe um neue private Nachrichten erstellen zu dürfen."
     newuser_max_links: "Maximale Anzahl der Links, die neue Benutzer Beiträgen hinzufügen dürfen."
@@ -1134,6 +1135,7 @@ de:
     automatically_unpin_topics: "Themen automatisch loslösen, wenn ein Benutzer das Ende erreicht."
     read_time_word_count: "Wörter pro Minute für die Berechnung der geschätzten Lesezeit."
     topic_page_title_includes_category: "Name des Themas enthält den Namen der Kategorie."
+    max_prints_per_hour_per_user: "Maximale Anzahl von Aufrufen der Druckansicht pro Nutzer pro Stunde (0 zum deaktivieren)"
     full_name_required: "Der voller Name wird für das Benutzerprofil benötigt."
     enable_names: "Zeigt den vollen Namen eines Benutzers auf dem Profil, der Benutzerkarte und in E-Mails an. Wenn deaktiviert wird der volle Name überall ausgeblendet."
     display_name_on_posts: "Zeige zusätzlich zum @Benutzernamen auch den vollen Namen des Benutzers bei seinen Beiträgen."
@@ -1167,6 +1169,7 @@ de:
     enforce_square_emoji: "Emojis immer mit quadratischem Seitenverhältnis darstellen."
     approve_post_count: "Anzahl der Beiträge eines neuen Benutzer oder Anwärters, die genehmigt werden müssen"
     approve_unless_trust_level: "Beiträge von Benutzer unterhalb dieser Vertrauensstufe müssen genehmigt werden"
+    approve_new_topics_unless_trust_level: "Beiträge von Benutzer unterhalb dieser Vertrauensstufe müssen genehmigt werden"
     notify_about_queued_posts_after: "Wenn es Beiträge gibt, die länger als diese Anzahl von Stunden auf ihre Überprüfung gewartet haben, sende eine E-Mail an contact_email. Setze sie auf 0, um diese E-Mails zu deaktivieren."
     auto_close_messages_post_count: "Maximale Anzahl von Beiträgen, die in einer Nachricht erlaubt sind, bevor sie automatisch geschlossen wird (0 = ausgeschaltet)"
     auto_close_topics_post_count: "Maximale Anzahl von Beiträgen, die in einem Thema erlaubt sind, bevor es automatisch geschlossen wird (0 = ausgeschaltet)"
@@ -1561,6 +1564,78 @@ de:
         Wenn der Beitrag jedoch von der Community erneut ausgeblendet wurde, wird er ausgeblendet bleiben, bis sich ein Mitarbeiter darum kümmert – und möglicherweise gibt es weitere Maßnahmen, einschließlich einer möglichen Sperrung deines Kontos.
 
         Weitre Hinweise findest du in unseren [Community-Richtlinien](%{base_url}/guidelines).
+    usage_tips:
+      text_body_template: |
+        In dieser Nachricht findest du einige Tipps um dir den Einstieg zu erleichtern.
+
+        ## Einfach weiterscrollen
+
+        Es gibt keine Knöpfe um auf die nächste Seite zu gelangen oder Seitenzahlen – um mehr zu lesen, **scrolle einfach weiter nach unten!**
+
+        Wenn neue Beiträge eingebracht werden, erscheinen diese automatisch - ohne dass die Seite neu geladen werden muss.
+
+        ## Wo bin ich?
+
+        - Um die Suche, das Menü <kbd>☰</kbd> oder deine Profilseite aufzurufen, benutze die **Schaltflächen oben rechts**.
+
+        - Das Klicken auf den Titel eines Themas bringt dich zu **deinem nächsten ungelesenen Beitrag** in diesem Thema. Um stattdessen ganz oben oder ganz unten einzusteigen, klicke die Beitragszahl oder das Datum der letzten Antwort.
+
+        <img src="%{base_url}/images/welcome/topic-list-select-areas-2x.png" width="593" height="59">
+
+        - Während des Lesens eines Themas kannst du mit Hilfe dessen Titels zum &uarr; Anfang springen. Die grüne Fortschrittsanzeige unten rechts erlaubt weitere Navigation.
+
+        <img src="%{base_url}/images/welcome/progress-bar-2x.png" width="153" height="181">
+
+        Du kannst auch <kbd>?</kbd> auf der Tastatur drücken, für eine Liste super-schneller Tastaturkürzel.
+
+        ## Wie antworte ich?
+
+        - Um auf das gesamte Thema zu antworten, benutze den Antwortknopf <img src="%{base_url}/images/welcome/reply-topic.png" width="29" height="25"> ganz unten auf der Seite.
+
+        - Um auf einen bestimmten Beitrag zu antworten kannst du die Schaltfläche <img src="%{base_url}/images/welcome/reply-post.png" width="29" height="25"> direkt unter diesem Beitrag verwenden.
+
+        Das Zitieren eines Beitrags ist mit dem Auswählen des gewünschten Texts gefolgt von einem beliebigen Antwortknopf möglich.
+
+        <img src="%{base_url}/images/welcome/quote-reply.png" width="350" height="129">
+
+        Um jemanden in auf deinen Beitrag aufmerksam zu machen, erwähne ihn durch das Eingeben von `@` gefolgt von seinem Benutzernamen.
+
+        <img src="%{base_url}/images/welcome/username-completion.png" width="230" height="131">
+
+        - Um die Diskussion in eine andere Richtung zu lenken, die beiden Themen aber zu verknüpfen, benutze bitte <img src="%{base_url}/images/welcome/reply-as-linked-topic.png" width="15" height="25"> <kbd>Mit verknüpftem Thema antworten` rechts des passenden Beitrags.
+
+
+        ## Was kann ich sonst noch machen?
+
+        Unter jedem Beitrag befinden sich Aktionsbuttons:
+
+        <img src="%{base_url}/images/welcome/like-link-flag-bookmark.png" width="169" height="46">
+
+        Um zu Zeigen, dass dir der Beitrag gefallen hat, drücke den **❤**-Knopf. Wenn du ein Problem mit einem Beitrag feststellst, mach den Autor oder die Moderatoren durch **Melden** darauf aufmerksam.
+
+        Du kannst außerdem einen Link zu einem Beitrag **teilen**, oder ihn zum Merken mit einem [**Lesezeichen**](/my/activity/bookmarks) versehen.
+
+        ## Wer schreibt mir?
+
+        Wenn jemand auf deinen Beitrag antwortet, deinen Beitrag zitiert, oder deinen `@Benutzernamen` erwähnt, zeigt sich sofort eine Zahl oben rechts auf der Seite. Dort kannst du auch deine **Benachrichtigungen** abrufen.
+
+        <img src="%{base_url}/images/welcome/notification-panel.png" width="178" height="59">
+
+        Um das Verpassen von Antworten (und Nachrichten) musst du dir keine Sorgen machen – diese werden dir 3 Minuten nach ihrer Erstellung automatisch per E-Mail zugeschickt, für den Fall dass du nicht online sein solltest wenn sie ankommen.
+
+        ## Wann sind Themen neu?
+
+        Standardmäßig gelten alle Themen die weniger als zwei Tage alt sind als neu. Alle Themen an denen du teilgenommen hast (durch Antwort, eigene Erstellung, oder längeres Lesen) werden automatisch verfolgt.
+
+        Neben diesen Themen wirst du blaue Indikatoren finden, die dich über die Aktualität informieren:
+
+        <img src="%{base_url}/images/welcome/topics-new-unread.png" width="368" height="89">
+
+        Du kannst den Informationsmodus eines Themas mit dem Menü am Ende anpassen (auch für ganze Kategorien möglich). Du kannst damit Stummstellen, Verfolgen oder Benachrichtigungen über alles Neue erhalten. Um diese Funktion zu konfigurieren, gehe in [deine Einstellungen](/my/preferences).
+
+        ## Warum kann ich manche Sachen nicht machen?
+
+        Aus Sicherheitsgründen sind neue Benutzer etwas eingeschränkt in ihren Befugnissen. Mit dem Teilnehmen hier und dem Gewinnen von Vertrauen werden diese Einschränkungen automatisch aufgehoben. Wenn du eine höhere Vertrauensstufe erlangst, kannst du außerdem ein wenig beim Moderieren helfen.
     welcome_user:
       subject_template: "Willkommen bei %{site_name}!"
       text_body_template: |
@@ -2516,35 +2591,6 @@ de:
       Wenn wir uns dazu entscheiden, unsere Datenschutzbestimmungen zu ändern, werden wir diese Änderungen auf dieser Seite veröffentlichen.
 
       Dieses Dokument ist als CC-BY-SA lizensiert. Es wurde zuletzt aktualisiert am am 31. Mai 2013.
-  static:
-    search_help: |
-      <h3>Tipps</h3>
-      <p>
-      <ul>
-      <li>Suchtreffer in Titeln haben Vorrang &ndash; im Zweifel einfach nach Titeln suchen</li>
-      <li>Eindeutige, seltene Wörter erzielen die besten Suchergebnisse</li>
-      <li>Versuche, innerhalb einer bestimmten Kategorie, eines bestimmten Themas oder Benutzers zu suchen</li>
-      </ul>
-      </p>
-      <h3>Optionen</h3>
-      <p>
-      <table>
-      <tr><td><code>order:views</code></td><td><code>order:latest</code></td><td><code>order:likes</code></td><td><code>@username</code></td><td><code>user:foo</code></td></tr>
-      <tr><td><code>status:open</code></td><td><code>status:closed</code></td><td><code>status:archived</code></td><td><code>status:noreplies</code></td><td><code>status:single_user</code></td></tr>
-      <tr><td><code>#category-slug</code></td><td><code>category:foo</code></td><td><code>group:foo</code></td><td><code>badge:foo</code></td><td></td></tr>
-      <tr><td><code>in:likes</code></td><td><code>in:posted</code></td><td><code>in:watching</code></td><td><code>in:tracking</code></td><td><code>in:private</code></td></tr>
-      <tr><td><code>in:bookmarks</code></td><td><code>in:first</code></td><td><code>in:pinned</code></td><td><code>in:unpinned</code></td><td><code>in:wiki</code></td></tr>
-      <tr><td><code>posts_count:num</code></td><td><code>before:days or date</code></td><td><code>after:days or date</code></td><td><code>tags:one,two</code></td><td></td></tr>
-      </table>
-      </p>
-      <h3>Beispiele</h3>
-      <p>
-      <ul>
-      <li><code>Regenbogen #Parks</code> sucht nach Themen in der Kategorie "Parks", die das Wort "Regenbogen" enthalten.</li>
-      <li><code>Regenbogen category:parks status:open order:latest</code> sucht nach Themen in der Kategorie "Parks", die das Wort "Regenbogen" enthalten und die nicht geschlossen oder archiviert sind; die Treffer werden nach dem Datum des letzten Beitrags sortiert.</li>
-      <li><code>Regenbogen category:"Parks und Gärten" in:bookmarks</code> sucht nach Themen, die das Wort "Regenbogen" in der Kategorie "Parks und Gärten" erhalten und von dir mit einem Lesezeichen markiert sind.</li>
-      </ul>
-      </p>
   badges:
     editor:
       name: Bearbeiter

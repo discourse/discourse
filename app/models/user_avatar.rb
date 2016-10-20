@@ -68,9 +68,7 @@ class UserAvatar < ActiveRecord::Base
 
     upload = Upload.create_for(user.id, tempfile, "external-avatar." + ext, File.size(tempfile.path), origin: avatar_url, image_type: "avatar")
 
-    unless user.user_avatar
-      user.create_user_avatar
-    end
+    user.create_user_avatar unless user.user_avatar
 
     if !user.user_avatar.contains_upload?(upload.id)
       user.user_avatar.update_columns(custom_upload_id: upload.id)
@@ -83,7 +81,6 @@ class UserAvatar < ActiveRecord::Base
         user.update_columns(uploaded_avatar_id: upload.id)
       end
     end
-
 
   rescue => e
     # skip saving, we are not connected to the net

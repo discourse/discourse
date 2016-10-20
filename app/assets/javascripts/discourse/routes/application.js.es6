@@ -28,12 +28,6 @@ const ApplicationRoute = Discourse.Route.extend(OpenComposer, {
 
   actions: {
 
-    showSearchHelp() {
-      ajax("/static/search_help.html", { dataType: 'html' }).then(model => {
-        showModal('searchHelp', { model });
-      });
-    },
-
     toggleAnonymous() {
       ajax("/users/toggle-anon", {method: 'POST'}).then(() => {
         window.location.reload();

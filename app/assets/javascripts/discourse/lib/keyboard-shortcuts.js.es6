@@ -4,7 +4,7 @@ import { scrollTopFor } from 'discourse/lib/offset-calculator';
 
 const bindings = {
   '!':               {postAction: 'showFlags'},
-  '#':               {handler: 'toggleProgress', anonymous: true},
+  '#':               {handler: 'goToPost', anonymous: true},
   '/':               {handler: 'toggleSearch', anonymous: true},
   '=':               {handler: 'toggleHamburgerMenu', anonymous: true},
   '?':               {handler: 'showHelpModal', anonymous: true},
@@ -13,6 +13,8 @@ const bindings = {
   'c':               {handler: 'createTopic'},
   'ctrl+f':          {handler: 'showPageSearch', anonymous: true},
   'command+f':       {handler: 'showPageSearch', anonymous: true},
+  'ctrl+p':          {handler: 'printTopic', anonymous: true},
+  'command+p':       {handler: 'printTopic', anonymous: true},
   'd':               {postAction: 'deletePost'},
   'e':               {postAction: 'editPost'},
   'end':             {handler: 'goToLastPost', anonymous: true},
@@ -151,6 +153,15 @@ export default {
     });
   },
 
+  printTopic(event) {
+    Ember.run(() => {
+      if ($('.container.posts').length) {
+        event.preventDefault(); // We need to stop printing the current page in Firefox
+        this.container.lookup('controller:topic').print();
+      }
+    });
+  },
+
   createTopic() {
     this.container.lookup('controller:composer').open({action: Composer.CREATE_TOPIC, draftKey: Composer.CREATE_TOPIC});
   },
@@ -159,8 +170,8 @@ export default {
     this.container.lookup('controller:topic').togglePinnedState();
   },
 
-  toggleProgress() {
-    this.appEvents.trigger('topic-progress:keyboard-trigger', { type: 'jump' });
+  goToPost() {
+    this.appEvents.trigger('topic:keyboard-trigger', { type: 'jump' });
   },
 
   toggleSearch(event) {

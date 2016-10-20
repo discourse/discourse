@@ -163,9 +163,7 @@ describe Auth::DefaultCurrentUserProvider do
       UserApiKey.create!(
         application_name: 'my app',
         client_id: '1234',
-        read: true,
-        write: false,
-        push: false,
+        scopes: ['read'],
         key: SecureRandom.hex,
         user_id: user.id
       )

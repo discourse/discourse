@@ -2,6 +2,17 @@
   {{search-text-field value=searchTerm class="full-page-search input-xxlarge search no-blur" action="search" hasAutofocus=hasAutofocus}}
   {{d-button action="search" icon="search" class="btn-primary" disabled=searching}}
 
+  <div class='search-advanced'>
+    <button class="search-advanced-btn btn" {{action "toggleAdvancedSearch"}}>
+      {{{searchAdvancedIcon}}}
+      {{i18n "search.advanced.title"}}
+    </button>
+
+    {{#if expanded}}
+      {{search-advanced-options searchTerm=searchTerm isExpanded=expanded}}
+    {{/if}}
+  </div>
+
   {{#if canCreateTopic}}
     <span class="new-topic-btn">{{d-button id="create-topic" class="btn-default" action="createTopic" actionParam=searchTerm icon="plus" label="topic.create"}}</span>
   {{/if}}
@@ -40,7 +51,6 @@
       {{#if searchActive}}
         {{i18n "search.no_results"}}
       {{/if}}
-      <a href class="show-help" {{action "showSearchHelp" bubbles=false}}>{{i18n "search.search_help"}}</a>
     </h3>
   {{/unless}}
 
@@ -116,7 +126,6 @@
   {{#if hasResults}}
     <h3 class="search-footer">
       {{i18n "search.no_more_results"}}
-      <a href class="show-help" {{action "showSearchHelp" bubbles=false}}>{{i18n "search.search_help"}}</a>
     </h3>
   {{/if}}
 

@@ -13,9 +13,13 @@ ja:
       total_votes:
         other: "合計得票数"
       average_rating: "平均評価: <strong>%{average}</strong>."
+      multiple:
+        help:
+          up_to_max_options:
+            other: "<strong>%{count}</strong>個まで選ぶことができます"
       cast-votes:
         title: "投票する"
-        label: "今すぐ投票！"
+        label: "投票する"
       show-results:
         title: "投票結果を表示"
         label: "結果を表示"
@@ -27,6 +31,15 @@ ja:
         label: "開く"
         confirm: "この投票をオープンにしてもよろしいですか？"
       close:
-        title: "投票を終了"
-        label: "閉じる"
-        confirm: "この投票を終了してもよろしいですか？"
+        title: "投票を締め切る"
+        label: "投票を締め切る"
+        confirm: "この投票を締め切ってもよろしいですか？"
+      ui_builder:
+        title: 投票を作成
+        poll_type:
+          label: タイプ
+          regular: 一つだけ選択
+          multiple: 複数選択
+          number: 数字で評価
+        poll_public:
+          label: 誰が投票したか表示する

@@ -1,3 +1,4 @@
+import getUrl from 'discourse-common/lib/get-url';
 import computed from 'ember-addons/ember-computed-decorators';
 import { getToken } from 'wizard/lib/ajax';
 
@@ -20,7 +21,7 @@ export default Ember.Component.extend({
     const id = this.get('field.id');
 
     $upload.fileupload({
-      url: "/uploads.json",
+      url: getUrl("/uploads.json"),
       formData: { synchronous: true,
                   type: `wizard_${id}`,
                   authenticity_token: getToken() },

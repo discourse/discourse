@@ -1,5 +1,21 @@
 module JsLocaleHelper
 
+  def self.plugin_translations(locale_str)
+    @plugin_translations ||= HashWithIndifferentAccess.new
+
+    @plugin_translations[locale_str] ||= begin
+      translations = {}
+
+      Dir["#{Rails.root}/plugins/*/config/locales/client.#{locale_str}.yml"].each do |file|
+        if plugin_translations = YAML::load(File.open(file))[locale_str]
+          translations.deep_merge!(plugin_translations)
+        end
+      end
+
+      translations
+    end
+  end
+
   def self.load_translations(locale, opts=nil)
     opts ||= {}
 
@@ -11,14 +27,9 @@ module JsLocaleHelper
 
       # load default translations
       translations = YAML::load(File.open("#{Rails.root}/config/locales/client.#{locale_str}.yml"))
-      # load plugins translations
-      plugin_translations = {}
-      Dir["#{Rails.root}/plugins/*/config/locales/client.#{locale_str}.yml"].each do |file|
-        plugin_translations.deep_merge! YAML::load(File.open(file))
-      end
 
       # merge translations (plugin translations overwrite default translations)
-      translations[locale_str]['js'].deep_merge!(plugin_translations[locale_str]['js']) if translations[locale_str] && plugin_translations[locale_str] && plugin_translations[locale_str]['js']
+      translations[locale_str]['js'].deep_merge!(plugin_translations(locale_str)['js']) if translations[locale_str] && plugin_translations(locale_str) && plugin_translations(locale_str)['js']
 
       translations
     end
@@ -71,17 +82,16 @@ module JsLocaleHelper
 
     site_locale = SiteSetting.default_locale.to_sym
 
-    if Rails.env.development?
-      translations = load_translations(locale_sym, force: true)
-    else
-      if locale_sym == :en
-        translations = load_translations(locale_sym)
+    translations =
+      if Rails.env.development?
+        load_translations(locale_sym, force: true)
+      elsif locale_sym == :en
+        load_translations(locale_sym)
       elsif locale_sym == site_locale || site_locale == :en
-        translations = load_translations_merged(locale_sym, :en)
+        load_translations_merged(locale_sym, :en)
       else
-        translations = load_translations_merged(locale_sym, site_locale, :en)
+        load_translations_merged(locale_sym, site_locale, :en)
       end
-    end
 
     I18n.locale = current_locale
 

@@ -22,7 +22,7 @@ describe CookedPostProcessor do
 
   context "cooking options" do
     context "regular user" do
-      let(:post) { Fabricate(:post) } 
+      let(:post) { Fabricate(:post) }
 
       it "doesn't omit nofollow" do
         cpp = CookedPostProcessor.new(post)
@@ -41,14 +41,37 @@ describe CookedPostProcessor do
   end
 
   context ".keep_reverse_index_up_to_date" do
+    let(:video_upload) { Fabricate(:upload, url: '/uploads/default/1/1234567890123456.mp4' ) }
+    let(:image_upload) { Fabricate(:upload, url: '/uploads/default/1/1234567890123456.jpg' ) }
+    let(:audio_upload) { Fabricate(:upload, url: '/uploads/default/1/1234567890123456.ogg') }
+    let(:attachment_upload) { Fabricate(:upload, url: '/uploads/default/1/1234567890123456.csv') }
 
-    let(:post) { build(:post_with_uploads, id: 123) }
+    let(:raw) do
+      <<~RAW
+      <a href="#{attachment_upload.url}">Link</a>
+      <img src="#{image_upload.url}">
+
+      <video width="100%" height="100%" controls>
+        <source src="http://myforum.com#{video_upload.url}">
+        <a href="http://myforum.com#{video_upload.url}">http://myforum.com#{video_upload.url}</a>
+      </video>
+
+      <audio controls>
+        <source src="http://myforum.com#{audio_upload.url}">
+        <a href="http://myforum.com#{audio_upload.url}">http://myforum.com#{audio_upload.url}</a>
+      </audio>
+      RAW
+    end
+
+    let(:post) { Fabricate(:post, raw: raw) }
     let(:cpp) { CookedPostProcessor.new(post) }
 
     it "finds all the uploads in the post" do
-      Upload.expects(:get_from_url).with("/uploads/default/2/2345678901234567.jpg")
-      Upload.expects(:get_from_url).with("/uploads/default/1/1234567890123456.jpg")
       cpp.keep_reverse_index_up_to_date
+
+      expect(PostUpload.where(post: post).map(&:upload_id).sort).to eq(
+        [video_upload.id, image_upload.id, audio_upload.id, attachment_upload.id].sort
+      )
     end
 
     it "cleans the reverse index up for the current post" do

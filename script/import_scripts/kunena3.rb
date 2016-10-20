@@ -1,20 +1,42 @@
 require "mysql2"
 require File.expand_path(File.dirname(__FILE__) + "/base.rb")
 
+# If you change this script's functionality, please consider making a note here:
+# https://meta.discourse.org/t/importing-from-kunena-3/43776
+
+# Before running this script, paste these lines into your shell,
+# then use arrow keys to edit the values
+=begin
+export DB_HOST="localhost"
+export DB_NAME="kunena"
+export DB_USER="kunena"
+export DB_PW="kunena"
+export KUNENA_PREFIX="jos_" # "iff_" sometimes
+export IMAGE_PREFIX="http://EXAMPLE.com/media/kunena/attachments"
+export PARENT_FIELD="parent_id" # "parent" in some versions
+=end
+
 class ImportScripts::Kunena < ImportScripts::Base
 
-  KUNENA_DB    = "DATABASENAME"
+  DB_HOST ||= ENV['DB_HOST'] || "localhost"
+  DB_NAME ||= ENV['DB_NAME'] || "kunena"
+  DB_USER ||= ENV['DB_USER'] || "kunena"
+  DB_PW   ||= ENV['DB_PW'] || "kunena"
+  KUNENA_PREFIX ||= ENV['KUNENA_PREFIX'] || "jos_" # "iff_" sometimes
+  IMAGE_PREFIX ||= ENV['IMAGE_PREFIX'] || "http://EXAMPLE.com/media/kunena/attachments"
+  PARENT_FIELD ||= ENV['PARENT_FIELD'] || "parent_id" # "parent" in some versions
 
   def initialize
+
     super
 
     @users = {}
 
     @client = Mysql2::Client.new(
-      host: "HOSTNAME.COM",
-      username: "DATABASE_USER_NAME",
-      password: "DATABASE_USER_PASSWORD",
-      database: KUNENA_DB
+      host: DB_HOST,
+      username: DB_USER,
+      password: DB_PW,
+      database: DB_NAME
     )
   end
 
@@ -37,7 +59,7 @@ class ImportScripts::Kunena < ImportScripts::Base
 
     @users = nil
 
-    create_categories(@client.query("SELECT id, parent_id, name, description, ordering FROM jos_kunena_categories ORDER BY parent_id, id;")) do |c|
+    create_categories(@client.query("SELECT id, #{PARENT_FIELD} as parent_id, name, description, ordering FROM #{KUNENA_PREFIX}kunena_categories ORDER BY #{PARENT_FIELD}, id;")) do |c|
       h = {id: c['id'], name: c['name'], description: c['description'], position: c['ordering'].to_i}
       if c['parent_id'].to_i > 0
         h[:parent_category_id] = category_id_from_imported_category_id(c['parent_id'])
@@ -59,7 +81,7 @@ class ImportScripts::Kunena < ImportScripts::Base
     # Need to merge data from joomla with kunena
 
     puts "fetching Joomla users data from mysql"
-    results = @client.query("SELECT id, username, email, registerDate FROM jos_users;", cache_rows: false)
+    results = @client.query("SELECT id, username, email, registerDate FROM #{KUNENA_PREFIX}users;", cache_rows: false)
     results.each do |u|
       next unless u['id'].to_i > 0 and u['username'].present? and u['email'].present?
       username = u['username'].gsub(' ', '_').gsub(/[^A-Za-z0-9_]/, '')[0,User.username_length.end]
@@ -70,7 +92,7 @@ class ImportScripts::Kunena < ImportScripts::Base
     end
 
     puts "fetching Kunena user data from mysql"
-    results = @client.query("SELECT userid, signature, moderator, banned FROM jos_kunena_users;", cache_rows: false)
+    results = @client.query("SELECT userid, signature, moderator, banned FROM #{KUNENA_PREFIX}kunena_users;", cache_rows: false)
     results.each do |u|
       next unless u['userid'].to_i > 0
       user = @users[u['userid'].to_i]
@@ -85,7 +107,7 @@ class ImportScripts::Kunena < ImportScripts::Base
   def import_posts
     puts '', "creating topics and posts"
 
-    total_count = @client.query("SELECT COUNT(*) count FROM jos_kunena_messages m;").first['count']
+    total_count = @client.query("SELECT COUNT(*) count FROM #{KUNENA_PREFIX}kunena_messages m;").first['count']
 
     batch_size = 1000
 
@@ -99,8 +121,8 @@ class ImportScripts::Kunena < ImportScripts::Base
                m.subject subject,
                m.time time,
                t.message message
-        FROM jos_kunena_messages m,
-             jos_kunena_messages_text t
+        FROM #{KUNENA_PREFIX}kunena_messages m,
+             #{KUNENA_PREFIX}kunena_messages_text t
         WHERE m.id = t.mesid
         ORDER BY m.id
         LIMIT #{batch_size}
@@ -117,7 +139,9 @@ class ImportScripts::Kunena < ImportScripts::Base
 
         mapped[:id] = m['id']
         mapped[:user_id] = user_id_from_imported_user_id(m['userid']) || -1
-        mapped[:raw] = m["message"]
+
+        id = m['userid']
+        mapped[:raw] = m["message"].gsub(/\[attachment=[0-9]+\](.+?)\[\/attachment\]/, "\n#{IMAGE_PREFIX}/#{id}/\\1")
         mapped[:created_at] = Time.zone.at(m['time'])
 
         if m['parent'] == 0

@@ -1,10 +1,10 @@
 import { ajax } from 'discourse/lib/ajax';
 import { translateResults, searchContextDescription, getSearchKey, isValidSearchTerm } from "discourse/lib/search";
-import showModal from 'discourse/lib/show-modal';
 import { default as computed, observes } from 'ember-addons/ember-computed-decorators';
 import Category from 'discourse/models/category';
 import { escapeExpression } from 'discourse/lib/utilities';
 import { setTransient } from 'discourse/lib/page-tracker';
+import { iconHTML } from 'discourse-common/helpers/fa-icon';
 
 const SortOrders = [
   {name: I18n.t('search.relevance'), id: 0},
@@ -18,9 +18,10 @@ export default Ember.Controller.extend({
   bulkSelectEnabled: null,
 
   loading: Em.computed.not("model"),
-  queryParams: ["q", "context_id", "context", "skip_context"],
+  queryParams: ["q", "expanded", "context_id", "context", "skip_context"],
   q: null,
   selected: [],
+  expanded: false,
   context_id: null,
   context: null,
   searching: false,
@@ -138,9 +139,14 @@ export default Ember.Controller.extend({
     return this.currentUser && this.currentUser.staff && hasResults;
   },
 
-  @computed
-  canCreateTopic() {
-    return this.currentUser && !this.site.mobileView;
+  @computed('expanded')
+  canCreateTopic(expanded) {
+    return this.currentUser && !this.site.mobileView && !expanded;
+  },
+
+  @computed('expanded')
+  searchAdvancedIcon(expanded) {
+    return iconHTML(expanded ? "caret-down" : "caret-right");
   },
 
   _search() {
@@ -206,13 +212,12 @@ export default Ember.Controller.extend({
       this.get('selected').clear();
     },
 
-    showSearchHelp() {
-      // TODO: dupe code should be centralized
-      ajax("/static/search_help.html", { dataType: 'html' }).then(model => showModal('searchHelp', { model }));
-    },
-
     search() {
       this._search();
+    },
+
+    toggleAdvancedSearch() {
+      this.toggleProperty('expanded');
     }
   }
 });

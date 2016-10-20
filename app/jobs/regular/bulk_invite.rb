@@ -29,6 +29,7 @@ module Jobs
       # read csv file, and send out invitations
       read_csv_file(csv_path)
 
+    ensure
       # send notification to user regarding progress
       notify_user
 
@@ -48,7 +49,7 @@ module Jobs
     end
 
     def read_csv_file(csv_path)
-      CSV.foreach(csv_path) do |csv_info|
+      CSV.foreach(csv_path, encoding: "iso-8859-1:UTF-8") do |csv_info|
         if csv_info[0]
           if (EmailValidator.email_regex =~ csv_info[0])
             # email is valid
@@ -61,6 +62,9 @@ module Jobs
           end
         end
       end
+    rescue Exception => e
+      log "Bulk Invite Process Failed -- '#{e.message}'"
+      @failed += 1
     end
 
     def get_group_ids(group_names, csv_line_number)

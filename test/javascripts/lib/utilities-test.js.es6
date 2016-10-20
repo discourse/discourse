@@ -164,13 +164,13 @@ test("avatarImg", function() {
 });
 
 test("allowsAttachments", function() {
-  Discourse.SiteSettings.authorized_extensions = "jpg|jpeg|gif";
+  Discourse.SiteSettings.authorized_extensions = ".jpg, .jpeg, .gif";
   not(allowsAttachments(), "no attachments allowed by default");
 
-  Discourse.SiteSettings.authorized_extensions = "jpg|jpeg|gif|*";
+  Discourse.SiteSettings.authorized_extensions = ".jpg, .jpeg, .gif, *";
   ok(allowsAttachments(), "attachments are allowed when all extensions are allowed");
 
-  Discourse.SiteSettings.authorized_extensions = "jpg|jpeg|gif|pdf";
+  Discourse.SiteSettings.authorized_extensions = ".jpg, .jpeg, .gif, .pdf";
   ok(allowsAttachments(), "attachments are allowed when at least one extension is not an image extension");
 });
 

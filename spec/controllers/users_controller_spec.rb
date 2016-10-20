@@ -251,6 +251,15 @@ describe UsersController do
         user.reload
         expect(user.auth_token).to_not eq old_token
         expect(user.auth_token.length).to eq 32
+        expect(session["password-#{token}"]).to be_blank
+      end
+
+      it "redirects to the wizard if you're the first admin" do
+        user = Fabricate(:admin, auth_token: SecureRandom.hex(16), auth_token_updated_at: Time.now)
+        token = user.email_tokens.create(email: user.email).token
+        get :password_reset, token: token
+        put :password_reset, token: token, password: 'hg9ow8yhg98oadminlonger'
+        expect(response).to be_redirect
       end
 
       it "doesn't invalidate the token when loading the page" do

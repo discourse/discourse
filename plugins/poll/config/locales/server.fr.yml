@@ -38,6 +38,6 @@ fr:
     topic_must_be_open_to_vote: "Le sujet doit être ouvert pour pouvoir voter."
     poll_must_be_open_to_vote: "Le sondage doit être ouvert pour pouvoir voter."
     topic_must_be_open_to_toggle_status: "Le sujet doit être ouvert pour modifier le statut."
-    only_staff_or_op_can_toggle_status: "Seuls les responsables ou l'utilisateur qui a créé ce sujet peuvent modifier le statut d'un sondage."
+    only_staff_or_op_can_toggle_status: "Seul un responsable ou le créateur du sujet peut modifier le statut d'un sondage."
     email:
       link_to_poll: "Cliquer pour voir le sondage."

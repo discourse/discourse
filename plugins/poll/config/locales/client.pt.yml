@@ -19,6 +19,15 @@ pt:
         title: "Votos são públicos"
       multiple:
         help:
+          at_least_min_options:
+            one: "Escolha pelo menos <strong>1</strong> opção"
+            other: "Escolha pelo menos <strong>%{count}</strong> opções"
+          up_to_max_options:
+            one: "Escolha no máximo <strong>1</strong> opção"
+            other: "Escolha no máximo <strong>%{count}</strong> opções"
+          x_options:
+            one: "Escolha <strong>1</strong> opção"
+            other: "Escolha <strong>%{count}</strong> opções"
           between_min_and_max_options: "Escolha entre <strong>%{min}</strong> e <strong>%{max}</strong> opções"
       cast-votes:
         title: "Votar"

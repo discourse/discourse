@@ -99,7 +99,7 @@ class Invite < ActiveRecord::Base
 
     topic = opts[:topic]
     group_ids = opts[:group_ids]
-    send_email = opts[:send_email] || true
+    send_email = opts[:send_email].nil? ? true : opts[:send_email]
     custom_message = opts[:custom_message]
 
     lower_email = Email.downcase(email)

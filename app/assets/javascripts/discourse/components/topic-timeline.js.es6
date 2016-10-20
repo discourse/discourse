@@ -10,12 +10,28 @@ export default MountWidget.extend(Docking, {
   dockAt: null,
 
   buildArgs() {
-    return { topic: this.get('topic'),
-             topicTrackingState: this.topicTrackingState,
-             enteredIndex: this.get('enteredIndex'),
-             dockAt: this.dockAt,
-             top: this.dockAt || FIXED_POS,
-             dockBottom: this.dockBottom };
+    let attrs =  {
+      topic: this.get('topic'),
+      topicTrackingState: this.topicTrackingState,
+      enteredIndex: this.get('enteredIndex'),
+      dockBottom: this.dockBottom,
+      mobileView: this.get('site.mobileView')
+    };
+
+    let event = this.get('prevEvent');
+    if (event) {
+      attrs.enteredIndex = event.postIndex-1;
+    }
+
+    if (this.get('fullscreen')) {
+      attrs.fullScreen = true;
+      attrs.addShowClass = this.get('addShowClass');
+    } else {
+      attrs.dockAt = this.dockAt;
+      attrs.top = this.dockAt || FIXED_POS;
+    }
+
+    return attrs;
   },
 
   @observes('topic.highest_post_number', 'loading')
@@ -54,6 +70,14 @@ export default MountWidget.extend(Docking, {
 
   didInsertElement() {
     this._super();
+
+    if (this.get('fullscreen') && !this.get('addShowClass')) {
+      Em.run.next(()=>{
+        this.set('addShowClass', true);
+        this.queueRerender();
+      });
+    }
+
     this.dispatch('topic:current-post-scrolled', 'timeline-scrollarea');
     this.dispatch('topic-notifications-button:keyboard-trigger', 'topic-notifications-button');
   }

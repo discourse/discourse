@@ -35,7 +35,7 @@ TXT
 
   let :args do
     {
-      access: 'r',
+      scopes: 'read',
       client_id: "x"*32,
       auth_redirect: 'http://over.the/rainbow',
       application_name: 'foo',
@@ -48,7 +48,7 @@ TXT
     it "supports a head request cleanly" do
       head :new
       expect(response.code).to eq("200")
-      expect(response.headers["Auth-Api-Version"]).to eq("1")
+      expect(response.headers["Auth-Api-Version"]).to eq("2")
     end
   end
 
@@ -67,7 +67,6 @@ TXT
     end
 
     it "will allow tokens for staff without TL" do
-
       SiteSetting.min_trust_level_for_user_api_key = 2
       SiteSetting.allowed_user_api_auth_redirects = args[:auth_redirect]
 
@@ -96,7 +95,7 @@ TXT
 
       SiteSetting.min_trust_level_for_user_api_key = 0
       SiteSetting.allowed_user_api_auth_redirects = args[:auth_redirect]
-      SiteSetting.allow_read_user_api_keys = false
+      SiteSetting.allow_user_api_key_scopes = "write"
 
       user = Fabricate(:user, trust_level: 0)
 
@@ -143,7 +142,7 @@ TXT
       SiteSetting.min_trust_level_for_user_api_key = 0
       SiteSetting.allowed_user_api_auth_redirects = args[:auth_redirect]
 
-      args[:access] = "pr"
+      args[:scopes] = "push,read"
       args[:push_url] = "https://push.it/here"
 
       user = Fabricate(:user, trust_level: 0)
@@ -164,22 +163,21 @@ TXT
       parsed = JSON.parse(key.private_decrypt(encrypted))
 
       expect(parsed["nonce"]).to eq(args[:nonce])
-      expect(parsed["access"].split('').sort).to eq(['r'])
+      expect(parsed["push"]).to eq(false)
+      expect(parsed["api"]).to eq(2)
 
       key = user.user_api_keys.first
-      expect(key.push).to eq(true)
+      expect(key.scopes).to include("push")
       expect(key.push_url).to eq("https://push.it/here")
 
     end
 
     it "will redirect correctly with valid token" do
-
       SiteSetting.min_trust_level_for_user_api_key = 0
       SiteSetting.allowed_user_api_auth_redirects = args[:auth_redirect]
       SiteSetting.allowed_user_api_push_urls = "https://push.it/here"
-      SiteSetting.allow_write_user_api_keys = true
 
-      args[:access] = "prw"
+      args[:scopes] = "push,notifications,message_bus,session_info"
       args[:push_url] = "https://push.it/here"
 
       user = Fabricate(:user, trust_level: 0)
@@ -200,14 +198,12 @@ TXT
       parsed = JSON.parse(key.private_decrypt(encrypted))
 
       expect(parsed["nonce"]).to eq(args[:nonce])
-      expect(parsed["access"].split('').sort).to eq(['p','r', 'w'])
+      expect(parsed["push"]).to eq(true)
 
       api_key = UserApiKey.find_by(key: parsed["key"])
 
       expect(api_key.user_id).to eq(user.id)
-      expect(api_key.read).to eq(true)
-      expect(api_key.write).to eq(true)
-      expect(api_key.push).to eq(true)
+      expect(api_key.scopes.sort).to eq(["push", "message_bus", "notifications", "session_info"].sort)
       expect(api_key.push_url).to eq("https://push.it/here")
 
 

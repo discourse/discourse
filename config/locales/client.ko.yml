@@ -97,6 +97,7 @@ ko:
       invited_user: "%{who}이(가) %{when}에 초대됨"
       invited_group: "%{who} 이(가) %{when} 에 초대됨"
       removed_user: "%{who}이(가) %{when}에 삭제됨"
+      removed_group: "%{who}이(가) %{when}에 삭제됨"
       autoclosed:
         enabled: '%{when}에 닫힘'
         disabled: '%{when}에 열림'
@@ -432,6 +433,8 @@ ko:
       github_profile: "Github"
       email_activity_summary: "활동 요약"
       mailing_list_mode:
+        label: "메일링 리스트 모드"
+        enabled: "메일링 리스트 모드 활성화"
         individual: "모든 새로운 게시글에 대해 메일을 보내주세요."
         few_per_day: "모든 새로운 게시글에 대해 메일을 보내주세요 (하루에 약 2개)."
       tag_settings: "태그"
@@ -652,8 +655,10 @@ ko:
         likes_received:
           other: "받음"
         top_replies: "인기 댓글"
+        no_replies: "아직 답글이 없습니다."
         more_replies: "답글 더 보기"
         top_topics: "인기 주제"
+        no_topics: "아직 주제가 없습니다."
         more_topics: "주제 더 보기"
         top_badges: "인기 배지"
         no_badges: "아직 배지가 없습니다."
@@ -955,7 +960,6 @@ ko:
       title: "주제, 글, 사용자, 카테고리 검색"
       no_results: "검색 결과가 없습니다"
       no_more_results: "더 이상 결과가 없습니다."
-      search_help: 검색 도움말
       searching: "검색중..."
       post_format: "#{{post_number}} by {{username}}"
       context:

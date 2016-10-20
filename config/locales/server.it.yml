@@ -706,14 +706,7 @@ it:
     s3_backup_config_warning: 'Il server è configurato per caricare i backup su S3, ma almeno una delle seguenti impostazioni non è impostata: s3_access_key_id, s3_secret_access_key, s3_backup_bucket. Vai nelle <a href="/admin/site_settings">Impostazioni Sito</a> e aggiorna le impostazioni. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Leggi anche "How to set up image uploads to S3?" per saperne di più</a>.'
     image_magick_warning: 'Il server è configurato per creare miniature di immagini grandi, ma ImageMagick non è installato. Installa ImageMagick usando il tuo package manager preferito o <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">scarica la versione più recente</a>.'
     failing_emails_warning: 'Ci sono %{num_failed_jobs} job di email falliti. Controlla il file app.yml e assicurati che le impostazioni del mail server siano corrette. <a href="/sidekiq/retries" target="_blank">Vedi i job falliti in Sidekiq</a>.'
-    default_logo_warning: "Non hai personalizzato il logo del tuo sito. Aggiorna logo_url, logo_small_url e favicon_url nelle <a href='/admin/site_settings'>Impostazioni Sito</a>."
-    contact_email_missing: "Inserisci un indirizzo email di contatto per il sito, in modo da essere raggiungibile per questioni urgenti riguardanti il sito. Aggiornalo nelle <a href='/admin/site_settings'>Impostazioni Sito</a>."
-    contact_email_invalid: "La email di contatto non è valida. Aggiornala nelle <a href='/admin/site_settings'>Impostazioni Sito</a>."
-    title_nag: "Inserisci il nome del tuo sito. Aggiorna il titolo nelle <a href='/admin/site_settings'>Impostazioni Sito</a>."
-    site_description_missing: "Scrivi una breve descrizione del sito che comparirà nei risultati di ricerca. Aggiorna site_description nelle <a href='/admin/site_settings'>Impostazioni Sito</a>."
     consumer_email_warning: "Il tuo sito è configurato per usare Gmail (o un altro servizio email consumer) per inviare le email. <a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>Gmail limita il numero di email che puoi inviare</a>. Considera l'utilizzo di un fornitore di servizi come mandrill.com per assicurare l'invio delle email."
-    site_contact_username_warning: "Inserisci il nome di un membro dello staff da cui inviare messaggi importanti in maniera automatica. Aggiorna site_contact_username nelle <a href='/admin/site_settings'>Impostazioni Sito</a>."
-    notification_email_warning: "Le email di notifica non vengono inviate da un indirizzo email valido del tuo dominio; l'invio di email sarà inaffidabile. Definisci notification_email con un indirizzo email valido nelle <a href='/admin/site_settings'>Impostazioni Sito</a>."
     subfolder_ends_in_slash: "L'impostazione della sottocartella è errata; DISCOURSE_RELATIVE_URL_ROOT finisce con uno slash."
   site_settings:
     censored_words: "Parole che saranno automaticamente sostituite con &#9632;&#9632;&#9632;&#9632;"
@@ -1212,6 +1205,7 @@ it:
     email_error_notification:
       subject_template: "[%{site_name}] Problema relativo all'email -- Errore di autenticazione POP"
     too_many_spam_flags:
+      subject_template: "Nuovo account sospeso"
       text_body_template: |
         Salve,
 
@@ -1220,8 +1214,16 @@ it:
         Come misura precauzionale, il tuo nuovo account non può creare altre risposte o argomenti finché il tuo account non verrà revisionato da un membro dello staff. Ci scusiamo per il disagio.
 
         Per ulteriori informazioni, ti rimandiamo alle [linee guida della comunità](%{base_url}/guidelines).
+    too_many_tl3_flags:
+      subject_template: "Nuovo account sospeso"
+    blocked_by_staff:
+      subject_template: "Account temporaneamente sospeso"
+    user_automatically_blocked:
+      subject_template: "Nuovo utente %{username} bloccato dalle segnalazioni della comunità"
     spam_post_blocked:
       subject_template: "Il messaggi del nuovo utente %{username} sono stati bloccati a causa dell'invio di ripetuti collegamenti."
+    unblocked:
+      subject_template: "Account non più sospeso"
     pending_users_reminder:
       subject_template:
         one: "1 utente in attesa di approvazione"
@@ -1233,13 +1235,21 @@ it:
     download_remote_images_disabled:
       subject_template: "Lo scaricamento delle immagini remote è disabilitato"
       text_body_template: "L'impostazione `download_remote_images_to_local` è stata disabilitata perché è stato raggiunto il limite di spazio su disco definito in `download_remote_images_threshold`."
+    dashboard_problems:
+      subject_template: "Si sono riscontrati problemi"
   subject_re: "R:"
   subject_pm: "[MP]"
   user_notifications:
     previous_discussion: "Risposte Precedenti"
+    in_reply_to: "In Risposta A"
     unsubscribe:
       title: "Annulla iscrizione"
       description: "Non vuoi ricevere queste email? Nessun problema! Clicca qui sotto per annullare l'iscrizione:"
+    reply_by_email: "[Visita Argomento](%{base_url}%{url}) o rispondi a questa email per replicare."
+    reply_by_email_pm: "[Visita Messaggio](%{base_url}%{url}) o rispondi a questa email per replicare."
+    only_reply_by_email: "Rispondi a questa email per replicare."
+    visit_link_to_respond: "[Visita Argomento](%{base_url}%{url}) per replicare."
+    visit_link_to_respond_pm: "[Visita Messaggio](%{base_url}%{url}) per replicare."
     posted_by: "Pubblicato da %{username} il %{post_date}"
     user_invited_to_private_message_pm:
       subject_template: "[%{site_name}] %{username} ti invita al partecipare al messaggio '%{topic_title}'"
@@ -1345,6 +1355,7 @@ it:
     mailing_list:
       from: "%{site_name} riepilogo"
       new_topics: "Nuovi argomenti"
+      topic_updates: "Aggiornamenti argomento"
       view_this_topic: "Vedi questo argomento"
       back_to_top: "Torna in cima"
     forgot_password:
@@ -1498,6 +1509,9 @@ it:
       name: Autobiografo
     anniversary:
       name: Compleanno
+      description: Membro attivo per un anno, ha scritto almeno una volta
+      long_description: |
+        Questo distintivo è assegnato a chi è membro da un anno con almeno un messaggio scritto durante quell'anno. Grazie per esserci e contribuire alla nostra comunità. Non potremmo farcela senza di te.
     great_topic:
       description: Ha ricevuto 50 "Mi piace" in un argomento
     first_like:

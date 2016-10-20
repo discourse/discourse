@@ -134,6 +134,11 @@ const Topic = RestModel.extend({
     return this.get('url') + (user ? '?u=' + user.get('username_lower') : '');
   }.property('url'),
 
+  @computed('url')
+  printUrl(url) {
+    return url + '/print';
+  },
+
   url: function() {
     let slug = this.get('slug') || '';
     if (slug.trim().length === 0) {

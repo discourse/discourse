@@ -14,6 +14,7 @@ import Group from 'discourse/models/group';
 import Topic from 'discourse/models/topic';
 import { emojiUnescape } from 'discourse/lib/text';
 import PreloadStore from 'preload-store';
+import { defaultHomepage } from 'discourse/lib/utilities';
 
 const User = RestModel.extend({
 
@@ -135,9 +136,15 @@ const User = RestModel.extend({
 
   adminPath: url('id', 'username_lower', "/admin/users/%@1/%@2"),
 
-  mutedTopicsPath: url('/latest?state=muted'),
+  @computed()
+  mutedTopicsPath() {
+    return defaultHomepage() === "latest" ? Discourse.getURL('/?state=muted') : Discourse.getURL('/latest?state=muted');
+  },
 
-  watchingTopicsPath: url('/latest?state=watching'),
+  @computed()
+  watchingTopicsPath() {
+    return defaultHomepage() === "latest" ? Discourse.getURL('/?state=watching') : Discourse.getURL('/latest?state=watching');
+  },
 
   @computed("username")
   username_lower(username) {
@@ -222,6 +229,7 @@ const User = RestModel.extend({
      'digest_after_minutes',
      'new_topic_duration_minutes',
      'auto_track_topics_after_msecs',
+     'notification_level_when_replying',
      'like_notification_frequency',
      'include_tl0_in_digests'
     ].forEach(s => {

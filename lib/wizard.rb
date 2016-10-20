@@ -36,7 +36,7 @@ class Wizard
   end
 
   def steps_with_fields
-    @steps_with_fields ||= @steps.select {|s| s.has_fields? }
+    @steps_with_fields ||= @steps.select(&:has_fields?)
   end
 
   def start
@@ -54,7 +54,7 @@ class Wizard
   end
 
   def create_updater(step_id, fields)
-    step = @steps.find {|s| s.id == step_id.dasherize}
+    step = @steps.find { |s| s.id == step_id.dasherize }
     Wizard::StepUpdater.new(@user, step, fields)
   end
 
@@ -76,15 +76,17 @@ class Wizard
   def requires_completion?
     return false unless SiteSetting.wizard_enabled?
 
-    admins = User.where("admin = true AND id <> ? AND auth_token_updated_at IS NOT NULL", 
-                        Discourse.system_user.id).order(:auth_token_updated_at)
 
-    # In development mode all admins are developers, so the logic is a bit screwy:
-    unless Rails.env.development?
-      admins = admins.select {|a| !Guardian.new(a).is_developer? }
-    end
+    first_admin = User.where(admin: true)
+                      .where.not(id: Discourse.system_user.id)
+                      .where.not(auth_token_updated_at: nil)
+                      .order(:auth_token_updated_at)
 
-    admins.present? && admins.first == @user && !completed? && (Topic.count < 15)
+    @user.present? && first_admin.first == @user && !completed? && (Topic.count < 15)
+  end
+
+  def self.user_requires_completion?(user)
+    Wizard::Builder.new(user).build.requires_completion?
   end
 
 end

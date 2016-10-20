@@ -20,6 +20,7 @@ Discourse::Application.routes.draw do
   post "webhooks/sendgrid" => "webhooks#sendgrid"
   post "webhooks/mailjet"  => "webhooks#mailjet"
   post "webhooks/mandrill" => "webhooks#mandrill"
+  post "webhooks/sparkpost" => "webhooks#sparkpost"
 
   if Rails.env.development?
     mount Sidekiq::Web => "/sidekiq"
@@ -35,6 +36,11 @@ Discourse::Application.routes.draw do
       get "live_post_counts"
     end
   end
+
+  get "finish-installation" => "finish_installation#index"
+  get "finish-installation/register" => "finish_installation#register"
+  post "finish-installation/register" => "finish_installation#register"
+  get "finish-installation/confirm-email" => "finish_installation#confirm_email"
 
   resources :directory_items
 
@@ -390,7 +396,9 @@ Discourse::Application.routes.draw do
   get "posts/:username/deleted" => "posts#deleted_posts", constraints: {username: USERNAME_ROUTE_FORMAT}
   get "posts/:username/flagged" => "posts#flagged_posts", constraints: {username: USERNAME_ROUTE_FORMAT}
 
-  resources :groups do
+  get "groups/:id.json" => 'groups#show', constraints: {id: USERNAME_ROUTE_FORMAT}, defaults: {format: 'json'}
+  
+  resources :groups, id: USERNAME_ROUTE_FORMAT do
     get "posts.rss" => "groups#posts_feed", format: :rss
     get "mentions.rss" => "groups#mentions_feed", format: :rss
 
@@ -516,7 +524,6 @@ Discourse::Application.routes.draw do
 
   # Topics resource
   get "t/:id" => "topics#show"
-  post "t" => "topics#create"
   put "t/:id" => "topics#update"
   delete "t/:id" => "topics#destroy"
   put "t/:id/archive-message" => "topics#archive_message"
@@ -554,6 +561,7 @@ Discourse::Application.routes.draw do
 
   # Topic routes
   get "t/id_for/:slug" => "topics#id_for_slug"
+  get "t/:slug/:topic_id/print" => "topics#show", format: :html, print: true, constraints: {topic_id: /\d+/}
   get "t/:slug/:topic_id/wordpress" => "topics#wordpress", constraints: {topic_id: /\d+/}
   get "t/:topic_id/wordpress" => "topics#wordpress", constraints: {topic_id: /\d+/}
   get "t/:slug/:topic_id/moderator-liked" => "topics#moderator_liked", constraints: {topic_id: /\d+/}
@@ -683,6 +691,8 @@ Discourse::Application.routes.draw do
   root to: "categories#index", constraints: HomePageConstraint.new("categories"), :as => "categories_index"
   # special case for top
   root to: "list#top", constraints: HomePageConstraint.new("top"), :as => "top_lists"
+
+  root to: 'finish_installation#index', constraints: HomePageConstraint.new("finish_installation"), as: 'installation_redirect'
 
   get "/user-api-key/new" => "user_api_keys#new"
   post "/user-api-key" => "user_api_keys#create"

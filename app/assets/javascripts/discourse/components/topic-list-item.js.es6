@@ -1,4 +1,5 @@
 import StringBuffer from 'discourse/mixins/string-buffer';
+import computed from 'ember-addons/ember-computed-decorators';
 
 export function showEntrance(e) {
   let target = $(e.target);
@@ -29,9 +30,9 @@ export default Ember.Component.extend(StringBuffer, {
     }
   },
 
-  unboundClassNames: function() {
+  @computed('topic', 'lastVisitedTopic')
+  unboundClassNames(topic, lastVisitedTopic) {
     let classes = [];
-    const topic = this.get('topic');
 
     if (topic.get('category')) {
       classes.push("category-" + topic.get('category.fullSlug'));
@@ -47,12 +48,12 @@ export default Ember.Component.extend(StringBuffer, {
       }
     });
 
-    if (topic === this.get('lastVisitedTopic')) {
+    if (topic === lastVisitedTopic) {
       classes.push('last-visit');
     }
 
     return classes.join(' ');
-  }.property(),
+  },
 
   titleColSpan: function() {
     return (!this.get('hideCategory') &&
