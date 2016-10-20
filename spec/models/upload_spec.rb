@@ -149,6 +149,10 @@ describe Upload do
       )).to eq(upload)
     end
 
+    it "doesn't blow up with an invalid URI" do
+      expect { Upload.get_from_url("http://ip:port/index.html") }.not_to raise_error
+    end
+
     describe "s3 store" do
       let(:path) { "/original/3X/1/0/10f73034616a796dfd70177dc54b6def44c4ba6f.png" }
       let(:url) { "//#{SiteSetting.s3_upload_bucket}.s3.amazonaws.com#{path}" }
