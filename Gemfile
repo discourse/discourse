@@ -48,7 +48,7 @@ gem 'onebox'
 gem 'http_accept_language', '~>2.0.5', require: false
 
 gem 'ember-rails', '0.18.5'
-gem 'ember-source', '1.12.2'
+gem 'ember-source', '2.4.6'
 gem 'barber'
 gem 'babel-transpiler'
 
