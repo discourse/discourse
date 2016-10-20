@@ -1,4 +1,4 @@
-export default Ember.ArrayController.extend({
+export default Ember.Controller.extend({
   onlyOverridden: false,
 
   baseColorScheme: function() {
@@ -13,8 +13,8 @@ export default Ember.ArrayController.extend({
     return baseColorsHash;
   }.property('baseColorScheme'),
 
-  removeSelected: function() {
-    this.removeObject(this.get('selectedItem'));
+  removeSelected() {
+    this.get('model').removeObject(this.get('selectedItem'));
     this.set('selectedItem', null);
   },
 
@@ -26,8 +26,7 @@ export default Ember.ArrayController.extend({
       return;
     }
 
-    var matches = Em.A();
-
+    const matches = [];
     _.each(this.get('selectedItem.colors'), function(color){
       if (color.get('overridden')) matches.pushObject(color);
     });
@@ -58,10 +57,10 @@ export default Ember.ArrayController.extend({
       this.filterContent();
     },
 
-    newColorScheme: function() {
-      var newColorScheme = Em.copy(this.get('baseColorScheme'), true);
+    newColorScheme() {
+      const newColorScheme = Em.copy(this.get('baseColorScheme'), true);
       newColorScheme.set('name', I18n.t('admin.customize.colors.new_name'));
-      this.pushObject(newColorScheme);
+      this.get('model').pushObject(newColorScheme);
       this.send('selectColorScheme', newColorScheme);
       this.set('onlyOverridden', false);
     },
@@ -86,10 +85,10 @@ export default Ember.ArrayController.extend({
       this.updateEnabled();
     },
 
-    copy: function(colorScheme) {
+    copy(colorScheme) {
       var newColorScheme = Em.copy(colorScheme, true);
       newColorScheme.set('name', I18n.t('admin.customize.colors.copy_name_prefix') + ' ' + colorScheme.get('name'));
-      this.pushObject(newColorScheme);
+      this.get('model').pushObject(newColorScheme);
       this.send('selectColorScheme', newColorScheme);
     },
 

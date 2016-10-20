@@ -2,7 +2,7 @@ import debounce from 'discourse/lib/debounce';
 import { i18n } from 'discourse/lib/computed';
 import AdminUser from 'admin/models/admin-user';
 
-export default Ember.ArrayController.extend({
+export default Ember.Controller.extend({
   query: null,
   showEmails: false,
   refreshing: false,
