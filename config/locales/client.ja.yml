@@ -925,7 +925,6 @@ ja:
       title: "トピック、投稿、ユーザ、カテゴリを探す"
       no_results: "何も見つかりませんでした。"
       no_more_results: "検索結果は以上です。"
-      search_help: 検索のヘルプ
       searching: "検索中..."
       post_format: "#{{post_number}}  {{username}}から"
       context:
@@ -1561,8 +1560,6 @@ ja:
       full: "作成 / 返信 / 閲覧"
       create_post: "返信 / 閲覧"
       readonly: "閲覧できる"
-    search_help:
-      title: '検索のヘルプ'
     keyboard_shortcuts_help:
       title: 'ショートカットキー'
       jump_to:

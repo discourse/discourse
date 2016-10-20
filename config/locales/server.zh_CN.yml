@@ -2355,35 +2355,6 @@ zh_CN:
       如果我们决定更改我们的隐私政策，我们将在此页更新这些改变。
 
       文档以 CC-BY-SA 发布。最后更新时间为2013年5月31日。
-  static:
-    search_help: |
-      <h3>小技巧</h3>
-      <p>
-      <ul>
-      <li>标题匹配优先 &ndash; 不知道搜什么时，搜索标题</li>
-      <li>搜索独一无二且不常见的词可以找到最好的结果</li>
-      <li>试试选定分类、用户或主题搜索</li>
-      </ul>
-      </p>
-      <h3>选项</h3>
-      <p>
-      <table>
-      <tr><td><code>order:views</code>（按照显示次数排序）</td><td><code>order:latest</code>（按照更新时间排序）</td><td><code>order:likes</code>（按照赞的次数排序）</td><td><code>@用户名</code></td><td><code>user:用户名</code></td></tr>
-      <tr><td><code>status:open</code>（搜索正常状态的主题）</td><td><code>status:closed</code>（搜索锁定的主题）</td><td><code>status:archived</code>（搜索已经存档的主题）</td><td><code>status:noreplies</code>（搜索没有回复的主题）</td><td><code>status:single_user</code>（搜索只有一个人发言的主题）</td></tr>
-      <tr><td><code>#category-slug</code>（搜索分类代号）</td><td><code>category:分类名</code></td><td><code>group:小组名</code></td><td><code>badge:徽章名</code></td><td></td></tr>
-      <tr><td><code>in:likes</code>（在已赞过的帖子里搜索）</td><td><code>in:posted</code>（在发表的帖子里搜索）</td><td><code>in:watching</code>（在关注的帖子里搜索）</td><td><code>in:tracking</code>（在追踪的帖子里搜索）</td><td><code>in:private</code>（在秘密帖子里搜索）</td></tr>
-      <tr><td><code>in:bookmarks</code>（在收藏的帖子里搜索）</td><td><code>in:first</code>（在第一帖里搜索）</td><td><code>in:pinned</code>（在置顶主题里搜索）</td><td><code>in:unpinned</code>（在未置顶主题里搜索）</td><td><code>in:wiki</code>（在协作主题里搜索）</td></tr>
-      <tr><td><code>posts_count:N</code>（搜索帖子数为 N 的）</td><td><code>before:天数或日期</code></td><td><code>after:天数或日期</code></td><td><code>tags:一,二</code></td><td></td></tr>
-      </table>
-      </p>
-      <h3>例子</h3>
-      <p>
-      <ul>
-      <li><code>彩虹 #gong-yuan</code>将搜索在“公园”分类中没有关闭或存档中的名字包含“彩虹”的主题。</li>
-      <li><code>彩虹 category:公园 status:open order:latest</code>将搜索在“公园”分类中没有锁定或存档中的名字包含“彩虹”的主题，并按最后一个帖子的日期来排序。</li>
-      <li><code>彩虹 category:"公园和花园" in:bookmarks</code> 将搜索在“公园和花园”分类中已被你收藏的且名字包含“彩虹”的主题。</li>
-      </ul>
-      </p>
   badges:
     editor:
       name: 编辑

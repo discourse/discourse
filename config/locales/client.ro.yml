@@ -630,6 +630,7 @@ ro:
         title: "Limba interfeței"
         instructions: "Limba pentru interfața forumului. Schimbarea se va produce odată ce reîmprospătați pagina."
         default: "(implicit)"
+        any: "oricare"
       password_confirmation:
         title: "Confirmă parola"
       last_posted: "Ultima postare"
@@ -687,6 +688,7 @@ ro:
         after_4_minutes: "după 4 minute"
         after_5_minutes: "după 5 minute"
         after_10_minutes: "după 10 minute"
+      notification_level_when_replying: "Când postez într-un subiect, setează subiectul ca"
       invited:
         search: "Scrie pentru a căuta invitații..."
         title: "Invitații"
@@ -1132,7 +1134,6 @@ ro:
       title: "Caută subiecte, postări, utilizatori sau categorii"
       no_results: "Nici un rezultat."
       no_more_results: "Nu s-au mai găsit alte rezultate."
-      search_help: Ajutor căutare
       searching: "Se caută..."
       post_format: "#{{post_number}} de {{username}}"
       context:
@@ -1140,6 +1141,44 @@ ro:
         category: "Caută în categoria #{{category}} "
         topic: "Caută în acest subiect"
         private_messages: "Caută mesaje"
+      advanced:
+        title: Căutare avansată
+        posted_by:
+          label: Postat de
+        in_category:
+          label: În categoria
+        in_group:
+          label: În grupul
+        with_badge:
+          label: Cu ecusonul
+        with_tags:
+          label: Cu etichetele
+        filters:
+          label: Afișează doar postările/subiectele ...
+          likes: pe care le-am apreciat
+          posted: în care am postat
+          watching: pe care le urmăresc activ
+          tracking: le urmăresc
+          private: sunt în mesajele mele
+          bookmarks: le-am adăugat la semne de carte
+          first: sunt chiar pe primul loc în listă
+          pinned: sunt fixate
+          unpinned: nu sunt fixate
+          wiki: sunt wiki
+        statuses:
+          label: Unde subiectele
+          open: sunt deschise
+          closed: sunt închise
+          archived: sunt arhivate
+          noreplies: nu au nici un răspuns
+          single_user: au un singur utilizator
+        post:
+          count:
+            label: Număr minim de postări
+          time:
+            label: Postat(e)
+            before: înainte
+            after: după
     hamburger_menu: "Du-te la o altă categorie saulistă de subiecte"
     new_item: "nou"
     go_back: 'înapoi'
@@ -1362,6 +1401,9 @@ ro:
       share:
         title: 'Distribuie'
         help: 'distribuie un link cu acest subiect'
+      print:
+        title: 'Tipărire'
+        help: 'Deschide o versiune pentru imprimare a acestui subiect'
       flag_topic:
         title: 'Marcaje'
         help: 'marchează acest subiect pentru a atrage atenția adminilor sau a le trimite o notificare privată despre el'
@@ -1968,8 +2010,6 @@ ro:
       readonly: "Doar citire"
     lightbox:
       download: "descărcare"
-    search_help:
-      title: 'Ajutor căutare'
     keyboard_shortcuts_help:
       title: 'Scurtături de tastatură'
       jump_to:
@@ -2021,12 +2061,13 @@ ro:
         mark_regular: '<b>m</b>, <b>r</b> Subiect obișnuit (implicit)'
         mark_tracking: '<b>m</b>, <b>t</b> Urmărește subiect'
         mark_watching: '<b>m</b>, <b>w</b> Urmărește activ subiect'
+        print: '<b>ctrl</b>+<b>p</b> Tipărire subiect'
     badges:
       earned_n_times:
         one: "A primit acest ecuson o dată"
         few: "A primit acest ecuson de %{count} ori"
         other: "A primit acest ecuson de %{count} de ori"
-      granted_on: "Acordat pe %{date}"
+      granted_on: "Acordat acum %{date}"
       others_count: "Numărul celorlalți care au acest ecuson (%{count})"
       title: Ecusoane
       allow_title: "titlu disponibil"

@@ -657,6 +657,7 @@ de:
         after_4_minutes: "nach 4 Minuten"
         after_5_minutes: "nach 5 Minuten"
         after_10_minutes: "nach 10 Minuten"
+      notification_level_when_replying: "Wenn ich in einem Thema antworte, setze das Thema auf"
       invited:
         search: "zum Suchen nach Einladungen hier eingeben…"
         title: "Einladungen"
@@ -1088,7 +1089,6 @@ de:
       title: "suche nach Themen, Beiträgen, Benutzern oder Kategorien"
       no_results: "Keine Ergebnisse gefunden."
       no_more_results: "Es wurde keine weiteren Ergebnisse gefunden."
-      search_help: Hilfe zur Suche
       searching: "Suche …"
       post_format: "#{{post_number}} von {{username}}"
       context:
@@ -1096,6 +1096,21 @@ de:
         category: "Kategorie #{{category}} durchsuchen"
         topic: "Dieses Thema durchsuchen"
         private_messages: "Nachrichten durchsuchen"
+      advanced:
+        title: Erweiterte Suche
+        posted_by:
+          label: Verfasst von
+        in_category:
+          label: In der Kategorie
+        in_group:
+          label: In der Gruppe
+        with_badge:
+          label: Mit dem Abzeichen
+        with_tags:
+          label: Mit den Schlagwörtern
+        filters:
+          label: Zeige nur Beiträge an, die...
+          likes: Mir gefallen
     hamburger_menu: "zu einer anderen Themenliste oder Kategorie wechseln"
     new_item: "neu"
     go_back: 'zurückgehen'
@@ -1863,8 +1878,6 @@ de:
       readonly: "Ansehen"
     lightbox:
       download: "herunterladen"
-    search_help:
-      title: 'Suche'
     keyboard_shortcuts_help:
       title: 'Tastenkombinationen'
       jump_to:

@@ -959,7 +959,6 @@ gl:
       title: "buscar temas, publicacións, usuarios ou categorías"
       no_results: "Non se atoparon resultados."
       no_more_results: "Non se atoparon máis resultados."
-      search_help: Buscar axuda
       searching: "Buscando..."
       post_format: "#{{post_number}} de {{username}}"
       context:

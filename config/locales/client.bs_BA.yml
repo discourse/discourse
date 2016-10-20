@@ -28,6 +28,7 @@ bs_BA:
         millions: "{{number}} miliona"
     dates:
       time: "h:mm a"
+      timeline_date: "MMM YYYY"
       long_no_year: "MMM D h:mm a"
       long_no_year_no_time: "MMM D"
       full_no_year_no_time: "MMMM Do"
@@ -862,7 +863,6 @@ bs_BA:
       title: "traži teme, postove, članove ili kategorije"
       no_results: "Nema rezultata."
       no_more_results: "Nema rezultata pretrage."
-      search_help: Pomoć pri pretrazi
       searching: "Potražujem..."
       post_format: "#{{post_number}} od {{username}}"
       context:
@@ -1523,12 +1523,18 @@ bs_BA:
             name: 'love'
             description: "The like button's color."
       email:
+        title: "Emailovi"
         settings: "Settings"
+        templates: "Predlošci"
         preview_digest: "Pregled Sajta"
         sending_test: "Sending test Email..."
+        error: "<b>Greška</b> - %{server_error}"
         test_error: "There was a problem sending the test email. Please double-check your mail settings, verify that your host is not blocking mail connections, and try again."
         sent: "Sent"
         skipped: "Skipped"
+        bounced: "Vraćeni"
+        received: "Primljeno"
+        rejected: "Odbijeni"
         sent_at: "Sent At"
         time: "Time"
         user: "User"
@@ -1538,6 +1544,7 @@ bs_BA:
         send_test: "Send Test Email"
         sent_test: "sent!"
         delivery_method: "Delivery Method"
+        preview_digest_desc: "Prikaži sadržaj sažetih poruka pošte poslanih neaktivnim korisnicima."
         refresh: "Refresh"
         format: "Format"
         html: "html"
@@ -1545,6 +1552,26 @@ bs_BA:
         last_seen_user: "Last Seen User:"
         reply_key: "Reply Key"
         skipped_reason: "Skip Reason"
+        incoming_emails:
+          from_address: "Od"
+          to_addresses: "Za"
+          cc_addresses: "Cc"
+          subject: "Naslov"
+          error: "Greška"
+          none: "Nema dolaznih poruka pošte."
+          modal:
+            title: "Detalji dolaznih poruka pošte"
+            error: "Greška"
+            headers: "Zaglavlja"
+            subject: "Naslov"
+            body: "Tijelo"
+            rejection_message: "Poruka odbijenica"
+          filters:
+            from_placeholder: "from@example.com"
+            to_placeholder: "to@example.com"
+            cc_placeholder: "cc@example.com"
+            subject_placeholder: "Naslov..."
+            error_placeholder: "Greška"
         logs:
           none: "No logs found."
           filters:
@@ -1872,3 +1899,21 @@ bs_BA:
             with_post: <span class="username">%{username}</span> for post in %{link}
             with_post_time: <span class="username">%{username}</span> for post in %{link} at <span class="time">%{time}</span>
             with_time: <span class="username">%{username}</span> at <span class="time">%{time}</span>
+  wizard_js:
+    wizard:
+      back: "Prethodno"
+      next: "Iduće"
+      step: "%{current} od %{total}"
+      upload: "Učitaj"
+      uploading: "Učitavanje..."
+      quit: "Možda kasnije"
+      staff_count:
+        one: "Vaša zajednica ima 1 člana osoblja."
+        few: "Vaša zajednica ima 2 člana osoblja."
+        other: "Vaša zajednica ima %{count} članova osoblja."
+      invites:
+        add_user: "Dodaj"
+        roles:
+          admin: "Admin"
+          moderator: "Moderator"
+          regular: "Regularan korisnik"

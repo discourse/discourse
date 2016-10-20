@@ -2136,35 +2136,6 @@ sv:
     title: "Villkor"
   privacy_topic:
     title: "Integritetspolicy"
-  static:
-    search_help: |
-      <h3>Tips</h3>
-      <p>
-      <ul>
-      <li>Matchande rubriker prioriteras &ndash; sök efter rubriker om du är osäker</li>
-      <li>Unika, ovanliga ord kommer att ge bäst resultat</li>
-      <li>Försök att söka inom en kategori, ett ämne eller en användare</li>
-      </ul>
-      </p>
-      <h3>Alternativ</h3>
-      <p>
-      <table>
-      <tr><td><code>order:views</code></td><td><code>order:latest</code></td><td><code>order:likes</code></td><td><code>@username</code></td><td><code>user:foo</code></td></tr>
-      <tr><td><code>status:open</code></td><td><code>status:closed</code></td><td><code>status:archived</code></td><td><code>status:noreplies</code></td><td><code>status:single_user</code></td></tr>
-      <tr><td><code>#category-slug</code></td><td><code>category:foo</code></td><td><code>group:foo</code></td><td><code>badge:foo</code></td><td></td></tr>
-      <tr><td><code>in:likes</code></td><td><code>in:posted</code></td><td><code>in:watching</code></td><td><code>in:tracking</code></td><td><code>in:private</code></td></tr>
-      <tr><td><code>in:bookmarks</code></td><td><code>in:first</code></td><td><code>in:pinned</code></td><td><code>in:unpinned</code></td><td><code>in:wiki</code></td></tr>
-      <tr><td><code>posts_count:num</code></td><td><code>before:days or date</code></td><td><code>after:days or date</code></td><td><code>tags:one,two</code></td><td></td></tr>
-      </table>
-      </p>
-      <h3>Exempel</h3>
-      <p>
-      <ul>
-      <li><code>rainbows #parks</code> kommer att söka efter ämnen som innehåller ordet "rainbows" i kategorin "parks".</li>
-      <li><code>rainbows category:parks status:open order:latest</code> kommer att söka efter ämnen som innehåller ordet "rainbows" i kategorin "parks" som inte är stängda eller arkiverade, sorterade efter datum på senaste inlägget.</li>
-      <li><code>rainbows category:"parks and gardens" in:bookmarks</code> kommer att söka efter ämnen som innehåller ordet "rainbows" i kategorin "parks and gardens" som är bokmärkta av dig.</li>
-      </ul>
-      </p>
   badges:
     editor:
       name: Redigerare

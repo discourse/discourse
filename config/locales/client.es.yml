@@ -600,6 +600,7 @@ es:
         title: "Idioma de la interfaz"
         instructions: "El idioma de la interfaz. Cambiará cuando recargues la página."
         default: "(por defecto)"
+        any: "cualquiera"
       password_confirmation:
         title: "Introduce de nuevo la contraseña"
       last_posted: "Último post"
@@ -657,6 +658,7 @@ es:
         after_4_minutes: "después de 4 minutos"
         after_5_minutes: "después de 5 minutos"
         after_10_minutes: "después de 10 minutos"
+      notification_level_when_replying: "Cuando publique en un tema, cambia el nivel de seguimiento a"
       invited:
         search: "escribe para buscar invitaciones..."
         title: "Invitaciones"
@@ -1088,7 +1090,6 @@ es:
       title: "buscar temas, posts, usuarios o categorías"
       no_results: "No se ha encontrado ningún resultado."
       no_more_results: "No se encontraron más resultados."
-      search_help: Ayuda para buscar
       searching: "Buscando ..."
       post_format: "#{{post_number}} por {{username}}"
       context:
@@ -1096,6 +1097,44 @@ es:
         category: "Buscar la categoría #{{category}}"
         topic: "Buscar en este tema"
         private_messages: "Buscar en mensajes"
+      advanced:
+        title: Búsqueda avanzada
+        posted_by:
+          label: Publicado por
+        in_category:
+          label: En la categoría
+        in_group:
+          label: En el Grupo
+        with_badge:
+          label: Con el Distintivo
+        with_tags:
+          label: Con las Etiquetas
+        filters:
+          label: Muéstrame sólo temas/posts que...
+          likes: Me han gustado
+          posted: He publicado en ellos
+          watching: Estoy vigilando
+          tracking: Estoy siguiendo
+          private: están en mis mensajes directos
+          bookmarks: he guardado en marcadores
+          first: son el primer post del tema
+          pinned: están destacados con pin
+          unpinned: no están destacados con pin
+          wiki: son tipo wiki
+        statuses:
+          label: Donde los temas
+          open: están abiertos
+          closed: están cerrados
+          archived: están archivados
+          noreplies: no tienen respuestas
+          single_user: contienen un solo usuario
+        post:
+          count:
+            label: Número Mínimo de Posts
+          time:
+            label: Publicado
+            before: antes del
+            after: después del
     hamburger_menu: "ir a otra lista de temas o categoría"
     new_item: "nuevo"
     go_back: 'volver'
@@ -1309,6 +1348,9 @@ es:
       share:
         title: 'Compartir'
         help: 'comparte el enlace a este tema'
+      print:
+        title: 'Imprimir'
+        help: 'Abrir una versión imprimible de este tema'
       flag_topic:
         title: 'Reportar'
         help: 'reportar de forma privada para atención de los moderadores o enviar una notificación privada sobre él'
@@ -1868,8 +1910,6 @@ es:
       readonly: "Ver"
     lightbox:
       download: "descargar"
-    search_help:
-      title: 'Ayuda para búsquedas'
     keyboard_shortcuts_help:
       title: 'Atajos de teclado'
       jump_to:
@@ -1921,6 +1961,7 @@ es:
         mark_regular: '<b>m</b>, <b>r</b> Seguimiento normal del tema (por defecto)'
         mark_tracking: '<b>m</b>, <b>t</b> Seguir tema'
         mark_watching: '<b>m</b>, <b>w</b> Vigilar Tema'
+        print: '<b>ctrl</b>+<b>p</b> Imprimir tema'
     badges:
       earned_n_times:
         one: "Ganó este distintivo 1 vez"

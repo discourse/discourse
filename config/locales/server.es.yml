@@ -2195,35 +2195,6 @@ es:
       Si decidimos cambiar nuestra política de privacidad, publicaremos los cambios en esta misma página.
 
       Este documento tiene una licencia "CC-BY-SA". Última actualización: 31 de mayo del 2013.
-  static:
-    search_help: |
-      <h3>Consejos</h3>
-      <p>
-      <ul>
-      <li>Se priorizan las coincidencias por título &ndash; si tienes dudas, buscar por títulos</li>
-      <li>Buscar palabras diferentes, poco comunes, dará mejores resultados</li>
-      <li>Intenta centrar tu búsqueda con una categoría, tema o usuario en particular</li>
-      </ul>
-      </p>
-      <h3>Opciones</h3>
-      <p>
-      <table>
-      <tr><td><code>order:views</code></td><td><code>order:latest</code></td><td><code>order:likes</code></td><td><code>@username</code></td><td><code>user:foo</code></td></tr>
-      <tr><td><code>status:open</code></td><td><code>status:closed</code></td><td><code>status:archived</code></td><td><code>status:noreplies</code></td><td><code>status:single_user</code></td></tr>
-      <tr><td><code>#category-slug</code></td><td><code>category:foo</code></td><td><code>group:foo</code></td><td><code>badge:foo</code></td><td></td></tr>
-      <tr><td><code>in:likes</code></td><td><code>in:posted</code></td><td><code>in:watching</code></td><td><code>in:tracking</code></td><td><code>in:private</code></td></tr>
-      <tr><td><code>in:bookmarks</code></td><td><code>in:first</code></td><td><code>in:pinned</code></td><td><code>in:unpinned</code></td><td><code>in:wiki</code></td></tr>
-      <tr><td><code>posts_count:num</code></td><td><code>before:days or date</code></td><td><code>after:days or date</code></td><td><code>tags:one,two</code></td><td></td></tr>
-      </table>
-      </p>
-      <h3>Ejemplos</h3>
-      <p>
-      <ul>
-      <li><code>arcoiris #parques</code> buscará temas que contengan la palabra "arcoiris" en la categoría "parques".</li>
-      <li><code>arcoiris category:parques status:open order:latest</code> buscará temas que contengan la palabra "arcoiris" en la categoría "parques" que no estén cerrados o archivados, ordenados por la fecha del último post.</li>
-      <li><code>arcoiris category:"parques" in:bookmarks</code> buscará temas que contengan la palabra "arcoiris" en la categoría "parques" que hayas guardado en marcadores.</li>
-      </ul>
-      </p>
   badges:
     editor:
       name: Editor

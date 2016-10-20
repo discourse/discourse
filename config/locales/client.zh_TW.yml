@@ -798,7 +798,6 @@ zh_TW:
       title: "搜尋討論話題、文章、用戶或分類"
       no_results: "未找到任何結果。"
       no_more_results: "沒有找到更多的結果。"
-      search_help: 搜尋幫助
       searching: "正在搜尋..."
       post_format: "#{{post_number}} {{username}}"
       context:

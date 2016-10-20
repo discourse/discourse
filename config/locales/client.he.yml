@@ -600,6 +600,7 @@ he:
         title: "שפת ממשק"
         instructions: "שפת ממשק המשתמש. היא תתחלף כשתרעננו את העמוד."
         default: "(ברירת מחדל)"
+        any: "כלשהו"
       password_confirmation:
         title: "סיסמה שוב"
       last_posted: "פוסט אחרון"
@@ -657,6 +658,7 @@ he:
         after_4_minutes: "אחרי 4 דקות"
         after_5_minutes: "אחרי 5 דקות"
         after_10_minutes: "אחרי 10 דקות"
+      notification_level_when_replying: "כאשר אני מפרסם נושא, קבע נושא זה ל"
       invited:
         search: "הקלידו כדי לחפש הזמנות..."
         title: "הזמנות"
@@ -1088,7 +1090,6 @@ he:
       title: "חיפוש נושאים, פוסטים, משתמשים או קטגוריות"
       no_results: "אין תוצאות."
       no_more_results: "לא נמצאו עוד תוצאות."
-      search_help: עזרה בחיפוש
       searching: "מחפש ..."
       post_format: "#{{post_number}} מאת {{username}}"
       context:
@@ -1096,6 +1097,44 @@ he:
         category: "חפשו את הקטגוריה #{{category}}"
         topic: "חפשו בנושא זה"
         private_messages: "חיפוש הודעות"
+      advanced:
+        title: חיפוש מתקדם
+        posted_by:
+          label: פורסם על ידי
+        in_category:
+          label: בקטגוריה
+        in_group:
+          label: בקבוצה
+        with_badge:
+          label: עם עיטור
+        with_tags:
+          label: עם תגיות
+        filters:
+          label: החזירו רק נושאים/פוסטים ש...
+          likes: אהבתי
+          posted: פרסמתי בהם
+          watching: אני צופה בהם
+          tracking: אני עוקב אחריהם
+          private: בהודעות שלי
+          bookmarks: סימנתי עם סימנייה
+          first: הפוסטים הראשונים
+          pinned: נעוצים
+          unpinned: לא נעוצים
+          wiki: הם ויקי
+        statuses:
+          label: כאשר נושאים
+          open: פתוחים
+          closed: סגורים
+          archived: מאורכבים
+          noreplies: אין להם תגובות
+          single_user: מכילים משתמש/ת יחידים
+        post:
+          count:
+            label: מספר פוסטים מינימלי
+          time:
+            label: פורסמו
+            before: לפני
+            after: אחרי
     hamburger_menu: "עיברו לרשימת נושאים אחרת או קטגוריה"
     new_item: "חדש"
     go_back: 'חזור אחורה'
@@ -1311,6 +1350,9 @@ he:
       share:
         title: 'שיתוף'
         help: 'שתפו קישור לנושא זה'
+      print:
+        title: 'הדפסה'
+        help: 'פתיחת גרסה ידידותית להדפסה של נושא זה'
       flag_topic:
         title: 'דגל'
         help: 'דגלו נושא זה באופן פרטי לתשומת לב או שלחו התראה פרטית בנוגע אליו'
@@ -1689,7 +1731,7 @@ he:
     flagging:
       title: 'תודה על עזרתך לשמירה על תרבות הקהילה שלנו!'
       action: 'דגלו פוסט'
-      take_action: "בצע פעולה"
+      take_action: "ניקטו פעולה"
       notify_action: 'הודעה'
       official_warning: 'אזהרה רשמית'
       delete_spammer: "מחק ספאמר"
@@ -1870,8 +1912,6 @@ he:
       readonly: "צפה"
     lightbox:
       download: "הורדה"
-    search_help:
-      title: 'עזרה בחיפוש'
     keyboard_shortcuts_help:
       title: 'קיצורי מקלדת'
       jump_to:
@@ -1923,6 +1963,7 @@ he:
         mark_regular: '<b>m</b>, <b>r</b> נושא רגיל'
         mark_tracking: '<b>m</b>, <b>t</b> עקבו אחר נושא'
         mark_watching: '<b>m</b>, <b>w</b> צפו בנושא'
+        print: '<b>ctrl</b>+<b>p</b> הדפסת נושא'
     badges:
       earned_n_times:
         one: "הרוויחו עיטור זה פעם אחת"

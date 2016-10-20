@@ -1029,7 +1029,6 @@ it:
       title: "cerca argomenti, messaggi, utenti o categorie"
       no_results: "Nessun risultato trovato."
       no_more_results: "Nessun altro risultato trovato."
-      search_help: Cerca aiuto
       searching: "Ricerca in corso..."
       post_format: "#{{post_number}} da {{username}}"
       context:
@@ -1766,8 +1765,6 @@ it:
       readonly: "Visualizza"
     lightbox:
       download: "scarica"
-    search_help:
-      title: 'Aiuto Ricerca'
     keyboard_shortcuts_help:
       title: 'Scorciatorie Tastiera'
       jump_to:

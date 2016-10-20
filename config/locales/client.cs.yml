@@ -1059,7 +1059,6 @@ cs:
       title: "vyhledávat témata, příspěvky, uživatele nebo kategorie"
       no_results: "Nenalezeny žádné výsledky."
       no_more_results: "Nenalezeny žádné další výsledky."
-      search_help: Pomoc s hledáním
       searching: "Hledám ..."
       post_format: "#{{post_number}} od {{username}}"
       context:

@@ -1175,6 +1175,7 @@ ro:
     automatically_unpin_topics: "Desprinde automat subiecte când utilizatorul ajunge la sfârșitul paginii."
     read_time_word_count: "Contor de cuvinte pe minut pentru calcularea timpului estimat de citire."
     topic_page_title_includes_category: "Titlul paginii subiectului include un nume de categorie."
+    max_prints_per_hour_per_user: "Numărul maxim de amprente de vizualizare lăsate pentru /print (0 pentru dezactivare)"
     full_name_required: "Numele întreg este un câmp obligatoriu în profilul utilizator."
     enable_names: "Afișează numele întreg al utilizatorului în profilul său, în cardul utilizator și în emailuri. Dezactivează pentru ascunde numele peste tot."
     display_name_on_posts: "Arată atât numele complet cât și numele de utilizator în postări."
@@ -1208,6 +1209,7 @@ ro:
     enforce_square_emoji: "Forțează un aspect pătrățos la toti emoji."
     approve_post_count: "Numărul de postări de la un utilizator simplu trebuie să fie aprobat"
     approve_unless_trust_level: "Postările utilizatorilor care au un nivel de încredere mai mic decât acesta trebuie să fie aprobate."
+    approve_new_topics_unless_trust_level: "Crearea de subiecte noi pentru utilizatorii care se află sub acest nivel de încredere, trebuie aprobată"
     notify_about_queued_posts_after: "Dacă există postări care au așteptat să fie verificate mai mult de atâtea ore, un email va fi trimis către contact_email. Setează la 0 pentru a dezactiva aceste emailuri."
     auto_close_messages_post_count: "Numărul maxim de postări permise într-un mesaj privat înainte să fie închis automat (0 pentru dezactivare) "
     auto_close_topics_post_count: "Numărul maxim de postări permise într-un subiect înainte ca acesta să fie închis automat (0 pentru dezactivare)"
@@ -1224,6 +1226,7 @@ ro:
     default_email_in_reply_to: "Implicit, include în email un extras postarea căreia i se răspunde."
     default_other_new_topic_duration_minutes: "Condiție implicită globală referitoare la durata timpului pentru care subiectul este considerat nou"
     default_other_auto_track_topics_after_msecs: "Durata de timp implicită la nivel global înainte ca un subiect să fie urmărit în mod automat."
+    default_other_notification_level_when_replying: "Nivelul global implicit de notificare atunci când un utilizator răspunde la un subiect."
     default_other_external_links_in_new_tab: "Implicit, deschide link-urile externe în taburi noi."
     default_other_enable_quoting: "Implicit, activează citarea textului evidențiat."
     default_other_dynamic_favicon: "Implicit, arată contorul de subiecte noi/actualizate în icoana browserului."
@@ -2189,7 +2192,7 @@ ro:
       new_activity: "Activități noi în subiectele și postările tale:"
       top_topics: "Postări populare"
       other_new_topics: "Subiecte populare"
-      unsubscribe: "Acest rezumat este transmis de pe %{site_link} când a trecut ceva vreme de când nu te-am mai văzut. Pentru a te dezabona, dă clic pe %{unsubscribe_link}."
+      unsubscribe: "Acest rezumat este transmis de pe %{site_link} când a trecut ceva vreme de când nu te-am mai văzut. Pentru a te dezabona, %{unsubscribe_link}."
       click_here: "click aici"
       from: "%{site_name} rezumat"
       read_more: "Citește mai mult"
@@ -2533,35 +2536,6 @@ ro:
       Dacă decidem să ne schimbăm politica de confidențialitate, vom afișa schimbările în această pagină.
 
       Acest document se supune licenței creative commons CC-BY-SA. A fost actualizat ultima dată pe 31 mai 2013.
-  static:
-    search_help: |
-      <h3>Sfaturi</h3>
-      <p>
-      <ul>
-      <li>Rezultatele în care titlul corespunde căutării sunt prioritizate &ndash; în caz de dubiu, caută în titluri</li>
-      <li>Cele mai bune rezultate le dau cuvintele unice, altele decât cele obșnuite</li>
-      <li>Încearcă căutarea în cadrul unei categorii anume, a unui subiect sau utilizator</li>
-      </ul>
-      </p>
-      <h3>Opțiuni</h3>
-      <p>
-      <table>
-      <tr><td><code>ordine:vizualizări</code></td><td><code>ordine:recente</code></td><td><code>ordine:aprecieri</code></td><td><code>@username</code></td><td><code>utilizator:foo</code></td></tr>
-      <tr><td><code>stare:deschise</code></td><td><code>stare:închise</code></td><td><code>stare:arhivate</code></td><td><code>stare:fărărăspuns</code></td><td><code>stare:utilizator_unic</code></td></tr>
-      <tr><td><code>#categorie-slug</code></td><td><code>categorie:foo</code></td><td><code>grup:foo</code></td><td><code>ecuson:foo</code></td><td></td></tr>
-      <tr><td><code>in:aprecieri</code></td><td><code>în:postate</code></td><td><code>în:urmărite_activ</code></td><td><code>în:urmărite</code></td><td><code>în:privat</code></td></tr>
-      <tr><td><code>în:semne de carte</code></td><td><code>în:prima</code></td><td><code>în:fixate</code></td><td><code>în:detașate</code></td><td><code>în:wiki</code></td></tr>
-      <tr><td><code>posts_count:num</code></td><td><code>înainte:zile sau dată</code></td><td><code>după:zile sau dată</code></td><td><code>tags:one,two</code></td><td></td></tr>
-      </table>
-      </p>
-      <h3>Exemple</h3>
-      <p>
-      <ul>
-      <li><code>curcubee #parcuri</code> va căuta după postările care conțin cuvîntul "curcubee" în categoria "parcuri".</li>
-      <li><code>curcubee categorie:parcuri stare:deschise ordine:recente</code> va căuta după subiecte care conțin cuvântul "curcubee" în categoria "parcuri" și care nu sunt închise or arhivate, ordonate după data ultimei postări.</li>
-      <li><code>curcubee categorie:"parcuri și grădini" în:semne de carte</code> va căuta subiectele care conțin cuvântul "curcubee" în categoria "parcuri și grădini" și care sunt marcate de tine cu semn de carte.</li>
-      </ul>
-      </p>
   badges:
     editor:
       name: Editor

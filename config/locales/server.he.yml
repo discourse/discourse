@@ -502,7 +502,7 @@ he:
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: 'לא ראוי'
-      description: 'פוסט זה מכיל תוכן שאדם סביר היה רואה כפוגעני, מתעלל או הפרה של <a href="/guidelines"> כללי הקהילה </a>.'
+      description: 'פוסט זה מכיל תוכן שאדם סביר היה רואה כפוגעני, מתעלל או הפרה של <a href="/guidelines">כללי הקהילה</a>.'
       long_form: 'דוגלל כלא ראוי'
     notify_user:
       title: 'שלחו הודעה ל @{{username}}'
@@ -1132,6 +1132,7 @@ he:
     automatically_unpin_topics: "הסרת נעיצה אוטומטית של נושאים כאשר המשתמשים מגיעים לתחתית."
     read_time_word_count: "מספר המילים לדקה כדי להעריך את זמן הקריאה."
     topic_page_title_includes_category: "כותרת דף נושא כוללת את שם הקטגוריה."
+    max_prints_per_hour_per_user: "מספר מקסימלי של צפיות בדף /print (הדפסה) (קיבעו ל 0 כדי לנטרל)"
     full_name_required: "שם מלא הוא שדה נדרש לפרופיל משתמש/ת."
     enable_names: "הצגת השם המלא של המשתמש/ת בעמודי הפרופיל שלהם, בכרטיסי המשתמ ובדוא\"ל שלהם. נטרול הסתרת השם המלא בכל מקום."
     display_name_on_posts: "הצגת שמם המלא של משתמשים בפרסומיהם, בנוסף ל@שם_המשתמש שלהם."
@@ -1165,6 +1166,7 @@ he:
     enforce_square_emoji: "חובת מימדי ריבועיים בכל ה-emojis."
     approve_post_count: "מספר הפוסטים ממשתמשים חדשים או בסיסיים שחייבים לאשר אותם"
     approve_unless_trust_level: "פוסטים של משתמשים מתחת לרמת אמון זו חייבים לעבור אישור"
+    approve_new_topics_unless_trust_level: "נושאים חדשים עבור משתמשים מתחת לרמת אמון זו חייבים להיות מאושרים"
     notify_about_queued_posts_after: "אם יש פוסטים שהמתינו לסקירה ליותר מכמות השעות הזו, יישלח מייל ל contact_email. קבעו 0 כדי לנטרל את המיילים האלו."
     auto_close_messages_post_count: "מספר פוסטים מקסימלי בהודעה לפני שהיא נסגרת אוטומטית (0 לניטרול)"
     auto_close_topics_post_count: "מספר מקסימלי של פוסטים בנושא לפני שהוא נסגר אוטומטית (0 לניטרול)"
@@ -1181,6 +1183,7 @@ he:
     default_email_in_reply_to: "הכללת קטע של פוסט עליו עונים במיילים כברירת מחדל."
     default_other_new_topic_duration_minutes: "ברירת המחדל הגלובאלית עבור תנאי שבשבילו נושא ייחשב חדש."
     default_other_auto_track_topics_after_msecs: "ברירת המחדל הגלובאלית עבור הזמן לפני שנושא נעקב אוטומטית"
+    default_other_notification_level_when_replying: "ברירת מחדל גלובלית של רמת התראה כאשר משתמשים מגיבים לנושא."
     default_other_external_links_in_new_tab: "פתח קישורים חיצונים בטאב חדש, בתור ברירת מחדל."
     default_other_enable_quoting: "איפשור תגובות עם ציטוט לטקסט מצוטט כברירת מחדל."
     default_other_dynamic_favicon: "הציגו ספירה של נושאים חדשים/מעודכנים באייקון של הדפדפן כברירת מחדל."
@@ -2612,35 +2615,6 @@ he:
       אם נחליט לשנות את מדיניות הפרטיות שלנו, נפרסם שינויים אלו בדף זה.
 
       מסמך זה הוא CC-BY-SA. הוא עודכן לאחרונה ב 25 לספטמבר 2016.
-  static:
-    search_help: |
-      <h3>טיפים</h3>
-      <p>
-      <ul>
-      <li>התאמות לכותרות מתועדפות גבוה יותר - כשיש ספק, חפשו אחר כותרות</li>
-      <li>מילים ייחודיות ולא נפוצות יתנו את התוצאות הטובות ביותר</li>
-      <li>נסו לחפש בקטגוריה ספציפית, נושא ספציפי, או משתמש ספציפי</li>
-      </ul>
-      </p>
-      <h3>אפשרויות</h3>
-      <p>
-      <table>
-      <tr><td><code>order:views</code></td><td><code>order:latest</code></td><td><code>order:likes</code></td><td><code>@username</code></td><td><code>user:foo</code></td></tr>
-      <tr><td><code>status:open</code></td><td><code>status:closed</code></td><td><code>status:archived</code></td><td><code>status:noreplies</code></td><td><code>status:single_user</code></td></tr>
-      <tr><td><code>#category-slug</code></td><td><code>category:foo</code></td><td><code>group:foo</code></td><td><code>badge:foo</code></td><td></td></tr>
-      <tr><td><code>in:likes</code></td><td><code>in:posted</code></td><td><code>in:watching</code></td><td><code>in:tracking</code></td><td><code>in:private</code></td></tr>
-      <tr><td><code>in:bookmarks</code></td><td><code>in:first</code></td><td><code>in:pinned</code></td><td><code>in:unpinned</code></td><td><code>in:wiki</code></td></tr>
-      <tr><td><code>posts_count:num</code></td><td><code>before:days or date</code></td><td><code>after:days or date</code></td><td><code>tags:one,two</code></td><td></td></tr>
-      </table>
-      </p>
-      <h3>דוגמאות</h3>
-      <p>
-      <ul>
-      <li><code>קשת-בענן #פארקים</code> יחפש נושאים שמכילים את המילה ״קשת-בענן״ בקטגוריה שנקראת ״פארקים״.</li>
-      <li><code>קשת-בענן category:פארקים status:open order:latest</code> יחפש אחר נושאים שמכילים את המילה ״קשת-בענן״ בקטגוריה ״פארקים״ שאינם סגורים או מאורכבים, מסודרים לפי תאריך הפוסט האחרון.</li>
-      <li><code>קשת-בענן category:"פארקים וגנים" in:bookmarks</code> יחפש אחר נושאים שמכילים את המילה ״קשת-בענן״ בקטגוריה ״פארקים וגנים״ שסימנתם עם סימנייה.</li>
-      </ul>
-      </p>
   badges:
     editor:
       name: עורכים
