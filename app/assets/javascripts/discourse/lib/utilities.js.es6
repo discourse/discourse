@@ -190,10 +190,8 @@ export function validateUploadedFiles(files, bypassNewUserRestriction) {
 
 export function validateUploadedFile(file, type, bypassNewUserRestriction) {
   // check that the uploaded file is authorized
-  if (!authorizesAllExtensions() &&
-      !isAuthorizedUpload(file)) {
-    var extensions = authorizedExtensions();
-    bootbox.alert(I18n.t('post.errors.upload_not_authorized', { authorized_extensions: extensions }));
+  if (!authorizesAllExtensions() && !isAuthorizedUpload(file)) {
+    bootbox.alert(I18n.t('post.errors.upload_not_authorized', { authorized_extensions: authorizedExtensions() }));
     return false;
   }
 
@@ -217,23 +215,24 @@ export function authorizesAllExtensions() {
   return Discourse.SiteSettings.authorized_extensions.indexOf("*") >= 0;
 }
 
+function extensions() {
+  return Discourse.SiteSettings.authorized_extensions
+                               .toLowerCase()
+                               .replace(/[\s\.]+/g, "")
+                               .split("|")
+                               .filter(ext => ext.indexOf("*") === -1);
+}
+
+function extensionsRegex() {
+  return new RegExp("\\.(" + extensions().join("|") + ")$", "i");
+}
+
 export function isAuthorizedUpload(file) {
-  if (file && file.name) {
-    var extensions = _.chain(Discourse.SiteSettings.authorized_extensions.split("|"))
-      .reject(function(extension) { return extension.indexOf("*") >= 0; })
-      .map(function(extension) { return (extension.indexOf(".") === 0 ? extension.substring(1) : extension).replace(".", "\\."); })
-      .value();
-    return new RegExp("\\.(" + extensions.join("|") + ")$", "i").test(file.name);
-  }
-  return false;
+  return file && file.name && extensionsRegex().test(file.name);
 }
 
 export function authorizedExtensions() {
-  return _.chain(Discourse.SiteSettings.authorized_extensions.split("|"))
-    .reject(function(extension) { return extension.indexOf("*") >= 0; })
-    .map(function(extension) { return extension.toLowerCase(); })
-    .value()
-    .join(", ");
+  return extensions().join(", ");
 }
 
 export function uploadLocation(url) {
@@ -267,12 +266,12 @@ export function isAnImage(path) {
 
 export function allowsImages() {
   return authorizesAllExtensions() ||
-    (/\.(png|jpe?g|gif|bmp|tiff?|svg|webp|ico)/i).test(authorizedExtensions());
+    (/(png|jpe?g|gif|bmp|tiff?|svg|webp|ico)/i).test(authorizedExtensions());
 }
 
 export function allowsAttachments() {
   return authorizesAllExtensions() ||
-    !/^(\.(png|jpe?g|gif|bmp|tiff?|svg|webp|ico)(,\s)?)+$/i.test(authorizedExtensions());
+    !/^((png|jpe?g|gif|bmp|tiff?|svg|webp|ico)(,\s)?)+$/i.test(authorizedExtensions());
 }
 
 export function displayErrorForUpload(data) {
