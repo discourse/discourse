@@ -3192,7 +3192,7 @@ en:
     staff_tag_remove_disallowed: "The tag \"%{tag}\" may only be removed by staff."
   rss_by_tag: "Topics tagged %{tag}"
 
-  first_installation:
+  finish_installation:
     congratulations: "Congratulations, you installed Discourse!"
     register:
       button: "Register"
@@ -3202,6 +3202,9 @@ en:
     confirm_email:
       title: "Confirm your Email"
       message: "<p>We sent an activation mail to <b>%{email}</b>. Please follow the instructions in the email to activate your account.</p><p>If it doesn't arrive, ensure you have set up email correctly for your Discourse and check your spam folder.</p>"
+    resend_email:
+      title: "Resend Activation Email"
+      message: "<p>We've re-sent the activation email to <b>%{email}</b>"
 
   wizard:
     title: "Discourse Setup"

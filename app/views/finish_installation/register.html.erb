@@ -1,4 +1,4 @@
-<h1><%= t 'first_installation.register.title' %></h1>
+<h1><%= t 'finish_installation.register.title' %></h1>
 
 <%- if @allowed_emails.present? %>
   <%= form_tag(finish_installation_register_path) do %>
@@ -43,11 +43,11 @@
       <% end %>
     </div>
 
-    <%= submit_tag(t('first_installation.register.button'), class: 'wizard-btn primary') %>
+    <%= submit_tag(t('finish_installation.register.button'), class: 'wizard-btn primary') %>
 
   <%- end %>
 <%- else -%>
-  <p><%= raw(t 'first_installation.register.no_emails') %></p>
+  <p><%= raw(t 'finish_installation.register.no_emails') %></p>
 <%- end %>
 
 <script>
