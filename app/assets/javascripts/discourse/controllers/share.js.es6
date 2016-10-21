@@ -3,10 +3,10 @@ import { longDateNoYear } from 'discourse/lib/formatter';
 import computed from 'ember-addons/ember-computed-decorators';
 
 export default Ember.Controller.extend({
-  needs: ['topic'],
+  topic: Ember.inject.controller(),
 
-  title: Ember.computed.alias('controllers.topic.model.title'),
-  canReplyAsNewTopic: Ember.computed.alias('controllers.topic.model.details.can_reply_as_new_topic'),
+  title: Ember.computed.alias('topic.model.title'),
+  canReplyAsNewTopic: Ember.computed.alias('topic.model.details.can_reply_as_new_topic'),
 
   @computed('type', 'postNumber')
   shareTitle(type, postNumber) {
@@ -31,7 +31,7 @@ export default Ember.Controller.extend({
     },
 
     replyAsNewTopic() {
-      const topicController = this.get("controllers.topic");
+      const topicController = this.get("topic");
       const postStream = topicController.get("model.postStream");
       const postId = this.get("postId") || postStream.findPostIdForPostNumber(1);
       const post = postStream.findLoadedPost(postId);

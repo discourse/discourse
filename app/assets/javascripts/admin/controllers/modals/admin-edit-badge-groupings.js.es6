@@ -1,6 +1,5 @@
 import { ajax } from 'discourse/lib/ajax';
 export default Ember.Controller.extend({
-  needs: ['modal'],
 
   modelChanged: function(){
     const model = this.get('model');

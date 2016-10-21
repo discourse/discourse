@@ -1,7 +1,7 @@
 import debounce from 'discourse/lib/debounce';
 
 export default Ember.Controller.extend({
-  needs: ["application"],
+  application: Ember.inject.controller(),
   queryParams: ["period", "order", "asc", "name"],
   period: "weekly",
   order: "likes_received",
@@ -15,7 +15,7 @@ export default Ember.Controller.extend({
   }, 500).observes("nameInput"),
 
   _showFooter: function() {
-    this.set("controllers.application.showFooter", !this.get("model.canLoadMore"));
+    this.set("application.showFooter", !this.get("model.canLoadMore"));
   }.observes("model.canLoadMore"),
 
   actions: {

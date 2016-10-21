@@ -5,12 +5,11 @@ import DiscourseURL from 'discourse/lib/url';
 
 // Modal related to merging of topics
 export default Ember.Controller.extend(SelectedPostsCount, ModalFunctionality, {
-  needs: ['topic'],
+  topicController: Ember.inject.controller('topic'),
 
   saving: false,
   selectedTopicId: null,
 
-  topicController: Em.computed.alias('controllers.topic'),
   selectedPosts: Em.computed.alias('topicController.selectedPosts'),
   selectedReplies: Em.computed.alias('topicController.selectedReplies'),
   allPostsSelected: Em.computed.alias('topicController.allPostsSelected'),
@@ -26,7 +25,7 @@ export default Ember.Controller.extend(SelectedPostsCount, ModalFunctionality, {
   }.property('saving'),
 
   onShow() {
-    this.set('controllers.modal.modalClass', 'split-modal');
+    this.set('modal.modalClass', 'split-modal');
   },
 
   actions: {

@@ -24,7 +24,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
   emptyTags: Ember.computed.empty('tags'),
 
   onShow() {
-    this.set('controllers.modal.modalClass', 'topic-bulk-actions-modal small');
+    this.set('modal.modalClass', 'topic-bulk-actions-modal small');
 
     const buttonRows = [];
     let row = [];
@@ -86,7 +86,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
     showChangeCategory() {
       this.send('changeBulkTemplate', 'modal/bulk_change_category');
-      this.set('controllers.modal.modalClass', 'topic-bulk-actions-modal full');
+      this.set('modal.modalClass', 'topic-bulk-actions-modal full');
     },
 
     showNotificationLevel() {

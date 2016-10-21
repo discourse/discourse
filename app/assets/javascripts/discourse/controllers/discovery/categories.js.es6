@@ -2,7 +2,7 @@ import computed from 'ember-addons/ember-computed-decorators';
 import DiscoveryController from 'discourse/controllers/discovery';
 
 export default DiscoveryController.extend({
-  needs: ['modal', 'discovery'],
+  discovery: Ember.inject.controller(),
 
   // this makes sure the composer isn't scoping to a specific category
   category: null,
