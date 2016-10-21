@@ -389,7 +389,7 @@ export function cook(raw, opts) {
 
   preProcessors.forEach(p => raw = p(raw));
 
-  const whiteLister = new WhiteLister(opts.features);
+  const whiteLister = new WhiteLister(opts);
 
   const tree = parser.toHTMLTree(raw, 'Discourse');
   let result = opts.sanitizer(parser.renderJsonML(parseTree(tree, opts)), whiteLister);
