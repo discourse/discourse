@@ -1332,6 +1332,7 @@ en:
     embed_username_key_from_feed: "Key to pull discourse username from feed."
     embed_title_scrubber: "Regular expression for scrubbing embeddable titles."
     embed_truncate: "Truncate the embedded posts."
+    allowed_href_schemes: "Schemes allowed in links in addition to http and https."
     embed_post_limit: "Maximum number of posts to embed."
     embed_username_required: "The username for topic creation is required."
     embed_whitelist_selector: "CSS selector for elements that are allowed in embeds."
