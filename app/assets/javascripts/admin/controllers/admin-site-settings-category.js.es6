@@ -11,6 +11,6 @@ export default Ember.Controller.extend({
     } else {
       return [];
     }
-  }.property('controllers.adminSiteSettings.content', 'categoryNameKey')
+  }.property('adminSiteSettings.content', 'categoryNameKey')
 
 });

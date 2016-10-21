@@ -7,10 +7,10 @@ export default Ember.Controller.extend(BufferedContent, {
   saving: false,
   savingStatus: '',
 
-  badgeTypes: Em.computed.alias('adminBadges.badgeTypes'),
-  badgeGroupings: Em.computed.alias('adminBadges.badgeGroupings'),
-  badgeTriggers: Em.computed.alias('adminBadges.badgeTriggers'),
-  protectedSystemFields: Em.computed.alias('adminBadges.protectedSystemFields'),
+  badgeTypes: Ember.computed.alias('adminBadges.badgeTypes'),
+  badgeGroupings: Ember.computed.alias('adminBadges.badgeGroupings'),
+  badgeTriggers: Ember.computed.alias('adminBadges.badgeTriggers'),
+  protectedSystemFields: Ember.computed.alias('adminBadges.protectedSystemFields'),
 
   readOnly: Ember.computed.alias('buffered.system'),
   showDisplayName: propertyNotEqual('name', 'displayName'),

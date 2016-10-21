@@ -11,7 +11,10 @@ import { categoryBadgeHTML } from 'discourse/helpers/category-link';
 import Post from 'discourse/models/post';
 
 export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
-  needs: ['modal', 'composer', 'quote-button', 'application'],
+  composer: Ember.inject.controller(),
+  quoteButton: Ember.inject.controller('quote-button'),
+  application: Ember.inject.controller(),
+
   multiSelect: false,
   allPostsSelected: false,
   editingTopic: false,
@@ -282,8 +285,8 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
 
     // Post related methods
     replyToPost(post) {
-      const composerController = this.get('controllers.composer'),
-          quoteController = this.get('controllers.quote-button'),
+      const composerController = this.get('composer'),
+          quoteController = this.get('quoteButton'),
           quotedText = Quote.build(quoteController.get('post'), quoteController.get('buffer')),
           topic = post ? post.get('topic') : this.get('model');
 
@@ -380,7 +383,7 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
         return false;
       }
 
-      const composer = this.get('controllers.composer'),
+      const composer = this.get('composer'),
             composerModel = composer.get('model'),
             opts = {
               post: post,
@@ -602,8 +605,8 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
     },
 
     replyAsNewTopic(post) {
-      const composerController = this.get('controllers.composer');
-      const quoteController = this.get('controllers.quote-button');
+      const composerController = this.get('composer');
+      const quoteController = this.get('quoteButton');
       post = post || quoteController.get('post');
       const quotedText = Quote.build(post, quoteController.get('buffer'));
 
@@ -905,7 +908,7 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
 
   _showFooter: function() {
     const showFooter = this.get("model.postStream.loaded") && this.get("model.postStream.loadedAllPosts");
-    this.set("controllers.application.showFooter", showFooter);
+    this.set("application.showFooter", showFooter);
   }.observes("model.postStream.{loaded,loadedAllPosts}")
 
 });

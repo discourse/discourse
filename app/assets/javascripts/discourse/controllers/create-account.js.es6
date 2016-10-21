@@ -7,7 +7,7 @@ import { emailValid } from 'discourse/lib/utilities';
 import InputValidation from 'discourse/models/input-validation';
 
 export default Ember.Controller.extend(ModalFunctionality, {
-  needs: ['login'],
+  login: Ember.inject.controller(),
 
   uniqueUsernameValidation: null,
   globalNicknameExists: false,
@@ -345,7 +345,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
   actions: {
     externalLogin(provider) {
-      this.get('controllers.login').send('externalLogin', provider);
+      this.get('login').send('externalLogin', provider);
     },
 
     createAccount() {

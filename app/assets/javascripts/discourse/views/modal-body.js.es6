@@ -15,7 +15,7 @@ export default Ember.View.extend({
 
     const title = this.get('title');
     if (title) {
-      this.set('controller.controllers.modal.title', title);
+      this.set('controller.modal.title', title);
     }
   },
 

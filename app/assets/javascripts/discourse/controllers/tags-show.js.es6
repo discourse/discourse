@@ -40,7 +40,7 @@ if (customNavItemHref) {
 
 
 export default Ember.Controller.extend(BulkTopicSelection, {
-  needs: ["application"],
+  application: Ember.inject.controller(),
 
   tag: null,
   additionalTags: null,
@@ -81,7 +81,7 @@ export default Ember.Controller.extend(BulkTopicSelection, {
   },
 
   _showFooter: function() {
-    this.set("controllers.application.showFooter", !this.get("list.canLoadMore"));
+    this.set("application.showFooter", !this.get("list.canLoadMore"));
   }.observes("list.canLoadMore"),
 
   footerMessage: function() {

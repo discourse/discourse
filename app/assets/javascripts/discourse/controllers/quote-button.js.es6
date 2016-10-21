@@ -3,13 +3,14 @@ import computed from 'ember-addons/ember-computed-decorators';
 import { selectedText } from 'discourse/lib/utilities';
 
 export default Ember.Controller.extend({
-  needs: ['topic', 'composer'],
+  topic: Ember.inject.controller(),
+  composer: Ember.inject.controller(),
 
   @computed('buffer', 'postId')
   post(buffer, postId) {
     if (!postId || Ember.isEmpty(buffer)) { return null; }
 
-    const postStream = this.get('controllers.topic.model.postStream');
+    const postStream = this.get('topic.model.postStream');
     const post = postStream.findLoadedPost(postId);
 
     return post;
@@ -22,7 +23,7 @@ export default Ember.Controller.extend({
     if (!this.currentUser) return;
 
     // don't display the "quote-reply" button if we can't reply
-    const topicDetails = this.get('controllers.topic.model.details');
+    const topicDetails = this.get('topic.model.details');
     if (!(topicDetails.get('can_reply_as_new_topic') || topicDetails.get('can_create_post'))) {
       return;
     }
@@ -106,7 +107,7 @@ export default Ember.Controller.extend({
 
     // defer load if needed, if in an expanded replies section
     if (!post) {
-      const postStream = this.get('controllers.topic.model.postStream');
+      const postStream = this.get('topic.model.postStream');
       return postStream.loadPost(postId).then(p => {
         this.set('post', p);
         return this.quoteText();
@@ -114,12 +115,12 @@ export default Ember.Controller.extend({
     }
 
     // If we can't create a post, delegate to reply as new topic
-    if (!this.get('controllers.topic.model.details.can_create_post')) {
-      this.get('controllers.topic').send('replyAsNewTopic', post);
+    if (!this.get('topic.model.details.can_create_post')) {
+      this.get('topic').send('replyAsNewTopic', post);
       return;
     }
 
-    const composerController = this.get('controllers.composer');
+    const composerController = this.get('composer');
     const composerOpts = {
       action: Composer.REPLY,
       draftKey: post.get('topic.draft_key')

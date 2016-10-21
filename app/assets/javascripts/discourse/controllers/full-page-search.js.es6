@@ -14,7 +14,7 @@ const SortOrders = [
 ];
 
 export default Ember.Controller.extend({
-  needs: ["application"],
+  application: Ember.inject.controller(),
   bulkSelectEnabled: null,
 
   loading: Em.computed.not("model"),
@@ -131,7 +131,7 @@ export default Ember.Controller.extend({
 
   @observes('loading')
   _showFooter() {
-    this.set("controllers.application.showFooter", !this.get("loading"));
+    this.set("application.showFooter", !this.get("loading"));
   },
 
   @computed('hasResults')

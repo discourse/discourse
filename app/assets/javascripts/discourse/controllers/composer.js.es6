@@ -51,7 +51,9 @@ export function addPopupMenuOptionsCallback(callback) {
 }
 
 export default Ember.Controller.extend({
-  needs: ['modal', 'topic', 'application'],
+  topicController: Ember.inject.controller('topic'),
+  application: Ember.inject.controller(),
+
   replyAsNewTopicDraft: Em.computed.equal('model.draftKey', Composer.REPLY_AS_NEW_TOPIC_KEY),
   checkedMessages: false,
   messageCount: null,
@@ -102,7 +104,7 @@ export default Ember.Controller.extend({
     }
   }),
 
-  topicModel: Ember.computed.alias('controllers.topic.model'),
+  topicModel: Ember.computed.alias('topicController.model'),
 
   @computed('model.canEditTitle', 'model.creatingPrivateMessage')
   canEditTags(canEditTitle, creatingPrivateMessage) {
@@ -484,7 +486,7 @@ export default Ember.Controller.extend({
       self.appEvents.one('composer:will-open', () => bootbox.alert(error));
     });
 
-    if (this.get('controllers.application.currentRouteName').split('.')[0] === 'topic' &&
+    if (this.get('application.currentRouteName').split('.')[0] === 'topic' &&
         composer.get('topic.id') === this.get('topicModel.id')) {
       staged = composer.get('stagedPost');
     }

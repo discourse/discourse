@@ -3,7 +3,9 @@ import { propertyNotEqual, setting } from 'discourse/lib/computed';
 import computed from 'ember-addons/ember-computed-decorators';
 
 export default Ember.Controller.extend({
-  needs: ['topic', 'application'],
+  topic: Ember.inject.controller(),
+  application: Ember.inject.controller(),
+
   visible: false,
   user: null,
   username: null,
@@ -15,10 +17,10 @@ export default Ember.Controller.extend({
   // If inside a topic
   topicPostCount: null,
 
-  postStream: Em.computed.alias('controllers.topic.model.postStream'),
+  postStream: Em.computed.alias('topic.model.postStream'),
   enoughPostsForFiltering: Em.computed.gte('topicPostCount', 2),
-  viewingTopic: Em.computed.match('controllers.application.currentPath', /^topic\./),
-  viewingAdmin: Em.computed.match('controllers.application.currentPath', /^admin\./),
+  viewingTopic: Em.computed.match('application.currentPath', /^topic\./),
+  viewingAdmin: Em.computed.match('application.currentPath', /^admin\./),
   showFilter: Em.computed.and('viewingTopic', 'postStream.hasNoFilters', 'enoughPostsForFiltering'),
   showName: propertyNotEqual('user.name', 'user.username'),
   hasUserFilters: Em.computed.gt('postStream.userFilters.length', 0),
@@ -97,7 +99,7 @@ export default Ember.Controller.extend({
     this.setProperties({ username, userLoading: username, cardTarget: target, post });
 
     const args = { stats: false };
-    args.include_post_count_for = this.get('controllers.topic.model.id');
+    args.include_post_count_for = this.get('topic.model.id');
     args.skip_track_visit = true;
 
     return Discourse.User.findByUsername(username, args).then((user) => {
