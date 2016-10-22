@@ -10,7 +10,7 @@
 
 - The default of **1 GB** RAM works fine for small Discourse communities. We recommend 2 GB RAM for larger communities.
 
-- The default of **Ubuntu 14.04 LTS x64** works fine. At minimum, a 64-bit Linux OS with a kernel version of 3.10+ is required.
+- The default of **Ubuntu 16.04 LTS x64** works fine. At minimum, a 64-bit Linux OS with a kernel version of 3.10+ is required.
 
 - The default of **New York** is a good choice for most US and European audiences. Or select a region that is geographically closer to your audience.
 
@@ -60,15 +60,15 @@ Answer the following questions when prompted:
 
 This will generate an `app.yml` configuration file on your behalf, and then kicks off bootstrap. Bootstrapping takes between **2-8 minutes** to set up your Discourse.
 
-### Email Is Important
+### Email
 
-**Email is CRITICAL for account creation and notifications in Discourse. If you do not properly configure email before bootstrapping YOU WILL HAVE A BROKEN SITE!**
+> ⚠️ **Email is CRITICAL for account creation and notifications in Discourse.** If you do not properly configure email before bootstrapping YOU WILL HAVE A BROKEN SITE!
 
 - Already have a mail server? Great. Use your existing mail server credentials.
 
 - No existing mail server? Check out our [**Recommended Email Providers for Discourse**][mailconfig].
 
-- For proper email deliverability, add valid SPF and DKIM records in your DNS. See your email provider instructions for specifics.
+- For proper email deliverability, you must add valid SPF and DKIM TXT records in your DNS. See your email provider instructions for specifics.
 
 If you need to change or fix your email settings after bootstrapping, edit your `app.yml` file and `./launcher rebuild app`, otherwise your changes will not take effect.
 
