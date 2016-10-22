@@ -88,11 +88,11 @@ Register a new admin account using one of the email addresses you entered before
 
 (If you are unable to register your admin account, check the logs at `/var/discourse/shared/standalone/log/rails/production.log` and see our [Email Troubleshooting checklist](https://meta.discourse.org/t/troubleshooting-email-on-a-new-discourse-install/16326).)
 
-The setup wizard will guide you through basic configuration of your Discourse.
+After registering your admin account, the setup wizard will launch and guide you through basic configuration of your Discourse.
 
 <img src="https://www.discourse.org/images/install/17/discourse-wizard-step-1.png" width="650">
 
-After setup, you should see Staff topics and **READ ME FIRST: Admin Quick Start Guide**. This guide contains advice for further configuring and customizing your Discourse install. Read it closely!
+After completing the setup wizard, you should see Staff topics and **READ ME FIRST: Admin Quick Start Guide**. This guide contains advice for further configuring and customizing your Discourse install.
 
 <img src="https://www.discourse.org/images/install/17/discourse-homepage.png">
 
