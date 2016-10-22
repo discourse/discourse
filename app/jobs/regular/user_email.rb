@@ -103,7 +103,7 @@ module Jobs
         end
 
         if user.user_option.mailing_list_mode? &&
-           user.user_option.mailing_list_mode_frequency == 1 && # don't catch notifications for users on daily mailing list mode
+           user.user_option.mailing_list_mode_frequency > 0 && # don't catch notifications for users on daily mailing list mode
            (!post.try(:topic).try(:private_message?)) &&
            NOTIFICATIONS_SENT_BY_MAILING_LIST.include?(email_args[:notification_type])
            # no need to log a reason when the mail was already sent via the mailing list job
