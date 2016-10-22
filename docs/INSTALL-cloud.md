@@ -22,7 +22,7 @@ Connect to your server via its IP address using SSH, or [Putty][put] on Windows:
 
     ssh root@192.168.1.1
 
-Enter the root password from the email DigitalOcean sent you when the server was set up. You may be prompted to change the root password, too.
+Enter the root password from the email DigitalOcean sent you when the server was set up. You will be prompted to change the root password.
 
 <img src="https://www.discourse.org/images/install/15/ssh-login-terminal.png" width="600px">
 
@@ -76,19 +76,25 @@ If you need to change or fix your email settings after bootstrapping, edit your 
 
  Once bootstrapping is complete, your Discourse should be accessible in your web browser via the domain name `discourse.example.com` you entered earlier, provided you configured DNS. If not, you can visit the server IP directly, e.g. `http://192.168.1.1`.
 
-<img src="https://www.discourse.org/images/install/15/browser-discourse-installed.png">
+<img src="https://www.discourse.org/images/install/17/discourse-congrats.png">
 
 ### Register New Account and Become Admin
 
 Register a new admin account using one of the email addresses you entered before bootstrapping.
 
-If you are unable to register your admin account, check the logs at `/var/discourse/shared/standalone/log/rails/production.log` and see our [Email Troubleshooting checklist](https://meta.discourse.org/t/troubleshooting-email-on-a-new-discourse-install/16326).
+<img src="https://www.discourse.org/images/install/17/discourse-register.png">
 
-<img src="https://www.discourse.org/images/install/14/browser-logged-in-first-admin.png?v=1">
+<img src="https://www.discourse.org/images/install/17/discourse-activate.png">
 
-You should see Staff topics and **READ ME FIRST: Admin Quick Start Guide**. This guide contains the next steps for further configuring and customizing your Discourse install as an administrator. Read it closely!
+(If you are unable to register your admin account, check the logs at `/var/discourse/shared/standalone/log/rails/production.log` and see our [Email Troubleshooting checklist](https://meta.discourse.org/t/troubleshooting-email-on-a-new-discourse-install/16326).)
 
-(If you are still unable to register a new admin account via email, see [Create Admin Account from Console](https://meta.discourse.org/t/create-admin-account-from-console/17274), but note that *you will have a broken site* unless you get email working.)
+The setup wizard will guide you through basic configuration of your Discourse.
+
+<img src="https://www.discourse.org/images/install/17/discourse-wizard-step-1.png">
+
+After setup, you should see Staff topics and **READ ME FIRST: Admin Quick Start Guide**. This guide contains advice for further configuring and customizing your Discourse install. Read it closely!
+
+<img src="https://www.discourse.org/images/install/17/discourse-homepage.png">
 
 ### Post-Install Maintenance
 
