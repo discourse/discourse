@@ -1,3 +1,15 @@
+GIT
+  remote: https://github.com/vibol/onebox.git
+  revision: 8354bd4304801afe3882c4e701b04e8ee1c416c3
+  branch: feature/amazon-instant-video
+  specs:
+    onebox (1.5.50)
+      htmlentities (~> 4.3.4)
+      moneta (~> 0.8)
+      multi_json (~> 1.11)
+      mustache
+      nokogiri (~> 1.6.6)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -215,12 +227,6 @@ GEM
     omniauth-twitter (1.2.1)
       json (~> 1.3)
       omniauth-oauth (~> 1.1)
-    onebox (1.5.50)
-      htmlentities (~> 4.3.4)
-      moneta (~> 0.8)
-      multi_json (~> 1.11)
-      mustache
-      nokogiri (~> 1.6.6)
     openid-redis-store (0.0.2)
       redis
       ruby-openid
@@ -455,7 +461,7 @@ DEPENDENCIES
   omniauth-oauth2
   omniauth-openid
   omniauth-twitter
-  onebox
+  onebox!
   openid-redis-store
   pg
   pry-nav
