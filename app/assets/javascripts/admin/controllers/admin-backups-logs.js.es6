@@ -1,4 +1,5 @@
-export default Ember.ArrayController.extend({
-  needs: ["adminBackups"],
-  status: Em.computed.alias("controllers.adminBackups")
+export default Ember.Controller.extend({
+  logs: [],
+  adminBackups: Ember.inject.controller(),
+  status: Em.computed.alias("adminBackups.model")
 });

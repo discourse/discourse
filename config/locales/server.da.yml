@@ -726,14 +726,7 @@ da:
     s3_config_warning: 'Serveren er konfigureret til at uploade filer til s3, men mindst én af følgende indstillinger er ikke angivet: s3_access_key_id, s3_secret_access_key eller s3_upload_bucket. Gå til <a href="/admin/site_settings">indstillinger</a> og opdatér indstillingerne. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Se "How to set up image uploads to S3?" for mere information</a>.'
     image_magick_warning: 'Serveren er konfigureret til at lave thumbnails af store billeder, men ImageMagick er ikke installeret. Installér ImageMagick med din foretrukne package manager eller <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">download den seneste udgave</a>.'
     failing_emails_warning: 'Der er %{num_failed_jobs} email operationer der mislykkede. Tjek din app.yml for at sikre at din mail server indstillinger er korrekte. <a href="/sidekiq/retries" target="_blank">Se mislykkede operationer i Sidekiq</a>.'
-    default_logo_warning: "Du har ikke angivet en e-mail-adresse for dit site. Opdatér venligst contact_email under <a href='/admin/site_settings'>indstillinger</a>."
-    contact_email_missing: "Opdatér venligst med en site kontakt email under <a href='/admin/site_settings'>indstillinger</a>, således at du kan kontaktes!"
-    contact_email_invalid: "Email for site admin er ikke gyldig. Opdater det her: <a href='/admin/site_settings'>Site Settings</a>."
-    title_nag: "Skriv navnet på dit site. Opdater her: <a href='/admin/site_settings'>Site Settings</a>."
-    site_description_missing: "Skriv en kort beskrivelse af dit site, så det vil dukke op i søge resultater. Opdater her: <a href='/admin/site_settings'>Site Settings</a>."
     consumer_email_warning: "Dit site er konfigureret til at bruge Gmail (eller en anden offentlig e-mail-tjeneste) til at sende e-mail. <a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>Gmail har en  grænse for, hvor mange mails du kan sende</a>. Overvej at bruge en e-mail-udbyder som mandrill.com for at sikre at din mail bliver leveret."
-    site_contact_username_warning: "Enter the name of a friendly staff user account to send important automated messages from. Update site_contact_username in <a href='/admin/site_settings'>Site Settings</a>."
-    notification_email_warning: "Notifikations emails bliver ikke sendt fra en valid email adresse på dit domæne; email modtagelse vil være udfordret. Venlilgst sæt notifikations email til en valid lokal email adresse her <a href='/admin/site_settings'>Site Settings</a>."
     subfolder_ends_in_slash: "Din undermappe er ikke opsat korrekt; DISCOURSE_RELATIVE_URL_ROOT ender med en slash."
     email_polling_errored_recently:
       one: "Email afstemning har afstedkommet en fejl i de seneste 24 timer. Venligst se <a href='/logs' target='_blank'>the logs</a> for detaljer."

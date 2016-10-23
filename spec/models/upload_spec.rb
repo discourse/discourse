@@ -123,18 +123,59 @@ describe Upload do
   end
 
   context ".get_from_url" do
+    let(:url) { "/uploads/default/original/3X/1/0/10f73034616a796dfd70177dc54b6def44c4ba6f.png" }
+    let(:upload) { Fabricate(:upload, url: url) }
 
     it "works when the file has been uploaded" do
-      Upload.expects(:find_by).returns(nil).once
-      Upload.get_from_url("/uploads/default/1/10387531.jpg")
+      expect(Upload.get_from_url(upload.url)).to eq(upload)
     end
 
     it "works when using a cdn" do
-      Rails.configuration.action_controller.stubs(:asset_host).returns("http://my.cdn.com")
-      Upload.expects(:find_by).with(url: "/uploads/default/1/02395732905.jpg").returns(nil).once
-      Upload.get_from_url("http://my.cdn.com/uploads/default/1/02395732905.jpg")
+      begin
+        original_asset_host = Rails.configuration.action_controller.asset_host
+        Rails.configuration.action_controller.asset_host = 'http://my.cdn.com'
+
+        expect(Upload.get_from_url(
+          URI.join("http://my.cdn.com", upload.url).to_s
+        )).to eq(upload)
+      ensure
+        Rails.configuration.action_controller.asset_host = original_asset_host
+      end
     end
 
+    it "should return the right upload when using the full URL" do
+      expect(Upload.get_from_url(
+        URI.join("http://discourse.some.com:3000/", upload.url).to_s
+      )).to eq(upload)
+    end
+
+    it "doesn't blow up with an invalid URI" do
+      expect { Upload.get_from_url("http://ip:port/index.html") }.not_to raise_error
+    end
+
+    describe "s3 store" do
+      let(:path) { "/original/3X/1/0/10f73034616a796dfd70177dc54b6def44c4ba6f.png" }
+      let(:url) { "//#{SiteSetting.s3_upload_bucket}.s3.amazonaws.com#{path}" }
+
+      before do
+        SiteSetting.enable_s3_uploads = true
+        SiteSetting.s3_upload_bucket = "s3-upload-bucket"
+        SiteSetting.s3_access_key_id = "some key"
+        SiteSetting.s3_secret_access_key = "some secret key"
+      end
+
+      after do
+        SiteSetting.enable_s3_uploads = false
+      end
+
+      it "should return the right upload when using a CDN for s3" do
+        upload
+        s3_cdn_url = 'https://mycdn.slowly.net'
+        SiteSetting.s3_cdn_url = s3_cdn_url
+
+        expect(Upload.get_from_url(URI.join(s3_cdn_url, path).to_s)).to eq(upload)
+      end
+    end
   end
 
   describe '.generate_digest' do

@@ -5,6 +5,8 @@ import {
   extractDomainFromUrl,
   isAnImage,
   avatarUrl,
+  authorizedExtensions,
+  allowsImages,
   allowsAttachments,
   getRawSize,
   avatarImg,
@@ -63,12 +65,11 @@ test("new user cannot upload attachments", function() {
 });
 
 test("ensures an authorized upload", function() {
-  var html = { name: "unauthorized.html" };
-  var extensions = Discourse.SiteSettings.authorized_extensions.replace(/\|/g, ", ");
+  const html = { name: "unauthorized.html" };
   sandbox.stub(bootbox, "alert");
 
   not(validUpload([html]));
-  ok(bootbox.alert.calledWith(I18n.t('post.errors.upload_not_authorized', { authorized_extensions: extensions })));
+  ok(bootbox.alert.calledWith(I18n.t('post.errors.upload_not_authorized', { authorized_extensions: authorizedExtensions() })));
 });
 
 var imageSize = 10 * 1024;
@@ -163,6 +164,21 @@ test("avatarImg", function() {
   setDevicePixelRatio(oldRatio);
 });
 
+test("allowsImages", function() {
+  Discourse.SiteSettings.authorized_extensions = "jpg|jpeg|gif";
+  ok(allowsImages(), "works");
+
+  Discourse.SiteSettings.authorized_extensions = ".jpg|.jpeg|.gif";
+  ok(allowsImages(), "works with old extensions syntax");
+
+  Discourse.SiteSettings.authorized_extensions = "txt|pdf|*";
+  ok(allowsImages(), "images are allowed when all extensions are allowed");
+
+  Discourse.SiteSettings.authorized_extensions = "json|jpg|pdf|txt";
+  ok(allowsImages(), "images are allowed when at least one extension is an image extension");
+});
+
+
 test("allowsAttachments", function() {
   Discourse.SiteSettings.authorized_extensions = "jpg|jpeg|gif";
   not(allowsAttachments(), "no attachments allowed by default");
@@ -172,6 +188,9 @@ test("allowsAttachments", function() {
 
   Discourse.SiteSettings.authorized_extensions = "jpg|jpeg|gif|pdf";
   ok(allowsAttachments(), "attachments are allowed when at least one extension is not an image extension");
+
+  Discourse.SiteSettings.authorized_extensions = ".jpg|.jpeg|.gif|.pdf";
+  ok(allowsAttachments(), "works with old extensions syntax");
 });
 
 test("defaultHomepage", function() {

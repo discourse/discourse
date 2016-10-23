@@ -95,6 +95,12 @@ describe Email::Styles do
       expect(frag.at('iframe')).to be_blank
       expect(frag.at('a')).to be_blank
     end
+
+    it "won't allow empty iframe src, strips them with no link" do
+      frag = html_fragment("<iframe src=''></iframe>")
+      expect(frag.at('iframe')).to be_blank
+      expect(frag.at('a')).to be_blank
+    end
   end
 
   context "rewriting protocol relative URLs to the forum" do

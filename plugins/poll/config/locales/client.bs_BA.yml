@@ -17,8 +17,34 @@ bs_BA:
         few: "ukupno glasova"
         other: "ukupno glasova"
       average_rating: "Prosječna ocjena: <strong>%{average}</strong>."
+      public:
+        title: "Glasovi su javni."
+      multiple:
+        help:
+          at_least_min_options:
+            one: "Odaberi barem <strong>1</strong> opciju"
+            few: "Odaberi barem <strong>%{name}</strong> opcije"
+            other: "Odaberi barem <strong>%{name}</strong> opcija"
+          up_to_max_options:
+            one: "Odaberi do <strong>1</strong> opcije"
+            few: "Odaberi do <strong>%{count}</strong> opcije"
+            other: "Odaberi do <strong>%{count}</strong> opcija"
+          x_options:
+            one: "Odaberi <strong>1</strong> opciju"
+            few: "Odaberi <strong>%{count}</strong> opcije"
+            other: "Odaberi <strong>%{count}</strong> opcija"
+          between_min_and_max_options: "Odaberi između <strong>%{min}</strong> i <strong>%{max}</strong> opcija"
       cast-votes:
         title: "ukupno glasova"
         label: "Glasaj"
+      show-results:
+        title: "Prikaži rezultate ankete"
+        label: "Prikaži rezultate"
+      hide-results:
+        title: "Nazad na glasove"
+        label: "Sakrij rezultate"
+      open:
+        title: "Otvori anketu"
+        label: "Otvori"
       close:
         label: "Zatvori"

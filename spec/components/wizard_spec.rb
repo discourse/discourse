@@ -114,13 +114,6 @@ describe Wizard do
       expect(build_simple(Fabricate.build(:user)).requires_completion?).to eq(false)
     end
 
-    it "is false for a developer" do
-      developer = Fabricate(:admin)
-      Developer.create!(user_id: developer.id)
-
-      expect(build_simple(developer).requires_completion?).to eq(false)
-    end
-
     it "it's false when the wizard is disabled" do
       SiteSetting.wizard_enabled = false
       admin = Fabricate(:admin)

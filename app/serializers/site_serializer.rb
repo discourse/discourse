@@ -119,6 +119,6 @@ class SiteSerializer < ApplicationSerializer
   end
 
   def include_wizard_required?
-    Wizard::Builder.new(scope.user).build.requires_completion?
+    Wizard.user_requires_completion?(scope.user)
   end
 end

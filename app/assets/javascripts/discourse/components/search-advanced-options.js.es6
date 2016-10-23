@@ -1,37 +1,37 @@
-import { on, observes, default as computed } from 'ember-addons/ember-computed-decorators';
+import { observes } from 'ember-addons/ember-computed-decorators';
 
-const REGEXP_FILTER_PREFIXES   = /\s?(user:|@|category:|#|group:|badge:|tags?:|in:|status:|posts_count:|(before|after):)/ig;
+const REGEXP_BLOCKS            = /(([^" \t\n\x0B\f\r]+)?(("[^"]+")?))/g;
 
-const REGEXP_USERNAME_PREFIX   = /\s?(user:|@)/ig;
-const REGEXP_CATEGORY_PREFIX   = /\s?(category:|#)/ig;
-const REGEXP_GROUP_PREFIX      = /\s?group:/ig;
-const REGEXP_BADGE_PREFIX      = /\s?badge:/ig;
-const REGEXP_TAGS_PREFIX       = /\s?tags?:/ig;
-const REGEXP_IN_PREFIX         = /\s?in:/ig;
-const REGEXP_STATUS_PREFIX     = /\s?status:/ig;
-const REGEXP_POST_COUNT_PREFIX = /\s?posts_count:/ig;
-const REGEXP_POST_TIME_PREFIX  = /\s?(before|after):/ig;
+const REGEXP_USERNAME_PREFIX   = /(user:|@)/ig;
+const REGEXP_CATEGORY_PREFIX   = /(category:|#)/ig;
+const REGEXP_GROUP_PREFIX      = /group:/ig;
+const REGEXP_BADGE_PREFIX      = /badge:/ig;
+const REGEXP_TAGS_PREFIX       = /tags?:/ig;
+const REGEXP_IN_PREFIX         = /in:/ig;
+const REGEXP_STATUS_PREFIX     = /status:/ig;
+const REGEXP_POST_COUNT_PREFIX = /posts_count:/ig;
+const REGEXP_POST_TIME_PREFIX  = /(before|after):/ig;
 
-const REGEXP_CATEGORY_SLUG  = /\s?(\#[a-zA-Z0-9\-:]+)/ig;
-const REGEXP_CATEGORY_ID    = /\s?(category:[0-9]+)/ig;
-const REGEXP_POST_TIME_WHEN = /(before|after)/ig;
+const REGEXP_IN_MATCH                 = /in:(posted|watching|tracking|bookmarks|first|pinned|unpinned)/ig;
+const REGEXP_SPECIAL_IN_LIKES_MATCH   = /in:likes/ig;
+const REGEXP_SPECIAL_IN_PRIVATE_MATCH = /in:private/ig;
+const REGEXP_SPECIAL_IN_WIKI_MATCH    = /in:wiki/ig;
+
+const REGEXP_CATEGORY_SLUG            = /(\#[a-zA-Z0-9\-:]+)/ig;
+const REGEXP_CATEGORY_ID              = /(category:[0-9]+)/ig;
+const REGEXP_POST_TIME_WHEN           = /(before|after)/ig;
 
 export default Em.Component.extend({
-  tagName: 'div',
-  classNames: ['search-advanced', 'row'],
-  searchedTerms: {username: [], category: null, group: [], badge: [], tags: [],
-    in: '', status: '', posts_count: '', time: {when: 'before', days: ''}},
+  classNames: ['search-advanced-options'],
+
   inOptions: [
-    {name: I18n.t('search.advanced.filters.likes'),     value: "likes"},
     {name: I18n.t('search.advanced.filters.posted'),    value: "posted"},
     {name: I18n.t('search.advanced.filters.watching'),  value: "watching"},
     {name: I18n.t('search.advanced.filters.tracking'),  value: "tracking"},
-    {name: I18n.t('search.advanced.filters.private'),   value: "private"},
     {name: I18n.t('search.advanced.filters.bookmarks'), value: "bookmarks"},
     {name: I18n.t('search.advanced.filters.first'),     value: "first"},
     {name: I18n.t('search.advanced.filters.pinned'),    value: "pinned"},
     {name: I18n.t('search.advanced.filters.unpinned'),  value: "unpinned"},
-    {name: I18n.t('search.advanced.filters.wiki'),      value: "wiki"}
   ],
   statusOptions: [
     {name: I18n.t('search.advanced.statuses.open'),        value: "open"},
@@ -45,333 +45,470 @@ export default Em.Component.extend({
     {name: I18n.t('search.advanced.post.time.after'),   value: "after"}
   ],
 
-  @on('init')
+  init() {
+    this._super();
+    this._init();
+    this._update();
+  },
+
   @observes('searchTerm')
+  _updateOptions() {
+    Ember.run.debounce(this, this._update, 250);
+  },
+
   _init() {
-    let searchTerm = this.get('searchTerm');
+    this.setProperties({
+      searchedTerms: {
+        username: '',
+        category: null,
+        group: [],
+        badge: [],
+        tags: [],
+        in: '',
+        special: {
+          in: {
+            likes: false,
+            private: false,
+            wiki: false
+          }
+        },
+        status: '',
+        posts_count: '',
+        time: {
+          when: 'before',
+          days: ''
+        }
+      }
+    });
+  },
 
-    if (!searchTerm)
+  _update() {
+    if (!this.get('searchTerm')) {
+      this._init();
       return;
+    }
 
-    this.findUsername(searchTerm);
-    this.findCategory(searchTerm);
-    this.findGroup(searchTerm);
-    this.findBadge(searchTerm);
-    this.findTags(searchTerm);
-    this.findIn(searchTerm);
-    this.findStatus(searchTerm);
-    this.findPostsCount(searchTerm);
-    this.findPostTime(searchTerm);
+    this.findSearchTerms();
+    this.setSearchedTermValue('searchedTerms.username', REGEXP_USERNAME_PREFIX);
+    this.setSearchedTermValueForCategory();
+    this.setSearchedTermValueForGroup();
+    this.setSearchedTermValueForBadge();
+    this.setSearchedTermValueForTags();
+    this.setSearchedTermValue('searchedTerms.in', REGEXP_IN_PREFIX, REGEXP_IN_MATCH);
+    this.setSearchedTermSpecialInValue('searchedTerms.special.in.likes', REGEXP_SPECIAL_IN_LIKES_MATCH);
+    this.setSearchedTermSpecialInValue('searchedTerms.special.in.private', REGEXP_SPECIAL_IN_PRIVATE_MATCH);
+    this.setSearchedTermSpecialInValue('searchedTerms.special.in.wiki', REGEXP_SPECIAL_IN_WIKI_MATCH);
+    this.setSearchedTermValue('searchedTerms.status', REGEXP_STATUS_PREFIX);
+    this.setSearchedTermValueForPostTime();
+    this.setSearchedTermValue('searchedTerms.posts_count', REGEXP_POST_COUNT_PREFIX);
   },
 
-  findSearchTerm(EXPRESSION, searchTerm) {
+  findSearchTerms() {
+    const searchTerm = this.get('searchTerm');
     if (!searchTerm)
-      return "";
+      return [];
 
-    const expression_location = searchTerm.search(EXPRESSION);
-    if (expression_location === -1)
-      return "";
+    const blocks = searchTerm.match(REGEXP_BLOCKS);
+    if (!blocks) return [];
 
-    const remaining_phrase = searchTerm.substring(expression_location + 2);
-    let next_expression_location = remaining_phrase.search(REGEXP_FILTER_PREFIXES);
-    if (next_expression_location === -1)
-      next_expression_location = remaining_phrase.length;
+    let result = [];
+    blocks.forEach(block => {
+      if (block.length !== 0)
+        result.push(block);
+    });
 
-    return searchTerm.substring(expression_location, next_expression_location + expression_location + 2);
+    this.set('searchTermBlocks', result);
   },
 
-  findUsername(searchTerm) {
-    const match = this.findSearchTerm(REGEXP_USERNAME_PREFIX, searchTerm);
+  filterBlocks(regexPrefix) {
+    const blocks = this.get('searchTermBlocks');
+    if (!blocks) return [];
+
+    let result = [];
+    blocks.forEach(block => {
+      if (block.search(regexPrefix) !== -1)
+        result.push(block);
+    });
+
+    return result;
+  },
+
+  setSearchedTermValue(key, replaceRegEx, matchRegEx = null) {
+    matchRegEx = matchRegEx || replaceRegEx;
+    const match = this.filterBlocks(matchRegEx);
+
     if (match.length !== 0) {
-      let existingInput = _.isArray(this.get('searchedTerms.username')) ? this.get('searchedTerms.username')[0] : this.get('searchedTerms.username');
-      let userInput = match.replace(REGEXP_USERNAME_PREFIX, '');
-      if (userInput.length !== 0 && existingInput !== userInput)
-        this.set('searchedTerms.username', [userInput]);
-    } else
-      this.set('searchedTerms.username', []);
+      const userInput = match[0].replace(replaceRegEx, '');
+      if (this.get(key) !== userInput) {
+        this.set(key, userInput);
+      }
+    } else if(this.get(key).length !== 0) {
+      this.set(key, '');
+    }
   },
 
-  @observes('searchedTerms.username')
-  updateUsername() {
-    let searchTerm = this.get('searchTerm');
+  setSearchedTermSpecialInValue(key, replaceRegEx) {
+    const match = this.filterBlocks(replaceRegEx);
 
-    const match = this.findSearchTerm(REGEXP_USERNAME_PREFIX, searchTerm);
-    const userFilter = this.get('searchedTerms.username');
-    if (userFilter && userFilter.length !== 0)
-      if (match.length !== 0)
-        searchTerm = searchTerm.replace(match, ` user:${userFilter}`);
-      else
-        searchTerm += ` user:${userFilter}`;
-    else if (match.length !== 0)
-      searchTerm = searchTerm.replace(match, '');
-
-    this.set('searchTerm', searchTerm);
-  },
-
-  findCategory(searchTerm) {
-    const match = this.findSearchTerm(REGEXP_CATEGORY_PREFIX, searchTerm);
     if (match.length !== 0) {
-      let existingInput = _.isArray(this.get('searchedTerms.category')) ? this.get('searchedTerms.category')[0] : this.get('searchedTerms.category');
-      const subcategories = match.replace(REGEXP_CATEGORY_PREFIX, '').split(':');
+      if (this.get(key) !== true) {
+        this.set(key, true);
+      }
+    } else if(this.get(key) !== false) {
+      this.set(key, false);
+    }
+  },
+
+  setSearchedTermValueForCategory() {
+    const match = this.filterBlocks(REGEXP_CATEGORY_PREFIX);
+    if (match.length !== 0) {
+      const existingInput = this.get('searchedTerms.category');
+      const subcategories = match[0].replace(REGEXP_CATEGORY_PREFIX, '').split(':');
       if (subcategories.length > 1) {
-        let userInput = Discourse.Category.findBySlug(subcategories[1], subcategories[0]);
+        const userInput = Discourse.Category.findBySlug(subcategories[1], subcategories[0]);
         if ((!existingInput && userInput)
           || (existingInput && userInput && existingInput.id !== userInput.id))
           this.set('searchedTerms.category', userInput.id);
       } else
-        if (isNaN(subcategories)) {
-          let userInput = Discourse.Category.findSingleBySlug(subcategories[0]);
-          if ((!existingInput && userInput)
-            || (existingInput && userInput && existingInput.id !== userInput.id))
-            this.set('searchedTerms.category', userInput.id);
-        } else {
-          let userInput = Discourse.Category.findById(subcategories[0]);
-          if ((!existingInput && userInput)
-            || (existingInput && userInput && existingInput.id !== userInput.id))
-            this.set('searchedTerms.category', userInput.id);
-        }
+      if (isNaN(subcategories)) {
+        const userInput = Discourse.Category.findSingleBySlug(subcategories[0]);
+        if ((!existingInput && userInput)
+          || (existingInput && userInput && existingInput.id !== userInput.id))
+          this.set('searchedTerms.category', userInput.id);
+      } else {
+        const userInput = Discourse.Category.findById(subcategories[0]);
+        if ((!existingInput && userInput)
+          || (existingInput && userInput && existingInput.id !== userInput.id))
+          this.set('searchedTerms.category', userInput.id);
+      }
     } else
       this.set('searchedTerms.category', null);
   },
 
-  @observes('searchedTerms.category')
-  updateCategory() {
-    let searchTerm = this.get('searchTerm');
-    const categoryFilter = Discourse.Category.findById(this.get('searchedTerms.category'));
+  setSearchedTermValueForGroup() {
+    const match = this.filterBlocks(REGEXP_GROUP_PREFIX);
+    const group = this.get('searchedTerms.group');
 
-    const match = this.findSearchTerm(REGEXP_CATEGORY_PREFIX, searchTerm);
-    const slugCategoryMatches = match.match(REGEXP_CATEGORY_SLUG);
-    const idCategoryMatches = match.match(REGEXP_CATEGORY_ID);
+    if (match.length !== 0) {
+      const existingInput = _.isArray(group) ? group[0] : group;
+      const userInput = match[0].replace(REGEXP_GROUP_PREFIX, '');
+
+      if (existingInput !== userInput) {
+        this.set('searchedTerms.group', (userInput.length !== 0) ? [userInput] : []);
+      }
+    } else if (group.length !== 0) {
+      this.set('searchedTerms.group', []);
+    }
+  },
+
+  setSearchedTermValueForBadge() {
+    const match = this.filterBlocks(REGEXP_BADGE_PREFIX);
+    const badge = this.get('searchedTerms.badge');
+
+    if (match.length !== 0) {
+      const existingInput = _.isArray(badge) ? badge[0] : badge;
+      const userInput = match[0].replace(REGEXP_BADGE_PREFIX, '');
+
+      if (existingInput !== userInput) {
+        this.set('searchedTerms.badge', (userInput.length !== 0) ? [userInput] : []);
+      }
+    } else if (badge.length !== 0) {
+      this.set('searchedTerms.badge', []);
+    }
+  },
+
+  setSearchedTermValueForTags() {
+    if (!this.siteSettings.tagging_enabled) return;
+
+    const match = this.filterBlocks(REGEXP_TAGS_PREFIX);
+    const tags = this.get('searchedTerms.tags');
+
+    if (match.length !== 0) {
+      const existingInput = _.isArray(tags) ? tags.join(',') : tags;
+      const userInput = match[0].replace(REGEXP_TAGS_PREFIX, '');
+
+      if (existingInput !== userInput) {
+        this.set('searchedTerms.tags', (userInput.length !== 0) ? userInput.split(',') : []);
+      }
+    } else if (tags.length !== 0) {
+      this.set('searchedTerms.tags', []);
+    }
+  },
+
+  setSearchedTermValueForPostTime() {
+    const match = this.filterBlocks(REGEXP_POST_TIME_PREFIX);
+
+    if (match.length !== 0) {
+      const existingInputWhen = this.get('searchedTerms.time.when');
+      const userInputWhen = match[0].match(REGEXP_POST_TIME_WHEN)[0];
+      const existingInputDays = this.get('searchedTerms.time.days');
+      const userInputDays = match[0].replace(REGEXP_POST_TIME_PREFIX, '');
+
+      if (existingInputWhen !== userInputWhen) {
+        this.set('searchedTerms.time.when', userInputWhen);
+      }
+
+      if (existingInputDays !== userInputDays) {
+        this.set('searchedTerms.time.days', userInputDays);
+      }
+    } else {
+      this.set('searchedTerms.time.days', '');
+    }
+  },
+
+  @observes('searchedTerms.username')
+  updateSearchTermForUsername() {
+    const match = this.filterBlocks(REGEXP_USERNAME_PREFIX);
+    const userFilter = this.get('searchedTerms.username');
+    let searchTerm = this.get('searchTerm') || '';
+
+    if (userFilter && userFilter.length !== 0) {
+      if (match.length !== 0) {
+        searchTerm = searchTerm.replace(match[0], `@${userFilter}`);
+      } else {
+        searchTerm += ` @${userFilter}`;
+      }
+
+      this.set('searchTerm', searchTerm.trim());
+    } else if (match.length !== 0) {
+      searchTerm = searchTerm.replace(match[0], '');
+      this.set('searchTerm', searchTerm.trim());
+    }
+  },
+
+  @observes('searchedTerms.category')
+  updateSearchTermForCategory() {
+    const match = this.filterBlocks(REGEXP_CATEGORY_PREFIX);
+    const categoryFilter = Discourse.Category.findById(this.get('searchedTerms.category'));
+    let searchTerm = this.get('searchTerm') || '';
+
+    const slugCategoryMatches = (match.length !== 0) ? match[0].match(REGEXP_CATEGORY_SLUG) : null;
+    const idCategoryMatches = (match.length !== 0) ? match[0].match(REGEXP_CATEGORY_ID) : null;
     if (categoryFilter && categoryFilter.length !== 0) {
       const id = categoryFilter.id;
       const slug = categoryFilter.slug;
       if (categoryFilter && categoryFilter.parentCategory) {
         const parentSlug = categoryFilter.parentCategory.slug;
         if (slugCategoryMatches)
-          searchTerm = searchTerm.replace(slugCategoryMatches[0], ` #${parentSlug}:${slug}`);
+          searchTerm = searchTerm.replace(slugCategoryMatches[0], `#${parentSlug}:${slug}`);
         else if (idCategoryMatches)
-          searchTerm = searchTerm.replace(idCategoryMatches[0], ` category:${id}`);
+          searchTerm = searchTerm.replace(idCategoryMatches[0], `category:${id}`);
         else
           searchTerm += ` #${parentSlug}:${slug}`;
+
+        this.set('searchTerm', searchTerm.trim());
       } else if (categoryFilter) {
         if (slugCategoryMatches)
-          searchTerm = searchTerm.replace(slugCategoryMatches[0], ` #${slug}`);
+          searchTerm = searchTerm.replace(slugCategoryMatches[0], `#${slug}`);
         else if (idCategoryMatches)
-          searchTerm = searchTerm.replace(idCategoryMatches[0], ` category:${id}`);
+          searchTerm = searchTerm.replace(idCategoryMatches[0], `category:${id}`);
         else
           searchTerm += ` #${slug}`;
+
+        this.set('searchTerm', searchTerm.trim());
       }
     } else {
       if (slugCategoryMatches)
         searchTerm = searchTerm.replace(slugCategoryMatches[0], '');
       if (idCategoryMatches)
         searchTerm = searchTerm.replace(idCategoryMatches[0], '');
+
+      this.set('searchTerm', searchTerm.trim());
     }
-
-    this.set('searchTerm', searchTerm);
-  },
-
-  findGroup(searchTerm) {
-    const match = this.findSearchTerm(REGEXP_GROUP_PREFIX, searchTerm);
-    if (match.length !== 0) {
-      let existingInput = _.isArray(this.get('searchedTerms.group')) ? this.get('searchedTerms.group')[0] : this.get('searchedTerms.group');
-      let userInput = match.replace(REGEXP_GROUP_PREFIX, '');
-      if (userInput.length !== 0 && existingInput !== userInput)
-        this.set('searchedTerms.group', [userInput]);
-    } else
-      this.set('searchedTerms.group', []);
   },
 
   @observes('searchedTerms.group')
-  updateGroup() {
-    let searchTerm = this.get('searchTerm');
-
-    const match = this.findSearchTerm(REGEXP_GROUP_PREFIX, searchTerm);
+  updateSearchTermForGroup() {
+    const match = this.filterBlocks(REGEXP_GROUP_PREFIX);
     const groupFilter = this.get('searchedTerms.group');
-    if (groupFilter && groupFilter.length !== 0)
-      if (match.length !== 0)
-        searchTerm = searchTerm.replace(match, ` group:${groupFilter}`);
-      else
+    let searchTerm = this.get('searchTerm') || '';
+
+    if (groupFilter && groupFilter.length !== 0) {
+      if (match.length !== 0) {
+        searchTerm = searchTerm.replace(match[0], ` group:${groupFilter}`);
+      } else {
         searchTerm += ` group:${groupFilter}`;
-    else if (match.length !== 0)
-      searchTerm = searchTerm.replace(match, '');
+      }
 
-    this.set('searchTerm', searchTerm);
-  },
-
-  findBadge(searchTerm) {
-    const match = this.findSearchTerm(REGEXP_BADGE_PREFIX, searchTerm);
-    if (match.length !== 0) {
-      let existingInput = _.isArray(this.get('searchedTerms.badge')) ? this.get('searchedTerms.badge')[0] : this.get('searchedTerms.badge');
-      let userInput = match.replace(REGEXP_BADGE_PREFIX, '');
-      if (userInput.length !== 0 && existingInput !== userInput)
-        this.set('searchedTerms.badge', [match.replace(REGEXP_BADGE_PREFIX, '')]);
-    } else
-      this.set('searchedTerms.badge', []);
+      this.set('searchTerm', searchTerm);
+    } else if (match.length !== 0) {
+      searchTerm = searchTerm.replace(match[0], '');
+      this.set('searchTerm', searchTerm.trim());
+    }
   },
 
   @observes('searchedTerms.badge')
-  updateBadge() {
-    let searchTerm = this.get('searchTerm');
-
-    const match = this.findSearchTerm(REGEXP_BADGE_PREFIX, searchTerm);
+  updateSearchTermForBadge() {
+    const match = this.filterBlocks(REGEXP_BADGE_PREFIX);
     const badgeFilter = this.get('searchedTerms.badge');
-    if (badgeFilter && badgeFilter.length !== 0)
-      if (match.length !== 0)
-        searchTerm = searchTerm.replace(match, ` badge:${badgeFilter}`);
-      else
+    let searchTerm = this.get('searchTerm') || '';
+
+    if (badgeFilter && badgeFilter.length !== 0) {
+      if (match.length !== 0) {
+        searchTerm = searchTerm.replace(match[0], ` badge:${badgeFilter}`);
+      } else {
         searchTerm += ` badge:${badgeFilter}`;
-    else if (match.length !== 0)
-      searchTerm = searchTerm.replace(match, '');
+      }
 
-    this.set('searchTerm', searchTerm);
-  },
-
-  findTags(searchTerm) {
-    const match = this.findSearchTerm(REGEXP_TAGS_PREFIX, searchTerm);
-    if (match.length !== 0) {
-      let existingInput = _.isArray(this.get('searchedTerms.tags')) ? this.get('searchedTerms.tags').join(',') : this.get('searchedTerms.tags');
-      let userInput = match.replace(REGEXP_TAGS_PREFIX, '');
-      if (userInput.length !== 0 && existingInput !== userInput)
-        this.set('searchedTerms.tags', userInput.split(','));
-    } else
-      this.set('searchedTerms.tags', []);
+      this.set('searchTerm', searchTerm);
+    } else if (match.length !== 0) {
+      searchTerm = searchTerm.replace(match[0], '');
+      this.set('searchTerm', searchTerm.trim());
+    }
   },
 
   @observes('searchedTerms.tags')
-  updateTags() {
-    let searchTerm = this.get('searchTerm');
-
-    const match = this.findSearchTerm(REGEXP_TAGS_PREFIX, searchTerm);
+  updateSearchTermForTags() {
+    const match = this.filterBlocks(REGEXP_TAGS_PREFIX);
     const tagFilter = this.get('searchedTerms.tags');
+    let searchTerm = this.get('searchTerm') || '';
+
     if (tagFilter && tagFilter.length !== 0) {
       const tags = tagFilter.join(',');
-      if (match.length !== 0)
-        searchTerm = searchTerm.replace(match, ` tags:${tags}`);
-      else
+
+      if (match.length !== 0) {
+        searchTerm = searchTerm.replace(match[0], `tags:${tags}`);
+      } else {
         searchTerm += ` tags:${tags}`;
-    } else if (match.length !== 0)
-      searchTerm = searchTerm.replace(match, '');
+      }
 
-    this.set('searchTerm', searchTerm);
-  },
-
-  findIn(searchTerm) {
-    const match = this.findSearchTerm(REGEXP_IN_PREFIX, searchTerm);
-    if (match.length !== 0) {
-      let existingInput = this.get('searchedTerms.in');
-      let userInput = match.replace(REGEXP_IN_PREFIX, '');
-      if (userInput.length !== 0 && existingInput !== userInput)
-        this.set('searchedTerms.in', userInput);
-    } else
-      this.set('searchedTerms.in', '');
+      this.set('searchTerm', searchTerm.trim());
+    } else if (match.length !== 0) {
+      searchTerm = searchTerm.replace(match[0], '');
+      this.set('searchTerm', searchTerm.trim());
+    }
   },
 
   @observes('searchedTerms.in')
-  updateIn() {
-    let searchTerm = this.get('searchTerm');
-
-    const match = this.findSearchTerm(REGEXP_IN_PREFIX, searchTerm);
+  updateSearchTermForIn() {
+    const match = this.filterBlocks(REGEXP_IN_MATCH);
     const inFilter = this.get('searchedTerms.in');
-    if (inFilter)
-      if (match.length !== 0)
-        searchTerm = searchTerm.replace(match, ` in:${inFilter}`);
-      else
-        searchTerm += ` in:${inFilter}`;
-    else if (match.length !== 0)
-      searchTerm = searchTerm.replace(match, '');
+    let searchTerm = this.get('searchTerm') || '';
 
-    this.set('searchTerm', searchTerm);
+    if (inFilter) {
+      if (match.length !== 0) {
+        searchTerm = searchTerm.replace(match[0], `in:${inFilter}`);
+      } else {
+        searchTerm += ` in:${inFilter}`;
+      }
+
+      this.set('searchTerm', searchTerm.trim());
+    } else if (match.length !== 0) {
+      searchTerm = searchTerm.replace(match, '');
+      this.set('searchTerm', searchTerm.trim());
+    }
   },
 
-  findStatus(searchTerm) {
-    const match = this.findSearchTerm(REGEXP_STATUS_PREFIX, searchTerm);
-    if (match.length !== 0) {
-      let existingInput = this.get('searchedTerms.status');
-      let userInput = match.replace(REGEXP_STATUS_PREFIX, '');
-      if (userInput.length !== 0 && existingInput !== userInput)
-        this.set('searchedTerms.status', userInput);
-    } else
-      this.set('searchedTerms.status', '');
+  @observes('searchedTerms.special.in.likes')
+  updateSearchTermForSpecialInLikes() {
+    const match = this.filterBlocks(REGEXP_SPECIAL_IN_LIKES_MATCH);
+    const inFilter = this.get('searchedTerms.special.in.likes');
+    let searchTerm = this.get('searchTerm') || '';
+
+    if (inFilter) {
+      if (match.length === 0) {
+        searchTerm += ` in:likes`;
+        this.set('searchTerm', searchTerm.trim());
+      }
+    } else if (match.length !== 0) {
+      searchTerm = searchTerm.replace(match, '');
+      this.set('searchTerm', searchTerm.trim());
+    }
+  },
+
+  @observes('searchedTerms.special.in.private')
+  updateSearchTermForSpecialInPrivate() {
+    const match = this.filterBlocks(REGEXP_SPECIAL_IN_PRIVATE_MATCH);
+    const inFilter = this.get('searchedTerms.special.in.private');
+    let searchTerm = this.get('searchTerm') || '';
+
+    if (inFilter) {
+      if (match.length === 0) {
+        searchTerm += ` in:private`;
+        this.set('searchTerm', searchTerm.trim());
+      }
+    } else if (match.length !== 0) {
+      searchTerm = searchTerm.replace(match, '');
+      this.set('searchTerm', searchTerm.trim());
+    }
+  },
+
+  @observes('searchedTerms.special.in.wiki')
+  updateSearchTermForSpecialInWiki() {
+    const match = this.filterBlocks(REGEXP_SPECIAL_IN_WIKI_MATCH);
+    const inFilter = this.get('searchedTerms.special.in.wiki');
+    let searchTerm = this.get('searchTerm') || '';
+
+    if (inFilter) {
+      if (match.length === 0) {
+        searchTerm += ` in:wiki`;
+        this.set('searchTerm', searchTerm.trim());
+      }
+    } else if (match.length !== 0) {
+      searchTerm = searchTerm.replace(match, '');
+      this.set('searchTerm', searchTerm.trim());
+    }
   },
 
   @observes('searchedTerms.status')
-  updateStatus() {
-    let searchTerm = this.get('searchTerm');
-
-    const match = this.findSearchTerm(REGEXP_STATUS_PREFIX, searchTerm);
+  updateSearchTermForStatus() {
+    const match = this.filterBlocks(REGEXP_STATUS_PREFIX);
     const statusFilter = this.get('searchedTerms.status');
-    if (statusFilter)
-      if (match.length !== 0)
-        searchTerm = searchTerm.replace(match, ` status:${statusFilter}`);
-      else
+    let searchTerm = this.get('searchTerm') || '';
+
+    if (statusFilter) {
+      if (match.length !== 0) {
+        searchTerm = searchTerm.replace(match[0], `status:${statusFilter}`);
+      } else {
         searchTerm += ` status:${statusFilter}`;
-    else if (match.length !== 0)
-      searchTerm = searchTerm.replace(match, '');
+      }
 
-    this.set('searchTerm', searchTerm);
-  },
-
-  findPostsCount(searchTerm) {
-    const match = this.findSearchTerm(REGEXP_POST_COUNT_PREFIX, searchTerm);
-    if (match.length !== 0) {
-      let existingInput = this.get('searchedTerms.posts_count');
-      let userInput = match.replace(REGEXP_POST_COUNT_PREFIX, '');
-      if (userInput.length !== 0 && existingInput !== userInput)
-        this.set('searchedTerms.posts_count', userInput);
-    } else
-      this.set('searchedTerms.posts_count', '');
-  },
-
-  @observes('searchedTerms.posts_count')
-  updatePostsCount() {
-    let searchTerm = this.get('searchTerm');
-
-    const match = this.findSearchTerm(REGEXP_POST_COUNT_PREFIX, searchTerm);
-    const postsCountFilter = this.get('searchedTerms.posts_count');
-    if (postsCountFilter)
-      if (match.length !== 0)
-        searchTerm = searchTerm.replace(match, ` posts_count:${postsCountFilter}`);
-      else
-        searchTerm += ` posts_count:${postsCountFilter}`;
-    else if (match.length !== 0)
-      searchTerm = searchTerm.replace(match, '');
-
-    this.set('searchTerm', searchTerm);
-  },
-
-  findPostTime(searchTerm) {
-    const match = this.findSearchTerm(REGEXP_POST_TIME_WHEN, searchTerm);
-    if (match.length !== 0) {
-      let existingInputWhen = this.get('searchedTerms.time.when');
-      let userInputWhen = match.match(REGEXP_POST_TIME_WHEN)[0];
-      if (userInputWhen.length !== 0 && existingInputWhen !== userInputWhen)
-        this.set('searchedTerms.time.when', userInputWhen);
-
-      let existingInputDays = this.get('searchedTerms.time.days');
-      let userInputDays = match.replace(REGEXP_POST_TIME_PREFIX, '');
-      if (userInputDays.length !== 0 && existingInputDays !== userInputDays)
-        this.set('searchedTerms.time.days', userInputDays);
-    } else
-      this.set('searchedTerms.time.days', '');
+      this.set('searchTerm', searchTerm.trim());
+    } else if (match.length !== 0) {
+      searchTerm = searchTerm.replace(match[0], '');
+      this.set('searchTerm', searchTerm.trim());
+    }
   },
 
   @observes('searchedTerms.time.when', 'searchedTerms.time.days')
-  updatePostTime() {
-    let searchTerm = this.get('searchTerm');
-
-    const match = this.findSearchTerm(REGEXP_POST_TIME_PREFIX, searchTerm);
+  updateSearchTermForPostTime() {
+    const match = this.filterBlocks(REGEXP_POST_TIME_PREFIX);
     const timeDaysFilter = this.get('searchedTerms.time.days');
+    let searchTerm = this.get('searchTerm') || '';
+
     if (timeDaysFilter) {
       const when = this.get('searchedTerms.time.when');
-      if (match.length !== 0)
-        searchTerm = searchTerm.replace(match, ` ${when}:${timeDaysFilter}`);
-      else
+      if (match.length !== 0) {
+        searchTerm = searchTerm.replace(match[0], `${when}:${timeDaysFilter}`);
+      } else {
         searchTerm += ` ${when}:${timeDaysFilter}`;
-    } else if (match.length !== 0)
-      searchTerm = searchTerm.replace(match, '');
+      }
 
-    this.set('searchTerm', searchTerm);
+      this.set('searchTerm', searchTerm.trim());
+    } else if (match.length !== 0) {
+      searchTerm = searchTerm.replace(match[0], '');
+      this.set('searchTerm', searchTerm.trim());
+    }
+  },
+
+  @observes('searchedTerms.posts_count')
+  updateSearchTermForPostsCount() {
+    const match = this.filterBlocks(REGEXP_POST_COUNT_PREFIX);
+    const postsCountFilter = this.get('searchedTerms.posts_count');
+    let searchTerm = this.get('searchTerm') || '';
+
+    if (postsCountFilter) {
+      if (match.length !== 0) {
+        searchTerm = searchTerm.replace(match[0], `posts_count:${postsCountFilter}`);
+      } else {
+        searchTerm += ` posts_count:${postsCountFilter}`;
+      }
+
+      this.set('searchTerm', searchTerm.trim());
+    } else if (match.length !== 0) {
+      searchTerm = searchTerm.replace(match[0], '');
+      this.set('searchTerm', searchTerm.trim());
+    }
   },
 
   groupFinder(term) {
@@ -382,22 +519,5 @@ export default Em.Component.extend({
   badgeFinder(term) {
     const Badge = require('discourse/models/badge').default;
     return Badge.findAll({search: term});
-  },
-
-  collapsedClassName: function() {
-    return (this.get('isExpanded')) ? "fa-caret-down" : "fa-caret-right";
-  }.property('isExpanded'),
-
-  @computed('isExpanded')
-  isCollapsed(isExpanded){
-    return !isExpanded;
-  },
-
-  actions: {
-    expandOptions() {
-      this.set('isExpanded', !this.get('isExpanded'));
-      if (this.get('isExpanded'))
-        this._init();
-    }
   }
 });

@@ -50,6 +50,8 @@ export default function(options) {
            .off('paste.autocomplete')
            .off('click.autocomplete');
 
+    $(window).off('click.autocomplete');
+
     if (options === 'destroy')
       return;
   }
@@ -331,6 +333,7 @@ export default function(options) {
     closeAutocomplete();
   });
 
+  $(window).on('click.autocomplete', () => closeAutocomplete());
   $(this).on('click.autocomplete', () => closeAutocomplete());
 
   $(this).on('paste.autocomplete', function() {

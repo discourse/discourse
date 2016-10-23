@@ -11,13 +11,17 @@ const AuthErrors =
    'not_allowed_from_ip_address'];
 
 export default Ember.Controller.extend(ModalFunctionality, {
-  needs: ['modal', 'createAccount', 'forgotPassword', 'application'],
+
+  createAccount: Ember.inject.controller(),
+  forgotPassword: Ember.inject.controller(),
+  application: Ember.inject.controller(),
+
   authenticate: null,
   loggingIn: false,
   loggedIn: false,
 
   canLoginLocal: setting('enable_local_logins'),
-  loginRequired: Em.computed.alias('controllers.application.loginRequired'),
+  loginRequired: Em.computed.alias('application.loginRequired'),
 
   resetForm: function() {
     this.set('authenticate', null);
@@ -37,7 +41,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
   loginDisabled: Em.computed.or('loggingIn', 'loggedIn'),
 
   showSignupLink: function() {
-    return this.get('controllers.application.canSignUp') &&
+    return this.get('application.canSignUp') &&
            !this.get('loggingIn') &&
            Ember.isEmpty(this.get('authenticate'));
   }.property('loggingIn', 'authenticate'),
@@ -160,7 +164,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
     },
 
     createAccount: function() {
-      const createAccountController = this.get('controllers.createAccount');
+      const createAccountController = this.get('createAccount');
       if (createAccountController) {
         createAccountController.resetForm();
         const loginName = this.get('loginName');
@@ -174,7 +178,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
     },
 
     forgotPassword: function() {
-      const forgotPasswordController = this.get('controllers.forgotPassword');
+      const forgotPasswordController = this.get('forgotPassword');
       if (forgotPasswordController) { forgotPasswordController.set("accountEmailOrUsername", this.get("loginName")); }
       this.send("showForgotPassword");
     }
@@ -229,7 +233,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
       return;
     }
 
-    const createAccountController = this.get('controllers.createAccount');
+    const createAccountController = this.get('createAccount');
     createAccountController.setProperties({
       accountEmail: options.email,
       accountUsername: options.username,

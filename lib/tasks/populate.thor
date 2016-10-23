@@ -74,6 +74,10 @@ class Populate < Thor
     puts "Making a new topic: '#{topic_title}'"
     post_creator = PostCreator.new(users.sample, title: topic_title, raw: generate_sentence(7))
     first_post = post_creator.create
+    unless first_post
+      puts post_creator.errors.full_messages, ""
+      raise StandardError.new(post_creator.errors.full_messages)
+    end
     topic = first_post.topic
     start_post = 2
     topic
@@ -83,7 +87,11 @@ class Populate < Thor
     print '.'
     raw = rand(4) == 0 ? (rand(2) == 0 ? image_posts.sample : wikipedia_posts.sample) : generate_sentence(7)
     post_creator = PostCreator.new(users.sample, topic_id: topic.id, raw: raw)
-    post_creator.create
+    post = post_creator.create
+    unless post
+      puts post_creator.errors.full_messages, ""
+    end
+    post
   end
 
   def hipster_words

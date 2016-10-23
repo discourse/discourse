@@ -864,7 +864,6 @@ fa_IR:
       title: "جستجوی موضوعات، نوشته ها، کاربران یا دسته‌ بندی ها"
       no_results: "چیزی یافت نشد."
       no_more_results: "نتایجی بیشتری یافت نشد."
-      search_help: راهنمای جستجو
       searching: "جستجو کردن..."
       post_format: "#{{post_number}} توسط {{username}}"
       context:

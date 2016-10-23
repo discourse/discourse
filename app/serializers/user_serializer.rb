@@ -148,8 +148,7 @@ class UserSerializer < BasicUserSerializer
       {
         id: k.id,
         application_name: k.application_name,
-        read: k.read,
-        write: k.write,
+        scopes: k.scopes.map{|s| I18n.t("user_api_key.scopes.#{s}")},
         created_at: k.created_at
       }
     end

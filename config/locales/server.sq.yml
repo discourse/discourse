@@ -80,6 +80,11 @@ sq:
     replies:
       one: "1 përgjigje"
       other: "%{count} përgjigje"
+  no_mentions_allowed_newuser: "Na vjen keq, anëtarët e rinj nuk mund të citojnë anëtarë të tjerë."
+  too_many_mentions_newuser:
+    one: "Na vjen keq, anëtarët e rinj mund të citojnë vetëm 1 anëtar në një postim."
+    other: "Na vjen keq, anëtarët e rinj mund të citojnë vetëm %{count} anëtarë në një postim."
+  no_images_allowed: "Na vjen keq, anëtarët e rinj nuk kanë të drejtë të vendosin imazhe në një postim."
   spamming_host: "Na vjen keq, you cannot post a link to that host."
   invalid_characters: "përmban karaktere  jo të vlefshëm"
   next_page: "faqja tjetër →"
@@ -564,14 +569,7 @@ sq:
     s3_config_warning: 'The server is configured to upload files to s3, but at least one the following setting is not set: s3_access_key_id, s3_secret_access_key or s3_upload_bucket. Go to <a href="/admin/site_settings">the Site Settings</a> and update the settings. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">See "How to set up image uploads to S3?" to learn more</a>.'
     s3_backup_config_warning: 'The server is configured to upload backups to s3, but at least one the following setting is not set: s3_access_key_id, s3_secret_access_key or s3_backup_bucket. Go to <a href="/admin/site_settings">the Site Settings</a> and update the settings. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">See "How to set up image uploads to S3?" to learn more</a>.'
     image_magick_warning: 'The server is configured to create thumbnails of large images, but ImageMagick is not installed. Install ImageMagick using your favorite package manager or <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">download the latest release</a>.'
-    default_logo_warning: "Set the graphic logos for your site. Update logo_url, logo_small_url, and favicon_url in <a href='/admin/site_settings'>Site Settings</a>."
-    contact_email_missing: "Enter a site contact email address so you can be reached for urgent matters regarding your site. Update it in <a href='/admin/site_settings'>Site Settings</a>."
-    contact_email_invalid: "The site contact email is invalid. Update it in <a href='/admin/site_settings'>Site Settings</a>."
-    title_nag: "Enter the name of your site. Update title in <a href='/admin/site_settings'>Site Settings</a>."
-    site_description_missing: "Enter a one sentence description of your site that will appear in search results. Update site_description in <a href='/admin/site_settings'>Site Settings</a>."
     consumer_email_warning: "Your site is configured to use Gmail (or another consumer email service) to send email. <a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>Gmail limits how many emails you can send</a>. Consider using an email service provider like mandrill.com to ensure email deliverability."
-    site_contact_username_warning: "Enter the name of a friendly staff user account to send important automated messages from. Update site_contact_username in <a href='/admin/site_settings'>Site Settings</a>."
-    notification_email_warning: "Notification emails are not being sent from a valid email address on your domain; email delivery will be erratic and unreliable. Please set notification_email to a valid local email address in <a href='/admin/site_settings'>Site Settings</a>."
   site_settings:
     censored_words: "Fjalët do të zhvendosen automatikisht me &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Auto-delete any hidden posts that stay hidden for more than 30 days."
@@ -1088,6 +1086,22 @@ sq:
     deferred_and_deleted: "Thanks for letting us know. We've removed the post."
   temporarily_closed_due_to_flags: "Kjo temë është përkohësisht e mbyllur për shkak të një numri të madh sinjalizimesh nga komuniteti."
   system_messages:
+    post_hidden:
+      subject_template: "Postimi u fsheh ngaqë u sinjalizua nga komuniteti"
+      text_body_template: |
+        Përshëndetje,
+
+        Ky është një mesazh automatik nga %{site_name} për t'ju njoftuar se postimi juaj u fsheh.
+
+        %{base_url}%{url}
+
+        %{flag_reason}
+
+        Disa anëtarë të faqes sinjalizuan këtë postim. **Mund t'a modifikoni postimin pas %{edit_delay} minutash, dhe do të shfaqet automatikisht.**
+
+        Sidoqoftë, nëse postimi fshihet nga komuniteti për një herë të dytë, postimi do të mbetet u fshehur derisa të ndërhyjë stafi. Stafi mund të vendosë edhe të pezullojë ose bllokojë llogarinë tuaj.
+
+        Për udhëzime të mëtejshme, shikoni [rregullat e komunitetit](%{base_url}/guidelines).
     welcome_user:
       subject_template: "Mirë se vini tek %{site_name}!"
       text_body_template: |
@@ -1154,6 +1168,8 @@ sq:
     csv_export_failed:
       subject_template: "Data export failed"
       text_body_template: "We're sorry, but your data export failed. Please check the logs or contact a staff member."
+    email_reject_insufficient_trust_level:
+      subject_template: "[%{site_name}] Problem emaili -- Niveli i Besimit nuk mjafton"
     email_reject_no_account:
       subject_template: "[%{site_name}] Email issue -- Unknown Account"
     email_reject_empty:
@@ -1188,6 +1204,12 @@ sq:
     download_remote_images_disabled:
       subject_template: "Downloading remote images disabled"
       text_body_template: "The `download_remote_images_to_local` setting was disabled because the disk space limit at `download_remote_images_threshold` was reached."
+    dashboard_problems:
+      subject_template: "Gjetëm ca probleme"
+      text_body_template: |
+        Në panelin e kontrollit keni disa probleme që duhen riparuar.
+
+        [Shikoji dhe rregulloji](%{base_url}/admin).
   unsubscribe_link: |
     Për të mos marrë më njoftime të tilla, [klikoni këtu](%{unsubscribe_url}).
   unsubscribe_link_and_mail: |
@@ -1209,6 +1231,16 @@ sq:
     visit_link_to_respond: "[Shiko Temën](%{base_url}%{url}) për tu përgjigjur."
     visit_link_to_respond_pm: "[Shiko Mesazhin](%{base_url}%/{url}) për tu përgjigjur."
     posted_by: "Postuar nga %{username} më %{post_date}"
+    invited_to_private_message_body: |
+      %{username} ju ftoi tek mesazhi
+
+      > **%{topic_title}**
+      >
+      > %{topic_excerpt}
+
+      në
+
+      > %{site_title} -- %{site_description}
     invited_to_topic_body: |
       %{username} ju ftoi në një bisedë
 
@@ -1313,8 +1345,18 @@ sq:
         %{context}
 
         %{respond_instructions}
+    user_watching_first_post:
+      subject_template: "[%{site_name}] %{topic_title}"
+      text_body_template: |
+        %{header_instructions}
+
+        %{message}
+
+        %{context}
+
+        %{respond_instructions}
     user_posted_pm:
-      subject_template: "[%{site_name}] [PM] %{topic_title}"
+      subject_template: "[%{site_name}] [MP] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -1329,20 +1371,25 @@ sq:
 
         %{message}
     digest:
-      why: "Një përmbledhje e shkurtë e %{site_link} që prej vizitës tuaj të fundit më %{last_seen_at}"
-      subject_template: "[%{site_name}] Përmbledhje"
-      new_activity: "New activity on your topics and posts:"
+      why: "Një përmbledhje e shkurtër e temave tek %{site_link} që prej vizitës tuaj të fundit më %{last_seen_at}"
+      subject_template: "[%{site_name}] - Një përmbledhje e shkurtër"
+      new_activity: "Të rejat në temat e postimet tuaja:"
       top_topics: "Postimet më aktive"
-      other_new_topics: "Popular topics"
+      other_new_topics: "Temat më aktive"
       unsubscribe: "Kjo përmbledhje dërgohet nga %{site_link} kur nuk ju kemi parë prej disa kohësh. Për të çaktivizuar njoftimet %{unsubscribe_link}."
       click_here: "klikoni këtu"
-      from: "%{site_name} përmbledhje"
-      read_more: "Më Shumë"
-      more_topics: "There were %{new_topics_since_seen} other new topics."
+      from: "%{site_name} - Një përmbledhje e shkurtër"
+      read_more: "Më shumë"
+      more_topics: "Ka edhe %{new_topics_since_seen} tema të reja në faqe."
       more_topics_category: "Më shumë tema të reja:"
     mailing_list:
       subject_template: "[%{site_name}] Përmbledhja për %{date}"
+      unsubscribe: "Përmbledhja dërgohet përditë, duke qënë se faqja është në formatin \"mailing list\". %{unsubscribe_link} për t'u çabonuar."
       from: "%{site_name} përmbledhje"
+      new_topics: "Tema të reja"
+      topic_updates: "Tema të azhornuara"
+      view_this_topic: "Shiko këtë temë"
+      back_to_top: "Kthehu sipër"
     forgot_password:
       subject_template: "[%{site_name}] Rivendosje fjalëkalimi"
       text_body_template: |
@@ -1377,7 +1424,14 @@ sq:
 
         Klikoni lidhjen e mëtejshme për të zgjedhur një fjalëkalim për llogarinë tuaj të re:
         %{base_url}/users/password-reset/%{email_token}
+    confirm_new_email:
+      subject_template: "[%{site_name}] Konfirmo adresën e re email"
+      text_body_template: |
+        Konfirmo adresën e re email për faqen %{site_name} duke klikuar në linkun më poshtë:
+
+        %{base_url}/users/authorize-email/%{email_token}
     confirm_old_email:
+      subject_template: "[%{site_name}] Konfirmoni adresën e tanishme email"
       text_body_template: |
         Përpara se sa ta ndryshoni adresën tuaj email, nevojitet të konfirmoni që jeni i
         zoti i saj. Pasi ta përmbushni këtë hap, ne
@@ -1386,6 +1440,15 @@ sq:
         Konfirmoni adresën tuaj të tanishme email për %{site_name} duke klikuar lidhjen e mëtejshme:
 
         %{base_url}/users/authorize-email/%{email_token}
+    notify_old_email:
+      subject_template: "[%{site_name}] Adresa juaj email u ndryshua"
+      text_body_template: |
+        Ky është një mesazh automatik që ju njofton se adresa juaj email për
+        %{site_name} u ndryshua. Nëse ky është një gabim, njoftoni një administrator
+
+        Adresa e re email në sistem tani është:
+
+        %{new_email}
     signup_after_approval:
       subject_template: "Jeni aprovuar tek %{site_name}!"
       text_body_template: |
@@ -1704,34 +1767,6 @@ sq:
       Originally adapted from the [WordPress Terms of Service](http://en.wordpress.com/tos/).
   privacy_topic:
     title: "Politika e Privatësisë"
-  static:
-    search_help: |
-      <h3>Ca sugjerime</h3>
-      <p>
-      <ul>
-      <li>Titujt kanë prioritet</li>
-      <li>Kur jeni brenda një kategorie, teme apo etikete, mund të kërkoni temat e atij konteksti</li>
-      </ul>
-      </p>
-      <h3>Opsionet</h3>
-      <p>
-      <table>
-      <tr><td><code>order:views</code></td><td><code>order:latest</code></td><td><code>order:likes</code></td><td><code>@username</code></td><td><code>user:foo</code></td></tr>
-      <tr><td><code>status:open</code></td><td><code>status:closed</code></td><td><code>status:archived</code></td><td><code>status:noreplies</code></td><td><code>status:single_user</code></td></tr>
-      <tr><td><code>#category-slug</code></td><td><code>category:foo</code></td><td><code>group:foo</code></td><td><code>badge:foo</code></td><td></td></tr>
-      <tr><td><code>in:likes</code></td><td><code>in:posted</code></td><td><code>in:watching</code></td><td><code>in:tracking</code></td><td><code>in:private</code></td></tr>
-      <tr><td><code>in:bookmarks</code></td><td><code>in:first</code></td><td><code>in:pinned</code></td><td><code>in:unpinned</code></td><td><code>in:wiki</code></td></tr>
-      <tr><td><code>posts_count:num</code></td><td><code>before:days or date</code></td><td><code>after:days or date</code></td><td><code>tags:one,two</code></td><td></td></tr>
-      </table>
-      </p>
-      <h3>Ca shembuj</h3>
-      <p>
-      <ul>
-      <li><code>rainbows #parks</code> do kërkojë fjalën "rainbows" në kategorinë "parks".</li>
-      <li><code>rainbows category:parks status:open order:latest</code> do kërkojë për tema me fjalën "rainbows" në kategorinë "parks" që nuk janë mbyllur apo arkivuar, renditur sipas datës së përgjigjes së fundit.</li>
-      <li><code>rainbows category:"parks and gardens" in:bookmarks</code> do kërkojë për tema me fjalën "rainbows" në kategorinë "parks and gardens" që ju keni shtuar tek të preferuarat.</li>
-      </ul>
-      </p>
   badges:
     editor:
       name: Redaktor

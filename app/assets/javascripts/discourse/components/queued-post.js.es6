@@ -13,7 +13,6 @@ function updateState(state, opts) {
 
     post.update(args).then(() => {
       this.sendAction('removePost', post);
-      // this.get('controllers.queued-posts.model').removeObject(post);
     }).catch(popupAjaxError);
   };
 }

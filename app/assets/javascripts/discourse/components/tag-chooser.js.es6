@@ -56,6 +56,7 @@ export default Ember.TextField.extend({
       placeholder: this.get('placeholder') === "" ? "" : I18n.t(this.get('placeholderKey') || 'tagging.choose_for_topic'),
       maximumInputLength: this.siteSettings.max_tag_length,
       maximumSelectionSize: limit,
+      width: this.get('width') || 'resolve',
       initSelection(element, callback) {
         const data = [];
 

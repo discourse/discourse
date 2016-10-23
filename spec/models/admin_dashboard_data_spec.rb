@@ -123,29 +123,6 @@ describe AdminDashboardData do
     end
   end
 
-  describe 'send_consumer_email_check' do
-    subject { described_class.new.send_consumer_email_check }
-
-    it 'returns nil if gmail.com is not in the smtp_settings address' do
-      ActionMailer::Base.stubs(:smtp_settings).returns({address: 'mandrillapp.com'})
-      expect(subject).to be_nil
-    end
-
-    context 'gmail.com is in the smtp_settings address' do
-      before { ActionMailer::Base.stubs(:smtp_settings).returns({address: 'smtp.gmail.com'}) }
-
-      it 'returns nil in development env' do
-        Rails.stubs(env: ActiveSupport::StringInquirer.new('development'))
-        expect(subject).to be_nil
-      end
-
-      it 'returns a string when in production env' do
-        Rails.stubs(env: ActiveSupport::StringInquirer.new('production'))
-        expect(subject).not_to be_nil
-      end
-    end
-  end
-
   describe 'auth_config_checks' do
 
     shared_examples 'problem detection for login providers' do

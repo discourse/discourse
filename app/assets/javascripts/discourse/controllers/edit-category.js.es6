@@ -20,9 +20,9 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
   changeSize: function() {
     if (!Ember.isEmpty(this.get('model.description'))) {
-      this.set('controllers.modal.modalClass', 'edit-category-modal full');
+      this.set('modal.modalClass', 'edit-category-modal full');
     } else {
-      this.set('controllers.modal.modalClass', 'edit-category-modal small');
+      this.set('modal.modalClass', 'edit-category-modal small');
     }
   }.observes('model.description'),
 
@@ -34,7 +34,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
   }.property('model.id', 'model.name'),
 
   titleChanged: function() {
-    this.set('controllers.modal.title', this.get('title'));
+    this.set('modal.title', this.get('title'));
   }.observes('title'),
 
   disabled: function() {

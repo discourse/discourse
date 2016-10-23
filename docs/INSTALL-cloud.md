@@ -1,5 +1,7 @@
 **Set up Discourse in the cloud in under 30 minutes** with zero knowledge of Rails or Linux shell using our [Discourse Docker image][dd]. We recommend [DigitalOcean][do], but these steps will work on any Docker-compatible cloud provider or local server.
 
+>  🔔 Don't have 30 minutes to set this up? For a flat one-time fee of $99, the community can install Discourse in the cloud for you. [Click here to purchase a self-supported community install](http://jaypfaffman.com/product/99-install/).
+
 ### Create New Cloud Server
 
 [Sign up for DigitalOcean][do], update billing info, then create your new cloud server.
@@ -8,7 +10,7 @@
 
 - The default of **1 GB** RAM works fine for small Discourse communities. We recommend 2 GB RAM for larger communities.
 
-- The default of **Ubuntu 14.04 LTS x64** works fine. At minimum, a 64-bit Linux OS with a kernel version of 3.10+ is required.
+- The default of **Ubuntu 16.04 LTS x64** works fine. At minimum, a 64-bit Linux OS with a kernel version of 3.10+ is required.
 
 - The default of **New York** is a good choice for most US and European audiences. Or select a region that is geographically closer to your audience.
 
@@ -20,7 +22,7 @@ Connect to your server via its IP address using SSH, or [Putty][put] on Windows:
 
     ssh root@192.168.1.1
 
-Enter the root password from the email DigitalOcean sent you when the server was set up. You may be prompted to change the root password, too.
+Enter the root password from the email DigitalOcean sent you when the server was set up. You will be prompted to change the root password.
 
 <img src="https://www.discourse.org/images/install/15/ssh-login-terminal.png" width="600px">
 
@@ -41,6 +43,16 @@ Create a `/var/discourse` folder, clone the [Official Discourse Docker Image][dd
 
 You will need to be root through the rest of the setup and bootstrap process.
 
+### Email
+
+> ⚠️ **Email is CRITICAL for account creation and notifications in Discourse.** If you do not properly configure email before bootstrapping YOU WILL HAVE A BROKEN SITE!
+
+- Already have a mail server? Great. Use your existing mail server credentials.
+
+- No existing mail server? Check out our [**Recommended Email Providers for Discourse**][mailconfig].
+
+- For proper email deliverability, you must add valid SPF and DKIM TXT records in your DNS. See your email provider instructions for specifics.
+
 ### Edit Discourse Configuration
 
 Launch the setup tool at
@@ -56,37 +68,31 @@ Answer the following questions when prompted:
     SMTP port [587]:
     SMTP password? []: 
 
-This will generate an `app.yml` configuration file on your behalf, and then kicks off bootstrap. Bootstrapping takes between **2-8 minutes** to set up your Discourse.
-
-### Email Is Important
-
-**Email is CRITICAL for account creation and notifications in Discourse. If you do not properly configure email before bootstrapping YOU WILL HAVE A BROKEN SITE!**
-
-- Already have a mail server? Great. Use your existing mail server credentials.
-
-- No existing mail server? Check out our [**Recommended Email Providers for Discourse**][mailconfig].
-
-- For proper email deliverability, add valid SPF and DKIM records in your DNS. See your email provider instructions for specifics.
-
-If you need to change or fix your email settings after bootstrapping, edit your `app.yml` file and `./launcher rebuild app`, otherwise your changes will not take effect.
+This will generate an `app.yml` configuration file on your behalf, and then kicks off bootstrap. Bootstrapping takes between **2-8 minutes** to set up your Discourse. If you need to change or fix these settings after bootstrapping, edit your `/containers/app.yml` file and `./launcher rebuild app`, otherwise your changes will not take effect.
 
 ### Start Discourse
 
  Once bootstrapping is complete, your Discourse should be accessible in your web browser via the domain name `discourse.example.com` you entered earlier, provided you configured DNS. If not, you can visit the server IP directly, e.g. `http://192.168.1.1`.
 
-<img src="https://www.discourse.org/images/install/15/browser-discourse-installed.png">
+<img src="https://www.discourse.org/images/install/17/discourse-congrats.png" width="650">
 
 ### Register New Account and Become Admin
 
 Register a new admin account using one of the email addresses you entered before bootstrapping.
 
-If you are unable to register your admin account, check the logs at `/var/discourse/shared/standalone/log/rails/production.log` and see our [Email Troubleshooting checklist](https://meta.discourse.org/t/troubleshooting-email-on-a-new-discourse-install/16326).
+<img src="https://www.discourse.org/images/install/17/discourse-register.png" width="650">
 
-<img src="https://www.discourse.org/images/install/14/browser-logged-in-first-admin.png?v=1">
+<img src="https://www.discourse.org/images/install/17/discourse-activate.png" width="650">
 
-You should see Staff topics and **READ ME FIRST: Admin Quick Start Guide**. This guide contains the next steps for further configuring and customizing your Discourse install as an administrator. Read it closely!
+(If you are unable to register your admin account, check the logs at `/var/discourse/shared/standalone/log/rails/production.log` and see our [Email Troubleshooting checklist](https://meta.discourse.org/t/troubleshooting-email-on-a-new-discourse-install/16326).)
 
-(If you are still unable to register a new admin account via email, see [Create Admin Account from Console](https://meta.discourse.org/t/create-admin-account-from-console/17274), but note that *you will have a broken site* unless you get email working.)
+After registering your admin account, the setup wizard will launch and guide you through basic configuration of your Discourse.
+
+<img src="https://www.discourse.org/images/install/17/discourse-wizard-step-1.png" width="650">
+
+After completing the setup wizard, you should see Staff topics and **READ ME FIRST: Admin Quick Start Guide**. This guide contains advice for further configuring and customizing your Discourse install.
+
+<img src="https://www.discourse.org/images/install/17/discourse-homepage.png">
 
 ### Post-Install Maintenance
 

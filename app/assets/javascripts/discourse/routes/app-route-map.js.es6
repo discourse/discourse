@@ -132,7 +132,7 @@ export default function() {
       this.route('showCategory' + filter.capitalize(), {path: '/c/:category/:tag_id/l/' + filter});
       this.route('showParentCategory' + filter.capitalize(), {path: '/c/:parent_category/:category/:tag_id/l/' + filter});
     });
-    this.route('show', {path: 'intersection/:tag_id/*additional_tags'});
+    this.route('intersection', {path: 'intersection/:tag_id/*additional_tags'});
   });
 
   this.resource('tagGroups', {path: '/tag_groups'}, function() {

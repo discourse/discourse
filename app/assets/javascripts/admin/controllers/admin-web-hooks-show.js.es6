@@ -4,10 +4,10 @@ import computed from 'ember-addons/ember-computed-decorators';
 import InputValidation from 'discourse/models/input-validation';
 
 export default Ember.Controller.extend({
-  needs: ['adminWebHooks'],
-  eventTypes: Em.computed.alias('controllers.adminWebHooks.eventTypes'),
-  defaultEventTypes: Em.computed.alias('controllers.adminWebHooks.defaultEventTypes'),
-  contentTypes: Em.computed.alias('controllers.adminWebHooks.contentTypes'),
+  adminWebHooks: Ember.inject.controller(),
+  eventTypes: Ember.computed.alias('adminWebHooks.eventTypes'),
+  defaultEventTypes: Ember.computed.alias('adminWebHooks.defaultEventTypes'),
+  contentTypes: Ember.computed.alias('adminWebHooks.contentTypes'),
 
   @computed('model.isSaving', 'saved', 'saveButtonDisabled')
   savingStatus(isSaving, saved, saveButtonDisabled) {
@@ -68,7 +68,7 @@ export default Ember.Controller.extend({
       const saveWebHook = () => {
         return model.save().then(() => {
           this.set('saved', true);
-          this.get('controllers.adminWebHooks').get('model').addObject(model);
+          this.get('adminWebHooks').get('model').addObject(model);
         }).catch(popupAjaxError);
       };
 
@@ -88,7 +88,7 @@ export default Ember.Controller.extend({
         if (result) {
           const model = this.get('model');
           model.destroyRecord().then(() => {
-            this.get('controllers.adminWebHooks').get('model').removeObject(model);
+            this.get('adminWebHooks').get('model').removeObject(model);
             this.transitionToRoute('adminWebHooks');
           }).catch(popupAjaxError);
         }

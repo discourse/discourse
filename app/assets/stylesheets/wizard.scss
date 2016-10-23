@@ -14,6 +14,21 @@ body.wizard {
   line-height: 1.4em;
 }
 
+.finish-installation {
+  .tada {
+    width: 300px;
+  }
+
+  .row {
+    text-align: center;
+    margin-bottom: 1em;
+  }
+
+  .help-text {
+    color: #999;
+  }
+}
+
 .discourse-logo {
   background-image: asset-url('/images/wizard/discourse.png');
   height: 30px;
@@ -182,6 +197,7 @@ body.wizard {
     padding: 0.5em;
     transition: background-color .3s;
     margin-right: 0.5em;
+    text-decoration: none;
 
     background-color: #fff;
     color: #333;

@@ -2,6 +2,30 @@
   float: none;
 }
 
+.search-advanced {
+  .search-advanced-options {
+    .control-group {
+      padding-bottom: 10px;
+
+      &.pull-left {
+        float: none;
+        width: auto;
+      }
+
+      .controls {
+        label {
+          display: block;
+          margin-bottom: 5px;
+        }
+
+        input:not([type="checkbox"]),select {
+          width: 75%;
+        }
+      }
+    }
+  }
+}
+
 .search.row {
   margin-top: 5px;
 }

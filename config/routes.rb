@@ -37,6 +37,12 @@ Discourse::Application.routes.draw do
     end
   end
 
+  get "finish-installation" => "finish_installation#index"
+  get "finish-installation/register" => "finish_installation#register"
+  post "finish-installation/register" => "finish_installation#register"
+  get "finish-installation/confirm-email" => "finish_installation#confirm_email"
+  put "finish-installation/resend-email" => "finish_installation#resend_email"
+
   resources :directory_items
 
   get "site" => "site#site"
@@ -391,7 +397,9 @@ Discourse::Application.routes.draw do
   get "posts/:username/deleted" => "posts#deleted_posts", constraints: {username: USERNAME_ROUTE_FORMAT}
   get "posts/:username/flagged" => "posts#flagged_posts", constraints: {username: USERNAME_ROUTE_FORMAT}
 
-  resources :groups do
+  get "groups/:id.json" => 'groups#show', constraints: {id: USERNAME_ROUTE_FORMAT}, defaults: {format: 'json'}
+  
+  resources :groups, id: USERNAME_ROUTE_FORMAT do
     get "posts.rss" => "groups#posts_feed", format: :rss
     get "mentions.rss" => "groups#mentions_feed", format: :rss
 
@@ -684,6 +692,8 @@ Discourse::Application.routes.draw do
   root to: "categories#index", constraints: HomePageConstraint.new("categories"), :as => "categories_index"
   # special case for top
   root to: "list#top", constraints: HomePageConstraint.new("top"), :as => "top_lists"
+
+  root to: 'finish_installation#index', constraints: HomePageConstraint.new("finish_installation"), as: 'installation_redirect'
 
   get "/user-api-key/new" => "user_api_keys#new"
   post "/user-api-key" => "user_api_keys#create"

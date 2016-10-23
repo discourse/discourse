@@ -1071,7 +1071,6 @@ da:
       title: "søg efter emner, indlæg, brugere eller kategorier"
       no_results: "Ingen resultater fundet."
       no_more_results: "Ikke flere resultater."
-      search_help: Hjælp til søgning
       searching: "Søger…"
       post_format: "#{{post_number}} af {{username}}"
       context:
@@ -1184,7 +1183,7 @@ da:
       toggle_information: "vis detaljer om emnet"
       read_more_in_category: "Mere læsestof? Se andre emner i {{catLink}} eller {{latestLink}}."
       read_more: "Mere læsestof? {{catLink}} eller {{latestLink}}."
-      read_more_MF: "There { UNREAD, plural, =0 {} one { is <a href='/unread'>1 unread</a> } other { are <a href='/unread'># unread</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{and } false {is } other{}} <a href='/new'>1 new</a> topic} other { {BOTH, select, true{and } false {are } other{}} <a href='/new'># new</a> topics} } remaining, or {CATEGORY, select, true {browse other topics in {catLink}} false {{latestLink}} other {}}"
+      read_more_MF: "Der { UNREAD, plural, =0 {} one { er <a href='/unread'>1 ulæst</a> } other { er <a href='/unread'># ulæste</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{and } false {is } other{}} <a href='/new'>1 new</a> topic} other { {BOTH, select, true{and } false {are } other{}} <a href='/new'># new</a> topics} } tilbage, eller {CATEGORY, select, true {kig på andre emner i {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: Vis alle kategorier
       view_latest_topics: vis seneste emner
       suggest_create_topic: Hvorfor ikke oprette et emne?
@@ -1834,8 +1833,6 @@ da:
       readonly: "Se"
     lightbox:
       download: "download"
-    search_help:
-      title: 'Søg i hjælp'
     keyboard_shortcuts_help:
       title: 'Tastaturgenveje'
       jump_to:

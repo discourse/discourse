@@ -1089,7 +1089,6 @@ sk:
       title: "hľadaj témy, príspevky, používateľov, alebo kategórie"
       no_results: "Žiadne výsledky"
       no_more_results: "Nenašlo sa viac výsledkov"
-      search_help: Pomoc pri vyhľadávaní
       searching: "Vyhľadávam....."
       post_format: "#{{post_number}} podľa {{username}}"
       context:
@@ -1894,8 +1893,6 @@ sk:
       readonly: "Zobraz"
     lightbox:
       download: "stiahnuť"
-    search_help:
-      title: 'Pomoc pri vyhľadávaní'
     keyboard_shortcuts_help:
       title: 'Klávesové skratky'
       jump_to:

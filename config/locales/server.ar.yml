@@ -877,14 +877,7 @@ ar:
     s3_backup_config_warning: 'تم تهيئة الخادم لرفع نسخة احتياطية إلى s3، لكن واحدة على الأقل من الإعدادات التالية لم تضبط: s3_access_key_id, s3_secret_access_key or s3_backup_bucket. أذهب إلى  <a href="/admin/site_settings">إعدادات الموقع</a> وتحديث الإعدادات. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">انظر "كيف ترفع الصور المرفوعة إلى S3؟" لتعلم المزيد</a>.'
     image_magick_warning: 'تم تهيئة الخادم لإنشاء صور مصغرة للصور الكبيرة، لكن ImageMagick لم يثبت. ثبته باستخدام مدير الحزم المفضل لك أو  <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">حمل أحدث نسخة</a>.'
     failing_emails_warning: 'يوجد %{num_failed_jobs} مهام بريد إلكتروني فشلت. تحقق من app.yml الخاص بك وتأكد من إعدادات خادم البريد أنها صحيحة. <a href="/sidekiq/retries" target="_blank">أنظر للمهام الفاشلة في Sidekiq</a>.'
-    default_logo_warning: "ضع الشعارات الرسومية لموقعك. حدث logo_url, logo_small_url, و favicon_url in <a href='/admin/site_settings'>إعدادات الموقع</a>."
-    contact_email_missing: "أدخل عنوان البريد الإلكتروني لجهة اتصال الموقع لتكون على وصول بالأمور العاجلة حول موقعك. حدثه في <a href='/admin/site_settings'>إعدادات الموقع</a>."
-    contact_email_invalid: "البريد الالكتروني للموقع معطل. حدّثه <a href='/admin/site_settings'>Site Settings</a>."
-    title_nag: "أدخل اسم موقعك. حدث العنوان في الاعدادات <a href='/admin/site_settings'>Site Settings</a>."
-    site_description_missing: "أدخل جملة وصفية واحدة لموقعك والتي ستظهر في نتائج البحث. حدّث وصف_الموقع في اعدادات الموقع <a href='/admin/site_settings'>Site Settings</a>."
     consumer_email_warning: "موقعك مهيئ لاستخدام Gmail (أو مستهلك خدمة بريد إلكتروني أخر) لإرسال بريد إلكتروني. <a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>حدود Gmail كمية رسائل البريد الإلكتروني التي يمكنك إرسالها</a>. فكر باستخدام مزود خدمة بريد إلكتروني مثل mandrill.com لضمان أهداف البريد الإلكتروني."
-    site_contact_username_warning: "أدخل اسم حسابات الأعضاء العاملين الودودين لإرسال رسالة مهمة آليا من تحديث site_contact_username في <a href='/admin/site_settings'>إعدادات الموقع</a>."
-    notification_email_warning: "رسائل التنبية البريدية لم تكن مرسلة من عنوان بريدي صالح على مجالك؛ توصيل البريد سيكون غير منتظم ولايمكن الاعتماد عليها. الرجاء وضع رسائل التنبية في عنوان بريدي صالح في إعدادات الموقع  <a href='/admin/site_settings'>Site Settings</a>."
     subfolder_ends_in_slash: "إعدادات المجلدات الداخلية خاطئ;ال DISCOURSE_RELATIVE_URL_ROOT يجب ان تنتهي ب سلاش."
     missing_mailgun_api_key: "هذا الموقع معد لارسال البريد الالكترونى عن طريق خدمة mailgun لكنكم لم تزودونا بمفتاح  API الخاص بكم لتعريف رسائلكم للخدمة."
   site_settings:

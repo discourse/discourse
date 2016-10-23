@@ -1075,7 +1075,6 @@ pt_BR:
       title: "procurar em tópicos, respostas, usuários ou categorias"
       no_results: "Nenhum resultado encontrado."
       no_more_results: "Sem mais resultados encontrados."
-      search_help: Ajuda na busca
       searching: "Procurando..."
       post_format: "#{{post_number}} por {{username}}"
       context:
@@ -1837,8 +1836,6 @@ pt_BR:
       readonly: "Ver"
     lightbox:
       download: "download"
-    search_help:
-      title: 'Ajuda na pesquisa'
     keyboard_shortcuts_help:
       title: 'Atalhos de teclado'
       jump_to:

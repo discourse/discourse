@@ -1088,7 +1088,6 @@ sv:
       title: "sök efter ämnen, inlägg, användare, eller kategorier"
       no_results: "Inga resultat hittades."
       no_more_results: "Inga fler resultat hittades."
-      search_help: Sökhjälp
       searching: "Söker ..."
       post_format: "#{{post_number}} av {{username}}"
       context:
@@ -1868,8 +1867,6 @@ sv:
       readonly: "se"
     lightbox:
       download: "ladda ned"
-    search_help:
-      title: 'Sökhjälp'
     keyboard_shortcuts_help:
       title: 'Tangentbordsgenvägar'
       jump_to:

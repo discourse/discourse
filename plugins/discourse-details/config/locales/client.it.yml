@@ -1,0 +1,7 @@
+it:
+  js:
+    details:
+      title: Nascondi Dettagli
+    composer:
+      details_title: Summary
+      details_text: "Questo testo verrà nascosto"

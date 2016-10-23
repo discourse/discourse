@@ -102,7 +102,7 @@ createWidget('header-icons', {
                         contents() {
                           if (!attrs.flagCount) { return; }
                           return this.attach('link', {
-                            href: '/admin/flags/active',
+                            href: Discourse.getURL('/admin/flags/active'),
                             title: 'notifications.total_flagged',
                             rawLabel: attrs.flagCount,
                             className: 'badge-notification flagged-posts'
@@ -116,7 +116,7 @@ createWidget('header-icons', {
                      iconId: 'search-button',
                      action: 'toggleSearchMenu',
                      active: attrs.searchVisible,
-                     href: '/search'
+                     href: Discourse.getURL('/search')
                    });
 
     const icons = [search, hamburger];

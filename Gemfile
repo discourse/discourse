@@ -66,7 +66,7 @@ gem 'aws-sdk', require: false
 gem 'excon', require: false
 gem 'unf', require: false
 
-gem 'email_reply_trimmer', '0.1.3'
+gem 'email_reply_trimmer', '0.1.4'
 
 # note: for image_optim to correctly work you need to follow
 # https://github.com/toy/image_optim

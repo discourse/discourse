@@ -1087,7 +1087,6 @@ et:
       title: "otsi teemasid, postitusi, kasutajaid, või foorumeid"
       no_results: "Ei leidnud midagi."
       no_more_results: "Rohkem vasteid pole."
-      search_help: Otsingu spikker
       searching: "Otsin..."
       post_format: "postituse nr{{post_number}} tegi {{username}}"
       context:
@@ -1860,8 +1859,6 @@ et:
       readonly: "Vaata"
     lightbox:
       download: "lae alla"
-    search_help:
-      title: 'Otsi spikrist'
     keyboard_shortcuts_help:
       title: 'Klaviatuuri kiirvalikud'
       jump_to:
