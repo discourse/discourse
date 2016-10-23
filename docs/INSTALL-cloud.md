@@ -43,6 +43,16 @@ Create a `/var/discourse` folder, clone the [Official Discourse Docker Image][dd
 
 You will need to be root through the rest of the setup and bootstrap process.
 
+### Email
+
+> ⚠️ **Email is CRITICAL for account creation and notifications in Discourse.** If you do not properly configure email before bootstrapping YOU WILL HAVE A BROKEN SITE!
+
+- Already have a mail server? Great. Use your existing mail server credentials.
+
+- No existing mail server? Check out our [**Recommended Email Providers for Discourse**][mailconfig].
+
+- For proper email deliverability, you must add valid SPF and DKIM TXT records in your DNS. See your email provider instructions for specifics.
+
 ### Edit Discourse Configuration
 
 Launch the setup tool at
@@ -58,19 +68,7 @@ Answer the following questions when prompted:
     SMTP port [587]:
     SMTP password? []: 
 
-This will generate an `app.yml` configuration file on your behalf, and then kicks off bootstrap. Bootstrapping takes between **2-8 minutes** to set up your Discourse.
-
-### Email
-
-> ⚠️ **Email is CRITICAL for account creation and notifications in Discourse.** If you do not properly configure email before bootstrapping YOU WILL HAVE A BROKEN SITE!
-
-- Already have a mail server? Great. Use your existing mail server credentials.
-
-- No existing mail server? Check out our [**Recommended Email Providers for Discourse**][mailconfig].
-
-- For proper email deliverability, you must add valid SPF and DKIM TXT records in your DNS. See your email provider instructions for specifics.
-
-If you need to change or fix your email settings after bootstrapping, edit your `app.yml` file and `./launcher rebuild app`, otherwise your changes will not take effect.
+This will generate an `app.yml` configuration file on your behalf, and then kicks off bootstrap. Bootstrapping takes between **2-8 minutes** to set up your Discourse. If you need to change or fix these settings after bootstrapping, edit your `/containers/app.yml` file and `./launcher rebuild app`, otherwise your changes will not take effect.
 
 ### Start Discourse
 
