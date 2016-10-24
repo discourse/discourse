@@ -1,6 +1,6 @@
-import StringBuffer from 'discourse/mixins/string-buffer';
+import { bufferedRender } from 'discourse-common/lib/buffered-render';
 
-export default Ember.View.extend(StringBuffer, {
+export default Ember.View.extend(bufferedRender({
   tagName: 'button',
   classNames: ['btn', 'standard'],
   attributeBindings: ['title'],
@@ -13,7 +13,7 @@ export default Ember.View.extend(StringBuffer, {
     return I18n.t(key);
   }.property('archived'),
 
-  renderString: function(buffer) {
+  buildBuffer(buffer) {
     if (this.get('archived')){
       buffer.push(I18n.t('topic.move_to_inbox.title'));
     } else {
@@ -22,7 +22,7 @@ export default Ember.View.extend(StringBuffer, {
     }
   },
 
-  click: function() {
+  click() {
     if (!this.get('archiving')) {
       if (this.get('archived')) {
         this.get('controller').send('moveToInbox');
@@ -31,5 +31,5 @@ export default Ember.View.extend(StringBuffer, {
       }
     }
   }
-});
+}));
 

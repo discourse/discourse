@@ -1,8 +1,9 @@
 import debounce from 'discourse/lib/debounce';
 import { renderSpinner } from 'discourse/helpers/loading-spinner';
 import { escapeExpression } from 'discourse/lib/utilities';
+import { bufferedRender } from 'discourse-common/lib/buffered-render';
 
-export default Ember.Component.extend({
+export default Ember.Component.extend(bufferedRender({
   classNames: ["admin-backups-logs"],
 
   init() {
@@ -29,11 +30,11 @@ export default Ember.Component.extend({
       // update the formatted logs & cache index
       this.setProperties({ formattedLogs: formattedLogs, index: logs.length });
       // force rerender
-      this.rerender();
+      this.rerenderBuffer();
     }
   }, 150).observes("logs.[]").on('init'),
 
-  render(buffer) {
+  buildBuffer(buffer) {
     const formattedLogs = this.get("formattedLogs");
     if (formattedLogs && formattedLogs.length > 0) {
       buffer.push("<pre>");
@@ -53,4 +54,4 @@ export default Ember.Component.extend({
     const $div = this.$()[0];
     $div.scrollTop = $div.scrollHeight;
   },
-});
+}));
