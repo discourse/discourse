@@ -2,7 +2,7 @@ import userSearch from 'discourse/lib/user-search';
 import { default as computed, on } from 'ember-addons/ember-computed-decorators';
 import { linkSeenMentions, fetchUnseenMentions } from 'discourse/lib/link-mentions';
 import { linkSeenCategoryHashtags, fetchUnseenCategoryHashtags } from 'discourse/lib/link-category-hashtags';
-import { fetchUnseenTagHashtags, linkSeenTagHashtags } from 'discourse/lib/link-tag-hashtag';
+import { linkSeenTagHashtags, fetchUnseenTagHashtags } from 'discourse/lib/link-tag-hashtag';
 import { load } from 'pretty-text/oneboxer';
 import { ajax } from 'discourse/lib/ajax';
 import InputValidation from 'discourse/models/input-validation';
@@ -39,22 +39,6 @@ export default Ember.Component.extend({
   @computed('showPreview')
   toggleText: function(showPreview) {
     return showPreview ? I18n.t('composer.hide_preview') : I18n.t('composer.show_preview');
-  },
-
-  _renderUnseenTagHashtags($preview, unseen) {
-    fetchUnseenTagHashtags(unseen).then(() => {
-      linkSeenTagHashtags($preview);
-    });
-  },
-
-  @on('previewRefreshed')
-  paintTagHashtags($preview) {
-    if (!this.siteSettings.tagging_enabled) { return; }
-
-    const unseenTagHashtags = linkSeenTagHashtags($preview);
-    if (unseenTagHashtags.length) {
-      Ember.run.debounce(this, this._renderUnseenTagHashtags, $preview, unseenTagHashtags, 500);
-    }
   },
 
   @computed
@@ -152,17 +136,36 @@ export default Ember.Component.extend({
     $preview.scrollTop(desired + 50);
   },
 
-  _renderUnseenMentions: function($preview, unseen) {
-    fetchUnseenMentions($preview, unseen).then(() => {
+  _renderUnseenMentions($preview, unseen) {
+    fetchUnseenMentions(unseen).then(() => {
       linkSeenMentions($preview, this.siteSettings);
       this._warnMentionedGroups($preview);
     });
   },
 
-  _renderUnseenCategoryHashtags: function($preview, unseen) {
+  _renderUnseenCategoryHashtags($preview, unseen) {
     fetchUnseenCategoryHashtags(unseen).then(() => {
       linkSeenCategoryHashtags($preview);
     });
+  },
+
+  _renderUnseenTagHashtags($preview, unseen) {
+    fetchUnseenTagHashtags(unseen).then(() => {
+      linkSeenTagHashtags($preview);
+    });
+  },
+
+  _loadOneboxes($oneboxes) {
+    const post = this.get('composer.post');
+    let refresh = false;
+
+    // If we are editing a post, we'll refresh its contents once.
+    if (post && !post.get('refreshedPost')) {
+      refresh = true;
+      post.set('refreshedPost', true);
+    }
+
+    $oneboxes.each((_, o) => load(o, refresh, ajax));
   },
 
   _warnMentionedGroups($preview) {
@@ -481,31 +484,33 @@ export default Ember.Component.extend({
 
     previewUpdated($preview) {
       // Paint mentions
-      const unseen = linkSeenMentions($preview, this.siteSettings);
-      if (unseen.length) {
-        Ember.run.debounce(this, this._renderUnseenMentions, $preview, unseen, 500);
+      const unseenMentions = linkSeenMentions($preview, this.siteSettings);
+      if (unseenMentions.length) {
+        Ember.run.debounce(this, this._renderUnseenMentions, $preview, unseenMentions, 450);
       }
 
       this._warnMentionedGroups($preview);
 
       // Paint category hashtags
-      const unseenHashtags = linkSeenCategoryHashtags($preview);
-      if (unseenHashtags.length) {
-        Ember.run.debounce(this, this._renderUnseenCategoryHashtags, $preview, unseenHashtags, 500);
+      const unseenCategoryHashtags = linkSeenCategoryHashtags($preview);
+      if (unseenCategoryHashtags.length) {
+        Ember.run.debounce(this, this._renderUnseenCategoryHashtags, $preview, unseenCategoryHashtags, 450);
       }
 
-      const post = this.get('composer.post');
-      let refresh = false;
-
-      // If we are editing a post, we'll refresh its contents once. This is a feature that
-      // allows a user to refresh its contents once.
-      if (post && !post.get('refreshedPost')) {
-        refresh = true;
-        post.set('refreshedPost', true);
+      // Paint tag hashtags
+      if (this.siteSettings.tagging_enabled) {
+        const unseenTagHashtags = linkSeenTagHashtags($preview);
+        if (unseenTagHashtags.length) {
+          Ember.run.debounce(this, this._renderUnseenTagHashtags, $preview, unseenTagHashtags, 450);
+        }
       }
 
       // Paint oneboxes
-      $('a.onebox', $preview).each((i, e) => load(e, refresh, ajax));
+      const $oneboxes = $('a.onebox', $preview);
+      if ($oneboxes.length > 0 && $oneboxes.length <= this.siteSettings.max_oneboxes_per_post) {
+        Ember.run.debounce(this, this._loadOneboxes, $oneboxes, 450);
+      }
+
       this.trigger('previewRefreshed', $preview);
       this.sendAction('afterRefresh', $preview);
     },

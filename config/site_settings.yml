@@ -855,9 +855,12 @@ security:
 onebox:
   enable_flash_video_onebox: false
   post_onebox_maxlength: 500
-  onebox_domains_whitelist:
+  onebox_domains_blacklist:
     default: ''
     type: list
+  max_oneboxes_per_post:
+    default: 50
+    client: true
 
 spam:
   add_rel_nofollow_to_user_content: true
