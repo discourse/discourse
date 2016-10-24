@@ -119,13 +119,15 @@ class DiscourseSingleSignOn < SingleSignOn
         sso_record.last_payload = unsigned_payload
         sso_record.external_id = external_id
       else
-        UserAvatar.import_url_for_user(avatar_url, user) if avatar_url.present?
-        user.create_single_sign_on_record(last_payload: unsigned_payload,
-                                          external_id: external_id,
-                                          external_username: username,
-                                          external_email: email,
-                                          external_name: name,
-                                          external_avatar_url: avatar_url)
+        Jobs.enqueue(:download_avatar_from_url, url: avatar_url, user_id: user.id) if avatar_url.present?
+        user.create_single_sign_on_record(
+          last_payload: unsigned_payload,
+          external_id: external_id,
+          external_username: username,
+          external_email: email,
+          external_name: name,
+          external_avatar_url: avatar_url
+        )
       end
     end
 
@@ -148,12 +150,11 @@ class DiscourseSingleSignOn < SingleSignOn
     avatar_missing = user.uploaded_avatar_id.nil? || !Upload.exists?(user.uploaded_avatar_id)
 
     if (avatar_missing || avatar_force_update || SiteSetting.sso_overrides_avatar) && avatar_url.present?
+      avatar_changed = sso_record.external_avatar_url != avatar_url
 
-        avatar_changed = sso_record.external_avatar_url != avatar_url
-
-        if avatar_force_update || avatar_changed || avatar_missing
-           UserAvatar.import_url_for_user(avatar_url, user)
-        end
+      if avatar_force_update || avatar_changed || avatar_missing
+        Jobs.enqueue(:download_avatar_from_url, url: avatar_url, user_id: user.id)
+      end
     end
 
     # change external attributes for sso record
