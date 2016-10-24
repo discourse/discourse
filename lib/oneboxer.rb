@@ -1,6 +1,4 @@
-Dir["#{Rails.root}/lib/onebox/engine/*_onebox.rb"].sort.each {|f|
-  require_dependency(f.split('/')[-3..-1].join('/'))
-}
+Dir["#{Rails.root}/lib/onebox/engine/*_onebox.rb"].sort.each { |f| require f }
 
 module Oneboxer
   # keep reloaders happy
