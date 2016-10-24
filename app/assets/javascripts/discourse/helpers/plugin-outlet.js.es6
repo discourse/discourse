@@ -29,17 +29,6 @@
 
    And it will be wired up automatically.
 
-   ## The block form
-
-   If you use the block form of the outlet, its contents will be displayed
-   if no connectors are found. Example:
-
-   ```handlebars
-     {{#plugin-outlet "hello-world"}}
-       Nobody says hello :'(
-     {{/plugin-outlet}}
-   ```
-
    ## Disabling
 
    If a plugin returns a disabled status, the outlets will not be wired up for it.
@@ -174,13 +163,6 @@ registerHelper('plugin-outlet', function(params, hash, options, env) {
         });
       }
     }
-  } else if (options.isBlock) {
-    const virtualView = Ember.View.extend({
-      isVirtual: true,
-      tagName: hash.tagName || '',
-      template: options.template
-    });
-    env.helpers.view.helperFunction.call(this, [virtualView], hash, options, env);
   }
 });
 

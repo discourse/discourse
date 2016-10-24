@@ -1,5 +1,6 @@
-/* global requirejs, require */
+import { findHelper } from 'discourse-common/lib/helpers';
 
+/* global requirejs, require */
 var classify = Ember.String.classify;
 var get = Ember.get;
 
@@ -109,7 +110,9 @@ export function buildResolver(baseName) {
     },
 
     resolveHelper(parsedName) {
-      return this.customResolve(parsedName) || this._super(parsedName);
+      return findHelper(parsedName.fullNameWithoutType) ||
+             this.customResolve(parsedName) ||
+             this._super(parsedName);
     },
 
     resolveController(parsedName) {
