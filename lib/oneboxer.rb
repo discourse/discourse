@@ -1,11 +1,8 @@
-
-Dir["#{Rails.root}/lib/onebox/engine/*_onebox.rb"].each {|f|
+Dir["#{Rails.root}/lib/onebox/engine/*_onebox.rb"].sort.each {|f|
   require_dependency(f.split('/')[-3..-1].join('/'))
 }
 
 module Oneboxer
-
-
   # keep reloaders happy
   unless defined? Oneboxer::Result
     Result = Struct.new(:doc, :changed) do
@@ -120,38 +117,29 @@ module Oneboxer
   end
 
   private
-  def self.onebox_cache_key(url)
-    "onebox__#{url}"
-  end
 
-  def self.add_discourse_whitelists
-    # Add custom domain whitelists
-    if SiteSetting.onebox_domains_whitelist.present?
-      domains = SiteSetting.onebox_domains_whitelist.split('|')
-      whitelist = Onebox::Engine::WhitelistedGenericOnebox.whitelist
-      whitelist.concat(domains)
-      whitelist.uniq!
+    def self.blank_onebox
+      { preview: "", onebox: "" }
     end
-  end
 
-  def self.onebox_raw(url)
-    Rails.cache.fetch(onebox_cache_key(url), expires_in: 1.day){
-      # This might be able to move to whenever the SiteSetting changes?
-      Oneboxer.add_discourse_whitelists
+    def self.onebox_cache_key(url)
+      "onebox__#{url}"
+    end
 
-      r = Onebox.preview(url, cache: {}, max_width: 695)
-      {
-        onebox: r.to_s,
-        preview: r.try(:placeholder_html).to_s
-      }
-    }
-  rescue => e
-    # no point warning here, just cause we have an issue oneboxing a url
-    # we can later hunt for failed oneboxes by searching logs if needed
-    Rails.logger.info("Failed to onebox #{url} #{e} #{e.backtrace}")
+    def self.onebox_raw(url)
+      Rails.cache.fetch(onebox_cache_key(url), expires_in: 1.day) do
+        uri = URI(url) rescue nil
+        return blank_onebox if uri.blank? || SiteSetting.onebox_domains_blacklist.include?(uri.hostname)
 
-    # return a blank hash, so rest of the code works
-    {preview: "", onebox: ""}
-  end
+        r = Onebox.preview(url, cache: {}, max_width: 695)
+        { onebox: r.to_s, preview: r.try(:placeholder_html).to_s }
+      end
+    rescue => e
+      # no point warning here, just cause we have an issue oneboxing a url
+      # we can later hunt for failed oneboxes by searching logs if needed
+      Rails.logger.info("Failed to onebox #{url} #{e} #{e.backtrace}")
+      # return a blank hash, so rest of the code works
+      blank_onebox
+    end
 
 end
