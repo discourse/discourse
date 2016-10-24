@@ -149,13 +149,10 @@ class Group < ActiveRecord::Base
       group.save!
     end
 
-    group.name = I18n.t("groups.default_names.#{name}")
-
     # don't allow shoddy localization to break this
-    validator = UsernameValidator.new(group.name)
-    unless validator.valid_format?
-      group.name = name
-    end
+    localized_name = I18n.t("groups.default_names.#{name}")
+    validator = UsernameValidator.new(localized_name)
+    group.name = validator.valid_format? ? localized_name : name
 
     # the everyone group is special, it can include non-users so there is no
     # way to have the membership in a table

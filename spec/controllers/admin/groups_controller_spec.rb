@@ -19,7 +19,9 @@ describe Admin::GroupsController do
 
       xhr :get, :index
       expect(response.status).to eq(200)
-      expect(::JSON.parse(response.body).keep_if {|r| r["id"] == group.id }).to eq([{
+      json = ::JSON.parse(response.body)
+      expect(json.select { |r| r["id"] == Group::AUTO_GROUPS[:everyone] }).to be_empty
+      expect(json.select { |r| r["id"] == group.id }).to eq([{
         "id"=>group.id,
         "name"=>group.name,
         "user_count"=>1,
@@ -134,7 +136,5 @@ describe Admin::GroupsController do
     end
 
   end
-
-
 
 end
