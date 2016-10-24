@@ -5,12 +5,12 @@ export default Ember.Controller.extend({
   filteredContent: function() {
     if (!this.get('categoryNameKey')) { return []; }
 
-    const category = this.get('adminSiteSettings.allSiteSettings').findProperty('nameKey', this.get('categoryNameKey'));
+    const category = (this.get('adminSiteSettings.model') || []).findProperty('nameKey', this.get('categoryNameKey'));
     if (category) {
       return category.siteSettings;
     } else {
       return [];
     }
-  }.property('adminSiteSettings.content', 'categoryNameKey')
+  }.property('adminSiteSettings.model', 'categoryNameKey')
 
 });
