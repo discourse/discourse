@@ -43,7 +43,7 @@ gem 'redis-namespace'
 
 gem 'active_model_serializers', '~> 0.8.3'
 
-gem 'onebox'
+gem 'onebox', git: 'https://github.com/vibol/onebox.git', branch: 'feature/amazon-instant-video'
 
 gem 'http_accept_language', '~>2.0.5', require: false
 
