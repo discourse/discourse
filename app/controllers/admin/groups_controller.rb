@@ -1,7 +1,7 @@
 class Admin::GroupsController < Admin::AdminController
 
   def index
-    groups = Group.order(:name)
+    groups = Group.order(:name).where("name <> 'everyone'")
 
     if search = params[:search]
       search = search.to_s

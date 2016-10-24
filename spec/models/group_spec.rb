@@ -154,6 +154,11 @@ describe Group do
 
   end
 
+  it "makes sure the everyone group is not visible" do
+    g = Group.refresh_automatic_group!(:everyone)
+    expect(g.visible).to eq(false)
+  end
+
   it "Correctly handles removal of primary group" do
     group = Fabricate(:group)
     user = Fabricate(:user)

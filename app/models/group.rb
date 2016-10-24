@@ -160,6 +160,7 @@ class Group < ActiveRecord::Base
     # the everyone group is special, it can include non-users so there is no
     # way to have the membership in a table
     if name == :everyone
+      group.visible = false
       group.save!
       return group
     end
