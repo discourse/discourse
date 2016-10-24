@@ -90,6 +90,10 @@ export default function() {
       return response({});
     });
 
+    this.get('/users/search/users', () => {
+      return response(fixturesByUrl['/search/user/search?term=team&include_mentionable_groups=true']);
+    });
+
 
     this.put('/users/eviltrout', () => response({ user: {} }));
 
