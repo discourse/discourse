@@ -1,8 +1,8 @@
-import StringBuffer from 'discourse/mixins/string-buffer';
 import { iconHTML } from 'discourse-common/helpers/fa-icon';
 import { default as computed, observes } from 'ember-addons/ember-computed-decorators';
+import { bufferedRender } from 'discourse-common/lib/buffered-render';
 
-export default Ember.Component.extend(StringBuffer, {
+export default Ember.Component.extend(bufferedRender({
   classNameBindings: [':popup-tip', 'good', 'bad', 'lastShownAt::hide'],
   animateAttribute: null,
   bouncePixels: 6,
@@ -37,7 +37,7 @@ export default Ember.Component.extend(StringBuffer, {
     }
   },
 
-  renderString(buffer) {
+  buildBuffer(buffer) {
     const reason = this.get('validation.reason');
     if (!reason) { return; }
 
@@ -55,4 +55,4 @@ export default Ember.Component.extend(StringBuffer, {
       $elem.animate({ right: '-=' + this.bouncePixels }, this.bounceDelay).animate({ right: '+=' + this.bouncePixels }, this.bounceDelay);
     }
   }
-});
+}));

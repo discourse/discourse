@@ -13,13 +13,9 @@ export default Ember.View.extend({
   isMouseDown: false,
   isTouchInProgress: false,
 
-  //  The button is visible whenever there is something in the buffer
-  //  (ie. something has been selected)
+  // The button is visible whenever there is something in the buffer
+  // (ie. something has been selected)
   visible: Em.computed.notEmpty('controller.buffer'),
-
-  render(buffer) {
-    buffer.push(I18n.t("post.quote_reply"));
-  },
 
   /**
     Binds to the following global events:

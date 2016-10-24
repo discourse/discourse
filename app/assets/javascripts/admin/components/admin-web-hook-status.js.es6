@@ -1,8 +1,8 @@
 import computed from 'ember-addons/ember-computed-decorators';
-import StringBuffer from 'discourse/mixins/string-buffer';
 import { iconHTML } from 'discourse-common/helpers/fa-icon';
+import { bufferedRender } from 'discourse-common/lib/buffered-render';
 
-export default Ember.Component.extend(StringBuffer, {
+export default Ember.Component.extend(bufferedRender({
   classes: ["text-muted", "text-danger", "text-successful"],
   icons: ["circle-o", "times-circle", "circle"],
 
@@ -21,8 +21,8 @@ export default Ember.Component.extend(StringBuffer, {
     return classes[statusId - 1];
   },
 
-  renderString(buffer) {
+  buildBuffer(buffer) {
     buffer.push(iconHTML(this.get('icon'), { class: this.get('class') }));
     buffer.push(I18n.t(`admin.web_hooks.delivery_status.${this.get('status.name')}`));
   }
-});
+}));

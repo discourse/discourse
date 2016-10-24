@@ -25,8 +25,8 @@
 
 {{#if bulkSelectEnabled}}
   <div class='fps-select'>
-    {{d-link action="selectAll" label="search.select_all"}}
-    {{d-link action="clearAll" label="search.clear_all"}}
+    <a {{action "selectAll"}}>{{i18n "search.select_all"}}</a>
+    <a {{action "clearAll"}}>{{i18n "search.clear_all"}}</a>
   </div>
 {{/if}}
 

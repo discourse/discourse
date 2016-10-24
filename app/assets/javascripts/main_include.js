@@ -79,7 +79,6 @@
 //= require ./discourse/routes/user-activity-stream
 //= require ./discourse/routes/topic-from-params
 //= require ./discourse/components/text-field
-//= require ./discourse/components/visible
 //= require ./discourse/components/conditional-loading-spinner
 //= require ./discourse/helpers/user-avatar
 //= require ./discourse/helpers/cold-age-class

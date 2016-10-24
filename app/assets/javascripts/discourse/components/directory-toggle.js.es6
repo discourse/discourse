@@ -1,7 +1,7 @@
-import StringBuffer from 'discourse/mixins/string-buffer';
 import { iconHTML } from 'discourse-common/helpers/fa-icon';
+import { bufferedRender } from 'discourse-common/lib/buffered-render';
 
-export default Ember.Component.extend(StringBuffer, {
+export default Ember.Component.extend(bufferedRender({
   tagName: 'th',
   classNames: ['sortable'],
   attributeBindings: ['title'],
@@ -12,8 +12,7 @@ export default Ember.Component.extend(StringBuffer, {
     return I18n.t(labelKey + '_long', { defaultValue: I18n.t(labelKey) });
   }.property('field'),
 
-  renderString(buffer) {
-
+  buildBuffer(buffer) {
     const icon = this.get('icon');
     if (icon) {
       buffer.push(iconHTML(icon));
@@ -37,4 +36,4 @@ export default Ember.Component.extend(StringBuffer, {
       this.setProperties({ order: field, asc: null });
     }
   }
-});
+}));

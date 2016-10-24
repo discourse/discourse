@@ -209,6 +209,10 @@ html.anon .topic-list a.title:visited:not(.badge-notification) {color: dark-ligh
   }
 }
 
+ol.category-breadcrumb.hidden {
+  display: none;
+}
+
 ol.category-breadcrumb {
   display: block;
   float: left;

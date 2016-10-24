@@ -1,8 +1,9 @@
 /* global ace:true */
 import loadScript from 'discourse/lib/load-script';
 import { escapeExpression } from 'discourse/lib/utilities';
+import { bufferedRender } from 'discourse-common/lib/buffered-render';
 
-export default Ember.Component.extend({
+export default Ember.Component.extend(bufferedRender({
   mode: 'css',
   classNames: ['ace-wrapper'],
   _editor: null,
@@ -14,7 +15,7 @@ export default Ember.Component.extend({
     }
   }.observes('content'),
 
-  render(buffer) {
+  buildBuffer(buffer) {
     buffer.push("<div class='ace'>");
     if (this.get('content')) {
       buffer.push(escapeExpression(this.get('content')));
@@ -66,4 +67,4 @@ export default Ember.Component.extend({
     });
 
   }.on('didInsertElement')
-});
+}));

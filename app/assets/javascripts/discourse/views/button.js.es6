@@ -1,6 +1,6 @@
-import StringBuffer from 'discourse/mixins/string-buffer';
+import { bufferedRender } from 'discourse-common/lib/buffered-render';
 
-export default Ember.View.extend(StringBuffer, {
+export default Ember.View.extend(bufferedRender({
   tagName: 'button',
   classNameBindings: [':btn', ':standard', 'dropDownToggle'],
   attributeBindings: ['title', 'data-toggle', 'data-share-url'],
@@ -14,10 +14,10 @@ export default Ember.View.extend(StringBuffer, {
     return I18n.t(this.get('textKey'));
   }.property('textKey'),
 
-  renderString: function(buffer) {
+  buildBuffer(buffer) {
     if (this.renderIcon) {
       this.renderIcon(buffer);
     }
     buffer.push(this.get('text'));
   }
-});
+}));
