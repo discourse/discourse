@@ -147,7 +147,7 @@ GEM
     librarian (0.1.2)
       highline
       thor (~> 0.15)
-    libv8 (5.0.71.48.3)
+    libv8 (5.3.332.38.1)
     listen (0.7.3)
     logster (1.2.5)
     loofah (2.0.3)
@@ -162,8 +162,8 @@ GEM
     method_source (0.8.2)
     mime-types (2.99.2)
     mini_portile2 (2.1.0)
-    mini_racer (0.1.3)
-      libv8 (~> 5.0)
+    mini_racer (0.1.6)
+      libv8 (~> 5.3)
     minitest (5.9.1)
     mocha (1.1.0)
       metaclass (~> 0.0.1)
@@ -501,4 +501,4 @@ DEPENDENCIES
   unicorn
 
 BUNDLED WITH
-   1.13.4
+   1.13.6
