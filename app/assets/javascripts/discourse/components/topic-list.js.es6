@@ -32,7 +32,7 @@ export default Ember.Component.extend({
     return this.get('order') === "op_likes";
   }.property('order'),
 
-  @observes('topics.@each')
+  @observes('topics.[]')
   topicsAdded() {
     // special case so we don't keep scanning huge lists
     if (!this.get('lastVisitedTopic')) {
