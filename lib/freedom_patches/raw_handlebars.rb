@@ -54,6 +54,18 @@ end
 class Ember::Handlebars::Template
   include Discourse::Ember::Handlebars::Helper
 
+  def precompile_handlebars(string, input=nil)
+    "require('discourse-common/lib/raw-handlebars').template(#{Barber::Precompiler.compile(string)});"
+  end
+
+  def compile_handlebars(string, input=nil)
+    "require('discourse-common/lib/raw-handlebars').compile(#{indent(string).inspect});"
+  end
+
+  def global_template_target(namespace, module_name, config)
+    "#{namespace}[#{template_path(module_name, config).inspect}]"
+  end
+
   # FIXME: Previously, ember-handlebars-templates uses the logical path which incorrectly
   # returned paths with the `.raw` extension and our code is depending on the `.raw`
   # to find the right template to use.

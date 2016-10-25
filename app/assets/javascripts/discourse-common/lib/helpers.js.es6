@@ -55,12 +55,6 @@ function resolveParams(ctx, options) {
 }
 
 export function registerUnbound(name, fn) {
-  if (Ember.Helper) {
-    _helpers[name] = Ember.Helper.helper(function() {
-      // TODO: Allow newer ember to use helpers
-    });
-    return;
-  }
 
   const func = function(property, options) {
     if (options.types && (options.types[0] === "ID" || options.types[0] === "PathExpression")) {
@@ -69,6 +63,14 @@ export function registerUnbound(name, fn) {
 
     return fn.call(this, property, resolveParams(this, options));
   };
+
+  if (Ember.Helper) {
+    _helpers[name] = Ember.Helper.extend({
+      compute: (params, args) => fn(params[0], args)
+    });
+    Handlebars.registerHelper(name, func);
+    return;
+  }
 
   Handlebars.registerHelper(name, func);
   Ember.Handlebars.registerHelper(name, func);
