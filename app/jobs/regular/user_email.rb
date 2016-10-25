@@ -127,7 +127,7 @@ module Jobs
         email_args[:email_token] = email_token
       end
 
-      if type == :notify_old_email
+      if type.to_s == "notify_old_email"
         email_args[:new_email] = user.email
       end
 
