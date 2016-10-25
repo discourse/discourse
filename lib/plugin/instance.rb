@@ -203,6 +203,11 @@ class Plugin::Instance
     end
   end
 
+  def register_seedfu_fixtures(paths)
+    paths = [paths] if !paths.kind_of?(Array)
+    SeedFu.fixture_paths.concat(paths)
+  end
+
   def listen_for(event_name)
     return unless self.respond_to?(event_name)
     DiscourseEvent.on(event_name, &self.method(event_name))
