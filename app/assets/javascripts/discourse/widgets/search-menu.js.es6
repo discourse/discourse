@@ -67,7 +67,7 @@ const SearchHelper = {
 export default createWidget('search-menu', {
   tagName: 'div.search-menu',
 
-  fullSearchUrl() {
+  fullSearchUrl(opts) {
     const contextEnabled = searchData.contextEnabled;
 
     const ctx = contextEnabled ? this.searchContext() : null;
@@ -77,15 +77,31 @@ export default createWidget('search-menu', {
       return;
     }
 
-    let url = '/search?q=' + encodeURIComponent(searchData.term);
-    if (contextEnabled) {
-      if (this.currentUser &&
-          ctx.id.toString().toLowerCase() === this.currentUser.username_lower &&
-          type === "private_messages") {
-        url += ' in:private';
-      } else {
-        url += encodeURIComponent(" " + type + ":" + ctx.id);
+    let url = '/search';
+    const params = [];
+
+    if (searchData.term) {
+      let query = '';
+
+      query += `q=${encodeURIComponent(searchData.term)}`;
+
+      if (contextEnabled) {
+        if (this.currentUser &&
+            ctx.id.toString().toLowerCase() === this.currentUser.username_lower &&
+            type === "private_messages") {
+          query += ' in:private';
+        } else {
+          query += encodeURIComponent(" " + type + ":" + ctx.id);
+        }
       }
+
+      if (query) params.push(query);
+    }
+
+    if (opts && opts.expanded) params.push('expanded=true');
+
+    if (params.length > 0) {
+      url = `${url}?${params.join("&")}`;
     }
 
     return Discourse.getURL(url);
@@ -94,8 +110,13 @@ export default createWidget('search-menu', {
   panelContents() {
     const contextEnabled = searchData.contextEnabled;
 
-    const results = [this.attach('search-term', { value: searchData.term, contextEnabled }),
-                     this.attach('search-context', { contextEnabled })];
+    const results = [
+      this.attach('search-term', { value: searchData.term, contextEnabled }),
+      this.attach('search-context', {
+        contextEnabled,
+        url: this.fullSearchUrl({ expanded: true })
+      })
+    ];
 
     if (searchData.term) {
       if (searchData.loading) {
