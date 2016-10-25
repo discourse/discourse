@@ -12,8 +12,12 @@ module Jobs
       ignore_urls |= Category.uniq.where("background_url IS NOT NULL AND background_url != ''").pluck(:background_url)
 
       # Any URLs in site settings are fair game
-      ignore_urls |= [SiteSetting.logo_url, SiteSetting.logo_small_url, SiteSetting.favicon_url,
-                      SiteSetting.apple_touch_icon_url]
+      ignore_urls |= [
+        SiteSetting.logo_url,
+        SiteSetting.logo_small_url,
+        SiteSetting.favicon_url,
+        SiteSetting.apple_touch_icon_url
+      ]
 
       ids  = []
       ids |= PostUpload.uniq.pluck(:upload_id)
