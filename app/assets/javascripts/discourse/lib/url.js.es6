@@ -168,9 +168,6 @@ const DiscourseURL = Ember.Object.extend({
 
     if (this.navigatedToPost(oldPath, path, opts)) { return; }
 
-    // Schedule a DOM cleanup event
-    Em.run.scheduleOnce('afterRender', Discourse.Route, 'cleanDOM');
-
     if (oldPath === path) {
       // If navigating to the same path send an app event. Views can watch it
       // and tell their controllers to refresh

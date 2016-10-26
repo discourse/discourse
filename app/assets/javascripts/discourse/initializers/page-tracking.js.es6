@@ -1,4 +1,4 @@
-import { cleanDOM } from 'discourse/routes/discourse';
+import { cleanDOM } from 'discourse/lib/clean-dom';
 import { startPageTracking, onPageChange } from 'discourse/lib/page-tracker';
 import { viewTrackingRequired } from 'discourse/lib/ajax';
 
@@ -10,10 +10,7 @@ export default {
     // Tell our AJAX system to track a page transition
     const router = container.lookup('router:main');
     router.on('willTransition', viewTrackingRequired);
-
-    router.on('didTransition', function() {
-      Em.run.scheduleOnce('afterRender', Ember.Route, cleanDOM);
-    });
+    router.on('didTransition', cleanDOM);
 
     startPageTracking(router);
 
