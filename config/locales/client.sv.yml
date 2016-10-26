@@ -508,10 +508,7 @@ sv:
       apps: "Appar"
       revoke_access: "Återkalla åtkomst"
       undo_revoke_access: "Ångra återkallelse av åtkomst"
-      api_permissions: "Rättigheter:"
       api_approved: "Godkända:"
-      api_read: "läs"
-      api_read_write: "läs och skriv"
       staff_counters:
         flags_given: "hjälpsamma flaggor"
         flagged_posts: "flaggade inlägg"

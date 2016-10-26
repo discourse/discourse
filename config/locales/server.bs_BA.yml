@@ -231,7 +231,7 @@ bs_BA:
     title: 'Resetuj Šifru'
     success: "Uspješno ste promjenili šifru i sada se možete ulogovati."
     success_unapproved: "Uspješno ste promjenili šifru."
-    continue: "Idi na Revolucionar.com"
+    continue: "Idi na %{site_name}"
   change_email:
     confirmed: "Your email has been updated."
     please_continue: "Continue to %{site_name}"
@@ -239,7 +239,7 @@ bs_BA:
   activation:
     already_done: "Link za konfirmaciju nije validan. Možda ste već aktivirani?"
     please_continue: "Vaš novi nalog je verifikovan, i možete se ulogovati."
-    continue_button: "Idi na Revolucionar.com"
+    continue_button: "Nastavi na %{site_name}"
     welcome_to: "Dobrodošli na %{site_name}!"
     approval_required: "A moderator must manually approve your new account before you can access this forum. You'll get an email when your account is approved!"
   post_action_types:
@@ -253,7 +253,7 @@ bs_BA:
       long_form: 'opomeni kao spam'
     inappropriate:
       title: 'Neprikladno'
-      description: 'Ovaj post sadrži tekst koji je uvredljiv i pogrdan. I kao takav kosi se sa <a href="/t/dobrodosli-na-revolucionar/8">našim pravilima korišćenja</a>.'
+      description: 'Ovaj post sadrži tekst koji bi razumna osoba smatrala uvredljivim, pogrdnim i neprikladan prema <a href="/guidelines">pravilima naše zajednice</a>.'
       long_form: 'opomeni kao neprikladno'
     notify_user:
       long_form: 'korisnik obavješten'
@@ -281,7 +281,7 @@ bs_BA:
       long_form: 'opomenuo kao spam'
     inappropriate:
       title: 'Inappropriate'
-      description: 'Ova tema sadrži tekst koji je uvredljiv i pogrdan. I kao takav kosi se sa <a href="/t/dobrodosli-na-revolucionar/8">našim pravilima korišćenja</a>.'
+      description: 'Ova tema sadrži tekst koji bi razumna osoba smatrala uvredljivim, pogrdnim i neprikladan prema <a href="/guidelines">pravilima naše zajednice</a>.'
       long_form: 'opomenuto kao neprikladno'
     notify_moderators:
       title: "Obavijesti Moderatore"
@@ -651,7 +651,7 @@ bs_BA:
   most_recent_poster: "Posljednji Autor"
   frequent_poster: "Čest Autor"
   redirected_to_top_reasons:
-    new_user: "Dobrodošli na Revolucionar! Ovo su najnovije popularne teme."
+    new_user: "Dobrodošli u našu zajednicu! Ovo su najnovije popularne teme."
     not_seen_in_a_month: "Dobrodošli nazad! Nismo vas odavno vidjeli. Ovo su najnovije popularne teme od vaše zadnje posjete."
   change_owner:
     post_revision_text: "Ownership transferred from %{old_user} to %{new_user}"
@@ -705,7 +705,7 @@ bs_BA:
       >
       > %{topic_excerpt}
 
-      na  Revolucionar.com
+      na
 
       > %{site_title} -- %{site_description}
 
@@ -713,9 +713,9 @@ bs_BA:
 
       %{invite_link}
 
-      Ova pozivnica dolazi od člana koji je zaslužio povjerenje na našem sajtu te smo mu/joj omogućili opciju slanja pozivnica. Što vama kao zvanici daje mogućnost da odgovorite na diskusiju bez registracije.
+      Ova pozivnica dolazi od člana koji je zaslužio povjerenje na našem sajtu, što vama kao zvanici daje mogućnost da odmah odgovorite na diskusiju.
   invite_forum_mailer:
-    subject_template: "%{invitee_name} vas poziva na novu socijalnu mrežu Revolucionar.com"
+    subject_template: "%{invitee_name} vas poziva da se pridružite %{site_domain_name}"
   invite_password_instructions:
     subject_template: "Set password for your %{site_name} account"
   test_mailer:
@@ -737,17 +737,19 @@ bs_BA:
     deferred_and_deleted: "Thanks for letting us know. We've removed the post."
   system_messages:
     welcome_user:
-      subject_template: "Dobrodošli na Revolucionar.com!"
+      subject_template: "Dobrodošli na %{site_name}!"
       text_body_template: |
-        Hvala što ste se pridružili Revolucionaru, dobrodošli!
+        Hvala što ste se pridružili %{site_name}, dobrodošli!
 
         %{new_user_tips}
 
         Mi vjerujemo u [civilizovanu diskusiju](%{base_url}/guidelines) na svakom nivou u svako doba.
 
         Uživajte!
+
+        (Ako trebate razgovarati s nekim od [članova osoblja](%{base_url}/about) kao novi korisnik, samo odgovorite na ovu poruku.)
     welcome_invite:
-      subject_template: "Dobrodošli na Revolucionar.com!"
+      subject_template: "Dobrodošli na %{site_name}!"
       text_body_template: |
         Hvala vam što ste primili pozivnicu na %{site_name} -- dobrodošli!
 
@@ -899,7 +901,7 @@ bs_BA:
     popular_topics: "Popularne"
     recent_topics: "Nove"
     see_more: "Više"
-    search_title: "Pretraži Revolucionar"
+    search_title: "Pretraži stranicu"
     search_google: "Google"
   login_required:
     welcome_message: |
@@ -946,6 +948,9 @@ bs_BA:
     title: "Terms of Service"
   privacy_topic:
     title: "Privacy Policy"
+  first_installation:
+    register:
+      help: "Registriraj novi račun kako bi počeo"
   activemodel:
     errors:
       <<: *errors

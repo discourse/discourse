@@ -508,10 +508,7 @@ pt:
       apps: "Aplicações"
       revoke_access: "Rescindir Acesso"
       undo_revoke_access: "Cancelar Rescissão de Acesso"
-      api_permissions: "Permissões:"
       api_approved: "Aprovado:"
-      api_read: "ler"
-      api_read_write: "ler e escrever"
       staff_counters:
         flags_given: "sinalizações úteis"
         flagged_posts: "publicações denunciadas"

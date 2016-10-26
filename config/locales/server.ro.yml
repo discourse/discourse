@@ -616,9 +616,16 @@ ro:
     authorize: "Autorizează"
     read: "citire"
     read_write: "citire/scriere"
-    description: "Dorești să îi acorzi aplicației \"%{application_name}\" %{access} acces la contul tău?"
+    description: "„%{application_name}” cere accesul la contul tău de:"
     no_trust_level: "Ne pare rău, nu ai nivelul de încredere necesar pentru a accesa API utilizator"
     generic_error: "Ne pare rău, nu putem să emitem chei API utilizator: această funcționalitate este probabil dezactivată din administrarea site-ului"
+    scopes:
+      message_bus: "Actualizări directe (live)"
+      notifications: "Citește și șterge notificările"
+      push: "Trimite notificările către servicii externe"
+      session_info: "Citește informațiile despre sesiunea utilizatorului"
+      read: "Citește tot"
+      write: "Scrie tot"
   reports:
     visits:
       title: "Vizite ale utilizatorilor"
@@ -1238,9 +1245,8 @@ ro:
     default_categories_muted: "Implicit, listează categoriile care sunt setate pe silențios."
     max_user_api_reqs_per_day: "Numărul maxim de interogări API utilizator pe cheie, pe zi. "
     max_user_api_reqs_per_minute: "Numărul maxim de interogări API utilizator pe cheie, pe minut. "
-    allow_read_user_api_keys: "Permite generarea de chei API utilizator în mod exclusiv-citire."
-    allow_write_user_api_keys: "Permite generarea de chei API utilizator în mod scriere."
-    allow_push_user_api_keys: "Permite generarea de chei API utilizator pentru utilizarea serviciului push."
+    allow_user_api_keys: "Permite generarea de chei API pentru utilizator"
+    allow_user_api_key_scopes: "Lista domeniilor pentru care se permit chei API pentru utilizatori"
     max_api_keys_per_user: "Numărul maxim de chei API utilizator pe utilizator"
     min_trust_level_for_user_api_key: "Nivelul de încredere necesar pentru generarea de chei API utilizator"
     allowed_user_api_auth_redirects: "URL permis pentru redirecționarea autentificării pentru cheile API utilizator "
@@ -2767,6 +2773,16 @@ ro:
     staff_tag_disallowed: "Eticheta \"%{tag}\" poate fi pusă doar de un membru al echipei."
     staff_tag_remove_disallowed: "Eticheta \"%{tag}\" poate fi ștearsă doar de un membru al echipei."
   rss_by_tag: "Subiecte etichetate %{tag}"
+  first_installation:
+    congratulations: "Felicitări, ai instalat Discourse!"
+    register:
+      button: "Înregistrare"
+      title: "Înregistrare cont administrator"
+      help: "înregistrare cont nou pentru a începe"
+      no_emails: "Din păcate niciun un email pentru administrator nu a fost configurat în timpul instalării, așa că finalizarea configurării<a href='https://meta.discourse.org/t/how-to-create-an-administrator-account-after-install/14046'>poate fi dificilă</a>."
+    confirm_email:
+      title: "Confirmare email"
+      message: "<p>Am trimis un mail de activare la<b>%{email}</b>. Urmează instrucțiunile din mail pentru a-ți activa contul.</p><p>Dacă nu ai primit un mail, verifică dacă ai setat corect emailul și caută în dosarul cu spam.</p>"
   wizard:
     title: "Configurare Discourse"
     step:

@@ -508,10 +508,7 @@ de:
       apps: "Apps"
       revoke_access: "Entziehe Zugriffsrecht"
       undo_revoke_access: "Entziehe Zugriffsrecht widerrufen"
-      api_permissions: "Berechtigungen:"
       api_approved: "Genehmigt:"
-      api_read: "Lesen"
-      api_read_write: "Lesen und Schreiben"
       staff_counters:
         flags_given: "hilfreiche Meldungen"
         flagged_posts: "gemeldete Beiträge"
@@ -1117,6 +1114,7 @@ de:
     not_logged_in_user: 'Benutzerseite mit einer Zusammenfassung der Benutzeraktivitäten und Einstellungen'
     current_user: 'zu deiner Benutzerseite gehen'
     topics:
+      new_messages_marker: "letzter Besuch"
       bulk:
         unlist_topics: "Themen unsichtbar machen"
         reset_read: "Gelesene zurücksetzen"
@@ -2213,6 +2211,15 @@ de:
         info_html: "Dein API-Key erlaubt dir das Erstellen und Bearbeiten von Themen via JSON-Aufrufen."
         all_users: "Alle Benutzer"
         note_html: "Halte diesen Schlüssel <strong>geheim</strong>. Alle Benutzer, die diesen Schlüssel besitzen, können beliebige Beiträge als jeder Benutzer erstellen."
+      web_hooks:
+        save: "Speichern"
+        destroy: "Löschen"
+        description: "Beschreibung"
+        go_back: "Zurück zur Liste"
+        delivery_status:
+          inactive: "Inaktiv"
+          failed: "Fehlgeschlagen"
+          successful: "Erfolgreich"
       plugins:
         title: "Plug-ins"
         installed: "Installierte Plug-ins"
@@ -2915,3 +2922,12 @@ de:
           label: "Neu:"
           add: "Hinzufügen"
           filter: "Suche (URL oder externe URL)"
+  wizard_js:
+    wizard:
+      done: "Erledigt"
+      back: "Zurück"
+      invites:
+        roles:
+          admin: "Administration"
+          moderator: "Moderator"
+          regular: "Normaler Anwender"

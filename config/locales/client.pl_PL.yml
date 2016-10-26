@@ -527,10 +527,7 @@ pl_PL:
       apps: "Aplikacje"
       revoke_access: "Zablokuj dostęp"
       undo_revoke_access: "Cofnij zablokowanie dostępu"
-      api_permissions: "Uprawnienia:"
       api_approved: "Zatwierdzony:"
-      api_read: "odczyt"
-      api_read_write: "odczyt i zapis"
       staff_counters:
         flags_given: "uczynnych oflagowań"
         flagged_posts: "oflagowane wpisy"

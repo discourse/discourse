@@ -507,10 +507,7 @@ da:
       apps: "Apps"
       revoke_access: "Tilbagekald adgang"
       undo_revoke_access: "Revider tilbagekald adgang"
-      api_permissions: "Tilladelser:"
       api_approved: "Godkendt:"
-      api_read: "læst"
-      api_read_write: "læs og skriv"
       staff_counters:
         flags_given: "hjælpsomme markeringer"
         flagged_posts: "markerede indlæg"

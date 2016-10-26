@@ -229,7 +229,7 @@ de:
 
       - Kritik ist in Ordnung, aber bitte kritisiere nur *Ideen*, nicht Menschen.
 
-      Beachte bitte auch [unsere Richtlinien](/guidelines). Dieser Hilfetext wird nur bei deinen ersten %{education_posts_text} Beiträgen angezeigt.
+      Beachte bitte auch [unsere Richtlinien](/guidelines). Dieser Hilfetext wird nur bei deinen ersten %{education_posts_text} angezeigt.
     avatar: |
       ### Wie wäre es mit einem Bild für Deinen Account?
 
@@ -577,7 +577,6 @@ de:
     authorize: "Genehmigen"
     read: "Lesen"
     read_write: "Lesen/Schreiben"
-    description: "Möchtest du \"%{application_name}\" %{access} Zugriff auf dein Konto geben?"
     no_trust_level: "Entschuldige, du hast nicht die erforderliche Vertrauensstufe, um die Benutzer API zu nutzen."
     generic_error: "Entschuldige, wir können keinen Benutzer API Schlüssel erstellen. Dieses Feature ist möglicherweise vom Site Administrator deaktiviert worden."
   reports:
@@ -1197,9 +1196,6 @@ de:
     default_categories_muted: "Liste der standardmäßig stummgeschalteten Kategorien."
     max_user_api_reqs_per_day: "Maximale Zahl der Benutzer API Anfragen pro Schlüssel pro Tag"
     max_user_api_reqs_per_minute: "Maximale Zahl der Benutzer API Anfragen pro Schlüssel pro Minute"
-    allow_read_user_api_keys: "Erlaube die Generierung von nur-lese-berechtigten Benutzer API Schlüsseln"
-    allow_write_user_api_keys: "Erlaube die Generierung von schreib-berechtigten Benutzer API Schlüsseln"
-    allow_push_user_api_keys: "Erlaube die Generierung von push-berechtigten Benutzer API Schlüsseln"
     max_api_keys_per_user: "Maximale Zahl der Benutzer API Anfragen pro Benutzer"
     min_trust_level_for_user_api_key: "Erforderliche Vertrauensstufe für die Generierung von Benutzer API Schlüsseln"
     allowed_user_api_auth_redirects: "Erlaubte URL für die Authentifizierungs-Umleitung von Benutzer API Schlüsseln"
@@ -1217,6 +1213,8 @@ de:
     min_trust_level_to_tag_topics: "Minimale Vertrauensstufe, um Schlagwörter zu Themen hinzuzufügen."
     suppress_overlapping_tags_in_list: "Schlagwort nicht zeigen, wenn es genau so im Thementitel vorkommt"
     remove_muted_tags_from_latest: "Zeige in der Liste der neusten Beiträge keine Themen mit stummgeschalteten Schlagwörtern."
+    company_short_name: "Firmenname (kurz)"
+    company_full_name: "Firmenname (komplett)"
     errors:
       invalid_email: "Ungültige E-Mail-Ad­res­se"
       invalid_username: "Es gibt keinen Benutzer mit diesem Benutzernamen."
@@ -2822,6 +2820,39 @@ de:
     staff_tag_disallowed: "Das Schlagwort \"%{tag}\" kann nur von Mitarbeitern angewendet werden."
     staff_tag_remove_disallowed: "Das Schlagwort \"%{tag}\" kann nur von Mitarbeitern entfernt werden."
   rss_by_tag: "Themen mit dem Schlagwort %{tag}"
+  first_installation:
+    register:
+      button: "Registrieren"
+  wizard:
+    step:
+      forum_title:
+        title: "Name"
+      introduction:
+        title: "Einführung"
+      privacy:
+        title: "Zugriff"
+        fields:
+          privacy:
+            choices:
+              open:
+                label: "Öffentlich"
+              restricted:
+                label: "Privat"
+      contact:
+        title: "Kontakt"
+        fields:
+          contact_email:
+            label: "Mail"
+            placeholder: "name@example.com"
+      corporate:
+        title: "Organisation"
+        fields:
+          company_short_name:
+            label: "Firmenname (kurz)"
+          company_full_name:
+            label: "Firmenname (komplett)"
+      emoji:
+        title: "Emoji"
   activemodel:
     errors:
       <<: *errors
