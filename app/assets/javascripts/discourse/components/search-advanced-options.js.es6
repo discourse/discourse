@@ -88,7 +88,6 @@ export default Em.Component.extend({
       return;
     }
 
-    this.findSearchTerms();
     this.setSearchedTermValue('searchedTerms.username', REGEXP_USERNAME_PREFIX);
     this.setSearchedTermValueForCategory();
     this.setSearchedTermValueForGroup();
@@ -117,11 +116,11 @@ export default Em.Component.extend({
         result.push(block);
     });
 
-    this.set('searchTermBlocks', result);
+    return result;
   },
 
   filterBlocks(regexPrefix) {
-    const blocks = this.get('searchTermBlocks');
+    const blocks = this.findSearchTerms();
     if (!blocks) return [];
 
     let result = [];
