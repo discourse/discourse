@@ -63,7 +63,9 @@ export default {
     app.register('screen-track:main', screenTrack, { instantiate: false });
     inject(app, 'screenTrack', 'component', 'route');
 
-    inject(app, 'currentUser', 'component', 'route', 'controller');
+    if (currentUser) {
+      inject(app, 'currentUser', 'component', 'route', 'controller');
+    }
 
     app.register('location:discourse-location', DiscourseLocation);
 
