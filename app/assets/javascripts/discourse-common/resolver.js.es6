@@ -132,12 +132,6 @@ export function buildResolver(baseName) {
     },
 
     resolveTemplate(parsedName) {
-      let fullName = parsedName.fullNameWithoutType;
-      if (fullName.indexOf('.raw') !== -1) {
-        return Ember.TEMPLATES[fullName] ||
-               Ember.TEMPLATES[fullName.replace(/\.raw$/, '')];
-      }
-
       return this.findPluginMobileTemplate(parsedName) ||
              this.findPluginTemplate(parsedName) ||
              this.findMobileTemplate(parsedName) ||
@@ -187,6 +181,7 @@ export function buildResolver(baseName) {
       return this._super(parsedName) ||
              templates[slashedType] ||
              templates[withoutType] ||
+             templates[withoutType.replace(/\.raw$/, '')] ||
              templates[dashed] ||
              templates[decamelized.replace(/\./, '/')] ||
              templates[decamelized.replace(/\_/, '/')] ||
