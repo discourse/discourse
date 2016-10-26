@@ -15,7 +15,7 @@
     {{create-topics-notice}}
   </div>
   {{outlet}}
-  {{render "user-card"}}
+  {{outlet "user-card"}}
 </div>
 
 {{plugin-outlet "above-footer"}}
@@ -24,6 +24,6 @@
 {{/if}}
 {{plugin-outlet "below-footer"}}
 
-{{render "modal"}}
-{{render "topic-entrance"}}
-{{render "composer"}}
+{{outlet "modal"}}
+{{outlet "topic-entrance"}}
+{{outlet "composer"}}

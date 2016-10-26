@@ -20,14 +20,7 @@ function unlessReadOnly(method, message) {
 const ApplicationRoute = Discourse.Route.extend(OpenComposer, {
   siteTitle: setting('title'),
 
-  _handleLogout() {
-    if (this.currentUser) {
-      this.currentUser.destroySession().then(() => logout(this.siteSettings, this.keyValueStore));
-    }
-  },
-
   actions: {
-
     toggleAnonymous() {
       ajax("/users/toggle-anon", {method: 'POST'}).then(() => {
         window.location.reload();
@@ -179,6 +172,14 @@ const ApplicationRoute = Discourse.Route.extend(OpenComposer, {
     });
   },
 
+  renderTemplate() {
+    this.render('application');
+    this.render('user-card', { into: 'application', outlet: 'user-card' });
+    this.render('modal', { into: 'application', outlet: 'modal' });
+    this.render('topic-entrance', { into: 'application', outlet: 'topic-entrance' });
+    this.render('composer', { into: 'application', outlet: 'composer' });
+  },
+
   handleShowLogin() {
     if (this.siteSettings.enable_sso) {
       const returnPath = encodeURIComponent(window.location.pathname);
@@ -198,7 +199,6 @@ const ApplicationRoute = Discourse.Route.extend(OpenComposer, {
   },
 
   _autoLogin(modal, modalClass, notAuto) {
-
     const methods = findAll(this.siteSettings,
                             this.container.lookup('capabilities:main'),
                             this.site.isMobileDevice);
@@ -212,6 +212,11 @@ const ApplicationRoute = Discourse.Route.extend(OpenComposer, {
     }
   },
 
+  _handleLogout() {
+    if (this.currentUser) {
+      this.currentUser.destroySession().then(() => logout(this.siteSettings, this.keyValueStore));
+    }
+  },
 });
 
 RSVP.EventTarget.mixin(ApplicationRoute);

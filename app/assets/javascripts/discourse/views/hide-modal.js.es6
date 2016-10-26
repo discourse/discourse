@@ -1,8 +1,6 @@
-export default Em.View.extend({
-  // No rendering!
-  render: Em.K,
-
-  _hideModal: function() {
+export default Ember.View.extend({
+  didInsertElement() {
+    this._super();
     $('#discourse-modal').modal('hide');
-  }.on('didInsertElement')
+  }
 });
