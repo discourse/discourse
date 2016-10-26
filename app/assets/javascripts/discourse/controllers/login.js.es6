@@ -186,7 +186,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
   authMessage: (function() {
     if (Ember.isEmpty(this.get('authenticate'))) return "";
-    const method = findAll(this.siteSettings, this.capabilities, this.isMobileDevice).findProperty("name", this.get("authenticate"));
+    const method = findAll(this.siteSettings, this.capabilities, this.isMobileDevice).findBy("name", this.get("authenticate"));
     if(method){
       return method.get('message');
     }

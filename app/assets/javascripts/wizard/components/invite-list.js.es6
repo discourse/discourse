@@ -48,7 +48,7 @@ export default Ember.Component.extend({
       }
 
       const users = this.get('users');
-      if (users.findProperty('email', user.email)) {
+      if (users.findBy('email', user.email)) {
         return this.set('invalid', true);
       }
 

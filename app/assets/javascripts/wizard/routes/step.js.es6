@@ -1,7 +1,7 @@
 export default Ember.Route.extend({
   model(params) {
     const allSteps = this.modelFor('application').steps;
-    const step = allSteps.findProperty('id', params.step_id);
+    const step = allSteps.findBy('id', params.step_id);
     return step ? step : allSteps[0];
   },
 

@@ -13,7 +13,7 @@ export default Ember.Route.extend({
         name: I18n.t('admin.badges.new_badge')
       });
     }
-    return this.modelFor('adminBadges').findProperty('id', parseInt(params.badge_id));
+    return this.modelFor('adminBadges').findBy('id', parseInt(params.badge_id));
   },
 
   actions: {

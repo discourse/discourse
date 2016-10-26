@@ -68,7 +68,7 @@ function initializeRecentlyUsedIcons() {
 
     recent.forEach(emoji => recentlyUsedIcons.push(emoji.title));
 
-    const recentGroup = groups.findProperty('name', 'recent');
+    const recentGroup = groups.findBy('name', 'recent');
     if (recentGroup) {
       recentGroup.icons = recentlyUsedIcons;
     } else {

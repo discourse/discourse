@@ -20,7 +20,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
       let flagsAvailable = this.get('model.flagsAvailable');
 
       // "message user" option should be at the top
-      const notifyUserIndex = flagsAvailable.indexOf(flagsAvailable.filterProperty('name_key', 'notify_user')[0]);
+      const notifyUserIndex = flagsAvailable.indexOf(flagsAvailable.filterBy('name_key', 'notify_user')[0]);
       if (notifyUserIndex !== -1) {
         const notifyUser = flagsAvailable[notifyUserIndex];
         flagsAvailable.splice(notifyUserIndex, 1);
@@ -93,7 +93,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
       let postAction; // an instance of ActionSummary
 
       if (!this.get('flagTopic')) {
-        postAction = this.get('model.actions_summary').findProperty('id', this.get('selected.id'));
+        postAction = this.get('model.actions_summary').findBy('id', this.get('selected.id'));
       } else {
         postAction = this.get('topicActionByName.' + this.get('selected.name_key'));
       }

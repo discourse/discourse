@@ -59,7 +59,7 @@ export default RestModel.extend({
   @computed('hasLoadedData', 'firstPostId', 'posts.[]')
   firstPostPresent(hasLoadedData, firstPostId) {
     if (!hasLoadedData) { return false; }
-    return !!this.get('posts').findProperty('id', firstPostId);
+    return !!this.get('posts').findBy('id', firstPostId);
   },
 
   firstPostNotLoaded: Ember.computed.not('firstPostPresent'),
@@ -71,7 +71,7 @@ export default RestModel.extend({
     if (!hasLoadedData) { return false; }
     if (lastPostId === -1) { return true; }
 
-    return !!this.get('posts').findProperty('id', lastPostId);
+    return !!this.get('posts').findBy('id', lastPostId);
   },
 
   lastPostNotLoaded: Ember.computed.not('loadedAllPosts'),
@@ -208,7 +208,7 @@ export default RestModel.extend({
     if (opts.forceLoad) {
       this.set('loaded', false);
     } else {
-      const postWeWant = this.get('posts').findProperty('post_number', opts.nearPost);
+      const postWeWant = this.get('posts').findBy('post_number', opts.nearPost);
       if (postWeWant) { return Ember.RSVP.resolve(); }
     }
 
