@@ -3,8 +3,11 @@ import { get } from 'discourse-common/lib/raw-handlebars';
 // `Ember.Helper` is only available in versions after 1.12
 export function htmlHelper(fn) {
   if (Ember.Helper) {
-    return Ember.Helper.helper(function() {
-      return new Handlebars.SafeString(fn.apply(this, Array.prototype.slice.call(arguments)) || '');
+    return Ember.Helper.helper(function(...args) {
+      if (args.length > 1) {
+        args[1] = { hash: args[1] };
+      }
+      return new Handlebars.SafeString(fn.apply(this, args) || '');
     });
   } else {
     return Ember.Handlebars.makeBoundHelper(function() {

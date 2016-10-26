@@ -6,8 +6,8 @@ export default htmlHelper((user, args) => {
   if (!user) { return; }
 
   const name = escapeExpression(user.get('name'));
-  let currentUser = args.currentUser;
-  if (!currentUser && args.hash) {
+  let currentUser;
+  if (args && args.hash) {
     currentUser = args.hash.currentUser;
   }
 
