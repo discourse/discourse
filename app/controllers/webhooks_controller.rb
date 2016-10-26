@@ -133,6 +133,8 @@ class WebhooksController < ActionController::Base
       return if email_log.nil?
 
       email_log.update_columns(bounced: true)
+      return if email_log.user.nil? || email_log.user.email.blank?
+
       Email::Receiver.update_bounce_score(email_log.user.email, bounce_score)
     end
 
