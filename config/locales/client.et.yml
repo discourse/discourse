@@ -507,10 +507,7 @@ et:
       apps: "Äpid"
       revoke_access: "Tühista ligipääs"
       undo_revoke_access: "Tühista ligipääsu tühistamine"
-      api_permissions: "Õigused:"
       api_approved: "Heakskiidetud:"
-      api_read: "lugemine"
-      api_read_write: "lugemine ja kirjutamine"
       staff_counters:
         flags_given: "kasulikud tähised"
         flagged_posts: "tähistatud postitused"

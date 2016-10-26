@@ -18,6 +18,9 @@ nb_NO:
   log_in: "Logg inn"
   disable_remote_images_download_reason: "Nedlasting av bilder ble deaktivert grunnet mangel på tilgjengelig diskplass."
   anonymous: "Anonym"
+  emails:
+    incoming:
+      default_subject: "Innkommende epost fra %{email}"
   errors: &errors
     format: '%{attribute} %{message}'
     messages:
@@ -66,6 +69,7 @@ nb_NO:
       load_from_remote: "Det oppstod et problem med innlastingen av innlegget."
     site_settings:
       min_username_length_range: "Du kan ikke sette minimum høyere enn maksimum."
+      default_categories_already_selected: "Du kan ikke velge en annen kategori brukt i en annen liste."
   bulk_invite:
     file_should_be_csv: "Den opplastede filen må være i .csv eller .txt format."
   backup:
@@ -93,6 +97,14 @@ nb_NO:
     replies:
       one: "1 svar"
       other: "%{count} svar"
+  no_images_allowed: "Beklager, nye brukere kan ikke legge til bilder i et innlegg."
+  too_many_images:
+    one: "Beklager, nye brukere kan bare legge til ett bilde i et innlegg."
+    other: "Beklager, nye brukere kan bare legge til %{count} bilder i et innlegg."
+  no_attachments_allowed: "Beklager, nye brukere kan ikke laste opp vedlegg til et innlegg."
+  too_many_attachments:
+    one: "Beklager, nye brukere kan bare laste opp ett vedlegg til et innlegg."
+    other: "Beklager, nye brukere kan bare laste opp %{count} vedlegg til et innlegg."
   spamming_host: "Beklager, du kan ikke lenke til det domenet."
   user_is_suspended: "Utviste brukere kan ikke skrive innlegg."
   topic_not_found: "Noe gikk galt. Kanskje emnet har blitt lukket eller slettet samtidig som du har sett på det?"
@@ -114,6 +126,7 @@ nb_NO:
   rss_description:
     latest: "Siste emner"
     hot: "Populære emner"
+    top: "Mest Populære Emner"
     posts: "Nyeste innnlegg"
   too_late_to_edit: "Det innlegget ble laget for lenge siden. Det kan ikke lenger bli redigert eller slettet."
   excerpt_image: "bilde"

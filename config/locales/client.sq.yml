@@ -500,10 +500,7 @@ sq:
       apps: "Aplikimet"
       revoke_access: "Hiqi aksesin"
       undo_revoke_access: "Anullo heqjen e aksesit"
-      api_permissions: "Të drejtat"
       api_approved: "Aprovuar më:"
-      api_read: "lexuar"
-      api_read_write: "lexim e shkrim"
       staff_counters:
         flags_given: "sinjalizime të dobishme"
         flagged_posts: "postimet e sinjalizuara"

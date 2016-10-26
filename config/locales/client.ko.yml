@@ -457,10 +457,7 @@ ko:
       muted_users_instructions: "이 회원이 보낸 알림 모두 숨김"
       muted_topics_link: "알림을 끈 주제 보기"
       automatically_unpin_topics: "글 끝에 다다르면 자동으로 주제 고정을 해제합니다."
-      api_permissions: "사용 권한:"
       api_approved: "승인됨:"
-      api_read: "읽기"
-      api_read_write: "읽기와 쓰기"
       staff_counters:
         flags_given: "유용한 신고"
         flagged_posts: "신고된 글"

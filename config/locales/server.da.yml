@@ -569,7 +569,6 @@ da:
     authorize: "Autoriser"
     read: "læst"
     read_write: "læs/skriv"
-    description: "Ønsker du at give \"%{application_name}\" %{access} adgang til din konto?"
     no_trust_level: "Beklager, du har ikke adgang til brugerens API"
     generic_error: "Beklager, vi er ikke i stand til at give dig API nøgler, denne funktionalitet er muligvis bestemt af sitets administrator"
   reports:

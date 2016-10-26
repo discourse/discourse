@@ -136,6 +136,7 @@ it:
         enabled: 'listato %{when}'
         disabled: 'delistato %{when}'
     topic_admin_menu: "azioni amministrative sull'argomento"
+    wizard_required: "E' il momento di configurare il tuo forum! <a href='%{url}' data-auto-route='true'>Avvia la configurazione guidata</a>!"
     emails_are_disabled: "Tutte le email in uscita sono state disabilitate a livello globale da un amministratore. Non sarà inviata nessun tipo di notifica via email."
     bootstrap_mode_enabled: "Per aiutarti ad avviare il tuo nuovo sito, adesso sei in modalità bootstrap. Tutti i nuovi utenti saranno automaticamente promossi al livello 1 e riceveranno il riassunto quotidiano degli aggiornamenti via email. Questa modalità sarà disattivata automaticamente quando avrai più di %{min_users} utenti."
     bootstrap_mode_disabled: "La modalità bootstrap sarà disattivata entro 24 ore."
@@ -496,10 +497,7 @@ it:
       watched_topics_link: "Mostra argomenti osservati"
       automatically_unpin_topics: "Spunta automaticamente gli argomenti quando arrivi in fondo."
       revoke_access: "Revoca Accesso"
-      api_permissions: "Permessi:"
       api_approved: "Approvato:"
-      api_read: "lettura"
-      api_read_write: "lettura e scrittura"
       staff_counters:
         flags_given: "segnalazioni utili"
         flagged_posts: "messaggi segnalati"
@@ -665,9 +663,9 @@ it:
         rescind: "Rimuovi"
         rescinded: "Invito revocato"
         reinvite: "Rinvia Invito"
-        reinvite_all: "Re-invia tutti gli Inviti"
+        reinvite_all: "Rispedisci tutti gli Inviti"
         reinvited: "Invito rinviato"
-        reinvited_all: "Tutti gli inviti re-inviati"
+        reinvited_all: "Tutti gli inviti sono stati rispediti!"
         time_read: "Ora di Lettura"
         days_visited: "Presenza (giorni)"
         account_age_days: "Età dell'utente in giorni"
@@ -1782,7 +1780,7 @@ it:
         jump: '<b>#</b> Vai al messaggio n°'
         back: '<b>u</b> Indietro'
         up_down: '<b>k</b>/<b>j</b> Sposta la selezione &uarr; &darr;'
-        open: '<b>o</b> o <b>Enter</b> Apri l''argomento selezionato'
+        open: '<b>o</b> o <b>Invio</b> Apri argomento selezionato'
         next_prev: '<b>shift</b>+<b>j</b>/<b>shift</b>+<b>k</b> Prossima/precedente sezione'
       application:
         title: 'Applicazione'
@@ -1802,16 +1800,16 @@ it:
         pin_unpin_topic: '<b>shift</b>+<b>p</b> Appunta/Spunta argomento'
         share_topic: '<b>shift</b>+<b>s</b> Condividi argomento'
         share_post: '<b>s</b> Condividi messaggio'
-        reply_as_new_topic: '<b>t</b> Rispondi con argomento collegato'
+        reply_as_new_topic: '<b>t</b> Rispondi come argomento collegato'
         reply_topic: '<b>shift</b>+<b>r</b> Rispondi all''argomento'
         reply_post: '<b>r</b> Rispondi al messaggio'
-        quote_post: '<b>q</b> Quota messaggio'
+        quote_post: '<b>q</b> Cita messaggio'
         like: '<b>l</b> Metti "Mi piace" al messaggio'
-        flag: '<b>!</b> Segnala il messaggio'
+        flag: '<b>!</b> Segnala messaggio'
         bookmark: '<b>b</b> Aggiungi un segnalibro al messaggio'
-        edit: '<b>e</b> Modifica il messaggio'
-        delete: '<b>d</b> Cancella il messaggio'
-        mark_muted: '<b>m</b>, <b>m</b> Ignora argomento'
+        edit: '<b>e</b> Modifica messaggio'
+        delete: '<b>d</b> Cancella messaggio'
+        mark_muted: '<b>m</b>, <b>m</b> Silenzia argomento'
         mark_regular: '<b>m</b>, <b>r</b> Argomento normale (default)'
         mark_tracking: '<b>m</b>, <b>t</b> Segui argomento'
         mark_watching: '<b>m</b>, <b>w</b> Osserva argomento'
@@ -1823,21 +1821,21 @@ it:
       others_count: "Altri utenti con questo distintivo (%{count})"
       title: Distintivi
       allow_title: "titolo disponibile"
-      multiple_grant: "assegnata più volte"
+      multiple_grant: "assegnato più volte"
       badge_count:
         one: "1 Distintivo"
         other: "%{count} Distintivi"
       select_badge_for_title: Seleziona un distintivo da usare come tuo titolo
-      none: "<none>"
+      none: "<nessuno>"
       badge_grouping:
         getting_started:
-          name: Inizia
+          name: Iniziali
         community:
-          name: Community
+          name: Comunità
         trust_level:
           name: Livello Esperienza
         other:
-          name: Altro
+          name: Altri
         posting:
           name: Pubblicazione
     google_search: |
@@ -1871,19 +1869,19 @@ it:
       notifications:
         watching:
           title: "In osservazione"
-          description: "Visualizzerai automaticamente tutti gli argomenti di questa categoria. Riceverai una notifica per tutti i nuovi messaggi e argomenti. Inoltre, accanto all'argomento apparirà il conteggio dei messaggi non letti e di quelli nuovi."
+          description: "Visualizzerai automaticamente tutti gli argomenti con questa etichetta. Riceverai una notifica per tutti i nuovi messaggi e argomenti. Inoltre, accanto all'argomento apparirà il conteggio dei messaggi non letti e di quelli nuovi."
         watching_first_post:
           title: "Osservando Primo Messaggio"
-          description: "Riceverai solo la notifica per il primo messaggio di ogni nuovo argomenti in questa categoria."
+          description: "Riceverai solo la notifica per il primo messaggio di ogni nuovo argomenti con questa etichetta."
         tracking:
-          title: "Tracking"
-          description: "Seguirai automaticamente tutti gli argomenti di questa categoria. Accanto all'argomento visualizzerai un conteggio dei messaggi non letti e di quelli nuovi."
+          title: "Seguiti"
+          description: "Seguirai automaticamente tutti gli argomenti con questa etichetta. Accanto all'argomento apparirà un conteggio dei messaggi non letti e di quelli nuovi."
         regular:
           title: "Normale"
-          description: "Riceverai una notifica se qualcuno tagga il tuo @nome o risponde ad un tuo messaggio."
+          description: "Riceverai una notifica se qualcuno menziona il tuo @nome o risponde al tuo messaggio."
         muted:
           title: "Silenziato"
-          description: "Non riceverai nessuna notifiche dei nuovi argomenti in questa categoria, e non comparirà il tab dei messaggi non letti."
+          description: "Non riceverai alcuna notifica per nuovi argomenti con questa etichetta, e non compariranno nella tab dei messaggi non letti."
       groups:
         title: "Gruppi Etichette"
         about: "Aggiungi etichette a gruppi per poterle gestire più facilmente."
@@ -1919,10 +1917,10 @@ it:
           bookmarks: "Non ci sono ulteriori argomenti nei segnalibri."
           search: "Non ci sono ulteriori risultati di ricerca."
     invite:
-      custom_message: "Rendi il tuo invito un po' più personale scrivendo un"
+      custom_message: "Rendi l'invito un po' più personale scrivendo un"
       custom_message_link: "messaggio personalizzato"
       custom_message_placeholder: "Inserisci il tuo messaggio personalizzato"
-      custom_message_template_forum: "Hey, unisciti a questo forum!"
+      custom_message_template_forum: "Ehi, unisciti a questo forum!"
   admin_js:
     type_to_filter: "digita per filtrare..."
     admin:
@@ -2104,7 +2102,7 @@ it:
         save: "Salva"
         destroy: "Elimina"
         description: "Descrizione"
-        controls: "Controlli"
+        controls: "Componenti"
         go_back: "Torna all'elenco"
         payload_url: "Aggiungi URL"
         payload_url_placeholder: "https://example.com/postreceive"

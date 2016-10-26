@@ -111,6 +111,7 @@ es:
     operation_already_running: "Actualmente se está ejecutando una operación. No se puede iniciar un nuevo trabajo en este momento."
     backup_file_should_be_tar_gz: "El archivo de la copia de seguridad debería ser del tipo .tar.gz"
     not_enough_space_on_disk: "No hay espacio suficiente en el disco para subir esta copia de seguridad."
+    invalid_filename: "El nombre de archivo del backup contiene caracteres no válidos. Los válidos son a-z 0-9 . - _."
   not_logged_in: "Tienes que iniciar sesión para hacer eso."
   not_found: "No se ha podido encontrar la URL o recurso solicitado."
   invalid_access: "No tienes permiso para ver el recurso solicitado."
@@ -298,6 +299,10 @@ es:
         post_reply:
           base:
             different_topic: "El post y la respuesta deben pertenecer al mismo tema."
+        web_hook:
+          attributes:
+            payload_url:
+              invalid: "La URL no es válida. Debería incluir http:// or https://. Y no está permitido ningún espacio en blanco."
       <<: *errors
   user_profile:
     no_info_me: "<div class='missing-profile'>El campo 'Sobre mí' de tu perfil está vacío, <a href='/users/%{username_lower}/preferences/about-me'>¿Te gustaría completarlo?</a></div>"
@@ -572,9 +577,16 @@ es:
     authorize: "Autorizar"
     read: "lectura"
     read_write: "lectura/escritura"
-    description: "¿Quieres conceder a \"%{application_name}\" %{access} acceso a tu cuenta?"
+    description: "\"%{application_name}\" está solicitando el siguiente acceso a tu cuenta:"
     no_trust_level: "Lo sentimos, no tienes el nivel de confianza requerido para acceder a la API de usuario"
     generic_error: "Lo sentimos, no pudimos emitir claves API de usuario, esta funcionalidad puede estar desactivada por el administrador del sitio"
+    scopes:
+      message_bus: "Actualizaciones en tiempo real"
+      notifications: "Leer y despejar notificaciones"
+      push: "Notificaciones push a servicios externos"
+      session_info: "Leer información de la sesión del usuario"
+      read: "Leer todo"
+      write: "Escribir todo"
   reports:
     visits:
       title: "Visitas de usuario"
@@ -905,6 +917,7 @@ es:
     enable_facebook_logins: "Activar autenticación por Facebook, requiere una facebook_app_id y un facebook_app_secret"
     facebook_app_id: "App id para la autenticación por Facebook, registrado en https://developers.facebook.com/apps"
     facebook_app_secret: "App secret para autenticación por Facebook, registrado en https://developers.facebook.com/apps"
+    facebook_request_extra_profile_details: "Solicitar sobre mí, localización y sitio web desde facebook. (requiere que tu aplicación de autenticación esté aprobada por facebook)"
     enable_github_logins: "Activar autenticación por Github, requiere una github_client_id y un github_client_secret"
     github_client_id: "Client id para la autenticación por Github, registrado en https://github.com/settings/applications"
     github_client_secret: "Client secret para la autenticación por Github, registrado en https://github.com/settings/applications"
@@ -958,6 +971,7 @@ es:
     external_system_avatars_enabled: "Usar un servicio externo para los avatares."
     external_system_avatars_url: "Dirección URL del servicio externo para los avatares. Sustituciones permitidas: {username} {first_letter} {color} {size}"
     default_opengraph_image_url: "URL de la imagen opengraph por defecto."
+    twitter_summary_large_image_url: "URL de la imagen por defecto para la tarjeta resumen de Twitter (debería ser al menos de 280px de ancho y 150 px de alto)."
     allow_all_attachments_for_group_messages: "Permitir todos los archivos adjuntos de email para los mensajes a grupos."
     convert_pasted_images_to_hq_jpg: "Convertir imágenes pegadas en archivos JPG de alta calidad."
     convert_pasted_images_quality: "Calidad del archivo JPG convertido  (1 es calidad mínima, 100 es máxima calidad)."
@@ -990,6 +1004,7 @@ es:
     tl3_links_no_follow: "No remover rel=nofollow de los enlaces publicados por usuarios con nivel de confianza 3."
     min_trust_to_create_topic: "El mínimo nivel de confianza requerido para crear un nuevo tema."
     min_trust_to_edit_wiki_post: "El mínimo nivel de confianza requerido para editar un post marcado como wiki."
+    min_trust_to_edit_post: "El mínimo nivel de confianza requerido para editar posts."
     min_trust_to_allow_self_wiki: "El mínimo nivel de confianza requerido para que un usuario convierta sus propios posts a wiki."
     min_trust_to_send_messages: "Mínimo nivel de confianza requerido para crear nuevos mensajes directos."
     newuser_max_links: "Cuántos enlaces puede un nuevo usuario añadir a un post."
@@ -1127,6 +1142,7 @@ es:
     automatically_unpin_topics: "Quitar destacado automáticamente cuando el usuario llega al final del tema."
     read_time_word_count: "Número de palabras por minuto para calcular el tiempo de lectura estimado."
     topic_page_title_includes_category: "El título de la página del tema incluye el nombre de la categoría."
+    max_prints_per_hour_per_user: "Número máximo de impresiones de página /print (pon un 0 para desactivar esta opción)"
     full_name_required: "El nombre completo es un campo obligatorio del perfil de usuario."
     enable_names: "Mostrar el nombre completo del usuario en su perfil, tarjeta de usuario y emails. Desactiva esta opción para ocultar el nombre completo en todas partes."
     display_name_on_posts: "Mostrar el nombre completo de un usuario en sus posts, además de su @usuario."
@@ -1160,6 +1176,7 @@ es:
     enforce_square_emoji: "Forzar una relación de aspecto cuadrada para todos los emojis."
     approve_post_count: "La cantidad de posts que deben ser aprobados de usuarios nuevos o de nivel básico"
     approve_unless_trust_level: "Los posts de usuarios con un nivel de confianza inferior a este deberán ser aprobados"
+    approve_new_topics_unless_trust_level: "Los nuevos temas de usuarios por debajo de este nivel de confianza deben ser aprobados"
     notify_about_queued_posts_after: "Si hay publicaciones que han estado esperando para ser revisadas por más de este número de horas, se enviará un email a la dirección de contacto del sitio. Pon 0 para desactivar estos emails."
     auto_close_messages_post_count: "Máximo número de publicaciones permitidas en un mensaje antes de que sea cerrado automáticamente (0 para desactivar)"
     auto_close_topics_post_count: "Máximo número de publicaciones permitidas en un tema antes de que sea cerrado automáticamente (0 para desactivar)"

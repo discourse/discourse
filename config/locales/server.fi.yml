@@ -2505,6 +2505,8 @@ fi:
     staff_tag_disallowed: "Tunnisteen \"%{tag}\" voi lisätä vain henkilökunta"
     staff_tag_remove_disallowed: "Tunnisteen \"%{tag}\" voi poistaa vain henkilökunta"
   rss_by_tag: "Ketjut tunnisteella %{tag}"
+  first_installation:
+    congratulations: "Onneksi olkoon, asensit Discoursen!"
   wizard:
     title: "Discoursen asennus"
     step:

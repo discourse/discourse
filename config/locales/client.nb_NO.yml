@@ -38,6 +38,7 @@ nb_NO:
       long_date_with_year_without_time: "D MMM, 'YY"
       long_date_without_year_with_linebreak: "D MMM <br/>LT"
       long_date_with_year_with_linebreak: "D MMM, 'YY <br/>LT"
+      wrap_ago: "%{date} siden"
       tiny:
         half_a_minute: "< 1m"
         less_than_x_seconds:
@@ -112,6 +113,7 @@ nb_NO:
       private_topic: "gjorde dette emnet privat %{when}"
       invited_user: "inviterte %{who} %{when}"
       removed_user: "fjernet %{who} %{when}"
+      removed_group: "fjernet %{who} %{when}"
       autoclosed:
         enabled: 'lukket %{when}'
         disabled: 'åpnet %{when}'
@@ -128,6 +130,12 @@ nb_NO:
         enabled: 'festet globalt %{when}'
     topic_admin_menu: "admin-handlinger for emne"
     emails_are_disabled: "All utgående e-post har blitt deaktivert globalt av en administrator. Ingen e-postvarslinger vil bli sendt."
+    bootstrap_mode_disabled: "Bootstrap modus vil være deaktivert i de neste 24 timene"
+    s3:
+      regions:
+        eu_west_1: "EU (Irland)"
+        eu_central_1: "EU (Frankfurt)"
+        cn_north_1: "Kina (Beijing)"
     edit: 'rediger tittelen og kategorien til dette emnet'
     not_implemented: "Beklager, denne funksjonen har ikke blitt implementert enda."
     no_value: "Nei"

@@ -537,10 +537,7 @@ ro:
       apps: "Aplicații"
       revoke_access: "Revocă accesul"
       undo_revoke_access: "Anulează revocarea accesului"
-      api_permissions: "Permisiuni:"
       api_approved: "Aprobate:"
-      api_read: "citire"
-      api_read_write: "citire și scriere"
       staff_counters:
         flags_given: "Marcaje ajutătoare"
         flagged_posts: "Postări marcate"

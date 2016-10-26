@@ -111,6 +111,7 @@ it:
     operation_already_running: "Una operazione è in esecuzione. Non è possibile avviarne una nuova adesso."
     backup_file_should_be_tar_gz: "Il file di backup deve essere un archivio .tar.gz"
     not_enough_space_on_disk: "Non c'è abbastanza spazio su disco per caricare questo backup."
+    invalid_filename: "Il nome del file di backup contiene caratteri non validi. I caratteri validi sono a-z 0-9 . - _."
   not_logged_in: "Devi essere connesso per farlo."
   not_found: "L'URL o la risorsa richiesta non sono stati trovati."
   invalid_access: "Non hai il permesso di vedere la risorsa richiesta."
@@ -298,6 +299,10 @@ it:
         post_reply:
           base:
             different_topic: "Il messaggio e la risposta devono appartenere allo stesso argomento."
+        web_hook:
+          attributes:
+            payload_url:
+              invalid: "La URL non è valida. La URL dovrebbe iniziare per http:// o https:// e nessuno spazio non è ammesso. "
       <<: *errors
   user_profile:
     no_info_me: "<div class='missing-profile'>il campo \"Su di me\" del tuo profilo è vuoto, <a href='/users/%{username_lower}/preferences/about-me'>vuoi compilarlo?</a></div>"
@@ -802,7 +807,7 @@ it:
     enable_badges: "Attiva il sistema a distintivi"
     allow_index_in_robots_txt: "Specifica nel file robots.txt che questo sito permette l'indicizzazione da parte dei motori di ricerca."
     email_domains_blacklist: "Una lista di domini email separati dal carattere pipe \"|\" con cui gli utenti non possono registrare un account. Ad esempio: mailinator.com/trashmail.net"
-    forgot_password_strict: "Non informare gli utenti dell'esistenza dell'account quando richiamano la finestra per la password dimenticata."
+    forgot_password_strict: "Non informare gli utenti dell'esistenza o meno dell'account quando richiamano la funzione per la password dimenticata."
     log_out_strict: "Quando ci si disconnette, esci da TUTTE le sessioni dell'utente su tutti i dispositivi"
     version_checks: "Verifica su Discourse Hub l'esistenza di aggiornamenti e mostra i messaggi per le nuove versioni nel cruscotto /admin"
     new_version_emails: "Invia un'email all'indirizzo contact_email quando è disponibile una nuova versione di Discourse."
@@ -1170,8 +1175,24 @@ it:
       subject_template: "Backup fallito"
     restore_succeeded:
       subject_template: "Il ripristino è avvenuto con successo."
+      text_body_template: |
+        Il ripristino è avvenuto con successo.
+
+        Ecco il rapporto:
+
+        ```text
+        %{logs}
+        ```
     restore_failed:
       subject_template: "Ripristino fallito"
+      text_body_template: |
+        Il ripristino è fallito.
+
+        Ecco il rapporto:
+
+        ```text
+        %{logs}
+        ```
     bulk_invite_succeeded:
       subject_template: "Invito di massa processato con successo"
       text_body_template: "Il tuo file con l'invito di massa è stato processato, %{sent} inviti spediti."
@@ -1181,8 +1202,24 @@ it:
       subject_template: "Esportazione dati completa"
     csv_export_failed:
       subject_template: "Esportazione dati fallita"
+    email_reject_insufficient_trust_level:
+      subject_template: "[%{site_name}] Problema email -- Livello Esperienza Insufficiente"
+    email_reject_screened_email:
+      subject_template: "[%{site_name}] Problema email -- Email Bloccata"
+      text_body_template: |
+        Spiacenti, il tuo messaggio email a %{destination} (intitolato %{former_title}) non ha funzionato.
+
+        La tua risposta è stata inviata da un indirizzo email bloccato. Prova a spedire da un altro indirizzo email, oppure contatta un membro dello staff.
+    email_reject_inactive_user:
+      subject_template: "[%{site_name}] Problema email -- Utente Inattivo"
+    email_reject_blocked_user:
+      subject_template: "[%{site_name}] Problema email -- Utente Bloccato"
     email_reject_no_account:
       subject_template: "[%{site_name}] Problema relativo all'email -- Account Sconosciuto"
+      text_body_template: |
+        Ci dispiace, ma il tuo messaggio email per %{destination} (intitolato %{former_title}) non ha funzionato.
+
+        Non esiste un account con quell'indirizzo email. Prova ad inviarla a un altro indirizzo o contatta un membro dello staff.
     email_reject_empty:
       subject_template: "[%{site_name}] Problema relativo all'email -- Nessun Contenuto"
     email_reject_invalid_access:

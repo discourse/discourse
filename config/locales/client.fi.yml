@@ -594,6 +594,7 @@ fi:
         title: "Käyttöliittymän kieli"
         instructions: "Käyttöliittymän kieli. Kieli vaihtuu sivun uudelleen lataamisen yhteydessä."
         default: "(oletus)"
+        any: "mikä tahansa"
       password_confirmation:
         title: "Salasana uudelleen"
       last_posted: "Viimeisin viesti"
@@ -1131,6 +1132,7 @@ fi:
     not_logged_in_user: 'käyttäjäsivu, jossa on tiivistelmä käyttäjän viimeaikaisesta toiminnasta sekä käyttäjäasetukset'
     current_user: 'siirry omalle käyttäjäsivullesi'
     topics:
+      new_messages_marker: "edellinen vierailu"
       bulk:
         unlist_topics: "Poista ketjuja listauksista"
         reset_read: "Palauta lukutila"

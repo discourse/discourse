@@ -577,9 +577,16 @@ fr:
     authorize: "Autoriser"
     read: "lecture"
     read_write: "lecture/écriture"
-    description: "Voulez-vous autoriser à \"%{application_name}\" l'accès en %{access} à votre compte ?"
+    description: "« %{application_name} » demande l'accès suivant à votre compte :"
     no_trust_level: "Désolé, vous n'avez pas le niveau de confiance requis pour accéder à l'API utilisateur"
     generic_error: "Désolé, nous n'avons pu générer de clés pour l'API utilisateur, cette fonctionnalité peut être désactivée par l'administrateur"
+    scopes:
+      message_bus: "Mises à jour en temps réel"
+      notifications: "Lire et supprimer les notifications"
+      push: "Envoyer des notifications à des services externes"
+      session_info: "Lire les informations de la session utilisateur"
+      read: "Tout lire"
+      write: "Tout écrire"
   reports:
     visits:
       title: "Visites d'utilisateurs"
@@ -1198,9 +1205,8 @@ fr:
     default_categories_muted: "Liste de catégories silencées par défaut."
     max_user_api_reqs_per_day: "Nombre maximum de requêtes de l'API utilisateur par clé et par jour"
     max_user_api_reqs_per_minute: "Nombre maximum de requêtes de l'API utilisateur par clé et par minute"
-    allow_read_user_api_keys: "Autoriser la génération de clés en lecture seule pour l'API utilisateur"
-    allow_write_user_api_keys: "Autoriser la génération de clés en écriture pour l'API utilisateur"
-    allow_push_user_api_keys: "Autoriser la génération de clés pour utiliser le service push pour l'API utilisateur"
+    allow_user_api_keys: "Autoriser la génération des clés de l'API utilisateur"
+    allow_user_api_key_scopes: "Liste des champs d'action autorisés pour les clés de l'API utilisateur"
     max_api_keys_per_user: "Nombre maximum de clés de l'API utilisateur par utilisateur"
     min_trust_level_for_user_api_key: "Niveau de confiance requis pour générer des clés pour l'API utilisateur"
     allowed_user_api_auth_redirects: "URL autorisées pour la redirection d'authentification pour les clés de l'API utilisateur"
@@ -2622,6 +2628,16 @@ fr:
     staff_tag_disallowed: "Le tag \"%{tag}\" ne peut être mis que par un responsable."
     staff_tag_remove_disallowed: "Le tag \"%{tag}\" ne peut être retiré que par un responsable."
   rss_by_tag: "Sujets avec le tag %{tag}"
+  first_installation:
+    congratulations: "Félicitations, vous avez installé Discourse !"
+    register:
+      button: "Créer"
+      title: "Créer un compte administrateur"
+      help: "créez un nouveau compte pour commencer"
+      no_emails: "Malheureusement aucune adresse courriel d'administrateur n'a été définie lors de la configuration ; finaliser la configuration <a href='https://meta.discourse.org/t/how-to-create-an-administrator-account-after-install/14046'>peut être compliqué</a>."
+    confirm_email:
+      title: "Confirmer votre adresse courriel"
+      message: "<p>Nous avons envoyé un courriel d’activation à <b>%{email}</b>. Veuillez suivre les instructions du courriel pour activer votre compte.</p><p>S'il n'est pas réceptionné, assurez-vous que l'adresse courriel est correctement configurée pour votre Discourse et vérifiez vos courriers indésirables.</p>"
   wizard:
     title: "Configuration de Discourse"
     step:

@@ -16,7 +16,7 @@ vi:
           format: '%n %u'
           units:
             byte:
-              other: Byte
+              other: Bytes
             gb: GB
             kb: KB
             mb: MB
@@ -26,6 +26,7 @@ vi:
         millions: "{{number}}M"
     dates:
       time: "h:mm a"
+      timeline_date: "MMM YYYY"
       long_no_year: "MMM D h:mm a"
       long_no_year_no_time: "MMM D"
       full_no_year_no_time: "MMMM Do"
@@ -37,8 +38,9 @@ vi:
       long_date_with_year_without_time: "MMM D, 'YY"
       long_date_without_year_with_linebreak: "MMM D <br/>LT"
       long_date_with_year_with_linebreak: "MMM D, 'YY <br/>LT"
+      wrap_ago: "%{date} ngày trước"
       tiny:
-        half_a_minute: "< 1m"
+        half_a_minute: "< 1 phút"
         less_than_x_seconds:
           other: "< %{count}s"
         x_seconds:
@@ -90,9 +92,13 @@ vi:
       google+: 'chia sẻ lên Google+'
       email: 'Gửi liên kết này qua thư điện tử'
     action_codes:
+      public_topic: "Hiển thị chủ đề này lúc %{when}"
+      private_topic: "Ẩn chủ đề này lúc %{when}"
       split_topic: "chìa chủ đề này lúc %{when}"
       invited_user: "đã mời bởi %{who} %{when}"
+      invited_group: "Được mời bởi %{who} vào lúc %{when}"
       removed_user: "loại bỏ bởi %{who} %{when}"
+      removed_group: "Bị loại bỏ bởi %{who} vào lúc %{when}"
       autoclosed:
         enabled: 'đóng lúc %{when}'
         disabled: 'mở lúc %{when}'
@@ -221,6 +227,8 @@ vi:
     undo: "Hoàn tác"
     revert: "Phục hồi"
     failed: "Thất bại"
+    switch_to_anon: "Vào chế độ Ẩn danh"
+    switch_from_anon: "Thoát chế độ Ẩn danh"
     banner:
       close: "Xóa biểu ngữ này."
       edit: "Sửa banner này >>"
@@ -268,6 +276,8 @@ vi:
       title: "Thành viên"
       likes_given: "Đưa ra"
       likes_received: "Đã nhận"
+      topics_entered: "Đã xem"
+      topics_entered_long: "Chủ đề đã xem"
       time_read: "Thời gian đọc"
       topic_count: "Chủ đề"
       topic_count_long: "Chủ đề đã được tạo"
@@ -291,6 +301,7 @@ vi:
       selector_placeholder: "Thêm thành viên"
       owner: "chủ"
       visible: "Mọi thành viên có thể nhìn thấy nhóm"
+      index: "Nhóm"
       title:
         other: "các nhóm"
       members: "Các thành viên"
@@ -312,6 +323,9 @@ vi:
         watching:
           title: "Đang xem"
           description: "Bạn sẽ được thông báo khi có bài viết mới trong mỗi tin nhắn, và số lượng trả lời mới sẽ được hiển thị"
+        watching_first_post:
+          title: "Theo dõi chủ đề đầu tiên"
+          description: "Bạn sẽ được thông báo về bài viết đầu tiên của mỗi chủ đề mới trong nhóm này"
         tracking:
           title: "Đang theo dõi"
           description: "Bạn sẽ được thông báo nếu ai đó đề cập đến @tên bạn hoặc trả lời bạn, và số lượng trả lời mới sẽ được hiển thị"
@@ -354,6 +368,8 @@ vi:
       latest_by: "mới nhất bởi"
       toggle_ordering: "chuyển lệnh kiểm soát"
       subcategories: "Phân loại phụ"
+      topic_sentence:
+        other: "%{count} chủ đề"
       topic_stat_sentence:
         other: "%{count} số lượng chủ đề mới tỏng quá khứ %{unit}."
     ip_lookup:
@@ -400,6 +416,7 @@ vi:
         disable: "Khóa Notification"
         enable: "Cho phép Notification"
         each_browser_note: "Lưu ý: Bạn phải thay đổi trong cấu hình mỗi trình duyệt bạn sử dụng."
+      dismiss_notifications: "Bỏ qua tất cả"
       dismiss_notifications_tooltip: "Đánh dấu đã đọc cho tất cả các thông báo chưa đọc"
       disable_jump_reply: "Đừng tới bài viết của tôi sau khi tôi trả lời"
       dynamic_favicon: "Hiện số chủ đề mới / cập nhật vào biểu tượng trình duyệt"
@@ -414,6 +431,12 @@ vi:
       suspended_notice: "Thành viên này bị đình chỉ cho đến ngày {{date}}. "
       suspended_reason: "Lý do: "
       github_profile: "Github"
+      email_activity_summary: "Tóm tắt hoạt động"
+      mailing_list_mode:
+        label: "Chế độ mailing list"
+        enabled: "Bật chế độ mailing list"
+        daily: "Gửi cập nhật hàng ngày"
+        individual: "Gửi email cho mỗi bài viết mới."
       watched_categories: "Xem"
       tracked_categories: "Theo dõi"
       muted_categories: "Im lặng"

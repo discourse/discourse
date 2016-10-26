@@ -587,7 +587,7 @@ bs_BA:
         create: "Pošalji Pozivnicu"
         generate_link: "Kopiraj link za invite"
         bulk_invite:
-          none: "You haven't invited anyone here yet. You can send individual invites, or invite a bunch of people at once by <a href='https://revolucionar.com/t/send-bulk-invites/16468'>uploading a bulk invite file</a>."
+          none: "Još niste nikoga pozvali ovdje. Moete slati pojedinačne pozivnice ili pozvati više ljudi odjednom <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>učitavanjem datoteke za grupno pozivanje</a>."
           text: "Bulk Invite from File"
           uploading: "Uploading..."
           success: "File uploaded successfully, you will be notified shortly with progress."
@@ -1229,6 +1229,8 @@ bs_BA:
         help: "Ova tema je zatvorena; zvanično ne prima nove postove"
       archived:
         help: "Ova tema je arhivirana; zaleđena je i ne može biti promjenjena"
+      locked_and_archived:
+        help: "Ova tema je zatvorena i arhivirana; zvanično ne prima nove postove"
       unpinned:
         title: "Unpinned"
         help: "This topic is unpinned; it will display in default order"
@@ -1278,7 +1280,16 @@ bs_BA:
       unread:
         help: "teme koje trenutno pratite i motrite sa nepročitanim postovima"
       new:
+        lower_title_with_count:
+          one: "1 novi"
+          few: "{{count}} nova"
+          other: "{{count}} novih"
         lower_title: "nova"
+        title: "Novo"
+        title_with_count:
+          one: "Novo (1)"
+          few: "Novo ({{count}})"
+          other: "Novo ({{count}})"
         help: "teme kreirane u zadnjih nekoliko dana"
       posted:
         title: "Moji Odgovori"
@@ -1305,7 +1316,7 @@ bs_BA:
   admin_js:
     type_to_filter: "kucaj da sortiraš..."
     admin:
-      title: 'Revolucionar Admin'
+      title: 'Discourse Admin'
       moderator: 'Moderator'
       dashboard:
         title: "Dashboard"
@@ -1320,7 +1331,7 @@ bs_BA:
         version_check_pending: "Looks like you upgraded recently. Fantastic!"
         installed_version: "Installed"
         latest_version: "Najnovije"
-        problems_found: "Problemi su nađeni sa instalacijom Revolucionara:"
+        problems_found: "Pronašli smo probleme s vašom instalacijom Discoursea:"
         last_checked: "Zadnje pogledani"
         refresh_problems: "Osvježi"
         no_problems: "No problems were found."
@@ -1330,7 +1341,12 @@ bs_BA:
         suspended: 'Suspended:'
         private_messages_short: "PP"
         private_messages_title: "Privatne Poruke"
+        mobile_title: "Mobiteli"
         space_free: "{{size}} slobodno"
+        uploads: "Učitavanja"
+        backups: "backupovi"
+        page_views_short: "API pozivi"
+        show_traffic_report: "Pokaži detaljan izvještaj prometa"
         reports:
           today: "Today"
           yesterday: "Yesterday"
@@ -1418,6 +1434,18 @@ bs_BA:
         info_html: "Your API key will allow you to create and update topics using JSON calls."
         all_users: "All Users"
         note_html: "Keep this key <strong>secret</strong>, all users that have it may create arbitrary posts as any user."
+      plugins:
+        title: "Pluginovi"
+        installed: "Instalirani pluginovi"
+        name: "Ime"
+        none_installed: "Nemate instaliran niti jedan plugin"
+        version: "Verzija"
+        enabled: "Omogućen?"
+        is_enabled: "Da"
+        not_enabled: "Ne"
+        change_settings: "Izmijeni postavke"
+        change_settings_short: "Postavke"
+        howto: "Kako instaliram pluginove?"
       backups:
         title: "Backups"
         menu:
@@ -1899,6 +1927,11 @@ bs_BA:
             with_post: <span class="username">%{username}</span> for post in %{link}
             with_post_time: <span class="username">%{username}</span> for post in %{link} at <span class="time">%{time}</span>
             with_time: <span class="username">%{username}</span> at <span class="time">%{time}</span>
+      emoji:
+        add: "Dodaj novi emoji"
+      permalink:
+        form:
+          label: "Novo:"
   wizard_js:
     wizard:
       back: "Prethodno"
