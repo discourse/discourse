@@ -765,7 +765,7 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
     const selectedReplies = this.get('selectedReplies');
     selectedReplies.removeObject(post);
 
-    const selectedReply = selectedReplies.findProperty('post_number', post.get('reply_to_post_number'));
+    const selectedReply = selectedReplies.findBy('post_number', post.get('reply_to_post_number'));
     if (selectedReply) { selectedReplies.removeObject(selectedReply); }
 
     this.set('allPostsSelected', false);
@@ -774,7 +774,7 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
   postSelected(post) {
     if (this.get('allPostsSelected')) { return true; }
     if (this.get('selectedPosts').contains(post)) { return true; }
-    if (this.get('selectedReplies').findProperty('post_number', post.get('reply_to_post_number'))) { return true; }
+    if (this.get('selectedReplies').findBy('post_number', post.get('reply_to_post_number'))) { return true; }
 
     return false;
   },

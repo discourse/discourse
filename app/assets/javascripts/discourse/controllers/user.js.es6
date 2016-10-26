@@ -76,7 +76,7 @@ export default Ember.Controller.extend(CanCheckEmails, {
     const siteUserFields = this.site.get('user_fields');
     if (!Ember.isEmpty(siteUserFields)) {
       const userFields = this.get('model.user_fields');
-      return siteUserFields.filterProperty('show_on_profile', true).sortBy('position').map(field => {
+      return siteUserFields.filterBy('show_on_profile', true).sortBy('position').map(field => {
         field.dasherized_name = field.get('name').dasherize();
         const value = userFields ? userFields[field.get('id').toString()] : null;
         return Ember.isEmpty(value) ? null : Ember.Object.create({ value, field });

@@ -463,11 +463,11 @@ export default createWidget('post', {
 
   undoPostAction(typeId) {
     const post = this.model;
-    return post.get('actions_summary').findProperty('id', typeId).undo(post);
+    return post.get('actions_summary').findBy('id', typeId).undo(post);
   },
 
   deferPostActionFlags(typeId) {
     const post = this.model;
-    return post.get('actions_summary').findProperty('id', typeId).deferFlags(post);
+    return post.get('actions_summary').findBy('id', typeId).deferFlags(post);
   }
 });

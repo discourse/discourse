@@ -56,7 +56,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
     // Validate required fields
     let userFields = this.get('userFields');
-    if (userFields) { userFields = userFields.filterProperty('field.required'); }
+    if (userFields) { userFields = userFields.filterBy('field.required'); }
     if (!Ember.isEmpty(userFields)) {
       const anyEmpty = userFields.any(function(uf) {
         const val = uf.get('value');

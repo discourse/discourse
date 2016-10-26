@@ -153,7 +153,7 @@ const User = RestModel.extend({
 
   @computed("trust_level")
   trustLevel(trustLevel) {
-    return Discourse.Site.currentProp('trustLevels').findProperty('id', parseInt(trustLevel, 10));
+    return Discourse.Site.currentProp('trustLevels').findBy('id', parseInt(trustLevel, 10));
   },
 
   isBasic: Em.computed.equal('trust_level', 0),
@@ -525,7 +525,7 @@ User.reopenClass(Singleton, {
       action_type: UserAction.TYPES.replies
     });
 
-    stats.filterProperty('isResponse').forEach(stat => {
+    stats.filterBy('isResponse').forEach(stat => {
       responses.set('count', responses.get('count') + stat.get('count'));
     });
 

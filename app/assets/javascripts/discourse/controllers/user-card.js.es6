@@ -41,7 +41,7 @@ export default Ember.Controller.extend({
     const siteUserFields = this.site.get('user_fields');
     if (!Ember.isEmpty(siteUserFields)) {
       const userFields = this.get('user.user_fields');
-      return siteUserFields.filterProperty('show_on_user_card', true).sortBy('position').map(field => {
+      return siteUserFields.filterBy('show_on_user_card', true).sortBy('position').map(field => {
         Ember.set(field, 'dasherized_name', field.get('name').dasherize());
         const value = userFields ? userFields[field.get('id')] : null;
         return Ember.isEmpty(value) ? null : Ember.Object.create({ value, field });

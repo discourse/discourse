@@ -76,7 +76,7 @@ const Post = RestModel.extend({
 
   internalLinks: function() {
     if (Ember.isEmpty(this.get('link_counts'))) return null;
-    return this.get('link_counts').filterProperty('internal').filterProperty('title');
+    return this.get('link_counts').filterBy('internal').filterBy('title');
   }.property('link_counts.@each.internal'),
 
   flagsAvailable: function() {

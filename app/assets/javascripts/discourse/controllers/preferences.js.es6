@@ -25,7 +25,7 @@ export default Ember.Controller.extend(CanCheckEmails, {
 
       // Staff can edit fields that are not `editable`
       if (!this.get('currentUser.staff')) {
-        siteUserFields = siteUserFields.filterProperty('editable', true);
+        siteUserFields = siteUserFields.filterBy('editable', true);
       }
       return siteUserFields.sortBy('position').map(function(field) {
         const value = userFields ? userFields[field.get('id').toString()] : null;

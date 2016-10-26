@@ -50,7 +50,7 @@ export default Ember.Component.extend({
 
         const posts = topic.get('postStream.posts');
         if (posts && topicId === topic.get('id')) {
-          const quotedPost = posts.findProperty("post_number", postNumber);
+          const quotedPost = posts.findBy("post_number", postNumber);
           if (quotedPost) {
             return tinyAvatar(quotedPost.get('avatar_template'));
           }

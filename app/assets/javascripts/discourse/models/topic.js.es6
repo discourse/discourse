@@ -120,7 +120,7 @@ const Topic = RestModel.extend({
     const categoryName = this.get('categoryName');
     let category;
     if (categoryName) {
-      category = Discourse.Category.list().findProperty('name', categoryName);
+      category = Discourse.Category.list().findBy('name', categoryName);
     }
     this.set('category', category);
   }.observes('categoryName'),
@@ -213,7 +213,7 @@ const Topic = RestModel.extend({
   }.property('views'),
 
   archetypeObject: function() {
-    return Discourse.Site.currentProp('archetypes').findProperty('id', this.get('archetype'));
+    return Discourse.Site.currentProp('archetypes').findBy('id', this.get('archetype'));
   }.property('archetype'),
 
   isPrivateMessage: Em.computed.equal('archetype', 'private_message'),
