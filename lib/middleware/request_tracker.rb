@@ -79,7 +79,7 @@ class Middleware::RequestTracker
 
     if data
       if result && (headers=result[1])
-        headers["X-Discourse-TrackView"] = 1 if data[:track_view]
+        headers["X-Discourse-TrackView"] = "1" if data[:track_view]
       end
       log_later(data,host)
     end
