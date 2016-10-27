@@ -5,7 +5,7 @@ export function htmlHelper(fn) {
   if (Ember.Helper) {
     return Ember.Helper.helper(function(...args) {
       if (args.length > 1) {
-        args[1] = { hash: args[1] };
+        args = args[0].concat(args[args.length-1]);
       }
       return new Handlebars.SafeString(fn.apply(this, args) || '');
     });
