@@ -57,7 +57,6 @@ Discourse::Application.routes.draw do
 
   get "site_customizations/:key" => "site_customizations#show"
 
-  resources :forums
   get "srv/status" => "forums#status"
 
   get "wizard" => "wizard#index"
