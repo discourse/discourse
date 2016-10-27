@@ -7,7 +7,6 @@ import DiscourseLocation from 'discourse/lib/discourse-location';
 import SearchService from 'discourse/services/search';
 import { startTracking, default as TopicTrackingState } from 'discourse/models/topic-tracking-state';
 import ScreenTrack from 'discourse/lib/screen-track';
-import TopicFooterButtons from 'discourse/components/topic-footer-buttons';
 
 function inject() {
   const app = arguments[0],
@@ -72,13 +71,6 @@ export default {
     const keyValueStore = new KeyValueStore("discourse_");
     app.register('key-value-store:main', keyValueStore, { instantiate: false });
     injectAll(app, 'keyValueStore');
-
-    Discourse.TopicFooterButtonsView = {
-      reopen(obj) {
-        Ember.warn('`Discourse.TopicFooterButtonsView` is deprecated. Use the `topic-footer-buttons` component instead');
-        TopicFooterButtons.reopen(obj);
-      }
-    };
 
     startTracking(topicTrackingState);
   }

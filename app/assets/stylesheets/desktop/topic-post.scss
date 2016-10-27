@@ -436,6 +436,11 @@ a.star {
     margin-right: 10px;
     .fa-bookmark.bookmarked { color: $tertiary; }
   }
+
+  .bookmark.bookmarked .fa-bookmark {
+    color: $tertiary;
+  }
+
   .notification-options p {
     display: inline-block;
   }

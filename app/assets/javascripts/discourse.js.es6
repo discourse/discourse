@@ -135,15 +135,6 @@ const Discourse = Ember.Application.extend({
         }
       });
     });
-
-    const utils = require('discourse/lib/utilities');
-    Discourse.Utilities = {};
-    Object.keys(utils).forEach(function(k) {
-      Discourse.Utilities[k] = function() {
-        Ember.warn('Discourse.Utilities is deprecated. Import it as a module');
-        return utils[k].apply(utils, arguments);
-      };
-    });
   },
 
   @computed('currentAssetVersion', 'desiredAssetVersion')
