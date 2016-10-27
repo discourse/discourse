@@ -15,6 +15,11 @@ export default Ember.Component.extend(bufferedRender({
     this.setProperties({ formattedLogs: "", index: 0 });
   },
 
+  _scrollDown() {
+    const $div = this.$()[0];
+    $div.scrollTop = $div.scrollHeight;
+  },
+
   _updateFormattedLogs: debounce(function() {
     const logs = this.get("logs");
     if (logs.length === 0) {
@@ -32,6 +37,7 @@ export default Ember.Component.extend(bufferedRender({
       // force rerender
       this.rerenderBuffer();
     }
+    Ember.run.scheduleOnce('afterRender', this, this._scrollDown);
   }, 150).observes("logs.[]").on('init'),
 
   buildBuffer(buffer) {
@@ -47,11 +53,5 @@ export default Ember.Component.extend(bufferedRender({
     if (this.get("status.isOperationRunning")) {
       buffer.push(renderSpinner('small'));
     }
-  },
-
-  didInsertElement() {
-    this._super();
-    const $div = this.$()[0];
-    $div.scrollTop = $div.scrollHeight;
-  },
+  }
 }));
