@@ -59,7 +59,7 @@ export default Combobox.extend({
         refresh();
         break;
       case 'flag':
-        controller.send('showFlagTopic', topic);
+        controller.send('showFlagTopic');
         refresh();
         break;
     }

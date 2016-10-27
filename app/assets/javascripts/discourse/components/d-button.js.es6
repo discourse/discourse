@@ -1,6 +1,9 @@
 import { default as computed } from 'ember-addons/ember-computed-decorators';
 
 export default Ember.Component.extend({
+  // subclasses need this
+  layoutName: 'components/d-button',
+
   tagName: 'button',
   classNameBindings: [':btn', 'noText'],
   attributeBindings: ['disabled', 'translatedTitle:title'],

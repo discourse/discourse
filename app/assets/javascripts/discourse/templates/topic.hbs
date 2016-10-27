@@ -147,7 +147,11 @@
               {{! replace "Log In to Reply" with the infobox }}
               {{signup-cta}}
             {{else}}
-              {{topic-footer-buttons topic=model topicDelegated=topicDelegated}}
+              {{#if currentUser}}
+                {{topic-footer-buttons topic=model topicDelegated=topicDelegated}}
+              {{else}}
+                {{d-button icon="reply" class="btn-primary" action="showLogin" label="topic.reply.title"}}
+              {{/if}}
             {{/if}}
 
             {{#if model.pending_posts_count}}

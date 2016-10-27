@@ -45,7 +45,11 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
     'jumpToPost',
     'jumpToIndex',
     'jumpBottom',
-    'replyToPost'
+    'replyToPost',
+    'toggleArchiveMessage',
+    'showInvite',
+    'toggleBookmark',
+    'showFlagTopic'
   ],
 
   _titleChanged: function() {
@@ -269,18 +273,20 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
       this.deleteTopic();
     },
 
-    archiveMessage() {
+    // Archive a PM (as opposed to archiving a topic)
+    toggleArchiveMessage() {
       const topic = this.get('model');
-      topic.archiveMessage().then(()=>{
-        this.gotoInbox(topic.get("inboxGroupName"));
-      });
-    },
+      if (topic.get('archiving')) { return; }
 
-    moveToInbox() {
-      const topic = this.get('model');
-      topic.moveToInbox().then(()=>{
-        this.gotoInbox(topic.get("inboxGroupName"));
-      });
+      if (topic.get('message_archived')) {
+        topic.moveToInbox().then(()=>{
+          this.gotoInbox(topic.get("inboxGroupName"));
+        });
+      } else {
+        topic.archiveMessage().then(()=>{
+          this.gotoInbox(topic.get("inboxGroupName"));
+        });
+      }
     },
 
     // Post related methods
