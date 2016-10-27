@@ -109,7 +109,9 @@ describe WebhooksController do
         "msys" => {
           "message_event" => {
             "bounce_class" => 10,
-            "message_id" => message_id
+            "rcpt_meta" => {
+              "message_id" => message_id
+            }
           }
         }
       }]
