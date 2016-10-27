@@ -78,6 +78,7 @@ class Middleware::RequestTracker
     host = RailsMultisite::ConnectionManagement.host(env)
 
     if data
+      result[1]["X-Discourse-TrackView"] = 1 if data[:track_view]
       log_later(data,host)
     end
 
