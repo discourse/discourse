@@ -13,7 +13,7 @@ class Tag < ActiveRecord::Base
   has_many :tag_groups, through: :tag_group_memberships
 
   def self.tags_by_count_query(opts={})
-    q = TopicTag.joins(:tag, :topic).group("topic_tags.tag_id, tags.name").order('count_all DESC')
+    q = Topic.unscoped { TopicTag.joins(:tag, :topic).group("topic_tags.tag_id, tags.name").order('count_all DESC') }
     q = q.limit(opts[:limit]) if opts[:limit]
     q
   end
