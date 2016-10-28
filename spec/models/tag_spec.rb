@@ -40,6 +40,12 @@ describe Tag do
         counts = described_class.tags_by_count_query.where("topics.id = ?", @topics[1].id).count(Tag::COUNT_ARG)
         expect(counts).to eq({@tags[0].name => 1})
       end
+
+      it "returns unused tags too" do
+        unused = Fabricate(:tag)
+        counts = described_class.tags_by_count_query.count(Tag::COUNT_ARG)
+        expect(counts[unused.name]).to eq(0)
+      end
     end
   end
 
