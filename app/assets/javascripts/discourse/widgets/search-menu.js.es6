@@ -71,7 +71,7 @@ export default createWidget('search-menu', {
     const contextEnabled = searchData.contextEnabled;
 
     const ctx = contextEnabled ? this.searchContext() : null;
-    const type = Ember.get(ctx, 'type');
+    const type = ctx ? Ember.get(ctx, 'type') : null;
 
     if (contextEnabled && type === 'topic') {
       return;

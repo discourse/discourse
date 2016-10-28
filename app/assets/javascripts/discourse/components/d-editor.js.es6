@@ -201,18 +201,23 @@ export default Ember.Component.extend({
     return null;
   },
 
-  @on('didInsertElement')
-  _startUp() {
+  _readyNow() {
+    this.set('ready', true);
+  },
+
+  didInsertElement() {
+    this._super();
+
     const container = this.get('container'),
           $editorInput = this.$('.d-editor-input');
 
     this._applyEmojiAutocomplete(container, $editorInput);
     this._applyCategoryHashtagAutocomplete(container, $editorInput);
 
-    this.set('ready', true);
+
+    Ember.run.scheduleOnce('afterRender', this, this._readyNow);
 
     const mouseTrap = Mousetrap(this.$('.d-editor-input')[0]);
-
     const shortcuts = this.get('toolbar.shortcuts');
     Object.keys(shortcuts).forEach(sc => {
       const button = shortcuts[sc];
@@ -232,7 +237,6 @@ export default Ember.Component.extend({
 
     this.appEvents.on('composer:insert-text', text => this._addText(this._getSelected(), text));
     this.appEvents.on('composer:replace-text', (oldVal, newVal) => this._replaceText(oldVal, newVal));
-
     this._mouseTrap = mouseTrap;
   },
 
@@ -263,11 +267,10 @@ export default Ember.Component.extend({
     markdownOptions.siteSettings = this.siteSettings;
 
     this.set('preview', cook(value));
-    Ember.run.scheduleOnce('afterRender', () => {
+    Ember.run.next(() => {
       if (this._state !== "inDOM") { return; }
       const $preview = this.$('.d-editor-preview');
       if ($preview.length === 0) return;
-
       this.sendAction('previewUpdated', $preview);
     });
   },

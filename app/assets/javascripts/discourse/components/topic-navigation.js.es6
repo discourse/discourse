@@ -5,6 +5,8 @@ export default Ember.Component.extend({
   info: Em.Object.create(),
 
   _checkSize() {
+    if (!this.element || this.isDestroying || this.isDestroyed) { return; }
+
     let info = this.get('info');
 
     if (info.get('topicProgressExpanded')) {
@@ -110,7 +112,7 @@ export default Ember.Component.extend({
       $('#reply-control').on('div-resized.discourse-topic-navigation', () => this._checkSize());
     }
 
-    this._checkSize();
+    Ember.run.scheduleOnce('afterRender', this, this._checkSize);
   },
 
   willDestroyElement() {

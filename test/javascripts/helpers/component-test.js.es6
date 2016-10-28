@@ -21,7 +21,7 @@ export default function(name, opts) {
 
     this.siteSettings = Discourse.SiteSettings;
 
-    autoLoadModules();
+    autoLoadModules(this.container, this.registry);
 
     const store = createStore();
     if (!opts.anonymous) {
