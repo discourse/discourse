@@ -25,7 +25,7 @@ export function registerHelper(name, fn) {
 }
 
 export function findHelper(name) {
-  return _helpers[name];
+  return _helpers[name] || _helpers[name.dasherize()];
 }
 
 export function registerHelpers(registry) {
