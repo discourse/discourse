@@ -20,7 +20,7 @@ export function setCustomHTML(key, html) {
   _customizations[key] = html;
 }
 
-registerHelper('custom-html', function(params) {
-  const html = getCustomHTML(params[0]);
+registerHelper('custom-html', function([id]) {
+  const html = getCustomHTML(id);
   if (html) { return html; }
 });

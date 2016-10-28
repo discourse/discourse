@@ -118,7 +118,7 @@ function viewInjections(container) {
 }
 
 // unbound version of outlets, only has a template
-Handlebars.registerHelper('plugin-outlet', function(name){
+Handlebars.registerHelper('plugin-outlet', function(name) {
   if (!_rawCache) { buildConnectorCache(); }
 
   const functions = _rawCache[name];
@@ -134,9 +134,7 @@ Handlebars.registerHelper('plugin-outlet', function(name){
 
 });
 
-registerHelper('plugin-outlet', function(params, hash, options, env) {
-  const connectionName = params[0];
-
+registerHelper('plugin-outlet', function([connectionName], hash, options, env) {
   if (!_connectorCache) { buildConnectorCache(); }
 
   if (_connectorCache[connectionName]) {
