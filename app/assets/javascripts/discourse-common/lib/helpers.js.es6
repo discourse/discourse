@@ -1,13 +1,14 @@
 import { get } from 'discourse-common/lib/raw-handlebars';
 
+function fixArgs(args) {
+  return (args.length > 1) ? args[0].concat(args[args.length-1]) : args;
+}
+
 // `Ember.Helper` is only available in versions after 1.12
 export function htmlHelper(fn) {
   if (Ember.Helper) {
     return Ember.Helper.helper(function(...args) {
-      if (args.length > 1) {
-        args = args[0].concat(args[args.length-1]);
-      }
-      return new Handlebars.SafeString(fn.apply(this, args) || '');
+      return new Handlebars.SafeString(fn.apply(this, fixArgs(args)) || '');
     });
   } else {
     return Ember.Handlebars.makeBoundHelper(function() {
