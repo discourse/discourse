@@ -144,21 +144,24 @@ registerHelper('plugin-outlet', function([connectionName], hash, options, env) {
     // just shove it in.
     const viewClass = (childViews.length > 1) ? Ember.ContainerView : childViews[0];
 
-    const newHash = $.extend({}, viewInjections(env.data.view.container));
-    if (hash.tagName) { newHash.tagName = hash.tagName; }
+    // TODO: Figure out how to do this without a container view
+    if (env) {
+      const newHash = $.extend({}, viewInjections(env.data.view.container));
+      if (hash.tagName) { newHash.tagName = hash.tagName; }
 
-    // we don't need the default template since we have a connector
-    delete options.fn;
-    delete options.template;
-    env.helpers.view.helperFunction.call(this, [viewClass], newHash, options, env);
+      // we don't need the default template since we have a connector
+      delete options.fn;
+      delete options.template;
+      env.helpers.view.helperFunction.call(this, [viewClass], newHash, options, env);
 
-    const cvs = env.data.view._childViews;
-    if (childViews.length > 1 && cvs && cvs.length) {
-      const inserted = cvs[cvs.length-1];
-      if (inserted) {
-        childViews.forEach(function(cv) {
-          inserted.pushObject(cv.create());
-        });
+      const cvs = env.data.view._childViews;
+      if (childViews.length > 1 && cvs && cvs.length) {
+        const inserted = cvs[cvs.length-1];
+        if (inserted) {
+          childViews.forEach(function(cv) {
+            inserted.pushObject(cv.create());
+          });
+        }
       }
     }
   }

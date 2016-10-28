@@ -57,7 +57,6 @@
 //= require ./discourse/models/user-badge
 //= require ./discourse/controllers/discovery-sortable
 //= require ./discourse/controllers/navigation/default
-//= require ./discourse/views/container
 //= require ./discourse/views/modal-body
 //= require ./discourse/views/flag
 //= require ./discourse/components/edit-category-panel

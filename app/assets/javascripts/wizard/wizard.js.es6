@@ -9,7 +9,7 @@ export default Ember.Application.extend({
       if (/\/initializers\//.test(key)) {
         const module = require(key, null, null, true);
         if (!module) { throw new Error(key + ' must export an initializer.'); }
-        this.instanceInitializer(module.default);
+        this.initializer(module.default);
       }
     });
   }

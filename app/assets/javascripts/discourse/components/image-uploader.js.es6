@@ -6,7 +6,7 @@ export default Em.Component.extend(UploadMixin, {
 
   @computed('imageUrl')
   backgroundStyle(imageUrl) {
-    if (Em.isNone(imageUrl)) { return; }
+    if (Em.isNone(imageUrl)) { return "".htmlSafe(); }
     return `background-image: url(${imageUrl})`.htmlSafe();
   },
 

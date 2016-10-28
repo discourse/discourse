@@ -76,9 +76,9 @@ const UserAction = RestModel.extend({
     return targetUsername === Discourse.User.currentProp('username');
   },
 
-  presentName: Em.computed.any('name', 'username'),
-  targetDisplayName: Em.computed.any('target_name', 'target_username'),
-  actingDisplayName: Em.computed.any('acting_name', 'acting_username'),
+  presentName: Ember.computed.or('name', 'username'),
+  targetDisplayName: Ember.computed.or('target_name', 'target_username'),
+  actingDisplayName: Ember.computed.or('acting_name', 'acting_username'),
   targetUserUrl: url('target_username', '/users/%@'),
 
   @computed("username")

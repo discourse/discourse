@@ -81,7 +81,11 @@ export default Ember.Component.extend(bufferedRender({
       }
       this.set('value', val);
     });
-    $elem.trigger('change');
+    Ember.run.scheduleOnce('afterRender', this, this._triggerChange);
+  },
+
+  _triggerChange() {
+    this.$().trigger('change');
   },
 
   @on('willDestroyElement')
