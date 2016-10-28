@@ -16,12 +16,12 @@ class TagsController < ::ApplicationController
                          .where("id in (?)", guardian.allowed_category_ids)
                          .preload(:tags)
     category_tag_counts = categories.map do |c|
-      h = Tag.category_tags_by_count_query(c, limit: 300).count
+      h = Tag.category_tags_by_count_query(c, limit: 300).count(Tag::COUNT_ARG)
       h.merge!(c.tags.where.not(name: h.keys).inject({}) { |sum,t| sum[t.name] = 0; sum }) # unused tags
       {id: c.id, tags: self.class.tag_counts_json(h)}
     end
 
-    tag_counts = self.class.tags_by_count(guardian, limit: 300).count
+    tag_counts = self.class.tags_by_count(guardian, limit: 300).count(Tag::COUNT_ARG)
     @tags = self.class.tag_counts_json(tag_counts)
 
     @description_meta = I18n.t("tags.title")
@@ -145,17 +145,7 @@ class TagsController < ::ApplicationController
       }
     )
 
-    tags = tags_with_counts.count.map {|t, c| { id: t, text: t, count: c } }
-
-    unused_tags = DiscourseTagging.filter_allowed_tags(
-      Tag.where(topic_count: 0),
-      guardian,
-      { for_input: params[:filterForInput], term: params[:q], category: category, selected_tags: params[:selected_tags] }
-    )
-
-    unused_tags.each do |t|
-      tags << { id: t.name, text: t.name, count: 0 }
-    end
+    tags = tags_with_counts.count(Tag::COUNT_ARG).map {|t, c| { id: t, text: t, count: c } }
 
     json_response = { results: tags }
 
