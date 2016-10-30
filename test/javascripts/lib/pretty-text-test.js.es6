@@ -159,9 +159,18 @@ test("Links", function() {
          "<p><a href=\"http://discourse.org\">http://google.com ... wat</a></p>",
          "it supports links within links");
 
+  cooked("[http://google.com](http://discourse.org)",
+         "<p><a href=\"http://discourse.org\">http://google.com</a></p>",
+         "it supports markdown links where the name and link match");
+
+
   cooked("[Link](http://www.example.com) (with an outer \"description\")",
          "<p><a href=\"http://www.example.com\">Link</a> (with an outer \"description\")</p>",
          "it doesn't consume closing parens as part of the url");
+
+  cooked("A link inside parentheses (http://www.example.com)",
+         "<p>A link inside parentheses (<a href=\"http://www.example.com\">http://www.example.com</a>)</p>",
+         "it auto-links a url within parentheses");
 
   cooked("[ul][1]\n\n[1]: http://eviltrout.com",
          "<p><a href=\"http://eviltrout.com\">ul</a></p>",
