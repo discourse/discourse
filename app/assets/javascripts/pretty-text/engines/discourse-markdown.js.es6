@@ -500,7 +500,7 @@ function invalidBoundary(args, prev) {
 
   if (args.wordBoundary && (!last.match(/\W$/))) { return true; }
   if (args.spaceBoundary && (!last.match(/\s$/))) { return true; }
-  if (args.spaceOrTagBoundary && (!last.match(/(\s|\>)$/))) { return true; }
+  if (args.spaceOrTagBoundary && (!last.match(/(\s|\>|\()$/))) { return true; }
 }
 
 function countLines(str) {
