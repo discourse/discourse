@@ -32,6 +32,11 @@
   &.timeline-fullscreen.show {
     max-height: 700px;
     transition: max-height 0.4s ease-out;
+    .topic-timeline {
+      .timeline-footer-controls {
+        display: inherit;
+      }
+    }
   }
 
   &.timeline-fullscreen {
@@ -44,15 +49,83 @@
     left: 0;
     right: 0;
     border-top: 1px solid dark-light-choose(scale-color($primary, $lightness: 90%), scale-color($secondary, $lightness: 90%));
-    padding-top: 15px;
+    padding-top: 20px;
     z-index: 100000;
-    .timeline-scrollarea {
-      max-width: 200px;
-    }
     .topic-timeline {
-      width: auto;
-      margin-left: 1.5em;
-      margin-right: 1.5em;
+      width: 100%;
+      margin-left: 0;
+      margin-right: 0;
+      display: table;
+      .timeline-date-wrapper {
+        float: right;
+        text-align: right;
+        font-size: 1.1em;
+      }
+      .title {
+        margin-top: 0;
+        padding-left: 1em;
+        display: table-cell;
+        vertical-align: top;
+        line-height: 1.3em;
+      }
+      .timeline-last-read {
+        right: 0px;
+        margin-left: 0;
+        i.progress {
+          margin-right: -3px;
+          margin-left: 1em;
+        }
+      }
+      .timeline-footer-controls {
+        display: none;
+        position: absolute;
+        bottom: 10px;
+        left: 10px;
+
+        button {
+          float: none;
+          display: block;
+          margin-bottom: 10px;
+        }
+      }
+      .timeline-scrollarea-wrapper {
+        display: table-cell;
+        padding-bottom: 20px;
+        padding-right: 1.5em;
+        width: 100px;
+      }
+      .timeline-scrollarea {
+        border-left: 0;
+        border-right-style: solid;
+        border-right-width: 1px;
+        max-width: 120px;
+        float: right;
+
+        .timeline-scroller {
+          position: relative;
+          margin-right: -1.5em;
+          padding-right: 1.5em;
+          justify-content: flex-end;
+          .timeline-scroller-content {
+            text-align: right;
+            padding-left: 0;
+            padding-right: 1em;
+          }
+          .timeline-handle {
+            float: none;
+            width: 11px;
+            position: relative;
+            right: -6px;
+          }
+        }
+      }
+    }
+
+
+    .timeline-scrollarea-wrapper::after {
+      content: "";
+      display: table;
+      clear: both;
     }
 
   }

@@ -43,6 +43,7 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
     'convertToPrivateMessage',
     'jumpTop',
     'jumpToPost',
+    'jumpToPostPrompt',
     'jumpToIndex',
     'jumpBottom',
     'replyToPost',
@@ -423,6 +424,14 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
 
     jumpToIndex(index) {
       this._jumpToPostId(this.get('model.postStream.stream')[index-1]);
+    },
+
+    jumpToPostPrompt() {
+      const postText = prompt(I18n.t('topic.progress.jump_prompt_long'));
+      if (postText === null) { return; }
+      const postNumber = parseInt(postText, 10);
+      if (postNumber === 0) { return; }
+      this._jumpToPostId(this.get('model.postStream').findPostIdForPostNumber(postNumber));
     },
 
     jumpToPost(postNumber) {

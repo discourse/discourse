@@ -59,7 +59,13 @@ createWidget('timeline-scroller', {
       contents.push(h('div.timeline-ago', timelineDate(date)));
     }
 
-    return [ h('div.timeline-handle'), h('div.timeline-scroller-content', contents) ];
+    let result = [ h('div.timeline-handle'), h('div.timeline-scroller-content', contents) ];
+
+    if (attrs.fullScreen) {
+      result = [result[1], result[0]];
+    }
+
+    return result;
   },
 
   drag(e) {
@@ -140,7 +146,7 @@ createWidget('timeline-scrollarea', {
 
     const result = [
       this.attach('timeline-padding', { height: before }),
-      this.attach('timeline-scroller', position),
+      this.attach('timeline-scroller', _.merge(position, {fullScreen: attrs.fullScreen})),
       this.attach('timeline-padding', { height: after })
     ];
 
@@ -221,8 +227,11 @@ export default createWidget('topic-timeline', {
 
     let result = [];
 
-    if (attrs.mobileView) {
-      const titleHTML = new RawHtml({ html: `<span>${topic.get('fancyTitle')}</span>` });
+    if (attrs.fullScreen) {
+      let titleHTML = "";
+      if (attrs.mobileView) {
+        titleHTML = new RawHtml({ html: `<span>${topic.get('fancyTitle')}</span>` });
+      }
       result.push(h('h3.title', titleHTML));
     }
 
@@ -236,21 +245,23 @@ export default createWidget('topic-timeline', {
     }
 
     const bottomAge = relativeAge(new Date(topic.last_posted_at), { addAgo: true, defaultFormat: timelineDate });
-    result = result.concat([this.attach('link', {
+    let scroller = [h('div.timeline-date-wrapper', this.attach('link', {
                               className: 'start-date',
                               rawLabel: timelineDate(createdAt),
                               action: 'jumpTop'
-                            }),
+                            })),
                             this.attach('timeline-scrollarea', attrs),
-                            this.attach('link', {
+                            h('div.timeline-date-wrapper', this.attach('link', {
                               className: 'now-date',
                               rawLabel: bottomAge,
                               action: 'jumpBottom'
-                            })]);
+                            }))];
 
-    if (currentUser) {
-      const controls = [];
-      if (!attrs.fullScreen && attrs.topic.get('details.can_create_post')) {
+    result = result.concat([h('div.timeline-scrollarea-wrapper', scroller)]);
+
+    const controls = [];
+    if (currentUser && !attrs.fullScreen) {
+      if (attrs.topic.get('details.can_create_post')) {
         controls.push(this.attach('button', {
           className: 'btn create',
           icon: 'reply',
@@ -259,9 +270,21 @@ export default createWidget('topic-timeline', {
         }));
       }
 
-      if (currentUser && !attrs.fullScreen) {
+      if (currentUser) {
         controls.push(this.attach('topic-notifications-button', { topic }));
       }
+    }
+
+    if (attrs.fullScreen) {
+      controls.push(this.attach('button', {
+        className: 'btn jump-to-post',
+        title: 'topic.progress.jump_prompt_long',
+        label: 'topic.progress.jump_prompt',
+        action: 'jumpToPostPrompt'
+      }));
+    }
+
+    if (controls.length > 0) {
       result.push(h('div.timeline-footer-controls', controls));
     }
 
