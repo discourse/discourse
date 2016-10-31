@@ -242,19 +242,30 @@ describe CookedPostProcessor do
     end
 
     context "topic image" do
-
       let(:topic) { build(:topic, id: 1) }
       let(:post) { Fabricate(:post_with_uploaded_image, topic: topic) }
       let(:cpp) { CookedPostProcessor.new(post) }
 
-      it "adds a topic image if there's one in the post" do
+      it "adds a topic image if there's one in the first post" do
         FastImage.stubs(:size)
         expect(post.topic.image_url).to eq(nil)
         cpp.post_process_images
         post.topic.reload
         expect(post.topic.image_url).to be_present
       end
+    end
 
+    context "post image" do
+      let(:reply) { Fabricate(:post_with_uploaded_image, post_number: 2) }
+      let(:cpp) { CookedPostProcessor.new(reply) }
+
+      it "adds a post image if there's one in the post" do
+        FastImage.stubs(:size)
+        expect(reply.image_url).to eq(nil)
+        cpp.post_process_images
+        reply.reload
+        expect(reply.image_url).to be_present
+      end
     end
 
   end

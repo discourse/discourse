@@ -69,16 +69,15 @@ end
 #  client_id        :string           not null
 #  key              :string           not null
 #  application_name :string           not null
-#  read             :boolean          not null
-#  write            :boolean          not null
-#  push             :boolean          not null
 #  push_url         :string
 #  created_at       :datetime
 #  updated_at       :datetime
+#  revoked_at       :datetime
+#  scopes           :text             default([]), not null, is an Array
 #
 # Indexes
 #
-#  index_user_api_keys_on_client_id  (client_id)
+#  index_user_api_keys_on_client_id  (client_id) UNIQUE
 #  index_user_api_keys_on_key        (key) UNIQUE
 #  index_user_api_keys_on_user_id    (user_id)
 #

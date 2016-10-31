@@ -160,5 +160,12 @@ end
 #
 # Indexes
 #
+#  index_directory_items_on_days_visited             (days_visited)
+#  index_directory_items_on_likes_given              (likes_given)
+#  index_directory_items_on_likes_received           (likes_received)
 #  index_directory_items_on_period_type_and_user_id  (period_type,user_id) UNIQUE
+#  index_directory_items_on_post_count               (post_count)
+#  index_directory_items_on_posts_read               (posts_read)
+#  index_directory_items_on_topic_count              (topic_count)
+#  index_directory_items_on_topics_entered           (topics_entered)
 #
