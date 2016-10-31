@@ -285,6 +285,7 @@ end
 #  deleted_at     :datetime
 #  deleted_by_id  :integer
 #  invalidated_at :datetime
+#  moderator      :boolean          default(FALSE), not null
 #
 # Indexes
 #

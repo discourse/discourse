@@ -498,6 +498,9 @@ end
 #  grant_trust_level                  :integer
 #  incoming_email                     :string
 #  has_messages                       :boolean          default(FALSE), not null
+#  flair_url                          :string
+#  flair_bg_color                     :string
+#  flair_color                        :string
 #
 # Indexes
 #

@@ -24,7 +24,7 @@ end
 #  web_hook_id      :integer          not null
 #  headers          :string
 #  payload          :text
-#  status           :integer
+#  status           :integer          default(0)
 #  response_headers :string
 #  response_body    :text
 #  duration         :integer          default(0)
