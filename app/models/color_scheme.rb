@@ -153,4 +153,6 @@ end
 #  version      :integer          default(1), not null
 #  created_at   :datetime         not null
 #  updated_at   :datetime         not null
+#  via_wizard   :boolean          default(FALSE), not null
+#  theme_id     :string
 #
