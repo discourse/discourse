@@ -719,6 +719,7 @@ end
 #  raw_email               :text
 #  public_version          :integer          default(1), not null
 #  action_code             :string
+#  image_url               :string
 #
 # Indexes
 #

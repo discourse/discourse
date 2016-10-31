@@ -180,8 +180,12 @@ class TopicView
 
   def image_url
     if @post_number.present? && @post_number.to_i != 1 && @desired_post.present?
-      # show poster avatar
-      @desired_post.user.avatar_template_url.gsub("{size}", "100") if @desired_post.user
+      if @desired_post.image_url.present?
+        @desired_post.image_url
+      elsif @desired_post.user
+        # show poster avatar
+        @desired_post.user.avatar_template_url.gsub("{size}", "100")
+      end
     else
       @topic.image_url
     end
