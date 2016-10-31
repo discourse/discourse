@@ -60,7 +60,7 @@ export default Em.Component.extend({
     this.setProperties({
       searchedTerms: {
         username: '',
-        category: null,
+        category: '',
         group: [],
         badge: [],
         tags: [],
@@ -167,21 +167,21 @@ export default Em.Component.extend({
         const userInput = Discourse.Category.findBySlug(subcategories[1], subcategories[0]);
         if ((!existingInput && userInput)
           || (existingInput && userInput && existingInput.id !== userInput.id))
-          this.set('searchedTerms.category', userInput.id);
+          this.set('searchedTerms.category', [userInput]);
       } else
       if (isNaN(subcategories)) {
         const userInput = Discourse.Category.findSingleBySlug(subcategories[0]);
         if ((!existingInput && userInput)
           || (existingInput && userInput && existingInput.id !== userInput.id))
-          this.set('searchedTerms.category', userInput.id);
+          this.set('searchedTerms.category', [userInput]);
       } else {
         const userInput = Discourse.Category.findById(subcategories[0]);
         if ((!existingInput && userInput)
           || (existingInput && userInput && existingInput.id !== userInput.id))
-          this.set('searchedTerms.category', userInput.id);
+          this.set('searchedTerms.category', [userInput]);
       }
     } else
-      this.set('searchedTerms.category', null);
+      this.set('searchedTerms.category', '');
   },
 
   setSearchedTermValueForGroup() {
@@ -278,16 +278,16 @@ export default Em.Component.extend({
   @observes('searchedTerms.category')
   updateSearchTermForCategory() {
     const match = this.filterBlocks(REGEXP_CATEGORY_PREFIX);
-    const categoryFilter = Discourse.Category.findById(this.get('searchedTerms.category'));
+    const categoryFilter = this.get('searchedTerms.category');
     let searchTerm = this.get('searchTerm') || '';
 
     const slugCategoryMatches = (match.length !== 0) ? match[0].match(REGEXP_CATEGORY_SLUG) : null;
     const idCategoryMatches = (match.length !== 0) ? match[0].match(REGEXP_CATEGORY_ID) : null;
-    if (categoryFilter && categoryFilter.length !== 0) {
-      const id = categoryFilter.id;
-      const slug = categoryFilter.slug;
-      if (categoryFilter && categoryFilter.parentCategory) {
-        const parentSlug = categoryFilter.parentCategory.slug;
+    if (categoryFilter && categoryFilter[0]) {
+      const id = categoryFilter[0].id;
+      const slug = categoryFilter[0].slug;
+      if (categoryFilter[0].parentCategory) {
+        const parentSlug = categoryFilter[0].parentCategory.slug;
         if (slugCategoryMatches)
           searchTerm = searchTerm.replace(slugCategoryMatches[0], `#${parentSlug}:${slug}`);
         else if (idCategoryMatches)
@@ -296,7 +296,7 @@ export default Em.Component.extend({
           searchTerm += ` #${parentSlug}:${slug}`;
 
         this.set('searchTerm', searchTerm.trim());
-      } else if (categoryFilter) {
+      } else {
         if (slugCategoryMatches)
           searchTerm = searchTerm.replace(slugCategoryMatches[0], `#${slug}`);
         else if (idCategoryMatches)

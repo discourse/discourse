@@ -76,7 +76,7 @@ test("validate population of advanced search", assert => {
 
   andThen(() => {
     assert.ok(exists('.search-advanced-options span:contains("admin")'), 'has "admin" pre-populated');
-    assert.ok(exists('.search-advanced-options .category-combobox .select2-choice .select2-chosen:contains("bug")'), 'has "bug" pre-populated');
+    assert.ok(exists('.search-advanced-options .badge-category:contains("bug")'), 'has "bug" pre-populated');
     //assert.ok(exists('.search-advanced-options span:contains("moderators")'), 'has "moderators" pre-populated');
     //assert.ok(exists('.search-advanced-options span:contains("Reader")'), 'has "Reader" pre-populated');
     assert.ok(exists('.search-advanced-options .tag-chooser .tag-monkey'), 'has "monkey" pre-populated');
@@ -118,11 +118,13 @@ test("update category through advanced search ui", assert => {
   visit("/search");
   fillIn('.search input.full-page-search', 'none');
   click('.search-advanced-btn');
-  selectDropdown('.search-advanced-options .category-combobox', 4);
-  click('.search-advanced-options'); // need to click off the combobox for the search-term to get updated
+  fillIn('.search-advanced-options .category-selector', 'faq');
+  click('.search-advanced-options .category-selector');
+  keyEvent('.search-advanced-options .category-selector', 'keydown', 8);
+  keyEvent('.search-advanced-options .category-selector', 'keydown', 9);
 
   andThen(() => {
-    assert.ok(exists('.search-advanced-options .category-combobox .select2-choice .select2-chosen:contains("faq")'), 'has "faq" populated');
+    assert.ok(exists('.search-advanced-options .badge-category:contains("faq")'), 'has "faq" populated');
     assert.equal(find('.search input.full-page-search').val(), "none #faq", 'has updated search term to "none #faq"');
   });
 });
