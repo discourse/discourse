@@ -8,6 +8,9 @@ export default {
     withPluginApi('0.1', api => {
       api.decorateCooked($elem => {
 
+        const iframes = $('.lazyYT', $elem);
+        if (iframes.length === 0) { return; }
+
         // We use this because watching videos fullscreen in Chrome was super buggy
         // otherwise. Thanks to arrendek from q23 for the technique.
         $elem.iframeTracker({ blurCallback: () => {
