@@ -267,7 +267,7 @@ export default Ember.Component.extend({
     markdownOptions.siteSettings = this.siteSettings;
 
     this.set('preview', cook(value));
-    Ember.run.next(() => {
+    Ember.run.scheduleOnce('afterRender', () => {
       if (this._state !== "inDOM") { return; }
       const $preview = this.$('.d-editor-preview');
       if ($preview.length === 0) return;
