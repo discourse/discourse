@@ -32,6 +32,8 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
   QUIET = nil || ENV['VERBOSE'] == "TRUE"
   FORCE_HOSTNAME = nil || ENV['FORCE_HOSTNAME']
 
+  QUIET = true
+
   # Site settings
   SiteSetting.disable_emails = true
   if FORCE_HOSTNAME
@@ -54,10 +56,16 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
         password: DB_PW,
         database: DB_NAME
       )
-    rescue
+    rescue Exception => e
       puts '='*50
+      puts e.message
       puts <<EOM
 Cannot log in to database.
+
+Hostname: #{DB_HOST}
+Username: #{DB_USER}
+Password: #{DB_PW}
+database: #{DB_NAME}
 
 You should set these variables:
 
@@ -426,7 +434,9 @@ EOM
     Category.find_each do |cat|
       ccf = cat.custom_fields
       next unless id = ccf["import_id"]
-      print_warning("forum-category-#{id}.html --> /t/#{cat.id}")
+      unless QUIET
+        print_warning("forum-category-#{id}.html --> /t/#{cat.id}")
+      end
       Permalink.create( url: "#{BASE}/forum-category-#{id}.html", category_id: cat.id ) rescue nil
       print '.'
     end
