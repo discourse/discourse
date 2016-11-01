@@ -379,6 +379,26 @@ describe TopicQuery do
         ).to eq([topic_in_cat2.id, topic_category.id, topic_in_cat1.id])
       end
     end
+
+    describe "category default sort order" do
+      it "can use category's default sort order" do
+        category.update_attributes!(sort_order: 'created', sort_ascending: true)
+        topic_ids = TopicQuery.new(user, category: category.id).list_latest.topics.map(&:id)
+        expect(topic_ids - [topic_category.id]).to eq([topic_in_cat1.id, topic_in_cat2.id])
+      end
+
+      it "ignores invalid order value" do
+        category.update_attributes!(sort_order: 'funny')
+        topic_ids = TopicQuery.new(user, category: category.id).list_latest.topics.map(&:id)
+        expect(topic_ids - [topic_category.id]).to eq([topic_in_cat2.id, topic_in_cat1.id])
+      end
+
+      it "can be overridden" do
+        category.update_attributes!(sort_order: 'created', sort_ascending: true)
+        topic_ids = TopicQuery.new(user, category: category.id, order: 'activity').list_latest.topics.map(&:id)
+        expect(topic_ids - [topic_category.id]).to eq([topic_in_cat2.id, topic_in_cat1.id])
+      end
+    end
   end
 
   context 'unread / read topics' do
