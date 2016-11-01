@@ -98,7 +98,9 @@ const Category = RestModel.extend({
         topic_template: this.get('topic_template'),
         suppress_from_homepage: this.get('suppress_from_homepage'),
         allowed_tags: this.get('allowed_tags'),
-        allowed_tag_groups: this.get('allowed_tag_groups')
+        allowed_tag_groups: this.get('allowed_tag_groups'),
+        sort_order: this.get('sort_order'),
+        sort_ascending: this.get('sort_ascending')
       },
       type: id ? 'PUT' : 'POST'
     });

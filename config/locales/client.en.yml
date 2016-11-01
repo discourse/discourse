@@ -1883,6 +1883,7 @@ en:
       email_in_disabled: "Posting new topics via email is disabled in the Site Settings. To enable posting new topics via email, "
       email_in_disabled_click: 'enable the "email in" setting.'
       suppress_from_homepage: "Suppress this category from the homepage."
+      sort_order: "Default Sort:"
       allow_badges_label: "Allow badges to be awarded in this category"
       edit_permissions: "Edit Permissions"
       add_permission: "Add Permission"
@@ -1908,6 +1909,18 @@ en:
         muted:
           title: "Muted"
           description: "You will never be notified of anything about new topics in these categories, and they will not appear in latest."
+      sort_options:
+        default: "default"
+        likes: "Likes"
+        op_likes: "Original Post Likes"
+        views: "Views"
+        posts: "Posts"
+        activity: "Activity"
+        posters: "Posters"
+        category: "Category"
+        created: "Created"
+      sort_ascending: 'Ascending'
+      sort_descending: 'Descending'
 
     flagging:
       title: 'Thanks for helping to keep our community civil!'
