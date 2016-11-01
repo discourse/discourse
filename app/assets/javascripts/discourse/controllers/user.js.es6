@@ -15,6 +15,11 @@ export default Ember.Controller.extend(CanCheckEmails, {
     return username === User.currentProp('username');
   },
 
+  @computed('model.profileBackground')
+  hasProfileBackground(background) {
+    return !Ember.isEmpty(background.toString());
+  },
+
   @computed('indexStream', 'viewingSelf', 'forceExpand')
   collapsedInfo(indexStream, viewingSelf, forceExpand){
     return (!indexStream || viewingSelf) && !forceExpand;
