@@ -82,11 +82,15 @@ class Wizard
                       .where.not(auth_token_updated_at: nil)
                       .order(:auth_token_updated_at)
 
-    @user.present? && first_admin.first == @user && !completed? && (Topic.count < 15)
+    if @user.present? && first_admin.first == @user && (Topic.count < 15)
+      !Wizard::Builder.new(@user).build.completed?
+    else
+      false
+    end
   end
 
   def self.user_requires_completion?(user)
-    Wizard::Builder.new(user).build.requires_completion?
+    self.new(user).requires_completion?
   end
 
 end
