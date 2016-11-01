@@ -189,3 +189,9 @@ sup sup, sub sup, sup sub, sub sub { top: 0; }
     width: 95% !important;
   }
 }
+
+// make mobile timeline top and bottom dates easier to select
+.topic-timeline { 
+  .start-date { font-size: 120%; padding: 5px; }
+  .now-date { font-size: 120%; padding: 5px; }
+}
