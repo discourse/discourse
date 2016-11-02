@@ -232,7 +232,11 @@ export default createWidget('topic-timeline', {
       if (attrs.mobileView) {
         titleHTML = new RawHtml({ html: `<span>${topic.get('fancyTitle')}</span>` });
       }
-      result.push(h('h3.title', titleHTML));
+      result.push(h('h3.title', this.attach('link', {
+        contents: ()=>titleHTML,
+        className: 'fancy-title',
+        action: 'jumpTop'
+      })));
     }
 
 

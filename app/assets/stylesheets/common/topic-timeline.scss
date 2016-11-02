@@ -67,6 +67,9 @@
         display: table-cell;
         vertical-align: top;
         line-height: 1.3em;
+        a {
+          color: $primary;
+        }
       }
       .timeline-last-read {
         right: 0px;
