@@ -103,6 +103,16 @@ describe Jobs::CleanUpUploads do
     expect(Upload.find_by(id: upload.id)).to eq(upload)
   end
 
+  it "does not delete user custom upload" do
+    upload = fabricate_upload
+    Fabricate(:user, user_avatar: Fabricate(:user_avatar, custom_upload: upload))
+
+    Jobs::CleanUpUploads.new.execute(nil)
+
+    expect(Upload.find_by(id: @upload.id)).to eq(nil)
+    expect(Upload.find_by(id: upload.id)).to eq(upload)
+  end
+
   it "does not delete uploads in a queued post" do
     upload = fabricate_upload
 
