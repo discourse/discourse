@@ -1,3 +1,4 @@
+import addonFmt from 'ember-addons/fmt';
 /**
   Returns whether two properties are equal to each other.
 
@@ -46,14 +47,10 @@ export function propertyLessThan(p1, p2) {
   @params {String} format the i18n format string
   @return {Function} computedProperty function
 **/
-export function i18n() {
-  const args = Array.prototype.slice.call(arguments, 0);
+export function i18n(...args) {
   const format = args.pop();
-  const computed = Em.computed(function() {
-    const self = this;
-    return I18n.t(format.fmt.apply(format, args.map(function (a) {
-      return self.get(a);
-    })));
+  const computed = Ember.computed(function() {
+    return I18n.t(addonFmt(format, ...args.map(a => this.get(a))));
   });
   return computed.property.apply(computed, args);
 }
@@ -67,14 +64,10 @@ export function i18n() {
   @params {String} format the format string
   @return {Function} computedProperty function
 **/
-export function fmt() {
-  const args = Array.prototype.slice.call(arguments, 0);
+export function fmt(...args) {
   const format = args.pop();
-  const computed = Em.computed(function() {
-    const self = this;
-    return format.fmt.apply(format, args.map(function (a) {
-      return self.get(a);
-    }));
+  const computed = Ember.computed(function() {
+    return addonFmt(format, ...args.map(a => this.get(a)));
   });
   return computed.property.apply(computed, args);
 }
@@ -88,14 +81,10 @@ export function fmt() {
   @params {String} format the format string for the URL
   @return {Function} computedProperty function returning a URL
 **/
-export function url() {
-  const args = Array.prototype.slice.call(arguments, 0);
+export function url(...args) {
   const format = args.pop();
-  const computed = Em.computed(function() {
-    const self = this;
-    return Discourse.getURL(format.fmt.apply(format, args.map(function (a) {
-      return self.get(a);
-    })));
+  const computed = Ember.computed(function() {
+    return Discourse.getURL(addonFmt(format, ...args.map(a => this.get(a))));
   });
   return computed.property.apply(computed, args);
 }

@@ -2,6 +2,7 @@
 //= require ./ember-addons/decorator-alias
 //= require ./ember-addons/macro-alias
 //= require ./ember-addons/ember-computed-decorators
+//= require ./ember-addons/fmt
 //= require_tree ./discourse-common
 //= require ./discourse
 //= require ./deprecated
