@@ -329,7 +329,7 @@ module Discourse
     # in case v8 was initialized we want to make sure it is nil
     PrettyText.reset_context
 
-    Tilt::ES6ModuleTranspiler.reset_context if defined? Tilt::ES6ModuleTranspiler
+    Tilt::ES6ModuleTranspilerTemplate.reset_context if defined? Tilt::ES6ModuleTranspilerTemplate
     JsLocaleHelper.reset_context if defined? JsLocaleHelper
     nil
   end
