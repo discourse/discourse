@@ -61,14 +61,14 @@ export function mapRoutes() {
 
     // Apply other resources next. A little hacky but works!
     standalone.forEach(function(r) {
-      router.resource(r, {path: paths[r]}, function() {
+      router.route(r, {path: paths[r], resetNamespace: true}, function() {
         var res = this;
         resources[r].forEach(function(m) { m.call(res); });
 
         var s = segments[r];
         if (s) {
           var full = r + '.' + s;
-          res.resource(s, {path: paths[full]}, function() {
+          res.route(s, {path: paths[full], resetNamespace: true}, function() {
             var nestedRes = this;
             resources[full].forEach(function(m) { m.call(nestedRes); });
           });
