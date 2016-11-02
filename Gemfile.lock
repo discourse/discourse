@@ -162,7 +162,7 @@ GEM
     method_source (0.8.2)
     mime-types (2.99.2)
     mini_portile2 (2.1.0)
-    mini_racer (0.1.6)
+    mini_racer (0.1.7)
       libv8 (~> 5.3)
     minitest (5.9.1)
     mocha (1.1.0)
