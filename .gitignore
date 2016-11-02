@@ -30,9 +30,9 @@ config/discourse.pill
 config/discourse.conf
 
 # Ignore the default SQLite database and db dumps
+*.sql
+*.sql.gz
 /db/*.sqlite3
-/dbs/*.sql
-/dbs/*.sql.gz
 /db/structure.sql
 
 # Ignore all logfiles and tempfiles.
