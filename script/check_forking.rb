@@ -3,6 +3,9 @@ require File.expand_path("../../config/environment", __FILE__)
 def pretty
   puts "<before>"
   puts PrettyText.cook("My pid is #{Process.pid}")
+  GC.start
+  sleep 1
+  puts "done gc"
 end
 
 Discourse.after_fork
