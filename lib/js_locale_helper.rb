@@ -165,6 +165,10 @@ module JsLocaleHelper
     result
   end
 
+  def self.reset_context
+    @ctx = nil
+  end
+
   @mutex = Mutex.new
   def self.with_context
     @mutex.synchronize do
