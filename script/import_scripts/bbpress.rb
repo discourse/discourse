@@ -12,7 +12,7 @@ export IMAGE_PREFIX="https://example.com/wp-content/uploads/"
 export BASE="forums/"
 =end
 
-# If you change how this script behaves, please consider making a note her:
+# If you change how this script behaves, please consider making a note here:
 # https://meta.discourse.org/t/migrating-from-bbpress-wordpress-plugin-to-discourse/48876
 
 class ImportScripts::Bbpress < ImportScripts::Base
@@ -187,7 +187,6 @@ class ImportScripts::Bbpress < ImportScripts::Base
       create_posts(posts, total: total_posts, offset: offset) do |p|
         skip = false
 
-        attachments = {}
         raw = p["post_content"] || ""
         raw.gsub!("<pre><code>", "```\n")
         raw.gsub!("</code></pre>", "\n```")
@@ -276,6 +275,6 @@ class ImportScripts::Bbpress < ImportScripts::Base
     @client.query(sql, cache_rows: false)
   end
 
-  end
+end
 
 ImportScripts::Bbpress.new.perform
