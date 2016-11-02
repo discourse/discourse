@@ -16,7 +16,7 @@ module Jobs
       users =
           User.activated.not_blocked.not_suspended.real
           .joins(:user_option)
-          .where(user_options: {mailing_list_mode: true, mailing_list_mode_frequency: 1})
+          .where('user_options.mailing_list_mode AND user_options.mailing_list_mode_frequency > 0')
           .where('NOT EXISTS(
                       SELECT 1
                       FROM topic_users tu
@@ -43,6 +43,11 @@ module Jobs
 
           if user.user_stat.bounce_score >= SiteSetting.bounce_score_threshold
             skip(user.email, user.id, post.id, I18n.t('email_log.exceeded_bounces_limit'))
+            next
+          end
+
+          if (user.id == post.user_id) && (user.user_option.mailing_list_mode_frequency == 2)
+            skip(user.email, user.id, post.id, I18n.t('email_log.no_echo_mailing_list_mode'))
             next
           end
 

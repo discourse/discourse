@@ -5,6 +5,8 @@ export default Ember.Component.extend({
   info: Em.Object.create(),
 
   _checkSize() {
+    if (!this.element || this.isDestroying || this.isDestroyed) { return; }
+
     let info = this.get('info');
 
     if (info.get('topicProgressExpanded')) {
@@ -47,7 +49,7 @@ export default Ember.Component.extend({
     if (this.get('info.topicProgressExpanded')) {
       $(window).on('click.hide-fullscreen', (e) => {
         if ( $(e.target).is('.topic-timeline') ||
-             !$(e.target).parents().is('.timeline-container, #topic-progress-wrapper')) {
+             !$(e.target).parents().is('#topic-progress-wrapper')) {
           this._collapseFullscreen();
         }
       });
@@ -110,7 +112,7 @@ export default Ember.Component.extend({
       $('#reply-control').on('div-resized.discourse-topic-navigation', () => this._checkSize());
     }
 
-    this._checkSize();
+    Ember.run.scheduleOnce('afterRender', this, this._checkSize);
   },
 
   willDestroyElement() {

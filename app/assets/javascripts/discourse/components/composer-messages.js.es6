@@ -15,12 +15,12 @@ export default Ember.Component.extend({
 
   didInsertElement() {
     this._super();
-    this.reset();
     this.appEvents.on('composer:typed-reply', this, this._typedReply);
     this.appEvents.on('composer:opened', this, this._findMessages);
     this.appEvents.on('composer:find-similar', this, this._findSimilar);
     this.appEvents.on('composer-messages:close', this, this._closeTop);
     this.appEvents.on('composer-messages:create', this, this._create);
+    Ember.run.scheduleOnce('afterRender', this, this.reset);
   },
 
   willDestroyElement() {

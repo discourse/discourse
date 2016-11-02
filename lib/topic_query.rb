@@ -450,6 +450,15 @@ class TopicQuery
           result = result.where('categories.id = :category_id OR (categories.parent_category_id = :category_id AND categories.topic_id <> topics.id)', category_id: category_id)
         end
         result = result.references(:categories)
+
+        if !@options[:order]
+          # category default sort order
+          sort_order, sort_ascending = Category.where(id: category_id).pluck(:sort_order, :sort_ascending).first
+          if sort_order
+            options[:order] = sort_order
+            options[:ascending] = !!sort_ascending ? 'true' : 'false'
+          end
+        end
       end
 
       # ALL TAGS: something like this?

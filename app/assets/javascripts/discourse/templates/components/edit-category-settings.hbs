@@ -19,6 +19,16 @@
   </label>
 </section>
 
+<section class="field">
+  <label>
+    {{i18n "category.sort_order"}}
+    {{combo-box valueAttribute="value" content=availableSorts value=category.sort_order none="category.sort_options.default"}}
+    {{#unless isDefaultSortOrder}}
+      {{combo-box valueAttribute="value" content=sortAscendingOptions value=category.sort_ascending none="category.sort_options.default"}}
+    {{/unless}}
+  </label>
+</section>
+
 {{#if emailInEnabled}}
     <section class='field'>
       <label>

@@ -37,7 +37,7 @@ export function translateResults(results, opts) {
   });
 
   results.categories = results.categories.map(function(category){
-    return Category.list().findProperty('id', category.id);
+    return Category.list().findBy('id', category.id);
   }).compact();
 
   const r = results.grouped_search_result;

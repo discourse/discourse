@@ -17,7 +17,7 @@ describe Tag do
 
   describe '#tags_by_count_query' do
     it "returns empty hash if nothing is tagged" do
-      expect(described_class.tags_by_count_query.count).to eq({})
+      expect(described_class.tags_by_count_query.count(Tag::COUNT_ARG)).to eq({})
     end
 
     context "with some tagged topics" do
@@ -31,14 +31,20 @@ describe Tag do
       end
 
       it "returns tag names with topic counts in a hash" do
-        counts = described_class.tags_by_count_query.count
+        counts = described_class.tags_by_count_query.count(Tag::COUNT_ARG)
         expect(counts[@tags[0].name]).to eq(2)
         expect(counts[@tags[1].name]).to eq(1)
       end
 
       it "can be used to filter before doing the count" do
-        counts = described_class.tags_by_count_query.where("topics.id = ?", @topics[1].id).count
+        counts = described_class.tags_by_count_query.where("topics.id = ?", @topics[1].id).count(Tag::COUNT_ARG)
         expect(counts).to eq({@tags[0].name => 1})
+      end
+
+      it "returns unused tags too" do
+        unused = Fabricate(:tag)
+        counts = described_class.tags_by_count_query.count(Tag::COUNT_ARG)
+        expect(counts[unused.name]).to eq(0)
       end
     end
   end

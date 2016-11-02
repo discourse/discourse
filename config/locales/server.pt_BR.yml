@@ -715,7 +715,6 @@ pt_BR:
     s3_config_warning: 'O servidor está configurado para fazer upload de arquivos para o s3, mas pelo menos uma destas configurações não está definida: s3_access_key_id, s3_secret_access_key ou s3_upload_bucket. Vá até as <a href="/admin/site_settings">Configurações do Site</a> e atualize estas definições. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Veja "How to set up image uploads to S3?" para saber mais</a>.'
     s3_backup_config_warning: 'O servidor está configurado para fazer upload de arquivos para o s3, mas pelo menos uma destas configurações não está definida: s3_access_key_id, s3_secret_access_key ou s3_backup_bucket. Vá até as <a href="/admin/site_settings">Configurações</a> e atualize estas definições. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Veja "How to set up image uploads to S3?" para saber mais</a>.'
     image_magick_warning: 'O servidor está configurado para criar miniaturas de imagens grandes, mas o ImageMagick não está instalado. Instale o ImageMagick usando seu gerenciador de pacotes preferido ou acesse <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">para fazer download da última versão</a>.'
-    consumer_email_warning: "Seu site está configurado para usar Gmail (ou outro serviço de email para pessoas). <a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>Gmail limita a quantidade de emails que você pode enviar</a>. Considere o uso de um serviço de envio de emails como mandrill.com para assegurar a entregabilidade dos emails enviados."
   site_settings:
     censored_words: "Palavras que serão substituídos automaticamente por &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Auto-apagar todas as mensagens ocultas que ficar oculta por mais de 30 dias."
@@ -756,7 +755,6 @@ pt_BR:
     exclude_rel_nofollow_domains: "Uma lista de domínios aonde nofollow não deve ser adicionado nos links. tld.com automaticamente permite sub.tld.com. No mínimo, você deve adiocionar o domínio principal deste site para ajudar os motores de busca encontrarem todo conteúdo. Se outras partes de seu site estão em outros domínios, adicione estes também."
     post_excerpt_maxlength: "Limite de caracteres para o resumo de um post."
     post_onebox_maxlength: "Tamanho máximo para um Post em caracteres"
-    onebox_domains_whitelist: "Uma lista de domínios para os quais permitir oneboxing; estes domínios devem suportar OpenGraph ou oEmbed. Teste-os em http://iframely.com/debug"
     logo_url: "O logotipo ao lado superior esquerdo de seu site deve ser um retângulo largo. Se for deixado em branco, o que aparecerá será o nome do site. "
     apple_touch_icon_url: "Ícone usado para dispositivos Apple. Tamanho recomendado é 144px por 144px."
     notification_email: "O endereço de email utilizado quando enviado emails do sistema. O domínio especificado deve ter registros SPF, DKIM e PTR, devidamente configurados para que os email funcionem corretamente."

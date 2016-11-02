@@ -348,12 +348,9 @@ module SiteSettingExtension
   end
 
   def filter_value(name, value)
-    # filter domain name
-    if %w[disabled_image_download_domains onebox_domains_whitelist exclude_rel_nofollow_domains email_domains_blacklist email_domains_whitelist white_listed_spam_host_domains].include? name
+    if %w[disabled_image_download_domains onebox_domains_blacklist exclude_rel_nofollow_domains email_domains_blacklist email_domains_whitelist white_listed_spam_host_domains].include? name
       domain_array = []
-      value.split('|').each { |url|
-        domain_array.push(get_hostname(url))
-      }
+      value.split('|').each { |url| domain_array << get_hostname(url) }
       value = domain_array.join("|")
     end
     value

@@ -136,6 +136,7 @@ nl:
         enabled: 'zichtbaar %{when}'
         disabled: 'niet zichtbaar %{when}'
     topic_admin_menu: "Adminacties voor topic"
+    wizard_required: "Het is tijd om je forum te configureren! <a href='%{url}' data-auto-route='true'>Start de Setup Wizard</a>!"
     emails_are_disabled: "Alle uitgaande e-mails zijn uitgeschakeld door een beheerder. Geen enkele vorm van e-mail notificatie wordt verstuurd."
     bootstrap_mode_enabled: "Om het lanceren van een website makkelijker te maken, zit je nu in bootstrapmodus. Alle nieuwe gebruikers krijgen trustlevel 1 en zullen dagelijkse e-mailupdates krijgen. Dit wordt automatisch uitgeschakeld wanneer het totale gebruikersaantal hoger dan %{min_users} gebruikers wordt."
     bootstrap_mode_disabled: "Bootstrap modus zal uitgeschakeld worden in de komende 24 uur."
@@ -505,12 +506,9 @@ nl:
       watched_topics_link: "Toon in de gaten gehouden topics"
       automatically_unpin_topics: "Topics automatisch lospinnen als ik het laatste bericht bereik."
       apps: "Apps"
-      revoke_access: "Toegang intrekken"
-      undo_revoke_access: "Toegang intrekken ongedaan maken"
-      api_permissions: "Permissies:"
+      revoke_access: "Toegang Intrekken"
+      undo_revoke_access: "Toegang Intrekken Ongedaan Maken"
       api_approved: "Goedgekeurd:"
-      api_read: "lezen"
-      api_read_write: "lezen en schrijven"
       staff_counters:
         flags_given: "behulpzame markeringen"
         flagged_posts: "gemarkeerde berichten"
@@ -599,6 +597,7 @@ nl:
         title: "Interfacetaal"
         instructions: "De taal waarin het forum wordt getoond. Deze verandert als je de pagina herlaadt."
         default: "(standaard)"
+        any: "elke"
       password_confirmation:
         title: "Nogmaals het wachtwoord"
       last_posted: "Laatste bericht"
@@ -656,6 +655,7 @@ nl:
         after_4_minutes: "na 4 minuten"
         after_5_minutes: "na 5 minuten"
         after_10_minutes: "na 10 minuten"
+      notification_level_when_replying: "Als ik een bericht in een topic plaats , zet dat topic op"
       invited:
         search: "Typ om uitnodigingen te zoeken..."
         title: "Uitnodigingen"
@@ -1094,12 +1094,51 @@ nl:
         category: "Doorzoek de #{{category}} categorie"
         topic: "Zoek in deze topic"
         private_messages: "Zoek berichten"
+      advanced:
+        title: Uitgebreid Zoeken
+        posted_by:
+          label: Gepost door
+        in_category:
+          label: In Categorie
+        in_group:
+          label: In Groep
+        with_badge:
+          label: Meld Badge
+        with_tags:
+          label: Met Tags
+        filters:
+          label: Alleen topics/posts vinden...
+          likes: die ik geliked heb
+          posted: waar ik in gepost heb
+          watching: die ik watch
+          tracking: die ik volg
+          private: die in mijn berichten staan
+          bookmarks: die ik opgeslagen heb als favoriet
+          first: die het eerste bericht zijn
+          pinned: die gepind zijn
+          unpinned: die niet gepind zijn
+          wiki: die een wiki zijn
+        statuses:
+          label: Waar onderwerpen
+          open: open zijn
+          closed: gesloten zijn
+          archived: gearchiveerd zijn
+          noreplies: geen reacties hebben
+          single_user: een enkele gebruiker bevatten
+        post:
+          count:
+            label: Minimaal Bericht Aantal
+          time:
+            label: Geplaatst
+            before: voor
+            after: na
     hamburger_menu: "ga naar een andere topiclijst of categorie"
     new_item: "nieuw"
     go_back: 'ga terug'
     not_logged_in_user: 'gebruikerspagina met samenvatting van huidige activiteit en voorkeuren'
     current_user: 'ga naar je gebruikerspagina'
     topics:
+      new_messages_marker: "laatste bezoek"
       bulk:
         unlist_topics: "Topics van lijst halen"
         reset_read: "markeer als ongelezen"
@@ -1306,6 +1345,9 @@ nl:
       share:
         title: 'Deel'
         help: 'deel een link naar deze topic'
+      print:
+        title: 'Printen'
+        help: 'Open een printervriendelijke versie van dit topic'
       flag_topic:
         title: 'Markeer'
         help: 'geef een privé-markering aan deze topic of stuur er een privé-bericht over'
@@ -1916,6 +1958,7 @@ nl:
         mark_regular: '<b>m</b>, <b>r</b> Markeer topic als normaal'
         mark_tracking: '<b>m</b>, <b>t</b> Volg topic'
         mark_watching: '<b>m</b>, <b>w</b> Houd topic in de gaten'
+        print: '<b>ctrl</b>+<b>p</b> Print topic'
     badges:
       earned_n_times:
         one: "Deze badge is 1 keer verdiend"
@@ -2980,3 +3023,22 @@ nl:
           label: "Nieuw:"
           add: "Voeg toe"
           filter: "Zoeken (URL of Externe URL)"
+  wizard_js:
+    wizard:
+      done: "Klaar"
+      back: "Vorige"
+      next: "Volgende"
+      step: "%{current} van %{total}"
+      upload: "Uploaden"
+      uploading: "Uploaden..."
+      quit: "Misschien Later"
+      staff_count:
+        one: "Jouw community heeft 1 staflid."
+        other: "Jouw community heeft %{count} stafleden."
+      invites:
+        add_user: "toevoegen"
+        none_added: "Je hebt geen stafleden uitgenodigd. Weet je zeker dat je verder wilt gaan?"
+        roles:
+          admin: "Beheerder"
+          moderator: "Moderator"
+          regular: "Normale Gebruiker"

@@ -479,7 +479,6 @@ zh_TW:
     s3_config_warning: '伺服器被設定為上傳文件到 s3，但是至少有一個值未被設定： s3_access_key_id, s3_secret_access_key 或 s3_upload_bucket。到<a href="/admin/site_settings">設定</a>更新此設定。<a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">參考如何設置圖片上傳至 S3</a>。'
     s3_backup_config_warning: '伺服器被設置為上傳備份到 s3，但是至少有一個值未被設定： s3_access_key_id, s3_secret_access_key 或 s3_upload_bucket。到<a href="/admin/site_settings">設定</a>更新此設定。<a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">參考如何設置圖片上傳至 S3</a>。'
     image_magick_warning: '伺服器被設置為給大圖片創建縮略圖，但是 ImageMagick 沒有被安裝。使用你喜愛的包裝管理器安裝 ImageMagick 或<a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">下載最新版</a>。'
-    consumer_email_warning: "您的網站正以Gmail或其他服務供應商郵件服務發送郵件。<a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>Gmail限制每日郵件發送數量</a>. 請考慮使用其他電郵服務商來保證郵件能成功發送，例如 mandrill.com。"
   site_settings:
     censored_words: "將被自動替換為 &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "自動刪除被隱藏超過 30 天的帖子。"
@@ -516,7 +515,6 @@ zh_TW:
     add_rel_nofollow_to_user_content: "添加 rel nofollow 屬性到所有的用戶內容，除了內部鏈接（包括父域名）。如果你更改了這個，你必須重新調制所有帖子，而該命令為：“rake posts:rebake”"
     post_excerpt_maxlength: "文章摘要的最大文字長度"
     post_onebox_maxlength: "Onebox 處理後的 Discourse 帖子的最大字符長度"
-    onebox_domains_whitelist: "對這些站點啟用 Onebox 的域名列表；這些域名應該支持 OpenGraph 或 oEmbed。在此測試它們：http://iframely.com/debug"
     apple_touch_icon_url: "Apple 觸碰設備使用的圖示，建議 144 X 144px 大小"
     notification_email: "這個表格：被用於發送所有重要系統郵件的郵箱地址。指定的域名必須正確設置 SPF、DKIM 和反向 PTR 記錄以發送郵件。"
     email_custom_headers: "自定義的電子郵件標題的管道分隔列表"

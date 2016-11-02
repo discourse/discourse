@@ -7,7 +7,7 @@ import { emailValid } from 'discourse/lib/utilities';
 import InputValidation from 'discourse/models/input-validation';
 
 export default Ember.Controller.extend(ModalFunctionality, {
-  needs: ['login'],
+  login: Ember.inject.controller(),
 
   uniqueUsernameValidation: null,
   globalNicknameExists: false,
@@ -56,7 +56,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
     // Validate required fields
     let userFields = this.get('userFields');
-    if (userFields) { userFields = userFields.filterProperty('field.required'); }
+    if (userFields) { userFields = userFields.filterBy('field.required'); }
     if (!Ember.isEmpty(userFields)) {
       const anyEmpty = userFields.any(function(uf) {
         const val = uf.get('value');
@@ -345,7 +345,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
   actions: {
     externalLogin(provider) {
-      this.get('controllers.login').send('externalLogin', provider);
+      this.get('login').send('externalLogin', provider);
     },
 
     createAccount() {

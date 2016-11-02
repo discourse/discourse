@@ -764,7 +764,6 @@ ru:
     s3_config_warning: 'Сервер сконфигурирован на загрузку файлов в хранилище S3, однако не указаны некоторые значения из списка: s3_access_key_id, s3_secret_access_key или s3_upload_bucket. Перейдите в <a href="/admin/site_settings">Настройки сайта</a> и установите необходимые значения. Для получения дополнительной информации перейдите по ссылке <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">How to set up image uploads to S3?</a>.'
     s3_backup_config_warning: 'Сервер сконфигурирован на загрузку резервных копий в хранилище S3, однако не заданы все необходимые настройки : s3_access_key_id, s3_secret_access_key, s3_backup_bucket. Перейдите в <a href="/admin/site_settings">настройки сайта</a> и установите необходимые значения. Для получения дополнительной информации перейдите по ссылке <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">How to set up image uploads to S3?</a>.'
     image_magick_warning: 'Сервер сконфигурирован на создание превью больших изображений, однако на сервере не установлен ImageMagick. Установите ImageMagick используя системный менеджер пакетов, или пройдите по ссылке <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">для загрузки последней версии</a>.'
-    consumer_email_warning: "Сайт настроен на использование Gmail (или другого почтового сервиса) для отправки сообщений. Gmail <a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>имеет ограничения</a> на количество отправляемых сообщений. Вы можете рассмотреть возможность использования альтернативного поставщика услуг (например, mandrill.com) для обеспечения бесперебойности доставки почтовых сообщений."
   site_settings:
     censored_words: "Слова, которые будут автоматически заменены на &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Автоматически удалять сообщения, скрытые дольше чем 30 дней."
@@ -801,7 +800,6 @@ ru:
     add_rel_nofollow_to_user_content: "Добавить \"rel nofollow\" для всех ссылок за исключением внутренних (включая родительский домен). Изменение данной настройки потребует обновления всех сообщений с помощью команды \"rake posts:rebake\""
     post_excerpt_maxlength: "Максимальная длина краткого изложения сообщения."
     post_onebox_maxlength: "Максимальная длина сообщения с форума Discourse в режиме умной вставки."
-    onebox_domains_whitelist: "Список доменов, разрешенных для умной вставки. Эти домены должны поддерживать OpenGraph или oEmbed. Проверьте их по ссылке http://iframely.com/debug"
     apple_touch_icon_url: "Иконка используемая для тач-устройств Apple. Рекомендуемый размер 144 x 144 px."
     notification_email: "Отправитель: E-mail использующийся при отправке всех системных писем. Домен, указанный здесь должен иметь правильно сконфигурированные SPF, DKIM и  reverse PTR записи, для успешной отправки."
     email_custom_headers: "Разделенный чертой список дополнительных заголовков в почтовых сообщениях"

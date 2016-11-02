@@ -1,6 +1,6 @@
-export default Ember.ArrayController.extend({
+export default Ember.Controller.extend({
   actions: {
-    selectTagGroup: function(tagGroup) {
+    selectTagGroup(tagGroup) {
       if (this.get('selectedItem')) { this.get('selectedItem').set('selected', false); }
       this.set('selectedItem', tagGroup);
       tagGroup.set('selected', true);
@@ -8,10 +8,10 @@ export default Ember.ArrayController.extend({
       this.transitionToRoute('tagGroups.show', tagGroup);
     },
 
-    newTagGroup: function() {
+    newTagGroup() {
       const newTagGroup = this.store.createRecord('tag-group');
       newTagGroup.set('name', I18n.t('tagging.groups.new_name'));
-      this.pushObject(newTagGroup);
+      this.get('model').pushObject(newTagGroup);
       this.send('selectTagGroup', newTagGroup);
     }
   }

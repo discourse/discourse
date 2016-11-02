@@ -699,7 +699,6 @@ pl_PL:
     s3_config_warning: 'Serwer jest skonfigurowany by przesyłać pliki na s3, ale przynajmniej jedno z następujących ustawień nie jest ustawione: s3_access_key_id, s3_secret_access_key or s3_upload_bucket. Przejdź do <a href="/admin/site_settings">ustawień serwisu</a> i zmień ustawienia. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Zobacz ten poradnik by dowiedzieć się więcej</a>.'
     s3_backup_config_warning: 'Serwer jest skonfigurowany tak, aby wysyłać kopie zapasowe do s3, ale jedno z ustawień nie jest ustawione prawidłowo: s3_access_key_id, s3_secret_access_key or s3_backup_bucket. Idź do <a href="/admin/site_settings"> ustawień strony </a> i zaktualizuj ustawienia. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank"> Zobacz Jak ustawić wysyłanie zdjęć do S3 </a>.'
     image_magick_warning: 'Serwer jest skonfigurowany by tworzyć miniaturki dużych obrazów, ale ImageMagick nie jest zainstalowany. Zainstaluj ImageMagick za pomocą ulubionego menedżera pakietów lub <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">pobierz najnowszą wersję</a>.'
-    consumer_email_warning: "Twój serwis jest skonfigurowany by używać Gmaila (lub innego konsumenckiego serwisu poczty) do wysyłania emaili. <a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>Gmail ogranicza jak dużo wiadomości możesz wysłać</a>. Rozważ wykorzystanie dostawcy serwisu pocztowego jak mandrill.com by zagwarantować dostarczanie poczty."
   site_settings:
     censored_words: "Wskazane słowa będą automatycznie zamieniane na  &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Automatycznie kasuj wpisy ukryte dłużej niż 30 dni."
@@ -738,7 +737,6 @@ pl_PL:
     fixed_category_positions_on_create: "Jeżeli jest sprawdzone to porządkowanie kategorii będzie zależało od stworzonego tematu (requires fixed_category_positions). "
     post_excerpt_maxlength: "Maksymalna długość podsumowania / streszczenia wpisu."
     post_onebox_maxlength: "Maksymalna długość (ilość znaków) treści wpisu osadzonego via Onebox"
-    onebox_domains_whitelist: "Lista domen dla których włączony jest oneboxing; te domeny powinny wspierać OpenGraph lub oEmbed. Można to sprawdzić na  http://iframely.com/debug"
     logo_url: "Zdjęcie logo w lewym górnym rogu twojej strony powinno mieć kształt szerokiego prostokąta. Jeśli zostawisz miejsce puste, wyświetlany będzie tytuł strony."
     apple_touch_icon_url: "Ikona używana przez urządzenia Apple. Rekomendowany wymiar to 144px na 144px."
     notification_email: "Adres z którego wysyłane będą wszystkie istotne emaile systemowe.\nKonieczna jest poprawna konfiguracja rekordów SPF, DKIM oraz zwrotnego PTR użytej domeny."

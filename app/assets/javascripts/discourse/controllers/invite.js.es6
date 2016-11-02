@@ -2,7 +2,7 @@ import ModalFunctionality from 'discourse/mixins/modal-functionality';
 import { emailValid } from 'discourse/lib/utilities';
 
 export default Ember.Controller.extend(ModalFunctionality, {
-  needs: ['user-invited-show'],
+  userInvitedShow: Ember.inject.controller('user-invited-show'),
 
   // If this isn't defined, it will proxy to the user model on the preferences
   // page which is wrong.
@@ -169,7 +169,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
       if (this.get('disabled')) { return; }
 
       const groupNames = this.get('model.groupNames'),
-            userInvitedController = this.get('controllers.user-invited-show'),
+            userInvitedController = this.get('userInvitedShow'),
             model = this.get('model');
 
       model.setProperties({ saving: true, error: false });
@@ -215,7 +215,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
       if (this.get('disabled')) { return; }
 
       const groupNames = this.get('model.groupNames'),
-            userInvitedController = this.get('controllers.user-invited-show'),
+            userInvitedController = this.get('userInvitedShow'),
             model = this.get('model');
 
       var topicId = null;

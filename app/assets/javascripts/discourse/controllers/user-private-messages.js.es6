@@ -2,18 +2,21 @@ import computed from 'ember-addons/ember-computed-decorators';
 import Topic from 'discourse/models/topic';
 
 export default Ember.Controller.extend({
-  needs: ["application", "user-topics-list", "user"],
+  application: Ember.inject.controller(),
+  userTopicsList: Ember.inject.controller('user-topics-list'),
+  user: Ember.inject.controller(),
+
   pmView: false,
-  viewingSelf: Em.computed.alias('controllers.user.viewingSelf'),
+  viewingSelf: Em.computed.alias('user.viewingSelf'),
   isGroup: Em.computed.equal('pmView', 'groups'),
-  currentPath: Em.computed.alias('controllers.application.currentPath'),
-  selected: Em.computed.alias('controllers.user-topics-list.selected'),
-  bulkSelectEnabled: Em.computed.alias('controllers.user-topics-list.bulkSelectEnabled'),
+  currentPath: Em.computed.alias('application.currentPath'),
+  selected: Em.computed.alias('userTopicsList.selected'),
+  bulkSelectEnabled: Em.computed.alias('userTopicsList.bulkSelectEnabled'),
 
   showNewPM: function(){
-    return this.get('controllers.user.viewingSelf') &&
+    return this.get('user.viewingSelf') &&
            Discourse.User.currentProp('can_send_private_messages');
-  }.property('controllers.user.viewingSelf'),
+  }.property('user.viewingSelf'),
 
   @computed('selected.[]', 'bulkSelectEnabled')
   hasSelection(selected, bulkSelectEnabled){
@@ -39,7 +42,7 @@ export default Ember.Controller.extend({
     }
 
     Topic.bulkOperation(selected,params).then(() => {
-      const model = this.get('controllers.user-topics-list.model');
+      const model = this.get('userTopicsList.model');
       const topics = model.get('topics');
       topics.removeObjects(selected);
       selected.clear();

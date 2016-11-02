@@ -11,7 +11,10 @@ import { categoryBadgeHTML } from 'discourse/helpers/category-link';
 import Post from 'discourse/models/post';
 
 export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
-  needs: ['modal', 'composer', 'quote-button', 'application'],
+  composer: Ember.inject.controller(),
+  quoteButton: Ember.inject.controller('quote-button'),
+  application: Ember.inject.controller(),
+
   multiSelect: false,
   allPostsSelected: false,
   editingTopic: false,
@@ -24,6 +27,7 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
   retrying: false,
   userTriggeredProgress: null,
   _progressIndex: null,
+  hasScrolled: null,
 
   topicDelegated: [
     'toggleMultiSelect',
@@ -39,9 +43,14 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
     'convertToPrivateMessage',
     'jumpTop',
     'jumpToPost',
+    'jumpToPostPrompt',
     'jumpToIndex',
     'jumpBottom',
-    'replyToPost'
+    'replyToPost',
+    'toggleArchiveMessage',
+    'showInvite',
+    'toggleBookmark',
+    'showFlagTopic'
   ],
 
   _titleChanged: function() {
@@ -265,24 +274,26 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
       this.deleteTopic();
     },
 
-    archiveMessage() {
+    // Archive a PM (as opposed to archiving a topic)
+    toggleArchiveMessage() {
       const topic = this.get('model');
-      topic.archiveMessage().then(()=>{
-        this.gotoInbox(topic.get("inboxGroupName"));
-      });
-    },
+      if (topic.get('archiving')) { return; }
 
-    moveToInbox() {
-      const topic = this.get('model');
-      topic.moveToInbox().then(()=>{
-        this.gotoInbox(topic.get("inboxGroupName"));
-      });
+      if (topic.get('message_archived')) {
+        topic.moveToInbox().then(()=>{
+          this.gotoInbox(topic.get("inboxGroupName"));
+        });
+      } else {
+        topic.archiveMessage().then(()=>{
+          this.gotoInbox(topic.get("inboxGroupName"));
+        });
+      }
     },
 
     // Post related methods
     replyToPost(post) {
-      const composerController = this.get('controllers.composer'),
-          quoteController = this.get('controllers.quote-button'),
+      const composerController = this.get('composer'),
+          quoteController = this.get('quoteButton'),
           quotedText = Quote.build(quoteController.get('post'), quoteController.get('buffer')),
           topic = post ? post.get('topic') : this.get('model');
 
@@ -379,7 +390,7 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
         return false;
       }
 
-      const composer = this.get('controllers.composer'),
+      const composer = this.get('composer'),
             composerModel = composer.get('model'),
             opts = {
               post: post,
@@ -413,6 +424,14 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
 
     jumpToIndex(index) {
       this._jumpToPostId(this.get('model.postStream.stream')[index-1]);
+    },
+
+    jumpToPostPrompt() {
+      const postText = prompt(I18n.t('topic.progress.jump_prompt_long'));
+      if (postText === null) { return; }
+      const postNumber = parseInt(postText, 10);
+      if (postNumber === 0) { return; }
+      this._jumpToPostId(this.get('model.postStream').findPostIdForPostNumber(postNumber));
     },
 
     jumpToPost(postNumber) {
@@ -601,8 +620,8 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
     },
 
     replyAsNewTopic(post) {
-      const composerController = this.get('controllers.composer');
-      const quoteController = this.get('controllers.quote-button');
+      const composerController = this.get('composer');
+      const quoteController = this.get('quoteButton');
       post = post || quoteController.get('post');
       const quotedText = Quote.build(post, quoteController.get('buffer'));
 
@@ -761,7 +780,7 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
     const selectedReplies = this.get('selectedReplies');
     selectedReplies.removeObject(post);
 
-    const selectedReply = selectedReplies.findProperty('post_number', post.get('reply_to_post_number'));
+    const selectedReply = selectedReplies.findBy('post_number', post.get('reply_to_post_number'));
     if (selectedReply) { selectedReplies.removeObject(selectedReply); }
 
     this.set('allPostsSelected', false);
@@ -770,7 +789,7 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
   postSelected(post) {
     if (this.get('allPostsSelected')) { return true; }
     if (this.get('selectedPosts').contains(post)) { return true; }
-    if (this.get('selectedReplies').findProperty('post_number', post.get('reply_to_post_number'))) { return true; }
+    if (this.get('selectedReplies').findBy('post_number', post.get('reply_to_post_number'))) { return true; }
 
     return false;
   },
@@ -904,7 +923,7 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
 
   _showFooter: function() {
     const showFooter = this.get("model.postStream.loaded") && this.get("model.postStream.loadedAllPosts");
-    this.set("controllers.application.showFooter", showFooter);
+    this.set("application.showFooter", showFooter);
   }.observes("model.postStream.{loaded,loadedAllPosts}")
 
 });

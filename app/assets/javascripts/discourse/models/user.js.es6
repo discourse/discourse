@@ -64,7 +64,7 @@ const User = RestModel.extend({
 
   @computed('profile_background')
   profileBackground(bgUrl) {
-    if (Em.isEmpty(bgUrl) || !Discourse.SiteSettings.allow_profile_backgrounds) { return; }
+    if (Em.isEmpty(bgUrl) || !Discourse.SiteSettings.allow_profile_backgrounds) { return "".htmlSafe(); }
     return ('background-image: url(' + Discourse.getURLWithCDN(bgUrl) + ')').htmlSafe();
   },
 
@@ -153,7 +153,7 @@ const User = RestModel.extend({
 
   @computed("trust_level")
   trustLevel(trustLevel) {
-    return Discourse.Site.currentProp('trustLevels').findProperty('id', parseInt(trustLevel, 10));
+    return Discourse.Site.currentProp('trustLevels').findBy('id', parseInt(trustLevel, 10));
   },
 
   isBasic: Em.computed.equal('trust_level', 0),
@@ -322,7 +322,7 @@ const User = RestModel.extend({
   @computed("stats.@each.isPM")
   statsExcludingPms() {
     if (Ember.isEmpty(this.get('stats'))) return [];
-    return this.get('stats').rejectProperty('isPM');
+    return this.get('stats').rejectBy('isPM');
   },
 
   findDetails(options) {
@@ -525,12 +525,12 @@ User.reopenClass(Singleton, {
       action_type: UserAction.TYPES.replies
     });
 
-    stats.filterProperty('isResponse').forEach(stat => {
+    stats.filterBy('isResponse').forEach(stat => {
       responses.set('count', responses.get('count') + stat.get('count'));
     });
 
     const result = Em.A();
-    result.pushObjects(stats.rejectProperty('isResponse'));
+    result.pushObjects(stats.rejectBy('isResponse'));
 
     let insertAt = 0;
     result.forEach((item, index) => {

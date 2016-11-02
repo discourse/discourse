@@ -1,19 +1,12 @@
-/**
-  A helper for looking up oneboxes and displaying them
-
-  For now it only stores in a local Javascript Object, in future we can change it so it uses localStorage
-  or some other mechanism.
-**/
-
 const localCache = {};
 const failedCache = {};
 
-// Perform a lookup of a onebox based an anchor element. It will insert a loading
-// indicator and remove it when the loading is complete or fails.
+// Perform a lookup of a onebox based an anchor element.
+// It will insert a loading indicator and remove it when the loading is complete or fails.
 export function load(e, refresh, ajax) {
-  var $elem = $(e);
+  const $elem = $(e);
 
-  // If the onebox has loaded, return
+  // If the onebox has loaded or is loading, return
   if ($elem.data('onebox-loaded')) return;
   if ($elem.hasClass('loading-onebox')) return;
 
@@ -41,7 +34,7 @@ export function load(e, refresh, ajax) {
   }).then(html => {
     localCache[url] = html;
     $elem.replaceWith(html);
-  }, function() {
+  }, () => {
     failedCache[url] = true;
   }).finally(() => {
     $elem.removeClass('loading-onebox');

@@ -1,5 +1,4 @@
 export default Ember.Object.extend({
-
   localizedName: function(){
     if(this.forceName){
       return this.forceName;

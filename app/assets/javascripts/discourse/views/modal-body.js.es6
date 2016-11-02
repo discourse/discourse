@@ -7,15 +7,17 @@ export default Ember.View.extend({
   _setupModal() {
     $('#modal-alert').hide();
     $('#discourse-modal').modal('show');
+    Ember.run.scheduleOnce('afterRender', this, this._afterFirstRender);
+  },
 
-    // Focus on first element
+  _afterFirstRender() {
     if (!this.site.mobileView && this.get('focusInput')) {
-      Em.run.schedule('afterRender', () => this.$('input:first').focus());
+      this.$('input:first').focus();
     }
 
     const title = this.get('title');
     if (title) {
-      this.set('controller.controllers.modal.title', title);
+      this.set('controller.modal.title', title);
     }
   },
 

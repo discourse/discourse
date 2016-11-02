@@ -180,4 +180,15 @@ describe Plugin::Instance do
     end
   end
 
+  describe '.register_seedfu_fixtures' do
+    it "should add the new path to SeedFu's fixtures path" do
+      plugin = Plugin::Instance.new nil, "/tmp/test.rb"
+      plugin.register_seedfu_fixtures(['some_path'])
+      plugin.register_seedfu_fixtures('some_path2')
+
+      expect(SeedFu.fixture_paths).to include('some_path')
+      expect(SeedFu.fixture_paths).to include('some_path2')
+    end
+  end
+
 end

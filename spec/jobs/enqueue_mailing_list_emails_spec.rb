@@ -82,6 +82,11 @@ describe Jobs::EnqueueMailingListEmails do
         expect(subject).to_not include user.id
       end
 
+      it "doesn't return users with mailing list mode set to 'individual_excluding_own'" do
+        user_option.update(mailing_list_mode_frequency: 2)
+        expect(subject).to_not include user.id
+      end
+
       it "doesn't return a user who has received the mailing list summary earlier" do
         user.update(first_seen_at: 5.hours.ago)
         expect(subject).to_not include user.id

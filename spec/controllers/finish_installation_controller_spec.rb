@@ -82,4 +82,18 @@ describe FinishInstallationController do
       end
     end
   end
+
+  describe '.resend_email' do
+    before do
+      SiteSetting.has_login_hint = true
+      GlobalSetting.stubs(:developer_emails).returns("robin@example.com")
+      post :register, email: 'robin@example.com', username: 'eviltrout', password: 'disismypasswordokay'
+    end
+
+    it "resends the email" do
+      Jobs.expects(:enqueue).with(:critical_user_email, has_entries(type: :signup))
+      get :resend_email
+      expect(response).to be_success
+    end
+  end
 end

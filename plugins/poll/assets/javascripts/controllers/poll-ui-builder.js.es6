@@ -2,7 +2,6 @@ import { default as computed, observes } from 'ember-addons/ember-computed-decor
 import InputValidation from 'discourse/models/input-validation';
 
 export default Ember.Controller.extend({
-  needs: ['modal'],
   numberPollType: 'number',
   multiplePollType: 'multiple',
 

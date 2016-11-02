@@ -536,6 +536,8 @@ end
 #  topic_template                :text
 #  suppress_from_homepage        :boolean          default(FALSE)
 #  contains_messages             :boolean
+#  sort_order                    :string
+#  sort_ascending                :boolean
 #
 # Indexes
 #

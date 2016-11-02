@@ -128,7 +128,7 @@ class PostsController < ApplicationController
     end
 
     guardian.ensure_can_see!(post)
-    redirect_to post.url
+    redirect_to path(post.url)
   end
 
   def create

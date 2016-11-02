@@ -1,11 +1,9 @@
 import { escapeExpression } from 'discourse/lib/utilities';
 
 export default Ember.Controller.extend({
-  needs: ['modal'],
-
-  sample: Em.computed.alias('model.sample'),
-  errors: Em.computed.alias('model.errors'),
-  count: Em.computed.alias('model.grant_count'),
+  sample: Ember.computed.alias('model.sample'),
+  errors: Ember.computed.alias('model.errors'),
+  count: Ember.computed.alias('model.grant_count'),
 
   count_warning: function() {
     if (this.get('count') <= 10) {

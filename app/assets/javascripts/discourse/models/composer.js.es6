@@ -118,7 +118,7 @@ const Composer = RestModel.extend({
   }.property().volatile(),
 
   archetype: function() {
-    return this.get('archetypes').findProperty('id', this.get('archetypeId'));
+    return this.get('archetypes').findBy('id', this.get('archetypeId'));
   }.property('archetypeId'),
 
   archetypeChanged: function() {
@@ -378,14 +378,14 @@ const Composer = RestModel.extend({
 
     // If the user didn't change the template, clear it
     if (oldCategoryId) {
-      const oldCat = this.site.categories.findProperty('id', oldCategoryId);
+      const oldCat = this.site.categories.findBy('id', oldCategoryId);
       if (oldCat && (oldCat.get('topic_template') === reply)) {
         reply = "";
       }
     }
 
     if (!Ember.isEmpty(reply)) { return; }
-    const category = this.site.categories.findProperty('id', categoryId);
+    const category = this.site.categories.findBy('id', categoryId);
     if (category) {
       this.set('reply', category.get('topic_template') || "");
     }

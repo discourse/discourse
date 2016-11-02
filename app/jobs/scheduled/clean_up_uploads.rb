@@ -5,27 +5,29 @@ module Jobs
     def execute(args)
       return unless SiteSetting.clean_up_uploads?
 
-      ignore_urls  = []
-      ignore_urls |= UserProfile.uniq.where("profile_background IS NOT NULL AND profile_background != ''").pluck(:profile_background)
-      ignore_urls |= UserProfile.uniq.where("card_background IS NOT NULL AND card_background != ''").pluck(:card_background)
-      ignore_urls |= Category.uniq.where("logo_url IS NOT NULL AND logo_url != ''").pluck(:logo_url)
-      ignore_urls |= Category.uniq.where("background_url IS NOT NULL AND background_url != ''").pluck(:background_url)
-
       # Any URLs in site settings are fair game
-      ignore_urls |= [SiteSetting.logo_url, SiteSetting.logo_small_url, SiteSetting.favicon_url,
-                      SiteSetting.apple_touch_icon_url]
-
-      ids  = []
-      ids |= PostUpload.uniq.pluck(:upload_id)
-      ids |= User.uniq.where("uploaded_avatar_id IS NOT NULL").pluck(:uploaded_avatar_id)
-      ids |= UserAvatar.uniq.where("gravatar_upload_id IS NOT NULL").pluck(:gravatar_upload_id)
+      ignore_urls = [
+        SiteSetting.logo_url,
+        SiteSetting.logo_small_url,
+        SiteSetting.favicon_url,
+        SiteSetting.apple_touch_icon_url
+      ]
 
       grace_period = [SiteSetting.clean_orphan_uploads_grace_period_hours, 1].max
 
-      result = Upload.where("retain_hours IS NULL OR created_at < current_timestamp - interval '1 hour' * retain_hours")
-      result = result.where("created_at < ?", grace_period.hour.ago)
-      result = result.where("id NOT IN (?)", ids) if !ids.empty?
-      result = result.where("url NOT IN (?)", ignore_urls) if !ignore_urls.empty?
+      result = Upload.where("uploads.retain_hours IS NULL OR uploads.created_at < current_timestamp - interval '1 hour' * uploads.retain_hours")
+        .where("uploads.created_at < ?", grace_period.hour.ago)
+        .joins("LEFT JOIN post_uploads pu ON pu.upload_id = uploads.id")
+        .joins("LEFT JOIN users u ON u.uploaded_avatar_id = uploads.id")
+        .joins("LEFT JOIN user_avatars ua ON (ua.gravatar_upload_id = uploads.id OR ua.custom_upload_id = uploads.id)")
+        .joins("LEFT JOIN user_profiles up ON up.profile_background = uploads.url OR up.card_background = uploads.url")
+        .joins("LEFT JOIN categories c ON c.logo_url = uploads.url OR c.background_url = uploads.url")
+        .where("pu.upload_id IS NULL")
+        .where("u.uploaded_avatar_id IS NULL")
+        .where("ua.gravatar_upload_id IS NULL AND ua.custom_upload_id IS NULL")
+        .where("up.profile_background IS NULL AND up.card_background IS NULL")
+        .where("c.logo_url IS NULL AND c.background_url IS NULL")
+        .where("uploads.url NOT IN (?)", ignore_urls)
 
       result.find_each do |upload|
         next if QueuedPost.where("raw LIKE '%#{upload.sha1}%'").exists?

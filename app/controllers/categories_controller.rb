@@ -238,6 +238,8 @@ class CategoriesController < ApplicationController
                         :slug,
                         :allow_badges,
                         :topic_template,
+                        :sort_order,
+                        :sort_ascending,
                         :custom_fields => [params[:custom_fields].try(:keys)],
                         :permissions => [*p.try(:keys)],
                         :allowed_tags => [],

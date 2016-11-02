@@ -72,7 +72,7 @@ const TopicDetails = RestModel.extend({
       type: 'PUT',
       data: { name: name }
     }).then(() => {
-      groups.removeObject(groups.findProperty('name', name));
+      groups.removeObject(groups.findBy('name', name));
     });
   },
 
@@ -84,7 +84,7 @@ const TopicDetails = RestModel.extend({
       type: 'PUT',
       data: { username: username }
     }).then(() => {
-      users.removeObject(users.findProperty('username', username));
+      users.removeObject(users.findBy('username', username));
     });
   }
 });

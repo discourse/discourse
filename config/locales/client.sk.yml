@@ -524,10 +524,7 @@ sk:
       apps: "Appky"
       revoke_access: "Odvolať prístup"
       undo_revoke_access: "Zrušiť odvolanie prístupu"
-      api_permissions: "Práva:"
       api_approved: "Schválený:"
-      api_read: "čítať"
-      api_read_write: "čítať a zapisovať"
       staff_counters:
         flags_given: "nápomocné značky"
         flagged_posts: "označkované príspevky"
@@ -1100,7 +1097,7 @@ sk:
     new_item: "nový"
     go_back: 'späť'
     not_logged_in_user: 'používateľská stránka so súhrnom aktivít a nastavení'
-    current_user: 'prejsť na Vašu uťívateľskú stránku'
+    current_user: 'prejsť na Vašu používateľskú stránku'
     topics:
       bulk:
         unlist_topics: "Dôverné témy"
@@ -1350,7 +1347,7 @@ sk:
         email_or_username: "Email, alebo používateľské meno pozvaného"
         email_or_username_placeholder: "emailova adresa alebo používateľské meno"
         action: "Pozvi"
-        success: "Pozvali sme tohoto uťívateľa aby sa podieľal na tejto správe"
+        success: "Pozvali sme tohoto používateľa aby sa podieľal na tejto správe"
         error: "Ľutujeme, pri pozývaní tohto používateľa nastala chyba."
         group_name: "názov skupiny"
       controls: "Ovládacie prvky Témy"
@@ -1367,7 +1364,7 @@ sk:
         to_username: "Zadajte používateľské meno osoby, ktorú chcete pozvať. Pošleme mu pozvánku s odkazom na túto tému."
         email_placeholder: 'name@example.com'
         success_email: "Poslali sme email s pozvánkou na <b>{{emailOrUsername}}</b>. Upozorníme vas keď bude pozvánka použítá. Svoje pozvánky môžete sledovať na karte pozvánok vo svojom používateľskom profile."
-        success_username: "Pozvali sme tohoto uťívateľa aby sa podieľal na tejto téme."
+        success_username: "Pozvali sme tohoto používateľa aby sa podieľal na tejto téme."
         error: "Ľutujeme, nepodarilo sa nám pozvať túto osobu. Nebola už náhodou pozvaná? (Počet opakovaných pozvánok je obmedzený)"
       login_reply: 'Príhláste sa ak chcete odpovedať'
       filters:
@@ -2168,7 +2165,7 @@ sk:
         refresh: "Obnoviť"
         new: "Nový"
         selector_placeholder: "zadať používateľské meno"
-        name_placeholder: "Názov skupiny, bez medzier, rovnaké pravidlá ako pre uťívateľa"
+        name_placeholder: "Názov skupiny, bez medzier, rovnaké pravidlá ako pre používateľa"
         about: "Tu upravíte Vaše členstvo v skupinách a mená"
         group_members: "Členovia skupiny"
         delete: "Odstrániť"
@@ -2626,8 +2623,8 @@ sk:
         flags_given_received_count: 'Rozdané a prijaté označenia'
         approve: 'Schváliť'
         approved_by: "schválený"
-        approve_success: "Uťívateľ schválený a bol zaslaný email s aktivačnými inštrukciami"
-        approve_bulk_success: "Úspech! Všetci vybraní uťívateľia boli schválení a oboznáamení."
+        approve_success: "Poožívateľ schválený a bol zaslaný email s aktivačnými inštrukciami"
+        approve_bulk_success: "Úspech! Všetci vybraní používatelia boli schválení a oboznámení."
         time_read: "Doba Čítania"
         anonymize: "Anonymizovať používateľa"
         anonymize_confirm: "Ste si istý že chcete zmeniť tento účet na anonymný? Zmeni to používateľské meno, email a zmažú sa všetky informácie z profilu. "
@@ -2666,7 +2663,7 @@ sk:
         block_accept: 'Ano, zablokovať používateľa'
         deactivate_explanation: "Deaktivovaý používateľ musí znovu overiť svoj email"
         suspended_explanation: "Suspendovaní užívatelia sa nemôžu prihlasovať."
-        block_explanation: "Zablokovaní uťívatelia nemôžu zakladať témy ani pridávať príspevky."
+        block_explanation: "Zablokovaní používatelia nemôžu zakladať témy ani pridávať príspevky."
         staged_explanation: "Dočasný používateľ môže iba prispievať emailom do vybraných tém."
         trust_level_change_failed: "Nastala chyba pri zmene stupňa dôvery používateľa."
         suspend_modal_title: "Zruš práva používateľovi"

@@ -1,7 +1,9 @@
-export default Em.View.extend({
+import { bufferedRender } from 'discourse-common/lib/buffered-render';
+
+export default Ember.View.extend(bufferedRender({
   classNameBindings: [':container'],
 
-  render: function(buffer) {
+  buildBuffer(buffer) {
     buffer.push(this.get('controller.model'));
   }
-});
+}));

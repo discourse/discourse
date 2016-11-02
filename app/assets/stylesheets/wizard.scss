@@ -496,4 +496,14 @@ body.wizard {
   .invite-list .new-user { flex-direction: column !important; align-items: inherit !important; }
   .invite-list .new-user .invite-email { width: 100% !important; margin-bottom: 5px !important; }
   .invite-list .add-user { margin-top: 5px !important; }
+
+  canvas {
+    max-width: 365px;
+  }
+
+  .wizard-step-logos, .wizard-step-icons {
+    canvas {
+      max-width: 225px;
+    }
+  }
 }

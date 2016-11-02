@@ -504,8 +504,9 @@ pt_BR:
       muted_topics_link: "Mostrar tópicos silenciados"
       watched_topics_link: "Mostrar tópicos observados"
       automatically_unpin_topics: "Desafixar automaticamente os tópicos quando eu chegar ao fundo."
-      api_permissions: "Permissões:"
-      api_read_write: "ler e escrever"
+      apps: "Aplicativos"
+      revoke_access: "Revogar Acesso"
+      api_approved: "Aprovada:"
       staff_counters:
         flags_given: "sinalizadas úteis"
         flagged_posts: "posts sinalizados"
@@ -904,6 +905,7 @@ pt_BR:
       win10: "Win10"
     category_page_style:
       categories_only: "Categorias Apenas"
+      categories_with_featured_topics: "Categorias com Tópicos em Destaque"
       categories_and_latest_topics: "Categorias e Últimos Tópicos"
     shortcut_modifier_key:
       shift: 'Shift'
@@ -1082,12 +1084,46 @@ pt_BR:
         category: "Procurar a categoria #{{category}}"
         topic: "Procurar nesse tópico"
         private_messages: "Procurar mensagens"
+      advanced:
+        title: Busca avançada
+        posted_by:
+          label: Postado por
+        in_category:
+          label: Em Categoria
+        in_group:
+          label: Em Grupo
+        with_badge:
+          label: Com Emblema
+        with_tags:
+          label: Com Etiquetas
+        filters:
+          label: Retornar apenas tópicos/publicações que...
+          likes: Eu gostei
+          posted: Eu publiquei em
+          watching: Eu estou assistindo
+          tracking: Eu estou rastreando
+          private: estão em minhas mensagens
+          bookmarks: Eu marquei
+          pinned: está fixado
+          unpinned: não está fixado
+        statuses:
+          open: está aberto
+          closed: está fechado
+          archived: está arquivado
+          noreplies: tem zero respostas
+          single_user: contém um único usuário
+        post:
+          time:
+            label: Publicado
+            before: antes
+            after: depois
     hamburger_menu: "ir para outra listagem de tópicos ou categoria"
     new_item: "novo"
     go_back: 'voltar'
     not_logged_in_user: 'página do usuário com resumo de atividades correntes e preferencias'
     current_user: 'ir para a sua página de usuário'
     topics:
+      new_messages_marker: "última visita"
       bulk:
         unlist_topics: "Tópicos Não Listados"
         reset_read: "Redefinir Lido"
@@ -1187,7 +1223,7 @@ pt_BR:
       toggle_information: "alternar detalhes do tópico"
       read_more_in_category: "Quer ler mais? Procure outros tópicos em {{catLink}} ou {{latestLink}}."
       read_more: "Quer ler mais? {{catLink}} ou {{latestLink}}."
-      read_more_MF: "Há { UNREAD, plural, =0 {} one { <a href='/unread'>1 não lido</a> }\tother { are <a href='/unread'># não lidos</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{e } false {} other{}} <a href='/new'>1 novo</a> tópico} other { {BOTH, select, true{e } false {} other{}} <a href='/new'># novos</a> tópicos} } ou {CATEGORY, select, true {veja outros tópicos em {catLink}} false {{latestLink}} other {}}"
+      read_more_MF: "Há { UNREAD, plural, =0 {} one { <a href='/unread'>1 não lido</a> }\tother {<a href='/unread'># não lidos</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{e } false {} other{}} <a href='/new'>1 novo</a> tópico} other { {BOTH, select, true{e } false {} other{}} <a href='/new'># novos</a> tópicos} } ou {CATEGORY, select, true {veja outros tópicos em {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: Procurar em todas as categorias
       view_latest_topics: ver tópicos mais recentes
       suggest_create_topic: Que tal criar um tópico?
@@ -2154,6 +2190,7 @@ pt_BR:
         add_owners: Adicionar proprietários
         incoming_email: "Endereço de email de entrada personalizado"
         incoming_email_placeholder: "Insira um endereço de email"
+        flair_preview: "Pré-visualizar"
       api:
         generate_master: "Gerar chave Mestra de API"
         none: "Não existem chaves API ativas no momento."
@@ -2168,6 +2205,31 @@ pt_BR:
         info_html: "Sua chave de API permitirá a criação e edição de tópicos usando requests JSON."
         all_users: "Todos os Usuários"
         note_html: "Guarde esta chave <strong>secretamente</strong>, todos usuários que tiverem acesso a ela poderão criar posts arbritários no forum como qualquer usuário."
+      web_hooks:
+        create: "Criar"
+        save: "Salvar"
+        destroy: "Excluir"
+        description: "Descrição"
+        controls: "Controles"
+        go_back: "Volta à lista"
+        payload_url_placeholder: "https://example.com/postreceive"
+        secret: "Segredo"
+        wildcard_event: "Envie-me tudo."
+        individual_event: "Selecionar eventos individuais."
+        active: "Ativo"
+        post_event:
+          name: "Publicar Evento"
+        delivery_status:
+          title: "Status de Entrega"
+          inactive: "Inativo"
+          failed: "Falhou"
+          successful: "Sucesso"
+        events:
+          response: "Resposta"
+          headers: "Cabeçalhos"
+          body: "Corpo"
+          timestamp: "Criado"
+          actions: "Ações"
       plugins:
         title: "Plugins"
         installed: "Plugins Instalados"
@@ -2751,6 +2813,7 @@ pt_BR:
           plugins: "Plugins"
           user_preferences: "Preferências de Usuário"
           tags: "Marcações"
+          search: "Procurar"
       badges:
         title: Emblemas
         new_badge: Novo Emblema
@@ -2865,3 +2928,17 @@ pt_BR:
           label: "Novo:"
           add: "Adicionar"
           filter: "Busca (URL ou URL Externa)"
+  wizard_js:
+    wizard:
+      done: "Feito"
+      back: "Voltar"
+      next: "Próximo"
+      upload: "Enviar"
+      uploading: "Enviando..."
+      quit: "Talvez Depois"
+      invites:
+        add_user: "adicionar"
+        roles:
+          admin: "Admin"
+          moderator: "Moderador"
+          regular: "Usuário Regular"

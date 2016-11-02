@@ -149,17 +149,15 @@ class Group < ActiveRecord::Base
       group.save!
     end
 
-    group.name = I18n.t("groups.default_names.#{name}")
-
     # don't allow shoddy localization to break this
-    validator = UsernameValidator.new(group.name)
-    unless validator.valid_format?
-      group.name = name
-    end
+    localized_name = I18n.t("groups.default_names.#{name}")
+    validator = UsernameValidator.new(localized_name)
+    group.name = validator.valid_format? ? localized_name : name
 
     # the everyone group is special, it can include non-users so there is no
     # way to have the membership in a table
     if name == :everyone
+      group.visible = false
       group.save!
       return group
     end
@@ -500,6 +498,9 @@ end
 #  grant_trust_level                  :integer
 #  incoming_email                     :string
 #  has_messages                       :boolean          default(FALSE), not null
+#  flair_url                          :string
+#  flair_bg_color                     :string
+#  flair_color                        :string
 #
 # Indexes
 #

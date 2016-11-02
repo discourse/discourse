@@ -1,18 +1,27 @@
 import debounce from 'discourse/lib/debounce';
 import { renderSpinner } from 'discourse/helpers/loading-spinner';
 import { escapeExpression } from 'discourse/lib/utilities';
+import { bufferedRender } from 'discourse-common/lib/buffered-render';
 
-export default Ember.View.extend({
+export default Ember.Component.extend(bufferedRender({
   classNames: ["admin-backups-logs"],
 
-  _initialize: function() { this._reset(); }.on("init"),
+  init() {
+    this._super();
+    this._reset();
+  },
 
   _reset() {
     this.setProperties({ formattedLogs: "", index: 0 });
   },
 
+  _scrollDown() {
+    const $div = this.$()[0];
+    $div.scrollTop = $div.scrollHeight;
+  },
+
   _updateFormattedLogs: debounce(function() {
-    const logs = this.get("controller.model");
+    const logs = this.get("logs");
     if (logs.length === 0) {
       this._reset(); // reset the cached logs whenever the model is reset
     } else {
@@ -26,11 +35,12 @@ export default Ember.View.extend({
       // update the formatted logs & cache index
       this.setProperties({ formattedLogs: formattedLogs, index: logs.length });
       // force rerender
-      this.rerender();
+      this.rerenderBuffer();
     }
-  }, 150).observes("controller.model.[]"),
+    Ember.run.scheduleOnce('afterRender', this, this._scrollDown);
+  }, 150).observes("logs.[]").on('init'),
 
-  render(buffer) {
+  buildBuffer(buffer) {
     const formattedLogs = this.get("formattedLogs");
     if (formattedLogs && formattedLogs.length > 0) {
       buffer.push("<pre>");
@@ -40,14 +50,8 @@ export default Ember.View.extend({
       buffer.push("<p>" + I18n.t("admin.backups.logs.none") + "</p>");
     }
     // add a loading indicator
-    if (this.get("controller.status.model.isOperationRunning")) {
+    if (this.get("status.isOperationRunning")) {
       buffer.push(renderSpinner('small'));
     }
-  },
-
-  _forceScrollToBottom: function() {
-    const $div = this.$()[0];
-    $div.scrollTop = $div.scrollHeight;
-  }.on("didInsertElement")
-
-});
+  }
+}));

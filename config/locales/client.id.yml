@@ -450,8 +450,6 @@ id:
       muted_users_instructions: "Menekan semua pemberitahuan dari semua pengguna."
       muted_topics_link: "Menampilkan topik yang diredam"
       apps: "Aplikasi"
-      api_read: "baca"
-      api_read_write: "baca dan tulis"
       staff_counters:
         deleted_posts: "menghapus posting"
         suspensions: "penangguhan"

@@ -725,7 +725,6 @@ sv:
     s3_backup_config_warning: 'Servern är konfigurerad till att ladda upp säkerhetskopior till s3, men minst en av följande inställningar är inte satta: s3_access_key_id, s3_secret_access_key eller s3_backup_bucket. Gå till <a href="/admin/site_settings">Webbplatsinställningarna</a> och uppdatera inställningarna. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Se "How to set up image uploads to S3?" för att lära dig mer</a>.'
     image_magick_warning: 'Servern är konfigurerad att skapa ikoner av stora bilder, men ImageMagick är inte installerad. Installera ImageMagick med din föredragna pakethanterare eller <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">ladda hem den senaste utgåvan</a>.'
     failing_emails_warning: 'Det finns %{num_failed_jobs} e-postutskick som har misslyckats. Kontrollera din app.yml-fil för att säkerställa att serverinställningarna för e-post är korrekta. <a href="/sidekiq/retries" target="_blank">Se alla misslyckade utskick i Sidekiq</a>.'
-    consumer_email_warning: "Din sida är konfigurerad till att använda Gmail (eller någon annan konsumenttjänst) för att skicka e-post. <a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>Gmail begränsar antalet e-post du kan skicka</a>. Överväg att använda en tjänsteleverantör som exempelvis mandrill.com för att säkerställa att all e-post levereras."
     subfolder_ends_in_slash: "Inställningarna för dina undermappar är inte korrekt; DISCOURSE_RELATIV_URL_ROOT slutar med ett snedstreck."
     email_polling_errored_recently:
       one: "E-postpolling har genererat ett fel de senaste 24 timmarna. Se <a href='/logs' target='_blank'>loggarna</a> för mer detaljer."
@@ -779,7 +778,6 @@ sv:
     show_pinned_excerpt_mobile: "Visa inte utdrag för klistrade ämnen i mobilen."
     show_pinned_excerpt_desktop: "Visa inte utdrag för klistrade ämnen på datorn."
     post_onebox_maxlength: "Maxlängd på ett onebox:at Discourse-inlägg i antal tecken."
-    onebox_domains_whitelist: "En lista över alla domäner som tillåter onebox; dessa domäner bör stödja OpenGraph eller oEmbed. Testa dem på http://iframely.com/debug"
     logo_url: "Logotypen i övre vänstra sidan av din webbplats bör ha en bred rektangulär form. Om den lämnas blank kommer webbplatsens titel att visas. "
     digest_logo_url: "Den alternativa logotypen används överst i din webbplats e-postsammanfattning. Den bör ha en bred rektangulär form. Den borde inte vara en SVG-bild. Om den lämnas blank kommer `logo_url` att användas."
     logo_small_url: "Den lilla logotypen som visas i övre vänstra hörnet av hemsidan när man bläddrar ned i ämnen. Om den lämnas blank kommer hemloggan visas."

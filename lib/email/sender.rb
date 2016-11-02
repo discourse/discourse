@@ -133,12 +133,14 @@ module Email
       @message.header['X-Discourse-Post-Id']   = nil if post_id.present?
       @message.header['X-Discourse-Reply-Key'] = nil if reply_key.present?
 
-      # pass the original message_id when using mailjet/mandrill
+      # pass the original message_id when using mailjet/mandrill/sparkpost
       case ActionMailer::Base.smtp_settings[:address]
       when /\.mailjet\.com/
         @message.header['X-MJ-CustomID'] = @message.message_id
       when "smtp.mandrillapp.com"
-        @message.header['X-MC-Metadata'] = { message_id: @message.message_id }.to_json
+        merge_json_x_header('X-MC-Metadata', { message_id: @message.message_id })
+      when "smtp.sparkpostmail.com"
+        merge_json_x_header('X-MSYS-API', { metadata: { message_id: @message.message_id } })
       end
 
       # Suppress images from short emails
@@ -198,6 +200,14 @@ module Email
         skipped: true,
         skipped_reason: "[Sender] #{reason}"
       )
+    end
+
+    def merge_json_x_header(name, value)
+      mc_metadata   = JSON.parse(@message.header[name].to_s) rescue nil
+      mc_metadata ||= {}
+      mc_metadata.merge!(value)
+      @message.header[name] = nil
+      @message.header[name] = mc_metadata.to_json
     end
 
   end

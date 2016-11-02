@@ -41,6 +41,7 @@ Discourse::Application.routes.draw do
   get "finish-installation/register" => "finish_installation#register"
   post "finish-installation/register" => "finish_installation#register"
   get "finish-installation/confirm-email" => "finish_installation#confirm_email"
+  put "finish-installation/resend-email" => "finish_installation#resend_email"
 
   resources :directory_items
 
@@ -56,7 +57,6 @@ Discourse::Application.routes.draw do
 
   get "site_customizations/:key" => "site_customizations#show"
 
-  resources :forums
   get "srv/status" => "forums#status"
 
   get "wizard" => "wizard#index"

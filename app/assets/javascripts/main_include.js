@@ -57,7 +57,6 @@
 //= require ./discourse/models/user-badge
 //= require ./discourse/controllers/discovery-sortable
 //= require ./discourse/controllers/navigation/default
-//= require ./discourse/views/container
 //= require ./discourse/views/modal-body
 //= require ./discourse/views/flag
 //= require ./discourse/components/edit-category-panel
@@ -79,7 +78,6 @@
 //= require ./discourse/routes/user-activity-stream
 //= require ./discourse/routes/topic-from-params
 //= require ./discourse/components/text-field
-//= require ./discourse/components/visible
 //= require ./discourse/components/conditional-loading-spinner
 //= require ./discourse/helpers/user-avatar
 //= require ./discourse/helpers/cold-age-class

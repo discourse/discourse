@@ -613,8 +613,6 @@ ar:
       muted_topics_link: "أظهر المواضيع المكتومة"
       watched_topics_link: "أظهر المواضيع المراقبة"
       automatically_unpin_topics: "ألغِ تثبيت المواضيع آليا عندما أصل إلى أسفلها."
-      api_read: "اقرأ"
-      api_read_write: "اقرأ واكتب"
       staff_counters:
         flags_given: "علامات مساعدة"
         flagged_posts: "# مشاركات"

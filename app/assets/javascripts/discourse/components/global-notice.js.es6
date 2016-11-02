@@ -1,12 +1,12 @@
 import { on } from 'ember-addons/ember-computed-decorators';
-import StringBuffer from 'discourse/mixins/string-buffer';
 import { iconHTML } from 'discourse-common/helpers/fa-icon';
 import LogsNotice from 'discourse/services/logs-notice';
+import { bufferedRender } from 'discourse-common/lib/buffered-render';
 
-export default Ember.Component.extend(StringBuffer, {
+export default Ember.Component.extend(bufferedRender({
   rerenderTriggers: ['site.isReadOnly'],
 
-  renderString: function(buffer) {
+  buildBuffer(buffer) {
     let notices = [];
 
     if (this.site.get("isReadOnly")) {
@@ -51,7 +51,7 @@ export default Ember.Component.extend(StringBuffer, {
   @on('didInsertElement')
   _setupLogsNotice() {
     LogsNotice.current().addObserver('hidden', () => {
-      this.rerenderString();
+      this.rerenderBuffer();
     });
 
     this.$().on('click.global-notice', '.alert-logs-notice .close', () => {
@@ -63,4 +63,4 @@ export default Ember.Component.extend(StringBuffer, {
   _teardownLogsNotice() {
     this.$().off('click.global-notice');
   }
-});
+}));

@@ -6,6 +6,7 @@
 
 # javascript
 register_asset "javascripts/lazyYT.js"
+register_asset "javascripts/jquery.iframetracker.js"
 
 # stylesheet
 register_asset "stylesheets/lazyYT.css"

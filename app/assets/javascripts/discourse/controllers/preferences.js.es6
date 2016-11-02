@@ -25,7 +25,7 @@ export default Ember.Controller.extend(CanCheckEmails, {
 
       // Staff can edit fields that are not `editable`
       if (!this.get('currentUser.staff')) {
-        siteUserFields = siteUserFields.filterProperty('editable', true);
+        siteUserFields = siteUserFields.filterBy('editable', true);
       }
       return siteUserFields.sortBy('position').map(function(field) {
         const value = userFields ? userFields[field.get('id').toString()] : null;
@@ -79,7 +79,8 @@ export default Ember.Controller.extend(CanCheckEmails, {
   mailingListModeOptions() {
     return [
       {name: I18n.t('user.mailing_list_mode.daily'), value: 0},
-      {name: this.get('frequencyEstimate'), value: 1}
+      {name: this.get('frequencyEstimate'), value: 1},
+      {name: I18n.t('user.mailing_list_mode.individual_no_echo'), value: 2}
     ];
   },
 

@@ -146,6 +146,10 @@ class ImportScripts::Base
     admin
   end
 
+  def created_group(group)
+    # override if needed
+  end
+
   # Iterate through a list of groups to be imported.
   # Takes a collection and yields to the block for each element.
   # Block should return a hash with the attributes for each element.
@@ -165,6 +169,7 @@ class ImportScripts::Base
         skipped += 1
       else
         new_group = create_group(g, g[:id])
+        created_group(new_group)
 
         if new_group.valid?
           @lookup.add_group(g[:id].to_s, new_group)
@@ -218,6 +223,10 @@ class ImportScripts::Base
     conn.exec('DROP TABLE import_ids')
   end
 
+  def created_user(user)
+    # override if needed
+  end
+
   # Iterate through a list of user records to be imported.
   # Takes a collection, and yields to the block for each element.
   # Block should return a hash with the attributes for the User model.
@@ -243,6 +252,7 @@ class ImportScripts::Base
           skipped += 1
         elsif u[:email].present?
           new_user = create_user(u, import_id)
+          created_user(new_user)
 
           if new_user && new_user.valid? && new_user.user_profile && new_user.user_profile.valid?
             @lookup.add_user(import_id.to_s, new_user)
@@ -347,6 +357,10 @@ class ImportScripts::Base
     u # If there was an error creating the user, u.errors has the messages
   end
 
+  def created_category(category)
+    # override if needed
+  end
+
   # Iterates through a collection to create categories.
   # The block should return a hash with attributes for the new category.
   # Required fields are :id and :name, where :id is the id of the
@@ -377,7 +391,8 @@ class ImportScripts::Base
           params[:parent_category_id] = top.id if top
         end
 
-        create_category(params, params[:id])
+        new_category = create_category(params, params[:id])
+        created_category(new_category)
 
         created += 1
       end

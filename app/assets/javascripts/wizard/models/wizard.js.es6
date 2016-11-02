@@ -8,13 +8,13 @@ const Wizard = Ember.Object.extend({
   totalSteps: length => length,
 
   getTitle() {
-    const titleStep = this.get('steps').findProperty('id', 'forum-title');
+    const titleStep = this.get('steps').findBy('id', 'forum-title');
     if (!titleStep) { return; }
     return titleStep.get('fieldsById.title.value');
   },
 
   getLogoUrl() {
-    const logoStep = this.get('steps').findProperty('id', 'logos');
+    const logoStep = this.get('steps').findBy('id', 'logos');
     if (!logoStep) { return; }
     return logoStep.get('fieldsById.logo_url.value');
 
@@ -22,7 +22,7 @@ const Wizard = Ember.Object.extend({
 
   // A bit clunky, but get the current colors from the appropriate step
   getCurrentColors() {
-    const colorStep = this.get('steps').findProperty('id', 'colors');
+    const colorStep = this.get('steps').findBy('id', 'colors');
     if (!colorStep) { return; }
 
     const themeChoice = colorStep.get('fieldsById.theme_id');
@@ -34,7 +34,7 @@ const Wizard = Ember.Object.extend({
     const choices = themeChoice.get('choices');
     if (!choices) { return; }
 
-    const option = choices.findProperty('id', themeId);
+    const option = choices.findBy('id', themeId);
     if (!option) { return; }
 
     return option.data.colors;

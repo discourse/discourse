@@ -91,7 +91,7 @@ class WebhooksController < ActionController::Base
   def sparkpost
     events = params["_json"] || [params]
     events.each do |event|
-      message_id = event["msys"]["message_event"]["message_id"] rescue nil
+      message_id = event["msys"]["message_event"]["rcpt_meta"]["message_id"] rescue nil
       bounce_class = event["msys"]["message_event"]["bounce_class"] rescue nil
       next unless message_id && bounce_class
 
@@ -133,6 +133,8 @@ class WebhooksController < ActionController::Base
       return if email_log.nil?
 
       email_log.update_columns(bounced: true)
+      return if email_log.user.nil? || email_log.user.email.blank?
+
       Email::Receiver.update_bounce_score(email_log.user.email, bounce_score)
     end
 

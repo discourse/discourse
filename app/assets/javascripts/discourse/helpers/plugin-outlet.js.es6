@@ -29,17 +29,6 @@
 
    And it will be wired up automatically.
 
-   ## The block form
-
-   If you use the block form of the outlet, its contents will be displayed
-   if no connectors are found. Example:
-
-   ```handlebars
-     {{#plugin-outlet "hello-world"}}
-       Nobody says hello :'(
-     {{/plugin-outlet}}
-   ```
-
    ## Disabling
 
    If a plugin returns a disabled status, the outlets will not be wired up for it.
@@ -129,7 +118,7 @@ function viewInjections(container) {
 }
 
 // unbound version of outlets, only has a template
-Handlebars.registerHelper('plugin-outlet', function(name){
+Handlebars.registerHelper('plugin-outlet', function(name) {
   if (!_rawCache) { buildConnectorCache(); }
 
   const functions = _rawCache[name];
@@ -145,9 +134,7 @@ Handlebars.registerHelper('plugin-outlet', function(name){
 
 });
 
-registerHelper('plugin-outlet', function(params, hash, options, env) {
-  const connectionName = params[0];
-
+registerHelper('plugin-outlet', function([connectionName], hash, options, env) {
   if (!_connectorCache) { buildConnectorCache(); }
 
   if (_connectorCache[connectionName]) {
@@ -157,30 +144,26 @@ registerHelper('plugin-outlet', function(params, hash, options, env) {
     // just shove it in.
     const viewClass = (childViews.length > 1) ? Ember.ContainerView : childViews[0];
 
-    const newHash = $.extend({}, viewInjections(env.data.view.container));
-    if (hash.tagName) { newHash.tagName = hash.tagName; }
+    // TODO: Figure out how to do this without a container view
+    if (env) {
+      const newHash = $.extend({}, viewInjections(env.data.view.container));
+      if (hash.tagName) { newHash.tagName = hash.tagName; }
 
-    // we don't need the default template since we have a connector
-    delete options.fn;
-    delete options.template;
-    env.helpers.view.helperFunction.call(this, [viewClass], newHash, options, env);
+      // we don't need the default template since we have a connector
+      delete options.fn;
+      delete options.template;
+      env.helpers.view.helperFunction.call(this, [viewClass], newHash, options, env);
 
-    const cvs = env.data.view._childViews;
-    if (childViews.length > 1 && cvs && cvs.length) {
-      const inserted = cvs[cvs.length-1];
-      if (inserted) {
-        childViews.forEach(function(cv) {
-          inserted.pushObject(cv.create());
-        });
+      const cvs = env.data.view._childViews;
+      if (childViews.length > 1 && cvs && cvs.length) {
+        const inserted = cvs[cvs.length-1];
+        if (inserted) {
+          childViews.forEach(function(cv) {
+            inserted.pushObject(cv.create());
+          });
+        }
       }
     }
-  } else if (options.isBlock) {
-    const virtualView = Ember.View.extend({
-      isVirtual: true,
-      tagName: hash.tagName || '',
-      template: options.template
-    });
-    env.helpers.view.helperFunction.call(this, [virtualView], hash, options, env);
   }
 });
 

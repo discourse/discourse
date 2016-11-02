@@ -697,7 +697,6 @@ nl:
     s3_backup_config_warning: 'De server is geconfigureerd om backups naar s3 toe te staan, maar op zijn minst een van de volgende instellingen is niet ingesteld: s3_access_key_id, s3_secret_access_key of s3_backup_bucket. Ga naar <a href="/admin/site_settings">de Site Instellingen</a> en stel deze in. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Bekijk "How to set up image uploads to S3?" voor meer informatie</a>.'
     image_magick_warning: 'De server is geconfigureerd om thumbnails te maken van grote afbeeldingen, maar ImageMagick is niet geïnstalleerd. Installeer ImageMagick met je favoriete package manager of <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">download de laatste release</a>.'
     failing_emails_warning: 'Er zijn %{num_failed_jobs} e-mail jobs mislukt. Controleer in app.yml of de e-mailserver instelling correct zijn. <a href="/sidekiq/retries" target="_blank">Toon de mislukte jobs in Sidekiq</a>.'
-    consumer_email_warning: "Je site is ingesteld om Gmail te gebruiken voor het versturen van mails. <a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>Gmail heeft limieten voor het aantal mails dat je kan versturen</a>. Overweeg om een andere e-mailprovider te gebruiken om er zeker van te zijn dat mails aankomen."
     subfolder_ends_in_slash: "Je submap setup is onjuist; de DISCOURSE_RELATIVE_URL_ROOT eindigt in een schuine streep."
   site_settings:
     censored_words: "Woorden welke automatisch vervangen zullen worden met &#9632;&#9632;&#9632;&#9632;"
@@ -739,7 +738,6 @@ nl:
     exclude_rel_nofollow_domains: "Een lijst van domeinen waar ´nofollow´ niet aan de links moet worden toegevoegd. (voorbeelddomein.com staat automatisch sub.voorbeelddomein toe). Voeg minimaal het 'top-level' domein van deze site toe om web crawlers alle content te laten vinden. Als delen van deze site zich op andere domeinen bevinden, voeg deze eveneens toe."
     post_excerpt_maxlength: "Maximale lengte van een uittreksel / samenvatting van een bericht."
     post_onebox_maxlength: "Maximale lengte van een 'oneboxed Discourse' bericht in tekens."
-    onebox_domains_whitelist: "Een lijst met domeinen waarvoor oneboxing is toegestaan; deze domeinen moeten OpenGraph of oEmbed ondersteunen. Dit kun je testen op http://iframely.com/debug"
     logo_url: "De logo afbeelding links bovenaan je site moet de vorm hebben van een brede rechthoek. Indien leeg wordt de site titeltekst getoond."
     logo_small_url: "De kleine logo afbeelding links boven aan je site moet de vorm van een vierkant hebben en wordt getoond als naar beneden wordt gescrold. Indien leeg wordt een homepage symbool getoond."
     favicon_url: "Een favicon voor je site, zie http://nl.wikipedia.org/wiki/Favicon. Voor een correcte werking via CDN moet het een png zijn."

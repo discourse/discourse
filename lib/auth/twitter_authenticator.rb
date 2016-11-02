@@ -51,6 +51,8 @@ class Auth::TwitterAuthenticator < Auth::Authenticator
 
     retrieve_avatar(user, extra_data)
     retrieve_profile(user, extra_data)
+
+    true
   end
 
   def register_middleware(omniauth)
@@ -62,27 +64,30 @@ class Auth::TwitterAuthenticator < Auth::Authenticator
            }
   end
 
-  def retrieve_avatar(user, data)
-    return unless user
-    return if user.user_avatar.try(:custom_upload_id).present?
+  protected
 
-    if (avatar_url = data[:twitter_image]).present?
-      UserAvatar.import_url_for_user(avatar_url.sub("_normal", ""), user, override_gravatar: false)
+    def retrieve_avatar(user, data)
+      return unless user
+      return if user.user_avatar.try(:custom_upload_id).present?
+
+      if (avatar_url = data[:twitter_image]).present?
+        url = avatar_url.sub("_normal", "")
+        Jobs.enqueue(:download_avatar_from_url, url: url, user_id: user.id, override_gravatar: false)
+      end
     end
-  end
 
-  def retrieve_profile(user, data)
-    return unless user
+    def retrieve_profile(user, data)
+      return unless user
 
-    bio = data[:twitter_description]
-    location = data[:twitter_location]
+      bio = data[:twitter_description]
+      location = data[:twitter_location]
 
-    if user && (bio || location)
-      profile = user.user_profile
-      profile.bio_raw  = bio      unless profile.bio_raw.present?
-      profile.location = location unless profile.location.present?
-      profile.save
+      if bio || location
+        profile = user.user_profile
+        profile.bio_raw  = bio      unless profile.bio_raw.present?
+        profile.location = location unless profile.location.present?
+        profile.save
+      end
     end
-  end
 
 end

@@ -128,6 +128,8 @@ class GroupsController < ApplicationController
       user = User.find(params[:user_id])
     elsif params[:username].present?
       user = User.find_by_username(params[:username])
+    elsif params[:user_email].present?
+      user = User.find_by_email(params[:user_email])
     else
       raise Discourse::InvalidParameters.new('user_id or username must be present')
     end

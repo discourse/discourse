@@ -1,13 +1,14 @@
+import { bufferedRender } from 'discourse-common/lib/buffered-render';
 import { on, observes } from 'ember-addons/ember-computed-decorators';
 
-export default Ember.Component.extend({
+export default Ember.Component.extend(bufferedRender({
   tagName: 'select',
   attributeBindings: ['tabindex', 'disabled'],
   classNames: ['combobox'],
   valueAttribute: 'id',
   nameProperty: 'name',
 
-  render(buffer) {
+  buildBuffer(buffer) {
     const nameProperty = this.get('nameProperty');
     const none = this.get('none');
 
@@ -48,11 +49,11 @@ export default Ember.Component.extend({
 
   @observes('content.[]')
   _rerenderOnChange() {
-    this.rerender();
+    this.rerenderBuffer();
   },
 
-  @on('didInsertElement')
-  _initializeCombo() {
+  didInsertElement() {
+    this._super();
 
     // Workaround for https://github.com/emberjs/ember.js/issues/9813
     // Can be removed when fixed. Without it, the wrong option is selected
@@ -60,7 +61,7 @@ export default Ember.Component.extend({
 
     // observer for item names changing (optional)
     if (this.get('nameChanges')) {
-      this.addObserver('content.@each.' + this.get('nameProperty'), this.rerender);
+      this.addObserver('content.@each.' + this.get('nameProperty'), this.rerenderBuffer);
     }
 
     const $elem = this.$();
@@ -80,7 +81,11 @@ export default Ember.Component.extend({
       }
       this.set('value', val);
     });
-    $elem.trigger('change');
+    Ember.run.scheduleOnce('afterRender', this, this._triggerChange);
+  },
+
+  _triggerChange() {
+    this.$().trigger('change');
   },
 
   @on('willDestroyElement')
@@ -88,4 +93,4 @@ export default Ember.Component.extend({
     this.$().select2('destroy');
   }
 
-});
+}));

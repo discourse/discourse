@@ -14,6 +14,7 @@ If you don't already have a Ruby environment that's tuned to your liking, you ca
 2. Clone the Discourse repo and cd into it.
 3. Run `script/osx_dev`.
 4. Review `log/osx_dev.log` to make sure everything finished successfully.
+5. Jump To [Setting up your Discourse](#setting-up-your-discourse)
 
 Of course, it is good to understand what the script is doing and why. The rest of this guide goes through what's happening.
 
@@ -132,7 +133,7 @@ If you get this error when starting `psql` from the command line:
     psql: could not connect to server: No such file or directory
     Is the server running locally and accepting
     connections on Unix domain socket "/tmp/.s.PGSQL.5432"?
-    
+
 it is because it is still looking in the `/tmp` directory and not in `/var/pgsql_socket`.
 
 If running `psql -h /var/pgsql_socket` works then you need to configure the host in your `.bash_profile`:
@@ -152,7 +153,7 @@ However, the seed data currently has some dependencies on their being a 'postgre
 
 In theory, you're not setting up with vagrant, either, and shouldn't need a vagrant user; however, again, all the seed data assumes 'vagrant'. To avoid headaches, it's probably best to go with this flow, so again, we create a 'vagrant' user.
 
-    brew install postgresql # Installs 9.2
+    brew install postgresql
     ln -sfv /usr/local/opt/postgresql/*.plist ~/Library/LaunchAgents
 
     export PATH=/usr/local/opt/postgresql/bin:$PATH # You may want to put this in your default path!
@@ -161,7 +162,7 @@ In theory, you're not setting up with vagrant, either, and shouldn't need a vagr
     launchctl load ~/Library/LaunchAgents/homebrew.mxcl.postgresql.plist
 
 ### Seed data relies on both 'postgres' and 'vagrant'
-    
+
     createuser --createdb --superuser postgres
     createuser --createdb --superuser vagrant
 
@@ -204,7 +205,7 @@ mkdir ~/.magick
 cd ~/.magick
 curl http://www.imagemagick.org/Usage/scripts/imagick_type_gen > type_gen
 find /System/Library/Fonts /Library/Fonts ~/Library/Fonts -name "*.[to]tf" | perl type_gen -f - > type.xml
-cd /usr/local/Cellar/imagemagick/<version>/etc/ImageMagick-6   
+cd /usr/local/Cellar/imagemagick/<version>/etc/ImageMagick-6
 ```
 
 Edit system config file called "type.xml" and add line near end to tell IM to
@@ -230,25 +231,12 @@ outbound email and you can verify what is being sent.
 
 ## Additional Setup Tasks
 
-You may have issues installing therubyracer when running `bundle install`
-because of a dependency on libv8. This is how to fix it:
-
-```sh
-brew tap homebrew/versions
-brew uninstall v8
-brew install v8-315
-gem uninstall -a libv8
-gem uninstall -a therubyracer
-gem install libv8 -v '3.16.14.13' -- --with-system-v8
-gem install therubyracer -v '0.12.2' -- --with-v8-dir=$(brew --prefix v8-315)
-```
-
 In addition to ImageMagick we also need to install some other image related
 software:
 
 ```sh
 brew install gifsicle jpegoptim optipng
-npm install -g svgo 
+npm install -g svgo
 ```
 
 Install jhead
@@ -263,28 +251,31 @@ make install
 ## Setting up your Discourse
 
 ###  Check out the repository
-
-    git@github.com:discourse/discourse.git ~/discourse
-    cd ~/discourse # Navigate into the repository, and stay there for the rest of this how-to
-
+```sh
+git clone git@github.com:discourse/discourse.git
+cd discourse # Navigate into the repository, and stay there for the rest of this how-to
+```
 ### What about the config files?
 
 If you've stuck to all the defaults above, the default `discourse.conf` and `redis.conf` should work out of the box.
 
 ### Install the needed gems
-
-    bundle install # Yes, this DOES take a while. No, it's not really cloning all of rubygems :-)
+```sh
+bundle install
+```
 
 ### Prepare your database
-
-    rake db:migrate
-    rake db:test:prepare
-    rake db:seed_fu
+```sh
+rake db:create
+rake db:migrate
+rake db:test:prepare
+rake db:seed_fu
+```
 
 ## Now, test it out!
-
-    bundle exec rspec
-
+```sh
+bundle exec rspec
+```
 All specs should pass
 
 ### Deal with any problems which arise.

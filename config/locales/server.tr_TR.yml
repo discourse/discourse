@@ -674,7 +674,6 @@ tr_TR:
     s3_backup_config_warning: 'Sunucu s3''e yedekleme yüklenebilmesi için yapılandırılmış, fakat şunlardan en az biri henüz ayarlanmamış: s3_access_key_id, s3_secret_access_key or s3_backup_bucket. <a href="/admin/site_settings">Site Ayarları</a> sayfasına gidin ve ayarları güncelleyin. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Daha fazla bilgi için "How to set up image uploads to S3?" konulu gönderiye bakın</a>.'
     image_magick_warning: 'Sunucu büyük resimlerin küçük boylarının oluşturulması için yapılandırılmış, fakat ImageMagick henüz kurulmamış. Favori paket yöneticinizi kullanarak ImageMagick kurun veya <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">son sürümünü indirin</a>.'
     failing_emails_warning: 'Başarısızlıkla sonuçlanmış %{num_failed_jobs} e-posta işlemi bulunuyor. app.yml dosyanızı kontrol edin ve e-posta sunucu ayarlarınızın doğru olduğundan emin olun. <a href="/sidekiq/retries" target="_blank">Sidekiq''deki başarısız işlemlere göz atın</a>.'
-    consumer_email_warning: "Sitenizde e-posta gönderimleri için Gmail (ya da başka bir e-posta hizmeti) kurulumu yapılmış. <a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>Gmail ile gönderebileceğiniz e-posta sayısı limitlidir</a>. Onun yerine, e-postalarınızın ulaştırılabildiğinden emin olmak için mandrill.com benzeri bir hizmet sağlayıcısını kullanın."
     subfolder_ends_in_slash: "Alt dizin kurulumunuz hatalı, DISCOURSE_RELATIVE_URL_ROOT sonunda yan çizgi bulunmalı."
     bad_favicon_url: "Minik simge yüklemesi başarısız oldu. <a href='/admin/site_settings'>Site Ayarları</a>ndan favicon_url alanını kontrol edin."
   site_settings:
@@ -724,7 +723,7 @@ tr_TR:
     show_pinned_excerpt_mobile: "Mobil görünümünde başa tutturulmuş konuların özetini göster."
     show_pinned_excerpt_desktop: "Masaüstü görünümünde başa tutturulmuş konuların özetini göster."
     post_onebox_maxlength: "Kutulanmış bir Discourse gönderisinin en fazla karakter uzunluğu"
-    onebox_domains_whitelist: "Kutulamaya izin verilen alan adları listesi; bu alan adları OpenGraph ya da oEmbed desteklemeliler. http://iframely.com/debug adresinden test edebilirsiniz."
+    max_oneboxes_per_post: "Gönderide olabilecek en fazla kutulama sayısı"
     logo_url: "Sitenin üst solundaki görsel, geniş dikdörtgen şeklinde olmalıdır. Boş bırakılırsa site başlığı gösterilecektir."
     logo_small_url: "Sitenin üst solundaki küçük görsel, kare şeklinde olmalıdır, aşağıya doğru kaydırılırken görünür. Boş bırakılırsa bir ev oyması gösterilecektir."
     favicon_url: "Site simgesi, bilgi için http://en.wikipedia.org/wiki/Favicon adresine bakınız, bir CDN ile doğru şekilde çalışmak için png olmalıdır."
@@ -977,6 +976,7 @@ tr_TR:
     unsubscribe_via_email: "Kullanıcıların konu veya içerik alanında 'unsubscribe' olan bir e-posta göndererek e-postalara abonelikten çıkmasına izin ver"
     delete_email_logs_after_days: "(n) günden sonra e-posta kayıtlarını sil. sürekli tutmak için 0"
     max_emails_per_day_per_user: "Kullanıcılara bir günde gönderilebilecek en fazla e-posta sayısı. Limiti kaldırmak için 0"
+    bounce_score_threshold: "Kullanıcıya e-posta gönderimi durdurmak için gereken en fazla geri seken posta sayısı"
     pop3_polling_enabled: "E-posta cevapları için POP3 üzerinden sorgula"
     pop3_polling_ssl: "POP3 sunucusuna bağlanırken SSL kullanın. (Tavsiye edilir)"
     pop3_polling_period_mins: "Periyodik olarak POP3 hesabının e-posta için kontrol edilmesinin dakika bazında sıklığı. NOT: yeniden başlatma gerektirir"
@@ -1029,9 +1029,9 @@ tr_TR:
     show_time_gap_days: "İki gönderinin tarihleri arasında bu kadar gün farkı varsa, konuda zaman aralığına yer ver."
     invites_per_page: "Öntanımlı olarak kullanıcı sayfasında gösterilen davetler."
     short_progress_text_threshold: "Bir konudaki gönderi sayısı bu sayının üzerine çıktığında, ilerleme çubuğunda sadece şu anki gönderi sayısını göster. İlerleme çubuğunun kalınlığını değiştirirseniz, bu değeri de değiştirmeniz gerekebilir."
-    default_code_lang: "GitHub kod bloklarına (lang-auto, ruby, python vs.) uygulanacak, öntanımlı programlama dili söz dizimi vurgulaması."
+    default_code_lang: "GitHub kod parçalarına (lang-auto, ruby, python vs.) uygulanacak olan öntanımlı programlama dili söz dizimi vurgulaması."
     warn_reviving_old_topic_age: "Herhangi bir kullanıcı, son cevabın burada belirtilen gün sayısından daha önce yazıldığı bir konuya cevap yazmaya başladığında, bir uyarı iletisi çıkacak. Bu özelliği devre dışı bırakmak için 0 girin. "
-    autohighlight_all_code: "Tüm önceden biçimlendirilen kod bloklarına, açıkça dil seçimi yapılmamış olsa da, zorla kod vurgulaması uygula."
+    autohighlight_all_code: "Tüm önceden biçimlendirilen kod parçalarına, açıkça dil seçimi yapılmamış olsa da, zorla kod vurgulaması uygula."
     highlighted_languages: "Dahil edilen kod renklendirme kuralları. (Uyarı: çok fazla dil eklemek performansı etkileyebilir) demo için bakınız: https://highlightjs.org/static/demo/"
     feed_polling_enabled: "SADECE YERLEŞTİRME İÇİN: RSS/ATOM beslemesinin gönderi olarak yerleştirilip yerleştirilemeyeceği."
     feed_polling_url: "SADECE YERLEŞTİRME İÇİN: Yerleştirilecek RSS/ATOM beslemesinin URL'i."
@@ -1073,8 +1073,6 @@ tr_TR:
     default_categories_muted: "Öntanımlı olarak, sesi kısılan kategorilerin listesi."
     max_user_api_reqs_per_day: "Gün başına yapılabilecek en fazla kullanıcı API isteği"
     max_user_api_reqs_per_minute: "Dakika başına yapılabilecek en fazla kullanıcı API isteği"
-    allow_read_user_api_keys: "Yalnızca okuma için kullanıcı API'leri oluşturulmasına izin ver"
-    allow_write_user_api_keys: "Yazma yetkili kullanıcı API'leri oluşturulmasına izin ver"
     max_api_keys_per_user: "Kullanıcı başına kullanılabilecek kullanıcı API anahtarı sayısı"
     min_trust_level_for_user_api_key: "Kullanıcı API'si oluşturmak için gereken güven seviyesi"
     tagging_enabled: "Konularda etiketleri etkinleştirin?"
@@ -1651,7 +1649,7 @@ tr_TR:
   unsubscribe_link_and_mail: |
     Bu e-postaları almayı durdurmak için [buraya tıklayın](%{unsubscribe_url}).
   unsubscribe_mailing_list: |
-    Duyuru listesi ayarını açtığınız için bunu alıyorsunuz.
+    Duyuru listesi modunu açtığınız için bunu alıyorsunuz.
 
     Bu e-postaları almayı durdurmak için [buraya tıklayın](%{unsubscribe_url}).
   subject_re: "Cvp:"
@@ -1813,6 +1811,7 @@ tr_TR:
       new_activity: "Konu ve gönderilerinizdeki yeni etkinlikler:"
       top_topics: "Gözde gönderiler"
       other_new_topics: "Gözde konular"
+      unsubscribe: "Bir süredir görünmediğiniz için bu e-posta size %{site_link} topluluğundan gönderildi. Bu e-postaları almak istemiyorsanız %{unsubscribe_link}."
       click_here: "buraya tıklayın"
       from: "%{site_name} özeti"
       read_more: "Devamını Oku"
@@ -1820,6 +1819,7 @@ tr_TR:
       more_topics_category: "Daha fazla yeni konu:"
     mailing_list:
       subject_template: "[%{site_name}] %{date} Özeti "
+      unsubscribe: "Bu günlük e-posta size %{site_link} topluluğundan duyuru listesi modunu etkin yaptığınız için gönderildi. Bu e-postaları almak istemiyorsanız %{unsubscribe_link}."
       from: "%{site_name} özeti"
       new_topics: "Yeni konular"
       topic_updates: "Konu güncellemeleri"
@@ -2200,6 +2200,15 @@ tr_TR:
     staff_tag_disallowed: " \"%{tag}\" etiketi yalnızca görevliler tarafından eklenebilir gözüküyor."
     staff_tag_remove_disallowed: " \"%{tag}\" etiketi yalnızca görevliler tarafından silinebilir gözüküyor."
   rss_by_tag: "%{tag} etiketli konular"
+  finish_installation:
+    register:
+      button: "Kayıt Ol"
+      help: "başlamak için yeni bir hesap oluşturun"
+    confirm_email:
+      title: "E-posta adresinizi doğrulayın"
+    resend_email:
+      title: "Etkinleştirme E-postasını Tekrar Gönder"
+      message: "<p> <b>%{email}</b> adresine etkinleştirme e-postasını tekrar gönderdik"
   wizard:
     title: "Discourse Kurulumu"
     step:

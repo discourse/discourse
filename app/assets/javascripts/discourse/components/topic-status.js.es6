@@ -1,8 +1,8 @@
 import { iconHTML } from 'discourse-common/helpers/fa-icon';
-import StringBuffer from 'discourse/mixins/string-buffer';
+import { bufferedRender } from 'discourse-common/lib/buffered-render';
 import { escapeExpression } from 'discourse/lib/utilities';
 
-export default Ember.Component.extend(StringBuffer, {
+export default Ember.Component.extend(bufferedRender({
   classNames: ['topic-statuses'],
 
   rerenderTriggers: ['topic.archived', 'topic.closed', 'topic.pinned', 'topic.visible', 'topic.unpinned', 'topic.is_warning'],
@@ -26,7 +26,7 @@ export default Ember.Component.extend(StringBuffer, {
     return Discourse.User.current() && !this.get('disableActions');
   }.property('disableActions'),
 
-  renderString(buffer) {
+  buildBuffer(buffer) {
     const self = this;
 
     const renderIcon = function(name, key, actionable) {
@@ -57,4 +57,4 @@ export default Ember.Component.extend(StringBuffer, {
     renderIconIf('topic.unpinned', 'thumb-tack', 'unpinned', this.get("canAct"));
     renderIconIf('topic.invisible', 'eye-slash', 'invisible');
   }
-});
+}));

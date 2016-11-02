@@ -1,17 +1,27 @@
 import { registerUnbound } from 'discourse-common/lib/helpers';
 
-// see: https://github.com/emberjs/ember.js/issues/12634
-var missingViews = {};
+let _injections;
 
-function renderRaw(ctx, template, templateName, params) {
+function renderRaw(ctx, container, template, templateName, params) {
   params.parent = params.parent || ctx;
 
-  if (!params.view && !missingViews[templateName]) {
-    var viewClass = Discourse.__container__.lookupFactory('view:' + templateName);
-    if (viewClass) {
-      params.view = viewClass.create(params);
-    } else {
-      missingViews[templateName] = true;
+  if (!params.view) {
+    if (!_injections) {
+      _injections = {
+        siteSettings: container.lookup('site-settings:main'),
+        currentUser: container.lookup('currentUser:main'),
+        site: container.lookup('site:main'),
+        session: container.lookup('session:main'),
+        topicTrackingState: container.lookup('topic-tracking-state:main')
+      };
+    }
+
+    const module = `discourse/views/${templateName}`;
+    if (requirejs.entries[module]) {
+      const viewClass = require(module, null, null, true);
+      if (viewClass && viewClass.default) {
+        params.view = viewClass.default.create(params, _injections);
+      }
     }
   }
 
@@ -19,10 +29,13 @@ function renderRaw(ctx, template, templateName, params) {
 }
 
 registerUnbound('raw', function(templateName, params) {
-  var template = Discourse.__container__.lookup('template:' + templateName + '.raw');
+  templateName = templateName.replace('.', '/');
+
+  const container = Discourse.__container__;
+  var template = container.lookup('template:' + templateName + '.raw');
   if (!template) {
     Ember.warn('Could not find raw template: ' + templateName);
     return;
   }
-  return renderRaw(this, template, templateName, params);
+  return renderRaw(this, container, template, templateName, params);
 });

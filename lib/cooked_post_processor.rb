@@ -84,7 +84,7 @@ class CookedPostProcessor
       convert_to_link!(img)
     end
 
-    update_topic_image
+    update_post_image
   end
 
   def extract_images
@@ -100,7 +100,7 @@ class CookedPostProcessor
     @doc.css(".quote img")
   end
 
-  def extract_images_for_topic
+  def extract_images_for_post
     # all image with a src attribute
     @doc.css("img[src]") -
     # minus, emojis
@@ -285,10 +285,11 @@ class CookedPostProcessor
     span
   end
 
-  def update_topic_image
-    if @post.is_first_post?
-      img = extract_images_for_topic.first
-      @post.topic.update_column(:image_url, img["src"][0...255]) if img["src"].present?
+  def update_post_image
+    img = extract_images_for_post.first
+    if img["src"].present?
+      @post.update_column(:image_url, img["src"][0...255]) # post
+      @post.topic.update_column(:image_url, img["src"][0...255]) if @post.is_first_post? # topic
     end
   end
 

@@ -119,7 +119,7 @@ tr_TR:
         disabled: '%{when} listelenmedi'
     topic_admin_menu: "konuyla alakalı yönetici eylemleri"
     wizard_required: "Forumunuzu yapılandırma zamanı geldi! <a href='%{url}' data-auto-route='true'>Kur Sihirbazını çalıştırın</a>!"
-    emails_are_disabled: "Tüm giden e-postalar yönetici tarafından evrensel olarak devre dışı bırakıldı. Herhangi bir e-posta bildirimi gönderilmeyecek."
+    emails_are_disabled: "Tüm giden e-postalar yönetici tarafından genel olarak devre dışı bırakıldı. Herhangi bir e-posta bildirimi gönderilmeyecek."
     bootstrap_mode_enabled: "Yeni sitenizi kolayca çalıştırmak için bootstrap modundasınız. Tüm yeni kullanıcılar güven seviyesi 1den başlar ve e-posta uyarıcıları açıksa günlük mail alırlar. Bu özellik kullanıcı sayısı %{min_users} rakamına ulaştığında otomatik kapatılacaktır."
     bootstrap_mode_disabled: "Bootstrap modu önümüzdeki 24 saat içinde edilgen olacaktır."
     s3:
@@ -479,10 +479,7 @@ tr_TR:
       apps: "Uygulamalar"
       revoke_access: "Erişimi İptal Et"
       undo_revoke_access: "Erişim İptalini Geri Al"
-      api_permissions: "İzinler:"
       api_approved: "Onaylanmış:"
-      api_read: "okuma"
-      api_read_write: "okuma ve yazma"
       staff_counters:
         flags_given: "yardımcı bildirimler"
         flagged_posts: "bildirilen gönderiler"
@@ -1221,7 +1218,7 @@ tr_TR:
       notifications:
         title: bu konu hakkında ne sıklıkla bildirim alacağını değiştir
         reasons:
-          mailing_list_mode: "E-posta liste modunu etkinleştirdin, böylece bu konuya gelen cevaplarla ilgili bildirimleri e-posta yoluyla alabileceksin. "
+          mailing_list_mode: "Duyuru listesi modunu etkinleştirdin, bundan dolayı bu konuya gelen cevaplarla ilgili bildirimleri e-posta yoluyla alacaksın. "
           '3_10': 'Bu konuyla ilgili bir etiketi gözlediğin için bildirim alacaksın.'
           '3_6': 'Bu kategoriyi gözlediğiniz için bildirimlerini alacaksınız.'
           '3_5': 'Bu konuyu otomatik olarak gözlemeye başladığınız için bildirimlerini alacaksınız.'
@@ -2380,10 +2377,10 @@ tr_TR:
         preview_digest: "Özeti Önizle"
         sending_test: "Test e-postası gönderiliyor..."
         error: "<b>HATA</b> - %{server_error}"
-        test_error: "Test e-postasının gönderilmesinde sorun yaşandı. Lütfen e-posta ayarlarınızı tekrar kontrol edin, yer sağlayıcınızın e-posta bağlantılarını bloke etmediğinden emin olun, ve tekrar deneyin."
+        test_error: "Test e-postasının gönderilmesinde sorun yaşandı. Lütfen e-posta ayarlarınızı tekrar kontrol edin, yer sağlayıcınızın e-posta bağlantılarını engellemediğinden emin olun, ve tekrar deneyin."
         sent: "Gönderildi"
         skipped: "Atlandı"
-        bounced: "Geri sekenler"
+        bounced: "Geri Sekenler"
         received: "Alındı"
         rejected: "Reddedildi"
         sent_at: "Gönderildiği Zaman"

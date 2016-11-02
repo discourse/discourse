@@ -32,3 +32,17 @@ nb_NO:
         title: "Lukk avstemming"
         label: "Lukk"
         confirm: "Er du sikker på at du vil lukke avstemmingen?"
+      error_while_casting_votes: "Beklager, det oppstod en feil når du ga din stemme."
+      ui_builder:
+        insert: 'Sett inn avstemming '
+        help:
+          options_count: Må inneholde minst 2 alternativer
+        poll_type:
+          regular: Enkelt valg
+          multiple: Flere valg
+          number: Nummer vurdering
+        poll_config:
+          max: Maks
+          step: skritt
+        poll_public:
+          label: Se hvem som har stemt

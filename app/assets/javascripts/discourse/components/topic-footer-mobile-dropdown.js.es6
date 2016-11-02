@@ -27,7 +27,7 @@ export default Combobox.extend({
     }
 
     this.comboTemplate = (item) => {
-      const contentItem = content.findProperty('id', item.id);
+      const contentItem = content.findBy('id', item.id);
       if (!contentItem) { return item.text; }
       return `${iconHTML(contentItem.icon)}&nbsp; ${item.text}`;
     };
@@ -59,7 +59,7 @@ export default Combobox.extend({
         refresh();
         break;
       case 'flag':
-        controller.send('showFlagTopic', topic);
+        controller.send('showFlagTopic');
         refresh();
         break;
     }

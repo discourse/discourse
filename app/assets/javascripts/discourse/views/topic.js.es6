@@ -93,9 +93,6 @@ const TopicView = Ember.View.extend(AddCategoryClass, AddArchetypeClass, Scrolli
     this.set('docAt', false);
   },
 
-  offset: 0,
-  hasScrolled: Em.computed.gt("offset", 0),
-
   showTopicInHeader(topic, offset) {
     if (this.get('docAt')) {
       return offset >= this.get('docAt') || topic.get('postStream.firstPostNotLoaded');
@@ -118,7 +115,7 @@ const TopicView = Ember.View.extend(AddCategoryClass, AddArchetypeClass, Scrolli
       }
     }
 
-    this.set("offset", offset);
+    this.set('controller.hasScrolled', offset > 0);
 
     const topic = this.get('topic');
     const showTopic = this.showTopicInHeader(topic, offset);

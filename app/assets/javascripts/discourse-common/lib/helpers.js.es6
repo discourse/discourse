@@ -3,8 +3,9 @@ import { get } from 'discourse-common/lib/raw-handlebars';
 // `Ember.Helper` is only available in versions after 1.12
 export function htmlHelper(fn) {
   if (Ember.Helper) {
-    return Ember.Helper.helper(function() {
-      return new Handlebars.SafeString(fn.apply(this, Array.prototype.slice.call(arguments)) || '');
+    return Ember.Helper.helper(function(...args) {
+      args = (args.length > 1) ? args[0].concat({ hash: args[args.length-1] }) : args;
+      return new Handlebars.SafeString(fn.apply(this, args) || '');
     });
   } else {
     return Ember.Handlebars.makeBoundHelper(function() {
@@ -13,8 +14,24 @@ export function htmlHelper(fn) {
   }
 }
 
+const _helpers = {};
+
 export function registerHelper(name, fn) {
-  Ember.HTMLBars._registerHelper(name, fn);
+  if (Ember.Helper) {
+    _helpers[name] = Ember.Helper.helper(fn);
+  } else {
+    return Ember.HTMLBars._registerHelper(name, fn);
+  }
+}
+
+export function findHelper(name) {
+  return _helpers[name] || _helpers[name.dasherize()];
+}
+
+export function registerHelpers(registry) {
+  Object.keys(_helpers).forEach(name => {
+    registry.register(`helper:${name}`, _helpers[name], { singleton: false });
+  });
 }
 
 function resolveParams(ctx, options) {
@@ -39,6 +56,7 @@ function resolveParams(ctx, options) {
 }
 
 export function registerUnbound(name, fn) {
+
   const func = function(property, options) {
     if (options.types && (options.types[0] === "ID" || options.types[0] === "PathExpression")) {
       property = get(this, property, options);
@@ -46,6 +64,14 @@ export function registerUnbound(name, fn) {
 
     return fn.call(this, property, resolveParams(this, options));
   };
+
+  if (Ember.Helper) {
+    _helpers[name] = Ember.Helper.extend({
+      compute: (params, args) => fn(params[0], args)
+    });
+    Handlebars.registerHelper(name, func);
+    return;
+  }
 
   Handlebars.registerHelper(name, func);
   Ember.Handlebars.registerHelper(name, func);

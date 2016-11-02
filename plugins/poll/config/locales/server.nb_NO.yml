@@ -26,3 +26,5 @@ nb_NO:
     poll_must_be_open_to_vote: "Spørreundersøkelsen må være åpen for å kunne avigi stemme."
     topic_must_be_open_to_toggle_status: "Emnet må være åpent for å redigere status."
     only_staff_or_op_can_toggle_status: "Kun forumpersonalet eller den forfatteren av emnet kan redigere status på spørreundersøkelsen."
+    email:
+      link_to_poll: "Klikk for å se avstemningen"
