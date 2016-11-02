@@ -725,7 +725,6 @@ da:
     s3_config_warning: 'Serveren er konfigureret til at uploade filer til s3, men mindst én af følgende indstillinger er ikke angivet: s3_access_key_id, s3_secret_access_key eller s3_upload_bucket. Gå til <a href="/admin/site_settings">indstillinger</a> og opdatér indstillingerne. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Se "How to set up image uploads to S3?" for mere information</a>.'
     image_magick_warning: 'Serveren er konfigureret til at lave thumbnails af store billeder, men ImageMagick er ikke installeret. Installér ImageMagick med din foretrukne package manager eller <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">download den seneste udgave</a>.'
     failing_emails_warning: 'Der er %{num_failed_jobs} email operationer der mislykkede. Tjek din app.yml for at sikre at din mail server indstillinger er korrekte. <a href="/sidekiq/retries" target="_blank">Se mislykkede operationer i Sidekiq</a>.'
-    consumer_email_warning: "Dit site er konfigureret til at bruge Gmail (eller en anden offentlig e-mail-tjeneste) til at sende e-mail. <a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>Gmail har en  grænse for, hvor mange mails du kan sende</a>. Overvej at bruge en e-mail-udbyder som mandrill.com for at sikre at din mail bliver leveret."
     subfolder_ends_in_slash: "Din undermappe er ikke opsat korrekt; DISCOURSE_RELATIVE_URL_ROOT ender med en slash."
     email_polling_errored_recently:
       one: "Email afstemning har afstedkommet en fejl i de seneste 24 timer. Venligst se <a href='/logs' target='_blank'>the logs</a> for detaljer."
@@ -780,7 +779,6 @@ da:
     show_pinned_excerpt_mobile: "Vis uddrag af fastgjorte emner på mobilen."
     show_pinned_excerpt_desktop: "Vis uddrag af fastgjorte emner i desktop visning"
     post_onebox_maxlength: "Max længde af Discourse indlæg i tegn"
-    onebox_domains_whitelist: "En liste af domæner der tillader oneboxing; disse domæner burde supportere OpenGraph eller oEmbed. Test dem på http://iframely.com/debug"
     logo_url: "Logoet på jeres site, øverst til venstre, burde være en bred rektangel. Hvis denne efterlades blank, vil sidens titel tekst blive vist."
     digest_logo_url: "Det alternative logo billede der anvendes øverst på jeres sides email opsummering, burde være en bred rektangel. Skal ikke være et SVG billede. Hvis denne efterlades blank, vil 'logo_url' blive anvendt."
     logo_small_url: "Det lille logo øverst til venstre på siden burde være firkantet når der bladres ned. Såfremt denne efterlades blank. vil home 'glyph' blive vist."
@@ -1041,13 +1039,19 @@ da:
     user_posted_pm:
       subject_template: "[%{site_name}] [PM] %{topic_title}"
     digest:
-      why: "Et kort resume af %{site_link} siden dit sidste besøg %{last_seen_at}"
+      why: "Et kort resumé af %{site_link} siden dit sidste besøg %{last_seen_at}"
+      subject_template: "[%{site_name}] Resumé"
       new_activity: "Ny aktivitet på dine emner og indlæg:"
       top_topics: "Populære emner"
       other_new_topics: "Populære emner"
+      unsubscribe: "Dette resumé sendes fra %{site_link} når vi ikke har set dig i et stykke tid. For at afmelde %{unsubscribe_link}."
       click_here: "klik her"
+      from: "%{site_name} resumé"
       read_more: "Læs mere"
+      more_topics: "Der var %{new_topics_since_seen} andre nye emner."
       more_topics_category: "Flere nye emner: "
+    mailing_list:
+      subject_template: "[%{site_name}] Resumé for %{date}"
     forgot_password:
       subject_template: "[%{site_name}] Nulstil kodeord"
       text_body_template: |

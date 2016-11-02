@@ -585,7 +585,6 @@ fa_IR:
     s3_config_warning: 'سرور تنظیم شده برای بارگزاری فایل به  s3 ولی حداقل یکی از تنظیمات پیش رو تنظیم نشده است:  s3_access_key_id, s3_secret_access_key or s3_upload_bucket.  برو به <a href="/admin/site_settings"> تنظیمات سایت </a>  و بروز رسانی و تنظیمات. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank"> این را ببین برای بارگزاری های  عکس به  S3؟"  برای کسب اطلاعات بیشتر </a>.'
     s3_backup_config_warning: 'سرور تنظیم شده برای بارگزاری نسخه پشتیبان  به  s3 ولی حداقل یکی از تنظیمات پیش رو تنظیم نشده است:  : s3_access_key_id, s3_secret_access_key or s3_backup_bucket. برو به <a href="/admin/site_settings"> تنظیمات سایت </a> و بروز رسانی و تنظیمات  <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">  این را ببین برای تنظیم ارسال عکس ها به S3؟ "  برای کسب اطلاعات بیشتر </a>.'
     image_magick_warning: 'سرور تنظیم شده برای ساخت تامبنیل های عکس های بزرگ. ولی  ImageMagick نصب نشده است. ImageMagick را نصب کن با استفاده از بسته مدیریت یا <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank"> آخرین نسخه را دانلود کن. '
-    consumer_email_warning: "سایت شما  برای استفاده از ایمیل گوگل پیکربندی شده (یا دیگر سرویس دهندگان ایمیل) برای ارسال ایمیل. <a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'> جیمیل  محدود می کند که چند ایمیل می توانی بفرستی</a>. استفاده از یک ارائه دهنده خدمات ایمیل را مانند mandrill.com در نظر بگیرید برای اطمنیان از قابلیت تحوبل ایمیل. "
   site_settings:
     censored_words: "کلماتی که به صورت خودکار جایگزین می شوند با  &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "پاک کردن خودکار تمام نوشته هایی که بیش از 30 روز بصورت پنهان باقی می مانند. "
@@ -625,7 +624,6 @@ fa_IR:
     exclude_rel_nofollow_domains: "لیست دامنه‌هایی که مقدار nofollow نباید به لینک‌های آن‌ها اضافه شود. tld.com به صورت خودکار اجازه sub.tld.com را نیز می‌دهد. حداقل کاری که می‌توان انجام داد این است که سطح بالاترین دامنه این سایت به این لیست اضافه شود تا کراولرهای وب بتوانند محتوای موجود را پیدا کنند. اگر بعضی قسمت‌های سایت شما روی دامنه‌های دیگری است، آن‌ها نیز باید اضافه شوند."
     post_excerpt_maxlength: "حداکثر طول یک نوشته گزیده شده / خلاصه. "
     post_onebox_maxlength: " حداکثر طول به یک نوشته  ایجاد گروه Discourse در کاراکتر. "
-    onebox_domains_whitelist: "لیست دامنه ها تا اجازه دهد به  oneboxing برای; این دامنه ها باید OpenGraph یا oEmbed را ساپورت کنندو امتحان کنید در http://iframely.com/debug"
     apple_touch_icon_url: "آیکون استفاده شده برای دستگاه های لمسی اپل . سایز پیشنهادی 144px by 144px."
     notification_email: "از : ایمیل آدرس زمان ارسال تمام ایمیل های ضروری سیستم استفاده شد. .دامنه مشخص شده در اینجا باید SPF, DKIM  داشته باشد و سوابق PTR معکوس به درستی برای ورود ایمیل تنظیم شده باشد. "
     email_custom_headers: "لیست  pipe-delimited از هدر ایمیل سفارشی "

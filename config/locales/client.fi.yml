@@ -508,7 +508,7 @@ fi:
       automatically_unpin_topics: "Poista kiinnitetyn ketjun kiinnitys automaattisesti, kun olen selannut sen loppuun."
       staff_counters:
         flags_given: "hyödyllistä liputusta"
-        flagged_posts: "liputettuja viestejä"
+        flagged_posts: "liputettua viestiä"
         deleted_posts: "poistettua viestiä"
         suspensions: "hyllytyksiä"
         warnings_received: "varoituksia"
@@ -652,6 +652,7 @@ fi:
         after_4_minutes: "4 minuutin jälkeen"
         after_5_minutes: "5 minuutin jälkeen"
         after_10_minutes: "10 minuutin jälkeen"
+      notification_level_when_replying: "Kun kirjoitan ketjuun, aseta se "
       invited:
         search: "kirjoita etsiäksesi kutsuja..."
         title: "Kutsut"
@@ -871,7 +872,7 @@ fi:
       not_allowed_from_ip_address: "Kirjautuminen estetty tästä IP-osoitteesta."
       admin_not_allowed_from_ip_address: "Et voi kirjautua ylläpitäjänä tästä IP-osoitteesta."
       resend_activation_email: "Klikkaa tästä lähettääksesi vahvistusviestin uudelleen."
-      sent_activation_email_again: "Lähetimme uuden vahvistusviestin sinulle osoitteeseen <b>{{sentTo}}</b>. Viestin saapumisessa voi kestää muutama minuutti, muista tarkastaa myös roskapostikansio."
+      sent_activation_email_again: "Lähetimme uuden vahvistusviestin sinulle osoitteeseen <b>{{currentEmail}}</b>. Viestin saapumisessa voi kestää muutama minuutti; muista tarkastaa myös roskapostikansio."
       to_continue: "Ole hyvä ja kirjaudu sisään"
       preferences: "Sinun täytyy olla kirjautuneena sisään muokataksesi tilisi asetuksia"
       forgot: "En muista käyttäjätilini tietoja"
@@ -2822,12 +2823,14 @@ fi:
           developer: 'Kehittäjä'
           embedding: "Upottaminen"
           legal: "Säännöt"
+          user_api: 'Käyttäjärajapinta'
           uncategorized: 'Muut'
           backups: "Varmuuskopiot"
           login: "Kirjautuminen"
           plugins: "Lisäosat"
           user_preferences: "Käyttäjäasetukset"
           tags: "Tunnisteet"
+          search: "Haku"
       badges:
         title: Ansiomerkit
         new_badge: Uusi ansiomerkki

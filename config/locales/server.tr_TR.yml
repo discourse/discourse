@@ -674,7 +674,6 @@ tr_TR:
     s3_backup_config_warning: 'Sunucu s3''e yedekleme yüklenebilmesi için yapılandırılmış, fakat şunlardan en az biri henüz ayarlanmamış: s3_access_key_id, s3_secret_access_key or s3_backup_bucket. <a href="/admin/site_settings">Site Ayarları</a> sayfasına gidin ve ayarları güncelleyin. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Daha fazla bilgi için "How to set up image uploads to S3?" konulu gönderiye bakın</a>.'
     image_magick_warning: 'Sunucu büyük resimlerin küçük boylarının oluşturulması için yapılandırılmış, fakat ImageMagick henüz kurulmamış. Favori paket yöneticinizi kullanarak ImageMagick kurun veya <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">son sürümünü indirin</a>.'
     failing_emails_warning: 'Başarısızlıkla sonuçlanmış %{num_failed_jobs} e-posta işlemi bulunuyor. app.yml dosyanızı kontrol edin ve e-posta sunucu ayarlarınızın doğru olduğundan emin olun. <a href="/sidekiq/retries" target="_blank">Sidekiq''deki başarısız işlemlere göz atın</a>.'
-    consumer_email_warning: "Sitenizde e-posta gönderimleri için Gmail (ya da başka bir e-posta hizmeti) kurulumu yapılmış. <a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>Gmail ile gönderebileceğiniz e-posta sayısı limitlidir</a>. Onun yerine, e-postalarınızın ulaştırılabildiğinden emin olmak için mandrill.com benzeri bir hizmet sağlayıcısını kullanın."
     subfolder_ends_in_slash: "Alt dizin kurulumunuz hatalı, DISCOURSE_RELATIVE_URL_ROOT sonunda yan çizgi bulunmalı."
     bad_favicon_url: "Minik simge yüklemesi başarısız oldu. <a href='/admin/site_settings'>Site Ayarları</a>ndan favicon_url alanını kontrol edin."
   site_settings:
@@ -724,7 +723,7 @@ tr_TR:
     show_pinned_excerpt_mobile: "Mobil görünümünde başa tutturulmuş konuların özetini göster."
     show_pinned_excerpt_desktop: "Masaüstü görünümünde başa tutturulmuş konuların özetini göster."
     post_onebox_maxlength: "Kutulanmış bir Discourse gönderisinin en fazla karakter uzunluğu"
-    onebox_domains_whitelist: "Kutulamaya izin verilen alan adları listesi; bu alan adları OpenGraph ya da oEmbed desteklemeliler. http://iframely.com/debug adresinden test edebilirsiniz."
+    max_oneboxes_per_post: "Gönderide olabilecek en fazla kutulama sayısı"
     logo_url: "Sitenin üst solundaki görsel, geniş dikdörtgen şeklinde olmalıdır. Boş bırakılırsa site başlığı gösterilecektir."
     logo_small_url: "Sitenin üst solundaki küçük görsel, kare şeklinde olmalıdır, aşağıya doğru kaydırılırken görünür. Boş bırakılırsa bir ev oyması gösterilecektir."
     favicon_url: "Site simgesi, bilgi için http://en.wikipedia.org/wiki/Favicon adresine bakınız, bir CDN ile doğru şekilde çalışmak için png olmalıdır."
@@ -2201,13 +2200,15 @@ tr_TR:
     staff_tag_disallowed: " \"%{tag}\" etiketi yalnızca görevliler tarafından eklenebilir gözüküyor."
     staff_tag_remove_disallowed: " \"%{tag}\" etiketi yalnızca görevliler tarafından silinebilir gözüküyor."
   rss_by_tag: "%{tag} etiketli konular"
-  first_installation:
-    congratulations: "Tebrikler, Discourse yüklemesini tamamladınız!"
+  finish_installation:
     register:
       button: "Kayıt Ol"
-      title: "Yönetici Hesabı Oluştur"
+      help: "başlamak için yeni bir hesap oluşturun"
     confirm_email:
       title: "E-posta adresinizi doğrulayın"
+    resend_email:
+      title: "Etkinleştirme E-postasını Tekrar Gönder"
+      message: "<p> <b>%{email}</b> adresine etkinleştirme e-postasını tekrar gönderdik"
   wizard:
     title: "Discourse Kurulumu"
     step:

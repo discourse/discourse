@@ -198,9 +198,9 @@ fi:
       email_already_used_in_category: "'%{email}' on jo käytössä alueella '%{category_name}'."
     default_names:
       everyone: "kaikki"
-      admins: "ylläpitäjät"
+      admins: "yllapitajat"
       moderators: "valvojat"
-      staff: "henkilökunta"
+      staff: "henkilokunta"
       trust_level_0: "luottamustaso_0"
       trust_level_1: "luottamustaso_1"
       trust_level_2: "luottamustaso_2"
@@ -729,7 +729,6 @@ fi:
     s3_backup_config_warning: 'Palvelin on konfiguroitu lataamaan varmuuskopiot s3:een, mutta vähintään yksi arvoista s3_access_key_id, s3_secret_access_key tai s3_backup_bucket ei ole asetettu. Päivitä arvot <a href="/admin/site_settings">sivuston asetuksissa</a>.Voit lukea lisätietoja oppaasta <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">"How to set up image uploads to S3?"</a>.'
     image_magick_warning: 'Palvelin on konfiguroitu luomaan esikatselukuvia suurista kuvista, mutta ImageMagickia ei ole asennettu. Asenna ImageMagick paketinhallinnasta tai <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">lataamalla uusin versio</a>.'
     failing_emails_warning: 'Epäonnistuneiden sähköpostitehtävien määrä on %{num_failed_jobs}. Tarkista app.yml ja varmista, että palvelimen asetukset ovat kunnossa. <a href="/sidekiq/retries" target="_blank">Katsele epäonnistuneita tehtäviä Sidekiqissa</a>.'
-    consumer_email_warning: "Sivusto on konfiguroitu käyttämään Gmailia (tai muuta yksityishenkilöille suunnattua sähköpostipalvelua) sähköpostin lähettämiseen. <a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>Gmail rajoittaa lähetettävien sähköpostien määrää</a>. Harkitse sähköpostipalveluntarjoajaa, kuten mandrill.com varmistaaksesi sähköpostin lähetyksen."
     subfolder_ends_in_slash: "Alihakemiston asetuksesi ei kelpaa; DISCOURSE_RELATIVE_URL_ROOT päättyy vinoviivaan."
     email_polling_errored_recently:
       one: "Sähköpostin pollaus on aiheuttanut virheen edellisen 24 tunnin aikana. Tarkastele <a href='/logs' target='_blank'>lokeja</a> saadaksesi lisätietoja."
@@ -782,7 +781,6 @@ fi:
     show_pinned_excerpt_mobile: "Näytä katkelma kiinnitetyistä ketjuista mobiilinäkymässä."
     show_pinned_excerpt_desktop: "Näytä katkelma kiinnitetyistä ketjuista työpöytänäkymässä."
     post_onebox_maxlength: "Discourse-viestin Onebox-esikatselun merkkien maksimimäärä."
-    onebox_domains_whitelist: "Lista verkkotunnuksista, joilta sallitaan onebox-esikatselut; näiden tunnusten pitäisi tukea OpenGraphia tai oEmbedia. Testaa ne osoitteessa http://iframely.com/debug"
     logo_url: "Logo sivustosi vasemmassa yläkulmassa. Sen pitäisi olla leveä suorakulmio muodoltaan. Jos jätetään tyhjäksi, näytetään sivuston otsikkoteksti."
     digest_logo_url: "Vaihtoehtoinen logo, jota käytetään sähköpostikoosteessa. Muodoltaan sen tulisi olla leveä suorakulmio, eikä se saa olla SVG-muodossa. Jos ei aseteta, käytetään `logo_url`-kuvaa."
     logo_small_url: "Pieni logo sivuston vasemmassa reunassa, joka näytettään rullattaessa alaspäin. Sen pitäisi olla neliö muodoltaan. Jos jätetään tyhjäksi, näytetään sen tilalla koti-merkki."
@@ -1185,6 +1183,9 @@ fi:
     min_trust_level_to_tag_topics: "Vähimmäisluottamustaso, jolla voi lisätä tunnisteita ketjuihin"
     suppress_overlapping_tags_in_list: "Jos tunniste esiintyy sanana täsmälleen ketjun otsikossa, älä näytä tunnistetta"
     remove_muted_tags_from_latest: "Jos tunniste on vaimennettu, älä näytä ketjua Tuoreimmissa."
+    company_short_name: "Yrityksen nimi (lyhyesti)"
+    company_full_name: "Yrityksen nimi (virallisesti)"
+    company_domain: "Yrityksen verkkotunnus"
     errors:
       invalid_email: "Sähköpostiosoite ei kelpaa."
       invalid_username: "Tällä nimellä ei löydy käyttäjää."
@@ -2157,6 +2158,7 @@ fi:
     message_to_blank: "message.to on tyhjä"
     text_part_body_blank: "text_part.body on tyhjä"
     body_blank: "body on tyhjä"
+    no_echo_mailing_list_mode: "Postitustilassa ei sähköposti-ilmoituksia käyttäjän omista viesteistä"
   color_schemes:
     base_theme_name: "Pohja"
   about: "Tietoja"
@@ -2505,8 +2507,12 @@ fi:
     staff_tag_disallowed: "Tunnisteen \"%{tag}\" voi lisätä vain henkilökunta"
     staff_tag_remove_disallowed: "Tunnisteen \"%{tag}\" voi poistaa vain henkilökunta"
   rss_by_tag: "Ketjut tunnisteella %{tag}"
-  first_installation:
+  finish_installation:
     congratulations: "Onneksi olkoon, asensit Discoursen!"
+    register:
+      button: "Rekisteröidy"
+      title: "Rekisteröi ylläpitäjätunnus"
+      help: "aloita rekisteröimällä uusi tunnus"
   wizard:
     title: "Discoursen asennus"
     step:

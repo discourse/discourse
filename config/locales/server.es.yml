@@ -742,7 +742,6 @@ es:
     s3_backup_config_warning: 'El servidor está configurado para permitir subir las copias de seguridad a s3, pero al menos una de las siguientes configuraciones no está realizada: s3_access_key_id, s3_secret_access_key o s3_backup_bucket. Ve a <a href="/admin/site_settings">la Configuración del Sitio</a> y actualiza la configuración. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Revisa "How to set up image uploads to S3?" para aprender más</a>.'
     image_magick_warning: 'El servidor está configurado para permitir miniaturas de imágenes grandes, pero ImageMagick no está instalado. Instala ImageMagick usando tu administrador de paquetes favorito o <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">descárgate la última versión</a>.'
     failing_emails_warning: 'Hay %{num_failed_jobs} jobs de email que fallaron. Revisa tu app.yml y asegúrate que la configuración del servidor de mail es correcta. <a href="/sidekiq/retries" target="_blank">Mira los jobs fallados en Sidekiq</a>.'
-    consumer_email_warning: "Tu sitio está configurado para Utilizar Gmail (u otro servicio de email de consumidor) para enviar email. <a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>Gmail limita la cantidad de emails que puedes enviar</a>. Considera usar un proveedor de servicio email como mandrill.com para asegurarte la entrega de los emails."
     subfolder_ends_in_slash: "La configuación del subdirectorio no es correcta; el campo DISCOURSE_RELATIVE_URL_ROOT termina con una barra."
     email_polling_errored_recently:
       one: "El email polling ha generado un error en las pasadas 24 horas. Mira en <a href='/logs' target='_blank'>los logs</a> para más detalles."
@@ -798,7 +797,6 @@ es:
     show_pinned_excerpt_mobile: "Mostrar extracto de temas destacados en la vista móvil."
     show_pinned_excerpt_desktop: "Mostrar extracto de temas destacados en la vista de escritorio."
     post_onebox_maxlength: "Extensión máxima en caracteres de un post de Discourse en formato Onebox."
-    onebox_domains_whitelist: "Una lista de dominios a los que permitir el formato Onebox; estos dominios deberán soportar OpenGraph u oEmbed. Pruébalos en http://iframely.com/debug"
     logo_url: "El logo situado en la esquina superior izquierda de tu sitio, debería encajar en las dimensiones de un rectángulo. Si se deja en blanco, se mostrará un texto con el título del sitio."
     digest_logo_url: "La imagen de logo alterno utilizado en la parte superior del resumen del sitio enviado por email. Debería encajar en las dimensiones de un rectángulo. No debería ser una imagen SVG. Si se deja en blanco, se utilizará `logo_url`."
     logo_small_url: "El logo pequeño situado en la esquina superior izquierda del sitio, debería encajar en las dimensiones de un cuadrado y se muestra cuando se hace scroll hacia abajo. Si se deja en blanco, se mostrará un glifo de una casita."

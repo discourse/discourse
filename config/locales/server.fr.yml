@@ -742,7 +742,6 @@ fr:
     s3_backup_config_warning: 'Le serveur est configuré pour envoyer les sauvegardes sur S3, mais l''un des paramètres suivants n''est pas renseigné: s3_access_key_id, s3_secret_access_key or s3_backup_bucket. Allez dans les <a href="/admin/site_settings">Paramètres</a> et mettez les à jour. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Voir "Comment mettre en place une sauvegarde sur S3?" pour en savoir plus</a>.'
     image_magick_warning: 'Le serveur est configuré pour créer des aperçus des grandes images, mais ImageMagick n''est pas installé. Installez ImageMagick en utilisant votre gestionnaire de paquets favori ou bien allez ici <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">pour télécharger la dernière version</a>.'
     failing_emails_warning: 'Il y a %{num_failed_jobs} tâches d''envois de courriel en erreur. Vérifiez votre fichier app.yml et assurez-vous de la conformité des paramètres du serveur de courriel. <a href="/sidekiq/retries" target="_blank">Voir aussi les processus en échec dans Sidekiq</a>.'
-    consumer_email_warning: "Votre site est configuré pour envoyer les courriels en utilisant Gmail (ou un autre site de courriels pour utilisateur standard). <a href='http://support.google.com/a/bin/answer.py?hl=fr&answer=166852' target='_blank'>Gmail limite le nombre d'emails que vous pouvez envoyer</a>. Nous vous conseillons d'utiliser un autre service d'envoi de courriels afin d'assurer une meilleure délivrabilité."
     subfolder_ends_in_slash: "Votre configuration de sous-répertoire est erronée; DISCOURSE_RELATIVE_URL_ROOT se termine avec une barre oblique ."
     email_polling_errored_recently:
       one: "La vérification des courriels a généré une erreur au cours des 24 dernières heures. Vérifiez <a href='/logs' target='_blank'>le journal</a> pour plus de détails."
@@ -798,7 +797,8 @@ fr:
     show_pinned_excerpt_mobile: "Afficher les extraits des sujets épinglés en vue mobile."
     show_pinned_excerpt_desktop: "Afficher les extraits des sujets épinglés en vue bureau."
     post_onebox_maxlength: "Longueur maximale d'un message emboîté en nombre de caractères."
-    onebox_domains_whitelist: "Liste des noms de domaines autorisés pour les 'onebox'. Ces domaines doivent supporter OpenGraph or oEmbed. Testez les sur http://iframely.com/debug"
+    onebox_domains_blacklist: "Une liste de domaines que ne seront jamais transformés en Onebox."
+    max_oneboxes_per_post: "Nombre maximum de Onebox dans un message."
     logo_url: "L'image de votre logo situé en haut à gauche de votre site doit être de forme rectangulaire large. Si vous laissez ce champ vide, le nom de votre site apparaitra."
     digest_logo_url: "L'image alternative de votre logo utilisée en haut du résumé par courriel de votre site. Elle devrait idéalement être en forme de large rectangle et ne pas être une image SVG. Si vide, `logo_url` sera utilisé."
     logo_small_url: "Le petit logo situé en haut à gauche de votre site doit être de forme carré. Si vous laissez ce champ vide, un logo de maison apparaîtra."
@@ -1159,6 +1159,7 @@ fr:
     embed_username_key_from_feed: "Clé pour extraire le pseudo du flux."
     embed_title_scrubber: "Expression régulière pour nettoyer les titres intégrables."
     embed_truncate: "Tronquer les messages embarqués."
+    allowed_href_schemes: "Préfixes autorisés dans les liens en plus de http et https."
     embed_post_limit: "Nombre maximum de messages à embarquer."
     embed_username_required: "Un pseudo d'utilisateur pour la création du sujet est nécessaire."
     embed_whitelist_selector: "Sélecteur CSS pour les éléments qui seront autorisés dans les contenus embarqués."
@@ -2203,6 +2204,7 @@ fr:
     message_to_blank: "message.to est vide"
     text_part_body_blank: "text_part.body est vide"
     body_blank: "sans contenu"
+    no_echo_mailing_list_mode: "Notifications de la liste de diffusion désactivées pour les messages de l'utilisateur."
   color_schemes:
     base_theme_name: "Base"
   about: "À propos"
@@ -2628,7 +2630,7 @@ fr:
     staff_tag_disallowed: "Le tag \"%{tag}\" ne peut être mis que par un responsable."
     staff_tag_remove_disallowed: "Le tag \"%{tag}\" ne peut être retiré que par un responsable."
   rss_by_tag: "Sujets avec le tag %{tag}"
-  first_installation:
+  finish_installation:
     congratulations: "Félicitations, vous avez installé Discourse !"
     register:
       button: "Créer"
@@ -2638,6 +2640,9 @@ fr:
     confirm_email:
       title: "Confirmer votre adresse courriel"
       message: "<p>Nous avons envoyé un courriel d’activation à <b>%{email}</b>. Veuillez suivre les instructions du courriel pour activer votre compte.</p><p>S'il n'est pas réceptionné, assurez-vous que l'adresse courriel est correctement configurée pour votre Discourse et vérifiez vos courriers indésirables.</p>"
+    resend_email:
+      title: "Renvoyer le courriel d'activation"
+      message: "<p>Nous avons renvoyé le courriel d'activation à <b>%{email}</b>"
   wizard:
     title: "Configuration de Discourse"
     step:

@@ -711,7 +711,6 @@ it:
     s3_backup_config_warning: 'Il server è configurato per caricare i backup su S3, ma almeno una delle seguenti impostazioni non è impostata: s3_access_key_id, s3_secret_access_key, s3_backup_bucket. Vai nelle <a href="/admin/site_settings">Impostazioni Sito</a> e aggiorna le impostazioni. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Leggi anche "How to set up image uploads to S3?" per saperne di più</a>.'
     image_magick_warning: 'Il server è configurato per creare miniature di immagini grandi, ma ImageMagick non è installato. Installa ImageMagick usando il tuo package manager preferito o <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">scarica la versione più recente</a>.'
     failing_emails_warning: 'Ci sono %{num_failed_jobs} job di email falliti. Controlla il file app.yml e assicurati che le impostazioni del mail server siano corrette. <a href="/sidekiq/retries" target="_blank">Vedi i job falliti in Sidekiq</a>.'
-    consumer_email_warning: "Il tuo sito è configurato per usare Gmail (o un altro servizio email consumer) per inviare le email. <a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>Gmail limita il numero di email che puoi inviare</a>. Considera l'utilizzo di un fornitore di servizi come mandrill.com per assicurare l'invio delle email."
     subfolder_ends_in_slash: "L'impostazione della sottocartella è errata; DISCOURSE_RELATIVE_URL_ROOT finisce con uno slash."
   site_settings:
     censored_words: "Parole che saranno automaticamente sostituite con &#9632;&#9632;&#9632;&#9632;"
@@ -754,7 +753,6 @@ it:
     exclude_rel_nofollow_domains: "Una lista di domini a cui non aggiungere \"nofollow\" ai collegamenti. Inoltre tld.com autorizzerà automaticamente sub.tld.com. Dovresti perlomeno aggiungere il dominio di primo livello di questo sito, per aiutare i motori di ricerca a trovare tutto il contenuto. Se parti del tuo sito si trovano su altri domini, aggiungi anche quelli."
     post_excerpt_maxlength: "Lunghezza massima dell'estratto / riassunto di un messaggio."
     post_onebox_maxlength: "Lunghezza massima in caratteri di un messaggio Discourse in Onebox."
-    onebox_domains_whitelist: "Lista di domini per i quali consentire la funzione di onebox; questi domini devono supportare OpenGraph o oEmbed. Testali su http://iframely.com/debug"
     logo_url: "L'immagine nel logo in alto a sinistra del sito, dovrebbe essere larga e di forma rettangolare. Se non impostata, verrà usato il testo del titolo del sito."
     logo_small_url: "Il piccolo logo in alto a sinistra del tuo sito, dovrebbe essere a forma di quadrato. Se non impostato, verrà mostrata l'icona di una casa."
     apple_touch_icon_url: "Icona usata per dispositivi touch Apple. La dimensione consigliata è 144 x 144 pixel."

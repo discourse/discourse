@@ -474,6 +474,7 @@ he:
           נושאים וקטגוריות שהושתקו לא יכללו במיילים אלו.
         daily: "שלח עדכונים יומיים"
         individual: "שליחת מייל עבור כל פוסט חדש"
+        individual_no_echo: "שלח מייל עבור כל פוסט חדש מלבד שלי"
         many_per_day: "שלחו לי מייל עבור כל פוסט חדש (בערך {{dailyEmailEstimate}} ביום)"
         few_per_day: "שלחו לי מייל עבור כל פוסט חדש (בערך 2 ביום)"
       tag_settings: "תגיות"
@@ -1700,6 +1701,7 @@ he:
       email_in_disabled: "אפשרות הפרסום של נושאים חדשים דרך דוא\"ל נוטרלה בהגדרות האתר. כדי לאפשר פרסום באמצעות  משלוח דוא\"ל,"
       email_in_disabled_click: 'אפשרו את את ההגדרה "דוא"ל נכנס"'
       suppress_from_homepage: "הרחיקו קטגוריה זו מהעמוד הראשי."
+      sort_order: "סידור ברירת מחדל:"
       allow_badges_label: "הרשו לעיטורים להיות מוענקים בקטגוריה זו"
       edit_permissions: "ערוך הרשאות"
       add_permission: "הוסף הרשאה"
@@ -1725,6 +1727,18 @@ he:
         muted:
           title: "מושתק"
           description: "לא תקבלו התראות על נושאים חדשים בקטגוריות אלו, והם לא יופיעו בעמוד הלא-נקראו שלך."
+      sort_options:
+        default: "ברירת מחדל"
+        likes: "לייקים"
+        op_likes: "לייקים של הפוסט המקורי"
+        views: "מבטים"
+        posts: "פוסטים"
+        activity: "פעילות"
+        posters: "מפרסמים"
+        category: "קטגוריה"
+        created: "נוצרו"
+      sort_ascending: 'בסדר עולה'
+      sort_descending: 'בסדר יורד'
     flagging:
       title: 'תודה על עזרתך לשמירה על תרבות הקהילה שלנו!'
       action: 'דגלו פוסט'
@@ -2898,7 +2912,7 @@ he:
           seo: 'SEO'
           spam: 'ספאם'
           rate_limits: 'מגבלות קצב'
-          developer: 'מפתח'
+          developer: 'מפתחים'
           embedding: "הטמעה"
           legal: "משפטי"
           user_api: 'API של משתמש'
