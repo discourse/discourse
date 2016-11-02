@@ -734,7 +734,6 @@ de:
     s3_backup_config_warning: 'Der Server ist so konfiguriert, dass Datensicherungen auf S3 geladen werden, aber mindestens eine der folgenden Einstellungen: s3_access_key_id, s3_secret_access_key oder s3_backup_bucket ist nicht festgelegt. Gehe zu <a href="/admin/site_settings">den Siteneinstellungen</a> und aktualisiere die Einstellungen. Um mehr darüber zu erfahren siehe <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">"Wie konfiguriere ich das Hochladen von Bildern zu S3?" (en)</a>.'
     image_magick_warning: 'Der Server wurde konfiguriert um Vorschaubilder von grossen Bildern zu erstellen, aber ImageMagick ist nicht installiertd. Installiere ImageMagick mit deinem bevorzugten Packetmanager oder besuche <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">um das aktuelle Paket herunterzuladen</a>.'
     failing_emails_warning: "%{num_failed_jobs} E-Mails konnten nicht versendet werden. Überprüfe deine app.yml und stelle sicher, dass die E-Mail Servereinstellungen korrekt gesetzt sind. \n<a href=\"/sidekiq/retries\" target=\"_blank\">Sieh dir hier die nicht versendeten E-Mails an.</a>"
-    consumer_email_warning: "Deine Site verwendet Gmail (oder einen anderen für Endkunden gedachten E-Mailserver) um E-Mails zu versenden. <a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>Gmail hat einen Grenzwert bezüglich des Sendens von E-Mails</a>. Um die E-Mail-Zustellung zu gewährleisten, solltest du die Verwendung eines anderen E-Mail-Dienstes in Erwägung ziehen."
     subfolder_ends_in_slash: "Deine Installation in einem Pfad ist nicht korrekt, DISCOURSE_RELATIVE_URL_ROOT endet mit einem Schrägstrich."
     email_polling_errored_recently:
       one: "Beim Abrufen von E-Mails ist in den letzten 24 Stunden ein Fehler aufgetreten. Weitere Informationen findest du <a href='/logs' target='_blank'>im Fehlerprotokoll</a>."
@@ -790,7 +789,6 @@ de:
     show_pinned_excerpt_mobile: "Zeige einen Auszug hervorgehobener Beiträge in der mobilen Ansicht."
     show_pinned_excerpt_desktop: "Zeige einen Auszug hervorgehobener Beiträge in der Desktop-Ansicht."
     post_onebox_maxlength: "Maximale Länge eines Onebox-Discourse-Beitrags in Zeichen."
-    onebox_domains_whitelist: "Liste von Domains, deren Inhalte für Oneboxen erlaubt sind; diese Domains sollten OpenGraph oder oEmbed unterstützen. Teste ihre Kompatibilität unter http://iframely.com/debug"
     logo_url: "Das Logo oben links auf deiner Site sollte eine breite, rechteckige Form haben. Wenn du kein Logo auswählst, wird stattdessen `title` angezeigt."
     digest_logo_url: "Das alternative Logo oben in den E-Mail-Zusammenfassungen deiner Site. Sollte eine breite, rechteckige Form haben. Sollte kein SVG-Bild sein. Wenn leer, wird `logo_url` verwendet."
     logo_small_url: "Dein Logo in klein für die obere linke Seite deiner Site, in Form eines rechteckigen Quadrates. Es wird angezeigt, wenn der Benutzer scrollt. Wenn du dieses Feld frei lässt, wird stattdessen ein Haus-Symbol angezeigt."
@@ -2820,9 +2818,6 @@ de:
     staff_tag_disallowed: "Das Schlagwort \"%{tag}\" kann nur von Mitarbeitern angewendet werden."
     staff_tag_remove_disallowed: "Das Schlagwort \"%{tag}\" kann nur von Mitarbeitern entfernt werden."
   rss_by_tag: "Themen mit dem Schlagwort %{tag}"
-  first_installation:
-    register:
-      button: "Registrieren"
   wizard:
     step:
       forum_title:

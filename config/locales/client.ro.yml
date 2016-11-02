@@ -503,6 +503,7 @@ ro:
           Subiectele setate pe silențios și categoriile nu sunt incluse în aceste emailuri."
         daily: "Trimite actualizări zilnice"
         individual: "Trimite un email pentru fiecare postare nouă"
+        individual_no_echo: "Trimite un email pentru fiecare postare nouă în afară de postările mele"
         many_per_day: "Trimite câte un email pentru pentru fiecare nouă postare (aproximativ {{dailyEmailEstimate}} pe zi)"
         few_per_day: "Trimite câte un email pentru fiecare nouă postare (aproximativ 2 pe zi)"
       tag_settings: "Etichete"
@@ -1784,6 +1785,7 @@ ro:
       email_in_disabled: "Postarea subiectelor noi prin email este dezactivată din setările siteului. Pentru a activa postarea subiectelor noi prin email,"
       email_in_disabled_click: 'activează opțiunea "primire email ".'
       suppress_from_homepage: "Elimină această categorie de pe pagina principală."
+      sort_order: "Sortare implicită:"
       allow_badges_label: "Permite acordarea de ecusoane în această categorie"
       edit_permissions: "Editează permisiuni"
       add_permission: "Adaugă permisiune"
@@ -1809,6 +1811,18 @@ ro:
         muted:
           title: "Setat pe silențios"
           description: "Nu vei fi niciodată notificat cu privire la nimic legat de noile subiecte din aceste categorii și ele nu vor apărea în listă."
+      sort_options:
+        default: "implicit"
+        likes: "Aprecieri"
+        op_likes: "Aprecieri la postarea originală"
+        views: "Vizualizări"
+        posts: "Postări"
+        activity: "Activitate"
+        posters: "Autori"
+        category: "Categorie"
+        created: "Creat"
+      sort_ascending: 'Crescător'
+      sort_descending: 'Descrescător'
     flagging:
       title: 'Îți mulțumim că ne ajuți să păstrăm o comunitate civilizată!'
       action: 'Marcare'
@@ -2206,7 +2220,7 @@ ro:
         admins: 'Admini:'
         blocked: 'Blocați:'
         suspended: 'Suspendați:'
-        private_messages_short: "Msje"
+        private_messages_short: "Mesje"
         private_messages_title: "Mesaje"
         mobile_title: "Mobil"
         space_free: "{{size}} liber"

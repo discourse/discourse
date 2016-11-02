@@ -685,7 +685,6 @@ zh_CN:
     s3_backup_config_warning: '服务器被配置为上传备份到 s3，但是至少有一个值未被设定： s3_access_key_id, s3_secret_access_key 或 s3_upload_bucket。到<a href="/admin/site_settings">站点设置</a>更新此设定。<a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">参考如何设置图片上传至 S3</a>。'
     image_magick_warning: '服务器被设置为给大图片创建缩略图，但是 ImageMagick 没有被安装。用你最喜爱的包管理器安装 ImageMagick 或<a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">下载最新版</a>。'
     failing_emails_warning: '有 %{num_failed_jobs} 个邮件任务失败。请检查 app.yml 文件是否正确配置了邮件服务器。<a href="/sidekiq/retries" target="_blank">查看 Sidekiq 中失败的任务</a>。'
-    consumer_email_warning: "你的站点被设置为使用 Gmail 或者其他客户邮箱服务发送邮件。<a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>Gmail 限制每日邮件发送数量</a>。请考虑使用其他邮件服务商来保证邮件的成功发送，例如 mandrill.com。"
     subfolder_ends_in_slash: "你的子目录设置不正确；DISCOURSE_RELATIVE_URL_ROOT以斜杠结尾。"
     email_polling_errored_recently:
       other: "邮件轮询在过去的 24 小时内出现了 %{count} 个错误。看一看<a href='/logs' target='_blank'>日志</a>寻找详情。"
@@ -738,7 +737,6 @@ zh_CN:
     show_pinned_excerpt_mobile: "移动版显示置顶主题剪辑。"
     show_pinned_excerpt_desktop: "移动版显示置顶主题剪辑。"
     post_onebox_maxlength: "Onebox 处理后的 Discourse 帖子的最大字符长度"
-    onebox_domains_whitelist: "对这些站点启用 Onebox 的域名列表；这些域名应该支持 OpenGraph 或 oEmbed。在此测试他们：http://iframely.com/debug"
     logo_url: "在你站点左上角出现的小号标志图片，应为一个长方形。如果留空，将显示站点标题文字。"
     digest_logo_url: "邮件摘要中使用的标志图像。应为长方形。不能使用 SVG 图片。如果留空，将使用 `logo_url`。"
     logo_small_url: "在你站点左上角的小号标志图片，应为正方形，当滚动时才可见。如果留空，将显示主页图标。"

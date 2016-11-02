@@ -283,7 +283,7 @@ et:
         title: "Postitus vajab kinnitust"
         description: "Oleme sinu uue postituse kätte saanud, kuid see vajab enne ilmumist moderaatori kinnitust. Palume veidi kannatust. "
         pending_posts:
-          one: "Teil on <strong>1</strong> kinnitamata postitus."
+          one: "Sul on <strong>1</strong> kinnitamata postitus."
           other: "Sul on <strong>{{count}}</strong> kinnitamata postitust."
         ok: "OK"
     user_action:
@@ -1091,6 +1091,40 @@ et:
         category: "Otsi #{{category}} foorumist"
         topic: "Otsi sellest teemast"
         private_messages: "Otsi sõnumeid"
+      advanced:
+        title: Täpsem otsing
+        posted_by:
+          label: Postitaja
+        in_category:
+          label: Foorumis
+        in_group:
+          label: Grupis
+        with_tags:
+          label: Sildiga
+        filters:
+          label: Tagasta ainult need postitused, mis
+          likes: mulle meeldisid
+          posted: sisaldavad minu postitust
+          watching: on minu vaatlemise nimekirjas
+          tracking: on minu jälgimise nimekirjas
+          private: on minu sõnumite hulgas
+          bookmarks: on minu järjehoidjaga
+          first: on teema esimesed postitused
+          wiki: on wiki
+        statuses:
+          label: Kus teemad
+          open: on avatud
+          closed: on suletud
+          archived: on arhiveeritud
+          noreplies: ilma vastusteta
+          single_user: on ainult ühe kasutaja postitustega
+        post:
+          count:
+            label: Minimaalne postituste arv
+          time:
+            label: Postitatud
+            before: enne
+            after: pärast
     hamburger_menu: "mine teise teemaloetelu või foorumi juurde"
     new_item: "uus"
     go_back: 'tagasi'
@@ -1153,8 +1187,8 @@ et:
       filter_to:
         one: "1 postitus teemas"
         other: "{{count}} postitust teemas"
-      create: 'Uus Teema'
-      create_long: 'Loo uus Teema'
+      create: 'Uus teema'
+      create_long: 'Loo uus teema'
       private_message: 'Alusta sõnumit'
       archive_message:
         help: 'Liiguta sõnum oma arhiivi'
@@ -1200,7 +1234,7 @@ et:
       toggle_information: "lülita teema üksikasjad ümber"
       read_more_in_category: "Soovid veel lugeda? Vaata teisi teemasid {{catLink}} või {{latestLink}}."
       read_more: "Soovid veel lugeda? {{catLink}} või {{latestLink}}."
-      read_more_MF: "Teil on { UNREAD, plural, =0 {} one { is <a href='/unread'>1 lugemata</a> } other { are <a href='/unread'># lugemata </a> } } { NEW, plural, =0 {} one { {BOTH, select, true{and } false {is } other{}} <a href='/new'>1 uus</a> teema} other { {BOTH, select, true{and } false {are } other{}} <a href='/new'># uut</a> teemat} } jäänud, või {CATEGORY, select, true {browse other topics in {catLink}} false {{latestLink}} other {}}\nby priit.varik, a month ago"
+      read_more_MF: "Sul on { UNREAD, plural, =0 {} one { is <a href='/unread'>1 lugemata</a> } other { are <a href='/unread'># lugemata </a> } } { NEW, plural, =0 {} one { {BOTH, select, true{and } false {is } other{}} <a href='/new'>1 uus</a> teema} other { {BOTH, select, true{and } false {are } other{}} <a href='/new'># uut</a> teemat} } jäänud, või {CATEGORY, select, true {browse other topics in {catLink}} false {{latestLink}} other {}}\nby priit.varik, a month ago"
       browse_all_categories: Vaata kõiki foorumeid
       view_latest_topics: vaata värskeid teemasid
       suggest_create_topic: Teeks äkki teema?
@@ -1212,6 +1246,9 @@ et:
       auto_close_title: 'Automaatse sulgumise sätted'
       auto_close_save: "Salvesta"
       auto_close_remove: "Ära lase sel teemal automaatselt sulguda"
+      auto_close_immediate:
+        one: "Viimane postitus selles teemas on juba 1 tund aega vana, seega sulgub see teema nüüd."
+        other: "Viimane postitus selles teemas on juba %{hours} tundi vana, seega sulgub see teema nüüd."
       timeline:
         back: "Tagasi"
         back_description: "Mine tagasi oma viimase lugemata postituse juurde"
@@ -1247,20 +1284,20 @@ et:
           '0_2': 'Eirad kõiki teavitusi selle teema kohta.'
           '0': 'Eirad kõiki teavitusi selles foorumis.'
         watching_pm:
-          title: "Vaatleb"
+          title: "Vaatlemine"
           description: "Saad teavituse iga uue vastuse kohta sellele sõnumile koos uute vastuste koguarvu näitamisega."
         watching:
-          title: "Vaatleb"
+          title: "Vaatlemine"
           description: "Saad teavituse iga uue vastuse kohta selles teemas koos uute vastuste koguarvu näitamisega."
         tracking_pm:
-          title: "Jälgib"
+          title: "Jälgimine"
           description: "Selle sõnumi kohta näidatakse uute vastuste koguarvu. Saad teavituse kui keegi Sinu @name mainib või Sulle vastab."
         tracking:
-          title: "Jälgib"
+          title: "Jälgimine"
           description: "Selle teema kohta näidatakse uute vastuste koguarvu. Saad teavituse kui keegi Sinu @name mainib või Sulle vastab."
         regular:
           title: "Normaalne"
-          description: "Teid teavitatakse, kui keegi Sinu @name mainib või Sulle vastab."
+          description: "Sind teavitatakse, kui keegi Sinu @name mainib või Sulle vastab."
         regular_pm:
           title: "Normaalne"
           description: "Sind teavitatakse, kui keegi Sinu @name mainib või Sulle vastab."
@@ -1293,7 +1330,7 @@ et:
         make_banner: "Tee teema bänneriks"
         remove_banner: "Eemalda teema bännerist"
       reply:
-        title: 'Vasta'
+        title: 'vasta'
         help: 'alusta selle teema vastuse koostamist'
       clear_pin:
         title: "Kustuta esiletõstmine"
@@ -1301,6 +1338,8 @@ et:
       share:
         title: 'Jaga'
         help: 'jaga viidet sellele teemale'
+      print:
+        title: 'Trüki'
       flag_topic:
         title: 'Tähista'
         help: 'tähista see teema privaatselt meelespidamiseks või saada selle kohta privaatsõnum'
@@ -1662,13 +1701,13 @@ et:
       parent: "Emafoorum"
       notifications:
         watching:
-          title: "Vaatleb"
+          title: "Vaatlemine"
           description: "Sa vaatled nendes foorumites kõiki teemasid automaatselt. Sind teavitatakse igast uuest postitusest igas teemas. Ühtlasi kuvatakse uute vastuste arv."
         watching_first_post:
           title: "Vaatan esimest postitust"
           description: "Sind teavitatakse vaid esimesest postitusest igas uues teemas nendes foorumites."
         tracking:
-          title: "Jälgib"
+          title: "Jälgimine"
           description: "Sa vaatled kõiki nende foorumite teemasid automaatselt. Sind teavitatakse, kui keegi sinu @name mainib või sulle vastab. Ühtlasi kuvatakse uute vastuste arv."
         regular:
           title: "Normaalne"

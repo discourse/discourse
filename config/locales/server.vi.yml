@@ -655,7 +655,6 @@ vi:
     s3_backup_config_warning: 'Máy chủ được cấu hình để upload các bản sao lưu dữ liệu lên s3, tuy nhiên ít nhất một trong các tùy chỉnh sau đây không được thiết lập: s3_access_key_id, s3_secret_access_key hoặc s3_backup_bucket. Truy cập <a href="/admin/site_settings">Thiết lập Site</a> và  bổ sung các thiết lập đó. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Xem bài viết "How to set up image uploads to S3?" để biết thêm chi tiết</a>.'
     image_magick_warning: 'Máy chủ đã cấu hình để tạo hình đại diện nhỏ từ những hình lới, nhưng ImageMagick chưa được cài đặt. Cài ImageMagick sử dụng trình quản lý package yêu thích của bạn hoặc <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">tải về phiên bản mới nhất</a>.'
     failing_emails_warning: 'Có %{num_failed_jobs} email jobs thấ bại. Kiểm tra app.yml và chắc chắn rằng cấu hình máy chủ email đúng. <a href="/sidekiq/retries" target="_blank">Xem jobs thất bại ở Sidekiq</a>.'
-    consumer_email_warning: "Trang web của bạn được cài đặt sử dụng Gmail (hoặc một dịch vụ email khác) để gửi email. <a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>Gmail có giới hạn số lượng email bạn có thể gửi</a>. Hãy xem xét sử dụng một dịch vụ email khác như mandrill.com để đảm bảo khả năng vận chuyển tất cả các email."
     subfolder_ends_in_slash: "Thư mục con của bạn được thiết lập không đúng, DISCOURSE_RELATIVE_URL_ROOT phải được kết thúc bằng dấu gạch chéo."
     email_polling_errored_recently:
       other: "Email đã tạo %{count} lỗi trong 24 giờ qua, xem <a href='/logs' target='_blank'>nhật ký</a> để biết thêm chi tiết."
@@ -704,7 +703,6 @@ vi:
     exclude_rel_nofollow_domains: "Một danh sách tên miền mà rel='nofollow' không được thêm vào các liên kết, các tên miền con sẽ được tự động áp dụng như với tên miền chính. Tối thiểu, bạn nên thêm tên miền cấp cao nhất của website này để giúp search engine tìm kiếm tất cả các nội dung. Nếu các phần khác của website thuộc tên miền khác, cũng nên thêm vào."
     post_excerpt_maxlength: "Chiều dài tối đa của đoạn trích / tóm tắt chủ đề."
     post_onebox_maxlength: "Số ký tự tối đa của một bài onebox Discourse."
-    onebox_domains_whitelist: "Danh sách các tên miền cho phép onebox, các tên miền này phải hỗ trợ OpenGraph hoặc oEmbed. Kiểm tra tại http://iframely.com/debug"
     logo_url: "Logo ở vị trí trên cùng của website nên là hình chữ nhật, nếu để trống thì tên website sẽ hiển thị."
     logo_small_url: "Logo nhỏ ở vị trí trên cùng của website hiển thị khi cuộn xuống nên là hình vuông, nếu để trống thì icon trang chủ sẽ hiển thị."
     favicon_url: "Favicon cho trang của bạn, xem tại http://en.wikipedia.org/wiki/Favicon, để chạy được với CDN ảnh phải là png"

@@ -570,7 +570,6 @@ ko:
     s3_config_warning: '파일을 Amazon S3로 업로드 하도록 설정하였습니다. 하지만 아직 Access key id(s3_access_key_id), Secret access key(s3_secret_access_key) 혹은 S3 bucket(s3_upload_bucketat) 중 하나를 설정하지 않았습니다. <a href="/admin/site_settings">사이트 세팅</a>에서 설정해주세요. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">자세히 알아보기("How to set up image uploads to S3?")</a>.'
     s3_backup_config_warning: 's3를 이용한 서버 설정이 완료 되지 않았습니다: s3_access_key_id, s3_secret_access_key, s3_secret_access_key 또는 s3_upload_bucket. <a href="/admin/site_settings">사이트 설정</a> 에 가셔서 업데이트 하세요. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">"How to set up image uploads to S3?" 읽어 보세요.</a>'
     image_magick_warning: '큰 이미지의 섬네일 만드는 설정이 있지만, ImageMagick가 설치되지 않았습니다. <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">최신버전 받기</a>.'
-    consumer_email_warning: "이메일 전송을 위해 Gmail(또는 다른 커스텀 이메일 서비스)을 사용하고 있습니다. <a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>Gmail의 이메일 전송 제한</a> 을 읽어보세요. mandrill.com을 이메일 서비스로 설정하는 것을 고려해보세요."
   site_settings:
     censored_words: "단어는 자동적으로 `&#9632;&#9632;&#9632;&#9632;` 로 대체 됩니다."
     delete_old_hidden_posts: "30일이 지난 숨겨진 글은 자동으로 삭제됩니다."
@@ -610,7 +609,6 @@ ko:
     exclude_rel_nofollow_domains: "nofollow 도메인 리스트에 넣으면 링크에 추가가 안됩니다. tld.com은 자동으로 sub.tld.com도 포함합니다. 최소한, 이 사이트의 top-level 도메인은 허가해서 웹크롤러가 모든 자료를 검색할 수 있게 해야합니다. 다른 도메인으로도 이 사이트가 들어가진다면 그것도 추가해야 합니다."
     post_excerpt_maxlength: "글 인용에 허용되는 최대 글자수"
     post_onebox_maxlength: "onebox가 적용된 Discourse 글에 허용되는 최대 글자수"
-    onebox_domains_whitelist: "onebox 사용을 허가할 도메일 리스트; 이 도메인은 OpenGraph나 oEmbed를 지원하여야합니다. 테스트: http://iframely.com/debug"
     logo_url: "좌측 상단의 로고이미지는 직사각형 모양이어야 합니다. 설정하지 않을 경우 사이트 이름이 출력됩니다."
     apple_touch_icon_url: "애플 디바이스는 144px의 아이콘을 사용함. 144px X 144px 사이즈를 추천함"
     notification_email: "The from: 이 이메일 주소는 모든 기본 시스템 메일을 보내는데 사용됩니다. 여기에 명시된 도메인은 SPF, DKIM가 적용되어 있어야하며, reverse PTR 레코드가 제대로 설정되어 있어야 메일이 도착 할 수 있습니다."

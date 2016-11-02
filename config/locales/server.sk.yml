@@ -737,7 +737,6 @@ sk:
     s3_backup_config_warning: 'Server má nakonfigurované nahrávanie záloh na S3, ale minimálne jedna z nasledujúcich hodnôt nie je nastavená: s3_access_key_id, s3_secret_access_key, alebo  s3_backup_bucket. Navštívte  <a href="/admin/site_settings">Nastavenia stránky</a> a aktualizujte nastavenia. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Chcete vedieť viac? Pozrite si návod ako nastaviť nahrávanie súborov na S3</a>.'
     image_magick_warning: 'Server je nakonfigurovaný na vytváranie náhľadov z veľkých obrázkov, ale ImageMagick  nie je nainštalovaný. Nainštalujte ImageMagick pomocou Vášho správcu balíčkov, alebo <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">Stiahnite najnovšiu verziu</a>.'
     failing_emails_warning: 'Existuje %{num_failed_jobs} neuspešných emailých pokusov. Skontrolujte Váš app.yml a uistite sa, že nastavenia email serveru máte správne. <a href="/sidekiq/retries" target="_blank">Pozrieť neúspešné pokusy v Sidekiq</a>.'
-    consumer_email_warning: "Vaše stránky sú nastavené tak aby na posielanie emailov používali Gmail (alebo iné služby pre spotrebiteľov). <a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>Gmail obmedzuje počet odoslaných emailov</a>. Na zaistenie doručiteľonosti emailov zvážte použitie emailového poskytovateľa ako napríklad mandrill.com."
     subfolder_ends_in_slash: "Vaše nastavenie podadresára je chybné, DISCOURSE_RELATIVE_URL_ROOT je ukončené lomítkom."
   site_settings:
     censored_words: "Slová, ktoré budu automatický nahradené znakmi &#9632;&#9632;&#9632;&#9632;"
@@ -780,7 +779,6 @@ sk:
     exclude_rel_nofollow_domains: "Zoznam domén, na ktorých odkazy nebude pridávaný nofollow . tld.com automaticky umožní sub.tld.com. Aby ste umožnili internetovým vyhľadávačom nájsť kompletný obsah mali by ste pridať minimálne doménu najvyššej úrovne týchto stránok. Ak je nejaká časť stránok na iných doménach, pridajte ich tiež."
     post_excerpt_maxlength: "Maximálna dĺžka príspevku okrem zhrnutia."
     post_onebox_maxlength: "Maximálna dĺžka vloženého Discourse príspevku v znakoch."
-    onebox_domains_whitelist: "Zoznam domén, pre ktoré je umožnené vkladanie. Tieto domény by mali podporovať OpenGraph alebo oEmbed. Overte ich pomocou http://iframely.com/debug"
     logo_url: "Obrázok loga na ľavej hornej časti stránky, mal by byť tvaru širokého obdĺžnika. Ak nebude uvedený, zobrazí sa nadpis stránok."
     logo_small_url: "Malý obrázok loga na ľavej hornej strane stránok, mal by mať tvar štvorca a bude zobrazený pri skrolovaní nadol. Ak nebude uvedený, zobrazí sa piktogram domu."
     favicon_url: "Favicon pre Vaše stránky, pozrite http://en.wikipedia.org/wiki/Favicon. Aby fungoval správne s CDN, musí byť vo formáte png"

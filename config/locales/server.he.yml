@@ -739,7 +739,6 @@ he:
     s3_backup_config_warning: 'השרת מכוון להעלות גיבויים ל s3, אבל לפחות אחת מההגדרות הבאות לא נקבעה: s3_access_key_id, s3_secret_access_key או s3_backup_bucket. לכו ל <a href="/admin/site_settings">הגדרות האתר</a> ועדכנו את ההגדרות. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">ראו ״כיצד לקבוע העלאות קבצים ל S3?״ כדי ללמוד עוד</a>.'
     image_magick_warning: 'השרת מכוון ליצור צלמיות לתמונות גדולות, אבל ImageMagick לא מותקן. התקינו ImageMagick באמצעות מנהל החבילות האהוב עליכם או <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">הורידו את הגרסה האחרונה</a>.'
     failing_emails_warning: 'יש %{num_failed_jobs} עבודות מייל שנכשלו. בידקו את app.yml שלכם כדי לוודא ששרת המייל מוגדר כיאות. <a href="/sidekiq/retries" target="_blank">ראו את העבודות שנכשלו ב Sidekiq</a>.'
-    consumer_email_warning: "השרת שלכם מכוון להשתמש בג׳ימייל (או שירות מייל אחר שנועד לאנשים פרטיים) כדי לשלוח מייל. <a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>ג׳ימייל מגביל כמה מיילים ניתן לשלוח</a>. שיקלו להשתמש בשירות מייל כמו mandrill.com כדי להבטיח שליחה של מיילים."
     subfolder_ends_in_slash: "הגדרות תיקיית המשנה שלכם לא נכונות, הנתיב DISCOURSE_RELATIVE_URL_ROOT צריך להסתיים בלוכסן."
     email_polling_errored_recently:
       one: "ניסיונות שליחת מיילים יצרו תקלה ב 24 השעות האחרונות. צפו ב<a href='/logs' target='_blank'>יומנים</a> לפרטים נוספים."
@@ -795,7 +794,8 @@ he:
     show_pinned_excerpt_mobile: "הצגת קטע בנושאים נעוצים במבט ניידים."
     show_pinned_excerpt_desktop: "הצגת קטע בנושאים נעוצים בתצוגת מחשב-שולחני."
     post_onebox_maxlength: "מספר תוים מקסימאלי מותר כאורך פוסט Discourse אחד בקופסא (oneboxed Discourse post)."
-    onebox_domains_whitelist: "רשימת מתחמים (דומיינים) מותרים לאריזה (oneboxing); על דומיינים אלה לתמוך ב-OpenGraph או ב-oEmbed. בדקו אותם ב-http://iframely.com/debug."
+    onebox_domains_blacklist: "רשימת מתחמים (דומיינים) שלעולם לא יהיו Oneboxed."
+    max_oneboxes_per_post: "מספר מקסימלי של onebox-ים בפוסט."
     logo_url: "תמונת הלוגו בפינה הימנית עליונה של המסך, אמורה להיות מלבנית רחבה. אם נשארת ריקה, תוצג כותרת האתר."
     digest_logo_url: "תמונת הלוגו האלטרנטיבי שמשמשת בראש המיילים של הסיכום מאתרכם. אמורה להיות צורה מלבנית מוארכת. צריכה לא להיות תמונת SVG. אם נשאר ריק ייעשה שימוש ב `logo_url`."
     logo_small_url: "תמונת לוגו קטנה בפינה הימנית עליונה של האתר, אמורה להיות ריבועית, נראית כאשר גוללים למטה. אם נשארת ריקה תוצג צלמית בית."
@@ -1156,6 +1156,7 @@ he:
     embed_username_key_from_feed: "מפתח למשיכת שם המשתמש ב-discourse מהפיד."
     embed_title_scrubber: "ביטויים רגולריים כדי לנקות כותרות מוטמעות."
     embed_truncate: "חיתוך הפוסטים המוטמעים."
+    allowed_href_schemes: "פרוטוקולים מותרים בלינקים בנוסף ל http ו https."
     embed_post_limit: "מספר מקסימלי של פוסטים להטמעה."
     embed_username_required: "נדרש שם משתמש ליצירת הנושא."
     embed_whitelist_selector: "בוררי CSS לאלמנטים שיותר להטמיע."
@@ -2283,6 +2284,7 @@ he:
     message_to_blank: "message.to ריק"
     text_part_body_blank: "text_part.body ריק"
     body_blank: "גוף ריק"
+    no_echo_mailing_list_mode: "התראות רשימת תפוצה ינוטרלו עבור הפוסטים של המשתמש עצמו"
   color_schemes:
     base_theme_name: "בסיס"
   about: "אודות"
@@ -2853,16 +2855,19 @@ he:
     staff_tag_disallowed: "התג \"%{tag}\" ניתן רק על ידי הצוות."
     staff_tag_remove_disallowed: "התג \"%{tag}\" ניתן להסרה רק על ידי הצוות."
   rss_by_tag: "נושאים מתוייגים %{tag}"
-  first_installation:
-    congratulations: "ברכות, התקנתם את Discourse!"
+  finish_installation:
+    congratulations: "ברכותינו, התקנתם את דיסקורס!"
     register:
       button: "הרשמה"
       title: "הרשמת חשבון אדמיניסטרטור"
       help: "רישמו חשבון חדש כדי להתחיל"
-      no_emails: "לצערנו, לא נרשם חשבון אדמיניסטרטור במהלך ההתקנה, כך שהשלמת ההתקנה <a href='https://meta.discourse.org/t/how-to-create-an-administrator-account-after-install/14046'>כנראה תהיה קשה</a>."
+      no_emails: "לצערנו, לא הוגדר מייל של אדמיניסטרטור במהלך ההתקנה, כך שהשלמת ההגדרות <a href='https://meta.discourse.org/t/how-to-create-an-administrator-account-after-install/14046'>כנראה תהיה מאתגרת</a>."
     confirm_email:
       title: "אשרו את המייל שלכם"
-      message: "<p>שלחנו לכם מייל הפעלה ל <b>%{email}</b>. אנא עיקבו אחר ההוראות במייל כדי להפעיל את החשבון שלכם.</p><p>אם הוא לא מגיע, וודאו שהקמתם את המייל כמו שצריך ב Discourse שלכם ובידקו את תיקיית הספאם.</p>"
+      message: "<p>שלחנו מייל אקטיבציה ל<b>%{email}</b>. אנא עיקבו אחר ההוראות במייל כדי להפעיל את החשבון שלכם.</p><p>אם הוא לא מגיע, וודאו שהגדרתם נכון את המייל עבור הדיסקורס שלכם ובידקו בתיקיית הספאם.</p>"
+    resend_email:
+      title: "שליחת מייל אקטיבציה מחדש"
+      message: "<p>שלחנו מחדש את מייל האקטיבציה ל<b>%{email}</b>"
   wizard:
     title: "הקמת Discourse"
     step:

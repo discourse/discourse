@@ -474,6 +474,7 @@ fr:
           Les sujets et catégories passés en silencieux ne sont pas inclus dans ces courriels.
         daily: "Envoyer des informations quotidiennes"
         individual: "Envoyer un courriel pour chaque nouveau message"
+        individual_no_echo: "Envoyer un courriel pour chaque nouveau message sauf les miens"
         many_per_day: "M'envoyer un courriel pour chaque nouveau message (environ {{dailyEmailEstimate}} par jour)"
         few_per_day: "M'envoyer un courriel pour chaque nouveau message (environ 2 par jour)"
       tag_settings: "Tags"
@@ -1698,6 +1699,7 @@ fr:
       email_in_disabled: "La possibilité de créer des nouveaux sujets via courriel est désactivé dans les Paramètres. Pour l'activer,"
       email_in_disabled_click: 'activer le paramètre "email in".'
       suppress_from_homepage: "Retirer cette catégorie de la page d'accueil"
+      sort_order: "Tri par défaut :"
       allow_badges_label: "Autoriser les badges à être accordé dans cette catégorie"
       edit_permissions: "Modifier les permissions"
       add_permission: "Ajouter la permission"
@@ -1723,6 +1725,18 @@ fr:
         muted:
           title: "Silencieux"
           description: "Vous ne serez jamais notifié de rien concernant les nouveaux sujets dans ces catégories, et elles n'apparaîtront pas dans les dernières catégories."
+      sort_options:
+        default: "standard"
+        likes: "J'aime"
+        op_likes: "J'aime du premier message"
+        views: "Vues"
+        posts: "Messages"
+        activity: "Activité"
+        posters: "Auteurs"
+        category: "Catégorie"
+        created: "Création"
+      sort_ascending: 'Croissant'
+      sort_descending: 'Décroissant'
     flagging:
       title: 'Merci d''aider à garder notre communauté civilisée !'
       action: 'Signaler ce message'

@@ -534,7 +534,7 @@ et:
       xaxis: "Päev"
       yaxis: "Uute meeldimiste arv"
     flags:
-      title: "Lipud"
+      title: "Tähised"
       xaxis: "Päev"
     bookmarks:
       title: "Järjehoidjad"
@@ -682,8 +682,22 @@ et:
   privacy_topic:
     title: "Puutumatusnormid"
   badges:
+    editor:
+      description: Esimene redigeerimine
+    basic_user:
+      name: Tavakasutaja
+    member:
+      name: Liige
+    regular:
+      name: Püsiliige
+    leader:
+      name: Vedaja
     welcome:
       name: Teretulemast
+    autobiographer:
+      name: Autobiograaf
+    anniversary:
+      name: Tähtpäev
     nice_post:
       name: Mõnus vastus
     good_post:
@@ -697,19 +711,28 @@ et:
     great_topic:
       name: Suurepärane teema
     nice_share:
-      name: Mõnus jagmaine
+      name: Mõnus jagamine
     good_share:
-      name: Hea jagmaine
+      name: Hea jagamine
     great_share:
       name: Suurepärane jagamine
     first_like:
       name: Esimene meeldimine
+    first_flag:
+      name: Esimene tähis
+      description: Teatas lipuga postitusest
+    promoter:
+      name: Promootor
+    campaigner:
+      name: Aktiivne promootor
+    champion:
+      name: Tšempion
     first_share:
       name: Esimene jagamine
       description: Jagas postitust
     first_link:
       name: Esimene viide
-      description: Lisas teise postitusele viite
+      description: Lisas teise postituse viite
     first_quote:
       name: Esimene tsitaat
       description: Tsiteeris postitust
@@ -736,13 +759,17 @@ et:
     crazy_in_love:
       name: Hullult armunud
     thank_you:
-      name: Tänamine
+      name: Tänud
+    gives_back:
+      name: Annab tagasi
     empathetic:
       name: Empaatiline
     first_emoji:
       name: Esimene emotikon
     first_mention:
       name: Esimene mainimine
+    first_reply_by_email:
+      name: Esimene vastamine meiliga
   admin_login:
     success: "Kiri saadetud"
     error: "Viga!"

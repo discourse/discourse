@@ -567,7 +567,6 @@ ja:
     s3_config_warning: 'サーバが S3 にファイルをアップロードするように設定されていますが、次のうち少なくとも1つが設定されていません: s3_access_key_id, s3_secret_access_key or s3_upload_bucket。<a href="/admin/site_settings">サイトの設定</a> にて設定を更新してください。<a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">詳しくは "How to set up image uploads to S3?" を参考にしてください</a>。'
     s3_backup_config_warning: 'サーバが S3 にバックアップをアップロードするように設定されていますが、次のうち少なくとも1つが設定されていません: s3_access_key_id, s3_secret_access_key or s3_upload_bucket。<a href="/admin/site_settings">サイトの設定</a> にて設定を更新してください。<a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">詳しくは "How to set up image uploads to S3?" を参考にしてください</a>'
     image_magick_warning: 'サーバが大きな画像のサムネイルを作成する設定になっていますが、ImageMagick がインストールされていません。お好きなパッケージマネージャを使って ImageMagick をインストールするか、<a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">最新のリリースをダウンロードしてください</a>。'
-    consumer_email_warning: "サイトはメール送信に Gmail (または他のカスタムメールサービス) を利用するように設定されています。<a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>Gmail で送信可能なメール数には制限があります</a>。メールを確実に送信するために mandrill.com などのメールサービスプロバイダーの利用を検討してください。"
   site_settings:
     censored_words: "自動的に &#9632;&#9632;&#9632;&#9632; で置換されます"
     delete_old_hidden_posts: "30日以上非表示になっている投稿を自動で削除します"
@@ -607,7 +606,6 @@ ja:
     exclude_rel_nofollow_domains: "nofollowを付与すべきではないドメインのリスト。tld.comは、sub.tld.com も許可します。最低でもクローラーが全てのコンテンツを見つけるために、このサイトのトップレベルドメインを追加する必要があります。このサイトの他の部分が別ドメインに存在している場合、それも追加します"
     post_excerpt_maxlength: "投稿の引用/サマリの最大文字数"
     post_onebox_maxlength: "Discourse OneBox投稿の最大文字数"
-    onebox_domains_whitelist: "OneBoxを許可するドメインのリスト。これらのドメインはOpenGraphかoEmbedをサポートしている必要があります。http://iframely.com/debug でテストできます"
     logo_url: "サイトの左上に表示されるロゴ画像です。横幅の大きい長方形にする必要があります。空欄の場合、サイトタイトルが表示されます"
     logo_small_url: "サイトの左上に表示される小さいロゴ画像です。正方形である必要があります。下にスクロールすると表示されます。空欄の場合、ホームアイコンが表示されます"
     mobile_logo_url: "モバイルサイトの左上に固定で表示されるロゴ画像です。正方形である必要があります。空欄の場合 `logo_url` が利用されます 例: http://example.com/uploads/default/logo.png"
