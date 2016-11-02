@@ -1,38 +1,14 @@
-import { default as computed } from 'ember-addons/ember-computed-decorators';
-
 let lastSearch;
+let lastOverridden;
 
 export default Ember.Controller.extend({
-  _q: null,
   searching: false,
   siteTexts: null,
   preferred: false,
-  _overridden: null,
   queryParams: ['q', 'overridden'],
 
-  @computed
-  overridden: {
-    set(value) {
-      if (!value || value === "false") { value = false; }
-      this._overridden = value;
-      return value;
-    },
-    get() {
-      return this._overridden;
-    }
-  },
-
-  @computed
-  q: {
-    set(value) {
-      if (Ember.isEmpty(value)) { value = null; }
-      this._q = value;
-      return value;
-    },
-    get() {
-      return this._q;
-    }
-  },
+  q: null,
+  overridden: null,
 
   _performSearch() {
     this.store.find('site-text', this.getProperties('q', 'overridden')).then(results => {
@@ -46,11 +22,14 @@ export default Ember.Controller.extend({
     },
 
     search(overridden) {
+      this.set('overridden', overridden);
+
       const q = this.get('q');
-      if (q !== lastSearch || overridden) {
+      if (q !== lastSearch || overridden !== lastOverridden) {
         this.set('searching', true);
         Ember.run.debounce(this, this._performSearch, 400);
         lastSearch = q;
+        lastOverridden = overridden;
       }
     }
   }
