@@ -270,7 +270,7 @@ class TagsController < ::ApplicationController
         page: params[:page],
         topic_ids: param_to_integer_list(:topic_ids),
         exclude_category_ids: params[:exclude_category_ids],
-        category: params[:category],
+        category: @filter_on_category ? @filter_on_category.id : params[:category],
         order: params[:order],
         ascending: params[:ascending],
         min_posts: params[:min_posts],
