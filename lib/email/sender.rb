@@ -203,11 +203,16 @@ module Email
     end
 
     def merge_json_x_header(name, value)
-      mc_metadata   = JSON.parse(@message.header[name].to_s) rescue nil
-      mc_metadata ||= {}
-      mc_metadata.merge!(value)
+      data   = JSON.parse(@message.header[name].to_s) rescue nil
+      data ||= {}
+      data.merge!(value)
+      # /!\ @message.header is not a standard ruby hash.
+      # It can have multiple values attached to the same key...
+      # In order to remove all the previous keys, we have to "nil" it.
+      # But for "nil" to work, there must already be a key...
+      @message.header[name] = ""
       @message.header[name] = nil
-      @message.header[name] = mc_metadata.to_json
+      @message.header[name] = data.to_json
     end
 
   end
