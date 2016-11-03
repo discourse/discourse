@@ -190,20 +190,7 @@ test("streamFilters", function() {
   postStream.toggleParticipant(participant.username);
   deepEqual(postStream.get('streamFilters'), {
     username_filters: 'eviltrout',
-    show_deleted: true
-  }, "streamFilters contains the username we filtered and show_deleted");
-
-  postStream.toggleDeleted();
-  deepEqual(postStream.get('streamFilters'), {
-    username_filters: 'eviltrout'
-  }, "streamFilters contains the username we filtered without show_deleted");
-
-  postStream.cancelFilter();
-  postStream.toggleDeleted();
-  deepEqual(postStream.get('streamFilters'), {
-    show_deleted: true
-  }, "streamFilters show_deleted only");
-
+  }, "streamFilters contains the username we filtered");
 });
 
 test("loading", function() {
