@@ -1,4 +1,4 @@
-import { buildResolver } from 'discourse-common/resolver';
+import { setResolverOption, buildResolver } from 'discourse-common/resolver';
 
 let originalTemplates;
 let resolver;
@@ -92,7 +92,7 @@ test("resolves mobile templates to 'mobile/' namespace", function() {
     "baz"
   ]);
 
-  resolver.mobileView = true;
+  setResolverOption('mobileView', true);
 
   lookupTemplate("template:foo", "mobile/foo", "finding mobile version even if normal one is not present");
   lookupTemplate("template:bar", "mobile/bar", "preferring mobile version when both mobile and normal versions are present");

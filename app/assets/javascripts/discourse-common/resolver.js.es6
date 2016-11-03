@@ -9,6 +9,13 @@ var LOADING_WHITELIST = ['badges', 'userActivity', 'userPrivateMessages', 'admin
 var _dummyRoute;
 var _loadingView;
 
+
+const _options = {};
+
+export function setResolverOption(name, value) {
+  _options[name] = value;
+}
+
 function loadingResolver(cb) {
   return function(parsedName) {
     var fullNameWithoutType = parsedName.fullNameWithoutType;
@@ -158,14 +165,14 @@ export function buildResolver(baseName) {
     },
 
     findPluginMobileTemplate(parsedName) {
-      if (this.mobileView) {
+      if (_options.mobileView) {
         var pluginParsedName = this.parseName(parsedName.fullName.replace("template:", "template:javascripts/mobile/"));
         return this.findTemplate(pluginParsedName);
       }
     },
 
     findMobileTemplate(parsedName) {
-      if (this.mobileView) {
+      if (_options.mobileView) {
         var mobileParsedName = this.parseName(parsedName.fullName.replace("template:", "template:mobile/"));
         return this.findTemplate(mobileParsedName);
       }
