@@ -1,6 +1,7 @@
 import computed from 'ember-addons/ember-computed-decorators';
+import DelegatedActions from 'discourse/mixins/delegated-actions';
 
-export default Ember.Component.extend({
+export default Ember.Component.extend(DelegatedActions, {
   elementId: 'topic-footer-buttons',
 
   // Allow us to extend it
@@ -8,15 +9,7 @@ export default Ember.Component.extend({
 
   init() {
     this._super();
-
-    this._actions = this._actions || {};
-
-    (this.get('topicDelegated') || []).forEach(m => {
-      this._actions[m] = function() {
-        this.sendAction(m);
-      };
-      this.set(m, m);
-    });
+    this.delegateAll(this.get('topicDelegated'));
   },
 
   @computed('topic.details.can_invite_to')
