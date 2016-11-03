@@ -4,7 +4,7 @@ export default Ember.Component.extend({
   composerOpen: null,
   info: Em.Object.create(),
 
-  _checkSize() {
+  _performCheckSize() {
     if (!this.element || this.isDestroying || this.isDestroyed) { return; }
 
     let info = this.get('info');
@@ -39,6 +39,10 @@ export default Ember.Component.extend({
     }
   },
 
+  _checkSize() {
+    Ember.run.scheduleOnce('afterRender', this, this._performCheckSize);
+  },
+
   // we need to store this so topic progress has something to init with
   _topicScrolled(event) {
     this.set('info.prevEvent', event);
@@ -62,7 +66,7 @@ export default Ember.Component.extend({
   composerOpened() {
     this.set('composerOpen', true);
     // we need to do the check after animation is done
-    setTimeout(()=>this._checkSize(), 500);
+    Ember.run.later(() => this._checkSize(), 500);
   },
 
   composerClosed() {
@@ -112,7 +116,7 @@ export default Ember.Component.extend({
       $('#reply-control').on('div-resized.discourse-topic-navigation', () => this._checkSize());
     }
 
-    Ember.run.scheduleOnce('afterRender', this, this._checkSize);
+    this._checkSize();
   },
 
   willDestroyElement() {

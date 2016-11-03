@@ -278,7 +278,13 @@ export default Ember.Component.extend({
   @observes('ready', 'value')
   _watchForChanges() {
     if (!this.get('ready')) { return; }
-    Ember.run.debounce(this, this._updatePreview, 30);
+
+    // Debouncing in test mode is complicated
+    if (Ember.testing) {
+      this._updatePreview();
+    } else {
+      Ember.run.debounce(this, this._updatePreview, 30);
+    }
   },
 
   _applyCategoryHashtagAutocomplete(container) {
