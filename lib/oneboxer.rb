@@ -62,9 +62,7 @@ module Oneboxer
     onebox_links = doc.search("a.onebox")
     if onebox_links.present?
       onebox_links.each do |link|
-        if link['href'].present?
-          yield link['href'], link
-        end
+        yield(link['href'], link) if link['href'].present?
       end
     end
 
