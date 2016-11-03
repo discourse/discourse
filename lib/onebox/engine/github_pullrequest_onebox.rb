@@ -23,8 +23,7 @@ module Onebox
         result['link'] = link
         result['created_at'] = Time.parse(result['created_at']).strftime("%I:%M%p - %d %b %y")
         ulink = URI(link)
-        result['repository_path'] = "#{ulink.host}/#{ulink.path.split('/')[1]}/#{ulink.path.split('/')[2]}"
-        result['repository_url'] = "https://#{result['repository_path']}"
+        result['domain'] = "#{ulink.host}/#{ulink.path.split('/')[1]}/#{ulink.path.split('/')[2]}"
         result
       end
     end

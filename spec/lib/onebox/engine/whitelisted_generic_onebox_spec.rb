@@ -66,9 +66,11 @@ describe Onebox::Engine::WhitelistedGenericOnebox do
   end
 
   describe 'oembed_providers' do
+    let(:url) { "http://www.meetup.com/Toronto-Ember-JS-Meetup/events/219939537" }
+
     before do
-      fake("http://api.meetup.com/oembed?url=http://www.meetup.com/Toronto-Ember-JS-Meetup/events/219939537",
-           response('meetup'))
+      fake(url, response('meetup'))
+      fake("http://api.meetup.com/oembed?url=#{url}", response('meetup_oembed'))
     end
 
     it 'uses the endpoint for the url' do

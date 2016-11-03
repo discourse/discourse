@@ -41,8 +41,7 @@ module Onebox
                    closed_at: (@raw['closed_at'].nil? ? "" : @raw['closed_at'].split("T")[0]),
                    closed_by: @raw['closed_by'],
                    avatar: "https://avatars1.githubusercontent.com/u/#{@raw['user']['id']}?v=2&s=96",
-                   repository_path: "#{ulink.host}/#{ulink.path.split('/')[1]}/#{ulink.path.split('/')[2]}",
-                   repository_url: "https://#{ulink.host}/#{ulink.path.split('/')[1]}/#{ulink.path.split('/')[2]}",
+                   domain: "#{ulink.host}/#{ulink.path.split('/')[1]}/#{ulink.path.split('/')[2]}",
                   }
       end
     end

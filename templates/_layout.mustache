@@ -1,16 +1,13 @@
 <aside class="onebox {{subname}}">
   <header class="source">
-    <a href="{{{link}}}" target='_blank' >
-      {{#repository_path}}{{repository_path}}{{/repository_path}}
-      {{^repository_path}}{{domain}}{{/repository_path}}
-    </a>
+    <a href="{{{link}}}" target='_blank'>{{domain}}</a>
   </header>
   <article class="onebox-body">
     {{{view}}}
   </article>
   <div class="onebox-metadata">
-    {{#twitter_label1}}<span style="float: left;">{{twitter_label1}}: {{twitter_data1}}</span>{{/twitter_label1}}
-    {{#twitter_label2}}<span style="float: right;">{{twitter_label2}}: {{twitter_data2}}</span>{{/twitter_label2}}
+    {{#metadata_1_label}}<span style="float: left;">{{metadata_1_label}}: {{metadata_1_value}}</span>{{/metadata_1_label}}
+    {{#metadata_2_label}}<span style="float: right;">{{metadata_2_label}}: {{metadata_2_value}}</span>{{/metadata_2_label}}
   </div>
   <div style="clear: both"></div>
 </aside>

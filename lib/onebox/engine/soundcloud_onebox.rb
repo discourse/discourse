@@ -8,27 +8,26 @@ module Onebox
       always_https
 
       def to_html
-        oembed_data = get_oembed_data[:html]
-        oembed_data.gsub!('visual=true', 'visual=false') || oembed_data
+        oembed_data[:html].gsub('visual=true', 'visual=false')
       end
 
       def placeholder_html
-        "<img src='#{get_oembed_data[:thumbnail_url]}'>"
+        return if Onebox::Helpers.blank?(oembed_data[:thumbnail_url])
+        "<img src='#{oembed_data[:thumbnail_url]}'>"
       end
 
       private
 
-      def set?
-        url =~ /\/sets\//
-      end
-
-      def get_oembed_data
-        if set?
-          Onebox::Helpers.symbolize_keys(::MultiJson.load(Onebox::Helpers.fetch_response("https://soundcloud.com/oembed.json?url=#{url}").body))
-        else
-          Onebox::Helpers.symbolize_keys(::MultiJson.load(Onebox::Helpers.fetch_response("https://soundcloud.com/oembed.json?url=#{url}&maxheight=166").body))
+        def oembed_data
+          @oembed_data ||= begin
+            oembed_url = "https://soundcloud.com/oembed.json?url=#{url}"
+            oembed_url << "&maxheight=166" if url["/sets/"]
+            Onebox::Helpers.symbolize_keys(::MultiJson.load(Onebox::Helpers.fetch_response(oembed_url).body))
+          rescue
+            {}
+          end
         end
-      end
+
     end
   end
 end

@@ -33,57 +33,50 @@ module Onebox
 
     private
 
-    def uri
-      @uri = URI(link)
-    end
+      def uri
+        @uri = URI(link)
+      end
 
+      def checksum
+        @md5.hexdigest("#{VERSION}:#{link}")
+      end
 
-    def checksum
-      @md5.hexdigest("#{VERSION}:#{link}")
-    end
+      def link
+        record[:link]
+      end
 
-    def link
-      record[:link]
-    end
+      def domain
+        record[:domain] || URI(link || '').host
+      end
 
-    def domain
-      return record[:domain] if record[:domain]
-      URI(link || '').host
-    end
+      def metadata_1_label
+        record[:metadata_1_label]
+      end
 
-    def repository_path
-      record[:repository_path]
-    end
+      def metadata_1_value
+        record[:metadata_1_value]
+      end
 
-    def twitter_label1
-      record[:twitter_label1]
-    end
+      def metadata_2_label
+        record[:metadata_2_label]
+      end
 
-    def twitter_data1
-      record[:twitter_data1]
-    end
+      def metadata_2_value
+        record[:metadata_2_value]
+      end
 
-    def twitter_label2
-      record[:twitter_label2]
-    end
-
-    def twitter_data2
-      record[:twitter_data2]
-    end
-
-    def details
-      {
-        link: record[:link],
-        title: record[:title],
-        domain: domain,
-        repository_path: repository_path,
-        twitter_label1: record[:twitter_label1],
-        twitter_data1: record[:twitter_data1],
-        twitter_label2: record[:twitter_label2],
-        twitter_data2: record[:twitter_data2],
-        subname: view.template_name,
-        view: view.to_html
-      }
-    end
+      def details
+        {
+          link: record[:link],
+          title: record[:title],
+          domain: domain,
+          metadata_1_label: record[:metadata_1_label],
+          metadata_1_value: record[:metadata_1_value],
+          metadata_2_label: record[:metadata_2_label],
+          metadata_2_value: record[:metadata_2_value],
+          subname: view.template_name,
+          view: view.to_html
+        }
+      end
   end
 end

@@ -29,8 +29,7 @@ module Onebox
 
         ulink = URI(link)
         result['commit_date'] = Time.parse(result['commit']['author']['date']).strftime("%I:%M%p - %d %b %y")
-        result['repository_path'] = "#{ulink.host}/#{ulink.path.split('/')[1]}/#{ulink.path.split('/')[2]}"
-        result['repository_url'] = "https://#{result['repository_path']}"
+        result['domain'] = "#{ulink.host}/#{ulink.path.split('/')[1]}/#{ulink.path.split('/')[2]}"
         result
       end
     end

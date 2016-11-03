@@ -18,9 +18,7 @@ module Onebox
                 (uri.fragment.nil? || uri.fragment.size == 0) &&
                 (uri.path.size == 0 || uri.path == "/")
 
-      ordered_engines.select do |engine|
-        engine === uri
-      end.first
+      ordered_engines.find { |engine| engine === uri }
     rescue URI::InvalidURIError
       # If it's not a valid URL, don't even match
       nil
