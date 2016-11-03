@@ -80,11 +80,10 @@ export default RestModel.extend({
     Returns a JS Object of current stream filter options. It should match the query
     params for the stream.
   **/
-  @computed('summary', 'show_deleted', 'userFilters.[]')
-  streamFilters(summary, showDeleted) {
+  @computed('summary', 'userFilters.[]')
+  streamFilters(summary) {
     const result = {};
     if (summary) { result.filter = "summary"; }
-    if (showDeleted) { result.show_deleted = true; }
 
     const userFilters = this.get('userFilters');
     if (!Ember.isEmpty(userFilters)) {
@@ -141,7 +140,6 @@ export default RestModel.extend({
 
   cancelFilter() {
     this.set('summary', false);
-    this.set('show_deleted', false);
     this.get('userFilters').clear();
   },
 
@@ -156,11 +154,6 @@ export default RestModel.extend({
     });
   },
 
-  toggleDeleted() {
-    this.toggleProperty('show_deleted');
-    return this.refresh();
-  },
-
   jumpToSecondVisible() {
     const posts = this.get('posts');
     if (posts.length > 1) {
@@ -173,7 +166,6 @@ export default RestModel.extend({
   toggleParticipant(username) {
     const userFilters = this.get('userFilters');
     this.set('summary', false);
-    this.set('show_deleted', true);
 
     let jump = false;
     if (userFilters.contains(username)) {

@@ -20,7 +20,7 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
   editingTopic: false,
   selectedPosts: null,
   selectedReplies: null,
-  queryParams: ['filter', 'username_filters', 'show_deleted'],
+  queryParams: ['filter', 'username_filters'],
   loadedAllPosts: Ember.computed.or('model.postStream.loadedAllPosts', 'model.postStream.loadingLastPost'),
   enteredAt: null,
   enteredIndex: null,
@@ -28,6 +28,9 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
   userTriggeredProgress: null,
   _progressIndex: null,
   hasScrolled: null,
+
+  username_filters: null,
+  filter: null,
 
   topicDelegated: [
     'toggleMultiSelect',
@@ -53,6 +56,11 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
     'showFlagTopic'
   ],
 
+  updateQueryParams() {
+    const postStream = this.get('model.postStream');
+    this.setProperties(postStream.get('streamFilters'));
+  },
+
   _titleChanged: function() {
     const title = this.get('model.title');
     if (!Ember.isEmpty(title)) {
@@ -77,32 +85,6 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
   @computed('model.postStream.loadingFilter')
   androidLoading(loading) {
     return this.capabilities.isAndroid && loading;
-  },
-
-  @computed('model.postStream.summary')
-  show_deleted: {
-    set(value) {
-      const postStream = this.get('model.postStream');
-      if (!postStream) { return; }
-      postStream.set('show_deleted', value);
-      return postStream.get('show_deleted') ? true : undefined;
-    },
-    get() {
-      return this.get('postStream.show_deleted') ? true : undefined;
-    }
-  },
-
-  @computed('model.postStream.summary')
-  filter: {
-    set(value) {
-      const postStream = this.get('model.postStream');
-      if (!postStream) { return; }
-      postStream.set('summary', value === "summary");
-      return postStream.get('summary') ? "summary" : undefined;
-    },
-    get() {
-      return this.get('postStream.summary') ? "summary" : undefined;
-    }
   },
 
   @computed('model', 'topicTrackingState.messageCount')
@@ -155,19 +137,6 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
     return model.get('isPrivateMessage') ?
       `<a href="${this.get('pmPath')}"><i class='private-message-glyph fa fa-envelope'></i></a> ${I18n.t("suggested_topics.pm_title")}` :
       I18n.t("suggested_topics.title");
-  },
-
-  @computed('model.postStream.streamFilters.username_filters')
-  username_filters: {
-    set(value) {
-      const postStream = this.get('model.postStream');
-      if (!postStream) { return; }
-      postStream.set('streamFilters.username_filters', value);
-      return postStream.get('streamFilters.username_filters');
-    },
-    get() {
-      return this.get('postStream.streamFilters.username_filters');
-    }
   },
 
   _clearSelected: function() {
@@ -259,7 +228,9 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
     },
 
     toggleSummary() {
-      return this.get('model.postStream').toggleSummary();
+      return this.get('model.postStream').toggleSummary().then(() => {
+        this.updateQueryParams();
+      });
     },
 
     removeAllowedUser(user) {
@@ -464,7 +435,10 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
     },
 
     toggleParticipant(user) {
-      this.get('model.postStream').toggleParticipant(Em.get(user, 'username'));
+      const postStream = this.get('model.postStream');
+      postStream.toggleParticipant(Ember.get(user, 'username')).then(() => {
+        this.updateQueryParams();
+      });
     },
 
     editTopic() {
