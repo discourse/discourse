@@ -104,7 +104,14 @@ const Discourse = Ember.Application.extend({
       if (/\/pre\-initializers\//.test(key)) {
         const module = require(key, null, null, true);
         if (!module) { throw new Error(key + ' must export an initializer.'); }
-        Discourse.initializer(module.default);
+
+        const init = module.default;
+        const oldInitialize = init.initialize;
+        init.initialize = function() {
+          oldInitialize.call(this, Discourse.__container__, Discourse);
+        };
+
+        Discourse.initializer(init);
       }
     });
 
@@ -115,8 +122,8 @@ const Discourse = Ember.Application.extend({
 
         const init = module.default;
         const oldInitialize = init.initialize;
-        init.initialize = function(app) {
-          oldInitialize.call(this, app.container, Discourse);
+        init.initialize = function() {
+          oldInitialize.call(this, Discourse.__container__, Discourse);
         };
 
         Discourse.instanceInitializer(init);
