@@ -46,6 +46,7 @@ module Jobs
           'Content-Type' => content_type,
           'Host' => uri.host,
           'User-Agent' => "Discourse/" + Discourse::VERSION::STRING,
+          'X-Discourse-Instance' => Discourse.base_url,
           'X-Discourse-Event-Id' => web_hook_event.id,
           'X-Discourse-Event-Type' => @opts[:event_type]
         }
