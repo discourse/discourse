@@ -1,5 +1,6 @@
 import computed from 'ember-addons/ember-computed-decorators';
 import { bufferedRender } from 'discourse-common/lib/buffered-render';
+import { getOwner } from 'discourse-common/lib/get-owner';
 
 export function showEntrance(e) {
   let target = $(e.target);
@@ -11,7 +12,7 @@ export function showEntrance(e) {
         target = target.end();
       }
     }
-    this.container.lookup('controller:application').send("showTopicEntrance", {topic: this.get('topic'), position: target.offset()});
+    getOwner(this).lookup('controller:application').send("showTopicEntrance", {topic: this.get('topic'), position: target.offset()});
     return false;
   }
 }
@@ -30,7 +31,7 @@ export default Ember.Component.extend(bufferedRender({
   },
 
   buildBuffer(buffer) {
-    const template = Discourse.__container__.lookup('template:list/topic-list-item.raw');
+    const template = getOwner(this).lookup('template:list/topic-list-item.raw');
     if (template) {
       buffer.push(template(this));
     }

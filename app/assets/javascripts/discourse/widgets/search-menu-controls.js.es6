@@ -30,7 +30,7 @@ createWidget('search-context', {
   tagName: 'div.search-context',
 
   html(attrs) {
-    const service = this.container.lookup('search-service:main');
+    const service = this.register.lookup('search-service:main');
     const ctx = service.get('searchContext');
 
     const result = [];

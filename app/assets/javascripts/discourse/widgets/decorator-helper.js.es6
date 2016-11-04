@@ -8,7 +8,8 @@ class DecoratorHelper {
     this.widget = widget;
     this.attrs = attrs;
     this.state = state;
-    this.container = widget.container;
+    this.register = widget.register;
+    this.register.deprecateContainer(this);
   }
 
   /**

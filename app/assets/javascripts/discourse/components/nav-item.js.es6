@@ -1,6 +1,7 @@
 /* You might be looking for navigation-item. */
 
 import computed from "ember-addons/ember-computed-decorators";
+import { getOwner } from 'discourse-common/lib/get-owner';
 
 export default Ember.Component.extend({
   tagName: 'li',
@@ -8,7 +9,7 @@ export default Ember.Component.extend({
 
   @computed()
   router() {
-    return this.container.lookup('router:main');
+    return getOwner(this).lookup('router:main');
   },
 
   @computed("path")
