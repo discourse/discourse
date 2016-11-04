@@ -446,6 +446,7 @@ class PostRevisor
   def post_process_post
     @post.invalidate_oneboxes = true
     @post.trigger_post_process
+    DiscourseEvent.trigger(:post_edited, @post, self.topic_changed?)
   end
 
   def update_topic_word_counts
