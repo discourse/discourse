@@ -5,6 +5,7 @@ import Quote from 'discourse/lib/quote';
 import Draft from 'discourse/models/draft';
 import computed from 'ember-addons/ember-computed-decorators';
 import { escapeExpression, tinyAvatar } from 'discourse/lib/utilities';
+import { emojiUnescape } from 'discourse/lib/text';
 
 const CLOSED = 'closed',
       SAVING = 'saving',
@@ -174,7 +175,7 @@ const Composer = RestModel.extend({
       case REPLY:
       case EDIT:
         if (postDescription) return postDescription;
-        if (topic) return I18n.t('post.reply_topic', { link: topicLink });
+        if (topic) return emojiUnescape(I18n.t('post.reply_topic', { link: topicLink }));
     }
 
   }.property('action', 'post', 'topic', 'topic.title'),
