@@ -40,8 +40,12 @@ class WebHook < ActiveRecord::Base
     end
   end
 
-  def self.enqueue_topic_hooks(event, topic, user)
+  def self.enqueue_topic_hooks(event, topic, user=nil)
     WebHook.enqueue_hooks(:topic, topic_id: topic.id, user_id: user&.id, category_id: topic&.category&.id, event_name: event.to_s)
+  end
+
+  def self.enqueue_post_hooks(event, post, user=nil)
+    WebHook.enqueue_hooks(:post, post_id: post.id, topic_id: post&.topic&.id, user_id: user&.id, category_id: post&.topic&.category_id, event_name: event.to_s)
   end
 
   %i(topic_destroyed topic_recovered).each do |event|
@@ -57,16 +61,14 @@ class WebHook < ActiveRecord::Base
   %i(post_created
      post_destroyed
      post_recovered).each do |event|
-
     DiscourseEvent.on(event) do |post, _, user|
-      WebHook.enqueue_hooks(:post,
-        post_id: post.id,
-        topic_id: post&.topic&.id,
-        user_id: user&.id,
-        category_id: post.topic&.category&.id,
-        event_name: event.to_s
-      )
+      WebHook.enqueue_post_hooks(event, post, user)
     end
+  end
+
+  DiscourseEvent.on(:post_edited) do |post, topic_changed|
+    WebHook.enqueue_post_hooks(:post_edited, post)
+    WebHook.enqueue_topic_hooks(:topic_edited, post.topic) if post.is_first_post? && topic_changed
   end
 
   %i(user_created user_approved).each do |event|
