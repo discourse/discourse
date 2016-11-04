@@ -6,6 +6,7 @@ import { default as computed, observes } from 'ember-addons/ember-computed-decor
 import { relativeAge } from 'discourse/lib/formatter';
 import { escapeExpression } from 'discourse/lib/utilities';
 import InputValidation from 'discourse/models/input-validation';
+import { getOwner } from 'discourse-common/lib/get-owner';
 
 function loadDraft(store, opts) {
   opts = opts || {};
@@ -85,8 +86,8 @@ export default Ember.Controller.extend({
   },
 
   showToolbar: Em.computed({
-    get(){
-      const keyValueStore = this.container.lookup('key-value-store:main');
+    get() {
+      const keyValueStore = getOwner(this).lookup('key-value-store:main');
       const storedVal = keyValueStore.get("toolbar-enabled");
       if (this._toolbarEnabled === undefined && storedVal === undefined) {
         // iPhone 6 is 375, anything narrower and toolbar should
@@ -97,7 +98,7 @@ export default Ember.Controller.extend({
       return this._toolbarEnabled || storedVal === "true";
     },
     set(key, val){
-      const keyValueStore = this.container.lookup('key-value-store:main');
+      const keyValueStore = getOwner(this).lookup('key-value-store:main');
       this._toolbarEnabled = val;
       keyValueStore.set({key: "toolbar-enabled", value: val ? "true" : "false"});
       return val;

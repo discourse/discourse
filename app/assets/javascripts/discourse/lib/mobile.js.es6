@@ -1,3 +1,5 @@
+import deprecated from 'discourse-common/lib/deprecated';
+
 let mobileForced = false;
 
 //  An object that is responsible for logic related to mobile devices.
@@ -67,10 +69,9 @@ export function resetMobile() {
   mobileForced = false;
 }
 
-// Backwards compatibiltity, deprecated
 Object.defineProperty(Discourse, 'Mobile', {
-  get: function() {
-    Ember.warn("DEPRECATION: `Discourse.Mobile` is deprecated, use `this.site.mobileView` instead");
+  get() {
+    deprecated("`Discourse.Mobile` is deprecated, use `this.site.mobileView` instead");
     return Mobile;
   }
 });

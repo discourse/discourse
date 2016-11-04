@@ -190,7 +190,7 @@ export default createWidget('header', {
 
   updateHighlight() {
     if (!this.state.searchVisible) {
-      const service = this.container.lookup('search-service:main');
+      const service = this.register.lookup('search-service:main');
       service.set('highlightTerm', '');
     }
   },
@@ -208,7 +208,7 @@ export default createWidget('header', {
 
   toggleSearchMenu() {
     if (this.site.mobileView) {
-      const searchService = this.container.lookup('search-service:main');
+      const searchService = this.register.lookup('search-service:main');
       const context = searchService.get('searchContext');
       var params = "";
 
@@ -240,7 +240,7 @@ export default createWidget('header', {
 
     state.contextEnabled = false;
 
-    const currentPath = this.container.lookup('controller:application').get('currentPath');
+    const currentPath = this.register.lookup('controller:application').get('currentPath');
     const blacklist = [ /^discovery\.categories/ ];
     const whitelist = [ /^topic\./ ];
     const check = function(regex) { return !!currentPath.match(regex); };
@@ -249,7 +249,7 @@ export default createWidget('header', {
     // If we're viewing a topic, only intercept search if there are cloaked posts
     if (showSearch && currentPath.match(/^topic\./)) {
       showSearch = ($('.topic-post .cooked, .small-action:not(.time-gap)').length <
-                    this.container.lookup('controller:topic').get('model.postStream.stream.length'));
+                    this.register.lookup('controller:topic').get('model.postStream.stream.length'));
     }
 
     if (state.searchVisible) {

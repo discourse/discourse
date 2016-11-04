@@ -21,7 +21,7 @@ export default class Connector {
       }
 
       const view = Ember.View.create({
-        container: widget.container,
+        container: widget.register,
         templateName: opts.templateName,
         context
       });

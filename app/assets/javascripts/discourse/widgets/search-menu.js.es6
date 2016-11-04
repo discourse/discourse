@@ -134,7 +134,7 @@ export default createWidget('search-menu', {
 
   searchService() {
     if (!this._searchService) {
-      this._searchService = this.container.lookup('search-service:main');
+      this._searchService = this.register.lookup('search-service:main');
     }
     return this._searchService;
   },

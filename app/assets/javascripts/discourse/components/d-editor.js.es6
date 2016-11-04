@@ -10,6 +10,8 @@ import { cook } from 'discourse/lib/text';
 import { translations } from 'pretty-text/emoji/data';
 import { emojiSearch } from 'pretty-text/emoji';
 import { emojiUrlFor } from 'discourse/lib/text';
+import { getRegister } from 'discourse-common/lib/get-owner';
+import deprecated from 'discourse-common/lib/deprecated';
 
 // Our head can be a static string or a function that returns a string
 // based on input (like for numbered lists).
@@ -182,7 +184,7 @@ export function addToolbarCallback(func) {
 }
 
 export function onToolbarCreate(func) {
-  console.warn('`onToolbarCreate` is deprecated, use the plugin api instead.');
+  deprecated('`onToolbarCreate` is deprecated, use the plugin api instead.');
   addToolbarCallback(func);
 };
 
@@ -205,15 +207,18 @@ export default Ember.Component.extend({
     this.set('ready', true);
   },
 
+  init() {
+    this._super();
+    this.register = getRegister(this);
+  },
+
   didInsertElement() {
     this._super();
 
-    const container = this.get('container'),
-          $editorInput = this.$('.d-editor-input');
+    const $editorInput = this.$('.d-editor-input');
 
-    this._applyEmojiAutocomplete(container, $editorInput);
-    this._applyCategoryHashtagAutocomplete(container, $editorInput);
-
+    this._applyEmojiAutocomplete($editorInput);
+    this._applyCategoryHashtagAutocomplete($editorInput);
 
     Ember.run.scheduleOnce('afterRender', this, this._readyNow);
 
@@ -287,8 +292,8 @@ export default Ember.Component.extend({
     }
   },
 
-  _applyCategoryHashtagAutocomplete(container) {
-    const template = container.lookup('template:category-tag-autocomplete.raw');
+  _applyCategoryHashtagAutocomplete() {
+    const template = this.register.lookup('template:category-tag-autocomplete.raw');
     const siteSettings = this.siteSettings;
 
     this.$('.d-editor-input').autocomplete({
@@ -310,10 +315,11 @@ export default Ember.Component.extend({
     });
   },
 
-  _applyEmojiAutocomplete(container, $editorInput) {
+  _applyEmojiAutocomplete($editorInput) {
     if (!this.siteSettings.enable_emoji) { return; }
 
-    const template = container.lookup('template:emoji-selector-autocomplete.raw');
+    const register = this.register;
+    const template = this.register.lookup('template:emoji-selector-autocomplete.raw');
     const self = this;
 
     $editorInput.autocomplete({
@@ -329,7 +335,7 @@ export default Ember.Component.extend({
         } else {
           showSelector({
             appendTo: self.$(),
-            container,
+            register,
             onSelect: title => {
               // Remove the previously type characters when a new emoji is selected from the selector.
               let selected = self._getSelected();
@@ -614,7 +620,7 @@ export default Ember.Component.extend({
     emoji() {
       showSelector({
         appendTo: this.$(),
-        container: this.container,
+        register: this.register,
         onSelect: title => this._addText(this._getSelected(), `:${title}:`)
       });
     }

@@ -1,4 +1,5 @@
 import { on, observes, default as computed } from 'ember-addons/ember-computed-decorators';
+import { getOwner } from 'discourse-common/lib/get-owner';
 
 export default Ember.Component.extend({
   @computed('placeholderKey')
@@ -18,7 +19,7 @@ export default Ember.Component.extend({
     var selectedGroups;
     var groupNames = this.get('groupNames');
 
-    var template = this.container.lookup('template:group-selector-autocomplete.raw');
+    var template = getOwner(this).lookup('template:group-selector-autocomplete.raw');
     self.$('input').autocomplete({
       allowAny: false,
       items: _.isArray(groupNames) ? groupNames : (Ember.isEmpty(groupNames)) ? [] : [groupNames],

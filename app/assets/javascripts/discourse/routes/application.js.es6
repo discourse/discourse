@@ -6,6 +6,7 @@ import OpenComposer from "discourse/mixins/open-composer";
 import Category from 'discourse/models/category';
 import mobile from 'discourse/lib/mobile';
 import { findAll } from 'discourse/models/login-method';
+import { getOwner } from 'discourse-common/lib/get-owner';
 
 function unlessReadOnly(method, message) {
   return function() {
@@ -40,7 +41,7 @@ const ApplicationRoute = Discourse.Route.extend(OpenComposer, {
 
     // Ember doesn't provider a router `willTransition` event so let's make one
     willTransition() {
-      var router = this.container.lookup('router:main');
+      var router = getOwner(this).lookup('router:main');
       Ember.run.once(router, router.trigger, 'willTransition');
       return this._super();
     },
@@ -150,7 +151,7 @@ const ApplicationRoute = Discourse.Route.extend(OpenComposer, {
 
     changeBulkTemplate(w) {
       const controllerName = w.replace('modal/', ''),
-            factory = this.container.lookupFactory('controller:' + controllerName);
+            factory = getOwner(this).lookupFactory('controller:' + controllerName);
 
       this.render(w, {into: 'modal/topic-bulk-actions', outlet: 'bulkOutlet', controller: factory ? controllerName : 'topic-bulk-actions'});
     },
@@ -200,7 +201,7 @@ const ApplicationRoute = Discourse.Route.extend(OpenComposer, {
 
   _autoLogin(modal, modalClass, notAuto) {
     const methods = findAll(this.siteSettings,
-                            this.container.lookup('capabilities:main'),
+                            getOwner(this).lookup('capabilities:main'),
                             this.site.isMobileDevice);
 
     if (!this.siteSettings.enable_local_logins && methods.length === 1) {
