@@ -144,9 +144,6 @@ GEM
     json (1.8.3)
     jwt (1.5.2)
     kgio (2.10.0)
-    librarian (0.1.2)
-      highline
-      thor (~> 0.15)
     libv8 (5.3.332.38.1)
     listen (0.7.3)
     logster (1.2.5)
@@ -431,7 +428,6 @@ DEPENDENCIES
   htmlentities
   http_accept_language (~> 2.0.5)
   image_optim (= 0.20.2)
-  librarian (>= 0.0.25)
   listen (= 0.7.3)
   logster
   lru_redux
