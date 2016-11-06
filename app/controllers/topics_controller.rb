@@ -492,7 +492,7 @@ class TopicsController < ApplicationController
     params.require(:topic_id)
     params.require(:timestamp)
 
-    guardian.ensure_can_change_post_owner!
+    guardian.ensure_can_change_post_timestamps!
 
     begin
       PostTimestampChanger.new( topic_id: params[:topic_id].to_i,
