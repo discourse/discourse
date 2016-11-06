@@ -185,6 +185,10 @@ module PostGuardian
     is_admin?
   end
 
+  def can_change_post_timestamps?
+    is_admin?
+  end
+
   def can_wiki?(post)
     return false unless authenticated?
     return true if is_staff? || @user.has_trust_level?(TrustLevel[4])
