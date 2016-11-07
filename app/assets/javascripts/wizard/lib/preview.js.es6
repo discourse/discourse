@@ -126,8 +126,11 @@ export function createPreviewComponent(width, height, obj) {
       // Logo
       const headerMargin = headerHeight * 0.2;
       const logoHeight = headerHeight - (headerMargin * 2);
-      const logoWidth = (logoHeight / this.logo.height) * this.logo.width;
-      this.scaleImage(this.logo, headerMargin, headerMargin, logoWidth, logoHeight);
+
+      if (this.logo) {
+        const logoWidth = (logoHeight / this.logo.height) * this.logo.width;
+        this.scaleImage(this.logo, headerMargin, headerMargin, logoWidth, logoHeight);
+      }
 
       // Top right menu
       this.scaleImage(this.avatar, width - avatarSize - headerMargin, headerMargin, avatarSize, avatarSize);
