@@ -70,6 +70,18 @@ describe DiscourseRedis do
       end
     end
 
+    it "should return the slave config when master is still loading data" do
+      begin
+        Redis::Client.any_instance.expects(:call).with([:info]).returns("someconfig:haha\r\nloading:1")
+        config = connector.resolve
+
+        expect(config[:host]).to eq(slave_host)
+        expect(config[:port]).to eq(slave_port)
+      ensure
+        fallback_handler.master = true
+      end
+    end
+
     it "should raise the right error" do
       error = RuntimeError.new('test error')
       Redis::Client.any_instance.expects(:call).raises(error).twice

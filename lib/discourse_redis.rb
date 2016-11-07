@@ -98,8 +98,8 @@ class DiscourseRedis
         options = @options.dup
         options.delete(:connector)
         client = Redis::Client.new(options)
-        client.call([:role])
-        @options
+        loading = client.call([:info]).split("\r\n").include?("loading:1")
+        loading ? @slave_options : @options
       rescue Redis::ConnectionError, Redis::CannotConnectError, RuntimeError => ex
         raise ex if ex.class == RuntimeError && ex.message != "Name or service not known"
         @fallback_handler.master = false
