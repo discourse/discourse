@@ -26,7 +26,7 @@ module Onebox
 
         case route[:controller]
         when "uploads" then upload_html(path)
-        when "topics"  then topic_html(path, route)
+        when "topics"  then topic_html(route)
         end
       end
 
@@ -41,13 +41,14 @@ module Onebox
           end
         end
 
-        def topic_html(path, route)
+        def topic_html(route)
           link = "<a href='#{@url}'>#{@url}</a>"
           source_topic_id = @url[/[&?]source_topic_id=(\d+)/, 1].to_i
+          source_topic = Topic.find_by(id: source_topic_id) if source_topic_id > 0
 
           if route[:post_number].present? && route[:post_number].to_i > 1
             post = Post.find_by(topic_id: route[:topic_id], post_number: route[:post_number])
-            return link if post.nil? || post.hidden || !Guardian.new.can_see?(post)
+            return link unless can_see_post?(post, source_topic)
 
             topic = post.topic
             slug = Slug.for(topic.title)
@@ -63,7 +64,7 @@ module Onebox
             PrettyText.cook(quote, args)
           else
             topic = Topic.find_by(id: route[:topic_id])
-            return link if topic.nil? || !Guardian.new.can_see?(topic)
+            return link unless can_see_topic?(topic, source_topic)
 
             first_post = topic.ordered_posts.first
 
@@ -79,6 +80,20 @@ module Onebox
             template = File.read("#{Rails.root}/lib/onebox/templates/discourse_topic_onebox.hbs")
             Mustache.render(template, args)
           end
+        end
+
+        def can_see_post?(post, source_topic)
+          return false if post.nil? || post.hidden || post.trashed? || post.topic.nil?
+          Guardian.new.can_see_post?(post) || same_category?(post.topic.category, source_topic)
+        end
+
+        def can_see_topic?(topic, source_topic)
+          return false if topic.nil? || topic.trashed? || topic.private_message?
+          Guardian.new.can_see_topic?(topic) || same_category?(topic.category, source_topic)
+        end
+
+        def same_category?(category, source_topic)
+          source_topic.try(:category_id) == category.try(:id)
         end
 
     end

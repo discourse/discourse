@@ -15,7 +15,7 @@ describe Onebox::Engine::DiscourseLocalOnebox do
 
     it "returns a link if not allowed to see the post" do
       url = "#{Discourse.base_url}#{post2.url}"
-      Guardian.any_instance.stubs(:can_see?).returns(false)
+      Guardian.any_instance.expects(:can_see_post?).returns(false)
       expect(Onebox.preview(url).to_s).to eq("<a href='#{url}'>#{url}</a>")
     end
 
@@ -46,9 +46,9 @@ describe Onebox::Engine::DiscourseLocalOnebox do
       expect(Onebox.preview(url).to_s).to eq("<a href='#{url}'>#{url}</a>")
     end
 
-    it "returns a link if not allowed to see the post" do
+    it "returns a link if not allowed to see the topic" do
       url = topic.url
-      Guardian.any_instance.stubs(:can_see?).returns(false)
+      Guardian.any_instance.expects(:can_see_topic?).returns(false)
       expect(Onebox.preview(url).to_s).to eq("<a href='#{url}'>#{url}</a>")
     end
 
@@ -57,8 +57,7 @@ describe Onebox::Engine::DiscourseLocalOnebox do
       expect(Onebox.preview(topic.url).to_s).to match(/hamburger\.png/)
     end
 
-    it "returns some onebox goodness if post exists and can be seen" do
-      Guardian.any_instance.stubs(:can_see?).returns(true)
+    it "returns some onebox goodness if topic exists and can be seen" do
       html = Onebox.preview(topic.url).to_s
       expect(html).to include(topic.ordered_posts.first.user.username)
       expect(html).to include("<blockquote>")
@@ -101,7 +100,6 @@ describe Onebox::Engine::DiscourseLocalOnebox do
 
       it "returns some onebox goodness if post exists and can be seen" do
         url = "#{Discourse.base_url}#{post2.url}?source_topic_id=#{post2.topic_id+1}"
-        Guardian.any_instance.stubs(:can_see?).returns(true)
         html = Onebox.preview(url).to_s
         expect(html).to include(post2.excerpt)
         expect(html).to include(post2.topic.title)
