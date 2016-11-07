@@ -14,18 +14,20 @@ class DiscourseRedis
       @running = false
       @mutex = Mutex.new
       @slave_config = DiscourseRedis.slave_config
+      @timer_task = init_timer_task
     end
 
     def verify_master
       synchronize do
-        return if @running || recently_checked?
-        @running = true
+        return if @timer_task.running?
       end
 
-      Thread.new { initiate_fallback_to_master }
+      @timer_task.execute
     end
 
     def initiate_fallback_to_master
+      success = false
+
       begin
         slave_client = ::Redis::Client.new(@slave_config)
         logger.info "#{log_prefix}: Checking connection to master server..."
@@ -39,13 +41,14 @@ class DiscourseRedis
 
           Discourse.clear_readonly!
           Discourse.request_refresh!
-          @master = true
+          self.master = true
+          success = true
         end
       ensure
-        @running = false
-        @last_checked = Time.zone.now
         slave_client.disconnect
       end
+
+      success
     end
 
     def master
@@ -56,22 +59,17 @@ class DiscourseRedis
       synchronize { @master = args }
     end
 
-    def recently_checked?
-      if @last_checked
-        Time.zone.now <= (@last_checked + 5.seconds)
-      else
-        false
-      end
-    end
-
-    # Used for testing
-    def reset!
-      @master = true
-      @last_checked = nil
-      @running = false
+    def running?
+      synchronize { @timer_task.running? }
     end
 
     private
+
+    def init_timer_task
+      Concurrent::TimerTask.new(execution_interval: 10) do |task|
+        task.shutdown if initiate_fallback_to_master
+      end
+    end
 
     def synchronize
       @mutex.synchronize { yield }
@@ -87,9 +85,6 @@ class DiscourseRedis
   end
 
   class Connector < Redis::Client::Connector
-    MASTER = 'master'.freeze
-    SLAVE = 'slave'.freeze
-
     def initialize(options)
       super(options)
       @slave_options = DiscourseRedis.slave_config(options)
@@ -97,21 +92,18 @@ class DiscourseRedis
     end
 
     def resolve
-
-      return @options unless @slave_options[:host]
+      return @slave_options if !@fallback_handler.master
 
       begin
         options = @options.dup
         options.delete(:connector)
-        client = ::Redis::Client.new(options)
-        client.call([:role])[0]
+        client = Redis::Client.new(options)
+        client.call([:role])
         @options
       rescue Redis::ConnectionError, Redis::CannotConnectError, RuntimeError => ex
-        # A consul service name may be deregistered for a redis container setup
         raise ex if ex.class == RuntimeError && ex.message != "Name or service not known"
-
-        return @slave_options if !@fallback_handler.master
         @fallback_handler.master = false
+        @fallback_handler.verify_master unless @fallback_handler.running?
         raise ex
       ensure
         client.disconnect
