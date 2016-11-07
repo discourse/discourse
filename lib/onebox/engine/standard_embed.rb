@@ -76,10 +76,15 @@ module Onebox
           og = {}
 
           html_doc.css('meta').each do |m|
-            if m["property"] && m["property"][/^og:(.+)$/i]
-              value = m["content"].to_s
+            if (m["property"] && m["property"][/^og:(.+)$/i]) || (m["name"] && m["name"][/^og:(.+)$/i])
+              value = (m["content"] || m["value"]).to_s
               og[$1.tr('-:','_').to_sym] ||= value unless Onebox::Helpers::blank?(value)
             end
+          end
+
+          # Attempt to retrieve the title from the meta tag
+          if title = html_doc.at_css('title').try(:text)
+            og[:title] ||= title unless Onebox::Helpers.blank?(title)
           end
 
           og
@@ -89,7 +94,7 @@ module Onebox
           twitter = {}
 
           html_doc.css('meta').each do |m|
-            if m["name"] && m["name"][/^twitter:(.+)$/i]
+            if (m["property"] && m["property"][/^twitter:(.+)$/i]) || (m["name"] && m["name"][/^twitter:(.+)$/i])
               value = (m["content"] || m["value"]).to_s
               twitter[$1.tr('-:','_').to_sym] ||= value unless Onebox::Helpers::blank?(value)
             end
