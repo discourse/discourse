@@ -167,12 +167,12 @@ body {
 }
 
 .ring {
-  top: -13.4px !important;
-  right: 22.4px !important;
-  border-radius: 15px;
+  top: -13px !important;
+  right: 21px !important;
+  border-radius: 100%;
   width: 20px;
   height: 20px;
-  border: solid #FF0000 1px;
+  border: solid #090 3px;
   -moz-animation-iteration-count: infinite;
   -webkit-animation-iteration-count: infinite;
   -webkit-transform-origin: center;
@@ -193,7 +193,7 @@ body {
     opacity: 1;
   }
   to {
-    $scale: 2.5;
+    $scale: 2;
     transform: scale($scale);
     -ms-transform: scale($scale);
     -webkit-transform: scale($scale);
