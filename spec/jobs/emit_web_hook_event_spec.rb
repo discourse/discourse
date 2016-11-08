@@ -69,6 +69,12 @@ describe Jobs::EmitWebHookEvent do
       end.to change(WebHookEvent, :count).by(1)
     end
 
+    it 'skips silently on missing post' do
+      expect do
+        subject.execute(web_hook_id: post_hook.id, event_type: 'post', post_id: (Post.maximum(:id).to_i + 1))
+      end.not_to raise_error
+    end
+
     it 'sets up proper request headers' do
       Excon.stub({ url: "https://meta.discourse.org/webhook_listener" },
                  { headers: { test: 'string' }, body: 'OK', status: 200 })
