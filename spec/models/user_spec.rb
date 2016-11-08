@@ -1314,4 +1314,27 @@ describe User do
     end
   end
 
+  describe '#read_first_notification?' do
+    let(:user) { Fabricate(:user) }
+    let(:notification) { Fabricate(:private_message_notification, user: user) }
+    let(:other_notification) { Fabricate(:private_message_notification, user: user) }
+
+    describe 'when first notification has not been read' do
+      it 'should return the right value' do
+        notification.update_attributes!(read: false)
+        other_notification.update_attributes!(read: true)
+
+        expect(user.read_first_notification?).to eq(false)
+      end
+    end
+
+    describe 'when first notification has been read' do
+      it 'should return the right value' do
+        notification.update_attributes!(read: true)
+        other_notification.update_attributes!(read: false)
+
+        expect(user.read_first_notification?).to eq(true)
+      end
+    end
+  end
 end

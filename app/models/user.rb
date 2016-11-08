@@ -343,6 +343,10 @@ class User < ActiveRecord::Base
     end
   end
 
+  def read_first_notification?
+    notifications.order(created_at: :asc).first.read
+  end
+
   def publish_notifications_state
     # publish last notification json with the message so we
     # can apply an update
@@ -384,6 +388,7 @@ class User < ActiveRecord::Base
                        {unread_notifications: unread_notifications,
                         unread_private_messages: unread_private_messages,
                         total_unread_notifications: total_unread_notifications,
+                        read_first_notification: read_first_notification?,
                         last_notification: json,
                         recent: recent,
                         seen_notification_id: seen_notification_id
