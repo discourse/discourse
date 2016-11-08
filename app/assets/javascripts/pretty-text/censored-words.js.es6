@@ -7,10 +7,7 @@ export function censor(text, censoredWords, censoredPattern) {
   }
 
   if (censoredPattern && censoredPattern.length > 0) {
-    try {
-      new RegExp(censoredPattern); // exception if invalid
-      patterns.push("(" + censoredPattern + ")");
-    } catch(e) {}
+    patterns.push("(" + censoredPattern + ")");
   }
 
   if (patterns.length) {
