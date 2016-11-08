@@ -212,7 +212,18 @@ module PrettyText
     options[:topicId] = opts[:topic_id]
 
     working_text = text.dup
-    sanitized = markdown(working_text, options)
+
+    begin
+      sanitized = markdown(working_text, options)
+    rescue MiniRacer::ScriptTerminatedError => e
+      if SiteSetting.censored_pattern.present?
+        Rails.logger.warn "Post cooking timed out. Clearing the censored_pattern setting and retrying."
+        SiteSetting.censored_pattern = nil
+        sanitized = markdown(working_text, options)
+      else
+        raise e
+      end
+    end
 
     doc = Nokogiri::HTML.fragment(sanitized)
 

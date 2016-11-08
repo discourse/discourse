@@ -536,6 +536,11 @@ posting:
     default: ''
     refresh: true
     type: list
+  censored_pattern:
+    client: true
+    default: ''
+    refresh: true
+    type: regex
   enable_emoji:
     default: true
     client: true

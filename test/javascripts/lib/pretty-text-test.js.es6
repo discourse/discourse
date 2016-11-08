@@ -11,7 +11,8 @@ const defaultOpts = buildOptions({
     emoji_set: 'emoji_one',
     highlighted_languages: 'json|ruby|javascript',
     default_code_lang: 'auto',
-    censored_words: 'shucks|whiz|whizzer'
+    censored_words: 'shucks|whiz|whizzer',
+    censored_pattern: '\\d{3}-\\d{4}|tech\\w*'
   },
   getURL: url => url
 });
@@ -532,6 +533,9 @@ test("censoring", function() {
   cooked("The link still works. [whiz](http://www.whiz.com)",
          "<p>The link still works. <a href=\"http://www.whiz.com\">&#9632;&#9632;&#9632;&#9632;</a></p>",
          "it won't break links by censoring them.");
+  cooked("Call techapj the computer whiz at 555-555-1234 for free help.",
+         "<p>Call &#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632; the computer &#9632;&#9632;&#9632;&#9632; at 555-&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632; for free help.</p>",
+         "uses both censored words and patterns from site settings");
 });
 
 test("code blocks/spans hoisting", function() {
