@@ -344,7 +344,7 @@ class User < ActiveRecord::Base
   end
 
   def read_first_notification?
-    notifications.order(created_at: :asc).first.read
+    notifications.order(created_at: :asc).first&.read || false
   end
 
   def publish_notifications_state
