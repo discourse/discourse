@@ -166,6 +166,43 @@ body {
   &.badge-notification[href] {color: $secondary;}
 }
 
+.ring {
+  top: -13.4px !important;
+  right: 22.4px !important;
+  border-radius: 15px;
+  width: 20px;
+  height: 20px;
+  border: solid #FF0000 1px;
+  -moz-animation-iteration-count: infinite;
+  -webkit-animation-iteration-count: infinite;
+  -webkit-transform-origin: center;
+  -moz-animation-duration: 3s;
+  -webkit-animation-duration: 3s;
+  -moz-animation-name: ping;
+  -webkit-animation-name: ping;
+}
+
+@-webkit-keyframes ping {
+  from {
+    $scale: 0.25;
+    transform: scale($scale);
+    -ms-transform: scale($scale);
+    -webkit-transform: scale($scale);
+    -o-transform: scale($scale);
+    -moz-transform: scale($scale);
+    opacity: 1;
+  }
+  to {
+    $scale: 2.5;
+    transform: scale($scale);
+    -ms-transform: scale($scale);
+    -webkit-transform: scale($scale);
+    -o-transform: scale($scale);
+    -moz-transform: scale($scale);
+    opacity: 0;
+  }
+}
+
 .fade {
   opacity: 0;
   transition: opacity 0.15s linear;
