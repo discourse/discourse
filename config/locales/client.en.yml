@@ -488,6 +488,7 @@ en:
       mute: "Mute"
       edit: "Edit Preferences"
       download_archive: "Download My Posts"
+      download_archive_confirm: "Are you sure you want to download your posts?"
       new_private_message: "New Message"
       private_message: "Message"
       private_messages: "Messages"
@@ -2621,7 +2622,6 @@ en:
             confirm: "Are you sure you want to rollback the database to the previous working state?"
 
       export_csv:
-        user_archive_confirm: "Are you sure you want to download your posts?"
         success: "Export initiated, you will be notified via message when the process is complete."
         failed: "Export failed. Please check the logs."
         rate_limit_error: "Posts can be downloaded once per day, please try again tomorrow."
@@ -3302,5 +3302,3 @@ en:
           admin: "Admin"
           moderator: "Moderator"
           regular: "Regular User"
-
-
