@@ -32,7 +32,8 @@ module SiteSettingExtension
                         url_list: 9,
                         host_list: 10,
                         category_list: 11,
-                        value_list: 12)
+                        value_list: 12,
+                        regex: 13)
   end
 
   def mutex
@@ -443,7 +444,8 @@ module SiteSettingExtension
       types[:fixnum] => IntegerSettingValidator,
       types[:string] => StringSettingValidator,
       'list' => StringSettingValidator,
-      'enum' => StringSettingValidator
+      'enum' => StringSettingValidator,
+      'regex' => RegexSettingValidator
     }
     @validator_mapping[type_name]
   end

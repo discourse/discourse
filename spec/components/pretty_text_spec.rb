@@ -438,4 +438,13 @@ HTML
     end
   end
 
+  describe "censored_pattern site setting" do
+    it "can be cleared if it causes cooking to timeout" do
+      SiteSetting.censored_pattern = "evilregex"
+      described_class.stubs(:markdown).raises(MiniRacer::ScriptTerminatedError)
+      PrettyText.cook("Protect against it plz.") rescue nil
+      expect(SiteSetting.censored_pattern).to be_blank
+    end
+  end
+
 end
