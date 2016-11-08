@@ -42,6 +42,8 @@ createWidget('header-notifications', {
 
     const unreadPMs = currentUser.get('unread_private_messages');
     if (!!unreadPMs) {
+      if (!currentUser.get('read_first_notification')) contents.push(h('span.ring'));
+
       contents.push(this.attach('link', { action: attrs.action,
                                           className: 'badge-notification unread-private-messages',
                                           rawLabel: unreadPMs }));
