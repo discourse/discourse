@@ -154,7 +154,10 @@ module PrettyText
       context.eval("__optInput.mentionLookup = __mentionLookup;")
 
       custom_emoji = {}
-      Emoji.custom.map {|e| custom_emoji[e.name] = e.url}
+      Emoji.custom.map do |e|
+        context.eval("__registerEmoji('#{e.name}', '#{e.url}')")
+        custom_emoji[e.name] = e.url
+      end
       context.eval("__optInput.customEmoji = #{custom_emoji.to_json};")
 
       context.eval('__textOptions = __buildOptions(__optInput);')
