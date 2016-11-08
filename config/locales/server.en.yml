@@ -94,7 +94,7 @@ en:
       has_already_been_used: "has already been used"
       inclusion: is not included in the list
       invalid: is invalid
-      is_invalid: "is invalid; try to be a little more descriptive"
+      is_invalid: "seems unclear, is it a complete sentence?"
       less_than: must be less than %{count}
       less_than_or_equal_to: must be less than or equal to %{count}
       not_a_number: is not a number
@@ -196,7 +196,7 @@ en:
 
   just_posted_that: "is too similar to what you recently posted"
   invalid_characters: "contains invalid characters"
-  is_invalid: "is invalid; try to be a little more descriptive"
+  is_invalid: "seems unclear, is it a complete sentence?"
   next_page: "next page →"
   prev_page: "← previous page"
   page_num: "Page %{num}"
