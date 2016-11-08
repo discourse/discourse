@@ -44,7 +44,7 @@ export default Ember.Object.extend({
 
   init() {
     this._super();
-    this.register = getRegister(this);
+    this.register = this.register || getRegister(this);
   },
 
   pluralize(thing) {
