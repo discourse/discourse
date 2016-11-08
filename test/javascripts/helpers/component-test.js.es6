@@ -36,22 +36,10 @@ export default function(name, opts) {
     this.registry.register('store:main', store, { instantiate: false });
 
     if (opts.setup) {
-      if (Ember.VERSION[0] === "2") {
-        // use closure actions instead
-        this.on = (actionName, fn) => this.set(actionName, fn);
-      }
-
       opts.setup.call(this, store);
     }
 
     andThen(() => {
-      // TODO: This shouldn't be necessary
-      this.owner = {
-        hasRegistration: (...args) => this.registry.has(...args),
-        lookup: (...args) => this.container.lookup(...args),
-        _lookupFactory: (...args) => this.container.lookupFactory(...args)
-      };
-
       return this.render(opts.template);
     });
     andThen(() => opts.test.call(this, assert));
