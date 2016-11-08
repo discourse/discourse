@@ -1,4 +1,9 @@
+import { mapRoutes } from 'discourse/mapping-router';
+
 moduleFor("controller:poll-ui-builder", "controller:poll-ui-builder", {
+  setup() {
+    this.registry.register('router:main', mapRoutes());
+  },
   needs: ['controller:modal']
 });
 

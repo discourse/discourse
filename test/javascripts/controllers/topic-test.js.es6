@@ -1,8 +1,12 @@
 import { blank, present } from 'helpers/qunit-helpers';
+import { mapRoutes } from 'discourse/mapping-router';
 
 moduleFor('controller:topic', 'controller:topic', {
   needs: ['controller:modal', 'controller:composer', 'controller:quote-button',
-          'controller:application']
+          'controller:application'],
+  setup() {
+    this.registry.register('router:main', mapRoutes());
+  },
 });
 
 import Topic from 'discourse/models/topic';
