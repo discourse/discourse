@@ -1336,5 +1336,11 @@ describe User do
         expect(user.read_first_notification?).to eq(true)
       end
     end
+
+    describe 'when user does not have any notifications' do
+      it 'should return the right value' do
+        expect(user.read_first_notification?).to eq(false)
+      end
+    end
   end
 end
