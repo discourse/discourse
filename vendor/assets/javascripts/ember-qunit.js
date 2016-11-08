@@ -159,8 +159,12 @@ define('ember-qunit/only', ['exports', 'ember-qunit/test-wrapper', 'qunit'], fun
 
   'use strict';
 
-  function only(testName, callback) {
-    testWrapper['default'](testName, callback, qunit.only);
+  function only(/* testName, expected, callback, async */) {
+    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; ++_key) {
+      args[_key] = arguments[_key];
+    }
+    args.unshift(qunit.only);
+    testWrapper['default'].apply(null, args);
   }
   exports['default'] = only;
 
@@ -240,7 +244,12 @@ define('ember-qunit/test-wrapper', ['exports', 'ember', 'ember-test-helpers'], f
 
   'use strict';
 
-  function testWrapper(testName, callback, qunit) {
+  function testWrapper(qunit /*, testName, expected, callback, async */) {
+    var callback;
+    for (var _len = arguments.length, args = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; ++_key) {
+      args[_key - 1] = arguments[_key];
+    }
+
     function wrapper() {
       var context = ember_test_helpers.getContext();
 
@@ -267,7 +276,13 @@ define('ember-qunit/test-wrapper', ['exports', 'ember', 'ember-test-helpers'], f
       });
     }
 
-    qunit(testName, wrapper);
+    if (args.length === 2) {
+      callback = args.splice(1, 1, wrapper)[0];
+    } else {
+      callback = args.splice(2, 1, wrapper)[0];
+    }
+
+    qunit.apply(null, args);
   }
   exports['default'] = testWrapper;
 
@@ -276,8 +291,12 @@ define('ember-qunit/test', ['exports', 'ember-qunit/test-wrapper', 'qunit'], fun
 
   'use strict';
 
-  function test(testName, callback) {
-    testWrapper['default'](testName, callback, qunit.test);
+  function test(/* testName, expected, callback, async */) {
+    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; ++_key) {
+      args[_key] = arguments[_key];
+    }
+    args.unshift(qunit.test);
+    testWrapper['default'].apply(null, args);
   }
   exports['default'] = test;
 
@@ -459,6 +478,8 @@ define('ember-test-helpers/test-module-for-component', ['exports', 'ember-test-h
   'use strict';
 
   exports['default'] = TestModule['default'].extend({
+    isComponentTestModule: true,
+
     init: function(componentName, description, callbacks) {
       // Allow `description` to be omitted
       if (!callbacks && typeof description === 'object') {
@@ -486,17 +507,17 @@ define('ember-test-helpers/test-module-for-component', ['exports', 'ember-test-h
         this.isUnitTest = true;
       }
 
-      if (!this.isUnitTest) {
-        callbacks.integration = true;
-      }
-
       if (description) {
         this._super.call(this, 'component:' + componentName, description, callbacks);
       } else {
         this._super.call(this, 'component:' + componentName, callbacks);
       }
 
-      if (this.isUnitTest) {
+      if (!this.isUnitTest && !this.isLegacy) {
+        callbacks.integration = true;
+      }
+
+      if (this.isUnitTest || this.isLegacy) {
         this.setupSteps.push(this.setupComponentUnitTest);
       } else {
         this.callbacks.subject = function() {
@@ -655,7 +676,7 @@ define('ember-test-helpers/test-module-for-component', ['exports', 'ember-test-h
         (this.registry || this.container).injection('component', '_viewRegistry', '-view-registry:main');
       }
 
-      if (!this.isUnitTest) {
+      if (!this.isUnitTest && !this.isLegacy) {
         this.context.factory = function() {};
       }
     },
@@ -741,7 +762,16 @@ define('ember-test-helpers/test-module', ['exports', 'ember', 'ember-test-helper
       }
 
       if (this.callbacks.integration) {
-        this.isIntegration = callbacks.integration;
+        if (this.isComponentTestModule) {
+          this.isLegacy = (callbacks.integration === 'legacy');
+          this.isIntegration = (callbacks.integration !== 'legacy');
+        } else {
+          if (callbacks.integration === 'legacy') {
+            throw new Error('`integration: \'legacy\'` is only valid for component tests.');
+          }
+          this.isIntegration = true;
+        }
+
         delete callbacks.integration;
       }
 
@@ -843,7 +873,7 @@ define('ember-test-helpers/test-module', ['exports', 'ember', 'ember-test-helper
     },
 
     setupContainer: function() {
-      if (this.isIntegration) {
+      if (this.isIntegration || this.isLegacy) {
         this._setupIntegratedContainer();
       } else {
         this._setupIsolatedContainer();
@@ -974,9 +1004,14 @@ define('ember-test-helpers/test-module', ['exports', 'ember', 'ember-test-helper
       }
     },
 
-    _setupContainer: function() {
+    _setupContainer: function(isolated) {
       var resolver = test_resolver.getResolver();
-      var items = buildRegistry['default'](resolver);
+
+      var items = buildRegistry['default'](!isolated ? resolver : Object.create(resolver, {
+        resolve: {
+          value: function() {}
+        }
+      }));
 
       this.container = items.container;
       this.registry = items.registry;
@@ -991,7 +1026,7 @@ define('ember-test-helpers/test-module', ['exports', 'ember', 'ember-test-helper
 
     _setupIsolatedContainer: function() {
       var resolver = test_resolver.getResolver();
-      this._setupContainer();
+      this._setupContainer(true);
 
       var thingToRegisterWith = this.registry || this.container;
 
@@ -1001,9 +1036,7 @@ define('ember-test-helpers/test-module', ['exports', 'ember', 'ember-test-helper
         thingToRegisterWith.register(fullName, resolver.resolve(normalizedFullName));
       }
 
-      if (this.registry) {
-        this.registry.fallback.resolver = function() {};
-      } else {
+      if (!this.registry) {
         this.container.resolver = function() {};
       }
     },
