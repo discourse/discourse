@@ -40,12 +40,12 @@ export default Ember.Component.extend({
     }
   },
 
-  @observes('topics', 'order', 'ascending', 'category')
+  @observes('topics', 'order', 'ascending', 'category', 'top')
   lastVisitedTopicChanged() {
     this.refreshLastVisited();
   },
 
-  _updateLastVisitedTopic(topics, order, ascending) {
+  _updateLastVisitedTopic(topics, order, ascending, top) {
 
     this.set('lastVisitedTopic', null);
 
@@ -54,6 +54,10 @@ export default Ember.Component.extend({
     }
 
     if (order !== "default" && order !== "activity") {
+      return;
+    }
+
+    if (top) {
       return;
     }
 
@@ -103,7 +107,7 @@ export default Ember.Component.extend({
   },
 
   refreshLastVisited() {
-    this._updateLastVisitedTopic(this.get('topics'), this.get('order'), this.get('ascending'));
+    this._updateLastVisitedTopic(this.get('topics'), this.get('order'), this.get('ascending'), this.get('top'));
   },
 
   click(e) {
