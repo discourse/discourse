@@ -167,12 +167,17 @@ body {
 }
 
 .ring {
-  top: -13px !important;
-  right: 21px !important;
+  $gradient-start: transparent;
+  $gradient-end: #090;
+  background: -webkit-radial-gradient($gradient-start, $gradient-end);
+  background: -o-radial-gradient($gradient-start, $gradient-end);
+  background: -moz-radial-gradient($gradient-start, $gradient-end);
+  background: radial-gradient($gradient-start, $gradient-end);
+  top: -11px !important;
+  right: 24px !important;
   border-radius: 100%;
   width: 20px;
   height: 20px;
-  border: solid #090 3px;
   -moz-animation-iteration-count: infinite;
   -webkit-animation-iteration-count: infinite;
   -webkit-transform-origin: center;
