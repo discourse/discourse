@@ -25,13 +25,18 @@ export function bufferedRender(obj) {
     return obj;
   }
 
-  const caller = {};
+  const caller = {
+    _didRender: false
+  };
 
   // True in 1.13 or greater
   if (Ember.Helper) {
     caller.didRender = function() {
       this._super();
-      this._customRender();
+      if (!this._didRender) {
+        this._customRender();
+      }
+      this._didRender = true;
     };
   } else {
     caller.didInsertElement = function() {
