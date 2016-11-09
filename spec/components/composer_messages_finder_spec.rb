@@ -48,7 +48,7 @@ describe ComposerMessagesFinder do
         let(:finder) { ComposerMessagesFinder.new(user, composer_action: 'createTopic', topic_id: topic.id) }
 
         it 'should return an empty string' do
-          expect(finder.check_education_message).to eq('')
+          expect(finder.check_education_message).to eq(nil)
         end
       end
 
@@ -56,7 +56,7 @@ describe ComposerMessagesFinder do
         let(:finder) { ComposerMessagesFinder.new(user, composer_action: 'reply', topic_id: topic.id) }
 
         it 'should return an empty string' do
-          expect(finder.check_education_message).to eq('')
+          expect(finder.check_education_message).to eq(nil)
         end
       end
     end
