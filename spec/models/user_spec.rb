@@ -1257,6 +1257,7 @@ describe User do
       SiteSetting.default_categories_watching = "1"
       SiteSetting.default_categories_tracking = "2"
       SiteSetting.default_categories_muted = "3"
+      SiteSetting.default_categories_watching_first_post = "4"
     end
 
     it "has overriden preferences" do
@@ -1279,6 +1280,7 @@ describe User do
       expect(CategoryUser.lookup(user, :watching).pluck(:category_id)).to eq([1])
       expect(CategoryUser.lookup(user, :tracking).pluck(:category_id)).to eq([2])
       expect(CategoryUser.lookup(user, :muted).pluck(:category_id)).to eq([3])
+      expect(CategoryUser.lookup(user, :watching_first_post).pluck(:category_id)).to eq([4])
     end
 
     it "does not set category preferences for staged users" do
@@ -1286,6 +1288,7 @@ describe User do
       expect(CategoryUser.lookup(user, :watching).pluck(:category_id)).to eq([])
       expect(CategoryUser.lookup(user, :tracking).pluck(:category_id)).to eq([])
       expect(CategoryUser.lookup(user, :muted).pluck(:category_id)).to eq([])
+      expect(CategoryUser.lookup(user, :watching_first_post).pluck(:category_id)).to eq([])
     end
   end
 

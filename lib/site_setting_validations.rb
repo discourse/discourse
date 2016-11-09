@@ -21,6 +21,7 @@ module SiteSettingValidations
 
   def validate_default_categories_watching(new_val)
     default_categories_selected = [
+      SiteSetting.default_categories_watching_first_post.split("|"),
       SiteSetting.default_categories_tracking.split("|"),
       SiteSetting.default_categories_muted.split("|"),
     ].flatten.to_set
@@ -31,6 +32,7 @@ module SiteSettingValidations
   def validate_default_categories_tracking(new_val)
     default_categories_selected = [
       SiteSetting.default_categories_watching.split("|"),
+      SiteSetting.default_categories_watching_first_post.split("|"),
       SiteSetting.default_categories_muted.split("|"),
     ].flatten.to_set
 
@@ -40,7 +42,18 @@ module SiteSettingValidations
   def validate_default_categories_muted(new_val)
     default_categories_selected = [
       SiteSetting.default_categories_watching.split("|"),
+      SiteSetting.default_categories_watching_first_post.split("|"),
       SiteSetting.default_categories_tracking.split("|"),
+    ].flatten.to_set
+
+    validate_default_categories(new_val, default_categories_selected)
+  end
+
+  def validate_default_categories_watching_first_post(new_val)
+    default_categories_selected = [
+      SiteSetting.default_categories_watching.split("|"),
+      SiteSetting.default_categories_tracking.split("|"),
+      SiteSetting.default_categories_muted.split("|"),
     ].flatten.to_set
 
     validate_default_categories(new_val, default_categories_selected)
