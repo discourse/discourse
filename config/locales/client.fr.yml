@@ -953,7 +953,7 @@ fr:
       create_pm: "Message privé"
       title: "ou appuyez sur Ctrl+Entrée"
       users_placeholder: "Ajouter un utilisateur"
-      title_placeholder: "Quel est votre sujet en une phrase descriptive ?"
+      title_placeholder: "Quel est le sujet en une courte phrase ?"
       edit_reason_placeholder: "pourquoi modifiez-vous le message ?"
       show_edit_reason: "(ajouter la raison de la modification)"
       reply_placeholder: "Écrivez ici. Utilisez Markdown, BBCode, ou HTML pour mettre en forme. Glissez ou collez des images."

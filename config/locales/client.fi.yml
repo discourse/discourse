@@ -475,6 +475,7 @@ fi:
 
         daily: "Lähetä päivittäin"
         individual: "Lähetä sähköpostia jokaisesta uudesta viestistä"
+        individual_no_echo: "Lähetä sähköposti jokaisesta uudesta viestistä lukuun ottamatta omiani"
         many_per_day: "Lähetä minulle sähköpostia jokaisesta uudesta viestistä (noin {{dailyEmailEstimate}} päivässä)"
         few_per_day: "Lähetä minulle sähköpostia jokaisesta uudesta viestistä (noin 2 päivässä)"
       tag_settings: "Tunnisteet"

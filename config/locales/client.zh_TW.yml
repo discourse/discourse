@@ -880,6 +880,7 @@ zh_TW:
       toggle_information: "切換討論話題詳情"
       read_more_in_category: "要閱讀更多文章嗎? 瀏覽 {{catLink}} 裡的討論話題或 {{latestLink}}。"
       read_more: "要閱讀更多文章嗎? 請按 {{catLink}} 或 {{latestLink}}。"
+      read_more_MF: "還有 { UNREAD, plural, =0 {} one { <a href='/unread'>1 個未讀的討論話題</a>} other { <a href='/unread'># 個未讀的討論話題</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{和 } false {} other{}} <a href='/new'>1 個新</a>的討論話題} other { {BOTH, select, true{和 } false {} other{}} <a href='/new'># 個最近</a>的討論話題} }可以閱讀，或者{CATEGORY, select, true {瀏覽{catLink}中的其他討論話題} false {{latestLink}} other {}}"
       browse_all_categories: 瀏覽所有分類
       view_latest_topics: 檢視最近的文章
       suggest_create_topic: 建立一個新討論話題吧？

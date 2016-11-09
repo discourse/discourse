@@ -862,7 +862,7 @@ sk:
     sso_overrides_name: "Nahrádzať lokálne plné mená pomocou plných mien z externej stránky pomocou dát z SSO dotazu pri každom logine a zamedziť lokálnym zmenám."
     sso_overrides_avatar: "Nahrádzať používateľský avatar pomocou avatara z externej stránky pomocou dát z SSO dotazu. V prípade zapnutia veľmi doporučujeme vypnúť allow_uploaded_avatars"
     sso_not_approved_url: "Presmeruj nepovolené SSO účty na URL"
-    enable_local_logins: "Povoliť pouťívanie lokálnych účtov a hesiel. (Poznámka: musí to byť zapnuté pre fungovanie pozvánok)"
+    enable_local_logins: "Povoliť používanie lokálnych účtov a hesiel. (Poznámka: musí to byť zapnuté pre fungovanie pozvánok)"
     allow_new_registrations: "Povoliť registráciu nových používateľov. Odznačte to ak chcete zabrániť vytváraniu nových účtov. "
     enable_signup_cta: "Zobraz oznámenie pre navrátilých anonymných používateľov s výzvou na registráciu účtu. "
     enable_yahoo_logins: "Povoliť autentifikáciu pomocou Yahoo."

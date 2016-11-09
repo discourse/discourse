@@ -15,6 +15,13 @@ nb_NO:
         one: "antall stemmer"
         other: "antall stemmer"
       average_rating: "Gjennomsnitt: <strong>%{average}</strong>."
+      public:
+        title: "Stemmer er offentlig."
+      multiple:
+        help:
+          at_least_min_options:
+            one: "Velg minst <strong>1</strong> alternativ"
+            other: "Velg minst <strong>%{count}</strong> alternativ"
       cast-votes:
         title: "Stem nå"
         label: "Stem!"
