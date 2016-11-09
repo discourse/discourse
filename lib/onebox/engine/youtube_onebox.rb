@@ -65,7 +65,7 @@ module Onebox
           @video_id ||= begin
             # http://youtu.be/afyK1HSFfgw
             if uri.host["youtu.be"]
-              id = uri.path[/\/([\w\-]+)\//, 1]
+              id = uri.path[/\/([\w\-]+)/, 1]
               return id if id
             end
 
