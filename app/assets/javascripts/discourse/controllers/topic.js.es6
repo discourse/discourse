@@ -9,6 +9,7 @@ import Composer from 'discourse/models/composer';
 import DiscourseURL from 'discourse/lib/url';
 import { categoryBadgeHTML } from 'discourse/helpers/category-link';
 import Post from 'discourse/models/post';
+import debounce from 'discourse/lib/debounce';
 
 export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
   composer: Ember.inject.controller(),
@@ -668,6 +669,7 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
     const topic = this.get('model');
     const postStream = topic.get('postStream');
     const post = postStream.findLoadedPost(postId);
+
     if (post) {
       DiscourseURL.routeTo(topic.urlForPostNumber(post.get('post_number')));
     } else {
@@ -838,9 +840,29 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
         topic.reload().then(() => {
           this.send('postChangedRoute', topic.get('post_number') || 1);
         });
+      } else {
+        const postNumber = data.post_number;
+        const notInPostStream = topic.get('highest_post_number') <= postNumber;
+        const postNumberDifference = postNumber - topic.get('currentPost');
+
+        if (notInPostStream &&
+            topic.get('isPrivateMessage') &&
+            postNumberDifference > 0 &&
+            postNumberDifference < 7) {
+
+          this._scrollToPost(data.post_number);
+        }
       }
     });
   },
+
+  _scrollToPost: debounce(function(postNumber) {
+    const $post = $(`.topic-post article#post_${postNumber}`);
+
+    if ($post.length === 0) return;
+
+    $('body').animate({ scrollTop: $post.offset().top }, 1000);
+  }, 500),
 
   unsubscribe() {
     const topicId = this.get('content.id');
