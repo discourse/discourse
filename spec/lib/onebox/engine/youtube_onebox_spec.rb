@@ -3,6 +3,8 @@ require 'spec_helper'
 describe Onebox::Engine::YoutubeOnebox do
   before do
     fake("https://www.youtube.com/watch?feature=player_embedded&v=21Lk4YiASMo", response("youtube"))
+    fake("https://youtu.be/21Lk4YiASMo", response("youtube"))
+    fake("http://www.youtube.com/oembed?format=json&url=http://www.youtube.com/watch?v=21Lk4YiASMo", response("youtube"))
     fake("https://www.youtube.com/channel/UCL8ZULXASCc1I_oaOT0NaOQ", response("youtube-channel"))
     fake("https://www.youtube.com/playlist?list=PL5308B2E5749D1696", response("youtube-playlist"))
   end
@@ -41,6 +43,7 @@ describe Onebox::Engine::YoutubeOnebox do
 
   it "returns an image as the placeholder" do
     expect(Onebox.preview('https://www.youtube.com/watch?v=21Lk4YiASMo').placeholder_html).to match(/<img/)
+    expect(Onebox.preview('https://youtu.be/21Lk4YiASMo').placeholder_html).to match(/<img/)
   end
 
   it "passes the playlist ID through" do
