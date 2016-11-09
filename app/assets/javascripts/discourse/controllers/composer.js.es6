@@ -4,7 +4,6 @@ import Draft from 'discourse/models/draft';
 import Composer from 'discourse/models/composer';
 import { default as computed, observes } from 'ember-addons/ember-computed-decorators';
 import { relativeAge } from 'discourse/lib/formatter';
-import { escapeExpression } from 'discourse/lib/utilities';
 import InputValidation from 'discourse/models/input-validation';
 import { getOwner } from 'discourse-common/lib/get-owner';
 
