@@ -407,7 +407,7 @@ export default Ember.Controller.extend({
 
         if (currentTopic) {
           buttons.push({
-            "label": I18n.t("composer.reply_here") + "<br/><div class='topic-title overflow-ellipsis'>" + escapeExpression(currentTopic.get('title')) + "</div>",
+            "label": I18n.t("composer.reply_here") + "<br/><div class='topic-title overflow-ellipsis'>" + currentTopic.get('fancyTitle') + "</div>",
             "class": "btn btn-reply-here",
             "callback": function() {
               composer.set('topic', currentTopic);
@@ -418,7 +418,7 @@ export default Ember.Controller.extend({
         }
 
         buttons.push({
-          "label": I18n.t("composer.reply_original") + "<br/><div class='topic-title overflow-ellipsis'>" + escapeExpression(this.get('model.topic.title')) + "</div>",
+          "label": I18n.t("composer.reply_original") + "<br/><div class='topic-title overflow-ellipsis'>" + this.get('model.topic.fancyTitle') + "</div>",
           "class": "btn-primary btn-reply-on-original",
           "callback": function() {
             self.save(true);
