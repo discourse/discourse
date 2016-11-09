@@ -25,6 +25,9 @@ export default class Connector {
         templateName: opts.templateName,
         context
       });
+      if (Ember.setOwner) {
+        Ember.setOwner(view, Ember.getOwner(mounted));
+      }
       mounted._connected.push(view);
 
       view.renderer.replaceIn(view, $elem[0]);
