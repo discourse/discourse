@@ -574,6 +574,16 @@ fi:
     different_user_description: "Olet kirjautunut sisään eri käyttäjänä kuin jolle sähköposti lähetettiin. Ole hyvä ja kirjaudu ulos tai siirry anonyymitilaan, ja yritä sitten uudelleen."
     not_found_description: "Pahoittelut, tätä tilauksen perumista ei löytynyt. Kenties sinulle lähetetty linkki on vanhentunut?"
     log_out: "Kirjaudu ulos"
+  user_api_key:
+    title: "Anna sovellukselle käyttöoikeus"
+    authorize: "Anna käyttöoikeus"
+    read: "luku"
+    read_write: "luku/kirjoitus"
+    description: "\"%{application_name}\" pyytää seuraavaa käyttöoikeutta tunnukseesi:"
+    no_trust_level: "Pahoittelut, luottamustasosi ei ole riittävä käyttäjärajapinnan käyttämiseen"
+    generic_error: "Pahoittelut, API-salausavainta ei muodostettu; sivuston ylläpitäjä on saattanut ottaa ominaisuuden pois käytöstä"
+    scopes:
+      message_bus: "Reaaliaikaiset päivitykset"
   reports:
     visits:
       title: "Vierailut"

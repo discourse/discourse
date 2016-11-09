@@ -1166,12 +1166,46 @@ ar:
         category: "ابحث في فئة #{{category}}"
         topic: "ابحث في هذا الموضوع"
         private_messages: "البحث في الرسائل الخاصة"
+      advanced:
+        title: البحث التفصيلي
+        posted_by:
+          label: المشارك
+        in_category:
+          label: في الفئة
+        in_group:
+          label: في المجموعة
+        with_badge:
+          label: مع الشعارات
+        filters:
+          label: استرجع فقط المواضيع/المشاركات التي...
+          likes: أعجبني
+          posted: شاركت في
+          watching: أنا اراقب
+          tracking: أنا اتابع
+          private: من ضمن رسائلي
+          bookmarks: أضفت للمفضلات
+          first: تلك المشاركة الاولى
+        statuses:
+          label: عندما المواضيع
+          open: مفتوحة
+          closed: مغلقة
+          archived: محفوظة
+          noreplies: لا تحتوي على رد
+          single_user: تحتوي على مستخدم واحد
+        post:
+          count:
+            label: عدد المشاركات الأدنى
+          time:
+            label: ا’رْسِلت
+            before: قبل
+            after: بعد
     hamburger_menu: "انتقل إلى قائمة مواضيع أو فئة أخرى"
     new_item: "جديد"
     go_back: 'الرجوع'
     not_logged_in_user: 'صفحة المستخدم مع ملخص عن نشاطه و إعداداته'
     current_user: 'الذهاب إلى صفحتك الشخصية'
     topics:
+      new_messages_marker: "آخر مشاهدة"
       bulk:
         unlist_topics: "ازالة المواضيع من القائمة"
         reset_read: "تصفير القراءات"

@@ -10,6 +10,14 @@ nb_NO:
     short_date_no_year: "D MMM"
     short_date: "D MMM, YYYY"
     long_date: "MMMM D, YYYY h:mma"
+  datetime_formats: &datetime_formats
+    formats:
+      short: "%m-%d-%Y"
+      short_no_year: "%B %-d"
+      long: "%B %-d, %Y, %l:%M%P"
+  time:
+    am: "am"
+    <<: *datetime_formats
   title: "Discourse"
   topics: "Emner"
   posts: "innlegg"
@@ -745,6 +753,8 @@ nb_NO:
   csv_export:
     boolean_yes: "Ja"
     boolean_no: "Nei"
+  date:
+    <<: *datetime_formats
   activemodel:
     errors:
       <<: *errors

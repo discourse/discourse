@@ -2831,6 +2831,7 @@ et:
           developer: 'Arendaja'
           embedding: "Manustamised"
           legal: "Õiguslik"
+          user_api: 'Kasutaja API'
           uncategorized: 'Muu'
           backups: "Varukoopiad"
           login: "Sisselogimine"
@@ -2919,6 +2920,7 @@ et:
         sample: "Kasuta järgnevat HTML koodi oma saidil, et luua ja lisada/sängitada discourse teemad oma saidile. Asenda <b>REPLACE_ME</b> kanoonilise lehe URL-viitega, kuhu Sa seda lisad."
         title: "Sängitamine"
         host: "Lubatud hostid"
+        path_whitelist: "Lubatud aadressiosad"
         edit: "muuda"
         category: "Postita foorumisse"
         add_host: "Lisa host"
@@ -2958,7 +2960,9 @@ et:
       done: "Tehtud"
       back: "Tagasi"
       next: "Järgmine"
+      step: "%{current} %{total}st"
       upload: "Lae üles"
+      uploading: "Laen üles..."
       quit: "Võib-olla hiljem"
       staff_count:
         one: "Sinu kommuunis on 1 tiimi liige."
