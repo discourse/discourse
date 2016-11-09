@@ -1293,6 +1293,9 @@ user_preferences:
   default_categories_muted:
     type: category_list
     default: ''
+  default_categories_watching_first_post:
+    type: category_list
+    default: ''
 
 user_api:
   max_user_api_reqs_per_day:
