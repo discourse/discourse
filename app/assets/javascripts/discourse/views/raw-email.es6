@@ -1,7 +1,7 @@
 import ModalBodyView from "discourse/views/modal-body";
 
 export default ModalBodyView.extend({
-  templateName: 'modal/raw_email',
+  templateName: 'modal/raw-email',
   title: I18n.t('raw_email.title'),
 
   resizeModal: function(){
