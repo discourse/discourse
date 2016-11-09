@@ -38,7 +38,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
     if (row.length) { buttonRows.push(row); }
 
     this.set('buttonRows', buttonRows);
-    this.send('changeBulkTemplate', 'modal/bulk_actions_buttons');
+    this.send('changeBulkTemplate', 'modal/bulk-actions-buttons');
   },
 
   perform(operation) {
@@ -85,12 +85,12 @@ export default Ember.Controller.extend(ModalFunctionality, {
     },
 
     showChangeCategory() {
-      this.send('changeBulkTemplate', 'modal/bulk_change_category');
+      this.send('changeBulkTemplate', 'modal/bulk-change-category');
       this.set('modal.modalClass', 'topic-bulk-actions-modal full');
     },
 
     showNotificationLevel() {
-      this.send('changeBulkTemplate', 'modal/bulk_notification_level');
+      this.send('changeBulkTemplate', 'modal/bulk-notification-level');
     },
 
     deleteTopics() {

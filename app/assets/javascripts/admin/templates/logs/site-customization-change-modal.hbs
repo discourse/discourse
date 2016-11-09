@@ -11,7 +11,7 @@
     <div class="modal-tab new-tab {{unless newSelected 'invisible'}}">
       {{#if model.new_value}}
         {{#with model.new_value}}
-          {{partial "admin/templates/logs/site_customization_change_details"}}
+          {{partial "admin/templates/logs/site-customization-change-details"}}
         {{/with}}
       {{else}}
         {{i18n 'admin.logs.staff_actions.deleted'}}
@@ -20,7 +20,7 @@
     <div class="modal-tab previous-tab {{unless previousSelected 'invisible'}}">
       {{#if model.previous_value}}
         {{#with model.previous_value}}
-          {{partial "admin/templates/logs/site_customization_change_details"}}
+          {{partial "admin/templates/logs/site-customization-change-details"}}
         {{/with}}
       {{else}}
         {{i18n 'admin.logs.staff_actions.no_previous'}}

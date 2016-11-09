@@ -3,7 +3,7 @@ import showModal from 'discourse/lib/show-modal';
 export default Discourse.Route.extend({
   // TODO: make this automatic using an `{{outlet}}`
   renderTemplate: function() {
-    this.render('admin/templates/logs/staff_action_logs', {into: 'adminLogs'});
+    this.render('admin/templates/logs/staff-action-logs', {into: 'adminLogs'});
   },
 
   setupController: function(controller) {
