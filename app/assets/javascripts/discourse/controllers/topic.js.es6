@@ -841,16 +841,20 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
           this.send('postChangedRoute', topic.get('post_number') || 1);
         });
       } else {
-        const postNumber = data.post_number;
-        const notInPostStream = topic.get('highest_post_number') <= postNumber;
-        const postNumberDifference = postNumber - topic.get('currentPost');
+        if (topic.get('isPrivateMessage') &&
+            this.currentUser &&
+            this.currentUser.get('id') !== data.user_id) {
 
-        if (notInPostStream &&
-            topic.get('isPrivateMessage') &&
+          const postNumber = data.post_number;
+          const notInPostStream = topic.get('highest_post_number') <= postNumber;
+          const postNumberDifference = postNumber - topic.get('currentPost');
+
+          if (notInPostStream &&
             postNumberDifference > 0 &&
             postNumberDifference < 7) {
 
-          this._scrollToPost(data.post_number);
+            this._scrollToPost(data.post_number);
+          }
         }
       }
     });
