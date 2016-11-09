@@ -17,7 +17,7 @@ class ComposerMessagesFinder
 
   # Determines whether to show the user education text
   def check_education_message
-    return '' if @topic && @topic.archetype == Archetype.private_message
+    return if @topic && @topic.archetype == Archetype.private_message
 
     if creating_topic?
       count = @user.created_topic_count
@@ -37,7 +37,7 @@ class ComposerMessagesFinder
       }
     end
 
-    ''
+    nil
   end
 
   # New users have a limited number of replies in a topic
