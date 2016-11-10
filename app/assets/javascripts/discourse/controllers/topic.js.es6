@@ -10,6 +10,7 @@ import DiscourseURL from 'discourse/lib/url';
 import { categoryBadgeHTML } from 'discourse/helpers/category-link';
 import Post from 'discourse/models/post';
 import debounce from 'discourse/lib/debounce';
+import isElementInViewport from "discourse/lib/is-element-in-viewport";
 
 export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
   composer: Ember.inject.controller(),
@@ -864,9 +865,9 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
   _scrollToPost: debounce(function(postNumber) {
     const $post = $(`.topic-post article#post_${postNumber}`);
 
-    if ($post.length === 0) return;
+    if ($post.length === 0 || isElementInViewport($post)) return;
 
-    $('body').animate({ scrollTop: $post.offset().top }, 1000);
+    $('body').animate({ scrollTop: $post.offset().top - $post.height() }, 1000);
   }, 500),
 
   unsubscribe() {
