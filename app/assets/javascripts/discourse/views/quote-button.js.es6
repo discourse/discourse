@@ -11,7 +11,7 @@ export default Ember.View.extend({
   classNames: ['quote-button'],
   classNameBindings: ['visible'],
   isMouseDown: false,
-  isTouchInProgress: false,
+  _isTouchInProgress: false,
 
   // The button is visible whenever there is something in the buffer
   // (ie. something has been selected)
@@ -59,17 +59,23 @@ export default Ember.View.extend({
     }).on('selectionchange', () => {
       // there is no need to handle this event when the mouse is down
       // or if there a touch in progress
-      if (this.get('isMouseDown') || this.get('isTouchInProgress')) { return; }
+      if (this.get('isMouseDown') || this._isTouchInProgress) { return; }
       // `selection.anchorNode` is used as a target
       onSelectionChanged();
     });
 
     // Android is dodgy, touchend often will not fire
     // https://code.google.com/p/android/issues/detail?id=19827
-    if (!isAndroid) {
-      $(document)
-        .on('touchstart.quote-button', () => this.set('isTouchInProgress', true))
-        .on('touchend.quote-button', () => this.set('isTouchInProgress', false));
+    if (!this.isAndroid) {
+      $(document).on('touchstart.quote-button', () => {
+        this._isTouchInProgress = true;
+        return true;
+      });
+
+      $(document).on('touchend.quote-button', () => {
+        this._isTouchInProgress = false;
+        return true;
+      });
     }
   },
 
