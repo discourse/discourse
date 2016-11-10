@@ -1,4 +1,4 @@
-<section class='user-content'>
+<section class='user-content user-preferences'>
   <form class="form-horizontal">
 
     <div class="control-group">
@@ -25,7 +25,7 @@
       <div class="control-group">
         <label class="control-label">{{i18n 'user.email.title'}}</label>
         <div class="controls">
-          {{text-field value=newEmail id="change_email" classNames="input-xxlarge"}}
+          {{text-field value=newEmail id="change_email" classNames="input-xxlarge" autofocus="autofocus"}}
         </div>
         <div class='instructions'>
           {{#if taken}}

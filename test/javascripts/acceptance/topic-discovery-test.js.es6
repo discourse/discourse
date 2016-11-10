@@ -18,6 +18,7 @@ test("Visit Discovery Pages", () => {
 
   visit("/categories");
   andThen(() => {
+    ok($('body.navigation-categories').length, "has the body class");
     ok($('body.category-bug').length === 0, "removes the custom category class");
     ok(exists('.category'), "has a list of categories");
     ok($('body.categories-list').length, "has a custom class to indicate categories");
