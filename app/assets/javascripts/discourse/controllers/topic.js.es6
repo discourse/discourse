@@ -843,7 +843,8 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
       } else {
         if (topic.get('isPrivateMessage') &&
             this.currentUser &&
-            this.currentUser.get('id') !== data.user_id) {
+            this.currentUser.get('id') !== data.user_id &&
+            data.type === 'created') {
 
           const postNumber = data.post_number;
           const notInPostStream = topic.get('highest_post_number') <= postNumber;
