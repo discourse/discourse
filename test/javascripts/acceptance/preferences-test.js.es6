@@ -19,17 +19,23 @@ test("update some fields", () => {
   });
 });
 
-test("about me", () => {
+test("username", () => {
   visit("/users/eviltrout/preferences/username");
   andThen(() => {
-    ok(exists("#change_username"), "it has the input element for the bio");
+    ok(exists("#change_username"), "it has the input element");
   });
 });
 
-test("username", () => {
+test("about me", () => {
   visit("/users/eviltrout/preferences/about-me");
   andThen(() => {
-    ok(exists(".raw-bio"), "it has the input element for the bio");
+    ok(exists(".raw-bio"), "it has the input element");
   });
 });
 
+test("email", () => {
+  visit("/users/eviltrout/preferences/email");
+  andThen(() => {
+    ok(exists("#change_email"), "it has the input element");
+  });
+});
