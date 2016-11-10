@@ -373,9 +373,9 @@ class Topic < ActiveRecord::Base
   end
 
   # Using the digest query, figure out what's  new for a user since last seen
-  def self.new_since_last_seen(user, since, featured_topic_ids)
+  def self.new_since_last_seen(user, since, featured_topic_ids=nil)
     topics = Topic.for_digest(user, since)
-    topics.where("topics.id NOT IN (?)", featured_topic_ids)
+    featured_topic_ids ? topics.where("topics.id NOT IN (?)", featured_topic_ids) : topics
   end
 
   def meta_data=(data)

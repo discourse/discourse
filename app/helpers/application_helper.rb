@@ -107,6 +107,14 @@ module ApplicationHelper
     AgeWords.age_words(secs)
   end
 
+  def short_date(dt)
+    if dt.year == Time.now.year
+      I18n.l(dt, format: :short_no_year)
+    else
+      I18n.l(dt, format: :date_only)
+    end
+  end
+
   def guardian
     @guardian ||= Guardian.new(current_user)
   end

@@ -1279,6 +1279,7 @@ en:
     default_avatars: "URLs to avatars that will be used by default for new users until they change them."
     automatically_download_gravatars: "Download Gravatars for users upon account creation or email change."
     digest_topics: "The maximum number of topics to display in the email summary."
+    digest_posts: "The maximum number of popular posts to display in the email summary."
     digest_min_excerpt_length: "Minimum post excerpt in the email summary, in characters."
     delete_digest_email_after_days: "Suppress summary emails for users not seen on the site for more than (n) days."
     digest_suppress_categories: "Suppress these categories from summary emails."
@@ -2427,16 +2428,21 @@ en:
 
     digest:
       why: "A brief summary of %{site_link} since your last visit on %{last_seen_at}"
+      since_last_visit: "Since your last visit"
+      new_topics: "New Topics"
+      unread_messages: "Unread Messages"
+      unread_notifications: "Unread Notifications"
+      popular_topics: "Popular Topics"
+      follow_topic: "Follow this topic"
+      join_the_discussion: "Join the discussion"
+      popular_posts: "Popular Posts"
+      from_topic_label: "From"
+      more_new: "New in topics and categories you follow"
       subject_template: "[%{site_name}] Summary"
-      new_activity: "New activity on your topics and posts:"
-      top_topics: "Popular posts"
-      other_new_topics: "Popular topics"
       unsubscribe: "This summary is sent from %{site_link} when we haven't seen you in a while. To unsubscribe %{unsubscribe_link}."
       click_here: "click here"
       from: "%{site_name} summary"
-      read_more: "Read More"
-      more_topics: "There were %{new_topics_since_seen} other new topics."
-      more_topics_category: "More new topics:"
+      preheader: "A brief summary since your last visit on %{last_seen_at}"
       custom:
         html:
           header: ''
