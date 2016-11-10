@@ -43,6 +43,8 @@ test("perform various searches", assert => {
   visit("/search");
 
   andThen(() => {
+    ok($('body.search-page').length, "has body class");
+    ok(exists('.search-container'), "has container class");
     assert.ok(find('input.search').length > 0);
     assert.ok(find('.fps-topic').length === 0);
   });

@@ -5,6 +5,7 @@ test("update some fields", () => {
   visit("/users/eviltrout/preferences");
 
   andThen(() => {
+    ok($('body.user-preferences-page').length, "has the body class");
     equal(currentURL(), '/users/eviltrout/preferences', "it doesn't redirect");
     ok(exists('.user-preferences'), 'it shows the preferences');
   });

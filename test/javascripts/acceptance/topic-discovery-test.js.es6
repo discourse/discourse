@@ -4,6 +4,7 @@ acceptance("Topic Discovery");
 test("Visit Discovery Pages", () => {
   visit("/");
   andThen(() => {
+    ok($('body.navigation-topics').length, "has the default navigation");
     ok(exists(".topic-list"), "The list of topics was rendered");
     ok(exists('.topic-list .topic-list-item'), "has topics");
   });
