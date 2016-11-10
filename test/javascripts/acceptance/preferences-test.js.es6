@@ -18,3 +18,18 @@ test("update some fields", () => {
     ok(exists('.saved-user'), 'it displays the saved message');
   });
 });
+
+test("about me", () => {
+  visit("/users/eviltrout/preferences/username");
+  andThen(() => {
+    ok(exists("#change_username"), "it has the input element for the bio");
+  });
+});
+
+test("username", () => {
+  visit("/users/eviltrout/preferences/about-me");
+  andThen(() => {
+    ok(exists(".raw-bio"), "it has the input element for the bio");
+  });
+});
+
