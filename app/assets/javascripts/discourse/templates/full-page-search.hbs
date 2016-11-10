@@ -1,132 +1,134 @@
-<div class="search row clearfix">
-  {{search-text-field value=searchTerm class="full-page-search input-xxlarge search no-blur" action="search" hasAutofocus=hasAutofocus}}
-  {{d-button action="search" icon="search" class="btn-primary" disabled=searching}}
+{{#d-section pageClass="search" class="search-container"}}
+  <div class="search row clearfix">
+    {{search-text-field value=searchTerm class="full-page-search input-xxlarge search no-blur" action="search" hasAutofocus=hasAutofocus}}
+    {{d-button action="search" icon="search" class="btn-primary" disabled=searching}}
 
-  <div class='search-advanced'>
-    <button class="search-advanced-btn btn" {{action "toggleAdvancedSearch"}}>
-      {{{searchAdvancedIcon}}}
-      {{i18n "search.advanced.title"}}
-    </button>
+    <div class='search-advanced'>
+      <button class="search-advanced-btn btn" {{action "toggleAdvancedSearch"}}>
+        {{{searchAdvancedIcon}}}
+        {{i18n "search.advanced.title"}}
+      </button>
 
-    {{#if expanded}}
-      {{search-advanced-options searchTerm=searchTerm isExpanded=expanded}}
+      {{#if expanded}}
+        {{search-advanced-options searchTerm=searchTerm isExpanded=expanded}}
+      {{/if}}
+    </div>
+
+    {{#if canCreateTopic}}
+      <span class="new-topic-btn">{{d-button id="create-topic" class="btn-default" action="createTopic" actionParam=searchTerm icon="plus" label="topic.create"}}</span>
+    {{/if}}
+
+    {{#if canBulkSelect}}
+      {{d-button icon="list" class="bulk-select" title="topics.bulk.toggle" action="toggleBulkSelect"}}
+      {{bulk-select-button selected=selected action="search"}}
     {{/if}}
   </div>
 
-  {{#if canCreateTopic}}
-    <span class="new-topic-btn">{{d-button id="create-topic" class="btn-default" action="createTopic" actionParam=searchTerm icon="plus" label="topic.create"}}</span>
-  {{/if}}
-
-  {{#if canBulkSelect}}
-    {{d-button icon="list" class="bulk-select" title="topics.bulk.toggle" action="toggleBulkSelect"}}
-    {{bulk-select-button selected=selected action="search"}}
-  {{/if}}
-</div>
-
-{{#if bulkSelectEnabled}}
-  <div class='fps-select'>
-    <a {{action "selectAll"}}>{{i18n "search.select_all"}}</a>
-    <a {{action "clearAll"}}>{{i18n "search.clear_all"}}</a>
-  </div>
-{{/if}}
-
-{{#if invalidSearch}}
-  <div class='fps-invalid'>
-    {{i18n "search.too_short"}}
-  </div>
-{{/if}}
-
-{{#if context}}
-  <div class='fps-search-context'>
-    <label>
-      {{input type="checkbox" name="searchContext" checked=searchContextEnabled}} {{searchContextDescription}}
-    </label>
-  </div>
-{{/if}}
-
-{{#conditional-loading-spinner condition=loading}}
-
-  {{#unless hasResults}}
-    <h3>
-      {{#if searchActive}}
-        {{i18n "search.no_results"}}
-      {{/if}}
-    </h3>
-  {{/unless}}
-
-  {{#if hasResults}}
-    <div class='search-title clearfix'>
-      <div class='result-count'>
-        <span>
-          {{{i18n "search.result_count" count=resultCount term=noSortQ}}}
-        </span>
-      </div>
-      <div class='sort-by'>
-        <span class='desc'>
-          {{i18n "search.sort_by"}}
-        </span>
-        {{combo-box value=sortOrder content=sortOrders castInteger="true"}}
-      </div>
+  {{#if bulkSelectEnabled}}
+    <div class='fps-select'>
+      <a {{action "selectAll"}}>{{i18n "search.select_all"}}</a>
+      <a {{action "clearAll"}}>{{i18n "search.clear_all"}}</a>
     </div>
   {{/if}}
 
-  {{#each model.posts as |result|}}
-    <div class='fps-result'>
-      <div class='author'>
-        <a href={{result.userPath}} data-user-card="{{unbound result.username}}">
-          {{avatar result imageSize="large"}}
-        </a>
-      </div>
+  {{#if invalidSearch}}
+    <div class='fps-invalid'>
+      {{i18n "search.too_short"}}
+    </div>
+  {{/if}}
 
-      <div class='fps-topic'>
-        <div class='topic'>
-          {{#if bulkSelectEnabled}}
-            {{track-selected selectedList=selected selectedId=result.topic}}
-          {{/if}}
+  {{#if context}}
+    <div class='fps-search-context'>
+      <label>
+        {{input type="checkbox" name="searchContext" checked=searchContextEnabled}} {{searchContextDescription}}
+      </label>
+    </div>
+  {{/if}}
 
-          <a class='search-link' href='{{unbound result.url}}'>
-            {{topic-status topic=result.topic disableActions=true}}<span class='topic-title'>{{#highlight-text highlight=q}}{{{unbound result.topic.fancyTitle}}}{{/highlight-text}}</span>
-          </a>
+  {{#conditional-loading-spinner condition=loading}}
 
-          <div class='search-category'>
-            {{category-link result.topic.category}}
-            {{#each result.topic.tags as |tag|}}
-              {{discourse-tag tag}}
-            {{/each}}
-            {{plugin-outlet "full-page-search-category"}}
-          </div>
-        </div>
-
-        <div class='blurb container'>
-          <span class='date'>
-            {{format-age result.created_at}}
-            {{#if result.blurb}}
-            -
-            {{/if}}
-          </span>
-
-          {{#if result.blurb}}
-            {{#highlight-text highlight=q}}
-              {{{unbound result.blurb}}}
-            {{/highlight-text}}
-          {{/if}}
-        </div>
-
-        {{#if showLikeCount}}
-          {{#if result.like_count}}
-            <span class='like-count'>
-              {{result.like_count}} {{fa-icon "heart"}}
-            </span>
-          {{/if}}
+    {{#unless hasResults}}
+      <h3>
+        {{#if searchActive}}
+          {{i18n "search.no_results"}}
         {{/if}}
+      </h3>
+    {{/unless}}
+
+    {{#if hasResults}}
+      <div class='search-title clearfix'>
+        <div class='result-count'>
+          <span>
+            {{{i18n "search.result_count" count=resultCount term=noSortQ}}}
+          </span>
+        </div>
+        <div class='sort-by'>
+          <span class='desc'>
+            {{i18n "search.sort_by"}}
+          </span>
+          {{combo-box value=sortOrder content=sortOrders castInteger="true"}}
+        </div>
       </div>
-    </div>
-  {{/each}}
+    {{/if}}
 
-  {{#if hasResults}}
-    <h3 class="search-footer">
-      {{i18n "search.no_more_results"}}
-    </h3>
-  {{/if}}
+    {{#each model.posts as |result|}}
+      <div class='fps-result'>
+        <div class='author'>
+          <a href={{result.userPath}} data-user-card="{{unbound result.username}}">
+            {{avatar result imageSize="large"}}
+          </a>
+        </div>
 
-{{/conditional-loading-spinner}}
+        <div class='fps-topic'>
+          <div class='topic'>
+            {{#if bulkSelectEnabled}}
+              {{track-selected selectedList=selected selectedId=result.topic}}
+            {{/if}}
+
+            <a class='search-link' href='{{unbound result.url}}'>
+              {{topic-status topic=result.topic disableActions=true}}<span class='topic-title'>{{#highlight-text highlight=q}}{{{unbound result.topic.fancyTitle}}}{{/highlight-text}}</span>
+            </a>
+
+            <div class='search-category'>
+              {{category-link result.topic.category}}
+              {{#each result.topic.tags as |tag|}}
+                {{discourse-tag tag}}
+              {{/each}}
+              {{plugin-outlet "full-page-search-category"}}
+            </div>
+          </div>
+
+          <div class='blurb container'>
+            <span class='date'>
+              {{format-age result.created_at}}
+              {{#if result.blurb}}
+              -
+              {{/if}}
+            </span>
+
+            {{#if result.blurb}}
+              {{#highlight-text highlight=q}}
+                {{{unbound result.blurb}}}
+              {{/highlight-text}}
+            {{/if}}
+          </div>
+
+          {{#if showLikeCount}}
+            {{#if result.like_count}}
+              <span class='like-count'>
+                {{result.like_count}} {{fa-icon "heart"}}
+              </span>
+            {{/if}}
+          {{/if}}
+        </div>
+      </div>
+    {{/each}}
+
+    {{#if hasResults}}
+      <h3 class="search-footer">
+        {{i18n "search.no_more_results"}}
+      </h3>
+    {{/if}}
+
+  {{/conditional-loading-spinner}}
+{{/d-section}}

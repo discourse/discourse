@@ -1,4 +1,4 @@
-<section class='user-navigation'>
+{{#d-section class="user-navigation" pageClass="user-messages"}}
   {{#unless site.mobileView}}
     {{#if showNewPM}}
       {{d-button class="btn-primary new-private-message" action="composePrivateMessage" icon="envelope" label="user.new_private_message"}}
@@ -37,8 +37,7 @@
     {{/if}}
     {{/each}}
   {{/mobile-nav}}
-
-</section>
+{{/d-section}}
 
 <section class='user-right messages'>
 
