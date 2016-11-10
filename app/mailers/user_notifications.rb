@@ -99,28 +99,22 @@ class UserNotifications < ActionMailer::Base
 
     @last_seen_at = short_date(user.last_seen_at || user.created_at)
 
-    # A list of topics to show the user
-    @featured_topics = Topic.for_digest(user, min_date, limit: SiteSetting.digest_topics, top_order: true).to_a
+    @preheader_text = I18n.t('user_notifications.digest.preheader', last_seen_at: @last_seen_at)
 
-    # Don't send email unless there is content in it
-    if @featured_topics.present?
-      featured_topic_ids = @featured_topics.map(&:id)
+    @new_topics_count = Topic.new_since_last_seen(user, min_date).count
+    @unread_messages = user.unread_private_messages
+    @unread_notifications = user.unread_notifications
 
-      @new_topics_since_seen = Topic.new_since_last_seen(user, min_date, featured_topic_ids).count
-      if @new_topics_since_seen > SiteSetting.digest_topics
-        category_counts = Topic.new_since_last_seen(user, min_date, featured_topic_ids).group(:category_id).count
+    topics_for_digest = Topic.for_digest(user, min_date, limit: SiteSetting.digest_topics + 3, top_order: true).to_a
 
-        @new_by_category = []
-        if category_counts.present?
-          Category.where(id: category_counts.keys).each do |c|
-            @new_by_category << [c, category_counts[c.id]]
-          end
-          @new_by_category.sort_by! {|c| -c[1]}
-        end
-      end
+    @popular_topics = topics_for_digest[0,SiteSetting.digest_topics]
+    @popular_posts = SiteSetting.digest_posts > 0 ? Post.where("post_number > ?", 1).where("score > ?", 5.0).order("score DESC").limit(SiteSetting.digest_posts) : []
+    @other_new_for_you = topics_for_digest.size > SiteSetting.digest_topics ? topics_for_digest[SiteSetting.digest_topics..-1] : []
 
-      @featured_topics, @new_topics = @featured_topics[0..4], @featured_topics[5..-1]
+    topic_lookup = TopicUser.lookup_for(user, @other_new_for_you)
+    @other_new_for_you.each { |t| t.user_data = topic_lookup[t.id] }
 
+    if @popular_topics.present?
       opts = {
         from_alias: I18n.t('user_notifications.digest.from', site_name: SiteSetting.title),
         subject: I18n.t('user_notifications.digest.subject_template', site_name: @site_name, date: short_date(Time.now)),
@@ -131,6 +125,7 @@ class UserNotifications < ActionMailer::Base
       build_email(user.email, opts)
     end
   end
+
 
   def user_replied(user, opts)
     opts[:allow_reply_by_email] = true
@@ -421,7 +416,8 @@ class UserNotifications < ActionMailer::Base
     @date            = short_date(Time.now)
     @base_url        = Discourse.base_url
     @site_name       = SiteSetting.email_prefix.presence || SiteSetting.title
-    @header_color    = ColorScheme.hex_for_name('header_background')
+    @header_color    = ColorScheme.hex_for_name('header_primary')
+    @header_bgcolor  = ColorScheme.hex_for_name('header_background')
     @anchor_color    = ColorScheme.hex_for_name('tertiary')
     @markdown_linker = MarkdownLinker.new(@base_url)
     @unsubscribe_key = UnsubscribeKey.create_key_for(@user, "digest")

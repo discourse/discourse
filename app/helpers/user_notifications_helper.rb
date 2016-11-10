@@ -48,9 +48,9 @@ module UserNotificationsHelper
     doc.css('div').first
   end
 
-  def email_excerpt(html, posts_count)
+  def email_excerpt(html, posts_count=nil)
     # only include 1st paragraph when more than 1 posts
-    html = first_paragraph_from(html).to_s if posts_count > 1
+    html = first_paragraph_from(html).to_s if posts_count.nil? || posts_count > 1
     PrettyText.format_for_email(html).html_safe
   end
 
@@ -91,6 +91,10 @@ module UserNotificationsHelper
 
   def digest_custom(i18n_key)
     PrettyText.format_for_email(I18n.t(i18n_key)).html_safe
+  end
+
+  def email_image_url(basename)
+    UrlHelper.absolute("#{Discourse.base_uri}/images/emails/#{basename}")
   end
 
 end
