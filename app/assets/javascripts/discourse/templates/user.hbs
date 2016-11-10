@@ -1,5 +1,5 @@
-<div class="container{{if viewingSelf ' viewing-self'}}">
-  <section class='user-main'>
+<div class="container {{if viewingSelf 'viewing-self'}}">
+  {{#d-section class="user-main"}}
 
     <section class="{{if collapsedInfo 'collapsed-info'}} about {{if hasProfileBackground 'has-background' 'no-background'}}"  style={{model.profileBackground}}>
     {{#unless collapsedInfo}}
@@ -186,5 +186,5 @@
       </div>
     </div>
 
-  </section>
+  {{/d-section}}
 </div>

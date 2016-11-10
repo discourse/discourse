@@ -65,9 +65,7 @@ export default function() {
 
     this.get('/users/eviltrout.json', () => {
       const json = fixturesByUrl['/users/eviltrout.json'];
-      if (loggedIn()) {
-        json.user.can_edit = true;
-      }
+      json.user.can_edit = loggedIn();
       return response(json);
     });
 

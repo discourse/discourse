@@ -28,5 +28,6 @@ test("Root URL - Viewing Self", () => {
   andThen(() => {
     ok($('body.user-summary-page').length, "has the body class");
     equal(currentPath(), 'user.summary', "it defaults to summary");
+    ok(exists('.container.viewing-self'), "has the viewing-self class");
   });
 });
