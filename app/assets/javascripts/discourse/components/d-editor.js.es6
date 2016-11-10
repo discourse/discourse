@@ -205,6 +205,10 @@ export default Ember.Component.extend({
 
   _readyNow() {
     this.set('ready', true);
+
+    if (this.get('autofocus')) {
+      this.$('textarea').focus();
+    }
   },
 
   init() {

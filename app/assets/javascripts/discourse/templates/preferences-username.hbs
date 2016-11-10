@@ -18,13 +18,15 @@
     <div class="control-group">
       <label class="control-label">{{i18n 'user.username.title'}}</label>
       <div class="controls">
-        {{text-field value=newUsername id="change_username" classNames="input-xxlarge" maxlength=maxLength}}
+        {{text-field value=newUsername id="change_username" classNames="input-xxlarge" maxlength=maxLength autofocus="autofocus" insert-newline="changeUsername"}}
       </div>
-      <div class='instructions'>
+      <div class='instructions controls'>
+        <p>
         {{#if taken}}
           {{i18n 'user.change_username.taken'}}
         {{/if}}
-        <span>{{ errorMessage }}</span>
+        <span>{{errorMessage}}</span>
+        </p>
       </div>
     </div>
 
