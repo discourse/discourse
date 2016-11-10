@@ -686,6 +686,10 @@ const Composer = RestModel.extend({
     }).catch(throwAjaxError(function() {
       if (postStream) {
         postStream.undoPost(createdPost);
+
+        if (post) {
+          post.set('reply_count', post.get('reply_count') - 1);
+        }
       }
       Ember.run.next(() => composer.set('composeState', OPEN));
     }));
