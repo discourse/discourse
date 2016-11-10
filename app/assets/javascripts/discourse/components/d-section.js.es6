@@ -1,13 +1,8 @@
-import DiscourseURL from 'discourse/lib/url';
+import { scrollTop } from 'discourse/mixins/scroll-top';
 
 // Can add a body class from within a component, also will scroll to the top automatically.
 export default Ember.Component.extend({
   tagName: 'section',
-
-  _scrollTop() {
-    if (Ember.testing) { return; }
-    $(document).scrollTop(0);
-  },
 
   didInsertElement() {
     this._super();
@@ -26,8 +21,7 @@ export default Ember.Component.extend({
       return;
     }
 
-    if (DiscourseURL.isJumpScheduled()) { return; }
-    Ember.run.scheduleOnce('afterRender', this, this._scrollTop);
+    scrollTop();
   },
 
   willDestroyElement() {
