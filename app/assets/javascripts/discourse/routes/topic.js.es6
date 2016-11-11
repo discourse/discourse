@@ -117,7 +117,7 @@ const TopicRoute = Discourse.Route.extend({
 
     willTransition() {
       this._super();
-      this.controllerFor("quote-button").deselectText();
+      this.controllerFor("topic").send('deselectText');
       Em.run.cancel(scheduledReplace);
       isTransitioning = true;
       return true;

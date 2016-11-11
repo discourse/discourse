@@ -14,9 +14,7 @@ import isElementInViewport from "discourse/lib/is-element-in-viewport";
 
 export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
   composer: Ember.inject.controller(),
-  quoteButton: Ember.inject.controller('quote-button'),
   application: Ember.inject.controller(),
-
   multiSelect: false,
   allPostsSelected: false,
   editingTopic: false,
@@ -30,9 +28,9 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
   userTriggeredProgress: null,
   _progressIndex: null,
   hasScrolled: null,
-
   username_filters: null,
   filter: null,
+  quoteState: null,
 
   topicDelegated: [
     'toggleMultiSelect',
@@ -141,10 +139,12 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
       I18n.t("suggested_topics.title");
   },
 
-  _clearSelected: function() {
+  init() {
+    this._super();
     this.set('selectedPosts', []);
     this.set('selectedReplies', []);
-  }.on('init'),
+    this.set('quoteState', Ember.Object.create({ buffer: null, postId: null }));
+  },
 
   showCategoryChooser: Ember.computed.not("model.isPrivateMessage"),
 
@@ -166,6 +166,52 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
   },
 
   actions: {
+
+    deselectText() {
+      const quoteState = this.get('quoteState');
+      quoteState.setProperties({ buffer: null, postId: null });
+    },
+
+    selectText() {
+      const quoteState = this.get('quoteState');
+      const postStream = this.get('model.postStream');
+
+      const postId = quoteState.get('postId');
+      postStream.loadPost(postId).then(post => {
+        // If we can't create a post, delegate to reply as new topic
+        if (!this.get('model.details.can_create_post')) {
+          this.send('replyAsNewTopic', post);
+          return;
+        }
+
+        const composer = this.get('composer');
+        const composerOpts = {
+          action: Composer.REPLY,
+          draftKey: post.get('topic.draft_key')
+        };
+
+        if (post.get('post_number') === 1) {
+          composerOpts.topic = post.get("topic");
+        } else {
+          composerOpts.post = post;
+        }
+
+        // If the composer is associated with a different post, we don't change it.
+        const composerPost = composer.get('content.post');
+        if (composerPost && (composerPost.get('id') !== this.get('post.id'))) {
+          composerOpts.post = composerPost;
+        }
+
+        const quotedText = Quote.build(post, quoteState.get('buffer'));
+        composerOpts.quote = quotedText;
+        if (composer.get('content.viewOpen') || composer.get('content.viewDraft')) {
+          this.appEvents.trigger('composer:insert-text', quotedText);
+        } else {
+          composer.open(composerOpts);
+        }
+        this.send('deselectText');
+      });
+    },
 
     fillGapBefore(args) {
       return this.get('model.postStream').fillGapBefore(args.post, args.gap);
@@ -265,12 +311,14 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
 
     // Post related methods
     replyToPost(post) {
-      const composerController = this.get('composer'),
-          quoteController = this.get('quoteButton'),
-          quotedText = Quote.build(quoteController.get('post'), quoteController.get('buffer')),
-          topic = post ? post.get('topic') : this.get('model');
+      const composerController = this.get('composer');
+      const topic = post ? post.get('topic') : this.get('model');
 
-      quoteController.set('buffer', '');
+      const quoteState = this.get('quoteState');
+      const postStream = this.get('model.postStream');
+      const quotedPost = postStream.findLoadedPost(quoteState.get('postId'));
+      const quotedText = Quote.build(quotedPost, quoteState.get('buffer'));
+      this.send('deselectText');
 
       if (composerController.get('content.topic.id') === topic.get('id') &&
           composerController.get('content.action') === Composer.REPLY) {
@@ -597,11 +645,11 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
 
     replyAsNewTopic(post) {
       const composerController = this.get('composer');
-      const quoteController = this.get('quoteButton');
-      post = post || quoteController.get('post');
-      const quotedText = Quote.build(post, quoteController.get('buffer'));
 
-      quoteController.deselectText();
+      const quoteState = this.get('quoteState');
+      post = post || quoteState.get('post');
+      const quotedText = Quote.build(post, quoteState.get('buffer'));
+      this.send('deselectText');
 
       composerController.open({
         action: Composer.CREATE_TOPIC,
@@ -633,7 +681,6 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
     togglePostType(post) {
       const regular = this.site.get('post_types.regular');
       const moderator = this.site.get('post_types.moderator_action');
-
       return post.updatePostField('post_type', post.get('post_type') === moderator ? regular : moderator);
     },
 
@@ -921,7 +968,6 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
       }
     }
   },
-
 
   _showFooter: function() {
     const showFooter = this.get("model.postStream.loaded") && this.get("model.postStream.loadedAllPosts");
