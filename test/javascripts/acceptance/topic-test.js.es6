@@ -10,7 +10,6 @@ test("Share Popup", () => {
   click("[data-share-url]:eq(0)");
   andThen(() => {
     ok(exists('#share-link.visible'), 'it shows the popup');
-    ok(find('input[type=text]').val().length, 'it has the URL in the input box');
   });
 
   click('#share-link .close-share');
