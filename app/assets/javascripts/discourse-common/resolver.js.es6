@@ -4,8 +4,6 @@ import { findHelper } from 'discourse-common/lib/helpers';
 var classify = Ember.String.classify;
 var get = Ember.get;
 
-var LOADING_WHITELIST = ['badges', 'userActivity', 'userPrivateMessages', 'admin', 'adminFlags',
-                         'user', 'preferences', 'adminEmail', 'adminUsersList'];
 const _options = {};
 
 export function setResolverOption(name, value) {
