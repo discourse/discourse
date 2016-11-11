@@ -1248,6 +1248,7 @@ en:
     manual_polling_enabled: "Push emails using the API for email replies."
     pop3_polling_enabled: "Poll via POP3 for email replies."
     pop3_polling_ssl: "Use SSL while connecting to the POP3 server. (Recommended)"
+    pop3_polling_openssl_verify: "Verify TLS server certificate (Default: enabled)"
     pop3_polling_period_mins: "The period in minutes between checking the POP3 account for email. NOTE: requires restart."
     pop3_polling_port: "The port to poll a POP3 account on."
     pop3_polling_host: "The host to poll for email via POP3."
