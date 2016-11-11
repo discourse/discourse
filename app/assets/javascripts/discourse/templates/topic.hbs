@@ -224,6 +224,9 @@
 {{share-popup topic=model replyAsNewTopic="replyAsNewTopic"}}
 
 {{#if currentUser.enable_quoting}}
-  {{render "quote-button"}}
+  {{quote-button topic=model
+                 quoteState=quoteState
+                 selectText="selectText"
+                 deselectText="deselectText"}}
 {{/if}}
 
