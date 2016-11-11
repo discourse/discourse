@@ -113,6 +113,41 @@ describe DiscourseSingleSignOn do
     expect(admin_group.users.where('users.id = ?', user.id).exists?).to eq(true)
   end
 
+  it "can specify groups" do
+
+    user = Fabricate(:user)
+
+    add_group1 = Fabricate(:group, name: 'group1')
+    add_group2 = Fabricate(:group, name: 'group2')
+    existing_group = Fabricate(:group, name: 'group3')
+
+    existing_group.add(user)
+    existing_group.save!
+
+    add_group1.add(user)
+    existing_group.save!
+
+    sso = DiscourseSingleSignOn.new
+    sso.username = "bobsky"
+    sso.name = "Bob"
+    sso.email = user.email
+    sso.external_id = "A"
+
+    sso.add_groups = "#{add_group1.name},#{add_group2.name},badname"
+    sso.remove_groups = "#{existing_group.name},badname"
+
+    sso.lookup_or_create_user(ip_address)
+
+    existing_group.reload
+    expect(existing_group.usernames).to eq("")
+
+    add_group1.reload
+    expect(add_group1.usernames).to eq(user.username)
+
+    add_group2.reload
+    expect(add_group2.usernames).to eq(user.username)
+  end
+
   it "can override name / email / username" do
     admin = Fabricate(:admin)
 
