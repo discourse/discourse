@@ -221,7 +221,7 @@
   </div>
 {{/if}}
 
-{{render "share"}}
+{{share-popup topic=model replyAsNewTopic="replyAsNewTopic"}}
 
 {{#if currentUser.enable_quoting}}
   {{render "quote-button"}}
