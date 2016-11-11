@@ -1,6 +1,24 @@
 import { acceptance } from "helpers/qunit-helpers";
 acceptance("Topic", { loggedIn: true });
 
+test("Share Popup", () => {
+  visit("/t/internationalization-localization/280");
+  andThen(() => {
+    ok(!exists('#share-link.visible'), 'it is not visible');
+  });
+
+  click("[data-share-url]:eq(0)");
+  andThen(() => {
+    ok(exists('#share-link.visible'), 'it shows the popup');
+    ok(find('input[type=text]').val().length, 'it has the URL in the input box');
+  });
+
+  click('#share-link .close-share');
+  andThen(() => {
+    ok(!exists('#share-link.visible'), 'it closes the popup');
+  });
+});
+
 test("Showing and hiding the edit controls", () => {
   visit("/t/internationalization-localization/280");
 
