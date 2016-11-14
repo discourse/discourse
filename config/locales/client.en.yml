@@ -771,7 +771,8 @@ en:
         account_age_days: "Account age in days"
         create: "Send an Invite"
         generate_link: "Copy Invite Link"
-        generated_link_message: '<p>Invite link generated successfully!</p><p><input class="invite-link-input" style="width: 75%;" type="text" value="%{inviteLink}"></p><p>Invite link is only valid for this email address: <b>%{invitedEmail}</b></p>'
+        link_generated: "Invite link generated successfully!"
+        valid_for: "Invite link is only valid for this email address: %{email}"
         bulk_invite:
           none: "You haven't invited anyone here yet. You can send individual invites, or invite a bunch of people at once by <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>uploading a bulk invite file</a>."
           text: "Bulk Invite from File"
