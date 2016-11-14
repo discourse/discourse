@@ -1346,4 +1346,18 @@ describe User do
       end
     end
   end
+
+  describe "#featured_user_badges" do
+    let(:user) { Fabricate(:user) }
+    let!(:user_badge_tl1) { UserBadge.create(badge_id: 1, user: user, granted_by: Discourse.system_user, granted_at: Time.now) }
+    let!(:user_badge_tl2) { UserBadge.create(badge_id: 2, user: user, granted_by: Discourse.system_user, granted_at: Time.now) }
+
+    it 'should display highest trust level badge first' do
+      expect(user.featured_user_badges[0].badge_id).to eq(2)
+    end
+
+    it 'should display only 1 trust level badge' do
+      expect(user.featured_user_badges.length).to eq(1)
+    end
+  end
 end
