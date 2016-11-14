@@ -1,5 +1,6 @@
 import ModalFunctionality from 'discourse/mixins/modal-functionality';
 import { emailValid } from 'discourse/lib/utilities';
+import computed from 'ember-addons/ember-computed-decorators';
 
 export default Ember.Controller.extend(ModalFunctionality, {
   userInvitedShow: Ember.inject.controller('user-invited-show'),
@@ -10,6 +11,17 @@ export default Ember.Controller.extend(ModalFunctionality, {
   hasCustomMessage: false,
   customMessage: null,
   inviteIcon: "envelope",
+
+  @computed('isMessage', 'invitingToTopic')
+  title(isMessage, invitingToTopic) {
+    if (isMessage) {
+      return 'topic.invite_private.title';
+    } else if (invitingToTopic) {
+      return 'topic.invite_reply.title';
+    } else {
+      return 'user.invited.create';
+    }
+  },
 
   isAdmin: function(){
     return Discourse.User.currentProp("admin");
@@ -120,9 +132,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
   },
 
   successMessage: function() {
-    if (this.get('model.inviteLink')) {
-      return I18n.t('user.invited.generated_link_message', {inviteLink: this.get('model.inviteLink'), invitedEmail: this.get('emailOrUsername')});
-    } else if (this.get('hasGroups')) {
+    if (this.get('hasGroups')) {
       return I18n.t('topic.invite_private.success_group');
     } else if (this.get('isMessage')) {
       return I18n.t('topic.invite_private.success');
