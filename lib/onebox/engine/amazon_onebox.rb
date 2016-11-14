@@ -50,7 +50,7 @@ module Onebox
 
       def data
         result = { link: link,
-                   title: raw.css("title").inner_text,
+                   title: CGI.unescapeHTML(raw.css("title").inner_text),
                    image: image }
 
         result[:by_info] = raw.at("#by-line")
