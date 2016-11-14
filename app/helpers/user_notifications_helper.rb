@@ -58,7 +58,18 @@ module UserNotificationsHelper
     name.downcase.gsub(/[\s_-]/, '')
   end
 
+  def show_username_on_post(post)
+    return true if SiteSetting.prioritize_username_in_ux
+    return true unless SiteSetting.enable_names?
+    return true unless SiteSetting.display_name_on_posts?
+    return true unless post.user.name.present?
+
+    normalize_name(post.user.name) != normalize_name(post.user.username)
+  end
+
   def show_name_on_post(post)
+    return true unless SiteSetting.prioritize_username_in_ux
+
     SiteSetting.enable_names? &&
       SiteSetting.display_name_on_posts? &&
       post.user.name.present? &&
