@@ -28,9 +28,9 @@ export default Ember.Controller.extend(ModalFunctionality, {
   },
 
   actions: {
-    useUploadedAvatar() { this.set("selected", "uploaded"); },
-    useGravatar() { this.set("selected", "gravatar"); },
-    useSystem() { this.set("selected", "system"); },
+    uploadComplete() {
+      this.set("selected", "uploaded");
+    },
 
     refreshGravatar() {
       this.set("gravatarRefreshDisabled", true);
