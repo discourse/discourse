@@ -1,9 +1,9 @@
-<div class="modal-body">
+{{#d-modal-body title="tagging.rename_tag"}}
   <label>
     <p>{{i18n "tagging.rename_instructions"}}</p>
     {{input value=buffered.id maxlength=siteSettings.max_tag_length}}
   </label>
-</div>
+{{/d-modal-body}}
 
 <div class="modal-footer">
   {{d-button class="btn-primary"

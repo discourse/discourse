@@ -1,5 +1,5 @@
 <form>
-  <div class="modal-body">
+  {{#d-modal-body title="topic.auto_close_title" autoFocus="false"}}
     {{auto-close-form autoCloseTime=model.auto_close_time
                       autoCloseValid=auto_close_valid
                       autoCloseBasedOnLastPost=model.details.auto_close_based_on_last_post
@@ -10,7 +10,7 @@
         {{willCloseI18n}}
       </div>
     {{/if}}
-  </div>
+  {{/d-modal-body}}
   <div class="modal-footer">
     {{d-button class="btn-primary" disabled=disable_submit label="topic.auto_close_save" action="saveAutoClose"}}
     <a {{action "closeModal"}}>{{i18n 'cancel'}}</a>
