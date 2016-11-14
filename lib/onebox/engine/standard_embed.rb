@@ -41,7 +41,7 @@ module Onebox
         @raw
       end
 
-      private
+      protected
 
         def html_doc
           return @html_doc if @html_doc
