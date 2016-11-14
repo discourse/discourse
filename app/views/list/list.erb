@@ -33,7 +33,7 @@
       <a href='<%= t.relative_url %>' itemprop='item'>
         <span itemprop='name'><%= t.title %></span>
       </a>
-      <%= page_links(t) %>
+      <span class="page-links"><%= page_links(t) %></span>
       <% if (!@category || @category.has_children?) && t.category %>
         <span class='category'>[<a href='<%= t.category.url %>'><%= t.category.name %></a>]</span>
       <% end %>
