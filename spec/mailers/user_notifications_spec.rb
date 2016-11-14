@@ -232,6 +232,39 @@ describe UserNotifications do
 
 
       expect(mail.html_part.to_s.scan(/In Reply To/).count).to eq(0)
+
+
+
+      SiteSetting.enable_names = true
+      SiteSetting.display_name_on_posts = true
+      SiteSetting.prioritize_username_in_ux = false
+
+      response.user.username = "bobmarley"
+      response.user.name = "Bob Marley"
+      response.user.save
+
+      mail = UserNotifications.user_replied(response.user,
+                                             post: response,
+                                             notification_type: notification.notification_type,
+                                             notification_data_hash: notification.data_hash
+                                           )
+
+
+      mail_html = mail.html_part.to_s
+      expect(mail_html.scan(/>Bob Marley/).count).to eq(1)
+      expect(mail_html.scan(/>bobmarley/).count).to eq(0)
+
+      SiteSetting.prioritize_username_in_ux = true
+
+      mail = UserNotifications.user_replied(response.user,
+                                             post: response,
+                                             notification_type: notification.notification_type,
+                                             notification_data_hash: notification.data_hash
+                                           )
+
+      mail_html = mail.html_part.to_s
+      expect(mail_html.scan(/>Bob Marley/).count).to eq(0)
+      expect(mail_html.scan(/>bobmarley/).count).to eq(1)
     end
   end
 
