@@ -1,10 +1,9 @@
-import AddCategoryClass from 'discourse/mixins/add-category-class';
 import AddArchetypeClass from 'discourse/mixins/add-archetype-class';
 import ClickTrack from 'discourse/lib/click-track';
 import Scrolling from 'discourse/mixins/scrolling';
 import { selectedText } from 'discourse/lib/utilities';
 
-const TopicView = Ember.View.extend(AddCategoryClass, AddArchetypeClass, Scrolling, {
+const TopicView = Ember.View.extend(AddArchetypeClass, Scrolling, {
   templateName: 'topic',
   topic: Ember.computed.alias('controller.model'),
 
@@ -18,7 +17,6 @@ const TopicView = Ember.View.extend(AddCategoryClass, AddArchetypeClass, Scrolli
   menuVisible: true,
   SHORT_POST: 1200,
 
-  categoryFullSlug: Em.computed.alias('topic.category.fullSlug'),
   postStream: Em.computed.alias('topic.postStream'),
   archetype: Em.computed.alias('topic.archetype'),
 
