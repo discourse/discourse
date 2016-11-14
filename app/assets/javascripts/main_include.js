@@ -60,7 +60,6 @@
 //= require ./discourse/controllers/discovery-sortable
 //= require ./discourse/controllers/navigation/default
 //= require ./discourse/views/modal-body
-//= require ./discourse/views/flag
 //= require ./discourse/components/edit-category-panel
 //= require ./discourse/components/dropdown-button
 //= require ./discourse/components/notifications-button

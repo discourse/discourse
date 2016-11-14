@@ -1,6 +1,7 @@
 import ModalFunctionality from 'discourse/mixins/modal-functionality';
 import ActionSummary from 'discourse/models/action-summary';
 import { MAX_MESSAGE_LENGTH } from 'discourse/models/post-action-type';
+import computed from 'ember-addons/ember-computed-decorators';
 
 export default Ember.Controller.extend(ModalFunctionality, {
   userDetails: null,
@@ -12,6 +13,11 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
   onShow() {
     this.set('selected', null);
+  },
+
+  @computed('flagTopic')
+  title(flagTopic) {
+    return flagTopic ? 'flagging_topic.title' : 'flagging.title';
   },
 
   flagsAvailable: function() {
