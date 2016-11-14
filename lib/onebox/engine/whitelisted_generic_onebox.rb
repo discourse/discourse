@@ -220,10 +220,10 @@ module Onebox
 
         def generic_html
           return article_html  if is_article?
-          return embedded_html if is_embedded?
           return video_html    if is_video?
           return image_html    if is_image?
           return article_html  if has_text?
+          return embedded_html if is_embedded?
         end
 
         def is_article?
