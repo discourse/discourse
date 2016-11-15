@@ -344,6 +344,22 @@ export default Ember.Controller.extend({
           });
         });
       }
+    },
+
+    cannotSeeMention(mentions) {
+      mentions.forEach(mention => {
+        const translation = (this.get('topic.isPrivateMessage')) ?
+          'composer.cannot_see_mention.private' :
+          'composer.cannot_see_mention.category';
+        const body = I18n.t(translation, {
+          username: "@" + mention.name
+        });
+        this.appEvents.trigger('composer-messages:create', {
+          extraClass: 'custom-body',
+          templateName: 'custom-body',
+          body
+        });
+      });
     }
 
   },
