@@ -211,7 +211,8 @@ const User = RestModel.extend({
       'muted_tags',
       'tracked_tags',
       'watched_tags',
-      'watching_first_post_tags');
+      'watching_first_post_tags',
+      'date_of_birth');
 
     ['email_always',
      'mailing_list_mode',
