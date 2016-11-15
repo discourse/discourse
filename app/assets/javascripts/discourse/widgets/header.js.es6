@@ -20,6 +20,8 @@ const dropdown = {
   }
 };
 
+let hideRingBackdrop = false;
+
 createWidget('header-notifications', {
   settings: {
     avatarSize: 'medium'
@@ -44,7 +46,10 @@ createWidget('header-notifications', {
     if (!!unreadPMs) {
       if (!currentUser.get('read_first_notification')) {
         contents.push(h('span.ring'));
-        contents.push(h('span.ring-backdrop'));
+        if (!attrs.active && !hideRingBackdrop) {
+          contents.push(h('span.ring-backdrop'));
+          hideRingBackdrop = true;
+        }
       };
 
       contents.push(this.attach('link', { action: attrs.action,
