@@ -123,7 +123,7 @@
       .notifications {
         position: relative;
       }
-      .badge-notification, .ring {
+      .badge-notification, .ring, .ring-backdrop {
         position: absolute;
         top: -9px;
         z-index: 1;
@@ -133,7 +133,7 @@
         right: 0;
         background-color: scale-color($tertiary, $lightness: 50%);
       }
-      .unread-private-messages, .ring {
+      .unread-private-messages, .ring, .ring-backdrop {
         right: 25px;
       }
       .flagged-posts {

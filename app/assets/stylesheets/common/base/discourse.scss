@@ -166,6 +166,16 @@ body {
   &.badge-notification[href] {color: $secondary;}
 }
 
+.ring-backdrop {
+  width: 80px;
+  height: 80px;
+  top: -18px !important;
+  right: -18px !important;
+  box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.8);
+  border-radius: 100%;
+  z-index: 1040;
+}
+
 .ring {
   $gradient-start: transparent;
   $gradient-end: #090;
