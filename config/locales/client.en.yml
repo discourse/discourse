@@ -1045,6 +1045,9 @@ en:
       group_mentioned:
         one: "By mentioning {{group}}, you are about to notify <a href='{{group_link}}'>1 person</a> – are you sure?"
         other: "By mentioning {{group}}, you are about to notify <a href='{{group_link}}'>{{count}} people</a> – are you sure?"
+      cannot_see_mention:
+        category: "You mentioned {{username}} but they won't be notified because they do not have access to this category. Would you like to add them to a group that has access to this category?"
+        private: "You mentioned {{username}} but they won't be notified because they are unable to see this personal message. Would you like to add them to this PM?"
       duplicate_link: "It looks like your link to <b>{{domain}}</b> was already posted in the topic by <b>@{{username}}</b> in <a href='{{post_url}}'>a reply {{ago}}</a> – are you sure you want to post it again?"
 
       error:
