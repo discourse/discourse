@@ -22,7 +22,8 @@
 //= require vendor
 //= require ember-shim
 //= require pretty-text-bundle
-//= require main_include
+//= require application
+//= require plugin
 //= require htmlparser.js
 //= require admin
 
