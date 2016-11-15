@@ -529,6 +529,7 @@ describe TopicsController do
       get :show, topic_id: topic.id, slug: topic.slug
       expect(response).to be_success
       expect(css_select("link[rel=canonical]").length).to eq(1)
+      expect(response.headers["Cache-Control"]).to eq("no-store, must-revalidate, no-cache, private")
     end
   end
 
