@@ -1,17 +1,10 @@
-import ModalBodyView from "discourse/views/modal-body";
 import ClickTrack from 'discourse/lib/click-track';
 import { selectedText } from 'discourse/lib/utilities';
 
-export default ModalBodyView.extend({
-  templateName: 'modal/history',
-  title: I18n.t('history'),
+export default Ember.Component.extend({
+  didInsertElement() {
+    this._super();
 
-  resizeModal: function(){
-    const viewPortHeight = $(window).height();
-    this.$(".modal-body").css("max-height", Math.floor(0.8 * viewPortHeight) + "px");
-  }.on("didInsertElement"),
-
-  _inserted: function() {
     this.$().on('mouseup.discourse-redirect', '#revisions a', function(e) {
       // bypass if we are selecting stuff
       const selection = window.getSelection && window.getSelection();
@@ -26,11 +19,10 @@ export default ModalBodyView.extend({
 
       return ClickTrack.trackClick(e);
     });
+  },
 
-  }.on('didInsertElement'),
-
-  // This view is being removed. Shut down operations
-  _destroyed: function() {
+  willDestroyElement() {
+    this._super();
     this.$().off('mouseup.discourse-redirect', '#revisions a');
-  }.on('willDestroyElement')
+  }
 });
