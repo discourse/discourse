@@ -946,6 +946,7 @@ en:
     search_hint: 'username, email or IP address'
 
     create_account:
+      disclaimer: "By registering, you agree to the <a href='{{privacy_link}}'>privacy policy</a> and <a href='{{tos_link}}'>terms of service</a>."
       title: "Create New Account"
       failed: "Something went wrong, perhaps this email is already registered, try the forgot password link"
 
