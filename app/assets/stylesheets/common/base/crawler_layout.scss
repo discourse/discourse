@@ -11,9 +11,16 @@ body.crawler {
   div.topic-list div[itemprop='itemListElement'] {
     padding: 10px 0px;
     border-bottom: 1px solid #e9e9e9;
+    .page-links a {
+      padding: 0px 4px;
+    }
   }
-  .page-links a {
-    padding: 0px 4px;
+  div#main-outlet {
+    div.post {
+      img {
+        max-width: 100%;
+      }
+    }
   }
   footer nav {
     margin: 50px 0px;
