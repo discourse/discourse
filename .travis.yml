@@ -9,7 +9,7 @@ env:
     - "RAILS_MASTER=1"
 
 addons:
-  postgresql: 9.3
+  postgresql: 9.5
   apt:
     packages:
     - gifsicle
