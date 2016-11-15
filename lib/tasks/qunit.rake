@@ -63,7 +63,7 @@ task "qunit:test" => :environment do
     while tries < 3 && $?.exitstatus == 124
       tries += 1
       puts "\nTimed Out. Trying again...\n"
-      rake_system(cmd)
+      sh(cmd)
     end
 
     success &&= $?.success?
