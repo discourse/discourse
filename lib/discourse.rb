@@ -97,6 +97,7 @@ module Discourse
     set
   end
 
+
   def self.activate_plugins!
     all_plugins = Plugin::Instance.find_all("#{Rails.root}/plugins")
 
@@ -136,6 +137,14 @@ module Discourse
 
   def self.plugins
     @plugins ||= []
+  end
+
+  def self.official_plugins
+    plugins.find_all{|p| p.metadata.official?}
+  end
+
+  def self.unofficial_plugins
+    plugins.find_all{|p| !p.metadata.official?}
   end
 
   def self.assets_digest

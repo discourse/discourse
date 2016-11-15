@@ -393,6 +393,37 @@ JS
     end
   end
 
+  def handlebars_includes
+    assets.map do |asset, opts|
+      next if opts == :admin
+      next unless asset =~ DiscoursePluginRegistry::HANDLEBARS_REGEX
+      asset
+    end.compact
+  end
+
+  def javascript_includes
+    assets.map do |asset, opts|
+      next if opts == :admin
+      next unless asset =~ DiscoursePluginRegistry::JS_REGEX
+      asset
+    end.compact
+  end
+
+  def each_globbed_asset
+    if @path
+      # Automatically include all ES6 JS and hbs files
+      root_path = "#{File.dirname(@path)}/assets/javascripts"
+
+      Dir.glob("#{root_path}/**/*") do |f|
+        if File.directory?(f)
+          yield [f,true]
+        elsif f.to_s.ends_with?(".js.es6") || f.to_s.ends_with?(".hbs")
+          yield [f,false]
+        end
+      end
+    end
+  end
+
   protected
 
   def register_assets!
