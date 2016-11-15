@@ -184,10 +184,9 @@
                   {{#if model.isPrivateMessage}}
                     {{basic-topic-list hideCategory="true"
                                        showPosters="true"
-                                       topics=model.details.suggested_topics
-                                       postsAction="showTopicEntrance"}}
+                                       topics=model.details.suggested_topics}}
                   {{else}}
-                    {{basic-topic-list topics=model.details.suggested_topics postsAction="showTopicEntrance"}}
+                    {{basic-topic-list topics=model.details.suggested_topics}}
                   {{/if}}
                 </div>
                 <h3>{{{browseMoreMessage}}}</h3>
