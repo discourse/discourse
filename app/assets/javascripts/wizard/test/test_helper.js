@@ -2,7 +2,7 @@
 
 //= require env
 //= require jquery.debug
-//= require loader
+//= require discourse-loader
 //= require jquery.debug
 //= require handlebars
 //= require ember.debug
