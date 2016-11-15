@@ -137,9 +137,10 @@ export default Ember.Component.extend({
   },
 
   _renderUnseenMentions($preview, unseen) {
-    fetchUnseenMentions(unseen).then(() => {
+    fetchUnseenMentions(unseen, this.get('topic.id')).then(() => {
       linkSeenMentions($preview, this.siteSettings);
       this._warnMentionedGroups($preview);
+      this._warnCannotSeeMention($preview);
     });
   },
 
@@ -170,19 +171,33 @@ export default Ember.Component.extend({
 
   _warnMentionedGroups($preview) {
     Ember.run.scheduleOnce('afterRender', () => {
-      this._warnedMentions = this._warnedMentions || [];
-      var found = [];
+      var found = this.get('warnedGroupMentions') || [];
       $preview.find('.mention-group.notify').each((idx,e) => {
         const $e = $(e);
         var name = $e.data('name');
-        found.push(name);
-        if (this._warnedMentions.indexOf(name) === -1){
-          this._warnedMentions.push(name);
+        if (found.indexOf(name) === -1){
           this.sendAction('groupsMentioned', [{name: name, user_count: $e.data('mentionable-user-count')}]);
+          found.push(name);
         }
       });
 
-      this._warnedMentions = found;
+      this.set('warnedGroupMentions', found);
+    });
+  },
+
+  _warnCannotSeeMention($preview) {
+    Ember.run.scheduleOnce('afterRender', () => {
+      var found = this.get('warnedCannotSeeMentions') || [];
+      $preview.find('.mention.cannot-see').each((idx,e) => {
+        const $e = $(e);
+        var name = $e.data('name');
+        if (found.indexOf(name) === -1) {
+          this.sendAction('cannotSeeMention', [{name: name}]);
+          found.push(name);
+        }
+      });
+
+      this.set('warnedCannotSeeMentions', found);
     });
   },
 
@@ -490,6 +505,7 @@ export default Ember.Component.extend({
       }
 
       this._warnMentionedGroups($preview);
+      this._warnCannotSeeMention($preview);
 
       // Paint category hashtags
       const unseenCategoryHashtags = linkSeenCategoryHashtags($preview);

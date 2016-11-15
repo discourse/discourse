@@ -1602,6 +1602,9 @@ describe UsersController do
 
     let(:user) { Fabricate(:user) }
     let(:group) { Fabricate(:group, name: "Discourse") }
+    let(:topic) { Fabricate(:topic) }
+    let(:allowed_user) { Fabricate(:user) }
+    let(:private_topic) { Fabricate(:private_message_topic, user: allowed_user) }
 
     it "finds the user" do
       xhr :get, :is_local_username, username: user.username
@@ -1630,6 +1633,38 @@ describe UsersController do
       expect(response).to be_success
       json = JSON.parse(response.body)
       expect(json["valid"].size).to eq(0)
+    end
+
+    it "returns user who cannot see topic" do
+      Guardian.any_instance.expects(:can_see?).with(topic).returns(false)
+      xhr :get, :is_local_username, usernames: [user.username], topic_id: topic.id
+      expect(response).to be_success
+      json = JSON.parse(response.body)
+      expect(json["cannot_see"].size).to eq(1)
+    end
+
+    it "never returns a user who can see the topic" do
+      Guardian.any_instance.expects(:can_see?).with(topic).returns(true)
+      xhr :get, :is_local_username, usernames: [user.username], topic_id: topic.id
+      expect(response).to be_success
+      json = JSON.parse(response.body)
+      expect(json["cannot_see"].size).to eq(0)
+    end
+
+    it "returns user who cannot see a private topic" do
+      Guardian.any_instance.expects(:can_see?).with(private_topic).returns(false)
+      xhr :get, :is_local_username, usernames: [user.username], topic_id: private_topic.id
+      expect(response).to be_success
+      json = JSON.parse(response.body)
+      expect(json["cannot_see"].size).to eq(1)
+    end
+
+    it "never returns a user who can see the topic" do
+      Guardian.any_instance.expects(:can_see?).with(private_topic).returns(true)
+      xhr :get, :is_local_username, usernames: [allowed_user.username], topic_id: private_topic.id
+      expect(response).to be_success
+      json = JSON.parse(response.body)
+      expect(json["cannot_see"].size).to eq(0)
     end
 
   end

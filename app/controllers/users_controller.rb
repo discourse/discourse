@@ -242,11 +242,18 @@ class UsersController < ApplicationController
     usernames -= groups
     usernames.each(&:downcase!)
 
+    cannot_see = []
+    topic_id = params[:topic_id]
+    unless topic_id.blank?
+      topic = Topic.find_by(id: topic_id)
+      usernames.each{ |username| cannot_see.push(username) unless Guardian.new(User.find_by_username(username)).can_see?(topic) }
+    end
+
     result = User.where(staged: false)
                  .where(username_lower: usernames)
                  .pluck(:username_lower)
 
-    render json: {valid: result, valid_groups: groups, mentionable_groups: mentionable_groups}
+    render json: {valid: result, valid_groups: groups, mentionable_groups: mentionable_groups, cannot_see: cannot_see}
   end
 
   def render_available_true

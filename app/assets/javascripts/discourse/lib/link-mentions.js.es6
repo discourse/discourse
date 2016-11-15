@@ -1,16 +1,21 @@
 import { ajax } from 'discourse/lib/ajax';
 
 function replaceSpan($e, username, opts) {
+  let extra = "";
+  let extraClass = "";
+
   if (opts && opts.group) {
-    let extra = "";
-    let extraClass = "";
     if (opts.mentionable) {
       extra = `data-name='${username}' data-mentionable-user-count='${opts.mentionable.user_count}'`;
       extraClass = "notify";
     }
     $e.replaceWith(`<a href='${Discourse.getURL("/groups/") + username}' class='mention-group ${extraClass}' ${extra}>@${username}</a>`);
   } else {
-    $e.replaceWith(`<a href='${Discourse.getURL("/users/") + username.toLowerCase()}' class='mention'>@${username}</a>`);
+    if (opts && opts.cannot_see) {
+      extra = `data-name='${username}'`;
+      extraClass = "cannot-see";
+    }
+    $e.replaceWith(`<a href='${Discourse.getURL("/users/") + username.toLowerCase()}' class='mention ${extraClass}' ${extra}>@${username}</a>`);
   }
 }
 
@@ -18,6 +23,7 @@ const found = {};
 const foundGroups = {};
 const mentionableGroups = {};
 const checked = {};
+const cannotSee = [];
 
 function updateFound($mentions, usernames) {
   Ember.run.scheduleOnce('afterRender', function() {
@@ -25,7 +31,7 @@ function updateFound($mentions, usernames) {
       const $e = $(e);
       const username = usernames[i];
       if (found[username.toLowerCase()]) {
-        replaceSpan($e, username);
+        replaceSpan($e, username, { cannot_see: cannotSee[username] });
       } else if (foundGroups[username]) {
         replaceSpan($e, username, { group: true, mentionable: mentionableGroups[username] });
       } else if (checked[username]) {
@@ -45,11 +51,12 @@ export function linkSeenMentions($elem, siteSettings) {
   return [];
 }
 
-export function fetchUnseenMentions(usernames) {
-  return ajax("/users/is_local_username", { data: { usernames } }).then(r => {
+export function fetchUnseenMentions(usernames, topic_id) {
+  return ajax("/users/is_local_username", { data: { usernames, topic_id } }).then(r => {
     r.valid.forEach(v => found[v] = true);
     r.valid_groups.forEach(vg => foundGroups[vg] = true);
-    r.mentionable_groups.forEach(mg => mentionableGroups[mg] = true);
+    r.mentionable_groups.forEach(mg => mentionableGroups[mg.name] = mg);
+    r.cannot_see.forEach(cs => cannotSee[cs] = true);
     usernames.forEach(u => checked[u] = true);
     return r;
   });
