@@ -1,4 +1,4 @@
-var define, requireModule, require, requirejs;
+var define, require, requirejs;
 
 (function() {
 
@@ -134,7 +134,7 @@ var define, requireModule, require, requirejs;
     throw new Error('Could not find module ' + name);
   }
 
-  requirejs = require = requireModule = function(name) {
+  requirejs = require = function(name) {
     var mod = registry[name] || registry[MOVED_MODULES[name]];
 
 
@@ -180,6 +180,7 @@ var define, requireModule, require, requirejs;
 
     return (seen[name] = obj);
   };
+  window.requireModule = requirejs;
 
   function resolve(child, name) {
     if (child.charAt(0) !== '.') { return child; }
