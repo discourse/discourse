@@ -46,10 +46,6 @@ const ApplicationRoute = Discourse.Route.extend(OpenComposer, {
       return this._super();
     },
 
-    showTopicEntrance(data) {
-      this.controllerFor('topic-entrance').send('show', data);
-    },
-
     postWasEnqueued(details) {
       const title = details.reason ? 'queue_reason.' + details.reason + '.title' : 'queue.approval.title';
       showModal('post-enqueued', {model: details, title });
@@ -177,7 +173,6 @@ const ApplicationRoute = Discourse.Route.extend(OpenComposer, {
     this.render('application');
     this.render('user-card', { into: 'application', outlet: 'user-card' });
     this.render('modal', { into: 'application', outlet: 'modal' });
-    this.render('topic-entrance', { into: 'application', outlet: 'topic-entrance' });
     this.render('composer', { into: 'application', outlet: 'composer' });
   },
 

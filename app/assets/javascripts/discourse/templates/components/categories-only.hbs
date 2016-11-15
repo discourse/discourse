@@ -38,9 +38,7 @@
           {{#if showTopics}}
             <td class="latest">
               {{#each c.featuredTopics as |t|}}
-                {{featured-topic topic=t
-                                 latestTopicOnly=latestTopicOnly
-                                 action="showTopicEntrance"}}
+                {{featured-topic topic=t latestTopicOnly=latestTopicOnly}}
               {{/each}}
             </td>
           {{/if}}

@@ -12,7 +12,8 @@ export function showEntrance(e) {
         target = target.end();
       }
     }
-    getOwner(this).lookup('controller:application').send("showTopicEntrance", {topic: this.get('topic'), position: target.offset()});
+
+    this.appEvents.trigger('topic-entrance:show', { topic: this.get('topic'), position: target.offset() });
     return false;
   }
 }
