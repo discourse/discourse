@@ -2,6 +2,14 @@ var define, requireModule, require, requirejs;
 
 (function() {
 
+  var MOVED_MODULES = {
+    "discourse/views/list/post-count-or-badges": "discourse/raw-views/list/post-count-or-badges",
+    "discourse/views/list/posts-count-column" : "discourse/raw-views/list/posts-count-column",
+    "discourse/views/list/visited-line" : "discourse/raw-views/list/visited-line",
+    "discourse/views/topic-list-header-column" : "discourse/raw-views/topic-list-header-column",
+    "discourse/views/topic-status" : "discourse/raw-views/topic-status"
+  };
+
   var _isArray;
   if (!Array.isArray) {
     _isArray = function (x) {
@@ -48,7 +56,7 @@ var define, requireModule, require, requirejs;
     return this._require || (this._require = function(dep) {
       return require(resolve(dep, name));
     });
-  }
+  };
 
   define = function(name, deps, callback) {
     if (arguments.length < 2) {
@@ -76,7 +84,7 @@ var define, requireModule, require, requirejs;
     return new Alias(path);
   };
 
-  function reify(mod, name, seen) {
+  function reify(mod, name, rseen) {
     var deps = mod.deps;
     var length = deps.length;
     var reified = new Array(length);
@@ -88,11 +96,11 @@ var define, requireModule, require, requirejs;
     for (var i = 0, l = length; i < l; i++) {
       dep = deps[i];
       if (dep === 'exports') {
-        module.exports = reified[i] = seen;
+        module.exports = reified[i] = rseen;
       } else if (dep === 'require') {
         reified[i] = mod.makeRequire();
       } else if (dep === 'module') {
-        mod.exports = seen;
+        mod.exports = rseen;
         module = reified[i] = mod;
       } else {
         reified[i] = requireFrom(resolve(dep, name), name);
@@ -106,7 +114,16 @@ var define, requireModule, require, requirejs;
   }
 
   function requireFrom(name, origin) {
+
     var mod = registry[name];
+    if (!mod) {
+      var moved = MOVED_MODULES[name];
+      if (moved) {
+        console.warn("DEPRECATION: `" + name + "` was moved to `" + moved + "`");
+      }
+      mod = registry[moved];
+    }
+
     if (!mod) {
       throw new Error('Could not find module `' + name + '` imported from `' + origin + '`');
     }
@@ -116,8 +133,9 @@ var define, requireModule, require, requirejs;
   function missingModule(name) {
     throw new Error('Could not find module ' + name);
   }
+
   requirejs = require = requireModule = function(name) {
-    var mod = registry[name];
+    var mod = registry[name] || registry[MOVED_MODULES[name]];
 
 
     if (mod && mod.callback instanceof Alias) {
@@ -189,6 +207,6 @@ var define, requireModule, require, requirejs;
   requirejs.entries = requirejs._eak_seen = registry;
   requirejs.clear = function() {
     requirejs.entries = requirejs._eak_seen = registry = {};
-    seen = state = {};
+    seen = {};
   };
 })();

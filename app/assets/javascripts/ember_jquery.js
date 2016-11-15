@@ -1,5 +1,5 @@
 //= require env
 //= require jquery_include
 //= require ember_include
-//= require loader
+//= require discourse-loader
 //= require ember-shim
