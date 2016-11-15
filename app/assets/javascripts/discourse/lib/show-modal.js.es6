@@ -9,17 +9,21 @@ export default function(name, opts) {
 
   modalController.set('modalClass', null);
 
+  const controllerName = opts.admin ? `modals/${name}` : name;
+
   const viewClass = container.lookupFactory('view:' + name);
-  const controller = container.lookup('controller:' + name);
+  const controller = container.lookup('controller:' + controllerName);
   if (viewClass) {
     route.render(name, { into: 'modal', outlet: 'modalBody' });
   } else {
     const templateName = Ember.String.dasherize(name);
 
     const renderArgs = { into: 'modal', outlet: 'modalBody', view: 'modal-body'};
-    if (controller) { renderArgs.controller = name; }
+    if (controller) { renderArgs.controller = controllerName; }
 
-    route.render('modal/' + templateName, renderArgs);
+    const modalName = `modal/${templateName}`;
+    const fullName = opts.admin ? `admin/templates/${modalName}` : modalName;
+    route.render(fullName, renderArgs);
     if (opts.title) {
       modalController.set('title', I18n.t(opts.title));
     }

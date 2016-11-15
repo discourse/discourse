@@ -1,4 +1,4 @@
-<div class="modal-body">
+{{#d-modal-body title="admin.user.suspend_modal_title"}}
   <form>
     {{i18n 'admin.user.suspend_duration'}}
     {{text-field value=duration maxlength="5" autofocus="autofocus"}}
@@ -8,7 +8,8 @@
     <br/>
     {{text-field value=reason class="span8"}}
   </form>
-</div>
+{{/d-modal-body}}
+
 <div class="modal-footer">
   <button class='btn btn-danger' {{action "suspend"}} disabled={{submitDisabled}}><i class='fa fa-ban'></i>{{i18n 'admin.user.suspend'}}</button>
   <a {{action "closeModal"}}>{{i18n 'cancel'}}</a>
