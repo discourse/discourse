@@ -90,7 +90,6 @@
           {{/if}}
 
           </form>
-          <div class='disclaimer'>{{{disclaimerHtml}}}</div>
         </div>
       {{/if}}
     {{/d-modal-body}}
@@ -103,6 +102,8 @@
             {{i18n 'log_in'}}
           </button>
         {{/conditional-loading-spinner}}
+
+      <div class='disclaimer'>{{{disclaimerHtml}}}</div>
       </div>
     {{/if}}
   {{/unless}}
