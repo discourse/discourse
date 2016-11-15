@@ -608,6 +608,7 @@ email:
     default: false
     validator: "POP3PollingEnabledSettingValidator"
   pop3_polling_ssl: true
+  pop3_polling_openssl_verify: true
   pop3_polling_period_mins: 5
   pop3_polling_host: ''
   pop3_polling_port: 995
