@@ -125,6 +125,14 @@ export default Ember.Component.extend({
       this.rerender();
     });
 
+    onClick('button.bulk-select-all', function(){
+      $('input.bulk-select:not(:checked)').click();
+    });
+
+    onClick('button.bulk-clear-all', function(){
+      $('input.bulk-select:checked').click();
+    });
+
     onClick('th.sortable', function(e2){
       this.sendAction('changeSort', e2.data('sort-order'));
       this.rerender();
