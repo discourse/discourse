@@ -137,6 +137,8 @@ export default Ember.Component.extend({
   },
 
   _renderUnseenMentions($preview, unseen) {
+    // 'Create a New Topic' scenario is not supported (per conversation with codinghorror)
+    // https://meta.discourse.org/t/taking-another-1-7-release-task/51986/7
     fetchUnseenMentions(unseen, this.get('topic.id')).then(() => {
       linkSeenMentions($preview, this.siteSettings);
       this._warnMentionedGroups($preview);

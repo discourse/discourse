@@ -51,6 +51,8 @@ export function linkSeenMentions($elem, siteSettings) {
   return [];
 }
 
+// 'Create a New Topic' scenario is not supported (per conversation with codinghorror)
+// https://meta.discourse.org/t/taking-another-1-7-release-task/51986/7
 export function fetchUnseenMentions(usernames, topic_id) {
   return ajax("/users/is_local_username", { data: { usernames, topic_id } }).then(r => {
     r.valid.forEach(v => found[v] = true);
