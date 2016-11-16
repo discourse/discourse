@@ -344,6 +344,7 @@ class User < ActiveRecord::Base
   end
 
   def read_first_notification?
+    return true if (trust_level > TrustLevel[0] || created_at < 1.week.ago)
     notifications.order(created_at: :asc).first&.read || false
   end
 

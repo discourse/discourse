@@ -1318,7 +1318,7 @@ describe User do
   end
 
   describe '#read_first_notification?' do
-    let(:user) { Fabricate(:user) }
+    let(:user) { Fabricate(:user, trust_level: TrustLevel[0]) }
     let(:notification) { Fabricate(:private_message_notification, user: user) }
     let(:other_notification) { Fabricate(:private_message_notification, user: user) }
 
@@ -1336,13 +1336,29 @@ describe User do
         notification.update_attributes!(read: true)
         other_notification.update_attributes!(read: false)
 
-        expect(user.read_first_notification?).to eq(true)
+        expect(user.reload.read_first_notification?).to eq(true)
       end
     end
 
     describe 'when user does not have any notifications' do
       it 'should return the right value' do
         expect(user.read_first_notification?).to eq(false)
+      end
+    end
+
+    describe 'when user is not trust level 0' do
+      it 'should return the right value' do
+        user.update_attributes!(trust_level: TrustLevel[1])
+
+        expect(user.read_first_notification?).to eq(true)
+      end
+    end
+
+    describe 'when user is an old user' do
+      it 'should return the right value' do
+        user.update_attributes!(created_at: 1.year.ago)
+
+        expect(user.read_first_notification?).to eq(true)
       end
     end
   end
