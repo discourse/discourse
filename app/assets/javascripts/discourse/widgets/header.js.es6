@@ -45,6 +45,7 @@ createWidget('header-notifications', {
       if (!currentUser.get('read_first_notification')) {
         contents.push(h('span.ring'));
         if (!attrs.active && attrs.ringBackdrop) {
+          contents.push(h('span.ring-backdrop-spotlight'));
           contents.push(h('span.ring-backdrop',
             {},
             h('h1.ring-first-notification', {} ,I18n.t('user.first_notification'))
