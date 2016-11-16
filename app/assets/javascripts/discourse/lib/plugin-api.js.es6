@@ -11,7 +11,6 @@ import { preventCloak } from 'discourse/widgets/post-stream';
 import { h } from 'virtual-dom';
 import { addFlagProperty } from 'discourse/components/site-header';
 import { addPopupMenuOptionsCallback } from 'discourse/controllers/composer';
-import { emojiUrlFor } from 'discourse/lib/text';
 
 class PluginApi {
   constructor(version, container) {
