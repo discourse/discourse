@@ -36,25 +36,17 @@ page.open(args[0], function(status) {
   } else {
     page.evaluate(logQUnit);
 
-    var timeout = parseInt(args[1] || 120000, 10),
-        start = Date.now();
-
     var interval = setInterval(function() {
-      if (Date.now() > start + timeout) {
-        console.error("Tests timed out");
-        phantom.exit(124);
-      } else {
-        var qunitDone = page.evaluate(function() {
-          return window.qunitDone;
-        });
+      var qunitDone = page.evaluate(function() {
+        return window.qunitDone;
+      });
 
-        if (qunitDone) {
-          clearInterval(interval);
-          if (qunitDone.failed > 0) {
-            phantom.exit(1);
-          } else {
-            phantom.exit();
-          }
+      if (qunitDone) {
+        clearInterval(interval);
+        if (qunitDone.failed > 0) {
+          phantom.exit(1);
+        } else {
+          phantom.exit();
         }
       }
     }, 250);
@@ -67,6 +59,8 @@ function logQUnit() {
   var assertionErrors = [];
 
   console.log("\nRunning: " + JSON.stringify(QUnit.urlParams) + "\n");
+
+  QUnit.config.testTimeout = 30000;
 
   QUnit.moduleDone(function(context) {
     if (context.failed) {
