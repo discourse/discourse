@@ -20,8 +20,6 @@ const dropdown = {
   }
 };
 
-let hideRingBackdrop = false;
-
 createWidget('header-notifications', {
   settings: {
     avatarSize: 'medium'
@@ -46,9 +44,8 @@ createWidget('header-notifications', {
     if (!!unreadPMs) {
       if (!currentUser.get('read_first_notification')) {
         contents.push(h('span.ring'));
-        if (!attrs.active && !hideRingBackdrop) {
+        if (!attrs.active && attrs.ringBackdrop) {
           contents.push(h('span.ring-backdrop'));
-          hideRingBackdrop = true;
         }
       };
 
@@ -132,7 +129,8 @@ createWidget('header-icons', {
     const icons = [search, hamburger];
     if (this.currentUser) {
       icons.push(this.attach('user-dropdown', { active: attrs.userVisible,
-                                                action: 'toggleUserMenu' }));
+                                                action: 'toggleUserMenu',
+                                                ringBackdrop: attrs.ringBackdrop }));
     }
 
     return icons;
@@ -170,7 +168,8 @@ export default createWidget('header', {
     return { searchVisible: false,
              hamburgerVisible: false,
              userVisible: false,
-             contextEnabled: false };
+             contextEnabled: false,
+             ringBackdrop: true };
   },
 
   html(attrs, state) {
@@ -178,6 +177,7 @@ export default createWidget('header', {
                     this.attach('header-icons', { hamburgerVisible: state.hamburgerVisible,
                                                   userVisible: state.userVisible,
                                                   searchVisible: state.searchVisible,
+                                                  ringBackdrop: state.ringBackdrop,
                                                   flagCount: attrs.flagCount })];
 
     if (state.searchVisible) {
@@ -238,6 +238,7 @@ export default createWidget('header', {
   },
 
   toggleUserMenu() {
+    this.state.ringBackdrop = false;
     this.state.userVisible = !this.state.userVisible;
   },
 
