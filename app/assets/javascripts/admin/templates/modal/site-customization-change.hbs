@@ -7,26 +7,22 @@
       <a href {{action "selectPrevious"}}>{{i18n 'admin.logs.staff_actions.previous_value'}}</a>
     </li>
   </ul>
-  <div class="modal-body">
+  {{#d-modal-body title="admin.logs.staff_actions.modal_title"}}
     <div class="modal-tab new-tab {{unless newSelected 'invisible'}}">
       {{#if model.new_value}}
-        {{#with model.new_value}}
-          {{partial "admin/templates/logs/site-customization-change-details"}}
-        {{/with}}
+        {{site-customization-change-details change=model.new_value}}
       {{else}}
         {{i18n 'admin.logs.staff_actions.deleted'}}
       {{/if}}
     </div>
     <div class="modal-tab previous-tab {{unless previousSelected 'invisible'}}">
       {{#if model.previous_value}}
-        {{#with model.previous_value}}
-          {{partial "admin/templates/logs/site-customization-change-details"}}
-        {{/with}}
+        {{site-customization-change-details change=model.previous_value}}
       {{else}}
         {{i18n 'admin.logs.staff_actions.no_previous'}}
       {{/if}}
     </div>
-  </div>
+  {{/d-modal-body}}
   <div class="modal-footer">
     <button class='btn btn-primary' {{action "closeModal"}}>{{i18n 'close'}}</button>
   </div>
