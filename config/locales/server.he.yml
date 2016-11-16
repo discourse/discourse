@@ -71,7 +71,7 @@ he:
       has_already_been_used: "כבר בשימוש"
       inclusion: לא נכלל ברשימה
       invalid: לא תקין
-      is_invalid: "אינו קביל; נסו להיות מעט יותר מפורטים"
+      is_invalid: "נראה לא ברור, האם זה משפט שלם?"
       less_than: חייב להיות פחות מ-%{count}
       less_than_or_equal_to: חייב להיות פחות או שווה ל-%{count}
       not_a_number: אינו מספר
@@ -159,7 +159,7 @@ he:
   topic_not_found: "משהו השתבש אולי נושא זה נסגר או נמחק בזמן שקראתם אותו?"
   just_posted_that: "דומה מידי למה שפרסמתם לאחרונה"
   invalid_characters: "מכיל תווים לא תקניים"
-  is_invalid: "אינו תקין: נסו להיות יותר מפורטים"
+  is_invalid: "נראה לא ברור, האם זה משפט שלם?"
   next_page: "עמוד הבא ←"
   prev_page: "→ עמוד קודם"
   page_num: "עמוד %{num}"
@@ -749,6 +749,7 @@ he:
     poll_pop3_auth_error: "החיבור לשרת POP3 נכשל בשל שגיאת הזדהות. אנא בדקו את <a href='/admin/site_settings/category/email'> הגדרות ה-POP3 </a> שלכם."
   site_settings:
     censored_words: "מלים שיוחלפו באופן אוטומטי ב- &#9632;&#9632;&#9632;&#9632;"
+    censored_pattern: "ביטוי רגולרי שיוחלף אוטומטית עם &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "מחיקת אוטומטית של פרסומים מוסתרים שנותרים מוסתרים במשך יותר מ-30 יום."
     default_locale: "שפת ברירת המחדל עבור אתר Discourse זה (קוד ISO 639-1)"
     allow_user_locale: "אפשרו למשתמשים לבחור את הגדרות השפה שלהם בממשק המשתמש/ת"
@@ -1247,6 +1248,7 @@ he:
       reply_by_email_address_is_empty: "אתם חייבים להגדיר את 'מענה באמצעות כתובת מייל' לפני שאתם מאפשרים תגובה באמצעות מייל."
       email_polling_disabled: "עליכם לאפשר ידני או תשאול POP3 לפני שתאפשרו מענה באמצעות מייל."
       user_locale_not_enabled: "לפני שתוכלו להפעיל אפשרות זאת, יש לאפשר \"הגדרות מקומיות מותאמות משתמש/ת\""
+      invalid_regex: "ביטוי רגולרי לא תקין או לא מותר."
   search:
     within_post: "#%{post_number} פוסטים של %{username}"
     types:
@@ -2915,7 +2917,7 @@ he:
           contact_url:
             label: "דף ווב"
             placeholder: "http://www.example.com/contact-us"
-            description: "דף אינטרנט כללי ליצירת קשר איתכם או הארגון שלכם. יוצג ב<a href='/about' target='_blank'>דף האודות</a>."
+            description: "דף יצירת קשר כללי איתכם או עם הארגון שלכם. יוצג ב<a href='/about' target='_blank'>דף האודות שלכם</a>."
           site_contact:
             label: "הודעות אוטומטיות"
             description: "כל ההודעות הפרטיות והאוטומטיות של Discourse יישלחו ממשתמש זה. הכי חשוב, משתמש זה יהיה השולח הנבחר של כל הודעת ברוכים הבאים שנשלחת אוטומטית למשתמשים חדשים."

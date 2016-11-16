@@ -44,7 +44,6 @@ zh_TW:
       has_already_been_used: "已經被使用"
       inclusion: 不包括在這列表中
       invalid: 無效的
-      is_invalid: "無效，請再仔細描述"
       less_than: 必須少於 %{count}
       less_than_or_equal_to: 必須少於或等於 %{count}
       not_a_number: 不是數字
@@ -100,7 +99,6 @@ zh_TW:
   topic_not_found: "出現問題。也許這個話題被關閉或刪除。"
   just_posted_that: "與你最近發表的內容太相似"
   invalid_characters: "包含無效字詞"
-  is_invalid: "無效，請再仔細描述"
   next_page: "下一頁 &rarr;"
   prev_page: "← 上一頁"
   page_num: "%{num} 頁"

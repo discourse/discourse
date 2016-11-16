@@ -2244,7 +2244,6 @@ pl_PL:
             label: "Wycofaj"
             title: "Wycofaj bazę danych do poprzedniego poprawnego stanu"
       export_csv:
-        user_archive_confirm: "Czy na pewno chcesz pobrać swoje wszystkie wpisy?"
         success: "Rozpoczęto eksport: otrzymasz wiadomość, gdy proces zostanie zakończony."
         failed: "Eksport zakończył się niepowodzeniem. Sprawdź logi."
         rate_limit_error: "Wpisy mogą być pobierane raz dziennie, spróbuj ponownie jutro."

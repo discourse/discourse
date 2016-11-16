@@ -1892,7 +1892,6 @@ gl:
             title: "Reverter a base de datos ao estado de funcionamento anterior"
             confirm: "Confirmas a reversión da base de datos ao estado de funcionamento anterior?"
       export_csv:
-        user_archive_confirm: "Confirmas a descarga das túas publicacións?"
         success: "Iniciouse a exportación, notificarémosche cunha mensaxe o remate do proceso."
         failed: "Produciuse un fallo na exportación. Comproba os rexistros."
         rate_limit_error: "Só se poden descargar as publicacións unha vez por día. Téntao de novo mañá."

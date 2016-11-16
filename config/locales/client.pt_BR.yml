@@ -2295,7 +2295,6 @@ pt_BR:
             title: "Reverter o banco de dados para seu estado anterior"
             confirm: "Tem certeza que deseja reverter o banco de dados para seu estado anterior?"
       export_csv:
-        user_archive_confirm: "Tem certeza que você quer baixar os seus tópicos?"
         success: "Exportação iniciada, você será notificado por mensagem particular quando o processo estiver completo."
         failed: "Falha na exportação. Por favor verifique os logs."
         rate_limit_error: "O download de posts pode ser feito apenas uma vez por dia, por favor, tente novamente amanhã."

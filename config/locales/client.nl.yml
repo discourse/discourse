@@ -2383,7 +2383,6 @@ nl:
             title: "Herstel de database naar de laatst werkende versie"
             confirm: "Weet je zeker dat je de database wilt terugzetten naar de vorige werkende staat?"
       export_csv:
-        user_archive_confirm: "Weet je zeker dat je al je berichten wilt downloaden?"
         success: "Exporteren is gestart, je zult een bericht ontvangen als het proces is afgerond."
         failed: "Exporteren is mislukt. Controleer de logbestanden."
         rate_limit_error: "Berichten kunnen één keer per dag gedownload worden, probeer het morgen nog eens."

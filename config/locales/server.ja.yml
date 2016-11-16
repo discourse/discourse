@@ -53,7 +53,6 @@ ja:
       has_already_been_used: "は既に使用されています"
       inclusion: は一覧にありません
       invalid: は正しくありません
-      is_invalid: "に問題があります。長さなど、不備が無いか確認してください。"
       less_than: は%{count}より小さい値にしてください
       less_than_or_equal_to: は%{count}以下の値にしてください
       not_a_number: は数値で入力してください
@@ -110,7 +109,6 @@ ja:
   topic_not_found: "問題が発生しました。トピックがクローズしたか、閲覧中に削除された可能性があります。"
   just_posted_that: "は最近の投稿と内容がほぼ一緒です"
   invalid_characters: "は不正な文字を含んでいます"
-  is_invalid: "に問題があります。長さなど、不備が無いか確認してください。"
   next_page: "次のページ →"
   prev_page: "← 前のページ"
   page_num: "%{num} ページ"
@@ -1152,6 +1150,7 @@ ja:
       new_activity: "あなたのトピックおよびポストにおけるアクティビティ:"
       top_topics: "人気の投稿"
       other_new_topics: "人気のトピック"
+      unsubscribe: "このお知らせは%{site_link}から送信されました。購読を解除したい場合は%{unsubscribe_link}してください。"
       click_here: "ここをクリック"
       read_more: "もっと読む"
       more_topics: " %{new_topics_since_seen}個の新しいトピックがありました"

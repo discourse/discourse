@@ -71,7 +71,6 @@ et:
       has_already_been_used: "on juba kasutusel"
       inclusion: puudub nimekirjas
       invalid: pole korrektne
-      is_invalid: "pole korrektne; katsu olla pisut täpsem"
       less_than: peab olema väiksem kui %{count}
       less_than_or_equal_to: peab olema väiksem või võrdne kui %{count}
       not_a_number: ei ole number
@@ -158,7 +157,6 @@ et:
   topic_not_found: "Midagi on valesti. Kas on võimalik, et antud teema suleti või kustutati samal ajal, kui te seda vaatasite?"
   just_posted_that: "on liiga sarnane sellele, mida sa hiljuti postitasid"
   invalid_characters: "sisaldab ebasobivaid tähemärke"
-  is_invalid: "pole korrektne, püüa kirjeldada täpsemalt"
   next_page: "järgmine leht →"
   prev_page: "← eelmine leht"
   page_num: "Leht %{num}"

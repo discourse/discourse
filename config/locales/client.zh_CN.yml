@@ -2199,7 +2199,6 @@ zh_CN:
             title: "将数据库回滚到之前的工作状态"
             confirm: "你确定要将数据库回滚到之前的工作状态吗？"
       export_csv:
-        user_archive_confirm: "你确定要下载你的帖子吗？"
         success: "导出开始，完成后你将被通过消息通知。"
         failed: "导出失败。请检查日志。"
         rate_limit_error: "帖子只能每天下载一次，请明天再重试。"

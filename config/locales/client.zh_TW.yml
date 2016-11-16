@@ -1583,7 +1583,6 @@ zh_TW:
             label: "回溯"
             title: "回溯資料庫到以前的工作階段"
       export_csv:
-        user_archive_confirm: "你確定要下載你的文章嗎?"
         success: "開始匯出，處理完畢後將以私人訊息通知你。"
         failed: "匯出失敗。請觀看紀錄。"
         rate_limit_error: "文章每天只能下載一次，請明天再試。"

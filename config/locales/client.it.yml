@@ -2171,7 +2171,6 @@ it:
             title: "Ripristina il database a una versione funzionante precedente"
             confirm: "Sei sicuro di voler ripristinare il database alla versione funzionante precedente?"
       export_csv:
-        user_archive_confirm: "Sei sicuro di voler scaricare i tuoi messaggi?"
         success: "Esportazione iniziata, verrai avvertito con un messaggio al termine del processo."
         failed: "Esportazione fallita. Controlla i log."
         rate_limit_error: "I messaggi possono essere scaricati una volta al giorno, prova ancora domani."

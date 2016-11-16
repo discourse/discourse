@@ -69,7 +69,6 @@ da:
       has_already_been_used: "er allerede blevet brugt"
       inclusion: er ikke inkluderet i listen
       invalid: er ikke gyldig
-      is_invalid: "er ugyldig; prøv at være mere beskrivende"
       less_than: skal være mindre end %{count}
       less_than_or_equal_to: skal være mindre end eller lig med %{count}
       not_a_number: er ikke et nummer
@@ -156,7 +155,6 @@ da:
   topic_not_found: "Der er gået noget galt. Måske er emnet blevet lukket eller slettet mens du kiggede på det?"
   just_posted_that: "ligner et andet indlæg, som du har skrevet for nyligt, for meget"
   invalid_characters: "indeholder ugyldige tegn"
-  is_invalid: "er ugyldig; prøv at være mere beskrivende"
   next_page: "næste side →"
   prev_page: "← forrige side"
   page_num: "Side %{num}"

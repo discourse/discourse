@@ -2269,7 +2269,6 @@ tr_TR:
             title: "Veritabanını calışan son haline geri al"
             confirm: "Veritabanını çalışan son haline döndürmek istediğinize emin misiniz?"
       export_csv:
-        user_archive_confirm: "Gönderilerinizi indirmek istediğinize emin misiniz ?"
         success: "Dışarı aktarma başlatıldı, işlem tamamlandığında iletiyle  bilgilendirileceksiniz."
         failed: "Dışa aktarırken hata oluştu. Lütfen kayıtları kontrol edin."
         rate_limit_error: "Gönderiler günde bir kez indirilebilir, lütfen yarın tekrar deneyin."

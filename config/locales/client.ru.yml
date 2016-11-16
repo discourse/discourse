@@ -453,6 +453,11 @@ ru:
       latest_by: "последние по"
       toggle_ordering: "изменить сортировку"
       subcategories: "Подразделы"
+      topic_sentence:
+        one: "1 тема"
+        few: "%{count} тем"
+        many: "%{count} тем"
+        other: "%{count} тем"
       topic_stat_sentence:
         one: "%{count} новая тема за предыдущий %{unit}."
         few: "%{count} новые темы за предыдущий %{unit}."
@@ -481,6 +486,7 @@ ru:
       mute: "Отключить"
       edit: "Настройки"
       download_archive: "Скачать архив сообщений"
+      download_archive_confirm: "Вы уверены, что хотите скачать все ваши сообщения?"
       new_private_message: "Новое сообщение"
       private_message: "Личное сообщение"
       private_messages: "Личные сообщения"
@@ -853,11 +859,18 @@ ru:
     logout: "Вы вышли."
     refresh: "Обновить"
     read_only_mode:
+      enabled: "Сайт работает в режиме \"только для чтения\". Сейчас вы можете продолжать просматривать сайт, но другие действия будут недоступны. "
       login_disabled: "Вход отключён, пока сайт в режиме «только для чтения»"
       logout_disabled: "Выход отключён, пока сайт в режиме «только для чтения»"
     too_few_topics_and_posts_notice: "Давайте <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>приступим к обсуждению!</a> Сейчас <strong>%{currentTopics} / %{requiredTopics}</strong> тем и <strong>%{currentPosts} / %{requiredPosts}</strong> сообщений. Новым пользователям будет интереснее тут, если появится больше тем для обсуждений."
     too_few_topics_notice: "Давайте <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>приступим к обсуждению!</a> Сейчас <strong>%{currentTopics} / %{requiredTopics}</strong> тем. Новым пользователям будет интереснее тут, если появится больше тем для обсуждений."
     too_few_posts_notice: "Давайте <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>приступим к обсуждению!</a>  Сейчас <strong>%{currentPosts} / %{requiredPosts}</strong> сообщений. Новым пользователям будет интереснее тут, если появится больше сообщений для обсуждения."
+    logs_error_rate_notice:
+      rate:
+        one: "1 ошибка/%{duration}"
+        few: "%{count} ошибок/%{duration}"
+        many: "%{count} ошибок/%{duration}"
+        other: "%{count} ошибок/%{duration}"
     learn_more: "подробнее..."
     all_time: 'всего'
     all_time_desc: 'всего создано тем'
@@ -1103,6 +1116,8 @@ ru:
         edited: "Изменил ваше сообщение"
         liked: "Понравилось ваше сообщение"
         private_message: "Личное сообщение от"
+        invited_to_private_message: "Приглашение в личную беседе от"
+        invited_to_topic: "Приглашение в тему от"
         invitee_accepted: "Приглашение принято"
         moved_post: "Ваша тема перенесена участником "
         linked: "Ссылка на ваше сообщение"
@@ -1222,6 +1237,7 @@ ru:
           other: "Вы выбрали <b>{{count}}</b> тем."
         change_tags: "Изменить тэги"
         choose_new_tags: "Выбрать новые тэги для выбранных тем:"
+        changed_tags: "Теги этой темы были изменены."
       none:
         unread: "У вас нет непрочитанных тем."
         new: "У вас нет новых тем."
@@ -1250,6 +1266,11 @@ ru:
     topic:
       unsubscribe:
         change_notification_state: "Ваше текущее состояние уведомлений"
+      filter_to:
+        one: "1 сообщение в теме"
+        few: "{{post_count}} сообщений в теме"
+        many: "{{post_count}} сообщений в теме"
+        other: "{{post_count}} сообщений в теме"
       create: 'Создать Тему'
       create_long: 'Создать новую тему'
       private_message: 'Новое личное соощение'
@@ -1585,6 +1606,7 @@ ru:
         edit: "К сожалению, не удалось изменить сообщение. Попробуйте еще раз."
         upload: "К сожалению, не удалось загрузить файл. Попробуйте еще раз."
         too_many_uploads: "К сожалению, за один раз можно загрузить только одно изображение."
+        too_many_dragged_and_dropped_files: "К сожалению, за один раз можно загрузить только 10 файлов."
         upload_not_authorized: "К сожалению, вы не можете загрузить файл данного типа (список разрешенных типов файлов: {{authorized_extensions}})."
         image_upload_not_allowed_for_new_user: "К сожалению, загрузка изображений недоступна новым пользователям."
         attachment_upload_not_allowed_for_new_user: "К сожалению, загрузка файлов недоступна новым пользователям."
@@ -1595,6 +1617,8 @@ ru:
         yes_value: "Да, отказаться"
       via_email: "это сообщение пришло с почты"
       whisper: "Это внутреннее сообщение, т.е. оно видно только модераторам"
+      wiki:
+        about: "это вики-сообщение"
       archetypes:
         save: 'Параметры сохранения'
       controls:
@@ -1640,6 +1664,7 @@ ru:
           like: "Больше не нравится"
           vote: "Отозвать голос"
         people:
+          off_topic: "отметили это как \"не по теме\""
           spam: "отмечено как спам"
           inappropriate: "отмеченно как неуместное"
           notify_moderators: "уведомлёные модераторы"
@@ -1742,6 +1767,12 @@ ru:
           few: "Вы уверены, что хотите удалить все эти сообщения?"
           many: "Вы уверены, что хотите удалить все эти сообщения?"
           other: "Вы уверены, что хотите удалить все эти сообщения?"
+      merge:
+        confirm:
+          one: "Вы уверены, что хотите объединить эти сообщения?"
+          few: "Вы уверены, что хотите объединить эти {{count}} сообщений?"
+          many: "Вы уверены, что хотите объединить эти {{count}} сообщений?"
+          other: "Вы уверены, что хотите объединить эти {{count}} сообщений?"
       revisions:
         controls:
           first: "Начальная версия"
@@ -1774,6 +1805,10 @@ ru:
       settings: 'Настройки'
       topic_template: "Шаблон темы"
       tags: "Тэги"
+      tags_allowed_tags: "Теги, которые могут быть использованы только в этом разделе:"
+      tags_allowed_tag_groups: "Группы тегов, которые могут быть использованы только в этом разделе:"
+      tags_placeholder: "(Необязательно) список доступных тегов"
+      tag_groups_placeholder: "(Необязательно) список доступных групп тегов"
       delete: 'Удалить раздел'
       create: 'Создать Раздел'
       create_long: 'Создать новый раздел'
@@ -1807,6 +1842,7 @@ ru:
       email_in_allow_strangers: "Принимать письма от анонимных пользователей без учетных записей"
       email_in_disabled: "Создание новых тем через электронную почту отключено в настройках сайта. Чтобы разрешить создание новых тем через электронную почту,"
       email_in_disabled_click: 'активируйте настройку "email in".'
+      suppress_from_homepage: "Не отображать этот раздел на главной странице."
       sort_order: "Порядок сортировки:"
       allow_badges_label: "Разрешить вручение наград в этом разделе"
       edit_permissions: "Изменить права доступа"
@@ -1820,8 +1856,13 @@ ru:
       notifications:
         watching:
           title: "Наблюдать"
+          description: "Наблюдать за всеми темами этого раздела. Уведомлять о каждом новом сообщении в любой из тем и показывать счетчик новых ответов."
+        watching_first_post:
+          title: "Наблюдать за первым сообщением"
+          description: "Вы будете уведомлены только о первом сообщении в каждой новой теме этого раздела."
         tracking:
           title: "Следить"
+          description: "Отслеживать все темы этого раздела. Уведомлять если кто-то упомянет ваше @name или ответит вам, показывать счетчик новых ответов."
         regular:
           title: "Уведомлять"
           description: "Уведомлять, если кто-нибудь упомянет мой @псевдоним или ответит на мое сообщение."
@@ -1890,6 +1931,8 @@ ru:
         few: "%{count} клика"
         many: "%{count} кликов"
         other: "%{count} кликов"
+    post_links:
+      about: "gjrfpf"
     topic_statuses:
       warning:
         help: "Это официальное предупреждение."
@@ -2039,6 +2082,8 @@ ru:
       full: "Создавать / Отвечать / Просматривать"
       create_post: "Отвечать / Просматривать"
       readonly: "Просматривать"
+    lightbox:
+      download: "скачать"
     keyboard_shortcuts_help:
       title: 'Сочетания клавиш'
       jump_to:
@@ -2090,8 +2135,33 @@ ru:
         mark_regular: '<b>m</b>, <b>r</b> Стандартные уведомления в теме (по-умолчанию)'
         mark_tracking: '<b>m</b>, <b>t</b> Следить за темой'
         mark_watching: '<b>m</b>, <b>w</b> Наблюдать за темой'
+        print: '<b>ctrl</b>+<b>p</b> Печатать тему'
     badges:
+      granted_on: "Выдана %{date}"
+      others_count: "Другие с этой наградой (%{count})"
       title: Награды
+      more_badges:
+        one: "еще +1"
+        few: "+ еще %{count}"
+        many: "+ еще %{count}"
+        other: "+ еще %{count}"
+      none: "<отсутствует>"
+      badge_grouping:
+        getting_started:
+          name: Начало работы
+        community:
+          name: Сообщество
+        trust_level:
+          name: Уровень доверия
+    google_search: |
+      <h3>Искать с помощью Google</h3>
+      <p>
+      <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:' + window.location.host + ' ' + document.getElementById('user-query').value; return true;">
+      <input type="text" id='user-query' value="">
+      <input type='hidden' id='google-query' name="q">
+      <button class="btn btn-primary">Google</button>
+      </form>
+      </p>
     tagging:
       all_tags: "Все теги"
       selector_all_tags: "Все теги"
@@ -2329,6 +2399,10 @@ ru:
         add_owners: Добавить владельцев
         incoming_email: "Специальный входящий адрес e-mail"
         incoming_email_placeholder: "введите e-mail"
+        flair_url_placeholder: "(Необязательно) Ссылка на изображение или класс шрифта Font Awesome"
+        flair_bg_color_placeholder: "(Необязательно) Hex-код цвета"
+        flair_color_placeholder: "(Необязательно) Hex-код цвета"
+        flair_preview: "Предпросмотр"
       api:
         generate_master: "Сгенерировать ключ API"
         none: "Отсутствует ключ API."
@@ -2343,6 +2417,48 @@ ru:
         info_html: "Ваш API ключ позволит вам создавать и обновлять темы, используя JSON calls."
         all_users: "Все пользователи"
         note_html: "Никому <strong>не сообщайте</strong> этот ключ. Тот, у кого он есть, сможет создавать сообщения, выдавая себя за любого пользователя форума."
+      web_hooks:
+        title: "Webhooks"
+        instruction: "Webhooks позволяют Discourse уведомлять внешние службы, когда определенное событие происходит на вашем сайте. При срабатывании webhook, на соответствующий URL будет отправлен POST-запрос."
+        detailed_instruction: "При наступлении выбранного события, на соответствующий URL будет отправлен POST-запрос."
+        new: "Добавить Webhook"
+        create: "Создать"
+        save: "Сохранить"
+        destroy: "Удалить"
+        description: "Описание"
+        go_back: "Вернуться к списку"
+        payload_url_placeholder: "https://example.com/postreceive"
+        secret_placeholder: "Необязательная строка, используется для генерации подписи"
+        event_type_missing: "Вам необходимо настроить по крайней мере один тип событий."
+        delete_confirm: "Удалить Webhook?"
+        topic_event:
+          name: "Событие темы"
+          details: "Происходит, когда тема создается, пересматривается, изменяется или удаляется."
+        post_event:
+          name: "Событие сообщения"
+          details: "Происходит, когда сообщение создается, редактируется, удаляется или восстанавливается."
+        user_event:
+          name: "Событие пользователя"
+          details: "Происходит, когда создается или подтверждается пользователь."
+        delivery_status:
+          title: "Статус передачи"
+          inactive: "Неактивна"
+          failed: "Проблема"
+          successful: "Успех"
+        events:
+          none: "Нет связанных событий."
+          redeliver: "Возврат"
+          request: "Запрос"
+          response: "Ответ"
+          headers: "Заголовки"
+          body: "Тело"
+          go_list: "Перейти к списку"
+          go_details: "Редактировать webhook"
+          go_events: "Перейти к событию"
+          ping: "Ping"
+          event_id: "Идентификатор (ID)"
+          timestamp: "Создано"
+          actions: "Действия"
       plugins:
         title: "Плагины"
         installed: "Установленные плагины"
@@ -2361,6 +2477,14 @@ ru:
           backups: "Резервные копии"
           logs: "Журнал событий"
         none: "Нет доступных резервных копий"
+        read_only:
+          enable:
+            title: "Включить режим \"только для чтения\""
+            label: "Включить режим \"только для чтения\""
+            confirm: "Вы уверены, что хотите включить режим \"только для чтения\"?"
+          disable:
+            title: "Выключить режим \"только для чтения\""
+            label: "Выключить режим \"только для чтения\""
         logs:
           none: "Пока нет сообщений в журнале регистрации..."
         columns:
@@ -2400,7 +2524,6 @@ ru:
             title: "Откатить базу данных к предыдущему рабочему состоянию"
             confirm: "Вы уверены, что хотите откатить базу данных до предыдущего рабочего состояния?"
       export_csv:
-        user_archive_confirm: "Вы уверены, то хотите скачать все ваши сообщения?"
         success: "Процедура экспорта начата, мы отправим вам сообщение, когда процесс будет завершен."
         failed: "Экспорт не удался. Пожалуйста, проверьте логи."
         rate_limit_error: "Записи могут быть загружены один раз в день, пожалуйста, попробуйте еще раз завтра."
@@ -2423,6 +2546,7 @@ ru:
         header: "Заголовок"
         top: "Топ"
         footer: "нижний колонтитул"
+        embedded_css: "Встроенные CSS"
         head_tag:
           text: "</head>"
           title: "HTML код, который будет добавлен перед тегом </head>."
@@ -2449,6 +2573,7 @@ ru:
         opacity: "Прозрачность"
         copy: "Копировать"
         email_templates:
+          title: "Шаблоны писем"
           subject: "Тема"
           body: "Текст сообщения"
           none_selected: "Выберите шаблон письма, чтобы начать редактирование."
@@ -2616,6 +2741,8 @@ ru:
             revoke_admin: "отозваны права администратора"
             grant_moderation: "выданы права модератора"
             revoke_moderation: "отозваны права модератора"
+            backup_operation: "операции резервного копирования"
+            deleted_tag: "удаленный тег"
         screened_emails:
           title: "Почтовые адреса"
           description: "Когда кто-то создает новую учетную запись, проверяется данный почтовый адрес и регистрация блокируется или производятся другие дополнительные действия."
@@ -2914,6 +3041,7 @@ ru:
           plugins: "Плагины"
           user_preferences: "Пользовательские настройки"
           tags: "Тэги"
+          search: "Поиск"
       badges:
         title: Награды
         new_badge: Новая награда
@@ -2992,7 +3120,9 @@ ru:
         image: "Изображение"
         delete_confirm: "Вы уверены, что хотите удалить иконку :%{name}:?"
       embedding:
+        get_started: "Для встраивания на другой сайт необходимо добавить соответствующий хост."
         confirm_delete: "Вы уверены, что хотите удалить это поле?"
+        sample: "Используйте следующий HTML-код на своем сайте, для возможности создания связанных тем. Замените <b>REPLACE_ME</b> канонической ссылкой страницы, куда производится встраивание."
         title: "Встраивание"
         host: "Разрешённые Хосты"
         edit: "изменить"
@@ -3000,13 +3130,19 @@ ru:
         add_host: "Добавить хост"
         settings: "Настройки встраивания"
         feed_settings: "Настройки Фида"
+        feed_description: "Поддержка RSS/ATOM вашим сайтом может улучшить возможности импорта данных."
+        crawling_settings: "Настройки определения"
+        crawling_description: "Если RSS/ATOM не поддерживается, то при создании тем Discourse попытается разобрать содержимое из HTML. В некоторых случаях извлечение содержимого оказывается сложным, поэтому мы предоставляем возможность задавать правила CSS, чтобы сделать извлечение проще."
+        embed_by_username: "Имя пользователя, которое будет использоваться для создания темы"
         embed_post_limit: "Максимальное количество вложенных сообщений"
         embed_username_key_from_feed: "Ключ для извлечения пользователя из ленты"
+        embed_title_scrubber: "Регулярное выражение, используемое для очистки заголовка сообщений"
         embed_truncate: "Обрезать встроенные сообщения."
         embed_whitelist_selector: "Селекторы CSS которые разрешены для использования."
         embed_blacklist_selector: "Селекторы CSS которые запрещены для использования."
         embed_classname_whitelist: "Разрешённые CSS-классы"
         feed_polling_enabled: "Импорт сообщений через RSS/ATOM"
+        feed_polling_url: "Ссылка на RSS/ATOM"
         save: "Сохранить настройки встраивания"
       permalink:
         title: "Постоянные ссылки"
@@ -3023,3 +3159,16 @@ ru:
           label: "Новая постоянная ссылка:"
           add: "Добавить"
           filter: "Поиск по ссылке или внешней ссылке (URL)"
+  wizard_js:
+    wizard:
+      done: "Готово"
+      back: "Назад"
+      next: "Далее"
+      step: "%{current} из %{total}"
+      upload: "Загрузить"
+      uploading: "Загрузка..."
+      quit: "Может быть позже"
+      invites:
+        roles:
+          admin: "Администратор"
+          moderator: "Модератор"

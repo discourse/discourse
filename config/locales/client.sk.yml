@@ -2269,7 +2269,6 @@ sk:
             label: "Vrátiť späť"
             title: "Vrátiť databázu do predchádzajúceho funkčného stavu"
       export_csv:
-        user_archive_confirm: "Ste si istý, že si chcete stiahnut svoje príspevky?"
         success: "Export bol spustený, o jeho skončení budete informovaný správou."
         failed: "Export zlyhal. Skontrolujte prosím logy."
         rate_limit_error: "Príspevky možu byť stiahnuté len raz za deň. Skúste opäť zajtra."

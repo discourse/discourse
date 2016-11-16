@@ -71,7 +71,6 @@ zh_CN:
       has_already_been_used: "不能和其他%{attribute}重复"
       inclusion: 不包括在列表中
       invalid: 无效
-      is_invalid: "无效；请描述得更详尽些"
       less_than: 必须小于 %{count}
       less_than_or_equal_to: 必须小于等于 %{count}
       not_a_number: 不是数字
@@ -146,7 +145,6 @@ zh_CN:
   topic_not_found: "出现问题。也许这个话题被关闭或删除。"
   just_posted_that: "太类似于你最近发表的内容"
   invalid_characters: "包含无效字符"
-  is_invalid: "无效；请描述得更清楚一点"
   next_page: "下一页 →"
   prev_page: "← 上一页"
   page_num: "第%{num}页"

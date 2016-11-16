@@ -2384,7 +2384,6 @@ pt:
             title: "Reverter a base de dados para um estado anterior operacional"
             confirm: "Tem a certeza que pretende reverter a base de dados para o estado de funcionamento anterior?"
       export_csv:
-        user_archive_confirm: "Tem a certeza que deseja descarregar as suas mensagens?"
         success: "Exportação iniciada, será notificado através de mensagem assim que o processo estiver concluído."
         failed: "A exportação falhou. Por favor verifique os registos dos logs."
         rate_limit_error: "As mensagens podem ser descarregadas uma vez por dia. Por favor, tente novamente amanhã."

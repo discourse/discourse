@@ -429,6 +429,7 @@ fi:
       mute: "Vaimenna"
       edit: "Muokkaa asetuksia"
       download_archive: "Lataa viestini"
+      download_archive_confirm: "Haluatko varmasti ladata kaikki viestisi?"
       new_private_message: "Uusi viesti"
       private_message: "Viesti"
       private_messages: "Viestit"
@@ -507,6 +508,10 @@ fi:
       muted_topics_link: "Näytä vaimennetut ketjut"
       watched_topics_link: "Näytä tarkkaillut ketjut"
       automatically_unpin_topics: "Poista kiinnitetyn ketjun kiinnitys automaattisesti, kun olen selannut sen loppuun."
+      apps: "Sovellukset"
+      revoke_access: "Peru käyttöoikeus"
+      undo_revoke_access: "Peru käyttöoikeuden peruminen"
+      api_approved: "Sallitut:"
       staff_counters:
         flags_given: "hyödyllistä liputusta"
         flagged_posts: "liputettua viestiä"
@@ -1694,6 +1699,7 @@ fi:
       email_in_disabled: "Uusien ketjujen luominen sähköpostitse on otettu pois käytöstä sivuston asetuksissa. Salliaksesi uusien ketjujen luomisen sähköpostilla, "
       email_in_disabled_click: 'ota käyttöön "email in" asetus.'
       suppress_from_homepage: "Vaimenna alue kotisivulta."
+      sort_order: "Oletusjärjestys:"
       allow_badges_label: "Salli ansiomerkkien myöntäminen tältä alueelta"
       edit_permissions: "Muokkaa oikeuksia"
       add_permission: "Lisää oikeus"
@@ -1719,6 +1725,18 @@ fi:
         muted:
           title: "Vaimennettu"
           description: "Et saa ilmoituksia uusista ketjuista näillä alueilla, eivätkä ne näy tuoreimmissa."
+      sort_options:
+        default: "oletus"
+        likes: "Tykkäykset"
+        op_likes: "Avausviestin tykkäykset"
+        views: "Katselut"
+        posts: "Viestit"
+        activity: "Toiminta"
+        posters: "Kirjoittajat"
+        category: "Alue"
+        created: "Luomisaika"
+      sort_ascending: 'Nouseva'
+      sort_descending: 'Laskeva'
     flagging:
       title: 'Kiitos avustasi yhteisön hyväksi!'
       action: 'Liputa viesti'
@@ -2308,7 +2326,6 @@ fi:
             title: "Palauta tietokanta edelliseen toimivaan tilaan"
             confirm: "Oletko varma, että haluat palauttaa tietokannan edelliseen toimivaan tilaan?"
       export_csv:
-        user_archive_confirm: "Oletko varma, että haluat ladata viestisi?"
         success: "Vienti on käynnissä. Saat ilmoituksen viestillä, kun prosessi on valmis."
         failed: "Vienti epäonnistui. Tarkista loki-tiedostot."
         rate_limit_error: "Viestit voidaan ladata kerran päivässä, yritä uudestaan huomenna."

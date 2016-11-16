@@ -429,6 +429,7 @@ fr:
       mute: "Silencieux"
       edit: "Modifier les préférences"
       download_archive: "Télécharger mes messages"
+      download_archive_confirm: "Êtes-vous sûr de vouloir télécharger vos messages ?"
       new_private_message: "Créer un message privé"
       private_message: "Message privé"
       private_messages: "Messages privés"
@@ -2397,7 +2398,6 @@ fr:
             title: "Restaurer (RollBack) la base de données à l'état de travail précédent"
             confirm: "Êtes-vous sûr de vouloir restaurer la base de données à l'état de fonctionnement précédent?"
       export_csv:
-        user_archive_confirm: "Êtes-vous sûr de vouloir télécharger vos messages?"
         success: "L'exportation a été démarrée. Vous serez notifié par message lorsque le traitement sera terminé."
         failed: "L'exportation a échoué. Veuillez consulter les journaux."
         rate_limit_error: "Les messages peuvent être téléchargés une fois par jour, veuillez ressayer demain."

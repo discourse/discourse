@@ -2318,7 +2318,6 @@ et:
             title: "Pööra andmebaas tagasi viimati toiminud olekusse"
             confirm: "Oled kindel, et soovid andmebaasi tagasi viimati toiminud olekusse pöörata?"
       export_csv:
-        user_archive_confirm: "Oled kindel, et soovid enda postitused alla laadida?"
         success: "Eksportimine käivitatud. Protsessi lõppemisel saadetakse Sulle teade."
         failed: "Eksportimine ebaõnnestus. Kontrolli logisid."
         rate_limit_error: "Postitusi saab alla laadida üks kord ööpäevas. Palun proovi homme uuesti."

@@ -71,7 +71,7 @@ fi:
       has_already_been_used: "on jo käytetty"
       inclusion: ei ole listalla
       invalid: ei kelpaa
-      is_invalid: "ei kelpaa; yritä olla kuvailevampi"
+      is_invalid: "vaikuttaa epäselvältä, olihan se kokonainen virke?"
       less_than: täytyy olla vähemmän kuin %{count}
       less_than_or_equal_to: täytyy olla yhtä suuri tai pienempi kuin %{count}
       not_a_number: ei ole numero
@@ -159,7 +159,7 @@ fi:
   topic_not_found: "Jotain on mennyt pieleen. Ehkä tämä ketju on suljettu tai poistettu sillä välin, kun katselit sitä?"
   just_posted_that: "on liian samanlainen kuin aiempi viestisi"
   invalid_characters: "sisältää epäkelpoja merkkejä"
-  is_invalid: "ei kelpaa; yritä olla kuvailevampi"
+  is_invalid: "vaikuttaa epäselvältä, olihan se kokonainen virke?"
   next_page: "seuraava sivu →"
   prev_page: "← edellinen sivu"
   page_num: "Sivu %{num}"
@@ -584,6 +584,11 @@ fi:
     generic_error: "Pahoittelut, API-salausavainta ei muodostettu; sivuston ylläpitäjä on saattanut ottaa ominaisuuden pois käytöstä"
     scopes:
       message_bus: "Reaaliaikaiset päivitykset"
+      notifications: "Ilmoitusten lukeminen ja kuittaaminen"
+      push: "Push-ilmoitukset ulkoisiin palveluihin"
+      session_info: "Tiedot käyttäjän istunnosta"
+      read: "Kaikkien luku"
+      write: "Kaikkiin kirjaittaminen"
   reports:
     visits:
       title: "Vierailut"
@@ -749,6 +754,7 @@ fi:
     poll_pop3_auth_error: "Yhteys POP3-palvelimelle epäonnistuu autentikaatiovirheen vuoksi. Tarkista <a href='/admin/site_settings/category/email'>POP3-asetukset</a>."
   site_settings:
     censored_words: "Sanat, jotka korvataan automaattisesti merkeillä &#9632;&#9632;&#9632;&#9632;"
+    censored_pattern: "Merkkijono, joka korvataan automaattisesti &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Poista automaattisesti kaikki yli 30 päivää piilotettuna olleet viestit."
     default_locale: "Sivuston oletuskieli (ISO 639-1 koodi)"
     allow_user_locale: "Salli käyttäjien vaihtaa käyttöliittymän kieli omista asetuksista"
@@ -791,6 +797,8 @@ fi:
     show_pinned_excerpt_mobile: "Näytä katkelma kiinnitetyistä ketjuista mobiilinäkymässä."
     show_pinned_excerpt_desktop: "Näytä katkelma kiinnitetyistä ketjuista työpöytänäkymässä."
     post_onebox_maxlength: "Discourse-viestin Onebox-esikatselun merkkien maksimimäärä."
+    onebox_domains_blacklist: "Verkko-osoitteet, joista ei luoda Onebox-esikatselua"
+    max_oneboxes_per_post: "Oneboxien enimmäismäärä yhdessä viestissä"
     logo_url: "Logo sivustosi vasemmassa yläkulmassa. Sen pitäisi olla leveä suorakulmio muodoltaan. Jos jätetään tyhjäksi, näytetään sivuston otsikkoteksti."
     digest_logo_url: "Vaihtoehtoinen logo, jota käytetään sähköpostikoosteessa. Muodoltaan sen tulisi olla leveä suorakulmio, eikä se saa olla SVG-muodossa. Jos ei aseteta, käytetään `logo_url`-kuvaa."
     logo_small_url: "Pieni logo sivuston vasemmassa reunassa, joka näytettään rullattaessa alaspäin. Sen pitäisi olla neliö muodoltaan. Jos jätetään tyhjäksi, näytetään sen tilalla koti-merkki."
@@ -831,6 +839,8 @@ fi:
     must_approve_users: "Henkilökunnan täytyy hyväksyä kaikki uudet tilit, ennen uusien käyttäjien päästämistä sivustolle. VAROITUS: tämän asetuksen valitseminen poistaa pääsyn kaikilta jo olemassa olevilta henkilökuntaan kuulumattomilta käyttäjiltä."
     pending_users_reminder_delay: "Ilmoita valvojille, jos uusi käyttäjä on odottanut hyväksyntää kauemmin kuin näin monta tuntia. Aseta -1, jos haluat kytkeä ilmoitukset pois päältä."
     maximum_session_age: "Käyttäjä pysyy sisäänkirjautuneena n tuntia vierailunsa jälkeen"
+    ga_tracking_code: "VANHENTUNUT: Google Analytics (ga.js) -seurantatunnus, esim. UA-12345678-9; ks. http://google.com/analytics"
+    ga_domain_name: "VANHENTUNUT: Google Analytics (ga.js) -verkkotunnus, esim. mysite.com; ks. http://google.com/analytics"
     ga_universal_tracking_code: "Google Universal analytics (analytics.js) seurantakoodi, esim.: UA-12345678-9; katso http://google.com/analytics"
     ga_universal_domain_name: "Google Universal analytics (analytics.js) verkkotunnus, esim.: osoite.fi; katso http://google.com/analytics"
     enable_escaped_fragments: "Käytä Googlen Ajax-sivustoille tarkoitettua API:a, jos webcrawleria ei tunnisteta. Katso https://developers.google.com/webmasters/ajax-crawling/docs/learn-more"
@@ -1171,6 +1181,7 @@ fi:
     default_email_in_reply_to: "Sisällytä lyhennelmä vastattavasta viestistä sähköpostiin oletuksena."
     default_other_new_topic_duration_minutes: "Yleinen oletusarvo sille, koska ketju tulkitaan uudeksi."
     default_other_auto_track_topics_after_msecs: "Yleinen oletusarvo sille, missä ajassa ketjua aletaan seurata."
+    default_other_notification_level_when_replying: "Yleinen oletusasetus ilmoitusasetukselle, kun käyttäjä vastaa ketjuun."
     default_other_external_links_in_new_tab: "Avaa oletuksena ulkopuoliset linkit uudessa välilehdessä."
     default_other_enable_quoting: "Ota oletuksena käyttöön lainaaminen valitsemalla tekstiä."
     default_other_dynamic_favicon: "Näytä oletuksena uusien/päivittyneiden ketjujen määrä selaimen ikonissa."
@@ -1180,6 +1191,12 @@ fi:
     default_categories_watching: "Lista oletuksena tarkkailtavista alueista."
     default_categories_tracking: "Lista oletuksena seurattavista alueista."
     default_categories_muted: "Lista oletuksena vaimennetuista alueista."
+    max_user_api_reqs_per_day: "Rajapintapyyntöjen päivittäinen enimmäismäärä rajapinnan avainta kohden"
+    max_user_api_reqs_per_minute: "Rajapintapyyntöjen enimmäismäärä minuuttia kohden rajapinnan avainta kohden"
+    allow_user_api_keys: "Salli rajapinnan käyttäjäavainten muodostaminen"
+    allow_user_api_key_scopes: "Lista rajapinnan käyttäjäavaimiin liittyvistä oikeuksista"
+    max_api_keys_per_user: "Enimmäismäärä rajapinnan käyttäjäavaimia käyttäjää kohden"
+    min_trust_level_for_user_api_key: "Vähimmäisluottamustaso, joka vaaditaan rajapinnan käyttäjäavainten muodostamiseen"
     tagging_enabled: "Ota käyttöön ketjujen tunnisteet?"
     min_trust_to_create_tag: "Vähimmäisluottamustaso, jolla voi luoda tunnisteita."
     max_tags_per_topic: "Suurin tunnisteiden määrä, joka voi liittyä ketjuun."
@@ -2569,7 +2586,6 @@ fi:
           contact_url:
             label: "Internet-sivu"
             placeholder: "http://www.example.com/contact-us"
-            description: "Internet-sivu, jonka kautta sinuun tai organisaatioosi voi ottaa yhteyttä. Näytetään <a href='/about' target='_blank'>Tietoja-sivulla</a>."
           site_contact:
             label: "Automaattiset viestit"
             description: "Tämän käyttäjän nimissä Discourse lähettää kaikki automaattiset yksityisviestit käyttäjälle. Tärkeimpänä, käyttäjä on uudelle käyttäjälle lähetettävän tervetuloviestin lähettäjä."

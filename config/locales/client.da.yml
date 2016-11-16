@@ -2181,7 +2181,6 @@ da:
             title: "Rul databasen tilbage til et tidspunkt hvor tingene virkede"
             confirm: "Er du sikker på at du vil genskabe databasen til den forrige virkende version?"
       export_csv:
-        user_archive_confirm: "Er du sikker på du vil downloade dine indlæg?"
         success: "Eksport er startet, du vil blive notificeret via en besked når denne proces er færdig."
         failed: "Eksport fejlede. Tjek venligst loggen."
         rate_limit_error: "Indlæg kan downloades én gang om dagen, prøv igen i morgen."

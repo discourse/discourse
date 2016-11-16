@@ -1833,7 +1833,6 @@ ko:
             title: "데이터베이스를 이전 workiong state로 되돌리기"
             confirm: "데이타베이스를 이전 상태로 롤백 또는 되돌리기 할까요?"
       export_csv:
-        user_archive_confirm: "정말로 내 글을 다운로드 받습니까?"
         success: "Export initiated, you will be notified via message when the process is complete."
         failed: "내보내기가 실패했습니다. 로그를 확인해주세요"
         rate_limit_error: "글은 하루에 한번 다운로드 받을 수 있습니다. 내일 다시 시도해주십시요."

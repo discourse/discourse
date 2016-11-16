@@ -1853,7 +1853,6 @@ vi:
             title: "Đưa csdl về trạng thái làm việc trước"
             confirm: "Bạn có chắc chắn muốn phục hồi csdl về trạng thái làm việc trước?"
       export_csv:
-        user_archive_confirm: "Bạn có chắc chắn muốn download các bài viết của mình?"
         success: "Export đang được khởi tạo, bạn sẽ nhận được tin nhắn thông báo khi quá trình hoàn tất."
         failed: "Xuất lỗi. Vui lòng kiểm tra log."
         rate_limit_error: "Bài viết có thể tải về 1 lần mỗi này, vui lòng thử lại vào ngày mai."

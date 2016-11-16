@@ -471,7 +471,7 @@ de:
         enabled: "Mailinglisten-Modus aktivieren"
         instructions: |
           Diese Einstellung überschreibt die Aktivitäts-Übersicht.<br />
-          Stummgeschaltete Themen und Kategorien werden in diesen E-Mails nicht eingeschlossen.
+          Stummgeschaltete Themen und Kategorien werden in diese E-Mails nicht eingeschlossen.
         daily: "Aktualisierungen täglich senden"
         individual: "Für jeden Beitrag eine E-Mail senden"
         many_per_day: "Sende mir für jeden neuen Beitrag eine E-Mail (etwa {{dailyEmailEstimate}} pro Tag)"
@@ -2285,7 +2285,6 @@ de:
             title: "Die Datenbank auf den letzten funktionierenden Zustand zurücksetzen"
             confirm: "Möchtest du wirklich die Datenbank auf den letzten funktionierenden Stand zurücksetzen?"
       export_csv:
-        user_archive_confirm: "Möchtest du wirklich deine Beiträge herunterladen?"
         success: "Der Export wurde gestartet. Du erhältst eine Nachricht, sobald der Vorgang abgeschlossen ist."
         failed: "Der Export ist fehlgeschlagen. Bitte überprüfe die Logs."
         rate_limit_error: "Beiträge können pro Tag nur einmal heruntergeladen werden. Bitte versuch es morgen wieder."
