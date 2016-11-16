@@ -1319,24 +1319,40 @@ describe User do
 
   describe '#read_first_notification?' do
     let(:user) { Fabricate(:user, trust_level: TrustLevel[0]) }
-    let(:notification) { Fabricate(:private_message_notification, user: user) }
-    let(:other_notification) { Fabricate(:private_message_notification, user: user) }
+    let(:post) { Fabricate(:post) }
+    let(:topic) { Fabricate(:topic, first_post: post) }
+
+    let(:notification) do
+      Fabricate(:private_message_notification,
+        user: user, read: false, topic: topic, post_number: post.post_number
+      )
+    end
+
+    after do
+      $redis.del(User.first_notification_read_key(user))
+    end
 
     describe 'when first notification has not been read' do
       it 'should return the right value' do
-        notification.update_attributes!(read: false)
-        other_notification.update_attributes!(read: true)
-
         expect(user.read_first_notification?).to eq(false)
       end
     end
 
     describe 'when first notification has been read' do
       it 'should return the right value' do
-        notification.update_attributes!(read: true)
-        other_notification.update_attributes!(read: false)
+        notification
+        Notification.read(user, [notification.id])
 
         expect(user.reload.read_first_notification?).to eq(true)
+      end
+    end
+
+    describe 'when post has been read' do
+      it 'should return the right value' do
+        notification
+        Notification.mark_posts_read(user, notification.topic_id, [1])
+
+        expect(user.read_first_notification?).to eq(true)
       end
     end
 
