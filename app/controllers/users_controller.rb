@@ -242,6 +242,8 @@ class UsersController < ApplicationController
     usernames -= groups
     usernames.each(&:downcase!)
 
+    # Create a New Topic Scenario is not supported (per conversation with codinghorror)
+    # https://meta.discourse.org/t/taking-another-1-7-release-task/51986/7
     cannot_see = []
     topic_id = params[:topic_id]
     unless topic_id.blank?
