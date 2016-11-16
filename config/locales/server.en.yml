@@ -1247,6 +1247,7 @@ en:
     attachment_filename_blacklist: "List of keywords used to blacklist attachments based on the filename."
 
     enable_forwarded_emails: "[BETA] Allow users to create a topic by forwarding an email in."
+    always_show_trimmed_content: "Always show trimmed part of incoming emails. WARNING: might reveal email addresses."
 
     manual_polling_enabled: "Push emails using the API for email replies."
     pop3_polling_enabled: "Poll via POP3 for email replies."

@@ -557,7 +557,7 @@ module Email
                            options[:topic].try(:private_message?)
 
       # only add elided part in messages
-      if options[:elided].present? && is_private_message
+      if options[:elided].present? && (SiteSetting.always_show_trimmed_content || is_private_message)
         options[:raw] << "\n\n" << "<details class='elided'>" << "\n"
         options[:raw] << "<summary title='#{I18n.t('emails.incoming.show_trimmed_content')}'>&#183;&#183;&#183;</summary>" << "\n"
         options[:raw] << options[:elided] << "\n"

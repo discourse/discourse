@@ -671,6 +671,7 @@ email:
     type: list
     default: "smime.p7s|signature.asc"
   enable_forwarded_emails: false
+  always_show_trimmed_content: false
 
 files:
   max_image_size_kb:
