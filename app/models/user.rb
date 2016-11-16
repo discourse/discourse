@@ -343,9 +343,32 @@ class User < ActiveRecord::Base
     end
   end
 
+  TRACK_FIRST_NOTIFICATION_READ_DURATION = 1.week.to_i
+
+  def self.first_notification_read_key(user)
+    "#{user.id}:first-notification-read"
+  end
+
+  def mark_first_notification_read
+    first_notification_read_key = User.first_notification_read_key(self)
+
+    if !$redis.get(first_notification_read_key)
+      $redis.setex(
+        first_notification_read_key,
+        User::TRACK_FIRST_NOTIFICATION_READ_DURATION,
+        1
+      )
+    end
+  end
+
   def read_first_notification?
-    return true if (trust_level > TrustLevel[0] || created_at < 1.week.ago)
-    notifications.order(created_at: :asc).first&.read || false
+    if (trust_level > TrustLevel[0] ||
+        created_at < TRACK_FIRST_NOTIFICATION_READ_DURATION.seconds.ago)
+
+      return true
+    end
+
+    !!$redis.get(self.class.first_notification_read_key(self))
   end
 
   def publish_notifications_state
