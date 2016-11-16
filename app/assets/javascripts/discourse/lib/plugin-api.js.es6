@@ -93,11 +93,6 @@ class PluginApi {
         if (result.icon) {
           iconBody = iconNode(result.icon);
         } else if (result.emoji) {
-          iconBody = result.emoji.split('|').map(emoji => {
-            const src = emojiUrlFor(emoji);
-            return dec.h('img', { className: 'emoji', attributes: { src } });
-          });
-
           iconBody = result.emoji.split('|').map(name => dec.attach('emoji', { name }));
         }
 
