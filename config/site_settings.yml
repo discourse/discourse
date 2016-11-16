@@ -670,7 +670,7 @@ email:
   attachment_filename_blacklist:
     type: list
     default: "smime.p7s|signature.asc"
-
+  enable_forwarded_emails: false
 
 files:
   max_image_size_kb:
