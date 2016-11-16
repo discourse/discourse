@@ -60,7 +60,6 @@ tr_TR:
       has_already_been_used: "önceden kullanıldı"
       inclusion: listeye dahil edilmemiş
       invalid: geçersiz
-      is_invalid: "geçersiz; biraz daha açıklayıcı olmaya çalışın"
       less_than: '%{count} rakamından az olmalı'
       less_than_or_equal_to: '%{count} rakamına eşit veya daha az olmalı'
       not_a_number: sayı değil
@@ -136,7 +135,6 @@ tr_TR:
   topic_not_found: "Bir şeyler ters gitti. Muhtemelen siz konuya bakarken bu konu kapatıldı ya da silindi."
   just_posted_that: "yakın zamanda yaptığınız bir gönderiye çok benziyor"
   invalid_characters: "geçersiz karakterler barındırıyor"
-  is_invalid: "geçersiz; biraz daha açıklayıcı olmaya çalışın"
   next_page: "sonraki sayfa →"
   prev_page: "← önceki sayfa"
   page_num: "Sayfa %{num}"

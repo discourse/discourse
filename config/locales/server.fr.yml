@@ -71,7 +71,7 @@ fr:
       has_already_been_used: "a déjà été utilisée"
       inclusion: n'est pas inclus dans la liste
       invalid: est invalide
-      is_invalid: "n'est pas valide ; merci d'être un peu plus descriptif"
+      is_invalid: "ne semble pas clair, est-ce une phrase complète ?"
       less_than: doit être inférieure à %{count}
       less_than_or_equal_to: doit être inférieur ou égal à %{count}
       not_a_number: n'est pas un nombre
@@ -159,7 +159,7 @@ fr:
   topic_not_found: "Une erreur est survenue. Peut-être que ce sujet a été fermé ou supprimé pendant que vous le regardiez ?"
   just_posted_that: "est trop similaire à ce que vous avez récemment posté"
   invalid_characters: "contient des caractères invalides"
-  is_invalid: "est invalide ; essayez d'être plus précis"
+  is_invalid: "ne semble pas clair, est-ce une phrase complète ?"
   next_page: "page suivante →"
   prev_page: "← page précédente"
   page_num: "Page %{num}"
@@ -739,7 +739,7 @@ fr:
     twitter_config_warning: 'Le serveur est configuré pour permettre l''authentification par Twitter (enable_twitter_logins), mais les paramètres key et secret ne sont pas renseignés. Allez dans les <a href="/admin/site_settings">Paramétres</a> et mettez les à jour. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">Voir le guide pour en savoir plus</a>.'
     github_config_warning: 'Le serveur est configuré pour permettre l''authentification par GitHub (enable_github_logins), mais les paramètres github_client_id et github_client_secret ne sont pas renseignés. Allez dans les <a href=\"/admin/site_settings\">Paramètres</a> et mettez les à jour. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">Voir le guide pour en savoir plus</a>.'
     s3_config_warning: 'Le serveur est configuré pour charger les fichiers vers s3, mais au moins un de ces paramètre n''est pas configuré : s3_access_key_id, s3_secret_access_key or s3_upload_bucket. Allez dans les <a href=\"/admin/site_settings\">Paramètres</a> pour les renseignés. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Voir le guide "Comment charger les images sur S3 ?" pour en savoir plus</a>'
-    s3_backup_config_warning: 'Le serveur est configuré pour envoyer les sauvegardes sur S3, mais l''un des paramètres suivants n''est pas renseigné: s3_access_key_id, s3_secret_access_key or s3_backup_bucket. Allez dans les <a href="/admin/site_settings">Paramètres</a> et mettez les à jour. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Voir "Comment mettre en place une sauvegarde sur S3?" pour en savoir plus</a>.'
+    s3_backup_config_warning: 'Le serveur est configuré pour envoyer les sauvegardes sur S3, mais l''un des paramètres suivants n''est pas renseigné : s3_access_key_id, s3_secret_access_key ou s3_backup_bucket. Allez dans les <a href="/admin/site_settings">Paramètres</a> et mettez les à jour. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Voir « Comment mettre en place une sauvegarde sur S3 ? » pour en savoir plus</a>.'
     image_magick_warning: 'Le serveur est configuré pour créer des aperçus des grandes images, mais ImageMagick n''est pas installé. Installez ImageMagick en utilisant votre gestionnaire de paquets favori ou bien allez ici <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">pour télécharger la dernière version</a>.'
     failing_emails_warning: 'Il y a %{num_failed_jobs} tâches d''envois de courriel en erreur. Vérifiez votre fichier app.yml et assurez-vous de la conformité des paramètres du serveur de courriel. <a href="/sidekiq/retries" target="_blank">Voir aussi les processus en échec dans Sidekiq</a>.'
     subfolder_ends_in_slash: "Votre configuration de sous-répertoire est erronée; DISCOURSE_RELATIVE_URL_ROOT se termine avec une barre oblique ."
@@ -752,6 +752,7 @@ fr:
     poll_pop3_auth_error: "La connexion vers le serveur POP3 échoue avec une erreur d'authentification. Veuillez vérifier <a href='/admin/site_settings/category/email'>les paramètres POP3</a>."
   site_settings:
     censored_words: "Mots qui seront automatiquement remplacés par &#9632;&#9632;&#9632;&#9632;"
+    censored_pattern: "Expressions régulières qui seront automatiquement remplacées par &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Supprimer automatiquement les messages cachés plus de 30 jours."
     default_locale: "La langue par défaut de cette instance de Discourse (code ISO 639-1)"
     allow_user_locale: "Autoriser les utilisateurs à choisir la langue de l'interface dans leurs préférences"
@@ -1250,6 +1251,7 @@ fr:
       reply_by_email_address_is_empty: "Vous devez renseigner une 'adresse de réponse par courriel' avant d'activer la réponse par courriel."
       email_polling_disabled: "Vous devez activer le relevé manuel ou via POP3 avant d'activer les réponses par courriel."
       user_locale_not_enabled: "Vous devez d'abord activer 'allow user locale' avant d'activer ce paramètre."
+      invalid_regex: "L'expression régulière est invalide ou non autorisée."
   search:
     within_post: "#%{post_number} par %{username}"
     types:
@@ -1619,7 +1621,7 @@ fr:
       text_body_template: |
         La sauvegarde a réussi.
 
-        Visitez [la section admin > sauvegarde](%{base_url}/admin/backups) pour télécharger votre nouvelle sauvegarde.
+        Rendez-vous dans la section [Sauvegardes](%{base_url}/admin/backups) pour la télécharger.
 
         Voici le détail :
 
@@ -2690,7 +2692,7 @@ fr:
           contact_url:
             label: "Page Web"
             placeholder: "http://www.exemple.com/contacter-nous"
-            description: "Page Web pour contacter votre organisation ou vous-même. Sera affiché dans la page <a href='/about' target='_blank'>À propos</a>."
+            description: "Page web pour vous contacter ou votre organisation. Sera affichée dans la page <a href='/about' target='_blank'>À propos</a>."
           site_contact:
             label: "Messages automatiques"
             description: "Tous les messages privés automatiques de Discourse seront envoyés par cet utilisateur. Plus important, cet utilisateur sera l'envoyeur désigné de tous les messages de bienvenue à destination des nouveaux utilisateurs."

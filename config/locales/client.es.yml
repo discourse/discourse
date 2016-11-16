@@ -2383,7 +2383,6 @@ es:
             title: "Regresar la base de datos al estado funcional anterior"
             confirm: "¿Seguro que quieres retornar la base de datos al estado funcional previo?"
       export_csv:
-        user_archive_confirm: "¿Seguro que quieres descargar todos tus posts?"
         success: "Exportación iniciada, se te notificará a través de un mensaje cuando el proceso se haya completado."
         failed: "Exportación fallida, revisa los logs."
         rate_limit_error: "Los posts se pueden descargar una vez al día, por favor, prueba otra vez mañana."

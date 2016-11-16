@@ -62,7 +62,6 @@ sk:
       has_already_been_used: "je už použité"
       inclusion: nie je v zozname
       invalid: je nesprávne
-      is_invalid: "je nesprávne; skúste opísať lepšie"
       less_than: musí byť menej ako %{count}
       less_than_or_equal_to: musí byť menej alebo rovné %{count}
       not_a_number: nie je číslo
@@ -161,7 +160,6 @@ sk:
   topic_not_found: "Niečo sa pokazilo. Téma mohla byť napríklad uzavretá, alebo zmazaná kým ste ju prezerali."
   just_posted_that: "je to príliš podobné Vášmu predchádzajúcemu príspevku"
   invalid_characters: "obsahuje neplatné znaky"
-  is_invalid: "je nesprávne; skúste opísať lepšie"
   next_page: "nasledujúca stránka →"
   prev_page: "← predchádzajúca stránka"
   page_num: "Stránka %{num}"

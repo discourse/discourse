@@ -15,8 +15,13 @@ cs:
       short: "%-d. %-m. %Y"
       short_no_year: "%-d. %B"
       date_only: "%-d %B %Y"
+      long: "%B %-d, %Y, %l:%M%P"
   date:
     month_names: [null, ledna, února, března, dubna, května, června, července, srpna, září, října, listopadu, prosince]
+    <<: *datetime_formats
+  time:
+    am: "am"
+    pm: "pm"
     <<: *datetime_formats
   title: "Discourse"
   topics: "Témata"
@@ -26,6 +31,9 @@ cs:
   log_in: "Přihlásit se"
   disable_remote_images_download_reason: "Stahování obrázků z cizích serverů bylo vypnuto protože na disku není dostatek místa."
   anonymous: "Anonymní"
+  emails:
+    incoming:
+      default_subject: "Příchozí email z %{email}"
   errors: &errors
     format: '%{attribute} %{message}'
     messages:
@@ -45,7 +53,6 @@ cs:
       has_already_been_used: "již byl použit"
       inclusion: není zahrnutý v seznamu
       invalid: je neplatný
-      is_invalid: "je neplatný; zkus být trochu více popisný"
       less_than: musí být menší než %{count}
       less_than_or_equal_to: musí být menší nebo roven %{count}
       not_a_number: není číslo
@@ -91,6 +98,8 @@ cs:
   not_logged_in: "Na tuto akci musíte být přihlášení."
   not_found: "Žádaná URL adresa nebo zdroj nelze najít."
   read_only_mode_enabled: "Tato stránka je v režimu jen pro čtení. Interakce jsou zakázány."
+  reading_time: "Čas čtení"
+  likes: "Líbí se"
   too_many_replies:
     one: "Je nám líto, ale noví uživatelé jsou dočasně omezeni na 1 odpověď v tématu."
     few: "Je nám líto, ale noví uživatelé jsou dočasně omezeni na %{count} odpovědi v tématu."
@@ -110,11 +119,12 @@ cs:
       one: "1 reakce"
       few: "%{count} reakce"
       other: "%{count} reakcí"
+  no_mentions_allowed: "Bohužel, nemůžete zmiňovat ostatní uživatele."
+  no_mentions_allowed_newuser: "Bohužel, noví uživatelé nemohou zmiňovat ostatní uživatele."
   spamming_host: "Bohužel, na tento server nemůžete odkazovat."
   user_is_suspended: "Vyloučení uživatelé nemohou přidávat příspěvky."
   just_posted_that: "je příliš podobný vašemu příspěvku z poslední doby"
   invalid_characters: "obsahuje neplatné znaky"
-  is_invalid: "je neplatné; zkuste se vyjádřit více popisně"
   next_page: "další strana →"
   prev_page: "← předchozí strana"
   page_num: "Strana %{num}"
@@ -784,8 +794,49 @@ cs:
     success: "E-mail odeslán"
     error: "Chyba!"
     submit_button: "Odeslat e-mail"
-  time:
-    <<: *datetime_formats
+  wizard:
+    step:
+      privacy:
+        title: "Přístup"
+      corporate:
+        fields:
+          company_short_name:
+            label: "Název společnosti (krátký)"
+            placeholder: "Initech"
+          company_full_name:
+            label: "Název společnosti (plný)"
+            placeholder: "Initech, s.r.o."
+          company_domain:
+            placeholder: "initech.cz"
+      colors:
+        title: "Téma"
+      logos:
+        title: "Loga"
+        fields:
+          logo_url:
+            label: "Primární loga"
+      icons:
+        title: "Ikony"
+        fields:
+          favicon_url:
+            label: "Malá ikona"
+          apple_touch_icon_url:
+            label: "Velká ikona"
+      homepage:
+        title: "Domovská stránka"
+        fields:
+          homepage_style:
+            choices:
+              latest:
+                label: "Nejnovější témata"
+              categories:
+                label: "Kategorie"
+      emoji:
+        title: "Smajlíky :)"
+      invites:
+        title: "Pozvi redakci"
+      finished:
+        title: "Váš Discourse je připraven!"
   activemodel:
     errors:
       <<: *errors

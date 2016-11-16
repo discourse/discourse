@@ -2327,7 +2327,6 @@ sv:
             title: "Gör en tillbakarullning på databasen till ett tidigare fungerande tillstånd."
             confirm: "Är du säker på att du vill göra en tillbakarullning på databasen till det tidigare fungerande tillståndet?"
       export_csv:
-        user_archive_confirm: "Är du säker på att du vill ladda ner dina inlägg?"
         success: "Export påbörjad, du får en notis via meddelande när processen är genomförd."
         failed: "Exporteringen misslyckades. Kontrollera loggarna."
         rate_limit_error: "Inlägg kan bara laddas ner en gång per dag, var vänlig och försök imorgon istället."

@@ -70,7 +70,7 @@ ar:
       has_already_been_used: "مستخدم بالفعل "
       inclusion: غير متضمن في القائمة
       invalid: غير صالح
-      is_invalid: "غير صالح ، حاول ان تضع وصف اكثر"
+      is_invalid: "تبدو غير واضحة، هل هذه الجملة كاملة؟"
       less_than: يجب أن يكون أقل من %{count}
       less_than_or_equal_to: يجب أن تكون أقل من أو تساوي %{count}
       not_a_number: ليس عدد
@@ -126,6 +126,7 @@ ar:
     operation_already_running: "ثمّة عملية تجري حاليا. لا يمكنك بدء مهمة جديدة الآن."
     backup_file_should_be_tar_gz: "على الملف الاحتياطي أن يكون أرشيف \"‎.tar.gz\"."
     not_enough_space_on_disk: "ليس ثمّة مساحة كافية على القرص لرفع النسخة الاحتياطية هذه."
+    invalid_filename: "اسم ملف النسخة الاحتياطية يحتوي على حروف غير صالحة. الحروف الصالحة هي a-z 0-9 .-_."
   not_logged_in: "عليك تسجيل الدخول لفعل ذلك."
   not_found: "تعذر العثور على رابط العنوان المطلوب"
   invalid_access: "لا تمتلك صلاحيات لعرض المطلوب "
@@ -205,7 +206,7 @@ ar:
   topic_not_found: "حدث خطب ما. قد يكون الموضوع أُغلق أو حُذف وأنت تشاهده؟"
   just_posted_that: "هذا مماثل لما شاركته مؤخرا"
   invalid_characters: "يحتوي احرف غير صالحة "
-  is_invalid: "غير صالح حاول ان تضع وصف اكثر"
+  is_invalid: "تبدو غير واضحة، هل هذه عبارة كاملة؟"
   next_page: "الصفحة التالية ←"
   prev_page: "→ الصفحة السابقة "
   page_num: "الصفحة %{num}"
@@ -350,6 +351,10 @@ ar:
         post_reply:
           base:
             different_topic: "المشاركة والرد لابد ان يكونا في نفس الموضوع"
+        web_hook:
+          attributes:
+            payload_url:
+              invalid: "رابط غير صالح. يجب أن يحتوي الرابط على http://  او https://. المساحة الفارغة غير مسموح بها."
       <<: *errors
   user_profile:
     no_info_me: "<div class='missing-profile'>مجال المعلومات عني لملف تعريفك فارغ حاليا، <a href='/users/%{username_lower}/preferences/about-me'>هل تريد أن تملأه؟</a></div>"
@@ -711,6 +716,7 @@ ar:
   unsubscribed:
     title: "غير مشترك "
     description: "لقد تم الغاء اشتراكك. لتغير اختيارات بريدك الالكترونى <a href='%{url}'>زور اختياراتك الشخصية</a>"
+    topic_description: "لإعادة الاشتراك لل %{link}، استخدم ادارة التنبيهات في أسفل او يمين الموضوع."
   unsubscribe:
     title: "إلغاء الإشتراك"
     stop_watching_topic: "توقف عن مراقبة هذا الموضوع،  %{link}"
@@ -722,6 +728,17 @@ ar:
     different_user_description: "أنت حالياً سجلت دخولك كمستخدم مختلف عن الذي كان يُرسله له الملخص. الرجاء تسجيل الخروج  ثم  الدخول مرة أخرى  والمحاولة مجدداً."
     not_found_description: "نأسف ، لم نستطيع أن نلغي اشتراكك . من الممكن أن الرابط المرسل إليك قد انتهت مدته . "
     log_out: "تسجيل خروج"
+  user_api_key:
+    title: "منح الصلاحية لدخول التطبيق"
+    authorize: "منح الصلاحية"
+    read: "قراءة"
+    read_write: "قراءة/كتابة"
+    no_trust_level: "عذرا، ليس لديك درجة الموثوقية الكافية لدخول واجهة برمجة التطبيق الخاصة بالمستخدم."
+    scopes:
+      message_bus: "تحديثات فورية"
+      notifications: "قراءة  و مسح التنبيهات"
+      read: "قراءة الكل"
+      write: "كتابة الكل"
   reports:
     visits:
       title: "زيارات العضو"
@@ -2091,6 +2108,12 @@ ar:
       name: أول إبلاغ
     promoter:
       description: عضو غير صحيح
+    first_share:
+      name: أول مشاركة
+    first_link:
+      name: أول رابط
+    first_quote:
+      name: أول إقتباس
     read_guidelines:
       name: إقرأ القواعد العامة
     reader:

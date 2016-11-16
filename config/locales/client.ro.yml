@@ -458,6 +458,7 @@ ro:
       mute: "Silențios"
       edit: "Editează preferințe"
       download_archive: "Descarcă arhiva postărilor mele"
+      download_archive_confirm: "Ești sigur că vrei să îți descarci toate postările?"
       new_private_message: "Mesaj nou"
       private_message: "Mesaj"
       private_messages: "Mesaje"
@@ -2508,7 +2509,6 @@ ro:
             title: "Restabilește baza de date la stadiul funcțional anterior"
             confirm: "Ești sigur că vrei să restaurezi baza de date la starea funcțională anterioară?"
       export_csv:
-        user_archive_confirm: "Ești sigur că vrei să îți descarci mesajele?"
         success: "Exportul a fost inițiat. Vei primi un mesaj de notificare când procesul se va termina."
         failed: "Exportul a eşuat. Verifică raportul de erori."
         rate_limit_error: "Postările pot fi descărcate doar o singură dată pe zi. Te rugăm încearcă mâine."

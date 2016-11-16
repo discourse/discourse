@@ -208,6 +208,7 @@ ar:
         enabled: 'أدرجه في %{when}'
         disabled: 'أزال إدراجه في %{when}'
     topic_admin_menu: "عمليات المدير"
+    wizard_required: "حان وقت اعداد منتداك! <a href='%{url}' data-auto-route='true'>شغل معالج الإعداد</a>!"
     emails_are_disabled: "لقد عطّل أحد المدراء الرّسائل الصادرة للجميع. لن تُرسل إشعارات عبر البريد الإلكتروني أيا كان نوعها."
     bootstrap_mode_enabled: "الموقع اﻷن مفعل بالطريقة التمهيدية لكى تتمكن من اطلاق موقعك الجديد بسهولة. سيسجل كل الأعضاء الجدد بمستوى ثقة 1 وسيكون اختيار ارسال الملخص اليومى عن طريق البريد الالكترونى مفعل. سيتم الغاء تفعيل الطريقة التمهيدية تلقائيا عندما يتخطى عدد اﻷعضاء %{min_users} عضو."
     bootstrap_mode_disabled: "سيتم الغاء تفعيل الطريقة التمهيدية خلال ال 24 ساعة القادمة"
@@ -507,6 +508,13 @@ ar:
       latest_by: "الاحدث بـ"
       toggle_ordering: "تبديل التحكم في الترتيب"
       subcategories: "تصنيفات فرعية"
+      topic_sentence:
+        zero: "%{count} موضوع"
+        one: "1 موضوع"
+        two: "موضوعين"
+        few: "%{count} مواضيع"
+        many: "%{count} موضوع"
+        other: "%{count} موضوع"
       topic_stat_sentence:
         zero: "لا مواضيع جديدة في ال%{unit} الماضي."
         one: "موضوع واحد جديد في ال%{unit} الماضي."
@@ -537,6 +545,7 @@ ar:
       mute: "كتم"
       edit: "تعديل التفضيلات"
       download_archive: "تحميل مواضيعي"
+      download_archive_confirm: "هل انت متأكد انك تريد تنزيل مشاركاتك؟"
       new_private_message: "رسالة جديدة"
       private_message: "رسالة"
       private_messages: "الرسائل"
@@ -582,6 +591,7 @@ ar:
           هذه الرسائل لا تشمل المواضيع والفئات المكتومة.
         daily: "أرسل تحديثات يومية"
         individual: "أرسل لي بريدا لكل مشاركة جديدة"
+        individual_no_echo: "ارسل بريد الكتروني لكل مشاركة جديدة ما عدا مواضيعي"
         many_per_day: "أرسل لي بريدا لكل مشاركة جديدة (تقريبا {{dailyEmailEstimate}} يوميا)"
         few_per_day: "أرسل لي بريدا لكل مشاركة جديدة (تقريبا إثنتان يوميا)"
       tag_settings: "الوسوم"
@@ -613,6 +623,10 @@ ar:
       muted_topics_link: "أظهر المواضيع المكتومة"
       watched_topics_link: "أظهر المواضيع المراقبة"
       automatically_unpin_topics: "ألغِ تثبيت المواضيع آليا عندما أصل إلى أسفلها."
+      apps: "برامج"
+      revoke_access: "توقيف صلاحيات الوصول"
+      undo_revoke_access: "رفع توقيف صلاحيات الوصول"
+      api_approved: "موافق عليه:"
       staff_counters:
         flags_given: "علامات مساعدة"
         flagged_posts: "# مشاركات"
@@ -705,6 +719,7 @@ ar:
         title: "لغة الواجهة"
         instructions: "لغة الواجهة الرسومية. ستتغير عندما تنعش الصفحة."
         default: "(الافتراضية)"
+        any: "أي"
       password_confirmation:
         title: "اعد كلمة المرور"
       last_posted: " أخر موضوع"
@@ -762,6 +777,7 @@ ar:
         after_4_minutes: "بعد 4 دقائق"
         after_5_minutes: "بعد 5 دقائق"
         after_10_minutes: "بعد 10 دقائق"
+      notification_level_when_replying: "عندما أشارك في موضوع، اجعل ذلك الموضوع"
       invited:
         search: "نوع البحث عن الدعوات"
         title: "دعوة"
@@ -815,6 +831,34 @@ ar:
         title: "ملخص"
         stats: "إحصائيات"
         time_read: "وقت القراءة"
+        topic_count:
+          zero: "تم إنشاء المواضيع"
+          one: "تم إنشاء الموضوع"
+          two: "تم إنشاء المواضيع"
+          few: "تم إنشاء المواضيع"
+          many: "تم إنشاء المواضيع"
+          other: "تم إنشاء المواضيع"
+        post_count:
+          zero: "تم إنشاء المشاركات"
+          one: "تم إنشاء المشاركة"
+          two: "تم إنشاء المشاركات"
+          few: "تم إنشاء المشاركات"
+          many: "تم إنشاء المشاركات"
+          other: "تم إنشاء المشاركات"
+        likes_given:
+          zero: "<i class='fa fa-heart'></i> معطاة"
+          one: "<i class='fa fa-heart'></i> معطاة"
+          two: "<i class='fa fa-heart'></i> معطاة"
+          few: "<i class='fa fa-heart'></i> معطاة"
+          many: "<i class='fa fa-heart'></i> معطاة"
+          other: "<i class='fa fa-heart'></i> معطاة"
+        likes_received:
+          zero: "<i class='fa fa-heart'></i> حصّلت"
+          one: "<i class='fa fa-heart'></i> حصّلت"
+          two: "<i class='fa fa-heart'></i> حصّلت"
+          few: "<i class='fa fa-heart'></i> حصّلت"
+          many: "<i class='fa fa-heart'></i> حصّلت"
+          other: "<i class='fa fa-heart'></i> حصّلت"
         top_replies: "أفضل الردود"
         no_replies: "لا ردود بعد."
         more_replies: "ردود أخرى"
@@ -2574,7 +2618,6 @@ ar:
             title: "Rollback the database to previous working state"
             confirm: "هل انت متاكد انك تريد اعاده قواعد البيانات الى الحاله السابقه؟"
       export_csv:
-        user_archive_confirm: "هل أنت متأكد من رغبتك في تحميل جميع مشاركاتك ؟"
         success: "بدأ التصدير, سيتم إعلامك برسالة عند اكتمال العملية."
         failed: "فشل التصدير. من فضلك افحص السجلات."
         rate_limit_error: "المشاركات يمكن تحميلها لمرة واحدة في اليوم , الرجاء المحاولة غدا."
@@ -3229,7 +3272,24 @@ ar:
           filter: "بحث  ( رابط داخلي أو خارجي )"
   wizard_js:
     wizard:
+      done: "انتهى"
       back: "الى الخلف"
       next: "التالي"
+      step: "%{current} من %{total}"
+      upload: "رفع"
+      uploading: "جاري رفع الملفات.."
+      quit: "ربما لاحقا"
+      staff_count:
+        zero: "شركتك لديها %{count} من الموظفين"
+        one: "شركتك لديها 1 موظف فقط"
+        two: "شركتك لديها %{count} من الموظفين"
+        few: "شركتك لديها %{count} من الموظفين"
+        many: "شركتك لديها %{count} من الموظفين"
+        other: "شركتك لديها %{count} من الموظفين"
       invites:
         add_user: "أضف"
+        none_added: "لم تقم بدعوة أي موظفين. هل أنت متأكد انك تريد المتابعة؟"
+        roles:
+          admin: "مدير"
+          moderator: "مشرف"
+          regular: "مستخدم عادي"

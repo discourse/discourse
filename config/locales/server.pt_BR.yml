@@ -69,7 +69,6 @@ pt_BR:
       has_already_been_used: "já está sendo usado"
       inclusion: não está incluído na lista
       invalid: é inválido
-      is_invalid: "é inválido; tente ser um pouco mais descritivo"
       less_than: precisa ser menor que %{count}
       less_than_or_equal_to: deve ser menor ou igual à %{count}
       not_a_number: não é um número
@@ -156,7 +155,6 @@ pt_BR:
   topic_not_found: "Ocorreu um erro. Talvez este tópico foi fechado ou removido enquanto você estava visualizando?"
   just_posted_that: "é demasiado similar ao que postaste recentemente"
   invalid_characters: "contém caracteres inválidos"
-  is_invalid: "é inválido; tenta ser um bocado mais descritivo"
   next_page: "próxima página →"
   prev_page: "← página anterior"
   page_num: "Página %{num}"
@@ -1553,6 +1551,8 @@ pt_BR:
 
         Clique no link a seguir para escolher uma senha para a sua nova conta:
         %{base_url}/users/password-reset/%{email_token}
+    notify_old_email:
+      subject_template: "[%{site_name}] Seu endereço de email foi alterado."
     signup_after_approval:
       subject_template: "Você foi aprovado no %{site_name}!"
       text_body_template: |
@@ -1794,6 +1794,14 @@ pt_BR:
     staff_tag_disallowed: "A marcação \"%{tag}\" pode ser aplicada somente pelo pessoal de apoio."
     staff_tag_remove_disallowed: "A marcação \"%{tag}\" pode ser removida somente pelo pessoal de apoio."
   rss_by_tag: "Tópicos marcados com %{tag}"
+  finish_installation:
+    congratulations: "Parabéns, você instalou o Discourse!"
+    register:
+      button: "Registro"
+      title: "Registro da Conta Administradora"
+      help: "registro de uma nova conta para ser iniciado"
+    confirm_email:
+      title: "Confirme seu email"
   wizard:
     step:
       locale:
@@ -1871,6 +1879,8 @@ pt_BR:
         description: "Qual estilo de Emoji se adequa melhor para sua comunidade? Você poderá sempre adicionar novas customizações de Emojis através da aba: Admin > Customizar > Emoji."
       invites:
         title: "Convidar um grupo"
+      finished:
+        title: "Seu Discourse está pronto!"
   activemodel:
     errors:
       <<: *errors

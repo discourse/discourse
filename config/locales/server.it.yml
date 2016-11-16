@@ -71,7 +71,6 @@ it:
       has_already_been_used: "è già stato usato"
       inclusion: non è incluso nella lista
       invalid: non è valido
-      is_invalid: "non è valido; prova a specificare meglio"
       less_than: deve essere minore di %{count}
       less_than_or_equal_to: deve essere minore o uguale a %{count}
       not_a_number: non è un numero
@@ -159,7 +158,6 @@ it:
   topic_not_found: "Quancosa non ha funzionato. Forse questo argomento è stato chiuso o cancellato mentre lo leggevi."
   just_posted_that: "è troppo simile a ciò che hai appena pubblicato"
   invalid_characters: "contiene caratteri non validi"
-  is_invalid: "non è valido; prova ad essere un po' più descrittivo"
   next_page: "pagina seguente →"
   prev_page: "← pagina precedente"
   page_num: "Pagina %{num}"

@@ -71,7 +71,7 @@ ro:
       has_already_been_used: "a fost deja folosit"
       inclusion: nu este inclus in listă
       invalid: nu este valid
-      is_invalid: "este invalid; încearcă o descriere mai detaliată"
+      is_invalid: "pare neclar, e completă propoziția?"
       less_than: trebuie să fie mai mic decât %{count}
       less_than_or_equal_to: trebuie să fie mai mic sau egal cu %{count}
       not_a_number: nu este un număr
@@ -171,7 +171,7 @@ ro:
   topic_not_found: "Ceva n-a mers bine. Poate că acest subiect a fost închis sau șters în timp ce te uitai la el?"
   just_posted_that: "este prea asemănător cu ceea ce ați postat recent"
   invalid_characters: "conține caractere invalide"
-  is_invalid: "este invalid; încearcă o descriere mai detaliată"
+  is_invalid: "pare neclar, e completă propoziția?"
   next_page: "pagina următoare →"
   prev_page: "← pagina precedentă"
   page_num: "Pagina %{num}"
@@ -792,6 +792,7 @@ ro:
     poll_pop3_auth_error: "Conexiunea la serverul POP3 a eșuat cu o eroare de autentificare. Te rugăm să verifici <a href='/admin/site_settings/category/email'>setările POP3</a>."
   site_settings:
     censored_words: "Cuvintele vor fi înlocuite automat cu &#9632;&#9632;&#9632;&#9632;"
+    censored_pattern: "Modelul Regex va fi înlocuit automat cu  &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "șterge automat toate postările ascunse care stau ascunse mai mult de 30 de zile."
     default_locale: "Limba implicită a acestei instanțe de Discourse (ISO 639-1 Code)"
     allow_user_locale: "Permite utilizatorilor să-și aleagă singuri limba pentru interfață"
@@ -1290,6 +1291,7 @@ ro:
       reply_by_email_address_is_empty: "Trebuie să setezi o adresă pentru „răspunde prin email” înainte să poți activa răspunsul prin email."
       email_polling_disabled: "Trebuie să setezi fie retragerea manuala fie cea prin POP3 înainte să activezi răspunsul prin email."
       user_locale_not_enabled: "Trebuie să activezi întâi „permite locale utilizator” înainte de activa această setare."
+      invalid_regex: "Regex invalid sau nepermis."
   search:
     within_post: "#%{post_number} de %{username}:"
     types:
@@ -2970,7 +2972,7 @@ ro:
           contact_url:
             label: "Pagină web"
             placeholder: "http://www.exemplu.com/contact"
-            description: "Pagina web de contact pentru organizația ta sau pentru tine însuți. Va fi afișată <a href='/about' target='_blank'>Despre noi</a>."
+            description: "Pagina web generică cu date de contact pentru tine sau organizația ta. Se va afișa pe <a href='/about' target='_blank'>pagina despre noi</a>. "
           site_contact:
             label: "Mesaje automate"
             description: "Toate mesajele personale automate din Discourse vor fi trimite de la acest utilizator. Ce-i mai important este că acest utilizator va fi desemnat să trimită fiecare mesaj de bun venit ce se trimite automat noilor utilizatori."

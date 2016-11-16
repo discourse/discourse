@@ -48,7 +48,6 @@ nb_NO:
       has_already_been_used: "har allerede blitt brukt"
       inclusion: er ikke inkludert i listen
       invalid: er ugyldig
-      is_invalid: "er ugyldig; prøv å være litt mer beskrivende"
       less_than: må være mindre enn %{count}
       less_than_or_equal_to: må være lik eller mindre enn %{count}
       not_a_number: er ikke et nummer
@@ -118,7 +117,6 @@ nb_NO:
   topic_not_found: "Noe gikk galt. Kanskje emnet har blitt lukket eller slettet samtidig som du har sett på det?"
   just_posted_that: "er for likt det du nylig postet."
   invalid_characters: "inneholder ugyldige tegn"
-  is_invalid: "er ugyldig; prøv å være litt mer beskrivende"
   next_page: "neste side →"
   prev_page: "← forrige side"
   page_num: "Side %{num}"

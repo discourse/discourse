@@ -2182,7 +2182,6 @@ sq:
           rollback:
             label: "Rikthe mbrapa"
       export_csv:
-        user_archive_confirm: "Vërtet doni t'i shkarkoni postimet tuaja?"
         failed: "Eksporti dështoi. Kontrolloni log-et. "
         button_text: "Eksporto"
         button_title:

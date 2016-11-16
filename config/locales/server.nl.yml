@@ -71,7 +71,6 @@ nl:
       has_already_been_used: "is al gebruikt"
       inclusion: komt niet voor in de lijst
       invalid: is ongeldig
-      is_invalid: "is ongeldig; probeer een betere omschrijving"
       less_than: moet minder zijn dan %{count}
       less_than_or_equal_to: moet minder zijn dan of gelijk zijn aan %{count}
       not_a_number: is niet een getal
@@ -158,7 +157,6 @@ nl:
   topic_not_found: "Er is iets fout gegaan. Wellicht is het topic gesloten of verwijderd terwijl je er naar keek?"
   just_posted_that: "lijkt teveel op het bericht dat je net geschreven hebt"
   invalid_characters: "bevat ongeldige tekens"
-  is_invalid: "is niet geldig; probeer het iets beter te omschrijven"
   next_page: "volgende pagina →"
   prev_page: "← vorige pagina"
   page_num: "Pagina %{num}"
