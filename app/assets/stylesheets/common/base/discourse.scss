@@ -171,9 +171,19 @@ body {
   height: 80px;
   top: -18px !important;
   right: -18px !important;
-  box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.8);
+  box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.85);
   border-radius: 100%;
   z-index: 1040;
+}
+
+.ring-first-notification {
+  position: absolute;
+  color: $secondary;
+  text-align: left;
+  right: 60px;
+  top: 70px;
+  width: 290px;
+  line-height: 30px;
 }
 
 .ring {
