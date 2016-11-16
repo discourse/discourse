@@ -10,7 +10,7 @@ export default Ember.Component.extend({
       this.set('loginName', $.cookie('email'));
     }
 
-    Ember.run.schedule('afterRender', function() {
+    Ember.run.schedule('afterRender', () => {
       $('#login-account-password, #login-account-name').keydown(e => {
         if (e.keyCode === 13) {
           this.sendAction();
