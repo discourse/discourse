@@ -74,7 +74,7 @@ export function toTitleCase(str) {
 
 export function longDate(dt) {
   if (!dt) return;
-  return moment(dt).longDate();
+  return moment(dt).format(I18n.t("dates.long_with_year"));
 }
 
 // suppress year, if current year
