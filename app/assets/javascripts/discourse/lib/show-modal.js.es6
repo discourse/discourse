@@ -16,7 +16,7 @@ export default function(name, opts) {
   if (viewClass) {
     route.render(name, { into: 'modal', outlet: 'modalBody' });
   } else {
-    const templateName = Ember.String.dasherize(name);
+    const templateName = opts.templateName || Ember.String.dasherize(name);
 
     const renderArgs = { into: 'modal', outlet: 'modalBody', view: 'modal-body'};
     if (controller) { renderArgs.controller = controllerName; }
