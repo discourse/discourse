@@ -145,7 +145,7 @@ export default Ember.Component.extend({
     },
 
     share(source) {
-      var url = source.generateUrl(this.get('link'), this.get('title'));
+      const url = source.generateUrl(this.get('link'), this.get('topic.title'));
       if (source.shouldOpenInPopup) {
         window.open(url, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,width=600,height=' + (source.popupHeight || 315));
       } else {
