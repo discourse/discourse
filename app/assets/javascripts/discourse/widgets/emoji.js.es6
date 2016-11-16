@@ -11,6 +11,6 @@ export default createWidget('emoji', {
   tagName: 'img.emoji',
 
   buildAttributes(attrs) {
-    return { src: emojiUrlFor(attrs.name) };
+    return { src: emojiUrlFor(attrs.name), title: attrs.name, alt: `:${attrs.name}:` };
   },
 });
