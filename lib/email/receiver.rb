@@ -377,7 +377,7 @@ module Email
       embedded = Mail.new(@embedded_email_raw)
       email, display_name = parse_from_field(embedded)
       embedded_user = find_or_create_user(email, display_name)
-      raw = embedded.decoded
+      raw = try_to_encode(embedded.decoded, "UTF-8").presence || embedded.to_s
       title = embedded.subject.presence || subject
 
       case destination[:type]
