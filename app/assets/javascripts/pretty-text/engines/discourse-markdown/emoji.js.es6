@@ -1,5 +1,5 @@
 import { registerOption } from 'pretty-text/pretty-text';
-import { registerEmoji, buildEmojiUrl, isCustomEmoji } from 'pretty-text/emoji';
+import { buildEmojiUrl, isCustomEmoji } from 'pretty-text/emoji';
 import { translations } from 'pretty-text/emoji/data';
 
 let _unicodeReplacements;
@@ -29,7 +29,7 @@ function checkPrev(prev) {
 registerOption((siteSettings, opts, state) => {
   opts.features.emoji = !!siteSettings.enable_emoji;
   opts.emojiSet = siteSettings.emoji_set || "";
-  _(state.customEmoji).each((url, name) => registerEmoji(name, url));
+  opts.customEmoji = state.customEmoji;
 });
 
 export function setup(helper) {
@@ -38,11 +38,11 @@ export function setup(helper) {
 
   function imageFor(code) {
     code = code.toLowerCase();
-    const options = helper.getOptions();
-    const url = buildEmojiUrl(code, options);
+    const opts = helper.getOptions();
+    const url = buildEmojiUrl(code, opts);
     if (url) {
       const title = `:${code}:`;
-      const classes = isCustomEmoji(code) ? "emoji emoji-custom" : "emoji";
+      const classes = isCustomEmoji(code, opts) ? "emoji emoji-custom" : "emoji";
       return ['img', { href: url, title, 'class': classes, alt: title }];
     }
   }
