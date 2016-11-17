@@ -56,7 +56,6 @@ class Notification < ActiveRecord::Base
       .update_all("read = 't'")
 
     if count > 0
-      user.mark_first_notification_read
       user.publish_notifications_state
     end
 
@@ -69,7 +68,6 @@ class Notification < ActiveRecord::Base
                                read: false).update_all(read: true)
 
     if count > 0
-      user.mark_first_notification_read
       user.publish_notifications_state
     end
   end
