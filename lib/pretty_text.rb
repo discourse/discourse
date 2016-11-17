@@ -56,7 +56,7 @@ module PrettyText
     ctx.eval("window = {}; window.devicePixelRatio = 2;") # hack to make code think stuff is retina
 
     if Rails.env.development? || Rails.env.test?
-      ctx.attach("console.log", proc{|l| p l })
+      ctx.attach("console.log", proc { |l| p l })
     end
 
     ctx_load(ctx, "#{Rails.root}/app/assets/javascripts/discourse-loader.js")
@@ -154,10 +154,7 @@ module PrettyText
       context.eval("__optInput.mentionLookup = __mentionLookup;")
 
       custom_emoji = {}
-      Emoji.custom.map do |e|
-        context.eval("__registerEmoji('#{e.name}', '#{e.url}')")
-        custom_emoji[e.name] = e.url
-      end
+      Emoji.custom.map { |e| custom_emoji[e.name] = e.url }
       context.eval("__optInput.customEmoji = #{custom_emoji.to_json};")
 
       context.eval('__textOptions = __buildOptions(__optInput);')

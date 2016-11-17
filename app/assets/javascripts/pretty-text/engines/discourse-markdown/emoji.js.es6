@@ -1,5 +1,5 @@
 import { registerOption } from 'pretty-text/pretty-text';
-import { buildEmojiUrl, isCustomEmoji } from 'pretty-text/emoji';
+import { registerEmoji, buildEmojiUrl, isCustomEmoji } from 'pretty-text/emoji';
 import { translations } from 'pretty-text/emoji/data';
 
 let _unicodeReplacements;
@@ -29,7 +29,7 @@ function checkPrev(prev) {
 registerOption((siteSettings, opts, state) => {
   opts.features.emoji = !!siteSettings.enable_emoji;
   opts.emojiSet = siteSettings.emoji_set || "";
-  opts.customEmoji = state.customEmoji;
+  _(state.customEmoji).each((url, name) => registerEmoji(name, url));
 });
 
 export function setup(helper) {
