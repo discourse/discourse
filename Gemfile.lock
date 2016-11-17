@@ -80,7 +80,7 @@ GEM
     docile (1.1.5)
     domain_name (0.5.25)
       unf (>= 0.0.5, < 1.0.0)
-    email_reply_trimmer (0.1.5)
+    email_reply_trimmer (0.1.6)
     ember-data-source (1.0.0.beta.16.1)
       ember-source (~> 1.8)
     ember-handlebars-template (0.7.3)
@@ -411,7 +411,7 @@ DEPENDENCIES
   certified
   discourse-qunit-rails
   discourse_fastimage (= 2.0.3)
-  email_reply_trimmer (= 0.1.5)
+  email_reply_trimmer (= 0.1.6)
   ember-rails (= 0.18.5)
   ember-source (= 1.12.2)
   excon
