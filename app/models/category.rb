@@ -467,9 +467,15 @@ SQL
   def create_category_permalink
     old_slug = changed_attributes["slug"]
     if self.parent_category
-      Permalink.create(url: "c/#{self.parent_category.slug}/#{old_slug}", category_id: id)
+      url = "c/#{self.parent_category.slug}/#{old_slug}"
     else
-      Permalink.create(url: "c/#{old_slug}", category_id: id)
+      url = "c/#{old_slug}"
+    end
+
+    if Permalink.where(url: url).exists?
+      Permalink.where(url: url).update_all(category_id: id)
+    else
+      Permalink.create(url: url, category_id: id)
     end
   end
 
