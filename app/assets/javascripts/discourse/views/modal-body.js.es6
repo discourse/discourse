@@ -1,10 +1,14 @@
-import { observes, on } from "ember-addons/ember-computed-decorators";
+import { observes } from "ember-addons/ember-computed-decorators";
+import deprecated from 'discourse-common/lib/deprecated';
 
 export default Ember.View.extend({
   focusInput: true,
 
-  @on("didInsertElement")
-  _setupModal() {
+  didInsertElement() {
+    this._super();
+
+    deprecated('ModalBodyView is deprecated. Use the `d-modal-body` component instead');
+
     $('#modal-alert').hide();
     $('#discourse-modal').modal('show');
     Ember.run.scheduleOnce('afterRender', this, this._afterFirstRender);
