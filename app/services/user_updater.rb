@@ -54,6 +54,7 @@ class UserUpdater
 
     user.name = attributes.fetch(:name) { user.name }
     user.locale = attributes.fetch(:locale) { user.locale }
+    user.date_of_birth = attributes.fetch(:date_of_birth) { user.date_of_birth }
 
     if guardian.can_grant_title?(user)
       user.title = attributes.fetch(:title) { user.title }

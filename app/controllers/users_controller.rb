@@ -706,7 +706,7 @@ class UsersController < ApplicationController
     end
 
     def user_params
-      result = params.permit(:name, :email, :password, :username)
+      result = params.permit(:name, :email, :password, :username, :date_of_birth)
                      .merge(ip_address: request.remote_ip,
                             registration_ip_address: request.remote_ip,
                             locale: user_locale)
