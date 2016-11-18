@@ -117,8 +117,8 @@ const DiscoveryCategoriesRoute = Discourse.Route.extend(OpenComposer, {
         allow_badges: true
       });
 
-      showModal("editCategory", { model });
-      this.controllerFor("editCategory").set("selectedTab", "general");
+      showModal("edit-category", { model });
+      this.controllerFor("edit-category").set("selectedTab", "general");
     },
 
     reorderCategories() {

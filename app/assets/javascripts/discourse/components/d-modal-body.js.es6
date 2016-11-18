@@ -22,8 +22,6 @@ export default Ember.Component.extend({
       }
     }
 
-    this.appEvents.trigger('modal:body-shown', {
-      title: this.get('title')
-    });
+    this.appEvents.trigger('modal:body-shown', this.getProperties('title'));
   }
 });

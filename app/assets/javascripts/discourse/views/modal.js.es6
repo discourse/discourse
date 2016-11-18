@@ -18,7 +18,9 @@ export default Ember.View.extend({
     });
 
     this.appEvents.on('modal:body-shown', data => {
-      this.set('controller.title', I18n.t(data.title));
+      if (data.title) {
+        this.set('controller.title', I18n.t(data.title));
+      }
     });
   },
 
