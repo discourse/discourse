@@ -1,4 +1,4 @@
-<div class="modal-body poll-ui-builder">
+{{#d-modal-body title="poll.ui_builder.title" class="poll-ui-builder"}}
   <form class="poll-ui-builder-form form-horizontal">
     <div class="input-group">
       <label class="input-group-label">{{i18n 'poll.ui_builder.poll_type.label'}}</label>
@@ -52,7 +52,7 @@
       </div>
     {{/unless}}
   </form>
-</div>
+{{/d-modal-body}}
 
 <div class="modal-footer">
   {{d-button action="insertPoll" icon="bar-chart-o" class='btn-primary' label='poll.ui_builder.insert' disabled=disableInsert}}

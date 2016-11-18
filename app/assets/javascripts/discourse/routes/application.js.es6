@@ -127,12 +127,12 @@ const ApplicationRoute = Discourse.Route.extend(OpenComposer, {
     },
 
     editCategory(category) {
-      Category.reloadById(category.get('id')).then((atts) => {
+      Category.reloadById(category.get('id')).then(atts => {
         const model = this.store.createRecord('category', atts.category);
         model.setupGroupsAndPermissions();
         this.site.updateCategory(model);
-        showModal('editCategory', { model });
-        this.controllerFor('editCategory').set('selectedTab', 'general');
+        showModal('edit-category', { model });
+        this.controllerFor('edit-category').set('selectedTab', 'general');
       });
     },
 
