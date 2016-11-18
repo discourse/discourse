@@ -264,7 +264,7 @@ GEM
       loofah (~> 2.0)
     rails-observers (0.1.2)
       activemodel (~> 4.0)
-    rails_multisite (1.0.5)
+    rails_multisite (1.0.6)
       rails (> 4.2, < 5)
     railties (4.2.7.1)
       actionpack (= 4.2.7.1)
