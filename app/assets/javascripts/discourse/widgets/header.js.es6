@@ -169,11 +169,19 @@ export default createWidget('header', {
   buildKey: () => `header`,
 
   defaultState() {
-    return { searchVisible: false,
-             hamburgerVisible: false,
-             userVisible: false,
-             contextEnabled: false,
-             ringBackdrop: true };
+    let states =  {
+      searchVisible: false,
+      hamburgerVisible: false,
+      userVisible: false,
+      contextEnabled: false,
+      ringBackdrop: true
+    };
+
+    if (this.site.mobileView) {
+      states.skipSearchContext = true;
+    }
+
+    return states;
   },
 
   html(attrs, state) {
@@ -227,7 +235,7 @@ export default createWidget('header', {
       var params = "";
 
       if (context) {
-        params = `?context=${context.type}&context_id=${context.id}&skip_context=true`;
+        params = `?context=${context.type}&context_id=${context.id}&skip_context=${this.state.skipSearchContext}`;
       }
 
       return DiscourseURL.routeTo('/search' + params);
