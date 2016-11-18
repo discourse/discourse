@@ -68,7 +68,6 @@
 //= require ./discourse/lib/emoji/groups
 //= require ./discourse/lib/emoji/toolbar
 //= require ./discourse/components/d-editor
-//= require ./discourse/views/composer
 //= require ./discourse/lib/show-modal
 //= require ./discourse/lib/screen-track
 //= require ./discourse/routes/discourse
