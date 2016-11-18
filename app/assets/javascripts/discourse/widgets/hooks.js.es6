@@ -4,6 +4,7 @@ const CLICK_ATTRIBUTE_NAME         = '_discourse_click_widget';
 const CLICK_OUTSIDE_ATTRIBUTE_NAME = '_discourse_click_outside_widget';
 const KEY_UP_ATTRIBUTE_NAME        = '_discourse_key_up_widget';
 const KEY_DOWN_ATTRIBUTE_NAME      = '_discourse_key_down_widget';
+const KEY_PRESS_ATTRIBUTE_NAME     = '_discourse_key-press_widget';
 const DRAG_ATTRIBUTE_NAME          = '_discourse_drag_widget';
 
 function buildHook(attributeName, setAttr) {
@@ -32,6 +33,7 @@ export const WidgetClickHook = buildHook(CLICK_ATTRIBUTE_NAME);
 export const WidgetClickOutsideHook = buildHook(CLICK_OUTSIDE_ATTRIBUTE_NAME, 'data-click-outside');
 export const WidgetKeyUpHook = buildHook(KEY_UP_ATTRIBUTE_NAME);
 export const WidgetKeyDownHook = buildHook(KEY_DOWN_ATTRIBUTE_NAME);
+export const WidgetKeyPressHook = buildHook(KEY_PRESS_ATTRIBUTE_NAME);
 export const WidgetDragHook = buildHook(DRAG_ATTRIBUTE_NAME);
 
 
@@ -109,6 +111,10 @@ WidgetClickHook.setupDocumentCallback = function() {
 
   $(document).on('keydown.discourse-widget', e => {
     nodeCallback(e.target, KEY_DOWN_ATTRIBUTE_NAME, w => w.keyDown(e));
+  });
+
+  $(document).on('keypress.discourse-widget', e => {
+    nodeCallback(e.target, KEY_PRESS_ATTRIBUTE_NAME, w => w.keyPress(e));
   });
 
   _watchingDocument = true;
