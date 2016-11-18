@@ -68,7 +68,7 @@ export default Ember.Component.extend({
 
     // Android is dodgy, touchend often will not fire
     // https://code.google.com/p/android/issues/detail?id=19827
-    if (!this.isAndroid) {
+    if (!isAndroid) {
       $(document).on('touchstart.quote-button', () => {
         this._isTouchInProgress = true;
         return true;
