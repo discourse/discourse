@@ -3,6 +3,8 @@
 .btn-social {
   width: 150px;
   font-size: 1.143em;
+  overflow: hidden;
+  white-space: nowrap;
 }
 
 #login-buttons {
