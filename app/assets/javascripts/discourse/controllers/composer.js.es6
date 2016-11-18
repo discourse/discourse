@@ -196,6 +196,17 @@ export default Ember.Controller.extend({
   }.property('model.creatingPrivateMessage', 'model.targetUsernames'),
 
   actions: {
+
+    typed() {
+      this.checkReplyLength();
+      this.get('model').typing();
+    },
+
+    cancelled() {
+      this.send('hitEsc');
+      this.send('hideOptions');
+    },
+
     addLinkLookup(linkLookup) {
       this.set('linkLookup', linkLookup);
     },
