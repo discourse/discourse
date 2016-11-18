@@ -54,10 +54,10 @@ export default Ember.Component.extend({
         this.sendAction('deselectText');
       }
     }).on('mouseup.quote-button', e => {
+      this.set('isMouseDown', false);
       if (ignoreElements(e)) { return; }
 
       this._selectText(e.target);
-      this.set('isMouseDown', false);
     }).on('selectionchange', () => {
       // there is no need to handle this event when the mouse is down
       // or if there a touch in progress
