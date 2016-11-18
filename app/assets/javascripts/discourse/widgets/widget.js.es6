@@ -137,6 +137,13 @@ export default class Widget {
     register.deprecateContainer(this);
 
     this.key = this.buildKey ? this.buildKey(attrs) : null;
+    this.site = register.lookup('site:main');
+    this.siteSettings = register.lookup('site-settings:main');
+    this.currentUser = register.lookup('current-user:main');
+    this.capabilities = register.lookup('capabilities:main');
+    this.store = register.lookup('store:main');
+    this.appEvents = register.lookup('app-events:main');
+    this.keyValueStore = register.lookup('key-value-store:main');
 
     // Helps debug widgets
     if (Ember.testing) {
@@ -147,14 +154,6 @@ export default class Widget {
         Ember.warn(`you need a key when using state ${this.name}`);
       }
     }
-
-    this.site = register.lookup('site:main');
-    this.siteSettings = register.lookup('site-settings:main');
-    this.currentUser = register.lookup('current-user:main');
-    this.capabilities = register.lookup('capabilities:main');
-    this.store = register.lookup('store:main');
-    this.appEvents = register.lookup('app-events:main');
-    this.keyValueStore = register.lookup('key-value-store:main');
 
     if (this.name) {
       const custom = _customSettings[this.name];
