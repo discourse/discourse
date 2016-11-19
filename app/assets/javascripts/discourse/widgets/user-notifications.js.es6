@@ -64,13 +64,14 @@ export default createWidget('user-notifications', {
     } else if (state.notifications.length) {
 
       const notificationItems = state.notifications.map(n => this.attach('notification-item', n));
-      const href = `${attrs.path}/notifications`;
 
       result.push(h('hr'));
 
       const items = [notificationItems];
 
-      if (notificationItems.length > 0) {
+      if (notificationItems.length > 5) {
+        const href = `${attrs.path}/notifications`;
+
         items.push(
           h('li.read.last.heading', h('a', { attributes: { href } }, [I18n.t('notifications.more'), '...'])),
           h('hr')
