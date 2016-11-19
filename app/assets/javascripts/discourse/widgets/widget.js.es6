@@ -2,7 +2,7 @@ import { WidgetClickHook,
          WidgetClickOutsideHook,
          WidgetKeyUpHook,
          WidgetKeyDownHook,
-         WidgetKeyPressHook,
+         WidgetInputHook,
          WidgetDragHook } from 'discourse/widgets/hooks';
 import { h } from 'virtual-dom';
 import DecoratorHelper from 'discourse/widgets/decorator-helper';
@@ -81,8 +81,8 @@ function drawWidget(builder, attrs, state) {
     properties['widget-key-down'] = new WidgetKeyDownHook(this);
   }
 
-  if (this.keyPress) {
-    properties['widget-key-press'] = new WidgetKeyPressHook(this);
+  if (this.input) {
+    properties['widget-input'] = new WidgetInputHook(this);
   }
 
   if (this.clickOutside) {
