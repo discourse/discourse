@@ -1,4 +1,4 @@
-<div class="modal-body">
+{{#d-modal-body title="login.title" class="login-modal"}}
   {{login-buttons action="externalLogin"}}
   {{#if canLoginLocal}}
     <form id='login-form' method='post'>
@@ -32,7 +32,8 @@
   {{/if}}
   {{authMessage}}
   <div id='login-alert' class={{alertClass}}>{{alert}}</div>
-</div>
+{{/d-modal-body}}
+
 <div class="modal-footer">
   {{#if authenticate}}
     {{i18n 'login.authenticating'}}
