@@ -77,7 +77,7 @@ HTML
     end
 
     it "should inject nofollow in all user provided links" do
-      expect(PrettyText.cook('<a href="http://cnn.com">cnn</a>')).to match(/nofollow noopener noreferrer/)
+      expect(PrettyText.cook('<a href="http://cnn.com">cnn</a>')).to match(/nofollow noopener/)
     end
 
     it "should not inject nofollow in all local links" do
