@@ -261,11 +261,11 @@ module PrettyText
            whitelist.any?{|u| uri.host == u || uri.host.ends_with?("." << u)}
           # we are good no need for nofollow
         else
-          l["rel"] = "nofollow noopener noreferrer"
+          l["rel"] = "nofollow noopener"
         end
       rescue URI::InvalidURIError, URI::InvalidComponentError
         # add a nofollow anyway
-        l["rel"] = "nofollow noopener noreferrer"
+        l["rel"] = "nofollow noopener"
       end
     end
   end
