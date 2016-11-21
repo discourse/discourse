@@ -92,7 +92,11 @@ class PluginApi {
         if (result.icon) {
           iconBody = iconNode(result.icon);
         } else if (result.emoji) {
-          iconBody = result.emoji.split('|').map(name => dec.attach('emoji', { name }));
+          iconBody = result.emoji.split('|').map(name => {
+            let widgetAttrs = { name };
+            if (result.title) widgetAttrs.title = true;
+            dec.attach('emoji', widgetAttrs);
+          });
         }
 
         if (result.text) {
