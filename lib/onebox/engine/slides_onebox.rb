@@ -16,7 +16,7 @@ module Onebox
                   webkitallowfullscreen
                   mozallowfullscreen
                   allowfullscreen>
-          </iframe>"
+          </iframe>
         HTML
       end
 
