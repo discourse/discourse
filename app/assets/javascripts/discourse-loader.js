@@ -135,8 +135,12 @@ var define, require, requirejs;
   }
 
   requirejs = require = function(name) {
-    var mod = registry[name] || registry[MOVED_MODULES[name]];
 
+    if (MOVED_MODULES[name]) {
+      name = MOVED_MODULES[name];
+    }
+
+    var mod = registry[name];
 
     if (mod && mod.callback instanceof Alias) {
       mod = registry[mod.callback.name];
