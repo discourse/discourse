@@ -2308,6 +2308,10 @@ en:
       custom_message_template_forum: "Hey, you should join this forum!"
       custom_message_template_topic: "Hey, I thought you might enjoy this topic!"
 
+    safe_mode:
+      enabled: "Safe mode is enabled, to exit safe mode close this browser window"
+
+
   # This section is exported to the javascript for i18n in the admin section
   admin_js:
     type_to_filter: "type to filter..."

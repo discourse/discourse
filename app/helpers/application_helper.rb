@@ -241,7 +241,18 @@ module ApplicationHelper
   end
 
   def customization_disabled?
-    session[:disable_customization]
+    safe_mode = params["safe_mode"]
+    session[:disable_customization] || (safe_mode && safe_mode.include?("no_custom"))
+  end
+
+  def allow_plugins?
+    safe_mode = params["safe_mode"]
+    !(safe_mode && safe_mode.include?("no_plugins"))
+  end
+
+  def allow_third_party_plugins?
+    safe_mode = params["safe_mode"]
+    !(safe_mode && (safe_mode.include?("no_plugins") || safe_mode.include?("only_official")))
   end
 
   def loading_admin?
