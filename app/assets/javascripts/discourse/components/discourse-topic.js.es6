@@ -2,13 +2,24 @@ import AddArchetypeClass from 'discourse/mixins/add-archetype-class';
 import ClickTrack from 'discourse/lib/click-track';
 import Scrolling from 'discourse/mixins/scrolling';
 import { selectedText } from 'discourse/lib/utilities';
+import { observes } from 'ember-addons/ember-computed-decorators';
 
-const TopicView = Ember.View.extend(AddArchetypeClass, Scrolling, {
-  templateName: 'topic',
-  topic: Ember.computed.alias('controller.model'),
+function highlight(postNumber) {
+  const $contents = $(`#post_${postNumber} .topic-body`),
+        origColor = $contents.data('orig-color') || $contents.css('backgroundColor');
 
+  $contents.data("orig-color", origColor)
+    .addClass('highlighted')
+    .stop()
+    .animate({ backgroundColor: origColor }, 2500, 'swing', function() {
+      $contents.removeClass('highlighted');
+      $contents.css({'background-color': ''});
+    });
+}
+
+export default Ember.Component.extend(AddArchetypeClass, Scrolling, {
   userFilters: Ember.computed.alias('topic.userFilters'),
-  classNameBindings: ['controller.multiSelect:multi-select',
+  classNameBindings: ['multiSelect',
                       'topic.archetype',
                       'topic.is_warning',
                       'topic.category.read_restricted:read_restricted',
@@ -17,30 +28,26 @@ const TopicView = Ember.View.extend(AddArchetypeClass, Scrolling, {
   menuVisible: true,
   SHORT_POST: 1200,
 
-  postStream: Em.computed.alias('topic.postStream'),
-  archetype: Em.computed.alias('topic.archetype'),
+  postStream: Ember.computed.alias('topic.postStream'),
+  archetype: Ember.computed.alias('topic.archetype'),
 
   _lastShowTopic: null,
 
-  _composeChanged: function() {
-    const composerController = Discourse.get('router.composerController');
-    composerController.clearState();
-    composerController.set('topic', this.get('topic'));
-  }.observes('composer'),
-
-  _enteredTopic: function() {
+  @observes('enteredAt')
+  _enteredTopic() {
     // Ember is supposed to only call observers when values change but something
     // in our view set up is firing this observer with the same value. This check
     // prevents scrolled from being called twice.
-    const enteredAt = this.get('controller.enteredAt');
+    const enteredAt = this.get('enteredAt');
     if (enteredAt && (this.get('lastEnteredAt') !== enteredAt)) {
       this._lastShowTopic = null;
       this.scrolled();
       this.set('lastEnteredAt', enteredAt);
     }
-  }.observes('controller.enteredAt'),
+  },
 
-  _inserted: function() {
+  didInsertElement() {
+    this._super();
     this.bindScrolling({name: 'topic-view'});
 
     $(window).on('resize.discourse-on-scroll', () => this.scrolled());
@@ -63,10 +70,10 @@ const TopicView = Ember.View.extend(AddArchetypeClass, Scrolling, {
     this.appEvents.on('post:highlight', postNumber => {
       Ember.run.scheduleOnce('afterRender', null, highlight, postNumber);
     });
-  }.on('didInsertElement'),
+  },
 
-  // This view is being removed. Shut down operations
-  _destroyed: function() {
+  willDestroyElement() {
+    this._super();
     this.unbindScrolling('topic-view');
     $(window).unbind('resize.discourse-on-scroll');
 
@@ -79,15 +86,16 @@ const TopicView = Ember.View.extend(AddArchetypeClass, Scrolling, {
     this.appEvents.trigger('header:hide-topic');
     this.appEvents.off('post:highlight');
 
-  }.on('willDestroyElement'),
+  },
 
-  gotFocus: function() {
+  @observes('Discourse.hasFocus')
+  gotFocus() {
     if (Discourse.get('hasFocus')){
       this.scrolled();
     }
-  }.observes("Discourse.hasFocus"),
+  },
 
-  resetExamineDockCache: function() {
+  resetExamineDockCache() {
     this.set('docAt', false);
   },
 
@@ -113,7 +121,7 @@ const TopicView = Ember.View.extend(AddArchetypeClass, Scrolling, {
       }
     }
 
-    this.set('controller.hasScrolled', offset > 0);
+    this.set('hasScrolled', offset > 0);
 
     const topic = this.get('topic');
     const showTopic = this.showTopicInHeader(topic, offset);
@@ -131,18 +139,3 @@ const TopicView = Ember.View.extend(AddArchetypeClass, Scrolling, {
     this.appEvents.trigger('topic:scrolled', offset);
   }
 });
-
-function highlight(postNumber) {
-  const $contents = $(`#post_${postNumber} .topic-body`),
-        origColor = $contents.data('orig-color') || $contents.css('backgroundColor');
-
-  $contents.data("orig-color", origColor)
-    .addClass('highlighted')
-    .stop()
-    .animate({ backgroundColor: origColor }, 2500, 'swing', function() {
-      $contents.removeClass('highlighted');
-      $contents.css({'background-color': ''});
-    });
-}
-
-export default TopicView;
