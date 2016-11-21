@@ -191,4 +191,49 @@ describe Plugin::Instance do
     end
   end
 
+  describe '#add_model_callback' do
+    let(:metadata) do
+      metadata = Plugin::Metadata.new
+      metadata.name = 'test'
+      metadata
+    end
+
+    let(:plugin_instance) do
+      plugin = Plugin::Instance.new(nil, "/tmp/test.rb")
+      plugin.metadata = metadata
+      plugin
+    end
+
+    it 'should add the right callback' do
+      called = 0
+
+      method_name = plugin_instance.add_model_callback(User, :after_create) do
+        called += 1
+      end
+
+      user = Fabricate(:user)
+
+      expect(called).to eq(1)
+
+      user.update_attributes!(username: 'some_username')
+
+      expect(called).to eq(1)
+    end
+
+    it 'should add the right callback with options' do
+      called = 0
+
+      method_name = plugin_instance.add_model_callback(User, :after_commit, on: :create) do
+        called += 1
+      end
+
+      user = Fabricate(:user)
+
+      expect(called).to eq(1)
+
+      user.update_attributes!(username: 'some_username')
+
+      expect(called).to eq(1)
+    end
+  end
 end
