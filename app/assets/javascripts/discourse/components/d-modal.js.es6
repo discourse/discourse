@@ -1,9 +1,8 @@
 import { on } from "ember-addons/ember-computed-decorators";
 
-export default Ember.View.extend({
+export default Ember.Component.extend({
   elementId: 'discourse-modal',
-  templateName: 'modal/modal',
-  classNameBindings: [':modal', ':hidden', 'controller.modalClass'],
+  classNameBindings: [':modal', ':hidden', 'modalClass'],
   attributeBindings: ['data-keyboard'],
 
   // We handle ESC ourselves
@@ -19,7 +18,7 @@ export default Ember.View.extend({
 
     this.appEvents.on('modal:body-shown', data => {
       if (data.title) {
-        this.set('controller.title', I18n.t(data.title));
+        this.set('title', I18n.t(data.title));
       }
     });
   },
