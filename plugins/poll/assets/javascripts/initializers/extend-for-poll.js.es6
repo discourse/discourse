@@ -1,20 +1,10 @@
 import { withPluginApi } from 'discourse/lib/plugin-api';
 import { observes } from "ember-addons/ember-computed-decorators";
 
-function createPollView(container, post, poll, vote, publicPoll) {
-  const controller = container.lookup("controller:poll", { singleton: false });
-  const view = container.lookup("view:poll");
-
-  controller.setProperties({
-    model: poll,
-    vote: vote,
-    public: publicPoll,
-    post
-  });
-
-  view.set("controller", controller);
-
-  return view;
+function createPollComponent(container, post, poll, vote) {
+  const component = container.lookup("component:discourse-poll");
+  component.setProperties({ model: poll, vote, post });
+  return component;
 }
 
 let _pollViews;
@@ -89,20 +79,18 @@ function initializePolls(api) {
       const $poll = $(pollElem);
 
       const pollName = $poll.data("poll-name");
-      const publicPoll = $poll.data("poll-public");
       const pollId = `${pollName}-${post.id}`;
 
-      const pollView = createPollView(
+      const pollComponent = createPollComponent(
         helper.container,
         post,
         polls[pollName],
-        votes[pollName],
-        publicPoll
+        votes[pollName]
       );
 
       $poll.replaceWith($div);
-      Em.run.schedule('afterRender', () => pollView.renderer.replaceIn(pollView, $div[0]));
-      postPollViews[pollId] = pollView;
+      Em.run.schedule('afterRender', () => pollComponent.renderer.replaceIn(pollComponent, $div[0]));
+      postPollViews[pollId] = pollComponent;
     });
 
     _pollViews = postPollViews;

@@ -1,7 +1,16 @@
-import { ajax } from 'discourse/lib/ajax';
 import { default as computed, observes } from "ember-addons/ember-computed-decorators";
+import { ajax } from 'discourse/lib/ajax';
 
-export default Ember.Controller.extend({
+export default Ember.Component.extend({
+  layoutName: 'components/discourse-poll',
+  classNames: ["poll"],
+  attributeBindings: ["data-poll-type", "data-poll-name", "data-poll-status", "data-poll-public"],
+
+  "data-poll-type": Ember.computed.alias("poll.type"),
+  "data-poll-name": Ember.computed.alias("poll.name"),
+  "data-poll-status": Ember.computed.alias("poll.status"),
+  "data-poll-public": Ember.computed.alias("poll.public"),
+
   isMultiple: Ember.computed.equal("poll.type", "multiple"),
   isNumber: Ember.computed.equal("poll.type", "number"),
   isClosed: Ember.computed.equal("poll.status", "closed"),
@@ -11,10 +20,10 @@ export default Ember.Controller.extend({
   //   - poll is closed
   //   - topic is archived
   //   - user wants to see the results
-  showingResults: Em.computed.or("isClosed", "post.topic.archived", "showResults"),
+  showingResults: Ember.computed.or("isClosed", "post.topic.archived", "showResults"),
 
-  showResultsDisabled: Em.computed.equal("poll.voters", 0),
-  hideResultsDisabled: Em.computed.or("isClosed", "post.topic.archived"),
+  showResultsDisabled: Ember.computed.equal("poll.voters", 0),
+  hideResultsDisabled: Ember.computed.or("isClosed", "post.topic.archived"),
 
   @observes("post.polls")
   _updatePoll() {
