@@ -94,8 +94,8 @@ class PluginApi {
         } else if (result.emoji) {
           iconBody = result.emoji.split('|').map(name => {
             let widgetAttrs = { name };
-            if (result.title) widgetAttrs.title = true;
-            dec.attach('emoji', widgetAttrs);
+            if (result.emojiTitle) widgetAttrs.title = true;
+            return dec.attach('emoji', widgetAttrs);
           });
         }
 
