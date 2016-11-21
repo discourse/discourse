@@ -4,7 +4,7 @@ module Onebox
       include Engine
       include StandardEmbed
 
-      matches_regexp(/^https?:\/\/giphy\.com\/gifs\//)
+      matches_regexp(/^https?:\/\/(giphy\.com\/gifs|gph\.is)\//)
 
       def to_html
         oembed = get_oembed
@@ -15,6 +15,7 @@ module Onebox
           </a>
         HTML
       end
+
     end
   end
 end
