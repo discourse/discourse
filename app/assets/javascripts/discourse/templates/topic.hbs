@@ -1,233 +1,233 @@
-
-{{#if model}}
-  {{add-category-class category=model.category}}
-  <div class="container">
-    {{discourse-banner user=currentUser banner=site.banner overlay=hasScrolled hide=model.errorLoading}}
-  </div>
-{{/if}}
-
-{{plugin-outlet "topic-above-post-stream"}}
-
-{{#if model.postStream.loaded}}
-  {{#if model.postStream.firstPostPresent}}
-    <div id="topic-title">
-      <div class="container">
-
-        <div class="title-wrapper">
-          {{#if editingTopic}}
-            {{#if model.isPrivateMessage}}
-              <span class="private-message-glyph">{{fa-icon "envelope"}}</span>
-            {{/if}}
-
-            {{text-field id="edit-title" value=buffered.title maxlength=siteSettings.max_topic_title_length autofocus="true"}}
-            {{#if showCategoryChooser}}
-              <br>
-              {{category-chooser valueAttribute="id" value=buffered.category_id}}
-            {{/if}}
-
-            {{#if canEditTags}}
-              <br>
-              {{tag-chooser tags=buffered.tags categoryId=buffered.category_id}}
-            {{/if}}
-
-            {{plugin-outlet "edit-topic"}}
-
-            {{d-button action="finishedEditingTopic" class="btn-primary btn-small submit-edit" icon="check"}}
-            {{d-button action="cancelEditingTopic" class="btn-small cancel-edit" icon="times"}}
-          {{else}}
-            <h1>
-              {{#unless model.is_warning}}
-                <a href={{pmPath}}>
-                  <span class="private-message-glyph">{{fa-icon "envelope"}}</span>
-                </a>
-              {{/unless}}
-
-              {{#if model.details.loaded}}
-                {{topic-status topic=model}}
-                <a href="{{unbound model.url}}" {{action "jumpTop"}} class="fancy-title">
-                  {{{model.fancyTitle}}}
-                </a>
-              {{/if}}
-
-              {{#if model.details.can_edit}}
-                <a href {{action "editTopic"}} class="edit-topic" title="{{i18n "edit"}}">{{fa-icon "pencil"}}</a>
-              {{/if}}
-            </h1>
-
-            {{#unless model.isPrivateMessage}}
-              {{topic-category topic=model class="topic-category"}}
-            {{/unless}}
-          {{/if}}
-        </div>
-        {{plugin-outlet "topic-title"}}
-      </div>
+{{#discourse-topic multiSelect=multiSelect enteredAt=enteredAt topic=model hasScrolled=hasScrolled}}
+  {{#if model}}
+    {{add-category-class category=model.category}}
+    <div class="container">
+      {{discourse-banner user=currentUser banner=site.banner overlay=hasScrolled hide=model.errorLoading}}
     </div>
   {{/if}}
 
-  <div class="container posts">
-    <div class='selected-posts {{unless multiSelect 'hidden'}}'>
-      {{partial "selected-posts"}}
-    </div>
+  {{plugin-outlet "topic-above-post-stream"}}
 
-    {{#topic-navigation jumpToIndex="jumpToIndex" as |info|}}
+  {{#if model.postStream.loaded}}
+    {{#if model.postStream.firstPostPresent}}
+      <div id="topic-title">
+        <div class="container">
 
-      {{#if info.renderAdminMenuButton}}
-        {{topic-admin-menu-button topic=model fixed="true" delegated=topicDelegated}}
-      {{/if}}
-
-      {{#if info.renderTimeline}}
-        {{topic-timeline topic=model
-                         prevEvent=info.prevEvent
-                         fullscreen=info.topicProgressExpanded
-                         enteredIndex=enteredIndex
-                         loading=model.postStream.loading
-                         delegated=topicDelegated}}
-
-      {{else}}
-        {{topic-progress prevEvent=info.prevEvent topic=model delegated=topicDelegated expanded=info.topicProgressExpanded}}
-      {{/if}}
-
-
-    {{/topic-navigation}}
-
-    <div class="row">
-      <section class="topic-area" id="topic" data-topic-id="{{unbound model.id}}">
-
-        <div class="posts-wrapper">
-          {{conditional-loading-spinner condition=model.postStream.loadingAbove}}
-
-          {{plugin-outlet "topic-above-posts"}}
-
-          {{#unless model.postStream.loadingFilter}}
-            {{scrolling-post-stream
-              posts=postsToRender
-              canCreatePost=model.details.can_create_post
-              multiSelect=multiSelect
-              selectedPostsCount=selectedPostsCount
-              selectedQuery=selectedQuery
-              gaps=model.postStream.gaps
-              showFlags="showFlags"
-              editPost="editPost"
-              showHistory="showHistory"
-              showLogin="showLogin"
-              showRawEmail="showRawEmail"
-              deletePost="deletePost"
-              recoverPost="recoverPost"
-              expandHidden="expandHidden"
-              newTopicAction="replyAsNewTopic"
-              expandFirstPost="expandFirstPost"
-              toggleBookmark="toggleBookmark"
-              togglePostType="togglePostType"
-              rebakePost="rebakePost"
-              changePostOwner="changePostOwner"
-              unhidePost="unhidePost"
-              replyToPost="replyToPost"
-              toggleWiki="toggleWiki"
-              toggleSummary="toggleSummary"
-              removeAllowedUser="removeAllowedUser"
-              removeAllowedGroup="removeAllowedGroup"
-              showInvite="showInvite"
-              topVisibleChanged="topVisibleChanged"
-              currentPostChanged="currentPostChanged"
-              currentPostScrolled="currentPostScrolled"
-              bottomVisibleChanged="bottomVisibleChanged"
-              selectPost="toggledSelectedPost"
-              selectReplies="toggledSelectedPostReplies"
-              fillGapBefore="fillGapBefore"
-              fillGapAfter="fillGapAfter"}}
-          {{/unless}}
-
-          {{conditional-loading-spinner condition=model.postStream.loadingBelow}}
-        </div>
-        <div id="topic-bottom"></div>
-
-        {{#conditional-loading-spinner condition=model.postStream.loadingFilter}}
-          {{#if loadedAllPosts}}
-
-            {{topic-closing topic=model}}
-            {{#if session.showSignupCta}}
-              {{! replace "Log In to Reply" with the infobox }}
-              {{signup-cta}}
-            {{else}}
-              {{#if currentUser}}
-                {{topic-footer-buttons topic=model topicDelegated=topicDelegated}}
-              {{else}}
-                {{d-button icon="reply" class="btn-primary" action="showLogin" label="topic.reply.title"}}
+          <div class="title-wrapper">
+            {{#if editingTopic}}
+              {{#if model.isPrivateMessage}}
+                <span class="private-message-glyph">{{fa-icon "envelope"}}</span>
               {{/if}}
-            {{/if}}
 
-            {{#if model.pending_posts_count}}
-              <div class="has-pending-posts">
-                {{{i18n "queue.has_pending_posts" count=model.pending_posts_count}}}
+              {{text-field id="edit-title" value=buffered.title maxlength=siteSettings.max_topic_title_length autofocus="true"}}
+              {{#if showCategoryChooser}}
+                <br>
+                {{category-chooser valueAttribute="id" value=buffered.category_id}}
+              {{/if}}
 
-                {{#if currentUser.show_queued_posts}}
-                  {{#link-to "queued-posts"}}
-                    {{fa-icon "check"}}
-                    {{i18n "queue.view_pending"}}
-                  {{/link-to}}
+              {{#if canEditTags}}
+                <br>
+                {{tag-chooser tags=buffered.tags categoryId=buffered.category_id}}
+              {{/if}}
+
+              {{plugin-outlet "edit-topic"}}
+
+              {{d-button action="finishedEditingTopic" class="btn-primary btn-small submit-edit" icon="check"}}
+              {{d-button action="cancelEditingTopic" class="btn-small cancel-edit" icon="times"}}
+            {{else}}
+              <h1>
+                {{#unless model.is_warning}}
+                  <a href={{pmPath}}>
+                    <span class="private-message-glyph">{{fa-icon "envelope"}}</span>
+                  </a>
+                {{/unless}}
+
+                {{#if model.details.loaded}}
+                  {{topic-status topic=model}}
+                  <a href="{{unbound model.url}}" {{action "jumpTop"}} class="fancy-title">
+                    {{{model.fancyTitle}}}
+                  </a>
                 {{/if}}
-              </div>
+
+                {{#if model.details.can_edit}}
+                  <a href {{action "editTopic"}} class="edit-topic" title="{{i18n "edit"}}">{{fa-icon "pencil"}}</a>
+                {{/if}}
+              </h1>
+
+              {{#unless model.isPrivateMessage}}
+                {{topic-category topic=model class="topic-category"}}
+              {{/unless}}
             {{/if}}
+          </div>
+          {{plugin-outlet "topic-title"}}
+        </div>
+      </div>
+    {{/if}}
 
-            {{#if showSelectedPostsAtBottom}}
-              <div class='selected-posts {{unless multiSelect 'hidden'}}'>
-                {{partial "selected-posts"}}
-              </div>
-            {{/if}}
+    <div class="container posts">
+      <div class='selected-posts {{unless multiSelect 'hidden'}}'>
+        {{partial "selected-posts"}}
+      </div>
 
-            {{plugin-outlet "topic-above-suggested"}}
+      {{#topic-navigation jumpToIndex="jumpToIndex" as |info|}}
 
-            {{#if model.details.suggested_topics.length}}
-              <div id="suggested-topics">
-                <h3>{{{suggestedTitle}}}</h3>
-                <div class="topics">
-                  {{#if model.isPrivateMessage}}
-                    {{basic-topic-list hideCategory="true"
-                                       showPosters="true"
-                                       topics=model.details.suggested_topics}}
-                  {{else}}
-                    {{basic-topic-list topics=model.details.suggested_topics}}
+        {{#if info.renderAdminMenuButton}}
+          {{topic-admin-menu-button topic=model fixed="true" delegated=topicDelegated}}
+        {{/if}}
+
+        {{#if info.renderTimeline}}
+          {{topic-timeline topic=model
+                           prevEvent=info.prevEvent
+                           fullscreen=info.topicProgressExpanded
+                           enteredIndex=enteredIndex
+                           loading=model.postStream.loading
+                           delegated=topicDelegated}}
+
+        {{else}}
+          {{topic-progress prevEvent=info.prevEvent topic=model delegated=topicDelegated expanded=info.topicProgressExpanded}}
+        {{/if}}
+
+
+      {{/topic-navigation}}
+
+      <div class="row">
+        <section class="topic-area" id="topic" data-topic-id="{{unbound model.id}}">
+
+          <div class="posts-wrapper">
+            {{conditional-loading-spinner condition=model.postStream.loadingAbove}}
+
+            {{plugin-outlet "topic-above-posts"}}
+
+            {{#unless model.postStream.loadingFilter}}
+              {{scrolling-post-stream
+                posts=postsToRender
+                canCreatePost=model.details.can_create_post
+                multiSelect=multiSelect
+                selectedPostsCount=selectedPostsCount
+                selectedQuery=selectedQuery
+                gaps=model.postStream.gaps
+                showFlags="showFlags"
+                editPost="editPost"
+                showHistory="showHistory"
+                showLogin="showLogin"
+                showRawEmail="showRawEmail"
+                deletePost="deletePost"
+                recoverPost="recoverPost"
+                expandHidden="expandHidden"
+                newTopicAction="replyAsNewTopic"
+                expandFirstPost="expandFirstPost"
+                toggleBookmark="toggleBookmark"
+                togglePostType="togglePostType"
+                rebakePost="rebakePost"
+                changePostOwner="changePostOwner"
+                unhidePost="unhidePost"
+                replyToPost="replyToPost"
+                toggleWiki="toggleWiki"
+                toggleSummary="toggleSummary"
+                removeAllowedUser="removeAllowedUser"
+                removeAllowedGroup="removeAllowedGroup"
+                showInvite="showInvite"
+                topVisibleChanged="topVisibleChanged"
+                currentPostChanged="currentPostChanged"
+                currentPostScrolled="currentPostScrolled"
+                bottomVisibleChanged="bottomVisibleChanged"
+                selectPost="toggledSelectedPost"
+                selectReplies="toggledSelectedPostReplies"
+                fillGapBefore="fillGapBefore"
+                fillGapAfter="fillGapAfter"}}
+            {{/unless}}
+
+            {{conditional-loading-spinner condition=model.postStream.loadingBelow}}
+          </div>
+          <div id="topic-bottom"></div>
+
+          {{#conditional-loading-spinner condition=model.postStream.loadingFilter}}
+            {{#if loadedAllPosts}}
+
+              {{topic-closing topic=model}}
+              {{#if session.showSignupCta}}
+                {{! replace "Log In to Reply" with the infobox }}
+                {{signup-cta}}
+              {{else}}
+                {{#if currentUser}}
+                  {{topic-footer-buttons topic=model topicDelegated=topicDelegated}}
+                {{else}}
+                  {{d-button icon="reply" class="btn-primary" action="showLogin" label="topic.reply.title"}}
+                {{/if}}
+              {{/if}}
+
+              {{#if model.pending_posts_count}}
+                <div class="has-pending-posts">
+                  {{{i18n "queue.has_pending_posts" count=model.pending_posts_count}}}
+
+                  {{#if currentUser.show_queued_posts}}
+                    {{#link-to "queued-posts"}}
+                      {{fa-icon "check"}}
+                      {{i18n "queue.view_pending"}}
+                    {{/link-to}}
                   {{/if}}
                 </div>
-                <h3>{{{browseMoreMessage}}}</h3>
-              </div>
+              {{/if}}
+
+              {{#if showSelectedPostsAtBottom}}
+                <div class='selected-posts {{unless multiSelect 'hidden'}}'>
+                  {{partial "selected-posts"}}
+                </div>
+              {{/if}}
+
+              {{plugin-outlet "topic-above-suggested"}}
+
+              {{#if model.details.suggested_topics.length}}
+                <div id="suggested-topics">
+                  <h3>{{{suggestedTitle}}}</h3>
+                  <div class="topics">
+                    {{#if model.isPrivateMessage}}
+                      {{basic-topic-list hideCategory="true"
+                                         showPosters="true"
+                                         topics=model.details.suggested_topics}}
+                    {{else}}
+                      {{basic-topic-list topics=model.details.suggested_topics}}
+                    {{/if}}
+                  </div>
+                  <h3>{{{browseMoreMessage}}}</h3>
+                </div>
+              {{/if}}
+
             {{/if}}
+          {{/conditional-loading-spinner}}
 
-          {{/if}}
-        {{/conditional-loading-spinner}}
+        </section>
+      </div>
 
-      </section>
     </div>
+  {{else}}
+    <div class="container">
+      {{#conditional-loading-spinner condition=noErrorYet}}
+        {{#if model.notFoundHtml}}
+          <div class="not-found">{{{model.notFoundHtml}}}</div>
+        {{else}}
+          <div class="topic-error">
+            <div>{{model.message}}</div>
+            {{#if model.noRetry}}
+              {{#unless currentUser}}
+                {{d-button action="showLogin" class="btn-primary topic-retry" icon="user" label="log_in"}}
+              {{/unless}}
+            {{else}}
+              {{d-button action="retryLoading" class="btn-primary topic-retry" icon="refresh" label="errors.buttons.again"}}
+            {{/if}}
+          </div>
+          {{conditional-loading-spinner condition=retrying}}
+        {{/if}}
+      {{/conditional-loading-spinner}}
+    </div>
+  {{/if}}
 
-  </div>
-{{else}}
-  <div class="container">
-    {{#conditional-loading-spinner condition=noErrorYet}}
-      {{#if model.notFoundHtml}}
-        <div class="not-found">{{{model.notFoundHtml}}}</div>
-      {{else}}
-        <div class="topic-error">
-          <div>{{model.message}}</div>
-          {{#if model.noRetry}}
-            {{#unless currentUser}}
-              {{d-button action="showLogin" class="btn-primary topic-retry" icon="user" label="log_in"}}
-            {{/unless}}
-          {{else}}
-            {{d-button action="retryLoading" class="btn-primary topic-retry" icon="refresh" label="errors.buttons.again"}}
-          {{/if}}
-        </div>
-        {{conditional-loading-spinner condition=retrying}}
-      {{/if}}
-    {{/conditional-loading-spinner}}
-  </div>
-{{/if}}
+  {{share-popup topic=model replyAsNewTopic="replyAsNewTopic"}}
 
-{{share-popup topic=model replyAsNewTopic="replyAsNewTopic"}}
-
-{{#if currentUser.enable_quoting}}
-  {{quote-button topic=model
-                 quoteState=quoteState
-                 selectText="selectText"
-                 deselectText="deselectText"}}
-{{/if}}
-
+  {{#if currentUser.enable_quoting}}
+    {{quote-button topic=model
+                   quoteState=quoteState
+                   selectText="selectText"
+                   deselectText="deselectText"}}
+  {{/if}}
+{{/discourse-topic}}
