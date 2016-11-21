@@ -112,7 +112,7 @@ class Plugin::Instance
     end
   end
 
-  def add_model_callback(klass, callback, &block)
+  def add_model_callback(klass, callback, options = {}, &block)
     klass = klass.to_s.classify.constantize rescue klass.to_s.constantize
     plugin = self
 
@@ -122,10 +122,11 @@ class Plugin::Instance
     hidden_method_name = :"#{method_name}_without_enable_check"
     klass.send(:define_method, hidden_method_name, &block)
 
-    klass.send(callback) do |*args|
+    klass.send(callback, options) do |*args|
       send(hidden_method_name, *args) if plugin.enabled?
     end
 
+    hidden_method_name
   end
 
   # Add validation method but check that the plugin is enabled
