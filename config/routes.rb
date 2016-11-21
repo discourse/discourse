@@ -699,6 +699,9 @@ Discourse::Application.routes.draw do
   post "/user-api-key/revoke" => "user_api_keys#revoke"
   post "/user-api-key/undo-revoke" => "user_api_keys#undo_revoke"
 
+  get "/safe-mode" => "safe_mode#index"
+  post "/safe-mode" => "safe_mode#enter", as: "safe_mode_enter"
+
   get "*url", to: 'permalinks#show', constraints: PermalinkConstraint.new
 
 end

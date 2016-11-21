@@ -9,6 +9,10 @@ export default Ember.Component.extend(bufferedRender({
   buildBuffer(buffer) {
     let notices = [];
 
+    if (this.session.get('safe_mode')) {
+      notices.push([I18n.t("safe_mode.enabled"), 'safe-mode']);
+    }
+
     if (this.site.get("isReadOnly")) {
       notices.push([I18n.t("read_only_mode.enabled"), 'alert-read-only']);
     }
