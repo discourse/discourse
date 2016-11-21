@@ -209,8 +209,11 @@ export default {
   sendToTopicListItemView(action) {
     const elem = $('tr.selected.topic-list-item.ember-view')[0];
     if (elem) {
-      const view = Ember.View.views[elem.id];
-      view.send(action);
+      const registry = this.container.lookup('-view-registry:main');
+      if (registry) {
+        const view = registry[elem.id];
+        view.send(action);
+      }
     }
   },
 
