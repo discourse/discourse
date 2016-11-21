@@ -97,4 +97,10 @@ module UserNotificationsHelper
     UrlHelper.absolute("#{Discourse.base_uri}/images/emails/#{basename}")
   end
 
+  def url_for_email(href)
+    URI(href).host.present? ? href : UrlHelper.absolute("#{Discourse.base_uri}#{href}")
+  rescue URI::InvalidURIError, URI::InvalidComponentError
+    href
+  end
+
 end
