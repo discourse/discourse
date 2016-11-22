@@ -35,9 +35,11 @@ export default Ember.Component.extend({
 
         // Figure out the size of the fields
         const $fields = this.$('.composer-fields');
-        const fieldPos = $fields.position();
-        if (fieldPos) {
-          this.$('.wmd-controls').css('top', $fields.height() + fieldPos.top + 5);
+        if ($fields) {
+          const fieldPos = $fields.position();
+          if (fieldPos) {
+            this.$('.wmd-controls').css('top', $fields.height() + fieldPos.top + 5);
+          }
         }
 
         // get the submit panel height
