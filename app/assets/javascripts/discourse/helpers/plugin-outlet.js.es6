@@ -61,6 +61,11 @@ function findOutlets(collection, callback) {
   });
 }
 
+export function clearCache() {
+  _connectorCache = null;
+  _rawCache = null;
+}
+
 function buildConnectorCache() {
   _connectorCache = {};
   _rawCache = {};

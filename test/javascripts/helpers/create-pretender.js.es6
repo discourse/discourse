@@ -63,6 +63,10 @@ export default function() {
       }] });
     });
 
+    this.get(`/users/eviltrout/emails.json`, () => {
+      return response({ email: 'eviltrout@example.com' });
+    });
+
     this.get('/users/eviltrout.json', () => {
       const json = fixturesByUrl['/users/eviltrout.json'];
       json.user.can_edit = loggedIn();
