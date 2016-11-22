@@ -4,6 +4,7 @@ import sessionFixtures from 'fixtures/session-fixtures';
 import siteFixtures from 'fixtures/site-fixtures';
 import HeaderComponent from 'discourse/components/site-header';
 import { forceMobile, resetMobile } from 'discourse/lib/mobile';
+import { resetPluginApi } from 'discourse/lib/plugin-api';
 
 function currentUser() {
   return Discourse.User.create(sessionFixtures['/session/current.json'].current_user);
@@ -74,6 +75,7 @@ function acceptance(name, options) {
       Discourse.User.resetCurrent();
       Discourse.Site.resetCurrent(Discourse.Site.create(jQuery.extend(true, {}, fixtures['site.json'].site)));
 
+      resetPluginApi();
       Discourse.reset();
     }
   });
