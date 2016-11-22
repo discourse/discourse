@@ -28,27 +28,27 @@ export default Ember.Component.extend({
   },
 
   @observes('composeState', 'composer.action')
-    resize() {
-      Ember.run.scheduleOnce('afterRender', () => {
-        const h = $('#reply-control').height() || 0;
-        this.movePanels(h + "px");
+  resize() {
+    Ember.run.scheduleOnce('afterRender', () => {
+      if (!this.element || this.isDestroying || this.isDestroyed) { return; }
 
-        // Figure out the size of the fields
-        const $fields = this.$('.composer-fields');
-        if ($fields) {
-          const fieldPos = $fields.position();
-          if (fieldPos) {
-            this.$('.wmd-controls').css('top', $fields.height() + fieldPos.top + 5);
-          }
-        }
+      const h = $('#reply-control').height() || 0;
+      this.movePanels(h + "px");
 
-        // get the submit panel height
-        const submitPos = this.$('.submit-panel').position();
-        if (submitPos) {
-          this.$('.wmd-controls').css('bottom', h - submitPos.top + 7);
-        }
-      });
-    },
+      // Figure out the size of the fields
+      const $fields = this.$('.composer-fields');
+      const fieldPos = $fields.position();
+      if (fieldPos) {
+        this.$('.wmd-controls').css('top', $fields.height() + fieldPos.top + 5);
+      }
+
+      // get the submit panel height
+      const submitPos = this.$('.submit-panel').position();
+      if (submitPos) {
+        this.$('.wmd-controls').css('bottom', h - submitPos.top + 7);
+      }
+    });
+  },
 
   keyUp() {
     this.sendAction('typed');
