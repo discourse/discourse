@@ -175,7 +175,17 @@ describe UserNotifications do
         expect(subject.subject).to match(/Try Discourse/)
         expect(subject.subject).not_to match(/Discourse Meta/)
       end
+
+      it "excludes deleted topics and their posts" do
+        deleted = Fabricate(:topic, user: Fabricate(:user), title: "Delete this topic plz")
+        post = Fabricate(:post, topic: deleted, score: 100.0, post_number: 2, raw: "Your wish is my command")
+        deleted.trash!
+        html = subject.html_part.body.to_s
+        expect(html).to_not include deleted.title
+        expect(html).to_not include post.raw
+      end
     end
+
   end
 
   describe '.user_replied' do
