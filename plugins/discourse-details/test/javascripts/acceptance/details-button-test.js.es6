@@ -9,10 +9,6 @@ function findTextarea() {
 test('details button', () => {
   visit("/");
 
-  andThen(() => {
-    ok(exists('#create-topic'), 'the create button is visible');
-  });
-
   click('#create-topic');
   click('button.options');
   click('.popup-menu .fa-caret-right');

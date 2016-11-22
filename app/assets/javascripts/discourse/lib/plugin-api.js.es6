@@ -368,6 +368,10 @@ function decorate(klass, evt, cb) {
   klass.reopen(mixin);
 }
 
+export function resetPluginApi() {
+  _pluginv01 = null;
+}
+
 export function decorateCooked() {
   console.warn('`decorateCooked` has been removed. Use `getPluginApi(version).decorateCooked` instead');
 }
