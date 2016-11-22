@@ -108,8 +108,16 @@ class UserNotifications < ActionMailer::Base
     topics_for_digest = Topic.for_digest(user, min_date, limit: SiteSetting.digest_topics + 3, top_order: true).to_a
 
     @popular_topics = topics_for_digest[0,SiteSetting.digest_topics]
-    @popular_posts = SiteSetting.digest_posts > 0 ? Post.where("post_number > ? AND score > ? AND created_at > ?", 1, 5.0, min_date).order("score DESC").limit(SiteSetting.digest_posts) : []
     @other_new_for_you = topics_for_digest.size > SiteSetting.digest_topics ? topics_for_digest[SiteSetting.digest_topics..-1] : []
+
+    @popular_posts = if SiteSetting.digest_posts > 0
+      Post.public_posts
+          .where("posts.post_number > ? AND posts.score > ? AND posts.created_at > ?", 1, 5.0, min_date)
+          .order("posts.score DESC")
+          .limit(SiteSetting.digest_posts)
+    else
+      []
+    end
 
     topic_lookup = TopicUser.lookup_for(user, @other_new_for_you)
     @other_new_for_you.each { |t| t.user_data = topic_lookup[t.id] }
