@@ -6,6 +6,7 @@ const GOODBYE = 'javascripts/multi-test/connectors/user-profile-primary/goodbye'
 
 acceptance("Plugin Outlet - Multi Template", {
   setup() {
+    clearCache();
     Ember.TEMPLATES[HELLO] = Ember.HTMLBars.compile(`<span class='hello-span'>Hello</span>`);
     Ember.TEMPLATES[GOODBYE] = Ember.HTMLBars.compile(`<span class='bye-span'>Goodbye</span>`);
   },
