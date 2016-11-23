@@ -40,6 +40,7 @@ before_install:
   - gem install bundler
   - git clone --depth=1 https://github.com/discourse/discourse-backup-uploads-to-s3.git plugins/discourse-backup-uploads-to-s3
   - git clone --depth=1 https://github.com/discourse/discourse-spoiler-alert.git plugins/discourse-spoiler-alert
+  - git clone --depth=1 https://github.com/discourse/discourse-cakeday.git plugins/discourse-cakeday
   - npm i -g eslint babel-eslint
   - eslint app/assets/javascripts
   - eslint --ext .es6 app/assets/javascripts
