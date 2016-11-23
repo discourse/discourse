@@ -1,7 +1,7 @@
 import { registerHelper } from 'discourse-common/lib/helpers';
 import PreloadStore from 'preload-store';
 
-const _customizations = {};
+let _customizations = {};
 
 export function getCustomHTML(key) {
   const c = _customizations[key];
@@ -13,6 +13,10 @@ export function getCustomHTML(key) {
   if (html && html[key] && html[key].length) {
     return new Handlebars.SafeString(html[key]);
   }
+}
+
+export function clearHTMLCache() {
+  _customizations = {};
 }
 
 // Set a fragment of HTML by key. It can then be looked up with `getCustomHTML(key)`.

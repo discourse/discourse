@@ -1,22 +1,17 @@
 import { acceptance } from "helpers/qunit-helpers";
-import { clearCache } from 'discourse/helpers/plugin-outlet';
 
 const CONNECTOR = 'javascripts/single-test/connectors/user-profile-primary/hello';
 acceptance("Plugin Outlet - Single Template", {
   setup() {
-    clearCache();
     Ember.TEMPLATES[CONNECTOR] = Ember.HTMLBars.compile(
-      `
-        <span class='hello-username'>{{model.username}}</span>
+      `<span class='hello-username'>{{model.username}}</span>
         <button class='hello-check-email' {{action "checkEmail" model}}></button>
-        <span class='hello-email'>{{model.email}}</span>
-      `
+        <span class='hello-email'>{{model.email}}</span>`
     );
   },
 
   teardown() {
     delete Ember.TEMPLATES[CONNECTOR];
-    clearCache();
   }
 });
 
