@@ -65,6 +65,7 @@ function acceptance(name, options) {
         }
       }
 
+      resetPluginApi();
       Discourse.reset();
     },
 
