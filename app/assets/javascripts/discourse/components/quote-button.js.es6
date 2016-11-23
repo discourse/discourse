@@ -164,6 +164,8 @@ export default Ember.Component.extend({
       .off("touchstart.quote-button")
       .off("touchend.quote-button")
       .off("selectionchange");
+
+    this.sendAction('deselectText');
   },
 
   click(e) {
