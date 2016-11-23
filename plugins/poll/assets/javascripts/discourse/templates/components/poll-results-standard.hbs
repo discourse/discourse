@@ -11,7 +11,7 @@
     </div>
 
     {{#if isPublic}}
-      {{poll-results-standard-voters option=option}}
+      {{poll-voters-standard option=option fetch='fetchUsers'}}
     {{/if}}
   </li>
 {{/each}}

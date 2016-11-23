@@ -83,6 +83,14 @@ div.poll {
   .poll-voters-toggle-expand {
     width: 100%;
     text-align: center;
+
+    .inline-spinner {
+      display: block;
+    }
+
+    a {
+      display: block;
+    }
   }
 
   .results {
