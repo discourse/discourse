@@ -111,8 +111,8 @@ class UserNotifications < ActionMailer::Base
     @other_new_for_you = topics_for_digest.size > SiteSetting.digest_topics ? topics_for_digest[SiteSetting.digest_topics..-1] : []
 
     @popular_posts = if SiteSetting.digest_posts > 0
-      Post.public_posts
-          .where("posts.post_number > ? AND posts.score > ? AND posts.created_at > ?", 1, 5.0, min_date)
+      Post.for_mailing_list(user, min_date)
+          .where("posts.post_number > ? AND posts.score > ?", 1, 5.0)
           .order("posts.score DESC")
           .limit(SiteSetting.digest_posts)
     else

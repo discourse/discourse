@@ -155,8 +155,8 @@ describe UserNotifications do
     context "with new topics" do
 
       before do
-        Topic.expects(:for_digest).returns([Fabricate(:topic, user: Fabricate(:coding_horror))])
-        Topic.expects(:new_since_last_seen).returns(Topic.none)
+        Topic.stubs(:for_digest).returns([Fabricate(:topic, user: Fabricate(:coding_horror))])
+        Topic.stubs(:new_since_last_seen).returns(Topic.none)
       end
 
       it "works" do
