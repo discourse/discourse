@@ -19,6 +19,24 @@
 </div>
 
 {{#conditional-loading-spinner condition=loading}}
+
+  {{#if showSendEmailForm}}
+    <br/>
+    <div>
+      {{#if sendingEmail}}
+        {{i18n 'admin.email.sending_test'}}
+      {{else}}
+        <label style="display: inline;">{{i18n 'admin.email.send_digest_label'}}</label>
+        {{text-field value=email placeholderKey="admin.email.test_email_address"}}
+        <button class='btn' {{action "sendEmail"}} disabled={{sendEmailDisabled}}>{{i18n 'admin.email.send_digest'}}</button>
+        {{#if sentEmail}}
+          <span class='result-message'>{{i18n 'admin.email.sent_test'}}</span>
+        {{/if}}
+      {{/if}}
+    </div>
+    <br/>
+  {{/if}}
+
   {{#if showHtml}}
     {{{model.html_content}}}
   {{else}}
