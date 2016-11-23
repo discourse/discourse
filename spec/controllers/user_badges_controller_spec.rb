@@ -104,6 +104,7 @@ describe UserBadgesController do
       log_in :admin
       user
       DiscourseEvent.expects(:trigger).with(:user_badge_granted, anything, anything).once
+      DiscourseEvent.expects(:trigger).with(:notification_created, anything).once
       xhr :post, :create, badge_id: badge.id, username: user.username
     end
   end

@@ -1,6 +1,13 @@
 require 'rails_helper'
+require_dependency 'auth/default_current_user_provider'
 
 describe WebHook do
+  def provider(url, opts=nil)
+    opts ||= {method: "GET"}
+    env = Rack::MockRequest.env_for(url, opts)
+    Auth::DefaultCurrentUserProvider.new(env)
+  end
+
   it { is_expected.to validate_presence_of :payload_url }
   it { is_expected.to validate_presence_of :content_type }
   it { is_expected.to validate_presence_of :last_delivery_status }
@@ -107,6 +114,8 @@ describe WebHook do
     let(:topic) { Fabricate(:topic, user: user) }
     let(:post) { Fabricate(:post, topic: topic, user: user) }
     let(:post2) { Fabricate(:post, topic: topic, user: user) }
+    let(:notification) { Fabricate(:notification, user: user) }
+    let(:badge) { Fabricate(:badge) }
 
     it 'should enqueue the right hooks for topic events' do
       WebHook.expects(:enqueue_topic_hooks).once
@@ -131,7 +140,7 @@ describe WebHook do
       PostDestroyer.new(user, post2).recover
     end
 
-    it 'should enqueue the right hooks for user creation events' do
+    it 'should enqueue the right hooks for user events' do
       WebHook.expects(:enqueue_hooks).once
       user
 
@@ -140,6 +149,23 @@ describe WebHook do
 
       WebHook.expects(:enqueue_hooks).once
       user.approve(admin)
+    end
+
+    it 'should enqueue the right hooks for notification events' do
+      user # bypass a user_created event
+
+      WebHook.expects(:enqueue_hooks).once
+      notification
+    end
+
+    it 'should enqueue the right hooks for session events' do
+      user # bypass a user_created event
+
+      WebHook.expects(:enqueue_hooks).once
+      provider('/').log_on_user(user, {}, {})
+
+      WebHook.expects(:enqueue_hooks).once
+      user.logged_out
     end
   end
 end

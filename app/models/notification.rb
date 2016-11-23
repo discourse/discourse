@@ -12,6 +12,8 @@ class Notification < ActiveRecord::Base
   scope :visible , lambda { joins('LEFT JOIN topics ON notifications.topic_id = topics.id')
                             .where('topics.id IS NULL OR topics.deleted_at IS NULL') }
 
+  after_create { DiscourseEvent.trigger(:notification_created, self) }
+
   after_save :refresh_notification_count
   after_destroy :refresh_notification_count
 

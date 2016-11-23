@@ -126,6 +126,7 @@ class Auth::DefaultCurrentUserProvider
 
     cookies[TOKEN_COOKIE] = cookie_hash(user)
     make_developer_admin(user)
+    DiscourseEvent.trigger(:user_logged_in, user)
     enable_bootstrap_mode(user)
     @env[CURRENT_USER_KEY] = user
   end

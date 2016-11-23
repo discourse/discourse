@@ -21,6 +21,10 @@ module Jobs
         return unless args[:user] = User.find_by(id: args[:user_id])
       end
 
+      if args[:notification_id]
+        return unless args[:notification] = Notification.find_by(id: args[:notification_id])
+      end
+
       web_hook = WebHook.find(args[:web_hook_id])
 
       unless args[:event_type] == 'ping'
@@ -102,6 +106,10 @@ module Jobs
 
       if user = args[:user]
         body[:user] = UserSerializer.new(user, scope: guardian, root: false).as_json
+      end
+
+      if notification = args[:notification]
+        body[:notification] = NotificationSerializer.new(notification, scope: guardian, root: false).as_json
       end
 
       body[:ping] = 'OK' if args[:event_type] == 'ping'
