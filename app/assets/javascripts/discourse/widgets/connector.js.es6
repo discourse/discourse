@@ -25,7 +25,7 @@ export default class Connector {
       let view;
 
       if (opts.component) {
-        const connector = container.lookupFactory('component:connector-container');
+        const connector = widget.register.lookupFactory('component:connector-container');
         view = connector.create({
           layoutName: `components/${opts.component}`,
           model: widget.findAncestorModel()
@@ -51,7 +51,7 @@ export default class Connector {
           Ember.setOwner(view, Ember.getOwner(mounted));
         }
         mounted._connected.push(view);
-        view.renderer.replaceIn(view, $elem[0]);
+        view.renderer.appendTo(view, $elem[0]);
       }
     });
 
