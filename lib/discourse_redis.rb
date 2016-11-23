@@ -35,13 +35,14 @@ class DiscourseRedis
         if slave_client.call([:info]).split("\r\n").include?(MASTER_LINK_STATUS)
           logger.info "#{log_prefix}: Master server is active, killing all connections to slave..."
 
+          self.master = true
+
           CONNECTION_TYPES.each do |connection_type|
             slave_client.call([:client, [:kill, 'type', connection_type]])
           end
 
           Discourse.clear_readonly!
           Discourse.request_refresh!
-          self.master = true
           success = true
         end
       ensure
