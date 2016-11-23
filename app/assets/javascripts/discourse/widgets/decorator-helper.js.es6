@@ -7,6 +7,7 @@ class DecoratorHelper {
   constructor(widget, attrs, state) {
     this.widget = widget;
     this.attrs = attrs;
+    this.canConnectComponent = true;
     this.state = state;
     this.register = widget.register;
     this.register.deprecateContainer(this);
@@ -105,7 +106,6 @@ class DecoratorHelper {
   connect(details) {
     return new Connector(this.widget, details);
   }
-
 }
 DecoratorHelper.prototype.h = h;
 
