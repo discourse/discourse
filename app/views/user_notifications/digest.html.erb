@@ -313,7 +313,7 @@ body, table, td, th, h1, h2, h3 {font-family: Helvetica, Arial, sans-serif !impo
     <tr style="vertical-align:top;">
       <td style="padding:20px 8px 0 16px;text-align:left;">
         <p style="background:#2F70AC;border-radius:50%;color:#fff;height:30px;line-height:30px;margin:0 0 10px 0;padding:0;text-align:center;width:30px;font-weight: 400;">
-          <%= t.user_data ? (t.highest_post_number - t.user_data.last_read_post_number) : t.highest_post_number %>
+          <%= t.user_data ? (t.highest_post_number - (t.user_data.last_read_post_number || 0)) : t.highest_post_number %>
         </p>
       </td>
       <td style="padding:24px 8px 16px 8px;text-align:left;">
