@@ -5,6 +5,8 @@ import siteFixtures from 'fixtures/site-fixtures';
 import HeaderComponent from 'discourse/components/site-header';
 import { forceMobile, resetMobile } from 'discourse/lib/mobile';
 import { resetPluginApi } from 'discourse/lib/plugin-api';
+import { clearCache as clearOutletCache } from 'discourse/helpers/plugin-outlet';
+import { clearHTMLCache } from 'discourse/helpers/custom-html';
 
 function currentUser() {
   return Discourse.User.create(sessionFixtures['/session/current.json'].current_user);
@@ -65,6 +67,8 @@ function acceptance(name, options) {
         }
       }
 
+      clearOutletCache();
+      clearHTMLCache();
       resetPluginApi();
       Discourse.reset();
     },
@@ -76,6 +80,8 @@ function acceptance(name, options) {
       Discourse.User.resetCurrent();
       Discourse.Site.resetCurrent(Discourse.Site.create(jQuery.extend(true, {}, fixtures['site.json'].site)));
 
+      clearOutletCache();
+      clearHTMLCache();
       resetPluginApi();
       Discourse.reset();
     }
