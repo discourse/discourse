@@ -21,6 +21,10 @@ export default function(name, opts) {
     const renderArgs = { into: 'modal', outlet: 'modalBody'};
     if (controller) { renderArgs.controller = controllerName; }
 
+    if (opts.addModalBodyView) {
+      renderArgs.view = 'modal-body';
+    }
+
     const modalName = `modal/${templateName}`;
     const fullName = opts.admin ? `admin/templates/${modalName}` : modalName;
     route.render(fullName, renderArgs);
