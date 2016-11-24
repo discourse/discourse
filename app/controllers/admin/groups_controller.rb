@@ -1,7 +1,9 @@
 class Admin::GroupsController < Admin::AdminController
 
   def index
-    groups = Group.order(:name).where("id <> ?", Group::AUTO_GROUPS[:everyone])
+    groups = Group.order(:name)
+      .where("id <> ?", Group::AUTO_GROUPS[:everyone])
+      .includes(:group_users)
 
     if search = params[:search].to_s
       groups = groups.where("name ILIKE ?", "%#{search}%")
