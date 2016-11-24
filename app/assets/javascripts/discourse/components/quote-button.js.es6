@@ -102,7 +102,7 @@ export default Ember.Component.extend({
                .off("selectionchange.quote-button");
   },
 
-  click(e) {
+  click() {
     this.sendAction("selectText");
     return false;
   }
