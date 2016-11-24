@@ -111,7 +111,6 @@ whiteListFeature('default', [
   'a.onebox',
   'a[data-bbcode]',
   'a[name]',
-  'a[name]',
   'a[rel=nofollow]',
   'a[target=_blank]',
   'a[title]',
