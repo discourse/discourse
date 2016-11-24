@@ -50,7 +50,7 @@ const Group = Discourse.Model.extend({
 
   removeOwner(member) {
     var self = this;
-    return ajax('/admin/groups/' + this.get('id') + '/owners.json', {
+    return ajax(`/admin/groups/${this.get('id')}/owners`, {
       type: "DELETE",
       data: { user_id: member.get("id") }
     }).then(function() {
@@ -61,7 +61,7 @@ const Group = Discourse.Model.extend({
 
   removeMember(member) {
     var self = this;
-    return ajax('/groups/' + this.get('id') + '/members.json', {
+    return ajax(`/groups/${this.get('id')}/members`, {
       type: "DELETE",
       data: { user_id: member.get("id") }
     }).then(function() {
@@ -72,7 +72,7 @@ const Group = Discourse.Model.extend({
 
   addMembers(usernames) {
     var self = this;
-    return ajax('/groups/' + this.get('id') + '/members.json', {
+    return ajax(`/groups/${this.get('id')}/members`, {
       type: "PUT",
       data: { usernames: usernames }
     }).then(function() {
@@ -82,7 +82,7 @@ const Group = Discourse.Model.extend({
 
   addOwners(usernames) {
     var self = this;
-    return ajax('/admin/groups/' + this.get('id') + '/owners.json', {
+    return ajax(`/admin/groups/${this.get('id')}/owners`, {
       type: "PUT",
       data: { usernames: usernames }
     }).then(function() {
@@ -141,7 +141,7 @@ const Group = Discourse.Model.extend({
     var data = {};
     if (opts.beforePostId) { data.before_post_id = opts.beforePostId; }
 
-    return ajax(`/groups/${this.get('name')}/${type}.json`, { data: data }).then(posts => {
+    return ajax(`/groups/${this.get('name')}/${type}`, { data: data }).then(posts => {
       return posts.map(p => {
         p.user = Discourse.User.create(p.user);
         p.topic = Discourse.Topic.create(p.topic);
@@ -161,21 +161,21 @@ const Group = Discourse.Model.extend({
 
 Group.reopenClass({
   findAll(opts) {
-    return ajax("/admin/groups.json", { data: opts }).then(function (groups){
+    return ajax("/admin/groups", { data: opts }).then(function (groups){
       return groups.map(g => Group.create(g));
     });
   },
 
   findGroupCounts(name) {
-    return ajax("/groups/" + name + "/counts.json").then(result => Em.Object.create(result.counts));
+    return ajax(`/groups/${name}/counts`).then(result => Em.Object.create(result.counts));
   },
 
   find(name) {
-    return ajax("/groups/" + name + ".json").then(result => Group.create(result.basic_group));
+    return ajax(`/groups/${name}`).then(result => Group.create(result.basic_group));
   },
 
   loadMembers(name, offset, limit) {
-    return ajax('/groups/' + name + '/members.json', {
+    return ajax(`/groups/${name}/members`, {
       data: {
         limit: limit || 50,
         offset: offset || 0
