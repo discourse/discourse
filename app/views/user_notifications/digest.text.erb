@@ -3,9 +3,9 @@
       site_link: site_link,
       last_seen_at: @last_seen_at) %>
 
-<%= @new_topics_count -%> <%=t 'user_notifications.digest.new_topics' %>
-<%= @unread_messages -%> <%=t 'user_notifications.digest.unread_messages' %>
-<%= @unread_notifications -%> <%=t 'user_notifications.digest.unread_notifications' %>
+<%- @counts.each do |count| -%>
+<%= count[:value] -%> <%=t count[:label_key] %>
+<%- end -%>
 
 --------------------------------------------------------------------------------
 

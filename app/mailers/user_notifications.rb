@@ -101,10 +101,25 @@ class UserNotifications < ActionMailer::Base
 
     @preheader_text = I18n.t('user_notifications.digest.preheader', last_seen_at: @last_seen_at)
 
-    @new_topics_count = Topic.new_since_last_seen(user, min_date).count
-    @unread_messages = user.unread_private_messages
-    @unread_notifications = user.unread_notifications
+    # Try to find 3 interesting stats for the top of the digest
+    @counts = [{label_key: 'user_notifications.digest.new_topics', value: Topic.new_since_last_seen(user, min_date).count}]
 
+    value = user.unread_notifications
+    @counts << {label_key: 'user_notifications.digest.unread_notifications', value: value} if value > 0
+
+    value = user.unread_private_messages
+    @counts << {label_key: 'user_notifications.digest.unread_messages', value: value} if value > 0
+
+    if @counts.size < 3
+      @counts << {label_key: 'user_notifications.digest.new_posts', value: Post.for_mailing_list(user, min_date).where("posts.post_number > ?", 1).count}
+    end
+
+    if @counts.size < 3
+      value = User.real.where(active: true, staged: false).not_suspended.where("created_at > ?", min_date).count
+      @counts << {label_key: 'user_notifications.digest.new_users', value: value } if value > 0
+    end
+
+    # Now fetch some topics and posts to show
     topics_for_digest = Topic.for_digest(user, min_date, limit: SiteSetting.digest_topics + 3, top_order: true).to_a
 
     @popular_topics = topics_for_digest[0,SiteSetting.digest_topics]
