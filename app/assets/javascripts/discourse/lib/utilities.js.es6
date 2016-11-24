@@ -85,37 +85,27 @@ export function extractDomainFromUrl(url) {
 }
 
 export function selectedText() {
-  var html = '';
+  const selection = window.getSelection();
+  if (selection.isCollapsed) { return ""; }
 
-  if (typeof window.getSelection !== "undefined") {
-    var sel = window.getSelection();
-    if (sel.rangeCount) {
-      var container = document.createElement("div");
-      for (var i = 0, len = sel.rangeCount; i < len; ++i) {
-        container.appendChild(sel.getRangeAt(i).cloneContents());
-      }
-      html = container.innerHTML;
-    }
-  } else if (typeof document.selection !== "undefined") {
-    if (document.selection.type === "Text") {
-      html = document.selection.createRange().htmlText;
-    }
+  const $div = $("<div>");
+  for (let r = 0; r < selection.rangeCount; r++) {
+    const range = selection.getRangeAt(r);
+    const $ancestor = $(range.commonAncestorContainer);
+
+    // ensure we never quote text in the post menu area
+    const $postMenuArea = $ancestor.find(".post-menu-area")[0];
+    if ($postMenuArea) { range.setEndBefore($postMenuArea); }
+
+    $div.append(range.cloneContents());
   }
 
-  html = html.replace(/<br>/g, "\n");
+  // strip click counters
+  $div.find(".clicks").remove();
+  // replace emojis
+  $div.find("img.emoji").replaceWith(function() { return this.title; });
 
-  // Strip out any .click elements from the HTML before converting it to text
-  const div = document.createElement('div');
-  div.innerHTML = html;
-
-  const $div = $(div);
-
-  // Find all emojis and replace with its title attribute.
-  $div.find('img.emoji').replaceWith(function() { return this.title; });
-  $('.clicks', $div).remove();
-  const text = div.textContent || div.innerText || "";
-
-  return String(text).trim();
+  return String($div.text()).trim();
 }
 
 // Determine the row and col of the caret in an element

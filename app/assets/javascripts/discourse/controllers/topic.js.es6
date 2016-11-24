@@ -168,23 +168,21 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
   actions: {
 
     deselectText() {
-      const quoteState = this.get('quoteState');
-      quoteState.setProperties({ buffer: null, postId: null });
+      this.get('quoteState').setProperties({ buffer: null, postId: null });
     },
 
     selectText() {
-      const quoteState = this.get('quoteState');
-      const postStream = this.get('model.postStream');
+      const { postId, buffer } = this.get('quoteState');
 
-      const postId = quoteState.get('postId');
-      postStream.loadPost(postId).then(post => {
+      this.send('deselectText');
+
+      this.get('model.postStream').loadPost(postId).then(post => {
         // If we can't create a post, delegate to reply as new topic
         if (!this.get('model.details.can_create_post')) {
           this.send('replyAsNewTopic', post);
           return;
         }
 
-        const composer = this.get('composer');
         const composerOpts = {
           action: Composer.REPLY,
           draftKey: post.get('topic.draft_key')
@@ -197,19 +195,19 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
         }
 
         // If the composer is associated with a different post, we don't change it.
+        const composer = this.get('composer');
         const composerPost = composer.get('content.post');
         if (composerPost && (composerPost.get('id') !== this.get('post.id'))) {
           composerOpts.post = composerPost;
         }
 
-        const quotedText = Quote.build(post, quoteState.get('buffer'));
+        const quotedText = Quote.build(post, buffer);
         composerOpts.quote = quotedText;
         if (composer.get('content.viewOpen') || composer.get('content.viewDraft')) {
           this.appEvents.trigger('composer:insert-text', quotedText);
         } else {
           composer.open(composerOpts);
         }
-        this.send('deselectText');
       });
     },
 
