@@ -12,7 +12,7 @@ class DiscourseIIFE
 
   # Add a IIFE around our javascript
   def call(input)
-    path = input[:environment].context_class.new(input).pathname.to_s
+    path = input[:environment].context_class.new(input).filename
     data = input[:data]
 
     # Only discourse or admin paths

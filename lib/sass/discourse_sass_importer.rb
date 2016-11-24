@@ -28,7 +28,9 @@ class DiscourseSassImporter < Sass::Importers::Filesystem
     end
 
     def find_relative(name, base, options)
-      engine_from_path(name, File.dirname(base), options)
+      if base
+        engine_from_path(name, File.dirname(base), options)
+      end
     end
 
     def apply_cdn(url)
@@ -70,7 +72,6 @@ class DiscourseSassImporter < Sass::Importers::Filesystem
         end
 
         ::Sass::Engine.new(contents, options.merge(
-          filename: "#{name}.scss",
           importer: self,
           syntax: :scss
         ))
