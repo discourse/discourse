@@ -453,6 +453,7 @@ he:
         each_browser_note: "הערה: עליך לשנות הגדרה זו עבור כל דפדפן בנפרד."
       dismiss_notifications: "בטלו הכל"
       dismiss_notifications_tooltip: "סימון כל ההתראות שלא נקראו כהתראות שנקראו"
+      first_notification: "התראה ראשונה! בחרו אותה כדי להתחיל."
       disable_jump_reply: "אל תקפצו לפוסטים שלי לאחר שאני משיב/ה"
       dynamic_favicon: "הצגת מספר נושאים חדשים/מעודכנים על האייקון של הדפדפן"
       external_links_in_new_tab: "פתח את כל הקישורים החיצוניים בעמוד חדש"
@@ -688,7 +689,8 @@ he:
         account_age_days: "גיל החשבון בימים"
         create: "שליחת הזמנה"
         generate_link: "העתקת קישור הזמנה"
-        generated_link_message: '<p>הזמנה נוצרה בהצלחה</p><p><input class="invite-link-input" style="width: 75%;" type="text" value="%{inviteLink}"></p><p>לינק ההזמנה תקף רק למייל הזה:  <b>%{invitedEmail}</b></p>'
+        link_generated: "קישור הזמנה יוצר בהצלחה!"
+        valid_for: "קישור הזמנה תקף רק לכתובת המייל הזו: %{email}"
         bulk_invite:
           none: "נכון לעכשיו לא הזמנת לכאן אף אחד. תוכלו לשלוח הזמנות אישיות, או להזמין כמה אנשים בבת אחת באמצעות   <a href='https://meta.discourse.org/t/send-bulk-invites/16468'> העלאת קובץ הזמנה קבוצתית</a>."
           text: "הזמנה קבוצתית מקובץ"
@@ -846,6 +848,7 @@ he:
     trust_level: 'רמת אמון'
     search_hint: 'שם משתמש/ת, דוא"ל או כתובת IP'
     create_account:
+      disclaimer: "כשאתם נרשמים, אתם מסכימים ל<a href='{{privacy_link}}'>מדיניות הפרטיות</a> ו<a href='{{tos_link}}'>תנאי השירות</a>."
       title: "יצירת חשבון חדש"
       failed: "משהו לא בסדר, אולי כבר קיימת כתובת דואר אלקטרוני כזו. נסו את קישור שכחתי סיסמה."
     forgot_password:
@@ -936,6 +939,9 @@ he:
       group_mentioned:
         one: "על ידי אזכור {{group}}, אתם עומדים ליידע <a href='{{group_link}}'>אדם אחד</a> – אתם בטוחים?"
         other: "על ידי אזכור {{group}}, אתם עומדים ליידע <a href='{{group_link}}'>{{count}} אנשים</a> – אתם בטוחים?"
+      cannot_see_mention:
+        category: "הזכרתם את {{username}} אבל הוא/היא לא יקבלו התראה כיוון שאין להם גישה לקטגוריה זו. תצטרכו להוסיף אותם לקבוצה שיש לה גישה לקטגוריה הזו."
+        private: "הזכרתם את {{username}} אבל הוא/היא לא יקבלו התראה כיוון שהם לא יכולים לראות את ההודעה הפרטית הזו. תצטרכו להזמין אותם להודעה פרטית זו."
       duplicate_link: "נראה שהקישור שלכם ל <b>{{domain}}</b> כבר פורסם בנושא זה על ידי <b>@{{username}}</b> ב <a href='{{post_url}}'>תגובה {{ago}}</a> - האם אתם בטוחים שאתם מעוניינים לפרסם אותו שוב?"
       error:
         title_missing: "יש להזין כותרת."

@@ -683,7 +683,6 @@ et:
         account_age_days: "Konto vanus päevades"
         create: "Saada kutse"
         generate_link: "Kopeeri viide kutsele"
-        generated_link_message: '<p>Kutse viide edukalt genereeritud!</p><p><input class="invite-link-input" style="width: 75%;" type="text" value="%{inviteLink}"></p><p>Kutse viide on kehtiv vaid selle meiliaadressi jaoks: <b>%{invitedEmail}</b></p>'
         bulk_invite:
           none: "Sa ei ole veel kedagi siia kutsunud. Võid saata kutseid individuaalselt, või korraga tervele grupile kui <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>laed üles masskutsete faili</a>."
           text: "Masskutse Failist"
@@ -1234,7 +1233,7 @@ et:
       toggle_information: "lülita teema üksikasjad ümber"
       read_more_in_category: "Soovid veel lugeda? Vaata teisi teemasid {{catLink}} või {{latestLink}}."
       read_more: "Soovid veel lugeda? {{catLink}} või {{latestLink}}."
-      read_more_MF: "Sul on { UNREAD, plural, =0 {} one { is <a href='/unread'>1 lugemata</a> } other { are <a href='/unread'># lugemata </a> } } { NEW, plural, =0 {} one { {BOTH, select, true{and } false {is } other{}} <a href='/new'>1 uus</a> teema} other { {BOTH, select, true{and } false {are } other{}} <a href='/new'># uut</a> teemat} } jäänud, või {CATEGORY, select, true {browse other topics in {catLink}} false {{latestLink}} other {}}\nby priit.varik, a month ago"
+      read_more_MF: "Sul on { UNREAD, plural, =0 {} one { is <a href='/unread'>1 lugemata</a> } other { are <a href='/unread'># lugemata </a> } } { NEW, plural, =0 {} one { {BOTH, select, true{and } false {is } other{}} <a href='/new'>1 uus</a> teema} other { {BOTH, select, true{and } false {are } other{}} <a href='/new'># uut</a> teemat} } jäänud või {CATEGORY, select, true {loe teisi teemasid {catLink} alafoorumis} false {{latestLink}} other {}}"
       browse_all_categories: Vaata kõiki foorumeid
       view_latest_topics: vaata värskeid teemasid
       suggest_create_topic: Teeks äkki teema?

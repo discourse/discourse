@@ -748,7 +748,6 @@ ru:
         account_age_days: "Дней с момента регистрации"
         create: "Отправить приглашение"
         generate_link: "Скопировать ссылку для приглашений"
-        generated_link_message: '<p>Пригласительная ссылка сгенерирована!</p><p><input class="invite-link-input" style="width: 75%;" type="text" value="%{inviteLink}"></p><p>Эта ссылка действует только для следующего e-mail:<b>%{invitedEmail}</b></p>'
         bulk_invite:
           none: "Вы еще никого не приглашали на этот форум. Можно отправить индивидуальные приглашения по одному, или же пригласить сразу несколько людей <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>из файла</a>."
           text: "Пригласить всех из файла"

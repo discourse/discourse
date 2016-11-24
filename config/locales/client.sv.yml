@@ -684,7 +684,6 @@ sv:
         account_age_days: "Kontoålder i dagar"
         create: "Skicka en inbjudan"
         generate_link: "Kopiera inbjudningslänken"
-        generated_link_message: '<p>Inbjudningslänken genererades utan problem!</p><p><input class="invite-link-input" style="width: 75%;" type="text" value="%{inviteLink}"></p><p>Inbjudningslänken är endast giltig för den här e-postadressen: <b>%{invitedEmail}</b></p>'
         bulk_invite:
           none: "Du har inte skickat några inbjudningar. Du kan skicka individuella inbjudningar, eller så kan du bjuda in flera på en gång genom att <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>ladda upp en bulkfil.</a>"
           text: "Massinbjudan från fil"

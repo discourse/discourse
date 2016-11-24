@@ -71,6 +71,7 @@ it:
       has_already_been_used: "è già stato usato"
       inclusion: non è incluso nella lista
       invalid: non è valido
+      is_invalid: "sembra poco chiaro, è una frase completa?"
       less_than: deve essere minore di %{count}
       less_than_or_equal_to: deve essere minore o uguale a %{count}
       not_a_number: non è un numero
@@ -158,6 +159,7 @@ it:
   topic_not_found: "Quancosa non ha funzionato. Forse questo argomento è stato chiuso o cancellato mentre lo leggevi."
   just_posted_that: "è troppo simile a ciò che hai appena pubblicato"
   invalid_characters: "contiene caratteri non validi"
+  is_invalid: "sembra poco chiaro, è una frase completa?"
   next_page: "pagina seguente →"
   prev_page: "← pagina precedente"
   page_num: "Pagina %{num}"
@@ -556,9 +558,21 @@ it:
     stop_watching_topic: "Smetti di osservare questo argomento, %{link}"
     mute_topic: "Silenziare tutte le notifiche per questo argomento, %{link}"
     unwatch_category: "Smetti di osservare tutti gli argomenti in %{category}"
+    mailing_list_mode: "Disabilita la modalità Mailing list"
+    disable_digest_emails: "Smetti di inviarmi email ripielogative"
     all: "Non inviare alcuna email da %{sitename}"
     different_user_description: "Sei attualmente connesso con un utente diverso da quello a cui abbiamo scritto. Per favore disconnettiti, oppure attiva la modalità anonima, e riprova."
     log_out: "Disconnetti"
+  user_api_key:
+    title: "Autorizza accesso dell'applicazione"
+    authorize: "Autorizza"
+    read: "lettura"
+    read_write: "lettura/scrittura"
+    scopes:
+      message_bus: "Aggiornamenti in Tempo Reale"
+      notifications: "Leggi e elimina tutte le notifiche"
+      read: "Leggi tutto"
+      write: "Scrivi tutto"
   reports:
     visits:
       title: "Visite Utente"
@@ -642,6 +656,7 @@ it:
     page_view_anon_reqs:
       title: "Anonimo"
       xaxis: "Giorno"
+      yaxis: "Visualizzazioni pagina da visitatori Anonimi"
     page_view_logged_in_reqs:
       title: "Connesso"
       xaxis: "Giorno"
@@ -649,15 +664,19 @@ it:
     page_view_crawler_reqs:
       title: "Web Crawler"
       xaxis: "Giorno"
+      yaxis: "Visualizzazioni pagina da Spider web"
     page_view_total_reqs:
       title: "Totali"
       xaxis: "Giorno"
+      yaxis: "Visualizzazioni pagina totali"
     page_view_logged_in_mobile_reqs:
       title: "Pagine viste da utenti connessi"
       xaxis: "Giorno"
       yaxis: "Pagine viste da utenti connessi su mobile"
     page_view_anon_mobile_reqs:
+      title: "Visualizzazioni pagina da visitatori Anonimi"
       xaxis: "Giorno"
+      yaxis: "Visualizzazioni pagina da visitatori Anonimi su dispositivi mobili"
     http_background_reqs:
       title: "Background"
       xaxis: "Giorno"

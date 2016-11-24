@@ -626,7 +626,6 @@ gl:
         account_age_days: "Tempo da conta en días"
         create: "Enviar un convite"
         generate_link: "Copiar a ligazón do convite"
-        generated_link_message: '<p>A ligazón do convite xerouse correctamente.</p><p><input class="invite-link-input" style="width: 75%;" type="text" value="%{inviteLink}"></p><p>A ligazón do convite só é válida para este enderezo de correo-e: <b>%{invitedEmail}</b></p>'
         bulk_invite:
           none: "Aínda non convidaches a ninguén. Podes enviar convites individuais ou en grupo se <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>subes un ficheiro para convites múltiples</a>."
           text: "Convidar en grupo desde un ficheiro"

@@ -685,7 +685,6 @@ de:
         account_age_days: "Konto-Alter in Tagen"
         create: "Einladung versenden"
         generate_link: "Einladungslink kopieren"
-        generated_link_message: '<p>Einladungslink erfolgreich generiert!</p><p><input class="invite-link-input" style="width: 75%;" type="text" value="%{inviteLink}"></p><p>Der Einladungslink ist nur für folgende E-Mail-Adresse gültig: <b>%{invitedEmail}</b></p>'
         bulk_invite:
           none: "Du hast noch niemanden hierher eingeladen. Du kannst individuelle Einladungen verschicken oder eine Masseneinladung an eine Gruppe von Leuten verschicken indem du <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>eine Datei für Masseneinladung</a> hochlädst."
           text: "Masseneinladung aus Datei"

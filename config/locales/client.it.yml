@@ -429,6 +429,7 @@ it:
       mute: "Ignora"
       edit: "Modifica opzioni"
       download_archive: "Scarica i miei messaggi"
+      download_archive_confirm: "Sei sicuro di voler scaricare i tuoi messaggi?"
       new_private_message: "Nuovo Messaggio"
       private_message: "Messaggio"
       private_messages: "Messaggi"
@@ -452,6 +453,7 @@ it:
         each_browser_note: "Nota: devi modificare questa impostazione per ogni browser che utilizzi."
       dismiss_notifications: "Chiudi Tutti"
       dismiss_notifications_tooltip: "Imposta tutte le notifiche non lette come lette "
+      first_notification: "La tua prima notifica! Selezionala per iniziare."
       disable_jump_reply: "Non saltare al mio messaggio dopo la mia risposta"
       dynamic_favicon: "Visualizza il conteggio degli argomenti nuovi / aggiornati sull'icona del browser"
       external_links_in_new_tab: "Apri tutti i link esterni in nuove schede"
@@ -465,8 +467,16 @@ it:
       suspended_notice: "Questo utente è sospeso fino al {{date}}."
       suspended_reason: "Motivo: "
       github_profile: "Github"
+      email_activity_summary: "Riassunto Attività"
       mailing_list_mode:
+        label: "Modalità Mailing list"
+        enabled: "Abilita la modalità Mailing list"
+        instructions: |
+          Questa impostazione modifica il riassunto attività.<br />
+          Gli argomenti e le categorie silenziate non sono incluse in queste email.
+        daily: "Invia aggiornamenti giornalieri"
         individual: "Invia una email per ogni nuovo messaggio"
+        individual_no_echo: "Invia una email per ogni nuovo messaggio, eccetto per i miei"
         many_per_day: "Inviamo una email per ogni nuovo messaggio (circa {{dailyEmailEstimate}} al giorno)"
         few_per_day: "Inviami una email per ogni nuovo messaggio (circa 2 al giorno)"
       tag_settings: "Etichette"
@@ -481,7 +491,9 @@ it:
       tracked_categories: "Seguite"
       tracked_categories_instructions: "Seguirai automaticamente tutti gli argomenti appartenenti a queste categorie. Accanto all'argomento comparirà il conteggio dei nuovi messaggi."
       watched_first_post_categories: "Osservando Primo Messaggio"
+      watched_first_post_categories_instructions: "Riceverai solo la notifica per il primo messaggio di ogni nuovo argomento in queste categorie."
       watched_first_post_tags: "Osservando Primo Messaggio"
+      watched_first_post_tags_instructions: "Riceverai solo la notifica per il primo messaggio di ogni nuovo argomento con queste etichette."
       muted_categories: "Silenziate"
       muted_categories_instructions: "Non ti verrà notificato nulla sui nuovi argomenti in queste categorie, e non compariranno nell'elenco Ultimi."
       delete_account: "Cancella il mio account"
@@ -496,7 +508,9 @@ it:
       muted_topics_link: "Mostra argomenti silenziati"
       watched_topics_link: "Mostra argomenti osservati"
       automatically_unpin_topics: "Spunta automaticamente gli argomenti quando arrivi in fondo."
+      apps: "Applicazioni"
       revoke_access: "Revoca Accesso"
+      undo_revoke_access: "Annullare Revoca Accesso"
       api_approved: "Approvato:"
       staff_counters:
         flags_given: "segnalazioni utili"
@@ -586,6 +600,7 @@ it:
         title: "Lingua dell'interfaccia"
         instructions: "Lingua dell'interfaccia utente. Cambierà quando aggiornerai la pagina."
         default: "(default)"
+        any: "qualunque"
       password_confirmation:
         title: "Ripeti la password"
       last_posted: "Ultimo Messaggio"
@@ -610,12 +625,14 @@ it:
         always: "sempre"
         never: "mai"
       email_digests:
+        title: "Se non dovessi visitare questo sito, inviami un riassunto via email degli argomenti più discussi e delle risposte"
         every_30_minutes: "ogni 30 minuti"
         every_hour: "ogni ora"
         daily: "ogni giorno"
         every_three_days: "ogni tre giorni"
         weekly: "ogni settimana"
         every_two_weeks: "ogni due settimane"
+      include_tl0_in_digests: "Includi contenuti dei nuovi utenti nelle email di riepilogo"
       email_in_reply_to: "Nelle email includi un estratto delle risposte al messaggio"
       email_direct: "Inviami un'email quando qualcuno mi cita, risponde a un mio messaggio, menziona il mio @nome o mi invita ad un argomento"
       email_private_messages: "Inviami una email quando qualcuno mi scrive un messaggio"
@@ -641,6 +658,7 @@ it:
         after_4_minutes: "dopo 4 minuti"
         after_5_minutes: "dopo 5 minuti"
         after_10_minutes: "dopo 10 minuti"
+      notification_level_when_replying: "Quando scrivo in un argomento, modifica il titolo dell'argomento a"
       invited:
         search: "digita per cercare inviti..."
         title: "Inviti"
@@ -671,7 +689,8 @@ it:
         account_age_days: "Età dell'utente in giorni"
         create: "Invia un Invito"
         generate_link: "Copia il collegamento di invito"
-        generated_link_message: '<p>Il collegamento di invito è stato generato con successo!</p><p><input class="invite-link-input" style="width: 75%;" type="text" value="%{inviteLink}"></p><p>Il collegamento sarà valido solo per la seguente email: <b>%{invitedEmail}</b></p>'
+        link_generated: "Link di invito generato con successo!"
+        valid_for: "Questo link di invito è valido solamente per questo indirizzo email: %{email}"
         bulk_invite:
           none: "Non hai ancora invitato nessuno qui. Puoi inviare inviti individuali, o invitare un gruppo di persone caricando un <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>file di invito di massa</a>."
           text: "Invito di Massa da File"
@@ -722,6 +741,9 @@ it:
         more_badges: "Altri Distintivi"
         top_links: "Migliori Collegamenti"
         no_links: "Ancora nessun collegamento."
+        most_liked_by: "Ricevuto più \"Mi Piace\" da"
+        most_liked_users: "Con più \"Mi Piace\""
+        most_replied_to_users: "Più Risposte A"
         no_likes: "Ancora nessun \"Mi piace\"."
       associated_accounts: "Connessioni"
       ip_address:
@@ -771,7 +793,15 @@ it:
     too_few_topics_and_posts_notice: "<a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>Cominciamo a discutere!</a> Ci sono al momento <strong>%{currentTopics} / %{requiredTopics}</strong> argomenti e <strong>%{currentPosts} / %{requiredPosts}</strong> messaggi. I nuovi visitatori vogliono qualche discussione da leggere e a cui rispondere."
     too_few_topics_notice: "<a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>Cominciamo a discutere!</a> Ci sono al momento <strong>%{currentTopics} / %{requiredTopics}</strong> argomenti. I nuovi visitatori vogliono qualche discussione da leggere e a cui rispondere."
     too_few_posts_notice: "<a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>Cominciamo a discutere!</a> Ci sono al momento <strong>%{currentTopics} / %{requiredTopics}</strong> argomenti e <strong>%{currentPosts} / %{requiredPosts}</strong> messaggi. I nuovi visitatori vogliono qualche discussione da leggere e a cui rispondere."
+    logs_error_rate_notice:
+      reached: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> ha raggiunto i limiti impostati di %{siteSettingRate}."
+      exceeded: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> ha ecceduto i limiti impostati di  %{siteSettingRate}."
+      rate:
+        one: "1 errore/%{duration}"
+        other: "%{count} errori/%{duration}"
     learn_more: "per saperne di più..."
+    all_time: 'totale'
+    all_time_desc: 'numero totale di argomenti creati'
     year: 'all''anno'
     year_desc: 'argomenti creati negli ultimi 365 giorni'
     month: 'al mese'
@@ -809,6 +839,7 @@ it:
       title: "Messaggio"
       invite: "Invita altri utenti..."
       remove_allowed_user: "Davvero vuoi rimuovere {{name}} da questo messaggio?"
+      remove_allowed_group: "Vuoi veramente rimuovere {{name}} da questo messaggio?"
     email: 'Email'
     username: 'Nome utente'
     last_seen: 'Ultima visita'
@@ -817,6 +848,7 @@ it:
     trust_level: 'Livello Esperienza'
     search_hint: 'nome utente, email o indirizzo IP'
     create_account:
+      disclaimer: "Registrandoti, accetti la <a href='{{privacy_link}}'>privacy policy</a> e <a href='{{tos_link}}'>i termini di servizio</a>."
       title: "Crea Nuovo Account"
       failed: "Qualcosa non ha funzionato. Forse questa email è già registrata, prova a usare il link di recupero password"
     forgot_password:
@@ -875,6 +907,16 @@ it:
       github:
         title: "con GitHub"
         message: "Autenticazione con GitHub (assicurati che il blocco pop up non sia attivo)"
+    emoji_set:
+      apple_international: "Apple/International"
+      google: "Google"
+      twitter: "Twitter"
+      emoji_one: "Emoji One"
+      win10: "Win10"
+    category_page_style:
+      categories_only: "Solo Categorie"
+      categories_with_featured_topics: "Categorie con argomenti in evidenza"
+      categories_and_latest_topics: "Categorie e ultimi argomenti"
     shortcut_modifier_key:
       shift: 'Maiusc'
       ctrl: 'Ctrl'
@@ -884,14 +926,23 @@ it:
       more_emoji: "altro..."
       options: "Opzioni"
       whisper: "sussurra"
+      unlist: "invisibile"
       add_warning: "Questo è un avvertimento ufficiale."
       toggle_whisper: "Attiva/Disattiva Sussurri"
+      toggle_unlisted: "Attiva/Disattiva Invisibili"
       posting_not_on_topic: "A quale argomento vuoi rispondere?"
       saving_draft_tip: "salvataggio..."
       saved_draft_tip: "salvato"
       saved_local_draft_tip: "salvato in locale"
       similar_topics: "Il tuo argomento è simile a..."
       drafts_offline: "bozze offline"
+      group_mentioned:
+        one: "Menzionando {{group}}, stai per notificare <a href='{{group_link}}'>1 persona</a> – sei sicuro?"
+        other: "Menzionando {{group}}, stai per notificare <a href='{{group_link}}'>{{count}} persone</a> – sei sicuro?"
+      cannot_see_mention:
+        category: "Hai menzionato {{username}} ma non saranno notificati perché non hanno accesso a questa categoria. Dovrai aggiungerli ad un gruppo che ha accesso a questa categoria."
+        private: "Hai menzionato {{username}} ma non saranno notificati perché non hanno accesso a questo messaggio personale. Dovrai invitarli a questo MP."
+      duplicate_link: "Sembra che il tuo link a <b>{{domain}}</b> sia già stato pubblicato nell'argomento di <b>@{{username}}</b> <a href='{{post_url}}'>una risposta {{ago}}</a> – sei sicuro di volerlo pubblicare ancora?"
       error:
         title_missing: "Il titolo è richiesto"
         title_too_short: "Il titolo deve essere lungo almeno {{min}} caratteri"
@@ -921,8 +972,10 @@ it:
       show_preview: 'visualizza anteprima &raquo;'
       hide_preview: '&laquo; nascondi anteprima'
       quote_post_title: "Cita l'intero messaggio"
+      bold_label: "G"
       bold_title: "Grassetto"
       bold_text: "testo in grassetto"
+      italic_label: "I"
       italic_title: "Italic"
       italic_text: "testo italic"
       link_title: "Collegamento"
@@ -940,6 +993,7 @@ it:
       olist_title: "Elenco Numerato"
       ulist_title: "Elenco Puntato"
       list_item: "Elemento lista"
+      heading_label: "T"
       heading_title: "Intestazione"
       heading_text: "Intestazione"
       hr_title: "Linea Orizzontale"
@@ -948,6 +1002,9 @@ it:
       modal_ok: "OK"
       modal_cancel: "Annulla"
       cant_send_pm: "Spiacenti, non puoi inviare un messaggio a %{username}."
+      yourself_confirm:
+        title: "Hai dimenticato di aggiungere i destinatari?"
+        body: "In questo momento questo messaggio è visibile solo a te!"
       admin_options_title: "Impostazioni dello staff opzionali per l'argomento"
       auto_close:
         label: "Tempo per auto-chiusura argomento:"
@@ -961,20 +1018,31 @@ it:
     notifications:
       title: "notifiche di menzioni @nome, risposte ai tuoi messaggi e argomenti ecc."
       none: "Impossibile caricare le notifiche al momento."
+      empty: "Nessuna notifica trovata."
       more: "visualizza le notifiche precedenti"
       total_flagged: "totale argomenti segnalati"
       mentioned: "<i title='mentioned' class='fa fa-at'></i><p><span>{{username}}</span> {{description}}</p>"
       group_mentioned: "<i title='group mentioned' class='fa fa-at'></i><p><span>{{username}}</span> {{description}}</p>"
       quoted: "<i title='quoted' class='fa fa-quote-right'></i><p><span>{{username}}</span> {{description}}</p>"
       replied: "<i title='replied' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
+      posted: "<i title='posted' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
       edited: "<i title='edited' class='fa fa-pencil'></i><p><span>{{username}}</span> {{description}}</p>"
       liked: "<i title='liked' class='fa fa-heart'></i><p><span>{{username}}</span> {{description}}</p>"
+      liked_2: "<i title='liked' class='fa fa-heart'></i><p><span>{{username}}, {{username2}}</span> {{description}}</p>"
+      liked_many:
+        one: "<i title='liked' class='fa fa-heart'></i><p><span>{{username}}, {{username2}} e 1 altro</span> {{description}}</p>"
+        other: "<i title='liked' class='fa fa-heart'></i><p><span>{{username}}, {{username2}} e {{count}} altri</span> {{description}}</p>"
       private_message: "<i title='private message' class='fa fa-envelope-o'></i><p><span>{{username}}</span> {{description}}</p>"
       invited_to_private_message: "<i title='private message' class='fa fa-envelope-o'></i><p><span>{{username}}</span> {{description}}</p>"
       invited_to_topic: "<i title='invited to topic' class='fa fa-hand-o-right'></i><p><span>{{username}}</span> {{description}}</p>"
       invitee_accepted: "<i title='accepted your invitation' class='fa fa-user'></i><p><span>{{username}}</span>ha accettato il tuo invito</p>"
       moved_post: "<i title='moved post' class='fa fa-sign-out'></i><p><span>{{username}}</span> ha spostato {{description}}</p>"
+      linked: "<i title='linked post' class='fa fa-link'></i><p><span>{{username}}</span> {{description}}</p>"
       granted_badge: "<i title='badge granted' class='fa fa-certificate'></i><p>Guadagnato '{{description}}'</p>"
+      watching_first_post: "<i title='new topic' class='fa fa-dot-circle-o'></i><p><span>Nuovo Argomento</span> {{description}}</p>"
+      group_message_summary:
+        one: "<i title='messages in group inbox' class='fa fa-group'></i><p> {{count}} messaggio nella tua casella {{group_name}}</p>"
+        other: "<i title='messages in group inbox' class='fa fa-group'></i><p> {{count}} messaggi nella tua casella {{group_name}}</p>"
       alt:
         mentioned: "Menzionato da"
         quoted: "Citato da"
@@ -1031,8 +1099,47 @@ it:
       post_format: "#{{post_number}} da {{username}}"
       context:
         user: "Cerca messaggi di @{{username}}"
+        category: "Cerca nella categoria #{{category}}"
         topic: "Cerca in questo argomento"
         private_messages: "Cerca messaggi"
+      advanced:
+        title: Ricerca Avanzata
+        posted_by:
+          label: Pubblicato da
+        in_category:
+          label: In Categoria
+        in_group:
+          label: In Gruppo
+        with_badge:
+          label: Con Distintivo
+        with_tags:
+          label: Con Etichette
+        filters:
+          label: Mostra solamente argomenti/post che...
+          likes: Ho messo "Mi Piace"
+          posted: Ho pubblicato in
+          watching: Sto' osservando
+          tracking: Sto' seguendo
+          private: sono nei miei messaggi
+          bookmarks: Ho aggiunto ai segnalibri
+          first: sono il primissimo post
+          pinned: sono appuntati
+          unpinned: non sono appuntati
+          wiki: sono wiki
+        statuses:
+          label: Dove gli argomenti
+          open: sono aperti
+          closed: sono chiusi
+          archived: sono archiviati
+          noreplies: hanno zero risposte
+          single_user: contengono un singolo utente
+        post:
+          count:
+            label: Conteggio Messaggi Minimo
+          time:
+            label: Pubblicato
+            before: prima
+            after: dopo
     hamburger_menu: "vai ad un'altra lista di argomenti o categoria"
     new_item: "nuovo"
     go_back: 'indietro'
@@ -1092,6 +1199,9 @@ it:
       unsubscribe:
         stop_notifications: "Da ora riceverai meno notifiche per <strong>{{title}}</strong>"
         change_notification_state: "Lo stato delle tue notifiche è"
+      filter_to:
+        one: "1 messaggio in questo argomento"
+        other: "{{count}} messaggi in questo argomento"
       create: 'Nuovo Argomento'
       create_long: 'Crea un nuovo Argomento'
       private_message: 'Inizia a scrivere un messaggio'
@@ -1151,6 +1261,9 @@ it:
       auto_close_title: 'Impostazioni di auto-chiusura'
       auto_close_save: "Salva"
       auto_close_remove: "Non chiudere automaticamente questo argomento"
+      auto_close_immediate:
+        one: "L'ultimo messaggio nell'argomento è già vecchio di 1 ora, per cui l'argomento verrà chiuso immediatamente."
+        other: "L'ultimo messaggio nell'argomento è già vecchio di %{count} ore, per cui l'argomento verrà chiuso immediatamente."
       timeline:
         back: "Indietro"
         back_description: "Torna indietro al tuo ultimo messaggio non letto"
@@ -1169,6 +1282,8 @@ it:
       notifications:
         title: cambia la frequenza con cui sarai avvertito su questo argomento
         reasons:
+          mailing_list_mode: "Hai la modalità mailing list abilitata, verrai notificato delle risposte a questo argomento via email."
+          '3_10': 'Riceverai notifiche perché stai osservando una etichetta in questo argomento.'
           '3_6': 'Riceverai notifiche perché stai osservando questa categoria.'
           '3_5': 'Riceverai notifiche poiché hai iniziato ad osservare questo argomento automaticamente.'
           '3_2': 'Riceverai notifiche perché stai osservando questo argomento.'
@@ -1221,6 +1336,8 @@ it:
         invisible: "Rendi Invisibile"
         visible: "Rendi Visibile"
         reset_read: "Reimposta Dati Letti"
+        make_public: "Rendi Pubblico questo Argomento"
+        make_private: "Rendi un Messaggio Privato"
       feature:
         pin: "Appunta Argomento"
         unpin: "Spunta Argomento"
@@ -1236,6 +1353,9 @@ it:
       share:
         title: 'Condividi'
         help: 'condividi un collegamento a questo argomento'
+      print:
+        title: 'Stampa'
+        help: 'Apri una versione da stampa di questo argomento'
       flag_topic:
         title: 'Segnala'
         help: 'segnala questo argomento o invia una notifica privata'
@@ -1267,12 +1387,14 @@ it:
         no_banner_exists: "Non c'è alcun argomento annuncio."
         banner_exists: "<strong class='badge badge-notification unread'>C'è</strong> attualmente un argomento annuncio."
       inviting: "Sto invitando..."
+      automatically_add_to_groups: "Questo invito include anche l'accesso ai seguenti gruppi:"
       invite_private:
         title: 'Invita al Messaggio'
         email_or_username: "Email o Utente di chi invita"
         email_or_username_placeholder: "indirizzo email o nome utente"
         action: "Invita"
         success: "Abbiamo invitato l'utente a partecipare a questo messaggio."
+        success_group: "Abbiamo invitato quel gruppo a partecipare a questo messaggio."
         error: "Spiacenti, si è verificato un errore durante l'invito dell'utente."
         group_name: "nome gruppo"
       controls: "Impostazioni Argomento"
@@ -1381,6 +1503,7 @@ it:
         create: "Spiacenti, si è verificato un errore nel creare il tuo messaggio. Prova di nuovo."
         edit: "Spiacenti, si è verificato un errore nel modificare il tuo messaggio. Prova di nuovo."
         upload: "Spiacenti, si è verificato un errore durante il caricamento del file. Prova di nuovo."
+        file_too_large: "Spiacente, questo file è troppo grande (la grandezza massima è {{max_size_kb}}kb). Perché non carichi il tuo file in un servizio di cloud sharing e poi condividi il link?"
         too_many_uploads: "Spiacenti, puoi caricare un solo file per volta."
         too_many_dragged_and_dropped_files: "Spiacenti, puoi caricare solo 10 file alla volta."
         upload_not_authorized: "Spiacenti, il file che stai cercando di caricare non è autorizzato (estensioni autorizzate: {{authorized_extensions}})."
@@ -1392,6 +1515,7 @@ it:
         no_value: "No, mantienilo"
         yes_value: "Si, abbandona"
       via_email: "questo messaggio è arrivato via email"
+      via_auto_generated_email: "questo post è arrivato tramite una mail auto generata"
       whisper: "questo messaggio è un sussurro privato per i moderatori"
       wiki:
         about: "questo messaggio è una guida"
@@ -1545,6 +1669,7 @@ it:
       topic_template: "Modello di Argomento"
       tags: "Etichette"
       tags_allowed_tags: "Etichette che si possono usare soltanto in questa categoria:"
+      tags_allowed_tag_groups: "Aggiungi etichette ai gruppi che possono essere utilizzati unicamente in questa categoria:"
       tags_placeholder: "Elenco (opzionale) delle etichette permesse"
       tag_groups_placeholder: "Elenco (opzionale) dei gruppi di etichette permessi"
       delete: 'Elimina Categoria'
@@ -1581,6 +1706,7 @@ it:
       email_in_disabled: "Le Impostazioni Sito non permettono di creare nuovi argomenti via email. Per abilitare la creazione di argomenti via email,"
       email_in_disabled_click: 'abilita l''impostazione "email entrante".'
       suppress_from_homepage: "Elimina questa categoria dalla homepage."
+      sort_order: "Ordinamento di Default:"
       allow_badges_label: "Permetti l'assegnazione di distintivi in questa categoria"
       edit_permissions: "Modifica Permessi"
       add_permission: "Aggiungi Permesso"
@@ -1601,6 +1727,12 @@ it:
         muted:
           title: "Silenziato"
           description: "Non ti verrà mai notificato nulla sui nuovi argomenti di queste categorie, e non compariranno nell'elenco dei Non letti."
+      sort_options:
+        default: "predefinito"
+        likes: "Mi piace"
+        op_likes: "\"Mi Piace\" del Post Originale"
+        views: "Visualizzazioni"
+        posts: "Messaggi"
     flagging:
       title: 'Grazie per aiutarci a mantenere la nostra comunità civile!'
       action: 'Segnala Messaggio'

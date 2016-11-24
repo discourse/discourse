@@ -686,7 +686,6 @@ nl:
         account_age_days: "leeftijd van account in dagen"
         create: "Stuur een uitnodiging"
         generate_link: "Kopieer uitnodigingslink"
-        generated_link_message: '<p>Uitnodigingslink succesvol aangemaakt!</p><p><input class="invite-link-input" style="width: 75%;" type="text" value="%{inviteLink}"></p><p>Uitnodigingslink is alleen geldig voor dit e-mailadres: <b>%{invitedEmail}</b></p>'
         bulk_invite:
           none: "Je hebt nog niemand uitgenodigd. Je kan individueel uitnodigen of een groep mensen tegelijk door <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>een groepsuitnodiging-bestand te uploaden</a>"
           text: "Groepsuitnodiging via bestand"

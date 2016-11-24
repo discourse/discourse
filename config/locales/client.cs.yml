@@ -716,7 +716,6 @@ cs:
         account_age_days: "Stáří účtu ve dnech"
         create: "Poslat pozvánku"
         generate_link: "Zkopírovat odkaz na pozvánku"
-        generated_link_message: '<p>Odkaz na poznámku byl úspěšně vygenerován!</p><p><input class="invite-link-input" style="width: 75%;" type="text" value="%{inviteLink}"></p><p>Odkaz na pozvánku je platný jen pro tuto e-mailovou adresu: <b>%{invitedEmail}</b></p>'
         bulk_invite:
           none: "Zatím jste nikoho nepozval. Můžete poslat individuální pozvánku nebo pozvat skupinu lidí naráz pomocí <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>nahrání souboru</a>."
           text: "Hromadné pozvání s pomocí souboru"

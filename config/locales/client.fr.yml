@@ -453,6 +453,7 @@ fr:
         each_browser_note: "Note : Vous devez changer ce paramètre sur chaque navigateur que vous utilisez."
       dismiss_notifications: "Tout ignorer"
       dismiss_notifications_tooltip: "Marquer les notifications comme lues"
+      first_notification: "Votre première notification ! Cliquez-la pour démarrer."
       disable_jump_reply: "Ne pas aller à mon nouveau message après avoir répondu"
       dynamic_favicon: "Faire apparaître le nombre de sujets récemment créés ou mis à jour sur l'icône navigateur"
       external_links_in_new_tab: "Ouvrir tous les liens externes dans un nouvel onglet"
@@ -688,7 +689,8 @@ fr:
         account_age_days: "Âge du compte en jours"
         create: "Envoyer une invitation"
         generate_link: "Copier le lien d'invitation"
-        generated_link_message: '<p>Le lien d''invitation a été généré avec succès !</p><p><input class="invite-link-input" style="width: 75%;" type="text" value="%{inviteLink}"></p><p>Le lien d''invitation est valide uniquement pour cette adresse : <b>%{invitedEmail}</b></p>'
+        link_generated: "Lien d'invitation généré avec succés !"
+        valid_for: "Le lien d'invitation est seulement valide pour cette adresse courriel : %{email}"
         bulk_invite:
           none: "Vous n'avez encore invité personne. Vous pouvez envoyé des invitations individuelles, ou en masse en <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>envoyant un fichier d'invitation contenant la liste des courriels</a>."
           text: "Invitation massive depuis un fichier"
@@ -846,6 +848,7 @@ fr:
     trust_level: 'Niveau de confiance'
     search_hint: 'pseudo, courriel ou adresse IP'
     create_account:
+      disclaimer: "En vous s'inscrivant, vous acceptez la <a href='{{privacy_link}}'>politique de confidentialité</a> et les <a href='{{tos_link}}'>conditions générales d'utilisation</a>."
       title: "Créer un nouveau compte"
       failed: "Quelque chose s'est mal passé, peut-être que cette adresse de courriel est déjà enregistrée, essayez le lien Mot de passe oublié."
     forgot_password:
@@ -936,6 +939,9 @@ fr:
       group_mentioned:
         one: "En mentionnant {{group}}, vous êtes sur le point de notifier <a href='{{group_link}}'>1 personne</a> – êtes-vous sûr ?"
         other: "En mentionnant {{group}}, vous êtes sur le point de notifier <a href='{{group_link}}'>{{count}} personnes</a> – êtes-vous sûr ?"
+      cannot_see_mention:
+        category: "Vous avez mentionné {{username}} mais il ne sera pas notifié car il n'a pas accès à cette catégorie. Vous devez ajouter cet utilisateur à un groupe ayant accès à cette catégorie."
+        private: "Vous avez mentionné {{username}} mais il ne sera pas notifié car il ne peut pas voir ce message privé. Vous devez inviter cet utilisateur à la discussion."
       duplicate_link: "Il semblerait que votre lien vers <b>{{domain}}</b> a déjà été partagé par <b>@{{username}}</b> dans <a href='{{post_url}}'>une réponse {{ago}}</a> – êtes vous sûr de vouloir le partager à nouveau ?"
       error:
         title_missing: "Le titre est obligatoire."

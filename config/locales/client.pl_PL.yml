@@ -700,7 +700,6 @@ pl_PL:
         account_age_days: "Wiek konta w dniach"
         create: "Wyślij zaproszenie"
         generate_link: "Skopiuj link z zaproszeniem"
-        generated_link_message: '<p>Link z zaproszeniem został wygenerowany pomyślnie!</p><p><input class="invite-link-input" style="width: 75%;" type="text" value="%{inviteLink}"></p><p>Link zaproszenia jest ważny jedynie dla tego adresu e-mail: <b>%{invitedEmail}</b></p>'
         bulk_invite:
           none: "Jeszcze nikogo nie zaproszono. Możesz wysłać pojedyncze zaproszenie lub <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>zaprosić wiele osób na raz wysyłając odpowiedni plik</a>."
           text: "Zaproszenia hurtowe z pliku"

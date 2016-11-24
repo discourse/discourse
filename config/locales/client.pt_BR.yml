@@ -136,8 +136,9 @@ pt_BR:
         enabled: 'listou %{when}'
         disabled: 'desalistou %{when}'
     topic_admin_menu: "ações administrativas do tópico"
+    wizard_required: "Chegou a hora de configurar seu fórum! <a href='%{url}' data-auto-route='true'>Começar o Assistente de Configuração</a>!"
     emails_are_disabled: "Todo o envio de email foi globalmente desabilitado por algum administrador. Nenhum email de notificações de qualquer tipo será enviado."
-    bootstrap_mode_enabled: "Para fazer o lançamento do seu novo site mais fácil, você está no modo de inicialização. A todos os novos usuários será concedido nível de confiança 1 e terão o resumo diário das atualizações ativado. Isso será automaticamente desativado quando a contagem total de usuários exceder %{min_users} usuários."
+    bootstrap_mode_enabled: "Para facilitar o lançamento do seu novo site, você esta no modo de inicialização. A todos os novos usuários, será concedido o nível de confiança 1 e eles terão o resumo diário de atualizações por email ativado. Isso será automaticamente desativado quando a contagem total de usuários exceder %{min_users} usuários."
     bootstrap_mode_disabled: "O modo de inicialização será desativado nas próximas 24 horas."
     s3:
       regions:
@@ -428,6 +429,7 @@ pt_BR:
       mute: "Silenciar"
       edit: "Editar Preferências"
       download_archive: "Fazer Download dos Meus Posts"
+      download_archive_confirm: "Você tem certeza que deseja baixar as suas postagens?"
       new_private_message: "Nova Mensagem"
       private_message: "Mensagem"
       private_messages: "Mensagens"
@@ -451,6 +453,7 @@ pt_BR:
         each_browser_note: "Nota: Você deve modificar essa configuração em todos navegadores que você usa."
       dismiss_notifications: "Descartar tudo"
       dismiss_notifications_tooltip: "Marcar todas as notificações não lidas como lidos"
+      first_notification: "Sua primeira notificação! Selecione-a para começar."
       disable_jump_reply: "Não pular para o meu tópico depois que eu respondo"
       dynamic_favicon: "Exibir ícone no navegador de tópicos novos / atualizados."
       external_links_in_new_tab: "Abrir todos os links externos em uma nova aba"
@@ -473,6 +476,7 @@ pt_BR:
           Tópicos e categorias silenciados não são incluídos nesses emails.
         daily: "Enviar atualizações diárias"
         individual: "Enviar email para cada postagem nova"
+        individual_no_echo: "Mande um email para todas as novas publicações, exceto as minhas"
         many_per_day: "Me envie um email para cada nova postagem (aproximadamente {{dailyEmailEstimate}} por dia)"
         few_per_day: "Me envie um email para cada nova postagem (aproximadamente 2 por dia)"
       tag_settings: "Etiquetas"
@@ -506,6 +510,7 @@ pt_BR:
       automatically_unpin_topics: "Desafixar automaticamente os tópicos quando eu chegar ao fundo."
       apps: "Aplicativos"
       revoke_access: "Revogar Acesso"
+      undo_revoke_access: "Desfazer a Revogação de Acesso"
       api_approved: "Aprovada:"
       staff_counters:
         flags_given: "sinalizadas úteis"
@@ -595,6 +600,7 @@ pt_BR:
         title: "idioma de interface"
         instructions: "Idioma de interface do usuário. Será alterado quando você atualizar a página."
         default: "(padrão)"
+        any: "qualquer"
       password_confirmation:
         title: "Senha novamente"
       last_posted: "Última resposta"
@@ -652,6 +658,7 @@ pt_BR:
         after_4_minutes: "depois de 4 minutos"
         after_5_minutes: "depois de 5 minutos"
         after_10_minutes: "depois de 10 minutos"
+      notification_level_when_replying: "Quando eu publicar um tópico, definir o tópico como"
       invited:
         search: "digite para pesquisar convites..."
         title: "Convites"
@@ -682,7 +689,8 @@ pt_BR:
         account_age_days: "Idade da conta em dias"
         create: "Enviar um convite"
         generate_link: "Copiar Link do Convite"
-        generated_link_message: '<p>Link do convite gerado com sucesso!</p><p><input class="invite-link-input" style="width: 75%;" type="text" value="%{inviteLink}"></p><p>Link do convite válido apenas para este endereço de email: <b>%{invitedEmail}</b></p>'
+        link_generated: "Link de convite gerado com sucesso!"
+        valid_for: "Link de convite é válido apenas para esse endereço de email: %{email}"
         bulk_invite:
           none: "Você ainda não convidou ninguém. Você pode enviar convites individuais, ou enviar vários de uma vez através da ferramenta de <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>enviar em massa</a>."
           text: "Convidar em massa a partir de arquivo"
@@ -793,6 +801,7 @@ pt_BR:
         other: "%{count} erros/%{duration}"
     learn_more: "aprenda mais..."
     all_time: 'total'
+    all_time_desc: 'total de tópicos criados'
     year: 'ano'
     year_desc: 'tópicos criados nos últimos 365 dias'
     month: 'mês'
@@ -839,6 +848,7 @@ pt_BR:
     trust_level: 'Nível de confiança'
     search_hint: 'nome de usuário, email ou endereço de IP'
     create_account:
+      disclaimer: "Ao se registrar, você concorda com a <a href='{{privacy_link}}'>política de privacidade</a> e os <a href='{{tos_link}}'>termos de serviço</a>."
       title: "Criar nova conta"
       failed: "Alguma coisa deu errado, talvez este email já esteja registrado, tente usar o Esqueci a Senha."
     forgot_password:
@@ -926,6 +936,12 @@ pt_BR:
       saved_local_draft_tip: "salvo localmente"
       similar_topics: "Seu tópico é parecido com..."
       drafts_offline: "rascunhos offline"
+      group_mentioned:
+        one: "Ao mencionar {{group}}, você está prester a notifcar <a href='{{group_link}}'>1 pessoa</a> – tem certeza?"
+        other: "Ao mencionar {{group}}, você está prestes a notificar <a href='{{group_link}}'>{{count}} pessoas</a> – tem certeza?"
+      cannot_see_mention:
+        category: "Você mencionou {{username}}, porém ele(a) não será notificado(a), pois não tem acesso a essa categoria. Você deverá adicioná-lo(a) ao grupo que tem acesso à categoria."
+        private: "Você mencionou {{username}}, porém ele(a) não será notificado(a), pois não pode ver essa mensagem pessoal. Você deverá convidá-lo(a) para essa MP."
       duplicate_link: "Parece que o seu link para <b>{{domain}}</b> já foi postado no tópico por <b>@{{username}}</b> em <a href='{{post_url}}'>uma resposta {{ago}}</a> – tem certeza que deseja postá-lo novamente?"
       error:
         title_missing: "Título é obrigatório"
@@ -959,6 +975,7 @@ pt_BR:
       bold_label: "B"
       bold_title: "Negrito"
       bold_text: "texto em negrito"
+      italic_label: "I"
       italic_title: "Itálico"
       italic_text: "texto em itálico"
       link_title: "Link"
@@ -976,6 +993,7 @@ pt_BR:
       olist_title: "Lista numerada"
       ulist_title: "Lista de itens"
       list_item: "Item da lista"
+      heading_label: "H"
       heading_title: "Título"
       heading_text: "Título"
       hr_title: "Barra horizontal"
@@ -1113,6 +1131,8 @@ pt_BR:
           noreplies: tem zero respostas
           single_user: contém um único usuário
         post:
+          count:
+            label: Contagem de Publicação Mínima
           time:
             label: Publicado
             before: antes
@@ -1176,6 +1196,9 @@ pt_BR:
       unsubscribe:
         stop_notifications: "Você agora vai receber menos notificações de <strong>{{title}}</strong>"
         change_notification_state: "Seu estado de notificação atual é"
+      filter_to:
+        one: "1 publicação no tópico"
+        other: "{{count}} publicações no tópico"
       create: 'Novo tópico'
       create_long: 'Criar um novo tópico'
       private_message: 'Iniciar uma mensagem'
@@ -1235,6 +1258,9 @@ pt_BR:
       auto_close_title: 'Configurações para fechar automaticamente'
       auto_close_save: "Salvar"
       auto_close_remove: "Não fechar automaticamente este tópico"
+      auto_close_immediate:
+        one: "A última publicação no tópico já tem 1 hora, portanto ele será fechado imediatamente."
+        other: "A última publicação no tópico já tem %{count} horas, portanto ele será fechado imediatamente."
       timeline:
         back: "Voltar"
         back_description: "Volte para a sua última postagem não lida"
@@ -1324,6 +1350,9 @@ pt_BR:
       share:
         title: 'Compartilhar'
         help: 'compartilhar um link deste tópico'
+      print:
+        title: 'Imprimir'
+        help: 'Abrir uma versão imprimível deste tópico'
       flag_topic:
         title: 'Sinalizar'
         help: 'sinaliza privativamente este tópico para chamar atenção ou notificar privativamente sobre isso'
@@ -1674,6 +1703,7 @@ pt_BR:
       email_in_disabled: "Postar novos tópicos via email está desabilitado nas Configurações do Site. Para habilitar respostas em novos tópicos via email,"
       email_in_disabled_click: 'habilitar a configuração de "email em".'
       suppress_from_homepage: "Suprimir esta categoria da página inicial."
+      sort_order: "Ordenação Padrão:"
       allow_badges_label: "Permitir a concessão de emblemas nessa categoria"
       edit_permissions: "Editar Permissões"
       add_permission: "Adicionar Permissões"
@@ -1699,6 +1729,18 @@ pt_BR:
         muted:
           title: "Silenciar"
           description: "Você nunca será notificado sobre novos tópicos nessas categorias, e não aparecerão no Recentes."
+      sort_options:
+        default: "padrão"
+        likes: "Curtidas"
+        op_likes: "Curtidas da Publicação Original"
+        views: "Visualizações"
+        posts: "Postagens"
+        activity: "Atividade"
+        posters: "Participantes"
+        category: "Categoria"
+        created: "Criado"
+      sort_ascending: 'Ascendente'
+      sort_descending: 'Descendente'
     flagging:
       title: 'Obrigado por ajudar a manter a civilidade da nossa comunidade!'
       action: 'Sinalizar resposta'
@@ -1719,6 +1761,16 @@ pt_BR:
         spam: "É spam"
       custom_placeholder_notify_user: "Seja específico, construtivo e sempre seja gentil."
       custom_placeholder_notify_moderators: "Deixe-nos saber especificamente com o que você está preocupado, e nos forneça links relevantes e exemplos quando possível."
+      custom_message:
+        at_least:
+          one: "insira pelo menos 1 caractere"
+          other: "insira pelo menos {{count}} caracteres"
+        more:
+          one: "Falta apenas 1..."
+          other: "Faltam {{count}}..."
+        left:
+          one: "1 restante"
+          other: "{{count}} restantes"
     flagging_topic:
       title: "Obrigado por ajudar a manter a civilidade da nossa comunidade!"
       action: "Sinalizar Tópico"
@@ -1923,6 +1975,7 @@ pt_BR:
         mark_regular: '<b>m</b>, <b>r</b> Tópico regular (padrão)'
         mark_tracking: '<b>m</b>, <b>t</b> Monitorar o tópico'
         mark_watching: '<b>m</b>, <b>w</b> Observar o tópico'
+        print: '<b>ctrl</b>+<b>p</b> Imprimir tópico'
     badges:
       earned_n_times:
         one: "Emblema adquirido 1 vez"
@@ -2190,6 +2243,9 @@ pt_BR:
         add_owners: Adicionar proprietários
         incoming_email: "Endereço de email de entrada personalizado"
         incoming_email_placeholder: "Insira um endereço de email"
+        flair_url_placeholder: "(Opcional) URL de imagem ou classe Font Awesome"
+        flair_bg_color_placeholder: "(Opcional) Valor em hexadecimal da cor"
+        flair_color_placeholder: "(Opcional) Valor em hexadecimal da cor"
         flair_preview: "Pré-visualizar"
       api:
         generate_master: "Gerar chave Mestra de API"
@@ -2206,29 +2262,73 @@ pt_BR:
         all_users: "Todos os Usuários"
         note_html: "Guarde esta chave <strong>secretamente</strong>, todos usuários que tiverem acesso a ela poderão criar posts arbritários no forum como qualquer usuário."
       web_hooks:
+        title: "Webhooks"
+        none: "Não existem webhooks no momento."
+        instruction: "Webhooks permitem que o Discourse notifique serviços externos quando certos eventos acontecem em seu site. Quando o webhook é desencadeado, uma requisição POST é enviada às URLs fornecidas."
+        detailed_instruction: "Uma requisição POST será enviada à URL fornecida quando o evento escolhido acontecer."
+        new: "Novo Webhook"
         create: "Criar"
         save: "Salvar"
         destroy: "Excluir"
         description: "Descrição"
         controls: "Controles"
         go_back: "Volta à lista"
+        payload_url: "URL do Payload"
         payload_url_placeholder: "https://example.com/postreceive"
+        warn_local_payload_url: "Parece que você está tentando configurar um webhook para uma URL local. Eventos entregues a endereços locais podem causar efeitos colaterais ou comportamentos inesperados. Continuar?"
+        secret_invalid: "O segredo não deve conter caracteres em branco."
+        secret_too_short: "O segredo deve ter pelo menos 12 caracteres."
+        secret_placeholder: "Uma string opcional, usada para gerar assinaturas"
+        event_type_missing: "Você deve configurar apenas um tipo de evento."
+        content_type: "Tipo de Conteúdo"
         secret: "Segredo"
+        event_chooser: "Que eventos devem desencadear esse webhook?"
         wildcard_event: "Envie-me tudo."
         individual_event: "Selecionar eventos individuais."
+        verify_certificate: "Verificar o certificado TLS da URL do payload"
         active: "Ativo"
+        active_notice: "Entregaremos detalhes do evento quando ele acontecer."
+        categories_filter_instructions: "Os webhooks aplicáveis serão desencadeados apenas se o evento estiver relacionado às categorias especificadas. Deixe em branco para desencadear webhooks para todas as categorias."
+        categories_filter: "Categorias Desencadeadas"
+        groups_filter_instructions: "Webhooks aplicáveis serão desencadeados apenas se o evento estiver relacionado aos grupos especificados. Deixe em branco para desencadear webhooks para todos os grupos."
+        groups_filter: "Grupos Desencadeados"
+        delete_confirm: "Deletar esse webhook?"
+        topic_event:
+          details: "Quando existir um tópico novo, revisado, modificado ou deletado."
         post_event:
           name: "Publicar Evento"
+          details: "Quando existir uma nova resposta, edição, deleção ou recuperação."
+        user_event:
+          name: "Evento de Usuário"
+          details: "When um usuário é criado ou aprovado."
         delivery_status:
           title: "Status de Entrega"
           inactive: "Inativo"
           failed: "Falhou"
           successful: "Sucesso"
         events:
+          none: "Não existem eventos relacionados."
+          redeliver: "Entregar novamente"
+          incoming:
+            one: "Existe um novo evento."
+            other: "Existem {{count}} novos eventos."
+          completed_in:
+            one: "Completado em 1 segundo."
+            other: "Completado em {{count}} segundos."
+          request: "Requisição"
           response: "Resposta"
+          redeliver_confirm: "Tem certeza que deseja enviar o mesmo payload novamente?"
           headers: "Cabeçalhos"
+          payload: "Payload"
           body: "Corpo"
+          go_list: "Ir para lista"
+          go_details: "Editar webhook"
+          go_events: "Ir para eventos"
+          ping: "Latência"
+          status: "Código de Status"
+          event_id: "ID"
           timestamp: "Criado"
+          completion: "Tempo de Conclusão"
           actions: "Ações"
       plugins:
         title: "Plugins"
@@ -2612,6 +2712,7 @@ pt_BR:
         suspend_reason: "Motivo"
         suspended_by: "Suspenso por"
         delete_all_posts: "Apagar todas mensagens"
+        delete_all_posts_confirm_MF: "Você está prestes a apagar {POSTS, plural, one {1 publicação} other {# publicações}} and {TOPICS, plural, one {1 tópico} other {# tópicos}}. Você tem certeza?"
         suspend: "Suspender"
         unsuspend: "Readmitir"
         suspended: "Suspenso?"
@@ -2707,6 +2808,9 @@ pt_BR:
         unlock_trust_level: "Destravar Nível de Confiança"
         tl3_requirements:
           title: "Requisitos para o Nível de Confiança 3"
+          table_title:
+            one: "No último dia:"
+            other: "Nos últimos %{count} dias:"
           value_heading: "Valor"
           requirement_heading: "Requisito"
           visits: "Visitas"
@@ -2806,6 +2910,7 @@ pt_BR:
           developer: 'Desenvolvedor'
           embedding: "Incorporação"
           legal: "Jurídico"
+          user_api: 'API de Usuário'
           uncategorized: 'Outros'
           backups: "Backups"
           login: "Entrar"
@@ -2894,6 +2999,7 @@ pt_BR:
         sample: "Use o seguinte código HTML no seu site para criar e incorporar tópicos do Discourse. Troque <b>REPLACE_ME</b> com a URL canônica da página na qual você está incorporando."
         title: "Incorporar"
         host: "Hosts Permitidos"
+        path_whitelist: "Lista de Caminhos Permitidos "
         edit: "editar"
         category: "Postar na Categoria"
         add_host: "Adicionar Host"
@@ -2905,6 +3011,7 @@ pt_BR:
         embed_by_username: "Nome de usuário para criação do tópico"
         embed_post_limit: "Número máximo de postagens para incorporar"
         embed_username_key_from_feed: "Chave para obter o nome de usuário no discourse do feed"
+        embed_title_scrubber: "Expressão regular usada para higienizar o título das publicações"
         embed_truncate: "Truncar as postagens incorporadas"
         embed_whitelist_selector: "Seletor de CSS para elementos que são permitidos na incorporação"
         embed_blacklist_selector: "Seletor de CSS para elementos que são removidos da incorporação"
@@ -2932,11 +3039,16 @@ pt_BR:
       done: "Feito"
       back: "Voltar"
       next: "Próximo"
+      step: "%{current} de %{total}"
       upload: "Enviar"
       uploading: "Enviando..."
       quit: "Talvez Depois"
+      staff_count:
+        one: "Sua comunidade tem 1 membro na equipe."
+        other: "Sua comunidade tem %{count} membros na equipe."
       invites:
         add_user: "adicionar"
+        none_added: "Você ainda não convidou ninguém para a equipe. Tem certeza que deseja continuar?"
         roles:
           admin: "Admin"
           moderator: "Moderador"

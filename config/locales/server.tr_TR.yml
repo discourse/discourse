@@ -2199,6 +2199,7 @@ tr_TR:
     staff_tag_remove_disallowed: " \"%{tag}\" etiketi yalnızca görevliler tarafından silinebilir gözüküyor."
   rss_by_tag: "%{tag} etiketli konular"
   finish_installation:
+    congratulations: "Tebrikler, Discourse yüklediniz!"
     register:
       button: "Kayıt Ol"
       help: "başlamak için yeni bir hesap oluşturun"

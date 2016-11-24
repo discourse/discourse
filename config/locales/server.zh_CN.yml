@@ -1163,7 +1163,7 @@ zh_CN:
     not_found: "无法找到你的账户。请联系站点管理人员。"
     account_not_approved: "你的帐号尚未被审核通过。一旦你的帐号获得批准，你就会收到一封电子邮件提醒。"
     unknown_error: "你的账户发生了问题。请联系站点管理人员。"
-    timeout_expired: "账户登录超市，请重新尝试登录。"
+    timeout_expired: "账户登录超时，请重新尝试登录。"
   original_poster: "原始作者"
   most_posts: "大部分帖子"
   most_recent_poster: "当前大部分帖子作者"
