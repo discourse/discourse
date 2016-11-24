@@ -52,6 +52,8 @@ class TopTopic < ActiveRecord::Base
                                    all: 6)
   end
 
+  private
+
   def self.sort_orders
     @@sort_orders ||= [:posts, :views, :likes, :op_likes].freeze
   end
@@ -224,10 +226,6 @@ class TopTopic < ActiveRecord::Base
                   AND tt.#{period}_#{sort}_count <> c.count",
              from: start_of(period))
   end
-
-  private_class_method :sort_orders, :update_counts_and_compute_scores_for, :remove_invisible_topics,
-                       :add_new_visible_topics, :update_posts_count_for, :update_views_count_for, :update_likes_count_for,
-                       :compute_top_score_for, :start_of, :update_top_topics
 end
 
 # == Schema Information
