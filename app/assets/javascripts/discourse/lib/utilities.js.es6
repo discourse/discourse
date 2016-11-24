@@ -244,7 +244,7 @@ export function uploadLocation(url) {
   } else {
     var protocol = window.location.protocol + '//',
       hostname = window.location.hostname,
-      port = ':' + window.location.port;
+      port = window.location.port ? ':' + window.location.port : '';
     return protocol + hostname + port + url;
   }
 }
