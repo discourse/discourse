@@ -58,29 +58,21 @@ body, table, td, th, h1, h2, h3 {font-family: Helvetica, Arial, sans-serif !impo
 
 
 
-<table style="margin-bottom:20px;padding:0;vertical-align:top;width:100%">
+<table style="table-layout:fixed;margin-bottom:20px;padding:0;vertical-align:top;width:100%">
 <tbody>
   <tr>
-    <td style="text-align:center;color:#fff;font-size:3em;font-weight:400;width:33%;">
-      <strong><%= @new_topics_count -%></strong>
-    </td>
-    <td style="text-align:center;color:#fff;font-size:3em;font-weight:400;">
-      <strong><%= @unread_messages -%></strong>
-    </td>
-    <td style="text-align:center;color:#fff;font-size:3em;font-weight:400;width:33%;">
-      <strong><%= @unread_notifications -%></strong>
-    </td>
+    <%- @counts.each do |count| -%>
+      <td style="text-align:center;color:#fff;font-size:3em;font-weight:400;">
+        <strong><%= count[:value] -%></strong>
+      </td>
+    <%- end -%>
   </tr>
   <tr>
-    <td style="color:#fff;font-size:16px;font-weight:400;text-align:center;width:33%;">
-      <%=t 'user_notifications.digest.new_topics' %>
-    </td>
-    <td style="color:#fff;font-size:16px;font-weight:400;text-align:center;">
-      <%=t 'user_notifications.digest.unread_messages' %>
-    </td>
-    <td style="color:#fff;font-size:16px;font-weight:400;text-align:center;width:33%;">
-      <%=t 'user_notifications.digest.unread_notifications' %>
-    </td>
+    <%- @counts.each do |count| -%>
+      <td style="color:#fff;font-size:16px;font-weight:400;text-align:center;">
+        <strong><%=t count[:label_key] -%></strong>
+      </td>
+    <%- end -%>
   </tr>
 </tbody>
 </table>

@@ -2432,6 +2432,8 @@ en:
       new_topics: "New Topics"
       unread_messages: "Unread Messages"
       unread_notifications: "Unread Notifications"
+      new_posts: "New Posts"
+      new_users: "New Users"
       popular_topics: "Popular Topics"
       follow_topic: "Follow this topic"
       join_the_discussion: "Read More"
