@@ -20,13 +20,14 @@
 
 {{#conditional-loading-spinner condition=loading}}
 
+<div class="email-preview-digest">
   {{#if showSendEmailForm}}
     <br/>
-    <div>
+    <div class="controls">
       {{#if sendingEmail}}
         {{i18n 'admin.email.sending_test'}}
       {{else}}
-        <label style="display: inline;">{{i18n 'admin.email.send_digest_label'}}</label>
+        <label>{{i18n 'admin.email.send_digest_label'}}</label>
         {{text-field value=email placeholderKey="admin.email.test_email_address"}}
         <button class='btn' {{action "sendEmail"}} disabled={{sendEmailDisabled}}>{{i18n 'admin.email.send_digest'}}</button>
         {{#if sentEmail}}
@@ -37,9 +38,17 @@
     <br/>
   {{/if}}
 
-  {{#if showHtml}}
-    {{{model.html_content}}}
-  {{else}}
-    <pre>{{{model.text_content}}}</pre>
-  {{/if}}
+  <div class="preview-output">
+    {{#if showHtml}}
+      {{#if htmlEmpty}}
+        <p>{{i18n 'admin.email.no_result'}}</p>
+      {{else}}
+        <iframe src="{{iframeSrc}}" />
+      {{/if}}
+    {{else}}
+      <pre>{{{model.text_content}}}</pre>
+    {{/if}}
+  </div>
+</div>
+
 {{/conditional-loading-spinner}}

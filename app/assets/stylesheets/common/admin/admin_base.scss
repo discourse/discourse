@@ -1921,6 +1921,21 @@ table#user-badges {
   }
 }
 
+.email-preview-digest {
+  .controls {
+    margin-left: 20px;
+    label {
+      display: inline;
+    }
+  }
+
+  .preview-output iframe {
+    width: 100%;
+    height: 600px;
+    border-width: 1px;
+  }
+}
+
 // Mobile specific styles
 // Mobile view text-inputs need some padding
 .mobile-view .admin-contents {
