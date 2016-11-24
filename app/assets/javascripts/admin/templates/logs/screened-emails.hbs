@@ -19,7 +19,22 @@
         <div class="clearfix"></div>
       </div>
 
-      {{screened-emails-list content=model}}
+      {{#each model as |item|}}
+        <div class="admin-list-item">
+          <div class="col first email">
+            <div class="overflow-ellipsis" title={{item.email}}>{{item.email}}</div>
+          </div>
+          <div class="col action">{{item.actionName}}</div>
+          <div class="col match_count">{{item.match_count}}</div>
+          <div class="col last_match_at">{{age-with-tooltip item.last_match_at}}</div>
+          <div class="col created_at">{{age-with-tooltip item.created_at}}</div>
+          <div class="col ip_address">{{item.ip_address}}</div>
+          <div class="col action">
+            {{d-button action="clearBlock" actionParam=item icon="check" label="admin.logs.screened_emails.actions.allow"}}
+          </div>
+          <div class="clearfix"></div>
+        </div>
+      {{/each}}
     </div>
 
   {{else}}

@@ -49,10 +49,39 @@
   </div>
 
   {{#conditional-loading-spinner condition=loading}}
-    {{#if model.length}}
-      {{staff-action-logs-list content=model}}
+    {{#each model as |item|}}
+      <div class='admin-list-item'>
+        <div class="col value first staff_user">
+          {{#link-to 'adminUser' item.acting_user}}{{avatar item.acting_user imageSize="tiny"}}{{/link-to}}
+          <a {{action "filterByStaffUser" item.acting_user}} class="btn btn-small">{{item.acting_user.username}}</a>
+        </div>
+        <div class="col value action">
+          <a {{action "filterByAction" item}} class="btn btn-small">{{item.actionName}}</a>
+        </div>
+        <div class="col value subject">
+          {{#if item.target_user}}
+            {{#link-to 'adminUser' item.target_user}}{{avatar item.target_user imageSize="tiny"}}{{/link-to}}
+            <a {{action "filterByTargetUser" item.target_user}} class="btn btn-small">{{item.target_user.username}}</a>
+          {{/if}}
+          {{#if item.subject}}
+            <a {{action "filterBySubject" item.subject}} title={{item.subject}}  class="btn btn-small">{{item.subject}}</a>
+          {{/if}}
+        </div>
+        <div class="col value created_at">{{age-with-tooltip item.created_at}}</div>
+        <div class="col value details">
+          {{{item.formattedDetails}}}
+          {{#if item.useCustomModalForDetails}}
+            <a {{action "showCustomDetailsModal" item}}>{{i18n 'admin.logs.staff_actions.show'}}</a>
+          {{/if}}
+          {{#if item.useModalForDetails}}
+            <a {{action "showDetailsModal" item}}>{{i18n 'admin.logs.staff_actions.show'}}</a>
+          {{/if}}
+        </div>
+        <div class="col value context">{{item.context}}</div>
+        <div class="clearfix"></div>
+      </div>
     {{else}}
       {{i18n 'search.no_results'}}
-    {{/if}}
+    {{/each}}
   {{/conditional-loading-spinner}}
 </div>

@@ -16,7 +16,18 @@
         <div class="clearfix"></div>
       </div>
 
-      {{screened-urls-list content=model}}
+      {{#each model as |url|}}
+        <div class="admin-list-item">
+          <div class="col first domain">
+            <div class="overflow-ellipsis" title={{url.domain}}>{{url.domain}}</div>
+          </div>
+          <div class="col action">{{url.actionName}}</div>
+          <div class="col match_count">{{url.match_count}}</div>
+          <div class="col last_match_at">{{age-with-tooltip url.last_match_at}}</div>
+          <div class="col created_at">{{age-with-tooltip url.created_at}}</div>
+          <div class="clearfix"></div>
+        </div>
+      {{/each}}
     </div>
   {{else}}
     {{i18n 'search.no_results'}}
