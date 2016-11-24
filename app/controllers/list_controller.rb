@@ -327,14 +327,20 @@ class ListController < ApplicationController
     exclude_category_ids.pluck(:id)
   end
 
-  def self.best_period_for(previous_visit_at, category_id=nil)
+  def self.best_period_with_topics_for(previous_visit_at, category_id=nil)
     best_periods_for(previous_visit_at).each do |period|
       top_topics = TopTopic.where("#{period}_score > 0")
       top_topics = top_topics.joins(:topic).where("topics.category_id = ?", category_id) if category_id
-      return period if top_topics.count >= SiteSetting.topics_per_period_in_top_page
+      top_topics = top_topics.limit(SiteSetting.topics_per_period_in_top_page)
+      return period if top_topics.count == SiteSetting.topics_per_period_in_top_page
     end
-    # default period is yearly
-    SiteSetting.top_page_default_timeframe.to_sym
+
+    false
+  end
+
+  def self.best_period_for(previous_visit_at, category_id=nil)
+    best_period_with_topics_for(previous_visit_at, category_id) ||
+      SiteSetting.top_page_default_timeframe.to_sym
   end
 
   def self.best_periods_for(date)
