@@ -2769,6 +2769,7 @@ en:
         html: "html"
         text: "text"
         last_seen_user: "Last Seen User:"
+        no_result: "No results found for digest."
         reply_key: "Reply Key"
         skipped_reason: "Skip Reason"
         incoming_emails:
