@@ -60,7 +60,7 @@ class Admin::EmailController < Admin::AdminController
       message.to = params[:email]
       begin
         Email::Sender.new(message, :digest).send
-        render nothing: true
+        render json: success_json
       rescue => e
         render json: {errors: [e.message]}, status: 422
       end
