@@ -4,12 +4,6 @@ class TopTopic < ActiveRecord::Base
 
   belongs_to :topic
 
-  def self.topics_per_period(period)
-    DistributedMemoizer.memoize("#{Discourse.current_hostname}_topics_per_period_#{period}", 1.day) do
-      TopTopic.where("#{period}_score > 0").count
-    end.to_i
-  end
-
   # The top topics we want to refresh often
   def self.refresh_daily!
     transaction do

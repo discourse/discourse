@@ -99,8 +99,8 @@ class SiteSetting < ActiveRecord::Base
   end
 
   def self.min_redirected_to_top_period(duration)
-    period = ListController.best_period_for(duration)
-    return period if TopTopic.topics_per_period(period) >= SiteSetting.topics_per_period_in_top_page
+    period = ListController.best_period_with_topics_for(duration)
+    return period if period
 
     # not enough topics
     nil
