@@ -429,6 +429,7 @@ pt:
       mute: "Silenciar"
       edit: "Editar Preferências"
       download_archive: "Descarregar As Minhas Publicações"
+      download_archive_confirm: "Tem a certeza que deseja descarregar as suas publicações?"
       new_private_message: "Nova Mensagem"
       private_message: "Mensagem"
       private_messages: "Mensagens"
@@ -452,6 +453,7 @@ pt:
         each_browser_note: "Nota: Tem que alterar esta configuração em todos os navegadores de internet que utiliza."
       dismiss_notifications: "Marcar Visto Tudo"
       dismiss_notifications_tooltip: "Marcar como lidas todas as notificações por ler"
+      first_notification: "A sua primeira notificação! Seleccione-a para começar."
       disable_jump_reply: "Não voltar para a minha publicação após eu ter respondido"
       dynamic_favicon: "Mostrar contagem de tópicos novos / atualizados no ícone do browser."
       external_links_in_new_tab: "Abrir todas as hiperligações externas num novo separador"
@@ -687,7 +689,8 @@ pt:
         account_age_days: "Idade da conta, em dias"
         create: "Enviar um Convite"
         generate_link: "Copiar Hiperligação do Convite"
-        generated_link_message: '<p>Hiperligação do Convite gerada corretamente!</p><p><input class="invite-link-input" style="width: 75%;" type="text" value="%{inviteLink}"></p><p>A hiperligação do convite é válida apenas para este endereço de email: <b>%{invitedEmail}</b></p>'
+        link_generated: "Ligação de convite gerada com sucesso!"
+        valid_for: "Ligação de convite é válida apenas para este endereço de email:  %{email}"
         bulk_invite:
           none: "Ainda não convidou ninguém. Pode enviar convites individuais, ou convidar um grupo de pessoas de uma única vez <a href='https://meta.discourse.org/t/send-bulk-invites/16468'> carregando um ficheiro com convites em massa."
           text: "Convite em massa a partir de ficheiro"
@@ -845,6 +848,7 @@ pt:
     trust_level: 'Nível de Confiança'
     search_hint: 'nome de utilizador, email ou endereço de IP'
     create_account:
+      disclaimer: "Ao registrar-se, aceita a <a href='{{privacy_link}}'>política de privacidade</a> e os <a href='{{tos_link}}'>termos de serviço</a>."
       title: "Criar Nova Conta"
       failed: "Ocorreu um erro, talvez este email já esteja registado, tente usar a hiperligação \"Esqueci-me da Palavra-passe\"."
     forgot_password:
@@ -935,6 +939,9 @@ pt:
       group_mentioned:
         one: "Ao usar {{group}}, estará a notificar <a href='{{group_link}}'>1 pessoa</a> – tem a certeza?"
         other: "Ao usar {{group}}, estará a notificar <a href='{{group_link}}'>{{count}} pessoas</a> – tem a certeza?"
+      cannot_see_mention:
+        category: "Mencionou {{username}}  mas este não será notificado porque não têm acesso a esta categoria. Terá de os adicionar a um grupo que tenho acesso a esta categoria."
+        private: "Mencionou {{username}} mas estes não serão notificados porque não conseguem ver esta mensagem privada.  Terá de os convidar para esta MP."
       duplicate_link: "Parce que a tua ligação a <b>{{domain}}</b> já foi publicada neste tópico por <b>@{{username}}</b>  nesta <a href='{{post_url}}'>resposta {{ago}}</a> – tens a certeza de que a queres publicar outra vez?"
       error:
         title_missing: "O título é obrigatório"
@@ -1275,7 +1282,7 @@ pt:
       notifications:
         title: mudar quão frequentemente é notificado sobre este tópico
         reasons:
-          mailing_list_mode: "Tem o modo de lista de mailing activado, por isso será notificado de respostas a este tópico por email."
+          mailing_list_mode: "Tem o modo de lista de distribuição activado, por isso será notificado de respostas a este tópico por email."
           '3_10': 'Receberá notificações porque está a vigiar uma etiqueta neste tópico.'
           '3_6': 'Receberá notificações porque está a vigiar esta categoria.'
           '3_5': 'Receberá notificações porque começou a vigiar automaticamente este tópico.'
@@ -1699,6 +1706,7 @@ pt:
       email_in_disabled: "Publicar novos tópicos através do email está desactivado nas Configurações do Sítio. Para permitir a publicação de novos tópicos através do email,"
       email_in_disabled_click: 'ative a definição "email em".'
       suppress_from_homepage: "Suprimir esta categoria da página principal."
+      sort_order: "Ordenação Predefinida:"
       allow_badges_label: "Permitir a atribuição de distintivos nesta categoria"
       edit_permissions: "Editar Permissões"
       add_permission: "Adicionar Permissões"
@@ -1724,6 +1732,18 @@ pt:
         muted:
           title: "Silenciado"
           description: "Nunca será notificado de nada acerca de novos tópicos nestas categorias, e estes não irão aparecer nos recentes."
+      sort_options:
+        default: "predefinida"
+        likes: "Gostos"
+        op_likes: "Gostos à Publicação Original"
+        views: "Visualizações"
+        posts: "Publicações"
+        activity: "Actividade"
+        posters: "Autores"
+        category: "Categoria"
+        created: "Criado"
+      sort_ascending: 'Ascendente'
+      sort_descending: 'Descendente'
     flagging:
       title: 'Obrigado por ajudar a manter a nossa comunidade cívica!'
       action: 'Denunciar Mensagem'

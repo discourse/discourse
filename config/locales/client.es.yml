@@ -429,6 +429,7 @@ es:
       mute: "Silenciar"
       edit: "Editar Preferencias"
       download_archive: "Descargar mis posts"
+      download_archive_confirm: "¿Seguro que quieres descargar tus posts?"
       new_private_message: "Nuevo mensaje"
       private_message: "Mensaje"
       private_messages: "Mensajes"
@@ -452,6 +453,7 @@ es:
         each_browser_note: "Nota: Tendrás que cambiar esta opción para cada navegador que uses."
       dismiss_notifications: "Descartar todos"
       dismiss_notifications_tooltip: "Marcar todas las notificaciones no leídas como leídas"
+      first_notification: "¡Tu primera notificación! Selecciónala para comenzar."
       disable_jump_reply: "No dirigirme a mi post cuando responda"
       dynamic_favicon: "Mostrar contador de temas nuevos/actualizados en el favicon"
       external_links_in_new_tab: "Abrir todos los enlaces externos en una nueva pestaña"
@@ -474,6 +476,7 @@ es:
           Los temas y categorías silenciadas no se incluyen en estos emails.
         daily: "Enviar actualizaciones diariamente"
         individual: "Enviar un email por cada nuevo post"
+        individual_no_echo: "Envíame un email por cada nuevo post excepto los publicados por mí"
         many_per_day: "Enviarme un email por cada nuevo post (unos {{dailyEmailEstimate}} por día)"
         few_per_day: "Enviarme un email por cada nuevo post (unos 2 por día)"
       tag_settings: "Etiquetas"
@@ -686,7 +689,8 @@ es:
         account_age_days: "Antigüedad de la cuenta en días"
         create: "Enviar una Invitación"
         generate_link: "Copiar Enlace de Invitación"
-        generated_link_message: '<p>¡Enlace de Invitación generado con éxito!</p><p><input class="invite-link-input" style="width: 75%;" type="text" value="%{inviteLink}"></p><p>Este enlace de Invitación es sólo válido para la siguiente dirección de email: <b>%{invitedEmail}</b></p>'
+        link_generated: "¡Enlace de invitación generado satisfactoriamente!"
+        valid_for: "El enlace de invitación sólo es válido para esta dirección: %{email}"
         bulk_invite:
           none: "No has invitado a nadie todavía. Puedes enviar invitaciones individuales o invitar a un grupo de personas a la vez <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>subiendo un archivo para invitaciones en masa</a>."
           text: "Archivo de Invitación en Masa"
@@ -844,6 +848,7 @@ es:
     trust_level: 'Nivel de Confianza'
     search_hint: 'usuario, email o dirección IP'
     create_account:
+      disclaimer: "Al registrarte, aceptas la <a href='{{privacy_link}}'>política de privacidad</a> y los <a href='{{tos_link}}'>términos de servicio</a>."
       title: "Crear nueva cuenta"
       failed: "Algo ha salido mal, tal vez este e-mail ya fue registrado, intenta con el enlace 'olvidé la contraseña'"
     forgot_password:
@@ -934,6 +939,8 @@ es:
       group_mentioned:
         one: "Al mencionar a {{group}}, estás a punto de notificar a <a href='{{group_link}}'>1 persona</a> – ¿seguro que quieres hacerlo?"
         other: "Al mencionar a {{group}}, estás a punto de notificar a <a href='{{group_link}}'>{{count}} personas</a> – ¿seguro que quieres hacerlo?"
+      cannot_see_mention:
+        category: "Mencionaste a {{username}} pero no será notificado porque no tiene acceso a esta categoría. Necesitarás añadirlo a un grupo para que tenga acceso a esta categoría."
       duplicate_link: "Parece que tu enlace a <b>{{domain}}</b> ha sido ya publicado en el tema por <b>@{{username}}</b> en <a href='{{post_url}}'>un post {{ago}}</a> – ¿seguro que quieres publicarlo de nuevo?"
       error:
         title_missing: "Es necesario un título"

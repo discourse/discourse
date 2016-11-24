@@ -655,7 +655,6 @@ tr_TR:
         account_age_days: "Hesabın gün olarak yaşı"
         create: "Davet Yolla"
         generate_link: "Davet bağlantısını kopyala"
-        generated_link_message: '<p>Davet bağlantısı başarılı bir şekilde oluşturuldu!</p><p><input class="invite-link-input" style="width: 75%;" type="text" value="%{inviteLink}"></p><p>Davet bağlantısı sadece bu e-posta adresi için geçerlidir: <b>%{invitedEmail}</b></p>'
         bulk_invite:
           none: "Henüz kimseyi buraya davet etmediniz. Tek tek davetiye gönderebilirsiniz, ya da <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>toplu bir davetiye dosyası yükleyerek</a> birçok kişiyi aynı anda davet edebilirsiniz. "
           text: "Dosyadan Toplu Davet Gönder"
@@ -1634,6 +1633,11 @@ tr_TR:
         muted:
           title: "Susturuldu"
           description: "Bu kategorilerdeki yeni konular hakkında herhangi bir bildiri almayacaksınız ve en son gönderilerde gözükmeyecekler. "
+      sort_options:
+        default: "öntanımlı"
+        likes: "Beğeniler"
+        posts: "Gönderiler"
+        category: "Kategori"
     flagging:
       title: 'Topluluğumuzun düzenli kalmasına desteğiniz için teşekkürler!'
       action: 'Gönderiyi Bildir'

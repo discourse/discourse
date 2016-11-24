@@ -683,7 +683,6 @@ da:
         account_age_days: "Kontoens alder i dage"
         create: "Send en invitation"
         generate_link: "Kopier invitations-link"
-        generated_link_message: '<p>Invitationslink genereret!</p><p><input class="invite-link-input" style="width: 75%;" type="text" value="%{inviteLink}"></p><p>Invitationslinket er kun gyldigt for denne email-adresse: <b>%{invitedEmail}</b></p>'
         bulk_invite:
           none: "Du har ikke inviteret nogen her endnu. Du kan sende individuelle invitationer eller invitere en masse mennesker på én gang ved at <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>uploade en samlet liste over invitationer</a>."
           text: "Masse invitering fra en fil"

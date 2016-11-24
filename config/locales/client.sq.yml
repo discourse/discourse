@@ -676,7 +676,6 @@ sq:
         account_age_days: "Jetëgjatësia e llogarisë (ditë)"
         create: "Dërgo një ftesë"
         generate_link: "Kopjo lidhjen e ftesës"
-        generated_link_message: '<p>Lidhja e ftesës u krijua!</p><p><input class="invite-link-input" style="width: 75%;" type="text" value="%{inviteLink}"></p><p>Kjo ftesë është e vlefshme veto për adresën email: <b>%{invitedEmail}</b></p>'
         bulk_invite:
           none: "Ju nuk keni ftuar askënd deri tani. Mund të dërgoni ftesa individuale ose mund të ftoni një grup personash duke <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>ngarkuar skedarin</a>."
           text: "Skedari për ftesat në grup"

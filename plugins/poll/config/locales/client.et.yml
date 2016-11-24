@@ -10,7 +10,7 @@ et:
     poll:
       voters:
         one: "hääletaja"
-        other: "hääletajad"
+        other: "hääletajat"
       total_votes:
         one: "häält kokku"
         other: "hääli kokku"

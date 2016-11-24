@@ -559,7 +559,6 @@ fa_IR:
         account_age_days: "عمر حساب بر اساس روز"
         create: "فرستادن یک دعوتنامه"
         generate_link: "کپی لینک دعوت"
-        generated_link_message: '<p>لینک دعوت با موفقیت تولید شد!</p><p><input class="invite-link-input" style="width: 75%;" type="text" value="%{inviteLink}"></p><p>لینک دعوت فقط برای این ایمیل آدرس معتبر است: <b>%{invitedEmail}</b></p>'
         bulk_invite:
           none: "شما هنوز کسی را اینجا دعوت نکرده اید. می توانید بصورت تکی یا گروهی یکجا دعوتنامه را بفرستید از طریق  <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>بارگذار فراخوانه فله ای </a>."
           text: "دعوت گروهی از طریق فایل"

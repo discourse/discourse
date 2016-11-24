@@ -422,6 +422,7 @@ zh_CN:
         each_browser_note: "注意：你必须在你使用的所用浏览器中更改这项设置。"
       dismiss_notifications: "忽略所有"
       dismiss_notifications_tooltip: "标记所有未读通知为已读"
+      first_notification: "你的头一个通知！选中它开始。"
       disable_jump_reply: "回复后不跳转至新帖子"
       dynamic_favicon: "在浏览器图标中显示主题更新数量"
       external_links_in_new_tab: "在新标签页打开外部链接"
@@ -648,7 +649,6 @@ zh_CN:
         account_age_days: "账号建立天数"
         create: "发送邀请"
         generate_link: "复制邀请链接"
-        generated_link_message: '<p>邀请链接成功生成！</p><p><input class="invite-link-input" style="width: 75%;" type="text" value="%{inviteLink}"></p><p>邀请链接仅对下列邮件地址有效：<b>%{invitedEmail}</b></p>'
         bulk_invite:
           none: "你从未邀请过他人。你可以发送单个邀请，或者<a href='https://meta.discourse.org/t/send-bulk-invites/16468'>上传批量邀请文件</a>一次邀请多人。"
           text: "通过文件批量邀请"

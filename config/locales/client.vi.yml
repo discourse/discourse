@@ -620,7 +620,6 @@ vi:
         account_age_days: "Thời gian của tài khoản theo ngày"
         create: "Gửi một lời mời"
         generate_link: "Chép liên kết Mời"
-        generated_link_message: '<p>Liên kết thư mời được tạo thành công!</p><p><input class="invite-link-input" style="width: 75%;" type="text" value="%{inviteLink}"></p><p>Liên kết thư mời chỉ hợp lệ cho email này: <b>%{invitedEmail}</b></p>'
         bulk_invite:
           none: "Bạn đã mời ai ở đây chưa. Bạn có thể mời một hoặc một nhóm bằng <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>tải lên hàng loạt file mời</a>."
           text: "Mời hàng loạt bằng file"

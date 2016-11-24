@@ -624,7 +624,6 @@ ko:
         account_age_days: "일일 계정 나이"
         create: "이 포럼에 친구를 초대하기"
         generate_link: "초대 링크 복사"
-        generated_link_message: '<p>초대 링크가 성공적으로 생성되었습니다!</p><p><input class="invite-link-input" style="width: 75%;" type="text" value="%{inviteLink}"></p><p>초대 링크는 다음 이메일에 한해 유효합니다: <b>%{invitedEmail}</b></p>'
         bulk_invite:
           none: "아직 아무도 초대하지 않았습니다. 초대장을 각각 보내거나, <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>uploading a bulk invite file</a>을 이용하여 단체 초대를 보낼 수 있습니다."
           text: "파일로 대량 초대하기"

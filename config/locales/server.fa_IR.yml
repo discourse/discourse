@@ -21,8 +21,21 @@ fa_IR:
   loading: "بارگذاری..."
   powered_by_html: 'قدرت گرفته از<a href="http://www.discourse.org">دیسکورس</a>فارسی سازی<a href="http://discours.ir/t/1-0/33"> دیسکورس فارسی</a>, برای نمایش بهتر جاوا اسکریپت را فعال کنید.'
   log_in: "ورود"
+  purge_reason: "حساب کاربری غیرفعال. حذف شده به صورت خودکار به علت عدم استفاده."
   disable_remote_images_download_reason: "عکس های ریموت دانلود شده غیرفعال شدند زیرا آنجا فضای کافی در دیسک وجود نداشت"
   anonymous: "ناشناس"
+  emails:
+    incoming:
+      default_subject: "ایمیل دریافتی از %{email}"
+      show_trimmed_content: "نمایش محتوای پنهان شده."
+      maximum_staged_user_per_email_reached: "تکمیل ظرفیت تعداد حساب های کاربری با هر ایمیل."
+      errors:
+        empty_email_error: "رخ دادن در هنگامی که ایمیل خام دریافتی خالی باشد."
+        inactive_user_error: "رخ دادن در هنگامی که ارسال کننده فعال نباشد."
+        blocked_user_error: "رخ دادن در هنگامی که که ارسال کننده مسدود شده باشد."
+        strangers_not_allowed_error: "رخ دادن در هنگامی که که کاربر سعی در ایجاد مبحث در دسته بندی می کند که در آن عضو نیست."
+        reply_user_not_matching_error: "رخ دادن در هنگامی که پاسخ از ایمیل متفاوتی از آنچه که ما اطلاع رسانی را به آن ارسال کرده ایم، دریافت شده باشد."
+        topic_not_found_error: "رخ دادن در هنگامی که پاسخ دریافت شده باشد، اما مبحث مربوطه حذف شده باشد."
   errors: &errors
     format: '%{attribute} %{message}'
     messages:
@@ -873,6 +886,9 @@ fa_IR:
     emoji_set: "می‌خواهید ایموجی شما چطور باشد؟"
     enforce_square_emoji: "تحمیل نسبت ابعاد مربع به تمام شکلک ها emojis . "
     approve_unless_trust_level: "نوشته ها برای کاربران پایین ت از این سطح اعتماد نیاز به تایید دارد. "
+    default_other_external_links_in_new_tab: "باز کردن لینک های ارجاع به بیرون در یک تب جدید به صورت پیشفرض."
+    default_other_enable_quoting: "فعال کردن پاسخ به صورت نقل قول برای نوشته های هایلایت شده به صورت پیشفرض."
+    default_other_dynamic_favicon: "نمایش تعداد مباحث جدید/آپدیت شده در آیکن مرورگر به صورت پیشفرض"
     errors:
       invalid_email: "آدرس ایمیل نامعتبر"
       invalid_username: "هیچ کاربری با این نام کاربری وجود ندارد."

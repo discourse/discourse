@@ -482,6 +482,7 @@ ro:
         each_browser_note: "Observație: Setările trebuie modificate pe fiecare browser utilizat."
       dismiss_notifications: "Elimină tot"
       dismiss_notifications_tooltip: "Marchează toate notificările ca citite"
+      first_notification: "Prima notificare pe care ai primit-o! Selectează-o ca să continui. "
       disable_jump_reply: "Nu sări la postarea mea după ce răspund"
       dynamic_favicon: "Arată subiectele noi/actualizate în pictograma browserului."
       external_links_in_new_tab: "Deschide toate adresele externe într-un tab nou"
@@ -719,7 +720,8 @@ ro:
         account_age_days: "Vârsta contului în zile"
         create: "Trimite o invitație"
         generate_link: "Copiază link-ul de invitație"
-        generated_link_message: '<p>Link-ul de invitație a fost generat cu succes!</p><p><input class="invite-link-input" style="width: 75%;" type="text" value="%{inviteLink}"></p><p>Linkul de invitație e valabil doar pentru această adresă de email: <b>%{invitedEmail}</b></p>'
+        link_generated: "Link de invitare generat cu succes!"
+        valid_for: "Link-ul de invitare este valid doar pentru următoarele adrese de email:  %{email}"
         bulk_invite:
           none: "Nu ai invitat încă pe nimeni. Poți trimite invitații individuale sau mai multor oameni deodată prin <a href='https://meta.discourse.org/t/send-bulk-invites/16468'> încărcarea fișierului de invitații multiple</a>."
           text: "Invitație multiplă din fișier"
@@ -886,6 +888,7 @@ ro:
     trust_level: 'Nivel de încredere'
     search_hint: 'Numele de utilizator, email sau adresă IP'
     create_account:
+      disclaimer: "Înregistrându-te, ești de acord cu <a href='{{privacy_link}}'>politica de confidențialitate</a> și <a href='{{tos_link}}'>termenii de utilizare</a>."
       title: "Creează cont"
       failed: "Ceva s-a întâmplat, poate că acest email este deja înregistrat, încearcă să-ți resetezi parola la link-ul respectiv."
     forgot_password:
@@ -977,6 +980,9 @@ ro:
         one: "Prin menționarea {{group}}, urmează să notifici <a href='{{group_link}}'>o persoană</a> – ești sigur?"
         few: "Prin menționarea {{group}}, urmează să notifici <a href='{{group_link}}'>{{count}}  persoane</a> – ești sigur?"
         other: "Prin menționarea {{group}}, urmează să notifici <a href='{{group_link}}'>{{count}} de persoane</a> – ești sigur?"
+      cannot_see_mention:
+        category: "Ai menționat utilizatorii: {{username}}. Însă ei nu vor notificați pentru că nu au acces la această categorie. Va trebui să îi adaugi la într-un grup care are acces la aceasta categorie."
+        private: "Ai menționat utilizatorii:  {{username}}. Însă ei nu vor fi notificați pentru că nu au posibilitatea să vadă acest mesaj personal. Va trebui să îi inviți la acest MP. "
       duplicate_link: "Se pare că link-ul tău către <b>{{domain}}</b> a fost deja postat în cadrul subiectului de către <b>@{{username}}</b> în <a href='{{post_url}}'> un răspuns {{ago}} în urmă</a> – eși sigur că vrei să îl postezi din nou?"
       error:
         title_missing: "Trebuie un titlu"

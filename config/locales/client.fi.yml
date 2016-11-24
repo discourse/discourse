@@ -453,6 +453,7 @@ fi:
         each_browser_note: "Huom: Sinun täytyy vaihtaa tämä asetus kaikissa selaimista, joita käytät."
       dismiss_notifications: "Unohda kaikki"
       dismiss_notifications_tooltip: "Merkitse kaikki lukemattomat ilmoitukset luetuiksi"
+      first_notification: "Ensimmäinen ilmoitus sinulle! Valitse se niin aloitetaan."
       disable_jump_reply: "Älä siirry uuteen viestiini lähetettyäni sen"
       dynamic_favicon: "Näytä uusien / päivittyneiden ketjujen määrä selaimen ikonissa"
       external_links_in_new_tab: "Avaa sivuston ulkopuoliset linkit uudessa välilehdessä"
@@ -689,7 +690,6 @@ fi:
         account_age_days: "Tilin ikä päivissä"
         create: "Lähetä kutsu"
         generate_link: "Kopioi kutsulinkki"
-        generated_link_message: '<p>Kutsulinkin kopiointi onnistui!</p><p><input class="invite-link-input" style="width: 75%;" type="text" value="%{inviteLink}"></p><p>Kutsulinkki kelpaa vain tällä sähköpostiosoitteella: <b>%{invitedEmail}</b></p>'
         bulk_invite:
           none: "Et ole kutsunut vielä ketään. Voit lähettää yksittäisiä kutsuja tai kutsua useita ihmisiä kerralla <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>lähettämällä massakutsun tiedostosta</a>."
           text: "Lähetä massakutsu tiedostosta"
@@ -935,6 +935,9 @@ fi:
       group_mentioned:
         one: "Jos viittaat ryhmään {{group}},  <a href='{{group_link}}'>1 käyttäjä</a> saa ilmoituksen – oletko varma?"
         other: "Jos viittaat ryhmään {{group}}, <a href='{{group_link}}'>{{count}} käyttäjää</a> saa ilmoituksen – oletko varma?"
+      cannot_see_mention:
+        category: "Mainitsit käyttäjän {{username}} mutta hän ei saa ilmoitusta, koska hänellä ei ole pääsyä tälle alueelle. Hänet tulee lisätä ryhmään, jolla on pääsy alueelle."
+        private: "Mainitsit käyttäjän {{username}} mutta hän ei saa ilmoitusta, koska hän ei näe tätä yksityiskeskustelua. Hänet tulee kutsua tähän yksityiskeskusteluun."
       duplicate_link: "Näyttää siltä, että <b>@{{username}}</b> on jo lähettänyt saman linkin kohteeseen <b>{{domain}}</b> ketjun <a href='{{post_url}}'>aiemmassa viestissä {{ago}}</a> – oletko varma, että haluat lähettää sen uudestaan?"
       error:
         title_missing: "Otsikko on pakollinen"
@@ -1704,7 +1707,7 @@ fi:
       edit_permissions: "Muokkaa oikeuksia"
       add_permission: "Lisää oikeus"
       this_year: "tänä vuonna"
-      position: "arvo"
+      position: "sijainti"
       default_position: "Oletuspaikka"
       position_disabled: "Alueet näytetään aktiivisuusjärjestyksessä. Muokataksesi järjestystä,"
       position_disabled_click: 'ota käyttöön "pysyvä aluejärjestys" asetuksista.'

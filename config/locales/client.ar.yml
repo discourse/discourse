@@ -812,7 +812,6 @@ ar:
         account_age_days: "عمر الحساب بالأيام"
         create: "أرسل دعوة"
         generate_link: "انسخ رابط الدعوة"
-        generated_link_message: '<p>رابط الدعوة منح بنجاح!</p><p><input class="invite-link-input" style="width: 75%;" type="text" value="%{inviteLink}"></p><p>رابط الدعوة صالح فقط لعنوان البريد الإلكتروني هذا: <b>%{invitedEmail}</b></p>'
         bulk_invite:
           none: "لم تقم بدعوة اي احد حتى الان. تستطيع ارسال دعوة , أو ارسال عدة دعوات عن طريق<a href='https://meta.discourse.org/t/send-bulk-invites/16468'>uploading a bulk invite file</a>."
           text: "الدعوة من ملف"
