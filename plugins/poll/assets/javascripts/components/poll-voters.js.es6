@@ -40,8 +40,10 @@ export default Ember.Component.extend({
   didInsertElement() {
     this._super();
 
-    this.set("numOfVotersToShow", Math.round(this.$().width() / 25) * 2);
-    if (this.get("voterIds").length > 0) this._fetchUsers();
+    Ember.run.scheduleOnce('afterRender', () => {
+      this.set("numOfVotersToShow", Math.round(this.$().width() / 25) * 2);
+      if (this.get("voterIds").length > 0) this._fetchUsers();
+    });
   },
 
   actions: {
