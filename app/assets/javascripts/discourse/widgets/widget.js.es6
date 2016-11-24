@@ -319,7 +319,7 @@ export default class Widget {
     return this.rerenderResult(() => {
       const widget = this._findAncestorWithProperty(name);
       if (widget) {
-        return widget[name](param);
+        return widget[name].call(widget, param);
       }
 
       return this._sendComponentAction(name, param || this.findAncestorModel());
