@@ -24,8 +24,7 @@ class BasicGroupSerializer < ApplicationSerializer
   end
 
   def notification_level
-    # TODO: fix this N+1
-    GroupUser.where(group_id: object.id, user_id: scope.user.id).first.try(:notification_level)
+    fetch_group_user&.notification_level
   end
 
   def include_notification_level?
@@ -37,11 +36,16 @@ class BasicGroupSerializer < ApplicationSerializer
   end
 
   def is_member
-    scope.is_admin? || GroupUser.where(group_id: object.id, user_id: scope.user.id).present?
+    scope.is_admin? || fetch_group_user.present?
   end
 
   def include_is_member?
     scope.authenticated?
   end
 
+  private
+
+  def fetch_group_user
+    @group_user ||= (object.group_users & scope.user.group_users).first
+  end
 end
