@@ -1,8 +1,8 @@
 import { withPluginApi } from 'discourse/lib/plugin-api';
 import { observes } from "ember-addons/ember-computed-decorators";
 
-function createPollComponent(container, post, poll, vote) {
-  const component = container.lookup("component:discourse-poll");
+function createPollComponent(register, post, poll, vote) {
+  const component = register.lookup("component:discourse-poll");
   component.setProperties({ model: poll, vote, post });
   return component;
 }
@@ -82,7 +82,7 @@ function initializePolls(api) {
       const pollId = `${pollName}-${post.id}`;
 
       const pollComponent = createPollComponent(
-        helper.container,
+        helper.register,
         post,
         polls[pollName],
         votes[pollName]
