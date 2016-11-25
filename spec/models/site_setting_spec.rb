@@ -76,7 +76,11 @@ describe SiteSetting do
       before do
         SiteSetting.topics_per_period_in_top_page = 2
         SiteSetting.top_page_default_timeframe = 'daily'
-        TopTopic.stubs(:topics_per_period).with(:daily).returns(3)
+
+        2.times do
+          TopTopic.create!(daily_score: 2.5)
+        end
+
         TopTopic.refresh!
       end
 
@@ -91,7 +95,6 @@ describe SiteSetting do
       before do
         SiteSetting.topics_per_period_in_top_page = 20
         SiteSetting.top_page_default_timeframe = 'daily'
-        TopTopic.stubs(:topics_per_period).with(:daily).returns(1)
         TopTopic.refresh!
       end
 
