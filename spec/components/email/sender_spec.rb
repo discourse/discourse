@@ -180,9 +180,6 @@ describe Email::Sender do
       When { email_sender.send }
       Then { expect(email_log.post_id).to eq(3344) }
       Then { expect(email_log.topic_id).to eq(5577) }
-      Then { expect(message.header['In-Reply-To']).to be_present }
-      Then { expect(message.header['References']).to be_present }
-
     end
 
     context "email log with a reply key" do

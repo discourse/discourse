@@ -72,25 +72,37 @@ module Email
       reply_key = header_value('X-Discourse-Reply-Key')
 
       # always set a default Message ID from the host
-      uuid = SecureRandom.uuid
-      @message.header['Message-ID'] = "<#{uuid}@#{host}>"
+      @message.header['Message-ID'] = "<#{SecureRandom.uuid}@#{host}>"
 
       if topic_id.present?
         email_log.topic_id = topic_id
 
+        post = Post.find_by(id: post_id)
+        topic = Topic.find_by(id: topic_id)
+
+        topic_message_id = "<topic/#{topic_id}@#{host}>"
+        post_message_id = "<topic/#{topic_id}/#{post_id}@#{host}>"
+
         incoming_email = IncomingEmail.find_by(post_id: post_id, topic_id: topic_id)
+        incoming_message_id = "<#{incoming_email.message_id}>" if incoming_email&.message_id.present?
 
-        incoming_message_id = nil
-        incoming_message_id = "<#{incoming_email.message_id}>" if incoming_email.try(:message_id).present?
+        referenced_posts = Post.includes(:incoming_email)
+                               .where(id: PostReply.where(reply_id: post_id).select(:post_id))
+                               .order(id: :desc)
 
-        topic_identifier = "<topic/#{topic_id}@#{host}>"
-        post_identifier = "<topic/#{topic_id}/#{post_id}@#{host}>"
+        referenced_post_message_ids = referenced_posts.map do |post|
+          if post&.incoming_email&.message_id.present?
+            "<#{post.incoming_email.message_id}>"
+          else
+            "<topic/#{topic_id}/#{post.id}@#{host}>"
+          end
+        end
 
-        @message.header['Message-ID'] = post_identifier
-        @message.header['In-Reply-To'] = incoming_message_id || topic_identifier
-        @message.header['References'] = topic_identifier
-
-        topic = Topic.where(id: topic_id).first
+        @message.header['Message-ID'] = incoming_message_id || post_message_id
+        if post && post.post_number > 1
+          @message.header['In-Reply-To'] = referenced_post_message_ids.first
+          @message.header['References'] = [topic_message_id, referenced_post_message_ids].flatten
+        end
 
         # http://www.ietf.org/rfc/rfc2919.txt
         if topic && topic.category && !topic.category.uncategorized?
