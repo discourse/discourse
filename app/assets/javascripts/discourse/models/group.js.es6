@@ -151,7 +151,7 @@ const Group = Discourse.Model.extend({
   },
 
   setNotification(notification_level) {
-    this.set("notification_level", notification_level);
+    this.set("group_user.notification_level", notification_level);
     return ajax(`/groups/${this.get("name")}/notifications`, {
       data: { notification_level },
       type: "POST"

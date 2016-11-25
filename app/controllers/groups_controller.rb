@@ -4,7 +4,7 @@ class GroupsController < ApplicationController
   skip_before_filter :preload_json, :check_xhr, only: [:posts_feed, :mentions_feed]
 
   def show
-    render_serialized(find_group(:id), BasicGroupSerializer)
+    render_serialized(find_group(:id), GroupShowSerializer, root: 'basic_group')
   end
 
   def counts
