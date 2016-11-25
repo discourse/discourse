@@ -1306,6 +1306,36 @@ describe TopicsController do
     end
   end
 
+  context "excerpts" do
+
+    it "can correctly get excerpts" do
+
+      first_post = create_post(raw: 'This is the first post :)', title: 'This is a test title I am making yay')
+      second_post = create_post(raw: 'This is second post', topic: first_post.topic)
+
+      random_post = Fabricate(:post)
+
+
+      xhr :get, :excerpts, topic_id: first_post.topic_id, post_ids: [first_post.id, second_post.id, random_post.id]
+
+      json = JSON.parse(response.body)
+      json.sort!{|a,b| a["post_id"] <=> b["post_id"]}
+
+      # no random post
+      expect(json.length).to eq(2)
+      # keep emoji images
+      expect(json[0]["excerpt"]).to match(/emoji/)
+      expect(json[0]["excerpt"]).to match(/first post/)
+      expect(json[0]["username"]).to eq(first_post.user.username)
+      expect(json[0]["post_id"]).to eq(first_post.id)
+
+      expect(json[1]["excerpt"]).to match(/second post/)
+
+
+    end
+
+  end
+
   context "convert_topic" do
     it 'needs you to be logged in' do
       expect { xhr :put, :convert_topic, id: 111, type: "private" }.to raise_error(Discourse::NotLoggedIn)

@@ -592,6 +592,7 @@ Discourse::Application.routes.draw do
   get "t/:slug/:topic_id/:post_number" => "topics#show", constraints: {topic_id: /\d+/, post_number: /\d+/}
   get "t/:slug/:topic_id/last" => "topics#show", post_number: 99999999, constraints: {topic_id: /\d+/}
   get "t/:topic_id/posts" => "topics#posts", constraints: {topic_id: /\d+/}, format: :json
+  get "t/:topic_id/excerpts" => "topics#excerpts", constraints: {topic_id: /\d+/}, format: :json
   post "t/:topic_id/timings" => "topics#timings", constraints: {topic_id: /\d+/}
   post "t/:topic_id/invite" => "topics#invite", constraints: {topic_id: /\d+/}
   post "t/:topic_id/invite-group" => "topics#invite_group", constraints: {topic_id: /\d+/}
