@@ -1,27 +1,16 @@
 import { get } from 'discourse-common/lib/raw-handlebars';
 
-// `Ember.Helper` is only available in versions after 1.12
 export function htmlHelper(fn) {
-  if (Ember.Helper) {
-    return Ember.Helper.helper(function(...args) {
-      args = (args.length > 1) ? args[0].concat({ hash: args[args.length-1] }) : args;
-      return new Handlebars.SafeString(fn.apply(this, args) || '');
-    });
-  } else {
-    return Ember.Handlebars.makeBoundHelper(function() {
-      return new Handlebars.SafeString(fn.apply(this, Array.prototype.slice.call(arguments)) || '');
-    });
-  }
+  return Ember.Helper.helper(function(...args) {
+    args = (args.length > 1) ? args[0].concat({ hash: args[args.length-1] }) : args;
+    return new Handlebars.SafeString(fn.apply(this, args) || '');
+  });
 }
 
 const _helpers = {};
 
 export function registerHelper(name, fn) {
-  if (Ember.Helper) {
-    _helpers[name] = Ember.Helper.helper(fn);
-  } else {
-    return Ember.HTMLBars._registerHelper(name, fn);
-  }
+  _helpers[name] = Ember.Helper.helper(fn);
 }
 
 export function findHelper(name) {
@@ -65,14 +54,8 @@ export function registerUnbound(name, fn) {
     return fn.call(this, property, resolveParams(this, options));
   };
 
-  if (Ember.Helper) {
-    _helpers[name] = Ember.Helper.extend({
-      compute: (params, args) => fn(params[0], args)
-    });
-    Handlebars.registerHelper(name, func);
-    return;
-  }
-
+  _helpers[name] = Ember.Helper.extend({
+    compute: (params, args) => fn(params[0], args)
+  });
   Handlebars.registerHelper(name, func);
-  Ember.Handlebars.registerHelper(name, func);
 }

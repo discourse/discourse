@@ -27,18 +27,10 @@ export function bufferedRender(obj) {
 
   const caller = { };
 
-  // True in 1.13 or greater
-  if (Ember.Helper) {
-    caller.didRender = function() {
-      this._super();
-      this._customRender();
-    };
-  } else {
-    caller.didInsertElement = function() {
-      this._super();
-      this._customRender();
-    };
-  }
+  caller.didRender = function() {
+    this._super();
+    this._customRender();
+  };
 
   const triggers = obj.rerenderTriggers;
   if (triggers) {

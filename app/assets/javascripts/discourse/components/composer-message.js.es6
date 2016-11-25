@@ -5,7 +5,7 @@ export default Ember.Component.extend({
   classNameBindings: [':composer-popup', ':hidden', 'message.extraClass'],
 
   @computed('message.templateName')
-  defaultLayout(templateName) {
+  layout(templateName) {
     return getOwner(this).lookup(`template:composer/${templateName}`);
   },
 
