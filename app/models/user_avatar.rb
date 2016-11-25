@@ -105,5 +105,7 @@ end
 #
 # Indexes
 #
-#  index_user_avatars_on_user_id  (user_id)
+#  index_user_avatars_on_custom_upload_id    (custom_upload_id)
+#  index_user_avatars_on_gravatar_upload_id  (gravatar_upload_id)
+#  index_user_avatars_on_user_id             (user_id)
 #
