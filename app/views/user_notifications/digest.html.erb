@@ -188,7 +188,9 @@ body, table, td, th, h1, h2, h3 {font-family: Helvetica, Arial, sans-serif !impo
 </div>
 <!--   End of Popular Topic   -->
 
+<% if i < 5 %>
 <%= digest_custom_html("below_post_#{i+1}") %>
+<% end %>
 
 <% end %>
 
