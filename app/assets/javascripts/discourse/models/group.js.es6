@@ -181,7 +181,11 @@ Group.reopenClass({
         offset: offset || 0
       }
     });
-  }
+  },
+
+  mentionable(name) {
+    return ajax(`/groups/${name}/mentionable`, { data: { name } });
+  },
 });
 
 export default Group;

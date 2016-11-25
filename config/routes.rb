@@ -409,6 +409,7 @@ Discourse::Application.routes.draw do
     get 'mentions'
     get 'messages'
     get 'counts'
+    get 'mentionable'
 
     member do
       put "members" => "groups#add_members"
