@@ -18,19 +18,24 @@ export default Ember.Component.extend({
 
   _selectionChanged() {
     const selection = window.getSelection();
-    if (selection.isCollapsed) { return; }
+    if (selection.isCollapsed) {
+      if (this.get("visible")) this.sendAction("deselectText");
+      return;
+    }
 
-    // ensure we selected content inside 1 post
+    // ensure we selected content inside 1 post *only*
     let firstRange, postId;
     for (let r = 0; r < selection.rangeCount; r++) {
       const range = selection.getRangeAt(r);
-      firstRange = firstRange || range;
-
       const $ancestor = $(range.commonAncestorContainer);
-      if ($ancestor.closest(".contents").length === 0) { return; }
 
+      firstRange = firstRange || range;
       postId = postId || $ancestor.closest('.boxed, .reply').data('post-id');
-      if (!postId) { return; }
+
+      if ($ancestor.closest(".contents").length === 0 || !postId) {
+        if (this.get("visible")) this.sendAction("deselectText");
+        return;
+      }
     }
 
     this.get("quoteState").setProperties({ postId, buffer: selectedText() });
