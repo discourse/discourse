@@ -1,15 +1,11 @@
-
-export const TARGET_NAME = (Ember.VERSION[0] === "2") ? 'actions' : '_actions';
-
 export default Ember.Mixin.create({
-
   delegateAll(actionNames) {
     actionNames = actionNames || [];
 
-    this[TARGET_NAME] = this[TARGET_NAME] || {};
+    this.actions = this.actions || {};
 
     actionNames.forEach(m => {
-      this[TARGET_NAME][m] = function() { this.sendAction(m); };
+      this.actions[m] = function() { this.sendAction(m); };
       this.set(m, m);
     });
   }
