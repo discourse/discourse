@@ -1,5 +1,4 @@
 import { componentTest } from 'wizard/test/helpers/component-test';
-
 moduleForComponent('invite-list', { integration: true });
 
 componentTest('can add users', {
@@ -59,5 +58,4 @@ componentTest('can add users', {
       assert.ok(this.$('.users-list .invite-list-user').length === 0, 'removed the user');
     });
   }
-
 });

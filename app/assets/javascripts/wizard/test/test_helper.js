@@ -22,6 +22,7 @@
 //= require pretender
 //= require ./wizard-pretender
 
+
 // Trick JSHint into allow document.write
 var d = document;
 d.write('<div id="ember-testing-container"><div id="ember-testing"></div></div>');
@@ -44,10 +45,9 @@ QUnit.testDone(function() {
   server.shutdown();
 });
 
-require('wizard/test/helpers/start-app').default();
-
-var buildResolver = require('discourse-common/resolver').buildResolver;
-window.setResolver(buildResolver('wizard').create());
+var _testApp = require('wizard/test/helpers/start-app').default();
+var _buildResolver = require('discourse-common/resolver').buildResolver;
+window.setResolver(_buildResolver('wizard').create({ namespace: _testApp }));
 
 Object.keys(requirejs.entries).forEach(function(entry) {
   if ((/\-test/).test(entry)) {
