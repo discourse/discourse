@@ -732,10 +732,15 @@ export default RestModel.extend({
     this._excerpts = this._excerpts || [];
     const stream = this.get('stream');
 
+    this._excerpts.loadNext = streamPosition;
+
     if (this._excerpts.loading) {
       return this._excerpts.loading.then(()=>{
         if(!this._excerpts[stream[streamPosition]]) {
-          return this.backfillExcerpts(streamPosition);
+
+          if (this._excerpts.loadNext === streamPosition) {
+            return this.backfillExcerpts(streamPosition);
+          }
         }
       });
     }
