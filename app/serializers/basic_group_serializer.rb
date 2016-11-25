@@ -46,6 +46,6 @@ class BasicGroupSerializer < ApplicationSerializer
   private
 
   def fetch_group_user
-    @group_user ||= (object.group_users & scope.user.group_users).first
+    @group_user ||= object.group_users.find_by(user_id: scope.user.id)
   end
 end
