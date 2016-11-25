@@ -169,7 +169,6 @@ class SessionController < ApplicationController
     login = params[:login].strip
     login = login[1..-1] if login[0] == "@"
 
-
     if user = User.find_by_username_or_email(login)
 
       # If their password is correct
