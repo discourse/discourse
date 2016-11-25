@@ -29,7 +29,7 @@
    The list of disabled plugins is returned via the `Site` singleton.
 
 **/
-let _connectorCache, _rawCache, _templateCache;
+let _connectorCache, _templateCache;
 
 function findOutlets(collection, callback) {
   const disabledPlugins = Discourse.Site.currentProp('disabled_plugins') || [];
@@ -55,29 +55,20 @@ function findOutlets(collection, callback) {
 export function clearCache() {
   _templateCache = null;
   _connectorCache = null;
-  _rawCache = null;
 }
 
 function buildConnectorCache() {
   _connectorCache = {};
-  _rawCache = {};
   _templateCache = [];
 
   findOutlets(Ember.TEMPLATES, function(outletName, resource, uniqueName) {
-    if (/\.raw$/.test(uniqueName)) {
-      if (!_rawCache[outletName]) {
-        _rawCache[outletName] = [];
-      }
-      _rawCache[outletName].push(Ember.TEMPLATES[resource]);
-    } else {
-      _connectorCache[outletName] = _connectorCache[outletName] || [];
+    _connectorCache[outletName] = _connectorCache[outletName] || [];
 
-      _connectorCache[outletName].push({
-        templateName: resource.replace('javascripts/', ''),
-        template: Ember.TEMPLATES[resource],
-        classNames: `${outletName}-outlet ${uniqueName}`
-      });
-    }
+    _connectorCache[outletName].push({
+      templateName: resource.replace('javascripts/', ''),
+      template: Ember.TEMPLATES[resource],
+      classNames: `${outletName}-outlet ${uniqueName}`
+    });
   });
 
   Object.keys(_connectorCache).forEach(outletName => {
@@ -91,16 +82,11 @@ function buildConnectorCache() {
 
 // unbound version of outlets, only has a template
 Handlebars.registerHelper('plugin-outlet', function(name) {
-  if (!_rawCache) { buildConnectorCache(); }
+  if (!_connectorCache) { buildConnectorCache(); }
 
-  const functions = _rawCache[name];
-  if (functions) {
-    var output = [];
-
-    for(var i=0; i<functions.length; i++){
-      output.push(functions[i]({context: this}));
-    }
-
+  const connector = _connectorCache[name];
+  if (connector && connector.length) {
+    const output = connector.map(c => c.template({context: this}));
     return new Handlebars.SafeString(output.join(""));
   }
 });
