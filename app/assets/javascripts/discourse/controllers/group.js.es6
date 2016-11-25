@@ -41,8 +41,16 @@ export default Ember.Controller.extend({
     });
   },
 
-  @computed('model.is_member')
-  getTabs(isMember) {
-    return this.get('tabs').filter(t => isMember || !t.get('requiresMembership'));
+  @computed('model.is_group_user')
+  getTabs(isGroupUser) {
+    return this.get('tabs').filter(t => {
+      let isMember = false;
+
+      if (this.currentUser) {
+        isMember = this.currentUser.admin || isGroupUser;
+      }
+
+      return isMember || !t.get('requiresMembership');
+    });
   }
 });

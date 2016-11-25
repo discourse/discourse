@@ -341,7 +341,15 @@ const User = RestModel.extend({
       }
 
       if (!Em.isEmpty(json.user.groups)) {
-        json.user.groups = json.user.groups.map(g => Group.create(g));
+        const groups = [];
+
+        for(let i = 0; i < json.user.groups.length; i++) {
+          const group = Group.create(json.user.groups[i]);
+          group.group_user = json.user.group_users[i];
+          groups.push(group);
+        }
+
+        json.user.groups = groups;
       }
 
       if (json.user.invited_by) {
