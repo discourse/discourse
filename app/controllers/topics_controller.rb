@@ -186,6 +186,40 @@ class TopicsController < ApplicationController
     render_json_dump(TopicViewPostsSerializer.new(@topic_view, scope: guardian, root: false, include_raw: !!params[:include_raw]))
   end
 
+  def excerpts
+    params.require(:topic_id)
+    params.require(:post_ids)
+
+    post_ids = params[:post_ids].map(&:to_i)
+    unless Array === post_ids
+      render_json_error("Expecting post_ids to contain a list of posts ids")
+      return
+    end
+
+    if post_ids.length > 100
+      render_json_error("Requested a chunk that is too big")
+      return
+    end
+
+    @topic = Topic.with_deleted.where(id: params[:topic_id]).first
+    guardian.ensure_can_see!(@topic)
+
+    @posts = Post.where(hidden: false, deleted_at: nil, topic_id: @topic.id)
+        .where('posts.id in (?)', post_ids)
+        .joins("LEFT JOIN users u on u.id = posts.user_id")
+        .pluck(:id, :cooked, :username)
+        .map do |post_id, cooked, username|
+          {
+            post_id: post_id,
+            username: username,
+            excerpt: PrettyText.excerpt(cooked, 800, keep_emoji_images: true)
+          }
+         end
+
+
+    render json: @posts.to_json
+  end
+
   def destroy_timings
     PostTiming.destroy_for(current_user.id, [params[:topic_id].to_i])
     render nothing: true

@@ -728,6 +728,63 @@ export default RestModel.extend({
     });
   },
 
+  backfillExcerpts(streamPosition){
+    this._excerpts = this._excerpts || [];
+    const stream = this.get('stream');
+
+    if (this._excerpts.loading) {
+      return this._excerpts.loading.then(()=>{
+        if(!this._excerpts[stream[streamPosition]]) {
+          return this.backfillExcerpts(streamPosition);
+        }
+      });
+    }
+
+
+    let postIds = stream.slice(Math.max(streamPosition-20,0), streamPosition+20);
+
+    for(let i=postIds.length-1;i>=0;i--) {
+      if (this._excerpts[postIds[i]]) {
+        postIds.splice(i,1);
+      }
+    }
+
+    let data = {
+      post_ids: postIds
+    };
+
+    this._excerpts.loading = ajax("/t/" + this.get('topic.id') + "/excerpts.json", {data})
+      .then(excerpts => {
+        excerpts.forEach(obj => {
+          this._excerpts[obj.post_id] = obj;
+        });
+      })
+      .finally(()=>{ this._excerpts.loading = null; });
+
+    return this._excerpts.loading;
+  },
+
+  excerpt(streamPosition){
+
+    const stream = this.get('stream');
+
+    return new Ember.RSVP.Promise((resolve,reject) => {
+
+      let excerpt = this._excerpts && this._excerpts[stream[streamPosition]];
+
+      if(excerpt) {
+        resolve(excerpt);
+        return;
+      }
+
+      this.backfillExcerpts(streamPosition)
+          .then(()=>{
+            resolve(this._excerpts[stream[streamPosition]]);
+          })
+          .catch(e => reject(e));
+    });
+  },
+
   indexOf(post) {
     return this.get('stream').indexOf(post.get('id'));
   },

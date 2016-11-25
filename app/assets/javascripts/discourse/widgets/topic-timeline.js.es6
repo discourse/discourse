@@ -131,6 +131,13 @@ createWidget('timeline-scrollarea', {
       result.lastReadPercentage = this._percentFor(topic, idx);
     }
 
+
+    if (this.state.position !== result.current) {
+      this.state.position = result.current;
+      const timeline = this._findAncestorWithProperty('updatePosition');
+      timeline.updatePosition.call(timeline, result.current);
+    }
+
     return result;
   },
 
@@ -219,6 +226,47 @@ createWidget('topic-timeline-container', {
 export default createWidget('topic-timeline', {
   tagName: 'div.topic-timeline',
 
+  buildKey: () => 'topic-timeline-area',
+
+  defaultState() {
+    return { position: null, excerpt: null };
+  },
+
+  updatePosition(pos) {
+    if (!this.attrs.fullScreen) {
+      return;
+    }
+
+    this.state.position = pos;
+    this.state.excerpt = "";
+    this.scheduleRerender();
+
+    const stream = this.attrs.topic.get('postStream');
+
+    // a little debounce to avoid flashing
+    setTimeout(()=>{
+      if (!this.state.position === pos) {
+        return;
+      }
+
+      stream.excerpt(pos).then(info => {
+
+        if (info && this.state.position === pos) {
+          let excerpt = "";
+
+          if (info.username) {
+            excerpt = "<span class='username'>" + info.username + ":</span> ";
+          }
+
+          excerpt += info.excerpt;
+
+          this.state.excerpt = excerpt;
+          this.scheduleRerender();
+        }
+      });
+    }, 50);
+  },
+
   html(attrs) {
     const { topic } = attrs;
     const createdAt = new Date(topic.created_at);
@@ -232,11 +280,21 @@ export default createWidget('topic-timeline', {
       if (attrs.mobileView) {
         titleHTML = new RawHtml({ html: `<span>${topic.get('fancyTitle')}</span>` });
       }
-      result.push(h('h3.title', this.attach('link', {
-        contents: ()=>titleHTML,
-        className: 'fancy-title',
-        action: 'jumpTop'
-      })));
+
+      let elems = [h('h2', this.attach('link', {
+              contents: ()=>titleHTML,
+              className: 'fancy-title',
+              action: 'jumpTop'}))];
+
+
+      if (this.state.excerpt) {
+        elems.push(
+            new RawHtml({
+              html: "<div class='post-excerpt'>" + this.state.excerpt + "</div>"
+            }));
+      }
+
+      result.push(h('div.title', elems));
     }
 
 

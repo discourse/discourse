@@ -53,6 +53,7 @@
     z-index: 100000;
     .topic-timeline {
       width: 100%;
+      table-layout: fixed;
       margin-left: 0;
       margin-right: 0;
       display: table;
@@ -61,12 +62,38 @@
         text-align: right;
         font-size: 1.1em;
       }
+      .post-excerpt {
+        max-width: 650px;
+        max-height: 155px;
+        line-height: 1.4em;
+        overflow: hidden;
+        word-wrap: break-word;
+        text-overflow: ellipsis;
+      }
+      .username {
+        color: dark-light-choose(scale-color($primary, $lightness: 30%), scale-color($secondary, $lightness: 70%));
+        word-wrap: break-word;
+        font-weight: bold;
+      }
       .title {
         margin-top: 0;
         padding-left: 1em;
         display: table-cell;
         vertical-align: top;
-        line-height: 1.3em;
+        width: 100%;
+        h2 {
+          margin-top: 0;
+          display: block;
+          display: -webkit-box;
+          -webkit-line-clamp: 4;
+          -webkit-box-orient: vertical;
+          max-height: 110px;
+          line-height: 1.3em;
+          word-wrap: break-word;
+          text-overflow: ellipsis;
+          overflow: hidden;
+          font-size: 1.3em;
+        }
         a {
           color: $primary;
         }
