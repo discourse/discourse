@@ -650,3 +650,86 @@ task "uploads:analyze", [:cache_path, :limit] => :environment do |_, args|
   puts "List of file paths @ #{path}"
   puts "Duration: #{Time.zone.now - now} seconds"
 end
+
+################################################################################
+#                              Create Upload Record                            #
+################################################################################
+
+task "uploads:create_record" => :environment do
+  if ENV["RAILS_DB"]
+    create_record
+  else
+    RailsMultisite::ConnectionManagement.each_connection { create_record }
+  end
+end
+
+def create_record
+  if Discourse.store.external?
+    puts "This task only works for internal storages."
+    return
+  end
+
+  begin
+    original_setting = SiteSetting.max_image_size_kb
+    SiteSetting.max_image_size_kb = 10240
+    current_db = RailsMultisite::ConnectionManagement.current_db
+
+    public_path = Rails.root.join("public")
+    paths = Dir.glob(File.join(public_path, 'uploads', current_db, '**', '*.*'))
+    max = paths.length
+
+    paths.each_with_index do |path, index|
+      filename = File.basename(path)
+
+      printf("%9d / %d (%5.1f%%)\n", (index + 1), max, (((index + 1).to_f / max.to_f) * 100).round(1))
+
+      Post.where("raw LIKE ?", "%#{filename}%").each do |post|
+        doc = Nokogiri::HTML::fragment(post.raw)
+        updated = false
+
+        doc.css("img[src]").each do |img|
+          url = img["src"]
+          next unless url =~ /^\/uploads\//
+          upload = Upload.find_by(url: url)
+
+          if !upload && url
+            printf "Creating record for #{path}..."
+            existing_path = File.join(public_path, url)
+
+            if File.exists?(existing_path)
+              File.open(existing_path) do |file|
+                new_upload = Upload.create_for(Discourse::SYSTEM_USER_ID, file, File.basename(url), File.size(file))
+
+                if new_upload.persisted?
+                  printf "Restored into #{new_upload.url}\n"
+                  DbHelper.remap(url, new_upload.url)
+                  updated = true
+
+                  # move existing image (without upload record) to tombstone
+                  move_to_tombstone(url)
+                else
+                  puts "Failed to create upload for #{url}: #{new_upload.errors.full_messages}."
+                end
+              end
+            else
+              puts "Failed to find file (#{existing_path})."
+            end
+          end
+        end
+
+        post.rebake! if updated
+      end
+    end
+  ensure
+    SiteSetting.max_image_size_kb = original_setting
+  end
+end
+
+def move_to_tombstone(url)
+  source = "#{Rails.root}/public#{url}"
+  return unless File.exists?(source)
+  destination = "#{Rails.root}/public#{url.sub("/uploads/", "/uploads/tombstone/")}"
+  dir = Pathname.new(destination).dirname
+  FileUtils.mkdir_p(dir) unless Dir.exists?(dir)
+  FileUtils.move(source, destination, force: true)
+end
