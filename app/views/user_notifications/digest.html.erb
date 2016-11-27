@@ -303,12 +303,12 @@ body, table, td, th, h1, h2, h3 {font-family: Helvetica, Arial, sans-serif !impo
 
 <!--   Begin new topic  -->
     <tr style="vertical-align:top;">
-      <td style="padding:20px 8px 0 16px;text-align:left;">
+      <td style="padding:8px;text-align:left;">
         <p style="background:#2F70AC;border-radius:50%;color:#fff;height:30px;line-height:30px;margin:0 0 10px 0;padding:0;text-align:center;width:30px;">
           <%= t.user_data ? (t.highest_post_number - (t.user_data.last_read_post_number || 0)) : t.highest_post_number %>
         </p>
       </td>
-      <td style="padding:24px 8px 16px 8px;text-align:left;">
+      <td style="padding:8px;text-align:left;">
         <a href="<%= Discourse.base_url_no_prefix + t.relative_url %>" style="color:#2F70AC;font-weight:400;line-height:1.3;margin:0;padding:0;text-decoration:none">
           <strong><%= t.title -%></strong>
         </a>
@@ -316,18 +316,18 @@ body, table, td, th, h1, h2, h3 {font-family: Helvetica, Arial, sans-serif !impo
           <%= category_badge(t.category, inline_style: true, absolute_url: true) %>
         </p>
       </td>
-      <td style="padding:24px 8px 16px 8px;text-align:left;">
+      <td style="padding:8px;text-align:left;">
         <% t.posters_summary[0,2].each do |ps| %>
           <% if ps.user %>
             <img src="<%= ps.user.small_avatar_url -%>" style="height:20px;width:20px;margin:0 5px 5px 0;border-radius:50%;clear:both;display:inline-block;outline:0;text-decoration:none;">
           <% end %>
         <% end %>
       </td>
-      <td style="padding:24px 8px 16px 8px;text-align:left;">
+      <td style="padding:8px;text-align:left;">
         <img src="<%= email_image_url 'heart.png' -%>" style="clear:both;display:inline-block;float:left;height:20px;margin:0;max-width:100%;opacity:.4;outline:0;text-decoration:none;width:auto">
         <p style="color:#8f8f8f;float:left;line-height:1.3;margin:0 5px 10px 5px;padding:0;text-align:left;font-weight:400;"><%= t.like_count -%></p>
       </td>
-      <td style="padding:24px 16px 16px 8px;text-align:left;">
+      <td style="padding:8px;text-align:left;">
         <img src="<%= email_image_url 'comment.png' -%>" style="clear:none;display:inline-block;float:left;height:20px;margin:0;max-width:100%;opacity:.4;outline:0;text-decoration:none;width:auto">
         <p style="color:#8f8f8f;float:left;line-height:1.3;margin:0 5px 10px 5px;padding:0;text-align:left;font-weight:400;"><%= t.posts_count - 1 -%></p>
       </td>
