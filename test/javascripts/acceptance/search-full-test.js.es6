@@ -71,7 +71,7 @@ test("open advanced search", assert => {
 
 test("validate population of advanced search", assert => {
   visit("/search");
-  fillIn('.search input.full-page-search', 'test user:admin #bug group:moderators badge:Reader tags:monkey in:likes in:private in:wiki in:bookmarks status:open after:2016-10-05 posts_count:10');
+  fillIn('.search input.full-page-search', 'test user:admin #bug group:moderators badge:Reader tags:monkey in:likes in:private in:wiki in:bookmarks status:open after:2016-10-05 min_post_count:10');
   click('.search-advanced-btn');
 
   andThen(() => {
@@ -87,7 +87,7 @@ test("validate population of advanced search", assert => {
     assert.ok(exists('.search-advanced-options .combobox .select2-choice .select2-chosen:contains("are open")'), 'has "are open" pre-populated');
     assert.ok(exists('.search-advanced-options .combobox .select2-choice .select2-chosen:contains("after")'), 'has "after" pre-populated');
     assert.equal(find('.search-advanced-options #search-post-date').val(), "2016-10-05", 'has "2016-10-05" pre-populated');
-    assert.equal(find('.search-advanced-options #search-posts-count').val(), "10", 'has "10" pre-populated');
+    assert.equal(find('.search-advanced-options #search-min-post-count').val(), "10", 'has "10" pre-populated');
   });
 });
 
@@ -270,15 +270,15 @@ test("update post time through advanced search ui", assert => {
   });
 });
 
-test("update posts count through advanced search ui", assert => {
+test("update min post count through advanced search ui", assert => {
   visit("/search");
   fillIn('.search input.full-page-search', 'none');
   click('.search-advanced-btn');
-  fillIn('#search-posts-count', '5');
+  fillIn('#search-min-post-count', '5');
 
   andThen(() => {
-    assert.equal(find('.search-advanced-options #search-posts-count').val(), "5", 'has "5" populated');
-    assert.equal(find('.search input.full-page-search').val(), "none posts_count:5", 'has updated search term to "none posts_count:5"');
+    assert.equal(find('.search-advanced-options #search-min-post-count').val(), "5", 'has "5" populated');
+    assert.equal(find('.search input.full-page-search').val(), "none min_post_count:5", 'has updated search term to "none min_post_count:5"');
   });
 });
 
