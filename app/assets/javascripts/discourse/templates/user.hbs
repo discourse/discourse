@@ -86,7 +86,9 @@
                   <b>{{i18n 'user.suspended_reason'}}</b> {{model.suspend_reason}}
                 </div>
               {{/if}}
-              {{{model.bio_cooked}}}
+              {{#if isNotSuspendedOrIsStaff}}
+                {{{model.bio_cooked}}}
+              {{/if}}
             </div>
 
             {{#if publicUserFields}}
