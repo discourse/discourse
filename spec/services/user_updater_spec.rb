@@ -91,6 +91,19 @@ describe UserUpdater do
       expect(user.date_of_birth).to eq(date_of_birth.to_date)
     end
 
+    it "disables email_digests when enabling mailing_list_mode" do
+      user = Fabricate(:user)
+      updater = UserUpdater.new(acting_user, user)
+
+      val = updater.update(mailing_list_mode: true, email_digests: true)
+      expect(val).to be_truthy
+
+      user.reload
+
+      expect(user.user_option.email_digests).to eq false
+      expect(user.user_option.mailing_list_mode).to eq true
+    end
+
     context 'when sso overrides bio' do
       it 'does not change bio' do
         SiteSetting.enable_sso = true
