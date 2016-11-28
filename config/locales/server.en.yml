@@ -94,7 +94,7 @@ en:
       has_already_been_used: "has already been used"
       inclusion: is not included in the list
       invalid: is invalid
-      is_invalid: "is invalid; try to be a little more descriptive"
+      is_invalid: "seems unclear, is it a complete sentence?"
       less_than: must be less than %{count}
       less_than_or_equal_to: must be less than or equal to %{count}
       not_a_number: is not a number
@@ -196,7 +196,7 @@ en:
 
   just_posted_that: "is too similar to what you recently posted"
   invalid_characters: "contains invalid characters"
-  is_invalid: "is invalid; try to be a little more descriptive"
+  is_invalid: "seems unclear, is it a complete sentence?"
   next_page: "next page →"
   prev_page: "← previous page"
   page_num: "Page %{num}"
@@ -828,6 +828,7 @@ en:
 
   site_settings:
     censored_words: "Words that will be automatically replaced with &#9632;&#9632;&#9632;&#9632;"
+    censored_pattern: "Regex pattern that will be automatically replaced with &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Auto-delete any hidden posts that stay hidden for more than 30 days."
     default_locale: "The default language of this Discourse instance (ISO 639-1 Code)"
     allow_user_locale: "Allow users to choose their own language interface preference"
@@ -1245,9 +1246,13 @@ en:
     attachment_content_type_blacklist: "List of keywords used to blacklist attachments based on the content type."
     attachment_filename_blacklist: "List of keywords used to blacklist attachments based on the filename."
 
+    enable_forwarded_emails: "[BETA] Allow users to create a topic by forwarding an email in."
+    always_show_trimmed_content: "Always show trimmed part of incoming emails. WARNING: might reveal email addresses."
+
     manual_polling_enabled: "Push emails using the API for email replies."
     pop3_polling_enabled: "Poll via POP3 for email replies."
     pop3_polling_ssl: "Use SSL while connecting to the POP3 server. (Recommended)"
+    pop3_polling_openssl_verify: "Verify TLS server certificate (Default: enabled)"
     pop3_polling_period_mins: "The period in minutes between checking the POP3 account for email. NOTE: requires restart."
     pop3_polling_port: "The port to poll a POP3 account on."
     pop3_polling_host: "The host to poll for email via POP3."
@@ -1274,6 +1279,7 @@ en:
     default_avatars: "URLs to avatars that will be used by default for new users until they change them."
     automatically_download_gravatars: "Download Gravatars for users upon account creation or email change."
     digest_topics: "The maximum number of topics to display in the email summary."
+    digest_posts: "The maximum number of popular posts to display in the email summary."
     digest_min_excerpt_length: "Minimum post excerpt in the email summary, in characters."
     delete_digest_email_after_days: "Suppress summary emails for users not seen on the site for more than (n) days."
     digest_suppress_categories: "Suppress these categories from summary emails."
@@ -1392,6 +1398,7 @@ en:
     default_categories_watching: "List of categories that are watched by default."
     default_categories_tracking: "List of categories that are tracked by default."
     default_categories_muted: "List of categories that are muted by default."
+    default_categories_watching_first_post: "List of categories in which first post in each new topic will be watched by default."
 
     max_user_api_reqs_per_day: "Maximum number of user API requests per key per day"
     max_user_api_reqs_per_minute: "Maximum number of user API requests per key per minute"
@@ -1442,6 +1449,7 @@ en:
       reply_by_email_address_is_empty: "You must set a 'reply by email address' before enabling reply by email."
       email_polling_disabled: "You must enable either manual or POP3 polling before enabling reply by email."
       user_locale_not_enabled: "You must first enable 'allow user locale' before enabling this setting."
+      invalid_regex: "Regex is invalid or not allowed."
 
   search:
     within_post: "#%{post_number} by %{username}"
@@ -2420,16 +2428,23 @@ en:
 
     digest:
       why: "A brief summary of %{site_link} since your last visit on %{last_seen_at}"
+      since_last_visit: "Since your last visit"
+      new_topics: "New Topics"
+      unread_messages: "Unread Messages"
+      unread_notifications: "Unread Notifications"
+      new_posts: "New Posts"
+      new_users: "New Users"
+      popular_topics: "Popular Topics"
+      follow_topic: "Follow this topic"
+      join_the_discussion: "Read More"
+      popular_posts: "Popular Posts"
+      from_topic_label: "From"
+      more_new: "New in topics and categories you follow"
       subject_template: "[%{site_name}] Summary"
-      new_activity: "New activity on your topics and posts:"
-      top_topics: "Popular posts"
-      other_new_topics: "Popular topics"
       unsubscribe: "This summary is sent from %{site_link} when we haven't seen you in a while. To unsubscribe %{unsubscribe_link}."
       click_here: "click here"
       from: "%{site_name} summary"
-      read_more: "Read More"
-      more_topics: "There were %{new_topics_since_seen} other new topics."
-      more_topics_category: "More new topics:"
+      preheader: "A brief summary since your last visit on %{last_seen_at}"
       custom:
         html:
           header: ''
@@ -3209,6 +3224,13 @@ en:
       title: "Resend Activation Email"
       message: "<p>We've re-sent the activation email to <b>%{email}</b>"
 
+  safe_mode:
+    title: "Enter safe mode"
+    description: "Safe mode allows you to test your site without loading plugins or site customizations."
+    no_customizations: "Disable all site customizations"
+    only_official: "Disable unofficial plugins"
+    no_plugins: "Disable all plugins"
+    enter: "Enter Safe Mode"
   wizard:
     title: "Discourse Setup"
     step:
@@ -3270,7 +3292,7 @@ en:
           contact_url:
             label: "Web Page"
             placeholder: "http://www.example.com/contact-us"
-            description: "General contact web page for you or your oganization. Will be displayed on <a href='/about' target='_blank'>your about page</a>."
+            description: "General contact web page for you or your organization. Will be displayed on <a href='/about' target='_blank'>your about page</a>."
           site_contact:
             label: "Automated Messages"
             description: "All automated Discourse personal messages will be sent from this user. Most importantly, this user will be the designated sender of every welcome message automatically sent to new users."

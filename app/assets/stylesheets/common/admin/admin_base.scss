@@ -1832,6 +1832,12 @@ table#user-badges {
   }
 }
 
+.admin-list-item {
+  width: 100%;
+  border-top: 1px solid #e9e9e9;
+  padding: 0.25em 0;
+}
+
 // Webhook
 
 .web-hook-container {
@@ -1912,6 +1918,21 @@ table#user-badges {
   margin-top: 15px;
   .alert {
     margin: 15px 0 0 0;
+  }
+}
+
+.email-preview-digest {
+  .controls {
+    margin-left: 20px;
+    label {
+      display: inline;
+    }
+  }
+
+  .preview-output iframe {
+    width: 100%;
+    height: 600px;
+    border-width: 1px;
   }
 }
 

@@ -28,6 +28,12 @@
     <%= script "vendor" %>
     <%= script "pretty-text-bundle" %>
     <%= script "application" %>
+    <%- if allow_plugins? %>
+    <%= script "plugin" %>
+    <%- end %>
+    <%- if allow_third_party_plugins? %>
+    <%= script "plugin-third-party" %>
+    <%- end %>
 
     <%- if staff? %>
       <script src="<%= Discourse.base_uri %>/extra-locales/admin"></script>

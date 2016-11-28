@@ -77,10 +77,6 @@ class RandomTopicSelector
     results
   end
 
-  def self.clear_cache!
-    $redis.keys('random_topic_cache*').each{|k| $redis.del k}
-  end
-
   def self.cache_key(category=nil)
     "random_topic_cache_#{category.try(:id)}"
   end

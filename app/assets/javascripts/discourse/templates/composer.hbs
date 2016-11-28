@@ -1,135 +1,143 @@
-{{#if visible}}
-<div class='contents'>
+{{#composer-body
+  composer=model
+  openIfDraft="openIfDraft"
+  typed="typed"
+  cancelled="cancelled"
+  save="save"}}
+  {{#if visible}}
+    <div class='contents'>
 
-  {{#if showPopupMenu}}
-    {{#popup-menu visible=optionsVisible hide="hideOptions" title="composer.options"}}
-      {{#each popupMenuOptions as |option|}}
-        {{#if option.condition}}
-          <li>
-            {{d-button action=option.action icon=option.icon label=option.label}}
-          </li>
+      {{#if showPopupMenu}}
+        {{#popup-menu visible=optionsVisible hide="hideOptions" title="composer.options"}}
+          {{#each popupMenuOptions as |option|}}
+            {{#if option.condition}}
+              <li>
+                {{d-button action=option.action icon=option.icon label=option.label}}
+              </li>
+            {{/if}}
+          {{/each}}
+        {{/popup-menu}}
+      {{/if}}
+
+      {{composer-messages composer=model messageCount=messageCount addLinkLookup="addLinkLookup"}}
+
+      <div class='control'>
+        {{#if site.mobileView}}
+          <a href class='toggle-toolbar' {{action "toggleToolbar" bubbles=false}}></a>
         {{/if}}
-      {{/each}}
-    {{/popup-menu}}
-  {{/if}}
+        <a href class='toggler' {{action "toggle" bubbles=false}} title={{i18n 'composer.toggler'}}></a>
 
-  {{composer-messages composer=model messageCount=messageCount addLinkLookup="addLinkLookup"}}
+        {{#if model.viewOpen}}
+          <div class='control-row reply-area'>
+            <div class='composer-fields'>
+              {{plugin-outlet "composer-open"}}
 
-  <div class='control'>
-    {{#if site.mobileView}}
-    <a href class='toggle-toolbar' {{action "toggleToolbar" bubbles=false}}></a>
-    {{/if}}
-    <a href class='toggler' {{action "toggle" bubbles=false}} title={{i18n 'composer.toggler'}}></a>
-
-    {{#if model.viewOpen}}
-      <div class='control-row reply-area'>
-        <div class='composer-fields'>
-          {{plugin-outlet "composer-open"}}
-
-          <div class='reply-to'>
-            {{{model.actionTitle}}}
-            {{#unless site.mobileView}}
-            {{#if whisperOrUnlistTopicText}}
-              <span class='whisper'>({{whisperOrUnlistTopicText}})</span>
-            {{/if}}
-            {{/unless}}
-
-            {{#if canEdit}}
-              {{#if showEditReason}}
-                <div class="edit-reason-input">
-                  {{text-field autofocus="true" value=editReason tabindex="7" id="edit-reason" maxlength="255" placeholderKey="composer.edit_reason_placeholder"}}
-                </div>
-              {{else}}
-                <a {{action "displayEditReason"}} class="display-edit-reason">{{i18n 'composer.show_edit_reason'}}</a>
-              {{/if}}
-            {{/if}}
-          </div>
-
-          {{#if model.canEditTitle}}
-            <div class='form-element clearfix'>
-              {{#if model.creatingPrivateMessage}}
-                {{composer-user-selector topicId=topicModel.id
-                                         usernames=model.targetUsernames
-                                         hasGroups=model.hasTargetGroups
-                                         focusTarget=focusTarget}}
-                {{#if showWarning}}
-                  <div class='add-warning'>
-                    <label>
-                      {{input type="checkbox" checked=model.isWarning tabindex="3"}}
-                      {{i18n "composer.add_warning"}}
-                    </label>
-                  </div>
+              <div class='reply-to'>
+                {{{model.actionTitle}}}
+                {{#unless site.mobileView}}
+                {{#if whisperOrUnlistTopicText}}
+                  <span class='whisper'>({{whisperOrUnlistTopicText}})</span>
                 {{/if}}
-              {{/if}}
+                {{/unless}}
 
-              {{composer-title composer=model lastValidatedAt=lastValidatedAt focusTarget=focusTarget}}
-
-              {{#if model.showCategoryChooser}}
-                <div class="category-input">
-                  {{category-chooser valueAttribute="id" value=model.categoryId scopedCategoryId=scopedCategoryId tabindex="3"}}
-                  {{popup-input-tip validation=categoryValidation}}
-                </div>
-                {{#if model.archetype.hasOptions}}
-                  <button class='btn' {{action "showOptions"}}>{{i18n 'topic.options'}}</button>
+                {{#if canEdit}}
+                  {{#if showEditReason}}
+                    <div class="edit-reason-input">
+                      {{text-field autofocus="true" value=editReason tabindex="7" id="edit-reason" maxlength="255" placeholderKey="composer.edit_reason_placeholder"}}
+                    </div>
+                  {{else}}
+                    <a {{action "displayEditReason"}} class="display-edit-reason">{{i18n 'composer.show_edit_reason'}}</a>
+                  {{/if}}
                 {{/if}}
-                {{render "additional-composer-buttons" model}}
+              </div>
+
+              {{#if model.canEditTitle}}
+                <div class='form-element clearfix'>
+                  {{#if model.creatingPrivateMessage}}
+                    {{composer-user-selector topicId=topicModel.id
+                                             usernames=model.targetUsernames
+                                             hasGroups=model.hasTargetGroups
+                                             focusTarget=focusTarget}}
+                    {{#if showWarning}}
+                      <div class='add-warning'>
+                        <label>
+                          {{input type="checkbox" checked=model.isWarning tabindex="3"}}
+                          {{i18n "composer.add_warning"}}
+                        </label>
+                      </div>
+                    {{/if}}
+                  {{/if}}
+
+                  {{composer-title composer=model lastValidatedAt=lastValidatedAt focusTarget=focusTarget}}
+
+                  {{#if model.showCategoryChooser}}
+                    <div class="category-input">
+                      {{category-chooser valueAttribute="id" value=model.categoryId scopedCategoryId=scopedCategoryId tabindex="3"}}
+                      {{popup-input-tip validation=categoryValidation}}
+                    </div>
+                    {{#if model.archetype.hasOptions}}
+                      <button class='btn' {{action "showOptions"}}>{{i18n 'topic.options'}}</button>
+                    {{/if}}
+                    {{render "additional-composer-buttons" model}}
+                  {{/if}}
+                </div>
               {{/if}}
+
+              {{plugin-outlet "composer-fields"}}
             </div>
-          {{/if}}
 
-          {{plugin-outlet "composer-fields"}}
-        </div>
+            {{composer-editor topic=topic
+                              composer=model
+                              lastValidatedAt=lastValidatedAt
+                              canWhisper=canWhisper
+                              showPopupMenu=showPopupMenu
+                              draftStatus=model.draftStatus
+                              isUploading=isUploading
+                              groupsMentioned="groupsMentioned"
+                              cannotSeeMention="cannotSeeMention"
+                              importQuote="importQuote"
+                              showOptions="showOptions"
+                              hideOptions="hideOptions"
+                              optionsVisible=optionsVisible
+                              showToolbar=showToolbar
+                              showUploadSelector="showUploadSelector"
+                              afterRefresh="afterRefresh"}}
 
-        {{composer-editor topic=topic
-                          composer=model
-                          lastValidatedAt=lastValidatedAt
-                          canWhisper=canWhisper
-                          showPopupMenu=showPopupMenu
-                          draftStatus=model.draftStatus
-                          isUploading=isUploading
-                          groupsMentioned="groupsMentioned"
-                          importQuote="importQuote"
-                          showOptions="showOptions"
-                          hideOptions="hideOptions"
-                          optionsVisible=optionsVisible
-                          showToolbar=showToolbar
-                          showUploadSelector="showUploadSelector"
-                          afterRefresh="afterRefresh"}}
+            {{#if currentUser}}
+              <div class='submit-panel'>
+                {{plugin-outlet "composer-fields-below"}}
+                {{#if canEditTags}}
+                  {{tag-chooser tags=model.tags tabIndex="4" categoryId=model.categoryId}}
+                {{/if}}
+                <button {{action "save"}} tabindex="5" class="btn btn-primary create {{if disableSubmit 'disabled'}}" title="{{i18n 'composer.title'}}">{{{model.saveIcon}}}{{model.saveText}}</button>
+                <a href {{action "cancel"}} class='cancel' tabindex="6">{{i18n 'cancel'}}</a>
 
-        {{#if currentUser}}
-          <div class='submit-panel'>
-            {{plugin-outlet "composer-fields-below"}}
-            {{#if canEditTags}}
-              {{tag-chooser tags=model.tags tabIndex="4" categoryId=model.categoryId}}
+                {{#if site.mobileView}}
+                {{#if whisperOrUnlistTopic}}
+                  <span class='whisper'><i class='fa fa-eye-slash'></i></span>
+                {{/if}}
+                {{/if}}
+              </div>
             {{/if}}
-            <button {{action "save"}} tabindex="5" class="btn btn-primary create {{if disableSubmit 'disabled'}}" title="{{i18n 'composer.title'}}">{{{model.saveIcon}}}{{model.saveText}}</button>
-            <a href {{action "cancel"}} class='cancel' tabindex="6">{{i18n 'cancel'}}</a>
-
-            {{#if site.mobileView}}
-            {{#if whisperOrUnlistTopic}}
-              <span class='whisper'><i class='fa fa-eye-slash'></i></span>
-            {{/if}}
-            {{/if}}
+          </div>
+        {{else}}
+          <div class='row'>
+            <div class='span24'>
+              <div class='saving-text'>
+                {{#if model.createdPost}}
+                  {{i18n 'composer.saved'}} <a class='permalink' href="{{unbound createdPost.url}}" {{action "viewNewReply"}}>{{i18n 'composer.view_new_post'}}</a>
+                {{else}}
+                  {{i18n 'composer.saving'}} {{loading-spinner size="small"}}
+                {{/if}}
+              </div>
+              <div class='draft-text'>
+                {{i18n 'composer.saved_draft'}}
+              </div>
+            </div>
           </div>
         {{/if}}
-      </div>
-    {{else}}
-      <div class='row'>
-        <div class='span24'>
-          <div class='saving-text'>
-            {{#if model.createdPost}}
-              {{i18n 'composer.saved'}} <a class='permalink' href="{{unbound createdPost.url}}" {{action "viewNewReply"}}>{{i18n 'composer.view_new_post'}}</a>
-            {{else}}
-              {{i18n 'composer.saving'}} {{loading-spinner size="small"}}
-            {{/if}}
-          </div>
-          <div class='draft-text'>
-            {{i18n 'composer.saved_draft'}}
-          </div>
-        </div>
-      </div>
-    {{/if}}
 
-  </div>
-</div>
-{{/if}}
+      </div>
+    </div>
+  {{/if}}
+{{/composer-body}}

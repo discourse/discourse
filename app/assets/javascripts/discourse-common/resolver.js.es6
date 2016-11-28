@@ -4,22 +4,10 @@ import { findHelper } from 'discourse-common/lib/helpers';
 var classify = Ember.String.classify;
 var get = Ember.get;
 
-var LOADING_WHITELIST = ['badges', 'userActivity', 'userPrivateMessages', 'admin', 'adminFlags',
-                         'user', 'preferences', 'adminEmail', 'adminUsersList'];
-var _dummyRoute;
-var _loadingView;
+const _options = {};
 
-function loadingResolver(cb) {
-  return function(parsedName) {
-    var fullNameWithoutType = parsedName.fullNameWithoutType;
-
-    if (fullNameWithoutType.indexOf('Loading') >= 0) {
-      fullNameWithoutType = fullNameWithoutType.replace('Loading', '');
-      if (LOADING_WHITELIST.indexOf(fullNameWithoutType) !== -1) {
-        return cb(fullNameWithoutType);
-      }
-    }
-  };
+export function setResolverOption(name, value) {
+  _options[name] = value;
 }
 
 function parseName(fullName) {
@@ -106,7 +94,7 @@ export function buildResolver(baseName) {
     },
 
     resolveView(parsedName) {
-      return this.findLoadingView(parsedName) || this.customResolve(parsedName) || this._super(parsedName);
+      return this.customResolve(parsedName) || this._super(parsedName);
     },
 
     resolveHelper(parsedName) {
@@ -128,7 +116,13 @@ export function buildResolver(baseName) {
     },
 
     resolveRoute(parsedName) {
-      return this.findLoadingRoute(parsedName) || this.customResolve(parsedName) || this._super(parsedName);
+      return this.customResolve(parsedName) || this._super(parsedName);
+    },
+
+    findLoadingTemplate(parsedName) {
+      if (parsedName.fullNameWithoutType.match(/loading$/)) {
+        return Ember.TEMPLATES.loading;
+      }
     },
 
     resolveTemplate(parsedName) {
@@ -136,21 +130,9 @@ export function buildResolver(baseName) {
              this.findPluginTemplate(parsedName) ||
              this.findMobileTemplate(parsedName) ||
              this.findTemplate(parsedName) ||
+             this.findLoadingTemplate(parsedName) ||
              Ember.TEMPLATES.not_found;
     },
-
-    findLoadingRoute: loadingResolver(function() {
-      _dummyRoute = _dummyRoute || Ember.Route.extend();
-      return _dummyRoute;
-    }),
-
-    findLoadingView: loadingResolver(function() {
-      if (!_loadingView) {
-        _loadingView = require('discourse/views/loading', null, null, true /* force sync */);
-        if (_loadingView && _loadingView['default']) { _loadingView = _loadingView['default']; }
-      }
-      return _loadingView;
-    }),
 
     findPluginTemplate(parsedName) {
       var pluginParsedName = this.parseName(parsedName.fullName.replace("template:", "template:javascripts/"));
@@ -158,14 +140,14 @@ export function buildResolver(baseName) {
     },
 
     findPluginMobileTemplate(parsedName) {
-      if (this.mobileView) {
+      if (_options.mobileView) {
         var pluginParsedName = this.parseName(parsedName.fullName.replace("template:", "template:javascripts/mobile/"));
         return this.findTemplate(pluginParsedName);
       }
     },
 
     findMobileTemplate(parsedName) {
-      if (this.mobileView) {
+      if (_options.mobileView) {
         var mobileParsedName = this.parseName(parsedName.fullName.replace("template:", "template:mobile/"));
         return this.findTemplate(mobileParsedName);
       }

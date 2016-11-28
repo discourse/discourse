@@ -71,7 +71,7 @@ he:
       has_already_been_used: "כבר בשימוש"
       inclusion: לא נכלל ברשימה
       invalid: לא תקין
-      is_invalid: "אינו קביל; נסו להיות מעט יותר מפורטים"
+      is_invalid: "נראה לא ברור, האם זה משפט שלם?"
       less_than: חייב להיות פחות מ-%{count}
       less_than_or_equal_to: חייב להיות פחות או שווה ל-%{count}
       not_a_number: אינו מספר
@@ -159,7 +159,7 @@ he:
   topic_not_found: "משהו השתבש אולי נושא זה נסגר או נמחק בזמן שקראתם אותו?"
   just_posted_that: "דומה מידי למה שפרסמתם לאחרונה"
   invalid_characters: "מכיל תווים לא תקניים"
-  is_invalid: "אינו תקין: נסו להיות יותר מפורטים"
+  is_invalid: "נראה לא ברור, האם זה משפט שלם?"
   next_page: "עמוד הבא ←"
   prev_page: "→ עמוד קודם"
   page_num: "עמוד %{num}"
@@ -226,7 +226,7 @@ he:
 
       - ביקורת מבנה היא רצויה, אבל אנא בקרו *רעיונות*, לא אנשים.
 
-      למידע נוסף [ראו את הכללים המנחים שלנו]/guidelines). פאנל זה יופיע רק ב-%{education_posts_text} התגובות הראשונות שלך.
+      למידע נוסף [ראו את הכללים המנחים שלנו](/guidelines). פאנל זה יופיע רק ב-%{education_posts_text} התגובות הראשונות שלך.
     avatar: |
       ### מה דעתך להוסיף תמונה לחשבון שלך?
 
@@ -749,6 +749,7 @@ he:
     poll_pop3_auth_error: "החיבור לשרת POP3 נכשל בשל שגיאת הזדהות. אנא בדקו את <a href='/admin/site_settings/category/email'> הגדרות ה-POP3 </a> שלכם."
   site_settings:
     censored_words: "מלים שיוחלפו באופן אוטומטי ב- &#9632;&#9632;&#9632;&#9632;"
+    censored_pattern: "ביטוי רגולרי שיוחלף אוטומטית עם &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "מחיקת אוטומטית של פרסומים מוסתרים שנותרים מוסתרים במשך יותר מ-30 יום."
     default_locale: "שפת ברירת המחדל עבור אתר Discourse זה (קוד ISO 639-1)"
     allow_user_locale: "אפשרו למשתמשים לבחור את הגדרות השפה שלהם בממשק המשתמש/ת"
@@ -1088,9 +1089,12 @@ he:
     reset_bounce_score_after_days: "איפוס אוטומטי של ניקוד-החזר לאחר X ימים."
     attachment_content_type_blacklist: "רשימת מילות מפתח שמשמשות להכנסת צירופים לרשימה שחורה על בסיס סוג התוכן."
     attachment_filename_blacklist: "רשימת מילות מפתח לרשימה שחורה של שמות קבצים מצורפים."
+    enable_forwarded_emails: "[בטא] אפשרו למשתמשים ליצור נושא על ידי העברת מייל."
+    always_show_trimmed_content: "תמיד הציגו חלק מקוצר של מיילים נכנסים. אזהרה: עלול לחשוף כתובות מייל."
     manual_polling_enabled: "דחיפת מיילים באמצעות ה API לתגובות מייל."
     pop3_polling_enabled: "משיכה דרך POP3 לתגובות דוא\"ל."
     pop3_polling_ssl: "שימוש ב-SSL בעת חיבור לשרת POP3. (מומלץ)"
+    pop3_polling_openssl_verify: "וידוא סרטיפיקט TLS של השרת (ברירת מחדל: מאופשר)"
     pop3_polling_period_mins: "משך הזמן בדקות בין בדיקת הדוא\"ל בחשבון ה-POP3. הערה: דורש אתחול."
     pop3_polling_port: "החיבור (Port) ממנו יש למשוך נתונים מחשבון POP3."
     pop3_polling_host: "השרת המארח (Host) למשיכת דוא\"ל דרך POP3."
@@ -1114,6 +1118,7 @@ he:
     default_avatars: "כתובות URL לאווטרים אשר ישמשו כברירת מחדל למשתמשים חדשים עד אשר ישנו אותם."
     automatically_download_gravatars: "הורדת גראווטרים למשתמשים בעת יצירת החשבון או שינוי כתובת הדוא\"ל."
     digest_topics: "המספר המקסימלי של נושאים להציג במייל הסיכום."
+    digest_posts: "המספר המקסימלי של פוסטים פופולאריים להצגה במייל סיכום."
     digest_min_excerpt_length: "אורך קטע מינימלי מהפוסט למיילי הסיכום, בתווים."
     delete_digest_email_after_days: "השתקת מיילי סיכום למשתמשים שלא ביקרו באתר למעלה מ (n) ימים."
     digest_suppress_categories: "וותרו על קטגוריות אלו במיילים מסכמים."
@@ -1201,6 +1206,7 @@ he:
     default_categories_watching: "רשימת קטגוריות שנצפית כברירת מחדל."
     default_categories_tracking: "רשימת קטגוריות שנעקבת כברירת מחדל."
     default_categories_muted: "רשימת קטגוריות שמושתקות כברירת מחדל."
+    default_categories_watching_first_post: "רשימת קטגוריות שבה הפוסט הראשון בכל נושא ייצפה אוטומטית."
     max_user_api_reqs_per_day: "המספר המקסימלי של בקשות API של משתמש ליום"
     max_user_api_reqs_per_minute: "המספר המקסימלי של בקשות API של משתמש לדקה"
     allow_user_api_keys: "איפשור יצירת מפתחות API למשתמשים"
@@ -1247,6 +1253,7 @@ he:
       reply_by_email_address_is_empty: "אתם חייבים להגדיר את 'מענה באמצעות כתובת מייל' לפני שאתם מאפשרים תגובה באמצעות מייל."
       email_polling_disabled: "עליכם לאפשר ידני או תשאול POP3 לפני שתאפשרו מענה באמצעות מייל."
       user_locale_not_enabled: "לפני שתוכלו להפעיל אפשרות זאת, יש לאפשר \"הגדרות מקומיות מותאמות משתמש/ת\""
+      invalid_regex: "ביטוי רגולרי לא תקין או לא מותר."
   search:
     within_post: "#%{post_number} פוסטים של %{username}"
     types:
@@ -2132,16 +2139,21 @@ he:
         %{message}
     digest:
       why: "סיכום קצר של %{site_link} מאז ביקורך האחרון ב-%{last_seen_at}"
+      since_last_visit: "מאז ביקורכם האחרון"
+      new_topics: "נושאים חדשים"
+      unread_messages: "הודעות שלא נקראו"
+      unread_notifications: "התראות שלא נקראו"
+      popular_topics: "נושאים פופולאריים"
+      follow_topic: "עיקבו אחרי נושא זה"
+      join_the_discussion: "קראו עוד"
+      popular_posts: "פוסטים פופולאריים"
+      from_topic_label: "מאת"
+      more_new: "חדש בנושאים וקרטגוריות שאתם עוקבים אחריהם"
       subject_template: "[%{site_name}] סיכום"
-      new_activity: "פעילות חדשה בנושאים ובפוסטים שלכם:"
-      top_topics: "פוסטים פופולריים"
-      other_new_topics: "נושאים פופולאריים"
       unsubscribe: "סיכום זה נשלח מ %{site_link} כאשר אנחנו לא רואים אתכם לאורך זמן. כדי לבטל את המנוי %{unsubscribe_link}."
       click_here: "לחצו כאן"
       from: "סיכום %{site_name}"
-      read_more: "קיראו עוד"
-      more_topics: "ישנם %{new_topics_since_seen} נושאים חדשים נוספים."
-      more_topics_category: "עוד נושאים חדשים:"
+      preheader: "סיכום קצר מאז ביקורכם האחרון ב-%{last_seen_at}"
     mailing_list:
       why: "כל הפעילות ב-%{site_link} ל-%{date}"
       subject_template: "[%{site_name}] סיכום ל %{date}"
@@ -2868,6 +2880,13 @@ he:
     resend_email:
       title: "שליחת מייל אקטיבציה מחדש"
       message: "<p>שלחנו מחדש את מייל האקטיבציה ל<b>%{email}</b>"
+  safe_mode:
+    title: "כנסו למצב בטוח"
+    description: "מצב בטוח מאפשר לכם לבחון את האתר שלכם מבלי לטעון תוספים או התאמות אתר."
+    no_customizations: "נטרלו את כל התאמות האתר"
+    only_official: "נטרלו תוספים לא רשמיים"
+    no_plugins: "נטרלו את כל התוספים"
+    enter: "כנסו למצב בטוח"
   wizard:
     title: "הקמת Discourse"
     step:
@@ -2915,7 +2934,7 @@ he:
           contact_url:
             label: "דף ווב"
             placeholder: "http://www.example.com/contact-us"
-            description: "דף אינטרנט כללי ליצירת קשר איתכם או הארגון שלכם. יוצג ב<a href='/about' target='_blank'>דף האודות</a>."
+            description: "דף יצירת קשר כללי איתכם או עם הארגון שלכם. יוצג ב<a href='/about' target='_blank'>דף האודות שלכם</a>."
           site_contact:
             label: "הודעות אוטומטיות"
             description: "כל ההודעות הפרטיות והאוטומטיות של Discourse יישלחו ממשתמש זה. הכי חשוב, משתמש זה יהיה השולח הנבחר של כל הודעת ברוכים הבאים שנשלחת אוטומטית למשתמשים חדשים."

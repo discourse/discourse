@@ -3,10 +3,16 @@
       site_link: site_link,
       last_seen_at: @last_seen_at) %>
 
-<%- if @featured_topics.present? %>
-### <%=t 'user_notifications.digest.top_topics' %>
+<%- @counts.each do |count| -%>
+<%= count[:value] -%> <%=t count[:label_key] %>
+<%- end -%>
 
-<%- @featured_topics.each_with_index do |t,i| %>
+--------------------------------------------------------------------------------
+
+<%- if @popular_topics.present? %>
+### <%=t 'user_notifications.digest.popular_topics' %>
+
+<%- @popular_topics.each_with_index do |t,i| %>
 <%= raw(@markdown_linker.create(t.title, t.relative_url)) %>
 
 <%- if t.best_post.present? %>
@@ -18,14 +24,26 @@
 <%- end %>
 <%- end %>
 <%= digest_custom_text("above_popular_topics") %>
-<%- if @new_topics.present? %>
-**<%=t 'user_notifications.digest.other_new_topics' %>**
 
-<%- @new_topics.each do |t| %>
+<%- if @popular_posts.present? %>
+### <%=t 'user_notifications.digest.popular_posts' %>
+
+<%- @popular_posts.each_with_index do |post,i| %>
+<%= post.user.username -%> <%=t 'user_notifications.digest.from_topic_label' -%> <%= raw(@markdown_linker.create(post.topic.title, post.topic.relative_url)) %>
+
+ <%= raw(post.excerpt(1000, strip_links: true, text_entities: true, markdown_images: true)) %>
+--------------------------------------------------------------------------------
+
+<%- end %>
+<%- end %>
+
+<%- if @other_new_for_you.present? %>
+**<%=t 'user_notifications.digest.more_new' %>**
+
+<%- @other_new_for_you.each do |t| %>
 * <%= raw(@markdown_linker.create(t.title, t.relative_url)) %> - <%= t.posts_count %> - <%- if t.category %>[<%= t.category.name %>]<%- end %>
 <%- end -%>
-
-<%- end -%>
+<%- end %>
 
 <%= digest_custom_text("below_popular_topics") %>
 

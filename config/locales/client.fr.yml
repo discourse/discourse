@@ -429,6 +429,7 @@ fr:
       mute: "Silencieux"
       edit: "Modifier les préférences"
       download_archive: "Télécharger mes messages"
+      download_archive_confirm: "Êtes-vous sûr de vouloir télécharger vos messages ?"
       new_private_message: "Créer un message privé"
       private_message: "Message privé"
       private_messages: "Messages privés"
@@ -452,6 +453,7 @@ fr:
         each_browser_note: "Note : Vous devez changer ce paramètre sur chaque navigateur que vous utilisez."
       dismiss_notifications: "Tout ignorer"
       dismiss_notifications_tooltip: "Marquer les notifications comme lues"
+      first_notification: "Votre première notification ! Cliquez-la pour démarrer."
       disable_jump_reply: "Ne pas aller à mon nouveau message après avoir répondu"
       dynamic_favicon: "Faire apparaître le nombre de sujets récemment créés ou mis à jour sur l'icône navigateur"
       external_links_in_new_tab: "Ouvrir tous les liens externes dans un nouvel onglet"
@@ -687,7 +689,8 @@ fr:
         account_age_days: "Âge du compte en jours"
         create: "Envoyer une invitation"
         generate_link: "Copier le lien d'invitation"
-        generated_link_message: '<p>Le lien d''invitation a été généré avec succès !</p><p><input class="invite-link-input" style="width: 75%;" type="text" value="%{inviteLink}"></p><p>Le lien d''invitation est valide uniquement pour cette adresse : <b>%{invitedEmail}</b></p>'
+        link_generated: "Lien d'invitation généré avec succés !"
+        valid_for: "Le lien d'invitation est seulement valide pour cette adresse courriel : %{email}"
         bulk_invite:
           none: "Vous n'avez encore invité personne. Vous pouvez envoyé des invitations individuelles, ou en masse en <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>envoyant un fichier d'invitation contenant la liste des courriels</a>."
           text: "Invitation massive depuis un fichier"
@@ -845,6 +848,7 @@ fr:
     trust_level: 'Niveau de confiance'
     search_hint: 'pseudo, courriel ou adresse IP'
     create_account:
+      disclaimer: "En vous s'inscrivant, vous acceptez la <a href='{{privacy_link}}'>politique de confidentialité</a> et les <a href='{{tos_link}}'>conditions générales d'utilisation</a>."
       title: "Créer un nouveau compte"
       failed: "Quelque chose s'est mal passé, peut-être que cette adresse de courriel est déjà enregistrée, essayez le lien Mot de passe oublié."
     forgot_password:
@@ -935,6 +939,9 @@ fr:
       group_mentioned:
         one: "En mentionnant {{group}}, vous êtes sur le point de notifier <a href='{{group_link}}'>1 personne</a> – êtes-vous sûr ?"
         other: "En mentionnant {{group}}, vous êtes sur le point de notifier <a href='{{group_link}}'>{{count}} personnes</a> – êtes-vous sûr ?"
+      cannot_see_mention:
+        category: "Vous avez mentionné {{username}} mais il ne sera pas notifié car il n'a pas accès à cette catégorie. Vous devez ajouter cet utilisateur à un groupe ayant accès à cette catégorie."
+        private: "Vous avez mentionné {{username}} mais il ne sera pas notifié car il ne peut pas voir ce message privé. Vous devez inviter cet utilisateur à la discussion."
       duplicate_link: "Il semblerait que votre lien vers <b>{{domain}}</b> a déjà été partagé par <b>@{{username}}</b> dans <a href='{{post_url}}'>une réponse {{ago}}</a> – êtes vous sûr de vouloir le partager à nouveau ?"
       error:
         title_missing: "Le titre est obligatoire."
@@ -953,7 +960,7 @@ fr:
       create_pm: "Message privé"
       title: "ou appuyez sur Ctrl+Entrée"
       users_placeholder: "Ajouter un utilisateur"
-      title_placeholder: "Quel est votre sujet en une phrase descriptive ?"
+      title_placeholder: "Quel est le sujet en une courte phrase ?"
       edit_reason_placeholder: "pourquoi modifiez-vous le message ?"
       show_edit_reason: "(ajouter la raison de la modification)"
       reply_placeholder: "Écrivez ici. Utilisez Markdown, BBCode, ou HTML pour mettre en forme. Glissez ou collez des images."
@@ -1141,6 +1148,8 @@ fr:
     topics:
       new_messages_marker: "dernière visite"
       bulk:
+        select_all: "Tout sélectionner"
+        clear_all: "Tout désélectionner"
         unlist_topics: "Ne plus lister les sujets"
         reset_read: "Réinitialiser la lecture"
         delete: "Supprimer les sujets"
@@ -1461,7 +1470,7 @@ fr:
     post:
       reply: "<i class='fa fa-mail-forward'></i> {{replyAvatar}} {{usernameLink}}"
       reply_topic: "<i class='fa fa-mail-forward'></i> {{link}}"
-      quote_reply: "citer"
+      quote_reply: "Citer"
       edit: "Modifier {{link}} par {{replyAvatar}} {{username}}"
       edit_reason: "Raison :"
       post_number: "message {{number}}"
@@ -2090,6 +2099,8 @@ fr:
       custom_message_placeholder: "Entrez votre message personnalisé"
       custom_message_template_forum: "Hey, tu devrais rejoindre ce forum !"
       custom_message_template_topic: "Hey, je pensais que tu pourrais aimer ce sujet !"
+    safe_mode:
+      enabled: "Le mode sans échec et activé ; fermez cette fenêtre de navigateur pour le quitter"
   admin_js:
     type_to_filter: "commencez à taper pour filtrer…"
     admin:
@@ -2397,7 +2408,6 @@ fr:
             title: "Restaurer (RollBack) la base de données à l'état de travail précédent"
             confirm: "Êtes-vous sûr de vouloir restaurer la base de données à l'état de fonctionnement précédent?"
       export_csv:
-        user_archive_confirm: "Êtes-vous sûr de vouloir télécharger vos messages?"
         success: "L'exportation a été démarrée. Vous serez notifié par message lorsque le traitement sera terminé."
         failed: "L'exportation a échoué. Veuillez consulter les journaux."
         rate_limit_error: "Les messages peuvent être téléchargés une fois par jour, veuillez ressayer demain."
@@ -2522,6 +2532,9 @@ fr:
         delivery_method: "Méthode d'envoi"
         preview_digest_desc: "Prévisualiser le contenu des courriels hebdomadaires sommaires envoyés aux utilisateurs inactifs."
         refresh: "Rafraîchir"
+        send_digest_label: "Envoyer ce résultat à :"
+        send_digest: "Envoyer"
+        sending_email: "Courriel en cours d'envoi…"
         format: "Format"
         html: "html"
         text: "texte"

@@ -151,6 +151,7 @@ Discourse::Application.routes.draw do
         get "/incoming/:id/raw" => "email#raw_email"
         get "/incoming/:id" => "email#incoming"
         get "preview-digest" => "email#preview_digest"
+        get "send-digest" => "email#send_digest"
         post "handle_mail"
       end
     end
@@ -397,7 +398,7 @@ Discourse::Application.routes.draw do
   get "posts/:username/flagged" => "posts#flagged_posts", constraints: {username: USERNAME_ROUTE_FORMAT}
 
   get "groups/:id.json" => 'groups#show', constraints: {id: USERNAME_ROUTE_FORMAT}, defaults: {format: 'json'}
-  
+
   resources :groups, id: USERNAME_ROUTE_FORMAT do
     get "posts.rss" => "groups#posts_feed", format: :rss
     get "mentions.rss" => "groups#mentions_feed", format: :rss
@@ -408,6 +409,7 @@ Discourse::Application.routes.draw do
     get 'mentions'
     get 'messages'
     get 'counts'
+    get 'mentionable'
 
     member do
       put "members" => "groups#add_members"
@@ -591,6 +593,7 @@ Discourse::Application.routes.draw do
   get "t/:slug/:topic_id/:post_number" => "topics#show", constraints: {topic_id: /\d+/, post_number: /\d+/}
   get "t/:slug/:topic_id/last" => "topics#show", post_number: 99999999, constraints: {topic_id: /\d+/}
   get "t/:topic_id/posts" => "topics#posts", constraints: {topic_id: /\d+/}, format: :json
+  get "t/:topic_id/excerpts" => "topics#excerpts", constraints: {topic_id: /\d+/}, format: :json
   post "t/:topic_id/timings" => "topics#timings", constraints: {topic_id: /\d+/}
   post "t/:topic_id/invite" => "topics#invite", constraints: {topic_id: /\d+/}
   post "t/:topic_id/invite-group" => "topics#invite_group", constraints: {topic_id: /\d+/}
@@ -698,6 +701,9 @@ Discourse::Application.routes.draw do
   post "/user-api-key" => "user_api_keys#create"
   post "/user-api-key/revoke" => "user_api_keys#revoke"
   post "/user-api-key/undo-revoke" => "user_api_keys#undo_revoke"
+
+  get "/safe-mode" => "safe_mode#index"
+  post "/safe-mode" => "safe_mode#enter", as: "safe_mode_enter"
 
   get "*url", to: 'permalinks#show', constraints: PermalinkConstraint.new
 

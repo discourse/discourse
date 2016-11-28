@@ -1632,7 +1632,7 @@ ja:
         updates_available: "アップデートが存在します。"
         please_upgrade: "今すぐアップデートしてください!"
         no_check_performed: "アップデートの確認が正しく動作していません。sidekiq が起動していることを確認してください。"
-        stale_data: "最近アップデートの確認が正しく動作していません。sidekiq が起動していることを確認してください。"
+        stale_data: "更新のチェックが最近行われておりません。Sidekiqが動作しているか確認してください。"
         version_check_pending: "アップロードしたてです。素晴らしいです！   "
         installed_version: "インストール済み"
         latest_version: "最新"
@@ -1839,7 +1839,6 @@ ja:
             label: "ロールバック"
             title: "データベースを前回の状態に戻します"
       export_csv:
-        user_archive_confirm: "投稿をダウンロードしてもよろしいですか？"
         success: "エクスポートを開始しました。処理が完了した後、メッセージでお知らせします。"
         failed: "出力失敗。詳しくはログに参考してください。"
         rate_limit_error: "投稿は1日に1度だけダウンロードできます。また明日お試しください。"

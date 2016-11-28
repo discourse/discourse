@@ -48,7 +48,7 @@ export default Ember.Component.extend({
         }
 
         const topic = this.get('topics').findBy('id', parseInt(topicId));
-        this.sendAction('postsAction', {topic, position: target.offset()});
+        this.appEvents.trigger('topic-entrance:show', { topic, position: target.offset() });
       }
       return false;
     }

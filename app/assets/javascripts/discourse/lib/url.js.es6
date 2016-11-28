@@ -332,7 +332,8 @@ const DiscourseURL = Ember.Object.extend({
 
     const transition = router.handleURL(path);
     transition._discourse_intercepted = true;
-    transition.promise.then(() => jumpToElement(elementId));
+    const promise = transition.promise || transition;
+    promise.then(() => jumpToElement(elementId));
   }
 }).create();
 

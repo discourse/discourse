@@ -2,6 +2,7 @@ import { keyDirty } from 'discourse/widgets/widget';
 import { diff, patch } from 'virtual-dom';
 import { WidgetClickHook } from 'discourse/widgets/hooks';
 import { renderedKey, queryRegistry } from 'discourse/widgets/widget';
+import { getRegister } from 'discourse-common/lib/get-owner';
 
 const _cleanCallbacks = {};
 export function addWidgetCleanCallback(widgetName, fn) {
@@ -24,11 +25,14 @@ export default Ember.Component.extend({
 
     (this.get('delegated') || []).forEach(m => this.set(m, m));
 
-    this._widgetClass = queryRegistry(name) || this.container.lookupFactory(`widget:${name}`);
+    this.register = getRegister(this);
+
+    this._widgetClass = queryRegistry(name) || this.register.lookupFactory(`widget:${name}`);
 
     if (!this._widgetClass) {
       console.error(`Error: Could not find widget: ${name}`);
     }
+
 
     this._childEvents = [];
     this._connected = [];
@@ -97,13 +101,14 @@ export default Ember.Component.extend({
 
   rerenderWidget() {
     Ember.run.cancel(this._timeout);
+
     if (this._rootNode) {
       if (!this._widgetClass) { return; }
 
       const t0 = new Date().getTime();
       const args = this.get('args') || this.buildArgs();
       const opts = { model: this.get('model') };
-      const newTree = new this._widgetClass(args, this.container, opts);
+      const newTree = new this._widgetClass(args, this.register, opts);
 
       newTree._emberView = this;
       const patches = diff(this._tree || this._rootNode, newTree);

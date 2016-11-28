@@ -121,8 +121,8 @@ describe UserProfile do
 
       it 'includes the link as nofollow if the user is not new' do
         user.user_profile.send(:cook)
-        expect(user_profile.bio_excerpt).to match_html("I love <a href='http://discourse.org' rel='nofollow'>http://discourse.org</a>")
-        expect(user_profile.bio_processed).to match_html("<p>I love <a href=\"http://discourse.org\" rel=\"nofollow\">http://discourse.org</a></p>")
+        expect(user_profile.bio_excerpt).to match_html("I love <a href='http://discourse.org' rel='nofollow noopener'>http://discourse.org</a>")
+        expect(user_profile.bio_processed).to match_html("<p>I love <a href=\"http://discourse.org\" rel=\"nofollow noopener\">http://discourse.org</a></p>")
       end
 
       it 'removes the link if the user is new' do
@@ -160,8 +160,8 @@ describe UserProfile do
           created_user.save
           created_user.reload
           created_user.change_trust_level!(TrustLevel[2])
-          expect(created_user.user_profile.bio_excerpt).to match_html("I love <a href='http://discourse.org' rel='nofollow'>http://discourse.org</a>")
-          expect(created_user.user_profile.bio_processed).to match_html("<p>I love <a href=\"http://discourse.org\" rel=\"nofollow\">http://discourse.org</a></p>")
+          expect(created_user.user_profile.bio_excerpt).to match_html("I love <a href='http://discourse.org' rel='nofollow noopener'>http://discourse.org</a>")
+          expect(created_user.user_profile.bio_processed).to match_html("<p>I love <a href=\"http://discourse.org\" rel=\"nofollow noopener\">http://discourse.org</a></p>")
         end
       end
 
@@ -171,8 +171,8 @@ describe UserProfile do
         it 'includes the link with nofollow if the user is trust level 3 or higher' do
           user.trust_level = TrustLevel[3]
           user_profile.send(:cook)
-          expect(user_profile.bio_excerpt).to match_html("I love <a href='http://discourse.org' rel='nofollow'>http://discourse.org</a>")
-          expect(user_profile.bio_processed).to match_html("<p>I love <a href=\"http://discourse.org\" rel=\"nofollow\">http://discourse.org</a></p>")
+          expect(user_profile.bio_excerpt).to match_html("I love <a href='http://discourse.org' rel='nofollow noopener'>http://discourse.org</a>")
+          expect(user_profile.bio_processed).to match_html("<p>I love <a href=\"http://discourse.org\" rel=\"nofollow noopener\">http://discourse.org</a></p>")
         end
       end
     end

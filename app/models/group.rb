@@ -381,10 +381,6 @@ class Group < ActiveRecord::Base
     true
   end
 
-  def mentionable?(user, group_id)
-    Group.mentionable(user).where(id: group_id).exists?
-  end
-
   def staff?
     STAFF_GROUPS.include?(self.name.to_sym)
   end

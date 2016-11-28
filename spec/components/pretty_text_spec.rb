@@ -77,7 +77,7 @@ HTML
     end
 
     it "should inject nofollow in all user provided links" do
-      expect(PrettyText.cook('<a href="http://cnn.com">cnn</a>')).to match(/nofollow/)
+      expect(PrettyText.cook('<a href="http://cnn.com">cnn</a>')).to match(/nofollow noopener/)
     end
 
     it "should not inject nofollow in all local links" do
@@ -435,6 +435,15 @@ HTML
     it "replaces the custom emoji" do
       Emoji.stubs(:custom).returns([ Emoji.create_from_path('trout') ])
       expect(PrettyText.cook("hello :trout:")).to match(/<img src[^>]+trout[^>]+>/)
+    end
+  end
+
+  describe "censored_pattern site setting" do
+    it "can be cleared if it causes cooking to timeout" do
+      SiteSetting.censored_pattern = "evilregex"
+      described_class.stubs(:markdown).raises(MiniRacer::ScriptTerminatedError)
+      PrettyText.cook("Protect against it plz.") rescue nil
+      expect(SiteSetting.censored_pattern).to be_blank
     end
   end
 

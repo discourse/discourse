@@ -653,7 +653,7 @@ class Search
     end
 
     def self.query_locale
-      @query_locale ||= Post.sanitize(Search.long_locale)
+      "'#{Search.long_locale}'"
     end
 
     def query_locale

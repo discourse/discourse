@@ -1,0 +1,35 @@
+<p>
+  {{i18n 'admin.logs.screened_urls.description'}}
+  <button class="btn pull-right" {{action "exportScreenedUrlList"}} title="{{i18n 'admin.export_csv.button_title.screened_url'}}">{{fa-icon "download"}}{{i18n 'admin.export_csv.button_text'}}</button>
+</p>
+<br>
+
+{{#conditional-loading-spinner condition=loading}}
+  {{#if model.length}}
+    <div class='table screened-urls'>
+      <div class="heading-container">
+        <div class="col heading first domain">{{i18n 'admin.logs.screened_urls.domain'}}</div>
+        <div class="col heading action">{{i18n 'admin.logs.action'}}</div>
+        <div class="col heading match_count">{{i18n 'admin.logs.match_count'}}</div>
+        <div class="col heading last_match_at">{{i18n 'admin.logs.last_match_at'}}</div>
+        <div class="col heading created_at">{{i18n 'admin.logs.created_at'}}</div>
+        <div class="clearfix"></div>
+      </div>
+
+      {{#each model as |url|}}
+        <div class="admin-list-item">
+          <div class="col first domain">
+            <div class="overflow-ellipsis" title={{url.domain}}>{{url.domain}}</div>
+          </div>
+          <div class="col action">{{url.actionName}}</div>
+          <div class="col match_count">{{url.match_count}}</div>
+          <div class="col last_match_at">{{age-with-tooltip url.last_match_at}}</div>
+          <div class="col created_at">{{age-with-tooltip url.created_at}}</div>
+          <div class="clearfix"></div>
+        </div>
+      {{/each}}
+    </div>
+  {{else}}
+    {{i18n 'search.no_results'}}
+  {{/if}}
+{{/conditional-loading-spinner}}

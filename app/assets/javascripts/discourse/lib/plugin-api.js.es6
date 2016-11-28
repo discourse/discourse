@@ -11,7 +11,6 @@ import { preventCloak } from 'discourse/widgets/post-stream';
 import { h } from 'virtual-dom';
 import { addFlagProperty } from 'discourse/components/site-header';
 import { addPopupMenuOptionsCallback } from 'discourse/controllers/composer';
-import { emojiUrlFor } from 'discourse/lib/text';
 
 class PluginApi {
   constructor(version, container) {
@@ -93,12 +92,11 @@ class PluginApi {
         if (result.icon) {
           iconBody = iconNode(result.icon);
         } else if (result.emoji) {
-          iconBody = result.emoji.split('|').map(emoji => {
-            const src = emojiUrlFor(emoji);
-            return dec.h('img', { className: 'emoji', attributes: { src } });
+          iconBody = result.emoji.split('|').map(name => {
+            let widgetAttrs = { name };
+            if (result.emojiTitle) widgetAttrs.title = true;
+            return dec.attach('emoji', widgetAttrs);
           });
-
-          iconBody = result.emoji.split('|').map(name => dec.attach('emoji', { name }));
         }
 
         if (result.text) {
@@ -368,6 +366,10 @@ function decorate(klass, evt, cb) {
   const mixin = {};
   mixin["_decorate_" + (_decorateId++)] = function($elem) { cb($elem); }.on(evt);
   klass.reopen(mixin);
+}
+
+export function resetPluginApi() {
+  _pluginv01 = null;
 }
 
 export function decorateCooked() {

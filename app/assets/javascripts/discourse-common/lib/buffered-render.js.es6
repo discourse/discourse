@@ -2,10 +2,7 @@
 // In the long term we'll want to remove this.
 
 const Mixin = {
-  __bufferTimeout: null,
-
   _customRender() {
-    Ember.run.cancel(this.__bufferTimeout);
     if (!this.element || this.isDestroying || this.isDestroyed) { return; }
 
     const buffer = [];
@@ -25,20 +22,12 @@ export function bufferedRender(obj) {
     return obj;
   }
 
-  const caller = {};
+  const caller = { };
 
-  // True in 1.13 or greater
-  if (Ember.Helper) {
-    caller.didRender = function() {
-      this._super();
-      this._customRender();
-    };
-  } else {
-    caller.didInsertElement = function() {
-      this._super();
-      this._customRender();
-    };
-  }
+  caller.didRender = function() {
+    this._super();
+    this._customRender();
+  };
 
   const triggers = obj.rerenderTriggers;
   if (triggers) {

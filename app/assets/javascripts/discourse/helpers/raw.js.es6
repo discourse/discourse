@@ -16,7 +16,7 @@ function renderRaw(ctx, container, template, templateName, params) {
       };
     }
 
-    const module = `discourse/views/${templateName}`;
+    const module = `discourse/raw-views/${templateName}`;
     if (requirejs.entries[module]) {
       const viewClass = require(module, null, null, true);
       if (viewClass && viewClass.default) {

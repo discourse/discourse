@@ -184,7 +184,7 @@ class TopicView
         @desired_post.image_url
       elsif @desired_post.user
         # show poster avatar
-        @desired_post.user.avatar_template_url.gsub("{size}", "100")
+        @desired_post.user.avatar_template_url.gsub("{size}", "200")
       end
     else
       @topic.image_url

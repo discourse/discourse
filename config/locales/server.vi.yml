@@ -65,7 +65,6 @@ vi:
       has_already_been_used: "đã được sử dụng"
       inclusion: không được bao gồm trong danh sách
       invalid: là không hợp lệ
-      is_invalid: "không hợp lệ; cố gắng cụ thể hơn một chút"
       less_than: phải nhỏ hơn %{count}
       less_than_or_equal_to: phải nhỏ hơn hoặc bằng %{count}
       not_a_number: không phải là số
@@ -140,7 +139,6 @@ vi:
   topic_not_found: "Có gì đó đã sai. Có lẽ chủ đề này đã bị đóng hoặc bị xóa trong khi bạn đang xem?"
   just_posted_that: "rất giống với những gì bạn đã viết gần đây"
   invalid_characters: "chứa các kí tự không hợp lệ"
-  is_invalid: "không hợp lệ; cố gắng cụ thể hơn một chút"
   next_page: "trang sau →"
   prev_page: "← trang trước"
   page_num: "Trang %{num}"

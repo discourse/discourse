@@ -1745,7 +1745,6 @@ nb_NO:
             label: "Gjenopprett"
             title: "Gjenopprett databasen til en tidligere fungerende tilstand"
       export_csv:
-        user_archive_confirm: "Er du sikker på at du vil laste ned innleggene dine?"
         success: "Eksportering iverksatt. Du vil bli varslet med en melding når prosessen er fullført."
         failed: "Eksporteringen feilet. Venligst undersøk loggene."
         rate_limit_error: "Innlegg kan lastes ned en gang om dagen, vennligst prøv igjen i morgen."

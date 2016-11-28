@@ -41,6 +41,26 @@ describe ComposerMessagesFinder do
       end
     end
 
+    context 'private message' do
+      let(:topic) { Fabricate(:private_message_topic) }
+
+      context 'starting a new private message' do
+        let(:finder) { ComposerMessagesFinder.new(user, composer_action: 'createTopic', topic_id: topic.id) }
+
+        it 'should return an empty string' do
+          expect(finder.check_education_message).to eq(nil)
+        end
+      end
+
+      context 'replying to a private message' do
+        let(:finder) { ComposerMessagesFinder.new(user, composer_action: 'reply', topic_id: topic.id) }
+
+        it 'should return an empty string' do
+          expect(finder.check_education_message).to eq(nil)
+        end
+      end
+    end
+
     context 'creating reply' do
       let(:finder) { ComposerMessagesFinder.new(user, composer_action: 'reply') }
 

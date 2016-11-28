@@ -53,7 +53,6 @@ id:
       has_already_been_used: "telah digunakan"
       inclusion: tidak dimasukkan kedalam daftar
       invalid: tidak benar
-      is_invalid: "tidak valid; cobalah untuk lebih deskriptif"
       less_than: harus kurang dari %{count}
       less_than_or_equal_to: harus sama dengan atau kurang dari %{count}
       not_a_number: bukan numerik
@@ -126,7 +125,6 @@ id:
   topic_not_found: "Ada yang salah. Mungkin topik ini ditutup atau dihapus ketika Anda sedang menjelajahinya?"
   just_posted_that: "tingkat kemiripan dengan post sebelumnya sangat tinggi"
   invalid_characters: "memuat karakter yang tidak valid"
-  is_invalid: "tidak valid; cobalah dengan sesuatu yang lebih deskriptif"
   next_page: "halaman berikutnya →"
   prev_page: "← halaman sebelumnya"
   page_num: "Halaman %{num}"

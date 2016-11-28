@@ -3,6 +3,8 @@ import { h } from 'virtual-dom';
 import DiscourseURL from 'discourse/lib/url';
 import { ajax } from 'discourse/lib/ajax';
 
+const flatten = array => [].concat.apply([], array);
+
 createWidget('priority-faq-link', {
   tagName: 'a.faq-priority.widget-link',
 
@@ -61,7 +63,7 @@ export default createWidget('hamburger-menu', {
   },
 
   lookupCount(type) {
-    const tts = this.container.lookup('topic-tracking-state:main');
+    const tts = this.register.lookup('topic-tracking-state:main');
     return tts ? tts.lookupCount(type) : 0;
   },
 
@@ -105,8 +107,7 @@ export default createWidget('hamburger-menu', {
       links.push({ route: 'tags', label: 'tagging.tags' });
     }
 
-    const extraLinks = applyDecorators(this, 'generalLinks', this.attrs, this.state);
-
+    const extraLinks = flatten(applyDecorators(this, 'generalLinks', this.attrs, this.state));
     return links.concat(extraLinks).map(l => this.attach('link', l));
   },
 
@@ -143,7 +144,7 @@ export default createWidget('hamburger-menu', {
                    label: this.site.mobileView ? "desktop_view" : "mobile_view" });
     }
 
-    const extraLinks = applyDecorators(this, 'footerLinks', this.attrs, this.state);
+    const extraLinks = flatten(applyDecorators(this, 'footerLinks', this.attrs, this.state));
     return links.concat(extraLinks).map(l => this.attach('link', l));
   },
 
@@ -165,7 +166,7 @@ export default createWidget('hamburger-menu', {
 
     if (currentUser && currentUser.staff) {
       results.push(this.attach('menu-links', { contents: () => {
-        const extraLinks = applyDecorators(this, 'admin-links', this.attrs, this.state) || [];
+        const extraLinks = flatten(applyDecorators(this, 'admin-links', this.attrs, this.state));
         return this.adminLinks().concat(extraLinks);
       }}));
     }

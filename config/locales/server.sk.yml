@@ -62,7 +62,6 @@ sk:
       has_already_been_used: "je už použité"
       inclusion: nie je v zozname
       invalid: je nesprávne
-      is_invalid: "je nesprávne; skúste opísať lepšie"
       less_than: musí byť menej ako %{count}
       less_than_or_equal_to: musí byť menej alebo rovné %{count}
       not_a_number: nie je číslo
@@ -161,7 +160,6 @@ sk:
   topic_not_found: "Niečo sa pokazilo. Téma mohla byť napríklad uzavretá, alebo zmazaná kým ste ju prezerali."
   just_posted_that: "je to príliš podobné Vášmu predchádzajúcemu príspevku"
   invalid_characters: "obsahuje neplatné znaky"
-  is_invalid: "je nesprávne; skúste opísať lepšie"
   next_page: "nasledujúca stránka →"
   prev_page: "← predchádzajúca stránka"
   page_num: "Stránka %{num}"
@@ -862,7 +860,7 @@ sk:
     sso_overrides_name: "Nahrádzať lokálne plné mená pomocou plných mien z externej stránky pomocou dát z SSO dotazu pri každom logine a zamedziť lokálnym zmenám."
     sso_overrides_avatar: "Nahrádzať používateľský avatar pomocou avatara z externej stránky pomocou dát z SSO dotazu. V prípade zapnutia veľmi doporučujeme vypnúť allow_uploaded_avatars"
     sso_not_approved_url: "Presmeruj nepovolené SSO účty na URL"
-    enable_local_logins: "Povoliť pouťívanie lokálnych účtov a hesiel. (Poznámka: musí to byť zapnuté pre fungovanie pozvánok)"
+    enable_local_logins: "Povoliť používanie lokálnych účtov a hesiel. (Poznámka: musí to byť zapnuté pre fungovanie pozvánok)"
     allow_new_registrations: "Povoliť registráciu nových používateľov. Odznačte to ak chcete zabrániť vytváraniu nových účtov. "
     enable_signup_cta: "Zobraz oznámenie pre navrátilých anonymných používateľov s výzvou na registráciu účtu. "
     enable_yahoo_logins: "Povoliť autentifikáciu pomocou Yahoo."

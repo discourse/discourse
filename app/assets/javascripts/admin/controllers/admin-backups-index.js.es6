@@ -1,3 +1,4 @@
+import DiscourseURL from 'discourse/lib/url';
 import { ajax } from 'discourse/lib/ajax';
 
 export default Ember.Controller.extend({
@@ -35,8 +36,11 @@ export default Ember.Controller.extend({
       } else {
         this._toggleReadOnlyMode(false);
       }
-    }
+    },
 
+    download(backup) {
+      DiscourseURL.redirectTo(backup.get('link'));
+    }
   },
 
   _toggleReadOnlyMode(enable) {

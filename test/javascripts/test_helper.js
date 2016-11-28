@@ -12,7 +12,7 @@
 //= require fake_xml_http_request
 //= require route-recognizer
 //= require pretender
-//= require loader
+//= require discourse-loader
 //= require preload-store
 
 //= require locales/i18n
@@ -22,7 +22,8 @@
 //= require vendor
 //= require ember-shim
 //= require pretty-text-bundle
-//= require main_include
+//= require application
+//= require plugin
 //= require htmlparser.js
 //= require admin
 

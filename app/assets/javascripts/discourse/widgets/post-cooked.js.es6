@@ -11,11 +11,11 @@ export function addDecorator(cb) {
 
 export default class PostCooked {
 
-  constructor(attrs, getModel) {
+  constructor(attrs, decoratorHelper) {
     this.attrs = attrs;
     this.expanding = false;
     this._highlighted = false;
-    this.getModel = getModel;
+    this.decoratorHelper = decoratorHelper;
   }
 
   update(prev) {
@@ -31,7 +31,7 @@ export default class PostCooked {
     this._fixImageSizes($html);
     this._applySearchHighlight($html);
 
-    _decorators.forEach(cb => cb($html, this.getModel));
+    _decorators.forEach(cb => cb($html, this.decoratorHelper));
     return $html[0];
   }
 

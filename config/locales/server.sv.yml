@@ -71,7 +71,6 @@ sv:
       has_already_been_used: "har redan använts"
       inclusion: är inte inkluderad i listan
       invalid: är ogiltig
-      is_invalid: "är ogiltig; försök att vara lite mer beskrivande"
       less_than: måste vara mindre än %{count}
       less_than_or_equal_to: måste vara mindre eller lika med %{count}
       not_a_number: är inte ett nummer
@@ -159,7 +158,6 @@ sv:
   topic_not_found: "Något har gått fel. Kanske har ämnet stängts eller raderats medan du tittade på det?"
   just_posted_that: "är för likt det du nyligen postade"
   invalid_characters: "innehåller otillåtna tecken"
-  is_invalid: "är ogiltig; försök att skriva lite mer detaljerad"
   next_page: "nästa sida →"
   prev_page: "← föregående sida"
   page_num: "Sida %{num}"

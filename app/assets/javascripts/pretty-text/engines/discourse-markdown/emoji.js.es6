@@ -1,5 +1,5 @@
 import { registerOption } from 'pretty-text/pretty-text';
-import { buildEmojiUrl } from 'pretty-text/emoji';
+import { buildEmojiUrl, isCustomEmoji } from 'pretty-text/emoji';
 import { translations } from 'pretty-text/emoji/data';
 
 let _unicodeReplacements;
@@ -38,10 +38,12 @@ export function setup(helper) {
 
   function imageFor(code) {
     code = code.toLowerCase();
-    const url = buildEmojiUrl(code, helper.getOptions());
+    const opts = helper.getOptions();
+    const url = buildEmojiUrl(code, opts);
     if (url) {
       const title = `:${code}:`;
-      return ['img', { href: url, title, 'class': 'emoji', alt: title }];
+      const classes = isCustomEmoji(code, opts) ? "emoji emoji-custom" : "emoji";
+      return ['img', { href: url, title, 'class': classes, alt: title }];
     }
   }
 

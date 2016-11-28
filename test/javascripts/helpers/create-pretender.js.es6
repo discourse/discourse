@@ -56,11 +56,20 @@ export default function() {
       return response(json);
     });
 
+    this.get('/tags', () => {
+      return response({ tags: [{
+        id: 'eviltrout',
+        count: 1
+      }] });
+    });
+
+    this.get(`/users/eviltrout/emails.json`, () => {
+      return response({ email: 'eviltrout@example.com' });
+    });
+
     this.get('/users/eviltrout.json', () => {
       const json = fixturesByUrl['/users/eviltrout.json'];
-      if (loggedIn()) {
-        json.user.can_edit = true;
-      }
+      json.user.can_edit = loggedIn();
       return response(json);
     });
 
@@ -74,6 +83,20 @@ export default function() {
         },
         topics: [],
       });
+    });
+
+    this.get('/users/eviltrout/invited_count.json', () => {
+      return response({
+        "counts": { "pending": 1, "redeemed": 0, "total": 0 }
+      });
+    });
+
+    this.get('/users/eviltrout/invited.json', () => {
+      return response({ "invites": [ {id: 1} ] });
+    });
+
+    this.get('/topics/private-messages/eviltrout.json', () => {
+      return response({ topic_list: { topics: [] } });
     });
 
     this.get('/clicks/track', success);

@@ -53,7 +53,6 @@ ko:
       has_already_been_used: "이미 사용되었음"
       inclusion: 리스트에 없음
       invalid: 올바르지 않음
-      is_invalid: "유효하지 않음; 좀더 자세하게 서술해주세요"
       less_than: '%{count}보다 작아야 함'
       less_than_or_equal_to: '%{count}보다 작거나 같아야 함'
       not_a_number: 숫자가 아님
@@ -121,7 +120,6 @@ ko:
   topic_not_found: "뭔가 잘못됐네요. 아마 글 보려는 도중에 글타래가 닫혔거나 지워진 건 아닐까요?"
   just_posted_that: "당신이 이전에 게시한 것과 너무 비슷합니다."
   invalid_characters: "사용할 수 없는 문자를 포함하고 있습니다."
-  is_invalid: "사용할 수 없습니다. 조금더 자세하게 적어주세요."
   next_page: "다음 페이지 →"
   prev_page: "← 이전 페이지"
   page_num: "%{num}페이지 "

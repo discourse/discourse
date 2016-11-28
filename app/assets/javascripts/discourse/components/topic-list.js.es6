@@ -40,12 +40,12 @@ export default Ember.Component.extend({
     }
   },
 
-  @observes('topics', 'order', 'ascending', 'category')
+  @observes('topics', 'order', 'ascending', 'category', 'top')
   lastVisitedTopicChanged() {
     this.refreshLastVisited();
   },
 
-  _updateLastVisitedTopic(topics, order, ascending) {
+  _updateLastVisitedTopic(topics, order, ascending, top) {
 
     this.set('lastVisitedTopic', null);
 
@@ -54,6 +54,10 @@ export default Ember.Component.extend({
     }
 
     if (order !== "default" && order !== "activity") {
+      return;
+    }
+
+    if (top) {
       return;
     }
 
@@ -103,7 +107,7 @@ export default Ember.Component.extend({
   },
 
   refreshLastVisited() {
-    this._updateLastVisitedTopic(this.get('topics'), this.get('order'), this.get('ascending'));
+    this._updateLastVisitedTopic(this.get('topics'), this.get('order'), this.get('ascending'), this.get('top'));
   },
 
   click(e) {
@@ -119,6 +123,14 @@ export default Ember.Component.extend({
     onClick('button.bulk-select', function(){
       this.sendAction('toggleBulkSelect');
       this.rerender();
+    });
+
+    onClick('button.bulk-select-all', function(){
+      $('input.bulk-select:not(:checked)').click();
+    });
+
+    onClick('button.bulk-clear-all', function(){
+      $('input.bulk-select:checked').click();
     });
 
     onClick('th.sortable', function(e2){

@@ -1,4 +1,4 @@
-<div class="modal-body">
+{{#d-modal-body title="history" maxHeight="80%"}}
   <div>
     <div id="revision-controls">
       {{d-button action="loadFirstVersion" icon="fast-backward" title="post.revisions.controls.first" disabled=loadFirstDisabled}}
@@ -89,9 +89,9 @@
 
     {{plugin-outlet "post-revisions"}}
 
-    <div class="row">
+    {{#links-redirect class="row"}}
       {{{bodyDiff}}}
-    </div>
+    {{/links-redirect}}
 
     {{#if displayRevert}}
       {{d-button action="revertToVersion" icon="undo" label="post.revisions.controls.revert" class="btn-danger" disabled=loading}}
@@ -103,4 +103,4 @@
       {{d-button action="showVersion" icon="eye" label="post.revisions.controls.show" disabled=loading}}
     {{/if}}
   </div>
-</div>
+{{/d-modal-body}}

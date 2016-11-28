@@ -15,6 +15,13 @@ ar:
         few: "صوّتوا"
         many: "صوّتوا"
         other: "صوّتوا"
+      total_votes:
+        zero: "لم يصوت أحد"
+        one: "صوت واحد"
+        two: "صوتان"
+        few: "مجموعة من الأصوات"
+        many: "العديد من الأصوات"
+        other: "مجموع الأصوات"
       average_rating: "متوسط التقييمات: <strong>%{average}</strong> "
       public:
         title: "الأصوات تظهر للعموم."

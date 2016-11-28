@@ -35,13 +35,21 @@ export function performEmojiUnescape(string, opts) {
       const emojiVal = isEmoticon ? translations[m] : m.slice(1, m.length - 1);
       const hasEndingColon = m.lastIndexOf(":") === m.length - 1;
       const url = buildEmojiUrl(emojiVal, opts);
+      const classes = isCustomEmoji(emojiVal, opts) ? "emoji emoji-custom" : "emoji";
 
       return url && (isEmoticon || hasEndingColon) ?
-             `<img src='${url}' title='${emojiVal}' alt='${emojiVal}' class='emoji'>` : m;
+             `<img src='${url}' title='${emojiVal}' alt='${emojiVal}' class='${classes}'>` : m;
     });
   }
 
   return string;
+}
+
+export function isCustomEmoji(code, opts) {
+  code = code.toLowerCase();
+  if (extendedEmoji.hasOwnProperty(code)) return true;
+  if (opts && opts.customEmoji && opts.customEmoji.hasOwnProperty(code)) return true;
+  return false;
 }
 
 export function buildEmojiUrl(code, opts) {

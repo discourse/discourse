@@ -1,6 +1,6 @@
 import WizardField from 'wizard/models/wizard-field';
 
-module("model:wizard-field");
+moduleFor("model:wizard-field");
 
 test('basic state', assert => {
   const w = WizardField.create({ type: 'text' });

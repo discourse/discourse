@@ -200,7 +200,7 @@ describe PostAnalyzer do
 
     it "ignores oneboxes" do
       post_analyzer = PostAnalyzer.new("Hello @Jake\n#{url}", default_topic_id)
-      post_analyzer.stubs(:cook).returns("<p>Hello <span class=\"mention\">@Jake</span><br><a href=\"https://twitter.com/evil_trout/status/345954894420787200\" class=\"onebox\" target=\"_blank\" rel=\"nofollow\">@Finn</a></p>")
+      post_analyzer.stubs(:cook).returns("<p>Hello <span class=\"mention\">@Jake</span><br><a href=\"https://twitter.com/evil_trout/status/345954894420787200\" class=\"onebox\" target=\"_blank\" rel=\"nofollow noopener\">@Finn</a></p>")
       expect(post_analyzer.raw_mentions).to eq(['jake'])
     end
 

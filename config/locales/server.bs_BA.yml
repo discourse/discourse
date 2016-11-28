@@ -62,7 +62,6 @@ bs_BA:
   user_is_suspended: "Suspended users are not allowed to post."
   just_posted_that: "is too similar to what you recently posted"
   invalid_characters: "contains invalid characters"
-  is_invalid: "is invalid; try to be a little more descriptive"
   next_page: "next page →"
   prev_page: "← previous page"
   page_num: "Page %{num}"

@@ -41,6 +41,7 @@ export default {
 
         user.set('unread_notifications', data.unread_notifications);
         user.set('unread_private_messages', data.unread_private_messages);
+        user.set('read_first_notification', data.read_first_notification);
 
         if (oldUnread !== data.unread_notifications || oldPM !== data.unread_private_messages) {
           appEvents.trigger('notifications:changed');

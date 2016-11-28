@@ -4,7 +4,7 @@ export default Ember.Component.extend({
   click(e) {
     const $target = $(e.target);
     if ($target.closest('.last-posted-at').length) {
-      this.sendAction('action', {topic: this.get('topic'), position: $target.offset()});
+      this.appEvents.trigger('topic-entrance:show', {topic: this.get('topic'), position: $target.offset()});
       return false;
     }
   }

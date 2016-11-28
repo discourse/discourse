@@ -91,8 +91,7 @@ module ApplicationHelper
   end
 
   def format_topic_title(title)
-    PrettyText.unescape_emoji(title)
-    strip_tags(title)
+    PrettyText.unescape_emoji strip_tags(title)
   end
 
   def with_format(format, &block)
@@ -105,6 +104,14 @@ module ApplicationHelper
 
   def age_words(secs)
     AgeWords.age_words(secs)
+  end
+
+  def short_date(dt)
+    if dt.year == Time.now.year
+      I18n.l(dt, format: :short_no_year)
+    else
+      I18n.l(dt, format: :date_only)
+    end
   end
 
   def guardian
@@ -233,7 +240,18 @@ module ApplicationHelper
   end
 
   def customization_disabled?
-    session[:disable_customization]
+    safe_mode = params["safe_mode"]
+    session[:disable_customization] || (safe_mode && safe_mode.include?("no_custom"))
+  end
+
+  def allow_plugins?
+    safe_mode = params["safe_mode"]
+    !(safe_mode && safe_mode.include?("no_plugins"))
+  end
+
+  def allow_third_party_plugins?
+    safe_mode = params["safe_mode"]
+    !(safe_mode && (safe_mode.include?("no_plugins") || safe_mode.include?("only_official")))
   end
 
   def loading_admin?

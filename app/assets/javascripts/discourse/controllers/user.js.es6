@@ -25,6 +25,11 @@ export default Ember.Controller.extend(CanCheckEmails, {
     return (!indexStream || viewingSelf) && !forceExpand;
   },
 
+  @computed('model.isSuspended', 'currentUser.staff')
+  isNotSuspendedOrIsStaff(isSuspended, isStaff) {
+    return !isSuspended || isStaff;
+  },
+
   linkWebsite: Em.computed.not('model.isBasic'),
 
   @computed("model.trust_level")

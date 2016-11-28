@@ -26,7 +26,7 @@ export default Discourse.Route.extend({
 
   actions: {
     showSuspendModal(model) {
-      showModal('modals/admin-suspend-user', { model });
+      showModal('admin-suspend-user', { model, admin: true });
       this.controllerFor('modal').set('modalClass', 'suspend-user-modal');
     }
   }

@@ -23,7 +23,7 @@ export default Ember.Controller.extend({
   actions: {
     exportUserArchive() {
       bootbox.confirm(
-        I18n.t("admin.export_csv.user_archive_confirm"),
+        I18n.t("user.download_archive_confirm"),
         I18n.t("no_value"),
         I18n.t("yes_value"),
         function(confirmed) {

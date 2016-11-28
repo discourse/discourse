@@ -1,19 +1,35 @@
-export function censor(text, censoredWords) {
-  if (censoredWords && censoredWords.length) {
-    const split = censoredWords.split("|");
-    let censorRegexp;
-    if (split && split.length) {
-      censorRegexp = new RegExp("(\\b(?:" + split.map(function (t) { return "(" + t.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&') + ")"; }).join("|") + ")\\b)(?![^\\(]*\\))", "ig");
-    }
+export function censor(text, censoredWords, censoredPattern) {
+  let patterns = [],
+      originalText = text;
 
-    if (censorRegexp) {
-      let m = censorRegexp.exec(text);
-      while (m && m[0]) {
-        const replacement = new Array(m[0].length+1).join('&#9632;');
-        text = text.replace(new RegExp("(\\b" + m[0] + "\\b)(?![^\\(]*\\))", "ig"), replacement);
-        m = censorRegexp.exec(text);
+  if (censoredWords && censoredWords.length) {
+    patterns = censoredWords.split("|").map(t => { return "(" + t.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&') + ")"; });
+  }
+
+  if (censoredPattern && censoredPattern.length > 0) {
+    patterns.push("(" + censoredPattern + ")");
+  }
+
+  if (patterns.length) {
+    let censorRegexp;
+
+    try {
+      censorRegexp = new RegExp("(\\b(?:" + patterns.join("|") + ")\\b)(?![^\\(]*\\))", "ig");
+
+      if (censorRegexp) {
+        let m = censorRegexp.exec(text);
+
+        while (m && m[0]) {
+          if (m[0].length > originalText.length) { return originalText; } // regex is dangerous
+          const replacement = new Array(m[0].length+1).join('&#9632;');
+          text = text.replace(new RegExp("(\\b" + m[0] + "\\b)(?![^\\(]*\\))", "ig"), replacement);
+          m = censorRegexp.exec(text);
+        }
       }
+    } catch(e) {
+      return originalText;
     }
   }
+
   return text;
 }

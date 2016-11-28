@@ -1,14 +1,24 @@
 import DiscourseURL from 'discourse/lib/url';
+import { deprecated } from 'discourse/mixins/scroll-top';
+
+const context = {
+  _scrollTop() {
+    if (Ember.testing) { return; }
+    $(document).scrollTop(0);
+  }
+};
 
 function scrollTop() {
   if (DiscourseURL.isJumpScheduled()) { return; }
-  Ember.run.schedule('afterRender', function() {
-    $(document).scrollTop(0);
-  });
+  Ember.run.scheduleOnce('afterRender', context, context._scrollTop);
 }
 
 export default Ember.Mixin.create({
-  _scrollTop: scrollTop.on('didInsertElement')
+  didInsertElement() {
+    deprecated('The `ScrollTop` mixin is deprecated. Replace it with a `{{d-section}}` component');
+    this._super();
+    scrollTop();
+  }
 });
 
 export { scrollTop };

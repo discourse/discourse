@@ -155,8 +155,8 @@ describe UserNotifications do
     context "with new topics" do
 
       before do
-        Topic.expects(:for_digest).returns([Fabricate(:topic, user: Fabricate(:coding_horror))])
-        Topic.expects(:new_since_last_seen).returns(Topic.none)
+        Topic.stubs(:for_digest).returns([Fabricate(:topic, user: Fabricate(:coding_horror))])
+        Topic.stubs(:new_since_last_seen).returns(Topic.none)
       end
 
       it "works" do
@@ -175,7 +175,17 @@ describe UserNotifications do
         expect(subject.subject).to match(/Try Discourse/)
         expect(subject.subject).not_to match(/Discourse Meta/)
       end
+
+      it "excludes deleted topics and their posts" do
+        deleted = Fabricate(:topic, user: Fabricate(:user), title: "Delete this topic plz")
+        post = Fabricate(:post, topic: deleted, score: 100.0, post_number: 2, raw: "Your wish is my command")
+        deleted.trash!
+        html = subject.html_part.body.to_s
+        expect(html).to_not include deleted.title
+        expect(html).to_not include post.raw
+      end
     end
+
   end
 
   describe '.user_replied' do
@@ -232,6 +242,39 @@ describe UserNotifications do
 
 
       expect(mail.html_part.to_s.scan(/In Reply To/).count).to eq(0)
+
+
+
+      SiteSetting.enable_names = true
+      SiteSetting.display_name_on_posts = true
+      SiteSetting.prioritize_username_in_ux = false
+
+      response.user.username = "bobmarley"
+      response.user.name = "Bob Marley"
+      response.user.save
+
+      mail = UserNotifications.user_replied(response.user,
+                                             post: response,
+                                             notification_type: notification.notification_type,
+                                             notification_data_hash: notification.data_hash
+                                           )
+
+
+      mail_html = mail.html_part.to_s
+      expect(mail_html.scan(/>Bob Marley/).count).to eq(1)
+      expect(mail_html.scan(/>bobmarley/).count).to eq(0)
+
+      SiteSetting.prioritize_username_in_ux = true
+
+      mail = UserNotifications.user_replied(response.user,
+                                             post: response,
+                                             notification_type: notification.notification_type,
+                                             notification_data_hash: notification.data_hash
+                                           )
+
+      mail_html = mail.html_part.to_s
+      expect(mail_html.scan(/>Bob Marley/).count).to eq(0)
+      expect(mail_html.scan(/>bobmarley/).count).to eq(1)
     end
   end
 

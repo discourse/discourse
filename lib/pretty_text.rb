@@ -56,10 +56,10 @@ module PrettyText
     ctx.eval("window = {}; window.devicePixelRatio = 2;") # hack to make code think stuff is retina
 
     if Rails.env.development? || Rails.env.test?
-      ctx.attach("console.log", proc{|l| p l })
+      ctx.attach("console.log", proc { |l| p l })
     end
 
-    ctx_load(ctx, "vendor/assets/javascripts/loader.js")
+    ctx_load(ctx, "#{Rails.root}/app/assets/javascripts/discourse-loader.js")
     ctx_load(ctx, "vendor/assets/javascripts/lodash.js")
     manifest = File.read("#{Rails.root}/app/assets/javascripts/pretty-text-bundle.js")
     root_path = "#{Rails.root}/app/assets/javascripts/"
@@ -154,7 +154,7 @@ module PrettyText
       context.eval("__optInput.mentionLookup = __mentionLookup;")
 
       custom_emoji = {}
-      Emoji.custom.map {|e| custom_emoji[e.name] = e.url}
+      Emoji.custom.map { |e| custom_emoji[e.name] = e.url }
       context.eval("__optInput.customEmoji = #{custom_emoji.to_json};")
 
       context.eval('__textOptions = __buildOptions(__optInput);')
@@ -209,7 +209,18 @@ module PrettyText
     options[:topicId] = opts[:topic_id]
 
     working_text = text.dup
-    sanitized = markdown(working_text, options)
+
+    begin
+      sanitized = markdown(working_text, options)
+    rescue MiniRacer::ScriptTerminatedError => e
+      if SiteSetting.censored_pattern.present?
+        Rails.logger.warn "Post cooking timed out. Clearing the censored_pattern setting and retrying."
+        SiteSetting.censored_pattern = nil
+        sanitized = markdown(working_text, options)
+      else
+        raise e
+      end
+    end
 
     doc = Nokogiri::HTML.fragment(sanitized)
 
@@ -250,11 +261,11 @@ module PrettyText
            whitelist.any?{|u| uri.host == u || uri.host.ends_with?("." << u)}
           # we are good no need for nofollow
         else
-          l["rel"] = "nofollow"
+          l["rel"] = "nofollow noopener"
         end
       rescue URI::InvalidURIError, URI::InvalidComponentError
         # add a nofollow anyway
-        l["rel"] = "nofollow"
+        l["rel"] = "nofollow noopener"
       end
     end
   end

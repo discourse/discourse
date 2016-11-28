@@ -135,7 +135,6 @@ pl_PL:
   topic_not_found: "Coś poszło nie tak. Być może temat został zamknięty lub usunięty w międzyczasie?"
   just_posted_that: "jest zbyt podobne do tego co umieściłeś niedawno"
   invalid_characters: "zawiera niepoprawne znaki"
-  is_invalid: "jest niewystarczająca – spróbuj ją rozwinąć"
   next_page: "następna strona →"
   prev_page: "← poprzednia strona"
   page_num: "Strona %{num}"

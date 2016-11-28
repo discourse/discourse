@@ -2,7 +2,7 @@
 
 //= require env
 //= require jquery.debug
-//= require loader
+//= require discourse-loader
 //= require jquery.debug
 //= require handlebars
 //= require ember.debug
@@ -21,6 +21,7 @@
 //= require route-recognizer
 //= require pretender
 //= require ./wizard-pretender
+
 
 // Trick JSHint into allow document.write
 var d = document;
@@ -44,10 +45,9 @@ QUnit.testDone(function() {
   server.shutdown();
 });
 
-require('wizard/test/helpers/start-app').default();
-
-var buildResolver = require('discourse-common/resolver').buildResolver;
-window.setResolver(buildResolver('wizard').create());
+var _testApp = require('wizard/test/helpers/start-app').default();
+var _buildResolver = require('discourse-common/resolver').buildResolver;
+window.setResolver(_buildResolver('wizard').create({ namespace: _testApp }));
 
 Object.keys(requirejs.entries).forEach(function(entry) {
   if ((/\-test/).test(entry)) {

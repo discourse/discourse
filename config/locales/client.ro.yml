@@ -458,6 +458,7 @@ ro:
       mute: "Silențios"
       edit: "Editează preferințe"
       download_archive: "Descarcă arhiva postărilor mele"
+      download_archive_confirm: "Ești sigur că vrei să îți descarci toate postările?"
       new_private_message: "Mesaj nou"
       private_message: "Mesaj"
       private_messages: "Mesaje"
@@ -481,6 +482,7 @@ ro:
         each_browser_note: "Observație: Setările trebuie modificate pe fiecare browser utilizat."
       dismiss_notifications: "Elimină tot"
       dismiss_notifications_tooltip: "Marchează toate notificările ca citite"
+      first_notification: "Prima notificare pe care ai primit-o! Selectează-o ca să continui. "
       disable_jump_reply: "Nu sări la postarea mea după ce răspund"
       dynamic_favicon: "Arată subiectele noi/actualizate în pictograma browserului."
       external_links_in_new_tab: "Deschide toate adresele externe într-un tab nou"
@@ -718,7 +720,8 @@ ro:
         account_age_days: "Vârsta contului în zile"
         create: "Trimite o invitație"
         generate_link: "Copiază link-ul de invitație"
-        generated_link_message: '<p>Link-ul de invitație a fost generat cu succes!</p><p><input class="invite-link-input" style="width: 75%;" type="text" value="%{inviteLink}"></p><p>Linkul de invitație e valabil doar pentru această adresă de email: <b>%{invitedEmail}</b></p>'
+        link_generated: "Link de invitare generat cu succes!"
+        valid_for: "Link-ul de invitare este valid doar pentru următoarele adrese de email:  %{email}"
         bulk_invite:
           none: "Nu ai invitat încă pe nimeni. Poți trimite invitații individuale sau mai multor oameni deodată prin <a href='https://meta.discourse.org/t/send-bulk-invites/16468'> încărcarea fișierului de invitații multiple</a>."
           text: "Invitație multiplă din fișier"
@@ -885,6 +888,7 @@ ro:
     trust_level: 'Nivel de încredere'
     search_hint: 'Numele de utilizator, email sau adresă IP'
     create_account:
+      disclaimer: "Înregistrându-te, ești de acord cu <a href='{{privacy_link}}'>politica de confidențialitate</a> și <a href='{{tos_link}}'>termenii de utilizare</a>."
       title: "Creează cont"
       failed: "Ceva s-a întâmplat, poate că acest email este deja înregistrat, încearcă să-ți resetezi parola la link-ul respectiv."
     forgot_password:
@@ -976,6 +980,9 @@ ro:
         one: "Prin menționarea {{group}}, urmează să notifici <a href='{{group_link}}'>o persoană</a> – ești sigur?"
         few: "Prin menționarea {{group}}, urmează să notifici <a href='{{group_link}}'>{{count}}  persoane</a> – ești sigur?"
         other: "Prin menționarea {{group}}, urmează să notifici <a href='{{group_link}}'>{{count}} de persoane</a> – ești sigur?"
+      cannot_see_mention:
+        category: "Ai menționat utilizatorii: {{username}}. Însă ei nu vor notificați pentru că nu au acces la această categorie. Va trebui să îi adaugi la într-un grup care are acces la aceasta categorie."
+        private: "Ai menționat utilizatorii:  {{username}}. Însă ei nu vor fi notificați pentru că nu au posibilitatea să vadă acest mesaj personal. Va trebui să îi inviți la acest MP. "
       duplicate_link: "Se pare că link-ul tău către <b>{{domain}}</b> a fost deja postat în cadrul subiectului de către <b>@{{username}}</b> în <a href='{{post_url}}'> un răspuns {{ago}} în urmă</a> – eși sigur că vrei să îl postezi din nou?"
       error:
         title_missing: "Trebuie un titlu"
@@ -1185,6 +1192,8 @@ ro:
     topics:
       new_messages_marker: "ultima vizită"
       bulk:
+        select_all: "Selectează tot"
+        clear_all: "Deselectează tot"
         unlist_topics: "Elimină subiecte din listă"
         reset_read: "Resetează citite"
         delete: "Șterge subiectele"
@@ -1521,7 +1530,7 @@ ro:
     post:
       reply: "<i class='fa fa-mail-forward'></i> {{replyAvatar}} {{usernameLink}}"
       reply_topic: "<i class='fa fa-mail-forward'></i> {{link}}"
-      quote_reply: "citează răspuns"
+      quote_reply: "Citează"
       edit: "Editează {{link}} {{replyAvatar}} {{username}}"
       edit_reason: "Motivul edit[rii: "
       post_number: "postarea {{number}}"
@@ -2194,6 +2203,8 @@ ro:
       custom_message_placeholder: "Introdu mesajul tău personalizat"
       custom_message_template_forum: "Salutare! Ar trebui să te alături acestui forum!"
       custom_message_template_topic: "Salutare! Cred că o să îți placă acest subiect!"
+    safe_mode:
+      enabled: "Modul sigur este activat, pentru a ieși din modul sigur închide această fereastră de browser"
   admin_js:
     type_to_filter: "tastează pentru a filtra..."
     admin:
@@ -2508,7 +2519,6 @@ ro:
             title: "Restabilește baza de date la stadiul funcțional anterior"
             confirm: "Ești sigur că vrei să restaurezi baza de date la starea funcțională anterioară?"
       export_csv:
-        user_archive_confirm: "Ești sigur că vrei să îți descarci mesajele?"
         success: "Exportul a fost inițiat. Vei primi un mesaj de notificare când procesul se va termina."
         failed: "Exportul a eşuat. Verifică raportul de erori."
         rate_limit_error: "Postările pot fi descărcate doar o singură dată pe zi. Te rugăm încearcă mâine."
@@ -2633,6 +2643,9 @@ ro:
         delivery_method: "Metoda de livrare"
         preview_digest_desc: "Previzualizează conținutul emailurilor-rezumat trimise către utilizatori inactivi."
         refresh: "Reîmprospătează"
+        send_digest_label: "Trimite acest rezultat către:"
+        send_digest: "Trimite"
+        sending_email: "Trimitere email..."
         format: "Format"
         html: "html"
         text: "text"

@@ -300,10 +300,10 @@ class CookedPostProcessor
     }
 
     # apply oneboxes
-    Oneboxer.apply(@doc, topic_id: @post.topic_id) { |url|
+    Oneboxer.apply(@doc, topic_id: @post.topic_id) do |url|
       @has_oneboxes = true
       Oneboxer.onebox(url, args)
-    }
+    end
 
     # make sure we grab dimensions for oneboxed images
     oneboxed_images.each { |img| limit_size!(img) }

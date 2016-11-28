@@ -80,11 +80,10 @@ export default RestModel.extend({
     Returns a JS Object of current stream filter options. It should match the query
     params for the stream.
   **/
-  @computed('summary', 'show_deleted', 'userFilters.[]')
-  streamFilters(summary, showDeleted) {
+  @computed('summary', 'userFilters.[]')
+  streamFilters(summary) {
     const result = {};
     if (summary) { result.filter = "summary"; }
-    if (showDeleted) { result.show_deleted = true; }
 
     const userFilters = this.get('userFilters');
     if (!Ember.isEmpty(userFilters)) {
@@ -141,7 +140,6 @@ export default RestModel.extend({
 
   cancelFilter() {
     this.set('summary', false);
-    this.set('show_deleted', false);
     this.get('userFilters').clear();
   },
 
@@ -156,11 +154,6 @@ export default RestModel.extend({
     });
   },
 
-  toggleDeleted() {
-    this.toggleProperty('show_deleted');
-    return this.refresh();
-  },
-
   jumpToSecondVisible() {
     const posts = this.get('posts');
     if (posts.length > 1) {
@@ -173,7 +166,6 @@ export default RestModel.extend({
   toggleParticipant(username) {
     const userFilters = this.get('userFilters');
     this.set('summary', false);
-    this.set('show_deleted', true);
 
     let jump = false;
     if (userFilters.contains(username)) {
@@ -733,6 +725,68 @@ export default RestModel.extend({
       if (posts) {
         posts.forEach(p => this.storePost(store.createRecord('post', p)));
       }
+    });
+  },
+
+  backfillExcerpts(streamPosition){
+    this._excerpts = this._excerpts || [];
+    const stream = this.get('stream');
+
+    this._excerpts.loadNext = streamPosition;
+
+    if (this._excerpts.loading) {
+      return this._excerpts.loading.then(()=>{
+        if(!this._excerpts[stream[streamPosition]]) {
+
+          if (this._excerpts.loadNext === streamPosition) {
+            return this.backfillExcerpts(streamPosition);
+          }
+        }
+      });
+    }
+
+
+    let postIds = stream.slice(Math.max(streamPosition-20,0), streamPosition+20);
+
+    for(let i=postIds.length-1;i>=0;i--) {
+      if (this._excerpts[postIds[i]]) {
+        postIds.splice(i,1);
+      }
+    }
+
+    let data = {
+      post_ids: postIds
+    };
+
+    this._excerpts.loading = ajax("/t/" + this.get('topic.id') + "/excerpts.json", {data})
+      .then(excerpts => {
+        excerpts.forEach(obj => {
+          this._excerpts[obj.post_id] = obj;
+        });
+      })
+      .finally(()=>{ this._excerpts.loading = null; });
+
+    return this._excerpts.loading;
+  },
+
+  excerpt(streamPosition){
+
+    const stream = this.get('stream');
+
+    return new Ember.RSVP.Promise((resolve,reject) => {
+
+      let excerpt = this._excerpts && this._excerpts[stream[streamPosition]];
+
+      if(excerpt) {
+        resolve(excerpt);
+        return;
+      }
+
+      this.backfillExcerpts(streamPosition)
+          .then(()=>{
+            resolve(this._excerpts[stream[streamPosition]]);
+          })
+          .catch(e => reject(e));
     });
   },
 

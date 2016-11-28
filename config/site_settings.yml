@@ -536,6 +536,11 @@ posting:
     default: ''
     refresh: true
     type: list
+  censored_pattern:
+    client: true
+    default: ''
+    refresh: true
+    type: regex
   enable_emoji:
     default: true
     client: true
@@ -579,7 +584,10 @@ email:
   private_email_time_window_seconds: 20
   email_posts_context: 5
   digest_min_excerpt_length: 100
-  digest_topics: 20
+  digest_topics:
+    default: 5
+    min: 1
+  digest_posts: 3
   delete_digest_email_after_days: 365
   digest_suppress_categories:
     type: category_list
@@ -603,6 +611,7 @@ email:
     default: false
     validator: "POP3PollingEnabledSettingValidator"
   pop3_polling_ssl: true
+  pop3_polling_openssl_verify: true
   pop3_polling_period_mins: 5
   pop3_polling_host: ''
   pop3_polling_port: 995
@@ -664,7 +673,8 @@ email:
   attachment_filename_blacklist:
     type: list
     default: "smime.p7s|signature.asc"
-
+  enable_forwarded_emails: false
+  always_show_trimmed_content: false
 
 files:
   max_image_size_kb:
@@ -1286,6 +1296,9 @@ user_preferences:
     type: category_list
     default: ''
   default_categories_muted:
+    type: category_list
+    default: ''
+  default_categories_watching_first_post:
     type: category_list
     default: ''
 

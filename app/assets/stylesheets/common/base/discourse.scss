@@ -166,6 +166,78 @@ body {
   &.badge-notification[href] {color: $secondary;}
 }
 
+.ring-backdrop-spotlight {
+  position: absolute;
+  width: 80px;
+  height: 80px;
+  top: -18px;
+  right: -18px;
+  background-image: radial-gradient(40px at 50% 50% , transparent 95%, $primary 100%);
+  opacity: 0.85;
+}
+
+.ring-backdrop {
+  position: absolute;
+  width: 80px;
+  height: 80px;
+  top: -18px !important;
+  right: -18px !important;
+  box-shadow: 0 0 0 9999px rgba($primary, 0.85);
+  z-index: 1040;
+}
+
+.ring-first-notification {
+  position: absolute;
+  color: $secondary;
+  text-align: left;
+  right: 70px;
+  top: 60px;
+  width: 230px;
+  line-height: 30px;
+}
+
+.ring {
+  $gradient-start: transparent;
+  $gradient-end: #090;
+  background: -webkit-radial-gradient($gradient-start, $gradient-end);
+  background: -o-radial-gradient($gradient-start, $gradient-end);
+  background: -moz-radial-gradient($gradient-start, $gradient-end);
+  background: radial-gradient($gradient-start, $gradient-end);
+  top: -11px !important;
+  right: 23.5px !important;
+  border-radius: 100%;
+  width: 20px;
+  height: 20px;
+  -moz-animation-iteration-count: infinite;
+  -webkit-animation-iteration-count: infinite;
+  -webkit-transform-origin: center;
+  -moz-animation-duration: 3s;
+  -webkit-animation-duration: 3s;
+  -moz-animation-name: ping;
+  -webkit-animation-name: ping;
+}
+
+@-webkit-keyframes ping {
+  from {
+    $scale: 0.25;
+    transform: scale($scale);
+    -ms-transform: scale($scale);
+    -webkit-transform: scale($scale);
+    -o-transform: scale($scale);
+    -moz-transform: scale($scale);
+    opacity: 1;
+  }
+  to {
+    $scale: 2;
+    transform: scale($scale);
+    -ms-transform: scale($scale);
+    -webkit-transform: scale($scale);
+    -o-transform: scale($scale);
+    -moz-transform: scale($scale);
+    opacity: 0;
+  }
+}
+
 .fade {
   opacity: 0;
   transition: opacity 0.15s linear;

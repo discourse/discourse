@@ -1,6 +1,7 @@
 import { ajax } from 'discourse/lib/ajax';
 import RestModel from 'discourse/models/rest';
 import ResultSet from 'discourse/models/result-set';
+import { getRegister } from 'discourse-common/lib/get-owner';
 
 let _identityMap;
 
@@ -40,6 +41,11 @@ flushMap();
 export default Ember.Object.extend({
   _plurals: {'post-reply': 'post-replies',
              'post-reply-history': 'post_reply_histories'},
+
+  init() {
+    this._super();
+    this.register = this.register || getRegister(this);
+  },
 
   pluralize(thing) {
     return this._plurals[thing] || thing + "s";
@@ -196,11 +202,11 @@ export default Ember.Object.extend({
     obj.__state = obj.id ? "created" : "new";
 
     // TODO: Have injections be automatic
-    obj.topicTrackingState = this.container.lookup('topic-tracking-state:main');
-    obj.keyValueStore = this.container.lookup('key-value-store:main');
-    obj.siteSettings = this.container.lookup('site-settings:main');
+    obj.topicTrackingState = this.register.lookup('topic-tracking-state:main');
+    obj.keyValueStore = this.register.lookup('key-value-store:main');
+    obj.siteSettings = this.register.lookup('site-settings:main');
 
-    const klass = this.container.lookupFactory('model:' + type) || RestModel;
+    const klass = this.register.lookupFactory('model:' + type) || RestModel;
     const model = klass.create(obj);
 
     storeMap(type, obj.id, model);
@@ -208,7 +214,7 @@ export default Ember.Object.extend({
   },
 
   adapterFor(type) {
-    return this.container.lookup('adapter:' + type) || this.container.lookup('adapter:rest');
+    return this.register.lookup('adapter:' + type) || this.register.lookup('adapter:rest');
   },
 
   _lookupSubType(subType, type, id, root) {
@@ -287,7 +293,7 @@ export default Ember.Object.extend({
 
     if (existing) {
       delete obj.id;
-      const klass = this.container.lookupFactory('model:' + type) || RestModel;
+      const klass = this.register.lookupFactory('model:' + type) || RestModel;
       existing.setProperties(klass.munge(obj));
       obj.id = id;
       return existing;

@@ -1,17 +1,19 @@
-<div class='container badges'>
-  <h1>{{i18n 'badges.title'}}</h1>
+{{#d-section pageClass="badges"}}
+  <div class='container badges'>
+    <h1>{{i18n 'badges.title'}}</h1>
 
-  <div class='badge-groups'>
-    {{#each badgeGroups as |bg|}}
-      <div class='badge-grouping'>
-        <div class='title'>
-          <h3>{{bg.badgeGrouping.displayName}}</h3>
+    <div class='badge-groups'>
+      {{#each badgeGroups as |bg|}}
+        <div class='badge-grouping'>
+          <div class='title'>
+            <h3>{{bg.badgeGrouping.displayName}}</h3>
+          </div>
+
+          {{#each bg.badges as |b|}}
+            {{badge-card badge=b navigateOnClick="true"}}
+          {{/each}}
         </div>
-
-        {{#each bg.badges as |b|}}
-          {{badge-card badge=b navigateOnClick="true"}}
-        {{/each}}
-      </div>
-    {{/each}}
+      {{/each}}
+    </div>
   </div>
-</div>
+{{/d-section}}
