@@ -291,7 +291,10 @@ class ListController < ApplicationController
       state: params[:state],
       search: params[:search],
       q: params[:q],
-      group_name: params[:group_name]
+      group_name: params[:group_name],
+      tags: params[:tags],
+      match_all_tags: params[:match_all_tags],
+      no_tags: params[:no_tags]
     }
     options[:no_subcategories] = true if params[:no_subcategories] == 'true'
     options[:slow_platform] = true if slow_platform?
