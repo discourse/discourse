@@ -1,16 +1,16 @@
 import { observes } from 'ember-addons/ember-computed-decorators';
 
-const REGEXP_BLOCKS            = /(([^" \t\n\x0B\f\r]+)?(("[^"]+")?))/g;
+const REGEXP_BLOCKS                = /(([^" \t\n\x0B\f\r]+)?(("[^"]+")?))/g;
 
-const REGEXP_USERNAME_PREFIX   = /(user:|@)/ig;
-const REGEXP_CATEGORY_PREFIX   = /(category:|#)/ig;
-const REGEXP_GROUP_PREFIX      = /group:/ig;
-const REGEXP_BADGE_PREFIX      = /badge:/ig;
-const REGEXP_TAGS_PREFIX       = /tags?:/ig;
-const REGEXP_IN_PREFIX         = /in:/ig;
-const REGEXP_STATUS_PREFIX     = /status:/ig;
-const REGEXP_POST_COUNT_PREFIX = /posts_count:/ig;
-const REGEXP_POST_TIME_PREFIX  = /(before|after):/ig;
+const REGEXP_USERNAME_PREFIX       = /(user:|@)/ig;
+const REGEXP_CATEGORY_PREFIX       = /(category:|#)/ig;
+const REGEXP_GROUP_PREFIX          = /group:/ig;
+const REGEXP_BADGE_PREFIX          = /badge:/ig;
+const REGEXP_TAGS_PREFIX           = /tags?:/ig;
+const REGEXP_IN_PREFIX             = /in:/ig;
+const REGEXP_STATUS_PREFIX         = /status:/ig;
+const REGEXP_MIN_POST_COUNT_PREFIX = /min_post_count:/ig;
+const REGEXP_POST_TIME_PREFIX      = /(before|after):/ig;
 
 const REGEXP_IN_MATCH                 = /in:(posted|watching|tracking|bookmarks|first|pinned|unpinned)/ig;
 const REGEXP_SPECIAL_IN_LIKES_MATCH   = /in:likes/ig;
@@ -73,7 +73,7 @@ export default Em.Component.extend({
           }
         },
         status: '',
-        posts_count: '',
+        min_post_count: '',
         time: {
           when: 'before',
           days: ''
@@ -99,7 +99,7 @@ export default Em.Component.extend({
     this.setSearchedTermSpecialInValue('searchedTerms.special.in.wiki', REGEXP_SPECIAL_IN_WIKI_MATCH);
     this.setSearchedTermValue('searchedTerms.status', REGEXP_STATUS_PREFIX);
     this.setSearchedTermValueForPostTime();
-    this.setSearchedTermValue('searchedTerms.posts_count', REGEXP_POST_COUNT_PREFIX);
+    this.setSearchedTermValue('searchedTerms.min_post_count', REGEXP_MIN_POST_COUNT_PREFIX);
   },
 
   findSearchTerms() {
@@ -490,17 +490,17 @@ export default Em.Component.extend({
     }
   },
 
-  @observes('searchedTerms.posts_count')
-  updateSearchTermForPostsCount() {
-    const match = this.filterBlocks(REGEXP_POST_COUNT_PREFIX);
-    const postsCountFilter = this.get('searchedTerms.posts_count');
+  @observes('searchedTerms.min_post_count')
+  updateSearchTermForMinPostCount() {
+    const match = this.filterBlocks(REGEXP_MIN_POST_COUNT_PREFIX);
+    const postsCountFilter = this.get('searchedTerms.min_post_count');
     let searchTerm = this.get('searchTerm') || '';
 
     if (postsCountFilter) {
       if (match.length !== 0) {
-        searchTerm = searchTerm.replace(match[0], `posts_count:${postsCountFilter}`);
+        searchTerm = searchTerm.replace(match[0], `min_post_count:${postsCountFilter}`);
       } else {
-        searchTerm += ` posts_count:${postsCountFilter}`;
+        searchTerm += ` min_post_count:${postsCountFilter}`;
       }
 
       this.set('searchTerm', searchTerm.trim());
