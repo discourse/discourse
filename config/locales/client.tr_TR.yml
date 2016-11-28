@@ -1092,6 +1092,7 @@ tr_TR:
     topics:
       new_messages_marker: "son ziyaret"
       bulk:
+        select_all: "Tümünü Seç"
         unlist_topics: "Konuları Listeleme"
         reset_read: "Okunmuşları Sıfırla"
         delete: "Konuları Sil"
@@ -1608,6 +1609,7 @@ tr_TR:
       email_in_disabled: "E-posta üzerinden yeni konu oluşturma özelliği Site Ayarları'nda devre dışı bırakılmış. E-posta üzerinden yeni konu oluşturma özelliğini etkinleştirmek için,"
       email_in_disabled_click: '"e-postala" ayarını etkinleştir'
       suppress_from_homepage: "Bu kategoriyi ana sayfadan gizle"
+      sort_order: "Öntanımlı Sıralama:"
       allow_badges_label: "Bu kategoride rozet verilmesine izin ver"
       edit_permissions: "İzinleri Düzenle"
       add_permission: "İzin Ekle"
@@ -1636,8 +1638,11 @@ tr_TR:
       sort_options:
         default: "öntanımlı"
         likes: "Beğeniler"
+        views: "Gösterimler"
         posts: "Gönderiler"
+        activity: "Etkinlik"
         category: "Kategori"
+        created: "Oluşturulma"
     flagging:
       title: 'Topluluğumuzun düzenli kalmasına desteğiniz için teşekkürler!'
       action: 'Gönderiyi Bildir'
@@ -1973,6 +1978,8 @@ tr_TR:
       custom_message_placeholder: "Kişiselleştirilmiş iletinizi düzenleyin"
       custom_message_template_forum: "Hey, bu foruma katılmalısın!"
       custom_message_template_topic: "Hey, bu konu senin için eğleceli olabilir!"
+    safe_mode:
+      enabled: "Güvenli mod etkin, çıkmak için bu tarayıcı penceresini kapatın"
   admin_js:
     type_to_filter: "süzgeç girin..."
     admin:
@@ -2397,6 +2404,9 @@ tr_TR:
         delivery_method: "Gönderme Metodu"
         preview_digest_desc: "Durgun kullanıcılara gönderilen özet e-postaların içeriğini önizle."
         refresh: "Yenile"
+        send_digest_label: "Bu sonucu şuna gönder:"
+        send_digest: "Gönder"
+        sending_email: "E-posta gönderiliyor..."
         format: "Biçim"
         html: "html"
         text: "yazı"

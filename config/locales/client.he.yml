@@ -1148,6 +1148,8 @@ he:
     topics:
       new_messages_marker: "ביקור אחרון"
       bulk:
+        select_all: "בחרו הכל"
+        clear_all: "נקו הכל"
         unlist_topics: "הסרת נושאים"
         reset_read: "איפוס נקראו"
         delete: "מחיקת נושאים"
@@ -1470,7 +1472,7 @@ he:
     post:
       reply: "<i class='fa fa-mail-forward'></i> {{replyAvatar}} {{usernameLink}}"
       reply_topic: "<i class='fa fa-mail-forward'></i> {{link}}"
-      quote_reply: "תגובה עם ציטוט"
+      quote_reply: "ציטוט"
       edit: "עורך את {{link}} {{replyAvatar}} {{username}}"
       edit_reason: "סיבה: "
       post_number: "פוסט {{number}}"
@@ -2099,6 +2101,8 @@ he:
       custom_message_placeholder: "הכניסו את הודעתכם האישית"
       custom_message_template_forum: "הי, כדאי לכם להצטרף לפורום הזה!"
       custom_message_template_topic: "הי, חשבתי שנושא זה יעניין אתכם!"
+    safe_mode:
+      enabled: "מצב בטוח מאופשר, כדי לצאת ממנו סיגרו את חלון הדפדפן הזה"
   admin_js:
     type_to_filter: "הקלידו לסינון..."
     admin:
@@ -2530,6 +2534,9 @@ he:
         delivery_method: "שיטת העברה"
         preview_digest_desc: "תצוגה מקדימה של מייל סיכום שנשלח למשתמשים לא פעילים. "
         refresh: "רענן"
+        send_digest_label: "שילחו תוצאה זו אל:"
+        send_digest: "שליחה"
+        sending_email: "שולחים מייל..."
         format: "פורמט"
         html: "html"
         text: "טקסט"

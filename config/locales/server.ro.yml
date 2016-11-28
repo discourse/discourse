@@ -1132,6 +1132,8 @@ ro:
     reset_bounce_score_after_days: "Resetează automat rata de ricoșeu după X zile."
     attachment_content_type_blacklist: "Lista cuvintelor cheie folosite pentru filtrarea atașamentelor în funcție de tipul de conținut."
     attachment_filename_blacklist: "Lista cuvintelor cheie folosite la filtrarea atașamentelor în funcție de numele fișierului."
+    enable_forwarded_emails: "[BETA] Permite utilizatorilor să creeze un subiect prin forward-area unui email."
+    always_show_trimmed_content: "Arată întotdeauna partea trunchiată a emailurilor sosite. ATENȚIE: s-ar putea dezvălui adresele de email."
     manual_polling_enabled: "Trimite emailuri folosind API-ul pentru răspunsuri prin email."
     pop3_polling_enabled: "Folosește POP3 pentru răspunsuri prin email."
     pop3_polling_ssl: "Folosește SSL pentru conexiunile cu serverul POP3. (Recomandat)"
@@ -1159,6 +1161,7 @@ ro:
     default_avatars: "URL-urile avatarelor care vor fi folosite implicit pentru noii utilizatori până ce aceștia le vor schimba."
     automatically_download_gravatars: "Descarcă Gravatare pentru utilizatori după crearea contului sau schimbarea email-ului."
     digest_topics: "Numărul maxim de subiecte care să fie afișat în emailul-rezumat."
+    digest_posts: "Numărul maxim de postări notorii care să se afișeze în rezumatul pe email."
     digest_min_excerpt_length: "Lungimea minimă (în caractere) a extraselor de postări, ce vor fi incluse în emailul-rezumat."
     delete_digest_email_after_days: "Nu trimite emailuri-rezumat utilizatorilor care nu au fost văzuți pe site de mai mult de (n) zile."
     digest_suppress_categories: "Nu include aceste categorii în emailurile-rezumat."
@@ -2199,16 +2202,21 @@ ro:
         %{message}
     digest:
       why: "Un rezumat scurt al %{site_link} de la ultima ta vizită din %{last_seen_at}."
+      since_last_visit: "De la ultima ta vizită"
+      new_topics: "Subiecte noi"
+      unread_messages: "Mesaje necitite"
+      unread_notifications: "Notificări necitite"
+      popular_topics: "Subiecte notorii"
+      follow_topic: "Urmărește acest subiect"
+      join_the_discussion: "Citește mai mult"
+      popular_posts: "Postări notorii"
+      from_topic_label: "De la"
+      more_new: "Noutăți în subiectele și categoriile pe care le urmărești"
       subject_template: "[%{site_name}] Rezumat"
-      new_activity: "Activități noi în subiectele și postările tale:"
-      top_topics: "Postări populare"
-      other_new_topics: "Subiecte populare"
       unsubscribe: "Acest rezumat este transmis de pe %{site_link} când a trecut ceva vreme de când nu te-am mai văzut. Pentru a te dezabona, %{unsubscribe_link}."
       click_here: "click aici"
       from: "%{site_name} rezumat"
-      read_more: "Citește mai mult"
-      more_topics: "Existau %{new_topics_since_seen} alte subiecte noi "
-      more_topics_category: "Mai multe subiecte noi:"
+      preheader: "Un scurt rezumat de la ultima ta vizită din %{last_seen_at}"
     mailing_list:
       why: "Toată activitatea de pe %{site_link} pentru data de %{date}"
       subject_template: "[%{site_name}] Rezumatul pentru data de %{date}"
@@ -2927,6 +2935,13 @@ ro:
     resend_email:
       title: "Retrimite email de activare"
       message: "<p>Am trimis un email de activare la <b>%{email}</b>"
+  safe_mode:
+    title: "Activează modul sigur"
+    description: "Modul sigur îți permite să îți testezi site-ul fără să încarci plugin-uri și personalizări."
+    no_customizations: "Dezactivează toate personalizările site-ului"
+    only_official: "Dezactivează plugin-urile neoficiale"
+    no_plugins: "Dezactivează toate plugin-urile"
+    enter: "Activează modul sigur"
   wizard:
     title: "Configurare Discourse"
     step:

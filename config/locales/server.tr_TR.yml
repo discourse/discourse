@@ -1805,16 +1805,20 @@ tr_TR:
         %{message}
     digest:
       why: "%{last_seen_at} tarihindeki son girişinizden beri %{site_link} sitesine olanların kısa bir özeti"
+      since_last_visit: "Son ziyaretinizden bu yana"
+      new_topics: "Yeni Konular"
+      unread_messages: "Okunmamış İletiler"
+      unread_notifications: "Okunmamış Bildirimler"
+      popular_topics: "Gözde Konular"
+      follow_topic: "Bu konuyu takip et"
+      join_the_discussion: "Devamını Oku"
+      popular_posts: "Gözde Gönderiler"
+      more_new: "Takip ettiğiniz konu ve kategorideki yeniler"
       subject_template: "[%{site_name}] Özeti"
-      new_activity: "Konu ve gönderilerinizdeki yeni etkinlikler:"
-      top_topics: "Gözde gönderiler"
-      other_new_topics: "Gözde konular"
       unsubscribe: "Bir süredir görünmediğiniz için bu e-posta size %{site_link} topluluğundan gönderildi. Bu e-postaları almak istemiyorsanız %{unsubscribe_link}."
       click_here: "buraya tıklayın"
       from: "%{site_name} özeti"
-      read_more: "Devamını Oku"
-      more_topics: "%{new_topics_since_seen} tane daha yeni konu vardı."
-      more_topics_category: "Daha fazla yeni konu:"
+      preheader: "%{last_seen_at} tarihindeki ziyaretinizden bu yana olanların kısa bir özeti"
     mailing_list:
       subject_template: "[%{site_name}] %{date} Özeti "
       unsubscribe: "Bu günlük e-posta size %{site_link} topluluğundan duyuru listesi modunu etkin yaptığınız için gönderildi. Bu e-postaları almak istemiyorsanız %{unsubscribe_link}."
@@ -2202,12 +2206,18 @@ tr_TR:
     congratulations: "Tebrikler, Discourse yüklediniz!"
     register:
       button: "Kayıt Ol"
+      title: "Yönetici Hesabı Oluştur"
       help: "başlamak için yeni bir hesap oluşturun"
     confirm_email:
       title: "E-posta adresinizi doğrulayın"
     resend_email:
       title: "Etkinleştirme E-postasını Tekrar Gönder"
       message: "<p> <b>%{email}</b> adresine etkinleştirme e-postasını tekrar gönderdik"
+  safe_mode:
+    title: "Güvenli moda gir"
+    no_customizations: "Tüm site özelleştirmelerini devre dışı bırak"
+    no_plugins: "Tüm eklentileri devre dışı bırak"
+    enter: "Güvenli Moda Gir"
   wizard:
     title: "Discourse Kurulumu"
     step:

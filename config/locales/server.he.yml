@@ -1089,6 +1089,8 @@ he:
     reset_bounce_score_after_days: "איפוס אוטומטי של ניקוד-החזר לאחר X ימים."
     attachment_content_type_blacklist: "רשימת מילות מפתח שמשמשות להכנסת צירופים לרשימה שחורה על בסיס סוג התוכן."
     attachment_filename_blacklist: "רשימת מילות מפתח לרשימה שחורה של שמות קבצים מצורפים."
+    enable_forwarded_emails: "[בטא] אפשרו למשתמשים ליצור נושא על ידי העברת מייל."
+    always_show_trimmed_content: "תמיד הציגו חלק מקוצר של מיילים נכנסים. אזהרה: עלול לחשוף כתובות מייל."
     manual_polling_enabled: "דחיפת מיילים באמצעות ה API לתגובות מייל."
     pop3_polling_enabled: "משיכה דרך POP3 לתגובות דוא\"ל."
     pop3_polling_ssl: "שימוש ב-SSL בעת חיבור לשרת POP3. (מומלץ)"
@@ -1116,6 +1118,7 @@ he:
     default_avatars: "כתובות URL לאווטרים אשר ישמשו כברירת מחדל למשתמשים חדשים עד אשר ישנו אותם."
     automatically_download_gravatars: "הורדת גראווטרים למשתמשים בעת יצירת החשבון או שינוי כתובת הדוא\"ל."
     digest_topics: "המספר המקסימלי של נושאים להציג במייל הסיכום."
+    digest_posts: "המספר המקסימלי של פוסטים פופולאריים להצגה במייל סיכום."
     digest_min_excerpt_length: "אורך קטע מינימלי מהפוסט למיילי הסיכום, בתווים."
     delete_digest_email_after_days: "השתקת מיילי סיכום למשתמשים שלא ביקרו באתר למעלה מ (n) ימים."
     digest_suppress_categories: "וותרו על קטגוריות אלו במיילים מסכמים."
@@ -2136,16 +2139,21 @@ he:
         %{message}
     digest:
       why: "סיכום קצר של %{site_link} מאז ביקורך האחרון ב-%{last_seen_at}"
+      since_last_visit: "מאז ביקורכם האחרון"
+      new_topics: "נושאים חדשים"
+      unread_messages: "הודעות שלא נקראו"
+      unread_notifications: "התראות שלא נקראו"
+      popular_topics: "נושאים פופולאריים"
+      follow_topic: "עיקבו אחרי נושא זה"
+      join_the_discussion: "קראו עוד"
+      popular_posts: "פוסטים פופולאריים"
+      from_topic_label: "מאת"
+      more_new: "חדש בנושאים וקרטגוריות שאתם עוקבים אחריהם"
       subject_template: "[%{site_name}] סיכום"
-      new_activity: "פעילות חדשה בנושאים ובפוסטים שלכם:"
-      top_topics: "פוסטים פופולריים"
-      other_new_topics: "נושאים פופולאריים"
       unsubscribe: "סיכום זה נשלח מ %{site_link} כאשר אנחנו לא רואים אתכם לאורך זמן. כדי לבטל את המנוי %{unsubscribe_link}."
       click_here: "לחצו כאן"
       from: "סיכום %{site_name}"
-      read_more: "קיראו עוד"
-      more_topics: "ישנם %{new_topics_since_seen} נושאים חדשים נוספים."
-      more_topics_category: "עוד נושאים חדשים:"
+      preheader: "סיכום קצר מאז ביקורכם האחרון ב-%{last_seen_at}"
     mailing_list:
       why: "כל הפעילות ב-%{site_link} ל-%{date}"
       subject_template: "[%{site_name}] סיכום ל %{date}"
@@ -2872,6 +2880,13 @@ he:
     resend_email:
       title: "שליחת מייל אקטיבציה מחדש"
       message: "<p>שלחנו מחדש את מייל האקטיבציה ל<b>%{email}</b>"
+  safe_mode:
+    title: "כנסו למצב בטוח"
+    description: "מצב בטוח מאפשר לכם לבחון את האתר שלכם מבלי לטעון תוספים או התאמות אתר."
+    no_customizations: "נטרלו את כל התאמות האתר"
+    only_official: "נטרלו תוספים לא רשמיים"
+    no_plugins: "נטרלו את כל התוספים"
+    enter: "כנסו למצב בטוח"
   wizard:
     title: "הקמת Discourse"
     step:

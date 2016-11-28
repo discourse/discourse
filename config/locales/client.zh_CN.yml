@@ -118,6 +118,7 @@ zh_CN:
         enabled: '于%{when}解除隐藏'
         disabled: '于%{when}隐藏'
     topic_admin_menu: "管理主题"
+    wizard_required: "是时候配置你的论坛啦！<a href='%{url}' data-auto-route='true'>点击开始设置向导</a>！"
     emails_are_disabled: "出站邮件已经被管理员全局禁用。将不发送任何邮件提醒。"
     bootstrap_mode_enabled: "为方便站点准备发布，其正处于初始化模式中。所有新用户将被授予信任等级1，并为他们设置接受每日邮件摘要。初始化模式会在用户数超过 %{min_users} 个时关闭。"
     bootstrap_mode_disabled: "初始化模式将会在24小时后关闭。"
@@ -399,6 +400,7 @@ zh_CN:
       mute: "防打扰"
       edit: "修改设置"
       download_archive: "下载我的帖子"
+      download_archive_confirm: "你确定要下载你的帖子吗？"
       new_private_message: "发新私信"
       private_message: "私信"
       private_messages: "私信"
@@ -445,6 +447,7 @@ zh_CN:
           静音主题和分类不包含在这些邮件中。
         daily: "发送每日更新"
         individual: "为每个新帖发送一封邮件通知"
+        individual_no_echo: "为每个除了我发表的新帖发送一封邮件通知"
         many_per_day: "为每个新帖给我发送邮件 (大约每天 {{dailyEmailEstimate}} 封)"
         few_per_day: "为每个新帖给我发送邮件 (大约每天 2 封 )"
       tag_settings: "标签"
@@ -476,6 +479,10 @@ zh_CN:
       muted_topics_link: "显示已静音的主题"
       watched_topics_link: "显示已监看的主题"
       automatically_unpin_topics: "当我完整阅读了主题时自动解除置顶。"
+      apps: "应用"
+      revoke_access: "撤销许可"
+      undo_revoke_access: "解除撤销许可"
+      api_approved: "已批准："
       staff_counters:
         flags_given: "采纳标记"
         flagged_posts: "被标记"
@@ -563,6 +570,7 @@ zh_CN:
         title: "界面语言"
         instructions: "用户界面语言。将在你刷新页面后改变。"
         default: "默认"
+        any: "任意"
       password_confirmation:
         title: "请再次输入密码"
       last_posted: "最后发帖"
@@ -620,6 +628,7 @@ zh_CN:
         after_4_minutes: "4分钟后"
         after_5_minutes: "5分钟后"
         after_10_minutes: "10分钟后"
+      notification_level_when_replying: "当我在主题中回复后，将主题设置至"
       invited:
         search: "输入以搜索邀请..."
         title: "邀请"
@@ -649,6 +658,8 @@ zh_CN:
         account_age_days: "账号建立天数"
         create: "发送邀请"
         generate_link: "复制邀请链接"
+        link_generated: "邀请链接生成成功！"
+        valid_for: "邀请链接只对这个邮件地址有效：%{email}"
         bulk_invite:
           none: "你从未邀请过他人。你可以发送单个邀请，或者<a href='https://meta.discourse.org/t/send-bulk-invites/16468'>上传批量邀请文件</a>一次邀请多人。"
           text: "通过文件批量邀请"
@@ -745,6 +756,8 @@ zh_CN:
     too_few_topics_notice: "让我们<a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>开始讨论！</a>目前有 <strong>%{currentTopics} / %{requiredTopics}</strong> 个主题。新访客需要能够阅读和回复一些讨论。"
     too_few_posts_notice: "让我们<a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>开始讨论！</a>目前有 <strong>%{currentPosts} / %{requiredPosts}</strong> 个帖子。新访客需要能够阅读和回复一些讨论。"
     logs_error_rate_notice:
+      reached: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> 达到了站点设置中的 %{siteSettingRate}。"
+      exceeded: "<b>[%{relativeAge}]</b> 目前的错误率 <a href='%{url}' target='_blank'>%{rate}</a> 已超出了站点设置中的 %{siteSettingRate}。"
       rate:
         other: "%{count} 错误/%{duration}"
     learn_more: "了解更多..."
@@ -795,6 +808,7 @@ zh_CN:
     trust_level: '用户级别'
     search_hint: '用户名、电子邮件或 IP 地址'
     create_account:
+      disclaimer: "注册即表示你同意<a href='{{privacy_link}}'>隐私策略</a>和<a href='{{tos_link}}'>服务条款</a>。"
       title: "创建用户"
       failed: "出问题了，有可能这个邮箱已经被注册了。试试忘记密码链接？"
     forgot_password:
@@ -859,6 +873,10 @@ zh_CN:
       twitter: "Twitter"
       emoji_one: "Emoji One"
       win10: "Win10"
+    category_page_style:
+      categories_only: "仅分类"
+      categories_with_featured_topics: "有推荐主题的分类"
+      categories_and_latest_topics: "分类和最新主题"
     shortcut_modifier_key:
       shift: 'Shift'
       ctrl: 'Ctrl'
@@ -868,14 +886,21 @@ zh_CN:
       more_emoji: "更多…"
       options: "选项"
       whisper: "密语"
+      unlist: "隐藏"
       add_warning: "正式警告"
       toggle_whisper: "折叠或展开密语"
+      toggle_unlisted: "解除隐藏"
       posting_not_on_topic: "你想回复哪一个主题？"
       saving_draft_tip: "保存中..."
       saved_draft_tip: "已保存"
       saved_local_draft_tip: "已本地保存"
       similar_topics: "你的主题有点类似于..."
       drafts_offline: "离线草稿"
+      group_mentioned:
+        other: "提及 {{group}} 时，你将通知 <a href='{{group_link}}'>{{count}} 人</a> － 确定吗？"
+      cannot_see_mention:
+        category: "你提到了{{userrname}}，然而他们不能访问该分类，所以他们不会被通知。你需要把他们加入到能访问该分类的群组中。"
+        private: "你提到了{{userrname}}，然而他们不能访问该私信，所以他们不会被通知。你需要邀请他们至私信中。"
       duplicate_link: "似乎你的链接 <b>{{domain}}</b> 在<a href='{{post_url}}'>{{ago}}</a>已经由<b>@{{username}}</b>回复了 － 确定再次提交吗？"
       error:
         title_missing: "标题为空"
@@ -936,6 +961,9 @@ zh_CN:
       modal_ok: "确认"
       modal_cancel: "取消"
       cant_send_pm: "抱歉，你不能向 %{username} 发送消息。"
+      yourself_confirm:
+        title: "你忘记添加收信人了吗？"
+        body: "目前该私信只发给了你自己！"
       admin_options_title: "本主题可选设置"
       auto_close:
         label: "自动关闭主题时间："
@@ -1030,6 +1058,44 @@ zh_CN:
         category: "搜索 #{{category}} 分类"
         topic: "搜索本主题"
         private_messages: "搜索消息"
+      advanced:
+        title: 高级搜索
+        posted_by:
+          label: 发帖人
+        in_category:
+          label: 在该分类中
+        in_group:
+          label: 在该群组中
+        with_badge:
+          label: 有该徽章
+        with_tags:
+          label: 有该标签
+        filters:
+          label: 只返回主题/帖子符合...
+          likes: 我赞了
+          posted: 我曾发表过恢复
+          watching: 我正在监看
+          tracking: 我正在追踪
+          private: 在我的消息中
+          bookmarks: 我已经收藏了
+          first: 是第一帖
+          pinned: 是置顶的
+          unpinned: 不是置顶的
+          wiki: 是协同编辑的
+        statuses:
+          label: 当主题
+          open: 是开放的
+          closed: 是关闭的
+          archived: 已经存档的
+          noreplies: 没有回复
+          single_user: 只有一个用户参与
+        post:
+          count:
+            label: 最小帖子数
+          time:
+            label: 发表于
+            before: 之前
+            after: 之后
     hamburger_menu: "转到另一个主题列表或分类"
     new_item: "新"
     go_back: '返回'
@@ -1038,6 +1104,8 @@ zh_CN:
     topics:
       new_messages_marker: "上次访问"
       bulk:
+        select_all: "选择全部"
+        clear_all: "清除全部"
         unlist_topics: "未在列表的主题"
         reset_read: "设为未读"
         delete: "删除主题"
@@ -1143,6 +1211,8 @@ zh_CN:
       auto_close_title: '自动关闭设置'
       auto_close_save: "保存"
       auto_close_remove: "不要自动关闭该主题"
+      auto_close_immediate:
+        other: "主题中的最后一帖是 %{hours} 小时前发出的，所以主题将会立即关闭。"
       timeline:
         back: "返回"
         back_description: "回到最后一个未读帖子"
@@ -1232,6 +1302,9 @@ zh_CN:
       share:
         title: '分享'
         help: '分享指向这个主题的链接'
+      print:
+        title: '打印'
+        help: '打开该主题对打印友好的版本'
       flag_topic:
         title: '标记'
         help: '背地里标记该帖以示警示，或发送关于它的私下通知'
@@ -1337,7 +1410,7 @@ zh_CN:
     post:
       reply: "<i class='fa fa-mail-forward'></i> {{replyAvatar}} {{usernameLink}}"
       reply_topic: "<i class='fa fa-mail-forward'></i> {{link}}"
-      quote_reply: "引述回复"
+      quote_reply: "引用"
       edit: "编辑 {{replyAvatar}} {{username}}发表的{{link}}"
       edit_reason: "理由："
       post_number: "帖子 {{number}}"
@@ -1549,6 +1622,7 @@ zh_CN:
       email_in_disabled: "站点设置中已经禁用通过邮件发表新主题。欲启用通过邮件发表新主题，"
       email_in_disabled_click: '启用“邮件发表”设置。'
       suppress_from_homepage: "不在主页中显示这个分类。"
+      sort_order: "默认排序："
       allow_badges_label: "允许在这个分类中授予徽章"
       edit_permissions: "编辑权限"
       add_permission: "添加权限"
@@ -1574,6 +1648,18 @@ zh_CN:
         muted:
           title: "静音"
           description: "在这些分类里面，你将不会收到新主题任何通知，它们也不会出现在“最新”主题列表。 "
+      sort_options:
+        default: "默认"
+        likes: "赞"
+        op_likes: "原始帖子赞"
+        views: "浏览"
+        posts: "帖子"
+        activity: "活动"
+        posters: "发表人"
+        category: "分类"
+        created: "创建"
+      sort_ascending: '升序'
+      sort_descending: '降序'
     flagging:
       title: '感谢你帮助我们建设文明社群！'
       action: '标记帖子'
@@ -1581,6 +1667,7 @@ zh_CN:
       notify_action: '消息'
       official_warning: '正式警告'
       delete_spammer: "删除垃圾发布者"
+      delete_confirm_MF: "你将删除该用户的{POSTS, plural, one {<b>1</b>个帖子} other {<b>#</b>个帖子}} and {TOPICS, plural, one {<b>1</b>个主题} other {<b>#</b>个主题}}、该账户，并阻止其IP地址 <b>%{ip_address}</b> 再次注册，并将其邮件地址 <b>%{email}</b> 加入黑名单。你确定这用户是广告散布者吗？"
       yes_delete_spammer: "确定"
       ip_address_missing: "（N/A）"
       hidden_email_address: "（隐藏）"
@@ -1794,6 +1881,7 @@ zh_CN:
         mark_regular: '<b>m</b>, <b>r</b> 常规 (默认) 主题'
         mark_tracking: '<b>m</b>, <b>t</b> 追踪主题'
         mark_watching: '<b>m</b>, <b>w</b> 看主题'
+        print: '<b>ctrl</b>+<b>p</b> 打印主题'
     badges:
       earned_n_times:
         other: "授予徽章 %{count} 次"
@@ -1907,6 +1995,8 @@ zh_CN:
       custom_message_placeholder: "输入留言"
       custom_message_template_forum: "你好，你应该来我们这个论坛！"
       custom_message_template_topic: "你好，我觉得你可能会喜欢这个主题！"
+    safe_mode:
+      enabled: "安全模式已经开启，关闭该浏览器窗口以退出安全模式"
   admin_js:
     type_to_filter: "输入过滤条件..."
     admin:
@@ -2052,6 +2142,10 @@ zh_CN:
         add_owners: 添加所有者
         incoming_email: "自定义进站电子邮件地址"
         incoming_email_placeholder: "输入邮箱地址"
+        flair_url_placeholder: "（可选）图片 URL 或 Font Awesome class"
+        flair_bg_color_placeholder: "（可选）十六进制色彩值"
+        flair_color_placeholder: "（可选）十六进制色彩值"
+        flair_preview: "预览"
       api:
         generate_master: "生成主 API 密钥"
         none: "当前没有可用的 API 密钥。"
@@ -2323,6 +2417,9 @@ zh_CN:
         delivery_method: "发送方式"
         preview_digest_desc: "预览发送给不活跃用户的摘要邮件内容。"
         refresh: "刷新"
+        send_digest_label: "发送结果至："
+        send_digest: "发送"
+        sending_email: "发送邮件..."
         format: "格式"
         html: "html"
         text: "text"
@@ -2512,6 +2609,7 @@ zh_CN:
         suspend_reason: "封禁的理由"
         suspended_by: "封禁操作者："
         delete_all_posts: "删除所有帖子"
+        delete_all_posts_confirm_MF: "你将要删除 {POSTS, plural, one {1 个帖子} other {# 个帖子}}和 {TOPICS, plural, one {1 个主题} other {# 个主题}}。确定吗？"
         suspend: "禁止"
         unsuspend: "解禁"
         suspended: "已禁止？"
@@ -2793,6 +2891,7 @@ zh_CN:
         sample: "使用下列 HTML 代码至你的站点创建和嵌入 Discourse 主题。把<b>REPLACE_ME</b> 替换成你将嵌入至的网址。"
         title: "嵌入"
         host: "允许的主机"
+        path_whitelist: "路径白名单"
         edit: "编辑"
         category: "发布到分类"
         add_host: "增加主机"
@@ -2804,6 +2903,7 @@ zh_CN:
         embed_by_username: "主题创建者的用户名"
         embed_post_limit: "嵌入的最大帖子数量。"
         embed_username_key_from_feed: "从流中拉取 Discourse 用户名的 Key "
+        embed_title_scrubber: "从帖子中提取标题的正则表达式"
         embed_truncate: "截断嵌入的帖子"
         embed_whitelist_selector: "使用 CSS 选择器选择允许的嵌入元素"
         embed_blacklist_selector: "使用 CSS 选择器移除嵌入元素"
@@ -2826,3 +2926,21 @@ zh_CN:
           label: "新："
           add: "添加"
           filter: "搜索（URL 或外部 URL）"
+  wizard_js:
+    wizard:
+      done: "完成"
+      back: "上一步"
+      next: "下一步"
+      step: "%{current} / %{total}"
+      upload: "上传"
+      uploading: "上传中..."
+      quit: "以后再说"
+      staff_count:
+        other: "你的社群中有 %{count} 位工作人员。"
+      invites:
+        add_user: "添加"
+        none_added: "你还没有邀请任何工作人员。你确定要继续吗？"
+        roles:
+          admin: "管理员"
+          moderator: "版主"
+          regular: "普通用户"
