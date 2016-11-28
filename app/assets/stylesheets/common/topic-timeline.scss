@@ -69,6 +69,10 @@
         overflow: hidden;
         word-wrap: break-word;
         text-overflow: ellipsis;
+        display: block;
+        display: -webkit-box;
+        -webkit-line-clamp: 8;
+        -webkit-box-orient: vertical;
       }
       .username {
         color: dark-light-choose(scale-color($primary, $lightness: 30%), scale-color($secondary, $lightness: 70%));
