@@ -6,7 +6,8 @@ export const queryParams = {
   state: { replace: true, refreshModel: true },
   search: { replace: true, refreshModel: true },
   max_posts: { replace: true, refreshModel: true },
-  q: { replace: true, refreshModel: true }
+  q: { replace: true, refreshModel: true },
+  tags: { replace: true, refreshModel: true }
 };
 
 // Basic controller options
