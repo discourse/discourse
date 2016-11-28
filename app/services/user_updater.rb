@@ -70,14 +70,13 @@ class UserUpdater
       TagUser.batch_set(user, level, attributes[attribute])
     end
 
-
     save_options = false
 
     OPTION_ATTR.each do |attribute|
       if attributes.key?(attribute)
         save_options = true
 
-        if [true,false].include?(user.user_option.send(attribute))
+        if [true, false].include?(user.user_option.send(attribute))
           val = attributes[attribute].to_s == 'true'
           user.user_option.send("#{attribute}=", val)
         else
@@ -85,6 +84,9 @@ class UserUpdater
         end
       end
     end
+
+    # automatically disable digests when mailing_list_mode is enabled
+    user.user_option.email_digests = false if user.user_option.mailing_list_mode
 
     fields = attributes[:custom_fields]
     if fields.present?
