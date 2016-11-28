@@ -93,6 +93,10 @@ module UserNotificationsHelper
     PrettyText.format_for_email(I18n.t(i18n_key)).html_safe
   end
 
+  def show_image_with_url(url)
+    !(url.nil? || url.downcase.end_with?('svg'))
+  end
+
   def email_image_url(basename)
     UrlHelper.absolute("#{Discourse.base_uri}/images/emails/#{basename}")
   end
