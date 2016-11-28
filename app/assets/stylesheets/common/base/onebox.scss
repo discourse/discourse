@@ -360,3 +360,10 @@ aside.onebox.stackexchange .onebox-body {
 .mobile-view article.onebox-body {
   border-top: none;
 }
+
+.onebox.xkcd .onebox-body {
+  img {
+    max-width: 100% !important;
+    float: none !important;
+  }
+}
