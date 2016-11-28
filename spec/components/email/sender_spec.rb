@@ -139,6 +139,75 @@ describe Email::Sender do
       Then { expect(message.header['X-Discourse-Reply-Key']).not_to be_present }
     end
 
+    context "email threading" do
+      let(:topic) { Fabricate(:topic) }
+
+      let(:post_1) { Fabricate(:post, topic: topic, post_number: 1) }
+      let(:post_2) { Fabricate(:post, topic: topic, post_number: 2) }
+      let(:post_3) { Fabricate(:post, topic: topic, post_number: 3) }
+      let(:post_4) { Fabricate(:post, topic: topic, post_number: 4) }
+
+      let!(:incoming_email) { IncomingEmail.create(topic: topic, post: post_4, message_id: "foobar") }
+
+      let!(:post_reply_1_3) { PostReply.create(post: post_1, reply: post_3) }
+      let!(:post_reply_2_3) { PostReply.create(post: post_2, reply: post_3) }
+
+      before do
+        message.header['X-Discourse-Topic-Id'] = topic.id
+      end
+
+      it "doesn't set the 'In-Reply-To' and 'References' headers on the first post" do
+        message.header['X-Discourse-Post-Id'] = post_1.id
+
+        email_sender.send
+
+        expect(message.header['Message-Id'].to_s).to eq("<topic/#{topic.id}/#{post_1.id}@test.localhost>")
+        expect(message.header['In-Reply-To'].to_s).to be_blank
+        expect(message.header['References'].to_s).to be_blank
+      end
+
+      it "sets the 'In-Reply-To' header to the topic by default" do
+        message.header['X-Discourse-Post-Id'] = post_2.id
+
+        email_sender.send
+
+        expect(message.header['Message-Id'].to_s).to eq("<topic/#{topic.id}/#{post_2.id}@test.localhost>")
+        expect(message.header['In-Reply-To'].to_s).to eq("<topic/#{topic.id}@test.localhost>")
+      end
+
+      it "sets the 'In-Reply-To' header to the newest replied post" do
+        message.header['X-Discourse-Post-Id'] = post_3.id
+
+        email_sender.send
+
+        expect(message.header['Message-Id'].to_s).to eq("<topic/#{topic.id}/#{post_3.id}@test.localhost>")
+        expect(message.header['In-Reply-To'].to_s).to eq("<topic/#{topic.id}/#{post_2.id}@test.localhost>")
+      end
+
+      it "sets the 'References' header to the topic and all replied posts" do
+        message.header['X-Discourse-Post-Id'] = post_3.id
+
+        email_sender.send
+
+        references = [
+          "<topic/#{topic.id}@test.localhost>",
+          "<topic/#{topic.id}/#{post_2.id}@test.localhost>",
+          "<topic/#{topic.id}/#{post_1.id}@test.localhost>",
+        ]
+
+        expect(message.header['References'].to_s).to eq(references.join(" "))
+      end
+
+      it "uses the incoming_email message_id when available" do
+        message.header['X-Discourse-Post-Id'] = post_4.id
+
+        email_sender.send
+
+        expect(message.header['Message-Id'].to_s).to eq("<#{incoming_email.message_id}>")
+      end
+
+    end
+
     context "merges custom mandrill header" do
       before do
         ActionMailer::Base.smtp_settings[:address] = "smtp.mandrillapp.com"
@@ -220,7 +289,6 @@ describe Email::Sender do
     it 'should have the current user_id' do
       expect(@email_log.user_id).to eq(user.id)
     end
-
 
   end
 
