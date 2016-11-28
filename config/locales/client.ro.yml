@@ -1192,6 +1192,8 @@ ro:
     topics:
       new_messages_marker: "ultima vizită"
       bulk:
+        select_all: "Selectează tot"
+        clear_all: "Deselectează tot"
         unlist_topics: "Elimină subiecte din listă"
         reset_read: "Resetează citite"
         delete: "Șterge subiectele"
@@ -1528,7 +1530,7 @@ ro:
     post:
       reply: "<i class='fa fa-mail-forward'></i> {{replyAvatar}} {{usernameLink}}"
       reply_topic: "<i class='fa fa-mail-forward'></i> {{link}}"
-      quote_reply: "citează răspuns"
+      quote_reply: "Citează"
       edit: "Editează {{link}} {{replyAvatar}} {{username}}"
       edit_reason: "Motivul edit[rii: "
       post_number: "postarea {{number}}"
@@ -2201,6 +2203,8 @@ ro:
       custom_message_placeholder: "Introdu mesajul tău personalizat"
       custom_message_template_forum: "Salutare! Ar trebui să te alături acestui forum!"
       custom_message_template_topic: "Salutare! Cred că o să îți placă acest subiect!"
+    safe_mode:
+      enabled: "Modul sigur este activat, pentru a ieși din modul sigur închide această fereastră de browser"
   admin_js:
     type_to_filter: "tastează pentru a filtra..."
     admin:
@@ -2639,6 +2643,9 @@ ro:
         delivery_method: "Metoda de livrare"
         preview_digest_desc: "Previzualizează conținutul emailurilor-rezumat trimise către utilizatori inactivi."
         refresh: "Reîmprospătează"
+        send_digest_label: "Trimite acest rezultat către:"
+        send_digest: "Trimite"
+        sending_email: "Trimitere email..."
         format: "Format"
         html: "html"
         text: "text"

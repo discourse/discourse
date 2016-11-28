@@ -1148,6 +1148,8 @@ fr:
     topics:
       new_messages_marker: "dernière visite"
       bulk:
+        select_all: "Tout sélectionner"
+        clear_all: "Tout désélectionner"
         unlist_topics: "Ne plus lister les sujets"
         reset_read: "Réinitialiser la lecture"
         delete: "Supprimer les sujets"
@@ -1468,7 +1470,7 @@ fr:
     post:
       reply: "<i class='fa fa-mail-forward'></i> {{replyAvatar}} {{usernameLink}}"
       reply_topic: "<i class='fa fa-mail-forward'></i> {{link}}"
-      quote_reply: "citer"
+      quote_reply: "Citer"
       edit: "Modifier {{link}} par {{replyAvatar}} {{username}}"
       edit_reason: "Raison :"
       post_number: "message {{number}}"
@@ -2097,6 +2099,8 @@ fr:
       custom_message_placeholder: "Entrez votre message personnalisé"
       custom_message_template_forum: "Hey, tu devrais rejoindre ce forum !"
       custom_message_template_topic: "Hey, je pensais que tu pourrais aimer ce sujet !"
+    safe_mode:
+      enabled: "Le mode sans échec et activé ; fermez cette fenêtre de navigateur pour le quitter"
   admin_js:
     type_to_filter: "commencez à taper pour filtrer…"
     admin:
@@ -2528,6 +2532,9 @@ fr:
         delivery_method: "Méthode d'envoi"
         preview_digest_desc: "Prévisualiser le contenu des courriels hebdomadaires sommaires envoyés aux utilisateurs inactifs."
         refresh: "Rafraîchir"
+        send_digest_label: "Envoyer ce résultat à :"
+        send_digest: "Envoyer"
+        sending_email: "Courriel en cours d'envoi…"
         format: "Format"
         html: "html"
         text: "texte"

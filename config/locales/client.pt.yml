@@ -102,13 +102,13 @@ pt:
       previous_month: 'Mês Anterior'
       next_month: 'Mês Seguinte'
     share:
-      topic: 'partilhar uma hiperligação para este tópico'
+      topic: 'partilhar uma ligação para este tópico'
       post: 'publicação #%{postNumber}'
       close: 'fechar'
-      twitter: 'partilhar esta hiperligação no Twitter'
-      facebook: 'partilhar esta hiperligação no Facebook'
-      google+: 'partilhar esta hiperligação no Google+'
-      email: 'enviar esta hiperligação por email'
+      twitter: 'partilhar esta ligação no Twitter'
+      facebook: 'partilhar esta ligação no Facebook'
+      google+: 'partilhar esta ligação no Google+'
+      email: 'enviar esta ligação por email'
     action_codes:
       public_topic: "tornei este tópico publico %{when}"
       private_topic: "tornei este tópico privado %{when}"
@@ -171,10 +171,10 @@ pt:
     show_help: "opções"
     links: "Hiperligações"
     links_lowercase:
-      one: "hiperligação"
+      one: "ligação"
       other: "hiperligações"
     faq: "FAQ"
-    guidelines: "Diretrizes"
+    guidelines: "Orientações"
     privacy_policy: "Política de Privacidade"
     privacy: "Privacidade"
     terms_of_service: "Termos de Serviço"
@@ -354,7 +354,7 @@ pt:
       notifications:
         watching:
           title: "A vigiar"
-          description: "Será notificado de cada nova publicação em todas as mensagens, e uma contagem de novas respostas será exibida."
+          description: "Será notificado de cada nova publicação em cada mensagem, e uma contagem de novas respostas será exibida."
         watching_first_post:
           title: "A Vigiar a Primeira Publicação"
           description: "Será apenas notificado acerca da primeira publicação em cada tópico deste grupo."
@@ -480,7 +480,7 @@ pt:
         many_per_day: "Mandar-me um email por cada nova publicação (cerca de {{dailyEmailEstimate}} por dia)"
         few_per_day: "Mandar-me um email por cada nova publicação (cerca de 2 por dia)"
       tag_settings: "Etiquetas"
-      watched_tags: "Visto"
+      watched_tags: "A vigiar"
       watched_tags_instructions: "Irá vigiar automaticamente todos os novos tópicos nestas categorias. Será notificado de todas as novas respostas e tópicos, e uma contagem de novas respostas irá aparecer junto ao tópico."
       tracked_tags: "Seguido"
       tracked_tags_instructions: "Irá seguir automaticamente todos os novos tópicos nestas categorias. Uma contagem de novas respostas irá aparecer junto ao tópico."
@@ -688,7 +688,7 @@ pt:
         days_visited: "Dias Visitados"
         account_age_days: "Idade da conta, em dias"
         create: "Enviar um Convite"
-        generate_link: "Copiar Hiperligação do Convite"
+        generate_link: "Copiar Ligação do Convite"
         link_generated: "Ligação de convite gerada com sucesso!"
         valid_for: "Ligação de convite é válida apenas para este endereço de email:  %{email}"
         bulk_invite:
@@ -740,7 +740,7 @@ pt:
         no_badges: "Nenhuma distintivo ainda."
         more_badges: "Mais Distintivos"
         top_links: "Melhores hiperligações"
-        no_links: "Não há nenhuma hiperligação ainda."
+        no_links: "Não há nenhuma ligação ainda."
         most_liked_by: "Por mais apreciados"
         most_liked_users: "Mais Gostados"
         most_replied_to_users: "Mais Respondidos"
@@ -823,7 +823,7 @@ pt:
       hide_forever: "não obrigado"
       hidden_for_session: "OK, Irei perguntar-lhe amanhã. Pode sempre usar 'Iniciar Sessão' para criar uma conta, também."
       intro: "Olá! :heart_eyes: Parece que está a gostar da discussão, mas não está inscrito para uma conta."
-      value_prop: "Quando cria uma conta, nós lembramo-nos exatamente do que leu, por isso volta sempre ao sítio onde ficou. Também recebe notificações, aqui ou por email, sempre que novas mensagens são feitas. E pode gostar de publicações para partilhar o amor. :heartbeat:"
+      value_prop: "Quando cria uma conta, nós lembramo-nos exatamente do que leu, por isso volta sempre ao sítio onde ficou. Também recebe notificações, aqui ou por email, sempre que novas publicações são feitas. E pode gostar de publicações para partilhar o amor. :heartbeat:"
     summary:
       enabled_description: "Está a ver um resumo deste tópico: as respostas mais interessantes são determinadas pela comunidade."
       description: "Existem <b>{{replyCount}}</b> respostas."
@@ -850,7 +850,7 @@ pt:
     create_account:
       disclaimer: "Ao registrar-se, aceita a <a href='{{privacy_link}}'>política de privacidade</a> e os <a href='{{tos_link}}'>termos de serviço</a>."
       title: "Criar Nova Conta"
-      failed: "Ocorreu um erro, talvez este email já esteja registado, tente usar a hiperligação \"Esqueci-me da Palavra-passe\"."
+      failed: "Ocorreu um erro, talvez este email já esteja registado, tente usar a ligação \"Esqueci-me da Palavra-passe\"."
     forgot_password:
       title: "Repor Palavra-Passe"
       action: "Esqueci-me da minha palavra-passe"
@@ -875,7 +875,7 @@ pt:
       logging_in: "A iniciar sessão..."
       or: "Ou"
       authenticating: "A autenticar..."
-      awaiting_confirmation: "A sua conta está a aguardar ativação. Utilize a hiperligação \"Esqueci a Palavra-passe\" para pedir um novo email de ativação."
+      awaiting_confirmation: "A sua conta está a aguardar ativação. Utilize a ligação \"Esqueci a Palavra-passe\" para pedir um novo email de ativação."
       awaiting_approval: "A sua conta ainda não foi aprovada por um membro do pessoal. Receberá um email quando a sua conta for aprovada."
       requires_invite: "Pedimos desculpa, o acesso a este fórum é permitido somente por convite de outro membro."
       not_activated: "Ainda não pode iniciar sessão. Enviámos anteriormente um email de ativação para o endereço <b>{{sentTo}}</b>. Por favor siga as instruções contidas nesse email para ativar a sua conta."
@@ -979,8 +979,8 @@ pt:
       italic_title: "Itálico"
       italic_text: "texto em itálico"
       link_title: "Hiperligação"
-      link_description: "digite a descrição da hiperligação aqui"
-      link_dialog_title: "Inserir Hiperligação"
+      link_description: "digite a descrição da ligação aqui"
+      link_dialog_title: "Inserir Ligação"
       link_optional_text: "título opcional"
       link_url_placeholder: "http://example.com"
       quote_title: "Bloco de Citação"
@@ -1071,15 +1071,15 @@ pt:
       title_with_attachments: "Adicionar uma imagem ou um ficheiro"
       from_my_computer: "Do meu dispositivo "
       from_the_web: "Da internet"
-      remote_tip: "hiperligação para imagem"
-      remote_tip_with_attachments: "hiperligação para imagem ou ficheiro {{authorized_extensions}}"
+      remote_tip: "ligação para imagem"
+      remote_tip_with_attachments: "ligação para imagem ou ficheiro {{authorized_extensions}}"
       local_tip: "selecionar imagens do seu dispositivo"
       local_tip_with_attachments: "selecionar imagens ou ficheiros a partir do seu dispositivo {{authorized_extensions}}"
       hint: "(pode também arrastar o ficheiro para o editor para fazer o carregamento)"
       hint_for_supported_browsers: "pode também arrastar e largar ou colar imagens no editor"
       uploading: "A carregar"
       select_file: "Selecionar Ficheiro"
-      image_link: "hiperligação da imagem irá apontar para"
+      image_link: "ligação da imagem irá apontar para"
     search:
       sort_by: "Ordenar por"
       relevance: "Relevância"
@@ -1087,7 +1087,7 @@ pt:
       most_viewed: "Mais Visto"
       most_liked: "Mais Gostos"
       select_all: "Selecionar Tudo"
-      clear_all: "Limpar Tudo"
+      clear_all: "Remover Tudo"
       too_short: "O seu termo de pesquisa é demasiado curto."
       result_count:
         one: "1 resultado para <span class='term'>\"{{term}}\"</span>"
@@ -1148,13 +1148,15 @@ pt:
     topics:
       new_messages_marker: "última visita"
       bulk:
+        select_all: "Selecionar Tudo"
+        clear_all: "Remover Tudo"
         unlist_topics: "Remover Tópicos da Lista"
         reset_read: "Repor Leitura"
         delete: "Eliminar Tópicos"
         dismiss: "Marcar Visto"
         dismiss_read: "Marcar todos os não lidos como vistos"
         dismiss_button: "Marcar visto..."
-        dismiss_tooltip: "Marcar como vistas apenas novas mensagens ou parar de seguir tópicos"
+        dismiss_tooltip: "Marcar como vistas apenas novas publicações ou parar de seguir tópicos"
         also_dismiss_topics: "Parar de seguir estes tópicos para que estes nunca me apareçam como não lidos novamente"
         dismiss_new: "Marcar Visto Novos"
         toggle: "ativar seleção em massa de tópicos"
@@ -1352,7 +1354,7 @@ pt:
         help: "Remover destaque deste tópico para que o mesmo deixe de aparecer no topo da sua lista de tópicos"
       share:
         title: 'Partilhar'
-        help: 'Partilhar uma hiperligação para este tópico'
+        help: 'Partilhar uma ligação para este tópico'
       print:
         title: 'Imprimir'
         help: 'Abrir uma versão para impressão deste tópico'
@@ -1403,12 +1405,12 @@ pt:
         username_placeholder: "nome de utilizador"
         action: 'Enviar Convite'
         help: 'convidar outros para este tópico via email ou notificações'
-        to_forum: "Enviaremos um breve email que permitirá ao seu amigo juntar-se imediatamente clicando numa hiperligação, não sendo necessário ter sessão iniciada."
+        to_forum: "Enviaremos um breve email que permitirá ao seu amigo juntar-se imediatamente clicando numa ligação, não sendo necessário ter sessão iniciada."
         sso_enabled: "Introduza o nome de utilizador da pessoa que gostaria de convidar para este tópico."
         to_topic_blank: "Introduza o nome de utilizador ou endereço de email da pessoa que gostaria de convidar para este tópico."
         to_topic_email: "Introduziu um endereço de email. Iremos enviar um email com um convite que permite aos seus amigos responderem a este tópico imediatamente."
-        to_topic_username: "Introduziu um nome de utilizador. Iremos enviar-lhe uma notificação com uma hiperligação convidando-o para este tópico."
-        to_username: "Introduza o nome de utilizador da pessoa que deseja convidar. Iremos enviar-lhe uma notificação com uma hiperligação convidando-o para este tópico."
+        to_topic_username: "Introduziu um nome de utilizador. Iremos enviar-lhe uma notificação com uma ligação convidando-o para este tópico."
+        to_username: "Introduza o nome de utilizador da pessoa que deseja convidar. Iremos enviar-lhe uma notificação com uma ligação convidando-o para este tópico."
         email_placeholder: 'nome@exemplo.com'
         success_email: "Enviámos por email um convite para <b>{{emailOrUsername}}</b>. Iremos notificá-lo quando o convite for utilizado. Verifique o separador de convites na sua página de utilizador para acompanhar os seus convites."
         success_username: "Convidámos esse utilizador para participar neste tópico."
@@ -1453,7 +1455,7 @@ pt:
         action: "alterar selo temporal"
         invalid_timestamp: "O selo temporal não pode ser no futuro."
         error: "Ocorreu um erro ao alterar o selo temporal do tópico."
-        instructions: "Por favor selecione o novo selo temporal do tópico. Mensagens no tópico serão atualizadas para terem a mesma diferença temporal."
+        instructions: "Por favor selecione o novo selo temporal do tópico. Publicações no tópico serão atualizadas para terem a mesma diferença temporal."
       multi_select:
         select: 'selecionar'
         selected: '({{count}}) selecionados'
@@ -1468,7 +1470,7 @@ pt:
     post:
       reply: "<i class='fa fa-mail-forward'></i> {{replyAvatar}} {{usernameLink}}"
       reply_topic: "<i class='fa fa-mail-forward'></i> {{link}}"
-      quote_reply: "citar resposta"
+      quote_reply: "Citar"
       edit: "Editar {{link}} {{replyAvatar}} {{username}}"
       edit_reason: "Motivo:"
       post_number: "publicação {{number}}"
@@ -1635,7 +1637,7 @@ pt:
       merge:
         confirm:
           one: "Tem a certeza que quer juntar estas publicações?"
-          other: "Tem a certeza que quer juntar estas {{count}} publicações?"
+          other: "Tem a certeza que quer unir estas {{count}} publicações?"
       revisions:
         controls:
           first: "Primeira revisão"
@@ -1736,7 +1738,7 @@ pt:
         default: "predefinida"
         likes: "Gostos"
         op_likes: "Gostos à Publicação Original"
-        views: "Visualizações"
+        views: "Vistas"
         posts: "Publicações"
         activity: "Actividade"
         posters: "Autores"
@@ -1746,7 +1748,7 @@ pt:
       sort_descending: 'Descendente'
     flagging:
       title: 'Obrigado por ajudar a manter a nossa comunidade cívica!'
-      action: 'Denunciar Mensagem'
+      action: 'Denunciar Publicação'
       take_action: "Acionar"
       notify_action: 'Mensagem'
       official_warning: 'Aviso Oficial'
@@ -1757,7 +1759,7 @@ pt:
       hidden_email_address: "(escondido)"
       submit_tooltip: "Submeter a denúncia privada"
       take_action_tooltip: "Atingir imediatamente o limite de denúncias, em vez de esperar por mais denúncias da comunidade"
-      cant: "Pedimos desculpa, não é possível colocar uma denúncia nesta mensagem neste momento."
+      cant: "Pedimos desculpa, não é possível colocar uma denúncia nesta publicação neste momento."
       notify_staff: 'Notificar o pessoal privadamente'
       formatted_name:
         off_topic: "Está fora do contexto"
@@ -1813,20 +1815,20 @@ pt:
         title: "Fixado"
         help: "Este tópico foi fixado por si; será mostrado no topo da sua categoria"
       invisible:
-        help: "Este tópico não está listado; não será apresentado na lista de tópicos e poderá ser acedido apenas através de uma hiperligação direta"
-    posts: "Mensagens"
-    posts_long: "existem {{number}} mensagens neste tópico"
+        help: "Este tópico não está listado; não será apresentado na lista de tópicos e poderá ser acedido apenas através de uma ligação direta"
+    posts: "Publicações"
+    posts_long: "existem {{number}} publicações neste tópico"
     posts_likes_MF: |
       Este tópico tem {count, plural, one {1 resposta} other {# respostas}} {ratio, select,
       baixo {com uma proporção de gostos alta}
       med {com uma proporção de gostos muito alta}
       alta {com uma proporção de gostos extremamente alta}
       outros {}}
-    original_post: "Mensagem Original"
-    views: "Visualizações"
+    original_post: "Publicação Original"
+    views: "Vistas"
     views_lowercase:
-      one: "visualização"
-      other: "visualizações"
+      one: "vista"
+      other: "vistas"
     replies: "Respostas"
     views_long: "este tópico foi visto {{number}} vezes"
     activity: "Atividade"
@@ -1854,7 +1856,7 @@ pt:
         title_with_count:
           one: "Recente (1)"
           other: "Recentes ({{count}})"
-        help: "tópicos com mensagens recentes"
+        help: "tópicos com publicações recentes"
       hot:
         title: "Quente"
         help: "uma seleção dos tópicos mais quentes"
@@ -1888,8 +1890,8 @@ pt:
           other: "Novos ({{count}})"
         help: "tópicos criados nos últimos dias"
       posted:
-        title: "As Minhas mensagens"
-        help: "tópicos nos quais publicou uma mensagem"
+        title: "As Minhas publicações"
+        help: "tópicos nos quais publicou uma publicação"
       bookmarks:
         title: "Marcadores"
         help: "tópicos que marcou"
@@ -2097,6 +2099,8 @@ pt:
       custom_message_placeholder: "Insira a sua mensagem personalizada"
       custom_message_template_forum: "Olá, devia juntar-se a este fórum!"
       custom_message_template_topic: "Olá, achei que poderia gostar deste tópico!"
+    safe_mode:
+      enabled: "O modo de segurança está activado, para sair do modo de segurança feche esta janela do navegador"
   admin_js:
     type_to_filter: "digite para filtrar..."
     admin:
@@ -2159,10 +2163,10 @@ pt:
         agree: "Aceitar"
         agree_title: "Confirmar esta denúncia como válida e correta"
         agree_flag_modal_title: "Aceitar e..."
-        agree_flag_hide_post: "Aceitar (esconder mensagem + enviar MP)"
+        agree_flag_hide_post: "Aceitar (esconder publicação + enviar MP)"
         agree_flag_hide_post_title: "Esconder esta publicação e enviar automaticamente uma mensagem ao utilizador solicitando a edição urgente da mesma"
-        agree_flag_restore_post: "Concordar (restaurar mensagem)"
-        agree_flag_restore_post_title: "Restaurar esta mensagem"
+        agree_flag_restore_post: "Concordar (restaurar publicação)"
+        agree_flag_restore_post_title: "Restaurar esta publicação"
         agree_flag: "Concordar com a denúncia"
         agree_flag_title: "Concordar com a denúncia e manter a publicação inalterada"
         defer_flag: "Diferir"
@@ -2170,13 +2174,13 @@ pt:
         delete: "Eliminar"
         delete_title: "Eliminar a publicação associada a esta denúncia."
         delete_post_defer_flag: "Eliminar publicação e diferir a denúncia."
-        delete_post_defer_flag_title: "Eliminar mensagem; se é a primeira do tópico então eliminar o tópico"
+        delete_post_defer_flag_title: "Eliminar publicação; se é a primeira do tópico então eliminar o tópico"
         delete_post_agree_flag: "Eliminar publicação e Concordar com a denúncia"
-        delete_post_agree_flag_title: "Eliminar mensagem; se é a primeira do tópico então eliminar o tópico"
+        delete_post_agree_flag_title: "Eliminar publicação; se é a primeira do tópico então eliminar o tópico"
         delete_flag_modal_title: "Eliminar e…"
         delete_spammer: "Eliminar Spammer"
-        delete_spammer_title: "Remover utilizador e todos as mensagens e tópicos do mesmo."
-        disagree_flag_unhide_post: "Discordar (exibir mensagem)"
+        delete_spammer_title: "Remover utilizador e todos as publicações e tópicos do mesmo."
+        disagree_flag_unhide_post: "Discordar (exibir publicação)"
         disagree_flag_unhide_post_title: "Remover qualquer denúncia desta publicação e torná-la visível novamente"
         disagree_flag: "Discordar"
         disagree_flag_title: "Negar esta denúncia como inválida ou incorreta"
@@ -2268,7 +2272,7 @@ pt:
         confirm_revoke: "Tem a certeza que quer revogar essa chave?"
         info_html: "A sua chave API permitirá a criação e edição de tópicos usando pedidos JSON."
         all_users: "Todos os Utilizadores"
-        note_html: "Manter esta chave <strong>secreta</strong>, todos os utilizadores que a tenham poderão criar mensagens arbitrárias como qualquer utilizador."
+        note_html: "Manter esta chave <strong>secreta</strong>, todos os utilizadores que a tenham poderão criar publicações arbitrárias como qualquer utilizador."
       web_hooks:
         title: "Webhooks"
         none: "Não existem webhooks neste momento."
@@ -2406,7 +2410,7 @@ pt:
       export_csv:
         success: "Exportação iniciada, será notificado através de mensagem assim que o processo estiver concluído."
         failed: "A exportação falhou. Por favor verifique os registos dos logs."
-        rate_limit_error: "As mensagens podem ser descarregadas uma vez por dia. Por favor, tente novamente amanhã."
+        rate_limit_error: "As publicações podem ser descarregadas uma vez por dia. Por favor, tente novamente amanhã."
         button_text: "Exportar"
         button_title:
           user: "Exportar lista total de utilizadores em formato CSV."
@@ -2494,10 +2498,10 @@ pt:
             description: "Texto e ícones no cabeçalho do sítio."
           highlight:
             name: 'destaque'
-            description: 'A cor de fundo de elementos destacados na página, tais como mensagens e tópicos.'
+            description: 'A cor de fundo de elementos destacados na página, tais como publicações e tópicos.'
           danger:
             name: 'perigo'
-            description: 'Cor de destaque para ações como apagar mensagens e tópicos.'
+            description: 'Cor de destaque para ações como apagar publicações e tópicos.'
           success:
             name: 'sucesso'
             description: 'Usado para indicar que uma ação foi bem sucedida.'
@@ -2514,7 +2518,7 @@ pt:
         test_error: "Occorreu um problema no envio do email de teste. Por favor verifique novamente as suas definições de email, verifique se o seu host não está a bloquear conexões de email, e tente novamente."
         sent: "Enviado"
         skipped: "Ignorado"
-        bounced: "Devolvida"
+        bounced: "Redirecionado"
         received: "Recebido"
         rejected: "Rejeitado"
         sent_at: "Enviado em"
@@ -2528,6 +2532,9 @@ pt:
         delivery_method: "Método de Entrega"
         preview_digest_desc: "Pré-visualizar o conteúdo dos emails de resumo enviados aos utilizadores inativos."
         refresh: "Atualizar"
+        send_digest_label: "Enviar este resultado para:"
+        send_digest: "Enviar"
+        sending_email: "A enviar email..."
         format: "Formato"
         html: "html"
         text: "texto"
@@ -2571,7 +2578,7 @@ pt:
         match_count: "Correspondência"
         ip_address: "IP"
         topic_id: "ID do Tópico"
-        post_id: "ID da Mensagem"
+        post_id: "ID da Publicação"
         category_id: "ID da Categoria"
         delete: 'Eliminar'
         edit: 'Editar'
@@ -2610,7 +2617,7 @@ pt:
             revoke_badge: "revogar distintivo"
             check_email: "verificar email"
             delete_topic: "eliminar tópico"
-            delete_post: "eliminar mensagem"
+            delete_post: "eliminar publicação"
             impersonate: "personificar"
             anonymize_user: "tornar utilizador anónimo"
             roll_up: "agregar blocos IP"
@@ -2635,7 +2642,7 @@ pt:
             allow: "Permitir"
         screened_urls:
           title: "URLs Filtrados"
-          description: "Os URLs listados aqui foram usados em mensagens de utilizadores que foram identificados como spammers."
+          description: "Os URLs listados aqui foram usados em publicações de utilizadores que foram identificados como spammers."
           url: "URL"
           domain: "Domínio"
         screened_ips:
@@ -2720,7 +2727,7 @@ pt:
         suspend_reason_label: "Qual é o motivo da sua suspensão? Este texto <b>estará visível para todos</b> na página do perfil deste utilizador, e será mostrada ao utilizador quando tentar iniciar sessão. Mantenha-o breve."
         suspend_reason: "Motivo"
         suspended_by: "Suspendido por"
-        delete_all_posts: "Eliminar todas as mensagens"
+        delete_all_posts: "Eliminar todas as publicações"
         delete_all_posts_confirm_MF: "Está prestes a apagar {POSTS, plural, one {1  publicação} other {# publicações}}  e {TOPICS, plural, one {1 tópico} other {# tópicos}}. Tem a certeza de que quer continuar?"
         suspend: "Suspender"
         unsuspend: "Retirar a suspensão"
@@ -2751,8 +2758,8 @@ pt:
         like_count: Gostos Dados / Recebidos
         last_100_days: 'nos últimos 100 dias'
         private_topics_count: Tópicos Privados
-        posts_read_count: Mensagens lidas
-        post_count: Mensagens criadas
+        posts_read_count: Publicações lidas
+        post_count: Publicações criadas
         topics_entered: Tópicos Visualizados
         flags_given_count: Denúncias Dadas
         flags_received_count: Denúncias Recebidas
@@ -2769,21 +2776,21 @@ pt:
         anonymize_failed: "Ocorreu um problema ao tornar esta conta anónima."
         delete: "Eliminar Utilizador"
         delete_forbidden_because_staff: "Administradores e moderadores não podem ser eliminados."
-        delete_posts_forbidden_because_staff: "Não é possível eliminar todas as mensagens dos administradores e moderadores."
+        delete_posts_forbidden_because_staff: "Não é possível eliminar todas as publicações dos administradores e moderadores."
         delete_forbidden:
-          one: "Utilizadores não podem ser eliminados se tiverem mensagens. Apague todas as mensagens antes de eliminar o utilizador. (Mensagens com mais de %{count} dia de existência não podem ser eliminadas.)"
-          other: "Utilizadores não podem ser eliminados se tiverem mensagens. Apague todas as mensagens antes de eliminar o utilizador. (Mensagens com mais de %{count} dias de existência não podem ser eliminadas.)"
+          one: "Utilizadores não podem ser eliminados se tiverem publicações. Apague todas as publicações antes de eliminar o utilizador. (Publicações com mais de %{count} dia de existência não podem ser eliminadas.)"
+          other: "Utilizadores não podem ser eliminados se tiverem publicações. Apague todas as publicações antes de eliminar o utilizador. (Publicações com mais de %{count} dias de existência não podem ser eliminadas.)"
         cant_delete_all_posts:
-          one: "Não é possível eliminar todas as mensagens. Algumas mensagens existem há mais de %{count} dia. (A configuração delete_user_max_post_age.)"
-          other: "Não é possível eliminar todas as mensagens. Algumas mensagens existem há mais de %{count} dias. (A configuração delete_user_max_post_age.)"
+          one: "Não é possível eliminar todas as publicações. Algumas publicações existem há mais de %{count} dia. (A configuração delete_user_max_post_age.)"
+          other: "Não é possível eliminar todas as publicações. Algumas publicações existem há mais de %{count} dias. (A configuração delete_user_max_post_age.)"
         cant_delete_all_too_many_posts:
-          one: "Não é possível eliminar todas as mensagens porque o utilizador tem mais de 1 mensagens. (delete_all_posts_max)"
-          other: "Não é possível eliminar todas as mensagens porque o utilizador tem mais de %{count} mensagens. (delete_all_posts_max)"
+          one: "Não é possível eliminar todas as publicações porque o utilizador tem mais de 1 publicações. (delete_all_posts_max)"
+          other: "Não é possível eliminar todas as publicações porque o utilizador tem mais de %{count} publicações. (delete_all_posts_max)"
         delete_confirm: "Tem a CERTEZA que deseja eliminar este utilizador? Esta ação é permanente!"
         delete_and_block: "Eliminar e <b>bloquear<b> este endereço de email e IP"
         delete_dont_block: "Apenas eliminar"
         deleted: "O utilizador foi eliminado."
-        delete_failed: "Ocorreu um erro ao eliminar o utilizador. Certifique-se de que todas as suas mensagens foram apagadas antes de tentar eliminá-lo."
+        delete_failed: "Ocorreu um erro ao eliminar o utilizador. Certifique-se de que todas as suas publicações foram apagadas antes de tentar eliminá-lo."
         send_activation_email: "Enviar Email de Ativação"
         activation_email_sent: "Um email de ativação foi enviado."
         send_activation_email_failed: "Ocorreu um problema ao enviar um novo email de ativação. %{error}"
@@ -2793,15 +2800,15 @@ pt:
         deactivate_failed: "Ocorreu um problema ao desativar o utilizador."
         unblock_failed: 'Ocorreu um problema ao desbloquear o utilizador.'
         block_failed: 'Ocorreu um problema ao bloquear o utilizador.'
-        block_confirm: 'Tem a certeza que pretende bloquear este utilizador? Este não será capaz de criar novos tópicos ou mensagens.'
+        block_confirm: 'Tem a certeza que pretende bloquear este utilizador? Este não será capaz de criar novos tópicos ou publicações.'
         block_accept: 'Sim, bloquear este utilizador'
-        bounce_score: "Número de Redirecionamentos"
+        bounce_score: "Pontuação de Redirecionamento"
         reset_bounce_score:
           label: "Repor"
-          title: "Repor número de redirecionamentos a 0"
+          title: "Repor pontuação de redirecionamento a 0"
         deactivate_explanation: "Um utilizador desativado deve revalidar o seu email."
         suspended_explanation: "Um utilizador suspenso não pode iniciar sessão."
-        block_explanation: "Um utilizador bloqueado não pode publicar mensagens ou iniciar tópicos."
+        block_explanation: "Um utilizador bloqueado não pode publicar publicações ou iniciar tópicos."
         staged_explanation: "Um utilizador temporário pode apenas publicar por email em tópicos específicos."
         bounce_score_explanation:
           none: "Nenhum redirecionamento foi recebido recentemente desse email."
@@ -2827,8 +2834,8 @@ pt:
           topics_replied_to: "Tópicos com Respostas"
           topics_viewed: "Tópicos Visualizados"
           topics_viewed_all_time: "Tópicos Visualizados (desde sempre)"
-          posts_read: "Mensagens lidas"
-          posts_read_all_time: "Mensagens lidas (desde sempre)"
+          posts_read: "Publicações lidas"
+          posts_read_all_time: "Publicações lidas (desde sempre)"
           flagged_posts: "Publicações Denunciadas"
           flagged_by_users: "Utilizadores Que Denunciaram"
           likes_given: "Gostos Dados"
@@ -2899,7 +2906,7 @@ pt:
         reset: 'repor'
         none: 'nenhum'
         no_results: "Não foi encontrado nenhum resultado."
-        clear_filter: "Limpar"
+        clear_filter: "Remover"
         add_url: "adicionar URL"
         add_host: "adicionar host"
         categories:
@@ -2942,7 +2949,7 @@ pt:
           modal_title: Agrupamento de Distintivos
         granted_by: Concedido Por
         granted_at: Concedido Em
-        reason_help: (Uma hiperligação para uma mensagem ou tópico)
+        reason_help: (Uma ligação para uma publicação ou tópico)
         save: Guardar
         delete: Apagar
         delete_confirm: Tem a certeza que quer eliminar este distintivo?
@@ -2965,17 +2972,17 @@ pt:
         image: Imagem
         icon_help: "Use uma classe Font Awesome ou um URL para uma imagem"
         query: '"Query" de Distintivo (SQL)'
-        target_posts: '"Query" direcionada a mensagens'
+        target_posts: '"Query" direcionada a publicações'
         auto_revoke: 'Executar diariamente a "query" de revogação '
-        show_posts: Mostrar mensagens de concessão de distintivo na página de distintivos
+        show_posts: Mostrar publicações de concessão de distintivo na página de distintivos
         trigger: Acionar
         trigger_type:
           none: "Atualizado diariamente"
-          post_action: "Quando um utilizador atua numa mensagem"
-          post_revision: "Quando um utilizador edita ou cria uma mensagem"
+          post_action: "Quando um utilizador atua numa publicação"
+          post_revision: "Quando um utilizador edita ou cria uma publicação"
           trust_level_change: "Quando um utilizador muda de Nível de Confiança"
           user_change: "Quando um utilizador é editado ou criado"
-          post_processed: "Depois de uma mensagem ser processada"
+          post_processed: "Depois de uma publicação ser processada"
         preview:
           link_text: "Pré-visualizar distintivos concedidos"
           plan_text: "Pré-visualizar com plano de consulta"
@@ -2992,8 +2999,8 @@ pt:
           sample: "Amostra:"
           grant:
             with: <span class="username">%{username}</span>
-            with_post: <span class="username">%{username}</span> pela mensagem em %{link}
-            with_post_time: <span class="username">%{username}</span> pela mensagem em %{link} às <span class="time">%{time}</span>
+            with_post: <span class="username">%{username}</span> pela publicação em %{link}
+            with_post_time: <span class="username">%{username}</span> pela publicação em %{link} às <span class="time">%{time}</span>
             with_time: <span class="username">%{username}</span> às <span class="time">%{time}</span>
       emoji:
         title: "Emoji"
@@ -3010,22 +3017,22 @@ pt:
         host: "Servidores Permitidos"
         path_whitelist: "Lista Branca de Caminhos"
         edit: "editar"
-        category: "Mensagem para Categoria"
+        category: "Publicação para Categoria"
         add_host: "Adicionar Servidor"
         settings: "Configurações de Incorporação"
         feed_settings: "Configurações do Feed"
         feed_description: "Fornecer um fed RSS/ATOM para o seu sítio pode melhorar a habilidade do Discourse de importar o seu conteúdo."
         crawling_settings: "Configurações de Rastreio"
-        crawling_description: "Quando o Discourse cria tópicos para as suas mensagens, se nenhum feed RSS/ATOM está presente o Discourse irá tentar analisar o seu conteúdo fora do seu HTML. Algumas vezes pode ser um desafio extrair o seu conteúdo, por isso temos a habilidade de especificar regras CSS para tornar a extração mais fácil. "
+        crawling_description: "Quando o Discourse cria tópicos para as suas publicações, se nenhum feed RSS/ATOM está presente o Discourse irá tentar analisar o seu conteúdo fora do seu HTML. Algumas vezes pode ser um desafio extrair o seu conteúdo, por isso temos a habilidade de especificar regras CSS para tornar a extração mais fácil. "
         embed_by_username: "Nome de uilizador para criação do tópico"
-        embed_post_limit: "Número máximo de mensagens a incorporar"
+        embed_post_limit: "Número máximo de publicações a incorporar"
         embed_username_key_from_feed: "Chave para puxar o nome de utilizador discouse do feed"
         embed_title_scrubber: "Expressão regular usada para filtrar o título de publicações"
-        embed_truncate: "Truncar as mensagens incorporadas"
+        embed_truncate: "Truncar as publicações incorporadas"
         embed_whitelist_selector: "Seletor CSS para elementos que são permitidos nas incorporações"
         embed_blacklist_selector: "Seletor CSS para elementos que são removidos das incorporações"
         embed_classname_whitelist: "Nomes de classes CSS permitidas"
-        feed_polling_enabled: "Importar mensagens através de RSS/ATOM"
+        feed_polling_enabled: "Importar publicações através de RSS/ATOM"
         feed_polling_url: "URL do feed RSS/ATOM para rastreio"
         save: "Guardar Configurações de Incorporação"
       permalink:
@@ -3033,12 +3040,12 @@ pt:
         url: "URL"
         topic_id: "ID do Tópico"
         topic_title: "Tópico"
-        post_id: "ID da Mensagem"
-        post_title: "Mensagem"
+        post_id: "ID da Publicação"
+        post_title: "Publicação"
         category_id: "ID da Categoria"
         category_title: "Categoria"
         external_url: "URL Externo"
-        delete_confirm: Tem a certeza que deseja eliminar esta hiperligação permanente?
+        delete_confirm: Tem a certeza que deseja eliminar esta ligação permanente?
         form:
           label: "Novo:"
           add: "Adicionar"

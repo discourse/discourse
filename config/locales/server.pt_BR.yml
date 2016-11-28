@@ -1133,12 +1133,18 @@ pt_BR:
       invalid_string_min: "Precisa ter no mínimo %{min} caracteres."
       invalid_string_max: "Deve ser não mais que %{max} caracteres."
       invalid_reply_by_email_address: "O valor deve conter '%{reply_key}' e ser diferente do email de notificação."
+      invalid_regex: "Expressão regular inválida ou não permitida."
   search:
     within_post: "#%{post_number} por %{username}"
     types:
       category: 'Categorias'
       topic: 'Resultados'
       user: 'Utilizadores'
+  sso:
+    not_found: "Sua conta não pode ser encontrada. Por favor, entre em contato com o administrador do site."
+    account_not_approved: "Sua conta está aguardando aprovação. Você receberá uma notificação por email quando ela for aprovada."
+    unknown_error: "Há um problema com sua conta. Por favor, entre em contato com o administrador do site."
+    timeout_expired: "O login de sua conta expirou, por favor tente logar novamente."
   original_poster: "Postador original"
   most_posts: "Maior parte das postagens"
   most_recent_poster: "Maior parte das Postagens Recentes"
@@ -1146,6 +1152,20 @@ pt_BR:
   redirected_to_top_reasons:
     new_user: "Bem vindo a nossa comunidade! Aqui estão os nosso tópicos populares mais recentes."
     not_seen_in_a_month: "Bem-vindo de volta! Nós não o vemos a um tempo. Estes são os principais tópicos de discussão desde que você foi embora."
+  merge_posts:
+    edit_reason:
+      one: "Uma publicação foi combinada por %{username}"
+      other: "%{count} publicações foram combinadas por %{username}"
+    errors:
+      different_topics: "Publicações que pertencem a tópicos diferentes não podem ser combinadas."
+      different_users: "Publicações que pertencem a usuários diferentes não podem ser combinadas."
+  move_posts:
+    new_topic_moderator_post:
+      one: "Uma publicação foi dividida em um novo tópico : %{topic_link}"
+      other: "%{count} publicações foram divididas em um novo tópico: %{topic_link}"
+    existing_topic_moderator_post:
+      one: "Uma publicação foi combinada em um tópico existente: %{topic_link}"
+      other: "%{count} publicações foram combinadas em um tópico existente: %{topic_link}"
   change_owner:
     post_revision_text: "Autoria transferida de %{old_user} para %{new_user}"
     deleted_user: "um usuário deletado"
@@ -1444,8 +1464,16 @@ pt_BR:
       subject_template: "[%{site_name}] Problema com Email -- Conta Desconhecida"
     email_reject_empty:
       subject_template: "[%{site_name}] Problema com email -- Sem conteúdo"
+    email_reject_parsing:
+      subject_template: "[%{site_name}] Problema com email -- Conteúdo Não Reconhecido"
+      text_body_template: |
+        Nos desculpamos, mas sua mensagem de email para %{destination} (intitulada %{former_title}) não funcionou.
+
+        Não pudemos encontrar seu resposta no email. **Certifique-se que sua resposta está no topo do email** -- não conseguimos processar respostas em linha.
     email_reject_invalid_access:
       subject_template: "[%{site_name}] Email -- Acesso Inválido"
+    email_reject_strangers_not_allowed:
+      subject_template: "[%{site_name}] Problema com Email -- Acesso Inválido"
     email_reject_reply_key:
       subject_template: "[%{site_name}] Problema com email -- Chave de Resposta Desconhecida"
     email_reject_topic_not_found:
@@ -1456,6 +1484,8 @@ pt_BR:
       subject_template: "[%{site_name}] Problema com email -- Resposta Gerada Automaticamente"
     email_error_notification:
       subject_template: "[%{site_name}] Problema com email -- Erro de autenticação POP"
+    too_many_spam_flags:
+      subject_template: "Nova conta suspensa"
     too_many_tl3_flags:
       subject_template: "Nova conta suspensa"
     blocked_by_staff:
