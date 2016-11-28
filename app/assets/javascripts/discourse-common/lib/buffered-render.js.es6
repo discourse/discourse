@@ -2,10 +2,7 @@
 // In the long term we'll want to remove this.
 
 const Mixin = {
-  __bufferTimeout: null,
-
   _customRender() {
-    Ember.run.cancel(this.__bufferTimeout);
     if (!this.element || this.isDestroying || this.isDestroyed) { return; }
 
     const buffer = [];
