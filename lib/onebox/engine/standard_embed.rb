@@ -67,7 +67,12 @@ module Onebox
 
           return {} if Onebox::Helpers.blank?(oembed_url)
 
-          Onebox::Helpers.symbolize_keys(::MultiJson.load(Onebox::Helpers.fetch_response(oembed_url).body))
+          oe = Onebox::Helpers.symbolize_keys(::MultiJson.load(Onebox::Helpers.fetch_response(oembed_url).body))
+
+          # never use oembed from WordPress 4.4 (it's broken)
+          oe.delete(:html) if oe[:html] && oe[:html]["wp-embedded-content"]
+
+          oe
         rescue Errno::ECONNREFUSED, Net::HTTPError, MultiJson::LoadError
           {}
         end
