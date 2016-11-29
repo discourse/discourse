@@ -63,14 +63,14 @@ body, table, td, th, h1, h2, h3 {font-family: Helvetica, Arial, sans-serif !impo
   <tr>
     <%- @counts.each do |count| -%>
       <td style="text-align:center;color:#fff;font-size:3em;font-weight:400;">
-        <strong><%= count[:value] -%></strong>
+        <a style="color:#fff;" href="<%= count[:href] -%>"><strong><%= count[:value] -%></strong></a>
       </td>
     <%- end -%>
   </tr>
   <tr>
     <%- @counts.each do |count| -%>
       <td style="color:#fff;font-size:16px;font-weight:400;text-align:center;">
-        <strong><%=t count[:label_key] -%></strong>
+        <a style="color:#fff;" href="<%= count[:href] -%>"><strong><%=t count[:label_key] -%></strong></a>
       </td>
     <%- end -%>
   </tr>
