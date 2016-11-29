@@ -16,15 +16,27 @@
   <section class='user-main'>
     <section class='user-right groups'>
       <section class='about group'>
-        <div class='details'>
-          <h1 class='group-header'>
-            {{#if model.flair_url}}
-              <span class='group-avatar-flair'>
-                {{mount-widget widget="avatar-flair" args=avatarFlairAttributes}}
-              </span>
-            {{/if}}
-            <span class='group-name'>{{groupName}}</span>
-          </h1>
+        <div class='details group-details'>
+          <span>
+            <h1 class='group-header'>
+              {{#if model.flair_url}}
+                <span class='group-avatar-flair'>
+                  {{avatar-flair
+                    flairURL=model.flair_url
+                    flairBgColor=model.flair_bg_color
+                    flairColor=model.flair_color
+                    groupName=model.name}}
+                </span>
+              {{/if}}
+              <span class='group-name'>{{groupName}}</span>
+            </h1>
+          </span>
+
+          {{#if canEditGroup}}
+            <span>
+              {{d-button action="showGroupEditor" class="group-edit-btn btn-small" icon="pencil"}}
+            </span>
+          {{/if}}
         </div>
       </section>
       {{outlet}}

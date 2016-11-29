@@ -1845,6 +1845,21 @@ en:
             title: "Show the raw source diffs side-by-side"
             button: '<i class="fa fa-columns"></i> Raw'
 
+    group:
+      edit:
+        title: 'Edit Group'
+      name: "Name"
+      name_placeholder: "Group name, no spaces, same as username rule"
+      flair_url: "Avatar Flair Image"
+      flair_url_placeholder: "(Optional) Image URL or Font Awesome class"
+      flair_bg_color: "Avatar Flair Background Color"
+      flair_bg_color_placeholder: "(Optional) Hex color value"
+      flair_color: "Avatar Flair Color"
+      flair_color_placeholder: "(Optional) Hex color value"
+      flair_preview_icon: "Preview Icon"
+      flair_preview_image: "Preview Image"
+      flair_note: "Note: Flair will only show for a user's primary group."
+
     category:
       can: 'can&hellip; '
       none: '(no category)'
@@ -2451,7 +2466,6 @@ en:
         refresh: "Refresh"
         new: "New"
         selector_placeholder: "enter username"
-        name_placeholder: "Group name, no spaces, same as username rule"
         about: "Edit your group membership and names here"
         group_members: "Group members"
         delete: "Delete"
@@ -2459,7 +2473,6 @@ en:
         delete_failed: "Unable to delete group. If this is an automatic group, it cannot be destroyed."
         delete_member_confirm: "Remove '%{username}' from the '%{group}' group?"
         delete_owner_confirm: "Remove owner privilege for '%{username}'?"
-        name: "Name"
         add: "Add"
         add_members: "Add members"
         custom: "Custom"
@@ -2476,14 +2489,6 @@ en:
         add_owners: Add owners
         incoming_email: "Custom incoming email address"
         incoming_email_placeholder: "enter email address"
-        flair_url: "Avatar Flair Image"
-        flair_url_placeholder: "(Optional) Image URL or Font Awesome class"
-        flair_bg_color: "Avatar Flair Background Color"
-        flair_bg_color_placeholder: "(Optional) Hex color value"
-        flair_color: "Avatar Flair Color"
-        flair_color_placeholder: "(Optional) Hex color value"
-        flair_preview: "Preview"
-        flair_note: "Note: Flair will only show for a user's primary group."
 
       api:
         generate_master: "Generate Master API Key"

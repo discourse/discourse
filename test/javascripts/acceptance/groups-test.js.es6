@@ -32,7 +32,7 @@ test("Browsing Groups", () => {
   });
 });
 
-test("Messages tab", () => {
+test("Admin Browsing Groups", () => {
   logIn();
   Discourse.reset();
 
@@ -40,5 +40,11 @@ test("Messages tab", () => {
 
   andThen(() => {
     ok($('.action-list li').length === 5, 'it should show messages tab if user is admin');
+  });
+
+  click('.group-edit-btn');
+
+  andThen(() => {
+    ok(find('.group-flair-inputs').length === 1, 'it should display avatar flair inputs');
   });
 });

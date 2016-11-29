@@ -349,7 +349,11 @@ class Group < ActiveRecord::Base
   end
 
   def add_owner(user)
-    self.group_users.create(user_id: user.id, owner: true)
+    if group_user = self.group_users.find_by(user: user)
+      group_user.update_attributes!(owner: true) if !group_user.owner
+    else
+      GroupUser.create!(user: user, group: self, owner: true)
+    end
   end
 
   def self.find_by_email(email)

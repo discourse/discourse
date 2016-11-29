@@ -1,9 +1,12 @@
 .groups {
-  .group-header {
+  .group-header, .group-details {
     display: table;
-  }
 
-  .group-avatar-flair {
+    span {
+      display: table-cell;
+      vertical-align: middle;
+    }
+
     .avatar-flair {
       $size: 40px;
 
@@ -17,8 +20,43 @@
     }
   }
 
-  .group-avatar-flair, .group-name {
-    display: table-cell;
-    vertical-align: middle;
+  .group-edit-btn {
+    margin-left: 5px;
+  }
+
+  .form-horizontal {
+    label {
+      font-weight: bold;
+    }
+
+    input[type="text"] {
+      width: 80% !important;
+      margin-bottom: 10px;
+    }
+
+    .group-flair-inputs {
+      display: inline-block;
+      margin-top: 30px;
+      margin-bottom: 30px;
+
+      .group-flair-left {
+        float: left;
+      }
+
+      .group-flair-right {
+        float: left;
+        margin-left: 30px;
+      }
+    }
+
+    .avatar-flair-preview {
+      position: relative;
+      width: 45px;
+
+      .avatar-wrapper {
+        background-color: #f4f4f4;
+      }
+    }
   }
 }
+
