@@ -101,8 +101,8 @@
   {{/unless}}
 
   {{#unless model.automatic}}
-    <div class="flair_inputs">
-      <div class="flair_left">
+    <div class="flair-inputs">
+      <div class="flair-left">
         <div>
           <label for="flair_url">{{i18n 'admin.groups.flair_url'}}</label>
           {{text-field name="flair_url" value=model.flair_url placeholderKey="admin.groups.flair_url_placeholder"}}
@@ -110,13 +110,13 @@
 
         <div>
           <label for="flair_bg_color">{{i18n 'admin.groups.flair_bg_color'}}</label>
-          {{text-field name="flair_bg_color" class="flair_bg_color" value=model.flair_bg_color placeholderKey="admin.groups.flair_bg_color_placeholder"}}
+          {{text-field name="flair_bg_color" class="flair-bg-color" value=model.flair_bg_color placeholderKey="admin.groups.flair_bg_color_placeholder"}}
         </div>
 
         {{#if flairPreviewIcon}}
           <div>
             <label for="flair_color">{{i18n 'admin.groups.flair_color'}}</label>
-            {{text-field name="flair_color" class="flair_color" value=model.flair_color placeholderKey="admin.groups.flair_color_placeholder"}}
+            {{text-field name="flair_color" class="flair-color" value=model.flair_color placeholderKey="admin.groups.flair_color_placeholder"}}
           </div>
         {{/if}}
 
@@ -127,7 +127,7 @@
       </div>
 
       {{#if flairPreviewIcon}}
-        <div class="flair_right">
+        <div class="flair-right">
           <div>
             <label>{{i18n 'admin.groups.flair_preview'}} Icon</label>
             <div class="avatar-flair-preview">

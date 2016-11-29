@@ -705,11 +705,11 @@ section.details {
     }
   }
   .form-horizontal {
-    .flair_inputs {
+    .flair-inputs {
       margin-top: 30px;
       margin-bottom: 30px;
 
-      .flair_left {
+      .flair-left {
         float: left;
         width: 60%;
         input[name=flair_url] {
@@ -717,7 +717,7 @@ section.details {
         }
       }
 
-      .flair_right {
+      .flair-right {
         float: left;
         margin-left: 30px;
       }
@@ -725,7 +725,7 @@ section.details {
   }
 }
 .row.groups {
-  input[type='text'].flair_bg_color, input[type='text'].flair_color {
+  input[type='text'].flair-bg-color, input[type='text'].flair-color {
     width: 200px;
   }
 }
