@@ -599,6 +599,14 @@ en:
       description: 'Vote for this post'
       long_form: 'voted for this post'
 
+  user_activity:
+    no_bookmarks:
+      self: "You have no bookmarked posts, bookmarking posts allows you to easily access them later on."
+      other: "No bookmarks."
+    no_likes_given:
+      self: "You have not liked any posts."
+      other: "No liked posts."
+
   topic_flag_types:
     spam:
       title: 'Spam'
