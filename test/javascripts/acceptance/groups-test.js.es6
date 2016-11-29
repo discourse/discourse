@@ -4,7 +4,9 @@ acceptance("Groups");
 
 test("Browsing Groups", () => {
   visit("/groups/discourse");
+
   andThen(() => {
+    ok(count('.avatar-flair .fa-adjust') === 1, "it displays the group's avatar flair");
     ok(count('.group-members tr') > 0, "it lists group members");
   });
 

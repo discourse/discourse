@@ -17,7 +17,14 @@
     <section class='user-right groups'>
       <section class='about group'>
         <div class='details'>
-          <h1>{{groupName}}</h1>
+          <h1 class='group-header'>
+            {{#if model.flair_url}}
+              <span class='group-avatar-flair'>
+                {{mount-widget widget="avatar-flair" args=avatarFlairAttributes}}
+              </span>
+            {{/if}}
+            <span class='group-name'>{{groupName}}</span>
+          </h1>
         </div>
       </section>
       {{outlet}}
