@@ -28,6 +28,16 @@ export default Ember.Controller.extend({
     return name.capitalize();
   },
 
+  @computed('model.name', 'model.flair_url', 'model.flair_bg_color', 'model.flair_color')
+  avatarFlairAttributes(groupName, flairURL, flairBgColor, flairColor) {
+    return {
+      primary_group_flair_url: flairURL,
+      primary_group_flair_bg_color: flairBgColor,
+      primary_group_flair_color: flairColor,
+      primary_group_name: groupName
+    };
+  },
+
   @observes('counts')
   countsChanged() {
     const counts = this.get('counts');

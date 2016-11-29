@@ -6,7 +6,8 @@ export default {
       "name":"discourse",
       "user_count":8,
       "alias_level":0,
-      "visible":true
+      "visible":true,
+      "flair_url": 'fa-adjust'
     }
   },
   "/groups/discourse/counts.json":{

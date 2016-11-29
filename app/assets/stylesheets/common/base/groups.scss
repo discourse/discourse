@@ -1,0 +1,16 @@
+.groups {
+  .group-header {
+    display: table;
+  }
+
+  .avatar-flair {
+    background-size: 40px;
+    height: 40px;
+    width: 40px;
+  }
+
+  .group-avatar-flair, .group-name {
+    display: table-cell;
+    vertical-align: middle;
+  }
+}
