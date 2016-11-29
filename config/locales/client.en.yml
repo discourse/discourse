@@ -487,8 +487,11 @@ en:
       profile: "Profile"
       mute: "Mute"
       edit: "Edit Preferences"
-      download_archive: "Download My Posts"
-      download_archive_confirm: "Are you sure you want to download your posts?"
+      download_archive:
+        button_text: "Download My Posts"
+        confirm: "Are you sure you want to download your posts?"
+        success: "Download initiated, you will be notified via message when the process is complete."
+        rate_limit_error: "Posts can be downloaded once per day, please try again tomorrow."
       new_private_message: "New Message"
       private_message: "Message"
       private_messages: "Messages"
@@ -2636,7 +2639,6 @@ en:
       export_csv:
         success: "Export initiated, you will be notified via message when the process is complete."
         failed: "Export failed. Please check the logs."
-        rate_limit_error: "Posts can be downloaded once per day, please try again tomorrow."
         button_text: "Export"
         button_title:
           user: "Export full user list in CSV format."
