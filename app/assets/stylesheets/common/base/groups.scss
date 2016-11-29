@@ -4,9 +4,15 @@
   }
 
   .avatar-flair {
-    background-size: 40px;
-    height: 40px;
-    width: 40px;
+    $size: 40px;
+
+    background-size: $size;
+    height: $size;
+    width: $size;
+
+    i {
+      font-size: $size !important;
+    }
   }
 
   .group-avatar-flair, .group-name {
