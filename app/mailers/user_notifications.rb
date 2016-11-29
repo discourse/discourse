@@ -102,21 +102,31 @@ class UserNotifications < ActionMailer::Base
     @preheader_text = I18n.t('user_notifications.digest.preheader', last_seen_at: @last_seen_at)
 
     # Try to find 3 interesting stats for the top of the digest
-    @counts = [{label_key: 'user_notifications.digest.new_topics', value: Topic.new_since_last_seen(user, min_date).count}]
+    @counts = [{label_key: 'user_notifications.digest.new_topics',
+                value: Topic.new_since_last_seen(user, min_date).count,
+                href: "#{Discourse.base_url}/new"}]
 
     value = user.unread_notifications
-    @counts << {label_key: 'user_notifications.digest.unread_notifications', value: value} if value > 0
+    @counts << {label_key: 'user_notifications.digest.unread_notifications', value: value, href: "#{Discourse.base_url}/my/notifications"} if value > 0
 
     value = user.unread_private_messages
-    @counts << {label_key: 'user_notifications.digest.unread_messages', value: value} if value > 0
+    @counts << {label_key: 'user_notifications.digest.unread_messages', value: value, href: "#{Discourse.base_url}/my/messages"} if value > 0
 
     if @counts.size < 3
-      @counts << {label_key: 'user_notifications.digest.new_posts', value: Post.for_mailing_list(user, min_date).where("posts.post_number > ?", 1).count}
+      @counts << {
+        label_key: 'user_notifications.digest.new_posts',
+        value: Post.for_mailing_list(user, min_date).where("posts.post_number > ?", 1).count,
+        href: "#{Discourse.base_url}/new"
+      }
     end
 
     if @counts.size < 3
       value = User.real.where(active: true, staged: false).not_suspended.where("created_at > ?", min_date).count
-      @counts << {label_key: 'user_notifications.digest.new_users', value: value } if value > 0
+      @counts << {
+        label_key: 'user_notifications.digest.new_users',
+        value: value,
+        href: "#{Discourse.base_url}/about"
+      } if value > 0
     end
 
     # Now fetch some topics and posts to show
