@@ -17,9 +17,11 @@ class RouteNode {
     this.childrenByName = {};
     this.paths = {};
 
-    if (opts.path) {
-      this.paths[opts.path] = true;
+    if (!opts.path) {
+      opts.path = name;
     }
+
+    this.paths[opts.path] = true;
   }
 
   route(name, opts, fn) {
