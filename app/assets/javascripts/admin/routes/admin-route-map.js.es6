@@ -1,7 +1,5 @@
-export default {
-  resource: 'admin',
-
-  map() {
+export default function() {
+  this.route('admin', { resetNamespace: true }, function() {
     this.route('dashboard', { path: '/' });
     this.route('adminSiteSettings', { path: '/site_settings', resetNamespace: true }, function() {
       this.route('adminSiteSettingsCategory', { path: 'category/:category_id', resetNamespace: true} );
@@ -84,5 +82,7 @@ export default {
     this.route('adminBadges', { path: '/badges', resetNamespace: true }, function() {
       this.route('show', { path: '/:badge_id' });
     });
-  }
+
+    this.route('adminPlugins', { path: '/plugins', resetNamespace: true });
+  });
 };

@@ -5,11 +5,92 @@ const BareRouter = Ember.Router.extend({
   location: Ember.testing ? 'none': 'discourse-location'
 });
 
-export function mapRoutes() {
+// Ember's router can't be extended. We need to allow plugins to add routes to routes that were defined
+// in the core app. This class has the same API as Ember's `Router.map` but saves the results in a tree.
+// The tree is applied after all plugins are defined.
+class RouteNode {
+  constructor(name, opts={}, depth=0) {
+    this.name = name;
+    this.opts = opts;
+    this.depth = depth;
+    this.children = [];
+    this.childrenByName = {};
+    this.paths = {};
 
-  var Router = BareRouter.extend();
-  const resources = {};
-  const paths = {};
+    if (opts.path) {
+      this.paths[opts.path] = true;
+    }
+  }
+
+  route(name, opts, fn) {
+    if (typeof opts === 'function') {
+      fn = opts;
+      opts = {};
+    } else {
+      opts = opts || {};
+    }
+
+    const existing = this.childrenByName[name];
+    if (existing) {
+      if (opts.path) {
+        existing.paths[opts.path] = true;
+      }
+      existing.extract(fn);
+    } else {
+      const node = new RouteNode(name, opts, this.depth+1);
+      node.extract(fn);
+      this.childrenByName[name] = node;
+      this.children.push(node);
+    }
+  }
+
+  extract(fn) {
+    if (!fn) { return; }
+    fn.call(this);
+  }
+
+  mapRoutes(router) {
+    const children = this.children;
+    if (this.name === 'root') {
+      children.forEach(c => c.mapRoutes(router));
+    } else {
+
+      const builder = (children.length === 0) ? undefined : function() {
+        children.forEach(c => c.mapRoutes(this));
+      };
+      router.route(this.name, this.opts, builder);
+
+      // We can have multiple paths to the same route
+      const paths = Object.keys(this.paths);
+      if (paths.length > 1) {
+        paths.filter(p => p !== this.opts.path).forEach(path => {
+          const newOpts = jQuery.extend({}, this.opts, { path });
+          router.route(this.name, newOpts, builder);
+        });
+      }
+    }
+  }
+
+  findSegment(segments) {
+    if (segments && segments.length) {
+      const first = segments.shift();
+      const node = this.childrenByName[first];
+      if (node) {
+        return (segments.length === 0) ? node : node.findSegment(segments);
+      }
+    }
+  }
+
+  findPath(path) {
+    if (path) {
+      return this.findSegment(path.split('.'));
+    }
+  }
+}
+
+export function mapRoutes() {
+  const tree = new RouteNode('root');
+  const extras = [];
 
   // If a module is defined as `route-map` in discourse or a plugin, its routes
   // will be built automatically. You can supply a `resource` property to
@@ -20,62 +101,24 @@ export function mapRoutes() {
       var module = require(key, null, null, true);
       if (!module || !module.default) { throw new Error(key + ' must export a route map.'); }
 
-      var mapObj = module.default;
+      const mapObj = module.default;
       if (typeof mapObj === 'function') {
-        mapObj = { resource: 'root', map: mapObj };
+        tree.extract(mapObj);
+      } else {
+        extras.push(mapObj);
       }
-
-      if (!resources[mapObj.resource]) { resources[mapObj.resource] = []; }
-      resources[mapObj.resource].push(mapObj.map);
-      if (mapObj.path) { paths[mapObj.resource] = mapObj.path; }
     }
   });
 
-  return Router.map(function() {
-    var router = this;
-
-    // Do the root resources first
-    if (resources.root) {
-      resources.root.forEach(function(m) {
-        m.call(router);
-      });
-      delete resources.root;
+  extras.forEach(extra => {
+    const node = tree.findPath(extra.resource);
+    if (node) {
+      node.extract(extra.map);
     }
+  });
 
-    // Even if no plugins set it up, we need an `adminPlugins` route
-    var adminPlugins = 'admin.adminPlugins';
-    resources[adminPlugins] = resources[adminPlugins] || [Ember.K];
-    paths[adminPlugins] = paths[adminPlugins] || "/plugins";
-
-    var segments = {},
-        standalone = [];
-
-    Object.keys(resources).forEach(function(r) {
-      var m = /^([^\.]+)\.(.*)$/.exec(r);
-      if (m) {
-        segments[m[1]] = m[2];
-      } else {
-        standalone.push(r);
-      }
-    });
-
-    // Apply other resources next. A little hacky but works!
-    standalone.forEach(function(r) {
-      router.route(r, {path: paths[r], resetNamespace: true}, function() {
-        var res = this;
-        resources[r].forEach(function(m) { m.call(res); });
-
-        var s = segments[r];
-        if (s) {
-          var full = r + '.' + s;
-          res.route(s, {path: paths[full], resetNamespace: true}, function() {
-            var nestedRes = this;
-            resources[full].forEach(function(m) { m.call(nestedRes); });
-          });
-        }
-      });
-    });
-
+  return BareRouter.extend().map(function() {
+    tree.mapRoutes(this);
     this.route('unknown', {path: '*path'});
   });
 }
