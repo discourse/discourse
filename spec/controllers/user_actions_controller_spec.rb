@@ -43,7 +43,7 @@ describe UserActionsController do
       expect(response.status).to eq(200)
       parsed = JSON.parse(response.body)
 
-      expect(parsed["no_results_help"]).to eq(I18n.t("user_activity.no_bookmarks.other"))
+      expect(parsed["no_results_help"]).to eq(I18n.t("user_activity.no_bookmarks.others"))
     end
 
     context "queued posts" do

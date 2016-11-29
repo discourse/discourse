@@ -29,7 +29,7 @@ class UserActionsController < ApplicationController
       if user.id == guardian.user.try(:id)
         help_key += ".self"
       else
-        help_key += ".other"
+        help_key += ".others"
       end
       render json: {
         user_action: [],
