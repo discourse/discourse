@@ -55,6 +55,7 @@ export default Ember.Controller.extend({
   application: Ember.inject.controller(),
 
   replyAsNewTopicDraft: Em.computed.equal('model.draftKey', Composer.REPLY_AS_NEW_TOPIC_KEY),
+  replyAsNewPrivateMessageDraft: Em.computed.equal('model.draftKey', Composer.REPLY_AS_NEW_PRIVATE_MESSAGE_KEY),
   checkedMessages: false,
   messageCount: null,
   showEditReason: false,
@@ -479,7 +480,7 @@ export default Ember.Controller.extend({
       }
 
       // If user "created a new topic/post" or "replied as a new topic" successfully, remove the draft.
-      if (result.responseJson.action === "create_post" || self.get('replyAsNewTopicDraft')) {
+      if (result.responseJson.action === "create_post" || self.get('replyAsNewTopicDraft') || self.get('replyAsNewPrivateMessageDraft')) {
         self.destroyDraft();
       }
       if (self.get('model.action') === 'edit') {

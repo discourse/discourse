@@ -649,11 +649,37 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
       const quotedText = Quote.build(post, quoteState.get('buffer'));
       this.send('deselectText');
 
-      composerController.open({
-        action: Composer.CREATE_TOPIC,
-        draftKey: Composer.REPLY_AS_NEW_TOPIC_KEY,
-        categoryId: this.get('model.category.id')
-      }).then(() => {
+      var options;
+
+      if (this.get('model.isPrivateMessage')) {
+
+        var users = this.get('model.details.allowed_users');
+        var groups = this.get('model.details.allowed_groups');
+
+        var usernames = users.map(user => {
+          return user.username;
+        }).concat(groups.map(group => {
+          return group.name;
+        })).join();
+
+        options = {
+          action: Composer.PRIVATE_MESSAGE,
+          archetypeId: 'private_message',
+          draftKey: Composer.REPLY_AS_NEW_PRIVATE_MESSAGE_KEY,
+          usernames: usernames
+        };
+
+      } else {
+
+        options = {
+          action: Composer.CREATE_TOPIC,
+          draftKey: Composer.REPLY_AS_NEW_TOPIC_KEY,
+          categoryId: this.get('model.category.id')
+        };
+
+      }
+
+      composerController.open(options).then(() => {
         return Em.isEmpty(quotedText) ? "" : quotedText;
       }).then(q => {
         const postUrl = `${location.protocol}//${location.host}${post.get('url')}`;
