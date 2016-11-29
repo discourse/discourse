@@ -118,6 +118,7 @@ export default function() {
     this.get("/t/280.json", () => response(fixturesByUrl['/t/280/1.json']));
     this.get("/t/28830.json", () => response(fixturesByUrl['/t/28830/1.json']));
     this.get("/t/9.json", () => response(fixturesByUrl['/t/9/1.json']));
+    this.get("/t/12.json", () => response(fixturesByUrl['/t/12/1.json']));
 
     this.get("/t/id_for/:slug", () => {
       return response({id: 280, slug: "internationalization-localization", url: "/t/internationalization-localization/280"});
