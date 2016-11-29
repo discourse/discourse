@@ -12,7 +12,6 @@ var Tab = Em.Object.extend({
   }
 });
 
-
 export default Ember.Controller.extend({
   counts: null,
   showing: 'members',
@@ -23,6 +22,11 @@ export default Ember.Controller.extend({
     Tab.create({ name: 'mentions' }),
     Tab.create({ name: 'messages', requiresMembership: true })
   ],
+
+  @computed('model.name')
+  groupName(name) {
+    return name.capitalize();
+  },
 
   @observes('counts')
   countsChanged() {
