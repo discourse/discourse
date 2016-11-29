@@ -1,0 +1,36 @@
+module Onebox
+  module Engine
+    class SteamStoreOnebox
+      include Engine
+      include StandardEmbed
+
+      always_https
+      matches_regexp(/^https?:\/\/store\.steampowered\.com\/app\/\d+/)
+
+      def placeholder_html
+        og = get_opengraph
+        <<-HTML
+          <div style='width:100%; height:190px; background-color:#262626; color:#9e9e9e; margin:15px 0;'>
+            <div style='padding:10px'>
+              <h3 style='color:#fff; margin:10px 0 10px 5px;'>#{og[:title]}</h3>
+              <img src='#{og[:image]}' style='float:left; max-width:184px; margin:5px 15px 0 5px'/>
+              <p>#{og[:description]}</p>
+            </div>
+          </div>
+        HTML
+      end
+
+      def to_html
+        iframe_url = @url.gsub('/app/', '/widget/')
+
+        <<-HTML
+          <iframe src='#{iframe_url}'
+                  frameborder='0'
+                  width='100%'
+                  height='190'>
+          </iframe>
+        HTML
+      end
+    end
+  end
+end
