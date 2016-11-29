@@ -119,13 +119,19 @@ const Group = Discourse.Model.extend({
 
   create() {
     var self = this;
-    return ajax("/admin/groups", { type: "POST", data: this.asJSON() }).then(function(resp) {
+    return ajax("/admin/groups", { type: "POST", data:  { group: this.asJSON() } }).then(function(resp) {
       self.set('id', resp.basic_group.id);
     });
   },
 
   save() {
-    return ajax("/admin/groups/" + this.get('id'), { type: "PUT", data: this.asJSON() });
+    const id = this.get('id');
+    const url = this.get('is_group_owner') ? `/groups/${id}` : `/admin/groups/${id}`;
+
+    return ajax(url, {
+      type: "PUT",
+      data: { group: this.asJSON() }
+    });
   },
 
   destroy() {

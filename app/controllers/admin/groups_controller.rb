@@ -36,7 +36,7 @@ class Admin::GroupsController < Admin::AdminController
   def create
     group = Group.new
 
-    group.name = (params[:name] || '').strip
+    group.name = (group_params[:name] || '').strip
     save_group(group)
   end
 
@@ -44,29 +44,29 @@ class Admin::GroupsController < Admin::AdminController
     group = Group.find(params[:id])
 
     # group rename is ignored for automatic groups
-    group.name = params[:name] if params[:name] && !group.automatic
+    group.name = group_params[:name] if group_params[:name] && !group.automatic
     save_group(group)
   end
 
   def save_group(group)
-    group.alias_level = params[:alias_level].to_i if params[:alias_level].present?
-    group.visible = params[:visible] == "true"
-    grant_trust_level = params[:grant_trust_level].to_i
+    group.alias_level = group_params[:alias_level].to_i if group_params[:alias_level].present?
+    group.visible = group_params[:visible] == "true"
+    grant_trust_level = group_params[:grant_trust_level].to_i
     group.grant_trust_level = (grant_trust_level > 0 && grant_trust_level <= 4) ? grant_trust_level : nil
 
-    group.automatic_membership_email_domains = params[:automatic_membership_email_domains] unless group.automatic
-    group.automatic_membership_retroactive = params[:automatic_membership_retroactive] == "true" unless group.automatic
+    group.automatic_membership_email_domains = group_params[:automatic_membership_email_domains] unless group.automatic
+    group.automatic_membership_retroactive = group_params[:automatic_membership_retroactive] == "true" unless group.automatic
 
-    group.primary_group = group.automatic ? false : params["primary_group"] == "true"
+    group.primary_group = group.automatic ? false : group_params["primary_group"] == "true"
 
-    group.incoming_email = group.automatic ? nil : params[:incoming_email]
+    group.incoming_email = group.automatic ? nil : group_params[:incoming_email]
 
-    title = params[:title] if params[:title].present?
+    title = group_params[:title] if group_params[:title].present?
     group.title = group.automatic ? nil : title
 
-    group.flair_url      = params[:flair_url].presence
-    group.flair_bg_color = params[:flair_bg_color].presence
-    group.flair_color    = params[:flair_color].presence
+    group.flair_url      = group_params[:flair_url].presence
+    group.flair_bg_color = group_params[:flair_bg_color].presence
+    group.flair_color    = group_params[:flair_color].presence
 
     if group.save
       Group.reset_counters(group.id, :group_users)
@@ -124,7 +124,18 @@ class Admin::GroupsController < Admin::AdminController
 
   protected
 
-    def can_not_modify_automatic
-      render json: {errors: I18n.t('groups.errors.can_not_modify_automatic')}, status: 422
-    end
+  def can_not_modify_automatic
+    render json: {errors: I18n.t('groups.errors.can_not_modify_automatic')}, status: 422
+  end
+
+  private
+
+  def group_params
+    params.require(:group).permit(
+      :name, :alias_level, :visible, :automatic_membership_email_domains,
+      :automatic_membership_retroactive, :title, :primary_group,
+      :grant_trust_level, :incoming_email, :flair_url, :flair_bg_color,
+      :flair_color
+    )
+  end
 end
