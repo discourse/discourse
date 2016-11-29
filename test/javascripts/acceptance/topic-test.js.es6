@@ -72,3 +72,57 @@ test("Marking a topic as wiki", () => {
     ok(find('a.wiki').length === 1, 'it shows the wiki icon');
   });
 });
+
+test("Reply as new topic", () => {
+  visit("/t/internationalization-localization/280");
+  click("button.share:eq(0)");
+  click(".reply-as-new-topic a");
+
+  andThen(() => {
+    ok(exists('.d-editor-input'), 'the composer input is visible');
+
+    equal(
+      find('.d-editor-input').val().trim(),
+      "Continuing the discussion from [Internationalization / localization](http://localhost:3000/t/internationalization-localization/280):",
+      "it fills composer with the ring string"
+    );
+
+    equal(
+      find('#select2-chosen-1').text().trim(), "feature",
+      "it fills category selector with the right category"
+    );
+  });
+});
+
+test("Reply as new message", () => {
+  visit("/t/pm-for-testing/12");
+  click("button.share:eq(0)");
+  click(".reply-as-new-topic a");
+
+  andThen(() => {
+    ok(exists('.d-editor-input'), 'the composer input is visible');
+
+    equal(
+      find('.d-editor-input').val().trim(),
+      "Continuing the discussion from [PM for testing](http://localhost:3000/t/pm-for-testing/12):",
+      "it fills composer with the ring string"
+    );
+
+    const targets = find('.item span', '.composer-fields');
+
+    equal(
+      $(targets[0]).text(), "someguy",
+      "it fills up the composer with the right user to start the PM to"
+    );
+
+    equal(
+      $(targets[1]).text(), "test",
+      "it fills up the composer with the right user to start the PM to"
+    );
+
+    equal(
+      $(targets[2]).text(), "Group",
+      "it fills up the composer with the right group to start the PM to"
+    );
+  });
+});

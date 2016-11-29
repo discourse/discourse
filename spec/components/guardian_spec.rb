@@ -218,6 +218,7 @@ describe Guardian do
   describe 'can_reply_as_new_topic' do
     let(:user) { Fabricate(:user) }
     let(:topic) { Fabricate(:topic) }
+    let(:private_message) { Fabricate(:private_message_topic) }
 
     it "returns false for a non logged in user" do
       expect(Guardian.new(nil).can_reply_as_new_topic?(topic)).to be_falsey
@@ -234,6 +235,10 @@ describe Guardian do
 
     it "returns true for a trusted user" do
       expect(Guardian.new(user).can_reply_as_new_topic?(topic)).to be_truthy
+    end
+
+    it "returns true for a private message" do
+      expect(Guardian.new(user).can_reply_as_new_topic?(private_message)).to be_truthy
     end
   end
 
