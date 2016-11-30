@@ -101,6 +101,8 @@ module ActiveRecord
       config = config.symbolize_keys
 
       if fallback_handler.master_down?
+        fallback_handler.verify_master
+
         connection = postgresql_connection(config.dup.merge({
           host: config[:replica_host], port: config[:replica_port]
         }))
