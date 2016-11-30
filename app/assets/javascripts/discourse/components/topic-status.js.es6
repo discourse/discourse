@@ -27,8 +27,6 @@ export default Ember.Component.extend(bufferedRender({
   }.property('disableActions'),
 
   buildBuffer(buffer) {
-    const self = this;
-
     const renderIcon = function(name, key, actionable) {
       const title = escapeExpression(I18n.t(`topic_statuses.${key}.help`)),
             startTag = actionable ? "a href" : "span",
@@ -39,8 +37,8 @@ export default Ember.Component.extend(bufferedRender({
       buffer.push(`<${startTag} title='${title}' class='topic-status'>${icon}</${endTag}>`);
     };
 
-    const renderIconIf = function(conditionProp, name, key, actionable) {
-      if (!self.get(conditionProp)) { return; }
+    const renderIconIf = (conditionProp, name, key, actionable) => {
+      if (!this.get(conditionProp)) { return; }
       renderIcon(name, key, actionable);
     };
 
