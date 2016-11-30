@@ -89,7 +89,7 @@ function initializePolls(api) {
       );
 
       $poll.replaceWith($div);
-      Em.run.schedule('afterRender', () => pollComponent.renderer.replaceIn(pollComponent, $div[0]));
+      Em.run.schedule('afterRender', () => pollComponent.renderer.appendTo(pollComponent, $div[0]));
       postPollViews[pollId] = pollComponent;
     });
 
