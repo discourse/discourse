@@ -163,7 +163,7 @@ SQL
 
           added_urls << url
 
-          unless TopicLink.find_by(topic_id: post.topic_id, post_id: post.id, url: url)
+          unless TopicLink.exists?(topic_id: post.topic_id, post_id: post.id, url: url)
             begin
               TopicLink.create!(post_id: post.id,
                                 user_id: post.user_id,
