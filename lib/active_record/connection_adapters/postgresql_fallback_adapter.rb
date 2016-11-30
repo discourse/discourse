@@ -39,10 +39,6 @@ class PostgreSQLFallbackHandler
     synchronize { @masters_down.delete(namespace) }
   end
 
-  def running?
-    synchronize { @thread.alive? }
-  end
-
   def initiate_fallback_to_master
     @masters_down.keys.each do |key|
       RailsMultisite::ConnectionManagement.with_connection(key) do
@@ -59,7 +55,6 @@ class PostgreSQLFallbackHandler
             Discourse.disable_readonly_mode
           end
         rescue => e
-          byebug
           logger.warn "#{log_prefix}: Connection to master PostgreSQL server failed with '#{e.message}'"
         end
       end
