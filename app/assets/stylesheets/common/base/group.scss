@@ -1,0 +1,101 @@
+.group-header {
+  font-size: 2.142em;
+  font-weight: normal;
+}
+
+table.group-members {
+  width: 100%;
+
+  th, tr {
+    border-bottom: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
+  }
+
+  th {
+    text-align: left;
+  }
+
+  tr {
+    .user-info {
+      display: block;
+    }
+
+    td {
+      color: dark-light-diff($primary, $secondary, 50%, -50%);
+      padding: 0.8em 0;
+    }
+  }
+}
+
+.group-owner-label {
+  color: $primary;
+}
+
+.group-header, .group-details {
+  display: table;
+
+  span {
+    display: table-cell;
+    vertical-align: middle;
+  }
+
+  .avatar-flair {
+    $size: 40px;
+
+    background-size: $size;
+    height: $size;
+    width: $size;
+
+    i {
+      font-size: $size !important;
+    }
+  }
+}
+
+.group-edit-btn {
+  margin-left: 5px;
+}
+
+.form-horizontal {
+  label {
+    font-weight: bold;
+  }
+
+  input[type="text"] {
+    width: 80% !important;
+    margin-bottom: 10px;
+  }
+
+  .group-flair-inputs {
+    display: inline-block;
+    margin-top: 30px;
+    margin-bottom: 30px;
+
+    .group-flair-left {
+      float: left;
+    }
+
+    .group-flair-right {
+      float: left;
+      margin-left: 30px;
+    }
+  }
+
+  .avatar-flair-preview {
+    position: relative;
+    width: 45px;
+
+    .avatar-wrapper {
+      background-color: #f4f4f4;
+    }
+  }
+}
+
+#add-user-to-group {
+  .ac-wrap {
+    width: 100% !important;
+  }
+
+  .add {
+    margin-top: 10px;
+  }
+}

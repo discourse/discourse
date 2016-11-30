@@ -27,7 +27,7 @@ test("Browsing Groups", () => {
 
   visit("/groups/discourse/messages");
   andThen(() => {
-    ok($('.action-list li').length === 4, 'it should not show messages tab');
+    ok($('.nav-stacked li').length === 4, 'it should not show messages tab');
     ok(count('.user-stream .item') > 0, "it lists stream items");
   });
 });
@@ -39,7 +39,7 @@ test("Admin Browsing Groups", () => {
   visit("/groups/discourse");
 
   andThen(() => {
-    ok($('.action-list li').length === 5, 'it should show messages tab if user is admin');
+    ok($('.nav-stacked li').length === 5, 'it should show messages tab if user is admin');
   });
 
   click('.group-edit-btn');
