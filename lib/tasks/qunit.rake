@@ -1,6 +1,6 @@
 desc "Runs the qunit test suite"
 
-task "qunit:test" => :environment do
+task "qunit:test", [:timeout] => :environment do |_, args|
 
   require "rack"
   require "socket"
@@ -35,7 +35,7 @@ task "qunit:test" => :environment do
   begin
     success = true
     test_path = "#{Rails.root}/vendor/assets/javascripts"
-    cmd = "phantomjs #{test_path}/run-qunit.js http://localhost:#{port}/qunit"
+    cmd = "phantomjs #{test_path}/run-qunit.js http://localhost:#{port}/qunit #{args[:timeout]}"
 
     options = {}
 
