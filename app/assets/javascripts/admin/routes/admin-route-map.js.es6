@@ -83,6 +83,8 @@ export default function() {
       this.route('show', { path: '/:badge_id' });
     });
 
-    this.route('adminPlugins', { path: '/plugins', resetNamespace: true });
+    this.route('adminPlugins', { path: '/plugins', resetNamespace: true }, function() {
+      this.route('index', { path: '/' });
+    });
   });
 };
