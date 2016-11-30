@@ -33,7 +33,7 @@ class SystemMessage
 
     post = creator.create
     if creator.errors.present?
-      raise StandardError, creator.errors.to_s
+      raise StandardError, creator.errors.full_messages.join(" ")
     end
 
     UserArchivedMessage.create!(user: Discourse.site_contact_user, topic: post.topic)
