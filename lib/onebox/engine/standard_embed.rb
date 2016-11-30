@@ -22,7 +22,7 @@ module Onebox
       add_oembed_provider(/www\.meetup\.com\//, 'http://api.meetup.com/oembed')
 
       def always_https?
-        WhitelistedGenericOnebox.host_matches(uri, WhitelistedGenericOnebox.https_hosts)
+        WhitelistedGenericOnebox.host_matches(uri, WhitelistedGenericOnebox.https_hosts) || super
       end
 
       def raw

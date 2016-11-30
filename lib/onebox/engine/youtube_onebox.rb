@@ -43,7 +43,6 @@ module Onebox
           # for channel pages
           html = Onebox::Engine::WhitelistedGenericOnebox.new(@url, @cache, @timeout).to_html
           return if Onebox::Helpers.blank?(html)
-          html.gsub!("http:", "https:")
           html.gsub!(/['"]\/\//, "https://")
           html
         end

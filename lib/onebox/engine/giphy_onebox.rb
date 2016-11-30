@@ -5,6 +5,7 @@ module Onebox
       include StandardEmbed
 
       matches_regexp(/^https?:\/\/(giphy\.com\/gifs|gph\.is)\//)
+      always_https
 
       def to_html
         oembed = get_oembed

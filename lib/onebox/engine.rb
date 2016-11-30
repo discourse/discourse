@@ -21,17 +21,13 @@ module Onebox
 
     def options=(opt)
       return @options if opt.nil? #make sure options provided
-      if opt.instance_of? OpenStruct
-        @options = @options.merge(opt.to_h)
-      else
-       @options =  @options.merge(opt)
-      end
+      opt = opt.to_h  if opt.instance_of?(OpenStruct)
+      @options.merge!(opt)
       @options
     end
 
 
     def initialize(link, cache = nil, timeout = nil)
-
       @options = DEFAULT
       class_name = self.class.name.split("::").last.to_s
       self.options = Onebox.options[class_name] || {} #Set the engine options extracted from global options.

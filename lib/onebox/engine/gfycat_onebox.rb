@@ -5,6 +5,7 @@ module Onebox
       include StandardEmbed
 
       matches_regexp(/^https?:\/\/gfycat\.com\//)
+      always_https
 
       def to_html
         oembed = get_oembed
