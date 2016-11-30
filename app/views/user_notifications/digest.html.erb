@@ -130,7 +130,7 @@ body, table, td, th, h1, h2, h3 {font-family: Helvetica, Arial, sans-serif !impo
       </td>
       <td style="color:#0a0a0a;padding:0 16px 0 8px;text-align:left;">
         <h6 style="color:inherit;font-size:18px;font-weight:400;line-height:1.3;margin:0;padding:0;word-wrap:normal;"><%= t.user.try(:username) -%></h6>
-        <% if t.user.try(:name).present? %>
+        <% if SiteSetting.enable_names? && t.user.try(:name).present? %>
           <p style="color:#8f8f8f;line-height:1.3;margin:0 0 16px 0;padding:0;"><%= t.user.name -%></p>
         <% end %>
       </td>
@@ -219,7 +219,7 @@ body, table, td, th, h1, h2, h3 {font-family: Helvetica, Arial, sans-serif !impo
 <table style="background-color: #f3f3f3; width: 100%;">
   <tr>
     <td>
-      <h1 style="color:#0a0a0a;font-size:28px;line-height:1.3;text-align:center;">
+      <h1 style="color:#0a0a0a;font-size:28px;line-height:1.3;text-align:center;font-family:Helvetica,Arial,sans-serif;">
         <%=t 'user_notifications.digest.popular_posts' %>
       </h1>
     </td>
@@ -261,8 +261,10 @@ body, table, td, th, h1, h2, h3 {font-family: Helvetica, Arial, sans-serif !impo
         <img src="<%= post.user.small_avatar_url -%>" style="border-radius:50%;clear:both;display:block;height:50px;width:50px;outline:0;">
       </td>
       <td style="color:#0a0a0a;line-height:1.3;padding:0 8px 8px 8px;vertical-align:top;">
-        <h6 style="color:inherit;font-size:16px;font-weight:400;margin:0;padding:0;text-align:left;word-wrap:normal;"><%= post.user.username -%></h6>
-        <p style="color:#8f8f8f;font-size:16px;line-height:1.3;margin:0;padding:0;text-align:left;"><%= post.user.name -%></p>
+        <h6 style="color:inherit;font-size:16px;font-weight:400;margin:0;padding:0;text-align:left;word-wrap:normal;"><%= post.user.try(:username) -%></h6>
+        <% if SiteSetting.enable_names? && post.user.try(:name) %>
+          <p style="color:#8f8f8f;font-size:16px;line-height:1.3;margin:0;padding:0;text-align:left;"><%= post.user.name -%></p>
+        <% end %>
       </td>
       <td style="color:#0a0a0a;line-height:1.3;padding:0 8px 8px 8px;text-align:right;">
         <p style="color:#8f8f8f;line-height:1.3;margin:0 0 10px 0;padding:0;text-align:right;">
@@ -279,22 +281,32 @@ body, table, td, th, h1, h2, h3 {font-family: Helvetica, Arial, sans-serif !impo
 
 <div style="background-color:#f3f3f3">
   <table class="spacer" style="padding:0;text-align:left;vertical-align:top;width:100%">
-    <tbody><tr><td height="40px" style="-moz-hyphens:auto;-webkit-hyphens:auto;border-collapse:collapse!important;color:#0a0a0a;font-size:40px;font-weight:400;hyphens:auto;line-height:40px;margin:0;mso-line-height-rule:exactly;padding:0;text-align:left;vertical-align:top;word-wrap:normal">&#xA0;</td></tr></tbody>
+    <tbody><tr><td height="40" style="-moz-hyphens:auto;-webkit-hyphens:auto;border-collapse:collapse!important;color:#0a0a0a;font-size:40px;font-weight:400;hyphens:auto;line-height:40px;margin:0;mso-line-height-rule:exactly;padding:0;text-align:left;vertical-align:top;word-wrap:normal">&#xA0;</td></tr></tbody>
   </table>
 </div>
 <!--   End of Popular Post   -->
 
 <% end %>
 
+    </td>
+    <td class="side-spacer" style="width:5%;padding:0;">&nbsp;</td>
+  </tr>
+</table>
+
 <% end %>
 
 
 
 <% if @other_new_for_you.present? %>
-  <center style="color:#0a0a0a;font-size:28px;font-weight:400;margin-bottom: 8px;"><%=t 'user_notifications.digest.more_new' %></center>
+  <center style="color:#0a0a0a;font-size:28px;font-weight:400;margin-bottom: 8px;font-family:Helvetica,Arial,sans-serif;"><%=t 'user_notifications.digest.more_new' %></center>
 
 
 <%= digest_custom_html("above_popular_topics") %>
+
+<table class="body" style="width:100%;background:#f3f3f3;border-spacing:0;border-collapse:collapse!important;font-family:Helvetica,Arial,sans-serif;font-size:16px;font-weight:200;line-height:1.3;padding:0;text-align:left;vertical-align:top;">
+  <tr>
+    <td class="side-spacer" style="width:5%;padding:0;">&nbsp;</td>
+    <td align="center" valign="top" style="width:90%;border-collapse:collapse!important;margin:0;padding:0;">
 
 <table style="padding:0;text-align:left;vertical-align:top;width:100%">
   <tbody>
@@ -340,6 +352,11 @@ body, table, td, th, h1, h2, h3 {font-family: Helvetica, Arial, sans-serif !impo
 <% end %>
 
 </tbody>
+</table>
+
+    </td>
+    <td class="side-spacer" style="width:5%;padding:0;">&nbsp;</td>
+  </tr>
 </table>
 
 <%= digest_custom_html("below_popular_topics") %>
