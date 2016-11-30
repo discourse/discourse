@@ -669,7 +669,7 @@ email:
   reset_bounce_score_after_days: 30
   attachment_content_type_blacklist:
     type: list
-    default: "pkcs7"
+    default: "pkcs7|x-vcard"
   attachment_filename_blacklist:
     type: list
     default: "smime.p7s|signature.asc"
