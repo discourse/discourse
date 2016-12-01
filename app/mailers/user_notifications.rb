@@ -130,7 +130,7 @@ class UserNotifications < ActionMailer::Base
     end
 
     # Now fetch some topics and posts to show
-    topics_for_digest = Topic.for_digest(user, min_date, limit: SiteSetting.digest_topics + 3, top_order: true).to_a
+    topics_for_digest = Topic.for_digest(user, min_date, limit: SiteSetting.digest_topics + SiteSetting.digest_other_topics, top_order: true).to_a
 
     @popular_topics = topics_for_digest[0,SiteSetting.digest_topics]
     @other_new_for_you = topics_for_digest.size > SiteSetting.digest_topics ? topics_for_digest[SiteSetting.digest_topics..-1] : []

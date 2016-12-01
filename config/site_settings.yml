@@ -588,6 +588,7 @@ email:
     default: 5
     min: 1
   digest_posts: 3
+  digest_other_topics: 5
   delete_digest_email_after_days: 365
   digest_suppress_categories:
     type: category_list
