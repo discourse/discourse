@@ -394,9 +394,14 @@ describe Email::Receiver do
 
       expect(forwarded_post.raw).to match(/XoXo/)
       expect(last_post.raw).to match(/can you have a look at this email below/)
+
+      expect(last_post.post_type).to eq(Post.types[:regular])
     end
 
     it "handles weirdly forwarded emails" do
+      group.add(Fabricate(:user, email: "ba@bar.com"))
+      group.save
+
       SiteSetting.enable_forwarded_emails = true
       expect { process(:forwarded_email_2) }.to change(Topic, :count)
 
@@ -407,6 +412,8 @@ describe Email::Receiver do
 
       expect(forwarded_post.raw).to match(/XoXo/)
       expect(last_post.raw).to match(/can you have a look at this email below/)
+
+      expect(last_post.post_type).to eq(Post.types[:whisper])
     end
 
   end
