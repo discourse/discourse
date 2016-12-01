@@ -137,6 +137,8 @@ class UserNotifications < ActionMailer::Base
 
     @popular_posts = if SiteSetting.digest_posts > 0
       Post.for_mailing_list(user, min_date)
+          .where('posts.post_type = ?', Post.types[:regular])
+          .where('posts.deleted_at IS NULL AND posts.hidden = false AND posts.user_deleted = false')
           .where("posts.post_number > ? AND posts.score > ?", 1, 5.0)
           .order("posts.score DESC")
           .limit(SiteSetting.digest_posts)
