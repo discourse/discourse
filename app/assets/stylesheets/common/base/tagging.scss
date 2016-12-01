@@ -136,7 +136,7 @@ $tag-color: scale-color($primary, $lightness: 40%);
   top: -0.1em;
 }
 
-header .discourse-tag {color: $tag-color !important; }
+header .discourse-tag {color: $tag-color }
 
 .list-tags {
   display: inline;
