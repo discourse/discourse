@@ -129,9 +129,11 @@ body, table, td, th, h1, h2, h3 {font-family: Helvetica, Arial, sans-serif !impo
         <img src="<%= t.user.small_avatar_url -%>" style="border-radius:50%;clear:both;display:block;float:none;height:50px;width:50px;margin:0;max-width:100%;outline:0;text-align:center;text-decoration:none;" align="center">
       </td>
       <td style="color:#0a0a0a;padding:0 16px 0 8px;text-align:left;">
-        <h6 style="color:inherit;font-size:18px;font-weight:400;line-height:1.3;margin:0;padding:0;word-wrap:normal;"><%= t.user.try(:username) -%></h6>
-        <% if SiteSetting.enable_names? && t.user.try(:name).present? %>
-          <p style="color:#8f8f8f;line-height:1.3;margin:0 0 16px 0;padding:0;"><%= t.user.name -%></p>
+        <% if t.user %>
+          <h6 style="color:inherit;font-size:18px;font-weight:400;line-height:1.3;margin:0;padding:0;word-wrap:normal;"><%= t.user.username -%></h6>
+          <% if SiteSetting.enable_names? && t.user.name.present? && t.user.name.downcase != t.user.username.downcase %>
+            <p style="color:#8f8f8f;line-height:1.3;margin:0 0 16px 0;padding:0;"><%= t.user.name -%></p>
+          <% end %>
         <% end %>
       </td>
       <%- if show_image_with_url(t.image_url) -%>
@@ -261,9 +263,11 @@ body, table, td, th, h1, h2, h3 {font-family: Helvetica, Arial, sans-serif !impo
         <img src="<%= post.user.small_avatar_url -%>" style="border-radius:50%;clear:both;display:block;height:50px;width:50px;outline:0;">
       </td>
       <td style="color:#0a0a0a;line-height:1.3;padding:0 8px 8px 8px;vertical-align:top;">
-        <h6 style="color:inherit;font-size:16px;font-weight:400;margin:0;padding:0;text-align:left;word-wrap:normal;"><%= post.user.try(:username) -%></h6>
-        <% if SiteSetting.enable_names? && post.user.try(:name) %>
-          <p style="color:#8f8f8f;font-size:16px;line-height:1.3;margin:0;padding:0;text-align:left;"><%= post.user.name -%></p>
+        <% if post.user %>
+          <h6 style="color:inherit;font-size:16px;font-weight:400;margin:0;padding:0;text-align:left;word-wrap:normal;"><%= post.user.username -%></h6>
+          <% if SiteSetting.enable_names? && post.user.name && post.user.name.downcase != post.user.username %>
+            <p style="color:#8f8f8f;font-size:16px;line-height:1.3;margin:0;padding:0;text-align:left;"><%= post.user.name -%></p>
+          <% end %>
         <% end %>
       </td>
       <td style="color:#0a0a0a;line-height:1.3;padding:0 8px 8px 8px;text-align:right;">
