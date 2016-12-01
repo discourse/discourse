@@ -28,7 +28,7 @@ export default Ember.Component.extend({
       }
     }
 
-    this.appEvents.trigger('modal:body-shown', this.getProperties('title'));
+    this.appEvents.trigger('modal:body-shown', this.getProperties('title', 'rawTitle'));
   },
 
   _flash(msg) {

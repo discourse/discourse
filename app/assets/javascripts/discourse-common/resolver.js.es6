@@ -135,7 +135,7 @@ export function buildResolver(baseName) {
     },
 
     findPluginTemplate(parsedName) {
-      var pluginParsedName = this.parseName(parsedName.fullName.replace("template:", "template:javascripts/"));
+      const pluginParsedName = this.parseName(parsedName.fullName.replace("template:", "template:javascripts/"));
       return this.findTemplate(pluginParsedName);
     },
 
