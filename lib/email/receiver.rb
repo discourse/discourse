@@ -420,11 +420,14 @@ module Email
       end
 
       if post && post.topic && @before_embedded.present?
+        post_type = Post.types[:regular]
+        post_type = Post.types[:whisper] if post.topic.private_message? && group.usernames[user.username]
+
         create_reply(user: user,
                      raw: @before_embedded,
                      post: post,
                      topic: post.topic,
-                     post_type: Post.types[:whisper])
+                     post_type: post_type)
       end
 
       true
