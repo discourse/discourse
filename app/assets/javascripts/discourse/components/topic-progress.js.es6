@@ -3,16 +3,10 @@ import { default as computed, observes } from 'ember-addons/ember-computed-decor
 export default Ember.Component.extend({
   elementId: 'topic-progress-wrapper',
   classNameBindings: ['docked'],
-  expanded: false,
   docked: false,
   progressPosition: null,
   postStream: Ember.computed.alias('topic.postStream'),
   _streamPercentage: null,
-
-  init() {
-    this._super();
-    (this.get('delegated') || []).forEach(m => this.set(m, m));
-  },
 
   @computed('progressPosition')
   jumpTopDisabled(progressPosition) {

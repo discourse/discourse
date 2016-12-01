@@ -168,7 +168,7 @@ export default RestModel.extend({
     this.set('summary', false);
 
     let jump = false;
-    if (userFilters.contains(username)) {
+    if (userFilters.includes(username)) {
       userFilters.removeObject(username);
     } else {
       userFilters.addObject(username);
@@ -256,7 +256,7 @@ export default RestModel.extend({
         return this.findPostsByIds(gap).then(posts => {
           posts.forEach(p => {
             const stored = this.storePost(p);
-            if (!currentPosts.contains(stored)) {
+            if (!currentPosts.includes(stored)) {
               currentPosts.insertAt(postIdx++, stored);
             }
           });
@@ -410,7 +410,7 @@ export default RestModel.extend({
     if (stored) {
       const posts = this.get('posts');
 
-      if (!posts.contains(stored)) {
+      if (!posts.includes(stored)) {
         if (!this.get('loadingBelow')) {
           this.get('postsWithPlaceholders').appendPost(() => posts.pushObject(stored));
         } else {

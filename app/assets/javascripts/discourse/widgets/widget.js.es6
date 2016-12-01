@@ -256,31 +256,24 @@ export default class Widget {
   }
 
   _sendComponentAction(name, param) {
-    const view = this._findAncestorWithProperty('_emberView');
-
     let promise;
-    if (view) {
-      // Peek into ember internals to allow us to return promises from actions
-      const ev = view._emberView;
-      const target = ev.get('targetObject');
 
-      const actionName = ev.get(name);
-      if (!actionName) {
-        Ember.warn(`${name} not found`);
+    const view = this._findView();
+    if (view) {
+      const method = view.attrs[name];
+      if (!method) {
+        console.warn(`${name} not found`);
         return;
       }
 
-      if (target) {
-        // TODO: Use ember closure actions
-        const actions = target.actions || target.actionHooks || {};
-        const method = actions[actionName];
-        if (method) {
-          promise = method.call(target, param);
-          if (!promise || !promise.then) {
-            promise = Ember.RSVP.resolve(promise);
-          }
-        } else {
-          return ev.sendAction(name, param);
+      if (typeof name === "string") {
+        view.sendAction(name, param);
+        promise = Ember.RSVP.resolve();
+      } else {
+        const target = view.get('targetObject');
+        promise = method.call(target, param);
+        if (!promise || !promise.then) {
+          promise = Ember.RSVP.resolve(promise);
         }
       }
     }
