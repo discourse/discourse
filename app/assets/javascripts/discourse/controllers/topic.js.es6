@@ -650,17 +650,14 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
       this.send('deselectText');
 
       var options;
-
       if (this.get('model.isPrivateMessage')) {
+        let users = this.get('model.details.allowed_users');
+        let groups = this.get('model.details.allowed_groups');
 
-        var users = this.get('model.details.allowed_users');
-        var groups = this.get('model.details.allowed_groups');
-
-        var usernames = users.map(user => {
-          return user.username;
-        }).concat(groups.map(group => {
-          return group.name;
-        })).join();
+        let usernames = [];
+        users.forEach(user => usernames.push(user.username));
+        groups.forEach(group => usernames.push(group.name));
+        usernames = usernames.join();
 
         options = {
           action: Composer.PRIVATE_MESSAGE,
@@ -668,15 +665,12 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
           draftKey: Composer.REPLY_AS_NEW_PRIVATE_MESSAGE_KEY,
           usernames: usernames
         };
-
       } else {
-
         options = {
           action: Composer.CREATE_TOPIC,
           draftKey: Composer.REPLY_AS_NEW_TOPIC_KEY,
           categoryId: this.get('model.category.id')
         };
-
       }
 
       composerController.open(options).then(() => {
