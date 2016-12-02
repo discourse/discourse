@@ -19,6 +19,8 @@ export default Ember.Component.extend({
     this.appEvents.on('modal:body-shown', data => {
       if (data.title) {
         this.set('title', I18n.t(data.title));
+      } else if (data.rawTitle) {
+        this.set('title', data.rawTitle);
       }
     });
   },

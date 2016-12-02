@@ -244,14 +244,21 @@ module Email
           address_field.decoded
           from_address = address_field.address
           from_display_name = address_field.display_name.try(:to_s)
-          return [from_address.downcase, from_display_name] if from_address["@"]
+          return [from_address&.downcase, from_display_name&.strip] if from_address["@"]
         end
       end
 
-      from_address = mail.from[/<([^>]+)>/, 1]
-      from_display_name = mail.from[/^([^<]+)/, 1]
+      if mail.from[/<[^>]+>/]
+        from_address = mail.from[/<([^>]+)>/, 1]
+        from_display_name = mail.from[/^([^<]+)/, 1]
+      end
 
-      [from_address.downcase, from_display_name]
+      if (from_address.blank? || !from_address["@"]) && mail.from[/\[mailto:[^\]]+\]/]
+        from_address = mail.from[/\[mailto:([^\]]+)\]/, 1]
+        from_display_name = mail.from[/^([^\[]+)/, 1]
+      end
+
+      [from_address&.downcase, from_display_name&.strip]
     end
 
     def subject
@@ -376,6 +383,9 @@ module Email
     def process_forwarded_email(destination, user)
       embedded = Mail.new(@embedded_email_raw)
       email, display_name = parse_from_field(embedded)
+
+      return false if email.blank? || !email["@"]
+
       embedded_user = find_or_create_user(email, display_name)
       raw = try_to_encode(embedded.decoded, "UTF-8").presence || embedded.to_s
       title = embedded.subject.presence || subject
@@ -387,6 +397,7 @@ module Email
                             raw: raw,
                             title: title,
                             archetype: Archetype.private_message,
+                            target_usernames: [user.username],
                             target_group_names: [group.name],
                             is_group_message: true,
                             skip_validations: true,
@@ -409,11 +420,14 @@ module Email
       end
 
       if post && post.topic && @before_embedded.present?
+        post_type = Post.types[:regular]
+        post_type = Post.types[:whisper] if post.topic.private_message? && group.usernames[user.username]
+
         create_reply(user: user,
                      raw: @before_embedded,
                      post: post,
                      topic: post.topic,
-                     post_type: Post.types[:whisper])
+                     post_type: post_type)
       end
 
       true

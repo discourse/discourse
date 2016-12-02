@@ -12,7 +12,7 @@ export default DiscoveryController.extend({
     return Discourse.User.currentProp('staff');
   },
 
-  @computed("model.categories.@each.featuredTopics.length")
+  @computed("model.categories.[].featuredTopics.length")
   latestTopicOnly() {
     return this.get("model.categories").find(c => c.get("featuredTopics.length") > 1) === undefined;
   },

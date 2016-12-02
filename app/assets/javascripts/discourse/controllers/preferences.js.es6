@@ -157,9 +157,7 @@ export default Ember.Controller.extend(CanCheckEmails, {
 
       // Cook the bio for preview
       model.set('name', this.get('newNameInput'));
-      var options = {};
-
-      return model.save(options).then(() => {
+      return model.save().then(() => {
         if (Discourse.User.currentProp('id') === model.get('id')) {
           Discourse.User.currentProp('name', model.get('name'));
         }

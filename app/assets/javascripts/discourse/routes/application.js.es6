@@ -146,10 +146,9 @@ const ApplicationRoute = Discourse.Route.extend(OpenComposer, {
     },
 
     changeBulkTemplate(w) {
-      const controllerName = w.replace('modal/', ''),
-            factory = getOwner(this).lookupFactory('controller:' + controllerName);
-
-      this.render(w, {into: 'modal/topic-bulk-actions', outlet: 'bulkOutlet', controller: factory ? controllerName : 'topic-bulk-actions'});
+      const controllerName = w.replace('modal/', '');
+      const controller = getOwner(this).lookup('controller:' + controllerName);
+      this.render(w, {into: 'modal/topic-bulk-actions', outlet: 'bulkOutlet', controller: controller ? controllerName : 'topic-bulk-actions'});
     },
 
     createNewTopicViaParams(title, body, category_id, category, tags) {
