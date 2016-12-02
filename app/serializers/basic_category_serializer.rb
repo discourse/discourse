@@ -11,8 +11,6 @@ class BasicCategorySerializer < ApplicationSerializer
              :description,
              :description_text,
              :topic_url,
-             :logo_url,
-             :background_url,
              :read_restricted,
              :permission,
              :parent_category_id,
@@ -22,6 +20,9 @@ class BasicCategorySerializer < ApplicationSerializer
              :has_children,
              :sort_order,
              :sort_ascending
+
+  has_one :uploaded_logo, embed: :object, serializer: CategoryUploadSerializer
+  has_one :uploaded_background, embed: :object, serializer: CategoryUploadSerializer
 
   def include_parent_category_id?
     parent_category_id
