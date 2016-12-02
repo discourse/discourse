@@ -62,7 +62,7 @@ export default Ember.Component.extend({
   @on('didInsertElement')
   _composerEditorInit() {
     const topicId = this.get('topic.id');
-    const template = getOwner(this).lookup('template:user-selector-autocomplete.raw');
+    const template = getOwner(this).lookup('raw-template:user-selector-autocomplete');
     const $input = this.$('.d-editor-input');
     $input.autocomplete({
       template,

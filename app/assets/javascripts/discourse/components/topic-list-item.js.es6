@@ -32,7 +32,7 @@ export default Ember.Component.extend(bufferedRender({
   },
 
   buildBuffer(buffer) {
-    const template = getOwner(this).lookup('template:list/topic-list-item.raw');
+    const template = getOwner(this).lookup('raw-template:list/topic-list-item');
     if (template) {
       buffer.push(template(this));
     }

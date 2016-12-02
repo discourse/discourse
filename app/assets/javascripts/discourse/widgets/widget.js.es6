@@ -266,8 +266,8 @@ export default class Widget {
         return;
       }
 
-      if (typeof name === "string") {
-        view.sendAction(name, param);
+      if (typeof method === "string") {
+        view.sendAction(method, param);
         promise = Ember.RSVP.resolve();
       } else {
         const target = view.get('targetObject');

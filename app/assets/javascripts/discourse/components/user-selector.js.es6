@@ -31,7 +31,7 @@ export default TextField.extend({
     }
 
     this.$().val(this.get('usernames')).autocomplete({
-      template: getOwner(this).lookup('template:user-selector-autocomplete.raw'),
+      template: getOwner(this).lookup('raw-template:user-selector-autocomplete'),
       disabled: this.get('disabled'),
       single: this.get('single'),
       allowAny: this.get('allowAny'),

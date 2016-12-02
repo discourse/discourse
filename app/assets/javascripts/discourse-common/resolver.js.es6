@@ -11,18 +11,18 @@ export function setResolverOption(name, value) {
 }
 
 function parseName(fullName) {
-  const nameParts = fullName.split(":"),
-        type = nameParts[0], fullNameWithoutType = nameParts[1],
-        name = fullNameWithoutType,
-        namespace = get(this, 'namespace'),
-        root = namespace;
+  const nameParts = fullName.split(":");
+  const type = nameParts[0];
+  let fullNameWithoutType = nameParts[1];
+  const namespace = get(this, 'namespace');
+  const root = namespace;
 
   return {
-    fullName: fullName,
-    type: type,
-    fullNameWithoutType: fullNameWithoutType,
-    name: name,
-    root: root,
+    fullName,
+    type,
+    fullNameWithoutType,
+    name: fullNameWithoutType,
+    root,
     resolveMethodName: "resolve" + classify(type)
   };
 }
@@ -123,6 +123,18 @@ export function buildResolver(baseName) {
       if (parsedName.fullNameWithoutType.match(/loading$/)) {
         return Ember.TEMPLATES.loading;
       }
+    },
+
+    resolveRawTemplate(parsedName) {
+      const dashed = Ember.String.dasherize(parsedName.fullNameWithoutType);
+      return Discourse.RAW_TEMPLATES[dashed];
+    },
+
+    resolveOther(parsedName) {
+      if (parsedName.type === 'raw-template') {
+        return this.resolveRawTemplate(parsedName);
+      }
+      return this._super(parsedName);
     },
 
     resolveTemplate(parsedName) {

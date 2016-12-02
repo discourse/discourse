@@ -19,7 +19,7 @@ export default Ember.Component.extend({
     var selectedGroups;
     var groupNames = this.get('groupNames');
 
-    var template = getOwner(this).lookup('template:group-selector-autocomplete.raw');
+    var template = getOwner(this).lookup('raw-template:group-selector-autocomplete');
     self.$('input').autocomplete({
       allowAny: false,
       items: _.isArray(groupNames) ? groupNames : (Ember.isEmpty(groupNames)) ? [] : [groupNames],

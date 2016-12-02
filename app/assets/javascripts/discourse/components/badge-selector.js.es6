@@ -18,7 +18,7 @@ export default Ember.Component.extend({
     var self = this;
     var selectedBadges;
 
-    var template = getOwner(this).lookup('template:badge-selector-autocomplete.raw');
+    var template = getOwner(this).lookup('raw-template:badge-selector-autocomplete');
     self.$('input').autocomplete({
       allowAny: false,
       items: _.isArray(this.get('badgeNames')) ? this.get('badgeNames') : [this.get('badgeNames')],

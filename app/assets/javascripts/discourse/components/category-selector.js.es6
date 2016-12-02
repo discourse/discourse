@@ -13,7 +13,7 @@ export default Ember.Component.extend({
   @on('didInsertElement')
   _initializeAutocomplete(opts) {
     const self = this,
-          template = getOwner(this).lookup('template:category-selector-autocomplete.raw'),
+          template = getOwner(this).lookup('raw-template:category-selector-autocomplete'),
           regexp = new RegExp(`href=['\"]${Discourse.getURL('/c/')}([^'\"]+)`);
 
     this.$('input').autocomplete({
