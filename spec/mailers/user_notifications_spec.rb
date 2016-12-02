@@ -155,8 +155,7 @@ describe UserNotifications do
     context "with new topics" do
 
       before do
-        Topic.stubs(:for_digest).returns([Fabricate(:topic, user: Fabricate(:coding_horror))])
-        Topic.stubs(:new_since_last_seen).returns(Topic.none)
+        Fabricate(:topic, user: Fabricate(:coding_horror))
       end
 
       it "works" do
@@ -183,6 +182,28 @@ describe UserNotifications do
         html = subject.html_part.body.to_s
         expect(html).to_not include deleted.title
         expect(html).to_not include post.raw
+      end
+
+      it "excludes whispers and other post types that don't belong" do
+        t = Fabricate(:topic, user: Fabricate(:user), title: "Who likes the same stuff I like?")
+        whisper = Fabricate(:post, topic: t, score: 100.0, post_number: 2, raw: "You like weird stuff", post_type: Post.types[:whisper])
+        mod_action = Fabricate(:post, topic: t, score: 100.0, post_number: 3, raw: "This topic unlisted", post_type: Post.types[:moderator_action])
+        small_action = Fabricate(:post, topic: t, score: 100.0, post_number: 4, raw: "A small action", post_type: Post.types[:small_action])
+        html = subject.html_part.body.to_s
+        expect(html).to_not include whisper.raw
+        expect(html).to_not include mod_action.raw
+        expect(html).to_not include small_action.raw
+      end
+
+      it "excludes deleted and hidden posts" do
+        t = Fabricate(:topic, user: Fabricate(:user), title: "Post objectionable stuff here")
+        deleted = Fabricate(:post, topic: t, score: 100.0, post_number: 2, raw: "This post is uncalled for", deleted_at: 5.minutes.ago)
+        hidden = Fabricate(:post, topic: t, score: 100.0, post_number: 3, raw: "Try to find this post", hidden: true, hidden_at: 5.minutes.ago, hidden_reason_id: Post.hidden_reasons[:flagged_by_tl3_user])
+        user_deleted = Fabricate(:post, topic: t, score: 100.0, post_number: 4, raw: "I regret this post", user_deleted: true)
+        html = subject.html_part.body.to_s
+        expect(html).to_not include deleted.raw
+        expect(html).to_not include hidden.raw
+        expect(html).to_not include user_deleted.raw
       end
     end
 

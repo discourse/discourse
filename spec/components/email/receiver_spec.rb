@@ -383,6 +383,39 @@ describe Email::Receiver do
       expect(Post.last.raw).to match(/discourse\.rb/)
     end
 
+    it "handles forwarded emails" do
+      SiteSetting.enable_forwarded_emails = true
+      expect { process(:forwarded_email_1) }.to change(Topic, :count)
+
+      forwarded_post, last_post = *Post.last(2)
+
+      expect(forwarded_post.user.email).to eq("some@one.com")
+      expect(last_post.user.email).to eq("ba@bar.com")
+
+      expect(forwarded_post.raw).to match(/XoXo/)
+      expect(last_post.raw).to match(/can you have a look at this email below/)
+
+      expect(last_post.post_type).to eq(Post.types[:regular])
+    end
+
+    it "handles weirdly forwarded emails" do
+      group.add(Fabricate(:user, email: "ba@bar.com"))
+      group.save
+
+      SiteSetting.enable_forwarded_emails = true
+      expect { process(:forwarded_email_2) }.to change(Topic, :count)
+
+      forwarded_post, last_post = *Post.last(2)
+
+      expect(forwarded_post.user.email).to eq("some@one.com")
+      expect(last_post.user.email).to eq("ba@bar.com")
+
+      expect(forwarded_post.raw).to match(/XoXo/)
+      expect(last_post.raw).to match(/can you have a look at this email below/)
+
+      expect(last_post.post_type).to eq(Post.types[:whisper])
+    end
+
   end
 
   context "new topic in a category" do

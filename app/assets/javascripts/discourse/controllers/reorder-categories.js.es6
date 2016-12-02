@@ -5,8 +5,6 @@ import { popupAjaxError } from 'discourse/lib/ajax-error';
 import { on, default as computed } from "ember-addons/ember-computed-decorators";
 import Ember from 'ember';
 
-const SortableArrayProxy = Ember.ArrayProxy.extend(Ember.SortableMixin);
-
 export default Ember.Controller.extend(ModalFunctionality, Ember.Evented, {
 
   @on('init')
@@ -20,12 +18,8 @@ export default Ember.Controller.extend(ModalFunctionality, Ember.Evented, {
     return categories.map(c => bufProxy.create({ content: c }));
   },
 
-  categoriesOrdered: function() {
-    return SortableArrayProxy.create({
-      sortProperties: ['content.position'],
-      content: this.get('categoriesBuffered')
-    });
-  }.property('categoriesBuffered'),
+  categoriesSorting: ['position'],
+  categoriesOrdered: Ember.computed.sort('categoriesBuffered', 'categoriesSorting'),
 
   showFixIndices: function() {
     const cats = this.get('categoriesOrdered');

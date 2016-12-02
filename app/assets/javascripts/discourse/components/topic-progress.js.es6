@@ -65,7 +65,7 @@ export default Ember.Component.extend({
 
     const prevEvent = this.get('prevEvent');
     if (prevEvent) {
-      this._topicScrolled(prevEvent);
+      Ember.run.scheduleOnce('afterRender', this, this._topicScrolled, prevEvent);
     } else {
       Ember.run.scheduleOnce('afterRender', this, this._updateProgressBar);
     }
