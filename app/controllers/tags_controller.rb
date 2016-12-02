@@ -8,7 +8,14 @@ class TagsController < ::ApplicationController
   before_filter :ensure_tags_enabled
 
   skip_before_filter :check_xhr, only: [:tag_feed, :show, :index]
-  before_filter :ensure_logged_in, only: [:notifications, :update_notifications, :update]
+  before_filter :ensure_logged_in, except: [
+    :index,
+    :show,
+    :tag_feed,
+    :search,
+    :check_hashtag,
+    Discourse.anonymous_filters.map { |f| :"show_#{f}"}
+  ].flatten
   before_filter :set_category_from_params, except: [:index, :update, :destroy, :tag_feed, :search, :notifications, :update_notifications]
 
   def index
@@ -40,30 +47,14 @@ class TagsController < ::ApplicationController
     end
   end
 
-  # TODO: move all this to ListController
   Discourse.filters.each do |filter|
     define_method("show_#{filter}") do
       @tag_id = params[:tag_id]
       @additional_tags = params[:additional_tag_ids].to_s.split('/')
 
-      page = params[:page].to_i
       list_opts = build_topic_list_options
 
-      query = TopicQuery.new(current_user, list_opts)
-
-      results = query.send("#{filter}_results")
-
-      if @filter_on_category
-        category_ids = [@filter_on_category.id]
-
-        unless list_opts[:no_subcategories]
-          category_ids += @filter_on_category.subcategories.pluck(:id)
-        end
-
-        results = results.where(category_id: category_ids)
-      end
-
-      @list = query.create_list(:by_tag, {}, results)
+      @list = TopicQuery.new(current_user, list_opts).public_send("list_#{filter}")
 
       @list.draft_key = Draft::NEW_TOPIC
       @list.draft_sequence = DraftSequence.current(current_user, Draft::NEW_TOPIC)

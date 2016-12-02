@@ -81,6 +81,12 @@ describe TagsController do
         expect(response).to be_success
         expect(assigns(:list).topics).to include(t)
       end
+
+      it "can filter by bookmarked" do
+        log_in(:user)
+        xhr :get, :show_bookmarks, tag_id: tag.name
+        expect(response).to be_success
+      end
     end
   end
 
