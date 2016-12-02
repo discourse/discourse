@@ -88,8 +88,16 @@ function initializePolls(api) {
         votes[pollName]
       );
 
+      // Destroy a poll view if we're replacing it
+      if (_pollViews && _pollViews[pollId]) {
+        _pollViews[pollId].destroy();
+      }
+
       $poll.replaceWith($div);
-      Em.run.schedule('afterRender', () => pollComponent.renderer.appendTo(pollComponent, $div[0]));
+      Ember.run.scheduleOnce('afterRender', () => {
+        pollComponent.renderer.appendTo(pollComponent, $div[0]);
+      });
+
       postPollViews[pollId] = pollComponent;
     });
 
