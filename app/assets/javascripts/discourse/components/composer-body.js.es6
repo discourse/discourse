@@ -78,7 +78,7 @@ export default Ember.Component.extend({
 
   @observes('composeState')
   disableFullscreen() {
-    if (this.get('composeState') !== Composer.OPEN) {
+    if (this.get('composeState') !== Composer.OPEN && positioningWorkaround.blur) {
       positioningWorkaround.blur();
     }
   },
