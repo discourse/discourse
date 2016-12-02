@@ -166,10 +166,6 @@ Group.reopenClass({
     });
   },
 
-  findGroupCounts(name) {
-    return ajax("/groups/" + name + "/counts.json").then(result => Em.Object.create(result.counts));
-  },
-
   find(name) {
     return ajax("/groups/" + name + ".json").then(result => Group.create(result.basic_group));
   },

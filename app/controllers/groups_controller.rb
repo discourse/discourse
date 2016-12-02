@@ -7,23 +7,6 @@ class GroupsController < ApplicationController
     render_serialized(find_group(:id), GroupShowSerializer, root: 'basic_group')
   end
 
-  def counts
-    group = find_group(:group_id)
-
-    counts = {
-      posts: group.posts_for(guardian).count,
-      topics: group.posts_for(guardian).where(post_number: 1).count,
-      mentions: group.mentioned_posts_for(guardian).count,
-      members: group.users.count,
-    }
-
-    if guardian.can_see_group_messages?(group)
-      counts[:messages] = group.messages_for(guardian).where(post_number: 1).count
-    end
-
-    render json: { counts: counts }
-  end
-
   def posts
     group = find_group(:group_id)
     posts = group.posts_for(guardian, params[:before_post_id]).limit(20)
