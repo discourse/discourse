@@ -76,6 +76,13 @@ export default Ember.Component.extend({
     }
   },
 
+  @observes('composeState')
+  disableFullscreen() {
+    if (this.get('composeState') !== Composer.OPEN) {
+      positioningWorkaround.blur();
+    }
+  },
+
   didInsertElement() {
     this._super();
     const $replyControl = $('#reply-control');
