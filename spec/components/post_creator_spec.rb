@@ -334,7 +334,12 @@ describe PostCreator do
   context 'whisper' do
     let!(:topic) { Fabricate(:topic, user: user) }
 
-    it 'forces replies to whispers to be whispers' do
+    it 'whispers do not mess up the public view' do
+
+      first = PostCreator.new(user,
+                                topic_id: topic.id,
+                                raw: 'this is the first post').create
+
       whisper = PostCreator.new(user,
                                 topic_id: topic.id,
                                 reply_to_post_number: 1,
@@ -344,6 +349,7 @@ describe PostCreator do
       expect(whisper).to be_present
       expect(whisper.post_type).to eq(Post.types[:whisper])
 
+
       whisper_reply = PostCreator.new(user,
                                       topic_id: topic.id,
                                       reply_to_post_number: whisper.post_number,
@@ -352,6 +358,29 @@ describe PostCreator do
 
       expect(whisper_reply).to be_present
       expect(whisper_reply.post_type).to eq(Post.types[:whisper])
+
+
+      first.reload
+      # does not leak into the OP
+      expect(first.reply_count).to eq(0)
+
+      topic.reload
+
+      # cause whispers should not muck up that number
+      expect(topic.highest_post_number).to eq(1)
+      expect(topic.reply_count).to eq(0)
+      expect(topic.posts_count).to eq(1)
+      expect(topic.highest_staff_post_number).to eq(3)
+
+      topic.update_columns(highest_staff_post_number:0, highest_post_number:0, posts_count: 0, last_posted_at: 1.year.ago)
+
+      Topic.reset_highest(topic.id)
+
+      topic.reload
+      expect(topic.highest_post_number).to eq(1)
+      expect(topic.posts_count).to eq(1)
+      expect(topic.last_posted_at).to eq(first.created_at)
+      expect(topic.highest_staff_post_number).to eq(3)
     end
   end
 
@@ -624,6 +653,8 @@ describe PostCreator do
       _post2 = create_post(user: post1.user, topic_id: post1.topic_id)
 
       post1.topic.reload
+
+      expect(post1.topic.posts_count).to eq(3)
       expect(post1.topic.closed).to eq(true)
     end
   end

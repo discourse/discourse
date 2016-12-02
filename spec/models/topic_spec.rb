@@ -1724,4 +1724,21 @@ describe Topic do
 
     expect(@topic_status_event_triggered).to eq(true)
   end
+
+
+  it 'allows users to normalize counts' do
+
+    topic = Fabricate(:topic, last_posted_at: 1.year.ago)
+    post1 = Fabricate(:post, topic: topic, post_number: 1)
+    post2 = Fabricate(:post, topic: topic, post_type: Post.types[:whisper], post_number: 2)
+
+    Topic.reset_all_highest!
+    topic.reload
+
+    expect(topic.posts_count).to eq(1)
+    expect(topic.highest_post_number).to eq(post1.post_number)
+    expect(topic.highest_staff_post_number).to eq(post2.post_number)
+    expect(topic.last_posted_at).to be_within(1.second).of (post1.created_at)
+  end
+
 end
