@@ -38,12 +38,9 @@ export default Ember.Controller.extend({
     };
   },
 
-  @observes('counts')
-  countsChanged() {
-    const counts = this.get('counts');
-    this.get('tabs').forEach(tab => {
-      tab.set('count', counts.get(tab.get('name')));
-    });
+  @observes('model.user_count')
+  _setMembersTabCount() {
+    this.get('tabs')[0].set('count', this.get('model.user_count'));
   },
 
   @observes('showing')
