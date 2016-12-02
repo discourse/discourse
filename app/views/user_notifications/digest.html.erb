@@ -265,7 +265,7 @@ body, table, td, th, h1, h2, h3 {font-family: Helvetica, Arial, sans-serif !impo
       <td style="color:#0a0a0a;line-height:1.3;padding:0 8px 8px 8px;vertical-align:top;">
         <% if post.user %>
           <h6 style="color:inherit;font-size:16px;font-weight:400;margin:0;padding:0;text-align:left;word-wrap:normal;"><%= post.user.username -%></h6>
-          <% if SiteSetting.enable_names? && post.user.name && post.user.name.downcase != post.user.username %>
+          <% if SiteSetting.enable_names? && post.user.name && post.user.name.downcase != post.user.username.downcase %>
             <p style="color:#8f8f8f;font-size:16px;line-height:1.3;margin:0;padding:0;text-align:left;"><%= post.user.name -%></p>
           <% end %>
         <% end %>
