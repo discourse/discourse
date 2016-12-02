@@ -152,7 +152,7 @@ class UsersController < ApplicationController
     user = fetch_user_from_params
     guardian.ensure_can_edit!(user)
 
-    report = TopicTrackingState.report(user.id)
+    report = TopicTrackingState.report(user)
     serializer = ActiveModel::ArraySerializer.new(report, each_serializer: TopicTrackingStateSerializer)
 
     render json: MultiJson.dump(serializer)
