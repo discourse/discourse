@@ -9,12 +9,13 @@ class GroupsController < ApplicationController
 
   def counts
     group = find_group(:group_id)
+    group_posts = group.posts_for(guardian)
 
     counts = {
-      posts: group.posts_for(guardian).count,
-      topics: group.posts_for(guardian).where(post_number: 1).count,
+      posts: group_posts.count,
+      topics: group_posts.where(post_number: 1).count,
       mentions: group.mentioned_posts_for(guardian).count,
-      members: group.users.count,
+      members: group.user_count,
     }
 
     if guardian.can_see_group_messages?(group)

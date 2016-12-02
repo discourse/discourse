@@ -99,9 +99,9 @@ class Group < ActiveRecord::Base
   end
 
   def posts_for(guardian, before_post_id=nil)
-    user_ids = group_users.map { |gu| gu.user_id }
-    result = Post.includes(:user, :topic, topic: :category)
-                 .references(:posts, :topics, :category)
+    user_ids = group_users.pluck(:user_id)
+
+    result = Post.joins(:topic)
                  .where(user_id: user_ids)
                  .where('topics.archetype <> ?', Archetype.private_message)
                  .where(post_type: Post.types[:regular])
@@ -112,8 +112,7 @@ class Group < ActiveRecord::Base
   end
 
   def messages_for(guardian, before_post_id=nil)
-    result = Post.includes(:user, :topic, topic: :category)
-                 .references(:posts, :topics, :category)
+    result = Post.joins(:topic)
                  .where('topics.archetype = ?', Archetype.private_message)
                  .where(post_type: Post.types[:regular])
                  .where('topics.id IN (SELECT topic_id FROM topic_allowed_groups WHERE group_id = ?)', self.id)
@@ -124,9 +123,7 @@ class Group < ActiveRecord::Base
   end
 
   def mentioned_posts_for(guardian, before_post_id=nil)
-    result = Post.joins(:group_mentions)
-                 .includes(:user, :topic, topic: :category)
-                 .references(:posts, :topics, :category)
+    result = Post.joins(:group_mentions, :topic)
                  .where('topics.archetype <> ?', Archetype.private_message)
                  .where(post_type: Post.types[:regular])
                  .where('group_mentions.group_id = ?', self.id)
