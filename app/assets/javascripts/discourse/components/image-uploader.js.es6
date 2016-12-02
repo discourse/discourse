@@ -12,11 +12,13 @@ export default Em.Component.extend(UploadMixin, {
 
   uploadDone(upload) {
     this.set("imageUrl", upload.url);
+    this.set("imageId", upload.id);
   },
 
   actions: {
     trash() {
       this.set("imageUrl", null);
+      this.set("imageId", null);
     }
   }
 });
