@@ -3,6 +3,7 @@ import { registerUnbound } from 'discourse-common/lib/helpers';
 let _injections;
 
 function renderRaw(ctx, container, template, templateName, params) {
+  params = Object.assign({}, params);
   params.parent = params.parent || ctx;
 
   if (!params.view) {
@@ -32,9 +33,9 @@ registerUnbound('raw', function(templateName, params) {
   templateName = templateName.replace('.', '/');
 
   const container = Discourse.__container__;
-  var template = container.lookup('template:' + templateName + '.raw');
+  const template = container.lookup('raw-template:' + templateName);
   if (!template) {
-    Ember.warn('Could not find raw template: ' + templateName);
+    console.warn('Could not find raw template: ' + templateName);
     return;
   }
   return renderRaw(this, container, template, templateName, params);

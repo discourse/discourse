@@ -91,48 +91,51 @@ Handlebars.registerHelper('plugin-outlet', function(name) {
   }
 });
 
-const { registerKeyword } = Ember.__loader.require("ember-htmlbars/keywords");
-const { internal } = Ember.__loader.require('htmlbars-runtime');
-
-registerKeyword('plugin-outlet', {
-  setupState(state, env, scope, params) {
-    if (!_connectorCache) { buildConnectorCache(); }
-    return { outletName: env.hooks.getValue(params[0]) };
-  },
-
-  render(renderNode, env, scope, params, hash, template, inverse, visitor) {
-    let state = renderNode.getState();
-    if (!state.outletName) { return true; }
-    const connector = _connectorCache[state.outletName];
-    if (!connector || connector.length === 0) { return true; }
-
-    const listTemplate = Ember.TEMPLATES['outlet-list'];
-    listTemplate.raw.locals = ['templateId', 'outletClasses', 'tagName'];
-
-    internal.hostBlock(renderNode, env, scope, listTemplate.raw, null, null, visitor, function(options) {
-      connector.forEach(source => {
-        const tid = source.templateId;
-        options.templates.template.yieldItem(`d-outlet-${tid}`, [
-          tid,
-          source.classNames,
-          hash.tagName || 'div'
-        ]);
-      });
-    });
-    return true;
-  }
+export default Ember.Helper.helper(function() {
 });
 
-registerKeyword('connector', function(morph, env, scope, params, hash, template, inverse, visitor) {
-  template = _templateCache[parseInt(env.hooks.getValue(hash.templateId))];
-
-  env.hooks.component(morph,
-      env,
-      scope,
-      'connector-container',
-      params,
-      hash,
-      { default: template.raw, inverse },
-      visitor);
-  return true;
-});
+// const { registerKeyword } = Ember.__loader.require("ember-htmlbars/keywords");
+// const { internal } = Ember.__loader.require('htmlbars-runtime');
+//
+// registerKeyword('plugin-outlet', {
+//   setupState(state, env, scope, params) {
+//     if (!_connectorCache) { buildConnectorCache(); }
+//     return { outletName: env.hooks.getValue(params[0]) };
+//   },
+//
+//   render(renderNode, env, scope, params, hash, template, inverse, visitor) {
+//     let state = renderNode.getState();
+//     if (!state.outletName) { return true; }
+//     const connector = _connectorCache[state.outletName];
+//     if (!connector || connector.length === 0) { return true; }
+//
+//     const listTemplate = Ember.TEMPLATES['outlet-list'];
+//     listTemplate.raw.locals = ['templateId', 'outletClasses', 'tagName'];
+//
+//     internal.hostBlock(renderNode, env, scope, listTemplate.raw, null, null, visitor, function(options) {
+//       connector.forEach(source => {
+//         const tid = source.templateId;
+//         options.templates.template.yieldItem(`d-outlet-${tid}`, [
+//           tid,
+//           source.classNames,
+//           hash.tagName || 'div'
+//         ]);
+//       });
+//     });
+//     return true;
+//   }
+// });
+//
+// registerKeyword('connector', function(morph, env, scope, params, hash, template, inverse, visitor) {
+//   template = _templateCache[parseInt(env.hooks.getValue(hash.templateId))];
+//
+//   env.hooks.component(morph,
+//       env,
+//       scope,
+//       'connector-container',
+//       params,
+//       hash,
+//       { default: template.raw, inverse },
+//       visitor);
+//   return true;
+// });
