@@ -223,7 +223,7 @@ class ImportScripts::VBulletin < ImportScripts::Base
         raw = preprocess_post_raw(topic["raw"]) rescue nil
         next if raw.blank?
         topic_id = "thread-#{topic["threadid"]}"
-        @closed_topic_ids << topic_id if topic["open"] == "0"
+        @closed_topic_ids << topic_id if topic["open"] == 0
         t = {
           id: topic_id,
           user_id: user_id_from_imported_user_id(topic["postuserid"]) || Discourse::SYSTEM_USER_ID,
@@ -244,7 +244,11 @@ class ImportScripts::VBulletin < ImportScripts::Base
     puts "", "importing posts..."
 
     # make sure `firstpostid` is indexed
-    mysql_query("CREATE INDEX firstpostid_index ON #{TABLE_PREFIX}thread (firstpostid)")
+    begin
+      mysql_query("CREATE INDEX firstpostid_index ON #{TABLE_PREFIX}thread (firstpostid)")
+    rescue Mysql2::Error
+      puts 'Index already exists'
+    end
 
     post_count = mysql_query("SELECT COUNT(postid) count FROM #{TABLE_PREFIX}post WHERE postid NOT IN (SELECT firstpostid FROM #{TABLE_PREFIX}thread)").first["count"]
 
@@ -469,15 +473,15 @@ class ImportScripts::VBulletin < ImportScripts::Base
     sql = <<-SQL
       WITH closed_topic_ids AS (
         SELECT t.id AS topic_id
-        FROM #{TABLE_PREFIX}post_custom_fields pcf
-        JOIN #{TABLE_PREFIX}posts p ON p.id = pcf.post_id
-        JOIN #{TABLE_PREFIX}topics t ON t.id = p.topic_id
+        FROM post_custom_fields pcf
+        JOIN posts p ON p.id = pcf.post_id
+        JOIN topics t ON t.id = p.topic_id
         WHERE pcf.name = 'import_id'
         AND pcf.value IN (?)
       )
       UPDATE topics
       SET closed = true
-      WHERE id IN (SELECT topic_id FROM #{TABLE_PREFIX}closed_topic_ids)
+      WHERE id IN (SELECT topic_id FROM closed_topic_ids)
     SQL
 
     Topic.exec_sql(sql, @closed_topic_ids)
@@ -511,39 +515,39 @@ class ImportScripts::VBulletin < ImportScripts::Base
     raw = @htmlentities.decode(raw)
 
     # fix whitespaces
-    raw = raw.gsub(/(\\r)?\\n/, "\n")
-             .gsub("\\t", "\t")
+    raw.gsub!(/(\\r)?\\n/, "\n")
+       .gsub!("\\t", "\t")
 
     # [HTML]...[/HTML]
-    raw = raw.gsub(/\[html\]/i, "\n```html\n")
-             .gsub(/\[\/html\]/i, "\n```\n")
+    raw.gsub!(/\[html\]/i, "\n```html\n")
+       .gsub!(/\[\/html\]/i, "\n```\n")
 
     # [PHP]...[/PHP]
-    raw = raw.gsub(/\[php\]/i, "\n```php\n")
-             .gsub(/\[\/php\]/i, "\n```\n")
+    raw.gsub!(/\[php\]/i, "\n```php\n")
+       .gsub!(/\[\/php\]/i, "\n```\n")
 
     # [HIGHLIGHT="..."]
-    raw = raw.gsub(/\[highlight="?(\w+)"?\]/i) { "\n```#{$1.downcase}\n" }
+    raw.gsub!(/\[highlight="?(\w+)"?\]/i) { "\n```#{$1.downcase}\n" }
 
     # [CODE]...[/CODE]
     # [HIGHLIGHT]...[/HIGHLIGHT]
-    raw = raw.gsub(/\[\/?code\]/i, "\n```\n")
-             .gsub(/\[\/?highlight\]/i, "\n```\n")
+    raw.gsub!(/\[\/?code\]/i, "\n```\n")
+       .gsub!(/\[\/?highlight\]/i, "\n```\n")
 
     # [SAMP]...[/SAMP]
-    raw = raw.gsub(/\[\/?samp\]/i, "`")
+    raw.gsub!(/\[\/?samp\]/i, "`")
 
     # replace all chevrons with HTML entities
     # NOTE: must be done
     #  - AFTER all the "code" processing
     #  - BEFORE the "quote" processing
-    raw = raw.gsub(/`([^`]+)`/im) { "`" + $1.gsub("<", "\u2603") + "`" }
-             .gsub("<", "&lt;")
-             .gsub("\u2603", "<")
+    raw.gsub!(/`([^`]+)`/im) { "`" + $1.gsub("<", "\u2603") + "`" }
+       .gsub!("<", "&lt;")
+       .gsub!("\u2603", "<")
 
-    raw = raw.gsub(/`([^`]+)`/im) { "`" + $1.gsub(">", "\u2603") + "`" }
-             .gsub(">", "&gt;")
-             .gsub("\u2603", ">")
+    raw.gsub!(/`([^`]+)`/im) { "`" + $1.gsub(">", "\u2603") + "`" }
+       .gsub!(">", "&gt;")
+       .gsub!("\u2603", ">")
 
     # [URL=...]...[/URL]
     raw.gsub!(/\[url="?([^"]+?)"?\](.*?)\[\/url\]/im) { "[#{$2.strip}](#{$1})" }
@@ -551,11 +555,11 @@ class ImportScripts::VBulletin < ImportScripts::Base
 
     # [URL]...[/URL]
     # [MP3]...[/MP3]
-    raw = raw.gsub(/\[\/?url\]/i, "")
-             .gsub(/\[\/?mp3\]/i, "")
+    raw.gsub!(/\[\/?url\]/i, "")
+       .gsub!(/\[\/?mp3\]/i, "")
 
     # [MENTION]<username>[/MENTION]
-    raw = raw.gsub(/\[mention\](.+?)\[\/mention\]/i) do
+    raw.gsub!(/\[mention\](.+?)\[\/mention\]/i) do
       old_username = $1
       if @old_username_to_new_usernames.has_key?(old_username)
         old_username = @old_username_to_new_usernames[old_username]
@@ -570,7 +574,7 @@ class ImportScripts::VBulletin < ImportScripts::Base
     }
 
     # [QUOTE=<username>]...[/QUOTE]
-    raw = raw.gsub(/\[quote=([^;\]]+)\](.+?)\[\/quote\]/im) do
+    raw.gsub!(/\[quote=([^;\]]+)\](.+?)\[\/quote\]/im) do
       old_username, quote = $1, $2
       if @old_username_to_new_usernames.has_key?(old_username)
         old_username = @old_username_to_new_usernames[old_username]
@@ -579,10 +583,10 @@ class ImportScripts::VBulletin < ImportScripts::Base
     end
 
     # [YOUTUBE]<id>[/YOUTUBE]
-    raw = raw.gsub(/\[youtube\](.+?)\[\/youtube\]/i) { "\n//youtu.be/#{$1}\n" }
+    raw.gsub!(/\[youtube\](.+?)\[\/youtube\]/i) { "\n//youtu.be/#{$1}\n" }
 
     # [VIDEO=youtube;<id>]...[/VIDEO]
-    raw = raw.gsub(/\[video=youtube;([^\]]+)\].*?\[\/video\]/i) { "\n//youtu.be/#{$1}\n" }
+    raw.gsub!(/\[video=youtube;([^\]]+)\].*?\[\/video\]/i) { "\n//youtu.be/#{$1}\n" }
 
     # More Additions ....
 
@@ -610,7 +614,7 @@ class ImportScripts::VBulletin < ImportScripts::Base
 
   def postprocess_post_raw(raw)
     # [QUOTE=<username>;<post_id>]...[/QUOTE]
-    raw = raw.gsub(/\[quote=([^;]+);(\d+)\](.+?)\[\/quote\]/im) do
+    raw.gsub!(/\[quote=([^;]+);(\d+)\](.+?)\[\/quote\]/im) do
       old_username, post_id, quote = $1, $2, $3
 
       if @old_username_to_new_usernames.has_key?(old_username)
@@ -627,11 +631,11 @@ class ImportScripts::VBulletin < ImportScripts::Base
     end
 
     # remove attachments
-    raw = raw.gsub(/\[attach[^\]]*\]\d+\[\/attach\]/i, "")
+    raw.gsub!(/\[attach[^\]]*\]\d+\[\/attach\]/i, "")
 
     # [THREAD]<thread_id>[/THREAD]
     # ==> http://my.discourse.org/t/slug/<topic_id>
-    raw = raw.gsub(/\[thread\](\d+)\[\/thread\]/i) do
+    raw.gsub!(/\[thread\](\d+)\[\/thread\]/i) do
       thread_id = $1
       if topic_lookup = topic_lookup_from_imported_post_id("thread-#{thread_id}")
         topic_lookup[:url]
@@ -642,7 +646,7 @@ class ImportScripts::VBulletin < ImportScripts::Base
 
     # [THREAD=<thread_id>]...[/THREAD]
     # ==> [...](http://my.discourse.org/t/slug/<topic_id>)
-    raw = raw.gsub(/\[thread=(\d+)\](.+?)\[\/thread\]/i) do
+    raw.gsub!(/\[thread=(\d+)\](.+?)\[\/thread\]/i) do
       thread_id, link = $1, $2
       if topic_lookup = topic_lookup_from_imported_post_id("thread-#{thread_id}")
         url = topic_lookup[:url]
@@ -654,7 +658,7 @@ class ImportScripts::VBulletin < ImportScripts::Base
 
     # [POST]<post_id>[/POST]
     # ==> http://my.discourse.org/t/slug/<topic_id>/<post_number>
-    raw = raw.gsub(/\[post\](\d+)\[\/post\]/i) do
+    raw.gsub!(/\[post\](\d+)\[\/post\]/i) do
       post_id = $1
       if topic_lookup = topic_lookup_from_imported_post_id(post_id)
         topic_lookup[:url]
@@ -665,7 +669,7 @@ class ImportScripts::VBulletin < ImportScripts::Base
 
     # [POST=<post_id>]...[/POST]
     # ==> [...](http://my.discourse.org/t/<topic_slug>/<topic_id>/<post_number>)
-    raw = raw.gsub(/\[post=(\d+)\](.+?)\[\/post\]/i) do
+    raw.gsub!(/\[post=(\d+)\](.+?)\[\/post\]/i) do
       post_id, link = $1, $2
       if topic_lookup = topic_lookup_from_imported_post_id(post_id)
         url = topic_lookup[:url]
