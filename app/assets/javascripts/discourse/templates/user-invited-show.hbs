@@ -16,7 +16,7 @@
             <div class="pull-right">
               {{d-button icon="plus" action="showInvite" label="user.invited.create" class="btn"}}
               {{#if canBulkInvite}}
-                {{resumable-upload target="/invites/upload" success="uploadSuccess" error="uploadError" uploadText=uploadText}}
+                {{csv-uploader uploading=uploading}}
               {{/if}}
               {{#if showReinviteAllButton}}
                 {{#if reinvitedAll}}

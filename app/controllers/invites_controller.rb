@@ -6,7 +6,7 @@ class InvitesController < ApplicationController
   skip_before_filter :check_xhr, :preload_json
   skip_before_filter :redirect_to_login_if_required
 
-  before_filter :ensure_logged_in, only: [:destroy, :create, :create_invite_link, :resend_invite, :resend_all_invites, :check_csv_chunk, :upload_csv_chunk]
+  before_filter :ensure_logged_in, only: [:destroy, :create, :create_invite_link, :resend_invite, :resend_all_invites, :upload_csv]
   before_filter :ensure_new_registrations_allowed, only: [:show, :redeem_disposable_invite]
   before_filter :ensure_not_logged_in, only: [:show, :redeem_disposable_invite]
 
@@ -147,48 +147,29 @@ class InvitesController < ApplicationController
     render nothing: true
   end
 
-  def check_csv_chunk
+  def upload_csv
     guardian.ensure_can_bulk_invite_to_forum!(current_user)
 
-    filename           = params.fetch(:resumableFilename)
-    identifier         = params.fetch(:resumableIdentifier)
-    chunk_number       = params.fetch(:resumableChunkNumber)
-    current_chunk_size = params.fetch(:resumableCurrentChunkSize).to_i
+    file = params[:file] || params[:files].first
+    name = params[:name] || File.basename(file.original_filename, ".*")
+    extension = File.extname(file.original_filename)
 
-    # path to chunk file
-    chunk = Invite.chunk_path(identifier, filename, chunk_number)
-    # check chunk upload status
-    status = HandleChunkUpload.check_chunk(chunk, current_chunk_size: current_chunk_size)
-
-    render nothing: true, status: status
-  end
-
-  def upload_csv_chunk
-    guardian.ensure_can_bulk_invite_to_forum!(current_user)
-
-    filename = params.fetch(:resumableFilename)
-    return render status: 415, text: I18n.t("bulk_invite.file_should_be_csv") unless (filename.to_s.end_with?(".csv") || filename.to_s.end_with?(".txt"))
-
-    file               = params.fetch(:file)
-    identifier         = params.fetch(:resumableIdentifier)
-    chunk_number       = params.fetch(:resumableChunkNumber).to_i
-    chunk_size         = params.fetch(:resumableChunkSize).to_i
-    total_size         = params.fetch(:resumableTotalSize).to_i
-    current_chunk_size = params.fetch(:resumableCurrentChunkSize).to_i
-
-    # path to chunk file
-    chunk = Invite.chunk_path(identifier, filename, chunk_number)
-    # upload chunk
-    HandleChunkUpload.upload_chunk(chunk, file: file)
-
-    uploaded_file_size = chunk_number * chunk_size
-    # when all chunks are uploaded
-    if uploaded_file_size + current_chunk_size >= total_size
-      # handle bulk_invite processing in a background thread
-      Jobs.enqueue(:bulk_invite, filename: filename, identifier: identifier, chunks: chunk_number, current_user_id: current_user.id)
+    Scheduler::Defer.later("Upload CSV") do
+      begin
+        data = if extension == ".csv"
+          path = Invite.create_csv(file, name)
+          Jobs.enqueue(:bulk_invite, filename: "#{name}.csv", current_user_id: current_user.id)
+          {url: path}
+        else
+          failed_json.merge(errors: [I18n.t("bulk_invite.file_should_be_csv")])
+        end
+      rescue
+        failed_json.merge(errors: [I18n.t("bulk_invite.error")])
+      end
+      MessageBus.publish("/uploads/csv", data.as_json, user_ids: [current_user.id])
     end
 
-    render nothing: true
+    render json: success_json
   end
 
   def fetch_username
