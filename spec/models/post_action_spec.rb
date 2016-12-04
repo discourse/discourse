@@ -199,10 +199,6 @@ describe PostAction do
       expect { bookmark.save; post.reload }.to change(post, :bookmark_count).by(1)
     end
 
-    it "increases the forum topic's bookmark count when saved" do
-      expect { bookmark.save; post.topic.reload }.to change(post.topic, :bookmark_count).by(1)
-    end
-
     describe 'when deleted' do
 
       before do
@@ -218,9 +214,6 @@ describe PostAction do
         expect { post.reload }.to change(post, :bookmark_count).by(-1)
       end
 
-      it 'reduces the bookmark count of the forum topic' do
-        expect { @topic.reload }.to change(post.topic, :bookmark_count).by(-1)
-      end
     end
   end
 
@@ -291,19 +284,24 @@ describe PostAction do
     end
   end
 
-  describe 'when a user votes for something' do
-    it 'should increase the vote counts when a user votes' do
+  describe 'when a user likes something' do
+    it 'should increase the like counts when a user votes' do
       expect {
-        PostAction.act(codinghorror, post, PostActionType.types[:vote])
+        PostAction.act(codinghorror, post, PostActionType.types[:like])
         post.reload
-      }.to change(post, :vote_count).by(1)
+      }.to change(post, :like_count).by(1)
     end
 
     it 'should increase the forum topic vote count when a user votes' do
       expect {
-        PostAction.act(codinghorror, post, PostActionType.types[:vote])
+        PostAction.act(codinghorror, post, PostActionType.types[:like])
         post.topic.reload
-      }.to change(post.topic, :vote_count).by(1)
+      }.to change(post.topic, :like_count).by(1)
+
+      expect {
+        PostAction.remove_act(codinghorror, post, PostActionType.types[:like])
+        post.topic.reload
+      }.to change(post.topic, :like_count).by(-1)
     end
   end
 

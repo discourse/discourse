@@ -466,23 +466,103 @@ class Topic < ActiveRecord::Base
   end
 
   # Atomically creates the next post number
-  def self.next_post_number(topic_id, reply = false)
+  def self.next_post_number(topic_id, reply = false, whisper = false)
     highest = exec_sql("select coalesce(max(post_number),0) as max from posts where topic_id = ?", topic_id).first['max'].to_i
 
-    reply_sql = reply ? ", reply_count = reply_count + 1" : ""
-    result = exec_sql("UPDATE topics SET highest_post_number = ? + 1#{reply_sql}
-                       WHERE id = ? RETURNING highest_post_number", highest, topic_id)
-    result.first['highest_post_number'].to_i
+    if whisper
+
+      result = exec_sql("UPDATE topics
+                          SET highest_staff_post_number = ? + 1
+                          WHERE id = ?
+                          RETURNING highest_staff_post_number", highest, topic_id)
+
+      result.first['highest_staff_post_number'].to_i
+
+    else
+
+      reply_sql = reply ? ", reply_count = reply_count + 1" : ""
+
+      result = exec_sql("UPDATE topics
+                          SET highest_staff_post_number = :highest + 1,
+                              highest_post_number = :highest + 1#{reply_sql},
+                              posts_count = posts_count + 1
+                          WHERE id = :topic_id
+                          RETURNING highest_post_number", highest: highest, topic_id: topic_id)
+
+      result.first['highest_post_number'].to_i
+    end
   end
+
+
+  def self.reset_all_highest!
+    exec_sql <<SQL
+WITH
+X as (
+  SELECT topic_id,
+         COALESCE(MAX(post_number), 0) highest_post_number
+  FROM posts
+  WHERE deleted_at IS NULL
+  GROUP BY topic_id
+),
+Y as (
+  SELECT topic_id,
+         coalesce(MAX(post_number), 0) highest_post_number,
+         count(*) posts_count,
+         max(created_at) last_posted_at
+  FROM posts
+  WHERE deleted_at IS NULL AND post_type <> 4
+  GROUP BY topic_id
+)
+UPDATE topics
+SET
+  highest_staff_post_number = X.highest_post_number,
+  highest_post_number = Y.highest_post_number,
+  last_posted_at = Y.last_posted_at,
+  posts_count = Y.posts_count
+FROM X, Y
+WHERE
+  X.topic_id = topics.id AND
+  Y.topic_id = topics.id AND (
+    topics.highest_staff_post_number <> X.highest_post_number OR
+    topics.highest_post_number <> Y.highest_post_number OR
+    topics.last_posted_at <> Y.last_posted_at OR
+    topics.posts_count <> Y.posts_count
+  )
+SQL
+  end
+
 
   # If a post is deleted we have to update our highest post counters
   def self.reset_highest(topic_id)
     result = exec_sql "UPDATE topics
-                        SET highest_post_number = (SELECT COALESCE(MAX(post_number), 0) FROM posts WHERE topic_id = :topic_id AND deleted_at IS NULL),
-                            posts_count = (SELECT count(*) FROM posts WHERE deleted_at IS NULL AND topic_id = :topic_id),
-                            last_posted_at = (SELECT MAX(created_at) FROM POSTS WHERE topic_id = :topic_id AND deleted_at IS NULL)
+                        SET
+                        highest_staff_post_number = (
+                            SELECT COALESCE(MAX(post_number), 0) FROM posts
+                            WHERE topic_id = :topic_id AND
+                                  deleted_at IS NULL
+                          ),
+                        highest_post_number = (
+                            SELECT COALESCE(MAX(post_number), 0) FROM posts
+                            WHERE topic_id = :topic_id AND
+                                  deleted_at IS NULL AND
+                                  post_type <> 4
+                          ),
+                          posts_count = (
+                            SELECT count(*) FROM posts
+                            WHERE deleted_at IS NULL AND
+                                  topic_id = :topic_id AND
+                                  post_type <> 4
+                          ),
+
+                          last_posted_at = (
+                            SELECT MAX(created_at) FROM posts
+                            WHERE topic_id = :topic_id AND
+                                  deleted_at IS NULL AND
+                                  post_type <> 4
+                          )
                         WHERE id = :topic_id
                         RETURNING highest_post_number", topic_id: topic_id
+
     highest_post_number = result.first['highest_post_number'].to_i
 
     # Update the forum topic user records
@@ -724,10 +804,7 @@ class Topic < ActiveRecord::Base
   end
 
   def update_action_counts
-    PostActionType.types.each_key do |type|
-      count_field = "#{type}_count"
-      update_column(count_field, Post.where(topic_id: id).sum(count_field))
-    end
+    update_column(:like_count, Post.where(topic_id: id).sum(:like_count))
   end
 
   def posters_summary(options = {})

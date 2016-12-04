@@ -409,6 +409,29 @@ describe TopicQuery do
       end
     end
 
+    context 'with whispers' do
+
+      it 'correctly shows up in unread for staff' do
+
+        first = create_post(raw: 'this is the first post', title: 'super amazing title')
+
+        _whisper = create_post(topic_id: first.topic.id,
+                              post_type: Post.types[:whisper],
+                              raw: 'this is a whispered reply')
+
+        topic_id = first.topic.id
+
+        TopicUser.update_last_read(user, topic_id, first.post_number, 1)
+        TopicUser.update_last_read(admin, topic_id, first.post_number, 1)
+
+        TopicUser.change(user.id, topic_id, notification_level: TopicUser.notification_levels[:tracking])
+        TopicUser.change(admin.id, topic_id, notification_level: TopicUser.notification_levels[:tracking])
+
+        expect(TopicQuery.new(user).list_unread.topics).to eq([])
+        expect(TopicQuery.new(admin).list_unread.topics).to eq([first.topic])
+      end
+    end
+
     context 'with read data' do
       let!(:partially_read) { Fabricate(:post, user: creator).topic }
       let!(:fully_read) { Fabricate(:post, user: creator).topic }
@@ -419,8 +442,9 @@ describe TopicQuery do
       end
 
       context 'list_unread' do
-        it 'contains no topics' do
+        it 'lists topics correctly' do
           expect(topic_query.list_unread.topics).to eq([])
+          expect(topic_query.list_read.topics).to match_array([fully_read, partially_read])
         end
       end
 
@@ -435,11 +459,6 @@ describe TopicQuery do
         end
       end
 
-      context 'list_read' do
-        it 'contain both topics ' do
-          expect(topic_query.list_read.topics).to match_array([fully_read, partially_read])
-        end
-      end
     end
 
   end
@@ -629,7 +648,6 @@ describe TopicQuery do
 
       related_by_group_pm  = create_pm(sender, target_group_names: [group_with_user.name])
       read(user, related_by_group_pm, 1)
-
 
       expect(TopicQuery.new(user).list_suggested_for(pm_to_group).topics.map(&:id)).to(
         eq([related_by_group_pm.id, related_by_user_pm.id, pm_to_user.id])
