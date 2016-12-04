@@ -146,6 +146,9 @@ class PostCreator
     end
 
     if @post && errors.blank?
+      # update counters etc.
+      @post.topic.reload
+
       publish
 
       track_latest_on_category
@@ -199,7 +202,9 @@ class PostCreator
     set_reply_info(post)
 
     post.word_count = post.raw.scan(/[[:word:]]+/).size
-    post.post_number ||= Topic.next_post_number(post.topic_id, post.reply_to_post_number.present?)
+
+    whisper = post.post_type == Post.types[:whisper]
+    post.post_number ||= Topic.next_post_number(post.topic_id, post.reply_to_post_number.present?, whisper)
 
     cooking_options = post.cooking_options || {}
     cooking_options[:topic_id] = post.topic_id
