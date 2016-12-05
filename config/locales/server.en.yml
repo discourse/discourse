@@ -134,7 +134,8 @@ en:
       <<: *errors
 
   bulk_invite:
-    file_should_be_csv: "The uploaded file should be of csv or txt format."
+    file_should_be_csv: "The uploaded file should be of csv format."
+    error: "There was an error uploading that file. Please try again later."
 
   backup:
     operation_already_running: "An operation is currently running. Can't start a new job right now."
