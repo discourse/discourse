@@ -38,6 +38,9 @@ export default Ember.Component.extend({
       }
     }
 
+    // used to work around Safari losing selection
+    const clone = firstRange.cloneRange();
+
     this.get("quoteState").setProperties({ postId, buffer: selectedText() });
 
     // on Desktop, shows the button at the beginning of the selection
@@ -63,6 +66,11 @@ export default Ember.Component.extend({
 
     // remove the marker
     markerElement.parentNode.removeChild(markerElement);
+
+    // work around Safari that would sometimes lose the selection
+    const s = window.getSelection();
+    s.removeAllRanges();
+    s.addRange(clone);
 
     // change the position of the button
     Ember.run.scheduleOnce("afterRender", () => {
