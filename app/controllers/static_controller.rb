@@ -4,7 +4,7 @@ require_dependency 'file_helper'
 class StaticController < ApplicationController
 
   skip_before_filter :check_xhr, :redirect_to_login_if_required
-  skip_before_filter :verify_authenticity_token, only: [:cdn_asset, :enter, :favicon]
+  skip_before_filter :verify_authenticity_token, only: [:brotli_asset, :cdn_asset, :enter, :favicon]
 
   PAGES_WITH_EMAIL_PARAM = ['login', 'password_reset', 'signup']
 
@@ -123,7 +123,32 @@ class StaticController < ApplicationController
       response.headers["Last-Modified"] = Time.new('2000-01-01').httpdate
       render text: data, content_type: "image/png"
     end
+  end
 
+  def brotli_asset
+    path = File.expand_path(Rails.root + "public/assets/" + params[:path])
+    path += ".br"
+
+    # SECURITY what if path has /../
+    raise Discourse::NotFound unless path.start_with?(Rails.root.to_s + "/public/assets")
+
+    opts = { disposition: nil }
+    opts[:type] = "application/javascript" if path =~ /\.js.br$/
+
+    response.headers["Expires"] = 1.year.from_now.httpdate
+    response.headers["Content-Encoding"] = 'br'
+    begin
+      response.headers["Last-Modified"] = File.ctime(path).httpdate
+      response.headers["Content-Length"] = File.size(path).to_s
+    rescue Errno::ENOENT
+      raise Discourse::NotFound
+    end
+
+    if File.exists?(path)
+      send_file(path, opts)
+    else
+      raise Discourse::NotFound
+    end
   end
 
 

@@ -46,10 +46,12 @@ module ApplicationHelper
   end
 
   def script(*args)
-    if SiteSetting.enable_cdn_js_debugging && GlobalSetting.cdn_url
-      tags = javascript_include_tag(*args, "crossorigin" => "anonymous")
-      tags.gsub!("/assets/", "/cdn_asset/#{Discourse.current_hostname.tr(".","_")}/")
-      tags.gsub!(".js\"", ".js?v=1&origin=#{CGI.escape request.base_url}\"")
+    if  GlobalSetting.cdn_url &&
+        GlobalSetting.cdn_url.start_with?("https") &&
+        ENV["COMPRESS_BROTLI"] == "1" &&
+        request.env["ACCEPT_ENCODING"] =~ /br/
+      tags = javascript_include_tag(*args)
+      tags.gsub!("#{GlobalSetting.cdn_url}/assets/", "#{GlobalSetting.cdn_url}/brotli_asset/")
       tags.html_safe
     else
       javascript_include_tag(*args)
