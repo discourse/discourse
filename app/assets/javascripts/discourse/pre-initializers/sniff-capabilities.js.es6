@@ -1,4 +1,4 @@
-/*global Modernizr:true*/
+/*global Modernizr:true safari:true*/
 
 // Initializes an object that lets us know about our capabilities.
 export default {
