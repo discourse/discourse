@@ -778,11 +778,9 @@ en:
         link_generated: "Invite link generated successfully!"
         valid_for: "Invite link is only valid for this email address: %{email}"
         bulk_invite:
-          none: "You haven't invited anyone here yet. You can send individual invites, or invite a bunch of people at once by <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>uploading a bulk invite file</a>."
+          none: "You haven't invited anyone here yet. You can send individual invites, or invite a bunch of people at once by <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>uploading a CSV file</a>."
           text: "Bulk Invite from File"
-          uploading: "Uploading..."
           success: "File uploaded successfully, you will be notified via message when the process is complete."
-          error: "There was an error uploading '{{filename}}': {{message}}"
 
       password:
         title: "Password"
