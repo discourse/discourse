@@ -4,13 +4,21 @@ describe StaticController do
 
   context 'brotli_asset' do
     it 'has correct headers for brotli assets' do
-      FileUtils.mkdir_p(Rails.root + "public/assets/")
-      File.write(Rails.root + "public/assets/test.js.br", 'fake brotli file')
+      begin
+        assets_path = Rails.root.join("public/assets")
 
-      get :brotli_asset, path: 'test.js'
+        FileUtils.mkdir_p(assets_path)
 
-      expect(response.status).to eq(200)
-      expect(response.headers["Cache-Control"]).to match(/public/)
+        file_path = assets_path.join("test.js.br")
+        File.write(file_path, 'fake brotli file')
+
+        get :brotli_asset, path: 'test.js'
+
+        expect(response.status).to eq(200)
+        expect(response.headers["Cache-Control"]).to match(/public/)
+      ensure
+        File.delete(file_path)
+      end
     end
   end
 
