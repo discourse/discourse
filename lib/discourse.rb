@@ -371,9 +371,11 @@ module Discourse
     end
   end
 
+  SIDEKIQ_NAMESPACE ||= 'sidekiq'.freeze
+
   def self.sidekiq_redis_config
     conf = GlobalSetting.redis_config.dup
-    conf[:namespace] = 'sidekiq'
+    conf[:namespace] = SIDEKIQ_NAMESPACE
     conf
   end
 
