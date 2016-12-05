@@ -41,6 +41,8 @@
       </tbody>
     </table>
   {{/load-more}}
+
+  {{conditional-loading-spinner condition=loading}}
 {{else}}
   <div>{{i18n "groups.empty.users"}}</div>
 {{/if}}
