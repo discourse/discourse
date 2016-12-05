@@ -2,6 +2,18 @@ require 'rails_helper'
 
 describe StaticController do
 
+  context 'brotli_asset' do
+    it 'has correct headers for brotli assets' do
+      FileUtils.mkdir_p(Rails.root + "public/assets/")
+      File.write(Rails.root + "public/assets/test.js.br", 'fake brotli file')
+
+      get :brotli_asset, path: 'test.js'
+
+      expect(response.status).to eq(200)
+      expect(response.headers["Cache-Control"]).to match(/public/)
+    end
+  end
+
   context 'show' do
     before do
       post = create_post

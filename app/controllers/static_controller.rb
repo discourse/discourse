@@ -145,6 +145,8 @@ class StaticController < ApplicationController
       raise Discourse::NotFound
     end
 
+    expires_in 1.year, public: true, must_revalidate: false
+
     if File.exists?(path)
       send_file(path, opts)
     else
