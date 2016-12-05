@@ -11,6 +11,11 @@
 
   {{#if model.id}}
     {{#unless model.automatic}}
+      <div>
+        <label for="bio">{{i18n 'group.bio'}}</label>
+        {{d-editor value=model.bio_raw}}
+      </div>
+
       {{#if model.hasOwners}}
       <div>
         <label for='owner-list'>{{i18n 'admin.groups.group_owners'}}</label>

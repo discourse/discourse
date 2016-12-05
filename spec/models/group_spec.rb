@@ -322,7 +322,6 @@ describe Group do
     expect(Group.desired_trust_level_groups(2).sort).to eq [10,11,12]
   end
 
-
   it "correctly handles trust level changes" do
     user = Fabricate(:user, trust_level: 2)
     Group.user_trust_level_change!(user.id, 2)
@@ -367,6 +366,13 @@ describe Group do
 
     group.add(u3)
     expect(u3.reload.trust_level).to eq(3)
+  end
+
+  it 'should cook the bio' do
+    group = Fabricate(:group)
+    group.update_attributes!(bio_raw: 'This is a group for :unicorn: lovers')
+
+    expect(group.bio_cooked).to include("unicorn.png")
   end
 
 end

@@ -13,6 +13,7 @@ class Group < ActiveRecord::Base
   has_and_belongs_to_many :web_hooks
 
   before_save :downcase_incoming_email
+  before_save :cook_bio
 
   after_save :destroy_deletions
   after_save :automatic_group_membership
@@ -81,6 +82,12 @@ class Group < ActiveRecord::Base
 
   def downcase_incoming_email
     self.incoming_email = (incoming_email || "").strip.downcase.presence
+  end
+
+  def cook_bio
+    if !self.bio_raw.blank?
+      self.bio_cooked = PrettyText.cook(self.bio_raw)
+    end
   end
 
   def incoming_email_validator
