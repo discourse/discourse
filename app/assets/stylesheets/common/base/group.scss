@@ -4,8 +4,9 @@
 }
 
 .group-details-container {
-  background: rgba(204, 204, 204, 0.2);
+  background: rgba(230, 230, 230, 0.3);
   padding: 20px;
+  margin-bottom: 30px;
 }
 
 table.group-members {
@@ -35,6 +36,10 @@ table.group-members {
   color: $primary;
 }
 
+.group-details {
+  width: 100%;
+}
+
 .group-header, .group-details {
   display: table;
 
@@ -58,6 +63,7 @@ table.group-members {
 
 .group-edit-btn {
   margin-left: 5px;
+  float: right;
 }
 
 .groups.edit-group .form-horizontal {
@@ -100,6 +106,8 @@ table.group-members {
 }
 
 #add-user-to-group {
+  margin: 0px;
+
   .ac-wrap {
     width: 100% !important;
   }
