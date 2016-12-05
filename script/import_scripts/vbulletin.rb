@@ -516,15 +516,15 @@ class ImportScripts::VBulletin < ImportScripts::Base
 
     # fix whitespaces
     raw.gsub!(/(\\r)?\\n/, "\n")
-       .gsub!("\\t", "\t")
+    raw.gsub!("\\t", "\t")
 
     # [HTML]...[/HTML]
     raw.gsub!(/\[html\]/i, "\n```html\n")
-       .gsub!(/\[\/html\]/i, "\n```\n")
+    raw.gsub!(/\[\/html\]/i, "\n```\n")
 
     # [PHP]...[/PHP]
     raw.gsub!(/\[php\]/i, "\n```php\n")
-       .gsub!(/\[\/php\]/i, "\n```\n")
+    raw.gsub!(/\[\/php\]/i, "\n```\n")
 
     # [HIGHLIGHT="..."]
     raw.gsub!(/\[highlight="?(\w+)"?\]/i) { "\n```#{$1.downcase}\n" }
@@ -532,7 +532,7 @@ class ImportScripts::VBulletin < ImportScripts::Base
     # [CODE]...[/CODE]
     # [HIGHLIGHT]...[/HIGHLIGHT]
     raw.gsub!(/\[\/?code\]/i, "\n```\n")
-       .gsub!(/\[\/?highlight\]/i, "\n```\n")
+    raw.gsub!(/\[\/?highlight\]/i, "\n```\n")
 
     # [SAMP]...[/SAMP]
     raw.gsub!(/\[\/?samp\]/i, "`")
@@ -542,12 +542,12 @@ class ImportScripts::VBulletin < ImportScripts::Base
     #  - AFTER all the "code" processing
     #  - BEFORE the "quote" processing
     raw.gsub!(/`([^`]+)`/im) { "`" + $1.gsub("<", "\u2603") + "`" }
-       .gsub!("<", "&lt;")
-       .gsub!("\u2603", "<")
+    raw.gsub!("<", "&lt;")
+    raw.gsub!("\u2603", "<")
 
     raw.gsub!(/`([^`]+)`/im) { "`" + $1.gsub(">", "\u2603") + "`" }
-       .gsub!(">", "&gt;")
-       .gsub!("\u2603", ">")
+    raw.gsub!(">", "&gt;")
+    raw.gsub!("\u2603", ">")
 
     # [URL=...]...[/URL]
     raw.gsub!(/\[url="?([^"]+?)"?\](.*?)\[\/url\]/im) { "[#{$2.strip}](#{$1})" }
@@ -556,7 +556,7 @@ class ImportScripts::VBulletin < ImportScripts::Base
     # [URL]...[/URL]
     # [MP3]...[/MP3]
     raw.gsub!(/\[\/?url\]/i, "")
-       .gsub!(/\[\/?mp3\]/i, "")
+    raw.gsub!(/\[\/?mp3\]/i, "")
 
     # [MENTION]<username>[/MENTION]
     raw.gsub!(/\[mention\](.+?)\[\/mention\]/i) do
