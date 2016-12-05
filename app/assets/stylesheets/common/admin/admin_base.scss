@@ -696,38 +696,6 @@ section.details {
     width: 100%;
     border-color: dark-light-choose(scale-color($primary, $lightness: 75%), scale-color($secondary, $lightness: 25%));
   }
-  .avatar-flair-preview {
-    position: relative;
-    width: 45px;
-
-    .avatar-wrapper {
-      background-color: #f4f4f4;
-    }
-  }
-  .form-horizontal {
-    .flair-inputs {
-      margin-top: 30px;
-      margin-bottom: 30px;
-
-      .flair-left {
-        float: left;
-        width: 60%;
-        input[name=flair_url] {
-          width: 90%;
-        }
-      }
-
-      .flair-right {
-        float: left;
-        margin-left: 30px;
-      }
-    }
-  }
-}
-.row.groups {
-  input[type='text'].flair-bg-color, input[type='text'].flair-color {
-    width: 200px;
-  }
 }
 
 // Customise area

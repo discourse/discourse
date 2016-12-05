@@ -7,7 +7,8 @@ export default {
       "user_count":8,
       "alias_level":0,
       "visible":true,
-      "flair_url": 'fa-adjust'
+      "flair_url": 'fa-adjust',
+      "is_group_owner":true
     }
   },
   "/groups/discourse/counts.json":{

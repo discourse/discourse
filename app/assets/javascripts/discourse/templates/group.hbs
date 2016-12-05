@@ -1,7 +1,6 @@
-<div class="container user-table">
-  <div class="wrapper">
-  <section class='user-navigation'>
-    <ul class='action-list nav-stacked'>
+<div class="container group">
+  <div class='pull-left group-nav'>
+    <ul class='nav-stacked'>
       {{#each getTabs as |tab|}}
         <li class="{{if tab.active 'active'}}">
           {{#link-to tab.location model title=tab.message}}
@@ -11,24 +10,34 @@
         </li>
       {{/each}}
     </ul>
-  </section>
+  </div>
 
-  <section class='user-main'>
-    <section class='user-right groups'>
-      <section class='about group'>
-        <div class='details'>
-          <h1 class='group-header'>
-            {{#if model.flair_url}}
-              <span class='group-avatar-flair'>
-                {{mount-widget widget="avatar-flair" args=avatarFlairAttributes}}
-              </span>
-            {{/if}}
-            <span class='group-name'>{{groupName}}</span>
-          </h1>
-        </div>
-      </section>
+  <div class='pull-left group-outlet'>
+    <div class='group-details'>
+      <span>
+        <h1 class='group-header'>
+          {{#if model.flair_url}}
+            <span class='group-avatar-flair'>
+              {{avatar-flair
+                flairURL=model.flair_url
+                flairBgColor=model.flair_bg_color
+                flairColor=model.flair_color
+                groupName=model.name}}
+            </span>
+          {{/if}}
+          <span class='group-name'>{{groupName}}</span>
+        </h1>
+      </span>
+
+      {{#if canEditGroup}}
+        <span>
+          {{d-button action="showGroupEditor" class="group-edit-btn btn-small" icon="pencil"}}
+        </span>
+      {{/if}}
+    </div>
+
+    <div class='user-main'>
       {{outlet}}
-    </section>
-  </section>
+    </div>
   </div>
 </div>

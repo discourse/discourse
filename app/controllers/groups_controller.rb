@@ -1,10 +1,26 @@
 class GroupsController < ApplicationController
 
-  before_filter :ensure_logged_in, only: [:set_notifications, :mentionable]
+  before_filter :ensure_logged_in, only: [
+    :set_notifications,
+    :mentionable,
+    :update
+  ]
+
   skip_before_filter :preload_json, :check_xhr, only: [:posts_feed, :mentions_feed]
 
   def show
     render_serialized(find_group(:id), GroupShowSerializer, root: 'basic_group')
+  end
+
+  def update
+    group = Group.find(params[:id])
+    guardian.ensure_can_edit!(group)
+
+    if group.update_attributes(group_params)
+      render json: success_json
+    else
+      render_json_error(group)
+    end
   end
 
   def posts
@@ -152,11 +168,15 @@ class GroupsController < ApplicationController
 
   private
 
-    def find_group(param_name)
-      name = params.require(param_name)
-      group = Group.find_by("lower(name) = ?", name.downcase)
-      guardian.ensure_can_see!(group)
-      group
-    end
+  def group_params
+    params.require(:group).permit(:flair_url, :flair_bg_color, :flair_color)
+  end
+
+  def find_group(param_name)
+    name = params.require(param_name)
+    group = Group.find_by("lower(name) = ?", name.downcase)
+    guardian.ensure_can_see!(group)
+    group
+  end
 
 end

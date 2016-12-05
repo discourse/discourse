@@ -1,0 +1,23 @@
+.group {
+  margin-top: 15px;
+}
+
+.group-nav, .group-outlet {
+  width: 100%;
+}
+
+table.group-members {
+  th {
+    text-align: center;
+  }
+
+  tr {
+    .user-info {
+      width: 130px;
+    }
+
+    td {
+      padding-left: 0.5em;
+    }
+  }
+}
