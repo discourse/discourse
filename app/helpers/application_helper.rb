@@ -49,7 +49,7 @@ module ApplicationHelper
     if  GlobalSetting.cdn_url &&
         GlobalSetting.cdn_url.start_with?("https") &&
         ENV["COMPRESS_BROTLI"] == "1" &&
-        request.env["ACCEPT_ENCODING"] =~ /br/
+        request.env["HTTP_ACCEPT_ENCODING"] =~ /br/
       tags = javascript_include_tag(*args)
       tags.gsub!("#{GlobalSetting.cdn_url}/assets/", "#{GlobalSetting.cdn_url}/brotli_asset/")
       tags.html_safe

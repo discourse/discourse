@@ -136,6 +136,7 @@ class StaticController < ApplicationController
     opts[:type] = "application/javascript" if path =~ /\.js.br$/
 
     response.headers["Expires"] = 1.year.from_now.httpdate
+    response.headers["Cache-Control"] = 'max-age=31557600, public'
     response.headers["Content-Encoding"] = 'br'
     begin
       response.headers["Last-Modified"] = File.ctime(path).httpdate
