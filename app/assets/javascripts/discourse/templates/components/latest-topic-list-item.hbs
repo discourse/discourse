@@ -12,6 +12,9 @@
         <tr>
           {{topic-status topic=topic}}
           {{topic-link topic}}
+          {{#if topic.featured_link}}
+            {{topic-featured-link topic}}
+          {{/if}}
           {{topic-post-badges newPosts=topic.totalUnread unseen=topic.unseen url=topic.lastUnreadUrl}}
         </tr>
         <tr>
