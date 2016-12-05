@@ -133,50 +133,6 @@
     }
    }
 
-  table.group-members {
-    width: 100%;
-    p {
-      max-width: 600px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-    th {
-      padding: 0.5em;
-      text-align: right;
-      border-bottom: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
-    }
-    td.avatar {
-      width: 60px;
-      position: relative;
-      .is-owner {
-        position: absolute;
-        right: 0;
-        top: 20px;
-        color: dark-light-diff($primary, $secondary, 50%, -50%);
-      }
-    }
-    td.remove-user {
-      text-align: right;
-    }
-    td {
-      padding: 0.5em;
-      border-bottom: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
-      img {
-        margin-right: 10px;
-      }
-      span.text {
-        float: right;
-        font-size: 1.2em;
-        color: dark-light-diff($primary, $secondary, 50%, -50%);
-      }
-    }
-  }
-
-  .user-right.groups {
-    margin-top: 0;
-  }
-
   .user-right {
     width: 900px;
     margin-top: 20px;

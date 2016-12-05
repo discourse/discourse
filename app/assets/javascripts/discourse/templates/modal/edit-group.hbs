@@ -1,0 +1,10 @@
+{{#d-modal-body title="group.edit.title" class="edit-group groups"}}
+  <form class="form-horizontal">
+    {{group-flair-inputs model=model}}
+  </form>
+{{/d-modal-body}}
+
+<div class="modal-footer">
+  {{d-button action="save" class="btn-primary" disabled=saving label="save"}}
+  <a {{action "closeModal"}}>{{i18n 'cancel'}}</a>
+</div>

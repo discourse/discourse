@@ -27,18 +27,24 @@ test("Browsing Groups", () => {
 
   visit("/groups/discourse/messages");
   andThen(() => {
-    ok($('.action-list li').length === 4, 'it should not show messages tab');
+    ok($('.nav-stacked li').length === 4, 'it should not show messages tab');
     ok(count('.user-stream .item') > 0, "it lists stream items");
   });
 });
 
-test("Messages tab", () => {
+test("Admin Browsing Groups", () => {
   logIn();
   Discourse.reset();
 
   visit("/groups/discourse");
 
   andThen(() => {
-    ok($('.action-list li').length === 5, 'it should show messages tab if user is admin');
+    ok($('.nav-stacked li').length === 5, 'it should show messages tab if user is admin');
+  });
+
+  click('.group-edit-btn');
+
+  andThen(() => {
+    ok(find('.group-flair-inputs').length === 1, 'it should display avatar flair inputs');
   });
 });

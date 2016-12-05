@@ -4,7 +4,11 @@
     <div class="user-card-avatar">
       <a href={{user.path}} {{action "showUser"}} class="card-huge-avatar">{{bound-avatar avatar "huge"}}</a>
       {{#if user.primary_group_name}}
-        {{mount-widget widget="avatar-flair" args=user}}
+        {{avatar-flair
+          flairURL=user.primary_group_flair_url
+          flairBgColor=user.primary_group_flair_bg_color
+          flairColor=user.primary_group_flair_color
+          groupName=user.primary_group_name}}
       {{/if}}
     </div>
 

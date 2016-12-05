@@ -23,6 +23,11 @@ export default Ember.Controller.extend({
     Tab.create({ name: 'messages', requiresMembership: true })
   ],
 
+  @computed('model.is_group_owner', 'model.automatic')
+  canEditGroup(isGroupOwner, automatic) {
+    return !automatic && isGroupOwner;
+  },
+
   @computed('model.name')
   groupName(name) {
     return name.capitalize();
