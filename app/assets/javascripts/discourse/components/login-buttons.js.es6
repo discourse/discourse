@@ -1,4 +1,5 @@
 import { findAll }  from 'discourse/models/login-method';
+import { getOwner } from 'discourse-common/lib/get-owner';
 
 export default Ember.Component.extend({
   elementId: 'login-buttons',
@@ -7,7 +8,7 @@ export default Ember.Component.extend({
   hidden: Ember.computed.equal('buttons.length', 0),
 
   buttons: function() {
-    return findAll(this.siteSettings);
+    return findAll(this.siteSettings, getOwner(this).lookup('capabilities:main'), this.site.isMobileDevice);
   }.property(),
 
   actions: {
