@@ -169,7 +169,12 @@ class GroupsController < ApplicationController
   private
 
   def group_params
-    params.require(:group).permit(:flair_url, :flair_bg_color, :flair_color)
+    params.require(:group).permit(
+      :flair_url,
+      :flair_bg_color,
+      :flair_color,
+      :bio_raw
+    )
   end
 
   def find_group(param_name)

@@ -1,18 +1,5 @@
 <div class="container group">
-  <div class='pull-left group-nav'>
-    <ul class='nav-stacked'>
-      {{#each getTabs as |tab|}}
-        <li class="{{if tab.active 'active'}}">
-          {{#link-to tab.location model title=tab.message}}
-            {{tab.message}}
-            {{#if tab.count}}<span class='count'>({{tab.count}})</span>{{/if}}
-          {{/link-to}}
-        </li>
-      {{/each}}
-    </ul>
-  </div>
-
-  <div class='pull-left group-outlet'>
+  <div class='group-details-container'>
     <div class='group-details'>
       <span>
         <h1 class='group-header'>
@@ -31,11 +18,32 @@
 
       {{#if canEditGroup}}
         <span>
-          {{d-button action="showGroupEditor" class="group-edit-btn btn-small" icon="pencil"}}
+          {{d-button action="showGroupEditor" label="group.edit.title" class="group-edit-btn" icon="pencil"}}
         </span>
       {{/if}}
     </div>
 
+    {{#if model.bio_cooked}}
+      <div class='group-bio'>
+        <p>{{{model.bio_cooked}}}</p>
+      </div>
+    {{/if}}
+  </div>
+
+  <div class='pull-left group-nav'>
+    <ul class='nav-stacked'>
+      {{#each getTabs as |tab|}}
+        <li class="{{if tab.active 'active'}}">
+          {{#link-to tab.location model title=tab.message}}
+            {{tab.message}}
+            {{#if tab.count}}<span class='count'>({{tab.count}})</span>{{/if}}
+          {{/link-to}}
+        </li>
+      {{/each}}
+    </ul>
+  </div>
+
+  <div class='pull-left group-outlet'>
     <div class='user-main'>
       {{outlet}}
     </div>

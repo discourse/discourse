@@ -1,5 +1,8 @@
 {{#d-modal-body title="group.edit.title" class="edit-group groups"}}
   <form class="form-horizontal">
+    <label for='bio'>{{i18n 'group.bio'}}</label>
+    {{d-editor value=model.bio_raw class="edit-group-bio"}}
+
     {{group-flair-inputs model=model}}
   </form>
 {{/d-modal-body}}
