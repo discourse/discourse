@@ -650,6 +650,7 @@ Discourse::Application.routes.draw do
   delete "draft" => "draft#destroy"
 
   get "cdn_asset/:site/*path" => "static#cdn_asset", format: false
+  get "brotli_asset/*path" => "static#brotli_asset", format: false
 
   get "favicon/proxied" => "static#favicon", format: false
 
