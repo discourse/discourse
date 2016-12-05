@@ -3,6 +3,11 @@
   font-weight: normal;
 }
 
+.group-details-container {
+  background: rgba(204, 204, 204, 0.2);
+  padding: 20px;
+}
+
 table.group-members {
   width: 100%;
 
@@ -55,7 +60,11 @@ table.group-members {
   margin-left: 5px;
 }
 
-.form-horizontal {
+.groups.edit-group .form-horizontal {
+  textarea {
+    width: 99%;
+  }
+
   label {
     font-weight: bold;
   }

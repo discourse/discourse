@@ -114,6 +114,7 @@ const Group = Discourse.Model.extend({
       flair_url: this.get('flair_url'),
       flair_bg_color: this.get('flairBackgroundHexColor'),
       flair_color: this.get('flairHexColor'),
+      bio_raw: this.get('bio_raw')
     };
   },
 
