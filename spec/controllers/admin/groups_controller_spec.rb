@@ -37,7 +37,9 @@ describe Admin::GroupsController do
         "has_messages"=>false,
         "flair_url"=>nil,
         "flair_bg_color"=>nil,
-        "flair_color"=>nil
+        "flair_color"=>nil,
+        "bio_raw"=>nil,
+        "bio_cooked"=>nil
       }])
     end
 
