@@ -128,14 +128,11 @@ export default Ember.Component.extend(bufferedRender({
 
   highlight(opts = { isLastViewedTopic: false }) {
     const $topic = this.$();
-    const originalCol = $topic.css('backgroundColor');
     $topic
       .addClass('highlighted')
-      .attr('data-islastviewedtopic', opts.isLastViewedTopic)
-      .stop()
-      .animate({ backgroundColor: originalCol }, 2500, 'swing', function() {
-        $topic.removeClass('highlighted');
-      });
+      .attr('data-islastviewedtopic', opts.isLastViewedTopic);
+
+    $topic.on('animationend', () => $topic.removeClass('highlighted'));
   },
 
   _highlightIfNeeded: function() {

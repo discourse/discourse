@@ -339,3 +339,12 @@ body {
 span.relative-date {
   white-space:nowrap;
 }
+
+@keyframes background-fade-highlight {
+  0% {
+    background-color: dark-light-diff($tertiary, $secondary, 85%, -65%);
+  }
+  100% {
+    background-color: transparent;
+  }
+}
