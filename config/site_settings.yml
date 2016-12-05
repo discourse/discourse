@@ -1197,8 +1197,6 @@ uncategorized:
 
   notify_about_flags_after: 48
 
-  enable_cdn_js_debugging: false
-
   show_create_topics_notice:
     client: true
     default: true
