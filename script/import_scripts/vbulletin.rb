@@ -31,6 +31,7 @@ class ImportScripts::VBulletin < ImportScripts::Base
   def execute
     import_groups
     import_users
+    create_groups_membership
     import_categories
     import_topics
     import_posts
@@ -40,7 +41,7 @@ class ImportScripts::VBulletin < ImportScripts::Base
     close_topics
     post_process_posts
 
-    create_permalinks
+    create_permalink_file
     suspend_users
   end
 
@@ -89,7 +90,7 @@ class ImportScripts::VBulletin < ImportScripts::Base
           email: user["email"].presence || fake_email,
           website: user["homepage"].strip,
           title: @htmlentities.decode(user["usertitle"]).strip,
-          primary_group_id: group_id_from_imported_group_id(user["usergroupid"]),
+          primary_group_id: group_id_from_imported_group_id(user["usergroupid"].to_i),
           created_at: parse_timestamp(user["joindate"]),
           last_seen_at: parse_timestamp(user["lastvisit"]),
           post_create_action: proc do |u|
@@ -98,6 +99,32 @@ class ImportScripts::VBulletin < ImportScripts::Base
             import_profile_background(user, u)
           end
         }
+      end
+    end
+  end
+
+  def create_groups_membership
+    puts "", "Creating groups membership..."
+
+    Group.find_each do |group|
+      begin
+        next if group.automatic
+        puts "\t#{group.name}"
+        next if GroupUser.where(group_id: group.id).count > 0
+        user_ids_in_group = User.where(primary_group_id: group.id).pluck(:id).to_a
+        next if user_ids_in_group.size == 0
+        values = user_ids_in_group.map { |user_id| "(#{group.id}, #{user_id}, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)" }.join(",")
+
+        User.exec_sql <<-SQL
+          BEGIN;
+          INSERT INTO group_users (group_id, user_id, created_at, updated_at) VALUES #{values};
+          COMMIT;
+        SQL
+
+        Group.reset_counters(group.id, :group_users)
+      rescue Exception => e
+        puts e.message
+        puts e.backtrace.join("\n")
       end
     end
   end
@@ -163,9 +190,9 @@ class ImportScripts::VBulletin < ImportScripts::Base
 
     categories = mysql_query("SELECT forumid, title, description, displayorder, parentid FROM #{TABLE_PREFIX}forum ORDER BY forumid").to_a
 
-    # top_level_categories = categories.select { |c| c["parentid"] == -1 }
+    top_level_categories = categories.select { |c| c["parentid"] == -1 }
 
-    create_categories(categories) do |category|
+    create_categories(top_level_categories) do |category|
       {
         id: category["forumid"],
         name: @htmlentities.decode(category["title"]).strip,
@@ -174,27 +201,27 @@ class ImportScripts::VBulletin < ImportScripts::Base
       }
     end
 
-    # puts "", "importing children categories..."
-    #
-    # children_categories = categories.select { |c| c["parentid"] != -1 }
-    # top_level_category_ids = Set.new(top_level_categories.map { |c| c["forumid"] })
-    #
-    # # cut down the tree to only 2 levels of categories
-    # children_categories.each do |cc|
-    #   while !top_level_category_ids.include?(cc["parentid"])
-    #     cc["parentid"] = categories.detect { |c| c["forumid"] == cc["parentid"] }["parentid"]
-    #   end
-    # end
-    #
-    # create_categories(children_categories) do |category|
-    #   {
-    #     id: category["forumid"],
-    #     name: @htmlentities.decode(category["title"]).strip,
-    #     position: category["displayorder"],
-    #     description: @htmlentities.decode(category["description"]).strip,
-    #     parent_category_id: category_id_from_imported_category_id(category["parentid"])
-    #   }
-    # end
+    puts "", "importing children categories..."
+
+    children_categories = categories.select { |c| c["parentid"] != -1 }
+    top_level_category_ids = Set.new(top_level_categories.map { |c| c["forumid"] })
+
+    # cut down the tree to only 2 levels of categories
+    children_categories.each do |cc|
+      while !top_level_category_ids.include?(cc["parentid"])
+        cc["parentid"] = categories.detect { |c| c["forumid"] == cc["parentid"] }["parentid"]
+      end
+    end
+
+    create_categories(children_categories) do |category|
+      {
+        id: category["forumid"],
+        name: @htmlentities.decode(category["title"]).strip,
+        position: category["displayorder"],
+        description: @htmlentities.decode(category["description"]).strip,
+        parent_category_id: category_id_from_imported_category_id(category["parentid"])
+      }
+    end
   end
 
   def import_topics
@@ -237,6 +264,18 @@ class ImportScripts::VBulletin < ImportScripts::Base
         t[:pinned_at] = t[:created_at] if topic["sticky"].to_i == 1
         t
       end
+
+      # uncomment below lines to create permalink
+      # topics.each do |thread|
+      #   topic_id = "thread-#{thread["threadid"]}"
+      #   topic = topic_lookup_from_imported_post_id(topic_id)
+      #   if topic.present?
+      #     title_slugified = thread["title"].gsub(" ","-").gsub(".","-") if thread["title"].present?
+      #     url_slug = "threads/#{thread["threadid"]}-#{title_slugified}" if thread["title"].present?
+      #     Permalink.create(url: url_slug, topic_id: topic[:topic_id].to_i) if url_slug.present? && topic[:topic_id].present?
+      #   end
+      # end
+
     end
   end
 
@@ -567,6 +606,24 @@ class ImportScripts::VBulletin < ImportScripts::Base
       "@#{old_username}"
     end
 
+    # [FONT=blah] and [COLOR=blah]
+    raw.gsub! /\[FONT=.*?\](.*?)\[\/FONT\]/im, '\1'
+    raw.gsub! /\[COLOR=.*?\](.*?)\[\/COLOR\]/im, '\1'
+    raw.gsub! /\[COLOR=#.*?\](.*?)\[\/COLOR\]/im, '\1'
+
+    raw.gsub! /\[SIZE=.*?\](.*?)\[\/SIZE\]/im, '\1'
+    raw.gsub! /\[h=.*?\](.*?)\[\/h\]/im, '\1'
+
+    # [CENTER]...[/CENTER]
+    raw.gsub! /\[CENTER\](.*?)\[\/CENTER\]/im, '\1'
+
+    # [INDENT]...[/INDENT]
+    raw.gsub! /\[INDENT\](.*?)\[\/INDENT\]/im, '\1'
+    raw.gsub! /\[TABLE\](.*?)\[\/TABLE\]/im, '\1'
+    raw.gsub! /\[TR\](.*?)\[\/TR\]/im, '\1'
+    raw.gsub! /\[TD\](.*?)\[\/TD\]/im, '\1'
+    raw.gsub! /\[TD="?.*?"?\](.*?)\[\/TD\]/im, '\1'
+
     # [QUOTE]...[/QUOTE]
     raw.gsub!(/\[quote\](.+?)\[\/quote\]/im) { |quote|
       quote.gsub!(/\[quote\](.+?)\[\/quote\]/im) { "\n#{$1}\n" }
@@ -607,7 +664,7 @@ class ImportScripts::VBulletin < ImportScripts::Base
     raw.gsub!(/\[\*\]\n/, '')
     raw.gsub!(/\[\*\](.*?)\[\/\*:m\]/, '[li]\1[/li]')
     raw.gsub!(/\[\*\](.*?)\n/, '[li]\1[/li]')
-
+    raw.gsub!(/\[\*=1\]/, '')
 
     raw
   end
@@ -683,8 +740,8 @@ class ImportScripts::VBulletin < ImportScripts::Base
   end
 
 
-  def create_permalinks
-    puts '', 'Creating Permalinks...', ''
+  def create_permalink_file
+    puts '', 'Creating Permalink File...', ''
 
     id_mapping = []
 
@@ -723,7 +780,7 @@ class ImportScripts::VBulletin < ImportScripts::Base
     system_user = Discourse.system_user
 
     mysql_query("SELECT userid, bandate FROM #{TABLE_PREFIX}userban").each do |b|
-      user = User.find_by_id(b['userid'])
+      user = User.find_by_id(user_id_from_imported_user_id(b['userid']))
       if user
         user.suspended_at = parse_timestamp(user["bandate"])
         user.suspended_till = 200.years.from_now
