@@ -6,7 +6,7 @@ class GroupPostSerializer < ApplicationSerializer
              :url,
              :category
 
-  has_one :user, serializer: BasicUserSerializer, embed: :object
+  has_one :user, serializer: GroupPostUserSerializer, embed: :object
   has_one :topic, serializer: BasicTopicSerializer, embed: :object
 
   def title
