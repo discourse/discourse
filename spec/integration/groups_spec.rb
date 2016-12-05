@@ -46,7 +46,8 @@ describe "Groups" do
         xhr :put, "/groups/#{group.id}", { group: {
           flair_bg_color: 'FFF',
           flair_color: 'BBB',
-          flair_url: 'fa-adjust'
+          flair_url: 'fa-adjust',
+          bio_raw: 'testing'
         } }
 
         expect(response).to be_success
@@ -56,6 +57,7 @@ describe "Groups" do
         expect(group.flair_bg_color).to eq('FFF')
         expect(group.flair_color).to eq('BBB')
         expect(group.flair_url).to eq('fa-adjust')
+        expect(group.bio_raw).to eq('testing')
       end
     end
 

@@ -3,6 +3,12 @@
   font-weight: normal;
 }
 
+.group-details-container {
+  background: rgba(230, 230, 230, 0.3);
+  padding: 20px;
+  margin-bottom: 30px;
+}
+
 table.group-members {
   width: 100%;
 
@@ -30,6 +36,10 @@ table.group-members {
   color: $primary;
 }
 
+.group-details {
+  width: 100%;
+}
+
 .group-header, .group-details {
   display: table;
 
@@ -53,9 +63,14 @@ table.group-members {
 
 .group-edit-btn {
   margin-left: 5px;
+  float: right;
 }
 
-.form-horizontal {
+.groups.edit-group .form-horizontal {
+  textarea {
+    width: 99%;
+  }
+
   label {
     font-weight: bold;
   }
@@ -91,6 +106,8 @@ table.group-members {
 }
 
 #add-user-to-group {
+  margin: 0px;
+
   .ac-wrap {
     width: 100% !important;
   }
