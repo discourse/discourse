@@ -193,6 +193,10 @@ class PostRevisionSerializer < ApplicationSerializer
         end
       end
 
+      if SiteSetting.topic_featured_link_enabled
+        latest_modifications["featured_link"] = [post.topic.featured_link]
+      end
+
       if SiteSetting.tagging_enabled
         latest_modifications["tags"] = [post.topic.tags.map(&:name)]
       end

@@ -4,6 +4,7 @@ import { iconNode } from 'discourse/helpers/fa-icon-node';
 import DiscourseURL from 'discourse/lib/url';
 import RawHtml from 'discourse/widgets/raw-html';
 import { tagNode } from 'discourse/lib/render-tag';
+import { topicFeaturedLinkNode } from 'discourse/lib/render-topic-featured-link';
 
 export default createWidget('header-topic-info', {
   tagName: 'div.extra-info-wrapper',
@@ -44,11 +45,18 @@ export default createWidget('header-topic-info', {
         title.push(this.attach('category-link', { category }));
       }
 
+      const extra = [];
       if (this.siteSettings.tagging_enabled) {
         const tags = topic.get('tags') || [];
         if (tags.length) {
-          title.push(h('div.list-tags', tags.map(tagNode)));
+          extra.push(h('div.list-tags', tags.map(tagNode)));
         }
+      }
+      if (this.siteSettings.topic_featured_link_enabled) {
+        extra.push(topicFeaturedLinkNode(attrs.topic));
+      }
+      if (extra) {
+        title.push(h('div.topic-header-extra', extra));
       }
     }
 
