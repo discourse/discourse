@@ -160,6 +160,14 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
     return post => this.postSelected(post);
   }.property(),
 
+  @computed('model.isPrivateMessage', 'model.category.id')
+  canEditTopicFeaturedLink(isPrivateMessage, categoryId) {
+    if (!this.siteSettings.topic_featured_link_enabled || isPrivateMessage) { return false; }
+
+    const categoryIds = this.site.get('topic_featured_link_allowed_category_ids');
+    return categoryIds === undefined || !categoryIds.length || categoryIds.indexOf(categoryId) !== -1;
+  },
+
   @computed('model.isPrivateMessage')
   canEditTags(isPrivateMessage) {
     return !isPrivateMessage && this.site.get('can_tag_topics');

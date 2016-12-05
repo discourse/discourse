@@ -27,17 +27,10 @@
   }
 }
 
-.extra-info-wrapper {
-  .list-tags {
-    padding-top: 5px;
-  }
-
-  .discourse-tag {
-    -webkit-animation: fadein .7s;
-    animation: fadein .7s;
-  }
+.topic-header-extra .discourse-tag {
+  -webkit-animation: fadein .7s;
+  animation: fadein .7s;
 }
-
 
 .add-tags .select2 {
   margin: 0;
@@ -139,8 +132,8 @@ $tag-color: scale-color($primary, $lightness: 40%);
 header .discourse-tag {color: $tag-color }
 
 .list-tags {
+  margin-right: 3px;
   display: inline;
-  margin: 0 0 0 5px;
   font-size: 0.857em;
 }
 
@@ -169,24 +162,6 @@ header .discourse-tag {color: $tag-color }
   top: 30px;
   bottom: auto;
   left: auto;
-}
-
-.bullet + .list-tags {
-  display: block;
-  line-height: 15px;
-}
-
-.bar + .list-tags {
-  line-height: 1.25;
-  .discourse-tag {
-    vertical-align: middle;
-  }
-}
-
-.box + .list-tags {
-  display: inline-block;
-  margin: 5px 0 0 5px;
-  padding-top: 2px;
 }
 
 .tag-sort-options {

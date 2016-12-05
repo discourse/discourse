@@ -187,6 +187,10 @@ div.ac-wrap {
   }
 }
 
+#reply-control.topic-featured-link-only.open {
+  .wmd-controls { display: none; }
+}
+
 #cancel-file-upload {
   font-size: 1.6em;
 }

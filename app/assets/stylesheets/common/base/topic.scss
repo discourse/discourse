@@ -9,6 +9,10 @@
     .badge-wrapper {
       float: left;
     }
+
+    a.topic-featured-link {
+      display: inline-block;
+    }
   }
 
   a.badge-category {
@@ -47,7 +51,7 @@
   display: inline;
 }
 
-#suggested-topics h3 .badge-wrapper.bullet span.badge-category, {
+#suggested-topics h3 .badge-wrapper.bullet span.badge-category {
   // Override vertical-align: text-top from `badges.css.scss`
   vertical-align: baseline;
   line-height: 1.2;
@@ -131,5 +135,20 @@
         background: dark-light-diff($tertiary, $secondary, 85%, -65%);
       }
     }
+  }
+}
+
+a.topic-featured-link {
+  display: inline-block;
+  text-transform: lowercase;
+  color: #858585;
+  font-size: 0.875rem;
+
+  &::before {
+    position: relative;
+    top: 0.1em;
+    padding-right: 3px;
+    font-family: FontAwesome;
+    content: "\f08e";
   }
 }

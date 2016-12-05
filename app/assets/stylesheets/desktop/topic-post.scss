@@ -505,13 +505,13 @@ video {
 .extra-info-wrapper {
   overflow: hidden;
 
-  .badge-wrapper, i,  .topic-link {
+  .badge-wrapper, i, .topic-link {
     -webkit-animation: fadein .7s;
     animation: fadein .7s;
   }
 
   .topic-statuses {
-    i  { color: $header_primary; }
+    i { color: $header_primary; }
     i.fa-envelope { color: $danger; }
     .unpinned { color: $header_primary; }
   }
@@ -523,6 +523,26 @@ video {
     overflow: hidden;
     text-overflow: ellipsis;
   }
+
+  .topic-header-extra {
+    margin: 0 0 0 5px;
+    padding-top: 5px;
+  }
+}
+
+.bullet + .topic-header-extra {
+  display: block;
+  line-height: 12px;
+}
+
+.bar + .topic-header-extra {
+  line-height: 1.25;
+}
+
+.box + .topic-header-extra {
+  display: inline-block;
+  margin: 0 0 0 5px;
+  padding-top: 5px;
 }
 
 /* default docked header CSS for all topics, including those without categories */

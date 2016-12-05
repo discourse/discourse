@@ -13,7 +13,8 @@ export default Ember.Component.extend({
                       'composer.canEditTitle:edit-title',
                       'composer.createdPost:created-post',
                       'composer.creatingTopic:topic',
-                      'composer.whisper:composing-whisper'],
+                      'composer.whisper:composing-whisper',
+                      'composer.showComposerEditor::topic-featured-link-only'],
 
   @computed('composer.composeState')
   composeState(composeState) {
@@ -27,7 +28,7 @@ export default Ember.Component.extend({
     this.appEvents.trigger("composer:resized");
   },
 
-  @observes('composeState', 'composer.action')
+  @observes('composeState', 'composer.action', 'composer.canEditTopicFeaturedLink')
   resize() {
     Ember.run.scheduleOnce('afterRender', () => {
       if (!this.element || this.isDestroying || this.isDestroyed) { return; }

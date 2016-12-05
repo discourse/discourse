@@ -1074,6 +1074,7 @@ en:
       title_placeholder: "What is this discussion about in one brief sentence?"
       edit_reason_placeholder: "why are you editing?"
       show_edit_reason: "(add edit reason)"
+      topic_featured_link_placeholder: "Enter link shown with title."
       reply_placeholder: "Type here. Use Markdown, BBCode, or HTML to format. Drag or paste images."
       view_new_post: "View your new post."
       saving: "Saving"
@@ -1875,6 +1876,7 @@ en:
       tags_allowed_tag_groups: "Tag groups that can only be used in this category:"
       tags_placeholder: "(Optional) list of allowed tags"
       tag_groups_placeholder: "(Optional) list of allowed tag groups"
+      topic_featured_link_allowed: "Restricts editing the topic featured link in this category. Require site setting topic_featured_link_enabled is checked."
       delete: 'Delete Category'
       create: 'New Category'
       create_long: 'Create a new category'

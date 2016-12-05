@@ -169,6 +169,18 @@ const Category = RestModel.extend({
   @computed("id")
   isUncategorizedCategory(id) {
     return id === Discourse.Site.currentProp("uncategorized_category_id");
+  },
+
+  @computed('custom_fields.topic_featured_link_allowed')
+  topicFeaturedLinkAllowed: {
+    get(allowed) {
+      return allowed === "true";
+    },
+    set(value) {
+      value = value ? "true" : "false";
+      this.set("custom_fields.topic_featured_link_allowed", value);
+      return value;
+    }
   }
 });
 

@@ -23,7 +23,8 @@ class SiteSerializer < ApplicationSerializer
              :can_tag_topics,
              :tags_filter_regexp,
              :top_tags,
-             :wizard_required
+             :wizard_required,
+             :topic_featured_link_allowed_category_ids
 
   has_many :categories, serializer: BasicCategorySerializer, embed: :objects
   has_many :trust_levels, embed: :objects
@@ -120,5 +121,13 @@ class SiteSerializer < ApplicationSerializer
 
   def include_wizard_required?
     Wizard.user_requires_completion?(scope.user)
+  end
+
+  def include_topic_featured_link_allowed_category_ids?
+    SiteSetting.topic_featured_link_enabled
+  end
+
+  def topic_featured_link_allowed_category_ids
+    scope.topic_featured_link_allowed_category_ids
   end
 end
