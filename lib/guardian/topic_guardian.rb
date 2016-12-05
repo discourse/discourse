@@ -105,4 +105,9 @@ module TopicGuardian
     records
   end
 
+  def can_edit_featured_link?(category_id)
+    SiteSetting.topic_featured_link_enabled &&
+        (topic_featured_link_allowed_category_ids.empty? || # no per category restrictions
+        category_id && topic_featured_link_allowed_category_ids.include?(category_id.to_i)) # category restriction exists
+  end
 end

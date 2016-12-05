@@ -320,6 +320,7 @@ en:
         name: "Category Name"
       topic:
         title: 'Title'
+        featured_link: 'Featured Link'
       post:
         raw: "Body"
       user_profile:
@@ -336,6 +337,9 @@ en:
               too_many_users: "You can only send warnings to one user at a time."
               cant_send_pm: "Sorry, you cannot send a private message to that user."
               no_user_selected: "You must select a valid user."
+            featured_link:
+              invalid: "is invalid. URL should include http:// or https://."
+              invalid_category: "can't be edited in this category."
         user:
           attributes:
             password:
@@ -846,6 +850,10 @@ en:
     min_first_post_length: "Minimum allowed first post (topic body) length in characters"
     min_private_message_post_length: "Minimum allowed post length in characters for messages"
     max_post_length: "Maximum allowed post length in characters"
+    topic_featured_link_enabled: "Enable posting a link with topics."
+    topic_featured_link_onebox: "Show an onebox in the post body if possible and prevent editing post content."
+    open_topic_featured_link_in_external_window: "Open topic featured link in a external window."
+    show_topic_featured_link_in_digest: "Show the topic featured link in the digest email."
     min_topic_title_length: "Minimum allowed topic title length in characters"
     max_topic_title_length: "Maximum allowed topic title length in characters"
     min_private_message_title_length: "Minimum allowed title length for a message in characters"

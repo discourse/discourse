@@ -1725,7 +1725,6 @@ describe Topic do
     expect(@topic_status_event_triggered).to eq(true)
   end
 
-
   it 'allows users to normalize counts' do
 
     topic = Fabricate(:topic, last_posted_at: 1.year.ago)
@@ -1741,4 +1740,39 @@ describe Topic do
     expect(topic.last_posted_at).to be_within(1.second).of (post1.created_at)
   end
 
+  context 'featured link' do
+    before { SiteSetting.topic_featured_link_enabled = true }
+    let(:topic) { Fabricate(:topic) }
+
+    it 'can validate featured link' do
+      topic.featured_link = ' invalid string'
+
+      expect(topic).not_to be_valid
+      expect(topic.errors[:featured_link]).to be_present
+    end
+
+    it 'can properly save the featured link' do
+      topic.featured_link = '  https://github.com/discourse/discourse'
+
+      expect(topic.save).to be_truthy
+      expect(topic.custom_fields['featured_link']).to eq('https://github.com/discourse/discourse')
+    end
+
+    context 'when category restricts present' do
+      let!(:link_category) { Fabricate(:link_category) }
+      let(:topic) { Fabricate(:topic) }
+      let(:link_topic) { Fabricate(:topic, category: link_category) }
+
+      it 'can save the featured link if it belongs to that category' do
+        link_topic.featured_link = 'https://github.com/discourse/discourse'
+        expect(link_topic.save).to be_truthy
+        expect(link_topic.custom_fields['featured_link']).to eq('https://github.com/discourse/discourse')
+      end
+
+      it 'can not save the featured link if it belongs to that category' do
+        topic.featured_link = 'https://github.com/discourse/discourse'
+        expect(topic.save).to be_falsey
+      end
+    end
+  end
 end

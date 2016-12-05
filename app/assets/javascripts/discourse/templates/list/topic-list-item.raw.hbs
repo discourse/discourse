@@ -7,6 +7,9 @@
 <td class='main-link clearfix' colspan="{{titleColSpan}}">
   {{raw "topic-status" topic=topic}}
   {{topic-link topic}}
+  {{#if topic.featured_link}}
+    {{topic-featured-link topic}}
+  {{/if}}
   {{plugin-outlet "topic-list-after-title"}}
   {{#if showTopicPostBadges}}
     {{raw "topic-post-badges" unread=topic.unread newPosts=topic.displayNewPosts unseen=topic.unseen url=topic.lastUnreadUrl}}

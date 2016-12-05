@@ -68,4 +68,9 @@ module CategoryGuardian
   def topic_create_allowed_category_ids
     @topic_create_allowed_category_ids ||= @user.topic_create_allowed_category_ids
   end
+
+  def topic_featured_link_allowed_category_ids
+    @topic_featured_link_allowed_category_ids = CategoryCustomField.where(name: "topic_featured_link_allowed", value: "true")
+                                                                   .pluck(:category_id)
+  end
 end

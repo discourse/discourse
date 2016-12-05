@@ -19,6 +19,17 @@
   </label>
 </section>
 
+{{#if siteSettings.topic_featured_link_enabled}}
+  <section class='field'>
+    <div class="allowed-topic-featured-link-category">
+      <label class="checkbox-label">
+        {{input type="checkbox" checked=category.topicFeaturedLinkAllowed}}
+        {{i18n 'category.topic_featured_link_allowed'}}
+      </label>
+    </div>
+  </section>
+{{/if}}
+
 <section class="field">
   <label>
     {{i18n "category.sort_order"}}
