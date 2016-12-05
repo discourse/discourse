@@ -32,13 +32,15 @@ const CLOSED = 'closed',
         target_usernames: 'targetUsernames',
         typing_duration_msecs: 'typingTime',
         composer_open_duration_msecs: 'composerTime',
-        tags: 'tags'
+        tags: 'tags',
+        featured_link: 'featuredLink'
       },
 
       _edit_topic_serializer = {
         title: 'topic.title',
         categoryId: 'topic.category.id',
-        tags: 'topic.tags'
+        tags: 'topic.tags',
+        featuredLink: 'topic.featured_link'
       };
 
 const Composer = RestModel.extend({
@@ -136,6 +138,14 @@ const Composer = RestModel.extend({
   canEditTitle: Em.computed.or('creatingTopic', 'creatingPrivateMessage', 'editingFirstPost'),
   canCategorize: Em.computed.and('canEditTitle', 'notCreatingPrivateMessage'),
 
+  @computed('canEditTitle', 'creatingPrivateMessage', 'categoryId')
+  canEditTopicFeaturedLink(canEditTitle, creatingPrivateMessage, categoryId) {
+    if (!this.siteSettings.topic_featured_link_enabled || !canEditTitle || creatingPrivateMessage) { return false; }
+
+    const categoryIds = this.site.get('topic_featured_link_allowed_category_ids');
+    return categoryIds === undefined || !categoryIds.length || categoryIds.indexOf(categoryId) !== -1;
+  },
+
   // Determine the appropriate title for this action
   actionTitle: function() {
     const topic = this.get('topic');
@@ -180,6 +190,10 @@ const Composer = RestModel.extend({
 
   }.property('action', 'post', 'topic', 'topic.title'),
 
+  @computed('canEditTopicFeaturedLink')
+  showComposerEditor(canEditTopicFeaturedLink) {
+    return canEditTopicFeaturedLink ? !this.siteSettings.topic_featured_link_onebox : true;
+  },
 
   // whether to disable the post button
   cantSubmitPost: function() {
@@ -269,11 +283,12 @@ const Composer = RestModel.extend({
     }
   }.property('privateMessage'),
 
-  missingReplyCharacters: function() {
-    const postType = this.get('post.post_type');
-    if (postType === this.site.get('post_types.small_action')) { return 0; }
-    return this.get('minimumPostLength') - this.get('replyLength');
-  }.property('minimumPostLength', 'replyLength'),
+  @computed('minimumPostLength', 'replyLength', 'canEditTopicFeaturedLink')
+  missingReplyCharacters(minimumPostLength, replyLength, canEditTopicFeaturedLink) {
+    if (this.get('post.post_type') === this.site.get('post_types.small_action') ||
+        canEditTopicFeaturedLink && this.siteSettings.topic_featured_link_onebox) { return 0; }
+    return minimumPostLength - replyLength;
+  },
 
   /**
     Minimum number of characters for a post body to be valid.
@@ -492,6 +507,14 @@ const Composer = RestModel.extend({
 
   save(opts) {
     if (!this.get('cantSubmitPost')) {
+
+      // change category may result in some effect for topic featured link
+      if (this.get('canEditTopicFeaturedLink')) {
+        if (this.siteSettings.topic_featured_link_onebox) { this.set('reply', null); }
+      } else {
+        this.set('featuredLink', null);
+      }
+
       return this.get('editingPost') ? this.editPost(opts) : this.createPost(opts);
     }
   },
@@ -512,7 +535,8 @@ const Composer = RestModel.extend({
       stagedPost: false,
       typingTime: 0,
       composerOpened: null,
-      composerTotalOpened: 0
+      composerTotalOpened: 0,
+      featuredLink: null
     });
   },
 

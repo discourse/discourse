@@ -5,6 +5,7 @@ require_dependency 'topic_creator'
 require_dependency 'post_jobs_enqueuer'
 require_dependency 'distributed_mutex'
 require_dependency 'has_errors'
+require_dependency 'discourse_featured_link'
 
 class PostCreator
   include HasErrors
@@ -103,6 +104,11 @@ class PostCreator
       end
     end
 
+    onebox_featured_link = SiteSetting.topic_featured_link_enabled && SiteSetting.topic_featured_link_onebox && guardian.can_edit_featured_link?(find_category_id)
+    if onebox_featured_link
+      @opts[:raw] = DiscourseFeaturedLink.cache_onebox_link(@opts[:featured_link])
+    end
+
     setup_post
 
     return true if skip_validations?
@@ -116,7 +122,7 @@ class PostCreator
     DiscourseEvent.trigger :before_create_post, @post
     DiscourseEvent.trigger :validate_post, @post
 
-    post_validator = Validators::PostValidator.new(skip_topic: true)
+    post_validator = Validators::PostValidator.new(skip_topic: true, skip_post_body: onebox_featured_link)
     post_validator.validate(@post)
 
     valid = @post.errors.blank?
@@ -337,6 +343,18 @@ class PostCreator
   end
 
   private
+
+  # TODO: merge the similar function in TopicCreator and fix parameter naming for `category`
+  def find_category_id
+    @opts.delete(:category) if @opts[:archetype].present? && @opts[:archetype] == Archetype.private_message
+
+    category = if (@opts[:category].is_a? Integer) || (@opts[:category] =~ /^\d+$/)
+                 Category.find_by(id: @opts[:category])
+               else
+                 Category.find_by(name_lower: @opts[:category].try(:downcase))
+               end
+    category&.id
+  end
 
   def create_topic
     return if @topic

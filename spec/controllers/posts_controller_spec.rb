@@ -579,10 +579,6 @@ describe PostsController do
       let(:moderator) { log_in(:moderator) }
       let(:new_post) { Fabricate.build(:post, user: user) }
 
-      it "raises an exception without a raw parameter" do
-	      expect { xhr :post, :create }.to raise_error(ActionController::ParameterMissing)
-      end
-
       context "fast typing" do
         before do
           SiteSetting.min_first_post_typing_time = 3000
@@ -771,8 +767,8 @@ describe PostsController do
         end
 
         it "passes category through" do
-          xhr :post, :create, {raw: 'hello', category: 'cool'}
-          expect(assigns(:manager_params)['category']).to eq('cool')
+          xhr :post, :create, {raw: 'hello', category: 1}
+          expect(assigns(:manager_params)['category']).to eq('1')
         end
 
         it "passes target_usernames through" do

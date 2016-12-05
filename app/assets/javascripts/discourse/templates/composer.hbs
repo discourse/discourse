@@ -80,9 +80,13 @@
                     {{/if}}
                     {{render "additional-composer-buttons" model}}
                   {{/if}}
+                  {{#if model.canEditTopicFeaturedLink}}
+                    <div class="topic-featured-link-input">
+                      {{text-field tabindex="4" type="url" value=model.featuredLink id='topic-featured-link' placeholderKey="composer.topic_featured_link_placeholder"}}
+                    </div>
+                  {{/if}}
                 </div>
               {{/if}}
-
               {{plugin-outlet "composer-fields"}}
             </div>
 

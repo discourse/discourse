@@ -86,6 +86,13 @@
         {{/each}}
       </div>
     {{/if}}
+    {{#if model.featured_link_changes}}
+      <div class='row'>
+        {{model.featured_link_changes.previous}}
+        &rarr;
+        {{model.featured_link_changes.current}}
+      </div>
+    {{/if}}
 
     {{plugin-outlet "post-revisions"}}
 

@@ -433,6 +433,15 @@ posting:
   max_post_length:
     client: true
     default: 32000
+  topic_featured_link_enabled:
+    client: true
+    default: false
+  topic_featured_link_onebox:
+    client: true
+    default: false
+  open_topic_featured_link_in_external_window:
+    client: true
+    default: true
   body_min_entropy: 7
   min_topic_title_length:
     client: true
@@ -596,6 +605,7 @@ email:
   disable_digest_emails:
     default: false
     client: true
+  show_topic_featured_link_in_digest: true
   email_custom_headers: 'Auto-Submitted: auto-generated'
   email_subject: '[%{site_name}] %{optional_pm}%{optional_cat}%{topic_title}'
   reply_by_email_enabled:
