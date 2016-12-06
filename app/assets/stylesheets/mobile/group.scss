@@ -6,6 +6,24 @@
   width: 100%;
 }
 
+.group-details-container {
+  margin-bottom: 15px;
+}
+
+.group-nav.mobile-nav {
+  margin-bottom: 15px;
+
+  > li {
+    a {
+      color: white;
+
+      .fa { color: white; }
+    }
+  }
+
+  background-color: $quaternary;
+}
+
 table.group-members {
   th {
     text-align: center;

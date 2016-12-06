@@ -30,18 +30,16 @@
     {{/if}}
   </div>
 
-  <div class='pull-left group-nav'>
-    <ul class='nav-stacked'>
-      {{#each getTabs as |tab|}}
-        <li class="{{if tab.active 'active'}}">
-          {{#link-to tab.location model title=tab.message}}
-            {{tab.message}}
-            {{#if tab.count}}<span class='count'>({{tab.count}})</span>{{/if}}
-          {{/link-to}}
-        </li>
-      {{/each}}
-    </ul>
-  </div>
+  {{#mobile-nav class='group-nav' desktopClass="pull-left nav nav-stacked" currentPath=currentPath}}
+    {{#each getTabs as |tab|}}
+      <li class="{{if tab.active 'active'}}">
+        {{#link-to tab.location model title=tab.message}}
+          {{tab.message}}
+          {{#if tab.count}}<span class='count'>({{tab.count}})</span>{{/if}}
+        {{/link-to}}
+      </li>
+    {{/each}}
+  {{/mobile-nav}}
 
   <div class='pull-left group-outlet'>
     <div class='user-main'>
