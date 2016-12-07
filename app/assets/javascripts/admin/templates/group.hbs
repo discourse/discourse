@@ -4,15 +4,15 @@
     {{#if model.automatic}}
       <h3>{{model.name}}</h3>
     {{else}}
-      <label for="name">{{i18n 'group.name'}}</label>
-      {{text-field name="name" value=model.name placeholderKey="group.name_placeholder"}}
+      <label for="name">{{i18n 'groups.name'}}</label>
+      {{text-field name="name" value=model.name placeholderKey="groups.name_placeholder"}}
     {{/if}}
   </div>
 
   {{#if model.id}}
     {{#unless model.automatic}}
       <div>
-        <label for="bio">{{i18n 'group.bio'}}</label>
+        <label for="bio">{{i18n 'groups.bio'}}</label>
         {{d-editor value=model.bio_raw}}
       </div>
 
@@ -63,12 +63,19 @@
   </div>
 
   {{#unless model.automatic}}
-  <div>
-    <label for="primary_group">
-      {{input type="checkbox" checked=model.primary_group}}
-      {{i18n 'admin.groups.primary_group'}}
-    </label>
-  </div>
+    <div>
+      <label for="primary_group">
+        {{input type="checkbox" checked=model.primary_group}}
+        {{i18n 'admin.groups.primary_group'}}
+      </label>
+    </div>
+
+    <div>
+      <label>
+        {{input type="checkbox" checked=model.public}}
+        {{i18n 'groups.public'}}
+      </label>
+    </div>
   {{/unless}}
 
   <div>

@@ -376,6 +376,11 @@ en:
         other: "%{count} users"
 
     groups:
+      edit:
+        title: 'Edit Group'
+        group_title: 'Title'
+      name_placeholder: "Group name, no spaces, same as username rule"
+      public: "Allow users to join/leave the group freely"
       empty:
         posts: "There is no post by members of this group."
         members: "There is no member in this group."
@@ -383,6 +388,10 @@ en:
         messages: "There is no message for this group."
         topics: "There is no topic by members of this group."
       add: "Add"
+      join: "Join Group"
+      leave: "Leave Group"
+      name: "Name"
+      bio: "About Group"
       selector_placeholder: "Add members"
       owner: "owner"
       visible: "Group is visible to all users"
@@ -421,6 +430,15 @@ en:
         muted:
           title: "Muted"
           description: "You will never be notified of anything about new topics in this group."
+      flair_url: "Avatar Flair Image"
+      flair_url_placeholder: "(Optional) Image URL or Font Awesome class"
+      flair_bg_color: "Avatar Flair Background Color"
+      flair_bg_color_placeholder: "(Optional) Hex color value"
+      flair_color: "Avatar Flair Color"
+      flair_color_placeholder: "(Optional) Hex color value"
+      flair_preview_icon: "Preview Icon"
+      flair_preview_image: "Preview Image"
+      flair_note: "Note: Flair will only show for a user's primary group."
 
     user_action_groups:
       "1": "Likes Given"
@@ -1844,26 +1862,6 @@ en:
           side_by_side_markdown:
             title: "Show the raw source diffs side-by-side"
             button: '<i class="fa fa-columns"></i> Raw'
-
-    group:
-      edit:
-        title: 'Edit Group'
-      join: "Join Group"
-      leave: "Leave Group"
-      title: 'Title'
-      name: "Name"
-      bio: "About Group"
-      public: "Allow users to join/leave the group freely"
-      name_placeholder: "Group name, no spaces, same as username rule"
-      flair_url: "Avatar Flair Image"
-      flair_url_placeholder: "(Optional) Image URL or Font Awesome class"
-      flair_bg_color: "Avatar Flair Background Color"
-      flair_bg_color_placeholder: "(Optional) Hex color value"
-      flair_color: "Avatar Flair Color"
-      flair_color_placeholder: "(Optional) Hex color value"
-      flair_preview_icon: "Preview Icon"
-      flair_preview_image: "Preview Image"
-      flair_note: "Note: Flair will only show for a user's primary group."
 
     category:
       can: 'can&hellip; '
