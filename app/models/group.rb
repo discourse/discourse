@@ -508,6 +508,9 @@ end
 #  flair_url                          :string
 #  flair_bg_color                     :string
 #  flair_color                        :string
+#  bio_raw                            :text
+#  bio_cooked                         :text
+#  public                             :boolean          default(FALSE), not null
 #
 # Indexes
 #
