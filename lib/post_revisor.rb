@@ -442,18 +442,14 @@ class PostRevisor
   def update_category_description
     return unless category = Category.find_by(topic_id: @topic.id)
 
-    body = @post.cooked
-    matches = body.scan(/\<p\>(.*)\<\/p\>/)
+    doc = Nokogiri::HTML.fragment(@post.cooked)
+    doc.css("img").remove
 
-    matches.each do |match|
-      next if match[0] =~ /\<img(.*)src=/ || match[0].blank?
-      new_description = match[0]
-      # first 50 characters should be fine to test they haven't changed the default description
-      new_description = nil if new_description.starts_with?(I18n.t("category.replace_paragraph")[0..50])
-      category.update_column(:description, new_description)
-      @category_changed = category
-      break
-    end
+    html = doc.css("p").first.inner_html.strip
+    new_description = html unless html.starts_with?(Category.post_template[0..50])
+
+    category.update_column(:description, new_description)
+    @category_changed = category
   end
 
   def advance_draft_sequence
