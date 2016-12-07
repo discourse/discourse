@@ -5,7 +5,6 @@ import { WidgetClickHook,
          WidgetDragHook } from 'discourse/widgets/hooks';
 import { h } from 'virtual-dom';
 import DecoratorHelper from 'discourse/widgets/decorator-helper';
-import { TARGET_NAME } from 'discourse/mixins/delegated-actions';
 
 function emptyContent() { }
 
@@ -272,7 +271,7 @@ export default class Widget {
 
       if (target) {
         // TODO: Use ember closure actions
-        const actions = target[TARGET_NAME] || target.actionHooks || {};
+        const actions = target.actions || target.actionHooks || {};
         const method = actions[actionName];
         if (method) {
           promise = method.call(target, param);
