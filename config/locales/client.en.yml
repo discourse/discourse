@@ -1847,6 +1847,7 @@ en:
     group:
       edit:
         title: 'Edit Group'
+      title: 'Title'
       name: "Name"
       bio: "About Group"
       name_placeholder: "Group name, no spaces, same as username rule"

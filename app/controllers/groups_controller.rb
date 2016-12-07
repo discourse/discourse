@@ -173,7 +173,8 @@ class GroupsController < ApplicationController
       :flair_url,
       :flair_bg_color,
       :flair_color,
-      :bio_raw
+      :bio_raw,
+      :title
     )
   end
 

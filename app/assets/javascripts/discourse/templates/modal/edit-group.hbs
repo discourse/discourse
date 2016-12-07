@@ -1,5 +1,8 @@
 {{#d-modal-body title="group.edit.title" class="edit-group groups"}}
   <form class="form-horizontal">
+    <label for='title'>{{i18n 'group.title'}}</label>
+    {{input type='text' name='title' value=model.title class='edit-group-title'}}
+
     <label for='bio'>{{i18n 'group.bio'}}</label>
     {{d-editor value=model.bio_raw class="edit-group-bio"}}
 
