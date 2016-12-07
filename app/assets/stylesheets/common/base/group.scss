@@ -17,13 +17,33 @@
 
 table.group-members {
   width: 100%;
+  table-layout: fixed;
 
   th, tr {
     border-bottom: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
   }
 
+  th:first-child {
+    width: 60%;
+  }
+
+  th:last-child {
+    width: 5%;
+  }
+
   th {
     text-align: left;
+    padding: 5px 0px;
+
+    i {
+      margin-left: 5px;
+    }
+
+    &:hover {
+      color: $tertiary;
+      cursor: pointer;
+      text-decoration: underline;
+    }
   }
 
   tr {
