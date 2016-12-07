@@ -110,6 +110,7 @@ export default Ember.Component.extend({
       const opts = { model: this.get('model') };
       const newTree = new this._widgetClass(args, this.register, opts);
 
+      newTree._rerenderable = this;
       newTree._emberView = this;
       const patches = diff(this._tree || this._rootNode, newTree);
 

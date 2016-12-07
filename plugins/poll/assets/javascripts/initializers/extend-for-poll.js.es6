@@ -1,15 +1,10 @@
 import { withPluginApi } from 'discourse/lib/plugin-api';
 import { observes } from "ember-addons/ember-computed-decorators";
-
-function createPollComponent(register, post, poll, vote) {
-  const component = register.lookup("component:discourse-poll");
-  component.setProperties({ model: poll, vote, post });
-  return component;
-}
-
-let _pollViews;
+import { getRegister } from 'discourse-common/lib/get-owner';
+import WidgetGlue from 'discourse/widgets/glue';
 
 function initializePolls(api) {
+  const register = getRegister(api);
 
   const TopicController = api.container.lookupFactory('controller:topic');
   TopicController.reopen({
@@ -52,14 +47,8 @@ function initializePolls(api) {
     }
   });
 
-  function cleanUpPollViews() {
-    if (_pollViews) {
-      Object.keys(_pollViews).forEach(pollName => _pollViews[pollName].destroy());
-    }
-    _pollViews = null;
-  }
-
-  function createPollViews($elem, helper) {
+  const _glued = [];
+  function attachPolls($elem, helper) {
     const $polls = $('.poll', $elem);
     if (!$polls.length) { return; }
 
@@ -72,41 +61,33 @@ function initializePolls(api) {
     const polls = post.get("pollsObject");
     if (!polls) { return; }
 
-    const postPollViews = {};
-
     $polls.each((idx, pollElem) => {
-      const $div = $("<div>");
       const $poll = $(pollElem);
-
       const pollName = $poll.data("poll-name");
-      const pollId = `${pollName}-${post.id}`;
+      const poll = polls[pollName];
+      if (poll) {
+        const isMultiple = poll.get('type') === 'multiple';
 
-      const pollComponent = createPollComponent(
-        helper.register,
-        post,
-        polls[pollName],
-        votes[pollName]
-      );
-
-      // Destroy a poll view if we're replacing it
-      if (_pollViews && _pollViews[pollId]) {
-        _pollViews[pollId].destroy();
+        const glue = new WidgetGlue('discourse-poll', register, {
+          id: `${pollName}-${post.id}`,
+          post,
+          poll,
+          vote: votes[pollName] || [],
+          isMultiple,
+        });
+        glue.appendTo(pollElem);
+        _glued.push(glue);
       }
-
-      $poll.replaceWith($div);
-      Ember.run.scheduleOnce('afterRender', () => {
-        pollComponent.renderer.appendTo(pollComponent, $div[0]);
-      });
-
-      postPollViews[pollId] = pollComponent;
     });
+  }
 
-    _pollViews = postPollViews;
+  function cleanUpPolls() {
+    _glued.forEach(g => g.cleanUp());
   }
 
   api.includePostAttributes("polls", "polls_votes");
-  api.decorateCooked(createPollViews, { onlyStream: true });
-  api.cleanupStream(cleanUpPollViews);
+  api.decorateCooked(attachPolls, { onlyStream: true });
+  api.cleanupStream(cleanUpPolls);
 }
 
 export default {
