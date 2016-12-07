@@ -89,23 +89,15 @@ table.group-members {
   float: right;
 }
 
-.groups.edit-group .form-horizontal {
-  textarea {
-    width: 99%;
-  }
-
-  label {
-    font-weight: bold;
-  }
-
-  input[type="text"] {
-    width: 80% !important;
-    margin-bottom: 10px;
-  }
-
+.form-horizontal {
   .group-flair-inputs {
     display: inline-block;
     margin: 15px 0px;
+
+    input[type="text"] {
+      width: 80% !important;
+      margin-bottom: 10px;
+    }
 
     .group-flair-left {
       float: left;
@@ -124,6 +116,16 @@ table.group-members {
     .avatar-wrapper {
       background-color: #f4f4f4;
     }
+  }
+}
+
+.groups.edit-group .form-horizontal {
+  textarea {
+    width: 99%;
+  }
+
+  label {
+    font-weight: bold;
   }
 }
 
