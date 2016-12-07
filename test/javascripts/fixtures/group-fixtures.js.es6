@@ -4,6 +4,7 @@ export default {
       "id":47,
       "automatic":false,
       "name":"discourse",
+      "title":"Awesome Team",
       "user_count":8,
       "alias_level":0,
       "visible":true,

@@ -3,6 +3,12 @@
   font-weight: normal;
 }
 
+.group-name {
+  font-weight: normal;
+  margin-top: 5px;
+  color: dark-light-diff($primary, $secondary, 50%, -50%);
+}
+
 .group-details-container {
   background: rgba(230, 230, 230, 0.3);
   padding: 20px;
@@ -40,16 +46,14 @@ table.group-members {
   width: 100%;
 }
 
-.group-header, .group-details {
-  display: table;
-
+.group-details {
   span {
-    display: table-cell;
+    display: inline-block;
     vertical-align: middle;
   }
 
   .avatar-flair {
-    $size: 40px;
+    $size: 50px;
 
     background-size: $size;
     height: $size;
@@ -61,8 +65,7 @@ table.group-members {
   }
 }
 
-.group-edit-btn {
-  margin-left: 5px;
+.group-edit {
   float: right;
 }
 
