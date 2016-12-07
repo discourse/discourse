@@ -213,11 +213,11 @@ SQL
   end
 
   def description_text
-    return nil unless description
+    return nil unless self.description
 
     @@cache ||= LruRedux::ThreadSafeCache.new(1000)
     @@cache.getset(self.description) do
-      Nokogiri::HTML(self.description).text
+      Nokogiri::HTML.fragment(self.description).text.strip
     end
   end
 
