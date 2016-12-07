@@ -6,6 +6,8 @@ import { default as computed, observes } from 'ember-addons/ember-computed-decor
 import { relativeAge } from 'discourse/lib/formatter';
 import InputValidation from 'discourse/models/input-validation';
 import { getOwner } from 'discourse-common/lib/get-owner';
+import { escapeExpression } from 'discourse/lib/utilities';
+import { emojiUnescape } from 'discourse/lib/text';
 
 function loadDraft(store, opts) {
   opts = opts || {};
@@ -194,6 +196,11 @@ export default Ember.Controller.extend({
     }
     return this.get('model.creatingPrivateMessage');
   }.property('model.creatingPrivateMessage', 'model.targetUsernames'),
+
+  @computed('model.topic')
+  draftTitle(topic) {
+    return emojiUnescape(escapeExpression(topic.get('title')));
+  },
 
   actions: {
 
