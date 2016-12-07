@@ -1848,9 +1848,12 @@ en:
     group:
       edit:
         title: 'Edit Group'
+      join: "Join Group"
+      leave: "Leave Group"
       title: 'Title'
       name: "Name"
       bio: "About Group"
+      public: "Allow users to join/leave the group freely"
       name_placeholder: "Group name, no spaces, same as username rule"
       flair_url: "Avatar Flair Image"
       flair_url_placeholder: "(Optional) Image URL or Font Awesome class"

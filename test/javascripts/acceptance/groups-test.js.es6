@@ -50,5 +50,6 @@ test("Admin Browsing Groups", () => {
     ok(find('.group-flair-inputs').length === 1, 'it should display avatar flair inputs');
     ok(find('.edit-group-bio').length === 1, 'it should display group bio input');
     ok(find('.edit-group-title').length === 1, 'it should display group title input');
+    ok(find('.edit-group-public').length === 1, 'it should display group public input');
   });
 });

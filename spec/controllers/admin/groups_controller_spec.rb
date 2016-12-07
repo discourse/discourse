@@ -39,8 +39,10 @@ describe Admin::GroupsController do
         "flair_bg_color"=>nil,
         "flair_color"=>nil,
         "bio_raw"=>nil,
-        "bio_cooked"=>nil
+        "bio_cooked"=>nil,
+        "public"=>false
       }])
+
     end
 
   end

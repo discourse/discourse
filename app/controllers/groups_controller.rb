@@ -107,16 +107,29 @@ class GroupsController < ApplicationController
 
   def add_members
     group = Group.find(params[:id])
-    guardian.ensure_can_edit!(group)
+    group.public ? ensure_logged_in : guardian.ensure_can_edit!(group)
 
-    if params[:usernames].present?
-      users = User.where(username: params[:usernames].split(","))
-    elsif params[:user_ids].present?
-      users = User.find(params[:user_ids].split(","))
-    elsif params[:user_emails].present?
-      users = User.where(email: params[:user_emails].split(","))
-    else
-      raise Discourse::InvalidParameters.new('user_ids or usernames or user_emails must be present')
+    users =
+      if params[:usernames].present?
+        User.where(username: params[:usernames].split(","))
+      elsif params[:user_ids].present?
+        User.find(params[:user_ids].split(","))
+      elsif params[:user_emails].present?
+        User.where(email: params[:user_emails].split(","))
+      else
+        raise Discourse::InvalidParameters.new(
+          'user_ids or usernames or user_emails must be present'
+        )
+      end
+
+    raise Discourse::NotFound if users.blank?
+
+    if group.public
+      raise Discourse::InvalidAccess unless current_user == users.first
+
+      unless current_user.staff?
+        RateLimiter.new(current_user, "public_group_membership", 3, 1.minute).performed!
+      end
     end
 
     users.each do |user|
@@ -146,16 +159,27 @@ class GroupsController < ApplicationController
 
   def remove_member
     group = Group.find(params[:id])
-    guardian.ensure_can_edit!(group)
+    group.public ? ensure_logged_in : guardian.ensure_can_edit!(group)
 
-    if params[:user_id].present?
-      user = User.find(params[:user_id])
-    elsif params[:username].present?
-      user = User.find_by_username(params[:username])
-    elsif params[:user_email].present?
-      user = User.find_by_email(params[:user_email])
-    else
-      raise Discourse::InvalidParameters.new('user_id or username must be present')
+    user =
+      if params[:user_id].present?
+        User.find_by(id: params[:user_id])
+      elsif params[:username].present?
+        User.find_by_username(params[:username])
+      elsif params[:user_email].present?
+        User.find_by_email(params[:user_email])
+      else
+        raise Discourse::InvalidParameters.new('user_id or username must be present')
+      end
+
+    raise Discourse::NotFound unless user
+
+    if group.public
+      raise Discourse::InvalidAccess unless current_user == user
+
+      unless current_user.staff?
+        RateLimiter.new(current_user, "public_group_membership", 3, 1.minute).performed!
+      end
     end
 
     user.primary_group_id = nil if user.primary_group_id == group.id
@@ -189,7 +213,8 @@ class GroupsController < ApplicationController
       :flair_bg_color,
       :flair_color,
       :bio_raw,
-      :title
+      :title,
+      :public
     )
   end
 

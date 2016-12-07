@@ -16,7 +16,8 @@ class BasicGroupSerializer < ApplicationSerializer
              :flair_bg_color,
              :flair_color,
              :bio_raw,
-             :bio_cooked
+             :bio_cooked,
+             :public
 
   def include_incoming_email?
     staff?

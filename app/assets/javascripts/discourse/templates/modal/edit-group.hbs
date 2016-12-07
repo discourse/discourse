@@ -1,4 +1,4 @@
-{{#d-modal-body title="group.edit.title" class="edit-group groups"}}
+{{#d-modal-body title="group.title" class="edit-group groups"}}
   <form class="form-horizontal">
     <label for='title'>{{i18n 'group.title'}}</label>
     {{input type='text' name='title' value=model.title class='edit-group-title'}}
@@ -7,6 +7,11 @@
     {{d-editor value=model.bio_raw class="edit-group-bio"}}
 
     {{group-flair-inputs model=model}}
+
+    <label>
+      {{input type='checkbox' checked=model.public class="edit-group-public"}}
+      {{i18n 'group.public'}}
+    </label>
   </form>
 {{/d-modal-body}}
 
