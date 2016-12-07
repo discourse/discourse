@@ -47,7 +47,8 @@ describe "Groups" do
           flair_bg_color: 'FFF',
           flair_color: 'BBB',
           flair_url: 'fa-adjust',
-          bio_raw: 'testing'
+          bio_raw: 'testing',
+          title: 'awesome team'
         } }
 
         expect(response).to be_success
@@ -58,6 +59,7 @@ describe "Groups" do
         expect(group.flair_color).to eq('BBB')
         expect(group.flair_url).to eq('fa-adjust')
         expect(group.bio_raw).to eq('testing')
+        expect(group.title).to eq('awesome team')
       end
     end
 
