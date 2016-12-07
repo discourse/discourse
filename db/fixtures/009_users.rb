@@ -32,7 +32,7 @@ duration = Rails.env.production? ? 60 : 0
 if User.exec_sql("SELECT 1 FROM schema_migration_details
                   WHERE EXISTS(
                       SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS
-                      WHERE table_name = 'users' AND column_name = 'last_redirected_to_top_at'
+                      WHERE table_schema = 'public' AND table_name = 'users' AND column_name = 'last_redirected_to_top_at'
                     ) AND
                     name = 'MoveTrackingOptionsToUserOptions' AND
                     created_at < (current_timestamp at time zone 'UTC' - interval '#{duration} minutes')

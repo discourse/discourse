@@ -15,9 +15,15 @@ describe QuotedPost do
     post1 = Fabricate(:post)
     post2 = Fabricate(:post)
 
-    post2.cooked = <<HTML
-<aside class="quote" data-post="#{post1.post_number}" data-topic="#{post1.topic_id}"><div class="title"><div class="quote-controls"></div><img width="20" height="20" src="/user_avatar/meta.discourse.org/techapj/20/3281.png" class="avatar">techAPJ:</div><blockquote><p>When the user will v</p></blockquote></aside>
-HTML
+    post2.cooked = <<-HTML
+      <aside class="quote" data-post="#{post1.post_number}" data-topic="#{post1.topic_id}">
+        <div class="title">
+          <div class="quote-controls"></div>
+          <img width="20" height="20" src="/user_avatar/meta.discourse.org/techapj/20/3281.png" class="avatar">techAPJ:
+        </div>
+        <blockquote><p>When the user will v</p></blockquote>
+      </aside>
+    HTML
 
     QuotedPost.create!(post_id: post2.id, quoted_post_id: 999)
 

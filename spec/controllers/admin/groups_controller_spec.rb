@@ -37,7 +37,9 @@ describe Admin::GroupsController do
         "has_messages"=>false,
         "flair_url"=>nil,
         "flair_bg_color"=>nil,
-        "flair_color"=>nil
+        "flair_color"=>nil,
+        "bio_raw"=>nil,
+        "bio_cooked"=>nil
       }])
     end
 
@@ -66,7 +68,7 @@ describe Admin::GroupsController do
   context ".create" do
 
     it "strip spaces on the group name" do
-      xhr :post, :create, name: " bob "
+      xhr :post, :create, { group: { name: " bob " } }
 
       expect(response.status).to eq(200)
 
@@ -81,7 +83,7 @@ describe Admin::GroupsController do
   context ".update" do
 
     it "ignore name change on automatic group" do
-      xhr :put, :update, id: 1, name: "WAT", visible: "true"
+      xhr :put, :update, { id: 1, group: { name: "WAT", visible: "true" } }
       expect(response).to be_success
 
       group = Group.find(1)
@@ -92,14 +94,14 @@ describe Admin::GroupsController do
     it "doesn't launch the 'automatic group membership' job when it's not retroactive" do
       Jobs.expects(:enqueue).never
       group = Fabricate(:group)
-      xhr :put, :update, id: group.id, automatic_membership_retroactive: "false"
+      xhr :put, :update, { id: group.id, group: { automatic_membership_retroactive: "false" } }
       expect(response).to be_success
     end
 
     it "launches the 'automatic group membership' job when it's retroactive" do
       group = Fabricate(:group)
       Jobs.expects(:enqueue).with(:automatic_group_membership, group_id: group.id)
-      xhr :put, :update, id: group.id, automatic_membership_retroactive: "true"
+      xhr :put, :update, { id: group.id, group: { automatic_membership_retroactive: "true" } }
       expect(response).to be_success
     end
 

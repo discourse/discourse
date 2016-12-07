@@ -1,0 +1,49 @@
+.group {
+  margin-top: 15px;
+}
+
+.group-header {
+  margin: 0px;
+}
+
+.group-name {
+  margin: 5px 0px 0px 0px;
+}
+
+.group-nav, .group-outlet {
+  width: 100%;
+}
+
+.group-details-container {
+  margin-bottom: 15px;
+}
+
+.group-nav.mobile-nav {
+  margin-bottom: 15px;
+
+  > li {
+    a {
+      color: white;
+
+      .fa { color: white; }
+    }
+  }
+
+  background-color: $quaternary;
+}
+
+table.group-members {
+  th {
+    text-align: center;
+  }
+
+  tr {
+    .user-info {
+      width: 130px;
+    }
+
+    td {
+      padding-left: 0.5em;
+    }
+  }
+}

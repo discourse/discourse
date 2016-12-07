@@ -20,6 +20,7 @@ describe PostCreator do
     let(:creator_with_category) { PostCreator.new(user, basic_topic_params.merge(category: category.id )) }
     let(:creator_with_meta_data) { PostCreator.new(user, basic_topic_params.merge(meta_data: {hello: "world"} )) }
     let(:creator_with_image_sizes) { PostCreator.new(user, basic_topic_params.merge(image_sizes: image_sizes)) }
+    let(:creator_with_featured_link) { PostCreator.new(user, title: "featured link topic", archetype_id: 1, featured_link: "http://discourse.org") }
 
     it "can create a topic with null byte central" do
       post = PostCreator.create(user, title: "hello\u0000world this is title", raw: "this is my\u0000 first topic")
@@ -243,6 +244,14 @@ describe PostCreator do
         end
       end
 
+      it 'creates a post without raw' do
+        SiteSetting.topic_featured_link_enabled = true
+        SiteSetting.topic_featured_link_onebox = true
+        post = creator_with_featured_link.create
+        expect(post.topic.featured_link).to eq('http://discourse.org')
+        expect(post.raw).to eq('http://discourse.org')
+      end
+
       describe "topic's auto close" do
 
         it "doesn't update topic's auto close when it's not based on last post" do
@@ -334,7 +343,12 @@ describe PostCreator do
   context 'whisper' do
     let!(:topic) { Fabricate(:topic, user: user) }
 
-    it 'forces replies to whispers to be whispers' do
+    it 'whispers do not mess up the public view' do
+
+      first = PostCreator.new(user,
+                                topic_id: topic.id,
+                                raw: 'this is the first post').create
+
       whisper = PostCreator.new(user,
                                 topic_id: topic.id,
                                 reply_to_post_number: 1,
@@ -344,6 +358,7 @@ describe PostCreator do
       expect(whisper).to be_present
       expect(whisper.post_type).to eq(Post.types[:whisper])
 
+
       whisper_reply = PostCreator.new(user,
                                       topic_id: topic.id,
                                       reply_to_post_number: whisper.post_number,
@@ -352,6 +367,29 @@ describe PostCreator do
 
       expect(whisper_reply).to be_present
       expect(whisper_reply.post_type).to eq(Post.types[:whisper])
+
+
+      first.reload
+      # does not leak into the OP
+      expect(first.reply_count).to eq(0)
+
+      topic.reload
+
+      # cause whispers should not muck up that number
+      expect(topic.highest_post_number).to eq(1)
+      expect(topic.reply_count).to eq(0)
+      expect(topic.posts_count).to eq(1)
+      expect(topic.highest_staff_post_number).to eq(3)
+
+      topic.update_columns(highest_staff_post_number:0, highest_post_number:0, posts_count: 0, last_posted_at: 1.year.ago)
+
+      Topic.reset_highest(topic.id)
+
+      topic.reload
+      expect(topic.highest_post_number).to eq(1)
+      expect(topic.posts_count).to eq(1)
+      expect(topic.last_posted_at).to eq(first.created_at)
+      expect(topic.highest_staff_post_number).to eq(3)
     end
   end
 
@@ -624,6 +662,8 @@ describe PostCreator do
       _post2 = create_post(user: post1.user, topic_id: post1.topic_id)
 
       post1.topic.reload
+
+      expect(post1.topic.posts_count).to eq(3)
       expect(post1.topic.closed).to eq(true)
     end
   end

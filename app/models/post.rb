@@ -24,7 +24,7 @@ class Post < ActiveRecord::Base
   rate_limit :limit_posts_per_day
 
   belongs_to :user
-  belongs_to :topic, counter_cache: :posts_count
+  belongs_to :topic
 
   belongs_to :reply_to_user, class_name: "User"
 

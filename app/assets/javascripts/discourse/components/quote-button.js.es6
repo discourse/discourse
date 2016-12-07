@@ -15,6 +15,7 @@ export default Ember.Component.extend({
   visible: buffer => buffer && buffer.length > 0,
 
   _isMouseDown: false,
+  _reselected: false,
 
   _selectionChanged() {
     const selection = window.getSelection();
@@ -43,8 +44,11 @@ export default Ember.Component.extend({
     // on Desktop, shows the button at the beginning of the selection
     // on Mobile, shows the button at the end of the selection
     const isMobileDevice = this.site.isMobileDevice;
-    const { isIOS, isAndroid } = this.capabilities;
+    const { isIOS, isAndroid, isSafari } = this.capabilities;
     const showAtEnd = isMobileDevice || isIOS || isAndroid;
+
+    // used to work around Safari losing selection
+    const clone = firstRange.cloneRange();
 
     // create a marker element containing a single invisible character
     const markerElement = document.createElement("span");
@@ -63,6 +67,13 @@ export default Ember.Component.extend({
 
     // remove the marker
     markerElement.parentNode.removeChild(markerElement);
+
+    // work around Safari that would sometimes lose the selection
+    if (isSafari) {
+      this._reselected = true;
+      selection.removeAllRanges();
+      selection.addRange(clone);
+    }
 
     // change the position of the button
     Ember.run.scheduleOnce("afterRender", () => {
@@ -88,6 +99,7 @@ export default Ember.Component.extend({
 
     $(document).on("mousedown.quote-button", (e) => {
       this._isMouseDown = true;
+      this._reselected = false;
       if (!willQuote(e)) {
         this.sendAction("deselectText");
       }
@@ -95,7 +107,7 @@ export default Ember.Component.extend({
       this._isMouseDown = false;
       onSelectionChanged();
     }).on("selectionchange.quote-button", () => {
-      if (!this._isMouseDown) {
+      if (!this._isMouseDown && !this._reselected) {
         onSelectionChanged();
       }
     });

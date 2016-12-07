@@ -23,12 +23,12 @@
       {{/link-to}}
     </li>
     {{/if}}
-    {{plugin-outlet "user-activity-bottom"}}
+    {{plugin-outlet "user-activity-bottom" tagName='li'}}
   {{/mobile-nav}}
 
   {{#if viewingSelf}}
     <div class='user-archive'>
-      {{d-button action="exportUserArchive" label="user.download_archive" icon="download"}}
+      {{d-button action="exportUserArchive" label="user.download_archive.button_text" icon="download"}}
     </div>
   {{/if}}
 {{/d-section}}

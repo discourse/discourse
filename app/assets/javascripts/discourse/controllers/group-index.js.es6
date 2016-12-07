@@ -1,22 +1,11 @@
 import { popupAjaxError } from 'discourse/lib/ajax-error';
-import computed from 'ember-addons/ember-computed-decorators';
 import Group from 'discourse/models/group';
 
 export default Ember.Controller.extend({
   loading: false,
   limit: null,
   offset: null,
-
-  @computed('model.owners.[]')
-  isOwner(owners) {
-    if (this.get('currentUser.admin')) {
-      return true;
-    }
-    const currentUserId = this.get('currentUser.id');
-    if (currentUserId) {
-      return !!owners.findBy('id', currentUserId);
-    }
-  },
+  isOwner: Ember.computed.alias('model.is_group_owner'),
 
   actions: {
     removeMember(user) {

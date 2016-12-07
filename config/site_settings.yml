@@ -433,6 +433,15 @@ posting:
   max_post_length:
     client: true
     default: 32000
+  topic_featured_link_enabled:
+    client: true
+    default: false
+  topic_featured_link_onebox:
+    client: true
+    default: false
+  open_topic_featured_link_in_external_window:
+    client: true
+    default: true
   body_min_entropy: 7
   min_topic_title_length:
     client: true
@@ -588,6 +597,7 @@ email:
     default: 5
     min: 1
   digest_posts: 3
+  digest_other_topics: 5
   delete_digest_email_after_days: 365
   digest_suppress_categories:
     type: category_list
@@ -595,6 +605,7 @@ email:
   disable_digest_emails:
     default: false
     client: true
+  show_topic_featured_link_in_digest: true
   email_custom_headers: 'Auto-Submitted: auto-generated'
   email_subject: '[%{site_name}] %{optional_pm}%{optional_cat}%{topic_title}'
   reply_by_email_enabled:
@@ -669,7 +680,7 @@ email:
   reset_bounce_score_after_days: 30
   attachment_content_type_blacklist:
     type: list
-    default: "pkcs7"
+    default: "pkcs7|x-vcard"
   attachment_filename_blacklist:
     type: list
     default: "smime.p7s|signature.asc"
@@ -685,7 +696,7 @@ files:
     default: 3072
   authorized_extensions:
     client: true
-    default: 'jpg|jpeg|png|gif'
+    default: 'jpg|jpeg|png|gif|csv'
     refresh: true
     type: list
   crawl_images:
@@ -1195,8 +1206,6 @@ uncategorized:
     hidden: true
 
   notify_about_flags_after: 48
-
-  enable_cdn_js_debugging: false
 
   show_create_topics_notice:
     client: true

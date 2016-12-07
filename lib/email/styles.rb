@@ -67,6 +67,11 @@ module Email
         add_styles(img, 'max-width: 100%;') if img['style'] !~ /max-width/
       end
 
+      # topic featured link
+      @fragment.css('a.topic-featured-link').each do |e|
+        e['style'] = "color:#858585;padding:2px 8px;border:1px solid #e6e6e6;border-radius:2px;box-shadow:0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);"
+      end
+
       # attachments
       @fragment.css('a.attachment').each do |a|
         # ensure all urls are absolute
@@ -114,12 +119,12 @@ module Email
       style('blockquote > p', 'padding: 1em;')
 
       # Oneboxes
-      style('aside.onebox', "padding: 12px 25px 2px 12px; border-left: 5px solid #bebebe; background: #eee; margin-bottom: 10px;")
-      style('aside.onebox img', "max-height: 80%; max-width: 25%; height: auto; float: left; margin-right: 10px; margin-bottom: 10px")
-      style('aside.onebox h3', "border-bottom: 0")
-      style('aside.onebox .source', "margin-bottom: 8px")
-      style('aside.onebox .source a[href]', "color: #333; font-weight: normal")
-      style('aside.clearfix', "clear: both")
+      style('aside.onebox', "border: 5px solid #e9e9e9; padding: 12px 25px 12px 12px;")
+      style('aside.onebox header a[href]', "color: #222222; text-decoration: none;")
+      style('aside.onebox .onebox-body', "clear: both")
+      style('aside.onebox .onebox-body img', "max-height: 80%; max-width: 20%; height: auto; float: left; margin-right: 10px;")
+      style('aside.onebox .onebox-body h3, aside.onebox .onebox-body h4', "font-size: 1.17em; margin: 10px 0;")
+      style('.onebox-metadata', "color: #919191")
 
       # Finally, convert all `aside` tags to `div`s
       @fragment.css('aside, article, header').each do |n|

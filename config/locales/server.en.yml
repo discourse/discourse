@@ -134,7 +134,8 @@ en:
       <<: *errors
 
   bulk_invite:
-    file_should_be_csv: "The uploaded file should be of csv or txt format."
+    file_should_be_csv: "The uploaded file should be of csv format."
+    error: "There was an error uploading that file. Please try again later."
 
   backup:
     operation_already_running: "An operation is currently running. Can't start a new job right now."
@@ -319,6 +320,7 @@ en:
         name: "Category Name"
       topic:
         title: 'Title'
+        featured_link: 'Featured Link'
       post:
         raw: "Body"
       user_profile:
@@ -335,6 +337,9 @@ en:
               too_many_users: "You can only send warnings to one user at a time."
               cant_send_pm: "Sorry, you cannot send a private message to that user."
               no_user_selected: "You must select a valid user."
+            featured_link:
+              invalid: "is invalid. URL should include http:// or https://."
+              invalid_category: "can't be edited in this category."
         user:
           attributes:
             password:
@@ -599,6 +604,14 @@ en:
       description: 'Vote for this post'
       long_form: 'voted for this post'
 
+  user_activity:
+    no_bookmarks:
+      self: "You have no bookmarked posts, bookmarking posts allows you to easily access them later on."
+      others: "No bookmarks."
+    no_likes_given:
+      self: "You have not liked any posts."
+      others: "No liked posts."
+
   topic_flag_types:
     spam:
       title: 'Spam'
@@ -837,6 +850,10 @@ en:
     min_first_post_length: "Minimum allowed first post (topic body) length in characters"
     min_private_message_post_length: "Minimum allowed post length in characters for messages"
     max_post_length: "Maximum allowed post length in characters"
+    topic_featured_link_enabled: "Enable posting a link with topics."
+    topic_featured_link_onebox: "Show an onebox in the post body if possible and prevent editing post content."
+    open_topic_featured_link_in_external_window: "Open topic featured link in a external window."
+    show_topic_featured_link_in_digest: "Show the topic featured link in the digest email."
     min_topic_title_length: "Minimum allowed topic title length in characters"
     max_topic_title_length: "Maximum allowed topic title length in characters"
     min_private_message_title_length: "Minimum allowed title length for a message in characters"
@@ -959,7 +976,7 @@ en:
     email_token_grace_period_hours: "Forgot password / activate account tokens are still valid for a grace period of (n) hours after being redeemed."
 
     enable_badges: "Enable the badge system"
-    enable_whispers: "Allow staff private communication within topic. (experimental)"
+    enable_whispers: "Allow staff private communication within topics."
 
     allow_index_in_robots_txt: "Specify in robots.txt that this site is allowed to be indexed by web search engines."
     email_domains_blacklist: "A pipe-delimited list of email domains that users are not allowed to register accounts with. Example: mailinator.com|trashmail.net"
@@ -1278,8 +1295,9 @@ en:
     allow_animated_thumbnails: "Generates animated thumbnails of animated gifs."
     default_avatars: "URLs to avatars that will be used by default for new users until they change them."
     automatically_download_gravatars: "Download Gravatars for users upon account creation or email change."
-    digest_topics: "The maximum number of topics to display in the email summary."
+    digest_topics: "The maximum number of popular topics to display in the email summary."
     digest_posts: "The maximum number of popular posts to display in the email summary."
+    digest_other_topics: "The maximum number of topics to show in the 'New in topics and categories you follow' section of the email summary."
     digest_min_excerpt_length: "Minimum post excerpt in the email summary, in characters."
     delete_digest_email_after_days: "Suppress summary emails for users not seen on the site for more than (n) days."
     digest_suppress_categories: "Suppress these categories from summary emails."
@@ -1345,7 +1363,6 @@ en:
     embed_whitelist_selector: "CSS selector for elements that are allowed in embeds."
     embed_blacklist_selector: "CSS selector for elements that are removed from embeds."
     notify_about_flags_after: "If there are flags that haven't been handled after this many hours, send an email to the contact_email. Set to 0 to disable."
-    enable_cdn_js_debugging: "Allow /logs to display proper errors by adding crossorigin permissions on all js includes."
     show_create_topics_notice: "If the site has fewer than 5 public topics, show a notice asking admins to create some topics."
 
     delete_drafts_older_than_n_days: Delete drafts older than (n) days.

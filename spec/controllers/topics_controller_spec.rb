@@ -1224,6 +1224,12 @@ describe TopicsController do
         expect { xhr :put, :bulk, topic_ids: topic_ids, operation: {}}.to raise_error(ActionController::ParameterMissing)
       end
 
+      it "can find unread" do
+        # mark all unread muted
+        xhr :put, :bulk, filter: 'unread', operation: {type: :change_notification_level, notification_level_id: 0}
+        expect(response.status).to eq(200)
+      end
+
       it "delegates work to `TopicsBulkAction`" do
         topics_bulk_action = mock
         TopicsBulkAction.expects(:new).with(user, topic_ids, operation, group: nil).returns(topics_bulk_action)

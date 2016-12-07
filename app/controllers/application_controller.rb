@@ -110,6 +110,32 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def self.last_ar_cache_reset
+    @last_ar_cache_reset
+  end
+
+  def self.last_ar_cache_reset=(val)
+    @last_ar_cache_reset
+  end
+
+  rescue_from ActiveRecord::StatementInvalid do |e|
+
+    last_cache_reset = ApplicationController.last_ar_cache_reset
+
+    if e.message =~ /UndefinedColumn/ && (last_cache_reset.nil?  || last_cache_reset < 30.seconds.ago)
+      Rails.logger.warn "Clear Active Record cache cause schema appears to have changed!"
+
+      ApplicationController.last_ar_cache_reset = Time.zone.now
+
+      ActiveRecord::Base.connection.query_cache.clear
+      (ActiveRecord::Base.connection.tables - %w[schema_migrations]).each do |table|
+        table.classify.constantize.reset_column_information rescue nil
+      end
+    end
+
+    raise e
+  end
+
   class PluginDisabled < StandardError; end
 
   # Handles requests for giant IDs that throw pg exceptions
@@ -130,7 +156,7 @@ class ApplicationController < ActionController::Base
   end
 
   rescue_from Discourse::ReadOnly do
-    render_json_error I18n.t('read_only_mode_enabled'), type: :read_only, status: 405
+    render_json_error I18n.t('read_only_mode_enabled'), type: :read_only, status: 503
   end
 
   def rescue_discourse_actions(type, status_code, include_ember=false)
@@ -382,7 +408,7 @@ class ApplicationController < ActionController::Base
 
     def preload_current_user_data
       store_preloaded("currentUser", MultiJson.dump(CurrentUserSerializer.new(current_user, scope: guardian, root: false)))
-      report = TopicTrackingState.report(current_user.id)
+      report = TopicTrackingState.report(current_user)
       serializer = ActiveModel::ArraySerializer.new(report, each_serializer: TopicTrackingStateSerializer)
       store_preloaded("topicTrackingStates", MultiJson.dump(serializer))
     end
@@ -465,7 +491,7 @@ class ApplicationController < ActionController::Base
     end
 
     def mini_profiler_enabled?
-      defined?(Rack::MiniProfiler) && guardian.is_developer?
+      defined?(Rack::MiniProfiler) && (guardian.is_developer? || Rails.env.development?)
     end
 
     def authorize_mini_profiler

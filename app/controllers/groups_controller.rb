@@ -1,27 +1,26 @@
 class GroupsController < ApplicationController
 
-  before_filter :ensure_logged_in, only: [:set_notifications, :mentionable]
+  before_filter :ensure_logged_in, only: [
+    :set_notifications,
+    :mentionable,
+    :update
+  ]
+
   skip_before_filter :preload_json, :check_xhr, only: [:posts_feed, :mentions_feed]
 
   def show
     render_serialized(find_group(:id), GroupShowSerializer, root: 'basic_group')
   end
 
-  def counts
-    group = find_group(:group_id)
+  def update
+    group = Group.find(params[:id])
+    guardian.ensure_can_edit!(group)
 
-    counts = {
-      posts: group.posts_for(guardian).count,
-      topics: group.posts_for(guardian).where(post_number: 1).count,
-      mentions: group.mentioned_posts_for(guardian).count,
-      members: group.users.count,
-    }
-
-    if guardian.can_see_group_messages?(group)
-      counts[:messages] = group.messages_for(guardian).where(post_number: 1).count
+    if group.update_attributes(group_params)
+      render json: success_json
+    else
+      render_json_error(group)
     end
-
-    render json: { counts: counts }
   end
 
   def posts
@@ -169,11 +168,21 @@ class GroupsController < ApplicationController
 
   private
 
-    def find_group(param_name)
-      name = params.require(param_name)
-      group = Group.find_by("lower(name) = ?", name.downcase)
-      guardian.ensure_can_see!(group)
-      group
-    end
+  def group_params
+    params.require(:group).permit(
+      :flair_url,
+      :flair_bg_color,
+      :flair_color,
+      :bio_raw,
+      :title
+    )
+  end
+
+  def find_group(param_name)
+    name = params.require(param_name)
+    group = Group.find_by("lower(name) = ?", name.downcase)
+    guardian.ensure_can_see!(group)
+    group
+  end
 
 end

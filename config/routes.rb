@@ -617,12 +617,8 @@ Discourse::Application.routes.draw do
   resources :queued_posts, constraints: StaffConstraint.new
   get 'queued-posts' => 'queued_posts#index'
 
-  resources :invites do
-    collection do
-      get "upload" => "invites#check_csv_chunk"
-      post "upload" => "invites#upload_csv_chunk"
-    end
-  end
+  resources :invites
+  post "invites/upload_csv" => "invites#upload_csv"
   post "invites/reinvite" => "invites#resend_invite"
   post "invites/reinvite-all" => "invites#resend_all_invites"
   post "invites/link" => "invites#create_invite_link"
@@ -650,6 +646,7 @@ Discourse::Application.routes.draw do
   delete "draft" => "draft#destroy"
 
   get "cdn_asset/:site/*path" => "static#cdn_asset", format: false
+  get "brotli_asset/*path" => "static#brotli_asset", format: false
 
   get "favicon/proxied" => "static#favicon", format: false
 

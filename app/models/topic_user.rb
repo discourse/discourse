@@ -236,6 +236,8 @@ SQL
                                     topic_users.notification_level, tu.notification_level old_level, tu.last_read_post_number
                                 "
 
+    UPDATE_TOPIC_USER_SQL_STAFF = UPDATE_TOPIC_USER_SQL.gsub("highest_post_number", "highest_staff_post_number")
+
     INSERT_TOPIC_USER_SQL = "INSERT INTO topic_users (user_id, topic_id, last_read_post_number, highest_seen_post_number, last_visited_at, first_visited_at, notification_level)
                   SELECT :user_id, :topic_id, :post_number, ft.highest_post_number, :now, :now, :new_status
                   FROM topics AS ft
@@ -244,6 +246,8 @@ SQL
                     AND NOT EXISTS(SELECT 1
                                    FROM topic_users AS ftu
                                    WHERE ftu.user_id = :user_id and ftu.topic_id = :topic_id)"
+
+    INSERT_TOPIC_USER_SQL_STAFF = INSERT_TOPIC_USER_SQL.gsub("highest_post_number", "highest_staff_post_number")
 
     def update_last_read(user, topic_id, post_number, msecs, opts={})
       return if post_number.blank?
@@ -265,7 +269,11 @@ SQL
       # ... user visited the topic but did not read the posts
       #
       # 86400000 = 1 day
-      rows = exec_sql(UPDATE_TOPIC_USER_SQL,args).values
+      rows = if user.staff?
+               exec_sql(UPDATE_TOPIC_USER_SQL_STAFF,args).values
+             else
+               exec_sql(UPDATE_TOPIC_USER_SQL,args).values
+             end
 
       if rows.length == 1
         before = rows[0][1].to_i
@@ -295,7 +303,11 @@ SQL
         user.update_posts_read!(post_number, mobile: opts[:mobile])
 
         begin
-          exec_sql(INSERT_TOPIC_USER_SQL, args)
+          if user.staff?
+            exec_sql(INSERT_TOPIC_USER_SQL_STAFF, args)
+          else
+            exec_sql(INSERT_TOPIC_USER_SQL, args)
+          end
         rescue PG::UniqueViolation
           # if record is inserted between two statements this can happen
           # we retry once to avoid failing the req

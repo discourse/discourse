@@ -87,8 +87,14 @@ class UserOption < ActiveRecord::Base
   def redirected_to_top
     # redirect is enabled
     return unless SiteSetting.redirect_users_to_top_page
+
+    # PERF: bypass min_redirected_to_top query for users that were seen already
+    return if user.trust_level > 0 && user.last_seen_at && user.last_seen_at > 1.month.ago
+
     # top must be in the top_menu
     return unless SiteSetting.top_menu =~ /(^|\|)top(\||$)/i
+
+
     # not enough topics
     return unless period = SiteSetting.min_redirected_to_top_period(1.days.ago)
 

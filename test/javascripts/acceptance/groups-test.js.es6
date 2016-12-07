@@ -4,7 +4,9 @@ acceptance("Groups");
 
 test("Browsing Groups", () => {
   visit("/groups/discourse");
+
   andThen(() => {
+    ok(count('.avatar-flair .fa-adjust') === 1, "it displays the group's avatar flair");
     ok(count('.group-members tr') > 0, "it lists group members");
   });
 
@@ -25,18 +27,28 @@ test("Browsing Groups", () => {
 
   visit("/groups/discourse/messages");
   andThen(() => {
-    ok($('.action-list li').length === 4, 'it should not show messages tab');
+    ok($('.nav-stacked li').length === 4, 'it should not show messages tab');
     ok(count('.user-stream .item') > 0, "it lists stream items");
   });
 });
 
-test("Messages tab", () => {
+test("Admin Browsing Groups", () => {
   logIn();
   Discourse.reset();
 
   visit("/groups/discourse");
 
   andThen(() => {
-    ok($('.action-list li').length === 5, 'it should show messages tab if user is admin');
+    ok(find('.nav-stacked li').length === 5, 'it should show messages tab if user is admin');
+    equal(find('.group-title').text(), 'Awesome Team', 'it should display the group title');
+    equal(find('.group-name').text(), '@discourse', 'it should display the group name');
+  });
+
+  click('.group-edit-btn');
+
+  andThen(() => {
+    ok(find('.group-flair-inputs').length === 1, 'it should display avatar flair inputs');
+    ok(find('.edit-group-bio').length === 1, 'it should display group bio input');
+    ok(find('.edit-group-title').length === 1, 'it should display group title input');
   });
 });

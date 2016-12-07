@@ -487,8 +487,11 @@ en:
       profile: "Profile"
       mute: "Mute"
       edit: "Edit Preferences"
-      download_archive: "Download My Posts"
-      download_archive_confirm: "Are you sure you want to download your posts?"
+      download_archive:
+        button_text: "Download My Posts"
+        confirm: "Are you sure you want to download your posts?"
+        success: "Download initiated, you will be notified via message when the process is complete."
+        rate_limit_error: "Posts can be downloaded once per day, please try again tomorrow."
       new_private_message: "New Message"
       private_message: "Message"
       private_messages: "Messages"
@@ -775,11 +778,9 @@ en:
         link_generated: "Invite link generated successfully!"
         valid_for: "Invite link is only valid for this email address: %{email}"
         bulk_invite:
-          none: "You haven't invited anyone here yet. You can send individual invites, or invite a bunch of people at once by <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>uploading a bulk invite file</a>."
+          none: "You haven't invited anyone here yet. You can send individual invites, or invite a bunch of people at once by <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>uploading a CSV file</a>."
           text: "Bulk Invite from File"
-          uploading: "Uploading..."
           success: "File uploaded successfully, you will be notified via message when the process is complete."
-          error: "There was an error uploading '{{filename}}': {{message}}"
 
       password:
         title: "Password"
@@ -1073,6 +1074,7 @@ en:
       title_placeholder: "What is this discussion about in one brief sentence?"
       edit_reason_placeholder: "why are you editing?"
       show_edit_reason: "(add edit reason)"
+      topic_featured_link_placeholder: "Enter link shown with title."
       reply_placeholder: "Type here. Use Markdown, BBCode, or HTML to format. Drag or paste images."
       view_new_post: "View your new post."
       saving: "Saving"
@@ -1842,6 +1844,23 @@ en:
             title: "Show the raw source diffs side-by-side"
             button: '<i class="fa fa-columns"></i> Raw'
 
+    group:
+      edit:
+        title: 'Edit Group'
+      title: 'Title'
+      name: "Name"
+      bio: "About Group"
+      name_placeholder: "Group name, no spaces, same as username rule"
+      flair_url: "Avatar Flair Image"
+      flair_url_placeholder: "(Optional) Image URL or Font Awesome class"
+      flair_bg_color: "Avatar Flair Background Color"
+      flair_bg_color_placeholder: "(Optional) Hex color value"
+      flair_color: "Avatar Flair Color"
+      flair_color_placeholder: "(Optional) Hex color value"
+      flair_preview_icon: "Preview Icon"
+      flair_preview_image: "Preview Image"
+      flair_note: "Note: Flair will only show for a user's primary group."
+
     category:
       can: 'can&hellip; '
       none: '(no category)'
@@ -1858,6 +1877,7 @@ en:
       tags_allowed_tag_groups: "Tag groups that can only be used in this category:"
       tags_placeholder: "(Optional) list of allowed tags"
       tag_groups_placeholder: "(Optional) list of allowed tag groups"
+      topic_featured_link_allowed: "Restricts editing the topic featured link in this category. Require site setting topic_featured_link_enabled is checked."
       delete: 'Delete Category'
       create: 'New Category'
       create_long: 'Create a new category'
@@ -2448,7 +2468,6 @@ en:
         refresh: "Refresh"
         new: "New"
         selector_placeholder: "enter username"
-        name_placeholder: "Group name, no spaces, same as username rule"
         about: "Edit your group membership and names here"
         group_members: "Group members"
         delete: "Delete"
@@ -2456,7 +2475,6 @@ en:
         delete_failed: "Unable to delete group. If this is an automatic group, it cannot be destroyed."
         delete_member_confirm: "Remove '%{username}' from the '%{group}' group?"
         delete_owner_confirm: "Remove owner privilege for '%{username}'?"
-        name: "Name"
         add: "Add"
         add_members: "Add members"
         custom: "Custom"
@@ -2473,14 +2491,6 @@ en:
         add_owners: Add owners
         incoming_email: "Custom incoming email address"
         incoming_email_placeholder: "enter email address"
-        flair_url: "Avatar Flair Image"
-        flair_url_placeholder: "(Optional) Image URL or Font Awesome class"
-        flair_bg_color: "Avatar Flair Background Color"
-        flair_bg_color_placeholder: "(Optional) Hex color value"
-        flair_color: "Avatar Flair Color"
-        flair_color_placeholder: "(Optional) Hex color value"
-        flair_preview: "Preview"
-        flair_note: "Note: Flair will only show for a user's primary group."
 
       api:
         generate_master: "Generate Master API Key"
@@ -2636,7 +2646,6 @@ en:
       export_csv:
         success: "Export initiated, you will be notified via message when the process is complete."
         failed: "Export failed. Please check the logs."
-        rate_limit_error: "Posts can be downloaded once per day, please try again tomorrow."
         button_text: "Export"
         button_title:
           user: "Export full user list in CSV format."

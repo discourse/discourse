@@ -7,6 +7,8 @@ function applicable() {
 }
 
 let workaroundActive = false;
+let composingTopic = false;
+
 export function isWorkaroundActive() {
   return workaroundActive;
 }
@@ -22,27 +24,38 @@ function positioningWorkaround($fixedElement) {
   var done = false;
   var originalScrollTop = 0;
 
+  positioningWorkaround.blur = function(evt) {
+    if (workaroundActive) {
+      done = true;
+
+      $('#main-outlet').show();
+      $('header').show();
+
+      fixedElement.style.position = '';
+      fixedElement.style.top = '';
+      fixedElement.style.height = '';
+
+      $(window).scrollTop(originalScrollTop);
+
+      if (evt) {
+        evt.target.removeEventListener('blur', blurred);
+      }
+      workaroundActive = false;
+    }
+  };
+
   var blurredNow = function(evt) {
     if (!done && _.include($(document.activeElement).parents(), fixedElement)) {
       // something in focus so skip
       return;
     }
 
-    done = true;
-
-    $('#main-outlet').show();
-    $('header').show();
-
-    fixedElement.style.position = '';
-    fixedElement.style.top = '';
-    fixedElement.style.height = '';
-
-    $(window).scrollTop(originalScrollTop);
-
-    if (evt) {
-      evt.target.removeEventListener('blur', blurred);
+    if (composingTopic) {
+      return false;
     }
-    workaroundActive = false;
+
+    positioningWorkaround.blur(evt);
+
   };
 
   var blurred = _.debounce(blurredNow, 250);
@@ -73,7 +86,20 @@ function positioningWorkaround($fixedElement) {
 
     fixedElement.style.top = '0px';
 
-    const height = Math.max(parseInt(window.innerHeight*0.6), 350);
+    let ratio = 0.6;
+    let min = 350;
+
+    composingTopic = false;
+
+    if ($('#reply-control select.category-combobox').length > 0) {
+      composingTopic = true;
+      // creating a topic, less height
+      ratio = 0.54;
+      min = 300;
+    }
+
+    const height = Math.max(parseInt(window.innerHeight*ratio), min);
+
     fixedElement.style.height = height + "px";
 
     // I used to do this, but it seems like we don't need to with position

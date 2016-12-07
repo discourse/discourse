@@ -421,14 +421,14 @@ describe Category do
   describe 'latest' do
     it 'should be updated correctly' do
       category = Fabricate(:category)
-      post = create_post(category: category.name)
+      post = create_post(category: category.id)
 
       category.reload
       expect(category.latest_post_id).to eq(post.id)
       expect(category.latest_topic_id).to eq(post.topic_id)
 
-      post2 = create_post(category: category.name)
-      post3 = create_post(topic_id: post.topic_id, category: category.name)
+      post2 = create_post(category: category.id)
+      post3 = create_post(topic_id: post.topic_id, category: category.id)
 
       category.reload
       expect(category.latest_post_id).to eq(post3.id)
@@ -451,7 +451,7 @@ describe Category do
 
     context 'with regular topics' do
       before do
-        create_post(user: @category.user, category: @category.name)
+        create_post(user: @category.user, category: @category.id)
         Category.update_stats
         @category.reload
       end
@@ -491,7 +491,7 @@ describe Category do
 
     context 'with revised post' do
       before do
-        post = create_post(user: @category.user, category: @category.name)
+        post = create_post(user: @category.user, category: @category.id)
 
         SiteSetting.stubs(:editing_grace_period).returns(1.minute.to_i)
         post.revise(post.user, { raw: 'updated body' }, revised_at: post.updated_at + 2.minutes)

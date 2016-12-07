@@ -7,12 +7,12 @@
     </span>
     <span class="category">{{category-link post.category}}</span>
     <div class="group-member-info">
-      {{#if post.user_long_name}}
-        <span class="name">{{post.user_long_name}}</span>{{#if post.user_title}}<span class="title">, {{post.user_title}}</span>{{/if}}
+      {{#if post.user.name}}
+        <span class="name">{{post.user.name}}</span>{{#if post.user.title}}<span class="title">, {{post.user.title}}</span>{{/if}}
       {{/if}}
     </div>
   </div>
   <p class='excerpt'>
-  {{{unbound post.cooked}}}
+  {{{unbound post.excerpt}}}
   </p>
 </div>
