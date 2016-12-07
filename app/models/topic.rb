@@ -1231,10 +1231,8 @@ end
 #  deleted_at                    :datetime
 #  highest_post_number           :integer          default(0), not null
 #  image_url                     :string
-#  off_topic_count               :integer          default(0), not null
 #  like_count                    :integer          default(0), not null
 #  incoming_link_count           :integer          default(0), not null
-#  bookmark_count                :integer          default(0), not null
 #  category_id                   :integer
 #  visible                       :boolean          default(TRUE), not null
 #  moderator_posts_count         :integer          default(0), not null
@@ -1247,12 +1245,9 @@ end
 #  featured_user4_id             :integer
 #  notify_moderators_count       :integer          default(0), not null
 #  spam_count                    :integer          default(0), not null
-#  illegal_count                 :integer          default(0), not null
-#  inappropriate_count           :integer          default(0), not null
 #  pinned_at                     :datetime
 #  score                         :float
 #  percent_rank                  :float            default(1.0), not null
-#  notify_user_count             :integer          default(0), not null
 #  subtype                       :string
 #  slug                          :string
 #  auto_close_at                 :datetime
@@ -1267,6 +1262,7 @@ end
 #  auto_close_hours              :float
 #  pinned_until                  :datetime
 #  fancy_title                   :string(400)
+#  highest_staff_post_number     :integer          default(0), not null
 #
 # Indexes
 #
