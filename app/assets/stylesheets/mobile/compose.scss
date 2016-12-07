@@ -99,6 +99,10 @@ input {
       display: block;
           position: absolute;
           margin-right: 40px;
+          max-width: 80%;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
     }
     .toggler {
       &:before {
