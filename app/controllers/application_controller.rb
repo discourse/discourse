@@ -156,7 +156,7 @@ class ApplicationController < ActionController::Base
   end
 
   rescue_from Discourse::ReadOnly do
-    render_json_error I18n.t('read_only_mode_enabled'), type: :read_only, status: 405
+    render_json_error I18n.t('read_only_mode_enabled'), type: :read_only, status: 503
   end
 
   def rescue_discourse_actions(type, status_code, include_ember=false)
