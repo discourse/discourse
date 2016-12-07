@@ -136,11 +136,11 @@ class UserNotifications < ActionMailer::Base
     @other_new_for_you = topics_for_digest.size > SiteSetting.digest_topics ? topics_for_digest[SiteSetting.digest_topics..-1] : []
 
     @popular_posts = if SiteSetting.digest_posts > 0
-      Post.for_mailing_list(user, min_date)
+      Post.order("posts.score DESC")
+          .for_mailing_list(user, min_date)
           .where('posts.post_type = ?', Post.types[:regular])
           .where('posts.deleted_at IS NULL AND posts.hidden = false AND posts.user_deleted = false')
-          .where("posts.post_number > ? AND posts.score > ?", 1, 5.0)
-          .order("posts.score DESC")
+          .where("posts.post_number > ? AND posts.score > ?", 1, ScoreCalculator.default_score_weights[:like_score] * 5.0)
           .limit(SiteSetting.digest_posts)
     else
       []
