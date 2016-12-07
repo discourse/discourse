@@ -3,7 +3,7 @@ function sumsUpTo100(percentages) {
   return percentages.map(p => Math.floor(p)).reduce((a, b) => a + b) === 100;
 }
 
-export default (percentages) => {
+export default function(percentages) {
   var decimals = percentages.map(a => a % 1);
   const sumOfDecimals = Math.ceil(decimals.reduce((a, b) => a + b));
   // compensate error by adding 1 to n items with the greatest decimal part

@@ -246,10 +246,11 @@ export default class Widget {
         keyDirty(widget.key);
       }
 
-      const emberView = widget._emberView;
-      if (emberView) {
-        return emberView.queueRerender();
+      const rerenderable = widget._rerenderable;
+      if (rerenderable) {
+        return rerenderable.queueRerender();
       }
+
       widget = widget.parentWidget;
     }
   }
