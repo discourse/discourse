@@ -24,12 +24,12 @@ const Group = Discourse.Model.extend({
     if (userCount > 0) { return userCount; }
   },
 
-  findMembers() {
+  findMembers(params) {
     if (Em.isEmpty(this.get('name'))) { return ; }
 
     const self = this, offset = Math.min(this.get("user_count"), Math.max(this.get("offset"), 0));
 
-    return Group.loadMembers(this.get("name"), offset, this.get("limit")).then(function (result) {
+    return Group.loadMembers(this.get("name"), offset, this.get("limit"), params).then(function (result) {
       var ownerIds = {};
       result.owners.forEach(owner => ownerIds[owner.id] = true);
 
@@ -177,12 +177,12 @@ Group.reopenClass({
     return ajax("/groups/" + name + ".json").then(result => Group.create(result.basic_group));
   },
 
-  loadMembers(name, offset, limit) {
+  loadMembers(name, offset, limit, params) {
     return ajax('/groups/' + name + '/members.json', {
-      data: {
+      data: Object.assign({
         limit: limit || 50,
         offset: offset || 0
-      }
+      }, params)
     });
   },
 
