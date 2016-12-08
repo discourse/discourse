@@ -531,6 +531,12 @@ fr:
       title: 'Vote'
       description: 'Votez pour ce message'
       long_form: 'a voté pour ce message'
+  user_activity:
+    no_bookmarks:
+      others: "Aucun signet."
+    no_likes_given:
+      self: "Vous n'avez aimé aucun message"
+      others: "Aucun message aimé"
   topic_flag_types:
     spam:
       title: 'Spam'
@@ -1120,7 +1126,7 @@ fr:
     allow_animated_thumbnails: "Créer des aperçus animés pour les gifs animés."
     default_avatars: "URLs des avatars qui seront utilisés par défaut pour les nouveaux utilisateurs jusqu'à ce qu'ils les modifient."
     automatically_download_gravatars: "Télécharger les gravatars pour les utilisateurs lors de la création de compte ou de la modification de courriel."
-    digest_topics: "Le nombre maximum de sujets à afficher dans le résumé par courriel."
+    digest_topics: "Le nombre maximum de sujets populaires à afficher dans le résumé par courriel."
     digest_posts: "Le nombre maximum de messages populaires à afficher dans le résumé par courriel."
     digest_min_excerpt_length: "Longueur minimale (en caractères) de l'extrait des messages dans le résumé par courriel."
     delete_digest_email_after_days: "Ne pas envoyer de résumés par courriel aux utilisateurs qui n'ont pas visité le site depuis plus de (n) jours."
@@ -2060,6 +2066,8 @@ fr:
       new_topics: "Nouveaux sujets"
       unread_messages: "Messages non lus"
       unread_notifications: "Notifications non lues"
+      new_posts: "Nouveaux messages"
+      new_users: "Nouveaux utilisateurs"
       popular_topics: "Sujets populaires"
       follow_topic: "Suivre ce sujet"
       join_the_discussion: "Lire la suite"

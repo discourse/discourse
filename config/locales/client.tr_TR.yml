@@ -399,7 +399,6 @@ tr_TR:
       profile: "Profil"
       mute: "Sustur"
       edit: "Tercihleri Düzenle"
-      download_archive: "Gönderilerimi İndir"
       new_private_message: "Yeni İleti"
       private_message: "İleti"
       private_messages: "İletiler"
@@ -1397,7 +1396,6 @@ tr_TR:
     post:
       reply: "<i class='fa fa-mail-forward'></i> {{replyAvatar}} {{usernameLink}}"
       reply_topic: "<i class='fa fa-mail-forward'></i> {{link}}"
-      quote_reply: "alıntıyla cevapla"
       edit: "{{link}} {{replyAvatar}} {{username}} düzenleniyor"
       edit_reason: "Neden: "
       post_number: "gönderi {{number}}"
@@ -2282,7 +2280,6 @@ tr_TR:
       export_csv:
         success: "Dışarı aktarma başlatıldı, işlem tamamlandığında iletiyle  bilgilendirileceksiniz."
         failed: "Dışa aktarırken hata oluştu. Lütfen kayıtları kontrol edin."
-        rate_limit_error: "Gönderiler günde bir kez indirilebilir, lütfen yarın tekrar deneyin."
         button_text: "Dışa aktar"
         button_title:
           user: "Tüm kullanıcı listesini CSV biçiminde dışa aktar."

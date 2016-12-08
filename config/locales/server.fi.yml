@@ -533,6 +533,13 @@ fi:
       title: 'Äänestä'
       description: 'Äänestä tätä viestiä'
       long_form: 'viestiä äänestetty'
+  user_activity:
+    no_bookmarks:
+      self: "Kirjanmerkeissäsi ei ole viestejä. Kirjanmerkit auttavat löytämään viestejä helposti myöhemmin."
+      others: "Ei kirjanmerkkejä."
+    no_likes_given:
+      self: "Et ole tykännyt yhdestäkään viestistä."
+      others: "Ei tykättyjä viestejä."
   topic_flag_types:
     spam:
       title: 'Roskaposti'
@@ -915,6 +922,7 @@ fi:
     enable_facebook_logins: "Ota käyttöön Facebook autentikaatio, vaatimuksena facebook_app_id ja facebook_app_secret"
     facebook_app_id: "App id Facebook autentikaatioon, rekisteröinti osoitteessa https://developers.facebook.com/apps"
     facebook_app_secret: "App secret Facebook autentikaatioon, rekisteröinti osoitteessa https://developers.facebook.com/apps"
+    facebook_request_extra_profile_details: "Pyydä tietoa käyttäjästä, sijaintitieto ja internetsivu Facebookilta (vaatii Facebookin hyväksynnän)"
     enable_github_logins: "Ota käyttöön Gtihub autentikaatio, vaatimuksena github_client_id ja github_client_secret"
     github_client_id: "Client id Github autentikaatioon, rekisteröinti osoitteessa https://github.com/settings/applications"
     github_client_secret: "Client secret Github autentikaatioon, rekisteröinti osoitteessa https://github.com/settings/applications"
@@ -1108,7 +1116,6 @@ fi:
     allow_animated_thumbnails: "Luo animoidut esikatselukuvat animoiduista gif-tiedostoista."
     default_avatars: "Verkko-osoitteet profiilikuviin, joita käytetään oletuksena uusille käyttäjille."
     automatically_download_gravatars: "Lataa käyttäjille Gravatarit automaattisesti tilin luonnin ja sähköpostin vaihdon yhteydessä."
-    digest_topics: "Maksimimäärä ketjuja, joka näytetään sähköpostikoosteissa."
     digest_min_excerpt_length: "Vähimmäispituus merkeissä viestin katkelmalle, joka näytetään sähköpostikoosteissa."
     delete_digest_email_after_days: "Älä lähetä sähköpostikoosteita käyttäjille, joita ei ole nähty sivustolla yli (n) päivään."
     digest_suppress_categories: "Älä liitä näiden alueiden viestejä sähköpostikoosteisiin."
@@ -2033,15 +2040,9 @@ fi:
     digest:
       why: "Lyhyt kooste siitä mitä on tapahtunut sivustolla %{site_link} viimeisimmän vierailusi jälkeen %{last_seen_at}."
       subject_template: "[%{site_name}] Kooste"
-      new_activity: "Uusi toiminta omissa ketjuissasi ja viesteissäsi:"
-      top_topics: "Suosittuja viestejä"
-      other_new_topics: "Suosittuja ketjuja"
       unsubscribe: "Tämä kooste lähetettiin sivustolta %{site_link}, koska emme ole nähneet sinua vähään aikaan. Jos et halua vastaanottaa näitä viestejä %{unsubscribe_link}."
       click_here: "klikkaa tästä"
       from: "%{site_name} kooste"
-      read_more: "Lue lisää"
-      more_topics: "Muita uusia ketjuja on luotu %{new_topics_since_seen}."
-      more_topics_category: "Lisää uusia ketjuja:"
     mailing_list:
       why: "Kaikki toiminta sivustolla [%{site_name}] ajalla %{date}"
       subject_template: "[%{site_name}] Kooste ajalle %{date}"

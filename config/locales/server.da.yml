@@ -1039,15 +1039,9 @@ da:
     digest:
       why: "Et kort resumé af %{site_link} siden dit sidste besøg %{last_seen_at}"
       subject_template: "[%{site_name}] Resumé"
-      new_activity: "Ny aktivitet på dine emner og indlæg:"
-      top_topics: "Populære emner"
-      other_new_topics: "Populære emner"
       unsubscribe: "Dette resumé sendes fra %{site_link} når vi ikke har set dig i et stykke tid. For at afmelde %{unsubscribe_link}."
       click_here: "klik her"
       from: "%{site_name} resumé"
-      read_more: "Læs mere"
-      more_topics: "Der var %{new_topics_since_seen} andre nye emner."
-      more_topics_category: "Flere nye emner: "
     mailing_list:
       subject_template: "[%{site_name}] Resumé for %{date}"
     forgot_password:

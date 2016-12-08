@@ -399,8 +399,6 @@ zh_CN:
       profile: "个人资料"
       mute: "防打扰"
       edit: "修改设置"
-      download_archive: "下载我的帖子"
-      download_archive_confirm: "你确定要下载你的帖子吗？"
       new_private_message: "发新私信"
       private_message: "私信"
       private_messages: "私信"
@@ -809,7 +807,7 @@ zh_CN:
     search_hint: '用户名、电子邮件或 IP 地址'
     create_account:
       disclaimer: "注册即表示你同意<a href='{{privacy_link}}'>隐私策略</a>和<a href='{{tos_link}}'>服务条款</a>。"
-      title: "创建用户"
+      title: "创建新帐号"
       failed: "出问题了，有可能这个邮箱已经被注册了。试试忘记密码链接？"
     forgot_password:
       title: "重置密码"
@@ -2295,7 +2293,6 @@ zh_CN:
       export_csv:
         success: "导出开始，完成后你将被通过消息通知。"
         failed: "导出失败。请检查日志。"
-        rate_limit_error: "帖子只能每天下载一次，请明天再重试。"
         button_text: "导出"
         button_title:
           user: "以CSV格式导出所有用户列表"

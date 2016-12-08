@@ -1478,13 +1478,7 @@ sk:
       subject_template: "%{optional_re}%{topic_title}"
     digest:
       why: "Krátky súhrn zo stránky  %{site_link} od Vašej poslednej návštevy %{last_seen_at}"
-      new_activity: "Nová aktivita na Vašich témach a príspevkoch:"
-      top_topics: "Populárne príspevky"
-      other_new_topics: "Populárne témy"
       click_here: "kliknite tu"
-      read_more: "Čítať viac"
-      more_topics: "Boli vytvorené %{new_topics_since_seen} ďalšie nové témy."
-      more_topics_category: "Viac nových tém:"
     forgot_password:
       subject_template: "[%{site_name}] Obnovenie hesla"
       text_body_template: |

@@ -570,6 +570,13 @@ ro:
       title: 'Votează'
       description: 'Votează pentru această postare'
       long_form: 'a votat pentru această postare'
+  user_activity:
+    no_bookmarks:
+      self: "Nu ai nicio postare cu semn de carte. Folosirea semnelor de carte pentru postări permite accesarea lor ulterioară într-un mod facil. "
+      others: "Nu există semne de carte."
+    no_likes_given:
+      self: "Nu ai apreciat nicio postare."
+      others: "Nu există postări apreciate."
   topic_flag_types:
     spam:
       title: 'Spam'
@@ -1160,8 +1167,9 @@ ro:
     allow_animated_thumbnails: "Generează thumbnails animate pentru gif-uri animate."
     default_avatars: "URL-urile avatarelor care vor fi folosite implicit pentru noii utilizatori până ce aceștia le vor schimba."
     automatically_download_gravatars: "Descarcă Gravatare pentru utilizatori după crearea contului sau schimbarea email-ului."
-    digest_topics: "Numărul maxim de subiecte care să fie afișat în emailul-rezumat."
-    digest_posts: "Numărul maxim de postări notorii care să se afișeze în rezumatul pe email."
+    digest_topics: "Numărul maxim de subiecte notorii care să fie afișate în rezumatul pe email."
+    digest_posts: "Numărul maxim de postări notorii care să se afișeze în rezumatul-email."
+    digest_other_topics: "Numărul maxim de subiecte care să fie afișate în secțiunea „Noutăți în subiectele și categoriile pe care le urmărești” din rezumatul pe email."
     digest_min_excerpt_length: "Lungimea minimă (în caractere) a extraselor de postări, ce vor fi incluse în emailul-rezumat."
     delete_digest_email_after_days: "Nu trimite emailuri-rezumat utilizatorilor care nu au fost văzuți pe site de mai mult de (n) zile."
     digest_suppress_categories: "Nu include aceste categorii în emailurile-rezumat."
@@ -2206,6 +2214,8 @@ ro:
       new_topics: "Subiecte noi"
       unread_messages: "Mesaje necitite"
       unread_notifications: "Notificări necitite"
+      new_posts: "Postări noi"
+      new_users: "Utilizatori noi"
       popular_topics: "Subiecte notorii"
       follow_topic: "Urmărește acest subiect"
       join_the_discussion: "Citește mai mult"

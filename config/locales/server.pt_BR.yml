@@ -1507,6 +1507,10 @@ pt_BR:
       text_body_template: "A configuração `download_remote_images_to_local` está desativada porque o espaço limite no disco configurado em `download_remote_images_threshold` foi alcançado."
     dashboard_problems:
       subject_template: "Problemas foram encontrados"
+  unsubscribe_link: |
+    Para cancelar a subscrição destes e-mails, [clique aqui](%{unsubscribe_url}).
+  unsubscribe_link_and_mail: |
+    Para cancelar a subscrição destes e-mails, [clique aqui](%{unsubscribe_url}).
   subject_re: "Re:"
   subject_pm: "[PM]"
   user_notifications:
@@ -1640,14 +1644,19 @@ pt_BR:
         %{message}
     digest:
       why: "Um breve resumo de %{site_link} desde que viu pela última vez em %{last_seen_at}."
-      new_activity: "Nova atividade nos seus tópicos e postagens:"
-      top_topics: "Tópicos populares"
-      other_new_topics: "Tópicos populares"
+      new_topics: "Novos Tópicos"
+      new_users: "Usuários Novos"
+      popular_topics: "Tópicos Populares"
+      join_the_discussion: "Leia Mais"
+      subject_template: "[%{site_name}] Resumo das discussões"
+      unsubscribe: "Este resumo é enviado por %{site_link} quando não o vemos há algum tempo. Para cancelar a assinatura %{unsubscribe_link}."
       click_here: "clique aqui"
-      read_more: "Leia Mais"
-      more_topics: "Há %{new_topics_since_seen} outros novos tópicos."
-      more_topics_category: "Mais tópicos novos:"
+      from: "resumo do site %{site_name} "
+      preheader: "Um breve resumo do que aconteceu no fórum desde a sua última visita no dia %{last_seen_at}"
     mailing_list:
+      subject_template: "[%{site_name}] Resumo das discussões do dia %{date}"
+      unsubscribe: "Este resumo está sendo enviado diariamente devido à configuração de \"lista de email\" estar habilitada. Para deixar de receber estas mensagens, clique em  %{unsubscribe_link}."
+      from: "Resumo das discussões do site %{site_name}"
       new_topics: "Novos tópicos"
       topic_updates: "Atualizações do tópico"
       view_this_topic: "Ver esse tópico"
@@ -2014,7 +2023,12 @@ pt_BR:
           contact_email:
             label: "E-mail"
             placeholder: "nome@exemplo.com"
+          contact_url:
+            placeholder: "http://www.example.com/contact-us"
+          site_contact:
+            label: "Mensagens Automatizadas"
       corporate:
+        title: "Organização"
         fields:
           company_short_name:
             label: "Nome da Empresa (curto)"

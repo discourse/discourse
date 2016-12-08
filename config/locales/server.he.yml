@@ -528,6 +528,13 @@ he:
       title: 'הצבע'
       description: 'הצביעו לפוסט זה'
       long_form: 'הצבעתם לפוסט זה'
+  user_activity:
+    no_bookmarks:
+      self: "אין לכם פוסטים שסומנו בסימניה, סימון פוסטים מאפשר לכם לגשת אליהם בקלות בהמשך."
+      others: "אין סימניות."
+    no_likes_given:
+      self: "לא עשיתם לייק לאף פוסט."
+      others: "אין פוסטים שנעשה להם לייק."
   topic_flag_types:
     spam:
       title: 'ספאם'
@@ -1117,8 +1124,9 @@ he:
     allow_animated_thumbnails: "יצירת תמונות אנימציה מוקטנות קטנות של קבצי אנימציית gif."
     default_avatars: "כתובות URL לאווטרים אשר ישמשו כברירת מחדל למשתמשים חדשים עד אשר ישנו אותם."
     automatically_download_gravatars: "הורדת גראווטרים למשתמשים בעת יצירת החשבון או שינוי כתובת הדוא\"ל."
-    digest_topics: "המספר המקסימלי של נושאים להציג במייל הסיכום."
+    digest_topics: "המספר המקסימלי של נושאים פופולאריים להצגה במייל הסיכום."
     digest_posts: "המספר המקסימלי של פוסטים פופולאריים להצגה במייל סיכום."
+    digest_other_topics: "המספר המקסימלי של נושאים להצגה בקטע 'חדש בנושאים וקטגוריות שאתם עוקבים אחריהם' של מייל הסיכום."
     digest_min_excerpt_length: "אורך קטע מינימלי מהפוסט למיילי הסיכום, בתווים."
     delete_digest_email_after_days: "השתקת מיילי סיכום למשתמשים שלא ביקרו באתר למעלה מ (n) ימים."
     digest_suppress_categories: "וותרו על קטגוריות אלו במיילים מסכמים."
@@ -2143,6 +2151,8 @@ he:
       new_topics: "נושאים חדשים"
       unread_messages: "הודעות שלא נקראו"
       unread_notifications: "התראות שלא נקראו"
+      new_posts: "פוסטים חדשים"
+      new_users: "משתמשים חדשים"
       popular_topics: "נושאים פופולאריים"
       follow_topic: "עיקבו אחרי נושא זה"
       join_the_discussion: "קראו עוד"

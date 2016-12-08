@@ -1395,15 +1395,9 @@ it:
     digest:
       why: "Un breve sommario di %{site_link} dalla tua ultima visita il %{last_seen_at}"
       subject_template: "[%{site_name}] Riepilogo"
-      new_activity: "Nuove attività nei tuoi argomenti e messaggi:"
-      top_topics: "Messaggi di successo"
-      other_new_topics: "Argomenti più attivi"
       unsubscribe: "Questo riepilogo viene inviato da %{site_link} se non ti si vede da un po'. Per annullare l'iscrizione %{unsubscribe_link}."
       click_here: "clicca qui"
       from: "%{site_name} riepilogo"
-      read_more: "Leggi Altro"
-      more_topics: "Ci sono stati %{new_topics_since_seen} altri nuovi argomenti."
-      more_topics_category: "Ulteriori nuovi argomenti:"
     mailing_list:
       from: "%{site_name} riepilogo"
       new_topics: "Nuovi argomenti"

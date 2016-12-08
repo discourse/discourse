@@ -859,7 +859,6 @@ pl_PL:
     email_editable: "Allow users to change their e-mail address after registration."
     allow_uploaded_avatars: "Zezwól użytkownikom na przesyłanie niestandardowych zdjęć profilowych."
     allow_animated_thumbnails: "Generowanie miniatur animowanych gifów."
-    digest_topics: "Maksymalna liczba tematów do wyświetlenia w podsumowaniu email."
     allow_anonymous_posting: "Zezwól użytkownikom na przechodzenie w tryb anonimowości."
     allow_profile_backgrounds: "Zezwól użytkownikom na przesyłanie obrazu tła dla profilu."
     enable_mobile_theme: "Urządzenia mobilne używają dedykowanego mobilnego szablonu. Wyłącz to, jeśli chcesz użyć własnego, pojedynczego i responsywnego szablonu stylów. "
@@ -1079,11 +1078,7 @@ pl_PL:
     user_posted_pm:
       subject_template: "[%{site_name}] [PW] %{topic_title}"
     digest:
-      new_activity: "Nowa aktywność w twoich tematach i wpisach:"
-      top_topics: "Popularne wpisy"
-      other_new_topics: "Popularne wątki"
       click_here: "kliknij tutaj"
-      read_more: "Czytaj więcej"
     forgot_password:
       subject_template: "[%{site_name}] Reset hasła"
       text_body_template: |

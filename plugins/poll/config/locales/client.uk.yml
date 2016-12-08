@@ -5,4 +5,21 @@
 # To work with us on translations, join this project:
 # https://www.transifex.com/projects/p/discourse-org/
 
-uk: {}
+uk:
+  js:
+    poll:
+      show-results:
+        label: "Показати результати"
+      hide-results:
+        label: "Приховати результати"
+      open:
+        label: "Відкрити"
+      close:
+        label: "Закрити"
+      ui_builder:
+        poll_type:
+          label: Тип
+        poll_config:
+          max: Макс
+          min: Мін
+          step: Крок

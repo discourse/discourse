@@ -428,8 +428,6 @@ pt_BR:
       profile: "Perfil"
       mute: "Silenciar"
       edit: "Editar Preferências"
-      download_archive: "Fazer Download dos Meus Posts"
-      download_archive_confirm: "Você tem certeza que deseja baixar as suas postagens?"
       new_private_message: "Nova Mensagem"
       private_message: "Mensagem"
       private_messages: "Mensagens"
@@ -1465,7 +1463,6 @@ pt_BR:
     post:
       reply: "<i class='fa fa-mail-forward'></i> {{replyAvatar}} {{usernameLink}}"
       reply_topic: "<i class='fa fa-mail-forward'></i> {{link}}"
-      quote_reply: "citar resposta"
       edit: "Em resposta a {{link}} por {{replyAvatar}} {{username}}"
       edit_reason: "Motivo:"
       post_number: "resposta {{number}}"
@@ -2397,7 +2394,6 @@ pt_BR:
       export_csv:
         success: "Exportação iniciada, você será notificado por mensagem particular quando o processo estiver completo."
         failed: "Falha na exportação. Por favor verifique os logs."
-        rate_limit_error: "O download de posts pode ser feito apenas uma vez por dia, por favor, tente novamente amanhã."
         button_text: "Exportar"
         button_title:
           user: "Exportar lista de usuários completa em formato CSV."

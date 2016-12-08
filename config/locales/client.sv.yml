@@ -428,7 +428,11 @@ sv:
       profile: "Profil"
       mute: "Tysta"
       edit: "Redigera inställningar"
-      download_archive: "Ladda ned mina inlägg"
+      download_archive:
+        button_text: "Ladda ner mina inlägg"
+        confirm: "Är du säker att du vill ladda ner dina inlägg?"
+        success: "Nedladdning påbörjad, du kommer bli notifierad via meddelande när processen är klar."
+        rate_limit_error: "Inlägg kan laddas ner en gång per dag, försök igen imorgon."
       new_private_message: "Nytt meddelande"
       private_message: "Meddelande"
       private_messages: "Meddelanden"
@@ -452,6 +456,7 @@ sv:
         each_browser_note: "Notera: Du behöver ändra denna inställning i varje webbläsare du använder."
       dismiss_notifications: "Avfärda alla"
       dismiss_notifications_tooltip: "Markera alla olästa aviseringar som lästa"
+      first_notification: "Du har fått din första notifikation! Markera den för att börja."
       disable_jump_reply: "Hoppa inte till mitt inlägg efter att jag har svarat"
       dynamic_favicon: "Visa antal nya / uppdaterade ämnen på webbläsarikon"
       external_links_in_new_tab: "Öppna alla externa länkar i en ny flik"
@@ -474,6 +479,7 @@ sv:
           Tystade ämnen och kategorier är inte inkluderade i de här e-postmeddelandena.
         daily: "Skicka dagliga uppdateringar"
         individual: "Skicka ett e-postmeddelande för varje nytt inlägg."
+        individual_no_echo: "Jag vill ha ett mail när nya poster publiceras"
         many_per_day: "Skicka ett e-postmeddelande för varje nytt inlägg (ungefär {{dailyEmailEstimate}} per dag)"
         few_per_day: "Skicka ett e-postmeddelande för varje nytt inlägg (ungefär 2 per dag)"
       tag_settings: "Taggar"
@@ -597,6 +603,7 @@ sv:
         title: "Gränssnittsspråk"
         instructions: "Språket som används av forumsgränssnittet. Det kommer att ändras när du laddar om sidan."
         default: "(förvalt värde)"
+        any: "något"
       password_confirmation:
         title: "Lösenord igen"
       last_posted: "Senaste inlägg"
@@ -654,6 +661,7 @@ sv:
         after_4_minutes: "efter 4 minuter"
         after_5_minutes: "efter 5 minuter"
         after_10_minutes: "efter 10 minuter"
+      notification_level_when_replying: "När jag publicerar i ett ämne, sätt ämnet till"
       invited:
         search: "sök efter inbjudningar..."
         title: "Inbjudningar"
@@ -684,6 +692,8 @@ sv:
         account_age_days: "Kontoålder i dagar"
         create: "Skicka en inbjudan"
         generate_link: "Kopiera inbjudningslänken"
+        link_generated: "Länk för inbjudan framgångsrikt skapad!"
+        valid_for: "Länk för inbjudan är endast giltig för denna email adress: %{email}"
         bulk_invite:
           none: "Du har inte skickat några inbjudningar. Du kan skicka individuella inbjudningar, eller så kan du bjuda in flera på en gång genom att <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>ladda upp en bulkfil.</a>"
           text: "Massinbjudan från fil"
@@ -841,6 +851,7 @@ sv:
     trust_level: 'Förtroendenivå'
     search_hint: 'användarnamn, e-post eller IP-adress'
     create_account:
+      disclaimer: "Genom att registrera dig godkänner du <a href='{{privacy_link}}'>integritetspolicyn</a> och <a href='{{tos_link}}'>användarvillkoren</a>."
       title: "Registrera nytt konto"
       failed: "Något gick fel, kanske är denna e-post redan registrerad, försök glömt lösenordslänken"
     forgot_password:
@@ -931,6 +942,8 @@ sv:
       group_mentioned:
         one: "Genom att nämna {{group}}, så kommer du att notifiera <a href='{{group_link}}'>1 person</a> – är du säker?"
         other: "Genom att nämna {{group}}, så kommer du att notifiera <a href='{{group_link}}'>{{count}} medlemmar</a> – är du säker?"
+      cannot_see_mention:
+        category: "Du nämnde {{username}} men hen kommer inte få någon notifikation för hen har inte tillgång till denna kategori. Du behöver lägga till hen till en grupp som har tillgång till den här kategorin."
       duplicate_link: "Det ser ut som att din länk till <b>{{domain}}</b> redan har delats i ämnet av <b>@{{username}}</b> i <a href='{{post_url}}'>ett svar {{ago}} sedan</a> – är du säker på att du vill dela den igen?"
       error:
         title_missing: "Du måste ange en rubrik"
@@ -1091,6 +1104,39 @@ sv:
         category: "Sök #{{category}} kategorin"
         topic: "Sök i det här ämnet"
         private_messages: "Sök meddelanden"
+      advanced:
+        title: Avancerad sökning
+        posted_by:
+          label: Postat av
+        in_category:
+          label: I kategorin
+        in_group:
+          label: I gruppen
+        with_tags:
+          label: Med taggar
+        filters:
+          likes: Jag gillade
+          posted: Jag postade i
+          watching: Jag tittar
+          tracking: Jag bevakar
+          private: finns i mitt meddelande
+          bookmarks: Jag har bokmärkt
+          first: är den första posten
+          pinned: är pinnade
+          unpinned: är inte pinnade
+          wiki: är wiki
+        statuses:
+          label: Där ämnen
+          open: är öppen
+          closed: är stängd
+          archived: är arkiverad
+          noreplies: har noll svar
+          single_user: innehåller en ensam användare
+        post:
+          time:
+            label: Publicerad
+            before: innan
+            after: efter
     hamburger_menu: "gå till en annan ämneslista eller kategori"
     new_item: "ny"
     go_back: 'gå tillbaka'
@@ -1099,6 +1145,8 @@ sv:
     topics:
       new_messages_marker: "senaste besök"
       bulk:
+        select_all: "Välj alla"
+        clear_all: "Rensa alla"
         unlist_topics: "Avlista ämnen"
         reset_read: "Återställ lästa"
         delete: "Ta bort ämnen"
@@ -1304,6 +1352,9 @@ sv:
       share:
         title: 'Dela'
         help: 'dela en länk till detta ämne'
+      print:
+        title: 'Skriv ut'
+        help: 'Öppna en utskriftsvänlig version av det här ämnet'
       flag_topic:
         title: 'Flagga'
         help: 'flagga privat detta ämne för uppmärksamhet eller skicka en privat notifiering om den'
@@ -1416,7 +1467,7 @@ sv:
     post:
       reply: "<i class='fa fa-mail-forward'></i> {{replyAvatar}} {{usernameLink}}"
       reply_topic: "<i class='fa fa-mail-forward'></i> {{link}}"
-      quote_reply: "citatsvar"
+      quote_reply: "Citat"
       edit: "Redigerar {{link}} {{replyAvatar}} {{username}}"
       edit_reason: "Anledning:"
       post_number: "inlägg {{number}}"
@@ -1679,6 +1730,15 @@ sv:
         muted:
           title: "Tystad"
           description: "Du kommer aldrig att notifieras om något som rör nya ämnen i de här kategorierna och de kommer inte att dyka upp i din olästa tabb."
+      sort_options:
+        likes: "Gillar"
+        views: "Visningar"
+        posts: "Poster"
+        activity: "Aktiviteter"
+        category: "Kategori"
+        created: "Skapad"
+      sort_ascending: 'Stigande'
+      sort_descending: 'Fallande'
     flagging:
       title: 'Tack för att du hjälper till att hålla forumet civiliserat!'
       action: 'Flagga inlägg'
@@ -2208,6 +2268,7 @@ sv:
         description: "Beskrivning"
         controls: "Kontroller"
         go_back: "Tillbaka till listan"
+        payload_url_placeholder: "https://example.com/postreceive"
         secret_invalid: "Hemligheten får inte ha några blanka tecken."
         secret_too_short: "Hemligheten bör vara minst 12 tecken."
         secret_placeholder: "En valfri sträng, används för att generera signatur"
@@ -2328,7 +2389,6 @@ sv:
       export_csv:
         success: "Export påbörjad, du får en notis via meddelande när processen är genomförd."
         failed: "Exporteringen misslyckades. Kontrollera loggarna."
-        rate_limit_error: "Inlägg kan bara laddas ner en gång per dag, var vänlig och försök imorgon istället."
         button_text: "Exportera"
         button_title:
           user: "Exportera alla användare i CSV-format"
@@ -2450,6 +2510,9 @@ sv:
         delivery_method: "Leveransmetod"
         preview_digest_desc: "Förhandsgranska innehållet i sammanfattningen som skickas via e-post till inaktiva användare."
         refresh: "Uppdatera"
+        send_digest_label: "Skicka detta resultatet till:"
+        send_digest: "Skicka"
+        sending_email: "Skickar email..."
         format: "Format"
         html: "html"
         text: "text"

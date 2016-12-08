@@ -711,12 +711,7 @@ cs:
     user_posted_pm:
       subject_template: "[%{site_name}] [PM] %{topic_title}"
     digest:
-      new_activity: "Nová aktivita ve vašich tématech a příspěvcích:"
-      top_topics: "Populární příspěvky"
-      other_new_topics: "Populární témata"
       click_here: "klikněte zde"
-      read_more: "Číst dále"
-      more_topics_category: "Více nových témat:"
     forgot_password:
       subject_template: "[%{site_name}] Obnovení hesla"
       text_body_template: |

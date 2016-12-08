@@ -457,8 +457,11 @@ ro:
       profile: "Profil"
       mute: "Silențios"
       edit: "Editează preferințe"
-      download_archive: "Descarcă arhiva postărilor mele"
-      download_archive_confirm: "Ești sigur că vrei să îți descarci toate postările?"
+      download_archive:
+        button_text: "Descarcă postările mele"
+        confirm: "Ești sigur că vrei să îți descarci postările?"
+        success: "Descărcarea a început, vei fi notificat printr-un mesaj atunci când procesul se va termina."
+        rate_limit_error: "Postările pot fi descărcate doar o singură dată pe zi, te rugăm să încerci din nou mâine."
       new_private_message: "Mesaj nou"
       private_message: "Mesaj"
       private_messages: "Mesaje"
@@ -2521,7 +2524,6 @@ ro:
       export_csv:
         success: "Exportul a fost inițiat. Vei primi un mesaj de notificare când procesul se va termina."
         failed: "Exportul a eşuat. Verifică raportul de erori."
-        rate_limit_error: "Postările pot fi descărcate doar o singură dată pe zi. Te rugăm încearcă mâine."
         button_text: "Exportă"
         button_title:
           user: "Exportă lista totală a utilizatorilor, în format CSV."
@@ -2650,6 +2652,7 @@ ro:
         html: "html"
         text: "text"
         last_seen_user: "Ultimul utilizator văzut:"
+        no_result: "Nu s-au găsit rezultate pentru rezumatul-email."
         reply_key: "Cheie de răspuns"
         skipped_reason: "Motivul omiterii"
         incoming_emails:

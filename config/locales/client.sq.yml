@@ -425,7 +425,6 @@ sq:
       profile: "Profili"
       mute: "Hesht"
       edit: "Ndrysho preferencat"
-      download_archive: "Shkarko postimet e mia"
       new_private_message: "Mesazh i ri"
       private_message: "Mesazh"
       private_messages: "Mesazhet"
@@ -1389,7 +1388,6 @@ sq:
     post:
       reply: "<i class='fa fa-mail-forward'></i> {{replyAvatar}} {{usernameLink}}"
       reply_topic: "<i class='fa fa-mail-forward'></i> {{link}}"
-      quote_reply: "cito përgjigjen"
       edit: "Duke modifikuar {{link}} {{replyAvatar}} {{username}}"
       edit_reason: "Arsyeja:"
       post_number: "postimi {{number}}"

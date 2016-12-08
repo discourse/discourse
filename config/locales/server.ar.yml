@@ -1631,13 +1631,7 @@ ar:
       subject_template: "%{optional_re}%{topic_title}"
     digest:
       why: "ملخص المؤجز من %{site_link} منذ زيارتك الاخيره في  %{last_seen_at}"
-      new_activity: "يوجد نشاط جديد في المواضيع والمشاركات الخاصة بك:"
-      top_topics: "اشهر المشاركات "
-      other_new_topics: "اشهر المواضيع "
       click_here: "أنقر هنا"
-      read_more: "قراءة المزيد"
-      more_topics: "هناك %{new_topics_since_seen} مواضيع جديدة أخرى."
-      more_topics_category: "أكثر المواضيع الجديدة:"
     forgot_password:
       subject_template: "[%{site_name}] إعادة ضبط كلمة المرور"
       text_body_template: |

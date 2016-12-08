@@ -428,8 +428,9 @@ fr:
       profile: "Profil"
       mute: "Silencieux"
       edit: "Modifier les préférences"
-      download_archive: "Télécharger mes messages"
-      download_archive_confirm: "Êtes-vous sûr de vouloir télécharger vos messages ?"
+      download_archive:
+        button_text: "Télécharger mes messages"
+        confirm: "Êtes-vous sûr de vouloir télécharger vos messages ?"
       new_private_message: "Créer un message privé"
       private_message: "Message privé"
       private_messages: "Messages privés"
@@ -2100,7 +2101,7 @@ fr:
       custom_message_template_forum: "Hey, tu devrais rejoindre ce forum !"
       custom_message_template_topic: "Hey, je pensais que tu pourrais aimer ce sujet !"
     safe_mode:
-      enabled: "Le mode sans échec et activé ; fermez cette fenêtre de navigateur pour le quitter"
+      enabled: "Le mode sans échec est activé ; fermez cette fenêtre de navigateur pour le quitter"
   admin_js:
     type_to_filter: "commencez à taper pour filtrer…"
     admin:
@@ -2410,7 +2411,6 @@ fr:
       export_csv:
         success: "L'exportation a été démarrée. Vous serez notifié par message lorsque le traitement sera terminé."
         failed: "L'exportation a échoué. Veuillez consulter les journaux."
-        rate_limit_error: "Les messages peuvent être téléchargés une fois par jour, veuillez ressayer demain."
         button_text: "Exporter"
         button_title:
           user: "Exporter la liste des utilisateurs dans un fichier CSV."
@@ -2539,6 +2539,7 @@ fr:
         html: "html"
         text: "texte"
         last_seen_user: "Dernièr utilisateur vu :"
+        no_result: "Aucun résultat trouvé pour le résumé."
         reply_key: "Répondre"
         skipped_reason: "Passer Raison"
         incoming_emails:

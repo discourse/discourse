@@ -112,6 +112,7 @@ nb_NO:
       public_topic: "gjorde dette emnet offentlig %{when}"
       private_topic: "gjorde dette emnet privat %{when}"
       invited_user: "inviterte %{who} %{when}"
+      invited_group: "inviterte %{who} %{when}"
       removed_user: "fjernet %{who} %{when}"
       removed_group: "fjernet %{who} %{when}"
       autoclosed:
@@ -130,6 +131,7 @@ nb_NO:
         enabled: 'festet globalt %{when}'
     topic_admin_menu: "admin-handlinger for emne"
     emails_are_disabled: "All utgående e-post har blitt deaktivert globalt av en administrator. Ingen e-postvarslinger vil bli sendt."
+    bootstrap_mode_enabled: "For å gjøre det enklere å lansere det nye nettstedet ditt er det i bootstrap-modus. Alle nye brukere vil få tillitsnivå 1 og ha daglige oppdateringer på e-post aktivert. Dette vil automatisk bli slått av når antallet brukere overstiger %{min_users}."
     bootstrap_mode_disabled: "Bootstrap modus vil være deaktivert i de neste 24 timene"
     s3:
       regions:
@@ -156,9 +158,9 @@ nb_NO:
       other: "linker"
     faq: "FAQ"
     guidelines: "Retningslinjer"
-    privacy_policy: "Personvern"
+    privacy_policy: "Personvernerklæring"
     privacy: "Personvern"
-    terms_of_service: "Betingelser"
+    terms_of_service: "Bruksvilkår"
     mobile_view: "Mobilvisning"
     desktop_view: "Skrivebordsvisning"
     you: "Du"
@@ -384,7 +386,6 @@ nb_NO:
       profile: "Profil"
       mute: "Demp"
       edit: "Rediger innstillinger"
-      download_archive: "Last ned mine innlegg"
       new_private_message: "Ny Melding"
       private_message: "Melding"
       private_messages: "Meldinger"
@@ -535,7 +536,7 @@ nb_NO:
         every_three_days: "hver tredje dag"
         weekly: "ukentlig"
         every_two_weeks: "annenhver uke"
-      email_direct: "Motta en e-post når noen siterer deg, svarer på dine innlegg, nevner ditt brukernavn eller inviterer deg til et emne"
+      email_direct: "Motta en e-post når noen siterer meg, svarer på innlegget mitt, nevner @brukernavnet mitt eller inviterer meg til et emne"
       email_private_messages: "Motta en e-post når noen sender deg en melding"
       email_always: "Send meg varsler på epost selv når jeg er aktiv på nettstedet"
       other_settings: "Annet"
@@ -626,7 +627,7 @@ nb_NO:
         network_fixed: "Ser ut som om den er tilbake."
         server: "Feilkode: {{status}}"
         forbidden: "Du har ikke tilgang til dette."
-        not_found: "Oops, applikasjonen forsøkte å laste en URL som ikke eksisterer."
+        not_found: "Oisann, applikasjonen forsøkte å laste en URL som ikke eksisterer."
         unknown: "Noe gikk galt."
       buttons:
         back: "Gå tilbake"
@@ -638,6 +639,9 @@ nb_NO:
     refresh: "Refresh"
     read_only_mode:
       login_disabled: "Innlogging er deaktivert mens nettsiden er i skrivebeskyttet modus."
+    too_few_topics_and_posts_notice: "La oss  <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>få i gang diskusjonen.</a> Det finnes for øyeblikket <strong>%{currentTopics} / %{requiredTopics}</strong> emner og <strong>%{currentPosts} / %{requiredPosts}</strong> innlegg. Nye brukere trenger noen samtaler å lese og svare på."
+    too_few_topics_notice: "La oss  <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>få i gang diskusjonen.</a> Det finnes for øyeblikket <strong>%{currentTopics} / %{requiredTopics}</strong> emner. Nye brukere trenger noen samtaler å lese og svare på."
+    too_few_posts_notice: "La oss  <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>få i gang diskusjonen.</a> Det finnes for øyeblikket <strong>%{currentPosts} / %{requiredPosts}</strong> innlegg. Nye brukere trenger noen samtaler å lese og svare på."
     learn_more: "lær mer..."
     year: 'år'
     year_desc: 'emner opprettet de siste 365 dagene'
@@ -672,7 +676,7 @@ nb_NO:
       disable: "Vis slettede innlegg"
     private_message_info:
       title: "Send"
-      invite: "Inviter andre..."
+      invite: "Invitér andre..."
       remove_allowed_user: "Er du sikker på at du vil fjerne {{name}} fra denne meldingen?"
     email: 'E-post'
     username: 'Brukernavn'
@@ -682,6 +686,7 @@ nb_NO:
     trust_level: 'Tillitsnivå'
     search_hint: 'brukernavn, e-post eller IP-adresse'
     create_account:
+      disclaimer: "Ved å registrere deg samtykker du til <a href='{{privacy_link}}'>Personvernerklæringen</a> og <a href='{{tos_link}}'>Bruksvilkårene</a>."
       title: "Opprett ny konto"
       failed: "Noe gikk galt, kanskje denne e-postadressen allerede er registrert. Prøv lenke for glemt passord"
     forgot_password:
@@ -900,20 +905,20 @@ nb_NO:
         new: "Du har ingen nye emner å lese."
         read: "Du har ikke lest noen emner enda."
         posted: "Du har ikke postet i noen emner enda."
-        latest: "Det er ingen siste emner. Det er trist."
+        latest: "Det er ingen nylige emner. Det er trist."
         hot: "Det er ingen populære emner."
         bookmarks: "Du har ingen bokmerkede emner."
         category: "Det er ingen {{category}} emner."
         top: "Det er ingen populære emner."
         search: "Det er ingen søkeresultater"
       bottom:
-        latest: "Det er ikke noen siste emner igjen å lese."
-        hot: "Det er ikke noen populære emner igjen å lese."
-        posted: "Det er ikke noen postede emner igjen å lese."
-        read: "Det er ikke noen leste emner igjen å lese."
-        new: "Det er ikke noen nye emner igjen å lese."
-        unread: "Det er ikke noen uleste emner igjen å lese."
-        category: "Det er ikke noen {{category}} emner igjen."
+        latest: "Det er ingen nylige emner igjen å lese."
+        hot: "Det er ingen populære emner igjen å lese."
+        posted: "Det er ingen postede emner igjen å lese."
+        read: "Det er ingen leste emner igjen å lese."
+        new: "Det er ingen nye emner igjen å lese."
+        unread: "Det er ingen uleste emner igjen å lese."
+        category: "Det er ingen {{category}} emner igjen."
         top: "Det er ingen flere populære emner."
         bookmarks: "Det er ingen bokmerkede emner."
         search: "Det er ingen flere søkeresultater"
@@ -966,7 +971,7 @@ nb_NO:
       read_more: "Vil du lese mer? {{catLink}} eller {{latestLink}}."
       read_more_MF: "There { UNREAD, plural, =0 {} one { is <a href='/unread'>1 unread</a> } other { are <a href='/unread'># unread</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{and } false {is } other{}} <a href='/new'>1 new</a> topic} other { {BOTH, select, true{and } false {are } other{}} <a href='/new'># new</a> topics} } remaining, or {CATEGORY, select, true {browse other topics in {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: Se alle kategorier
-      view_latest_topics: se siste emner
+      view_latest_topics: se nylige emner
       suggest_create_topic: Hvorfor ikke opprette et emne?
       jump_reply_up: hopp til tidligere svar
       jump_reply_down: hopp til senere svar
@@ -1054,8 +1059,8 @@ nb_NO:
         title: 'Del'
         help: 'del en lenke til dette emnet'
       flag_topic:
-        title: 'Rapporter'
-        help: 'rapporter dette innlegget privat eller send et privat varsel om det'
+        title: 'Rapportér'
+        help: 'rapportér dette innlegget (ikke offentlig) eller send et privat varsel om det'
         success_message: 'Du har rapportert dette emnet'
       feature_topic:
         title: "Fremhev dette emnet"
@@ -1070,16 +1075,16 @@ nb_NO:
         banner_note: "Brukere kan fjerne banneret ved å lukke det. Kun et emne kan være banner på en og samme tid. "
       inviting: "Inviterer..."
       invite_private:
-        title: 'Inviter til samtale'
+        title: 'Invitér til samtale'
         email_or_username: "Invitertes e-post eller brukernavn."
         email_or_username_placeholder: "e-postadresse eller brukernavn"
-        action: "Inviter"
+        action: "Invitér"
         success: "Vi har invitert denne brukeren til å delta i denne meldingen."
         error: "Beklager, det oppstod en feil ved å invitere den brukeren."
         group_name: "gruppenavn"
       controls: "Emnefunksjoner"
       invite_reply:
-        title: 'Inviter'
+        title: 'Invitér'
         username_placeholder: "brukernavn"
         action: 'Send Invitasjon'
         help: 'Inviter andre til dette emnet via epost eller varsler'
@@ -1136,7 +1141,6 @@ nb_NO:
           one: Du har valgt <b>1</b> innlegg.
           other: Du har valgt <b>{{count}}</b> innlegg.
     post:
-      quote_reply: "siter svar"
       edit: "Redigerer {{link}} {{replyAvatar}} {{username}}"
       edit_reason: "Begrunnelse:"
       post_number: "post {{number}}"
@@ -1190,7 +1194,7 @@ nb_NO:
         undo_like: "angre liker"
         edit: "rediger dette innlegget"
         edit_anonymous: "Beklager, du må være innlogget for å endre dette innlegget."
-        flag: "rapporter dette innlegget privat eller send et privat varsel om det"
+        flag: "rapportér dette innlegget (ikke offentlig) eller send et privat varsel om det"
         delete: "slett dette innlegget"
         undelete: "gjenopprett dette innlegget"
         share: "del en lenke til dette innlegget"
@@ -1373,7 +1377,7 @@ nb_NO:
           title: "Dempet"
     flagging:
       title: 'Takk for at du hjelper å holde forumet ryddig!'
-      action: 'Rapporter innlegg'
+      action: 'Rapportér innlegg'
       take_action: "Ta Handling"
       notify_action: 'Melding'
       official_warning: 'Offisiell Advarsel'
@@ -1381,7 +1385,7 @@ nb_NO:
       yes_delete_spammer: "Ja, slett spammer"
       ip_address_missing: "(N/A)"
       hidden_email_address: "(skjult)"
-      submit_tooltip: "Rapporter privat"
+      submit_tooltip: "Rapportér privat"
       take_action_tooltip: "Oppnå rapporteringsterskel umiddelbart, i stedet for å vente på flere rapporteringer."
       cant: "Beklager, du kan ikke rapportere dette innlegget nå."
       formatted_name:
@@ -1392,7 +1396,7 @@ nb_NO:
       custom_placeholder_notify_moderators: "La oss vite nøyaktig hva problemet er, og del relevante lenker og eksempler hvorvidt det er mulig."
     flagging_topic:
       title: "Takk for at du hjelper med å vedlikeholde god skikk i samfundet vårt!"
-      action: "Rapporter emne"
+      action: "Rapportér emne"
       notify_action: "Melding"
     topic_map:
       title: "Emneoppsummering"
@@ -1504,7 +1508,7 @@ nb_NO:
         title_with_count:
           one: "{{categoryName}} (1)"
           other: "{{categoryName}} ({{count}})"
-        help: "siste emner i {{categoryName}}-kategorien"
+        help: "nylige emner i {{categoryName}}-kategorien"
       top:
         title: "Aktive"
         help: "de mest aktive emnene det siste året, den siste måneden, den siste uken eller i dag"
@@ -1747,7 +1751,6 @@ nb_NO:
       export_csv:
         success: "Eksportering iverksatt. Du vil bli varslet med en melding når prosessen er fullført."
         failed: "Eksporteringen feilet. Venligst undersøk loggene."
-        rate_limit_error: "Innlegg kan lastes ned en gang om dagen, vennligst prøv igjen i morgen."
         button_text: "Eksporter"
         button_title:
           user: "Eksporter full medlemsliste i CSV format."

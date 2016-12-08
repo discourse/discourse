@@ -1160,13 +1160,7 @@ fa_IR:
       subject_template: "[%{site_name}] [PM] %{topic_title}"
     digest:
       why: "یک گزارش کوتاه از %{site_link}  از آخرین باری که بازدید کردید در %{last_seen_at}"
-      new_activity: "فعالیت جدید در موضوعات و نوشته‌های شما:"
-      top_topics: "نوشته‌های محبوب"
-      other_new_topics: "موضوعات محبوب"
       click_here: "اینجا کلیک کنید"
-      read_more: "بیش‌تر بخوانید"
-      more_topics: "جستارهای جدیدی%{new_topics_since_seen} وجود داشت."
-      more_topics_category: "موضوعات جدید بیشتر"
     forgot_password:
       subject_template: "[%{site_name}] باز یابی رمز عبور"
       text_body_template: |

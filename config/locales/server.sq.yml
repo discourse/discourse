@@ -1371,15 +1371,9 @@ sq:
     digest:
       why: "Një përmbledhje e shkurtër e temave tek %{site_link} që prej vizitës tuaj të fundit më %{last_seen_at}"
       subject_template: "[%{site_name}] - Një përmbledhje e shkurtër"
-      new_activity: "Të rejat në temat e postimet tuaja:"
-      top_topics: "Postimet më aktive"
-      other_new_topics: "Temat më aktive"
       unsubscribe: "Kjo përmbledhje dërgohet nga %{site_link} kur nuk ju kemi parë prej disa kohësh. Për të çaktivizuar njoftimet %{unsubscribe_link}."
       click_here: "klikoni këtu"
       from: "%{site_name} - Një përmbledhje e shkurtër"
-      read_more: "Më shumë"
-      more_topics: "Ka edhe %{new_topics_since_seen} tema të reja në faqe."
-      more_topics_category: "Më shumë tema të reja:"
     mailing_list:
       subject_template: "[%{site_name}] Përmbledhja për %{date}"
       unsubscribe: "Përmbledhja dërgohet përditë, duke qënë se faqja është në formatin \"mailing list\". %{unsubscribe_link} për t'u çabonuar."

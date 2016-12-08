@@ -1363,13 +1363,7 @@ nl:
       subject_template: "[%{site_name}] [PM] %{topic_title}"
     digest:
       why: "Een korte samenvatting van %{site_link} sinds we je voor het laatst zagen op %{last_seen_at}."
-      new_activity: "Nieuwe reacties op je topics en berichten:"
-      top_topics: "Populaire berichten"
-      other_new_topics: "Populaire topics"
       click_here: "klik hier"
-      read_more: "Lees verder"
-      more_topics: "Er waren %{new_topics_since_seen} andere nieuwe topics gepost."
-      more_topics_category: "Meer nieuwe topics:"
     forgot_password:
       subject_template: "[%{site_name}] Wachtwoord herstellen"
       text_body_template: |
