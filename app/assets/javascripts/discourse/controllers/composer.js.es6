@@ -388,19 +388,14 @@ export default Ember.Controller.extend({
 
   toggle() {
     this.closeAutocomplete();
-    switch (this.get('model.composeState')) {
-      case Composer.OPEN:
-        if (Ember.isEmpty(this.get('model.reply')) && Ember.isEmpty(this.get('model.title'))) {
-          this.close();
-        } else {
-          this.shrink();
-        }
-        break;
-      case Composer.DRAFT:
-        this.set('model.composeState', Composer.OPEN);
-        break;
-      case Composer.SAVING:
+    if (this.get('model.composeState') === Composer.OPEN) {
+      if (Ember.isEmpty(this.get('model.reply')) && Ember.isEmpty(this.get('model.title'))) {
         this.close();
+      } else {
+        this.shrink();
+      }
+    } else {
+      this.close();
     }
     return false;
   },
