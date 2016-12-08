@@ -118,8 +118,9 @@
 
         button {
           float: none;
-          display: block;
+          display: inline-block;
           margin-bottom: 10px;
+          margin-right: 15px;
         }
       }
       .timeline-scrollarea-wrapper {
@@ -162,6 +163,18 @@
       clear: both;
     }
 
+  }
+
+  &.timeline-fullscreen .topic-timeline .timeline-footer-controls ul.dropdown-menu {
+    width: auto;
+    min-width: 250px;
+    right: auto;
+    .desc {
+      display: none;
+    }
+    .title {
+      padding-left: 0;
+    }
   }
 
   .topic-timeline {
