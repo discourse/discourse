@@ -182,7 +182,7 @@ Group.reopenClass({
       data: Object.assign({
         limit: limit || 50,
         offset: offset || 0
-      }, params)
+      }, params || {})
     });
   },
 
