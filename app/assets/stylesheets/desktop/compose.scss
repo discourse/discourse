@@ -187,11 +187,15 @@
     border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
     .draft-text {
       display: block;
+
+      i {
+        color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
+      }
     }
     .toggler {
       &:before {
         font-family: "FontAwesome";
-        content: "\f077";
+        content: "\f00d";
       }
     }
   }
