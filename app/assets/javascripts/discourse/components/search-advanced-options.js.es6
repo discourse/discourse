@@ -1,4 +1,5 @@
 import { observes } from 'ember-addons/ember-computed-decorators';
+import { escapeExpression } from 'discourse/lib/utilities';
 
 const REGEXP_BLOCKS                = /(([^" \t\n\x0B\f\r]+)?(("[^"]+")?))/g;
 
@@ -103,7 +104,7 @@ export default Em.Component.extend({
   },
 
   findSearchTerms() {
-    const searchTerm = this.get('searchTerm');
+    const searchTerm = escapeExpression(this.get('searchTerm'));
     if (!searchTerm)
       return [];
 
