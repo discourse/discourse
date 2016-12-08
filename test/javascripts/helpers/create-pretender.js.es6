@@ -320,6 +320,26 @@ export default function() {
     this.delete('/admin/users/:user_id/revoke_api_key', success);
     this.post('/admin/badges', success);
     this.delete('/admin/badges/:id', success);
+
+    this.get('/onebox', request => {
+      if (request.queryParams.url === 'http://www.example.com/has-title.html') {
+        return [
+          200,
+          {"Content-Type": "application/html"},
+          '<aside class="onebox"><article class="onebox-body"><h3><a href="http://www.example.com/article.html">An interesting article</a></h3></article></aside>'
+        ];
+      }
+
+      if (request.queryParams.url === 'http://www.example.com/no-title.html') {
+        return [
+          200,
+          {"Content-Type": "application/html"},
+          '<aside class="onebox"><article class="onebox-body"><p>No title</p></article></aside>'
+        ];
+      }
+
+      return [404, {"Content-Type": "application/html"}, ''];;
+    });
   });
 
   server.prepareBody = function(body){

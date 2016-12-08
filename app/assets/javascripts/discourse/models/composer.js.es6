@@ -146,6 +146,11 @@ const Composer = RestModel.extend({
     return categoryIds === undefined || !categoryIds.length || categoryIds.indexOf(categoryId) !== -1;
   },
 
+  @computed('canEditTopicFeaturedLink')
+  titlePlaceholder() {
+    return this.get('canEditTopicFeaturedLink') ? 'composer.title_or_link_placeholder' : 'composer.title_placeholder';
+  },
+
   // Determine the appropriate title for this action
   actionTitle: function() {
     const topic = this.get('topic');

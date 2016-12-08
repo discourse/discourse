@@ -25,9 +25,6 @@
                 {{category-chooser valueAttribute="id" value=buffered.category_id}}
               {{/if}}
 
-              {{#if canEditTopicFeaturedLink}}
-                {{text-field type="url" value=buffered.featured_link id='topic-featured-link' placeholderKey="composer.topic_featured_link_placeholder"}}
-              {{/if}}
               {{#if canEditTags}}
                 <br>
                 {{tag-chooser tags=buffered.tags categoryId=buffered.category_id}}
