@@ -3,18 +3,18 @@ import Group from 'discourse/models/group';
 import { observes } from 'ember-addons/ember-computed-decorators';
 
 export default Ember.Controller.extend({
-  queryParams: ['order', 'asc'],
-  order: 'last_posted_at',
-  asc: null,
+  queryParams: ['order', 'desc'],
+  order: '',
+  desc: null,
   loading: false,
   limit: null,
   offset: null,
   isOwner: Ember.computed.alias('model.is_group_owner'),
 
-  @observes('order', 'asc')
+  @observes('order', 'desc')
   refreshMembers() {
     this.get('model') &&
-      this.get('model').findMembers({ order: this.get('order'), asc: this.get('asc') });
+      this.get('model').findMembers({ order: this.get('order'), desc: this.get('desc') });
   },
 
   actions: {
@@ -39,7 +39,7 @@ export default Ember.Controller.extend({
         this.get("model.name"),
         this.get("model.members.length"),
         this.get("limit"),
-        { order: this.get('order'), asc: this.get('asc') }
+        { order: this.get('order'), desc: this.get('desc') }
       ).then(result => {
         this.get("model.members").addObjects(result.members.map(member => Discourse.User.create(member)));
         this.setProperties({

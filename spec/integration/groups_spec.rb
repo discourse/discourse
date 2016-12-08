@@ -110,7 +110,7 @@ describe "Groups" do
     let(:group) { Fabricate(:group, users: [user1, user2]) }
 
     it "should allow members to be sorted by" do
-      xhr :get, "/groups/#{group.name}/members", order: 'last_seen_at', asc: true
+      xhr :get, "/groups/#{group.name}/members", order: 'last_seen_at', desc: true
 
       expect(response).to be_success
 
@@ -126,7 +126,7 @@ describe "Groups" do
 
       expect(members.map { |m| m["id"] }).to eq([user2.id, user1.id])
 
-      xhr :get, "/groups/#{group.name}/members", order: 'last_posted_at', asc: true
+      xhr :get, "/groups/#{group.name}/members", order: 'last_posted_at', desc: true
 
       expect(response).to be_success
 

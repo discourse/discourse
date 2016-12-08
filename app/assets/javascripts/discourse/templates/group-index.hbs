@@ -9,9 +9,9 @@
   {{#load-more selector=".group-members tr" action="loadMore"}}
     <table class='group-members'>
       <thead>
-        <th></th>
-        {{group-index-toggle order=order asc=asc field='last_posted_at' i18nKey='last_post'}}
-        {{group-index-toggle order=order asc=asc field='last_seen_at'  i18nKey='last_seen'}}
+        {{group-index-toggle order=order desc=desc field='username_lower' i18nKey='username'}}
+        {{group-index-toggle order=order desc=desc field='last_posted_at' i18nKey='last_post'}}
+        {{group-index-toggle order=order desc=desc field='last_seen_at'  i18nKey='last_seen'}}
         <th></th>
       </thead>
 
