@@ -66,10 +66,12 @@ export default Ember.Component.extend({
           this._updatePost(lookupCache(this.get('composer.title')));
         }).finally(() => {
           this.set('composer.loading', false);
+          Ember.run.schedule('afterRender', () => { this.$('input').putCursorAtEnd(); });
         });
       } else {
         this._updatePost(loadOnebox);
         this.set('composer.loading', false);
+        Ember.run.schedule('afterRender', () => { this.$('input').putCursorAtEnd(); });
       }
     }
   },
@@ -85,13 +87,17 @@ export default Ember.Component.extend({
       this.set('composer.reply', this.get('composer.title'));
 
       if (header.length > 0 && header.text().length > 0) {
-        this.set('composer.title', header.text().trim());
+        this.changeTitle(header.text());
       } else {
         const filename = (this.get('composer.featuredLink')||"").split("/").pop();
-        if (filename && filename.length > 0) {
-          this.set('composer.title', filename.trim());
-        }
+        this.changeTitle(filename);
       }
+    }
+  },
+
+  changeTitle(val) {
+    if (val && val.length > 0) {
+      this.set('composer.title', val.trim());
     }
   },
 
