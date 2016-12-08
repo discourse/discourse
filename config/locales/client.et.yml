@@ -427,7 +427,6 @@ et:
       profile: "Profiil"
       mute: "Vaigista"
       edit: "Muuda Eelistusi"
-      download_archive: "Lae Minu Postitused alla"
       new_private_message: "Uus sõnum"
       private_message: "Sõnum"
       private_messages: "Sõnumid"
@@ -1451,7 +1450,6 @@ et:
     post:
       reply: "<i class='fa fa-mail-forward'></i> {{replyAvatar}} {{usernameLink}}"
       reply_topic: "<i class='fa fa-mail-forward'></i> {{link}}"
-      quote_reply: "tsitaadiga vastus"
       edit: "Redigeerin {{link}} {{replyAvatar}} {{username}}"
       edit_reason: "Põhjus:"
       post_number: "postitus {{number}}"
@@ -2319,7 +2317,6 @@ et:
       export_csv:
         success: "Eksportimine käivitatud. Protsessi lõppemisel saadetakse Sulle teade."
         failed: "Eksportimine ebaõnnestus. Kontrolli logisid."
-        rate_limit_error: "Postitusi saab alla laadida üks kord ööpäevas. Palun proovi homme uuesti."
         button_text: "Ekspordi"
         button_title:
           user: "Ekspordi täielik kasutajate nimekiri CSV formaadis."

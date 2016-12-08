@@ -1123,13 +1123,7 @@ ko:
       subject_template: "[%{site_name}] [PM] %{topic_title}"
     digest:
       why: "%{last_seen_at}부터 지금까지 %{site_link} 사이트 근황"
-      new_activity: "당신의 글타래과 글에 등록된 새로운 활동:"
-      top_topics: "인기 글"
-      other_new_topics: "인기 글타래"
       click_here: "클릭"
-      read_more: "더 읽기"
-      more_topics: "%{new_topics_since_seen}개의 글타래가 새로 올라왔어요."
-      more_topics_category: "더 많은 새글:"
     forgot_password:
       subject_template: "[%{site_name}] 패스워드 재설정"
       text_body_template: |

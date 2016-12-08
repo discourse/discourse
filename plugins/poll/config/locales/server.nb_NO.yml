@@ -11,7 +11,7 @@ nb_NO:
     poll_maximum_options: "Maksimalt antall alternativer i en spørreundersøkelse som tillates."
   poll:
     multiple_polls_without_name: "Det er flere spørreundersøkelser uten et navn. Bruk '<code>navn</code>' attributten til å identifisere spørreundersøkelsene dine."
-    multiple_polls_with_same_name: "Det er flere spørreundersøkelser med samme navn: <strong>%{name}</strong>. Bruk '<code>name</code>' attributten til å identifisere spørreundersøkelsene dine."
+    multiple_polls_with_same_name: "Det er flere spørreundersøkelser med samme navn: <strong>%{name}</strong>. Bruk '<code>name</code>' attributten til å bestemme spørreundersøkelsene dine entydig."
     default_poll_must_have_at_least_2_options: "Spørrsundersøkelser må inneholde minst 2 alternativer."
     named_poll_must_have_at_least_2_options: "Spørresundersøkelsen <strong>%{name}</strong> må ha minst 2 svaralternativer."
     default_poll_must_have_less_options:

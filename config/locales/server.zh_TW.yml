@@ -826,13 +826,7 @@ zh_TW:
       subject_template: "[%{site_name}] [PM] %{topic_title}"
     digest:
       why: "在你上一次於 %{last_seen_at} 訪問後，在 %{site_link} 上的摘要。"
-      new_activity: "在你的討論話題和文章裡的動態："
-      top_topics: "熱門文章"
-      other_new_topics: "熱門討論話題"
       click_here: "點擊此處"
-      read_more: "閱讀更多"
-      more_topics: "有其他 %{new_topics_since_seen} 個新主題。"
-      more_topics_category: "更多新主題："
     forgot_password:
       subject_template: "[%{site_name}] 密碼重設"
       text_body_template: |

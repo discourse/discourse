@@ -428,8 +428,11 @@ pt:
       profile: "Perfil"
       mute: "Silenciar"
       edit: "Editar Preferências"
-      download_archive: "Descarregar As Minhas Publicações"
-      download_archive_confirm: "Tem a certeza que deseja descarregar as suas publicações?"
+      download_archive:
+        button_text: "Descarregar As Minhas Publicações"
+        confirm: "Tem a certeza que deseja descarregar as suas publicações?"
+        success: "Descarregamento iniciado, será notificado via mensagem assim que o processo estiver concluído."
+        rate_limit_error: "As publicações podem ser descarregadas uma vez por dia, por favor, tente novamente amanhã."
       new_private_message: "Nova Mensagem"
       private_message: "Mensagem"
       private_messages: "Mensagens"
@@ -730,7 +733,7 @@ pt:
         bookmark_count:
           one: "marcador"
           other: "marcadores"
-        top_replies: "Respostas"
+        top_replies: "Respostas de Topo"
         no_replies: "Nenhuma resposta ainda."
         more_replies: "Mais Respostas"
         top_topics: "Melhores Tópicos"
@@ -1820,10 +1823,10 @@ pt:
     posts_long: "existem {{number}} publicações neste tópico"
     posts_likes_MF: |
       Este tópico tem {count, plural, one {1 resposta} other {# respostas}} {ratio, select,
-      baixo {com uma proporção de gostos alta}
-      med {com uma proporção de gostos muito alta}
-      alta {com uma proporção de gostos extremamente alta}
-      outros {}}
+      low {com uma proporção de gostos para publicações alta}
+      med {com uma proporção de gostos para publicações muito alta}
+      high {com uma proporção de gostos para publicações extremamente alta}
+      other {}}
     original_post: "Publicação Original"
     views: "Vistas"
     views_lowercase:
@@ -2410,7 +2413,6 @@ pt:
       export_csv:
         success: "Exportação iniciada, será notificado através de mensagem assim que o processo estiver concluído."
         failed: "A exportação falhou. Por favor verifique os registos dos logs."
-        rate_limit_error: "As publicações podem ser descarregadas uma vez por dia. Por favor, tente novamente amanhã."
         button_text: "Exportar"
         button_title:
           user: "Exportar lista total de utilizadores em formato CSV."
@@ -2539,6 +2541,7 @@ pt:
         html: "html"
         text: "texto"
         last_seen_user: "Último Utilizador Visto:"
+        no_result: "Não foram encontrados resultados para resumo."
         reply_key: "Chave de Resposta"
         skipped_reason: "Ignorar Motivo"
         incoming_emails:

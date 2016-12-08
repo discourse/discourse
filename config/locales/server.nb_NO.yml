@@ -12,7 +12,7 @@ nb_NO:
     long_date: "MMMM D, YYYY h:mma"
   datetime_formats: &datetime_formats
     formats:
-      short: "%m-%d-%Y"
+      short: "%d-%m-%Y"
       short_no_year: "%B %-d"
       long: "%B %-d, %Y, %l:%M%P"
   time:
@@ -130,7 +130,7 @@ nb_NO:
   read_full_topic: "Les hele emnet"
   private_message_abbrev: "Mld"
   rss_description:
-    latest: "Siste emner"
+    latest: "Nylige emner"
     hot: "Populære emner"
     top: "Mest Populære Emner"
     posts: "Nyeste innnlegg"
@@ -166,15 +166,15 @@ nb_NO:
 
       [Se våre retningslinjer](/guidelines) for mer informasjon. Denne meldingen vises kun for ditt første %{education_posts_text}.
     new-reply: |
-      Velkommen til %{site_name} &mdash; **takk for bidraget!**
+      Velkommen til %{site_name} &mdash; **takk for at du bidrar!**
 
       - Forbedrer innlegget ditt samtalen på noen måte?
 
-      - Vær snill med andre medlemmer
+      - Vær snill mot andre medlemmer.
 
-      - Konstruktiv kritikk ønskes velkommen, men husk å kritiser ideèr, ikke mennesker.
+      - Konstruktiv kritikk ønskes velkommen, men husk å kritiser *idéer,* ikke mennesker.
 
-      For mer informasjon [see våre retningslinjer](/guidelines). Dette panelet vil kun vises for ditt første %{education_posts_text}.
+      For mer informasjon [se våre retningslinjer](/guidelines). Dette panelet vil kun vises for ditt/dine første %{education_posts_text}.
     sequential_replies: |
       ### Vurder å svare til flere innlegg på samme tid
 
@@ -266,6 +266,8 @@ nb_NO:
       [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
   category:
     topic_prefix: "Om kategorien %{category} "
+    replace_paragraph: "(Erstatt dette første avsnittet med en kort beskrivelse av den nye kategorien din. Denne teksten vil vises i oversikten over kategorier, så prøv å holde den under 200 ord. **Til du endrer denne beskrivelsen eller oppretter emner vil denne kategorien ikke vises på kategorier-siden.**)"
+    post_template: "%{replace_paragraph}\n\nBruk de følgende avsnittene for en lengre beskrivelse, eller for å beskrive retningslinjer eller regler for kategorien:\n\n- Hvorfor skal folk bruke denne kategorien? Hva er den ment for?\n\n- På hvilken måte skiller den seg fra de andre kategoriene vi allerede har?\n\n- Hva skal emner i denne kategorien generelt sett inneholde?\n\n- Trenger vi denne kategorien? Kan vi slå den sammen med en annen kategori eller underkategori?\n"
     errors:
       uncategorized_parent: "Ukategorisert kan ikke ha en foreldrekategori"
       self_parent: "En underkategori kan ikke være underlagt seg selv"
@@ -621,6 +623,8 @@ nb_NO:
     newuser_max_images: "Hvor mange bilder en ny bruker kan legge til i et innlegg."
     title_prettify: "Unngå vanlige skrivefeil i titler, sånn som store bokstaver, liten bokstav først, mange !, ? og punktum på slutten, osv."
     faq_url: "Hvis du har en FAQ på et annet nettsted du gjerne vil bruke, vennligst sett inn URL'en her."
+    tos_url: "Dersom du har et bruksvilkår-dokument et annet sted som du vil bruke, skriv inn den fullstendige URL-en her."
+    privacy_policy_url: "Dersom du har en personvernerklæring et annet sted som du vil bruke, skriv inn den fullstendige URL-en her."
     delete_user_max_post_age: "Ikke tillatt å slette brukere hvor deres første innlegg er mer enn (x) dager gamle."
     email_editable: "Tillat brukere å endre deres email etter at de har registrert seg."
     allow_profile_backgrounds: "Gi brukere mulighet til å laste opp profilbakgrunner."
@@ -679,6 +683,7 @@ nb_NO:
     omniauth_error_unknown: "Noe gikk galt under innloggingsprosessen, vennligst prøv igjen."
     password_too_long: "Passord er begrenset til 200 tegn."
     missing_user_field: "Du har ikke fylt ut alle brukerfeltene."
+    already_logged_in: "Oisann, ser ut som du prøver å akteptere en invitasjon for en en annen bruker. Hvis du ikke er %{current_user}, vennligst logg ut og prøv igjen."
   user:
     username:
       short: "må være minst %{min} tegn"
@@ -700,12 +705,7 @@ nb_NO:
   user_notifications:
     digest:
       why: "Dette har skjedd på %{site_link} siden ditt forrige besøk %{last_seen_at}"
-      new_activity: "Ny aktivitet rundt dine emner og innlegg:"
-      top_topics: "Populære innlegg"
-      other_new_topics: "Populære emner"
       click_here: "trykk her"
-      read_more: "Les Mer"
-      more_topics_category: "Flere nye emner:"
     account_created:
       subject_template: "[%{site_name}] Din Nye Konto"
       text_body_template: |
@@ -721,6 +721,7 @@ nb_NO:
         Trykk på denne lenken for å aktivere kontoen din:
         %{base_url}/users/activate-account/%{email_token}
   page_not_found:
+    title: "Oisann! Den siden finnes ikke eller er privat."
     recent_topics: "Nylig"
     see_more: "Mer"
     search_title: "Søk i denne siden"
@@ -730,8 +731,8 @@ nb_NO:
       #[Velkommen til %{title}](#welcome)
       En bruker er påkrevd. Lag en bruker eller logg inn for å fortsette.
   terms_of_service:
-    title: "Betingelser"
-    signup_form_message: 'Jeg har lest og akseptert <a href="/tos" target="_blank">betingelsene</a>.'
+    title: "Bruksvilkår"
+    signup_form_message: 'Jeg har lest og akseptert <a href="/tos" target="_blank">Bruksvilkårene</a>.'
   deleted: 'slettet'
   upload:
     edit_reason: "Last ned lokal kopi av bilder"
@@ -751,6 +752,195 @@ nb_NO:
   csv_export:
     boolean_yes: "Ja"
     boolean_no: "Nei"
+  guidelines_topic:
+    body: |
+      <a name="sivilisert"></a>
+
+      ## [Dette er et sivilisert sted for offentlig diskusjon](#sivilisert)
+
+      Vær så snill og behandle denne diskusjonen med samme respekt du ville behandlet en offentlig park med. Også vi er en ressurs delt med fellesskapet &ndash; et sted hvor en kan dele ferdigheter, kunnskap og interesse gjennom en samtale som går sin gang.
+
+      Dette er ikke definitive regler, bare hjelpemidler for fellesskapets menneskelige vurderingsevne. Bruk disse retningslinjene til å holde dette stedet rent og godt belyst for sivilisert offentlig samtale.
+
+      <a name="forbedre"></a>
+
+      ## [Forbedre diskusjonen](#forbedre)
+
+      Hjelp oss å gjøre dette til et godt sted for diskusjon ved å alltid jobbe mot å gjøre diskusjonen bedre på en eller annen måte. Hvis du ikke er sikker på at innlegget ditt tilfører noe til diskusjonen, så tenk over hva det er du vil si og prøv igjen senere.
+
+      Emnene som diskuteres her, betyr noe for oss, og vi vil at du skal oppføre deg som om de betyr noe for deg også. Vis respekt for dem og menneskene som diskuterer dem, selv om du er uenig med noe av det som blir sagt.
+
+      En måte å forbedre diskusjonen på er å utforske dem som allerede foregår. Vær så snill og bruk litt tid til å streife gjennom emnene her før du svarer eller startet ditt eget, og du vil ha større sjanse for å møte noen som deler dine interesser.
+
+      <a name="grei"></a>
+
+      ## [Vær grei, også dersom du er uenig](#grei)
+
+      Du ønsker kanskje å svare på noe du er uenig med. Det er greit. Men husk å _krisere idéer, ikke mennesker_. Vær så snill å unngå:
+
+      *   Utskjelling.
+      *   Personangrep.
+      *   Å svare på et innleggs tone i stedet for dets faktiske innhold
+      *   Refleksartig motsigelse.
+
+      Kom med begrunnede motargumenter i stedet som forbedrer samtalen.
+
+      <a name="delta"></a>
+
+      ## [Din deltakelse teller](#delta)
+
+      Samtalene vi fører her, setter tonen for alle. Hjelp oss å påvirke fremtiden til dette fellesskapet ved å velge å ta del i diskusjoner som gjør dette forumet til et interessant sted å være &ndash; og ved å unngå dem som ikke gjør det.
+
+      Discourse kommer med verktøy som gjør fellesskapeti stand til å sammen identifisere de beste (og dårligste) bidragene: favoritter, bokmerker, liker, rapportering, svar, redigering, osv. Bruk disse verktøyene til å forbedre din egen opplevelse, og alle andres.
+
+      La oss prøve å forlate parken i bedre stand enn da vi kom.
+
+      <a name="rapporter-problemer"></a>
+
+      ## [Dersom du ser et problem, rapportér det](#rapporter-problemer)
+
+      Moderatorer har en særmakt; de er ansvarlige for dette forumet. Men det er du også. Med din hjelp kan moderatorene være meglere, ikke bare vaktmestre eller politi.
+
+      Når du ser dårlig oppførsel, ikke var. Det oppmuntrer den dårlige oppførselen ved å gi den oppmerksomhet, tærer på kreftene dine og kaster bort alles tid. _Bare rapportér den_. Dersom nok rapporteringer blir registrert, vil det bli handlet, enten automatisk eller ved at en moderator griper inn.
+
+      For å opprettholde fellesskapet forbeholder moderatorene seg retten til å fjerne hvilket som helst innhold fra hvilken som helst bruker av hvilken som helst grunn når som helst. Moderatorer godkjenner ikke nye innlegg på noen som helst måte; moderatorene og sideoperatøren påtar seg intet ansvar for innhold publisert av fellesskapet.
+
+      <a name="vaer-sivilisert"></a>
+
+      ## [Vær alltid sivilisert](#vaer-sivilisert)
+
+      Ingenting saboterer en sunn samtale som frekkhet:
+
+      *   Vær sivilisert. Ikke publiser noe som et fornuftig menneske ville ansett som fornærmende, sårende eller hatefult.
+      *   Hold det rent. Ikke publiser noe usømmelig eller pornografisk.
+      *   Respektér hverandre. Ikke trakassér eller plag noen, utgi deg for å være for å være en annen eller prisgi andres fortrolighet.
+      * Respekt forumet vårt. Ikke publiser spam eller vandalisér forumet på annet vis.
+
+      Dette er ikke håndfaste begrep med nøyaktige definisjoner &ndash; unngå til og med det som _ser ut_ til å være noe av disse tingene. Hvis du er usikker, spør deg selv hvordan det ville føles om innlegget ditt sto på forsiden av New York Times.
+
+      Dette er et offentlig forum, og søkemotorer indekserer disse diskusjonene. Sørg for at språket, lenkene og bildene er trygt for familie og venner.
+
+      <a name="hold-det-ryddig"></a>
+
+      ## [Hold det ryddig](#hold-det-ryddig)
+
+      Anstreng deg for å sette ting på riktig plass slik at vi bruke mer tid på å diskutere og mindre på å rydde opp. Derfor:
+
+      *   Ikke start et emne i gal kategori.
+      *   Ikke publiser samme ting i flere kategorier.
+      *   Ikke publiser svar uten innhold.
+      *   Ikke avled et emne ved å endre det midt i diskusjonen.
+      *   Ikke signér innleggene dine &ndash; hvert innlegg har profilinformasjonen din tilknyttet.
+
+      I stedet for å publisere «+1» eller «Enig» bruk liker-knappen. I stedet for å ta et eksisterende emne i en radikalt annerledes retning, bruk Svar med lenket emne.
+
+      <a name="tyveri"></a>
+
+      ## [Publisér dine egne ting](#tyveri)
+
+      Du har ikke lov publisere noe digitalt som tilhører en annen, uten tillatelse. Du har ikke lov til å publisere beskrivelser av, lenker til eller metoder for å stjele andres åndsverk (programvare, film, lyd, bilde), eller for å bryte andre lover.
+
+      <a name="drevet-av"></a>
+
+      ## [Drevet av deg](#drevet-av)
+
+      Denne siden drives av ditt [vennlige personell](/about) og *deg*, en del av felleskapet. Dersom du har noen flere spørsmål om hvordan ting skal fungere her, opprett et nytt emne i [kategorien for tilbakemeldinger](/c/site-feedback) og la oss diskutere! Hvis det er et kritisk eller akutt problem som ikke kan bli håndtert med et meta-emne eller en rapportering, ta kontakt med oss via [personell-siden](/about).
+
+      <a name="vilkaar"></a>
+
+      ## [Vilkår](#vilkaar)
+
+      Ja, juridisk fagspråk er kjedelig, men vi må beskytte oss selv &ndash; og i utvidet betydning deg og dine data &ndash; mot uvennlige mennesker. Vi har [Vilkår](/tos) som beskriver din (og vår) oppførsel og rettigheter med tanke på innhold, personvern og lover. For å bruke denne tjenesten må du samtykke å overholde våre [Vilkår](/tos).
+  tos_topic:
+    title: "Bruksvilkår"
+  privacy_topic:
+    title: "Personvernerklæring"
+    body: |
+      <a name="samle"></a>
+
+      ## [Hvilke opplysninger samler vi?](#samle)
+
+      Vi samler opplysninger fra deg når du registrerer deg på siden vår og samler data når du deltar på forumet ved å lese, skrive og evaluere innholdet som deles her.
+
+      Når du registrerer seg på siden vår, kan du bli bedt om å oppgi navnet og e-postadressen din. Imidlertid kan du besøke siden vår uten å registrere deg. E-postadressen din vil bli bekreftet med en e-post som inneholder en unik lenke. Hvis siden den lenker til, blir besøkt, vet vi at du har kontroll over e-postadressen.
+
+      Når du registrerer deg og skriver innlegg, registrerer vi e-postadressen som innlegget stammer fra. Vi kan også oppbevare logger som inkluderer e-postadressen til alle forespørslene sendt til tjeneren vår.
+
+      <a name="bruk"></a>
+
+      ## [Hva bruker vi opplysningene dine til?](#bruk)
+
+      Alle opplysningene vi samler fra deg, kan bli brukt på en av følgende måter:
+
+      *   For å gjøre opplevelsen din mer personlig. Opplysningene dine hjelper oss å reagere bedre på dine individuelle behov.
+      *   For å forbedre nettstedet vårt. Vi jobber konstant for å forbedre nettstedets tilbud basert på opplysningene og tilbakemeldingene vi mottar fra deg.
+      *   For å forbedre vår kundeservice. Dine opplysninger hjelper oss å svare mer effektivt på dine forespørsler sendt til kundeservice eller behov om støtte.
+      *   For å sende periodiske e-poster. E-postadressen du oppgir, kan bli brukt til å sende deg informasjon, påminnelser som du ber om ved endringer av emner eller ved svar til brukernavnet ditt, til henvendelser, og/eller andre forspørsler eller andre spørsmål.
+
+      <a name="sikre"></a>
+
+      ## [Hvordan sikrer vi opplysningene?](#sikre)
+
+      Vi gjennomfører flere sikkerhetstiltak for å holde personopplysningene dine sikre når du skriver inn, lagrer eller henter dem.
+
+      <a name="datalagring"></a>
+
+      ## [Hva er retningslinjene deres for lagring av data?](#datalagring)
+
+      Vi vil forsøke i god tro å:
+
+      *   Oppbevare tjener-logger som inneholder IP-adressen til alle forspørslene til denne tjeneren ikke lenger enn i 90 dager.
+      *   Oppbevare IP-adressene forbundet med registrerte brukere og deres innlegg ikke lenger enn 5 år.
+
+      <a name="informasjonskapsler"></a>
+
+      ## [Bruker vi informasjonskapsler?](#informasjonskapsler)
+
+      Ja. Informasjonskapsler er små filer som et nettsted eller dets tjenesteleverandør overfører til harddisken på datamaskinen din gjennom nettleseren din (dersom du tillater det). Disse informasjonskapslene gjør det mulig for nettstedet å gjenkjenne nettleseren din og, dersom du har en konto, knytte nettleseren til den.
+
+      Vi bruker informasjonskapsler for å forstå og lagre preferansene dine for fremtidige besøk og for å samle aggregatdata om trafikk på og samhandling med nettstedet slik at vi kan tilby bedre opplevelser og verktøy på nettstedet i fremtiden. Vi kan inngå avtaler med tredjeparts tjenesteleverandører for å bistå oss i å forstå besøkerne våres bedre. Disse tjenesteleverandørene har ikke lov til å bruke opplysningene samlet på våres vegne unntatt til å hjelpe oss å gjennomføre og forbedre anliggendet vårt.
+
+      <a name="gi-videre"></a>
+
+      ## [Gir vi noen opplysninger videre til andre parter?](#gi-videre)
+
+      Vi verken selger, handler med eller overfører på noen annen måte til andre parter dine identifiserbare personopplysninger. Dette inkluderer ikke tredjeparter som har vår tillit og bistår oss i å drive nettstedet, utføre våre anliggender eller yter tjenester til deg, så lenge disse partene samtykker til å behandle disse opplysningene fortrolig. Vi kan også frigi opplysningene dine dersom vi tror at å frigi dem er hensiktsmessig for å overholde loven, håndheve nettstedet retningslinjer eller beskytte våre og andres rettigheter. Imidlertid kan opplysninger som ikke er personlig identifiserbare, bli delt med andre parter for marketsføring, reklame eller annet bruk.
+
+      <a name="tredjepart"></a>
+
+      ## [Tredjeparts lenker](#tredjepart)
+
+      Av og til, etter skjønn, kan vil inkludere eller tilby tredjeparts produkter eller tjenester på nettstedet vårt. Disse tredjeparts nettstedene har separate og selvstendige personvernerklæringer. Vi bærer derfor intet ansvar eller forpliktelser for innholdet eller aktivitetene til disse nettstedene det lenkes til. Ikke mindre prøver vi å bevare vår eget nettsteds integritet og ønsker enhver tilbakemelding om disse nettstedene velkomne.
+
+      <a name="coppa"></a>
+
+      ## [Overensstemmelse med Children's Online Privacy Protection Act](#coppa)
+
+      Nettstedet, produktene og tjenestene våre er rettet mot folk som er minst 13 år gamle. Dersom denne tjeneren er i USA, og du er under 13 år i henhold til kravene i  COPPA ([Children's Online Privacy Protection Act](https://en.wikipedia.org/wiki/Children%27s_Online_Privacy_Protection_Act)), ikke bruk denne siden.
+
+      <a name="nett"></a>
+
+      ## [Personvernerklæring bare for nettet](#nett)
+
+      Denne nett-personvernerklæringen gjelder bare for informasjon samlet gjennom nettstedet vårt og ikke for opplysninger samlet når en er frakoblet.
+
+      <a name="samtykke"></a>
+
+      ## [Ditt samtykke](#samtykke)
+
+      Vet å bruke nettstedet vårt samtykker du til nettstedets personvernerklæring.
+
+      <a name="endringer"></a>
+
+      ## [Changes to our Privacy Policy](#endringer)
+
+      Dersom vi beslutter å endre personvernerklæringen vår, vil vi publisere disse endringene på denne siden.
+
+      Dette dokumentet er lisensiert under CC-BY-SA. De ble sist oppdatert 31. mai 2013.
+  wizard:
+    step:
+      corporate:
+        description: "Disse navnene vil bli satt inn i din <a href='/privacy' target='blank'>Personvernerklæring</a> og dine <a href='/tos' target='blank'>Bruksvilkår</a>, som du kan endre når som helst i stab-kategorien. Hvis du ikke har et firma, kan du gjerne hoppe over dette steget."
   date:
     <<: *datetime_formats
   activemodel:

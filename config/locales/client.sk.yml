@@ -451,7 +451,6 @@ sk:
       profile: "Profil"
       mute: "Ignorovať"
       edit: "Upraviť nastavenia"
-      download_archive: "Stiahnutie mojich prípevkov"
       new_private_message: "Nová správa"
       private_message: "Správa"
       private_messages: "Správy"
@@ -1424,7 +1423,6 @@ sk:
     post:
       reply: "<i class='fa fa-mail-forward'></i> {{replyAvatar}} {{usernameLink}}"
       reply_topic: "<i class='fa fa-mail-forward'></i> {{link}}"
-      quote_reply: "citovať odpoveď"
       edit: "Upravujete {{link}} {{replyAvatar}} {{username}}"
       edit_reason: "Dôvod:"
       post_number: "príspevok {{number}}"
@@ -2270,7 +2268,6 @@ sk:
       export_csv:
         success: "Export bol spustený, o jeho skončení budete informovaný správou."
         failed: "Export zlyhal. Skontrolujte prosím logy."
-        rate_limit_error: "Príspevky možu byť stiahnuté len raz za deň. Skúste opäť zajtra."
         button_text: "Export"
         button_title:
           user: "Exportovať celý zoznam používateľov v CSV formáte."

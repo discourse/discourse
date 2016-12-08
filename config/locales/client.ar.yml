@@ -544,8 +544,6 @@ ar:
       profile: "الصفحة الشخصية"
       mute: "كتم"
       edit: "تعديل التفضيلات"
-      download_archive: "تحميل مواضيعي"
-      download_archive_confirm: "هل انت متأكد انك تريد تنزيل مشاركاتك؟"
       new_private_message: "رسالة جديدة"
       private_message: "رسالة"
       private_messages: "الرسائل"
@@ -1617,7 +1615,6 @@ ar:
     post:
       reply: "<i class='fa fa-mail-forward'></i> {{replyAvatar}} {{usernameLink}}"
       reply_topic: "<i class='fa fa-mail-forward'></i> {{link}}"
-      quote_reply: "اقتبس للرد"
       edit: "أنت تعدّل {{link}} {{replyAvatar}} {{username}} ."
       edit_reason: "السبب:"
       post_number: "المشاركة {{number}}"
@@ -2619,7 +2616,6 @@ ar:
       export_csv:
         success: "بدأ التصدير, سيتم إعلامك برسالة عند اكتمال العملية."
         failed: "فشل التصدير. من فضلك افحص السجلات."
-        rate_limit_error: "المشاركات يمكن تحميلها لمرة واحدة في اليوم , الرجاء المحاولة غدا."
         button_text: "التصدير"
         button_title:
           user: "تصدير قائمة المستخدمين على شكل CSV"

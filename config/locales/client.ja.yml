@@ -380,7 +380,6 @@ ja:
       profile: "プロフィール"
       mute: "ミュート"
       edit: "プロフィールを編集"
-      download_archive: "自分の投稿をダウンロード"
       new_private_message: "メッセージを作成"
       private_message: "メッセージ"
       private_messages: "メッセージ"
@@ -1203,7 +1202,6 @@ ja:
     post:
       reply: "<i class='fa fa-mail-forward'></i> {{replyAvatar}} {{usernameLink}}"
       reply_topic: "<i class='fa fa-mail-forward'></i> {{link}}"
-      quote_reply: "引用して返信"
       edit: "編集中 {{link}} {{replyAvatar}} {{username}}"
       edit_reason: "理由: "
       post_number: "投稿{{number}}"
@@ -1841,7 +1839,6 @@ ja:
       export_csv:
         success: "エクスポートを開始しました。処理が完了した後、メッセージでお知らせします。"
         failed: "出力失敗。詳しくはログに参考してください。"
-        rate_limit_error: "投稿は1日に1度だけダウンロードできます。また明日お試しください。"
         button_text: "エクスポート"
         button_title:
           user: "全てのユーザをCSV出力"

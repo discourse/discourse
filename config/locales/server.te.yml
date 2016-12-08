@@ -550,12 +550,7 @@ te:
     user_replied:
       subject_template: "[%{site_name}] %{topic_title}"
     digest:
-      new_activity: "మీ విషయాలు మరియు టపాల మీద కొత్త కార్యక్రమం మొదలైంది:"
-      top_topics: "ప్రముఖ టపాలు"
-      other_new_topics: "ప్రముఖ విషయాలు"
       click_here: "ఇక్కడ క్లిక్ చేయండి"
-      read_more: "ఇంకా చదువు"
-      more_topics_category: "మరిన్ని కొత్త విషయాలు:"
     account_created:
       subject_template: "[%{site_name}] మీ కొత్త ఖాతా"
   page_not_found:

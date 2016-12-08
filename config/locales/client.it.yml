@@ -428,8 +428,6 @@ it:
       profile: "Profilo"
       mute: "Ignora"
       edit: "Modifica opzioni"
-      download_archive: "Scarica i miei messaggi"
-      download_archive_confirm: "Sei sicuro di voler scaricare i tuoi messaggi?"
       new_private_message: "Nuovo Messaggio"
       private_message: "Messaggio"
       private_messages: "Messaggi"
@@ -1468,7 +1466,6 @@ it:
     post:
       reply: "<i class='fa fa-mail-forward'></i> {{replyAvatar}} {{usernameLink}}"
       reply_topic: "<i class='fa fa-mail-forward'></i> {{link}}"
-      quote_reply: "rispondi citando"
       edit: "Modifica in corso {{link}} {{replyAvatar}} {{username}}"
       edit_reason: "Motivo:"
       post_number: "messaggio {{number}}"
@@ -2305,7 +2302,6 @@ it:
       export_csv:
         success: "Esportazione iniziata, verrai avvertito con un messaggio al termine del processo."
         failed: "Esportazione fallita. Controlla i log."
-        rate_limit_error: "I messaggi possono essere scaricati una volta al giorno, prova ancora domani."
         button_text: "Esporta"
         button_title:
           user: "Esporta l'intero elenco di utenti in formato CSV."

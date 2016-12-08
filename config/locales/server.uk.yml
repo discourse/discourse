@@ -15,19 +15,68 @@ uk:
   posts: "дописи"
   loading: "Завантаження"
   powered_by_html: 'Створено за допомогою технології <a href="http://www.discourse.org">Discourse</a>, бажано переглядати з увімкненим JavaScript'
+  log_in: "Вхід"
+  emails:
+    incoming:
+      default_subject: "Вхідна пошта від %{email}"
+      errors:
+        inactive_user_error: "Таке трапляється, якщо відправник не активний"
+        blocked_user_error: "Таке трапляється, якщо відправника було заблоковано"
+  errors: &errors
+    messages:
+      accepted: має бути прийнятий
+      blank: не може бути порожнім
+      present: має бути порожнім
+      not_a_number: це не цифра
+      not_an_integer: має бути цілим числом
+      too_long:
+        one: надто довге (максимум 1 символ)
+        few: надто довге (максимум %{count} символів)
+        other: надто довге (максимум %{count} символів)
+      other_than: "має бути іншим ніж %{count}"
+    template:
+      body: 'Проблеми на цих полях:'
+    embed:
+      load_from_remote: "Під час завантаження допису виникла проблема."
   backup:
     operation_already_running: "An operation is currently running. Can't start a new job right now."
     backup_file_should_be_tar_gz: "The backup file should be a .tar.gz archive."
     not_enough_space_on_disk: "There is not enough space on disk to upload this backup."
   not_logged_in: "You need to be logged in to do that."
   read_only_mode_enabled: "The site is in read only mode. Interactions are disabled."
+  reading_time: "Час зчитування"
+  likes: "Вподобання"
   embed:
     start_discussion: "Розпочати Дискусію"
     continue: "Продовжити Дискусію"
+    more_replies:
+      one: "1 більше відповідей"
+      few: "%{count} більше відповідей"
+      other: "%{count} більше відповідей"
     loading: "Завантаження обговорення..."
     permalink: "Постійне посилання"
     imported_from: "Discussion topic for the original blog entry at: %{link}"
+    replies:
+      one: "1 відповідь"
+      few: "%{count} відповідей"
+      other: "%{count} відповідей"
+  no_images_allowed: "Даруйте, нові користувачі не можуть вставляти зображення в дописи."
+  too_many_images:
+    one: "Даруйте, нові користувачі можуть вставляти тільки одне зображення в допис."
+    few: "Даруйте, нові користувачі можуть вставляти тільки %{count} зображень в допис."
+    other: "Даруйте, нові користувачі можуть вставляти тільки %{count} зображень в допис."
+  no_attachments_allowed: "Даруйте, нові користувачі не можуть вставляти прикріплення в дописи."
+  too_many_attachments:
+    one: "Даруйте, нові користувачі можуть вставляти тільки одне прикріплення в допис."
+    few: "Даруйте, нові користувачі можуть вставляти тільки %{count} прикріплень в допис."
+    other: "Даруйте, нові користувачі можуть вставляти тільки %{count} прикріплень в допис."
+  no_links_allowed: "Даруйте, нові користувачі не можуть вставляти посилання в дописи."
+  too_many_links:
+    one: "Даруйте, нові користувачі можуть вставляти тільки одне посилання в допис."
+    few: "Даруйте, нові користувачі можуть вставляти тільки %{count} посилань в допис."
+    other: "Даруйте, нові користувачі можуть вставляти тільки %{count} посилань в допис."
   spamming_host: "Даруйте, Ви не можете вставити посилання на цей хост."
+  topic_not_found: "Щось пішло не так. Можливо цей допис було закрито або видалено, під час того як ви його переглядали?"
   just_posted_that: "це дуже схоже на те, що ви нещодавно дописували"
   invalid_characters: "містить неприпустимі символи"
   next_page: "наступна сторінка →"
@@ -43,9 +92,16 @@ uk:
   rss_description:
     latest: "Останні теми"
     hot: "Гарячі теми"
+    posts: "Останні дописи"
+    private_posts: "Останні приватні повідомлення"
+    group_posts: "Останні дописи від %{group_name}"
+    user_posts: "Останні дописи @%{username}"
+    user_topics: "Останні теми @%{username}"
   too_late_to_edit: "Цей допис було створено надто давно. Його вже не можна редагувати або видалити."
+  excerpt_image: "зображення"
   groups:
     default_names:
+      everyone: "усі"
       admins: "адміністратори"
       moderators: "модератори"
       staff: "персонал"
@@ -76,18 +132,28 @@ uk:
     attributes:
       category:
         name: "Назва категорії"
+      topic:
+        title: 'Назва'
       post:
         raw: "Тіло"
+      user_profile:
+        bio_raw: "Про мене"
     errors:
       models:
         user:
           attributes:
             ip_address:
               signup_not_allowed: "Вхід не дозволено з цього облікового запису."
+        web_hook:
+          attributes:
+            payload_url:
+              invalid: "Хибний URL. URL має містити http:// або https://. І пробіли не дозволяються."
+      <<: *errors
   user_profile:
     no_info_me: "<div class='missing-profile'>поле Про Мене вашого профілю зараз є порожнім, <a href='/users/%{username_lower}/preferences/about-me'>ви маєте бажання заповнити його?</a></div>"
     no_info_other: "<div class='missing-profile'>%{name} hasn't entered anything in the About Me field of their profile yet</div>"
   vip_category_description: "A category exclusive to members with trust level 3 and higher."
+  staff_category_name: "Персонал"
   staff_category_description: "Закрита категорія для обговорень між персоналом. Теми бачать тільки адміністратори та модератори."
   category:
     topic_prefix: "Про категорію %{category}"
@@ -98,13 +164,31 @@ uk:
       title: "новий користувач"
     basic:
       title: "базовий користувач"
+    member:
+      title: "учасник"
   rate_limiter:
     too_many_requests: "У нас є обмеження щодо того, скільки разів за добу можна виконати цю дію. Будь ласка, зачекайте %{time_left} перед тим, як спробувати ще раз."
+    hours:
+      one: "1 година"
+      few: "%{count} години"
+      other: "%{count} годин"
+    minutes:
+      one: "1 хвилина"
+      few: "%{count} хвилини"
+      other: "%{count} хвилин"
+    seconds:
+      one: "1 секунда"
+      few: "%{count} секунди"
+      other: "%{count} секунд"
   datetime:
     distance_in_words:
       half_a_minute: "< 1 хв"
     distance_in_words_verbose:
       half_a_minute: "щойно"
+      x_seconds:
+        one: "1 секунда тому"
+        few: "%{count} секунд тому"
+        other: "%{count} секунд тому"
   password_reset:
     choose_new: "Будь ласка, оберіть новий пароль"
     choose: "Будь ласка, оберіть пароль"
@@ -383,11 +467,7 @@ uk:
     user_posted_pm:
       subject_template: "[%{site_name}] [ПП] %{topic_title}"
     digest:
-      new_activity: "Нова активність у ваших темах та дописах:"
-      top_topics: "Популярні дописи"
-      other_new_topics: "Популярні теми"
       click_here: "натисніть тут"
-      read_more: "Читати більше"
     forgot_password:
       subject_template: "[%{site_name}] Скидання пароля"
       text_body_template: |
@@ -451,3 +531,6 @@ uk:
   edit_this_page: "Редагувати цю сторінку"
   guidelines_topic:
     title: "ЧаПи/Інструкції"
+  activemodel:
+    errors:
+      <<: *errors

@@ -462,10 +462,6 @@ id:
   user_notifications:
     previous_discussion: "Balasan Sebelumnya"
     posted_by: "Dipost oleh %{username} pada %{post_date}"
-    digest:
-      new_activity: "Aktifitas baru di topik dan posting Anda:"
-      more_topics: "Ada %{new_topics_since_seen} topik baru lainnya."
-      more_topics_category: "Topik baru lebih banyak:"
     account_created:
       subject_template: "[%{site_name}] Akun Baru Anda"
       text_body_template: |+

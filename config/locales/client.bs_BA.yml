@@ -386,7 +386,6 @@ bs_BA:
       profile: "Profil"
       mute: "Mutiraj"
       edit: "Uredi Postavke"
-      download_archive: "skini arhivu mojih odgovora"
       new_private_message: "Nova poruka"
       private_message: "Privatne Poruke"
       private_messages: "Poruke"
@@ -1059,7 +1058,6 @@ bs_BA:
         select_all: select all
         deselect_all: deselect all
     post:
-      quote_reply: "citiraj odgovor"
       edit: "Editing {{link}} by {{replyAvatar}} {{username}}"
       edit_reason: "Razlog: "
       post_number: "post {{number}}"

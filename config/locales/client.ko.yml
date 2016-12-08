@@ -394,7 +394,6 @@ ko:
       profile: "프로필"
       mute: "알림 끄기"
       edit: "환경 설정 편집"
-      download_archive: "내 게시글 다운로드"
       new_private_message: "새로운 메시지"
       private_message: "메시지"
       private_messages: "메시지"
@@ -1244,7 +1243,6 @@ ko:
     post:
       reply: "<i class='fa fa-mail-forward'></i> {{replyAvatar}} {{usernameLink}}"
       reply_topic: "<i class='fa fa-mail-forward'></i> {{link}}"
-      quote_reply: "인용한 답글"
       edit: "{{link}} {{replyAvatar}} {{username}} 편집"
       edit_reason: "Reason: "
       post_number: "{{number}}번째 글"
@@ -1834,7 +1832,6 @@ ko:
       export_csv:
         success: "Export initiated, you will be notified via message when the process is complete."
         failed: "내보내기가 실패했습니다. 로그를 확인해주세요"
-        rate_limit_error: "글은 하루에 한번 다운로드 받을 수 있습니다. 내일 다시 시도해주십시요."
         button_text: "내보니기"
         button_title:
           user: "모든 사용자 목록을 CSV 형식으로 내보내기"

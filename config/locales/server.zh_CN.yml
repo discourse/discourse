@@ -492,6 +492,13 @@ zh_CN:
       title: '投票'
       description: '给本帖投票'
       long_form: '已给本帖投票'
+  user_activity:
+    no_bookmarks:
+      self: "你没有收藏帖子，收藏帖子能让你之后轻松找到他们。"
+      others: "没有收藏。"
+    no_likes_given:
+      self: "你还没有赞任何帖子。"
+      others: "没有被赞的帖子。"
   topic_flag_types:
     spam:
       title: '垃圾'
@@ -933,7 +940,7 @@ zh_CN:
     external_system_avatars_url: "外部系统头像服务的 URL 地址。可选参数是 {username} {first_letter} {color} {size}"
     default_opengraph_image_url: "opengraph图像的缺省URL。"
     twitter_summary_large_image_url: "默认 Twitter summary 卡片的 URL（需要至少宽 280px 和高 150px）。"
-    allow_all_attachments_for_group_messages: "允许群组消息中包含任何邮件附近。"
+    allow_all_attachments_for_group_messages: "允许群组消息中包含任何邮件附件。"
     convert_pasted_images_to_hq_jpg: "将粘贴图片转为高质量 JPG 文件。"
     convert_pasted_images_quality: "转换过的 JPG 文件质量（1 是最低，100 最高质量）。"
     enable_flash_video_onebox: "在 Onebox 启用嵌入 swf 和 flv 链接（Adobe Flash）。警告：可能增加安全风险。"
@@ -1080,7 +1087,7 @@ zh_CN:
     allow_animated_thumbnails: "为动画 gif 生成动态缩略图。"
     default_avatars: "在用户更改头像前的默认头像 URL"
     automatically_download_gravatars: "为注册或更改邮箱的用户下载 Gravatar 头像。"
-    digest_topics: "邮件摘要中显示的主题数目上限。"
+    digest_topics: "邮件摘要中显示的流行主题的最大数目。"
     digest_posts: "邮件摘要中显示的最流行帖子的数量。"
     digest_min_excerpt_length: "邮件摘要中显示的帖子摘要字符数下限。"
     delete_digest_email_after_days: "不发送摘要邮件给超过（n）天没访问的用户。"
@@ -1588,6 +1595,14 @@ zh_CN:
         ```
     restore_succeeded:
       subject_template: "恢复成功完成"
+      text_body_template: |
+        恢复成功。
+
+        以下是日志：
+
+        ```
+        %{logs}
+        ```
     restore_failed:
       subject_template: "恢复失败"
       text_body_template: |
@@ -2742,7 +2757,66 @@ zh_CN:
             description: "你的社群主要使用什么语言？"
       forum_title:
         title: "名字"
+        fields:
+          title:
+            label: "你社群的名字"
+      contact:
+        fields:
+          contact_url:
+            label: "网页"
+            placeholder: "http://www.example.com/contact-us"
+      corporate:
+        title: "组织"
+        fields:
+          company_short_name:
+            label: "公司名（短）"
+            placeholder: "国际科技"
+          company_full_name:
+            label: "公司名（全）"
+            placeholder: "国际科技有限公司。"
+          company_domain:
+            label: "公司域名名字"
+            placeholder: "initech.com"
+      colors:
+        title: "主题"
+        fields:
+          theme_id:
+            choices:
+              default:
+                label: "简洁亮"
+              dark:
+                label: "简洁黑"
+      logos:
+        title: "标志"
+        fields:
+          logo_url:
+            label: "主要标志"
+            description: "在你站点左上角出现的小号标志图片，应为一个长方形。"
+          logo_small_url:
+            label: "紧凑 Logo"
+            description: "站点标志的紧凑版本，在向下滚动时出现在左上角。用正方形的图片。"
+      icons:
+        title: "图标"
+        fields:
+          favicon_url:
+            label: "小图标"
+          apple_touch_icon_url:
+            label: "大图标"
+      homepage:
+        title: "主页"
+        fields:
+          homepage_style:
+            choices:
+              latest:
+                label: "最新主题"
+              categories:
+                label: "分类"
+      emoji:
+        title: "Emoji"
+      invites:
+        title: "邀请工作人员"
       finished:
+        title: "你的 Discourse 已经准备就绪！"
         description: |
           <p>如果你觉得需要修改这些设置，访问<a href='/admin' target='_blank'>管理员分块</a>；你可以在站点菜单找到扳手图标旁找到。</p>
           <p>祝你玩得开心，还有祝你<a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'>建设新社区好运！</a></p>

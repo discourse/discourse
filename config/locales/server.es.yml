@@ -1112,7 +1112,6 @@ es:
     allow_animated_thumbnails: "Generar miniaturas en movimiento de los gifs animados."
     default_avatars: "URLs de avatares que se utilizarán por defecto para nuevos usuarios."
     automatically_download_gravatars: "Descargar Gravatars para usuarios cuando se creen una cuenta o cambien el email."
-    digest_topics: "Máximo número de temas mostrados en el resumen por email."
     digest_min_excerpt_length: "Mínimo de caracteres del extracto de posts en el resumen por email."
     delete_digest_email_after_days: "Suprimir los emails de resumen para aquellos usuarios que no han visto el sitio desde más de (n) días."
     digest_suppress_categories: "Suprimir estas categorías de los emails de resumen."
@@ -1721,15 +1720,9 @@ es:
     digest:
       why: "Un breve resumen de %{site_link} desde tu última visita el %{last_seen_at}"
       subject_template: "Resumen de [%{site_name}]"
-      new_activity: "Actividad nueva en tus temas y posts:"
-      top_topics: "Posts populares"
-      other_new_topics: "Temas populares"
       unsubscribe: "Este resumen se envía desde %{site_link} cuando pasa un tiempo desde tu última visita. Para cancelar tu suscripción %{unsubscribe_link}."
       click_here: "clic aquí"
       from: "resumen de %{site_name}"
-      read_more: "Leer más"
-      more_topics: "Se han publicado otros %{new_topics_since_seen} nuevos temas."
-      more_topics_category: "Más temas nuevos:"
     mailing_list:
       why: "Actividad en %{site_link} a %{date}"
       subject_template: "[%{site_name}] Resumen del %{date}"

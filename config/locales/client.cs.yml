@@ -456,8 +456,6 @@ cs:
       profile: "Profil"
       mute: "Ignorovat"
       edit: "Upravit nastavení"
-      download_archive: "Stáhnout moje příspěvky"
-      download_archive_confirm: "Jste si jistí, že chcete stáhnout všechny své příspěvky?"
       new_private_message: "Nová zpráva"
       private_message: "Zpráva"
       private_messages: "Zprávy"
@@ -1514,7 +1512,6 @@ cs:
     post:
       reply: "<i class='fa fa-mail-forward'></i> {{replyAvatar}} {{usernameLink}}"
       reply_topic: "<i class='fa fa-mail-forward'></i> {{link}}"
-      quote_reply: "odpověď s citací"
       edit: "Editujete {{link}} {{replyAvatar}} {{username}}"
       edit_reason: "Důvod: "
       post_number: "příspěvek č. {{number}}"
@@ -2445,7 +2442,6 @@ cs:
       export_csv:
         success: "Export byl spuštěn. O dokončení celého procesu budete informování pomocí zprávy."
         failed: "Exportování selhalo. Prosím zkontrolujte logy."
-        rate_limit_error: "Příspěvky mohou být staženy jednou za den. Prosíme, zkuste to znovu zítra."
         button_text: "Export"
         button_title:
           user: "Exportovat kompletní seznam uživatelů v CSV formátu."

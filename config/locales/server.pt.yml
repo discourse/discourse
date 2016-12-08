@@ -315,7 +315,7 @@ pt:
   meta_category_description: "Discussão sobre este sítio, a sua organização, como funciona, e como podemos melhorá-lo."
   staff_category_name: "Pessoal"
   staff_category_description: "Categoria privada para discussões do pessoal. Os tópicos estão apenas visíveis para administradores e moderadores."
-  assets_topic_body: "Este é um tópico permanente, visível apenas ao pessoal, para armazenar imagens e ficheiros usados no design do sítio. Não o apague!\n\n\nVeja como:\n\n\n1. Responda a este tópico.\n2. Carregue todas as imagens que deseja usar para os logótipos, favicons, e tudo o mais. (Use o ícone da ferramenta de carregamento neste editor de mensagens, arraste ou cole imagens).\n3. Submeta a sua resposta.\n4. Clique com o botão direito do rato nas imagens da sua nova mensagem para obter o caminho das imagens submetidas, ou carregue no ícone de edição para editar a sua mensagem e recuperar o caminho para as imagens. Copie os caminhos das imagens.\n5. Cole esses caminhos em [configurações básicas](/admin/site_settings/category/required).\n\n\nSe precisar de ativar o carregamento de diferentes tipos de ficheiros, edite `authorized_extensions` em [configurações de ficheiros](/admin/site_settings/category/files)."
+  assets_topic_body: "Este é um tópico permanente, visível apenas à equipa de apoio, para armazenar imagens e ficheiros usados no design do sítio. Não o apague!\n\n\nVeja como:\n\n\n1. Responda a este tópico.\n2. Carregue todas as imagens que deseja usar para os logótipos, favicons, e tudo o mais. (Use o ícone da ferramenta de carregamento neste editor de mensagens, arraste ou cole imagens).\n3. Submeta a sua resposta.\n4. Clique com o botão direito do rato nas imagens da sua nova mensagem para obter o caminho das imagens submetidas, ou carregue no ícone de edição para editar a sua mensagem e recuperar o caminho para as imagens. Copie os caminhos das imagens.\n5. Cole esses caminhos em [configurações básicas](/admin/site_settings/category/required).\n\n\nSe precisar de ativar o carregamento de diferentes tipos de ficheiros, edite `authorized_extensions` em [configurações de ficheiros](/admin/site_settings/category/files)."
   lounge_welcome:
     title: "Bem-vindo ao Salão"
     body: |2+
@@ -534,6 +534,13 @@ pt:
       title: 'Votar'
       description: 'Votar nesta mensagem'
       long_form: 'votou nesta mensagem'
+  user_activity:
+    no_bookmarks:
+      self: "Não tem publicações marcadas, marcar publicações permite-lhe aceder-lhes facilmente mais tarde."
+      others: "Sem marcadores."
+    no_likes_given:
+      self: "Ainda não gostou de nenhuma publicação."
+      others: "Sem publicações gostadas."
   topic_flag_types:
     spam:
       title: 'Spam'
@@ -600,7 +607,7 @@ pt:
       xaxis: "Dia"
       yaxis: "Número de novos utilizadores"
     profile_views:
-      title: "Vistas de Página do Perfil de Utilizador"
+      title: "Vistas do Perfil de Utilizador"
       xaxis: "Dia"
       yaxis: "Número de perfis de utilizador vistos"
     topics:
@@ -1123,8 +1130,9 @@ pt:
     allow_animated_thumbnails: "Gera miniaturas de imagens ou gifs animados."
     default_avatars: "URLs para avatars que serão usados por defeito para novos utilizadores até que estes o mudem."
     automatically_download_gravatars: "Descarregar Gravatars para os utilizadores após criação de conta ou mudança de email."
-    digest_topics: "Número máximo de tópicos a mostrar no resumo do email."
+    digest_topics: "Número máximo de publicações populares a mostrar no email de resumo."
     digest_posts: "Número máximo de publicações populares a mostrar no resumo do email."
+    digest_other_topics: "O número máximo de tópicos a mostrar na secção de  \"Novos em tópicos e categorias que segue\" do email de resumo."
     digest_min_excerpt_length: "Tamanho mínimo dos excertos de publicações no email de resumo, em caracteres."
     delete_digest_email_after_days: "Suprimir emails de resumos para utilizadores não vistos no sítio por mais de (n) dias."
     digest_suppress_categories: "Suprimir estas categorias dos emails de resumo."
@@ -2161,6 +2169,8 @@ pt:
       new_topics: "Novos tópicos"
       unread_messages: "Mensagens Não Lidas"
       unread_notifications: "Notificações Não Lidas"
+      new_posts: "Novas Publicações"
+      new_users: "Novos Utilizadores"
       popular_topics: "Tópicos Populares"
       follow_topic: "Acompanhar este tópico"
       join_the_discussion: "Ler Mais"
@@ -2945,7 +2955,7 @@ pt:
           contact_email:
             label: "Email"
             placeholder: "name@example.com"
-            description: "Endereço de email da pessoa ou grupo responsáveis por esta categoria. Usado para notificações críticas tais como denúncias não tratadas, actualizações de segurança, assim  como <a href='/about' target='_blank'>na sua página de descrição</a> para comunicações urgentes com a comunidade."
+            description: "Endereço de email da pessoa ou grupo responsáveis por esta comunidade. Usado para notificações críticas tais como denúncias não tratadas, actualizações de segurança, assim  como <a href='/about' target='_blank'>na sua página de descrição</a> para comunicações urgentes com a comunidade."
           contact_url:
             label: "Página da Internet"
             placeholder: "http://www.example.com/contact-us"
