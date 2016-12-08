@@ -6,8 +6,11 @@ engines:
     enabled: true
   csslint:
     enabled: true
+  duplication:
+    enabled: true
   eslint:
     enabled: true
+    channel: eslint-3
   fixme:
     enabled: true
   rubocop:
@@ -28,9 +31,17 @@ ratings:
   - "**.php"
   - "**.py"
 exclude_paths:
-- config/
-- db/
-- script/
-- spec/
-- test/
-- vendor/
+ - "app/assets/javascripts/defer/*"
+ - "app/assets/javascripts/ember-addons/*"
+ - "lib/autospec/*"
+ - "lib/es6_module_transpiler/*"
+ - "lib/highlight_js/*"
+ - "lib/import/*"
+ - "lib/javascripts/*"
+ - "lib/tasks/*"
+ - "lib/*.js"
+ - "public/*"
+ - "script/*"
+ - "spec/*"
+ - "test/*"
+ - "vendor/*"
