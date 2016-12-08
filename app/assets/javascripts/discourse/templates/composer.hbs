@@ -135,7 +135,11 @@
                 {{/if}}
               </div>
               <div class='draft-text'>
-                {{i18n 'composer.saved_draft'}}
+                {{#if model.topic}}
+                  {{fa-icon "reply"}} {{{draftTitle}}}
+                {{else}}
+                  {{i18n "composer.saved_draft"}}
+                {{/if}}
               </div>
             </div>
           </div>
