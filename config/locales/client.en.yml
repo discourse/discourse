@@ -1072,6 +1072,7 @@ en:
 
       users_placeholder: "Add a user"
       title_placeholder: "What is this discussion about in one brief sentence?"
+      title_or_link_placeholder: "Type title, or paste a link here"
       edit_reason_placeholder: "why are you editing?"
       show_edit_reason: "(add edit reason)"
       topic_featured_link_placeholder: "Enter link shown with title."
