@@ -1,4 +1,4 @@
-import loadScript from 'discourse/lib/load-script';
+import DiscourseURL from 'discourse/lib/url';
 
 //  Use the message bus for live reloading of components for faster development.
 export default {
@@ -30,6 +30,11 @@ export default {
       });
     });
 
+    // Useful to export this for debugging purposes
+    if (Discourse.Environment === 'development' && !Ember.testing) {
+      window.DiscourseURL = DiscourseURL;
+    }
+
     // Observe file changes
     messageBus.subscribe("/file-change", function(data) {
       if (Handlebars.compile && !Ember.TEMPLATES.empty) {
@@ -41,24 +46,6 @@ export default {
         if (me === "refresh") {
           // Refresh if necessary
           document.location.reload(true);
-        } else if (me.name.substr(-10) === "hbs") {
-
-          // Reload handlebars
-          const js = me.name.replace(".hbs", "").replace("app/assets/javascripts", "/assets");
-          loadScript(js + "?hash=" + me.hash).then(function() {
-            const templateName = js.replace(".js", "").replace("/assets/", "");
-            return _.each(Ember.View.views, function(view) {
-              if (view.get('templateName') === templateName) {
-                view.set('templateName', 'empty');
-                view.rerender();
-                Em.run.schedule('afterRender', function() {
-                  view.set('templateName', templateName);
-                  view.rerender();
-                });
-              }
-            });
-          });
-
         } else {
           $('link').each(function() {
             // TODO: stop bundling css in DEV please

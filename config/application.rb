@@ -70,13 +70,10 @@ module Discourse
     end]
 
     config.assets.precompile += ['vendor.js', 'common.css', 'desktop.css', 'mobile.css',
-                                 'admin.js', 'admin.css', 'shiny/shiny.css', 'preload_store.js',
-                                 'browser-update.js', 'embed.css', 'break_string.js', 'ember_jquery.js']
-
-    # Precompile all defer
-    Dir.glob("#{config.root}/app/assets/javascripts/defer/*.js").each do |file|
-      config.assets.precompile << "defer/#{File.basename(file)}"
-    end
+                                 'admin.js', 'admin.css', 'shiny/shiny.css', 'preload-store.js.es6',
+                                 'browser-update.js', 'embed.css', 'break_string.js', 'ember_jquery.js',
+                                 'pretty-text-bundle.js', 'wizard.css', 'wizard-application.js',
+                                 'wizard-vendor.js', 'plugin.js', 'plugin-third-party.js']
 
     # Precompile all available locales
     Dir.glob("#{config.root}/app/assets/javascripts/locales/*.js.erb").each do |file|
@@ -106,6 +103,7 @@ module Discourse
     config.filter_parameters += [
         :password,
         :pop3_polling_password,
+        :api_key,
         :s3_secret_access_key,
         :twitter_consumer_secret,
         :facebook_app_secret,
@@ -144,6 +142,7 @@ module Discourse
 
     # Our templates shouldn't start with 'discourse/templates'
     config.handlebars.templates_root = 'discourse/templates'
+    config.handlebars.raw_template_namespace = "Ember.TEMPLATES"
 
     require 'discourse_redis'
     require 'logster/redis_store'
@@ -179,6 +178,10 @@ module Discourse
 
     if ENV['RBTRACE'] == "1"
       require 'rbtrace'
+    end
+
+    config.generators do |g|
+      g.test_framework :rspec, fixture: false
     end
 
   end

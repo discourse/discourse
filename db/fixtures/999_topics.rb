@@ -64,3 +64,32 @@ if seed_welcome_topics
                       skip_validations: true,
                       category: staff ? staff.name : nil)
 end
+
+
+
+# run this later, cause we need to make sure new application controller resilience is in place first
+duration = Rails.env.production? ? 60 : 0
+if Topic.exec_sql("SELECT 1 FROM schema_migration_details
+                  WHERE EXISTS(
+                      SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS
+                      WHERE table_schema = 'public' AND table_name = 'topics' AND column_name = 'inappropriate_count'
+                    ) AND
+                    name = 'AddTopicColumnsBack' AND
+                    created_at < (current_timestamp at time zone 'UTC' - interval '#{duration} minutes')
+                 ").to_a.length > 0
+
+
+  Topic.transaction do
+    STDERR.puts "Removing superflous topic columns!"
+    %w[
+    inappropriate_count
+    bookmark_count
+    off_topic_count
+    illegal_count
+    notify_user_count
+].each do |column|
+      User.exec_sql("ALTER TABLE topics DROP COLUMN IF EXISTS #{column}")
+    end
+
+  end
+end

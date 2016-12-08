@@ -22,6 +22,10 @@ summary:before {
   margin-right: .25em;
 }
 
+details[open] > * {
+  display: block;
+}
+
 details[open] > summary:before,
 details.open  > summary:before {
   content: '\25BC';

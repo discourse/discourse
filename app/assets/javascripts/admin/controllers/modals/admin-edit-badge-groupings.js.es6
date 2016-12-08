@@ -1,5 +1,5 @@
+import { ajax } from 'discourse/lib/ajax';
 export default Ember.Controller.extend({
-  needs: ['modal'],
 
   modelChanged: function(){
     const model = this.get('model');
@@ -57,7 +57,7 @@ export default Ember.Controller.extend({
       const groupIds = items.map(function(i){return i.get("id") || -1;});
       const names = items.map(function(i){return i.get("name");});
 
-      Discourse.ajax('/admin/badges/badge_groupings',{
+      ajax('/admin/badges/badge_groupings',{
         data: {ids: groupIds, names: names},
         method: 'POST'
       }).then(function(data){

@@ -30,6 +30,7 @@
     filter: alpha(opacity=75);
   }
   .diff-ins {
+    color: dark-light-choose($primary, $secondary);
     background: scale-color($success, $lightness: 90%);
   }
   ins {

@@ -2,7 +2,7 @@ class Plugin::AuthProvider
 
   def self.auth_attributes
     [:glyph, :background_color, :title, :message, :frame_width, :frame_height, :authenticator,
-     :title_setting, :enabled_setting, :full_screen_login]
+     :title_setting, :enabled_setting, :full_screen_login, :custom_url]
   end
 
   attr_accessor(*auth_attributes)
@@ -13,6 +13,7 @@ class Plugin::AuthProvider
 
   def to_json
     result = {name: name}
+    result['customUrl'] = custom_url if custom_url
     result['titleOverride'] = title if title
     result['titleSetting'] = title_setting if title_setting
     result['enabledSetting'] = enabled_setting if enabled_setting

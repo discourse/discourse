@@ -4,6 +4,9 @@
 
 body {
   background-color: $secondary;
+  textarea {
+    background-color:$secondary;
+  }
 }
 
 // This sets the space between the application content and the edge of the
@@ -110,6 +113,7 @@ h2#site-text-logo
 .mobile-view .mobile-nav {
   a .fa {
     margin-right: 8px;
+    color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
   }
   a {
     color: $primary;

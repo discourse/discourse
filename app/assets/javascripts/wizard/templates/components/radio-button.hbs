@@ -1,0 +1,17 @@
+<div class='radio-area'>
+  <input type="radio" name={{label}} tabindex="9">
+  <span class='radio-label'>
+    {{#if icon}}
+      {{fa-icon icon}}
+    {{/if}}
+    {{label}}
+  </span>
+  {{#if extraLabel}}
+    <span class='extra-label'>
+      {{{extraLabel}}}
+    </span>
+  {{/if}}
+</div>
+<div class='radio-description'>
+  {{description}}
+</div>

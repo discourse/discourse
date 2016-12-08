@@ -8,15 +8,16 @@ require_dependency 'distributed_mutex'
 
 module Scheduler
   class Manager
-    attr_accessor :random_ratio, :redis
+    attr_accessor :random_ratio, :redis, :enable_stats
 
     class Runner
       def initialize(manager)
+        @stopped = false
         @mutex = Mutex.new
         @queue = Queue.new
         @manager = manager
         @reschedule_orphans_thread = Thread.new do
-          while true
+          while !@stopped
             sleep 1.minute
             @mutex.synchronize do
               reschedule_orphans
@@ -24,7 +25,7 @@ module Scheduler
           end
         end
         @keep_alive_thread = Thread.new do
-          while true
+          while !@stopped
             @mutex.synchronize do
               keep_alive
             end
@@ -32,8 +33,17 @@ module Scheduler
           end
         end
         @thread = Thread.new do
-          while true
-            process_queue
+          while !@stopped
+            if @manager.enable_stats
+              begin
+                RailsMultisite::ConnectionManagement.establish_connection(db: "default")
+                process_queue
+              ensure
+                ActiveRecord::Base.connection_handler.clear_active_connections!
+              end
+            else
+              process_queue
+            end
           end
         end
       end
@@ -50,16 +60,36 @@ module Scheduler
         Discourse.handle_job_exception(ex, {message: "Scheduling manager orphan rescheduler"})
       end
 
+      def hostname
+        @hostname ||= begin
+                        `hostname`
+                      rescue
+                        "unknown"
+                      end
+      end
+
       def process_queue
         klass = @queue.deq
+        return unless klass
+
         # hack alert, I need to both deq and set @running atomically.
         @running = true
         failed = false
         start = Time.now.to_f
         info = @mutex.synchronize { @manager.schedule_info(klass) }
+        stat = nil
         begin
           info.prev_result = "RUNNING"
           @mutex.synchronize { info.write! }
+          if @manager.enable_stats
+            stat = SchedulerStat.create!(
+              name: klass.to_s,
+              hostname: hostname,
+              pid: Process.pid,
+              started_at: Time.zone.now,
+              live_slots_start: GC.stat[:heap_live_slots]
+            )
+          end
           klass.new.perform
         rescue Jobs::HandledExceptionWrapper
           # Discourse.handle_exception was already called, and we don't have any extra info to give
@@ -72,6 +102,13 @@ module Scheduler
         info.prev_duration = duration
         info.prev_result = failed ? "FAILED" : "OK"
         info.current_owner = nil
+        if stat
+          stat.update_columns(
+            duration_ms: duration,
+            live_slots_finish: GC.stat[:heap_live_slots],
+            success: !failed
+          )
+        end
         attempts(3) do
           @mutex.synchronize { info.write! }
         end
@@ -83,9 +120,17 @@ module Scheduler
 
       def stop!
         @mutex.synchronize do
-          @thread.kill
+          @stopped = true
+
           @keep_alive_thread.kill
           @reschedule_orphans_thread.kill
+
+          enq(nil)
+
+          Thread.new do
+            sleep 5
+            @thread.kill
+          end
         end
       end
 
@@ -130,6 +175,12 @@ module Scheduler
 
       @hostname = options && options[:hostname]
       @manager_id = SecureRandom.hex
+
+      if options && options.key?(:enable_stats)
+        @enable_stats = options[:enable_stats]
+      else
+        @enable_stats = true
+      end
     end
 
     def self.current

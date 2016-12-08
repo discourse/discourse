@@ -2,7 +2,14 @@ class BadgesController < ApplicationController
   skip_before_filter :check_xhr, only: [:index, :show]
 
   def index
+    raise Discourse::NotFound unless SiteSetting.enable_badges
+
     badges = Badge.all
+
+    if search = params[:search]
+      search = search.to_s
+      badges = badges.where("name ILIKE ?", "%#{search}%")
+    end
 
     if (params[:only_listable] == "true") || !request.xhr?
       # NOTE: this is sorted client side if needed
@@ -28,6 +35,8 @@ class BadgesController < ApplicationController
   end
 
   def show
+    raise Discourse::NotFound unless SiteSetting.enable_badges
+
     params.require(:id)
     badge = Badge.enabled.find(params[:id])
 

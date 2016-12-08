@@ -1,3 +1,7 @@
+import deprecated from 'discourse-common/lib/deprecated';
+
+let mobileForced = false;
+
 //  An object that is responsible for logic related to mobile devices.
 const Mobile = {
   isMobileDevice: false,
@@ -5,8 +9,10 @@ const Mobile = {
 
   init() {
     const $html = $('html');
-    this.isMobileDevice = $html.hasClass('mobile-device');
-    this.mobileView = $html.hasClass('mobile-view');
+    this.isMobileDevice = mobileForced || $html.hasClass('mobile-device');
+    this.mobileView = mobileForced || $html.hasClass('mobile-view');
+
+    if (Ember.testing || mobileForced) { return; }
 
     try{
       if (window.location.search.match(/mobile_view=1/)){
@@ -25,10 +31,22 @@ const Mobile = {
       // localStorage may be disabled, just skip this
       // you get security errors if it is disabled
     }
+
+    // Sam: I tried this to disable zooming on iOS 10 but it is not consistent
+    //  you can still sometimes trigger zoom and be stuck in a horrible state
+    //
+    // let iOS = !!navigator.platform && /iPad|iPhone|iPod/.test(navigator.platform);
+    // if (iOS) {
+    //   document.documentElement.addEventListener('touchstart', function (event) {
+    //     if (event.touches.length > 1) {
+    //       event.preventDefault();
+    //     }
+    //   }, false);
+    // }
   },
 
-  toggleMobileView: function() {
-    try{
+  toggleMobileView() {
+    try {
       if (localStorage) {
         localStorage.mobileView = !this.mobileView;
       }
@@ -38,15 +56,22 @@ const Mobile = {
     this.reloadPage(!this.mobileView);
   },
 
-  reloadPage: function(mobile) {
+  reloadPage(mobile) {
     window.location.assign(window.location.pathname + '?mobile_view=' + (mobile ? '1' : '0'));
   }
 };
 
-// Backwards compatibiltity, deprecated
+export function forceMobile() {
+  mobileForced = true;
+}
+
+export function resetMobile() {
+  mobileForced = false;
+}
+
 Object.defineProperty(Discourse, 'Mobile', {
-  get: function() {
-    Ember.warn("DEPRECATION: `Discourse.Mobile` is deprecated, use `this.site.mobileView` instead");
+  get() {
+    deprecated("`Discourse.Mobile` is deprecated, use `this.site.mobileView` instead");
     return Mobile;
   }
 });

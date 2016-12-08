@@ -15,18 +15,20 @@ it:
         one: "voto totale"
         other: "voti totali"
       average_rating: "Voto medio: <strong>%{average}</strong>."
+      public:
+        title: "I voti sono pubblici."
       multiple:
         help:
           at_least_min_options:
-            one: "Devi scegliere almeno <strong>una</strong> opzione."
-            other: "Devi scegliere almeno <strong>%{count}</strong> opzioni."
+            one: "Scegli almeno <strong>1</strong> opzione"
+            other: "Scegli almeno <strong>%{count}</strong> opzioni"
           up_to_max_options:
-            one: "Puoi scegliere fino a <strong>una</strong> opzione."
-            other: "Puoi scegliere fino a <strong>%{count}</strong> opzioni."
+            one: "Scegli fino a <strong>1</strong> opzione"
+            other: "Scegli fino a <strong>%{count}</strong> opzioni"
           x_options:
-            one: "Devi scegliere <strong>una</strong> opzione."
-            other: "Devi scegliere <strong>%{count}</strong> opzioni."
-          between_min_and_max_options: "Puoi scegliere tra <strong>%{min}</strong> e <strong>%{max}</strong> opzioni."
+            one: "Scegli <strong>1</strong> opzione"
+            other: "Scegli <strong>%{count}</strong> opzioni"
+          between_min_and_max_options: "Scegli tra <strong>%{min}</strong> e <strong>%{max}</strong> opzioni"
       cast-votes:
         title: "Vota"
         label: "Vota!"
@@ -44,5 +46,24 @@ it:
         title: "Chiudi il sondaggio"
         label: "Chiudi"
         confirm: "Sicuro di voler chiudere questo sondaggio?"
-      error_while_toggling_status: "Si è verificato un errore nel commutare lo stato di questo sondaggio."
-      error_while_casting_votes: "Si è verificato un errore nella votazione."
+      error_while_toggling_status: "Spiacenti, si è verificato un errore nel commutare lo stato di questo sondaggio."
+      error_while_casting_votes: "Spiacenti, si è verificato un errore nella votazione."
+      error_while_fetching_voters: "Spiacenti, si è verificato un errore nel visualizzare i votanti."
+      ui_builder:
+        title: Crea Sondaggio
+        insert: Inserisci Sondaggio
+        help:
+          options_count: Inserisci almeno 2 opzioni
+        poll_type:
+          label: Tipo
+          regular: Scelta Singola
+          multiple: Scelta Multipla
+          number: Votazione Numerica
+        poll_config:
+          max: Massimo
+          min: Minimo
+          step: Passo
+        poll_public:
+          label: Mostra i votanti
+        poll_options:
+          label: Inserisci un'opzione di sondaggio per riga

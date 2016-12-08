@@ -1,3 +1,5 @@
+import { bufferedRender } from 'discourse-common/lib/buffered-render';
+
 /*global Resumable:true */
 
 /**
@@ -10,7 +12,7 @@
         uploadText="UPLOAD"
     }}
 **/
-const ResumableUploadComponent = Ember.Component.extend(Discourse.StringBuffer, {
+export default Ember.Component.extend(bufferedRender({
   tagName: "button",
   classNames: ["btn", "ru"],
   classNameBindings: ["isUploading"],
@@ -36,9 +38,9 @@ const ResumableUploadComponent = Ember.Component.extend(Discourse.StringBuffer, 
     }
   }.property("isUploading", "progress"),
 
-  renderString: function(buffer) {
-    var icon = this.get("isUploading") ? "times" : "upload";
-    buffer.push("<i class='fa fa-" + icon + "'></i>");
+  buildBuffer(buffer) {
+    const icon = this.get("isUploading") ? "times" : "upload";
+    buffer.push(`<i class="fa fa-${icon}"></i>`);
     buffer.push("<span class='ru-label'>" + this.get("text") + "</span>");
     buffer.push("<span class='ru-progress' style='width:" + this.get("progress") + "%'></span>");
   },
@@ -60,7 +62,7 @@ const ResumableUploadComponent = Ember.Component.extend(Discourse.StringBuffer, 
 
   _initialize: function() {
     this.resumable = new Resumable({
-      target: this.get("target"),
+      target: Discourse.getURL(this.get("target")),
       maxFiles: 1, // only 1 file at a time
       headers: { "X-CSRF-Token": $("meta[name='csrf-token']").attr("content") }
     });
@@ -117,6 +119,4 @@ const ResumableUploadComponent = Ember.Component.extend(Discourse.StringBuffer, 
     }
   }.on("willDestroyElement")
 
-});
-
-export default ResumableUploadComponent;
+}));

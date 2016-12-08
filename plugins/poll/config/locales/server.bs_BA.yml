@@ -9,3 +9,27 @@ bs_BA:
   site_settings:
     poll_enabled: "Dozvolite korisnicima da kreiraju ankete?"
     poll_maximum_options: "Najveći broj dopuštenih izbora u anketi."
+    poll_edit_window_mins: "Period od objave posta u minutama u kojem je moguće urediti ankete."
+  poll:
+    multiple_polls_without_name: "Postoji više anketa bez imena. Koristi  '<code>name</code>' atribut za jedinstvenu indentifikaciju anketa."
+    multiple_polls_with_same_name: "Postoji više anketa s istim imenom: <strong>%{name}</strong>. Koristite atribut '<code>name</code>' za jedinstvenu indentifikaciju anketa."
+    default_poll_must_have_at_least_2_options: "Anketa mora imati barem 2 opcije."
+    named_poll_must_have_at_least_2_options: "Anketa nazvana <strong>%{name}</strong> mora imati barem 2 opcije."
+    default_poll_must_have_less_options:
+      one: "Ankete moraju imati manje od 1 opcije."
+      few: "Ankete moraju imati manje od %{count} opcije."
+      other: "Ankete moraju imati manje od %{count} opcija."
+    named_poll_must_have_less_options:
+      one: "Anketa nazvana <strong>%{name}</strong> mora imati manje od 1 opcije."
+      few: "Anketa nazvana <strong>%{name}</strong> mora imati manje od %{count} opcije."
+      other: "Anketa nazvana <strong>%{name}</strong> mora imati manje od %{count} opcija."
+    default_poll_must_have_different_options: "Ankete moraju imati različite opcije."
+    named_poll_must_have_different_options: "Anketa nazvana <strong>%{name}</strong> mora imati različite opcije."
+    default_poll_with_multiple_choices_has_invalid_parameters: "Anketa s više opcija ima nevažeće parametre."
+    named_poll_with_multiple_choices_has_invalid_parameters: "Anketa nazvana <strong>%{name}</strong> s više opcija ima nevažeće parametre."
+    requires_at_least_1_valid_option: "Morate odabrati barem 1 valjanu opciju."
+    default_cannot_be_made_public: "Anketa s glasovima ne može biti postavljena kao javna."
+    named_cannot_be_made_public: "Anketa nazvana <strong>%{name}</strong> i ima glasove ne može biti postavljena kao javna."
+    edit_window_expired:
+      cannot_change_polls: "Možete dodati, ukloniti ili preimenovati ankete nakon prvih %{minutes} minuta."
+      op_cannot_edit_options: "Ne možete dodati ili ukloniti opcije ankete ankon prvih %{minutes} minuta. Molimo kontaktirajte moderatora ako morate urediti opciju ankete."

@@ -1,4 +1,5 @@
 import Badge from 'discourse/models/badge';
+import PreloadStore from 'preload-store';
 
 export default Discourse.Route.extend({
   model() {

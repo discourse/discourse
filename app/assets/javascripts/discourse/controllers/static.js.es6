@@ -1,21 +1,24 @@
+import { ajax } from 'discourse/lib/ajax';
 import computed from 'ember-addons/ember-computed-decorators';
 
 export default Ember.Controller.extend({
-
-  needs: ['application'],
+  application: Ember.inject.controller(),
 
   showLoginButton: Em.computed.equal("model.path", "login"),
 
+  @computed('model.path')
+  bodyClass: path => `static-${path}`,
+
   @computed("model.path")
   showSignupButton() {
-    return this.get("model.path") === "login" && this.get('controllers.application.canSignUp');
+    return this.get("model.path") === "login" && this.get('application.canSignUp');
   },
 
   actions: {
     markFaqRead() {
       const currentUser = this.currentUser;
       if (currentUser) {
-        Discourse.ajax("/users/read-faq", { method: "POST" }).then(() => {
+        ajax("/users/read-faq", { method: "POST" }).then(() => {
           currentUser.set('read_faq', true);
         });
       }

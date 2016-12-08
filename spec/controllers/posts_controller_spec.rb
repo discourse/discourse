@@ -108,6 +108,24 @@ describe PostsController do
     end
   end
 
+  describe 'user_posts_feed' do
+    let(:user) { log_in }
+    let!(:public_topic) { Fabricate(:topic) }
+    let!(:post) { Fabricate(:post, user: user, topic: public_topic) }
+    let!(:private_topic) { Fabricate(:topic, archetype: Archetype.private_message, category: nil) }
+    let!(:private_post) { Fabricate(:post, user: user, topic: private_topic) }
+    let!(:topicless_post) { Fabricate(:post, user: user, raw: '<p>Car 54, where are you?</p>') }
+
+    it 'returns public posts with topic for rss' do
+      topicless_post.update topic_id: -100
+      xhr :get, :user_posts_feed, username: user.username, format: :rss
+      expect(response).to be_success
+      expect(assigns(:posts)).to include post
+      expect(assigns(:posts)).to_not include private_post
+      expect(assigns(:posts)).to_not include topicless_post
+    end
+  end
+
   describe 'cooked' do
     before do
       post = Post.new(cooked: 'wat')
@@ -128,7 +146,7 @@ describe PostsController do
 
     describe "when logged in" do
       let(:user) { log_in }
-      let(:post) { Fabricate(:post, user: user, raw_email: 'email_content') }
+      let(:post) { Fabricate(:post, deleted_at: 2.hours.ago, user: user, raw_email: 'email_content') }
 
       it "raises an error if the user doesn't have permission to view raw email" do
         Guardian.any_instance.expects(:can_view_raw_email?).returns(false)
@@ -369,8 +387,12 @@ describe PostsController do
       end
 
       it "extracts links from the new body" do
-        TopicLink.expects(:extract_from).with(post)
-        xhr :put, :update, update_params
+        param = update_params
+        param[:post][:raw] =  'I just visited this https://google.com so many cool links'
+
+        xhr :put, :update, param
+        expect(response).to be_success
+        expect(TopicLink.count).to eq(1)
       end
 
       it "doesn't allow updating of deleted posts" do
@@ -557,34 +579,57 @@ describe PostsController do
       let(:moderator) { log_in(:moderator) }
       let(:new_post) { Fabricate.build(:post, user: user) }
 
-      it "raises an exception without a raw parameter" do
-	      expect { xhr :post, :create }.to raise_error(ActionController::ParameterMissing)
-      end
+      context "fast typing" do
+        before do
+          SiteSetting.min_first_post_typing_time = 3000
+          SiteSetting.auto_block_fast_typers_max_trust_level = 1
+        end
 
-      it 'queues the post if min_first_post_typing_time is not met' do
+        it 'queues the post if min_first_post_typing_time is not met' do
+          xhr :post, :create, {raw: 'this is the test content', title: 'this is the test title for the topic'}
 
-        SiteSetting.min_first_post_typing_time = 3000
-        # our logged on user here is tl1
-        SiteSetting.auto_block_fast_typers_max_trust_level = 1
+          expect(response).to be_success
+          parsed = ::JSON.parse(response.body)
 
-        xhr :post, :create, {raw: 'this is the test content', title: 'this is the test title for the topic'}
+          expect(parsed["action"]).to eq("enqueued")
 
-        expect(response).to be_success
-        parsed = ::JSON.parse(response.body)
+          user.reload
+          expect(user.blocked).to eq(true)
 
-        expect(parsed["action"]).to eq("enqueued")
+          qp = QueuedPost.first
 
-        user.reload
-        expect(user.blocked).to eq(true)
+          mod = Fabricate(:moderator)
+          qp.approve!(mod)
 
-        qp = QueuedPost.first
+          user.reload
+          expect(user.blocked).to eq(false)
+        end
 
-        mod = Fabricate(:moderator)
-        qp.approve!(mod)
+        it "doesn't enqueue replies when the topic is closed" do
+          topic = Fabricate(:closed_topic)
 
-        user.reload
-        expect(user.blocked).to eq(false)
+          xhr :post, :create, {
+            raw: 'this is the test content',
+            title: 'this is the test title for the topic',
+            topic_id: topic.id
+          }
 
+          expect(response).not_to be_success
+          parsed = ::JSON.parse(response.body)
+          expect(parsed["action"]).not_to eq("enqueued")
+        end
+
+        it "doesn't enqueue replies when the post is too long" do
+          SiteSetting.max_post_length = 10
+          xhr :post, :create, {
+            raw: 'this is the test content',
+            title: 'this is the test title for the topic',
+          }
+
+          expect(response).not_to be_success
+          parsed = ::JSON.parse(response.body)
+          expect(parsed["action"]).not_to eq("enqueued")
+        end
       end
 
       it 'blocks correctly based on auto_block_first_post_regex' do
@@ -722,8 +767,8 @@ describe PostsController do
         end
 
         it "passes category through" do
-          xhr :post, :create, {raw: 'hello', category: 'cool'}
-          expect(assigns(:manager_params)['category']).to eq('cool')
+          xhr :post, :create, {raw: 'hello', category: 1}
+          expect(assigns(:manager_params)['category']).to eq('1')
         end
 
         it "passes target_usernames through" do

@@ -1,4 +1,4 @@
-<section class='user-navigation'>
+{{#d-section pageClass="user-activity" class="user-navigation" scrollTop="false"}}
   {{#mobile-nav class='activity-nav' desktopClass='action-list activity-list nav-stacked' currentPath=currentPath}}
     <li class='no-glyph'>
       {{#link-to 'userActivity.index'}}{{i18n 'user.filters.all'}}{{/link-to}}
@@ -23,18 +23,16 @@
       {{/link-to}}
     </li>
     {{/if}}
-    {{plugin-outlet "user-activity-bottom"}}
+    {{plugin-outlet "user-activity-bottom" tagName='li'}}
   {{/mobile-nav}}
 
   {{#if viewingSelf}}
     <div class='user-archive'>
-      {{d-button action="exportUserArchive" label="user.download_archive" icon="download"}}
+      {{d-button action="exportUserArchive" label="user.download_archive.button_text" icon="download"}}
     </div>
   {{/if}}
-
-</section>
+{{/d-section}}
 
 <section class='user-right'>
-{{outlet}}
+  {{outlet}}
 </section>
-

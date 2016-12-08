@@ -1,5 +1,5 @@
-import registerUnbound from 'discourse/helpers/register-unbound';
-import { iconHTML } from 'discourse/helpers/fa-icon';
+import { registerUnbound } from 'discourse-common/lib/helpers';
+import { iconHTML } from 'discourse-common/helpers/fa-icon';
 
 var get = Em.get,
     escapeExpression = Handlebars.Utils.escapeExpression;
@@ -94,4 +94,3 @@ export function categoryLinkHTML(category, options) {
 }
 
 registerUnbound('category-link', categoryLinkHTML);
-Ember.Handlebars.helper('bound-category-link', categoryLinkHTML);

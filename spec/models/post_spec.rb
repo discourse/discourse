@@ -137,17 +137,28 @@ describe Post do
   end
 
   describe 'flagging helpers' do
-    it 'isFlagged is accurate' do
-      post = Fabricate(:post)
-      user = Fabricate(:coding_horror)
-      PostAction.act(user, post, PostActionType.types[:off_topic])
+    let(:post) { Fabricate(:post) }
+    let(:user) { Fabricate(:coding_horror) }
+    let(:admin) { Fabricate(:admin) }
 
+    it 'isFlagged is accurate' do
+      PostAction.act(user, post, PostActionType.types[:off_topic])
       post.reload
       expect(post.is_flagged?).to eq(true)
 
       PostAction.remove_act(user, post, PostActionType.types[:off_topic])
       post.reload
       expect(post.is_flagged?).to eq(false)
+    end
+
+    it 'has_active_flag is accurate' do
+      PostAction.act(user, post, PostActionType.types[:spam])
+      post.reload
+      expect(post.has_active_flag?).to eq(true)
+
+      PostAction.defer_flags!(post, admin)
+      post.reload
+      expect(post.has_active_flag?).to eq(false)
     end
   end
 
@@ -358,6 +369,7 @@ describe Post do
     end
 
     it "finds links from HTML" do
+
       expect(post_two_links.link_count).to eq(2)
     end
 
@@ -616,6 +628,21 @@ describe Post do
 
   end
 
+  describe 'before save' do
+    let(:cooked) { "<p><div class=\"lightbox-wrapper\"><a data-download-href=\"//localhost:3000/uploads/default/34784374092783e2fef84b8bc96d9b54c11ceea0\" href=\"//localhost:3000/uploads/default/original/1X/34784374092783e2fef84b8bc96d9b54c11ceea0.gif\" class=\"lightbox\" title=\"Sword reworks.gif\"><img src=\"//localhost:3000/uploads/default/optimized/1X/34784374092783e2fef84b8bc96d9b54c11ceea0_1_690x276.gif\" width=\"690\" height=\"276\"><div class=\"meta\">\n<span class=\"filename\">Sword reworks.gif</span><span class=\"informations\">1000x400 1000 KB</span><span class=\"expand\"></span>\n</div></a></div></p>" }
+
+    let(:post) do
+      Fabricate(:post,
+        raw: "<img src=\"/uploads/default/original/1X/34784374092783e2fef84b8bc96d9b54c11ceea0.gif\" width=\"690\" height=\"276\">",
+        cooked: cooked
+      )
+    end
+
+    it 'should not cook the post if raw has not been changed' do
+      post.save!
+      expect(post.cooked).to eq(cooked)
+    end
+  end
 
   describe 'after save' do
 
@@ -785,7 +812,7 @@ describe Post do
     it "should add nofollow to links in the post for trust levels below 3" do
       post.user.trust_level = 2
       post.save
-      expect(post.cooked).to match(/nofollow/)
+      expect(post.cooked).to match(/nofollow noopener/)
     end
 
     it "when tl3_links_no_follow is false, should not add nofollow for trust level 3 and higher" do
@@ -799,7 +826,7 @@ describe Post do
       SiteSetting.stubs(:tl3_links_no_follow).returns(true)
       post.user.trust_level = 3
       post.save
-      expect(post.cooked).to match(/nofollow/)
+      expect(post.cooked).to match(/nofollow noopener/)
     end
   end
 
@@ -859,6 +886,27 @@ describe Post do
       expect(post.baked_at).not_to eq(first_baked)
       expect(post.cooked).to eq(first_cooked)
       expect(result).to eq(true)
+    end
+  end
+
+  describe "#set_owner" do
+    let(:post) { Fabricate(:post) }
+    let(:coding_horror) { Fabricate(:coding_horror) }
+
+    it "will change owner of a post correctly" do
+      post.set_owner(coding_horror, Discourse.system_user)
+      post.reload
+
+      expect(post.user).to eq(coding_horror)
+      expect(post.revisions.size).to eq(1)
+    end
+
+    it "skips creating new post revision if skip_revision is true" do
+      post.set_owner(coding_horror, Discourse.system_user, true)
+      post.reload
+
+      expect(post.user).to eq(coding_horror)
+      expect(post.revisions.size).to eq(0)
     end
   end
 

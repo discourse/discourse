@@ -57,11 +57,6 @@
   display: none;
 }
 
-.notification-buttons {
-  margin: 10px 0;
-  text-align: right;
-}
-
 .user-navigation {
 
   .map {
@@ -174,6 +169,7 @@
 
 .user-nav {
   margin: 5px 0px;
+  padding-top: 10px;
   .fa {
     margin-right: 5px;
   }
@@ -190,60 +186,116 @@
 }
 
 .top-section {
-  display: inline-block;
-  width: 45%;
-  max-width: 500px;
-  padding-right: 20px;
-  vertical-align: top;
-  margin-bottom: 30px;
-  .more {
-    display: block;
-    margin-top: 10px;
-    color: dark-light-choose(scale-color($primary, $lightness: 40%), scale-color($secondary, $lightness: 60%));
-  }
-  h3 {
-    margin-bottom: 15px;
-  }
-  .relative-date {
-    color: lighten($primary, 40%);
-    font-size: 0.8em;
-    margin-left: 5px;
-  }
-  .like-count {
-    margin-left: 5px;
-  }
+  @include clearfix();
   ul {
-    list-style-type: none;
-    padding: 0;
+    list-style: none;
     margin: 0;
-    li {
-      margin: 0;
-      padding: 8px 0;
-      .fa-heart {
-        margin-left: 3px;
+  }
+}
+
+.top-section,
+.top-sub-section {
+  margin-bottom: 20px;
+}
+
+.stats-title {
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+
+.stats-section {
+  ul {
+    margin: 10px 0;
+  }
+
+  li {
+    display: inline-block;
+    padding: 10px 14px;
+    margin: 0 5px 10px 0;
+    background: dark-light-diff($primary, $secondary, 90%, -65%);
+
+    &.linked-stat { // This makes the entire "box" (the li) clickable instead of a narrow area.
+      padding: 0;
+      a {
+        padding: 10px 14px;
+        width: 100%;
+        height: 100%;
+        display: block;
+        color: black;
       }
     }
   }
 
-  dt,dd {
-    float:left;
+  li:last-of-type {
+    margin: 0;
   }
-  dd {
-    min-width: 80px;
-    text-align: right;
+
+  .value {
+    font-weight: bold;
+    font-size: 1.2em;
   }
-  dt {
-    clear: left;
-    min-width: 100px;
-    color: dark-light-choose(scale-color($primary, $lightness: 25%), scale-color($secondary, $lightness: 75%));
+
+  .label {
+    color: dark-light-diff($primary, $secondary, 50%, -50%);
+  }
+}
+
+.top-sub-section {
+  width: 50%;
+
+  ul {
+    max-width: 95%;
+  }
+
+  li {
+    border-left: dark-light-diff($primary, $secondary, 90%, -65%) solid 2px;
+    padding: 5px 8px;
+    margin: 10px 0;
+  }
+
+  .topic-info {
+    color: dark-light-choose(scale-color($primary, $lightness: 40%), scale-color($secondary, $lightness: 40%));
+  }
+}
+
+.replies-section,
+.topics-section,
+.links-section {
+  li {
+    word-wrap: break-word;
+  }
+}
+
+.links-section {
+  .domain {
+    font-size: 0.714em;
+    color: dark-light-choose(scale-color($primary, $lightness: 40%), scale-color($secondary, $lightness: 40%));
+  }
+}
+
+.likes-section {
+  li {
+    height: 40px;
   }
 }
 
 @media all
 and (max-width : 600px) {
-  .top-section {
-    width: 90%;
+  .top-sub-section {
+    float: none;
+    width: 100%;
   }
 }
 
+.user-preferences .tags .select2-container-multi {
+  border: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
+  width: 540px;
+  border-radius: 0;
+  .select2-choices {
+    border: none;
+  }
+}
 
+.user-preferences .watching-first-post.fa-dot-circle-o {
+  color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
+}

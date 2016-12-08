@@ -1,0 +1,16 @@
+<h1><%= t 'finish_installation.congratulations' %></h1>
+
+<div class='row'>
+  <%= image_tag "/images/wizard/tada.svg", class: "tada" %>
+</div>
+
+<div class='row help-text'>
+  <%= t 'finish_installation.register.help' %>
+</div>
+
+<div class='row'>
+  <%= link_to(finish_installation_register_path, class: 'wizard-btn primary') do %>
+    <i class='fa fa-user'></i>
+    <%= t 'finish_installation.register.button' %>
+  <% end %>
+</div>

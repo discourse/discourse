@@ -1,6 +1,6 @@
 import { createWidget } from 'discourse/widgets/widget';
 import RawHtml from 'discourse/widgets/raw-html';
-import { iconNode } from 'discourse/helpers/fa-icon';
+import { iconNode } from 'discourse/helpers/fa-icon-node';
 import { h } from 'virtual-dom';
 import { actionDescriptionHtml } from 'discourse/components/small-action';
 import { avatarFor } from 'discourse/widgets/post';
@@ -20,7 +20,11 @@ const icons = {
   'visible.disabled': 'eye-slash',
   'split_topic': 'sign-out',
   'invited_user': 'plus-circle',
-  'removed_user': 'minus-circle'
+  'invited_group': 'plus-circle',
+  'removed_user': 'minus-circle',
+  'removed_group': 'minus-circle',
+  'public_topic': 'comment',
+  'private_topic': 'envelope'
 };
 
 export default createWidget('post-small-action', {

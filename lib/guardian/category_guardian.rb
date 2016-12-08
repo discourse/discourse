@@ -45,9 +45,10 @@ module CategoryGuardian
   end
 
   def can_see_category?(category)
-    is_admin? ||
-    !category.read_restricted ||
-    (@user.staged? && category.email_in.present? && category.email_in_allow_strangers) ||
+    return false unless category
+    return true if is_admin?
+    return true if !category.read_restricted
+    return true if is_staged? && category.email_in.present? && category.email_in_allow_strangers
     secure_category_ids.include?(category.id)
   end
 
@@ -66,5 +67,10 @@ module CategoryGuardian
 
   def topic_create_allowed_category_ids
     @topic_create_allowed_category_ids ||= @user.topic_create_allowed_category_ids
+  end
+
+  def topic_featured_link_allowed_category_ids
+    @topic_featured_link_allowed_category_ids = CategoryCustomField.where(name: "topic_featured_link_allowed", value: "true")
+                                                                   .pluck(:category_id)
   end
 end

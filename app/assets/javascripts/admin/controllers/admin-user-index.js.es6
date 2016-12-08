@@ -1,3 +1,4 @@
+import { ajax } from 'discourse/lib/ajax';
 import CanCheckEmails from 'discourse/mixins/can-check-emails';
 import { propertyNotEqual, setting } from 'discourse/lib/computed';
 
@@ -5,6 +6,7 @@ export default Ember.Controller.extend(CanCheckEmails, {
   editingTitle: false,
   originalPrimaryGroupId: null,
   availableGroups: null,
+  userTitleValue: null,
 
   showApproval: setting('must_approve_users'),
   showBadges: setting('enable_badges'),
@@ -26,23 +28,25 @@ export default Ember.Controller.extend(CanCheckEmails, {
       });
     }
     return [];
-  }.property('model.user_fields.@each'),
+  }.property('model.user_fields.[]'),
 
   actions: {
     toggleTitleEdit() {
+      this.set('userTitleValue', this.get('model.title'));
       this.toggleProperty('editingTitle');
     },
 
     saveTitle() {
       const self = this;
 
-      return Discourse.ajax("/users/" + this.get('model.username').toLowerCase(), {
-        data: {title: this.get('model.title')},
+      return ajax("/users/" + this.get('model.username').toLowerCase(), {
+        data: {title: this.get('userTitleValue')},
         type: 'PUT'
       }).catch(function(e) {
         bootbox.alert(I18n.t("generic_error_with_reason", {error: "http: " + e.status + " - " + e.body}));
       }).finally(function() {
-        self.send('toggleTitleEdit');
+        self.set('model.title', self.get('userTitleValue'));
+        self.toggleProperty('editingTitle');
       });
     },
 
@@ -65,7 +69,7 @@ export default Ember.Controller.extend(CanCheckEmails, {
     savePrimaryGroup() {
       const self = this;
 
-      return Discourse.ajax("/admin/users/" + this.get('model.id') + "/primary_group", {
+      return ajax("/admin/users/" + this.get('model.id') + "/primary_group", {
         type: 'PUT',
         data: {primary_group_id: this.get('model.primary_group_id')}
       }).then(function () {

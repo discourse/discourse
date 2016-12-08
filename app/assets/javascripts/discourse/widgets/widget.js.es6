@@ -1,4 +1,8 @@
-import { WidgetClickHook, WidgetClickOutsideHook } from 'discourse/widgets/click-hook';
+import { WidgetClickHook,
+         WidgetClickOutsideHook,
+         WidgetKeyUpHook,
+         WidgetKeyDownHook,
+         WidgetDragHook } from 'discourse/widgets/hooks';
 import { h } from 'virtual-dom';
 import DecoratorHelper from 'discourse/widgets/decorator-helper';
 
@@ -66,17 +70,34 @@ function drawWidget(builder, attrs, state) {
   if (this.buildAttributes) {
     properties.attributes = this.buildAttributes(attrs);
   }
+
+  if (this.keyUp) {
+    properties['widget-key-up'] = new WidgetKeyUpHook(this);
+  }
+
+  if (this.keyDown) {
+    properties['widget-key-down'] = new WidgetKeyDownHook(this);
+  }
+
   if (this.clickOutside) {
     properties['widget-click-outside'] = new WidgetClickOutsideHook(this);
   }
   if (this.click) {
     properties['widget-click'] = new WidgetClickHook(this);
   }
+  if (this.drag) {
+    properties['widget-drag'] = new WidgetDragHook(this);
+  }
 
   const attributes = properties['attributes'] || {};
   properties.attributes = attributes;
+
   if (this.title) {
-    attributes.title = I18n.t(this.title);
+    if (typeof this.title === 'function') {
+      attributes.title = this.title(attrs, state);
+    } else {
+      attributes.title = I18n.t(this.title);
+    }
   }
 
   let contents = this.html(attrs, state);
@@ -105,21 +126,33 @@ export function createWidget(name, opts) {
 }
 
 export default class Widget {
-  constructor(attrs, container, opts) {
+  constructor(attrs, register, opts) {
     opts = opts || {};
     this.attrs = attrs || {};
     this.mergeState = opts.state;
-    this.container = container;
     this.model = opts.model;
+    this.register = register;
+
+    register.deprecateContainer(this);
 
     this.key = this.buildKey ? this.buildKey(attrs) : null;
+    this.site = register.lookup('site:main');
+    this.siteSettings = register.lookup('site-settings:main');
+    this.currentUser = register.lookup('current-user:main');
+    this.capabilities = register.lookup('capabilities:main');
+    this.store = register.lookup('store:main');
+    this.appEvents = register.lookup('app-events:main');
+    this.keyValueStore = register.lookup('key-value-store:main');
 
-    this.site = container.lookup('site:main');
-    this.siteSettings = container.lookup('site-settings:main');
-    this.currentUser = container.lookup('current-user:main');
-    this.store = container.lookup('store:main');
-    this.appEvents = container.lookup('app-events:main');
-    this.keyValueStore = container.lookup('key-value-store:main');
+    // Helps debug widgets
+    if (Ember.testing) {
+      const ds = this.defaultState(attrs);
+      if (typeof ds !== "object") {
+        Ember.warn(`defaultState must return an object`);
+      } else if (Object.keys(ds).length > 0 && !this.key) {
+        Ember.warn(`you need a key when using state ${this.name}`);
+      }
+    }
 
     if (this.name) {
       const custom = _customSettings[this.name];
@@ -138,7 +171,7 @@ export default class Widget {
   }
 
   render(prev) {
-    if (prev && prev.state) {
+    if (prev && prev.key && prev.key === this.key) {
       this.state = prev.state;
     } else {
       this.state = this.defaultState(this.attrs, this.state);
@@ -161,7 +194,7 @@ export default class Widget {
 
       const refreshAction = dirtyOpts.onRefresh;
       if (refreshAction) {
-        this.sendWidgetAction(refreshAction);
+        this.sendWidgetAction(refreshAction, dirtyOpts.refreshArg);
       }
     }
 
@@ -190,15 +223,15 @@ export default class Widget {
     let WidgetClass = _registry[widgetName];
 
     if (!WidgetClass) {
-      if (!this.container) {
-        console.error("couldn't find container");
+      if (!this.register) {
+        console.error("couldn't find register");
         return;
       }
-      WidgetClass = this.container.lookupFactory(`widget:${widgetName}`);
+      WidgetClass = this.register.lookupFactory(`widget:${widgetName}`);
     }
 
     if (WidgetClass) {
-      const result = new WidgetClass(attrs, this.container, opts);
+      const result = new WidgetClass(attrs, this.register, opts);
       result.parentWidget = this;
       return result;
     } else {
@@ -238,7 +271,7 @@ export default class Widget {
 
       if (target) {
         // TODO: Use ember closure actions
-        const actions = target._actions || target.actionHooks;
+        const actions = target.actions || target.actionHooks || {};
         const method = actions[actionName];
         if (method) {
           promise = method.call(target, param);
@@ -271,11 +304,21 @@ export default class Widget {
     return result;
   }
 
+  sendWidgetEvent(name) {
+    const methodName = `${name}Event`;
+    return this.rerenderResult(() => {
+      const widget = this._findAncestorWithProperty(methodName);
+      if (widget) {
+        return widget[methodName]();
+      }
+    });
+  }
+
   sendWidgetAction(name, param) {
     return this.rerenderResult(() => {
       const widget = this._findAncestorWithProperty(name);
       if (widget) {
-        return widget[name](param);
+        return widget[name].call(widget, param);
       }
 
       return this._sendComponentAction(name, param || this.findAncestorModel());

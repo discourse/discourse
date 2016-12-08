@@ -1,6 +1,6 @@
 <a href {{action "share" source}} title="{{unbound source.title}}" aria-label="{{unbound source.title}}" >
   {{#if source.faIcon}}
-    <i {{bind-attr class=":fa source.faIcon"}}></i>
+    <i class="fa {{source.faIcon}}"></i>
   {{else}}
     {{{source.htmlIcon}}}
   {{/if}}

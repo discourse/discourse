@@ -42,7 +42,7 @@ describe DiscourseRedis do
 
     it 'should return the slave config when master is down' do
       begin
-        Redis::Client.any_instance.expects(:call).raises(Redis::CannotConnectError).twice
+        Redis::Client.any_instance.expects(:call).raises(Redis::CannotConnectError).once
         expect { connector.resolve }.to raise_error(Redis::CannotConnectError)
 
         config = connector.resolve
@@ -58,9 +58,24 @@ describe DiscourseRedis do
       begin
         error = RuntimeError.new('Name or service not known')
 
-        Redis::Client.any_instance.expects(:call).raises(error).twice
+        Redis::Client.any_instance.expects(:call).raises(error).once
         expect { connector.resolve }.to raise_error(error)
+        fallback_handler.instance_variable_get(:@timer_task).shutdown
+        expect(fallback_handler.running?).to eq(false)
 
+        config = connector.resolve
+
+        expect(config[:host]).to eq(slave_host)
+        expect(config[:port]).to eq(slave_port)
+        expect(fallback_handler.running?).to eq(true)
+      ensure
+        fallback_handler.master = true
+      end
+    end
+
+    it "should return the slave config when master is still loading data" do
+      begin
+        Redis::Client.any_instance.expects(:call).with([:info]).returns("someconfig:haha\r\nloading:1")
         config = connector.resolve
 
         expect(config[:host]).to eq(slave_host)
@@ -78,20 +93,28 @@ describe DiscourseRedis do
   end
 
   describe DiscourseRedis::FallbackHandler do
+    after do
+      fallback_handler.master = true
+    end
+
     describe '#initiate_fallback_to_master' do
+      it 'should return the right value if the master server is still down' do
+        fallback_handler.master = false
+        Redis::Client.any_instance.expects(:call).with([:info]).returns("Some other stuff")
+        expect(fallback_handler.initiate_fallback_to_master).to eq(false)
+      end
+
       it 'should fallback to the master server once it is up' do
-        begin
-          fallback_handler.master = false
-          Redis::Client.any_instance.expects(:call).with([:info]).returns(DiscourseRedis::FallbackHandler::MASTER_LINK_STATUS)
-          Redis::Client.any_instance.expects(:call).with([:client, [:kill, 'type', 'normal']])
+        fallback_handler.master = false
+        Redis::Client.any_instance.expects(:call).with([:info]).returns(DiscourseRedis::FallbackHandler::MASTER_LINK_STATUS)
 
-          fallback_handler.initiate_fallback_to_master
-
-          expect(fallback_handler.master).to eq(true)
-          expect(Discourse.recently_readonly?).to eq(false)
-        ensure
-          fallback_handler.master = true
+        DiscourseRedis::FallbackHandler::CONNECTION_TYPES.each do |connection_type|
+          Redis::Client.any_instance.expects(:call).with([:client, [:kill, 'type', connection_type]])
         end
+
+        expect(fallback_handler.initiate_fallback_to_master).to eq(true)
+        expect(fallback_handler.master).to eq(true)
+        expect(Discourse.recently_readonly?).to eq(false)
       end
     end
   end

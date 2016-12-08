@@ -5,6 +5,7 @@ require_relative 'category_importer'
 require_relative 'message_importer'
 require_relative 'poll_importer'
 require_relative 'post_importer'
+require_relative 'permalink_importer'
 require_relative 'user_importer'
 require_relative '../support/smiley_processor'
 require_relative '../support/text_processor'
@@ -29,11 +30,11 @@ module ImportScripts::PhpBB3
     end
 
     def category_importer
-      CategoryImporter.new(@lookup, text_processor)
+      CategoryImporter.new(@lookup, text_processor, permalink_importer)
     end
 
     def post_importer
-      PostImporter.new(@lookup, text_processor, attachment_importer, poll_importer, @settings)
+      PostImporter.new(@lookup, text_processor, attachment_importer, poll_importer, permalink_importer, @settings)
     end
 
     def message_importer
@@ -42,6 +43,10 @@ module ImportScripts::PhpBB3
 
     def bookmark_importer
       BookmarkImporter.new
+    end
+
+    def permalink_importer
+      @permalink_importer ||= PermalinkImporter.new(@settings.permalinks)
     end
 
     protected

@@ -1,4 +1,8 @@
-const _customizations = {};
+const { registerKeyword } = Ember.__loader.require("ember-htmlbars/keywords");
+const { internal } = Ember.__loader.require('htmlbars-runtime');
+import PreloadStore from 'preload-store';
+
+let _customizations = {};
 
 export function getCustomHTML(key) {
   const c = _customizations[key];
@@ -12,19 +16,44 @@ export function getCustomHTML(key) {
   }
 }
 
+export function clearHTMLCache() {
+  _customizations = {};
+}
+
 // Set a fragment of HTML by key. It can then be looked up with `getCustomHTML(key)`.
 export function setCustomHTML(key, html) {
   _customizations[key] = html;
 }
 
-Ember.HTMLBars._registerHelper('custom-html', function(params, hash, options, env) {
-  const name = params[0];
-  const html = getCustomHTML(name);
-  if (html) { return html; }
+registerKeyword('custom-html', {
+  setupState(state, env, scope, params) {
+    return { htmlKey: env.hooks.getValue(params[0]) };
+  },
 
-  const contextString = params[1];
-  const container = (env || contextString).data.view.container;
-  if (container.lookup('template:' + name)) {
-    return env.helpers.partial.helperFunction.apply(this, arguments);
+  render(renderNode, env, scope, params, hash, template, inverse, visitor) {
+    let state = renderNode.getState();
+    if (!state.htmlKey) { return true; }
+
+    const html = getCustomHTML(state.htmlKey);
+    if (html) {
+      const htmlHash = { html };
+      env.hooks.component(renderNode,
+          env,
+          scope,
+          'custom-html-container',
+          params,
+          htmlHash,
+          { default: template, inverse },
+          visitor);
+      return true;
+    }
+
+    template = env.owner.lookup(`template:${state.htmlKey}`);
+    if (template) {
+      internal.hostBlock(renderNode, env, scope, template.raw, null, null, visitor, function(options) {
+        options.templates.template.yield();
+      });
+    }
+    return true;
   }
 });

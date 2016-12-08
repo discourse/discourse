@@ -12,7 +12,15 @@ test("search", (assert) => {
   });
 
   fillIn('#search-term', 'dev');
+  keyEvent('#search-term', 'keyup', 16);
   andThen(() => {
     assert.ok(exists('.search-menu .results ul li'), 'it shows results');
+  });
+
+  click('.show-help');
+
+  andThen(() => {
+    assert.equal(find('.full-page-search').val(), 'dev', 'it shows the search term');
+    assert.ok(exists('.search-advanced-options'), 'advanced search is expanded');
   });
 });

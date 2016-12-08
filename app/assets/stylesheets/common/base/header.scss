@@ -47,7 +47,7 @@
     }
 
     .icons {
-      float: left;
+      float: right;
       text-align: center;
       margin: 0 0 0 5px;
       list-style: none;
@@ -88,6 +88,15 @@
           border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
           border-left: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
           border-right: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
+
+          .badge-notification {
+            top: -10px;
+          }
+
+          .flagged-posts {
+            right: 24px;
+          }
+
           &:after {
             display: block;
             position: absolute;
@@ -114,7 +123,7 @@
       .notifications {
         position: relative;
       }
-      .badge-notification {
+      .badge-notification, .ring {
         position: absolute;
         top: -9px;
         z-index: 1;
@@ -124,14 +133,14 @@
         right: 0;
         background-color: scale-color($tertiary, $lightness: 50%);
       }
-      .unread-private-messages {
+      .unread-private-messages, .ring {
         right: 25px;
       }
       .flagged-posts {
         right: 65px;
       }
     }
-    .flagged-posts {
+    .flagged-posts, .queued-posts {
       background: $danger;
     }
 }

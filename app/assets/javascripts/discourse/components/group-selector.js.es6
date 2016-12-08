@@ -1,15 +1,30 @@
-export default Ember.Component.extend({
-  placeholder: function(){
-    return I18n.t(this.get("placeholderKey"));
-  }.property("placeholderKey"),
+import { on, observes, default as computed } from 'ember-addons/ember-computed-decorators';
+import { getOwner } from 'discourse-common/lib/get-owner';
 
-  _initializeAutocomplete: function() {
+export default Ember.Component.extend({
+  @computed('placeholderKey')
+  placeholder(placeholderKey) {
+    return placeholderKey ? I18n.t(placeholderKey) : '';
+  },
+
+  @observes('groupNames')
+  _update() {
+    if (this.get('canReceiveUpdates') === 'true')
+      this._initializeAutocomplete({updateData: true});
+  },
+
+  @on('didInsertElement')
+  _initializeAutocomplete(opts) {
     var self = this;
     var selectedGroups;
+    var groupNames = this.get('groupNames');
 
-    var template = this.container.lookup('template:group-selector-autocomplete.raw');
+    var template = getOwner(this).lookup('template:group-selector-autocomplete.raw');
     self.$('input').autocomplete({
       allowAny: false,
+      items: _.isArray(groupNames) ? groupNames : (Ember.isEmpty(groupNames)) ? [] : [groupNames],
+      single: this.get('single'),
+      updateData: (opts && opts.updateData) ? opts.updateData : false,
       onChangeItems: function(items){
         selectedGroups = items;
         self.set("groupNames", items.join(","));
@@ -31,5 +46,5 @@ export default Ember.Component.extend({
       },
       template: template
     });
-  }.on('didInsertElement')
+  }
 });

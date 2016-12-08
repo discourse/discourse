@@ -72,20 +72,36 @@ class Invite < ActiveRecord::Base
     end
   end
 
-  def self.invite_by_email(email, invited_by, topic=nil, group_ids=nil)
-    create_invite_by_email(email, invited_by, topic, group_ids, true)
+  def self.invite_by_email(email, invited_by, topic=nil, group_ids=nil, custom_message=nil)
+    create_invite_by_email(email, invited_by, {
+      topic: topic,
+      group_ids: group_ids,
+      custom_message: custom_message,
+      send_email: true
+    })
   end
 
   # generate invite link
   def self.generate_invite_link(email, invited_by, topic=nil, group_ids=nil)
-    invite = create_invite_by_email(email, invited_by, topic, group_ids, false)
+    invite = create_invite_by_email(email, invited_by, {
+      topic: topic,
+      group_ids: group_ids,
+      send_email: false
+    })
     return "#{Discourse.base_url}/invites/#{invite.invite_key}" if invite
   end
 
   # Create an invite for a user, supplying an optional topic
   #
   # Return the previously existing invite if already exists. Returns nil if the invite can't be created.
-  def self.create_invite_by_email(email, invited_by, topic=nil, group_ids=nil, send_email=true)
+  def self.create_invite_by_email(email, invited_by, opts=nil)
+    opts ||= {}
+
+    topic = opts[:topic]
+    group_ids = opts[:group_ids]
+    send_email = opts[:send_email].nil? ? true : opts[:send_email]
+    custom_message = opts[:custom_message]
+
     lower_email = Email.downcase(email)
     user = User.find_by(email: lower_email)
 
@@ -105,7 +121,9 @@ class Invite < ActiveRecord::Base
     end
 
     if !invite
-      invite = Invite.create!(invited_by: invited_by, email: lower_email)
+      create_args = { invited_by: invited_by, email: lower_email }
+      create_args[:moderator] = true if opts[:moderator]
+      invite = Invite.create!(create_args)
     end
 
     if topic && !invite.topic_invites.pluck(:topic_id).include?(topic.id)
@@ -126,7 +144,7 @@ class Invite < ActiveRecord::Base
       end
     end
 
-    Jobs.enqueue(:invite_email, invite_id: invite.id) if send_email
+    Jobs.enqueue(:invite_email, invite_id: invite.id, custom_message: custom_message) if send_email
 
     invite.reload
     invite
@@ -233,6 +251,12 @@ class Invite < ActiveRecord::Base
     Jobs.enqueue(:invite_email, invite_id: self.id)
   end
 
+  def self.resend_all_invites_from(user_id)
+    Invite.where('invites.user_id IS NULL AND invites.email IS NOT NULL AND invited_by_id = ?', user_id).find_each do |invite|
+      invite.resend_invite unless invite.blank?
+    end
+  end
+
   def limit_invites_per_day
     RateLimiter.new(invited_by, "invites-per-day", SiteSetting.max_invites_per_day, 1.day.to_i)
   end
@@ -241,8 +265,12 @@ class Invite < ActiveRecord::Base
     File.join(Rails.root, "public", "uploads", "csv", RailsMultisite::ConnectionManagement.current_db)
   end
 
-  def self.chunk_path(identifier, filename, chunk_number)
-    File.join(Invite.base_directory, "tmp", identifier, "#{filename}.part#{chunk_number}")
+  def self.create_csv(file, name)
+    extension = File.extname(file.original_filename)
+    path = "#{Invite.base_directory}/#{name}#{extension}"
+    FileUtils.mkdir_p(Pathname.new(path).dirname)
+    File.open(path, "wb") { |f| f << file.tempfile.read }
+    path
   end
 end
 
@@ -261,6 +289,7 @@ end
 #  deleted_at     :datetime
 #  deleted_by_id  :integer
 #  invalidated_at :datetime
+#  moderator      :boolean          default(FALSE), not null
 #
 # Indexes
 #

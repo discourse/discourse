@@ -4,7 +4,7 @@ export default Ember.Component.extend({
   actions: {
     showBulkActions() {
       const controller = showModal('topic-bulk-actions', { model: this.get('selected'), title: 'topics.bulk.actions' });
-      controller.set('refreshTarget', this.get('refreshTarget'));
+      controller.set('refreshClosure', () => this.sendAction());
     }
   }
 });

@@ -9,6 +9,7 @@ pl_PL:
   site_settings:
     poll_enabled: "Pozwolić użytkownikom na tworzenie ankiet?"
     poll_maximum_options: "Maksymalna ilość dozwolonych opcji w ankiecie."
+    poll_edit_window_mins: "Liczba minut po utworzeniu postu, podczas którego można edytować ankietę."
   poll:
     multiple_polls_without_name: "Istnieje kilka nienazwanych ankiet. Uzyj atrybutu '<code>name</code>', aby umożliwić ich jednoznaczną identyfikację."
     multiple_polls_with_same_name: "Istnieje kilka ankiet o tej samej nazwie: <strong>%{name}</strong>. Użyj atrybutu '<code>name</code>', aby umożliwić ich jednoznaczną identyfikację."
@@ -27,9 +28,12 @@ pl_PL:
     default_poll_with_multiple_choices_has_invalid_parameters: "Ankieta wielokrotnego wyboru posiada nieprawidłowe parametry."
     named_poll_with_multiple_choices_has_invalid_parameters: "Ankieta wielokrotnego wyboru o nazwie <strong>%{name}</strong> posiada nieprawidłowe parametry."
     requires_at_least_1_valid_option: "Musisz wybrać co najmniej 1 poprawną opcje."
-    cannot_change_polls_after_5_minutes: "Po upływie 5 minut ankiety nie mogą być zmieniane."
-    op_cannot_edit_options_after_5_minutes: "Po upływie 5 minut  nie można dodawać lub usuwać opcji wyboru w ankietach. Skontaktuj się z moderatorem jeśli naprawdę musisz zmienić opcję w tej ankiecie."
-    staff_cannot_add_or_remove_options_after_5_minutes: "Po upływie 5 minut  nie można dodawać lub usuwać opcji wyboru w ankietach. Jeśli mimo wszystko chcesz wprowadzić tak drastyczne zmiany, zamknij/usuń ten temat i utwórz poprawną ankietę w nowym."
+    default_cannot_be_made_public: "Ankieta z głosami nie może być publiczna."
+    named_cannot_be_made_public: "Ankieta o nazwie <strong>% {name} </ strong> posiadająca głosy nie może być publiczna."
+    edit_window_expired:
+      cannot_change_polls: "Po upływie pierwszych %{minutes} minut nie można dodawać, usuwać lub zmieniać ankiet."
+      op_cannot_edit_options: "Po upływie pierwszych %{minutes} minut nie można dodawać lub usuwać opcji wyboru w ankietach. Skontaktuj się z moderatorem jeśli naprawdę musisz zmienić opcję w tej ankiecie."
+      staff_cannot_add_or_remove_options: "Po upływie pierwszych %{minutes} minut nie można dodawać lub usuwać opcji wyboru w ankietach. Należy zamknąć ten temat i utworzyć zamiast tego nowy temat."
     no_polls_associated_with_this_post: "Wskazany wpis nie posiada przypisanych ankiet."
     no_poll_with_this_name: "Ankieta <strong>%{name}</strong> nie jest przypisana do tego wpisu."
     post_is_deleted: "Nie można wykonywać akcji na usuniętym wpisie."

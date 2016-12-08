@@ -5,7 +5,7 @@ export default Ember.Controller.extend({
   queryParams: ['username'],
   noMoreBadges: false,
   userBadges: null,
-  needs: ["application"],
+  application: Ember.inject.controller(),
 
   @computed('username')
   user(username) {
@@ -21,6 +21,11 @@ export default Ember.Controller.extend({
 
   actions: {
     loadMore() {
+      if (this.get('loadingMore')) {
+        return;
+      }
+      this.set('loadingMore', true);
+
       const userBadges = this.get('userBadges');
 
       UserBadge.findByBadgeId(this.get('model.id'), {
@@ -31,6 +36,8 @@ export default Ember.Controller.extend({
         if (userBadges.length === 0){
           this.set('noMoreBadges', true);
         }
+      }).finally(()=>{
+        this.set('loadingMore', false);
       });
     }
   },
@@ -41,9 +48,14 @@ export default Ember.Controller.extend({
     return grantCount > (userBadgeLength || 0);
   },
 
+  @computed('user', 'model.grant_count')
+  canShowOthers(user, grantCount) {
+    return !!user && grantCount > 1;
+  },
+
   @observes('canLoadMore')
   _showFooter() {
-    this.set("controllers.application.showFooter", !this.get("canLoadMore"));
+    this.set("application.showFooter", !this.get("canLoadMore"));
   }
 
 });

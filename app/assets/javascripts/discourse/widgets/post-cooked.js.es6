@@ -1,3 +1,4 @@
+import { ajax } from 'discourse/lib/ajax';
 import { isValidLink } from 'discourse/lib/click-track';
 import { number } from 'discourse/lib/formatter';
 
@@ -10,11 +11,11 @@ export function addDecorator(cb) {
 
 export default class PostCooked {
 
-  constructor(attrs, getModel) {
+  constructor(attrs, decoratorHelper) {
     this.attrs = attrs;
     this.expanding = false;
     this._highlighted = false;
-    this.getModel = getModel;
+    this.decoratorHelper = decoratorHelper;
   }
 
   update(prev) {
@@ -30,7 +31,7 @@ export default class PostCooked {
     this._fixImageSizes($html);
     this._applySearchHighlight($html);
 
-    _decorators.forEach(cb => cb($html, this.getModel));
+    _decorators.forEach(cb => cb($html, this.decoratorHelper));
     return $html[0];
   }
 
@@ -130,7 +131,7 @@ export default class PostCooked {
       const postId = parseInt($aside.data('post'), 10);
       topicId = parseInt(topicId, 10);
 
-      Discourse.ajax(`/posts/by_number/${topicId}/${postId}`).then(result => {
+      ajax(`/posts/by_number/${topicId}/${postId}`).then(result => {
         const div = $("<div class='expanded-quote'></div>");
         div.html(result.cooked);
         div.highlight(originalText, {caseSensitive: true, element: 'span', className: 'highlighted'});
@@ -162,12 +163,7 @@ export default class PostCooked {
         // If it's the same topic as ours, build the URL from the topic object
         if (this.attrs.topicId === asideTopicId) {
           navLink = `<a href='${this._urlForPostNumber(postNumber)}' title='${quoteTitle}' class='back'></a>`;
-        } else {
-          // Made up slug should be replaced with canonical URL
-          const asideLink = Discourse.getURL("/t/via-quote/") + asideTopicId + "/" + postNumber;
-          navLink = `<a href='${asideLink}' title='${quoteTitle}' class='quote-other-topic'></a>`;
         }
-
       } else {
         // assume the same topic
         navLink = `<a href='${this._urlForPostNumber(postNumber)}' title='${quoteTitle}' class='back'></a>`;

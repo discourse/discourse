@@ -52,13 +52,13 @@ class ImportScripts::Quandora < ImportScripts::Base
       post = Post.find(post_id) # already imported this topic
     else
       topic[:user_id] = user_id_from_imported_user_id(topic[:author_id]) || -1
-      topic[:category] = 'quandora-import' 
+      topic[:category] = 'quandora-import'
 
       post = create_post(topic, topic[:id])
 
-      unless created_topic.is_a?(Post)
+      unless post.is_a?(Post)
         puts "Error creating topic #{topic[:id]}. Skipping."
-        puts created_topic.inspect
+        puts post.inspect
       end
     end
 
@@ -76,14 +76,14 @@ class ImportScripts::Quandora < ImportScripts::Base
       return # already imported
     end
     post[:topic_id] = topic_id
-    post[:user_id] = user_id_from_imported_user_id(post[:author_id])
-    new_post = create_post post, post[:id] 
+    post[:user_id] = user_id_from_imported_user_id(post[:author_id]) || -1
+    new_post = create_post post, post[:id]
     unless new_post.is_a?(Post)
       puts "Error creating post #{post[:id]}. Skipping."
       puts new_post.inspect
     end
   end
-  
+
   def file_full_path(relpath)
     File.join JSON_FILES_DIR, relpath.split("?").first
   end

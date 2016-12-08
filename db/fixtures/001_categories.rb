@@ -1,15 +1,16 @@
 # fix any bust caches post initial migration
-ActiveRecord::Base.send(:subclasses).each{|m| m.reset_column_information}
+ActiveRecord::Base.send(:subclasses).each { |m| m.reset_column_information }
 
 SiteSetting.refresh!
-if SiteSetting.uncategorized_category_id == -1 || !Category.exists?(SiteSetting.uncategorized_category_id)
+uncat_id = SiteSetting.uncategorized_category_id
+uncat_id = -1 unless Numeric === uncat_id
+
+if uncat_id == -1 || !Category.exists?(uncat_id)
   puts "Seeding uncategorized category!"
 
   result = Category.exec_sql "SELECT 1 FROM categories WHERE lower(name) = 'uncategorized'"
   name = 'Uncategorized'
-  if result.count > 0
-    name << SecureRandom.hex
-  end
+  name << SecureRandom.hex if result.count > 0
 
   result = Category.exec_sql "INSERT INTO categories
           (name,color,slug,description,text_color, user_id, created_at, updated_at, position, name_lower)

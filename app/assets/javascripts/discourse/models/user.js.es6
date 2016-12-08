@@ -1,3 +1,4 @@
+import { ajax } from 'discourse/lib/ajax';
 import { url } from 'discourse/lib/computed';
 import RestModel from 'discourse/models/rest';
 import UserStream from 'discourse/models/user-stream';
@@ -11,6 +12,9 @@ import UserActionStat from 'discourse/models/user-action-stat';
 import UserAction from 'discourse/models/user-action';
 import Group from 'discourse/models/group';
 import Topic from 'discourse/models/topic';
+import { emojiUnescape } from 'discourse/lib/text';
+import PreloadStore from 'preload-store';
+import { defaultHomepage } from 'discourse/lib/utilities';
 
 const User = RestModel.extend({
 
@@ -38,7 +42,7 @@ const User = RestModel.extend({
   staff: Em.computed.or('admin', 'moderator'),
 
   destroySession() {
-    return Discourse.ajax(`/session/${this.get('username')}`, { type: 'DELETE'});
+    return ajax(`/session/${this.get('username')}`, { type: 'DELETE'});
   },
 
   @computed("username_lower")
@@ -60,7 +64,7 @@ const User = RestModel.extend({
 
   @computed('profile_background')
   profileBackground(bgUrl) {
-    if (Em.isEmpty(bgUrl) || !Discourse.SiteSettings.allow_profile_backgrounds) { return; }
+    if (Em.isEmpty(bgUrl) || !Discourse.SiteSettings.allow_profile_backgrounds) { return "".htmlSafe(); }
     return ('background-image: url(' + Discourse.getURLWithCDN(bgUrl) + ')').htmlSafe();
   },
 
@@ -68,6 +72,46 @@ const User = RestModel.extend({
   path() {
     // no need to observe, requires a hard refresh to update
     return Discourse.getURL(`/users/${this.get('username_lower')}`);
+  },
+
+  @computed()
+  userApiKeys() {
+    const keys = this.get('user_api_keys');
+    if (keys) {
+      return keys.map((raw)=>{
+        let obj = Em.Object.create(
+          raw
+        );
+
+        obj.revoke = () => {
+          this.revokeApiKey(obj);
+        };
+
+        obj.undoRevoke = () => {
+          this.undoRevokeApiKey(obj);
+        };
+
+        return obj;
+      });
+    }
+  },
+
+  revokeApiKey(key) {
+    return ajax("/user-api-key/revoke", {
+      type: 'POST',
+      data: { id: key.get('id') }
+    }).then(()=>{
+      key.set('revoked', true);
+    });
+  },
+
+  undoRevokeApiKey(key){
+    return ajax("/user-api-key/undo-revoke", {
+      type: 'POST',
+      data: { id: key.get('id') }
+    }).then(()=>{
+      key.set('revoked', false);
+    });
   },
 
   pmPath(topic) {
@@ -92,7 +136,15 @@ const User = RestModel.extend({
 
   adminPath: url('id', 'username_lower', "/admin/users/%@1/%@2"),
 
-  mutedTopicsPath: url('/latest?state=muted'),
+  @computed()
+  mutedTopicsPath() {
+    return defaultHomepage() === "latest" ? Discourse.getURL('/?state=muted') : Discourse.getURL('/latest?state=muted');
+  },
+
+  @computed()
+  watchingTopicsPath() {
+    return defaultHomepage() === "latest" ? Discourse.getURL('/?state=watching') : Discourse.getURL('/latest?state=watching');
+  },
 
   @computed("username")
   username_lower(username) {
@@ -101,7 +153,7 @@ const User = RestModel.extend({
 
   @computed("trust_level")
   trustLevel(trustLevel) {
-    return Discourse.Site.currentProp('trustLevels').findProperty('id', parseInt(trustLevel, 10));
+    return Discourse.Site.currentProp('trustLevels').findBy('id', parseInt(trustLevel, 10));
   },
 
   isBasic: Em.computed.equal('trust_level', 0),
@@ -110,6 +162,11 @@ const User = RestModel.extend({
   canManageTopic: Em.computed.or('staff', 'isElder'),
 
   isSuspended: Em.computed.equal('suspended', true),
+
+  @computed("previous_visit_at")
+  previousVisitAt(previous_visit_at) {
+    return new Date(previous_visit_at);
+  },
 
   @computed("suspended_till")
   suspended(suspendedTill) {
@@ -122,85 +179,96 @@ const User = RestModel.extend({
   },
 
   changeUsername(new_username) {
-    return Discourse.ajax(`/users/${this.get('username_lower')}/preferences/username`, {
+    return ajax(`/users/${this.get('username_lower')}/preferences/username`, {
       type: 'PUT',
       data: { new_username }
     });
   },
 
   changeEmail(email) {
-    return Discourse.ajax(`/users/${this.get('username_lower')}/preferences/email`, {
+    return ajax(`/users/${this.get('username_lower')}/preferences/email`, {
       type: 'PUT',
       data: { email }
     });
   },
 
   copy() {
-    return Discourse.User.create(this.getProperties(Ember.keys(this)));
+    return Discourse.User.create(this.getProperties(Object.keys(this)));
   },
 
   save() {
     const data = this.getProperties(
-            'bio_raw',
-            'website',
-            'location',
-            'name',
-            'locale',
-            'custom_fields',
-            'user_fields',
-            'muted_usernames',
-            'profile_background',
-            'card_background'
-          );
+      'bio_raw',
+      'website',
+      'location',
+      'name',
+      'locale',
+      'custom_fields',
+      'user_fields',
+      'muted_usernames',
+      'profile_background',
+      'card_background',
+      'muted_tags',
+      'tracked_tags',
+      'watched_tags',
+      'watching_first_post_tags',
+      'date_of_birth');
 
-    [       'email_always',
-            'mailing_list_mode',
-            'external_links_in_new_tab',
-            'email_digests',
-            'email_direct',
-            'email_in_reply_to',
-            'email_private_messages',
-            'email_previous_replies',
-            'dynamic_favicon',
-            'enable_quoting',
-            'disable_jump_reply',
-            'automatically_unpin_topics',
-            'digest_after_minutes',
-            'new_topic_duration_minutes',
-            'auto_track_topics_after_msecs',
-            'like_notification_frequency',
-            'include_tl0_in_digests'
+    ['email_always',
+     'mailing_list_mode',
+     'mailing_list_mode_frequency',
+     'external_links_in_new_tab',
+     'email_digests',
+     'email_direct',
+     'email_in_reply_to',
+     'email_private_messages',
+     'email_previous_replies',
+     'dynamic_favicon',
+     'enable_quoting',
+     'disable_jump_reply',
+     'automatically_unpin_topics',
+     'digest_after_minutes',
+     'new_topic_duration_minutes',
+     'auto_track_topics_after_msecs',
+     'notification_level_when_replying',
+     'like_notification_frequency',
+     'include_tl0_in_digests'
     ].forEach(s => {
       data[s] = this.get(`user_option.${s}`);
     });
 
-    ['muted','watched','tracked'].forEach(s => {
-      let cats = this.get(s + 'Categories').map(c => c.get('id'));
-      // HACK: denote lack of categories
-      if (cats.length === 0) { cats = [-1]; }
-      data[s + '_category_ids'] = cats;
-    });
+    var updatedState = {};
 
-    if (!Discourse.SiteSettings.edit_history_visible_to_public) {
-      data['edit_history_public'] = this.get('user_option.edit_history_public');
-    }
+    ['muted','watched','tracked','watched_first_post'].forEach(s => {
+      let prop = s === "watched_first_post" ? "watchedFirstPostCategories" : s + "Categories";
+      let cats = this.get(prop);
+      if (cats) {
+        let cat_ids = cats.map(c => c.get('id'));
+        updatedState[s + '_category_ids'] = cat_ids;
+
+        // HACK: denote lack of categories
+        if (cats.length === 0) { cat_ids = [-1]; }
+        data[s + '_category_ids'] = cat_ids;
+      }
+    });
 
     // TODO: We can remove this when migrated fully to rest model.
     this.set('isSaving', true);
-    return Discourse.ajax(`/users/${this.get('username_lower')}`, {
+    return ajax(`/users/${this.get('username_lower')}`, {
       data: data,
       type: 'PUT'
     }).then(result => {
       this.set('bio_excerpt', result.user.bio_excerpt);
       const userProps = Em.getProperties(this.get('user_option'),'enable_quoting', 'external_links_in_new_tab', 'dynamic_favicon');
       Discourse.User.current().setProperties(userProps);
+      this.setProperties(updatedState);
     }).finally(() => {
       this.set('isSaving', false);
     });
   },
 
   changePassword() {
-    return Discourse.ajax("/session/forgot_password", {
+    return ajax("/session/forgot_password", {
       dataType: 'json',
       data: { login: this.get('username') },
       type: 'POST'
@@ -209,14 +277,14 @@ const User = RestModel.extend({
 
   loadUserAction(id) {
     const stream = this.get('stream');
-    return Discourse.ajax(`/user_actions/${id}.json`, { cache: 'false' }).then(result => {
+    return ajax(`/user_actions/${id}.json`, { cache: 'false' }).then(result => {
       if (result && result.user_action) {
         const ua = result.user_action;
 
         if ((this.get('stream.filter') || ua.action_type) !== ua.action_type) return;
         if (!this.get('stream.filter') && !this.inAllStream(ua)) return;
 
-        ua.title = Discourse.Emoji.unescape(Handlebars.Utils.escapeExpression(ua.title));
+        ua.title = emojiUnescape(Handlebars.Utils.escapeExpression(ua.title));
         const action = UserAction.collapseStream([UserAction.create(ua)]);
         stream.set('itemsLoaded', stream.get('itemsLoaded') + 1);
         stream.get('content').insertAt(0, action[0]);
@@ -229,9 +297,9 @@ const User = RestModel.extend({
            ua.action_type === UserAction.TYPES.topics;
   },
 
-  @computed("groups.@each")
+  @computed("groups.[]")
   displayGroups() {
-    const groups = this.get('groups');
+    const groups = this.get('groups') || [];
     const filtered = groups.filter(group => {
       return !group.automatic || group.name === "moderators";
     });
@@ -255,14 +323,14 @@ const User = RestModel.extend({
   @computed("stats.@each.isPM")
   statsExcludingPms() {
     if (Ember.isEmpty(this.get('stats'))) return [];
-    return this.get('stats').rejectProperty('isPM');
+    return this.get('stats').rejectBy('isPM');
   },
 
   findDetails(options) {
     const user = this;
 
     return PreloadStore.getAndRemove(`user_${user.get('username')}`, () => {
-      return Discourse.ajax(`/users/${user.get('username')}.json`, { data: options });
+      return ajax(`/users/${user.get('username')}.json`, { data: options });
     }).then(json => {
 
       if (!Em.isEmpty(json.user.stats)) {
@@ -273,7 +341,15 @@ const User = RestModel.extend({
       }
 
       if (!Em.isEmpty(json.user.groups)) {
-        json.user.groups = json.user.groups.map(g => Group.create(g));
+        const groups = [];
+
+        for(let i = 0; i < json.user.groups.length; i++) {
+          const group = Group.create(json.user.groups[i]);
+          group.group_user = json.user.group_users[i];
+          groups.push(group);
+        }
+
+        json.user.groups = groups;
       }
 
       if (json.user.invited_by) {
@@ -299,13 +375,13 @@ const User = RestModel.extend({
 
   findStaffInfo() {
     if (!Discourse.User.currentProp("staff")) { return Ember.RSVP.resolve(null); }
-    return Discourse.ajax(`/users/${this.get("username_lower")}/staff-info.json`).then(info => {
+    return ajax(`/users/${this.get("username_lower")}/staff-info.json`).then(info => {
       this.setProperties(info);
     });
   },
 
   pickAvatar(upload_id, type, avatar_template) {
-    return Discourse.ajax(`/users/${this.get("username_lower")}/preferences/avatar/pick`, {
+    return ajax(`/users/${this.get("username_lower")}/preferences/avatar/pick`, {
       type: 'PUT',
       data: { upload_id, type }
     }).then(() => this.setProperties({
@@ -320,15 +396,15 @@ const User = RestModel.extend({
            Discourse.SiteSettings['newuser_max_' + type + 's'] > 0;
   },
 
-  createInvite(email, group_names) {
-    return Discourse.ajax('/invites', {
+  createInvite(email, group_names, custom_message) {
+    return ajax('/invites', {
       type: 'POST',
-      data: { email, group_names }
+      data: { email, group_names, custom_message }
     });
   },
 
   generateInviteLink(email, group_names, topic_id) {
-    return Discourse.ajax('/invites/link', {
+    return ajax('/invites/link', {
       type: 'POST',
       data: { email, group_names, topic_id }
     });
@@ -349,6 +425,11 @@ const User = RestModel.extend({
     this.set("watchedCategories", Discourse.Category.findByIds(this.watched_category_ids));
   },
 
+  @observes("watched_first_post_category_ids")
+  updateWatchedFirstPostCategories() {
+    this.set("watchedFirstPostCategories", Discourse.Category.findByIds(this.watched_first_post_category_ids));
+  },
+
   @computed("can_delete_account", "reply_count", "topic_count")
   canDeleteAccount(canDeleteAccount, replyCount, topicCount) {
     return !Discourse.SiteSettings.enable_sso && canDeleteAccount && ((replyCount || 0) + (topicCount || 0)) <= 1;
@@ -356,7 +437,7 @@ const User = RestModel.extend({
 
   "delete": function() {
     if (this.get('can_delete_account')) {
-      return Discourse.ajax("/users/" + this.get('username'), {
+      return ajax("/users/" + this.get('username'), {
         type: 'DELETE',
         data: {context: window.location.pathname}
       });
@@ -367,15 +448,14 @@ const User = RestModel.extend({
 
   dismissBanner(bannerKey) {
     this.set("dismissed_banner_key", bannerKey);
-    Discourse.ajax(`/users/${this.get('username')}`, {
+    ajax(`/users/${this.get('username')}`, {
       type: 'PUT',
       data: { dismissed_banner_key: bannerKey }
     });
   },
 
   checkEmail() {
-    return Discourse.ajax(`/users/${this.get("username_lower")}/emails.json`, {
-      type: "PUT",
+    return ajax(`/users/${this.get("username_lower")}/emails.json`, {
       data: { context: window.location.pathname }
     }).then(result => {
       if (result) {
@@ -388,19 +468,16 @@ const User = RestModel.extend({
   },
 
   summary() {
-    return Discourse.ajax(`/users/${this.get("username_lower")}/summary.json`)
+    return ajax(`/users/${this.get("username_lower")}/summary.json`)
            .then(json => {
-              const topicMap = {};
-
-              json.topics.forEach(t => {
-                topicMap[t.id] = Topic.create(t);
-              });
-
-              const badgeMap = {};
-              Badge.createFromJson(json).forEach(b => {
-                badgeMap[b.id] = b;
-              });
               const summary = json["user_summary"];
+              const topicMap = {};
+              const badgeMap = {};
+
+              json.topics.forEach(t => topicMap[t.id] = Topic.create(t));
+              Badge.createFromJson(json).forEach(b => badgeMap[b.id] = b );
+
+              summary.topics = summary.topic_ids.map(id => topicMap[id]);
 
               summary.replies.forEach(r => {
                 r.topic = topicMap[r.topic_id];
@@ -408,13 +485,19 @@ const User = RestModel.extend({
                 r.createdAt = new Date(r.created_at);
               });
 
-              summary.topics = summary.topic_ids.map(id => topicMap[id]);
-
-              summary.badges = summary.badges.map(ub => {
-                const badge = badgeMap[ub.badge_id];
-                badge.count = ub.count;
-                return badge;
+              summary.links.forEach(l => {
+                l.topic = topicMap[l.topic_id];
+                l.post_url = l.topic.urlForPostNumber(l.post_number);
               });
+
+              if (summary.badges) {
+                summary.badges = summary.badges.map(ub => {
+                  const badge = badgeMap[ub.badge_id];
+                  badge.count = ub.count;
+                  return badge;
+                });
+              }
+
               return summary;
            });
   }
@@ -440,7 +523,7 @@ User.reopenClass(Singleton, {
   },
 
   checkUsername(username, email, for_user_id) {
-    return Discourse.ajax('/users/check_username', {
+    return ajax('/users/check_username', {
       data: { username, email, for_user_id }
     });
   },
@@ -451,12 +534,12 @@ User.reopenClass(Singleton, {
       action_type: UserAction.TYPES.replies
     });
 
-    stats.filterProperty('isResponse').forEach(stat => {
+    stats.filterBy('isResponse').forEach(stat => {
       responses.set('count', responses.get('count') + stat.get('count'));
     });
 
     const result = Em.A();
-    result.pushObjects(stats.rejectProperty('isResponse'));
+    result.pushObjects(stats.rejectBy('isResponse'));
 
     let insertAt = 0;
     result.forEach((item, index) => {
@@ -471,7 +554,7 @@ User.reopenClass(Singleton, {
   },
 
   createAccount(attrs) {
-    return Discourse.ajax("/users", {
+    return ajax("/users", {
       data: {
         name: attrs.accountName,
         email: attrs.accountEmail,

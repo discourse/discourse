@@ -32,6 +32,10 @@ class UserEmailObserver < ActiveRecord::Observer
       enqueue :user_linked
     end
 
+    def watching_first_post
+      enqueue :user_watching_first_post
+    end
+
     def private_message
       enqueue_private(:user_private_message)
     end
@@ -74,7 +78,10 @@ class UserEmailObserver < ActiveRecord::Observer
     end
 
     def perform_enqueue(type, delay)
-      return unless notification.user.active? || notification.user.staged?
+      user = notification.user
+      return unless user.active? || user.staged?
+      return if SiteSetting.must_approve_users? && !user.approved?
+
       return unless EMAILABLE_POST_TYPES.include?(post_type)
 
       Jobs.enqueue_in(delay, :user_email, self.class.notification_params(notification, type))

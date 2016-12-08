@@ -7,38 +7,49 @@ class DiscourseRedis
     include Singleton
 
     MASTER_LINK_STATUS = "master_link_status:up".freeze
+    CONNECTION_TYPES = %w{normal pubsub}.each(&:freeze)
 
     def initialize
       @master = true
       @running = false
       @mutex = Mutex.new
       @slave_config = DiscourseRedis.slave_config
+      @timer_task = init_timer_task
     end
 
     def verify_master
       synchronize do
-        return if @running && !recently_checked?
-        @running = true
+        return if @timer_task.running?
       end
 
-      Thread.new { initiate_fallback_to_master }
+      @timer_task.execute
     end
 
     def initiate_fallback_to_master
+      success = false
+
       begin
         slave_client = ::Redis::Client.new(@slave_config)
+        logger.info "#{log_prefix}: Checking connection to master server..."
 
         if slave_client.call([:info]).split("\r\n").include?(MASTER_LINK_STATUS)
-          slave_client.call([:client, [:kill, 'type', 'normal']])
+          logger.info "#{log_prefix}: Master server is active, killing all connections to slave..."
+
+          self.master = true
+
+          CONNECTION_TYPES.each do |connection_type|
+            slave_client.call([:client, [:kill, 'type', connection_type]])
+          end
+
           Discourse.clear_readonly!
           Discourse.request_refresh!
-          @master = true
+          success = true
         end
       ensure
-        @running = false
-        @last_checked = Time.zone.now
         slave_client.disconnect
       end
+
+      success
     end
 
     def master
@@ -49,25 +60,32 @@ class DiscourseRedis
       synchronize { @master = args }
     end
 
-    def recently_checked?
-      if @last_checked
-        Time.zone.now > (@last_checked + 5.seconds)
-      else
-        false
-      end
+    def running?
+      @timer_task.running?
     end
 
     private
 
+    def init_timer_task
+      Concurrent::TimerTask.new(execution_interval: 10) do |task|
+        task.shutdown if initiate_fallback_to_master
+      end
+    end
+
     def synchronize
       @mutex.synchronize { yield }
+    end
+
+    def logger
+      Rails.logger
+    end
+
+    def log_prefix
+      "#{self.class}"
     end
   end
 
   class Connector < Redis::Client::Connector
-    MASTER = 'master'.freeze
-    SLAVE = 'slave'.freeze
-
     def initialize(options)
       super(options)
       @slave_options = DiscourseRedis.slave_config(options)
@@ -75,21 +93,21 @@ class DiscourseRedis
     end
 
     def resolve
-
-      return @options unless @slave_options[:host]
+      if !@fallback_handler.master
+        @fallback_handler.verify_master unless @fallback_handler.running?
+        return @slave_options
+      end
 
       begin
         options = @options.dup
         options.delete(:connector)
-        client = ::Redis::Client.new(options)
-        client.call([:role])[0]
-        @options
+        client = Redis::Client.new(options)
+        loading = client.call([:info]).split("\r\n").include?("loading:1")
+        loading ? @slave_options : @options
       rescue Redis::ConnectionError, Redis::CannotConnectError, RuntimeError => ex
-        # A consul service name may be deregistered for a redis container setup
         raise ex if ex.class == RuntimeError && ex.message != "Name or service not known"
-
-        return @slave_options if !@fallback_handler.master
         @fallback_handler.master = false
+        @fallback_handler.verify_master unless @fallback_handler.running?
         raise ex
       ensure
         client.disconnect

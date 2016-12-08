@@ -15,8 +15,8 @@ To learn more about the philosophy and goals of the project, [visit **discourse.
 <a href="http://discuss.howtogeek.com"><img src="https://www.discourse.org/faq/14/how-to-geek-discourse.png" width="720px"></a>
 <a href="https://talk.turtlerockstudios.com/"><img src="https://www.discourse.org/faq/14/turtle-rock-discourse.jpg" width="720px"></a>
 
-<a href="https://discuss.atom.io"><img src="https://www.discourse.org/faq/14/nexus-7-mobile-discourse.png" alt="Atom" width="410px"></a> &nbsp;
-<a href="//discourse.soylent.com"><img src="https://www.discourse.org/faq/14/iphone-5s-mobile-discourse.png" alt="Soylent" width="270px"></a>
+<a href="https://discuss.atom.io"><img src="https://www.discourse.org/faq/15/nexus-7-2013-mobile-discourse.png?v=2" alt="Atom" width="430px"></a> &nbsp;
+<a href="//discourse.soylent.com"><img src="https://www.discourse.org/faq/15/iphone-5s-mobile-discourse.png" alt="Soylent" width="270px"></a>
 
 Browse [lots more notable Discourse instances](http://www.discourse.org/faq/customers/).
 
@@ -26,7 +26,7 @@ Browse [lots more notable Discourse instances](http://www.discourse.org/faq/cust
 
 2. If you're familiar with how Rails works and are comfortable setting up your own environment, use our [**Discourse Advanced Developer Guide**](docs/DEVELOPER-ADVANCED.md).
 
-Before you get started, ensure you have the following minimum versions: [Ruby 2.0.0+](http://www.ruby-lang.org/en/downloads/), [PostgreSQL 9.3+](http://www.postgresql.org/download/), [Redis 2.6+](http://redis.io/download). If you're having trouble, please see our [**TROUBLESHOOTING GUIDE**](docs/TROUBLESHOOTING.md) first!
+Before you get started, ensure you have the following minimum versions: [Ruby 2.3+](http://www.ruby-lang.org/en/downloads/), [PostgreSQL 9.3+](http://www.postgresql.org/download/), [Redis 2.6+](http://redis.io/download). If you're having trouble, please see our [**TROUBLESHOOTING GUIDE**](docs/TROUBLESHOOTING.md) first!
 
 ## Setting up Discourse
 
@@ -40,9 +40,9 @@ Discourse is built for the *next* 10 years of the Internet, so our requirements 
 
 | Browsers | Tablets |  Smartphones |
 | -------- | ------- | ----------- |
-| Safari 5.1+| iPad 2+ |  iOS 7+ |
-| Google Chrome 23+ |  Android 4.1+ | Android 4.1+ |
-| Internet Explorer 10+ | Windows 8 | Windows Phone 8 |
+| Safari 6.1+| iPad 2+ |  iOS 7+ |
+| Google Chrome 23+ |  Android 4.3+ | Android 4.3+ |
+| Internet Explorer 11+ | Windows 8 | Windows Phone 8 |
 | Firefox 16+ | |
 
 ## Built With
@@ -84,7 +84,7 @@ The original Discourse code contributors can be found in [**AUTHORS.MD**](docs/A
 
 ## Copyright / License
 
-Copyright 2014 - 2015 Civilized Discourse Construction Kit, Inc.
+Copyright 2014 - 2016 Civilized Discourse Construction Kit, Inc.
 
 Licensed under the GNU General Public License Version 2.0 (or later);
 you may not use this work except in compliance with the License.

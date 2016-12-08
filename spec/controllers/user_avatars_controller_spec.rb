@@ -2,6 +2,19 @@ require 'rails_helper'
 
 describe UserAvatarsController do
 
+  context 'show_proxy_letter' do
+    it 'returns not found if external avatar is set somewhere else' do
+      SiteSetting.external_system_avatars_url = "https://somewhere.else.com/avatar.png"
+      response = get :show_proxy_letter, version: 'v2', letter: 'a', color: 'aaaaaa', size: 20
+      expect(response.status).to eq(404)
+    end
+
+    it 'returns an avatar if we are allowing the proxy' do
+      response = get :show_proxy_letter, version: 'v2', letter: 'a', color: 'aaaaaa', size: 20
+      expect(response.status).to eq(200)
+    end
+  end
+
   context 'show' do
     it 'handles non local content correctly' do
       SiteSetting.avatar_sizes = "100|49"
@@ -33,6 +46,7 @@ describe UserAvatarsController do
 
       get :show, size: 98, username: user.username, version: upload.id, hostname: 'default'
       expect(response.body).to eq("image")
+      expect(response.headers["Cache-Control"]).to eq('max-age=31557600, public')
     end
 
     it 'serves image even if size missing and its in local mode' do

@@ -1,0 +1,69 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-org/
+
+et:
+  js:
+    poll:
+      voters:
+        one: "hääletaja"
+        other: "hääletajat"
+      total_votes:
+        one: "häält kokku"
+        other: "hääli kokku"
+      average_rating: "Keskmine hinnang: <strong>%{average}</strong>."
+      public:
+        title: "Antud hääled on avalikud."
+      multiple:
+        help:
+          at_least_min_options:
+            one: "Tee vähemalt <strong>1</strong> valik"
+            other: "Tee vähemalt <strong>%{count}</strong> valikut"
+          up_to_max_options:
+            one: "Võid teha <strong>1</strong> valiku"
+            other: "Võid teha kuni <strong>%{count}</strong> valikut"
+          x_options:
+            one: "Tee <strong>1</strong> valik"
+            other: "Tee <strong>%{count}</strong> valikut"
+          between_min_and_max_options: "Tee <strong>%{min}</strong> kuni <strong>%{max}</strong> valikut"
+      cast-votes:
+        title: "Anna oma hääl"
+        label: "Hääleta nüüd!"
+      show-results:
+        title: "Kuva hääletuse tulemused"
+        label: "Kuva tulemused"
+      hide-results:
+        title: "Tagasi sinu vastuse juurde"
+        label: "Peida tulemused"
+      open:
+        title: "Ava hääletus"
+        label: "Ava"
+        confirm: "Kas sa oled kindel, et soovid selle hääletuse avada?"
+      close:
+        title: "Sulge hääletus"
+        label: "Sulge"
+        confirm: "Kas sa oled kindel, et sa tahad antud hääletuse sulgeda?"
+      error_while_toggling_status: "Kahjuks tekkis postituse staatuse ümberlülitamisel tõrge."
+      error_while_casting_votes: "Kahjuks tekkis hääletamise käigus tõrge."
+      error_while_fetching_voters: "Kahjuks tekkis hääletajate näitamise käigus tõrge."
+      ui_builder:
+        title: Koosta hääletus
+        insert: Sisesta hääletus
+        help:
+          options_count: Sisesta vähemalt 2 valikut
+        poll_type:
+          label: Tüüp
+          regular: Üks valik
+          multiple: Mitu valikut
+          number: Numbriline vastus
+        poll_config:
+          max: Maksimum
+          min: Miinumum
+          step: Samm
+        poll_public:
+          label: Näita vastajaid
+        poll_options:
+          label: Sisesta üks küsitluse valik rea kohta

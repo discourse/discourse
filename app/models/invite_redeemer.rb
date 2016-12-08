@@ -30,6 +30,8 @@ InviteRedeemer = Struct.new(:invite, :username, :name) do
     available_name = name || available_username
 
     user = User.new(email: invite.email, username: available_username, name: available_name, active: true, trust_level: SiteSetting.default_invitee_trust_level)
+
+    user.moderator = true if invite.moderator? && invite.invited_by.staff?
     user.save!
 
     user
@@ -112,8 +114,10 @@ InviteRedeemer = Struct.new(:invite, :username, :name) do
   end
 
   def notify_invitee
-    invite.invited_by.notifications.create(notification_type: Notification.types[:invitee_accepted],
-                                           data: {display_username: invited_user.username}.to_json)
+    if inviter = invite.invited_by
+        inviter.notifications.create(notification_type: Notification.types[:invitee_accepted],
+                                     data: {display_username: invited_user.username}.to_json)
+    end
   end
 
   def delete_duplicate_invites

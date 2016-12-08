@@ -1,17 +1,47 @@
+@import "common/foundation/variables";
+
 /*!
  * Pikaday
  * Copyright © 2014 David Bushell | BSD & MIT license | http://dbushell.com/
  */
 
+// Variables
+// Declare any of these variables before importing this SCSS file to easily override defaults
+// Variables are namespaced with the pd (pikaday) prefix
+
+// Colours
+$pd-text-color: $primary !default;
+$pd-title-color: $primary !default;
+$pd-title-bg: $secondary !default;
+$pd-picker-bg: $secondary !default;
+$pd-picker-border: dark-light-diff($secondary, $primary, -20%, 20%) !default;
+$pd-picker-border-bottom: dark-light-diff($secondary, $primary, -30%, 30%) !default;
+$pd-picker-shadow: rgba(0,0,0,.5) !default;
+$pd-th-color: dark-light-diff($primary, $secondary, -20%, 20%) !default;
+$pd-day-color: dark-light-diff($primary, $secondary, -30%, 30%) !default;
+$pd-day-bg: dark-light-diff($primary, $secondary, 90%, -90%) !default;
+$pd-day-hover-color: $secondary !default;
+$pd-day-hover-bg: dark-light-diff($tertiary, $secondary, 30%, -30%) !default;
+$pd-day-today-color: $tertiary !default;
+$pd-day-selected-color: $secondary !default;
+$pd-day-selected-bg: $tertiary !default;
+$pd-day-selected-shadow: dark-light-diff($tertiary, $secondary, 50%, -50%) !default;
+$pd-day-disabled-color: dark-light-diff($primary, $secondary, -20%, 20%) !default;
+$pd-week-color: dark-light-diff($primary, $secondary, -20%, 20%) !default;
+
+// Font
+$pd-font-family: "Helvetica Neue", Helvetica, Arial, sans-serif !default;
+
+
 .pika-single {
     z-index: 9999;
     display: block;
     position: relative;
-    color: #333;
-    background: #fff;
-    border: 1px solid #ccc;
-    border-bottom-color: #bbb;
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    color: $pd-text-color;
+    background: $pd-picker-bg;
+    border: 1px solid $pd-picker-border;
+    border-bottom-color: $pd-picker-border-bottom;
+    font-family: $pd-font-family;
 
     &.is-hidden {
         display: none;
@@ -19,7 +49,7 @@
 
     &.is-bound {
         position: absolute;
-        box-shadow: 0 5px 15px -5px rgba(0,0,0,.5);
+        box-shadow: 0 5px 15px -5px $pd-picker-shadow;
     }
 }
 
@@ -70,7 +100,8 @@
     font-size: 14px;
     line-height: 20px;
     font-weight: bold;
-    background-color: #fff;
+    color: $pd-title-color;
+    background-color: $pd-title-bg;
 }
 
 .pika-prev,
@@ -86,7 +117,9 @@
     text-indent: 20px; // hide text using text-indent trick, using width value (it's enough)
     white-space: nowrap;
     overflow: hidden;
-    background: transparent no-repeat center center;
+    background-color: transparent;
+    background-position: center center;
+    background-repeat: no-repeat;
     background-size: 75% 75%;
     opacity: .5;
     *position: absolute;
@@ -134,7 +167,7 @@
     }
 
     th {
-        color: #999;
+        color: $pd-th-color;
         font-size: 12px;
         line-height: 25px;
         font-weight: bold;
@@ -157,35 +190,36 @@
     margin: 0;
     width: 100%;
     padding: 5px;
-    color: #666;
+    color: $pd-day-color;
     font-size: 12px;
     line-height: 15px;
     text-align: right;
-    background: #f5f5f5;
+    background: $pd-day-bg;
 
     .is-today & {
-        color: #33aaff;
+        color: $pd-day-today-color;
         font-weight: bold;
     }
 
     .is-selected & {
-        color: #fff;
+        color: $pd-day-selected-color;
         font-weight: bold;
-        background: #33aaff;
-        box-shadow: inset 0 1px 3px #178fe5;
+        background: $pd-day-selected-bg;
+        box-shadow: inset 0 1px 3px $pd-day-selected-shadow;
         border-radius: 3px;
     }
 
-    .is-disabled & {
+    .is-disabled &,
+    .is-outside-current-month & {
         pointer-events: none;
         cursor: default;
-        color: #999;
+        color: $pd-day-disabled-color;
         opacity: .3;
     }
 
     &:hover {
-        color: #fff;
-        background: #ff8000;
+        color: $pd-day-hover-color;
+        background: $pd-day-hover-bg;
         box-shadow: none;
         border-radius: 3px;
     }
@@ -193,7 +227,7 @@
 
 .pika-week {
     font-size: 11px;
-    color: #999;
+    color: $pd-week-color;
 }
 
 .is-inrange .pika-button {
@@ -201,15 +235,15 @@
 }
 
 .is-startrange .pika-button {
-    color: #fff;
+    color: $secondary;
     background: #6CB31D;
     box-shadow: none;
     border-radius: 3px;
 }
 
 .is-endrange .pika-button {
-    color: #fff;
-    background: #33aaff;
+    color: $secondary;
+    background: $tertiary;
     box-shadow: none;
     border-radius: 3px;
 }

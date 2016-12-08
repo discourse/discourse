@@ -27,7 +27,8 @@ class TopicTrackingState
         highest_post_number: 1,
         created_at: topic.created_at,
         topic_id: topic.id,
-        category_id: topic.category_id
+        category_id: topic.category_id,
+        archetype: topic.archetype
       }
     }
 
@@ -37,7 +38,7 @@ class TopicTrackingState
     publish_read(topic.id, 1, topic.user_id)
   end
 
-  def self.publish_latest(topic)
+  def self.publish_latest(topic, staff_only=false)
     return unless topic.archetype == "regular"
 
     message = {
@@ -46,19 +47,30 @@ class TopicTrackingState
       payload: {
         bumped_at: topic.bumped_at,
         topic_id: topic.id,
-        category_id: topic.category_id
+        category_id: topic.category_id,
+        archetype: topic.archetype
       }
     }
 
-    group_ids = topic.category && topic.category.secure_group_ids
+    group_ids =
+      if staff_only
+        [Group::AUTO_GROUPS[:staff]]
+      else
+        topic.category && topic.category.secure_group_ids
+      end
     MessageBus.publish("/latest", message.as_json, group_ids: group_ids)
   end
 
   def self.publish_unread(post)
     # TODO at high scale we are going to have to defer this,
     #   perhaps cut down to users that are around in the last 7 days as well
-    #
-    group_ids = post.topic.category && post.topic.category.secure_group_ids
+
+    group_ids =
+      if post.post_type == Post.types[:whisper]
+        [Group::AUTO_GROUPS[:staff]]
+      else
+        post.topic.category && post.topic.category.secure_group_ids
+      end
 
     TopicUser
         .tracking(post.topic_id)
@@ -74,13 +86,43 @@ class TopicTrackingState
           created_at: post.created_at,
           topic_id: post.topic_id,
           category_id: post.topic.category_id,
-          notification_level: tu.notification_level
+          notification_level: tu.notification_level,
+          archetype: post.topic.archetype
         }
       }
 
       MessageBus.publish("/unread/#{tu.user_id}", message.as_json, group_ids: group_ids)
     end
 
+  end
+
+  def self.publish_recover(topic)
+    group_ids = topic.category && topic.category.secure_group_ids
+
+    message = {
+      topic_id: topic.id,
+      message_type: "recover",
+      payload: {
+        topic_id: topic.id,
+      }
+    }
+
+    MessageBus.publish("/recover", message.as_json, group_ids: group_ids)
+
+  end
+
+  def self.publish_delete(topic)
+    group_ids = topic.category && topic.category.secure_group_ids
+
+    message = {
+      topic_id: topic.id,
+      message_type: "delete",
+      payload: {
+        topic_id: topic.id,
+      }
+    }
+
+    MessageBus.publish("/delete", message.as_json, group_ids: group_ids)
   end
 
   def self.publish_read(topic_id, last_read_post_number, user_id, notification_level=nil)
@@ -116,7 +158,7 @@ class TopicTrackingState
               ).where_values[0]
   end
 
-  def self.report(user_id, topic_id = nil)
+  def self.report(user, topic_id = nil)
 
     # Sam: this is a hairy report, in particular I need custom joins and fancy conditions
     #  Dropping to sql_builder so I can make sense of it.
@@ -128,12 +170,12 @@ class TopicTrackingState
     #  cycles from usual requests
     #
     #
-    sql = report_raw_sql(topic_id: topic_id, skip_unread: true, skip_order: true)
+    sql = report_raw_sql(topic_id: topic_id, skip_unread: true, skip_order: true, staff: user.staff?)
     sql << "\nUNION ALL\n\n"
-    sql << report_raw_sql(topic_id: topic_id, skip_new: true, skip_order: true)
+    sql << report_raw_sql(topic_id: topic_id, skip_new: true, skip_order: true, staff: user.staff?)
 
     SqlBuilder.new(sql)
-      .map_exec(TopicTrackingState, user_id: user_id, topic_id: topic_id)
+      .map_exec(TopicTrackingState, user_id: user.id, topic_id: topic_id)
 
   end
 
@@ -144,7 +186,7 @@ class TopicTrackingState
       if opts && opts[:skip_unread]
         "1=0"
       else
-        TopicQuery.unread_filter(Topic).where_values.join(" AND ")
+        TopicQuery.unread_filter(Topic, staff: opts && opts[:staff]).where_values.join(" AND ")
       end
 
     new =
@@ -158,7 +200,7 @@ class TopicTrackingState
            u.id AS user_id,
            topics.id AS topic_id,
            topics.created_at,
-           highest_post_number,
+           #{opts && opts[:staff] ? "highest_staff_post_number highest_post_number" : "highest_post_number"},
            last_read_post_number,
            c.id AS category_id,
            tu.notification_level"

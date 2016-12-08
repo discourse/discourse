@@ -1,0 +1,78 @@
+<div class='content-list span6'>
+  <h3>{{i18n 'admin.customize.colors.long_title'}}</h3>
+  <ul>
+    {{#each model as |scheme|}}
+      {{#unless scheme.is_base}}
+      <li><a {{action "selectColorScheme" scheme}} class="{{if scheme.selected 'active'}}">{{scheme.description}}</a></li>
+      {{/unless}}
+    {{/each}}
+  </ul>
+  <button {{action "newColorScheme"}} class='btn'><i class="fa fa-plus"></i>{{i18n 'admin.customize.new'}}</button>
+</div>
+
+{{#if selectedItem}}
+  <div class="current-style color-scheme">
+    <div class="admin-container">
+      <h1>{{text-field class="style-name" value=selectedItem.name}}</h1>
+
+      <div class="controls">
+        <button {{action "save"}} disabled={{selectedItem.disableSave}} class='btn'>{{i18n 'admin.customize.save'}}</button>
+        <button {{action "toggleEnabled"}} disabled={{selectedItem.disableEnable}} class="btn">
+          {{#if selectedItem.enabled}}
+            {{i18n 'disable'}}
+          {{else}}
+            {{i18n 'enable'}}
+          {{/if}}
+        </button>
+        <button {{action "copy" selectedItem}} class='btn'><i class="fa fa-copy"></i> {{i18n 'admin.customize.copy'}}</button>
+        <button {{action "destroy"}} class='btn btn-danger'><i class="fa fa-trash-o"></i> {{i18n 'admin.customize.delete'}}</button>
+        <span class="saving {{unless selectedItem.savingStatus 'hidden'}}">{{selectedItem.savingStatus}}</span>
+      </div>
+
+      <br/>
+
+      <div class='admin-controls'>
+        <div class='search controls'>
+          <label>
+            {{input type="checkbox" checked=onlyOverridden}}
+            {{i18n 'admin.site_settings.show_overriden'}}
+          </label>
+        </div>
+      </div>
+
+      {{#if colors.length}}
+      <table class="table colors">
+        <thead>
+          <tr>
+            <th></th>
+            <th class="hex">{{i18n 'admin.customize.color'}}</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {{#each colors as |c|}}
+            <tr class="{{if c.changed 'changed'}} {{if c.valid 'valid' 'invalid'}}">
+              <td class="name" title={{c.name}}>
+                <b>{{c.translatedName}}</b>
+                <br/>
+                <span class="description">{{c.description}}</span>
+              </td>
+              <td class="hex">{{color-input hexValue=c.hex brightnessValue=c.brightness valid=c.valid}}</td>
+              <td class="actions">
+                <button class="btn revert {{unless c.savedIsOverriden 'invisible'}}" {{action "revert" c}} title="{{i18n 'admin.customize.colors.revert_title'}}">{{i18n 'revert'}}</button>
+                <button class="btn undo {{unless c.changed 'invisible'}}" {{action "undo" c}} title="{{i18n 'admin.customize.colors.undo_title'}}">{{i18n 'undo'}}</button>
+              </td>
+            </tr>
+          {{/each}}
+        </tbody>
+      </table>
+      {{else}}
+        <p>{{i18n 'search.no_results'}}</p>
+      {{/if}}
+    </div>
+  </div>
+{{else}}
+  <p class="about">{{i18n 'admin.customize.colors.about'}}</p>
+{{/if}}
+
+<div class="clearfix"></div>

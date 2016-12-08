@@ -1,4 +1,5 @@
-import registerUnbound from 'discourse/helpers/register-unbound';
+import { registerUnbound } from 'discourse-common/lib/helpers';
+import { avatarImg } from 'discourse/lib/utilities';
 
 function renderAvatar(user, options) {
   options = options || {};
@@ -10,8 +11,8 @@ function renderAvatar(user, options) {
 
     if (!username || !avatarTemplate) { return ''; }
 
-    let title;
-    if (!options.ignoreTitle) {
+    let title = options.title;
+    if (!title && !options.ignoreTitle) {
       // first try to get a title
       title = Em.get(user, 'title');
       // if there was no title provided
@@ -26,7 +27,7 @@ function renderAvatar(user, options) {
       }
     }
 
-    return Discourse.Utilities.avatarImg({
+    return avatarImg({
       size: options.imageSize,
       extraClasses: Em.get(user, 'extras') || options.extraClasses,
       title: title || username,

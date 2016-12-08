@@ -3,6 +3,7 @@ require_dependency 'promotion'
 require_dependency 'url_helper'
 require_dependency 'topics_bulk_action'
 require_dependency 'discourse_event'
+require_dependency 'rate_limiter'
 
 class TopicsController < ApplicationController
   before_filter :ensure_logged_in, only: [:timings,
@@ -27,6 +28,7 @@ class TopicsController < ApplicationController
                                           :change_timestamps,
                                           :archive_message,
                                           :move_to_inbox,
+                                          :convert_topic,
                                           :bookmark]
 
   before_filter :consider_user_for_promotion, only: :show
@@ -57,14 +59,31 @@ class TopicsController < ApplicationController
     username_filters = opts[:username_filters]
 
     opts[:slow_platform] = true if slow_platform?
+    opts[:print] = true if params[:print].present?
     opts[:username_filters] = username_filters.split(',') if username_filters.is_a?(String)
+
+    # Special case: a slug with a number in front should look by slug first before looking
+    # up that particular number
+    if params[:id] && params[:id] =~ /^\d+[^\d\\]+$/
+      topic = Topic.find_by(slug: params[:id].downcase)
+      return redirect_to_correct_topic(topic, opts[:post_number]) if topic && topic.visible
+    end
+
+    if opts[:print]
+      raise Discourse::InvalidAccess unless SiteSetting.max_prints_per_hour_per_user > 0
+      begin
+        RateLimiter.new(current_user, "print-topic-per-hour", SiteSetting.max_prints_per_hour_per_user, 1.hour).performed! unless @guardian.is_admin?
+      rescue RateLimiter::LimitExceeded
+        render_json_error(I18n.t("rate_limiter.slow_down"))
+      end
+    end
 
     begin
       @topic_view = TopicView.new(params[:id] || params[:topic_id], current_user, opts)
     rescue Discourse::NotFound
       if params[:id]
         topic = Topic.find_by(slug: params[:id].downcase)
-        return redirect_to_correct_topic(topic, opts[:post_number]) if topic
+        return redirect_to_correct_topic(topic, opts[:post_number]) if topic && topic.visible
       end
       raise Discourse::NotFound
     end
@@ -76,7 +95,14 @@ class TopicsController < ApplicationController
 
     discourse_expires_in 1.minute
 
-    redirect_to_correct_topic(@topic_view.topic, opts[:post_number]) && return if slugs_do_not_match || (!request.format.json? && params[:slug].nil?)
+    if !@topic_view.topic.visible && @topic_view.topic.slug != params[:slug] && !request.format.json?
+      raise Discourse::NotFound
+    end
+
+    if slugs_do_not_match || (!request.format.json? && params[:slug].nil?)
+      redirect_to_correct_topic(@topic_view.topic, opts[:post_number])
+      return
+    end
 
     track_visit_to_topic
 
@@ -121,13 +147,13 @@ class TopicsController < ApplicationController
 
     tu = TopicUser.find_by(user_id: current_user.id, topic_id: params[:topic_id])
 
-    if tu.notification_level > TopicUser.notification_levels[:regular]
+    if tu && tu.notification_level > TopicUser.notification_levels[:regular]
       tu.notification_level = TopicUser.notification_levels[:regular]
+      tu.save!
     else
-      tu.notification_level = TopicUser.notification_levels[:muted]
+      TopicUser.change(current_user.id, params[:topic_id].to_i, notification_level: TopicUser.notification_levels[:muted])
     end
 
-    tu.save!
 
     perform_show_response
   end
@@ -154,10 +180,44 @@ class TopicsController < ApplicationController
 
   def posts
     params.require(:topic_id)
-    params.require(:post_ids)
+    params.permit(:post_ids)
 
     @topic_view = TopicView.new(params[:topic_id], current_user, post_ids: params[:post_ids])
     render_json_dump(TopicViewPostsSerializer.new(@topic_view, scope: guardian, root: false, include_raw: !!params[:include_raw]))
+  end
+
+  def excerpts
+    params.require(:topic_id)
+    params.require(:post_ids)
+
+    post_ids = params[:post_ids].map(&:to_i)
+    unless Array === post_ids
+      render_json_error("Expecting post_ids to contain a list of posts ids")
+      return
+    end
+
+    if post_ids.length > 100
+      render_json_error("Requested a chunk that is too big")
+      return
+    end
+
+    @topic = Topic.with_deleted.where(id: params[:topic_id]).first
+    guardian.ensure_can_see!(@topic)
+
+    @posts = Post.where(hidden: false, deleted_at: nil, topic_id: @topic.id)
+        .where('posts.id in (?)', post_ids)
+        .joins("LEFT JOIN users u on u.id = posts.user_id")
+        .pluck(:id, :cooked, :username)
+        .map do |post_id, cooked, username|
+          {
+            post_id: post_id,
+            username: username,
+            excerpt: PrettyText.excerpt(cooked, 800, keep_emoji_images: true)
+          }
+         end
+
+
+    render json: @posts.to_json
   end
 
   def destroy_timings
@@ -334,8 +394,6 @@ class TopicsController < ApplicationController
     first_post = topic.ordered_posts.first
     PostDestroyer.new(current_user, first_post, { context: params[:context] }).destroy
 
-    DiscourseEvent.trigger(:topic_destroyed, topic, current_user)
-
     render nothing: true
   end
 
@@ -345,8 +403,6 @@ class TopicsController < ApplicationController
 
     first_post = topic.posts.with_deleted.order(:post_number).first
     PostDestroyer.new(current_user, first_post).recover
-
-    DiscourseEvent.trigger(:topic_recovered, topic, current_user)
 
     render nothing: true
   end
@@ -367,6 +423,33 @@ class TopicsController < ApplicationController
     end
   end
 
+  def remove_allowed_group
+    params.require(:name)
+    topic = Topic.find_by(id: params[:topic_id])
+    guardian.ensure_can_remove_allowed_users!(topic)
+
+    if topic.remove_allowed_group(current_user, params[:name])
+      render json: success_json
+    else
+      render json: failed_json, status: 422
+    end
+  end
+
+  def invite_group
+    group = Group.find_by(name: params[:group])
+    raise Discourse::NotFound unless group
+
+    topic = Topic.find_by(id: params[:topic_id])
+
+    if topic.private_message?
+      guardian.ensure_can_send_private_message!(group)
+      topic.invite_group(current_user, group)
+      render_json_dump BasicGroupSerializer.new(group, scope: guardian, root: 'group')
+    else
+      render json: failed_json, status: 422
+    end
+  end
+
   def invite
     username_or_email = params[:user] ? fetch_username : fetch_email
 
@@ -376,7 +459,7 @@ class TopicsController < ApplicationController
     guardian.ensure_can_invite_to!(topic,group_ids)
 
     begin
-      if topic.invite(current_user, username_or_email, group_ids)
+      if topic.invite(current_user, username_or_email, group_ids, params[:custom_message])
         user = User.find_by_username_or_email(username_or_email)
         if user
           render_json_dump BasicUserSerializer.new(user, scope: guardian, root: 'user')
@@ -443,7 +526,7 @@ class TopicsController < ApplicationController
     params.require(:topic_id)
     params.require(:timestamp)
 
-    guardian.ensure_can_change_post_owner!
+    guardian.ensure_can_change_post_timestamps!
 
     begin
       PostTimestampChanger.new( topic_id: params[:topic_id].to_i,
@@ -491,7 +574,7 @@ class TopicsController < ApplicationController
       topic_ids = params[:topic_ids].map {|t| t.to_i}
     elsif params[:filter] == 'unread'
       tq = TopicQuery.new(current_user)
-      topics = TopicQuery.unread_filter(tq.joined_topic_user).listable_topics
+      topics = TopicQuery.unread_filter(tq.joined_topic_user, staff: guardian.is_staff?).listable_topics
       topics = topics.where('category_id = ?', params[:category_id]) if params[:category_id]
       topic_ids = topics.pluck(:id)
     else
@@ -508,6 +591,22 @@ class TopicsController < ApplicationController
   def reset_new
     current_user.user_stat.update_column(:new_since, Time.now)
     render nothing: true
+  end
+
+  def convert_topic
+    params.require(:id)
+    params.require(:type)
+    topic = Topic.find_by(id: params[:id])
+    guardian.ensure_can_convert_topic!(topic)
+
+    if params[:type] == "public"
+      converted_topic = topic.convert_to_public_topic(current_user)
+    else
+      converted_topic = topic.convert_to_private_message(current_user)
+    end
+    render_topic_changes(converted_topic)
+  rescue ActiveRecord::RecordInvalid => ex
+    render_json_error(ex)
   end
 
   private
@@ -559,9 +658,7 @@ class TopicsController < ApplicationController
 
     Scheduler::Defer.later "Track Visit" do
       TopicViewItem.add(topic_id, ip, user_id)
-      if track_visit
-        TopicUser.track_visit! topic_id, user_id
-      end
+      TopicUser.track_visit!(topic_id, user_id) if track_visit
     end
 
   end
@@ -571,6 +668,12 @@ class TopicsController < ApplicationController
   end
 
   def perform_show_response
+
+    if request.head?
+      head :ok
+      return
+    end
+
     topic_view_serializer = TopicViewSerializer.new(@topic_view, scope: guardian, root: false, include_raw: !!params[:include_raw])
 
     respond_to do |format|

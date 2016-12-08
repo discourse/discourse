@@ -1,11 +1,15 @@
-import { default as computed, on } from 'ember-addons/ember-computed-decorators';
+import { default as computed, observes } from 'ember-addons/ember-computed-decorators';
+import InputValidation from 'discourse/models/input-validation';
+import { load, lookupCache } from 'pretty-text/oneboxer';
+import { ajax } from 'discourse/lib/ajax';
 
 export default Ember.Component.extend({
   classNames: ['title-input'],
+  watchForLink: Ember.computed.alias('composer.canEditTopicFeaturedLink'),
 
-  @on('didInsertElement')
-  _focusOnTitle() {
-    if (!this.capabilities.isIOS) {
+  didInsertElement() {
+    this._super();
+    if (this.get('focusTarget') === 'title') {
       this.$('input').putCursorAtEnd();
     }
   },
@@ -23,7 +27,82 @@ export default Ember.Component.extend({
     }
 
     if (reason) {
-      return Discourse.InputValidation.create({ failed: true, reason, lastShownAt: lastValidatedAt });
+      return InputValidation.create({ failed: true, reason, lastShownAt: lastValidatedAt });
     }
+  },
+
+  @observes('composer.titleLength')
+  _titleChanged() {
+    if (this.get('composer.titleLength') === 0) { this.set('autoPosted', false); }
+    if (this.get('autoPosted') || !this.get('watchForLink')) { return; }
+
+    if (Ember.testing) {
+      this._checkForUrl();
+    } else {
+      Ember.run.debounce(this, this._checkForUrl, 500);
+    }
+  },
+
+  @observes('composer.replyLength')
+  _clearFeaturedLink() {
+    if (this.get('watchForLink') && this.get('composer.replyLength') === 0) {
+      this.set('composer.featuredLink', null);
+    }
+  },
+
+  _checkForUrl() {
+    if (this.get('isAbsoluteUrl') && (this.get('composer.reply')||"").length === 0) {
+      // Try to onebox. If success, update post body and title.
+
+      this.set('composer.loading', true);
+
+      const link = document.createElement('a');
+      link.href = this.get('composer.title');
+
+      let loadOnebox = load(link, false, ajax);
+
+      if (loadOnebox && loadOnebox.then) {
+        loadOnebox.then( () => {
+          this._updatePost(lookupCache(this.get('composer.title')));
+        }).finally(() => {
+          this.set('composer.loading', false);
+          Ember.run.schedule('afterRender', () => { this.$('input').putCursorAtEnd(); });
+        });
+      } else {
+        this._updatePost(loadOnebox);
+        this.set('composer.loading', false);
+        Ember.run.schedule('afterRender', () => { this.$('input').putCursorAtEnd(); });
+      }
+    }
+  },
+
+  _updatePost(html) {
+    if (html) {
+      this.set('autoPosted', true);
+      this.set('composer.featuredLink', this.get('composer.title'));
+
+      const $h = $(html),
+            header = $h.find('h4').length > 0 ? $h.find('h4') : $h.find('h3');
+
+      this.set('composer.reply', this.get('composer.title'));
+
+      if (header.length > 0 && header.text().length > 0) {
+        this.changeTitle(header.text());
+      } else {
+        const filename = (this.get('composer.featuredLink')||"").split("/").pop();
+        this.changeTitle(filename);
+      }
+    }
+  },
+
+  changeTitle(val) {
+    if (val && val.length > 0) {
+      this.set('composer.title', val.trim());
+    }
+  },
+
+  @computed('composer.title')
+  isAbsoluteUrl() {
+    return this.get('composer.titleLength') > 0 && /^(https?:)?\/\/[\w\.\-]+/i.test(this.get('composer.title'));
   }
 });

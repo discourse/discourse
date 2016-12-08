@@ -44,6 +44,8 @@ class ApplicationController < ActionController::Base
   before_filter :redirect_to_login_if_required
   before_filter :check_xhr
   after_filter  :add_readonly_header
+  after_filter  :perform_refresh_session
+  after_filter  :dont_cache_page
 
   layout :set_layout
 
@@ -52,11 +54,21 @@ class ApplicationController < ActionController::Base
   end
 
   def use_crawler_layout?
-    @use_crawler_layout ||= (has_escaped_fragment? || CrawlerDetection.crawler?(request.user_agent))
+    @use_crawler_layout ||= (has_escaped_fragment? || CrawlerDetection.crawler?(request.user_agent) || params.key?("print"))
   end
 
   def add_readonly_header
     response.headers['Discourse-Readonly'] = 'true' if Discourse.readonly_mode?
+  end
+
+  def perform_refresh_session
+    refresh_session(current_user)
+  end
+
+  def dont_cache_page
+    if !response.headers["Cache-Control"] && response.cache_control.blank?
+      response.headers["Cache-Control"] = "no-store, must-revalidate, no-cache, private"
+    end
   end
 
   def slow_platform?
@@ -98,6 +110,32 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def self.last_ar_cache_reset
+    @last_ar_cache_reset
+  end
+
+  def self.last_ar_cache_reset=(val)
+    @last_ar_cache_reset
+  end
+
+  rescue_from ActiveRecord::StatementInvalid do |e|
+
+    last_cache_reset = ApplicationController.last_ar_cache_reset
+
+    if e.message =~ /UndefinedColumn/ && (last_cache_reset.nil?  || last_cache_reset < 30.seconds.ago)
+      Rails.logger.warn "Clear Active Record cache cause schema appears to have changed!"
+
+      ApplicationController.last_ar_cache_reset = Time.zone.now
+
+      ActiveRecord::Base.connection.query_cache.clear
+      (ActiveRecord::Base.connection.tables - %w[schema_migrations]).each do |table|
+        table.classify.constantize.reset_column_information rescue nil
+      end
+    end
+
+    raise e
+  end
+
   class PluginDisabled < StandardError; end
 
   # Handles requests for giant IDs that throw pg exceptions
@@ -118,7 +156,7 @@ class ApplicationController < ActionController::Base
   end
 
   rescue_from Discourse::ReadOnly do
-    render_json_error I18n.t('read_only_mode_enabled'), type: :read_only, status: 405
+    render_json_error I18n.t('read_only_mode_enabled'), type: :read_only, status: 503
   end
 
   def rescue_discourse_actions(type, status_code, include_ember=false)
@@ -167,10 +205,7 @@ class ApplicationController < ActionController::Base
 
       if notifications.present?
         notification_ids = notifications.split(",").map(&:to_i)
-        count = Notification.where(user_id: current_user.id, id: notification_ids, read: false).update_all(read: true)
-        if count > 0
-          current_user.publish_notifications_state
-        end
+        Notification.read(current_user, notification_ids)
         cookies.delete('cn')
       end
     end
@@ -293,16 +328,17 @@ class ApplicationController < ActionController::Base
     Middleware::AnonymousCache.anon_cache(request.env, time_length)
   end
 
-  def fetch_user_from_params(opts=nil)
+  def fetch_user_from_params(opts=nil, eager_load = [])
     opts ||= {}
     user = if params[:username]
-      username_lower = params[:username].downcase
-      username_lower.gsub!(/\.json$/, '')
+      username_lower = params[:username].downcase.chomp('.json')
       find_opts = { username_lower: username_lower }
       find_opts[:active] = true unless opts[:include_inactive] || current_user.try(:staff?)
-      User.find_by(find_opts)
+      result = User
+      (result = result.includes(*eager_load)) if !eager_load.empty?
+      result.find_by(find_opts)
     elsif params[:external_id]
-      external_id = params[:external_id].gsub(/\.json$/, '')
+      external_id = params[:external_id].chomp('.json')
       SingleSignOnRecord.find_by(external_id: external_id).try(:user)
     end
     raise Discourse::NotFound if user.blank?
@@ -314,9 +350,7 @@ class ApplicationController < ActionController::Base
   def post_ids_including_replies
     post_ids = params[:post_ids].map {|p| p.to_i}
     if params[:reply_post_ids]
-      post_ids << PostReply.where(post_id: params[:reply_post_ids].map {|p| p.to_i}).pluck(:reply_id)
-      post_ids.flatten!
-      post_ids.uniq!
+      post_ids |= PostReply.where(post_id: params[:reply_post_ids].map {|p| p.to_i}).pluck(:reply_id)
     end
     post_ids
   end
@@ -328,6 +362,25 @@ class ApplicationController < ActionController::Base
     request.session_options[:skip] = true
   end
 
+  def permalink_redirect_or_not_found
+    url = request.fullpath
+    permalink = Permalink.find_by_url(url)
+
+    if permalink.present?
+      # permalink present, redirect to that URL
+      if permalink.external_url
+        redirect_to permalink.external_url, status: :moved_permanently
+      elsif permalink.target_url
+        redirect_to "#{Discourse::base_uri}#{permalink.target_url}", status: :moved_permanently
+      else
+        raise Discourse::NotFound
+      end
+    else
+      # redirect to 404
+      raise Discourse::NotFound
+    end
+  end
+
   private
 
     def locale_from_header
@@ -335,9 +388,9 @@ class ApplicationController < ActionController::Base
         # Rails I18n uses underscores between the locale and the region; the request
         # headers use hyphens.
         require 'http_accept_language' unless defined? HttpAcceptLanguage
-        available_locales = I18n.available_locales.map { |locale| locale.to_s.gsub(/_/, '-') }
+        available_locales = I18n.available_locales.map { |locale| locale.to_s.tr('_', '-') }
         parser = HttpAcceptLanguage::Parser.new(request.env["HTTP_ACCEPT_LANGUAGE"])
-        parser.language_region_compatible_from(available_locales).gsub(/-/, '_')
+        parser.language_region_compatible_from(available_locales).tr('-', '_')
       rescue
         # If Accept-Language headers are not set.
         I18n.default_locale
@@ -355,7 +408,7 @@ class ApplicationController < ActionController::Base
 
     def preload_current_user_data
       store_preloaded("currentUser", MultiJson.dump(CurrentUserSerializer.new(current_user, scope: guardian, root: false)))
-      report = TopicTrackingState.report(current_user.id)
+      report = TopicTrackingState.report(current_user)
       serializer = ActiveModel::ArraySerializer.new(report, each_serializer: TopicTrackingStateSerializer)
       store_preloaded("topicTrackingStates", MultiJson.dump(serializer))
     end
@@ -438,7 +491,7 @@ class ApplicationController < ActionController::Base
     end
 
     def mini_profiler_enabled?
-      defined?(Rack::MiniProfiler) && guardian.is_developer?
+      defined?(Rack::MiniProfiler) && (guardian.is_developer? || Rails.env.development?)
     end
 
     def authorize_mini_profiler
@@ -448,7 +501,7 @@ class ApplicationController < ActionController::Base
 
     def check_xhr
       # bypass xhr check on PUT / POST / DELETE provided api key is there, otherwise calling api is annoying
-      return if !request.get? && api_key_valid?
+      return if !request.get? && is_api?
       raise RenderEmpty.new unless ((request.format && request.format.json?) || request.xhr?)
     end
 
@@ -460,12 +513,20 @@ class ApplicationController < ActionController::Base
       raise Discourse::InvalidAccess.new unless current_user && current_user.staff?
     end
 
+    def ensure_admin
+      raise Discourse::InvalidAccess.new unless current_user && current_user.admin?
+    end
+
+    def ensure_wizard_enabled
+      raise Discourse::InvalidAccess.new unless SiteSetting.wizard_enabled?
+    end
+
     def destination_url
       request.original_url unless request.original_url =~ /uploads/
     end
 
     def redirect_to_login_if_required
-      return if current_user || (request.format.json? && api_key_valid?)
+      return if current_user || (request.format.json? && is_api?)
 
       # redirect user to the SSO page if we need to log in AND SSO is enabled
       if SiteSetting.login_required?
@@ -493,7 +554,7 @@ class ApplicationController < ActionController::Base
       @recent = Topic.where.not(id: category_topic_ids).recent(10)
       @slug =  params[:slug].class == String ? params[:slug] : ''
       @slug =  (params[:id].class == String ? params[:id] : '') if @slug.blank?
-      @slug.gsub!('-',' ')
+      @slug.tr!('-',' ')
       render_to_string status: status, layout: layout, formats: [:html], template: '/exceptions/not_found'
     end
 
@@ -508,10 +569,6 @@ class ApplicationController < ActionController::Base
         post_serializer.post_actions = counts
       end
       render_json_dump(post_serializer)
-    end
-
-    def api_key_valid?
-      request["api_key"] && ApiKey.where(key: request["api_key"]).exists?
     end
 
     # returns an array of integers given a param key

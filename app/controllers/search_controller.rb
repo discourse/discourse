@@ -81,9 +81,10 @@ class SearchController < ApplicationController
       context_obj = nil
       if ['user','private_messages'].include? search_context[:type]
         context_obj = User.find_by(username_lower: search_context[:id].downcase)
-      else
-        klass = search_context[:type].classify.constantize
-        context_obj = klass.find_by(id: search_context[:id])
+      elsif 'category' == search_context[:type]
+        context_obj = Category.find_by(id: search_context[:id].to_i)
+      elsif 'topic' == search_context[:type]
+        context_obj = Topic.find_by(id: search_context[:id].to_i)
       end
 
       type_filter = nil

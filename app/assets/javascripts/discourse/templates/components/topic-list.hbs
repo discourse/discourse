@@ -15,5 +15,19 @@
   </thead>
 {{/unless}}
 <tbody>
-  {{each topic in topics itemView="topic-list-item"}}
+  {{#each topics as |topic|}}
+    {{topic-list-item topic=topic
+                      bulkSelectEnabled=bulkSelectEnabled
+                      showTopicPostBadges=showTopicPostBadges
+                      hideCategory=hideCategory
+                      showPosters=showPosters
+                      showParticipants=showParticipants
+                      showLikes=showLikes
+                      showOpLikes=showOpLikes
+                      expandGloballyPinned=expandGloballyPinned
+                      expandAllPinned=expandAllPinned
+                      lastVisitedTopic=lastVisitedTopic
+                      selected=selected}}
+    {{raw "list/visited-line" lastVisitedTopic=lastVisitedTopic topic=topic}}
+  {{/each}}
 </tbody>

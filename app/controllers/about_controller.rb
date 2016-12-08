@@ -9,8 +9,6 @@ class AboutController < ApplicationController
 
     respond_to do |format|
       format.html do
-        # @list = list
-        # store_preloaded(list.preload_key, MultiJson.dump(TopicListSerializer.new(list, scope: guardian)))
         render :index
       end
       format.json do

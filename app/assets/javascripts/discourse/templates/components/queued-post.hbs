@@ -1,0 +1,79 @@
+<div class='queued-post'>
+  <div class='poster'>
+    {{#user-link user=post.user}}
+      {{avatar post.user imageSize="large"}}
+    {{/user-link}}
+  </div>
+  <div class='cooked'>
+    <div class='names'>
+      <span class="username">
+        {{#user-link user=post.user}}
+          {{post.user.username}}
+        {{/user-link}}
+        {{#if post.user.blocked}}
+        <i class='fa fa-ban' title='{{i18n "user.blocked_tooltip"}}'></i>
+        {{/if}}
+      </span>
+    </div>
+    <div class='post-info'>
+      <span class='post-date'>{{age-with-tooltip post.created_at}}</span>
+    </div>
+    <div class='clearfix'></div>
+
+    <span class='post-title'>
+      {{i18n "queue.topic"}}
+      {{#if post.topic}}
+        {{topic-link post.topic}}
+      {{else}}
+        {{post.post_options.title}}
+      {{/if}}
+      {{category-badge post.category}}
+    </span>
+
+    <div class='body'>
+      {{#if editing}}
+        {{d-editor value=buffered.raw}}
+      {{else}}
+        {{{cook-text post.raw}}}
+      {{/if}}
+    </div>
+
+    <div class='queue-controls'>
+      {{#if editing}}
+        {{d-button action="confirmEdit"
+                   label="queue.confirm"
+                   disabled=post.isSaving
+                   class="btn-primary confirm"}}
+        {{d-button action="cancelEdit"
+                   label="queue.cancel"
+                   icon="times"
+                   disabled=post.isSaving
+                   class="btn-danger cancel"}}
+      {{else}}
+        {{d-button action="approve"
+                   disabled=post.isSaving
+                   label="queue.approve"
+                   icon="check"
+                   class="btn-primary approve"}}
+        {{d-button action="reject"
+                   disabled=post.isSaving
+                   label="queue.reject"
+                   icon="times"
+                   class="btn-danger reject"}}
+        {{#if post.can_delete_user}}
+          {{d-button action="deleteUser"
+                     disabled=post.isSaving
+                     label="queue.delete_user"
+                     icon="trash"
+                     class="btn-danger delete-user"}}
+        {{/if}}
+        {{d-button action="edit"
+                   disabled=post.isSaving
+                   label="queue.edit"
+                   icon="pencil"
+                   class="edit"}}
+      {{/if}}
+    </div>
+  </div>
+  <div class='clearfix'></div>
+</div>

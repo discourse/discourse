@@ -1,6 +1,7 @@
 class SingleSignOn
   ACCESSORS = [:nonce, :name, :username, :email, :avatar_url, :avatar_force_update, :require_activation,
-               :about_me, :external_id, :return_sso_url, :admin, :moderator, :suppress_welcome_message]
+               :bio, :external_id, :return_sso_url, :admin, :moderator, :suppress_welcome_message,
+               :add_groups, :remove_groups]
   FIXNUMS = []
   BOOLS = [:avatar_force_update, :admin, :moderator, :require_activation, :suppress_welcome_message]
   NONCE_EXPIRY_TIME = 10.minutes
@@ -53,6 +54,12 @@ class SingleSignOn
     end
 
     sso
+  end
+
+  def diagnostics
+    SingleSignOn::ACCESSORS.map do |a|
+      "#{a}: #{send(a)}"
+    end.join("\n")
   end
 
   def sso_secret

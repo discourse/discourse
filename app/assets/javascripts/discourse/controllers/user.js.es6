@@ -6,17 +6,28 @@ import User from 'discourse/models/user';
 export default Ember.Controller.extend(CanCheckEmails, {
   indexStream: false,
   userActionType: null,
-  needs: ['application','user-notifications', 'user-topics-list'],
-  currentPath: Em.computed.alias('controllers.application.currentPath'),
+  application: Ember.inject.controller(),
+  userNotifications: Ember.inject.controller('user-notifications'),
+  currentPath: Ember.computed.alias('application.currentPath'),
 
   @computed("content.username")
   viewingSelf(username) {
     return username === User.currentProp('username');
   },
 
+  @computed('model.profileBackground')
+  hasProfileBackground(background) {
+    return !Ember.isEmpty(background.toString());
+  },
+
   @computed('indexStream', 'viewingSelf', 'forceExpand')
   collapsedInfo(indexStream, viewingSelf, forceExpand){
     return (!indexStream || viewingSelf) && !forceExpand;
+  },
+
+  @computed('model.isSuspended', 'currentUser.staff')
+  isNotSuspendedOrIsStaff(isSuspended, isStaff) {
+    return !isSuspended || isStaff;
   },
 
   linkWebsite: Em.computed.not('model.isBasic'),
@@ -41,7 +52,12 @@ export default Ember.Controller.extend(CanCheckEmails, {
     return viewingSelf || staff;
   },
 
-  @computed("content.badge_count")
+  @computed('model.name')
+  nameFirst(name) {
+    return !this.get('siteSettings.prioritize_username_in_ux') && name && name.trim().length > 0;
+  },
+
+  @computed("model.badge_count")
   showBadges(badgeCount) {
     return Discourse.SiteSettings.enable_badges && badgeCount > 0;
   },
@@ -70,7 +86,7 @@ export default Ember.Controller.extend(CanCheckEmails, {
     const siteUserFields = this.site.get('user_fields');
     if (!Ember.isEmpty(siteUserFields)) {
       const userFields = this.get('model.user_fields');
-      return siteUserFields.filterProperty('show_on_profile', true).sortBy('position').map(field => {
+      return siteUserFields.filterBy('show_on_profile', true).sortBy('position').map(field => {
         field.dasherized_name = field.get('name').dasherize();
         const value = userFields ? userFields[field.get('id').toString()] : null;
         return Ember.isEmpty(value) ? null : Ember.Object.create({ value, field });

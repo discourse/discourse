@@ -10,19 +10,32 @@ require_relative '../lib/locale_file_walker'
 
 if `which tx`.strip.empty?
   puts '', 'The Transifex client needs to be installed to use this script.'
-  puts 'Instructions are here: http://docs.transifex.com/developer/client/setup'
+  puts 'Instructions are here: http://docs.transifex.com/client/setup/'
   puts '', 'On Mac:', ''
-  puts '  curl -O https://raw.github.com/pypa/pip/master/contrib/get-pip.py'
-  puts '  sudo python get-pip.py'
+  puts '  sudo easy_install pip'
   puts '  sudo pip install transifex-client', ''
   exit 1
 end
 
-languages = Dir.glob(File.expand_path('../../config/locales/client.*.yml', __FILE__))
-              .map { |x| x.split('.')[-2] }.select { |x| x != 'en' }.sort
+if ARGV.include?('force')
+  STDERR.puts 'Usage:   ruby pull_translations.rb [languages]'
+  STDERR.puts 'Example: ruby pull_translations.rb de it', ''
+  exit 1
+end
+
+def get_languages
+  if ARGV.empty?
+    Dir.glob(File.expand_path('../../config/locales/client.*.yml', __FILE__))
+      .map { |x| x.split('.')[-2] }
+  else
+    ARGV
+  end
+end
+
+languages = get_languages.select { |x| x != 'en' }.sort
 
 puts 'Pulling new translations...', ''
-command = "tx pull --mode=developer --language=#{languages.join(',')} #{ARGV.include?('force') ? '-f' : ''}"
+command = "tx pull --mode=developer --language=#{languages.join(',')} --force"
 
 Open3.popen2e(command) do |stdin, stdout_err, wait_thr|
   while (line = stdout_err.gets)
@@ -59,7 +72,7 @@ end
 # Add comments to the top of files and replace the language (first key in YAML file)
 def update_file_header(filename, language)
   lines = File.readlines(filename)
-  lines.collect! {|line| line =~ /^[a-z_]+:$/i ? "#{language}:" : line}
+  lines.collect! { |line| line =~ /^[a-z_]+:$/i ? "#{language}:" : line }
 
   File.open(filename, 'w+') do |f|
     f.puts(YML_FILE_COMMENTS, '') unless lines[0][0] == '#'
@@ -212,6 +225,61 @@ def add_anchors_and_aliases(english_alias_data, filename)
   end
 end
 
+def fix_invalid_yml_keys(filename)
+  lines = File.readlines(filename)
+
+  # fix YAML keys which are on the wrong line
+  lines.each { |line| line.gsub!(/^(.*(?:'|"))(\s*\S*:)$/, "\\1\n\\2") }
+
+  File.open(filename, 'w+') do |f|
+    f.puts(lines)
+  end
+end
+
+def fix_invalid_yml(filename)
+  lines = File.readlines(filename)
+
+  lines.each_with_index do |line, i|
+    if line =~ /^\s+#.*$/i
+      # remove comments
+      lines[i] = nil
+    elsif line.strip.empty?
+      # remove empty lines
+      lines[i] = nil
+    elsif line =~ /^\s+.*: (?:""|''|)$/i
+      # remove lines which contain empty string values
+      lines[i] = nil
+    elsif line =~ /^(\s)*.*: \|$/i
+      next_line = i + 1 < lines.size ? lines[i + 1] : nil
+
+      if next_line.nil? || line[/^\s*/].size + 2 != next_line[/^\s*/].size
+        # remove lines which contain the value | without a string in the next line
+        lines[i] = nil
+      end
+    end
+  end.compact!
+
+  loop do
+    lines.each_with_index do |line, i|
+      if line =~ /^\s+\w*:\s*$/i
+        next_line = i + 1 < lines.size ? lines[i + 1] : nil
+
+        if next_line.nil? || line[/^\s*/].size >= next_line[/^\s*/].size
+          # remove lines which have an empty value and are not followed
+          # by a key on the next level
+          lines[i] = nil
+        end
+      end
+    end
+
+    break if lines.compact!.nil?
+  end
+
+  File.open(filename, 'w+') do |f|
+    f.puts(lines)
+  end
+end
+
 YML_DIRS.each do |dir|
   YML_FILE_PREFIXES.each do |prefix|
     english_alias_data = get_english_alias_data(dir, prefix)
@@ -220,7 +288,13 @@ YML_DIRS.each do |dir|
       filename = yml_path(dir, prefix, language)
 
       if filename
+        # The following methods were added to handle a bug in Transifex's yml. Should not be needed now.
+        # fix_invalid_yml_keys(filename)
+        # fix_invalid_yml(filename)
+
+        # TODO check if this is still needed with recent Transifex changes
         add_anchors_and_aliases(english_alias_data, filename)
+
         update_file_header(filename, language)
       end
     end

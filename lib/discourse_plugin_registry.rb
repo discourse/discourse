@@ -5,7 +5,6 @@ class DiscoursePluginRegistry
 
   class << self
     attr_writer :javascripts
-    attr_writer :server_side_javascripts
     attr_writer :admin_javascripts
     attr_writer :stylesheets
     attr_writer :mobile_stylesheets
@@ -16,6 +15,10 @@ class DiscoursePluginRegistry
     attr_writer :seed_data
 
     attr_accessor :custom_html
+
+    def plugins
+      @plugins ||= []
+    end
 
     # Default accessor values
     def javascripts
@@ -28,10 +31,6 @@ class DiscoursePluginRegistry
 
     def admin_javascripts
       @admin_javascripts ||= Set.new
-    end
-
-    def server_side_javascripts
-      @server_side_javascripts ||= Set.new
     end
 
     def stylesheets
@@ -65,7 +64,6 @@ class DiscoursePluginRegistry
 
   def register_js(filename, options={})
     # If we have a server side option, add that too.
-    self.class.server_side_javascripts << options[:server_side] if options[:server_side].present?
     self.class.javascripts << filename
   end
 
@@ -99,14 +97,14 @@ class DiscoursePluginRegistry
     end
   end
 
+  JS_REGEX = /\.js$|\.js\.erb$|\.js\.es6$/
+  HANDLEBARS_REGEX = /\.hbs$|\.js\.handlebars$/
+
   def self.register_asset(asset, opts=nil)
-    if asset =~ /\.js$|\.js\.erb$|\.js\.es6$/
+    if asset =~ JS_REGEX
       if opts == :admin
         self.admin_javascripts << asset
       else
-        if opts == :server_side
-          self.server_side_javascripts << asset
-        end
         self.javascripts << asset
       end
     elsif asset =~ /\.css$|\.scss$/
@@ -120,9 +118,7 @@ class DiscoursePluginRegistry
         self.stylesheets << asset
       end
 
-    elsif asset =~ /\.hbs$/
-      self.handlebars << asset
-    elsif asset =~ /\.js\.handlebars$/
+    elsif asset =~ HANDLEBARS_REGEX
       self.handlebars << asset
     end
   end
@@ -133,10 +129,6 @@ class DiscoursePluginRegistry
 
   def javascripts
     self.class.javascripts
-  end
-
-  def server_side_javascripts
-    self.class.server_side_javascripts
   end
 
   def stylesheets
@@ -161,7 +153,6 @@ class DiscoursePluginRegistry
 
   def self.clear
     self.javascripts = nil
-    self.server_side_javascripts = nil
     self.stylesheets = nil
     self.mobile_stylesheets = nil
     self.desktop_stylesheets = nil
@@ -172,7 +163,6 @@ class DiscoursePluginRegistry
   def self.reset!
     javascripts.clear
     admin_javascripts.clear
-    server_side_javascripts.clear
     stylesheets.clear
     mobile_stylesheets.clear
     desktop_stylesheets.clear

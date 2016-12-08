@@ -6,7 +6,7 @@
 </li>
 {{#if expanded}}
 <ul class='drop'>
-  {{#each navItem in navItems}}
+  {{#each navItems as |navItem|}}
     {{navigation-item content=navItem filterMode=filterMode}}
   {{/each}}
 </ul>

@@ -25,19 +25,6 @@ describe GroupsController do
     end
   end
 
-  describe "counts" do
-    it "returns counts if it can be seen" do
-      xhr :get, :counts, group_id: group.name
-      expect(response).to be_success
-    end
-
-    it "returns no counts if it can not be seen" do
-      group.update_columns(visible: false)
-      xhr :get, :counts, group_id: group.name
-      expect(response).not_to be_success
-    end
-  end
-
   describe "posts" do
     it "ensures the group can be seen" do
       Guardian.any_instance.expects(:can_see?).with(group).returns(false)
@@ -66,20 +53,19 @@ describe GroupsController do
       expect(response).to be_success
     end
 
-    # Pending until we fix group truncation
-    skip "ensures that membership can be paginated" do
+    it "ensures that membership can be paginated" do
       5.times { group.add(Fabricate(:user)) }
-      usernames = group.users.map{ |m| m['username'] }.sort
+      usernames = group.users.map{ |m| m.username }.sort
 
       xhr :get, :members, group_id: group.name, limit: 3
       expect(response).to be_success
-      members = JSON.parse(response.body)
-      expect(members.map{ |m| m['username'] }).to eq(usernames[0..2])
+      members = JSON.parse(response.body)["members"]
+      expect(members.map { |m| m['username'] }).to eq(usernames[0..2])
 
       xhr :get, :members, group_id: group.name, limit: 3, offset: 3
       expect(response).to be_success
-      members = JSON.parse(response.body)
-      expect(members.map{ |m| m['username'] }).to eq(usernames[3..4])
+      members = JSON.parse(response.body)["members"]
+      expect(members.map { |m| m['username'] }).to eq(usernames[3..4])
     end
   end
 
@@ -200,19 +186,22 @@ describe GroupsController do
       end
 
       it "removes by id" do
-        xhr :delete, :remove_member, id: group.id, user_id: user.id
+        expect do
+          xhr :delete, :remove_member, id: group.id, user_id: user.id
 
-        expect(response).to be_success
-        group.reload
-        expect(group.users.count).to eq(0)
+          expect(response).to be_success
+          group.reload
+        end.to change{group.users.count}.from(1).to(0)
       end
 
       it "removes by username" do
-        xhr :delete, :remove_member, id: group.id, username: user.username
+        expect do
+          xhr :delete, :remove_member, id: group.id, username: user.username
 
-        expect(response).to be_success
-        group.reload
-        expect(group.users.count).to eq(0)
+          expect(response).to be_success
+          group.reload
+
+        end.to change{group.users.count}.from(1).to(0)
       end
 
       it "removes user.primary_group_id when user is removed from group" do
@@ -223,6 +212,14 @@ describe GroupsController do
 
         user.reload
         expect(user.primary_group_id).to eq(nil)
+      end
+
+      it "removes by user_email" do
+        expect do
+          xhr :delete, :remove_member, id: group.id, user_email: user.email
+          expect(response).to be_success
+          group.reload
+        end.to change{group.users.count}.from(1).to(0)
       end
     end
 

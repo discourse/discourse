@@ -3,6 +3,7 @@ import Archetype from 'discourse/models/archetype';
 import PostActionType from 'discourse/models/post-action-type';
 import Singleton from 'discourse/mixins/singleton';
 import RestModel from 'discourse/models/rest';
+import PreloadStore from 'preload-store';
 
 const Site = RestModel.extend({
 
@@ -15,18 +16,18 @@ const Site = RestModel.extend({
     return result;
   },
 
-  @computed("post_action_types.@each")
+  @computed("post_action_types.[]")
   flagTypes() {
     const postActionTypes = this.get('post_action_types');
     if (!postActionTypes) return [];
-    return postActionTypes.filterProperty('is_flag', true);
+    return postActionTypes.filterBy('is_flag', true);
   },
 
   topicCountDesc: ['topic_count:desc'],
   categoriesByCount: Ember.computed.sort('categories', 'topicCountDesc'),
 
   // Sort subcategories under parents
-  @computed("categoriesByCount", "categories.@each")
+  @computed("categoriesByCount", "categories.[]")
   sortedCategories(cats) {
     const result = [],
           remaining = {};
@@ -41,7 +42,7 @@ const Site = RestModel.extend({
       }
     });
 
-    Ember.keys(remaining).forEach(parentCategoryId => {
+    Object.keys(remaining).forEach(parentCategoryId => {
       const category = result.findBy('id', parseInt(parentCategoryId, 10)),
             index = result.indexOf(category);
 
@@ -63,7 +64,7 @@ const Site = RestModel.extend({
 
   removeCategory(id) {
     const categories = this.get('categories');
-    const existingCategory = categories.findProperty('id', id);
+    const existingCategory = categories.findBy('id', id);
     if (existingCategory) {
       categories.removeObject(existingCategory);
       delete this.get('categoriesById').categoryId;
@@ -73,7 +74,7 @@ const Site = RestModel.extend({
   updateCategory(newCategory) {
     const categories = this.get('categories');
     const categoryId = Em.get(newCategory, 'id');
-    const existingCategory = categories.findProperty('id', categoryId);
+    const existingCategory = categories.findBy('id', categoryId);
 
     // Don't update null permissions
     if (newCategory.permission === null) { delete newCategory.permission; }

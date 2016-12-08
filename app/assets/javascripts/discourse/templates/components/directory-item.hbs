@@ -1,0 +1,11 @@
+<td>{{user-info user=item.user}}</td>
+<td>{{number item.likes_received}}</td>
+<td>{{number item.likes_given}}</td>
+<td>{{number item.topic_count}}</td>
+<td>{{number item.post_count}}</td>
+<td>{{number item.topics_entered}}</td>
+<td>{{number item.posts_read}}</td>
+<td>{{number item.days_visited}}</td>
+{{#if showTimeRead}}
+  <td><span class='time-read'>{{unbound item.time_read}}</span></td>
+{{/if}}

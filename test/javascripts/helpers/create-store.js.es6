@@ -2,12 +2,13 @@ import Store from "discourse/models/store";
 import RestAdapter from 'discourse/adapters/rest';
 import KeyValueStore from 'discourse/lib/key-value-store';
 import TopicTrackingState from 'discourse/models/topic-tracking-state';
-import Resolver from 'discourse/ember/resolver';
+import { buildResolver } from 'discourse-common/resolver';
 
 export default function() {
-  const resolver = Resolver.create();
+  const resolver = buildResolver('discourse').create();
+
   return Store.create({
-    container: {
+    register: {
       lookup(type) {
         if (type === "adapter:rest") {
           this._restAdapter = this._restAdapter || RestAdapter.create({ container: this });
@@ -22,7 +23,7 @@ export default function() {
           return (this._tracker);
         }
         if (type === "site-settings:main") {
-          this._settings = this._settings || Discourse.SiteSettings.current();
+          this._settings = this._settings || Discourse.SiteSettings;
           return (this._settings);
         }
       },

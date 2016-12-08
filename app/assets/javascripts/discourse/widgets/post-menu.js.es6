@@ -114,6 +114,7 @@ registerButton('replies', (attrs, state, siteSettings) => {
 registerButton('share', attrs => {
   return {
     action: 'share',
+    className: 'share',
     title: 'post.controls.share',
     icon: 'link',
     data: {
@@ -251,6 +252,9 @@ export default createWidget('post-menu', {
               case 'first':
                 visibleButtons.unshift(button);
                 break;
+              case 'second':
+                visibleButtons.splice(1, 0, button);
+                break;
               case 'second-last-hidden':
                 if (!state.collapsed) {
                   visibleButtons.splice(visibleButtons.length-2, 0, button);
@@ -303,6 +307,9 @@ export default createWidget('post-menu', {
   },
 
   like() {
+    if (!this.currentUser) {
+      return this.sendWidgetAction('showLogin');
+    }
     const attrs = this.attrs;
     if (attrs.liked) {
       return this.sendWidgetAction('toggleLike');
@@ -311,14 +318,18 @@ export default createWidget('post-menu', {
     const $heart = $(`[data-post-id=${attrs.id}] .fa-heart`);
     $heart.closest('button').addClass('has-like');
 
-    const scale = [1.0, 1.5];
-    return new Ember.RSVP.Promise(resolve => {
-      animateHeart($heart, scale[0], scale[1], () => {
-        animateHeart($heart, scale[1], scale[0], () => {
-          this.sendWidgetAction('toggleLike').then(() => resolve());
+    if (!Ember.testing) {
+      const scale = [1.0, 1.5];
+      return new Ember.RSVP.Promise(resolve => {
+        animateHeart($heart, scale[0], scale[1], () => {
+          animateHeart($heart, scale[1], scale[0], () => {
+            this.sendWidgetAction('toggleLike').then(() => resolve());
+          });
         });
       });
-    });
+    } else {
+      this.sendWidgetAction('toggleLike');
+    }
   },
 
   refreshLikes() {

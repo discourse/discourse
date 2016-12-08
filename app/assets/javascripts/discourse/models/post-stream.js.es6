@@ -1,3 +1,4 @@
+import { ajax } from 'discourse/lib/ajax';
 import DiscourseURL from 'discourse/lib/url';
 import RestModel from 'discourse/models/rest';
 import PostsWithPlaceholders from 'discourse/lib/posts-with-placeholders';
@@ -16,6 +17,7 @@ export default RestModel.extend({
   loadingFilter: null,
   stagingPost: null,
   postsWithPlaceholders: null,
+  timelineLookup: null,
 
   init() {
     this._identityMap = {};
@@ -33,6 +35,7 @@ export default RestModel.extend({
       loadingBelow: false,
       loadingFilter: false,
       stagingPost: false,
+      timelineLookup: []
     });
   },
 
@@ -40,7 +43,7 @@ export default RestModel.extend({
   notLoading: Ember.computed.not('loading'),
   filteredPostsCount: Ember.computed.alias("stream.length"),
 
-  @computed('posts.@each')
+  @computed('posts.[]')
   hasPosts() {
     return this.get('posts.length') > 0;
   },
@@ -53,10 +56,10 @@ export default RestModel.extend({
   canAppendMore: Ember.computed.and('notLoading', 'hasPosts', 'lastPostNotLoaded'),
   canPrependMore: Ember.computed.and('notLoading', 'hasPosts', 'firstPostNotLoaded'),
 
-  @computed('hasLoadedData', 'firstPostId', 'posts.@each')
+  @computed('hasLoadedData', 'firstPostId', 'posts.[]')
   firstPostPresent(hasLoadedData, firstPostId) {
     if (!hasLoadedData) { return false; }
-    return !!this.get('posts').findProperty('id', firstPostId);
+    return !!this.get('posts').findBy('id', firstPostId);
   },
 
   firstPostNotLoaded: Ember.computed.not('firstPostPresent'),
@@ -68,7 +71,7 @@ export default RestModel.extend({
     if (!hasLoadedData) { return false; }
     if (lastPostId === -1) { return true; }
 
-    return !!this.get('posts').findProperty('id', lastPostId);
+    return !!this.get('posts').findBy('id', lastPostId);
   },
 
   lastPostNotLoaded: Ember.computed.not('loadedAllPosts'),
@@ -77,11 +80,10 @@ export default RestModel.extend({
     Returns a JS Object of current stream filter options. It should match the query
     params for the stream.
   **/
-  @computed('summary', 'show_deleted', 'userFilters.[]')
-  streamFilters(summary, showDeleted) {
+  @computed('summary', 'userFilters.[]')
+  streamFilters(summary) {
     const result = {};
     if (summary) { result.filter = "summary"; }
-    if (showDeleted) { result.show_deleted = true; }
 
     const userFilters = this.get('userFilters');
     if (!Ember.isEmpty(userFilters)) {
@@ -101,7 +103,7 @@ export default RestModel.extend({
     Returns the window of posts above the current set in the stream, bound to the top of the stream.
     This is the collection we'll ask for when scrolling upwards.
   **/
-  @computed('posts.@each', 'stream.@each')
+  @computed('posts.[]', 'stream.[]')
   previousWindow() {
     // If we can't find the last post loaded, bail
     const firstPost = _.first(this.get('posts'));
@@ -121,7 +123,7 @@ export default RestModel.extend({
     Returns the window of posts below the current set in the stream, bound by the bottom of the
     stream. This is the collection we use when scrolling downwards.
   **/
-  @computed('posts.lastObject', 'stream.@each')
+  @computed('posts.lastObject', 'stream.[]')
   nextWindow(lastLoadedPost) {
     // If we can't find the last post loaded, bail
     if (!lastLoadedPost) { return []; }
@@ -138,7 +140,6 @@ export default RestModel.extend({
 
   cancelFilter() {
     this.set('summary', false);
-    this.set('show_deleted', false);
     this.get('userFilters').clear();
   },
 
@@ -153,11 +154,6 @@ export default RestModel.extend({
     });
   },
 
-  toggleDeleted() {
-    this.toggleProperty('show_deleted');
-    return this.refresh();
-  },
-
   jumpToSecondVisible() {
     const posts = this.get('posts');
     if (posts.length > 1) {
@@ -170,7 +166,6 @@ export default RestModel.extend({
   toggleParticipant(username) {
     const userFilters = this.get('userFilters');
     this.set('summary', false);
-    this.set('show_deleted', true);
 
     let jump = false;
     if (userFilters.contains(username)) {
@@ -194,13 +189,18 @@ export default RestModel.extend({
     opts = opts || {};
     opts.nearPost = parseInt(opts.nearPost, 10);
 
+    if (opts.cancelSummary) {
+      this.set('summary', false);
+      delete opts.cancelSummary;
+    }
+
     const topic = this.get('topic');
 
     // Do we already have the post in our list of posts? Jump there.
     if (opts.forceLoad) {
       this.set('loaded', false);
     } else {
-      const postWeWant = this.get('posts').findProperty('post_number', opts.nearPost);
+      const postWeWant = this.get('posts').findBy('post_number', opts.nearPost);
       if (postWeWant) { return Ember.RSVP.resolve(); }
     }
 
@@ -212,7 +212,7 @@ export default RestModel.extend({
     // Request a topicView
     return loadTopicView(topic, opts).then(json => {
       this.updateFromJson(json.post_stream);
-      this.setProperties({ loadingFilter: false, loaded: true });
+      this.setProperties({ loadingFilter: false, timelineLookup: json.timeline_lookup, loaded: true });
     }).catch(result => {
       this.errorLoading(result);
       throw result;
@@ -448,7 +448,7 @@ export default RestModel.extend({
     const url = "/posts/" + postId;
     const store = this.store;
 
-    return Discourse.ajax(url).then(p => this.storePost(store.createRecord('post', p)));
+    return ajax(url).then(p => this.storePost(store.createRecord('post', p)));
   },
 
   /**
@@ -490,7 +490,7 @@ export default RestModel.extend({
       // need to insert into stream
       const url = "/posts/" + postId;
       const store = this.store;
-      return Discourse.ajax(url).then(p => {
+      return ajax(url).then(p => {
         const post = store.createRecord('post', p);
         const stream = this.get("stream");
         const posts = this.get("posts");
@@ -531,7 +531,7 @@ export default RestModel.extend({
       const url = "/posts/" + postId;
       const store = this.store;
 
-      return Discourse.ajax(url).then(p => {
+      return ajax(url).then(p => {
         this.storePost(store.createRecord('post', p));
       }).catch(() => {
         this.removePosts([existing]);
@@ -548,7 +548,7 @@ export default RestModel.extend({
     if (existing && existing.updated_at !== updatedAt) {
       const url = "/posts/" + postId;
       const store = this.store;
-      return Discourse.ajax(url).then(p => this.storePost(store.createRecord('post', p)));
+      return ajax(url).then(p => this.storePost(store.createRecord('post', p)));
     }
     return resolved;
   },
@@ -605,6 +605,27 @@ export default RestModel.extend({
     });
 
     return closest;
+  },
+
+  closestDaysAgoFor(postNumber) {
+    const timelineLookup = this.get('timelineLookup') || [];
+
+    let low = 0, high = timelineLookup.length - 1;
+    while (low <= high) {
+      const mid = Math.floor(low + ((high - low) / 2));
+      const midValue = timelineLookup[mid][0];
+
+      if (midValue > postNumber) {
+        high = mid - 1;
+      } else if (midValue < postNumber) {
+        low = mid + 1;
+      } else {
+        return timelineLookup[mid][1];
+      }
+    }
+
+    const val = timelineLookup[high] || timelineLookup[low];
+    if (val) { return val[1]; }
   },
 
   // Find a postId for a postNumber, respecting gaps
@@ -668,6 +689,7 @@ export default RestModel.extend({
       const postNumber = post.get('post_number');
       if (postNumber && postNumber > (this.get('topic.highest_post_number') || 0)) {
         this.set('topic.highest_post_number', postNumber);
+        this.set('topic.last_posted_at', post.get('created_at'));
       }
 
       if (existing) {
@@ -698,11 +720,73 @@ export default RestModel.extend({
     const url = "/t/" + this.get('topic.id') + "/posts.json";
     const data = { post_ids: postIds };
     const store = this.store;
-    return Discourse.ajax(url, {data}).then(result => {
+    return ajax(url, {data}).then(result => {
       const posts = Ember.get(result, "post_stream.posts");
       if (posts) {
         posts.forEach(p => this.storePost(store.createRecord('post', p)));
       }
+    });
+  },
+
+  backfillExcerpts(streamPosition){
+    this._excerpts = this._excerpts || [];
+    const stream = this.get('stream');
+
+    this._excerpts.loadNext = streamPosition;
+
+    if (this._excerpts.loading) {
+      return this._excerpts.loading.then(()=>{
+        if(!this._excerpts[stream[streamPosition]]) {
+
+          if (this._excerpts.loadNext === streamPosition) {
+            return this.backfillExcerpts(streamPosition);
+          }
+        }
+      });
+    }
+
+
+    let postIds = stream.slice(Math.max(streamPosition-20,0), streamPosition+20);
+
+    for(let i=postIds.length-1;i>=0;i--) {
+      if (this._excerpts[postIds[i]]) {
+        postIds.splice(i,1);
+      }
+    }
+
+    let data = {
+      post_ids: postIds
+    };
+
+    this._excerpts.loading = ajax("/t/" + this.get('topic.id') + "/excerpts.json", {data})
+      .then(excerpts => {
+        excerpts.forEach(obj => {
+          this._excerpts[obj.post_id] = obj;
+        });
+      })
+      .finally(()=>{ this._excerpts.loading = null; });
+
+    return this._excerpts.loading;
+  },
+
+  excerpt(streamPosition){
+
+    const stream = this.get('stream');
+
+    return new Ember.RSVP.Promise((resolve,reject) => {
+
+      let excerpt = this._excerpts && this._excerpts[stream[streamPosition]];
+
+      if(excerpt) {
+        resolve(excerpt);
+        return;
+      }
+
+      this.backfillExcerpts(streamPosition)
+          .then(()=>{
+            resolve(this._excerpts[stream[streamPosition]]);
+          })
+          .catch(e => reject(e));
     });
   },
 

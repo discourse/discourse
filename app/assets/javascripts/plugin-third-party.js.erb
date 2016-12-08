@@ -1,0 +1,15 @@
+<%
+# Include plugin javascripts/handlebars templates
+Discourse.unofficial_plugins.each do |plugin|
+  plugin.javascript_includes.each { |js| require_asset(js) }
+  plugin.handlebars_includes.each { |hb| require_asset(hb) }
+
+  plugin.each_globbed_asset do |f, is_dir|
+    if is_dir
+      depend_on(f)
+    else
+      require_asset(f)
+    end
+  end
+end
+%>

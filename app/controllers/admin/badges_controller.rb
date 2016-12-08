@@ -5,6 +5,7 @@ class Admin::BadgesController < Admin::AdminController
       badge_types: BadgeType.all.order(:id).to_a,
       badge_groupings: BadgeGrouping.all.order(:position).to_a,
       badges: Badge.includes(:badge_grouping)
+                    .includes(:badge_type)
                     .references(:badge_grouping)
                     .order('badge_groupings.position, badge_type_id, badges.name').to_a,
       protected_system_fields: Badge.protected_system_fields,
@@ -14,6 +15,12 @@ class Admin::BadgesController < Admin::AdminController
   end
 
   def preview
+
+    unless SiteSetting.enable_badge_sql
+      render json: "preview not allowed", status: 403
+      return
+    end
+
     render json: BadgeGranter.preview(params[:sql],
                                       target_posts: params[:target_posts] == "true",
                                       explain: params[:explain] == "true",
@@ -94,6 +101,8 @@ class Admin::BadgesController < Admin::AdminController
         allowed = Badge.column_names.map(&:to_sym)
         allowed -= [:id, :created_at, :updated_at, :grant_count]
         allowed -= Badge.protected_system_fields if badge.system?
+        allowed -= [:query] unless SiteSetting.enable_badge_sql
+
         params.permit(*allowed)
 
         allowed.each do |key|
@@ -102,7 +111,9 @@ class Admin::BadgesController < Admin::AdminController
 
         # Badge query contract checks
         begin
-          BadgeGranter.contract_checks!(badge.query, { target_posts: badge.target_posts, trigger: badge.trigger })
+          if SiteSetting.enable_badge_sql
+            BadgeGranter.contract_checks!(badge.query, { target_posts: badge.target_posts, trigger: badge.trigger })
+          end
         rescue => e
           errors << e.message
           raise ActiveRecord::Rollback

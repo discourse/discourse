@@ -2,6 +2,7 @@ class Admin::EmailTemplatesController < Admin::AdminController
 
   def self.email_keys
     @email_keys ||= ["invite_forum_mailer", "invite_mailer", "invite_password_instructions",
+                     "custom_invite_mailer", "custom_invite_forum_mailer",
                      "new_version_mailer", "new_version_mailer_with_notes", "queued_posts_reminder",
                      "system_messages.backup_failed", "system_messages.backup_succeeded",
                      "system_messages.blocked_by_staff", "system_messages.bulk_invite_failed",
@@ -14,6 +15,7 @@ class Admin::EmailTemplatesController < Admin::AdminController
                      "system_messages.email_reject_post_error_specified", "system_messages.email_reject_user_not_found",
                      "system_messages.email_reject_reply_key", "system_messages.email_reject_topic_closed",
                      "system_messages.email_reject_topic_not_found", "system_messages.email_reject_trust_level",
+                     "system_messages.email_reject_screened_email",
                      "system_messages.pending_users_reminder", "system_messages.post_hidden",
                      "system_messages.restore_failed", "system_messages.restore_succeeded",
                      "system_messages.spam_post_blocked", "system_messages.too_many_spam_flags",

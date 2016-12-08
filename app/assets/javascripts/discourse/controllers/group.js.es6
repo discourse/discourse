@@ -12,17 +12,40 @@ var Tab = Em.Object.extend({
   }
 });
 
-
 export default Ember.Controller.extend({
   counts: null,
-  showing: 'posts',
+  showing: 'members',
+  tabs: [
+    Tab.create({ name: 'members', active: true, 'location': 'group.index' }),
+    Tab.create({ name: 'posts' }),
+    Tab.create({ name: 'topics' }),
+    Tab.create({ name: 'mentions' }),
+    Tab.create({ name: 'messages', requiresMembership: true })
+  ],
 
-  @observes('counts')
-  countsChanged() {
-    const counts = this.get('counts');
-    this.get('tabs').forEach(tab => {
-      tab.set('count', counts.get(tab.get('name')));
-    });
+  @computed('model.is_group_owner', 'model.automatic')
+  canEditGroup(isGroupOwner, automatic) {
+    return !automatic && isGroupOwner;
+  },
+
+  @computed('model.name', 'model.title')
+  groupName(name, title) {
+    return (title || name).capitalize();
+  },
+
+  @computed('model.name', 'model.flair_url', 'model.flair_bg_color', 'model.flair_color')
+  avatarFlairAttributes(groupName, flairURL, flairBgColor, flairColor) {
+    return {
+      primary_group_flair_url: flairURL,
+      primary_group_flair_bg_color: flairBgColor,
+      primary_group_flair_color: flairColor,
+      primary_group_name: groupName
+    };
+  },
+
+  @observes('model.user_count')
+  _setMembersTabCount() {
+    this.get('tabs')[0].set('count', this.get('model.user_count'));
   },
 
   @observes('showing')
@@ -34,11 +57,16 @@ export default Ember.Controller.extend({
     });
   },
 
-  tabs: [
-    Tab.create({ name: 'posts', active: true, 'location': 'group.index' }),
-    Tab.create({ name: 'topics' }),
-    Tab.create({ name: 'mentions' }),
-    Tab.create({ name: 'members' }),
-    Tab.create({ name: 'messages' }),
-  ]
+  @computed('model.is_group_user')
+  getTabs(isGroupUser) {
+    return this.get('tabs').filter(t => {
+      let isMember = false;
+
+      if (this.currentUser) {
+        isMember = this.currentUser.admin || isGroupUser;
+      }
+
+      return isMember || !t.get('requiresMembership');
+    });
+  }
 });

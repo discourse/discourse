@@ -20,7 +20,7 @@
   }
 
   &.badge-type-gold .fa {
-    color: #ffd700 !important;
+    color: rgb(231, 195, 0) !important;
   }
 
   &.badge-type-silver .fa {
@@ -57,6 +57,7 @@
     }
   }
 }
+
 .user-info.medium.badge-info {
   min-height: 80px;
 
@@ -160,18 +161,19 @@
 
       img {
         max-width: 80px;
+        max-height: 80px;
       }
 
       &.badge-type-gold .fa {
-        color: #ffd700;
+        color: rgb(231, 195, 0) !important;
       }
 
       &.badge-type-silver .fa {
-        color: #c0c0c0;
+        color: #c0c0c0 !important;
       }
 
       &.badge-type-bronze .fa {
-        color: #cd7f32;
+        color: #cd7f32 !important;
       }
     }
 
@@ -183,7 +185,7 @@
       color: $primary;
 
       h3 {
-        margin-bottom: 0.25em;
+        margin-bottom: 0.4em;
       }
     }
   }
@@ -192,6 +194,12 @@
 .badge-card.medium {
   width: 350px;
   vertical-align: top;
+}
+
+@media all and (max-width: 320px) {
+  .badge-card.medium {
+    width: 100%;
+  }
 }
 
 .badge-card.large {
@@ -246,3 +254,6 @@
   background-color: $danger;
 }
 
+.hyperlink {
+  cursor: pointer;
+}

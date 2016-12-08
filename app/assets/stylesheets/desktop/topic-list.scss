@@ -193,8 +193,6 @@
     }
   }
   .category{
-    width: 45%;
-
     h3 {
       display: inline-block;
       font-size: 1.286em;
@@ -272,11 +270,13 @@ button.dismiss-read {
   margin-left: 10px;
 }
 
-.category-notification-menu .dropdown-menu {
-  right: 0;
-  top: 30px;
-  bottom: auto;
-  left: auto;
+.category-notification-menu, .tags-admin-menu {
+  .dropdown-menu {
+    right: 0;
+    top: 30px;
+    bottom: auto;
+    left: auto;
+  }
 }
 
 .category-heading {
@@ -285,6 +285,10 @@ button.dismiss-read {
     line-height: 1.5em;
     font-size: 1.5em;
   }
+}
+
+.category-navigation {
+  clear: both;
 }
 
 .category-logo {

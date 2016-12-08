@@ -15,13 +15,23 @@ module ApplicationHelper
   include ConfigurableUrls
   include GlobalPath
 
-  def ga_universal_json
-    cookie_domain = SiteSetting.ga_universal_domain_name.gsub(/^http(s)?:\/\//, '')
-    result = {cookieDomain: cookie_domain}
+  def google_universal_analytics_json(ua_domain_name=nil)
+    result = {}
+    if ua_domain_name
+      result[:cookieDomain] = ua_domain_name.gsub(/^http(s)?:\/\//, '')
+    end
     if current_user.present?
       result[:userId] = current_user.id
     end
     result.to_json.html_safe
+  end
+
+  def ga_universal_json
+    google_universal_analytics_json(SiteSetting.ga_universal_domain_name)
+  end
+
+  def google_tag_manager_json
+    google_universal_analytics_json
   end
 
   def shared_session_key
@@ -36,10 +46,12 @@ module ApplicationHelper
   end
 
   def script(*args)
-    if SiteSetting.enable_cdn_js_debugging && GlobalSetting.cdn_url
-      tags = javascript_include_tag(*args, "crossorigin" => "anonymous")
-      tags.gsub!("/assets/", "/cdn_asset/#{Discourse.current_hostname.gsub(".","_")}/")
-      tags.gsub!(".js\"", ".js?v=1&origin=#{CGI.escape request.base_url}\"")
+    if  GlobalSetting.cdn_url &&
+        GlobalSetting.cdn_url.start_with?("https") &&
+        ENV["COMPRESS_BROTLI"] == "1" &&
+        request.env["HTTP_ACCEPT_ENCODING"] =~ /br/
+      tags = javascript_include_tag(*args)
+      tags.gsub!("#{GlobalSetting.cdn_url}/assets/", "#{GlobalSetting.cdn_url}/brotli_asset/")
       tags.html_safe
     else
       javascript_include_tag(*args)
@@ -59,6 +71,12 @@ module ApplicationHelper
     "#{mobile_view? ? 'mobile-view' : 'desktop-view'} #{mobile_device? ? 'mobile-device' : 'not-mobile-device'} #{rtl_class} #{current_user ? '' : 'anon'}"
   end
 
+  def body_classes
+    if @category && @category.url.present?
+      "category-#{@category.url.sub(/^\/c\//, '').gsub(/\//, '-')}"
+    end
+  end
+
   def rtl_class
     rtl? ? 'rtl' : ''
   end
@@ -75,8 +93,7 @@ module ApplicationHelper
   end
 
   def format_topic_title(title)
-    PrettyText.unescape_emoji(title)
-    strip_tags(title)
+    PrettyText.unescape_emoji strip_tags(title)
   end
 
   def with_format(format, &block)
@@ -89,6 +106,14 @@ module ApplicationHelper
 
   def age_words(secs)
     AgeWords.age_words(secs)
+  end
+
+  def short_date(dt)
+    if dt.year == Time.now.year
+      I18n.l(dt, format: :short_no_year)
+    else
+      I18n.l(dt, format: :date_only)
+    end
   end
 
   def guardian
@@ -126,20 +151,41 @@ module ApplicationHelper
     opts ||= {}
     opts[:url] ||= "#{Discourse.base_url_no_prefix}#{request.fullpath}"
 
-    # Use the correct scheme for open graph
-    if opts[:image].present? && opts[:image].start_with?("//")
-      uri = URI(Discourse.base_url)
-      opts[:image] = "#{uri.scheme}:#{opts[:image]}"
-    elsif opts[:image].present? && opts[:image].start_with?("/uploads/")
-      opts[:image] = "#{Discourse.base_url}#{opts[:image]}"
+    if opts[:image].blank? && (SiteSetting.default_opengraph_image_url.present? || SiteSetting.twitter_summary_large_image_url.present?)
+      opts[:twitter_summary_large_image] = SiteSetting.twitter_summary_large_image_url if SiteSetting.twitter_summary_large_image_url.present?
+      opts[:image] = SiteSetting.default_opengraph_image_url.present? ? SiteSetting.default_opengraph_image_url : SiteSetting.twitter_summary_large_image_url
+    elsif opts[:image].blank? && SiteSetting.apple_touch_icon_url.present?
+      opts[:image] = SiteSetting.apple_touch_icon_url
     end
 
-    # Add opengraph tags
+    # Use the correct scheme for open graph image
+    if opts[:image].present?
+      if opts[:image].start_with?("//")
+        uri = URI(Discourse.base_url)
+        opts[:image] = "#{uri.scheme}:#{opts[:image]}"
+      elsif opts[:image].start_with?("/uploads/")
+        opts[:image] = "#{Discourse.base_url}#{opts[:image]}"
+      elsif GlobalSetting.relative_url_root && opts[:image].start_with?(GlobalSetting.relative_url_root)
+        opts[:image] = "#{Discourse.base_url_no_prefix}#{opts[:image]}"
+      end
+    end
+
+    # Add opengraph & twitter tags
     result = []
     result << tag(:meta, property: 'og:site_name', content: SiteSetting.title)
-    result << tag(:meta, name: 'twitter:card', content: "summary")
 
-    [:url, :title, :description, :image].each do |property|
+    if opts[:twitter_summary_large_image].present?
+      result << tag(:meta, name: 'twitter:card', content: "summary_large_image")
+      result << tag(:meta, name: "twitter:image", content: opts[:twitter_summary_large_image])
+    elsif opts[:image].present?
+      result << tag(:meta, name: 'twitter:card', content: "summary")
+      result << tag(:meta, name: "twitter:image", content: opts[:image])
+    else
+      result << tag(:meta, name: 'twitter:card', content: "summary")
+    end
+    result << tag(:meta, property: "og:image", content: opts[:image]) if opts[:image].present?
+
+    [:url, :title, :description].each do |property|
       if opts[property].present?
         escape = (property != :image)
         result << tag(:meta, { property: "og:#{property}", content: opts[property] }, nil, escape)
@@ -157,6 +203,20 @@ module ApplicationHelper
     result.join("\n")
   end
 
+  def render_sitelinks_search_tag
+    json = {
+      '@context' => 'http://schema.org',
+      '@type' => 'WebSite',
+      url: Discourse.base_url,
+      potentialAction: {
+        '@type' => 'SearchAction',
+        target: "#{Discourse.base_url}/search?q={search_term_string}",
+        'query-input' => 'required name=search_term_string',
+      }
+    }
+    content_tag(:script, MultiJson.dump(json).html_safe, type: 'application/ld+json'.freeze)
+  end
+
   def application_logo_url
     @application_logo_url ||= (mobile_view? && SiteSetting.mobile_logo_url) || SiteSetting.logo_url
   end
@@ -169,8 +229,12 @@ module ApplicationHelper
     MobileDetection.resolve_mobile_view!(request.user_agent,params,session)
   end
 
+  def crawler_layout?
+    controller.try(:use_crawler_layout?)
+  end
+
   def include_crawler_content?
-    controller.try(:use_crawler_layout?) || !mobile_view?
+    crawler_layout? || !mobile_view?
   end
 
   def mobile_device?
@@ -178,7 +242,18 @@ module ApplicationHelper
   end
 
   def customization_disabled?
-    session[:disable_customization]
+    safe_mode = params["safe_mode"]
+    session[:disable_customization] || (safe_mode && safe_mode.include?("no_custom"))
+  end
+
+  def allow_plugins?
+    safe_mode = params["safe_mode"]
+    !(safe_mode && safe_mode.include?("no_plugins"))
+  end
+
+  def allow_third_party_plugins?
+    safe_mode = params["safe_mode"]
+    !(safe_mode && (safe_mode.include?("no_plugins") || safe_mode.include?("only_official")))
   end
 
   def loading_admin?
@@ -207,4 +282,15 @@ module ApplicationHelper
     result.html_safe
   end
 
+  def topic_featured_link_domain(link)
+    begin
+      uri = URI.encode(link)
+      uri = URI.parse(uri)
+      uri = URI.parse("http://#{uri}") if uri.scheme.nil?
+      host = uri.host.downcase
+      host.start_with?('www.') ? host[4..-1] : host
+    rescue
+      ''
+    end
+  end
 end

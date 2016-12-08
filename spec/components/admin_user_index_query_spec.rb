@@ -16,6 +16,16 @@ describe AdminUserIndexQuery do
       query = ::AdminUserIndexQuery.new({ query: "active" })
       expect(query.find_users_query.to_sql).to match("last_seen_at")
     end
+
+    it "can't be injected" do
+      query = ::AdminUserIndexQuery.new({ order: "wat, no" })
+      expect(query.find_users_query.to_sql).not_to match("wat, no")
+    end
+
+    it "allows custom ordering" do
+      query = ::AdminUserIndexQuery.new({ order: "trust_level DESC" })
+      expect(query.find_users_query.to_sql).to match("trust_level DESC")
+    end
   end
 
   describe "no users with trust level" do
@@ -100,12 +110,12 @@ describe AdminUserIndexQuery do
       before(:each) { Fabricate(:user, email: "test1@example.com") }
 
       it "matches the email" do
-        query = ::AdminUserIndexQuery.new({ filter: "est1" })
+        query = ::AdminUserIndexQuery.new({ filter: " est1" })
         expect(query.find_users.count()).to eq(1)
       end
 
       it "matches the email using any case" do
-        query = ::AdminUserIndexQuery.new({ filter: "Test1" })
+        query = ::AdminUserIndexQuery.new({ filter: "Test1\t" })
         expect(query.find_users.count()).to eq(1)
       end
 
@@ -116,12 +126,12 @@ describe AdminUserIndexQuery do
       before(:each) { Fabricate(:user, username: "test_user_1") }
 
       it "matches the username" do
-        query = ::AdminUserIndexQuery.new({ filter: "user" })
+        query = ::AdminUserIndexQuery.new({ filter: "user\n" })
         expect(query.find_users.count).to eq(1)
       end
 
       it "matches the username using any case" do
-        query = ::AdminUserIndexQuery.new({ filter: "User" })
+        query = ::AdminUserIndexQuery.new({ filter: "\r\nUser" })
         expect(query.find_users.count).to eq(1)
       end
     end
@@ -131,7 +141,7 @@ describe AdminUserIndexQuery do
       let!(:user) { Fabricate(:user, ip_address: "117.207.94.9") }
 
       it "matches the ip address" do
-        query = ::AdminUserIndexQuery.new({ filter: "117.207.94.9" })
+        query = ::AdminUserIndexQuery.new({ filter: " 117.207.94.9 " })
         expect(query.find_users.count()).to eq(1)
       end
 

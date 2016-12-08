@@ -51,6 +51,10 @@ module UserGuardian
     is_staff? && !user.nil? && !user.staff?
   end
 
+  def can_reset_bounce_score?(user)
+    user && is_staff?
+  end
+
   def can_check_emails?(user)
     is_admin? || (is_staff? && SiteSetting.show_email_on_profile)
   end

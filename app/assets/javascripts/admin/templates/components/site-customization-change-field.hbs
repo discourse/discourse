@@ -1,0 +1,7 @@
+{{#if field}}
+  <section class="field">
+    <b>{{i18n name}}</b>: ({{i18n 'character_count' count=field.length}})
+    <br/>
+    {{textarea value=field class="plain"}}
+  </section>
+{{/if}}

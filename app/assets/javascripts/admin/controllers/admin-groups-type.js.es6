@@ -1,17 +1,18 @@
-export default Ember.ArrayController.extend({
-  sortProperties: ['name'],
+import { ajax } from 'discourse/lib/ajax';
+export default Ember.Controller.extend({
+  sortedGroups: Ember.computed.sort('model', 'groupSorting'),
+  groupSorting: ['name'],
+
   refreshingAutoGroups: false,
-  isAuto: function(){
-    return this.get('type') === 'automatic';
-  }.property('type'),
+
+  isAuto: Ember.computed.equal('type', 'automatic'),
 
   actions: {
-    refreshAutoGroups: function(){
-      var self = this;
+    refreshAutoGroups() {
       this.set('refreshingAutoGroups', true);
-      Discourse.ajax('/admin/groups/refresh_automatic_groups', {type: 'POST'}).then(function() {
-        self.transitionToRoute("adminGroupsType", "automatic").then(function() {
-          self.set('refreshingAutoGroups', false);
+      ajax('/admin/groups/refresh_automatic_groups', {type: 'POST'}).then(() => {
+        this.transitionToRoute("adminGroupsType", "automatic").then(() => {
+          this.set('refreshingAutoGroups', false);
         });
       });
     }

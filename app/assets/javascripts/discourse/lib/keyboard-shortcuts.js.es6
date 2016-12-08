@@ -1,20 +1,24 @@
 import DiscourseURL from 'discourse/lib/url';
 import Composer from 'discourse/models/composer';
+import { scrollTopFor } from 'discourse/lib/offset-calculator';
 
 const bindings = {
   '!':               {postAction: 'showFlags'},
-  '#':               {handler: 'toggleProgress', anonymous: true},
+  '#':               {handler: 'goToPost', anonymous: true},
   '/':               {handler: 'toggleSearch', anonymous: true},
   '=':               {handler: 'toggleHamburgerMenu', anonymous: true},
   '?':               {handler: 'showHelpModal', anonymous: true},
   '.':               {click: '.alert.alert-info.clickable', anonymous: true}, // show incoming/updated topics
   'b':               {handler: 'toggleBookmark'},
   'c':               {handler: 'createTopic'},
-  'ctrl+f':          {handler: 'showBuiltinSearch', anonymous: true},
-  'command+f':       {handler: 'showBuiltinSearch', anonymous: true},
+  'ctrl+f':          {handler: 'showPageSearch', anonymous: true},
+  'command+f':       {handler: 'showPageSearch', anonymous: true},
+  'ctrl+p':          {handler: 'printTopic', anonymous: true},
+  'command+p':       {handler: 'printTopic', anonymous: true},
   'd':               {postAction: 'deletePost'},
   'e':               {postAction: 'editPost'},
   'end':             {handler: 'goToLastPost', anonymous: true},
+  'command+down':    {handler: 'goToLastPost', anonymous: true},
   'f':               {handler: 'toggleBookmarkTopic'},
   'g h':             {path: '/', anonymous: true},
   'g l':             {path: '/latest', anonymous: true},
@@ -26,13 +30,14 @@ const bindings = {
   'g p':             {path: '/my/activity'},
   'g m':             {path: '/my/messages'},
   'home':            {handler: 'goToFirstPost', anonymous: true},
+  'command+up':      {handler: 'goToFirstPost', anonymous: true},
   'j':               {handler: 'selectDown', anonymous: true},
   'k':               {handler: 'selectUp', anonymous: true},
   'l':               {click: '.topic-post.selected button.toggle-like'},
-  'm m':             {click: 'div.notification-options li[data-id="0"] a'}, // mark topic as muted
-  'm r':             {click: 'div.notification-options li[data-id="1"] a'}, // mark topic as regular
-  'm t':             {click: 'div.notification-options li[data-id="2"] a'}, // mark topic as tracking
-  'm w':             {click: 'div.notification-options li[data-id="3"] a'}, // mark topic as watching
+  'm m':             {handler: 'setTrackingToMuted'}, // mark topic as muted
+  'm r':             {handler: 'setTrackingToRegular'}, // mark topic as regular
+  'm t':             {handler: 'setTrackingToTracking'}, // mark topic as tracking
+  'm w':             {handler: 'setTrackingToWatching'}, // mark topic as watching
   'o,enter':         {click: '.topic-list tr.selected a.title', anonymous: true}, // open selected topic
   'p':               {handler: 'showCurrentUser'},
   'q':               {handler: 'quoteReply'},
@@ -114,7 +119,7 @@ export default {
 
   _jumpTo(direction) {
     if ($('.container.posts').length) {
-      this.container.lookup('controller:topic-progress').send(direction);
+      this.container.lookup('controller:topic').send(direction);
     }
   },
 
@@ -142,32 +147,19 @@ export default {
     this._changeSection(-1);
   },
 
-  showBuiltinSearch() {
-    if (this.container.lookup('controller:header').get('searchVisible')) {
-      this.toggleSearch();
-      return true;
-    }
+  showPageSearch(event) {
+    Ember.run(() => {
+      this.appEvents.trigger('header:keyboard-trigger', {type: 'page-search', event});
+    });
+  },
 
-    this.searchService.set('searchContextEnabled', false);
-
-    const currentPath = this.container.lookup('controller:application').get('currentPath'),
-          blacklist = [ /^discovery\.categories/ ],
-          whitelist = [ /^topic\./ ],
-          check = function(regex) { return !!currentPath.match(regex); };
-    let showSearch = whitelist.any(check) && !blacklist.any(check);
-
-    // If we're viewing a topic, only intercept search if there are cloaked posts
-    if (showSearch && currentPath.match(/^topic\./)) {
-      showSearch = $('.cooked').length < this.container.lookup('controller:topic').get('model.postStream.stream.length');
-    }
-
-    if (showSearch) {
-      this.searchService.set('searchContextEnabled', true);
-      this.toggleSearch();
-      return false;
-    }
-
-    return true;
+  printTopic(event) {
+    Ember.run(() => {
+      if ($('.container.posts').length) {
+        event.preventDefault(); // We need to stop printing the current page in Firefox
+        this.container.lookup('controller:topic').print();
+      }
+    });
   },
 
   createTopic() {
@@ -178,32 +170,50 @@ export default {
     this.container.lookup('controller:topic').togglePinnedState();
   },
 
-  toggleProgress() {
-    this.container.lookup('controller:topic-progress').send('toggleExpansion', {highlight: true});
+  goToPost() {
+    this.appEvents.trigger('topic:keyboard-trigger', { type: 'jump' });
   },
 
-  toggleSearch() {
-    this.container.lookup('controller:header').send('toggleSearch');
-    return false;
+  toggleSearch(event) {
+    this.appEvents.trigger('header:keyboard-trigger', {type: 'search', event});
   },
 
-  toggleHamburgerMenu() {
-    this.container.lookup('controller:header').send('toggleMenuPanel', 'hamburgerVisible');
+  toggleHamburgerMenu(event) {
+    this.appEvents.trigger('header:keyboard-trigger', {type: 'hamburger', event});
   },
 
-  showCurrentUser() {
-    this.container.lookup('controller:header').send('toggleMenuPanel', 'userMenuVisible');
+  showCurrentUser(event) {
+    this.appEvents.trigger('header:keyboard-trigger', {type: 'user', event});
   },
 
   showHelpModal() {
     this.container.lookup('controller:application').send('showKeyboardShortcutsHelp');
   },
 
+  setTrackingToMuted(event) {
+    this.appEvents.trigger('topic-notifications-button:keyboard-trigger', {type: 'notification', id: 0, event});
+  },
+
+  setTrackingToRegular(event) {
+    this.appEvents.trigger('topic-notifications-button:keyboard-trigger', {type: 'notification', id: 1, event});
+  },
+
+  setTrackingToTracking(event) {
+    this.appEvents.trigger('topic-notifications-button:keyboard-trigger', {type: 'notification', id: 2, event});
+  },
+
+  setTrackingToWatching(event) {
+    this.appEvents.trigger('topic-notifications-button:keyboard-trigger', {type: 'notification', id: 3, event});
+  },
+
   sendToTopicListItemView(action) {
     const elem = $('tr.selected.topic-list-item.ember-view')[0];
     if (elem) {
-      const view = Ember.View.views[elem.id];
-      view.send(action);
+      const registry = this.container.lookup('-view-registry:main');
+      if (registry) {
+        const view = registry[elem.id];
+        view.send(action);
+      }
     }
   },
 
@@ -226,7 +236,13 @@ export default {
       const post = topicController.get('model.postStream.posts').findBy('id', selectedPostId);
       if (post) {
         // TODO: Use ember closure actions
-        const result = topicController._actions[action].call(topicController, post);
+        let actionMethod = topicController._actions[action];
+        if (!actionMethod) {
+          const topicRoute = container.lookup('route:topic');
+          actionMethod = topicRoute._actions[action];
+        }
+
+        const result = actionMethod.call(topicController, post);
         if (result && result.then) {
           this.appEvents.trigger('post-stream:refresh', { id: selectedPostId });
         }
@@ -275,7 +291,9 @@ export default {
       return;
     }
 
-    const $selected = $articles.filter('.selected');
+    const $selected = ($articles.filter('.selected').length !== 0)
+      ? $articles.filter('.selected')
+      : $articles.filter('[data-islastviewedtopic=true]');
     let index = $articles.index($selected);
 
     if ($selected.length !== 0) { //boundries check
@@ -311,31 +329,36 @@ export default {
       $articles.removeClass('selected');
       $article.addClass('selected');
 
-      if ($article.is('.topic-list-item')) {
-        this.sendToTopicListItemView('select');
-      }
-
       if ($article.is('.topic-post')) {
         $('a.tabLoc', $article).focus();
-      }
+        this._scrollToPost($article);
 
-      this._scrollList($article, direction);
+      } else {
+        this._scrollList($article, direction);
+      }
     }
+  },
+
+  _scrollToPost($article) {
+    const pos = $article.offset();
+    $(window).scrollTop(Math.ceil(pos.top - scrollTopFor(pos.top)));
   },
 
   _scrollList($article) {
     // Try to keep the article on screen
     const pos = $article.offset();
     const height = $article.height();
+    const headerHeight = $('header.d-header').height();
     const scrollTop = $(window).scrollTop();
     const windowHeight = $(window).height();
 
     // skip if completely on screen
-    if (pos.top > scrollTop && (pos.top + height) < (scrollTop + windowHeight)) {
+    if ((pos.top - headerHeight) > scrollTop && (pos.top + height) < (scrollTop + windowHeight)) {
       return;
     }
 
     let scrollPos = (pos.top + (height/2)) - (windowHeight * 0.5);
+    if (height > (windowHeight - headerHeight)) { scrollPos = (pos.top - headerHeight); }
     if (scrollPos < 0) { scrollPos = 0; }
 
     if (this._scrollAnimation) {

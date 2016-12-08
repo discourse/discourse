@@ -1,6 +1,6 @@
 import { createWidget } from 'discourse/widgets/widget';
 import { h } from 'virtual-dom';
-import { iconNode  } from 'discourse/helpers/fa-icon';
+import { iconNode } from 'discourse/helpers/fa-icon-node';
 
 function description(attrs) {
   const daysSince = attrs.daysSince;
@@ -20,7 +20,7 @@ export default createWidget('time-gap', {
   tagName: 'div.time-gap.small-action.clearfix',
 
   html(attrs) {
-    return [h('div.topic-avatar', iconNode('clock-o')),
-            h('div.small-action-desc', description(attrs))];
+    return [h('div.topic-avatar', iconNode('fw')),
+            h('div.small-action-desc.timegap', description(attrs))];
   }
 });

@@ -10,7 +10,10 @@ class Group < ActiveRecord::Base
   has_many :categories, through: :category_groups
   has_many :users, through: :group_users
 
+  has_and_belongs_to_many :web_hooks
+
   before_save :downcase_incoming_email
+  before_save :cook_bio
 
   after_save :destroy_deletions
   after_save :automatic_group_membership
@@ -28,6 +31,7 @@ class Group < ActiveRecord::Base
   validates_uniqueness_of :name, case_sensitive: false
   validate :automatic_membership_email_domains_format_validator
   validate :incoming_email_validator
+  validates :flair_url, url: true, if: Proc.new { |g| g.flair_url && g.flair_url[0,3] != 'fa-' }
 
   AUTO_GROUPS = {
     :everyone => 0,
@@ -80,15 +84,23 @@ class Group < ActiveRecord::Base
     self.incoming_email = (incoming_email || "").strip.downcase.presence
   end
 
+  def cook_bio
+    if !self.bio_raw.blank?
+      self.bio_cooked = PrettyText.cook(self.bio_raw)
+    end
+  end
+
   def incoming_email_validator
     return if self.automatic || self.incoming_email.blank?
+
     incoming_email.split("|").each do |email|
+      escaped = Rack::Utils.escape_html(email)
       if !Email.is_valid?(email)
-        self.errors.add(:base, I18n.t('groups.errors.invalid_incoming_email', email: email))
+        self.errors.add(:base, I18n.t('groups.errors.invalid_incoming_email', email: escaped))
       elsif group = Group.where.not(id: self.id).find_by_email(email)
-        self.errors.add(:base, I18n.t('groups.errors.email_already_used_in_group', email: email, group_name: group.name))
+        self.errors.add(:base, I18n.t('groups.errors.email_already_used_in_group', email: escaped, group_name: Rack::Utils.escape_html(group.name)))
       elsif category = Category.find_by_email(email)
-        self.errors.add(:base, I18n.t('groups.errors.email_already_used_in_category', email: email, category_name: category.name))
+        self.errors.add(:base, I18n.t('groups.errors.email_already_used_in_category', email: escaped, category_name: Rack::Utils.escape_html(category.name)))
       end
     end
   end
@@ -144,17 +156,15 @@ class Group < ActiveRecord::Base
       group.save!
     end
 
-    group.name = I18n.t("groups.default_names.#{name}")
-
     # don't allow shoddy localization to break this
-    validator = UsernameValidator.new(group.name)
-    unless validator.valid_format?
-      group.name = name
-    end
+    localized_name = I18n.t("groups.default_names.#{name}")
+    validator = UsernameValidator.new(localized_name)
+    group.name = validator.valid_format? ? localized_name : name
 
     # the everyone group is special, it can include non-users so there is no
     # way to have the membership in a table
     if name == :everyone
+      group.visible = false
       group.save!
       return group
     end
@@ -215,6 +225,17 @@ class Group < ActiveRecord::Base
     Group.reset_counters(group.id, :group_users)
 
     group
+  end
+
+  def self.ensure_consistency!
+    reset_all_counters!
+    refresh_automatic_groups!
+  end
+
+  def self.reset_all_counters!
+    Group.pluck(:id).each do |group_id|
+      Group.reset_counters(group_id, :group_users)
+    end
   end
 
   def self.refresh_automatic_groups!(*args)
@@ -335,7 +356,11 @@ class Group < ActiveRecord::Base
   end
 
   def add_owner(user)
-    self.group_users.create(user_id: user.id, owner: true)
+    if group_user = self.group_users.find_by(user: user)
+      group_user.update_attributes!(owner: true) if !group_user.owner
+    else
+      GroupUser.create!(user: user, group: self, owner: true)
+    end
   end
 
   def self.find_by_email(email)
@@ -367,10 +392,6 @@ class Group < ActiveRecord::Base
     true
   end
 
-  def mentionable?(user, group_id)
-    Group.mentionable(user).where(id: group_id).exists?
-  end
-
   def staff?
     STAFF_GROUPS.include?(self.name.to_sym)
   end
@@ -388,7 +409,7 @@ class Group < ActiveRecord::Base
       domains.each do |domain|
         domain.sub!(/^https?:\/\//, '')
         domain.sub!(/\/.*$/, '')
-        self.errors.add :base, (I18n.t('groups.errors.invalid_domain', domain: domain)) unless domain =~ /\A[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?\Z/i
+        self.errors.add :base, (I18n.t('groups.errors.invalid_domain', domain: domain)) unless domain =~ /\A[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,24}(:[0-9]{1,5})?(\/.*)?\Z/i
       end
       self.automatic_membership_email_domains = domains.join("|")
     end
@@ -484,6 +505,9 @@ end
 #  grant_trust_level                  :integer
 #  incoming_email                     :string
 #  has_messages                       :boolean          default(FALSE), not null
+#  flair_url                          :string
+#  flair_bg_color                     :string
+#  flair_color                        :string
 #
 # Indexes
 #

@@ -13,7 +13,6 @@ respawn limit 3 30
 start on runlevel [2345]
 stop on runlevel [06]
 
-env RUBY_GC_MALLOC_LIMIT=90000000
 env RAILS_ROOT=/var/www/discourse
 env RAILS_ENV=production
 env NUM_WEBS=4

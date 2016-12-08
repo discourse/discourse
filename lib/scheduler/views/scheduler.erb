@@ -7,7 +7,7 @@
     </div>
   <% end %>
   <div class="col-sm-12">
-    <h3>Recurring Jobs</h3>
+    <h3>Recurring Jobs <a style='font-size:50%; margin-left: 30px' href='scheduler/history'>history</a></h3>
   </div>
 </header>
 
@@ -43,7 +43,7 @@
               <%= @info.prev_result %>
             </td>
             <td>
-              <%= @info.prev_duration %>
+              <%= sane_duration @info.prev_duration %>
             </td>
             <td>
               <%= @info.current_owner %>

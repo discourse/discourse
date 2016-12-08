@@ -1,23 +1,7 @@
-import registerUnbound from 'discourse/helpers/register-unbound';
+import { registerUnbound } from 'discourse-common/lib/helpers';
 import { longDate, autoUpdatingRelativeAge, number } from 'discourse/lib/formatter';
 
 const safe = Handlebars.SafeString;
-
-Em.Handlebars.helper('bound-avatar', (user, size) => {
-  if (Em.isEmpty(user)) {
-    return new safe("<div class='avatar-placeholder'></div>");
-  }
-
-  const avatar = Em.get(user, 'avatar_template');
-  return new safe(Discourse.Utilities.avatarImg({ size: size, avatarTemplate: avatar }));
-}, 'username', 'avatar_template');
-
-/*
- * Used when we only have a template
- */
-Em.Handlebars.helper('bound-avatar-template', (at, size) => {
-  return new safe(Discourse.Utilities.avatarImg({ size: size, avatarTemplate: at }));
-});
 
 registerUnbound('raw-date', dt => longDate(new Date(dt)));
 
@@ -36,11 +20,13 @@ registerUnbound('number', (orig, params) => {
   if (params['class']) {
     classNames += ' ' + params['class'];
   }
+
   let result = "<span class='" + classNames + "'";
+  let addTitle = params.noTitle ? false : true;
 
   // Round off the thousands to one decimal place
   const n = number(orig);
-  if (n !== title) {
+  if (n.toString() !== title.toString() && addTitle) {
     result += " title='" + Handlebars.Utils.escapeExpression(title) + "'";
   }
   result += ">" + n + "</span>";

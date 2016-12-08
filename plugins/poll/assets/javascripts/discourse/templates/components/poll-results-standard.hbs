@@ -1,4 +1,4 @@
-{{#each option in options}}
+{{#each options as |option|}}
   <li>
     <div class="option">
       <p>
@@ -9,5 +9,9 @@
     <div class="bar-back">
       <div class="bar" style={{option.style}}></div>
     </div>
+
+    {{#if isPublic}}
+      {{poll-results-standard-voters option=option}}
+    {{/if}}
   </li>
 {{/each}}

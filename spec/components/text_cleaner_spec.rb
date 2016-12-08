@@ -187,6 +187,14 @@ describe TextCleaner do
         expect(TextCleaner.clean_title("Hello there ?")).to eq("Hello there?")
       end
 
+      it "replaces all upper case unicode text with regular unicode case letters" do
+        expect(TextCleaner.clean_title("INVESTIGAÇÃO POLÍTICA NA CÂMARA")).to eq("Investigação política na câmara")
+      end
+
+      it "capitalizes first unicode letter" do
+        expect(TextCleaner.clean_title("épico encontro")).to eq("Épico encontro")
+      end
+
     end
 
   end

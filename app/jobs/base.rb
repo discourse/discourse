@@ -148,7 +148,7 @@ module Jobs
           t = Thread.new do
             begin
               RailsMultisite::ConnectionManagement.establish_connection(db: db)
-              I18n.locale = SiteSetting.default_locale
+              I18n.locale = SiteSetting.default_locale || "en"
               I18n.ensure_all_loaded!
               begin
                 execute(opts)
@@ -173,10 +173,9 @@ module Jobs
 
       if exceptions.length > 0
         exceptions.each do |exception_hash|
-          Discourse.handle_job_exception(exception_hash[:ex],
-                error_context(opts, exception_hash[:code], exception_hash[:other]))
+          Discourse.handle_job_exception(exception_hash[:ex], error_context(opts, exception_hash[:code], exception_hash[:other]))
         end
-        raise HandledExceptionWrapper.new exceptions[0][:ex]
+        raise HandledExceptionWrapper.new(exceptions[0][:ex])
       end
 
       nil
@@ -237,18 +236,22 @@ module Jobs
     enqueue_in(secs, job_name, opts)
   end
 
-  def self.cancel_scheduled_job(job_name, params={})
-    scheduled_for(job_name, params).each(&:delete)
+  def self.cancel_scheduled_job(job_name, opts={})
+    scheduled_for(job_name, opts).each(&:delete)
   end
 
-  def self.scheduled_for(job_name, params={})
-    params = params.with_indifferent_access
+  def self.scheduled_for(job_name, opts={})
+    opts = opts.with_indifferent_access
+    unless opts.delete(:all_sites)
+      opts[:current_site_id] ||= RailsMultisite::ConnectionManagement.current_db
+    end
+
     job_class = "Jobs::#{job_name.to_s.camelcase}"
     Sidekiq::ScheduledSet.new.select do |scheduled_job|
       if scheduled_job.klass.to_s == job_class
         matched = true
         job_params = scheduled_job.item["args"][0].with_indifferent_access
-        params.each do |key, value|
+        opts.each do |key, value|
           if job_params[key] != value
             matched = false
             break
@@ -262,6 +265,6 @@ module Jobs
   end
 end
 
-# Require all jobs
+Dir["#{Rails.root}/app/jobs/onceoff/*.rb"].each {|file| require_dependency file }
 Dir["#{Rails.root}/app/jobs/regular/*.rb"].each {|file| require_dependency file }
 Dir["#{Rails.root}/app/jobs/scheduled/*.rb"].each {|file| require_dependency file }

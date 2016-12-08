@@ -12,16 +12,18 @@ zh_CN:
         other: "投票者"
       total_votes:
         other: "总票数"
-      average_rating: "平均排名：<strong>%{average}</strong>。"
+      average_rating: "平均评分：<strong>%{average}</strong>。"
+      public:
+        title: "投票是公开的。"
       multiple:
         help:
           at_least_min_options:
-            other: "你必须选择至少 <strong>%{count}</strong> 个选项。"
+            other: "至少选择 <strong>%{count}</strong> 个选项"
           up_to_max_options:
-            other: "你可以选择最多 <strong>%{count}</strong> 个选项。"
+            other: "最多选择 <strong>%{count}</strong> 个选项"
           x_options:
-            other: "你必须选择 <strong>%{count}</strong> 个选项。"
-          between_min_and_max_options: "你可以选择 <strong>%{min}</strong> 至 <strong>%{max}</strong> 个选项。"
+            other: "选择 <strong>%{count}</strong> 个选项"
+          between_min_and_max_options: "选择 <strong>%{min}</strong> 至 <strong>%{max}</strong> 个选项"
       cast-votes:
         title: "投你的票"
         label: "现在投票！"
@@ -39,5 +41,24 @@ zh_CN:
         title: "关闭投票"
         label: "关闭"
         confirm: "你确定要关闭这个投票？"
-      error_while_toggling_status: "改变投票状态时出错。"
-      error_while_casting_votes: "执行投票时发生了错误。"
+      error_while_toggling_status: "对不起，改变投票状态时出错了。"
+      error_while_casting_votes: "对不起，投票时出错了。"
+      error_while_fetching_voters: "对不起，显示投票者时出错了。"
+      ui_builder:
+        title: 创建投票
+        insert: 插入投票
+        help:
+          options_count: 输入至少 2 个选项
+        poll_type:
+          label: 类型
+          regular: 单选
+          multiple: 多选
+          number: 评分
+        poll_config:
+          max: 最大
+          min: 最小
+          step: 梯级
+        poll_public:
+          label: 显示投票人
+        poll_options:
+          label: 每行输入一个调查选项

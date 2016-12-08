@@ -39,18 +39,45 @@ describe UserUpdater do
       expect(user.reload.name).to eq 'Jim Tom'
     end
 
+    it 'can update categories and tags' do
+      category = Fabricate(:category)
+      tag = Fabricate(:tag)
+
+      user = Fabricate(:user)
+      updater = UserUpdater.new(acting_user, user)
+      updater.update(watched_tags: [tag.name], muted_category_ids: [category.id])
+
+      expect(TagUser.where(
+        user_id: user.id,
+        tag_id: tag.id,
+        notification_level: TagUser.notification_levels[:watching]
+      ).count).to eq(1)
+
+      expect(CategoryUser.where(
+        user_id: user.id,
+        category_id: category.id,
+        notification_level: CategoryUser.notification_levels[:muted]
+      ).count).to eq(1)
+
+    end
+
     it 'updates various fields' do
       user = Fabricate(:user)
       updater = UserUpdater.new(acting_user, user)
+      date_of_birth = Time.zone.now
 
-      updater.update(bio_raw: 'my new bio',
+      val = updater.update(bio_raw: 'my new bio',
                      email_always: 'true',
                      mailing_list_mode: true,
                      digest_after_minutes: "45",
                      new_topic_duration_minutes: 100,
                      auto_track_topics_after_msecs: 101,
-                     email_in_reply_to: false
+                     notification_level_when_replying: 3,
+                     email_in_reply_to: false,
+                     date_of_birth: date_of_birth
                     )
+      expect(val).to be_truthy
+
       user.reload
 
       expect(user.user_profile.bio_raw).to eq 'my new bio'
@@ -59,15 +86,36 @@ describe UserUpdater do
       expect(user.user_option.digest_after_minutes).to eq 45
       expect(user.user_option.new_topic_duration_minutes).to eq 100
       expect(user.user_option.auto_track_topics_after_msecs).to eq 101
+      expect(user.user_option.notification_level_when_replying).to eq 3
       expect(user.user_option.email_in_reply_to).to eq false
+      expect(user.date_of_birth).to eq(date_of_birth.to_date)
     end
 
-    context 'when update succeeds' do
-      it 'returns true' do
+    it "disables email_digests when enabling mailing_list_mode" do
+      user = Fabricate(:user)
+      updater = UserUpdater.new(acting_user, user)
+
+      val = updater.update(mailing_list_mode: true, email_digests: true)
+      expect(val).to be_truthy
+
+      user.reload
+
+      expect(user.user_option.email_digests).to eq false
+      expect(user.user_option.mailing_list_mode).to eq true
+    end
+
+    context 'when sso overrides bio' do
+      it 'does not change bio' do
+        SiteSetting.enable_sso = true
+        SiteSetting.sso_overrides_bio = true
+
         user = Fabricate(:user)
         updater = UserUpdater.new(acting_user, user)
 
-        expect(updater.update).to be_truthy
+        expect(updater.update(bio_raw: "new bio")).to be_truthy
+
+        user.reload
+        expect(user.user_profile.bio_raw).not_to eq 'new bio'
       end
     end
 

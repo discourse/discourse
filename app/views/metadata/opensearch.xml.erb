@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OpenSearchDescription xmlns="http://a9.com/-/spec/opensearch/1.1/">
+  <ShortName><%= SiteSetting.title %> Search</ShortName>
+  <Description>Search for posts on <%= SiteSetting.title %></Description>
+  <Tags>discourse forum</Tags>
+  <% if SiteSetting.favicon_url =~ /\.ico$/ -%>
+  <Image height="16" width="16" type="image/vnd.microsoft.icon"><%= UrlHelper.absolute SiteSetting.favicon_url %></Image>
+  <%- else -%>
+  <Image type="image/png"><%= UrlHelper.absolute SiteSetting.favicon_url %></Image>
+  <%- end %>
+  <Url type="application/opensearchdescription+xml" rel="self" template="<%= Discourse.base_url %>/opensearch.xml"/>
+  <Url type="text/html" template="<%= Discourse.base_url %>/search?q={searchTerms}"/>
+  <Query role="example" searchTerms="search term"/>
+</OpenSearchDescription>

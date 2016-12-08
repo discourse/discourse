@@ -18,9 +18,13 @@ describe Badge do
     badge = Badge.find_by_name("Basic User")
     name_english = badge.name
 
-    I18n.locale = 'fr'
+    begin
+      I18n.locale = 'fr'
 
-    expect(badge.display_name).not_to eq(name_english)
+      expect(badge.display_name).not_to eq(name_english)
+    ensure
+      I18n.locale = :en
+    end
   end
 
   it 'handles changes on badge description and long description correctly for system badges' do
@@ -41,6 +45,20 @@ describe Badge do
 
     expect(badge[:description]).to eq("testing")
     expect(badge[:long_description]).to eq("testing it")
+  end
+
+  it 'can ensure consistency' do
+    b = Badge.first
+    b.grant_count = 100
+    b.save
+
+    UserBadge.create!(user_id: -100, badge_id: b.id, granted_at: 1.minute.ago, granted_by_id: -1)
+    UserBadge.create!(user_id: User.first.id, badge_id: b.id, granted_at: 1.minute.ago, granted_by_id: -1)
+
+    Badge.ensure_consistency!
+
+    b.reload
+    expect(b.grant_count).to eq(1)
   end
 
 end

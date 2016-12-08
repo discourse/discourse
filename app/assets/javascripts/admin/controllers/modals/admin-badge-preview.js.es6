@@ -1,9 +1,9 @@
-export default Ember.Controller.extend({
-  needs: ['modal'],
+import { escapeExpression } from 'discourse/lib/utilities';
 
-  sample: Em.computed.alias('model.sample'),
-  errors: Em.computed.alias('model.errors'),
-  count: Em.computed.alias('model.grant_count'),
+export default Ember.Controller.extend({
+  sample: Ember.computed.alias('model.sample'),
+  errors: Ember.computed.alias('model.errors'),
+  count: Ember.computed.alias('model.grant_count'),
 
   count_warning: function() {
     if (this.get('count') <= 10) {
@@ -22,7 +22,7 @@ export default Ember.Controller.extend({
         returned = "<pre class='badge-query-plan'>";
 
     _.each(raw, function(linehash) {
-      returned += Discourse.Utilities.escapeExpression(linehash["QUERY PLAN"]);
+      returned += escapeExpression(linehash["QUERY PLAN"]);
       returned += "<br>";
     });
 
@@ -32,7 +32,7 @@ export default Ember.Controller.extend({
 
   processed_sample: Ember.computed.map('model.sample', function(grant) {
     var i18nKey = 'admin.badges.preview.grant.with',
-        i18nParams = { username: Discourse.Utilities.escapeExpression(grant.username) };
+        i18nParams = { username: escapeExpression(grant.username) };
 
     if (grant.post_id) {
       i18nKey += "_post";
@@ -41,7 +41,7 @@ export default Ember.Controller.extend({
 
     if (grant.granted_at) {
       i18nKey += "_time";
-      i18nParams.time = Discourse.Utilities.escapeExpression(moment(grant.granted_at).format(I18n.t('dates.long_with_year')));
+      i18nParams.time = escapeExpression(moment(grant.granted_at).format(I18n.t('dates.long_with_year')));
     }
 
     return I18n.t(i18nKey, i18nParams);

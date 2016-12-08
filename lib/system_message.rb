@@ -33,7 +33,7 @@ class SystemMessage
 
     post = creator.create
     if creator.errors.present?
-      raise StandardError, creator.errors.to_s
+      raise StandardError, creator.errors.full_messages.join(" ")
     end
 
     UserArchivedMessage.create!(user: Discourse.site_contact_user, topic: post.topic)
@@ -47,12 +47,13 @@ class SystemMessage
     title = I18n.t("system_messages.#{type}.subject_template", params)
     raw = I18n.t("system_messages.#{type}.text_body_template", params)
 
-    PostCreator.create(Discourse.system_user,
+    PostCreator.create!(Discourse.system_user,
                        title: title,
                        raw: raw,
                        archetype: Archetype.private_message,
                        target_usernames: @recipient.username,
-                       subtype: TopicSubtype.system_message)
+                       subtype: TopicSubtype.system_message,
+                       skip_validations: true)
   end
 
   def defaults

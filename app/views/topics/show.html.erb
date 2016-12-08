@@ -17,7 +17,9 @@
   <% end %>
 </div>
 <% end %>
+
 <%= server_plugin_outlet "topic_header" %>
+
 <hr>
 
 <%- if include_crawler_content? %>
@@ -64,3 +66,19 @@
 <% end %>
 
 <% content_for(:title) { "#{@topic_view.page_title}" } %>
+
+<% if @topic_view.print %>
+  <% content_for :after_body do %>
+      <style media="print">
+        /* For readability */
+        a, a:visited {
+          color: #0088cc !important;
+        }
+      </style>
+      <script>
+        document.addEventListener("DOMContentLoaded", function() {
+          window.print();
+        });
+      </script>
+  <% end %>
+<% end %>

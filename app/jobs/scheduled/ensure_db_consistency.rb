@@ -5,12 +5,12 @@ module Jobs
 
     def execute(args)
       UserVisit.ensure_consistency!
-      Group.refresh_automatic_groups!
+      Group.ensure_consistency!
       Notification.ensure_consistency!
       UserAction.ensure_consistency!
       TopicFeaturedUsers.ensure_consistency!
       PostRevision.ensure_consistency!
-      UserStat.update_view_counts(13.hours.ago)
+      UserStat.ensure_consistency!(13.hours.ago)
       Topic.ensure_consistency!
       Badge.ensure_consistency!
       CategoryUser.ensure_consistency!

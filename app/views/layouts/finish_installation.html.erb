@@ -1,0 +1,23 @@
+<html>
+  <head>
+    <%= stylesheet_link_tag 'wizard' %>
+    <%= render partial: "common/special_font_face" %>
+    <%= script 'jquery_include' %>
+    <%= script 'wizard-vendor' %>
+    <%= render partial: "layouts/head" %>
+    <title><%= t 'wizard.title' %></title>
+  </head>
+
+  <body class='wizard'>
+    <div id='wizard-main'>
+      <div class='wizard-column'>
+        <div class='wizard-column-contents finish-installation'>
+          <%= yield %>
+        </div>
+        <div class='wizard-footer'>
+          <div class='discourse-logo'></div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

@@ -3,9 +3,9 @@ require 'rails_helper'
 describe SpamRule::AutoBlock do
 
   before do
-    SiteSetting.stubs(:flags_required_to_hide_post).returns(0) # never
-    SiteSetting.stubs(:num_flags_to_block_new_user).returns(2)
-    SiteSetting.stubs(:num_users_to_block_new_user).returns(2)
+    SiteSetting.flags_required_to_hide_post = 0 # never
+    SiteSetting.num_spam_flags_to_block_new_user = 2
+    SiteSetting.num_users_to_block_new_user = 2
   end
 
   describe 'perform' do
@@ -86,6 +86,44 @@ describe SpamRule::AutoBlock do
     end
   end
 
+  describe 'num_tl3_flags_against_user' do
+    let(:post)     { Fabricate(:post) }
+    let(:enforcer) { described_class.new(post.user) }
+
+    it "counts flags of all types from tl3 users only" do
+      Fabricate(:flag, post: post, user: Fabricate(:user, trust_level: 1), post_action_type_id: PostActionType.types[:inappropriate])
+      expect(enforcer.num_tl3_flags_against_user).to eq(0)
+      Fabricate(:flag, post: post, user: Fabricate(:user, trust_level: 3), post_action_type_id: PostActionType.types[:inappropriate])
+      expect(enforcer.num_tl3_flags_against_user).to eq(1)
+      Fabricate(:flag, post: post, user: Fabricate(:user, trust_level: 1), post_action_type_id: PostActionType.types[:spam])
+      Fabricate(:flag, post: post, user: Fabricate(:user, trust_level: 3), post_action_type_id: PostActionType.types[:spam])
+      expect(enforcer.num_tl3_flags_against_user).to eq(2)
+    end
+  end
+
+  describe 'num_tl3_users_who_flagged' do
+    let(:post)     { Fabricate(:post) }
+    let(:enforcer) { described_class.new(post.user) }
+
+    it "counts only tl3 users who flagged with any type" do
+      Fabricate(:flag, post: post, user: Fabricate(:user, trust_level: 1), post_action_type_id: PostActionType.types[:inappropriate])
+      expect(enforcer.num_tl3_users_who_flagged).to eq(0)
+
+      tl3_user1 = Fabricate(:user, trust_level: 3)
+      Fabricate(:flag, post: post, user: tl3_user1, post_action_type_id: PostActionType.types[:inappropriate])
+      expect(enforcer.num_tl3_users_who_flagged).to eq(1)
+
+      Fabricate(:flag, post: post, user: Fabricate(:user, trust_level: 1), post_action_type_id: PostActionType.types[:spam])
+      expect(enforcer.num_tl3_users_who_flagged).to eq(1)
+
+      Fabricate(:flag, post: post, user: Fabricate(:user, trust_level: 3), post_action_type_id: PostActionType.types[:spam])
+      expect(enforcer.num_tl3_users_who_flagged).to eq(2)
+
+      Fabricate(:flag, post: Fabricate(:post, user: post.user), user: tl3_user1, post_action_type_id: PostActionType.types[:inappropriate])
+      expect(enforcer.num_tl3_users_who_flagged).to eq(2)
+    end
+  end
+
   describe 'block_user' do
     let!(:admin)  { Fabricate(:admin) } # needed for SystemMessage
     let(:user)    { Fabricate(:user) }
@@ -109,7 +147,7 @@ describe SpamRule::AutoBlock do
       end
 
       it 'sends private message to moderators' do
-        SiteSetting.stubs(:notify_mods_when_user_blocked).returns(true)
+        SiteSetting.notify_mods_when_user_blocked = true
         moderator = Fabricate(:moderator)
         GroupMessage.expects(:create).with do |group, msg_type, params|
           group == Group[:moderators].name and msg_type == :user_automatically_blocked and params[:user].id == user.id
@@ -144,6 +182,8 @@ describe SpamRule::AutoBlock do
           enforcer = described_class.new(user)
           enforcer.expects(:num_spam_flags_against_user).never
           enforcer.expects(:num_users_who_flagged_spam_against_user).never
+          enforcer.expects(:num_flags_against_user).never
+          enforcer.expects(:num_users_who_flagged).never
           expect(enforcer.block?).to eq(false)
         end
       end
@@ -188,8 +228,8 @@ describe SpamRule::AutoBlock do
         expect(subject.block?).to be_falsey
       end
 
-      it 'returns false if num_flags_to_block_new_user is 0' do
-        SiteSetting.stubs(:num_flags_to_block_new_user).returns(0)
+      it 'returns false if num_spam_flags_to_block_new_user is 0' do
+        SiteSetting.num_spam_flags_to_block_new_user = 0
         subject.stubs(:num_spam_flags_against_user).returns(100)
         subject.stubs(:num_users_who_flagged_spam_against_user).returns(100)
         expect(subject.block?).to be_falsey
@@ -206,6 +246,31 @@ describe SpamRule::AutoBlock do
         subject.stubs(:num_spam_flags_against_user).returns(2)
         subject.stubs(:num_users_who_flagged_spam_against_user).returns(2)
         expect(subject.block?).to be_truthy
+      end
+
+      context "all types of flags" do
+        before do
+          SiteSetting.num_tl3_flags_to_block_new_user = 3
+          SiteSetting.num_tl3_users_to_block_new_user = 2
+        end
+
+        it 'returns false if there are not enough flags' do
+          subject.stubs(:num_tl3_flags_against_user).returns(1)
+          subject.stubs(:num_tl3_users_who_flagged).returns(1)
+          expect(subject.block?).to be_falsey
+        end
+
+        it 'returns false if enough flags but not enough users' do
+          subject.stubs(:num_tl3_flags_against_user).returns(3)
+          subject.stubs(:num_tl3_users_who_flagged).returns(1)
+          expect(subject.block?).to be_falsey
+        end
+
+        it 'returns true if enough flags and users' do
+          subject.stubs(:num_tl3_flags_against_user).returns(3)
+          subject.stubs(:num_tl3_users_who_flagged).returns(2)
+          expect(subject.block?).to eq(true)
+        end
       end
     end
 

@@ -7,6 +7,11 @@ reload_settings = lambda {
   RailsMultisite::ConnectionManagement.each_connection do
     begin
       SiteSetting.refresh!
+
+      unless String === SiteSetting.push_api_secret_key && SiteSetting.push_api_secret_key.length == 32
+        SiteSetting.push_api_secret_key = SecureRandom.hex
+      end
+
     rescue ActiveRecord::StatementInvalid
       # This will happen when migrating a new database
     rescue => e
@@ -16,9 +21,9 @@ reload_settings = lambda {
   end
 }
 
-if Rails.configuration.cache_classes
-  reload_settings.call
-else
+reload_settings.call
+
+if !Rails.configuration.cache_classes
   ActionDispatch::Reloader.to_prepare do
     reload_settings.call
   end

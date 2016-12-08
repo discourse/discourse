@@ -5,6 +5,16 @@ describe Validators::PostValidator do
   let(:post) { build(:post) }
   let(:validator) { Validators::PostValidator.new({}) }
 
+  context "when empty raw can bypass post body validation" do
+    let(:validator) { Validators::PostValidator.new(skip_post_body: true) }
+
+    it "should be allowed for empty raw based on site setting" do
+      post.raw = ""
+      validator.post_body_validator(post)
+      expect(post.errors).to be_empty
+    end
+  end
+
   context "stripped_length" do
     it "adds an error for short raw" do
       post.raw = "abc"
@@ -63,6 +73,14 @@ describe Validators::PostValidator do
     it "should be valid when new user does not exceed max mentions limit" do
       post.acting_user = build(:newuser)
       post.expects(:raw_mentions).returns(['jake', 'finn'])
+      validator.max_mention_validator(post)
+      expect(post.errors.count).to be(0)
+    end
+
+    it "should be valid when new user exceeds max mentions limit in PM" do
+      post.acting_user = build(:newuser)
+      post.topic.expects(:private_message?).returns(true)
+      post.expects(:raw_mentions).returns(['jake', 'finn', 'jake_old'])
       validator.max_mention_validator(post)
       expect(post.errors.count).to be(0)
     end

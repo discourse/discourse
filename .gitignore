@@ -4,11 +4,11 @@
 # or operating system, you probably want to add a global ignore instead:
 #   git config --global core.excludesfile ~/.gitignore_global
 
-tags
-
 .DS_Store
 ._.DS_Store
 dump.rdb
+
+bin/*
 
 .sass-cache/*
 public/csv/*
@@ -16,7 +16,6 @@ public/plugins/*
 public/tombstone/*
 
 # Ignore bundler config
-/bin
 /.bundle
 /.vagrant
 /.vagrantfile
@@ -31,9 +30,9 @@ config/discourse.pill
 config/discourse.conf
 
 # Ignore the default SQLite database and db dumps
+*.sql
+*.sql.gz
 /db/*.sqlite3
-/dbs/*.sql
-/dbs/*.sql.gz
 /db/structure.sql
 
 # Ignore all logfiles and tempfiles.
@@ -48,6 +47,7 @@ log/
 !/plugins/lazyYT/
 !/plugins/poll/
 !/plugins/discourse-details/
+!/plugins/discourse-nginx-performance-report
 /plugins/*/auto_generated/
 
 /spec/fixtures/plugins/my_plugin/auto_generated
@@ -108,3 +108,7 @@ config/version.rb
 bundler_stubs/*
 
 vendor/bundle/*
+*.db
+
+#ignore jetbrains ide file
+*.iml

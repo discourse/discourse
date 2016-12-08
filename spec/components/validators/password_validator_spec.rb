@@ -96,6 +96,15 @@ describe PasswordValidator do
       validate
       expect(record.errors[:password]).to be_present
     end
+
+    it "adds an error when new password is same as current password" do
+      @password = "mypetsname"
+      record.save!
+      record.reload
+      record.password = @password
+      validate
+      expect(record.errors[:password]).to be_present
+    end
   end
 
   context "password not required" do

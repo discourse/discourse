@@ -76,6 +76,70 @@ describe UserNotifications do
 
   end
 
+  describe '.mailing_list' do
+    subject { UserNotifications.mailing_list(user) }
+
+    context "without new posts" do
+      it "doesn't send the email" do
+        expect(subject.to).to be_blank
+      end
+    end
+
+    context "with new posts" do
+      let(:user) { Fabricate(:user) }
+      let(:topic) { Fabricate(:topic, user: user) }
+      let!(:new_post) { Fabricate(:post, topic: topic, created_at: 2.hours.ago, raw: "Feel the Bern") }
+      let!(:old_post) { Fabricate(:post, topic: topic, created_at: 25.hours.ago, raw: "Make America Great Again") }
+      let(:old_topic) { Fabricate(:topic, user: user, created_at: 10.days.ago) }
+      let(:new_post_in_old_topic) { Fabricate(:post, topic: old_topic, created_at: 2.hours.ago, raw: "Yes We Can") }
+      let(:stale_post) { Fabricate(:post, topic: old_topic, created_at: 2.days.ago, raw: "A New American Century") }
+
+      it "works" do
+        expect(subject.to).to eq([user.email])
+        expect(subject.subject).to be_present
+        expect(subject.from).to eq([SiteSetting.notification_email])
+        expect(subject.html_part.body.to_s).to include topic.title
+        expect(subject.text_part.body.to_s).to be_present
+        expect(subject.header["List-Unsubscribe"].to_s).to match(/\/email\/unsubscribe\/\h{64}/)
+      end
+
+      it "includes posts less than 24 hours old" do
+        expect(subject.html_part.body.to_s).to include new_post.cooked
+      end
+
+      it "does not include posts older than 24 hours old" do
+        expect(subject.html_part.body.to_s).to_not include old_post.cooked
+      end
+
+      it "includes topics created over 24 hours ago which have new posts" do
+        new_post_in_old_topic
+        expect(subject.html_part.body.to_s).to include old_topic.title
+        expect(subject.html_part.body.to_s).to include new_post_in_old_topic.cooked
+        expect(subject.html_part.body.to_s).to_not include stale_post.cooked
+      end
+
+      it "includes multiple topics" do
+        new_post_in_old_topic
+        expect(subject.html_part.body.to_s).to include topic.title
+        expect(subject.html_part.body.to_s).to include old_topic.title
+      end
+
+      it "does not include topics not updated for the past 24 hours" do
+        stale_post
+        expect(subject.html_part.body.to_s).to_not include old_topic.title
+        expect(subject.html_part.body.to_s).to_not include stale_post.cooked
+      end
+
+      it "includes email_prefix in email subject instead of site title" do
+        SiteSetting.email_prefix = "Try Discourse"
+        SiteSetting.title = "Discourse Meta"
+
+        expect(subject.subject).to match(/Try Discourse/)
+        expect(subject.subject).not_to match(/Discourse Meta/)
+      end
+    end
+  end
+
   describe '.digest' do
 
     subject { UserNotifications.digest(user) }
@@ -91,8 +155,7 @@ describe UserNotifications do
     context "with new topics" do
 
       before do
-        Topic.expects(:for_digest).returns([Fabricate(:topic, user: Fabricate(:coding_horror))])
-        Topic.expects(:new_since_last_seen).returns(Topic.none)
+        Fabricate(:topic, user: Fabricate(:coding_horror))
       end
 
       it "works" do
@@ -101,6 +164,7 @@ describe UserNotifications do
         expect(subject.from).to eq([SiteSetting.notification_email])
         expect(subject.html_part.body.to_s).to be_present
         expect(subject.text_part.body.to_s).to be_present
+        expect(subject.header["List-Unsubscribe"].to_s).to match(/\/email\/unsubscribe\/\h{64}/)
       end
 
       it "includes email_prefix in email subject instead of site title" do
@@ -110,7 +174,39 @@ describe UserNotifications do
         expect(subject.subject).to match(/Try Discourse/)
         expect(subject.subject).not_to match(/Discourse Meta/)
       end
+
+      it "excludes deleted topics and their posts" do
+        deleted = Fabricate(:topic, user: Fabricate(:user), title: "Delete this topic plz")
+        post = Fabricate(:post, topic: deleted, score: 100.0, post_number: 2, raw: "Your wish is my command")
+        deleted.trash!
+        html = subject.html_part.body.to_s
+        expect(html).to_not include deleted.title
+        expect(html).to_not include post.raw
+      end
+
+      it "excludes whispers and other post types that don't belong" do
+        t = Fabricate(:topic, user: Fabricate(:user), title: "Who likes the same stuff I like?")
+        whisper = Fabricate(:post, topic: t, score: 100.0, post_number: 2, raw: "You like weird stuff", post_type: Post.types[:whisper])
+        mod_action = Fabricate(:post, topic: t, score: 100.0, post_number: 3, raw: "This topic unlisted", post_type: Post.types[:moderator_action])
+        small_action = Fabricate(:post, topic: t, score: 100.0, post_number: 4, raw: "A small action", post_type: Post.types[:small_action])
+        html = subject.html_part.body.to_s
+        expect(html).to_not include whisper.raw
+        expect(html).to_not include mod_action.raw
+        expect(html).to_not include small_action.raw
+      end
+
+      it "excludes deleted and hidden posts" do
+        t = Fabricate(:topic, user: Fabricate(:user), title: "Post objectionable stuff here")
+        deleted = Fabricate(:post, topic: t, score: 100.0, post_number: 2, raw: "This post is uncalled for", deleted_at: 5.minutes.ago)
+        hidden = Fabricate(:post, topic: t, score: 100.0, post_number: 3, raw: "Try to find this post", hidden: true, hidden_at: 5.minutes.ago, hidden_reason_id: Post.hidden_reasons[:flagged_by_tl3_user])
+        user_deleted = Fabricate(:post, topic: t, score: 100.0, post_number: 4, raw: "I regret this post", user_deleted: true)
+        html = subject.html_part.body.to_s
+        expect(html).to_not include deleted.raw
+        expect(html).to_not include hidden.raw
+        expect(html).to_not include user_deleted.raw
+      end
     end
+
   end
 
   describe '.user_replied' do
@@ -167,6 +263,39 @@ describe UserNotifications do
 
 
       expect(mail.html_part.to_s.scan(/In Reply To/).count).to eq(0)
+
+
+
+      SiteSetting.enable_names = true
+      SiteSetting.display_name_on_posts = true
+      SiteSetting.prioritize_username_in_ux = false
+
+      response.user.username = "bobmarley"
+      response.user.name = "Bob Marley"
+      response.user.save
+
+      mail = UserNotifications.user_replied(response.user,
+                                             post: response,
+                                             notification_type: notification.notification_type,
+                                             notification_data_hash: notification.data_hash
+                                           )
+
+
+      mail_html = mail.html_part.to_s
+      expect(mail_html.scan(/>Bob Marley/).count).to eq(1)
+      expect(mail_html.scan(/>bobmarley/).count).to eq(0)
+
+      SiteSetting.prioritize_username_in_ux = true
+
+      mail = UserNotifications.user_replied(response.user,
+                                             post: response,
+                                             notification_type: notification.notification_type,
+                                             notification_data_hash: notification.data_hash
+                                           )
+
+      mail_html = mail.html_part.to_s
+      expect(mail_html.scan(/>Bob Marley/).count).to eq(0)
+      expect(mail_html.scan(/>bobmarley/).count).to eq(1)
     end
   end
 
@@ -412,6 +541,14 @@ describe UserNotifications do
   end
 
   describe "user invited to a topic" do
+    include_examples "notification email building" do
+      let(:notification_type) { :invited_to_topic }
+      include_examples "no reply by email"
+      include_examples "sets user locale"
+    end
+  end
+
+  describe "watching first post" do
     include_examples "notification email building" do
       let(:notification_type) { :invited_to_topic }
       include_examples "no reply by email"

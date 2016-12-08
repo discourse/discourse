@@ -14,7 +14,7 @@ class DiscourseStylesheets
     @cache ||= DistributedCache.new("discourse_stylesheet")
   end
 
-  def self.stylesheet_link_tag(target = :desktop)
+  def self.stylesheet_link_tag(target = :desktop, media = 'all')
 
     tag = cache[target]
 
@@ -24,7 +24,7 @@ class DiscourseStylesheets
       builder = self.new(target)
       builder.compile unless File.exists?(builder.stylesheet_fullpath)
       builder.ensure_digestless_file
-      tag = %[<link href="#{Rails.env.production? ? builder.stylesheet_cdnpath : builder.stylesheet_relpath_no_digest + '?body=1'}" media="all" rel="stylesheet" />]
+      tag = %[<link href="#{Rails.env.production? ? builder.stylesheet_cdnpath : builder.stylesheet_relpath_no_digest + '?body=1'}" media="#{media}" rel="stylesheet" />]
 
       cache[target] = tag
 
@@ -59,7 +59,7 @@ class DiscourseStylesheets
   def self.max_file_mtime
     globs = ["#{Rails.root}/app/assets/stylesheets/**/*.*css"]
 
-    for path in (Discourse.plugins || []).map { |plugin| File.dirname(plugin.path) }
+    Discourse.plugins.map { |plugin| File.dirname(plugin.path) }.each do |path|
       globs += [
         "#{path}/plugin.rb",
         "#{path}/**/*.*css",
@@ -70,8 +70,6 @@ class DiscourseStylesheets
       Dir.glob(pattern).map { |x| File.mtime(x) }.max
     end.compact.max.to_i
   end
-
-
 
   def initialize(target = :desktop)
     @target = target
@@ -167,7 +165,13 @@ class DiscourseStylesheets
       if theme || category_updated > 0
         Digest::SHA1.hexdigest "#{RailsMultisite::ConnectionManagement.current_db}-#{theme}-#{DiscourseStylesheets.last_file_updated}-#{category_updated}"
       else
-        Digest::SHA1.hexdigest "defaults-#{DiscourseStylesheets.last_file_updated}"
+        digest_string = "defaults-#{DiscourseStylesheets.last_file_updated}"
+
+        if cdn_url = GlobalSetting.cdn_url
+          digest_string = "#{digest_string}-#{cdn_url}"
+        end
+
+        Digest::SHA1.hexdigest digest_string
       end
     end
   end

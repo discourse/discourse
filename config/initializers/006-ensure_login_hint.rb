@@ -6,7 +6,7 @@ if User.limit(20).count < 20 && User.where(admin: true).count == 1
     else
       emails = GlobalSetting.developer_emails.split(",")
       if emails.length > 1
-        emails = emails[0..-2].join(' , ') << " or #{emails[-1]} "
+        emails = emails[0..-2].join(', ') << " or #{emails[-1]} "
       else
         emails = emails[0]
       end

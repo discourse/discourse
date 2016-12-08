@@ -1,0 +1,10 @@
+{{#each notificationLevels as |level|}}
+  <div class='controls'>
+    <label class='radio'>
+      {{radio-button value=level.id name="notification_level" selection=notificationLevelId}} <strong>{{unbound level.name}}</strong>
+      <div class='description'>{{{unbound level.description}}}</div>
+    </label>
+  </div>
+{{/each}}
+
+<button class='btn' disabled={{disabled}} {{action "changeNotificationLevel"}}>{{i18n 'topics.bulk.notification_level'}}</button>

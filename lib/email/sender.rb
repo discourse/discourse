@@ -22,7 +22,7 @@ module Email
     end
 
     def send
-      return if SiteSetting.disable_emails
+      return if SiteSetting.disable_emails && @email_type.to_s != "admin_login"
 
       return if ActionMailer::Base::NullMail === @message
       return if ActionMailer::Base::NullMail === (@message.message rescue nil)
@@ -72,28 +72,46 @@ module Email
       reply_key = header_value('X-Discourse-Reply-Key')
 
       # always set a default Message ID from the host
-      uuid = SecureRandom.uuid
-      @message.header['Message-ID'] = "<#{uuid}@#{host}>"
+      @message.header['Message-ID'] = "<#{SecureRandom.uuid}@#{host}>"
 
       if topic_id.present?
         email_log.topic_id = topic_id
 
-        topic_identifier = "<topic/#{topic_id}@#{host}>"
-        post_identifier = "<topic/#{topic_id}/#{post_id}@#{host}>"
-        @message.header['Message-ID'] = post_identifier
-        @message.header['In-Reply-To'] = topic_identifier
-        @message.header['References'] = topic_identifier
+        post = Post.find_by(id: post_id)
+        topic = Topic.find_by(id: topic_id)
 
-        topic = Topic.where(id: topic_id).first
+        topic_message_id = "<topic/#{topic_id}@#{host}>"
+        post_message_id = "<topic/#{topic_id}/#{post_id}@#{host}>"
+
+        incoming_email = IncomingEmail.find_by(post_id: post_id, topic_id: topic_id)
+        incoming_message_id = "<#{incoming_email.message_id}>" if incoming_email&.message_id.present?
+
+        referenced_posts = Post.includes(:incoming_email)
+                               .where(id: PostReply.where(reply_id: post_id).select(:post_id))
+                               .order(id: :desc)
+
+        referenced_post_message_ids = referenced_posts.map do |post|
+          if post&.incoming_email&.message_id.present?
+            "<#{post.incoming_email.message_id}>"
+          else
+            "<topic/#{topic_id}/#{post.id}@#{host}>"
+          end
+        end
+
+        @message.header['Message-ID'] = incoming_message_id || post_message_id
+        if post && post.post_number > 1
+          @message.header['In-Reply-To'] = referenced_post_message_ids.first || topic_message_id
+          @message.header['References'] = [topic_message_id, referenced_post_message_ids].flatten.compact.uniq
+        end
 
         # http://www.ietf.org/rfc/rfc2919.txt
         if topic && topic.category && !topic.category.uncategorized?
-          list_id = "<#{topic.category.name.downcase.gsub(' ', '-')}.#{host}>"
+          list_id = "<#{topic.category.name.downcase.tr(' ', '-')}.#{host}>"
 
           # subcategory case
           if !topic.category.parent_category_id.nil?
             parent_category_name = Category.find_by(id: topic.category.parent_category_id).name
-            list_id = "<#{topic.category.name.downcase.gsub(' ', '-')}.#{parent_category_name.downcase.gsub(' ', '-')}.#{host}>"
+            list_id = "<#{topic.category.name.downcase.tr(' ', '-')}.#{parent_category_name.downcase.tr(' ', '-')}.#{host}>"
           end
         else
           list_id = "<#{host}>"
@@ -110,6 +128,15 @@ module Email
         @message.header['List-Post'] = "<mailto:#{email}>"
       end
 
+      if SiteSetting.reply_by_email_address.present? && SiteSetting.reply_by_email_address["+"]
+        email_log.bounce_key = SecureRandom.hex
+
+        # WARNING: RFC claims you can not set the Return Path header, this is 100% correct
+        # however Rails has special handling for this header and ends up using this value
+        # as the Envelope From address so stuff works as expected
+        @message.header[:return_path] = SiteSetting.reply_by_email_address.sub("%{reply_key}", "verp-#{email_log.bounce_key}")
+      end
+
       email_log.post_id = post_id if post_id.present?
       email_log.reply_key = reply_key if reply_key.present?
 
@@ -118,13 +145,25 @@ module Email
       @message.header['X-Discourse-Post-Id']   = nil if post_id.present?
       @message.header['X-Discourse-Reply-Key'] = nil if reply_key.present?
 
+      # pass the original message_id when using mailjet/mandrill/sparkpost
+      case ActionMailer::Base.smtp_settings[:address]
+      when /\.mailjet\.com/
+        @message.header['X-MJ-CustomID'] = @message.message_id
+      when "smtp.mandrillapp.com"
+        merge_json_x_header('X-MC-Metadata', { message_id: @message.message_id })
+      when "smtp.sparkpostmail.com"
+        merge_json_x_header('X-MSYS-API', { metadata: { message_id: @message.message_id } })
+      end
+
       # Suppress images from short emails
       if SiteSetting.strip_images_from_short_emails &&
-         @message.html_part.body.to_s.bytesize <= SiteSetting.short_email_length &&
-         @message.html_part.body =~ /<img[^>]+>/
+        @message.html_part.body.to_s.bytesize <= SiteSetting.short_email_length &&
+        @message.html_part.body =~ /<img[^>]+>/
         style = Email::Styles.new(@message.html_part.body.to_s)
         @message.html_part.body = style.strip_avatars_and_emojis
       end
+
+      email_log.message_id = @message.message_id
 
       begin
         @message.deliver_now
@@ -173,6 +212,19 @@ module Email
         skipped: true,
         skipped_reason: "[Sender] #{reason}"
       )
+    end
+
+    def merge_json_x_header(name, value)
+      data   = JSON.parse(@message.header[name].to_s) rescue nil
+      data ||= {}
+      data.merge!(value)
+      # /!\ @message.header is not a standard ruby hash.
+      # It can have multiple values attached to the same key...
+      # In order to remove all the previous keys, we have to "nil" it.
+      # But for "nil" to work, there must already be a key...
+      @message.header[name] = ""
+      @message.header[name] = nil
+      @message.header[name] = data.to_json
     end
 
   end

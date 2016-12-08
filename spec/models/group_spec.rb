@@ -60,6 +60,11 @@ describe Group do
       expect(group.valid?).to eq true
     end
 
+    it "is valid for newer TLDs" do
+      group.automatic_membership_email_domains = "discourse.institute"
+      expect(group.valid?).to eq true
+    end
+
     it "is invalid for bad incoming email" do
       group.incoming_email = "foo.bar.org"
       expect(group.valid?).to eq(false)
@@ -149,6 +154,11 @@ describe Group do
 
   end
 
+  it "makes sure the everyone group is not visible" do
+    g = Group.refresh_automatic_group!(:everyone)
+    expect(g.visible).to eq(false)
+  end
+
   it "Correctly handles removal of primary group" do
     group = Fabricate(:group)
     user = Fabricate(:user)
@@ -234,20 +244,20 @@ describe Group do
     groups = Group.includes(:users).to_a
     expect(groups.count).to eq Group::AUTO_GROUPS.count
 
-    g = groups.find{|g| g.id == Group::AUTO_GROUPS[:admins]}
+    g = groups.find{|grp| grp.id == Group::AUTO_GROUPS[:admins]}
     expect(g.users.count).to eq 2
     expect(g.user_count).to eq 2
 
-    g = groups.find{|g| g.id == Group::AUTO_GROUPS[:staff]}
+    g = groups.find{|grp| grp.id == Group::AUTO_GROUPS[:staff]}
     expect(g.users.count).to eq 2
     expect(g.user_count).to eq 2
 
-    g = groups.find{|g| g.id == Group::AUTO_GROUPS[:trust_level_1]}
+    g = groups.find{|grp| grp.id == Group::AUTO_GROUPS[:trust_level_1]}
     # admin, system and user
     expect(g.users.count).to eq 3
     expect(g.user_count).to eq 3
 
-    g = groups.find{|g| g.id == Group::AUTO_GROUPS[:trust_level_2]}
+    g = groups.find{|grp| grp.id == Group::AUTO_GROUPS[:trust_level_2]}
     # system and user
     expect(g.users.count).to eq 2
     expect(g.user_count).to eq 2
@@ -312,7 +322,6 @@ describe Group do
     expect(Group.desired_trust_level_groups(2).sort).to eq [10,11,12]
   end
 
-
   it "correctly handles trust level changes" do
     user = Fabricate(:user, trust_level: 2)
     Group.user_trust_level_change!(user.id, 2)
@@ -357,6 +366,13 @@ describe Group do
 
     group.add(u3)
     expect(u3.reload.trust_level).to eq(3)
+  end
+
+  it 'should cook the bio' do
+    group = Fabricate(:group)
+    group.update_attributes!(bio_raw: 'This is a group for :unicorn: lovers')
+
+    expect(group.bio_cooked).to include("unicorn.png")
   end
 
 end

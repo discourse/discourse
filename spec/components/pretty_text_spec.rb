@@ -77,7 +77,7 @@ HTML
     end
 
     it "should inject nofollow in all user provided links" do
-      expect(PrettyText.cook('<a href="http://cnn.com">cnn</a>')).to match(/nofollow/)
+      expect(PrettyText.cook('<a href="http://cnn.com">cnn</a>')).to match(/nofollow noopener/)
     end
 
     it "should not inject nofollow in all local links" do
@@ -204,8 +204,16 @@ HTML
       expect(extract_urls("<aside class=\"quote\" data-topic=\"321\">aside</aside>")).to eq(["/t/topic/321"])
     end
 
+    it "should lazyYT videos" do
+      expect(extract_urls("<div class=\"lazyYT\" data-youtube-id=\"yXEuEUQIP3Q\" data-youtube-title=\"Mister Rogers defending PBS to the US Senate\" data-width=\"480\" data-height=\"270\" data-parameters=\"feature=oembed&amp;wmode=opaque\"></div>")).to eq(["https://www.youtube.com/watch?v=yXEuEUQIP3Q"])
+    end
+
     it "should extract links to posts" do
       expect(extract_urls("<aside class=\"quote\" data-topic=\"1234\" data-post=\"4567\">aside</aside>")).to eq(["/t/topic/1234/4567"])
+    end
+
+    it "should not extract links to anchors" do
+      expect(extract_urls("<a href='#tos'>TOS</a>")).to eq([])
     end
 
     it "should not extract links inside quotes" do
@@ -257,9 +265,14 @@ HTML
       expect(PrettyText.excerpt(emoji_image, 100, { keep_emoji_images: true })).to match_html(emoji_image)
     end
 
+    it "should have an option to remap emoji to code points" do
+      emoji_image = "I <img src='/images/emoji/emoji_one/heart.png?v=1' title=':heart:' class='emoji' alt=':heart:'> you <img src='/images/emoji/emoji_one/heart.png?v=1' title=':unknown:' class='emoji' alt=':unknown:'> "
+      expect(PrettyText.excerpt(emoji_image, 100, { remap_emoji: true })).to match_html("I ❤  you :unknown:")
+    end
+
     it "should have an option to preserve emoji codes" do
       emoji_code = "<img src='/images/emoji/emoji_one/heart.png?v=1' title=':heart:' class='emoji' alt=':heart:'>"
-      expect(PrettyText.excerpt(emoji_code, 100, { keep_emoji_codes: true })).to eq(":heart:")
+      expect(PrettyText.excerpt(emoji_code, 100)).to eq(":heart:")
     end
 
   end
@@ -282,41 +295,6 @@ HTML
     end
   end
 
-  describe "make_all_links_absolute" do
-    let(:base_url) { "http://baseurl.net" }
-
-    def make_abs_string(html)
-      doc = Nokogiri::HTML.fragment(html)
-      described_class.make_all_links_absolute(doc)
-      doc.to_html
-    end
-
-    before do
-      Discourse.stubs(:base_url).returns(base_url)
-    end
-
-    it "adds base url to relative links" do
-      html = "<p><a class=\"mention\" href=\"/users/wiseguy\">@wiseguy</a>, <a class=\"mention\" href=\"/users/trollol\">@trollol</a> what do you guys think? </p>"
-      output = make_abs_string(html)
-      expect(output).to eq("<p><a class=\"mention\" href=\"#{base_url}/users/wiseguy\">@wiseguy</a>, <a class=\"mention\" href=\"#{base_url}/users/trollol\">@trollol</a> what do you guys think? </p>")
-    end
-
-    it "doesn't change external absolute links" do
-      html = "<p>Check out <a href=\"http://mywebsite.com/users/boss\">this guy</a>.</p>"
-      expect(make_abs_string(html)).to eq(html)
-    end
-
-    it "doesn't change internal absolute links" do
-      html = "<p>Check out <a href=\"#{base_url}/users/boss\">this guy</a>.</p>"
-      expect(make_abs_string(html)).to eq(html)
-    end
-
-    it "can tolerate invalid URLs" do
-      html = "<p>Check out <a href=\"not a real url\">this guy</a>.</p>"
-      expect { make_abs_string(html) }.to_not raise_error
-    end
-  end
-
   describe "strip_image_wrapping" do
     def strip_image_wrapping(html)
       doc = Nokogiri::HTML.fragment(html)
@@ -335,8 +313,36 @@ HTML
   end
 
   describe 'format_for_email' do
+    let(:base_url) { "http://baseurl.net" }
+    let(:post) { Fabricate(:post) }
+
+    before do
+      Discourse.stubs(:base_url).returns(base_url)
+    end
+
     it 'does not crash' do
-      PrettyText.format_for_email('<a href="mailto:michael.brown@discourse.org?subject=Your%20post%20at%20http://try.discourse.org/t/discussion-happens-so-much/127/1000?u=supermathie">test</a>')
+      PrettyText.format_for_email('<a href="mailto:michael.brown@discourse.org?subject=Your%20post%20at%20http://try.discourse.org/t/discussion-happens-so-much/127/1000?u=supermathie">test</a>', post)
+    end
+
+    it "adds base url to relative links" do
+      html = "<p><a class=\"mention\" href=\"/users/wiseguy\">@wiseguy</a>, <a class=\"mention\" href=\"/users/trollol\">@trollol</a> what do you guys think? </p>"
+      output = described_class.format_for_email(html, post)
+      expect(output).to eq("<p><a class=\"mention\" href=\"#{base_url}/users/wiseguy\">@wiseguy</a>, <a class=\"mention\" href=\"#{base_url}/users/trollol\">@trollol</a> what do you guys think? </p>")
+    end
+
+    it "doesn't change external absolute links" do
+      html = "<p>Check out <a href=\"http://mywebsite.com/users/boss\">this guy</a>.</p>"
+      expect(described_class.format_for_email(html, post)).to eq(html)
+    end
+
+    it "doesn't change internal absolute links" do
+      html = "<p>Check out <a href=\"#{base_url}/users/boss\">this guy</a>.</p>"
+      expect(described_class.format_for_email(html, post)).to eq(html)
+    end
+
+    it "can tolerate invalid URLs" do
+      html = "<p>Check out <a href=\"not a real url\">this guy</a>.</p>"
+      expect { described_class.format_for_email(html, post) }.to_not raise_error
     end
   end
 
@@ -363,28 +369,27 @@ HTML
     SiteSetting.s3_cdn_url = "https://awesome.cdn"
 
     # add extra img tag to ensure it does not blow up
-    raw = "<img><img src='#{Discourse.store.absolute_base_url}/original/9/9/99c9384b8b6d87f8509f8395571bc7512ca3cad1.jpg'"
-    cooked = "<p><img><img src='https://awesome.cdn/original/9/9/99c9384b8b6d87f8509f8395571bc7512ca3cad1.jpg'></p>"
+    raw = <<HTML
+  <img>
+  <img src='https:#{Discourse.store.absolute_base_url}/original/9/9/99c9384b8b6d87f8509f8395571bc7512ca3cad1.jpg'>
+  <img src='http:#{Discourse.store.absolute_base_url}/original/9/9/99c9384b8b6d87f8509f8395571bc7512ca3cad1.jpg'>
+  <img src='#{Discourse.store.absolute_base_url}/original/9/9/99c9384b8b6d87f8509f8395571bc7512ca3cad1.jpg'>
+
+HTML
+
+    cooked = <<HTML
+<p>  <img><br>  <img src="https://awesome.cdn/original/9/9/99c9384b8b6d87f8509f8395571bc7512ca3cad1.jpg"><br>  <img src="https://awesome.cdn/original/9/9/99c9384b8b6d87f8509f8395571bc7512ca3cad1.jpg"><br>  <img src="https://awesome.cdn/original/9/9/99c9384b8b6d87f8509f8395571bc7512ca3cad1.jpg"></p>
+HTML
 
     expect(PrettyText.cook(raw)).to match_html(cooked)
   end
 
   describe 'tables' do
-    before do
-      PrettyText.reset_context
-    end
-
-    after do
-      PrettyText.reset_context
-    end
-
     it 'allows table html' do
       SiteSetting.allow_html_tables = true
-      PrettyText.reset_context
       table = "<table class='fa-spin'><thead><tr>\n<th class='fa-spin'>test</th></tr></thead><tbody><tr><td>a</td></tr></tbody></table>"
       match = "<table class=\"md-table\"><thead><tr> <th>test</th> </tr></thead><tbody><tr><td>a</td></tr></tbody></table>"
       expect(PrettyText.cook(table)).to match_html(match)
-
     end
 
     it 'allows no tables when not enabled' do
@@ -414,6 +419,31 @@ HTML
     it "doesn't replace unicode emoji if emoji is disabled" do
       SiteSetting.enable_emoji = false
       expect(PrettyText.cook("💣")).not_to match(/\:bomb\:/)
+    end
+  end
+
+  describe "tag and category links" do
+    it "produces tag links" do
+      Fabricate(:topic, {tags: [Fabricate(:tag, name: 'known')]})
+      expect(PrettyText.cook(" #unknown::tag #known::tag")).to match_html("<p> <span class=\"hashtag\">#unknown::tag</span> <a class=\"hashtag\" href=\"http://test.localhost/tags/known\">#<span>known</span></a></p>")
+    end
+
+    # TODO does it make sense to generate hashtags for tags that are missing in action?
+  end
+
+  describe "custom emoji" do
+    it "replaces the custom emoji" do
+      Emoji.stubs(:custom).returns([ Emoji.create_from_path('trout') ])
+      expect(PrettyText.cook("hello :trout:")).to match(/<img src[^>]+trout[^>]+>/)
+    end
+  end
+
+  describe "censored_pattern site setting" do
+    it "can be cleared if it causes cooking to timeout" do
+      SiteSetting.censored_pattern = "evilregex"
+      described_class.stubs(:markdown).raises(MiniRacer::ScriptTerminatedError)
+      PrettyText.cook("Protect against it plz.") rescue nil
+      expect(SiteSetting.censored_pattern).to be_blank
     end
   end
 

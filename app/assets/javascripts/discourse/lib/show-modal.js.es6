@@ -9,23 +9,32 @@ export default function(name, opts) {
 
   modalController.set('modalClass', null);
 
+  const controllerName = opts.admin ? `modals/${name}` : name;
+
   const viewClass = container.lookupFactory('view:' + name);
-  const controller = container.lookup('controller:' + name);
+  const controller = container.lookup('controller:' + controllerName);
   if (viewClass) {
     route.render(name, { into: 'modal', outlet: 'modalBody' });
   } else {
-    const templateName = Ember.String.dasherize(name);
+    const templateName = opts.templateName || Ember.String.dasherize(name);
 
-    const renderArgs = { into: 'modal', outlet: 'modalBody', view: 'modal-body'};
-    if (controller) { renderArgs.controller = name; }
+    const renderArgs = { into: 'modal', outlet: 'modalBody'};
+    if (controller) { renderArgs.controller = controllerName; }
 
-    route.render('modal/' + templateName, renderArgs);
+    if (opts.addModalBodyView) {
+      renderArgs.view = 'modal-body';
+    }
+
+    const modalName = `modal/${templateName}`;
+    const fullName = opts.admin ? `admin/templates/${modalName}` : modalName;
+    route.render(fullName, renderArgs);
     if (opts.title) {
       modalController.set('title', I18n.t(opts.title));
     }
   }
 
   if (controller) {
+    controller.set('modal', modalController);
     const model = opts.model;
     if (model) { controller.set('model', model); }
     if (controller.onShow) { controller.onShow(); }

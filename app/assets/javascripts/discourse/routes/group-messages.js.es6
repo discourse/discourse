@@ -1,11 +1,3 @@
-export default Discourse.Route.extend({
+import { buildGroupPage } from 'discourse/routes/group-posts';
 
-  model() {
-    return this.modelFor("group").findPosts({type: 'messages'});
-  },
-
-  setupController(controller, model) {
-    controller.set("model", model);
-    this.controllerFor("group").set("showing", "messages");
-  }
-});
+export default buildGroupPage('messages');

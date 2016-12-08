@@ -9,6 +9,7 @@ ar:
   site_settings:
     poll_enabled: "أيمكن للمستخدمين إنشاء تصويتات؟"
     poll_maximum_options: "أقصى عدد للخيارات في كلّ تصويت."
+    poll_edit_window_mins: "عدد الدقائق المسموح فيها تعديل التصويتات بعد نشر المشاركة."
   poll:
     multiple_polls_without_name: "توجد بضعة تصويتات بلا اسم. استخدم خاصية '<code>name</code>' لتمييزها."
     multiple_polls_with_same_name: "توجد بضعة تصويتات بالاسم <strong>%{name}</strong> نفسه. استخدم خاصية '<code>name</code>' لتمييزها."
@@ -33,9 +34,12 @@ ar:
     default_poll_with_multiple_choices_has_invalid_parameters: "للتصويت متعدد الخيارات معلمات غير صالحة."
     named_poll_with_multiple_choices_has_invalid_parameters: "للتصويت متعدد الخيارات ذو الاسم <strong>%{name}</strong> معلمات غير صالحة."
     requires_at_least_1_valid_option: "عليك اختيار خيار واحد صالح على الأقل."
-    cannot_change_polls_after_5_minutes: "لا يمكنك إضافة تصويتات، أو حذفها أو إعادة تسميتها بعد مضي 5 دقائق."
-    op_cannot_edit_options_after_5_minutes: "لا يمكنك إضافة تصويتات، أو حذفها أو إعادة تسميتها بعد مضي 5 دقائق. من فضلك راسل مشرفا إن احتجت إلى تعديل أحد خيارات التصويت."
-    staff_cannot_add_or_remove_options_after_5_minutes: "لا يمكنك إضافة تصويتات، أو حذفها أو إعادة تسميتها بعد مضي 5 دقائق. عليك إغلاق هذا الموضوع وإنشاء آخر بدله."
+    default_cannot_be_made_public: "التصويت المدرج به اصوات لا يمكن أن يكون مفتوح للجميع."
+    named_cannot_be_made_public: "التصويت <strong>%{name}</strong> مدرج بة أصوات ولا يمكن فتحة للجميع."
+    edit_window_expired:
+      cannot_change_polls: "لا يمكنك اضافة أو حذف أو اعادة تسمية تصويت بعد الدقائق %{minutes}  اﻷولى."
+      op_cannot_edit_options: "لا يمكنك إضافة تصويتات، أو حذفها أو إعادة تسميتها بعد مضي %{minutes}  دقائق. من فضلك راسل مشرفا إن احتجت إلى تعديل أحد خيارات التصويت."
+      staff_cannot_add_or_remove_options: "لا يمكنك إضافة تصويتات، أو حذفها أو إعادة تسميتها بعد مضي %{minutes}  دقائق. عليك إغلاق هذا الموضوع وإنشاء آخر بدله."
     no_polls_associated_with_this_post: "لا تصويتات مرتبطة مع هذه المشاركة."
     no_poll_with_this_name: "لا تصويت بالاسم <strong>%{name}</strong> مرتبط مع هذه المشاركة."
     post_is_deleted: "لا شيء تفعله مع مشاركة محذوفة. "

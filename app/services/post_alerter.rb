@@ -107,6 +107,42 @@ class PostAlerter
     end
 
     sync_group_mentions(post, mentioned_groups)
+
+    if new_record && post.post_number == 1
+      topic = post.topic
+
+      if topic.present?
+        cat_watchers = topic.category_users
+                            .where(notification_level: CategoryUser.notification_levels[:watching_first_post])
+                            .pluck(:user_id)
+
+        tag_watchers = topic.tag_users
+                            .where(notification_level: TagUser.notification_levels[:watching_first_post])
+                            .pluck(:user_id)
+
+        group_ids = topic.allowed_groups.pluck(:group_id)
+        group_watchers = GroupUser.where(group_id: group_ids,
+                                         notification_level: GroupUser.notification_levels[:watching_first_post])
+                                  .pluck(:user_id)
+
+        watchers = [cat_watchers, tag_watchers, group_watchers].flatten
+
+        notify_first_post_watchers(post, watchers)
+      end
+    end
+  end
+
+  def notify_first_post_watchers(post, user_ids)
+    return if user_ids.blank?
+
+    user_ids.uniq!
+
+    # Don't notify the OP
+    user_ids -= [post.user_id]
+
+    User.where(id: user_ids).each do |u|
+      create_notification(u, Notification.types[:watching_first_post], post)
+    end
   end
 
   def sync_group_mentions(post, mentioned_groups)
@@ -341,18 +377,35 @@ class PostAlerter
      # we may have an invalid post somehow, dont blow up
      post_url = original_post.url rescue nil
      if post_url
-        MessageBus.publish("/notification-alert/#{user.id}", {
+        payload = {
           notification_type: type,
           post_number: original_post.post_number,
           topic_title: original_post.topic.title,
           topic_id: original_post.topic.id,
-          excerpt: original_post.excerpt(400, text_entities: true, strip_links: true),
+          excerpt: original_post.excerpt(400, text_entities: true, strip_links: true, remap_emoji: true),
           username: original_username,
           post_url: post_url
-        }, user_ids: [user.id])
+        }
+
+        MessageBus.publish("/notification-alert/#{user.id}", payload, user_ids: [user.id])
+        push_notification(user, payload)
+        DiscourseEvent.trigger(:post_notification_alert, user, payload)
      end
    end
 
+  end
+
+  def push_notification(user, payload)
+    if SiteSetting.allow_user_api_key_scopes.split("|").include?("push") && SiteSetting.allowed_user_api_push_urls.present?
+      clients = user.user_api_keys
+          .where("('push' = ANY(scopes) OR 'notifications' = ANY(scopes)) AND push_url IS NOT NULL AND position(push_url in ?) > 0 AND revoked_at IS NULL",
+                  SiteSetting.allowed_user_api_push_urls)
+          .pluck(:client_id, :push_url)
+
+      if clients.length > 0
+        Jobs.enqueue(:push_notification, clients: clients, payload: payload, user_id: user.id)
+      end
+    end
   end
 
   def expand_group_mentions(groups, post)
@@ -413,14 +466,47 @@ class PostAlerter
   end
 
   def notify_post_users(post, notified)
-    notify = TopicUser.where(topic_id: post.topic_id)
-                      .where(notification_level: TopicUser.notification_levels[:watching])
+    return unless post.topic
+
+    condition = <<SQL
+
+    id IN (
+      SELECT user_id FROM topic_users
+        WHERE notification_level = :watching AND topic_id = :topic_id
+
+      UNION ALL
+
+      SELECT cu.user_id FROM category_users cu
+      LEFT JOIN topic_users tu ON tu.user_id = cu.user_id AND tu.topic_id = :topic_id
+      WHERE cu.notification_level = :watching AND cu.category_id = :category_id AND tu.user_id IS NULL
+
+      /*tags*/
+    )
+SQL
+
+    tag_ids = post.topic.topic_tags.pluck('topic_tags.tag_id')
+    if tag_ids.present?
+      condition.sub! "/*tags*/", <<SQL
+      UNION ALL
+
+      SELECT tag_users.user_id FROM tag_users
+      LEFT JOIN topic_users tu ON tu.user_id = tag_users.user_id AND tu.topic_id = :topic_id
+      WHERE tag_users.notification_level = :watching AND tag_users.tag_id IN (:tag_ids) AND tu.user_id IS NULL
+SQL
+    end
+
+    notify = User.where(condition,
+                          watching: TopicUser.notification_levels[:watching],
+                          topic_id: post.topic_id,
+                          category_id: post.topic.category_id,
+                          tag_ids: tag_ids
+                       )
 
     exclude_user_ids = notified.map(&:id)
-    notify = notify.where("user_id NOT IN (?)", exclude_user_ids) if exclude_user_ids.present?
+    notify = notify.where("id NOT IN (?)", exclude_user_ids) if exclude_user_ids.present?
 
-    notify.includes(:user).each do |tu|
-      create_notification(tu.user, Notification.types[:posted], post)
+    notify.each do |user|
+      create_notification(user, Notification.types[:posted], post)
     end
   end
 

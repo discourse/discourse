@@ -1,9 +1,19 @@
-class DiscourseIIFE < Sprockets::Processor
+class DiscourseIIFE
+  def initialize(options = {}, &block)
+  end
+
+  def self.instance
+    @instance ||= new
+  end
+
+  def self.call(input)
+    instance.call(input)
+  end
 
   # Add a IIFE around our javascript
-  def evaluate(context, locals)
-
-    path = context.pathname.to_s
+  def call(input)
+    path = input[:environment].context_class.new(input).pathname.to_s
+    data = input[:data]
 
     # Only discourse or admin paths
     return data unless (path =~ /\/javascripts\/discourse/ || path =~ /\/javascripts\/admin/ || path =~ /\/test\/javascripts/)
@@ -23,6 +33,8 @@ class DiscourseIIFE < Sprockets::Processor
     return data if path =~ /\.shbrs/
     return data if path =~ /\.hbrs/
     return data if path =~ /\.hbs/
+
+    return data if path =~ /discourse-loader/
 
     "(function () {\n\nvar $ = window.jQuery;\n// IIFE Wrapped Content Begins:\n\n#{data}\n\n// IIFE Wrapped Content Ends\n\n })(this);"
   end

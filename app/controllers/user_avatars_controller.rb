@@ -21,8 +21,11 @@ class UserAvatarsController < ApplicationController
     end
   end
 
-  # mainly used in development for backwards compat
   def show_proxy_letter
+    if SiteSetting.external_system_avatars_url !~ /^\/letter_avatar_proxy/
+      raise Discourse::NotFound
+    end
+
     params.require(:letter)
     params.require(:color)
     params.require(:version)
@@ -83,7 +86,7 @@ class UserAvatarsController < ApplicationController
     return render_blank unless upload_id > 0 && user_avatar = user.user_avatar
 
     size = params[:size].to_i
-    return render_blank if size < 8 || size > 500
+    return render_blank if size < 8 || size > 1000
 
     if !Discourse.avatar_sizes.include?(size) && Discourse.store.external?
       closest = Discourse.avatar_sizes.to_a.min { |a,b| (size-a).abs <=> (size-b).abs }
@@ -120,7 +123,7 @@ class UserAvatarsController < ApplicationController
   def proxy_avatar(url)
 
     if url[0..1] == "//"
-      url = (SiteSetting.use_https ? "https:" : "http:") + url
+      url = (SiteSetting.force_https ? "https:" : "http:") + url
     end
 
     sha = Digest::SHA1.hexdigest(url)

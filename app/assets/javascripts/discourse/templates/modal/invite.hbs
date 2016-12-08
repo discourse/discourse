@@ -1,4 +1,4 @@
-<div class="modal-body invite-modal">
+{{#d-modal-body id="invite-modal" title=title}}
   {{#if model.error}}
     <div class="alert alert-error">
       <button class="close" data-dismiss="alert">×</button>
@@ -6,24 +6,50 @@
     </div>
   {{/if}}
   {{#if model.finished}}
-    {{{successMessage}}}
+    {{#if model.inviteLink}}
+      {{generated-invite-link link=model.inviteLink email=emailOrUsername}}
+    {{else}}
+      {{{successMessage}}}
+    {{/if}}
   {{else}}
     <label>{{inviteInstructions}}</label>
     {{#if allowExistingMembers}}
       {{#if isPrivateTopic}}
-        {{user-selector single="true" allowAny=true excludeCurrentUser="true" usernames=emailOrUsername allowedUsers="true" topicId=topicId placeholderKey=placeholderKey}}
+        {{user-selector single="true"
+                        allowAny=true
+                        excludeCurrentUser="true"
+                        usernames=emailOrUsername
+                        allowedUsers="true"
+                        topicId=topicId
+                        placeholderKey=placeholderKey
+                        autocomplete="off"}}
       {{else}}
-        {{user-selector single="true" allowAny=true excludeCurrentUser="true" usernames=emailOrUsername placeholderKey=placeholderKey}}
+        {{user-selector
+            single="true"
+            allowAny=true
+            excludeCurrentUser="true"
+            includeMentionableGroups="true"
+            hasGroups=hasGroups
+            usernames=emailOrUsername
+            placeholderKey=placeholderKey
+            autocomplete="off"}}
       {{/if}}
     {{else}}
       {{text-field value=emailOrUsername placeholderKey="topic.invite_reply.email_placeholder"}}
     {{/if}}
     {{#if showGroups}}
-      <label>{{{groupInstructions}}}</label>
+      <label><span class={{showGroupsClass}}>{{i18n 'topic.automatically_add_to_groups'}}</span></label>
       {{group-selector groupFinder=groupFinder groupNames=model.groupNames placeholderKey="topic.invite_private.group_name"}}
     {{/if}}
+
+    {{#if showCustomMessage}}
+      <br><label><span class='optional'>{{i18n 'invite.custom_message'}}</span> <a {{action "showCustomMessageBox"}}>{{i18n 'invite.custom_message_link'}}</a>.</label>
+      {{#if hasCustomMessage}}{{textarea value=customMessage placeholder=customMessagePlaceholder}}{{/if}}
+    {{/if}}
+
   {{/if}}
-</div>
+{{/d-modal-body}}
+
 <div class="modal-footer">
   {{#if model.finished}}
     {{d-button class="btn-primary" action="closeModal" label="close"}}

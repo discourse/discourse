@@ -1,0 +1,70 @@
+<div class='admin-controls'>
+  <div class='span15'>
+    <ul class='nav nav-pills'>
+      <li>{{#link-to 'adminUser' user}}<i class="fa fa-caret-left"></i> &nbsp;{{user.username}}{{/link-to}}</li>
+    </ul>
+  </div>
+</div>
+
+{{#conditional-loading-spinner condition=loading}}
+  <div class='admin-container user-badges'>
+    <h2>{{i18n 'admin.badges.grant_badge'}}</h2>
+    <br>
+    {{#if noBadges}}
+      <p>{{i18n 'admin.badges.no_badges'}}</p>
+    {{else}}
+    <form class="form-horizontal">
+      <div>
+      <label>{{i18n 'admin.badges.badge'}}</label>
+      {{combo-box valueAttribute="id" value=selectedBadgeId content=grantableBadges nameProperty="name"}}
+      </div>
+      <label>
+      <label>{{i18n 'admin.badges.reason'}}</label>
+      {{input type="text" value=badgeReason}}<br><small>{{i18n 'admin.badges.reason_help'}}</small>
+      </label>
+      <button class='btn btn-primary' {{action "grantBadge" selectedBadgeId}}>{{i18n 'admin.badges.grant'}}</button>
+    </form>
+    {{/if}}
+
+    <table id='user-badges'>
+      <tr>
+        <th>{{i18n 'admin.badges.badge'}}</th>
+        <th>{{i18n 'admin.badges.granted_by'}}</th>
+        <th class='reason'>{{i18n 'admin.badges.reason'}}</th>
+        <th>{{i18n 'admin.badges.granted_at'}}</th>
+        <th></th>
+      </tr>
+
+      {{#each groupedBadges as |userBadge|}}
+        <tr>
+          <td>{{user-badge badge=userBadge.badge count=userBadge.count}}</td>
+          <td>
+            {{#link-to 'adminUser' userBadge.badge.granted_by}}
+              {{avatar userBadge.granted_by imageSize="tiny"}}
+              {{userBadge.granted_by.username}}
+            {{/link-to}}
+          </td>
+          <td class='reason'>
+            {{#if userBadge.postUrl}}
+            <a href="{{unbound userBadge.postUrl}}">{{userBadge.topic_title}}</a>
+            {{/if}}
+          </td>
+          <td>{{age-with-tooltip userBadge.granted_at}}</td>
+          <td>
+            {{#if userBadge.grouped}}
+              <button class='btn' {{action "expandGroup" userBadge}}>{{{i18n 'admin.badges.expand'}}}</button>
+            {{else}}
+              <button class='btn btn-danger' {{action "revokeBadge" userBadge}}>{{i18n 'admin.badges.revoke'}}</button>
+            {{/if}}
+          </td>
+        </tr>
+      {{else}}
+        <tr>
+          <td colspan="5">
+            <p>{{i18n 'admin.badges.no_user_badges' name=user.username}}</p>
+          </td>
+        </tr>
+      {{/each}}
+    </table>
+  </div>
+{{/conditional-loading-spinner}}

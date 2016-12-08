@@ -30,7 +30,7 @@ class QueuedPostSerializer < ApplicationSerializer
   end
 
   def include_can_delete_user?
-    user.trust_level == TrustLevel[0]
+    user && user.trust_level == TrustLevel[0]
   end
 
 end

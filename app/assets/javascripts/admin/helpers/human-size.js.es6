@@ -1,3 +1,3 @@
-Em.Handlebars.helper('human-size', function(size) {
-  return new Handlebars.SafeString(I18n.toHumanSize(size));
-});
+import { htmlHelper } from 'discourse-common/lib/helpers';
+
+export default htmlHelper(size => I18n.toHumanSize(size));

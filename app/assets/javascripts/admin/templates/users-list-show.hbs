@@ -21,7 +21,7 @@
 
 {{#conditional-loading-spinner condition=refreshing}}
   {{#if model}}
-    <table class='table'>
+    <table class='table users-list'>
       <tr>
         {{#if showApproval}}
           <th>{{input type="checkbox" checked=selectAll}}</th>
@@ -41,9 +41,9 @@
         <th>&nbsp;</th>
       </tr>
 
-      {{#each user in model}}
-        <tr {{bind-attr class="user.selected user.active::not-activated"}}>
-          {{#if controller.showApproval}}
+      {{#each model as |user|}}
+        <tr class="user {{user.selected}} {{unless user.active 'not-activated'}}">
+          {{#if showApproval}}
             <td>
               {{#if user.can_approve}}
                 {{input type="checkbox" checked=user.selected}}
@@ -52,7 +52,7 @@
           {{/if}}
           <td><a href="{{unbound user.path}}" data-user-card="{{unbound user.username}}">{{avatar user imageSize="small"}}</a></td>
           <td>{{#link-to 'adminUser' user}}{{unbound user.username}}{{/link-to}}</td>
-          <td>{{{unbound user.email}}}</td>
+          <td class='email'>{{unbound user.email}}</td>
           <td>{{{unbound user.last_emailed_age}}}</td>
           <td>{{{unbound user.last_seen_age}}}</td>
           <td>{{{unbound user.topics_entered}}}</td>

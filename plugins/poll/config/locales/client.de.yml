@@ -15,18 +15,20 @@ de:
         one: "abgegebene Stimme"
         other: "abgegebene Stimmen"
       average_rating: "Durchschnittliche Bewertung: <strong>%{average}</strong>"
+      public:
+        title: "Abgegebene Stimmen werden veröffentlicht."
       multiple:
         help:
           at_least_min_options:
-            one: "Du musst mindestens <strong>eine</strong> Option auswählen."
+            one: "Du musst mindestens <strong>1</strong> Option auswählen."
             other: "Du musst mindestens <strong>%{count}</strong> Optionen auswählen."
           up_to_max_options:
-            one: "Du kannst genau <strong>eine</strong> Option auswählen."
+            one: "Du kannst bis zu <strong>eine</strong> Option auswählen."
             other: "Du kannst bis zu <strong>%{count}</strong> Optionen auswählen."
           x_options:
-            one: "Du musst <strong>eine</strong> Option auswählen."
-            other: "Du musst <strong>%{count}</strong> Optionen auswählen."
-          between_min_and_max_options: "Du kannst zwischen <strong>%{min}</strong> und <strong>%{max}</strong> Optionen auswählen."
+            one: "Bitte wähle <strong>1</strong> Option"
+            other: "Bitte wähle <strong>%{count}</strong> Optionen"
+          between_min_and_max_options: "Bitte wähle zwischen <strong>%{min}</strong> und <strong>%{max}</strong> Optionen"
       cast-votes:
         title: "Gib deine Stimmen ab"
         label: "Jetzt abstimmen!"
@@ -44,5 +46,24 @@ de:
         title: "Umfrage beenden"
         label: "Beenden"
         confirm: "Möchtest du diese Umfrage wirklich beenden?"
-      error_while_toggling_status: "Beim Ändern des Status der Umfrage ist ein Fehler aufgetreten."
-      error_while_casting_votes: "Beim Abstimmen ist ein Fehler aufgetreten."
+      error_while_toggling_status: "Entschuldige, es gab einen Fehler beim Wechseln des Status dieser Umfrage."
+      error_while_casting_votes: "Entschuldige, es gab einen Fehler beim Abgeben deiner Stimme."
+      error_while_fetching_voters: "Entschuldige, es gab einen Fehler beim Anzeigen der Teilnehmer."
+      ui_builder:
+        title: Umfrage erstellen
+        insert: Umfrage einfügen
+        help:
+          options_count: Gib mindestens 2 Optionen ein
+        poll_type:
+          label: Art
+          regular: Einfachauswahl
+          multiple: Mehrfachauswahl
+          number: Bewertung
+        poll_config:
+          max: max.
+          min: min.
+          step: Schrittweite
+        poll_public:
+          label: Anzeigen wer abgestimmt hat
+        poll_options:
+          label: Bitte gib eine Umfrageoption pro Zeile ein

@@ -1,13 +1,15 @@
 require 'mysql2'
 require File.expand_path(File.dirname(__FILE__) + "/base.rb")
 require 'htmlentities'
+require 'php_serialize' # https://github.com/jqr/php-serialize
 
 class ImportScripts::VBulletin < ImportScripts::Base
   BATCH_SIZE = 1000
 
   # CHANGE THESE BEFORE RUNNING THE IMPORTER
-  DATABASE = "iref"
-  TIMEZONE = "Asia/Kolkata"
+  DATABASE = "q23"
+  TABLE_PREFIX = "vb_"
+  TIMEZONE = "America/Los_Angeles"
   ATTACHMENT_DIR = '/path/to/your/attachment/folder'
 
   def initialize
@@ -29,13 +31,18 @@ class ImportScripts::VBulletin < ImportScripts::Base
   def execute
     import_groups
     import_users
+    create_groups_membership
     import_categories
     import_topics
     import_posts
+    import_private_messages
     import_attachments
 
     close_topics
     post_process_posts
+
+    create_permalink_file
+    suspend_users
   end
 
   def import_groups
@@ -43,7 +50,7 @@ class ImportScripts::VBulletin < ImportScripts::Base
 
     groups = mysql_query <<-SQL
         SELECT usergroupid, title
-          FROM usergroup
+          FROM #{TABLE_PREFIX}usergroup
       ORDER BY usergroupid
     SQL
 
@@ -58,12 +65,12 @@ class ImportScripts::VBulletin < ImportScripts::Base
   def import_users
     puts "", "importing users"
 
-    user_count = mysql_query("SELECT COUNT(userid) count FROM user").first["count"]
+    user_count = mysql_query("SELECT COUNT(userid) count FROM #{TABLE_PREFIX}user").first["count"]
 
     batches(BATCH_SIZE) do |offset|
       users = mysql_query <<-SQL
           SELECT userid, username, homepage, usertitle, usergroupid, joindate, email
-            FROM user
+            FROM #{TABLE_PREFIX}user
         ORDER BY userid
            LIMIT #{BATCH_SIZE}
           OFFSET #{offset}
@@ -83,8 +90,9 @@ class ImportScripts::VBulletin < ImportScripts::Base
           email: user["email"].presence || fake_email,
           website: user["homepage"].strip,
           title: @htmlentities.decode(user["usertitle"]).strip,
-          primary_group_id: group_id_from_imported_group_id(user["usergroupid"]),
+          primary_group_id: group_id_from_imported_group_id(user["usergroupid"].to_i),
           created_at: parse_timestamp(user["joindate"]),
+          last_seen_at: parse_timestamp(user["lastvisit"]),
           post_create_action: proc do |u|
             @old_username_to_new_usernames[user["username"]] = u.username
             import_profile_picture(user, u)
@@ -95,10 +103,36 @@ class ImportScripts::VBulletin < ImportScripts::Base
     end
   end
 
+  def create_groups_membership
+    puts "", "Creating groups membership..."
+
+    Group.find_each do |group|
+      begin
+        next if group.automatic
+        puts "\t#{group.name}"
+        next if GroupUser.where(group_id: group.id).count > 0
+        user_ids_in_group = User.where(primary_group_id: group.id).pluck(:id).to_a
+        next if user_ids_in_group.size == 0
+        values = user_ids_in_group.map { |user_id| "(#{group.id}, #{user_id}, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)" }.join(",")
+
+        User.exec_sql <<-SQL
+          BEGIN;
+          INSERT INTO group_users (group_id, user_id, created_at, updated_at) VALUES #{values};
+          COMMIT;
+        SQL
+
+        Group.reset_counters(group.id, :group_users)
+      rescue Exception => e
+        puts e.message
+        puts e.backtrace.join("\n")
+      end
+    end
+  end
+
   def import_profile_picture(old_user, imported_user)
     query = mysql_query <<-SQL
         SELECT filedata, filename
-          FROM customavatar
+          FROM #{TABLE_PREFIX}customavatar
          WHERE userid = #{old_user["userid"]}
       ORDER BY dateline DESC
          LIMIT 1
@@ -127,7 +161,7 @@ class ImportScripts::VBulletin < ImportScripts::Base
   def import_profile_background(old_user, imported_user)
     query = mysql_query <<-SQL
         SELECT filedata, filename
-          FROM customprofilepic
+          FROM #{TABLE_PREFIX}customprofilepic
          WHERE userid = #{old_user["userid"]}
       ORDER BY dateline DESC
          LIMIT 1
@@ -154,7 +188,7 @@ class ImportScripts::VBulletin < ImportScripts::Base
   def import_categories
     puts "", "importing top level categories..."
 
-    categories = mysql_query("SELECT forumid, title, description, displayorder, parentid FROM forum ORDER BY forumid").to_a
+    categories = mysql_query("SELECT forumid, title, description, displayorder, parentid FROM #{TABLE_PREFIX}forum ORDER BY forumid").to_a
 
     top_level_categories = categories.select { |c| c["parentid"] == -1 }
 
@@ -196,14 +230,14 @@ class ImportScripts::VBulletin < ImportScripts::Base
     # keep track of closed topics
     @closed_topic_ids = []
 
-    topic_count = mysql_query("SELECT COUNT(threadid) count FROM thread").first["count"]
+    topic_count = mysql_query("SELECT COUNT(threadid) count FROM #{TABLE_PREFIX}thread").first["count"]
 
     batches(BATCH_SIZE) do |offset|
       topics = mysql_query <<-SQL
           SELECT t.threadid threadid, t.title title, forumid, open, postuserid, t.dateline dateline, views, t.visible visible, sticky,
                  p.pagetext raw
-            FROM thread t
-            JOIN post p ON p.postid = t.firstpostid
+            FROM #{TABLE_PREFIX}thread t
+            JOIN #{TABLE_PREFIX}post p ON p.postid = t.firstpostid
         ORDER BY t.threadid
            LIMIT #{BATCH_SIZE}
           OFFSET #{offset}
@@ -216,7 +250,7 @@ class ImportScripts::VBulletin < ImportScripts::Base
         raw = preprocess_post_raw(topic["raw"]) rescue nil
         next if raw.blank?
         topic_id = "thread-#{topic["threadid"]}"
-        @closed_topic_ids << topic_id if topic["open"] == "0"
+        @closed_topic_ids << topic_id if topic["open"] == 0
         t = {
           id: topic_id,
           user_id: user_id_from_imported_user_id(topic["postuserid"]) || Discourse::SYSTEM_USER_ID,
@@ -230,6 +264,18 @@ class ImportScripts::VBulletin < ImportScripts::Base
         t[:pinned_at] = t[:created_at] if topic["sticky"].to_i == 1
         t
       end
+
+      # uncomment below lines to create permalink
+      # topics.each do |thread|
+      #   topic_id = "thread-#{thread["threadid"]}"
+      #   topic = topic_lookup_from_imported_post_id(topic_id)
+      #   if topic.present?
+      #     title_slugified = thread["title"].gsub(" ","-").gsub(".","-") if thread["title"].present?
+      #     url_slug = "threads/#{thread["threadid"]}-#{title_slugified}" if thread["title"].present?
+      #     Permalink.create(url: url_slug, topic_id: topic[:topic_id].to_i) if url_slug.present? && topic[:topic_id].present?
+      #   end
+      # end
+
     end
   end
 
@@ -237,15 +283,19 @@ class ImportScripts::VBulletin < ImportScripts::Base
     puts "", "importing posts..."
 
     # make sure `firstpostid` is indexed
-    mysql_query("CREATE INDEX firstpostid_index ON thread (firstpostid)")
+    begin
+      mysql_query("CREATE INDEX firstpostid_index ON #{TABLE_PREFIX}thread (firstpostid)")
+    rescue Mysql2::Error
+      puts 'Index already exists'
+    end
 
-    post_count = mysql_query("SELECT COUNT(postid) count FROM post WHERE postid NOT IN (SELECT firstpostid FROM thread)").first["count"]
+    post_count = mysql_query("SELECT COUNT(postid) count FROM #{TABLE_PREFIX}post WHERE postid NOT IN (SELECT firstpostid FROM #{TABLE_PREFIX}thread)").first["count"]
 
     batches(BATCH_SIZE) do |offset|
       posts = mysql_query <<-SQL
           SELECT postid, userid, threadid, pagetext raw, dateline, visible, parentid
-            FROM post
-           WHERE postid NOT IN (SELECT firstpostid FROM thread)
+            FROM #{TABLE_PREFIX}post
+           WHERE postid NOT IN (SELECT firstpostid FROM #{TABLE_PREFIX}thread)
         ORDER BY postid
            LIMIT #{BATCH_SIZE}
           OFFSET #{offset}
@@ -278,7 +328,7 @@ class ImportScripts::VBulletin < ImportScripts::Base
   def find_upload(post, attachment_id)
     sql = "SELECT a.attachmentid attachment_id, a.userid user_id, a.filedataid file_id, a.filename filename,
                   a.caption caption
-             FROM attachment a
+             FROM #{TABLE_PREFIX}attachment a
             WHERE a.attachmentid = #{attachment_id}"
     results = mysql_query(sql)
 
@@ -310,11 +360,120 @@ class ImportScripts::VBulletin < ImportScripts::Base
     return nil
   end
 
+
+  def import_private_messages
+    puts "", "importing private messages..."
+
+    topic_count = mysql_query("SELECT COUNT(pmtextid) count FROM #{TABLE_PREFIX}pmtext").first["count"]
+
+    batches(BATCH_SIZE) do |offset|
+      private_messages = mysql_query <<-SQL
+          SELECT pmtextid, fromuserid, title, message, touserarray, dateline
+          FROM #{TABLE_PREFIX}pmtext
+          ORDER BY pmtextid
+          LIMIT #{BATCH_SIZE}
+          OFFSET #{offset}
+      SQL
+
+      break if private_messages.size < 1
+      next if all_records_exist? :posts, private_messages.map {|pm| "pm-#{pm['pmtextid']}" }
+
+      title_username_of_pm_first_post = {}
+
+      create_posts(private_messages, total: topic_count, offset: offset) do |m|
+        skip = false
+        mapped = {}
+
+        mapped[:id] = "pm-#{m['pmtextid']}"
+        mapped[:user_id] = user_id_from_imported_user_id(m['fromuserid']) || Discourse::SYSTEM_USER_ID
+        mapped[:raw] = preprocess_post_raw(m['message']) rescue nil
+        mapped[:created_at] = Time.zone.at(m['dateline'])
+        title = @htmlentities.decode(m['title']).strip[0...255]
+        topic_id = nil
+
+        next if mapped[:raw].blank?
+
+        # users who are part of this private message.
+        target_usernames = []
+        target_userids = []
+        begin
+          to_user_array = PHP.unserialize(m['touserarray'])
+        rescue
+          puts "#{m['pmtextid']} -- #{m['touserarray']}"
+          skip = true
+        end
+
+        begin
+          to_user_array.each do |to_user|
+            if to_user[0] == "cc" || to_user[0] == "bcc" # not sure if we should include bcc users
+              to_user[1].each do |to_user_cc|
+                user_id = user_id_from_imported_user_id(to_user_cc[0])
+                username = User.find_by(id: user_id).try(:username)
+                target_userids << user_id || Discourse::SYSTEM_USER_ID
+                target_usernames << username if username
+              end
+            else
+              user_id = user_id_from_imported_user_id(to_user[0])
+              username = User.find_by(id: user_id).try(:username)
+              target_userids << user_id || Discourse::SYSTEM_USER_ID
+              target_usernames << username if username
+            end
+          end
+        rescue
+          puts "skipping pm-#{m['pmtextid']} `to_user_array` is not properly serialized -- #{to_user_array.inspect}"
+          skip = true
+        end
+
+        participants = target_userids
+        participants << mapped[:user_id]
+        begin
+          participants.sort!
+        rescue
+          puts "one of the participant's id is nil -- #{participants.inspect}"
+        end
+
+        if title =~ /^Re:/
+
+          parent_id = title_username_of_pm_first_post[[title[3..-1], participants]]
+          parent_id = title_username_of_pm_first_post[[title[4..-1], participants]] unless parent_id
+          parent_id = title_username_of_pm_first_post[[title[5..-1], participants]] unless parent_id
+          parent_id = title_username_of_pm_first_post[[title[6..-1], participants]] unless parent_id
+          parent_id = title_username_of_pm_first_post[[title[7..-1], participants]] unless parent_id
+          parent_id = title_username_of_pm_first_post[[title[8..-1], participants]] unless parent_id
+          if parent_id
+            if t = topic_lookup_from_imported_post_id("pm-#{parent_id}")
+              topic_id = t[:topic_id]
+            end
+          end
+        else
+          title_username_of_pm_first_post[[title, participants]] ||= m['pmtextid']
+        end
+
+        unless topic_id
+          mapped[:title] = title
+          mapped[:archetype] = Archetype.private_message
+          mapped[:target_usernames] = target_usernames.join(',')
+
+          if mapped[:target_usernames].empty? # pm with yourself?
+            # skip = true
+            mapped[:target_usernames] = "system"
+            puts "pm-#{m['pmtextid']} has no target (#{m['touserarray']})"
+          end
+        else
+          mapped[:topic_id] = topic_id
+        end
+
+        skip ? nil : mapped
+      end
+    end
+  end
+
+
   def import_attachments
     puts '', 'importing attachments...'
 
     current_count = 0
-    total_count = mysql_query("SELECT COUNT(postid) count FROM post WHERE postid NOT IN (SELECT firstpostid FROM thread)").first["count"]
+    total_count = mysql_query("SELECT COUNT(postid) count FROM #{TABLE_PREFIX}post WHERE postid NOT IN (SELECT firstpostid FROM #{TABLE_PREFIX}thread)").first["count"]
 
     success_count = 0
     fail_count = 0
@@ -395,50 +554,51 @@ class ImportScripts::VBulletin < ImportScripts::Base
     raw = @htmlentities.decode(raw)
 
     # fix whitespaces
-    raw = raw.gsub(/(\\r)?\\n/, "\n")
-             .gsub("\\t", "\t")
+    raw.gsub!(/(\\r)?\\n/, "\n")
+    raw.gsub!("\\t", "\t")
 
     # [HTML]...[/HTML]
-    raw = raw.gsub(/\[html\]/i, "\n```html\n")
-             .gsub(/\[\/html\]/i, "\n```\n")
+    raw.gsub!(/\[html\]/i, "\n```html\n")
+    raw.gsub!(/\[\/html\]/i, "\n```\n")
 
     # [PHP]...[/PHP]
-    raw = raw.gsub(/\[php\]/i, "\n```php\n")
-             .gsub(/\[\/php\]/i, "\n```\n")
+    raw.gsub!(/\[php\]/i, "\n```php\n")
+    raw.gsub!(/\[\/php\]/i, "\n```\n")
 
     # [HIGHLIGHT="..."]
-    raw = raw.gsub(/\[highlight="?(\w+)"?\]/i) { "\n```#{$1.downcase}\n" }
+    raw.gsub!(/\[highlight="?(\w+)"?\]/i) { "\n```#{$1.downcase}\n" }
 
     # [CODE]...[/CODE]
     # [HIGHLIGHT]...[/HIGHLIGHT]
-    raw = raw.gsub(/\[\/?code\]/i, "\n```\n")
-             .gsub(/\[\/?highlight\]/i, "\n```\n")
+    raw.gsub!(/\[\/?code\]/i, "\n```\n")
+    raw.gsub!(/\[\/?highlight\]/i, "\n```\n")
 
     # [SAMP]...[/SAMP]
-    raw = raw.gsub(/\[\/?samp\]/i, "`")
+    raw.gsub!(/\[\/?samp\]/i, "`")
 
     # replace all chevrons with HTML entities
     # NOTE: must be done
     #  - AFTER all the "code" processing
     #  - BEFORE the "quote" processing
-    raw = raw.gsub(/`([^`]+)`/im) { "`" + $1.gsub("<", "\u2603") + "`" }
-             .gsub("<", "&lt;")
-             .gsub("\u2603", "<")
+    raw.gsub!(/`([^`]+)`/im) { "`" + $1.gsub("<", "\u2603") + "`" }
+    raw.gsub!("<", "&lt;")
+    raw.gsub!("\u2603", "<")
 
-    raw = raw.gsub(/`([^`]+)`/im) { "`" + $1.gsub(">", "\u2603") + "`" }
-             .gsub(">", "&gt;")
-             .gsub("\u2603", ">")
+    raw.gsub!(/`([^`]+)`/im) { "`" + $1.gsub(">", "\u2603") + "`" }
+    raw.gsub!(">", "&gt;")
+    raw.gsub!("\u2603", ">")
 
     # [URL=...]...[/URL]
-    raw = raw.gsub(/\[url="?(.+?)"?\](.+)\[\/url\]/i) { "[#{$2}](#{$1})" }
+    raw.gsub!(/\[url="?([^"]+?)"?\](.*?)\[\/url\]/im) { "[#{$2.strip}](#{$1})" }
+    raw.gsub!(/\[url="?(.+?)"?\](.+)\[\/url\]/im) { "[#{$2.strip}](#{$1})" }
 
     # [URL]...[/URL]
     # [MP3]...[/MP3]
-    raw = raw.gsub(/\[\/?url\]/i, "")
-             .gsub(/\[\/?mp3\]/i, "")
+    raw.gsub!(/\[\/?url\]/i, "")
+    raw.gsub!(/\[\/?mp3\]/i, "")
 
     # [MENTION]<username>[/MENTION]
-    raw = raw.gsub(/\[mention\](.+?)\[\/mention\]/i) do
+    raw.gsub!(/\[mention\](.+?)\[\/mention\]/i) do
       old_username = $1
       if @old_username_to_new_usernames.has_key?(old_username)
         old_username = @old_username_to_new_usernames[old_username]
@@ -446,20 +606,32 @@ class ImportScripts::VBulletin < ImportScripts::Base
       "@#{old_username}"
     end
 
-    # [MENTION=<user_id>]<username>[/MENTION]
-    # raw = raw.gsub(/\[mention="?(\d+)"?\](.+?)\[\/mention\]/i) do
-    #   user_id, old_username = $1, $2
-    #   if user = @users.select { |u| u[:userid] == user_id }.first
-    #     old_username = @old_username_to_new_usernames[user[:username]] || user[:username]
-    #   end
-    #   "@#{old_username}"
-    # end
+    # [FONT=blah] and [COLOR=blah]
+    raw.gsub! /\[FONT=.*?\](.*?)\[\/FONT\]/im, '\1'
+    raw.gsub! /\[COLOR=.*?\](.*?)\[\/COLOR\]/im, '\1'
+    raw.gsub! /\[COLOR=#.*?\](.*?)\[\/COLOR\]/im, '\1'
+
+    raw.gsub! /\[SIZE=.*?\](.*?)\[\/SIZE\]/im, '\1'
+    raw.gsub! /\[h=.*?\](.*?)\[\/h\]/im, '\1'
+
+    # [CENTER]...[/CENTER]
+    raw.gsub! /\[CENTER\](.*?)\[\/CENTER\]/im, '\1'
+
+    # [INDENT]...[/INDENT]
+    raw.gsub! /\[INDENT\](.*?)\[\/INDENT\]/im, '\1'
+    raw.gsub! /\[TABLE\](.*?)\[\/TABLE\]/im, '\1'
+    raw.gsub! /\[TR\](.*?)\[\/TR\]/im, '\1'
+    raw.gsub! /\[TD\](.*?)\[\/TD\]/im, '\1'
+    raw.gsub! /\[TD="?.*?"?\](.*?)\[\/TD\]/im, '\1'
 
     # [QUOTE]...[/QUOTE]
-    raw = raw.gsub(/\[quote\](.+?)\[\/quote\]/im) { "\n> #{$1}\n" }
+    raw.gsub!(/\[quote\](.+?)\[\/quote\]/im) { |quote|
+      quote.gsub!(/\[quote\](.+?)\[\/quote\]/im) { "\n#{$1}\n" }
+      quote.gsub!(/\n(.+?)/) { "\n> #{$1}" }
+    }
 
     # [QUOTE=<username>]...[/QUOTE]
-    raw = raw.gsub(/\[quote=([^;\]]+)\](.+?)\[\/quote\]/im) do
+    raw.gsub!(/\[quote=([^;\]]+)\](.+?)\[\/quote\]/im) do
       old_username, quote = $1, $2
       if @old_username_to_new_usernames.has_key?(old_username)
         old_username = @old_username_to_new_usernames[old_username]
@@ -468,17 +640,38 @@ class ImportScripts::VBulletin < ImportScripts::Base
     end
 
     # [YOUTUBE]<id>[/YOUTUBE]
-    raw = raw.gsub(/\[youtube\](.+?)\[\/youtube\]/i) { "\n//youtu.be/#{$1}\n" }
+    raw.gsub!(/\[youtube\](.+?)\[\/youtube\]/i) { "\n//youtu.be/#{$1}\n" }
 
     # [VIDEO=youtube;<id>]...[/VIDEO]
-    raw = raw.gsub(/\[video=youtube;([^\]]+)\].*?\[\/video\]/i) { "\n//youtu.be/#{$1}\n" }
+    raw.gsub!(/\[video=youtube;([^\]]+)\].*?\[\/video\]/i) { "\n//youtu.be/#{$1}\n" }
+
+    # More Additions ....
+
+    # [spoiler=Some hidden stuff]SPOILER HERE!![/spoiler]
+    raw.gsub!(/\[spoiler="?(.+?)"?\](.+?)\[\/spoiler\]/im) { "\n#{$1}\n[spoiler]#{$2}[/spoiler]\n" }
+
+    # [IMG][IMG]http://i63.tinypic.com/akga3r.jpg[/IMG][/IMG]
+    raw.gsub!(/\[IMG\]\[IMG\](.+?)\[\/IMG\]\[\/IMG\]/i) { "[IMG]#{$1}[/IMG]" }
+
+    # convert list tags to ul and list=1 tags to ol
+    # (basically, we're only missing list=a here...)
+    # (https://meta.discourse.org/t/phpbb-3-importer-old/17397)
+    raw.gsub!(/\[list\](.*?)\[\/list\]/im, '[ul]\1[/ul]')
+    raw.gsub!(/\[list=1\](.*?)\[\/list\]/im, '[ol]\1[/ol]')
+    raw.gsub!(/\[list\](.*?)\[\/list:u\]/im, '[ul]\1[/ul]')
+    raw.gsub!(/\[list=1\](.*?)\[\/list:o\]/im, '[ol]\1[/ol]')
+    # convert *-tags to li-tags so bbcode-to-md can do its magic on phpBB's lists:
+    raw.gsub!(/\[\*\]\n/, '')
+    raw.gsub!(/\[\*\](.*?)\[\/\*:m\]/, '[li]\1[/li]')
+    raw.gsub!(/\[\*\](.*?)\n/, '[li]\1[/li]')
+    raw.gsub!(/\[\*=1\]/, '')
 
     raw
   end
 
   def postprocess_post_raw(raw)
     # [QUOTE=<username>;<post_id>]...[/QUOTE]
-    raw = raw.gsub(/\[quote=([^;]+);(\d+)\](.+?)\[\/quote\]/im) do
+    raw.gsub!(/\[quote=([^;]+);(\d+)\](.+?)\[\/quote\]/im) do
       old_username, post_id, quote = $1, $2, $3
 
       if @old_username_to_new_usernames.has_key?(old_username)
@@ -495,11 +688,11 @@ class ImportScripts::VBulletin < ImportScripts::Base
     end
 
     # remove attachments
-    raw = raw.gsub(/\[attach[^\]]*\]\d+\[\/attach\]/i, "")
+    raw.gsub!(/\[attach[^\]]*\]\d+\[\/attach\]/i, "")
 
     # [THREAD]<thread_id>[/THREAD]
     # ==> http://my.discourse.org/t/slug/<topic_id>
-    raw = raw.gsub(/\[thread\](\d+)\[\/thread\]/i) do
+    raw.gsub!(/\[thread\](\d+)\[\/thread\]/i) do
       thread_id = $1
       if topic_lookup = topic_lookup_from_imported_post_id("thread-#{thread_id}")
         topic_lookup[:url]
@@ -510,7 +703,7 @@ class ImportScripts::VBulletin < ImportScripts::Base
 
     # [THREAD=<thread_id>]...[/THREAD]
     # ==> [...](http://my.discourse.org/t/slug/<topic_id>)
-    raw = raw.gsub(/\[thread=(\d+)\](.+?)\[\/thread\]/i) do
+    raw.gsub!(/\[thread=(\d+)\](.+?)\[\/thread\]/i) do
       thread_id, link = $1, $2
       if topic_lookup = topic_lookup_from_imported_post_id("thread-#{thread_id}")
         url = topic_lookup[:url]
@@ -522,7 +715,7 @@ class ImportScripts::VBulletin < ImportScripts::Base
 
     # [POST]<post_id>[/POST]
     # ==> http://my.discourse.org/t/slug/<topic_id>/<post_number>
-    raw = raw.gsub(/\[post\](\d+)\[\/post\]/i) do
+    raw.gsub!(/\[post\](\d+)\[\/post\]/i) do
       post_id = $1
       if topic_lookup = topic_lookup_from_imported_post_id(post_id)
         topic_lookup[:url]
@@ -533,7 +726,7 @@ class ImportScripts::VBulletin < ImportScripts::Base
 
     # [POST=<post_id>]...[/POST]
     # ==> [...](http://my.discourse.org/t/<topic_slug>/<topic_id>/<post_number>)
-    raw = raw.gsub(/\[post=(\d+)\](.+?)\[\/post\]/i) do
+    raw.gsub!(/\[post=(\d+)\](.+?)\[\/post\]/i) do
       post_id, link = $1, $2
       if topic_lookup = topic_lookup_from_imported_post_id(post_id)
         url = topic_lookup[:url]
@@ -544,6 +737,68 @@ class ImportScripts::VBulletin < ImportScripts::Base
     end
 
     raw
+  end
+
+
+  def create_permalink_file
+    puts '', 'Creating Permalink File...', ''
+
+    id_mapping = []
+
+    Topic.listable_topics.find_each do |topic|
+      pcf = topic.first_post.custom_fields
+      if pcf && pcf["import_id"]
+        id = pcf["import_id"].split('-').last
+        id_mapping.push("XXX#{id}  YYY#{topic.id}")
+      end
+    end
+
+    # Category.find_each do |cat|
+    #   ccf = cat.custom_fields
+    #   if ccf && ccf["import_id"]
+    #     id = ccf["import_id"].to_i
+    #     id_mapping.push("/forumdisplay.php?#{id}  http://forum.quartertothree.com#{cat.url}")
+    #   end
+    # end
+
+    CSV.open(File.expand_path("../vb_map.csv", __FILE__), "w") do |csv|
+      id_mapping.each do |value|
+        csv << [value]
+      end
+    end
+
+  end
+
+
+  def suspend_users
+    puts '', "updating banned users"
+
+    banned = 0
+    failed = 0
+    total = mysql_query("SELECT count(*) count FROM #{TABLE_PREFIX}userban").first['count']
+
+    system_user = Discourse.system_user
+
+    mysql_query("SELECT userid, bandate FROM #{TABLE_PREFIX}userban").each do |b|
+      user = User.find_by_id(user_id_from_imported_user_id(b['userid']))
+      if user
+        user.suspended_at = parse_timestamp(user["bandate"])
+        user.suspended_till = 200.years.from_now
+
+        if user.save
+          StaffActionLogger.new(system_user).log_user_suspend(user, "banned during initial import")
+          banned += 1
+        else
+          puts "Failed to suspend user #{user.username}. #{user.errors.try(:full_messages).try(:inspect)}"
+          failed += 1
+        end
+      else
+        puts "Not found: #{b['userid']}"
+        failed += 1
+      end
+
+      print_status banned + failed, total
+    end
   end
 
   def parse_timestamp(timestamp)

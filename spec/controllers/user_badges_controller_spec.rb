@@ -24,7 +24,7 @@ describe UserBadgesController do
     let!(:user_badge) { UserBadge.create(badge: badge, user: user, granted_by: Discourse.system_user, granted_at: Time.now) }
 
     it 'requires username or badge_id to be specified' do
-      expect { xhr :get, :index }.to raise_error
+      expect { xhr :get, :index }.to raise_error(ActionController::ParameterMissing)
     end
 
     it 'returns user_badges for a user' do
@@ -54,7 +54,7 @@ describe UserBadgesController do
 
   context 'create' do
     it 'requires username to be specified' do
-      expect { xhr :post, :create, badge_id: badge.id }.to raise_error
+      expect { xhr :post, :create, badge_id: badge.id }.to raise_error(ActionController::ParameterMissing)
     end
 
     it 'does not allow regular users to grant badges' do
@@ -102,7 +102,7 @@ describe UserBadgesController do
 
     it 'will trigger :user_badge_granted' do
       log_in :admin
-
+      user
       DiscourseEvent.expects(:trigger).with(:user_badge_granted, anything, anything).once
       xhr :post, :create, badge_id: badge.id, username: user.username
     end
@@ -126,6 +126,7 @@ describe UserBadgesController do
 
     it 'will trigger :user_badge_removed' do
       log_in :admin
+
       DiscourseEvent.expects(:trigger).with(:user_badge_removed, anything, anything).once
       xhr :delete, :destroy, id: user_badge.id
     end

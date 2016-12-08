@@ -2,6 +2,34 @@ require 'rails_helper'
 
 describe TopicUser do
 
+  describe "#unwatch_categories!" do
+    it "correctly unwatches categories" do
+
+      op_topic = Fabricate(:topic)
+      another_topic = Fabricate(:topic)
+      tracked_topic = Fabricate(:topic)
+
+      user = op_topic.user
+      watching = TopicUser.notification_levels[:watching]
+      regular = TopicUser.notification_levels[:regular]
+      tracking = TopicUser.notification_levels[:tracking]
+
+      TopicUser.change(user.id, op_topic, notification_level: watching)
+      TopicUser.change(user.id, another_topic, notification_level: watching)
+      TopicUser.change(user.id, tracked_topic, notification_level: watching, total_msecs_viewed: SiteSetting.default_other_auto_track_topics_after_msecs + 1)
+
+      TopicUser.unwatch_categories!(user, [Fabricate(:category).id, Fabricate(:category).id])
+      expect(TopicUser.get(another_topic, user).notification_level).to eq(watching)
+
+      TopicUser.unwatch_categories!(user, [op_topic.category_id])
+
+      expect(TopicUser.get(op_topic, user).notification_level).to eq(watching)
+      expect(TopicUser.get(another_topic, user).notification_level).to eq(regular)
+      expect(TopicUser.get(tracked_topic, user).notification_level).to eq(tracking)
+    end
+
+  end
+
   describe '#notification_levels' do
     context "verify enum sequence" do
       before do
@@ -125,7 +153,7 @@ describe TopicUser do
   describe 'visited at' do
 
     before do
-      TopicUser.track_visit!(topic, user)
+      TopicUser.track_visit!(topic.id, user.id)
     end
 
     it 'set upon initial visit' do
@@ -139,7 +167,7 @@ describe TopicUser do
       today = yesterday.tomorrow
 
       freeze_time today do
-        TopicUser.track_visit!(topic,user)
+        TopicUser.track_visit!(topic.id, user.id)
         # reload is a no go
         topic_user = TopicUser.get(topic,user)
         expect(topic_user.first_visited_at.to_i).to eq(yesterday.to_i)
@@ -149,7 +177,7 @@ describe TopicUser do
 
     it 'triggers the observer callbacks when updating' do
       UserActionObserver.instance.expects(:after_save).twice
-      2.times { TopicUser.track_visit!(topic, user) }
+      2.times { TopicUser.track_visit!(topic.id, user.id) }
     end
   end
 
@@ -294,7 +322,8 @@ describe TopicUser do
     it "will receive email notification for every topic" do
       user1 = Fabricate(:user)
 
-      SiteSetting.stubs(:default_email_mailing_list_mode).returns(true)
+      SiteSetting.default_email_mailing_list_mode = true
+      SiteSetting.default_email_mailing_list_mode_frequency = 1
 
       user2 = Fabricate(:user)
       post = create_post

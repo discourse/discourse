@@ -8,5 +8,5 @@
 ja:
   site_settings:
     enable_imgur: "アップロードするため、imgur apiを有効にしています、ファイルはローカルにホストされません"
-    imgur_client_id: "画像をアップロードするのに、あなたのimgur.comのクライアントIDが必要です"
+    imgur_client_id: "画像をアップロードするためには、imgur.comのアカウントが必要です。"
     imgur_client_secret: "あなたのimgur.comクライアントは秘密です。今は使用されていない画像アップロードに必要です、しかしいずれは必要になるでしょう。"

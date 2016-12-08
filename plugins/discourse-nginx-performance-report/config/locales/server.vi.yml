@@ -1,0 +1,3 @@
+vi:
+  site_settings:
+    daily_performance_report: "Phân tích nhật ký NGINX hàng ngày và gửi cho BQT thông tin chi tiết"

@@ -11,17 +11,8 @@ id:
       voters:
         other: "pemilih"
       total_votes:
-        other: "jumlah pemilih"
+        other: "jumlah suara"
       average_rating: "Rata-rata rating: <strong>%{average}</strong>."
-      multiple:
-        help:
-          at_least_min_options:
-            other: "Anda harus memilih <strong>%{count}</strong> pilihan."
-          up_to_max_options:
-            other: "Anda dapat memilih maksimum <strong>%{count}</strong> pilihan."
-          x_options:
-            other: "Anda harus memilih <strong>%{count}</strong> pilihan."
-          between_min_and_max_options: "Anda hanya bisa memilih minimum <strong>%{min}</strong> pilihan dan maximum <strong>%{max}</strong> pilihan."
       cast-votes:
         title: "Gunakan suaramu"
         label: "Pilih sekarang!"
@@ -39,5 +30,3 @@ id:
         title: "Tutup polling"
         label: "Tutup"
         confirm: "Apakah Anda yakin  ingin menutup akun ini?"
-      error_while_toggling_status: "Terjadi kesalahan ketika merubah status polling ini."
-      error_while_casting_votes: "Terjadi kesalahan ketika merubah status."

@@ -1,4 +1,4 @@
-import ComboboxView from 'discourse/components/combo-box';
+import ComboboxView from 'discourse-common/components/combo-box';
 import { categoryBadgeHTML } from 'discourse/helpers/category-link';
 import computed from 'ember-addons/ember-computed-decorators';
 import { observes, on } from 'ember-addons/ember-computed-decorators';
@@ -7,7 +7,6 @@ import PermissionType from 'discourse/models/permission-type';
 export default ComboboxView.extend({
   classNames: ['combobox category-combobox'],
   dataAttributes: ['id', 'description_text'],
-  valueBinding: Ember.Binding.oneWay('source'),
   overrideWidths: true,
   castInteger: true,
 
@@ -39,7 +38,7 @@ export default ComboboxView.extend({
 
   @computed("rootNone")
   none(rootNone) {
-    if (Discourse.SiteSettings.allow_uncategorized_topics) {
+    if (Discourse.SiteSettings.allow_uncategorized_topics || this.get('allowUncategorized')) {
       if (rootNone) {
         return "category.none";
       } else {

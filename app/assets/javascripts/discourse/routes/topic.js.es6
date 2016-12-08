@@ -14,7 +14,6 @@ const TopicRoute = Discourse.Route.extend({
   queryParams: {
     filter: { replace: true },
     username_filters: { replace: true },
-    show_deleted: { replace: true }
   },
 
   titleToken() {
@@ -45,7 +44,8 @@ const TopicRoute = Discourse.Route.extend({
       this.controllerFor('flag').setProperties({ selected: null, flagTopic: false });
     },
 
-    showFlagTopic(model) {
+    showFlagTopic() {
+      const model = this.modelFor('topic');
       showModal('flag',  { model });
       this.controllerFor('flag').setProperties({ selected: null, flagTopic: true });
     },
@@ -117,7 +117,7 @@ const TopicRoute = Discourse.Route.extend({
 
     willTransition() {
       this._super();
-      this.controllerFor("quote-button").deselectText();
+      this.controllerFor("topic").send('deselectText');
       Em.run.cancel(scheduledReplace);
       isTransitioning = true;
       return true;
@@ -139,7 +139,6 @@ const TopicRoute = Discourse.Route.extend({
   setupParams(topic, params) {
     const postStream = topic.get('postStream');
     postStream.set('summary', Em.get(params, 'filter') === 'summary');
-    postStream.set('show_deleted', !!Em.get(params, 'show_deleted'));
 
     const usernames = Em.get(params, 'username_filters'),
         userFilters = postStream.get('userFilters');
@@ -179,8 +178,9 @@ const TopicRoute = Discourse.Route.extend({
     this.searchService.set('searchContext', null);
     this.controllerFor('user-card').set('visible', false);
 
-    const topicController = this.controllerFor('topic'),
-        postStream = topicController.get('model.postStream');
+    const topicController = this.controllerFor('topic');
+    const postStream = topicController.get('model.postStream');
+
     postStream.cancelFilter();
 
     topicController.set('multiSelect', false);
@@ -188,11 +188,7 @@ const TopicRoute = Discourse.Route.extend({
     this.controllerFor('composer').set('topic', null);
     this.screenTrack.stop();
 
-    const headerController = this.controllerFor('header');
-    if (headerController) {
-      headerController.set('topic', null);
-      headerController.set('showExtraInfo', false);
-    }
+    this.appEvents.trigger('header:hide-topic');
   },
 
   setupController(controller, model) {
@@ -207,14 +203,14 @@ const TopicRoute = Discourse.Route.extend({
 
     TopicRoute.trigger('setupTopicController', this);
 
-    this.controllerFor('header').setProperties({ topic: model, showExtraInfo: false });
     this.searchService.set('searchContext', model.get('searchContext'));
+
+    // close the multi select when switching topics
+    controller.set('multiSelect', false);
 
     this.controllerFor('composer').set('topic', model);
     this.topicTrackingState.trackIncoming('all');
     controller.subscribe();
-
-    this.controllerFor('topic-progress').set('model', model);
 
     // We reset screen tracking every time a topic is entered
     this.screenTrack.start(model.get('id'), controller);

@@ -208,24 +208,25 @@ testCase('link modal (cancel)', function(assert) {
 
 testCase('link modal (simple link)', function(assert, textarea) {
   click('button.link');
-  fillIn('.insert-link input', 'http://eviltrout.com');
+
+  const url = 'http://eviltrout.com';
+
+  fillIn('.insert-link input.link-url', url);
   click('.insert-link button.btn-primary');
-  const desc = I18n.t('composer.link_description');
   andThen(() => {
     assert.equal(this.$('.insert-link.hidden').length, 1);
-    assert.equal(this.get('value'), `hello world.[${desc}](http://eviltrout.com)`);
+    assert.equal(this.get('value'), `hello world.[${url}](${url})`);
     assert.equal(textarea.selectionStart, 13);
-    assert.equal(textarea.selectionEnd, 13 + desc.length);
+    assert.equal(textarea.selectionEnd, 13 + url.length);
   });
 });
 
 testCase('link modal auto http addition', function(assert) {
   click('button.link');
-  fillIn('.insert-link input', 'sam.com');
+  fillIn('.insert-link input.link-url', 'sam.com');
   click('.insert-link button.btn-primary');
-  const desc = I18n.t('composer.link_description');
   andThen(() => {
-    assert.equal(this.get('value'), `hello world.[${desc}](http://sam.com)`);
+    assert.equal(this.get('value'), `hello world.[sam.com](http://sam.com)`);
   });
 });
 
@@ -234,7 +235,7 @@ testCase('link modal (simple link) with selected text', function(assert, textare
   textarea.selectionEnd = 12;
 
   click('button.link');
-  fillIn('.insert-link input', 'http://eviltrout.com');
+  fillIn('.insert-link input.link-url', 'http://eviltrout.com');
   click('.insert-link button.btn-primary');
   andThen(() => {
     assert.equal(this.$('.insert-link.hidden').length, 1);
@@ -244,7 +245,8 @@ testCase('link modal (simple link) with selected text', function(assert, textare
 
 testCase('link modal (link with description)', function(assert) {
   click('button.link');
-  fillIn('.insert-link input', 'http://eviltrout.com "evil trout"');
+  fillIn('.insert-link input.link-url', 'http://eviltrout.com');
+  fillIn('.insert-link input.link-text', 'evil trout');
   click('.insert-link button.btn-primary');
   andThen(() => {
     assert.equal(this.$('.insert-link.hidden').length, 1);
@@ -255,12 +257,15 @@ testCase('link modal (link with description)', function(assert) {
 componentTest('advanced code', {
   template: '{{d-editor value=value}}',
   setup() {
+    this.siteSettings.code_formatting_style = '4-spaces-indent';
     this.set('value',
-`function xyz(x, y, z) {
+`
+function xyz(x, y, z) {
   if (y === z) {
     return true;
   }
-}`);
+}
+`   );
   },
 
   test(assert) {
@@ -271,11 +276,14 @@ componentTest('advanced code', {
     click('button.code');
     andThen(() => {
       assert.equal(this.get('value'),
-`    function xyz(x, y, z) {
+`
+    function xyz(x, y, z) {
       if (y === z) {
         return true;
       }
-    }`);
+    }
+`
+      );
     });
   }
 
@@ -284,7 +292,7 @@ componentTest('advanced code', {
 componentTest('code button', {
   template: '{{d-editor value=value}}',
   setup() {
-    this.set('value', "first line\n\nsecond line\n\nthird line");
+    this.siteSettings.code_formatting_style = '4-spaces-indent';
   },
 
   test(assert) {
@@ -292,7 +300,56 @@ componentTest('code button', {
 
     click('button.code');
     andThen(() => {
-      assert.equal(this.get('value'), "first line\n\nsecond line\n\nthird line`" + I18n.t('composer.code_text') + "`");
+      assert.equal(this.get('value'),
+`    ${I18n.t('composer.code_text')}`
+      );
+
+      this.set('value', "first line\n\nsecond line\n\nthird line");
+
+      textarea.selectionStart = 11;
+      textarea.selectionEnd = 11;
+    });
+
+    click('button.code');
+    andThen(() => {
+      assert.equal(this.get('value'),
+`first line
+    ${I18n.t('composer.code_text')}
+second line
+
+third line`
+      );
+
+      this.set('value', "first line\n\nsecond line\n\nthird line");
+    });
+
+
+    click('button.code');
+    andThen(() => {
+      assert.equal(this.get('value'),
+`first line
+
+second line
+
+third line\`${I18n.t('composer.code_title')}\``
+      );
+      this.set('value', "first line\n\nsecond line\n\nthird line");
+    });
+
+    andThen(() => {
+      textarea.selectionStart = 5;
+      textarea.selectionEnd = 5;
+    });
+
+    click('button.code');
+    andThen(() => {
+      assert.equal(this.get('value'),
+`first\`${I18n.t('composer.code_title')}\` line
+
+second line
+
+third line`
+      );
       this.set('value', "first line\n\nsecond line\n\nthird line");
     });
 
@@ -333,6 +390,116 @@ componentTest('code button', {
     });
   }
 });
+
+componentTest('code fences', {
+  template: '{{d-editor value=value}}',
+  setup() {
+    this.set('value', '');
+  },
+
+  test(assert) {
+    const textarea = jumpEnd(this.$('textarea.d-editor-input')[0]);
+
+    click('button.code');
+    andThen(() => {
+      assert.equal(this.get('value'),
+`\`\`\`
+${I18n.t("composer.paste_code_text")}
+\`\`\``
+      );
+
+      assert.equal(textarea.selectionStart, 4);
+      assert.equal(textarea.selectionEnd, 27);
+
+      this.set('value', 'first line\nsecond line\nthird line');
+
+      textarea.selectionStart = 0;
+      textarea.selectionEnd = textarea.value.length;
+    });
+
+    click('button.code');
+    andThen(() => {
+      assert.equal(this.get('value'),
+`\`\`\`
+first line
+second line
+third line
+\`\`\`
+`
+      );
+
+      assert.equal(textarea.selectionStart, textarea.value.length);
+      assert.equal(textarea.selectionEnd, textarea.value.length);
+
+      this.set('value', 'first line\nsecond line\nthird line');
+
+      textarea.selectionStart = 0;
+      textarea.selectionEnd = 0;
+    });
+
+    click('button.code');
+    andThen(() => {
+      assert.equal(this.get('value'),
+`\`${I18n.t('composer.code_title')}\`first line
+second line
+third line`
+      );
+
+      assert.equal(textarea.selectionStart, 1);
+      assert.equal(textarea.selectionEnd, I18n.t('composer.code_title').length + 1);
+
+      this.set('value', 'first line\nsecond line\nthird line');
+
+      textarea.selectionStart = 0;
+      textarea.selectionEnd = 10;
+    });
+
+    click('button.code');
+    andThen(() => {
+      assert.equal(this.get('value'),
+`\`first line\`
+second line
+third line`
+      );
+
+      assert.equal(textarea.selectionStart, 1);
+      assert.equal(textarea.selectionEnd, 11);
+
+      this.set('value', 'first line\nsecond line\nthird line');
+
+      textarea.selectionStart = 0;
+      textarea.selectionEnd = 23;
+    });
+
+    click('button.code');
+    andThen(() => {
+      assert.equal(this.get('value'),
+`\`\`\`
+first line
+second line
+\`\`\`
+third line`
+      );
+
+      assert.equal(textarea.selectionStart, 30);
+      assert.equal(textarea.selectionEnd, 30);
+
+      this.set('value', 'first line\nsecond line\nthird line');
+
+      textarea.selectionStart = 6;
+      textarea.selectionEnd = 17;
+    });
+
+    click('button.code');
+    andThen(() => {
+      assert.equal(this.get('value'), `first \n\`\`\`\nline\nsecond\n\`\`\`\n line\nthird line`);
+
+      assert.equal(textarea.selectionStart, 27);
+      assert.equal(textarea.selectionEnd, 27);
+    });
+  }
+});
+
 
 testCase('quote button', function(assert, textarea) {
   click('button.quote');
@@ -591,4 +758,19 @@ componentTest('emoji', {
       assert.equal(this.get('value'), 'hello world.:grinning:');
     });
   }
+});
+
+testCase("replace-text event", function(assert, textarea) {
+
+  this.set('value', "red green blue");
+
+  andThen(() => {
+    this.container.lookup('app-events:main').trigger('composer:replace-text', 'green', 'yellow');
+  });
+
+  andThen(() => {
+    assert.equal(this.get('value'), 'red yellow blue');
+    assert.equal(textarea.selectionStart, 10);
+    assert.equal(textarea.selectionEnd, 10);
+  });
 });

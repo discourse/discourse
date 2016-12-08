@@ -6,6 +6,7 @@ class ImportScripts::VanillaSQL < ImportScripts::Base
 
   VANILLA_DB = "vanilla_mysql"
   TABLE_PREFIX = "GDN_"
+  ATTACHMENTS_BASE_DIR = nil # "/absolute/path/to/attachments" set the absolute path if you have attachments
   BATCH_SIZE = 1000
   CONVERT_HTML = true
 
@@ -18,13 +19,31 @@ class ImportScripts::VanillaSQL < ImportScripts::Base
       password: "pa$$word",
       database: VANILLA_DB
     )
+
+    @import_tags = false
+    begin
+      r = @client.query("select count(*) count from #{TABLE_PREFIX}Tag where countdiscussions > 0")
+      @import_tags = true if r.first["count"].to_i > 0
+    rescue => e
+      puts "Tags won't be imported. #{e.message}"
+    end
   end
 
   def execute
+    if @import_tags
+      SiteSetting.tagging_enabled = true
+      SiteSetting.max_tags_per_topic = 10
+    end
+
     import_users
+    import_avatars
     import_categories
     import_topics
     import_posts
+
+    update_tl0
+
+    create_permalinks
   end
 
   def import_users
@@ -52,6 +71,7 @@ class ImportScripts::VanillaSQL < ImportScripts::Base
       create_users(results, total: total_count, offset: offset) do |user|
         next if user['Email'].blank?
         next if user['Name'].blank?
+        next if @lookup.user_id_from_imported_user_id(user['UserID'])
 
         if user['Name'] == '[Deleted User]'
           # EVERY deleted user record in Vanilla has the same username: [Deleted User]
@@ -82,6 +102,78 @@ class ImportScripts::VanillaSQL < ImportScripts::Base
     end
   end
 
+  def import_avatars
+    if ATTACHMENTS_BASE_DIR && File.exists?(ATTACHMENTS_BASE_DIR)
+      puts "", "importing user avatars"
+
+      User.find_each do |u|
+        next unless u.custom_fields["import_id"]
+
+        r = mysql_query("SELECT photo FROM #{TABLE_PREFIX}User WHERE UserID = #{u.custom_fields['import_id']};").first
+        next if r.nil?
+        photo = r["photo"]
+        next unless photo.present?
+
+        # Possible encoded values:
+        # 1. cf://uploads/userpics/820/Y0AFUQYYM6QN.jpg
+        # 2. ~cf/userpics2/cf566487133f1f538e02da96f9a16b18.jpg
+        # 3. ~cf/userpics/txkt8kw1wozn.jpg
+
+        photo_real_filename = nil
+        parts = photo.squeeze("/").split("/")
+        if parts[0] == "cf:"
+          photo_path = "#{ATTACHMENTS_BASE_DIR}/#{parts[2..-2].join('/')}".squeeze("/")
+        elsif parts[0] == "~cf"
+          photo_path = "#{ATTACHMENTS_BASE_DIR}/#{parts[1..-2].join('/')}".squeeze("/")
+        else
+          puts "UNKNOWN FORMAT: #{photo}"
+          next
+        end
+
+        if !File.exists?(photo_path)
+          puts "Path to avatar file not found! Skipping. #{photo_path}"
+          next
+        end
+
+        photo_real_filename = find_photo_file(photo_path, parts.last)
+        if photo_real_filename.nil?
+          puts "Couldn't find file for #{photo}. Skipping."
+          next
+        end
+
+        print "."
+
+        upload = create_upload(u.id, photo_real_filename, File.basename(photo_real_filename))
+        if upload.persisted?
+          u.import_mode = false
+          u.create_user_avatar
+          u.import_mode = true
+          u.user_avatar.update(custom_upload_id: upload.id)
+          u.update(uploaded_avatar_id: upload.id)
+        else
+          puts "Error: Upload did not persist for #{u.username} #{photo_real_filename}!"
+        end
+      end
+    end
+  end
+
+  def find_photo_file(path, base_filename)
+    base_guess = base_filename.dup
+    full_guess = File.join(path, base_guess) # often an exact match exists
+
+    return full_guess if File.exists?(full_guess)
+
+    # Otherwise, the file exists but with a prefix:
+    # The p prefix seems to be the full file, so try to find that one first.
+    ['p', 't', 'n'].each do |prefix|
+      full_guess = File.join(path, "#{prefix}#{base_guess}")
+      return full_guess if File.exists?(full_guess)
+    end
+
+    # Didn't find it.
+    nil
+  end
+
   def import_categories
     puts "", "importing categories..."
 
@@ -102,6 +194,8 @@ class ImportScripts::VanillaSQL < ImportScripts::Base
 
   def import_topics
     puts "", "importing topics..."
+
+    tag_names_sql = "select t.name as tag_name from GDN_Tag t, GDN_TagDiscussion td where t.tagid = td.tagid and td.discussionid = {discussionid} and t.name != '';"
 
     total_count = mysql_query("SELECT count(*) count FROM #{TABLE_PREFIX}Discussion;").first['count']
 
@@ -124,7 +218,13 @@ class ImportScripts::VanillaSQL < ImportScripts::Base
           title: discussion['Name'],
           category: category_id_from_imported_category_id(discussion['CategoryID']),
           raw: clean_up(discussion['Body']),
-          created_at: Time.zone.at(discussion['DateInserted'])
+          created_at: Time.zone.at(discussion['DateInserted']),
+          post_create_action: proc do |post|
+            if @import_tags
+              tag_names = @client.query(tag_names_sql.gsub('{discussionid}', discussion['DiscussionID'].to_s)).map {|row| row['tag_name']}
+              DiscourseTagging.tag_topic_by_names(post.topic, staff_guardian, tag_names)
+            end
+          end
         }
       end
     end
@@ -241,9 +341,15 @@ class ImportScripts::VanillaSQL < ImportScripts::Base
     raw.gsub!(/\[attach[^\]]*\]\d+\[\/attach\]/i, "")
 
     # sanitize img tags
-    raw.gsub!(/\<img.*src\="([^\"]+)\".*\>/i) {"\n<img src='#{$1}'>\n"}
+    # This regexp removes everything between the first and last img tag. The .* is too much.
+    # If it's needed, it needs to be fixed.
+    # raw.gsub!(/\<img.*src\="([^\"]+)\".*\>/i) {"\n<img src='#{$1}'>\n"}
 
     raw
+  end
+
+  def staff_guardian
+    @_staff_guardian ||= Guardian.new(Discourse.system_user)
   end
 
   def mysql_query(sql)
@@ -251,6 +357,34 @@ class ImportScripts::VanillaSQL < ImportScripts::Base
     # @client.query(sql, cache_rows: false) #segfault: cache_rows: false causes segmentation fault
   end
 
+  def create_permalinks
+    puts '', 'Creating redirects...', ''
+
+    User.find_each do |u|
+      ucf = u.custom_fields
+      if ucf && ucf["import_id"] && ucf["import_username"]
+        Permalink.create( url: "profile/#{ucf['import_id']}/#{ucf['import_username']}", external_url: "/users/#{u.username}" ) rescue nil
+        print '.'
+      end
+    end
+
+    Post.find_each do |post|
+      pcf = post.custom_fields
+      if pcf && pcf["import_id"]
+        topic = post.topic
+        id = pcf["import_id"].split('#').last
+        if post.post_number == 1
+          slug = Slug.for(topic.title) # probably matches what vanilla would do...
+          Permalink.create( url: "discussion/#{id}/#{slug}", topic_id: topic.id ) rescue nil
+        else
+          Permalink.create( url: "discussion/comment/#{id}", post_id: post.id ) rescue nil
+        end
+        print '.'
+      end
+    end
+  end
+
 end
+
 
 ImportScripts::VanillaSQL.new.perform

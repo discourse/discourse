@@ -26,6 +26,10 @@ describe Email::MessageBuilder do
     expect(builder.build_args[:charset]).to eq("UTF-8")
   end
 
+  it "ask politely not to receive automated responses" do
+    expect(header_args['X-Auto-Response-Suppress']).to eq("All")
+  end
+
   context "reply by email" do
 
     context "without allow_reply_by_email" do
@@ -136,10 +140,14 @@ describe Email::MessageBuilder do
 
   context "header args" do
 
-    let(:message_with_header_args) { Email::MessageBuilder.new(to_address,
-                                                               body: 'hello world',
-                                                               topic_id: 1234,
-                                                               post_id: 4567) }
+    let(:message_with_header_args) do
+      Email::MessageBuilder.new(
+        to_address,
+        body: 'hello world',
+        topic_id: 1234,
+        post_id: 4567,
+      )
+    end
 
     it "passes through a post_id" do
       expect(message_with_header_args.header_args['X-Discourse-Post-Id']).to eq('4567')
@@ -169,33 +177,21 @@ describe Email::MessageBuilder do
       let(:message_with_unsubscribe) { Email::MessageBuilder.new(to_address,
                                                                 body: 'hello world',
                                                                 add_unsubscribe_link: true,
+                                                                url: "/t/1234",
                                                                 unsubscribe_url: "/t/1234/unsubscribe") }
 
       it "has an List-Unsubscribe header" do
         expect(message_with_unsubscribe.header_args['List-Unsubscribe']).to be_present
       end
 
-      it "has the user preferences url in the body" do
-        expect(message_with_unsubscribe.body).to match(builder.template_args[:user_preferences_url])
-      end
-
-    end
-
-    context "with unsubscribe_via_email_link true" do
-      let(:message_with_unsubscribe_via_email) { Email::MessageBuilder.new(to_address,
-                                                                           body: 'hello world',
-                                                                           add_unsubscribe_link: true,
-                                                                           add_unsubscribe_via_email_link: true,
-                                                                           unsubscribe_url: "/t/1234/unsubscribe") }
-
-      it "can add an unsubscribe via email link" do
-        SiteSetting.stubs(:unsubscribe_via_email_footer).returns(true)
-        expect(message_with_unsubscribe_via_email.body).to match(/mailto:reply@#{Discourse.current_hostname}\?subject=unsubscribe/)
+      it "has the unsubscribe url in the body" do
+        expect(message_with_unsubscribe.body).to match('/t/1234/unsubscribe')
       end
 
       it "does not add unsubscribe via email link without site setting set" do
-        expect(message_with_unsubscribe_via_email.body).to_not match(/mailto:reply@#{Discourse.current_hostname}\?subject=unsubscribe/)
+        expect(message_with_unsubscribe.body).to_not match(/mailto:reply@#{Discourse.current_hostname}\?subject=unsubscribe/)
       end
+
     end
 
   end

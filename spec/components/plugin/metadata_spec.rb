@@ -24,4 +24,31 @@ TEXT
     end
   end
 
+  def official(name)
+    metadata = Plugin::Metadata.parse <<TEXT
+# name: #{name}
+TEXT
+
+    expect(metadata.official?).to eq(true)
+  end
+
+  def unofficial(name)
+    metadata = Plugin::Metadata.parse <<TEXT
+# name: #{name}
+TEXT
+
+    expect(metadata.official?).to eq(false)
+  end
+
+  it "correctly detects official vs unofficial plugins" do
+    official("customer-flair")
+    official("discourse-adplugin")
+    official("discourse-akismet")
+    official("discourse-backup-uploads-to-s3")
+    official("discourse-cakeday")
+    official("Canned Replies")
+    official("discourse-data-explorer")
+    unofficial("babble")
+  end
+
 end

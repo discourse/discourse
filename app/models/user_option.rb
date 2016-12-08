@@ -24,6 +24,7 @@ class UserOption < ActiveRecord::Base
   def set_defaults
     self.email_always = SiteSetting.default_email_always
     self.mailing_list_mode = SiteSetting.default_email_mailing_list_mode
+    self.mailing_list_mode_frequency = SiteSetting.default_email_mailing_list_mode_frequency
     self.email_direct = SiteSetting.default_email_direct
     self.automatically_unpin_topics = SiteSetting.default_topics_automatic_unpin
     self.email_private_messages = SiteSetting.default_email_private_messages
@@ -34,13 +35,12 @@ class UserOption < ActiveRecord::Base
     self.external_links_in_new_tab = SiteSetting.default_other_external_links_in_new_tab
     self.dynamic_favicon = SiteSetting.default_other_dynamic_favicon
     self.disable_jump_reply = SiteSetting.default_other_disable_jump_reply
-    self.edit_history_public = SiteSetting.default_other_edit_history_public
 
     self.new_topic_duration_minutes = SiteSetting.default_other_new_topic_duration_minutes
     self.auto_track_topics_after_msecs = SiteSetting.default_other_auto_track_topics_after_msecs
+    self.notification_level_when_replying = SiteSetting.default_other_notification_level_when_replying
 
     self.like_notification_frequency = SiteSetting.default_other_like_notification_frequency
-
 
     if SiteSetting.default_email_digest_frequency.to_i <= 0
       self.email_digests = false
@@ -87,10 +87,16 @@ class UserOption < ActiveRecord::Base
   def redirected_to_top
     # redirect is enabled
     return unless SiteSetting.redirect_users_to_top_page
+
+    # PERF: bypass min_redirected_to_top query for users that were seen already
+    return if user.trust_level > 0 && user.last_seen_at && user.last_seen_at > 1.month.ago
+
     # top must be in the top_menu
     return unless SiteSetting.top_menu =~ /(^|\|)top(\||$)/i
+
+
     # not enough topics
-    return unless period = SiteSetting.min_redirected_to_top_period
+    return unless period = SiteSetting.min_redirected_to_top_period(1.days.ago)
 
     if !user.seen_before? || (user.trust_level == 0 && !redirected_to_top_yet?)
       update_last_redirected_to_top!
@@ -130,26 +136,27 @@ end
 #
 # Table name: user_options
 #
-#  user_id                       :integer          not null, primary key
-#  email_always                  :boolean          default(FALSE), not null
-#  mailing_list_mode             :boolean          default(FALSE), not null
-#  email_digests                 :boolean
-#  email_direct                  :boolean          default(TRUE), not null
-#  email_private_messages        :boolean          default(TRUE), not null
-#  external_links_in_new_tab     :boolean          default(FALSE), not null
-#  enable_quoting                :boolean          default(TRUE), not null
-#  dynamic_favicon               :boolean          default(FALSE), not null
-#  disable_jump_reply            :boolean          default(FALSE), not null
-#  edit_history_public           :boolean          default(FALSE), not null
-#  automatically_unpin_topics    :boolean          default(TRUE), not null
-#  digest_after_minutes          :integer
-#  auto_track_topics_after_msecs :integer
-#  new_topic_duration_minutes    :integer
-#  last_redirected_to_top_at     :datetime
-#  email_previous_replies        :integer          default(2), not null
-#  email_in_reply_to             :boolean          default(TRUE), not null
-#  like_notification_frequency   :integer          default(1), not null
-#  include_tl0_in_digests        :boolean          default(FALSE)
+#  user_id                          :integer          not null, primary key
+#  email_always                     :boolean          default(FALSE), not null
+#  mailing_list_mode                :boolean          default(FALSE), not null
+#  email_digests                    :boolean
+#  email_direct                     :boolean          default(TRUE), not null
+#  email_private_messages           :boolean          default(TRUE), not null
+#  external_links_in_new_tab        :boolean          default(FALSE), not null
+#  enable_quoting                   :boolean          default(TRUE), not null
+#  dynamic_favicon                  :boolean          default(FALSE), not null
+#  disable_jump_reply               :boolean          default(FALSE), not null
+#  automatically_unpin_topics       :boolean          default(TRUE), not null
+#  digest_after_minutes             :integer
+#  auto_track_topics_after_msecs    :integer
+#  notification_level_when_replying :integer
+#  new_topic_duration_minutes       :integer
+#  last_redirected_to_top_at        :datetime
+#  email_previous_replies           :integer          default(2), not null
+#  email_in_reply_to                :boolean          default(TRUE), not null
+#  like_notification_frequency      :integer          default(1), not null
+#  include_tl0_in_digests           :boolean          default(FALSE)
+#  mailing_list_mode_frequency      :integer          default(0), not null
 #
 # Indexes
 #

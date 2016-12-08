@@ -7,6 +7,7 @@ class UserProfileView < ActiveRecord::Base
     at ||= Time.zone.now
     redis_key = "user-profile-view:#{user_profile_id}:#{at.to_date}"
     if user_id
+      return if user_id < 1
       redis_key << ":user-#{user_id}"
     else
       redis_key << ":ip-#{ip}"

@@ -18,8 +18,20 @@ class AdminUserIndexQuery
     find_users_query.count
   end
 
+  def self.orderable_columns
+    %w(created_at days_visited posts_read_count topics_entered post_count trust_level)
+  end
+
   def initialize_query_with_order(klass)
-    order = [params[:order]]
+    order = []
+
+    custom_order = params[:order]
+    if custom_order.present? &&
+      without_dir = custom_order.downcase.sub(/ (asc|desc)$/, '')
+      if AdminUserIndexQuery.orderable_columns.include?(without_dir)
+        order << custom_order
+      end
+    end
 
     if params[:query] == "active"
       order << "COALESCE(last_seen_at, to_date('1970-01-01', 'YYYY-MM-DD')) DESC"
@@ -67,6 +79,7 @@ class AdminUserIndexQuery
 
   def filter_by_search
     if params[:filter].present?
+      params[:filter].strip!
       if ip = IPAddr.new(params[:filter]) rescue nil
         @query.where('ip_address <<= :ip OR registration_ip_address <<= :ip', ip: ip.to_cidr_s)
       else
@@ -77,7 +90,7 @@ class AdminUserIndexQuery
 
   def filter_by_ip
     if params[:ip].present?
-      @query.where('ip_address = :ip OR registration_ip_address = :ip', ip: params[:ip])
+      @query.where('ip_address = :ip OR registration_ip_address = :ip', ip: params[:ip].strip)
     end
   end
 

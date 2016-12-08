@@ -43,7 +43,7 @@ end
 namespace :deploy do
   desc 'Start thin servers'
   task :start, :roles => :app, :except => { :no_release => true } do
-    run "cd #{current_path} && RUBY_GC_MALLOC_LIMIT=90000000 bundle exec thin -C config/thin.yml start", :pty => false
+    run "cd #{current_path} && bundle exec thin -C config/thin.yml start", :pty => false
   end
 
   desc 'Stop thin servers'
@@ -53,7 +53,7 @@ namespace :deploy do
 
   desc 'Restart thin servers'
   task :restart, :roles => :app, :except => { :no_release => true } do
-    run "cd #{current_path} && RUBY_GC_MALLOC_LIMIT=90000000 bundle exec thin -C config/thin.yml restart"
+    run "cd #{current_path} && bundle exec thin -C config/thin.yml restart"
   end
 end
 

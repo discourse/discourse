@@ -1,0 +1,3 @@
+ja:
+  site_settings:
+    daily_performance_report: "日別のNGINXのログを解析し、Staff Onlyトピックへ詳細を投稿する"

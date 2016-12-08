@@ -1,4 +1,7 @@
+import { ajax } from 'discourse/lib/ajax';
 import DiscourseURL from 'discourse/lib/url';
+import { wantsNewWindow } from 'discourse/lib/intercept-click';
+import { selectedText } from 'discourse/lib/utilities';
 
 export function isValidLink($link) {
   return ($link.hasClass("track-link") ||
@@ -8,18 +11,27 @@ export function isValidLink($link) {
 export default {
   trackClick(e) {
     // cancel click if triggered as part of selection.
-    if (Discourse.Utilities.selectedText() !== "") { return false; }
+    if (selectedText() !== "") { return false; }
 
     var $link = $(e.currentTarget);
-    if ($link.hasClass('lightbox') || $link.hasClass('mention-group')) { return true; }
+
+    // don't track lightboxes, group mentions or links with disabled tracking
+    if ($link.hasClass('lightbox') || $link.hasClass('mention-group') ||
+        $link.hasClass('no-track-link') || $link.hasClass('hashtag')) {
+      return true;
+    }
+
+    // don't track links in quotes or in elided part
+    if ($link.parents('aside.quote,.elided').length) { return true; }
 
     var href = $link.attr('href') || $link.data('href'),
-        $article = $link.closest('article'),
+        $article = $link.closest('article,.excerpt,#revisions'),
         postId = $article.data('post-id'),
-        topicId = $('#topic').data('topic-id'),
+        topicId = $('#topic').data('topic-id') || $article.data('topic-id'),
         userId = $link.data('user-id');
 
-    if (!href || href.trim().length === 0) { return; }
+    if (!href || href.trim().length === 0) { return false; }
+    if (href.indexOf("mailto:") === 0) { return true; }
 
     if (!userId) userId = $article.data('user-id');
 
@@ -52,8 +64,8 @@ export default {
     }
 
     // if they want to open in a new tab, do an AJAX request
-    if (e.shiftKey || e.metaKey || e.ctrlKey || e.which === 2) {
-      Discourse.ajax("/clicks/track", {
+    if (wantsNewWindow(e)) {
+      ajax("/clicks/track", {
         data: {
           url: href,
           post_id: postId,
@@ -94,7 +106,7 @@ export default {
 
     // If we're on the same site, use the router and track via AJAX
     if (DiscourseURL.isInternal(href) && !$link.hasClass('attachment')) {
-      Discourse.ajax("/clicks/track", {
+      ajax("/clicks/track", {
         data: {
           url: href,
           post_id: postId,

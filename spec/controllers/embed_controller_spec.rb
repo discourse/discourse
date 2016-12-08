@@ -92,7 +92,7 @@ describe EmbedController do
 
       it "creates a topic view when a topic_id is found" do
         TopicEmbed.expects(:topic_id_for_embed).returns(123)
-        TopicView.expects(:new).with(123, nil, {limit: 100, exclude_first: true, exclude_deleted_users: true})
+        TopicView.expects(:new).with(123, nil, {limit: 100, exclude_first: true, exclude_deleted_users: true, exclude_hidden: true})
         get :comments, embed_url: embed_url
       end
 

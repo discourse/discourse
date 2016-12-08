@@ -70,20 +70,6 @@ describe AdminDashboardData do
     end
   end
 
-  describe 'gc_checks' do
-    subject { described_class.new.gc_checks }
-
-    it 'returns nil when gc params are set' do
-      ENV.stubs(:[]).with('RUBY_GC_MALLOC_LIMIT').returns(90000000)
-      expect(subject).to be_nil
-    end
-
-    it 'returns a string when gc params are not set' do
-      ENV.stubs(:[]).with('RUBY_GC_MALLOC_LIMIT').returns(nil)
-      expect(subject).to_not be_nil
-    end
-  end
-
   describe 'sidekiq_check' do
     subject { described_class.new.sidekiq_check }
 
@@ -135,77 +121,6 @@ describe AdminDashboardData do
       MemInfo.any_instance.stubs(:mem_total).returns(512636)
       expect(subject).to_not be_nil
     end
-  end
-
-  describe 'send_consumer_email_check' do
-    subject { described_class.new.send_consumer_email_check }
-
-    it 'returns nil if gmail.com is not in the smtp_settings address' do
-      ActionMailer::Base.stubs(:smtp_settings).returns({address: 'mandrillapp.com'})
-      expect(subject).to be_nil
-    end
-
-    context 'gmail.com is in the smtp_settings address' do
-      before { ActionMailer::Base.stubs(:smtp_settings).returns({address: 'smtp.gmail.com'}) }
-
-      it 'returns nil in development env' do
-        Rails.stubs(env: ActiveSupport::StringInquirer.new('development'))
-        expect(subject).to be_nil
-      end
-
-      it 'returns a string when in production env' do
-        Rails.stubs(env: ActiveSupport::StringInquirer.new('production'))
-        expect(subject).not_to be_nil
-      end
-    end
-  end
-
-  describe 'default_logo_check' do
-    subject { described_class.new.default_logo_check }
-
-    describe 'favicon_url check' do
-      before do
-        SiteSetting.logo_url = '/assets/my-logo.jpg'
-        SiteSetting.logo_small_url = '/assets/my-small-logo.jpg'
-      end
-
-      it 'returns a string when favicon_url is default' do
-        expect(subject).not_to be_nil
-      end
-
-      it 'returns a string when favicon_url contains default filename' do
-        SiteSetting.favicon_url = "/prefix#{SiteSetting.defaults[:favicon_url]}"
-        expect(subject).not_to be_nil
-      end
-
-      it 'returns nil when favicon_url does not match default-favicon.png' do
-        SiteSetting.favicon_url = '/assets/my-favicon.png'
-        expect(subject).to be_nil
-      end
-    end
-
-    describe 'logo_url check' do
-      before do
-        SiteSetting.favicon_url = '/assets/my-favicon.png'
-        SiteSetting.logo_small_url = '/assets/my-small-logo.jpg'
-      end
-
-      it 'returns a string when logo_url is default' do
-        expect(subject).not_to be_nil
-      end
-
-      it 'returns a string when logo_url contains default filename' do
-        SiteSetting.logo_url = "/prefix#{SiteSetting.defaults[:logo_url]}"
-        expect(subject).not_to be_nil
-      end
-
-      it 'returns nil when logo_url does not match d-logo-sketch.png' do
-        SiteSetting.logo_url = '/assets/my-logo.png'
-        expect(subject).to be_nil
-      end
-    end
-
-    # etc.
   end
 
   describe 'auth_config_checks' do
@@ -276,6 +191,28 @@ describe AdminDashboardData do
 
   describe 'stats cache' do
     include_examples 'stats cachable'
+  end
+
+  describe '#problem_message_check' do
+    let(:key) { AdminDashboardData.problem_messages.first }
+
+    before do
+      described_class.clear_problem_message(key)
+    end
+
+    it 'returns nil if message has not been added' do
+      expect(described_class.problem_message_check(key)).to be_nil
+    end
+
+    it 'returns a message if it was added' do
+      described_class.add_problem_message(key)
+      expect(described_class.problem_message_check(key)).to eq(I18n.t(key))
+    end
+
+    it 'returns a message if it was added with an expiry' do
+      described_class.add_problem_message(key, 300)
+      expect(described_class.problem_message_check(key)).to eq(I18n.t(key))
+    end
   end
 
 end

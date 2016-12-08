@@ -6,6 +6,7 @@ class CurrentUserSerializer < BasicUserSerializer
              :total_unread_notifications,
              :unread_notifications,
              :unread_private_messages,
+             :read_first_notification?,
              :admin?,
              :notification_channel_position,
              :site_flagged_posts_count,
@@ -32,7 +33,10 @@ class CurrentUserSerializer < BasicUserSerializer
              :post_queue_new_count,
              :show_queued_posts,
              :read_faq,
-             :automatically_unpin_topics
+             :automatically_unpin_topics,
+             :mailing_list_mode,
+             :previous_visit_at,
+             :seen_notification_id
 
   def include_site_flagged_posts_count?
     object.staff?
@@ -159,6 +163,10 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def include_show_queued_posts?
     object.staff? && (NewPostManager.queue_enabled? || QueuedPost.new_count > 0)
+  end
+
+  def mailing_list_mode
+    object.user_option.mailing_list_mode
   end
 
 end

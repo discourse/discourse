@@ -41,6 +41,9 @@ class DiscourseCLI < Thor
     backup = backuper.run
     if filename.present?
       puts "Moving '#{backup}' to '#{filename}'"
+      puts "Including version number into '#{filename}'"
+      version_string = File.basename(backup)[/-#{BackupRestore::VERSION_PREFIX}\d{14}/]
+      filename = filename.dup.insert(filename.index('.'), version_string)
       FileUtils.mv(backup, filename)
       backup = filename
     end
@@ -56,7 +59,18 @@ class DiscourseCLI < Thor
   end
 
   desc "restore", "Restore a Discourse backup"
-  def restore(filename)
+  def restore(filename=nil)
+
+    if !filename
+      puts "You must provide a filename to restore. Did you mean one of the following?\n\n"
+
+      Dir["public/backups/default/*"].each do |f|
+        puts "script/discourse restore #{File.basename(f)}"
+      end
+
+      return
+    end
+
     load_rails
     require "backup_restore/backup_restore"
     require "backup_restore/restorer"

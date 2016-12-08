@@ -3,14 +3,7 @@ class IncomingEmailDetailsSerializer < ApplicationSerializer
   attributes :error,
              :error_description,
              :rejection_message,
-             :return_path,
-             :date,
-             :from,
-             :to,
-             :cc,
-             :message_id,
-             :references,
-             :in_reply_to,
+             :headers,
              :subject,
              :body
 
@@ -35,38 +28,8 @@ class IncomingEmailDetailsSerializer < ApplicationSerializer
     @error_string[EMAIL_RECEIVER_ERROR_PREFIX]
   end
 
-  def return_path
-    @mail.return_path
-  end
-
-  def date
-    @mail.date
-  end
-
-  def from
-    @mail.from.first.downcase
-  end
-
-  def to
-    @mail.to.map(&:downcase)
-  end
-
-  def cc
-    @mail.cc.map(&:downcase) if @mail.cc.present?
-  end
-
-  def message_id
-    @mail.message_id
-  end
-
-  def references
-    references = Email::Receiver.extract_references(@mail.references)
-    references.delete(@mail.in_reply_to) if references
-    references
-  end
-
-  def in_reply_to
-    @mail.in_reply_to
+  def headers
+    @mail.header.to_s
   end
 
   def subject

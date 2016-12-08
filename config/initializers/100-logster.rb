@@ -7,7 +7,6 @@ if Rails.env.production?
 
     /^ActionController::UnknownFormat/,
     /^ActionController::UnknownHttpMethod/,
-
     /^AbstractController::ActionNotFound/,
 
     # alihack is really annoying, nothing really we can do about this
@@ -21,18 +20,24 @@ if Rails.env.production?
     #
     /(?m).*?Line: (?:\D|0).*?Column: (?:\D|0)/,
 
-    # also empty JS errors
-    /^Script error\..*Line: 0/m,
+    # suppress empty JS errors (covers MSIE 9, etc)
+    /^(Syntax|Script) error.*Line: (0|1)\b/m,
 
     # CSRF errors are not providing enough data
     # suppress unconditionally for now
     /^Can't verify CSRF token authenticity$/,
 
-    # 404s can be dealt with elsewise
-    /^ActiveRecord::RecordNotFound /,
+    # Yandex bot triggers this JS error a lot
+    /^Uncaught ReferenceError: I18n is not defined/,
+
+    # related to browser plugins somehow, we don't care
+    /Error calling method on NPObject/,
+
+    # 404s can be dealt with elsewhere
+    /^ActiveRecord::RecordNotFound/,
 
     # bad asset requested, no need to log
-    /^ActionController::BadRequest /
+    /^ActionController::BadRequest/
   ]
 end
 
@@ -68,7 +73,7 @@ RailsMultisite::ConnectionManagement.each_connection do
 
   if (error_rate_per_minute || 0) > 0
     store.register_rate_limit_per_minute(severities, error_rate_per_minute) do |rate|
-      MessageBus.publish("/logs_error_rate_exceeded", { rate: rate, duration: 'minute' })
+      MessageBus.publish("/logs_error_rate_exceeded", { rate: rate, duration: 'minute', publish_at: Time.current.to_i })
     end
   end
 
@@ -76,7 +81,12 @@ RailsMultisite::ConnectionManagement.each_connection do
 
   if (error_rate_per_hour || 0) > 0
     store.register_rate_limit_per_hour(severities, error_rate_per_hour) do |rate|
-      MessageBus.publish("/logs_error_rate_exceeded", { rate: rate, duration: 'hour' })
+      MessageBus.publish("/logs_error_rate_exceeded", { rate: rate, duration: 'hour', publish_at: Time.current.to_i })
     end
   end
+end
+
+if Rails.configuration.multisite
+  chained = Rails.logger.instance_variable_get(:@chained)
+  chained && chained.first.formatter = RailsMultisite::Formatter.new
 end

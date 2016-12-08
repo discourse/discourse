@@ -82,7 +82,7 @@ module Discourse
     @anonymous_top_menu_items ||= Discourse.anonymous_filters + [:category, :categories, :top]
   end
 
-  PIXEL_RATIOS ||= [1, 2, 3]
+  PIXEL_RATIOS ||= [1, 1.5, 2, 3]
 
   def self.avatar_sizes
     # TODO: should cache these when we get a notification system for site settings
@@ -96,6 +96,7 @@ module Discourse
 
     set
   end
+
 
   def self.activate_plugins!
     all_plugins = Plugin::Instance.find_all("#{Rails.root}/plugins")
@@ -131,11 +132,19 @@ module Discourse
   end
 
   def self.disabled_plugin_names
-    plugins.select {|p| !p.enabled?}.map(&:name)
+    plugins.select { |p| !p.enabled? }.map(&:name)
   end
 
   def self.plugins
     @plugins ||= []
+  end
+
+  def self.official_plugins
+    plugins.find_all{|p| p.metadata.official?}
+  end
+
+  def self.unofficial_plugins
+    plugins.find_all{|p| !p.metadata.official?}
   end
 
   def self.assets_digest
@@ -179,67 +188,65 @@ module Discourse
 
   # Get the current base URL for the current site
   def self.current_hostname
-    if SiteSetting.force_hostname.present?
-      SiteSetting.force_hostname
-    else
-      RailsMultisite::ConnectionManagement.current_hostname
-    end
+    SiteSetting.force_hostname.presence || RailsMultisite::ConnectionManagement.current_hostname
   end
 
   def self.base_uri(default_value = "")
-    if !ActionController::Base.config.relative_url_root.blank?
-      ActionController::Base.config.relative_url_root
-    else
-      default_value
-    end
+    ActionController::Base.config.relative_url_root.presence || default_value
+  end
+
+  def self.base_protocol
+    SiteSetting.force_https? ? "https" : "http"
   end
 
   def self.base_url_no_prefix
-    default_port = 80
-    protocol = "http"
-
-    if SiteSetting.use_https?
-      protocol = "https"
-      default_port = 443
-    end
-
-    result = "#{protocol}://#{current_hostname}"
-
-    port = SiteSetting.port.present? && SiteSetting.port.to_i > 0 ? SiteSetting.port.to_i : default_port
-
-    result << ":#{SiteSetting.port}" if port != default_port
-    result
+    default_port = SiteSetting.force_https? ? 443 : 80
+    url = "#{base_protocol}://#{current_hostname}"
+    url << ":#{SiteSetting.port}" if SiteSetting.port.to_i > 0 && SiteSetting.port.to_i != default_port
+    url
   end
 
   def self.base_url
     base_url_no_prefix + base_uri
   end
 
-  def self.enable_readonly_mode
-    $redis.set(readonly_mode_key, 1)
+  READONLY_MODE_KEY_TTL ||= 60
+  READONLY_MODE_KEY ||= 'readonly_mode'.freeze
+  USER_READONLY_MODE_KEY ||= 'readonly_mode:user'.freeze
+
+  def self.enable_readonly_mode(user_enabled: false)
+    if user_enabled
+      $redis.set(USER_READONLY_MODE_KEY, 1)
+    else
+      $redis.setex(READONLY_MODE_KEY, READONLY_MODE_KEY_TTL, 1)
+      keep_readonly_mode
+    end
+
     MessageBus.publish(readonly_channel, true)
-    keep_readonly_mode
     true
   end
 
   def self.keep_readonly_mode
     # extend the expiry by 1 minute every 30 seconds
-    Thread.new do
-      while readonly_mode?
-        $redis.expire(readonly_mode_key, 1.minute)
-        sleep 30.seconds
+    unless Rails.env.test?
+      Thread.new do
+        while readonly_mode?
+          $redis.expire(READONLY_MODE_KEY, READONLY_MODE_KEY_TTL)
+          sleep 30.seconds
+        end
       end
     end
   end
 
-  def self.disable_readonly_mode
-    $redis.del(readonly_mode_key)
+  def self.disable_readonly_mode(user_enabled: false)
+    key = user_enabled ? USER_READONLY_MODE_KEY : READONLY_MODE_KEY
+    $redis.del(key)
     MessageBus.publish(readonly_channel, false)
     true
   end
 
   def self.readonly_mode?
-    recently_readonly? || !!$redis.get(readonly_mode_key)
+    recently_readonly? || !!$redis.get(READONLY_MODE_KEY) || !!$redis.get(USER_READONLY_MODE_KEY)
   end
 
   def self.request_refresh!
@@ -283,7 +290,7 @@ module Discourse
   SYSTEM_USER_ID ||= -1
 
   def self.system_user
-    User.find_by(id: SYSTEM_USER_ID)
+    @system_user ||= User.find_by(id: SYSTEM_USER_ID)
   end
 
   def self.store
@@ -308,10 +315,6 @@ module Discourse
     Rails.configuration.action_controller.asset_host
   end
 
-  def self.readonly_mode_key
-    "readonly_mode"
-  end
-
   def self.readonly_channel
     "/site/read-only"
   end
@@ -333,6 +336,12 @@ module Discourse
     # re-establish
     Sidekiq.redis = sidekiq_redis_config
     start_connection_reaper
+
+    # in case v8 was initialized we want to make sure it is nil
+    PrettyText.reset_context
+
+    Tilt::ES6ModuleTranspilerTemplate.reset_context if defined? Tilt::ES6ModuleTranspilerTemplate
+    JsLocaleHelper.reset_context if defined? JsLocaleHelper
     nil
   end
 
@@ -362,9 +371,11 @@ module Discourse
     end
   end
 
+  SIDEKIQ_NAMESPACE ||= 'sidekiq'.freeze
+
   def self.sidekiq_redis_config
     conf = GlobalSetting.redis_config.dup
-    conf[:namespace] = 'sidekiq'
+    conf[:namespace] = SIDEKIQ_NAMESPACE
     conf
   end
 

@@ -1,4 +1,4 @@
-import registerUnbound from 'discourse/helpers/register-unbound';
+import { registerUnbound } from 'discourse-common/lib/helpers';
 
 registerUnbound('shorten-url', function(url) {
   var matches = url.match(/\//g);

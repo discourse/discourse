@@ -13,7 +13,7 @@ export default Ember.Component.extend({
 
   _topicListChanged: function() {
     this._initFromTopicList(this.get('topicList'));
-  }.observes('topicList.@each'),
+  }.observes('topicList.[]'),
 
   _initFromTopicList(topicList) {
     if (topicList !== null) {
@@ -47,12 +47,10 @@ export default Ember.Component.extend({
           target = target.find('a');
         }
 
-        const topic = this.get('topics').findProperty('id', parseInt(topicId));
-        this.sendAction('postsAction', {topic, position: target.offset()});
+        const topic = this.get('topics').findBy('id', parseInt(topicId));
+        this.appEvents.trigger('topic-entrance:show', { topic, position: target.offset() });
       }
       return false;
     }
-
   }
-
 });

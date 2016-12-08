@@ -1,13 +1,10 @@
 $border-color: rgb(219,219,219);
 $text-color: #9E9E9E;
 
-$option-foreground: $primary;
 $option-background: dark-light-diff($primary, $secondary, 90%, -65%);
-$option-background-selected: #dbffdb;
-$option-shadow: dark-light-diff($option-background, $primary, 10%, -10%);
 
 div.poll {
-
+  margin: 10px 0px;
   border: 1px solid $border-color;
 
   @include unselectable;
@@ -27,25 +24,8 @@ div.poll {
   }
 
   li[data-poll-option-id] {
-    color: $option-foreground;
-    background: $option-background;
-    box-shadow: inset 0 -6px rgba(0,0,0,.25), inset 0 0 0 100px rgba(0,0,0,0);
+    color: $primary;
     padding: .5em .7em .7em .5em;
-    border-radius: 4px;
-
-    &:hover {
-      box-shadow: inset 0 -6px rgba(0,0,0,.35), inset 0 0 0 100px rgba(0,0,0,.1);
-    }
-
-    &:active {
-      -webkit-transform: translate(0,2px);
-              transform: translate(0,2px);
-      box-shadow: inset 0 -4px rgba(0,0,0,.35), inset 0 0 0 100px rgba(0,0,0,.1);
-    }
-
-    &[data-poll-selected="selected"] {
-      background: $option-background-selected !important;
-    }
   }
 
   .button {
@@ -81,7 +61,7 @@ div.poll {
     vertical-align: middle;
     padding: 10px;
 
-    & > span {
+    .poll-results-number-rating {
       font-size: 2em;
     }
   }
@@ -90,6 +70,19 @@ div.poll {
     button {
       float: none;
     }
+  }
+
+  .poll-voters-list {
+    li {
+      display: inline;
+    }
+
+    margin-top: 10px;
+  }
+
+  .poll-voters-toggle-expand {
+    width: 100%;
+    text-align: center;
   }
 
   .results {
@@ -102,27 +95,29 @@ div.poll {
     }
 
     .percentage {
-      font-size: 25px;
+      font-size: 20px;
       float: right;
       color: $text-color;
+      margin-left: 5px;
     }
 
     .bar-back {
-      background: $border-color;
+      background: $option-background;
     }
 
     .bar {
       height: 10px;
-      background: $option-foreground;
+      background: $primary;
     }
 
   }
 
   &[data-poll-type="number"] {
 
-    li {
+    li[data-poll-option-id] {
       display: inline-block;
-      margin: 0 12px 15px 5px;
+      width: 45px;
+      margin-right: 5px;
     }
 
   }

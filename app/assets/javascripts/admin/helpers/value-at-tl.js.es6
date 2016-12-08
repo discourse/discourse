@@ -1,4 +1,4 @@
-import registerUnbound from 'discourse/helpers/register-unbound';
+import { registerUnbound } from 'discourse-common/lib/helpers';
 
 registerUnbound('value-at-tl', function(data, params) {
   var tl = parseInt(params.level, 10);

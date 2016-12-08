@@ -1,5 +1,5 @@
 import { autoUpdatingRelativeAge } from 'discourse/lib/formatter';
-import registerUnbound from 'discourse/helpers/register-unbound';
+import { registerUnbound } from 'discourse-common/lib/helpers';
 
 registerUnbound('format-age', function(dt) {
   dt = new Date(dt);

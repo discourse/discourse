@@ -144,6 +144,24 @@ describe TopicLinkClick do
 
         end
 
+        context "s3 cdns" do
+
+          it "works with s3 urls" do
+            SiteSetting.s3_cdn_url = "https://discourse-s3-cdn.global.ssl.fastly.net"
+
+            post = Fabricate(:post, topic: @topic, raw: "[test](//test.localhost/uploads/default/my-test-link)")
+            TopicLink.extract_from(post)
+
+            url = TopicLinkClick.create_from(
+              url: "https://discourse-s3-cdn.global.ssl.fastly.net/my-test-link",
+              topic_id: @topic.id,
+              ip: '127.0.0.3')
+
+            expect(url).to be_present
+          end
+
+        end
+
       end
 
       context 'with a HTTPS version of the same URL' do
@@ -158,6 +176,36 @@ describe TopicLinkClick do
           expect(@url).to eq('https://twitter.com')
         end
       end
+
+      context 'with a google analytics tracking code' do
+        before do
+          @url = TopicLinkClick.create_from(url: 'http://twitter.com?_ga=1.16846778.221554446.1071987018',
+                                            topic_id: @topic.id,
+                                            ip: '127.0.0.3')
+          @click = TopicLinkClick.last
+        end
+
+        it 'creates a click' do
+          expect(@click).to be_present
+          expect(@click.topic_link).to eq(@topic_link)
+          expect(@url).to eq('http://twitter.com?_ga=1.16846778.221554446.1071987018')
+        end
+      end
+
+      context 'with a google analytics tracking code and a hash' do
+        before do
+          @url = TopicLinkClick.create_from(url: 'http://discourse.org?_ga=1.16846778.221554446.1071987018#faq',
+                                            topic_id: @topic.id,
+                                            ip: '127.0.0.3')
+          @click = TopicLinkClick.last
+        end
+
+        it 'creates a click' do
+          expect(@click).to be_present
+          expect(@url).to eq('http://discourse.org?_ga=1.16846778.221554446.1071987018#faq')
+        end
+      end
+
 
       context 'with a valid url and topic_id' do
         before do

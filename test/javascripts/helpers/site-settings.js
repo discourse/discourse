@@ -14,7 +14,7 @@ Discourse.SiteSettingsOriginal = {
   "ga_domain_name":"",
   "top_menu":"latest|new|unread|categories|top",
   "post_menu":"like-count|like|share|flag|edit|bookmark|delete|admin|reply",
-  "post_menu_hidden_items":"edit|delete|admin",
+  "post_menu_hidden_items":"flag|edit|delete|admin",
   "share_links":"twitter|facebook|google+|email",
   "category_colors":"BF1E2E|F1592A|F7941D|9EB83B|3AB54A|12A89D|25AAE2|0E76BD|652D90|92278F|ED207B|8C6238|231F20|808281|B3B5B4|283890",
   "enable_mobile_theme":true,
@@ -60,7 +60,7 @@ Discourse.SiteSettingsOriginal = {
   "newuser_max_attachments":0,
   "display_name_on_posts":true,
   "short_progress_text_threshold":10000,
-  "default_code_lang":"lang-auto",
+  "default_code_lang":"auto",
   "autohighlight_all_code":false,
   "email_in":false,
   "authorized_extensions":".jpg|.jpeg|.png|.gif|.svg|.txt|.ico|.yml",
@@ -92,6 +92,7 @@ Discourse.SiteSettingsOriginal = {
   "available_locales":"cs|da|de|en|es|fr|he|id|it|ja|ko|nb_NO|nl|pl_PL|pt|pt_BR|ru|sv|uk|zh_CN|zh_TW",
   "highlighted_languages":"apache|bash|cs|cpp|css|coffeescript|diff|xml|http|ini|json|java|javascript|makefile|markdown|nginx|objectivec|ruby|perl|php|python|sql|handlebars",
   "enable_emoji":true,
-  "emoji_set":"emoji_one"
+  "emoji_set":"emoji_one",
+  "desktop_category_page_style":"categories_and_latest_topics"
 };
 Discourse.SiteSettings = jQuery.extend(true, {}, Discourse.SiteSettingsOriginal);

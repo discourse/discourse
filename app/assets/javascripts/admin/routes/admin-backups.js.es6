@@ -1,6 +1,8 @@
+import { ajax } from 'discourse/lib/ajax';
 import showModal from 'discourse/lib/show-modal';
 import BackupStatus from 'admin/models/backup-status';
 import Backup from 'admin/models/backup';
+import PreloadStore from 'preload-store';
 
 const LOG_CHANNEL = "/admin/backups/logs";
 
@@ -13,7 +15,7 @@ export default Discourse.Route.extend({
   _processLogMessage(log) {
     if (log.message === "[STARTED]") {
       this.controllerFor("adminBackups").set("model.isOperationRunning", true);
-      this.controllerFor("adminBackupsLogs").clear();
+      this.controllerFor("adminBackupsLogs").get('logs').clear();
     } else if (log.message === "[FAILED]") {
       this.controllerFor("adminBackups").set("model.isOperationRunning", false);
       bootbox.alert(I18n.t("admin.backups.operations.failed", { operation: log.operation }));
@@ -25,13 +27,13 @@ export default Discourse.Route.extend({
         window.location.pathname = Discourse.getURL("/");
       }
     } else {
-      this.controllerFor("adminBackupsLogs").pushObject(Em.Object.create(log));
+      this.controllerFor("adminBackupsLogs").get('logs').pushObject(Em.Object.create(log));
     }
   },
 
   model() {
     return PreloadStore.getAndRemove("operations_status", function() {
-      return Discourse.ajax("/admin/backups/status.json");
+      return ajax("/admin/backups/status.json");
     }).then(status => {
       return BackupStatus.create({
         isOperationRunning: status.is_operation_running,
@@ -47,7 +49,7 @@ export default Discourse.Route.extend({
 
   actions: {
     startBackup() {
-      showModal('modals/admin-start-backup');
+      showModal('admin-start-backup', { admin: true });
       this.controllerFor('modal').set('modalClass', 'start-backup-modal');
     },
 

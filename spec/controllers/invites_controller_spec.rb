@@ -367,33 +367,10 @@ describe InvitesController do
 
   end
 
-  context '.check_csv_chunk' do
+  context '.upload_csv' do
     it 'requires you to be logged in' do
       expect {
-        post :check_csv_chunk
-      }.to raise_error(Discourse::NotLoggedIn)
-    end
-
-    context 'while logged in' do
-      let(:resumableChunkNumber) { 1 }
-      let(:resumableCurrentChunkSize) { 46 }
-      let(:resumableIdentifier) { '46-discoursecsv' }
-      let(:resumableFilename) { 'discourse.csv' }
-
-      it "fails if you can't bulk invite to the forum" do
-        log_in
-        post :check_csv_chunk, resumableChunkNumber: resumableChunkNumber, resumableCurrentChunkSize: resumableCurrentChunkSize.to_i, resumableIdentifier: resumableIdentifier, resumableFilename: resumableFilename
-        expect(response).not_to be_success
-      end
-
-    end
-
-  end
-
-  context '.upload_csv_chunk' do
-    it 'requires you to be logged in' do
-      expect {
-        post :upload_csv_chunk
+        xhr :post, :upload_csv
       }.to raise_error(Discourse::NotLoggedIn)
     end
 
@@ -402,27 +379,19 @@ describe InvitesController do
       let(:file) do
         ActionDispatch::Http::UploadedFile.new({ filename: 'discourse.csv', tempfile: csv_file })
       end
-      let(:resumableChunkNumber) { 1 }
-      let(:resumableChunkSize) { 1048576 }
-      let(:resumableCurrentChunkSize) { 46 }
-      let(:resumableTotalSize) { 46 }
-      let(:resumableType) { 'text/csv' }
-      let(:resumableIdentifier) { '46-discoursecsv' }
-      let(:resumableFilename) { 'discourse.csv' }
-      let(:resumableRelativePath) { 'discourse.csv' }
+      let(:filename) { 'discourse.csv' }
 
       it "fails if you can't bulk invite to the forum" do
         log_in
-        post :upload_csv_chunk, file: file, resumableChunkNumber: resumableChunkNumber.to_i, resumableChunkSize: resumableChunkSize.to_i, resumableCurrentChunkSize: resumableCurrentChunkSize.to_i, resumableTotalSize: resumableTotalSize.to_i, resumableType: resumableType, resumableIdentifier: resumableIdentifier, resumableFilename: resumableFilename
+        xhr :post, :upload_csv, file: file, name: filename
         expect(response).not_to be_success
       end
 
-      it "allows admins to bulk invite" do
+      it "allows admin to bulk invite" do
         log_in(:admin)
-        post :upload_csv_chunk, file: file, resumableChunkNumber: resumableChunkNumber.to_i, resumableChunkSize: resumableChunkSize.to_i, resumableCurrentChunkSize: resumableCurrentChunkSize.to_i, resumableTotalSize: resumableTotalSize.to_i, resumableType: resumableType, resumableIdentifier: resumableIdentifier, resumableFilename: resumableFilename
+        xhr :post, :upload_csv, file: file, name: filename
         expect(response).to be_success
       end
-
     end
 
   end

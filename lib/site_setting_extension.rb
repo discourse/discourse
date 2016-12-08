@@ -32,7 +32,8 @@ module SiteSettingExtension
                         url_list: 9,
                         host_list: 10,
                         category_list: 11,
-                        value_list: 12)
+                        value_list: 12,
+                        regex: 13)
   end
 
   def mutex
@@ -117,11 +118,10 @@ module SiteSettingExtension
         hidden_settings << name
       end
 
-      # You can "shadow" a site setting with a GlobalSetting. If the GlobalSetting
-      # exists it will be used instead of the setting and the setting will be hidden.
-      # Useful for things like API keys on multisite.
       if opts[:shadowed_by_global] && GlobalSetting.respond_to?(name)
-        unless (val = GlobalSetting.send(name)) == ''.freeze
+        val = GlobalSetting.send(name)
+
+        unless val.nil? || (val == ''.freeze)
           hidden_settings << name
           shadowed_settings << name
           current_value = val
@@ -349,12 +349,9 @@ module SiteSettingExtension
   end
 
   def filter_value(name, value)
-    # filter domain name
-    if %w[disabled_image_download_domains onebox_domains_whitelist exclude_rel_nofollow_domains email_domains_blacklist email_domains_whitelist white_listed_spam_host_domains].include? name
+    if %w[disabled_image_download_domains onebox_domains_blacklist exclude_rel_nofollow_domains email_domains_blacklist email_domains_whitelist white_listed_spam_host_domains].include? name
       domain_array = []
-      value.split('|').each { |url|
-        domain_array.push(get_hostname(url))
-      }
+      value.split('|').each { |url| domain_array << get_hostname(url) }
       value = domain_array.join("|")
     end
     value
@@ -368,6 +365,12 @@ module SiteSettingExtension
     else
       raise ArgumentError.new("Either no setting named '#{name}' exists or value provided is invalid")
     end
+  end
+
+  def set_and_log(name, value, user=Discourse.system_user)
+    prev_value = send(name)
+    set(name, value)
+    StaffActionLogger.new(user).log_site_setting_change(name, prev_value, value) if has_setting?(name)
   end
 
   protected
@@ -441,11 +444,34 @@ module SiteSettingExtension
       types[:fixnum] => IntegerSettingValidator,
       types[:string] => StringSettingValidator,
       'list' => StringSettingValidator,
-      'enum' => StringSettingValidator
+      'enum' => StringSettingValidator,
+      'regex' => RegexSettingValidator
     }
     @validator_mapping[type_name]
   end
 
+  DEPRECATED_SETTINGS = [
+    ['use_https', 'force_https', '1.7']
+  ]
+
+  def setup_deprecated_methods
+    DEPRECATED_SETTINGS.each do |old_setting, new_setting, version|
+      define_singleton_method old_setting do
+        logger.warn("`SiteSetting.#{old_setting}` has been deprecated and will be removed in the #{version} Release. Please use `SiteSetting.#{new_setting}` instead")
+        self.public_send new_setting
+      end
+
+      define_singleton_method "#{old_setting}?" do
+        logger.warn("`SiteSetting.#{old_setting}?` has been deprecated and will be removed in the #{version} Release. Please use `SiteSetting.#{new_setting}?` instead")
+        self.public_send "#{new_setting}?"
+      end
+
+      define_singleton_method "#{old_setting}=" do |val|
+        logger.warn("`SiteSetting.#{old_setting}=` has been deprecated and will be removed in the #{version} Release. Please use `SiteSetting.#{new_setting}=` instead")
+        self.public_send "#{new_setting}=", val
+      end
+    end
+  end
 
   def setup_methods(name)
     clean_name = name.to_s.sub("?", "").to_sym
@@ -479,6 +505,12 @@ module SiteSettingExtension
       url = URI.parse(url).host
     end
     url
+  end
+
+  private
+
+  def logger
+    Rails.logger
   end
 
 end

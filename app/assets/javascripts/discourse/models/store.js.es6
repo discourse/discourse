@@ -1,5 +1,7 @@
+import { ajax } from 'discourse/lib/ajax';
 import RestModel from 'discourse/models/rest';
 import ResultSet from 'discourse/models/result-set';
+import { getRegister } from 'discourse-common/lib/get-owner';
 
 let _identityMap;
 
@@ -40,6 +42,11 @@ export default Ember.Object.extend({
   _plurals: {'post-reply': 'post-replies',
              'post-reply-history': 'post_reply_histories'},
 
+  init() {
+    this._super();
+    this.register = this.register || getRegister(this);
+  },
+
   pluralize(thing) {
     return this._plurals[thing] || thing + "s";
   },
@@ -48,9 +55,9 @@ export default Ember.Object.extend({
     this._plurals[thing] = plural;
   },
 
-  findAll(type) {
+  findAll(type, findArgs) {
     const self = this;
-    return this.adapterFor(type).findAll(this, type).then(function(result) {
+    return this.adapterFor(type).findAll(this, type, findArgs).then(function(result) {
       return self._resultSet(type, result);
     });
   },
@@ -114,7 +121,7 @@ export default Ember.Object.extend({
 
   refreshResults(resultSet, type, url) {
     const self = this;
-    return Discourse.ajax(url).then(result => {
+    return ajax(url).then(result => {
       const typeName = Ember.String.underscore(self.pluralize(type));
       const content = result[typeName].map(obj => self._hydrate(type, obj, result));
       resultSet.set('content', content);
@@ -124,7 +131,7 @@ export default Ember.Object.extend({
   appendResults(resultSet, type, url) {
     const self = this;
 
-    return Discourse.ajax(url).then(function(result) {
+    return ajax(url).then(function(result) {
       const typeName = Ember.String.underscore(self.pluralize(type)),
             totalRows = result["total_rows_" + typeName] || result.get('totalRows'),
             loadMoreUrl = result["load_more_" + typeName],
@@ -195,10 +202,11 @@ export default Ember.Object.extend({
     obj.__state = obj.id ? "created" : "new";
 
     // TODO: Have injections be automatic
-    obj.topicTrackingState = this.container.lookup('topic-tracking-state:main');
-    obj.keyValueStore = this.container.lookup('key-value-store:main');
+    obj.topicTrackingState = this.register.lookup('topic-tracking-state:main');
+    obj.keyValueStore = this.register.lookup('key-value-store:main');
+    obj.siteSettings = this.register.lookup('site-settings:main');
 
-    const klass = this.container.lookupFactory('model:' + type) || RestModel;
+    const klass = this.register.lookupFactory('model:' + type) || RestModel;
     const model = klass.create(obj);
 
     storeMap(type, obj.id, model);
@@ -206,7 +214,7 @@ export default Ember.Object.extend({
   },
 
   adapterFor(type) {
-    return this.container.lookup('adapter:' + type) || this.container.lookup('adapter:rest');
+    return this.register.lookup('adapter:' + type) || this.register.lookup('adapter:rest');
   },
 
   _lookupSubType(subType, type, id, root) {
@@ -268,7 +276,9 @@ export default Ember.Object.extend({
 
   _hydrate(type, obj, root) {
     if (!obj) { throw "Can't hydrate " + type + " of `null`"; }
-    if (!obj.id) { throw "Can't hydrate " + type + " without an `id`"; }
+
+    const id = obj.id;
+    if (!id) { throw "Can't hydrate " + type + " without an `id`"; }
 
     root = root || obj;
 
@@ -278,13 +288,14 @@ export default Ember.Object.extend({
       this._hydrateEmbedded(type, obj, root);
     }
 
-    const existing = fromMap(type, obj.id);
+    const existing = fromMap(type, id);
     if (existing === obj) { return existing; }
 
     if (existing) {
       delete obj.id;
-      const klass = this.container.lookupFactory('model:' + type) || RestModel;
+      const klass = this.register.lookupFactory('model:' + type) || RestModel;
       existing.setProperties(klass.munge(obj));
+      obj.id = id;
       return existing;
     }
 

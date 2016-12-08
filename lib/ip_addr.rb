@@ -16,7 +16,7 @@ class IPAddr
     (4 - parts.size).times { parts << '*' } # support strings like 192.*
     v = parts.join('.')
 
-    "#{v.gsub('*', '0')}/#{32 - (v.count('*') * 8)}"
+    "#{v.tr('*', '0')}/#{32 - (v.count('*') * 8)}"
   end
 
   def to_cidr_s

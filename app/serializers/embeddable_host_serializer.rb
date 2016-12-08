@@ -1,16 +1,11 @@
 class EmbeddableHostSerializer < ApplicationSerializer
-  attributes :id, :host, :category_id
 
-  def id
-    object.id
+  TO_SERIALIZE = [:id, :host, :path_whitelist, :category_id]
+
+  attributes *TO_SERIALIZE
+
+  TO_SERIALIZE.each do |attr|
+    define_method(attr) { object.send(attr) }
   end
 
-  def host
-    object.host
-  end
-
-  def category_id
-    object.category_id
-  end
 end
-

@@ -3,6 +3,7 @@ import { url } from 'discourse/lib/computed';
 import { on } from 'ember-addons/ember-computed-decorators';
 import computed from 'ember-addons/ember-computed-decorators';
 import UserActionGroup from 'discourse/models/user-action-group';
+import { postUrl } from 'discourse/lib/utilities';
 
 const UserActionTypes = {
   likes_given: 1,
@@ -75,9 +76,9 @@ const UserAction = RestModel.extend({
     return targetUsername === Discourse.User.currentProp('username');
   },
 
-  presentName: Em.computed.any('name', 'username'),
-  targetDisplayName: Em.computed.any('target_name', 'target_username'),
-  actingDisplayName: Em.computed.any('acting_name', 'acting_username'),
+  presentName: Ember.computed.or('name', 'username'),
+  targetDisplayName: Ember.computed.or('target_name', 'target_username'),
+  actingDisplayName: Ember.computed.or('acting_name', 'acting_username'),
   targetUserUrl: url('target_username', '/users/%@'),
 
   @computed("username")
@@ -89,12 +90,12 @@ const UserAction = RestModel.extend({
 
   @computed()
   postUrl() {
-    return Discourse.Utilities.postUrl(this.get('slug'), this.get('topic_id'), this.get('post_number'));
+    return postUrl(this.get('slug'), this.get('topic_id'), this.get('post_number'));
   },
 
   @computed()
   replyUrl() {
-    return Discourse.Utilities.postUrl(this.get('slug'), this.get('topic_id'), this.get('reply_to_post_number'));
+    return postUrl(this.get('slug'), this.get('topic_id'), this.get('reply_to_post_number'));
   },
 
   replyType: Em.computed.equal('action_type', UserActionTypes.replies),
@@ -147,10 +148,10 @@ const UserAction = RestModel.extend({
     }
     return rval;
   }.property("childGroups",
-    "childGroups.likes.items", "childGroups.likes.items.@each",
-    "childGroups.stars.items", "childGroups.stars.items.@each",
-    "childGroups.edits.items", "childGroups.edits.items.@each",
-    "childGroups.bookmarks.items", "childGroups.bookmarks.items.@each"),
+    "childGroups.likes.items", "childGroups.likes.items.[]",
+    "childGroups.stars.items", "childGroups.stars.items.[]",
+    "childGroups.edits.items", "childGroups.edits.items.[]",
+    "childGroups.bookmarks.items", "childGroups.bookmarks.items.[]"),
 
   switchToActing() {
     this.setProperties({

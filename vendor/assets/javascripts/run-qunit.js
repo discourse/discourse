@@ -36,7 +36,7 @@ page.open(args[0], function(status) {
   } else {
     page.evaluate(logQUnit);
 
-    var timeout = parseInt(args[1] || 120000, 10),
+    var timeout = parseInt(args[1] || 200000, 10),
         start = Date.now();
 
     var interval = setInterval(function() {
@@ -67,6 +67,8 @@ function logQUnit() {
   var assertionErrors = [];
 
   console.log("\nRunning: " + JSON.stringify(QUnit.urlParams) + "\n");
+
+  QUnit.config.testTimeout = 10000;
 
   QUnit.moduleDone(function(context) {
     if (context.failed) {

@@ -1,14 +1,10 @@
 import { withPluginApi } from 'discourse/lib/plugin-api';
+import { observes } from "ember-addons/ember-computed-decorators";
 
-function createPollView(container, post, poll, vote) {
-  const controller = container.lookup("controller:poll", { singleton: false });
-  const view = container.lookup("view:poll");
-
-  controller.set("vote", vote);
-  controller.setProperties({ model: poll, post });
-  view.set("controller", controller);
-
-  return view;
+function createPollComponent(register, post, poll, vote) {
+  const component = register.lookup("component:discourse-poll");
+  component.setProperties({ model: poll, vote, post });
+  return component;
 }
 
 let _pollViews;
@@ -38,7 +34,8 @@ function initializePolls(api) {
     pollsObject: null,
 
     // we need a proper ember object so it is bindable
-    pollsChanged: function(){
+    @observes("polls")
+    pollsChanged() {
       const polls = this.get("polls");
       if (polls) {
         this._polls = this._polls || {};
@@ -52,7 +49,7 @@ function initializePolls(api) {
         });
         this.set("pollsObject", this._polls);
       }
-    }.observes("polls")
+    }
   });
 
   function cleanUpPollViews() {
@@ -75,7 +72,6 @@ function initializePolls(api) {
     const polls = post.get("pollsObject");
     if (!polls) { return; }
 
-    cleanUpPollViews();
     const postPollViews = {};
 
     $polls.each((idx, pollElem) => {
@@ -84,16 +80,31 @@ function initializePolls(api) {
 
       const pollName = $poll.data("poll-name");
       const pollId = `${pollName}-${post.id}`;
-      const pollView = createPollView(helper.container, post, polls[pollName], votes[pollName]);
+
+      const pollComponent = createPollComponent(
+        helper.register,
+        post,
+        polls[pollName],
+        votes[pollName]
+      );
+
+      // Destroy a poll view if we're replacing it
+      if (_pollViews && _pollViews[pollId]) {
+        _pollViews[pollId].destroy();
+      }
 
       $poll.replaceWith($div);
-      Em.run.next(() => pollView.renderer.replaceIn(pollView, $div[0]));
-      postPollViews[pollId] = pollView;
+      Ember.run.scheduleOnce('afterRender', () => {
+        pollComponent.renderer.appendTo(pollComponent, $div[0]);
+      });
+
+      postPollViews[pollId] = pollComponent;
     });
 
     _pollViews = postPollViews;
   }
 
+  api.includePostAttributes("polls", "polls_votes");
   api.decorateCooked(createPollViews, { onlyStream: true });
   api.cleanupStream(cleanUpPollViews);
 }

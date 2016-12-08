@@ -66,11 +66,8 @@ class Report
         ApplicationRequest.where(req_type:  ApplicationRequest.req_types[filter])
       end
 
-    filtered_results = data
-    filtered_results = data.filtered_results.where(category_id: report.category_id) if report.category_id
-
     report.data = []
-    filtered_results.where('date >= ? AND date <= ?', report.start_date.to_date, report.end_date.to_date)
+    data.where('date >= ? AND date <= ?', report.start_date.to_date, report.end_date.to_date)
                     .order(date: :asc)
                     .group(:date)
                     .sum(:count)
@@ -79,7 +76,7 @@ class Report
     end
 
     report.total      = data.sum(:count)
-    report.prev30Days = filtered_results.where('date >= ? AND date <= ?',
+    report.prev30Days = data.where('date >= ? AND date <= ?',
                                                (report.start_date - 31.days).to_date,
                                                (report.end_date - 31.days).to_date )
                                         .sum(:count)
@@ -205,7 +202,7 @@ class Report
   # Private messages counts:
 
   def self.private_messages_report(report, topic_subtype)
-    basic_report_about report, Post, :private_messages_count_per_day, default_days, topic_subtype
+    basic_report_about report, Post, :private_messages_count_per_day, report.start_date, report.end_date, topic_subtype
     add_counts report, Post.private_posts.with_topic_subtype(topic_subtype), 'posts.created_at'
   end
 

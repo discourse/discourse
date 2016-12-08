@@ -25,7 +25,7 @@ class Demon::Sidekiq < Demon::Base
     # parent process is in charge of the file anyway.
     Sidekiq::Logging.logger = nil
     cli = Sidekiq::CLI.instance
-    cli.parse(["-c", GlobalSetting.sidekiq_workers.to_s])
+    cli.parse(["-c", GlobalSetting.sidekiq_workers.to_s, "-q", "critical,4", "-q", "default,2", "-q", "low"])
 
     load Rails.root + "config/initializers/100-sidekiq.rb"
     cli.run

@@ -16,7 +16,10 @@ display: none !important; // can be removed if inline JS CSS is removed from com
 input {
   background: $secondary;
   color: $primary;
-  border-color: blend-primary-secondary(15%);
+  padding: 4px;
+  border-radius: 3px;
+  box-shadow: inset 0 1px 1px rgba(0,0,0, .3);
+  border: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
 }
 
 #reply-control {
@@ -94,13 +97,21 @@ input {
     border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
     .draft-text {
       display: block;
-          position: absolute;
-          margin-right: 40px;
+      position: absolute;
+      margin-right: 40px;
+      max-width: 80%;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+
+      i {
+        color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
+      }
     }
     .toggler {
       &:before {
         font-family: "FontAwesome";
-        content: "\f077";
+        content: "\f00d";
       }
     }
   }
@@ -131,6 +142,7 @@ input {
         margin-top: 6px;
         width: 99%;
         box-sizing: border-box;
+        border: 1px solid $secondary;
       }
       .wmd-controls {
         transition: top 0.3s ease;
@@ -176,9 +188,15 @@ input {
     }
     .d-editor-input {
       color: dark-light-choose(darken($primary, 40%), blend-primary-secondary(90%));
-    }
-    .d-editor-input {
       bottom: 35px;
+      width: 100%;
+      height: 100%;
+      padding: 7px;
+      margin: 0;
+      background-color: $secondary;
+      word-wrap: break-word;
+      box-sizing: border-box;
+      border: 1px solid $secondary;
     }
     .submit-panel {
       // need minimum width that fits, or this'll wrap cancel under submit/create which is super bad
@@ -245,6 +263,13 @@ input {
       display: none;
     }
 
+    .btn.hide-preview {
+      position: fixed;
+      right: 5px;
+      bottom: 5px;
+      z-index: 1000001;
+    }
+
     .d-editor-preview-wrapper.force-preview {
       display: block;
       position: fixed;
@@ -261,22 +286,6 @@ input {
         border: 0;
         overflow: auto;
       }
-
-      .hide-preview {
-        position: fixed;
-        right: 5px;
-        bottom: 5px;
-        z-index: 1000001;
-      }
-    }
-    .d-editor-input {
-      width: 100%;
-      height: 100%;
-      padding: 7px;
-      margin: 0;
-      background-color: $secondary;
-      word-wrap: break-word;
-      box-sizing: border-box;
     }
     .d-editor-textarea-wrapper {
       position: relative;

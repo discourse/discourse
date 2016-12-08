@@ -59,7 +59,7 @@ function organizeResults(r, options) {
 
   if (r.groups) {
     r.groups.every(function(g) {
-      if (results.length > limit) return false;
+      if (results.length > limit && options.term !== g.name) return false;
       if (exclude.indexOf(g.name) === -1) {
         groups.push(g);
         results.push(g);
@@ -91,7 +91,7 @@ export default function userSearch(options) {
 
   return new Ember.RSVP.Promise(function(resolve) {
     // TODO site setting for allowed regex in username
-    if (term.match(/[^a-zA-Z0-9_\.\-]/)) {
+    if (term.match(/[^\w\.\-]/)) {
       resolve([]);
       return;
     }

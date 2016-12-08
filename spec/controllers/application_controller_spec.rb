@@ -84,6 +84,24 @@ describe TopicsController do
 
   end
 
+  describe "print" do
+    render_views
+
+    context "when the SiteSetting is enabled" do
+      it "uses the application layout when there's no param" do
+        get :show, topic_id: topic.id, slug: topic.slug
+        expect(response).to render_template(layout: 'application')
+        assert_select "meta[name=fragment]", true, "it has the meta tag"
+      end
+
+      it "uses the crawler layout when there's an print param" do
+        get :show, topic_id: topic.id, slug: topic.slug, print: 'true'
+        expect(response).to render_template(layout: 'crawler')
+        assert_select "meta[name=fragment]", false, "it doesn't have the meta tag"
+      end
+    end
+  end
+
   describe 'clear_notifications' do
     it 'correctly clears notifications if specified via cookie' do
       notification = Fabricate(:notification)

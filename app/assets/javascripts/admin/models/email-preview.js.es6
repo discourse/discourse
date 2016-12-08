@@ -1,3 +1,4 @@
+import { ajax } from 'discourse/lib/ajax';
 const EmailPreview = Discourse.Model.extend({});
 
 EmailPreview.reopenClass({
@@ -11,10 +12,24 @@ EmailPreview.reopenClass({
       username = Discourse.User.current().username;
     }
 
-    return Discourse.ajax("/admin/email/preview-digest.json", {
+    return ajax("/admin/email/preview-digest.json", {
       data: { last_seen_at: lastSeenAt, username: username }
     }).then(function (result) {
       return EmailPreview.create(result);
+    });
+  },
+
+  sendDigest: function(lastSeenAt, username, email) {
+    if (Em.isEmpty(lastSeenAt)) {
+      lastSeenAt = moment().subtract(7, 'days').format('YYYY-MM-DD');
+    }
+
+    if (Em.isEmpty(username)) {
+      username = Discourse.User.current().username;
+    }
+
+    return ajax("/admin/email/send-digest.json", {
+      data: { last_seen_at: lastSeenAt, username: username, email: email }
     });
   }
 });

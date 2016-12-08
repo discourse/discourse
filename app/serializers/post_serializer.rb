@@ -34,6 +34,9 @@ class PostSerializer < BasicPostSerializer
              :category_id,
              :display_username,
              :primary_group_name,
+             :primary_group_flair_url,
+             :primary_group_flair_bg_color,
+             :primary_group_flair_color,
              :version,
              :can_edit,
              :can_delete,
@@ -63,6 +66,7 @@ class PostSerializer < BasicPostSerializer
              :user_custom_fields,
              :static_doc,
              :via_email,
+             :is_auto_generated,
              :action_code,
              :action_code_who
 
@@ -147,6 +151,18 @@ class PostSerializer < BasicPostSerializer
     else
       object.user.primary_group.name if object.user.primary_group
     end
+  end
+
+  def primary_group_flair_url
+    object.user.try(:primary_group).try(:flair_url)
+  end
+
+  def primary_group_flair_bg_color
+    object.user.try(:primary_group).try(:flair_bg_color)
+  end
+
+  def primary_group_flair_color
+    object.user.try(:primary_group).try(:flair_color)
   end
 
   def link_counts
@@ -309,6 +325,14 @@ class PostSerializer < BasicPostSerializer
 
   def include_via_email?
     object.via_email?
+  end
+
+  def is_auto_generated
+    object.incoming_email.try(:is_auto_generated)
+  end
+
+  def include_is_auto_generated?
+    object.via_email? && is_auto_generated
   end
 
   def version
