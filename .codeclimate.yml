@@ -8,6 +8,9 @@ engines:
     enabled: true
   duplication:
     enabled: true
+    languages:
+      - ruby
+      - javascript
   eslint:
     enabled: true
     channel: eslint-3
