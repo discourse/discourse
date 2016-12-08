@@ -179,7 +179,7 @@ Group.reopenClass({
 
   loadMembers(name, offset, limit, params) {
     return ajax('/groups/' + name + '/members.json', {
-      data: Object.assign({
+      data: _.extend({
         limit: limit || 50,
         offset: offset || 0
       }, params || {})
