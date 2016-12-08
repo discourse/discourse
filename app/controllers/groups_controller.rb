@@ -74,24 +74,24 @@ class GroupsController < ApplicationController
 
     limit = (params[:limit] || 20).to_i
     offset = params[:offset].to_i
-
+    dir = (params[:desc] && !params[:desc].blank?) ? 'DESC' : 'ASC'
     order = {}
 
     if params[:order] && %w{last_posted_at last_seen_at}.include?(params[:order])
-      order.merge!({ params[:order] => params[:asc].blank? ? 'ASC' : 'DESC' })
+      order.merge!(params[:order] => dir)
     end
 
     total = group.users.count
     members = group.users
       .order('NOT group_users.owner')
       .order(order)
-      .order(:username_lower)
+      .order(:username_lower => dir)
       .limit(limit)
       .offset(offset)
 
     owners = group.users
       .order(order)
-      .order(:username_lower)
+      .order(:username_lower => dir)
       .where('group_users.owner')
 
     render json: {
