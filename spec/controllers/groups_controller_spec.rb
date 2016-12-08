@@ -53,20 +53,19 @@ describe GroupsController do
       expect(response).to be_success
     end
 
-    # Pending until we fix group truncation
-    skip "ensures that membership can be paginated" do
+    it "ensures that membership can be paginated" do
       5.times { group.add(Fabricate(:user)) }
-      usernames = group.users.map{ |m| m['username'] }.sort
+      usernames = group.users.map{ |m| m.username }.sort
 
       xhr :get, :members, group_id: group.name, limit: 3
       expect(response).to be_success
-      members = JSON.parse(response.body)
-      expect(members.map{ |m| m['username'] }).to eq(usernames[0..2])
+      members = JSON.parse(response.body)["members"]
+      expect(members.map { |m| m['username'] }).to eq(usernames[0..2])
 
       xhr :get, :members, group_id: group.name, limit: 3, offset: 3
       expect(response).to be_success
-      members = JSON.parse(response.body)
-      expect(members.map{ |m| m['username'] }).to eq(usernames[3..4])
+      members = JSON.parse(response.body)["members"]
+      expect(members.map { |m| m['username'] }).to eq(usernames[3..4])
     end
   end
 

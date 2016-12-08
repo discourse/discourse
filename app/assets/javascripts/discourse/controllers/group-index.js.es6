@@ -1,11 +1,21 @@
 import { popupAjaxError } from 'discourse/lib/ajax-error';
 import Group from 'discourse/models/group';
+import { observes } from 'ember-addons/ember-computed-decorators';
 
 export default Ember.Controller.extend({
+  queryParams: ['order', 'asc'],
+  order: 'last_posted_at',
+  asc: null,
   loading: false,
   limit: null,
   offset: null,
   isOwner: Ember.computed.alias('model.is_group_owner'),
+
+  @observes('order', 'asc')
+  refreshMembers() {
+    this.get('model') &&
+      this.get('model').findMembers({ order: this.get('order'), asc: this.get('asc') });
+  },
 
   actions: {
     removeMember(user) {
@@ -25,7 +35,12 @@ export default Ember.Controller.extend({
 
       this.set("loading", true);
 
-      Group.loadMembers(this.get("model.name"), this.get("model.members.length"), this.get("limit")).then(result => {
+      Group.loadMembers(
+        this.get("model.name"),
+        this.get("model.members.length"),
+        this.get("limit"),
+        { order: this.get('order'), asc: this.get('asc') }
+      ).then(result => {
         this.get("model.members").addObjects(result.members.map(member => Discourse.User.create(member)));
         this.setProperties({
           loading: false,
