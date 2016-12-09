@@ -7,6 +7,7 @@ import { forceMobile, resetMobile } from 'discourse/lib/mobile';
 import { resetPluginApi } from 'discourse/lib/plugin-api';
 import { clearCache as clearOutletCache, resetExtraClasses } from 'discourse/lib/plugin-connectors';
 import { clearHTMLCache } from 'discourse/helpers/custom-html';
+import { flushMap } from 'discourse/models/store';
 
 
 function currentUser() {
@@ -79,6 +80,7 @@ function acceptance(name, options) {
       if (options && options.teardown) {
         options.teardown.call(this);
       }
+      flushMap();
       Discourse.User.resetCurrent();
       Discourse.Site.resetCurrent(Discourse.Site.create(jQuery.extend(true, {}, fixtures['site.json'].site)));
 

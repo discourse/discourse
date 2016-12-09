@@ -11,7 +11,7 @@
 <div id="main-outlet" class="wrap">
   <div class="container">
     {{#if showTop}}
-      {{custom-html "top"}}
+      {{custom-html name="top"}}
     {{/if}}
     {{global-notice}}
     {{create-topics-notice}}
@@ -22,7 +22,7 @@
 
 {{plugin-outlet name="above-footer"}}
 {{#if showFooter}}
-  {{custom-html "footer"}}
+  {{custom-html name="footer"}}
 {{/if}}
 {{plugin-outlet name="below-footer"}}
 

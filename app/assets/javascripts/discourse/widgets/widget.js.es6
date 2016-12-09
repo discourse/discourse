@@ -260,7 +260,7 @@ export default class Widget {
 
     const view = this._findView();
     if (view) {
-      const method = view.attrs[name];
+      const method = view.get(name);
       if (!method) {
         console.warn(`${name} not found`);
         return;

@@ -33,7 +33,7 @@ registerUnbound('raw', function(templateName, params) {
   templateName = templateName.replace('.', '/');
 
   const container = Discourse.__container__;
-  const template = container.lookup('raw-template:' + templateName);
+  const template = Discourse.RAW_TEMPLATES[templateName];
   if (!template) {
     console.warn('Could not find raw template: ' + templateName);
     return;

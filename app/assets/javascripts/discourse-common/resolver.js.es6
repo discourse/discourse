@@ -125,18 +125,6 @@ export function buildResolver(baseName) {
       }
     },
 
-    resolveRawTemplate(parsedName) {
-      const dashed = Ember.String.dasherize(parsedName.fullNameWithoutType);
-      return Discourse.RAW_TEMPLATES[dashed];
-    },
-
-    resolveOther(parsedName) {
-      if (parsedName.type === 'raw-template') {
-        return this.resolveRawTemplate(parsedName);
-      }
-      return this._super(parsedName);
-    },
-
     findConnectorTemplate(parsedName) {
       const full = parsedName.fullNameWithoutType.replace('components/', '');
       if (full.indexOf('connectors') === 0) {
