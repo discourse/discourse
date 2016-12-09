@@ -29,7 +29,14 @@ module DiscourseTagging
 
       if tag_names.present?
         category = topic.category
-        tags = filter_allowed_tags(Tag.where(name: tag_names), guardian, { for_input: true, category: category, selected_tags: tag_names }).to_a
+
+        # guardian is explicitly nil cause we don't want to strip all
+        # staff tags that already passed validation
+        tags = filter_allowed_tags(Tag.where(name: tag_names), nil, {
+          for_input: true,
+          category: category,
+          selected_tags: tag_names
+        }).to_a
 
         if tags.size < tag_names.size && (category.nil? || category.tags.count == 0)
           tag_names.each do |name|
