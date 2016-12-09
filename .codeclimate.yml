@@ -7,10 +7,11 @@ engines:
   csslint:
     enabled: true
   duplication:
-    enabled: false
+    enabled: true
     config:
       languages:
         - ruby
+        - javascript
   eslint:
     enabled: true
     channel: eslint-3
@@ -33,3 +34,8 @@ ratings:
   - "**.module"
   - "**.php"
   - "**.py"
+exclude_paths:
+ - "app/assets/javascripts/defer/*"
+ - "app/assets/javascripts/ember-addons/*"
+ - "lib/*.js"
+ - "public/*"
