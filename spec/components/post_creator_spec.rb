@@ -246,8 +246,10 @@ describe PostCreator do
 
       it 'creates a post with featured link' do
         SiteSetting.topic_featured_link_enabled = true
+        SiteSetting.min_first_post_length = 100
         post = creator_with_featured_link.create
         expect(post.topic.featured_link).to eq('http://www.discourse.org')
+        expect(post.valid?).to eq(true)
       end
 
       describe "topic's auto close" do

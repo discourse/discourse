@@ -41,9 +41,10 @@ test('missingReplyCharacters', function() {
   missingReplyCharacters('hi', false, true,  Discourse.SiteSettings.min_first_post_length - 2, 'too short first post');
   missingReplyCharacters('hi', true, false,  Discourse.SiteSettings.min_private_message_post_length - 2, 'too short private message');
 
-  // TODO: test that presence of featured link makes this test pass
-  // const composer = createComposer({ canEditTopicFeaturedLink: true });
-  // equal(composer.get('missingReplyCharacters'), 0, "don't require any post content");
+  const link = "http://imgur.com/gallery/grxX8";
+  const composer = createComposer({ canEditTopicFeaturedLink: true, title: link, featuredLink: link, reply: link });
+
+  equal(composer.get('missingReplyCharacters'), 0, "don't require any post content");
 });
 
 test('missingTitleCharacters', function() {

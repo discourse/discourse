@@ -286,7 +286,7 @@ const Composer = RestModel.extend({
   @computed('minimumPostLength', 'replyLength', 'canEditTopicFeaturedLink')
   missingReplyCharacters(minimumPostLength, replyLength, canEditTopicFeaturedLink) {
     if (this.get('post.post_type') === this.site.get('post_types.small_action') ||
-        canEditTopicFeaturedLink && this.siteSettings.topic_featured_link_onebox) { return 0; }
+        canEditTopicFeaturedLink && this.get('featuredLink')) { return 0; }
     return minimumPostLength - replyLength;
   },
 
@@ -509,9 +509,7 @@ const Composer = RestModel.extend({
     if (!this.get('cantSubmitPost')) {
 
       // change category may result in some effect for topic featured link
-      if (this.get('canEditTopicFeaturedLink')) {
-        if (this.siteSettings.topic_featured_link_onebox) { this.set('reply', null); }
-      } else {
+      if (!this.get('canEditTopicFeaturedLink')) {
         this.set('featuredLink', null);
       }
 
