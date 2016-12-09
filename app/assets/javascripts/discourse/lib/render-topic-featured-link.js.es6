@@ -8,7 +8,9 @@ export function addFeaturedLinkMetaDecorator(decorator) {
 }
 
 function extractLinkMeta(topic) {
-  const href = topic.featured_link, target = Discourse.SiteSettings.open_topic_featured_link_in_external_window ? '_blank' : '';
+  const href = topic.featured_link,
+        target = Discourse.User.currentProp('external_links_in_new_tab') ? '_blank' : '';
+
   if (!href) { return; }
 
   let domain = extractDomainFromUrl(href);
