@@ -73,7 +73,5 @@ export default {
     injectAll(app, 'keyValueStore');
 
     startTracking(topicTrackingState);
-
-    app.registerOptionsForType('raw-template', { instantiate: false });
   }
 };

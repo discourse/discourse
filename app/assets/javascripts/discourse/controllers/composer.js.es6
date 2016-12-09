@@ -267,6 +267,7 @@ export default Ember.Controller.extend({
     },
 
     showOptions(toolbarEvent, loc) {
+      console.log("opts", JSON.stringify(toolbarEvent.selected));
       this.set('toolbarEvent', toolbarEvent);
       this.appEvents.trigger('popup-menu:open', loc);
       this.set('optionsVisible', true);
