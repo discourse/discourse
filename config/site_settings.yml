@@ -435,7 +435,7 @@ posting:
     default: 32000
   topic_featured_link_enabled:
     client: true
-    default: false
+    default: true
   body_min_entropy: 7
   min_topic_title_length:
     client: true
