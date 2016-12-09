@@ -195,11 +195,6 @@ const Composer = RestModel.extend({
 
   }.property('action', 'post', 'topic', 'topic.title'),
 
-  @computed('canEditTopicFeaturedLink')
-  showComposerEditor(canEditTopicFeaturedLink) {
-    return canEditTopicFeaturedLink ? !this.siteSettings.topic_featured_link_onebox : true;
-  },
-
   // whether to disable the post button
   cantSubmitPost: function() {
 
