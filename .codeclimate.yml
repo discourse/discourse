@@ -10,7 +10,23 @@ engines:
     enabled: true
     config:
       languages:
+        - ruby
         - javascript
+    exclude_paths:
+     - "app/assets/javascripts/defer/*"
+     - "app/assets/javascripts/ember-addons/*"
+     - "lib/autospec/*"
+     - "lib/es6_module_transpiler/*"
+     - "lib/highlight_js/*"
+     - "lib/import/*"
+     - "lib/javascripts/*"
+     - "lib/tasks/*"
+     - "lib/*.js"
+     - "public/*"
+     - "script/*"
+     - "spec/*"
+     - "test/*"
+     - "vendor/*"
   eslint:
     enabled: true
     channel: eslint-3
@@ -33,8 +49,3 @@ ratings:
   - "**.module"
   - "**.php"
   - "**.py"
-exclude_paths:
- - "app/assets/javascripts/defer/*"
- - "app/assets/javascripts/ember-addons/*"
- - "lib/*.js"
- - "public/*"
