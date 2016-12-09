@@ -28,12 +28,8 @@ describe TopicList do
       SiteSetting.tagging_enabled = true
     end
 
-    after do
-      SiteSetting.tagging_enabled = false
-    end
-
     it "should add tags to preloaded custom fields" do
-      expect(topic_list.preloaded_custom_fields).to eq(Set.new([DiscourseTagging::TAGS_FIELD_NAME]))
+      expect(topic_list.preloaded_custom_fields).to include(DiscourseTagging::TAGS_FIELD_NAME)
     end
   end
 
