@@ -436,9 +436,6 @@ posting:
   topic_featured_link_enabled:
     client: true
     default: false
-  open_topic_featured_link_in_external_window:
-    client: true
-    default: true
   body_min_entropy: 7
   min_topic_title_length:
     client: true

@@ -851,8 +851,6 @@ en:
     min_private_message_post_length: "Minimum allowed post length in characters for messages"
     max_post_length: "Maximum allowed post length in characters"
     topic_featured_link_enabled: "Enable posting a link with topics."
-    topic_featured_link_onebox: "Show an onebox in the post body if possible and prevent editing post content."
-    open_topic_featured_link_in_external_window: "Open topic featured link in a external window."
     show_topic_featured_link_in_digest: "Show the topic featured link in the digest email."
     min_topic_title_length: "Minimum allowed topic title length in characters"
     max_topic_title_length: "Maximum allowed topic title length in characters"
