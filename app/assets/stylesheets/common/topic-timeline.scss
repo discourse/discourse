@@ -116,11 +116,18 @@
         bottom: 10px;
         left: 10px;
 
-        button {
+        .dropdown-menu {
+          position: absolute;
+          left: 0;
+          bottom: 30px;
+        }
+
+        button, .btn-group {
           float: none;
           display: inline-block;
-          margin-bottom: 10px;
+          margin-bottom: 0;
           margin-right: 15px;
+          position: static;
         }
       }
       .timeline-scrollarea-wrapper {
