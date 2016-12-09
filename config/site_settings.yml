@@ -599,7 +599,7 @@ email:
   disable_digest_emails:
     default: false
     client: true
-  show_topic_featured_link_in_digest: true
+  show_topic_featured_link_in_digest: false
   email_custom_headers: 'Auto-Submitted: auto-generated'
   email_subject: '[%{site_name}] %{optional_pm}%{optional_cat}%{topic_title}'
   reply_by_email_enabled:
