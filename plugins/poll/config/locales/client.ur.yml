@@ -1,0 +1,89 @@
+# encoding: utf-8
+# This file contains content for the client portion of the poll plugin, sent out
+# to the Javascript app.
+#
+# To work with us on translations, see:
+# https://www.transifex.com/projects/p/discourse-org/
+#
+# This is a "source" file, which is used by Transifex to get translations for other languages.
+# After this file is changed, it needs to be pushed by a maintainer to Transifex:
+#
+#   tx push -s
+#
+# Read more here: https://meta.discourse.org/t/contribute-a-translation-to-discourse/14882
+#
+# To validate this YAML file after you change it, please paste it into
+# http://yamllint.com/
+
+ur:
+  js:
+    poll:
+      voters:
+        one: "voter"
+        other: "voters"
+      total_votes:
+        one: "total vote"
+        other: "total votes"
+
+      average_rating: "Average rating: <strong>%{average}</strong>."
+
+      public:
+        title: "Votes are public."
+
+      multiple:
+        help:
+          at_least_min_options:
+            one: "Choose at least <strong>1</strong> option"
+            other: "Choose at least <strong>%{count}</strong> options"
+          up_to_max_options:
+            one: "Choose up to <strong>1</strong> option"
+            other: "Choose up to <strong>%{count}</strong> options"
+          x_options:
+            one: "Choose <strong>1</strong> option"
+            other: "Choose <strong>%{count}</strong> options"
+          between_min_and_max_options: "Choose between <strong>%{min}</strong> and <strong>%{max}</strong> options"
+
+      cast-votes:
+        title: "Cast your votes"
+        label: "Vote now!"
+
+      show-results:
+        title: "Display the poll results"
+        label: "Show results"
+
+      hide-results:
+        title: "Back to your votes"
+        label: "Hide results"
+
+      open:
+        title: "Open the poll"
+        label: "Open"
+        confirm: "Are you sure you want to open this poll?"
+
+      close:
+        title: "Close the poll"
+        label: "Close"
+        confirm: "Are you sure you want to close this poll?"
+
+      error_while_toggling_status: "Sorry, there was an error toggling the status of this poll."
+      error_while_casting_votes: "Sorry, there was an error casting your votes."
+      error_while_fetching_voters: "Sorry, there was an error displaying the voters."
+
+      ui_builder:
+        title: Build Poll
+        insert: Insert Poll
+        help:
+          options_count: Enter at least 2 options
+        poll_type:
+          label: Type
+          regular: Single Choice
+          multiple: Multiple Choice
+          number: Number Rating
+        poll_config:
+          max: Max
+          min: Min
+          step: Step
+        poll_public:
+          label: Show who voted
+        poll_options:
+          label: Enter one poll option per line
