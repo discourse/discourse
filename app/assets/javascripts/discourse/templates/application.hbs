@@ -1,4 +1,4 @@
-{{plugin-outlet "above-site-header"}}
+{{plugin-outlet name="above-site-header"}}
 {{site-header canSignUp=canSignUp
               showCreateAccount=(action "appRouteAction" "showCreateAccount")
               showLogin=(action "appRouteAction" "showLogin")
@@ -6,7 +6,7 @@
               toggleMobileView=(action "appRouteAction" "toggleMobileView")
               toggleAnonymous=(action "appRouteAction" "toggleAnonymous")
               logout=(action "appRouteAction" "logout")}}
-{{plugin-outlet "below-site-header"}}
+{{plugin-outlet name="below-site-header"}}
 
 <div id="main-outlet" class="wrap">
   <div class="container">
@@ -20,11 +20,11 @@
   {{outlet "user-card"}}
 </div>
 
-{{plugin-outlet "above-footer"}}
+{{plugin-outlet name="above-footer"}}
 {{#if showFooter}}
   {{custom-html "footer"}}
 {{/if}}
-{{plugin-outlet "below-footer"}}
+{{plugin-outlet name="below-footer"}}
 
 {{outlet "modal"}}
 {{topic-entrance}}

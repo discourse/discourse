@@ -66,8 +66,12 @@
              title="topic.reply.help"}}
 {{/if}}
 
-{{plugin-outlet "after-topic-footer-main-buttons" tagName="span"}}
+{{plugin-outlet name="after-topic-footer-main-buttons"
+                args=(hash topic=topic)
+                connectorTagName="span"}}
 
 {{pinned-button topic=topic}}
 {{topic-notifications-button topic=topic}}
-{{plugin-outlet "after-topic-footer-buttons" tagName="span"}}
+{{plugin-outlet name="after-topic-footer-buttons"
+                args=(hash topic=topic)
+                connectorTagName="span"}}

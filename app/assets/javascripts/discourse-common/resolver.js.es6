@@ -137,12 +137,21 @@ export function buildResolver(baseName) {
       return this._super(parsedName);
     },
 
+    findConnectorTemplate(parsedName) {
+      const full = parsedName.fullNameWithoutType.replace('components/', '');
+      if (full.indexOf('connectors') === 0) {
+        return Ember.TEMPLATES[`javascripts/${full}`];
+      }
+
+    },
+
     resolveTemplate(parsedName) {
       return this.findPluginMobileTemplate(parsedName) ||
              this.findPluginTemplate(parsedName) ||
              this.findMobileTemplate(parsedName) ||
              this.findTemplate(parsedName) ||
              this.findLoadingTemplate(parsedName) ||
+             this.findConnectorTemplate(parsedName) ||
              Ember.TEMPLATES.not_found;
     },
 
