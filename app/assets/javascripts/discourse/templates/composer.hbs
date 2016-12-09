@@ -30,7 +30,7 @@
         {{#if model.viewOpen}}
           <div class='control-row reply-area'>
             <div class='composer-fields'>
-              {{plugin-outlet "composer-open"}}
+              {{plugin-outlet name="composer-open" args=(hash model=model)}}
 
               <div class='reply-to'>
                 {{{model.actionTitle}}}
@@ -81,7 +81,7 @@
                   {{/if}}
                 </div>
               {{/if}}
-              {{plugin-outlet "composer-fields"}}
+              {{plugin-outlet name="composer-fields" args=(hash model=model)}}
             </div>
 
             {{composer-editor topic=topic
@@ -103,7 +103,7 @@
 
             {{#if currentUser}}
               <div class='submit-panel'>
-                {{plugin-outlet "composer-fields-below"}}
+                {{plugin-outlet name="composer-fields-below" args=(hash model=model)}}
                 {{#if canEditTags}}
                   {{tag-chooser tags=model.tags tabIndex="4" categoryId=model.categoryId}}
                 {{/if}}

@@ -121,7 +121,7 @@
     {{#if siteSettings.email_in}}
         <label for="incoming_email">{{i18n 'admin.groups.incoming_email'}}</label>
         {{text-field name="incoming_email" value=model.incoming_email placeholderKey="admin.groups.incoming_email_placeholder"}}
-      {{plugin-outlet "group-email-in"}}
+      {{plugin-outlet name="group-email-in" args=(hash model=model)}}
     {{/if}}
   {{/unless}}
 

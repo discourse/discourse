@@ -6,7 +6,7 @@
     </div>
   {{/if}}
 
-  {{plugin-outlet "topic-above-post-stream"}}
+  {{plugin-outlet name="topic-above-post-stream" args=(hash model=model)}}
 
   {{#if model.postStream.loaded}}
     {{#if model.postStream.firstPostPresent}}
@@ -30,7 +30,7 @@
                 {{tag-chooser tags=buffered.tags categoryId=buffered.category_id}}
               {{/if}}
 
-              {{plugin-outlet "edit-topic"}}
+              {{plugin-outlet name="edit-topic" args=(hash model=model buffered=buffered)}}
 
               {{d-button action="finishedEditingTopic" class="btn-primary btn-small submit-edit" icon="check"}}
               {{d-button action="cancelEditingTopic" class="btn-small cancel-edit" icon="times"}}
@@ -59,7 +59,7 @@
               {{/unless}}
             {{/if}}
           </div>
-          {{plugin-outlet "topic-title"}}
+          {{plugin-outlet name="topic-title" args=(hash model=model)}}
         </div>
       </div>
     {{/if}}
@@ -125,7 +125,7 @@
           <div class="posts-wrapper">
             {{conditional-loading-spinner condition=model.postStream.loadingAbove}}
 
-            {{plugin-outlet "topic-above-posts"}}
+            {{plugin-outlet name="topic-above-posts" args=(hash model=model)}}
 
             {{#unless model.postStream.loadingFilter}}
               {{scrolling-post-stream
@@ -221,7 +221,7 @@
                 </div>
               {{/if}}
 
-              {{plugin-outlet "topic-above-suggested"}}
+              {{plugin-outlet name="topic-above-suggested" args=(hash model=model)}}
 
               {{#if model.details.suggested_topics.length}}
                 <div id="suggested-topics">
