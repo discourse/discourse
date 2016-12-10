@@ -135,7 +135,7 @@ module ApplicationHelper
   end
 
   def rtl?
-    ["ar", "fa_IR", "he"].include? I18n.locale.to_s
+    ["ar", "ur", "fa_IR", "he"].include? I18n.locale.to_s
   end
 
   def user_locale
