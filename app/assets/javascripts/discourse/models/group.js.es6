@@ -1,5 +1,6 @@
 import { ajax } from 'discourse/lib/ajax';
 import computed from "ember-addons/ember-computed-decorators";
+import GroupHistory from 'discourse/models/group-history';
 
 const Group = Discourse.Model.extend({
   limit: 50,
@@ -139,6 +140,15 @@ const Group = Discourse.Model.extend({
   destroy() {
     if (!this.get('id')) { return; }
     return ajax("/admin/groups/" + this.get('id'), { type: "DELETE" });
+  },
+
+  findLogs(offset, filters) {
+    return ajax(`/groups/${this.get('name')}/logs.json`, { data: { offset, filters } }).then(results => {
+      return Ember.Object.create({
+        logs: results["logs"].map(log => GroupHistory.create(log)),
+        all_loaded: results["all_loaded"]
+      });
+    });
   },
 
   findPosts(opts) {

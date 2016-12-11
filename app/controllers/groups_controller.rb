@@ -3,7 +3,9 @@ class GroupsController < ApplicationController
   before_filter :ensure_logged_in, only: [
     :set_notifications,
     :mentionable,
-    :update
+    :update,
+    :messages,
+    :histories
   ]
 
   skip_before_filter :preload_json, :check_xhr, only: [:posts_feed, :mentions_feed]
@@ -17,6 +19,8 @@ class GroupsController < ApplicationController
     guardian.ensure_can_edit!(group)
 
     if group.update_attributes(group_params)
+      GroupActionLogger.new(current_user, group).log_change_group_settings
+
       render json: success_json
     else
       render_json_error(group)
@@ -135,6 +139,7 @@ class GroupsController < ApplicationController
     users.each do |user|
       if !group.users.include?(user)
         group.add(user)
+        GroupActionLogger.new(current_user, group).log_add_user_to_group(user)
       else
         return render_json_error I18n.t('groups.errors.member_already_exist', username: user.username)
       end
@@ -184,7 +189,8 @@ class GroupsController < ApplicationController
 
     user.primary_group_id = nil if user.primary_group_id == group.id
 
-    group.users.delete(user.id)
+    group.remove(user)
+    GroupActionLogger.new(current_user, group).log_remove_user_from_group(user)
 
     if group.save && user.save
       render json: success_json
@@ -203,6 +209,23 @@ class GroupsController < ApplicationController
              .update_all(notification_level: notification_level)
 
     render json: success_json
+  end
+
+  def histories
+    group = find_group(:group_id)
+    guardian.ensure_can_edit!(group)
+
+    page_size = 25
+    offset = (params[:offset] && params[:offset].to_i) || 0
+
+    group_histories = GroupHistory.with_filters(group, params[:filters])
+      .limit(page_size)
+      .offset(offset * page_size)
+
+    render_json_dump(
+      logs: serialize_data(group_histories, BasicGroupHistorySerializer),
+      all_loaded: group_histories.count < page_size
+    )
   end
 
   private

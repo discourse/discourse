@@ -410,6 +410,7 @@ Discourse::Application.routes.draw do
     get 'messages'
     get 'counts'
     get 'mentionable'
+    get 'logs' => 'groups#histories'
 
     member do
       put "members" => "groups#add_members"

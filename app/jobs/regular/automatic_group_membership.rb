@@ -16,11 +16,9 @@ module Jobs
       User.where("email ~* '@(#{domains})$'")
           .where("users.id NOT IN (SELECT user_id FROM group_users WHERE group_users.group_id = ?)", group_id)
           .find_each do |user|
-        begin
+
           group.add(user)
-        rescue ActiveRecord::RecordNotUnique, PG::UniqueViolation
-          # we don't care about this
-        end
+          GroupActionLogger.new(Discourse.system_user, group).log_add_user_to_group(user)
       end
 
       Group.reset_counters(group.id, :group_users)

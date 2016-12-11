@@ -48,14 +48,16 @@ describe "Groups" do
       end
 
       it "should be able update the group" do
-        xhr :put, "/groups/#{group.id}", { group: {
-          flair_bg_color: 'FFF',
-          flair_color: 'BBB',
-          flair_url: 'fa-adjust',
-          bio_raw: 'testing',
-          title: 'awesome team',
-          public: true
-        } }
+        expect do
+          xhr :put, "/groups/#{group.id}", { group: {
+            flair_bg_color: 'FFF',
+            flair_color: 'BBB',
+            flair_url: 'fa-adjust',
+            bio_raw: 'testing',
+            title: 'awesome team',
+            public: true
+          } }
+        end.to change { GroupHistory.count }.by(6)
 
         expect(response).to be_success
 
@@ -67,6 +69,7 @@ describe "Groups" do
         expect(group.bio_raw).to eq('testing')
         expect(group.title).to eq('awesome team')
         expect(group.public).to eq(true)
+        expect(GroupHistory.last.subject).to eq('public')
       end
     end
 
@@ -218,21 +221,32 @@ describe "Groups" do
     context 'adding members' do
       it "can make incremental adds" do
         user2 = Fabricate(:user)
-        expect(group.users.count).to eq(1)
 
-        xhr :put, "/groups/#{group.id}/members", usernames: user2.username
+        expect do
+          xhr :put, "/groups/#{group.id}/members", usernames: user2.username
+        end.to change { group.users.count }.by(1)
 
         expect(response).to be_success
-        expect(group.reload.users.count).to eq(2)
+
+        group_history = GroupHistory.last
+
+        expect(group_history.action).to eq(GroupHistory.actions[:add_user_to_group])
+        expect(group_history.acting_user).to eq(admin)
+        expect(group_history.target_user).to eq(user2)
       end
 
       it "can make incremental deletes" do
-        expect(group.users.count).to eq(1)
-
-        xhr :delete, "/groups/#{group.id}/members", username: user.username
+        expect do
+          xhr :delete, "/groups/#{group.id}/members", username: user.username
+        end.to change { group.users.count }.by(-1)
 
         expect(response).to be_success
-        expect(group.reload.users.count).to eq(0)
+
+        group_history = GroupHistory.last
+
+        expect(group_history.action).to eq(GroupHistory.actions[:remove_user_from_group])
+        expect(group_history.acting_user).to eq(admin)
+        expect(group_history.target_user).to eq(user)
       end
 
       it "cannot add members to automatic groups" do
@@ -362,6 +376,85 @@ describe "Groups" do
 
             expect(response).to be_forbidden
           end
+        end
+      end
+    end
+  end
+
+  describe "group histories" do
+    context 'when user is not signed in' do
+      it 'should raise the right error' do
+        expect { xhr :get, "/groups/#{group.name}/logs" }
+          .to raise_error(Discourse::NotLoggedIn)
+      end
+    end
+
+    context 'when user is not a group owner' do
+      before do
+        sign_in(user)
+      end
+
+      it 'should be forbidden' do
+        xhr :get, "/groups/#{group.name}/logs"
+
+        expect(response).to be_forbidden
+      end
+    end
+
+    describe 'viewing history' do
+      context 'public group' do
+        before do
+          group.add_owner(user)
+          group.update_attributes!(public: true)
+          GroupActionLogger.new(user, group).log_change_group_settings
+          sign_in(user)
+        end
+
+        it 'should allow group owner to view history' do
+          xhr :get, "/groups/#{group.name}/logs"
+
+          expect(response).to be_success
+
+          result = JSON.parse(response.body)["logs"].first
+
+          expect(result["action"]).to eq(GroupHistory.actions[1].to_s)
+          expect(result["subject"]).to eq('public')
+          expect(result["prev_value"]).to eq('f')
+          expect(result["new_value"]).to eq('t')
+        end
+      end
+
+      context 'admin' do
+        let(:admin) { Fabricate(:admin) }
+
+        before do
+          sign_in(admin)
+        end
+
+        it 'should be able to view history' do
+          GroupActionLogger.new(admin, group).log_remove_user_from_group(user)
+
+          xhr :get, "/groups/#{group.name}/logs"
+
+          expect(response).to be_success
+
+          result = JSON.parse(response.body)["logs"].first
+
+          expect(result["action"]).to eq(GroupHistory.actions[3].to_s)
+        end
+
+        it 'should be able to filter through the history' do
+          GroupActionLogger.new(admin, group).log_add_user_to_group(user)
+          GroupActionLogger.new(admin, group).log_remove_user_from_group(user)
+
+          xhr :get, "/groups/#{group.name}/logs", filters: { "action" => "add_user_to_group" }
+
+          expect(response).to be_success
+
+          logs = JSON.parse(response.body)["logs"]
+
+          expect(logs.count).to eq(1)
+          expect(logs.first["action"]).to eq(GroupHistory.actions[2].to_s)
         end
       end
     end
