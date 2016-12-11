@@ -1163,6 +1163,12 @@ describe User do
       user = Fabricate(:user, email: "foo@bar.com")
       group.reload
       expect(group.users.include?(user)).to eq(true)
+
+      group_history = GroupHistory.last
+
+      expect(group_history.action).to eq(GroupHistory.actions[:add_user_to_group])
+      expect(group_history.acting_user).to eq(Discourse.system_user)
+      expect(group_history.target_user).to eq(user)
     end
 
   end

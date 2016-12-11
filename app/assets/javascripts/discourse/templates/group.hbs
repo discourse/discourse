@@ -41,6 +41,7 @@
     {{#each getTabs as |tab|}}
       <li class="{{if tab.active 'active'}}">
         {{#link-to tab.location model title=tab.message}}
+          {{#if tab.icon}}{{fa-icon tab.icon}}{{/if}}
           {{tab.message}}
           {{#if tab.count}}<span class='count'>({{tab.count}})</span>{{/if}}
         {{/link-to}}
