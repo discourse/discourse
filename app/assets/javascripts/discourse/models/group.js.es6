@@ -1,5 +1,5 @@
 import { ajax } from 'discourse/lib/ajax';
-import computed from "ember-addons/ember-computed-decorators";
+import { default as computed, observes } from "ember-addons/ember-computed-decorators";
 import GroupHistory from 'discourse/models/group-history';
 
 const Group = Discourse.Model.extend({
@@ -101,6 +101,23 @@ const Group = Discourse.Model.extend({
     return this.get('flair_color') ? this.get('flair_color').replace(new RegExp("[^0-9a-fA-F]", "g"), "") : null;
   },
 
+  @computed('alias_level')
+  canEveryoneMention(aliasLevel) {
+    return aliasLevel === '99';
+  },
+
+  @observes("visible", "canEveryoneMention")
+  _updateAllowMembershipRequests() {
+    if (!this.get('visible') || !this.get('canEveryoneMention')) {
+      this.set('allow_membership_requests', false);
+    }
+  },
+
+  @observes("visible")
+  _updatePublic() {
+    if (!this.get('visible')) this.set('public', false);
+  },
+
   asJSON() {
     return {
       name: this.get('name'),
@@ -116,7 +133,8 @@ const Group = Discourse.Model.extend({
       flair_bg_color: this.get('flairBackgroundHexColor'),
       flair_color: this.get('flairHexColor'),
       bio_raw: this.get('bio_raw'),
-      public: this.get('public')
+      public: this.get('public'),
+      allow_membership_requests: this.get('allow_membership_requests')
     };
   },
 

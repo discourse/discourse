@@ -9,8 +9,21 @@
     {{group-flair-inputs model=model}}
 
     <label>
-      {{input type='checkbox' checked=model.public class="edit-group-public"}}
+      {{input type='checkbox'
+          checked=model.public
+          class="edit-group-public"
+          disabled=model.allow_membership_requests}}
+
       {{i18n 'groups.public'}}
+    </label>
+
+    <label>
+      {{input type='checkbox'
+          checked=model.allow_membership_requests
+          class="edit-group-allow-membership-requests"
+          disabled=model.public}}
+
+      {{i18n 'groups.allow_membership_requests'}}
     </label>
   </form>
 {{/d-modal-body}}

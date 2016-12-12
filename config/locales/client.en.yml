@@ -397,8 +397,11 @@ en:
       edit:
         title: 'Edit Group'
         group_title: 'Title'
+      request_membership_pm:
+        title: "Membership Request"
+        body: "I would like to request membership in @%{groupName}."
       name_placeholder: "Group name, no spaces, same as username rule"
-      public: "Allow users to join/leave the group freely"
+      public: "Allow users to join/leave the group freely (Requires group to be visible)"
       empty:
         posts: "There is no post by members of this group."
         members: "There is no member in this group."
@@ -409,6 +412,8 @@ en:
       add: "Add"
       join: "Join Group"
       leave: "Leave Group"
+      request: "Request to Join Group"
+      allow_membership_requests: "Allow users to send membership requests to group owners (Requires everyone to be able to mention the group)"
       name: "Name"
       bio: "About Group"
       selector_placeholder: "Add members"

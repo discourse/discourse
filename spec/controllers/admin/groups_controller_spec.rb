@@ -40,7 +40,8 @@ describe Admin::GroupsController do
         "flair_color"=>nil,
         "bio_raw"=>nil,
         "bio_cooked"=>nil,
-        "public"=>false
+        "public"=>false,
+        "allow_membership_requests"=>false
       }])
 
     end
