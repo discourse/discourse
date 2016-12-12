@@ -7,7 +7,7 @@ export const queryParams = {
   search: { replace: true, refreshModel: true },
   max_posts: { replace: true, refreshModel: true },
   q: { replace: true, refreshModel: true },
-  tags: { replace: true, refreshModel: true }
+  tags: { replace: true }
 };
 
 // Basic controller options
