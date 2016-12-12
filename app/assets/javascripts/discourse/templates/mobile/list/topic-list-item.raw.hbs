@@ -10,6 +10,9 @@
     <div class='main-link'>
       {{raw "topic-status" topic=topic}}
       {{topic-link topic}}
+      {{#if topic.featured_link}}
+        {{topic-featured-link topic}}
+      {{/if}}
       {{#if topic.unseen}}
         <span class="badge-notification new-topic"></span>
       {{/if}}
