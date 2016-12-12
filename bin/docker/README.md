@@ -12,6 +12,7 @@ It should be as easy as (from your source root):
     #   - dependencies are installed,
     #   - the database is migrated, and
     #   - an admin user is created (you'll need to interact with this)
+
 ./bin/docker/rails s
 ```
 
@@ -25,12 +26,11 @@ When you're done, you can kill the Docker container with:
 
 Note that data is persisted between invocations of the container in your source root `tmp/postgres` directory.
 
-## Caveats
+If for any reason you want to reset your database run
 
-There seems to be an issue with the ember-data-source gem installed by default (2.3.0.beta.5).  It's missing its `dist` directory.  I've worked around this by acquiring that commit, building the distribution locally, and patching it into `/usr/local/lib/ruby/gems/2.3.0/gems/ember-data-source-2.3.0.beta.5` by hand.  I _believe_ later versions of the gem fix this, but the very next version (2.3.0 proper) bumps the ember-source dependency up to 2.0, which Discourse isn't using yet.
-
-You can get `boot_dev` to patch for you by passing `--patch local/path/to/ember-data-source/dist` on the command-line.  You should only have to do this once (like `--init`).
-
+```sh
+sudo rm -fr tmp/postgres
+```
 
 ## Other Notes
 
