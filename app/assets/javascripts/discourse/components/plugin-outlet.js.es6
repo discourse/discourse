@@ -42,7 +42,7 @@ export default Ember.Component.extend({
     if (name) {
       const args = this.get('args');
       const connectors = connectorsFor(name).filter(con => {
-        return con.connectorClass.shouldRender(args);
+        return con.connectorClass.shouldRender(args, this);
       });
 
       this.set('connectors', connectors);
