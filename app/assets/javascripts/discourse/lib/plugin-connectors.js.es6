@@ -1,8 +1,10 @@
 let _connectorCache;
 let _extraConnectorClasses = {};
+let _classPaths;
 
 export function resetExtraClasses() {
   _extraConnectorClasses = {};
+  _classPaths = undefined;
 }
 
 // Note: In plugins, define a class by path and it will be wired up automatically
@@ -13,7 +15,8 @@ export function extraConnectorClass(name, obj) {
 
 const DefaultConnectorClass = {
   actions: {},
-  shouldRender: () => true
+  shouldRender: () => true,
+  setupComponent() { }
 };
 
 function findOutlets(collection, callback) {
@@ -41,22 +44,33 @@ export function clearCache() {
   _connectorCache = null;
 }
 
+function findClass(outletName, uniqueName) {
+  if (!_classPaths) {
+    _classPaths = {};
+    findOutlets(require._eak_seen, (outlet, res, un) => {
+      _classPaths[`${outlet}/${un}`] = require(res).default;
+    });
+  }
+
+  const id = `${outletName}/${uniqueName}`;
+  let foundClass = _extraConnectorClasses[id] || _classPaths[id];
+
+  return foundClass ?
+    jQuery.extend({}, DefaultConnectorClass, foundClass) :
+    DefaultConnectorClass;
+}
+
 function buildConnectorCache() {
   _connectorCache = {};
 
   findOutlets(Ember.TEMPLATES, function(outletName, resource, uniqueName) {
     _connectorCache[outletName] = _connectorCache[outletName] || [];
 
-    const foundClass = _extraConnectorClasses[`${outletName}/${uniqueName}`];
-    const connectorClass = foundClass ?
-      jQuery.extend({}, DefaultConnectorClass, foundClass) :
-      DefaultConnectorClass;
-
     _connectorCache[outletName].push({
       templateName: resource.replace('javascripts/', ''),
       template: Ember.TEMPLATES[resource],
       classNames: `${outletName}-outlet ${uniqueName}`,
-      connectorClass
+      connectorClass: findClass(outletName, uniqueName)
     });
   });
 }
