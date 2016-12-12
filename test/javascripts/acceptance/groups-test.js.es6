@@ -27,7 +27,8 @@ test("Browsing Groups", () => {
 
   visit("/groups/discourse/messages");
   andThen(() => {
-    ok($('.nav-stacked li').length === 4, 'it should not show messages tab');
+    ok(find(".nav-stacked li a[title='Messages']").length === 0, 'it should not show messages tab if user is admin');
+    ok(find(".nav-stacked li a[title='Logs']").length === 0, 'it should not show Logs tab if user is admin');
     ok(count('.user-stream .item') > 0, "it lists stream items");
   });
 });
