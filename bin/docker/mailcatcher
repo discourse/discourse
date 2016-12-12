@@ -1,0 +1,4 @@
+#!/bin/bash
+
+CMD="mailcatcher --http-ip 0.0.0.0 -f || (apt-get install -y libsqlite3-dev && gem install mailcatcher && mailcatcher --http-ip 0.0.0.0 -f)"
+docker exec -it discourse_dev /bin/bash -c "$CMD"
