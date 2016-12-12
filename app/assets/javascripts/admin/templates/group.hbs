@@ -64,16 +64,29 @@
 
   {{#unless model.automatic}}
     <div>
-      <label for="primary_group">
-        {{input type="checkbox" checked=model.primary_group}}
-        {{i18n 'admin.groups.primary_group'}}
+      <label>
+        {{input type="checkbox"
+            checked=model.public
+            disabled=disablePublicSetting}}
+
+        {{i18n 'groups.public'}}
       </label>
     </div>
 
     <div>
       <label>
-        {{input type="checkbox" checked=model.public}}
-        {{i18n 'groups.public'}}
+        {{input type="checkbox"
+            checked=model.allow_membership_requests
+            disabled=disableMembershipRequestSetting}}
+
+        {{i18n 'groups.allow_membership_requests'}}
+      </label>
+    </div>
+
+    <div>
+      <label for="primary_group">
+        {{input type="checkbox" checked=model.primary_group}}
+        {{i18n 'admin.groups.primary_group'}}
       </label>
     </div>
   {{/unless}}

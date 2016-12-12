@@ -55,9 +55,10 @@ describe "Groups" do
             flair_url: 'fa-adjust',
             bio_raw: 'testing',
             title: 'awesome team',
-            public: true
+            public: true,
+            allow_membership_requests: true
           } }
-        end.to change { GroupHistory.count }.by(6)
+        end.to change { GroupHistory.count }.by(7)
 
         expect(response).to be_success
 
@@ -69,7 +70,8 @@ describe "Groups" do
         expect(group.bio_raw).to eq('testing')
         expect(group.title).to eq('awesome team')
         expect(group.public).to eq(true)
-        expect(GroupHistory.last.subject).to eq('public')
+        expect(group.allow_membership_requests).to eq(true)
+        expect(GroupHistory.last.subject).to eq('allow_membership_requests')
       end
     end
 

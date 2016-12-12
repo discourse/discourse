@@ -18,6 +18,11 @@
           label="groups.join"
           disabled=updatingMembership}}
     {{/if}}
+  {{else if canRequestMembership}}
+    {{d-button action="requestMembership"
+        class="group-index-request"
+        icon="envelope"
+        label="groups.request"}}
   {{/if}}
 
   {{#load-more selector=".group-members tr" action="loadMore"}}

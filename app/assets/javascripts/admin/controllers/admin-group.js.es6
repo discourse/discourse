@@ -1,5 +1,6 @@
 import { popupAjaxError } from 'discourse/lib/ajax-error';
 import { propertyEqual } from 'discourse/lib/computed';
+import computed from 'ember-addons/ember-computed-decorators';
 
 export default Ember.Controller.extend({
   adminGroupsType: Ember.inject.controller(),
@@ -34,6 +35,16 @@ export default Ember.Controller.extend({
       { name: 1, value: 1 }, { name: 2, value: 2 }, { name: 3, value: 3 }, { name: 4, value: 4 }
     ];
   }.property(),
+
+  @computed('model.visible', 'model.public', 'model.alias_level')
+  disableMembershipRequestSetting(visible, publicGroup) {
+    return !visible || publicGroup || !this.get('model.canEveryoneMention');
+  },
+
+  @computed('model.visible', 'model.allow_membership_requests')
+  disablePublicSetting(visible, allowMembershipRequests) {
+    return !visible || allowMembershipRequests;
+  },
 
   actions: {
     next() {

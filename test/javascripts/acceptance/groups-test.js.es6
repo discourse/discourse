@@ -53,5 +53,19 @@ test("Admin Browsing Groups", () => {
     ok(find('.edit-group-bio').length === 1, 'it should display group bio input');
     ok(find('.edit-group-title').length === 1, 'it should display group title input');
     ok(find('.edit-group-public').length === 1, 'it should display group public input');
+    ok(find('.edit-group-allow-membership-requests').length === 1, 'it should display group allow_membership_requets input');
+  });
+
+  click('.edit-group-public');
+
+  andThen(() => {
+    ok(find('.edit-group-allow-membership-requests[disabled]').length === 1, 'it should disable group allow_membership_requets input');
+  });
+
+  click('.edit-group-public');
+  click('.edit-group-allow-membership-requests');
+
+  andThen(() => {
+    ok(find('.edit-group-public[disabled]').length === 1, 'it should disable group public input');
   });
 });
