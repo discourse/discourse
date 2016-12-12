@@ -1,31 +1,31 @@
 <div class="group-flair-left">
   <div>
-    <label for="flair_url">{{i18n 'group.flair_url'}}</label>
+    <label for="flair_url">{{i18n 'groups.flair_url'}}</label>
     {{text-field name="flair_url"
         value=model.flair_url
-        placeholderKey="group.flair_url_placeholder"}}
+        placeholderKey="groups.flair_url_placeholder"}}
   </div>
 
   <div>
-    <label for="flair_bg_color">{{i18n 'group.flair_bg_color'}}</label>
+    <label for="flair_bg_color">{{i18n 'groups.flair_bg_color'}}</label>
     {{text-field name="flair_bg_color"
         class="group-flair-bg-color"
         value=model.flair_bg_color
-        placeholderKey="group.flair_bg_color_placeholder"}}
+        placeholderKey="groups.flair_bg_color_placeholder"}}
   </div>
 
   {{#if flairPreviewIcon}}
     <div>
-      <label for="flair_color">{{i18n 'group.flair_color'}}</label>
+      <label for="flair_color">{{i18n 'groups.flair_color'}}</label>
       {{text-field name="flair_color"
           class="group-flair-color"
           value=model.flair_color
-          placeholderKey="group.flair_color_placeholder"}}
+          placeholderKey="groups.flair_color_placeholder"}}
     </div>
   {{/if}}
 
   <div>
-    <strong>{{i18n 'group.flair_note'}}</strong>
+    <strong>{{i18n 'groups.flair_note'}}</strong>
   </div>
 </div>
 

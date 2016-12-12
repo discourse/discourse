@@ -443,6 +443,7 @@ en:
       create_topic: "You're creating topics too quickly. Please wait %{time_left} before trying again."
       create_post: "You're replying too quickly. Please wait %{time_left} before trying again."
       delete_post: "You're deleting posts too quickly. Please wait %{time_left} before trying again."
+      public_group_membership: "You're joining/leaving groups too frequently. Please wait %{time_left} before trying again."
       topics_per_day: "You've reached the maximum number of new topics today. Please wait %{time_left} before trying again."
       pms_per_day: "You've reached the maximum number of messages today. Please wait %{time_left} before trying again."
       create_like: "You've reached the maximum number of likes today. Please wait %{time_left} before trying again."

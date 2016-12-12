@@ -45,6 +45,6 @@ export default Ember.Component.extend({
   @computed('flairPreviewImage')
   flairPreviewLabel(flairPreviewImage) {
     const key = flairPreviewImage ? 'image' : 'icon';
-    return I18n.t(`group.flair_preview_${key}`);
+    return I18n.t(`groups.flair_preview_${key}`);
   }
 });

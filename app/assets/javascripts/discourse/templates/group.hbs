@@ -23,7 +23,7 @@
 
       {{#if canEditGroup}}
         <span class="group-edit">
-          {{d-button action="showGroupEditor" label="group.edit.title" class="group-edit-btn" icon="pencil"}}
+          {{d-button action="showGroupEditor" label="groups.edit.title" class="group-edit-btn" icon="pencil"}}
         </span>
       {{/if}}
     </div>
@@ -41,6 +41,7 @@
     {{#each getTabs as |tab|}}
       <li class="{{if tab.active 'active'}}">
         {{#link-to tab.location model title=tab.message}}
+          {{#if tab.icon}}{{fa-icon tab.icon}}{{/if}}
           {{tab.message}}
           {{#if tab.count}}<span class='count'>({{tab.count}})</span>{{/if}}
         {{/link-to}}

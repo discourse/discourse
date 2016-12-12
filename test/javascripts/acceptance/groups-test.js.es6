@@ -39,7 +39,8 @@ test("Admin Browsing Groups", () => {
   visit("/groups/discourse");
 
   andThen(() => {
-    ok(find('.nav-stacked li').length === 5, 'it should show messages tab if user is admin');
+    ok(find(".nav-stacked li a[title='Messages']").length === 1, 'it should show messages tab if user is admin');
+    ok(find(".nav-stacked li a[title='Logs']").length === 1, 'it should show Logs tab if user is admin');
     equal(find('.group-title').text(), 'Awesome Team', 'it should display the group title');
     equal(find('.group-name').text(), '@discourse', 'it should display the group name');
   });
@@ -50,5 +51,6 @@ test("Admin Browsing Groups", () => {
     ok(find('.group-flair-inputs').length === 1, 'it should display avatar flair inputs');
     ok(find('.edit-group-bio').length === 1, 'it should display group bio input');
     ok(find('.edit-group-title').length === 1, 'it should display group title input');
+    ok(find('.edit-group-public').length === 1, 'it should display group public input');
   });
 });
