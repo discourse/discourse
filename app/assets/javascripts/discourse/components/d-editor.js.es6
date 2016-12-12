@@ -297,7 +297,7 @@ export default Ember.Component.extend({
   },
 
   _applyCategoryHashtagAutocomplete() {
-    const template = Discourse.RAW_TEMPLATES['category-tag-autocomplete'];
+    const template = this.register.lookup('template:category-tag-autocomplete.raw');
     const siteSettings = this.siteSettings;
 
     this.$('.d-editor-input').autocomplete({
@@ -323,7 +323,7 @@ export default Ember.Component.extend({
     if (!this.siteSettings.enable_emoji) { return; }
 
     const register = this.register;
-    const template = Discourse.RAW_TEMPLATES['emoji-selector-autocomplete'];
+    const template = this.register.lookup('template:emoji-selector-autocomplete.raw');
     const self = this;
 
     $editorInput.autocomplete({
