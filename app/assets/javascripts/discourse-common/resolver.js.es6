@@ -11,18 +11,18 @@ export function setResolverOption(name, value) {
 }
 
 function parseName(fullName) {
-  const nameParts = fullName.split(":");
-  const type = nameParts[0];
-  let fullNameWithoutType = nameParts[1];
-  const namespace = get(this, 'namespace');
-  const root = namespace;
+  const nameParts = fullName.split(":"),
+        type = nameParts[0], fullNameWithoutType = nameParts[1],
+        name = fullNameWithoutType,
+        namespace = get(this, 'namespace'),
+        root = namespace;
 
   return {
-    fullName,
-    type,
-    fullNameWithoutType,
-    name: fullNameWithoutType,
-    root,
+    fullName: fullName,
+    type: type,
+    fullNameWithoutType: fullNameWithoutType,
+    name: name,
+    root: root,
     resolveMethodName: "resolve" + classify(type)
   };
 }
@@ -125,21 +125,12 @@ export function buildResolver(baseName) {
       }
     },
 
-    findConnectorTemplate(parsedName) {
-      const full = parsedName.fullNameWithoutType.replace('components/', '');
-      if (full.indexOf('connectors') === 0) {
-        return Ember.TEMPLATES[`javascripts/${full}`];
-      }
-
-    },
-
     resolveTemplate(parsedName) {
       return this.findPluginMobileTemplate(parsedName) ||
              this.findPluginTemplate(parsedName) ||
              this.findMobileTemplate(parsedName) ||
              this.findTemplate(parsedName) ||
              this.findLoadingTemplate(parsedName) ||
-             this.findConnectorTemplate(parsedName) ||
              Ember.TEMPLATES.not_found;
     },
 

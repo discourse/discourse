@@ -94,7 +94,7 @@
               {{#each result.topic.tags as |tag|}}
                 {{discourse-tag tag}}
               {{/each}}
-              {{plugin-outlet name="full-page-search-category" args=(hash result=result)}}
+              {{plugin-outlet "full-page-search-category"}}
             </div>
           </div>
 

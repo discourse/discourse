@@ -36,7 +36,7 @@ test('details button', () => {
     equal(
       find(".d-editor-input").val(),
       `[details=${I18n.t("composer.details_title")}]This is my title[/details]`,
-      'it should contain the right selected output'
+      'it should contain the right output'
     );
 
     const textarea = findTextarea();

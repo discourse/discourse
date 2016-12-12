@@ -151,7 +151,7 @@ function render(page, offset, options) {
   };
 
   $('.emoji-modal', options.appendTo).remove();
-  const template = Discourse.RAW_TEMPLATES['emoji-toolbar'];
+  const template = options.register.lookup('template:emoji-toolbar.raw');
   options.appendTo.append(template(model));
 
   bindEvents(page, offset, options);
