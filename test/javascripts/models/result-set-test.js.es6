@@ -15,7 +15,7 @@ test('defaults', function() {
 
 test('pagination support', function() {
   const store = createStore();
-  store.findAll('widget').then(function(rs) {
+  return store.findAll('widget').then(function(rs) {
     equal(rs.get('length'), 2);
     equal(rs.get('totalRows'), 4);
     ok(rs.get('loadMoreUrl'), 'has a url to load more');
@@ -36,7 +36,7 @@ test('pagination support', function() {
 
 test('refresh support', function() {
   const store = createStore();
-  store.findAll('widget').then(function(rs) {
+  return store.findAll('widget').then(function(rs) {
     equal(rs.get('refreshUrl'), '/widgets?refresh=true', 'it has the refresh url');
 
     const promise = rs.refresh();

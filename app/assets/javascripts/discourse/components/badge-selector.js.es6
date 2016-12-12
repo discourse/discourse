@@ -1,5 +1,4 @@
 import { on, observes, default as computed } from 'ember-addons/ember-computed-decorators';
-import { getOwner } from 'discourse-common/lib/get-owner';
 
 export default Ember.Component.extend({
   @computed('placeholderKey')
@@ -18,7 +17,7 @@ export default Ember.Component.extend({
     var self = this;
     var selectedBadges;
 
-    var template = getOwner(this).lookup('template:badge-selector-autocomplete.raw');
+    var template = Discourse.RAW_TEMPLATES['badge-selector-autocomplete'];
     self.$('input').autocomplete({
       allowAny: false,
       items: _.isArray(this.get('badgeNames')) ? this.get('badgeNames') : [this.get('badgeNames')],

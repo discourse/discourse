@@ -68,7 +68,7 @@ export default Ember.Controller.extend(BufferedContent, {
         this.get('model').save(data).then(() => {
           if (newBadge) {
             const adminBadges = this.get('adminBadges.model');
-            if (!adminBadges.contains(model)) {
+            if (!adminBadges.includes(model)) {
               adminBadges.pushObject(model);
             }
             this.transitionToRoute('adminBadges.show', model.get('id'));

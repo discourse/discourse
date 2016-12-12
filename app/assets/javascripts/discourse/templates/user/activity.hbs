@@ -23,7 +23,9 @@
       {{/link-to}}
     </li>
     {{/if}}
-    {{plugin-outlet "user-activity-bottom" tagName='li'}}
+    {{plugin-outlet name="user-activity-bottom"
+                    connectorTagName='li'
+                    args=(hash model=model)}}
   {{/mobile-nav}}
 
   {{#if viewingSelf}}

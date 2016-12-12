@@ -23,7 +23,7 @@ widgetTest('listing actions', {
 });
 
 widgetTest('undo', {
-  template: '{{mount-widget widget="actions-summary" args=args undoPostAction="undoPostAction"}}',
+  template: '{{mount-widget widget="actions-summary" args=args undoPostAction=undoPostAction}}',
   setup() {
     this.set('args', {
       actionsSummary: [
@@ -31,7 +31,7 @@ widgetTest('undo', {
       ]
     });
 
-    this.on('undoPostAction', () => this.undid = true);
+    this.set('undoPostAction', () => this.undid = true);
   },
   test(assert) {
     assert.equal(this.$('.post-actions .post-action').length, 1);
