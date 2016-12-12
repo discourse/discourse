@@ -9,6 +9,7 @@ class Group < ActiveRecord::Base
 
   has_many :categories, through: :category_groups
   has_many :users, through: :group_users
+  has_many :group_histories, dependent: :destroy
 
   has_and_belongs_to_many :web_hooks
 
@@ -347,7 +348,8 @@ class Group < ActiveRecord::Base
   end
 
   def add(user)
-    self.users.push(user)
+    self.users.push(user) unless self.users.include?(user)
+    self
   end
 
   def remove(user)
@@ -508,6 +510,9 @@ end
 #  flair_url                          :string
 #  flair_bg_color                     :string
 #  flair_color                        :string
+#  bio_raw                            :text
+#  bio_cooked                         :text
+#  public                             :boolean          default(FALSE), not null
 #
 # Indexes
 #

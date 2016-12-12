@@ -45,7 +45,7 @@ class Admin::GroupsController < Admin::AdminController
 
     # group rename is ignored for automatic groups
     group.name = group_params[:name] if group_params[:name] && !group.automatic
-    save_group(group)
+    save_group(group) { |g| GroupActionLogger.new(current_user, g).log_change_group_settings }
   end
 
   def save_group(group)
@@ -67,9 +67,14 @@ class Admin::GroupsController < Admin::AdminController
     group.flair_url      = group_params[:flair_url].presence
     group.flair_bg_color = group_params[:flair_bg_color].presence
     group.flair_color    = group_params[:flair_color].presence
+    group.public = group_params[:public] if group_params[:public]
+    group.bio_raw = group_params[:bio_raw] if group_params[:bio_raw]
 
     if group.save
       Group.reset_counters(group.id, :group_users)
+
+      yield(group) if block_given?
+
       render_serialized(group, BasicGroupSerializer)
     else
       render_json_error group
@@ -99,10 +104,14 @@ class Admin::GroupsController < Admin::AdminController
     users = User.where(username: params[:usernames].split(","))
 
     users.each do |user|
+      group_action_logger = GroupActionLogger.new(current_user, group)
+
       if !group.users.include?(user)
         group.add(user)
+        group_action_logger.log_add_user_to_group(user)
       end
       group.group_users.where(user_id: user.id).update_all(owner: true)
+      group_action_logger.log_make_user_group_owner(user)
     end
 
     Group.reset_counters(group.id, :group_users)
@@ -116,6 +125,7 @@ class Admin::GroupsController < Admin::AdminController
 
     user = User.find(params[:user_id].to_i)
     group.group_users.where(user_id: user.id).update_all(owner: false)
+    GroupActionLogger.new(current_user, group).log_remove_user_as_group_owner(user)
 
     Group.reset_counters(group.id, :group_users)
 
@@ -135,7 +145,7 @@ class Admin::GroupsController < Admin::AdminController
       :name, :alias_level, :visible, :automatic_membership_email_domains,
       :automatic_membership_retroactive, :title, :primary_group,
       :grant_trust_level, :incoming_email, :flair_url, :flair_bg_color,
-      :flair_color
+      :flair_color, :bio_raw, :public
     )
   end
 end

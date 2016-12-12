@@ -3,7 +3,9 @@ class GroupsController < ApplicationController
   before_filter :ensure_logged_in, only: [
     :set_notifications,
     :mentionable,
-    :update
+    :update,
+    :messages,
+    :histories
   ]
 
   skip_before_filter :preload_json, :check_xhr, only: [:posts_feed, :mentions_feed]
@@ -17,6 +19,8 @@ class GroupsController < ApplicationController
     guardian.ensure_can_edit!(group)
 
     if group.update_attributes(group_params)
+      GroupActionLogger.new(current_user, group).log_change_group_settings
+
       render json: success_json
     else
       render_json_error(group)
@@ -107,21 +111,35 @@ class GroupsController < ApplicationController
 
   def add_members
     group = Group.find(params[:id])
-    guardian.ensure_can_edit!(group)
+    group.public ? ensure_logged_in : guardian.ensure_can_edit!(group)
 
-    if params[:usernames].present?
-      users = User.where(username: params[:usernames].split(","))
-    elsif params[:user_ids].present?
-      users = User.find(params[:user_ids].split(","))
-    elsif params[:user_emails].present?
-      users = User.where(email: params[:user_emails].split(","))
-    else
-      raise Discourse::InvalidParameters.new('user_ids or usernames or user_emails must be present')
+    users =
+      if params[:usernames].present?
+        User.where(username: params[:usernames].split(","))
+      elsif params[:user_ids].present?
+        User.find(params[:user_ids].split(","))
+      elsif params[:user_emails].present?
+        User.where(email: params[:user_emails].split(","))
+      else
+        raise Discourse::InvalidParameters.new(
+          'user_ids or usernames or user_emails must be present'
+        )
+      end
+
+    raise Discourse::NotFound if users.blank?
+
+    if group.public
+      raise Discourse::InvalidAccess unless current_user == users.first
+
+      unless current_user.staff?
+        RateLimiter.new(current_user, "public_group_membership", 3, 1.minute).performed!
+      end
     end
 
     users.each do |user|
       if !group.users.include?(user)
         group.add(user)
+        GroupActionLogger.new(current_user, group).log_add_user_to_group(user)
       else
         return render_json_error I18n.t('groups.errors.member_already_exist', username: user.username)
       end
@@ -146,21 +164,33 @@ class GroupsController < ApplicationController
 
   def remove_member
     group = Group.find(params[:id])
-    guardian.ensure_can_edit!(group)
+    group.public ? ensure_logged_in : guardian.ensure_can_edit!(group)
 
-    if params[:user_id].present?
-      user = User.find(params[:user_id])
-    elsif params[:username].present?
-      user = User.find_by_username(params[:username])
-    elsif params[:user_email].present?
-      user = User.find_by_email(params[:user_email])
-    else
-      raise Discourse::InvalidParameters.new('user_id or username must be present')
+    user =
+      if params[:user_id].present?
+        User.find_by(id: params[:user_id])
+      elsif params[:username].present?
+        User.find_by_username(params[:username])
+      elsif params[:user_email].present?
+        User.find_by_email(params[:user_email])
+      else
+        raise Discourse::InvalidParameters.new('user_id or username must be present')
+      end
+
+    raise Discourse::NotFound unless user
+
+    if group.public
+      raise Discourse::InvalidAccess unless current_user == user
+
+      unless current_user.staff?
+        RateLimiter.new(current_user, "public_group_membership", 3, 1.minute).performed!
+      end
     end
 
     user.primary_group_id = nil if user.primary_group_id == group.id
 
-    group.users.delete(user.id)
+    group.remove(user)
+    GroupActionLogger.new(current_user, group).log_remove_user_from_group(user)
 
     if group.save && user.save
       render json: success_json
@@ -181,6 +211,23 @@ class GroupsController < ApplicationController
     render json: success_json
   end
 
+  def histories
+    group = find_group(:group_id)
+    guardian.ensure_can_edit!(group)
+
+    page_size = 25
+    offset = (params[:offset] && params[:offset].to_i) || 0
+
+    group_histories = GroupHistory.with_filters(group, params[:filters])
+      .limit(page_size)
+      .offset(offset * page_size)
+
+    render_json_dump(
+      logs: serialize_data(group_histories, BasicGroupHistorySerializer),
+      all_loaded: group_histories.count < page_size
+    )
+  end
+
   private
 
   def group_params
@@ -189,7 +236,8 @@ class GroupsController < ApplicationController
       :flair_bg_color,
       :flair_color,
       :bio_raw,
-      :title
+      :title,
+      :public
     )
   end
 

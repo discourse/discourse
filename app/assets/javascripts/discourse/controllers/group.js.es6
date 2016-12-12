@@ -6,9 +6,9 @@ var Tab = Em.Object.extend({
     return 'group.' + name;
   },
 
-  @computed('name')
-  message(name) {
-    return I18n.t('groups.' + name);
+  @computed('name', 'i18nKey')
+  message(name, i18nKey) {
+    return I18n.t(`groups.${i18nKey || name}`);
   }
 });
 
@@ -20,7 +20,8 @@ export default Ember.Controller.extend({
     Tab.create({ name: 'posts' }),
     Tab.create({ name: 'topics' }),
     Tab.create({ name: 'mentions' }),
-    Tab.create({ name: 'messages', requiresMembership: true })
+    Tab.create({ name: 'messages', requiresMembership: true }),
+    Tab.create({ name: 'logs', i18nKey: 'logs.title', icon: 'shield', requiresMembership: true })
   ],
 
   @computed('model.is_group_owner', 'model.automatic')

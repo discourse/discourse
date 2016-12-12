@@ -66,6 +66,9 @@ class User < ActiveRecord::Base
 
   belongs_to :uploaded_avatar, class_name: 'Upload'
 
+  has_many :acting_group_histories, dependent: :destroy, foreign_key: :acting_user_id, class_name: GroupHistory
+  has_many :targeted_group_histories, dependent: :destroy, foreign_key: :target_user_id, class_name: GroupHistory
+
   delegate :last_sent_email_address, :to => :email_logs
 
   before_validation :strip_downcase_email
@@ -927,8 +930,9 @@ class User < ActiveRecord::Base
          .where("LENGTH(COALESCE(automatic_membership_email_domains, '')) > 0")
          .each do |group|
       domains = group.automatic_membership_email_domains.gsub('.', '\.')
-      if self.email =~ Regexp.new("@(#{domains})$", true)
-        group.add(self) rescue ActiveRecord::RecordNotUnique
+      if self.email =~ Regexp.new("@(#{domains})$", true) && !group.users.include?(self)
+        group.add(self)
+        GroupActionLogger.new(Discourse.system_user, group).log_add_user_to_group(self)
       end
     end
   end

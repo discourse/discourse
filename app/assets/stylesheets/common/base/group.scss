@@ -15,6 +15,39 @@
   margin-bottom: 30px;
 }
 
+.group-logs-filter {
+  margin-right: 10px;
+
+  &:hover {
+    background-color: $danger;
+  }
+}
+
+table.group-logs {
+  width: 100%;
+
+  th, tr {
+    border-bottom: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
+  }
+
+  th {
+    text-align: left;
+    padding: 5px 0px;
+  }
+
+  td {
+    padding: 10px 0px;
+  }
+
+  .group-logs-expand-details {
+    cursor: pointer;
+
+    i {
+      color: dark-light-diff($primary, $secondary, 50%, -50%);
+    }
+  }
+}
+
 table.group-members {
   width: 100%;
   table-layout: fixed;
@@ -89,24 +122,15 @@ table.group-members {
   float: right;
 }
 
-.groups.edit-group .form-horizontal {
-  textarea {
-    width: 99%;
-  }
-
-  label {
-    font-weight: bold;
-  }
-
-  input[type="text"] {
-    width: 80% !important;
-    margin-bottom: 10px;
-  }
-
+.form-horizontal {
   .group-flair-inputs {
     display: inline-block;
-    margin-top: 30px;
-    margin-bottom: 30px;
+    margin: 15px 0px;
+
+    input[type="text"] {
+      width: 80% !important;
+      margin-bottom: 10px;
+    }
 
     .group-flair-left {
       float: left;
@@ -125,6 +149,16 @@ table.group-members {
     .avatar-wrapper {
       background-color: #f4f4f4;
     }
+  }
+}
+
+.groups.edit-group .form-horizontal {
+  textarea {
+    width: 99%;
+  }
+
+  label {
+    font-weight: bold;
   }
 }
 
