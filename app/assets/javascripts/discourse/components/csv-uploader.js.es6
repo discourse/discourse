@@ -11,6 +11,12 @@ export default Em.Component.extend(UploadMixin, {
     return uploading ? I18n.t("uploading") : I18n.t("user.invited.bulk_invite.text");
   },
 
+  @computed("uploading")
+  uploadButtonDisabled(uploading) {
+    // https://github.com/emberjs/ember.js/issues/10976#issuecomment-132417731
+    return uploading ? true : null;
+  },
+
   uploadDone() {
     bootbox.alert(I18n.t("user.invited.bulk_invite.success"));
   }
