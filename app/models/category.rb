@@ -533,8 +533,6 @@ end
 #  email_in_allow_strangers      :boolean          default(FALSE)
 #  topics_day                    :integer          default(0)
 #  posts_day                     :integer          default(0)
-#  logo_url                      :string
-#  background_url                :string
 #  allow_badges                  :boolean          default(TRUE), not null
 #  name_lower                    :string(50)       not null
 #  auto_close_based_on_last_post :boolean          default(FALSE)
@@ -543,12 +541,12 @@ end
 #  contains_messages             :boolean
 #  sort_order                    :string
 #  sort_ascending                :boolean
+#  uploaded_logo_id              :integer
+#  uploaded_background_id        :integer
 #
 # Indexes
 #
-#  index_categories_on_background_url  (background_url)
-#  index_categories_on_email_in        (email_in) UNIQUE
-#  index_categories_on_logo_url        (logo_url)
-#  index_categories_on_topic_count     (topic_count)
-#  unique_index_categories_on_name     (name) UNIQUE
+#  index_categories_on_email_in     (email_in) UNIQUE
+#  index_categories_on_topic_count  (topic_count)
+#  unique_index_categories_on_name  (name) UNIQUE
 #
