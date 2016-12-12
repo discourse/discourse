@@ -160,7 +160,7 @@ class DiscourseStylesheets
   def digest
     @digest ||= begin
       theme = (cs = ColorScheme.enabled) ? "#{cs.id}-#{cs.version}" : false
-      category_updated = Category.where("background_url IS NOT NULL and background_url != ''").last_updated_at
+      category_updated = Category.where("uploaded_background_id IS NOT NULL").last_updated_at
 
       if theme || category_updated > 0
         Digest::SHA1.hexdigest "#{RailsMultisite::ConnectionManagement.current_db}-#{theme}-#{DiscourseStylesheets.last_file_updated}-#{category_updated}"

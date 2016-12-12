@@ -15,6 +15,8 @@ class Category < ActiveRecord::Base
 
   belongs_to :user
   belongs_to :latest_post, class_name: "Post"
+  belongs_to :uploaded_logo, class_name: "Upload"
+  belongs_to :uploaded_background, class_name: "Upload"
 
   has_many :topics
   has_many :category_users
@@ -37,9 +39,6 @@ class Category < ActiveRecord::Base
   validate :parent_category_validator
 
   validate :email_in_validator
-
-  validates :logo_url, upload_url: true, if: :logo_url_changed?
-  validates :background_url, upload_url: true, if: :background_url_changed?
 
   validate :ensure_slug
   before_save :apply_permissions
