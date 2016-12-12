@@ -3,7 +3,7 @@ import { registerUnbound } from 'discourse-common/lib/helpers';
 let _injections;
 
 function renderRaw(ctx, container, template, templateName, params) {
-  params = Object.assign({}, params);
+  params = jQuery.extend({}, params);
   params.parent = params.parent || ctx;
 
   if (!params.view) {
