@@ -293,23 +293,22 @@ class User < ActiveRecord::Base
     super
   end
 
-  def unread_private_messages
-    @unread_pms ||=
-      begin
-        # perf critical, much more efficient than AR
-        sql = "
-           SELECT COUNT(*) FROM notifications n
-           LEFT JOIN topics t ON n.topic_id = t.id
-           WHERE
-            t.deleted_at IS NULL AND
-            n.notification_type = :type AND
-            n.user_id = :user_id AND
-            NOT read"
+  def unread_notifications_of_type(notification_type)
+    # perf critical, much more efficient than AR
+    sql = "
+       SELECT COUNT(*) FROM notifications n
+       LEFT JOIN topics t ON n.topic_id = t.id
+       WHERE
+        t.deleted_at IS NULL AND
+        n.notification_type = :type AND
+        n.user_id = :user_id AND
+        NOT read"
 
-        User.exec_sql(sql, user_id: id,
-                           type:  Notification.types[:private_message])
-            .getvalue(0,0).to_i
-      end
+    User.exec_sql(sql, user_id: id, type: notification_type).getvalue(0,0).to_i
+  end
+
+  def unread_private_messages
+    @unread_pms ||= unread_notifications_of_type(Notification.types[:private_message])
   end
 
   def unread_notifications
