@@ -23,7 +23,7 @@ test("canJoinGroup", function() {
 test('canRequestMembership', function() {
   this.subject().setProperties({
     model: { allow_membership_requests: false, alias_level: 0 }
-  })
+  });
 
   equal(this.subject().get('canRequestMembership'), false);
 
