@@ -513,6 +513,7 @@ end
 #  bio_raw                            :text
 #  bio_cooked                         :text
 #  public                             :boolean          default(FALSE), not null
+#  allow_membership_requests          :boolean          default(FALSE), not null
 #
 # Indexes
 #
