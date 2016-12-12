@@ -113,6 +113,11 @@ class UserNotifications < ActionMailer::Base
     @counts << {label_key: 'user_notifications.digest.unread_messages', value: value, href: "#{Discourse.base_url}/my/messages"} if value > 0
 
     if @counts.size < 3
+      value = user.unread_notifications_of_type(Notification.types[:liked])
+      @counts << {label_key: 'user_notifications.digest.liked_received', value: value, href: "#{Discourse.base_url}/my/notifications"} if value > 0
+    end
+
+    if @counts.size < 3
       @counts << {
         label_key: 'user_notifications.digest.new_posts',
         value: Post.for_mailing_list(user, min_date).where("posts.post_number > ?", 1).count,
