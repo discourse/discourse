@@ -92,7 +92,7 @@ GEM
       ember-source (>= 1.1.0)
       jquery-rails (>= 1.0.17)
       railties (>= 3.1)
-    ember-source (2.4.6)
+    ember-source (2.10.0)
     erubis (2.7.0)
     eventmachine (1.2.0.1)
     excon (0.53.0)
@@ -402,7 +402,7 @@ DEPENDENCIES
   discourse_fastimage (= 2.0.3)
   email_reply_trimmer (= 0.1.6)
   ember-rails (= 0.18.5)
-  ember-source (= 2.4.6)
+  ember-source (= 2.10.0)
   excon
   execjs
   fabrication (= 2.9.8)
