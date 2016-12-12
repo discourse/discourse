@@ -55,7 +55,7 @@ describe Jobs::CleanUpUploads do
 
   it "does not delete category logo uploads" do
     category_logo_upload = fabricate_upload
-    Fabricate(:category, logo_url: category_logo_upload.url)
+    Fabricate(:category, uploaded_logo: category_logo_upload)
 
     Jobs::CleanUpUploads.new.execute(nil)
 
@@ -64,13 +64,13 @@ describe Jobs::CleanUpUploads do
   end
 
   it "does not delete category background url uploads" do
-    category_background_url = fabricate_upload
-    Fabricate(:category, background_url: category_background_url.url)
+    category_logo_upload = fabricate_upload
+    Fabricate(:category, uploaded_background: category_logo_upload)
 
     Jobs::CleanUpUploads.new.execute(nil)
 
     expect(Upload.find_by(id: @upload.id)).to eq(nil)
-    expect(Upload.find_by(id: category_background_url.id)).to eq(category_background_url)
+    expect(Upload.find_by(id: category_logo_upload.id)).to eq(category_logo_upload)
   end
 
   it "does not delete post uploads" do
