@@ -66,7 +66,7 @@
             {{#if model.title}}
               <h3>{{model.title}}</h3>
             {{/if}}
-            {{plugin-outlet "user-post-names"}}
+            {{plugin-outlet name="user-post-names" args=(hash model=model)}}
             <h3>
             {{#if model.location}}{{fa-icon "map-marker"}} {{model.location}}{{/if}}
             {{#if model.website_name}}
