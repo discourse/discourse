@@ -9,16 +9,16 @@ module Onebox
 
       def to_html
         imgur_data = get_imgur_data
-        return "<video width='#{imgur_data[:"video:width"]}' height='#{imgur_data[:"video:height"]}' controls autoplay loop><source src='#{imgur_data[:"video:secure_url"]}' type='video/mp4'><source src='#{imgur_data[:"video:secure_url"].gsub('mp4', 'webm')}' type='video/webm'></video>" if imgur_data[:"video:secure_url"]
-        return "<div class='onebox imgur-album'><a href='#{url}' target='_blank'><span class='outer-box' style='width:#{imgur_data[:"image:width"]}px'><span class='inner-box'><span class='album-title'>[Album] #{imgur_data[:title]}</span></span></span><img src='#{get_secure_link(imgur_data[:image])}' alt='Imgur' height='#{imgur_data[:"image:height"]}' width='#{imgur_data[:"image:width"]}'></a></div>" if is_album?
-        return "<a href='#{url}' target='_blank'><img src='#{get_secure_link(imgur_data[:image])}' alt='Imgur' height='#{imgur_data[:"image:height"]}' width='#{imgur_data[:"image:width"]}'></a>" if imgur_data[:image]
+        return "<video width='#{imgur_data[:"video:width"]}' height='#{imgur_data[:"video:height"]}' #{Helpers.title_attr(imgur_data)} controls autoplay loop><source src='#{imgur_data[:"video:secure_url"]}' type='video/mp4'><source src='#{imgur_data[:"video:secure_url"].gsub('mp4', 'webm')}' type='video/webm'></video>" if imgur_data[:"video:secure_url"]
+        return "<div class='onebox imgur-album'><a href='#{url}' target='_blank'><span class='outer-box' style='width:#{imgur_data[:"image:width"]}px'><span class='inner-box'><span class='album-title'>[Album] #{imgur_data[:title]}</span></span></span><img src='#{get_secure_link(imgur_data[:image])}' #{Helpers.title_attr(imgur_data)} height='#{imgur_data[:"image:height"]}' width='#{imgur_data[:"image:width"]}'></a></div>" if is_album?
+        return "<a href='#{url}' target='_blank'><img src='#{get_secure_link(imgur_data[:image])}' #{Helpers.title_attr(imgur_data)} alt='Imgur' height='#{imgur_data[:"image:height"]}' width='#{imgur_data[:"image:width"]}'></a>" if imgur_data[:image]
         return nil
       end
 
       def placeholder_html
         imgur_data = get_imgur_data
-        return "<video width='#{imgur_data[:"video:width"]}' height='#{imgur_data[:"video:height"]}' controls autoplay loop><source src='#{imgur_data[:"video:secure_url"]}' type='video/mp4'><source src='#{imgur_data[:"video:secure_url"].gsub('mp4', 'webm')}' type='video/webm'></video>" if imgur_data[:"video:secure_url"]
-        return "<img src='#{get_secure_link(imgur_data[:image])}' alt='Imgur' height='#{imgur_data[:"image:height"]}' width='#{imgur_data[:"image:width"]}'>"
+        return "<video width='#{imgur_data[:"video:width"]}' height='#{imgur_data[:"video:height"]}' #{Helpers.title_attr(imgur_data)} controls autoplay loop><source src='#{imgur_data[:"video:secure_url"]}' type='video/mp4'><source src='#{imgur_data[:"video:secure_url"].gsub('mp4', 'webm')}' type='video/webm'></video>" if imgur_data[:"video:secure_url"]
+        return "<img src='#{get_secure_link(imgur_data[:image])}' #{Helpers.title_attr(imgur_data)} alt='Imgur' height='#{imgur_data[:"image:height"]}' width='#{imgur_data[:"image:width"]}'>"
         return nil
       end
 

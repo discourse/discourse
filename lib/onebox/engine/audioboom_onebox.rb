@@ -13,7 +13,7 @@ module Onebox
         # we want the image to have the same dimensions as the embedded html
 
         <<-HTML
-          <img src="#{oembed[:thumbnail_url]}" style="max-width: #{oembed[:width]}px; max-height: #{oembed[:height]}px;">
+          <img src="#{oembed[:thumbnail_url]}" style="max-width: #{oembed[:width]}px; max-height: #{oembed[:height]}px;" #{Helpers.title_attr(oembed)}>
         HTML
       end
 

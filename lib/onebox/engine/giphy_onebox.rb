@@ -12,7 +12,7 @@ module Onebox
 
         <<-HTML
           <a href="#{oembed[:url]}" target="_blank">
-            <img src="#{oembed[:image]}" width="#{oembed[:width]}" height="#{oembed[:height]}">
+            <img src="#{oembed[:image]}" width="#{oembed[:width]}" height="#{oembed[:height]}" #{Helpers.title_attr(oembed)}>
           </a>
         HTML
       end

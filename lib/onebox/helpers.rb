@@ -63,5 +63,9 @@ module Onebox
     def self.truncate(string, length = 50)
       string.size > length ? string[0..length] + "..." : string
     end
+
+    def self.title_attr(meta)
+      (meta && !blank?(meta[:title])) ? "title='#{CGI.escapeHTML(meta[:title])}'" : ""
+    end
   end
 end
