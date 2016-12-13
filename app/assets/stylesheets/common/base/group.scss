@@ -62,23 +62,22 @@ table.group-members {
 
   th:first-child {
     width: 60%;
+    text-align: left;
   }
 
-  th:last-child {
+  th.group-members-actions {
     width: 5%;
   }
 
   th {
     border-bottom: 3px solid dark-light-diff($primary, $secondary, 90%, -60%);
+    text-align: center;
+    padding: 5px 0px 5px 5px;
+    color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
+    font-weight: normal;
   }
 
   th.sortable {
-    text-align: left;
-    padding: 5px 0px 5px 5px;
-
-    color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
-    font-weight: normal;
-
     i {
       margin-left: 5px;
     }
@@ -94,7 +93,12 @@ table.group-members {
       display: block;
     }
 
+    td:first-child {
+      text-align: left;
+    }
+
     td {
+      text-align: center;
       color: dark-light-diff($primary, $secondary, 50%, -50%);
       padding: 0.8em 0;
     }
@@ -128,14 +132,9 @@ table.group-members {
   }
 }
 
-.group-edit {
-  float: right;
-}
-
 .form-horizontal {
   .group-flair-inputs {
     display: inline-block;
-    margin: 15px 0px;
 
     input[type="text"] {
       width: 80% !important;
@@ -162,11 +161,7 @@ table.group-members {
   }
 }
 
-.groups.edit-group .form-horizontal {
-  textarea {
-    width: 99%;
-  }
-
+.group-edit .form-horizontal {
   label {
     font-weight: bold;
   }

@@ -1,24 +1,10 @@
 import { popupAjaxError } from 'discourse/lib/ajax-error';
-import { propertyEqual } from 'discourse/lib/computed';
 import computed from 'ember-addons/ember-computed-decorators';
 
 export default Ember.Controller.extend({
   adminGroupsType: Ember.inject.controller(),
   disableSave: false,
   savingStatus: '',
-
-  currentPage: function() {
-    if (this.get("model.user_count") === 0) { return 0; }
-    return Math.floor(this.get("model.offset") / this.get("model.limit")) + 1;
-  }.property("model.limit", "model.offset", "model.user_count"),
-
-  totalPages: function() {
-    if (this.get("model.user_count") === 0) { return 0; }
-    return Math.floor(this.get("model.user_count") / this.get("model.limit")) + 1;
-  }.property("model.limit", "model.user_count"),
-
-  showingFirst: Em.computed.lte("currentPage", 1),
-  showingLast: propertyEqual("currentPage", "totalPages"),
 
   aliasLevelOptions: function() {
     return [
@@ -47,38 +33,6 @@ export default Ember.Controller.extend({
   },
 
   actions: {
-    next() {
-      if (this.get("showingLast")) { return; }
-
-      const group = this.get("model"),
-            offset = Math.min(group.get("offset") + group.get("limit"), group.get("user_count"));
-
-      group.set("offset", offset);
-
-      return group.findMembers();
-    },
-
-    previous() {
-      if (this.get("showingFirst")) { return; }
-
-      const group = this.get("model"),
-            offset = Math.max(group.get("offset") - group.get("limit"), 0);
-
-      group.set("offset", offset);
-
-      return group.findMembers();
-    },
-
-    removeMember(member) {
-      const self = this,
-            message = I18n.t("admin.groups.delete_member_confirm", { username: member.get("username"), group: this.get("model.name") });
-      return bootbox.confirm(message, I18n.t("no_value"), I18n.t("yes_value"), function(confirm) {
-        if (confirm) {
-          self.get("model").removeMember(member);
-        }
-      });
-    },
-
     removeOwner(member) {
       const self = this,
             message = I18n.t("admin.groups.delete_owner_confirm", { username: member.get("username"), group: this.get("model.name") });
@@ -93,12 +47,6 @@ export default Ember.Controller.extend({
       if (Em.isEmpty(this.get("model.ownerUsernames"))) { return; }
       this.get("model").addOwners(this.get("model.ownerUsernames")).catch(popupAjaxError);
       this.set("model.ownerUsernames", null);
-    },
-
-    addMembers() {
-      if (Em.isEmpty(this.get("model.usernames"))) { return; }
-      this.get("model").addMembers(this.get("model.usernames")).catch(popupAjaxError);
-      this.set("model.usernames", null);
     },
 
     save() {

@@ -14,6 +14,9 @@ class GroupsController < ApplicationController
     render_serialized(find_group(:id), GroupShowSerializer, root: 'basic_group')
   end
 
+  def edit
+  end
+
   def update
     group = Group.find(params[:id])
     guardian.ensure_can_edit!(group)

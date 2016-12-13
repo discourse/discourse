@@ -20,12 +20,6 @@
           <h3 class='group-name'>@{{model.name}}</h3>
         {{/if}}
       </span>
-
-      {{#if canEditGroup}}
-        <span class="group-edit">
-          {{d-button action="showGroupEditor" label="groups.edit.title" class="group-edit-btn" icon="pencil"}}
-        </span>
-      {{/if}}
     </div>
 
     {{#if model.bio_cooked}}

@@ -397,6 +397,8 @@ en:
       edit:
         title: 'Edit Group'
         group_title: 'Title'
+        add_members: "Add Members"
+        delete_member_confirm: "Remove '%{username}' from the '%{group}' group?"
       request_membership_pm:
         title: "Membership Request"
         body: "I would like to request membership in @%{groupName}."
@@ -2499,7 +2501,6 @@ en:
         delete: "Delete"
         delete_confirm: "Delete this group?"
         delete_failed: "Unable to delete group. If this is an automatic group, it cannot be destroyed."
-        delete_member_confirm: "Remove '%{username}' from the '%{group}' group?"
         delete_owner_confirm: "Remove owner privilege for '%{username}'?"
         add: "Add"
         add_members: "Add members"
