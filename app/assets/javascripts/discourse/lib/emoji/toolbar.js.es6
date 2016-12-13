@@ -2,6 +2,7 @@ import groups from 'discourse/lib/emoji/groups';
 import KeyValueStore from "discourse/lib/key-value-store";
 import { emojiList } from 'pretty-text/emoji';
 import { emojiUrlFor } from 'discourse/lib/text';
+import { findRawTemplate } from 'discourse/lib/raw-templates';
 
 const keyValueStore = new KeyValueStore("discourse_emojis_");
 const EMOJI_USAGE = "emojiUsage";
@@ -151,7 +152,7 @@ function render(page, offset, options) {
   };
 
   $('.emoji-modal', options.appendTo).remove();
-  const template = Discourse.RAW_TEMPLATES['emoji-toolbar'];
+  const template = findRawTemplate('emoji-toolbar');
   options.appendTo.append(template(model));
 
   bindEvents(page, offset, options);

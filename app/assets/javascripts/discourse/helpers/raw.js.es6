@@ -1,4 +1,5 @@
 import { registerUnbound } from 'discourse-common/lib/helpers';
+import { findRawTemplate } from 'discourse/lib/raw-templates';
 
 let _injections;
 
@@ -33,7 +34,7 @@ registerUnbound('raw', function(templateName, params) {
   templateName = templateName.replace('.', '/');
 
   const container = Discourse.__container__;
-  const template = Discourse.RAW_TEMPLATES[templateName];
+  const template = findRawTemplate(templateName);
   if (!template) {
     console.warn('Could not find raw template: ' + templateName);
     return;

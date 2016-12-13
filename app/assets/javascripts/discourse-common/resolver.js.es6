@@ -10,6 +10,10 @@ export function setResolverOption(name, value) {
   _options[name] = value;
 }
 
+export function getResolverOption(name) {
+  return _options[name];
+}
+
 function parseName(fullName) {
   const nameParts = fullName.split(":");
   const type = nameParts[0];
