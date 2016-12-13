@@ -396,7 +396,7 @@ en:
         to: "To"
       edit:
         title: 'Edit Group'
-        group_title: 'Title'
+        full_name: 'Full Name'
         add_members: "Add Members"
         delete_member_confirm: "Remove '%{username}' from the '%{group}' group?"
       request_membership_pm:

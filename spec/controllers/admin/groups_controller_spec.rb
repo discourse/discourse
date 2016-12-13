@@ -41,7 +41,8 @@ describe Admin::GroupsController do
         "bio_raw"=>nil,
         "bio_cooked"=>nil,
         "public"=>false,
-        "allow_membership_requests"=>false
+        "allow_membership_requests"=>false,
+        "full_name"=>group.full_name
       }])
 
     end

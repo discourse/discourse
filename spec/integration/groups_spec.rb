@@ -54,7 +54,7 @@ describe "Groups" do
             flair_color: 'BBB',
             flair_url: 'fa-adjust',
             bio_raw: 'testing',
-            title: 'awesome team',
+            full_name: 'awesome team',
             public: true,
             allow_membership_requests: true
           } }
@@ -68,7 +68,7 @@ describe "Groups" do
         expect(group.flair_color).to eq('BBB')
         expect(group.flair_url).to eq('fa-adjust')
         expect(group.bio_raw).to eq('testing')
-        expect(group.title).to eq('awesome team')
+        expect(group.full_name).to eq('awesome team')
         expect(group.public).to eq(true)
         expect(group.allow_membership_requests).to eq(true)
         expect(GroupHistory.last.subject).to eq('allow_membership_requests')

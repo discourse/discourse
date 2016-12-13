@@ -10,7 +10,7 @@ test("Editing group", () => {
   andThen(() => {
     ok(find('.group-flair-inputs').length === 1, 'it should display avatar flair inputs');
     ok(find('.group-edit-bio').length === 1, 'it should display group bio input');
-    ok(find('.group-edit-title').length === 1, 'it should display group title input');
+    ok(find('.group-edit-full-name').length === 1, 'it should display group full name input');
     ok(find('.group-edit-public').length === 1, 'it should display group public input');
     ok(find('.group-edit-allow-membership-requests').length === 1, 'it should display group allow_membership_requets input');
     ok(find('.group-members-input .item').length === 7, 'it should display group members');
