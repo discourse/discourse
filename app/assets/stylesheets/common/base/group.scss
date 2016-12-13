@@ -56,7 +56,7 @@ table.group-members {
   width: 100%;
   table-layout: fixed;
 
-  th, tr {
+  tr {
     border-bottom: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
   }
 
@@ -69,17 +69,23 @@ table.group-members {
   }
 
   th {
+    border-bottom: 3px solid dark-light-diff($primary, $secondary, 90%, -60%);
+  }
+
+  th.sortable {
     text-align: left;
-    padding: 5px 0px;
+    padding: 5px 0px 5px 5px;
+
+    color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
+    font-weight: normal;
 
     i {
       margin-left: 5px;
     }
 
     &:hover {
-      color: $tertiary;
       cursor: pointer;
-      text-decoration: underline;
+      background-color: dark-light-diff($primary, $secondary, 90%, -75%);
     }
   }
 
