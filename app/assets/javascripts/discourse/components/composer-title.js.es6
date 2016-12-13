@@ -82,15 +82,17 @@ export default Ember.Component.extend({
       this.set('composer.featuredLink', this.get('composer.title'));
 
       const $h = $(html),
-            header = $h.find('h4').length > 0 ? $h.find('h4') : $h.find('h3');
+            heading = $h.find('h3').length > 0 ? $h.find('h3') : $h.find('h4');
 
       this.set('composer.reply', this.get('composer.title'));
 
-      if (header.length > 0 && header.text().length > 0) {
-        this.changeTitle(header.text());
+      if (heading.length > 0 && heading.text().length > 0) {
+        this.changeTitle(heading.text());
       } else {
-        const filename = (this.get('composer.featuredLink')||"").split("/").pop();
-        this.changeTitle(filename);
+        const firstTitle = $h.attr('title') || $h.find("[title]").attr("title");
+        if (firstTitle && firstTitle.length > 0) {
+          this.changeTitle(firstTitle);
+        }
       }
     }
   },
