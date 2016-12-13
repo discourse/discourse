@@ -134,7 +134,8 @@ const Group = Discourse.Model.extend({
       flair_color: this.get('flairHexColor'),
       bio_raw: this.get('bio_raw'),
       public: this.get('public'),
-      allow_membership_requests: this.get('allow_membership_requests')
+      allow_membership_requests: this.get('allow_membership_requests'),
+      full_name: this.get('full_name')
     };
   },
 

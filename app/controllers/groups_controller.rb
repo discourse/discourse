@@ -239,7 +239,7 @@ class GroupsController < ApplicationController
       :flair_bg_color,
       :flair_color,
       :bio_raw,
-      :title,
+      :full_name,
       :public,
       :allow_membership_requests
     )

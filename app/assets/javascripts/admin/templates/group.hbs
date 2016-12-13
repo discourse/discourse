@@ -12,6 +12,11 @@
   {{#if model.id}}
     {{#unless model.automatic}}
       <div>
+        <label for='full_name'>{{i18n 'groups.edit.full_name'}}</label>
+        {{input type='text' name='full_name' value=model.full_name class='group-edit-full-name'}}
+      </div>
+
+      <div>
         <label for="bio">{{i18n 'groups.bio'}}</label>
         {{d-editor value=model.bio_raw}}
       </div>

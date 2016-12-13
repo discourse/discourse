@@ -514,6 +514,7 @@ end
 #  bio_cooked                         :text
 #  public                             :boolean          default(FALSE), not null
 #  allow_membership_requests          :boolean          default(FALSE), not null
+#  full_name                          :string
 #
 # Indexes
 #

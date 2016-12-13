@@ -69,6 +69,7 @@ class Admin::GroupsController < Admin::AdminController
     group.flair_color    = group_params[:flair_color].presence
     group.public = group_params[:public] if group_params[:public]
     group.bio_raw = group_params[:bio_raw] if group_params[:bio_raw]
+    group.full_name = group_params[:full_name] if group_params[:full_name]
 
     if group.save
       Group.reset_counters(group.id, :group_users)
@@ -145,7 +146,7 @@ class Admin::GroupsController < Admin::AdminController
       :name, :alias_level, :visible, :automatic_membership_email_domains,
       :automatic_membership_retroactive, :title, :primary_group,
       :grant_trust_level, :incoming_email, :flair_url, :flair_bg_color,
-      :flair_color, :bio_raw, :public, :allow_membership_requests
+      :flair_color, :bio_raw, :public, :allow_membership_requests, :full_name
     )
   end
 end
