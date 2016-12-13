@@ -237,20 +237,6 @@ describe "Groups" do
         expect(group_history.target_user).to eq(user2)
       end
 
-      it "can make incremental deletes" do
-        expect do
-          xhr :delete, "/groups/#{group.id}/members", username: user.username
-        end.to change { group.users.count }.by(-1)
-
-        expect(response).to be_success
-
-        group_history = GroupHistory.last
-
-        expect(group_history.action).to eq(GroupHistory.actions[:remove_user_from_group])
-        expect(group_history.acting_user).to eq(admin)
-        expect(group_history.target_user).to eq(user)
-      end
-
       it "cannot add members to automatic groups" do
         group.update!(automatic: true)
 
@@ -296,6 +282,22 @@ describe "Groups" do
           group.update!(public: true)
         end
 
+        context 'admin' do
+          it "can make incremental adds" do
+            expect do
+              xhr :put, "/groups/#{group.id}/members", usernames: other_user.username
+            end.to change { group.users.count }.by(1)
+
+            expect(response).to be_success
+
+            group_history = GroupHistory.last
+
+            expect(group_history.action).to eq(GroupHistory.actions[:add_user_to_group])
+            expect(group_history.acting_user).to eq(admin)
+            expect(group_history.target_user).to eq(other_user)
+          end
+        end
+
         it 'should allow a user to join the group' do
           sign_in(other_user)
 
@@ -305,7 +307,9 @@ describe "Groups" do
           expect(response).to be_success
         end
 
-        it 'should not allow a user to add another user to a group' do
+        it 'should not allow an underprivilege user to add another user to a group' do
+          sign_in(user)
+
           xhr :put, "/groups/#{group.id}/members", usernames: other_user.username
 
           expect(response).to be_forbidden
@@ -364,6 +368,15 @@ describe "Groups" do
             group.update!(public: true)
           end
 
+          context "admin" do
+            it "removes by username" do
+              expect { xhr :delete, "/groups/#{group.id}/members", username: other_user.username }
+                .to change { group.users.count }.by(-1)
+
+              expect(response).to be_success
+            end
+          end
+
           it 'should allow a user to leave a group' do
             sign_in(other_user)
 
@@ -373,7 +386,9 @@ describe "Groups" do
             expect(response).to be_success
           end
 
-          it 'should not allow a user to leave a group for another user' do
+          it 'should not allow a underprivilege user to leave a group for another user' do
+            sign_in(user)
+
             xhr :delete, "/groups/#{group.id}/members", username: other_user.username
 
             expect(response).to be_forbidden

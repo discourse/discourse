@@ -132,7 +132,9 @@ class GroupsController < ApplicationController
     raise Discourse::NotFound if users.blank?
 
     if group.public
-      raise Discourse::InvalidAccess unless current_user == users.first
+      if !guardian.can_log_group_changes?(group) && current_user != users.first
+        raise Discourse::InvalidAccess
+      end
 
       unless current_user.staff?
         RateLimiter.new(current_user, "public_group_membership", 3, 1.minute).performed!
@@ -183,7 +185,9 @@ class GroupsController < ApplicationController
     raise Discourse::NotFound unless user
 
     if group.public
-      raise Discourse::InvalidAccess unless current_user == user
+      if !guardian.can_log_group_changes?(group) && current_user != user
+        raise Discourse::InvalidAccess
+      end
 
       unless current_user.staff?
         RateLimiter.new(current_user, "public_group_membership", 3, 1.minute).performed!
