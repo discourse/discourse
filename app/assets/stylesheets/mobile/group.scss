@@ -32,6 +32,18 @@
   background-color: $quaternary;
 }
 
+.form-horizontal {
+  .control-group {
+    margin-bottom: 10px;
+  }
+
+  .group-flair-inputs {
+    .group-flair-right {
+      margin: 0px
+    }
+  }
+}
+
 table.group-logs {
   width: 130%;
 }
