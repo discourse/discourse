@@ -27,8 +27,9 @@ test("Browsing Groups", () => {
 
   visit("/groups/discourse/messages");
   andThen(() => {
-    ok(find(".nav-stacked li a[title='Messages']").length === 0, 'it should not show messages tab if user is admin');
-    ok(find(".nav-stacked li a[title='Logs']").length === 0, 'it should not show Logs tab if user is admin');
+    ok(find(".nav-stacked li a[title='Messages']").length === 0, 'it should not show messages tab if user is not admin');
+    ok(find(".nav-stacked li a[title='Edit Group']").length === 0, 'it should not show messages tab if user is not admin');
+    ok(find(".nav-stacked li a[title='Logs']").length === 0, 'it should not show Logs tab if user is not admin');
     ok(count('.user-stream .item') > 0, "it lists stream items");
   });
 });
@@ -41,31 +42,9 @@ test("Admin Browsing Groups", () => {
 
   andThen(() => {
     ok(find(".nav-stacked li a[title='Messages']").length === 1, 'it should show messages tab if user is admin');
+    ok(find(".nav-stacked li a[title='Edit Group']").length === 1, 'it should show edit group tab if user is admin');
     ok(find(".nav-stacked li a[title='Logs']").length === 1, 'it should show Logs tab if user is admin');
     equal(find('.group-title').text(), 'Awesome Team', 'it should display the group title');
     equal(find('.group-name').text(), '@discourse', 'it should display the group name');
-  });
-
-  click('.group-edit-btn');
-
-  andThen(() => {
-    ok(find('.group-flair-inputs').length === 1, 'it should display avatar flair inputs');
-    ok(find('.edit-group-bio').length === 1, 'it should display group bio input');
-    ok(find('.edit-group-title').length === 1, 'it should display group title input');
-    ok(find('.edit-group-public').length === 1, 'it should display group public input');
-    ok(find('.edit-group-allow-membership-requests').length === 1, 'it should display group allow_membership_requets input');
-  });
-
-  click('.edit-group-public');
-
-  andThen(() => {
-    ok(find('.edit-group-allow-membership-requests[disabled]').length === 1, 'it should disable group allow_membership_requets input');
-  });
-
-  click('.edit-group-public');
-  click('.edit-group-allow-membership-requests');
-
-  andThen(() => {
-    ok(find('.edit-group-public[disabled]').length === 1, 'it should disable group public input');
   });
 });

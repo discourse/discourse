@@ -22,6 +22,10 @@ export default Ember.Controller.extend({
     Tab.create({ name: 'mentions' }),
     Tab.create({ name: 'messages', requiresMembership: true }),
     Tab.create({
+      name: 'edit', i18nKey: 'edit.title',
+      requiresMembership: true, requiresGroupAdmin: true
+    }),
+    Tab.create({
       name: 'logs', i18nKey: 'logs.title',
       requiresMembership: true, requiresGroupAdmin: true
     })

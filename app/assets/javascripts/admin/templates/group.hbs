@@ -33,26 +33,8 @@
       </div>
     {{/unless}}
     <div>
-      <label>{{i18n 'admin.groups.group_members'}} ({{model.user_count}})</label>
-      <div>
-        <a class="previous {{if showingFirst 'disabled'}}" {{action "previous"}}>{{fa-icon "fast-backward"}}</a>
-        {{currentPage}}/{{totalPages}}
-        <a class="next {{if showingLast 'disabled'}}" {{action "next"}}>{{fa-icon "fast-forward"}}</a>
-      </div>
-      <div class="ac-wrap clearfix">
-        {{#each model.members as |member|}}
-          {{group-member member=member automatic=model.automatic removeAction="removeMember"}}
-        {{/each}}
-      </div>
+      {{group-members-input model=model}}
     </div>
-
-    {{#unless model.automatic}}
-      <div>
-        <label for="user-selector">{{i18n 'admin.groups.add_members'}}</label>
-        {{user-selector usernames=model.usernames placeholderKey="admin.groups.selector_placeholder" id="user-selector"}}
-        {{d-button action="addMembers" class="add" icon="plus" label="admin.groups.add"}}
-      </div>
-    {{/unless}}
   {{/if}}
 
   <div>

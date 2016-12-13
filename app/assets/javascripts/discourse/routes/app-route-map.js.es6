@@ -57,6 +57,7 @@ export default function() {
     this.route('mentions');
     this.route('messages');
     this.route('logs');
+    this.route('edit');
   });
 
   // User routes

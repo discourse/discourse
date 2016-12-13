@@ -10,6 +10,7 @@ export default Ember.Controller.extend({
   limit: null,
   offset: null,
   isOwner: Ember.computed.alias('model.is_group_owner'),
+  showActions: false,
 
   @observes('order', 'desc')
   refreshMembers() {
@@ -28,6 +29,10 @@ export default Ember.Controller.extend({
   },
 
   actions: {
+    toggleActions() {
+      this.toggleProperty("showActions");
+    },
+
     removeMember(user) {
       this.get('model').removeMember(user);
     },

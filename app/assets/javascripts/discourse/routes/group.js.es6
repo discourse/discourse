@@ -17,12 +17,5 @@ export default Discourse.Route.extend({
 
   setupController(controller, model) {
     controller.setProperties({ model, counts: this.get('counts') });
-  },
-
-  actions: {
-    showGroupEditor() {
-      showModal('edit-group');
-      this.controllerFor('edit-group').set('model', this.modelFor('group'));
-    }
   }
 });
