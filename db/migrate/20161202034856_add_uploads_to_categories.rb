@@ -14,8 +14,5 @@ class AddUploadsToCategories < ActiveRecord::Migration
         category.save!
       end
     end
-
-    remove_column :categories, :logo_url, :string
-    remove_column :categories, :background_url, :string
   end
 end
