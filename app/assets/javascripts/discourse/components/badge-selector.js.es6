@@ -1,4 +1,5 @@
 import { on, observes, default as computed } from 'ember-addons/ember-computed-decorators';
+import { findRawTemplate } from 'discourse/lib/raw-templates';
 
 export default Ember.Component.extend({
   @computed('placeholderKey')
@@ -17,7 +18,6 @@ export default Ember.Component.extend({
     var self = this;
     var selectedBadges;
 
-    var template = Discourse.RAW_TEMPLATES['badge-selector-autocomplete'];
     self.$('input').autocomplete({
       allowAny: false,
       items: _.isArray(this.get('badgeNames')) ? this.get('badgeNames') : [this.get('badgeNames')],
@@ -42,7 +42,7 @@ export default Ember.Component.extend({
           });
         });
       },
-      template: template
+      template: findRawTemplate('badge-selector-autocomplete')
     });
   }
 });

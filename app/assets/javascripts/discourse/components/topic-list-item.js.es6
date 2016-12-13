@@ -1,5 +1,7 @@
 import computed from 'ember-addons/ember-computed-decorators';
 import { bufferedRender } from 'discourse-common/lib/buffered-render';
+import { findRawTemplate } from 'discourse/lib/raw-templates';
+
 export function showEntrance(e) {
   let target = $(e.target);
 
@@ -30,7 +32,7 @@ export default Ember.Component.extend(bufferedRender({
   },
 
   buildBuffer(buffer) {
-    const template = Discourse.RAW_TEMPLATES['list/topic-list-item'];
+    const template = findRawTemplate('list/topic-list-item');
     if (template) {
       buffer.push(template(this));
     }
