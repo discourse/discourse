@@ -1,5 +1,4 @@
 import Group from 'discourse/models/group';
-import showModal from 'discourse/lib/show-modal';
 
 export default Discourse.Route.extend({
 
