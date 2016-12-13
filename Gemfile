@@ -138,8 +138,6 @@ group :test, :development do
   gem 'rb-inotify', '~> 0.9', require: RUBY_PLATFORM =~ /linux/i ? 'rb-inotify' : false
   gem 'rspec-rails', require: false
   gem 'shoulda', require: false
-  gem 'simplecov', require: false
-  gem 'rspec-given'
   gem 'rspec-html-matchers'
   gem 'spork-rails'
   gem 'pry-nav'
