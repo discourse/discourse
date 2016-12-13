@@ -131,7 +131,7 @@ describe WebHook do
       PostDestroyer.new(user, post2).recover
     end
 
-    it 'should enqueue the right hooks for user creation events' do
+    it 'should enqueue the right hooks for user events' do
       WebHook.expects(:enqueue_hooks).once
       user
 
@@ -140,6 +140,9 @@ describe WebHook do
 
       WebHook.expects(:enqueue_hooks).once
       user.approve(admin)
+
+      WebHook.expects(:enqueue_hooks).once
+      UserUpdater.new(admin, user).update(username: 'testing123')
     end
   end
 end
