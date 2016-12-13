@@ -2574,6 +2574,12 @@ en:
         user_event:
           name: "User Event"
           details: "When a user is created or approved."
+        notification_event:
+          name: "Notification Event"
+          details: "When a notification is created."
+        session_event:
+          name: "Session Event"
+          details: "When a user log in or log out."
         delivery_status:
           title: "Delivery Status"
           inactive: "Inactive"

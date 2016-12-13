@@ -76,6 +76,19 @@ class WebHook < ActiveRecord::Base
       WebHook.enqueue_hooks(:user, user_id: user.id, event_name: event.to_s)
     end
   end
+
+  DiscourseEvent.on(:notification_created) do |notification|
+    WebHook.enqueue_hooks(:notification,
+      notification_id: notification.id,
+      event_name: "notification_#{Notification.types[notification.notification_type]}_created")
+  end
+
+  %i(user_logged_in user_logged_out).each do |event|
+    DiscourseEvent.on(event) do |user|
+      WebHook.enqueue_hooks(:session, user_id: user.id, event_name: event.to_s)
+    end
+  end
+
 end
 
 # == Schema Information
