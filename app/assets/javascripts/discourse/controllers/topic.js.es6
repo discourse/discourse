@@ -155,8 +155,8 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
       return this.send('showFlags', post);
     },
 
-    topicRouteAction(name) {
-      return this.send(name);
+    topicRouteAction(name, model) {
+      return this.send(name, model);
     },
 
     openAutoClose() {
