@@ -158,6 +158,11 @@ en:
   embed:
     start_discussion: "Start Discussion"
     continue: "Continue Discussion"
+    error: "Error Embedding"
+    referer: "Referer:"
+    mismatch: "The referer did not match any of the following hosts:"
+    no_hosts: "No hosts were set up for embedding."
+    configure: "Configure Embedding"
     more_replies:
       one: "1 more reply"
       other: "%{count} more replies"
