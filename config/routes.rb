@@ -7,7 +7,7 @@ require_dependency "permalink_constraint"
 
 # This used to be User#username_format, but that causes a preload of the User object
 # and makes Guard not work properly.
-USERNAME_ROUTE_FORMAT = /[\w.\-]+/ unless defined? USERNAME_ROUTE_FORMAT
+USERNAME_ROUTE_FORMAT = /[\w.\-]+?/ unless defined? USERNAME_ROUTE_FORMAT
 
 BACKUP_ROUTE_FORMAT = /.+\.(sql\.gz|tar\.gz|tgz)/i unless defined? BACKUP_ROUTE_FORMAT
 
@@ -397,8 +397,6 @@ Discourse::Application.routes.draw do
   get "posts/:username/deleted" => "posts#deleted_posts", constraints: {username: USERNAME_ROUTE_FORMAT}
   get "posts/:username/flagged" => "posts#flagged_posts", constraints: {username: USERNAME_ROUTE_FORMAT}
 
-  get "groups/:id.json" => 'groups#show', constraints: {id: USERNAME_ROUTE_FORMAT}, defaults: {format: 'json'}
-
   resources :groups, id: USERNAME_ROUTE_FORMAT do
     get "posts.rss" => "groups#posts_feed", format: :rss
     get "mentions.rss" => "groups#mentions_feed", format: :rss
@@ -422,10 +420,6 @@ Discourse::Application.routes.draw do
   # aliases so old API code works
   delete "admin/groups/:id/members" => "groups#remove_member", constraints: AdminConstraint.new
   put "admin/groups/:id/members" => "groups#add_members", constraints: AdminConstraint.new
-
-  # In case people try the wrong URL
-  get '/group/:id', to: redirect('/groups/%{id}')
-  get '/group/:id/members', to: redirect('/groups/%{id}/members')
 
   resources :posts do
     put "bookmark"
