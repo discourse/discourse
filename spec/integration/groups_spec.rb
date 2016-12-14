@@ -12,6 +12,24 @@ describe "Groups" do
     expect(response).to be_success
   end
 
+  describe 'viewing groups' do
+    it 'should return the right response' do
+      group.update_attributes!(visible: true)
+      other_group = Fabricate(:group, name: '0000', visible: true)
+
+      get "/groups.json"
+
+      expect(response).to be_success
+
+      response_body = JSON.parse(response.body)
+
+      group_ids = response_body["groups"].map { |g| g["id"] }
+
+      expect(group_ids).to include(group.id, other_group.id)
+      expect(response_body["load_more_groups"]).to eq("/groups?page=1")
+    end
+  end
+
   describe "checking if a group can be mentioned" do
     it "should return the right response" do
       sign_in(user)

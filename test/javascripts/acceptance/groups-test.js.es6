@@ -3,6 +3,20 @@ import { acceptance, logIn } from "helpers/qunit-helpers";
 acceptance("Groups");
 
 test("Browsing Groups", () => {
+  visit("/groups");
+
+  andThen(() => {
+    equal(count('.groups-table-row'), 18, 'it displays visible groups');
+  });
+
+  click("a[href='/groups/discourse/members']");
+
+  andThen(() => {
+    equal(find('.group-header').text().trim(), 'Awesome Team', "it displays the group page");
+  });
+});
+
+test("Viewing Group", () => {
   visit("/groups/discourse");
 
   andThen(() => {
@@ -34,7 +48,7 @@ test("Browsing Groups", () => {
   });
 });
 
-test("Admin Browsing Groups", () => {
+test("Admin Viewing Group", () => {
   logIn();
   Discourse.reset();
 

@@ -1,0 +1,39 @@
+{{#d-section pageClass="groups"}}
+  {{#load-more selector=".groups-table .groups-table-row" action="loadMore"}}
+    <h1>{{i18n "groups.index"}}</h1>
+
+    <div class='container'>
+      <table class="groups-table">
+        <thead>
+          <th>{{i18n "groups.name"}}</th>
+          <th>{{i18n "groups.user_count"}}</th>
+        </thead>
+
+        <tbody>
+          {{#each groups as |group|}}
+            <tr class="groups-table-row">
+              <td class="groups-name">
+                {{#link-to "group.members" group.name}}
+                  {{#if group.flair_url}}
+                    <span>
+                      {{avatar-flair
+                        flairURL=group.flair_url
+                        flairBgColor=group.flair_bg_color
+                        flairColor=group.flair_color
+                        groupName=group.name}}
+                    </span>
+                  {{/if}}
+
+                  <span><h4>@{{group.name}}</h4></span>
+                {{/link-to}}
+              </td>
+              <td>{{group.user_count}}</td>
+            </tr>
+          {{/each}}
+        </tbody>
+      </table>
+    </div>
+  {{/load-more}}
+
+  {{conditional-loading-spinner condition=groups.loadingMore}}
+{{/d-section}}
