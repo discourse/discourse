@@ -1,0 +1,45 @@
+.groups-page {
+  h1 {
+    margin: 20px 0px;
+  }
+}
+
+.groups-table {
+  width: 100%;
+
+  .groups-name {
+    span {
+      display: inline-block;
+      vertical-align: middle;
+    }
+
+    .avatar-flair {
+      $size: 30px;
+
+      background-size: $size;
+      height: $size;
+      width: $size;
+
+      i {
+        font-size: $size !important;
+      }
+    }
+  }
+
+  th {
+    border-bottom: 3px solid dark-light-diff($primary, $secondary, 90%, -60%);
+    padding: 5px 0px 5px 5px;
+    color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
+    font-weight: normal;
+  }
+
+  tr {
+    border-bottom: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
+
+    td {
+      text-align: center;
+      color: dark-light-diff($primary, $secondary, 50%, -50%);
+      padding: 0.8em 0;
+    }
+  }
+}
