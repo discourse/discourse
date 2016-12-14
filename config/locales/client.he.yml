@@ -138,7 +138,7 @@ he:
     topic_admin_menu: "פעולות ניהול לנושא"
     wizard_required: "הגיע הזמן לכוונן את הפורום שלכם! <a href='%{url}' data-auto-route='true'>התחילו את אשף ההקמה</a>!"
     emails_are_disabled: "כל הדוא\"ל היוצא נוטרל באופן גורף על ידי מנהל אתר. שום הודעת דוא\"ל, מכל סוג שהוא, לא תשלח."
-    bootstrap_mode_enabled: "כדי להקל על הקמת האתר החדש שלכם, אתם במצב איתחול-ראשוני. כל המשתמשים החדשים יקבלו רמת אמון 1 ויקבלו סיכומים יומיים במייל. אפשרות זו תכובה אוטומטית כאשר יהיו יותר מ %{min_users} משתמשים."
+    bootstrap_mode_enabled: "כדי להקל על הקמת האתר החדש שלכם, אתם במצב איתחול-ראשוני. כל המשתמשים החדשים יקבלו רמת אמון 1 ויקבלו תמצות יומי במייל. אפשרות זו תכובה אוטומטית כאשר יהיו יותר מ %{min_users} משתמשים."
     bootstrap_mode_disabled: "מצב איתחול-ראשוני יכובה ב 24 השעות הקרובות."
     s3:
       regions:
@@ -966,6 +966,7 @@ he:
       title_placeholder: " במשפט אחד, במה עוסק הדיון הזה?"
       edit_reason_placeholder: "מדוע ערכת?"
       show_edit_reason: "(הוספת סיבת עריכה)"
+      topic_featured_link_placeholder: "הזינו קישור שיוצג עם הכותרת."
       reply_placeholder: "הקלידו כאן. השתמשו ב Markdown, BBCode או HTML כדי לערוך. גררו או הדביקו תמונות."
       view_new_post: "צפו בפוסט החדש שלכם."
       saving: "שומר"
@@ -1663,6 +1664,22 @@ he:
           side_by_side_markdown:
             title: "הציגו את ההבדלי המקור הגולמיים זה לצד זה"
             button: '<i class="fa fa-columns"></i> גלם'
+    group:
+      edit:
+        title: 'עריכת קבוצה'
+      title: 'כותרת'
+      name: "שם"
+      bio: "אודות הקבוצה"
+      name_placeholder: "שם הקבוצה, ללא רווחים, זהה לכלל שם-משתמש/ת"
+      flair_url: "תמונת פלייר אווטר"
+      flair_url_placeholder: "(אופציונלי) URL של תמונה או מחלקה של Font Awesome"
+      flair_bg_color: "צבע רקע של פלייר לאווטר"
+      flair_bg_color_placeholder: "(אופציונלי) ערך צבע בהקס"
+      flair_color: "צבע פלייר אווטר"
+      flair_color_placeholder: "(אופציונלי) ערך צבע בהקס"
+      flair_preview_icon: "תצוגה מקדימה של אייקון"
+      flair_preview_image: "תצוגה מקדימה של תמונה"
+      flair_note: "שימו לב: פלייר יופיע רק עבור הקבוצה הראשית של משתמשים."
     category:
       can: 'יכול&hellip; '
       none: '(ללא קטגוריה)'
@@ -1679,6 +1696,7 @@ he:
       tags_allowed_tag_groups: "קבוצות תגים שניתנות לשימוש בקטגוריה זו:"
       tags_placeholder: "(אופציונלי) רשימת תגים מותרים"
       tag_groups_placeholder: "(אופציונלי) רשימת קבוצות תגים"
+      topic_featured_link_allowed: "מגביל עריכת קישור מומלץ של נושא בקטגוריה זו. ההגדרה topic_featured_link_enabled צריכה להיות מסומנת."
       delete: 'מחק קטגוריה'
       create: 'קטגוריה חדשה'
       create_long: 'יצירת קטגוריה חדשה'
@@ -2516,7 +2534,7 @@ he:
         title: "מיילים"
         settings: "הגדרות"
         templates: "תבניות"
-        preview_digest: "תצוגה מקדימה של סיכום"
+        preview_digest: "תצוגה מקדימה של תמצית"
         sending_test: "שולח דואר אלקטרוני לבדיקה..."
         error: "<b>שגיאה</b> - %{server_error}"
         test_error: "הייתה בעיה בשליחת הדואר האלקטרוני. בבקשה בידקו את ההגדרות שלכם ונסו שנית."
@@ -2534,7 +2552,7 @@ he:
         send_test: "שליחת מייל בדיקה"
         sent_test: "נשלח!"
         delivery_method: "שיטת העברה"
-        preview_digest_desc: "תצוגה מקדימה של מייל סיכום שנשלח למשתמשים לא פעילים. "
+        preview_digest_desc: "תצוגה מקדימה של מייל תמצות שנשלח למשתמשים לא פעילים. "
         refresh: "רענן"
         send_digest_label: "שילחו תוצאה זו אל:"
         send_digest: "שליחה"
@@ -2543,7 +2561,7 @@ he:
         html: "html"
         text: "טקסט"
         last_seen_user: "משתמש שנראה לאחרונה:"
-        no_result: "לא נמצאו תוצאות לסיכום."
+        no_result: "לא נמצאו תוצאות לתמצית."
         reply_key: "מפתח תגובה"
         skipped_reason: "דלג על סיבה"
         incoming_emails:
@@ -2572,7 +2590,7 @@ he:
             title: "סינון"
             user_placeholder: "שם משתמש"
             address_placeholder: "name@example.com"
-            type_placeholder: "סיכום, הרשמה..."
+            type_placeholder: "תמצית, הרשמה..."
             reply_key_placeholder: "מפתח תגובה"
             skipped_reason_placeholder: "סיבה"
       logs:
@@ -2975,7 +2993,7 @@ he:
         enabled: אפשרו עיטור
         icon: סמליל
         image: תמונה
-        icon_help: "השתמשו ב-class בשם Font Awesome או ב-URL לתמונה"
+        icon_help: "השתמשו במחלקה של Font Awesome או ב-URL לתמונה"
         query: שאילתת עיטור (SQL)
         target_posts: פרסומי מטרות שאילתה
         auto_revoke: הפעלת שאילתת ביטול יומית

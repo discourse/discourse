@@ -8,7 +8,7 @@
 pt_BR:
   dates:
     short_date_no_year: "D MMM"
-    short_date: "D MMM, YYYY"
+    short_date: "D MMM, AAAA"
     long_date: "D de MMMM de YYYY h:mma"
   datetime_formats: &datetime_formats
     formats:
@@ -270,6 +270,7 @@ pt_BR:
         name: "Nome da Categoria"
       topic:
         title: 'Título'
+        featured_link: 'Link Em Destaque'
       post:
         raw: "Corpo"
       user_profile:
@@ -531,6 +532,9 @@ pt_BR:
       title: 'Vote'
       description: 'Votar nesta postagem'
       long_form: 'voto computado para esta postagem'
+  user_activity:
+    no_bookmarks:
+      others: "Nenhum favorito."
   topic_flag_types:
     spam:
       title: 'Spam'
@@ -1644,10 +1648,17 @@ pt_BR:
         %{message}
     digest:
       why: "Um breve resumo de %{site_link} desde que viu pela última vez em %{last_seen_at}."
+      since_last_visit: "Desde a sua última visita"
       new_topics: "Novos Tópicos"
+      unread_messages: "Mensagens Não-lidas"
+      unread_notifications: "Notificações Não-lidas"
+      new_posts: "Novas Mensagens"
       new_users: "Usuários Novos"
       popular_topics: "Tópicos Populares"
+      follow_topic: "Seguir esse tópico"
       join_the_discussion: "Leia Mais"
+      popular_posts: "Publicações Populares"
+      from_topic_label: "De"
       subject_template: "[%{site_name}] Resumo das discussões"
       unsubscribe: "Este resumo é enviado por %{site_link} quando não o vemos há algum tempo. Para cancelar a assinatura %{unsubscribe_link}."
       click_here: "clique aqui"

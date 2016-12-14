@@ -115,7 +115,7 @@ zh_CN:
         enabled: '于%{when}全站置顶'
         disabled: '于%{when}解除全站置顶'
       visible:
-        enabled: '于%{when}解除隐藏'
+        enabled: '%{when}列出'
         disabled: '于%{when}隐藏'
     topic_admin_menu: "管理主题"
     wizard_required: "是时候配置你的论坛啦！<a href='%{url}' data-auto-route='true'>点击开始设置向导</a>！"
@@ -887,7 +887,7 @@ zh_CN:
       unlist: "隐藏"
       add_warning: "正式警告"
       toggle_whisper: "折叠或展开密语"
-      toggle_unlisted: "解除隐藏"
+      toggle_unlisted: "未列表切换"
       posting_not_on_topic: "你想回复哪一个主题？"
       saving_draft_tip: "保存中..."
       saved_draft_tip: "已保存"
@@ -1070,16 +1070,16 @@ zh_CN:
           label: 有该标签
         filters:
           label: 只返回主题/帖子符合...
-          likes: 我赞了
-          posted: 我曾发表过恢复
+          likes: 我给了赞的
+          posted: 我参与发帖
           watching: 我正在监看
           tracking: 我正在追踪
-          private: 在我的消息中
+          private: 在我的私信中
           bookmarks: 我已经收藏了
           first: 是第一帖
           pinned: 是置顶的
           unpinned: 不是置顶的
-          wiki: 是协同编辑的
+          wiki: 公共编辑
         statuses:
           label: 当主题
           open: 是开放的

@@ -27,17 +27,18 @@ nb_NO:
         millions: "{{number}}M"
     dates:
       time: "h:mm a"
+      timeline_date: "MMM YYYY"
       long_no_year: "D MMM h:mm a"
       long_no_year_no_time: "D MMM"
-      full_no_year_no_time: "MMMM Do"
+      full_no_year_no_time: "D. MMMM"
       long_with_year: "D MMM, YYYY h:mm a"
       long_with_year_no_time: "D MMM, YYYY"
-      full_with_year_no_time: "MMMM Do, YYYY"
+      full_with_year_no_time: "D. MMMM, YYYY"
       long_date_with_year: "D MMM, 'YY LT"
       long_date_without_year: "D MMM, LT"
       long_date_with_year_without_time: "D MMM, 'YY"
       long_date_without_year_with_linebreak: "D MMM <br/>LT"
-      long_date_with_year_with_linebreak: "D MMM, 'YY <br/>LT"
+      long_date_with_year_with_linebreak: "D. MMM, 'YY <br/>LT"
       wrap_ago: "%{date} siden"
       tiny:
         half_a_minute: "< 1m"
@@ -77,7 +78,7 @@ nb_NO:
         x_days:
           one: "1 dag"
           other: "%{count} dager"
-        date_year: "D MMM, 'YY"
+        date_year: "D. MMM, 'YY"
       medium_with_ago:
         x_minutes:
           one: "1 minutt siden"
@@ -328,13 +329,18 @@ nb_NO:
       notifications:
         watching:
           title: "Følger"
+          description: "Du vil bli varslet om hvert nye innlegg i hver beskjed, og antallet nye svar vil bli vist."
+        watching_first_post:
+          description: "Du vil bare bli varslet om det første innlegget i hvert nye emne i denne gruppen."
         tracking:
           title: "Sporer"
+          description: "Du vil få beskjeddersom nevner @navnet_ditt eller svarer deg, og antallet nye svar vil bli vist."
         regular:
           title: "Normal"
           description: "Du vil bli varslet hvis noen nevner ditt @navn eller svarer deg."
         muted:
           title: "Dempet"
+          description: "Du vil aldri bli varslet om noe angående nye emner i denne gruppen."
     user_action_groups:
       '1': "Liker tildelt"
       '2': "Liker mottatt"
@@ -418,9 +424,26 @@ nb_NO:
       suspended_notice: "Denne brukeren er bannlyst til {{date}}."
       suspended_reason: "Begrunnelse:"
       github_profile: "Github"
+      email_activity_summary: "Oppsummering av aktivitet"
+      mailing_list_mode:
+        instructions: |
+          Denne innstillingen overstyrer oppsummeringen av aktivitet.<br />
+          Dempede emner og kategorier blir ikke inkludert i disse e-postene.
+        individual: "Send en e-post for hvert nye innlegg"
+        individual_no_echo: "Send en e-post for hvert nye innlegg bortsett fra mine egne"
+        many_per_day: "Send meg en e-post for hvert nye innlegg (rundt {{dailyEmailEstimate}} daglig)"
+        few_per_day: "Send meg en e-post for hvert nye innlegg (rundt 2 daglig)"
+      watched_tags_instructions: "Du vil automatisk overvåke alle emner med disse stikkordene. Du vil bli varslet om alle nye innlegg og emner, og tallet på nye innlegg til også vises ved siden av emnet."
+      tracked_tags_instructions: "Du vil automatisk spore alle emner med disse stikkordene. Tallet på nye innlegg vil vises ved siden av emnet."
+      muted_tags_instructions: "Du vil ikke bli varslet om noe med tanke på nye emner med disse stikkordene, og de vil ikke vises i siste."
       watched_categories: "Følger"
+      watched_categories_instructions: "Du vil automatisk spore alle emner i disse kategoriene. Du vil bli varslet om alle nye innlegg og emner, og tallet på nye innlegg vil vises ved siden av emnet."
       tracked_categories: "Sporet"
+      tracked_categories_instructions: "Du vil automatisk spore alle emner i disse kategoriene. Tallet på nye innlegg vil vises ved siden av emnet."
+      watched_first_post_categories_instructions: "Du vil bli varslet om det første innlegget i hvert nye emner i disse kategoriene."
+      watched_first_post_tags_instructions: "Du vil bli varslet om det første innlegget i hvert nye emne med disse stikkordene."
       muted_categories: "Dempet"
+      muted_categories_instructions: "Du vil ikke bli varslet om noe med tanke på nye emner i disse kategoriene, og de vil ikke vises i siste."
       delete_account: "Slett kontoen min"
       delete_account_confirm: "Er du sikker på at du vil slette kontoen din permanent? Denne handlingen kan ikke angres!"
       deleted_yourself: "Slettingen av din konto har vært vellykket."
@@ -530,15 +553,17 @@ nb_NO:
         always: "alltid"
         never: "aldri"
       email_digests:
+        title: "Send meg en oppsummering på e-post av polære emner og svar dersom jeg ikke besøker siden"
         every_30_minutes: "hvert 30 minutt"
         every_hour: "hver time"
         daily: "daglig"
         every_three_days: "hver tredje dag"
         weekly: "ukentlig"
         every_two_weeks: "annenhver uke"
+      include_tl0_in_digests: "Inkludér innhold fra nye brukere i oppsummerings-eposter"
       email_direct: "Motta en e-post når noen siterer meg, svarer på innlegget mitt, nevner @brukernavnet mitt eller inviterer meg til et emne"
       email_private_messages: "Motta en e-post når noen sender deg en melding"
-      email_always: "Send meg varsler på epost selv når jeg er aktiv på nettstedet"
+      email_always: "Send meg varsler på e-post selv når jeg er aktiv på nettstedet"
       other_settings: "Annet"
       categories_settings: "Kategorier"
       new_topic_duration:
@@ -634,7 +659,7 @@ nb_NO:
         again: "Prøv igjen"
         fixed: "Last side"
     close: "Lukk"
-    assets_changed_confirm: "Dette nettstedet ble nettopp oppdatert. Oppdater nå for nyeste versjon?"
+    assets_changed_confirm: "Dette nettstedet ble nettopp oppdatert. Oppdater nå for siste versjon?"
     logout: "Du ble logget ut"
     refresh: "Refresh"
     read_only_mode:
@@ -666,7 +691,7 @@ nb_NO:
       intro: "Hei du! :heart_eyes: Det ser ut som du følger diskusjonen, men ikke har registrert deg enda."
       value_prop: "Når du registrerer deg husker vi hvor langt du har lest, så du starter på riktig sted neste gang du åpner en tråd. Du får også varsler, her og på e-post når det skjer ting i diskusjonene du vil følge. I tillegg kan du like innlegg :heartbeat:"
     summary:
-      enabled_description: "Du ser for øyeblikket en oppsummering av dette emnet: de mest interessante innleggene i følge nettsamfunnet."
+      enabled_description: "Du ser for øyeblikket en oppsummering av dette emnet: de mest interessante innleggene ifølge fellesskapet."
       enable: 'Oppsummer dette emnet'
       disable: 'Vis alle innlegg'
     deleted_filter:
@@ -760,10 +785,10 @@ nb_NO:
       drafts_offline: "utkast offline"
       error:
         title_missing: "Tittel er påkrevd"
-        title_too_short: "Tittel må være minst {{min}} tegn"
+        title_too_short: "Tittel må være på minst {{min}} tegn"
         title_too_long: "Tittel kan ikke være mer enn {{max}} tegn"
         post_missing: "Innlegget kan ikke være tomt"
-        post_length: "Innlegget må være minst {{min}} tegn"
+        post_length: "Innlegget må være på minst {{min}} tegn"
         try_like: 'Har du prøvd <i class="fa fa-heart"></i> knappen?'
         category_missing: "Du må velge en kategori"
       save_edit: "Lagre endring"
@@ -866,7 +891,7 @@ nb_NO:
     search:
       sort_by: "Sorter etter"
       relevance: "Relevanse"
-      latest_post: "Nyeste Innlegg"
+      latest_post: "Siste innlegg"
       most_viewed: "Mest Lest"
       most_liked: "Mest Likt"
       select_all: "Velg Alle"
@@ -883,7 +908,7 @@ nb_NO:
     hamburger_menu: "gå til en annen emneliste eller kategori"
     new_item: "ny"
     go_back: 'gå tilbake'
-    not_logged_in_user: 'brukerside med oppsummering av nylig aktivtet og preferanser.'
+    not_logged_in_user: 'brukerside med oppsummering av nåværende aktivtet og preferanser.'
     current_user: 'go til din brukerside'
     topics:
       bulk:
@@ -905,14 +930,14 @@ nb_NO:
         new: "Du har ingen nye emner å lese."
         read: "Du har ikke lest noen emner enda."
         posted: "Du har ikke postet i noen emner enda."
-        latest: "Det er ingen nylige emner. Det er trist."
+        latest: "Det finnes ingen siste emner. Det var synd."
         hot: "Det er ingen populære emner."
         bookmarks: "Du har ingen bokmerkede emner."
         category: "Det er ingen {{category}} emner."
         top: "Det er ingen populære emner."
         search: "Det er ingen søkeresultater"
       bottom:
-        latest: "Det er ingen nylige emner igjen å lese."
+        latest: "Det er ingen siste emner igjen å lese."
         hot: "Det er ingen populære emner igjen å lese."
         posted: "Det er ingen postede emner igjen å lese."
         read: "Det er ingen leste emner igjen å lese."
@@ -971,7 +996,7 @@ nb_NO:
       read_more: "Vil du lese mer? {{catLink}} eller {{latestLink}}."
       read_more_MF: "There { UNREAD, plural, =0 {} one { is <a href='/unread'>1 unread</a> } other { are <a href='/unread'># unread</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{and } false {is } other{}} <a href='/new'>1 new</a> topic} other { {BOTH, select, true{and } false {are } other{}} <a href='/new'># new</a> topics} } remaining, or {CATEGORY, select, true {browse other topics in {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: Se alle kategorier
-      view_latest_topics: se nylige emner
+      view_latest_topics: se siste emner
       suggest_create_topic: Hvorfor ikke opprette et emne?
       jump_reply_up: hopp til tidligere svar
       jump_reply_down: hopp til senere svar
@@ -1087,11 +1112,11 @@ nb_NO:
         title: 'Invitér'
         username_placeholder: "brukernavn"
         action: 'Send Invitasjon'
-        help: 'Inviter andre til dette emnet via epost eller varsler'
+        help: 'Inviter andre til dette emnet via e-post eller varsler'
         to_forum: "Vi sender en kortfattet e-post som gjør det mulig for en venn å umiddelbart registreres ved å klikke på en lenke. Ingen innlogging er nødvendig."
         sso_enabled: "Oppgi brukernavnet til personen du ønsker å invitere til dette emnet."
-        to_topic_blank: "Oppgi brukernavnet eller epost-adressen til personen du ønsker å invitere til dette emnet."
-        to_topic_email: "Du har oppgitt en epostadresse. Vi vil sende invitasjonen som later vennen din umiddelbart svare på dette emnet."
+        to_topic_blank: "Oppgi brukernavnet eller e-post-adressen til personen du ønsker å invitere til dette emnet."
+        to_topic_email: "Du har oppgitt en e-postadresse. Vi vil sende invitasjonen som lar vennen din svare på dette emnet umiddelbart."
         to_topic_username: "Du har oppgitt et brukernavn. Vi sender et varsel med en link som inviterer dem til dette emnet."
         to_username: "Oppgi brukernavnet til personen du ønsker å invitere. Vi sender et varsel med en lenke som inviterer dem til dette emnet."
         email_placeholder: 'navn@example.com'
@@ -1508,7 +1533,7 @@ nb_NO:
         title_with_count:
           one: "{{categoryName}} (1)"
           other: "{{categoryName}} ({{count}})"
-        help: "nylige emner i {{categoryName}}-kategorien"
+        help: "siste emner i {{categoryName}}-kategorien"
       top:
         title: "Aktive"
         help: "de mest aktive emnene det siste året, den siste måneden, den siste uken eller i dag"
@@ -1553,7 +1578,7 @@ nb_NO:
         stale_data: "Det har ikke vært sjekket for oppdateringer på en stund. Sjekk at sidekiq kjører."
         version_check_pending: "Ser ut som om du oppgraderte nylig. Fantastisk!"
         installed_version: "Installert"
-        latest_version: "Seneste"
+        latest_version: "Siste"
         problems_found: "Det har oppstått noen problemer med din installasjon av Discourse:"
         last_checked: "Sist sjekket"
         refresh_problems: "Last inn siden på nytt"
@@ -1661,25 +1686,23 @@ nb_NO:
         refresh: "Last inn på nytt"
         new: "Ny"
         selector_placeholder: "oppgi brukernavn"
-        name_placeholder: "Gruppenavn, ingen mellomrom, samme regler som for brukernavn"
         about: "Rediger gruppemedlemskap og navn her."
         group_members: "Gruppemedlemmer"
         delete: "Slett"
         delete_confirm: "Slette denne grupper?"
         delete_failed: "Unable to delete group. If this is an automatic group, it cannot be destroyed."
         delete_member_confirm: "Fjern '%{username}' fra '%{group}' gruppen?"
-        name: "Navn"
         add: "Legg til"
         add_members: "Legg til medlemmer"
         custom: "Egendefinert"
         automatic: "Automatisk"
-        automatic_membership_email_domains: "Brukere som registererer seg med et epostdomene som matcher en i denne listen vil automatisk bli lagt til i denne gruppen."
-        automatic_membership_retroactive: "Benytt samme epostdomeneregel for å legge til eksisterende brukere"
+        automatic_membership_email_domains: "Brukere som registererer seg med et e-postdomene som er det samme som et i denne listen, vil automatisk bli lagt til i denne gruppen."
+        automatic_membership_retroactive: "Benytt samme e-postdomeneregel for å legge til eksisterende brukere"
         default_title: "Standardtittel for alle brukere i denne gruppen"
         primary_group: "Sett som primærgruppe automatisk"
         group_owners: Eiere
         add_owners: Legg til eiere
-        incoming_email_placeholder: "oppgi epostadresse"
+        incoming_email_placeholder: "oppgi e-postadresse"
       api:
         generate_master: "Generer Master API-nøkkel"
         none: "Det er ingen aktive API-nøkler akkurat nå."
@@ -1755,7 +1778,7 @@ nb_NO:
         button_title:
           user: "Eksporter full medlemsliste i CSV format."
           staff_action: "Eksporter full handligslogg i CSV format."
-          screened_email: "Eksporter komplett liste over filtrerte epostadresser i CSV format."
+          screened_email: "Eksporter komplett liste over filtrerte e-postadresser i CSV format."
           screened_ip: "Eksporter komplett liste over filtrerte IP-addresser i CSV format."
           screened_url: "Eksporter komplett liste over filtrerte URL'er i CSV format."
       export_json:
@@ -1843,7 +1866,7 @@ nb_NO:
             name: 'liker'
             description: "Fargen til Liker-knappen."
       email:
-        title: "Eposter"
+        title: "E-poster"
         settings: "Instillinger"
         preview_digest: "Forhåndsvis Oppsummering"
         sending_test: "Sender e-post for testing"
@@ -1942,7 +1965,7 @@ nb_NO:
           actions:
             allow: "Tillat"
         screened_urls:
-          title: "Kontrollerte URLs"
+          title: "Kontrollerte URL-er"
           description: "URLer listet her ble brukt i innlegg av brukere som har blitt identifisert som spammere."
           url: "URL"
           domain: "Domene"

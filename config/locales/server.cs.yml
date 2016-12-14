@@ -785,6 +785,9 @@ cs:
     title: "Podmínky používání"
   privacy_topic:
     title: "Ochrana soukromí"
+  badges:
+    admired:
+      name: Obdivovaný
   admin_login:
     success: "E-mail odeslán"
     error: "Chyba!"

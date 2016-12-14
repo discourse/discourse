@@ -106,7 +106,8 @@ fr:
       default_categories_already_selected: "Vous ne pouvez pas séléctionner une catégorie qui est utilisée dans une autre liste."
       s3_upload_bucket_is_required: "Vous ne pouvez pas activer l'upload sur S3 avant d'avoir renseigné le 's3_upload_bucket'."
   bulk_invite:
-    file_should_be_csv: "Le fichier envoyé doit être au format csv ou txt."
+    file_should_be_csv: "Le fichier envoyé doit être au format CSV."
+    error: "Il y a eu une erreur en envoyant ce fichier. Merci de réessayer plus tard."
   backup:
     operation_already_running: "Une opération est en cours d'exécution. Vous ne pouvez pas démarrer un nouveau processus pour l'instant."
     backup_file_should_be_tar_gz: "Le fichier de sauvegarde doit être une archive .tar.gz."
@@ -270,6 +271,7 @@ fr:
         name: "Nom de la catégorie"
       topic:
         title: 'Titre'
+        featured_link: 'Lien associé'
       post:
         raw: "Corps"
       user_profile:
@@ -283,6 +285,9 @@ fr:
               too_many_users: "Vous ne pouvez envoyer des avertissements qu'à un utilisateur à la fois."
               cant_send_pm: "Désolé, vous ne pouvez pas envoyer de message privé à cet utilisateur."
               no_user_selected: "Vous devez choisir un utilisateur valide."
+            featured_link:
+              invalid: "est invalide. L'URL doit inclure http:// ou https://."
+              invalid_category: "ne peut pas être modifié dans cette catégorie."
         user:
           attributes:
             password:
@@ -533,6 +538,7 @@ fr:
       long_form: 'a voté pour ce message'
   user_activity:
     no_bookmarks:
+      self: "Vous n'avez mis de signets à aucun message ; mettre des signets vous permet de facilement les retrouver par la suite."
       others: "Aucun signet."
     no_likes_given:
       self: "Vous n'avez aimé aucun message"
@@ -767,6 +773,10 @@ fr:
     min_first_post_length: "Longueur minimale d'un premier message (corps de sujet) en nombre de caractères"
     min_private_message_post_length: "Longueur minimale des messages en nombre de caractères"
     max_post_length: "Longueur maximale autorisée des messages en nombres de caractères"
+    topic_featured_link_enabled: "Activer la création de sujets avec lien"
+    topic_featured_link_onebox: "Si possible, afficher une Onebox dans le corps du message et empêcher la modification du contenu."
+    open_topic_featured_link_in_external_window: "Ouvrir le lien associé au sujet dans un nouvel onglet."
+    show_topic_featured_link_in_digest: "Afficher les sujets avec lien dans le résumé par courriel."
     min_topic_title_length: "Longueur minimale autorisée des titres de sujet en nombre de caractères"
     max_topic_title_length: "Longueur maximale autorisée des titres de sujet en nombre de caractères"
     min_private_message_title_length: "Longueur minimale pour un titre de message en nombre de caractères"
@@ -877,7 +887,7 @@ fr:
     email_token_valid_hours: "Les jetons (tokens) de Mot de passe oublié / Activation de comptes sont valides (n) jours."
     email_token_grace_period_hours: "Les jetons (tokens) de Mot de passe oublié / Activation de comptes sont encore valides pour une période de grâce de (n) heures après leur expiration."
     enable_badges: "Activer le système de badges"
-    enable_whispers: "Permettre la communication privée entre responsables au sein d'un sujet (expérimental)."
+    enable_whispers: "Autoriser les communications privées entre responsables au sein d'un sujet."
     allow_index_in_robots_txt: "Préciser dans robots.txt que le site est autorisé à être indexé par les robots des moteurs de recherche."
     email_domains_blacklist: "Liste des domaines de courriel qui ne sont pas autorisés lors de la création de compte, délimitée par des pipes. Exemple : mailinator.com|trashmail.net"
     email_domains_whitelist: "Liste des domaines de courriel avec lesquelles les utilisateurs DOIVENT s'enregistrer, délimités par un pipe. ATTENTION : les utilisateurs ayant une adresse de courriel sur un autre domaine ne pourront pas s'enregistrer."
@@ -1128,6 +1138,7 @@ fr:
     automatically_download_gravatars: "Télécharger les gravatars pour les utilisateurs lors de la création de compte ou de la modification de courriel."
     digest_topics: "Le nombre maximum de sujets populaires à afficher dans le résumé par courriel."
     digest_posts: "Le nombre maximum de messages populaires à afficher dans le résumé par courriel."
+    digest_other_topics: "Le nombre maximum de sujets à afficher dans la section « Nouveautés dans les sujets et catégories que vous suivez » du résumé par courriel."
     digest_min_excerpt_length: "Longueur minimale (en caractères) de l'extrait des messages dans le résumé par courriel."
     delete_digest_email_after_days: "Ne pas envoyer de résumés par courriel aux utilisateurs qui n'ont pas visité le site depuis plus de (n) jours."
     digest_suppress_categories: "Ne pas inclure ces catégories dans les résumés par courriel."

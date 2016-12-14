@@ -106,7 +106,7 @@ it:
       default_categories_already_selected: "Non puoi selezionare una categoria usata in un'altra lista."
       s3_upload_bucket_is_required: "Non è possibile attivare i caricamenti da S3 a meno che non imposti l'opzione 's3_upload_bucket'."
   bulk_invite:
-    file_should_be_csv: "Il file caricato deve essere in formato csv o txt."
+    file_should_be_csv: "Il file caricato deve essere in formato csv."
   backup:
     operation_already_running: "Una operazione è in esecuzione. Non è possibile avviarne una nuova adesso."
     backup_file_should_be_tar_gz: "Il file di backup deve essere un archivio .tar.gz"
@@ -558,7 +558,7 @@ it:
     stop_watching_topic: "Smetti di osservare questo argomento, %{link}"
     mute_topic: "Silenziare tutte le notifiche per questo argomento, %{link}"
     unwatch_category: "Smetti di osservare tutti gli argomenti in %{category}"
-    mailing_list_mode: "Disabilita la modalità Mailing list"
+    mailing_list_mode: "Disabilita la modalità mailing list"
     disable_digest_emails: "Smetti di inviarmi email ripielogative"
     all: "Non inviare alcuna email da %{sitename}"
     different_user_description: "Sei attualmente connesso con un utente diverso da quello a cui abbiamo scritto. Per favore disconnettiti, oppure attiva la modalità anonima, e riprova."
@@ -569,7 +569,7 @@ it:
     read: "lettura"
     read_write: "lettura/scrittura"
     scopes:
-      message_bus: "Aggiornamenti in Tempo Reale"
+      message_bus: "Aggiornamenti in tempo reale"
       notifications: "Leggi e elimina tutte le notifiche"
       read: "Leggi tutto"
       write: "Scrivi tutto"
@@ -674,9 +674,9 @@ it:
       xaxis: "Giorno"
       yaxis: "Pagine viste da utenti connessi su mobile"
     page_view_anon_mobile_reqs:
-      title: "Visualizzazioni pagina da visitatori Anonimi"
+      title: "Visualizzazioni pagina da visitatori anonimi"
       xaxis: "Giorno"
-      yaxis: "Visualizzazioni pagina da visitatori Anonimi su dispositivi mobili"
+      yaxis: "Visualizzazioni pagina da visitatori anonimi su dispositivi mobili"
     http_background_reqs:
       title: "Background"
       xaxis: "Giorno"

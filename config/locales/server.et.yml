@@ -71,6 +71,7 @@ et:
       has_already_been_used: "on juba kasutusel"
       inclusion: puudub nimekirjas
       invalid: pole korrektne
+      is_invalid: "tundub segane. kas see on terve lause?"
       less_than: peab olema väiksem kui %{count}
       less_than_or_equal_to: peab olema väiksem või võrdne kui %{count}
       not_a_number: ei ole number
@@ -105,11 +106,13 @@ et:
       default_categories_already_selected: "Sa ei saa valida teises nimekirjas valitud liiki."
       s3_upload_bucket_is_required: "Ei saa aktiveerida S3 üleslaadimist, kui 's3_upload_bucket' ei ole määratud."
   bulk_invite:
-    file_should_be_csv: "Üles laetud fail peab olema kas csv või txt formaadis."
+    file_should_be_csv: "Üles laetav fail peab olema CSV vormingus."
+    error: "Selle faili üleslaadimisel tekkis viga. Palun proovi hiljem uuesti."
   backup:
     operation_already_running: "Praegu on üks protsess pooleli. Uut tegevust ei saa hetkel käivitada."
     backup_file_should_be_tar_gz: "Varukoopia peab olema .tar.gz arhiivifail."
     not_enough_space_on_disk: "Varukoopia üleslaadimiseks pole piisavalt kettaruumi."
+    invalid_filename: "Varundusfaili nimi sisaldab keelatud sümboleid. Lubatud sümbolid on a-z 0-9 . - _."
   not_logged_in: "Selleks peate olema sisse logitud."
   not_found: "Päritud URLi või ressurssi ei leitud."
   invalid_access: "Päritud ressursi vaatamiseks puuduvad õigused."
@@ -157,6 +160,7 @@ et:
   topic_not_found: "Midagi on valesti. Kas on võimalik, et antud teema suleti või kustutati samal ajal, kui te seda vaatasite?"
   just_posted_that: "on liiga sarnane sellele, mida sa hiljuti postitasid"
   invalid_characters: "sisaldab ebasobivaid tähemärke"
+  is_invalid: "tundub segane. kas see on terve lause?"
   next_page: "järgmine leht →"
   prev_page: "← eelmine leht"
   page_num: "Leht %{num}"
@@ -255,6 +259,7 @@ et:
         name: "Liigi nimetus"
       topic:
         title: 'Pealkiri'
+        featured_link: 'Põhiloo viide'
       post:
         raw: "Sisu"
       user_profile:
@@ -268,12 +273,16 @@ et:
               too_many_users: "Saad hoiatusi saata vaid ühele kasutajale korraga."
               cant_send_pm: "Vabanda, sa ei saa sellele kasutajale privaatsõnumit saata."
               no_user_selected: "Pead valima sobiva kasutaja."
+            featured_link:
+              invalid: "on vigane. URL peab sisaldama http:// või https://."
+              invalid_category: "ei saa selles foorumis redigeerida."
         user:
           attributes:
             password:
               common: "on üks 10000 enim kasutatud salasõnast. Palun kasuta turvalisemat parooli."
               same_as_username: "on sama mis su kasutajanimi. Palun kasuta turvalisemat parooli."
               same_as_email: "on sama mis su meiliaadress. Palun kasuta turvalisemat parooli."
+              same_as_current: "ühtib sinu hetkel kehtiva parooliga."
             ip_address:
               signup_not_allowed: "Sellelt kontolt pole liitumine lubatud."
         color_scheme_color:
@@ -283,6 +292,10 @@ et:
         post_reply:
           base:
             different_topic: "Postitus ja vastus peavad kuuluma samasse teemasse."
+        web_hook:
+          attributes:
+            payload_url:
+              invalid: "URL on vigane. URL peab sisaldama http:// või https://. Ning tühikud ei ole lubatud."
       <<: *errors
   user_profile:
     no_info_me: "<div class='missing-profile'>Sinu profiili väli 'Minust' on hetkel tühi, <a href='/users/%{username_lower}/preferences/about-me'>kas sooviksid selle ära täita?</a></div>"
@@ -494,6 +507,12 @@ et:
       title: 'Hääleta'
       description: 'Hääleta selle postituse poolt'
       long_form: 'hääletas selle postituse poolt'
+  user_activity:
+    no_bookmarks:
+      others: "Järjehoidjad puuduvad."
+    no_likes_given:
+      self: "Sa pole oma meeldimist ühelegi postitusele andnud."
+      others: "Meeldimisega postitusi veel pole."
   topic_flag_types:
     spam:
       title: 'Spämm'
@@ -501,10 +520,18 @@ et:
     inappropriate:
       title: 'Ebasobiv'
       long_form: 'tähistasin selle kui sobimatu'
+    notify_moderators:
+      title: "Miski muu"
+      email_body: "%{link}\n\n%{message}"
   archetypes:
+    regular:
+      title: "Tavaline teema"
     banner:
       title: "Teema Bänneriks"
+  unsubscribed:
+    title: "Tellimus tühistatud!"
   unsubscribe:
+    title: "Tühista tellimus"
     log_out: "Logi välja"
   user_api_key:
     read: "lugemine"
@@ -649,6 +676,8 @@ et:
     csv_export_failed:
       subject_template: "Andmete eksportimine ebaõnnestus"
   user_notifications:
+    unsubscribe:
+      title: "Tühista tellimus"
     mailing_list:
       new_topics: "Uued teemad"
       topic_updates: "eemade uuendused"
@@ -666,7 +695,10 @@ et:
   email_log:
     anonymous_user: "Kasutaja on anonüümne"
     seen_recently: "Kasutajat nähti hiljuti"
+    topic_nil: "post.topic tühi hulk"
     message_blank: "sõnum on tühi"
+    message_to_blank: "message.to on tühi"
+    text_part_body_blank: "text_part.body on tühi"
     body_blank: "sisu on tühi"
   about: "Teave"
   guidelines: "Juhendid"
