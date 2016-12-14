@@ -172,7 +172,7 @@ pl_PL:
       email_already_used_in_category: "'%{email}' jest już używany przez kategorię '%{category_name}'."
     default_names:
       everyone: "wszyscy"
-      admins: "admini"
+      admins: "administratorzy"
       moderators: "moderatorzy"
       staff: "zespół"
       trust_level_0: "poziom_zaufania_0"
@@ -854,6 +854,7 @@ pl_PL:
     reply_by_email_address: "Template for reply by email incoming email address, for example: %{reply_key}@reply.example.com or replies+%{reply_key}@example.com"
     ignore_by_title: "Ignoruj przychodzące wiadomości e-mail w oparciu o ich tytuł."
     pop3_polling_ssl: "Używaj SSL podczas łączenia z serwerem POP3. (Rekomendowane)"
+    pop3_polling_openssl_verify: "Sprawdź certyfikat TLS serwera (domyślnie: włączone)"
     relative_date_duration: "Liczba dni od wysłania wpisu gdy wyświetlana jest data relatywna (7d) zamiast absolutnej (20 Lut)."
     delete_all_posts_max: "The maximum number of posts that can be deleted at once with the Delete All Posts button. If a user has more than this many posts, the posts cannot all be deleted at once and the user can't be deleted."
     email_editable: "Allow users to change their e-mail address after registration."
@@ -868,6 +869,7 @@ pl_PL:
     enable_emoji: "Włącz obsługę emoji"
     emoji_set: "Jaki jest twój preferowany styl emoji?"
     approve_unless_trust_level: "Posty użytkowników poniżej tego poziomu zaufania muszą być zatwierdzane"
+    default_other_external_links_in_new_tab: "Otwórz linki zewnętrzne w nowej karcie domyślnie."
     default_categories_watching: "Lista kategorii obserwowanych domyślnie."
     default_categories_tracking: "Lista kategorii śledzonych domyślnie."
     errors:

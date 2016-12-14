@@ -399,6 +399,9 @@ tr_TR:
       profile: "Profil"
       mute: "Sustur"
       edit: "Tercihleri Düzenle"
+      download_archive:
+        button_text: "İletilerimi indir"
+        confirm: "İletilerinizi indirmek istediğinize emin'misiniz?"
       new_private_message: "Yeni İleti"
       private_message: "İleti"
       private_messages: "İletiler"

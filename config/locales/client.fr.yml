@@ -431,6 +431,8 @@ fr:
       download_archive:
         button_text: "Télécharger mes messages"
         confirm: "Êtes-vous sûr de vouloir télécharger vos messages ?"
+        success: "Le téléchargement a démarré ; vous serez notifié par message lorsqu'il est terminé."
+        rate_limit_error: "Les messages peuvent être téléchargés une fois par jour, veuillez ressayer demain."
       new_private_message: "Créer un message privé"
       private_message: "Message privé"
       private_messages: "Messages privés"
@@ -964,6 +966,7 @@ fr:
       title_placeholder: "Quel est le sujet en une courte phrase ?"
       edit_reason_placeholder: "pourquoi modifiez-vous le message ?"
       show_edit_reason: "(ajouter la raison de la modification)"
+      topic_featured_link_placeholder: "Entrez un lien affiché avec le titre."
       reply_placeholder: "Écrivez ici. Utilisez Markdown, BBCode, ou HTML pour mettre en forme. Glissez ou collez des images."
       view_new_post: "Voir votre nouveau message."
       saving: "Sauvegarde"
@@ -1659,6 +1662,22 @@ fr:
           side_by_side_markdown:
             title: "Afficher les différences de la source côte-à-côte"
             button: '<i class="fa fa-columns"></i> Brut'
+    group:
+      edit:
+        title: 'Modifier le groupe'
+      title: 'Titre'
+      name: "Nom"
+      bio: "À propos du groupe"
+      name_placeholder: "Nom du groupe, sans espaces, même règle que pour les pseudos"
+      flair_url: "Image de la vignette d'avatar"
+      flair_url_placeholder: "(Facultatif) URL de l'image ou classe Font Awesome"
+      flair_bg_color: "Couleur de l'arrière-plan de la vignette d'avatar"
+      flair_bg_color_placeholder: "(Facultatif) Couleur en héxadécimal"
+      flair_color: "Couleur de la vignette d'avatar"
+      flair_color_placeholder: "(Facultatif) Couleur en héxadécimal"
+      flair_preview_icon: "Prévisualiser l'icône"
+      flair_preview_image: "Prévisualiser l'image"
+      flair_note: "Note : la vignette d'avatar sera uniquement affichée pour le groupe principal d'un utilisateur."
     category:
       can: 'peut&hellip; '
       none: '(aucune catégorie)'
@@ -1675,6 +1694,7 @@ fr:
       tags_allowed_tag_groups: "Groupes de tags pouvant être utilisés uniquement dans cette catégorie :"
       tags_placeholder: "(Facultatif) liste des tags autorisés"
       tag_groups_placeholder: "(Facultatif) liste des groupes de tags autorisés"
+      topic_featured_link_allowed: "Restreindre la création de sujets avec lien à cette catégorie. Nécessite que le paramètre topic_featured_link_enabled soit activé."
       delete: 'Supprimer la catégorie'
       create: 'Nouvelle catégorie'
       create_long: 'Créer une nouvelle catégorie'

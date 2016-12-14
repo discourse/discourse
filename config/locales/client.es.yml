@@ -966,6 +966,7 @@ es:
       title_placeholder: "En una frase breve, ¿de qué trata este tema?"
       edit_reason_placeholder: "¿Por qué lo estás editando?"
       show_edit_reason: "(añadir motivo de edición)"
+      topic_featured_link_placeholder: "Introduce el enlace mostrado con el título."
       reply_placeholder: "Escribe aquí. Usa Markdown, BBCode o HTML para darle formato. Arrastra o pega imágenes."
       view_new_post: "Ver tu nuevo post."
       saving: "Guardando"
@@ -1661,6 +1662,22 @@ es:
           side_by_side_markdown:
             title: "Mostrar las diferencias crudas a la par"
             button: '<i class="fa fa-columns"></i> Crudo'
+    group:
+      edit:
+        title: 'Editar grupo'
+      title: 'Títul'
+      name: "Nombre"
+      bio: "Sobre el grupo"
+      name_placeholder: "Nombre del grupo, sin espacios, al igual que un usuario"
+      flair_url: "Imagen distintiva"
+      flair_url_placeholder: "(Opcional) URL de la imagen o Clase de Font Awesome"
+      flair_bg_color: "Color de fondo de la imagen distintiva"
+      flair_bg_color_placeholder: "(Opcional) Valor hexadecimal del color"
+      flair_color: "Color de la imagen distintiva"
+      flair_color_placeholder: "(Opcional) Valor hexadecimal del color"
+      flair_preview_icon: "Vista previa del icono"
+      flair_preview_image: "Vista previa de la imagen"
+      flair_note: "Nota: la imagen distintiva sólo se mostrará para el grupo primario del usuario."
     category:
       can: 'puede&hellip; '
       none: '(sin categoría)'
@@ -1677,6 +1694,7 @@ es:
       tags_allowed_tag_groups: "Grupos de etiquetas que sólo pueden pueden utilizarse en esta categoría:"
       tags_placeholder: "(Opcional) lista de etiquetas permitidas"
       tag_groups_placeholder: "(Opcional) lista de grupos de etiquetas permitidos"
+      topic_featured_link_allowed: "Limita la edición del enlace destacado del tema en esta categoría. Requiere que la opción topic_featured_link_enabled esté habilitada."
       delete: 'Eliminar categoría'
       create: 'Crear categoría'
       create_long: 'Crear una nueva categoría'

@@ -154,6 +154,7 @@ pl_PL:
         enabled: 'wylistowanie %{when}'
         disabled: 'odlistowanie %{when}'
     topic_admin_menu: "akcje administratora"
+    wizard_required: "Teraz czas na konfigurację twojego forum! <a href='%{url}' data-auto-route='true'>Rozpocznij Kreator Konfiguracji</a>!"
     emails_are_disabled: "Wysyłanie e-maili zostało globalnie wyłączone przez administrację. Powiadomienia e-mail nie będą dostarczane."
     bootstrap_mode_enabled: "Aby ułatwić uruchomienie Twojego nowego serwisu, znajdujesz się w trybie bootstrap. Wszyscy nowi użytkownicy otrzymają 1. poziom zaufania i będą otrzymywać codzienne podsumowania drogą mailową. To się zmieni, gdy liczba użytkowników przekroczy liczbę %{min_users}."
     bootstrap_mode_disabled: "Tryb Bootstrap zostanie wyłączony w ciągu najbliższych 24 godzin."
@@ -456,6 +457,11 @@ pl_PL:
       profile: "Profil"
       mute: "Wycisz"
       edit: "Edytuj ustawienia"
+      download_archive:
+        button_text: "Pobierz moje wpisy"
+        confirm: "Czy na pewno chcesz pobrać swoje wszystkie wpisy?"
+        success: "Rozpoczęto eksport: otrzymasz wiadomość, gdy proces zostanie zakończony."
+        rate_limit_error: "Wpisy mogą być pobierane raz dziennie, spróbuj ponownie jutro."
       new_private_message: "Nowa wiadomość"
       private_message: "Wiadomość"
       private_messages: "Wiadomości"
@@ -479,6 +485,7 @@ pl_PL:
         each_browser_note: "Uwaga: to ustawienie musisz zmienić w każdej przeglądarce której używasz."
       dismiss_notifications: "Odrzuć wszystkie"
       dismiss_notifications_tooltip: "Oznacz wszystkie powiadomienia jako przeczytane"
+      first_notification: "Twoje pierwsze powiadomienie! Kliknij aby zacząć."
       disable_jump_reply: "Po odpowiedzi nie przechodź do nowego wpisu"
       dynamic_favicon: "Pokazuj licznik powiadomień na karcie jako dynamiczny favicon"
       external_links_in_new_tab: "Otwieraj wszystkie zewnętrzne odnośniki w nowej karcie"
@@ -496,13 +503,18 @@ pl_PL:
       mailing_list_mode:
         label: "Tryb listy mailingowej"
         enabled: "Włącz tryb listy mailingowej"
+        instructions: |
+          To ustawienie  nadpisuje podsumowanie aktywności. <br />
         daily: "Wyślij codzienne aktualizacje"
         individual: "Wyślij e-mail dla każdego nowego postu"
+        individual_no_echo: "Wysyłaj emaile dla każdego nowego postu oprócz mojego"
         many_per_day: "Wyślij mi e-mail dla każdego nowego posta (około {{dailyEmailEstimate}} na dzień)"
         few_per_day: "Wyślij mi e-mail dla każdego nowego posta (około 2 dziennie)"
       tag_settings: "Tagi"
       watched_tags: "Obserwowane"
+      watched_tags_instructions: "Będziesz automatycznie śledzić wszystkie nowe tematy z tymi tagami, będziesz otrzymywać powiadomienie o każdym nowym wpisie i temacie, a liczba nieprzeczytanych i nowych wpisów będzie wyświetlana obok tytułów na liście tematów. "
       tracked_tags: "Śledzone"
+      tracked_tags_instructions: "Będziesz automatycznie śledzić wszystkie nowe tematy z tymi tagami. Licznik nowych wpisów pojawi się obok tytułu na liście tematów."
       muted_tags: "Wyciszone"
       watched_categories: "Obserwowane"
       tracked_categories: "Śledzone"
@@ -615,6 +627,7 @@ pl_PL:
         title: "Język interfejsu"
         instructions: "Język interfejsu użytkownika. Zmieni się, gdy odświeżysz stronę."
         default: "(domyślny)"
+        any: "każdy"
       password_confirmation:
         title: "Powtórz hasło"
       last_posted: "Ostatni wpis"
@@ -802,6 +815,7 @@ pl_PL:
     too_few_posts_notice: "Pora <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>rozruszać dyskusję!</a> Aktualnie istnieje <strong>%{currentPosts} / %{requiredPosts}</strong> wpisów. Odwiedzający potrzebują więcej tematów i konwersacji do czytania i pisania na ich temat."
     learn_more: "dowiedz się więcej…"
     all_time: 'łącznie'
+    all_time_desc: 'łącznie utworzonych tematów'
     year: 'rok'
     year_desc: 'tematy dodane w ciągu ostatnich 365 dni'
     month: 'miesiąc'
@@ -961,8 +975,10 @@ pl_PL:
       show_preview: 'pokaż podgląd &raquo;'
       hide_preview: '&laquo; schowaj podgląd'
       quote_post_title: "Cytuj cały wpis"
+      bold_label: "Pogrubienie"
       bold_title: "Pogrubienie"
       bold_text: "pogrubiony tekst"
+      italic_label: "Kursywa"
       italic_title: "Wyróżnienie"
       italic_text: "wyróżniony tekst"
       link_title: "Odnośnik"
@@ -980,6 +996,7 @@ pl_PL:
       olist_title: "Lista numerowana"
       ulist_title: "Lista wypunktowana"
       list_item: "Element listy"
+      heading_label: "Nagłówek"
       heading_title: "Nagłówek"
       heading_text: "Nagłówek"
       hr_title: "Pozioma linia"
@@ -990,6 +1007,7 @@ pl_PL:
       cant_send_pm: "Przepraszamy, niestety nie możesz wysłać prywatnej wiadomości do %{username}."
       yourself_confirm:
         title: "Nie zapomniałeś dodać odbiorców?"
+        body: "Aktualnie ta wiadomość będzie wysłana tylko do ciebie!"
       admin_options_title: "Opcjonalne ustawienia obsługi dla tego tematu"
       auto_close:
         label: "Automatycznie zamykaj tematy po:"
@@ -1013,6 +1031,7 @@ pl_PL:
       posted: "<i title='posted' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
       edited: "<i title='edycja' class='fa fa-pencil'></i><p><span>{{username}}</span> {{description}}</p>"
       liked: "<i title='polubienie' class='fa fa-heart'></i><p><span>{{username}}</span> {{description}}</p>"
+      liked_2: "<i title='polubienie' class='fa fa-heart'></i><p><span>{{username}}</span> {{description}}</p>"
       liked_many:
         one: "<i title='liked' class='fa fa-heart'></i><p><span>{{username}}, {{username2}} oraz 1 inna osoba</span> {{description}}</p>"
         few: "<i title='liked' class='fa fa-heart'></i><p><span>{{username}}, {{username2}} i {{count}} innych osób</span> {{description}}</p>"
@@ -1087,13 +1106,45 @@ pl_PL:
         category: "Szukaj w kategorii #{{category}}"
         topic: "Szukaj w tym temacie"
         private_messages: "Wyszukiwanie wiadomości"
+      advanced:
+        title: Zaawansowane wyszukiwanie
+        posted_by:
+          label: Wysłane przez
+        in_category:
+          label: W kategorii
+        in_group:
+          label: W grupie
+        with_badge:
+          label: Z odnaką
+        with_tags:
+          label: Z tagami
+        filters:
+          likes: Lubię
+          watching: Obserwuję
+          tracking: Śledzę
+          private: są w moich wiadomościach
+          bookmarks: Dodałeś do zakładek
+          pinned: są przypięte
+          unpinned: są nie przypięte
+          wiki: są postami wiki
+        statuses:
+          open: są otwarte
+          closed: są zamknięte
+          noreplies: ma zero odpowiedzi
+        post:
+          time:
+            before: przed
+            after: po
     hamburger_menu: "przejdź do innej listy lub kategorii"
     new_item: "nowy"
     go_back: 'wróć'
     not_logged_in_user: 'strona użytkownika z podsumowaniem bieżących działań i ustawień'
     current_user: 'idź do swojej strony użytkowanika'
     topics:
+      new_messages_marker: "ostatnia wizyta"
       bulk:
+        select_all: "Zaznacz wszystkie"
+        clear_all: "Wyczyść wszystko"
         unlist_topics: "Ukryj tematy"
         reset_read: "Wyzeruj przeczytane"
         delete: "Usuń tematy"
@@ -1294,6 +1345,8 @@ pl_PL:
       share:
         title: 'Udostępnij'
         help: 'udostępnij odnośnik do tego tematu'
+      print:
+        title: 'Drukuj'
       flag_topic:
         title: 'Zgłoś'
         help: 'zgłoś ten temat, aby zwrócić uwagę moderacji lub wyślij powiadomienie o nim'
@@ -1410,6 +1463,7 @@ pl_PL:
     post:
       reply: "<i class='fa fa-mail-forward'></i> {{replyAvatar}} {{usernameLink}}"
       reply_topic: "<i class='fa fa-mail-forward'></i> {{link}}"
+      quote_reply: "Cytuj"
       edit: "Edycja {{link}} {{replyAvatar}} {{username}}"
       edit_reason: "Powód"
       post_number: "wpis {{number}}"
@@ -1621,6 +1675,14 @@ pl_PL:
           side_by_side_markdown:
             title: "Pokaż porównanie źródeł w formie tekstowej obok siebie"
             button: '<i class="fa fa-columns"></i> Tekst'
+    group:
+      edit:
+        title: 'Edycja grupy'
+      title: 'Tytuł'
+      name: "Nazwa"
+      bio: "O grupie"
+      flair_preview_icon: "Podgląd ikony"
+      flair_preview_image: "Podgląd obrazu"
     category:
       can: 'może&hellip; '
       none: '(brak kategorii)'
@@ -1669,6 +1731,7 @@ pl_PL:
       email_in_disabled: "Tworzenie nowych tematów emailem jest wyłączone w ustawieniach serwisu. "
       email_in_disabled_click: 'Kliknij tu, aby włączyć.'
       suppress_from_homepage: "Nie wyświetlaj tej kategorii na stronie głównej."
+      sort_order: "Domyślnie sortuj:"
       allow_badges_label: "Włącz przyznawanie odznak na podstawie aktywności w tej kategorii"
       edit_permissions: "Edytuj uprawnienia"
       add_permission: "Dodaj uprawnienie"
@@ -1982,6 +2045,7 @@ pl_PL:
         new_name: "Nowa grupa tagów"
         save: "Zapisz"
         delete: "Usuń"
+        confirm_delete: "Czy na pewno chcesz usunąć ten tag grupy?"
       topics:
         none:
           unread: "Nie masz nieprzeczytanych tematów."
@@ -2177,6 +2241,34 @@ pl_PL:
         info_html: "Twoje klucze API dają dostęp do tworzenia i aktualizowania tenatów przez wywołania JSON."
         all_users: "Wszyscy użytkownicy"
         note_html: "Zachowaj ten klucz <strong>w tajemnicy</strong>, wszyscy którzy go posiadają mogą tworzyć wpisy jako dowolny użytkownik."
+      web_hooks:
+        new: "Nowy webhook"
+        create: "Stwórz"
+        save: "Zapisz"
+        destroy: "Usuń"
+        description: "Opis"
+        go_back: "Powrót do listy"
+        payload_url_placeholder: "https://example.com/postreceive"
+        wildcard_event: "Wysyłaj mi wszystko."
+        active: "Aktywny"
+        delete_confirm: "Usunąć ten webhook?"
+        topic_event:
+          details: "Kiedy pojawia się nowy temat, poprawiony, zmieniony lub usunięty."
+        delivery_status:
+          title: "Status dostarczenia"
+          inactive: "Nieaktywny"
+          failed: "Niepowodzenie"
+        events:
+          request: "Żądanie"
+          response: "Odpowiedź"
+          headers: "Nagłówki"
+          go_list: "Przejdź do listy"
+          go_events: "Przejdź do wydarzeń"
+          ping: "Ping"
+          event_id: "ID"
+          timestamp: "Utworzono"
+          completion: "Czas wykonania"
+          actions: "Akcje"
       plugins:
         title: "Wtyczki"
         installed: "Zainstalowane wtyczki"
@@ -2363,6 +2455,9 @@ pl_PL:
         delivery_method: "Metoda Dostarczenia"
         preview_digest_desc: "Podgląd treści zestawienia wysyłanego e-mailem do nieaktywnych użytkowników."
         refresh: "Odśwież"
+        send_digest_label: "Wyślij ten wynik do:"
+        send_digest: "Wyślij"
+        sending_email: "Wysyłanie wiadomości e-mail ..."
         format: "Format"
         html: "html"
         text: "text"
@@ -2451,8 +2546,10 @@ pl_PL:
             create_category: "Dodaj nową kategorię"
             block_user: "zablokuj użytkownika"
             unblock_user: "odblokuj użytkownika"
+            revoke_moderation: "cofnąć moderację"
             backup_operation: "operacja tworzenia kopii zapasowej"
             deleted_tag: "usunięty tag"
+            revoke_email: "cofnąć e-mail"
         screened_emails:
           title: "Ekranowane emaile"
           description: "Kiedy ktoś próbuje założyć nowe konto, jego adres email zostaje sprawdzony i rejestracja zostaje zablokowana, lub inna akcja jest podejmowana."
@@ -2596,7 +2693,7 @@ pl_PL:
         anonymize_yes: "Tak, anonimizuj to konto."
         anonymize_failed: "Wystąpił problem podczas anonimizacji konta."
         delete: "Usuń użytkownika"
-        delete_forbidden_because_staff: "Admini i moderatorzy nie mogą zostać usunięci."
+        delete_forbidden_because_staff: "Administratorzy i moderatorzy nie mogą zostać usunięci."
         delete_posts_forbidden_because_staff: "Nie można usunąć wszystkich wpisów administratorów i moderatorów."
         delete_forbidden:
           one: "Użytkownik nie może zostać usunięty jeśli posiada wpisy. Usuń wszystkie jego wpisy przed usunięciem użytkownika. (Nie można usunąć wpisów starszych niż %{count} dzień.)"
@@ -2625,6 +2722,7 @@ pl_PL:
         unblock_failed: 'Wystąpił problem podczaj odblokowania użytkownika.'
         block_failed: 'Wystąpił problem podczas blokowania użytkownika.'
         block_accept: 'Tak, zablokuj tego użytkownika'
+        bounce_score: "Wskaźnik odbić"
         reset_bounce_score:
           label: "Przywróć"
         deactivate_explanation: "Wymusza ponowne potwierdzenie adresu email tego konta."
@@ -2864,3 +2962,18 @@ pl_PL:
           label: "Nowy:"
           add: "Dodaj"
           filter: "Wyszukaj (URL or zewnętrzny URL)"
+  wizard_js:
+    wizard:
+      done: "Zrobione"
+      back: "Poprzednia"
+      next: "Następna"
+      upload: "Wyślij"
+      uploading: "Wysyłanie…"
+      quit: "Może później"
+      invites:
+        add_user: "dodaj"
+        none_added: "Nie zaprosiłeś nikogo. Czy na pewno chcesz kontynuować?"
+        roles:
+          admin: "Administratorzy"
+          moderator: "Moderatoratorzy"
+          regular: "Zwykli użytkownicy"

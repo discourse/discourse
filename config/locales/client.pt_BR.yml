@@ -428,6 +428,10 @@ pt_BR:
       profile: "Perfil"
       mute: "Silenciar"
       edit: "Editar Preferências"
+      download_archive:
+        button_text: "Baixar Minhas Publicações"
+        confirm: "Você tem certeza de que quer baixar as suas publicações?"
+        rate_limit_error: "Publicações podem ser baixadas somente uma vez por dia, por favor tente novamente amanhã."
       new_private_message: "Nova Mensagem"
       private_message: "Mensagem"
       private_messages: "Mensagens"
@@ -961,6 +965,7 @@ pt_BR:
       title_placeholder: "Sobre o que é esta discussão em uma pequena frase?"
       edit_reason_placeholder: "por que você está editando?"
       show_edit_reason: "(adicione motivo da edição)"
+      topic_featured_link_placeholder: "Entre com o link mostrado no título."
       reply_placeholder: "Escreva aqui. Use Markdown, BBCode ou HTML para formatar. Arraste ou cole uma imagens."
       view_new_post: "Ver sua nova resposta."
       saving: "Salvando"
@@ -1120,6 +1125,7 @@ pt_BR:
           tracking: Eu estou rastreando
           private: estão em minhas mensagens
           bookmarks: Eu marquei
+          first: são a primeira publicação
           pinned: está fixado
           unpinned: não está fixado
         statuses:
@@ -1143,6 +1149,7 @@ pt_BR:
     topics:
       new_messages_marker: "última visita"
       bulk:
+        select_all: "Selecionar Tudo"
         unlist_topics: "Tópicos Não Listados"
         reset_read: "Redefinir Lido"
         delete: "Apagar Tópicos"
@@ -1463,6 +1470,7 @@ pt_BR:
     post:
       reply: "<i class='fa fa-mail-forward'></i> {{replyAvatar}} {{usernameLink}}"
       reply_topic: "<i class='fa fa-mail-forward'></i> {{link}}"
+      quote_reply: "Citação"
       edit: "Em resposta a {{link}} por {{replyAvatar}} {{username}}"
       edit_reason: "Motivo:"
       post_number: "resposta {{number}}"
@@ -1650,6 +1658,12 @@ pt_BR:
           side_by_side_markdown:
             title: "Mostrar a diferença da fonte crua lado-a-lado"
             button: '<i class="fa fa-columns"></i> Cru'
+    group:
+      edit:
+        title: 'Editar Grupo'
+      title: 'Título'
+      name: "Nome"
+      name_placeholder: "Nome do grupo, sem espaços, mesma regra que o nome de usuário"
     category:
       can: 'pode&hellip; '
       none: '(sem categoria)'
@@ -2515,6 +2529,9 @@ pt_BR:
         delivery_method: "Delivery Method"
         preview_digest_desc: "Pré-visualizar o conteúdo do e-mail de resumo enviado para usuários inativos."
         refresh: "Atualizar"
+        send_digest_label: "Enviar esse resultado para:"
+        send_digest: "Enviar"
+        sending_email: "Enviando email..."
         format: "Formato"
         html: "html"
         text: "texto"

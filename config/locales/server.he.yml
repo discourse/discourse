@@ -106,7 +106,8 @@ he:
       default_categories_already_selected: "לא ניתן לבחור קטגוריה שהשתמשו בה ברשימה אחרת."
       s3_upload_bucket_is_required: "אינכם יכולים להעלות ל-S3 ללא 's3_upload_bucket'."
   bulk_invite:
-    file_should_be_csv: "הקובץ המועלה צריך להיות בפורמט csv או txt."
+    file_should_be_csv: "הקובץ שמועלה אמור להיות בפורמט csv."
+    error: "ארעה שגיאה בהעלת הקובץ. אנא נסו שוב מאוחר יותר."
   backup:
     operation_already_running: "פעולה רצה כרגע. לא יכול להתחיל עבודה חדשה עכשיו."
     backup_file_should_be_tar_gz: "קובץ הגיבוי צריך להיות .tar.gz."
@@ -268,6 +269,7 @@ he:
         name: "שם קטגוריה"
       topic:
         title: 'כותרת'
+        featured_link: 'קישור מומלץ'
       post:
         raw: "גוף"
       user_profile:
@@ -281,6 +283,9 @@ he:
               too_many_users: "אתם יכולים לשלוח אזהרות רק למשתמש/ת אחד בכל פעם."
               cant_send_pm: "מצטערים, אינכם יכולים לשלוח הודעה פרטית למשתמש זה."
               no_user_selected: "עליכם לבחור משתמש/ת תקניים."
+            featured_link:
+              invalid: "אינו תקין. URL אמור לכלול http:// או https://."
+              invalid_category: "לא ניתן לעריכה בקטגוריה זו."
         user:
           attributes:
             password:
@@ -765,6 +770,10 @@ he:
     min_first_post_length: "אורך מינימלי מותר לפוסט ראשון (בגוף הנושא) בתווים "
     min_private_message_post_length: "אורך הפוסט המינימלי המותר בתווים להודעות"
     max_post_length: "מספר התווים המקסימלי כאורך פוסט"
+    topic_featured_link_enabled: "איפשור של פרסום קישור עם נושאים."
+    topic_featured_link_onebox: "הצגת onebox בתוכן פוסט במידת האפשר ומניעת עריכת תוכן פוסט."
+    open_topic_featured_link_in_external_window: "פתיחת קישור מומלץ של נושא בחלון חיצוני."
+    show_topic_featured_link_in_digest: "הצגת קישור מומלץ של הנושא במייל התמצות."
     min_topic_title_length: "מספר התווים המינימלי הנדרש לכותרת נושא"
     max_topic_title_length: "מספר התווים המקסימלי המותר לכותרת נושא"
     min_private_message_title_length: "אורך הכותרת המנימילי המותר להודעה בתווים"
@@ -875,7 +884,7 @@ he:
     email_token_valid_hours: "סיסמאות שכחת סיסמה / הפעלת חשבון תקפים במשך (n) שעות."
     email_token_grace_period_hours: "סיסמאות שכחת סיסמה / הפעלת חשבון עדיין זמינים לזמן חסד של (n) שעות לאחר שהופקו."
     enable_badges: "הפעלת מערכת העיטורים"
-    enable_whispers: "הודעות פרטיות בין חברי הצוות אפשריות בתוך הנושא (ניסיוני)"
+    enable_whispers: "אפשרו לצוות לקיים תקשורת פרטית בתוך נושאים."
     allow_index_in_robots_txt: "פרטו ב-robots.txt שלאתר זה מותר להיות מאונדקס על ידי מנועי חיפוש."
     email_domains_blacklist: "רשימה מופרדת בצינור (pipe) של דומיינים של אימייל אשר מהם משתמשים לא מורשים לרשום חשבונות. למשל: mailinator.com|trashmail.net"
     email_domains_whitelist: "רשימה מופרדת בצינור (pipe) אשר ר-ק ממנה משתמשים יכולים לרשום חשבונות. א-ז-ה-ר-ה: משתמשים עם אימיילים מדומיינים אחרים לא יורשו!"
