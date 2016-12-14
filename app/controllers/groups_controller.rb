@@ -10,6 +10,22 @@ class GroupsController < ApplicationController
 
   skip_before_filter :preload_json, :check_xhr, only: [:posts_feed, :mentions_feed]
 
+  def index
+    page_size = 30
+    page = params[:page]&.to_i || 0
+
+    groups = Group.order(user_count: :desc, name: :asc)
+      .where(visible: true)
+      .offset(page * page_size)
+      .limit(page_size)
+
+    render json: {
+      groups: serialize_data(groups, BasicGroupSerializer),
+      total_rows_groups: Group.count,
+      load_more_groups: groups_path(page: page + 1)
+    }
+  end
+
   def show
     render_serialized(find_group(:id), GroupShowSerializer, root: 'basic_group')
   end

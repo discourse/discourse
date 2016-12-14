@@ -1,8 +1,9 @@
 import { ajax } from 'discourse/lib/ajax';
 import { default as computed, observes } from "ember-addons/ember-computed-decorators";
 import GroupHistory from 'discourse/models/group-history';
+import RestModel from 'discourse/models/rest';
 
-const Group = Discourse.Model.extend({
+const Group = RestModel.extend({
   limit: 50,
   offset: 0,
   user_count: 0,
