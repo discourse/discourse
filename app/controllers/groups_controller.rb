@@ -3,13 +3,34 @@ class GroupsController < ApplicationController
   before_filter :ensure_logged_in, only: [
     :set_notifications,
     :mentionable,
-    :update
+    :update,
+    :messages,
+    :histories
   ]
 
   skip_before_filter :preload_json, :check_xhr, only: [:posts_feed, :mentions_feed]
 
+  def index
+    page_size = 30
+    page = params[:page]&.to_i || 0
+
+    groups = Group.order(user_count: :desc, name: :asc)
+      .where(visible: true)
+      .offset(page * page_size)
+      .limit(page_size)
+
+    render json: {
+      groups: serialize_data(groups, BasicGroupSerializer),
+      total_rows_groups: Group.count,
+      load_more_groups: groups_path(page: page + 1)
+    }
+  end
+
   def show
     render_serialized(find_group(:id), GroupShowSerializer, root: 'basic_group')
+  end
+
+  def edit
   end
 
   def update
@@ -17,6 +38,8 @@ class GroupsController < ApplicationController
     guardian.ensure_can_edit!(group)
 
     if group.update_attributes(group_params)
+      GroupActionLogger.new(current_user, group).log_change_group_settings
+
       render json: success_json
     else
       render_json_error(group)
@@ -72,12 +95,27 @@ class GroupsController < ApplicationController
   def members
     group = find_group(:group_id)
 
-    limit = (params[:limit] || 50).to_i
+    limit = (params[:limit] || 20).to_i
     offset = params[:offset].to_i
+    dir = (params[:desc] && !params[:desc].blank?) ? 'DESC' : 'ASC'
+    order = {}
+
+    if params[:order] && %w{last_posted_at last_seen_at}.include?(params[:order])
+      order.merge!(params[:order] => dir)
+    end
 
     total = group.users.count
-    members = group.users.order('NOT group_users.owner').order(:username_lower).limit(limit).offset(offset)
-    owners = group.users.order(:username_lower).where('group_users.owner')
+    members = group.users
+      .order('NOT group_users.owner')
+      .order(order)
+      .order(:username_lower => dir)
+      .limit(limit)
+      .offset(offset)
+
+    owners = group.users
+      .order(order)
+      .order(:username_lower => dir)
+      .where('group_users.owner')
 
     render json: {
       members: serialize_data(members, GroupUserSerializer),
@@ -92,21 +130,37 @@ class GroupsController < ApplicationController
 
   def add_members
     group = Group.find(params[:id])
-    guardian.ensure_can_edit!(group)
+    group.public ? ensure_logged_in : guardian.ensure_can_edit!(group)
 
-    if params[:usernames].present?
-      users = User.where(username: params[:usernames].split(","))
-    elsif params[:user_ids].present?
-      users = User.find(params[:user_ids].split(","))
-    elsif params[:user_emails].present?
-      users = User.where(email: params[:user_emails].split(","))
-    else
-      raise Discourse::InvalidParameters.new('user_ids or usernames or user_emails must be present')
+    users =
+      if params[:usernames].present?
+        User.where(username: params[:usernames].split(","))
+      elsif params[:user_ids].present?
+        User.find(params[:user_ids].split(","))
+      elsif params[:user_emails].present?
+        User.where(email: params[:user_emails].split(","))
+      else
+        raise Discourse::InvalidParameters.new(
+          'user_ids or usernames or user_emails must be present'
+        )
+      end
+
+    raise Discourse::NotFound if users.blank?
+
+    if group.public
+      if !guardian.can_log_group_changes?(group) && current_user != users.first
+        raise Discourse::InvalidAccess
+      end
+
+      unless current_user.staff?
+        RateLimiter.new(current_user, "public_group_membership", 3, 1.minute).performed!
+      end
     end
 
     users.each do |user|
       if !group.users.include?(user)
         group.add(user)
+        GroupActionLogger.new(current_user, group).log_add_user_to_group(user)
       else
         return render_json_error I18n.t('groups.errors.member_already_exist', username: user.username)
       end
@@ -131,21 +185,35 @@ class GroupsController < ApplicationController
 
   def remove_member
     group = Group.find(params[:id])
-    guardian.ensure_can_edit!(group)
+    group.public ? ensure_logged_in : guardian.ensure_can_edit!(group)
 
-    if params[:user_id].present?
-      user = User.find(params[:user_id])
-    elsif params[:username].present?
-      user = User.find_by_username(params[:username])
-    elsif params[:user_email].present?
-      user = User.find_by_email(params[:user_email])
-    else
-      raise Discourse::InvalidParameters.new('user_id or username must be present')
+    user =
+      if params[:user_id].present?
+        User.find_by(id: params[:user_id])
+      elsif params[:username].present?
+        User.find_by_username(params[:username])
+      elsif params[:user_email].present?
+        User.find_by_email(params[:user_email])
+      else
+        raise Discourse::InvalidParameters.new('user_id or username must be present')
+      end
+
+    raise Discourse::NotFound unless user
+
+    if group.public
+      if !guardian.can_log_group_changes?(group) && current_user != user
+        raise Discourse::InvalidAccess
+      end
+
+      unless current_user.staff?
+        RateLimiter.new(current_user, "public_group_membership", 3, 1.minute).performed!
+      end
     end
 
     user.primary_group_id = nil if user.primary_group_id == group.id
 
-    group.users.delete(user.id)
+    group.remove(user)
+    GroupActionLogger.new(current_user, group).log_remove_user_from_group(user)
 
     if group.save && user.save
       render json: success_json
@@ -166,6 +234,23 @@ class GroupsController < ApplicationController
     render json: success_json
   end
 
+  def histories
+    group = find_group(:group_id)
+    guardian.ensure_can_edit!(group)
+
+    page_size = 25
+    offset = (params[:offset] && params[:offset].to_i) || 0
+
+    group_histories = GroupHistory.with_filters(group, params[:filters])
+      .limit(page_size)
+      .offset(offset * page_size)
+
+    render_json_dump(
+      logs: serialize_data(group_histories, BasicGroupHistorySerializer),
+      all_loaded: group_histories.count < page_size
+    )
+  end
+
   private
 
   def group_params
@@ -174,7 +259,9 @@ class GroupsController < ApplicationController
       :flair_bg_color,
       :flair_color,
       :bio_raw,
-      :title
+      :full_name,
+      :public,
+      :allow_membership_requests
     )
   end
 

@@ -6,6 +6,8 @@ import { default as computed, observes } from 'ember-addons/ember-computed-decor
 import { relativeAge } from 'discourse/lib/formatter';
 import InputValidation from 'discourse/models/input-validation';
 import { getOwner } from 'discourse-common/lib/get-owner';
+import { escapeExpression } from 'discourse/lib/utilities';
+import { emojiUnescape } from 'discourse/lib/text';
 
 function loadDraft(store, opts) {
   opts = opts || {};
@@ -195,6 +197,11 @@ export default Ember.Controller.extend({
     return this.get('model.creatingPrivateMessage');
   }.property('model.creatingPrivateMessage', 'model.targetUsernames'),
 
+  @computed('model.topic')
+  draftTitle(topic) {
+    return emojiUnescape(escapeExpression(topic.get('title')));
+  },
+
   actions: {
 
     typed() {
@@ -381,19 +388,14 @@ export default Ember.Controller.extend({
 
   toggle() {
     this.closeAutocomplete();
-    switch (this.get('model.composeState')) {
-      case Composer.OPEN:
-        if (Ember.isEmpty(this.get('model.reply')) && Ember.isEmpty(this.get('model.title'))) {
-          this.close();
-        } else {
-          this.shrink();
-        }
-        break;
-      case Composer.DRAFT:
-        this.set('model.composeState', Composer.OPEN);
-        break;
-      case Composer.SAVING:
+    if (this.get('model.composeState') === Composer.OPEN) {
+      if (Ember.isEmpty(this.get('model.reply')) && Ember.isEmpty(this.get('model.title'))) {
         this.close();
+      } else {
+        this.shrink();
+      }
+    } else {
+      this.close();
     }
     return false;
   },

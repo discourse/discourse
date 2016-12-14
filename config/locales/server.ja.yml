@@ -1147,14 +1147,8 @@ ja:
       subject_template: "[%{site_name}] [プライベートメッセージ] %{topic_title}"
     digest:
       why: "あなたが最後にアクセスした %{last_seen_at} 以降の %{site_link} のまとめです"
-      new_activity: "あなたのトピックおよびポストにおけるアクティビティ:"
-      top_topics: "人気の投稿"
-      other_new_topics: "人気のトピック"
       unsubscribe: "このお知らせは%{site_link}から送信されました。購読を解除したい場合は%{unsubscribe_link}してください。"
       click_here: "ここをクリック"
-      read_more: "もっと読む"
-      more_topics: " %{new_topics_since_seen}個の新しいトピックがありました"
-      more_topics_category: "もっと新しいトピック:"
     mailing_list:
       new_topics: "新着トピック"
     forgot_password:

@@ -11,27 +11,26 @@ module Jobs
       post = post_id ? Post.with_deleted.find_by(id: post_id) : nil
 
       raise Discourse::InvalidParameters.new(:post_id) unless post
-      return if post.trashed? || post.user_deleted? || (!post.topic)
+      return if post.trashed? || post.user_deleted? || !post.topic
 
       users =
           User.activated.not_blocked.not_suspended.real
           .joins(:user_option)
           .where('user_options.mailing_list_mode AND user_options.mailing_list_mode_frequency > 0')
-          .where('NOT EXISTS(
+          .where('NOT EXISTS (
+                      SELECT 1
+                      FROM muted_users mu
+                      WHERE mu.muted_user_id = ? AND mu.user_id = users.id
+                  )', post.user_id)
+          .where('NOT EXISTS (
                       SELECT 1
                       FROM topic_users tu
-                      WHERE
-                        tu.topic_id = ? AND
-                        tu.user_id = users.id AND
-                        tu.notification_level = ?
+                      WHERE tu.topic_id = ? AND tu.user_id = users.id AND tu.notification_level = ?
                   )', post.topic_id, TopicUser.notification_levels[:muted])
-          .where('NOT EXISTS(
+          .where('NOT EXISTS (
                      SELECT 1
                      FROM category_users cu
-                     WHERE
-                       cu.category_id = ? AND
-                       cu.user_id = users.id AND
-                       cu.notification_level = ?
+                     WHERE cu.category_id = ? AND cu.user_id = users.id AND cu.notification_level = ?
                   )', post.topic.category_id, CategoryUser.notification_levels[:muted])
 
       users.each do |user|

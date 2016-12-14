@@ -999,7 +999,6 @@ tr_TR:
     allow_animated_thumbnails: "Animasyonlu giflerin, animasyonlu küçük resmini oluşturur."
     default_avatars: "Yeni kullanıcılar için, onlar değiştirene kadar, öntanımlı olarak kullanılacak avatarların URL'leri."
     automatically_download_gravatars: "Hesap oluşturma veya e-posta değişikliği esnasında kullanıcılar için Gravatarları indir"
-    digest_topics: "E-posta özetinde en fazla gösterilebilecek olan konu sayısı."
     digest_min_excerpt_length: "E-posta özetindeki konular için gösterilecek özet boyutu, karakter olarak."
     digest_suppress_categories: "Bu kategorileri özet e-postalarından gizle."
     disable_digest_emails: "Tüm kullanıcılar için özet e-postaları devre dışı bırak."

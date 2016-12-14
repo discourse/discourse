@@ -428,8 +428,11 @@ fi:
       profile: "Profiili"
       mute: "Vaimenna"
       edit: "Muokkaa asetuksia"
-      download_archive: "Lataa viestini"
-      download_archive_confirm: "Haluatko varmasti ladata kaikki viestisi?"
+      download_archive:
+        button_text: "Lataa viestini"
+        confirm: "Haluatko varmasti ladata viestisi?"
+        success: "Lataus aloitettu. Saat ilmoituksen yksityisviestinä, kun prosessi on valmis."
+        rate_limit_error: "Viestit voi ladata kerran vuorokaudessa. Ole hyvä ja yritä huomenna uudelleen."
       new_private_message: "Uusi viesti"
       private_message: "Viesti"
       private_messages: "Viestit"
@@ -512,7 +515,7 @@ fi:
       apps: "Sovellukset"
       revoke_access: "Peru käyttöoikeus"
       undo_revoke_access: "Peru käyttöoikeuden peruminen"
-      api_approved: "Sallitut:"
+      api_approved: "Sallittu:"
       staff_counters:
         flags_given: "hyödyllistä liputusta"
         flagged_posts: "liputettua viestiä"
@@ -690,6 +693,8 @@ fi:
         account_age_days: "Tilin ikä päivissä"
         create: "Lähetä kutsu"
         generate_link: "Kopioi kutsulinkki"
+        link_generated: "Kutsulinkki luotiin onnistuneesti!"
+        valid_for: "Kutsulinkki on käypä tälle sähköpostiosoitteelle: %{email}"
         bulk_invite:
           none: "Et ole kutsunut vielä ketään. Voit lähettää yksittäisiä kutsuja tai kutsua useita ihmisiä kerralla <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>lähettämällä massakutsun tiedostosta</a>."
           text: "Lähetä massakutsu tiedostosta"
@@ -793,6 +798,8 @@ fi:
     too_few_topics_notice: "Laitetaanpa <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>keskustelu alulle!</a> Tällä hetkellä palstalla on <strong>%{currentTopics} / %{requiredTopics}</strong> ketjua. Uusia kävijöitä varten tarvitaan keskusteluita, joita voivat lukea ja joihin vastata."
     too_few_posts_notice: "Laitetaanpa <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>keskustelu alulle!</a> Tällä hetkellä palstalla on <strong>%{currentPosts} / %{requiredPosts}</strong> viestiä. Uusia kävijöitä varten tarvitaan keskusteluita, joita voivat lukea ja joihin vastata."
     logs_error_rate_notice:
+      reached: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> saavutti sivuston asetuksissa määritellyn rajan %{siteSettingRate}."
+      exceeded: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> ylittää sivuston asetuksissa määritellyn rajan %{siteSettingRate}."
       rate:
         one: "1 virhe/%{duration}"
         other: "%{count} virhettä/%{duration}"
@@ -845,6 +852,7 @@ fi:
     trust_level: 'Luottamustaso'
     search_hint: 'käyttäjätunnus, sähköposti tai IP-osoite'
     create_account:
+      disclaimer: "Rekisteröitymällä hyväksyt sivuston <a href='{{privacy_link}}'>rekisteriselosteen</a> ja <a href='{{tos_link}}'>käyttöehdot</a>."
       title: "Luo uusi tunnus"
       failed: "Jotain meni pieleen. Ehkäpä tämä sähköpostiosoite on jo rekisteröity, kokeile salasana unohtui -linkkiä."
     forgot_password:
@@ -1144,6 +1152,8 @@ fi:
     topics:
       new_messages_marker: "edellinen vierailu"
       bulk:
+        select_all: "Valitse kaikki"
+        clear_all: "Tyhjennä kaikki"
         unlist_topics: "Poista ketjuja listauksista"
         reset_read: "Palauta lukutila"
         delete: "Poista ketjut"
@@ -1464,7 +1474,7 @@ fi:
     post:
       reply: "<i class='fa fa-mail-forward'></i> {{replyAvatar}} {{usernameLink}}"
       reply_topic: "<i class='fa fa-mail-forward'></i> {{link}}"
-      quote_reply: "lainaa"
+      quote_reply: "Lainaa"
       edit: "Muokataan {{link}} {{replyAvatar}} {{username}}"
       edit_reason: "Syy:"
       post_number: "viesti {{number}}"
@@ -2093,6 +2103,8 @@ fi:
       custom_message_placeholder: "Kirjoita henkilökohtainen viestisi"
       custom_message_template_forum: "Hei, sinun pitäisi liittyä tälle palstalle!"
       custom_message_template_topic: "Hei, ajattelin, että voisit tykätä tästä ketjusta!"
+    safe_mode:
+      enabled: "Vikasietotila on nyt päällä, sulje selainikkuna lopettaaksesi"
   admin_js:
     type_to_filter: "kirjoita suodattaaksesi..."
     admin:
@@ -2244,6 +2256,7 @@ fi:
         incoming_email: "Saapuvan sähköpostin osoite"
         incoming_email_placeholder: "aseta sähköpostiosoite"
         flair_url: "Avatarpinssikuva"
+        flair_url_placeholder: "(Valinnainen) Kuvan URL tai Font Awesome luokka"
         flair_bg_color: "Avatarpinssin taustaväri"
         flair_bg_color_placeholder: "(Valinnainen) värin Hex-arvo"
         flair_color: "Avatarpinssin väri"
@@ -2264,6 +2277,15 @@ fi:
         info_html: "API avaimen avulla voi luoda ja pävittää ketjuja käyttämällä JSON kutsuja."
         all_users: "Kaikki käyttäjät"
         note_html: "Pidä tämä avain <strong>salaisena</strong>, sen haltija voi luoda viestejä esiintyen minä hyvänsä käyttäjänä."
+      web_hooks:
+        title: "Webhookit"
+        none: "Webhookeja ei ole nyt."
+        new: "Uusi Webhook"
+        create: "Luo"
+        save: "Tallenna"
+        destroy: "Poista"
+        description: "Kuvaus"
+        go_back: "Takaisin listaan"
       plugins:
         title: "Lisäosat"
         installed: "Asennetut lisäosat"
@@ -2331,7 +2353,6 @@ fi:
       export_csv:
         success: "Vienti on käynnissä. Saat ilmoituksen viestillä, kun prosessi on valmis."
         failed: "Vienti epäonnistui. Tarkista loki-tiedostot."
-        rate_limit_error: "Viestit voidaan ladata kerran päivässä, yritä uudestaan huomenna."
         button_text: "Vie"
         button_title:
           user: "Vie lista käyttäjistä CSV-formaatissa."

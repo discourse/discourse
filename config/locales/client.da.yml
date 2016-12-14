@@ -427,7 +427,6 @@ da:
       profile: "Profil"
       mute: "Mute"
       edit: "Redigér indstillinger"
-      download_archive: "Download Mine Posts"
       new_private_message: "Ny Besked"
       private_message: "Besked"
       private_messages: "Beskeder"
@@ -1395,7 +1394,6 @@ da:
     post:
       reply: "<i class='fa fa-mail-forward'></i> {{replyAvatar}} {{usernameLink}}"
       reply_topic: "<i class='fa fa-mail-forward'></i> {{link}}"
-      quote_reply: "citér svar"
       edit: "Redigerer {{link}} {{replyAvatar}} {{username}}"
       edit_reason: "Reason: "
       post_number: "indlæg {{number}}"
@@ -2182,7 +2180,6 @@ da:
       export_csv:
         success: "Eksport er startet, du vil blive notificeret via en besked når denne proces er færdig."
         failed: "Eksport fejlede. Tjek venligst loggen."
-        rate_limit_error: "Indlæg kan downloades én gang om dagen, prøv igen i morgen."
         button_text: "Eksporter"
         button_title:
           user: "Eksporter hele brugerlisten i en CSV-fil"

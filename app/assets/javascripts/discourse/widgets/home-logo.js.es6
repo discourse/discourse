@@ -8,7 +8,7 @@ export default createWidget('home-logo', {
   tagName: 'div.title',
 
   settings: {
-    href: '/'
+    href: Discourse.getURL("/")
   },
 
   href() {

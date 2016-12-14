@@ -406,7 +406,6 @@ gl:
       profile: "Perfil"
       mute: "Silenciar"
       edit: "Editar preferencias"
-      download_archive: "Descargar as miñas publicacións"
       new_private_message: "Nova mensaxe"
       private_message: "Mensaxe"
       private_messages: "Mensaxes"
@@ -1262,7 +1261,6 @@ gl:
     post:
       reply: "<i class='fa fa-mail-forward'></i> {{replyAvatar}} {{usernameLink}}"
       reply_topic: "<i class='fa fa-mail-forward'></i> {{link}}"
-      quote_reply: "citar resposta"
       edit: "Editando {{link}} {{replyAvatar}} {{username}}"
       edit_reason: "Razón:"
       post_number: "publicación {{number}}"
@@ -1893,7 +1891,6 @@ gl:
       export_csv:
         success: "Iniciouse a exportación, notificarémosche cunha mensaxe o remate do proceso."
         failed: "Produciuse un fallo na exportación. Comproba os rexistros."
-        rate_limit_error: "Só se poden descargar as publicacións unha vez por día. Téntao de novo mañá."
         button_text: "Exportar"
         button_title:
           user: "Exportar a lista completa de usuarios en formato CSV."

@@ -1,7 +1,9 @@
 import { ajax } from 'discourse/lib/ajax';
-import computed from "ember-addons/ember-computed-decorators";
+import { default as computed, observes } from "ember-addons/ember-computed-decorators";
+import GroupHistory from 'discourse/models/group-history';
+import RestModel from 'discourse/models/rest';
 
-const Group = Discourse.Model.extend({
+const Group = RestModel.extend({
   limit: 50,
   offset: 0,
   user_count: 0,
@@ -24,12 +26,12 @@ const Group = Discourse.Model.extend({
     if (userCount > 0) { return userCount; }
   },
 
-  findMembers() {
+  findMembers(params) {
     if (Em.isEmpty(this.get('name'))) { return ; }
 
     const self = this, offset = Math.min(this.get("user_count"), Math.max(this.get("offset"), 0));
 
-    return Group.loadMembers(this.get("name"), offset, this.get("limit")).then(function (result) {
+    return Group.loadMembers(this.get("name"), offset, this.get("limit"), params).then(function (result) {
       var ownerIds = {};
       result.owners.forEach(owner => ownerIds[owner.id] = true);
 
@@ -100,6 +102,23 @@ const Group = Discourse.Model.extend({
     return this.get('flair_color') ? this.get('flair_color').replace(new RegExp("[^0-9a-fA-F]", "g"), "") : null;
   },
 
+  @computed('alias_level')
+  canEveryoneMention(aliasLevel) {
+    return aliasLevel === '99';
+  },
+
+  @observes("visible", "canEveryoneMention")
+  _updateAllowMembershipRequests() {
+    if (!this.get('visible') || !this.get('canEveryoneMention')) {
+      this.set('allow_membership_requests', false);
+    }
+  },
+
+  @observes("visible")
+  _updatePublic() {
+    if (!this.get('visible')) this.set('public', false);
+  },
+
   asJSON() {
     return {
       name: this.get('name'),
@@ -114,7 +133,10 @@ const Group = Discourse.Model.extend({
       flair_url: this.get('flair_url'),
       flair_bg_color: this.get('flairBackgroundHexColor'),
       flair_color: this.get('flairHexColor'),
-      bio_raw: this.get('bio_raw')
+      bio_raw: this.get('bio_raw'),
+      public: this.get('public'),
+      allow_membership_requests: this.get('allow_membership_requests'),
+      full_name: this.get('full_name')
     };
   },
 
@@ -138,6 +160,15 @@ const Group = Discourse.Model.extend({
   destroy() {
     if (!this.get('id')) { return; }
     return ajax("/admin/groups/" + this.get('id'), { type: "DELETE" });
+  },
+
+  findLogs(offset, filters) {
+    return ajax(`/groups/${this.get('name')}/logs.json`, { data: { offset, filters } }).then(results => {
+      return Ember.Object.create({
+        logs: results["logs"].map(log => GroupHistory.create(log)),
+        all_loaded: results["all_loaded"]
+      });
+    });
   },
 
   findPosts(opts) {
@@ -177,12 +208,12 @@ Group.reopenClass({
     return ajax("/groups/" + name + ".json").then(result => Group.create(result.basic_group));
   },
 
-  loadMembers(name, offset, limit) {
+  loadMembers(name, offset, limit, params) {
     return ajax('/groups/' + name + '/members.json', {
-      data: {
+      data: _.extend({
         limit: limit || 50,
         offset: offset || 0
-      }
+      }, params || {})
     });
   },
 

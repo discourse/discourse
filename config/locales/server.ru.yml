@@ -1410,13 +1410,7 @@ ru:
       subject_template: "%{optional_re}%{topic_title}"
     digest:
       why: "Сводка обсуждений на сайте %{site_link} с момента вашего последнего визита %{last_seen_at}"
-      new_activity: "Новая активность в ваших темах и сообщениях:"
-      top_topics: "Популярные темы"
-      other_new_topics: "Популярные темы"
       click_here: "нажмите здесь"
-      read_more: "Читать еще"
-      more_topics: "Было создано еще %{new_topics_since_seen} новых тем."
-      more_topics_category: "Еще новые темы:"
     forgot_password:
       subject_template: "[%{site_name}] Сброс пароля"
       text_body_template: |

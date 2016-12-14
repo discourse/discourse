@@ -66,6 +66,9 @@ class User < ActiveRecord::Base
 
   belongs_to :uploaded_avatar, class_name: 'Upload'
 
+  has_many :acting_group_histories, dependent: :destroy, foreign_key: :acting_user_id, class_name: GroupHistory
+  has_many :targeted_group_histories, dependent: :destroy, foreign_key: :target_user_id, class_name: GroupHistory
+
   delegate :last_sent_email_address, :to => :email_logs
 
   before_validation :strip_downcase_email
@@ -290,23 +293,22 @@ class User < ActiveRecord::Base
     super
   end
 
-  def unread_private_messages
-    @unread_pms ||=
-      begin
-        # perf critical, much more efficient than AR
-        sql = "
-           SELECT COUNT(*) FROM notifications n
-           LEFT JOIN topics t ON n.topic_id = t.id
-           WHERE
-            t.deleted_at IS NULL AND
-            n.notification_type = :type AND
-            n.user_id = :user_id AND
-            NOT read"
+  def unread_notifications_of_type(notification_type)
+    # perf critical, much more efficient than AR
+    sql = "
+       SELECT COUNT(*) FROM notifications n
+       LEFT JOIN topics t ON n.topic_id = t.id
+       WHERE
+        t.deleted_at IS NULL AND
+        n.notification_type = :type AND
+        n.user_id = :user_id AND
+        NOT read"
 
-        User.exec_sql(sql, user_id: id,
-                           type:  Notification.types[:private_message])
-            .getvalue(0,0).to_i
-      end
+    User.exec_sql(sql, user_id: id, type: notification_type).getvalue(0,0).to_i
+  end
+
+  def unread_private_messages
+    @unread_pms ||= unread_notifications_of_type(Notification.types[:private_message])
   end
 
   def unread_notifications
@@ -927,8 +929,9 @@ class User < ActiveRecord::Base
          .where("LENGTH(COALESCE(automatic_membership_email_domains, '')) > 0")
          .each do |group|
       domains = group.automatic_membership_email_domains.gsub('.', '\.')
-      if self.email =~ Regexp.new("@(#{domains})$", true)
-        group.add(self) rescue ActiveRecord::RecordNotUnique
+      if self.email =~ Regexp.new("@(#{domains})$", true) && !group.users.include?(self)
+        group.add(self)
+        GroupActionLogger.new(Discourse.system_user, group).log_add_user_to_group(self)
       end
     end
   end

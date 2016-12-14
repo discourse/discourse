@@ -102,13 +102,6 @@ class PostRevisor
 
       topic_changes.record_change('featured_link', topic_changes.topic.featured_link, featured_link)
       topic_changes.topic.featured_link = featured_link
-
-      if SiteSetting.topic_featured_link_onebox
-        post = topic_changes.topic.first_post
-        post.raw = DiscourseFeaturedLink.cache_onebox_link(featured_link)
-        post.save!
-        post.rebake!
-      end
     end
   end
 

@@ -524,6 +524,11 @@ sv:
       title: 'Rösta'
       description: 'Rösta för detta inlägg'
       long_form: 'röstade för detta inlägg'
+  user_activity:
+    no_bookmarks:
+      others: "Inga bokmärken."
+    no_likes_given:
+      others: "Inga gillade inlägg."
   topic_flag_types:
     spam:
       title: 'Spam'
@@ -566,8 +571,13 @@ sv:
     not_found_description: "Tyvärr, vi kunde inte hitta den här avprenumerationen. Är det möjligt att länken i din e-post har löpt ut?"
     log_out: "Logga ut"
   user_api_key:
+    authorize: "Auktorisera"
     read: "läs"
     read_write: "läs/skriv"
+    scopes:
+      message_bus: "Live uppdateringar"
+      read: "Läs alla"
+      write: "Skriv alla"
   reports:
     visits:
       title: "Användarbesök"
@@ -1068,7 +1078,6 @@ sv:
     allow_animated_thumbnails: "Genererar animerade ikoner av animerade gif:ar."
     default_avatars: "URL:er till avatarer som kommer att användas utgångsläge för nya användare tills de ändrar dem."
     automatically_download_gravatars: "Ladda ned Gravatars för användare vid kontoregistrering eller e-postadressbyte."
-    digest_topics: "Högsta antal ämnen att visa i e-postsammanfattningen."
     digest_min_excerpt_length: "Minsta antal inläggsutdrag i e-postsammanfattningen, i tecken."
     delete_digest_email_after_days: "Undertryck e-postsammanfattningar för användare som inte har besökt webbplatsen i mer än (n) dagar."
     digest_suppress_categories: "Undertryck de här kategorierna från e-postsammanfattningar."
@@ -1864,15 +1873,9 @@ sv:
     digest:
       why: "En kortfattad sammanfattning av %{site_link} sedan ditt senaste besök den %{last_seen_at}"
       subject_template: "[%{site_name}] Sammanfattning"
-      new_activity: "Ny aktivitet i dina ämnen och inlägg:"
-      top_topics: "Populära inlägg"
-      other_new_topics: "Populära ämnen"
       unsubscribe: "Den här sammanfattningen har skickats från %{site_link} där vi inte har sett dig på ett tag. För att säga upp dig %{unsubscribe_link}."
       click_here: "klicka här"
       from: "%{site_name} sammanfattning"
-      read_more: "Läs mer"
-      more_topics: "Det finns %{new_topics_since_seen} nya ämnen."
-      more_topics_category: "Fler nya ämnen:"
     mailing_list:
       why: "All aktivitet på %{site_link} den %{date}"
       subject_template: "[%{site_name}] Sammanfattning för %{date}"

@@ -19,3 +19,5 @@ uk:
     no_poll_with_this_name: "Для цього допису відсутнє голосування під назвою <strong>%{name}</strong>."
     topic_must_be_open_to_vote: "Тема має бути відкрита для голосування."
     poll_must_be_open_to_vote: "Опитування має бути відкритим для голосування."
+    email:
+      link_to_poll: "Натисніть, щоб подивитися опитування."

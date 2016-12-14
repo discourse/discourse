@@ -1,13 +1,38 @@
 import { popupAjaxError } from 'discourse/lib/ajax-error';
 import Group from 'discourse/models/group';
+import { default as computed, observes } from 'ember-addons/ember-computed-decorators';
 
 export default Ember.Controller.extend({
+  queryParams: ['order', 'desc'],
+  order: '',
+  desc: null,
   loading: false,
   limit: null,
   offset: null,
   isOwner: Ember.computed.alias('model.is_group_owner'),
+  showActions: false,
+
+  @observes('order', 'desc')
+  refreshMembers() {
+    this.get('model') &&
+      this.get('model').findMembers({ order: this.get('order'), desc: this.get('desc') });
+  },
+
+  @computed("model.public")
+  canJoinGroup(publicGroup) {
+    return !!(this.currentUser) && publicGroup;
+  },
+
+  @computed('model.allow_membership_requests', 'model.alias_level')
+  canRequestMembership(allowMembershipRequests, aliasLevel) {
+    return !!(this.currentUser) && allowMembershipRequests && aliasLevel === 99;
+  },
 
   actions: {
+    toggleActions() {
+      this.toggleProperty("showActions");
+    },
+
     removeMember(user) {
       this.get('model').removeMember(user);
     },
@@ -19,13 +44,47 @@ export default Ember.Controller.extend({
       }
     },
 
+    requestMembership() {
+      const groupName = this.get('model.name');
+      const title = I18n.t('groups.request_membership_pm.title');
+      const body = I18n.t('groups.request_membership_pm.body', { groupName });
+      this.transitionToRoute(`/new-message?groupname=${groupName}&title=${title}&body=${body}`);
+    },
+
+    joinGroup() {
+      this.set('updatingMembership', true);
+      const model = this.get('model');
+
+      model.addMembers(this.currentUser.get('username')).then(() => {
+        model.set('is_group_user', true);
+      }).catch(popupAjaxError).finally(() => {
+        this.set('updatingMembership', false);
+      });
+    },
+
+    leaveGroup() {
+      this.set('updatingMembership', true);
+      const model = this.get('model');
+
+      model.removeMember(this.currentUser).then(() => {
+        model.set('is_group_user', false);
+      }).catch(popupAjaxError).finally(() => {
+        this.set('updatingMembership', false);
+      });
+    },
+
     loadMore() {
       if (this.get("loading")) { return; }
       if (this.get("model.members.length") >= this.get("model.user_count")) { return; }
 
       this.set("loading", true);
 
-      Group.loadMembers(this.get("model.name"), this.get("model.members.length"), this.get("limit")).then(result => {
+      Group.loadMembers(
+        this.get("model.name"),
+        this.get("model.members.length"),
+        this.get("limit"),
+        { order: this.get('order'), desc: this.get('desc') }
+      ).then(result => {
         this.get("model.members").addObjects(result.members.map(member => Discourse.User.create(member)));
         this.setProperties({
           loading: false,

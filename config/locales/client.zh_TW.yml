@@ -361,7 +361,6 @@ zh_TW:
       profile: "基本資料"
       mute: "靜音"
       edit: "編輯喜好設定"
-      download_archive: "下載我的文章"
       new_private_message: "新訊息"
       private_message: "訊息"
       private_messages: "訊息"
@@ -1027,7 +1026,6 @@ zh_TW:
         description:
           other: 你已選擇了 <b>{{count}}</b> 篇文章。
     post:
-      quote_reply: "引用回覆"
       edit: "編輯 {{replyAvatar}} {{username}} 發表的 {{link}}"
       edit_reason: "原因: "
       post_number: "文章 {{number}}"
@@ -1585,7 +1583,6 @@ zh_TW:
       export_csv:
         success: "開始匯出，處理完畢後將以私人訊息通知你。"
         failed: "匯出失敗。請觀看紀錄。"
-        rate_limit_error: "文章每天只能下載一次，請明天再試。"
         button_text: "匯出"
         button_title:
           user: "以 CSV 格式匯出用戶清單"

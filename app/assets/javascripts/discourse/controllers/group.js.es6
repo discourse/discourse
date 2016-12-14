@@ -6,9 +6,9 @@ var Tab = Em.Object.extend({
     return 'group.' + name;
   },
 
-  @computed('name')
-  message(name) {
-    return I18n.t('groups.' + name);
+  @computed('name', 'i18nKey')
+  message(name, i18nKey) {
+    return I18n.t(`groups.${i18nKey || name}`);
   }
 });
 
@@ -20,7 +20,15 @@ export default Ember.Controller.extend({
     Tab.create({ name: 'posts' }),
     Tab.create({ name: 'topics' }),
     Tab.create({ name: 'mentions' }),
-    Tab.create({ name: 'messages', requiresMembership: true })
+    Tab.create({ name: 'messages', requiresMembership: true }),
+    Tab.create({
+      name: 'edit', i18nKey: 'edit.title',
+      requiresMembership: true, requiresGroupAdmin: true
+    }),
+    Tab.create({
+      name: 'logs', i18nKey: 'logs.title',
+      requiresMembership: true, requiresGroupAdmin: true
+    })
   ],
 
   @computed('model.is_group_owner', 'model.automatic')
@@ -28,9 +36,9 @@ export default Ember.Controller.extend({
     return !automatic && isGroupOwner;
   },
 
-  @computed('model.name', 'model.title')
-  groupName(name, title) {
-    return (title || name).capitalize();
+  @computed('model.name', 'model.full_name')
+  groupName(name, fullName) {
+    return (fullName || name).capitalize();
   },
 
   @computed('model.name', 'model.flair_url', 'model.flair_bg_color', 'model.flair_color')
@@ -57,13 +65,19 @@ export default Ember.Controller.extend({
     });
   },
 
-  @computed('model.is_group_user')
-  getTabs(isGroupUser) {
+  @computed('model.is_group_user', 'model.is_group_owner')
+  getTabs(isGroupUser, isGroupOwner) {
     return this.get('tabs').filter(t => {
       let isMember = false;
 
       if (this.currentUser) {
-        isMember = this.currentUser.admin || isGroupUser;
+        let admin = this.currentUser.admin;
+
+        if (t.get('requiresGroupAdmin')) {
+          isMember = admin || isGroupOwner;
+        } else {
+          isMember = admin || isGroupUser;
+        }
       }
 
       return isMember || !t.get('requiresMembership');

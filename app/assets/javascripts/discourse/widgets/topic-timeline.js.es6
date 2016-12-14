@@ -334,9 +334,6 @@ export default createWidget('topic-timeline', {
         }));
       }
 
-      if (currentUser) {
-        controls.push(this.attach('topic-notifications-button', { topic }));
-      }
     }
 
     if (attrs.fullScreen) {
@@ -346,6 +343,10 @@ export default createWidget('topic-timeline', {
         label: 'topic.progress.jump_prompt',
         action: 'jumpToPostPrompt'
       }));
+    }
+
+    if (currentUser) {
+      controls.push(this.attach('topic-notifications-button', { topic }));
     }
 
     if (controls.length > 0) {

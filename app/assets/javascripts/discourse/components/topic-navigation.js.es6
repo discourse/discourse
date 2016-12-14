@@ -52,8 +52,16 @@ export default Ember.Component.extend({
   _expanded() {
     if (this.get('info.topicProgressExpanded')) {
       $(window).on('click.hide-fullscreen', (e) => {
-        if ( $(e.target).is('.topic-timeline') ||
-             !$(e.target).parents().is('#topic-progress-wrapper')) {
+        let $target = $(e.target);
+        let $parents = $target.parents();
+        if ( !$target.is('.widget-button') &&
+             !$parents.is('.widget-button') &&
+             !$parents.is('.dropdown-menu') &&
+             (
+              $target.is('.topic-timeline') ||
+             !$parents.is('#topic-progress-wrapper')
+             )
+          ) {
           this._collapseFullscreen();
         }
       });

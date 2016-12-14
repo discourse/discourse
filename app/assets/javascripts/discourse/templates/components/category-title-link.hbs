@@ -5,7 +5,7 @@
 
   <span class="category-name">{{category.name}}</span>
 
-  {{#if category.logo_url}}
-    <div>{{cdn-img src=category.logo_url class="category-logo"}}</div>
+  {{#if category.uploaded_logo.url}}
+    <div>{{cdn-img src=category.uploaded_logo.url class="category-logo"}}</div>
   {{/if}}
 </a>

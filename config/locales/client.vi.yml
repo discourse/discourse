@@ -394,7 +394,6 @@ vi:
       profile: "Tiểu sử"
       mute: "Im lặng"
       edit: "Tùy chỉnh"
-      download_archive: "Tải bài viết về"
       new_private_message: "Tin nhắn mới"
       private_message: "Tin nhắn"
       private_messages: "Các tin nhắn"
@@ -1254,7 +1253,6 @@ vi:
     post:
       reply: "<i class='fa fa-mail-forward'></i> {{replyAvatar}} {{usernameLink}}"
       reply_topic: "<i class='fa fa-mail-forward'></i> {{link}}"
-      quote_reply: "trả lời trích dẫn"
       edit: "Đang sửa {{link}} {{replyAvatar}} {{username}}"
       edit_reason: "Lý do: "
       post_number: "bài viết {{number}}"
@@ -1854,7 +1852,6 @@ vi:
       export_csv:
         success: "Export đang được khởi tạo, bạn sẽ nhận được tin nhắn thông báo khi quá trình hoàn tất."
         failed: "Xuất lỗi. Vui lòng kiểm tra log."
-        rate_limit_error: "Bài viết có thể tải về 1 lần mỗi này, vui lòng thử lại vào ngày mai."
         button_text: "Xuất"
         button_title:
           user: "Xuất danh sách người dùng đầy đủ với định dạng CSV."

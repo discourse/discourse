@@ -93,6 +93,16 @@ test("validate population of advanced search", assert => {
   });
 });
 
+test("escape search term", (assert) => {
+  visit("/search");
+  fillIn('.search input.full-page-search', '@<script>prompt(1337)</script>gmail.com');
+  click('.search-advanced-btn');
+
+  andThen(() => {
+    assert.ok(exists('.search-advanced-options span:contains("<script>prompt(1337)</script>gmail.com")'), 'it escapes search term');
+  });
+});
+
 test("update username through advanced search ui", assert => {
   visit("/search");
   fillIn('.search input.full-page-search', 'none');

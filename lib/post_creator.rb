@@ -104,11 +104,6 @@ class PostCreator
       end
     end
 
-    onebox_featured_link = SiteSetting.topic_featured_link_enabled && SiteSetting.topic_featured_link_onebox && guardian.can_edit_featured_link?(find_category_id)
-    if onebox_featured_link
-      @opts[:raw] = DiscourseFeaturedLink.cache_onebox_link(@opts[:featured_link])
-    end
-
     setup_post
 
     return true if skip_validations?
@@ -122,7 +117,7 @@ class PostCreator
     DiscourseEvent.trigger :before_create_post, @post
     DiscourseEvent.trigger :validate_post, @post
 
-    post_validator = Validators::PostValidator.new(skip_topic: true, skip_post_body: onebox_featured_link)
+    post_validator = Validators::PostValidator.new(skip_topic: true)
     post_validator.validate(@post)
 
     valid = @post.errors.blank?

@@ -146,6 +146,11 @@ const Composer = RestModel.extend({
     return categoryIds === undefined || !categoryIds.length || categoryIds.indexOf(categoryId) !== -1;
   },
 
+  @computed('canEditTopicFeaturedLink')
+  titlePlaceholder() {
+    return this.get('canEditTopicFeaturedLink') ? 'composer.title_or_link_placeholder' : 'composer.title_placeholder';
+  },
+
   // Determine the appropriate title for this action
   actionTitle: function() {
     const topic = this.get('topic');
@@ -189,11 +194,6 @@ const Composer = RestModel.extend({
     }
 
   }.property('action', 'post', 'topic', 'topic.title'),
-
-  @computed('canEditTopicFeaturedLink')
-  showComposerEditor(canEditTopicFeaturedLink) {
-    return canEditTopicFeaturedLink ? !this.siteSettings.topic_featured_link_onebox : true;
-  },
 
   // whether to disable the post button
   cantSubmitPost: function() {
@@ -286,7 +286,7 @@ const Composer = RestModel.extend({
   @computed('minimumPostLength', 'replyLength', 'canEditTopicFeaturedLink')
   missingReplyCharacters(minimumPostLength, replyLength, canEditTopicFeaturedLink) {
     if (this.get('post.post_type') === this.site.get('post_types.small_action') ||
-        canEditTopicFeaturedLink && this.siteSettings.topic_featured_link_onebox) { return 0; }
+        canEditTopicFeaturedLink && this.get('featuredLink')) { return 0; }
     return minimumPostLength - replyLength;
   },
 
@@ -509,9 +509,7 @@ const Composer = RestModel.extend({
     if (!this.get('cantSubmitPost')) {
 
       // change category may result in some effect for topic featured link
-      if (this.get('canEditTopicFeaturedLink')) {
-        if (this.siteSettings.topic_featured_link_onebox) { this.set('reply', null); }
-      } else {
+      if (!this.get('canEditTopicFeaturedLink')) {
         this.set('featuredLink', null);
       }
 

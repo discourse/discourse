@@ -1501,13 +1501,7 @@ vi:
       subject_template: "%{optional_re}%{topic_title}"
     digest:
       why: "Tóm tắt %{site_link} từ lần cuối truy cập %{last_seen_at}"
-      new_activity: "Hoạt động mới ở chủ đề và bài viết của bạn:"
-      top_topics: "Bài viết phổ biến"
-      other_new_topics: "Chủ đề phổ biến"
       click_here: "bấm vào đây"
-      read_more: "Đọc Tiếp"
-      more_topics: "Đây là %{new_topics_since_seen} những chủ đề mới khác."
-      more_topics_category: "Thêm chủ đề mới:"
     mailing_list:
       new_topics: "Chủ đề mới"
       view_this_topic: "Xem chủ đề này"

@@ -485,8 +485,6 @@ ru:
       profile: "Профиль"
       mute: "Отключить"
       edit: "Настройки"
-      download_archive: "Скачать архив сообщений"
-      download_archive_confirm: "Вы уверены, что хотите скачать все ваши сообщения?"
       new_private_message: "Новое сообщение"
       private_message: "Личное сообщение"
       private_messages: "Личные сообщения"
@@ -1213,6 +1211,8 @@ ru:
     topics:
       new_messages_marker: "последний визит"
       bulk:
+        select_all: "Выбрать все"
+        clear_all: "Очистить все"
         unlist_topics: "Исключить из списков"
         reset_read: "Сбросить прочтённые"
         delete: "Удалить темы"
@@ -1557,7 +1557,7 @@ ru:
     post:
       reply: "<i class='fa fa-mail-forward'></i> {{replyAvatar}} {{usernameLink}}"
       reply_topic: "<i class='fa fa-mail-forward'></i> {{link}}"
-      quote_reply: "ответить цитированием"
+      quote_reply: "Цитата"
       edit: "Изменить {{link}} {{replyAvatar}} {{username}}"
       edit_reason: "Причина:"
       post_number: "сообщение {{number}}"
@@ -2139,6 +2139,11 @@ ru:
       granted_on: "Выдана %{date}"
       others_count: "Другие с этой наградой (%{count})"
       title: Награды
+      badge_count:
+        one: "1 награда"
+        few: "%{count} наград"
+        many: "%{count} наград"
+        other: "%{count} наград"
       more_badges:
         one: "еще +1"
         few: "+ еще %{count}"
@@ -2152,6 +2157,8 @@ ru:
           name: Сообщество
         trust_level:
           name: Уровень доверия
+        other:
+          name: Прочее
     google_search: |
       <h3>Искать с помощью Google</h3>
       <p>
@@ -2525,7 +2532,6 @@ ru:
       export_csv:
         success: "Процедура экспорта начата, мы отправим вам сообщение, когда процесс будет завершен."
         failed: "Экспорт не удался. Пожалуйста, проверьте логи."
-        rate_limit_error: "Записи могут быть загружены один раз в день, пожалуйста, попробуйте еще раз завтра."
         button_text: "Экспорт"
         button_title:
           user: "Экспортировать список пользователей в CSV файл."
@@ -2645,6 +2651,8 @@ ru:
         delivery_method: "Метод отправки"
         preview_digest_desc: "Предпросмотр сводки новостей на отправку неактивным пользователям."
         refresh: "Обновить"
+        send_digest: "Отправить"
+        sending_email: "Отправка письма..."
         format: "Формат"
         html: "html"
         text: "текст"
@@ -2922,6 +2930,8 @@ ru:
         block_failed: 'Не удалось заблокировать пользователя.'
         block_confirm: 'Вы уверены что хотите заблокировать этого пользователя? Он больше не сможет создавать темы и отправлять сообщения.'
         block_accept: 'Подтвердить блокировку'
+        reset_bounce_score:
+          label: "Сбросить"
         deactivate_explanation: "Дезактивированные пользователи должны заново подтвердить свой e-mail."
         suspended_explanation: "Замороженный пользователь не может войти."
         block_explanation: "Заблокированный не может отвечать и создавать новые темы."
@@ -3168,6 +3178,7 @@ ru:
       uploading: "Загрузка..."
       quit: "Может быть позже"
       invites:
+        add_user: "добавить"
         roles:
           admin: "Администратор"
           moderator: "Модератор"

@@ -837,13 +837,7 @@ bs_BA:
       subject_template: "[%{site_name}] [PM] %{topic_title}"
     digest:
       why: "Ukratko šta se dešavalo na %{site_link} od vaše zadnje posjete %{last_seen_at}."
-      new_activity: "Nove aktivnosti ba vašim temama i postovima:"
-      top_topics: "Popularni postovi"
-      other_new_topics: "Popularne teme"
       click_here: "klikni ovdje"
-      read_more: "Pročitaj Više"
-      more_topics: "Postoji %{new_topics_since_seen} drugih novih tema otkako ste nas zadnji put posjetili %{last_seen_at}."
-      more_topics_category: "Postoji %{new_topics_since_seen} drugih novih tema u ovim kategorijama otkako ste nas zadnji put posjetili %{last_seen_at}:"
     forgot_password:
       subject_template: "[%{site_name}] Obnova Šifre"
       text_body_template: |

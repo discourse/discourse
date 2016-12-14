@@ -428,7 +428,11 @@ de:
       profile: "Profil"
       mute: "Stummschalten"
       edit: "Einstellungen bearbeiten"
-      download_archive: "Meine Beiträge herunterladen"
+      download_archive:
+        button_text: "Meine Beiträge herunterladen"
+        confirm: "Möchtest du wirklich deine Beiträge herunterladen?"
+        success: "Der Export wurde gestartet. Du erhältst eine Nachricht, sobald der Vorgang abgeschlossen ist."
+        rate_limit_error: "Beiträge können pro Tag nur einmal heruntergeladen werden. Bitte versuch es morgen wieder."
       new_private_message: "Neue Nachricht"
       private_message: "Nachricht"
       private_messages: "Nachrichten"
@@ -452,6 +456,7 @@ de:
         each_browser_note: "Hinweis: Du musst diese Einstellung in jedem von dir verwendeten Browser ändern."
       dismiss_notifications: "Alles ausblenden"
       dismiss_notifications_tooltip: "Alle ungelesenen Benachrichtigungen als gelesen markieren"
+      first_notification: "Deine erste Benachrichtigung! Wähle sie aus um fortzufahren."
       disable_jump_reply: "Springe nicht zu meinem Beitrag, nachdem ich geantwortet habe"
       dynamic_favicon: "Zeige die Anzahl der neuen und geänderten Themen im Browser-Symbol an"
       external_links_in_new_tab: "Öffne alle externen Links in einem neuen Tab"
@@ -474,6 +479,7 @@ de:
           Stummgeschaltete Themen und Kategorien werden in diese E-Mails nicht eingeschlossen.
         daily: "Aktualisierungen täglich senden"
         individual: "Für jeden Beitrag eine E-Mail senden"
+        individual_no_echo: "Sende für alle fremden Beträge eine Email"
         many_per_day: "Sende mir für jeden neuen Beitrag eine E-Mail (etwa {{dailyEmailEstimate}} pro Tag)"
         few_per_day: "Sende mir für jeden neuen Beitrag eine E-Mail (etwa 2 pro Tag)"
       tag_settings: "Schlagwörter"
@@ -597,6 +603,7 @@ de:
         title: "Oberflächensprache"
         instructions: "Die Sprache der Forumsoberfläche. Diese Änderung tritt nach dem Neuladen der Seite in Kraft."
         default: "(Standard)"
+        any: "jegliche"
       password_confirmation:
         title: "Wiederholung des Passworts"
       last_posted: "Letzter Beitrag"
@@ -685,6 +692,8 @@ de:
         account_age_days: "Konto-Alter in Tagen"
         create: "Einladung versenden"
         generate_link: "Einladungslink kopieren"
+        link_generated: "Der Einladungslink wurde erfolgreich generiert!"
+        valid_for: "Der Einladungslink ist nur für die Adresse %{email} gültig"
         bulk_invite:
           none: "Du hast noch niemanden hierher eingeladen. Du kannst individuelle Einladungen verschicken oder eine Masseneinladung an eine Gruppe von Leuten verschicken indem du <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>eine Datei für Masseneinladung</a> hochlädst."
           text: "Masseneinladung aus Datei"
@@ -842,6 +851,7 @@ de:
     trust_level: 'Vertrauensstufe'
     search_hint: 'Benutzername, E-Mail- oder IP-Adresse'
     create_account:
+      disclaimer: "Mit der Registrierung erklären Sie sich mit der <a href='{{privacy_link}}'>Datenschutzerklärung</a> und unseren <a href='{{tos_link}}'>Nutzungsbedingungen</a> einverstanden."
       title: "Neues Benutzerkonto erstellen"
       failed: "Etwas ist fehlgeschlagen. Vielleicht ist diese E-Mail-Adresse bereits registriert. Versuche den 'Passwort vergessen'-Link."
     forgot_password:
@@ -932,6 +942,9 @@ de:
       group_mentioned:
         one: "Indem du {{group}} erwähnst, bist du dabei, <a href='{{group_link}}'>eine Person</a> zu benachrichtigen – bist du dir sicher?"
         other: "Indem du {{group}} erwähnst, bist du dabei, <a href='{{group_link}}'>{{count}} Personen</a> zu benachrichtigen – bist du dir sicher?"
+      cannot_see_mention:
+        category: "Du hast {{username}} erwähnt, aber diese Person wird nicht benachrichtigt da sie keinen Zugriff auf diese Kategorie hat. Füge sie einer Gruppe hinzu die Zugriff auf diese Kategorie hat."
+        private: "Du hast {{username}} erwähnt, aber diese Person wird nicht benachrichtigt da sie diese persönliche Nachricht nicht sehen kann. Lade sie zu dieser PM ein."
       duplicate_link: "Es sieht so aus als wäre dein Link zu <b>{{domain}}</b> in dem Thema bereits von <b>@{{username}}</b> in <a href='{{post_url}}'>einer Antwort vor {{ago}}</a> geteilt worden – möchtest du ihn wirklich erneut teilen? "
       error:
         title_missing: "Titel ist erforderlich"
@@ -1107,6 +1120,29 @@ de:
         filters:
           label: Zeige nur Beiträge an, die...
           likes: Mir gefallen
+          posted: Ich schrieb einen Beitrag in
+          watching: Ich beobachte
+          tracking: Ich verfolge
+          private: sind in meinen Nachrichten
+          bookmarks: Ich habe ein Lesezeichen gesetzt
+          first: sind die allerersten Beiträge
+          pinned: sind angepinnt
+          unpinned: sind nicht angepinnt
+          wiki: sind Wiki
+        statuses:
+          label: Wo Themen
+          open: sind offen
+          closed: sind geschlossen
+          archived: sind archiviert
+          noreplies: haben keine Antworten
+          single_user: enthalten nur einen Nutzer
+        post:
+          count:
+            label: Minimale anzahl an Beiträgen
+          time:
+            label: Beigetragen
+            before: vorher
+            after: nachher
     hamburger_menu: "zu einer anderen Themenliste oder Kategorie wechseln"
     new_item: "neu"
     go_back: 'zurückgehen'
@@ -1115,6 +1151,8 @@ de:
     topics:
       new_messages_marker: "letzter Besuch"
       bulk:
+        select_all: "Wähle alle aus"
+        clear_all: "Auswahl aufheben"
         unlist_topics: "Themen unsichtbar machen"
         reset_read: "Gelesene zurücksetzen"
         delete: "Themen löschen"
@@ -1320,6 +1358,9 @@ de:
       share:
         title: 'Teilen'
         help: 'teile einen Link zu diesem Thema'
+      print:
+        title: 'Drucken'
+        help: 'Öffne eine Druckfreundliche Version dieses Themas'
       flag_topic:
         title: 'Melden'
         help: 'Dieses Thema den Moderatoren melden oder eine Nachricht senden.'
@@ -1432,7 +1473,7 @@ de:
     post:
       reply: "<i class='fa fa-mail-forward'></i> {{replyAvatar}} {{usernameLink}}"
       reply_topic: "<i class='fa fa-mail-forward'></i> {{link}}"
-      quote_reply: "Antwort zitieren"
+      quote_reply: "Zitat"
       edit: "Du bearbeitest {{link}} {{replyAvatar}} {{username}}"
       edit_reason: "Grund: "
       post_number: "Beitrag {{number}}"
@@ -1670,6 +1711,7 @@ de:
       email_in_disabled: "Das Erstellen von neuen Themen per E-Mail ist in den Website-Einstellungen deaktiviert. Um das Erstellen von neuen Themen per E-Mail zu erlauben,"
       email_in_disabled_click: 'aktiviere die Einstellung „email in“.'
       suppress_from_homepage: "Löse diese Kategorie von der Startseite."
+      sort_order: "Standardsortierung:"
       allow_badges_label: "Erlaube das Verleihen von Abzeichen in dieser Kategorie."
       edit_permissions: "Berechtigungen bearbeiten"
       add_permission: "Berechtigung hinzufügen"
@@ -1695,6 +1737,18 @@ de:
         muted:
           title: "Stummgeschaltet"
           description: "Du erhältst nie mehr Benachrichtigungen über neue Themen in dieser Kategorie und die Themen werden auch nicht in der Liste der letzten Themen erscheinen."
+      sort_options:
+        default: "Standard"
+        likes: "Likes"
+        op_likes: "Likes des Originalbeitrags"
+        views: "Ansichten"
+        posts: "Beiträge"
+        activity: "Aktivität"
+        posters: "Beitragende"
+        category: "Kategorie"
+        created: "Erstellt"
+      sort_ascending: 'Aufsteigend'
+      sort_descending: 'Absteigend'
     flagging:
       title: 'Danke für deine Mithilfe!'
       action: 'Beitrag melden'
@@ -1926,6 +1980,7 @@ de:
         mark_regular: '<b>m</b>, <b>r</b> Thema auf Normal setzen'
         mark_tracking: '<b>m</b>, <b>t</b> Thema verfolgen'
         mark_watching: '<b>m</b>, <b>w</b> Thema beobachten'
+        print: '<b>strg</b>+<b>p</b> Thema ausdrucken'
     badges:
       earned_n_times:
         one: "Abzeichen 1-mal erhalten"
@@ -2043,6 +2098,8 @@ de:
       custom_message_placeholder: "Gib deine persönliche Nachricht ein"
       custom_message_template_forum: "Hey, du solltest diesem Forum beitreten!"
       custom_message_template_topic: "Hey, ich dachte, dir könnte dieses Thema gefallen!"
+    safe_mode:
+      enabled: "Der geschützte Modus ist aktiviert. Schliesse das Browserfenster um ihn zu verlassen."
   admin_js:
     type_to_filter: "zum Filtern hier eingeben…"
     admin:
@@ -2193,9 +2250,14 @@ de:
         add_owners: Eigentümer hinzufügen
         incoming_email: "Benutzerdefinierte Adresse für eingehende E-Mails"
         incoming_email_placeholder: "E-Mail-Adresse eingeben"
+        flair_url: "Avatar Flair Bild"
+        flair_url_placeholder: "(optionale) Bild-URL oder Font Awesome class"
         flair_bg_color: "Profilbild Dekor-Knopf Hintergrundfarbe"
         flair_bg_color_placeholder: "(Optional) Hex Farbwert"
+        flair_color: "Avatar Flair Farbe"
+        flair_color_placeholder: "(optionaler) Hex Farbenwert"
         flair_preview: "Vorschau"
+        flair_note: "Beachte: Das Flair wird nur für die Primärgruppe eines Nutzers angezeigt"
       api:
         generate_master: "Master API Key erzeugen"
         none: "Es gibt momentan keine aktiven API-Keys"
@@ -2211,14 +2273,75 @@ de:
         all_users: "Alle Benutzer"
         note_html: "Halte diesen Schlüssel <strong>geheim</strong>. Alle Benutzer, die diesen Schlüssel besitzen, können beliebige Beiträge als jeder Benutzer erstellen."
       web_hooks:
+        title: "Webhooks"
+        none: "Aktuell gibt es keine Webhooks."
+        instruction: "Webhooks erlauben es Discourse externe Dienste zu benachrichtigen, wenn bestimmte Ereignisse auf der Plattform auftreten. Wird ein Webhook getriggert, so wird ein POST Request an die angegebenen URLs gesendet."
+        detailed_instruction: "Wenn das ausgewählte Ereignis eintritt wird ein POST Request an die angegebenen URLs versandt."
+        new: "Neuer Webhook"
+        create: "Erstellen"
         save: "Speichern"
         destroy: "Löschen"
         description: "Beschreibung"
+        controls: "Kontrollelemente"
         go_back: "Zurück zur Liste"
+        payload_url: "Payload URL"
+        payload_url_placeholder: "https://example.com/postreceive"
+        warn_local_payload_url: "Es sieht so aus als wenn du versuchst einen Webhook an eine lokale URL einzurichten. Ereignisse die an eine lokale Adresse ausgeliefert werden können möglicherweise Nebeneffekte oder unvorhergesehenes Verhalten auslösen. Möchtest du fortfahren?"
+        secret_invalid: "Das Geheimnis darf keine Leerzeichen enthalten."
+        secret_too_short: "Das Geheimnis sollte mindestens 12 Zeichen enthalten."
+        secret_placeholder: "Eine optionale Zeichenkette für die Signatur"
+        event_type_missing: "Du musst mindestens einen Ereignistyp definieren."
+        content_type: "Inhaltstyp"
+        secret: "Geheimnis"
+        event_chooser: "Welche Ereignisse sollen diesen Webhook auslösen?"
+        wildcard_event: "Sende mir alles."
+        individual_event: "Wähle einzelne Ereignisse aus."
+        verify_certificate: "Überprüfe das TLS Zertifikat der Payload URL"
+        active: "Aktiv"
+        active_notice: "Wir werden Ereignisdetails übermitteln wenn es eintritt."
+        categories_filter_instructions: "In Frage kommende Webhooks werden nur dann getriggert wenn das Ereignis in Verbindung mit den angegebenen Kategorien steht. Lasse den Wert frei um den Webhook für alle Kategorien auszuführen."
+        categories_filter: "Getriggerte Kategorien"
+        groups_filter_instructions: "In Frage kommende Webhooks werden nur dann getriggert wenn das Ereignis in Verbindung mit den angegebenen Gruppen steht. Lasse den Wert frei um den Webhook für alle Gruppen auszuführen."
+        groups_filter: "Getriggerte Gruppen"
+        delete_confirm: "Diesen Webhook löschen?"
+        topic_event:
+          name: "Thema Ereignis"
+          details: "Wenn ein neues Thema erstellt, bearbeitet oder gelöscht wird."
+        post_event:
+          name: "Beitrag Ereignis"
+          details: "Wenn auf einen Beitrag geantwortet wird oder der Beitrag geändert, gelöscht oder wiederhergestellt wird."
+        user_event:
+          name: "Benutzer Ereignis"
+          details: "Wenn ein Benutzer erstellt oder angenommen wird."
         delivery_status:
+          title: "Versandstatus"
           inactive: "Inaktiv"
           failed: "Fehlgeschlagen"
           successful: "Erfolgreich"
+        events:
+          none: "Es gibt keine verwandten Ereignisse."
+          redeliver: "Neu zustellen"
+          incoming:
+            one: "Es gibt ein neues Ereignis"
+            other: "Es gibt {{count}} neue Ereignisse."
+          completed_in:
+            one: "In 1 Sekunde fertiggestellt."
+            other: "In {{count}} Sekunden fertiggestellt."
+          request: "Request"
+          response: "Response"
+          redeliver_confirm: "Bist du sicher dass du denselben Payload noch einmal übertragen möchtest?"
+          headers: "Headers"
+          payload: "Payload"
+          body: "Body"
+          go_list: "Gehe zur Liste"
+          go_details: "Webhook bearbeiten"
+          go_events: "Gehe zu Ereignissen"
+          ping: "Ping"
+          status: "Status Code"
+          event_id: "ID"
+          timestamp: "Erstellt"
+          completion: "Zeit"
+          actions: "Aktionen"
       plugins:
         title: "Plug-ins"
         installed: "Installierte Plug-ins"
@@ -2286,7 +2409,6 @@ de:
       export_csv:
         success: "Der Export wurde gestartet. Du erhältst eine Nachricht, sobald der Vorgang abgeschlossen ist."
         failed: "Der Export ist fehlgeschlagen. Bitte überprüfe die Logs."
-        rate_limit_error: "Beiträge können pro Tag nur einmal heruntergeladen werden. Bitte versuch es morgen wieder."
         button_text: "Exportieren"
         button_title:
           user: "Vollständige Benutzerliste im CSV-Format exportieren."
@@ -2408,10 +2530,14 @@ de:
         delivery_method: "Versandmethode"
         preview_digest_desc: "Vorschau der Neuigkeiten, die als E-Mail an inaktive Nutzer gesendet werden."
         refresh: "Aktualisieren"
+        send_digest_label: "Sende das Ergebnis nach:"
+        send_digest: "Senden"
+        sending_email: "Sende Email..."
         format: "Format"
         html: "HTML"
         text: "Text"
         last_seen_user: "Benutzer zuletzt gesehen:"
+        no_result: "Für diesen Digest wurden keine Ergebnisse gefunden."
         reply_key: "Antwort-Schlüssel"
         skipped_reason: "Grund des Überspringens"
         incoming_emails:
@@ -2848,11 +2974,13 @@ de:
         target_posts: Abfrage betrifft Beiträge
         auto_revoke: Führe die Abfrage zum Widerruf täglich aus
         show_posts: Den für die Verleihung des Abzeichens verantwortlichen Beitrag auf der Abzeichenseite anzeigen
+        trigger: Trigger
         trigger_type:
           none: "Täglich aktualisieren"
           post_action: "Wenn ein Benutzer auf einen Beitrag reagiert"
           post_revision: "Wenn ein Benutzer einen Beitrag bearbeitet oder erstellt"
           trust_level_change: "Wenn sich die Vertrauensstufe eines Benutzers ändert"
+          user_change: "Wenn ein Benutzer bearbeitet oder erstellt wird."
           post_processed: "Nach der Verarbeitung eines Beitrags"
         preview:
           link_text: "Vorschau auf verliehene Abzeichen"
@@ -2886,6 +3014,7 @@ de:
         sample: "Benutze den folgenden HTML code für deine Site um Discourse Beiträge zu erstellen und einzubetten. Ersetze <b>REPLACE_ME</b> mit der URL der Site in die du sie einbetten möchtest."
         title: "Einbettung"
         host: "Erlaubte Hosts"
+        path_whitelist: "Pfad Whitelist"
         edit: "bearbeiten"
         category: "In Kategorie Beitrag schreiben"
         add_host: "Host hinzufügen"
@@ -2924,7 +3053,17 @@ de:
     wizard:
       done: "Erledigt"
       back: "Zurück"
+      next: "Nächstes"
+      step: "%{current} von %{total}"
+      upload: "Hochladen"
+      uploading: "Hochladen..."
+      quit: "Vielleicht später"
+      staff_count:
+        one: "Deine Community hat 1 Mitarbeiter"
+        other: "Deine Community hat %{count} Mitarbeiter"
       invites:
+        add_user: "Hinzufügen"
+        none_added: "Du hast bisher keine Mitarbeiter eingeladen. Willst du fortfahren?"
         roles:
           admin: "Administration"
           moderator: "Moderator"

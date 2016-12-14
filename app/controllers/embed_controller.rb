@@ -6,6 +6,16 @@ class EmbedController < ApplicationController
 
   layout 'embed'
 
+  rescue_from Discourse::InvalidAccess do
+    response.headers['X-Frame-Options'] = "ALLOWALL"
+    if current_user.try(:admin?)
+      @setup_url = "#{Discourse.base_url}/admin/customize/embedding"
+      @show_reason = true
+      @hosts = EmbeddableHost.all
+    end
+    render 'embed_error'
+  end
+
   def comments
     embed_url = params[:embed_url]
     embed_username = params[:discourse_username]

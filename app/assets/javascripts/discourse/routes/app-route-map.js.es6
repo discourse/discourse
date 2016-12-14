@@ -50,12 +50,16 @@ export default function() {
     this.route(defaultHomepage(), { path: '/' });
   });
 
+  this.route('groups', { resetNamespace: true });
+
   this.route('group', { path: '/groups/:name', resetNamespace: true }, function() {
     this.route('members');
     this.route('posts');
     this.route('topics');
     this.route('mentions');
     this.route('messages');
+    this.route('logs');
+    this.route('edit');
   });
 
   // User routes

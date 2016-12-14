@@ -358,7 +358,6 @@ fa_IR:
       profile: "نمایه"
       mute: "بی صدا"
       edit: "ویرایش تنظیمات"
-      download_archive: "دانلود نوشته های من"
       new_private_message: "پیام های جدید"
       private_message: "پیام"
       private_messages: "پیام‌ها"
@@ -1144,7 +1143,6 @@ fa_IR:
     post:
       reply: "<i class='fa fa-mail-forward'></i> {{replyAvatar}} {{usernameLink}}"
       reply_topic: "<i class='fa fa-mail-forward'></i> {{link}}"
-      quote_reply: "پاسخ با نقل قول"
       edit: "در حال ویرایش {{link}} {{replyAvatar}} {{username}}"
       edit_reason: "دلیل:"
       post_number: "نوشته {{number}}"
@@ -1733,7 +1731,6 @@ fa_IR:
       export_csv:
         success: "فرایند برون ریزی، به شما از طریق پیام اطلاع رسانی خواهد شد وقتی این فرایند تکمیل شود."
         failed: "برون ریزی شکست خورد.  لطفا لوگ گزارشات را مشاهده فرمایید."
-        rate_limit_error: "نوشته ها را می توانید روزی فقط یک بار دانلود کنید. لطفا فردا دوباره امتحان کنید."
         button_text: "خروجی گرفتن"
         button_title:
           user: "برون ریزی لیست کاربر در قالب CSV ."

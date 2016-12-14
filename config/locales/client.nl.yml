@@ -428,7 +428,6 @@ nl:
       profile: "Profiel"
       mute: "Negeer"
       edit: "Wijzig voorkeuren"
-      download_archive: "Download mijn berichten"
       new_private_message: "Nieuw bericht"
       private_message: "Bericht"
       private_messages: "Berichten"
@@ -1459,7 +1458,6 @@ nl:
     post:
       reply: "<i class='fa fa-mail-forward'></i> {{replyAvatar}} {{usernameLink}}"
       reply_topic: "<i class='fa fa-mail-forward'></i> {{link}}"
-      quote_reply: "citeer"
       edit: "Aan het bewerken {{link}} {{replyAvatar}} {{username}}"
       edit_reason: "Reden: "
       post_number: "bericht {{number}}"
@@ -2384,7 +2382,6 @@ nl:
       export_csv:
         success: "Exporteren is gestart, je zult een bericht ontvangen als het proces is afgerond."
         failed: "Exporteren is mislukt. Controleer de logbestanden."
-        rate_limit_error: "Berichten kunnen één keer per dag gedownload worden, probeer het morgen nog eens."
         button_text: "Exporteren"
         button_title:
           user: "Exporteer volledige gebruikerslijst in CSV-formaat"

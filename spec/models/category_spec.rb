@@ -12,24 +12,6 @@ describe Category do
     is_expected.to validate_uniqueness_of(:name).scoped_to(:parent_category_id)
   end
 
-  context "url validation" do
-    let(:user) { Fabricate(:user) }
-
-    let(:upload) { Fabricate(:upload) }
-
-    it "ensures logo_url is valid" do
-      expect(Fabricate.build(:category, user: user, logo_url: "---%")).not_to be_valid
-      expect(Fabricate.build(:category, user: user, logo_url: "http://example.com/made-up.jpg")).not_to be_valid
-      expect(Fabricate.build(:category, user: user, logo_url: upload.url)).to be_valid
-    end
-
-    it "ensures background_url is valid" do
-      expect(Fabricate.build(:category, user: user, background_url: ";test")).not_to be_valid
-      expect(Fabricate.build(:category, user: user, background_url: "http://example.com/no.jpg")).not_to be_valid
-      expect(Fabricate.build(:category, user: user, background_url: upload.url)).to be_valid
-    end
-  end
-
   it 'validates uniqueness in case insensitive way' do
     Fabricate(:category, name: "Cats")
     cats = Fabricate.build(:category, name: "cats")

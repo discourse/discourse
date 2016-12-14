@@ -14,7 +14,6 @@ widgetTest('basic rendering', {
   test(assert) {
     assert.ok(this.$('.names').length);
     assert.ok(this.$('span.username').length);
-    assert.ok(this.$('a[data-auto-route=true]').length);
     assert.ok(this.$('a[data-user-card=eviltrout]').length);
     assert.equal(this.$('.username a').text(), 'eviltrout');
     assert.equal(this.$('.full-name a').text(), 'Robin Ward');

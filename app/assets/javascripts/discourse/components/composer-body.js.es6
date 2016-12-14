@@ -13,8 +13,7 @@ export default Ember.Component.extend({
                       'composer.canEditTitle:edit-title',
                       'composer.createdPost:created-post',
                       'composer.creatingTopic:topic',
-                      'composer.whisper:composing-whisper',
-                      'composer.showComposerEditor::topic-featured-link-only'],
+                      'composer.whisper:composing-whisper'],
 
   @computed('composer.composeState')
   composeState(composeState) {
