@@ -15,7 +15,8 @@ module Onebox
           @url.gsub!("https://www.dropbox.com","https://dl.dropboxusercontent.com")
         end
 
-        "<a href='#{@url}' target='_blank'><img src='#{@url}'></a>"
+        escaped = url.gsub(/'/, "%27")
+        "<a href='#{escaped}' target='_blank'><img src='#{escaped}'></a>"
       end
     end
   end
