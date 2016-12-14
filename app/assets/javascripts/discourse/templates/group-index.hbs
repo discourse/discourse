@@ -1,4 +1,4 @@
-{{#if model}}
+{{#if model.members}}
   {{#if canJoinGroup}}
     {{#if model.is_group_user}}
       {{d-button action="leaveGroup"
@@ -50,5 +50,5 @@
 
   {{conditional-loading-spinner condition=loading}}
 {{else}}
-  <div>{{i18n "groups.empty.users"}}</div>
+  <div>{{i18n "groups.empty.members"}}</div>
 {{/if}}
