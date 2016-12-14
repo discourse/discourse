@@ -28,6 +28,9 @@ export default Ember.Component.extend({
     let firstRange, postId;
     for (let r = 0; r < selection.rangeCount; r++) {
       const range = selection.getRangeAt(r);
+
+      if ($(range.endContainer).closest('.cooked').length === 0) return;
+
       const $ancestor = $(range.commonAncestorContainer);
 
       firstRange = firstRange || range;
