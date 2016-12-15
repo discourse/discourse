@@ -19,18 +19,16 @@ createWidget('timeline-last-read', {
     return { style: `height: 40px; top: ${attrs.top}px` };
   },
 
-  html(attrs) {
-    const result = [ iconNode('minus', { class: 'progress' }) ];
-    if (attrs.showButton) {
-      result.push(this.attach('button', {
+  html() {
+    return [
+      iconNode('circle', { class: 'progress' }),
+      this.attach('button', {
         className: 'btn btn-primary btn-small',
         label: 'topic.timeline.back',
         title: 'topic.timeline.back_description',
         action: 'goBack'
-      }));
-    }
-
-    return result;
+      })
+    ];
   },
 
   goBack() {
@@ -161,12 +159,8 @@ createWidget('timeline-scrollarea', {
 
     if (position.lastRead && position.lastRead !== position.total) {
       const lastReadTop = Math.round(position.lastReadPercentage * SCROLLAREA_HEIGHT);
-      if (lastReadTop > (before + SCROLLER_HEIGHT * 0.5)) {
-        result.push(this.attach('timeline-last-read', {
-          top: lastReadTop,
-          lastRead: position.lastRead,
-          showButton: (lastReadTop > (before + SCROLLER_HEIGHT)) && (lastReadTop < (SCROLLAREA_HEIGHT - SCROLLER_HEIGHT))
-        }));
+      if ((lastReadTop > (before + SCROLLER_HEIGHT)) && (lastReadTop < (SCROLLAREA_HEIGHT - SCROLLER_HEIGHT))) {
+        result.push(this.attach('timeline-last-read', { top: lastReadTop, lastRead: position.lastRead }));
       }
     }
 

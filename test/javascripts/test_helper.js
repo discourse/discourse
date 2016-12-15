@@ -30,9 +30,9 @@
 //= require sinon-1.7.1
 //= require sinon-qunit-1.0.0
 
+//= require helpers/qunit-helpers
 //= require helpers/assertions
 
-//= require helpers/qunit-helpers
 //= require_tree ./fixtures
 //= require_tree ./lib
 //= require_tree .

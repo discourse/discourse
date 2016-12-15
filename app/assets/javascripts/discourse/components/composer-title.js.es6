@@ -51,8 +51,6 @@ export default Ember.Component.extend({
   },
 
   _checkForUrl() {
-    if (!this.element || this.isDestroying || this.isDestroyed) { return; }
-
     if (this.get('isAbsoluteUrl') && (this.get('composer.reply')||"").length === 0) {
       // Try to onebox. If success, update post body and title.
 

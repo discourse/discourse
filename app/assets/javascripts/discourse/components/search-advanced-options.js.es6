@@ -48,15 +48,12 @@ export default Em.Component.extend({
 
   init() {
     this._super();
-    Ember.run.scheduleOnce('afterRender', () => {
-      this._init();
-      this._update();
-    });
+    this._init();
+    this._update();
   },
 
   @observes('searchTerm')
   _updateOptions() {
-    this._update();
     Ember.run.debounce(this, this._update, 250);
   },
 

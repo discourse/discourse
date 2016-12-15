@@ -17,7 +17,7 @@ function inject() {
 }
 
 function injectAll(app, name) {
-  inject(app, name, 'controller', 'component', 'route', 'model', 'adapter');
+  inject(app, name, 'controller', 'component', 'route', 'view', 'model', 'adapter');
 }
 
 export default {

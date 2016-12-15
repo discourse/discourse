@@ -89,6 +89,7 @@
 //= require_tree ./discourse/models
 //= require_tree ./discourse/components
 //= require_tree ./discourse/raw-views
+//= require_tree ./discourse/views
 //= require_tree ./discourse/helpers
 //= require_tree ./discourse/templates
 //= require_tree ./discourse/routes

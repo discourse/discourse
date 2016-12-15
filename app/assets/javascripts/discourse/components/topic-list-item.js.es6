@@ -1,6 +1,6 @@
 import computed from 'ember-addons/ember-computed-decorators';
 import { bufferedRender } from 'discourse-common/lib/buffered-render';
-import { findRawTemplate } from 'discourse/lib/raw-templates';
+import { getOwner } from 'discourse-common/lib/get-owner';
 
 export function showEntrance(e) {
   let target = $(e.target);
@@ -32,7 +32,7 @@ export default Ember.Component.extend(bufferedRender({
   },
 
   buildBuffer(buffer) {
-    const template = findRawTemplate('list/topic-list-item');
+    const template = getOwner(this).lookup('template:list/topic-list-item.raw');
     if (template) {
       buffer.push(template(this));
     }
