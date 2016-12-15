@@ -5,8 +5,9 @@
     <div class='container'>
       <table class="groups-table">
         <thead>
-          <th>{{i18n "groups.name"}}</th>
+          <th></th>
           <th>{{i18n "groups.user_count"}}</th>
+          <th>{{i18n "groups.membership"}}</th>
         </thead>
 
         <tbody>
@@ -41,6 +42,14 @@
               </td>
 
               <td class="groups-user-count">{{group.user_count}}</td>
+
+              <td>
+                {{#group-membership-button model=group}}
+                  {{d-button icon="ban"
+                      label=(if group.automatic 'groups.automatic_group' 'groups.closed_group')
+                      disabled=true}}
+                {{/group-membership-button}}
+              </td>
             </tr>
           {{/each}}
         </tbody>

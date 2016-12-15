@@ -1,4 +1,6 @@
 <div class="container group">
+  {{#link-to "groups" class='group-breadcrumb'}}{{fa-icon 'arrow-left'}} {{i18n 'groups.index'}}{{/link-to}}
+
   <div class='group-details-container'>
     <div class='group-info'>
       {{#if model.flair_url}}

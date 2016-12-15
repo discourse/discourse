@@ -18,16 +18,6 @@ export default Ember.Controller.extend({
       this.get('model').findMembers({ order: this.get('order'), desc: this.get('desc') });
   },
 
-  @computed("model.public")
-  canJoinGroup(publicGroup) {
-    return !!(this.currentUser) && publicGroup;
-  },
-
-  @computed('model.allow_membership_requests', 'model.alias_level')
-  canRequestMembership(allowMembershipRequests, aliasLevel) {
-    return !!(this.currentUser) && allowMembershipRequests && aliasLevel === 99;
-  },
-
   actions: {
     toggleActions() {
       this.toggleProperty("showActions");
@@ -42,35 +32,6 @@ export default Ember.Controller.extend({
       if (usernames && usernames.length > 0) {
         this.get('model').addMembers(usernames).then(() => this.set('usernames', [])).catch(popupAjaxError);
       }
-    },
-
-    requestMembership() {
-      const groupName = this.get('model.name');
-      const title = I18n.t('groups.request_membership_pm.title');
-      const body = I18n.t('groups.request_membership_pm.body', { groupName });
-      this.transitionToRoute(`/new-message?groupname=${groupName}&title=${title}&body=${body}`);
-    },
-
-    joinGroup() {
-      this.set('updatingMembership', true);
-      const model = this.get('model');
-
-      model.addMembers(this.currentUser.get('username')).then(() => {
-        model.set('is_group_user', true);
-      }).catch(popupAjaxError).finally(() => {
-        this.set('updatingMembership', false);
-      });
-    },
-
-    leaveGroup() {
-      this.set('updatingMembership', true);
-      const model = this.get('model');
-
-      model.removeMember(this.currentUser).then(() => {
-        model.set('is_group_user', false);
-      }).catch(popupAjaxError).finally(() => {
-        this.set('updatingMembership', false);
-      });
     },
 
     loadMore() {
