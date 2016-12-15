@@ -1,4 +1,4 @@
-import { default as computed, observes } from 'ember-addons/ember-computed-decorators';
+import { observes } from 'ember-addons/ember-computed-decorators';
 
 export default Ember.Controller.extend({
   application: Ember.inject.controller(),
