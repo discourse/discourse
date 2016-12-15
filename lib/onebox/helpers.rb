@@ -57,17 +57,7 @@ module Onebox
     end
 
     def self.blank?(value)
-      if value.respond_to?(:empty?)
-        match = value.empty?
-
-        if value.is_a?(String)
-          match = match || !value[/\S/]
-        end
-
-        match
-      else
-        !value
-      end
+      value.respond_to?(:empty?) ? !!value.empty? : !value
     end
 
     def self.truncate(string, length = 50)
