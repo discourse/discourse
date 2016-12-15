@@ -4,6 +4,11 @@
   margin-bottom: 30px;
 }
 
+.group-breadcrumb {
+  display: block;
+  margin-bottom: 10px;
+}
+
 .group-info {
   width: 100%;
 
@@ -42,10 +47,6 @@
   &:hover {
     background-color: $danger;
   }
-}
-
-.group-index-request, .group-index-join, .group-index-leave {
-  float: right;
 }
 
 table.group-logs {

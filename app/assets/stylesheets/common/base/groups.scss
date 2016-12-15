@@ -8,10 +8,8 @@
   width: 100%;
 
   th {
-    border-bottom: 3px solid dark-light-diff($primary, $secondary, 90%, -60%);
+    border-bottom: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
     padding: 5px 0px;
-    color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
-    font-weight: normal;
     text-align: left;
   }
 
@@ -32,6 +30,7 @@
     .groups-info-name {
       font-weight: bold;
       color: $primary;
+      color: dark-light-choose(scale-color($primary, $lightness: 30%), scale-color($secondary, $lightness: 70%));
     }
 
     .groups-info-full-name {
