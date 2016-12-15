@@ -70,7 +70,6 @@ module CategoryGuardian
   end
 
   def topic_featured_link_allowed_category_ids
-    @topic_featured_link_allowed_category_ids = CategoryCustomField.where(name: "topic_featured_link_allowed", value: "true")
-                                                                   .pluck(:category_id)
+    @topic_featured_link_allowed_category_ids = Category.where(topic_featured_link_allowed: true).pluck(:id)
   end
 end

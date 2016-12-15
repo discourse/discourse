@@ -2285,20 +2285,28 @@ describe Guardian do
     before { SiteSetting.topic_featured_link_enabled = true }
     let(:guardian) { Guardian.new }
 
-    it 'returns true if no category restricts editing link' do
-      expect(guardian.can_edit_featured_link?(nil)).to eq(true)
-      expect(guardian.can_edit_featured_link?(5)).to eq(true)
+    context "uncategorized" do
+      let!(:link_category) { Fabricate(:link_category) }
+
+      it "allows featured links if no categories forbid it" do
+        expect(guardian.can_edit_featured_link?(nil)).to eq(true)
+      end
+
+      it "forbids featured links if a category forbids it" do
+        Fabricate(:category, topic_featured_link_allowed: false)
+        expect(guardian.can_edit_featured_link?(nil)).to eq(false)
+      end
     end
 
     context 'when exist' do
-      let!(:category) { Fabricate(:category) }
+      let!(:category) { Fabricate(:category, topic_featured_link_allowed: false) }
       let!(:link_category) { Fabricate(:link_category) }
 
       it 'returns true if the category is listed' do
         expect(guardian.can_edit_featured_link?(link_category.id)).to eq(true)
       end
 
-      it 'returns false if the category is not listed' do
+      it 'returns false if the category does not allow it' do
         expect(guardian.can_edit_featured_link?(category.id)).to eq(false)
       end
     end

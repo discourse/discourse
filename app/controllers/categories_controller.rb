@@ -240,6 +240,7 @@ class CategoriesController < ApplicationController
                         :topic_template,
                         :sort_order,
                         :sort_ascending,
+                        :topic_featured_link_allowed,
                         :custom_fields => [params[:custom_fields].try(:keys)],
                         :permissions => [*p.try(:keys)],
                         :allowed_tags => [],
