@@ -139,7 +139,7 @@ var runTests = function() {
   });
 
   test("at least one topic shows up", function() {
-    return $(".topic-list tbody tr").length;
+    return document.querySelector(".topic-list tbody tr");
   });
 
   execAsync("navigate to 1st topic", 500, function() {
@@ -147,7 +147,7 @@ var runTests = function() {
   });
 
   test("at least one post body", function() {
-    return $(".topic-post").length;
+    return document.querySelector(".topic-post");
   });
 
   execAsync("click on the 1st user", 500, function() {
@@ -157,7 +157,7 @@ var runTests = function() {
   });
 
   test("user has details", function() {
-    return $("#user-card .names").length;
+    return document.querySelector("#user-card .names");
   });
 
   exec("open login modal", function() {
@@ -165,7 +165,7 @@ var runTests = function() {
   });
 
   test("login modal is open", function() {
-    return $(".login-modal").length;
+    return document.querySelector(".login-modal");
   });
 
   exec("type in credentials & log in", function() {
@@ -175,7 +175,7 @@ var runTests = function() {
   });
 
   test("is logged in", function() {
-    return $(".current-user").length;
+    return document.querySelector(".current-user");
   });
 
   exec("go home", function() {
@@ -183,11 +183,11 @@ var runTests = function() {
   });
 
   test("it shows a topic list", function() {
-    return $(".topic-list").length;
+    return document.querySelector(".topic-list");
   });
 
   test('we have a create topic button', function() {
-    return $("#create-topic").length;
+    return document.querySelector("#create-topic");
   });
 
   exec("open composer", function() {
@@ -195,7 +195,7 @@ var runTests = function() {
   });
 
   test('the editor is visible', function() {
-    return $(".d-editor").length;
+    return document.querySelector(".d-editor");
   });
 
   exec("compose new topic", function() {
@@ -209,7 +209,7 @@ var runTests = function() {
   });
 
   test("updates preview", function() {
-    return $(".d-editor-preview p").length;
+    return document.querySelector(".d-editor-preview p");
   });
 
   exec("open upload modal", function() {
@@ -217,7 +217,7 @@ var runTests = function() {
   });
 
   test("upload modal is open", function() {
-    return $("#filename-input").length;
+    return document.querySelector("#filename-input");
   });
 
   // TODO: Looks like PhantomJS 2.0.0 has a bug with `uploadFile`
@@ -246,7 +246,7 @@ var runTests = function() {
   });
 
   test("topic is created", function() {
-    return $(".fancy-title").length;
+    return document.querySelector(".fancy-title");
   });
 
   exec("click reply button", function() {
@@ -254,7 +254,7 @@ var runTests = function() {
   });
 
   test("composer is open", function() {
-    return $("#reply-control .d-editor-input").length;
+    return document.querySelector("#reply-control .d-editor-input");
   });
 
   exec("compose reply", function() {

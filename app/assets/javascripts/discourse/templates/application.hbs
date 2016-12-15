@@ -1,17 +1,17 @@
-{{plugin-outlet name="above-site-header"}}
+{{plugin-outlet "above-site-header"}}
 {{site-header canSignUp=canSignUp
-              showCreateAccount=(action "appRouteAction" "showCreateAccount")
-              showLogin=(action "appRouteAction" "showLogin")
-              showKeyboard=(action "appRouteAction" "showKeyboardShortcutsHelp")
-              toggleMobileView=(action "appRouteAction" "toggleMobileView")
-              toggleAnonymous=(action "appRouteAction" "toggleAnonymous")
-              logout=(action "appRouteAction" "logout")}}
-{{plugin-outlet name="below-site-header"}}
+              showCreateAccount="showCreateAccount"
+              showLogin="showLogin"
+              showKeyboard="showKeyboardShortcutsHelp"
+              toggleMobileView="toggleMobileView"
+              toggleAnonymous="toggleAnonymous"
+              logout="logout"}}
+{{plugin-outlet "below-site-header"}}
 
 <div id="main-outlet" class="wrap">
   <div class="container">
     {{#if showTop}}
-      {{custom-html name="top"}}
+      {{custom-html "top"}}
     {{/if}}
     {{global-notice}}
     {{create-topics-notice}}
@@ -20,11 +20,11 @@
   {{outlet "user-card"}}
 </div>
 
-{{plugin-outlet name="above-footer"}}
+{{plugin-outlet "above-footer"}}
 {{#if showFooter}}
-  {{custom-html name="footer"}}
+  {{custom-html "footer"}}
 {{/if}}
-{{plugin-outlet name="below-footer"}}
+{{plugin-outlet "below-footer"}}
 
 {{outlet "modal"}}
 {{topic-entrance}}

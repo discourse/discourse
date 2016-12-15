@@ -6,7 +6,7 @@ const _pluginCallbacks = [];
 const Discourse = Ember.Application.extend({
   rootElement: '#main',
   _docTitle: document.title,
-  RAW_TEMPLATES: {},
+  __TAGS_INCLUDED__: true,
 
   getURL(url) {
     if (!url) return url;

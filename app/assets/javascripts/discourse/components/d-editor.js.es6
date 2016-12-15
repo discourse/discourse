@@ -11,7 +11,6 @@ import { translations } from 'pretty-text/emoji/data';
 import { emojiSearch } from 'pretty-text/emoji';
 import { emojiUrlFor } from 'discourse/lib/text';
 import { getRegister } from 'discourse-common/lib/get-owner';
-import { findRawTemplate } from 'discourse/lib/raw-templates';
 import deprecated from 'discourse-common/lib/deprecated';
 
 // Our head can be a static string or a function that returns a string
@@ -298,10 +297,11 @@ export default Ember.Component.extend({
   },
 
   _applyCategoryHashtagAutocomplete() {
+    const template = this.register.lookup('template:category-tag-autocomplete.raw');
     const siteSettings = this.siteSettings;
 
     this.$('.d-editor-input').autocomplete({
-      template: findRawTemplate('category-tag-autocomplete'),
+      template: template,
       key: '#',
       transformComplete(obj) {
         if (obj.model) {
@@ -323,10 +323,11 @@ export default Ember.Component.extend({
     if (!this.siteSettings.enable_emoji) { return; }
 
     const register = this.register;
+    const template = this.register.lookup('template:emoji-selector-autocomplete.raw');
     const self = this;
 
     $editorInput.autocomplete({
-      template: findRawTemplate('emoji-selector-autocomplete'),
+      template: template,
       key: ":",
       afterComplete(text) {
         self.set('value', text);

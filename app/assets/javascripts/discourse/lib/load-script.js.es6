@@ -5,16 +5,13 @@ const _loading = {};
 function loadWithTag(path, cb) {
   const head = document.getElementsByTagName('head')[0];
 
-  let finished = false;
   let s = document.createElement('script');
   s.src = path;
-  if (Ember.Test) {
-    Ember.Test.registerWaiter(() => finished);
-  }
+  if (Ember.Test) { Ember.Test.pendingAjaxRequests++; }
   head.appendChild(s);
 
   s.onload = s.onreadystatechange = function(_, abort) {
-    finished = true;
+    if (Ember.Test) { Ember.Test.pendingAjaxRequests--; }
     if (abort || !s.readyState || s.readyState === "loaded" || s.readyState === "complete") {
       s = s.onload = s.onreadystatechange = null;
       if (!abort) {

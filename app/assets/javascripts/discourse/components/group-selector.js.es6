@@ -1,5 +1,5 @@
 import { on, observes, default as computed } from 'ember-addons/ember-computed-decorators';
-import { findRawTemplate } from 'discourse/lib/raw-templates';
+import { getOwner } from 'discourse-common/lib/get-owner';
 
 export default Ember.Component.extend({
   @computed('placeholderKey')
@@ -19,6 +19,7 @@ export default Ember.Component.extend({
     var selectedGroups;
     var groupNames = this.get('groupNames');
 
+    var template = getOwner(this).lookup('template:group-selector-autocomplete.raw');
     self.$('input').autocomplete({
       allowAny: false,
       items: _.isArray(groupNames) ? groupNames : (Ember.isEmpty(groupNames)) ? [] : [groupNames],
@@ -43,7 +44,7 @@ export default Ember.Component.extend({
           });
         });
       },
-      template: findRawTemplate('group-selector-autocomplete')
+      template: template
     });
   }
 });

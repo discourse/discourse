@@ -16,7 +16,7 @@ if (customNavItemHref) {
     if (navItem.get('tagId')) {
       var name = navItem.get('name');
 
-      if ( !Discourse.Site.currentProp('filters').includes(name) ) {
+      if ( !Discourse.Site.currentProp('filters').contains(name) ) {
         return null;
       }
 

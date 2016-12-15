@@ -94,7 +94,7 @@
       </div>
     {{/if}}
 
-    {{plugin-outlet name="post-revisions" args=(hash model=model)}}
+    {{plugin-outlet "post-revisions"}}
 
     {{#links-redirect class="row"}}
       {{{bodyDiff}}}

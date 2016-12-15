@@ -11,7 +11,6 @@ import { preventCloak } from 'discourse/widgets/post-stream';
 import { h } from 'virtual-dom';
 import { addFlagProperty } from 'discourse/components/site-header';
 import { addPopupMenuOptionsCallback } from 'discourse/controllers/composer';
-import { extraConnectorClass } from 'discourse/lib/plugin-connectors';
 
 class PluginApi {
   constructor(version, container) {
@@ -331,33 +330,12 @@ class PluginApi {
   addStorePluralization(thing, plural) {
     this.container.lookup("store:main").addPluralization(thing, plural);
   }
-
-  /**
-   * Register a Connector class for a particular outlet and connector.
-   *
-   * For example, if the outlet is `user-profile-primary` and your connector
-   * template is called `my-connector.hbs`:
-   *
-   * ```javascript
-   * api.registerConnectorClass('user-profile-primary', 'my-connector', {
-   *   shouldRender(args, component) {
-   *     return component.siteSettings.my_plugin_enabled;
-   *   }
-   * });
-   * ```
-   *
-   * For more information on connector classes, see:
-   * https://meta.discourse.org/t/important-changes-to-plugin-outlets-for-ember-2-10/54136
-   **/
-  registerConnectorClass(outletName, connectorName, klass) {
-    extraConnectorClass(`${outletName}/${connectorName}`, klass);
-  }
 }
 
 let _pluginv01;
 function getPluginApi(version) {
   version = parseFloat(version);
-  if (version <= 0.6) {
+  if (version <= 0.5) {
     if (!_pluginv01) {
       _pluginv01 = new PluginApi(version, Discourse.__container__);
     }
