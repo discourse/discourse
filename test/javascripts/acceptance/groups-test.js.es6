@@ -12,7 +12,7 @@ test("Browsing Groups", () => {
   click("a[href='/groups/discourse/members']");
 
   andThen(() => {
-    equal(find('.group-header').text().trim(), 'Awesome Team', "it displays the group page");
+    equal(find('.group-info-name').text().trim(), 'Awesome Team', "it displays the group page");
   });
 });
 
@@ -58,7 +58,7 @@ test("Admin Viewing Group", () => {
     ok(find(".nav-stacked li a[title='Messages']").length === 1, 'it should show messages tab if user is admin');
     ok(find(".nav-stacked li a[title='Edit Group']").length === 1, 'it should show edit group tab if user is admin');
     ok(find(".nav-stacked li a[title='Logs']").length === 1, 'it should show Logs tab if user is admin');
-    equal(find('.group-title').text(), 'Awesome Team', 'it should display the group title');
-    equal(find('.group-name').text(), '@discourse', 'it should display the group name');
+
+    equal(find('.group-info-name').text(), 'Awesome Team', 'it should display the group name');
   });
 });
