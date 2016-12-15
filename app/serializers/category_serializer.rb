@@ -15,7 +15,8 @@ class CategorySerializer < BasicCategorySerializer
              :allow_badges,
              :custom_fields,
              :allowed_tags,
-             :allowed_tag_groups
+             :allowed_tag_groups,
+             :topic_featured_link_allowed
 
   def group_permissions
     @group_permissions ||= begin

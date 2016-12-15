@@ -106,8 +106,8 @@ module TopicGuardian
   end
 
   def can_edit_featured_link?(category_id)
-    SiteSetting.topic_featured_link_enabled &&
-        (topic_featured_link_allowed_category_ids.empty? || # no per category restrictions
-        category_id && topic_featured_link_allowed_category_ids.include?(category_id.to_i)) # category restriction exists
+    return false unless SiteSetting.topic_featured_link_enabled
+    return !Category.where(topic_featured_link_allowed: false).exists? unless category_id # uncategorized
+    Category.where(id: category_id, topic_featured_link_allowed: true).exists?
   end
 end

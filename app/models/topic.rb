@@ -7,7 +7,6 @@ require_dependency 'text_cleaner'
 require_dependency 'archetype'
 require_dependency 'html_prettify'
 require_dependency 'discourse_tagging'
-require_dependency 'discourse_featured_link'
 
 class Topic < ActiveRecord::Base
   include ActionView::Helpers::SanitizeHelper
@@ -76,11 +75,12 @@ class Topic < ActiveRecord::Base
 
   validates :featured_link, allow_nil: true, format: URI::regexp(%w(http https))
   validate if: :featured_link do
-    errors.add(:featured_link, :invalid_category) unless Guardian.new.can_edit_featured_link?(category_id)
+    errors.add(:featured_link, :invalid_category) unless !featured_link_changed? || Guardian.new.can_edit_featured_link?(category_id)
   end
 
   before_validation do
     self.title = TextCleaner.clean_title(TextSentinel.title_sentinel(title).text) if errors[:title].empty?
+    self.featured_link.strip! if self.featured_link
   end
 
   belongs_to :category
@@ -381,14 +381,6 @@ class Topic < ActiveRecord::Base
   def self.new_since_last_seen(user, since, featured_topic_ids=nil)
     topics = Topic.for_digest(user, since)
     featured_topic_ids ? topics.where("topics.id NOT IN (?)", featured_topic_ids) : topics
-  end
-
-  def featured_link
-    custom_fields[DiscourseFeaturedLink::CUSTOM_FIELD_NAME]
-  end
-
-  def featured_link=(link)
-    custom_fields[DiscourseFeaturedLink::CUSTOM_FIELD_NAME] = link.strip
   end
 
   def meta_data=(data)

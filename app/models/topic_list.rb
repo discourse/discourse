@@ -1,5 +1,4 @@
 require_dependency 'avatar_lookup'
-require_dependency 'discourse_featured_link'
 
 class TopicList
   include ActiveModel::Serialization
@@ -28,7 +27,6 @@ class TopicList
     end
 
     preloaded_custom_fields << DiscourseTagging::TAGS_FIELD_NAME if SiteSetting.tagging_enabled
-    preloaded_custom_fields << DiscourseFeaturedLink::CUSTOM_FIELD_NAME if SiteSetting.topic_featured_link_enabled
   end
 
   def tags

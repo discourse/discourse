@@ -1909,7 +1909,7 @@ en:
       tags_allowed_tag_groups: "Tag groups that can only be used in this category:"
       tags_placeholder: "(Optional) list of allowed tags"
       tag_groups_placeholder: "(Optional) list of allowed tag groups"
-      topic_featured_link_allowed: "Restricts editing the topic featured link in this category. Require site setting topic_featured_link_enabled is checked."
+      topic_featured_link_allowed: "Allow featured links in this category"
       delete: 'Delete Category'
       create: 'New Category'
       create_long: 'Create a new category'
