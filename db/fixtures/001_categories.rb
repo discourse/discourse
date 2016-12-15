@@ -30,7 +30,7 @@ if Category.exec_sql("
     SELECT 1 FROM schema_migration_details
     WHERE EXISTS(
       SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS
-        WHERE table_schema = 'public' AND table_name = 'categories' AND column_name = 'uploaded_logo_id'
+        WHERE table_schema = 'public' AND table_name = 'categories' AND column_name = 'logo_url'
       ) AND
     name = 'AddUploadsToCategories' AND
     created_at < (current_timestamp at time zone 'UTC' - interval '#{duration} minutes')
