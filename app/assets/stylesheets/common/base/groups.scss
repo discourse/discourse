@@ -7,28 +7,9 @@
 .groups-table {
   width: 100%;
 
-  .groups-name {
-    span {
-      display: inline-block;
-      vertical-align: middle;
-    }
-
-    .avatar-flair {
-      $size: 30px;
-
-      background-size: $size;
-      height: $size;
-      width: $size;
-
-      i {
-        font-size: $size !important;
-      }
-    }
-  }
-
   th {
     border-bottom: 3px solid dark-light-diff($primary, $secondary, 90%, -60%);
-    padding: 5px 0px 5px 5px;
+    padding: 5px 0px;
     color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
     font-weight: normal;
     text-align: left;
@@ -40,6 +21,43 @@
     td {
       color: dark-light-diff($primary, $secondary, 50%, -50%);
       padding: 0.8em 0;
+    }
+
+    td.groups-user-count {
+      font-size: 1.2em;
+    }
+  }
+
+  .groups-info {
+    .groups-info-name {
+      font-weight: bold;
+      color: $primary;
+    }
+
+    .groups-info-full-name {
+      color: dark-light-choose(scale-color($primary, $lightness: 30%), scale-color($secondary, $lightness: 70%));
+    }
+
+    .groups-info-title {
+      font-size: 0.9em;
+      color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
+    }
+
+    span {
+      display: inline-block;
+      vertical-align: middle;
+    }
+
+    .avatar-flair {
+      $size: 40px;
+
+      background-size: $size;
+      height: $size;
+      width: $size;
+
+      i {
+        font-size: $size !important;
+      }
     }
   }
 }

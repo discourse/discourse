@@ -1,18 +1,39 @@
-.group-header {
-  font-size: 2.142em;
-  font-weight: normal;
-}
-
-.group-name {
-  font-weight: normal;
-  margin-top: 5px;
-  color: dark-light-diff($primary, $secondary, 50%, -50%);
-}
-
 .group-details-container {
   background: rgba(230, 230, 230, 0.3);
   padding: 20px;
   margin-bottom: 30px;
+}
+
+.group-info {
+  width: 100%;
+
+  .group-info-name {
+    font-size: 1.4em;
+    font-weight: bold;
+    color: $primary;
+  }
+
+  .group-info-full-name {
+    font-size: 1.2em;
+    color: dark-light-choose(scale-color($primary, $lightness: 30%), scale-color($secondary, $lightness: 70%));
+  }
+
+  span {
+    display: inline-block;
+    vertical-align: middle;
+  }
+
+  .avatar-flair {
+    $size: 50px;
+
+    background-size: $size;
+    height: $size;
+    width: $size;
+
+    i {
+      font-size: $size !important;
+    }
+  }
 }
 
 .group-logs-filter {
@@ -107,27 +128,6 @@ table.group-members {
 
 .group-owner-label {
   color: $primary;
-}
-
-.group-details {
-  width: 100%;
-
-  span {
-    display: inline-block;
-    vertical-align: middle;
-  }
-
-  .avatar-flair {
-    $size: 50px;
-
-    background-size: $size;
-    height: $size;
-    width: $size;
-
-    i {
-      font-size: $size !important;
-    }
-  }
 }
 
 .form-horizontal {

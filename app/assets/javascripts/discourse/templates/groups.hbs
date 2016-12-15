@@ -12,10 +12,10 @@
         <tbody>
           {{#each groups as |group|}}
             <tr class="groups-table-row">
-              <td class="groups-name">
+              <td class="groups-info">
                 {{#link-to "group.members" group.name}}
                   {{#if group.flair_url}}
-                    <span>
+                    <span class='group-avatar-flair'>
                       {{avatar-flair
                         flairURL=group.flair_url
                         flairBgColor=group.flair_bg_color
@@ -24,10 +24,23 @@
                     </span>
                   {{/if}}
 
-                  <span><h4>@{{group.name}}</h4></span>
+                  <span>
+                    <span class='groups-info-name'>{{group.name}}</span>
+
+                    {{#if group.full_name}}
+                      <span class='groups-info-full-name'>{{group.full_name}}</span>
+                    {{/if}}
+
+                    {{#if group.title}}
+                      <div>
+                        <span class='groups-info-title'>{{group.title}}</span>
+                      </div>
+                    {{/if}}
+                  </span>
                 {{/link-to}}
               </td>
-              <td>{{group.user_count}}</td>
+
+              <td class="groups-user-count">{{group.user_count}}</td>
             </tr>
           {{/each}}
         </tbody>
