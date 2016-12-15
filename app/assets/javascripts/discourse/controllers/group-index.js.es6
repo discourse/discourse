@@ -1,6 +1,6 @@
 import { popupAjaxError } from 'discourse/lib/ajax-error';
 import Group from 'discourse/models/group';
-import { default as computed, observes } from 'ember-addons/ember-computed-decorators';
+import { observes } from 'ember-addons/ember-computed-decorators';
 
 export default Ember.Controller.extend({
   queryParams: ['order', 'desc'],
