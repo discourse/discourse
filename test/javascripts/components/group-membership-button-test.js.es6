@@ -1,8 +1,8 @@
 import { currentUser } from "helpers/qunit-helpers";
 
-moduleFor("controller:group-index");
+moduleFor('component:group-membership-button');
 
-test("canJoinGroup", function() {
+test('canJoinGroup', function() {
   this.subject().setProperties({
     model: { public: false }
   });
