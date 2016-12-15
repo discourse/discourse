@@ -3,7 +3,7 @@ module Onebox
     class VideoOnebox
       include Engine
 
-      matches_regexp /^(https?:)?\/\/.*\.(mov|mp4|webm|ogv)(\?.*)?$/
+      matches_regexp /^(https?:)?\/\/.*\.(mov|mp4|webm|ogv)(\?.*)?$/i
 
       def always_https?
         WhitelistedGenericOnebox.host_matches(uri, WhitelistedGenericOnebox.https_hosts)
