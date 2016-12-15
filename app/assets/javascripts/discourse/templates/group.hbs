@@ -1,6 +1,6 @@
 <div class="container group">
   <div class='group-details-container'>
-    <div class='group-details'>
+    <div class='group-info'>
       {{#if model.flair_url}}
         <span class='group-avatar-flair'>
           {{avatar-flair
@@ -12,13 +12,11 @@
       {{/if}}
 
       <span>
-        <h1 class='group-header'>
-          <span class='group-title'>{{groupName}}</span>
-        </h1>
+        <span class='group-info-name'>{{groupName}}</span>
 
-        {{#if model.full_name}}
-          <h3 class='group-name'>@{{model.name}}</h3>
-        {{/if}}
+        <div>
+          {{#if model.full_name}}<span class='group-info-full-name'>{{model.name}}</span>{{/if}}
+        </div>
       </span>
     </div>
 

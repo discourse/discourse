@@ -37,6 +37,7 @@ module Jobs
                                                args[:email_token],
                                                args[:to_address])
 
+      byebug
       if message
         Email::Sender.new(message, type, user).send
       else
