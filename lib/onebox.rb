@@ -8,6 +8,7 @@ require "moneta"
 require "cgi"
 require "net/http"
 require "digest"
+require "fast_blank"
 
 module Onebox
   DEFAULTS = {
