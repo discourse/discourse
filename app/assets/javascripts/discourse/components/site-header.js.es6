@@ -47,6 +47,12 @@ const SiteHeaderComponent = MountWidget.extend(Docking, {
     this.queueRerender();
   },
 
+  willRender() {
+    if (this.get('currentUser.staff')) {
+      $('body').addClass('staff');
+    }
+  },
+
   didInsertElement() {
     this._super();
     $(window).on('resize.discourse-menu-panel', () => this.afterRender());
