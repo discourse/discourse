@@ -1306,6 +1306,9 @@ en:
     delete_digest_email_after_days: "Suppress summary emails for users not seen on the site for more than (n) days."
     digest_suppress_categories: "Suppress these categories from summary emails."
     disable_digest_emails: "Disable summary emails for all users."
+    email_accent_bg_color: "The accent color to be used as the background of some elements in HTML emails. Enter a color name ('red') or hex value ('#FF000')."
+    email_accent_fg_color: "The color of text rendered on the email bg color in HTML emails. Enter a color name ('white') or hex value ('#FFFFFF')."
+    email_link_color: "The color of links in HTML emails. Enter a color name ('blue') or hex value ('#0000FF')."
 
     detect_custom_avatars: "Whether or not to check that users have uploaded custom profile pictures."
     max_daily_gravatar_crawls: "Maximum number of times Discourse will check Gravatar for custom avatars in a day"
