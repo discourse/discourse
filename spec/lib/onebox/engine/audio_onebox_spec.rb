@@ -6,7 +6,7 @@ describe Onebox::Engine::AudioOnebox do
   end
 
   it "supports mp3" do
-    expect(Onebox.preview('http://kolber.github.io/audiojs/demos/mp3/juicy.mp3').to_s).to match(/<audio/)
+    expect(Onebox.preview('http://kolber.github.io/audiojs/demos/mp3/juicy.MP3').to_s).to match(/<audio/)
   end
 
   it "supports wav" do

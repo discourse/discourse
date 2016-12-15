@@ -10,7 +10,7 @@ describe Onebox::Engine::VideoOnebox do
   end
 
   it "supports mov" do
-    expect(Onebox.preview('http://download.wavetlan.com/SVV/Media/HTTP/BlackBerry.mov').to_s).to match(/<video/)
+    expect(Onebox.preview('http://download.wavetlan.com/SVV/Media/HTTP/BlackBerry.MOV').to_s).to match(/<video/)
   end
 
   it "supports webm" do
