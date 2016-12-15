@@ -66,20 +66,23 @@ describe Onebox::Engine::DiscourseLocalOnebox do
 
   context "for a link to an internal audio or video file" do
 
+    let(:sha) { Digest::SHA1.hexdigest("discourse") }
+    let(:path) { "/uploads/default/original/3X/5/c/#{sha}" }
+
     it "returns nil if file type is not audio or video" do
-      url = "#{Discourse.base_url}/uploads/default/original/3X/5/c/24asdf42.pdf"
+      url = "#{Discourse.base_url}#{path}.pdf"
       FakeWeb.register_uri(:get, url, body: "")
       expect(Onebox.preview(url).to_s).to eq("")
     end
 
     it "returns some onebox goodness for audio file" do
-      url = "#{Discourse.base_url}/uploads/default/original/3X/5/c/24asdf42.mp3"
+      url = "#{Discourse.base_url}#{path}.MP3"
       html = Onebox.preview(url).to_s
       expect(html).to eq("<audio controls><source src='#{url}'><a href='#{url}'>#{url}</a></audio>")
     end
 
     it "returns some onebox goodness for video file" do
-      url = "#{Discourse.base_url}/uploads/default/original/3X/5/c/24asdf42.mp4"
+      url = "#{Discourse.base_url}#{path}.mov"
       html = Onebox.preview(url).to_s
       expect(html).to eq("<video width='100%' height='100%' controls><source src='#{url}'><a href='#{url}'>#{url}</a></video>")
     end
