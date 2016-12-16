@@ -8,6 +8,7 @@ class Auth::DefaultCurrentUserProvider
   USER_API_KEY ||= "HTTP_USER_API_KEY".freeze
   USER_API_CLIENT_ID ||= "HTTP_USER_API_CLIENT_ID".freeze
   API_KEY_ENV ||= "_DISCOURSE_API".freeze
+  USER_API_KEY_ENV ||= "_DISCOURSE_USER_API".freeze
   TOKEN_COOKIE ||= "_t".freeze
   PATH_INFO ||= "PATH_INFO".freeze
   COOKIE_ATTEMPTS_PER_MIN ||= 10
@@ -97,7 +98,7 @@ class Auth::DefaultCurrentUserProvider
       limiter_min.performed!
       limiter_day.performed!
 
-      @env[API_KEY_ENV] = true
+      @env[USER_API_KEY_ENV] = true
     end
 
     @env[CURRENT_USER_KEY] = current_user
@@ -172,7 +173,12 @@ class Auth::DefaultCurrentUserProvider
   # api has special rights return true if api was detected
   def is_api?
     current_user
-    @env[API_KEY_ENV]
+    !!(@env[API_KEY_ENV])
+  end
+
+  def is_user_api?
+    current_user
+    !!(@env[USER_API_KEY_ENV])
   end
 
   def has_auth_cookie?
