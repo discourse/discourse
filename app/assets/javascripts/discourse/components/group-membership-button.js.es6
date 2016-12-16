@@ -39,7 +39,7 @@ export default Ember.Component.extend({
       const groupName = this.get('model.name');
       const title = I18n.t('groups.request_membership_pm.title');
       const body = I18n.t('groups.request_membership_pm.body', { groupName });
-      this.transitionToRoute(`/new-message?groupname=${groupName}&title=${title}&body=${body}`);
+      this.sendAction("createNewMessageViaParams", groupName, title, body);
     }
   }
 });
