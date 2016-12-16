@@ -200,10 +200,10 @@ module Onebox
           html_entities = HTMLEntities.new
           d = { link: link }.merge(raw)
           if !Onebox::Helpers.blank?(d[:title])
-            d[:title] = html_entities.decode(Onebox::Helpers.truncate(d[:title]))
+            d[:title] = html_entities.decode(Onebox::Helpers.truncate(d[:title].strip, 80))
           end
           if !Onebox::Helpers.blank?(d[:description])
-            d[:description] = html_entities.decode(Onebox::Helpers.truncate(d[:description], 250))
+            d[:description] = html_entities.decode(Onebox::Helpers.truncate(d[:description].strip, 250))
           end
           d
         end

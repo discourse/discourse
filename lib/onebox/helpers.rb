@@ -65,7 +65,7 @@ module Onebox
     end
 
     def self.truncate(string, length = 50)
-      string.size > length ? string[0..length] + "..." : string
+      string.size > length ? string[0...(string.rindex(" ", length)||length)] + "..." : string
     end
 
     def self.title_attr(meta)
