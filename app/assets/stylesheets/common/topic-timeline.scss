@@ -106,7 +106,8 @@
         right: 0px;
         margin-left: 0;
         i.progress {
-          display: none
+          margin-right: -3px;
+          margin-left: 1em;
         }
       }
       .timeline-footer-controls {
@@ -261,15 +262,15 @@
 
     .timeline-last-read {
       position: absolute;
-      margin-left: -0.35em;
+      margin-left: -0.19em;
 
       .btn-small {
         padding: 2px 5px;
       }
 
       i.progress {
-        font-size: 0.8em;
-        color: $tertiary;
+        font-size: 0.5em;
+        color: dark-light-choose(scale-color($tertiary, $lightness: 80%), scale-color($tertiary, $lightness: 20%));
         margin-right: 1em;
       }
     }

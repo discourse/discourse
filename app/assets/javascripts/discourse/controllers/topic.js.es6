@@ -32,6 +32,30 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
   filter: null,
   quoteState: null,
 
+  topicDelegated: [
+    'toggleMultiSelect',
+    'deleteTopic',
+    'recoverTopic',
+    'toggleClosed',
+    'showAutoClose',
+    'showFeatureTopic',
+    'showChangeTimestamp',
+    'toggleArchived',
+    'toggleVisibility',
+    'convertToPublicTopic',
+    'convertToPrivateMessage',
+    'jumpTop',
+    'jumpToPost',
+    'jumpToPostPrompt',
+    'jumpToIndex',
+    'jumpBottom',
+    'replyToPost',
+    'toggleArchiveMessage',
+    'showInvite',
+    'toggleBookmark',
+    'showFlagTopic'
+  ],
+
   updateQueryParams() {
     const postStream = this.get('model.postStream');
     this.setProperties(postStream.get('streamFilters'));
@@ -150,22 +174,6 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
   },
 
   actions: {
-
-    showPostFlags(post) {
-      return this.send('showFlags', post);
-    },
-
-    topicRouteAction(name, model) {
-      return this.send(name, model);
-    },
-
-    openAutoClose() {
-      this.send('showAutoClose');
-    },
-
-    openFeatureTopic() {
-      this.send('showFeatureTopic');
-    },
 
     deselectText() {
       this.get('quoteState').setProperties({ buffer: null, postId: null });
@@ -810,7 +818,7 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
 
   postSelected(post) {
     if (this.get('allPostsSelected')) { return true; }
-    if (this.get('selectedPosts').includes(post)) { return true; }
+    if (this.get('selectedPosts').contains(post)) { return true; }
     if (this.get('selectedReplies').findBy('post_number', post.get('reply_to_post_number'))) { return true; }
 
     return false;

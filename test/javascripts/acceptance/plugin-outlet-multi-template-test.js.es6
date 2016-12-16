@@ -1,5 +1,5 @@
 import { acceptance } from "helpers/qunit-helpers";
-import { clearCache } from 'discourse/lib/plugin-connectors';
+import { clearCache } from 'discourse/helpers/plugin-outlet';
 
 const HELLO   = 'javascripts/multi-test/connectors/user-profile-primary/hello';
 const GOODBYE = 'javascripts/multi-test/connectors/user-profile-primary/goodbye';

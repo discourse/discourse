@@ -1,3 +1,5 @@
+import { defaultHomepage } from 'discourse/lib/utilities';
+
 export default function() {
   // Error page
   this.route('exception', { path: '/exception' });
@@ -43,6 +45,9 @@ export default function() {
     this.route('categoryNone', { path: '/c/:slug/none' });
     this.route('category', { path: '/c/:parentSlug/:slug' });
     this.route('categoryWithID', { path: '/c/:parentSlug/:slug/:id' });
+
+    // homepage
+    this.route(defaultHomepage(), { path: '/' });
   });
 
   this.route('groups', { resetNamespace: true });
