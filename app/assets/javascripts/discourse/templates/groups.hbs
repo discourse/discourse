@@ -44,7 +44,7 @@
               <td class="groups-user-count">{{group.user_count}}</td>
 
               <td>
-                {{#group-membership-button model=group}}
+                {{#group-membership-button model=group createNewMessageViaParams='createNewMessageViaParams'}}
                   {{d-button icon="ban"
                       label=(if group.automatic 'groups.automatic_group' 'groups.closed_group')
                       disabled=true}}
