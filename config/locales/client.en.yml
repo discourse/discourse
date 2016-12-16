@@ -401,7 +401,7 @@ en:
         delete_member_confirm: "Remove '%{username}' from the '%{group}' group?"
       request_membership_pm:
         title: "Membership Request"
-        body: "I would like to request membership in @%{groupName}."
+        body: "I would like to apply for membership in @%{groupName}."
       name_placeholder: "Group name, no spaces, same as username rule"
       public: "Allow users to join/leave the group freely (Requires group to be visible)"
       empty:
