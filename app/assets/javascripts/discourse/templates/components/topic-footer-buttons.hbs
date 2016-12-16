@@ -45,6 +45,8 @@
              action="toggleArchiveMessage"}}
 {{/if}}
 
+{{plugin-outlet "topic-footer-main-buttons-before-create" tagName="span"}}
+
 {{#if topic.details.can_create_post}}
   {{d-button class="btn-primary create"
              icon="reply"
