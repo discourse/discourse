@@ -326,7 +326,7 @@ Discourse::Application.routes.draw do
   get "users/:username/messages/group/:group_name/archive" => "user_actions#private_messages", constraints: {username: USERNAME_ROUTE_FORMAT, group_name: USERNAME_ROUTE_FORMAT}
 
   get "users/:username.json" => "users#show", constraints: {username: USERNAME_ROUTE_FORMAT}, defaults: {format: :json}
-  get "users/:username" => "users#show", as: 'user', constraints: {username: USERNAME_ROUTE_FORMAT}
+  get "users/:username" => "users#show", as: 'user', constraints: {username: USERNAME_ROUTE_FORMAT, format: /(json|html)/}
   put "users/:username" => "users#update", constraints: {username: USERNAME_ROUTE_FORMAT}, defaults: { format: :json }
   get "users/:username/emails" => "users#check_emails", constraints: {username: USERNAME_ROUTE_FORMAT}
   get "users/:username/preferences" => "users#preferences", constraints: {username: USERNAME_ROUTE_FORMAT}, as: :email_preferences
