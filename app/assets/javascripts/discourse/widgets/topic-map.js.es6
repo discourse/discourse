@@ -11,7 +11,7 @@ function renderParticipants(userFilters, participants) {
 
   userFilters = userFilters || [];
   return participants.map(p => {
-    return this.attach('topic-participant', p, { state: { toggled: userFilters.contains(p.username) } });
+    return this.attach('topic-participant', p, { state: { toggled: userFilters.includes(p.username) } });
   });
 }
 

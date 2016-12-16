@@ -600,6 +600,9 @@ email:
   disable_digest_emails:
     default: false
     client: true
+  email_accent_bg_color: "#2F70AC"
+  email_accent_fg_color: "#FFFFFF"
+  email_link_color: "#006699"
   show_topic_featured_link_in_digest: false
   email_custom_headers: 'Auto-Submitted: auto-generated'
   email_subject: '[%{site_name}] %{optional_pm}%{optional_cat}%{topic_title}'

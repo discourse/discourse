@@ -47,7 +47,9 @@
               {{#if currentUser.staff}}
                 <li><a href={{model.adminPath}} class="btn">{{fa-icon "wrench"}}{{i18n 'admin.user.show_admin_profile'}}</a></li>
               {{/if}}
-              {{plugin-outlet "user-profile-controls" tagName="li"}}
+              {{plugin-outlet name="user-profile-controls"
+                              connectorTagName="li"
+                              args=(hash model=model)}}
 
               {{#if collapsedInfo}}
               {{#if viewingSelf}}
@@ -64,7 +66,7 @@
             {{#if model.title}}
               <h3>{{model.title}}</h3>
             {{/if}}
-            {{plugin-outlet "user-post-names"}}
+            {{plugin-outlet name="user-post-names" args=(hash model=model)}}
             <h3>
             {{#if model.location}}{{fa-icon "map-marker"}} {{model.location}}{{/if}}
             {{#if model.website_name}}
@@ -75,7 +77,7 @@
                 <span title={{model.website}}>{{model.website_name}}</span>
               {{/if}}
             {{/if}}
-            {{plugin-outlet "user-location-and-website"}}
+            {{plugin-outlet name="user-location-and-website" args=(hash model=model)}}
             </h3>
 
             <div class='bio'>
@@ -102,12 +104,13 @@
                   {{/if}}
                 {{/each}}
 
-                {{plugin-outlet "user-profile-public-fields"}}
+                {{plugin-outlet name="user-profile-public-fields"
+                                args=(hash publicUserFields=publicUserFields
+                                      model=model)}}
               </div>
             {{/if}}
 
-            {{plugin-outlet "user-profile-primary"}}
-
+            {{plugin-outlet name="user-profile-primary" args=(hash model=model)}}
           </div>
         </div>
         <div style='clear: both'></div>
@@ -153,7 +156,7 @@
             {{d-button action="adminDelete" icon="exclamation-triangle" label="user.admin_delete" class="btn-danger"}}
           {{/if}}
         </dl>
-        {{plugin-outlet "user-profile-secondary"}}
+        {{plugin-outlet name="user-profile-secondary" args=(hash model=model)}}
       </div>
       {{/unless}}
     </section>

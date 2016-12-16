@@ -1,7 +1,7 @@
 import { categoryBadgeHTML } from 'discourse/helpers/category-link';
 import Category from 'discourse/models/category';
 import { on, observes } from 'ember-addons/ember-computed-decorators';
-import { getOwner } from 'discourse-common/lib/get-owner';
+import { findRawTemplate } from 'discourse/lib/raw-templates';
 
 export default Ember.Component.extend({
   @observes('categories')
@@ -13,7 +13,6 @@ export default Ember.Component.extend({
   @on('didInsertElement')
   _initializeAutocomplete(opts) {
     const self = this,
-          template = getOwner(this).lookup('template:category-selector-autocomplete.raw'),
           regexp = new RegExp(`href=['\"]${Discourse.getURL('/c/')}([^'\"]+)`);
 
     this.$('input').autocomplete({
@@ -41,7 +40,7 @@ export default Ember.Component.extend({
             self.set('categories', categories);
         });
       },
-      template,
+      template: findRawTemplate('category-selector-autocomplete'),
       transformComplete(category) {
         return categoryBadgeHTML(category, {allowUncategorized: true});
       }
