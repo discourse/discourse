@@ -9,5 +9,6 @@
   {{#each navItems as |navItem|}}
     {{navigation-item content=navItem filterMode=filterMode}}
   {{/each}}
+  {{plugin-outlet "after-mobile-navigation-bar" tagName="li"}}
 </ul>
 {{/if}}
