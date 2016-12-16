@@ -114,7 +114,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
     email = this.get("accountEmail");
 
-    if (this.get('rejectedEmails').includes(email)) {
+    if (this.get('rejectedEmails').contains(email)) {
       return InputValidation.create({
         failed: true,
         reason: I18n.t('user.email.invalid')
@@ -314,7 +314,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
       });
     }
 
-    if (this.get('rejectedPasswords').includes(password)) {
+    if (this.get('rejectedPasswords').contains(password)) {
       return InputValidation.create({
         failed: true,
         reason: I18n.t('user.password.common')

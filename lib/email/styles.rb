@@ -152,19 +152,20 @@ module Email
     end
 
     def format_html
-      style('.with-accent-colors', "background-color: #{SiteSetting.email_accent_bg_color}; color: #{SiteSetting.email_accent_fg_color};")
       style('h4', 'color: #222;')
       style('h3', 'margin: 15px 0 20px 0;')
       style('hr', 'background-color: #ddd; height: 1px; border: 1px;')
-      style('a', "text-decoration: none; font-weight: bold; color: #{SiteSetting.email_link_color};")
+      style('a', 'text-decoration: none; font-weight: bold; color: #006699;')
       style('ul', 'margin: 0 0 0 10px; padding: 0 0 0 20px;')
       style('li', 'padding-bottom: 10px')
+      style('div.digest-post', 'margin-left: 15px; margin-top: -5px; max-width: 694px;')
+      style('div.digest-post h1', 'font-size: 20px;')
       style('div.footer', 'color:#666; font-size:95%; text-align:center; padding-top:15px;')
       style('span.post-count', 'margin: 0 5px; color: #777;')
       style('pre', 'word-wrap: break-word; max-width: 694px;')
       style('code', 'background-color: #f1f1ff; padding: 2px 5px;')
       style('pre code', 'display: block; background-color: #f1f1ff; padding: 5px;')
-      style('.featured-topic a', "text-decoration: none; font-weight: bold; color: #{SiteSetting.email_link_color}; line-height:1.5em;")
+      style('.featured-topic a', 'text-decoration: none; font-weight: bold; color: #006699; line-height:1.5em;')
 
       onebox_styles
       plugin_styles

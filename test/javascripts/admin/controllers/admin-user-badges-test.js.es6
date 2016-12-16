@@ -20,6 +20,6 @@ test("grantableBadges", function() {
   });
 
 
-  not(badgeNames.includes(badgeDisabled), "excludes disabled badges");
+  not(badgeNames.contains(badgeDisabled), "excludes disabled badges");
   deepEqual(badgeNames, sortedNames, "sorts badges by name");
 });
