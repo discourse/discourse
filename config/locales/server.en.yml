@@ -1020,6 +1020,7 @@ en:
     sso_overrides_name: "Overrides local full name with external site full name from SSO payload on every login, and prevent local changes."
     sso_overrides_avatar: "Overrides user avatar with external site avatar from SSO payload. If enabled, disabling allow_uploaded_avatars is highly recommended"
     sso_not_approved_url: "Redirect unapproved SSO accounts to this URL"
+    sso_allows_all_return_paths: "Do not restrict the domain for return_paths provided by SSO (by default return path must be on current site)"
 
     enable_local_logins: "Enable local username and password login based accounts. (Note: this must be enabled for invites to work)"
     allow_new_registrations: "Allow new user registrations. Uncheck this to prevent anyone from creating a new account."

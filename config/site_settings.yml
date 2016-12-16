@@ -298,6 +298,7 @@ login:
   enable_sso:
     client: true
     default: false
+  sso_allows_all_return_paths: false
   enable_sso_provider: false
   verbose_sso_logging: false
   sso_url:
