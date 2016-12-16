@@ -1,5 +1,6 @@
 {{#if model.members}}
-  {{group-membership-button model=model}}
+  {{group-membership-button model=model
+      createNewMessageViaParams='createNewMessageViaParams'}}
 
   {{#load-more selector=".group-members tr" action="loadMore"}}
     <table class='group-members'>
