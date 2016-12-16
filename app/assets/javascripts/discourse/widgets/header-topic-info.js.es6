@@ -53,9 +53,12 @@ export default createWidget('header-topic-info', {
         }
       }
       if (this.siteSettings.topic_featured_link_enabled) {
-        extra.push(topicFeaturedLinkNode(attrs.topic));
+        const featured = topicFeaturedLinkNode(attrs.topic);
+        if (featured) {
+          extra.push(featured);
+        }
       }
-      if (extra) {
+      if (extra.length) {
         title.push(h('div.topic-header-extra', extra));
       }
     }
