@@ -4,14 +4,6 @@ describe "Groups" do
   let(:user) { Fabricate(:user) }
   let(:group) { Fabricate(:group, users: [user]) }
 
-  def sign_in(user)
-    password = 'somecomplicatedpassword'
-    user.update!(password: password)
-    Fabricate(:email_token, confirmed: true, user: user)
-    post "/session.json", { login: user.username, password: password }
-    expect(response).to be_success
-  end
-
   describe 'viewing groups' do
     it 'should return the right response' do
       group.update_attributes!(visible: true)

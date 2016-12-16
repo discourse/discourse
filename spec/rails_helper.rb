@@ -43,6 +43,7 @@ Spork.prefork do
     config.include Helpers
     config.include MessageBus
     config.include RSpecHtmlMatchers
+    config.include IntegrationHelpers, type: :request
     config.mock_framework = :mocha
     config.order = 'random'
     config.infer_spec_type_from_file_location!
