@@ -97,6 +97,7 @@ const Category = RestModel.extend({
         custom_fields: this.get('custom_fields'),
         topic_template: this.get('topic_template'),
         suppress_from_homepage: this.get('suppress_from_homepage'),
+        all_topics_wiki: this.get('all_topics_wiki'),
         allowed_tags: this.get('allowed_tags'),
         allowed_tag_groups: this.get('allowed_tag_groups'),
         sort_order: this.get('sort_order'),
