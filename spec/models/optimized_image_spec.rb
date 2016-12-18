@@ -5,6 +5,38 @@ describe OptimizedImage do
   let(:upload) { build(:upload) }
   before { upload.id = 42 }
 
+  describe ".safe_path?" do
+
+    it "correctly detects unsafe paths" do
+      expect(OptimizedImage.safe_path?("/path/A-AA/22_00.TIFF")).to eq(true)
+      expect(OptimizedImage.safe_path?("/path/AAA/2200.TIFF")).to eq(true)
+      expect(OptimizedImage.safe_path?("/tmp/a.png")).to eq(true)
+      expect(OptimizedImage.safe_path?("../a.png")).to eq(false)
+      expect(OptimizedImage.safe_path?("/tmp/a.png\\test")).to eq(false)
+      expect(OptimizedImage.safe_path?("/tmp/a.png\\test")).to eq(false)
+      expect(OptimizedImage.safe_path?("/path/\u1000.png")).to eq(false)
+      expect(OptimizedImage.safe_path?("/path/x.png\n")).to eq(false)
+      expect(OptimizedImage.safe_path?("/path/x.png\ny.png")).to eq(false)
+      expect(OptimizedImage.safe_path?("/path/x.png y.png")).to eq(false)
+      expect(OptimizedImage.safe_path?(nil)).to eq(false)
+    end
+
+  end
+
+  describe "ensure_safe_paths!" do
+    it "raises nothing on safe paths" do
+      expect {
+        OptimizedImage.ensure_safe_paths!("/a.png", "/b.png")
+      }.not_to raise_error
+    end
+
+    it "raises nothing on paths" do
+      expect {
+        OptimizedImage.ensure_safe_paths!("/a.png", "/b.png", "c.png")
+      }.to raise_error(Discourse::InvalidAccess)
+    end
+  end
+
   describe ".local?" do
 
     def local(url)
