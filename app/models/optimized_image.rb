@@ -97,7 +97,24 @@ class OptimizedImage < ActiveRecord::Base
    !(url =~ /^(https?:)?\/\//)
   end
 
+  def self.safe_path?(path)
+    # this matches instructions which call #to_s
+    path = path.to_s
+    return false if path != File.expand_path(path)
+    return false if path !~ /\A[_\-a-zA-Z0-9\.\/]+\z/m
+    true
+  end
+
+  def self.ensure_safe_paths!(*paths)
+    paths.each do |path|
+      raise Discourse::InvalidAccess unless safe_path?(path)
+    end
+  end
+
+
   def self.resize_instructions(from, to, dimensions, opts={})
+    ensure_safe_paths!(from, to)
+
     # NOTE: ORDER is important!
     %W{
       convert
@@ -115,6 +132,8 @@ class OptimizedImage < ActiveRecord::Base
   end
 
   def self.resize_instructions_animated(from, to, dimensions, opts={})
+    ensure_safe_paths!(from, to)
+
     %W{
       gifsicle
       --colors=256
@@ -126,6 +145,8 @@ class OptimizedImage < ActiveRecord::Base
   end
 
   def self.crop_instructions(from, to, dimensions, opts={})
+    ensure_safe_paths!(from, to)
+
     %W{
       convert
       #{from}[0]
@@ -141,6 +162,8 @@ class OptimizedImage < ActiveRecord::Base
   end
 
   def self.crop_instructions_animated(from, to, dimensions, opts={})
+    ensure_safe_paths!(from, to)
+
     %W{
       gifsicle
       --crop 0,0+#{dimensions}
@@ -152,6 +175,8 @@ class OptimizedImage < ActiveRecord::Base
   end
 
   def self.downsize_instructions(from, to, dimensions, opts={})
+    ensure_safe_paths!(from, to)
+
     %W{
       convert
       #{from}[0]

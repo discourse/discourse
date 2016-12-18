@@ -33,6 +33,20 @@ describe UploadsController do
         })
       end
 
+      it 'fails if type is invalid' do
+        xhr :post, :create, file: logo, type: "invalid type cause has space"
+        expect(response.status).to eq 403
+
+        xhr :post, :create, file: logo, type: "\\invalid"
+        expect(response.status).to eq 403
+
+        xhr :post, :create, file: logo, type: "invalid."
+        expect(response.status).to eq 403
+
+        xhr :post, :create, file: logo, type: "toolong"*100
+        expect(response.status).to eq 403
+      end
+
       it 'is successful with an image' do
         Jobs.expects(:enqueue).with(:create_thumbnails, anything)
 
