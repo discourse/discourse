@@ -9,6 +9,7 @@ class CategorySerializer < BasicCategorySerializer
              :email_in,
              :email_in_allow_strangers,
              :suppress_from_homepage,
+             :all_topics_wiki,
              :can_delete,
              :cannot_delete_reason,
              :is_special,
