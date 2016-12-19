@@ -56,12 +56,12 @@ let _dragging;
 const DRAG_NAME       = "mousemove.discourse-widget-drag";
 const DRAG_NAME_TOUCH = "touchmove.discourse-widget-drag";
 
-function cancelDrag() {
+function cancelDrag(e) {
   $('body').removeClass('widget-dragging');
   $(document).off(DRAG_NAME).off(DRAG_NAME_TOUCH);
 
   if (_dragging) {
-    if (_dragging.dragEnd) { _dragging.dragEnd(); }
+    if (_dragging.dragEnd) { _dragging.dragEnd(e); }
     _dragging = null;
   }
 }
@@ -70,7 +70,7 @@ WidgetClickHook.setupDocumentCallback = function() {
   if (_watchingDocument) { return; }
 
   $(document).on('mousedown.discource-widget-drag, touchstart.discourse-widget-drag', e => {
-    cancelDrag();
+    cancelDrag(e);
     const widget = findWidget(e.target, DRAG_ATTRIBUTE_NAME);
     if (widget) {
       e.preventDefault();
@@ -87,7 +87,7 @@ WidgetClickHook.setupDocumentCallback = function() {
     }
   });
 
-  $(document).on('mouseup.discourse-widget-drag, touchend.discourse-widget-drag', () => cancelDrag());
+  $(document).on('mouseup.discourse-widget-drag, touchend.discourse-widget-drag', e => cancelDrag(e));
 
   $(document).on('click.discourse-widget', e => {
     nodeCallback(e.target, CLICK_ATTRIBUTE_NAME, w => w.click(e));
