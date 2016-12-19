@@ -48,3 +48,16 @@ test("Updating the topic title and category", () => {
     equal(find('.fancy-title').text().trim(), 'this is the new title', 'it displays the new title');
   });
 });
+
+test("Reply as New Topic", () => {
+  visit("/t/internationalization-localization/280");
+  click("[data-share-url]:eq(0)");
+  click(".reply-as-new-topic a");
+  andThen(() => {
+    ok(exists('.d-editor-input'), 'the composer input is visible');
+    equal(find('.d-editor-input').val().trim(),
+          "Continuing the discussion from [Internationalization / localization](http://localhost:4000/t/internationalization-localization/280):",
+          "it fills composer with 'continuing the discussion from' string");
+    equal(find('#select2-chosen-1').text().trim(), "feature", "it fills category selector with category");
+  });
+});
