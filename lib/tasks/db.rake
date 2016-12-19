@@ -5,6 +5,19 @@ end
 
 # we need to run seed_fu every time we run rake db:migrate
 task 'db:migrate' => ['environment', 'set_locale'] do
+  if Rails.env.production?
+    max_deferred_migration_version = ActiveRecord::SchemaMigration.where(
+      version: ActiveRecord::Migrator.migrations('db/deferred_migrate').map!(&:version)
+    ).pluck(&:version).max
+    ActiveRecord::Migrator.migrate('db/deferred_migrate', max_deferred_migration_version)
+
+    # Run deferred migrations 30 mins later
+    Jobs.enqueue_in(1800, :run_deferred_migrations)
+  else
+    puts "Running deferred migrations..."
+    Rake::Task["db:deferred_migrate"].invoke
+  end
+
   SeedFu.seed
 
   SiteSetting.last_vacuum = Time.now.to_i if SiteSetting.last_vacuum == 0
@@ -15,7 +28,6 @@ task 'db:migrate' => ['environment', 'set_locale'] do
     puts "Set to run every #{SiteSetting.vacuum_db_days} days (search for vacuum in site settings)"
     puts "#{Time.now} starting..."
     begin
-
       Topic.exec_sql("VACUUM ANALYZE")
     rescue => e
       puts "VACUUM failed, skipping"
@@ -24,6 +36,12 @@ task 'db:migrate' => ['environment', 'set_locale'] do
     SiteSetting.last_vacuum = Time.now.to_i
     puts "#{Time.now} VACUUM done"
   end
+end
+
+# Run deferred migrations
+task 'db:deferred_migrate' => ['environment', 'set_locale'] do
+  ActiveRecord::Migration.verbose = ENV["VERBOSE"] ? ENV["VERBOSE"] == "true" : true
+  ActiveRecord::Migrator.migrate("db/deferred_migrate", ENV["VERSION"] ? ENV["VERSION"].to_i : nil)
 end
 
 task 'test:prepare' => 'environment' do
