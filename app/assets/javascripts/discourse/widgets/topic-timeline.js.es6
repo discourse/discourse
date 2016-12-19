@@ -79,7 +79,9 @@ createWidget('timeline-scroller', {
   },
 
   dragEnd(e) {
-    if (!$(e.target).is('button')) {
+    if ($(e.target).is('button')) {
+      this.sendWidgetAction('goBack');
+    } else {
       this.sendWidgetAction('commit');
     }
   }
@@ -167,9 +169,14 @@ createWidget('timeline-scrollarea', {
 
     if (hasBackPosition) {
       const lastReadTop = Math.round(position.lastReadPercentage * SCROLLAREA_HEIGHT);
-      showButton = ((lastReadTop < before - (SCROLLER_HEIGHT * 0.5)) ||
-                   (lastReadTop > (before + SCROLLER_HEIGHT))) &&
-                   (lastReadTop < (SCROLLAREA_HEIGHT - SCROLLER_HEIGHT));
+      showButton = ((before + SCROLLER_HEIGHT - 5) < lastReadTop) ||
+                    (before > (lastReadTop + 25));
+
+      // Don't show if at the bottom of the timeline
+      if (lastReadTop < (SCROLLAREA_HEIGHT - SCROLLER_HEIGHT)) {
+        showButton = false;
+      }
+
     }
 
     const result = [
