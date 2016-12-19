@@ -61,6 +61,19 @@
   margin-right: 148px;
 }
 
+.progress-back-container {
+  position: fixed;
+  width: 0;
+  right: 0;
+  bottom: 40px;
+  z-index: 950;
+  margin-right: 105px;
+
+  .btn {
+    margin: 0;
+  }
+}
+
 #topic-progress-expanded {
   border: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
   padding: 5px;

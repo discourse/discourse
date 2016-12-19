@@ -37,6 +37,13 @@ export default Ember.Component.extend({
     }
   },
 
+  @computed('progressPosition', 'topic.last_read_post_id')
+  showBackButton(position, lastReadId) {
+    if (!this.site.mobileView || !lastReadId) { return; }
+    const readPos = this.get('postStream.stream').indexOf(lastReadId) || 0;
+    return readPos > position;
+  },
+
   @observes('postStream.stream.[]')
   _updateBar() {
     Ember.run.scheduleOnce('afterRender', this, this._updateProgressBar);
@@ -140,6 +147,10 @@ export default Ember.Component.extend({
   actions: {
     toggleExpansion() {
       this.toggleProperty('expanded');
+    },
+
+    goBack() {
+      this.attrs.jumpToPost(this.get('topic.last_read_post_number'));
     }
   },
 
