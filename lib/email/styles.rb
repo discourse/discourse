@@ -152,6 +152,7 @@ module Email
     end
 
     def format_html
+      # lowest priority first
       style('.with-accent-colors', "background-color: #{SiteSetting.email_accent_bg_color}; color: #{SiteSetting.email_accent_fg_color};")
       style('h4', 'color: #222;')
       style('h3', 'margin: 15px 0 20px 0;')
@@ -161,6 +162,7 @@ module Email
       style('li', 'padding-bottom: 10px')
       style('div.footer', 'color:#666; font-size:95%; text-align:center; padding-top:15px;')
       style('span.post-count', 'margin: 0 5px; color: #777;')
+      style('.post-excerpt img', "max-width: 50%; max-height: 400px;")
       style('pre', 'word-wrap: break-word; max-width: 694px;')
       style('code', 'background-color: #f1f1ff; padding: 2px 5px;')
       style('pre code', 'display: block; background-color: #f1f1ff; padding: 5px;')
