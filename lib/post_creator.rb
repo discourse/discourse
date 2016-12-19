@@ -360,6 +360,9 @@ class PostCreator
     end
     @post.topic_id = @topic.id
     @post.topic = @topic
+    if @topic && @topic.category && @topic.category.all_topics_wiki
+      @post.wiki = true
+    end
   end
 
   def update_topic_stats
