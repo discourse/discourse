@@ -1,14 +1,51 @@
+let timeout;
+const loadingQueue = [];
 const localCache = {};
 const failedCache = {};
 
+function loadNext(ajax) {
+  if (loadingQueue.length === 0) {
+    timeout = null;
+    return;
+  }
+
+  let timeoutMs = 150;
+  let removeLoading = true;
+  const { url, refresh, elem, userId } = loadingQueue.shift();
+
+  // Retrieve the onebox
+  return ajax("/onebox", {
+    dataType: 'html',
+    data: { url, refresh, user_id: userId },
+    cache: true
+  }).then(html => {
+    localCache[url] = html;
+    elem.replaceWith(html);
+  }, result => {
+    if (result && result.jqXHR && result.jqXHR.status === 429) {
+      timeoutMs = 2000;
+      removeLoading = false;
+      loadingQueue.unshift({ url, refresh, elem, userId });
+    } else {
+      failedCache[url] = true;
+    }
+  }).finally(() => {
+    timeout = setTimeout(() => loadNext(ajax), timeoutMs);
+    if (removeLoading) {
+      elem.removeClass('loading-onebox');
+      elem.data('onebox-loaded');
+    }
+  });
+}
+
 // Perform a lookup of a onebox based an anchor element.
 // It will insert a loading indicator and remove it when the loading is complete or fails.
-export function load(e, refresh, ajax) {
-  const $elem = $(e);
+export function load(e, refresh, ajax, userId) {
+  const elem = $(e);
 
   // If the onebox has loaded or is loading, return
-  if ($elem.data('onebox-loaded')) return;
-  if ($elem.hasClass('loading-onebox')) return;
+  if (elem.data('onebox-loaded')) return;
+  if (elem.hasClass('loading-onebox')) return;
 
   const url = e.href;
 
@@ -24,22 +61,13 @@ export function load(e, refresh, ajax) {
   }
 
   // Add the loading CSS class
-  $elem.addClass('loading-onebox');
+  elem.addClass('loading-onebox');
 
-  // Retrieve the onebox
-  return ajax("/onebox", {
-    dataType: 'html',
-    data: { url, refresh },
-    cache: true
-  }).then(html => {
-    localCache[url] = html;
-    $elem.replaceWith(html);
-  }, () => {
-    failedCache[url] = true;
-  }).finally(() => {
-    $elem.removeClass('loading-onebox');
-    $elem.data('onebox-loaded');
-  });
+  // Add to the loading queue
+  loadingQueue.push({ url, refresh, elem, userId });
+
+  // Load next url in queue
+  timeout = timeout || setTimeout(() => loadNext(ajax), 150);
 }
 
 export function lookupCache(url) {
