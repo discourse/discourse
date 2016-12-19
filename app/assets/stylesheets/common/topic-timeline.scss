@@ -253,6 +253,10 @@
       cursor: ns-resize;
       display: flex;
       align-items: center;
+
+      .back-button {
+        margin-top: 1em;
+      }
     }
 
     .timeline-replies {
@@ -263,15 +267,15 @@
       position: absolute;
       margin-left: -0.35em;
 
-      .btn-small {
-        padding: 2px 5px;
-      }
-
       i.progress {
         font-size: 0.8em;
         color: $tertiary;
         margin-right: 1em;
       }
+    }
+
+    .back-button {
+      padding: 2px 5px;
     }
 
     .now-date {
