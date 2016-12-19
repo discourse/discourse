@@ -64,16 +64,7 @@ module Discourse
     # Allows us to skip minifincation on some files
     config.assets.skip_minification = []
 
-    # explicitly precompile any images in plugins ( /assets/images ) path
-    config.assets.precompile += [lambda do |filename, path|
-      path =~ /assets\/images/ && !%w(.js .css).include?(File.extname(filename))
-    end]
-
-    config.assets.precompile += ['vendor.js', 'common.css', 'desktop.css', 'mobile.css',
-                                 'admin.js', 'admin.css', 'shiny/shiny.css', 'preload-store.js.es6',
-                                 'browser-update.js', 'embed.css', 'break_string.js', 'ember_jquery.js',
-                                 'pretty-text-bundle.js', 'wizard.css', 'wizard-application.js',
-                                 'wizard-vendor.js', 'plugin.js', 'plugin-third-party.js']
+    config.assets.precompile = ["manifest.js"]
 
     # Precompile all available locales
     Dir.glob("#{config.root}/app/assets/javascripts/locales/*.js.erb").each do |file|

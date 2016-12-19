@@ -29,6 +29,7 @@ else
   # gem 'railties'
   # gem 'sprockets-rails'
   gem 'rails', '~> 4.2'
+  gem 'sprockets', '4.0.0.beta4'
 
   gem 'rails-observers'
   gem 'seed-fu', '~> 2.3.5'
@@ -47,7 +48,7 @@ gem 'onebox'
 
 gem 'http_accept_language', '~>2.0.5', require: false
 
-gem 'ember-rails', '0.18.5'
+gem 'ember-rails', git: "https://github.com/sgrif/ember-rails.git"
 gem 'ember-source', '2.4.6'
 gem 'barber'
 gem 'babel-transpiler'
@@ -99,7 +100,7 @@ gem 'rest-client'
 gem 'rinku'
 gem 'sanitize'
 gem 'sass'
-gem 'sass-rails'
+gem 'sass-rails', '6.0.0.beta1'
 gem 'sidekiq'
 gem 'sidekiq-statistic'
 

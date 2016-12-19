@@ -81,13 +81,13 @@ describe SiteCustomization do
 
   it 'should provide an awesome error on failure' do
     c = SiteCustomization.create!(user_id: user.id, name: "test", stylesheet: "$black: #000; #a { color: $black; }\n\n\nboom", header: '')
-    expect(c.stylesheet_baked).to match(/Syntax error/)
+    expect(c.stylesheet_baked).to match(/Error: Invalid CSS/)
     expect(c.mobile_stylesheet_baked).not_to be_present
   end
 
   it 'should provide an awesome error on failure for mobile too' do
     c = SiteCustomization.create!(user_id: user.id, name: "test", stylesheet: '', header: '', mobile_stylesheet: "$black: #000; #a { color: $black; }\n\n\nboom", mobile_header: '')
-    expect(c.mobile_stylesheet_baked).to match(/Syntax error/)
+    expect(c.mobile_stylesheet_baked).to match(/Error: Invalid CSS/)
     expect(c.stylesheet_baked).not_to be_present
   end
 

@@ -2,7 +2,7 @@
 
 //= require env
 //= require probes
-//= require jquery.debug
+//= require jquery_debug
 //= require jquery.ui.widget
 //= require handlebars
 //= require ember.debug

@@ -1,9 +1,9 @@
 /*global document, sinon, Logster, QUnit */
 
 //= require env
-//= require jquery.debug
+//= require jquery_debug
 //= require discourse-loader
-//= require jquery.debug
+//= require jquery_debug
 //= require handlebars
 //= require ember.debug
 //= require ember-template-compiler
