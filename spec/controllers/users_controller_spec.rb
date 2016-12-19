@@ -237,6 +237,18 @@ describe UsersController do
     end
 
     context 'valid token' do
+      context 'when rendered' do
+        render_views
+
+        it 'renders referrer never on get requests' do
+          user = Fabricate(:user, auth_token: SecureRandom.hex(16))
+          token = user.email_tokens.create(email: user.email).token
+          get :password_reset, token: token
+
+          expect(response.body).to include('<meta name="referrer" content="never">')
+        end
+      end
+
       it 'returns success' do
         user = Fabricate(:user, auth_token: SecureRandom.hex(16))
         token = user.email_tokens.create(email: user.email).token
