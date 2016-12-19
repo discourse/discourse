@@ -1214,7 +1214,7 @@ uncategorized:
 
   disable_edit_notifications: false
 
-  vacuum_db_days: 9000
+  vacuum_db_days: 90
   last_vacuum:
     default: 0
     hidden: true
