@@ -36,9 +36,9 @@ module UserNotificationsHelper
     doc = Nokogiri::HTML(html)
 
     result = ""
-    doc.css('p').each do |p|
-      if p.text.present?
-        result << p.to_s
+    doc.css('body > p, aside.onebox').each do |node|
+      if node.text.present?
+        result << node.to_s
         return result if result.size >= 100
       end
     end
