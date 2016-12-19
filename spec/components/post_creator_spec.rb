@@ -34,6 +34,14 @@ describe PostCreator do
       expect(TopicUser.where(user_id: p.user_id, topic_id: p.topic_id).count).to eq(0)
     end
 
+    it "can be created with first post as wiki" do
+      cat = Fabricate(:category)
+      cat.all_topics_wiki = true
+      cat.save
+      post = PostCreator.create(user, basic_topic_params.merge(category: cat.id ))
+      expect(post.wiki).to eq(true)
+    end
+
     it "ensures the user can create the topic" do
       Guardian.any_instance.expects(:can_create?).with(Topic,nil).returns(false)
       expect { creator.create }.to raise_error(Discourse::InvalidAccess)

@@ -230,6 +230,7 @@ class CategoriesController < ApplicationController
                         :email_in,
                         :email_in_allow_strangers,
                         :suppress_from_homepage,
+                        :all_topics_wiki,
                         :parent_category_id,
                         :auto_close_hours,
                         :auto_close_based_on_last_post,

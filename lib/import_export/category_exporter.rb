@@ -25,7 +25,7 @@ module ImportExport
 
     CATEGORY_ATTRS = [:id, :name, :color, :created_at, :user_id, :slug, :description, :text_color,
                       :auto_close_hours, :auto_close_based_on_last_post,
-                      :topic_template, :suppress_from_homepage, :permissions_params]
+                      :topic_template, :suppress_from_homepage, :all_topics_wiki, :permissions_params]
 
     def export_categories
       @export_data[:category] = CATEGORY_ATTRS.inject({}) { |h,a| h[a] = @category.send(a); h }

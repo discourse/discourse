@@ -1944,6 +1944,7 @@ en:
       email_in_disabled: "Posting new topics via email is disabled in the Site Settings. To enable posting new topics via email, "
       email_in_disabled_click: 'enable the "email in" setting.'
       suppress_from_homepage: "Suppress this category from the homepage."
+      all_topics_wiki: "Make new topics wikis by default."
       sort_order: "Default Sort:"
       allow_badges_label: "Allow badges to be awarded in this category"
       edit_permissions: "Edit Permissions"
