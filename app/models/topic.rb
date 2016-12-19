@@ -338,7 +338,7 @@ class Topic < ActiveRecord::Base
               .listable_topics
               .includes(:category)
 
-    unless user.user_option.try(:include_tl0_in_digests)
+    unless opts[:include_tl0] || user.user_option.try(:include_tl0_in_digests)
       topics = topics.where("COALESCE(users.trust_level, 0) > 0")
     end
 

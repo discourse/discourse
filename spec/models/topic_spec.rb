@@ -1354,6 +1354,13 @@ describe Topic do
       expect(Topic.for_digest(user, 1.year.ago, top_order: true)).to be_blank
     end
 
+    it "returns topics from TL0 users if given include_tl0" do
+      new_user = Fabricate(:user, trust_level: 0)
+      topic = Fabricate(:topic, user_id: new_user.id)
+
+      expect(Topic.for_digest(user, 1.year.ago, top_order: true, include_tl0: true)).to eq([topic])
+    end
+
     it "returns topics from TL0 users if enabled in preferences" do
       new_user = Fabricate(:user, trust_level: 0)
       topic = Fabricate(:topic, user_id: new_user.id)
