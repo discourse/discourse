@@ -55,13 +55,12 @@ export default Ember.Component.extend({
 
     if (this.get('isAbsoluteUrl') && (this.get('composer.reply')||"").length === 0) {
       // Try to onebox. If success, update post body and title.
-
       this.set('composer.loading', true);
 
       const link = document.createElement('a');
       link.href = this.get('composer.title');
 
-      let loadOnebox = load(link, false, ajax);
+      let loadOnebox = load(link, false, ajax, this.currentUser.id);
 
       if (loadOnebox && loadOnebox.then) {
         loadOnebox.then( () => {
