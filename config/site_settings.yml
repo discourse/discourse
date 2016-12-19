@@ -389,7 +389,6 @@ users:
   email_token_valid_hours:
     default: 48
     min: 1
-  email_token_grace_period_hours: 0
   purge_unactivated_users_grace_period_days: 14
   public_user_custom_fields:
     type: list
