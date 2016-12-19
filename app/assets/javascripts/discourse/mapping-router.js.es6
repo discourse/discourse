@@ -1,8 +1,14 @@
+import { defaultHomepage } from 'discourse/lib/utilities';
 const rootURL = Discourse.BaseUri;
 
 const BareRouter = Ember.Router.extend({
   rootURL,
-  location: Ember.testing ? 'none': 'discourse-location'
+  location: Ember.testing ? 'none': 'discourse-location',
+
+  handleURL(url) {
+    if (url === "/") { url = defaultHomepage(); }
+    return this._super(url);
+  }
 });
 
 // Ember's router can't be extended. We need to allow plugins to add routes to routes that were defined
@@ -67,7 +73,8 @@ class RouteNode {
       if (paths.length > 1) {
         paths.filter(p => p !== this.opts.path).forEach(path => {
           const newOpts = jQuery.extend({}, this.opts, { path });
-          router.route(this.name, newOpts, builder);
+          console.log(`warning: we can't have duplicate route names anymore`, newOpts);
+          // router.route(this.name, newOpts, builder);
         });
       }
     }
