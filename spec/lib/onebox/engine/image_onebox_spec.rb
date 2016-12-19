@@ -38,6 +38,6 @@ describe Onebox::Engine::ImageOnebox do
   end
 
   it "doesn't inline single quotes" do
-    expect(Onebox.preview("http://host/path/to/image'withquote.png").to_s).to match(/image%27withquote/)
+    expect(Onebox.preview("http://host/path/to/Image'withquote.png").to_s).to match(/Image&quot;withquote/)
   end
 end

@@ -71,5 +71,14 @@ module Onebox
     def self.title_attr(meta)
       (meta && !blank?(meta[:title])) ? "title='#{CGI.escapeHTML(meta[:title])}'" : ""
     end
+
+    def self.normalize_url_for_output(url)
+      url = url.dup
+      # expect properly encoded url, remove any unsafe chars
+      url.gsub!(/[^a-zA-Z0-9%\-`._~:\/?#\[\]@!$&'\(\)*+,;=]/, "")
+      url.gsub!("'", "&quot;")
+      url
+    end
+
   end
 end
