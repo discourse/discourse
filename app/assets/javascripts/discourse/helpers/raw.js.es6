@@ -1,8 +1,10 @@
 import { registerUnbound } from 'discourse-common/lib/helpers';
+import { findRawTemplate } from 'discourse/lib/raw-templates';
 
 let _injections;
 
 function renderRaw(ctx, container, template, templateName, params) {
+  params = jQuery.extend({}, params);
   params.parent = params.parent || ctx;
 
   if (!params.view) {
@@ -32,9 +34,9 @@ registerUnbound('raw', function(templateName, params) {
   templateName = templateName.replace('.', '/');
 
   const container = Discourse.__container__;
-  var template = container.lookup('template:' + templateName + '.raw');
+  const template = findRawTemplate(templateName);
   if (!template) {
-    Ember.warn('Could not find raw template: ' + templateName);
+    console.warn('Could not find raw template: ' + templateName);
     return;
   }
   return renderRaw(this, container, template, templateName, params);

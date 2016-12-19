@@ -6,7 +6,7 @@
     </div>
   {{/if}}
 
-  {{plugin-outlet "topic-above-post-stream"}}
+  {{plugin-outlet name="topic-above-post-stream" args=(hash model=model)}}
 
   {{#if model.postStream.loaded}}
     {{#if model.postStream.firstPostPresent}}
@@ -30,7 +30,7 @@
                 {{tag-chooser tags=buffered.tags categoryId=buffered.category_id}}
               {{/if}}
 
-              {{plugin-outlet "edit-topic"}}
+              {{plugin-outlet name="edit-topic" args=(hash model=model buffered=buffered)}}
 
               {{d-button action="finishedEditingTopic" class="btn-primary btn-small submit-edit" icon="check"}}
               {{d-button action="cancelEditingTopic" class="btn-small cancel-edit" icon="times"}}
@@ -59,7 +59,7 @@
               {{/unless}}
             {{/if}}
           </div>
-          {{plugin-outlet "topic-title"}}
+          {{plugin-outlet name="topic-title" args=(hash model=model)}}
         </div>
       </div>
     {{/if}}
@@ -70,24 +70,53 @@
       </div>
 
       {{#topic-navigation jumpToIndex="jumpToIndex" as |info|}}
-
         {{#if info.renderAdminMenuButton}}
-          {{topic-admin-menu-button topic=model fixed="true" delegated=topicDelegated}}
+          {{topic-admin-menu-button
+            topic=model
+            fixed="true"
+            toggleMultiSelect=(action "toggleMultiSelect")
+            deleteTopic=(action "deleteTopic")
+            recoverTopic=(action "recoverTopic")
+            toggleClosed=(action "toggleClosed")
+            toggleArchived=(action "toggleArchived")
+            toggleVisibility=(action "toggleVisibility")
+            showAutoClose=(action "topicRouteAction" "showAutoClose")
+            showFeatureTopic=(action "topicRouteAction" "showFeatureTopic")
+            showChangeTimestamp=(action "topicRouteAction" "showChangeTimestamp")
+            convertToPublicTopic=(action "convertToPublicTopic")
+            convertToPrivateMessage=(action "convertToPrivateMessage")}}
         {{/if}}
 
         {{#if info.renderTimeline}}
-          {{topic-timeline topic=model
-                           prevEvent=info.prevEvent
-                           fullscreen=info.topicProgressExpanded
-                           enteredIndex=enteredIndex
-                           loading=model.postStream.loading
-                           delegated=topicDelegated}}
-
+          {{topic-timeline
+            topic=model
+            prevEvent=info.prevEvent
+            fullscreen=info.topicProgressExpanded
+            enteredIndex=enteredIndex
+            loading=model.postStream.loading
+            jumpToPost=(action "jumpToPost")
+            jumpTop=(action "jumpTop")
+            jumpBottom=(action "jumpBottom")
+            jumpToPostPrompt=(action "jumpToPostPrompt")
+            jumpToIndex=(action "jumpToIndex")
+            replyToPost=(action "replyToPost")
+            toggleMultiSelect=(action "toggleMultiSelect")
+            deleteTopic=(action "deleteTopic")
+            recoverTopic=(action "recoverTopic")
+            toggleClosed=(action "toggleClosed")
+            toggleArchived=(action "toggleArchived")
+            toggleVisibility=(action "toggleVisibility")
+            showAutoClose=(action "topicRouteAction" "showAutoClose")
+            showFeatureTopic=(action "topicRouteAction" "showFeatureTopic")
+            showChangeTimestamp=(action "topicRouteAction" "showChangeTimestamp")
+            convertToPublicTopic=(action "convertToPublicTopic")
+            convertToPrivateMessage=(action "convertToPrivateMessage")}}
         {{else}}
-          {{topic-progress prevEvent=info.prevEvent topic=model delegated=topicDelegated expanded=info.topicProgressExpanded}}
+          {{topic-progress
+            prevEvent=info.prevEvent
+            topic=model
+            expanded=info.topicProgressExpanded}}
         {{/if}}
-
-
       {{/topic-navigation}}
 
       <div class="row">
@@ -96,7 +125,7 @@
           <div class="posts-wrapper">
             {{conditional-loading-spinner condition=model.postStream.loadingAbove}}
 
-            {{plugin-outlet "topic-above-posts"}}
+            {{plugin-outlet name="topic-above-posts" args=(hash model=model)}}
 
             {{#unless model.postStream.loadingFilter}}
               {{scrolling-post-stream
@@ -106,35 +135,34 @@
                 selectedPostsCount=selectedPostsCount
                 selectedQuery=selectedQuery
                 gaps=model.postStream.gaps
-                showFlags="showFlags"
-                editPost="editPost"
-                showHistory="showHistory"
-                showLogin="showLogin"
-                showRawEmail="showRawEmail"
-                deletePost="deletePost"
-                recoverPost="recoverPost"
-                expandHidden="expandHidden"
-                newTopicAction="replyAsNewTopic"
-                expandFirstPost="expandFirstPost"
-                toggleBookmark="toggleBookmark"
-                togglePostType="togglePostType"
-                rebakePost="rebakePost"
-                changePostOwner="changePostOwner"
-                unhidePost="unhidePost"
-                replyToPost="replyToPost"
-                toggleWiki="toggleWiki"
-                toggleSummary="toggleSummary"
-                removeAllowedUser="removeAllowedUser"
-                removeAllowedGroup="removeAllowedGroup"
-                showInvite="showInvite"
-                topVisibleChanged="topVisibleChanged"
-                currentPostChanged="currentPostChanged"
-                currentPostScrolled="currentPostScrolled"
-                bottomVisibleChanged="bottomVisibleChanged"
-                selectPost="toggledSelectedPost"
-                selectReplies="toggledSelectedPostReplies"
-                fillGapBefore="fillGapBefore"
-                fillGapAfter="fillGapAfter"}}
+                showFlags=(action "showPostFlags")
+                editPost=(action "editPost")
+                showHistory=(action "topicRouteAction" "showHistory")
+                showLogin=(action "topicRouteAction" "showLogin")
+                showRawEmail=(action "topicRouteAction" "showRawEmail")
+                deletePost=(action "deletePost")
+                recoverPost=(action "recoverPost")
+                expandHidden=(action "expandHidden")
+                newTopicAction=(action "replyAsNewTopic")
+                toggleBookmark=(action "toggleBookmark")
+                togglePostType=(action "togglePostType")
+                rebakePost=(action "rebakePost")
+                changePostOwner=(action "changePostOwner")
+                unhidePost=(action "unhidePost")
+                replyToPost=(action "replyToPost")
+                toggleWiki=(action "toggleWiki")
+                toggleSummary=(action "toggleSummary")
+                removeAllowedUser=(action "removeAllowedUser")
+                removeAllowedGroup=(action "removeAllowedGroup")
+                showInvite=(action "topicRouteAction" "showInvite")
+                topVisibleChanged=(action "topVisibleChanged")
+                currentPostChanged=(action "currentPostChanged")
+                currentPostScrolled=(action "currentPostScrolled")
+                bottomVisibleChanged=(action "bottomVisibleChanged")
+                selectPost=(action "toggledSelectedPost")
+                selectReplies=(action "toggledSelectedPostReplies")
+                fillGapBefore=(action "fillGapBefore")
+                fillGapAfter=(action "fillGapAfter")}}
             {{/unless}}
 
             {{conditional-loading-spinner condition=model.postStream.loadingBelow}}
@@ -150,7 +178,25 @@
                 {{signup-cta}}
               {{else}}
                 {{#if currentUser}}
-                  {{topic-footer-buttons topic=model topicDelegated=topicDelegated}}
+                  {{topic-footer-buttons
+                    topic=model
+                    toggleMultiSelect=(action "toggleMultiSelect")
+                    deleteTopic=(action "deleteTopic")
+                    recoverTopic=(action "recoverTopic")
+                    toggleClosed=(action "toggleClosed")
+                    toggleArchived=(action "toggleArchived")
+                    toggleVisibility=(action "toggleVisibility")
+                    showAutoClose=(action "topicRouteAction" "showAutoClose")
+                    showFeatureTopic=(action "topicRouteAction" "showFeatureTopic")
+                    showChangeTimestamp=(action "topicRouteAction" "showChangeTimestamp")
+                    convertToPublicTopic=(action "convertToPublicTopic")
+                    convertToPrivateMessage=(action "convertToPrivateMessage")
+                    toggleBookmark=(action "toggleBookmark")
+                    showFlagTopic=(action "topicRouteAction" "showFlagTopic")
+                    showInvite=(action "topicRouteAction" "showInvite")
+                    toggleArchiveMessage=(action "toggleArchiveMessage")
+                    replyToPost=(action "replyToPost")
+                    }}
                 {{else}}
                   {{d-button icon="reply" class="btn-primary" action="showLogin" label="topic.reply.title"}}
                 {{/if}}
@@ -175,7 +221,7 @@
                 </div>
               {{/if}}
 
-              {{plugin-outlet "topic-above-suggested"}}
+              {{plugin-outlet name="topic-above-suggested" args=(hash model=model)}}
 
               {{#if model.details.suggested_topics.length}}
                 <div id="suggested-topics">

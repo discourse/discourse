@@ -36,6 +36,7 @@ export default Ember.Component.extend({
 
     loadScript("/javascripts/ace/ace.js", { scriptTag: true }).then(() => {
       window.ace.require(['ace/ace'], loadedAce => {
+        if (!this.element || this.isDestroying || this.isDestroyed) { return; }
         const editor = loadedAce.edit(this.$('.ace')[0]);
 
         editor.setTheme("ace/theme/chrome");
