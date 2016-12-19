@@ -977,7 +977,6 @@ en:
     prioritize_username_in_ux: "Show username first on user page, user card and posts (when disabled name is shown first)"
 
     email_token_valid_hours: "Forgot password / activate account tokens are valid for (n) hours."
-    email_token_grace_period_hours: "Forgot password / activate account tokens are still valid for a grace period of (n) hours after being redeemed."
 
     enable_badges: "Enable the badge system"
     enable_whispers: "Allow staff private communication within topics."
