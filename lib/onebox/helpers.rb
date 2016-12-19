@@ -75,8 +75,9 @@ module Onebox
     def self.normalize_url_for_output(url)
       url = url.dup
       # expect properly encoded url, remove any unsafe chars
+      url.gsub!("'", "&apos;")
+      url.gsub!('"', "&quot;")
       url.gsub!(/[^a-zA-Z0-9%\-`._~:\/?#\[\]@!$&'\(\)*+,;=]/, "")
-      url.gsub!("'", "&quot;")
       url
     end
 
