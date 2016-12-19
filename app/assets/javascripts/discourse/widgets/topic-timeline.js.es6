@@ -175,7 +175,7 @@ createWidget('timeline-scrollarea', {
     const result = [
       this.attach('timeline-padding', { height: before }),
       this.attach('timeline-scroller', _.merge(position, {
-        showDockedButton: hasBackPosition && !showButton,
+        showDockedButton: !attrs.mobileView && hasBackPosition && !showButton,
         fullScreen: attrs.fullScreen
       })),
       this.attach('timeline-padding', { height: after })
