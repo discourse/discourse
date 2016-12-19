@@ -552,8 +552,7 @@ const Composer = RestModel.extend({
         post.get('post_number') === 1 &&
         this.get('topic.details.can_edit')) {
       const topicProps = this.getProperties(Object.keys(_edit_topic_serializer));
-
-       promise = Topic.update(this.get('topic'), topicProps);
+      promise = Topic.update(this.get('topic'), topicProps);
     } else {
       promise = Ember.RSVP.resolve();
     }
