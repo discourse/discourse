@@ -84,6 +84,8 @@ describe "Groups" do
       end
 
       it "should be able update the group" do
+        group.update!(allow_membership_requests: false)
+
         expect do
           xhr :put, "/groups/#{group.id}", { group: {
             flair_bg_color: 'FFF',
