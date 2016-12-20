@@ -2284,16 +2284,20 @@ describe Guardian do
   context 'topic featured link category restriction' do
     before { SiteSetting.topic_featured_link_enabled = true }
     let(:guardian) { Guardian.new }
+    let(:uncategorized) { Category.find(SiteSetting.uncategorized_category_id) }
 
     context "uncategorized" do
       let!(:link_category) { Fabricate(:link_category) }
 
-      it "allows featured links if no categories forbid it" do
+      it "allows featured links if uncategorized allows it" do
+        uncategorized.topic_featured_link_allowed = true
+        uncategorized.save!
         expect(guardian.can_edit_featured_link?(nil)).to eq(true)
       end
 
-      it "forbids featured links if a category forbids it" do
-        Fabricate(:category, topic_featured_link_allowed: false)
+      it "forbids featured links if uncategorized forbids it" do
+        uncategorized.topic_featured_link_allowed = false
+        uncategorized.save!
         expect(guardian.can_edit_featured_link?(nil)).to eq(false)
       end
     end
