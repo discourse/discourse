@@ -425,7 +425,9 @@ en:
       selector_placeholder: "Add members"
       owner: "owner"
       visible: "Group is visible to all users"
-      index: "Groups"
+      index:
+        title: "Groups"
+        empty: "There are no visible groups."
       title:
         one: "group"
         other: "groups"
