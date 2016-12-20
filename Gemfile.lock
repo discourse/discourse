@@ -113,7 +113,7 @@ GEM
     foreman (0.82.0)
       thor (~> 0.19.1)
     fspath (2.1.1)
-    gctools (0.2.3)
+    gc_tracer (1.5.1)
     globalid (0.3.7)
       activesupport (>= 4.1.0)
     guess_html_encoding (0.0.11)
@@ -414,7 +414,7 @@ DEPENDENCIES
   fast_xs
   flamegraph
   foreman
-  gctools
+  gc_tracer
   highline
   hiredis
   htmlentities
