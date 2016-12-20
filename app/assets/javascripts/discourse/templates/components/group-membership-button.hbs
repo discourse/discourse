@@ -13,10 +13,18 @@
         disabled=updatingMembership}}
   {{/if}}
 {{else if canRequestMembership}}
-  {{d-button action="requestMembership"
-      class="group-index-request"
-      icon="envelope"
-      label="groups.request"}}
+  {{#if model.is_group_user}}
+    {{d-button
+        class="btn-primary"
+        icon="user"
+        label="groups.is_group_user"
+        disabled=model.is_group_user}}
+  {{else}}
+    {{d-button action="requestMembership"
+        class="group-index-request"
+        icon="envelope"
+        label="groups.request"}}
+  {{/if}}
 {{else}}
   {{yield}}
 {{/if}}

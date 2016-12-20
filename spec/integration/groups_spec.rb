@@ -23,6 +23,7 @@ describe "Groups" do
 
       group_ids = response_body["groups"].map { |g| g["id"] }
 
+      expect(response_body["groups"].map { |g| g['is_group_user'] }).to eq([nil])
       expect(group_ids).to include(other_group.id)
       expect(group_ids).to_not include(group.id)
       expect(response_body["load_more_groups"]).to eq("/groups?page=1")
@@ -41,6 +42,7 @@ describe "Groups" do
 
         group_ids = response_body["groups"].map { |g| g["id"] }
 
+        expect(response_body["groups"].first['is_group_user']).to eq(false)
         expect(group_ids).to include(group.id, other_group.id)
         expect(response_body["load_more_groups"]).to eq("/groups?page=1")
         expect(response_body["total_rows_groups"]).to eq(10)
