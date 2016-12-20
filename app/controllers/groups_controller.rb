@@ -24,7 +24,7 @@ class GroupsController < ApplicationController
     groups = groups.offset(page * page_size).limit(page_size)
 
     render json: {
-      groups: serialize_data(groups, BasicGroupSerializer),
+      groups: serialize_data(groups, GroupShowSerializer),
       total_rows_groups: count,
       load_more_groups: groups_path(page: page + 1)
     }
