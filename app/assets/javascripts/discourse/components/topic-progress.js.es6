@@ -39,9 +39,11 @@ export default Ember.Component.extend({
 
   @computed('progressPosition', 'topic.last_read_post_id')
   showBackButton(position, lastReadId) {
-    if (!this.site.mobileView || !lastReadId) { return; }
-    const readPos = this.get('postStream.stream').indexOf(lastReadId) || 0;
-    return readPos > position;
+    if (!lastReadId) { return; }
+
+    const stream = this.get('postStream.stream');
+    const readPos = stream.indexOf(lastReadId) || 0;
+    return (readPos < (stream.length - 1)) && (readPos > position);
   },
 
   @observes('postStream.stream.[]')
