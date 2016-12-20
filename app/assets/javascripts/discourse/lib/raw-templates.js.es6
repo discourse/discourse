@@ -6,5 +6,6 @@ export function findRawTemplate(name) {
            Discourse.RAW_TEMPLATES[name];
   }
 
-  return Discourse.RAW_TEMPLATES[name];
+  return Discourse.RAW_TEMPLATES[name] ||
+         Discourse.RAW_TEMPLATES[`javascripts/${name}`];
 }
