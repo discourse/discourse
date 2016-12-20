@@ -14,11 +14,13 @@
   {{/if}}
 {{else if canRequestMembership}}
   {{#if model.is_group_user}}
-    {{d-button
-        class="btn-primary"
-        icon="user"
-        label="groups.is_group_user"
-        disabled=model.is_group_user}}
+    {{#if showMembershipStatus}}
+      {{d-button
+          class="btn-primary"
+          icon="user"
+          label="groups.is_group_user"
+          disabled=true}}
+    {{/if}}
   {{else}}
     {{d-button action="requestMembership"
         class="group-index-request"
