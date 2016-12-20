@@ -31,6 +31,29 @@ export default Ember.Controller.extend(CanCheckEmails, {
   }.property('model.user_fields.[]'),
 
   actions: {
+
+    impersonate() { return this.get("model").impersonate(); },
+    logOut() { return this.get("model").logOut(); },
+    resetBounceScore() { return this.get("model").resetBounceScore(); },
+    refreshBrowsers() { return this.get("model").refreshBrowsers(); },
+    approve() { return this.get("model").approve(); },
+    deactivate() { return this.get("model").deactivate(); },
+    sendActivationEmail() { return this.get("model").sendActivationEmail(); },
+    activate() { return this.get("model").activate(); },
+    revokeAdmin() { return this.get("model").revokeAdmin(); },
+    grantAdmin() { return this.get("model").grantAdmin(); },
+    revokeModeration() { return this.get("model").revokeModeration(); },
+    grantModeration() { return this.get("model").grantModeration(); },
+    saveTrustLevel() { return this.get("model").saveTrustLevel(); },
+    restoreTrustLevel() { return this.get("model").restoreTrustLevel(); },
+    lockTrustLevel(locked) { return this.get("model").lockTrustLevel(locked); },
+    unsuspend() { return this.get("model").unsuspend(); },
+    unblock() { return this.get("model").unblock(); },
+    block() { return this.get("model").block(); },
+    deleteAllPosts() { return this.get("model").deleteAllPosts(); },
+    anonymize() { return this.get('model').anonymize(); },
+    destroy() { return this.get('model').destroy(); },
+
     toggleTitleEdit() {
       this.set('userTitleValue', this.get('model.title'));
       this.toggleProperty('editingTitle');
@@ -107,14 +130,6 @@ export default Ember.Controller.extend(CanCheckEmails, {
           if (result) { self.get('model').revokeApiKey(); }
         }
       );
-    },
-
-    anonymize() {
-      this.get('model').anonymize();
-    },
-
-    destroy() {
-      this.get('model').destroy();
     }
   }
 

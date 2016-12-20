@@ -9,16 +9,10 @@
     {{/if}}
     {{#if model.active}}
       {{#if model.can_impersonate}}
-        <button class='btn btn-danger' {{action "impersonate" target="content"}} title="{{i18n 'admin.impersonate.help'}}">
-          {{fa-icon "crosshairs"}}
-          {{i18n 'admin.impersonate.title'}}
-        </button>
+        {{d-button class="btn-danger" action="impersonate" icon="crosshairs" label="admin.impersonate.title" title="admin.impersonate.help"}}
       {{/if}}
       {{#if currentUser.admin}}
-        <button class='btn' {{action "log_out" target="content"}}>
-          {{fa-icon "power-off"}}
-          {{i18n 'admin.user.log_out'}}
-        </button>
+        {{d-button action="logOut" icon="power-off" label="admin.user.log_out"}}
       {{/if}}
     {{/if}}
   </div>
@@ -49,7 +43,7 @@
         {{#if model.email}}
           <a href="mailto:{{unbound model.email}}">{{model.email}}</a>
         {{else}}
-          <button class="btn" title="{{i18n 'admin.users.check_email.title'}}" {{action "checkEmail" model}}>{{fa-icon "envelope-o"}} {{i18n 'admin.users.check_email.text'}}</button>
+          {{d-button action="checkEmail" actionParam=model icon="envelope-o" label="admin.users.check_email.text" title="admin.users.check_email.title"}}
         {{/if}}
       </div>
     </div>
@@ -59,9 +53,7 @@
       <div class='value'>{{model.bounceScore}}</div>
       <div class='controls'>
         {{#if model.canResetBounceScore}}
-          <button class='btn' {{action "resetBounceScore" target="content"}} title={{i18n "admin.user.reset_bounce_score.title"}}>
-            {{i18n "admin.user.reset_bounce_score.label"}}
-          </button>
+          {{d-button action="resetBounceScore" label="admin.user.reset_bounce_score.label" title="admin.user.reset_bounce_score.title"}}
         {{/if}}
         {{model.bounceScoreExplanation}}
       </div>
@@ -73,7 +65,7 @@
         {{#if model.associated_accounts}}
           {{model.associated_accounts}}
         {{else}}
-          <button class="btn" title="{{i18n 'admin.users.check_email.title'}}" {{action "checkEmail" model}}>{{fa-icon "envelope-o"}} {{i18n 'admin.users.check_email.text'}}</button>
+          {{d-button action="checkEmail" actionParam=model icon="envelope-o" label="admin.users.check_email.text" title="admin.users.check_email.title"}}
         {{/if}}
       </div>
     </div>
@@ -108,9 +100,7 @@
     <div class='value'>{{model.ip_address}}</div>
     <div class='controls'>
       {{#if currentUser.staff}}
-        <button class='btn' {{action "refreshBrowsers" target="content"}}>
-          {{i18n 'admin.user.refresh_browsers'}}
-        </button>
+        {{d-button action="refreshBrowsers" label="admin.user.refresh_browsers"}}
         {{ip-lookup ip=model.ip_address userId=model.id}}
       {{/if}}
     </div>
@@ -176,10 +166,7 @@
           {{i18n 'admin.user.approve_success'}}
         {{else}}
           {{#if model.can_approve}}
-            <button class='btn' {{action "approve" target="content"}}>
-              {{fa-icon "check"}}
-              {{i18n 'admin.user.approve'}}
-            </button>
+            {{d-button action="approve" icon="check" label="admin.user.approve"}}
           {{/if}}
         {{/if}}
       </div>
@@ -198,21 +185,15 @@
     <div class='controls'>
       {{#if model.active}}
         {{#if model.can_deactivate}}
-          <button class='btn' {{action "deactivate" target="content"}}>{{i18n 'admin.user.deactivate_account'}}</button>
+          {{d-button action="deactivate" label="admin.user.deactivate_account"}}
           {{i18n 'admin.user.deactivate_explanation'}}
         {{/if}}
       {{else}}
         {{#if model.can_send_activation_email}}
-          <button class='btn' {{action "sendActivationEmail" target="content"}}>
-            {{fa-icon "envelope"}}
-            {{i18n 'admin.user.send_activation_email'}}
-          </button>
+          {{d-button action="sendActivationEmail" icon="envelope" label="admin.user.send_activation_email"}}
         {{/if}}
         {{#if model.can_activate}}
-          <button class='btn' {{action "activate" target="content"}}>
-            {{fa-icon "check"}}
-            {{i18n 'admin.user.activate'}}
-          </button>
+          {{d-button action="activate" icon="check" label="admin.user.activate"}}
         {{/if}}
       {{/if}}
     </div>
@@ -243,16 +224,10 @@
     <div class='value'>{{model.admin}}</div>
     <div class='controls'>
       {{#if model.can_revoke_admin}}
-        <button class='btn' {{action "revokeAdmin" target="content"}}>
-          {{fa-icon "shield"}}
-          {{i18n 'admin.user.revoke_admin'}}
-        </button>
+        {{d-button action="revokeAdmin" icon="shield" label="admin.user.revoke_admin"}}
       {{/if}}
       {{#if model.can_grant_admin}}
-        <button class='btn' {{action "grantAdmin" target="content"}}>
-          {{fa-icon "shield"}}
-          {{i18n 'admin.user.grant_admin'}}
-        </button>
+        {{d-button action="grantAdmin" icon="shield" label="admin.user.grant_admin"}}
       {{/if}}
     </div>
   </div>
@@ -262,16 +237,10 @@
     <div class='value'>{{model.moderator}}</div>
     <div class='controls'>
       {{#if model.can_revoke_moderation}}
-        <button class='btn' {{action "revokeModeration" target="content"}}>
-          {{fa-icon "shield"}}
-          {{i18n 'admin.user.revoke_moderation'}}
-        </button>
+        {{d-button action="revokeModeration" icon="shield" label="admin.user.revoke_moderation"}}
       {{/if}}
       {{#if model.can_grant_moderation}}
-        <button class='btn' {{action "grantModeration" target="content"}}>
-          {{fa-icon "shield"}}
-          {{i18n 'admin.user.grant_moderation'}}
-        </button>
+        {{d-button action="grantModeration" icon="shield" label="admin.user.grant_moderation"}}
       {{/if}}
     </div>
   </div>
@@ -282,17 +251,17 @@
       {{combo-box content=site.trustLevels value=model.trust_level nameProperty="detailedName"}}
       {{#if model.dirty}}
         <div>
-          <button class='btn ok no-text' {{action "saveTrustLevel" target="content"}}>{{fa-icon "check"}}</button>
-          <button class='btn cancel no-text' {{action "restoreTrustLevel" target="content"}}>{{fa-icon "times"}}</button>
+          {{d-button class="ok no-text" action="saveTrustLevel" icon="check"}}
+          {{d-button class="cancel no-text" action="restoreTrustLevel" icon="times"}}
         </div>
       {{/if}}
     </div>
     <div class="controls">
       {{#if model.canLockTrustLevel}}
         {{#if model.trust_level_locked}}
-        <i title='{{i18n 'admin.user.trust_level_locked_tip'}}' {{action "lockTrustLevel" false target="model"}} class='fa fa-lock'></i> <button class="btn" {{action "lockTrustLevel" false target="model"}}>{{i18n 'admin.user.unlock_trust_level'}}</button>
+          <i title='{{i18n 'admin.user.trust_level_locked_tip'}}' class='fa fa-lock'></i> {{d-button action="lockTrustLevel" actionParam=false label="admin.user.unlock_trust_level"}}
         {{else}}
-        <i title='{{i18n 'admin.user.trust_level_unlocked_tip'}}' class='fa fa-unlock'></i> <button class="btn" {{action "lockTrustLevel" true target="model"}}>{{i18n 'admin.user.lock_trust_level'}}</button>
+          <i title='{{i18n 'admin.user.trust_level_unlocked_tip'}}' class='fa fa-unlock'></i> {{d-button action="lockTrustLevel" actionParam=true label="admin.user.lock_trust_level"}}
         {{/if}}
       {{/if}}
       {{#if model.tl3Requirements}}
@@ -306,18 +275,12 @@
     <div class='value'>{{model.isSuspended}}</div>
     <div class='controls'>
     {{#if model.isSuspended}}
-      <button class='btn btn-danger' {{action "unsuspend" target="content"}}>
-        {{fa-icon "ban"}}
-        {{i18n 'admin.user.unsuspend'}}
-      </button>
+      {{d-button class="btn-danger" action="unsuspend" icon="ban" label="admin.user.unsuspend"}}
       {{suspendDuration}}
       {{i18n 'admin.user.suspended_explanation'}}
     {{else}}
       {{#if model.canSuspend}}
-        <button class='btn btn-danger' {{action "showSuspendModal" model}}>
-          {{fa-icon "ban"}}
-          {{i18n 'admin.user.suspend'}}
-        </button>
+        {{d-button class="btn-danger" action="showSuspendModal" actionParam=model icon="ban" label="admin.user.suspend"}}
         {{i18n 'admin.user.suspended_explanation'}}
       {{/if}}
     {{/if}}
@@ -344,16 +307,10 @@
     <div class='controls'>
       {{#conditional-loading-spinner size="small" condition=model.blockingUser}}
         {{#if model.blocked}}
-          <button class='btn' {{action "unblock" target="content"}}>
-            {{fa-icon "thumbs-o-up"}}
-            {{i18n 'admin.user.unblock'}}
-          </button>
+          {{d-button action="unblock" icon="thumbs-o-up" label="admin.user.unblock"}}
           {{i18n 'admin.user.block_explanation'}}
         {{else}}
-          <button class='btn' {{action "block" target="content"}}>
-            {{fa-icon "ban"}}
-            {{i18n 'admin.user.block'}}
-          </button>
+          {{d-button action="block" icon="ban" label="admin.user.block"}}
           {{i18n 'admin.user.block_explanation'}}
         {{/if}}
       {{/conditional-loading-spinner}}
@@ -423,10 +380,7 @@
     <div class='controls'>
       {{#if model.can_delete_all_posts}}
         {{#if model.post_count}}
-          <button class='btn btn-danger' {{action "deleteAllPosts" target="content"}}>
-            {{fa-icon "trash-o"}}
-            {{i18n 'admin.user.delete_all_posts'}}
-          </button>
+          {{d-button class="btn-danger" action="deleteAllPosts" icon="trash-o" label="admin.user.delete_all_posts"}}
         {{/if}}
       {{else}}
         {{model.deleteAllPostsExplanation}}
