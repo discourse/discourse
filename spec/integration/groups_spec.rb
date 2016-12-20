@@ -26,6 +26,7 @@ describe "Groups" do
       expect(group_ids).to include(other_group.id)
       expect(group_ids).to_not include(group.id)
       expect(response_body["load_more_groups"]).to eq("/groups?page=1")
+      expect(response_body["total_rows_groups"]).to eq(1)
     end
 
     context 'viewing as an admin' do
@@ -42,6 +43,7 @@ describe "Groups" do
 
         expect(group_ids).to include(group.id, other_group.id)
         expect(response_body["load_more_groups"]).to eq("/groups?page=1")
+        expect(response_body["total_rows_groups"]).to eq(10)
       end
     end
   end
