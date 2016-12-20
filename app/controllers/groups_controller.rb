@@ -14,10 +14,13 @@ class GroupsController < ApplicationController
     page_size = 30
     page = params[:page]&.to_i || 0
 
-    groups = Group.order(user_count: :desc, name: :asc)
-      .where(visible: true)
-      .offset(page * page_size)
-      .limit(page_size)
+    groups = Group.order(user_count: :desc, name: :asc).where(visible: true)
+
+    if !guardian.is_admin?
+      groups = groups.where(automatic: false)
+    end
+
+    groups = groups.offset(page * page_size).limit(page_size)
 
     render json: {
       groups: serialize_data(groups, BasicGroupSerializer),
