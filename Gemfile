@@ -174,14 +174,13 @@ gem 'rack-mini-profiler', require: false
 gem 'unicorn', require: false
 gem 'puma', require: false
 gem 'rbtrace', require: false, platform: :mri
+gem 'gc_tracer', require: false, platform: :mri
 
 # required for feed importing and embedding
 #
 gem 'ruby-readability', require: false
-
 gem 'simple-rss', require: false
 
-gem 'gctools', require: false, platform: :mri_21
 
 begin
   gem 'stackprof', require: false, platform: [:mri_21, :mri_22, :mri_23]
