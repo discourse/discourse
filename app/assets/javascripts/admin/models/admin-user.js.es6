@@ -257,7 +257,7 @@ const AdminUser = Discourse.User.extend({
     });
   },
 
-  log_out() {
+  logOut() {
     return ajax("/admin/users/" + this.id + "/log_out", {
       type: 'POST',
       data: { username_or_email: this.get('username') }
