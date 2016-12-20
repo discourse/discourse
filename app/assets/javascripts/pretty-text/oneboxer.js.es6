@@ -30,7 +30,7 @@ function loadNext(ajax) {
       failedCache[url] = true;
     }
   }).finally(() => {
-    timeout = setTimeout(() => loadNext(ajax), timeoutMs);
+    timeout = Ember.run.later(() => loadNext(ajax), timeoutMs);
     if (removeLoading) {
       elem.removeClass('loading-onebox');
       elem.data('onebox-loaded');
@@ -67,7 +67,11 @@ export function load(e, refresh, ajax, userId) {
   loadingQueue.push({ url, refresh, elem, userId });
 
   // Load next url in queue
-  timeout = timeout || setTimeout(() => loadNext(ajax), 150);
+  if (timeout) {
+    return Ember.run.later(() => loadNext(ajax), 150);
+  } else {
+    return loadNext(ajax);
+  }
 }
 
 export function lookupCache(url) {
