@@ -1,7 +1,10 @@
 <div class="dashboard-stats version-check {{if versionCheck.critical_updates 'critical' 'normal'}}">
   <table class="table table-condensed table-hover">
+    {{custom-html name="upgrade-header" versionCheck=versionCheck tagName="thead"}}
+  </table>
+
+  <table class="table table-condensed table-hover">
     <thead>
-      {{custom-html name="upgrade-header"}}
       <tr>
         <th>&nbsp;</th>
         <th>{{i18n 'admin.dashboard.installed_version'}}</th>
