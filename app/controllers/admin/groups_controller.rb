@@ -71,6 +71,10 @@ class Admin::GroupsController < Admin::AdminController
     group.bio_raw = group_params[:bio_raw] if group_params[:bio_raw]
     group.full_name = group_params[:full_name] if group_params[:full_name]
 
+    if group_params[:allow_membership_requests]
+      group.allow_membership_requests = group_params[:allow_membership_requests]
+    end
+
     if group.save
       Group.reset_counters(group.id, :group_users)
 
