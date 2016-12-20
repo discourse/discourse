@@ -60,7 +60,7 @@ export default Ember.Component.extend({
       const link = document.createElement('a');
       link.href = this.get('composer.title');
 
-      let loadOnebox = load(link, false, ajax, this.currentUser.id);
+      let loadOnebox = load(link, false, ajax, this.currentUser.id, true);
 
       if (loadOnebox && loadOnebox.then) {
         loadOnebox.then( () => {
