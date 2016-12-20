@@ -5,10 +5,16 @@ describe "Groups" do
   let(:group) { Fabricate(:group, users: [user]) }
 
   describe 'viewing groups' do
-    it 'should return the right response' do
-      group.update_attributes!(visible: true)
-      other_group = Fabricate(:group, name: '0000', visible: true)
+    let(:other_group) do
+      Fabricate(:group, name: '0000', visible: true, automatic: false)
+    end
 
+    before do
+      other_group
+      group.update_attributes!(automatic: true, visible: true)
+    end
+
+    it 'should return the right response' do
       get "/groups.json"
 
       expect(response).to be_success
@@ -17,8 +23,26 @@ describe "Groups" do
 
       group_ids = response_body["groups"].map { |g| g["id"] }
 
-      expect(group_ids).to include(group.id, other_group.id)
+      expect(group_ids).to include(other_group.id)
+      expect(group_ids).to_not include(group.id)
       expect(response_body["load_more_groups"]).to eq("/groups?page=1")
+    end
+
+    context 'viewing as an admin' do
+      it 'should display automatic groups' do
+        sign_in(Fabricate(:admin))
+
+        get "/groups.json"
+
+        expect(response).to be_success
+
+        response_body = JSON.parse(response.body)
+
+        group_ids = response_body["groups"].map { |g| g["id"] }
+
+        expect(group_ids).to include(group.id, other_group.id)
+        expect(response_body["load_more_groups"]).to eq("/groups?page=1")
+      end
     end
   end
 
