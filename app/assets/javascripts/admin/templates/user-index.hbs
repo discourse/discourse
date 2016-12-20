@@ -49,7 +49,7 @@
         {{#if model.email}}
           <a href="mailto:{{unbound model.email}}">{{model.email}}</a>
         {{else}}
-          <button class="btn" title="{{i18n 'admin.users.check_email.title'}}" {{action "checkEmail" this}}>{{fa-icon "envelope-o"}} {{i18n 'admin.users.check_email.text'}}</button>
+          <button class="btn" title="{{i18n 'admin.users.check_email.title'}}" {{action "checkEmail" model}}>{{fa-icon "envelope-o"}} {{i18n 'admin.users.check_email.text'}}</button>
         {{/if}}
       </div>
     </div>
@@ -73,7 +73,7 @@
         {{#if model.associated_accounts}}
           {{model.associated_accounts}}
         {{else}}
-          <button class="btn" title="{{i18n 'admin.users.check_email.title'}}" {{action "checkEmail" this}}>{{fa-icon "envelope-o"}} {{i18n 'admin.users.check_email.text'}}</button>
+          <button class="btn" title="{{i18n 'admin.users.check_email.title'}}" {{action "checkEmail" model}}>{{fa-icon "envelope-o"}} {{i18n 'admin.users.check_email.text'}}</button>
         {{/if}}
       </div>
     </div>
@@ -314,7 +314,7 @@
       {{i18n 'admin.user.suspended_explanation'}}
     {{else}}
       {{#if model.canSuspend}}
-        <button class='btn btn-danger' {{action "showSuspendModal" this}}>
+        <button class='btn btn-danger' {{action "showSuspendModal" model}}>
           {{fa-icon "ban"}}
           {{i18n 'admin.user.suspend'}}
         </button>
