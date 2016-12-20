@@ -127,7 +127,7 @@ module Oneboxer
   private
 
     def self.preview_key(user_id)
-      "PREVIEWING_ONEBOX_#{user_id}"
+      "onebox:preview:#{user_id}"
     end
 
     def self.blank_onebox
