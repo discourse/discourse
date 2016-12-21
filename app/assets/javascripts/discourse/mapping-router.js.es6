@@ -6,7 +6,9 @@ const BareRouter = Ember.Router.extend({
   location: Ember.testing ? 'none': 'discourse-location',
 
   handleURL(url) {
-    if (url === "/") { url = defaultHomepage(); }
+    const params = url.split('?');
+
+    if (params[0] === "/") { url = defaultHomepage(); }
     return this._super(url);
   }
 });
