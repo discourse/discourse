@@ -90,8 +90,9 @@ describe Guardian do
       end
 
       it "returns true for a new user flagging a private message as spam" do
-        post.topic.archetype = Archetype.private_message
+        post = Fabricate(:private_message_post, user: Fabricate(:admin))
         user.trust_level = TrustLevel[0]
+        post.topic.allowed_users << user
         expect(Guardian.new(user).post_can_act?(post, :spam)).to be_truthy
       end
 
