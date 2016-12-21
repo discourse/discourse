@@ -23,11 +23,16 @@ class GroupsController < ApplicationController
     count = groups.count
     groups = groups.offset(page * page_size).limit(page_size)
 
-    render json: {
-      groups: serialize_data(groups, GroupShowSerializer),
+    group_user_ids = GroupUser.where(group: groups, user: current_user).pluck(:group_id)
+
+    render_json_dump(
+      groups: serialize_data(groups, BasicGroupSerializer),
+      extras: {
+        group_user_ids: group_user_ids
+      },
       total_rows_groups: count,
       load_more_groups: groups_path(page: page + 1)
-    }
+    )
   end
 
   def show
