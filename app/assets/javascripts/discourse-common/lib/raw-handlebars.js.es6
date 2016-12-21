@@ -1,3 +1,5 @@
+import deprecated from 'discourse-common/lib/deprecated';
+
 // This is a mechanism for quickly rendering templates which is Ember aware
 // templates are highly compatible with Ember so you don't need to worry about calling "get"
 // and computed properties function, additionally it uses stringParams like Ember does
@@ -17,6 +19,11 @@ RawHandlebars.helpers = objectCreate(Handlebars.helpers);
 RawHandlebars.helpers['get'] = function(context, options) {
   var firstContext =  options.contexts[0];
   var val = firstContext[context];
+
+  if (context.indexOf('controller') === 0) {
+    deprecated("Don't `use controller` in raw templates");
+    context = context.replace(/^controller\./, '');
+  }
 
   if (val && val.isDescriptor) { return Em.get(firstContext, context); }
   val = val === undefined ? Em.get(firstContext, context): val;
