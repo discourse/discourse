@@ -31,7 +31,7 @@ export default Ember.Component.extend({
     }
   },
 
-  @observes('composer.titleLength')
+  @observes('composer.titleLength', 'watchForLink')
   _titleChanged() {
     if (this.get('composer.titleLength') === 0) { this.set('autoPosted', false); }
     if (this.get('autoPosted') || !this.get('watchForLink')) { return; }
