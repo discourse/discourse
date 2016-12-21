@@ -13,6 +13,7 @@ var Tab = Em.Object.extend({
 });
 
 export default Ember.Controller.extend({
+  application: Ember.inject.controller(),
   counts: null,
   showing: 'members',
   tabs: [

@@ -31,7 +31,7 @@
     {{/if}}
   </div>
 
-  {{#mobile-nav class='group-nav' desktopClass="pull-left nav nav-stacked" currentPath=currentPath}}
+  {{#mobile-nav class='group-nav' desktopClass="pull-left nav nav-stacked" currentPath=application.currentPath}}
     {{#each getTabs as |tab|}}
       <li class="{{if tab.active 'active'}}">
         {{#link-to tab.location model title=tab.message}}
