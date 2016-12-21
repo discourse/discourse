@@ -10,6 +10,7 @@ describe Jobs::AutomaticGroupMembership do
   it "updates the membership" do
     user1 = Fabricate(:user, email: "foo@wat.com")
     user2 = Fabricate(:user, email: "foo@bar.com")
+    user3 = Fabricate(:user, email: "bar@wat.com", staged: true)
     group = Fabricate(:group, automatic_membership_email_domains: "wat.com", automatic_membership_retroactive: true)
 
     Jobs::AutomaticGroupMembership.new.execute(group_id: group.id)
@@ -17,6 +18,7 @@ describe Jobs::AutomaticGroupMembership do
     group.reload
     expect(group.users.include?(user1)).to eq(true)
     expect(group.users.include?(user2)).to eq(false)
+    expect(group.users.include?(user3)).to eq(false)
   end
 
 end
