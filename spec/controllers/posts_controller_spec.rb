@@ -426,13 +426,12 @@ describe PostsController do
     include_examples 'action requires login', :put, :bookmark, post_id: 2
 
     describe 'when logged in' do
-
       let(:post) { Fabricate(:post, user: log_in) }
+      let(:private_message) { Fabricate(:private_message_post) }
 
       it "raises an error if the user doesn't have permission to see the post" do
-        Guardian.any_instance.expects(:can_see?).with(post).returns(false).once
-
-        xhr :put, :bookmark, post_id: post.id, bookmarked: 'true'
+        post
+        xhr :put, :bookmark, post_id: private_message.id, bookmarked: 'true'
         expect(response).to be_forbidden
       end
 
