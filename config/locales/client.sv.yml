@@ -695,11 +695,8 @@ sv:
         link_generated: "Länk för inbjudan framgångsrikt skapad!"
         valid_for: "Länk för inbjudan är endast giltig för denna email adress: %{email}"
         bulk_invite:
-          none: "Du har inte skickat några inbjudningar. Du kan skicka individuella inbjudningar, eller så kan du bjuda in flera på en gång genom att <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>ladda upp en bulkfil.</a>"
           text: "Massinbjudan från fil"
-          uploading: "Laddar upp..."
           success: "Filen laddades upp, du blir underrättad via meddelande när processen är klar"
-          error: "Det blev ett fel vid uppladdning av '{{filename}}': {{message}}"
       password:
         title: "Lösenord"
         too_short: "Ditt lösenord är för kort."
@@ -2216,7 +2213,6 @@ sv:
         refresh: "Uppdatera"
         new: "Ny"
         selector_placeholder: "ange användarnamn"
-        name_placeholder: "Gruppnamn, inga mellanslag, samma regler som för användarnamn"
         about: "Redigera dina gruppmedlemskap och -namn här."
         group_members: "Gruppmedlemmar"
         delete: "Radera"
@@ -2224,7 +2220,6 @@ sv:
         delete_failed: "Oförmögen att ta bort grupp. Om det här är en automatisk grupp så kan den inte raderas."
         delete_member_confirm: "Ta bort '%{username}' från '%{group}' gruppen?"
         delete_owner_confirm: "Ta bort användarprivilegier för '\"{username}'?"
-        name: "Namn"
         add: "Lägg till"
         add_members: "Lägg till medlemmar"
         custom: "Anpassad"
@@ -2241,9 +2236,6 @@ sv:
         add_owners: Lägg till ägare
         incoming_email: "Egenvald inkommande e-postadress"
         incoming_email_placeholder: "Ange e-postadress"
-        flair_bg_color_placeholder: "(Valfritt) Hexadecimal färgkod"
-        flair_color_placeholder: "(Valfritt) Hexadecimal färgkod"
-        flair_preview: "Förhandsgranska"
       api:
         generate_master: "Generera API-huvudnyckel"
         none: "Det finns inga aktiva API-nycklar just nu."

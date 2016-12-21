@@ -591,8 +591,6 @@ id:
         generate_link: "Salin Tautan Undangan"
         bulk_invite:
           text: "Undangan Massal dari Berkas"
-          uploading: "Mengunggah..."
-          error: "Terdapat gangguan mengunggah '{{filename}}': {{message}}"
       password:
         title: "Kata sandi"
         too_short: "Password kamu terlalu pendek."

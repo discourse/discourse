@@ -15,6 +15,7 @@ pl_PL:
       short: "%d.%m.%Y"
       short_no_year: "%-d %B"
       date_only: "%-d %b %Y"
+      long: "%B %-d, %Y, %l:%M%P"
   date:
     month_names: [null, Styczeń, Luty, Marzec, Kwiecień, Maj, Czerwiec, Lipiec, Sierpień, Wrzesień, Październik, Listopad, Grudzień]
     <<: *datetime_formats
@@ -28,13 +29,16 @@ pl_PL:
   loading: "Ładowanie"
   powered_by_html: 'Zasilane przez <a href="http://www.discourse.org">Discourse</a>, najlepiej oglądać z włączonym JavaScriptem'
   log_in: "Logowanie"
+  purge_reason: "Automatycznie usunięte jako porzucone, dezaktywowane konto."
   disable_remote_images_download_reason: "Pobieranie zewnętrznych grafik zostało wyłączone z uwagi na niską ilość wolnego miejsca na dysku."
   anonymous: "Anonim"
   emails:
     incoming:
       default_subject: "Przychodzący email od %{email}"
       show_trimmed_content: "Pokaż skróconą zawartość"
+      maximum_staged_user_per_email_reached: "Osiągnięto maksymalną ilość użytkowników zarejestrowanych przez email."
       errors:
+        empty_email_error: "Zdarza się kiedy mail jaki dostaliśmy jest pusty."
         no_message_id_error: "Zdarza się kiedy email nie posiada nagłówka 'Message-Id'."
         inactive_user_error: "Zdarza się kiedy nadawca jest nie aktywny."
         blocked_user_error: "Zdarza się kiedy nadawca jest zablokowany."
@@ -95,11 +99,13 @@ pl_PL:
       default_categories_already_selected: "Nie możesz wybrać kategorii użytej w innej liście."
       s3_upload_bucket_is_required: "Nie możesz wysyłać na S3 jeżeli nie podasz 's3_upload_bucket'."
   bulk_invite:
-    file_should_be_csv: "Wysłany plik powinien być w formacie CSV lub TXT."
+    file_should_be_csv: "Wgrywany plik powinien być formatu csv."
+    error: "Wystąpił błąd podczas wgrywania tego pliku. Spróbuj ponownie później."
   backup:
     operation_already_running: "Operacja jest już uruchomiona. Nie można teraz utworzyć nowej."
     backup_file_should_be_tar_gz: "Plik z kopią zapasową powinien mieć postać archiwum .tar.gz."
     not_enough_space_on_disk: "Nie ma wystarczającej ilości wolnego miejsca, aby wczytać tę kopię zapasową."
+    invalid_filename: "Plik kopii zapasowej zawiera nieprawidłowe znaki. Nieprawidłowe znaki to a-z 0-9 . - _."
   not_logged_in: "Aby to zrobić musisz się zalogować."
   not_found: "Żądany URL lub źródło nie mógł zostać znaleziony."
   invalid_access: "Nie jesteś uprawniony, by zobaczyć żądane źródło."
@@ -248,6 +254,7 @@ pl_PL:
         name: "Nazwa kategorii"
       topic:
         title: 'Tytuł'
+        featured_link: 'Polecany link'
       post:
         raw: "Treść"
       user_profile:
@@ -261,12 +268,16 @@ pl_PL:
               too_many_users: "Jedno ostrzeżenie możesz wysłać tylko do pojedynczego użytkownika."
               cant_send_pm: "Przepraszamy, niestety nie możesz wysłać prywatnej wiadomości temu użytkownikowi."
               no_user_selected: "Musisz wybrać poprawnego użytkownika,"
+            featured_link:
+              invalid: "Link jest nieprawidłowy, powinien zawierać http:// lub https://."
+              invalid_category: "nie może być edytowany w tej kategorii."
         user:
           attributes:
             password:
               common: "jest jednym z 10000 najczęściej używanych haseł. Wybierz inne, bardziej bezpieczne hasło."
               same_as_username: "jest takie same jak Twoja nazwa użytkownika. Proszę użyj bardziej bezpiecznego hasła. "
               same_as_email: "jest takie same jak Twój email. Proszę użyj bardziej bezpiecznego hasła. "
+              same_as_current: "Hasło jest takie same jak aktualne."
             ip_address:
               signup_not_allowed: "Rejestracja z tego konta jest niemożliwa."
         color_scheme_color:
@@ -276,6 +287,10 @@ pl_PL:
         post_reply:
           base:
             different_topic: "Wpis i odpowiedź muszą należeć do tego samego tematu."
+        web_hook:
+          attributes:
+            payload_url:
+              invalid: "Link jest nieprawidłowy, powinien zawierać http:// lub https://. Puste pole jest niedozwolone."
       <<: *errors
   user_profile:
     no_info_me: "<div class='missing-profile'>Pole O mnie w Twoim profilu jest obecnie puste, <a href='/users/%{username_lower}/preferences/about-me'>czy chcesz je wypełnić?</a></div>"
@@ -334,6 +349,8 @@ pl_PL:
       title: "początkujący"
     member:
       title: "uczestnik"
+    regular:
+      title: "zwyczajny"
     leader:
       title: "lider"
     change_failed_explanation: "Twoja próba obniżenia poziomu %{user_name} do '%{new_trust_level}' była nieudana. Ten użytkownik posiada już poziom '%{current_trust_level}'. %{user_name} pozostanie na poziomie '%{current_trust_level}' - jeśli chcesz to zmienić, najpierw zablokuj poziom zaufania temu użytkownikowi."
@@ -515,6 +532,12 @@ pl_PL:
       title: 'Głosuj'
       description: 'Głosuj za tym wpisem'
       long_form: 'zagłosowano za tym wpisem'
+  user_activity:
+    no_bookmarks:
+      others: "Brak zakładek."
+    no_likes_given:
+      self: "Nie masz lajkowanych postów."
+      others: "Brak lajkowanych postów."
   topic_flag_types:
     spam:
       title: 'Spam'
@@ -540,6 +563,8 @@ pl_PL:
       message:
         make: "Ten temat został ustawiony jako baner. Będzie pojawiać się na górze każdej strony do czasu zamknięcia przez użytkownika."
         remove: "Ten temat nie jest już banerem. Nie będzie pojawiać się na górze każdej strony."
+  unsubscribed:
+    title: "Od subskrybuj!"
   unsubscribe:
     title: "Wypisz"
     stop_watching_topic: "Przestań obserwować ten temat, %{link}"
@@ -550,8 +575,16 @@ pl_PL:
     log_out: "Wyloguj"
   user_api_key:
     title: "Zezwolić na dostęp aplikacji"
+    authorize: "Autoryzuj"
     read: "odczyt"
     read_write: "odzczyt/zapis"
+    scopes:
+      message_bus: "Aktualizacje"
+      notifications: "Przeczytaj i wyczyść powiadomienia"
+      push: "Powiadomienia push dla zewnętrznych usług"
+      session_info: "Czytaj informację o sesji użytkowników"
+      read: "Czytaj wszystko."
+      write: "Zapisz wszystko"
   reports:
     visits:
       title: "Wizyty użytkowników"
@@ -635,19 +668,27 @@ pl_PL:
     page_view_anon_reqs:
       title: "Anonimowy"
       xaxis: "Dzień"
+      yaxis: "Anonimowe odsłony"
     page_view_logged_in_reqs:
       title: "Zalogowany"
       xaxis: "Dzień"
+      yaxis: "Zalogowane odsłony"
     page_view_crawler_reqs:
       title: "Bot indeksujący"
       xaxis: "Dzień"
+      yaxis: "Odsłony botów indeksujących"
     page_view_total_reqs:
       title: "Łącznie"
       xaxis: "Dzień"
+      yaxis: "Wszystkie odsłony"
     page_view_logged_in_mobile_reqs:
+      title: "Zalogowane odsłony"
       xaxis: "Dzień"
+      yaxis: "Odsłony użytkowników mobilnych"
     page_view_anon_mobile_reqs:
+      title: "Anonimowe odsłony"
       xaxis: "Dzień"
+      yaxis: "Odsłony anonimowych użytkowników mobilnych"
     http_background_reqs:
       title: "Tło"
       xaxis: "Dzień"
@@ -707,10 +748,16 @@ pl_PL:
     min_first_post_length: "Minimalna długość treści (liczba znaków) pierwszego wpisu w temacie "
     min_private_message_post_length: "Minimalna długość treści wiadomości "
     max_post_length: "Maksymalna długość wpisu, w znakach"
+    topic_featured_link_enabled: "Włącz dodawanie linków w tematach."
+    topic_featured_link_onebox: "Pokazuj onebox we wpisie jeśli jest taka możliwość, zapobiegaj edycji zawartości."
+    open_topic_featured_link_in_external_window: "Otwieraj polecane linki w nowym oknie."
+    show_topic_featured_link_in_digest: "Pokazuj polecany link tematu w podsumowaniu mailowym."
     min_topic_title_length: "Minimalna długość tytułu tematu, w znakach"
     max_topic_title_length: "Maksymalna długość tytułu tematu, w znakach"
     min_private_message_title_length: "Minimalna liczba znaków w temacie wiadomości "
     min_search_term_length: "Minimalna długość wyszukiwanego tekstu, w znakach"
+    search_prefer_recent_posts: "Jeśli wyszukiwanie na twoim duży forum jest wolne, ta opcja pozwala zaindeskować ostanie posty wpierw."
+    search_recent_posts_size: "Jak dużo ostanich postów trzymać w indexie"
     allow_uncategorized_topics: "Zezwól na tworzenie tematów bez kategorii. UWAGA: jeśli jest jakiś nieskategoryzowany temat, musisz go przypisać do kategorii, zanim wyłączysz tę opcję."
     allow_duplicate_topic_titles: "Pozwól na tworzenie tematów o identycznych tytułach."
     unique_posts_mins: "Ile minut musi upłynąć zanim użytkownik będzie mógł ponownie zrobić wpis z tą samą treścią"
@@ -736,6 +783,7 @@ pl_PL:
     fixed_category_positions_on_create: "Jeżeli jest sprawdzone to porządkowanie kategorii będzie zależało od stworzonego tematu (requires fixed_category_positions). "
     post_excerpt_maxlength: "Maksymalna długość podsumowania / streszczenia wpisu."
     post_onebox_maxlength: "Maksymalna długość (ilość znaków) treści wpisu osadzonego via Onebox"
+    max_oneboxes_per_post: "Masymalna ilość oneboxów w poście."
     logo_url: "Zdjęcie logo w lewym górnym rogu twojej strony powinno mieć kształt szerokiego prostokąta. Jeśli zostawisz miejsce puste, wyświetlany będzie tytuł strony."
     apple_touch_icon_url: "Ikona używana przez urządzenia Apple. Rekomendowany wymiar to 144px na 144px."
     notification_email: "Adres z którego wysyłane będą wszystkie istotne emaile systemowe.\nKonieczna jest poprawna konfiguracja rekordów SPF, DKIM oraz zwrotnego PTR użytej domeny."
@@ -768,6 +816,7 @@ pl_PL:
     show_email_on_profile: "Pokazuj email użytkownika w jego profilu (widoczny jedynie dla użytkownika i personelu)."
     email_token_valid_hours: "Tokeny resetujące hasło / aktywujące konto są ważne przez (n) godzin."
     enable_badges: "Włącz system odznak"
+    enable_whispers: "Pozwalaj administracji na prywatną rozmowę w tematach."
     log_out_strict: "Po wylogowaniu wyloguj WSZYSTKIE sesje użytkownika na wszystkich urządzeniach."
     port: "OSTRZEŻENIE! Tylko dla Developera! Użyj ten port HTTP zamiast domyślnego portu 80. Pozostaw puste pole, domyślnie port 80"
     force_hostname: "OSTRZEŻENIE! Tylko dla Developera! Określ nazwę hosta w adresie URL. Pozostaw domyślnie puste."
@@ -872,6 +921,8 @@ pl_PL:
     default_other_external_links_in_new_tab: "Otwórz linki zewnętrzne w nowej karcie domyślnie."
     default_categories_watching: "Lista kategorii obserwowanych domyślnie."
     default_categories_tracking: "Lista kategorii śledzonych domyślnie."
+    company_short_name: "Nazwa firmy (skrócona)"
+    company_full_name: "Nazwa firmy (pełna)"
     errors:
       invalid_email: "Nieprawidłowy adres email."
       invalid_username: "Użytkownik o takiej nazwie nie istnieje."
@@ -1056,6 +1107,12 @@ pl_PL:
     csv_export_failed:
       subject_template: "Nieudany eksport danych"
       text_body_template: "Przepraszamy, ale eksport danych zakończył się niepowodzeniem. Sprawdź logi lub skontaktuj się z operatorami serwisu."
+    too_many_spam_flags:
+      subject_template: "Nowe konto zawieszone"
+    too_many_tl3_flags:
+      subject_template: "Nowe konto zawieszone"
+    blocked_by_staff:
+      subject_template: "Konto tymczasowo zawieszone"
     pending_users_reminder:
       subject_template:
         one: "1 użytkownik czeka na zatwierdzenie"
@@ -1080,7 +1137,23 @@ pl_PL:
     user_posted_pm:
       subject_template: "[%{site_name}] [PW] %{topic_title}"
     digest:
+      new_topics: "Nowe tematy"
+      new_posts: "Nowe wpisy"
+      new_users: "Nowi użytkownicy"
+      popular_topics: "Popularne tematy"
+      follow_topic: "Śledź ten temat"
+      join_the_discussion: "Czytaj więcej"
+      popular_posts: "Popularne wpisy"
+      from_topic_label: "Od"
+      subject_template: "%{site_name} Podsumowanie"
       click_here: "kliknij tutaj"
+      from: "%{site_name} podsumowanie"
+    mailing_list:
+      from: "%{site_name} podsumowanie"
+      new_topics: "Nowe tematy"
+      topic_updates: "Aktualizacje tematu"
+      view_this_topic: "Zobacz ten temat"
+      back_to_top: "Powrót do góry"
     forgot_password:
       subject_template: "[%{site_name}] Reset hasła"
       text_body_template: |
@@ -1106,6 +1179,8 @@ pl_PL:
 
         Kliknij na linku poniżej, aby ustawić swoje hasło:
         %{base_url}/users/password-reset/%{email_token}
+    confirm_old_email:
+      subject_template: "[%{site_name}] Potwierdź aktualny adres email"
     signup_after_approval:
       subject_template: "Zostałeś zaakceptowany na forum %{site_name}!"
       text_body_template: |+
@@ -1136,6 +1211,7 @@ pl_PL:
 
         Jeśli powyższy link nie jest klikalny, spróbuj skopiować i wkleić go do pasku adresu Twojej przeglądarki.
   page_not_found:
+    title: "Ups! Ta strona nie istnieje lub jest prywatna."
     popular_topics: "Popularne"
     recent_topics: "Ostatnie"
     see_more: "Więcej"
@@ -1155,15 +1231,19 @@ pl_PL:
     edit_reason: "lokalne kopie pobranych obrazów"
     unauthorized: "Sorry, the file you are trying to upload is not authorized (authorized extensions: %{authorized_extensions})."
     pasted_image_filename: "Wklejone zdjęcie"
+    file_missing: "Przepraszamy, należy podać plik do przesłania."
     images:
       size_not_found: "Przepraszamy, ale nie udało się ustalić rozmiaru obrazu. Może twój obraz jest uszkodzony?"
   email_log:
     no_user: "Nie można znaleźć użytkownika z ID %{user_id}"
+    anonymous_user: "Użytkownik anonimowy"
     post_deleted: "Wpis został usunięty przez autora"
     user_suspended: "użytkownik został zawieszony"
     already_read: "użytkownik przeczytał ten post"
+    message_blank: "wiadomość jest pusta"
   color_schemes:
     base_theme_name: "Podstawa"
+  about: "O stronie"
   guidelines: "Przewodnik"
   privacy: "Prywatność"
   edit_this_page: "Edytuj tę stronę"
@@ -1178,6 +1258,13 @@ pl_PL:
     title: "Warunki użytkowania"
   privacy_topic:
     title: "Polityka prywatności"
+  badges:
+    first_mention:
+      name: Pierwsze Wspomnienie
+    first_onebox:
+      name: Pierwszy Onebox
+    first_reply_by_email:
+      name: Pierwsza Odpowiedz przez Email
   admin_login:
     success: "Email wysłany"
     error: "Błąd!"
@@ -1188,6 +1275,85 @@ pl_PL:
   performance_report:
     initial_post_raw: 'Ten temat zawiera codzienne raporty wydajności dla twojej witryny. '
     initial_topic_title: 'Testy wydajności witryny. '
+  safe_mode:
+    no_customizations: "Wyłącz własną personalizację strony"
+    only_official: "Wyłącz nieoficjalne wtyczki"
+    no_plugins: "Wyłącz wszystkie wtyczki"
+    enter: "Włącz Tryb Bezpieczny"
+  wizard:
+    title: "Instalacja Discourse"
+    step:
+      forum_title:
+        title: "Imię"
+      privacy:
+        title: "Dostęp"
+        fields:
+          privacy:
+            choices:
+              open:
+                label: "Publiczne"
+                description: "Wszyscy mają dostęp do społeczności, mogą się rejestrować aby zakładać konta"
+              restricted:
+                label: "Prywatne"
+                description: "Tylko osoby zaproszone mają dostęp do społeczności"
+      contact:
+        title: "Dane kontaktowe"
+        fields:
+          contact_email:
+            label: "E-mail"
+            placeholder: "name@example.com"
+          contact_url:
+            label: "Strona kontaktowa"
+          site_contact:
+            label: "Automatyczne wiadomości"
+      corporate:
+        title: "Organizacja"
+        fields:
+          company_short_name:
+            label: "Nazwa organizacji (krótka)"
+            placeholder: "Initech"
+          company_full_name:
+            label: "Nazwa organizacji (pełna)"
+            placeholder: "Initech, Inc."
+          company_domain:
+            label: "Domena Organizacji"
+            placeholder: "initech.com"
+      colors:
+        title: "Motyw"
+        fields:
+          theme_id:
+            choices:
+              default:
+                label: "Prosty Jasny"
+              dark:
+                label: "Prosty Ciemny"
+      logos:
+        title: "Loga"
+        fields:
+          logo_url:
+            label: "Podstawowe logo"
+      icons:
+        title: "Ikony"
+        fields:
+          favicon_url:
+            label: "Mała ikona"
+          apple_touch_icon_url:
+            label: "Duża ikona"
+      homepage:
+        title: "Strona Główna"
+        fields:
+          homepage_style:
+            choices:
+              latest:
+                label: "Ostatnie Tematy"
+              categories:
+                label: "Kategorie"
+      emoji:
+        title: "Emotikony"
+      invites:
+        title: "Zaproś administrację"
+      finished:
+        title: "Twój Discourse jest Gotowy!"
   activemodel:
     errors:
       <<: *errors

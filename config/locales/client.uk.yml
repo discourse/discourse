@@ -479,8 +479,6 @@ uk:
         create: "Надіслати Запрошення"
         bulk_invite:
           text: "Масове Запрошення з Файлу"
-          uploading: "Вивантаження..."
-          error: "Під час завантаження '{{filename}}' сталася помилка: {{message}}"
       password:
         title: "Пароль"
         too_short: "Ваш пароль надто короткий."
@@ -1218,17 +1216,14 @@ uk:
         refresh: "Оновити"
         new: "Новий"
         selector_placeholder: "введіть ім'я користувача"
-        name_placeholder: "Group name, no spaces, same as username rule"
         about: "Edit your group membership and names here"
         group_members: "Учасники групи"
         delete: "Видалити"
         delete_confirm: "Видалити цю групу?"
         delete_failed: "Не вдалося видалити групу. Якщо це - автоматична група, її неможливо знищити."
-        name: "Ім'я"
         add: "Додати"
         add_members: "Додати учасників"
         bulk_select: "(обрати групу)"
-        flair_preview: "Попередній перегляд"
       api:
         generate_master: "Згенерувати Головний ключ API"
         none: "Наразі немає жодного активного ключа API."

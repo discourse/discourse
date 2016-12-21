@@ -27,6 +27,7 @@ gl:
         millions: "{{number}}M"
     dates:
       time: "h:mm a"
+      timeline_date: "MMM YYYY"
       long_no_year: "D MMM h:mm a"
       long_no_year_no_time: "D MMM"
       full_no_year_no_time: "D MMMM"
@@ -38,6 +39,7 @@ gl:
       long_date_with_year_without_time: "D MMM, 'YY"
       long_date_without_year_with_linebreak: "D MMM <br/>LT"
       long_date_with_year_with_linebreak: "D MMM, 'YY <br/>LT"
+      wrap_ago: "fai %{date}"
       tiny:
         half_a_minute: "< 1m"
         less_than_x_seconds:
@@ -108,9 +110,13 @@ gl:
       google+: 'compartir esta ligazón no Google+'
       email: 'enviar esta ligazón nun correo electrónico'
     action_codes:
+      public_topic: "fixo esta publicación pública no %{when}"
+      private_topic: "fixo esta publicación privada no %{when}"
       split_topic: "este tema dividiuse o %{when}"
       invited_user: "convidou a %{who} %{when}"
+      invited_group: "invitou %{who} o %{when}"
       removed_user: "eliminou a %{who} %{when}"
+      removed_group: "eliminou %{who} o %{when}"
       autoclosed:
         enabled: 'pechado o %{when}'
         disabled: 'aberto o %{when}'
@@ -130,6 +136,7 @@ gl:
         enabled: 'listado o %{when}'
         disabled: 'retirado da lista o %{when}'
     topic_admin_menu: "accións do administrador de temas"
+    wizard_required: "É hora de configura-lo teu foro! <a href='%{url}' data-auto-route='true'>Inicie o Asistente de Configuración</a>!"
     emails_are_disabled: "Todos os correos electrónicos saíntes foron desactivados globalmente por un administrador. Non se enviará ningún tipo de notificación por correo electrónico."
     s3:
       regions:
@@ -626,11 +633,8 @@ gl:
         create: "Enviar un convite"
         generate_link: "Copiar a ligazón do convite"
         bulk_invite:
-          none: "Aínda non convidaches a ninguén. Podes enviar convites individuais ou en grupo se <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>subes un ficheiro para convites múltiples</a>."
           text: "Convidar en grupo desde un ficheiro"
-          uploading: "Enviando..."
           success: "O ficheiro enviouse correctamente, notificaráseche por mensaxe cando remate o proceso."
-          error: "Produciuse un erro ao subir «{{filename}}»: {{message}}"
       password:
         title: "Contrasinal"
         too_short: "O teu contrasinal é demasiado curto."
@@ -1793,7 +1797,6 @@ gl:
         refresh: "Actualizar"
         new: "Novo"
         selector_placeholder: "escribe o nome do usuario"
-        name_placeholder: "Nome do grupo sen espazos, como na regra do nome do usuario"
         about: "Edita aquí a túa pertenza a un grupo e nomes"
         group_members: "Membros do grupo"
         delete: "Eliminar"
@@ -1801,7 +1804,6 @@ gl:
         delete_failed: "Non é posíbel eliminar o grupo. Se este é un grupo automático, non se pode destruír."
         delete_member_confirm: "Queres eliminar a «%{username}» do grupo «%{group}»?"
         delete_owner_confirm: "Eliminar os privilexios de usuario de «%{username}»?"
-        name: "Nome"
         add: "Engadir"
         add_members: "Engadir membros"
         custom: "Personalizar"

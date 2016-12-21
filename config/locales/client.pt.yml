@@ -695,11 +695,9 @@ pt:
         link_generated: "Ligação de convite gerada com sucesso!"
         valid_for: "Ligação de convite é válida apenas para este endereço de email:  %{email}"
         bulk_invite:
-          none: "Ainda não convidou ninguém. Pode enviar convites individuais, ou convidar um grupo de pessoas de uma única vez <a href='https://meta.discourse.org/t/send-bulk-invites/16468'> carregando um ficheiro com convites em massa."
+          none: "Ainda não convidou ninguém. Pode enviar convites individuais, ou convidar um grupo de pessoas de uma única vez <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>carregando um ficheiro CSV</a>."
           text: "Convite em massa a partir de ficheiro"
-          uploading: "A carregar…"
           success: "Ficheiro carregado corretamente, será notificado via mensagem assim que o processo esteja concluído."
-          error: "Erro de carregamento '{{filename}}': {{message}}"
       password:
         title: "Palavra-passe"
         too_short: "A sua palavra-passe é muito curta."
@@ -966,6 +964,7 @@ pt:
       title_placeholder: "Numa breve frase, de que se trata esta discussão?"
       edit_reason_placeholder: "Porque está a editar?"
       show_edit_reason: "(adicione a razão para a edição)"
+      topic_featured_link_placeholder: "Inserir ligação mostrada com o título."
       reply_placeholder: "Digite aqui. Utilize Markdown, BBCode, ou HTML para formatar. Arraste ou cole imagens."
       view_new_post: "Ver a sua nova publicação"
       saving: "A Guardar"
@@ -1661,6 +1660,22 @@ pt:
           side_by_side_markdown:
             title: "Mostrar em bruto a fonte das diferenças lado-a-lado"
             button: '<i class="fa fa-columns"></i> Em bruto'
+    group:
+      edit:
+        title: 'Editar Grupo'
+      title: 'Título'
+      name: "Nome"
+      bio: "Sobre o Grupo"
+      name_placeholder: "Nome do grupo, sem espaços, com as mesmas regras do nome de utilizador"
+      flair_url: "Imagem da Marca de Avatar"
+      flair_url_placeholder: "(Opcional) URL da Imagem ou classe de Font Awesome"
+      flair_bg_color: "Cor de fundo da Marca de Avatar"
+      flair_bg_color_placeholder: "(Opcional) Valor Hexadecimal da cor"
+      flair_color: "Cor da Marca de Avatar"
+      flair_color_placeholder: "(Opcional) Valor Hexadecimal da cor"
+      flair_preview_icon: "Pré-visualizar Ícone"
+      flair_preview_image: "Pré-visualizar Imagem"
+      flair_note: "Nota: a Marca de um utilizador só aparecerá para o seu grupo primário."
     category:
       can: 'pode&hellip; '
       none: '(sem categoria)'
@@ -1677,6 +1692,7 @@ pt:
       tags_allowed_tag_groups: "Grupos de etiquetas que só podem ser usados nesta categoria:"
       tags_placeholder: "(Opcional) lista de etiquetas perimitidas"
       tag_groups_placeholder: "(Opcional) lista de grupos de etiquetas permitidos"
+      topic_featured_link_allowed: "Restringe editar o tópico destacado nesta categoria. Requer que a configuração do sitío  topic_featured_link_enabled esteja ativada."
       delete: 'Eliminar Categoria'
       create: 'Nova Categoria'
       create_long: 'Criar uma nova categoria'
@@ -2229,7 +2245,6 @@ pt:
         refresh: "Atualizar"
         new: "Novo"
         selector_placeholder: "insira o nome de utilizador"
-        name_placeholder: "Nome do grupo, sem espaços, com as mesmas regras do nome de utilizador"
         about: "Editar aqui a sua participação e nomes no grupo"
         group_members: "Membros do grupo"
         delete: "Eliminar"
@@ -2237,7 +2252,6 @@ pt:
         delete_failed: "Impossível eliminar grupo. Se se trata de um grupo automático, não pode ser eliminado."
         delete_member_confirm: "Remova o '%{username}' do grupo '%{group}'?"
         delete_owner_confirm: "Remover privilégios do proprietário para '%{username}'?"
-        name: "Nome"
         add: "Adicionar"
         add_members: "Adicionar membros"
         custom: "Personalizar"
@@ -2254,14 +2268,6 @@ pt:
         add_owners: Adicionar proprietários
         incoming_email: "Endereço de email de entrada personalizado"
         incoming_email_placeholder: "introduza o endereço de email"
-        flair_url: "Imagem da Marca de Avatar"
-        flair_url_placeholder: "(Opcional) URL da Imagem ou classe de Font Awesome"
-        flair_bg_color: "Cor de fundo da Marca de Avatar"
-        flair_bg_color_placeholder: "(Opcional) Valor Hexadecimal da cor"
-        flair_color: "Cor da Marca de Avatar"
-        flair_color_placeholder: "(Opcional) Valor Hexadecimal da cor"
-        flair_preview: "Pré-visualização"
-        flair_note: "Nota: a Marca de um utilizador só aparecerá para o seu grupo primário."
       api:
         generate_master: "Gerar Chave Mestra API "
         none: "Não existem chaves API ativas neste momento."

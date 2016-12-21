@@ -109,8 +109,6 @@ ru:
       max_username_length_range: "Нельзя установить максимум ниже минимума."
       default_categories_already_selected: "Нельзя выбрать раздел, используемый в другом списке."
       s3_upload_bucket_is_required: "Нельзя включить загрузки на S3, пока не задана настройка 's3_upload_bucket'."
-  bulk_invite:
-    file_should_be_csv: "Загружаемый файл должен быть в формате CSV или TXT."
   backup:
     operation_already_running: "Действие уже выполняется, поэтому невозможно начать новое действие прямо сейчас."
     backup_file_should_be_tar_gz: "Файл резервной копии должен быть архивом в формате .TAR.GZ."
@@ -1072,7 +1070,6 @@ ru:
     embed_whitelist_selector: "CSS selector которые разрешины для использования."
     embed_blacklist_selector: "CSS selector которые запрещены для использования."
     notify_about_flags_after: "Если есть жалобы, которые не были обработаны после этого колличества часов, отправить уведомление по электронной почте на contact_email. Значение 0, чтобы отключить."
-    enable_cdn_js_debugging: "Добавить права  crossorigin для всех js включений для правильного отображения ошибок в /logs "
     show_create_topics_notice: "Если общее количество тем меньше 5, показывать персоналу соощбение с просьбой создать новые темы."
     delete_drafts_older_than_n_days: Удалять черновики, которые старше (n) дней.
     prevent_anons_from_downloading_files: "Запретить анонимным пользователям скачивать вложенные файлы. ВНИМАНИЕ: при этом будут недоступны любые вложения кроме картинок."

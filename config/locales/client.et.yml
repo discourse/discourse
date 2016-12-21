@@ -2247,7 +2247,6 @@ et:
         refresh: "Värskenda"
         new: "Uus"
         selector_placeholder: "sisesta kasutajanimi"
-        name_placeholder: "Grupi nimi, tühikuteta, vastab kasutajanime reeglitele"
         about: "Siin saad muuta oma grupi liikmelisust ja nimesid"
         group_members: "Grupi liikmed"
         delete: "Kustuta"
@@ -2255,7 +2254,6 @@ et:
         delete_failed: "Ei suuda kustutada seda gruppi. Kui see on automaatne grupp, ei saa seda hävitada."
         delete_member_confirm: "Eemalda '%{username}' grupist '%{group}'?"
         delete_owner_confirm: "Eemaldan kasutajalt '%{username}' omaniku õigused?"
-        name: "Nimi"
         add: "Lisa"
         add_members: "Lisa liikmeid"
         custom: "Individuaalne"
@@ -2272,7 +2270,6 @@ et:
         add_owners: Lisa omanikke
         incoming_email: "Individuaalne sissetuleva meili aadress"
         incoming_email_placeholder: "sisesta meiliaadress"
-        flair_preview: "Eelvaade"
       api:
         generate_master: "Genereeri API peavõti"
         none: "Hetkel aktiivsed API võtmed puuduvad."

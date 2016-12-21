@@ -104,8 +104,6 @@ de:
       max_username_length_range: "Das Maximum darf nicht kleiner als das Minimum sein."
       default_categories_already_selected: "Du kannst keine Kategorie auswählen, welche bereits in einer anderen Liste benutzt wird. "
       s3_upload_bucket_is_required: "Uploads auf Amazon S3 können nicht aktiviert werden, bevor der 's3_upload_bucket' eingetragen wurde."
-  bulk_invite:
-    file_should_be_csv: "Die hochgeladene Datei sollte im CSV oder TXT Format vorliegen."
   backup:
     operation_already_running: "Eine Arbeitsschritt wird momentan bearbeitet. Im Moment kann kein neuer Vorgang gestartet werden."
     backup_file_should_be_tar_gz: "Die Sicherungsdatei sollte ein .tar.gz-Archiv sein."
@@ -858,7 +856,6 @@ de:
     email_token_valid_hours: "Tokens zur Passwort-Wiederherstellung / Aktivierung eines Kontos sind für (n) Stunden gültig."
     email_token_grace_period_hours: "Tokens zur Passwort-Wiederherstellung / Aktivierung eines Kontos sind auch nach ihrer Verwendung noch für eine Frist von (n) Stunden gültig."
     enable_badges: "Abzeichen aktivieren"
-    enable_whispers: "Erlaube Moderatoren und Administratoren in Beiträgen privat zu kommunizieren (experimentell)"
     allow_index_in_robots_txt: "Suchmaschinen mittels der robots.txt Datei erlauben, die Site zu indizieren."
     email_domains_blacklist: "Eine durch senkrechte Striche getrennte Liste von E-Mail-Domains, die für die Registrierung neuer Konten nicht verwendet werden dürfen. Beispiel: mailinator.com|trashmail.net"
     email_domains_whitelist: "Eine durch senkrechte Striche getrennte Liste von E-Mail-Domains, die für die Registrierung neuer Konten verwendet werden können. ACHTUNG: Benutzer mit E-Mail-Adressen anderer Domains werden nicht zugelassen!"
@@ -1151,7 +1148,6 @@ de:
     embed_whitelist_selector: "CSS-Selektor für Elemente, die in Einbettungen erlaubt sind."
     embed_blacklist_selector: "CSS-Selektor für Elemente, die in Einbettungen entfernt werden."
     notify_about_flags_after: "Wenn es Meldungen gibt, die nicht nach dieser Anzahl von Stunden behandelt wurden, sende eine E-Mail an contact_email. Setze dies auf 0 um es zu deaktivieren."
-    enable_cdn_js_debugging: "Ermöglicht die Anzeige vollständiger Fehler auf /logs, indem alle eingebetteten JavaScripts Cross-Origin Zugriffsberechtigungen erhalten."
     show_create_topics_notice: "Administratoren eine Warnmeldung anzeigen, wenn im Forum weniger als 5 öffentlich sichtbare Themen existieren."
     delete_drafts_older_than_n_days: Lösche Entwürfe, die mehr als (n) Tage alt sind.
     bootstrap_mode_min_users: "Erforderliche Benutzeranzahl, um den Bootstrapping-Modus zu deaktivieren (0 = ausgeschaltet)"

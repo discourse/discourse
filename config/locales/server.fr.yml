@@ -1187,7 +1187,6 @@ fr:
     embed_whitelist_selector: "Sélecteur CSS pour les éléments qui seront autorisés dans les contenus embarqués."
     embed_blacklist_selector: "Sélecteur CSS pour les éléments qui seront interdits dans les contenus embarqués."
     notify_about_flags_after: "Si il y a des signalements qui n'ont pas été traités après ce nombre d'heure, envoyer un courriel à contact_email.  Désactiver la fonctionnalité en indiquan 0."
-    enable_cdn_js_debugging: "Autoriser /logs à afficher correctement les erreurs en ajoutant des permissions de crossorigin sur toutes les inclusions de js."
     show_create_topics_notice: "Si le site contient moins de 5 sujets publics, afficher un message pour demander aux administrateurs de créer d'autres sujets."
     delete_drafts_older_than_n_days: Supprimer les brouillons plus vieux que (n) jours.
     bootstrap_mode_min_users: "Nombre minimum d'utilisateurs nécessaire pour désactiver le mode de démarrage (mettre à 0 pour désactiver)"

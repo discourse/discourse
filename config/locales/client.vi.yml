@@ -620,11 +620,8 @@ vi:
         create: "Gửi một lời mời"
         generate_link: "Chép liên kết Mời"
         bulk_invite:
-          none: "Bạn đã mời ai ở đây chưa. Bạn có thể mời một hoặc một nhóm bằng <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>tải lên hàng loạt file mời</a>."
           text: "Mời hàng loạt bằng file"
-          uploading: "Uploading..."
           success: "Tải lên thành công, bạn sẽ được thông báo qua tin nhắn khi quá trình hoàn tất."
-          error: "Có lỗi xảy ra khi upload '{{filename}}': {{message}}"
       password:
         title: "Mật khẩu"
         too_short: "Mật khẩu của bạn quá ngắn."
@@ -1746,7 +1743,6 @@ vi:
         refresh: "Làm mới"
         new: "Mới"
         selector_placeholder: "nhập tên tài khoản"
-        name_placeholder: "Tên nhóm, không khoản trắng, cùng luật với tên tài khoản"
         about: "Chỉnh sửa nhóm thành viên và tên của bạn ở đây"
         group_members: "Nhóm thành viên"
         delete: "Xóa"
@@ -1754,7 +1750,6 @@ vi:
         delete_failed: "Không thể xóa nhóm. Nếu đây là một nhóm tự động, nó không thể hủy bỏ."
         delete_member_confirm: "Loại bỏ '%{username}' khỏi nhóm '%{group}'?"
         delete_owner_confirm: "Loại bỏ quyền sở hữu của '%{username}'?"
-        name: "Tên"
         add: "Thêm"
         add_members: "Thêm thành viên"
         custom: "Tùy biến"

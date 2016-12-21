@@ -695,11 +695,9 @@ fr:
         link_generated: "Lien d'invitation généré avec succés !"
         valid_for: "Le lien d'invitation est seulement valide pour cette adresse courriel : %{email}"
         bulk_invite:
-          none: "Vous n'avez encore invité personne. Vous pouvez envoyé des invitations individuelles, ou en masse en <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>envoyant un fichier d'invitation contenant la liste des courriels</a>."
+          none: "Vous n'avez invité personne pour le moment. Vous pouvez envoyer des invitations individuelles ou inviter plusieurs personnes à la fois en <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>envoyant un fichier CSV</a>."
           text: "Invitation massive depuis un fichier"
-          uploading: "Envoi en cours…"
           success: "Le fichier a été correctement importé. Vous serez notifié par message privé lorsque le traitement sera terminé."
-          error: "Il y a eu une erreur lors de l'envoi de « {{filename}} » : {{message}}"
       password:
         title: "Mot de passe"
         too_short: "Votre mot de passe est trop court."
@@ -2247,7 +2245,6 @@ fr:
         refresh: "Actualiser"
         new: "Nouveau"
         selector_placeholder: "entrer le pseudo"
-        name_placeholder: "Nom du groupe, sans espace, mêmes règles que pour les pseudos"
         about: "Modifier votre adhésion et les noms ici"
         group_members: "Membres du groupe"
         delete: "Supprimer"
@@ -2255,7 +2252,6 @@ fr:
         delete_failed: "Impossible de supprimer le groupe. Si c'est un groupe automatique il ne peut être détruit."
         delete_member_confirm: "Enlever %{username} du groupe « %{group} » ?"
         delete_owner_confirm: "Retirer les privilèges de propriétaire pour %{username} ?"
-        name: "Nom"
         add: "Ajouter"
         add_members: "Ajouter des membres"
         custom: "Personnalisé"
@@ -2272,14 +2268,6 @@ fr:
         add_owners: Ajouter des propriétaires
         incoming_email: "Adresse de courriel entrant personnalisée"
         incoming_email_placeholder: "Entrer une adresse de courriel"
-        flair_url: "Image de la vignette d'avatar"
-        flair_url_placeholder: "(Facultatif) URL de l'image ou classe Font Awesome"
-        flair_bg_color: "Couleur de l'arrière-plan de la vignette d'avatar"
-        flair_bg_color_placeholder: "(Facultatif) Couleur en héxadécimal"
-        flair_color: "Couleur de la vignette d'avatar"
-        flair_color_placeholder: "(Facultatif) Couleur en héxadécimal"
-        flair_preview: "Prévisualiser"
-        flair_note: "Note : la vignette d'avatar sera uniquement affichée pour le groupe principal d'un utilisateur."
       api:
         generate_master: "Générer une clé d'API maître"
         none: "Il n'y a pas de clés API actives en ce moment."

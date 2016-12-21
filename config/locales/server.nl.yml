@@ -71,6 +71,7 @@ nl:
       has_already_been_used: "is al gebruikt"
       inclusion: komt niet voor in de lijst
       invalid: is ongeldig
+      is_invalid: "lijkt onduidelijk, is het een volledige zin?"
       less_than: moet minder zijn dan %{count}
       less_than_or_equal_to: moet minder zijn dan of gelijk zijn aan %{count}
       not_a_number: is niet een getal
@@ -105,11 +106,13 @@ nl:
       default_categories_already_selected: "Je kan geen categorie selecteren die wordt gebruikt in een andere lijst."
       s3_upload_bucket_is_required: "U kunt niet de uploads van de S3 toestaan totdat u de 's3_upload_bucket' hebt verleend."
   bulk_invite:
-    file_should_be_csv: "Het bestand moet in csv- of txt-formaat zijn."
+    file_should_be_csv: "Het geüploade bestand moet in csv-formaat zijn."
+    error: "Er trad een fout op tijdens het uploaden van dat bestand. Probeer het later nog eens."
   backup:
     operation_already_running: "Er wordt al een opdracht uitgevoerd. Kan nu niet een nieuwe opdracht starten."
     backup_file_should_be_tar_gz: "Het backupbestand moet een .tar.gz archief zijn."
     not_enough_space_on_disk: "Er is niet voldoende ruimte op de schijf vrij om deze backup te uploaden."
+    invalid_filename: "De naam van het backup-bestand bevat ongeldige tekens. Geldige tekens zijn a-z 0-9 . - _."
   not_logged_in: "Om dat te kunnen doen moet je ingelogd zijn."
   not_found: "De opgevraagde URL of resource kan niet gevonden worden."
   invalid_access: "Je hebt geen permissie om de opgevraagde resource te bekijken."
@@ -157,6 +160,7 @@ nl:
   topic_not_found: "Er is iets fout gegaan. Wellicht is het topic gesloten of verwijderd terwijl je er naar keek?"
   just_posted_that: "lijkt teveel op het bericht dat je net geschreven hebt"
   invalid_characters: "bevat ongeldige tekens"
+  is_invalid: "lijkt onduidelijk, is het een volledige zin?"
   next_page: "volgende pagina →"
   prev_page: "← vorige pagina"
   page_num: "Pagina %{num}"
@@ -267,6 +271,7 @@ nl:
         name: "Naam categorie"
       topic:
         title: 'Titel'
+        featured_link: 'Uitgelichte link'
       post:
         raw: "Inhoud"
       user_profile:
@@ -280,18 +285,29 @@ nl:
               too_many_users: "Je kunt een waarschuwing per keer slechts naar één ander lid sturen."
               cant_send_pm: "Sorry, je kan geen privébericht sturen naar deze persoon."
               no_user_selected: "Je moet een geldige gebruiker selecteren."
+            featured_link:
+              invalid: "is ongeldig. URL moet http:// of https:// bevatten."
+              invalid_category: "kan niet worden gewijzigd in deze categorie."
         user:
           attributes:
             password:
               common: "is een van de 10000 meest gebruikte wachtwoorden. Gebruik een veiliger wachtwoord."
               same_as_username: "is hetzelfde als je gebruikersnaam. Gebruik een veiliger wachtwoord."
               same_as_email: "is hetzelfde als je e-mailadres. Gebruik een veiliger wachtwoord."
+              same_as_current: "is hetzelfde als je huidige wachtwoord."
             ip_address:
               signup_not_allowed: "Inschrijven vanaf dit account is niet toegestaan."
         color_scheme_color:
           attributes:
             hex:
               invalid: "is niet een geldige kleur"
+        post_reply:
+          base:
+            different_topic: "Het bericht en antwoord moeten bij hetzelfde topic horen."
+        web_hook:
+          attributes:
+            payload_url:
+              invalid: "De URL is ongeldig. URL's moeten http:// of https:// bevatten. En een leeg veld is niet toegestaan."
       <<: *errors
   user_profile:
     no_info_me: "<div class='missing-profile'>Het Over Mij-profielveld is nog leeg, <a href='/users/%{username_lower}/preferences/about-me'>zou je deze willen invullen?</a></div>"
@@ -468,6 +484,7 @@ nl:
     please_continue: "Ga verder naar %{site_name}"
     error: "Er ging iets mis bij het wijzigen van je e-mailadres. Wellicht is deze al in gebruik?"
     error_staged: "Er ging iets mis bij het wijzigen van je e-mailadres. Het adres is reeds in gebruik door een staged gebruiker."
+    already_done: "Sorry, de bevestigingslink is niet langer geldig. Misschien is je e-mail al veranderd?"
     authorizing_old:
       title: "Dank voor het bevestigen van je e-mailadres"
       description: "We sturen nu ter bevestiging een e-mail naar je nieuwe adres."
@@ -478,6 +495,7 @@ nl:
     continue_button: "Ga verder naar %{site_name}"
     welcome_to: "Welkom bij %{site_name}!"
     approval_required: "Een moderator moet je nieuwe account handmatig activeren voordat je toegang krijgt tot dit forum. Je krijgt een e-mail van ons wanneer je account is goedgekeurd!"
+    missing_session: "We kunnen niet vaststellen of je account is aangemaakt, wees er alsjeblieft zeker van dat je cookies accepteert."
   post_action_types:
     off_topic:
       title: 'Off-topic'
@@ -517,6 +535,9 @@ nl:
       title: 'Stem'
       description: 'Stem op dit bericht'
       long_form: 'heeft op dit bericht gestemd'
+  user_activity:
+    no_bookmarks:
+      self: "Je hebt geen favoriete berichten, als favoriet gemarkeerde berichten kun je later makkelijk terugvinden."
   topic_flag_types:
     spam:
       title: 'Spam'
@@ -631,19 +652,27 @@ nl:
     page_view_anon_reqs:
       title: "Anoniem"
       xaxis: "Dag"
+      yaxis: "Anonieme paginaweergaven"
     page_view_logged_in_reqs:
       title: "Ingelogd"
       xaxis: "Dag"
+      yaxis: "Ingelogde paginaweergaven"
     page_view_crawler_reqs:
       title: "Web Crawlers"
       xaxis: "Dag"
+      yaxis: "Web Crawler paginaweergaven"
     page_view_total_reqs:
       title: "Totaal"
       xaxis: "Dag"
+      yaxis: "Totaal paginaweergaven"
     page_view_logged_in_mobile_reqs:
+      title: "Ingelogde paginaweergaven"
       xaxis: "Dag"
+      yaxis: "Mobiele ingelogde paginaweergaven"
     page_view_anon_mobile_reqs:
+      title: "Anonieme paginaweergaven"
       xaxis: "Dag"
+      yaxis: "Mobiele anonieme paginaweergaven"
     http_background_reqs:
       title: "Achtergrond"
       xaxis: "Dag"
@@ -791,7 +820,6 @@ nl:
     email_token_valid_hours: "Wachtwoord vergeten / activeer account tokens zijn (n) uur geldig."
     email_token_grace_period_hours: "Wachtwoord vergeten / activeer account tokens zijn nog geldig gedurende een respijtperiode van (n) uur na het benutten."
     enable_badges: "Activeer het badgesysteem"
-    enable_whispers: "Sta private communicatie tussen medewerkers toe in een topic. (experimenteel)"
     allow_index_in_robots_txt: "Specificeer in robots.txt dat de site geïndexeerd mag worden door zoekmachines."
     email_domains_blacklist: "Een lijst van e-maildomeinen gescheiden door een vertikaal streepje (pipe), die niet worden toegestaan. Voorbeeld: mailingen.com|trashmail.net"
     email_domains_whitelist: "Een lijst van e-maildomeinen gescheiden door een vertikaal streepje (pipe), die zijn voorgeschreven om te worden toegelaten. WAARSCHUWING: Gebruikers met andere e-maildomeinen dan opgenomen in de lijst worden NIET toegelaten."
@@ -1018,7 +1046,6 @@ nl:
     embed_whitelist_selector: "CSS-selector voor de elementen die zijn toegestaan in invoegberichten."
     embed_blacklist_selector: "CSS-selector voor de elementen die zijn verwijderd uit invoegberichten."
     notify_about_flags_after: "Als er vlaggen zijn die nog niet zijn afgehandeld na dit aantal uren, stuur dan een e-mail naar de contact_email. Zet op 0 om uit te schakelen."
-    enable_cdn_js_debugging: "Laat /logs juiste errors weergeven door crossorigin toestemmingen toe te voegen op alle js includes."
     show_create_topics_notice: "Als de site minder dan 5 publieke topics heeft, toon dan een melding waarin admins gevraagd wordt om een aantal topics te creëren."
     delete_drafts_older_than_n_days: Verwijder concepten ouder dan (n) dagen.
     prevent_anons_from_downloading_files: "Voorkom dat anonieme gebruikers bijlagen mogen downloaden. WAARSCHUWING: hierdoor zullen website onderdelen, anders dan afbeeldingen, die zijn gepost als bijlage niet langer werken."
@@ -1496,6 +1523,15 @@ nl:
     initial_topic_title: Performancerapportages van de website
   topic_invite:
     user_exists: "Sorry, die gebruiker is al uitgenodigd. Je kan een gebruiker maar een keer voor een topic uitnodigen."
+  wizard:
+    step:
+      invites:
+        description: "Je bent bijna klaar! Nodig wat stafleden uit om te helpen met <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>het starten van discussies</a> met interessante topics en berichten om je gemeenschap op te zetten."
+      finished:
+        title: "Je Discourse staat klaar!"
+        description: |
+          <p>Als je deze instellingen ooit aan wilt passen, bezoek dan <a href='/admin' target='_blank'>je beheerafdeling</a>; vind het naast het moersleutelicoon in het sitemenu.</p>
+          <p>Veel plezier, en succes met <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'>het opbouwen van je nieuwe gemeenschap!</a></p>
   activemodel:
     errors:
       <<: *errors

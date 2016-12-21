@@ -127,13 +127,15 @@ nb_NO:
         disabled: 'fjernet fra arkiv %{when}'
       pinned:
         enabled: 'festet %{when}'
-        disabled: 'avfestet %{when}'
+        disabled: 'feste fjernet %{when}'
       pinned_globally:
         enabled: 'festet globalt %{when}'
+        disabled: 'feste fjernet %{when}'
     topic_admin_menu: "admin-handlinger for emne"
+    wizard_required: "Det er på tide å sette opp forumet!  <a href='%{url}' data-auto-route='true'>Start veiviseren</a>!"
     emails_are_disabled: "All utgående e-post har blitt deaktivert globalt av en administrator. Ingen e-postvarslinger vil bli sendt."
     bootstrap_mode_enabled: "For å gjøre det enklere å lansere det nye nettstedet ditt er det i bootstrap-modus. Alle nye brukere vil få tillitsnivå 1 og ha daglige oppdateringer på e-post aktivert. Dette vil automatisk bli slått av når antallet brukere overstiger %{min_users}."
-    bootstrap_mode_disabled: "Bootstrap modus vil være deaktivert i de neste 24 timene"
+    bootstrap_mode_disabled: "Bootstrap modus vil være deaktivert de neste 24 timene"
     s3:
       regions:
         eu_west_1: "EU (Irland)"
@@ -331,9 +333,10 @@ nb_NO:
           title: "Følger"
           description: "Du vil bli varslet om hvert nye innlegg i hver beskjed, og antallet nye svar vil bli vist."
         watching_first_post:
+          title: "Følger første innlegg"
           description: "Du vil bare bli varslet om det første innlegget i hvert nye emne i denne gruppen."
         tracking:
-          title: "Sporer"
+          title: "Overvåker"
           description: "Du vil få beskjeddersom nevner @navnet_ditt eller svarer deg, og antallet nye svar vil bli vist."
         regular:
           title: "Normal"
@@ -373,7 +376,7 @@ nb_NO:
     ip_lookup:
       title: Slå opp IP-adresse
       hostname: Vertsnavn
-      location: Posisjon
+      location: Sted
       location_not_found: (ukjent)
       organisation: Organisasjon
       phone: Telefon
@@ -426,6 +429,8 @@ nb_NO:
       github_profile: "Github"
       email_activity_summary: "Oppsummering av aktivitet"
       mailing_list_mode:
+        label: "E-postlistemodus"
+        enabled: "Slå på e-postlistemodus"
         instructions: |
           Denne innstillingen overstyrer oppsummeringen av aktivitet.<br />
           Dempede emner og kategorier blir ikke inkludert i disse e-postene.
@@ -433,14 +438,20 @@ nb_NO:
         individual_no_echo: "Send en e-post for hvert nye innlegg bortsett fra mine egne"
         many_per_day: "Send meg en e-post for hvert nye innlegg (rundt {{dailyEmailEstimate}} daglig)"
         few_per_day: "Send meg en e-post for hvert nye innlegg (rundt 2 daglig)"
-      watched_tags_instructions: "Du vil automatisk overvåke alle emner med disse stikkordene. Du vil bli varslet om alle nye innlegg og emner, og tallet på nye innlegg til også vises ved siden av emnet."
-      tracked_tags_instructions: "Du vil automatisk spore alle emner med disse stikkordene. Tallet på nye innlegg vil vises ved siden av emnet."
+      tag_settings: "Stikkord"
+      watched_tags: "Fulgt"
+      watched_tags_instructions: "Du vil automatisk følge alle emner med disse stikkordene. Du vil bli varslet om alle nye innlegg og emner, og tallet på nye innlegg til også vises ved siden av emnet."
+      tracked_tags: "Overvåkes"
+      tracked_tags_instructions: "Du vil automatisk overvåke alle emner med disse stikkordene. Tallet på nye innlegg vil vises ved siden av emnet."
+      muted_tags: "Dempet"
       muted_tags_instructions: "Du vil ikke bli varslet om noe med tanke på nye emner med disse stikkordene, og de vil ikke vises i siste."
-      watched_categories: "Følger"
-      watched_categories_instructions: "Du vil automatisk spore alle emner i disse kategoriene. Du vil bli varslet om alle nye innlegg og emner, og tallet på nye innlegg vil vises ved siden av emnet."
-      tracked_categories: "Sporet"
-      tracked_categories_instructions: "Du vil automatisk spore alle emner i disse kategoriene. Tallet på nye innlegg vil vises ved siden av emnet."
+      watched_categories: "Fulgt"
+      watched_categories_instructions: "Du vil automatisk følge alle emner i disse kategoriene. Du vil bli varslet om alle nye innlegg og emner, og tallet på nye innlegg vil vises ved siden av emnet."
+      tracked_categories: "Overvåkes"
+      tracked_categories_instructions: "Du vil automatisk overvåke alle emner i disse kategoriene. Tallet på nye innlegg vil vises ved siden av emnet."
+      watched_first_post_categories: "Følger første innlegg"
       watched_first_post_categories_instructions: "Du vil bli varslet om det første innlegget i hvert nye emner i disse kategoriene."
+      watched_first_post_tags: "Følger første innlegg"
       watched_first_post_tags_instructions: "Du vil bli varslet om det første innlegget i hvert nye emne med disse stikkordene."
       muted_categories: "Dempet"
       muted_categories_instructions: "Du vil ikke bli varslet om noe med tanke på nye emner i disse kategoriene, og de vil ikke vises i siste."
@@ -453,6 +464,9 @@ nb_NO:
       users: "Brukere"
       muted_users: "Dempet"
       muted_users_instructions: "Skjul alle varsler fra denne brukeren"
+      muted_topics_link: "Vis dempede emner"
+      watched_topics_link: "Se emner som følges"
+      automatically_unpin_topics: "Automatisk fjern feste for emner når jeg når bunnen."
       staff_counters:
         flags_given: "nyttige rapporteringer"
         flagged_posts: "rapporterte innlegg"
@@ -471,7 +485,7 @@ nb_NO:
         success: "(e-post sendt)"
         in_progress: "(sender e-post)"
         error: "(feil)"
-        action: "Send e-post for passordnullstilling"
+        action: "Send e-post for nullstilling av passord"
         set_password: "Sett passord"
       change_about:
         title: "Rediger om meg"
@@ -498,10 +512,10 @@ nb_NO:
         image_is_not_a_square: "Vi har beskjært bildet ditt, høyde og bredde er ikke lik"
       change_profile_background:
         title: "Profilbakgrunn"
-        instructions: "Profil bakgrunner vil bli sentrert med en standard bredde på 850px"
+        instructions: "Profilbakgrunner vil bli sentrert med en standardbredde på 850 piksler."
       change_card_background:
         title: "Brukerkort bakgrunn"
-        instructions: "Bakgrunnsbilder vil bli sentrert og ha en standard bredde på 590px."
+        instructions: "Bakgrunnsbilder vil bli sentrert og ha en standardbredde på 590 piksler."
       email:
         title: "E-post"
         instructions: "Blir aldri vist offentlig"
@@ -538,22 +552,23 @@ nb_NO:
       last_seen: "Sist sett"
       created: "Medlem fra"
       log_out: "Logg ut"
-      location: "Posisjon"
+      location: "Sted"
       card_badge:
-        title: "Brukerkort merke"
+        title: "Brukerkort-merke"
       website: "Nettsted"
       email_settings: "E-post"
       like_notification_frequency:
         title: "Varsle når likt"
         always: "Alltid"
-        first_time_and_daily: "Første gnag et innlegg blir likt og daglig"
+        first_time_and_daily: "Første gang et innlegg blir likt, og daglig"
         first_time: "Første gang et innlegg blir likt"
         never: "Aldri"
       email_previous_replies:
+        title: "Inkludér tidligere svar nederst i e-poster"
         always: "alltid"
         never: "aldri"
       email_digests:
-        title: "Send meg en oppsummering på e-post av polære emner og svar dersom jeg ikke besøker siden"
+        title: "Send meg en oppsummering på e-post av populære emner og svar dersom jeg ikke besøker siden"
         every_30_minutes: "hvert 30 minutt"
         every_hour: "hver time"
         daily: "daglig"
@@ -561,25 +576,32 @@ nb_NO:
         weekly: "ukentlig"
         every_two_weeks: "annenhver uke"
       include_tl0_in_digests: "Inkludér innhold fra nye brukere i oppsummerings-eposter"
+      email_in_reply_to: "Inkludér et utdrag i e-poster av innlegget man svarer på"
       email_direct: "Motta en e-post når noen siterer meg, svarer på innlegget mitt, nevner @brukernavnet mitt eller inviterer meg til et emne"
-      email_private_messages: "Motta en e-post når noen sender deg en melding"
+      email_private_messages: "Motta en e-post når noen sender meg en melding"
       email_always: "Send meg varsler på e-post selv når jeg er aktiv på nettstedet"
       other_settings: "Annet"
       categories_settings: "Kategorier"
       new_topic_duration:
         label: "Anse emner som nye når"
-        not_viewed: "Jeg har ikke sett på dem enda."
+        not_viewed: "jeg ikke har sett dem ennå"
         last_here: "opprettet siden jeg var her sist"
-      auto_track_topics: "Følg automatisk emner jeg åpner"
+        after_1_day: "opprettet i løpet av det siste døgnet"
+        after_2_days: "opprettet i løpet av de siste 2 døgnene"
+        after_1_week: "opprettet i løpet av sist uke"
+        after_2_weeks: "opprettet i løpet av de siste 2 ukene"
+      auto_track_topics: "Overvåk automatisk emner jeg åpner"
       auto_track_options:
         never: "aldri"
         immediately: "øyeblikkelig"
+        after_30_seconds: "etter 30 sekunder"
         after_1_minute: "etter 1 minutt"
         after_2_minutes: "etter 2 minutt"
         after_3_minutes: "etter 3 minutt"
         after_4_minutes: "etter 4 minutt"
-        after_5_minutes: "etter 5 minut"
+        after_5_minutes: "etter 5 minutt"
         after_10_minutes: "etter 10 minutt"
+      notification_level_when_replying: "Når jeg publiserer noe i et emner, sett det emnet til"
       invited:
         search: "skriv for å søke etter invitasjoner..."
         title: "invitasjoner"
@@ -602,11 +624,8 @@ nb_NO:
         account_age_days: "Kontoalder i dager"
         create: "Send en invitasjon"
         bulk_invite:
-          none: "Du har ikke invitert noen hit enda. Du kan sende individuelle invitasjoner, eller invitere en gruppe folk på en gang ved å <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>laste opp en fil med flere invitasjoner</a>."
           text: "Masseinvitasjon fra fil"
-          uploading: "Laster opp..."
           success: "Filen er lastet opp, du vil motta en melding når prosessesen er ferdig"
-          error: "En feil oppsto ved opplastingen av '{{filename}}': {{message}}"
       password:
         title: "Passord"
         too_short: "Passordet ditt er for kort"
@@ -621,6 +640,8 @@ nb_NO:
         top_replies: "Mest Populære Svar"
         top_topics: "Mest Populære Emner"
         more_topics: "Flere Emner"
+        no_badges: "Ennå ingen merker."
+        more_badges: "Flere merker"
       associated_accounts: "Innloggingsforsøk"
       ip_address:
         title: "Siste IP-adresse"
@@ -905,6 +926,10 @@ nb_NO:
         user: "Søk innleggene av @{{username}}"
         topic: "Søk i dette emnet"
         private_messages: "Søk i meldinger"
+      advanced:
+        filters:
+          watching: Jeg følger
+          tracking: Jeg overvåker
     hamburger_menu: "gå til en annen emneliste eller kategori"
     new_item: "ny"
     go_back: 'gå tilbake'
@@ -914,6 +939,8 @@ nb_NO:
       bulk:
         reset_read: "Nullstill lest"
         delete: "Slett Emne"
+        dismiss_tooltip: "Avslå bare nye innlegg eller slutt å overvåke emner"
+        also_dismiss_topics: "Slutt å overvåke disse emnene slik at de aldri igjen vises til meg som ulest"
         dismiss_new: "Lest"
         toggle: "Veksle mellom massevelging av emner"
         actions: "Massehandlinger"
@@ -936,6 +963,8 @@ nb_NO:
         category: "Det er ingen {{category}} emner."
         top: "Det er ingen populære emner."
         search: "Det er ingen søkeresultater"
+        educate:
+          unread: '<p>Dine uleste emner vil vises her.</p><p>Som standard anses emner for å være ulest og vil vise ulest-tall <span class="badge new-posts badge-notification">1</span> dersom du:</p><ul><li>Opprettet emnet</li><li>Svarte på emnet</li><li>Leste emnet i mer enn 4 minutter</li></ul><p>Eller dersom du uttrykkelig har satt emnet som overvåkes eller sett via varselkontrollen nederst i hvert emne.</p><p>Gå til<a href="%{userPrefsUrl}">innstillingene</a> dine for å endre dette.</p>'
       bottom:
         latest: "Det er ingen siste emner igjen å lese."
         hot: "Det er ingen populære emner igjen å lese."
@@ -1017,14 +1046,16 @@ nb_NO:
         current: gjeldende innlegg
       notifications:
         reasons:
+          mailing_list_mode: "Du har slått på e-postlistemodus, så du vil bli varslet på e-post om svar på dette emnet."
+          '3_10': 'Du vil motta varsler fordi du følger et stikkord for dette emnet'
           '3_6': 'Du vil motta varsler fordi du følger denne kategorien'
           '3_5': 'Du vil motta varsler fordi du startet å følge dette emnet automatisk.'
           '3_2': 'Du vil motta varsler fordi du følger dette emnet.'
           '3_1': 'Du vil motta varsler fordi du opprettet dette emnet.'
           '3': 'Du vil motta varsler fordi du følger dette emnet.'
-          '2_8': 'Du vil motta varsler fordi du følger denne kategorien.'
+          '2_8': 'Du vil motta varsler fordi du overvåker denne kategorien.'
           '2_4': 'Du vil motta varsler fordi du svarte på dette emnet.'
-          '2_2': 'Du vil motta varsler fordi du følger dette emnet.'
+          '2_2': 'Du vil motta varsler fordi du overvåker dette emnet.'
           '2': 'Du vil motta varsler fordi du <a href="/users/{{username}}/preferences">read this topic</a>.'
           '1_2': 'Du vil bli varslet om noen nevner ditt @navn eller svarer på ditt innlegg.'
           '1': 'Du vil bli varslet om noen nevner ditt @navn eller svarer på ditt innlegg.'
@@ -1038,10 +1069,10 @@ nb_NO:
           title: "Følger"
           description: "Du vil bli varslet om hvert nye innlegg i dette emnet. Antall nye tilbakemeldinger vil også bli vist. "
         tracking_pm:
-          title: "Følger"
+          title: "Overvåker"
           description: "Antall nye tilbakemeldinger vil bli vist for denne meldingen. Du vil bli varslet om noen nevner ditt @name eller svarer på din melding. "
         tracking:
-          title: "Følger"
+          title: "Ovevåker"
           description: "Antall nye svar vil bli vist for dette emnet. Du vil bli varslet om noen nevner ditt @name eller svarer på ditt innlegg.. "
         regular:
           title: "Normal"
@@ -1091,10 +1122,10 @@ nb_NO:
         title: "Fremhev dette emnet"
         confirm_pin: "Du har allerede {{count}} låste emner. For mange låste emner kan være et problem for nye og anonyme brukere. Er du sikker på at du ønsker å låse et til emne i denne kategorien?"
         unpin: "Fjern dette emnet fra toppen av {{categoryLink}} kategorien."
-        pin_note: "Brukere kan låse opp emnet selv."
+        pin_note: "Brukere kan selv fjerne festet for dette emnet."
         confirm_pin_globally: "Du har allerede {{count}} globalt låste emner. For mange låste emner kan bli en byrde for nye og anonyme brukere. Er du sikker på at du vil låse et til emne globalt? "
         unpin_globally: "Fjern dette emnet fra toppen av alle emnelister. "
-        global_pin_note: "Brukere kan låse opp emner for dem selv. "
+        global_pin_note: "Brukere kan fjerne festet for emnet for seg selv"
         make_banner: "Gjør dette emnet til et banner som dukker opp på toppen av alle sider."
         remove_banner: "Fjern banneret som dukker opp på toppen av alle sider. "
         banner_note: "Brukere kan fjerne banneret ved å lukke det. Kun et emne kan være banner på en og samme tid. "
@@ -1120,7 +1151,7 @@ nb_NO:
         to_topic_username: "Du har oppgitt et brukernavn. Vi sender et varsel med en link som inviterer dem til dette emnet."
         to_username: "Oppgi brukernavnet til personen du ønsker å invitere. Vi sender et varsel med en lenke som inviterer dem til dette emnet."
         email_placeholder: 'navn@example.com'
-        success_email: "Vi har sendt ut en invitasjon til <b>{{emailOrUsername}}</b>. Vi varsler deg når invitasjonen er godtatt. Sjekk invitiasjonsfanen på brukersiden din for å holde styr på invitasjonene dine."
+        success_email: "Vi har sendt ut en invitasjon til <b>{{emailOrUsername}}</b>. Vi varsler deg når invitasjonen er godtatt. Sjekk invitiasjonsfanen på brukersiden din for å beholde oversikten over invitasjonene dine."
         success_username: "Vi har invitert brukeren til å delta i dette emnet."
         error: "Beklager, vi kunne ikke invitere den brukeren. De har muligens allerede blitt invitert?"
       login_reply: 'Logg Inn for å svare'
@@ -1388,13 +1419,17 @@ nb_NO:
       position: "posisjon"
       default_position: "Standard posisjon"
       position_disabled: "Kategorier vil bli vist i henhold til aktivitet. For å styre rekkefølgen av kategorier i listen"
-      position_disabled_click: 'kan du aktivere "faste kategoriposisjoner" i innstillinger.'
+      position_disabled_click: 'aktivere "faste kategoriposisjoner"-innstillingen.'
       parent: "Foreldrekategori"
       notifications:
         watching:
           title: "Følger"
+          description: "Du vil automatisk følge alle emnene i disse kategoriene. Du vil bli varslet om hvert nye innlegg i hvert emne, og antall nye svar vil bli vist."
+        watching_first_post:
+          title: "Følger første innlegg"
         tracking:
-          title: "Sporing"
+          title: "Overvåkning"
+          description: "Du vil automatisk overvåke alle emner i disse kategoriene. Du vil bli varslet dersom noen nevner @navnet ditt eller svarer deg, og antallet nye svar vil bli vist."
         regular:
           title: "Normal"
           description: "Du vil bli varslet om noen nevner ditt @navn eller svarer deg."
@@ -1440,8 +1475,8 @@ nb_NO:
       archived:
         help: "dette emnet er arkivert; det er fryst og kan ikke bli aktivert"
       unpinned:
-        title: "Løsgjort"
-        help: "Dette emnet er ikke lenger fastsatt, det vil vises i vanlig rekkefølge"
+        title: "Feste fjernet"
+        help: "Dette emnet er ikke lenger festet, det vil vises i vanlig rekkefølge"
       pinned_globally:
         title: "Globalt fastsatt"
       pinned:
@@ -1508,7 +1543,7 @@ nb_NO:
         title_with_count:
           one: "Ulest (1)"
           other: "Ulest ({{count}})"
-        help: "emner du for øyeblikket følger eller sporer med uleste innlegg"
+        help: "emner med uleste innlegg du for øyeblikket følger eller overvåker"
         lower_title_with_count:
           one: "1 ulest"
           other: "{{count}} uleste"
@@ -1561,6 +1596,26 @@ nb_NO:
       full: "Opprett / Svar / Se"
       create_post: "Svar / Se"
       readonly: "Se"
+    keyboard_shortcuts_help:
+      actions:
+        pin_unpin_topic: '<b>shift</b>+<b>p</b> Fest/fjern feste for emne'
+        mark_muted: '<b>m</b>, <b>m</b> Demp emnet'
+        mark_tracking: '<b>m</b>, <b>t</b> Overvåk emne'
+        mark_watching: '<b>m</b>, <b>w</b> Følg emne'
+    badges:
+      title: Merker
+    tagging:
+      notifications:
+        watching:
+          title: "Følger"
+          description: "Du vil automatisk følge alle emnene med dette stikkordet. Du vil bli varslet om alle nye innlegg og emner; i tillegg vil antallet uleste og nye innlegg vises ved siden av emnet."
+        watching_first_post:
+          title: "Følger første innlegg"
+        tracking:
+          title: "Overvåkning"
+          description: "Du vil automatisk overvåke alle emner med dette stikkordet. Antallet uleste og nye innlegg vil vises ved siden av emnet"
+        muted:
+          title: "Dempet"
   admin_js:
     type_to_filter: "skriv for å filtrere..."
     admin:
@@ -2206,7 +2261,7 @@ nb_NO:
           required: 'Påkrevd'
           basic: 'Grunnleggende oppsett'
           users: 'Brukere'
-          posting: 'Posting'
+          posting: 'Innlegg'
           email: 'E-post'
           files: 'Filer'
           trust: 'Tillitsnivå'
@@ -2222,6 +2277,8 @@ nb_NO:
           backups: "Sikkerhetskopier"
           login: "Login"
           plugins: "Utvidelser"
+          user_preferences: "Brukerinnstillinger"
+          search: "Søk"
       badges:
         title: Merker
         new_badge: Nytt merke
@@ -2306,3 +2363,9 @@ nb_NO:
           label: "Ny:"
           add: "Legg til"
           filter: "Søk (URL eller ekstern URL)"
+  wizard_js:
+    wizard:
+      done: "Ferdig"
+      back: "Forrige"
+      next: "Neste"
+      step: "%{current} av %{total}"

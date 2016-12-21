@@ -695,11 +695,8 @@ de:
         link_generated: "Der Einladungslink wurde erfolgreich generiert!"
         valid_for: "Der Einladungslink ist nur für die Adresse %{email} gültig"
         bulk_invite:
-          none: "Du hast noch niemanden hierher eingeladen. Du kannst individuelle Einladungen verschicken oder eine Masseneinladung an eine Gruppe von Leuten verschicken indem du <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>eine Datei für Masseneinladung</a> hochlädst."
           text: "Masseneinladung aus Datei"
-          uploading: "Wird hochgeladen…"
           success: "Die Datei wurde erfolgreich hochgeladen. Du erhältst eine Nachricht, sobald der Vorgang abgeschlossen ist."
-          error: "Beim Hochladen der Datei '{{filename}}' ist ein Fehler aufgetreten: {{message}}"
       password:
         title: "Passwort"
         too_short: "Dein Passwort ist zu kurz."
@@ -2225,7 +2222,6 @@ de:
         refresh: "Aktualisieren"
         new: "Neu"
         selector_placeholder: "Benutzername eingeben"
-        name_placeholder: "Gruppenname, keine Leerzeichen, gleiche Regel wie beim Benutzernamen"
         about: "Hier kannst du Gruppenzugehörigkeiten und Gruppennamen bearbeiten."
         group_members: "Gruppenmitglieder"
         delete: "Löschen"
@@ -2233,7 +2229,6 @@ de:
         delete_failed: "Gruppe konnte nicht gelöscht werden. Wenn dies eine automatische Gruppe ist, kann sie nicht gelöscht werden."
         delete_member_confirm: "'%{username}' aus der Gruppe '%{group}' entfernen?"
         delete_owner_confirm: "Eigentümerrechte für '%{username}' entfernen?"
-        name: "Name"
         add: "Hinzufügen"
         add_members: "Mitglieder hinzufügen"
         custom: "Benutzerdefiniert"
@@ -2250,14 +2245,6 @@ de:
         add_owners: Eigentümer hinzufügen
         incoming_email: "Benutzerdefinierte Adresse für eingehende E-Mails"
         incoming_email_placeholder: "E-Mail-Adresse eingeben"
-        flair_url: "Avatar Flair Bild"
-        flair_url_placeholder: "(optionale) Bild-URL oder Font Awesome class"
-        flair_bg_color: "Profilbild Dekor-Knopf Hintergrundfarbe"
-        flair_bg_color_placeholder: "(Optional) Hex Farbwert"
-        flair_color: "Avatar Flair Farbe"
-        flair_color_placeholder: "(optionaler) Hex Farbenwert"
-        flair_preview: "Vorschau"
-        flair_note: "Beachte: Das Flair wird nur für die Primärgruppe eines Nutzers angezeigt"
       api:
         generate_master: "Master API Key erzeugen"
         none: "Es gibt momentan keine aktiven API-Keys"

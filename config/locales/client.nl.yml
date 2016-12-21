@@ -428,6 +428,11 @@ nl:
       profile: "Profiel"
       mute: "Negeer"
       edit: "Wijzig voorkeuren"
+      download_archive:
+        button_text: "Download mijn berichten"
+        confirm: "Weet je zeker dat je je berichten wilt downloaden?"
+        success: "Downloaden is gestart, je krijgt een bericht als het proces is afgerond."
+        rate_limit_error: "Berichten kunnen slechts één keer per dag gedownload worden, probeer het morgen nog eens."
       new_private_message: "Nieuw bericht"
       private_message: "Bericht"
       private_messages: "Berichten"
@@ -451,6 +456,7 @@ nl:
         each_browser_note: "Let op: Je moet deze optie instellen voor elke browser die je gebruikt."
       dismiss_notifications: "Markeer alles als gelezen"
       dismiss_notifications_tooltip: "Markeer alle ongelezen berichten als gelezen"
+      first_notification: "Je eerste notificatie! Selecteer het om te beginnen."
       disable_jump_reply: "Niet naar je nieuwe bericht gaan na reageren"
       dynamic_favicon: "Laat aantal nieuwe / bijgewerkte topics zien in favicon"
       external_links_in_new_tab: "Open alle externe links in een nieuw tabblad"
@@ -473,6 +479,7 @@ nl:
           Genegeerde topics en categorieën zitten niet in deze e-mails.
         daily: "Verzend dagelijkse updates"
         individual: "Verstuur een e-mail voor elk nieuw bericht"
+        individual_no_echo: "Stuur een e-mail voor elk nieuw bericht behalve die van mijzelf."
         many_per_day: "Stuur mij een e-mail voor elk nieuw bericht (ongeveer {{dailyEmailEstimate}} per dag)"
         few_per_day: "Stuur mij een e-mail voor elk nieuw bericht (ongeveer 2 per dag)"
       tag_settings: "Tags"
@@ -685,12 +692,12 @@ nl:
         account_age_days: "leeftijd van account in dagen"
         create: "Stuur een uitnodiging"
         generate_link: "Kopieer uitnodigingslink"
+        link_generated: "Uitnodigingslink is succesvol aangemaakt!"
+        valid_for: "De uitnodigingslink is alleen geldig voor dit e-mailadres: %{email}"
         bulk_invite:
-          none: "Je hebt nog niemand uitgenodigd. Je kan individueel uitnodigen of een groep mensen tegelijk door <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>een groepsuitnodiging-bestand te uploaden</a>"
+          none: "Je hebt nog niemand hier uitgenodigd. Je kunt individueel uitnodigen, of een groep mensen tegelijk uitnodigen door <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>een CSV-bestand te uploaden</a>."
           text: "Groepsuitnodiging via bestand"
-          uploading: "Uploaden..."
           success: "Het uploaden van het bestand is gelukt, je krijgt een notificatie via een bericht als het proces afgerond is."
-          error: "Het uploaden van '{{filename}}' is niet gelukt: {{message}}"
       password:
         title: "Wachtwoord"
         too_short: "Je wachtwoord is te kort."
@@ -932,6 +939,9 @@ nl:
       group_mentioned:
         one: "Door het noemen van de groep {{group}}, sta je op het punt om <a href='{{group_link}}'>1 persoon</a> op de hoogte te brengen – weet je dit zeker?"
         other: "Door het noemen van de groep {{group}}, sta je op het punt om <a href='{{group_link}}'>{{count}} personen</a> op de hoogte te brengen – weet je dit zeker?"
+      cannot_see_mention:
+        category: "Je hebt {{username}} genoemd, maar het lid zal geen notificatie krijgen omdat het geen toegang heeft tot deze categorie. Je zult {{username}} moeten toevoegen aan een groep die toegang heeft tot deze categorie."
+        private: "Je hebt {{username}} genoemd, maar het lid zal geen notificatie krijgen omdat het dit persoonlijke bericht niet kan zien. Je zult {{username}} moeten uitnodigen voor dit PB."
       duplicate_link: "Het ziet er naar uit dat je link naar <b>{{domain}}</b> al genoemd is in deze topic door <b>@{{username}}</b> in <a href='{{post_url}}'>een bericht {{ago}}</a> – weet je zeker dat je dit opnieuw wilt plaatsen?"
       error:
         title_missing: "Titel is verplicht"
@@ -953,6 +963,7 @@ nl:
       title_placeholder: "Waar gaat de discussie over in één korte zin?"
       edit_reason_placeholder: "vanwaar de wijziging?"
       show_edit_reason: "(geef een reden)"
+      topic_featured_link_placeholder: "Plaats gegeven link met titel."
       reply_placeholder: "Typ hier. Gebruik Markdown, BBCode, of HTML om op te maken. Sleep of plak afbeeldingen."
       view_new_post: "Bekijk je nieuwe bericht."
       saving: "Opslaan"
@@ -1138,6 +1149,8 @@ nl:
     topics:
       new_messages_marker: "laatste bezoek"
       bulk:
+        select_all: "Alles selecteren"
+        clear_all: "Alles wissen"
         unlist_topics: "Topics van lijst halen"
         reset_read: "markeer als ongelezen"
         delete: "Verwijder topics"
@@ -1458,6 +1471,7 @@ nl:
     post:
       reply: "<i class='fa fa-mail-forward'></i> {{replyAvatar}} {{usernameLink}}"
       reply_topic: "<i class='fa fa-mail-forward'></i> {{link}}"
+      quote_reply: "Citeer"
       edit: "Aan het bewerken {{link}} {{replyAvatar}} {{username}}"
       edit_reason: "Reden: "
       post_number: "bericht {{number}}"
@@ -1645,6 +1659,13 @@ nl:
           side_by_side_markdown:
             title: "Bekijk de bron verschillen naast elkaar"
             button: '<i class="fa fa-columns"></i> Bron'
+    group:
+      edit:
+        title: 'Wijzig groep'
+      title: 'Titel'
+      name: "Naam"
+      bio: "Over de groep"
+      name_placeholder: "Groepsnaam, geen spaties, zelfde regels als bij een gebruikersnaam"
     category:
       can: 'kan...'
       none: '(geen categorie)'
@@ -1695,6 +1716,7 @@ nl:
       email_in_disabled: "Het plaatsen van nieuwe topics via e-mail is uitgeschakeld in de webite-instellingen. Om het plaatsen van nieuwe topic via e-mail mogelijk te maken,"
       email_in_disabled_click: 'schakel "e-mail in" instelling in.'
       suppress_from_homepage: "Negeer deze categorie op de homepage"
+      sort_order: "Standaardsortering:"
       allow_badges_label: "Laat badges toekennen voor deze categorie"
       edit_permissions: "Wijzig permissies"
       add_permission: "Nieuwe permissie"
@@ -1720,6 +1742,11 @@ nl:
         muted:
           title: "Genegeerd"
           description: "Je zult niet op de hoogte worden gebracht over nieuwe topics in deze categorie en ze zullen niet verschijnen in Recent."
+      sort_options:
+        default: "standaard"
+        category: "Categorie"
+      sort_ascending: 'Oplopend'
+      sort_descending: 'Aflopend'
     flagging:
       title: 'Bedankt voor het beleefd houden van onze gemeenschap!'
       action: 'Meld bericht'
@@ -2198,7 +2225,6 @@ nl:
         refresh: "Herlaad"
         new: "Nieuw"
         selector_placeholder: "vul gebruikersnaam in"
-        name_placeholder: "Groepsnaam, geen spaties, zelfde regels als bij een gebruikersnaam"
         about: "Wijzig hier je deelname aan groepen en je namen"
         group_members: "Groepsleden"
         delete: "Verwijder"
@@ -2206,7 +2232,6 @@ nl:
         delete_failed: "Kan groep niet verwijderen. Als dit een automatische groep is, kan deze niet verwijderd worden."
         delete_member_confirm: "Verwijder '%{username}' uit de '%{group'} groep?"
         delete_owner_confirm: "Verwijder eigenaarsprivileges van '% {username}'?"
-        name: "Naam"
         add: "Voeg toe"
         add_members: "Voeg leden toe"
         custom: "Aangepast"
@@ -2223,14 +2248,6 @@ nl:
         add_owners: Eigenaren toevoegen
         incoming_email: "Aangepaste inkomende e-mailadressen "
         incoming_email_placeholder: "Voer je e-mailadres in"
-        flair_url: "Avatar flair afbeelding"
-        flair_url_placeholder: "(Optioneel) Afbeeldings-URL of Font Awesome class"
-        flair_bg_color: "Avatar flair achtergrondkleur"
-        flair_bg_color_placeholder: "(Optioneel) Hexadecimale kleurwaarde"
-        flair_color: "Avatar flair kleur"
-        flair_color_placeholder: "(Optioneel) Hexadecimale kleurwaarde"
-        flair_preview: "Voorbeeld"
-        flair_note: "Noot: Flair wordt alleen getoond voor de primaire groep van een gebruiker."
       api:
         generate_master: "Genereer Master API Key"
         none: "Er zijn geen actieve API keys"
@@ -2503,6 +2520,8 @@ nl:
         delivery_method: "Verzendmethode"
         preview_digest_desc: "Bekijk een voorbeeld van de digest e-mails die gestuurd worden naar inactieve leden."
         refresh: "Verniew"
+        send_digest_label: "Stuur dit resultaat naar:"
+        sending_email: "E-mail wordt verzonden..."
         format: "Formaat"
         html: "html"
         text: "text"

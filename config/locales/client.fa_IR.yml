@@ -559,11 +559,8 @@ fa_IR:
         create: "فرستادن یک دعوتنامه"
         generate_link: "کپی لینک دعوت"
         bulk_invite:
-          none: "شما هنوز کسی را اینجا دعوت نکرده اید. می توانید بصورت تکی یا گروهی یکجا دعوتنامه را بفرستید از طریق  <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>بارگذار فراخوانه فله ای </a>."
           text: "دعوت گروهی از طریق فایل"
-          uploading: "بارگذاری..."
           success: "فایل با موفقیت بارگذاری شد٬  وقتی که پروسه تمام شد  به شما را از طریق پیام اطلاع می دهیم. "
-          error: "در بارگذاری «{{filename}}» خطایی روی داد: {{message}}"
       password:
         title: "رمزعبور"
         too_short: "رمز عبورتان خیلی کوتاه است"
@@ -1621,7 +1618,6 @@ fa_IR:
         refresh: "تازه کردن"
         new: "جدید"
         selector_placeholder: "نام کاربری را وارد نمایید ."
-        name_placeholder: "نام گروه، بدون فاصله، همان قاعده نام کاربری"
         about: "اعضای گروهت و نام ها  را اینجا ویرایش کن"
         group_members: "اعضای گروه"
         delete: "حذف"
@@ -1629,7 +1625,6 @@ fa_IR:
         delete_failed: "قادر به حذف گروه نیستیم. اگر این یک گروه خودکار است، نمی توان آن را از بین برد."
         delete_member_confirm: "حذف کردن '%{username}' از '%{group}' گروه؟"
         delete_owner_confirm: "حذف حق مالکیت برای '%{username}'؟"
-        name: "نام"
         add: "اضافه کردن"
         add_members: "اضافه کردن عضو"
         custom: "دلخواه"

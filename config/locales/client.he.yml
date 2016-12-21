@@ -183,7 +183,7 @@ he:
     you: "אתם"
     or: "או"
     now: "ממש עכשיו"
-    read_more: 'קרא עוד'
+    read_more: 'קראו עוד'
     more: "עוד"
     less: "פחות"
     never: "אף פעם"
@@ -695,11 +695,9 @@ he:
         link_generated: "קישור הזמנה יוצר בהצלחה!"
         valid_for: "קישור הזמנה תקף רק לכתובת המייל הזו: %{email}"
         bulk_invite:
-          none: "נכון לעכשיו לא הזמנת לכאן אף אחד. תוכלו לשלוח הזמנות אישיות, או להזמין כמה אנשים בבת אחת באמצעות   <a href='https://meta.discourse.org/t/send-bulk-invites/16468'> העלאת קובץ הזמנה קבוצתית</a>."
+          none: "עדיין לא הזמנתם לכאן אף אחד. תוכלו לשלוח הזמנות פרטניות, או להזמין כמה אנשים יחד על ידי <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>העלאת קובץ CSV</a>."
           text: "הזמנה קבוצתית מקובץ"
-          uploading: "העלאה..."
           success: "העלאת הקובץ החלה בהצלחה, תקבלו התראה באמצעות מסר כאשר התהליך יושלם."
-          error: "חלה תקלה בהעלאת \"'{{filename}}': \n{{message}}"
       password:
         title: "סיסמה"
         too_short: "הסיסמה שלך קצרה מידי."
@@ -2249,7 +2247,6 @@ he:
         refresh: "רענן"
         new: "חדש"
         selector_placeholder: "הזינו שם משתמש/ת"
-        name_placeholder: "שם הקבוצה, ללא רווחים, בזהה לחוקי שם המשתמש"
         about: "ערוך את חברות הקבוצה שלך והשמות כאן"
         group_members: "חברי הקבוצה"
         delete: "מחק"
@@ -2257,7 +2254,6 @@ he:
         delete_failed: "לא ניתן למחוק קבוצה זו. אם זו קבוצה אוטומטית, היא בלתי ניתנת למחיקה."
         delete_member_confirm: "להסיר את '%{username}' מהקבוצה '%{group}'?"
         delete_owner_confirm: "הסרת הרשאות מנהל עבור '%{username}'?"
-        name: "שם"
         add: "הוספה"
         add_members: "הוספת חברים וחברות"
         custom: "מותאם"
@@ -2274,14 +2270,6 @@ he:
         add_owners: הוספת בעלים
         incoming_email: "התאימו אישית כתובת מייל נכנס"
         incoming_email_placeholder: "הכניסו כתובת מייל"
-        flair_url: "תמונת פלייר אווטר"
-        flair_url_placeholder: "(אופציונלי) URL של תמונה או Font Awesome class"
-        flair_bg_color: "צבע רקע של פלייר לאווטר"
-        flair_bg_color_placeholder: "(אופציונלי) ערך צבע ב Hex"
-        flair_color: "צבע פלייר אווטר"
-        flair_color_placeholder: "(אופציונלי) ערך צבע הקסדצימלי"
-        flair_preview: "תצוגה מקדימה"
-        flair_note: "שימו לב: פלייר יופיע רק עבור הקבוצה הראשית של משתמשים."
       api:
         generate_master: "ייצר מפתח מאסטר ל-API"
         none: "אין מפתחות API פעילים כרגע."
@@ -2405,7 +2393,7 @@ he:
           error: "הייתה שגיאה במהלך העלאת '{{filename}}': {{message}}"
         operations:
           is_running: "פעולה רצה כרגע..."
-          failed: "ה{{operation}} נכשלה. אנא בדוק את הלוגים."
+          failed: "ה-{{operation}} נכשל/ה. אנא בידקו את הלוגים."
           cancel:
             label: "ביטול"
             title: "בטל את הפעולה הנוכחית"

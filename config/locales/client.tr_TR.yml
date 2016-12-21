@@ -658,11 +658,8 @@ tr_TR:
         create: "Davet Yolla"
         generate_link: "Davet bağlantısını kopyala"
         bulk_invite:
-          none: "Henüz kimseyi buraya davet etmediniz. Tek tek davetiye gönderebilirsiniz, ya da <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>toplu bir davetiye dosyası yükleyerek</a> birçok kişiyi aynı anda davet edebilirsiniz. "
           text: "Dosyadan Toplu Davet Gönder"
-          uploading: "Yükleniyor..."
           success: "Dosya başarıyla yüklendi, işlem tamamlandığında iletiyle bilgilendirileceksiniz."
-          error: "'{{filename}}' yüklenirken bir hata oluştu: {{message}}"
       password:
         title: "Parola"
         too_short: "Parolanız çok kısa."
@@ -2101,7 +2098,6 @@ tr_TR:
         refresh: "Yenile"
         new: "Yeni"
         selector_placeholder: "kullanıcı adı girin"
-        name_placeholder: "Grup adı, kullanıcı adındaki gibi boşluksuz olmalı"
         about: "Grup üyeliğinizi ve isimleri burada düzenleyin"
         group_members: "Grup üyeleri"
         delete: "Sil"
@@ -2109,7 +2105,6 @@ tr_TR:
         delete_failed: "Grup silinemedi. Bu otomatik oluşturulmuş bir grup ise, yok edilemez."
         delete_member_confirm: "'%{username}' adlı kullanıcıyı '%{group}' grubundan çıkart?"
         delete_owner_confirm: "'%{username}' için sahiplik izni kaldırılsın mı?"
-        name: "Ad"
         add: "Ekle"
         add_members: "Üye ekle"
         custom: "Özel"
@@ -2126,14 +2121,6 @@ tr_TR:
         add_owners: Sahiplik ekle
         incoming_email: "Özel gelen e-posta adresi"
         incoming_email_placeholder: "e-posta adresi girin"
-        flair_url: "Avatar Kabiliyet Resmi"
-        flair_url_placeholder: "(İsteğe bağlı) Resim URL'i ya da Font Awesome sınıfı"
-        flair_bg_color: "Avatar Kabiliyet Arkaplan Rengi"
-        flair_bg_color_placeholder: "(İsteğe bağlı) Hex renk değeri"
-        flair_color: "Avatar Kabiliyet Resmi"
-        flair_color_placeholder: "(İsteğe bağlı) Hex renk değeri"
-        flair_preview: "Önizleme"
-        flair_note: "Not: Kabiliyet sadece bir kullanıcının birincil grubu için gösterecek."
       api:
         generate_master: "Ana API Anahtarı Üret"
         none: "Şu an etkin API anahtarı bulunmuyor."

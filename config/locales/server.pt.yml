@@ -106,7 +106,8 @@ pt:
       default_categories_already_selected: "Não pode selecionar uma categoria usada noutra lista."
       s3_upload_bucket_is_required: "Não pode ativar carregamentos para o S3 excepto se tiver fornecido o 's3_upload_bucket'."
   bulk_invite:
-    file_should_be_csv: "O ficheiro a carregar deve estar em formato csv ou txt."
+    file_should_be_csv: "O ficheiro carregado deve ser do formato CSV."
+    error: "Ocorreu um erro ao carregar esse ficheiro. Por favor tente mais tarde."
   backup:
     operation_already_running: "Existe atualmente uma operação em execução. Neste momento não é possível iniciar um novo trabalho. "
     backup_file_should_be_tar_gz: "O ficheiro da cópia de segurança deve ser um arquivo .tar.gz"
@@ -272,6 +273,7 @@ pt:
         name: "Nome da Categoria"
       topic:
         title: 'Título'
+        featured_link: 'Ligação Destacada'
       post:
         raw: "Corpo"
       user_profile:
@@ -285,6 +287,9 @@ pt:
               too_many_users: "Apenas pode enviar avisos a um utilizador de cada vez."
               cant_send_pm: "Pedimos desculpa, não pode enviar uma mensagem privada a esse utilizador."
               no_user_selected: "Tem que selecionar um utilizador válido."
+            featured_link:
+              invalid: "é inválida. URL deve incluir http:// ou https://."
+              invalid_category: "não pode ser editada nesta categoria."
         user:
           attributes:
             password:
@@ -771,6 +776,10 @@ pt:
     min_first_post_length: "Tamanho mínimo permitido para a primeira mensagem (corpo do tópico), em caracteres"
     min_private_message_post_length: "Tamanho mínimo permitido para mensagens, em caracteres"
     max_post_length: "Tamanho máximo permitido por mensagem, em caracteres"
+    topic_featured_link_enabled: "Permitir publicar uma ligação com tópicos."
+    topic_featured_link_onebox: "Mostrar uma pré-visualização no corpo da publicação se possível e prevenir a edição do conteúdo da publicação."
+    open_topic_featured_link_in_external_window: "Abrir ligação destacada do tópico numa janela externa."
+    show_topic_featured_link_in_digest: "Mostrar a ligação destacada do tópico no email de resumo."
     min_topic_title_length: "Tamanho mínimo permitido por título de cada tópico, em caracteres"
     max_topic_title_length: "Tamanho máximo permitido por título de cada tópico, em caracteres"
     min_private_message_title_length: "Tamanho mínimo permitido por título nas mensagens, em caracteres"
@@ -881,7 +890,7 @@ pt:
     email_token_valid_hours: "Os símbolos para palavra-passe esquecida /conta ativada são válidos por (n) horas."
     email_token_grace_period_hours: "Os símbolos para palavra-passe esquecida /conta ativada são válidos por um período de carência de (n) horas após serem recuperados"
     enable_badges: "Ativar o sistema de distintivos"
-    enable_whispers: "Permitir comunicação privada do pessoal dentro de tópico (experimental)"
+    enable_whispers: "Permitir à equipa de apio comunicar de forma privada dentro de tópicos."
     allow_index_in_robots_txt: "Especificar em robots.txt que este sítio permite ser indexado pelos motores de pesquisa."
     email_domains_blacklist: "Lista de domínios de email que os utilizadores não podem usar para registo de contas. Exemplo: mailinator.com|trashmail.net"
     email_domains_whitelist: "Lista de domínios de email que os utilizadores DEVEM usar para registar contas. AVISO: Utilizadores com domínios de email diferentes dos listados não serão permitidos!"
@@ -1181,7 +1190,6 @@ pt:
     embed_whitelist_selector: "Seletor CSS para elementos permitidos em incorporações."
     embed_blacklist_selector: "Seletor CSS para elementos que foram removidos de incorporações."
     notify_about_flags_after: "Se houver sinalizações que não tenham sido tratadas após tantas horas, envie um email para 'contact_email'. Configurar a 0 para desativar."
-    enable_cdn_js_debugging: "Permitir que /logs exiba erros próprios ao adicionar permissões de origem-cruzada em todos os js incluídos."
     show_create_topics_notice: "Se o sítio tem menos de 5 tópicos públicos, mostrar um aviso pedindo aos administradores a criação de mais tópicos."
     delete_drafts_older_than_n_days: Eliminar rascunhos mais antigos que (n) days.
     bootstrap_mode_min_users: "Número mínimo de utilizadores necessários para desactivar o modo de inicialização (coloque 0 para desactivar)"

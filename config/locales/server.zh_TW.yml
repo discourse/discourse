@@ -71,8 +71,6 @@ zh_TW:
       min_username_length_range: "你不能設定「最小」大於「最大」。"
       max_username_length_exists: "您不能設置比現有用戶名短的「最大用戶名長度」。"
       max_username_length_range: "你不能設定「最大」小於「最小」。"
-  bulk_invite:
-    file_should_be_csv: "上傳的文件應為 csv 或 txt 格式。"
   backup:
     operation_already_running: "%{operation} 操作正在運行。 目前無法執行新的 %{operation} 操作。"
     backup_file_should_be_tar_gz: "備份檔案應使用 .tar.gz 歸檔"
@@ -695,7 +693,6 @@ zh_TW:
     embed_post_limit: "文章內 embed 的最大數量"
     embed_whitelist_selector: "在 embeds 頁面允許 CSS 元素選擇器"
     embed_blacklist_selector: "在 embeds 頁面移除 CSS 元件選擇器"
-    enable_cdn_js_debugging: "允許 /logs 適當的顯示 crossorigin permissions 所有 js 的錯誤"
     show_create_topics_notice: "如果網站的公開討論話題少於 5 個，顯示通知要求管理員建立一些討論話題。"
     enable_emoji: "啟用表情符號"
     emoji_set: "你會如何喜歡你的表情符號？"

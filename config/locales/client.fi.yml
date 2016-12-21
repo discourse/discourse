@@ -696,11 +696,9 @@ fi:
         link_generated: "Kutsulinkki luotiin onnistuneesti!"
         valid_for: "Kutsulinkki on käypä tälle sähköpostiosoitteelle: %{email}"
         bulk_invite:
-          none: "Et ole kutsunut vielä ketään. Voit lähettää yksittäisiä kutsuja tai kutsua useita ihmisiä kerralla <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>lähettämällä massakutsun tiedostosta</a>."
+          none: "Et ole kutsunut vielä ketään tänne. Voit lähettää yksittäisiä kutsuja tai kutsua joukon ihmisiä kerralla <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>lataamalla CSV-tiedoston</a>."
           text: "Lähetä massakutsu tiedostosta"
-          uploading: "Lähettää..."
           success: "Tiedoston lähettäminen onnistui. Saat viestin, kun prosessi on valmis."
-          error: "Tiedoston '{{filename}}' lähetyksen aikana tapahtui virhe: {{message}}"
       password:
         title: "Salasana"
         too_short: "Salasanasi on liian lyhyt."
@@ -2230,7 +2228,6 @@ fi:
         refresh: "Lataa uudelleen"
         new: "Uusi"
         selector_placeholder: "syötä käyttäjätunnus"
-        name_placeholder: "Ryhmän nimi, ei välilyöntejä, samat säännöt kuin käyttäjänimillä"
         about: "Muokkaa ryhmien jäsenyyksiä ja nimiä täällä"
         group_members: "Ryhmään kuuluvat"
         delete: "Poista"
@@ -2238,7 +2235,6 @@ fi:
         delete_failed: "Ryhmän poistaminen ei onnistu. Jos tämä on automaattinen ryhmä, sitä ei voi poistaa."
         delete_member_confirm: "Poista '%{username}' ryhmästä '%{group}'?"
         delete_owner_confirm: "Poista omistajan etuudet käyttäjältä '%{username}'?"
-        name: "Nimi"
         add: "Lisää"
         add_members: "Lisää jäseniä"
         custom: "Mukautetut"
@@ -2255,14 +2251,6 @@ fi:
         add_owners: Lisää omistajia
         incoming_email: "Saapuvan sähköpostin osoite"
         incoming_email_placeholder: "aseta sähköpostiosoite"
-        flair_url: "Avatarpinssikuva"
-        flair_url_placeholder: "(Valinnainen) Kuvan URL tai Font Awesome luokka"
-        flair_bg_color: "Avatarpinssin taustaväri"
-        flair_bg_color_placeholder: "(Valinnainen) värin Hex-arvo"
-        flair_color: "Avatarpinssin väri"
-        flair_color_placeholder: "(Valinnainen) värin Hex-arvo"
-        flair_preview: "Esikatselu"
-        flair_note: "Huom: Pinssi määräytyy käyttäjän ensisijaisen ryhmän mukaan."
       api:
         generate_master: "Luo rajapinnan pääavain"
         none: "Aktiivisia API avaimia ei ole määritelty."
