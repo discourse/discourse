@@ -382,6 +382,8 @@ class TopicsController < ApplicationController
     topic = Topic.find(params[:topic_id].to_i)
     first_post = topic.ordered_posts.first
 
+    guardian.ensure_can_see!(first_post)
+
     PostAction.act(current_user, first_post, PostActionType.types[:bookmark])
 
     render nothing: true

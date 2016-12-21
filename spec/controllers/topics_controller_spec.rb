@@ -1255,6 +1255,15 @@ describe TopicsController do
       xhr :put, :remove_bookmarks, topic_id: post.topic_id
       expect(PostAction.where(user_id: user.id, post_action_type: bookmark).count).to eq(0)
     end
+
+    it "should disallow bookmarks on posts you have no access to" do
+      log_in
+      user = Fabricate(:user)
+      pm = create_post(user: user, archetype: 'private_message', target_usernames: [user.username])
+
+      xhr :put, :bookmark, topic_id: pm.topic_id
+      expect(response).to be_forbidden
+    end
   end
 
 

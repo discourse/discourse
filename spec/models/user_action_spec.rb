@@ -19,6 +19,7 @@ describe UserAction do
     let(:private_topic) do
       topic = private_post.topic
       topic.update_columns(category_id: nil, archetype: Archetype::private_message)
+      TopicAllowedUser.create(topic_id: topic.id, user_id: user.id)
       topic
     end
 
@@ -223,13 +224,13 @@ describe UserAction do
     end
   end
 
-  describe 'private messages' do
+  describe 'secures private messages' do
 
     let(:user) do
       Fabricate(:user)
     end
 
-    let(:target_user) do
+    let(:user2) do
       Fabricate(:user)
     end
 
@@ -237,22 +238,35 @@ describe UserAction do
       PostCreator.create( user,
                           raw: 'this is a private message',
                           title: 'this is the pm title',
-                          target_usernames: target_user.username,
+                          target_usernames: user2.username,
                           archetype: Archetype::private_message
                         )
     end
 
-    let!(:response) do
-      PostCreator.create(user, raw: 'oops I forgot to mention this', topic_id: private_message.topic_id)
+    def count_bookmarks
+      UserAction.stream(
+        user_id: user.id,
+        action_types: [UserAction::BOOKMARK],
+        ignore_private_messages: false,
+        guardian: Guardian.new(user)
+      ).count
     end
 
-    let!(:private_message2) do
-      PostCreator.create( target_user,
-                          raw: 'this is a private message',
-                          title: 'this is the pm title',
-                          target_usernames: user.username,
-                          archetype: Archetype::private_message
-                        )
+    it 'correctly secures stream' do
+      PostAction.act(user, private_message, PostActionType.types[:bookmark])
+
+      expect(count_bookmarks).to eq(1)
+
+      private_message.topic.topic_allowed_users.where(user_id: user.id).destroy_all
+
+      expect(count_bookmarks).to eq(0)
+
+      group = Fabricate(:group)
+      group.add(user)
+      private_message.topic.topic_allowed_groups.create(group_id: group.id)
+
+      expect(count_bookmarks).to eq(1)
+
     end
 
   end
