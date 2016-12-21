@@ -99,8 +99,6 @@ sk:
       max_username_length_range: "Nemôžete nastaviť maximum menšie ako minimum."
       default_categories_already_selected: "Nemôžete vybrať kategóriu použitú v inom zozname."
       s3_upload_bucket_is_required: "Nemôžete nahrávať na S3 pokiaľ ste nezadali 's3_upload_bucket'."
-  bulk_invite:
-    file_should_be_csv: "Nahrávaný súbor by mal byť vo formáte csv alebo txt."
   backup:
     operation_already_running: "Prebieha spracovanie inej operácie. Momentálne sa nová úloha nedá spustiť. "
     backup_file_should_be_tar_gz: "Záložný súbor musí byť archív .tar.gz"
@@ -833,7 +831,6 @@ sk:
     email_token_valid_hours: "Platnosť tokenov pre Zabudnuté heslo a aktiváciu účtu v (n) hodinách."
     email_token_grace_period_hours: "Platnosť tokenov pre Zabudnuté heslo a aktiváciu účtu v (n) hodinách po ich uplatnení."
     enable_badges: "Povoliť systém odznakov"
-    enable_whispers: "Povoliť súkromnú konverzáciu pre redakciu v rámci témy. (experimantálne)"
     allow_index_in_robots_txt: "V súbore robots.txt nastaviť, že tieto stránky je povolené indexovať vyhľadávačmi."
     email_domains_blacklist: "Rúrou oddelený zoznam emailových domén, ktorých použitie nie je povolené pri registrácií. Napríklad: mailinator.com|trashmail.net"
     email_domains_whitelist: "Zoznam emailových domén oddelených zvislým oddelovačom \"|\", s použitím ktorých sa používateľ MUSÍ zaregistrovať. VAROVANIE: registrácia použivatelia s neuvedenými doménami nebude povolená!"
@@ -1065,7 +1062,6 @@ sk:
     embed_whitelist_selector: "CSS prepínač na elementy, ktoré sú povolené pri vkladaní."
     embed_blacklist_selector: "CSS prepínač na elementy, ktoré sú vymazané pri vkladaní."
     notify_about_flags_after: "Ak existujú príznaky ktoré neboli vyriešené po uvedenom počte hodín, pošli email na contact_email. Pre vypnutie nastavte 0."
-    enable_cdn_js_debugging: "Pomocou pridania \"crossorigin\" práv pre všetky vložené js umožniť /logs riadne zobrazenie chýb."
     show_create_topics_notice: "Zobraz výzvu žiadajúcu administrátorov o vytvorenie nejakých tém, ak majú stránky menej ako 5 verejných tém."
     delete_drafts_older_than_n_days: Vymazať návrhy staršie ako (n) dní.
     vacuum_db_days: "Spustiť VACUUM ANALYZE na získanie DB miesto po migráciách (pre vypnutie nastavte na 0)"

@@ -94,8 +94,6 @@ vi:
       max_username_length_range: "Bạn không thể thiết lập số tối đa nhỏ hơn số tối thiểu"
       default_categories_already_selected: "Bạn không thể chọn một danh mục được sử dụng trong danh sách khác."
       s3_upload_bucket_is_required: "Bạn không thể tải lên S3 mà chưa thiết lập 's3_upload_bucket'."
-  bulk_invite:
-    file_should_be_csv: "Tập tin tải lên nên ở dạng csv hoặc txt."
   backup:
     operation_already_running: "Một tiến trình đang được thực hiện. Không thể bắt đầu một tiến trình mới ngay bây giờ."
     backup_file_should_be_tar_gz: "Tập tin sao lưu nên nên ở dạng .tar.gz."
@@ -757,7 +755,6 @@ vi:
     email_token_valid_hours: "Token quyên mật khẩu / kích hoạt tài khoản có giá trị trong (n) giờ."
     email_token_grace_period_hours: "Token quyên mật khẩu / kích hoạt tài khoản vẫn còn giá trị (n) giờ sau khi được gia hạn"
     enable_badges: "Kích hoạt hệ thống huy hiệu"
-    enable_whispers: "Cho phép quản trị viên giao tiếp riêng trong chủ đề. (thực nghiệm)"
     allow_index_in_robots_txt: "Chỉ rõ trong robots.txt trang web này cho phép tạo chỉ mục bởi web search engines."
     email_domains_blacklist: "Một danh sách đuôi email mà người dùng không được phép dùng để đăng ký tài khoản. Ví dụ: maillinator.com|trashmail.net. Lưu ý mỗi tên miền cách nhau bởi dấu \"|\"."
     email_domains_whitelist: "Danh sách tên miền người dùng ĐƯỢC PHÉP đăng ký tài khoản. CẢNH BÁO: người dùng với  tên miền email khác trong danh sách sẽ không được phép đăng ký!"
@@ -1009,7 +1006,6 @@ vi:
     embed_whitelist_selector: "Bộ chọn các thành phần CSS được hỗ trợ khi nhúng."
     embed_blacklist_selector: "Bộ chọn các thành phần CSS được loại bỏ khi nhúng."
     notify_about_flags_after: "Nếu có các đánh dấu chưa được xử lý sau số giờ được thiết lập ở đây, gửi email đến contact_email. Đặt là 0 để vô hiệu hóa."
-    enable_cdn_js_debugging: "Cho phép /logs hiển thị lỗi thích hợp bằng cách thêm quyền cross-origin trên tất cả js kèm theo."
     show_create_topics_notice: "Nếu trang có ít hơn 5 chủ đề công khai, hiển thị một thông báo yêu cầu quản trị tạo thêm các chủ đề mới"
     delete_drafts_older_than_n_days: Xóa các bản nháp cũ hơn (n) ngày.
     vacuum_db_days: "Chạy VACUUM ANALYZE để lấy lại khoảng trống DB sau khi migration (đặt là 0 để tắt)"

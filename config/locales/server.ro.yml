@@ -109,8 +109,6 @@ ro:
       max_username_length_range: "Nu poți seta maximum cu o valoare mai mică decât a minimului."
       default_categories_already_selected: "Nu poți selecta o categorie folosită într-o altă listă."
       s3_upload_bucket_is_required: "Nu poți activa încărcările pe S3 dacă nu ai introdus 's3_upload_bucket'."
-  bulk_invite:
-    file_should_be_csv: "Fișierul încărcat ar trebui să fie în format csv sau txt."
   backup:
     operation_already_running: "O operație este în desfășurare. Nu poți începe alta nouă."
     backup_file_should_be_tar_gz: "Fișierul backup ar trebui să fie arhivat cu extensia .tar.gz."
@@ -918,7 +916,6 @@ ro:
     email_token_valid_hours: "Tokenul uitat parolă / activează cont sunt valabili pentru (n) ore."
     email_token_grace_period_hours: "Tokenul Parola uitată / activează cont sunt încă valabili pe o perioadă de grație de (n) ore după ce au fost acceptați."
     enable_badges: "Activează sistemul de ecusoane"
-    enable_whispers: "Permite membrilor echipei să comunice privat în cadrul unui subiect. (experimental)"
     allow_index_in_robots_txt: "Specifică în robots.txt că acest site poate fi indexat de motoarele de căutare web."
     email_domains_blacklist: "O listă de domenii de email separate cu simbolul | (pipe) ale căror utilizatori nu au permisiunea să înregistreze conturi. Exemplu: mailinator.com|trashmail.net"
     email_domains_whitelist: "O listă de domenii de email (separate cu simbolul | (pipe)) cu care utilizatorii TREBUIE să se înregistreze. ATENȚIE: utilizatorii cu alte domenii de email decât cele listate nu vor avea permisiunea să se înregistreze."
@@ -1218,7 +1215,6 @@ ro:
     embed_whitelist_selector: "Selector CSS pentru elementele ce sunt permise în încorporări."
     embed_blacklist_selector: "Selector CSS pentru elementele ce sunt șterse din încorporări"
     notify_about_flags_after: "Dacă sunt marcaje ce nu au fost aranjate după atâtea ore, trimite un email către email-ul de contact . Setează la 0 pentru a dezactiva."
-    enable_cdn_js_debugging: "Permite /logs să afișeze corect erorile adăugând permisiuni crossorigin pe toate js includes."
     show_create_topics_notice: "Dacă site-ul are mai puțin de 5 subiecte publice, afișează o notificare prin care se cere adminilor să creeze subiecte."
     delete_drafts_older_than_n_days: șterge drafturile mai vechi de (n) zile.
     bootstrap_mode_min_users: "Numărul minim de utilizatori necesar pentru dezactivarea modului bootstrap (0 pentru dezactivare)"

@@ -726,11 +726,8 @@ ro:
         link_generated: "Link de invitare generat cu succes!"
         valid_for: "Link-ul de invitare este valid doar pentru următoarele adrese de email:  %{email}"
         bulk_invite:
-          none: "Nu ai invitat încă pe nimeni. Poți trimite invitații individuale sau mai multor oameni deodată prin <a href='https://meta.discourse.org/t/send-bulk-invites/16468'> încărcarea fișierului de invitații multiple</a>."
           text: "Invitație multiplă din fișier"
-          uploading: "Se încarcă..."
           success: "Fișier încărcat cu succes, vei fi înștiințat printr-un mesaj când procesarea este completă."
-          error: "A apărut o eroare la încărcarea fișierului '{{filename}}': {{message}}"
       password:
         title: "Parolă"
         too_short: "Parola este prea scurtă."
@@ -2338,7 +2335,6 @@ ro:
         refresh: "Reîmprospătează"
         new: "Noi"
         selector_placeholder: "introdu nume de utilizator"
-        name_placeholder: "Numele grupului, fără spații, asemenea regulii de la numele de utilizator"
         about: "Editează aici numele și apartenența la grupuri"
         group_members: "Membrii grupului"
         delete: "Șterge"
@@ -2346,7 +2342,6 @@ ro:
         delete_failed: "Imposibil de șters grupul. Dacă este unul automat, nu se poate șterge."
         delete_member_confirm: "Şterge '%{username}' din grupul '%{group}'?"
         delete_owner_confirm: "Revocă dreptul de proprietar pentru '%{username}'?"
-        name: "Nume"
         add: "Adaugă"
         add_members: "Adaugă membri"
         custom: "Personalizat"
@@ -2363,14 +2358,6 @@ ro:
         add_owners: Adaugă proprietari
         incoming_email: "Adresă de primire emailuri personalizată"
         incoming_email_placeholder: "introducere adresă de email"
-        flair_url: "Imagine avatar cu element distinct"
-        flair_url_placeholder: "(Opțional) URL-ul imagine sau clasă Font Awesome"
-        flair_bg_color: "Culoarea de fundal a avatarului cu element distinct"
-        flair_bg_color_placeholder: "(Opțional) Valoarea Hex a culorii"
-        flair_color: "Culoarea avatarului cu element distinct"
-        flair_color_placeholder: "(Opțional) Valoarea Hex a culorii"
-        flair_preview: "Previzualizare"
-        flair_note: "Observație: Elementul distinct va fi afișat doar pentru grupul principal al utilizatorului."
       api:
         generate_master: "Generează cheie API principală"
         none: "Nu sunt chei API principale active deocamdată."

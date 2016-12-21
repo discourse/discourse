@@ -151,6 +151,7 @@ nb_NO:
     posts: "Siste innlegg"
     private_posts: "Siste private meldinger"
     group_posts: "Siste innlegg fra %{group_name}"
+    tag: "Emner merket med stikkord"
   too_late_to_edit: "Det innlegget ble laget for lenge siden. Det kan ikke lenger bli redigert eller slettet."
   excerpt_image: "bilde"
   queue:
@@ -175,13 +176,13 @@ nb_NO:
     new-topic: |
       Velkommen til %{site_name} &mdash; **takk for at du starter et nytt innlegg!**
 
-      - Høres tittelen på innlegget interessant ut hvis du leser den høyt? Er det en god oppsummering?
+      - Høres tittelen på innlegget interessant ut hvis du leser den høyt? Er den en god oppsummering?
 
       - Hvem vil være interessert i dette? Hvorfor har det noe å si? Hva slags respons er du ute etter?
 
-      - Bruk relevante begrep i emnet så andre kan *finne* det. Velg en kategori for å gruppere emnet ditt med andre liknende emner.
+      - Bruk relevante begrep i emnet så andre kan *finne* det. Velg en kategori for å gruppere emnet ditt med andre lignende emner.
 
-      [Se våre retningslinjer for felleskapet](/guidelines) for mer informasjon. Denne meldingen vises kun for ditt/dine første %{education_posts_text}.
+      [Se retningslinjene for dette nettstedet](/guidelines) for mer informasjon. Denne meldingen vises kun for ditt/dine første %{education_posts_text}.
     new-reply: |
       Velkommen til %{site_name} &mdash; **takk for at du bidrar!**
 
@@ -253,7 +254,7 @@ nb_NO:
     no_info_other: "<div class='missing-profile'>%{name} har ikke skrevet noe i Om meg-feltet på sin profil ennå</div>"
   vip_category_name: "Salong"
   vip_category_description: "En kategori tilgjengelig for brukere med tillitsnivå 3 og høyere."
-  meta_category_name: "Tilbakemelding"
+  meta_category_name: "Tilbakemeldinger"
   meta_category_description: "Diskusjon om dette nettstedet, hvordan det er organisert, hvordan det fungerer og hvordan vi kan forbedre det."
   staff_category_name: "Stab"
   staff_category_description: "Privat kategori for diskusjoner blant staben. Emner er kun synlige for administratorer og moderatorer."
@@ -283,7 +284,7 @@ nb_NO:
       [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
   category:
     topic_prefix: "Om kategorien %{category} "
-    replace_paragraph: "(Erstatt dette første avsnittet med en kort beskrivelse av den nye kategorien din. Denne teksten vil vises i oversikten over kategorier, så prøv å holde den under 200 ord. **Til du endrer denne beskrivelsen eller oppretter emner vil denne kategorien ikke vises på kategorier-siden.**)"
+    replace_paragraph: "(Erstatt dette første avsnittet med en kort beskrivelse av den nye kategorien din. Denne teksten vil vises i oversikten over kategorier, så prøv å holde den under 200 ord. **Inntil du endrer denne beskrivelsen eller oppretter emner, vil denne kategorien ikke vises på kategorier-siden.**)"
     post_template: "%{replace_paragraph}\n\nBruk de følgende avsnittene for en lengre beskrivelse, eller for å beskrive retningslinjer eller regler for kategorien:\n\n- Hvorfor skal folk bruke denne kategorien? Hva er den ment for?\n\n- På hvilken måte skiller den seg fra de andre kategoriene vi allerede har?\n\n- Hva skal emner i denne kategorien generelt sett inneholde?\n\n- Trenger vi denne kategorien? Kan vi slå den sammen med en annen kategori eller underkategori?\n"
     errors:
       uncategorized_parent: "Ukategorisert kan ikke ha en foreldrekategori"
@@ -296,6 +297,7 @@ nb_NO:
         one: "Kan ikke slette denne kategorien fordi den har 1 emne. Eldste emne er %{topic_link}."
         other: "Kan ikke slette denne kategorien fordi den har %{count} emner. Eldste emne er %{topic_link}."
       topic_exists_no_oldest: "Kan ikke slette denne kategorien fordi emneantallet er %{count}."
+    uncategorized_description: "Emner som ikke trenger en kategori eller som ikke passer i noen av de eksisterende."
   trust_levels:
     newuser:
       title: "ny bruker"
@@ -404,6 +406,7 @@ nb_NO:
     please_continue: "Fortsett til %{site_name}"
     error: "Det oppsto en feil ved endring av din e-postadresse. Kanskje addressen allerede er i bruk?"
     authorizing_old:
+      title: "Takk for at du bekreftet din nåværende e-postadresse"
       description: "Vi sender deg en e-post til din nye adresse for bekreftelse."
   activation:
     already_done: "Beklager, denne bekreftelseslenken er ikke lenger gyldig. Kanskje er kontoen din allerede aktivert?"
@@ -477,6 +480,10 @@ nb_NO:
         make: "Dette emnet er nå en banner. Det vil vises på toppen av hver side til brukeren lukker det."
         remove: "Dette emnet er ikke lenger en banner. Det vil ikke lenger vises på toppen av hver side."
   unsubscribe:
+    stop_watching_topic: "Slutt å følge dette emnet, %{link}"
+    mute_topic: "Demp alle varslene for dette emnet, %{link}"
+    unwatch_category: "Slutt å følge alle emner i %{category}"
+    mailing_list_mode: "Slå av e-postlistemodus"
     disable_digest_emails: "Slutt å sende meg oppsummerings-eposter"
   reports:
     visits:
@@ -575,7 +582,7 @@ nb_NO:
     http_background_reqs:
       title: "Bakgrunn"
       xaxis: "Dag"
-      yaxis: "Forespørsler for live-oppdateringer og -sporing"
+      yaxis: "Forespørsler brukt for direkte-oppdateringer og -overvåkning"
     http_2xx_reqs:
       title: "Status 2xx (OK)"
       xaxis: "Dag"
@@ -614,16 +621,16 @@ nb_NO:
     memory_warning: 'Serveren din kjører med mindre enn 1 GB med minne. Minst 1 GB RAM er anbefalt.'
   site_settings:
     censored_words: "Ord som automatisk vil bli erstattet med &#9632;&#9632;&#9632;&#9632;"
-    delete_old_hidden_posts: "Auto-slett skjulte innlegg som er skjult i mer enn 30 dager."
+    delete_old_hidden_posts: "Slett automatisk skjulte innlegg som har vært skjult i mer enn 30 dager."
     default_locale: "Standard språk for denne instansen av Discourse (ISO 639-1 Kode)"
-    allow_user_locale: "Tillta at brukere velger eget språk"
+    allow_user_locale: "Tillat brukere å velge eget språk"
     min_post_length: "Minimum tillatt lengde for innlegg i tegn"
     min_first_post_length: "Minimum tillatt lengde på for teksten i første innlegg"
     max_post_length: "Maksimum tillatt lengde for innlegg i tegn"
     min_topic_title_length: "Minimum tillatt lengde for tittel i tegn"
     max_topic_title_length: "Maksimum tillatt lengde for innlegg i tegn"
     min_search_term_length: "Minimum lengde på søkeord i tegn"
-    allow_duplicate_topic_titles: "Tillat emner med lik, duplikat tittel."
+    allow_duplicate_topic_titles: "Tillat flere emner med identisk tittel."
     unique_posts_mins: "Hvor mange minutter før en bruker kan lage en post med det samme innholdet igjen"
     educate_until_posts: "Når bruker begynner å skrive på de første (n) innleggene, vis pop-up med opplæringspanelet for nye brukere i editoren."
     title: "Navnet på denne siden, slik du vil ha det i title-taggen."
@@ -637,7 +644,7 @@ nb_NO:
     disabled_image_download_domains: "Eksterne bilder vil aldri bli lastet ned fra disse domenene (pipe-separert liste)."
     editing_grace_period: "(n) sekunder etter publisering vil redigering ikke opprette en ny versjon i redigeringsloggen."
     post_edit_time_limit: "Forfattere kan redigere eller slette innleggene sine (n) minutter etter opprettelse. Sett 0 for uendelig."
-    edit_history_visible_to_public: "Alle kan se tidligere versjoner av et redigert innlegg. Hvis det er slått av kan kun stab se det."
+    edit_history_visible_to_public: "Alle kan se tidligere versjoner av et redigert innlegg. Hvis det er slått av kan kun staben se det."
     delete_removed_posts_after: "Innlegg som blir fjernet av forfatter blir automatisk slettet etter (n) timer. Sett til 0 og innleggene blir slettet øyeblikkelig."
     max_image_width: "Maksimal thumbnail bredde for bilder i et innlegg"
     max_image_height: "Maksimal thumbnail høyde for bilder i et innlegg"
@@ -646,7 +653,7 @@ nb_NO:
     summary_max_results: "Det maksimale antall innlegg som returneres av 'Oppsummér dette emnet'"
     allow_moderators_to_create_categories: "Tillat moderatorer å opprette nye kategorier"
     topics_per_period_in_top_summary: "Antall topp-emner vises som standard i oppsummeringen av topp-emner."
-    show_email_on_profile: "Vis brukerens e-postadresse i profilen (kun synlig for brukeren selv og forum staff)"
+    show_email_on_profile: "Vis brukerens e-postadresse i profilen (kun synlig for brukeren selv og forumstaben)"
     email_token_valid_hours: "Glemt passord / aktiver konto tokens er gyldig for (n) timer."
     enable_badges: "Aktiver badge system"
     log_out_strict: "Ved utlogging, logg ut av ALLE enheter som er pålogget"
@@ -672,10 +679,20 @@ nb_NO:
     allow_profile_backgrounds: "Gi brukere mulighet til å laste opp profilbakgrunner."
     enable_mobile_theme: "Mobilenheter bruker et mobilvennlig tema, med muligheten til å gå til den fulle siden. Deaktiver dette hvis du ønsker å bruke et tilpasset stilark."
     dominating_topic_minimum_percent: "Hvor mange innlegg en bruker kan lage innenfor en topic før de blir påminnet om dominering av en topic."
+    automatically_unpin_topics: "Automatisk fjern feste for emner når brukeren når bunnen."
     enable_emoji: "Aktiver emoji."
     emoji_set: "Hvordan vil du ha din emoji?"
     default_email_digest_frequency: "Standardinnstillingen for hvor ofte brukere mottar oppsummerings-eposter"
     default_include_tl0_in_digests: "La det være standardinnsillingen å inkluder innlegg fra nye brukere i oppsummerings-eposter. Brukere kan endre dette i preferansene sine."
+    default_email_mailing_list_mode_frequency: "Brukere som slår på e-postlistemodus, vil motta e-poster så ofte som standard"
+    disable_mailing_list_mode: "Forby brukere å slå på e-postlistemodus"
+    default_email_previous_replies: "Inkludér tidligere svar i e-poster som standard."
+    default_topics_automatic_unpin: "Automatisk fjern feste for emner når brukeren når bunnen som standard."
+    default_categories_watching: "Liste med kategorier som følges som standard"
+    default_categories_tracking: "Liste med kategorier som overvåkes som standard"
+    default_categories_muted: "Liste med kategorier som blir dempet som standard"
+    default_categories_watching_first_post: "Liste med kategorier hvor det første innlegget i hvert nye emner følges som standard."
+    remove_muted_tags_from_latest: "Ikke vis emner med dempede stikkord i listen med siste emner."
     errors:
       invalid_email: "Ugyldig e-mail adresse"
       invalid_string: "Ugyldig verdi"
@@ -712,10 +729,10 @@ nb_NO:
       other: "Dette emnet ble automatisk lukket %{count} minutter etter siste innlegg. Emnet kan ikke lenger svares på. "
     autoclosed_disabled: "Dette emnet er nå åpent. Emnet kan svares på. "
     autoclosed_disabled_lastpost: "Dette emnet er åpnet. Nye svar er tillatt."
-    pinned_enabled: "Dette emnet er nå fastsatt. Det vil vises i toppen av sin kategori og alle emne lister frem til en administrator, for alle, eller brukerne for dem selv løsgjør emnet. "
-    pinned_disabled: "Dette emnet er ikke lenger fastsatt. Det vil ikke lenger vises i toppen av sin kategori."
-    pinned_globally_enabled: "Dette emnet er nå fastsatt globalt. Det vil vises i toppen av sin kategori og alle emne lister frem til administrator, for alle, eller brukerne for dem selv løsgjør emnet. "
-    pinned_globally_disabled: "Dette emnet er ikke lenger fastsatt. Det vil ikke lenger vises i toppen av sin kategori."
+    pinned_enabled: "Dette emnet er nå festet. Det vil vises i toppen av sin kategori inntil festet fjernes av en administrator eller av enkeltbrukere for seg selv."
+    pinned_disabled: "Dette emnet er ikke lenger festet. Det vil ikke lenger vises i toppen av sin kategori."
+    pinned_globally_enabled: "Dette emnet er nå festet globalt. Det vil vises i toppen av sin kategori og alle emne lister inntil festet fjernes for alle av staben, eller for enkelte brukere av dem selv."
+    pinned_globally_disabled: "Dette emnet er ikke lenger festet. Det vil ikke lenger vises i toppen av sin kategori."
     visible_enabled: "Dette emnet er nå listet. Det vil vises i emne listene. "
     visible_disabled: "Dette ement er ikke lenger listet. Det vil ikke lenger bli vist i noen av emnelistene. Den eneste måten å få tilgang til dette emnet er via en direkte link. "
   login:
@@ -753,6 +770,10 @@ nb_NO:
       subject_template: "Ny konto på vent"
     too_many_tl3_flags:
       subject_template: "Ny konto på vent"
+  unsubscribe_mailing_list: |
+    Du mottar dette fordi du har slått på e-postlistemodus.
+
+    For å melde deg av disse e-postene [klikk her](%{unsubscribe_url}).
   user_notifications:
     digest:
       why: "Dette har skjedd på %{site_link} siden ditt forrige besøk %{last_seen_at}"
@@ -770,7 +791,7 @@ nb_NO:
       preheader: "En kort oppsummering siden ditt siste besøk på %{last_seen_at}"
     mailing_list:
       subject_template: "[%{site_name}] Oppsummering for %{date}"
-      unsubscribe: "Denne oppsummeringen sendes daglig fordi e-postliste-modus er aktivert. For å melde deg deg av %{unsubscribe_link}."
+      unsubscribe: "Denne oppsummeringen sendes daglig fordi e-postlistemodus er aktivert. For å melde deg deg av %{unsubscribe_link}."
       from: "%{site_name}-oppsummering"
       new_topics: "Nye emner"
     account_created:

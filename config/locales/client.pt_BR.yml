@@ -694,11 +694,8 @@ pt_BR:
         link_generated: "Link de convite gerado com sucesso!"
         valid_for: "Link de convite é válido apenas para esse endereço de email: %{email}"
         bulk_invite:
-          none: "Você ainda não convidou ninguém. Você pode enviar convites individuais, ou enviar vários de uma vez através da ferramenta de <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>enviar em massa</a>."
           text: "Convidar em massa a partir de arquivo"
-          uploading: "Subindo..."
           success: "Arquivo enviado com sucesso, você será notificado por mensagem quando o processo estiver completo."
-          error: "Houve um erro ao enviar '{{filename}}': {{message}}"
       password:
         title: "Senha"
         too_short: "A sua senha é muito curta."
@@ -2229,7 +2226,6 @@ pt_BR:
         refresh: "Atualizar"
         new: "Novo"
         selector_placeholder: "digite o nome de usuário"
-        name_placeholder: "Nome do grupo, sem espaços, regras iguais ao nome de usuário"
         about: "Editar participação no grupo e nomes aqui"
         group_members: "Membros do grupo"
         delete: "Apagar"
@@ -2237,7 +2233,6 @@ pt_BR:
         delete_failed: "Unable to delete group. If this is an automatic group, it cannot be destroyed."
         delete_member_confirm: "Remover '%{username}' do grupo '%{group}'?"
         delete_owner_confirm: "Remover privilégio de proprietário de '%{username}'?"
-        name: "Nome"
         add: "Adicionar"
         add_members: "Adicionar membros"
         custom: "Definidos"
@@ -2254,10 +2249,6 @@ pt_BR:
         add_owners: Adicionar proprietários
         incoming_email: "Endereço de email de entrada personalizado"
         incoming_email_placeholder: "Insira um endereço de email"
-        flair_url_placeholder: "(Opcional) URL de imagem ou classe Font Awesome"
-        flair_bg_color_placeholder: "(Opcional) Valor em hexadecimal da cor"
-        flair_color_placeholder: "(Opcional) Valor em hexadecimal da cor"
-        flair_preview: "Pré-visualizar"
       api:
         generate_master: "Gerar chave Mestra de API"
         none: "Não existem chaves API ativas no momento."

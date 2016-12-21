@@ -61,8 +61,6 @@ te:
         other: '%{count} దోషాల వల్ల  %{model} భద్రపరుచుట వీలవలేదు'
     embed:
       load_from_remote: "ఈ టపా లోడింగులో దోషం"
-  bulk_invite:
-    file_should_be_csv: "ఎగుమతించే దస్త్రం కేవలం csv లేదా txt రూపంలో ఉండాలి"
   backup:
     operation_already_running: "ఒక పరిక్రియ ప్రస్తుతం జరుగుతోంది. కొత్త పని ఇప్పుడు మొదలుపెట్టవీలవదు."
     backup_file_should_be_tar_gz: "బ్యాకప్ దస్త్రం తప్పనిసరి .tar.gz కట్ట అయి ఉండాలి."

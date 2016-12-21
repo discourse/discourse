@@ -695,11 +695,9 @@ es:
         link_generated: "¡Enlace de invitación generado satisfactoriamente!"
         valid_for: "El enlace de invitación sólo es válido para esta dirección: %{email}"
         bulk_invite:
-          none: "No has invitado a nadie todavía. Puedes enviar invitaciones individuales o invitar a un grupo de personas a la vez <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>subiendo un archivo para invitaciones en masa</a>."
+          none: "Aún no has invitado a nadie aquí. Puedes enviar invitaciones individuales, o invitar varias personas a la vez <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>subiendo un archivo CSV</a>."
           text: "Archivo de Invitación en Masa"
-          uploading: "Subiendo..."
           success: "Archivo subido correctamente, se te notificará con un mensaje cuando se complete el proceso."
-          error: "Hubo un error al subir '{{filename}}': {{message}}"
       password:
         title: "Contraseña"
         too_short: "Tu contraseña es demasiada corta."
@@ -2247,7 +2245,6 @@ es:
         refresh: "Actualizar"
         new: "Nuevo"
         selector_placeholder: "introduce nombre de usuario"
-        name_placeholder: "Nombre del grupo, sin espacios, al igual que la regla del nombre usuario"
         about: "Edita los aquí los nombres de los grupos y sus miembros"
         group_members: "Miembros del grupo"
         delete: "Borrar"
@@ -2255,7 +2252,6 @@ es:
         delete_failed: "No se pudo borrar el grupo. Si este es un grupo automático, no se puede destruir."
         delete_member_confirm: "¿Eliminar a '%{username}' del grupo '%{group}'?"
         delete_owner_confirm: "¿Quitar privilegios de propietario para '%{username}'?"
-        name: "Nombre"
         add: "Añadir"
         add_members: "Añadir miembros"
         custom: "Personalizado"
@@ -2272,14 +2268,6 @@ es:
         add_owners: Añadir propietarios
         incoming_email: "Correos electrónicos entrantes personalizados"
         incoming_email_placeholder: "introducir dirección de email"
-        flair_url: "Imagen distintiva"
-        flair_url_placeholder: "(Opcional) URL de imagen o clase de Font Awesome"
-        flair_bg_color: "Color de fondo de imagen distintiva"
-        flair_bg_color_placeholder: "(Optional) Valor hexadecimal del color"
-        flair_color: "Color de la imagen distintiva"
-        flair_color_placeholder: "(Opcional) Color en valor hexadecimal"
-        flair_preview: "Vista previa"
-        flair_note: "Nota: sólo se mostrará la imagen distintiva del grupo principal del usuario."
       api:
         generate_master: "Generar clave maestra de API"
         none: "No hay ninguna clave de API activa en este momento."

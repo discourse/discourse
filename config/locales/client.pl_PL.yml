@@ -712,12 +712,10 @@ pl_PL:
         account_age_days: "Wiek konta w dniach"
         create: "Wyślij zaproszenie"
         generate_link: "Skopiuj link z zaproszeniem"
+        link_generated: "Link z zaproszenie został poprawnie wygenerowany!"
         bulk_invite:
-          none: "Jeszcze nikogo nie zaproszono. Możesz wysłać pojedyncze zaproszenie lub <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>zaprosić wiele osób na raz wysyłając odpowiedni plik</a>."
           text: "Zaproszenia hurtowe z pliku"
-          uploading: "Wysyłanie…"
           success: "Plik został przesłany pomyślnie: otrzymasz prywatną wiadomość, gdy proces zostanie zakończony."
-          error: "Podczas przesyłania wystąpił błąd '{{filename}}': {{message}}"
       password:
         title: "Hasło"
         too_short: "Hasło jest za krótkie."
@@ -1754,6 +1752,14 @@ pl_PL:
         muted:
           title: "Wyciszone"
           description: "Nie otrzymasz powiadomień o nowych tematach w tych kategoriach. Nie pojawią się na liście nieprzeczytanych."
+      sort_options:
+        default: "domyślny"
+        likes: "Polubienia"
+        views: "Odsłony"
+        posts: "Posty"
+        activity: "Aktywność"
+        category: "Kategoria"
+        created: "Utworzony"
     flagging:
       title: 'Dziękujemy za pomoc w utrzymaniu porządku w naszej społeczności!'
       action: 'Oflaguj wpis'
@@ -2201,7 +2207,6 @@ pl_PL:
         refresh: "Odśwież"
         new: "Nowa"
         selector_placeholder: "nazwa użytkownika"
-        name_placeholder: "Nazwa grupy: bez spacji, takie same zasady jak przy nazwie użytkownika"
         about: "Tu możesz edytować przypisania do grup oraz ich nazwy"
         group_members: "Członkowie grupy"
         delete: "Usuń"
@@ -2209,7 +2214,6 @@ pl_PL:
         delete_failed: "Nie można usunąć grupy. Jeżeli jest to grupa automatyczna, nie może zostać zniszczona."
         delete_member_confirm: "Usunąć '%{username}' z grupy '%{group}' ?"
         delete_owner_confirm: "Usunąć status właściciela dla  '%{username}'?"
-        name: "Nazwa"
         add: "Dodaj"
         add_members: "Dodaj członków"
         custom: "Niestandardowe"
@@ -2226,7 +2230,6 @@ pl_PL:
         add_owners: Dodaj właścicieli
         incoming_email: "Niestandardowy adres poczty przychodzącej"
         incoming_email_placeholder: "podaj adres e-mail"
-        flair_preview: "Podgląd"
       api:
         generate_master: "Generuj Master API Key"
         none: "Nie ma teraz aktywnych kluczy API."
@@ -2467,6 +2470,7 @@ pl_PL:
         incoming_emails:
           from_address: "Od"
           to_addresses: "Do"
+          cc_addresses: "Cc"
           subject: "Temat"
           error: "Błąd"
           modal:

@@ -624,11 +624,8 @@ ko:
         create: "이 포럼에 친구를 초대하기"
         generate_link: "초대 링크 복사"
         bulk_invite:
-          none: "아직 아무도 초대하지 않았습니다. 초대장을 각각 보내거나, <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>uploading a bulk invite file</a>을 이용하여 단체 초대를 보낼 수 있습니다."
           text: "파일로 대량 초대하기"
-          uploading: "업로드 중..."
           success: "파일이 성공적으로 업로드되었습니다. 완료되면 메시지로 알려드리겠습니다."
-          error: "'{{filename}}': {{message}} 업로드중 에러가 있었습니다."
       password:
         title: "비밀번호"
         too_short: "암호가 너무 짧습니다."
@@ -1735,7 +1732,6 @@ ko:
         refresh: "새로고침"
         new: "새로운"
         selector_placeholder: "아이디를 입력하세요"
-        name_placeholder: "그룹 이름, 사용자 이름처럼 빈칸 없이 작성"
         about: "회원과 이름을 변경"
         group_members: "그룹 멤버"
         delete: "삭제"
@@ -1743,7 +1739,6 @@ ko:
         delete_failed: "이것은 자동으로 생성된 그룹입니다. 삭제할 수 없습니다."
         delete_member_confirm: "'%{group}' 그룹에서 '%{username}'을 제외시키겠습니까?"
         delete_owner_confirm: "'%{username}' 님에게서 소유자권한을 제거할까요?"
-        name: "이름"
         add: "추가"
         add_members: "사용자 추가하기"
         custom: "Custom"

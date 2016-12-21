@@ -715,11 +715,8 @@ cs:
         create: "Poslat pozvánku"
         generate_link: "Zkopírovat odkaz na pozvánku"
         bulk_invite:
-          none: "Zatím jste nikoho nepozval. Můžete poslat individuální pozvánku nebo pozvat skupinu lidí naráz pomocí <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>nahrání souboru</a>."
           text: "Hromadné pozvání s pomocí souboru"
-          uploading: "Nahrávám..."
           success: "Nahrání souboru proběhlo úspěšně. O dokončení celého procesu budete informování pomocí zprávy."
-          error: "Nastala chyba při nahrávání '{{filename}}': {{message}}"
       password:
         title: "Heslo"
         too_short: "Vaše heslo je příliš krátké."
@@ -2303,7 +2300,6 @@ cs:
         refresh: "Obnovit"
         new: "Nová"
         selector_placeholder: "zadejte uživatelské jméno"
-        name_placeholder: "Název skupiny, bez mezer, stejná pravidla jako pro uživatelská jména"
         about: "Zde můžete upravit názvy skupin a členství"
         group_members: "Členové skupiny"
         delete: "Smazat"
@@ -2311,7 +2307,6 @@ cs:
         delete_failed: "Unable to delete group. If this is an automatic group, it cannot be destroyed."
         delete_member_confirm: "Odstranit '%{username}' ze '%{group}' skupiny?"
         delete_owner_confirm: "Odstranit vlastnickou výsadu od '%{username}'?"
-        name: "Jméno"
         add: "Přidat"
         add_members: "Přidat členy"
         custom: "Přizpůsobené"
@@ -2328,11 +2323,6 @@ cs:
         add_owners: Přidat vlastníky
         incoming_email: "Vlastní příchozí emailová adresa"
         incoming_email_placeholder: "zadej emailovou adresu"
-        flair_url: "Avatar Flair Image"
-        flair_url_placeholder: "(Volitelné) URL obrázku nebo třídy Font Awesome "
-        flair_bg_color: "Avatar Flair Barva pozadí"
-        flair_color: "Avatar Flair Color"
-        flair_preview: "Náhled"
       api:
         generate_master: "Vygenerovat Master API Key"
         none: "Nejsou tu žádné aktivní API klíče."

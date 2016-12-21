@@ -676,11 +676,8 @@ sq:
         create: "Dërgo një ftesë"
         generate_link: "Kopjo lidhjen e ftesës"
         bulk_invite:
-          none: "Ju nuk keni ftuar askënd deri tani. Mund të dërgoni ftesa individuale ose mund të ftoni një grup personash duke <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>ngarkuar skedarin</a>."
           text: "Skedari për ftesat në grup"
-          uploading: "Duke ngarkuar..."
           success: "Skedari u ngarkua, do njoftoheni me mesazh kur procesi të mbarojë. "
-          error: "Pati një gabi gjatë ngarkimit të skedarit '{{filename}}': {{message}}"
       password:
         title: "Fjalëkalimi"
         too_short: "Fjalëkalimi është shumë i shkurër."
@@ -2104,7 +2101,6 @@ sq:
         refresh: "Rifresko"
         new: "I Ri"
         selector_placeholder: "vendos emrin e përdoruesit"
-        name_placeholder: "Emri i grupit, pa hapësira, si username-t"
         about: "Modifiko anëtarët e grupit dhe emrin këtu"
         group_members: "Përdorues grupi"
         delete: "Fshij"
@@ -2112,7 +2108,6 @@ sq:
         delete_failed: "Nuk e fshimë dot grupin. Nëse ky është një grup automatik, nuk fshihet dot. "
         delete_member_confirm: "Do të heqësh '%{username}' nga grupi '%{group}'?"
         delete_owner_confirm: "Hiqe privilegjin e pronarit për '%{username}'?"
-        name: "Emri"
         add: "Shto"
         add_members: "Shto Anëtar"
         custom: "Grupet e krijuara"
@@ -2123,7 +2118,6 @@ sq:
         automatic: "Automatik"
         group_owners: Pronarët
         add_owners: Shto pronarë
-        flair_preview: "Parashikimi"
       api:
         generate_master: "Gjenero Master API Key"
         none: "Për momentin, nuk ka çelësa API aktivë."

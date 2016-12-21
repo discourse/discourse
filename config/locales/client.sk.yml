@@ -695,11 +695,8 @@ sk:
         create: "Poslať Pozvánku"
         generate_link: "Kopírovať Odkaz Pozvánky"
         bulk_invite:
-          none: "Zatiaľ ste tu nikoho nepozvali. Môžete odosielať pozvánky individuálne alebo pozvať skupinu ľudí naraz pomocou <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>nahratia súboru</a>."
           text: "Hromadná pozvánka zo súboru"
-          uploading: "Prebieha nahrávanie..."
           success: "Súbor bol úspešne odoslaný. Keď sa nahrávanie dokončí, budete na to upozornený cez správu."
-          error: "Pri nahrávaní '{{filename}}' sa vyskytla chyba: {{message}}"
       password:
         title: "Heslo"
         too_short: "Vaše heslo je príliš krátke."
@@ -2162,7 +2159,6 @@ sk:
         refresh: "Obnoviť"
         new: "Nový"
         selector_placeholder: "zadať používateľské meno"
-        name_placeholder: "Názov skupiny, bez medzier, rovnaké pravidlá ako pre používateľa"
         about: "Tu upravíte Vaše členstvo v skupinách a mená"
         group_members: "Členovia skupiny"
         delete: "Odstrániť"
@@ -2170,7 +2166,6 @@ sk:
         delete_failed: "Nepodarilo sa zmazať skupinu. Pokiaľ je skupina automatická, nemôže byť zrušená."
         delete_member_confirm: "Odstrániť '%{username}' zo skupiny '%{group}'?"
         delete_owner_confirm: "Odobrať vlastnícke práva %{username}'?"
-        name: "Meno"
         add: "Pridať"
         add_members: "Pridať členov"
         custom: "Vlastné"
@@ -2187,7 +2182,6 @@ sk:
         add_owners: Pridať vlastníkov
         incoming_email: "Vlastná e-mailová adresa pre príchodziu poštu"
         incoming_email_placeholder: "zadajte emailovú adresu"
-        flair_preview: "Náhľad"
       api:
         generate_master: "Vygenerovať Master API kľúč"
         none: "V súčasnosti neexistujú žiadne aktívne API kľúče."

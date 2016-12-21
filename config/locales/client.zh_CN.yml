@@ -659,11 +659,8 @@ zh_CN:
         link_generated: "邀请链接生成成功！"
         valid_for: "邀请链接只对这个邮件地址有效：%{email}"
         bulk_invite:
-          none: "你从未邀请过他人。你可以发送单个邀请，或者<a href='https://meta.discourse.org/t/send-bulk-invites/16468'>上传批量邀请文件</a>一次邀请多人。"
           text: "通过文件批量邀请"
-          uploading: "上传中..."
           success: "文件上传成功，当操作完成时将通过消息通知你。"
-          error: "在上传 '{{filename}}' 时出现错误：{{message}}"
       password:
         title: "密码"
         too_short: "密码过短"
@@ -795,7 +792,7 @@ zh_CN:
       disable: "显示已删除的帖子"
     private_message_info:
       title: "私信"
-      invite: "邀请其他..."
+      invite: "邀请其他人..."
       remove_allowed_user: "确定将 {{name}} 从本条消息中移除？"
       remove_allowed_group: "确定将 {{name}} 从本条消息中移除？"
     email: '邮箱'
@@ -2115,7 +2112,6 @@ zh_CN:
         refresh: "刷新"
         new: "新群组"
         selector_placeholder: "输入用户名"
-        name_placeholder: "群组名，不能含有空格，与用户名规则一致"
         about: "在这里编辑群组的名字和成员"
         group_members: "群组成员"
         delete: "删除"
@@ -2123,7 +2119,6 @@ zh_CN:
         delete_failed: "无法删除群组。如果该群组是自动生成的，则不可删除。"
         delete_member_confirm: "从群组“%{group}”中移除“%{username}”？"
         delete_owner_confirm: "移除“%{username}”的权限？"
-        name: "名字"
         add: "添加"
         add_members: "添加成员"
         custom: "定制"
@@ -2140,10 +2135,6 @@ zh_CN:
         add_owners: 添加所有者
         incoming_email: "自定义进站电子邮件地址"
         incoming_email_placeholder: "输入邮箱地址"
-        flair_url_placeholder: "（可选）图片 URL 或 Font Awesome class"
-        flair_bg_color_placeholder: "（可选）十六进制色彩值"
-        flair_color_placeholder: "（可选）十六进制色彩值"
-        flair_preview: "预览"
       api:
         generate_master: "生成主 API 密钥"
         none: "当前没有可用的 API 密钥。"

@@ -104,8 +104,6 @@ sv:
       max_username_length_range: "Du kan inte sätta maximum högre än minimum."
       default_categories_already_selected: "Du kan inte välja en kategori som används i en annan lista. "
       s3_upload_bucket_is_required: "Du kan inte aktivera uppladdning till S3 innan du har angivit 's3_upload_bucket'."
-  bulk_invite:
-    file_should_be_csv: "Den uppladdade filen ska vara i csv eller txt format."
   backup:
     operation_already_running: "En operation är redan igång. Kan inte starta ett nytt jobb just nu."
     backup_file_should_be_tar_gz: "Backup-filen ska vara ett .tar.gz arkiv."
@@ -854,7 +852,6 @@ sv:
     email_token_valid_hours: "Glömt lösenord / aktivera konto länkar är giltiga i (n) timmar."
     email_token_grace_period_hours: "Glömt lösenord / aktivera konto länkar är fortfarande giltiga i en nådefrist på (n) timmar efter att ha  blivit utlösta."
     enable_badges: "Aktivera utmärkelsesystemet"
-    enable_whispers: "Tillåt privat kommunikation mellan personal inom ett ämne. (experimentellt)"
     allow_index_in_robots_txt: "Specificera i robots.txt att den här webbplatsen tillåter att bli indexerad av sökmotorer. "
     email_domains_blacklist: "En pipe-avgränsad lista av alla e-postdomän som användare inte tillåts registrera konton med. Exempel: mailinator.com, trashmail.net"
     email_domains_whitelist: "En pipe-avgränsad lista av alla e-postdomän som användare MÅSTE registrera konton med. VARNING: Användare med e-postdomän som inte finns på listan kommer inte att tillåtas!"
@@ -1122,7 +1119,6 @@ sv:
     embed_whitelist_selector: "CSS-väljare för element som tillåts bäddas in. "
     embed_blacklist_selector: "CSS-väljare för element som tas bort från inbäddningar."
     notify_about_flags_after: "Skicka ett e-postmeddelande till contact_email om det finns flaggor som inte har hanterats efter så här många timmar. Ange 0 för att inaktivera."
-    enable_cdn_js_debugging: "Tillåt /logs att visa lämpliga fel genom att lägga till ursprungstillståndet på alla js-inkluderingar."
     show_create_topics_notice: "Visa en notis som ber administratörerna att skapa några ämnen om webbplatsen har färre än 5 publika ämnen."
     delete_drafts_older_than_n_days: Ta bort utkast som är äldre än (n) dagar.
     bootstrap_mode_min_users: "Minsta antal användare som krävs för att inaktivera bootstrap-läget (ange 0 för att inaktivera)"

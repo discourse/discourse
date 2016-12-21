@@ -811,11 +811,8 @@ ar:
         create: "أرسل دعوة"
         generate_link: "انسخ رابط الدعوة"
         bulk_invite:
-          none: "لم تقم بدعوة اي احد حتى الان. تستطيع ارسال دعوة , أو ارسال عدة دعوات عن طريق<a href='https://meta.discourse.org/t/send-bulk-invites/16468'>uploading a bulk invite file</a>."
           text: "الدعوة من ملف"
-          uploading: "يرفع..."
           success: "رُفع الملف بنجاح. سيصلك إشعارا عبر رسالة عند اكتمال العملية."
-          error: "حدثت مشكلة في رفع '{{filename}}': {{message}}"
       password:
         title: "كلمة المرور"
         too_short: "كلمة المرور قصيرة جدا."
@@ -2505,7 +2502,6 @@ ar:
         refresh: "تحديث"
         new: "جديد"
         selector_placeholder: "أدخل اسم المستخدم"
-        name_placeholder: "اسم المجموعة، بدون مسافات. يتبع قواعد اسم المستخدم"
         about: "هنا عدّل على عضوية المجموعة والاسماء"
         group_members: "أعضاء المجموعة"
         delete: "حذف"
@@ -2513,7 +2509,6 @@ ar:
         delete_failed: "تعذّر حذف المجموعة. إن كانت مجموعة آليّة، فلا يمكن تدميرها."
         delete_member_confirm: "أأزيل '%{username}' من المجموعة '%{group}'؟"
         delete_owner_confirm: "هل تريد إزالة صلاحيات الإدارة من '%{username} ؟"
-        name: "الاسم"
         add: "اضافة"
         add_members: "اضافة عضو"
         custom: "مخصص"
