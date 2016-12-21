@@ -1,5 +1,6 @@
 require_dependency 'email'
 require_dependency 'email_token'
+require_dependency 'email_validator'
 require_dependency 'trust_level'
 require_dependency 'pbkdf2'
 require_dependency 'discourse'
@@ -76,6 +77,7 @@ class User < ActiveRecord::Base
   validates_presence_of :username
   validate :username_validator, if: :username_changed?
   validates :email, presence: true, uniqueness: true
+  validates :email, format: { with: EmailValidator.email_regex }, if: :email_changed?
   validates :email, email: true, if: :should_validate_email?
   validate :password_validator
   validates :name, user_full_name: true, if: :name_changed?
