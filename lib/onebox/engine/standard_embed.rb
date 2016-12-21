@@ -20,6 +20,8 @@ module Onebox
 
       # Some oembed providers (like meetup.com) don't provide links to themselves
       add_oembed_provider(/www\.meetup\.com\//, 'http://api.meetup.com/oembed')
+      # In order to support Private Videos
+      add_oembed_provider(/vimeo\.com\//, 'https://vimeo.com/api/oembed.json')
 
       def always_https?
         WhitelistedGenericOnebox.host_matches(uri, WhitelistedGenericOnebox.https_hosts) || super
@@ -50,19 +52,23 @@ module Onebox
         end
 
         def get_oembed
-          application_json = html_doc.at("//link[@type='application/json+oembed']/@href")
-          oembed_url = application_json.value if application_json
+          oembed_url = nil
 
-          text_json = html_doc.at("//link[@type='text/json+oembed']/@href")
-          oembed_url ||= text_json.value if text_json
+          StandardEmbed.oembed_providers.each do |regexp, endpoint|
+            if url =~ regexp
+              oembed_url = "#{endpoint}?url=#{url}"
+              break
+            end
+          end
 
           if Onebox::Helpers.blank?(oembed_url)
-            StandardEmbed.oembed_providers.each do |regexp, endpoint|
-              if url[regexp]
-                oembed_url = "#{endpoint}?url=#{url}"
-                break
-              end
-            end
+            application_json = html_doc.at("//link[@type='application/json+oembed']/@href")
+            oembed_url = application_json.value if application_json
+          end
+
+          if Onebox::Helpers.blank?(oembed_url)
+            text_json = html_doc.at("//link[@type='text/json+oembed']/@href")
+            oembed_url ||= text_json.value if text_json
           end
 
           return {} if Onebox::Helpers.blank?(oembed_url)
