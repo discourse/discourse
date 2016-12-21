@@ -1,6 +1,5 @@
 {{#d-section pageClass="groups"}}
   <h1>{{i18n "groups.index.title"}}</h1>
-
   {{#if groups}}
     {{#load-more selector=".groups-table .groups-table-row" action="loadMore"}}
       <div class='container'>
@@ -47,7 +46,8 @@
                 <td>
                   {{#group-membership-button model=group
                       createNewMessageViaParams='createNewMessageViaParams'
-                      showMembershipStatus=true}}
+                      showMembershipStatus=true
+                      groupUserIds=groups.extras.group_user_ids}}
 
                     {{d-button icon="ban"
                         label=(if group.automatic 'groups.automatic_group' 'groups.closed_group')

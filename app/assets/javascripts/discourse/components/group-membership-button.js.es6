@@ -12,6 +12,15 @@ export default Ember.Component.extend({
     return !!(this.currentUser) && allowMembershipRequests && aliasLevel === 99;
   },
 
+  @computed("model.is_group_user", "model.id", "groupUserIds")
+  userIsGroupUser(isGroupUser, groupId, groupUserIds) {
+    if (isGroupUser) {
+      return isGroupUser;
+    } else {
+      return groupUserIds.includes(groupId);
+    }
+  },
+
   actions: {
     joinGroup() {
       this.set('updatingMembership', true);
