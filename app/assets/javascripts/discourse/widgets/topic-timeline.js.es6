@@ -25,7 +25,9 @@ createWidget('timeline-last-read', {
   tagName: 'div.timeline-last-read',
 
   buildAttributes(attrs) {
-    return { style: `height: 40px; top: ${attrs.top}px` };
+    const bottom = SCROLLAREA_HEIGHT - 10;
+    const top = attrs.top > bottom ? bottom : attrs.top;
+    return { style: `height: 20px; top: ${top}px` };
   },
 
   html(attrs) {
