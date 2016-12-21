@@ -7,6 +7,20 @@ describe PostActionsController do
       expect { xhr :post, :create }.to raise_error(Discourse::NotLoggedIn)
     end
 
+    context 'logged in as user' do
+      let(:user) { Fabricate(:user) }
+      let(:private_message) { Fabricate(:private_message_post, user: Fabricate(:coding_horror)) }
+
+      before do
+        log_in_user(user)
+      end
+
+      it 'fails when the user does not have permission to see the post' do
+        xhr :post, :create, id: private_message.id, post_action_type_id: PostActionType.types[:bookmark]
+        expect(response).to be_forbidden
+      end
+    end
+
     describe 'logged in as moderator' do
       before do
         @user = log_in(:moderator)
@@ -22,13 +36,7 @@ describe PostActionsController do
       end
 
       it "fails when the user doesn't have permission to see the post" do
-        Guardian.any_instance.expects(:can_see?).with(@post).returns(false)
-        xhr :post, :create, id: @post.id, post_action_type_id: PostActionType.types[:like]
-        expect(response).to be_forbidden
-      end
-
-      it "fails when the user doesn't have permission to perform that action" do
-        Guardian.any_instance.expects(:post_can_act?).with(@post, :like, taken_actions: nil).returns(false)
+        @post = Fabricate(:private_message_post, user: Fabricate(:user))
         xhr :post, :create, id: @post.id, post_action_type_id: PostActionType.types[:like]
         expect(response).to be_forbidden
       end
