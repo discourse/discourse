@@ -1,7 +1,7 @@
 import renderTag from 'discourse/lib/render-tag';
 
 function formatTag(t) {
-  return renderTag(t.id, {count: t.count});
+  return renderTag(t.id, {count: t.count, noHref: true});
 }
 
 export default Ember.TextField.extend({
@@ -96,7 +96,7 @@ export default Ember.TextField.extend({
         list.push(item);
       },
       formatSelection(data) {
-        return data ? renderTag(this.text(data)) : undefined;
+        return data ? renderTag(this.text(data), {noHref: true}) : undefined;
       },
       formatSelectionCssClass() {
         return "discourse-tag-select2";
