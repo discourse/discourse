@@ -1,6 +1,4 @@
 <div class="container group">
-  {{#link-to "groups" class='group-breadcrumb'}}{{fa-icon 'arrow-left'}} {{i18n 'groups.index.title'}}{{/link-to}}
-
   <div class='group-details-container'>
     <div class='group-info'>
       {{#if model.flair_url}}
@@ -31,10 +29,11 @@
     {{/if}}
   </div>
 
-  {{#mobile-nav class='group-nav' desktopClass="pull-left nav nav-stacked" currentPath=application.currentPath}}
+  {{#mobile-nav class='group-nav' desktopClass="nav nav-pills" currentPath=application.currentPath}}
     {{#each getTabs as |tab|}}
-      <li class="{{if tab.active 'active'}}">
+      <li>
         {{#link-to tab.location model title=tab.message}}
+          {{#if tab.icon}}{{fa-icon tab.icon}}{{/if}}
           {{tab.message}}
           {{#if tab.count}}<span class='count'>({{tab.count}})</span>{{/if}}
         {{/link-to}}
@@ -42,9 +41,7 @@
     {{/each}}
   {{/mobile-nav}}
 
-  <div class='pull-left group-outlet'>
-    <div class='user-main'>
-      {{outlet}}
-    </div>
+  <div class='group-outlet'>
+    {{outlet}}
   </div>
 </div>

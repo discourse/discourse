@@ -401,6 +401,8 @@ Discourse::Application.routes.draw do
     get "posts.rss" => "groups#posts_feed", format: :rss
     get "mentions.rss" => "groups#mentions_feed", format: :rss
 
+    get 'activity' => "groups#show"
+    get 'activity/:filter' => "groups#show"
     get 'members'
     get 'posts'
     get 'topics'

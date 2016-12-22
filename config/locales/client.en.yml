@@ -432,6 +432,7 @@ en:
       title:
         one: "group"
         other: "groups"
+      activity: "Activity"
       members: "Members"
       topics: "Topics"
       posts: "Posts"
