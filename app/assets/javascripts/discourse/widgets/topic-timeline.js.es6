@@ -48,12 +48,17 @@ function timelineDate(date) {
 
 createWidget('timeline-scroller', {
   tagName: 'div.timeline-scroller',
+  buildKey: () => `timeline-scroller`,
+
+  defaultState() {
+    return { dragging: false };
+  },
 
   buildAttributes() {
     return { style: `height: ${SCROLLER_HEIGHT}px` };
   },
 
-  html(attrs) {
+  html(attrs, state) {
     const { current, total, date } = attrs;
 
     const contents = [
@@ -64,7 +69,7 @@ createWidget('timeline-scroller', {
       contents.push(h('div.timeline-ago', timelineDate(date)));
     }
 
-    if (attrs.showDockedButton) {
+    if (attrs.showDockedButton && !state.dragging) {
       contents.push(attachBackButton(this));
     }
     let result = [ h('div.timeline-handle'), h('div.timeline-scroller-content', contents) ];
@@ -77,10 +82,12 @@ createWidget('timeline-scroller', {
   },
 
   drag(e) {
+    this.state.dragging = true;
     this.sendWidgetAction('updatePercentage', e.pageY);
   },
 
   dragEnd(e) {
+    this.state.dragging = false;
     if ($(e.target).is('button')) {
       this.sendWidgetAction('goBack');
     } else {
