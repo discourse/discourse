@@ -8,7 +8,12 @@ const BareRouter = Ember.Router.extend({
   handleURL(url) {
     const params = url.split('?');
 
-    if (params[0] === "/") { url = defaultHomepage(); }
+    if (params[0] === "/") {
+      url = defaultHomepage();
+      if (params[1] && params[1].length) {
+        url = `${url}?${params[1]}`;
+      }
+    }
     return this._super(url);
   }
 });
