@@ -10,7 +10,7 @@
   margin: 5px 0px 0px 0px;
 }
 
-.group-nav, .group-outlet {
+.group-nav {
   width: 100%;
 }
 
@@ -20,16 +20,20 @@
 
 .group-nav.mobile-nav {
   margin-bottom: 15px;
+}
 
-  > li {
-    a {
-      color: white;
+.group-activity {
+  position: relative;
+}
 
-      .fa { color: white; }
-    }
-  }
+.group-activity-nav.mobile-nav {
+  position: absolute;
+  right: 0px;
+  top: -50px;
+}
 
-  background-color: $quaternary;
+.group-activity-outlet {
+  float: none;
 }
 
 .form-horizontal {
@@ -55,7 +59,7 @@ table.group-members {
 
   tr {
     .user-info {
-      width: 130px;
+      width: auto;
     }
 
     td {

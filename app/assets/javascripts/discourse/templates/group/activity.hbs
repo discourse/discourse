@@ -1,0 +1,27 @@
+<div class='group-activity container'>
+  {{#mobile-nav class='group-activity-nav' desktopClass="pull-left nav nav-stacked" currentPath=application.currentPath}}
+    <li>
+      {{#link-to 'group.activity.posts'}}{{i18n 'groups.posts'}}{{/link-to}}
+    </li>
+
+    <li>
+      {{#link-to 'group.activity.topics'}}{{i18n 'groups.topics'}}{{/link-to}}
+    </li>
+
+    <li>
+      {{#link-to 'group.activity.mentions'}}{{i18n 'groups.mentions'}}{{/link-to}}
+    </li>
+
+    {{#if showGroupMessages}}
+      <li>
+        {{#link-to 'group.activity.messages'}}{{i18n 'groups.messages'}}{{/link-to}}
+      </li>
+    {{/if}}
+  {{/mobile-nav}}
+
+  <div class="{{if site.mobileView "" "pull-left"}} group-activity-outlet">
+    <div class='user-main'>
+      {{outlet}}
+    </div>
+  </div>
+</div>
