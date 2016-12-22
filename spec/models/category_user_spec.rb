@@ -69,6 +69,7 @@ describe CategoryUser do
   context 'integration' do
     before do
       ActiveRecord::Base.observers.enable :all
+      NotificationEmailer.enable
     end
 
     it 'should operate correctly' do

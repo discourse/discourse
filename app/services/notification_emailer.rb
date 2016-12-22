@@ -1,5 +1,4 @@
-class UserEmailObserver < ActiveRecord::Observer
-  observe :notification
+class NotificationEmailer
 
   class EmailUser
     attr_reader :notification
@@ -105,12 +104,17 @@ class UserEmailObserver < ActiveRecord::Observer
 
   end
 
-  def after_commit(notification)
-    transaction_includes_action = notification.send(:transaction_include_any_action?, [:create])
-    self.class.process_notification(notification) if transaction_includes_action
+  def self.disable
+    @disabled = true
+  end
+
+  def self.enable
+    @disabled = false
   end
 
   def self.process_notification(notification)
+    return if @disabled
+
     email_user   = EmailUser.new(notification)
     email_method = Notification.types[notification.notification_type]
 
