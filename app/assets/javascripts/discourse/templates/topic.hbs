@@ -70,7 +70,7 @@
         {{partial "selected-posts"}}
       </div>
 
-      {{#topic-navigation jumpToIndex="jumpToIndex" as |info|}}
+      {{#topic-navigation topic=model jumpToIndex=(action "jumpToIndex") as |info|}}
         {{#if info.renderAdminMenuButton}}
           {{topic-admin-menu-button
             topic=model
