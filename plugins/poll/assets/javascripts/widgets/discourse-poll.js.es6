@@ -81,6 +81,7 @@ createWidget('discourse-poll-voters', {
     if (state.loaded === 'loading') { return; }
 
     const { voterIds } = attrs;
+
     if (!voterIds.length) { return; }
 
     const windowSize = Math.round(($('.poll-container:eq(0)').width() / 25) * 2);
@@ -137,7 +138,19 @@ createWidget('discourse-poll-standard-results', {
     if (options) {
 
       const voters = poll.get('voters');
-      const ordered = options.sort((a, b) => b.votes - a.votes);
+      const ordered = options.sort((a, b) => {
+        if (a.votes < b.votes) {
+          return 1;
+        } else if (a.votes == b.votes) {
+          if (a.html < b.html) {
+            return -1;
+          } else {
+            return 1;
+          }
+        } else {
+          return -1;
+        }
+      });
 
       const percentages = voters === 0 ?
         Array(ordered.length).fill(0) :
