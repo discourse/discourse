@@ -111,10 +111,10 @@ class GroupsController < ApplicationController
     limit = (params[:limit] || 20).to_i
     offset = params[:offset].to_i
     dir = (params[:desc] && !params[:desc].blank?) ? 'DESC' : 'ASC'
-    order = {}
+    order = ""
 
     if params[:order] && %w{last_posted_at last_seen_at}.include?(params[:order])
-      order.merge!(params[:order] => dir)
+      order = "#{params[:order]} #{dir} NULLS LAST"
     end
 
     total = group.users.count
