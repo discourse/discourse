@@ -8,19 +8,6 @@ module Jobs
 
       args = args.dup
 
-      if args[:topic_id]
-        args[:topic_view] = TopicView.new(args[:topic_id], Discourse.system_user)
-      end
-
-      if args[:post_id]
-        # deleted post so skip
-        return unless args[:post] = Post.find_by(id: args[:post_id])
-      end
-
-      if args[:user_id]
-        return unless args[:user] = User.find_by(id: args[:user_id])
-      end
-
       web_hook = WebHook.find(args[:web_hook_id])
 
       unless args[:event_type] == 'ping'
@@ -29,6 +16,10 @@ module Jobs
           !web_hook.group_ids.include?(args[:group_id]))
         return if web_hook.category_ids.present? && (!args[:category_id].present? ||
           !web_hook.category_ids.include?(args[:category_id]))
+
+        model = args[:event_type].to_s
+        record_id = "#{model}_id".to_sym
+        return unless args[model] = WebHookEventType.const_get("#{model.classify}Type").load_record(args[record_id])
       end
 
       web_hook_request(args, web_hook)
@@ -36,8 +27,28 @@ module Jobs
 
     private
 
-    def web_hook_request(args, web_hook)
+    def build_web_hook_body(args, web_hook)
+      body = {}
+      guardian = Guardian.new(Discourse.system_user)
 
+      if args[:event_type] == 'ping'
+        body[:ping] = 'OK'
+      else
+        model = args[:event_type].to_s
+        klass = WebHookEventType.const_get("#{model.classify}Type").serializer
+        body[model] = klass.new(args[model], scope: guardian, root: false).as_json
+      end
+
+      raise Discourse::InvalidParameters.new if body.empty?
+
+      new_body = Plugin::Filter.apply(:after_build_web_hook_body, self, body)
+
+      Rails.logger.debug("Blank web hook body: #{args}") if new_body.blank?
+
+      MultiJson.dump(new_body)
+    end
+
+    def web_hook_request(args, web_hook)
       uri = URI(web_hook.payload_url)
       conn = Excon.new(uri.to_s,
                        ssl_verify_peer: web_hook.verify_certificate,
@@ -72,45 +83,20 @@ module Jobs
 
         now = Time.zone.now
         response = conn.post(headers: headers, body: body)
+
+        web_hook_event.update_attributes!(headers: MultiJson.dump(headers),
+                                          payload: body,
+                                          status: response.status,
+                                          response_headers: MultiJson.dump(response.headers),
+                                          response_body: response.body,
+                                          duration: ((Time.zone.now - now) * 1000).to_i)
+        MessageBus.publish("/web_hook_events/#{web_hook.id}", {
+          web_hook_event_id: web_hook_event.id,
+          event_type: args[:event_type]
+        }, user_ids: User.staff.pluck(:id))
       rescue
         web_hook_event.destroy!
       end
-
-      web_hook_event.update_attributes!(headers: MultiJson.dump(headers),
-                                        payload: body,
-                                        status: response.status,
-                                        response_headers: MultiJson.dump(response.headers),
-                                        response_body: response.body,
-                                        duration: ((Time.zone.now - now) * 1000).to_i)
-      MessageBus.publish("/web_hook_events/#{web_hook.id}", {
-        web_hook_event_id: web_hook_event.id,
-        event_type: args[:event_type]
-      }, user_ids: User.staff.pluck(:id))
     end
-
-    def build_web_hook_body(args, web_hook)
-      body = {}
-      guardian = Guardian.new(Discourse.system_user)
-
-      if topic_view = args[:topic_view]
-        body[:topic] = TopicViewSerializer.new(topic_view, scope: guardian, root: false).as_json
-      end
-
-      if post = args[:post]
-        body[:post] = PostSerializer.new(post, scope: guardian, root: false).as_json
-      end
-
-      if user = args[:user]
-        body[:user] = UserSerializer.new(user, scope: guardian, root: false).as_json
-      end
-
-      body[:ping] = 'OK' if args[:event_type] == 'ping'
-
-      raise Discourse::InvalidParameters.new if body.empty?
-
-      MultiJson.dump(body)
-    end
-
   end
-
 end
