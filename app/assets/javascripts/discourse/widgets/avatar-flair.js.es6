@@ -13,7 +13,13 @@ createWidget('avatar-flair', {
   },
 
   buildClasses(attrs) {
-    return 'avatar-flair-' + attrs.primary_group_name + (attrs.primary_group_flair_bg_color ? ' rounded' : '');
+    let defaultClass = `avatar-flair-${attrs.primary_group_name} ${(attrs.primary_group_flair_bg_color ? 'rounded' : '')}`;
+
+    if (!this.isIcon(attrs)) {
+      defaultClass += ' avatar-flair-image';
+    }
+
+    return defaultClass;
   },
 
   buildAttributes(attrs) {
