@@ -198,6 +198,8 @@ class Topic < ActiveRecord::Base
       TagUser.auto_track(topic_id: id)
       self.tags_changed = false
     end
+
+    SearchIndexer.index(self)
   end
 
   def initialize_default_values

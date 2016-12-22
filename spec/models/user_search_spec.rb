@@ -18,7 +18,7 @@ describe UserSearch do
   let(:staged)    { Fabricate :staged }
 
   before do
-    ActiveRecord::Base.observers.enable :all
+    SearchIndexer.enable
 
     Fabricate :post, user: user1, topic: topic
     Fabricate :post, user: user2, topic: topic2

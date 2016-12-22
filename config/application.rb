@@ -85,7 +85,6 @@ module Discourse
         :user_email_observer,
         :user_action_observer,
         :post_alert_observer,
-        :search_observer
     ]
 
     # Set Time.zone default to the specified zone and make Active Record auto-convert to this zone.
@@ -169,6 +168,22 @@ module Discourse
     end
 
     config.after_initialize do
+      # require common dependencies that are often required by plugins
+      # in the past observers would load them as side-effects
+      # correct behavior is for plugins to require stuff they need,
+      # however it would be a risky and breaking change not to require here
+      require_dependency 'category'
+      require_dependency 'post'
+      require_dependency 'topic'
+      require_dependency 'user'
+      require_dependency 'post_action'
+      require_dependency 'post_revision'
+      require_dependency 'notification'
+      require_dependency 'topic_user'
+      require_dependency 'group'
+      require_dependency 'user_field'
+      require_dependency 'post_action_type'
+
       # So open id logs somewhere sane
       OpenID::Util.logger = Rails.logger
       if plugins = Discourse.plugins

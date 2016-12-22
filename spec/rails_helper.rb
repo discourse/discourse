@@ -107,6 +107,8 @@ Spork.prefork do
       # disable all observers, enable as needed during specs
       #
       ActiveRecord::Base.observers.disable :all
+      SearchIndexer.disable
+
       SiteSetting.provider.all.each do |setting|
         SiteSetting.remove_override!(setting.name)
       end
