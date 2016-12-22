@@ -429,7 +429,6 @@ describe Topic do
       let(:actions) { topic.user.user_actions }
 
       it "should set up actions correctly" do
-        ActiveRecord::Base.observers.enable :all
         UserActionCreator.enable
 
         expect(actions.map{|a| a.action_type}).not_to include(UserAction::NEW_TOPIC)

@@ -1,5 +1,6 @@
 class Group < ActiveRecord::Base
   include HasCustomFields
+  include AnonCacheInvalidator
 
   has_many :category_groups, dependent: :destroy
   has_many :group_users, dependent: :destroy

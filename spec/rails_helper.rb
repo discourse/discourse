@@ -104,9 +104,7 @@ Spork.prefork do
       #
       # $redis = DiscourseMockRedis.new
       #
-      # disable all observers, enable as needed during specs
-      #
-      ActiveRecord::Base.observers.disable :all
+      PostActionNotifier.disable
       SearchIndexer.disable
       UserActionCreator.disable
       NotificationEmailer.disable

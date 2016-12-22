@@ -1,27 +1,18 @@
-class PostAlertObserver < ActiveRecord::Observer
-  observe :post_action, :post_revision
+class PostActionNotifier
+
+  def self.disable
+    @disabled = true
+  end
+
+  def self.enable
+    @disabled = false
+  end
 
   def self.alerter
     @alerter ||= PostAlerter.new
   end
 
-  def alerter
-    self.class.alerter
-  end
-
-  # Dispatch to an after_save_#{class_name} method
-  def after_save(model)
-    method_name = callback_for('after_save', model)
-    send(method_name, model) if respond_to?(method_name)
-  end
-
-  # Dispatch to an after_create_#{class_name} method
-  def after_create(model)
-    method_name = callback_for('after_create', model)
-    send(method_name, model) if respond_to?(method_name)
-  end
-
-  def refresh_like_notification(post, read)
+  def self.refresh_like_notification(post, read)
     return unless post && post.user_id
 
     usernames = post.post_actions.where(post_action_type_id: PostActionType.types[:like])
@@ -49,7 +40,10 @@ class PostAlertObserver < ActiveRecord::Observer
     end
   end
 
-  def after_save_post_action(post_action)
+  def self.post_action_deleted(post_action)
+
+    return if @disabled
+
     # We only care about deleting post actions for now
     return if post_action.deleted_at.blank?
 
@@ -74,7 +68,10 @@ class PostAlertObserver < ActiveRecord::Observer
     end
   end
 
-  def self.after_create_post_action(post_action)
+  def self.post_action_created(post_action)
+
+    return if @disabled
+
     # We only notify on likes for now
     return unless post_action.is_like?
 
@@ -91,11 +88,10 @@ class PostAlertObserver < ActiveRecord::Observer
     )
   end
 
-  def after_create_post_action(post_action)
-    self.class.after_create_post_action(post_action)
-  end
+  def self.after_create_post_revision(post_revision)
 
-  def after_create_post_revision(post_revision)
+    return if @disabled
+
     post = post_revision.post
 
     return unless post
@@ -112,11 +108,5 @@ class PostAlertObserver < ActiveRecord::Observer
       acting_user_id: post_revision.try(:user_id)
     )
   end
-
-  protected
-
-    def callback_for(action, model)
-      "#{action}_#{model.class.name.underscore.gsub(/.+\//, '')}"
-    end
 
 end

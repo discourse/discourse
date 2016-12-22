@@ -2,7 +2,6 @@ require 'rails_helper'
 
 describe Notification do
   before do
-    ActiveRecord::Base.observers.enable :all
     NotificationEmailer.enable
   end
 
@@ -235,7 +234,6 @@ describe Notification do
   describe 'ensure consistency' do
     it 'deletes notifications if post is missing or deleted' do
 
-      ActiveRecord::Base.observers.disable :all
       NotificationEmailer.disable
 
       p = Fabricate(:post)

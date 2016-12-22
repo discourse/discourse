@@ -5,7 +5,6 @@ require 'topic_subtype'
 describe PostCreator do
 
   before do
-    ActiveRecord::Base.observers.enable :all
   end
 
   let(:user) { Fabricate(:user) }

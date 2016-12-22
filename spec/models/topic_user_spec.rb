@@ -208,7 +208,6 @@ describe TopicUser do
 
     context 'private messages' do
       it 'should ensure recepients and senders are watching' do
-        ActiveRecord::Base.observers.enable :all
 
         target_user = Fabricate(:user)
         post = create_post(archetype: Archetype.private_message, target_usernames: target_user.username);
