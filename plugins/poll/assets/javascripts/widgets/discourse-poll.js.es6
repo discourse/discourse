@@ -78,6 +78,7 @@ createWidget('discourse-poll-voters', {
 
   fetchVoters() {
     const { attrs, state } = this;
+    if (state.loaded === 'loading') { return; }
 
     const { voterIds } = attrs;
     if (!voterIds.length) { return; }
