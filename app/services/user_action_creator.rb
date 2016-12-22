@@ -1,18 +1,15 @@
-class UserActionObserver < ActiveRecord::Observer
-  observe :post_action, :topic, :post, :notification, :topic_user
+class UserActionCreator
+  def self.disable
+    @disabled = true
+  end
 
-  def after_save(model)
-    case
-    when (model.is_a?(PostAction) && (model.is_bookmark? || model.is_like?))
-      log_post_action(model)
-    when (model.is_a?(Topic))
-      log_topic(model)
-    when (model.is_a?(Post))
-      UserActionObserver.log_post(model)
-    end
+  def self.enable
+    @disabled = false
   end
 
   def self.log_notification(post, user, notification_type, acting_user_id=nil)
+    return if @disabled
+
     action =
       case notification_type
         when Notification.types[:quoted]
@@ -44,6 +41,8 @@ class UserActionObserver < ActiveRecord::Observer
   end
 
   def self.log_post(model)
+    return if @disabled
+
     # first post gets nada
     return if model.is_first_post?
     return if model.topic.blank?
@@ -78,7 +77,8 @@ class UserActionObserver < ActiveRecord::Observer
     end
   end
 
-  def log_topic(model)
+  def self.log_topic(model)
+    return if @disabled
 
     # no action to log here, this can happen if a user is deleted
     # then topic has no user_id
@@ -113,7 +113,9 @@ class UserActionObserver < ActiveRecord::Observer
     end
   end
 
-  def log_post_action(model)
+  def self.log_post_action(model)
+    return if @disabled
+
     action = UserAction::BOOKMARK if model.is_bookmark?
     action = UserAction::LIKE if model.is_like?
 

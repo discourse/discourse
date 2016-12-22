@@ -74,7 +74,8 @@ describe PostOwnerChanger do
         UserAction.create!( action_type: UserAction::REPLY, user_id: p2user.id, acting_user_id: p2user.id,
                             target_post_id: p2.id, target_topic_id: p2.topic_id, created_at: p2.created_at )
 
-        ActiveRecord::Base.observers.enable :user_action_observer
+
+        UserActionCreator.enable
       end
 
       subject(:change_owners) { described_class.new(post_ids: [p1.id, p2.id], topic_id: topic.id, new_owner: user_a, acting_user: editor).change_owner! }

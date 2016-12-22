@@ -21,6 +21,7 @@ describe DirectoryItem do
   context 'refresh' do
     before do
       ActiveRecord::Base.observers.enable :all
+      UserActionCreator.enable
     end
 
     let!(:post) { create_post }

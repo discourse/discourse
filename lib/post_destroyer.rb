@@ -187,7 +187,7 @@ class PostDestroyer
 
   def recover_user_actions
     # TODO: Use a trash concept for `user_actions` to avoid churn and simplify this?
-    UserActionObserver.log_post(@post)
+    UserActionCreator.log_post(@post)
   end
 
   def remove_associated_replies

@@ -430,6 +430,7 @@ describe Topic do
 
       it "should set up actions correctly" do
         ActiveRecord::Base.observers.enable :all
+        UserActionCreator.enable
 
         expect(actions.map{|a| a.action_type}).not_to include(UserAction::NEW_TOPIC)
         expect(actions.map{|a| a.action_type}).to include(UserAction::NEW_PRIVATE_MESSAGE)
