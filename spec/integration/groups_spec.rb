@@ -168,7 +168,15 @@ describe "Groups" do
       )
     end
 
-    let(:group) { Fabricate(:group, users: [user1, user2]) }
+    let(:user3) do
+      Fabricate(:user,
+        last_seen_at: nil,
+        last_posted_at: nil,
+        email: 'c@test.org'
+      )
+    end
+
+    let(:group) { Fabricate(:group, users: [user1, user2, user3]) }
 
     it "should allow members to be sorted by" do
       xhr :get, "/groups/#{group.name}/members", order: 'last_seen_at', desc: true
@@ -177,7 +185,7 @@ describe "Groups" do
 
       members = JSON.parse(response.body)["members"]
 
-      expect(members.map { |m| m["id"] }).to eq([user1.id, user2.id])
+      expect(members.map { |m| m["id"] }).to eq([user1.id, user2.id, user3.id])
 
       xhr :get, "/groups/#{group.name}/members", order: 'last_seen_at'
 
@@ -185,7 +193,7 @@ describe "Groups" do
 
       members = JSON.parse(response.body)["members"]
 
-      expect(members.map { |m| m["id"] }).to eq([user2.id, user1.id])
+      expect(members.map { |m| m["id"] }).to eq([user2.id, user1.id, user3.id])
 
       xhr :get, "/groups/#{group.name}/members", order: 'last_posted_at', desc: true
 
@@ -193,7 +201,7 @@ describe "Groups" do
 
       members = JSON.parse(response.body)["members"]
 
-      expect(members.map { |m| m["id"] }).to eq([user2.id, user1.id])
+      expect(members.map { |m| m["id"] }).to eq([user2.id, user1.id, user3.id])
     end
 
     it "should not allow members to be sorted by columns that are not allowed" do
@@ -203,7 +211,7 @@ describe "Groups" do
 
       members = JSON.parse(response.body)["members"]
 
-      expect(members.map { |m| m["id"] }).to eq([user1.id, user2.id])
+      expect(members.map { |m| m["id"] }).to eq([user1.id, user2.id, user3.id])
     end
   end
 
