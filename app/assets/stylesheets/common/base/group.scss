@@ -23,12 +23,15 @@
     vertical-align: middle;
   }
 
-  .avatar-flair {
-    $size: 50px;
+  $size: 50px;
 
+  .avatar-flair-image {
+    width: $size;
+  }
+
+  .avatar-flair {
     background-size: $size;
     height: $size;
-    width: $size;
 
     i {
       font-size: $size !important;
