@@ -200,6 +200,7 @@ class Topic < ActiveRecord::Base
     end
 
     SearchIndexer.index(self)
+    UserActionCreator.log_topic(self)
   end
 
   def initialize_default_values

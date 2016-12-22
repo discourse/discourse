@@ -174,11 +174,6 @@ describe TopicUser do
         expect(topic_user.last_visited_at.to_i).to eq(today.to_i)
       end
     end
-
-    it 'triggers the observer callbacks when updating' do
-      UserActionObserver.instance.expects(:after_save).twice
-      2.times { TopicUser.track_visit!(topic.id, user.id) }
-    end
   end
 
   describe 'read tracking' do

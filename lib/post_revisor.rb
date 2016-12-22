@@ -250,7 +250,7 @@ class PostRevisor
       prev_owner = User.find(@post.user_id)
       new_owner = User.find(@fields["user_id"])
 
-      # UserActionObserver will create new UserAction records for the new owner
+      # UserActionCreator will create new UserAction records for the new owner
 
       UserAction.where(target_post_id: @post.id)
                 .where(user_id: prev_owner.id)

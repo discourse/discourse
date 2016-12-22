@@ -4,6 +4,7 @@ describe UserAction do
 
   before do
     ActiveRecord::Base.observers.enable :all
+    UserActionCreator.enable
   end
 
   it { is_expected.to validate_presence_of :action_type }

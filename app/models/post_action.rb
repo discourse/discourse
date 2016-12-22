@@ -22,6 +22,7 @@ class PostAction < ActiveRecord::Base
 
   after_save :update_counters
   after_save :enforce_rules
+  after_save :create_user_action
   after_commit :notify_subscribers
 
   def disposed_by_id
@@ -451,6 +452,12 @@ SQL
     PostAction.auto_close_if_threshold_reached(post.topic)
     PostAction.auto_hide_if_needed(user, post, post_action_type_key)
     SpamRulesEnforcer.enforce!(post.user)
+  end
+
+  def create_user_action
+    if is_bookmark? || is_like?
+      UserActionCreator.log_post_action(self)
+    end
   end
 
   def notify_subscribers

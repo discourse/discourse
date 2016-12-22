@@ -33,6 +33,7 @@ describe PostMover do
       p2.replies << p4
       # add a like to a post, enable observers so we get user actions
       ActiveRecord::Base.observers.enable :all
+      UserActionCreator.enable
       @like = PostAction.act(another_user, p4, PostActionType.types[:like])
     end
 

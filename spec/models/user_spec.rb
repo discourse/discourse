@@ -922,6 +922,7 @@ describe User do
     before do
       # To make testing easier, say 1 reply is too much
       SiteSetting.stubs(:newuser_max_replies_per_topic).returns(1)
+      UserActionCreator.enable
     end
 
     context "for a user who didn't create the topic" do
@@ -938,7 +939,10 @@ describe User do
 
       context "with a reply" do
         before do
-          PostCreator.new(Fabricate(:user), raw: 'whatever this is a raw post', topic_id: topic.id, reply_to_post_number: post.post_number).create
+          PostCreator.new(Fabricate(:user),
+                            raw: 'whatever this is a raw post',
+                            topic_id: topic.id,
+                            reply_to_post_number: post.post_number).create
         end
 
         it "resets the `posted_too_much` threshold" do
