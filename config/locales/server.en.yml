@@ -1315,6 +1315,7 @@ en:
     public_user_custom_fields: "A whitelist of custom fields for a user that can be shown publicly."
     staff_user_custom_fields: "A whitelist of custom fields for a user that can be shown to staff."
     enable_user_directory: "Provide a directory of users for browsing"
+    enable_group_directory: "Provide a directory of groups for browsing"
     allow_anonymous_posting: "Allow users to switch to anonymous mode"
     anonymous_posting_min_trust_level: "Minimum trust level required to enable anonymous posting"
     anonymous_account_duration_minutes: "To protect anonymity create a new anonymous account every N minutes for each user. Example: if set to 600, as soon as 600 minutes elapse from last post AND user switches to anon, a new anonymous account is created."
