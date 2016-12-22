@@ -303,7 +303,7 @@ describe Topic do
 
     context 'with a similar topic' do
       let!(:topic) {
-        ActiveRecord::Base.observers.enable :search_observer
+        SearchIndexer.enable
         post = create_post(title: "Evil trout is the dude who posted this topic")
         post.topic
       }

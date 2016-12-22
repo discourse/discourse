@@ -1331,7 +1331,7 @@ describe UsersController do
     let(:user)  { Fabricate :user, username: "joecabot", name: "Lawrence Tierney" }
 
     before do
-      ActiveRecord::Base.observers.enable :all
+      SearchIndexer.enable
       Fabricate :post, user: user, topic: topic
     end
 

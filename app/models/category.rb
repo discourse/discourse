@@ -41,20 +41,26 @@ class Category < ActiveRecord::Base
   validate :email_in_validator
 
   validate :ensure_slug
+
+  after_create :create_category_definition
+
   before_save :apply_permissions
   before_save :downcase_email
   before_save :downcase_name
-  after_create :create_category_definition
-
-  after_save :publish_category
-  after_destroy :publish_category_deletion
-
-  after_update :rename_category_definition, if: :name_changed?
-
-  after_create :delete_category_permalink
-  after_update :create_category_permalink, if: :slug_changed?
 
   after_save :publish_discourse_stylesheet
+  after_save :publish_category
+  after_save :reset_topic_ids_cache
+  after_save :clear_url_cache
+  after_save :index_search
+
+  after_destroy :reset_topic_ids_cache
+  after_destroy :publish_category_deletion
+
+  after_create :delete_category_permalink
+
+  after_update :rename_category_definition, if: :name_changed?
+  after_update :create_category_permalink, if: :slug_changed?
 
   has_one :category_search_data
   belongs_to :parent_category, class_name: 'Category'
@@ -65,8 +71,6 @@ class Category < ActiveRecord::Base
   has_many :category_tag_groups, dependent: :destroy
   has_many :tag_groups, through: :category_tag_groups
 
-  after_save :reset_topic_ids_cache
-  after_destroy :reset_topic_ids_cache
 
   scope :latest, -> { order('topic_count DESC') }
 
@@ -425,9 +429,7 @@ SQL
 
   @@url_cache = DistributedCache.new('category_url')
 
-  after_save do
-    # parent takes part in url calculation
-    # any change could invalidate multiples
+  def clear_url_cache
     @@url_cache.clear
   end
 
@@ -489,6 +491,10 @@ SQL
 
   def publish_discourse_stylesheet
     DiscourseStylesheets.cache.clear
+  end
+
+  def index_search
+    SearchIndexer.index(self)
   end
 
   def self.find_by_slug(category_slug, parent_category_slug=nil)

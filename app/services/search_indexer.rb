@@ -1,7 +1,14 @@
 require_dependency 'search'
 
-class SearchObserver < ActiveRecord::Observer
-  observe :topic, :post, :user, :category
+class SearchIndexer
+
+  def self.disable
+    @disabled = true
+  end
+
+  def self.enable
+    @disabled = false
+  end
 
   def self.scrub_html_for_search(html)
     HtmlScrubber.scrub(html)
@@ -72,17 +79,19 @@ class SearchObserver < ActiveRecord::Observer
   end
 
   def self.index(obj)
+    return if @disabled
+
     if obj.class == Post && obj.cooked_changed?
       if obj.topic
         category_name = obj.topic.category.name if obj.topic.category
-        SearchObserver.update_posts_index(obj.id, obj.cooked, obj.topic.title, category_name)
-        SearchObserver.update_topics_index(obj.topic_id, obj.topic.title, obj.cooked) if obj.is_first_post?
+        SearchIndexer.update_posts_index(obj.id, obj.cooked, obj.topic.title, category_name)
+        SearchIndexer.update_topics_index(obj.topic_id, obj.topic.title, obj.cooked) if obj.is_first_post?
       else
-        Rails.logger.warn("Orphan post skipped in search_observer, topic_id: #{obj.topic_id} post_id: #{obj.id} raw: #{obj.raw}")
+        Rails.logger.warn("Orphan post skipped in search_indexer, topic_id: #{obj.topic_id} post_id: #{obj.id} raw: #{obj.raw}")
       end
     end
     if obj.class == User && (obj.username_changed? || obj.name_changed?)
-      SearchObserver.update_users_index(obj.id, obj.username_lower || '', obj.name ? obj.name.downcase : '')
+      SearchIndexer.update_users_index(obj.id, obj.username_lower || '', obj.name ? obj.name.downcase : '')
     end
 
     if obj.class == Topic && obj.title_changed?
@@ -90,19 +99,15 @@ class SearchObserver < ActiveRecord::Observer
         post = obj.posts.find_by(post_number: 1)
         if post
           category_name = obj.category.name if obj.category
-          SearchObserver.update_posts_index(post.id, post.cooked, obj.title, category_name)
-          SearchObserver.update_topics_index(obj.id, obj.title, post.cooked)
+          SearchIndexer.update_posts_index(post.id, post.cooked, obj.title, category_name)
+          SearchIndexer.update_topics_index(obj.id, obj.title, post.cooked)
         end
       end
     end
 
     if obj.class == Category && obj.name_changed?
-      SearchObserver.update_categories_index(obj.id, obj.name)
+      SearchIndexer.update_categories_index(obj.id, obj.name)
     end
-  end
-
-  def after_save(object)
-    SearchObserver.index(object)
   end
 
 

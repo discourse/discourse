@@ -51,6 +51,8 @@ class Post < ActiveRecord::Base
 
   validates_with ::Validators::PostValidator
 
+  after_save :index_search
+
   # We can pass several creating options to a post via attributes
   attr_accessor :image_sizes, :quoted_post_numbers, :no_bump, :invalidate_oneboxes, :cooking_options, :skip_unique_check
 
@@ -634,6 +636,10 @@ class Post < ActiveRecord::Base
 
   def seen?(user)
     PostTiming.where(topic_id: topic_id, post_number: post_number, user_id: user.id).exists?
+  end
+
+  def index_search
+    SearchIndexer.index(self)
   end
 
   private
