@@ -11,12 +11,12 @@ export function buildGroupPage(type) {
     },
 
     setupController(controller, model) {
-      this.controllerFor('group-posts').setProperties({ model, type });
+      this.controllerFor('group-activity-posts').setProperties({ model, type });
       this.controllerFor("group").set("showing", type);
     },
 
     renderTemplate() {
-      this.render('group-posts');
+      this.render('group-activity-posts');
     },
 
     actions: {

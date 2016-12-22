@@ -49,10 +49,14 @@ export default function() {
 
   this.route('group', { path: '/groups/:name', resetNamespace: true }, function() {
     this.route('members');
-    this.route('posts');
-    this.route('topics');
-    this.route('mentions');
-    this.route('messages');
+
+    this.route('activity', function() {
+      this.route('posts');
+      this.route('topics');
+      this.route('mentions');
+      this.route('messages');
+    });
+
     this.route('logs');
     this.route('edit');
   });
