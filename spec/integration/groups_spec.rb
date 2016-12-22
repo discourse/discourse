@@ -14,6 +14,15 @@ describe "Groups" do
       group.update_attributes!(automatic: true, visible: true)
     end
 
+    context 'when group directory is disabled' do
+      site_setting(:enable_group_directory, false)
+
+      it 'should deny access' do
+        get "/groups.json"
+        expect(response).to be_forbidden
+      end
+    end
+
     it 'should return the right response' do
       get "/groups.json"
 

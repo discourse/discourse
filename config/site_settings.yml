@@ -411,6 +411,11 @@ users:
     default: false
     client: true
 
+groups:
+  enable_group_directory:
+    client: true
+    default: true
+
 posting:
   min_post_length:
     client: true

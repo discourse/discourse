@@ -11,6 +11,10 @@ class GroupsController < ApplicationController
   skip_before_filter :preload_json, :check_xhr, only: [:posts_feed, :mentions_feed]
 
   def index
+    unless SiteSetting.enable_group_directory?
+      raise Discourse::InvalidAccess.new(:enable_group_directory)
+    end
+
     page_size = 30
     page = params[:page]&.to_i || 0
 
