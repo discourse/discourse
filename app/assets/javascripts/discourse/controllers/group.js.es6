@@ -16,19 +16,15 @@ export default Ember.Controller.extend({
   application: Ember.inject.controller(),
   counts: null,
   showing: 'members',
+
   tabs: [
-    Tab.create({ name: 'members', active: true, 'location': 'group.index' }),
-    Tab.create({ name: 'posts' }),
-    Tab.create({ name: 'topics' }),
-    Tab.create({ name: 'mentions' }),
-    Tab.create({ name: 'messages', requiresMembership: true }),
+    Tab.create({ name: 'members', 'location': 'group.index', icon: 'users' }),
+    Tab.create({ name: 'activity' }),
     Tab.create({
-      name: 'edit', i18nKey: 'edit.title',
-      requiresMembership: true, requiresGroupAdmin: true
+      name: 'edit', i18nKey: 'edit.title', icon: 'pencil', requiresGroupAdmin: true
     }),
     Tab.create({
-      name: 'logs', i18nKey: 'logs.title',
-      requiresMembership: true, requiresGroupAdmin: true
+      name: 'logs', i18nKey: 'logs.title', icon: 'list-alt', requiresGroupAdmin: true
     })
   ],
 
@@ -57,31 +53,22 @@ export default Ember.Controller.extend({
     this.get('tabs')[0].set('count', this.get('model.user_count'));
   },
 
-  @observes('showing')
-  showingChanged() {
-    const showing = this.get('showing');
-
-    this.get('tabs').forEach(tab => {
-      tab.set('active', showing === tab.get('name'));
-    });
-  },
-
   @computed('model.is_group_user', 'model.is_group_owner', 'model.automatic')
   getTabs(isGroupUser, isGroupOwner, automatic) {
     return this.get('tabs').filter(t => {
-      let isMember = false;
+      let display = true;
 
-      if (this.currentUser && !automatic) {
+      if (this.currentUser) {
         let admin = this.currentUser.admin;
 
-        if (t.get('requiresGroupAdmin')) {
-          isMember = admin || isGroupOwner;
+        if (automatic && t.get('requiresGroupAdmin')) {
+          display = false;
         } else {
-          isMember = admin || isGroupUser;
+          display = admin || isGroupOwner;
         }
       }
 
-      return isMember || !t.get('requiresMembership');
+      return display;
     });
   }
 });

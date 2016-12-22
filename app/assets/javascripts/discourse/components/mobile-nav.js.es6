@@ -14,6 +14,7 @@ export default Ember.Component.extend({
   },
 
   tagName: 'ul',
+  selectedHtml: null,
 
   classNames: ['mobile-nav'],
 

@@ -1,12 +1,7 @@
 .group-details-container {
   background: rgba(230, 230, 230, 0.3);
   padding: 20px;
-  margin-bottom: 30px;
-}
-
-.group-breadcrumb {
-  display: block;
-  margin-bottom: 10px;
+  margin-bottom: 15px;
 }
 
 .group-info {
@@ -160,9 +155,11 @@ table.group-members {
   }
 }
 
-.group-edit .form-horizontal {
-  label {
-    font-weight: bold;
+.group-edit {
+  .form-horizontal {
+    label {
+      font-weight: bold;
+    }
   }
 }
 
