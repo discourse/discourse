@@ -82,7 +82,6 @@ module Discourse
 
     # Activate observers that should always be running.
     config.active_record.observers = [
-        :user_email_observer,
         :post_alert_observer,
     ]
 

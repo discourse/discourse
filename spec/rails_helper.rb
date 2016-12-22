@@ -109,6 +109,7 @@ Spork.prefork do
       ActiveRecord::Base.observers.disable :all
       SearchIndexer.disable
       UserActionCreator.disable
+      NotificationEmailer.disable
 
       SiteSetting.provider.all.each do |setting|
         SiteSetting.remove_override!(setting.name)
