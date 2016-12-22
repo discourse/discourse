@@ -9,7 +9,6 @@ describe UserActionsController do
     end
 
     it 'renders list correctly' do
-      ActiveRecord::Base.observers.enable :all
       UserActionCreator.enable
       post = Fabricate(:post)
 

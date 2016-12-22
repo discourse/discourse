@@ -220,7 +220,9 @@ describe PostAction do
   describe 'when a user likes something' do
 
     it 'should generate notifications correctly' do
-      ActiveRecord::Base.observers.enable :all
+
+      PostActionNotifier.enable
+
       PostAction.act(codinghorror, post, PostActionType.types[:like])
       expect(Notification.count).to eq(1)
 

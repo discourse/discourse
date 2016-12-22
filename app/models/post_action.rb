@@ -23,6 +23,8 @@ class PostAction < ActiveRecord::Base
   after_save :update_counters
   after_save :enforce_rules
   after_save :create_user_action
+  after_save :update_notifications
+  after_create :create_notifications
   after_commit :notify_subscribers
 
   def disposed_by_id
@@ -281,7 +283,7 @@ SQL
       post_action.recover!
       action_attrs.each { |attr, val| post_action.send("#{attr}=", val) }
       post_action.save
-      PostAlertObserver.after_create_post_action(post_action)
+      PostActionNotifier.post_action_created(post_action)
     else
       post_action = create(where_attrs.merge(action_attrs))
       if post_action && post_action.errors.count == 0
@@ -458,6 +460,16 @@ SQL
     if is_bookmark? || is_like?
       UserActionCreator.log_post_action(self)
     end
+  end
+
+  def update_notifications
+    if self.deleted_at.present?
+      PostActionNotifier.post_action_deleted(self)
+    end
+  end
+
+  def create_notifications
+    PostActionNotifier.post_action_created(self)
   end
 
   def notify_subscribers

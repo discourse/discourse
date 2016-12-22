@@ -4,7 +4,6 @@ require 'post_destroyer'
 describe PostDestroyer do
 
   before do
-    ActiveRecord::Base.observers.enable :all
     UserActionCreator.enable
   end
 

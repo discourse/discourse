@@ -6,6 +6,7 @@ class Category < ActiveRecord::Base
   include Positionable
   include HasCustomFields
   include CategoryHashtag
+  include AnonCacheInvalidator
 
   belongs_to :topic, dependent: :destroy
   belongs_to :topic_only_relative_url,
