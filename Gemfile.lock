@@ -149,7 +149,7 @@ GEM
     lru_redux (1.1.0)
     mail (2.6.4)
       mime-types (>= 1.16, < 4)
-    memory_profiler (0.9.6)
+    memory_profiler (0.9.7)
     message_bus (2.0.2)
       rack (>= 1.1.3)
     metaclass (0.0.4)
