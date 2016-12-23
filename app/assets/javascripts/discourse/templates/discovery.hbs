@@ -21,7 +21,8 @@
   <div class="row">
     <div class="full-width">
       <div id="list-area">
-        {{plugin-outlet name="discovery-list-container-top"}}
+        {{plugin-outlet name="discovery-list-container-top"
+                        args=(hash category=category)}}
         {{outlet "list-container"}}
       </div>
     </div>
