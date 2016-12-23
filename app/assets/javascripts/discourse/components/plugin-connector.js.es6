@@ -1,3 +1,5 @@
+import { observes } from 'ember-addons/ember-computed-decorators';
+
 export default Ember.Component.extend({
 
   init() {
@@ -11,6 +13,12 @@ export default Ember.Component.extend({
 
     const connectorClass = this.get('connector.connectorClass');
     connectorClass.setupComponent.call(this, args, this);
+  },
+
+  @observes('args')
+  _argsChanged() {
+    const args = this.get('args') || {};
+    Object.keys(args).forEach(key => this.set(key, args[key]));
   },
 
   send(name, ...args) {
