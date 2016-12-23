@@ -552,6 +552,7 @@ export default Ember.Component.extend({
         applySurround: (head, tail, exampleKey, opts) => this._applySurround(selected, head, tail, exampleKey, opts),
         applyList: (head, exampleKey) => this._applyList(selected, head, exampleKey),
         addText: text => this._addText(selected, text),
+        replaceText: text => this._addText({pre: '', post: ''}, text),
         getText: () => this.get('value'),
       };
 
