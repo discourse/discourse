@@ -722,8 +722,10 @@ files:
     max: 10000
   download_onebox_images_to_local:
     default:
-      test: false
       default: true
+  download_only_http_onebox_images:
+    default:
+      default: false
   disabled_image_download_domains:
     type: list
     default: ''
