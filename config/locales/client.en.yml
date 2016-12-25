@@ -3221,6 +3221,7 @@ en:
           user_preferences: "User Preferences"
           tags: "Tags"
           search: "Search"
+          groups: "Groups"
 
       badges:
         title: Badges
