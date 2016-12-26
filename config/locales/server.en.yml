@@ -1322,6 +1322,8 @@ en:
 
     hide_user_profiles_from_public: "Disable user cards, user profiles and user directory for anonymous users."
 
+    user_website_domains_whitelist: "User website will be verified against these domains. Pipe-delimited list." 
+
     allow_profile_backgrounds: "Allow users to upload profile backgrounds."
 
     sequential_replies_threshold: "Number of posts a user has to make in a row in a topic before being reminded about too many sequential replies."
@@ -1606,6 +1608,8 @@ en:
     ip_address:
       blocked: "New registrations are not allowed from your IP address."
       max_new_accounts_per_registration_ip: "New registrations are not allowed from your IP address (maximum limit reached). Contact a staff member."
+    website:
+      domain_not_allowed: "Website is invalid. Allowed domains are: %{domains}"
 
   flags_reminder:
     flags_were_submitted:
