@@ -54,16 +54,19 @@ describe UserProfile do
       expect(user_profile).not_to be_valid
     end
 
-    it "doesn't support invalid website" do
-      user_profile = Fabricate.build(:user_profile, website: "http://https://google.com")
-      user_profile.user = Fabricate.build(:user)
-      expect(user_profile).not_to be_valid
-    end
+    context "website validation" do
+      let(:user) { Fabricate(:user) }
 
-    it "supports valid website" do
-      user_profile = Fabricate.build(:user_profile, website: "https://google.com")
-      user_profile.user = Fabricate.build(:user)
-      expect(user_profile.valid?).to be true
+      it "ensures website is valid" do
+        expect(Fabricate.build(:user_profile, user: user, website: "http://https://google.com")).not_to be_valid
+        expect(Fabricate.build(:user_profile, user: user, website: "https://google.com")).to be_valid
+      end
+
+      it "validates website domain if user_website_domains_whitelist setting is present" do
+        SiteSetting.user_website_domains_whitelist = "discourse.org"
+        expect(Fabricate.build(:user_profile, user: user, website: "https://google.com")).not_to be_valid
+        expect(Fabricate.build(:user_profile, user: user, website: "http://discourse.org")).to be_valid
+      end
     end
 
     describe 'after save' do
