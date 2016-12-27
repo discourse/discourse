@@ -454,7 +454,15 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
     },
 
     jumpToPost(postNumber) {
-      this._jumpToPostId(this.get('model.postStream').findPostIdForPostNumber(postNumber));
+      const postStream = this.get('model.postStream');
+      let postId = postStream.findPostIdForPostNumber(postNumber);
+
+      // If we couldn't find the post, find the closest post to it
+      if (!postId) {
+        const closest = postStream.closestPostNumberFor(postNumber);
+        postId = postStream.findPostIdForPostNumber(closest);
+      }
+      this._jumpToPostId(postId);
     },
 
     jumpTop() {
