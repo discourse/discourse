@@ -361,6 +361,11 @@ function getPluginApi(version) {
     if (!_pluginv01) {
       _pluginv01 = new PluginApi(version, Discourse.__container__);
     }
+
+    // We are recycling the compatible object, but let's update to the higher version
+    if (_pluginv01.version < version) {
+      _pluginv01.version = version;
+    }
     return _pluginv01;
   } else {
     console.warn(`Plugin API v${version} is not supported`);

@@ -137,7 +137,7 @@ const Discourse = Ember.Application.extend({
       Discourse.instanceInitializer({
         name: "_discourse_plugin_" + (++initCount),
         after: 'inject-objects',
-        initialize: function() {
+        initialize() {
           withPluginApi(cb.version, cb.code);
         }
       });
