@@ -7,6 +7,7 @@ import RawHtml from 'discourse/widgets/raw-html';
 const SCROLLAREA_HEIGHT = 300;
 const SCROLLER_HEIGHT = 50;
 const SCROLLAREA_REMAINING = SCROLLAREA_HEIGHT - SCROLLER_HEIGHT;
+const LAST_READ_HEIGHT = 20;
 
 function clamp(p, min=0.0, max=1.0) {
   return Math.max(Math.min(p, max), min);
@@ -25,9 +26,9 @@ createWidget('timeline-last-read', {
   tagName: 'div.timeline-last-read',
 
   buildAttributes(attrs) {
-    const bottom = SCROLLAREA_HEIGHT - 10;
+    const bottom = SCROLLAREA_HEIGHT - (LAST_READ_HEIGHT / 2);
     const top = attrs.top > bottom ? bottom : attrs.top;
-    return { style: `height: 20px; top: ${top}px` };
+    return { style: `height: ${LAST_READ_HEIGHT}px; top: ${top}px` };
   },
 
   html(attrs) {
@@ -184,10 +185,9 @@ createWidget('timeline-scrollarea', {
 
 
       // Don't show if at the bottom of the timeline
-      if (lastReadTop > (SCROLLAREA_HEIGHT - SCROLLER_HEIGHT)) {
+      if (lastReadTop > (SCROLLAREA_HEIGHT - (LAST_READ_HEIGHT / 2))) {
         showButton = false;
       }
-
     }
 
     const result = [
