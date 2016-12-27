@@ -18,6 +18,7 @@ function attachBackButton(widget) {
     className: 'btn btn-primary btn-small back-button',
     label: 'topic.timeline.back',
     title: 'topic.timeline.back_description',
+    icon: 'arrow-down',
     action: 'goBack'
   });
 }
