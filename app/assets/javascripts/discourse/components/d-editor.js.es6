@@ -525,11 +525,43 @@ export default Ember.Component.extend({
 
   _replaceText(oldVal, newVal) {
     const val = this.get('value');
-    const loc = val.indexOf(oldVal);
-    if (loc !== -1) {
-      this.set('value', val.replace(oldVal, newVal));
-      this._selectText(loc + newVal.length, 0);
+    const needleStart = val.indexOf(oldVal);
+
+    if (needleStart === -1) {
+      // Nothing to replace.
+      return;
     }
+
+    const textarea = this.$('textarea.d-editor-input')[0];
+
+    // Remember cursor/selection.
+    const selectionStart = textarea.selectionStart;
+    const selectionEnd = textarea.selectionEnd;
+    const needleEnd = needleStart + oldValue.length;
+    const replacementEnd = needleStart + newVal.length;
+
+    // Replace value (side effect: cursor at end).
+    this.set('value', val.replace(oldVal, newVal));
+
+    // Determine cursor/selection.
+    const newSelectionStart, newSelectionEnd;
+    if (selectionEnd <= needleEnd) {
+      // Selection before needle.
+      newSelectionStart = selectionStart;
+      newSelectionEnd = selectionEnd;
+    } else if (selectionStart < needleEnd) {
+      // Selection within needle.
+      newSelectionStart = replacementEnd;
+      newSelectionEnd = replacementEnd;
+    } else {
+      // Selection behind needle.
+      const lengthDiff = replacementEnd - needleStart;
+      newSelectionStart = selectionStart + lengthDiff;
+      newSelectionEnd = selectionEnd + lengthDiff;
+    }
+
+    // Restore cursor.
+    this._selectText(newSelectionStart, newSelectionEnd - newSelectionStart);
   },
 
   _addText(sel, text) {
