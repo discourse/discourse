@@ -1,10 +1,19 @@
+@keyframes button-jump-up {
+  0% { bottom: 0;}
+  50% { bottom: 45px;}
+  65% { bottom: 40px;}
+  77% { bottom: 43px;}
+  100% { bottom: 40px;}
+}
+
 .progress-back-container {
   position: fixed;
   right: 0;
   bottom: 40px;
   z-index: 950;
   margin-right: 45px;
-
+  animation-duration: 0.5s;
+  animation-name: button-jump-up;
   .btn {
     margin: 0;
   }
