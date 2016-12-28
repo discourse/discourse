@@ -1,10 +1,10 @@
 require 'rails_helper'
 require_dependency 'post_destroyer'
 
-describe PostAlertObserver do
+describe PostActionNotifier do
 
   before do
-    ActiveRecord::Base.observers.enable :post_alert_observer
+    PostActionNotifier.enable
   end
 
   let!(:evil_trout) { Fabricate(:evil_trout) }

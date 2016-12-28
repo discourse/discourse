@@ -292,17 +292,10 @@ id:
       total_rows:
         other: "%{count} pengguna"
     groups:
-      empty:
-        posts: "Tidak ada posting dari anggota kelompok ini."
-        members: "TIdak ada anggota pada kelompok ini."
-        mentions: "Tidak ada balasan oleh kelompok ini."
-        messages: "Tidak ada pesan untuk kelompok ini."
-        topics: "Tidak ada topik dari anggota kelompok ini."
       add: "Menambahkan"
       selector_placeholder: "Menambahkan anggota"
       owner: "pemilik"
       visible: "Grup terlihat oleh semua pengguna"
-      index: "Grup"
       title:
         other: "Grup"
       members: "Anggota"
@@ -591,8 +584,6 @@ id:
         generate_link: "Salin Tautan Undangan"
         bulk_invite:
           text: "Undangan Massal dari Berkas"
-          uploading: "Mengunggah..."
-          error: "Terdapat gangguan mengunggah '{{filename}}': {{message}}"
       password:
         title: "Kata sandi"
         too_short: "Password kamu terlalu pendek."

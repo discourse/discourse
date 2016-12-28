@@ -25,15 +25,15 @@ if uncat_id == -1 || !Category.exists?(uncat_id)
 end
 
 # 60 minutes after our migration runs we need to exectue this code...
-duration = Rails.env.production? ? 60 : 0
+duration = Rails.env.production? ? 30 : 0
 if Category.exec_sql("
     SELECT 1 FROM schema_migration_details
     WHERE EXISTS(
       SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS
-        WHERE table_schema = 'public' AND table_name = 'categories' AND column_name = 'uploaded_logo_id'
+        WHERE table_schema = 'public' AND table_name = 'categories' AND column_name = 'logo_url'
       ) AND
     name = 'AddUploadsToCategories' AND
-    created_at < (current_timestamp at time zone 'UTC' - interval '#{duration} minutes')
+    created_at < (current_timestamp at time zone 'UTC' - interval '#{duration} days')
   ").to_a.length > 0
 
 

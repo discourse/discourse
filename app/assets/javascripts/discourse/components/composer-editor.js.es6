@@ -6,7 +6,7 @@ import { linkSeenTagHashtags, fetchUnseenTagHashtags } from 'discourse/lib/link-
 import { load } from 'pretty-text/oneboxer';
 import { ajax } from 'discourse/lib/ajax';
 import InputValidation from 'discourse/models/input-validation';
-import { getOwner } from 'discourse-common/lib/get-owner';
+import { findRawTemplate } from 'discourse/lib/raw-templates';
 import { tinyAvatar,
          displayErrorForUpload,
          getUploadMarkdown,
@@ -62,10 +62,9 @@ export default Ember.Component.extend({
   @on('didInsertElement')
   _composerEditorInit() {
     const topicId = this.get('topic.id');
-    const template = getOwner(this).lookup('template:user-selector-autocomplete.raw');
     const $input = this.$('.d-editor-input');
     $input.autocomplete({
-      template,
+      template: findRawTemplate('user-selector-autocomplete'),
       dataSource: term => userSearch({ term, topicId, includeGroups: true }),
       key: "@",
       transformComplete: v => v.username || v.name
@@ -168,7 +167,7 @@ export default Ember.Component.extend({
       post.set('refreshedPost', true);
     }
 
-    $oneboxes.each((_, o) => load(o, refresh, ajax));
+    $oneboxes.each((_, o) => load(o, refresh, ajax, this.currentUser.id));
   },
 
   _warnMentionedGroups($preview) {

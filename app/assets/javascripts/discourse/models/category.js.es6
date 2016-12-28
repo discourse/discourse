@@ -97,10 +97,12 @@ const Category = RestModel.extend({
         custom_fields: this.get('custom_fields'),
         topic_template: this.get('topic_template'),
         suppress_from_homepage: this.get('suppress_from_homepage'),
+        all_topics_wiki: this.get('all_topics_wiki'),
         allowed_tags: this.get('allowed_tags'),
         allowed_tag_groups: this.get('allowed_tag_groups'),
         sort_order: this.get('sort_order'),
-        sort_ascending: this.get('sort_ascending')
+        sort_ascending: this.get('sort_ascending'),
+        topic_featured_link_allowed: this.get('topic_featured_link_allowed')
       },
       type: id ? 'PUT' : 'POST'
     });
@@ -169,18 +171,6 @@ const Category = RestModel.extend({
   @computed("id")
   isUncategorizedCategory(id) {
     return id === Discourse.Site.currentProp("uncategorized_category_id");
-  },
-
-  @computed('custom_fields.topic_featured_link_allowed')
-  topicFeaturedLinkAllowed: {
-    get(allowed) {
-      return allowed === "true";
-    },
-    set(value) {
-      value = value ? "true" : "false";
-      this.set("custom_fields.topic_featured_link_allowed", value);
-      return value;
-    }
   }
 });
 

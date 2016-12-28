@@ -40,10 +40,9 @@ end
 if seed_welcome_topics
   puts "Seeding welcome topics"
 
-  PostCreator.create(Discourse.system_user, raw: I18n.t('assets_topic_body'), title: "Assets for the site design", skip_validations: true, category: staff ? staff.name : nil)
+  PostCreator.create(Discourse.system_user, raw: I18n.t('assets_topic_body'), title: I18n.t('assets_topic_title'), skip_validations: true, category: staff ? staff.name : nil)
 
-  welcome = File.read(Rails.root + 'docs/WELCOME-TO-DISCOURSE.md')
-  post = PostCreator.create(Discourse.system_user, raw: welcome, title: "Welcome to Discourse", skip_validations: true)
+  post = PostCreator.create(Discourse.system_user, raw: I18n.t('discourse_welcome_topic.body'), title: I18n.t('discourse_welcome_topic.title'), skip_validations: true)
   post.topic.update_pinned(true, true)
 
   lounge = Category.find_by(id: SiteSetting.lounge_category_id)

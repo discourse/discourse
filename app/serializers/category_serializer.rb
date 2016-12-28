@@ -9,13 +9,15 @@ class CategorySerializer < BasicCategorySerializer
              :email_in,
              :email_in_allow_strangers,
              :suppress_from_homepage,
+             :all_topics_wiki,
              :can_delete,
              :cannot_delete_reason,
              :is_special,
              :allow_badges,
              :custom_fields,
              :allowed_tags,
-             :allowed_tag_groups
+             :allowed_tag_groups,
+             :topic_featured_link_allowed
 
   def group_permissions
     @group_permissions ||= begin

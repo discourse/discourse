@@ -1,8 +1,13 @@
+{{#if showBackButton}}
+  <div class='progress-back-container'>
+    {{d-button label="topic.timeline.back" class="btn-primary progress-back" action="goBack" icon="arrow-down"}}
+  </div>
+{{/if}}
+
 <nav id='topic-progress' title="{{i18n 'topic.progress.title'}}" class="{{if hideProgress 'hidden'}}">
   <div class='nums'>
     <h4>{{progressPosition}}</h4><span class="{{if hugeNumberOfPosts 'hidden'}}">
     <span>/</span>
     <h4>{{postStream.filteredPostsCount}}</h4></span>
   </div>
-  <i class="fa {{unless expanded 'fa-sort'}}"></i>
 </nav>

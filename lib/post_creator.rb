@@ -5,7 +5,6 @@ require_dependency 'topic_creator'
 require_dependency 'post_jobs_enqueuer'
 require_dependency 'distributed_mutex'
 require_dependency 'has_errors'
-require_dependency 'discourse_featured_link'
 
 class PostCreator
   include HasErrors
@@ -361,6 +360,9 @@ class PostCreator
     end
     @post.topic_id = @topic.id
     @post.topic = @topic
+    if @topic && @topic.category && @topic.category.all_topics_wiki
+      @post.wiki = true
+    end
   end
 
   def update_topic_stats

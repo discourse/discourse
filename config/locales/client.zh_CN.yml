@@ -295,18 +295,45 @@ zh_CN:
       posts_read_long: "阅读帖子"
       total_rows:
         other: "%{count} 位用户"
+    group_histories:
+      actions:
+        change_group_setting: "更改小组设置"
+        add_user_to_group: "增加用户"
+        remove_user_from_group: "移除用户"
+        make_user_group_owner: "设为所有者"
+        remove_user_as_group_owner: "撤销所有者"
     groups:
+      logs:
+        title: "日志"
+        when: "时间"
+        action: "操作"
+        acting_user: "操作用户"
+        target_user: "目标用户"
+        subject: "主题"
+        details: "详情"
+        from: "来自"
+        to: "发至"
+      edit:
+        title: '编辑群组'
+        full_name: '名字'
+        add_members: "增加组员"
+        delete_member_confirm: "从“%{group}”群组中移除用户“%{username}'？"
+      request_membership_pm:
+        title: "成员申请"
+        body: "我想申请 @%{groupName} 的成员资格。"
+      name_placeholder: "群组名，没有空格，和用户名一样的规则"
+      public: "允许用户自由加入/离开群组（需要群组是可见）"
       empty:
-        posts: "群组的成员从未发表帖子。"
+        posts: "群组成员没有发布帖子。"
         members: "群组没有成员。"
-        mentions: "群组从未被提及过。"
-        messages: "群组从未发送过消息。"
-        topics: "群组的成员从未发表主题。"
       add: "添加"
+      join: "加入群组"
+      request: "请求加入群组"
       selector_placeholder: "添加成员"
       owner: "所有者"
       visible: "群组对所有用户可见"
-      index: "群组"
+      index:
+        title: "群组"
       title:
         other: "群组"
       members: "成员"
@@ -659,11 +686,8 @@ zh_CN:
         link_generated: "邀请链接生成成功！"
         valid_for: "邀请链接只对这个邮件地址有效：%{email}"
         bulk_invite:
-          none: "你从未邀请过他人。你可以发送单个邀请，或者<a href='https://meta.discourse.org/t/send-bulk-invites/16468'>上传批量邀请文件</a>一次邀请多人。"
           text: "通过文件批量邀请"
-          uploading: "上传中..."
           success: "文件上传成功，当操作完成时将通过消息通知你。"
-          error: "在上传 '{{filename}}' 时出现错误：{{message}}"
       password:
         title: "密码"
         too_short: "密码过短"
@@ -795,7 +819,7 @@ zh_CN:
       disable: "显示已删除的帖子"
     private_message_info:
       title: "私信"
-      invite: "邀请其他..."
+      invite: "邀请其他人..."
       remove_allowed_user: "确定将 {{name}} 从本条消息中移除？"
       remove_allowed_group: "确定将 {{name}} 从本条消息中移除？"
     email: '邮箱'
@@ -918,6 +942,7 @@ zh_CN:
       title: "或 Ctrl + 回车"
       users_placeholder: "添加用户"
       title_placeholder: "一句话告诉讨论什么..."
+      title_or_link_placeholder: "键入标题，或粘贴一个链接在这里"
       edit_reason_placeholder: "编辑理由"
       show_edit_reason: "添加理由"
       reply_placeholder: "在此键入。使用Markdown，BBCode，或HTML格式。可拖拽或粘贴图片。"
@@ -2115,15 +2140,12 @@ zh_CN:
         refresh: "刷新"
         new: "新群组"
         selector_placeholder: "输入用户名"
-        name_placeholder: "群组名，不能含有空格，与用户名规则一致"
         about: "在这里编辑群组的名字和成员"
         group_members: "群组成员"
         delete: "删除"
         delete_confirm: "删除这个群组吗？"
         delete_failed: "无法删除群组。如果该群组是自动生成的，则不可删除。"
-        delete_member_confirm: "从群组“%{group}”中移除“%{username}”？"
         delete_owner_confirm: "移除“%{username}”的权限？"
-        name: "名字"
         add: "添加"
         add_members: "添加成员"
         custom: "定制"
@@ -2140,10 +2162,6 @@ zh_CN:
         add_owners: 添加所有者
         incoming_email: "自定义进站电子邮件地址"
         incoming_email_placeholder: "输入邮箱地址"
-        flair_url_placeholder: "（可选）图片 URL 或 Font Awesome class"
-        flair_bg_color_placeholder: "（可选）十六进制色彩值"
-        flair_color_placeholder: "（可选）十六进制色彩值"
-        flair_preview: "预览"
       api:
         generate_master: "生成主 API 密钥"
         none: "当前没有可用的 API 密钥。"
@@ -2198,7 +2216,6 @@ zh_CN:
           details: "当有新回复、编辑、帖子被删除或者恢复时。"
         user_event:
           name: "用户事件"
-          details: "当用户被创建或者通过时。"
         delivery_status:
           title: "分发状态"
           inactive: "不活跃"

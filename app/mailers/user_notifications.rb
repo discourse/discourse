@@ -135,7 +135,11 @@ class UserNotifications < ActionMailer::Base
     end
 
     # Now fetch some topics and posts to show
-    topics_for_digest = Topic.for_digest(user, min_date, limit: SiteSetting.digest_topics + SiteSetting.digest_other_topics, top_order: true).to_a
+    digest_opts = {limit: SiteSetting.digest_topics + SiteSetting.digest_other_topics, top_order: true}
+    topics_for_digest = Topic.for_digest(user, min_date, digest_opts).to_a
+    if topics_for_digest.empty? && !user.user_option.try(:include_tl0_in_digests)
+      topics_for_digest = Topic.for_digest(user, min_date, digest_opts.merge(include_tl0: true)).where('topics.created_at < ?', 24.hours.ago).to_a
+    end
 
     @popular_topics = topics_for_digest[0,SiteSetting.digest_topics]
     @other_new_for_you = topics_for_digest.size > SiteSetting.digest_topics ? topics_for_digest[SiteSetting.digest_topics..-1] : []
@@ -150,9 +154,6 @@ class UserNotifications < ActionMailer::Base
     else
       []
     end
-
-    topic_lookup = TopicUser.lookup_for(user, @other_new_for_you)
-    @other_new_for_you.each { |t| t.user_data = topic_lookup[t.id] }
 
     if @popular_topics.present?
       opts = {

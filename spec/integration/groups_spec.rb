@@ -4,19 +4,26 @@ describe "Groups" do
   let(:user) { Fabricate(:user) }
   let(:group) { Fabricate(:group, users: [user]) }
 
-  def sign_in(user)
-    password = 'somecomplicatedpassword'
-    user.update!(password: password)
-    Fabricate(:email_token, confirmed: true, user: user)
-    post "/session.json", { login: user.username, password: password }
-    expect(response).to be_success
-  end
-
   describe 'viewing groups' do
-    it 'should return the right response' do
-      group.update_attributes!(visible: true)
-      other_group = Fabricate(:group, name: '0000', visible: true)
+    let(:other_group) do
+      Fabricate(:group, name: '0000', visible: true, automatic: false)
+    end
 
+    before do
+      other_group
+      group.update_attributes!(automatic: true, visible: true)
+    end
+
+    context 'when group directory is disabled' do
+      site_setting(:enable_group_directory, false)
+
+      it 'should deny access' do
+        get "/groups.json"
+        expect(response).to be_forbidden
+      end
+    end
+
+    it 'should return the right response' do
       get "/groups.json"
 
       expect(response).to be_success
@@ -25,8 +32,32 @@ describe "Groups" do
 
       group_ids = response_body["groups"].map { |g| g["id"] }
 
-      expect(group_ids).to include(group.id, other_group.id)
+      expect(response_body["extras"]["group_user_ids"]).to eq([])
+      expect(group_ids).to include(other_group.id)
+      expect(group_ids).to_not include(group.id)
       expect(response_body["load_more_groups"]).to eq("/groups?page=1")
+      expect(response_body["total_rows_groups"]).to eq(1)
+    end
+
+    context 'viewing as an admin' do
+      it 'should display automatic groups' do
+        admin = Fabricate(:admin)
+        sign_in(admin)
+        group.add(admin)
+
+        get "/groups.json"
+
+        expect(response).to be_success
+
+        response_body = JSON.parse(response.body)
+
+        group_ids = response_body["groups"].map { |g| g["id"] }
+
+        expect(response_body["extras"]["group_user_ids"]).to eq([group.id])
+        expect(group_ids).to include(group.id, other_group.id)
+        expect(response_body["load_more_groups"]).to eq("/groups?page=1")
+        expect(response_body["total_rows_groups"]).to eq(10)
+      end
     end
   end
 
@@ -66,6 +97,8 @@ describe "Groups" do
       end
 
       it "should be able update the group" do
+        group.update!(allow_membership_requests: false)
+
         expect do
           xhr :put, "/groups/#{group.id}", { group: {
             flair_bg_color: 'FFF',
@@ -135,7 +168,15 @@ describe "Groups" do
       )
     end
 
-    let(:group) { Fabricate(:group, users: [user1, user2]) }
+    let(:user3) do
+      Fabricate(:user,
+        last_seen_at: nil,
+        last_posted_at: nil,
+        email: 'c@test.org'
+      )
+    end
+
+    let(:group) { Fabricate(:group, users: [user1, user2, user3]) }
 
     it "should allow members to be sorted by" do
       xhr :get, "/groups/#{group.name}/members", order: 'last_seen_at', desc: true
@@ -144,7 +185,7 @@ describe "Groups" do
 
       members = JSON.parse(response.body)["members"]
 
-      expect(members.map { |m| m["id"] }).to eq([user1.id, user2.id])
+      expect(members.map { |m| m["id"] }).to eq([user1.id, user2.id, user3.id])
 
       xhr :get, "/groups/#{group.name}/members", order: 'last_seen_at'
 
@@ -152,7 +193,7 @@ describe "Groups" do
 
       members = JSON.parse(response.body)["members"]
 
-      expect(members.map { |m| m["id"] }).to eq([user2.id, user1.id])
+      expect(members.map { |m| m["id"] }).to eq([user2.id, user1.id, user3.id])
 
       xhr :get, "/groups/#{group.name}/members", order: 'last_posted_at', desc: true
 
@@ -160,7 +201,7 @@ describe "Groups" do
 
       members = JSON.parse(response.body)["members"]
 
-      expect(members.map { |m| m["id"] }).to eq([user2.id, user1.id])
+      expect(members.map { |m| m["id"] }).to eq([user2.id, user1.id, user3.id])
     end
 
     it "should not allow members to be sorted by columns that are not allowed" do
@@ -170,7 +211,7 @@ describe "Groups" do
 
       members = JSON.parse(response.body)["members"]
 
-      expect(members.map { |m| m["id"] }).to eq([user1.id, user2.id])
+      expect(members.map { |m| m["id"] }).to eq([user1.id, user2.id, user3.id])
     end
   end
 

@@ -18,8 +18,8 @@ def reindex_search(db=RailsMultisite::ConnectionManagement.current_db)
     post_number = p["post_number"].to_i
     topic_id = p["topic_id"].to_i
 
-    SearchObserver.update_posts_index(post_id, cooked, title, category)
-    SearchObserver.update_topics_index(topic_id, title , cooked) if post_number == 1
+    SearchIndexer.update_posts_index(post_id, cooked, title, category)
+    SearchIndexer.update_topics_index(topic_id, title , cooked) if post_number == 1
 
     putc "."
   end
@@ -30,7 +30,7 @@ def reindex_search(db=RailsMultisite::ConnectionManagement.current_db)
     id = u["id"]
     name = u["name"]
     username = u["username"]
-    SearchObserver.update_users_index(id, username, name)
+    SearchIndexer.update_users_index(id, username, name)
 
     putc "."
   end
@@ -41,7 +41,7 @@ def reindex_search(db=RailsMultisite::ConnectionManagement.current_db)
   Category.exec_sql("select id, name from categories").each do |c|
     id = c["id"]
     name = c["name"]
-    SearchObserver.update_categories_index(id, name)
+    SearchIndexer.update_categories_index(id, name)
   end
 
   puts

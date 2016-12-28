@@ -401,7 +401,7 @@ en:
         delete_member_confirm: "Remove '%{username}' from the '%{group}' group?"
       request_membership_pm:
         title: "Membership Request"
-        body: "I would like to request membership in @%{groupName}."
+        body: "I would like to apply for membership in @%{groupName}."
       name_placeholder: "Group name, no spaces, same as username rule"
       public: "Allow users to join/leave the group freely (Requires group to be visible)"
       empty:
@@ -415,17 +415,24 @@ en:
       join: "Join Group"
       leave: "Leave Group"
       request: "Request to Join Group"
+      automatic_group: Automatic Group
+      closed_group: Closed Group
+      is_group_user: "You are a member of this group"
       allow_membership_requests: "Allow users to send membership requests to group owners (Requires everyone to be able to mention the group)"
+      membership: "Membership"
       name: "Name"
       user_count: "Number of Members"
       bio: "About Group"
       selector_placeholder: "Add members"
       owner: "owner"
       visible: "Group is visible to all users"
-      index: "Groups"
+      index:
+        title: "Groups"
+        empty: "There are no visible groups."
       title:
         one: "group"
         other: "groups"
+      activity: "Activity"
       members: "Members"
       topics: "Topics"
       posts: "Posts"
@@ -1471,6 +1478,7 @@ en:
         go: "go"
         jump_bottom: "jump to last post"
         jump_prompt: "jump to post"
+        jump_prompt_of: "of %{count} posts"
         jump_prompt_long: "What post would you like to jump to?"
         jump_bottom_with_number: "jump to post %{post_number}"
         total: total posts
@@ -1906,7 +1914,7 @@ en:
       tags_allowed_tag_groups: "Tag groups that can only be used in this category:"
       tags_placeholder: "(Optional) list of allowed tags"
       tag_groups_placeholder: "(Optional) list of allowed tag groups"
-      topic_featured_link_allowed: "Restricts editing the topic featured link in this category. Require site setting topic_featured_link_enabled is checked."
+      topic_featured_link_allowed: "Allow featured links in this category"
       delete: 'Delete Category'
       create: 'New Category'
       create_long: 'Create a new category'
@@ -1941,6 +1949,7 @@ en:
       email_in_disabled: "Posting new topics via email is disabled in the Site Settings. To enable posting new topics via email, "
       email_in_disabled_click: 'enable the "email in" setting.'
       suppress_from_homepage: "Suppress this category from the homepage."
+      all_topics_wiki: "Make new topics wikis by default."
       sort_order: "Default Sort:"
       allow_badges_label: "Allow badges to be awarded in this category"
       edit_permissions: "Edit Permissions"
@@ -3212,6 +3221,7 @@ en:
           user_preferences: "User Preferences"
           tags: "Tags"
           search: "Search"
+          groups: "Groups"
 
       badges:
         title: Badges

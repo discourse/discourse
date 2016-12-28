@@ -1,5 +1,6 @@
 class Group < ActiveRecord::Base
   include HasCustomFields
+  include AnonCacheInvalidator
 
   has_many :category_groups, dependent: :destroy
   has_many :group_users, dependent: :destroy
@@ -367,6 +368,11 @@ class Group < ActiveRecord::Base
 
   def self.find_by_email(email)
     self.where("string_to_array(incoming_email, '|') @> ARRAY[?]", Email.downcase(email)).first
+  end
+
+  def self.grants_by_email_domain
+    Group.where(automatic: false)
+         .where("LENGTH(COALESCE(automatic_membership_email_domains, '')) > 0")
   end
 
   def bulk_add(user_ids)

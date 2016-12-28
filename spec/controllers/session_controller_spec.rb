@@ -141,6 +141,19 @@ describe SessionController do
       expect(response).to redirect_to('/b/')
     end
 
+    it 'redirects to random url if it is allowed' do
+      SiteSetting.sso_allows_all_return_paths = true
+
+      sso = get_sso('https://gusundtrout.com')
+      sso.external_id = '666' # the number of the beast
+      sso.email = 'bob@bob.com'
+      sso.name = 'Sam Saffron'
+      sso.username = 'sam'
+
+      get :sso_login, Rack::Utils.parse_query(sso.payload)
+      expect(response).to redirect_to('https://gusundtrout.com')
+    end
+
     it 'redirects to root if the host of the return_path is different' do
       sso = get_sso('//eviltrout.com')
       sso.external_id = '666' # the number of the beast

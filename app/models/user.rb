@@ -99,6 +99,7 @@ class User < ActiveRecord::Base
   after_save :refresh_avatar
   after_save :badge_grant
   after_save :expire_old_email_tokens
+  after_save :index_search
 
   before_destroy do
     # These tables don't have primary keys, so destroying them with activerecord is tricky:
@@ -913,6 +914,10 @@ class User < ActiveRecord::Base
     end
   end
 
+  def index_search
+    SearchIndexer.index(self)
+  end
+
   def clear_global_notice_if_needed
     if admin && SiteSetting.has_login_hint
       SiteSetting.has_login_hint = false
@@ -925,15 +930,21 @@ class User < ActiveRecord::Base
   end
 
   def automatic_group_membership
-    Group.where(automatic: false)
-         .where("LENGTH(COALESCE(automatic_membership_email_domains, '')) > 0")
-         .each do |group|
+    Group.grants_by_email_domain.each do |group|
       domains = group.automatic_membership_email_domains.gsub('.', '\.')
       if self.email =~ Regexp.new("@(#{domains})$", true) && !group.users.include?(self)
         group.add(self)
         GroupActionLogger.new(Discourse.system_user, group).log_add_user_to_group(self)
       end
     end
+  end
+
+  def automatic_group_from_email
+    Group.grants_by_email_domain.each do |group|
+      domains = group.automatic_membership_email_domains.gsub('.', '\.')
+      return group if self.email =~ Regexp.new("@(#{domains})$", true)
+    end
+    nil
   end
 
   def create_user_stat
@@ -965,7 +976,15 @@ class User < ActiveRecord::Base
   def add_trust_level
     # there is a possibility we did not load trust level column, skip it
     return unless has_attribute? :trust_level
+
     self.trust_level ||= SiteSetting.default_trust_level
+
+    group_from_email = automatic_group_from_email
+    if group_from_email&.grant_trust_level &&
+        group_from_email.grant_trust_level > self.trust_level
+      self.trust_level = group_from_email.grant_trust_level
+      self.trust_level_locked = true
+    end
   end
 
   def update_username_lower

@@ -45,10 +45,11 @@ widgetTest('multiple options in descending order', {
     this.set('poll', Ember.Object.create({
       type: 'multiple',
       options: [
-        { votes: 5 },
-        { votes: 2 },
-        { votes: 4 },
-        { votes: 1 }
+        { votes: 5, html: 'a' },
+        { votes: 2, html: 'b' },
+        { votes: 4, html: 'c' },
+        { votes: 1, html: 'b' },
+        { votes: 1, html: 'a' }
       ],
       voters: 12
     }));
@@ -59,5 +60,8 @@ widgetTest('multiple options in descending order', {
     assert.equal(this.$('.option .percentage:eq(1)').text(), '33%');
     assert.equal(this.$('.option .percentage:eq(2)').text(), '16%');
     assert.equal(this.$('.option .percentage:eq(3)').text(), '8%');
+    assert.equal(this.$('.option span:nth-child(2):eq(3)').text(), 'a');
+    assert.equal(this.$('.option .percentage:eq(4)').text(), '8%');
+    assert.equal(this.$('.option span:nth-child(2):eq(4)').text(), 'b');
   }
 });

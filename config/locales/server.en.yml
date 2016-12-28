@@ -379,7 +379,26 @@ en:
   staff_category_name: "Staff"
   staff_category_description: "Private category for staff discussions. Topics are only visible to admins and moderators."
 
+  assets_topic_title: "Assets for the site design"
   assets_topic_body: "This is a permanent topic, visible only to staff, for storing images and files used in the site design. Don't delete it!\n\n\nHere's how:\n\n\n1. Reply to this topic.\n2. Upload all the images you wish to use for logos, favicons, and so forth here. (Use the upload toolbar icon in the post editor, or drag-and-drop or paste images.)\n3. Submit your reply to post it.\n4. Right click the images in your new post to get the path to the uploaded images, or click the edit icon to edit your post and retrieve the path to the images. Copy the image paths.\n5. Paste those image paths into [basic settings](/admin/site_settings/category/required).\n\n\nIf you need to enable different file type uploads, edit `authorized_extensions` in the [file settings](/admin/site_settings/category/files)."
+
+  discourse_welcome_topic:
+    title: "Welcome to Discourse"
+    body: |
+
+      The first paragraph of this pinned topic will be visible as a welcome message to all new visitors on your homepage. It's important!
+
+      **Edit this** into a brief description of your community:
+
+      - Who is it for?
+      - What can they find here?
+      - Why should they come here?
+      - Where can they read more (links, resources, etc)?
+
+      <img src="/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
+
+      You may want to close this topic via the admin :wrench: (at the upper right and bottom), so that replies don't pile up on an announcement.
+
 
   lounge_welcome:
     title: "Welcome to the Lounge"
@@ -977,7 +996,6 @@ en:
     prioritize_username_in_ux: "Show username first on user page, user card and posts (when disabled name is shown first)"
 
     email_token_valid_hours: "Forgot password / activate account tokens are valid for (n) hours."
-    email_token_grace_period_hours: "Forgot password / activate account tokens are still valid for a grace period of (n) hours after being redeemed."
 
     enable_badges: "Enable the badge system"
     enable_whispers: "Allow staff private communication within topics."
@@ -1020,6 +1038,7 @@ en:
     sso_overrides_name: "Overrides local full name with external site full name from SSO payload on every login, and prevent local changes."
     sso_overrides_avatar: "Overrides user avatar with external site avatar from SSO payload. If enabled, disabling allow_uploaded_avatars is highly recommended"
     sso_not_approved_url: "Redirect unapproved SSO accounts to this URL"
+    sso_allows_all_return_paths: "Do not restrict the domain for return_paths provided by SSO (by default return path must be on current site)"
 
     enable_local_logins: "Enable local username and password login based accounts. (Note: this must be enabled for invites to work)"
     allow_new_registrations: "Allow new user registrations. Uncheck this to prevent anyone from creating a new account."
@@ -1306,17 +1325,23 @@ en:
     delete_digest_email_after_days: "Suppress summary emails for users not seen on the site for more than (n) days."
     digest_suppress_categories: "Suppress these categories from summary emails."
     disable_digest_emails: "Disable summary emails for all users."
+    email_accent_bg_color: "The accent color to be used as the background of some elements in HTML emails. Enter a color name ('red') or hex value ('#FF000')."
+    email_accent_fg_color: "The color of text rendered on the email bg color in HTML emails. Enter a color name ('white') or hex value ('#FFFFFF')."
+    email_link_color: "The color of links in HTML emails. Enter a color name ('blue') or hex value ('#0000FF')."
 
     detect_custom_avatars: "Whether or not to check that users have uploaded custom profile pictures."
     max_daily_gravatar_crawls: "Maximum number of times Discourse will check Gravatar for custom avatars in a day"
     public_user_custom_fields: "A whitelist of custom fields for a user that can be shown publicly."
     staff_user_custom_fields: "A whitelist of custom fields for a user that can be shown to staff."
     enable_user_directory: "Provide a directory of users for browsing"
+    enable_group_directory: "Provide a directory of groups for browsing"
     allow_anonymous_posting: "Allow users to switch to anonymous mode"
     anonymous_posting_min_trust_level: "Minimum trust level required to enable anonymous posting"
     anonymous_account_duration_minutes: "To protect anonymity create a new anonymous account every N minutes for each user. Example: if set to 600, as soon as 600 minutes elapse from last post AND user switches to anon, a new anonymous account is created."
 
     hide_user_profiles_from_public: "Disable user cards, user profiles and user directory for anonymous users."
+
+    user_website_domains_whitelist: "User website will be verified against these domains. Pipe-delimited list." 
 
     allow_profile_backgrounds: "Allow users to upload profile backgrounds."
 
@@ -1602,6 +1627,8 @@ en:
     ip_address:
       blocked: "New registrations are not allowed from your IP address."
       max_new_accounts_per_registration_ip: "New registrations are not allowed from your IP address (maximum limit reached). Contact a staff member."
+    website:
+      domain_not_allowed: "Website is invalid. Allowed domains are: %{domains}"
 
   flags_reminder:
     flags_were_submitted:
@@ -1828,97 +1855,9 @@ en:
 
     usage_tips:
       text_body_template: |
-        Here are a few quick tips to get you started:
+        For a few quick tips on getting started as a new user, [check out this blog post](http://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/).
 
-        ## Reading
-
-        To read more, **just keep scrolling down!**
-
-        As new replies or new topics arrive, they will appear automatically – no need to refresh the page.
-
-        ## Navigation
-
-        - For search, your user page, or the <kbd>☰</kbd> menu, use the **icon buttons at upper right**.
-
-        - Selecting a topic title will always take you to your **next unread reply** in the topic. To enter at the top or bottom instead, select the reply count or last reply date.
-
-            <img src="%{base_url}/images/welcome/topic-list-select-areas-2x.png" width="593" height="59">
-
-        - While reading a topic, use the timeline on the right to jump to the top, bottom, or your last read position. On smaller screens, select the progress bar at bottom right to expand it:
-
-            <img src="%{base_url}/images/welcome/progress-bar-2x.png" width="153" height="181">
-
-            You can also press <kbd>?</kbd> on your keyboard for a list of super-speedy keyboard shortcuts.
-
-        ## Replying
-
-        To insert a quote, select the text you wish to quote, then press any <img src="%{base_url}/images/welcome/reply-post-2x.png" width="25" height="23"> Reply button to open the editor. Repeat for multiple quotes.
-
-        <img src="%{base_url}/images/welcome/quote-reply-2x.png" width="326" height="128">
-
-        You can always continue reading while you compose your reply, and we automatically save drafts as you write.
-
-        To notify someone about your reply, mention their name. Type `@` to begin selecting a username.
-
-        <img src="%{base_url}/images/welcome/username-completion-2x.png" width="191" height="125">
-
-        To use [standard Emoji](http://www.emoji.codes/), just type `:` to match by name, or use the traditional smileys `;)`
-
-        <img src="%{base_url}/images/welcome/emoji-completion-2x.png" width="144" height="153">
-
-        To generate a summary for a link, paste it on a line by itself:
-
-        <img src="%{base_url}/images/welcome/link-oneboxing-animation.gif" width="480" height="228">
-
-        Your reply can be formatted using simple HTML, BBCode, or [Markdown](http://commonmark.org/help/):
-
-            This is <b>bold</b>.
-            This is [b]bold[/b].
-            This is **bold**.
-
-        For more formatting tips, [try our fun 10 minute interactive tutorial!](http://commonmark.org/help/tutorial/)
-
-        ## Actions
-
-        There are action buttons at the bottom of each post:
-
-        <img src="%{base_url}/images/welcome/like-link-flag-bookmark-2x.png" width="162" height="42">
-
-        - To let someone know that you enjoyed and appreciated their post, use the **like** button. Share the love!
-
-        - Grab a copy-pasteable link to any reply or topic via the **link** button.
-
-        - Use the <kbd>&hellip;</kbd> show more button to reveal more actions. **Flag** to privately let the author, or [our staff](%{base_url}/about), know about a problem. **Bookmark** to find this post later on your profile page.
-
-        ## Notifications
-
-        When someone replies to you, quotes your post, mentions your `@username`, or even links to your post, a number will immediately appear at the top right of the page. Select it to access your **notifications**.
-
-        <img src="%{base_url}/images/welcome/notification-panel-2x.png" width="160" height="54">
-
-        Don't worry about missing a reply – you'll be emailed any notifications that arrive when you are away.
-
-        ## Preferences
-
-          - All topics less than **two days old** are considered new.
-
-          - Any topic you've **actively participated in** (by creating it, replying to it, or reading it for an extended period) will be automatically tracked on your behalf.
-
-        You will see the new and unread number indicators next to these topics:
-
-        <img src="%{base_url}/images/welcome/topics-new-unread-2x.png" width="341" height="106">
-
-        You can change your notifications for any topic via the notification control at the bottom, and right hand side, of each topic.
-
-        <img src="%{base_url}/images/welcome/topic-notification-control-2x.png" width="608" height="312">
-
-        You can also set notification state per category, if you want to watch or mute every new topic in a specific category.
-
-        To change any of these settings, see [your user preferences](%{base_url}/my/preferences).
-
-        ## Community Trust
-
-        It's great to meet you! As you participate here, over time we'll get to know you, and your temporary new user limitations will be lifted. Keep participating, and over time you'll gain new [trust levels](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924) that include special abilities to help us manage our community together.
+        As you participate here, we’ll get to know you, and temporary new user limitations will be lifted. Over time you’ll gain [trust levels](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924) that include special abilities to help us manage our community together.
 
     welcome_user:
       subject_template: "Welcome to %{site_name}!"
@@ -2461,7 +2400,7 @@ en:
       join_the_discussion: "Read More"
       popular_posts: "Popular Posts"
       from_topic_label: "From"
-      more_new: "New in topics and categories you follow"
+      more_new: "New for you"
       subject_template: "[%{site_name}] Summary"
       unsubscribe: "This summary is sent from %{site_link} when we haven't seen you in a while. To unsubscribe %{unsubscribe_link}."
       click_here: "click here"

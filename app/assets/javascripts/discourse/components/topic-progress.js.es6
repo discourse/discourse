@@ -3,16 +3,10 @@ import { default as computed, observes } from 'ember-addons/ember-computed-decor
 export default Ember.Component.extend({
   elementId: 'topic-progress-wrapper',
   classNameBindings: ['docked'],
-  expanded: false,
   docked: false,
   progressPosition: null,
   postStream: Ember.computed.alias('topic.postStream'),
   _streamPercentage: null,
-
-  init() {
-    this._super();
-    (this.get('delegated') || []).forEach(m => this.set(m, m));
-  },
 
   @computed('progressPosition')
   jumpTopDisabled(progressPosition) {
@@ -41,6 +35,15 @@ export default Ember.Component.extend({
     } else {
       return I18n.t('topic.progress.jump_bottom');
     }
+  },
+
+  @computed('progressPosition', 'topic.last_read_post_id')
+  showBackButton(position, lastReadId) {
+    if (!lastReadId) { return; }
+
+    const stream = this.get('postStream.stream');
+    const readPos = stream.indexOf(lastReadId) || 0;
+    return (readPos < (stream.length - 1)) && (readPos > position);
   },
 
   @observes('postStream.stream.[]')
@@ -146,6 +149,10 @@ export default Ember.Component.extend({
   actions: {
     toggleExpansion() {
       this.toggleProperty('expanded');
+    },
+
+    goBack() {
+      this.attrs.jumpToPost(this.get('topic.last_read_post_number'));
     }
   },
 

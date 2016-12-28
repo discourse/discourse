@@ -1,8 +1,8 @@
 {{add-category-class category=category}}
 
 <section class='category-heading'>
-  {{#if category.logo_url}}
-    {{cdn-img src=category.logo_url class="category-logo"}}
+  {{#if category.uploaded_logo.url}}
+    {{cdn-img src=category.uploaded_logo.url class="category-logo"}}
     {{#if category.description}}
       <p>{{{category.description}}}</p>
     {{/if}}

@@ -15,6 +15,8 @@ module Jobs
 
       User.where("email ~* '@(#{domains})$'")
           .where("users.id NOT IN (SELECT user_id FROM group_users WHERE group_users.group_id = ?)", group_id)
+          .activated
+          .where(staged: false)
           .find_each do |user|
 
           group.add(user)

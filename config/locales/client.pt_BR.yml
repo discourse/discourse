@@ -321,18 +321,15 @@ pt_BR:
       total_rows:
         one: "1 usuário"
         other: "%{count} usuários"
+    group_histories:
+      actions:
+        add_user_to_group: "Adicionar usuário"
+        remove_user_from_group: "Remover usuário"
     groups:
-      empty:
-        posts: "Não há postagens por membros deste grupo."
-        members: "Não há membros neste grupo."
-        mentions: "Não há menção a este grupo."
-        messages: "Não há mensagens para este grupo."
-        topics: "Não há topicos por membros deste grupo."
       add: "Adicionar"
       selector_placeholder: "Adicionar membros"
       owner: "proprietário"
       visible: "Grupo é visível para todos os usuários"
-      index: "Grupos"
       title:
         one: "grupo"
         other: "grupos"
@@ -694,11 +691,8 @@ pt_BR:
         link_generated: "Link de convite gerado com sucesso!"
         valid_for: "Link de convite é válido apenas para esse endereço de email: %{email}"
         bulk_invite:
-          none: "Você ainda não convidou ninguém. Você pode enviar convites individuais, ou enviar vários de uma vez através da ferramenta de <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>enviar em massa</a>."
           text: "Convidar em massa a partir de arquivo"
-          uploading: "Subindo..."
           success: "Arquivo enviado com sucesso, você será notificado por mensagem quando o processo estiver completo."
-          error: "Houve um erro ao enviar '{{filename}}': {{message}}"
       password:
         title: "Senha"
         too_short: "A sua senha é muito curta."
@@ -1658,12 +1652,6 @@ pt_BR:
           side_by_side_markdown:
             title: "Mostrar a diferença da fonte crua lado-a-lado"
             button: '<i class="fa fa-columns"></i> Cru'
-    group:
-      edit:
-        title: 'Editar Grupo'
-      title: 'Título'
-      name: "Nome"
-      name_placeholder: "Nome do grupo, sem espaços, mesma regra que o nome de usuário"
     category:
       can: 'pode&hellip; '
       none: '(sem categoria)'
@@ -2229,15 +2217,12 @@ pt_BR:
         refresh: "Atualizar"
         new: "Novo"
         selector_placeholder: "digite o nome de usuário"
-        name_placeholder: "Nome do grupo, sem espaços, regras iguais ao nome de usuário"
         about: "Editar participação no grupo e nomes aqui"
         group_members: "Membros do grupo"
         delete: "Apagar"
         delete_confirm: "Apagar este grupos?"
         delete_failed: "Unable to delete group. If this is an automatic group, it cannot be destroyed."
-        delete_member_confirm: "Remover '%{username}' do grupo '%{group}'?"
         delete_owner_confirm: "Remover privilégio de proprietário de '%{username}'?"
-        name: "Nome"
         add: "Adicionar"
         add_members: "Adicionar membros"
         custom: "Definidos"
@@ -2254,10 +2239,6 @@ pt_BR:
         add_owners: Adicionar proprietários
         incoming_email: "Endereço de email de entrada personalizado"
         incoming_email_placeholder: "Insira um endereço de email"
-        flair_url_placeholder: "(Opcional) URL de imagem ou classe Font Awesome"
-        flair_bg_color_placeholder: "(Opcional) Valor em hexadecimal da cor"
-        flair_color_placeholder: "(Opcional) Valor em hexadecimal da cor"
-        flair_preview: "Pré-visualizar"
       api:
         generate_master: "Gerar chave Mestra de API"
         none: "Não existem chaves API ativas no momento."
@@ -2311,7 +2292,6 @@ pt_BR:
           details: "Quando existir uma nova resposta, edição, deleção ou recuperação."
         user_event:
           name: "Evento de Usuário"
-          details: "When um usuário é criado ou aprovado."
         delivery_status:
           title: "Status de Entrega"
           inactive: "Inativo"

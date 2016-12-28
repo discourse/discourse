@@ -1,6 +1,6 @@
 export default Discourse.Route.extend({
   titleToken() {
-    return I18n.t('groups.index');
+    return I18n.t('groups.index.title');
   },
 
   model(params) {

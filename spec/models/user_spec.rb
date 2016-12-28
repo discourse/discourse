@@ -922,6 +922,7 @@ describe User do
     before do
       # To make testing easier, say 1 reply is too much
       SiteSetting.stubs(:newuser_max_replies_per_topic).returns(1)
+      UserActionCreator.enable
     end
 
     context "for a user who didn't create the topic" do
@@ -938,7 +939,10 @@ describe User do
 
       context "with a reply" do
         before do
-          PostCreator.new(Fabricate(:user), raw: 'whatever this is a raw post', topic_id: topic.id, reply_to_post_number: post.post_number).create
+          PostCreator.new(Fabricate(:user),
+                            raw: 'whatever this is a raw post',
+                            topic_id: topic.id,
+                            reply_to_post_number: post.post_number).create
         end
 
         it "resets the `posted_too_much` threshold" do
@@ -1169,6 +1173,17 @@ describe User do
       expect(group_history.action).to eq(GroupHistory.actions[:add_user_to_group])
       expect(group_history.acting_user).to eq(Discourse.system_user)
       expect(group_history.target_user).to eq(user)
+    end
+
+    it "get attributes from the group" do
+      group = Fabricate(:group, automatic_membership_email_domains: "bar.com|wat.com", grant_trust_level: 1, title: "bars and wats", primary_group: true)
+      user = Fabricate.build(:user, trust_level: 0, email: "foo@bar.com", password: "strongpassword4Uguys")
+      user.password_required!
+      expect(user.save).to eq(true)
+      user.reload
+      expect(user.title).to eq("bars and wats")
+      expect(user.trust_level).to eq(1)
+      expect(user.trust_level_locked).to eq(true)
     end
 
   end

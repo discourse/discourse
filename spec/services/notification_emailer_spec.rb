@@ -1,6 +1,10 @@
 require 'rails_helper'
 
-describe UserEmailObserver do
+describe NotificationEmailer do
+
+  before do
+    NotificationEmailer.enable
+  end
 
   let(:topic) { Fabricate(:topic) }
   let(:post) { Fabricate(:post, topic: topic) }
@@ -18,8 +22,8 @@ describe UserEmailObserver do
   shared_examples "enqueue" do
 
     it "enqueues a job for the email" do
-      Jobs.expects(:enqueue_in).with(delay, :user_email, UserEmailObserver::EmailUser.notification_params(notification,type))
-      UserEmailObserver.process_notification(notification)
+      Jobs.expects(:enqueue_in).with(delay, :user_email, NotificationEmailer::EmailUser.notification_params(notification,type))
+      NotificationEmailer.process_notification(notification)
     end
 
     context "inactive user" do
@@ -27,13 +31,13 @@ describe UserEmailObserver do
 
       it "doesn't enqueue a job" do
         Jobs.expects(:enqueue_in).with(delay, :user_email, has_entry(type: type)).never
-        UserEmailObserver.process_notification(notification)
+        NotificationEmailer.process_notification(notification)
       end
 
       it "enqueues a job if the user is staged" do
         notification.user.staged = true
-        Jobs.expects(:enqueue_in).with(delay, :user_email, UserEmailObserver::EmailUser.notification_params(notification,type))
-        UserEmailObserver.process_notification(notification)
+        Jobs.expects(:enqueue_in).with(delay, :user_email, NotificationEmailer::EmailUser.notification_params(notification,type))
+        NotificationEmailer.process_notification(notification)
       end
     end
 
@@ -46,7 +50,7 @@ describe UserEmailObserver do
 
       it "doesn't enqueue a job" do
         Jobs.expects(:enqueue_in).with(delay, :user_email, has_entry(type: type)).never
-        UserEmailObserver.process_notification(notification)
+        NotificationEmailer.process_notification(notification)
       end
     end
 
@@ -55,7 +59,7 @@ describe UserEmailObserver do
       it "doesn't enqueue a job" do
         Post.any_instance.expects(:post_type).returns(Post.types[:small_action])
         Jobs.expects(:enqueue_in).with(delay, :user_email, has_entry(type: type)).never
-        UserEmailObserver.process_notification(notification)
+        NotificationEmailer.process_notification(notification)
       end
 
     end
@@ -68,7 +72,7 @@ describe UserEmailObserver do
     it "doesn't enqueue a job if the user has mention emails disabled" do
       notification.user.user_option.update_columns(email_direct: false)
       Jobs.expects(:enqueue_in).with(delay, :user_email, has_entry(type: type)).never
-      UserEmailObserver.process_notification(notification)
+      NotificationEmailer.process_notification(notification)
     end
   end
 
@@ -78,7 +82,7 @@ describe UserEmailObserver do
     it "doesn't enqueue a job if the user has private message emails disabled" do
       notification.user.user_option.update_columns(email_private_messages: false)
       Jobs.expects(:enqueue_in).with(delay, :user_email, has_entry(type: type)).never
-      UserEmailObserver.process_notification(notification)
+      NotificationEmailer.process_notification(notification)
     end
 
   end
@@ -92,8 +96,8 @@ describe UserEmailObserver do
 
     it "enqueue a delayed job for users that are online" do
       notification.user.last_seen_at = 1.minute.ago
-      Jobs.expects(:enqueue_in).with(delay, :user_email, UserEmailObserver::EmailUser.notification_params(notification,type))
-      UserEmailObserver.process_notification(notification)
+      Jobs.expects(:enqueue_in).with(delay, :user_email, NotificationEmailer::EmailUser.notification_params(notification,type))
+      NotificationEmailer.process_notification(notification)
     end
 
   end
@@ -140,7 +144,7 @@ describe UserEmailObserver do
     it "doesn't enqueue a job for a small action" do
       notification.data_hash["original_post_type"] = Post.types[:small_action]
       Jobs.expects(:enqueue_in).with(delay, :user_email, has_entry(type: type)).never
-      UserEmailObserver.process_notification(notification)
+      NotificationEmailer.process_notification(notification)
     end
 
   end

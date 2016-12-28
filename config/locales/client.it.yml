@@ -322,17 +322,10 @@ it:
         one: "1 utente"
         other: "%{count} utenti"
     groups:
-      empty:
-        posts: "Non ci sono messaggi dai membri di questo gruppo."
-        members: "Non ci sono membri in questo gruppo."
-        mentions: "Non ci sono menzioni a questo gruppo."
-        messages: "Non ci sono messaggi per questo gruppo."
-        topics: "Non ci sono argomenti da membri di questo gruppo."
       add: "Aggiungi"
       selector_placeholder: "Aggiungi membri"
       owner: "proprietario"
       visible: "Il Gruppo è visibile a tutti gli utenti"
-      index: "Gruppi"
       title:
         one: "gruppo"
         other: "gruppi"
@@ -1652,13 +1645,6 @@ it:
           side_by_side_markdown:
             title: "Mostra le differenze nei sorgenti fianco-a-fianco"
             button: '<i class="fa fa-columns"></i> Raw'
-    group:
-      edit:
-        title: 'Modifica gruppo'
-      title: 'Titolo'
-      name: "Nome"
-      flair_preview_icon: "Anteprima icona"
-      flair_preview_image: "Anteprima immagine"
     category:
       can: 'può&hellip;'
       none: '(nessuna categoria)'
@@ -2186,15 +2172,12 @@ it:
         refresh: "Aggiorna"
         new: "Nuovo"
         selector_placeholder: "inserisci nome utente"
-        name_placeholder: "Nome del gruppo, senza spazi, stesse regole del nome utente"
         about: "Modifica qui la tua appartenenza ai gruppi e i loro nomi"
         group_members: "Membri del gruppo"
         delete: "Cancella"
         delete_confirm: "Cancellare questo gruppo?"
         delete_failed: "Impossibile cancellare il gruppo. Se questo è un gruppo automatico, non può essere eliminato."
-        delete_member_confirm: "Rimuovere '%{username}' dal gruppo '%{group}'?"
         delete_owner_confirm: "Rimuovere i privilegi per '%{username}'?"
-        name: "Nome"
         add: "Aggiungi"
         add_members: "Aggiungi membri"
         custom: "Personalizzato"
@@ -2211,14 +2194,6 @@ it:
         add_owners: Aggiungi proprietari
         incoming_email: "Indirizzo email personalizzato"
         incoming_email_placeholder: "inserisci l'indirizzo e-mail"
-        flair_url: "Immagine Avatar"
-        flair_url_placeholder: "(Facoltativo) URL Immagine o categoria Font Awesome"
-        flair_bg_color: "Colore di sfondo Avatar"
-        flair_bg_color_placeholder: "(Facoltativo) Codice Hex colore"
-        flair_color: "Colore Avatar"
-        flair_color_placeholder: "(Facoltativo) Codice Hex colore"
-        flair_preview: "Anteprima"
-        flair_note: "Nota: l'Avatar verrà mostrato solo per il gruppo principale dell'utente."
       api:
         generate_master: "Genera una Master API Key"
         none: "Non ci sono chiavi API attive al momento."

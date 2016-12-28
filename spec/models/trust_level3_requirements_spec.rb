@@ -221,7 +221,7 @@ describe TrustLevel3Requirements do
 
   describe "num_likes_given" do
     it "counts likes given in the last 100 days" do
-      ActiveRecord::Base.observers.enable :user_action_observer
+      UserActionCreator.enable
 
       recent_post1 = create_post(created_at: 1.hour.ago)
       recent_post2 = create_post(created_at: 10.days.ago)
@@ -237,7 +237,7 @@ describe TrustLevel3Requirements do
 
   describe "num_likes_received" do
     it "counts likes received in the last 100 days" do
-      ActiveRecord::Base.observers.enable :user_action_observer
+      UserActionCreator.enable
 
       t = Fabricate(:topic, user: user, created_at: 102.days.ago)
       old_post     = create_post(topic: t, user: user, created_at: 102.days.ago)

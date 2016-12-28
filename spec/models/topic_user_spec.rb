@@ -174,11 +174,6 @@ describe TopicUser do
         expect(topic_user.last_visited_at.to_i).to eq(today.to_i)
       end
     end
-
-    it 'triggers the observer callbacks when updating' do
-      UserActionObserver.instance.expects(:after_save).twice
-      2.times { TopicUser.track_visit!(topic.id, user.id) }
-    end
   end
 
   describe 'read tracking' do
@@ -213,7 +208,6 @@ describe TopicUser do
 
     context 'private messages' do
       it 'should ensure recepients and senders are watching' do
-        ActiveRecord::Base.observers.enable :all
 
         target_user = Fabricate(:user)
         post = create_post(archetype: Archetype.private_message, target_usernames: target_user.username);

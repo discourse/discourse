@@ -135,23 +135,25 @@ class StaticController < ApplicationController
     opts = { disposition: nil }
     opts[:type] = "application/javascript" if path =~ /\.js.br$/
 
-    response.headers["Expires"] = 1.year.from_now.httpdate
-    response.headers["Cache-Control"] = 'max-age=31557600, public'
-    response.headers["Content-Encoding"] = 'br'
     begin
       response.headers["Last-Modified"] = File.ctime(path).httpdate
       response.headers["Content-Length"] = File.size(path).to_s
     rescue Errno::ENOENT
-      raise Discourse::NotFound
+      response.headers["Expires"] = 5.seconds.from_now.httpdate
+      response.headers["Cache-Control"] = 'max-age=5, public'
+      expires_in 5.seconds, public: true, must_revalidate: false
+
+      render text: "missing brotli asset", status: 404
+      return
     end
+
+    response.headers["Expires"] = 1.year.from_now.httpdate
+    response.headers["Cache-Control"] = 'max-age=31557600, public'
+    response.headers["Content-Encoding"] = 'br'
 
     expires_in 1.year, public: true, must_revalidate: false
 
-    if File.exists?(path)
-      send_file(path, opts)
-    else
-      raise Discourse::NotFound
-    end
+    send_file(path, opts)
   end
 
 

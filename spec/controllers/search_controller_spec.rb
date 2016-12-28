@@ -5,7 +5,7 @@ describe SearchController do
   context "integration" do
 
     before do
-      ActiveRecord::Base.observers.enable :search_observer
+      SearchIndexer.enable
     end
 
     it "can search correctly" do

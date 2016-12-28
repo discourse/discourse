@@ -62,8 +62,6 @@ sq:
       load_from_remote: "Postimi nuk mundi të ngarkohet. Riprovoheni!"
     site_settings:
       default_categories_already_selected: "Nuk mund të zgjidhni një kategori të përdorur në një tjetër listë."
-  bulk_invite:
-    file_should_be_csv: "Skedari duhet të jete i formatit csv ose txt"
   not_logged_in: "Ju duhet të identifikoheni për këtë veprim."
   invalid_access: "Ju nuk jeni të drejta për të parë burimin e kërkuar."
   reading_time: "Koha e leximit"
@@ -657,7 +655,6 @@ sq:
     redirect_users_to_top_page: "Automatically redirect new and long absent users to the top page."
     show_email_on_profile: "Show a user's email on their profile (only visible to themselves and staff)"
     email_token_valid_hours: "Forgot password / activate account tokens are valid for (n) hours."
-    email_token_grace_period_hours: "Forgot password / activate account tokens are still valid for a grace period of (n) hours after being redeemed."
     enable_badges: "Aktivizo sistemin e targetave"
     allow_index_in_robots_txt: "Specify in robots.txt that this site is allowed to be indexed by web search engines."
     email_domains_blacklist: "A pipe-delimited list of email domains that users are not allowed to register accounts with. Example: mailinator.com|trashmail.net"
@@ -863,7 +860,6 @@ sq:
     embed_whitelist_selector: "CSS selector for elements that are allowed in embeds."
     embed_blacklist_selector: "CSS selector for elements that are removed from embeds."
     notify_about_flags_after: "If there are flags that haven't been handled after this many hours, send an email to the contact_email. Set to 0 to disable."
-    enable_cdn_js_debugging: "Allow /logs to display proper errors by adding crossorigin permissions on all js includes."
     show_create_topics_notice: "If the site has fewer than 5 public topics, show a notice asking admins to create some topics."
     delete_drafts_older_than_n_days: Delete drafts older than (n) days.
     prevent_anons_from_downloading_files: "Prevent anonymous users from downloading attachments. WARNING: this will prevent any non-image site assets posted as attachments from working."

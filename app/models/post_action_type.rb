@@ -5,6 +5,8 @@ class PostActionType < ActiveRecord::Base
   after_save :expire_cache
   after_destroy :expire_cache
 
+  include AnonCacheInvalidator
+
   def expire_cache
     ApplicationSerializer.expire_cache_fragment!("post_action_types")
     ApplicationSerializer.expire_cache_fragment!("post_action_flag_types")

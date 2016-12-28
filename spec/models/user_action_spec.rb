@@ -3,7 +3,7 @@ require 'rails_helper'
 describe UserAction do
 
   before do
-    ActiveRecord::Base.observers.enable :all
+    UserActionCreator.enable
   end
 
   it { is_expected.to validate_presence_of :action_type }
@@ -50,6 +50,8 @@ describe UserAction do
     end
 
     it 'includes the events correctly' do
+      PostActionNotifier.enable
+
       mystats = stats_for_user(user)
       expecting = [UserAction::NEW_TOPIC, UserAction::NEW_PRIVATE_MESSAGE, UserAction::GOT_PRIVATE_MESSAGE, UserAction::BOOKMARK].sort
       expect(mystats).to eq(expecting)

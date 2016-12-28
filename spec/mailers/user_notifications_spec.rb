@@ -152,6 +152,18 @@ describe UserNotifications do
 
     end
 
+    context "with topics only from new users" do
+      let!(:new_today)     { Fabricate(:topic, user: Fabricate(:user, trust_level: TrustLevel[0], created_at: 10.minutes.ago), title: "Hey everyone look at me") }
+      let!(:new_yesterday) { Fabricate(:topic, user: Fabricate(:user, trust_level: TrustLevel[0], created_at: 25.hours.ago), created_at: 25.hours.ago, title: "This topic is of interest to you") }
+
+      it "returns topics from new users if they're more than 24 hours old" do
+        expect(subject.to).to eq([user.email])
+        html = subject.html_part.body.to_s
+        expect(html).to include(new_yesterday.title)
+        expect(html).to_not include(new_today.title)
+      end
+    end
+
     context "with new topics" do
 
       before do

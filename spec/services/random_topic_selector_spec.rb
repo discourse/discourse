@@ -23,7 +23,7 @@ describe RandomTopicSelector do
   end
 
   it 'can correctly backfill' do
-    category = Fabricate(:category)
+    category = Fabricate(:category, sort_order: 'op_likes')
     t1 = Fabricate(:topic, category_id: category.id)
     _t2 = Fabricate(:topic, category_id: category.id, visible: false)
     _t3 = Fabricate(:topic, category_id: category.id, deleted_at: 1.minute.ago)

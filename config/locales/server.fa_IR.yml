@@ -84,8 +84,6 @@ fa_IR:
       max_username_length_range: "شما نمیتوانید حداکثر را کمتر از حداقل بگذارید."
       default_categories_already_selected: "شما نمیتوانید یک دسته بندی که در یک فهرست دیگر استفاده شده را انتخاب کنید."
       s3_upload_bucket_is_required: "شما نمیتوانید بارگذاری به S3 را فعال کنید مگر اینکه 's3_upload_bucket' ارائه بدهید."
-  bulk_invite:
-    file_should_be_csv: "قالب پرونده‌ی بارگذاری شده باید csv و یا txt باشد."
   backup:
     operation_already_running: "یک عملیات در حال اجراست. کار جدیدی نمی توان شروع کرد."
     backup_file_should_be_tar_gz: "پرونده‌ی پشتیبان باید یک فایل فشرده با پسوند tar.gz. باشد."
@@ -681,7 +679,6 @@ fa_IR:
     top_page_default_timeframe: "دعوتنامه های معمولی در صفحه کاربر نشان داده می شوند. "
     show_email_on_profile: "به کاربران ایمیلشان را در نمایه نشان بده (فقط برای خودشان و مدیران)"
     email_token_valid_hours: "رمز عبور فراموش شده/ حساب کاربری فعال اعتبار دارد برای (n) ساعت."
-    email_token_grace_period_hours: "رمز عبور فراموش شده/ نشانه حساب کاربری فعال هنوز قابل اعتبار است برای مهلت (n) ساعت بعد از اینکه بخشوده شد."
     enable_badges: "فعال سازی سیستم مدال دهی"
     allow_index_in_robots_txt: "مشخص کردن در robots.txt که به این سایت اجازه می دهد به نمایه شدن برای موتورهای جستجوی وب."
     email_domains_blacklist: "لیست pipe-delimit دامنه های ایمیل که کاربران اجازه ندارند با آن حساب کاربری ثبت نام کنند. برای مثال:  mailinator.com|trashmail.net"
@@ -877,7 +874,6 @@ fa_IR:
     embed_whitelist_selector: "CSS انتخاب کننده برای المان های که اجازه دارند جاسازی شوند."
     embed_blacklist_selector: "CSS انتخاب کننده برای المان های که از جاسازی پاک شده اند. "
     notify_about_flags_after: "اگر پرچم هایی هست که به آنها بعد از چند ساعت رسیدگی نشده٬ ایمیلی ارسال کن به contact_email.  برای از کار انداختن  0 را تنظیم کن."
-    enable_cdn_js_debugging: "اجازه بده / logs  به نمایش خطاهای مناسب با اضافه کردن مجوز crossorigin به همه آنها دارای  js ."
     show_create_topics_notice: "اگر سایت کمتر از 5 جستار عمومی دارد٬ اطلاع بده به مدیران تا جستارهای بیشتری بسازند."
     delete_drafts_older_than_n_days: پیش‌نویس‌های قدیمی‌تر از (n) روز را حذف کن
     prevent_anons_from_downloading_files: "جلوگیری از دانلود کردن فایل پیوست توسط افراد ناشناس. اخطار: این جلوگیری می کنه از هر سایت دارای بدون عکسی. "

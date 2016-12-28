@@ -88,14 +88,19 @@ describe Admin::GroupsController do
 
     it "ignore name change on automatic group" do
       expect do
-        xhr :put, :update, { id: 1, group: { name: "WAT", visible: "true" } }
-      end.to_not change { GroupHistory.count }
+        xhr :put, :update, { id: 1, group: {
+          name: "WAT",
+          visible: "true",
+          allow_membership_requests: "true"
+        } }
+      end.to change { GroupHistory.count }.by(1)
 
       expect(response).to be_success
 
       group = Group.find(1)
       expect(group.name).not_to eq("WAT")
       expect(group.visible).to eq(true)
+      expect(group.allow_membership_requests).to eq(true)
     end
 
     it "doesn't launch the 'automatic group membership' job when it's not retroactive" do

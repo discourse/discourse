@@ -11,19 +11,32 @@ class GroupsController < ApplicationController
   skip_before_filter :preload_json, :check_xhr, only: [:posts_feed, :mentions_feed]
 
   def index
+    unless SiteSetting.enable_group_directory?
+      raise Discourse::InvalidAccess.new(:enable_group_directory)
+    end
+
     page_size = 30
     page = params[:page]&.to_i || 0
 
-    groups = Group.order(user_count: :desc, name: :asc)
-      .where(visible: true)
-      .offset(page * page_size)
-      .limit(page_size)
+    groups = Group.order(name: :asc).where(visible: true)
 
-    render json: {
+    if !guardian.is_admin?
+      groups = groups.where(automatic: false)
+    end
+
+    count = groups.count
+    groups = groups.offset(page * page_size).limit(page_size)
+
+    group_user_ids = GroupUser.where(group: groups, user: current_user).pluck(:group_id)
+
+    render_json_dump(
       groups: serialize_data(groups, BasicGroupSerializer),
-      total_rows_groups: Group.count,
+      extras: {
+        group_user_ids: group_user_ids
+      },
+      total_rows_groups: count,
       load_more_groups: groups_path(page: page + 1)
-    }
+    )
   end
 
   def show
@@ -98,10 +111,10 @@ class GroupsController < ApplicationController
     limit = (params[:limit] || 20).to_i
     offset = params[:offset].to_i
     dir = (params[:desc] && !params[:desc].blank?) ? 'DESC' : 'ASC'
-    order = {}
+    order = ""
 
     if params[:order] && %w{last_posted_at last_seen_at}.include?(params[:order])
-      order.merge!(params[:order] => dir)
+      order = "#{params[:order]} #{dir} NULLS LAST"
     end
 
     total = group.users.count

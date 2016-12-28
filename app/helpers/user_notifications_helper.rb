@@ -36,9 +36,9 @@ module UserNotificationsHelper
     doc = Nokogiri::HTML(html)
 
     result = ""
-    doc.css('p').each do |p|
-      if p.text.present?
-        result << p.to_s
+    doc.css('body > p, aside.onebox').each do |node|
+      if node.text.present?
+        result << node.to_s
         return result if result.size >= 100
       end
     end
@@ -48,9 +48,9 @@ module UserNotificationsHelper
     doc.css('div').first
   end
 
-  def email_excerpt(html, posts_count=nil)
+  def email_excerpt(html_arg, posts_count=nil)
     # only include 1st paragraph when more than 1 posts
-    html = first_paragraph_from(html).to_s if posts_count.nil? || posts_count > 1
+    html = (posts_count.nil? || posts_count > 1) ? (first_paragraph_from(html_arg)||html_arg).to_s : html_arg
     PrettyText.format_for_email(html).html_safe
   end
 
