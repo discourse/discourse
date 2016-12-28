@@ -8,12 +8,14 @@
 
 .progress-back-container {
   position: fixed;
-  right: 0;
   bottom: 40px;
   z-index: 950;
-  margin-right: 45px;
+  margin-right: 0px;
   animation-duration: 0.5s;
   animation-name: button-jump-up;
+  width: 145px;
+  text-align: center;
+
   .btn {
     margin: 0;
   }
