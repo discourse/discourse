@@ -370,6 +370,11 @@ class Group < ActiveRecord::Base
     self.where("string_to_array(incoming_email, '|') @> ARRAY[?]", Email.downcase(email)).first
   end
 
+  def self.grants_by_email_domain
+    Group.where(automatic: false)
+         .where("LENGTH(COALESCE(automatic_membership_email_domains, '')) > 0")
+  end
+
   def bulk_add(user_ids)
     if user_ids.present?
       Group.exec_sql("INSERT INTO group_users
