@@ -818,7 +818,6 @@ it:
     redirect_users_to_top_page: "Redirigi automaticamente i nuovi utenti e quelli assenti da tempo sulla pagina degli argomenti di punta."
     show_email_on_profile: "Mostra l'email di un utente nel suo profilo (visibile solo a se stesso e allo staff)"
     email_token_valid_hours: "I messaggi di password dimenticata / attivazione account sono validi per (n) ore."
-    email_token_grace_period_hours: "I messaggi di password dimenticata / attivazione account sono ancora validi per un periodo di grazia di (n) ore dopo essere stati convalidati."
     enable_badges: "Attiva il sistema a distintivi"
     allow_index_in_robots_txt: "Specifica nel file robots.txt che questo sito permette l'indicizzazione da parte dei motori di ricerca."
     email_domains_blacklist: "Una lista di domini email separati dal carattere pipe \"|\" con cui gli utenti non possono registrare un account. Ad esempio: mailinator.com/trashmail.net"

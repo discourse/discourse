@@ -322,17 +322,10 @@ et:
         one: "1 kasutaja"
         other: "%{count} kasutajat"
     groups:
-      empty:
-        posts: "Selle grupi liikmetelt ei ole postitusi."
-        members: "Selles grupis liikmeid pole."
-        mentions: "Seda gruppi pole mainitud."
-        messages: "Sellele grupile teated puuduvad."
-        topics: "Selle grupi liikmetelt teemasid ei ole."
       add: "Lisa"
       selector_placeholder: "Lisa liikmeid"
       owner: "omanik"
       visible: "Grupp on kõigile kasutajatele nähtav."
-      index: "Grupid"
       title:
         one: "grupp"
         other: "grupid"
@@ -1660,22 +1653,6 @@ et:
           side_by_side_markdown:
             title: "Näita töötlemata lähteandmete erinevusi kõrvuti"
             button: '<i class="fa fa-columns"></i> Toores'
-    group:
-      edit:
-        title: 'Muuda gruppi'
-      title: 'Pealkiri'
-      name: "Nimi"
-      bio: "Grupist"
-      name_placeholder: "Grupi nimi, tühikuteta, vastab kasutajanime reeglitele"
-      flair_url: "Avatari andekuse pilt"
-      flair_url_placeholder: "(Valikuline) Pildi URL või Font Awesome klass"
-      flair_bg_color: "Avatari andekuse taustavärv"
-      flair_bg_color_placeholder: "(Valikuline) Värvi väärtus heksakoodis"
-      flair_color: "Avatari andekuse värv"
-      flair_color_placeholder: "(Valikuline) Värvi väärtus heksakoodis"
-      flair_preview_icon: "Ikooni eelvaatlus"
-      flair_preview_image: "Pildi eelvaatlus"
-      flair_note: "Märkus: Andekus kuvatakse vaid kasutaja põhigrupi jaoks."
     category:
       can: 'saab&hellip; '
       none: '(foorum puudub)'
@@ -1692,7 +1669,6 @@ et:
       tags_allowed_tag_groups: "Siltide grupid, mida saab kasutada vaid selles foorumis:"
       tags_placeholder: "(Valikuline) loetelu lubatud silte"
       tag_groups_placeholder: "(Valikuline) loetelu lubatud siltide gruppe"
-      topic_featured_link_allowed: "Piirab teema põhiloo lingi redigeerimist selles foorumis. Nõuab, et saidi säte topic_featured_link_enabled oleks märgistatud."
       delete: 'Kustuta foorum'
       create: 'Uus foorum'
       create_long: 'Loo uus foorum'
@@ -2252,7 +2228,6 @@ et:
         delete: "Kustuta"
         delete_confirm: "Kustutame selle grupi?"
         delete_failed: "Ei suuda kustutada seda gruppi. Kui see on automaatne grupp, ei saa seda hävitada."
-        delete_member_confirm: "Eemalda '%{username}' grupist '%{group}'?"
         delete_owner_confirm: "Eemaldan kasutajalt '%{username}' omaniku õigused?"
         add: "Lisa"
         add_members: "Lisa liikmeid"
@@ -2324,7 +2299,6 @@ et:
           details: "Kui teemas on uus vastus, muudatus, kustutamine või taastamine."
         user_event:
           name: "Kasutaja sündmus"
-          details: "Kui kasutaja luakse või heaks kiidetakse."
         delivery_status:
           title: "Kättetoimetamise staatus"
           inactive: "Mitteaktiivne"

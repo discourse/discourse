@@ -749,8 +749,6 @@ pl_PL:
     min_private_message_post_length: "Minimalna długość treści wiadomości "
     max_post_length: "Maksymalna długość wpisu, w znakach"
     topic_featured_link_enabled: "Włącz dodawanie linków w tematach."
-    topic_featured_link_onebox: "Pokazuj onebox we wpisie jeśli jest taka możliwość, zapobiegaj edycji zawartości."
-    open_topic_featured_link_in_external_window: "Otwieraj polecane linki w nowym oknie."
     show_topic_featured_link_in_digest: "Pokazuj polecany link tematu w podsumowaniu mailowym."
     min_topic_title_length: "Minimalna długość tytułu tematu, w znakach"
     max_topic_title_length: "Maksymalna długość tytułu tematu, w znakach"

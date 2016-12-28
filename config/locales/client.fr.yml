@@ -321,18 +321,59 @@ fr:
       total_rows:
         one: "1 utilisateur"
         other: "%{count} utilisateurs"
+    group_histories:
+      actions:
+        change_group_setting: "Changer les paramètres du groupe"
+        add_user_to_group: "Ajouter l'utilisateur"
+        remove_user_from_group: "Supprimer l'utilisateur"
+        make_user_group_owner: "Rendre propriétaire"
+        remove_user_as_group_owner: "Retirer le propriétaire"
     groups:
+      logs:
+        title: "Journaux"
+        when: "Quand"
+        action: "Action"
+        acting_user: "Utilisateur agissant"
+        target_user: "Utilisateur cible"
+        subject: "Sujet"
+        details: "Détails"
+        from: "De"
+        to: "À"
+      edit:
+        title: 'Modifier le groupe'
+        full_name: 'Nom complet'
+        add_members: "Ajouter des membres"
+        delete_member_confirm: "Supprimer %{username} du groupe « %{group} » ?"
+      request_membership_pm:
+        title: "Demande d'adhésion"
+        body: "Je souhaiterais adhérer à @%{groupName}."
+      name_placeholder: "Nom du groupe, sans espaces, même règle que pour les pseudos"
+      public: "Autoriser les utilisateurs à rejoindre/quitter le groupe librement (nécessite que le groupe soit visible)"
       empty:
-        posts: "Il n'y a aucun message de la part des membres de ce groupe."
-        members: "Il n'y a aucun membre dans ce groupe."
+        posts: "Il n'y a aucun message de membres de ce groupe."
+        members: "Il n' y a aucun membre dans ce groupe."
         mentions: "Il n'y a aucune mention de ce groupe."
         messages: "Il n'y a aucun message pour ce groupe."
-        topics: "Il n'y a aucun sujet de la part des membres de ce groupe."
+        topics: "Il n'y a aucun sujet par des membres de ce groupe."
+        logs: "Il n'y a aucun journal pour ce groupe."
       add: "Ajouter"
+      join: "Rejoindre le groupe"
+      leave: "Quitter le groupe"
+      request: "Demander à rejoindre le groupe"
+      automatic_group: Groupe automatique
+      closed_group: Groupe fermé
+      is_group_user: "Vous êtes membre de ce groupe"
+      allow_membership_requests: "Autoriser les utilisateurs à envoyer des demandes d'adhésion aux propriétaires de groupe (nécessite que tout le monde puisse mentionner le groupe)"
+      membership: "Adhésion"
+      name: "Nom"
+      user_count: "Nombre de membres"
+      bio: "À propos du groupe"
       selector_placeholder: "Ajouter des membres"
       owner: "propriétaire"
       visible: "Ce groupe est visible par tous les utilisateurs"
-      index: "Groupes"
+      index:
+        title: "Groupes"
+        empty: "Il n'y a aucun groupe visible."
       title:
         one: "groupe"
         other: "groupes"
@@ -367,6 +408,15 @@ fr:
         muted:
           title: "Silencieux"
           description: "Nous ne serez jamais notifié de quoi que ce soit à propos des nouveaux sujets dans ce groupe."
+      flair_url: "Image de la vignette d'avatar"
+      flair_url_placeholder: "(Facultatif) URL de l'image ou classe Font Awesome"
+      flair_bg_color: "Couleur de l'arrière-plan de la vignette d'avatar"
+      flair_bg_color_placeholder: "(Facultatif) Couleur en héxadécimal"
+      flair_color: "Couleur de la vignette d'avatar"
+      flair_color_placeholder: "(Facultatif) Couleur en héxadécimal"
+      flair_preview_icon: "Prévisualiser l'icône"
+      flair_preview_image: "Prévisualiser l'image"
+      flair_note: "Note : la vignette d'avatar sera uniquement affichée pour le groupe principal d'un utilisateur."
     user_action_groups:
       '1': "J'aime donnés"
       '2': "J'aime reçus"
@@ -962,6 +1012,7 @@ fr:
       title: "ou appuyez sur Ctrl+Entrée"
       users_placeholder: "Ajouter un utilisateur"
       title_placeholder: "Quel est le sujet en une courte phrase ?"
+      title_or_link_placeholder: "Entrez un titre, ou copiez un lien ici"
       edit_reason_placeholder: "pourquoi modifiez-vous le message ?"
       show_edit_reason: "(ajouter la raison de la modification)"
       topic_featured_link_placeholder: "Entrez un lien affiché avec le titre."
@@ -1660,22 +1711,6 @@ fr:
           side_by_side_markdown:
             title: "Afficher les différences de la source côte-à-côte"
             button: '<i class="fa fa-columns"></i> Brut'
-    group:
-      edit:
-        title: 'Modifier le groupe'
-      title: 'Titre'
-      name: "Nom"
-      bio: "À propos du groupe"
-      name_placeholder: "Nom du groupe, sans espaces, même règle que pour les pseudos"
-      flair_url: "Image de la vignette d'avatar"
-      flair_url_placeholder: "(Facultatif) URL de l'image ou classe Font Awesome"
-      flair_bg_color: "Couleur de l'arrière-plan de la vignette d'avatar"
-      flair_bg_color_placeholder: "(Facultatif) Couleur en héxadécimal"
-      flair_color: "Couleur de la vignette d'avatar"
-      flair_color_placeholder: "(Facultatif) Couleur en héxadécimal"
-      flair_preview_icon: "Prévisualiser l'icône"
-      flair_preview_image: "Prévisualiser l'image"
-      flair_note: "Note : la vignette d'avatar sera uniquement affichée pour le groupe principal d'un utilisateur."
     category:
       can: 'peut&hellip; '
       none: '(aucune catégorie)'
@@ -1692,7 +1727,7 @@ fr:
       tags_allowed_tag_groups: "Groupes de tags pouvant être utilisés uniquement dans cette catégorie :"
       tags_placeholder: "(Facultatif) liste des tags autorisés"
       tag_groups_placeholder: "(Facultatif) liste des groupes de tags autorisés"
-      topic_featured_link_allowed: "Restreindre la création de sujets avec lien à cette catégorie. Nécessite que le paramètre topic_featured_link_enabled soit activé."
+      topic_featured_link_allowed: "Autoriser les sujets avec lien dans cette catégorie"
       delete: 'Supprimer la catégorie'
       create: 'Nouvelle catégorie'
       create_long: 'Créer une nouvelle catégorie'
@@ -1727,6 +1762,7 @@ fr:
       email_in_disabled: "La possibilité de créer des nouveaux sujets via courriel est désactivé dans les Paramètres. Pour l'activer,"
       email_in_disabled_click: 'activer le paramètre "email in".'
       suppress_from_homepage: "Retirer cette catégorie de la page d'accueil"
+      all_topics_wiki: "Faire des nouveaux sujets des Wikis par défaut"
       sort_order: "Tri par défaut :"
       allow_badges_label: "Autoriser les badges à être accordé dans cette catégorie"
       edit_permissions: "Modifier les permissions"
@@ -2250,7 +2286,6 @@ fr:
         delete: "Supprimer"
         delete_confirm: "Supprimer ce groupe ?"
         delete_failed: "Impossible de supprimer le groupe. Si c'est un groupe automatique il ne peut être détruit."
-        delete_member_confirm: "Enlever %{username} du groupe « %{group} » ?"
         delete_owner_confirm: "Retirer les privilèges de propriétaire pour %{username} ?"
         add: "Ajouter"
         add_members: "Ajouter des membres"
@@ -2322,7 +2357,7 @@ fr:
           details: "Quand il y a une réponse nouvelle, modifiée, supprimée ou rétablie."
         user_event:
           name: "Événement d'utilisateur"
-          details: "Quand un utilisateur est créé ou approuvé."
+          details: "Quand un utilisateur est créé, approuvé ou mis à jour."
         delivery_status:
           title: "État de l'envoi"
           inactive: "Inactif"

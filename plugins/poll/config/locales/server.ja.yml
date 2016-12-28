@@ -7,7 +7,7 @@
 
 ja:
   site_settings:
-    poll_enabled: "ユーザによる投票を許可しますか？"
+    poll_enabled: "ユーザーによる投票を許可しますか？"
     poll_maximum_options: "投票で許可されるオプションの最大数。"
   poll:
     multiple_polls_without_name: "名前のない複数の投票があります。一意に投票結果を識別するために、属性'<code>name</code>'を使用します。"

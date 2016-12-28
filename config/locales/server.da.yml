@@ -833,7 +833,6 @@ da:
     topics_per_period_in_top_page: "Antallet af top emner der vises når 'Vis Mere' er aktiveret."
     show_email_on_profile: "Vis en brugers email på deres profil (kun synligt for brugerne selv - samt admin)"
     email_token_valid_hours: "Glemte password / konto aktiverings muligheder er gyldige i (n) timer."
-    email_token_grace_period_hours: "Glemt password / konto aktiverings muligheder er fortsat gyldige i (n) timer efter at være blevet indløst."
     enable_badges: "Aktiver badge systemet"
     log_out_strict: "Når brugeren logger af, log da ud af alle sessioner, på alle enheder"
     new_version_emails: "Send en email til contact_email adressen når der er en ny version af Discourse tilgængelig."

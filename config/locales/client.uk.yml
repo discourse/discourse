@@ -228,15 +228,31 @@ uk:
       days_visited: "Відвідини"
       days_visited_long: "Днів відвідано"
       posts_read: "Прочитані"
+      posts_read_long: "Повідомлень Прочитано"
       total_rows:
         one: "%{count} користувач"
         few: "%{count} користувачі"
         other: "%{count} користувачів"
+    group_histories:
+      actions:
+        change_group_setting: "Змінити налаштування групи"
+        add_user_to_group: "Добавити користувача"
+        remove_user_from_group: "Видалити користувача"
     groups:
+      logs:
+        subject: "Тема"
+        details: "Деталі"
+        from: "Від"
+        to: "До"
+      edit:
+        title: 'Редагувати Групу'
+        full_name: 'Повне Ім''я'
+        add_members: "Добавити учасників"
+        delete_member_confirm: "Видалити '%{username}' з групи '%{group}'?"
       add: "Додати"
+      closed_group: Закрита Група
       selector_placeholder: "Додати учасників"
       visible: "Група видна всім користувачам"
-      index: "Групи"
       title:
         one: "група"
         few: "групи"
@@ -490,6 +506,7 @@ uk:
         title: "Підсумок"
         stats: "Статистика"
         time_read: "час читання"
+        more_topics: "Більше тем"
       ip_address:
         title: "Остання IP-адреса"
       registration_ip_address:

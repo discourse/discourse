@@ -294,17 +294,10 @@ ko:
       total_rows:
         other: "%{count} 사용자"
     groups:
-      empty:
-        posts: "이 그룹의 구성원에 의해 작성된 게시물은 없습니다."
-        members: "이 그룹에는 구성원이 없습니다."
-        mentions: "이 그룹에 대한 언급이 없습니다."
-        messages: "이 그룹에 대한 메시지는 없습니다."
-        topics: "이 그룹의 구성원에 의해 작성된 주제글이 없습니다."
       add: "추가"
       selector_placeholder: "멤버 추가"
       owner: "소유자"
       visible: "모든 사용자에게 보이는 그룹입니다."
-      index: "그룹"
       title:
         other: "그룹"
       members: "멤버"
@@ -1737,7 +1730,6 @@ ko:
         delete: "삭제"
         delete_confirm: "이 그룹을 삭제 하시겠습니까?"
         delete_failed: "이것은 자동으로 생성된 그룹입니다. 삭제할 수 없습니다."
-        delete_member_confirm: "'%{group}' 그룹에서 '%{username}'을 제외시키겠습니까?"
         delete_owner_confirm: "'%{username}' 님에게서 소유자권한을 제거할까요?"
         add: "추가"
         add_members: "사용자 추가하기"

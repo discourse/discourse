@@ -321,18 +321,59 @@ de:
       total_rows:
         one: "1 Benutzer"
         other: "%{count} Benutzer"
+    group_histories:
+      actions:
+        change_group_setting: "Gruppeneinstellung ändern"
+        add_user_to_group: "Benutzer hinzufügen"
+        remove_user_from_group: "Benutzer entfernen"
+        make_user_group_owner: "Zum Eigentümer machen"
+        remove_user_as_group_owner: "Eigentümerrechte entziehen"
     groups:
+      logs:
+        title: "Protokolle"
+        when: "Wann"
+        action: "Aktion"
+        acting_user: "Benutzer der Aktion"
+        target_user: "Betroffener Benutzer"
+        subject: "Gegenstand"
+        details: "Details"
+        from: "Von"
+        to: "An"
+      edit:
+        title: 'Gruppe bearbeiten'
+        full_name: 'Vollständiger Name'
+        add_members: "Mitglieder hinzufügen"
+        delete_member_confirm: "'%{username}' aus der Gruppe '%{group}' entfernen?"
+      request_membership_pm:
+        title: "Mitgliedschaftsanfrage"
+        body: "Ich möchte mich um eine Mitgliedschaft in @%{groupName} bewerben."
+      name_placeholder: "Gruppenname, keine Leerzeichen, gleiche Regel wie beim Benutzernamen"
+      public: "Benutzern erlauben, die Gruppenzugehörigkeit frei zu wechseln (Erfordert, dass die Gruppe sichtbar ist)"
       empty:
-        posts: "Es gibt keinen Beitrag von Mitgliedern dieser Gruppe."
-        members: "Diese Gruppe hat keine Mitglieder."
-        mentions: "Diese Gruppe wurde nicht erwähnt."
+        posts: "Es gibt keine Beiträge von Mitgliedern dieser Gruppe."
+        members: "Es gibt keine Mitglieder in dieser Gruppe."
+        mentions: "Es gibt keine Erwähnungen in dieser Gruppe."
         messages: "Es gibt keine Nachrichten für diese Gruppe."
-        topics: "Es gibt kein Thema von Mitgliedern dieser Gruppe."
+        topics: "Es gibt keine Themen von Mitgliedern dieser Gruppe."
+        logs: "Es gibt keine Protokolleinträge für diese Gruppe."
       add: "Hinzufügen"
+      join: "Gruppe beitreten"
+      leave: "Gruppe verlassen"
+      request: "Gruppenbeitritt beantragen"
+      automatic_group: Automatische Gruppe
+      closed_group: Geschlossene Gruppe
+      is_group_user: "Du bist ein Mitglied in dieser Gruppe."
+      allow_membership_requests: "Erlaube Benutzern, eine Mitgliedschaftsanfrage an Gruppenbesitzer zu schicken (Erfordert, dass jeder die Gruppe erwähnen kann)"
+      membership: "Mitgliedschaft"
+      name: "Name"
+      user_count: "Anzahl der Mitglieder"
+      bio: "Über die Gruppe"
       selector_placeholder: "Mitglieder hinzufügen"
       owner: "Eigentümer"
       visible: "Gruppe ist für alle Benutzer sichtbar"
-      index: "Gruppen"
+      index:
+        title: "Gruppen"
+        empty: "Es gibt keine sichtbaren Gruppen."
       title:
         one: "Gruppe"
         other: "Gruppen"
@@ -367,6 +408,15 @@ de:
         muted:
           title: "Stummgeschaltet"
           description: "Du erhältst keine Benachrichtigungen über neue Themen in dieser Gruppe."
+      flair_url: "Avatar-Hintergrund"
+      flair_url_placeholder: "(Optional) Bild-URL oder Font Awesome-Klasse"
+      flair_bg_color: "Avatar-Hintergrundfarbe"
+      flair_bg_color_placeholder: "(Optional) Hex-Farbwert"
+      flair_color: "Avatar-Hintergrundfarbe"
+      flair_color_placeholder: "(Optoinal) Hex-Farbwert"
+      flair_preview_icon: "Vorschau-Icon"
+      flair_preview_image: "Vorschaubild"
+      flair_note: "Hinweise: Ein Avatar-Hintergrund wird nur für die Hauptgruppe eines Benutzers angezeigt."
     user_action_groups:
       '1': "Abgegebene Likes"
       '2': "Erhaltene Likes"
@@ -695,6 +745,7 @@ de:
         link_generated: "Der Einladungslink wurde erfolgreich generiert!"
         valid_for: "Der Einladungslink ist nur für die Adresse %{email} gültig"
         bulk_invite:
+          none: "Du hast hier noch niemanden eingeladen. Du kannst einzelne Einladungen versenden, oder eine Reihe von Leuten auf einmal einladen, indem du <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>eine CSV-Datei hochlädst</a>."
           text: "Masseneinladung aus Datei"
           success: "Die Datei wurde erfolgreich hochgeladen. Du erhältst eine Nachricht, sobald der Vorgang abgeschlossen ist."
       password:
@@ -961,8 +1012,10 @@ de:
       title: "Oder drücke Strg+Eingabetaste"
       users_placeholder: "Benutzer hinzufügen"
       title_placeholder: "Um was geht es in dieser Diskussion? Schreib einen kurzen Satz."
+      title_or_link_placeholder: "Gib einen Titel ein oder füge einen Link ein"
       edit_reason_placeholder: "Warum bearbeitest du?"
       show_edit_reason: "(Bearbeitungsgrund hinzufügen)"
+      topic_featured_link_placeholder: "Gib einen Link, der mit dem Titel angezeigt wird."
       reply_placeholder: "Schreib hier. Verwende Markdown, BBCode oder HTML zur Formatierung. Füge Bilder ein oder ziehe sie herein."
       view_new_post: "Sieh deinen neuen Beitrag an."
       saving: "Wird gespeichert"
@@ -1674,6 +1727,7 @@ de:
       tags_allowed_tag_groups: "Schlagwortgruppen, die nur in dieser Kategorie verwendet werden können:"
       tags_placeholder: "(Optional) Liste erlaubter Schlagwörter"
       tag_groups_placeholder: "(Optional) Liste erlaubter Schlagwort-Gruppen"
+      topic_featured_link_allowed: "Erlaube hervorgehobene Links in dieser Kategorie"
       delete: 'Kategorie löschen'
       create: 'Neue Kategorie'
       create_long: 'Eine neue Kategorie erstellen'
@@ -1708,6 +1762,7 @@ de:
       email_in_disabled: "Das Erstellen von neuen Themen per E-Mail ist in den Website-Einstellungen deaktiviert. Um das Erstellen von neuen Themen per E-Mail zu erlauben,"
       email_in_disabled_click: 'aktiviere die Einstellung „email in“.'
       suppress_from_homepage: "Löse diese Kategorie von der Startseite."
+      all_topics_wiki: "Mache neue Themen standardmäßig zu Wikis."
       sort_order: "Standardsortierung:"
       allow_badges_label: "Erlaube das Verleihen von Abzeichen in dieser Kategorie."
       edit_permissions: "Berechtigungen bearbeiten"
@@ -2227,7 +2282,6 @@ de:
         delete: "Löschen"
         delete_confirm: "Diese Gruppe löschen?"
         delete_failed: "Gruppe konnte nicht gelöscht werden. Wenn dies eine automatische Gruppe ist, kann sie nicht gelöscht werden."
-        delete_member_confirm: "'%{username}' aus der Gruppe '%{group}' entfernen?"
         delete_owner_confirm: "Eigentümerrechte für '%{username}' entfernen?"
         add: "Hinzufügen"
         add_members: "Mitglieder hinzufügen"
@@ -2299,7 +2353,7 @@ de:
           details: "Wenn auf einen Beitrag geantwortet wird oder der Beitrag geändert, gelöscht oder wiederhergestellt wird."
         user_event:
           name: "Benutzer Ereignis"
-          details: "Wenn ein Benutzer erstellt oder angenommen wird."
+          details: "Wenn ein Benutzer erstellt, genehmigt oder aktualisiert wird."
         delivery_status:
           title: "Versandstatus"
           inactive: "Inaktiv"

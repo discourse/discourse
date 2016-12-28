@@ -818,7 +818,6 @@ nl:
     top_page_default_timeframe: "Standaard tijdspanne voor de top overzicht pagina."
     show_email_on_profile: "Laat e-mail van gebruikers zien in hun profiel (alleen zichtbaar voor henzelf en staf)"
     email_token_valid_hours: "Wachtwoord vergeten / activeer account tokens zijn (n) uur geldig."
-    email_token_grace_period_hours: "Wachtwoord vergeten / activeer account tokens zijn nog geldig gedurende een respijtperiode van (n) uur na het benutten."
     enable_badges: "Activeer het badgesysteem"
     allow_index_in_robots_txt: "Specificeer in robots.txt dat de site geïndexeerd mag worden door zoekmachines."
     email_domains_blacklist: "Een lijst van e-maildomeinen gescheiden door een vertikaal streepje (pipe), die niet worden toegestaan. Voorbeeld: mailingen.com|trashmail.net"

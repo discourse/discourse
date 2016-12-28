@@ -321,18 +321,59 @@ he:
       total_rows:
         one: "משתמש/ת 1"
         other: "%{count} משתמשים"
+    group_histories:
+      actions:
+        change_group_setting: "שינוי הגדרות קבוצה"
+        add_user_to_group: "הוספת משתמש/ת"
+        remove_user_from_group: "הסרת משתמש/ת"
+        make_user_group_owner: "הפיכה לבעלים"
+        remove_user_as_group_owner: "שלילת בעלות"
     groups:
+      logs:
+        title: "לוגים"
+        when: "מתי"
+        action: "פעולה"
+        acting_user: "משתמשים פועלים"
+        target_user: "משתמשי מטרה"
+        subject: "נושא"
+        details: "פרטים"
+        from: "מאת"
+        to: "אל"
+      edit:
+        title: 'עריכת קבוצה'
+        full_name: 'שם מלא'
+        add_members: "הוספת חברים"
+        delete_member_confirm: "הסרת '%{username}' מהקבוצה '%{group}'?"
+      request_membership_pm:
+        title: "בקשת חברות"
+        body: "הייתי מעוניין להגיש בקשת חברות ב-@%{groupName}."
+      name_placeholder: "שם קבוצה, ללא רווחים, לפי הכללים של שמות משתמשים"
+      public: "אפשרו למשתמשים להצטרף/לעזוב את הקבוצה בחופשיות (על הקבוצה להיות נראית)"
       empty:
-        posts: "אין פוסט של חברים בקבוצה זו"
+        posts: "אין פוסטים של חברי קבוצה זו."
         members: "אין חברים בקבוצה זו."
-        mentions: "אין אזכורים של קבוצה זו."
+        mentions: "אין איזכורים של קבוצה זו."
         messages: "אין הודעות לקבוצה זו."
-        topics: "אין נושא מטעם חברים בקבוצה זו."
+        topics: "אין נושאים שנוצרו על ידי חברים של קבוצה זו."
+        logs: "אין לוגים עבור קבוצה זו."
       add: "הוספה"
+      join: "הצטרפות לקבוצה"
+      leave: "עזיבת קבוצה"
+      request: "בקשה להצטרפות לקבוצה"
+      automatic_group: קבוצה אוטומטית
+      closed_group: קבוצה סגורה
+      is_group_user: "אתם חברים בקבוצה זו."
+      allow_membership_requests: "אפשרו למשתמשים לשלוח בקשות חברות לבעלי הקבוצה (מצריך שכולם יוכלו לאזכר את הקבוצה)"
+      membership: "חברות"
+      name: "שם"
+      user_count: "מספר חברים"
+      bio: "אודות הקבוצה"
       selector_placeholder: "הוספת חברים וחברות"
       owner: "מנהל"
       visible: "הקבוצה זמינה לכל המשתמשים"
-      index: "קבוצות"
+      index:
+        title: "קבוצות"
+        empty: "אין קבוצות נראות."
       title:
         one: "קבוצה"
         other: "קבוצות"
@@ -367,6 +408,15 @@ he:
         muted:
           title: "מושתק"
           description: "לעולם לא תקבלו התראה על נושאים חדשים בקבוצה זו."
+      flair_url: "תמונת פלייר אווטר"
+      flair_url_placeholder: "(אופציונלי) URL של תמונה או מחלקה של Font Awesome"
+      flair_bg_color: "צבע רקע של פלייר לאווטר"
+      flair_bg_color_placeholder: "(אופציונלי) ערך הקסדצימלי של הצבע"
+      flair_color: "צבע פלייר אווטר"
+      flair_color_placeholder: "(אופציונלי) ערך הקסדצימלי של הצבע"
+      flair_preview_icon: "תצוגה מקדימה של אייקון"
+      flair_preview_image: "תצוגה מקדימה של תמונה"
+      flair_note: "שימו לב: פלייר יופיע רק עבור הקבוצה הראשית של משתמשים."
     user_action_groups:
       '1': "לייקים שניתנו"
       '2': "לייקים שהתקבלו"
@@ -962,6 +1012,7 @@ he:
       title: "או לחצו Ctrl+Enter"
       users_placeholder: "הוספת משתמש"
       title_placeholder: " במשפט אחד, במה עוסק הדיון הזה?"
+      title_or_link_placeholder: "הקלידו כותרת, או הדביקו קישור כאן"
       edit_reason_placeholder: "מדוע ערכת?"
       show_edit_reason: "(הוספת סיבת עריכה)"
       topic_featured_link_placeholder: "הזינו קישור שיוצג עם הכותרת."
@@ -1662,22 +1713,6 @@ he:
           side_by_side_markdown:
             title: "הציגו את ההבדלי המקור הגולמיים זה לצד זה"
             button: '<i class="fa fa-columns"></i> גלם'
-    group:
-      edit:
-        title: 'עריכת קבוצה'
-      title: 'כותרת'
-      name: "שם"
-      bio: "אודות הקבוצה"
-      name_placeholder: "שם הקבוצה, ללא רווחים, זהה לכלל שם-משתמש/ת"
-      flair_url: "תמונת פלייר אווטר"
-      flair_url_placeholder: "(אופציונלי) URL של תמונה או מחלקה של Font Awesome"
-      flair_bg_color: "צבע רקע של פלייר לאווטר"
-      flair_bg_color_placeholder: "(אופציונלי) ערך צבע בהקס"
-      flair_color: "צבע פלייר אווטר"
-      flair_color_placeholder: "(אופציונלי) ערך צבע בהקס"
-      flair_preview_icon: "תצוגה מקדימה של אייקון"
-      flair_preview_image: "תצוגה מקדימה של תמונה"
-      flair_note: "שימו לב: פלייר יופיע רק עבור הקבוצה הראשית של משתמשים."
     category:
       can: 'יכול&hellip; '
       none: '(ללא קטגוריה)'
@@ -1694,7 +1729,7 @@ he:
       tags_allowed_tag_groups: "קבוצות תגים שניתנות לשימוש בקטגוריה זו:"
       tags_placeholder: "(אופציונלי) רשימת תגים מותרים"
       tag_groups_placeholder: "(אופציונלי) רשימת קבוצות תגים"
-      topic_featured_link_allowed: "מגביל עריכת קישור מומלץ של נושא בקטגוריה זו. ההגדרה topic_featured_link_enabled צריכה להיות מסומנת."
+      topic_featured_link_allowed: "אפשרו קישורים מומלצים בקטגוריה זו"
       delete: 'מחק קטגוריה'
       create: 'קטגוריה חדשה'
       create_long: 'יצירת קטגוריה חדשה'
@@ -1729,6 +1764,7 @@ he:
       email_in_disabled: "אפשרות הפרסום של נושאים חדשים דרך דוא\"ל נוטרלה בהגדרות האתר. כדי לאפשר פרסום באמצעות  משלוח דוא\"ל,"
       email_in_disabled_click: 'אפשרו את את ההגדרה "דוא"ל נכנס"'
       suppress_from_homepage: "הרחיקו קטגוריה זו מהעמוד הראשי."
+      all_topics_wiki: "כברירת מחדל נושאים חדשים יהיו וויקי."
       sort_order: "סידור ברירת מחדל:"
       allow_badges_label: "הרשו לעיטורים להיות מוענקים בקטגוריה זו"
       edit_permissions: "ערוך הרשאות"
@@ -2252,7 +2288,6 @@ he:
         delete: "מחק"
         delete_confirm: "למחוק קבוצה זו?"
         delete_failed: "לא ניתן למחוק קבוצה זו. אם זו קבוצה אוטומטית, היא בלתי ניתנת למחיקה."
-        delete_member_confirm: "להסיר את '%{username}' מהקבוצה '%{group}'?"
         delete_owner_confirm: "הסרת הרשאות מנהל עבור '%{username}'?"
         add: "הוספה"
         add_members: "הוספת חברים וחברות"
@@ -2324,7 +2359,7 @@ he:
           details: "כאשר יש תגובה חדשה, עריכה, מחיקה או שחזור."
         user_event:
           name: "אירוע משתמש"
-          details: "כאשר משתמש נוצר או מאושר."
+          details: "כאשר משתמש נוצר, מאושר, או מעודכן."
         delivery_status:
           title: "מצב שליחה"
           inactive: "לא פעיל"

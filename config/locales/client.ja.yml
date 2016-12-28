@@ -188,8 +188,8 @@ ja:
       like_count: "いいね！"
       topic_count: "トピック"
       post_count: "投稿"
-      user_count: "新規ユーザ"
-      active_user_count: "アクティブユーザ"
+      user_count: "新規ユーザー"
+      active_user_count: "アクティブユーザー"
       contact: "お問い合わせ"
       contact_info: "このサイトに影響を与える重要な問題や緊急の問題が発生した場合は、 %{contact_info}までご連絡ください"
     bookmarked:
@@ -238,7 +238,7 @@ ja:
       topic: "トピック："
       approve: '承認'
       reject: 'リジェクト'
-      delete_user: '削除されたユーザ'
+      delete_user: '削除されたユーザー'
       title: "承認待ち"
       none: "レビュー待ちの投稿はありません。"
       edit: "編集"
@@ -269,8 +269,8 @@ ja:
       sent_by_user: "<a href='{{userUrl}}'>{{user}}</a> が送信"
       sent_by_you: "<a href='{{userUrl}}'>あなた</a> が送信"
     directory:
-      filter_name: "ユーザ名でフィルタ"
-      title: "ユーザ"
+      filter_name: "ユーザー名でフィルタ"
+      title: "ユーザー"
       likes_given: "与えた"
       likes_received: "もらった"
       topics_entered: "閲覧数"
@@ -286,18 +286,12 @@ ja:
       posts_read: "既読"
       posts_read_long: "投稿の閲覧数"
       total_rows:
-        other: "%{count}人のユーザ"
+        other: "%{count}人のユーザー"
     groups:
-      empty:
-        posts: "このグループのメンバーからの投稿はありません。"
-        members: "このグループからの投稿はありません。"
-        mentions: "このグループのメンションはありません。"
-        messages: "このグループへのメッセージはありません。"
-        topics: "このグループのメンバーのトピックは何もありません。"
       add: "追加"
       selector_placeholder: "メンバーを追加"
       owner: "オーナー"
-      visible: "このグループは全てのユーザに表示されています。"
+      visible: "このグループは全てのユーザーに表示されています。"
       title:
         other: "グループ"
       members: "メンバー"
@@ -367,7 +361,7 @@ ja:
       phone: 電話
       other_accounts: "同じIPアドレスを持つアカウント"
       delete_other_accounts: "%{count}件削除"
-      username: "ユーザ名"
+      username: "ユーザー名"
       trust_level: "トラストレベル"
       read_time: "読んだ時間"
       topics_entered: "入力したトピック"
@@ -409,10 +403,10 @@ ja:
       change: "変更"
       moderator: "{{user}} はモデレータです"
       admin: "{{user}} は管理者です"
-      moderator_tooltip: "このユーザはモデレータです"
-      admin_tooltip: "このユーザは管理者です"
-      blocked_tooltip: "このユーザはブロックされています"
-      suspended_notice: "このユーザは {{date}} まで凍結状態です。"
+      moderator_tooltip: "このユーザーはモデレータです"
+      admin_tooltip: "このユーザーは管理者です"
+      blocked_tooltip: "このユーザーはブロックされています"
+      suspended_notice: "このユーザーは {{date}} まで凍結状態です。"
       suspended_reason: "理由: "
       github_profile: "Github"
       email_activity_summary: "アクティビティの情報"
@@ -433,9 +427,9 @@ ja:
       delete_yourself_not_allowed: "アカウントを削除できませんでした。サイトの管理者へ連絡してください。"
       unread_message_count: "メッセージ"
       admin_delete: "削除"
-      users: "ユーザ"
+      users: "ユーザー"
       muted_users: "ミュート"
-      muted_users_instructions: "ユーザからの通知をすべて行いません"
+      muted_users_instructions: "ユーザーからの通知をすべて行いません"
       muted_topics_link: "ミュートしたトピックを表示する"
       staff_counters:
         flags_given: "役に立った通報"
@@ -464,10 +458,10 @@ ja:
         title: "プロフィールを変更"
         error: "変更中にエラーが発生しました。"
       change_username:
-        title: "ユーザ名を変更"
-        taken: "このユーザ名は既に使われています。"
-        error: "ユーザ名変更中にエラーが発生しました。"
-        invalid: "このユーザ名は無効です。英数字のみ利用可能です。"
+        title: "ユーザー名を変更"
+        taken: "このユーザー名は既に使われています。"
+        error: "ユーザー名の変更中にエラーが発生しました。"
+        invalid: "このユーザー名は無効です。英数字のみ利用可能です。"
       change_email:
         title: "メールアドレスを変更"
         taken: "このメールアドレスは既に使われています。"
@@ -489,7 +483,7 @@ ja:
         title: "プロフィールの背景画像"
         instructions: "プロフィールの背景画像は、幅850pxで中央揃えになります"
       change_card_background:
-        title: "ユーザカードの背景画像"
+        title: "ユーザーカードの背景画像"
         instructions: "背景画像は、幅590pxで中央揃えになります"
       email:
         title: "メールアドレス"
@@ -506,7 +500,7 @@ ja:
         too_short: "名前が短いです"
         ok: "問題ありません"
       username:
-        title: "ユーザ名"
+        title: "ユーザー名"
         instructions: "空白を含まず、被らない名前を入力してください"
         short_instructions: "@{{username}} であなたにメンションを送ることができます"
         available: "ユーザ名は利用可能です"
@@ -1576,7 +1570,7 @@ ja:
         create: '<b>c</b> 新しいトピックを作成'
         notifications: '<b>n</b> お知らせを開く'
         hamburger_menu: '<b>=</b> メニューを開く'
-        user_profile_menu: '<b>p</b> ユーザメニュを開く'
+        user_profile_menu: '<b>p</b> ユーザーメニューを開く'
         show_incoming_updated_topics: '<b>.</b> 更新されたトピックを表示する'
         search: '<b>/</b> 検索'
         help: '<b>?</b> キーボードヘルプを表示する'
@@ -1736,7 +1730,6 @@ ja:
         delete: "削除"
         delete_confirm: "このグループを削除しますか?"
         delete_failed: "グループの削除に失敗しました。自動作成グループを削除することはできません。"
-        delete_member_confirm: "'%{group}' グループから'%{username}' を削除しますか?"
         add: "追加"
         add_members: "メンバーを追加"
         custom: "カスタム"

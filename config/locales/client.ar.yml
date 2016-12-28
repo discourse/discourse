@@ -425,18 +425,23 @@ ar:
         few: "%{count} أعضاء"
         many: "%{count} عضوًا"
         other: "%{count} عضو"
+    group_histories:
+      actions:
+        add_user_to_group: "إضافة مستخدم"
     groups:
-      empty:
-        posts: "لا مشاركات من أعضاء هذه المجموعة."
-        members: "لا أعضاء في هذه المجموعة."
-        mentions: "لم يُشر أحد إلى هذه المجموعة."
-        messages: "لا رسائل لهذه المجموعة."
-        topics: "لا مواضيع لأعضاء هذه المجموعة."
+      logs:
+        title: "السجلات"
+        details: "التفاصيل"
+        from: "من"
+        to: "إلى"
+      edit:
+        title: 'تعديل المجموعة'
+        full_name: 'الإسم الكامل'
+        add_members: "إضافة أعضاء"
       add: "أضف"
       selector_placeholder: "أضف أعضاء"
       owner: "المالك"
       visible: "المجموعة مرئية لكل المستخدمين"
-      index: "المجموعات"
       title:
         zero: "مجموعات"
         one: "مجموعات"
@@ -2507,7 +2512,6 @@ ar:
         delete: "حذف"
         delete_confirm: "أأحذف هذه المجموعة؟"
         delete_failed: "تعذّر حذف المجموعة. إن كانت مجموعة آليّة، فلا يمكن تدميرها."
-        delete_member_confirm: "أأزيل '%{username}' من المجموعة '%{group}'؟"
         delete_owner_confirm: "هل تريد إزالة صلاحيات الإدارة من '%{username} ؟"
         add: "اضافة"
         add_members: "اضافة عضو"

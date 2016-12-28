@@ -753,7 +753,6 @@ vi:
     top_page_default_timeframe: "Khung thời gian mặc định cho trang xem trên cùng."
     show_email_on_profile: "Hiển thị email thành viên trên trang hồ hơ (chỉ cho họ và quản trị viên)"
     email_token_valid_hours: "Token quyên mật khẩu / kích hoạt tài khoản có giá trị trong (n) giờ."
-    email_token_grace_period_hours: "Token quyên mật khẩu / kích hoạt tài khoản vẫn còn giá trị (n) giờ sau khi được gia hạn"
     enable_badges: "Kích hoạt hệ thống huy hiệu"
     allow_index_in_robots_txt: "Chỉ rõ trong robots.txt trang web này cho phép tạo chỉ mục bởi web search engines."
     email_domains_blacklist: "Một danh sách đuôi email mà người dùng không được phép dùng để đăng ký tài khoản. Ví dụ: maillinator.com|trashmail.net. Lưu ý mỗi tên miền cách nhau bởi dấu \"|\"."

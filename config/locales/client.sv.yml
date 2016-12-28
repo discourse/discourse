@@ -322,17 +322,10 @@ sv:
         one: "1 användare"
         other: "%{count} användare"
     groups:
-      empty:
-        posts: "Det finns inga inlägg från medlemmar in denna grupp."
-        members: "Det finns ingen medlem i den här gruppen."
-        mentions: "Det finns ingen omnämnande i den här gruppen."
-        messages: "Det finns inget meddelande för den här gruppen."
-        topics: "Det finns inget ämne från medlemmar i den här gruppen."
       add: "Lägg till"
       selector_placeholder: "Lägg till medlemmar"
       owner: "ägare"
       visible: "Gruppen är synlig för alla användare"
-      index: "Grupper"
       title:
         one: "grupp"
         other: "grupper"
@@ -2218,7 +2211,6 @@ sv:
         delete: "Radera"
         delete_confirm: "Ta bort den här gruppen?"
         delete_failed: "Oförmögen att ta bort grupp. Om det här är en automatisk grupp så kan den inte raderas."
-        delete_member_confirm: "Ta bort '%{username}' från '%{group}' gruppen?"
         delete_owner_confirm: "Ta bort användarprivilegier för '\"{username}'?"
         add: "Lägg till"
         add_members: "Lägg till medlemmar"
@@ -2284,7 +2276,6 @@ sv:
           details: "När det finns ett nytt svar, redigerat, borttaget eller återskapat."
         user_event:
           name: "Användarevent"
-          details: "När en användare är skapad eller godkänd."
         delivery_status:
           title: "Leveransstatus"
           inactive: "Inaktiv"

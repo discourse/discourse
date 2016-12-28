@@ -1004,7 +1004,6 @@ ar:
     top_page_default_timeframe: "الوقت المثبت علي الصفحة الأكثر مشاهدة."
     show_email_on_profile: "إظهار بريدك المستخدم على صفحته الشخصية (مرئية فقط لأنفسهم والموظفين)"
     email_token_valid_hours: "نسيت كلمه السر/ تنشيط رموز الحساب صالحه ل(n)  ساعات"
-    email_token_grace_period_hours: "نسيت كلمه السر/ تنشيط رموز الحساب لا تزال صالحة لفترة سماح بالـ(n) ساعات بعد استبدالها."
     enable_badges: "تفعيل نظام الأوسمة."
     allow_index_in_robots_txt: "تحديد في ملف robots.txt أن يسمح هذا الموقع ليتم فهرستها من قبل محركات البحث على شبكة الإنترنت."
     email_domains_blacklist: "قائمة pipe-delimited المجالات البريد الإلكتروني الذي لا يسمح للمستخدمين تسجيل حسابات مع. مثال: mailinator.com | trashmail.net"

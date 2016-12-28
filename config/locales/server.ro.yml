@@ -109,6 +109,9 @@ ro:
       max_username_length_range: "Nu poți seta maximum cu o valoare mai mică decât a minimului."
       default_categories_already_selected: "Nu poți selecta o categorie folosită într-o altă listă."
       s3_upload_bucket_is_required: "Nu poți activa încărcările pe S3 dacă nu ai introdus 's3_upload_bucket'."
+  bulk_invite:
+    file_should_be_csv: "Fișierul de încărcat trebuie să fie în format csv."
+    error: "A apărut o eroare la încărcarea acestui fișier. Te rugăm să încerci din nou, mai târziu."
   backup:
     operation_already_running: "O operație este în desfășurare. Nu poți începe alta nouă."
     backup_file_should_be_tar_gz: "Fișierul backup ar trebui să fie arhivat cu extensia .tar.gz."
@@ -127,6 +130,11 @@ ro:
   embed:
     start_discussion: "Pornește discuție"
     continue: "Continuă discuție"
+    error: "Eroare la încorporare"
+    referer: "Referent:"
+    mismatch: "Referentul nu corespunde nici uneia dintre următoarele gazde:"
+    no_hosts: "Nu s-a setat nicio gazdă pentru încorporare."
+    configure: "Configurează încorporarea"
     more_replies:
       one: "Încă un răspuns"
       few: "Încă %{count} răspunsuri"
@@ -281,6 +289,7 @@ ro:
         name: "Numele categoriei"
       topic:
         title: 'Titlu'
+        featured_link: 'Link promovat'
       post:
         raw: "Corp"
       user_profile:
@@ -294,6 +303,9 @@ ro:
               too_many_users: "Poți trimite avertizări la un singur utilizator odată."
               cant_send_pm: "Ne pare rău, nu poți trimite un mesaj privat acestui utilizator."
               no_user_selected: "Trebuie selectat un nume de utilizator valid."
+            featured_link:
+              invalid: "e invalid. URL-ul trebuie să includă http:// sau https://."
+              invalid_category: "nu poate fi editat în această categorie."
         user:
           attributes:
             password:
@@ -389,6 +401,7 @@ ro:
       create_topic: "Ai atins numărul maxim de subiecte. Te rugăm să aștepți %{time_left} înainte să încerci din nou."
       create_post: "Răspunzi prea rapid. Te rugăm să aștepți %{time_left} înainte să încerci din nou."
       delete_post: "ștergi postările prea rapid. Te rugăm să aștepți %{time_left} înainte să încerci din nou."
+      public_group_membership: "Ieși/intri din/în grupuri prea frecvent. Te rugăm așteaptă %{time_left} până să încerci din nou."
       topics_per_day: "Ai atins numărul maxim de subiecte noi pe ziua de azi. Te rugăm să aștepți %{time_left} înainte să încerci din nou."
       pms_per_day: "Ai atins numărul maxim de mesaje pe ziua de azi. Te rugăm să aștepți %{time_left} înainte să încerci din nou."
       create_like: "Ai atins numărul maxim de aprecieri pe ziua de azi. Te rugăm să aștepți %{time_left} înainte să încerci din nou."
@@ -806,6 +819,8 @@ ro:
     min_first_post_length: "Numărul minim de caractere permis pentru prima postare (în corpul mesajului)"
     min_private_message_post_length: "Numărul minim de caractere permis pentru mesaje, per postare"
     max_post_length: "Lungimea maximă permisă a postării, în caractere"
+    topic_featured_link_enabled: "Activează postarea unui link cu subiecte."
+    show_topic_featured_link_in_digest: "Arată link-ul promovat al subiectului în rezumatul pe email."
     min_topic_title_length: "Minimul de caractere permis în titlul unui subiect"
     max_topic_title_length: "Maximul de caractere permis în titlul unui subiect"
     min_private_message_title_length: "Numărul minim de caractere permis în titlul unui mesaj"
@@ -914,8 +929,8 @@ ro:
     show_email_on_profile: "Afișează adresa de email a unui utilizator în pagina sa de utilizator (vizibilă numai pentru el și pentru membrii echipei)"
     prioritize_username_in_ux: "Afișează întâi nume utilizator pe pagina utilizator, pe cardul utilizator și în postări (dacă e dezactivat, se afișează întâi numele)"
     email_token_valid_hours: "Tokenul uitat parolă / activează cont sunt valabili pentru (n) ore."
-    email_token_grace_period_hours: "Tokenul Parola uitată / activează cont sunt încă valabili pe o perioadă de grație de (n) ore după ce au fost acceptați."
     enable_badges: "Activează sistemul de ecusoane"
+    enable_whispers: "Permite membrilor echipei să comunice privat în cadrul subiectelor."
     allow_index_in_robots_txt: "Specifică în robots.txt că acest site poate fi indexat de motoarele de căutare web."
     email_domains_blacklist: "O listă de domenii de email separate cu simbolul | (pipe) ale căror utilizatori nu au permisiunea să înregistreze conturi. Exemplu: mailinator.com|trashmail.net"
     email_domains_whitelist: "O listă de domenii de email (separate cu simbolul | (pipe)) cu care utilizatorii TREBUIE să se înregistreze. ATENȚIE: utilizatorii cu alte domenii de email decât cele listate nu vor avea permisiunea să se înregistreze."
@@ -946,6 +961,7 @@ ro:
     sso_overrides_name: "Suprascrie numele întreg de pe local cu numele întreg din datele SSO la fiecare autentificare și împiedică schimbările locale."
     sso_overrides_avatar: "Suprascrie avatarul utilizatorului cu avatarul din datele SSO. Dacă este activat, se recomandă călduros dezactivarea allow_uploaded_avatars"
     sso_not_approved_url: "Redirecționează conturile neaprobate SSO către acest URL"
+    sso_allows_all_return_paths: "Nu restricționa domeniul pentru return_paths furnizate de SSO (implicit, calea de întoarcere trebuie să fie pe site-ul curent)"
     enable_local_logins: "Activează numele de utilizator local și conturile bazate pe autentificare cu parolă. (Notă: Pentru ca invitațiile să funcționeze, această opțiune trebuie să fie activată)"
     allow_new_registrations: "Permite înregistrarea noilor utilizatori. Debifați pentru a restricționa pe oricine să creeze un cont nou."
     enable_signup_cta: "Arată o notificare către utilizatorii anonimi care revin prin care să le ceri să se înscrie pentru a avea un cont pe site."
@@ -1171,6 +1187,9 @@ ro:
     delete_digest_email_after_days: "Nu trimite emailuri-rezumat utilizatorilor care nu au fost văzuți pe site de mai mult de (n) zile."
     digest_suppress_categories: "Nu include aceste categorii în emailurile-rezumat."
     disable_digest_emails: "Dezactivează emailurile-rezumat pentru toți utilizatorii."
+    email_accent_bg_color: "Culoarea accent care să fie folosită ca fundal pentru unele elemente din emailurile HTML. Introdu numele culorii („roșu”) sau valoarea hex ('#FF000')."
+    email_accent_fg_color: "Culoarea textului redat pe culoarea de fundal a emailurilor HTML. Introdu un nume de culoare („alb”) sau o valoare hex ('#FFFFFF')."
+    email_link_color: "Culoarea link-urilor din emailurile HTML. Introdu un nume de culoare („albastru”) sau o valoare hex ('#0000FF')."
     detect_custom_avatars: "Dacă sau nu să verifice dacă utilizatorii și-au încărcat poze de profil personalizate."
     max_daily_gravatar_crawls: "Numărul maxim zilnic de verificări pe care Discourse le va face pe Gravatar pentru a vedea dacă există avatare personalizate."
     public_user_custom_fields: "O listă albă cu câmpuri personalizate pentru utilizator, ce se pot afișa public."
@@ -1642,97 +1661,9 @@ ro:
         Pentru îndreptări suplimentare, te rugăm să citești [ghidul comunității](%{base_url}/guidelines).
     usage_tips:
       text_body_template: |
-        Aici sunt câteva sfaturi rapide pentru început:
+        Citește câteva sfaturi rapide destinate noilor utilizatori, [urmărind această postare pe blog](http://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/).
 
-        ## Citirea
-
-        Pentru a citi mai mult, **dă scroll în jos!**
-
-        Pe măsură ce sunt postate noi răspunsuri și noi subiecte, ele vor apărea în mod automat - nu e nevoie să reîmprospătezi pagina.
-
-        ## Navigarea
-
-        - Pentru a folosi căutarea, pentru a accesa pagina ta de utilizator, sau meniul <kbd>☰</kbd>, folosește **butoanele icoană din dreapta-sus**.
-
-        - Selectarea unui titlu de subiect te va duce întotdeauna la **următorul răspuns necitit** din subiect. Pentru a intra la începutul sau la sfârșitul listei de mesaje, selectează contorul de răspunsuri sau data ultimului răspuns.
-
-        <img src="%{base_url}/images/welcome/topic-list-select-areas-2x.png" width="593" height="59">
-
-        - Atunci când citești un subiect, poți folosi bara temporală din dreapta pentru a sări la începutul listei de mesaje, la sfârșitul ei sau la ultima poziție citită. Pe ecranele mai mici, selectează bara de progres din dreapta-jos pentru a o expanda:
-
-        <img src="%{base_url}/images/welcome/progress-bar-2x.png" width="153" height="181">
-
-        De asemenea, poți apăsa tasta <kbd>?</kbd> pentru o lista ultra-rapidă de scurtături de tastatură.
-
-        ## Răspunsul
-
-        Pentru a introduce un citat, sleceează textul pe care dorești să îl citezi, apoi apasă orice <img src="%{base_url}/images/welcome/reply-post-2x.png" width="25" height="23"> buton Răspunde pentru a deschide editorul. Pentru mai multe citate repetă operațiunea.
-
-        <img src="%{base_url}/images/welcome/quote-reply-2x.png" width="326" height="128">
-
-        Întotdeauna poți să continui să citești în timp ce ăți compui răspunsul, iar noi vom salva automat drafturile, pe măsură ce scrii.
-
-        Pentru a notifica pe cineva cu privire la răspunsul tău, menționează-i numele. Apasă `@` pentru a selecta un utilizator.
-
-        <img src="%{base_url}/images/welcome/username-completion-2x.png" width="191" height="125">
-
-        Pentru a folosi [Emoji standard](http://www.emoji.codes/), apasă pur și simplu `:` pentru a sorta după nume, sau folosește tradiționalele smileys `;)`
-
-        <img src="%{base_url}/images/welcome/emoji-completion-2x.png" width="144" height="153">
-
-        Pentru a genera un onebox pentru un link anume, lipiți-l pe o linie, de unul singur:
-
-        <img src="%{base_url}/images/welcome/link-oneboxing-animation.gif" width="480" height="228">
-
-        Răspunsul tău poate fi formatat folosind HTML simplu, BBCode, sau [Markdown](http://commonmark.org/help/):
-
-        Acesta este <b>bold</b>.
-        Acesta este  [b]bold[/b].
-        Acesta este **bold**.
-
-        Pentru mai multe sfaturi privind formatarea, [încearcă tutorialul nostru interactiv și amuzant de numai 10 minute!](http://commonmark.org/help/tutorial/)
-
-        ## Acțiunile
-
-        Există butoane de acțiune în partea de jos a fiecărei postări:
-
-        <img src="%{base_url}/images/welcome/like-link-flag-bookmark-2x.png" width="162" height="42">
-
-        - Pentru a-i spune cuiva că ți-a făcut plăcere și ai apreciat postarea sa, folosește butonul **apreciere**. Împărtășește apreciere!
-
-        - Folosind butonul **Distribuie** poți prelua un link ce se poate copia-lipi.
-
-        - Folosește <kbd>&hellip;</kbd> butonul arată mai mult pentru a descoperi mai multe acțiuni **Marchează cu marcaj de avertizare** pentru a informa în mod privat autorul, sau [echipa noastră](%{base_url}/about), cu privire la o anumită problemă. Folosește **Semn de carte** pentru a găsi această postare mai târziu, în pagina ta de profil.
-
-        ## Notificările
-
-        Când cineva îți răspunde la o postare, te citează, te menționează `@nume utilizator`, sau pune un link la un post al tău, îți va apărea imediat un număr în partea din dreapta-sus a paginii. Selectează-l pentru a-ți accesa **notificările**.
-
-        <img src="%{base_url}/images/welcome/notification-panel-2x.png" width="160" height="54">
-
-        Nu îți face griji că ai putea pierde vreun răspuns - vei primi pe email orice notificări apar cât ești plecat.
-
-        ## Preferințele
-
-        - Toate subiectele mai **recente de doua zile** sunt considerate noi.
-
-        - Orice subiect la care **ai participat în mod activ** (creându-l, răspunzând la el, sau citindu-l pe o perioadă mai îndelungată) va fi urmărit în mod automat pentru uzul tău.
-
-        Vei vedea indicatoarele "nou" și "număr necitite" alături de următoarele subiecte:
-
-        <img src="%{base_url}/images/welcome/topics-new-unread-2x.png" width="341" height="106">
-
-        Poți schimba notificările pentru fiecare subiect prin controlul de notificări aflat jos, în partea dreapta, la fiecare subiect.
-
-        <img src="%{base_url}/images/welcome/topic-notification-control-2x.png" width="608" height="312">
-
-        Poți de asemenea să alegi starea notificărilor pe categorii, dacă vrei să urmărești sau să ignori fiecare nou subiect dintr-o categorie specifică.
-
-        Pentru a schimba oricare dintre aceste preferințe, mergi la [preferințe utilizator](%{base_url}/my/preferences).
-
-        ## Încrederea comunității
-
-        Ne bucurăm de cunoștință! Pe măsură ce vei participa aici, de-a lungul timpului te vom cunoaște mai bine și limitările temporare de nou utilizator ce ți se aplică, vor fi ridicate. Continua să participi și, cu timpul, vei câștiga noi [niveluri de încredere](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924) ce vor include abilități speciale pentru a ne ajuta să gestionăm împreună această comunitate.
+        Pe măsură ce participi aici, vom ajunge să te cunoaștem iar limitările temporare aferente unui utilizator nou, îți vor fi ridicate. Cu timpul vei câștiga [niveluri de încredere](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924) care includ abilități speciale și care îți vor da posibilitatea să ne ajuți să ne gestionăm împreuna comunitatea.
     welcome_user:
       subject_template: "Bine ai venit pe %{site_name}!"
       text_body_template: |
@@ -2210,6 +2141,7 @@ ro:
       new_topics: "Subiecte noi"
       unread_messages: "Mesaje necitite"
       unread_notifications: "Notificări necitite"
+      liked_received: "Aprecieri primite"
       new_posts: "Postări noi"
       new_users: "Utilizatori noi"
       popular_topics: "Subiecte notorii"

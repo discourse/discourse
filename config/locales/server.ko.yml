@@ -653,7 +653,6 @@ ko:
     redirect_users_to_top_page: "신규 사용자와 오랜만에 방문한 사용자를 인기글 페이지로 리다이렉트."
     show_email_on_profile: "사용자 프로필에서 자신의 이메일 주소 보기(본인과 관리자만 볼 수 있음)"
     email_token_valid_hours: "비밀번호 찾기, 계정 활성화에 사용되는 토큰의 유효 기간(시간)"
-    email_token_grace_period_hours: "비밀번호 찾기, 계정 활성화에 사용되는 토큰은 사용되어진 이후 유효한 기간(시간)"
     enable_badges: "배지 기능 사용"
     allow_index_in_robots_txt: "이 사이트가 검색엔진에 의해 인덱스되는 것을 허용합니다.(robots.txt 수정)"
     email_domains_blacklist: "가입 금지된 이메일 도메인 목록, 파이프 기호로 구분. 예: mailinator.com|trashmail.net"

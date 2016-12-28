@@ -322,17 +322,10 @@ it:
         one: "1 utente"
         other: "%{count} utenti"
     groups:
-      empty:
-        posts: "Non ci sono messaggi dai membri di questo gruppo."
-        members: "Non ci sono membri in questo gruppo."
-        mentions: "Non ci sono menzioni a questo gruppo."
-        messages: "Non ci sono messaggi per questo gruppo."
-        topics: "Non ci sono argomenti da membri di questo gruppo."
       add: "Aggiungi"
       selector_placeholder: "Aggiungi membri"
       owner: "proprietario"
       visible: "Il Gruppo è visibile a tutti gli utenti"
-      index: "Gruppi"
       title:
         one: "gruppo"
         other: "gruppi"
@@ -1652,13 +1645,6 @@ it:
           side_by_side_markdown:
             title: "Mostra le differenze nei sorgenti fianco-a-fianco"
             button: '<i class="fa fa-columns"></i> Raw'
-    group:
-      edit:
-        title: 'Modifica gruppo'
-      title: 'Titolo'
-      name: "Nome"
-      flair_preview_icon: "Anteprima icona"
-      flair_preview_image: "Anteprima immagine"
     category:
       can: 'può&hellip;'
       none: '(nessuna categoria)'
@@ -2191,7 +2177,6 @@ it:
         delete: "Cancella"
         delete_confirm: "Cancellare questo gruppo?"
         delete_failed: "Impossibile cancellare il gruppo. Se questo è un gruppo automatico, non può essere eliminato."
-        delete_member_confirm: "Rimuovere '%{username}' dal gruppo '%{group}'?"
         delete_owner_confirm: "Rimuovere i privilegi per '%{username}'?"
         add: "Aggiungi"
         add_members: "Aggiungi membri"

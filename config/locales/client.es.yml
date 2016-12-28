@@ -99,7 +99,7 @@ es:
         x_years:
           one: "%{count} año después"
           other: "%{count} años después"
-      previous_month: 'Anterior mes'
+      previous_month: 'Mes anterior'
       next_month: 'Próximo mes'
     share:
       topic: 'comparte un enlace a este tema'
@@ -142,9 +142,9 @@ es:
     bootstrap_mode_disabled: "El modo de arranque se desactivará en las próximas 24 horas."
     s3:
       regions:
-        us_east_1: "US East (N. Virginia)"
-        us_west_1: "US West (N. California)"
-        us_west_2: "US West (Oregon)"
+        us_east_1: "EEUU Este (Virginia del Norte)"
+        us_west_1: "EEUU Oeste (Californa norte)"
+        us_west_2: "EEUU Oeste (Oregon)"
         us_gov_west_1: "AWS GovCloud (US)"
         eu_west_1: "UE (Irlanda)"
         eu_central_1: "UE (Frankfurt)"
@@ -211,10 +211,10 @@ es:
         all_time: "Todo el tiempo"
         last_7_days: "Últimos 7 días"
         last_30_days: "Últimos 30 días"
-      like_count: "Me Gusta"
+      like_count: "Me gusta"
       topic_count: "Temas"
       post_count: "Posts"
-      user_count: "Nuevos usuarios"
+      user_count: "Usuarios nuevos"
       active_user_count: "Usuarios activos"
       contact: "Contáctanos"
       contact_info: "En caso de un error crítico o un asunto urgente referente a este sitio, por favor, contáctanos en %{contact_info}."
@@ -222,8 +222,8 @@ es:
       title: "Marcador"
       clear_bookmarks: "Quitar Marcadores"
       help:
-        bookmark: "Clic para guardar en marcadores el primer post de este tema"
-        unbookmark: "Clic para quitar todos los marcadores de este tema"
+        bookmark: "Haz clic para guardar en marcadores el primer post de este tema"
+        unbookmark: "Haz clic para quitar todos los marcadores de este tema"
     bookmarks:
       not_logged_in: "Lo sentimos, debes iniciar sesión para guardar posts en marcadores."
       created: "has guardado este post en marcadores"
@@ -270,7 +270,7 @@ es:
       approve: 'Aprobar'
       reject: 'Rechazar'
       delete_user: 'Eliminar usuario'
-      title: "Necesita Aprobación"
+      title: "Necesita aprobación"
       none: "No hay posts para revisar"
       edit: "Editar"
       cancel: "Cancelar"
@@ -278,10 +278,10 @@ es:
       has_pending_posts:
         one: "Este tema tiene <b>1</b> post esperando aprobación"
         other: "Este tema tiene <b>{{count}}</b> posts esperando aprobación"
-      confirm: "Guardar Cambios"
+      confirm: "Guardar cambios"
       delete_prompt: "¿Seguro que quieres eliminar a <b>%{username}</b>? Se eliminarán todos sus posts y se bloqueará su email y dirección IP."
       approval:
-        title: "El Post Necesita Aprobación"
+        title: "El post necesita aprobación"
         description: "Hemos recibido tu nuevo post pero necesita ser aprobado por un moderador antes de aparecer. Por favor, ten paciencia."
         pending_posts:
           one: "Tienes <strong>1</strong> post pendiente."
@@ -302,13 +302,13 @@ es:
       sent_by_user: "Enviado por <a href='{{userUrl}}'>{{user}}</a>"
       sent_by_you: "Enviado por <a href='{{userUrl}}'>ti</a>"
     directory:
-      filter_name: "filtrar por usuario"
+      filter_name: "filtrar por nombre de usuario"
       title: "Usuarios"
       likes_given: "Dados"
       likes_received: "Recibidos"
       topics_entered: "Vistos"
       topics_entered_long: "Temas vistos"
-      time_read: "Tiempo de Lectura"
+      time_read: "Tiempo de lectura"
       topic_count: "Temas"
       topic_count_long: "Temas creados"
       post_count: "Respuestas"
@@ -321,18 +321,59 @@ es:
       total_rows:
         one: "1 usuario"
         other: "%{count} usuarios"
+    group_histories:
+      actions:
+        change_group_setting: "Cambiar ajustes de grupo"
+        add_user_to_group: "Añadir usuario"
+        remove_user_from_group: "Quitar usuario"
+        make_user_group_owner: "Convertir en dueño"
+        remove_user_as_group_owner: "Quitar de dueño"
     groups:
+      logs:
+        title: "Registros"
+        when: "Cuándo"
+        action: "Acción"
+        acting_user: "Usuario que actuó"
+        target_user: "Usuario objetivo"
+        subject: "Sujeto"
+        details: "Detalles"
+        from: "De"
+        to: "A"
+      edit:
+        title: 'Editar grupo'
+        full_name: 'Nombre completo'
+        add_members: "Añadir miembros"
+        delete_member_confirm: "¿Quitar a '%{username}' del grupo '%{group}'?"
+      request_membership_pm:
+        title: "Solicitud de miembro"
+        body: "Me gustaría pertenecer al grupo @%{groupName}."
+      name_placeholder: "Nombre del grupo, sin espacios, igual que los nombres de usuarios"
+      public: "Permitir a los usuarios unirse o salir del grupo cuando quieran (es necesario que el grupo sea visible)"
       empty:
-        posts: "No hay mensajes publicados por los miembros de este grupo."
-        members: "Este grupo no tiene miembros."
+        posts: "No existe ningún post de miembros de este grupo"
+        members: "No hay miembros en este grupo."
         mentions: "No hay menciones de este grupo."
-        messages: "No hay mensajes para este grupo."
+        messages: "No hay menciones a este grupo."
         topics: "No hay temas de miembros de este grupo."
+        logs: "No hay registros para este grupo."
       add: "Añadir"
+      join: "Unirse al grupo"
+      leave: "Salirse del grupo"
+      request: "Solicitar unirse al grupo"
+      automatic_group: Grupo automático
+      closed_group: Grupo cerrado
+      is_group_user: "Eres miembro de este grupo"
+      allow_membership_requests: "Permitir a los usuarios solicitudes para ser miembro a los dueños del grupo (es necesario que todo el mundo pueda mencionar al grupo)"
+      membership: "Membresía"
+      name: "Nombre"
+      user_count: "Número de miembros"
+      bio: "Acerca del grup"
       selector_placeholder: "Añadir miembros"
       owner: "propietario"
       visible: "El grupo es visible para todos los usuarios"
-      index: "Grupos"
+      index:
+        title: "Grupos"
+        empty: "No hay grupos visibles."
       title:
         one: "grupo"
         other: "grupos"
@@ -354,7 +395,7 @@ es:
       notifications:
         watching:
           title: "Vigilando"
-          description: "e te notificará de cada nuevo post en este mensaje y se mostrará un contador de nuevos posts."
+          description: "Se te notificará de cada nuevo post en este mensaje y se mostrará un contador de nuevos posts."
         watching_first_post:
           title: "Vigilar Primer Post"
           description: "Sólo se te notificará del primer post en cada nuevo tema en este grupo."
@@ -367,6 +408,15 @@ es:
         muted:
           title: "Silenciado"
           description: "Nunca se te notificará de nada sobre temas en este grupo."
+      flair_url: "Adorno de imagen de usuario"
+      flair_url_placeholder: "(Opcional) Dirección URL de una imagen o clase de Font Awesome"
+      flair_bg_color: "Color de fondo del adorno de la imagen de usuario"
+      flair_bg_color_placeholder: "(Opcional) Valor del color en hexadecimal"
+      flair_color: "Color del adorno de la imagen de usuario"
+      flair_color_placeholder: "(Opcional) Valor del color en hexadecimal"
+      flair_preview_icon: "Previsualización del icono"
+      flair_preview_image: "Previsualización de la imagen"
+      flair_note: "Nota: el adorno solo se mostrará para el grupo primario del usuario."
     user_action_groups:
       '1': "'Me gusta' Dados"
       '2': "'Me gusta' Recibidos"
@@ -791,9 +841,9 @@ es:
       enabled: "Este sitio está en modo solo-lectura. Puedes continuar navegando pero algunas acciones como responder o dar \"me gusta\" no están disponibles por ahora."
       login_disabled: "Iniciar sesión está desactivado mientras el foro esté en modo solo lectura."
       logout_disabled: "Cerrar sesión está desactivado mientras el sitio se encuentre en modo de sólo lectura."
-    too_few_topics_and_posts_notice: "¡Vamos a <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>dar por comenzada la comunidad!</a> Hay <strong>%{currentTopics} / %{requiredTopics}</strong> temas y <strong>%{currentPosts} / %{requiredPosts}</strong> mensajes. Los nuevos visitantes necesitan algo que leer y a lo que responder."
+    too_few_topics_and_posts_notice: "¡Vamos a <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>dar por comenzada la comunidad!</a> Hay <strong>%{currentTopics} / %{requiredTopics}</strong> temas y <strong>%{currentPosts} / %{requiredPosts}</strong> posts. Los nuevos visitantes necesitan algo que leer y a lo que responder."
     too_few_topics_notice: "¡Vamos a <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>dar por comenzada la comunidad!</a> Hay <strong>%{currentTopics} / %{requiredTopics}</strong> temas. Los nuevos visitantes necesitan algo que leer y a lo que responder."
-    too_few_posts_notice: "¡Vamos a <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>dar por empezada la comunidad!</a> Hay <strong>%{currentPosts} / %{requiredPosts}</strong> mensajes. Los nuevos visitantes necesitan algo que leer y a lo que responder."
+    too_few_posts_notice: "¡Vamos a <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>dar por empezada la comunidad!</a> Hay <strong>%{currentPosts} / %{requiredPosts}</strong> posts. Los nuevos visitantes necesitan algo que leer y a lo que responder."
     logs_error_rate_notice:
       reached: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> alcanzó el límite establecido en las opciones del sitio del %{siteSettingRate}."
       exceeded: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> excedió el límite establecido en las opciones del sitio del %{siteSettingRate}."
@@ -824,7 +874,7 @@ es:
       hide_forever: "no, gracias"
       hidden_for_session: "Vale, te preguntaremos mañana. Recuerda que también puedes usar el botón 'Iniciar sesión' para crear una cuenta en cualquier momento."
       intro: "¡Hola! :heart_eyes: Parece que estás interesado en las cosas que nuestros usuarios publican, pero no tienes una cuenta registrada."
-      value_prop: "Cuando te registras, recordamos lo que has leído, para que puedas volver justo donde estabas leyendo. También recibes notificaciones, por aquí y por email, cuando se publican nuevos mensajes. ¡También puedes darle a Me gusta a los mensajes! :heartbeat:"
+      value_prop: "Cuando te registras, recordamos lo que has leído, para que puedas volver justo donde estabas leyendo. También recibes notificaciones, por aquí y por email, cuando se publican nuevos posts. ¡También puedes darle a Me gusta a los mensajes! :heartbeat:"
     summary:
       enabled_description: "Estás viendo un resumen de este tema: los posts más interesantes determinados por la comunidad."
       description: "Hay <b>{{replyCount}}</b> respuestas."
@@ -962,6 +1012,7 @@ es:
       title: "O pulsa Ctrl+Intro"
       users_placeholder: "Añadir usuario"
       title_placeholder: "En una frase breve, ¿de qué trata este tema?"
+      title_or_link_placeholder: "Escribe un título o pega un enlace aquí"
       edit_reason_placeholder: "¿Por qué lo estás editando?"
       show_edit_reason: "(añadir motivo de edición)"
       topic_featured_link_placeholder: "Introduce el enlace mostrado con el título."
@@ -1660,22 +1711,6 @@ es:
           side_by_side_markdown:
             title: "Mostrar las diferencias crudas a la par"
             button: '<i class="fa fa-columns"></i> Crudo'
-    group:
-      edit:
-        title: 'Editar grupo'
-      title: 'Títul'
-      name: "Nombre"
-      bio: "Sobre el grupo"
-      name_placeholder: "Nombre del grupo, sin espacios, al igual que un usuario"
-      flair_url: "Imagen distintiva"
-      flair_url_placeholder: "(Opcional) URL de la imagen o Clase de Font Awesome"
-      flair_bg_color: "Color de fondo de la imagen distintiva"
-      flair_bg_color_placeholder: "(Opcional) Valor hexadecimal del color"
-      flair_color: "Color de la imagen distintiva"
-      flair_color_placeholder: "(Opcional) Valor hexadecimal del color"
-      flair_preview_icon: "Vista previa del icono"
-      flair_preview_image: "Vista previa de la imagen"
-      flair_note: "Nota: la imagen distintiva sólo se mostrará para el grupo primario del usuario."
     category:
       can: 'puede&hellip; '
       none: '(sin categoría)'
@@ -1692,7 +1727,7 @@ es:
       tags_allowed_tag_groups: "Grupos de etiquetas que sólo pueden pueden utilizarse en esta categoría:"
       tags_placeholder: "(Opcional) lista de etiquetas permitidas"
       tag_groups_placeholder: "(Opcional) lista de grupos de etiquetas permitidos"
-      topic_featured_link_allowed: "Limita la edición del enlace destacado del tema en esta categoría. Requiere que la opción topic_featured_link_enabled esté habilitada."
+      topic_featured_link_allowed: "Permitir enlaces destacados en esta categoría"
       delete: 'Eliminar categoría'
       create: 'Crear categoría'
       create_long: 'Crear una nueva categoría'
@@ -1727,6 +1762,7 @@ es:
       email_in_disabled: "La posibilidad de publicar nuevos temas por email está deshabilitada en los ajustes del sitio. Para habilitar la publicación de nuevos temas por email,"
       email_in_disabled_click: 'activa la opción "email in".'
       suppress_from_homepage: "Ocultar categoría de la página de inicio."
+      all_topics_wiki: "Hacer todos los temas wiki por defecto"
       sort_order: "Orden por defecto:"
       allow_badges_label: "Permitir conceder distintivos en esta categoría"
       edit_permissions: "Editar permisos"
@@ -2250,7 +2286,6 @@ es:
         delete: "Borrar"
         delete_confirm: "Borrar este grupo?"
         delete_failed: "No se pudo borrar el grupo. Si este es un grupo automático, no se puede destruir."
-        delete_member_confirm: "¿Eliminar a '%{username}' del grupo '%{group}'?"
         delete_owner_confirm: "¿Quitar privilegios de propietario para '%{username}'?"
         add: "Añadir"
         add_members: "Añadir miembros"
@@ -2322,7 +2357,7 @@ es:
           details: "Cuando se publique, edite, elimine o recupere una respuesta."
         user_event:
           name: "Evento de usuario"
-          details: "Cuando se cree o apruebe un usuario."
+          details: "Cuando un usuario es creado, aprobado o actualizado."
         delivery_status:
           title: "Estado de entrega"
           inactive: "Inactivo"

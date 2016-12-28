@@ -321,28 +321,67 @@ fi:
       total_rows:
         one: "1 käyttäjä"
         other: "%{count} käyttäjää"
+    group_histories:
+      actions:
+        change_group_setting: "Muuta ryhmän asetusta"
+        add_user_to_group: "Lisää käyttäjä"
+        remove_user_from_group: "Poista käyttäjä"
+        make_user_group_owner: "Myönnä isännyys"
+        remove_user_as_group_owner: "Peru isännyys"
     groups:
+      logs:
+        title: "Lokit"
+        when: "Milloin"
+        action: "Toiminta"
+        acting_user: "Toimiva käyttäjä"
+        target_user: "Kohdekäyttäjä"
+        subject: "Aihe"
+        details: "Yksityiskohdat"
+      edit:
+        title: 'Muuta ryhmää'
+        full_name: 'Täysimittainen nimi'
+        add_members: "Lisää jäseniä"
+        delete_member_confirm: "Poista '%{username}' ryhmästä '%{group}'?"
+      request_membership_pm:
+        title: "Jäsenhakemus"
+        body: "Haluaisin ryhmään @%{groupName}."
+      name_placeholder: "Ryhmän nimi. Ei välilyöntejä, samat säännöt kuin käyttäjänimillä"
+      public: "Salli jäsenten liittyä/poistua ryhmästä vapaasti (ryhmän tulee olla näkyvillä)"
       empty:
-        posts: "Ryhmän jäsenet eivät ole kirjoittaneet viestejä."
-        members: "Kukaan ei kuulu tähän ryhmään."
+        posts: "Ryhmän jäsenet eivät ole lähettäneet viestejä."
+        members: "Ryhmässä ei ole jäseniä."
         mentions: "Ryhmää ei ole mainittu."
-        messages: "Tällä ryhmällä ei ole yksityistä ketjua."
-        topics: "Ryhmän jäsenet eivät ole aloittaneet ketjuja."
+        messages: "Ryhmälle ei ole yksityisviestejä."
+        topics: "Ryhmän jäsenet eivät ole luoneet ketjuja."
+        logs: "Ryhmälle ei ole lokitietoja."
       add: "Lisää"
+      join: "Liity ryhmään"
+      leave: "Poistu ryhmästä"
+      request: "Hae ryhmään"
+      automatic_group: Automaattinen ryhmä
+      closed_group: Suljettu ryhmä
+      is_group_user: "Olet tämän ryhmän jäsen"
+      allow_membership_requests: "Salli käyttäjien lähettää jäsenhakemuksia ryhmien isännille (vaatii että kaikki voivat mainita ryhmän)"
+      membership: "Jäsenyys"
+      name: "Nimi"
+      user_count: "Jäsenmäärä"
+      bio: "Tietoa ryhmästä"
       selector_placeholder: "Lisää jäseniä"
       owner: "omistaja"
       visible: "Ryhmä näkyy kaikille käyttäjille"
-      index: "Ryhmät"
+      index:
+        title: "Ryhmät"
+        empty: "Näkyvillä olevia ryhmiä ei ole."
       title:
         one: "ryhmä"
         other: "ryhmät"
       members: "Jäsenet"
       topics: "Ketjut"
       posts: "Viestit"
-      mentions: "Viittaukset"
+      mentions: "Maininnat"
       messages: "Viestit"
       alias_levels:
-        title: "Ketkä voivat lähettää viestejä tälle ryhmälle tai @viitata siihen?"
+        title: "Ketkä voivat lähettää viestejä tälle ryhmälle tai @mainita sen?"
         nobody: "Ei kukaan"
         only_admins: "Vain ylläpitäjät"
         mods_and_admins: "Vain ylläpitäjät ja valvojat"
@@ -367,6 +406,15 @@ fi:
         muted:
           title: "Vaimennetut"
           description: "Et saa ilmoituksia uusista ketjuista tässä ryhmässä."
+      flair_url: "Avatarpinssin kuva"
+      flair_url_placeholder: "(Valinnainen) kuvan URL tai Font Awesome -luokka"
+      flair_bg_color: "Avatar-pinssin taustaväri"
+      flair_bg_color_placeholder: "(Valinnainen) värin Hex-arvo"
+      flair_color: "Avatarpinssin väri"
+      flair_color_placeholder: "(Valinnainen) värin Hex-arvo"
+      flair_preview_icon: "Ikonin esikatselu"
+      flair_preview_image: "Kuvan esikatselu"
+      flair_note: "Huom. Käyttäjän ensisijainen ryhmä määrää pinssin."
     user_action_groups:
       '1': "Annetut tykkäykset"
       '2': "Saadut tykkäykset"
@@ -374,7 +422,7 @@ fi:
       '4': "Ketjut"
       '5': "Vastauksia"
       '6': "Vastaukset"
-      '7': "Viittaukset"
+      '7': "Maininnat"
       '9': "Lainaukset"
       '11': "Muokkaukset"
       '12': "Lähetetyt"
@@ -432,7 +480,7 @@ fi:
         button_text: "Lataa viestini"
         confirm: "Haluatko varmasti ladata viestisi?"
         success: "Lataus aloitettu. Saat ilmoituksen yksityisviestinä, kun prosessi on valmis."
-        rate_limit_error: "Viestit voi ladata kerran vuorokaudessa. Ole hyvä ja yritä huomenna uudelleen."
+        rate_limit_error: "Viestit voi ladata kerran vuorokaudessa. Yritä huomenna uudelleen."
       new_private_message: "Uusi viesti"
       private_message: "Viesti"
       private_messages: "Viestit"
@@ -575,7 +623,7 @@ fi:
         title: "Sähköposti"
         instructions: "Ei tule julkiseksi"
         ok: "Lähetämme sinulle sähköpostin varmistukseksi."
-        invalid: "Ole hyvä ja anna toimiva sähköpostiosoite"
+        invalid: "Sähköpostiosoite ei kelpaa."
         authenticated: "{{provider}} on todentanut sähköpostiosoitteesi"
         frequency_immediately: "Saat sähköpostia välittömästi, jollet ole jo lukenut asiaa, jota sähköpostiviesti koskee."
         frequency:
@@ -638,7 +686,7 @@ fi:
         every_two_weeks: "joka toinen viikko"
       include_tl0_in_digests: "Sisällytä uusien käyttäjien viestit sähköpostikoosteisiin"
       email_in_reply_to: "Liitä sähköpostiin lyhennelmä viestistä, johon vastataan"
-      email_direct: "Lähetä minulle sähköposti, jos joku lainaa viestiäni, vastaa viestiini, viittaa @nimeeni tai kutsuu minut viestiketjuun"
+      email_direct: "Lähetä minulle sähköposti, jos joku lainaa viestiäni, vastaa viestiini, maintsee @nimeni tai kutsuu minut viestiketjuun"
       email_private_messages: "Lähetä minulle sähköposti, kun joku lähettää minulle viestin"
       email_always: "Lähetä sähköposti-ilmoitukset, vaikka olen aktiivinen palstalla."
       other_settings: "Muut"
@@ -871,7 +919,7 @@ fi:
       email_placeholder: "sähköposti tai käyttäjätunnus"
       caps_lock_warning: "Caps Lock on päällä"
       error: "Tuntematon virhe"
-      rate_limit: "Ole hyvä ja odota hetki ennen kuin yrität kirjautua uudelleen."
+      rate_limit: "Odota hetki ennen kuin yrität kirjautua uudelleen."
       blank_username_or_password: "Kirjoita sähköpostiosoite tai käyttäjänimi ja salasana."
       reset_password: 'Uusi salasana'
       logging_in: "Kirjaudutaan..."
@@ -939,8 +987,8 @@ fi:
       similar_topics: "Tämä ketju vaikuttaa samalta kuin.."
       drafts_offline: "offline luonnokset"
       group_mentioned:
-        one: "Jos viittaat ryhmään {{group}},  <a href='{{group_link}}'>1 käyttäjä</a> saa ilmoituksen – oletko varma?"
-        other: "Jos viittaat ryhmään {{group}}, <a href='{{group_link}}'>{{count}} käyttäjää</a> saa ilmoituksen – oletko varma?"
+        one: "Jos mainitset ryhmän {{group}},  <a href='{{group_link}}'>1 käyttäjä</a> saa ilmoituksen – oletko varma?"
+        other: "Jos mainitset ryhmän {{group}}, <a href='{{group_link}}'>{{count}} käyttäjää</a> saa ilmoituksen – oletko varma?"
       cannot_see_mention:
         category: "Mainitsit käyttäjän {{username}} mutta hän ei saa ilmoitusta, koska hänellä ei ole pääsyä tälle alueelle. Hänet tulee lisätä ryhmään, jolla on pääsy alueelle."
         private: "Mainitsit käyttäjän {{username}} mutta hän ei saa ilmoitusta, koska hän ei näe tätä yksityiskeskustelua. Hänet tulee kutsua tähän yksityiskeskusteluun."
@@ -963,6 +1011,7 @@ fi:
       title: "Tai paina Ctrl+Enter"
       users_placeholder: "Lisää käyttäjä"
       title_placeholder: "Kuvaile lyhyesti mistä tässä ketjussa on kyse?"
+      title_or_link_placeholder: "Kirjoita otsikko tai liitä linkki tähän"
       edit_reason_placeholder: "miksi muokkaat viestiä?"
       show_edit_reason: "(lisää syy muokkaukselle)"
       reply_placeholder: "Kirjoita tähän. Käytä Markdownia, BBCodea tai HTML:ää muotoiluun. Raahaa tai liitä kuvia."
@@ -1010,7 +1059,7 @@ fi:
       admin_options_title: "Tämän ketjun vain henkilökunnalle näytettävät asetukset"
       auto_close:
         label: "Sulje ketju automaattisesti tämän ajan jälkeen:"
-        error: "Ole hyvä ja syötä kelpaava arvo."
+        error: "Arvo ei kelpaa."
         based_on_last_post: "Älä sulje ennen kuin viimeisin viesti ketjussa on vähintään näin vanha."
         all:
           examples: 'Syötä aika tunteina (24), absoluuttisena aikana (17:30) tai aikaleimana (2013-11-22 14:00).'
@@ -1046,7 +1095,7 @@ fi:
         one: "<i title='messages in group inbox' class='fa fa-group'></i><p> {{count}} viesti ryhmän {{group_name}} saapuneissa</p>"
         other: "<i title='messages in group inbox' class='fa fa-group'></i><p> {{count}} viestiä ryhmän {{group_name}} saapuneissa</p>"
       alt:
-        mentioned: "Viittaaja"
+        mentioned: "Mainitsija"
         quoted: "Lainaaja"
         replied: "Vastasi"
         posted: "Kirjoittaja"
@@ -1676,6 +1725,7 @@ fi:
       tags_allowed_tag_groups: "Tällä alueella sallitut tunnisteryhmät:"
       tags_placeholder: "(Valinnainen) lista sallituista tunnisteista"
       tag_groups_placeholder: "(Valinnainen) lista sallituista tunnisteryhmistä"
+      topic_featured_link_allowed: "Salli ketjulinkit tällä alueella"
       delete: 'Poista alue'
       create: 'Uusi alue'
       create_long: 'Luo uusi alue'
@@ -1710,6 +1760,7 @@ fi:
       email_in_disabled: "Uusien ketjujen luominen sähköpostitse on otettu pois käytöstä sivuston asetuksissa. Salliaksesi uusien ketjujen luomisen sähköpostilla, "
       email_in_disabled_click: 'ota käyttöön "email in" asetus.'
       suppress_from_homepage: "Vaimenna alue kotisivulta."
+      all_topics_wiki: "Tee uusista ketjuista wiki-viestejä oletuksena."
       sort_order: "Oletusjärjestys:"
       allow_badges_label: "Salli ansiomerkkien myöntäminen tältä alueelta"
       edit_permissions: "Muokkaa oikeuksia"
@@ -2233,7 +2284,6 @@ fi:
         delete: "Poista"
         delete_confirm: "Poista tämä ryhmä?"
         delete_failed: "Ryhmän poistaminen ei onnistu. Jos tämä on automaattinen ryhmä, sitä ei voi poistaa."
-        delete_member_confirm: "Poista '%{username}' ryhmästä '%{group}'?"
         delete_owner_confirm: "Poista omistajan etuudet käyttäjältä '%{username}'?"
         add: "Lisää"
         add_members: "Lisää jäseniä"

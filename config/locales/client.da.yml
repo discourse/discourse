@@ -321,17 +321,10 @@ da:
         one: "1 bruger"
         other: "%{count} brugere"
     groups:
-      empty:
-        posts: "Der er ingen indlæg af medlemmer af denne gruppe."
-        members: "Der er ingen medlemmer i denne gruppe."
-        mentions: "Denne gruppe er ikke nævnt."
-        messages: "Der er ingen besked til denne gruppe."
-        topics: "Der er intet emne af medlemmer af denne gruppe."
       add: "Tilføj"
       selector_placeholder: "Tilføj medlemmer"
       owner: "ejer"
       visible: "Gruppen er synlige for alle brugere"
-      index: "Grupper"
       title:
         one: "gruppe"
         other: "grupper"
@@ -2069,7 +2062,6 @@ da:
         delete: "Slet"
         delete_confirm: "Slet denne gruppe?"
         delete_failed: "Kan ikke slette gruppen. Hvis dette er en automatisk gruppe, kan den ikke ødelægges."
-        delete_member_confirm: "Fjern '%{username}' fra gruppen '%{group}'?"
         delete_owner_confirm: "Fjern ejer-privilegier for '%{username}'?"
         add: "Tilføj"
         add_members: "Tilføj medlemmer"
