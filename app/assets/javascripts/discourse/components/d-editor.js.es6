@@ -537,14 +537,14 @@ export default Ember.Component.extend({
     // Remember cursor/selection.
     const selectionStart = textarea.selectionStart;
     const selectionEnd = textarea.selectionEnd;
-    const needleEnd = needleStart + oldValue.length;
+    const needleEnd = needleStart + oldVal.length;
     const replacementEnd = needleStart + newVal.length;
 
     // Replace value (side effect: cursor at end).
     this.set('value', val.replace(oldVal, newVal));
 
     // Determine cursor/selection.
-    const newSelectionStart, newSelectionEnd;
+    let newSelectionStart, newSelectionEnd;
     if (selectionEnd <= needleEnd) {
       // Selection before needle.
       newSelectionStart = selectionStart;
