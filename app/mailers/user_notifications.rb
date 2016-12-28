@@ -155,9 +155,6 @@ class UserNotifications < ActionMailer::Base
       []
     end
 
-    topic_lookup = TopicUser.lookup_for(user, @other_new_for_you)
-    @other_new_for_you.each { |t| t.user_data = topic_lookup[t.id] }
-
     if @popular_topics.present?
       opts = {
         from_alias: I18n.t('user_notifications.digest.from', site_name: SiteSetting.title),
