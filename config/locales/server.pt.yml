@@ -777,8 +777,6 @@ pt:
     min_private_message_post_length: "Tamanho mínimo permitido para mensagens, em caracteres"
     max_post_length: "Tamanho máximo permitido por mensagem, em caracteres"
     topic_featured_link_enabled: "Permitir publicar uma ligação com tópicos."
-    topic_featured_link_onebox: "Mostrar uma pré-visualização no corpo da publicação se possível e prevenir a edição do conteúdo da publicação."
-    open_topic_featured_link_in_external_window: "Abrir ligação destacada do tópico numa janela externa."
     show_topic_featured_link_in_digest: "Mostrar a ligação destacada do tópico no email de resumo."
     min_topic_title_length: "Tamanho mínimo permitido por título de cada tópico, em caracteres"
     max_topic_title_length: "Tamanho máximo permitido por título de cada tópico, em caracteres"
@@ -888,7 +886,6 @@ pt:
     show_email_on_profile: "Mostrar o email do utilizador no seu perfil (apenas visível para si próprio e para o pessoal)"
     prioritize_username_in_ux: "Mostrar o nome de utilizador primeiro na página de utilizador, cartão de utilizador e publicações (quando o nome desactivado é mostrado primeiro)"
     email_token_valid_hours: "Os símbolos para palavra-passe esquecida /conta ativada são válidos por (n) horas."
-    email_token_grace_period_hours: "Os símbolos para palavra-passe esquecida /conta ativada são válidos por um período de carência de (n) horas após serem recuperados"
     enable_badges: "Ativar o sistema de distintivos"
     enable_whispers: "Permitir à equipa de apio comunicar de forma privada dentro de tópicos."
     allow_index_in_robots_txt: "Especificar em robots.txt que este sítio permite ser indexado pelos motores de pesquisa."
@@ -1604,99 +1601,6 @@ pt:
         Contudo, se a publicação for ocultada pela comunidade uma segunda vez, irá manter-se ocultada até ser tratada pelo pessoal – e poderão ocorrer outras medidas, incluindo uma possível suspensão da sua conta.
 
         Para orientação adicional, por favor consulte as [orientações da comunidade](%{base_url}/guidelines).
-    usage_tips:
-      text_body_template: |
-        Aqui ficam algumas dicas para que possa começar:
-
-        ## Leitura
-
-        Para ler mais, **simplesmente continue a arrastar para baixo!**
-
-        À medida que novas respostas ou novos tópicos surgem, estes irão surgir automaticamente – não é necessário atualizar a página.
-
-        ## Navegação
-
-        - Para pesquisar, a sua página de utilizador, ou o menu <kbd>☰</kbd>, utilize **os botões-ícone no canto superior direito**.
-
-        - A selecção de um título do tópico leva-o sempre para a **próxima resposta não lida** no tópico. Para entrar na parte superior ou inferior, seleccione a contagem de respostas ou última data de resposta.
-
-        <img src="%{base_url}/images/welcome/topic-list-select-areas-2x.png" width="593" height="59">
-
-        - Ao ler um tópico, selecione a linha do tempo à direita para saltar para o topo, fundo, ou a última posição lida. Em ecrãs mais pequenos, selecione a barra de progresso no canto inferior direito para expandi-la:
-
-        <img src="%{base_url}/images/welcome/progress-bar-2x.png" width="153" height="181">
-
-        Também pode premir <kbd>?</kbd> no seu teclado para mostrar uma lista de atalhos de teclado super-rápidos.
-
-        ## Responder
-
-        Para inserir uma citação, selecione o texto que deseja citar, e de seguida prima qualquer <img src="%{base_url}/images/welcome/reply-post-2x.png" width="25" height="23"> botão de Responder para abrir o editor. Repita para múltiplas citações.
-
-        <img src="%{base_url}/images/welcome/quote-reply-2x.png" width="326" height="128">
-
-        Pode continuar sempre a ler enquanto compõe a sua resposta, e nós automaticamente guardamos rascunhos enquanto escreve.
-
-        Para notificar alguém sobre a sua resposta, mencione o nome correspondente. Escreva `@` para começar a selecionar um nome de utilizador.
-
-        <img src="%{base_url}/images/welcome/username-completion-2x.png" width="191" height="125">
-
-        Para utilizar [Emoji padrão](http://www.emoji.codes/), simplesmente digite `:` para encontrar por nome, ou as tradicionais carinhas risonhas `;)`
-
-        <img src="%{base_url}/images/welcome/emoji-completion-2x.png" width="144" height="153">
-
-        Para gerar um sumário para uma ligação, cole-o numa linha por si só:
-
-        <img src="%{base_url}/images/welcome/link-oneboxing-animation.gif" width="480" height="228">
-
-        A sua resposta pode ser formatada com HTML simplificado, BBCode ou [Markdown](http://commonmark.org/help/):
-
-        Isto é <b>negrito</b>.
-        Isto é [b]negrito[/b].
-        Isto é **negrito**.
-
-        Para mais dicas sobre formatação, [experimente o nosso tutorial interactivo de 10mn!](http://commonmark.org/help/tutorial/)
-
-        ## Acções
-
-        Existem botões de acção no final de cada publicação:
-
-        <img src="%{base_url}/images/welcome/like-link-flag-bookmark-2x.png" width="162" height="42">
-
-        - Para deixar alguém saber que desfrutou e apreciou as suas mensagens, utilize o botão **gosto**. Partilhe o amor!
-
-        - Obtenha uma ligação copiável e colável para qualquer resposta ou tópico via o botão **ligação**.
-
-        - Use o <kbd>&hellip;</kbd> botão mostrar mais para revelar mais ações. **Denuncie** para privadamente deixar o autor, ou [a nossa equipa de apoio](%{base_url}/about), saber sobre um problema. **Adicione um marcador** para encontrar esta publicação mais tarde na sua página de perfil.
-
-        ## Notificações
-
-        Quando alguém lhe responde, cita a sua publicação ou menciona o seu `@nome-de-utilizador`, um número irá aparecer imediatamente no canto superior direito na página. Selecione-o para aceder às suas **notificações**.
-
-        <img src="%{base_url}/images/welcome/notification-panel-2x.png" width="160" height="54">
-
-        Não se preocupe com perder uma resposta – irá receber por email quaisquer notificações que chegarem enquanto estiver ausente.
-
-        ## Preferências
-
-        - Todos os tópicos com menos de **dois dias de idade** são considerados novos.
-
-        - Qualquer tópico em que tenha **participado activamente** (criado, respondido, ou lido por um período extenso) será automaticamente seguido em seu nome.
-
-        Verá os indicadores numéricos de respostas novas e não lidas junto destes tópicos:
-
-        <img src="%{base_url}/images/welcome/topics-new-unread-2x.png" width="341" height="106">
-
-        Pode alterar as suas notificações para qualquer tópico através do controlo de notificações no final, e no lado direito, de cada tópico.
-
-        <img src="%{base_url}/images/welcome/topic-notification-control-2x.png" width="608" height="312">
-
-        Pode também configurar estados de notificação por categoria, se quiser vigiar ou silenciar cada novo tópico numa categoria específica.
-
-        Para mudar qualquer uma destas preferências, veja [as suas preferências de utilizador](%{base_url}/my/preferences).
-
-        ## Confiança da Comunidade
-
-        É fantástico encontra-lo aqui! À medida que for participando aqui, iremos conhecendo-lo, e as suas limitações temporárias de novo utlizador serão levantadas. Continue a participar, e ganhará novos [níveis de confiança](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924), que incluem abilidades especiais para nos ajudar a gerir a nossa comunidade juntos.
     welcome_user:
       subject_template: "Bem-vindo a %{site_name}!"
       text_body_template: |

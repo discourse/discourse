@@ -321,18 +321,15 @@ pt_BR:
       total_rows:
         one: "1 usuário"
         other: "%{count} usuários"
+    group_histories:
+      actions:
+        add_user_to_group: "Adicionar usuário"
+        remove_user_from_group: "Remover usuário"
     groups:
-      empty:
-        posts: "Não há postagens por membros deste grupo."
-        members: "Não há membros neste grupo."
-        mentions: "Não há menção a este grupo."
-        messages: "Não há mensagens para este grupo."
-        topics: "Não há topicos por membros deste grupo."
       add: "Adicionar"
       selector_placeholder: "Adicionar membros"
       owner: "proprietário"
       visible: "Grupo é visível para todos os usuários"
-      index: "Grupos"
       title:
         one: "grupo"
         other: "grupos"
@@ -1655,12 +1652,6 @@ pt_BR:
           side_by_side_markdown:
             title: "Mostrar a diferença da fonte crua lado-a-lado"
             button: '<i class="fa fa-columns"></i> Cru'
-    group:
-      edit:
-        title: 'Editar Grupo'
-      title: 'Título'
-      name: "Nome"
-      name_placeholder: "Nome do grupo, sem espaços, mesma regra que o nome de usuário"
     category:
       can: 'pode&hellip; '
       none: '(sem categoria)'
@@ -2231,7 +2222,6 @@ pt_BR:
         delete: "Apagar"
         delete_confirm: "Apagar este grupos?"
         delete_failed: "Unable to delete group. If this is an automatic group, it cannot be destroyed."
-        delete_member_confirm: "Remover '%{username}' do grupo '%{group}'?"
         delete_owner_confirm: "Remover privilégio de proprietário de '%{username}'?"
         add: "Adicionar"
         add_members: "Adicionar membros"
@@ -2302,7 +2292,6 @@ pt_BR:
           details: "Quando existir uma nova resposta, edição, deleção ou recuperação."
         user_event:
           name: "Evento de Usuário"
-          details: "When um usuário é criado ou aprovado."
         delivery_status:
           title: "Status de Entrega"
           inactive: "Inativo"

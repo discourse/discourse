@@ -322,17 +322,10 @@ nl:
         one: "1 lid"
         other: "%{count} leden"
     groups:
-      empty:
-        posts: "Er is geen enkel bericht door leden van deze groep."
-        members: "Er zijn geen leden in deze groep."
-        mentions: "Deze groep wordt niet benoemd."
-        messages: "Er zijn geen berichten voor deze groep."
-        topics: "Er is geen topic gemaakt door de leden van deze groep."
       add: "Voeg toe"
       selector_placeholder: "Voeg leden toe"
       owner: "eigenaar"
       visible: "Groep is zichtbaar voor alle gebruikers"
-      index: "Groepen"
       title:
         one: "groep"
         other: "groepen"
@@ -1659,13 +1652,6 @@ nl:
           side_by_side_markdown:
             title: "Bekijk de bron verschillen naast elkaar"
             button: '<i class="fa fa-columns"></i> Bron'
-    group:
-      edit:
-        title: 'Wijzig groep'
-      title: 'Titel'
-      name: "Naam"
-      bio: "Over de groep"
-      name_placeholder: "Groepsnaam, geen spaties, zelfde regels als bij een gebruikersnaam"
     category:
       can: 'kan...'
       none: '(geen categorie)'
@@ -2230,7 +2216,6 @@ nl:
         delete: "Verwijder"
         delete_confirm: "Verwijder deze groepen?"
         delete_failed: "Kan groep niet verwijderen. Als dit een automatische groep is, kan deze niet verwijderd worden."
-        delete_member_confirm: "Verwijder '%{username}' uit de '%{group'} groep?"
         delete_owner_confirm: "Verwijder eigenaarsprivileges van '% {username}'?"
         add: "Voeg toe"
         add_members: "Voeg leden toe"
@@ -2302,7 +2287,6 @@ nl:
           details: "Wanneer een nieuw bericht geplaatst, bewerkt, verwijderd of hersteld wordt."
         user_event:
           name: "Gebruikersgebeurtenis"
-          details: "Wanneer een gebruiker wordt aangemaakt of goedgekeurd."
         delivery_status:
           title: "Afleveringsstatus"
           inactive: "Inactief"

@@ -291,17 +291,10 @@ vi:
       total_rows:
         other: "%{count} người dùng"
     groups:
-      empty:
-        posts: "Không có chủ đề của các thành viên trong nhóm"
-        members: "Không có thành viên nào trong nhóm"
-        mentions: "Không có thành viên nào trong nhóm"
-        messages: "Không có tin nhắn nào trong nhóm"
-        topics: "Không có chủ đề của các thành viên trong nhóm"
       add: "Thêm"
       selector_placeholder: "Thêm thành viên"
       owner: "chủ"
       visible: "Mọi thành viên có thể nhìn thấy nhóm"
-      index: "Nhóm"
       title:
         other: "các nhóm"
       members: "Các thành viên"
@@ -1748,7 +1741,6 @@ vi:
         delete: "Xóa"
         delete_confirm: "Xóa nhóm này?"
         delete_failed: "Không thể xóa nhóm. Nếu đây là một nhóm tự động, nó không thể hủy bỏ."
-        delete_member_confirm: "Loại bỏ '%{username}' khỏi nhóm '%{group}'?"
         delete_owner_confirm: "Loại bỏ quyền sở hữu của '%{username}'?"
         add: "Thêm"
         add_members: "Thêm thành viên"

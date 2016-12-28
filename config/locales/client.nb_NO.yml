@@ -304,10 +304,6 @@ nb_NO:
         one: "1 bruker"
         other: "%{count} brukere"
     groups:
-      empty:
-        posts: "Det er ingen innlegg av medlemmene i denne gruppen."
-        members: "Det er ingen medlemmer i denne gruppen."
-        messages: "Det er ingen meldinger for denne gruppen."
       add: "Legg til"
       selector_placeholder: "Legg til medlemmer"
       owner: "eier"
@@ -1746,7 +1742,6 @@ nb_NO:
         delete: "Slett"
         delete_confirm: "Slette denne grupper?"
         delete_failed: "Unable to delete group. If this is an automatic group, it cannot be destroyed."
-        delete_member_confirm: "Fjern '%{username}' fra '%{group}' gruppen?"
         add: "Legg til"
         add_members: "Legg til medlemmer"
         custom: "Egendefinert"

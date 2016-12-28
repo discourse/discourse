@@ -264,16 +264,12 @@ fa_IR:
       total_rows:
         other: "%{count} کاربران"
     groups:
-      empty:
-        posts: "در این گروه هیچ پستی توسط کاربران "
-        members: "هیچ عضوی در این گروه وجود ندارد."
-        mentions: "هیچ کجا به این گروه اشاره‌ای نشده است."
-        messages: "پیامی در این گروه وجود ندارد."
-        topics: "در این گروه هیچ موضوعی توسط کاربران ارسال نشده."
       add: "افزودن"
       selector_placeholder: "افزودن عضو"
       owner: "مالک"
       visible: "همهٔ کاربران گروه را می‌بینند"
+      index:
+        title: "گروه‌ها"
       title:
         other: "گروه‌ها"
       members: "اعضا"
@@ -569,6 +565,10 @@ fa_IR:
         same_as_email: "رمز عبورتان با ایمیل شما برابر است. "
         ok: "گذرواژهٔ خوبی است."
         instructions: "در آخرین %{count} کاراکتر"
+      summary:
+        top_badges: "مدال های برتر"
+        no_badges: "هنوز مدالی نیست."
+        more_badges: "مدال های بیشتر"
       associated_accounts: "ورود ها"
       ip_address:
         title: "آخرین نشانی IP"
@@ -901,6 +901,8 @@ fa_IR:
         category: "هیچ موضوعاتی در {{category}} نیست."
         top: "موضوع برتر وجود ندارد."
         search: " هیچ نتیجه جستجویی وجود ندارد."
+        educate:
+          unread: '<p>موضوعات جدید در اینجا قرار می گیرند.</p><p>به طور پیش فرض، موضوعات جدید در نظر گرفته خواهند شد و نشان داده می شوند <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">جدید</span> شاخص اگر آنها در 2 روز گذشته ایجاد شده باشند </p><p>شما می توانید این را برای خود تغییر دهید <a href="%{userPrefsUrl}">تنظیمات</a>.</p>'
       bottom:
         latest: "موضوع تازهٔ دیگری نیست."
         hot: "موضوع داغ دیگری نیست."
@@ -1500,6 +1502,14 @@ fa_IR:
       full: "ساختن / پاسخ دادن / دیدن"
       create_post: "پاسخ دادن / دیدن"
       readonly: "دیدن"
+    badges:
+      earned_n_times:
+        other: "این مدال را %{count} بار به دست آورده"
+      others_count: "بقیه با این مدال (%{count})"
+      title: مدال ها
+      badge_count:
+        other: "%{count} مدال"
+      select_badge_for_title: انتخاب یک مدال برای استفاده در عنوان خود
   admin_js:
     type_to_filter: "بنویسید تا فیلتر کنید..."
     admin:
@@ -1623,7 +1633,6 @@ fa_IR:
         delete: "حذف"
         delete_confirm: "حفظ کردن این گروه؟"
         delete_failed: "قادر به حذف گروه نیستیم. اگر این یک گروه خودکار است، نمی توان آن را از بین برد."
-        delete_member_confirm: "حذف کردن '%{username}' از '%{group}' گروه؟"
         delete_owner_confirm: "حذف حق مالکیت برای '%{username}'؟"
         add: "اضافه کردن"
         add_members: "اضافه کردن عضو"

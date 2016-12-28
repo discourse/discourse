@@ -101,6 +101,9 @@ zh_CN:
       max_username_length_range: "不能将最大值设置为一个小于最小值的值。"
       default_categories_already_selected: "不能选择一个已经用于另一个列表的分类。"
       s3_upload_bucket_is_required: "你没有填写“s3_upload_bucket”，不能开启上传至 S3。"
+  bulk_invite:
+    file_should_be_csv: "上传的文件应为 csv 格式。"
+    error: "上传文件的时候出错了。请重试。"
   backup:
     operation_already_running: "有操作正在运行。目前无法开始新的操作。"
     backup_file_should_be_tar_gz: "备份文件应为 .tar.gz 存档文件。"
@@ -117,6 +120,11 @@ zh_CN:
   embed:
     start_discussion: "开始讨论"
     continue: "继续讨论"
+    error: "嵌入故障"
+    referer: "来源："
+    mismatch: "来源（referer）不符合下列主机地址："
+    no_hosts: "嵌入没有设置任何主机地址。"
+    configure: "配置嵌入"
     more_replies:
       other: "%{count} 个更多回复"
     loading: "正在载入讨论中..."
@@ -269,6 +277,9 @@ zh_CN:
               too_many_users: "一次只能发送警告给一个用户。"
               cant_send_pm: "抱歉，不能向该用户发送私信。"
               no_user_selected: "必须选择一个有效的用户。"
+            featured_link:
+              invalid: "不合法。URL 应包括 http:// 或 https://。"
+              invalid_category: "无法编辑该分类。"
         user:
           attributes:
             password:
@@ -362,6 +373,7 @@ zh_CN:
       create_topic: "你创建新主题的速度太快了，请等待%{time_left}之后再试。"
       create_post: "你回帖太快了，请等待%{time_left}之后再试。"
       delete_post: "你正在快速地删除帖子。请等 %{time_left}之后再试。"
+      public_group_membership: "你加入/离开群组的速度太快了，请等待%{time_left}之后再试。"
       topics_per_day: "你今天新主题的数量已经到达上限，请等待%{time_left}之后再试。"
       pms_per_day: "你今天的消息数量已经到达上限，请等待%{time_left}之后再试。"
       create_like: "你今天的“赞”数量已经到达上限，请等待%{time_left}之后再试。"
@@ -727,6 +739,8 @@ zh_CN:
     min_first_post_length: "第一帖（主题内容）允许的最少字符数"
     min_private_message_post_length: "消息允许的最小字符数"
     max_post_length: "帖子允许的最大字符数"
+    topic_featured_link_enabled: "允许发链接帖。"
+    show_topic_featured_link_in_digest: "在摘要邮件中显示主题特色链接。"
     min_topic_title_length: "标题允许的最少字符数"
     max_topic_title_length: "标题允许的最大字符数"
     min_private_message_title_length: "消息标题允许的最小字符数"
@@ -835,8 +849,8 @@ zh_CN:
     show_email_on_profile: "在用户页面显示用户的邮件地址（只有用户和管理人员可见）"
     prioritize_username_in_ux: "在用户页、用户卡片和帖子上优先显示用户名（未选时，昵称将先显示）"
     email_token_valid_hours: "“忘记密码”/“激活账户”令牌有效的小时数(n)。"
-    email_token_grace_period_hours: "“忘记密码”/“激活账户”令牌在使用后仍旧有效的小时数(n)。"
     enable_badges: "启用徽章系统"
+    enable_whispers: "允许工作人员在主题中私密交流。"
     allow_index_in_robots_txt: "在 robots.txt 中详细指出这个站点允许被网页搜索引擎检索。"
     email_domains_blacklist: "用管道符“|”分隔的邮箱域名黑名单列表，其中的域名将不能用来注册账户，例如：mailinator.com|trashmail.net"
     email_domains_whitelist: "用管道符“|”分隔的电子邮箱域名的列表，用户必须使用这些邮箱域名注册。警告：用户使用不包含在这个列表里的邮箱域名，将无法成功注册。"
@@ -867,6 +881,7 @@ zh_CN:
     sso_overrides_name: "每一次登录时，用 SSO 信息中的外部站点的全名覆盖本地全名，并且阻止本地的全名修改。"
     sso_overrides_avatar: "用单点登录信息中的外部站点头像覆盖用户头像。如果启用，强烈建议禁用 allow_uploaded_avatars"
     sso_not_approved_url: "重定向未受许可的单点登录账号至这个 URL"
+    sso_allows_all_return_paths: "不限制 SSO 提供的 return_paths 中的域名（默认情况下返回地址必须位于当前站点）"
     enable_local_logins: "启用本地用户名和密码验证。（注意：邀请特性需要该选项）"
     allow_new_registrations: "允许新用户注册。取消选择将阻止任何人创建一个新账户。"
     enable_signup_cta: "显示推荐创建账户的提示给那些回访的未注册用户。"
@@ -1087,10 +1102,14 @@ zh_CN:
     automatically_download_gravatars: "为注册或更改邮箱的用户下载 Gravatar 头像。"
     digest_topics: "邮件摘要中显示的流行主题的最大数目。"
     digest_posts: "邮件摘要中显示的最流行帖子的数量。"
+    digest_other_topics: "邮件摘要中“你关注的主题和分类中的新内容”栏目显示的主题数目上限。"
     digest_min_excerpt_length: "邮件摘要中显示的帖子摘要字符数下限。"
     delete_digest_email_after_days: "不发送摘要邮件给超过（n）天没访问的用户。"
     digest_suppress_categories: "不在摘要邮件中显示这些分类的内容。"
     disable_digest_emails: "禁用所有用户摘要邮件功能。"
+    email_accent_bg_color: "HTML 邮件中某些元素的背景使用的强调颜色。输入色彩名（“red”）或十六进制值（“#FF0000”）。"
+    email_accent_fg_color: "HTML 邮件中背景使用的字体颜色。输入色彩名（“white”）或十六进制值（“#FFFFFF”）。"
+    email_link_color: "HTML 邮件中的链接颜色。输入色彩名字（“blue”）或十六进制值（“#0000FF”）。"
     detect_custom_avatars: "检测用户是否上传了自定义个人头像。"
     max_daily_gravatar_crawls: "一天内 Discourse 将自动检查 gravatar 自定义头像的次数"
     public_user_custom_fields: "可公开显示的用户自定义属性白名单"
@@ -1181,6 +1200,7 @@ zh_CN:
     max_api_keys_per_user: "每用户最多持有的用户 API 数"
     min_trust_level_for_user_api_key: "生成用户 API 密钥所需的信任等级"
     allowed_user_api_auth_redirects: "允许用户 API 密钥重定向授权至"
+    allowed_user_api_push_urls: "允许使用服务器推送至用户 API 的 URL"
     tagging_enabled: "启用标签功能，允许为主题设置标签？"
     min_trust_to_create_tag: "创建标签所需的最小信任等级。"
     max_tags_per_topic: "主题最多允许有多少个标签。"
@@ -1534,6 +1554,8 @@ zh_CN:
         然而，如果帖子再次被社群成员标记并隐藏，它将被隐藏至版主处理后——并且可能导致进一步的措施，如封禁帐号。
 
         想了解更多，请查看我们的[社群指引](%{base_url}/guidelines)。
+    usage_tips:
+      text_body_template: "要查看给新用户的简要技巧，[（英文）看看这篇博客文章](http://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/)。\n\n只要你参与，我们将更了解你，并且新用户的临时限制将被移除。\b随着时间，你将获得[信任等级](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924)，这将提供一些特殊功能来帮助我们更好地管理社群。\n"
     welcome_user:
       subject_template: "欢迎来到 %{site_name}！"
       text_body_template: |
@@ -2006,6 +2028,7 @@ zh_CN:
       new_topics: "新主题"
       unread_messages: "未读私信"
       unread_notifications: "未读通知"
+      liked_received: "获得赞"
       new_posts: "新帖子"
       new_users: "新用户"
       popular_topics: "热门主题"
@@ -2756,16 +2779,50 @@ zh_CN:
             description: "你的社群主要使用什么语言？"
       forum_title:
         title: "名字"
+        description: "名字就像远方可见的路标一样，访客“首先”将看到这个社群的名字。你起的名字和标题怎样描述了你的社群？"
         fields:
           title:
             label: "你社群的名字"
-      contact:
+            placeholder: "小明的论坛"
+          site_description:
+            label: "用一句简短的话描述你的社群"
+            placeholder: "小明和他的朋友讨论酷东西的论坛"
+      introduction:
+        title: "介绍"
         fields:
+          welcome:
+            label: "欢迎主题"
+            description: "<p>你将怎么在一分钟内向陌生人描述你的社群？</p> <ul> <li>谁会对这些讨论感兴趣？</li> <li>我能获得什么？</li> <li>为什么我应该访问？</li> </ul> <p>你的欢迎主题是新访客将先看到的东西。把它想象为<b>一段</b>“电梯宣传”或者“使命声明”。</p>"
+            one_paragraph: "请限制你的欢迎消息至一段话。"
+      privacy:
+        title: "访问"
+        description: "<p>你的社群对所有人可见或者需要限制为会员许可、邀请许可或者审核许可？如果你愿意，你可以将其设为私密，然后再切换至公开。</p> <p>记住你永远可以在主题中邀请别人，或者从你的用户页面里也行。</p>"
+        fields:
+          privacy:
+            choices:
+              open:
+                label: "公开"
+                description: "任何人都可访问社群，可以创建账户"
+              restricted:
+                label: "私密"
+                description: "只有我邀请或审核通过的人可以访问社群"
+      contact:
+        title: "联系"
+        fields:
+          contact_email:
+            label: "邮件"
+            placeholder: "name@example.com"
+            description: "社群的负责人或小组的邮件地址。将用来接收关于未处理标记和安全更新的紧急通知，并显示在<a href='/about' target='_blank'>关于页面</a>上作为紧急联系的方式。"
           contact_url:
             label: "网页"
             placeholder: "http://www.example.com/contact-us"
+            description: "你或者你的组织平时用于联络的网页。将被显示在<a href='/about' target='_blank'>关于页面</a>中。"
+          site_contact:
+            label: "自动消息"
+            description: "所有自动发送自 Discourse 的私人消息将以该用户的名义发送。最重要的是，这个用户将被指定为发送给每个新用户的欢迎消息的发送人。"
       corporate:
         title: "组织"
+        description: "这些名字将显示于<a href='/privacy' target='blank'>隐私策略</a>和<a href='/tos' target='blank'>服务条款</a>中，你可以随时在工作人员分类中编辑他们。如果你没有公司，你可以跳过这个步骤。"
         fields:
           company_short_name:
             label: "公司名（短）"
@@ -2780,6 +2837,7 @@ zh_CN:
         title: "主题"
         fields:
           theme_id:
+            description: "你喜欢亮色还是暗色的颜色方案？你永远可以在管理-自定义中修改站点的观感。"
             choices:
               default:
                 label: "简洁亮"
@@ -2799,9 +2857,12 @@ zh_CN:
         fields:
           favicon_url:
             label: "小图标"
+            description: "浏览器中你站点显示的图标，要在小尺寸的情况下表现出色，例如 32px X 32px。"
           apple_touch_icon_url:
             label: "大图标"
+            description: "现代设备中你站点显示的图标，要在大一点尺寸的情况下表现出色。推荐的尺寸至少要达到144px X 144px。"
       homepage:
+        description: "我们推荐在你的主页显示最新主题，但是如果你喜欢，你也可以选择显示分类（一组主题）。"
         title: "主页"
         fields:
           homepage_style:
@@ -2812,8 +2873,10 @@ zh_CN:
                 label: "分类"
       emoji:
         title: "Emoji"
+        description: "你喜欢你的社群使用哪一种 Emoji 样式？你永远可以在管理-自定义-Emoji中增加更多的定制 Emoji。"
       invites:
         title: "邀请工作人员"
+        description: "你快做完啦！让我们邀请一些工作人员来帮助你<a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>创建一些讨论主题</a>以方便你发布社群。"
       finished:
         title: "你的 Discourse 已经准备就绪！"
         description: |

@@ -322,17 +322,10 @@ pt:
         one: "1 utilizador"
         other: "%{count} utilizadores"
     groups:
-      empty:
-        posts: "Não há nenhuma publicação feita por membros deste grupo."
-        members: "Não há nenhum membro neste grupo."
-        mentions: "Não há nenhuma menção deste grupo."
-        messages: "Não há nenhuma mensagem para este grupo."
-        topics: "Não há nenhum tópico feito por membros deste grupo."
       add: "Adicionar"
       selector_placeholder: "Adicionar membros"
       owner: "proprietário"
       visible: "O grupo é visível para todos os utilizadores"
-      index: "Grupos"
       title:
         one: "grupo"
         other: "grupos"
@@ -1660,22 +1653,6 @@ pt:
           side_by_side_markdown:
             title: "Mostrar em bruto a fonte das diferenças lado-a-lado"
             button: '<i class="fa fa-columns"></i> Em bruto'
-    group:
-      edit:
-        title: 'Editar Grupo'
-      title: 'Título'
-      name: "Nome"
-      bio: "Sobre o Grupo"
-      name_placeholder: "Nome do grupo, sem espaços, com as mesmas regras do nome de utilizador"
-      flair_url: "Imagem da Marca de Avatar"
-      flair_url_placeholder: "(Opcional) URL da Imagem ou classe de Font Awesome"
-      flair_bg_color: "Cor de fundo da Marca de Avatar"
-      flair_bg_color_placeholder: "(Opcional) Valor Hexadecimal da cor"
-      flair_color: "Cor da Marca de Avatar"
-      flair_color_placeholder: "(Opcional) Valor Hexadecimal da cor"
-      flair_preview_icon: "Pré-visualizar Ícone"
-      flair_preview_image: "Pré-visualizar Imagem"
-      flair_note: "Nota: a Marca de um utilizador só aparecerá para o seu grupo primário."
     category:
       can: 'pode&hellip; '
       none: '(sem categoria)'
@@ -1692,7 +1669,6 @@ pt:
       tags_allowed_tag_groups: "Grupos de etiquetas que só podem ser usados nesta categoria:"
       tags_placeholder: "(Opcional) lista de etiquetas perimitidas"
       tag_groups_placeholder: "(Opcional) lista de grupos de etiquetas permitidos"
-      topic_featured_link_allowed: "Restringe editar o tópico destacado nesta categoria. Requer que a configuração do sitío  topic_featured_link_enabled esteja ativada."
       delete: 'Eliminar Categoria'
       create: 'Nova Categoria'
       create_long: 'Criar uma nova categoria'
@@ -2250,7 +2226,6 @@ pt:
         delete: "Eliminar"
         delete_confirm: "Eliminar este grupo?"
         delete_failed: "Impossível eliminar grupo. Se se trata de um grupo automático, não pode ser eliminado."
-        delete_member_confirm: "Remova o '%{username}' do grupo '%{group}'?"
         delete_owner_confirm: "Remover privilégios do proprietário para '%{username}'?"
         add: "Adicionar"
         add_members: "Adicionar membros"
@@ -2322,7 +2297,6 @@ pt:
           details: "Quando uma resposta é nova, editada, apagada ou recuperada. "
         user_event:
           name: "Evento de Utilizador"
-          details: "Quando um utilizador é criado ou aprovado."
         delivery_status:
           title: "Estado de Entrega"
           inactive: "Inativo"

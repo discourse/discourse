@@ -829,7 +829,6 @@ sk:
     top_page_default_timeframe: "Východzí interval pre presmerovanie na hlavnú stránku."
     show_email_on_profile: "Zobraziť používateľov email na ich profile (viditeľné len nimi samotnými a obsluhou)"
     email_token_valid_hours: "Platnosť tokenov pre Zabudnuté heslo a aktiváciu účtu v (n) hodinách."
-    email_token_grace_period_hours: "Platnosť tokenov pre Zabudnuté heslo a aktiváciu účtu v (n) hodinách po ich uplatnení."
     enable_badges: "Povoliť systém odznakov"
     allow_index_in_robots_txt: "V súbore robots.txt nastaviť, že tieto stránky je povolené indexovať vyhľadávačmi."
     email_domains_blacklist: "Rúrou oddelený zoznam emailových domén, ktorých použitie nie je povolené pri registrácií. Napríklad: mailinator.com|trashmail.net"

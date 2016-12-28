@@ -347,17 +347,10 @@ cs:
         few: "%{count} uživatelé"
         other: "%{count} uživatelů"
     groups:
-      empty:
-        posts: "V této skupině není od žádného člena ani jeden příspěvek."
-        members: "V této skupině není žádny uživatel."
-        mentions: "Tato skupina nebyla ještě @zmíněna."
-        messages: "Pro tuto skupinu není žádná zpráva."
-        topics: "V této skupině není od žádného člena ani jedno téma."
       add: "Přidat"
       selector_placeholder: "Přidat členy"
       owner: "Vlastník"
       visible: "Skupina je viditelná pro všechny uživatele"
-      index: "Skupiny"
       title:
         one: "skupina"
         few: "skupiny"
@@ -2305,7 +2298,6 @@ cs:
         delete: "Smazat"
         delete_confirm: "Smazat toto skupiny?"
         delete_failed: "Unable to delete group. If this is an automatic group, it cannot be destroyed."
-        delete_member_confirm: "Odstranit '%{username}' ze '%{group}' skupiny?"
         delete_owner_confirm: "Odstranit vlastnickou výsadu od '%{username}'?"
         add: "Přidat"
         add_members: "Přidat členy"

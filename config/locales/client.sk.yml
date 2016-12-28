@@ -342,17 +342,10 @@ sk:
         few: "%{count} používatelia"
         other: "%{count} používateľov"
     groups:
-      empty:
-        posts: "Neexistuje žiadny príspevok od člena tejto skupiny."
-        members: "Táto skupina neobsahuje žiadnych členov."
-        mentions: "Táto skupina nieje nikde zmienená."
-        messages: "Neexistujú žiadne správy pre túto skupinu."
-        topics: "Neexistuje žiadna téma od členov tejto skupiny."
       add: "Pridať"
       selector_placeholder: "Pridať členov"
       owner: "vlastník"
       visible: "Skupina je viditeľná všetkým používateľom"
-      index: "Skupiny"
       title:
         one: "skupina"
         few: "skupiny"
@@ -2164,7 +2157,6 @@ sk:
         delete: "Odstrániť"
         delete_confirm: "Zmazať túto skupinu?"
         delete_failed: "Nepodarilo sa zmazať skupinu. Pokiaľ je skupina automatická, nemôže byť zrušená."
-        delete_member_confirm: "Odstrániť '%{username}' zo skupiny '%{group}'?"
         delete_owner_confirm: "Odobrať vlastnícke práva %{username}'?"
         add: "Pridať"
         add_members: "Pridať členov"

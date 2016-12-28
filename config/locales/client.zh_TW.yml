@@ -26,6 +26,7 @@ zh_TW:
         millions: "{{number}} 百萬"
     dates:
       time: "h:mm"
+      timeline_date: "MMM YYYY"
       long_no_year: "MMM D h:mm a"
       long_no_year_no_time: "MMM D"
       full_no_year_no_time: "MMMM Do"
@@ -281,6 +282,8 @@ zh_TW:
       total_rows:
         other: "%{count} 用戶"
     groups:
+      edit:
+        delete_member_confirm: "從 '%{group}' 群組刪除 '%{username}' ?"
       add: "新增"
       selector_placeholder: "新增成員"
       owner: "擁有者"
@@ -304,8 +307,13 @@ zh_TW:
       notifications:
         watching:
           title: "關注"
+        tracking:
+          description: "只有當有人@您或者回覆您的文章時，您才會收到通知，並且會顯示新回覆的次數。"
         regular:
           title: "一般"
+          description: "只有當有人@您或者回覆您的文章時，您才會收到通知。"
+        muted:
+          description: "你將不會再收到任何關於此群組的新通知。"
     user_action_groups:
       '1': "已按讚"
       '2': "已收到的讚"
@@ -361,6 +369,8 @@ zh_TW:
       profile: "基本資料"
       mute: "靜音"
       edit: "編輯喜好設定"
+      download_archive:
+        success: "開始下載，處理完畢後將以私人訊息通知你。"
       new_private_message: "新訊息"
       private_message: "訊息"
       private_messages: "訊息"
@@ -1498,7 +1508,6 @@ zh_TW:
         delete: "刪除"
         delete_confirm: "刪除此群組？"
         delete_failed: "無法刪除群組，自動建立的群組無法刪除。"
-        delete_member_confirm: "從 '%{group}' 群組刪除 '%{username}' ?"
         add: "加入"
         add_members: "新增成員"
         custom: "客製"

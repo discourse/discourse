@@ -314,12 +314,6 @@ gl:
         one: "Un usuario"
         other: "%{count} usuarios"
     groups:
-      empty:
-        posts: "Non hai publicacións de membros deste grupo."
-        members: "Non hai ningún membro neste grupo."
-        mentions: "Non hai ningunha mención deste grupo."
-        messages: "Non hai ningunha mensaxe para este grupo."
-        topics: "Non hai temas por membros deste grupo."
       add: "Engadir"
       selector_placeholder: "Engadir membros"
       owner: "propietario"
@@ -1802,7 +1796,6 @@ gl:
         delete: "Eliminar"
         delete_confirm: "Eliminar este grupo?"
         delete_failed: "Non é posíbel eliminar o grupo. Se este é un grupo automático, non se pode destruír."
-        delete_member_confirm: "Queres eliminar a «%{username}» do grupo «%{group}»?"
         delete_owner_confirm: "Eliminar os privilexios de usuario de «%{username}»?"
         add: "Engadir"
         add_members: "Engadir membros"

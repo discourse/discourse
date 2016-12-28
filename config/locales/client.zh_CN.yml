@@ -295,18 +295,45 @@ zh_CN:
       posts_read_long: "阅读帖子"
       total_rows:
         other: "%{count} 位用户"
+    group_histories:
+      actions:
+        change_group_setting: "更改小组设置"
+        add_user_to_group: "增加用户"
+        remove_user_from_group: "移除用户"
+        make_user_group_owner: "设为所有者"
+        remove_user_as_group_owner: "撤销所有者"
     groups:
+      logs:
+        title: "日志"
+        when: "时间"
+        action: "操作"
+        acting_user: "操作用户"
+        target_user: "目标用户"
+        subject: "主题"
+        details: "详情"
+        from: "来自"
+        to: "发至"
+      edit:
+        title: '编辑群组'
+        full_name: '名字'
+        add_members: "增加组员"
+        delete_member_confirm: "从“%{group}”群组中移除用户“%{username}'？"
+      request_membership_pm:
+        title: "成员申请"
+        body: "我想申请 @%{groupName} 的成员资格。"
+      name_placeholder: "群组名，没有空格，和用户名一样的规则"
+      public: "允许用户自由加入/离开群组（需要群组是可见）"
       empty:
-        posts: "群组的成员从未发表帖子。"
+        posts: "群组成员没有发布帖子。"
         members: "群组没有成员。"
-        mentions: "群组从未被提及过。"
-        messages: "群组从未发送过消息。"
-        topics: "群组的成员从未发表主题。"
       add: "添加"
+      join: "加入群组"
+      request: "请求加入群组"
       selector_placeholder: "添加成员"
       owner: "所有者"
       visible: "群组对所有用户可见"
-      index: "群组"
+      index:
+        title: "群组"
       title:
         other: "群组"
       members: "成员"
@@ -915,6 +942,7 @@ zh_CN:
       title: "或 Ctrl + 回车"
       users_placeholder: "添加用户"
       title_placeholder: "一句话告诉讨论什么..."
+      title_or_link_placeholder: "键入标题，或粘贴一个链接在这里"
       edit_reason_placeholder: "编辑理由"
       show_edit_reason: "添加理由"
       reply_placeholder: "在此键入。使用Markdown，BBCode，或HTML格式。可拖拽或粘贴图片。"
@@ -2117,7 +2145,6 @@ zh_CN:
         delete: "删除"
         delete_confirm: "删除这个群组吗？"
         delete_failed: "无法删除群组。如果该群组是自动生成的，则不可删除。"
-        delete_member_confirm: "从群组“%{group}”中移除“%{username}”？"
         delete_owner_confirm: "移除“%{username}”的权限？"
         add: "添加"
         add_members: "添加成员"
@@ -2189,7 +2216,6 @@ zh_CN:
           details: "当有新回复、编辑、帖子被删除或者恢复时。"
         user_event:
           name: "用户事件"
-          details: "当用户被创建或者通过时。"
         delivery_status:
           title: "分发状态"
           inactive: "不活跃"

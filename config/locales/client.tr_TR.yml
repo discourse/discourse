@@ -296,17 +296,10 @@ tr_TR:
       total_rows:
         other: "%{count} kullanıcı"
     groups:
-      empty:
-        posts: "Bu grubun üyelerinden gönderi yok."
-        members: "Bu grupta üye yok."
-        mentions: "Bu gruptan söz edilmemiş."
-        messages: "Bu grup için bir ileti yok."
-        topics: "Bu grubun üyelerinden konu yok."
       add: "Ekle"
       selector_placeholder: "Üye ekle"
       owner: "sahip"
       visible: "Grup tüm kullanıcılar tarafından görüntülenebiliyor"
-      index: "Gruplar"
       title:
         other: "gruplar"
       members: "Üyeler"
@@ -2103,7 +2096,6 @@ tr_TR:
         delete: "Sil"
         delete_confirm: "Grup silinsin mi?"
         delete_failed: "Grup silinemedi. Bu otomatik oluşturulmuş bir grup ise, yok edilemez."
-        delete_member_confirm: "'%{username}' adlı kullanıcıyı '%{group}' grubundan çıkart?"
         delete_owner_confirm: "'%{username}' için sahiplik izni kaldırılsın mı?"
         add: "Ekle"
         add_members: "Üye ekle"
@@ -2175,7 +2167,6 @@ tr_TR:
           details: "Yeni bir cevap oluşturulduğunda, düzenlendiğinde veya silindiğinde."
         user_event:
           name: "Kullanıcı Olayı"
-          details: "Kullanıcı oluşturulduğunda veya onaylandığında."
         delivery_status:
           title: "Teslim Durumu"
           inactive: "Etkin Değil"

@@ -347,18 +347,55 @@ pl_PL:
         one: "1 użytkownik"
         few: "%{count} użytkownicy"
         other: "%{count} użytkowników"
+    group_histories:
+      actions:
+        change_group_setting: "Zmień ustawienia grupy"
+        add_user_to_group: "Dodaj użytkownika"
+        remove_user_from_group: "Usuń użytkownika"
+        make_user_group_owner: "Nadaj prawa właściciela"
+        remove_user_as_group_owner: "Usuń prawa właściciela"
     groups:
+      logs:
+        title: "Logi"
+        when: "Kiedy"
+        action: "Akcja"
+        subject: "Kontekst"
+        details: "Szczegóły"
+        from: "Od"
+        to: "Do"
+      edit:
+        title: 'Edytuj grupę'
+        full_name: 'Pełna nazwa'
+        add_members: "Dodaj użytkowników"
+        delete_member_confirm: "Usuń '%{username}' z grupy '%{group}'?"
+      request_membership_pm:
+        title: "Prośba o członkostwo"
+      name_placeholder: "Nazwa grupy, bez spacji, takie same zasady jak przy nazwie użytkownika"
+      public: "Zezwalaj użytkownikom na zapraszanie/opuszczanie grupy (Grupa musi być widoczna)"
       empty:
         posts: "Członkowie tej grupy nie opublikowali żadnych postów."
-        members: "W tej grupie nie ma żadnych członków."
-        mentions: "Nie ma wzmianki w tej grupie."
-        messages: "Nie ma żadnej wiadomości dla tej grupy."
-        topics: "Członkowie tej grupy nie opublikowali żadnych postów."
+        members: "Nie ma użytkowników w tej grupie"
+        mentions: "Nie ma wspomnień tej grupy"
+        messages: "Nie ma wiadomości dla tej grupy"
+        topics: "Nie ma wątków stworzonych przez użytkowników tej grupy"
+        logs: "Nie ma logów dla tej grupy"
       add: "Dodaj"
+      join: "Dołącz do grupy"
+      leave: "Opuść grupę"
+      request: "Żądanie dołączenia do grupy"
+      automatic_group: Automatyczna grupa
+      closed_group: Zamknięta grupa
+      is_group_user: "Jesteś członkiem tej grupy"
+      membership: "Członkostwo"
+      name: "Nazwa"
+      user_count: "Ilość użytkowników"
+      bio: "O grupie"
       selector_placeholder: "Dodaj członków"
       owner: "właściciel"
       visible: "Grupa jest widoczna dla wszystkich użytkowników"
-      index: "Grupy"
+      index:
+        title: "Grupy"
+        empty: "Nie ma widocznych grup"
       title:
         one: "grupa"
         few: "grupy"
@@ -394,6 +431,8 @@ pl_PL:
         muted:
           title: "Wyciszony"
           description: "Nie otrzymasz powiadomień o nowych tematach w tej grupie."
+      flair_preview_icon: "Podgląd ikony"
+      flair_preview_image: "Podgląd obrazka"
     user_action_groups:
       '1': "Przyznane lajki"
       '2': "Otrzymane lajki"
@@ -736,6 +775,14 @@ pl_PL:
           one: "utworzono post"
           few: "utworzonych postów"
           other: "utworzono posty"
+        likes_given:
+          one: "dano"
+          few: "dano"
+          other: "dano"
+        likes_received:
+          one: "otrzymano"
+          few: "otrzymano"
+          other: "otrzymano"
         days_visited:
           one: "dzień odwiedzin"
           few: "dni odwiedzin"
@@ -1128,6 +1175,7 @@ pl_PL:
         statuses:
           open: są otwarte
           closed: są zamknięte
+          archived: są archiwizowane
           noreplies: ma zero odpowiedzi
         post:
           time:
@@ -1673,14 +1721,6 @@ pl_PL:
           side_by_side_markdown:
             title: "Pokaż porównanie źródeł w formie tekstowej obok siebie"
             button: '<i class="fa fa-columns"></i> Tekst'
-    group:
-      edit:
-        title: 'Edycja grupy'
-      title: 'Tytuł'
-      name: "Nazwa"
-      bio: "O grupie"
-      flair_preview_icon: "Podgląd ikony"
-      flair_preview_image: "Podgląd obrazu"
     category:
       can: 'może&hellip; '
       none: '(brak kategorii)'
@@ -2212,7 +2252,6 @@ pl_PL:
         delete: "Usuń"
         delete_confirm: "Usunąć tę grupę?"
         delete_failed: "Nie można usunąć grupy. Jeżeli jest to grupa automatyczna, nie może zostać zniszczona."
-        delete_member_confirm: "Usunąć '%{username}' z grupy '%{group}' ?"
         delete_owner_confirm: "Usunąć status właściciela dla  '%{username}'?"
         add: "Dodaj"
         add_members: "Dodaj członków"
@@ -2436,6 +2475,7 @@ pl_PL:
             name: 'polubienie'
             description: "Kolor przycisku lajkuj"
       email:
+        title: "Emaile"
         settings: "Ustawienia"
         templates: "Szablony"
         preview_digest: "Pokaż zestawienie aktywności"
@@ -2473,6 +2513,7 @@ pl_PL:
           cc_addresses: "Cc"
           subject: "Temat"
           error: "Błąd"
+          none: "Brak przychodzących emaili."
           modal:
             title: "Szczegóły przychodzącego emaila"
             error: "Błąd"

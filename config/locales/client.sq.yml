@@ -320,17 +320,10 @@ sq:
         one: "1 anëtar"
         other: "%{count} anëtarë"
     groups:
-      empty:
-        posts: "Nuk ka postim nga anëtarët e këtij grupi."
-        members: "Nuk ka asnjë anëtar në këtë grup."
-        mentions: "Nuk ka përmendje për këtë grup."
-        messages: "Nuk ka mesazhe për këtë grup."
-        topics: "Nuk ka asnjë temë nga anëtarët e këtij grupi."
       add: "Shto"
       selector_placeholder: "Shto anëtarë"
       owner: "autori"
       visible: "Grupi është i dukshëm për të gjithë përdoruesit"
-      index: "Grupet"
       title:
         one: "grup"
         other: "grupe"
@@ -2106,7 +2099,6 @@ sq:
         delete: "Fshij"
         delete_confirm: "Fshije këtë grup?"
         delete_failed: "Nuk e fshimë dot grupin. Nëse ky është një grup automatik, nuk fshihet dot. "
-        delete_member_confirm: "Do të heqësh '%{username}' nga grupi '%{group}'?"
         delete_owner_confirm: "Hiqe privilegjin e pronarit për '%{username}'?"
         add: "Shto"
         add_members: "Shto Anëtar"

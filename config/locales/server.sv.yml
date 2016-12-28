@@ -850,7 +850,6 @@ sv:
     show_email_on_profile: "Visa en användares e-postadress på deras profil (endast synlig för de själva och för personal)"
     prioritize_username_in_ux: "Använd användarnamn först på användarsidan, användarkortet och inlägg (när inaktiverad så visas namnet först)"
     email_token_valid_hours: "Glömt lösenord / aktivera konto länkar är giltiga i (n) timmar."
-    email_token_grace_period_hours: "Glömt lösenord / aktivera konto länkar är fortfarande giltiga i en nådefrist på (n) timmar efter att ha  blivit utlösta."
     enable_badges: "Aktivera utmärkelsesystemet"
     allow_index_in_robots_txt: "Specificera i robots.txt att den här webbplatsen tillåter att bli indexerad av sökmotorer. "
     email_domains_blacklist: "En pipe-avgränsad lista av alla e-postdomän som användare inte tillåts registrera konton med. Exempel: mailinator.com, trashmail.net"
