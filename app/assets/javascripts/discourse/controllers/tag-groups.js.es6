@@ -1,3 +1,5 @@
+import TagGroup from 'discourse/models/tag-group';
+
 export default Ember.Controller.extend({
   actions: {
     selectTagGroup(tagGroup) {
@@ -9,8 +11,7 @@ export default Ember.Controller.extend({
     },
 
     newTagGroup() {
-      const newTagGroup = this.store.createRecord('tag-group');
-      newTagGroup.set('name', I18n.t('tagging.groups.new_name'));
+      const newTagGroup = TagGroup.create({ id: 'new', name: I18n.t('tagging.groups.new_name') });
       this.get('model').pushObject(newTagGroup);
       this.send('selectTagGroup', newTagGroup);
     }
