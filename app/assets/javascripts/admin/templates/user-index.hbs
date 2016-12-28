@@ -175,13 +175,7 @@
 
   <div class='display-row'>
     <div class='field'>{{i18n 'admin.users.active'}}</div>
-    <div class='value'>
-      {{#if model.active}}
-        {{i18n 'yes_value'}}
-      {{else}}
-        {{i18n 'no_value'}}
-      {{/if}}
-    </div>
+    <div class='value'>{{i18n-yes-no model.active}}</div>
     <div class='controls'>
       {{#if model.active}}
         {{#if model.can_deactivate}}
@@ -221,13 +215,7 @@
 
   <div class='display-row'>
     <div class='field'>{{i18n 'admin.user.admin'}}</div>
-    <div class='value'>
-      {{#if model.admin}}
-        {{i18n 'yes_value'}}
-      {{else}}
-        {{i18n 'no_value'}}
-      {{/if}}
-    </div>
+    <div class='value'>{{i18n-yes-no model.admin}}</div>
     <div class='controls'>
       {{#if model.can_revoke_admin}}
         {{d-button action="revokeAdmin" icon="shield" label="admin.user.revoke_admin"}}
@@ -240,13 +228,7 @@
 
   <div class='display-row'>
     <div class='field'>{{i18n 'admin.user.moderator'}}</div>
-    <div class='value'>
-      {{#if model.moderator}}
-        {{i18n 'yes_value'}}
-      {{else}}
-        {{i18n 'no_value'}}
-      {{/if}}
-    </div>
+    <div class='value'>{{i18n-yes-no model.moderator}}</div>
     <div class='controls'>
       {{#if model.can_revoke_moderation}}
         {{d-button action="revokeModeration" icon="shield" label="admin.user.revoke_moderation"}}
@@ -284,13 +266,7 @@
 
     <div class="display-row {{if model.isSuspended 'highlight-danger'}}">
     <div class='field'>{{i18n 'admin.user.suspended'}}</div>
-    <div class='value'>
-      {{#if model.isSuspended}}
-        {{i18n 'yes_value'}}
-      {{else}}
-        {{i18n 'no_value'}}
-      {{/if}}
-    </div>
+    <div class='value'>{{i18n-yes-no model.isSuspended}}</div>
     <div class='controls'>
     {{#if model.isSuspended}}
       {{d-button class="btn-danger" action="unsuspend" icon="ban" label="admin.user.unsuspend"}}
@@ -321,13 +297,7 @@
 
   <div class="display-row {{if model.blocked 'highlight-danger'}}">
     <div class='field'>{{i18n 'admin.user.blocked'}}</div>
-    <div class='value'>
-      {{#if model.blocked}}
-        {{i18n 'yes_value'}}
-      {{else}}
-        {{i18n 'no_value'}}
-      {{/if}}
-    </div>
+    <div class='value'>{{i18n-yes-no model.blocked}}</div>
     <div class='controls'>
       {{#conditional-loading-spinner size="small" condition=model.blockingUser}}
         {{#if model.blocked}}
@@ -343,13 +313,7 @@
 
   <div class="display-row">
     <div class='field'>{{i18n 'admin.user.staged'}}</div>
-    <div class='value'>
-      {{#if model.staged}}
-        {{i18n 'yes_value'}}
-      {{else}}
-        {{i18n 'no_value'}}
-      {{/if}}
-    </div>
+    <div class='value'>{{i18n-yes-no model.staged}}</div>
     <div class='controls'>{{i18n 'admin.user.staged_explanation'}}</div>
   </div>
 </section>
