@@ -51,6 +51,9 @@
     border-top: 1px solid dark-light-choose(scale-color($primary, $lightness: 90%), scale-color($secondary, $lightness: 90%));
     padding-top: 20px;
     z-index: 100000;
+    .back-button {
+      display: none;
+    }
     .topic-timeline {
       width: 100%;
       table-layout: fixed;
