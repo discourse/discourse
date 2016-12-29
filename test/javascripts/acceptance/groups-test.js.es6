@@ -6,7 +6,9 @@ test("Browsing Groups", () => {
   visit("/groups");
 
   andThen(() => {
-    equal(count('.groups-table-row'), 18, 'it displays visible groups');
+    equal(count('.groups-table-row'), 2, 'it displays visible groups');
+    equal(find('.group-index-join').length, 1, 'it show button to join group');
+    equal(find('.group-index-request').length, 1, 'it show button to request for group membership');
   });
 
   click("a[href='/groups/discourse/members']");

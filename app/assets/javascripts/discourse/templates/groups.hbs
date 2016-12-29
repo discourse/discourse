@@ -47,7 +47,8 @@
                   {{#group-membership-button model=group
                       createNewMessageViaParams='createNewMessageViaParams'
                       showMembershipStatus=true
-                      groupUserIds=groups.extras.group_user_ids}}
+                      groupUserIds=groups.extras.group_user_ids
+                      showLogin='showLogin'}}
 
                     {{d-button icon="ban"
                         label=(if group.automatic 'groups.automatic_group' 'groups.closed_group')
