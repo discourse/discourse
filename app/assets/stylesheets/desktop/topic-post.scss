@@ -530,21 +530,6 @@ video {
   }
 }
 
-.bullet + .topic-header-extra {
-  display: block;
-  line-height: 12px;
-}
-
-.bar + .topic-header-extra {
-  line-height: 1.25;
-}
-
-.box + .topic-header-extra {
-  display: inline-block;
-  margin: 0 0 0 5px;
-  padding-top: 5px;
-}
-
 /* default docked header CSS for all topics, including those without categories */
 .extra-info {
   h1 {
