@@ -12,6 +12,7 @@ import { emojiSearch } from 'pretty-text/emoji';
 import { emojiUrlFor } from 'discourse/lib/text';
 import { getRegister } from 'discourse-common/lib/get-owner';
 import { findRawTemplate } from 'discourse/lib/raw-templates';
+import { determinePostReplaceSelection } from 'discourse/lib/utilities';
 import deprecated from 'discourse-common/lib/deprecated';
 
 // Our head can be a static string or a function that returns a string
@@ -525,11 +526,27 @@ export default Ember.Component.extend({
 
   _replaceText(oldVal, newVal) {
     const val = this.get('value');
-    const loc = val.indexOf(oldVal);
-    if (loc !== -1) {
-      this.set('value', val.replace(oldVal, newVal));
-      this._selectText(loc + newVal.length, 0);
+    const needleStart = val.indexOf(oldVal);
+
+    if (needleStart === -1) {
+      // Nothing to replace.
+      return;
     }
+
+    const textarea = this.$('textarea.d-editor-input')[0];
+
+    // Determine post-replace selection.
+    const newSelection = determinePostReplaceSelection({
+      selection: { start: textarea.selectionStart, end: textarea.selectionEnd },
+      needle: { start: needleStart, end: needleStart + oldVal.length },
+      replacement: { start: needleStart, end: needleStart + newVal.length }
+    });
+
+    // Replace value (side effect: cursor at the end).
+    this.set('value', val.replace(oldVal, newVal));
+
+    // Restore cursor.
+    this._selectText(newSelection.start, newSelection.end - newSelection.start);
   },
 
   _addText(sel, text) {
