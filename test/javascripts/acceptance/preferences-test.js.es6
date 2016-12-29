@@ -36,6 +36,12 @@ test("about me", () => {
 test("email", () => {
   visit("/users/eviltrout/preferences/email");
   andThen(() => {
-    ok(exists("#change_email"), "it has the input element");
+    ok(exists("#change-email"), "it has the input element");
+  });
+
+  fillIn("#change-email", 'invalidemail');
+
+  andThen(() => {
+    equal(find('.tip.bad').text().trim(), I18n.t('user.email.invalid'), 'it should display invalid email tip');
   });
 });

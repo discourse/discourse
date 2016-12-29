@@ -3,8 +3,29 @@ require_dependency 'user'
 
 describe User do
 
-  it { is_expected.to validate_presence_of :username }
-  it { is_expected.to validate_presence_of :email }
+  context 'validations' do
+    it { is_expected.to validate_presence_of :username }
+
+    describe 'emails' do
+      let(:user) { Fabricate.build(:user) }
+
+      it { is_expected.to validate_presence_of :email }
+
+      describe 'when record has a valid email' do
+        it "should be valid" do
+          user.email = 'test@gmail.com'
+          expect(user).to be_valid
+        end
+      end
+
+      describe 'when record has an invalid email' do
+        it 'should not be valid' do
+          user.email = 'test@gmailcom'
+          expect(user).to_not be_valid
+        end
+      end
+    end
+  end
 
   describe '#count_by_signup_date' do
     before(:each) do
