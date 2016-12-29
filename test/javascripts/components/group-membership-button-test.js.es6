@@ -7,8 +7,6 @@ test('canJoinGroup', function() {
     model: { public: false }
   });
 
-  this.subject().set("currentUser", currentUser());
-
   equal(this.subject().get("canJoinGroup"), false, "non public group cannot be joined");
 
   this.subject().set("model.public", true);
@@ -17,7 +15,7 @@ test('canJoinGroup', function() {
 
   this.subject().setProperties({ currentUser: null, model: { public: true } });
 
-  equal(this.subject().get("canJoinGroup"), false, "can't join group when not logged in");
+  equal(this.subject().get("canJoinGroup"), true, "can't join group when not logged in");
 });
 
 test('canRequestMembership', function() {
