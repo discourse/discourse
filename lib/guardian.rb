@@ -177,7 +177,7 @@ class Guardian
   end
 
   def can_grant_admin?(user)
-    can_administer_user?(user) && not(user.admin?)
+    can_administer_user?(user) && !user.admin?
   end
 
   def can_revoke_moderation?(moderator)
@@ -185,7 +185,7 @@ class Guardian
   end
 
   def can_grant_moderation?(user)
-    can_administer?(user) && not(user.moderator?)
+    can_administer?(user) && !user.moderator?
   end
 
   def can_grant_title?(user)
@@ -313,7 +313,7 @@ class Guardian
   end
 
   def can_administer?(obj)
-    is_admin? && obj.present?
+    is_admin? && obj.present? && obj.id&.positive?
   end
 
   def can_administer_user?(other_user)
