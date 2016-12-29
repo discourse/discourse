@@ -32,9 +32,9 @@
         </div>
       {{/unless}}
 
-      {{#if context.topic.tags}}
+      {{#if topic.tags}}
         <div class='discourse-tags'>
-        {{#each context.topic.visibleListTags as |tag|}}
+        {{#each topic.visibleListTags as |tag|}}
           {{discourse-tag tag}}
         {{/each}}
         </div>
