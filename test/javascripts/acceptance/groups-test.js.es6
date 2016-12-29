@@ -48,9 +48,8 @@ test("Viewing Group", () => {
       0,
       'it should not show messages tab if user is not a group user or admin'
     );
-
-    ok(find(".nav-stacked li a[title='Edit Group']").length === 0, 'it should not show messages tab if user is not admin');
-    ok(find(".nav-stacked li a[title='Logs']").length === 0, 'it should not show Logs tab if user is not admin');
+    ok(find(".nav-pills li a[title='Edit Group']").length === 0, 'it should not show messages tab if user is not admin');
+    ok(find(".nav-pills li a[title='Logs']").length === 0, 'it should not show Logs tab if user is not admin');
     ok(count('.user-stream .item') > 0, "it lists stream items");
   });
 });

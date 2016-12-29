@@ -66,6 +66,8 @@ export default Ember.Controller.extend({
         } else {
           display = admin || isGroupOwner;
         }
+      } else if (t.get('requiresGroupAdmin')) {
+        display = false;
       }
 
       return display;
