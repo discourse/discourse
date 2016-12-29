@@ -231,15 +231,10 @@ body, table, td, th, h1, h2, h3 {font-family: Helvetica, Arial, sans-serif !impo
 
 <% if @popular_posts.present? %>
 
-<table style="background-color: #f3f3f3; width: 100%;">
-  <tr>
-    <td>
-      <h1 style="color:#0a0a0a;font-size:22px;line-height:1.3;text-align:center;font-family:Helvetica,Arial,sans-serif;">
-        <%=t 'user_notifications.digest.popular_posts' %>
-      </h1>
-    </td>
-  </tr>
-</table>
+<br/>
+<center style="color:#0a0a0a;background:#f3f3f3;font-size:22px;font-weight:400;padding-bottom: 16px;font-family:Helvetica,Arial,sans-serif;">
+  <%=t 'user_notifications.digest.popular_posts' %>
+</center>
 
 <table class="body" style="width:100%;background:#f3f3f3;border-spacing:0;border-collapse:collapse!important;font-family:Helvetica,Arial,sans-serif;font-size:14px;font-weight:200;line-height:1.3;padding:0;text-align:left;vertical-align:top;">
   <tr>
