@@ -770,7 +770,96 @@ testCase("replace-text event", function(assert, textarea) {
 
   andThen(() => {
     assert.equal(this.get('value'), 'red yellow blue');
-    assert.equal(textarea.selectionStart, 10);
-    assert.equal(textarea.selectionEnd, 10);
   });
 });
+
+(() => {
+  // Tests to check cursor/selection after replace-text event.
+  const BEFORE = 'red green blue';
+  const NEEDLE = 'green';
+  const REPLACE = 'yellow';
+  const AFTER = BEFORE.replace(NEEDLE, REPLACE);
+
+  const CASES = [
+    {
+      description: 'cursor at start remains there',
+      before: [0, 0],
+      after: [0, 0]
+    },{
+      description: 'cursor before needle becomes cursor before replacement',
+      before: [BEFORE.indexOf(NEEDLE), 0],
+      after: [AFTER.indexOf(REPLACE), 0]
+    },{
+      description: 'cursor at needle start + 1 moves behind replacement',
+      before: [BEFORE.indexOf(NEEDLE) + 1, 0],
+      after: [AFTER.indexOf(REPLACE) + REPLACE.length, 0]
+    },{
+      description: 'cursor at needle end - 1 stays behind replacement',
+      before: [BEFORE.indexOf(NEEDLE) + NEEDLE.length - 1, 0],
+      after: [AFTER.indexOf(REPLACE) + REPLACE.length, 0]
+    },{
+      description: 'cursor behind needle becomes cursor behind replacement',
+      before: [BEFORE.indexOf(NEEDLE) + NEEDLE.length, 0],
+      after: [AFTER.indexOf(REPLACE) + REPLACE.length, 0]
+    },{
+      description: 'cursor at end remains there',
+      before: [BEFORE.length, 0],
+      after: [AFTER.length, 0]
+    },{
+      description: 'selection spanning needle start becomes selection until replacement start',
+      before: [BEFORE.indexOf(NEEDLE) - 1, 2],
+      after: [AFTER.indexOf(REPLACE) - 1, 1]
+    },{
+      description: 'selection spanning needle end becomes selection from replacement end',
+      before: [BEFORE.indexOf(NEEDLE) + NEEDLE.length - 1, 2],
+      after: [AFTER.indexOf(REPLACE) + REPLACE.length, 1]
+    },{
+      description: 'selection spanning needle becomes selection spanning replacement',
+      before: [BEFORE.indexOf(NEEDLE) - 1, NEEDLE.length + 2],
+      after: [AFTER.indexOf(REPLACE) - 1, REPLACE.length + 2]
+    },{
+      description: 'complete selection remains complete',
+      before: [0, BEFORE.length],
+      after: [0, AFTER.length]
+    }
+  ];
+
+  function setSelection(textarea, [start, len]) {
+    textarea.selectionStart = start;
+    textarea.selectionEnd = start + len;
+  }
+
+  function getSelection(textarea) {
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd
+    return [start, end - start];
+  }
+
+  function formatTextWithSelection(text, [start, len]) {
+    return [
+      '"',
+      text.substr(0, start),
+      '<',
+      text.substr(start, len),
+      '>',
+      text.substr(start+len),
+      '"',
+    ].join('');
+  }
+
+  for (let i = 0; i < CASES.length; i++) {
+    const CASE = CASES[i];
+    testCase(`replace-text event: ${CASE.description}`, function(assert, textarea) {
+      this.set('value', BEFORE);
+      setSelection(textarea, CASE.before);
+      andThen(() => {
+        this.container.lookup('app-events:main').trigger('composer:replace-text', 'green', 'yellow');
+      });
+      andThen(() => {
+        let expect = formatTextWithSelection(AFTER, CASE.after);
+        let actual = formatTextWithSelection(this.get('value'), getSelection(textarea));
+        assert.equal(actual, expect);
+      });
+    });
+  }
+})();
