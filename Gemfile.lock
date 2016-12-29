@@ -141,7 +141,7 @@ GEM
     json (1.8.3)
     jwt (1.5.2)
     kgio (2.10.0)
-    libv8 (5.3.332.38.1)
+    libv8 (5.3.332.38.3)
     listen (0.7.3)
     logster (1.2.5)
     loofah (2.0.3)
@@ -484,4 +484,4 @@ DEPENDENCIES
   unicorn
 
 BUNDLED WITH
-   1.13.6
+   1.13.7
