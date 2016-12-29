@@ -760,7 +760,7 @@ componentTest('emoji', {
   }
 });
 
-testCase("replace-text event", function(assert, textarea) {
+testCase("replace-text event", function(assert) {
 
   this.set('value', "red green blue");
 
@@ -831,7 +831,7 @@ testCase("replace-text event", function(assert, textarea) {
 
   function getSelection(textarea) {
     const start = textarea.selectionStart;
-    const end = textarea.selectionEnd
+    const end = textarea.selectionEnd;
     return [start, end - start];
   }
 
