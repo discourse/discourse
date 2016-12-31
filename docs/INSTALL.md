@@ -1,6 +1,6 @@
 # How Do I Install Discourse?
 
-> :bell: The only officially supported installs of Discourse are [Docker](https://www.docker.io/) based. You must have access to a 64-bit Linux server **with Docker support**. We regret that we cannot support any other methods of installation including cpanel, plesk, webmin, etc.
+> :bell: The only officially supported installs of Discourse are [Docker](https://www.docker.io/) based. You must have SSH access to a 64-bit Linux server **with Docker support**. We regret that we cannot support any other methods of installation including cpanel, plesk, webmin, etc.
 
 Simple 30 minute basic install:  
 [**Beginner Docker install guide**][basic]
