@@ -101,7 +101,7 @@ class OptimizedImage < ActiveRecord::Base
     # this matches instructions which call #to_s
     path = path.to_s
     return false if path != File.expand_path(path)
-    return false if path !~ /\A[_\-a-zA-Z0-9\.\/]+\z/m
+    return false if path !~ /\A[\w\-\.\/]+\z/m
     true
   end
 
