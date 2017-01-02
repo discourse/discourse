@@ -1477,7 +1477,7 @@ en:
         go_bottom: "bottom"
         go: "go"
         jump_bottom: "jump to last post"
-        jump_prompt: "jump to post"
+        jump_prompt: "jump to..."
         jump_prompt_of: "of %{count} posts"
         jump_prompt_long: "What post would you like to jump to?"
         jump_bottom_with_number: "jump to post %{post_number}"
