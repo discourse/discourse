@@ -10,6 +10,10 @@ export default Em.Component.extend(UploadMixin, {
     return `background-image: url(${imageUrl})`.htmlSafe();
   },
 
+  validateUploadedFilesOptions() {
+    return { imagesOnly: true };
+  },
+
   uploadDone(upload) {
     this.set("imageUrl", upload.url);
     this.set("imageId", upload.id);
