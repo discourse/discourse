@@ -1,29 +1,41 @@
 require 'mysql2'
 require File.expand_path(File.dirname(__FILE__) + "/base.rb")
 
-
 # Before running this script, paste these lines into your shell,
 # then use arrow keys to edit the values
 =begin
-export BBPRESS_USER="root"
-export BBPRESS_DB="bbpress"
-export BBPRESS_PW=""
+export DB_HOST="localhost"
+export DB_NAME="bbpress"
+export DB_USER="bbpress"
+export DB_PW="bbpress"
+export IMAGE_PREFIX="https://example.com/wp-content/uploads/"
+export BASE="forums/"
 =end
+
+# If you change how this script behaves, please consider making a note here:
+# https://meta.discourse.org/t/migrating-from-bbpress-wordpress-plugin-to-discourse/48876
 
 class ImportScripts::Bbpress < ImportScripts::Base
 
-  BB_PRESS_DB ||= ENV['BBPRESS_DB'] || "bbpress"
+  DB_HOST ||= ENV['DB_HOST'] || "localhost"
+  DB_NAME ||= ENV['DB_NAME'] || "bbpress"
+  DB_USER ||= ENV['DB_USER'] || "root"
+  DB_PW ||= ENV['DB_PW'] || ""
+  IMAGE_PREFIX ||= ENV['IMAGE_PREFIX'] || "none"
+  BASE ||= ENV['BASE'] || "forums/"
+  SKIP_PERMALINKS ||= ENV['SKIP_PERMALINKS'] || false
+  QUIET = false
+
   BATCH_SIZE  ||= 1000
-  BB_PRESS_PW ||= ENV['BBPRESS_PW'] || ""
-  BB_PRESS_USER ||= ENV['BBPRESS_USER'] || "root"
+
   def initialize
     super
 
     @client = Mysql2::Client.new(
-      host: "localhost",
-      username: BB_PRESS_USER,
-      database: BB_PRESS_DB,
-      password: BB_PRESS_PW,
+      host: DB_HOST,
+      username: DB_USER,
+      database: DB_NAME,
+      password: DB_PW
     )
   end
 
@@ -31,6 +43,17 @@ class ImportScripts::Bbpress < ImportScripts::Base
     import_users
     import_categories
     import_topics_and_posts
+    if SKIP_PERMALINKS
+      puts "\n\nSkipping permalinks. Do this:\n\n"
+      puts "#{BASE} --> /"
+      puts "#{BASE}topic/SLUG --> /t/SLUG"
+      puts "#{BASE}forum/SLUG --> /c/SLUG"
+      puts "members/SLUG --> /users/SLUG"
+    else
+      puts "\n\nCreating permalinks for topics, categories and users. "
+      puts "To disable: \n\n export SKIP_PERMALINKS=false"
+      create_permalinks
+    end
   end
 
   def import_users
@@ -159,23 +182,34 @@ class ImportScripts::Bbpress < ImportScripts::Base
          WHERE post_id IN (#{post_ids_sql})
            AND meta_key = 'Likes'
       SQL
-      ).each { |pm| posts_likes[pm["post_id"]] = pm["likes"].to_i }
+                   ).each { |pm| posts_likes[pm["post_id"]] = pm["likes"].to_i }
 
       create_posts(posts, total: total_posts, offset: offset) do |p|
         skip = false
 
+        raw = p["post_content"] || ""
+        raw.gsub!("<pre><code>", "```\n")
+        raw.gsub!("</code></pre>", "\n```")
+
+        bbpress_query(<<-SQL
+                SELECT wp_posts.id, wp_posts.post_parent, wp_postmeta.meta_value
+                FROM wp_posts,wp_postmeta
+                WHERE wp_posts.post_parent=#{p["id"]}
+                AND post_type = 'attachment'
+                AND wp_posts.id=wp_postmeta.post_id
+                AND wp_postmeta.meta_key='_wp_attached_file';
+        SQL
+                     ).each { |attachment|
+            raw += "\n\n#{IMAGE_PREFIX}#{attachment["meta_value"]}"
+        }
+
         post = {
           id: p["id"],
           user_id: user_id_from_imported_user_id(p["post_author"]) || find_user_by_import_id(p["post_author"]).try(:id) || -1,
-          raw: p["post_content"],
+          raw: raw,
           created_at: p["post_date"],
           like_count: posts_likes[p["id"]],
         }
-
-        if post[:raw].present?
-          post[:raw].gsub!("<pre><code>", "```\n")
-          post[:raw].gsub!("</code></pre>", "\n```")
-        end
 
         if p["post_type"] == "topic"
           post[:category] = category_id_from_imported_category_id(p["post_parent"])
@@ -193,6 +227,48 @@ class ImportScripts::Bbpress < ImportScripts::Base
         skip ? nil : post
       end
     end
+  end
+
+  def create_permalinks
+    puts '', 'Creating redirects...', ''
+
+    puts '', 'Users...', ''
+    # https://staging-gemsociety.kinsta.com/members/m76steve/
+    User.find_each do |u|
+      ucf = u.custom_fields
+      next unless ucf["import_id"]
+      if ucf && ucf["import_id"] && ucf["import_username"]
+        Permalink.create( url: "/members/#{ucf['import_username']}", external_url: "/users/#{u.username}" ) rescue nil
+        print '.'
+      end
+    end
+
+    puts '', 'Topics...', ''
+    Post.find_each do |post|
+      pcf = post.custom_fields
+      if pcf && pcf["import_id"]
+        topic = post.topic
+        id = pcf["import_id"].split('#').last
+        if post.post_number == 1
+          slug = Slug.for(topic.title)
+          Permalink.create( url: "#{BASE}topic/#{slug}", topic_id: topic.id ) rescue nil
+        end
+        print '.'
+      end
+    end
+
+    puts '', 'Categories...', ''
+    Category.find_each do |cat|
+      ccf = cat.custom_fields
+      next unless id = ccf["import_id"]
+      print_warning("#{BASE}forum/#{cat.name} --> /c/#{cat.name}")
+      Permalink.create( url: "#{BASE}forum/#{cat.name}", category_id: cat.id ) rescue nil
+      print '.'
+    end
+  end
+
+  def print_warning(message)
+    $stderr.puts "#{message}"
   end
 
   def bbpress_query(sql)
