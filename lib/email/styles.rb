@@ -109,9 +109,7 @@ module Email
 
     def onebox_styles
       # Links to other topics
-      style('aside.quote', 'border-left: 5px solid #e9e9e9; background-color: #f8f8f8; padding: 12px 25px 2px 12px; margin-bottom: 10px;')
-      style('aside.quote blockquote', 'border: 0px; padding: 0; margin: 7px 0; background-color: clear;')
-      style('aside.quote blockquote > p', 'padding: 0;')
+      style('aside.quote', 'padding: 12px 25px 2px 12px; margin-bottom: 10px;')
       style('aside.quote div.info-line', 'color: #666; margin: 10px 0')
       style('aside.quote .avatar', 'margin-right: 5px; width:20px; height:20px')
 
@@ -125,6 +123,19 @@ module Email
       style('aside.onebox .onebox-body img', "max-height: 80%; max-width: 20%; height: auto; float: left; margin-right: 10px;")
       style('aside.onebox .onebox-body h3, aside.onebox .onebox-body h4', "font-size: 1.17em; margin: 10px 0;")
       style('.onebox-metadata', "color: #919191")
+
+      @fragment.css('aside.quote blockquote > p').each do |p|
+        p['style'] = 'padding: 0;'
+      end
+
+      # Convert all `aside.quote` tags to `blockquote`s
+      @fragment.css('aside.quote').each do |n|
+        original_node = n.dup
+        original_node.search('div.quote-controls').remove
+        blockquote = original_node.css('blockquote').inner_html.strip.start_with?("<p") ? original_node.css('blockquote').inner_html : "<p style='padding: 0;'>#{original_node.css('blockquote').inner_html}</p>"
+        n.inner_html = original_node.css('div.title').inner_html + blockquote
+        n.name = "blockquote"
+      end
 
       # Finally, convert all `aside` tags to `div`s
       @fragment.css('aside, article, header').each do |n|
