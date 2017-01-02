@@ -111,7 +111,7 @@ module Email
       # Links to other topics
       style('aside.quote', 'padding: 12px 25px 2px 12px; margin-bottom: 10px;')
       style('aside.quote div.info-line', 'color: #666; margin: 10px 0')
-      style('aside.quote .avatar', 'margin-right: 5px; width:20px; height:20px')
+      style('aside.quote .avatar', 'margin-right: 5px; width:20px; height:20px; vertical-align:middle;')
 
       style('blockquote', 'border-left: 5px solid #e9e9e9; background-color: #f8f8f8; margin: 0;')
       style('blockquote > p', 'padding: 1em;')
