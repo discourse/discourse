@@ -34,7 +34,9 @@
 
 .bullet + .topic-header-extra {
   display: block;
-  line-height: 12px;
+  line-height: 15px;
+  font-size: 12px;
+  .list-tags { font-size: 12px; }
 }
 
 .bar + .topic-header-extra {
