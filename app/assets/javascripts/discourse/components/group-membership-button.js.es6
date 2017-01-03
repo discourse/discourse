@@ -1,5 +1,6 @@
 import { default as computed } from 'ember-addons/ember-computed-decorators';
 import { popupAjaxError } from 'discourse/lib/ajax-error';
+import Group from 'discourse/models/group';
 
 export default Ember.Component.extend({
   @computed("model.public")
@@ -64,9 +65,13 @@ export default Ember.Component.extend({
 
     requestMembership() {
       const groupName = this.get('model.name');
-      const title = I18n.t('groups.request_membership_pm.title');
-      const body = I18n.t('groups.request_membership_pm.body', { groupName });
-      this.sendAction("createNewMessageViaParams", groupName, title, body);
+
+      Group.loadOwners(groupName).then(result => {
+        const names = result.map(owner => owner.username).join(",");
+        const title = I18n.t('groups.request_membership_pm.title');
+        const body = I18n.t('groups.request_membership_pm.body', { groupName });
+        this.sendAction("createNewMessageViaParams", names, title, body);
+      });
     }
   }
 });
