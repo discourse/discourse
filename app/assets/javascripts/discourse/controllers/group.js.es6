@@ -58,14 +58,8 @@ export default Ember.Controller.extend({
     return this.get('tabs').filter(t => {
       let display = true;
 
-      if (this.currentUser) {
-        let admin = this.currentUser.admin;
-
-        if (automatic && t.get('requiresGroupAdmin')) {
-          display = false;
-        } else {
-          display = admin || isGroupOwner;
-        }
+      if (this.currentUser && t.get('requiresGroupAdmin')) {
+        display = automatic ? false : (this.currentUser.admin || isGroupOwner);
       } else if (t.get('requiresGroupAdmin')) {
         display = false;
       }
