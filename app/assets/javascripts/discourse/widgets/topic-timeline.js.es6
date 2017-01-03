@@ -237,7 +237,7 @@ createWidget('timeline-scrollarea', {
   },
 
   goBack() {
-    this.sendWidgetAction('jumpToPost', this.position().lastRead);
+    this.sendWidgetAction('jumpToIndex', this.position().lastRead);
   }
 });
 
