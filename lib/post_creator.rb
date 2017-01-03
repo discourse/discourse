@@ -92,6 +92,17 @@ class PostCreator
       return false
     end
 
+    # Make sure none of the users have muted the creator
+    names = @opts[:target_usernames]
+    if names.present? && !skip_validations? && !@user.staff?
+      users = User.where(username: names.split(',').flatten).pluck(:id, :username).to_h
+
+      MutedUser.where(user_id: users.keys, muted_user_id: @user.id).pluck(:user_id).each do |m|
+        errors[:base] << I18n.t(:not_accepting_pms, username: users[m])
+      end
+      return false if errors[:base].present?
+    end
+
     if new_topic?
       topic_creator = TopicCreator.new(@user, guardian, @opts)
       return false unless skip_validations? || validate_child(topic_creator)

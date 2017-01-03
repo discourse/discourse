@@ -199,6 +199,7 @@ en:
   spamming_host: "Sorry you cannot post a link to that host."
   user_is_suspended: "Suspended users are not allowed to post."
   topic_not_found: "Something has gone wrong. Perhaps this topic was closed or deleted while you were looking at it?"
+  not_accepting_pms: "Sorry, %{username} is not accepting messages at the moment."
 
   just_posted_that: "is too similar to what you recently posted"
   invalid_characters: "contains invalid characters"
