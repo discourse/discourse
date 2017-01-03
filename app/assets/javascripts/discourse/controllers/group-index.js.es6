@@ -1,6 +1,6 @@
 import { popupAjaxError } from 'discourse/lib/ajax-error';
 import Group from 'discourse/models/group';
-import { observes } from 'ember-addons/ember-computed-decorators';
+import { default as computed, observes } from 'ember-addons/ember-computed-decorators';
 
 export default Ember.Controller.extend({
   queryParams: ['order', 'desc'],
@@ -14,8 +14,17 @@ export default Ember.Controller.extend({
 
   @observes('order', 'desc')
   refreshMembers() {
+    this.set('loading', true);
+
     this.get('model') &&
-      this.get('model').findMembers({ order: this.get('order'), desc: this.get('desc') });
+      this.get('model')
+        .findMembers({ order: this.get('order'), desc: this.get('desc') })
+        .finally(() => this.set('loading', false));
+  },
+
+  @computed('model.members')
+  hasMembers(members) {
+    return members && members.length > 0;
   },
 
   actions: {
