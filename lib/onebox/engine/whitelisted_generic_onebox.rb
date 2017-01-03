@@ -275,6 +275,7 @@ module Onebox
         end
 
         def video_html
+          video_url = !Onebox::Helpers.blank?(data[:video_secure_url]) ? data[:video_secure_url] : data[:video]
           if data[:video_type] == "video/mp4"
             <<-HTML
               <video title='#{data[:title]}'
@@ -282,12 +283,12 @@ module Onebox
                      height='#{data[:video_height]}'
                      style='max-width:100%'
                      controls=''>
-                <source src='#{data[:video]}'>
+                <source src='#{video_url}'>
               </video>
             HTML
           else
             <<-HTML
-              <iframe src='#{data[:video]}'
+              <iframe src='#{video_url}'
                       title='#{data[:title]}'
                       width='#{data[:video_width]}'
                       height='#{data[:video_height]}'
