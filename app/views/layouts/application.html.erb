@@ -47,6 +47,10 @@
     <%= render_google_universal_analytics_code %>
     <link rel="manifest" href="<%= Discourse.base_uri %>/manifest.json">
 
+    <%- if SiteSetting.native_app_install_banner? %>
+        <meta name="apple-itunes-app" content="app-id=1173672076">
+    <%- end %>
+
     <%= yield :head %>
   </head>
 
