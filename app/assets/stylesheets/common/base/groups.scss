@@ -47,16 +47,19 @@
       vertical-align: middle;
     }
 
-    .avatar-flair {
-      $size: 40px;
+    $size: 40px;
 
+    .avatar-flair {
       background-size: $size;
       height: $size;
-      width: $size;
 
       i {
         font-size: $size !important;
       }
+    }
+
+    .avatar-flair-image {
+      width: $size;
     }
   }
 }
