@@ -35,3 +35,27 @@ test('canRequestMembership', function() {
 
   equal(this.subject().get('canRequestMembership'), false);
 });
+
+test('userIsGroupUser', function() {
+  this.subject().setProperties({
+    model: { is_group_user: true }
+  });
+
+  equal(this.subject().get('userIsGroupUser'), true);
+
+  this.subject().set('model.is_group_user', false);
+
+  equal(this.subject().get('userIsGroupUser'), false);
+
+  this.subject().setProperties({ model: { id: 1 }, groupUserIds: [1] });
+
+  equal(this.subject().get('userIsGroupUser'), true);
+
+  this.subject().set('groupUserIds', [3]);
+
+  equal(this.subject().get('userIsGroupUser'), false);
+
+  this.subject().set('groupUserIds', undefined);
+
+  equal(this.subject().get('userIsGroupUser'), false);
+});

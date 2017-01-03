@@ -17,7 +17,7 @@ export default Ember.Component.extend({
     if (isGroupUser) {
       return isGroupUser;
     } else {
-      return groupUserIds.includes(groupId);
+      return !!groupUserIds && groupUserIds.includes(groupId);
     }
   },
 
