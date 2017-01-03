@@ -13,7 +13,7 @@ class MetadataController < ApplicationController
   private
 
   def default_manifest
-    {
+    manifest = {
       name: SiteSetting.title,
       short_name: SiteSetting.title,
       display: 'standalone',
@@ -29,5 +29,19 @@ class MetadataController < ApplicationController
         }
       ]
     }
+
+    if SiteSetting.native_app_install_banner
+      manifest = manifest.merge({
+        prefer_related_applications: true,
+        related_applications: [
+          {
+            platform: "play",
+            id: "com.discourse"
+          }
+        ]
+      })
+    end
+
+    manifest
   end
 end

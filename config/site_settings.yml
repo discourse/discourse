@@ -1260,6 +1260,8 @@ uncategorized:
 
   topic_page_title_includes_category: true
 
+  native_app_install_banner: false
+
 
 user_preferences:
   default_email_digest_frequency:
