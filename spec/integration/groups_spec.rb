@@ -154,7 +154,7 @@ describe "Groups" do
   describe 'owners' do
     let(:user1) { Fabricate(:user, last_seen_at: Time.zone.now) }
     let(:user2) { Fabricate(:user, last_seen_at: Time.zone.now - 1 .day) }
-    let(:group) { Fabricate(:group, users: [user1, user2]) }
+    let(:group) { Fabricate(:group, users: [user, user1, user2]) }
 
     it 'should return the right list of owners' do
       group.add_owner(user1)
