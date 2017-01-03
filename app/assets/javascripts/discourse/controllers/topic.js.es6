@@ -170,8 +170,11 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
 
     selectText(postId, buffer) {
       return this.get('model.postStream').loadPost(postId).then(post => {
+        const composer = this.get('composer');
+        const viewOpen = composer.get('model.viewOpen');
+
         // If we can't create a post, delegate to reply as new topic
-        if (!this.get('model.details.can_create_post')) {
+        if ((!viewOpen) && (!this.get('model.details.can_create_post'))) {
           this.send('replyAsNewTopic', post);
           return;
         }
@@ -188,7 +191,6 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
         }
 
         // If the composer is associated with a different post, we don't change it.
-        const composer = this.get('composer');
         const composerPost = composer.get('model.post');
         if (composerPost && (composerPost.get('id') !== this.get('post.id'))) {
           composerOpts.post = composerPost;
