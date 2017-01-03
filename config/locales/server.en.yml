@@ -1367,6 +1367,8 @@ en:
 
     topic_page_title_includes_category: "Topic page title includes the category name."
 
+    native_app_install_banner: "Asks recurring visitors to install Discourse native app."
+
     max_prints_per_hour_per_user: "Maximum number of /print page impressions (set to 0 to disable)"
 
     full_name_required: "Full name is a required field of a user's profile."
