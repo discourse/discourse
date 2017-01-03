@@ -46,7 +46,7 @@ module Onebox
       end
 
       def domain
-        record[:domain] || URI(link || '').host
+        record[:domain] || URI(link || '').host.to_s.sub(/^www\./, '')
       end
 
       def metadata_1_label
