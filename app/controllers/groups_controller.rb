@@ -141,6 +141,16 @@ class GroupsController < ApplicationController
     }
   end
 
+  def owners
+    group = find_group(:group_id)
+
+    owners = group.users.where('group_users.owner')
+      .order("users.last_seen_at DESC")
+      .limit(5)
+
+    render_serialized(owners, GroupUserSerializer)
+  end
+
   def add_members
     group = Group.find(params[:id])
     group.public ? ensure_logged_in : guardian.ensure_can_edit!(group)

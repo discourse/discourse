@@ -404,6 +404,7 @@ Discourse::Application.routes.draw do
     get 'activity' => "groups#show"
     get 'activity/:filter' => "groups#show"
     get 'members'
+    get 'owners'
     get 'posts'
     get 'topics'
     get 'mentions'
