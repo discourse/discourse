@@ -904,4 +904,39 @@ describe PostCreator do
     end
   end
 
+  context "private message to a muted user" do
+    let(:muted_me) { Fabricate(:evil_trout) }
+
+    it 'should fail' do
+      updater = UserUpdater.new(muted_me, muted_me)
+      updater.update_muted_users("#{user.username}")
+
+      pc = PostCreator.new(
+        user,
+        title: 'this message is to someone who muted me!',
+        raw: "you will have to see this even if you muted me!",
+        archetype: Archetype.private_message,
+        target_usernames: "#{muted_me.username}"
+      )
+      expect(pc).not_to be_valid
+      expect(pc.errors).to be_present
+    end
+
+    let(:staff_user) { Fabricate(:admin) }
+
+    it 'succeeds if the user is staff' do
+      updater = UserUpdater.new(muted_me, muted_me)
+      updater.update_muted_users("#{staff_user.username}")
+
+      pc = PostCreator.new(
+        staff_user,
+        title: 'this message is to someone who muted me!',
+        raw: "you will have to see this even if you muted me!",
+        archetype: Archetype.private_message,
+        target_usernames: "#{muted_me.username}"
+      )
+      expect(pc).to be_valid
+      expect(pc.errors).to be_blank
+    end
+  end
 end
