@@ -339,7 +339,6 @@ module BackupRestore
     def migrate_database
       log "Migrating the database..."
       Discourse::Application.load_tasks
-      ENV["VERSION"] = @current_version.to_s
       User.exec_sql("SET search_path = public, pg_catalog;")
       Rake::Task["db:migrate"].invoke
     end
