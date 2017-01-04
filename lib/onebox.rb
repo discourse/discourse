@@ -33,8 +33,7 @@ module Onebox
   end
 
   def self.has_matcher?(url)
-    result = Matcher.new(url).oneboxed
-    !!result
+    !!Matcher.new(url).oneboxed
   end
 
   def self.options=(options)

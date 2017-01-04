@@ -22,6 +22,8 @@ module Onebox
       add_oembed_provider(/www\.meetup\.com\//, 'http://api.meetup.com/oembed')
       # In order to support Private Videos
       add_oembed_provider(/vimeo\.com\//, 'https://vimeo.com/api/oembed.json')
+      # NYT requires login so use oembed only
+      add_oembed_provider(/nytimes\.com\//, 'https://www.nytimes.com/svc/oembed/json/')
 
       def always_https?
         WhitelistedGenericOnebox.host_matches(uri, WhitelistedGenericOnebox.https_hosts) || super
@@ -46,9 +48,7 @@ module Onebox
       protected
 
         def html_doc
-          return @html_doc if @html_doc
-          response = Onebox::Helpers.fetch_response(url)
-          @html_doc = Nokogiri::HTML(response.body)
+          @html_doc ||= Nokogiri::HTML(Onebox::Helpers.fetch_response(url).body) rescue nil
         end
 
         def get_oembed
@@ -79,11 +79,13 @@ module Onebox
           oe.delete(:html) if oe[:html] && oe[:html]["wp-embedded-content"]
 
           oe
-        rescue Errno::ECONNREFUSED, Net::HTTPError, MultiJson::LoadError
+        rescue Errno::ECONNREFUSED, Net::HTTPError, Net::HTTPFatalError, MultiJson::LoadError
           {}
         end
 
         def get_opengraph
+          return {} unless html_doc
+
           og = {}
 
           html_doc.css('meta').each do |m|
@@ -103,6 +105,8 @@ module Onebox
         end
 
         def get_twitter
+          return {} unless html_doc
+
           twitter = {}
 
           html_doc.css('meta').each do |m|

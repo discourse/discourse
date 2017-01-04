@@ -177,11 +177,9 @@ module Onebox
       end
 
       def self.===(other)
-        if other.kind_of?(URI)
-          host_matches(other, whitelist) || probable_wordpress(other) || probable_discourse(other)
-        else
+        other.kind_of?(URI) ?
+          host_matches(other, whitelist) || probable_wordpress(other) || probable_discourse(other) :
           super
-        end
       end
 
       def to_html
@@ -199,16 +197,25 @@ module Onebox
         @data ||= begin
           html_entities = HTMLEntities.new
           d = { link: link }.merge(raw)
+
           if !Onebox::Helpers.blank?(d[:title])
             d[:title] = html_entities.decode(Onebox::Helpers.truncate(d[:title].strip, 80))
           end
+
+          d[:description] ||= d[:summary]
           if !Onebox::Helpers.blank?(d[:description])
             d[:description] = html_entities.decode(Onebox::Helpers.truncate(d[:description].strip, 250))
           end
+
           if !Onebox::Helpers.blank?(d[:domain])
             d[:domain] = "http://#{d[:domain]}" unless d[:domain] =~ /^https?:\/\//
             d[:domain] = URI(d[:domain]).host.to_s.sub(/^www\./, '')
           end
+
+          # prefer secure URLs
+          d[:image] = d[:image_secure_url] || d[:image_url] || d[:thumbnail_url] || d[:image]
+          d[:video] = d[:video_secure_url] || d[:video_url] || d[:video]
+
           d
         end
       end
@@ -226,8 +233,8 @@ module Onebox
           return article_html  if is_article?
           return video_html    if is_video?
           return image_html    if is_image?
-          return article_html  if has_text?
           return embedded_html if is_embedded?
+          return article_html  if has_text?
         end
 
         def is_article?
@@ -247,8 +254,7 @@ module Onebox
         end
 
         def has_image?
-          !Onebox::Helpers.blank?(data[:image]) ||
-          !Onebox::Helpers.blank?(data[:thumbnail_url])
+          !Onebox::Helpers.blank?(data[:image])
         end
 
         def is_video?
@@ -269,17 +275,15 @@ module Onebox
         end
 
         def image_html
-          src = data[:image] || data[:thumbnail_url]
-          return if Onebox::Helpers.blank?(src)
+          return if Onebox::Helpers.blank?(data[:image])
 
           alt    = data[:description]  || data[:title]
           width  = data[:image_width]  || data[:thumbnail_width]
           height = data[:image_height] || data[:thumbnail_height]
-          "<img src='#{src}' alt='#{alt}' width='#{width}' height='#{height}'>"
+          "<img src='#{data[:image]}' alt='#{alt}' width='#{width}' height='#{height}'>"
         end
 
         def video_html
-          video_url = !Onebox::Helpers.blank?(data[:video_secure_url]) ? data[:video_secure_url] : data[:video]
           if data[:video_type] == "video/mp4"
             <<-HTML
               <video title='#{data[:title]}'
@@ -287,12 +291,12 @@ module Onebox
                      height='#{data[:video_height]}'
                      style='max-width:100%'
                      controls=''>
-                <source src='#{video_url}'>
+                <source src='#{data[:video]}'>
               </video>
             HTML
           else
             <<-HTML
-              <iframe src='#{video_url}'
+              <iframe src='#{data[:video]}'
                       title='#{data[:title]}'
                       width='#{data[:video_width]}'
                       height='#{data[:video_height]}'

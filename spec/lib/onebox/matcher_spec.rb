@@ -26,7 +26,7 @@ describe Onebox::Matcher do
 
       it "doesn't find an engine" do
         matcher.stubs(:ordered_engines).returns([TestEngine])
-        expect(matcher.oneboxed).to be_nil
+        expect(matcher.oneboxed).not_to be_nil
       end
     end
 
