@@ -1,8 +1,8 @@
-<div class='autocomplete'>
+<div class='user-selector autocomplete'>
   <ul>
     {{#each options.users as |user|}}
-      <li>
-        <a href>
+      <li class="user-selector-item">
+        <a href title="{{user.name}}">
           {{avatar user imageSize="tiny"}}
           <span class='username'>{{user.username}}</span>
           <span class='name'>{{user.name}}</span>
@@ -11,11 +11,11 @@
     {{/each}}
     {{#if options.groups}}
       {{#each options.groups as |group|}}
-        <li>
-          <a href>
+        <li class="user-selector-item">
+          <a href title="{{group.full_name}}">
             <i class='fa fa-users'></i>
             <span class='username'>{{group.name}}</span>
-            <span class='name'>{{max-usernames group.usernames max="3"}}</span>
+            <span class='name'>{{group.full_name}}</span>
           </a>
         </li>
       {{/each}}

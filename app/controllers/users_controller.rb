@@ -568,7 +568,7 @@ class UsersController < ApplicationController
 
     if params[:include_groups] == "true"
       to_render[:groups] = Group.search_group(term).map do |m|
-        {name: m.name, usernames: []}
+        { name: m.name, full_name: m.full_name }
       end
     end
 
@@ -576,7 +576,7 @@ class UsersController < ApplicationController
       to_render[:groups] = Group.mentionable(current_user)
                                 .where("name ILIKE :term_like", term_like: "#{term}%")
                                 .map do |m|
-        {name: m.name, usernames: []}
+        { name: m.name, full_name: m.full_name }
       end
     end
 
