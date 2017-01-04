@@ -138,8 +138,8 @@ de:
     topic_admin_menu: "Thema administrieren"
     wizard_required: "Es ist an der Zeit, Dein Forum einzurichten! <a href='%{url}' data-auto-route='true'>Einrichtungs-Assistenten starten</a>!"
     emails_are_disabled: "Die ausgehende E-Mail-Kommunikation wurde von einem Administrator global deaktiviert. Es werden keinerlei Benachrichtigungen per E-Mail verschickt."
-    bootstrap_mode_enabled: "Damit du mit deiner Site einfacher loslegen kannst, befindest du dich im Bootstrapping-Modus. Alle neuen Benutzer erhalten die Vertrauensstufe 1 und bekommen eine tägliche Zusammenfassung per E-Mail. Der Modus wird automatisch deaktiviert, sobald sich mindestens %{min_users} Benutzer angemeldet haben."
-    bootstrap_mode_disabled: "Der Bootstrapping-Modus wird innerhalb der nächsten 24 Stunden deaktiviert."
+    bootstrap_mode_enabled: "Damit du mit deiner Seite einfacher loslegen kannst, befindest du dich im Starthilfe-Modus. Alle neuen Benutzer erhalten die Vertrauensstufe 1 und bekommen eine tägliche E-Mail-Zusammenfassung. Der Modus wird automatisch deaktiviert, sobald sich mindestens %{min_users} Benutzer angemeldet haben."
+    bootstrap_mode_disabled: "Der Starthilfe-Modus wird innerhalb der nächsten 24 Stunden deaktiviert."
     s3:
       regions:
         us_east_1: "USA Ost (Nord-Virginia)"
@@ -377,6 +377,7 @@ de:
       title:
         one: "Gruppe"
         other: "Gruppen"
+      activity: "Aktivität"
       members: "Mitglieder"
       topics: "Themen"
       posts: "Beiträge"
@@ -927,7 +928,7 @@ de:
       or: "Oder"
       authenticating: "Authentifiziere…"
       awaiting_confirmation: "Dein Konto ist noch nicht aktiviert. Verwende den 'Passwort vergessen'-Link, um eine weitere E-Mail mit Anweisungen zur Aktivierung zu erhalten."
-      awaiting_approval: "Dein Konto wurde noch nicht von einem Mitarbeiter genehmigt. Du bekommst eine E-Mail, sobald das geschehen ist."
+      awaiting_approval: "Dein Konto wurde noch nicht von einem Team-Mitglied genehmigt. Du bekommst eine E-Mail, sobald das geschehen ist."
       requires_invite: "Entschuldige, der Zugriff auf dieses Forum ist nur mit einer Einladung möglich."
       not_activated: "Du kannst dich noch nicht anmelden. Wir haben dir schon eine E-Mail zur Aktivierung an <b>{{sentTo}}</b> geschickt. Bitte folge den Anweisungen in dieser E-Mail, um dein Benutzerkonto zu aktivieren."
       not_allowed_from_ip_address: "Von dieser IP-Adresse darfst du dich nicht anmelden."
@@ -1058,7 +1059,7 @@ de:
       yourself_confirm:
         title: "Hast du vergessen Empfänger hinzuzufügen?"
         body: "Im Augenblick wird diese Nachricht nur an dich selbst gesendet!"
-      admin_options_title: "Optionale Mitarbeiter-Einstellungen für dieses Thema"
+      admin_options_title: "Optionale Team-Einstellungen für dieses Thema"
       auto_close:
         label: "Zeitpunkt der automatischen Schließung:"
         error: "Bitte gib einen gültigen Wert ein."
@@ -1176,8 +1177,8 @@ de:
           private: sind in meinen Nachrichten
           bookmarks: Ich habe ein Lesezeichen gesetzt
           first: sind die allerersten Beiträge
-          pinned: sind angepinnt
-          unpinned: sind nicht angepinnt
+          pinned: sind angeheftet
+          unpinned: sind nicht angeheftet
           wiki: sind Wiki
         statuses:
           label: Wo Themen
@@ -1330,6 +1331,7 @@ de:
         go: "Los"
         jump_bottom: "springe zum letzten Beitrag"
         jump_prompt: "Springe zu Beitrag"
+        jump_prompt_of: "von %{count} Beiträgen"
         jump_prompt_long: "Zu welchem Beitrag möchtest du springen?"
         jump_bottom_with_number: "springe zu Beitrag %{post_number}"
         total: Beiträge insgesamt
@@ -1598,8 +1600,8 @@ de:
         admin: "Administrative Aktionen"
         wiki: "Wiki erstellen"
         unwiki: "Wiki entfernen"
-        convert_to_moderator: "Mitarbeiter-Einfärbung hinzufügen"
-        revert_to_regular: "Mitarbeiter-Einfärbung entfernen"
+        convert_to_moderator: "Team-Einfärbung hinzufügen"
+        revert_to_regular: "Team-Einfärbung entfernen"
         rebake: "HTML erneuern"
         unhide: "Einblenden"
         change_owner: "Eigentümer ändern"
@@ -1815,7 +1817,7 @@ de:
       submit_tooltip: "Private Meldung abschicken"
       take_action_tooltip: "Den Meldungsschwellenwert sofort erreichen, anstatt auf weitere Meldungen aus der Community zu warten."
       cant: "Entschuldige, du kannst diesen Beitrag derzeit nicht melden."
-      notify_staff: 'Mitarbeiter nichtöffentlich benachrichtigen'
+      notify_staff: 'Team nicht-öffentlich benachrichtigen'
       formatted_name:
         off_topic: "Es ist am Thema vorbei"
         inappropriate: "Es ist unangemessen"
@@ -2016,7 +2018,7 @@ de:
       actions:
         title: 'Aktionen'
         bookmark_topic: '<b>f</b> Lesezeichen hinzufügen/entfernen'
-        pin_unpin_topic: '<b>shift</b>+<b>p</b> Thema hervorheben/nicht mehr hervorheben'
+        pin_unpin_topic: '<b>shift</b>+<b>p</b> Thema anheften/loslösen'
         share_topic: '<b>shift</b>+<b>s</b> Thema teilen'
         share_post: '<b>s</b> Beitrag teilen'
         reply_as_new_topic: '<b>t</b> Mit verknüpftem Thema antworten'
@@ -2627,10 +2629,10 @@ de:
           block: "blockieren"
           do_nothing: "nichts tun"
         staff_actions:
-          title: "Mitarbeiter-Aktionen"
+          title: "Team-Aktionen"
           instructions: "Klicke auf die Benutzernamen und Aktionen, um die Liste zu filtern. Klicke auf das Profilbild, um die Benutzerseiten zu sehen."
           clear_filters: "Alles anzeigen"
-          staff_user: "Mitarbeiter"
+          staff_user: "Team-Mitglied"
           target_user: "Betroffener Benutzer"
           subject: "Objekt"
           when: "Wann"
@@ -2723,7 +2725,7 @@ de:
           new: "Neu"
           active: "Aktiv"
           pending: "Genehmigung"
-          staff: 'Mitarbeiter'
+          staff: 'Team'
           suspended: 'Gesperrt'
           blocked: 'Blockiert'
           suspect: 'Verdächtig'
@@ -2743,7 +2745,7 @@ de:
           member: 'Benutzer mit Vertrauensstufe 2 (Mitglied)'
           regular: 'Benutzer mit Vertrauensstufe 3 (Stammgast)'
           leader: 'Benutzer mit Vertrauensstufe 4 (Anführer)'
-          staff: "Mitarbeiter"
+          staff: "Team"
           admins: 'Administratoren'
           moderators: 'Moderatoren'
           blocked: 'Blockierte Benutzer'
@@ -2974,6 +2976,7 @@ de:
           user_preferences: "Benutzereinstellungen"
           tags: "Schlagwörter"
           search: "Suche"
+          groups: "Gruppen"
       badges:
         title: Abzeichen
         new_badge: Neues Abzeichen
@@ -3100,11 +3103,11 @@ de:
       uploading: "Hochladen..."
       quit: "Vielleicht später"
       staff_count:
-        one: "Deine Community hat 1 Mitarbeiter"
-        other: "Deine Community hat %{count} Mitarbeiter"
+        one: "Deine Community hat 1 Team-Mitglied."
+        other: "Deine Community hat %{count} Team-Mitglieder."
       invites:
         add_user: "Hinzufügen"
-        none_added: "Du hast bisher keine Mitarbeiter eingeladen. Willst du fortfahren?"
+        none_added: "Du hast bisher kein Team eingeladen. Möchtest du wirklich fortfahren?"
         roles:
           admin: "Administration"
           moderator: "Moderator"

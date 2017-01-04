@@ -377,6 +377,7 @@ he:
       title:
         one: "קבוצה"
         other: "קבוצות"
+      activity: "פעילות"
       members: "חברים"
       topics: "נושאים"
       posts: "פוסטים"
@@ -1332,6 +1333,7 @@ he:
         go: "קדימה"
         jump_bottom: "מעבר לפוסט האחרון"
         jump_prompt: "קפיצה לפוסט"
+        jump_prompt_of: "מתוך %{count} פוסטים"
         jump_prompt_long: "לאיזה פוסט הייתם רוצים לקפוץ?"
         jump_bottom_with_number: "קפיצה לפוסט %{post_number}"
         total: סך הכל הפוסטים
@@ -2980,6 +2982,7 @@ he:
           user_preferences: "העדפות משתמש"
           tags: "תגיות"
           search: "חיפוש"
+          groups: "קבוצות"
       badges:
         title: עיטורים
         new_badge: עיטור חדש

@@ -367,7 +367,7 @@ es:
       membership: "Membresía"
       name: "Nombre"
       user_count: "Número de miembros"
-      bio: "Acerca del grup"
+      bio: "Acerca del grupo"
       selector_placeholder: "Añadir miembros"
       owner: "propietario"
       visible: "El grupo es visible para todos los usuarios"
@@ -2041,7 +2041,7 @@ es:
       earned_n_times:
         one: "Ganó este distintivo 1 vez"
         other: "Ganó este distintivo %{count} veces"
-      granted_on: "Concedido el %{date}"
+      granted_on: "Concedido hace: %{date}"
       others_count: "Otras personas con este distintivo (%{count})"
       title: Distintivos
       allow_title: "título disponible"

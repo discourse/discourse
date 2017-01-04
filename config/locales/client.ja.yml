@@ -288,10 +288,20 @@ ja:
       total_rows:
         other: "%{count}人のユーザー"
     groups:
+      request_membership_pm:
+        title: "メンバーシップリクエスト"
       add: "追加"
+      automatic_group: 自動作成グループ
+      closed_group: クローズドグループ
+      allow_membership_requests: "ユーザーがグループオーナーに対してメンバーシップリクエストを送信できるようにする(全ユーザーがグループへメンション出来るようにする必要があります。)"
+      membership: "メンバーシップ"
+      user_count: "メンバー数"
       selector_placeholder: "メンバーを追加"
       owner: "オーナー"
       visible: "このグループは全てのユーザーに表示されています。"
+      index:
+        title: "グループ"
+        empty: "表示するグループはありません。"
       title:
         other: "グループ"
       members: "メンバー"
@@ -395,6 +405,7 @@ ja:
         disable: "通知を無効にする"
         enable: "通知を有効にする"
         each_browser_note: "注意: 利用するすべてのブラウザでこの設定を変更する必要があります"
+      dismiss_notifications: "すべて既読にする"
       dismiss_notifications_tooltip: "全ての未読の通知を既読にします"
       disable_jump_reply: "返信した後に投稿へ移動しない"
       dynamic_favicon: "新規/更新トピックの件数をブラウザのアイコンに表示する"
@@ -932,6 +943,10 @@ ja:
         unlist_topics: "トピックをリストから非表示にする"
         reset_read: "未読に設定"
         delete: "トピックを削除"
+        dismiss: "既読"
+        dismiss_read: "未読をすべて既読にする"
+        dismiss_button: "既読..."
+        dismiss_tooltip: "新規投稿を既読にしてトピックの追跡を停止"
         dismiss_new: "既読にする"
         toggle: "選択したトピックを切り替え"
         actions: "操作"
@@ -1563,10 +1578,14 @@ ja:
         profile: '<b>g</b>, <b>p</b> プロフィール'
         messages: '<b>g</b>, <b>m</b> メッセージ'
       navigation:
+        title: 'ナビゲーション'
         jump: '<b>#</b> # 投稿へ'
         back: '<b>u</b> 戻る'
+        up_down: '<b>k</b>/<b>j</b> 選択を移動 &uarr; &darr;'
         open: '<b>o</b> or <b>Enter</b> トピックへ'
+        next_prev: '<b>shift</b>+<b>j</b>/<b>shift</b>+<b>k</b> 選択を次/前へ移動'
       application:
+        title: 'アプリケーション'
         create: '<b>c</b> 新しいトピックを作成'
         notifications: '<b>n</b> お知らせを開く'
         hamburger_menu: '<b>=</b> メニューを開く'
@@ -1574,10 +1593,11 @@ ja:
         show_incoming_updated_topics: '<b>.</b> 更新されたトピックを表示する'
         search: '<b>/</b> 検索'
         help: '<b>?</b> キーボードヘルプを表示する'
-        dismiss_new_posts: '<b>x</b>, <b>r</b> 新しい投稿を非表示にする'
-        dismiss_topics: 'Dismiss Topics'
+        dismiss_new_posts: '<b>x</b>, <b>r</b> 新規投稿を非表示にする'
+        dismiss_topics: '<b>x</b>, <b>t</b> トピックを既読にする'
         log_out: '<b>shift</b>+<b>j</b>/<b>shift</b>+<b>k</b> 次のセクション/前のセクション'
       actions:
+        title: 'アクション'
         bookmark_topic: '<b>f</b> トピックのブックマークを切り替え'
         pin_unpin_topic: '<b>shift</b>+<b>p</b>トピックを ピン留め/ピン留め解除'
         share_topic: '<b>shift</b>+<b>s</b> トピックをシェア'
@@ -1657,6 +1677,7 @@ ja:
           refresh_report: "Refresh Report"
           start_date: "Start Date"
           end_date: "End Date"
+          groups: "すべてのグループ"
       commits:
         latest_changes: "最新の更新内容:"
         by: "by"
@@ -1761,6 +1782,8 @@ ja:
       web_hooks:
         title: "Webhooks"
         none: "現在、Webhooksはありません。"
+        events:
+          actions: "アクション"
       plugins:
         title: "プラグイン"
         installed: "インストール済みプラグイン"
@@ -2295,6 +2318,7 @@ ja:
           login: "ログイン"
           plugins: "プラグイン"
           user_preferences: "ユーザ設定"
+          groups: "グループ"
       badges:
         title: バッジ
         new_badge: 新しいバッジ

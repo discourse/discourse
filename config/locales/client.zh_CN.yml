@@ -326,16 +326,31 @@ zh_CN:
       empty:
         posts: "群组成员没有发布帖子。"
         members: "群组没有成员。"
+        mentions: "群组从未被提及过。"
+        messages: "群组从未发送过消息。"
+        topics: "群组的成员从未发表主题。"
+        logs: "没有关于群组的日志。"
       add: "添加"
       join: "加入群组"
+      leave: "离开群组"
       request: "请求加入群组"
+      automatic_group: 自动群组
+      closed_group: 封闭群组
+      is_group_user: "你是该群组的一个成员"
+      allow_membership_requests: "允许用户向群组拥有者发送加入小组请求（群组需要能让所有人提及）"
+      membership: "成员"
+      name: "名字"
+      user_count: "成员数量"
+      bio: "关于群组"
       selector_placeholder: "添加成员"
       owner: "所有者"
       visible: "群组对所有用户可见"
       index:
         title: "群组"
+        empty: "没有可见的群组。"
       title:
         other: "群组"
+      activity: "活动"
       members: "成员"
       topics: "主题"
       posts: "帖子"
@@ -367,6 +382,15 @@ zh_CN:
         muted:
           title: "静音"
           description: "你不会收到组内关于新主题中的任何通知。"
+      flair_url: "头像图片"
+      flair_url_placeholder: "（可选）图片 URL 或 Font Awesome class"
+      flair_bg_color: "头像背景颜色"
+      flair_bg_color_placeholder: "（可选）十六进制色彩值"
+      flair_color: "头像颜色"
+      flair_color_placeholder: "（可选）十六进制色彩值"
+      flair_preview_icon: "预览图标"
+      flair_preview_image: "预览图片"
+      flair_note: "注意：标示将只在用户的主要群组显示"
     user_action_groups:
       '1': "送出赞"
       '2': "获得赞"
@@ -426,6 +450,11 @@ zh_CN:
       profile: "个人资料"
       mute: "防打扰"
       edit: "修改设置"
+      download_archive:
+        button_text: "下载我的帖子"
+        confirm: "你确定要下载你的帖子吗？"
+        success: "下载开始，完成后将有消息通知你。"
+        rate_limit_error: "帖子只能每天下载一次，请明天再重试。"
       new_private_message: "发新私信"
       private_message: "私信"
       private_messages: "私信"
@@ -686,6 +715,7 @@ zh_CN:
         link_generated: "邀请链接生成成功！"
         valid_for: "邀请链接只对这个邮件地址有效：%{email}"
         bulk_invite:
+          none: "你还没有邀请过任何人。你可以邀请一个人，或者<a href='https://meta.discourse.org/t/send-bulk-invites/16468'>上传 CSV 文件</a>邀请一批人。"
           text: "通过文件批量邀请"
           success: "文件上传成功，当操作完成时将通过消息通知你。"
       password:
@@ -945,6 +975,7 @@ zh_CN:
       title_or_link_placeholder: "键入标题，或粘贴一个链接在这里"
       edit_reason_placeholder: "编辑理由"
       show_edit_reason: "添加理由"
+      topic_featured_link_placeholder: "在标题里输入链接"
       reply_placeholder: "在此键入。使用Markdown，BBCode，或HTML格式。可拖拽或粘贴图片。"
       view_new_post: "浏览新帖。"
       saving: "保存中"
@@ -1247,6 +1278,7 @@ zh_CN:
         go: "前往"
         jump_bottom: "跳至最后一个帖子"
         jump_prompt: "跳至帖子"
+        jump_prompt_of: "%{count} 帖子"
         jump_prompt_long: "你想跳转至哪一贴？"
         jump_bottom_with_number: "跳至第 %{post_number} 帖"
         total: 全部帖子
@@ -1611,6 +1643,7 @@ zh_CN:
       tags_allowed_tag_groups: "仅在该分类内可以使用的标签组"
       tags_placeholder: "（可选）允许使用的标签列表"
       tag_groups_placeholder: "（可选）允许使用的标签组列表"
+      topic_featured_link_allowed: "运行在该分类中发布特色链接"
       delete: '删除分类'
       create: '新分类'
       create_long: '创建新的分类'
@@ -1645,6 +1678,7 @@ zh_CN:
       email_in_disabled: "站点设置中已经禁用通过邮件发表新主题。欲启用通过邮件发表新主题，"
       email_in_disabled_click: '启用“邮件发表”设置。'
       suppress_from_homepage: "不在主页中显示这个分类。"
+      all_topics_wiki: "默认将新主题设为维基主题"
       sort_order: "默认排序："
       allow_badges_label: "允许在这个分类中授予徽章"
       edit_permissions: "编辑权限"
@@ -2216,6 +2250,7 @@ zh_CN:
           details: "当有新回复、编辑、帖子被删除或者恢复时。"
         user_event:
           name: "用户事件"
+          details: "当用户被创建、审核通过或更新时。"
         delivery_status:
           title: "分发状态"
           inactive: "不活跃"
@@ -2438,6 +2473,7 @@ zh_CN:
         html: "html"
         text: "text"
         last_seen_user: "用户最后登录时间:"
+        no_result: "没有找到摘要信息。"
         reply_key: "回复关键字"
         skipped_reason: "跳过理由"
         incoming_emails:
@@ -2825,6 +2861,7 @@ zh_CN:
           user_preferences: "用户设置"
           tags: "标签"
           search: "搜索"
+          groups: "群组"
       badges:
         title: 徽章
         new_badge: 新徽章

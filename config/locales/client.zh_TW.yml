@@ -38,6 +38,7 @@ zh_TW:
       long_date_with_year_without_time: "'YY MMM D"
       long_date_without_year_with_linebreak: "MMM D <br/>LT"
       long_date_with_year_with_linebreak: "'YY MMM D<br/>LT"
+      wrap_ago: "%{date}以前"
       tiny:
         half_a_minute: "< 1 分鐘"
         less_than_x_seconds:
@@ -91,6 +92,8 @@ zh_TW:
       google+: '在 Google+ 分享此連結'
       email: '以電子郵件分享此連結'
     action_codes:
+      public_topic: "%{when}時讓大家看到這個主題"
+      private_topic: "%{when}時讓其他人看不到這個主題"
       split_topic: "於 %{when} 切分此討論話題"
       invited_user: "邀請 %{who} 於 %{when} "
       removed_user: "移除 %{who} 於 %{when} "
@@ -281,13 +284,29 @@ zh_TW:
       posts_read_long: "讀過的文章"
       total_rows:
         other: "%{count} 用戶"
+    group_histories:
+      actions:
+        add_user_to_group: "增加用戶"
+        remove_user_from_group: "移除用戶"
     groups:
+      logs:
+        title: "紀錄"
       edit:
+        add_members: "增加成員"
         delete_member_confirm: "從 '%{group}' 群組刪除 '%{username}' ?"
+      empty:
+        members: "這個團隊裡面沒有成員"
       add: "新增"
+      join: "加入團隊"
+      leave: "離開團隊"
+      closed_group: 關閉群組
+      name: "名字"
       selector_placeholder: "新增成員"
       owner: "擁有者"
       visible: "群組可被所有用戶看到"
+      index:
+        title: "群組"
+        empty: "沒有可看見的群組。"
       title:
         other: "群組"
       members: "成員"
@@ -403,6 +422,11 @@ zh_TW:
       suspended_notice: "此用戶已被停權至 {{date}}。"
       suspended_reason: "原因: "
       github_profile: "Github"
+      mailing_list_mode:
+        individual: "每當有新文章時，寄給我郵件通知"
+        individual_no_echo: "每當有新文章時，寄給我郵件通知（除了我自己的文章）"
+        many_per_day: "每當有新文章時，寄給我郵件通知（每天約有  {{dailyEmailEstimate}}  封）。"
+        few_per_day: "每當有新文章時，寄給我郵件通知（每天約有 2  封）。"
       watched_categories: "關注"
       tracked_categories: "追蹤"
       muted_categories: "靜音"
@@ -561,6 +585,10 @@ zh_TW:
         same_as_email: "你的密碼與電郵相同。"
         ok: "你的密碼符合要求。"
         instructions: "至少 %{count} 個字。"
+      summary:
+        top_badges: "熱門徽章"
+        no_badges: "還沒有徽章。"
+        more_badges: "更多徽章"
       associated_accounts: "登入"
       ip_address:
         title: "最近的 IP 位址"
@@ -727,6 +755,7 @@ zh_TW:
       title_placeholder: "用一個簡短的句子來描述想討論的內容。"
       edit_reason_placeholder: "你為什麼做編輯?"
       show_edit_reason: "(請加入編輯原因)"
+      reply_placeholder: "在這裡輸入內文，可以使用 Markdown, BBCode 或 HTML 來格式化文字，也可以拖曳或貼上圖片。"
       view_new_post: "檢視你的新文章。"
       saving: "正在儲存"
       saved: "儲存完畢!"
@@ -793,6 +822,7 @@ zh_TW:
       from_my_computer: "從我的電腦"
       from_the_web: "從網站"
       remote_tip: "圖片連結"
+      local_tip_with_attachments: "從裝置選取圖片或檔案： ({{authorized_extensions}})"
       hint: "(你也可以將檔案拖放至編輯器直接上傳)"
       uploading: "正在上傳"
       select_file: "選取檔案"
@@ -828,6 +858,7 @@ zh_TW:
         choose_new_category: "為主題選擇新類別："
         selected:
           other: "你已選擇了 <b>{{count}}</b> 個討論話題。"
+        choose_new_tags: "為主題選擇新標籤"
       none:
         unread: "沒有未讀的討論話題。"
         new: "沒有新的討論話題。"
@@ -1222,6 +1253,7 @@ zh_TW:
       email_in_disabled: "\"用電子郵件張貼新的討論話題\"功能已被關閉。若要使用此功能，"
       email_in_disabled_click: '請啟用"email in"功能'
       suppress_from_homepage: "不在首頁上顯示此分類。"
+      all_topics_wiki: "新的主題預設為共筆。"
       allow_badges_label: "允許授予本分類的徽章"
       edit_permissions: "編輯權限"
       add_permission: "新增權限"
@@ -1346,6 +1378,7 @@ zh_TW:
           other: "{{count}} 個未讀"
       new:
         lower_title: "新話題"
+        title: "新的"
         help: "最近幾天建立的主題"
       posted:
         title: "我的文章"
@@ -1385,6 +1418,20 @@ zh_TW:
       full: "建立 / 回覆 / 觀看"
       create_post: "回覆 / 觀看"
       readonly: "觀看"
+    keyboard_shortcuts_help:
+      title: '快捷鍵'
+      application:
+        help: '<b> ? </b> 打開按鍵說明'
+    badges:
+      title: 徽章
+      badge_count:
+        other: "%{count} 徽章"
+    tagging:
+      topics:
+        none:
+          new: "你沒有新的討論話題。"
+        bottom:
+          new: "已經沒有其他新討論話題了。"
   admin_js:
     type_to_filter: "輸入要搜尋的文字..."
     admin:
@@ -1435,6 +1482,7 @@ zh_TW:
           refresh_report: "重新整理報告"
           start_date: "開始日期"
           end_date: "結束日期"
+          groups: "所有群組"
       commits:
         latest_changes: "最近的變更：請經常更新！"
         by: "由"
@@ -2045,6 +2093,7 @@ zh_TW:
           login: "登入"
           plugins: "延伸套件"
           user_preferences: "偏好設定"
+          groups: "群組"
       badges:
         title: 徽章
         new_badge: 新徽章
@@ -2101,6 +2150,9 @@ zh_TW:
           bad_count_warning:
             header: "警告 !"
             text: "查詢結果沒有授予徽章的樣本；當查詢結果回傳的使用者 ID 或文章 ID 不存在時此問題有可能發生。如此可能會發生未預期的結果 ―― 請再次檢查您的 SQL 語法。"
+          no_grant_count: "沒有指定徽章。"
+          grant_count:
+            other: "指定了 <b>%{count}</b> 個徽章。"
           sample: "樣本："
           grant:
             with: <span class="username">%{username}</span>

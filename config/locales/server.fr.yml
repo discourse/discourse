@@ -323,7 +323,24 @@ fr:
   meta_category_description: "Discussions à propos du site, son organisation, son fonctionnement, et comment nous pouvons l'améliorer."
   staff_category_name: "Responsables"
   staff_category_description: "Catégorie privée pour les discussions de l'équipe du forum. Les sujets ne sont visibles que pour les administrateurs et les modérateurs."
+  assets_topic_title: "Ressources pour le style du site"
   assets_topic_body: "Ceci est un sujet permanent, visible uniquement par l'équipe, pour stocker les images et fichiers utilisés pour le design du site. Ne pas le supprimer !\n\n\nMarche à suivre:\n\n1. Répondre à ce sujet\n2. Envoyer toutes les images que vous voulez utilisés comme logos, favicons, et tout ce que vous souhaitez. (Utiliser l'icone dans la barre d'édition ou glisser-déposer ou coller les images)\n3. Envoyer votre réponse\n4. Afin d'obtenir le chemin complet de votre image, faites un clic-droit dessus ou éditer votre message et copier le chemin.\n5. Coller le chemin de l'image dans les [paramètres requis](/admin/site_settings/category/required).\n\nDe plus, si vous souhaitez envoyer d'autres formats de fichier, modifier l'option `authorized_extensions` dans les [paramètres de fichier](/admin/site_settings/category/files)."
+  discourse_welcome_topic:
+    title: "Bienvenue sur Discourse"
+    body: |2
+
+      Le premier paragraphe de ce sujet épinglé sera visible comme message de bienvenue à tous les nouveaux visiteurs de votre page d'accueil. Il est important !
+
+      **Modifier le** en une brève description de votre communauté :
+
+      - Pour qui est-elle destinée ?
+      - Que peuvent-ils y trouver ?
+      - Pourquoi doivent-ils venir ici ?
+      - Où peuvent-ils en lire plus (liens, ressources, etc.) ?
+
+      <img src="/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
+
+      Vous voulez peut-être fermer ce sujet via l'administration :wrench: (dans le coin supérieur droit et le bas) afin que des réponses ne s'accumulent pas après une annonce.
   lounge_welcome:
     title: "Bienvenue dans le salon"
     body: |2
@@ -834,7 +851,7 @@ fr:
     summary_posts_required: "Nombre minimum de messages dans un sujet avant que le 'Résumé du sujet' soit activé"
     summary_likes_required: "Nombre de J'aime minimum dans un sujet avant que le 'Résumé du sujet' soit activé"
     summary_percent_filter: "Quand un utilisateur clique sur « Résumer ce sujet », montrer le top % des messages"
-    summary_max_results: "Nombre maximum de messages retournés par 'Résumé de ce sujet'"
+    summary_max_results: "Nombre maximum de messages retournés par « Résumer ce sujet »"
     enable_private_messages: "Autoriser les utilisateurs de niveau de confiance 1 à créer des messages et à répondre (configurable via le niveau de confiance minimum pour envoyer des messages). Notez que les responsables peuvent toujours envoyer des messages."
     enable_long_polling: "Utiliser les requêtes longues pour le flux de notifications."
     long_polling_base_url: "Racine de l'URL utilisée pour les requêtes longues (dans le cas de l'utilisation d'un CDN pour fournir du contenu dynamique, pensez à le configurer en mode \"origin pull\") par exemple : http://origin.site.com"
@@ -999,16 +1016,16 @@ fr:
     enable_flash_video_onebox: "Activer l'utilisation de swf et flv (Adobe Flash) dans les boites imbriquées. ATTENTION : cela pourrait introduire un risque de sécurité."
     default_invitee_trust_level: "Niveau de confiance par défaut (0-4) pour les invités."
     default_trust_level: "Niveau de confiance par défaut (entre 0 et 4) pour tous les nouveaux utilisateurs. ATTENTION ! Changer ce paramètre peut vous exposer à des spams."
-    tl1_requires_topics_entered: "A combien de sujet un nouvel utilisateur doit avoir participé pour être promu au niveau de confiance 1."
+    tl1_requires_topics_entered: "À combien de sujets un nouvel utilisateur doit avoir participé pour être promu au niveau de confiance 1."
     tl1_requires_read_posts: "Combien de messages un nouvel utilisateur doit avoir lu pour être promu au niveau de confiance 1."
     tl1_requires_time_spent_mins: "Combien de minutes un nouvel utilisateur doit avoir passées à lire des messages pour être promu au niveau de confiance 1."
-    tl2_requires_topics_entered: "A combien de sujet un utilisateur doit avoir participé pour être promu au niveau de confiance 2."
+    tl2_requires_topics_entered: "À combien de sujets un utilisateur doit avoir participé pour être promu au niveau de confiance 2."
     tl2_requires_read_posts: "Combien de message un utilisateur doit avoir lu pour être promu au niveau de confiance 2."
     tl2_requires_time_spent_mins: "Combien de minutes un utilisateur doit avoir passées à lire des messages pour être promu au niveau de confiance 2."
     tl2_requires_days_visited: "Combien de jours un utilisateur doit visiter le site pour être promu au niveau de confiance 2."
     tl2_requires_likes_received: "Combien de J'aime un utilisateur doit recevoir pour être promu au niveau de confiance 2."
     tl2_requires_likes_given: "Combien de J'aime un utilisateur doit donner pour être promu au niveau de confiance 2."
-    tl2_requires_topic_reply_count: "A combien de sujet un utilisateur doit avoir participé pour être promu au niveau de confiance 2."
+    tl2_requires_topic_reply_count: "À combien de sujets un utilisateur doit avoir participé pour être promu au niveau de confiance 2."
     tl3_time_period: "Période de temps requise pour accéder au niveau de confiance 3 (en jours)"
     tl3_requires_days_visited: "Nombre minimum de jours qu'un utilisateur doit avoir passé sur le site dans les (tl3 time period) derniers jours pour être éligible au niveau de confiance 3. Fixer à plus que la période pour désactiver les promotions. (0 ou plus)"
     tl3_requires_topics_replied_to: "Nombre minimum de sujets auquel un utilisateur doit avoir répondu dans les (tl3 time period) derniers jours pour être éligible au niveau de confiance 3. (0 ou plus)"
@@ -1155,10 +1172,12 @@ fr:
     public_user_custom_fields: "Une liste blanche des champs personnalisés pour un utilisateur  qui peuvent être affichés publiquement."
     staff_user_custom_fields: "Une liste blanche des champs personnalisés pour un utilisateur qui peuvent être vus par l'équipe."
     enable_user_directory: "Fournir un répertoire des utilisateurs"
+    enable_group_directory: "Proposer un répertoire pour parcourir les groupes"
     allow_anonymous_posting: "Permettre aux utilisateurs de passer en mode anonyme"
     anonymous_posting_min_trust_level: "Le niveau de confiance minimum pour passer en mode anonyme."
     anonymous_account_duration_minutes: "Pour protéger l'anonymat, créer un nouveau compte anonyme tous les N minutes pour chaque utilisateur. Exemple: si 600 est choisi, dès 600 minutes après le dernier message ET que l'utilisateur passe en mode anonyme, un nouveau compte anonyme lui sera crée."
     hide_user_profiles_from_public: "Cacher les cartes, les profils et le répertoire d'utilisateurs aux visiteurs."
+    user_website_domains_whitelist: "Les sites Web des utilisateurs vont être vérifiés contre ces domaines. Liste délimitée par des pipes (|)."
     allow_profile_backgrounds: "Autoriser les utilisateurs à envoyer des arrières-plans de profil."
     sequential_replies_threshold: "Nombre de messages successifs qu'un utilisateur peut poster dans un sujet avant d'être averti d'avoir posté un nombre excessif de réponses qui se suivent."
     enable_mobile_theme: "Les appareils mobiles utilisent un thème adapté aux mobiles, avec la possibilité de passer à la totalité du site. Désactivez cette option si vous voulez utiliser une feuille de style personnalisée qui répond à tous les types de client."
@@ -1270,11 +1289,11 @@ fr:
       invalid_string_min_max: "Doit être compris(e) entre %{min} et %{max} caractères."
       invalid_string_min: "Doit être d'au moins %{count} caractères."
       invalid_string_max: "Ne doit pas être supérieur à %{max} caractères."
-      invalid_reply_by_email_address: "La valeur doit contenir '%{reply_key}' et être différente de la notification email."
-      invalid_alternative_reply_by_email_addresses: "Toutes les valeurs doivent contenir '%{reply_key}' et être différentes de l'adresse courriel de notification."
-      pop3_polling_host_is_empty: "Vous devez indiquer le \"nom d'un serveur pop3\" avant d'activer le relevé via POP3."
-      pop3_polling_username_is_empty: "Vous devez indiquer le \"login utilisateur pop3\" avant d'activer le relevé via POP3."
-      pop3_polling_password_is_empty: "Vous devez indiquer le \"mot de passe pop3\" avant d'activer le relevé via POP3."
+      invalid_reply_by_email_address: "La valeur doit contenir « %{reply_key} » et être différente du courriel de notification."
+      invalid_alternative_reply_by_email_addresses: "Toutes les valeurs doivent contenir « %{reply_key} » et être différentes du courriel de notification."
+      pop3_polling_host_is_empty: "Vous devez définir « pop3 polling host » avant d'activer le relevé via POP3."
+      pop3_polling_username_is_empty: "Vous devez définir « pop3 polling username » avant d'activer le relevé via POP3."
+      pop3_polling_password_is_empty: "Vous devez définir « pop3 polling password » avant d'activer le relevé via POP3."
       pop3_polling_authentication_failed: "Echec d'authentication POP3. Veuillez contrôler vos détails POP3."
       reply_by_email_address_is_empty: "Vous devez renseigner une 'adresse de réponse par courriel' avant d'activer la réponse par courriel."
       email_polling_disabled: "Vous devez activer le relevé manuel ou via POP3 avant d'activer les réponses par courriel."
@@ -1400,6 +1419,8 @@ fr:
     ip_address:
       blocked: "Les nouvelles inscriptions ne sont pas acceptées depuis votre adresse IP."
       max_new_accounts_per_registration_ip: "Les nouvelles inscriptions ne sont pas autorisées depuis votre adresse IP (limite atteinte). Contactez un responsable."
+    website:
+      domain_not_allowed: "Site Web invalide. Les domaines autorisés sont : %{domains}"
   flags_reminder:
     flags_were_submitted:
       one: "Un signalement a été soumis il y a plus d'une heure. Veuillez la passer en revue."
