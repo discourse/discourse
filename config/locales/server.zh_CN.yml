@@ -310,7 +310,24 @@ zh_CN:
   meta_category_description: "讨论该站点的站务、组织、如何运作和如何改善它。"
   staff_category_name: "管理人员"
   staff_category_description: "管理人员可见的分类。只有管理员和版主才能阅览主题。"
+  assets_topic_title: "站点设计资料"
   assets_topic_body: "这是一个永久主题，仅对管理人员可见，用于存储论坛设计使用的图像和文件。不要删除它！\n\n\n详细教程：\n\n\n1. 回复到这个主题。\n2. 上传你想用作站点标志、图标和其他所有图片到这儿。（使用帖子编辑器工具栏中的上传图标，或者拖拽或者粘贴图像。）\n3. 提交你的回复添加帖子。\n4. 在你的新帖子里右键点击图片获得这些已上传图片的链接，或者点击编辑按钮来编辑帖子，获得到图片的相对地址。复制这些相对地址。\n5. 粘贴这些图像的路径到[基础设置](/admin/site_settings/category/required)。\n\n\n如果你需要运行额外的上传文件类型，在[文件设置](/admin/site_settings/category/files)中编辑 `authorized_extensions`。"
+  discourse_welcome_topic:
+    title: "欢迎来到 Discourse"
+    body: |2
+
+      置顶主题的第一段是访客在主页看到的欢迎消息。这很重要！
+
+      **编辑**它作为社群的简要介绍：
+
+      - 什么人想参与？
+      - 他们能在这找到什么？
+      - 为什么他们要来这？
+      - 他们能在哪里阅读更多的内容（链接、资源等）？
+
+      <img src="/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
+
+      你可能想要在管理 :wrench: （右上角）中关闭这个主题，这样回复就不会积压在这个通告下。
   lounge_welcome:
     title: "欢迎来到贵宾室"
     body: |2
@@ -1115,10 +1132,12 @@ zh_CN:
     public_user_custom_fields: "可公开显示的用户自定义属性白名单"
     staff_user_custom_fields: "可给管理人员公开显示的用户自定义属性白名单。"
     enable_user_directory: "提供可供浏览的用户目录"
+    enable_group_directory: "提供可供浏览的群组目录"
     allow_anonymous_posting: "允许用户切换至匿名模式"
     anonymous_posting_min_trust_level: "启用匿名发帖所需的最小信任等级"
     anonymous_account_duration_minutes: "为了匿名性，为每个用户每 N 分钟创建一个匿名账户。例如：如果设置为 600，只要发帖后 600 分钟到了，并且用户切换至了匿名模式，就会创建一个新的匿名账户。"
     hide_user_profiles_from_public: "不对来访用户显示用户信息卡、用户资料和用户目录。"
+    user_website_domains_whitelist: "用户网站要属于这些域名中。用 | 分割。"
     allow_profile_backgrounds: "允许用户上传个人资料背景图片。"
     sequential_replies_threshold: "在被提醒回复了太多连续的回复前，用户在主题中可以连续回复的帖子的数量。"
     enable_mobile_theme: "为移动设备启用移动友好的主题，但也能切换回完整站点。如果你想要使用自定义的响应式主题请禁用它。"
@@ -1349,6 +1368,8 @@ zh_CN:
     ip_address:
       blocked: "不允许从你的 IP 地址注册新用户。"
       max_new_accounts_per_registration_ip: "不允许从你的 IP 地址注册新用户（达到上限）。联系一个管理人员。"
+    website:
+      domain_not_allowed: "网站无效。允许的域名有：%{domains}"
   flags_reminder:
     flags_were_submitted:
       other: "这些标记在过去 %{count} 小时内被提交。请审核他们。"

@@ -17,14 +17,32 @@ zh_TW:
   date:
     month_names: [null, 一月, 二月, 三月, 四月, 五月, 六月, 七月, 八月, 九月, 十月, 十一月, 十二月]
     <<: *datetime_formats
+  time:
+    am: "AM"
+    pm: "PM"
+    <<: *datetime_formats
   title: "論壇"
   topics: "討論話題"
   posts: "文章"
   loading: "載入中"
   powered_by_html: 'Powered by <a href="http://www.discourse.org">Discourse</a>, 請啟用 Javascript 以獲得最佳瀏覽效果'
   log_in: "登入"
+  purge_reason: "自動當成遺棄、未啟動的帳號刪除"
   disable_remote_images_download_reason: "磁盤空間不足，圖像下載已被禁用。"
   anonymous: "匿名"
+  emails:
+    incoming:
+      default_subject: "收入email從%{email}"
+      show_trimmed_content: "顯示之前刪除的內容"
+      maximum_staged_user_per_email_reached: "以達成分期使用者能創造的最大數量信件"
+      errors:
+        empty_email_error: "當收到的未加工訊息是空白時發生"
+        no_message_id_error: "當信件沒有訊息名稱時發生"
+        inactive_user_error: "當寄件者不是主動時發生"
+        blocked_user_error: "當寄件者被阻擋時發生"
+        strangers_not_allowed_error: "當使用者想在不屬於他的分類中開創一個新的主題時發生"
+        topic_not_found_error: "當得到回應，但相關主題已經被刪除時發生"
+        topic_closed_error: "當得到回應，但相關主題已經被關閉時發生"
   errors: &errors
     format: '%{attribute} %{message}'
     messages:
@@ -44,6 +62,7 @@ zh_TW:
       has_already_been_used: "已經被使用"
       inclusion: 不包括在這列表中
       invalid: 無效的
+      is_invalid: "似乎不清楚，這是個完整的句子嗎?"
       less_than: 必須少於 %{count}
       less_than_or_equal_to: 必須少於或等於 %{count}
       not_a_number: 不是數字
@@ -71,6 +90,9 @@ zh_TW:
       min_username_length_range: "你不能設定「最小」大於「最大」。"
       max_username_length_exists: "您不能設置比現有用戶名短的「最大用戶名長度」。"
       max_username_length_range: "你不能設定「最大」小於「最小」。"
+  bulk_invite:
+    file_should_be_csv: "上傳檔必須是CSV的格式"
+    error: "上傳檔案有錯誤，請再試一次。"
   backup:
     operation_already_running: "%{operation} 操作正在運行。 目前無法執行新的 %{operation} 操作。"
     backup_file_should_be_tar_gz: "備份檔案應使用 .tar.gz 歸檔"
@@ -79,11 +101,17 @@ zh_TW:
   not_found: "所請求的URL或資源無法找到。"
   invalid_access: "你不允許查看所請求的資源。"
   read_only_mode_enabled: "這個網站目前在唯讀模式，無法進行互動功能。"
+  reading_time: "看時間"
+  likes: "讚"
   too_many_replies:
     other: "我們非常抱歉，新用戶被臨時限制在同一個主題上，只能回覆 %{count} 次"
   embed:
     start_discussion: "開始討論"
     continue: "繼續討論"
+    error: "錯誤嵌入"
+    referer: "引薦"
+    mismatch: "引薦來源與下列任何主機不符"
+    no_hosts: "未設置嵌入的主機"
     more_replies:
       other: "%{count} 個更多回覆"
     loading: "討論串載入中⋯"
@@ -92,11 +120,27 @@ zh_TW:
     in_reply_to: "▶ %{username}"
     replies:
       other: "%{count} 個回覆"
+  no_mentions_allowed: "抱歉，你不能提及其他使用者"
+  too_many_mentions:
+    other: "抱歉，你只能提及帖子中%{count} 的使用者"
+  no_mentions_allowed_newuser: "抱歉，新使用者不能提及其他使用者"
+  too_many_mentions_newuser:
+    other: "抱歉，新使用者只能提及帖子中%{count}的使用者。"
+  no_images_allowed: "抱歉，新使用者不能在帖子中發布圖片"
+  too_many_images:
+    other: "抱歉，新者用者只能在帖子裡放%{count}張圖片"
+  no_attachments_allowed: "抱歉，新使用者不能在帖子中發布附件"
+  too_many_attachments:
+    other: "抱歉，新使用者只能在帖子裡發布%{count} 個附件"
+  no_links_allowed: "抱歉，新使用者不能在帖子裡放置連結"
+  too_many_links:
+    other: "抱歉，新使用者只能在帖子裡放置%{count}個連結"
   spamming_host: "抱歉，你不能張貼該網站之連結。"
   user_is_suspended: "被停權的用戶無法張貼文章。"
   topic_not_found: "出現問題。也許這個話題被關閉或刪除。"
   just_posted_that: "與你最近發表的內容太相似"
   invalid_characters: "包含無效字詞"
+  is_invalid: "似乎不清楚，這是個完整的句子嗎?"
   next_page: "下一頁 &rarr;"
   prev_page: "← 上一頁"
   page_num: "%{num} 頁"
@@ -112,13 +156,23 @@ zh_TW:
   rss_description:
     latest: "最新討論話題"
     hot: "熱門討論話題"
+    top: "熱門話題"
     posts: " 最近文章"
+    private_posts: "最近的私人訊息"
+    group_posts: "%{group_name}發布的最新帖子"
+    group_mentions: "%{group_name}最近提及的事物"
+    user_posts: "@%{username}發布的最新公告"
+    user_topics: "@%{username}發布的最新主題"
   too_late_to_edit: "這文章建立很久了，它已經無法被編輯或刪除"
+  revert_version_same: "你試圖回復的版本和當前版本相同。"
   excerpt_image: "圖片"
   groups:
     errors:
       member_already_exist: "'%{username}' 已經是群組成員了。"
       invalid_domain: "'%{domain}' 不是有效的域名."
+      invalid_incoming_email: "'%{email}'不是有效的電子郵件位址"
+      email_already_used_in_group: "'%{email}' 已經被組織'%{group_name}'使用"
+      email_already_used_in_category: "'%{email}'已經被分類 '%{category_name}'使用"
     default_names:
       everyone: "所有人"
       admins: "管理員"
@@ -141,11 +195,14 @@ zh_TW:
 
       - 歡迎有建設性的評論，但是評論的應該是觀點，而不是人身攻擊。
 
-      欲查看更多，[請查看我們的社群准則](/guidelines)。此訊息面板只會在你發表前 %{education_posts_text} 時顯示。
+      欲查看更多，[請查看我們的社群守則](/guidelines)。此訊息面板只會在你發表前 %{education_posts_text} 時顯示。
   activerecord:
     attributes:
       category:
         name: "分類名稱"
+      topic:
+        title: '標題'
+        featured_link: '有特色的連結'
       post:
         raw: "內容"
       user_profile:
@@ -159,18 +216,24 @@ zh_TW:
               too_many_users: "你只能同時傳送警告給一位用戶。"
               cant_send_pm: "抱歉，你不能向該用戶發送私人訊息。"
               no_user_selected: "你必須選擇有效用戶。"
+            featured_link:
+              invalid_category: "在這個分類中無法編輯"
         user:
           attributes:
             password:
               common: "這個密碼是 10000 個最常用密碼之一，請使用一個更安全的密碼"
               same_as_username: "與你的使用者名稱相同。請使用其他更安全的密碼。"
               same_as_email: "與你的電郵相同。請使用其他更安全的密碼。"
+              same_as_current: "與你當前的密碼相同"
             ip_address:
               signup_not_allowed: "不能使用這個帳戶進行登入"
         color_scheme_color:
           attributes:
             hex:
               invalid: "不是一個有效顏色"
+        post_reply:
+          base:
+            different_topic: "帖子和回復必須都是回在相同的主題"
       <<: *errors
   user_profile:
     no_info_me: "<div class='missing-profile'>你的自我簡介中，“關於我” 部分目前還沒有內容，<a href='/users/%{username_lower}/preferences/about-me'>不如來自我介紹一下？</a></div>"
@@ -180,6 +243,8 @@ zh_TW:
   meta_category_description: "討論這個網站、整體的組織規劃、社群的運作方式、以及我們該如何改善這些事務。"
   staff_category_name: "管理員"
   staff_category_description: "讓工作人員進行討論的私人分類。此分類下的討論話題只有管理員與板主才看得到。"
+  discourse_welcome_topic:
+    title: "歡迎來到Discourse"
   lounge_welcome:
     title: "歡迎來到貴賓室"
   category:
@@ -188,6 +253,9 @@ zh_TW:
       uncategorized_parent: "未分類不能有一個父分類"
       self_parent: "一個子分類的上層不能是自己"
       depth: "你不能在子分類下再包含子分類"
+      invalid_email_in: "'%{email}'不是有效的電子郵件位址"
+      email_already_used_in_group: "%{email}' 已經被組織'%{group_name}'使用"
+      email_already_used_in_category: "%{email}'已經被分類 '%{category_name}'使用"
     cannot_delete:
       uncategorized: "不能刪除該分類"
       has_subcategories: "不能刪除該分類，因為它有子分類"
@@ -202,9 +270,19 @@ zh_TW:
     member:
       title: "成員"
   rate_limiter:
+    slow_down: "你重複這個行動太多次了，請稍後再試"
     too_many_requests: "你的瀏覽速度過於頻繁，請等待 %{time_left} 後再試。"
     by_type:
+      create_topic: "你創建主題過於快速。請等待 %{time_left}再行嘗試"
       create_post: "你的回覆過快。請等待%{time_left}再重試。"
+      delete_post: "你刪除主題過於快速。請等待 %{time_left}再行嘗試"
+      public_group_membership: "你加入/離開團隊過於頻繁。請等待 %{time_left}再行嘗試"
+      topics_per_day: "你今天發布的主題已經達到上限次數。請等待%{time_left}再行嘗試。"
+      pms_per_day: "你今天發表的訊息已經達到上限次數。請等待%{time_left}再行嘗試。"
+      create_like: "你今天發表讚的次數已經達到上限。請等待%{time_left}再行嘗試。"
+      create_bookmark: "你今天存取的書籤已經達到上限次數。請等待%{time_left}再行嘗試。"
+      edit_post: "你今天編輯的次數已經達到上限。請等待%{time_left}再行嘗試。"
+      live_post_counts: "你要求即時帖子過於快速。請等待%{time_left}再行嘗試。"
     hours:
       other: "%{count} 小時"
     minutes:
@@ -293,10 +371,12 @@ zh_TW:
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: '不當內容'
-      description: '此帖內容包含對他人的攻擊、侮辱、仇視語言或違反了<a href="/guidelines">我們的社群准則</a>。'
+      description: '此帖內容包含對他人的攻擊、侮辱、仇視語言或違反了<a href="/guidelines">我們的社群守則</a>。'
       long_form: '投訴為不當內容'
     notify_user:
       title: '給 @{{username}} 送出一則訊息'
+      description: '我想要直接且隱密的和那個人討論這個帖子'
+      long_form: '訊息使用者'
       email_title: '你的文章在"%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
@@ -314,6 +394,11 @@ zh_TW:
       title: '投票'
       description: '投票給此文章'
       long_form: '已投票給此文章'
+  user_activity:
+    no_bookmarks:
+      others: "沒有書籤"
+    no_likes_given:
+      self: "你沒有喜歡任何帖子"
   topic_flag_types:
     spam:
       title: '垃圾內容'
@@ -321,7 +406,7 @@ zh_TW:
       long_form: '投訴為垃圾內容'
     inappropriate:
       title: '不當內容'
-      description: '此主題內容包含對他人的攻擊、侮辱、仇視語言或違反了<a href="/guidelines">我們的社群准則</a>。'
+      description: '此主題內容包含對他人的攻擊、侮辱、仇視語言或違反了<a href="/guidelines">我們的社群守則</a>。'
       long_form: '投訴為不當內容'
     notify_moderators:
       title: "其他"
@@ -338,6 +423,8 @@ zh_TW:
       message:
         make: "本主題現在是橫幅主題。它將出現在每頁的頂部，除非用戶將其隱藏。"
         remove: "本主題已經不再是橫幅主題。它將不在每個頁面的頂部顯示。"
+  unsubscribe:
+    stop_watching_topic: "停止觀看這個主題， %{link}"
   reports:
     visits:
       title: "用戶瀏覽量"
@@ -774,8 +861,39 @@ zh_TW:
   system_messages:
     welcome_user:
       subject_template: "歡迎來到 %{site_name}！"
+      text_body_template: |+
+        感謝你加入%{site_name}，歡迎討論！
+
+        %{new_user_tips}
+
+        我們相信始終相信[公民社群守則](%{base_url}/guidelines) 。好好享受你在論壇的時光！
+
+        （如果身為新的使用者你需要聯絡[工作人員](%{base_url}/about)，請直接回覆本訊息）
+
     welcome_invite:
       subject_template: "歡迎來到 %{site_name}！"
+      text_body_template: |+
+        歡迎你接受邀請加入 %{site_name} 的 Discourse。
+
+        你已經登入你的新帳號 **%{username}** 。你可以在[你的個人檔案][prefs]更改你的使用者名稱。
+
+        之後要再登入：
+
+        1. 永遠 **使用當初註冊的 email ** 登入，不然我們不知道是你！
+
+        2. 為[你的個人檔案][prefs]創立一個獨立的密碼，用它登入。
+
+        %{new_user_tips}
+
+        我們相信[公民社群守則](%{base_url}/guidelines)。
+
+        享受你在 Discourse 上的時光！
+
+        (如果身為新的使用者你需要聯絡[工作人員](%{base_url}/about) ，請直接回覆此訊息。
+
+        [prefs]: %{user_preferences_url}
+
+
     backup_succeeded:
       subject_template: "備份成功完成"
     backup_failed:
@@ -836,6 +954,12 @@ zh_TW:
       subject_template: "[%{site_name}] 設定密碼"
     account_created:
       subject_template: "[%{site_name}] 你的新帳號"
+    confirm_new_email:
+      subject_template: "[%{site_name}] 確認你的電子郵件位址"
+      text_body_template: |
+        點擊以下連結確認你在[%{site_name}]上的新電子郵件：
+
+        %{base_url}/users/authorize-email/%{email_token}
     signup_after_approval:
       subject_template: "你已受到 %{site_name} 的認可！"
     signup:
@@ -901,8 +1025,11 @@ zh_TW:
     submit_button: "送出電子郵件"
   performance_report:
     initial_topic_title: 網站效能報表
-  time:
-    <<: *datetime_formats
+  finish_installation:
+    register:
+      button: "註冊"
+  safe_mode:
+    title: "進入安全模式"
   activemodel:
     errors:
       <<: *errors

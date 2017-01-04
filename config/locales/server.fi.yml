@@ -126,6 +126,10 @@ fi:
     start_discussion: "Lisää kommentti"
     continue: "Siirry keskusteluun"
     error: "Virhe upotettaessa"
+    referer: "Referer-viite:"
+    mismatch: "Referer-viite ei täsmää mihinkään näistä isännistä:"
+    no_hosts: "Isäntiä ei ole määritetty upotusta varten."
+    configure: "Määritä upottaminen"
     more_replies:
       one: "1 muu kommentti"
       other: "%{count} muuta kommenttia"
@@ -321,7 +325,24 @@ fi:
   meta_category_description: "Keskustelua tästä sivustosta, sen järjestämisestä, siitä miten se toimii ja miten sitä voisi parantaa."
   staff_category_name: "Henkilökunta"
   staff_category_description: "Yksityinen alue henkilökunnan keskusteluille. Ketjut näkyvät ainoastaan ylläpitäjille ja valvojille."
+  assets_topic_title: "Sivuston designiin liittyviä hyödykkeitä"
   assets_topic_body: "Tämä on pysyvä ketju, joka näkyy ainoastaan henkilökunnalle. Se on tarkoitettu sivuston käyttämien kuvien ja muiden tiedostojen tallentamiseen. Älä poista sitä!\n\n\nTässä ova ohjeet sen käyttämiseen:\n\n\n1. Vastaa tähän ketjuun.\n2. Lataa kaikki kuvat, joita haluat käyttää logoina, faviconina jne tänne. (Käytä viestieditorin työkalupalkin painiketta, tai raahaa tai liitä kuvat).\n3. Lähetä viesti\n4. Klikkaa hiiren oikealla näppäimellä, tai klikkaa muokkaa-näppäintä muokataksesi viestiäsi, jotta saat kuvien polun näkyviin. Kopioi talteen polut kuviin.\n5. Liitä kuvien polut [perusasetuksiin](/admin/site_settings/category/required).\n\n\nLisäksi, jos sinun täytyy sallia uusia tiedostomuotoja, muokkaa `sallitut tiedostopäätteet` listaa [tiedostojen asetuksissa](/admin/site_settings/category/files)."
+  discourse_welcome_topic:
+    title: "Tervetuloa käyttämään Discoursea"
+    body: |2
+
+      Tämän kiinnitetyn ketjun ensimmäinen kappale on sivustolla vierailevalle näkyvä tervetulotoivotus. Se on tärkeä!
+
+      **Muokkaa tästä** tiivis kuvaus yhteisöstäsi:
+
+      - Kenelle se on suunnattu?
+      - Mistä täällä keskustellaan?
+      - Miksi heidän kannattaa käydä täällä?
+      - Mistä he löytävät lisätietoa (linkkejä, ohjeita jne.)?
+
+      <img src="/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
+
+      Saattaa olla hyvä sulkea tämä ketju ylläpitäjän :wrench: -valikon kautta (oikealla ylhäällä sekä sivun pohjalla), jottei vastauksia kasaannu ilmoituksen alle.
   lounge_welcome:
     title: "Tervetuloa Loungeen"
     body: |2
@@ -783,6 +804,8 @@ fi:
     max_topic_title_length: "Viestin otsikon merkkien maksimimäärä"
     min_private_message_title_length: "Viestin otsikon merkkien minimimäärä viestille"
     min_search_term_length: "Haun merkkien minimimäärä"
+    search_prefer_recent_posts: "Jos hakeminen suurelta palstaltasi on hidasta, tämä asetus kokeilee hakemistorakennetta, jossa tuoreimmat viestit ovat ensin"
+    search_recent_posts_size: "Kuinka monta tuoretta viestiä pidetään hakemistossa"
     allow_uncategorized_topics: "Salli ketjujen luominen valitsematta aluetta. VAROITUS: Alueettomat ketjut täytyy siirtää jollekin alueelle ennen kuin poistat asetuksen käytöstä."
     allow_duplicate_topic_titles: "Salli ketjun luominen identtisellä otsikolla."
     unique_posts_mins: "Kuinka monen minuutin kuluttua käyttäjä voi lähettää uudestaan samansisältöisen viestin"
@@ -824,6 +847,7 @@ fi:
     notification_email: "Sähköpostiosoite, josta kaikki tärkeät järjestelmän lähettämät sähköpostiviestit lähetetään. Verkkotunnuksen SPF, DKIM ja reverse PTR tietueiden täytyy olla kunnossa, jotta sähköpostit menevät perille."
     email_custom_headers: "Pystyviivalla eroteltu lista mukautetuista sähköpostin tunnisteista"
     email_subject: "Mukauta sähköpostiviestien otsikon muoto. Katso englanninkielinen ohje: https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801"
+    force_https: "Pakota sivusto käyttämään vain HTTPS:ää. VAROITUS: älä ota tätä käyttöön ennen kuin HTTPS on täysin käytössä ja toimii täysin kaikkialla! Tarkastitko käyttämäsi CDN, kaikki sosiaaliset kirjautumiset ja kaikki ulkoiset logot / muut riippuvuudet ovat myös HTTPS-yhteensopivia?"
     summary_score_threshold: "Viestin minimipistemäärä, jotta se näytetään ketjun tiivistelmässä."
     summary_posts_required: "Montako viestiä ketjussa täytyy olla, jotta ketjun tiivistelmä otetaan käyttöön"
     summary_likes_required: "Montako tykkäystä ketjussa pitää olla, jotta ketjun tiivistelmä otetaan käyttöön"
@@ -950,6 +974,7 @@ fi:
     top_topics_formula_log_views_multiplier: "katselukertojen logaritmin kerroin (n) Huiput-listauksen kaavassa: `log(katselut) * (n) + avausviestin tykkäykset * 0.5 + PIENEMPI(tykkäysten määrä / viestien määrä, 3) + 10 + log(viestien määrä)`"
     top_topics_formula_first_post_likes_multiplier: "avausviestin tykkäysmäärän kerroin (n) Huiput-listauksen kaavassa: `log(katselut) * 2 + avausviestin tykkäykset * (n) + PIENEMPI(tykkäysten määrä / viestien määrä, 3) + 10 + log(viestien määrä)`"
     top_topics_formula_least_likes_per_post_multiplier: "tykkäykset/viestit -suhteen enimmäisarvo (n) Huiput-listauksen kaavassa: `log(katselut) * 2 + avausviestin tykkäykset * 0.5 + PIENEMPI(tykkäysten määrä / viestien määrä, (n)) + 10 + log(viestien määrä)`"
+    rebake_old_posts_count: "Kuinka monta vanhaa viestiä rakennetaan uudelleen 15 minuutissa."
     rate_limit_create_topic: "Ketjun luomisen jälkeen käyttäjän täytyy odottaa (n) sekuntia voidakseen luoda uuden ketjun."
     rate_limit_create_post: "Viestin luomisen jälkeen käyttäjän täytyy odottaa (n) sekuntia voidakseen luoda uuden viestin."
     rate_limit_new_user_create_topic: "Ketjun luomisen jälkeen uuden käyttäjän täytyy odottaa (n) sekuntia voidakseen luoda uuden ketjun."
@@ -983,6 +1008,7 @@ fi:
     external_system_avatars_enabled: "Käytä ulkopuolista avatarpalvelua."
     external_system_avatars_url: "Ulkoisen avatarpalvelun URL. Sallitut vaihdokset ovat {username} {first_letter} {color} {size}"
     default_opengraph_image_url: "Oletuksena käytettävän opengraph-kuvan URL."
+    twitter_summary_large_image_url: "Oletuksena käytettävän Twitter-tiivistelmäkortin kuva (tulisi olla leveydeltään ainakin 280 px leveä ja 150 px korkea)."
     allow_all_attachments_for_group_messages: "Sali kaikki sähköpostiliitteet ryhmäviestessä."
     convert_pasted_images_to_hq_jpg: "Muuta liitetyt kuvat korkealaatuisiksi JPG-tiedostoiksi"
     convert_pasted_images_quality: "Muunnetun JPG-tiedoston laatu (1 on huonoin laatu, 100 on paras laatu)."
@@ -1099,6 +1125,10 @@ fi:
     bounce_score_threshold: "Palautuspistemäärä, jonka ylityttyä käyttäjälle ei lähetetä sähköpostia."
     bounce_score_threshold_deactivate: "Palautuspistemäärä, jonka ylityttyä käyttäjätili poistetaan käytöstä."
     reset_bounce_score_after_days: "Nollaa palautuspisteet X päivä kuluttua."
+    attachment_content_type_blacklist: "Lista avainsanoja, jota käytetään liitteiden estämisessä niiden sisältötyypin perusteella."
+    attachment_filename_blacklist: "Lista avainsanoja, jota käytetään liitteiden estämisessä niiden tiedostonimen perusteella."
+    enable_forwarded_emails: "[BETA] Salli käyttäjän luoda ketju välittämällä saapunut sähköpostiviesti."
+    always_show_trimmed_content: "Näytä kaikkialla saapuvien sähköpostien karsitut osat. VAROITUS: voi paljastaa sähköpostiosoitteita."
     manual_polling_enabled: "Työnnä sähköpostit käyttäen sähköpostivastausten APIa."
     pop3_polling_enabled: "Pollaa sähköpostivastaukset POP3:lla."
     pop3_polling_ssl: "Käytä SSL-salausta yhdistettäessä POP3-palvelimeen. (Suositellaan)"
@@ -1132,15 +1162,20 @@ fi:
     delete_digest_email_after_days: "Älä lähetä sähköpostikoosteita käyttäjille, joita ei ole nähty sivustolla yli (n) päivään."
     digest_suppress_categories: "Älä liitä näiden alueiden viestejä sähköpostikoosteisiin."
     disable_digest_emails: "Poista sähköpostikoosteet kaikilta käyttäjiltä."
+    email_accent_bg_color: "Kakkosväri, jota käytetään joidenkin elementtien taustavärinä sähköpostiviesteissä. Anna värin nimi englanniksi ('red') tai sen Hex-arvo ('#FF000')."
+    email_accent_fg_color: "Sähköpostiviestin taustavärin päällä olevan tekstin väri HTML-sähköpostiviesteissä. Anna värin nimi englanniksi ('white') tai sen Hex-arvo ('#FFFFFF')."
+    email_link_color: "Linkkien väri HTML-sähköpostiviesteissä. Anna värin nimi  ('blue') tai sen Hex-arvo ('#0000FF')."
     detect_custom_avatars: "Tarkistetaanko, ovatko käyttäjät ladanneet oman profiilikuvan."
     max_daily_gravatar_crawls: "Korkeintaan kuinka monta kertaa Discourse tarkistaa avatarit Gravatarista päivässä"
     public_user_custom_fields: "Whitelist käyttäjän mukautetuista kentistä, jotka voidaan näyttää julkisesti."
     staff_user_custom_fields: "Whitelist käyttäjän mukautetuista kentistä, jotka voidaan näyttää henkilökunnalle."
     enable_user_directory: "Näytä hakemisto käyttäjistä"
+    enable_group_directory: "Tarjoa luettelo ryhmistä selailtavaksi"
     allow_anonymous_posting: "Salli käyttäjien vaihtaa anonyymiin tilaan"
     anonymous_posting_min_trust_level: "Anonyymin tilan käyttämiseen vaadittava luottamustila"
     anonymous_account_duration_minutes: "Suojellaksesi anonymiteettiä, luo uusi anonyymi tili N minuutin välein jokaiselle käyttäjälle. Esimerkki: jos arvoksi asetetaan 600, kun 600 minuuttia tulee kuluneeksi edellisestä viestistä JA käyttäjä vaihtaa anonyymiin tilaan, luodaan uusi anonyymi tili."
     hide_user_profiles_from_public: "Älä näytä käyttäjäkortteja, käyttäjäprofiileita tai käyttäjähakemistoa kirjautumattomille käyttäjille."
+    user_website_domains_whitelist: "Käyttäjän kotisivu voi olla näiden verkkotunnusten alainen. Pystyviivoin erotettu lista."
     allow_profile_backgrounds: "Salli käyttäjien ladata profiilin taustakuva."
     sequential_replies_threshold: "Kuinka monen peräkkäisen viestin jälkeen yhdessä ketjussa käyttäjää muistutetaan peräkkäisistä vastauksista."
     enable_mobile_theme: "Mobiililaitteet käyttävät erillistä teemaa ja kahden välillä on mahdollista vaihtaa. Poista asetus käytöstä, jos haluat käyttää omaa tyylitiedostoa, joka on mukautuva eri laitteille."
@@ -1152,6 +1187,7 @@ fi:
     automatically_unpin_topics: "Poista ketjun kiinnitys automaattisesti, kun käyttäjä on sen lopussa."
     read_time_word_count: "Sanamäärä minuutissa, jota käytetään lukuajan arviointiin."
     topic_page_title_includes_category: "Ketjusivu sisältää alueen nimen."
+    max_prints_per_hour_per_user: "Tulostuspyyntöjen (/print) enimmäismäärä (aseta 0 poistaaksesi käytöstä)"
     full_name_required: "Koko nimi on käyttäjäprofiilin vaadittu kohta"
     enable_names: "Näytä käyttäjän koko nimi profiilissa, käyttäjäkortissa ja sähköposteissa. Poista käytöstä piilottaaksesi koko nimen kaikkialla."
     display_name_on_posts: "Näytä käyttäjän pitkä nimi viesteissä @nimen lisäksi."
@@ -1161,11 +1197,13 @@ fi:
     default_code_lang: "Oletusarvoinen ohjelmointikieli syntaksin korostukseen Github koodiblokeissa (lang-auto, ruby, python jne.)"
     warn_reviving_old_topic_age: "Kun käyttäjä alkaa kirjoittamaan vastausta ketjuun, jonka uusin viesti on tätä vanhempi päivissä, näytetään varoitus. Poista käytöstä asettamalla arvoksi 0."
     autohighlight_all_code: "Pakota koodin korostus kaikkiin esimuotoiltuihin tekstiblokkeihin, vaikka käyttäjä ei määrittelisi kieltä."
+    highlighted_languages: "Käytettävät syntaksinkorostussäännöt. (Varoitus: liian monen ohjelmointikielen käyttö voi vaikuttaa suorituskykyyn) ks. demo https://highlightjs.org/static/demo/"
     feed_polling_enabled: "VAIN UPOTUS: Upotetaanko RSS/ATOM syöte viesteinä."
     feed_polling_url: "VAIN UPOTUS: RSS/ATOM syötteen URL."
     embed_by_username: "Sen käyttäjän Discourse käyttäjänimi, joka luo upotetut ketjut."
     embed_username_key_from_feed: "Avain, jolla erotetaan Discourse-käyttäjänimi syötteestä."
     embed_truncate: "Typistä upotetut viestit."
+    allowed_href_schemes: "Linkeissä sallitut skeemat http:n ja https:n lisäksi."
     embed_post_limit: "Upotettavien viestien maksimimäärä."
     embed_username_required: "Käyttäjänimi vaaditaan ketjun luomiseksi."
     embed_whitelist_selector: "CSS valitsin elementeille, jotka sallitaan upotetuissa viesteissä."
@@ -1209,6 +1247,7 @@ fi:
     default_categories_watching: "Lista oletuksena tarkkailtavista alueista."
     default_categories_tracking: "Lista oletuksena seurattavista alueista."
     default_categories_muted: "Lista oletuksena vaimennetuista alueista."
+    default_categories_watching_first_post: "Lista alueista, joiden ketjujen ensimmäisiä viestejä tarkkaillaan oletuksena."
     max_user_api_reqs_per_day: "Rajapintapyyntöjen päivittäinen enimmäismäärä rajapinnan avainta kohden"
     max_user_api_reqs_per_minute: "Rajapintapyyntöjen enimmäismäärä minuuttia kohden rajapinnan avainta kohden"
     allow_user_api_keys: "Salli rajapinnan käyttäjäavainten muodostaminen"
@@ -1253,6 +1292,7 @@ fi:
       reply_by_email_address_is_empty: "'reply by email address' täytyy olla asetettuna ennen sähköpostivastausten ottamista käyttöön."
       email_polling_disabled: "Sinun täytyy ottaa käyttöön joko manuaalinen tai POP3 pollaus ennen sähköpostivastauksia."
       user_locale_not_enabled: "'allow user locale' täytyy olla asetettuna ennen tämän asetuksen ottamista käyttöön."
+      invalid_regex: "Säännöllinen lauseke ei kelpaa tai ei ole sallittu."
   search:
     within_post: "#%{post_number} käyttäjältä %{username}"
     types:
@@ -1372,6 +1412,8 @@ fi:
     ip_address:
       blocked: "Uusien tilien luonti tästä IP-osoitteesta ei ole sallittu."
       max_new_accounts_per_registration_ip: "Rekisteröitymisiä ei oteta vastaan IP-osoitteestasi (maksimimäärä saavutettu). Ota yhteyttä henkilökuntaan."
+    website:
+      domain_not_allowed: "Verkkosivu ei kelpaa. Sallitus verkkotunnukset ovat: %{domains}"
   flags_reminder:
     flags_were_submitted:
       one: "Viestejä liputettiin yli tunti sitten. Tarkasta liputukset."
@@ -1579,6 +1621,11 @@ fi:
         Kuitenkin, jos viesti piilotetaan toisen kerran, se pysyy piilotettuna, kunnes henkilökunta selvittää tilanteen – josta voi olla muita seuraumuksia, kuten tilisi hyllyttäminen.
 
         Saadaksesi lisätietoja, lue [yhteisön säännöt](%{base_url}/guidelines).
+    usage_tips:
+      text_body_template: |
+        [Tässä blogikirjoituksessa](http://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/) on joitakin käteviä vinkkejä uudelle käyttäjälle.
+
+        Sitä mukaa kun toimit täällä, opimme tuntemaan sinut ja väliaikaisia uuden käyttäjän rajoitteita poistetaan automaattisesti. Ajan myötä nouset ylemmille [luottamustasoille](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924) ja saat valtuuksia joiden avulla voit osallistua yhteisömme ylläpitoon.
     welcome_user:
       subject_template: "Tervetuloa sivustolle %{site_name}!"
       text_body_template: |
@@ -2062,10 +2109,12 @@ fi:
       join_the_discussion: "Lue lisää"
       popular_posts: "Suosittuja viestejä"
       from_topic_label: "Lähettäjä"
+      more_new: "Uutta suosimissasi ketjuissa ja suosimillasi alueilla"
       subject_template: "[%{site_name}] Kooste"
       unsubscribe: "Tämä kooste lähetettiin sivustolta %{site_link}, koska emme ole nähneet sinua vähään aikaan. Jos et halua vastaanottaa näitä viestejä %{unsubscribe_link}."
       click_here: "klikkaa tästä"
       from: "%{site_name} kooste"
+      preheader: "Lyhyt yhteenveto tapahtumista viime vierailusi (%{last_seen_at}) jälkeen"
     mailing_list:
       why: "Kaikki toiminta sivustolla [%{site_name}] ajalla %{date}"
       subject_template: "[%{site_name}] Kooste ajalle %{date}"
@@ -2564,6 +2613,7 @@ fi:
       button: "Rekisteröidy"
       title: "Rekisteröi ylläpitäjätunnus"
       help: "aloita rekisteröimällä uusi tunnus"
+      no_emails: "Valitettavasti ylläpitäjän sähköpostiosoitetta ei määritetty asennuksen aikana, joten asennuksen viimeistely <a href='https://meta.discourse.org/t/how-to-create-an-administrator-account-after-install/14046'>voi olla vaikeaa</a>."
     confirm_email:
       title: "Vahvista sähköpostisi"
       message: "<p>Lähetimme vahvistusviestin osoitteeseen <b>%{email}</b>. Ota tili käyttöön seuraamalla viestin ohjeita.</p><p>Jos viesti ei saavu, varmista että näppäilit sähköpostin oikein Discourseen ja tarkista roskapostikansiosi.</p>"

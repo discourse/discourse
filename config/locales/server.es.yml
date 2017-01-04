@@ -323,7 +323,24 @@ es:
   meta_category_description: "Debate sobre este sitio, su gestión, cómo funciona y cómo podríamos mejorarlo."
   staff_category_name: "Staff"
   staff_category_description: "Categoría privada para debates entre moderadores y administradores. Los temas solo serán visibles para miembros del staff."
+  assets_topic_title: "Recursos para el diseño del sitio"
   assets_topic_body: "Este es un tema permanente, visible únicamente para miembros del staff, con el fin de almacenar las imágenes y archivos utilizados en el diseño del sitio. ¡No lo elimines!\n\n\nCómo hacerlo:\n\n\n1. Responde a este tema.\n2. Sube todas las imágenes que desees para los logos, favicons y demás aquí. (Usa el icono de la barra de herramientas en el editor o arrastra y suelta las imágenes o pégalas). \n3. Publica tu respuesta.\n4. Haz clic con el botón derecho en las imágenes de tu nuevo post para obtener la ruta donde están subidas, o haz clic en el icono de editar para ver estas rutas en el panel de edición. Copia las rutas.\n5. Pega las rutas a las imágenes en [ajustes básicos](/admin/site_settings/category/required).\n\n\nSi necesitas habilitar la subida de diferentes tipos de archivo, edita `authorized_extensions` en las opciones de [archivos](/admin/site_settings/category/files)."
+  discourse_welcome_topic:
+    title: "Bienvenido a Discourse"
+    body: |2
+
+      El primer párrafo de este tema destacado (tema fijo) será visible para todos los usuarios como mensaje de bienvenida en tu página principal. Es importante!
+
+      **Estia esto** con un resumen de lo que es tu comunidad:
+
+      - ¿Para quiénes es?
+      - ¿Qué pueden encontrar aquí?
+      - ¿Por qué deben venir aquí?
+      - ¿Dónde pueden leer más sobre la comunidad (enlaces, recursos, etc)?
+
+      <img src="/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
+
+      Quizás quieras "cerrar" este tema :wrench: (en la parte superior derecha o en la parte de abajo), para que las nuevas respuestas no se sumen en el anuncio.
   lounge_welcome:
     title: "Bienvenido a la Sala VIP"
     body: |2
@@ -921,6 +938,7 @@ es:
     sso_overrides_name: "Sobreescribe el nombre completo con el que provee el payload del SSO en cada registro, y previene cambios locales."
     sso_overrides_avatar: "Sustituye el avatar de usuario con el avatar proveniente del sitio externo configurado para el SSO. Si se activa esta opción, se recomienda encarecidamente deshabilitar allow_uploaded_avatars"
     sso_not_approved_url: "Redireccionar cuentas SSO sin aprobar a esta URL"
+    sso_allows_all_return_paths: "No restringe el dominio para return_paths provisto por SSO (por defecto, el return_paths debe ser sobre el sitio actual)."
     enable_local_logins: "Habilitar las cuentas con nombre de usuario y contraseña de forma local. (Nota: esto debe estar habilitado para que funcionen las invitaciones)"
     allow_new_registrations: "Permitir el registro de nuevos usuarios. Desactiva esta opción para prevenir que nadie pueda crear una nueva cuenta."
     enable_signup_cta: "Mostrar un aviso a los usuarios anónimos que vuelvan a visitar el sitio animándoles a registrarse."
@@ -1669,12 +1687,26 @@ es:
         Tu cuenta no tiene el nivel de confianza necesario para publicar nuevos temas a esta dirección de email. Si crees que se trata de un error, contacta a un miembro del staff.
     email_reject_user_not_found:
       subject_template: "[%{site_name}] Problema de email -- Usuario no encontrado"
+    email_reject_screened_email:
+      subject_template: "[%{site_name}] Problema con el correo electrónico -- Correo bloqueado"
+      text_body_template: |
+        Lo sentimos, pero tu email para %{destination} (titulado %{former_title}) se ha rechazado.
+
+        No hay una cuenta asociada con esta dirección de email. Intenta enviarlo con otra dirección de email o contacta con algún miembro del Staff.
     email_reject_inactive_user:
       subject_template: "[%{site_name}] Problema relacionado con el email -- Usuario inactivo"
       text_body_template: |
         Lo sentimos, pero tu email para %{destination} (titulado %{former_title}) no se entregó.
 
         La cuenta asociada a esta dirección de email no ha sido activada. Por favor activa tu cuenta antes de enviar emails.
+    email_reject_blocked_user:
+      subject_template: "[%{site_name}] Problema con el correo electrónico -- Usuario bloqueado"
+      text_body_template: |
+        Lo sentimos, pero tu email para %{destination} (titulado %{former_title}) no se entregó.
+
+        La cuenta asociada a esta dirección de email ha sido bloqueada.
+    email_reject_reply_user_not_matching:
+      subject_template: "[%{site_name}] Problema con el correo electrónico -- Email de respuesta no esperado"
     email_reject_no_account:
       subject_template: "[%{site_name}] Problema con el correo electrónico -- Cuenta Desconocida"
     email_reject_empty:
@@ -1686,11 +1718,14 @@ es:
 
         Si estás teniendo este problema y _sí_ incluiste contenido, inténtalo de nuevo con un formato más simple.
     email_reject_parsing:
+      subject_template: "[%{site_name}] Problema con el correo electrónico -- Contenido erróneo"
       text_body_template: |
         Lo sentimos, pero tu email para %{destination} (titulado %{former_title}) no funcionó.
 
         No hemos encontrado tu respuesta en el email. **Asegúrate de escribir tu entera respuesta al principio del email** - no podemos analizar respuestas entre líneas.
     email_reject_invalid_access:
+      subject_template: "[%{site_name}] Error de email -- Acceso no válido"
+    email_reject_strangers_not_allowed:
       subject_template: "[%{site_name}] Error de email -- Acceso no válido"
     email_reject_reply_key:
       subject_template: "[%{site_name}] Problema con el correo electrónico -- Clave de Respuesta Desconocida"
@@ -1948,6 +1983,7 @@ es:
       new_topics: "Temas nuevos"
       unread_messages: "Mensajes no leídos"
       unread_notifications: "Notificaciones no leídas"
+      liked_received: "Me gusta recibidos"
       new_posts: "Nuevos temas"
       new_users: "Nuevos usuarios"
       popular_topics: "Temas populares"

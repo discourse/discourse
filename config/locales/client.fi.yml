@@ -375,6 +375,7 @@ fi:
       title:
         one: "ryhmä"
         other: "ryhmät"
+      activity: "Toiminta"
       members: "Jäsenet"
       topics: "Ketjut"
       posts: "Viestit"
@@ -1014,6 +1015,7 @@ fi:
       title_or_link_placeholder: "Kirjoita otsikko tai liitä linkki tähän"
       edit_reason_placeholder: "miksi muokkaat viestiä?"
       show_edit_reason: "(lisää syy muokkaukselle)"
+      topic_featured_link_placeholder: "Tähän linkki, joka näytetään otsikon yhteydessä."
       reply_placeholder: "Kirjoita tähän. Käytä Markdownia, BBCodea tai HTML:ää muotoiluun. Raahaa tai liitä kuvia."
       view_new_post: "Katsele uutta viestiäsi."
       saving: "Tallennetaan"
@@ -2512,10 +2514,14 @@ fi:
         delivery_method: "Lähetystapa"
         preview_digest_desc: "Esikatsele inaktiivisille käyttäjille lähetettyjen tiivistelmäsähköpostien sisältöä."
         refresh: "Päivitä"
+        send_digest_label: "Lähetä tämä tulos:"
+        send_digest: "Lähetä"
+        sending_email: "Lähetetään sähköpostia..."
         format: "Muotoilu"
         html: "html"
         text: "teksti"
         last_seen_user: "Käyttäjän edellinen kirjautuminen:"
+        no_result: "Tuloksia ei löydetty tiivistelmää varten."
         reply_key: "Vastausavain"
         skipped_reason: "Syy väliinjättämiselle"
         incoming_emails:
@@ -2911,6 +2917,7 @@ fi:
           user_preferences: "Käyttäjäasetukset"
           tags: "Tunnisteet"
           search: "Haku"
+          groups: "Ryhmät"
       badges:
         title: Ansiomerkit
         new_badge: Uusi ansiomerkki

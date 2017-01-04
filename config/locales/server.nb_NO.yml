@@ -34,6 +34,18 @@ nb_NO:
   emails:
     incoming:
       default_subject: "Innkommende e-post fra %{email}"
+      errors:
+        no_message_id_error: "Skjer når en e-post ikke har noen «Message-Id»-header."
+        auto_generated_email_error: "Skjer når «Precedence»-headeren er satt til list, junk, bulk eller auto_reply eller når en annen header innholder auto-submitted, auto-replied eller auto-generated."
+        no_body_detected_error: "Skjer når vi ikke kunne trekke ut meldingskroppen eller det ikke var noen vedlegg."
+        inactive_user_error: "Skjer når senderen ikke er aktiv."
+        blocked_user_error: "Skjer når avsenderen har blitt blokkert."
+        bad_destination_address: "Skjer når ingen av adressene i To-, Cc- eller Bcc-feltene passer med en konfigurert innkommende e-postadresse."
+        strangers_not_allowed_error: "Skjer når en bruker forsøket å opprette et nytt emne i en kategori som han eller hun ikke er medlem av."
+        insufficient_trust_level_error: "Skjer når en bruker forsøket å opprette et nytt emne i en kategori som han eller hun ikke har tillitsnivå for."
+        reply_user_not_matching_error: "Skjer når et innkommende svar kommer fra en annen e-postadresse enn varselet var sendt til."
+        topic_not_found_error: "Skjer når et svar blir mottatt, men det tilhørene emnet er slettet."
+        topic_closed_error: "Skjer når et svar blir mottatt, men det tilhørene emnet er stengt."
   errors: &errors
     format: '%{attribute} %{message}'
     messages:
@@ -103,6 +115,11 @@ nb_NO:
   embed:
     start_discussion: "Start Diskusjon"
     continue: "Fortsett Diskusjon"
+    error: "Feil ved innbygging"
+    referer: "Referer:"
+    mismatch: "Referer passet ikke med noen av de følgende vertsnavnene:"
+    no_hosts: "Vertsnavn for innbygging."
+    configure: "Sett opp innbygging"
     more_replies:
       one: "1 svar til"
       other: "%{count} svar til"
@@ -193,6 +210,14 @@ nb_NO:
       - Konstruktiv kritikk er velkommen, men husk å kritisere *idéer,* ikke mennesker.
 
       For mer informasjon [se retningslinjene våre](/guidelines). Dette panelet vil kun vises for ditt/dine første %{education_posts_text}.
+    avatar: |
+      ### Hva med et bilde til kontoen din?
+
+      Du har opprettet noen innlegg og svar, men profilbildet ditt er ikke så unikt som du er -- det er bare en bokstav.
+
+      Har du tenkt på å **[gå til brukerprofilen din](%{profile_path})** og laste opp et bilde som representerer deg?
+
+      Det er enklere å følge diskusjoner og finne interessante personer i samtaler når alle har et unikt profilbilde!
     sequential_replies: |
       ### Vurder å svare til flere innlegg på samme tid
 
@@ -223,6 +248,8 @@ nb_NO:
     attributes:
       category:
         name: "Kategorinavn"
+      topic:
+        title: 'Tittel'
       post:
         raw: "Body"
       user_profile:
@@ -248,6 +275,10 @@ nb_NO:
           attributes:
             hex:
               invalid: "er ikke en gyldig farge"
+        web_hook:
+          attributes:
+            payload_url:
+              invalid: "URL-adresse er ikke gyldig. Adressen skal starte med http:// eller https:// og ingen blanke tegn er tillatt."
       <<: *errors
   user_profile:
     no_info_me: "<div class='missing-profile'>Om meg-feltet på din profil er for øyeblikket blankt, <a href='/users/%{username_lower}/preferences/about-me'>ønsker du å fylle det ut?</a></div>"
@@ -259,6 +290,8 @@ nb_NO:
   staff_category_name: "Stab"
   staff_category_description: "Privat kategori for diskusjoner blant staben. Emner er kun synlige for administratorer og moderatorer."
   assets_topic_body: "Dette er et permanent emne, synlig bare for staben, for å lagre bilder of filer brukt i designet på siden. Ikke slett det!\n\n\nHvordan legge til nye filer:\n\n\n1. Svar på dette emnet.\n2. Last opp alle bilder du vil bruke, som logoer, favicons osv. (Bare dra bildene inn i skrivefeltet, eller bruk knappen for opplasting.)\n3. Send ditt svar.\n4. Høyrklikk bildene i din nye post for å få lenken til de opplastede bildene, eller klikk på redigeringsikonet for å kopiere lenkene fra skrivefeltet.\n5. Lim disse lenkene inn i [basic settings](/admin/site_settings/category/required).\n\n\nHvis du trenger å tillate andre filtyper, rediger `authorized_extensions` i [file settings](/admin/site_settings/category/files)."
+  discourse_welcome_topic:
+    title: "Velkommen til Discourse"
   lounge_welcome:
     title: "Velkommen til Salongen"
     body: |2
@@ -1030,16 +1063,53 @@ nb_NO:
   badges:
     first_onebox:
       long_description: Dette merket tildeles den første gangen du publiserer et innlegg med en lenke på en egen linje, som deretter automatisk blir utvidet til en miniboks med en kort oppsummering av lenken, en tittel og (dersom tilgjengelig) et bilde.
+  finish_installation:
+    confirm_email:
+      title: "Bekreft din e-postadresse"
+    resend_email:
+      title: "Send aktivterings-epost på nytt"
+      message: "<p>Vi har sendt aktiverings-eposten på nytt til <b>%{email}</b>"
+  safe_mode:
+    title: "Start sikkerhetsmodus"
+    description: "Sikkerhetsmodus lar deg teste nettstedet ditt uten at tillegg eller tilpasninger lastes."
   wizard:
     step:
+      contact:
+        fields:
+          contact_email:
+            label: "E-post"
+            placeholder: "navn@example.com"
       corporate:
         description: "Disse navnene vil bli satt inn i din <a href='/privacy' target='blank'>Personvernerklæring</a> og dine <a href='/tos' target='blank'>Bruksvilkår</a>, som du kan endre når som helst i stab-kategorien. Hvis du ikke har et firma, kan du gjerne hoppe over dette steget."
+      logos:
+        title: "Logoer"
+        fields:
+          logo_url:
+            label: "Primær logo"
+            description: "Logoen som vises oppe til venstre på nettstedet. Bruk et bilde med en bred rektangelform."
+          logo_small_url:
+            label: "Kompakt logo"
+            description: "En kompakt versjon av logoen. Vises oppe til venstre npr du blar nedover. Bruk et bilde med kvadratisk form."
+      icons:
+        title: "Ikoner"
+        fields:
+          favicon_url:
+            label: "Lite ikon"
+            description: "Et ikon som representerer nettstedet ditt i nettlesere. Bør se bra ut i så liten størrelse som 32 ganger 32 piksler."
+          apple_touch_icon_url:
+            label: "Stort ikon"
+            description: "Et ikon som representerer nettstedet ditt på moderne enheter og ser bra ut i større størrelser. Anbefalt størrelse er minst 144 ganger 144 piksler."
       homepage:
+        title: "Hjemmeside"
         fields:
           homepage_style:
             choices:
               latest:
                 label: "Siste emner"
+              categories:
+                label: "Kategorier"
+      emoji:
+        title: "Emoji"
   activemodel:
     errors:
       <<: *errors

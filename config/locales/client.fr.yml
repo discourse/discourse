@@ -377,6 +377,7 @@ fr:
       title:
         one: "groupe"
         other: "groupes"
+      activity: "Activité"
       members: "Membres"
       topics: "Sujets"
       posts: "Messages"
@@ -1060,7 +1061,7 @@ fr:
         body: "Pour le moment, ce message est uniquement envoyé à vous-même !"
       admin_options_title: "Paramètres optionnels pour ce sujet"
       auto_close:
-        label: "Heure de fermeture automatique de ce sujet :"
+        label: "Heure de fermeture automatique du sujet :"
         error: "Merci d'entrer une valeur valide."
         based_on_last_post: "Ne pas fermer tant que le dernier message du sujet n'a pas atteint cette ancienneté."
         all:
@@ -1330,6 +1331,7 @@ fr:
         go: "aller"
         jump_bottom: "aller au dernier message"
         jump_prompt: "aller au message"
+        jump_prompt_of: "de %{count} messages"
         jump_prompt_long: "À quel message voulez-vous aller ?"
         jump_bottom_with_number: "aller au message %{post_number}"
         total: total de messages
@@ -1718,7 +1720,7 @@ fr:
       choose: 'Sélectionner une catégorie&hellip;'
       edit: 'modifier'
       edit_long: "Modifier"
-      view: 'Voir les sujets dans cette catégorie'
+      view: 'Voir les sujets dans la catégorie'
       general: 'Général'
       settings: 'Paramètres'
       topic_template: "Modèle de sujet"
@@ -2298,7 +2300,7 @@ fr:
         automatic_membership_email_domains: "Les utilisateurs qui s'enregistrent avec un domaine courriel qui correspond exactement à un élément de cette liste seront automatiquement ajoutés à ce groupe:"
         automatic_membership_retroactive: "Appliquer la même règle de domaine courriel pour les utilisateurs existants"
         default_title: "Titre par défaut pour tous les utilisateurs de ce groupe"
-        primary_group: "Définir comme groupe primaire automatiquement"
+        primary_group: "Définir comme groupe principal automatiquement"
         group_owners: Propriétaires
         add_owners: Ajouter des propriétaires
         incoming_email: "Adresse de courriel entrant personnalisée"
@@ -2978,6 +2980,7 @@ fr:
           user_preferences: "Préférences"
           tags: "Tags"
           search: "Rechercher"
+          groups: "Groupes"
       badges:
         title: Badges
         new_badge: Nouveau badge
