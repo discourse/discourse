@@ -8,26 +8,27 @@
     list-style: none;
     padding: 0;
     margin: 0;
-    li {
+
+    .user-selector-item {
       .fa-users {
         color: lighten($primary, 40%);
         padding: 0 2px;
       }
+
       border-bottom: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
-      a[href] {
+
+      a {
         padding: 5px;
         display: block;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+
         span.username {
           color: darken($primary, 40%);
-          display: inline-block;
         }
         span.name {
           font-size: 11px;
-          display: inline-block;
-          width: 90px;
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
           vertical-align: middle;
         }
         &.selected {
