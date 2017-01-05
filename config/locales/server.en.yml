@@ -1711,7 +1711,7 @@ en:
 
       %{invite_link}
 
-      This invitation is from a trusted user, so an account will be created for you automatically.
+      This invitation is from a trusted user, so an account will be created for you automatically using this email address.
 
   custom_invite_forum_mailer:
     title: "Invite Forum Mailer"
@@ -1731,7 +1731,7 @@ en:
 
       %{invite_link}
 
-      This invitation is from a trusted user, so an account will be created for you automatically.
+      This invitation is from a trusted user, so an account will be created for you automatically using this email address.
 
   invite_password_instructions:
     title: "Invite Password Instructions"
@@ -1893,6 +1893,7 @@ en:
       text_body_template: |
         Thanks for accepting your invitation to %{site_name} -- welcome!
 
+        - We've created this new account **%{username}** for you. Change your name or password by visiting [your user profile][prefs].
 
         - When you log in, please **use the same email address from your original invitation** — otherwise we won't be able to tell it's you!
 
