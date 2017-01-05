@@ -6,7 +6,11 @@ class AdminEmailTemplateSerializer < ApplicationSerializer
   end
 
   def title
-    object.gsub(/.*\./, '').titleize
+    if I18n.exists?("#{object}.title")
+      I18n.t("#{object}.title")
+    else
+      object.gsub(/.*\./, '').titleize
+    end
   end
 
   def subject
