@@ -1893,13 +1893,8 @@ en:
       text_body_template: |
         Thanks for accepting your invitation to %{site_name} -- welcome!
 
-        We've created a new account **%{username}** for you, and you are logged in. You can change your name by visiting [your user profile][prefs].
 
-        To log in again later:
-
-        1. Always **use the same email address from your original invitation** when logging in. Otherwise we won't be able to tell it's you!
-
-        2. Create a unique password for [your user profile][prefs], and use it to log in.
+        - When you log in, please **use the same email address from your original invitation** — otherwise we won't be able to tell it's you!
 
         %{new_user_tips}
 
