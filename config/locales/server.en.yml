@@ -3300,13 +3300,13 @@ en:
               <li>What can I find here?</li>
               <li>Why should I visit?</li>
               </ul>
-            <p>Your welcome topic is the first thing new visitors will see. Think of it as your <b>one paragraph</b> 'elevator pitch' or 'mission statement'. </p>"
+            <p>Your welcome topic is the first thing new arrivals will read. Think of it as your <b>one paragraph</b> 'elevator pitch' or 'mission statement'. </p>"
             one_paragraph: "Please restrict your welcome message to one paragraph."
 
       privacy:
         title: "Access"
         description: "<p>Is your community open to everyone, or is it restricted by membership, invitation, or approval? If you prefer, you can set things up privately, then switch over to public later.</p>
-         <p>Remember you can always send invites from topics, or from your user profile page, too.</p>"
+         <p>You can always send invites from topics, or from your user profile page, too.</p>"
 
         fields:
           privacy:
@@ -3335,7 +3335,7 @@ en:
 
       corporate:
         title: "Organization"
-        description: "These names will be entered in your <a href='/privacy' target='blank'>Privacy Policy</a> and <a href='/tos' target='blank'>Terms of Service</a>, which you can edit any time in the Staff category. If you don’t have a company, feel free to skip this step for now."
+        description: "These names will be entered in your <a href='/privacy' target='blank'>Privacy Policy</a> and <a href='/tos' target='blank'>Terms of Service</a>, which are topics you can edit in the Staff category. If you don’t have a company, feel free to skip this step for now."
 
         fields:
           company_short_name:
@@ -3352,7 +3352,7 @@ en:
         title: "Theme"
         fields:
           theme_id:
-            description: "Do you prefer a light or dark color scheme to start with? You can always further customize the look and feel of your site via Admin, Customize."
+            description: "Do you prefer a light or dark color scheme to start with? You can further customize the look and feel of your site via Admin, Customize."
             choices:
               default:
                 label: "Simple Light"
@@ -3380,7 +3380,7 @@ en:
             description: "Icon image used to represent your site on modern devices that looks good at larger sizes. Recommended size is at least 144px by 144px."
 
       homepage:
-        description: "We recommend showing the latest topics on your homepage, but you can choose to show categories (groups of topics) on the homepage if you prefer."
+        description: "We recommend showing the latest topics on your homepage, but you can also show categories (groups of topics) on the homepage if you prefer."
         title: "Homepage"
 
         fields:
@@ -3393,7 +3393,7 @@ en:
 
       emoji:
         title: "Emoji"
-        description: "Which Emoji style do you prefer for your community? You can always add more custom Emoji later via Admin, Customize, Emoji."
+        description: "Which Emoji style do you prefer for your community? You can add more custom Emoji later via Admin, Customize, Emoji."
 
       invites:
         title: "Invite Staff"
