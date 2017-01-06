@@ -370,7 +370,7 @@ module Email
     end
 
     def has_been_forwarded?
-      subject[/^[[:blank]]*(re|fwd?)[[:blank]]?:/i] && embedded_email_raw.present?
+      subject[/^[[:blank]]*(fwd?|tr)[[:blank]]?:/i] && embedded_email_raw.present?
     end
 
     def embedded_email_raw
@@ -381,7 +381,7 @@ module Email
     end
 
     def process_forwarded_email(destination, user)
-      embedded = Mail.new(@embedded_email_raw)
+      embedded = Mail.new(embedded_email_raw)
       email, display_name = parse_from_field(embedded)
 
       return false if email.blank? || !email["@"]
@@ -419,15 +419,21 @@ module Email
         return false
       end
 
-      if post && post.topic && @before_embedded.present?
-        post_type = Post.types[:regular]
-        post_type = Post.types[:whisper] if post.topic.private_message? && group.usernames[user.username]
+      if post&.topic
+        # mark post as seen for the forwarder
+        PostTiming.record_timing(user_id: user.id, topic_id: post.topic_id, post_number: post.post_number, msecs: 5000)
 
-        create_reply(user: user,
-                     raw: @before_embedded,
-                     post: post,
-                     topic: post.topic,
-                     post_type: post_type)
+        # create reply when available
+        if @before_embedded.present?
+          post_type = Post.types[:regular]
+          post_type = Post.types[:whisper] if post.topic.private_message? && group.usernames[user.username]
+
+          create_reply(user: user,
+                       raw: @before_embedded,
+                       post: post,
+                       topic: post.topic,
+                       post_type: post_type)
+        end
       end
 
       true
@@ -579,8 +585,7 @@ module Email
       end
 
       user = options.delete(:user)
-      manager = NewPostManager.new(user, options)
-      result = manager.perform
+      result = NewPostManager.new(user, options).perform
 
       raise InvalidPost, result.errors.full_messages.join("\n") if result.errors.any?
 
