@@ -17,7 +17,9 @@
 
 {{#unless topic.isPrivateMessage}}
   {{#if site.mobileView}}
-    {{topic-footer-mobile-dropdown topic=topic}}
+    {{topic-footer-mobile-dropdown topic=topic
+                                   showInvite=showInvite
+                                   showFlagTopic=showFlagTopic}}
   {{else}}
     {{d-button class=bookmarkClass
                title=bookmarkTitle
