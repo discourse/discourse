@@ -61,14 +61,16 @@ module Onebox
             end
           end
 
-          if Onebox::Helpers.blank?(oembed_url)
-            application_json = html_doc.at("//link[@type='application/json+oembed']/@href")
-            oembed_url = application_json.value if application_json
-          end
+          if html_doc
+            if Onebox::Helpers.blank?(oembed_url)
+              application_json = html_doc.at("//link[@type='application/json+oembed']/@href")
+              oembed_url = application_json.value if application_json
+            end
 
-          if Onebox::Helpers.blank?(oembed_url)
-            text_json = html_doc.at("//link[@type='text/json+oembed']/@href")
-            oembed_url ||= text_json.value if text_json
+            if Onebox::Helpers.blank?(oembed_url)
+              text_json = html_doc.at("//link[@type='text/json+oembed']/@href")
+              oembed_url ||= text_json.value if text_json
+            end
           end
 
           return {} if Onebox::Helpers.blank?(oembed_url)
