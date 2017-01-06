@@ -38,7 +38,6 @@ export default Combobox.extend({
   @observes('value')
   _valueChanged() {
     const value = this.get('value');
-    const controller = this.get('parentView.controller');
     const topic = this.get('topic');
 
     const refresh = () => {
@@ -48,7 +47,7 @@ export default Combobox.extend({
 
     switch(value) {
       case 'invite':
-        controller.send('showInvite');
+        this.attrs.showInvite();
         refresh();
         break;
       case 'bookmark':
@@ -59,7 +58,7 @@ export default Combobox.extend({
         refresh();
         break;
       case 'flag':
-        controller.send('showFlagTopic');
+        this.attrs.showFlagTopic();
         refresh();
         break;
     }

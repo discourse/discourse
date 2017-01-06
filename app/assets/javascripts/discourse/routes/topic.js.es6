@@ -117,7 +117,6 @@ const TopicRoute = Discourse.Route.extend({
 
     willTransition() {
       this._super();
-      this.controllerFor("topic").send('deselectText');
       Em.run.cancel(scheduledReplace);
       isTransitioning = true;
       return true;
@@ -207,6 +206,7 @@ const TopicRoute = Discourse.Route.extend({
 
     // close the multi select when switching topics
     controller.set('multiSelect', false);
+    controller.get('quoteState').clear();
 
     this.controllerFor('composer').set('topic', model);
     this.topicTrackingState.trackIncoming('all');

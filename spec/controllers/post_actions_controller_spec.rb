@@ -31,6 +31,11 @@ describe PostActionsController do
         expect { xhr :post, :create, post_action_type_id: PostActionType.types[:like] }.to raise_error(ActionController::ParameterMissing)
       end
 
+      it 'fails when the id is invalid' do
+        xhr :post, :create, post_action_type_id: PostActionType.types[:like], id: -1
+        expect(response.status).to eq(404)
+      end
+
       it 'raises an error when the post_action_type_id index is missing' do
         expect { xhr :post, :create, id: @post.id }.to raise_error(ActionController::ParameterMissing)
       end

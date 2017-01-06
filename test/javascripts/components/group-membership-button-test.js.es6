@@ -7,8 +7,6 @@ test('canJoinGroup', function() {
     model: { public: false }
   });
 
-  this.subject().set("currentUser", currentUser());
-
   equal(this.subject().get("canJoinGroup"), false, "non public group cannot be joined");
 
   this.subject().set("model.public", true);
@@ -17,7 +15,7 @@ test('canJoinGroup', function() {
 
   this.subject().setProperties({ currentUser: null, model: { public: true } });
 
-  equal(this.subject().get("canJoinGroup"), false, "can't join group when not logged in");
+  equal(this.subject().get("canJoinGroup"), true, "can't join group when not logged in");
 });
 
 test('canRequestMembership', function() {
@@ -36,4 +34,28 @@ test('canRequestMembership', function() {
   this.subject().set("model.alias_level", 0);
 
   equal(this.subject().get('canRequestMembership'), false);
+});
+
+test('userIsGroupUser', function() {
+  this.subject().setProperties({
+    model: { is_group_user: true }
+  });
+
+  equal(this.subject().get('userIsGroupUser'), true);
+
+  this.subject().set('model.is_group_user', false);
+
+  equal(this.subject().get('userIsGroupUser'), false);
+
+  this.subject().setProperties({ model: { id: 1 }, groupUserIds: [1] });
+
+  equal(this.subject().get('userIsGroupUser'), true);
+
+  this.subject().set('groupUserIds', [3]);
+
+  equal(this.subject().get('userIsGroupUser'), false);
+
+  this.subject().set('groupUserIds', undefined);
+
+  equal(this.subject().get('userIsGroupUser'), false);
 });

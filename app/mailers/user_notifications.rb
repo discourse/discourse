@@ -97,47 +97,11 @@ class UserNotifications < ActionMailer::Base
     build_summary_for(user)
     min_date = opts[:since] || user.last_emailed_at || user.last_seen_at || 1.month.ago
 
-    @last_seen_at = short_date(user.last_seen_at || user.created_at)
-
-    @preheader_text = I18n.t('user_notifications.digest.preheader', last_seen_at: @last_seen_at)
-
-    # Try to find 3 interesting stats for the top of the digest
-    @counts = [{label_key: 'user_notifications.digest.new_topics',
-                value: Topic.new_since_last_seen(user, min_date).count,
-                href: "#{Discourse.base_url}/new"}]
-
-    value = user.unread_notifications
-    @counts << {label_key: 'user_notifications.digest.unread_notifications', value: value, href: "#{Discourse.base_url}/my/notifications"} if value > 0
-
-    value = user.unread_private_messages
-    @counts << {label_key: 'user_notifications.digest.unread_messages', value: value, href: "#{Discourse.base_url}/my/messages"} if value > 0
-
-    if @counts.size < 3
-      value = user.unread_notifications_of_type(Notification.types[:liked])
-      @counts << {label_key: 'user_notifications.digest.liked_received', value: value, href: "#{Discourse.base_url}/my/notifications"} if value > 0
-    end
-
-    if @counts.size < 3
-      @counts << {
-        label_key: 'user_notifications.digest.new_posts',
-        value: Post.for_mailing_list(user, min_date).where("posts.post_number > ?", 1).count,
-        href: "#{Discourse.base_url}/new"
-      }
-    end
-
-    if @counts.size < 3
-      value = User.real.where(active: true, staged: false).not_suspended.where("created_at > ?", min_date).count
-      @counts << {
-        label_key: 'user_notifications.digest.new_users',
-        value: value,
-        href: "#{Discourse.base_url}/about"
-      } if value > 0
-    end
-
-    # Now fetch some topics and posts to show
+    # Fetch some topics and posts to show
     digest_opts = {limit: SiteSetting.digest_topics + SiteSetting.digest_other_topics, top_order: true}
     topics_for_digest = Topic.for_digest(user, min_date, digest_opts).to_a
     if topics_for_digest.empty? && !user.user_option.try(:include_tl0_in_digests)
+      # Find some topics from new users that are at least 24 hours old
       topics_for_digest = Topic.for_digest(user, min_date, digest_opts.merge(include_tl0: true)).where('topics.created_at < ?', 24.hours.ago).to_a
     end
 
@@ -156,6 +120,42 @@ class UserNotifications < ActionMailer::Base
     end
 
     if @popular_topics.present?
+      # Try to find 3 interesting stats for the top of the digest
+
+      new_topics_count = Topic.new_since_last_seen(user, min_date).count
+      if new_topics_count == 0
+        # We used topics from new users instead, so count should match
+        new_topics_count = topics_for_digest.size
+      end
+      @counts = [{label_key: 'user_notifications.digest.new_topics',
+                  value: new_topics_count,
+                  href: "#{Discourse.base_url}/new"}]
+
+      value = user.unread_notifications
+      @counts << {label_key: 'user_notifications.digest.unread_notifications', value: value, href: "#{Discourse.base_url}/my/notifications"} if value > 0
+
+      value = user.unread_private_messages
+      @counts << {label_key: 'user_notifications.digest.unread_messages', value: value, href: "#{Discourse.base_url}/my/messages"} if value > 0
+
+      if @counts.size < 3
+        value = user.unread_notifications_of_type(Notification.types[:liked])
+        @counts << {label_key: 'user_notifications.digest.liked_received', value: value, href: "#{Discourse.base_url}/my/notifications"} if value > 0
+      end
+
+      if @counts.size < 3
+        value = Post.for_mailing_list(user, min_date).where("posts.post_number > ?", 1).count
+        @counts << { label_key: 'user_notifications.digest.new_posts', value: value, href: "#{Discourse.base_url}/new" } if value > 0
+      end
+
+      if @counts.size < 3
+        value = User.real.where(active: true, staged: false).not_suspended.where("created_at > ?", min_date).count
+        @counts << { label_key: 'user_notifications.digest.new_users', value: value, href: "#{Discourse.base_url}/about" } if value > 0
+      end
+
+      @last_seen_at = short_date(user.last_seen_at || user.created_at)
+
+      @preheader_text = I18n.t('user_notifications.digest.preheader', last_seen_at: @last_seen_at)
+
       opts = {
         from_alias: I18n.t('user_notifications.digest.from', site_name: SiteSetting.title),
         subject: I18n.t('user_notifications.digest.subject_template', site_name: @site_name, date: short_date(Time.now)),

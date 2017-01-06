@@ -164,7 +164,6 @@ gem 'htmlentities', require: false
 #  If you want to amend mini profiler to do the monkey patches in the railties
 #  we are open to it. by deferring require to the initializer we can configure discourse installs without it
 
-gem 'fast_stack', require: false, platform: [:mri_20]
 gem 'flamegraph', require: false
 gem 'rack-mini-profiler', require: false
 
@@ -178,20 +177,8 @@ gem 'gc_tracer', require: false, platform: :mri
 gem 'ruby-readability', require: false
 gem 'simple-rss', require: false
 
-
-begin
-  gem 'stackprof', require: false, platform: [:mri_21, :mri_22, :mri_23]
-  gem 'memory_profiler', require: false, platform: [:mri_21, :mri_22, :mri_23]
-rescue Bundler::GemfileError
-  begin
-    STDERR.puts "You are running an old version of bundler, please upgrade bundler ASAP, if you are using Discourse docker, rebuild your container."
-    gem 'stackprof', require: false, platform: [:mri_21, :mri_22]
-    gem 'memory_profiler', require: false, platform: [:mri_21, :mri_22]
-  rescue Bundler::GemfileError
-     gem 'stackprof', require: false, platform: [:mri_21]
-     gem 'memory_profiler', require: false, platform: [:mri_21]
-  end
-end
+gem 'stackprof', require: false, platform: :mri
+gem 'memory_profiler', require: false, platform: :mri
 
 gem 'rmmseg-cpp', require: false
 

@@ -272,6 +272,8 @@ ja:
     change_failed_explanation: "%{user_name} を '%{new_trust_level}' に下げようとしましたが、既にトラストレベルが '%{current_trust_level}' です。%{user_name} は '%{current_trust_level}' のままになります - もしユーザーを降格させたい場合は、トラストレベルをロックしてください"
   rate_limiter:
     too_many_requests: "このアクションを一日の間に実施可能な回数が決まっています。%{time_left}待ってから再度試してください。"
+    by_type:
+      public_group_membership: "グループへの参加/離脱が多すぎます。%{time_left}お待ち下さい。"
     hours:
       other: "%{count} 時間"
     minutes:
@@ -410,6 +412,11 @@ ja:
       message:
         make: "このトピックはバナートピックに設定されています。ユーザーが解除しない限り、ページ毎の一番上に表示されます"
         remove: "このトピックはバナーではなくなりました。トップページには表示されなくなります"
+  unsubscribe:
+    unwatch_category: "%{category}内の全トピックのウォッチを解除"
+  user_api_key:
+    title: "アプリケーションアクセスの認証"
+    description: "\"%{application_name}\" があなたのアカウントへのアクセスを要求しています: "
   reports:
     visits:
       title: "訪問ユーザー"

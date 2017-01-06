@@ -31,11 +31,16 @@
 
     .badge-wrapper {
       float: left;
+      margin-right: 12px;
     }
 
     a.topic-featured-link {
       display: inline-block;
     }
+  }
+
+  h1 {
+    margin: 0 0 4px 0;
   }
 
   a.badge-category {

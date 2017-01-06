@@ -321,14 +321,63 @@ et:
       total_rows:
         one: "1 kasutaja"
         other: "%{count} kasutajat"
+    group_histories:
+      actions:
+        change_group_setting: "Muuda grupi sätteid"
+        add_user_to_group: "Lisa kasutaja"
+        remove_user_from_group: "Eemalda kasutaja"
+        make_user_group_owner: "Määra omanikuks"
+        remove_user_as_group_owner: "Eemalda omanik"
     groups:
+      logs:
+        title: "Logid"
+        when: "Millal"
+        action: "Tegevus"
+        acting_user: "Tegev kasutaja"
+        target_user: "Sihtkasutaja"
+        subject: "Teema"
+        details: "Detailid"
+        from: "Kellelt"
+        to: "Kellele"
+      edit:
+        title: 'Muuda gruppi'
+        full_name: 'Täisnimi'
+        add_members: "Lisa liikmed"
+        delete_member_confirm: "Eemalda '%{username}' grupist '%{group}'?"
+      request_membership_pm:
+        title: "Liikmelisuse taotlus"
+        body: "Soovin liituda grupiga @%{groupName}."
+      name_placeholder: "Grupi nimi, tühikuteta, vastab kasutajanime reeglitele"
+      public: "Luba kasutajatel vabalt grupiga liituda/sellest lahkuda (nõuab, et grupp oleks nähtav)"
+      empty:
+        posts: "Selle grupi liikmetelt ei ole postitusi."
+        members: "Sellel grupil liikmed puuduvad."
+        mentions: "Seda gruppi pole mainitud."
+        messages: "Sellele grupile teated puuduvad."
+        topics: "Selle grupi liikmetelt ei ole teemasid."
+        logs: "Sellele grupile logid puuduvad."
       add: "Lisa"
+      join: "Liitu grupiga"
+      leave: "Lahku grupist"
+      request: "Taotle liitumist grupiga"
+      automatic_group: Automaatne grupp
+      closed_group: Suletud grupp
+      is_group_user: "Oled selle grupi liige"
+      allow_membership_requests: "Luba kasutajatel saata grupi omanikele liikmelisuse taotlusi (eeldab, et igaüks saab gruppi mainida)"
+      membership: "Liikmelisus"
+      name: "Nimi"
+      user_count: "Liikmete arv"
+      bio: "Grupist"
       selector_placeholder: "Lisa liikmeid"
       owner: "omanik"
       visible: "Grupp on kõigile kasutajatele nähtav."
+      index:
+        title: "Grupid"
+        empty: "Ühtegi nähtavat gruppi pole."
       title:
         one: "grupp"
         other: "grupid"
+      activity: "Tegevused"
       members: "Liikmed"
       topics: "Teemat"
       posts: "Postitused"
@@ -360,6 +409,15 @@ et:
         muted:
           title: "Vaigistatud"
           description: "Sind ei teavitata ühestki uuest teemast selles grupis."
+      flair_url: "Avatari andekuse pilt"
+      flair_url_placeholder: "(Valikuline) Pildi URL või Font Awesome klass"
+      flair_bg_color: "Avatari andekuse taustavärv"
+      flair_bg_color_placeholder: "(Valikuline) Värvi väärtus heksakoodis"
+      flair_color: "Avatari andekuse värv"
+      flair_color_placeholder: "(Valikuline) Värvi väärtus heksakoodis"
+      flair_preview_icon: "Ikooni eelvaatlus"
+      flair_preview_image: "Pildi eelvaatlus"
+      flair_note: "Märkus: Andekus kuvatakse vaid kasutaja põhigrupi jaoks."
     user_action_groups:
       '1': "Meeldimisi antud"
       '2': "Meeldimisi saadud"
@@ -955,6 +1013,7 @@ et:
       title: "Või vajuta Ctrl+Enter"
       users_placeholder: "Lisa kasutaja"
       title_placeholder: "Kuidas seda vestlust ühe lausega kirjeldada?"
+      title_or_link_placeholder: "Kirjuta pealkiri või kleebi link siia"
       edit_reason_placeholder: "miks sa seda muudad?"
       show_edit_reason: "(lisa muutmise põhjus)"
       topic_featured_link_placeholder: "Järgi pealkirjas näidatud viidet."
@@ -1272,6 +1331,7 @@ et:
         go: "mine"
         jump_bottom: "hüppa viimase postituse juurde"
         jump_prompt: "hüppa postituse juurde"
+        jump_prompt_of: "%{count} postitusest"
         jump_prompt_long: "Millise postituse juurde soovid hüpata?"
         jump_bottom_with_number: "hüppa postituse %{post_number} juurde"
         total: postitusi kokku
@@ -1669,6 +1729,7 @@ et:
       tags_allowed_tag_groups: "Siltide grupid, mida saab kasutada vaid selles foorumis:"
       tags_placeholder: "(Valikuline) loetelu lubatud silte"
       tag_groups_placeholder: "(Valikuline) loetelu lubatud siltide gruppe"
+      topic_featured_link_allowed: "Luba selles foorumis esiletõstetud linke "
       delete: 'Kustuta foorum'
       create: 'Uus foorum'
       create_long: 'Loo uus foorum'
@@ -1703,6 +1764,7 @@ et:
       email_in_disabled: "Uute teemade avamine meili teel on saidi sätetes välja lülitatud. Avamiseks"
       email_in_disabled_click: 'aktiveeri säte "sissetulev meil".'
       suppress_from_homepage: "Eemalda see foorum avalehelt."
+      all_topics_wiki: "Tee uued teemad vaikimisi wikideks."
       sort_order: "Vaikejärjestus"
       allow_badges_label: "Luba selles foorumis autasustamist märgistega"
       edit_permissions: "Muuda kasutusõigusi"
@@ -2299,6 +2361,7 @@ et:
           details: "Kui teemas on uus vastus, muudatus, kustutamine või taastamine."
         user_event:
           name: "Kasutaja sündmus"
+          details: "Kui kasutaja luuakse, kinnitatakse või muudetakse."
         delivery_status:
           title: "Kättetoimetamise staatus"
           inactive: "Mitteaktiivne"
@@ -2919,6 +2982,7 @@ et:
           user_preferences: "Kasutaja seaded"
           tags: "Sildid"
           search: "Otsi"
+          groups: "Grupid"
       badges:
         title: Märgised
         new_badge: Uus märgis

@@ -71,7 +71,7 @@ zh_CN:
       has_already_been_used: "不能和其他%{attribute}重复"
       inclusion: 不包括在列表中
       invalid: 无效
-      is_invalid: "似乎不清晰，这是个完整的句子吗？"
+      is_invalid: "這句似乎不清晰，这是个完整的句子吗？"
       less_than: 必须小于 %{count}
       less_than_or_equal_to: 必须小于等于 %{count}
       not_a_number: 不是数字
@@ -151,6 +151,7 @@ zh_CN:
   spamming_host: "抱歉，你不能添加一个链接到那个地址的链接。"
   user_is_suspended: "被封禁的用户不允许发贴。"
   topic_not_found: "出现问题。也许这个话题被关闭或删除。"
+  not_accepting_pms: "对不起，%{username} 目前不接收讯息。"
   just_posted_that: "太类似于你最近发表的内容"
   invalid_characters: "包含无效字符"
   is_invalid: "似乎不清晰，这是个完整的句子吗？"
@@ -310,7 +311,24 @@ zh_CN:
   meta_category_description: "讨论该站点的站务、组织、如何运作和如何改善它。"
   staff_category_name: "管理人员"
   staff_category_description: "管理人员可见的分类。只有管理员和版主才能阅览主题。"
+  assets_topic_title: "站点设计资料"
   assets_topic_body: "这是一个永久主题，仅对管理人员可见，用于存储论坛设计使用的图像和文件。不要删除它！\n\n\n详细教程：\n\n\n1. 回复到这个主题。\n2. 上传你想用作站点标志、图标和其他所有图片到这儿。（使用帖子编辑器工具栏中的上传图标，或者拖拽或者粘贴图像。）\n3. 提交你的回复添加帖子。\n4. 在你的新帖子里右键点击图片获得这些已上传图片的链接，或者点击编辑按钮来编辑帖子，获得到图片的相对地址。复制这些相对地址。\n5. 粘贴这些图像的路径到[基础设置](/admin/site_settings/category/required)。\n\n\n如果你需要运行额外的上传文件类型，在[文件设置](/admin/site_settings/category/files)中编辑 `authorized_extensions`。"
+  discourse_welcome_topic:
+    title: "欢迎来到 Discourse"
+    body: |2
+
+      置顶主题的第一段是访客在主页看到的欢迎消息。这很重要！
+
+      **编辑**它作为社群的简要介绍：
+
+      - 什么人想参与？
+      - 他们能在这找到什么？
+      - 为什么他们要来这？
+      - 他们能在哪里阅读更多的内容（链接、资源等）？
+
+      <img src="/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
+
+      你可能想要在管理 :wrench: （右上角）中关闭这个主题，这样回复就不会积压在这个通告下。
   lounge_welcome:
     title: "欢迎来到贵宾室"
     body: |2
@@ -1115,10 +1133,12 @@ zh_CN:
     public_user_custom_fields: "可公开显示的用户自定义属性白名单"
     staff_user_custom_fields: "可给管理人员公开显示的用户自定义属性白名单。"
     enable_user_directory: "提供可供浏览的用户目录"
+    enable_group_directory: "提供可供浏览的群组目录"
     allow_anonymous_posting: "允许用户切换至匿名模式"
     anonymous_posting_min_trust_level: "启用匿名发帖所需的最小信任等级"
     anonymous_account_duration_minutes: "为了匿名性，为每个用户每 N 分钟创建一个匿名账户。例如：如果设置为 600，只要发帖后 600 分钟到了，并且用户切换至了匿名模式，就会创建一个新的匿名账户。"
     hide_user_profiles_from_public: "不对来访用户显示用户信息卡、用户资料和用户目录。"
+    user_website_domains_whitelist: "用户网站要属于这些域名中。用 | 分割。"
     allow_profile_backgrounds: "允许用户上传个人资料背景图片。"
     sequential_replies_threshold: "在被提醒回复了太多连续的回复前，用户在主题中可以连续回复的帖子的数量。"
     enable_mobile_theme: "为移动设备启用移动友好的主题，但也能切换回完整站点。如果你想要使用自定义的响应式主题请禁用它。"
@@ -1131,6 +1151,7 @@ zh_CN:
     automatically_unpin_topics: "当用户到达底部时自动解除主题置顶。"
     read_time_word_count: "一分钟阅读的词的数量，用于估计阅读时间。"
     topic_page_title_includes_category: "主题页面标题包含分类名。"
+    native_app_install_banner: "邀請常客安裝 Discourse 本机应用程序"
     max_prints_per_hour_per_user: "/print 页面的每小时最大展示量（设置为 0 禁用）"
     full_name_required: "全名是用户个人信息的必填项。"
     enable_names: "在用户的个人信息、用户卡片和邮件中显示全名。禁用将在所有地方隐藏全名。"
@@ -1349,6 +1370,8 @@ zh_CN:
     ip_address:
       blocked: "不允许从你的 IP 地址注册新用户。"
       max_new_accounts_per_registration_ip: "不允许从你的 IP 地址注册新用户（达到上限）。联系一个管理人员。"
+    website:
+      domain_not_allowed: "网站无效。允许的域名有：%{domains}"
   flags_reminder:
     flags_were_submitted:
       other: "这些标记在过去 %{count} 小时内被提交。请审核他们。"
@@ -2036,7 +2059,7 @@ zh_CN:
       join_the_discussion: "阅读更多"
       popular_posts: "流行帖子"
       from_topic_label: "来自"
-      more_new: "你关注主题和分类里的新帖"
+      more_new: "新内容"
       subject_template: "[%{site_name}] 摘要"
       unsubscribe: "这是封来自%{site_link}的摘要邮件，因为你长时间没有访问而发送。%{unsubscribe_link}取消订阅。"
       click_here: "点击此处"

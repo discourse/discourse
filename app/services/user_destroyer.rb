@@ -31,15 +31,17 @@ class UserDestroyer
           # block all external urls
           if opts[:block_urls]
             post.topic_links.each do |link|
-              unless link.internal or Oneboxer.oneboxer_exists_for_url?(link.url)
-                ScreenedUrl.watch(link.url, link.domain, ip_address: user.ip_address).try(:record_match!)
+              unless link.internal ||
+                (Oneboxer.engine(link.url) != Onebox::Engine::WhitelistedGenericOnebox)
+
+                ScreenedUrl.watch(link.url, link.domain, ip_address: user.ip_address)&.record_match!
               end
             end
           end
 
           PostDestroyer.new(@actor.staff? ? @actor : Discourse.system_user, post).destroy
 
-          if post.topic and post.is_first_post?
+          if post.topic && post.is_first_post?
             Topic.unscoped.where(id: post.topic.id).update_all(user_id: nil)
           end
         end

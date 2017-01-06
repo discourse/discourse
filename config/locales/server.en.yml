@@ -199,6 +199,7 @@ en:
   spamming_host: "Sorry you cannot post a link to that host."
   user_is_suspended: "Suspended users are not allowed to post."
   topic_not_found: "Something has gone wrong. Perhaps this topic was closed or deleted while you were looking at it?"
+  not_accepting_pms: "Sorry, %{username} is not accepting messages at the moment."
 
   just_posted_that: "is too similar to what you recently posted"
   invalid_characters: "contains invalid characters"
@@ -1367,6 +1368,8 @@ en:
 
     topic_page_title_includes_category: "Topic page title includes the category name."
 
+    native_app_install_banner: "Asks recurring visitors to install Discourse native app."
+
     max_prints_per_hour_per_user: "Maximum number of /print page impressions (set to 0 to disable)"
 
     full_name_required: "Full name is a required field of a user's profile."
@@ -1639,6 +1642,7 @@ en:
       other: "%{count} flags waiting to be handled"
 
   unsubscribe_mailer:
+    title: "Unsubscribe Mailer"
     subject_template: "Confirm you no longer want to receive email updates from %{site_title}"
     text_body_template: |
       Someone (possibly you?) requested to no longer send email updates from %{site_domain_name} to this address.
@@ -1650,6 +1654,7 @@ en:
       If you want to continue receiving email updates, you may ignore this email.
 
   invite_mailer:
+    title: "Invite Mailer"
     subject_template: "%{invitee_name} invited you to '%{topic_title}' on %{site_domain_name}"
     text_body_template: |
       %{invitee_name} invited you to a discussion
@@ -1669,6 +1674,7 @@ en:
       This invitation is from a trusted user, so you can reply to the discussion immediately.
 
   custom_invite_mailer:
+    title: "Custom Invite Mailer"
     subject_template: "%{invitee_name} invited you to '%{topic_title}' on %{site_domain_name}"
     text_body_template: |
       %{invitee_name} invited you to a discussion
@@ -1692,6 +1698,7 @@ en:
       This invitation is from a trusted user, so you can reply to the discussion immediately.
 
   invite_forum_mailer:
+    title: "Invite Forum Mailer"
     subject_template: "%{invitee_name} invited you to join %{site_domain_name}"
     text_body_template: |
       %{invitee_name} invited you to join
@@ -1704,9 +1711,10 @@ en:
 
       %{invite_link}
 
-      This invitation is from a trusted user, so an account will be created for you automatically.
+      This invitation is from a trusted user, so an account will be created for you automatically using this email address.
 
   custom_invite_forum_mailer:
+    title: "Invite Forum Mailer"
     subject_template: "%{invitee_name} invited you to join %{site_domain_name}"
     text_body_template: |
       %{invitee_name} invited you to join
@@ -1723,9 +1731,10 @@ en:
 
       %{invite_link}
 
-      This invitation is from a trusted user, so an account will be created for you automatically.
+      This invitation is from a trusted user, so an account will be created for you automatically using this email address.
 
   invite_password_instructions:
+    title: "Invite Password Instructions"
     subject_template: "Set password for your %{site_name} account"
     text_body_template: |
       Thanks for accepting your invitation to %{site_name} -- welcome!
@@ -1736,6 +1745,7 @@ en:
       (If the link above has expired, choose "I forgot my password" when logging in with your email address.)
 
   test_mailer:
+    title: "Test Mailer"
     subject_template: "[%{site_name}] Email Deliverability Test"
     text_body_template: |
       This is a test email from
@@ -1780,6 +1790,7 @@ en:
       [mt]: http://www.mail-tester.com/
 
   new_version_mailer:
+    title: "New Version Mailer"
     subject_template: "[%{site_name}] New Discourse version, update available"
     text_body_template: |
       Hooray, a new version of [Discourse](http://www.discourse.org) is available!
@@ -1794,6 +1805,7 @@ en:
       - Visit [meta.discourse.org](https://meta.discourse.org) for news, discussion, and support for Discourse
 
   new_version_mailer_with_notes:
+    title: "New Version Mailer with Notes"
     subject_template: "[%{site_name}] update available"
     text_body_template: |
       Hooray, a new version of [Discourse](http://www.discourse.org) is available!
@@ -1812,6 +1824,7 @@ en:
       %{notes}
 
   queued_posts_reminder:
+    title: "Queued Posts Reminder"
     subject_template:
       one: "[%{site_name}] 1 post waiting to be reviewed"
       other: "[%{site_name}] %{count} posts waiting to be reviewed"
@@ -1837,6 +1850,7 @@ en:
 
   system_messages:
     post_hidden:
+      title: "Post Hidden"
       subject_template: "Post hidden by community flags"
       text_body_template: |
         Hello,
@@ -1860,6 +1874,7 @@ en:
         As you participate here, we’ll get to know you, and temporary new user limitations will be lifted. Over time you’ll gain [trust levels](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924) that include special abilities to help us manage our community together.
 
     welcome_user:
+      title: "Welcome User"
       subject_template: "Welcome to %{site_name}!"
       text_body_template: |
         Thanks for joining %{site_name}, and welcome!
@@ -1873,17 +1888,14 @@ en:
         (If you need to communicate with [staff members](%{base_url}/about) as a new user, just reply to this message.)
 
     welcome_invite:
+      title: "Welcome Invite"
       subject_template: "Welcome to %{site_name}!"
       text_body_template: |
         Thanks for accepting your invitation to %{site_name} -- welcome!
 
-        We've created a new account **%{username}** for you, and you are logged in. You can change your name by visiting [your user profile][prefs].
+        - We've created this new account **%{username}** for you. Change your name or password by visiting [your user profile][prefs].
 
-        To log in again later:
-
-        1. Always **use the same email address from your original invitation** when logging in. Otherwise we won't be able to tell it's you!
-
-        2. Create a unique password for [your user profile][prefs], and use it to log in.
+        - When you log in, please **use the same email address from your original invitation** — otherwise we won't be able to tell it's you!
 
         %{new_user_tips}
 
@@ -1896,6 +1908,7 @@ en:
         [prefs]: %{user_preferences_url}
 
     backup_succeeded:
+      title: "Backup Succeeded"
       subject_template: "Backup completed successfully"
       text_body_template: |
         The backup was successful.
@@ -1909,6 +1922,7 @@ en:
         ```
 
     backup_failed:
+      title: "Backup Failed"
       subject_template: "Backup failed"
       text_body_template: |
         The backup has failed.
@@ -1920,6 +1934,7 @@ en:
         ```
 
     restore_succeeded:
+      title: "Restore Succeeded"
       subject_template: "Restore completed successfully"
       text_body_template: |
         The restore was successful.
@@ -1931,6 +1946,7 @@ en:
         ```
 
     restore_failed:
+      title: "Restore Failed"
       subject_template: "Restore failed"
       text_body_template: |
         The restore has failed.
@@ -1942,10 +1958,12 @@ en:
         ```
 
     bulk_invite_succeeded:
+      title: "Bulk Invite Succeeded"
       subject_template: "Bulk user invite processed successfully"
       text_body_template: "Your bulk user invite file was processed, %{sent} invites mailed."
 
     bulk_invite_failed:
+      title: "Bulk Invite Failed"
       subject_template: "Bulk user invite processed with errors"
       text_body_template: |
         Your bulk user invite file was processed, %{sent} invites mailed with %{failed} error(s).
@@ -1957,6 +1975,7 @@ en:
         ```
 
     csv_export_succeeded:
+      title: "CSV Export Succeeded"
       subject_template: "Data export complete"
       text_body_template: |
         Your data export was successful! :dvd:
@@ -1966,10 +1985,12 @@ en:
         The above download link will be valid for 48 hours.
 
     csv_export_failed:
+      title: "CSV Export Failed"
       subject_template: "Data export failed"
       text_body_template: "We're sorry, but your data export failed. Please check the logs or contact a staff member."
 
     email_reject_insufficient_trust_level:
+      title: "Email Reject insufficient Trust Level"
       subject_template: "[%{site_name}] Email issue -- Insufficient Trust Level"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
@@ -1977,6 +1998,7 @@ en:
         Your account does not have the required trust level to post new topics to this email address. If you believe this is an error, contact a staff member.
 
     email_reject_user_not_found:
+      title: "Email Reject User Not Found"
       subject_template: "[%{site_name}] Email issue -- User Not Found"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
@@ -1984,6 +2006,7 @@ en:
         Your reply was sent from an unknown email address. Try sending from another email address, or contact a staff member.
 
     email_reject_screened_email:
+      title: "Email Reject Screened Email"
       subject_template: "[%{site_name}] Email issue -- Blocked Email"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
@@ -1991,6 +2014,7 @@ en:
         Your reply was sent from a blocked email address. Try sending from another email address, or contact a staff member.
 
     email_reject_inactive_user:
+      title: "Email Reject Inactive User"
       subject_template: "[%{site_name}] Email issue -- Inactive User"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
@@ -1998,6 +2022,7 @@ en:
         Your account associated with this email address is not activated. Please activate your account before sending emails in.
 
     email_reject_blocked_user:
+      title: "Email Reject Blocked User"
       subject_template: "[%{site_name}] Email issue -- Blocked User"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
@@ -2005,6 +2030,7 @@ en:
         Your account associated with this email address has been blocked.
 
     email_reject_reply_user_not_matching:
+      title: "Email Reject User Not Matching"
       subject_template: "[%{site_name}] Email issue -- Unexpected Reply Address"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
@@ -2012,6 +2038,7 @@ en:
         Your reply was sent from a different email address than the one we expected, so we're not sure if this is the same person. Try sending from another email address, or contact a staff member.
 
     email_reject_no_account:
+      title: "Email Reject No Account"
       subject_template: "[%{site_name}] Email issue -- Unknown Account"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
@@ -2019,6 +2046,7 @@ en:
         We can't find any accounts that match your email address. Try sending from a different email address, or contact a staff member.
 
     email_reject_empty:
+      title: "Email Reject Empty"
       subject_template: "[%{site_name}] Email issue -- No Content"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
@@ -2028,6 +2056,7 @@ en:
         If you're getting this and you _did_ include a reply, try again with simpler formatting.
 
     email_reject_parsing:
+      title: "Email Reject Parsing"
       subject_template: "[%{site_name}] Email issue -- Content Unrecognized"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
@@ -2035,6 +2064,7 @@ en:
         We couldn't find your reply in the email. **Make sure your reply is at the top of the email** -- we can't process inline replies.
 
     email_reject_invalid_access:
+      title: "Email Reject Invalid Access"
       subject_template: "[%{site_name}] Email issue -- Invalid Access"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
@@ -2042,6 +2072,7 @@ en:
         Your account does not have the privileges to post new topics in that category. If you believe this is an error, contact a staff member.
 
     email_reject_strangers_not_allowed:
+      title: "Email Reject Strangers Not Allowed"
       subject_template: "[%{site_name}] Email issue -- Invalid Access"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
@@ -2049,6 +2080,7 @@ en:
         The category you sent this email to only allows replies from users with valid accounts and known email addresses. If you believe this is an error, contact a staff member.
 
     email_reject_invalid_post:
+      title: "Email Reject Invalid Post"
       subject_template: "[%{site_name}] Email issue -- Posting error"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
@@ -2056,6 +2088,7 @@ en:
         Some possible causes are: complex formatting, message too large, message too small. Please try again, or post via the website if this continues.
 
     email_reject_invalid_post_specified:
+      title: "Email Reject Invalid Post Specified"
       subject_template: "[%{site_name}] Email issue -- Posting error"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
@@ -2067,6 +2100,7 @@ en:
         If you can correct the problem, please try again.
 
     email_reject_invalid_post_action:
+      title: "Email Reject Invalid Post Action"
       subject_template: "[%{site_name}] Email issue -- Invalid Post Action"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
@@ -2075,6 +2109,7 @@ en:
 
 
     email_reject_reply_key:
+      title: "Email Reject Reply Key"
       subject_template: "[%{site_name}] Email issue -- Unknown Reply Key"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
@@ -2082,6 +2117,7 @@ en:
         The reply key in the email is invalid or unknown, so we can't figure out what this email is in reply to. Contact a staff member.
 
     email_reject_bad_destination_address:
+      title: "Email Reject Bad Destination Address"
       subject_template: "[%{site_name}] Email issue -- Unknown To: Address"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
@@ -2089,6 +2125,7 @@ en:
         None of the destination email addresses are recognized. Please make sure that you are sending to the correct email address provided by staff.
 
     email_reject_topic_not_found:
+      title: "Email Reject Topic Not Found"
       subject_template: "[%{site_name}] Email issue -- Topic Not Found"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
@@ -2096,6 +2133,7 @@ en:
         The topic you are replying to no longer exists -- perhaps it was deleted? If you believe this is an error, contact a staff member.
 
     email_reject_topic_closed:
+      title: "Email Reject Topic Closed"
       subject_template: "[%{site_name}] Email issue -- Topic Closed"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
@@ -2103,6 +2141,7 @@ en:
         The topic you are replying to is currently closed and no longer accepting replies. If you believe this is an error, contact a staff member.
 
     email_reject_auto_generated:
+      title: "Email Reject Auto Generated"
       subject_template: "[%{site_name}] Email issue -- Auto Generated Reply"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
@@ -2110,6 +2149,7 @@ en:
         Your email was marked as "auto generated", which means it was automatically created by a computer instead of being typed by a human; we can't accept those kinds of emails. If you believe this is an error, contact a staff member.
 
     email_error_notification:
+      title: "Email Error Notification"
       subject_template: "[%{site_name}] Email issue -- POP authentication error"
       text_body_template: |
         Unfortunately, there was an authentication error while polling mails from the POP server.
@@ -2118,6 +2158,7 @@ en:
 
         If there is a web UI for the POP email account, you may need to log in on the web and check your settings there.
     too_many_spam_flags:
+      title: "Too Many Spam Flags"
       subject_template: "New account on hold"
       text_body_template: |
         Hello,
@@ -2128,6 +2169,7 @@ en:
 
         For additional guidance, please refer to our [community guidelines](%{base_url}/guidelines).
     too_many_tl3_flags:
+      title: "Too Many TL3 Flags"
       subject_template: "New account on hold"
       text_body_template: |
         Hello,
@@ -2138,6 +2180,7 @@ en:
 
         For additional guidance, please refer to our [community guidelines](%{base_url}/guidelines).
     blocked_by_staff:
+      title: "Blocked by Staff"
       subject_template: "Account temporarily on hold"
       text_body_template: |
         Hello,
@@ -2149,6 +2192,7 @@ en:
         For additional guidance, refer to our [community guidelines](%{base_url}/guidelines).
 
     user_automatically_blocked:
+      title: "User Automatically Blocked"
       subject_template: "New user %{username} blocked by community flags"
       text_body_template: |
         This is an automated message.
@@ -2160,6 +2204,7 @@ en:
         This threshold can be changed via the `block_new_user` site settings.
 
     spam_post_blocked:
+      title: "Spam Post Blocked"
       subject_template: "New user %{username} posts blocked due to repeated links"
       text_body_template: |
         This is an automated message.
@@ -2171,6 +2216,7 @@ en:
         This can be modified via the `newuser_spam_host_threshold` and `white_listed_spam_host_domains` site settings.
 
     unblocked:
+      title: "Unblocked"
       subject_template: "Account no longer on hold"
       text_body_template: |
         Hello,
@@ -2180,6 +2226,7 @@ en:
         You can now create new replies and topics again. Thank you for your patience.
 
     pending_users_reminder:
+      title: "Pending Users Reminder"
       subject_template:
         one: "1 user waiting for approval"
         other: "%{count} users waiting for approval"
@@ -2189,10 +2236,12 @@ en:
         [Please review them in the admin section](%{base_url}/admin/users/list/pending).
 
     download_remote_images_disabled:
+      title: "Download Remote Images Disabled"
       subject_template: "Downloading remote images disabled"
       text_body_template: "The `download_remote_images_to_local` setting was disabled because the disk space limit at `download_remote_images_threshold` was reached."
 
     dashboard_problems:
+      title: "Dashboard Problems"
       subject_template: "Problems have been found"
       text_body_template: |
         Some problems are being reported on your admin dashboard.
@@ -2255,6 +2304,7 @@ en:
       > %{site_title} -- %{site_description}
 
     user_invited_to_private_message_pm:
+      title: "User Invited to PM"
       subject_template: "[%{site_name}] %{username} invited you to a message '%{topic_title}'"
       text_body_template: |
         %{header_instructions}
@@ -2264,6 +2314,7 @@ en:
         %{respond_instructions}
 
     user_invited_to_private_message_pm_staged:
+      title: "User Invited to PM Staged"
       subject_template: "[%{site_name}] %{username} invited you to a message '%{topic_title}'"
       text_body_template: |
         %{header_instructions}
@@ -2273,6 +2324,7 @@ en:
         %{respond_instructions}
 
     user_invited_to_topic:
+      title: "User Invited to Topic"
       subject_template: "[%{site_name}] %{username} invited you to '%{topic_title}'"
       text_body_template: |
         %{header_instructions}
@@ -2282,6 +2334,7 @@ en:
         %{respond_instructions}
 
     user_replied:
+      title: "User Replied"
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -2293,6 +2346,7 @@ en:
         %{respond_instructions}
 
     user_replied_pm:
+      title: "User Replied PM"
       subject_template: "[%{site_name}] [PM] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -2304,6 +2358,7 @@ en:
         %{respond_instructions}
 
     user_quoted:
+      title: "User Quoted"
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -2315,6 +2370,7 @@ en:
         %{respond_instructions}
 
     user_linked:
+      title: "User Linked"
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -2326,6 +2382,7 @@ en:
         %{respond_instructions}
 
     user_mentioned:
+      title: "User Mentioned"
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -2337,6 +2394,7 @@ en:
         %{respond_instructions}
 
     user_group_mentioned:
+      title: "User Group Mentioned"
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -2348,6 +2406,7 @@ en:
         %{respond_instructions}
 
     user_posted:
+      title: "User Posted"
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -2359,6 +2418,7 @@ en:
         %{respond_instructions}
 
     user_watching_first_post:
+      title: "User Watching First Post"
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -2370,6 +2430,7 @@ en:
         %{respond_instructions}
 
     user_posted_pm:
+      title: "User Posted PM"
       subject_template: "[%{site_name}] [PM] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -2381,6 +2442,7 @@ en:
         %{respond_instructions}
 
     user_posted_pm_staged:
+      title: "User Posted PM Staged"
       subject_template: "%{optional_re}%{topic_title}"
       text_body_template: |
 
@@ -2439,6 +2501,7 @@ en:
       view_this_topic: "View this topic"
       back_to_top: "Back to top"
     forgot_password:
+      title: "Forgot Password"
       subject_template: "[%{site_name}] Password reset"
       text_body_template: |
         Somebody asked to reset your password on [%{site_name}](%{base_url}).
@@ -2449,6 +2512,7 @@ en:
         %{base_url}/users/password-reset/%{email_token}
 
     set_password:
+      title: "Set Password"
       subject_template: "[%{site_name}] Set Password"
       text_body_template: |
         Somebody asked to add a password to your account on [%{site_name}](%{base_url}). Alternatively, you can log in using any supported online service (Google, Facebook, etc) that is associated with this validated email address.
@@ -2459,6 +2523,7 @@ en:
         %{base_url}/users/password-reset/%{email_token}
 
     admin_login:
+      title: "Admin Login"
       subject_template: "[%{site_name}] Login"
       text_body_template: |
         Somebody asked to login to your account on [%{site_name}](%{base_url}).
@@ -2469,6 +2534,7 @@ en:
         %{base_url}/users/admin-login/%{email_token}
 
     account_created:
+      title: "Account Created"
       subject_template: "[%{site_name}] Your New Account"
       text_body_template: |
         A new account was created for you at %{site_name}
@@ -2477,6 +2543,7 @@ en:
         %{base_url}/users/password-reset/%{email_token}
 
     confirm_new_email:
+      title: "Confirm New Email"
       subject_template: "[%{site_name}] Confirm your new email address"
       text_body_template: |
         Confirm your new email address for %{site_name} by clicking on the following link:
@@ -2484,6 +2551,7 @@ en:
         %{base_url}/users/authorize-email/%{email_token}
 
     confirm_old_email:
+      title: "Confirm Old Email"
       subject_template: "[%{site_name}] Confirm your current email address"
       text_body_template: |
         Before we can change your email address, we need you to confirm that you control
@@ -2495,6 +2563,7 @@ en:
         %{base_url}/users/authorize-email/%{email_token}
 
     notify_old_email:
+      title: "Notify Old Email"
       subject_template: "[%{site_name}] Your email address has been changed"
       text_body_template: |
         This is an automated message to let you know that your email address for
@@ -2506,6 +2575,7 @@ en:
         %{new_email}
 
     signup_after_approval:
+      title: "Signup After Approval"
       subject_template: "You've been approved on %{site_name}!"
       text_body_template: |
         Welcome to %{site_name}!
@@ -2526,6 +2596,7 @@ en:
         (If you need to communicate with [staff members](%{base_url}/about) as a new user, just reply to this message.)
 
     signup:
+      title: "Signup"
       subject_template: "[%{site_name}] Confirm your new account"
       text_body_template: |
         Welcome to %{site_name}!
@@ -3225,13 +3296,13 @@ en:
               <li>What can I find here?</li>
               <li>Why should I visit?</li>
               </ul>
-            <p>Your welcome topic is the first thing new visitors will see. Think of it as your <b>one paragraph</b> 'elevator pitch' or 'mission statement'. </p>"
+            <p>Your welcome topic is the first thing new arrivals will read. Think of it as your <b>one paragraph</b> 'elevator pitch' or 'mission statement'. </p>"
             one_paragraph: "Please restrict your welcome message to one paragraph."
 
       privacy:
         title: "Access"
         description: "<p>Is your community open to everyone, or is it restricted by membership, invitation, or approval? If you prefer, you can set things up privately, then switch over to public later.</p>
-         <p>Remember you can always send invites from topics, or from your user profile page, too.</p>"
+         <p>You can always send invites from topics, or from your user profile page, too.</p>"
 
         fields:
           privacy:
@@ -3260,7 +3331,7 @@ en:
 
       corporate:
         title: "Organization"
-        description: "These names will be entered in your <a href='/privacy' target='blank'>Privacy Policy</a> and <a href='/tos' target='blank'>Terms of Service</a>, which you can edit any time in the Staff category. If you don’t have a company, feel free to skip this step for now."
+        description: "These names will be entered in your <a href='/privacy' target='blank'>Privacy Policy</a> and <a href='/tos' target='blank'>Terms of Service</a>, which are topics you can edit in the Staff category. If you don’t have a company, feel free to skip this step for now."
 
         fields:
           company_short_name:
@@ -3277,7 +3348,7 @@ en:
         title: "Theme"
         fields:
           theme_id:
-            description: "Do you prefer a light or dark color scheme to start with? You can always further customize the look and feel of your site via Admin, Customize."
+            description: "Do you prefer a light or dark color scheme to start with? You can further customize the look and feel of your site via Admin, Customize."
             choices:
               default:
                 label: "Simple Light"
@@ -3305,7 +3376,7 @@ en:
             description: "Icon image used to represent your site on modern devices that looks good at larger sizes. Recommended size is at least 144px by 144px."
 
       homepage:
-        description: "We recommend showing the latest topics on your homepage, but you can choose to show categories (groups of topics) on the homepage if you prefer."
+        description: "We recommend showing the latest topics on your homepage, but you can also show categories (groups of topics) on the homepage if you prefer."
         title: "Homepage"
 
         fields:
@@ -3318,7 +3389,7 @@ en:
 
       emoji:
         title: "Emoji"
-        description: "Which Emoji style do you prefer for your community? You can always add more custom Emoji later via Admin, Customize, Emoji."
+        description: "Which Emoji style do you prefer for your community? You can add more custom Emoji later via Admin, Customize, Emoji."
 
       invites:
         title: "Invite Staff"

@@ -8,6 +8,7 @@ export default {
       "user_count":8,
       "alias_level":0,
       "visible":true,
+      "public":true,
       "flair_url": 'fa-adjust',
       "is_group_owner":true
     }

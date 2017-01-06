@@ -137,7 +137,7 @@ class Admin::UsersController < Admin::AdminController
     group = Group.find(params[:group_id].to_i)
     return render_json_error group unless group && !group.automatic
     group.remove(@user)
-    GroupActionLogger.new(current_user, group).log_remove_user_from_group(user)
+    GroupActionLogger.new(current_user, group).log_remove_user_from_group(@user)
     render nothing: true
   end
 

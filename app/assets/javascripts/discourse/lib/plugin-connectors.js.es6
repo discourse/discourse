@@ -1,4 +1,5 @@
 let _connectorCache;
+let _rawConnectorCache;
 let _extraConnectorClasses = {};
 let _classPaths;
 
@@ -42,6 +43,7 @@ function findOutlets(collection, callback) {
 
 export function clearCache() {
   _connectorCache = null;
+  _rawConnectorCache = null;
 }
 
 function findClass(outletName, uniqueName) {
@@ -63,7 +65,7 @@ function findClass(outletName, uniqueName) {
 function buildConnectorCache() {
   _connectorCache = {};
 
-  findOutlets(Ember.TEMPLATES, function(outletName, resource, uniqueName) {
+  findOutlets(Ember.TEMPLATES, (outletName, resource, uniqueName) => {
     _connectorCache[outletName] = _connectorCache[outletName] || [];
 
     _connectorCache[outletName].push({
@@ -75,7 +77,22 @@ function buildConnectorCache() {
   });
 }
 
+function buildRawConnectorCache() {
+  _rawConnectorCache = {};
+  findOutlets(Discourse.RAW_TEMPLATES, (outletName, resource) => {
+    _rawConnectorCache[outletName] = _rawConnectorCache[outletName] || [];
+    _rawConnectorCache[outletName].push({
+      template: Discourse.RAW_TEMPLATES[resource]
+    });
+  });
+}
+
 export function connectorsFor(outletName) {
   if (!_connectorCache) { buildConnectorCache(); }
   return _connectorCache[outletName] || [];
+}
+
+export function rawConnectorsFor(outletName) {
+  if (!_rawConnectorCache) { buildRawConnectorCache(); }
+  return _rawConnectorCache[outletName] || [];
 }

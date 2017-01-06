@@ -4,9 +4,9 @@ require_dependency 'post_destroyer'
 
 describe Guardian do
 
-  let(:user) { build(:user) }
-  let(:moderator) { build(:moderator) }
-  let(:admin) { build(:admin) }
+  let(:user) { Fabricate(:user) }
+  let(:moderator) { Fabricate(:moderator) }
+  let(:admin) { Fabricate(:admin) }
   let(:trust_level_2) { build(:user, trust_level: 2) }
   let(:trust_level_3) { build(:user, trust_level: 3) }
   let(:trust_level_4)  { build(:user, trust_level: 4) }
@@ -1558,6 +1558,15 @@ describe Guardian do
       user.id = 2
       expect(Guardian.new(admin).can_grant_admin?(user)).to be_truthy
     end
+
+    it 'should not allow an admin to grant admin access to a non real user' do
+      begin
+        Discourse.system_user.update!(admin: false)
+        expect(Guardian.new(admin).can_grant_admin?(Discourse.system_user)).to be(false)
+      ensure
+        Discourse.system_user.update!(admin: true)
+      end
+    end
   end
 
   context 'can_revoke_admin?' do
@@ -1578,6 +1587,10 @@ describe Guardian do
       another_admin.id = 2
 
       expect(Guardian.new(admin).can_revoke_admin?(another_admin)).to be_truthy
+    end
+
+    it "should not allow an admin to revoke a no real user's admin access" do
+      expect(Guardian.new(admin).can_revoke_admin?(Discourse.system_user)).to be(false)
     end
   end
 
@@ -1601,6 +1614,15 @@ describe Guardian do
 
     it "allows an admin to grant a regular user access" do
       expect(Guardian.new(admin).can_grant_moderation?(user)).to be_truthy
+    end
+
+    it "should not allow an admin to grant moderation to a non real user" do
+      begin
+        Discourse.system_user.update!(moderator: false)
+        expect(Guardian.new(admin).can_grant_moderation?(Discourse.system_user)).to be(false)
+      ensure
+        Discourse.system_user.update!(moderator: true)
+      end
     end
   end
 
@@ -1628,6 +1650,10 @@ describe Guardian do
 
     it "does not allow revoke from non moderators" do
       expect(Guardian.new(admin).can_revoke_moderation?(admin)).to be_falsey
+    end
+
+    it "should not allow an admin to revoke moderation from a non real user" do
+      expect(Guardian.new(admin).can_revoke_moderation?(Discourse.system_user)).to be(false)
     end
   end
 
