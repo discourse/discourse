@@ -1560,8 +1560,12 @@ describe Guardian do
     end
 
     it 'should not allow an admin to grant admin access to a non real user' do
-      Discourse.system_user.update!(admin: false)
-      expect(Guardian.new(admin).can_grant_admin?(Discourse.system_user)).to be(false)
+      begin
+        Discourse.system_user.update!(admin: false)
+        expect(Guardian.new(admin).can_grant_admin?(Discourse.system_user)).to be(false)
+      ensure
+        Discourse.system_user.update!(admin: true)
+      end
     end
   end
 
@@ -1586,7 +1590,6 @@ describe Guardian do
     end
 
     it "should not allow an admin to revoke a no real user's admin access" do
-      Discourse.system_user.update!(admin: true)
       expect(Guardian.new(admin).can_revoke_admin?(Discourse.system_user)).to be(false)
     end
   end
@@ -1614,8 +1617,12 @@ describe Guardian do
     end
 
     it "should not allow an admin to grant moderation to a non real user" do
-      Discourse.system_user.update!(moderator: false)
-      expect(Guardian.new(admin).can_grant_moderation?(Discourse.system_user)).to be(false)
+      begin
+        Discourse.system_user.update!(moderator: false)
+        expect(Guardian.new(admin).can_grant_moderation?(Discourse.system_user)).to be(false)
+      ensure
+        Discourse.system_user.update!(moderator: true)
+      end
     end
   end
 
@@ -1646,7 +1653,6 @@ describe Guardian do
     end
 
     it "should not allow an admin to revoke moderation from a non real user" do
-      Discourse.system_user.update!(moderator: true)
       expect(Guardian.new(admin).can_revoke_moderation?(Discourse.system_user)).to be(false)
     end
   end
