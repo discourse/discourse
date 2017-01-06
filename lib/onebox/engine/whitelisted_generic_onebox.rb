@@ -264,6 +264,7 @@ module Onebox
 
         def is_embedded?
           data[:html] &&
+          data[:height] &&
           (
             data[:html]["iframe"] ||
             WhitelistedGenericOnebox.html_providers.include?(data[:provider_name])
@@ -278,8 +279,8 @@ module Onebox
           return if Onebox::Helpers.blank?(data[:image])
 
           alt    = data[:description]  || data[:title]
-          width  = data[:image_width]  || data[:thumbnail_width]
-          height = data[:image_height] || data[:thumbnail_height]
+          width  = data[:image_width]  || data[:thumbnail_width]  || data[:width]
+          height = data[:image_height] || data[:thumbnail_height] || data[:height]
           "<img src='#{data[:image]}' alt='#{alt}' width='#{width}' height='#{height}'>"
         end
 
@@ -309,6 +310,13 @@ module Onebox
         def embedded_html
           fragment = Nokogiri::HTML::fragment(data[:html])
           fragment.css("img").each { |img| img["class"] = "thumbnail" }
+          if iframe = fragment.at_css("iframe")
+            iframe.remove_attribute("style")
+            iframe["width"] = data[:width] || "100%"
+            iframe["height"] = data[:height]
+            iframe["scrolling"] = "no"
+            iframe["frameborder"] = "0"
+          end
           fragment.to_html
         end
     end

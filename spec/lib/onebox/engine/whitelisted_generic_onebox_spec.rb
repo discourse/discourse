@@ -31,8 +31,11 @@ describe Onebox::Engine::WhitelistedGenericOnebox do
   describe 'html_providers' do
     class HTMLOnebox < Onebox::Engine::WhitelistedGenericOnebox
       def data
-        {html: 'cool html',
-         provider_name: 'CoolSite'}
+        {
+          html: 'cool html',
+          height: 123,
+          provider_name: 'CoolSite',
+        }
       end
     end
 
