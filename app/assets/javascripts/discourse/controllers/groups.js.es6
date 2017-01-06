@@ -11,10 +11,6 @@ export default Ember.Controller.extend({
   actions: {
     loadMore() {
       this.get('groups').loadMore();
-    },
-
-    showLogin() {
-      return this.get('application').send('appRouteAction', 'showLogin');
     }
   }
 });
