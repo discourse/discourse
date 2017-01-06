@@ -163,6 +163,7 @@ de:
   spamming_host: "Entschuldigung, du kannst keine Links zu diesem Webserver posten."
   user_is_suspended: "Gesperrte Benutzer dürfen keine Beiträge schreiben."
   topic_not_found: "Etwas ist schief gelaufen. Wurde das Thema eventuell geschlossen oder gelöscht, während du es angeschaut hast?"
+  not_accepting_pms: "Entschuldige, %{username} akzeptiert gerade keine Nachrichten."
   just_posted_that: "ist einer einer vor Kurzem von dir geschriebenen Nachricht zu ähnlich"
   invalid_characters: "enthält ungültige Zeichen"
   is_invalid: "scheint unklar, ist das ein ganzer Satz?"
@@ -407,7 +408,7 @@ de:
       public_group_membership: "Du wechselst die Gruppenzugehörigkeit zu häufig. Bitte warte %{time_left}, bevor du es erneut versuchst."
       topics_per_day: "Du hast die maximale Anzahl an neuen Themen für heute erreicht. Bitte warte %{time_left}, bis Du es wieder versuchst."
       pms_per_day: "Du hast die maximale Anzahl an Nachrichten für heute erreicht. Bitte warte %{time_left}, bis Du es wieder versuchst."
-      create_like: "Du hast die maximale Anzahl „Gefällt mir“ für heute erreicht. Bitte warte %{time_left}, bis Du es wieder versuchst."
+      create_like: "Du hast die maximale Anzahl an Likes für heute erreicht. Bitte warte %{time_left}, bevor du es wieder versuchst."
       create_bookmark: "Du hast die maximale Anzahl an Lesezeichen für heute erreicht. Bitte warte %{time_left}, bis Du es wieder versuchst."
       edit_post: "Du hast die maximale Anzahl an Änderungen für heute erreicht. Bitte warte %{time_left}, bis Du es wieder versuchst."
       live_post_counts: "Du forderst die Live-Anzahl der Antworten zu schnell neu an. Bitte warte %{time_left}, bis du es wieder versuchst."
@@ -644,9 +645,9 @@ de:
       xaxis: "Tag"
       yaxis: "Anzahl neuer Beiträge"
     likes:
-      title: "„Gefällt mir“"
+      title: "Likes"
       xaxis: "Tag"
-      yaxis: "Anzahl neuer „Gefällt mir“"
+      yaxis: "Anzahl neuer Likes"
     flags:
       title: "Meldungen"
       xaxis: "Tag"
@@ -849,7 +850,7 @@ de:
     force_https: "Erzwinge HTTPS für deine Site. ACHTUNG: Aktiviere dies nicht, bevor HTTPS nicht vollständig eingerichtet ist und auf jeden Fall überall funktioniert! Hast du alle CDN-Netzwerke, alle Logins über Soziale Netzwerke, alle externe Logos / Abhängigkeiten geprüft, um sicherzustellen, dass sie auch alle HTTPS-kompatibel sind?"
     summary_score_threshold: "Mindestpunktzahl, die ein Beitrag benötigt, um in der \"Thema zusammenfassen\"-Ansicht zu erscheinen."
     summary_posts_required: "Mindestanzahl an Beiträgen in einem Thema, bevor die \"Thema zusammenfassen\"-Funktion aktiviert wird."
-    summary_likes_required: "Mindestanzahl an \"Gefällt mir\" Wertungen in einem Thema, bevor die \"Thema zusammenfassen\" Funktion aktiviert wird."
+    summary_likes_required: "Mindestanzahl an Likes in einem Thema, bevor die \"Thema zusammenfassen\" Funktion aktiviert wird."
     summary_percent_filter: "Zeige die besten (n)% der Beiträge eines Themas in der \"Thema zusammenfassen\"-Ansicht."
     summary_max_results: "Maximale Anzahl der sichtbaren Beiträge beim Zusammenfassen von Themen"
     enable_private_messages: "Erlaube Benutzer mit der Vertrauensstufe 1 (konfigurierbar über die minimale Vertrauensstufe zum Senden von Nachrichten), Nachrichten zu erstellen und auf Nachrichten zu antworten. Beachte, dass das Team immer Nachrichten und Antworten senden können."
@@ -980,7 +981,7 @@ de:
     rate_limit_create_post: "Nach Schreiben eines Beitrags muss ein Benutzer (n) Sekunden warten, bevor ein weiterer Beitrag erstellt werden kann."
     rate_limit_new_user_create_topic: "Nach Erstellen eines Themas muss ein neuer Benutzer (n) Sekunden warten, bevor ein weiteres Thema erstellt werden kann."
     rate_limit_new_user_create_post: "Nach Schreiben eines Beitrags muss ein neuer Benutzer (n) Sekunden warten, bevor ein weiterer Beitrag erstellt werden kann."
-    max_likes_per_day: "Maximale Anzahl der „Gefällt mir“-Angaben pro Benutzer und Tag."
+    max_likes_per_day: "Maximale Anzahl der Likes pro Benutzer und Tag."
     max_flags_per_day: "Maximale Anzahl der Meldungen pro Benutzer und Tag."
     max_bookmarks_per_day: "Maximale Anzahl der Lesezeichen pro Benutzer und Tag."
     max_edits_per_day: "Maximale Anzahl der Bearbeitungen pro Benutzer und Tag."
@@ -1037,8 +1038,8 @@ de:
     tl3_requires_posts_read_all_time: "Mindestanzahl Beiträge, die ein Benutzer gelesen haben muss, um die Vertrauensstufe Anführer (3) erreichen zu können."
     tl3_requires_max_flagged: "Um die Vertrauensstufe 3 erhalten zu können, dürfen in den letzten (tl3 time period) Tagen höchstens X Beiträge eines Benutzer von X verschiedenen anderen Benutzer gemeldet worden sein, wobei X diesem Wert entspricht. (0 oder mehr)"
     tl3_promotion_min_duration: "Mindestanzahl an Tagen, die ein Benutzer auf Vertrauensstufe 3 beförderter Benutzer auf dieser Stufe verbleibt, bevor er automatisch wieder auf Vertrauensstufe 2 heruntergestuft werden kann."
-    tl3_requires_likes_given: "Mindestanzahl an „Gefällt mir“-Angaben, die ein Benutzer innerhalb der letzten (tl3 time period) gegeben haben muss, um Vertrauensstufe 3 erreichen zu können."
-    tl3_requires_likes_received: "Mindestanzahl an „Gefällt mir“-Angaben die ein Benutzer innerhalb der letzten (tl3 time period) bekommen haben muss, um Vertrauensstufe 3 erreichen zu können."
+    tl3_requires_likes_given: "Mindestanzahl an Likes, die ein Benutzer innerhalb der letzten (tl3 time period) gegeben haben muss, um Vertrauensstufe 3 erreichen zu können."
+    tl3_requires_likes_received: "Mindestanzahl an Likes die ein Benutzer innerhalb der letzten (tl3 time period) bekommen haben muss, um Vertrauensstufe 3 erreichen zu können."
     tl3_links_no_follow: "rel=nofollow nicht von Links entfernen, die von Benutzern mit Vertrauensstufe 3 erstellt wurden."
     min_trust_to_create_topic: "Die minimale Vertrauensstufe wird benötigt um eine neues Thema zu erstellen."
     min_trust_to_edit_wiki_post: "Die minimal benötigte Vertrauensstufe, um als Wiki markierte Beiträge bearbeiten zu können."
@@ -1081,9 +1082,9 @@ de:
     history_hours_low: "Bearbeitungs-Symbol leicht hervorheben, wenn der Beitrag innerhalb so vieler Stunden nach Erstellen bearbeitet wird."
     history_hours_medium: "Bearbeitungs-Symbol mäßig hervorheben, wenn der Beitrag innerhalb so vieler Stunden nach Erstellen bearbeitet wird."
     history_hours_high: "Bearbeitungs-Symbol stark hervorheben, wenn der Beitrag innerhalb so vieler Stunden nach Erstellen bearbeitet wird."
-    topic_post_like_heat_low: "Feld für Anzahl der Antworten leicht hervorheben, wenn das Verhältnis von „Gefällt mir“-Angaben zu Antworten diesen Wert übersteigt."
-    topic_post_like_heat_medium: "Feld für Anzahl der Antworten mäßig hervorheben, wenn das Verhältnis von „Gefällt mir“-Angaben zu Antworten diesen Wert übersteigt."
-    topic_post_like_heat_high: "Feld für Anzahl der Antworten stark hervorheben, wenn das Verhältnis von „Gefällt mir“-Angaben zu Antworten diesen Wert übersteigt."
+    topic_post_like_heat_low: "Feld für Anzahl der Antworten leicht hervorheben, wenn das Verhältnis von Likes zu Antworten diesen Wert übersteigt."
+    topic_post_like_heat_medium: "Feld für Anzahl der Antworten mäßig hervorheben, wenn das Verhältnis von Likes zu Antworten diesen Wert übersteigt."
+    topic_post_like_heat_high: "Feld für Anzahl der Antworten stark hervorheben, wenn das Verhältnis von Likes zu Antworten diesen Wert übersteigt."
     faq_url: "Vollständige URL zu einer externen FAQ, welche du gerne verwenden möchtest."
     tos_url: "Die vollständige URL zu deinen extern gehosteten Nutzungsbedingungen, sofern vorhanden."
     privacy_policy_url: "Die vollständige URL zu deinen extern gehosteten Datenschutzrichtlinien, sofern vorhanden."
@@ -1190,6 +1191,7 @@ de:
     automatically_unpin_topics: "Themen automatisch loslösen, wenn ein Benutzer das Ende erreicht."
     read_time_word_count: "Wörter pro Minute für die Berechnung der geschätzten Lesezeit."
     topic_page_title_includes_category: "Name des Themas enthält den Namen der Kategorie."
+    native_app_install_banner: "Wiederkehrende Benutzer dazu einladen, die native Discourse-App herunterzuladen."
     max_prints_per_hour_per_user: "Maximale Anzahl von Aufrufen der Druckansicht pro Nutzer pro Stunde (0 zum deaktivieren)"
     full_name_required: "Der voller Name wird für das Benutzerprofil benötigt."
     enable_names: "Zeigt den vollen Namen eines Benutzers auf dem Profil, der Benutzerkarte und in E-Mails an. Wenn deaktiviert wird der volle Name überall ausgeblendet."
@@ -1246,7 +1248,7 @@ de:
     default_other_enable_quoting: "Aktiviere standardmäßig die Zitat-Antwort Funktion für hervorgehobenen Text."
     default_other_dynamic_favicon: "Zeige standardmäßig die Anzahl von neuen und geänderten Beiträgen im Browser-Symbol an."
     default_other_disable_jump_reply: "Springe standardmäßig nicht zum neusten Beitrag des Users, wenn dieser geantwortet hat."
-    default_other_like_notification_frequency: "Benutzer standardmäßig bei „Gefällt mir“-Angaben benachrichtigen."
+    default_other_like_notification_frequency: "Benutzer standardmäßig bei erhaltenen Likes benachrichtigen."
     default_topics_automatic_unpin: "Standardmäßig Themen automatisch loslösen, wenn ein Benutzer das Ende erreicht."
     default_categories_watching: "Liste der standardmäßig beobachteten Kategorien."
     default_categories_tracking: "Liste der standardmäßig gefolgten Kategorien."
@@ -2113,7 +2115,7 @@ de:
       join_the_discussion: "Mehr lesen"
       popular_posts: "Beliebte Beiträge"
       from_topic_label: "Von"
-      more_new: "Neues in Themen und Kategorien, denen du folgst"
+      more_new: "Neu für dich"
       subject_template: "Zusammenfassung für [%{site_name}]"
       unsubscribe: "Diese Zusammenfassung wird von %{site_link} gesendet, wenn wir dich einige Zeit lang nicht gesehen haben. Abbestellen unter %{unsubscribe_link}."
       click_here: "klicke hier"
@@ -2609,24 +2611,24 @@ de:
         Das Abzeichen wird verliehen, wenn du Vertrauensstufe 1 erreichst. Danke, dass du eine Weile dageblieben bist und ein paar Themen gelesen hast um zu lernen, worum es in unserer Community geht. Für dich gelten die Einschränkungen für neue Nutzer nicht mehr und du hast nun Zugriff auf alle wichtigen Funktionen, beispielsweise persönliche Nachrichten, die Melden-Funktion, das Bearbeiten von Wiki-Beiträgen und die Fähigkeit, mehrere Bilder und Links in Beiträgen zu verwenden.
     member:
       name: Mitglied
-      description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/5">Ermöglicht</a> das Versenden von Einladungen, Gruppen-Nachrichten, mehr „Gefällt mir“-Angaben
+      description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/5">Ermöglicht</a> das Versenden von Einladungen, Gruppen-Nachrichten, mehr Likes
       long_description: |
-        Das Abzeichen wird verliehen, wenn du Vertrauensstufe 2 erreichst. Danke, dass du einige Wochen mitgemacht hast, um unserer Community richtig beizutreten. Du kannst nun von deiner Benutzerseite und einzelnen Themen-Seiten aus Einladungen versenden, Gruppennachrichten erstellen und ein paar mehr „Gefällt mir“-Angaben pro Tag vergeben.
+        Das Abzeichen wird verliehen, wenn du Vertrauensstufe 2 erreichst. Danke, dass du einige Wochen mitgemacht hast, um unserer Community richtig beizutreten. Du kannst nun von deiner Benutzerseite und einzelnen Themen-Seiten aus Einladungen versenden, Gruppennachrichten erstellen und ein paar mehr Likes pro Tag vergeben.
     regular:
       name: Stammgast
-      description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/6">Ermöglicht</a> verschieben und umbenennen von Themen, veröffentlichen <a href="http://de.wikipedia.org/wiki/Nofollow">verfolgbarer Links</a>, Aktivierung der Wiki-Funktion, mehr „Gefällt mir“-Angaben
+      description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/6">Ermöglicht</a> verschieben und umbenennen von Themen, veröffentlichen <a href="http://de.wikipedia.org/wiki/Nofollow">verfolgbarer Links</a>, Aktivierung der Wiki-Funktion, mehr Likes
       long_description: |
-        Das Abzeichen wird verliehen, wenn du Vertrauensstufe 3 erreichst. Danke, dass du in unserer Community über mehrere Monate ein Stammgast gewesen bist. Du bist nun einer unserer aktivsten Leser und ein zuverlässiges Mitglied, das diese Community großartig macht. Du kannst nun Themen neu kategorisieren und umbenennen, mächtigere Spam-Meldungen nutzen, eine private Lounge nutzen und kannst viel mehr „Gefällt mir“-Angaben pro Tag erhalten.
+        Das Abzeichen wird verliehen, wenn du Vertrauensstufe 3 erreichst. Danke, dass du in unserer Community über mehrere Monate ein Stammgast gewesen bist. Du bist nun einer unserer aktivsten Leser und ein zuverlässiges Mitglied, das diese Community großartig macht. Du kannst nun Themen neu kategorisieren und umbenennen, mächtigere Spam-Meldungen nutzen, eine private Lounge nutzen und kannst viel mehr Likes pro Tag erhalten.
     leader:
       name: Anführer
-      description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/7">Ermöglicht</a> bearbeiten aller Beiträge, anheften, schließen, archivieren, aufteilen und zusammenfügen von Themen, mehr „Gefällt mir“-Angaben
+      description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/7">Ermöglicht</a> bearbeiten aller Beiträge, anheften, schließen, archivieren, aufteilen und zusammenfügen von Themen, mehr Likes
       long_description: |
-        Das Abzeichen wird verliehen, wenn du Vertrauensstufe 4 erreichst. Du bist ein vom Team ausgezeichneter Anführer und hast durch deine Aktivität und Worte ein positives Beispiel für die übrige Community abgegeben. Du kannst alle Beiträge bearbeiten, Moderator-Aktionen wie das Anheften, Schließen, Unsichtbar machen, Archivieren, Teilen und Zusammenführen von Themen durchführen und viel mehr „Gefällt mir“-Angaben pro Tag vergeben.
+        Das Abzeichen wird verliehen, wenn du Vertrauensstufe 4 erreichst. Du bist ein vom Team ausgezeichneter Anführer und hast durch deine Aktivität und Worte ein positives Beispiel für die übrige Community abgegeben. Du kannst alle Beiträge bearbeiten, Moderator-Aktionen wie das Anheften, Schließen, Unsichtbar machen, Archivieren, Teilen und Zusammenführen von Themen durchführen und viel mehr Likes pro Tag vergeben.
     welcome:
       name: Willkommen
-      description: Hat eine „Gefällt mir“-Angabe erhalten
+      description: Hat ein Like erhalten
       long_description: |
-        Das Abzeichen wird verliehen, wenn du die erster „Gefällt mir“-Angabe auf einen Beitrag erhältst. Glückwunsch, du hast einen Beitrag geschrieben, den deine Mitbenutzer interessant, cool oder nützlich finden!
+        Das Abzeichen wird verliehen, wenn du den ersten Like auf einen Beitrag erhältst. Glückwunsch, du hast einen Beitrag geschrieben, den deine Mitbenutzer interessant, cool oder nützlich finden!
     autobiographer:
       name: Autobiograf
       description: Hat <a href="/my/preferences">Benutzerprofil</a> ausgefüllt
@@ -2639,34 +2641,34 @@ de:
         Das Abzeichen wird verliehen, wenn du ein Jahr lang Mitglied warst und in diesem Jahr mindestens einen Beitrag geschrieben hast. Danke, dass du hier geblieben bist und zu unserer Community beiträgst. Ohne dich könnten wir dies nicht tun.
     nice_post:
       name: Schöne Antwort
-      description: Hat 10 „Gefällt mir“-Angaben für eine Antwort erhalten
+      description: Hat 10 Likes für eine Antwort erhalten
       long_description: |
-        Das Abzeichen wird verliehen, wenn eine deiner Antworten 10 „Gefällt mir“-Angaben erhält. Deine Antwort hat die Community wirklich beeindruckt und dabei geholfen, den Dialog voranzubringen!
+        Das Abzeichen wird verliehen, wenn eine deiner Antworten 10 Likes erhält. Deine Antwort hat die Community wirklich beeindruckt und dabei geholfen, den Dialog voranzubringen!
     good_post:
       name: Gute Antwort
-      description: Hat 25 „Gefällt mir“-Angaben für eine Antwort erhalten
+      description: Hat 25 Likes für eine Antwort erhalten
       long_description: |
-        Das Abzeichen wird verliehen, wenn eine deiner Antworten 25 „Gefällt mir“-Angaben erhält. Deine Antwort war außergewöhnlich und hat den Dialog sehr viel besser für alle gemacht!
+        Das Abzeichen wird verliehen, wenn eine deiner Antworten 25 Likes erhält. Deine Antwort war außergewöhnlich und hat den Dialog sehr viel besser für alle gemacht!
     great_post:
       name: Großartige Antwort
-      description: Hat 50 „Gefällt mir“-Angaben für eine Antwort erhalten
+      description: Hat 50 Likes für eine Antwort erhalten
       long_description: |
-        Das Abzeichen wird verliehen, wenn eine deiner Antworten 50 „Gefällt mir“-Angaben erhält. Wow! Deine Antwort war inspierend, faszinierend, wahnsinnig komisch oder aufschlussreich und die Community hat sie geliebt.
+        Das Abzeichen wird verliehen, wenn eine deiner Antworten 50 Likes erhält. Wow! Deine Antwort war inspirierend, faszinierend, wahnsinnig komisch oder aufschlussreich und die Community hat sie geliebt.
     nice_topic:
       name: Schönes Thema
-      description: Hat 10 „Gefällt mir“-Angaben für ein Thema erhalten
+      description: Hat 10 Likes für ein Thema erhalten
       long_description: |
-        Das Abzeichen wird verliehen, wenn eines deiner Themen 10 „Gefällt mir“-Angaben erhält. Hey, du hast einen interessanten Dialog begonnen, den die Community genossen hat!
+        Das Abzeichen wird verliehen, wenn eines deiner Themen 10 Likes erhält. Hey, du hast einen interessanten Dialog begonnen, den die Community genossen hat!
     good_topic:
       name: Gutes Thema
-      description: Hat 25 „Gefällt mir“-Angaben für ein Thema erhalten
+      description: Hat 25 Likes für ein Thema erhalten
       long_description: |
-        Das Abzeichen wird verliehen, wenn eines deiner Themen 25 „Gefällt mir“-Angaben erhält. Du hast einen lebendigen Dialog gestartet, die die Community versammelt hat und von dieser geliebt wurde!
+        Das Abzeichen wird verliehen, wenn eines deiner Themen 25 Likes erhält. Du hast einen lebendigen Dialog gestartet, die die Community versammelt hat und von dieser geliebt wurde!
     great_topic:
       name: Großartiges Thema
-      description: Hat 50 „Gefällt mir“-Angaben für ein Thema erhalten
+      description: Hat 50 Likes für ein Thema erhalten
       long_description: |
-        Das Abzeichen wird verliehen, wenn eines deiner Themen 50 „Gefällt mir“-angaben erhält. Du hast einen faszinierenden Dialog losgetreten und die Community hat die daraus enstandene, dynamische Diskussion genossen!
+        Das Abzeichen wird verliehen, wenn eines deiner Themen 50 Likes erhält. Du hast einen faszinierenden Dialog losgetreten und die Community hat die daraus entstandene, dynamische Diskussion genossen!
     nice_share:
       name: Schön geteilt
       description: Hat einen Beitrag mit 25 Besuchern geteilt
@@ -2683,7 +2685,7 @@ de:
       long_description: |
         Das Abzeichen wird verliehen, wenn du einen Link teilst, der von 1000 Besuchern angeklickt wurde. Wow! Du hast eine interessante Diskussion einer riesigen Leserschaft näher gebracht und unserer Community sehr geholfen zu wachsen!
     first_like:
-      name: Erste „Gefällt mir“-Angabe
+      name: Erster Like
       description: Hat einen Beitrag mit „Gefällt mir“ markiert
       long_description: |
         Das Abzeichen wird verliehen, wenn du das erste Mal auf die :heart:-Schaltfläche unter einem Beitrag klickst. Beiträge mit „Gefällt mir“ zu markieren, ist eine tolle Art, den Community-Kollegen wissen zu lassen, dass sein Beitrag interessant, nützlich, cool oder witzig war. Teile die Liebe!
@@ -2749,49 +2751,49 @@ de:
         Das Abzeichen wird verliehen, wenn ein von dir geteilter Link 1000 Klicks erhält. Wow! Du hast einen Link geteilt, der den Dialog signifikant verbessert hat, indem es ein wesentliches Detail, Kontext und Information geliefert hat. Großartige Arbeit!
     appreciated:
       name: Geschätzt
-      description: Hat je eine „Gefällt mir“-Angabe auf 20 Beiträge erhalten.
+      description: Hat je ein Like auf 20 Beiträge erhalten
       long_description: |
-        Das Abzeichen wird verliehen, wenn du mindestens eine „Gefällt mir“-Angabe an 20 verschiedenen Beiträgen erhältst. Die Community genießt deine Beiträge zu den Dialogen!
+        Das Abzeichen wird verliehen, wenn du mindestens ein Like auf 20 verschiedenen Beiträgen erhältst. Die Community genießt deine Beiträge zu den Dialogen!
     respected:
       name: Respektiert
-      description: Hat je zwei „Gefällt mir“-Angaben auf 100 Beiträge erhalten.
+      description: Hat je zwei Likes auf 100 Beiträge erhalten
       long_description: |
-        Das Abzeichen wird verliehen, wenn 100 deiner Beiträge mindestens 2 „Gefällt mir“-Angaben erhalten. Die Community wächst und respektiert deine zahlreichen Beiträge zu den Dialogen!
+        Das Abzeichen wird verliehen, wenn 100 deiner Beiträge mindestens 2 Likes erhalten. Die Community wächst und respektiert deine zahlreichen Beiträge zu den Dialogen!
     admired:
       name: Bewundert
-      description: Hat je fünf „Gefällt mir“-Angaben auf 300 Beiträge erhalten.
+      description: Hat je fünf Likes auf 300 Beiträge erhalten
       long_description: |
-        Das Abzeichen wird verliehen, wenn 300 deiner Beiträge mindestens 5 „Gefällt mir“-Angaben erhalten. Wow! Die Community bewundert deine regelmäßigen, hochwertigen Beiträge zu den Dialogen!
+        Das Abzeichen wird verliehen, wenn 300 deiner Beiträge mindestens 5 Likes erhalten. Wow! Die Community bewundert deine regelmäßigen, hochwertigen Beiträge zu den Dialogen!
     out_of_love:
       name: Out of Love
-      description: Hat 50 „Gefällt mir“-Angaben an einem Tag vergeben
+      description: Hat 50 Likes an einem Tag vergeben
       long_description: |
-        Das Abzeichen wird verliehen, wenn du alle deiner 50 täglichen „Gefällt mir“-Angaben nutzt. Daran zu denken, sich einen Moment zu nehmen und die Beiträge mit „Gefällt mir“ zu markieren, die du genießt und schätzt, ermuntert deine Community-Kollegen, in der Zukunft noch großartigere Diskussionen zu erstellen.
+        Das Abzeichen wird verliehen, wenn du alle deiner 50 täglichen Likes nutzt. Daran zu denken, sich einen Moment zu nehmen und die Beiträge mit „Gefällt mir“ zu markieren, die du genießt und schätzt, ermuntert deine Community-Kollegen, in der Zukunft noch großartigere Diskussionen zu erstellen.
     higher_love:
       name: Higher Love
-      description: Hat fünfmal je 50 „Gefällt mir“-Angaben an einem Tag vergeben
+      description: Hat fünfmal je 50 Likes an einem Tag vergeben
       long_description: |
-        Das Abzeichen wird verliehen, wenn du fünf Tage lang alle deiner 50 täglichen „Gefällt mir“-Angaben nutzt. Danke, dass du dir die Zeit nimmst, die besten Dialoge täglich zu fördern!
+        Das Abzeichen wird verliehen, wenn du fünf Tage lang alle deiner 50 täglichen Likes nutzt. Danke, dass du dir die Zeit nimmst, die besten Dialoge täglich zu fördern!
     crazy_in_love:
       name: Crazy in Love
-      description: Hat 20-mal je 50 „Gefällt mir“-Angaben an einem Tag vergeben
+      description: Hat 20-mal je 50 Likes an einem Tag vergeben
       long_description: |
-        Das Abzeichen wird verliehen, wenn du 20 Tage lang alle deiner 50 täglichen „Gefällt mir“-Angaben nutzt. Wow! Du bist ein Vorbild für die regelmäßige Ermunterung deiner Community-Kollegen!
+        Das Abzeichen wird verliehen, wenn du 20 Tage lang alle deiner 50 täglichen Likes nutzt. Wow! Du bist ein Vorbild für die regelmäßige Ermunterung deiner Community-Kollegen!
     thank_you:
       name: Dankeschön
-      description: Hat 20 „Gefällt mir“-Angaben für Beiträge erhalten und 10 „Gefällt mir“-Angaben vergeben
+      description: Hat 20 Likes für Beiträge erhalten und 10 Likes vergeben
       long_description: |
-        Das Abzeichen wird verliehen, wenn du 20 Beiträge mit „Gefällt mir“-Angaben hast und im Gegenzug mindestens 10 „Gefällt mir“-Angaben vergeben hast. Wenn jemand deine Beiträge mit „Gefällt mir“ markiert, findest du auch die Zeit, mit „Gefällt mir“ zu markieren, was andere schreiben.
+        Das Abzeichen wird verliehen, wenn du 20 Beiträge mit Likes hast und im Gegenzug mindestens 10 Likes vergeben hast. Wenn jemand deine Beiträge mit „Gefällt mir“ markiert, findest du auch die Zeit, mit „Gefällt mir“ zu markieren, was andere schreiben.
     gives_back:
       name: Geben & Nehmen
-      description: Hat 100 „Gefällt mir“-Angaben für Beiträge erhalten und 100 „Gefällt mir“-Angaben vergeben
+      description: Hat 100 Likes für Beiträge erhalten und 100 Likes vergeben
       long_description: |
-        Das Abzeichen wird verliehen, wenn du 100 Beiträge mit „Gefällt mir“-Angaben hast und im Gegenzug mindestens 100 „Gefällt mir“-Angaben vergeben hast. Danke, dass du vorab bezahlst!
+        Das Abzeichen wird verliehen, wenn du bei 100 Beiträgen Likes erhalten und im Gegenzug mindestens 100 Likes vergeben hast. Danke, dass du vorab bezahlst!
     empathetic:
       name: Empathisch
-      description: Hat 500 „Gefällt mir“-Angaben für Beiträge erhalten und 1000 „Gefällt mir“-Angaben vergeben
+      description: Hat 500 Likes für Beiträge erhalten und 1000 Likes vergeben
       long_description: |
-        Das Abzeichen wird verliehen, wenn du 500 Beiträge mit „Gefällt mir“-Angaben hast und im Gegenzug mindestens 1000 „Gefällt mir“-Angaben vergeben hast. Wow! Du bist ein Vorbild von Großzügigkeit und gegenseitige Wertschätzung :two_hearts:.
+        Das Abzeichen wird verliehen, wenn du bei 500 Beiträgen Likes erhalten und im Gegenzug mindestens 1000 Likes vergeben hast. Wow! Du bist ein Vorbild von Großzügigkeit und gegenseitige Wertschätzung :two_hearts:.
     first_emoji:
       name: Erstes Emoji
       description: Hat ein Emoji in einem Beitrag verwendet

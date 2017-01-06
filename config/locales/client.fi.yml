@@ -1329,7 +1329,8 @@ fi:
         go_bottom: "loppuun"
         go: "siirry"
         jump_bottom: "hyppää viimeisimpään viestiin"
-        jump_prompt: "hyppää viestiin"
+        jump_prompt: "hyppää..."
+        jump_prompt_of: "%{count} viestistä"
         jump_prompt_long: "Mihin viestiin haluat siirtyä?"
         jump_bottom_with_number: "hyppää viestiin %{post_number}"
         total: yhteensä viestejä
@@ -1561,7 +1562,7 @@ fi:
         file_too_large: "Pahoittelut, tiedosto jonka latausta yritit on liian suuri (suurin tiedostokoko on {{max_size_kb}}kb). Mitäpä jos lataisit tiedoston johonkin pilvipalveluun ja jakaisit täällä siihen linkin?"
         too_many_uploads: "Pahoittelut, voit ladata vain yhden tiedoston kerrallaan."
         too_many_dragged_and_dropped_files: "Pahoittelut, voit ladata korkeintaan 10 tiedostoa kerrallaan."
-        upload_not_authorized: "Pahoittelut, tiedostomuoto ei ole sallittu (sallitut tiedostopäätteet: {{authorized_extensions}})."
+        upload_not_authorized: "Pahoittelut, tiedosto jota yrität ladata ei ole sallittu (sallitut laajennukset: {{authorized_extensions}})."
         image_upload_not_allowed_for_new_user: "Pahoittelut, uudet käyttjät eivät saa ladata kuvia."
         attachment_upload_not_allowed_for_new_user: "Pahoittelut, uudet käyttäjät eivät saa ladata liitteitä."
         attachment_download_requires_login: "Pahoittelut, sinun täytyy kirjautua sisään voidaksesi ladata liitetiedostoja."

@@ -321,7 +321,33 @@ pt:
       total_rows:
         one: "1 utilizador"
         other: "%{count} utilizadores"
+    group_histories:
+      actions:
+        change_group_setting: "Mudar configuração do grupo"
+        add_user_to_group: "Adicionar utilizador"
+        remove_user_from_group: "Remover utilizador"
+        make_user_group_owner: "Tornar dono"
+        remove_user_as_group_owner: "Remover dono"
     groups:
+      logs:
+        title: "Registos"
+        when: "Quando"
+        action: "Ação"
+        acting_user: "Utlizador ator"
+        target_user: "Utilizador alvo"
+        subject: "Assunto"
+        details: "Detalhes"
+        from: "De"
+        to: "Para"
+      edit:
+        title: 'Editar Grupo'
+        full_name: 'Nome Completo'
+        add_members: "Adicionar membros"
+        delete_member_confirm: "Remover '%{username}' do grupo '%{group}'?"
+      request_membership_pm:
+        title: "Pedido de Adesão"
+        body: "Eu gostaria de aderir a @%{groupName}."
+      name_placeholder: "Nome do grupo, sem espaços, com as mesmas regras do nome de utilizador"
       add: "Adicionar"
       selector_placeholder: "Adicionar membros"
       owner: "proprietário"

@@ -191,7 +191,7 @@ nb_NO:
       one: "1 innlegg"
       other: "%{count} innlegg"
     new-topic: |
-      Velkommen til %{site_name} &mdash; **takk for at du starter et nytt innlegg!**
+      Velkommen til %{site_name}. **Takk for at du starter et nytt innlegg!**
 
       - Høres tittelen på innlegget interessant ut hvis du leser den høyt? Er den en god oppsummering?
 
