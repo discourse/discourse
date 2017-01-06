@@ -1141,20 +1141,6 @@ describe User do
     end
   end
 
-  describe "#purge_unactivated" do
-    let!(:user) { Fabricate(:user) }
-    let!(:inactive) { Fabricate(:user, active: false) }
-    let!(:inactive_old) { Fabricate(:user, active: false, created_at: 1.month.ago) }
-
-    it 'should only remove old, unactivated users' do
-      User.purge_unactivated
-      all_users = User.all
-      expect(all_users.include?(user)).to eq(true)
-      expect(all_users.include?(inactive)).to eq(true)
-      expect(all_users.include?(inactive_old)).to eq(false)
-    end
-  end
-
   describe "hash_passwords" do
 
     let(:too_long) { "x" * (User.max_password_length + 1) }
