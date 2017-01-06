@@ -377,6 +377,7 @@ es:
       title:
         one: "grupo"
         other: "grupos"
+      activity: "Actividad"
       members: "Miembros"
       topics: "Temas"
       posts: "Posts"
@@ -1329,7 +1330,8 @@ es:
         go_bottom: "abajo"
         go: "ir"
         jump_bottom: "salta al último post"
-        jump_prompt: "saltar al post"
+        jump_prompt: "saltar a..."
+        jump_prompt_of: "de %{count} posts"
         jump_prompt_long: "¿Hacia qué post quieres saltar?"
         jump_bottom_with_number: "saltar al post %{post_number}"
         total: posts totales
@@ -1561,7 +1563,7 @@ es:
         file_too_large: "Lo sentimos, ese archivo es demasiado grande (el tamaño máximo es {{max_size_kb}}kb). ¿Quizá podrías subir el archivo a un servicio de almacenamiento en la nube y compartir aquí el enlace?"
         too_many_uploads: "Lo siento solo puedes subir un archivo cada vez."
         too_many_dragged_and_dropped_files: "Lo sentimos, sólo puedes subir 10 archivos a la vez."
-        upload_not_authorized: "Lo sentimos, el archivo que intenta cargar no está autorizado (authorized extension: {{authorized_extensions}})."
+        upload_not_authorized: "Lo sentimos, el archivo que estás intentando subir no está permitido (extensiones autorizadas: {{authorized_extensions}})."
         image_upload_not_allowed_for_new_user: "Lo siento, usuarios nuevos no pueden subir imágenes."
         attachment_upload_not_allowed_for_new_user: "Lo siento, usuarios nuevos no pueden subir archivos adjuntos."
         attachment_download_requires_login: "Lo sentimos, necesitas haber iniciado sesión para descargar archivos adjuntos."
@@ -2978,6 +2980,7 @@ es:
           user_preferences: "Preferencias de los Usuarios"
           tags: "Etiquetas"
           search: "Búsqueda"
+          groups: "Grupos"
       badges:
         title: Distintivos
         new_badge: Nuevo distintivo

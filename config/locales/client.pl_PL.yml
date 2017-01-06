@@ -370,6 +370,7 @@ pl_PL:
         delete_member_confirm: "Usuń '%{username}' z grupy '%{group}'?"
       request_membership_pm:
         title: "Prośba o członkostwo"
+        body: "Chciałbym(-am) poprosić o członkostwo w grupie @%{groupName}."
       name_placeholder: "Nazwa grupy, bez spacji, takie same zasady jak przy nazwie użytkownika"
       public: "Zezwalaj użytkownikom na zapraszanie/opuszczanie grupy (Grupa musi być widoczna)"
       empty:
@@ -386,6 +387,7 @@ pl_PL:
       automatic_group: Automatyczna grupa
       closed_group: Zamknięta grupa
       is_group_user: "Jesteś członkiem tej grupy"
+      allow_membership_requests: "Pozwalaj użytkownikom wysyłać prośby o członkostwo do właścicieli grup (Wymagane jest aby wszyscy mogli wspominać grupę)"
       membership: "Członkostwo"
       name: "Nazwa"
       user_count: "Ilość użytkowników"
@@ -400,6 +402,7 @@ pl_PL:
         one: "grupa"
         few: "grupy"
         other: "grupy"
+      activity: "Aktywność"
       members: "Członkowie"
       topics: "Tematy"
       posts: "Wpisów"
@@ -431,6 +434,10 @@ pl_PL:
         muted:
           title: "Wyciszony"
           description: "Nie otrzymasz powiadomień o nowych tematach w tej grupie."
+      flair_url: "Awatar "
+      flair_url_placeholder: "(Opconalne) Link do obrazka lub klasa Font Awesome"
+      flair_bg_color_placeholder: "(Opcjonalne) Kolor w formacie Hex"
+      flair_color_placeholder: "(Opcjonalne) Kolor w formacie Hex"
       flair_preview_icon: "Podgląd ikony"
       flair_preview_image: "Podgląd obrazka"
     user_action_groups:
@@ -1173,10 +1180,12 @@ pl_PL:
           unpinned: są nie przypięte
           wiki: są postami wiki
         statuses:
+          label: Tematy gdzie
           open: są otwarte
           closed: są zamknięte
           archived: są archiwizowane
           noreplies: ma zero odpowiedzi
+          single_user: zawierają użytkownika
         post:
           time:
             before: przed
@@ -1295,6 +1304,7 @@ pl_PL:
       toggle_information: "przełącz szczegóły tematu"
       read_more_in_category: "Chcesz przeczytać więcej? Przeglądaj inne tematy w {{catLink}} lub {{latestLink}}."
       read_more: "Chcesz przeczytać więcej? {{catLink}} lub {{latestLink}}."
+      read_more_MF: "Masz do zobaczenia { UNREAD, plural, =0 {} one { is <a href='/unread'>1 nieprzeczytany</a> } other { are <a href='/unread'># nieprzeczytanych</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{and } false {is } other{}} <a href='/new'>1 nowy</a> temat} other { {BOTH, select, true{and } false {are } other{}} <a href='/new'># nowych</a> tematów} }, lub {CATEGORY, select, true {przeglądaj inne tematy w {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: Przeglądaj wszystkie kategorie
       view_latest_topics: pokaż aktualne tematy
       suggest_create_topic: Może rozpoczniesz temat?
@@ -1316,7 +1326,7 @@ pl_PL:
         go_bottom: "koniec"
         go: "idź"
         jump_bottom: "Przejdź na koniec"
-        jump_prompt: "przejdź do postu"
+        jump_prompt: "skocz do..."
         jump_bottom_with_number: "przeskocz do wpisu %{post_number}"
         total: w sumie wpisów
         current: obecny wpis
@@ -1786,6 +1796,7 @@ pl_PL:
           title: "Oglądasz pierwszy post"
         tracking:
           title: "Śledzona"
+          description: "Będziesz automatycznie śledzić wszystkie nowe tematy w tych kategoriach. Dostaniesz powiadomienie, gdy ktoś ci odpowie lub wspomni twoją @nazwę. Zobaczysz również liczbę odpowiedzi."
         regular:
           title: "Normalny"
           description: "Dostaniesz powiadomienie jedynie, gdy ktoś wspomni twoją @nazwę lub odpowie na twój wpis."
@@ -1800,6 +1811,8 @@ pl_PL:
         activity: "Aktywność"
         category: "Kategoria"
         created: "Utworzony"
+      sort_ascending: 'Rosnąco'
+      sort_descending: 'Malejąco'
     flagging:
       title: 'Dziękujemy za pomoc w utrzymaniu porządku w naszej społeczności!'
       action: 'Oflaguj wpis'
@@ -1813,6 +1826,7 @@ pl_PL:
       submit_tooltip: "Zapisz prywatną flagę."
       take_action_tooltip: "Nie czekaj, aż wpis zostanie zgłoszony przez innych,  natychmiast oflaguj do działania . "
       cant: "Przepraszamy, nie możesz oflagować teraz tego wpisu."
+      notify_staff: 'Powiadom zespół wiadomością prywatną'
       formatted_name:
         off_topic: "Jest nie-na-temat"
         inappropriate: "Jest nieodpowiednie"
@@ -1980,6 +1994,7 @@ pl_PL:
         new: '<b>g</b>, <b>n</b> Nowe'
         unread: '<b>g</b>, <b>u</b> Nieprzeczytane'
         categories: '<b>g</b>, <b>c</b> Kategorie'
+        top: '<b>g</b>, <b>t</b> Góra'
         bookmarks: '<b>g</b>, <b>b</b> Zakładki'
         profile: '<b>g</b>, <b>p</b> Profil'
         messages: '<b>g</b>, <b>m</b> Wiadomości'
@@ -1997,6 +2012,8 @@ pl_PL:
         user_profile_menu: '<b>p</b> Otwórz menu użytkownika'
         show_incoming_updated_topics: '<b>.</b> Pokaż zaktualizowane tematy'
         search: '<b>/</b> Wyszukaj'
+        help: '<b>?</b> Pokaż skróty klawiszowe'
+        dismiss_new_posts: '<b>x</b>, <b>r</b> wyczyść listę wpisów'
         dismiss_topics: '<b>x</b>, <b>t</b> wyczyść listę tematów'
         log_out: '<b>shift</b>+<b>z</b> <b>shift</b>+<b>z</b> Wyloguj'
       actions:
@@ -2005,6 +2022,7 @@ pl_PL:
         pin_unpin_topic: '<b>shift</b>+<b>p</b> przypnij/odepnij temat'
         share_topic: '<b>shift</b>+<b>s</b> Udostępnij temat'
         share_post: '<b>s</b> Udostępnij post'
+        reply_as_new_topic: '<b>t</b> Odpowiedz w nowym temacie'
         reply_topic: '<b>shift</b>+<b>r</b> Odpowiedz w temacie'
         reply_post: '<b>r</b> Odpowiedz na post'
         quote_post: '<b>q</b> cytuj post'
@@ -2014,6 +2032,7 @@ pl_PL:
         edit: '<b>e</b> Edytuj post'
         delete: '<b>d</b> Usuń post'
         mark_tracking: '<b>m</b>, <b>t</b> śledź temat'
+        mark_watching: '<b>m</b>, <b>w</b> Obserwuj wątek'
     badges:
       earned_n_times:
         one: "Otrzymano tą odznakę 1 raz"
@@ -2049,6 +2068,15 @@ pl_PL:
           name: Inne
         posting:
           name: Pisanie
+    google_search: |
+      <h3>Szukaj z Google</h3>
+      <p>
+      <form action='//google.com/search' id='google-search' onsubmit="document.getElementById('google-query').value = 'site:' + window.location.host + ' ' + document.getElementById('user-query').value; return true;">
+      <input type="text" id='user-query' value="">
+      <input type='hidden' id='google-query' name="q">
+      <button class="btn btn-primary">Google</button>
+      </form>
+      </p>
     tagging:
       all_tags: "Wszystkie tagi"
       selector_all_tags: "wszystkie tagi"
@@ -2591,6 +2619,8 @@ pl_PL:
             create_category: "Dodaj nową kategorię"
             block_user: "zablokuj użytkownika"
             unblock_user: "odblokuj użytkownika"
+            grant_admin: "nadaj prawa admina"
+            revoke_admin: "odbierz prawa admina"
             revoke_moderation: "cofnąć moderację"
             backup_operation: "operacja tworzenia kopii zapasowej"
             deleted_tag: "usunięty tag"
@@ -2893,6 +2923,7 @@ pl_PL:
           user_preferences: "Ustawienia użytk."
           tags: "Tagi"
           search: "Wyszukaj"
+          groups: "Grupy"
       badges:
         title: Odznaki
         new_badge: Nowa odznaka
@@ -3012,9 +3043,14 @@ pl_PL:
       done: "Zrobione"
       back: "Poprzednia"
       next: "Następna"
+      step: "%{current} z %{total}"
       upload: "Wyślij"
       uploading: "Wysyłanie…"
       quit: "Może później"
+      staff_count:
+        one: "W twojej społeczności jest 1 pracownik."
+        few: "W twojej społeczności jest %{count} pracowników."
+        other: "W twojej społeczności jest %{count} pracowników."
       invites:
         add_user: "dodaj"
         none_added: "Nie zaprosiłeś nikogo. Czy na pewno chcesz kontynuować?"

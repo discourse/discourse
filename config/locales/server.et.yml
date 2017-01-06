@@ -163,6 +163,7 @@ et:
   spamming_host: "Vabandust, sa ei tohi sellele domeenile viidata."
   user_is_suspended: "Peatatud kasutajatel pole lubatud postitada."
   topic_not_found: "Midagi on valesti. Kas on võimalik, et antud teema suleti või kustutati samal ajal, kui te seda vaatasite?"
+  not_accepting_pms: "Kahjuks ei aktsepteeri %{username} hetkel sõnumeid."
   just_posted_that: "on liiga sarnane sellele, mida sa hiljuti postitasid"
   invalid_characters: "sisaldab ebasobivaid tähemärke"
   is_invalid: "tundub segane. kas see on terve lause?"
@@ -258,6 +259,18 @@ et:
       See teema on Sulle kindlasti väga tähtis &ndash; enam kui %{percent}% vastustest siin on Sinu postitatud.
 
       Kas oled kindel, et jätad ka teistele piisavalt aega ja võimalust oma arvamuse avaldamiseks?
+    too_many_replies: |
+      ### Oled selle teema vastuste limiidi saavutanud
+
+      Vabandame, kuid uutele kasutajatele on ajutiselt seatud limiit %{newuser_max_replies_per_topic} vastust teema kohta.
+
+      Uue vastuse lisamise asemel kaalu oma varasema vastuse muutmist või teiste teemade külastust.
+    reviving_old_topic: |
+      ### Vana teema taaselustamine?
+
+      Viimane vastus sellele teemale on rohkem kui %{days} päeva vana. Sinu vastus tõstab selle teema nimekirja ette ning teavitab kõiki, kes selle teemaga seotud olid.
+
+      Oled sa kindel, et soovid seda vana arutelu jätkata?
   activerecord:
     attributes:
       category:
@@ -315,6 +328,20 @@ et:
   assets_topic_body: "See on püsiteema, nähtav vaid meeskonnale, selle saidi kujunduses kasutatavate piltide ja failide talletamiseks. Ära seda kustuta!\n\n\nTee nii:\n\n\n1. Vasta siia teemasse.\n2. Lae üles kõik pildid, mida soovida kasutada logodena, ikoonidena, vms. (Kasuta üleslaadimise ikooni postituse redaktori tööriistaribal, võid pildid siia ka lohistada või kleepida.)\n3. Postita oma vastus.\n4. Tee üleslaetud pildifailini leiad kas oma uues postituses oleval pildil paremklikates, või postituse muutmise ikooni klikkides ja kopeerides postitusest redaktoris. Kopeeri teed pildifailideni.\n5. Kleebi need teed sättesse [basic settings](/admin/site_settings/category/required).\n\n\nKui soovid lubada einevate failitüüpide üleslaadimist, muuda `authorized_extensions` sättes [file settings](/admin/site_settings/category/files)."
   discourse_welcome_topic:
     title: "Teretulemast Discourse'i"
+    body: |2
+
+      Selle märgistatud teema esimene lõik saab olema kõikidele uutele külastajatele nähtav kui tervitustekst sinu avalehel. See on oluline!
+
+      **Muuda see** enda kommuuni lühitutvustuseks:
+
+      - Kellele see on?
+      - Mida siit leiab?
+      - Miks peaks keegi siia tulema?
+      - Kust saab rohkem infot (lingid, ressursid jne)?
+
+      <img src="/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
+
+      Ilmselt peaksid sa selle teema administreerimise alt sulgema :wrench: (üleval paremal ja allääres), et teadandele vastuseid ei kuhjuks.
   lounge_welcome:
     title: "Teretulemast Lounge'i"
     body: |2
@@ -340,6 +367,8 @@ et:
       [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
   category:
     topic_prefix: "Liigist %{category}"
+    replace_paragraph: "(Asenda see paragrahv oma uues kategoorias kategooria lühitutvustusega. See juhis ilmub siis kategooriate vaates. Seega, katsu hoida kirjeldus alla 200 tähemärgi. **Kuniks sa pole muutnud seda kirjeldust või kuni sa pole loonud teemasid, ei ole seda kategooriat kategooriate lehel näha.**)"
+    post_template: "%{replace_paragraph}\n\nKasuta järgnevaid lõikusid pikema kirjelduse jaoks või foorumi juhendi või reeglite jaoks:\n\n- Miks peaksid inimesed seda foorumit kasutama? Mille jaoks see on?\n\n- Mille poolest erineb see meie teistest foorumitest?\n\n- Mis infot peaksid selle foorumi teemad sisaldama?\n\n- Kas meil on seda foorumit vaja? Kas me saame seda foorumit ühendada teise foorumiga või alamfoorumiga?\n"
     errors:
       uncategorized_parent: "'Liigitamata' ei saa omada vanem-liiki"
       self_parent: "Alamliigi vanemaks ei tohi olla alamliik ise"
@@ -366,6 +395,7 @@ et:
       title: "tavaline"
     leader:
       title: "juht"
+    change_failed_explanation: "Üritasid alandada %{user_name} tasemele '%{new_trust_level}'. Samas on tal juba tase'%{current_trust_level}'. %{user_name} jääb tasemele '%{current_trust_level}' - kui soovid alandada kasutaja taset, siis lukusta kõigepealt usaldustase."
   rate_limiter:
     slow_down: "Oled antud seda toimingut liiga palju proovinud. Proovi hiljem uuesti."
     too_many_requests: "Antud tegevuse jaoks on meil päevane kordade limiit. Palun oota %{time_left} enne kui uuesti proovid."
@@ -494,14 +524,17 @@ et:
   post_action_types:
     off_topic:
       title: 'Teemaväline'
+      description: 'Arvestades postituse pealkirja ja sisu, ei ole see postitus käesoleva vestlusega seotud ning see tuleks tõenäoliselt mujale liigutada.'
       long_form: 'tähistasin selle kui teemavälise'
     spam:
       title: 'Spämm'
+      description: 'See postitus on reklaam. Käesoleva vestlusega seoses ei ole see ei kasulik ega asjakohane vaid pigem millegi reklaamimine.'
       long_form: 'tähistasin selle kui spämmi'
       email_title: '"%{title}" tähistati spämmina'
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: 'Ebasünnis'
+      description: 'Selle postituse sisu on iga mõistliku inimese hinnangul solvav, ahistav või rikub <a href="/guidelines">meie kommuuni reegleid</a>.'
       long_form: 'tähistasin selle kui sobimatu'
     notify_user:
       title: 'Saada kasutajale @{{username}} sõnum'
@@ -803,39 +836,52 @@ et:
       name: Vedaja
     welcome:
       name: Teretulemast
+      description: Sai like'i
     autobiographer:
       name: Autobiograaf
     anniversary:
       name: Tähtpäev
+      description: Olnud aktiivne kasutaja vähemalt aasta, postitanud vähemalt ühe korra
     nice_post:
       name: Mõnus vastus
     good_post:
       name: Hea vastus
+      description: Kogus vastusele 25 like'i
     great_post:
       name: Suurepärane vastus
+      description: Kogus vastusele 50 like'i
     nice_topic:
       name: Mõnus teema
+      description: Kogus teemale 10 like'i
     good_topic:
       name: Hea teema
+      description: Kogus teemale 25 like'i
     great_topic:
       name: Suurepärane teema
+      description: Kogus teemale 50 like'i
     nice_share:
       name: Mõnus jagamine
+      description: Jagas postitust 25 unikaalse kasutajaga
     good_share:
       name: Hea jagamine
+      description: Jagas postitust 300 unikaalse külastajaga
     great_share:
       name: Suurepärane jagamine
     first_like:
       name: Esimene meeldimine
+      description: Laikis postitust
     first_flag:
       name: Esimene tähis
       description: Teatas lipuga postitusest
     promoter:
       name: Promootor
+      description: Kutsus kasutaja
     campaigner:
       name: Aktiivne promootor
+      description: Kutsus 3 tavakasutajat
     champion:
       name: Tšempion
+      description: Kutsus 5 liiget
     first_share:
       name: Esimene jagamine
       description: Jagas postitust
@@ -851,10 +897,13 @@ et:
       name: Lugeja
     popular_link:
       name: Populaarne viide
+      description: Postitas välise lingi, millel 50 klikki
     hot_link:
       name: Kuum viide
+      description: Postitas välise lingi, millel 300 klikki
     famous_link:
       name: Kuulus viide
+      description: Postitas välise lingi, millel 1000 klikki
     appreciated:
       name: Hinnatud
     respected:
@@ -869,16 +918,24 @@ et:
       name: Hullult armunud
     thank_you:
       name: Tänud
+      description: Omab 20 laigitud postitust ja laikis 10 postitust
     gives_back:
       name: Annab tagasi
+      description: Omab 100 laigitud postitust ja laikis 100 postitust
     empathetic:
       name: Empaatiline
+      description: Omab 500 laigitud postitust ja laikis 1000 postitust
+      long_description: |
+        Saad selle märgise, kui sul on 500 laigitud postitust ning oled ise laikunud 1000 või enam postitust. Oled tõeline lahkuse ja vastastikuse lugupidamise eeskuju :two_hearts:
     first_emoji:
       name: Esimene emotikon
+      description: Kasutasid postituses emotikoni
     first_mention:
       name: Esimene mainimine
+      description: Mainisid postituses kasutajat
     first_reply_by_email:
       name: Esimene vastamine meiliga
+      description: Vastasid postitusele läbi e-maili
   admin_login:
     success: "Kiri saadetud"
     error: "Viga!"
@@ -894,6 +951,7 @@ et:
     register:
       button: "Registreeru"
       title: "Registreeri adminni konto"
+      help: "alustamiseks registreeri uus konto"
     resend_email:
       title: "Saada aktiveerimismeil uuesti"
   safe_mode:
@@ -932,8 +990,10 @@ et:
             choices:
               open:
                 label: "Avalik"
+                description: "Kogukonnale pääseb ligi igaüks ning võib liituda"
               restricted:
                 label: "Privaatne"
+                description: "Kogukonnaga saavad liituda ainult minu poolt kutsutud või heakskiidetud inimesed"
       contact:
         title: "Kontakt"
         fields:
@@ -961,6 +1021,7 @@ et:
         title: "Kujundusteema"
         fields:
           theme_id:
+            description: "Kas soovid kasutada heledat või tumedat kujundust? Võid kujundusseadeid alati muuta läbi Admin paneeli ja seadistuste."
             choices:
               default:
                 label: "Lihtne hele"
@@ -982,6 +1043,7 @@ et:
             label: "Väike ikoon"
           apple_touch_icon_url:
             label: "Suur ikoon"
+            description: "Soovitame kasutada ikooni, et kuvada oma saiti uuematel seadmetel, mille pilt on suurem. Soovitatud ikooni suurus on vähemalt 144px x 144px"
       homepage:
         title: "Avaleht"
         fields:
