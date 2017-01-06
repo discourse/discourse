@@ -46,10 +46,6 @@ module Oneboxer
     ""
   end
 
-  def self.oneboxer_exists_for_url?(url)
-    Onebox.has_matcher?(url)
-  end
-
   def self.invalidate(url)
     Rails.cache.delete(onebox_cache_key(url))
   end
@@ -122,6 +118,10 @@ module Oneboxer
 
   def self.onebox_previewed!(user_id)
     $redis.del(preview_key(user_id))
+  end
+
+  def self.engine(url)
+    Onebox::Matcher.new(url).oneboxed
   end
 
   private
