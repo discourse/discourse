@@ -239,12 +239,12 @@ describe UserDestroyer do
 
         it "doesn't add ScreenedUrl records by default" do
           ScreenedUrl.expects(:watch).never
-          UserDestroyer.new(@admin).destroy(@user, {delete_posts: true})
+          UserDestroyer.new(@admin).destroy(@user, delete_posts: true)
         end
 
         it "adds ScreenedUrl records when :block_urls is true" do
           ScreenedUrl.expects(:watch).with(anything, anything, has_key(:ip_address)).at_least_once
-          UserDestroyer.new(@admin).destroy(@user, {delete_posts: true, block_urls: true})
+          UserDestroyer.new(@admin).destroy(@user, delete_posts: true, block_urls: true)
         end
       end
 
