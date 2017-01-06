@@ -18,10 +18,8 @@ test("Editing group", () => {
     ok(find('.group-members-input-selector .add[disabled]').length === 1, 'add members button should be disabled');
   });
 
-  click('.group-edit-public');
-
   andThen(() => {
-    ok(find('.group-edit-allow-membership-requests[disabled]').length === 1, 'it should disable group allow_membership_requets input');
+    ok(find('.group-edit-allow-membership-requests[disabled]').length === 1, 'it should disable group allow_membership_request input');
   });
 
   click('.group-edit-public');
