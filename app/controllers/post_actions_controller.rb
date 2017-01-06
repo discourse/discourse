@@ -6,6 +6,8 @@ class PostActionsController < ApplicationController
   before_filter :fetch_post_action_type_id_from_params
 
   def create
+    raise Discourse::NotFound if @post.blank?
+
     taken = PostAction.counts_for([@post], current_user)[@post.id]
 
     guardian.ensure_post_can_act!(
