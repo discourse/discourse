@@ -238,7 +238,7 @@ module Onebox
         end
 
         def is_article?
-          data[:type] =~ /article/ &&
+          (data[:type] =~ /article/ || data[:asset_type] =~ /article/) &&
           has_text?
         end
 
