@@ -14,7 +14,6 @@ const TopicRoute = Discourse.Route.extend({
   queryParams: {
     filter: { replace: true },
     username_filters: { replace: true },
-    show_deleted: { replace: true }
   },
 
   titleToken() {
@@ -45,7 +44,8 @@ const TopicRoute = Discourse.Route.extend({
       this.controllerFor('flag').setProperties({ selected: null, flagTopic: false });
     },
 
-    showFlagTopic(model) {
+    showFlagTopic() {
+      const model = this.modelFor('topic');
       showModal('flag',  { model });
       this.controllerFor('flag').setProperties({ selected: null, flagTopic: true });
     },
@@ -117,7 +117,6 @@ const TopicRoute = Discourse.Route.extend({
 
     willTransition() {
       this._super();
-      this.controllerFor("quote-button").deselectText();
       Em.run.cancel(scheduledReplace);
       isTransitioning = true;
       return true;
@@ -139,7 +138,6 @@ const TopicRoute = Discourse.Route.extend({
   setupParams(topic, params) {
     const postStream = topic.get('postStream');
     postStream.set('summary', Em.get(params, 'filter') === 'summary');
-    postStream.set('show_deleted', !!Em.get(params, 'show_deleted'));
 
     const usernames = Em.get(params, 'username_filters'),
         userFilters = postStream.get('userFilters');
@@ -208,6 +206,7 @@ const TopicRoute = Discourse.Route.extend({
 
     // close the multi select when switching topics
     controller.set('multiSelect', false);
+    controller.get('quoteState').clear();
 
     this.controllerFor('composer').set('topic', model);
     this.topicTrackingState.trackIncoming('all');

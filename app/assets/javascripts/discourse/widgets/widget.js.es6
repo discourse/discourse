@@ -1,4 +1,8 @@
-import { WidgetClickHook, WidgetClickOutsideHook, WidgetKeyUpHook, WidgetKeyDownHook, WidgetDragHook } from 'discourse/widgets/hooks';
+import { WidgetClickHook,
+         WidgetClickOutsideHook,
+         WidgetKeyUpHook,
+         WidgetKeyDownHook,
+         WidgetDragHook } from 'discourse/widgets/hooks';
 import { h } from 'virtual-dom';
 import DecoratorHelper from 'discourse/widgets/decorator-helper';
 
@@ -122,14 +126,23 @@ export function createWidget(name, opts) {
 }
 
 export default class Widget {
-  constructor(attrs, container, opts) {
+  constructor(attrs, register, opts) {
     opts = opts || {};
     this.attrs = attrs || {};
     this.mergeState = opts.state;
-    this.container = container;
     this.model = opts.model;
+    this.register = register;
+
+    register.deprecateContainer(this);
 
     this.key = this.buildKey ? this.buildKey(attrs) : null;
+    this.site = register.lookup('site:main');
+    this.siteSettings = register.lookup('site-settings:main');
+    this.currentUser = register.lookup('current-user:main');
+    this.capabilities = register.lookup('capabilities:main');
+    this.store = register.lookup('store:main');
+    this.appEvents = register.lookup('app-events:main');
+    this.keyValueStore = register.lookup('key-value-store:main');
 
     // Helps debug widgets
     if (Ember.testing) {
@@ -140,14 +153,6 @@ export default class Widget {
         Ember.warn(`you need a key when using state ${this.name}`);
       }
     }
-
-    this.site = container.lookup('site:main');
-    this.siteSettings = container.lookup('site-settings:main');
-    this.currentUser = container.lookup('current-user:main');
-    this.capabilities = container.lookup('capabilities:main');
-    this.store = container.lookup('store:main');
-    this.appEvents = container.lookup('app-events:main');
-    this.keyValueStore = container.lookup('key-value-store:main');
 
     if (this.name) {
       const custom = _customSettings[this.name];
@@ -218,15 +223,15 @@ export default class Widget {
     let WidgetClass = _registry[widgetName];
 
     if (!WidgetClass) {
-      if (!this.container) {
-        console.error("couldn't find container");
+      if (!this.register) {
+        console.error("couldn't find register");
         return;
       }
-      WidgetClass = this.container.lookupFactory(`widget:${widgetName}`);
+      WidgetClass = this.register.lookupFactory(`widget:${widgetName}`);
     }
 
     if (WidgetClass) {
-      const result = new WidgetClass(attrs, this.container, opts);
+      const result = new WidgetClass(attrs, this.register, opts);
       result.parentWidget = this;
       return result;
     } else {
@@ -241,40 +246,34 @@ export default class Widget {
         keyDirty(widget.key);
       }
 
-      const emberView = widget._emberView;
-      if (emberView) {
-        return emberView.queueRerender();
+      const rerenderable = widget._rerenderable;
+      if (rerenderable) {
+        return rerenderable.queueRerender();
       }
+
       widget = widget.parentWidget;
     }
   }
 
   _sendComponentAction(name, param) {
-    const view = this._findAncestorWithProperty('_emberView');
-
     let promise;
-    if (view) {
-      // Peek into ember internals to allow us to return promises from actions
-      const ev = view._emberView;
-      const target = ev.get('targetObject');
 
-      const actionName = ev.get(name);
-      if (!actionName) {
-        Ember.warn(`${name} not found`);
+    const view = this._findView();
+    if (view) {
+      const method = view.get(name);
+      if (!method) {
+        console.warn(`${name} not found`);
         return;
       }
 
-      if (target) {
-        // TODO: Use ember closure actions
-        const actions = target._actions || target.actionHooks || {};
-        const method = actions[actionName];
-        if (method) {
-          promise = method.call(target, param);
-          if (!promise || !promise.then) {
-            promise = Ember.RSVP.resolve(promise);
-          }
-        } else {
-          return ev.sendAction(name, param);
+      if (typeof method === "string") {
+        view.sendAction(method, param);
+        promise = Ember.RSVP.resolve();
+      } else {
+        const target = view.get('targetObject');
+        promise = method.call(target, param);
+        if (!promise || !promise.then) {
+          promise = Ember.RSVP.resolve(promise);
         }
       }
     }
@@ -313,7 +312,7 @@ export default class Widget {
     return this.rerenderResult(() => {
       const widget = this._findAncestorWithProperty(name);
       if (widget) {
-        return widget[name](param);
+        return widget[name].call(widget, param);
       }
 
       return this._sendComponentAction(name, param || this.findAncestorModel());

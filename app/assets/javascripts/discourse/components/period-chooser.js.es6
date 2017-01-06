@@ -24,8 +24,12 @@ export default Ember.Component.extend(CleansUp, {
     if ($(e.target).closest('.period-popup').length) { return; }
 
     if (!this.get('showPeriods')) {
-      const $chevron = this.$('i.fa-caret-down');
-      this.$('#period-popup').css($chevron.position());
+      if (!this.site.mobileView) {
+        const $chevron = this.$('i.fa-caret-down');
+        this.$('#period-popup').css($chevron.position());
+      } else {
+        this.$('#period-popup').css({top: this.$().height()});
+      }
       this.set('showPeriods', true);
       this._clickToClose();
     }

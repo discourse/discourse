@@ -11,6 +11,15 @@
 
 }
 
+.input-hint-text {
+  margin-left: 0.5em;
+  color: dark-light-diff($secondary, $primary, 30%, -35%);
+}
+
+.modal-header {
+  border-bottom: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
+}
+
 .modal-backdrop {
   position: fixed;
   top: 0;

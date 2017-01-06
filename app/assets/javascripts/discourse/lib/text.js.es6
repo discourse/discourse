@@ -19,7 +19,7 @@ export function cook(text) {
 }
 
 export function sanitize(text) {
-  return textSanitize(text, new WhiteLister(getOpts().features));
+  return textSanitize(text, new WhiteLister(getOpts()));
 }
 
 function emojiOptions() {
@@ -29,8 +29,8 @@ function emojiOptions() {
   return { getURL: Discourse.getURLWithCDN, emojiSet: siteSettings.emoji_set };
 }
 
-export function emojiUnescape(string) {
-  const opts = emojiOptions();
+export function emojiUnescape(string, options) {
+  const opts = _.extend(emojiOptions(), options || {});
   return opts ? performEmojiUnescape(string, opts) : string;
 }
 

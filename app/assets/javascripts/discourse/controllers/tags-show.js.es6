@@ -16,7 +16,7 @@ if (customNavItemHref) {
     if (navItem.get('tagId')) {
       var name = navItem.get('name');
 
-      if ( !Discourse.Site.currentProp('filters').contains(name) ) {
+      if ( !Discourse.Site.currentProp('filters').includes(name) ) {
         return null;
       }
 
@@ -40,9 +40,10 @@ if (customNavItemHref) {
 
 
 export default Ember.Controller.extend(BulkTopicSelection, {
-  needs: ["application"],
+  application: Ember.inject.controller(),
 
   tag: null,
+  additionalTags: null,
   list: null,
   canAdminTag: Ember.computed.alias("currentUser.staff"),
   filterMode: null,
@@ -72,15 +73,15 @@ export default Ember.Controller.extend(BulkTopicSelection, {
   }.property(),
 
   showAdminControls: function() {
-    return this.get('canAdminTag') && !this.get('category');
-  }.property('canAdminTag', 'category'),
+    return !this.get('additionalTags') && this.get('canAdminTag') && !this.get('category');
+  }.property('additionalTags', 'canAdminTag', 'category'),
 
   loadMoreTopics() {
     return this.get("list").loadMore();
   },
 
   _showFooter: function() {
-    this.set("controllers.application.showFooter", !this.get("list.canLoadMore"));
+    this.set("application.showFooter", !this.get("list.canLoadMore"));
   }.observes("list.canLoadMore"),
 
   footerMessage: function() {

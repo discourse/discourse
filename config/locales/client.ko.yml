@@ -44,8 +44,6 @@ ko:
           other: "< %{count}초"
         x_seconds:
           other: "%{count}초 전"
-        less_than_x_minutes:
-          other: "< %{count}분"
         x_minutes:
           other: "%{count}분 전"
         about_x_hours:
@@ -93,9 +91,13 @@ ko:
       google+: 'Google+로 공유'
       email: '이메일로 공유'
     action_codes:
+      public_topic: "이 토픽을 %{when} 에 공개"
+      private_topic: "이 토픽을 %{when} 에 비공개"
       split_topic: "이 주제를 ${when} 분리"
       invited_user: "%{who}이(가) %{when}에 초대됨"
+      invited_group: "%{who} 이(가) %{when} 에 초대됨"
       removed_user: "%{who}이(가) %{when}에 삭제됨"
+      removed_group: "%{who}이(가) %{when}에 삭제됨"
       autoclosed:
         enabled: '%{when}에 닫힘'
         disabled: '%{when}에 열림'
@@ -116,6 +118,8 @@ ko:
         disabled: '%{when} 목록에서 감춤'
     topic_admin_menu: "주제 관리자 기능"
     emails_are_disabled: "관리자가 이메일 송신을 전체 비활성화 했습니다. 어떤 종류의 이메일 알림도 보내지지 않습니다."
+    bootstrap_mode_enabled: "쉬운 시작을 위해 부트스트랩 모드로 구동 되었습니다. 모든 새로운 사용자에게 신뢰 수준 1이 부여되고 매일 이메일 다이제스트가 보내집니다. 이 기능은 총 사용자 수가% {min_users} 를 초과 할 때 자동으로 꺼집니다."
+    bootstrap_mode_disabled: "부트스트랩 모드는 24시간 뒤 비활성화 될 것입니다."
     s3:
       regions:
         us_east_1: "미국 동부 (N. 버지니아)"
@@ -126,9 +130,11 @@ ko:
         eu_central_1: "유럽연합 (프랑크푸르트)"
         ap_southeast_1: "아시아 태평양 (싱가폴)"
         ap_southeast_2: "아시아 태평양 (시드니)"
+        ap_south_1: "아시아 태평양 (뭄바이)"
         ap_northeast_1: "아시아 태평양 (토쿄)"
         ap_northeast_2: "아시아 태평양 (서울)"
         sa_east_1: "남 아메리카 (상파울로)"
+        cn_north_1: "중국 (북경)"
     edit: '이 주제의 제목과 카테고리 편집'
     not_implemented: "죄송합니다. 아직 사용할 수 없는 기능입니다."
     no_value: "아니오"
@@ -149,7 +155,7 @@ ko:
     faq: "FAQ"
     guidelines: "가이드라인"
     privacy_policy: "개인보호 정책"
-    privacy: "개인정보 취급방침"
+    privacy: "개인정보처리방침"
     terms_of_service: "서비스 이용약관"
     mobile_view: "모바일로 보기"
     desktop_view: "PC로 보기"
@@ -224,6 +230,8 @@ ko:
     undo: "실행 취소"
     revert: "되돌리기"
     failed: "실패"
+    switch_to_anon: "익명 모드 들어가기"
+    switch_from_anon: "익명 모드 나가기"
     banner:
       close: "배너 닫기"
       edit: "이 배너 수정 >>"
@@ -286,12 +294,6 @@ ko:
       total_rows:
         other: "%{count} 사용자"
     groups:
-      empty:
-        posts: "이 그룹의 구성원에 의해 작성된 게시물은 없습니다."
-        members: "이 그룹에는 구성원이 없습니다."
-        mentions: "이 그룹에 대한 언급이 없습니다."
-        messages: "이 그룹에 대한 메시지는 없습니다."
-        topics: "이 그룹의 구성원에 의해 작성된 주제글이 없습니다."
       add: "추가"
       selector_placeholder: "멤버 추가"
       owner: "소유자"
@@ -359,12 +361,10 @@ ko:
       latest_by: "가장 최근"
       toggle_ordering: "정렬 컨트롤 토글"
       subcategories: "하위 카테고리"
-      topic_stats: "새로운 주제 수"
+      topic_sentence:
+        other: "%{count}개의 주제"
       topic_stat_sentence:
         other: "지난 %{unit} 동안 %{count}개의 새로운 주제가 있습니다."
-      post_stats: "새 게시글 수"
-      post_stat_sentence:
-        other: "지난 %{unit} 동안 %{count}개의 새로운 게시글이 있습니다."
     ip_lookup:
       title: IP Address Lookup
       hostname: Hostname
@@ -387,7 +387,6 @@ ko:
       profile: "프로필"
       mute: "알림 끄기"
       edit: "환경 설정 편집"
-      download_archive: "내 게시글 다운로드"
       new_private_message: "새로운 메시지"
       private_message: "메시지"
       private_messages: "메시지"
@@ -409,6 +408,7 @@ ko:
         disable: "알림 비활성화"
         enable: "알림 활성화"
         each_browser_note: "노트: 사용하시는 모든 브라우저에서 이 설정을 변경해야합니다."
+      dismiss_notifications: "모두 해지"
       dismiss_notifications_tooltip: "읽지 않은 알림을 모두 읽음으로 표시"
       disable_jump_reply: "댓글을 작성했을 때, 새로 작성한 댓글로 화면을 이동하지 않습니다."
       dynamic_favicon: "새 글이나 업데이트된 글 수를 브라우저 아이콘에 보이기"
@@ -424,6 +424,16 @@ ko:
       suspended_reason: "이유: "
       github_profile: "Github"
       email_activity_summary: "활동 요약"
+      mailing_list_mode:
+        label: "메일링 리스트 모드"
+        enabled: "메일링 리스트 모드 활성화"
+        individual: "모든 새로운 게시글에 대해 메일을 보내주세요."
+        few_per_day: "모든 새로운 게시글에 대해 메일을 보내주세요 (하루에 약 2개)."
+      tag_settings: "태그"
+      watched_tags: "지켜보기"
+      tracked_tags: "추적하기"
+      muted_tags: "알람 끄기"
+      muted_tags_instructions: "이 태그의 새 주제에 대해 어떠한 알림도 받을 수 없으며, 최근의 주제도 나타나지 않습니다."
       watched_categories: "지켜보기"
       tracked_categories: "추적하기"
       muted_categories: "알림 끄기"
@@ -439,6 +449,7 @@ ko:
       muted_users_instructions: "이 회원이 보낸 알림 모두 숨김"
       muted_topics_link: "알림을 끈 주제 보기"
       automatically_unpin_topics: "글 끝에 다다르면 자동으로 주제 고정을 해제합니다."
+      api_approved: "승인됨:"
       staff_counters:
         flags_given: "유용한 신고"
         flagged_posts: "신고된 글"
@@ -605,13 +616,9 @@ ko:
         account_age_days: "일일 계정 나이"
         create: "이 포럼에 친구를 초대하기"
         generate_link: "초대 링크 복사"
-        generated_link_message: '<p>초대 링크가 성공적으로 생성되었습니다!</p><p><input class="invite-link-input" style="width: 75%;" type="text" value="%{inviteLink}"></p><p>초대 링크는 다음 이메일에 한해 유효합니다: <b>%{invitedEmail}</b></p>'
         bulk_invite:
-          none: "아직 아무도 초대하지 않았습니다. 초대장을 각각 보내거나, <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>uploading a bulk invite file</a>을 이용하여 단체 초대를 보낼 수 있습니다."
           text: "파일로 대량 초대하기"
-          uploading: "업로드 중..."
           success: "파일이 성공적으로 업로드되었습니다. 완료되면 메시지로 알려드리겠습니다."
-          error: "'{{filename}}': {{message}} 업로드중 에러가 있었습니다."
       password:
         title: "비밀번호"
         too_short: "암호가 너무 짧습니다."
@@ -633,8 +640,10 @@ ko:
         likes_received:
           other: "받음"
         top_replies: "인기 댓글"
+        no_replies: "아직 답글이 없습니다."
         more_replies: "답글 더 보기"
         top_topics: "인기 주제"
+        no_topics: "아직 주제가 없습니다."
         more_topics: "주제 더 보기"
         top_badges: "인기 배지"
         no_badges: "아직 배지가 없습니다."
@@ -683,9 +692,9 @@ ko:
     read_only_mode:
       enabled: "이 사이트는 현재 읽기전용 모드입니다. 브라우징은 가능하지만, 댓글달기, 좋아요 등 다른 행위들은 현재 비활성화 되어있습니다."
       login_disabled: "사이트가 읽기 전용모드로 되면서 로그인은 비활성화되었습니다."
-    too_few_topics_and_posts_notice: "<a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>토론을 시작하시죠!</a> 현재 <strong>%{currentTopics} / %{requiredTopics}</strong> 주제와 <strong>%{currentPosts} / %{requiredPosts}</strong> 글이 있습니다. 새 방문자는 읽고 응답할 대화꺼리가 좀 필요해요."
-    too_few_topics_notice: "<a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>토론을 시작하시죠!</a> 현재 <strong>%{currentTopics} / %{requiredTopics}</strong> 주제가 있습니다. 새 방문자는 읽고 응답할 대화꺼리가 좀 필요해요."
-    too_few_posts_notice: "<a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>토론을 시작하시죠!</a> 현재 <strong>%{currentPosts} / %{requiredPosts}</strong> 글이 있습니다. 새 방문자는 읽고 응답할 대화꺼리가 좀 필요해요."
+    too_few_topics_and_posts_notice: "<a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>토론을 시작하시죠!</a> 현재 <strong>%{currentTopics} / %{requiredTopics}</strong> 주제와 <strong>%{currentPosts} / %{requiredPosts}</strong> 글이 있습니다. 새 방문자에게는 읽고 응답할 대화거리가 필요합니다."
+    too_few_topics_notice: "<a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>토론을 시작하시죠!</a> 현재 <strong>%{currentTopics} / %{requiredTopics}</strong> 주제가 있습니다. 새 방문자에게는 읽고 응답할 대화거리가 필요합니다."
+    too_few_posts_notice: "<a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>토론을 시작하시죠!</a> 현재 <strong>%{currentPosts} / %{requiredPosts}</strong> 글이 있습니다. 새 방문자에게는 읽고 응답할 대화거리가 필요합니다."
     learn_more: "더 배우기"
     year: '년'
     year_desc: '지난 365일간 생성된 주제'
@@ -936,7 +945,6 @@ ko:
       title: "주제, 글, 사용자, 카테고리 검색"
       no_results: "검색 결과가 없습니다"
       no_more_results: "더 이상 결과가 없습니다."
-      search_help: 검색 도움말
       searching: "검색중..."
       post_format: "#{{post_number}} by {{username}}"
       context:
@@ -997,7 +1005,6 @@ ko:
       unsubscribe:
         stop_notifications: "<strong>{{title}}</strong>에 대한 알림은 이제 덜 받게 됩니다."
         change_notification_state: "현재 당신의 알림 설정 : "
-      filter_to: "이 주제에 {{post_count}}개의 글이 있습니다"
       create: '새 주제 만들기'
       create_long: '새로운 주제 만들기'
       private_message: '메시지 시작'
@@ -1051,7 +1058,6 @@ ko:
       auto_close_title: '자동으로 닫기 설정'
       auto_close_save: "저장"
       auto_close_remove: "이 주제를 자동으로 닫지 않기"
-      auto_close_immediate: "주제에 마지막 글이 올라온 지 %{hours} 시간 지났기 때문에 이 주제는 즉시 닫힐 예정입니다."
       progress:
         title: 진행 중인 주제
         go_top: "맨위"
@@ -1061,7 +1067,6 @@ ko:
         jump_bottom_with_number: "jump to post %{post_number}"
         total: 총 글
         current: 현재 글
-        position: "post %{current} of %{total}"
       notifications:
         reasons:
           '3_6': '이 카테고리를 보고 있어서 알림을 받게 됩니다.'
@@ -1228,7 +1233,6 @@ ko:
     post:
       reply: "<i class='fa fa-mail-forward'></i> {{replyAvatar}} {{usernameLink}}"
       reply_topic: "<i class='fa fa-mail-forward'></i> {{link}}"
-      quote_reply: "인용한 답글"
       edit: "{{link}} {{replyAvatar}} {{username}} 편집"
       edit_reason: "Reason: "
       post_number: "{{number}}번째 글"
@@ -1243,7 +1247,6 @@ ko:
       expand_collapse: "확장/축소"
       gap:
         other: "{{count}}개의 숨겨진 답글 보기"
-      more_links: "{{count}}개 더..."
       unread: "읽지 않은 포스트"
       has_replies:
         other: "{{count}} 답글"
@@ -1302,14 +1305,6 @@ ko:
         flag: '신고하기'
         defer_flags:
           other: "신고 보류하기"
-        it_too:
-          off_topic: "나도 신고하기"
-          spam: "나도 신고하기"
-          inappropriate: "나도 신고하기"
-          custom_flag: "나도 신고하기"
-          bookmark: "나도 북마크하기"
-          like: "나도 좋아해요"
-          vote: "나도 투표하기"
         undo:
           off_topic: "신고 취소"
           spam: "신고 취소"
@@ -1399,7 +1394,7 @@ ko:
       edit: '편집'
       edit_long: "카테고리 편집"
       view: '카테고리 안의 주제 보기'
-      general: '장군'
+      general: '일반'
       settings: '설정'
       topic_template: "주제 템플릿"
       delete: '카테고리 삭제'
@@ -1460,7 +1455,6 @@ ko:
       take_action: "조치하기"
       notify_action: '메시지 보내기'
       delete_spammer: "네, 스패머 회원을 삭제합니다"
-      delete_confirm: "이 회원의 글 %{posts}개 및 주제 %{topics}개를 삭제하고 IP주소 %{ip_address}와 이메일 %{email}을 영구 차단하려고 합니다. 이 회원이 정말 스패머가 확실합니까?"
       yes_delete_spammer: "예, 스팸 회원을 삭제합니다"
       ip_address_missing: "(알 수 없음)"
       hidden_email_address: "(숨김)"
@@ -1473,10 +1467,6 @@ ko:
         spam: "스팸입니다"
       custom_placeholder_notify_user: "구체적이고, 건설적이며, 항상 친절하세요."
       custom_placeholder_notify_moderators: "구체적으로 회원님이 걱정하는 내용과 가능한 모든 관련된 링크를 제공해주세요."
-      custom_message:
-        at_least: "최소한 {{n}}자를 입력하세요"
-        more: "{{n}} 이동합니다"
-        left: "{{n}} 나머지"
     flagging_topic:
       title: "우리 커뮤니티 질서를 지키는데 도와주셔서 감사합니다!"
       action: "주제 신고하기"
@@ -1507,7 +1497,6 @@ ko:
       invisible:
         help: "이 주제는 목록에서 제외됩니다. 주제 목록에 표시되지 않으며 링크를 통해서만 접근 할 수 있습니다."
     posts: "글"
-    posts_lowercase: "글"
     posts_long: "이 주제의 글 수는 {{number}}개 입니다."
     posts_likes_MF: |
       This topic has {count, plural, one {1 reply} other {# replies}} {ratio, select,
@@ -1736,15 +1725,12 @@ ko:
         refresh: "새로고침"
         new: "새로운"
         selector_placeholder: "아이디를 입력하세요"
-        name_placeholder: "그룹 이름, 사용자 이름처럼 빈칸 없이 작성"
         about: "회원과 이름을 변경"
         group_members: "그룹 멤버"
         delete: "삭제"
         delete_confirm: "이 그룹을 삭제 하시겠습니까?"
         delete_failed: "이것은 자동으로 생성된 그룹입니다. 삭제할 수 없습니다."
-        delete_member_confirm: "'%{group}' 그룹에서 '%{username}'을 제외시키겠습니까?"
         delete_owner_confirm: "'%{username}' 님에게서 소유자권한을 제거할까요?"
-        name: "이름"
         add: "추가"
         add_members: "사용자 추가하기"
         custom: "Custom"
@@ -1831,10 +1817,8 @@ ko:
             title: "데이터베이스를 이전 workiong state로 되돌리기"
             confirm: "데이타베이스를 이전 상태로 롤백 또는 되돌리기 할까요?"
       export_csv:
-        user_archive_confirm: "정말로 내 글을 다운로드 받습니까?"
         success: "Export initiated, you will be notified via message when the process is complete."
         failed: "내보내기가 실패했습니다. 로그를 확인해주세요"
-        rate_limit_error: "글은 하루에 한번 다운로드 받을 수 있습니다. 내일 다시 시도해주십시요."
         button_text: "내보니기"
         button_title:
           user: "모든 사용자 목록을 CSV 형식으로 내보내기"
@@ -2138,7 +2122,6 @@ ko:
         suspend_reason: "Reason"
         suspended_by: "접근 금지자"
         delete_all_posts: "모든 글을 삭제합니다"
-        delete_all_posts_confirm: "%{posts}개의 글과 %{topics}개의 주제를 지우려고 합니다. 확실합니까?"
         suspend: "접근 금지"
         unsuspend: "접근 허용"
         suspended: "접근 금지?"
@@ -2186,7 +2169,7 @@ ko:
         anonymize_failed: "There was a problem anonymizing the account."
         delete: "사용자 삭제"
         delete_forbidden_because_staff: "관리자 및 운영자 계정은 삭제할 수 없습니다."
-        delete_posts_forbidden_because_staff: "어드민와 운영자들의 포스트는 삭제할 수 없습니다."
+        delete_posts_forbidden_because_staff: "관리자와 운영자의 글은 삭제할 수 없습니다."
         delete_forbidden:
           other: "사용자가 작성한 글이 있으면 사용자를 삭제 할 수 없습니다. 사용자를 삭제 하기 전에 사용자가 작성한 글을 모두 삭제해야 합니다. (%{count}일 이전에 작성한 글은 삭제할 수 없습니다.)"
         cant_delete_all_posts:
@@ -2222,7 +2205,6 @@ ko:
         unlock_trust_level: "회원등급 고정 해제"
         tl3_requirements:
           title: "3등급 회원이 되기 위한 자격"
-          table_title: "지난 %{time_period} 일간"
           value_heading: "값"
           requirement_heading: "자격요건"
           visits: "방문횟수"

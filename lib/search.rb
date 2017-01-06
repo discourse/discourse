@@ -54,7 +54,7 @@ class Search
     posts.each do |post|
       # force indexing
       post.cooked += " "
-      SearchObserver.index(post)
+      SearchIndexer.index(post)
     end
 
     posts = Post.joins(:topic)
@@ -67,7 +67,7 @@ class Search
     posts.each do |post|
       # force indexing
       post.cooked += " "
-      SearchObserver.index(post)
+      SearchIndexer.index(post)
     end
 
     nil
@@ -128,6 +128,30 @@ class Search
     end
   end
 
+  def self.min_post_id_no_cache
+    return 0 unless SiteSetting.search_prefer_recent_posts?
+
+
+    offset, has_more = Post.unscoped
+                           .order('id desc')
+                           .offset(SiteSetting.search_recent_posts_size-1)
+                           .limit(2)
+                           .pluck(:id)
+
+    has_more ? offset : 0
+  end
+
+  def self.min_post_id(opts=nil)
+    return 0 unless SiteSetting.search_prefer_recent_posts?
+
+    # It can be quite slow to count all the posts so let's cache it
+    Rails.cache.fetch("search-min-post-id:#{SiteSetting.search_recent_posts_size}", expires_in: 1.week) do
+      min_post_id_no_cache
+    end
+  end
+
+  attr_accessor :term
+
   def initialize(term, opts=nil)
     @opts = opts || {}
     @guardian = @opts[:guardian] || Guardian.new
@@ -135,6 +159,7 @@ class Search
     @include_blurbs = @opts[:include_blurbs] || false
     @blurb_length = @opts[:blurb_length]
     @limit = Search.per_facet
+    @valid = true
 
     term = process_advanced_search!(term)
 
@@ -155,14 +180,26 @@ class Search
     @results = GroupedSearchResults.new(@opts[:type_filter], term, @search_context, @include_blurbs, @blurb_length)
   end
 
+  def valid?
+    @valid
+  end
+
   def self.execute(term, opts=nil)
     self.new(term, opts).execute
   end
 
   # Query a term
   def execute
-    if @term.blank? || @term.length < (@opts[:min_search_term_length] || SiteSetting.min_search_term_length)
-      return nil unless @filters.present?
+
+    unless @filters.present?
+      min_length = @opts[:min_search_term_length] || SiteSetting.min_search_term_length
+      terms = (@term || '').split(/\s(?=(?:[^"]|"[^"]*")*$)/).reject {|t| t.length < min_length }
+
+      if terms.blank?
+        @term = ''
+        @valid = false
+        return
+      end
     end
 
     # If the term is a number or url to a topic, just include that topic
@@ -213,6 +250,10 @@ class Search
 
   advanced_filter(/posts_count:(\d+)/) do |posts, match|
     posts.where("topics.posts_count = ?", match.to_i)
+  end
+
+  advanced_filter(/min_post_count:(\d+)/) do |posts, match|
+    posts.where("topics.posts_count >= ?", match.to_i)
   end
 
   advanced_filter(/in:first/) do |posts|
@@ -399,6 +440,9 @@ class Search
         elsif word == 'in:private'
           @search_pms = true
           nil
+        elsif word =~ /^private_messages:(.+)$/
+          @search_pms = true
+          nil
         else
           found ? nil : word
         end
@@ -530,6 +574,7 @@ class Search
           posts = posts.where("posts.raw  || ' ' || u.username || ' ' || COALESCE(u.name, '') ilike ?", "%#{term_without_quote}%")
         else
           posts = posts.where("post_search_data.search_data @@ #{ts_query}")
+
           exact_terms = @term.scan(/"([^"]+)"/).flatten
           exact_terms.each do |exact|
             posts = posts.where("posts.raw ilike ?", "%#{exact}%")
@@ -612,7 +657,7 @@ class Search
     end
 
     def self.query_locale
-      @query_locale ||= Post.sanitize(Search.long_locale)
+      "'#{Search.long_locale}'"
     end
 
     def query_locale
@@ -622,7 +667,7 @@ class Search
     def self.ts_query(term, locale = nil, joiner = "&")
 
       data = Post.exec_sql("SELECT to_tsvector(:locale, :term)",
-                            locale: locale || long_locale,
+                            locale: 'simple',
                             term: term
                           ).values[0][0]
 
@@ -641,33 +686,56 @@ class Search
       @ts_query_cache[(locale || query_locale) + " " + @term] ||= Search.ts_query(@term, locale)
     end
 
-    def aggregate_search(opts = {})
+    def wrap_rows(query)
+      "SELECT *, row_number() over() row_number FROM (#{query.to_sql}) xxx"
+    end
 
+    def aggregate_post_sql(opts)
       min_or_max = @order == :latest ? "max" : "min"
 
-      post_sql =
+      query =
         if @order == :likes
           # likes are a pain to aggregate so skip
           posts_query(@limit, private_messages: opts[:private_messages])
             .select('topics.id', "post_number")
-            .to_sql
         else
-          posts_query(@limit, aggregate_search: true,
-                                     private_messages: opts[:private_messages])
+          posts_query(@limit, aggregate_search: true, private_messages: opts[:private_messages])
             .select('topics.id', "#{min_or_max}(post_number) post_number")
             .group('topics.id')
-            .to_sql
         end
 
+      min_id = Search.min_post_id
+      if min_id > 0
+        low_set = query.dup.where("post_search_data.post_id < #{min_id}")
+        high_set = query.where("post_search_data.post_id >= #{min_id}")
+
+        return { default: wrap_rows(high_set), remaining: wrap_rows(low_set) }
+      end
+
       # double wrapping so we get correct row numbers
-      post_sql = "SELECT *, row_number() over() row_number FROM (#{post_sql}) xxx"
+      { default: wrap_rows(query) }
+    end
 
-      posts = Post.includes(:topic => :category)
-                  .joins("JOIN (#{post_sql}) x ON x.id = posts.topic_id AND x.post_number = posts.post_number")
-                  .order('row_number')
+    def aggregate_posts(post_sql)
+      return [] unless post_sql
 
-      posts.each do |post|
-        @results.add(post)
+      Post.includes(:topic => :category)
+        .includes(:user)
+        .joins("JOIN (#{post_sql}) x ON x.id = posts.topic_id AND x.post_number = posts.post_number")
+        .order('row_number')
+    end
+
+    def aggregate_search(opts = {})
+      post_sql = aggregate_post_sql(opts)
+
+      added = 0
+      aggregate_posts(post_sql[:default]).each do |p|
+        @results.add(p)
+        added += 1
+      end
+
+      if added < @limit
+        aggregate_posts(post_sql[:remaining]).each {|p| @results.add(p) }
       end
     end
 
@@ -679,7 +747,9 @@ class Search
 
     def topic_search
       if @search_context.is_a?(Topic)
-        posts = posts_query(@limit).where('posts.topic_id = ?', @search_context.id).includes(:topic => :category)
+        posts = posts_query(@limit).where('posts.topic_id = ?', @search_context.id)
+                                   .includes(:topic => :category)
+                                   .includes(:user)
         posts.each do |post|
           @results.add(post)
         end

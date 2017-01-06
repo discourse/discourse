@@ -28,12 +28,8 @@ describe TopicList do
       SiteSetting.tagging_enabled = true
     end
 
-    after do
-      SiteSetting.tagging_enabled = false
-    end
-
     it "should add tags to preloaded custom fields" do
-      expect(topic_list.preloaded_custom_fields).to eq(Set.new([DiscourseTagging::TAGS_FIELD_NAME]))
+      expect(topic_list.preloaded_custom_fields).to include(DiscourseTagging::TAGS_FIELD_NAME)
     end
   end
 
@@ -61,11 +57,11 @@ describe TopicList do
         expect(TopicList.new('latest', other_topic.user, [other_topic]).tags.sort).to eq([tag.name, other_tag.name].sort)
       end
 
-      it "with another category with no tags, should return exclude tags restricted to other categories" do
+      it "with another category with no tags, should return no tags" do
         other_category = Fabricate(:category)
         topic3 = Fabricate(:topic, category: other_category)
         list = TopicList.new('latest', topic3.user, [topic3], { category: other_category.id, category_id: other_category.id })
-        expect(list.tags).to eq([other_tag.name])
+        expect(list.tags).to be_empty
       end
     end
   end

@@ -15,8 +15,13 @@ cs:
       short: "%-d. %-m. %Y"
       short_no_year: "%-d. %B"
       date_only: "%-d %B %Y"
+      long: "%B %-d, %Y, %l:%M%P"
   date:
     month_names: [null, ledna, února, března, dubna, května, června, července, srpna, září, října, listopadu, prosince]
+    <<: *datetime_formats
+  time:
+    am: "am"
+    pm: "pm"
     <<: *datetime_formats
   title: "Discourse"
   topics: "Témata"
@@ -26,6 +31,9 @@ cs:
   log_in: "Přihlásit se"
   disable_remote_images_download_reason: "Stahování obrázků z cizích serverů bylo vypnuto protože na disku není dostatek místa."
   anonymous: "Anonymní"
+  emails:
+    incoming:
+      default_subject: "Příchozí email z %{email}"
   errors: &errors
     format: '%{attribute} %{message}'
     messages:
@@ -45,7 +53,6 @@ cs:
       has_already_been_used: "již byl použit"
       inclusion: není zahrnutý v seznamu
       invalid: je neplatný
-      is_invalid: "je neplatný; zkus být trochu více popisný"
       less_than: musí být menší než %{count}
       less_than_or_equal_to: musí být menší nebo roven %{count}
       not_a_number: není číslo
@@ -82,8 +89,6 @@ cs:
       max_username_length_exists: "Nemůžeš nastavit délku maximální uživatelského jména kratší než je nejdelší uživatelské jméno. "
       max_username_length_range: "Nemůžeš nastavit maximum pod minimum."
       default_categories_already_selected: "Nemůžeš vybrat kategorii používanou v jiném seznamu."
-  bulk_invite:
-    file_should_be_csv: "Nahraný soubrou by měl být ve formátu csv nebo txt."
   backup:
     operation_already_running: "Právě probíhá operace %{operation}. V tuto chvíli nelze zahájit novou operaci %{operation}."
     backup_file_should_be_tar_gz: "Záloha by měla být archiv s příponou .tar.gz."
@@ -91,6 +96,8 @@ cs:
   not_logged_in: "Na tuto akci musíte být přihlášení."
   not_found: "Žádaná URL adresa nebo zdroj nelze najít."
   read_only_mode_enabled: "Tato stránka je v režimu jen pro čtení. Interakce jsou zakázány."
+  reading_time: "Čas čtení"
+  likes: "Líbí se"
   too_many_replies:
     one: "Je nám líto, ale noví uživatelé jsou dočasně omezeni na 1 odpověď v tématu."
     few: "Je nám líto, ale noví uživatelé jsou dočasně omezeni na %{count} odpovědi v tématu."
@@ -110,11 +117,12 @@ cs:
       one: "1 reakce"
       few: "%{count} reakce"
       other: "%{count} reakcí"
+  no_mentions_allowed: "Bohužel, nemůžete zmiňovat ostatní uživatele."
+  no_mentions_allowed_newuser: "Bohužel, noví uživatelé nemohou zmiňovat ostatní uživatele."
   spamming_host: "Bohužel, na tento server nemůžete odkazovat."
   user_is_suspended: "Vyloučení uživatelé nemohou přidávat příspěvky."
   just_posted_that: "je příliš podobný vašemu příspěvku z poslední doby"
   invalid_characters: "obsahuje neplatné znaky"
-  is_invalid: "je neplatné; zkuste se vyjádřit více popisně"
   next_page: "další strana →"
   prev_page: "← předchozí strana"
   page_num: "Strana %{num}"
@@ -554,8 +562,6 @@ cs:
     github_config_warning: 'Server je nakonfigurován, aby povoloval registraci a přihlášení přes GitHub (enable_github_logins), ale nejsou nastaveny hodnoty "client id" a "secret". Navštivte <a href="/admin/site_settings">nastevení webu</a> a opravte nastavení. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide" target="_blank">Pro více informací si přečtěte tento návod</a>.'
     s3_config_warning: 'Server je nakonfigurován, aby nahrával soubory na S3, ale chybí nastavení: s3_access_key_id, s3_secret_access_key nebo s3_upload_bucket. Navštivte <a href="/admin/site_settings">nastavení webu</a> a opravte nastavení. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Přečtěte si "How to set up image uploads to S3?" pro více informací</a>.'
     image_magick_warning: 'Server je nakonfigurován, aby vytvářel náhledy velkých obrázků, ale není nainstalován ImageMagick. Nainstalujte ImageMagick pomocí vašeho oblíbeného balíčkovače, nebo navštivte <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">web ImageMagick pro stažení aktuální verze</a>.'
-    contact_email_invalid: "Kontaktní email je neplatný. Prosím, aktualizujte položku contact_email v <a href='/admin/site_settings'>Nastavení webu</a>."
-    consumer_email_warning: "Váš web je nastaven, aby používal Gmail (nebo jinou uživatelskou emailovou službu) k odesílání emailů. <a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>Gmail limituje počet emailů, které můžete odeslat</a>. Zvažte použití jiného emailového poskytovatele, jako je třeba mandrill.com k zajištění doručitelnosti emailů."
   site_settings:
     default_locale: "Výchozí jazyk této Discourse instance (kód ve formátu ISO 639-1)"
     allow_user_locale: "Povolit uživatelům nastavit si jazyk fóra"
@@ -703,12 +709,7 @@ cs:
     user_posted_pm:
       subject_template: "[%{site_name}] [PM] %{topic_title}"
     digest:
-      new_activity: "Nová aktivita ve vašich tématech a příspěvcích:"
-      top_topics: "Populární příspěvky"
-      other_new_topics: "Populární témata"
       click_here: "klikněte zde"
-      read_more: "Číst dále"
-      more_topics_category: "Více nových témat:"
     forgot_password:
       subject_template: "[%{site_name}] Obnovení hesla"
       text_body_template: |
@@ -782,12 +783,56 @@ cs:
     title: "Podmínky používání"
   privacy_topic:
     title: "Ochrana soukromí"
+  badges:
+    admired:
+      name: Obdivovaný
   admin_login:
     success: "E-mail odeslán"
     error: "Chyba!"
     submit_button: "Odeslat e-mail"
-  time:
-    <<: *datetime_formats
+  wizard:
+    step:
+      privacy:
+        title: "Přístup"
+      corporate:
+        fields:
+          company_short_name:
+            label: "Název společnosti (krátký)"
+            placeholder: "Initech"
+          company_full_name:
+            label: "Název společnosti (plný)"
+            placeholder: "Initech, s.r.o."
+          company_domain:
+            placeholder: "initech.cz"
+      colors:
+        title: "Téma"
+      logos:
+        title: "Loga"
+        fields:
+          logo_url:
+            label: "Primární loga"
+      icons:
+        title: "Ikony"
+        fields:
+          favicon_url:
+            label: "Malá ikona"
+          apple_touch_icon_url:
+            label: "Velká ikona"
+      homepage:
+        title: "Domovská stránka"
+        fields:
+          homepage_style:
+            choices:
+              latest:
+                label: "Nejnovější témata"
+              categories:
+                label: "Kategorie"
+      emoji:
+        title: "Smajlíky :)"
+      invites:
+        title: "Pozvi redakci"
+      finished:
+        title: "Váš Discourse je připraven!"
   activemodel:
     errors:
       <<: *errors

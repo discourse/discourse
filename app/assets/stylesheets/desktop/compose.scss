@@ -187,11 +187,15 @@
     border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
     .draft-text {
       display: block;
+
+      i {
+        color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
+      }
     }
     .toggler {
       &:before {
         font-family: "FontAwesome";
-        content: "\f077";
+        content: "\f00d";
       }
     }
   }
@@ -297,6 +301,11 @@
       &:disabled {
         background-color: dark-light-diff($primary, $secondary, 90%, -60%);
       }
+    }
+    #topic-featured-link {
+      padding: 7px 10px;
+      margin: 6px 10px 3px 0;
+      width: 400px;
     }
     .d-editor-input:disabled {
       background-color: dark-light-diff($primary, $secondary, 90%, -60%);
@@ -463,6 +472,10 @@
       color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
     }
   }
+}
+
+#reply-control.topic-featured-link-only.open {
+  height: 200px;
 }
 
 .control-row.reply-area {

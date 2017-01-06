@@ -9,33 +9,55 @@ ar:
   js:
     poll:
       voters:
-        zero: "لا يوجد مصوتون."
-        one: "مصوت."
-        two: "مصوتان."
-        few: "مصوتون قليلون."
-        many: "مصوتون كثيرون."
-        other: "المصوتون"
-      average_rating: "متوسط التقييم: <strong>%{average}</strong> "
+        zero: "لا أحد صوّت"
+        one: "واحد صوّت"
+        two: "إثنان صوّتا"
+        few: "صوّتوا"
+        many: "صوّتوا"
+        other: "صوّتوا"
+      total_votes:
+        zero: "لم يصوت أحد"
+        one: "صوت واحد"
+        two: "صوتان"
+        few: "مجموعة من الأصوات"
+        many: "العديد من الأصوات"
+        other: "مجموع الأصوات"
+      average_rating: "متوسط التقييمات: <strong>%{average}</strong> "
       public:
-        title: "الأصوات للعموم."
+        title: "الأصوات تظهر للعموم."
       multiple:
         help:
           at_least_min_options:
-            zero: "لا تختار أي خيار"
+            zero: "لا تختر شيئا"
             one: "اختر خيارًا واحدًا على الأقل"
-            two: "اختر خيارين اثنين على الأقل"
+            two: "اختر خيارين إثنين على الأقل"
             few: "اختر <strong>%{count}</strong> خيارات على الأقل"
-            many: "اختر <strong>%{count}</strong> خيارات على الأقل"
-            other: "اختر <strong>%{count}</strong> خيارات على الأقل"
+            many: "اختر <strong>%{count}</strong> خيارا على الأقل"
+            other: "اختر <strong>%{count}</strong> خيار على الأقل"
+          up_to_max_options:
+            zero: "لا تختر شيئا"
+            one: "اختر خيارا <strong>واحدا</strong>"
+            two: "اختر ما حدّه <strong>خيارين</strong>"
+            few: "اختر ما حدّه <strong>%{count}</strong> خيارات"
+            many: "اختر ما حدّه <strong>%{count}</strong> خيارا"
+            other: "اختر ما حدّه <strong>%{count}</strong> خيار"
+          x_options:
+            zero: "لا تختر شيئا"
+            one: "اختر خيار <strong>واحد</strong>"
+            two: "اختر <strong>خيارين</strong>"
+            few: "اختر <strong>%{count}</strong> خيارات"
+            many: "اختر <strong>%{count}</strong> خيارا"
+            other: "اختر <strong>%{count}</strong> خيار"
+          between_min_and_max_options: "اختر بين <strong>%{min}</strong> و <strong>%{max}</strong> خيارات"
       cast-votes:
-        title: "إدراج صوتك."
+        title: "أدلِ بصوتك"
         label: "صوّت اﻵن!"
       show-results:
         title: "اعرض نتائج التصويت"
         label: "أظهر النتائج"
       hide-results:
-        title: "العودة إلى أصواتك."
-        label: "أخف النتائج"
+        title: "عُد إلى أصواتك"
+        label: "أخفِ النتائج"
       open:
         title: "افتح التّصويت"
         label: "افتح"
@@ -44,15 +66,24 @@ ar:
         title: "أغلق التّصويت"
         label: "أغلق"
         confirm: "أمتأكد من إغلاق هذا التّصويت؟"
-      error_while_toggling_status: "آسفون، حصلت مشكلة في تبديل حالة هذا التّصويت."
-      error_while_fetching_voters: "آسفون، حصل خطأ في عرض المصوّتين."
+      error_while_toggling_status: "آسفون، حدثت مشكلة في تبديل حالة هذا التّصويت."
+      error_while_casting_votes: "آسفون، حدث خطأ في الإدلاء بأصواتك."
+      error_while_fetching_voters: "آسفون، حدث خطأ في عرض المصوّتين."
       ui_builder:
-        insert: أدرج تصويتا
+        title: ابنِ تصويتا
+        insert: أدرج التصويت
         help:
           options_count: أدخل خيارين على الأقل
         poll_type:
           label: النوع
+          regular: اختيار من متعدد
+          multiple: عدّة خيارات
+          number: تقييم عددي
+        poll_config:
+          max: الأقصى
+          min: الأدنى
+          step: الخطوة
         poll_public:
           label: أظهر المصوّتون
         poll_options:
-          label: أدخل خيارًا واحدًا في كلّ سطر
+          label: أدخل خيارًا واحدًا في كل سطر

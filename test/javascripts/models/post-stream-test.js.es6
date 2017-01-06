@@ -170,7 +170,7 @@ test("toggleParticipant", function() {
   equal(postStream.get('userFilters.length'), 0, "by default no participants are toggled");
 
   postStream.toggleParticipant(participant.username);
-  ok(postStream.get('userFilters').contains('eviltrout'), 'eviltrout is in the filters');
+  ok(postStream.get('userFilters').includes('eviltrout'), 'eviltrout is in the filters');
 
   postStream.toggleParticipant(participant.username);
   blank(postStream.get('userFilters'), "toggling the participant again removes them");
@@ -190,20 +190,7 @@ test("streamFilters", function() {
   postStream.toggleParticipant(participant.username);
   deepEqual(postStream.get('streamFilters'), {
     username_filters: 'eviltrout',
-    show_deleted: true
-  }, "streamFilters contains the username we filtered and show_deleted");
-
-  postStream.toggleDeleted();
-  deepEqual(postStream.get('streamFilters'), {
-    username_filters: 'eviltrout'
-  }, "streamFilters contains the username we filtered without show_deleted");
-
-  postStream.cancelFilter();
-  postStream.toggleDeleted();
-  deepEqual(postStream.get('streamFilters'), {
-    show_deleted: true
-  }, "streamFilters show_deleted only");
-
+  }, "streamFilters contains the username we filtered");
 });
 
 test("loading", function() {
@@ -296,7 +283,7 @@ test("identity map", function() {
 });
 
 test("loadIntoIdentityMap with no data", () => {
-  buildStream(1234).loadIntoIdentityMap([]).then(result => {
+  return buildStream(1234).loadIntoIdentityMap([]).then(result => {
     equal(result.length, 0, 'requesting no posts produces no posts');
   });
 });
@@ -304,7 +291,7 @@ test("loadIntoIdentityMap with no data", () => {
 test("loadIntoIdentityMap with post ids", function() {
   const postStream = buildStream(1234);
 
-  postStream.loadIntoIdentityMap([10]).then(function() {
+  return postStream.loadIntoIdentityMap([10]).then(function() {
     present(postStream.findLoadedPost(10), "it adds the returned post to the store");
   });
 });
@@ -340,7 +327,7 @@ test("staging and undoing a new post", function() {
   equal(stagedPost.get('topic'), topic, "it assigns the topic reference");
   equal(stagedPost.get('post_number'), 2, "it is assigned the probable post_number");
   present(stagedPost.get('created_at'), "it is assigned a created date");
-  ok(postStream.get('posts').contains(stagedPost), "the post is added to the stream");
+  ok(postStream.get('posts').includes(stagedPost), "the post is added to the stream");
   equal(stagedPost.get('id'), -1, "the post has a magical -1 id");
 
   // Undoing a created post (there was an error)
@@ -350,7 +337,7 @@ test("staging and undoing a new post", function() {
   equal(topic.get('highest_post_number'), 1, "it reverts the highest_post_number");
   equal(topic.get('posts_count'), 1, "it reverts the post count");
   equal(postStream.get('filteredPostsCount'), 1, "it retains the filteredPostsCount");
-  ok(!postStream.get('posts').contains(stagedPost), "the post is removed from the stream");
+  ok(!postStream.get('posts').includes(stagedPost), "the post is removed from the stream");
   ok(postStream.get('lastAppended'), original, "it doesn't consider undid post lastAppended");
 });
 
@@ -380,7 +367,7 @@ test("staging and committing a post", function() {
   ok(postStream.get('lastAppended'), original, "staging a post doesn't change the lastAppended");
 
   postStream.commitPost(stagedPost);
-  ok(postStream.get('posts').contains(stagedPost), "the post is still in the stream");
+  ok(postStream.get('posts').includes(stagedPost), "the post is still in the stream");
   ok(!postStream.get('loading'), "it is no longer loading");
 
   equal(postStream.get('filteredPostsCount'), 2, "it increases the filteredPostsCount");

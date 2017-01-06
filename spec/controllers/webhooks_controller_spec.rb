@@ -99,4 +99,30 @@ describe WebhooksController do
 
   end
 
+  context "sparkpost" do
+
+    it "works" do
+      user = Fabricate(:user, email: email)
+      email_log = Fabricate(:email_log, user: user, message_id: message_id)
+
+      post :sparkpost, "_json" => [{
+        "msys" => {
+          "message_event" => {
+            "bounce_class" => 10,
+            "rcpt_meta" => {
+              "message_id" => message_id
+            }
+          }
+        }
+      }]
+
+      expect(response).to be_success
+
+      email_log.reload
+      expect(email_log.bounced).to eq(true)
+      expect(email_log.user.user_stat.bounce_score).to eq(2)
+    end
+
+  end
+
 end

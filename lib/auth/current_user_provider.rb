@@ -25,6 +25,10 @@ class Auth::CurrentUserProvider
     raise NotImplementedError
   end
 
+  def is_user_api?
+    raise NotImplementedError
+  end
+
   # we may need to know very early on in the middleware if an auth token
   # exists, to optimise caching
   def has_auth_cookie?

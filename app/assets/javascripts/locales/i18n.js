@@ -92,6 +92,26 @@ I18n.isValidNode = function(obj, node, undefined) {
   return obj[node] !== null && obj[node] !== undefined;
 };
 
+function checkExtras(origScope, sep, extras) {
+  if (!extras || extras.length === 0) { return; }
+
+  for (var i=0; i<extras.length; i++) {
+    var messages = extras[i];
+    scope = origScope.split(sep);
+    if (scope[0] === 'js') {
+      scope.shift();
+    }
+
+    while (messages && scope.length > 0) {
+      currentScope = scope.shift();
+      messages = messages[currentScope];
+    }
+    if (messages !== undefined) {
+      return messages;
+    }
+  }
+}
+
 I18n.lookup = function(scope, options) {
   options = options || {};
   var lookupInitialScope = scope,
@@ -110,25 +130,32 @@ I18n.lookup = function(scope, options) {
     scope = options.scope.toString() + this.defaultSeparator + scope;
   }
 
-  scope = scope.split(this.defaultSeparator);
+  var origScope = "" + scope;
+
+  scope = origScope.split(this.defaultSeparator);
 
   while (messages && scope.length > 0) {
     currentScope = scope.shift();
     messages = messages[currentScope];
   }
 
-  if (!messages) {
+  if (messages === undefined) {
+    messages = checkExtras(origScope, this.defaultSeparator, this.extras);
+  }
+
+
+  if (messages === undefined) {
     if (I18n.fallbacks) {
       var fallbacks = this.getFallbacks(locale);
       for (var fallback = 0; fallback < fallbacks.length; fallbacks++) {
         messages = I18n.lookup(lookupInitialScope, this.prepareOptions({locale: fallbacks[fallback]}, options));
-        if (messages) {
+        if (messages !== undefined) {
           break;
         }
       }
     }
 
-    if (!messages && this.isValidNode(options, "defaultValue")) {
+    if (messages === undefined && this.isValidNode(options, "defaultValue")) {
         messages = options.defaultValue;
     }
   }
@@ -192,7 +219,9 @@ I18n.interpolate = function(message, options) {
 };
 
 I18n.translate = function(scope, options) {
+
   options = this.prepareOptions(options);
+
   var translation = this.lookup(scope, options);
   // Fallback to the default locale
   if (!translation && this.currentLocale() !== this.defaultLocale && !this.noFallbacks) {

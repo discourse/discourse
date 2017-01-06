@@ -12,8 +12,17 @@ class Tag < ActiveRecord::Base
   has_many :tag_group_memberships
   has_many :tag_groups, through: :tag_group_memberships
 
+  COUNT_ARG = "topic_tags.id"
+
+  # Apply more activerecord filters to the tags_by_count_query, and then
+  # fetch the result with .count(Tag::COUNT_ARG).
+  #
+  # e.g., Tag.tags_by_count_query.where("topics.category_id = ?", category.id).count(Tag::COUNT_ARG)
   def self.tags_by_count_query(opts={})
-    q = TopicTag.joins(:tag, :topic).group("topic_tags.tag_id, tags.name").order('count_all DESC')
+    q = Tag.joins("LEFT JOIN topic_tags ON tags.id = topic_tags.tag_id")
+           .joins("LEFT JOIN topics ON topics.id = topic_tags.topic_id")
+           .group("tags.id, tags.name")
+           .order('count_topic_tags_id DESC')
     q = q.limit(opts[:limit]) if opts[:limit]
     q
   end
@@ -23,12 +32,21 @@ class Tag < ActiveRecord::Base
                              .where("topics.category_id = ?", category.id)
   end
 
-  def self.top_tags(limit_arg: nil, category: nil)
+  def self.top_tags(limit_arg: nil, category: nil, guardian: nil)
     limit = limit_arg || SiteSetting.max_tags_in_filter_list
+    scope_category_ids = (guardian||Guardian.new).allowed_category_ids
 
-    tags = DiscourseTagging.filter_allowed_tags(tags_by_count_query(limit: limit), nil, category: category)
+    if category
+      scope_category_ids &= ([category.id] + category.subcategories.pluck(:id))
+    end
 
-    tags.count.map {|name, _| name}
+    tags = DiscourseTagging.filter_allowed_tags(
+      tags_by_count_query(limit: limit).where("topics.category_id in (?)", scope_category_ids),
+      nil, # Don't pass guardian. You might not be able to use some tags, but should still be able to see where they've been used.
+      category: category
+    )
+
+    tags.count(COUNT_ARG).map {|name, _| name}
   end
 
   def self.include_tags?

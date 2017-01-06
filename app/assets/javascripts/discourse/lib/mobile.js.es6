@@ -1,3 +1,5 @@
+import deprecated from 'discourse-common/lib/deprecated';
+
 let mobileForced = false;
 
 //  An object that is responsible for logic related to mobile devices.
@@ -29,6 +31,18 @@ const Mobile = {
       // localStorage may be disabled, just skip this
       // you get security errors if it is disabled
     }
+
+    // Sam: I tried this to disable zooming on iOS 10 but it is not consistent
+    //  you can still sometimes trigger zoom and be stuck in a horrible state
+    //
+    // let iOS = !!navigator.platform && /iPad|iPhone|iPod/.test(navigator.platform);
+    // if (iOS) {
+    //   document.documentElement.addEventListener('touchstart', function (event) {
+    //     if (event.touches.length > 1) {
+    //       event.preventDefault();
+    //     }
+    //   }, false);
+    // }
   },
 
   toggleMobileView() {
@@ -55,10 +69,9 @@ export function resetMobile() {
   mobileForced = false;
 }
 
-// Backwards compatibiltity, deprecated
 Object.defineProperty(Discourse, 'Mobile', {
-  get: function() {
-    Ember.warn("DEPRECATION: `Discourse.Mobile` is deprecated, use `this.site.mobileView` instead");
+  get() {
+    deprecated("`Discourse.Mobile` is deprecated, use `this.site.mobileView` instead");
     return Mobile;
   }
 });

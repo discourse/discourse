@@ -1,0 +1,29 @@
+{{categories-only categories=categories}}
+
+<table class="topic-list topic-list-latest">
+  <thead>
+    <tr>
+      <th class="latest">{{i18n "filters.latest.title"}}</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#if topics}}
+      {{#each topics as |t|}}
+        {{latest-topic-list-item topic=t}}
+      {{/each}}
+      <tr class="more-topics">
+        <td>
+          <a href="/latest" class="btn pull-right">{{i18n "more"}}</a>
+        </td>
+      </tr>
+    {{else}}
+      <tr class="no-topics">
+        <td>
+          <h3>{{i18n "topics.none.latest"}}</h3>
+        </td>
+      </tr>
+    {{/if}}
+  </tbody>
+</table>
+
+<div class="clearfix"></div>

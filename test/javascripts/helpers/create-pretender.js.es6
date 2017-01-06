@@ -56,11 +56,20 @@ export default function() {
       return response(json);
     });
 
+    this.get('/tags', () => {
+      return response({ tags: [{
+        id: 'eviltrout',
+        count: 1
+      }] });
+    });
+
+    this.get(`/users/eviltrout/emails.json`, () => {
+      return response({ email: 'eviltrout@example.com' });
+    });
+
     this.get('/users/eviltrout.json', () => {
       const json = fixturesByUrl['/users/eviltrout.json'];
-      if (loggedIn()) {
-        json.user.can_edit = true;
-      }
+      json.user.can_edit = loggedIn();
       return response(json);
     });
 
@@ -76,9 +85,35 @@ export default function() {
       });
     });
 
+    this.get('/users/eviltrout/invited_count.json', () => {
+      return response({
+        "counts": { "pending": 1, "redeemed": 0, "total": 0 }
+      });
+    });
+
+    this.get('/users/eviltrout/invited.json', () => {
+      return response({ "invites": [ {id: 1} ] });
+    });
+
+    this.get('/topics/private-messages/eviltrout.json', () => {
+      return response({ topic_list: { topics: [] } });
+    });
+
     this.get('/clicks/track', success);
 
-    this.put('/users/eviltrout', () => response({ user: {} }));
+    this.get('/search', request => {
+      if (request.queryParams.q === 'posts') {
+        return response({
+          posts: [{
+            id: 1234
+          }]
+        });
+      }
+
+      return response({});
+    });
+
+    this.put('/users/eviltrout.json', () => response({ user: {} }));
 
     this.get("/t/280.json", () => response(fixturesByUrl['/t/280/1.json']));
     this.get("/t/28830.json", () => response(fixturesByUrl['/t/28830/1.json']));
@@ -119,6 +154,8 @@ export default function() {
     this.get('/category_hashtags/check', () => {
       return response({ valid: [{ slug: "bug", url: '/c/bugs' }] });
     });
+
+    this.get("/categories_and_latest", () => response(fixturesByUrl["/categories_and_latest.json"]));
 
     this.put('/categories/:category_id', request => {
 
@@ -205,6 +242,10 @@ export default function() {
                                            slug: request.params.slug } });
     });
 
+    this.get("groups", () => {
+      return response(200, fixturesByUrl['/groups.json']);
+    });
+
     this.get("/groups/discourse/topics.json", () => {
       return response(200, fixturesByUrl['/groups/discourse/posts.json']);
     });
@@ -283,6 +324,26 @@ export default function() {
     this.delete('/admin/users/:user_id/revoke_api_key', success);
     this.post('/admin/badges', success);
     this.delete('/admin/badges/:id', success);
+
+    this.get('/onebox', request => {
+      if (request.queryParams.url === 'http://www.example.com/has-title.html') {
+        return [
+          200,
+          {"Content-Type": "application/html"},
+          '<aside class="onebox"><article class="onebox-body"><h3><a href="http://www.example.com/article.html">An interesting article</a></h3></article></aside>'
+        ];
+      }
+
+      if (request.queryParams.url === 'http://www.example.com/no-title.html') {
+        return [
+          200,
+          {"Content-Type": "application/html"},
+          '<aside class="onebox"><article class="onebox-body"><p>No title</p></article></aside>'
+        ];
+      }
+
+      return [404, {"Content-Type": "application/html"}, ''];;
+    });
   });
 
   server.prepareBody = function(body){

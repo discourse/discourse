@@ -10,7 +10,8 @@ class TopicListItemSerializer < ListableTopicSerializer
              :pinned_globally,
              :bookmarked_post_numbers,
              :liked_post_numbers,
-             :tags
+             :tags,
+             :featured_link
 
   has_many :posters, serializer: TopicPosterSerializer, embed: :objects
   has_many :participants, serializer: TopicPosterSerializer, embed: :objects
@@ -70,6 +71,14 @@ class TopicListItemSerializer < ListableTopicSerializer
 
   def tags
     object.tags.map(&:name)
+  end
+
+  def include_featured_link?
+    SiteSetting.topic_featured_link_enabled
+  end
+
+  def featured_link
+    object.featured_link
   end
 
 end

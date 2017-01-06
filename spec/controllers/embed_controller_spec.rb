@@ -8,12 +8,12 @@ describe EmbedController do
 
   it "is 404 without an embed_url" do
     get :comments
-    expect(response).not_to be_success
+    expect(response).to render_template :embed_error
   end
 
   it "raises an error with a missing host" do
     get :comments, embed_url: embed_url
-    expect(response).not_to be_success
+    expect(response).to render_template :embed_error
   end
 
   context "by topic id" do
@@ -34,7 +34,7 @@ describe EmbedController do
     context "without api key" do
       it "fails" do
         get :info, format: :json
-        expect(response).not_to be_success
+        expect(response).to render_template :embed_error
       end
     end
 
@@ -69,7 +69,7 @@ describe EmbedController do
 
     it "raises an error with no referer" do
       get :comments, embed_url: embed_url
-      expect(response).not_to be_success
+      expect(response).to render_template :embed_error
     end
 
     context "success" do
@@ -133,7 +133,7 @@ describe EmbedController do
       it "doesn't work with a made up host" do
         controller.request.stubs(:referer).returns("http://codinghorror.com/invalid-url")
         get :comments, embed_url: embed_url
-        expect(response).to_not be_success
+        expect(response).to render_template :embed_error
       end
     end
   end

@@ -7,10 +7,11 @@
 # - topics.csv is the topics table export
 #
 #
-# note, the importer will import all topics into a new category called 'Old Forum' and close all the topics
+# note, the importer will import all topics into a new category called 'Old Forum' and optionally close all the topics
 #
 require 'csv'
 require File.expand_path(File.dirname(__FILE__) + "/base.rb")
+require 'reverse_markdown' # gem 'reverse_markdown'
 
 # Call it like this:
 #   RAILS_ENV=production bundle exec ruby script/import_scripts/getsatisfaction.rb
@@ -22,6 +23,7 @@ class ImportScripts::GetSatisfaction < ImportScripts::Base
     @path = path
     super()
     @bbcode_to_md = true
+    @topic_slug = {}
 
     puts "loading post mappings..."
     @post_number_map = {}
@@ -43,7 +45,10 @@ class ImportScripts::GetSatisfaction < ImportScripts::Base
     import_users
     import_posts(c)
 
-    Topic.where(category: c).update_all(closed: true)
+    create_permalinks
+
+    # uncomment if you want to close all the topics
+    # Topic.where(category: c).update_all(closed: true)
   end
 
   class RowResolver
@@ -81,6 +86,8 @@ class ImportScripts::GetSatisfaction < ImportScripts::Base
     current_row = "";
     double_quote_count = 0
 
+    # In case of Excel export file, I converted it to CSV and used:
+    # CSV.open(filename, encoding:'iso-8859-1:utf-8').each do |raw|
     File.open(filename).each_line do |line|
 
       line.strip!
@@ -125,6 +132,8 @@ class ImportScripts::GetSatisfaction < ImportScripts::Base
   end
 
   def total_rows(table)
+    # In case of Excel export file, I converted it to CSV and used:
+    # CSV.foreach("#{@path}/#{table}.csv", encoding:'iso-8859-1:utf-8').inject(0) {|c, line| c+1} - 1
     File.foreach("#{@path}/#{table}.csv").inject(0) {|c, line| c+1} - 1
   end
 
@@ -191,6 +200,7 @@ class ImportScripts::GetSatisfaction < ImportScripts::Base
   end
 
   def normalize_raw!(raw)
+    return "<missing>" if raw.nil?
     raw = raw.dup
 
     # hoist code
@@ -215,6 +225,8 @@ class ImportScripts::GetSatisfaction < ImportScripts::Base
       raw.gsub!(hoist, "\n```\n" << code << "\n```\n")
     end
 
+    raw = CGI.unescapeHTML(raw)
+    raw = ReverseMarkdown.convert(raw)
     raw
   end
 
@@ -270,6 +282,8 @@ class ImportScripts::GetSatisfaction < ImportScripts::Base
     topic_map = {}
 
     csv_parse("topics") do |topic|
+      @topic_slug[topic.id.to_i] = topic.url
+
       topic_map[topic.id] = {
         id: topic.id,
         topic_id: topic.id,
@@ -320,6 +334,21 @@ class ImportScripts::GetSatisfaction < ImportScripts::Base
     import_post_batch!(posts, topic_map, count - posts.length, total) if posts.length > 0
   end
 
+  def create_permalinks
+    puts '', 'Creating Permalinks...', ''
+
+    topic_mapping = []
+
+    Topic.listable_topics.find_each do |topic|
+      tcf = topic.first_post.custom_fields
+      if tcf && tcf["import_id"]
+        slug = @topic_slug[tcf["import_id"].to_i]
+        # TODO: replace "http://community.example.com/" with the URL of your community
+        slug = slug.gsub("http://community.example.com/", "")
+        Permalink.create(url: slug, topic_id: topic.id)
+      end
+    end
+  end
 
 end
 

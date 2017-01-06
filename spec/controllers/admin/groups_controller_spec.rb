@@ -19,7 +19,9 @@ describe Admin::GroupsController do
 
       xhr :get, :index
       expect(response.status).to eq(200)
-      expect(::JSON.parse(response.body).keep_if {|r| r["id"] == group.id }).to eq([{
+      json = ::JSON.parse(response.body)
+      expect(json.select { |r| r["id"] == Group::AUTO_GROUPS[:everyone] }).to be_empty
+      expect(json.select { |r| r["id"] == group.id }).to eq([{
         "id"=>group.id,
         "name"=>group.name,
         "user_count"=>1,
@@ -32,11 +34,17 @@ describe Admin::GroupsController do
         "primary_group"=>false,
         "grant_trust_level"=>nil,
         "incoming_email"=>nil,
-        "notification_level"=>2,
         "has_messages"=>false,
-        "is_member"=>true,
-        "mentionable"=>false
+        "flair_url"=>nil,
+        "flair_bg_color"=>nil,
+        "flair_color"=>nil,
+        "bio_raw"=>nil,
+        "bio_cooked"=>nil,
+        "public"=>false,
+        "allow_membership_requests"=>false,
+        "full_name"=>group.full_name
       }])
+
     end
 
   end
@@ -64,7 +72,7 @@ describe Admin::GroupsController do
   context ".create" do
 
     it "strip spaces on the group name" do
-      xhr :post, :create, name: " bob "
+      xhr :post, :create, { group: { name: " bob " } }
 
       expect(response.status).to eq(200)
 
@@ -79,25 +87,33 @@ describe Admin::GroupsController do
   context ".update" do
 
     it "ignore name change on automatic group" do
-      xhr :put, :update, id: 1, name: "WAT", visible: "true"
+      expect do
+        xhr :put, :update, { id: 1, group: {
+          name: "WAT",
+          visible: "true",
+          allow_membership_requests: "true"
+        } }
+      end.to change { GroupHistory.count }.by(1)
+
       expect(response).to be_success
 
       group = Group.find(1)
       expect(group.name).not_to eq("WAT")
       expect(group.visible).to eq(true)
+      expect(group.allow_membership_requests).to eq(true)
     end
 
     it "doesn't launch the 'automatic group membership' job when it's not retroactive" do
       Jobs.expects(:enqueue).never
       group = Fabricate(:group)
-      xhr :put, :update, id: group.id, automatic_membership_retroactive: "false"
+      xhr :put, :update, { id: group.id, group: { automatic_membership_retroactive: "false" } }
       expect(response).to be_success
     end
 
     it "launches the 'automatic group membership' job when it's retroactive" do
       group = Fabricate(:group)
       Jobs.expects(:enqueue).with(:automatic_group_membership, group_id: group.id)
-      xhr :put, :update, id: group.id, automatic_membership_retroactive: "true"
+      xhr :put, :update, { id: group.id, group: { automatic_membership_retroactive: "true" } }
       expect(response).to be_success
     end
 
@@ -131,7 +147,5 @@ describe Admin::GroupsController do
     end
 
   end
-
-
 
 end

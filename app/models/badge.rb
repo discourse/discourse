@@ -66,14 +66,14 @@ class Badge < ActiveRecord::Base
     PostRevision = 2
     TrustLevelChange = 4
     UserChange = 8
-    PostProcessed = 16
+    PostProcessed = 16 # deprecated
 
     def self.is_none?(trigger)
       [None].include? trigger
     end
 
     def self.uses_user_ids?(trigger)
-      [TrustLevelChange, UserChange, PostProcessed].include? trigger
+      [TrustLevelChange, UserChange].include? trigger
     end
 
     def self.uses_post_ids?(trigger)
@@ -129,8 +129,10 @@ class Badge < ActiveRecord::Base
   end
 
   def default_icon=(val)
-    self.icon ||= val
-    self.icon = val if self.icon = "fa-certificate"
+    unless self.image
+      self.icon ||= val
+      self.icon = val if self.icon = "fa-certificate"
+    end
   end
 
   def default_name=(val)

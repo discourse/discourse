@@ -27,6 +27,12 @@ $input-width: 220px;
     }
   }
 
+  .disclaimer {
+    font-size: 0.9em;
+    color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
+    clear: both;
+  }
+
   .user-field.confirm {
     margin-top: 20px;
   }

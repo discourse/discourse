@@ -15,6 +15,8 @@ class Notification < ActiveRecord::Base
   after_save :refresh_notification_count
   after_destroy :refresh_notification_count
 
+  after_commit :send_email
+
   def self.ensure_consistency!
     Notification.exec_sql("
     DELETE FROM Notifications n WHERE notification_type = :id AND
@@ -55,9 +57,21 @@ class Notification < ActiveRecord::Base
              read: false)
       .update_all("read = 't'")
 
-    user.publish_notifications_state if count > 0
+    if count > 0
+      user.publish_notifications_state
+    end
 
     count
+  end
+
+  def self.read(user, notification_ids)
+    count = Notification.where(user_id: user.id,
+                               id: notification_ids,
+                               read: false).update_all(read: true)
+
+    if count > 0
+      user.publish_notifications_state
+    end
   end
 
   def self.interesting_after(min_date)
@@ -182,6 +196,11 @@ class Notification < ActiveRecord::Base
 
   def refresh_notification_count
     user.publish_notifications_state
+  end
+
+  def send_email
+    transaction_includes_action = self.send(:transaction_include_any_action?, [:create])
+    NotificationEmailer.process_notification(self) if transaction_includes_action
   end
 
 end

@@ -8,6 +8,10 @@ export default Em.Mixin.create({
     Em.warn("You should implement `uploadDone`");
   },
 
+  validateUploadedFilesOptions() {
+    return {};
+  },
+
   _initialize: function() {
     const $upload = this.$(),
           csrf = Discourse.Session.currentProp("csrfToken"),
@@ -40,7 +44,8 @@ export default Em.Mixin.create({
     });
 
     $upload.on("fileuploadsubmit", (e, data) => {
-      const isValid = validateUploadedFiles(data.files, true);
+      const opts = _.merge({ bypassNewUserRestriction: true }, this.validateUploadedFilesOptions());
+      const isValid = validateUploadedFiles(data.files, opts);
       let form = { type: this.get("type") };
       if (this.get("data")) { form = $.extend(form, this.get("data")); }
       data.formData = form;

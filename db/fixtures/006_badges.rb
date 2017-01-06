@@ -382,7 +382,7 @@ Badge.seed do |b|
   b.query = nil
   b.badge_grouping_id = BadgeGrouping::GettingStarted
   b.default_badge_grouping_id = BadgeGrouping::GettingStarted
-  b.trigger = Badge::Trigger::PostProcessed
+  b.trigger = Badge::Trigger::None
   b.system = true
 end
 
@@ -396,7 +396,7 @@ Badge.seed do |b|
   b.query = nil
   b.badge_grouping_id = BadgeGrouping::GettingStarted
   b.default_badge_grouping_id = BadgeGrouping::GettingStarted
-  b.trigger = Badge::Trigger::PostProcessed
+  b.trigger = Badge::Trigger::None
   b.system = true
 end
 
@@ -410,7 +410,7 @@ Badge.seed do |b|
   b.query = nil
   b.badge_grouping_id = BadgeGrouping::GettingStarted
   b.default_badge_grouping_id = BadgeGrouping::GettingStarted
-  b.trigger = Badge::Trigger::PostProcessed
+  b.trigger = Badge::Trigger::None
   b.system = true
 end
 

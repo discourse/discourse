@@ -116,15 +116,31 @@ img.emoji {
   color: #999;
 }
 
+.clearfix {
+  clear: both;
+}
+
+
 header.discourse {
   padding-left: 10px;
+  padding-right: 10px;
   padding-bottom: 8px;
   font-size: 1.286em;
   border-bottom: 3px solid #ddd;
 
-  .button {
-    float:right;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+
+  h3 {
+    margin: 0 auto 0 0;
+    font-size: 1.0em;
   }
+}
+
+.embed-error {
+  padding: 0 10px;
 }
 
 footer {

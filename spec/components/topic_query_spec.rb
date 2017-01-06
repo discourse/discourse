@@ -145,6 +145,14 @@ describe TopicQuery do
         # expect(TopicQuery.new(moderator, tags: [tag.id, other_tag.id]).list_latest.topics.map(&:id)).to eq([tagged_topic3.id].sort)
       end
 
+      it "can return topics with all specified tags" do
+        expect(TopicQuery.new(moderator, tags: [tag.name, other_tag.name], match_all_tags: true).list_latest.topics.map(&:id)).to eq([tagged_topic3.id])
+      end
+
+      it "returns an empty relation when an invalid tag is passed" do
+        expect(TopicQuery.new(moderator, tags: [tag.name, 'notatag'], match_all_tags: true).list_latest.topics).to be_empty
+      end
+
       it "can return topics with no tags" do
         expect(TopicQuery.new(moderator, no_tags: true).list_latest.topics.map(&:id)).to eq([no_tags_topic.id])
       end
@@ -371,6 +379,26 @@ describe TopicQuery do
         ).to eq([topic_in_cat2.id, topic_category.id, topic_in_cat1.id])
       end
     end
+
+    describe "category default sort order" do
+      it "can use category's default sort order" do
+        category.update_attributes!(sort_order: 'created', sort_ascending: true)
+        topic_ids = TopicQuery.new(user, category: category.id).list_latest.topics.map(&:id)
+        expect(topic_ids - [topic_category.id]).to eq([topic_in_cat1.id, topic_in_cat2.id])
+      end
+
+      it "ignores invalid order value" do
+        category.update_attributes!(sort_order: 'funny')
+        topic_ids = TopicQuery.new(user, category: category.id).list_latest.topics.map(&:id)
+        expect(topic_ids - [topic_category.id]).to eq([topic_in_cat2.id, topic_in_cat1.id])
+      end
+
+      it "can be overridden" do
+        category.update_attributes!(sort_order: 'created', sort_ascending: true)
+        topic_ids = TopicQuery.new(user, category: category.id, order: 'activity').list_latest.topics.map(&:id)
+        expect(topic_ids - [topic_category.id]).to eq([topic_in_cat2.id, topic_in_cat1.id])
+      end
+    end
   end
 
   context 'unread / read topics' do
@@ -378,6 +406,29 @@ describe TopicQuery do
     context 'with no data' do
       it "has no unread topics" do
         expect(topic_query.list_unread.topics).to be_blank
+      end
+    end
+
+    context 'with whispers' do
+
+      it 'correctly shows up in unread for staff' do
+
+        first = create_post(raw: 'this is the first post', title: 'super amazing title')
+
+        _whisper = create_post(topic_id: first.topic.id,
+                              post_type: Post.types[:whisper],
+                              raw: 'this is a whispered reply')
+
+        topic_id = first.topic.id
+
+        TopicUser.update_last_read(user, topic_id, first.post_number, 1)
+        TopicUser.update_last_read(admin, topic_id, first.post_number, 1)
+
+        TopicUser.change(user.id, topic_id, notification_level: TopicUser.notification_levels[:tracking])
+        TopicUser.change(admin.id, topic_id, notification_level: TopicUser.notification_levels[:tracking])
+
+        expect(TopicQuery.new(user).list_unread.topics).to eq([])
+        expect(TopicQuery.new(admin).list_unread.topics).to eq([first.topic])
       end
     end
 
@@ -391,8 +442,9 @@ describe TopicQuery do
       end
 
       context 'list_unread' do
-        it 'contains no topics' do
+        it 'lists topics correctly' do
           expect(topic_query.list_unread.topics).to eq([])
+          expect(topic_query.list_read.topics).to match_array([fully_read, partially_read])
         end
       end
 
@@ -407,11 +459,6 @@ describe TopicQuery do
         end
       end
 
-      context 'list_read' do
-        it 'contain both topics ' do
-          expect(topic_query.list_read.topics).to match_array([fully_read, partially_read])
-        end
-      end
     end
 
   end
@@ -602,7 +649,6 @@ describe TopicQuery do
       related_by_group_pm  = create_pm(sender, target_group_names: [group_with_user.name])
       read(user, related_by_group_pm, 1)
 
-
       expect(TopicQuery.new(user).list_suggested_for(pm_to_group).topics.map(&:id)).to(
         eq([related_by_group_pm.id, related_by_user_pm.id, pm_to_user.id])
       )
@@ -614,9 +660,12 @@ describe TopicQuery do
   end
 
   context 'suggested_for' do
+    def clear_cache!
+      $redis.keys('random_topic_cache*').each{|k| $redis.del k}
+    end
 
     before do
-      RandomTopicSelector.clear_cache!
+      clear_cache!
     end
 
     context 'when anonymous' do
@@ -646,7 +695,7 @@ describe TopicQuery do
       let(:suggested_topics) {
         tt = topic
         # lets clear cache once category is created - working around caching is hard
-        RandomTopicSelector.clear_cache!
+        clear_cache!
         topic_query.list_suggested_for(tt).topics.map{|t| t.id}
       }
 
@@ -663,11 +712,11 @@ describe TopicQuery do
           SiteSetting.suggested_topics_max_days_old = 1365
           tt = topic
 
-          RandomTopicSelector.clear_cache!
+          clear_cache!
           expect(topic_query.list_suggested_for(tt).topics.length).to eq(2)
 
           SiteSetting.suggested_topics_max_days_old = 365
-          RandomTopicSelector.clear_cache!
+          clear_cache!
 
           expect(topic_query.list_suggested_for(tt).topics.length).to eq(1)
         end

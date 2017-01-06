@@ -48,7 +48,8 @@ describe Plugin::Instance do
 
         # DiscourseEvent
         @hello_count = 0
-        @plugin.on(:hello) { @hello_count += 1 }
+        @increase_count = -> { @hello_count += 1 }
+        @set = @plugin.on(:hello, &@increase_count)
 
         # Serializer
         @plugin.add_to_serializer(:trout, :scales) { 1024 }
@@ -56,7 +57,7 @@ describe Plugin::Instance do
       end
 
       after do
-        DiscourseEvent.clear
+        DiscourseEvent.off(:hello, &@set.first)
       end
 
       it "checks enabled/disabled functionality for extensions" do
@@ -179,4 +180,60 @@ describe Plugin::Instance do
     end
   end
 
+  describe '.register_seedfu_fixtures' do
+    it "should add the new path to SeedFu's fixtures path" do
+      plugin = Plugin::Instance.new nil, "/tmp/test.rb"
+      plugin.register_seedfu_fixtures(['some_path'])
+      plugin.register_seedfu_fixtures('some_path2')
+
+      expect(SeedFu.fixture_paths).to include('some_path')
+      expect(SeedFu.fixture_paths).to include('some_path2')
+    end
+  end
+
+  describe '#add_model_callback' do
+    let(:metadata) do
+      metadata = Plugin::Metadata.new
+      metadata.name = 'test'
+      metadata
+    end
+
+    let(:plugin_instance) do
+      plugin = Plugin::Instance.new(nil, "/tmp/test.rb")
+      plugin.metadata = metadata
+      plugin
+    end
+
+    it 'should add the right callback' do
+      called = 0
+
+      method_name = plugin_instance.add_model_callback(User, :after_create) do
+        called += 1
+      end
+
+      user = Fabricate(:user)
+
+      expect(called).to eq(1)
+
+      user.update_attributes!(username: 'some_username')
+
+      expect(called).to eq(1)
+    end
+
+    it 'should add the right callback with options' do
+      called = 0
+
+      method_name = plugin_instance.add_model_callback(User, :after_commit, on: :create) do
+        called += 1
+      end
+
+      user = Fabricate(:user)
+
+      expect(called).to eq(1)
+
+      user.update_attributes!(username: 'some_username')
+
+      expect(called).to eq(1)
+    end
+  end
 end

@@ -46,6 +46,7 @@ describe UserAvatarsController do
 
       get :show, size: 98, username: user.username, version: upload.id, hostname: 'default'
       expect(response.body).to eq("image")
+      expect(response.headers["Cache-Control"]).to eq('max-age=31557600, public')
     end
 
     it 'serves image even if size missing and its in local mode' do

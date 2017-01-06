@@ -16,33 +16,42 @@ pt:
         other: "total de votos"
       average_rating: "Classificação média: <strong>%{average}</strong>."
       public:
-        title: "Votos são públicos"
+        title: "Votos são públicos."
       multiple:
         help:
+          at_least_min_options:
+            one: "Escolha pelo menos <strong>1</strong> opção"
+            other: "Escolha pelo menos <strong>%{count}</strong> opções"
+          up_to_max_options:
+            one: "Escolha no máximo <strong>1</strong> opção"
+            other: "Escolha no máximo <strong>%{count}</strong> opções"
+          x_options:
+            one: "Escolha <strong>1</strong> opção"
+            other: "Escolha <strong>%{count}</strong> opções"
           between_min_and_max_options: "Escolha entre <strong>%{min}</strong> e <strong>%{max}</strong> opções"
       cast-votes:
         title: "Votar"
         label: "Vote agora!"
       show-results:
-        title: "Exibir resultados da votação"
+        title: "Exibir resultados da sondagem"
         label: "Mostrar resultados"
       hide-results:
         title: "Voltar aos meus votos"
         label: "Ocultar resultados"
       open:
-        title: "Abrir a votação"
+        title: "Abrir a sondagem"
         label: "Abrir"
-        confirm: "Tem a certeza que quer abrir esta votação?"
+        confirm: "Tem a certeza que quer abrir esta sondagem?"
       close:
-        title: "Fechar a votação"
+        title: "Fechar a sondagem"
         label: "Fechar"
-        confirm: "Tem a certeza que quer fechar esta votação?"
-      error_while_toggling_status: "Pedimos desculpa, ocorreu um erro ao mudar o estado deste inquérito."
+        confirm: "Tem a certeza que quer fechar esta sondagem?"
+      error_while_toggling_status: "Pedimos desculpa, ocorreu um erro ao mudar o estado desta sondagem."
       error_while_casting_votes: "Pedimos desculpa, ocorreu um erro ao submeter os seus votos."
       error_while_fetching_voters: "Pedimos desculpa, ocorreu um erro ao apresentar os eleitores."
       ui_builder:
-        title: Criar Votação
-        insert: Inserir votação
+        title: Criar Sondagem
+        insert: Inserir sondagem
         help:
           options_count: Indique pelo menos 2 opções
         poll_type:
@@ -55,6 +64,6 @@ pt:
           min: Mínimo
           step: Passo
         poll_public:
-          label: Mostre quem votou
+          label: Mostrar quem votou
         poll_options:
-          label: Escreva uma opção de votação por linha
+          label: Escreva uma opção de sondagem por linha

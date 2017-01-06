@@ -1,6 +1,6 @@
 import { createWidget } from 'discourse/widgets/widget';
 import { h } from 'virtual-dom';
-import { iconNode } from 'discourse/helpers/fa-icon';
+import { iconNode } from 'discourse/helpers/fa-icon-node';
 import { wantsNewWindow } from 'discourse/lib/intercept-click';
 import DiscourseURL from 'discourse/lib/url';
 
@@ -8,7 +8,7 @@ export default createWidget('home-logo', {
   tagName: 'div.title',
 
   settings: {
-    href: '/'
+    href: Discourse.getURL("/")
   },
 
   href() {

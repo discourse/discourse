@@ -1,6 +1,6 @@
 import { wantsNewWindow } from 'discourse/lib/intercept-click';
 import { createWidget } from 'discourse/widgets/widget';
-import { iconNode } from 'discourse/helpers/fa-icon';
+import { iconNode } from 'discourse/helpers/fa-icon-node';
 import { h } from 'virtual-dom';
 import DiscourseURL from 'discourse/lib/url';
 
@@ -10,7 +10,7 @@ export default createWidget('link', {
   href(attrs) {
     const route = attrs.route;
     if (route) {
-      const router = this.container.lookup('router:main');
+      const router = this.register.lookup('router:main');
       if (router && router.router) {
         const params = [route];
         if (attrs.model) {

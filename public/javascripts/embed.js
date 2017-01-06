@@ -64,7 +64,7 @@
   }
 
   function normalizeUrl(url) {
-    return url.replace(/^https?(\:\/\/)?/, '');
+    return url.toLowerCase().replace(/^https?(\:\/\/)?/, '');
   }
 
   function postMessageReceived(e) {

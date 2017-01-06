@@ -5,4 +5,60 @@
 # To work with us on translations, join this project:
 # https://www.transifex.com/projects/p/discourse-org/
 
-zh_TW: {}
+zh_TW:
+  js:
+    poll:
+      voters:
+        other: "投票者"
+      total_votes:
+        other: "總票數"
+      average_rating: "平均評分：<strong>%{average}</strong>。"
+      public:
+        title: "投票是公開的。"
+      multiple:
+        help:
+          at_least_min_options:
+            other: "至少選擇 <strong>%{count}</strong> 個選項"
+          up_to_max_options:
+            other: "最多選擇 <strong>%{count}</strong> 個選項"
+          x_options:
+            other: "選擇 <strong>%{count}</strong> 個選項"
+          between_min_and_max_options: "選擇 <strong>%{min}</strong> 至 <strong>%{max}</strong> 個選項"
+      cast-votes:
+        title: "投你的票"
+        label: "現在投票！"
+      show-results:
+        title: "顯示投票結果"
+        label: "顯示結果"
+      hide-results:
+        title: "返回到你的投票"
+        label: "隱藏結果"
+      open:
+        title: "開啟投票"
+        label: "開啟"
+        confirm: "你確定要開啟這個投票麼？"
+      close:
+        title: "關閉投票"
+        label: "關閉"
+        confirm: "你確定要關閉這個投票？"
+      error_while_toggling_status: "對不起，改變投票狀態時出錯了。"
+      error_while_casting_votes: "對不起，投票時出錯了。"
+      error_while_fetching_voters: "對不起，顯示投票者時出錯了。"
+      ui_builder:
+        title: 創建投票
+        insert: 插入投票
+        help:
+          options_count: 輸入至少 2 個選項
+        poll_type:
+          label: 類型
+          regular: 單選
+          multiple: 多選
+          number: 評分
+        poll_config:
+          max: 最大
+          min: 最小
+          step: 梯級
+        poll_public:
+          label: 顯示投票人
+        poll_options:
+          label: 每行輸入一個調查選項

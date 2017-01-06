@@ -36,4 +36,9 @@ RSpec.describe UserProfileView do
       expect(described_class.count).to eq(1)
     end
   end
+
+  it "should not create a profile view for the system user" do
+    add(user_profile_id, '1.1.1.1', Discourse::SYSTEM_USER_ID)
+    expect(described_class.count).to eq(0)
+  end
 end

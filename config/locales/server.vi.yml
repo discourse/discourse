@@ -65,7 +65,6 @@ vi:
       has_already_been_used: "đã được sử dụng"
       inclusion: không được bao gồm trong danh sách
       invalid: là không hợp lệ
-      is_invalid: "không hợp lệ; cố gắng cụ thể hơn một chút"
       less_than: phải nhỏ hơn %{count}
       less_than_or_equal_to: phải nhỏ hơn hoặc bằng %{count}
       not_a_number: không phải là số
@@ -95,8 +94,6 @@ vi:
       max_username_length_range: "Bạn không thể thiết lập số tối đa nhỏ hơn số tối thiểu"
       default_categories_already_selected: "Bạn không thể chọn một danh mục được sử dụng trong danh sách khác."
       s3_upload_bucket_is_required: "Bạn không thể tải lên S3 mà chưa thiết lập 's3_upload_bucket'."
-  bulk_invite:
-    file_should_be_csv: "Tập tin tải lên nên ở dạng csv hoặc txt."
   backup:
     operation_already_running: "Một tiến trình đang được thực hiện. Không thể bắt đầu một tiến trình mới ngay bây giờ."
     backup_file_should_be_tar_gz: "Tập tin sao lưu nên nên ở dạng .tar.gz."
@@ -140,7 +137,6 @@ vi:
   topic_not_found: "Có gì đó đã sai. Có lẽ chủ đề này đã bị đóng hoặc bị xóa trong khi bạn đang xem?"
   just_posted_that: "rất giống với những gì bạn đã viết gần đây"
   invalid_characters: "chứa các kí tự không hợp lệ"
-  is_invalid: "không hợp lệ; cố gắng cụ thể hơn một chút"
   next_page: "trang sau →"
   prev_page: "← trang trước"
   page_num: "Trang %{num}"
@@ -288,7 +284,7 @@ vi:
   assets_topic_body: "Chủ đề này tồn tại vĩnh viễn, chỉ xem được bởi nhân viên, dùng để chứa ảnh và file dành cho việc thiết kế. Vui lòng đừng xóa.\n\n\nHướng dẫn:\n\n\n1. Trả lời chủ đề này.\n2. Tải lên tất cả ảnh bạn cần cho logo, favicon, và các thứ khác. (Dùng nút tải lên trong công cụ viết bài, hoặc kéo-và-thả hoặc dán ảnh vào) \n3. Gửi trả lời của bạn.\n4. Bấm chuột phải lên ảnh trong bài đăng mới để chép đường dẫn của các ảnh đã được tải lên, hoặc sửa bài viết của bạn để lấy đường dẫn của ảnh. Sao chép các đường dẫn này.\n5. Dán các đường dẫn này vào [thiết lập chung](/admin/site_settings/category/required).\n\n\nNếu bạn cần tải lên các loại file khác, sửa `authorized_extensions` trong [thiết lập file](/admin/site_settings/category/files)."
   lounge_welcome:
     title: "Chào mừng bạn đến với Phòng khách"
-    body: |
+    body: |2
 
       Chúc mừng! :confetti_ball:
 
@@ -655,14 +651,6 @@ vi:
     s3_backup_config_warning: 'Máy chủ được cấu hình để upload các bản sao lưu dữ liệu lên s3, tuy nhiên ít nhất một trong các tùy chỉnh sau đây không được thiết lập: s3_access_key_id, s3_secret_access_key hoặc s3_backup_bucket. Truy cập <a href="/admin/site_settings">Thiết lập Site</a> và  bổ sung các thiết lập đó. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Xem bài viết "How to set up image uploads to S3?" để biết thêm chi tiết</a>.'
     image_magick_warning: 'Máy chủ đã cấu hình để tạo hình đại diện nhỏ từ những hình lới, nhưng ImageMagick chưa được cài đặt. Cài ImageMagick sử dụng trình quản lý package yêu thích của bạn hoặc <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">tải về phiên bản mới nhất</a>.'
     failing_emails_warning: 'Có %{num_failed_jobs} email jobs thấ bại. Kiểm tra app.yml và chắc chắn rằng cấu hình máy chủ email đúng. <a href="/sidekiq/retries" target="_blank">Xem jobs thất bại ở Sidekiq</a>.'
-    default_logo_warning: "Cập nhập logo của trang. Cập nhập logo_url, logo_small_url, và favicon_url trong <a href='/admin/site_settings'>Thiết lập trang</a>."
-    contact_email_missing: "Điền địa chỉ email liên hệ để có thể nhận được các vấn đề cấp bách liên quan đến website của bạn, cập nhật trong <a href='/admin/site_settings'>Thiết lập website</a>."
-    contact_email_invalid: "Email liên lạc của trang không hợp lệ. Cập nhật trong <a href='/admin/site_settings'>Thiết lập trang/a>."
-    title_nag: "Nhập tên trang của bạn. Cập nhập tiêu đề trong <a href='/admin/site_settings'>Thiết lập trang</a>."
-    site_description_missing: "Điền một câu mô tả về website để hiển thị trên trang kết quả tìm kiếm, cập nhật site_description trong <a href='/admin/site_settings'>Thiết lập website</a>."
-    consumer_email_warning: "Trang web của bạn được cài đặt sử dụng Gmail (hoặc một dịch vụ email khác) để gửi email. <a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>Gmail có giới hạn số lượng email bạn có thể gửi</a>. Hãy xem xét sử dụng một dịch vụ email khác như mandrill.com để đảm bảo khả năng vận chuyển tất cả các email."
-    site_contact_username_warning: "Điền tên tài khoản điều hành viên để gửi tin nhắn tự động, cập nhật site_contact_username trong <a href='/admin/site_settings'>Thiết lập website</a>."
-    notification_email_warning: "Email thông báo không thể gửi từ một địa chỉ email với tên miền của bạn, gửi email sẽ thất thường và không đáng tin cậy. Hãy thiết lập notification_email tới một địa chỉ tin cậy trong <a href='/admin/site_settings'>Thiết lập website</a>."
     subfolder_ends_in_slash: "Thư mục con của bạn được thiết lập không đúng, DISCOURSE_RELATIVE_URL_ROOT phải được kết thúc bằng dấu gạch chéo."
     email_polling_errored_recently:
       other: "Email đã tạo %{count} lỗi trong 24 giờ qua, xem <a href='/logs' target='_blank'>nhật ký</a> để biết thêm chi tiết."
@@ -711,7 +699,6 @@ vi:
     exclude_rel_nofollow_domains: "Một danh sách tên miền mà rel='nofollow' không được thêm vào các liên kết, các tên miền con sẽ được tự động áp dụng như với tên miền chính. Tối thiểu, bạn nên thêm tên miền cấp cao nhất của website này để giúp search engine tìm kiếm tất cả các nội dung. Nếu các phần khác của website thuộc tên miền khác, cũng nên thêm vào."
     post_excerpt_maxlength: "Chiều dài tối đa của đoạn trích / tóm tắt chủ đề."
     post_onebox_maxlength: "Số ký tự tối đa của một bài onebox Discourse."
-    onebox_domains_whitelist: "Danh sách các tên miền cho phép onebox, các tên miền này phải hỗ trợ OpenGraph hoặc oEmbed. Kiểm tra tại http://iframely.com/debug"
     logo_url: "Logo ở vị trí trên cùng của website nên là hình chữ nhật, nếu để trống thì tên website sẽ hiển thị."
     logo_small_url: "Logo nhỏ ở vị trí trên cùng của website hiển thị khi cuộn xuống nên là hình vuông, nếu để trống thì icon trang chủ sẽ hiển thị."
     favicon_url: "Favicon cho trang của bạn, xem tại http://en.wikipedia.org/wiki/Favicon, để chạy được với CDN ảnh phải là png"
@@ -766,9 +753,7 @@ vi:
     top_page_default_timeframe: "Khung thời gian mặc định cho trang xem trên cùng."
     show_email_on_profile: "Hiển thị email thành viên trên trang hồ hơ (chỉ cho họ và quản trị viên)"
     email_token_valid_hours: "Token quyên mật khẩu / kích hoạt tài khoản có giá trị trong (n) giờ."
-    email_token_grace_period_hours: "Token quyên mật khẩu / kích hoạt tài khoản vẫn còn giá trị (n) giờ sau khi được gia hạn"
     enable_badges: "Kích hoạt hệ thống huy hiệu"
-    enable_whispers: "Cho phép quản trị viên giao tiếp riêng trong chủ đề. (thực nghiệm)"
     allow_index_in_robots_txt: "Chỉ rõ trong robots.txt trang web này cho phép tạo chỉ mục bởi web search engines."
     email_domains_blacklist: "Một danh sách đuôi email mà người dùng không được phép dùng để đăng ký tài khoản. Ví dụ: maillinator.com|trashmail.net. Lưu ý mỗi tên miền cách nhau bởi dấu \"|\"."
     email_domains_whitelist: "Danh sách tên miền người dùng ĐƯỢC PHÉP đăng ký tài khoản. CẢNH BÁO: người dùng với  tên miền email khác trong danh sách sẽ không được phép đăng ký!"
@@ -901,7 +886,7 @@ vi:
     email_time_window_mins: "Chờ (n) phút trước khi gửi bất kỳ một email thông báo nào, để cung cấp cho người dùng cơ hội để chỉnh sửa và hoàn tất bài viết của họ."
     private_email_time_window_seconds: "Đợi (n) giây trước khi gửi bất kỳ thông báo email nào, để cho thành viên cơ hội để chỉnh sửa và hoàn thiện các thông điệp của họ."
     email_posts_context: "Có bao nhiêu trả lời trước được kèm theo như là bối cảnh trong email thông báo."
-    flush_timings_secs: "Tần suất tuôn dữ liệu thời gan tới server, theo giây."
+    flush_timings_secs: "Tần suất tuôn dữ liệu thời gian tới server, theo giây."
     title_max_word_length: "Chiều dài tối đa chữ cho phép, tính theo ký tự, trong một tiêu đề chủ đề."
     title_min_entropy: "Entropy tối thiểu (ký tự độc đáo, số từ phi tiếng Anh) cần thiết cho tên chủ đề."
     body_min_entropy: "Entropy tối thiểu (ký tự độc đáo, số từ phi tiếng Anh) cần thiết cho nội dung bài viết."
@@ -1020,7 +1005,6 @@ vi:
     embed_whitelist_selector: "Bộ chọn các thành phần CSS được hỗ trợ khi nhúng."
     embed_blacklist_selector: "Bộ chọn các thành phần CSS được loại bỏ khi nhúng."
     notify_about_flags_after: "Nếu có các đánh dấu chưa được xử lý sau số giờ được thiết lập ở đây, gửi email đến contact_email. Đặt là 0 để vô hiệu hóa."
-    enable_cdn_js_debugging: "Cho phép /logs hiển thị lỗi thích hợp bằng cách thêm quyền cross-origin trên tất cả js kèm theo."
     show_create_topics_notice: "Nếu trang có ít hơn 5 chủ đề công khai, hiển thị một thông báo yêu cầu quản trị tạo thêm các chủ đề mới"
     delete_drafts_older_than_n_days: Xóa các bản nháp cũ hơn (n) ngày.
     vacuum_db_days: "Chạy VACUUM ANALYZE để lấy lại khoảng trống DB sau khi migration (đặt là 0 để tắt)"
@@ -1269,30 +1253,12 @@ vi:
         [prefs]: %{user_preferences_url}
     backup_succeeded:
       subject_template: "Sản sao lưu hoàn tất thành công"
-      text_body_template: "Bản sao lưu đã được tạo thành công.\nTruy cập [admin > backup section](%{base_url}/admin/backups) để download bản sao lưu mới."
     backup_failed:
       subject_template: "Sao lưu lỗi."
-      text_body_template: |
-        Sao lưu lỗi.
-
-        Đây là log:
-
-        ```
-        %{logs}
-        ```
     restore_succeeded:
       subject_template: "Phục hồi thành công"
-      text_body_template: "Phục hồi đã thành công."
     restore_failed:
       subject_template: "Phục hồi thất bại."
-      text_body_template: |
-        Phục hồi thất bại.
-
-        Đây là log:
-
-        ```
-        %{logs}
-        ```
     bulk_invite_succeeded:
       subject_template: "Mời thành viên hàng loạt đã được thực hiện thành công"
       text_body_template: "File mời thành viên hàng loạt của bạn đã được thực hiện, %{sent} lời mời đã được gửi."
@@ -1342,7 +1308,6 @@ vi:
 
         Tài khoản của bạn liên kết với địa chỉ email này đã bị chặn.
     email_reject_reply_user_not_matching:
-      subject_template: "[%{site_name}] Sự cố email -- Thành viên trả lời không khớp"
       text_body_template: |
         Xin lỗi, tin nhắn email bạn gửi tới %{destination} (tiêu đề %{former_title}) không được thực hiện.
 
@@ -1362,7 +1327,6 @@ vi:
 
         Nếu bạn tin _đã_kèm_theo nội dung trả lời, xin hãy thử lại với định dạng đơn giản hơn.
     email_reject_parsing:
-      subject_template: "[%{site_name}] Vấn đề Email-- Không nhận dạng được nội dung"
       text_body_template: |
         Xin lỗi, tin nhắn email bạn gửi tới %{destination} (tiêu đề %{former_title}) không được thực hiện.
 
@@ -1395,12 +1359,6 @@ vi:
         %{post_error}
 
         Nếu bạn có thể khắc phục sự cố, xin hãy thử lại.
-    email_reject_rate_limit_specified:
-      subject_template: "[%{site_name}] Sự cố email -- Tỷ lệ giới hạn"
-      text_body_template: |
-        Xin lỗi, tin nhắn email bạn gửi tới %{destination} (tiêu đề %{former_title}) không được thực hiện.
-
-        Lý do: %{rate_limit_description}
     email_reject_invalid_post_action:
       subject_template: "[%{site_name}] Sự cố email -- Hành động gửi bài không hợp lệ"
       text_body_template: |
@@ -1538,13 +1496,7 @@ vi:
       subject_template: "%{optional_re}%{topic_title}"
     digest:
       why: "Tóm tắt %{site_link} từ lần cuối truy cập %{last_seen_at}"
-      new_activity: "Hoạt động mới ở chủ đề và bài viết của bạn:"
-      top_topics: "Bài viết phổ biến"
-      other_new_topics: "Chủ đề phổ biến"
       click_here: "bấm vào đây"
-      read_more: "Đọc Tiếp"
-      more_topics: "Đây là %{new_topics_since_seen} những chủ đề mới khác."
-      more_topics_category: "Thêm chủ đề mới:"
     mailing_list:
       new_topics: "Chủ đề mới"
       view_this_topic: "Xem chủ đề này"

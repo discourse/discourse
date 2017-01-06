@@ -1,16 +1,16 @@
 # How Do I Install Discourse?
 
-Simple 30 minute basic install:
+> :bell: The only officially supported installs of Discourse are [Docker](https://www.docker.io/) based. You must have SSH access to a 64-bit Linux server **with Docker support**. We regret that we cannot support any other methods of installation including cpanel, plesk, webmin, etc.
+
+Simple 30 minute basic install:  
 [**Beginner Docker install guide**][basic]
 
-Powerful, flexible, large or multiple server install:
+Powerful, flexible, large / multiple server install:  
 [**Advanced Docker install guide**][advanced]
-
-The only officially supported installs of Discourse are the [Docker](https://www.docker.io/) based beginner and advanced installs. We regret that we cannot support any other methods of installation.
 
 ### Why do you only officially support Docker?
 
-Hosting Rails applications is complicated. Even if you already have Postgres, Redis and Ruby installed on your server, you still need to worry about running and monitoring your Sidekiq and Rails processes. Additionally, our Docker install comes bundled with a web-based GUI that makes upgrading to new versions of Discourse as easy as clicking a button.
+Hosting Rails applications is complicated. Even if you already have Postgres, Redis and Ruby installed on your server, you still need to worry about running and monitoring your Sidekiq and Rails processes, as well as configuring Nginx. With Docker, our fully optimized Discourse configuration is available to you in a simple container, along with a web-based GUI that makes upgrading to new versions of Discourse as easy as clicking a button.
 
 ### Hardware Requirements
 
@@ -20,9 +20,9 @@ Hosting Rails applications is complicated. Even if you already have Postgres, Re
 
 ### Software Requirements
 
-- [Postgres 9.3+](http://www.postgresql.org/download/)
+- [Postgres 9.5+](http://www.postgresql.org/download/)
 - [Redis 2.6+](http://redis.io/download)
-- [Ruby 2.0+](http://www.ruby-lang.org/en/downloads/) (we recommend 2.0.0-p353 or higher)
+- [Ruby 2.3+](http://www.ruby-lang.org/en/downloads/) (we recommend 2.3.1 or higher)
 
 ## Security
 

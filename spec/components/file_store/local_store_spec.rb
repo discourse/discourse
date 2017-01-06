@@ -32,8 +32,6 @@ describe FileStore::LocalStore do
 
     it "does not delete non uploaded" do
       FileUtils.expects(:mkdir_p).never
-      upload = Upload.new
-      upload.stubs(:url).returns("/path/to/file")
       store.remove_upload(upload)
     end
 
@@ -41,22 +39,19 @@ describe FileStore::LocalStore do
       FileUtils.expects(:mkdir_p)
       FileUtils.expects(:move)
       File.expects(:exists?).returns(true)
-      upload = Upload.new
-      upload.stubs(:url).returns("/uploads/default/42/253dc8edf9d4ada1.png")
       store.remove_upload(upload)
     end
 
   end
 
   describe ".remove_optimized_image" do
+    let(:optimized_image) { Fabricate(:optimized_image, url: "/uploads/default/_optimized/42/253dc8edf9d4ada1.png") }
 
     it "moves the file to the tombstone" do
       FileUtils.expects(:mkdir_p)
       FileUtils.expects(:move)
       File.expects(:exists?).returns(true)
-      oi = OptimizedImage.new
-      oi.stubs(:url).returns("/uploads/default/_optimized/42/253dc8edf9d4ada1.png")
-      store.remove_optimized_image(upload)
+      store.remove_optimized_image(optimized_image)
     end
 
   end

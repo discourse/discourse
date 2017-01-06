@@ -71,38 +71,41 @@ export function userUrl(username) {
 
 export function emailValid(email) {
   // see:  http://stackoverflow.com/questions/46155/validate-email-address-in-javascript
-  var re = /^[a-zA-Z0-9!#$%&'*+\/=?\^_`{|}~\-]+(?:\.[a-zA-Z0-9!#$%&'\*+\/=?\^_`{|}~\-]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9\-]*[a-zA-Z0-9])?\.)+[a-zA-Z0-9](?:[a-zA-Z0-9\-]*[a-zA-Z0-9])?$/;
+  const re = /^[a-zA-Z0-9!#$%&'*+\/=?\^_`{|}~\-]+(?:\.[a-zA-Z0-9!#$%&'\*+\/=?\^_`{|}~\-]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9\-]*[a-zA-Z0-9])?\.)+[a-zA-Z0-9](?:[a-zA-Z0-9\-]*[a-zA-Z0-9])?$/;
   return re.test(email);
 }
 
-export function selectedText() {
-  var html = '';
+export function extractDomainFromUrl(url) {
+  if (url.indexOf("://") > -1) {
+    url = url.split('/')[2];
+  } else {
+    url = url.split('/')[0];
+  }
+  return url.split(':')[0];
+}
 
-  if (typeof window.getSelection !== "undefined") {
-    var sel = window.getSelection();
-    if (sel.rangeCount) {
-      var container = document.createElement("div");
-      for (var i = 0, len = sel.rangeCount; i < len; ++i) {
-        container.appendChild(sel.getRangeAt(i).cloneContents());
-      }
-      html = container.innerHTML;
-    }
-  } else if (typeof document.selection !== "undefined") {
-    if (document.selection.type === "Text") {
-      html = document.selection.createRange().htmlText;
-    }
+export function selectedText() {
+  const selection = window.getSelection();
+  if (selection.isCollapsed) { return ""; }
+
+  const $div = $("<div>");
+  for (let r = 0; r < selection.rangeCount; r++) {
+    const range = selection.getRangeAt(r);
+    const $ancestor = $(range.commonAncestorContainer);
+
+    // ensure we never quote text in the post menu area
+    const $postMenuArea = $ancestor.find(".post-menu-area")[0];
+    if ($postMenuArea) { range.setEndBefore($postMenuArea); }
+
+    $div.append(range.cloneContents());
   }
 
-  // Strip out any .click elements from the HTML before converting it to text
-  var div = document.createElement('div');
-  div.innerHTML = html;
-  var $div = $(div);
-  // Find all emojis and replace with its title attribute.
-  $div.find('img.emoji').replaceWith(function() { return this.title; });
-  $('.clicks', $div).remove();
-  var text = div.textContent || div.innerText || "";
+  // strip click counters
+  $div.find(".clicks").remove();
+  // replace emojis
+  $div.find("img.emoji").replaceWith(function() { return this.title; });
 
-  return String(text).trim();
+  return String($div.text()).trim();
 }
 
 // Determine the row and col of the caret in an element
@@ -155,7 +158,7 @@ export function setCaretPosition(ctrl, pos) {
   }
 }
 
-export function validateUploadedFiles(files, bypassNewUserRestriction) {
+export function validateUploadedFiles(files, opts) {
   if (!files || files.length === 0) { return false; }
 
   if (files.length > 1) {
@@ -163,31 +166,43 @@ export function validateUploadedFiles(files, bypassNewUserRestriction) {
     return false;
   }
 
-  var upload = files[0];
+  const upload = files[0];
 
   // CHROME ONLY: if the image was pasted, sets its name to a default one
   if (typeof Blob !== "undefined" && typeof File !== "undefined") {
     if (upload instanceof Blob && !(upload instanceof File) && upload.type === "image/png") { upload.name = "blob.png"; }
   }
 
-  var type = uploadTypeFromFileName(upload.name);
+  opts = opts || {};
+  opts["type"] = uploadTypeFromFileName(upload.name);
 
-  return validateUploadedFile(upload, type, bypassNewUserRestriction);
+  return validateUploadedFile(upload, opts);
 }
 
-export function validateUploadedFile(file, type, bypassNewUserRestriction) {
+export function validateUploadedFile(file, opts) {
+  opts = opts || {};
+
+  const name = file && file.name;
+
+  if (!name) { return false; }
+
   // check that the uploaded file is authorized
-  if (!authorizesAllExtensions() &&
-      !isAuthorizedUpload(file)) {
-    var extensions = authorizedExtensions();
-    bootbox.alert(I18n.t('post.errors.upload_not_authorized', { authorized_extensions: extensions }));
-    return false;
+  if (opts["imagesOnly"]) {
+    if (!isAnImage(name) && !isAuthorizedImage(name)) {
+      bootbox.alert(I18n.t('post.errors.upload_not_authorized', { authorized_extensions: authorizedImagesExtensions() }));
+      return false;
+    }
+  } else {
+    if (!authorizesAllExtensions() && !isAuthorizedFile(name)) {
+      bootbox.alert(I18n.t('post.errors.upload_not_authorized', { authorized_extensions: authorizedExtensions() }));
+      return false;
+    }
   }
 
-  if (!bypassNewUserRestriction) {
+  if (!opts["bypassNewUserRestriction"]) {
     // ensures that new users can upload a file
-    if (!Discourse.User.current().isAllowedToUploadAFile(type)) {
-      bootbox.alert(I18n.t('post.errors.' + type + '_upload_not_allowed_for_new_user'));
+    if (!Discourse.User.current().isAllowedToUploadAFile(opts["type"])) {
+      bootbox.alert(I18n.t(`post.errors.${opts["type"]}_upload_not_allowed_for_new_user`));
       return false;
     }
   }
@@ -196,31 +211,62 @@ export function validateUploadedFile(file, type, bypassNewUserRestriction) {
   return true;
 }
 
-export function uploadTypeFromFileName(fileName) {
-  return isAnImage(fileName) ? 'image' : 'attachment';
+const IMAGES_EXTENSIONS_REGEX = /(png|jpe?g|gif|bmp|tiff?|svg|webp|ico)/i;
+
+function extensions() {
+  return Discourse.SiteSettings.authorized_extensions
+                               .toLowerCase()
+                               .replace(/[\s\.]+/g, "")
+                               .split("|")
+                               .filter(ext => ext.indexOf("*") === -1);
+}
+
+function imagesExtensions() {
+  return extensions().filter(ext => IMAGES_EXTENSIONS_REGEX.test(ext));
+}
+
+function extensionsRegex() {
+  return new RegExp("\\.(" + extensions().join("|") + ")$", "i");
+}
+
+function imagesExtensionsRegex() {
+  return new RegExp("\\.(" + imagesExtensions().join("|") + ")$", "i");
+}
+
+function isAuthorizedFile(fileName) {
+  return extensionsRegex().test(fileName);
+}
+
+function isAuthorizedImage(fileName){
+  return imagesExtensionsRegex().test(fileName);
+}
+
+export function authorizedExtensions() {
+  return authorizesAllExtensions() ? "*" : extensions().join(", ");
+}
+
+export function authorizedImagesExtensions() {
+  return authorizesAllExtensions() ? "png, jpg, jpeg, gif, bmp, tiff, svg, webp, ico" : imagesExtensions().join(", ");
 }
 
 export function authorizesAllExtensions() {
   return Discourse.SiteSettings.authorized_extensions.indexOf("*") >= 0;
 }
 
-export function isAuthorizedUpload(file) {
-  if (file && file.name) {
-    var extensions = _.chain(Discourse.SiteSettings.authorized_extensions.split("|"))
-      .reject(function(extension) { return extension.indexOf("*") >= 0; })
-      .map(function(extension) { return (extension.indexOf(".") === 0 ? extension.substring(1) : extension).replace(".", "\\."); })
-      .value();
-    return new RegExp("\\.(" + extensions.join("|") + ")$", "i").test(file.name);
-  }
-  return false;
+export function isAnImage(path) {
+  return (/\.(png|jpe?g|gif|bmp|tiff?|svg|webp|ico)$/i).test(path);
 }
 
-export function authorizedExtensions() {
-  return _.chain(Discourse.SiteSettings.authorized_extensions.split("|"))
-    .reject(function(extension) { return extension.indexOf("*") >= 0; })
-    .map(function(extension) { return extension.toLowerCase(); })
-    .value()
-    .join(", ");
+function uploadTypeFromFileName(fileName) {
+  return isAnImage(fileName) ? 'image' : 'attachment';
+}
+
+export function allowsImages() {
+  return authorizesAllExtensions() || IMAGES_EXTENSIONS_REGEX.test(authorizedExtensions());
+}
+
+export function allowsAttachments() {
+  return authorizesAllExtensions() || extensions().length > imagesExtensions().length;
 }
 
 export function uploadLocation(url) {
@@ -232,7 +278,7 @@ export function uploadLocation(url) {
   } else {
     var protocol = window.location.protocol + '//',
       hostname = window.location.hostname,
-      port = ':' + window.location.port;
+      port = window.location.port ? ':' + window.location.port : '';
     return protocol + hostname + port + url;
   }
 }
@@ -241,25 +287,10 @@ export function getUploadMarkdown(upload) {
   if (isAnImage(upload.original_filename)) {
     return '<img src="' + upload.url + '" width="' + upload.width + '" height="' + upload.height + '">';
   } else if (!Discourse.SiteSettings.prevent_anons_from_downloading_files && (/\.(mov|mp4|webm|ogv|mp3|ogg|wav|m4a)$/i).test(upload.original_filename)) {
-    // is Audio/Video
     return uploadLocation(upload.url);
   } else {
     return '<a class="attachment" href="' + upload.url + '">' + upload.original_filename + '</a> (' + I18n.toHumanSize(upload.filesize) + ')\n';
   }
-}
-
-export function isAnImage(path) {
-  return (/\.(png|jpe?g|gif|bmp|tiff?|svg|webp|ico)$/i).test(path);
-}
-
-export function allowsImages() {
-  return authorizesAllExtensions() ||
-    (/(png|jpe?g|gif|bmp|tiff?|svg|webp|ico)/i).test(authorizedExtensions());
-}
-
-export function allowsAttachments() {
-  return authorizesAllExtensions() ||
-    !(/((png|jpe?g|gif|bmp|tiff?|svg|web|ico)(,\s)?)+$/i).test(authorizedExtensions());
 }
 
 export function displayErrorForUpload(data) {
@@ -296,6 +327,36 @@ export function displayErrorForUpload(data) {
 export function defaultHomepage() {
   // the homepage is the first item of the 'top_menu' site setting
   return Discourse.SiteSettings.top_menu.split("|")[0].split(",")[0];
+}
+
+export function determinePostReplaceSelection({ selection, needle, replacement }) {
+  const diff = (replacement.end - replacement.start) - (needle.end - needle.start);
+
+  if (selection.end <= needle.start) {
+    // Selection ends (and starts) before needle.
+    return { start: selection.start, end: selection.end };
+  } else if (selection.start <= needle.start) {
+    // Selection starts before needle...
+    if (selection.end < needle.end) {
+      // ... and ends inside needle.
+      return { start: selection.start, end: needle.start };
+    } else {
+      // ... and spans needle completely.
+      return { start: selection.start, end: selection.end + diff };
+    }
+  } else if (selection.start < needle.end) {
+    // Selection starts inside needle...
+    if (selection.end <= needle.end) {
+      // ... and ends inside needle.
+      return { start: replacement.end, end: replacement.end };
+    } else {
+      // ... and spans end of needle.
+      return { start: replacement.end, end: selection.end + diff };
+    }
+  } else {
+    // Selection starts (and ends) behind needle.
+    return { start: selection.start + diff, end: selection.end + diff };
+  }
 }
 
 // This prevents a mini racer crash

@@ -47,6 +47,10 @@ class PostDestroyer
       mark_for_deletion
     end
     DiscourseEvent.trigger(:post_destroyed, @post, @opts, @user)
+
+    if @post.is_first_post? && @post.topic
+      DiscourseEvent.trigger(:topic_destroyed, @post.topic, @user)
+    end
   end
 
   def recover
@@ -60,6 +64,7 @@ class PostDestroyer
     topic.update_statistics
     recover_user_actions
     DiscourseEvent.trigger(:post_recovered, @post, @opts, @user)
+    DiscourseEvent.trigger(:topic_recovered, topic, @user) if @post.is_first_post?
   end
 
   def staff_recovered
@@ -182,7 +187,7 @@ class PostDestroyer
 
   def recover_user_actions
     # TODO: Use a trash concept for `user_actions` to avoid churn and simplify this?
-    UserActionObserver.log_post(@post)
+    UserActionCreator.log_post(@post)
   end
 
   def remove_associated_replies

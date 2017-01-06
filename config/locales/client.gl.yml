@@ -27,6 +27,7 @@ gl:
         millions: "{{number}}M"
     dates:
       time: "h:mm a"
+      timeline_date: "MMM YYYY"
       long_no_year: "D MMM h:mm a"
       long_no_year_no_time: "D MMM"
       full_no_year_no_time: "D MMMM"
@@ -38,6 +39,7 @@ gl:
       long_date_with_year_without_time: "D MMM, 'YY"
       long_date_without_year_with_linebreak: "D MMM <br/>LT"
       long_date_with_year_with_linebreak: "D MMM, 'YY <br/>LT"
+      wrap_ago: "fai %{date}"
       tiny:
         half_a_minute: "< 1m"
         less_than_x_seconds:
@@ -46,9 +48,6 @@ gl:
         x_seconds:
           one: "1s"
           other: "%{count}s"
-        less_than_x_minutes:
-          one: "< 1m"
-          other: "< %{count}m"
         x_minutes:
           one: "1m"
           other: "%{count}m"
@@ -111,9 +110,13 @@ gl:
       google+: 'compartir esta ligazón no Google+'
       email: 'enviar esta ligazón nun correo electrónico'
     action_codes:
+      public_topic: "fixo esta publicación pública no %{when}"
+      private_topic: "fixo esta publicación privada no %{when}"
       split_topic: "este tema dividiuse o %{when}"
       invited_user: "convidou a %{who} %{when}"
+      invited_group: "invitou %{who} o %{when}"
       removed_user: "eliminou a %{who} %{when}"
+      removed_group: "eliminou %{who} o %{when}"
       autoclosed:
         enabled: 'pechado o %{when}'
         disabled: 'aberto o %{when}'
@@ -133,6 +136,7 @@ gl:
         enabled: 'listado o %{when}'
         disabled: 'retirado da lista o %{when}'
     topic_admin_menu: "accións do administrador de temas"
+    wizard_required: "É hora de configura-lo teu foro! <a href='%{url}' data-auto-route='true'>Inicie o Asistente de Configuración</a>!"
     emails_are_disabled: "Todos os correos electrónicos saíntes foron desactivados globalmente por un administrador. Non se enviará ningún tipo de notificación por correo electrónico."
     s3:
       regions:
@@ -310,12 +314,6 @@ gl:
         one: "Un usuario"
         other: "%{count} usuarios"
     groups:
-      empty:
-        posts: "Non hai publicacións de membros deste grupo."
-        members: "Non hai ningún membro neste grupo."
-        mentions: "Non hai ningunha mención deste grupo."
-        messages: "Non hai ningunha mensaxe para este grupo."
-        topics: "Non hai temas por membros deste grupo."
       add: "Engadir"
       selector_placeholder: "Engadir membros"
       owner: "propietario"
@@ -384,14 +382,9 @@ gl:
       latest_by: "últimos de"
       toggle_ordering: "trocar o control de ordenación"
       subcategories: "Subcategorías"
-      topic_stats: "Número de temas novos."
       topic_stat_sentence:
         one: "%{count} tema novo no último %{unit}."
         other: "%{count} temas novos no último %{unit}."
-      post_stats: "O número de publicacións novas."
-      post_stat_sentence:
-        one: "%{count} nova publicación na última %{unit}."
-        other: "%{count} novas publicacións na última %{unit}."
     ip_lookup:
       title: Busca do enderezo IP
       hostname: Nome do servidor
@@ -414,7 +407,6 @@ gl:
       profile: "Perfil"
       mute: "Silenciar"
       edit: "Editar preferencias"
-      download_archive: "Descargar as miñas publicacións"
       new_private_message: "Nova mensaxe"
       private_message: "Mensaxe"
       private_messages: "Mensaxes"
@@ -634,13 +626,9 @@ gl:
         account_age_days: "Tempo da conta en días"
         create: "Enviar un convite"
         generate_link: "Copiar a ligazón do convite"
-        generated_link_message: '<p>A ligazón do convite xerouse correctamente.</p><p><input class="invite-link-input" style="width: 75%;" type="text" value="%{inviteLink}"></p><p>A ligazón do convite só é válida para este enderezo de correo-e: <b>%{invitedEmail}</b></p>'
         bulk_invite:
-          none: "Aínda non convidaches a ninguén. Podes enviar convites individuais ou en grupo se <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>subes un ficheiro para convites múltiples</a>."
           text: "Convidar en grupo desde un ficheiro"
-          uploading: "Enviando..."
           success: "O ficheiro enviouse correctamente, notificaráseche por mensaxe cando remate o proceso."
-          error: "Produciuse un erro ao subir «{{filename}}»: {{message}}"
       password:
         title: "Contrasinal"
         too_short: "O teu contrasinal é demasiado curto."
@@ -967,7 +955,6 @@ gl:
       title: "buscar temas, publicacións, usuarios ou categorías"
       no_results: "Non se atoparon resultados."
       no_more_results: "Non se atoparon máis resultados."
-      search_help: Buscar axuda
       searching: "Buscando..."
       post_format: "#{{post_number}} de {{username}}"
       context:
@@ -1029,7 +1016,6 @@ gl:
       unsubscribe:
         stop_notifications: "Agora recibirás menos notificacións sobre <strong>{{title}}</strong>"
         change_notification_state: "O estado actual das túas notificacións é"
-      filter_to: "{{post_count}} publicacións no tema"
       create: 'Novo tema'
       create_long: 'Crear un novo tema'
       private_message: 'Iniciar unha mensaxe'
@@ -1089,7 +1075,6 @@ gl:
       auto_close_title: 'Axustes do peche automático'
       auto_close_save: "Gardar"
       auto_close_remove: "arriba"
-      auto_close_immediate: "A última publicación deste tema xa ten %{hours} horas. O tema pecharase inmediatamente."
       progress:
         title: progreso do tema
         go_top: "principio"
@@ -1099,7 +1084,6 @@ gl:
         jump_bottom_with_number: "ir á publicación %{post_number}"
         total: publicacións totais
         current: publicación actual
-        position: "publicación %{current} de %{total}"
       notifications:
         reasons:
           '3_6': 'Recibirás notificacións porque estás vendo esta categoría.'
@@ -1275,7 +1259,6 @@ gl:
     post:
       reply: "<i class='fa fa-mail-forward'></i> {{replyAvatar}} {{usernameLink}}"
       reply_topic: "<i class='fa fa-mail-forward'></i> {{link}}"
-      quote_reply: "citar resposta"
       edit: "Editando {{link}} {{replyAvatar}} {{username}}"
       edit_reason: "Razón:"
       post_number: "publicación {{number}}"
@@ -1292,7 +1275,6 @@ gl:
       gap:
         one: "ver unha resposta oculta"
         other: "ver {{count}} respostas ocultas"
-      more_links: "{{count}} máis..."
       unread: "Publicación sen ler"
       has_replies:
         one: "{{count}} resposta"
@@ -1357,14 +1339,6 @@ gl:
         defer_flags:
           one: "Pospor denuncia"
           other: "Pospor denuncias"
-        it_too:
-          off_topic: "Denuncialo tamén"
-          spam: "Denuncialo tamén"
-          inappropriate: "Denuncialo tamén"
-          custom_flag: "Denuncialo tamén"
-          bookmark: "Marcalo tamén"
-          like: "Gústame tamén"
-          vote: "Votalo tamén"
         undo:
           off_topic: "Desfacer denuncia"
           spam: "Desfacer denuncia"
@@ -1535,7 +1509,6 @@ gl:
       take_action: "Tomar medidas"
       notify_action: 'Mensaxe'
       delete_spammer: "Eliminar spammer"
-      delete_confirm: "Vas borrar <b>%{posts}</b> publicacións e <b>%{topics}</b> temas deste usuario, eliminar a súa conta, bloquear o rexistro desde os seus enderezos IP <b>%{ip_address}</b> e engadir o seu correo-e <b>%{email}</b> a unha lista de bloqueos permanentes. Confirmas que este usuario é un spammer?"
       yes_delete_spammer: "Si, eliminar o spammer"
       ip_address_missing: "(N/D)"
       hidden_email_address: "(oculto)"
@@ -1549,10 +1522,6 @@ gl:
         spam: "É spam"
       custom_placeholder_notify_user: "Se específico, construtivo e sempre amábel."
       custom_placeholder_notify_moderators: "Especifícanos sobre o que estás preocupado e proporciónanos ligazóns relevantes e exemplos cando sexa posíbel."
-      custom_message:
-        at_least: "introduce cando menos {{n}} caracteres"
-        more: "{{n}} restantes..."
-        left: "{{n}} restantes"
     flagging_topic:
       title: "Grazas por axudar a manter a nosa comunidade."
       action: "Denunciar tema"
@@ -1587,7 +1556,6 @@ gl:
       invisible:
         help: "Este tema non está listado. Non se presentará nas listas de temas e só estará accesíbel vía ligazón directa"
     posts: "Publicacións"
-    posts_lowercase: "publicacións"
     posts_long: "hai {{number}} publicacións neste tema"
     posts_likes_MF: |
       Este tema ten {count, plural, one {1 resposta} other {# respostas}} {ratio, select,
@@ -1823,15 +1791,12 @@ gl:
         refresh: "Actualizar"
         new: "Novo"
         selector_placeholder: "escribe o nome do usuario"
-        name_placeholder: "Nome do grupo sen espazos, como na regra do nome do usuario"
         about: "Edita aquí a túa pertenza a un grupo e nomes"
         group_members: "Membros do grupo"
         delete: "Eliminar"
         delete_confirm: "Eliminar este grupo?"
         delete_failed: "Non é posíbel eliminar o grupo. Se este é un grupo automático, non se pode destruír."
-        delete_member_confirm: "Queres eliminar a «%{username}» do grupo «%{group}»?"
         delete_owner_confirm: "Eliminar os privilexios de usuario de «%{username}»?"
-        name: "Nome"
         add: "Engadir"
         add_members: "Engadir membros"
         custom: "Personalizar"
@@ -1919,10 +1884,8 @@ gl:
             title: "Reverter a base de datos ao estado de funcionamento anterior"
             confirm: "Confirmas a reversión da base de datos ao estado de funcionamento anterior?"
       export_csv:
-        user_archive_confirm: "Confirmas a descarga das túas publicacións?"
         success: "Iniciouse a exportación, notificarémosche cunha mensaxe o remate do proceso."
         failed: "Produciuse un fallo na exportación. Comproba os rexistros."
-        rate_limit_error: "Só se poden descargar as publicacións unha vez por día. Téntao de novo mañá."
         button_text: "Exportar"
         button_title:
           user: "Exportar a lista completa de usuarios en formato CSV."
@@ -2232,7 +2195,6 @@ gl:
         suspend_reason: "Razón"
         suspended_by: "Suspendido por"
         delete_all_posts: "Eliminar todas as publicacións"
-        delete_all_posts_confirm: "Confirmas a eliminación de %{posts} publicacións e %{topics} temas?"
         suspend: "Suspender"
         unsuspend: "Non suspender"
         suspended: "Suspendido?"
@@ -2319,7 +2281,6 @@ gl:
         unlock_trust_level: "Desbloquear o nivel de confianza"
         tl3_requirements:
           title: "Requerimentos para o nivel 3 de confianza"
-          table_title: "Nos últimos %{time_period} días:"
           value_heading: "Valor"
           requirement_heading: "Requirimento"
           visits: "Visitas"

@@ -9,6 +9,7 @@ da:
   site_settings:
     poll_enabled: "Tillad at brugere opretter afstemninger?"
     poll_maximum_options: "Maksimalt antal valgmuligheder i en afstemning."
+    poll_edit_window_mins: "Antal af minutter efter oprettelse af et indlæg hvor en afstemning kan redigeres."
   poll:
     multiple_polls_without_name: "Der er flere afstemninger uden navn. Brug attributten '<code>name</code>' for at identificere dine afstemninger."
     multiple_polls_with_same_name: "Der er flere afstemninger med samme navn <strong>%{name}</strong>. Brug attributten '<code>name</code>' for at identificere dine afstemninger."
@@ -25,9 +26,12 @@ da:
     default_poll_with_multiple_choices_has_invalid_parameters: "Afstemning med flere valgmuligheder har ugyldige parametre."
     named_poll_with_multiple_choices_has_invalid_parameters: "Afstemningen <strong>%{name}</strong> med flere valgmuligheder har ugyldige parametre."
     requires_at_least_1_valid_option: "Du skal vælge mindst 1 gyldig mulighed."
-    cannot_change_polls_after_5_minutes: "Du kan ikke tilføje, fjerne eller omdøbe afstemninger efter de første 5 minutter."
-    op_cannot_edit_options_after_5_minutes: "Du kan ikke tilføje eller fjerne afstemningsmuligheder efter de første 5 minutter. Kontakt venligst en moderator hvis du har brug for at rette en mulighed."
-    staff_cannot_add_or_remove_options_after_5_minutes: "Du kan ikke tilføje eller fjerne afstemningsmuligheder efter de første 5 minutter. Du kan lukke emnet og oprette et nyt istedet."
+    default_cannot_be_made_public: "En afstemning med stemmer kan ikke gøres offentlig."
+    named_cannot_be_made_public: "Afstemningen <strong>%{name}</strong> har stemmer og kan ikke gøres offentlig."
+    edit_window_expired:
+      cannot_change_polls: "Du kan ikke tilføje, slette eller omdøbe en afstemning efter de første %{minutes} minutter."
+      op_cannot_edit_options: "Du kan ikke tilføje eller slette afstemnings indstillinger efter de første %{minutes} minutter. Venligst kontakt en moderator hvis du har behov for at redigere en afstemning."
+      staff_cannot_add_or_remove_options: "Du kan ikke tilføje eller fjerne afstemningsmuligheder efter de første %{minutes} minutter. Du bør lukke dette emne og oprette et nyt istedet."
     no_polls_associated_with_this_post: "Ingen afstemninger er associeret med dette indlæg."
     no_poll_with_this_name: "Ingen afstemning med navnet <strong>%{name}</strong> er associeret med dette indlæg."
     post_is_deleted: "Kan ikke gøres på et slettet indlæg."

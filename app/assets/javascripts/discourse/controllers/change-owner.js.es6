@@ -4,9 +4,7 @@ import DiscourseURL from 'discourse/lib/url';
 
 // Modal related to changing the ownership of posts
 export default Ember.Controller.extend(SelectedPostsCount, ModalFunctionality, {
-  needs: ['topic'],
-
-  topicController: Em.computed.alias('controllers.topic'),
+  topicController: Ember.inject.controller('topic'),
   selectedPosts: Em.computed.alias('topicController.selectedPosts'),
   saving: false,
   new_user: null,

@@ -15,7 +15,7 @@ end
 #  external_username   :string
 #  external_email      :string
 #  external_name       :string
-#  external_avatar_url :string
+#  external_avatar_url :string(1000)
 #
 # Indexes
 #

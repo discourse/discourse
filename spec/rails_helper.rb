@@ -43,6 +43,7 @@ Spork.prefork do
     config.include Helpers
     config.include MessageBus
     config.include RSpecHtmlMatchers
+    config.include IntegrationHelpers, type: :request
     config.mock_framework = :mocha
     config.order = 'random'
     config.infer_spec_type_from_file_location!
@@ -103,9 +104,11 @@ Spork.prefork do
       #
       # $redis = DiscourseMockRedis.new
       #
-      # disable all observers, enable as needed during specs
-      #
-      ActiveRecord::Base.observers.disable :all
+      PostActionNotifier.disable
+      SearchIndexer.disable
+      UserActionCreator.disable
+      NotificationEmailer.disable
+
       SiteSetting.provider.all.each do |setting|
         SiteSetting.remove_override!(setting.name)
       end
@@ -140,9 +143,9 @@ Spork.prefork do
     Time.stubs(:now).returns(time)
   end
 
-  def file_from_fixtures(filename)
+  def file_from_fixtures(filename, directory="images")
     FileUtils.mkdir_p("#{Rails.root}/tmp/spec") unless Dir.exists?("#{Rails.root}/tmp/spec")
-    FileUtils.cp("#{Rails.root}/spec/fixtures/images/#{filename}", "#{Rails.root}/tmp/spec/#{filename}")
+    FileUtils.cp("#{Rails.root}/spec/fixtures/#{directory}/#{filename}", "#{Rails.root}/tmp/spec/#{filename}")
     File.new("#{Rails.root}/tmp/spec/#{filename}")
   end
 end

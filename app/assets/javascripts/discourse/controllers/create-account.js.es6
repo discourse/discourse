@@ -7,7 +7,7 @@ import { emailValid } from 'discourse/lib/utilities';
 import InputValidation from 'discourse/models/input-validation';
 
 export default Ember.Controller.extend(ModalFunctionality, {
-  needs: ['login'],
+  login: Ember.inject.controller(),
 
   uniqueUsernameValidation: null,
   globalNicknameExists: false,
@@ -56,7 +56,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
     // Validate required fields
     let userFields = this.get('userFields');
-    if (userFields) { userFields = userFields.filterProperty('field.required'); }
+    if (userFields) { userFields = userFields.filterBy('field.required'); }
     if (!Ember.isEmpty(userFields)) {
       const anyEmpty = userFields.any(function(uf) {
         const val = uf.get('value');
@@ -77,6 +77,13 @@ export default Ember.Controller.extend(ModalFunctionality, {
   passwordRequired: function() {
     return Ember.isEmpty(this.get('authOptions.auth_provider'));
   }.property('authOptions.auth_provider'),
+
+  disclaimerHtml: function() {
+    return I18n.t('create_account.disclaimer', {
+      tos_link: this.get('siteSettings.tos_url') || Discourse.getURL('/tos'),
+      privacy_link: this.get('siteSettings.privacy_policy_url') || Discourse.getURL('/privacy')
+    });
+  }.property(),
 
   passwordInstructions: function() {
     return this.get('isDeveloper') ? I18n.t('user.password.instructions', {count: Discourse.SiteSettings.min_admin_password_length}) : I18n.t('user.password.instructions', {count: Discourse.SiteSettings.min_password_length});
@@ -107,7 +114,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
     email = this.get("accountEmail");
 
-    if (this.get('rejectedEmails').contains(email)) {
+    if (this.get('rejectedEmails').includes(email)) {
       return InputValidation.create({
         failed: true,
         reason: I18n.t('user.email.invalid')
@@ -307,7 +314,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
       });
     }
 
-    if (this.get('rejectedPasswords').contains(password)) {
+    if (this.get('rejectedPasswords').includes(password)) {
       return InputValidation.create({
         failed: true,
         reason: I18n.t('user.password.common')
@@ -345,7 +352,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
   actions: {
     externalLogin(provider) {
-      this.get('controllers.login').send('externalLogin', provider);
+      this.get('login').send('externalLogin', provider);
     },
 
     createAccount() {

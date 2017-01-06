@@ -3,6 +3,7 @@ require_dependency 'promotion'
 require_dependency 'url_helper'
 require_dependency 'topics_bulk_action'
 require_dependency 'discourse_event'
+require_dependency 'rate_limiter'
 
 class TopicsController < ApplicationController
   before_filter :ensure_logged_in, only: [:timings,
@@ -58,7 +59,24 @@ class TopicsController < ApplicationController
     username_filters = opts[:username_filters]
 
     opts[:slow_platform] = true if slow_platform?
+    opts[:print] = true if params[:print].present?
     opts[:username_filters] = username_filters.split(',') if username_filters.is_a?(String)
+
+    # Special case: a slug with a number in front should look by slug first before looking
+    # up that particular number
+    if params[:id] && params[:id] =~ /^\d+[^\d\\]+$/
+      topic = Topic.find_by(slug: params[:id].downcase)
+      return redirect_to_correct_topic(topic, opts[:post_number]) if topic && topic.visible
+    end
+
+    if opts[:print]
+      raise Discourse::InvalidAccess unless SiteSetting.max_prints_per_hour_per_user > 0
+      begin
+        RateLimiter.new(current_user, "print-topic-per-hour", SiteSetting.max_prints_per_hour_per_user, 1.hour).performed! unless @guardian.is_admin?
+      rescue RateLimiter::LimitExceeded
+        render_json_error(I18n.t("rate_limiter.slow_down"))
+      end
+    end
 
     begin
       @topic_view = TopicView.new(params[:id] || params[:topic_id], current_user, opts)
@@ -166,6 +184,40 @@ class TopicsController < ApplicationController
 
     @topic_view = TopicView.new(params[:topic_id], current_user, post_ids: params[:post_ids])
     render_json_dump(TopicViewPostsSerializer.new(@topic_view, scope: guardian, root: false, include_raw: !!params[:include_raw]))
+  end
+
+  def excerpts
+    params.require(:topic_id)
+    params.require(:post_ids)
+
+    post_ids = params[:post_ids].map(&:to_i)
+    unless Array === post_ids
+      render_json_error("Expecting post_ids to contain a list of posts ids")
+      return
+    end
+
+    if post_ids.length > 100
+      render_json_error("Requested a chunk that is too big")
+      return
+    end
+
+    @topic = Topic.with_deleted.where(id: params[:topic_id]).first
+    guardian.ensure_can_see!(@topic)
+
+    @posts = Post.where(hidden: false, deleted_at: nil, topic_id: @topic.id)
+        .where('posts.id in (?)', post_ids)
+        .joins("LEFT JOIN users u on u.id = posts.user_id")
+        .pluck(:id, :cooked, :username)
+        .map do |post_id, cooked, username|
+          {
+            post_id: post_id,
+            username: username,
+            excerpt: PrettyText.excerpt(cooked, 800, keep_emoji_images: true)
+          }
+         end
+
+
+    render json: @posts.to_json
   end
 
   def destroy_timings
@@ -344,8 +396,6 @@ class TopicsController < ApplicationController
     first_post = topic.ordered_posts.first
     PostDestroyer.new(current_user, first_post, { context: params[:context] }).destroy
 
-    DiscourseEvent.trigger(:topic_destroyed, topic, current_user)
-
     render nothing: true
   end
 
@@ -355,8 +405,6 @@ class TopicsController < ApplicationController
 
     first_post = topic.posts.with_deleted.order(:post_number).first
     PostDestroyer.new(current_user, first_post).recover
-
-    DiscourseEvent.trigger(:topic_recovered, topic, current_user)
 
     render nothing: true
   end
@@ -480,7 +528,7 @@ class TopicsController < ApplicationController
     params.require(:topic_id)
     params.require(:timestamp)
 
-    guardian.ensure_can_change_post_owner!
+    guardian.ensure_can_change_post_timestamps!
 
     begin
       PostTimestampChanger.new( topic_id: params[:topic_id].to_i,
@@ -528,7 +576,7 @@ class TopicsController < ApplicationController
       topic_ids = params[:topic_ids].map {|t| t.to_i}
     elsif params[:filter] == 'unread'
       tq = TopicQuery.new(current_user)
-      topics = TopicQuery.unread_filter(tq.joined_topic_user).listable_topics
+      topics = TopicQuery.unread_filter(tq.joined_topic_user, staff: guardian.is_staff?).listable_topics
       topics = topics.where('category_id = ?', params[:category_id]) if params[:category_id]
       topic_ids = topics.pluck(:id)
     else
@@ -622,6 +670,12 @@ class TopicsController < ApplicationController
   end
 
   def perform_show_response
+
+    if request.head?
+      head :ok
+      return
+    end
+
     topic_view_serializer = TopicViewSerializer.new(@topic_view, scope: guardian, root: false, include_raw: !!params[:include_raw])
 
     respond_to do |format|

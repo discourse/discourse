@@ -25,3 +25,7 @@ Fabricator(:private_category, from: :category) do
     cat.category_groups.build(group_id: transients[:group].id, permission_type: CategoryGroup.permission_types[:full])
   end
 end
+
+Fabricator(:link_category, from: :category) do
+  before_validation { |category, transients| category.topic_featured_link_allowed = true }
+end

@@ -1,0 +1,11 @@
+{{#each field.choices as |c|}}
+  <div class="radio-field-choice">
+    {{radio-button value=field.value
+                   radioValue=c.id
+                   label=c.label
+                   extraLabel=c.extra_label
+                   icon=c.icon
+                   description=c.description
+                   onChange="changed"}}
+  </div>
+{{/each}}

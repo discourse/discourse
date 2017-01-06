@@ -1301,10 +1301,6 @@
       "name": "fallen_leaf"
     },
     {
-      "code": "1f46a",
-      "name": "family"
-    },
-    {
       "code": "23e9",
       "name": "fast_forward"
     },
@@ -1387,46 +1383,6 @@
     {
       "code": "1f3f4",
       "name": "flag_black"
-    },
-    {
-      "code": "1f1e8-1f1f3",
-      "name": "flag_cn"
-    },
-    {
-      "code": "1f1e9-1f1ea",
-      "name": "flag_de"
-    },
-    {
-      "code": "1f1ea-1f1f8",
-      "name": "flag_es"
-    },
-    {
-      "code": "1f1eb-1f1f7",
-      "name": "flag_fr"
-    },
-    {
-      "code": "1f1ec-1f1e7",
-      "name": "flag_gb"
-    },
-    {
-      "code": "1f1ee-1f1f9",
-      "name": "flag_it"
-    },
-    {
-      "code": "1f1ef-1f1f5",
-      "name": "flag_jp"
-    },
-    {
-      "code": "1f1f0-1f1f7",
-      "name": "flag_kr"
-    },
-    {
-      "code": "1f1f7-1f1fa",
-      "name": "flag_ru"
-    },
-    {
-      "code": "1f1fa-1f1f8",
-      "name": "flag_us"
     },
     {
       "code": "1f3f3",
@@ -4107,6 +4063,126 @@
     {
       "code": "1f4a4",
       "name": "zzz"
+    },
+    {
+      "code": "1f469-200d-2764-fe0f-200d-1f469",
+      "name": "female_couple_with_heart"
+    },
+    {
+      "code": "1f468-200d-2764-fe0f-200d-1f468",
+      "name": "male_couple_with_heart"
+    },
+    {
+      "code": "1f469-200d-2764-fe0f-200d-1f48b-200d-1f469",
+      "name": "female_couplekiss"
+    },
+    {
+      "code": "1f468-200d-2764-fe0f-200d-1f48b-200d-1f468",
+      "name": "male_couplekiss"
+    },
+    {
+      "code": "1f468-200d-1f469-200d-1f467",
+      "name": "family_man_woman_girl"
+    },
+    {
+      "code": "1f468-200d-1f469-200d-1f467-200d-1f466",
+      "name": "family_man_woman_girl_boy"
+    },
+    {
+      "code": "1f468-200d-1f469-200d-1f466-200d-1f466",
+      "name": "family_man_woman_boys"
+    },
+    {
+      "code": "1f468-200d-1f469-200d-1f467-200d-1f467",
+      "name": "family_man_woman_girls"
+    },
+    {
+      "code": "1f469-200d-1f469-200d-1f466",
+      "name": "family_women_boy"
+    },
+    {
+      "code": "1f469-200d-1f469-200d-1f467",
+      "name": "family_women_girl"
+    },
+    {
+      "code": "1f469-200d-1f469-200d-1f467-200d-1f466",
+      "name": "family_women_girl_boy"
+    },
+    {
+      "code": "1f469-200d-1f469-200d-1f466-200d-1f466",
+      "name": "family_women_boys"
+    },
+    {
+      "code": "1f469-200d-1f469-200d-1f467-200d-1f467",
+      "name": "family_women_girls"
+    },
+    {
+      "code": "1f468-200d-1f468-200d-1f466",
+      "name": "family_men_boy"
+    },
+    {
+      "code": "1f468-200d-1f468-200d-1f467",
+      "name": "family_men_girl"
+    },
+    {
+      "code": "1f468-200d-1f468-200d-1f467-200d-1f466",
+      "name": "family_men_girl_boy"
+    },
+    {
+      "code": "1f468-200d-1f468-200d-1f466-200d-1f466",
+      "name": "family_men_boys"
+    },
+    {
+      "code": "1f468-200d-1f468-200d-1f467-200d-1f467",
+      "name": "family_men_girls"
+    },
+    {
+      "code": "002a-20e3",
+      "name": "keycap_star"
+    },
+    {
+      "code": "1f5e8",
+      "name": "left_speech_bubble"
+    },
+    {
+      "code": "1f1e8-1f1f3",
+      "name": "cn"
+    },
+    {
+      "code": "1f1eb-1f1f7",
+      "name": "fr"
+    },
+    {
+      "code": "1f1e9-1f1ea",
+      "name": "de"
+    },
+    {
+      "code": "1f1ee-1f1f9",
+      "name": "it"
+    },
+    {
+      "code": "1f1ef-1f1f5",
+      "name": "jp"
+    },
+    {
+      "code": "1f1f7-1f1fa",
+      "name": "ru"
+    },
+    {
+      "code": "1f1f0-1f1f7",
+      "name": "kr"
+    },
+    {
+      "code": "1f1ea-1f1f8",
+      "name": "es"
+    },
+    {
+      "code": "1f1ec-1f1e7",
+      "name": "gb"
+    },
+    {
+      "code": "1f1fa-1f1f8",
+      "name": "us"
     }
   ],
   "aliases": {
@@ -4212,35 +4288,35 @@
     "flag_black": [
       "waving_black_flag"
     ],
-    "flag_cn": [
-      "cn"
+    "cn": [
+      "flag_cn"
     ],
-    "flag_de": [
-      "de"
+    "de": [
+      "flag_de"
     ],
-    "flag_es": [
-      "es"
+    "es": [
+      "flag_es"
     ],
-    "flag_fr": [
-      "fr"
+    "fr": [
+      "flag_fr"
     ],
-    "flag_gb": [
-      "gb"
+    "gb": [
+      "flag_gb"
     ],
-    "flag_it": [
-      "it"
+    "it": [
+      "flag_it"
     ],
-    "flag_jp": [
-      "jp"
+    "jp": [
+      "flag_jp"
     ],
-    "flag_kr": [
-      "kr"
+    "kr": [
+      "flag_kr"
     ],
-    "flag_ru": [
-      "ru"
+    "ru": [
+      "flag_ru"
     ],
-    "flag_us": [
-      "us"
+    "us": [
+      "flag_us"
     ],
     "flag_white": [
       "waving_white_flag"

@@ -34,6 +34,9 @@ class PostSerializer < BasicPostSerializer
              :category_id,
              :display_username,
              :primary_group_name,
+             :primary_group_flair_url,
+             :primary_group_flair_bg_color,
+             :primary_group_flair_color,
              :version,
              :can_edit,
              :can_delete,
@@ -148,6 +151,18 @@ class PostSerializer < BasicPostSerializer
     else
       object.user.primary_group.name if object.user.primary_group
     end
+  end
+
+  def primary_group_flair_url
+    object.user.try(:primary_group).try(:flair_url)
+  end
+
+  def primary_group_flair_bg_color
+    object.user.try(:primary_group).try(:flair_bg_color)
+  end
+
+  def primary_group_flair_color
+    object.user.try(:primary_group).try(:flair_color)
   end
 
   def link_counts

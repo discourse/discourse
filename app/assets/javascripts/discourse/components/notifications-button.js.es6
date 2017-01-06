@@ -1,6 +1,6 @@
 import DropdownButton from 'discourse/components/dropdown-button';
 import { allLevels, buttonDetails } from 'discourse/lib/notification-levels';
-import { iconHTML } from 'discourse/helpers/fa-icon';
+import { iconHTML } from 'discourse-common/helpers/fa-icon';
 import computed from 'ember-addons/ember-computed-decorators';
 
 export default DropdownButton.extend({

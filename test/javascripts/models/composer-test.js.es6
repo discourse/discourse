@@ -40,6 +40,11 @@ test('missingReplyCharacters', function() {
   missingReplyCharacters('hi', false, false, Discourse.SiteSettings.min_post_length - 2, 'too short public post');
   missingReplyCharacters('hi', false, true,  Discourse.SiteSettings.min_first_post_length - 2, 'too short first post');
   missingReplyCharacters('hi', true, false,  Discourse.SiteSettings.min_private_message_post_length - 2, 'too short private message');
+
+  const link = "http://imgur.com/gallery/grxX8";
+  const composer = createComposer({ canEditTopicFeaturedLink: true, title: link, featuredLink: link, reply: link });
+
+  equal(composer.get('missingReplyCharacters'), 0, "don't require any post content");
 });
 
 test('missingTitleCharacters', function() {
@@ -105,7 +110,7 @@ test("prependText", function() {
 
   composer.prependText("world ");
   equal(composer.get('reply'), "world hello", "it prepends text to existing text");
-  
+
   composer.prependText("before new line", {new_line: true});
   equal(composer.get('reply'), "before new line\n\nworld hello", "it prepends text with new line to existing text");
 });
@@ -226,4 +231,28 @@ test("Title length for static page topics as admin", function() {
 
   composer.set('title', '');
   ok(!composer.get('titleLengthValid'), "admins must set title to at least 1 character");
+});
+
+test("title placeholder depends on what you're doing", function() {
+  let composer = createComposer({action: Composer.CREATE_TOPIC});
+  equal(composer.get('titlePlaceholder'), 'composer.title_placeholder', "placeholder for normal topic");
+
+  composer = createComposer({action: Composer.PRIVATE_MESSAGE});
+  equal(composer.get('titlePlaceholder'), 'composer.title_placeholder', "placeholder for private message");
+
+  Discourse.SiteSettings.topic_featured_link_enabled = true;
+
+  composer = createComposer({action: Composer.CREATE_TOPIC});
+  equal(composer.get('titlePlaceholder'), 'composer.title_or_link_placeholder', "placeholder invites you to paste a link");
+
+  composer = createComposer({action: Composer.PRIVATE_MESSAGE});
+  equal(composer.get('titlePlaceholder'), 'composer.title_placeholder', "placeholder for private message with topic links enabled");
+});
+
+test("allows featured link before choosing a category", function() {
+  Discourse.SiteSettings.topic_featured_link_enabled = true;
+  Discourse.SiteSettings.allow_uncategorized_topics = false;
+  let composer = createComposer({action: Composer.CREATE_TOPIC});
+  equal(composer.get('titlePlaceholder'), 'composer.title_or_link_placeholder', "placeholder invites you to paste a link");
+  ok(composer.get('canEditTopicFeaturedLink'), "can paste link");
 });

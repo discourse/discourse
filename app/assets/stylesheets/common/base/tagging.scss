@@ -27,17 +27,27 @@
   }
 }
 
-.extra-info-wrapper {
-  .list-tags {
-    padding-top: 5px;
-  }
-
-  .discourse-tag {
-    -webkit-animation: fadein .7s;
-    animation: fadein .7s;
-  }
+.topic-header-extra .discourse-tag {
+  -webkit-animation: fadein .7s;
+  animation: fadein .7s;
 }
 
+.bullet + .topic-header-extra {
+  display: block;
+  line-height: 15px;
+  font-size: 12px;
+  .list-tags { font-size: 12px; }
+}
+
+.bar + .topic-header-extra {
+  line-height: 1.25;
+}
+
+.box + .topic-header-extra {
+  display: inline-block;
+  margin: 0 0 0 5px;
+  padding-top: 5px;
+}
 
 .add-tags .select2 {
   margin: 0;
@@ -110,6 +120,10 @@ $tag-color: scale-color($primary, $lightness: 40%);
   }
 }
 
+.categories-list .topic-list-latest .discourse-tags {
+  display: inline-block;
+}
+
 .mobile-view .topic-list-item .discourse-tags {
   display: inline-block;
   font-size: 0.9em;
@@ -132,11 +146,11 @@ $tag-color: scale-color($primary, $lightness: 40%);
   top: -0.1em;
 }
 
-header .discourse-tag {color: $tag-color !important; }
+header .discourse-tag {color: $tag-color }
 
 .list-tags {
+  margin-right: 3px;
   display: inline;
-  margin: 0 0 0 5px;
   font-size: 0.857em;
 }
 
@@ -165,23 +179,6 @@ header .discourse-tag {color: $tag-color !important; }
   top: 30px;
   bottom: auto;
   left: auto;
-}
-
-.bullet + .list-tags {
-  display: block;
-}
-
-.bar + .list-tags {
-  line-height: 1.25;
-  .discourse-tag {
-    vertical-align: middle;
-  }
-}
-
-.box + .list-tags {
-  display: inline-block;
-  margin: 5px 0 0 5px;
-  padding-top: 2px;
 }
 
 .tag-sort-options {

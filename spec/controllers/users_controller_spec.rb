@@ -237,6 +237,18 @@ describe UsersController do
     end
 
     context 'valid token' do
+      context 'when rendered' do
+        render_views
+
+        it 'renders referrer never on get requests' do
+          user = Fabricate(:user, auth_token: SecureRandom.hex(16))
+          token = user.email_tokens.create(email: user.email).token
+          get :password_reset, token: token
+
+          expect(response.body).to include('<meta name="referrer" content="never">')
+        end
+      end
+
       it 'returns success' do
         user = Fabricate(:user, auth_token: SecureRandom.hex(16))
         token = user.email_tokens.create(email: user.email).token
@@ -251,6 +263,28 @@ describe UsersController do
         user.reload
         expect(user.auth_token).to_not eq old_token
         expect(user.auth_token.length).to eq 32
+        expect(session["password-#{token}"]).to be_blank
+      end
+
+      it 'disallows double password reset' do
+
+        user = Fabricate(:user, auth_token: SecureRandom.hex(16))
+        token = user.email_tokens.create(email: user.email).token
+
+        get :password_reset, token: token
+        put :password_reset, token: token, password: 'hg9ow8yhg98o'
+        put :password_reset, token: token, password: 'test123123Asdfsdf'
+
+        user.reload
+        expect(user.confirm_password?('hg9ow8yhg98o')).to eq(true)
+      end
+
+      it "redirects to the wizard if you're the first admin" do
+        user = Fabricate(:admin, auth_token: SecureRandom.hex(16), auth_token_updated_at: Time.now)
+        token = user.email_tokens.create(email: user.email).token
+        get :password_reset, token: token
+        put :password_reset, token: token, password: 'hg9ow8yhg98oadminlonger'
+        expect(response).to be_redirect
       end
 
       it "doesn't invalidate the token when loading the page" do
@@ -1297,7 +1331,7 @@ describe UsersController do
     let(:user)  { Fabricate :user, username: "joecabot", name: "Lawrence Tierney" }
 
     before do
-      ActiveRecord::Base.observers.enable :all
+      SearchIndexer.enable
       Fabricate :post, user: user, topic: topic
     end
 
@@ -1593,6 +1627,9 @@ describe UsersController do
 
     let(:user) { Fabricate(:user) }
     let(:group) { Fabricate(:group, name: "Discourse") }
+    let(:topic) { Fabricate(:topic) }
+    let(:allowed_user) { Fabricate(:user) }
+    let(:private_topic) { Fabricate(:private_message_topic, user: allowed_user) }
 
     it "finds the user" do
       xhr :get, :is_local_username, username: user.username
@@ -1623,9 +1660,66 @@ describe UsersController do
       expect(json["valid"].size).to eq(0)
     end
 
+    it "returns user who cannot see topic" do
+      Guardian.any_instance.expects(:can_see?).with(topic).returns(false)
+      xhr :get, :is_local_username, usernames: [user.username], topic_id: topic.id
+      expect(response).to be_success
+      json = JSON.parse(response.body)
+      expect(json["cannot_see"].size).to eq(1)
+    end
+
+    it "never returns a user who can see the topic" do
+      Guardian.any_instance.expects(:can_see?).with(topic).returns(true)
+      xhr :get, :is_local_username, usernames: [user.username], topic_id: topic.id
+      expect(response).to be_success
+      json = JSON.parse(response.body)
+      expect(json["cannot_see"].size).to eq(0)
+    end
+
+    it "returns user who cannot see a private topic" do
+      Guardian.any_instance.expects(:can_see?).with(private_topic).returns(false)
+      xhr :get, :is_local_username, usernames: [user.username], topic_id: private_topic.id
+      expect(response).to be_success
+      json = JSON.parse(response.body)
+      expect(json["cannot_see"].size).to eq(1)
+    end
+
+    it "never returns a user who can see the topic" do
+      Guardian.any_instance.expects(:can_see?).with(private_topic).returns(true)
+      xhr :get, :is_local_username, usernames: [allowed_user.username], topic_id: private_topic.id
+      expect(response).to be_success
+      json = JSON.parse(response.body)
+      expect(json["cannot_see"].size).to eq(0)
+    end
+
   end
 
-  context '#summary' do
+  describe '.topic_tracking_state' do
+    let(:user){Fabricate(:user)}
+
+    context 'anon' do
+      it "raises an error on anon for topic_tracking_state" do
+        expect{
+          xhr :get, :topic_tracking_state, username: user.username, format: :json
+        }.to raise_error(Discourse::NotLoggedIn)
+      end
+    end
+
+    context 'logged on' do
+      it "detects new topic" do
+        log_in_user(user)
+
+        topic = Fabricate(:topic)
+        xhr :get, :topic_tracking_state, username: user.username, format: :json
+
+        states = JSON.parse(response.body)
+
+        expect(states[0]["topic_id"]).to eq(topic.id)
+      end
+    end
+  end
+
+  describe '.summary' do
 
     it "generates summary info" do
       user = Fabricate(:user)

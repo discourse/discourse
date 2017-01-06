@@ -1,60 +1,63 @@
-<div class="modal-body">
-  {{login-buttons action="externalLogin"}}
-  {{#if canLoginLocal}}
-    <form id='login-form' method='post'>
-      <div>
-        <table>
-          <tr>
-            <td>
-              <label for='login-account-name'>{{i18n 'login.username'}}&nbsp;</label>
-            </td>
-            <td>
-              {{text-field value=loginName placeholderKey="login.email_placeholder" id="login-account-name" autocorrect="off" autocapitalize="off" autofocus="autofocus"}}
-            </td>
-            <td></td>
-          </tr>
-          <tr>
-            <td>
-                <label for='login-account-password'>{{i18n 'login.password'}}&nbsp;</label>
-            </td>
-            <td>
-                {{password-field value=loginPassword type="password" id="login-account-password" maxlength="200" capsLockOn=capsLockOn}} &nbsp;
-            </td>
-            <td>
-              <a id="forgot-password-link" {{action "forgotPassword"}}>{{i18n 'forgot_password.action'}}</a>
-            </td>
-          </tr>
-          <tr>
-            <td></td>
-            <td><div class="caps-lock-warning {{unless capsLockOn 'invisible'}}"><i class="fa fa-exclamation-triangle"></i> {{i18n 'login.caps_lock_warning'}}</div></td>
-            <td></td>
-          </tr>
-        </table>
-      </div>
-    </form>
-  {{/if}}
-  {{authMessage}}
-  <div id='login-alert' class={{alertClass}}>{{alert}}</div>
-</div>
-<div class="modal-footer">
-  {{#if canLoginLocal}}
-    <button class="btn btn-large btn-primary"
-      disabled={{loginDisabled}}
-      {{action "login"}}>
-        <i class="fa fa-unlock"></i>&nbsp;{{loginButtonText}}
-    </button>
-
-    {{#if showSignupLink}}
-      &nbsp;
-      <button class="btn btn-large" id="new-account-link" {{action "createAccount"}}>
-        {{i18n 'create_account.title'}}
-      </button>
+{{#login-modal screenX=lastX screenY=lastY loginName=loginName loginPassword=loginPassword action="login"}}
+  {{#d-modal-body title="login.title" class="login-modal"}}
+    {{login-buttons action="externalLogin"}}
+    {{#if canLoginLocal}}
+      <form id='login-form' method='post'>
+        <div>
+          <table>
+            <tr>
+              <td>
+                <label for='login-account-name'>{{i18n 'login.username'}}&nbsp;</label>
+              </td>
+              <td>
+                {{text-field value=loginName placeholderKey="login.email_placeholder" id="login-account-name" autocorrect="off" autocapitalize="off" autofocus="autofocus"}}
+              </td>
+              <td></td>
+            </tr>
+            <tr>
+              <td>
+                  <label for='login-account-password'>{{i18n 'login.password'}}&nbsp;</label>
+              </td>
+              <td>
+                  {{password-field value=loginPassword type="password" id="login-account-password" maxlength="200" capsLockOn=capsLockOn}} &nbsp;
+              </td>
+              <td>
+                <a id="forgot-password-link" {{action "forgotPassword"}}>{{i18n 'forgot_password.action'}}</a>
+              </td>
+            </tr>
+            <tr>
+              <td></td>
+              <td><div class="caps-lock-warning {{unless capsLockOn 'invisible'}}"><i class="fa fa-exclamation-triangle"></i> {{i18n 'login.caps_lock_warning'}}</div></td>
+              <td></td>
+            </tr>
+          </table>
+        </div>
+      </form>
     {{/if}}
-  {{/if}}
+    {{authMessage}}
+    <div id='login-alert' class={{alertClass}}>{{alert}}</div>
+  {{/d-modal-body}}
 
-  {{#if authenticate}}
-    &nbsp; {{i18n 'login.authenticating'}}
-  {{/if}}
+  <div class="modal-footer">
+    {{#if canLoginLocal}}
+      <button class="btn btn-large btn-primary"
+        disabled={{loginDisabled}}
+        {{action "login"}}>
+          <i class="fa fa-unlock"></i>&nbsp;{{loginButtonText}}
+      </button>
 
-  {{conditional-loading-spinner condition=showSpinner size="small"}}
-</div>
+      {{#if showSignupLink}}
+        &nbsp;
+        <button class="btn btn-large" id="new-account-link" {{action "createAccount"}}>
+          {{i18n 'create_account.title'}}
+        </button>
+      {{/if}}
+    {{/if}}
+
+    {{#if authenticate}}
+      &nbsp; {{i18n 'login.authenticating'}}
+    {{/if}}
+
+    {{conditional-loading-spinner condition=showSpinner size="small"}}
+  </div>
+{{/login-modal}}

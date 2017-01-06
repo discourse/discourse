@@ -34,6 +34,8 @@ class DiscourseIIFE
     return data if path =~ /\.hbrs/
     return data if path =~ /\.hbs/
 
+    return data if path =~ /discourse-loader/
+
     "(function () {\n\nvar $ = window.jQuery;\n// IIFE Wrapped Content Begins:\n\n#{data}\n\n// IIFE Wrapped Content Ends\n\n })(this);"
   end
 

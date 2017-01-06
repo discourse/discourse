@@ -1,0 +1,31 @@
+body.crawler {
+  > header {
+    width: 100%;
+    position: absolute;
+    top: 0;
+    z-index: 1001;
+    background-color: #fff;
+    padding: 10px;
+    box-shadow: 0 2px 4px -1px rgba(0,0,0,0.25);
+  }
+  div.topic-list div[itemprop='itemListElement'] {
+    padding: 10px 0px;
+    border-bottom: 1px solid #e9e9e9;
+    .page-links a {
+      padding: 0px 4px;
+    }
+  }
+  div#main-outlet {
+    div.post {
+      img {
+        max-width: 100%;
+      }
+    }
+  }
+  footer nav {
+    margin: 50px 0px;
+    a {
+      padding: 15px;
+    }
+  }
+}

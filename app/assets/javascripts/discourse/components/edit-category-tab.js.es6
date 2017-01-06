@@ -14,9 +14,14 @@ export default Em.Component.extend({
     return I18n.t('category.' + this.get('tab').replace('-', '_'));
   }.property('tab'),
 
+  didInsertElement() {
+    this._super();
+    Ember.run.scheduleOnce('afterRender', this, this._addToCollection);
+  },
+
   _addToCollection: function() {
     this.get('panels').addObject(this.get('tabClassName'));
-  }.on('didInsertElement'),
+  },
 
   actions: {
     select: function() {

@@ -62,7 +62,7 @@ fi:
         poll_config:
           max: Enint.
           min: Väh.
-          step: Vaihe
+          step: Askelväli
         poll_public:
           label: Näytä äänestäneet
         poll_options:

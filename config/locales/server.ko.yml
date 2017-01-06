@@ -18,6 +18,10 @@ ko:
   date:
     month_names: []
     <<: *datetime_formats
+  time:
+    am: "오전"
+    pm: "오후"
+    <<: *datetime_formats
   title: "Discourse"
   topics: "글타래"
   posts: "글"
@@ -29,6 +33,7 @@ ko:
   emails:
     incoming:
       default_subject: "%{email} 으로부터 받은 이메일"
+      show_trimmed_content: "일부 내용만 보기"
   errors: &errors
     format: '%{attribute} %{message}'
     messages:
@@ -48,7 +53,6 @@ ko:
       has_already_been_used: "이미 사용되었음"
       inclusion: 리스트에 없음
       invalid: 올바르지 않음
-      is_invalid: "유효하지 않음; 좀더 자세하게 서술해주세요"
       less_than: '%{count}보다 작아야 함'
       less_than_or_equal_to: '%{count}보다 작거나 같아야 함'
       not_a_number: 숫자가 아님
@@ -71,8 +75,6 @@ ko:
         other: '%{model} 저장 시에 %{count}개의 에러가 발생하여 진행을 못했습니다.'
     embed:
       load_from_remote: "글 로딩 중 오류가 발생하였습니다."
-  bulk_invite:
-    file_should_be_csv: "CSV 또는 TXT형식의 파일을 업로드해야 합니다."
   backup:
     operation_already_running: "현재 %{operation} 작업중입니다. %{operation} 작업을 지금 시작할 수 없습니다."
     backup_file_should_be_tar_gz: "백업 파일은 .tar.gz형식의 파일이어야 합니다."
@@ -116,7 +118,6 @@ ko:
   topic_not_found: "뭔가 잘못됐네요. 아마 글 보려는 도중에 글타래가 닫혔거나 지워진 건 아닐까요?"
   just_posted_that: "당신이 이전에 게시한 것과 너무 비슷합니다."
   invalid_characters: "사용할 수 없는 문자를 포함하고 있습니다."
-  is_invalid: "사용할 수 없습니다. 조금더 자세하게 적어주세요."
   next_page: "다음 페이지 →"
   prev_page: "← 이전 페이지"
   page_num: "%{num}페이지 "
@@ -244,7 +245,7 @@ ko:
   assets_topic_body: "이 글타래는 스태프에게만 보이는 영구적인 글타래입니다. 사이트 디자인을 위한 이미지를 저장할 수 있습니다. 지우지 마세요!\n\n다음처럼 하세요:\n\n1. 이 글타래에 답글을 작성하세요.\n2. 로고, 파비콘 등으로 사용하고 싶은 모든 이미지들을 업로드한다. (글 에디터 툴바의 업로드 아이콘을 사용하거나, 드래그 앤 드롭으로 이미지를 올려주세요.)\n3. 답글을 제출합니다.\n4. 답글의 업로드된 이미지를 우클릭하거나, 수정 버튼을 눌러 이미지의 경로를 확인하세요. 해당 이미지의 경로를 복사하세요.\n5. 복사한 이미지 경로를 [basic settings](/admin/site_settings/category/required)에 붙여넣으세요.\n\n\n다른 유형의 이미지를 사용해야한다면 [file settings](/admin/site_settings/category/files)의 `authorized_extensions` 를 수정하세요."
   lounge_welcome:
     title: "라운지에 오신 것을 환영합니다."
-    body: |
+    body: |2
 
       축하합니다! :confetti_ball: 당신의 회원등급이 **지도자** (회원등급 3등급)로 올라갔기 때문에 이 글타래를 볼 수 있게 되었습니다. 이제부터 아래의 행동들을 할 수 있습니다 &hellip; * 글타래를 제목을 수정할 수 있습니다 * 글타래의 카테고리를 수정할 수 있습니다 * 링크가 follow로 처리됩니다 ([automatic nofollow](http://en.wikipedia.org/wiki/Nofollow) 가 제거됩니다) * 회원등급 3 이상인 사용자가 접근할 수 있는 비공개 카테고리인 라운지에 접근할 수 있습니다 * 좋아요와 신고의 가중치가 높아집니다 [정규 멤버 목록](&#x2F;badges/3/regular)을 확인할 수 있습니다. 인사하는 것을 잊지마세요. 이 커뮤니티의 중요한 역할을 해주신 것에 감사드립니다! (회원등급에 관한 더 자세한 정보를 보시려면, [이 글타래를 확인하세요][trust]. 기준에 맞는 사람만 정규 회원으로 자격이 유지됩니다.) [trust]:  https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
   category:
@@ -565,14 +566,6 @@ ko:
     s3_config_warning: '파일을 Amazon S3로 업로드 하도록 설정하였습니다. 하지만 아직 Access key id(s3_access_key_id), Secret access key(s3_secret_access_key) 혹은 S3 bucket(s3_upload_bucketat) 중 하나를 설정하지 않았습니다. <a href="/admin/site_settings">사이트 세팅</a>에서 설정해주세요. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">자세히 알아보기("How to set up image uploads to S3?")</a>.'
     s3_backup_config_warning: 's3를 이용한 서버 설정이 완료 되지 않았습니다: s3_access_key_id, s3_secret_access_key, s3_secret_access_key 또는 s3_upload_bucket. <a href="/admin/site_settings">사이트 설정</a> 에 가셔서 업데이트 하세요. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">"How to set up image uploads to S3?" 읽어 보세요.</a>'
     image_magick_warning: '큰 이미지의 섬네일 만드는 설정이 있지만, ImageMagick가 설치되지 않았습니다. <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">최신버전 받기</a>.'
-    default_logo_warning: "사이트에 로고를 설정해 주세요. logo_url, logo_small_url, 와 favicon_url 를 <a href='/admin/site_settings'>사이트 설정</a> 에서 설정하세요."
-    contact_email_missing: "사이트에 이메일을 설정해서 사이트와 관련된 긴급사항을 받아보세요. contact_email 을 <a href='/admin/site_settings'>사이트 설정</a> 에서 설정해주세요."
-    contact_email_invalid: "이 사이트의 연락가능한 이메일이 부정확 합니다.  <a href='/admin/site_settings'>사이트 설정</a> 에서 업데이트 해주세요."
-    title_nag: "사이트 이름을 설정하세요. <a href='/admin/site_settings'>사이트 설정</a> 에서 사이트 이름을 업데이트 해주세요."
-    site_description_missing: "검색 결과에 나올 한줄 설명을 적어주세요. <a href='/admin/site_settings'>사이트 설정</a>에서 site_description 업데이트하세요."
-    consumer_email_warning: "이메일 전송을 위해 Gmail(또는 다른 커스텀 이메일 서비스)을 사용하고 있습니다. <a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>Gmail의 이메일 전송 제한</a> 을 읽어보세요. mandrill.com을 이메일 서비스로 설정하는 것을 고려해보세요."
-    site_contact_username_warning: "중요 자동 메세지를 보낼 스태프 사용자 계정의 이름을 적으세요. <a href='/admin/site_settings'>사이트 설정</a>에서 site_contact_username을 업데이트하세요."
-    notification_email_warning: "알람 메일이 올바른 이 사이트의 도메인 내 이메일 주소로 전송되지 않고 있습니다; 이메일 전송이 안정적이지 않을 것입니다. <a href='/admin/site_settings'>사이트 설정</a>에서 올바른 도메인의 이메일 주소로 정해주세요."
   site_settings:
     censored_words: "단어는 자동적으로 `&#9632;&#9632;&#9632;&#9632;` 로 대체 됩니다."
     delete_old_hidden_posts: "30일이 지난 숨겨진 글은 자동으로 삭제됩니다."
@@ -612,7 +605,6 @@ ko:
     exclude_rel_nofollow_domains: "nofollow 도메인 리스트에 넣으면 링크에 추가가 안됩니다. tld.com은 자동으로 sub.tld.com도 포함합니다. 최소한, 이 사이트의 top-level 도메인은 허가해서 웹크롤러가 모든 자료를 검색할 수 있게 해야합니다. 다른 도메인으로도 이 사이트가 들어가진다면 그것도 추가해야 합니다."
     post_excerpt_maxlength: "글 인용에 허용되는 최대 글자수"
     post_onebox_maxlength: "onebox가 적용된 Discourse 글에 허용되는 최대 글자수"
-    onebox_domains_whitelist: "onebox 사용을 허가할 도메일 리스트; 이 도메인은 OpenGraph나 oEmbed를 지원하여야합니다. 테스트: http://iframely.com/debug"
     logo_url: "좌측 상단의 로고이미지는 직사각형 모양이어야 합니다. 설정하지 않을 경우 사이트 이름이 출력됩니다."
     apple_touch_icon_url: "애플 디바이스는 144px의 아이콘을 사용함. 144px X 144px 사이즈를 추천함"
     notification_email: "The from: 이 이메일 주소는 모든 기본 시스템 메일을 보내는데 사용됩니다. 여기에 명시된 도메인은 SPF, DKIM가 적용되어 있어야하며, reverse PTR 레코드가 제대로 설정되어 있어야 메일이 도착 할 수 있습니다."
@@ -661,7 +653,6 @@ ko:
     redirect_users_to_top_page: "신규 사용자와 오랜만에 방문한 사용자를 인기글 페이지로 리다이렉트."
     show_email_on_profile: "사용자 프로필에서 자신의 이메일 주소 보기(본인과 관리자만 볼 수 있음)"
     email_token_valid_hours: "비밀번호 찾기, 계정 활성화에 사용되는 토큰의 유효 기간(시간)"
-    email_token_grace_period_hours: "비밀번호 찾기, 계정 활성화에 사용되는 토큰은 사용되어진 이후 유효한 기간(시간)"
     enable_badges: "배지 기능 사용"
     allow_index_in_robots_txt: "이 사이트가 검색엔진에 의해 인덱스되는 것을 허용합니다.(robots.txt 수정)"
     email_domains_blacklist: "가입 금지된 이메일 도메인 목록, 파이프 기호로 구분. 예: mailinator.com|trashmail.net"
@@ -860,7 +851,6 @@ ko:
     embed_whitelist_selector: "embed에서 보여져야 할 DOM element 선택하는 CSS 셀렉터"
     embed_blacklist_selector: "embed에서 지워져야 할 DOM element 선택하는 CSS 셀렉터"
     notify_about_flags_after: "이 시간동안 처리되지 않은 신고가 들어와 있으면, contact_email 주소로 이메일을 보냅니다. 0으로 넣으면 비활성화됩니다."
-    enable_cdn_js_debugging: "/logs에서 적절한 모든 js를 포함해 crossorigin 권한 오류가 뜨도록 합니다."
     show_create_topics_notice: "이 사이트에 5개 이하의 공개 글타래가 있으면, 관리자에게 글타래 좀 만들라고 알려줍니다."
     delete_drafts_older_than_n_days: (n) 일지난 임시 보관글 삭제하기
     prevent_anons_from_downloading_files: "익명 사용자가 다운로드를 받지 못하게 합니다. 경고: 이미지 파일 외 모든 첨부파일이 다운로드 받지 못하게 됩니다."
@@ -1044,30 +1034,12 @@ ko:
         [사용자 정보 설정]: %{user_preferences_url}
     backup_succeeded:
       subject_template: "백업 성공"
-      text_body_template: "백업이 성공적으로 끝났습니다..\n[관리 > 백업](%{base_url}/admin/backups)에서 새 백업본을 다운로드 받으세요."
     backup_failed:
       subject_template: "백업에 실패했습니다."
-      text_body_template: |
-        백업이 실패하였습니다.
-
-        로그:
-
-        ```
-        %{logs}
-        ```
     restore_succeeded:
       subject_template: "복원 성공"
-      text_body_template: "복원에 성공했습니다."
     restore_failed:
       subject_template: "복원 실패"
-      text_body_template: |
-        복구가 실패하였습니다.
-
-        로그:
-
-        ```
-        %{logs}
-        ```
     bulk_invite_succeeded:
       subject_template: "대량 사용자 초대가 성공적으로 진행되었습니다."
       text_body_template: "대량 사용자 초대가 진행되어 %{sent}개의 초대장을 보냈습니다."
@@ -1097,7 +1069,6 @@ ko:
     email_reject_empty:
       subject_template: "[%{site_name}]  이메일 문제 -- 내용 없음"
     email_reject_parsing:
-      subject_template: "[%{site_name}]  이메일 문제 -- 내용 인식 불가"
       text_body_template: |
         죄송합니다, 이메일 메세지 %{destination} (titled %{former_title})가 안 됐습니다.
 
@@ -1148,13 +1119,7 @@ ko:
       subject_template: "[%{site_name}] [PM] %{topic_title}"
     digest:
       why: "%{last_seen_at}부터 지금까지 %{site_link} 사이트 근황"
-      new_activity: "당신의 글타래과 글에 등록된 새로운 활동:"
-      top_topics: "인기 글"
-      other_new_topics: "인기 글타래"
       click_here: "클릭"
-      read_more: "더 읽기"
-      more_topics: "%{new_topics_since_seen}개의 글타래가 새로 올라왔어요."
-      more_topics_category: "더 많은 새글:"
     forgot_password:
       subject_template: "[%{site_name}] 패스워드 재설정"
       text_body_template: |
@@ -1263,7 +1228,7 @@ ko:
   csv_export:
     boolean_yes: "네"
     boolean_no: "아니오"
-  static_topic_first_reply: |
+  static_topic_first_reply: |+
     이 글타래인 %{page_name} 페이지의 첫글 수정.
 
   guidelines_topic:
@@ -1282,8 +1247,6 @@ ko:
   performance_report:
     initial_post_raw: 이 글타래는 웹사이트의 일일 성능 보고를 포함하고 있습니다.
     initial_topic_title: 웹사이트 성능 보고
-  time:
-    <<: *datetime_formats
   activemodel:
     errors:
       <<: *errors

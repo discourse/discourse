@@ -303,7 +303,7 @@ describe Topic do
 
     context 'with a similar topic' do
       let!(:topic) {
-        ActiveRecord::Base.observers.enable :search_observer
+        SearchIndexer.enable
         post = create_post(title: "Evil trout is the dude who posted this topic")
         post.topic
       }
@@ -429,7 +429,7 @@ describe Topic do
       let(:actions) { topic.user.user_actions }
 
       it "should set up actions correctly" do
-        ActiveRecord::Base.observers.enable :all
+        UserActionCreator.enable
 
         expect(actions.map{|a| a.action_type}).not_to include(UserAction::NEW_TOPIC)
         expect(actions.map{|a| a.action_type}).to include(UserAction::NEW_PRIVATE_MESSAGE)
@@ -1354,6 +1354,13 @@ describe Topic do
       expect(Topic.for_digest(user, 1.year.ago, top_order: true)).to be_blank
     end
 
+    it "returns topics from TL0 users if given include_tl0" do
+      new_user = Fabricate(:user, trust_level: 0)
+      topic = Fabricate(:topic, user_id: new_user.id)
+
+      expect(Topic.for_digest(user, 1.year.ago, top_order: true, include_tl0: true)).to eq([topic])
+    end
+
     it "returns topics from TL0 users if enabled in preferences" do
       new_user = Fabricate(:user, trust_level: 0)
       topic = Fabricate(:topic, user_id: new_user.id)
@@ -1362,6 +1369,44 @@ describe Topic do
       u.user_option.include_tl0_in_digests = true
 
       expect(Topic.for_digest(u, 1.year.ago, top_order: true)).to eq([topic])
+    end
+
+    it "doesn't return topics with only muted tags" do
+      user = Fabricate(:user)
+      tag = Fabricate(:tag)
+      TagUser.change(user.id, tag.id, TagUser.notification_levels[:muted])
+      topic = Fabricate(:topic, tags: [tag])
+
+      expect(Topic.for_digest(user, 1.year.ago, top_order: true)).to be_blank
+    end
+
+    it "returns topics with both muted and not muted tags" do
+      user = Fabricate(:user)
+      muted_tag, other_tag = Fabricate(:tag), Fabricate(:tag)
+      TagUser.change(user.id, muted_tag.id, TagUser.notification_levels[:muted])
+      topic = Fabricate(:topic, tags: [muted_tag, other_tag])
+
+      expect(Topic.for_digest(user, 1.year.ago, top_order: true)).to eq([topic])
+    end
+
+    it "sorts by category notification levels" do
+      category1, category2 = Fabricate(:category), Fabricate(:category)
+      2.times {|i| Fabricate(:topic, category: category1) }
+      topic1 = Fabricate(:topic, category: category2)
+      2.times {|i| Fabricate(:topic, category: category1) }
+      CategoryUser.create(user: user, category: category2, notification_level: CategoryUser.notification_levels[:watching])
+      for_digest = Topic.for_digest(user, 1.year.ago, top_order: true)
+      expect(for_digest.first).to eq(topic1)
+    end
+
+    it "sorts by topic notification levels" do
+      topics = []
+      3.times {|i| topics << Fabricate(:topic) }
+      user = Fabricate(:user)
+      TopicUser.create(user_id: user.id, topic_id: topics[0].id, notification_level: TopicUser.notification_levels[:tracking])
+      TopicUser.create(user_id: user.id, topic_id: topics[2].id, notification_level: TopicUser.notification_levels[:watching])
+      for_digest = Topic.for_digest(user, 1.year.ago, top_order: true).pluck(:id)
+      expect(for_digest).to eq([topics[2].id, topics[0].id, topics[1].id])
     end
 
   end
@@ -1685,5 +1730,67 @@ describe Topic do
     topic.reload
 
     expect(@topic_status_event_triggered).to eq(true)
+  end
+
+  it 'allows users to normalize counts' do
+
+    topic = Fabricate(:topic, last_posted_at: 1.year.ago)
+    post1 = Fabricate(:post, topic: topic, post_number: 1)
+    post2 = Fabricate(:post, topic: topic, post_type: Post.types[:whisper], post_number: 2)
+
+    Topic.reset_all_highest!
+    topic.reload
+
+    expect(topic.posts_count).to eq(1)
+    expect(topic.highest_post_number).to eq(post1.post_number)
+    expect(topic.highest_staff_post_number).to eq(post2.post_number)
+    expect(topic.last_posted_at).to be_within(1.second).of (post1.created_at)
+  end
+
+  context 'featured link' do
+    before { SiteSetting.topic_featured_link_enabled = true }
+    let(:topic) { Fabricate(:topic) }
+
+    it 'can validate featured link' do
+      topic.featured_link = ' invalid string'
+
+      expect(topic).not_to be_valid
+      expect(topic.errors[:featured_link]).to be_present
+    end
+
+    it 'can properly save the featured link' do
+      topic.featured_link = '  https://github.com/discourse/discourse'
+
+      expect(topic.save).to be_truthy
+      expect(topic.featured_link).to eq('https://github.com/discourse/discourse')
+    end
+
+    context 'when category restricts present' do
+      let!(:link_category) { Fabricate(:link_category) }
+      let(:topic) { Fabricate(:topic) }
+      let(:link_topic) { Fabricate(:topic, category: link_category) }
+
+      it 'can save the featured link if it belongs to that category' do
+        link_topic.featured_link = 'https://github.com/discourse/discourse'
+        expect(link_topic.save).to be_truthy
+        expect(link_topic.featured_link).to eq('https://github.com/discourse/discourse')
+      end
+
+      it 'can not save the featured link if category does not allow it' do
+        topic.category = Fabricate(:category, topic_featured_link_allowed: false)
+        topic.featured_link = 'https://github.com/discourse/discourse'
+        expect(topic.save).to be_falsey
+      end
+
+      it 'if category changes to disallow it, topic remains valid' do
+        t = Fabricate(:topic, category: link_category, featured_link: "https://github.com/discourse/discourse")
+
+        link_category.topic_featured_link_allowed = false
+        link_category.save!
+        t.reload
+
+        expect(t.valid?).to eq(true)
+      end
+    end
   end
 end

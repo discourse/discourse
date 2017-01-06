@@ -1,0 +1,179 @@
+.group-details-container {
+  background: rgba(230, 230, 230, 0.3);
+  padding: 20px;
+  margin-bottom: 15px;
+}
+
+.group-info {
+  width: 100%;
+
+  .group-info-name {
+    font-size: 1.4em;
+    font-weight: bold;
+    color: $primary;
+  }
+
+  .group-info-full-name {
+    font-size: 1.2em;
+    color: dark-light-choose(scale-color($primary, $lightness: 30%), scale-color($secondary, $lightness: 70%));
+  }
+
+  span {
+    display: inline-block;
+    vertical-align: middle;
+  }
+
+  $size: 50px;
+
+  .avatar-flair-image {
+    width: $size;
+  }
+
+  .avatar-flair {
+    background-size: $size;
+    height: $size;
+
+    i {
+      font-size: $size !important;
+    }
+  }
+}
+
+.group-logs-filter {
+  margin-right: 10px;
+
+  &:hover {
+    background-color: $danger;
+  }
+}
+
+table.group-logs {
+  width: 100%;
+
+  th, tr {
+    border-bottom: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
+  }
+
+  th {
+    text-align: left;
+    padding: 5px 0px;
+  }
+
+  td {
+    padding: 10px 0px;
+  }
+
+  .group-logs-expand-details {
+    cursor: pointer;
+
+    i {
+      color: dark-light-diff($primary, $secondary, 50%, -50%);
+    }
+  }
+}
+
+table.group-members {
+  width: 100%;
+  table-layout: fixed;
+
+  tr {
+    border-bottom: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
+  }
+
+  th:first-child {
+    width: 60%;
+    text-align: left;
+  }
+
+  th.group-members-actions {
+    width: 5%;
+  }
+
+  th {
+    border-bottom: 3px solid dark-light-diff($primary, $secondary, 90%, -60%);
+    text-align: center;
+    padding: 5px 0px 5px 5px;
+    color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
+    font-weight: normal;
+  }
+
+  th.sortable {
+    i {
+      margin-left: 5px;
+    }
+
+    &:hover {
+      cursor: pointer;
+      background-color: dark-light-diff($primary, $secondary, 90%, -75%);
+    }
+  }
+
+  tr {
+    .user-info {
+      display: block;
+    }
+
+    td:first-child {
+      text-align: left;
+    }
+
+    td {
+      text-align: center;
+      color: dark-light-diff($primary, $secondary, 50%, -50%);
+      padding: 0.8em 0;
+    }
+  }
+}
+
+.group-owner-label {
+  color: $primary;
+}
+
+.form-horizontal {
+  .group-flair-inputs {
+    display: inline-block;
+
+    input[type="text"] {
+      width: 80% !important;
+      margin-bottom: 10px;
+    }
+
+    .group-flair-left {
+      float: left;
+    }
+
+    .group-flair-right {
+      float: left;
+      margin-left: 30px;
+    }
+  }
+
+  .avatar-flair-preview {
+    position: relative;
+    width: 45px;
+
+    .avatar-wrapper {
+      background-color: #f4f4f4;
+    }
+  }
+}
+
+.group-edit {
+  .form-horizontal {
+    label {
+      font-weight: bold;
+    }
+  }
+}
+
+#add-user-to-group {
+  margin: 0px;
+
+  .ac-wrap {
+    width: 100% !important;
+  }
+
+  .add {
+    margin-top: 10px;
+  }
+}

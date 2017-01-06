@@ -1,16 +1,36 @@
 import { createWidget, applyDecorators } from 'discourse/widgets/widget';
 import { h } from 'virtual-dom';
+import DiscourseURL from 'discourse/lib/url';
+import { ajax } from 'discourse/lib/ajax';
+
+const flatten = array => [].concat.apply([], array);
+
+createWidget('priority-faq-link', {
+  tagName: 'a.faq-priority.widget-link',
+
+  buildAttributes(attrs) {
+    return { href: attrs.href };
+  },
+
+  html() {
+    return [ I18n.t('faq'), ' ', h('span.badge.badge-notification', I18n.t('new_item')) ];
+  },
+
+  click(e) {
+    e.preventDefault();
+    if (this.siteSettings.faq_url === this.attrs.href) {
+      ajax("/users/read-faq", { method: "POST" }).then(() => {
+        this.currentUser.set('read_faq', true);
+        DiscourseURL.routeToTag($(e.target).closest('a')[0]);
+      });
+    } else {
+      DiscourseURL.routeToTag($(e.target).closest('a')[0]);
+    }
+  }
+});
 
 export default createWidget('hamburger-menu', {
   tagName: 'div.hamburger-panel',
-
-  faqLink(href) {
-    return h('a.faq-priority', { attributes: { href } }, [
-             I18n.t('faq'),
-             ' ',
-             h('span.badge.badge-notification', I18n.t('new_item'))
-           ]);
-  },
 
   adminLinks() {
     const { currentUser } = this;
@@ -43,7 +63,7 @@ export default createWidget('hamburger-menu', {
   },
 
   lookupCount(type) {
-    const tts = this.container.lookup('topic-tracking-state:main');
+    const tts = this.register.lookup('topic-tracking-state:main');
     return tts ? tts.lookupCount(type) : 0;
   },
 
@@ -83,12 +103,15 @@ export default createWidget('hamburger-menu', {
       links.push({ route: 'users', className: 'user-directory-link', label: 'directory.title' });
     }
 
+    if (this.siteSettings.enable_group_directory) {
+      links.push({ route: 'groups', className: 'groups-link', label: 'groups.index.title' });
+    }
+
     if (this.siteSettings.tagging_enabled) {
       links.push({ route: 'tags', label: 'tagging.tags' });
     }
 
-    const extraLinks = applyDecorators(this, 'generalLinks', this.attrs, this.state);
-
+    const extraLinks = flatten(applyDecorators(this, 'generalLinks', this.attrs, this.state));
     return links.concat(extraLinks).map(l => this.attach('link', l));
   },
 
@@ -125,7 +148,8 @@ export default createWidget('hamburger-menu', {
                    label: this.site.mobileView ? "desktop_view" : "mobile_view" });
     }
 
-    return links.map(l => this.attach('link', l));
+    const extraLinks = flatten(applyDecorators(this, 'footerLinks', this.attrs, this.state));
+    return links.concat(extraLinks).map(l => this.attach('link', l));
   },
 
   panelContents() {
@@ -139,12 +163,14 @@ export default createWidget('hamburger-menu', {
 
     const prioritizeFaq = this.currentUser && !this.currentUser.read_faq;
     if (prioritizeFaq) {
-      results.push(this.attach('menu-links', { heading: true, contents: () => this.faqLink(faqUrl) }));
+      results.push(this.attach('menu-links', { heading: true, contents: () => {
+        return this.attach('priority-faq-link', { href: faqUrl });
+      }}));
     }
 
     if (currentUser && currentUser.staff) {
       results.push(this.attach('menu-links', { contents: () => {
-        const extraLinks = applyDecorators(this, 'admin-links', this.attrs, this.state) || [];
+        const extraLinks = flatten(applyDecorators(this, 'admin-links', this.attrs, this.state));
         return this.adminLinks().concat(extraLinks);
       }}));
     }

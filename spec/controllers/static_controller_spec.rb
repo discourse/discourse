@@ -2,6 +2,35 @@ require 'rails_helper'
 
 describe StaticController do
 
+  context 'brotli_asset' do
+    it 'returns a brotli encoded 404 if asset is missing' do
+
+        get :brotli_asset, path: 'missing.js'
+
+        expect(response.status).to eq(404)
+        expect(response.headers['Content-Encoding']).not_to eq('br')
+        expect(response.headers["Cache-Control"]).to match(/max-age=5/)
+    end
+
+    it 'has correct headers for brotli assets' do
+      begin
+        assets_path = Rails.root.join("public/assets")
+
+        FileUtils.mkdir_p(assets_path)
+
+        file_path = assets_path.join("test.js.br")
+        File.write(file_path, 'fake brotli file')
+
+        get :brotli_asset, path: 'test.js'
+
+        expect(response.status).to eq(200)
+        expect(response.headers["Cache-Control"]).to match(/public/)
+      ensure
+        File.delete(file_path)
+      end
+    end
+  end
+
   context 'show' do
     before do
       post = create_post

@@ -38,7 +38,7 @@ module Email
 
     def process!
       return if is_blacklisted?
-      @from_email, @from_display_name = parse_from_field
+      @from_email, @from_display_name = parse_from_field(@mail)
       @incoming_email = find_or_create_incoming_email
       process_internal
     rescue => e
@@ -74,10 +74,10 @@ module Email
       raise InactiveUserError if !user.active && !user.staged
       raise BlockedUserError  if user.blocked
 
-      body, @elided = select_body
+      body, elided = select_body
       body ||= ""
 
-      raise NoBodyDetectedError if body.blank? && !@mail.has_attachments?
+      raise NoBodyDetectedError if body.blank? && attachments.empty?
 
       if is_auto_generated?
         @incoming_email.update_columns(is_auto_generated: true)
@@ -90,6 +90,7 @@ module Email
       elsif post = find_related_post
         create_reply(user: user,
                      raw: body,
+                     elided: elided,
                      post: post,
                      topic: post.topic,
                      skip_validations: user.staged?)
@@ -98,7 +99,7 @@ module Email
 
         destinations.each do |destination|
           begin
-            process_destination(destination, user, body)
+            process_destination(destination, user, body, elided)
           rescue => e
             first_exception ||= e
           else
@@ -237,17 +238,27 @@ module Email
       reply.split(previous_replies_regex)[0]
     end
 
-    def parse_from_field
-      if @mail[:from].errors.blank?
-        address_field = @mail[:from].address_list.addresses.first
-        address_field.decoded
-        from_address = address_field.address
-        from_display_name = address_field.display_name.try(:to_s)
-      else
-        from_address = @mail.from[/<([^>]+)>/, 1]
-        from_display_name = @mail.from[/^([^<]+)/, 1]
+    def parse_from_field(mail)
+      if mail[:from].errors.blank?
+        mail[:from].address_list.addresses.each do |address_field|
+          address_field.decoded
+          from_address = address_field.address
+          from_display_name = address_field.display_name.try(:to_s)
+          return [from_address&.downcase, from_display_name&.strip] if from_address["@"]
+        end
       end
-      [from_address.downcase, from_display_name]
+
+      if mail.from[/<[^>]+>/]
+        from_address = mail.from[/<([^>]+)>/, 1]
+        from_display_name = mail.from[/^([^<]+)/, 1]
+      end
+
+      if (from_address.blank? || !from_address["@"]) && mail.from[/\[mailto:[^\]]+\]/]
+        from_address = mail.from[/\[mailto:([^\]]+)\]/, 1]
+        from_display_name = mail.from[/^([^\[]+)/, 1]
+      end
+
+      [from_address&.downcase, from_display_name&.strip]
     end
 
     def subject
@@ -314,12 +325,17 @@ module Email
       end
     end
 
-    def process_destination(destination, user, body)
+    def process_destination(destination, user, body, elided)
+      return if SiteSetting.enable_forwarded_emails &&
+                has_been_forwarded? &&
+                process_forwarded_email(destination, user)
+
       case destination[:type]
       when :group
         group = destination[:obj]
         create_topic(user: user,
                      raw: body,
+                     elided: elided,
                      title: subject,
                      archetype: Archetype.private_message,
                      target_group_names: [group.name],
@@ -347,9 +363,80 @@ module Email
 
         create_reply(user: user,
                      raw: body,
+                     elided: elided,
                      post: email_log.post,
                      topic: email_log.post.topic)
       end
+    end
+
+    def has_been_forwarded?
+      subject[/^[[:blank]]*(fwd?|tr)[[:blank]]?:/i] && embedded_email_raw.present?
+    end
+
+    def embedded_email_raw
+      return @embedded_email_raw if @embedded_email_raw
+      text = fix_charset(@mail.multipart? ? @mail.text_part : @mail)
+      @embedded_email_raw, @before_embedded = EmailReplyTrimmer.extract_embedded_email(text)
+      @embedded_email_raw
+    end
+
+    def process_forwarded_email(destination, user)
+      embedded = Mail.new(embedded_email_raw)
+      email, display_name = parse_from_field(embedded)
+
+      return false if email.blank? || !email["@"]
+
+      embedded_user = find_or_create_user(email, display_name)
+      raw = try_to_encode(embedded.decoded, "UTF-8").presence || embedded.to_s
+      title = embedded.subject.presence || subject
+
+      case destination[:type]
+      when :group
+        group = destination[:obj]
+        post = create_topic(user: embedded_user,
+                            raw: raw,
+                            title: title,
+                            archetype: Archetype.private_message,
+                            target_usernames: [user.username],
+                            target_group_names: [group.name],
+                            is_group_message: true,
+                            skip_validations: true,
+                            created_at: embedded.date)
+
+      when :category
+        category = destination[:obj]
+
+        return false if user.staged? && !category.email_in_allow_strangers
+        return false if !user.has_trust_level?(SiteSetting.email_in_min_trust)
+
+        post = create_topic(user: embedded_user,
+                            raw: raw,
+                            title: title,
+                            category: category.id,
+                            skip_validations: embedded_user.staged?,
+                            created_at: embedded.date)
+      else
+        return false
+      end
+
+      if post&.topic
+        # mark post as seen for the forwarder
+        PostTiming.record_timing(user_id: user.id, topic_id: post.topic_id, post_number: post.post_number, msecs: 5000)
+
+        # create reply when available
+        if @before_embedded.present?
+          post_type = Post.types[:regular]
+          post_type = Post.types[:whisper] if post.topic.private_message? && group.usernames[user.username]
+
+          create_reply(user: user,
+                       raw: @before_embedded,
+                       post: post,
+                       topic: post.topic,
+                       post_type: post_type)
+        end
+      end
+
+      true
     end
 
     def reply_by_email_address_regex
@@ -436,15 +523,17 @@ module Email
       raise InvalidPostAction.new(e)
     end
 
-
+    def attachments
+      # strip blacklisted attachments (mostly signatures)
+      @attachments ||= @mail.attachments.select do |attachment|
+        attachment.content_type !~ SiteSetting.attachment_content_type_blacklist_regex &&
+        attachment.filename !~ SiteSetting.attachment_filename_blacklist_regex
+      end
+    end
 
     def create_post_with_attachments(options={})
       # deal with attachments
-      @mail.attachments.each do |attachment|
-        # strip blacklisted attachments (mostly signatures)
-        next if attachment.content_type =~ SiteSetting.attachment_content_type_blacklist_regex
-        next if attachment.filename =~ SiteSetting.attachment_filename_blacklist_regex
-
+      attachments.each do |attachment|
         tmp = Tempfile.new("discourse-email-attachment")
         begin
           # read attachment
@@ -481,22 +570,22 @@ module Email
       options[:raw_email] = @raw_email
 
       # ensure posts aren't created in the future
-      options[:created_at] = [@mail.date, DateTime.now].min
+      options[:created_at] ||= @mail.date
+      options[:created_at]   = DateTime.now if options[:created_at] > DateTime.now
 
       is_private_message = options[:archetype] == Archetype.private_message ||
                            options[:topic].try(:private_message?)
 
       # only add elided part in messages
-      if @elided.present? && is_private_message
+      if options[:elided].present? && (SiteSetting.always_show_trimmed_content || is_private_message)
         options[:raw] << "\n\n" << "<details class='elided'>" << "\n"
         options[:raw] << "<summary title='#{I18n.t('emails.incoming.show_trimmed_content')}'>&#183;&#183;&#183;</summary>" << "\n"
-        options[:raw] << @elided << "\n"
+        options[:raw] << options[:elided] << "\n"
         options[:raw] << "</details>" << "\n"
       end
 
       user = options.delete(:user)
-      manager = NewPostManager.new(user, options)
-      result = manager.perform
+      result = NewPostManager.new(user, options).perform
 
       raise InvalidPost, result.errors.full_messages.join("\n") if result.errors.any?
 
@@ -506,6 +595,8 @@ module Email
           add_other_addresses(result.post.topic, user)
         end
       end
+
+      result.post
     end
 
     def add_other_addresses(topic, sender)
@@ -516,6 +607,7 @@ module Email
               address_field.decoded
               email = address_field.address.downcase
               display_name = address_field.display_name.try(:to_s)
+              next unless email["@"]
               if should_invite?(email)
                 user = find_or_create_user(email, display_name)
                 if user && can_invite?(topic, user)

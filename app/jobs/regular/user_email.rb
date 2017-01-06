@@ -74,7 +74,7 @@ module Jobs
       set_skip_context(type, user.id, to_address || user.email, post.try(:id))
 
       return skip_message(I18n.t("email_log.anonymous_user"))   if user.anonymous?
-      return skip_message(I18n.t("email_log.suspended_not_pm")) if user.suspended? && type != :user_private_message
+      return skip_message(I18n.t("email_log.suspended_not_pm")) if user.suspended? && type.to_s != "user_private_message"
 
       return if user.staged && type == :digest
 
@@ -103,6 +103,7 @@ module Jobs
         end
 
         if user.user_option.mailing_list_mode? &&
+           user.user_option.mailing_list_mode_frequency > 0 && # don't catch notifications for users on daily mailing list mode
            (!post.try(:topic).try(:private_message?)) &&
            NOTIFICATIONS_SENT_BY_MAILING_LIST.include?(email_args[:notification_type])
            # no need to log a reason when the mail was already sent via the mailing list job
@@ -126,7 +127,7 @@ module Jobs
         email_args[:email_token] = email_token
       end
 
-      if type == :notify_old_email
+      if type.to_s == "notify_old_email"
         email_args[:new_email] = user.email
       end
 

@@ -16,7 +16,7 @@ vi:
           format: '%n %u'
           units:
             byte:
-              other: Byte
+              other: Bytes
             gb: GB
             kb: KB
             mb: MB
@@ -26,6 +26,7 @@ vi:
         millions: "{{number}}M"
     dates:
       time: "h:mm a"
+      timeline_date: "MMM YYYY"
       long_no_year: "MMM D h:mm a"
       long_no_year_no_time: "MMM D"
       full_no_year_no_time: "MMMM Do"
@@ -37,14 +38,13 @@ vi:
       long_date_with_year_without_time: "MMM D, 'YY"
       long_date_without_year_with_linebreak: "MMM D <br/>LT"
       long_date_with_year_with_linebreak: "MMM D, 'YY <br/>LT"
+      wrap_ago: "%{date} ngày trước"
       tiny:
-        half_a_minute: "< 1m"
+        half_a_minute: "< 1 phút"
         less_than_x_seconds:
           other: "< %{count}s"
         x_seconds:
           other: "%{count}s"
-        less_than_x_minutes:
-          other: "< %{count}m"
         x_minutes:
           other: "%{count}m"
         about_x_hours:
@@ -84,17 +84,21 @@ vi:
       previous_month: 'Tháng Trước'
       next_month: 'Tháng Sau'
     share:
-      topic: 'chia sẽ chủ đề này'
+      topic: 'chia sẻ chủ đề này'
       post: 'đăng #%{Bài đăng số}'
       close: 'đóng lại'
-      twitter: 'chia sẽ lên Twitter'
-      facebook: 'chia sẽ lên Facebook'
-      google+: 'chia sẽ lên Google+'
+      twitter: 'chia sẻ lên Twitter'
+      facebook: 'chia sẻ lên Facebook'
+      google+: 'chia sẻ lên Google+'
       email: 'Gửi liên kết này qua thư điện tử'
     action_codes:
+      public_topic: "Hiển thị chủ đề này lúc %{when}"
+      private_topic: "Ẩn chủ đề này lúc %{when}"
       split_topic: "chìa chủ đề này lúc %{when}"
       invited_user: "đã mời bởi %{who} %{when}"
+      invited_group: "Được mời bởi %{who} vào lúc %{when}"
       removed_user: "loại bỏ bởi %{who} %{when}"
+      removed_group: "Bị loại bỏ bởi %{who} vào lúc %{when}"
       autoclosed:
         enabled: 'đóng lúc %{when}'
         disabled: 'mở lúc %{when}'
@@ -223,6 +227,8 @@ vi:
     undo: "Hoàn tác"
     revert: "Phục hồi"
     failed: "Thất bại"
+    switch_to_anon: "Vào chế độ Ẩn danh"
+    switch_from_anon: "Thoát chế độ Ẩn danh"
     banner:
       close: "Xóa biểu ngữ này."
       edit: "Sửa banner này >>"
@@ -270,6 +276,8 @@ vi:
       title: "Thành viên"
       likes_given: "Đưa ra"
       likes_received: "Đã nhận"
+      topics_entered: "Đã xem"
+      topics_entered_long: "Chủ đề đã xem"
       time_read: "Thời gian đọc"
       topic_count: "Chủ đề"
       topic_count_long: "Chủ đề đã được tạo"
@@ -283,12 +291,6 @@ vi:
       total_rows:
         other: "%{count} người dùng"
     groups:
-      empty:
-        posts: "Không có chủ đề của các thành viên trong nhóm"
-        members: "Không có thành viên nào trong nhóm"
-        mentions: "Không có thành viên nào trong nhóm"
-        messages: "Không có tin nhắn nào trong nhóm"
-        topics: "Không có chủ đề của các thành viên trong nhóm"
       add: "Thêm"
       selector_placeholder: "Thêm thành viên"
       owner: "chủ"
@@ -314,6 +316,9 @@ vi:
         watching:
           title: "Đang xem"
           description: "Bạn sẽ được thông báo khi có bài viết mới trong mỗi tin nhắn, và số lượng trả lời mới sẽ được hiển thị"
+        watching_first_post:
+          title: "Theo dõi chủ đề đầu tiên"
+          description: "Bạn sẽ được thông báo về bài viết đầu tiên của mỗi chủ đề mới trong nhóm này"
         tracking:
           title: "Đang theo dõi"
           description: "Bạn sẽ được thông báo nếu ai đó đề cập đến @tên bạn hoặc trả lời bạn, và số lượng trả lời mới sẽ được hiển thị"
@@ -356,12 +361,10 @@ vi:
       latest_by: "mới nhất bởi"
       toggle_ordering: "chuyển lệnh kiểm soát"
       subcategories: "Phân loại phụ"
-      topic_stats: "Số lượng chủ đề mới"
+      topic_sentence:
+        other: "%{count} chủ đề"
       topic_stat_sentence:
         other: "%{count} số lượng chủ đề mới tỏng quá khứ %{unit}."
-      post_stats: "Số lượng bài viết mới"
-      post_stat_sentence:
-        other: "%{count} số lượng bài viết mới trong quá khứ %{unit}."
     ip_lookup:
       title: Tìm kiếm địa chỉ IP
       hostname: Hostname
@@ -384,7 +387,6 @@ vi:
       profile: "Tiểu sử"
       mute: "Im lặng"
       edit: "Tùy chỉnh"
-      download_archive: "Tải bài viết về"
       new_private_message: "Tin nhắn mới"
       private_message: "Tin nhắn"
       private_messages: "Các tin nhắn"
@@ -406,6 +408,7 @@ vi:
         disable: "Khóa Notification"
         enable: "Cho phép Notification"
         each_browser_note: "Lưu ý: Bạn phải thay đổi trong cấu hình mỗi trình duyệt bạn sử dụng."
+      dismiss_notifications: "Bỏ qua tất cả"
       dismiss_notifications_tooltip: "Đánh dấu đã đọc cho tất cả các thông báo chưa đọc"
       disable_jump_reply: "Đừng tới bài viết của tôi sau khi tôi trả lời"
       dynamic_favicon: "Hiện số chủ đề mới / cập nhật vào biểu tượng trình duyệt"
@@ -420,6 +423,12 @@ vi:
       suspended_notice: "Thành viên này bị đình chỉ cho đến ngày {{date}}. "
       suspended_reason: "Lý do: "
       github_profile: "Github"
+      email_activity_summary: "Tóm tắt hoạt động"
+      mailing_list_mode:
+        label: "Chế độ mailing list"
+        enabled: "Bật chế độ mailing list"
+        daily: "Gửi cập nhật hàng ngày"
+        individual: "Gửi email cho mỗi bài viết mới."
       watched_categories: "Xem"
       tracked_categories: "Theo dõi"
       muted_categories: "Im lặng"
@@ -603,13 +612,9 @@ vi:
         account_age_days: "Thời gian của tài khoản theo ngày"
         create: "Gửi một lời mời"
         generate_link: "Chép liên kết Mời"
-        generated_link_message: '<p>Liên kết thư mời được tạo thành công!</p><p><input class="invite-link-input" style="width: 75%;" type="text" value="%{inviteLink}"></p><p>Liên kết thư mời chỉ hợp lệ cho email này: <b>%{invitedEmail}</b></p>'
         bulk_invite:
-          none: "Bạn đã mời ai ở đây chưa. Bạn có thể mời một hoặc một nhóm bằng <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>tải lên hàng loạt file mời</a>."
           text: "Mời hàng loạt bằng file"
-          uploading: "Uploading..."
           success: "Tải lên thành công, bạn sẽ được thông báo qua tin nhắn khi quá trình hoàn tất."
-          error: "Có lỗi xảy ra khi upload '{{filename}}': {{message}}"
       password:
         title: "Mật khẩu"
         too_short: "Mật khẩu của bạn quá ngắn."
@@ -948,7 +953,6 @@ vi:
       title: "tìm kiếm chủ đề, bài viết, tài khoản hoặc các danh mục"
       no_results: "Không tìm thấy kết quả."
       no_more_results: "Không tìm thấy kết quả"
-      search_help: Giúp đỡ tìm kiếm
       searching: "Đang tìm ..."
       post_format: "#{{post_number}} bởi {{username}}"
       context:
@@ -1009,7 +1013,6 @@ vi:
       unsubscribe:
         stop_notifications: "Từ bây giờ bạn sẽ không nhận thông báo từ <strong>{{title}}</strong>"
         change_notification_state: "Tình trạn thông báo của bạn là"
-      filter_to: "{{post_count}} bài đăng trong chủ đề"
       create: 'Chủ đề Mới'
       create_long: 'Tạo một Chủ đề mới'
       private_message: 'Bắt đầu một thông điệp'
@@ -1063,7 +1066,6 @@ vi:
       auto_close_title: 'Tự động-Đóng các Cài đặt'
       auto_close_save: "Lưu"
       auto_close_remove: "Đừng Tự Động-Đóng Chủ Đề Này"
-      auto_close_immediate: "Bài viết cuối cùng trong chủ đề đã xảy ra %{hours} giờ qua, vì vậy chủ đề sẽ tự động đóng."
       progress:
         title: tiến trình của chủ đề
         go_top: "trên cùng"
@@ -1073,7 +1075,6 @@ vi:
         jump_bottom_with_number: "nhảy tới bài viết %{post_number}"
         total: tổng số bài viết
         current: bài viết hiện tại
-        position: "bài viết %{current} trong %{total}"
       notifications:
         reasons:
           '3_6': 'Bạn sẽ nhận được các thông báo bởi vì bạn đang xem chuyên mục nàyotification'
@@ -1242,7 +1243,6 @@ vi:
     post:
       reply: "<i class='fa fa-mail-forward'></i> {{replyAvatar}} {{usernameLink}}"
       reply_topic: "<i class='fa fa-mail-forward'></i> {{link}}"
-      quote_reply: "trả lời trích dẫn"
       edit: "Đang sửa {{link}} {{replyAvatar}} {{username}}"
       edit_reason: "Lý do: "
       post_number: "bài viết {{number}}"
@@ -1257,7 +1257,6 @@ vi:
       expand_collapse: "mở/đóng"
       gap:
         other: "xem {{count}} trả lời bị ẩn"
-      more_links: "hơn {{count}}..."
       unread: "Bài viết chưa đọc"
       has_replies:
         other: "{{count}} Trả lời"
@@ -1317,14 +1316,6 @@ vi:
         flag: 'Gắn cờ'
         defer_flags:
           other: "Đánh dấu hoãn"
-        it_too:
-          off_topic: "Gắn cờ nó"
-          spam: "Gắn cờ nó"
-          inappropriate: "Gắn cờ nó"
-          custom_flag: "Gắn cờ nó"
-          bookmark: "Đánh dấu nó"
-          like: "Thích nó"
-          vote: "Bịnh chọn nó"
         undo:
           off_topic: "Hủy gắn cờ"
           spam: "Hủy gắn cờ"
@@ -1478,7 +1469,6 @@ vi:
       take_action: "Thực hiện"
       notify_action: 'Tin nhắn'
       delete_spammer: "Xóa người Spam"
-      delete_confirm: "Bạn đang định xóa <b>%{posts}</b> bài đăng và <b>%{topics}</b> chủ đề từ người dùng này,  loại tài khoản, ngăn đăng ký từ địa chỉ IP <b>%{ip_address}</b> của họ, và thêm địa chỉ email <b>%{email}</b> vào danh sách chặn vĩnh viễn. Bạn có chắc người dùng này thật sự là một spammer?"
       yes_delete_spammer: "Có, xóa người spam"
       ip_address_missing: "(N/A)"
       hidden_email_address: "(ẩn)"
@@ -1492,10 +1482,6 @@ vi:
         spam: "Nó là rác"
       custom_placeholder_notify_user: "Phải hảo tâm và mang tính xây dựng."
       custom_placeholder_notify_moderators: "Hãy cho chúng tôi biết cụ thể những gì bạn quan tâm, và cung cấp các liên kết hoặc ví dụ liên quan nếu có thể."
-      custom_message:
-        at_least: "điền ít nhất {{n}} ký tự"
-        more: "còn {{n}}"
-        left: "{{n}} còn lại"
     flagging_topic:
       title: "Cám ơn bạn đã giúp phát triển cộng đồng!"
       action: "Gắn cờ Chủ đề"
@@ -1529,7 +1515,6 @@ vi:
       invisible:
         help: "Chủ đề này ẩn, nó sẽ không hiển thị trong danh sách chủ đề, và chỉ có thể truy cập thông qua liên kết trực tiếp"
     posts: "Bài viết"
-    posts_lowercase: "bài viết"
     posts_long: "Có {{number}} bài đăng trong chủ đề này"
     posts_likes_MF: |
       Chủ đề này có {count, plural, one {1 reply} other {# replies}} {ratio, select,
@@ -1751,15 +1736,12 @@ vi:
         refresh: "Làm mới"
         new: "Mới"
         selector_placeholder: "nhập tên tài khoản"
-        name_placeholder: "Tên nhóm, không khoản trắng, cùng luật với tên tài khoản"
         about: "Chỉnh sửa nhóm thành viên và tên của bạn ở đây"
         group_members: "Nhóm thành viên"
         delete: "Xóa"
         delete_confirm: "Xóa nhóm này?"
         delete_failed: "Không thể xóa nhóm. Nếu đây là một nhóm tự động, nó không thể hủy bỏ."
-        delete_member_confirm: "Loại bỏ '%{username}' khỏi nhóm '%{group}'?"
         delete_owner_confirm: "Loại bỏ quyền sở hữu của '%{username}'?"
-        name: "Tên"
         add: "Thêm"
         add_members: "Thêm thành viên"
         custom: "Tùy biến"
@@ -1855,10 +1837,8 @@ vi:
             title: "Đưa csdl về trạng thái làm việc trước"
             confirm: "Bạn có chắc chắn muốn phục hồi csdl về trạng thái làm việc trước?"
       export_csv:
-        user_archive_confirm: "Bạn có chắc chắn muốn download các bài viết của mình?"
         success: "Export đang được khởi tạo, bạn sẽ nhận được tin nhắn thông báo khi quá trình hoàn tất."
         failed: "Xuất lỗi. Vui lòng kiểm tra log."
-        rate_limit_error: "Bài viết có thể tải về 1 lần mỗi này, vui lòng thử lại vào ngày mai."
         button_text: "Xuất"
         button_title:
           user: "Xuất danh sách người dùng đầy đủ với định dạng CSV."
@@ -2165,7 +2145,6 @@ vi:
         suspend_reason: "Lý do"
         suspended_by: "Tạm khóa bởi"
         delete_all_posts: "Xóa tất cả bài viết"
-        delete_all_posts_confirm: "Bạn có chắc chắn muốn xóa %{posts} bài viết và %{topics} chủ đề?"
         suspend: "Tạm khóa"
         unsuspend: "Đã mở khóa"
         suspended: "Đã tạm khóa?"
@@ -2181,7 +2160,7 @@ vi:
         show_public_profile: "Hiển thị hồ sơ công khai"
         impersonate: 'Mạo danh'
         ip_lookup: "Tìm kiếm địa chỉ IP"
-        log_out: "Đăng suất"
+        log_out: "Đăng xuất"
         logged_out: "Thành viên đã đăng xuất trên tất cả thiết bị"
         revoke_admin: 'Thu hồi quản trị'
         grant_admin: 'Cấp quản trị'
@@ -2249,7 +2228,6 @@ vi:
         unlock_trust_level: "Mở khóa độ tin cậy"
         tl3_requirements:
           title: "Yêu cầu Cấp độ tin tưởng 3"
-          table_title: "Trong %{time_period} ngày qua:"
           value_heading: "Giá trị"
           requirement_heading: "Yêu cầu"
           visits: "Lượt xem"

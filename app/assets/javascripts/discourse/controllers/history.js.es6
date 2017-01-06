@@ -21,6 +21,9 @@ export default Ember.Controller.extend(ModalFunctionality, {
     if (this.site.mobileView) { this.set("viewMode", "inline"); }
   }.on("init"),
 
+  previousFeaturedLink: Em.computed.alias('model.featured_link_changes.previous'),
+  currentFeaturedLink: Em.computed.alias('model.featured_link_changes.current'),
+
   previousTagChanges: customTagArray('model.tags_changes.previous'),
   currentTagChanges: customTagArray('model.tags_changes.current'),
 

@@ -7,6 +7,8 @@ require_dependency 'pretty_text'
 class CookedPostProcessor
   include ActionView::Helpers::NumberHelper
 
+  attr_reader :cooking_options
+
   def initialize(post, opts={})
     @dirty = false
     @opts = opts
@@ -17,6 +19,7 @@ class CookedPostProcessor
     @cooking_options = post.cooking_options || opts[:cooking_options] || {}
     @cooking_options[:topic_id] = post.topic_id
     @cooking_options = @cooking_options.symbolize_keys
+    @cooking_options[:omit_nofollow] = true if post.omit_nofollow?
 
     analyzer = post.post_analyzer
     @doc = Nokogiri::HTML::fragment(analyzer.cook(post.raw, @cooking_options))
@@ -51,21 +54,14 @@ class CookedPostProcessor
 
     BadgeGranter.grant(Badge.find(Badge::FirstEmoji), @post.user, post_id: @post.id) if has_emoji?
     BadgeGranter.grant(Badge.find(Badge::FirstOnebox), @post.user, post_id: @post.id) if @has_oneboxes
+    BadgeGranter.grant(Badge.find(Badge::FirstReplyByEmail), @post.user, post_id: @post.id) if @post.is_reply_by_email?
   end
 
   def keep_reverse_index_up_to_date
     upload_ids = Set.new
 
-    @doc.css("a[href]").each do |a|
-      href = a["href"].to_s
-      if upload = Upload.get_from_url(href)
-        upload_ids << upload.id
-      end
-    end
-
-    @doc.css("img[src]").each do |img|
-      src = img["src"].to_s
-      if upload = Upload.get_from_url(src)
+    @doc.css("a/@href", "img/@src").each do |media|
+      if upload = Upload.get_from_url(media.value)
         upload_ids << upload.id
       end
     end
@@ -88,7 +84,7 @@ class CookedPostProcessor
       convert_to_link!(img)
     end
 
-    update_topic_image
+    update_post_image
   end
 
   def extract_images
@@ -104,7 +100,7 @@ class CookedPostProcessor
     @doc.css(".quote img")
   end
 
-  def extract_images_for_topic
+  def extract_images_for_post
     # all image with a src attribute
     @doc.css("img[src]") -
     # minus, emojis
@@ -289,10 +285,11 @@ class CookedPostProcessor
     span
   end
 
-  def update_topic_image
-    if @post.is_first_post?
-      img = extract_images_for_topic.first
-      @post.topic.update_column(:image_url, img["src"][0...255]) if img["src"].present?
+  def update_post_image
+    img = extract_images_for_post.first
+    if img["src"].present?
+      @post.update_column(:image_url, img["src"][0...255]) # post
+      @post.topic.update_column(:image_url, img["src"][0...255]) if @post.is_first_post? # topic
     end
   end
 
@@ -303,10 +300,10 @@ class CookedPostProcessor
     }
 
     # apply oneboxes
-    Oneboxer.apply(@doc, topic_id: @post.topic_id) { |url|
+    Oneboxer.apply(@doc, topic_id: @post.topic_id) do |url|
       @has_oneboxes = true
       Oneboxer.onebox(url, args)
-    }
+    end
 
     # make sure we grab dimensions for oneboxed images
     oneboxed_images.each { |img| limit_size!(img) }

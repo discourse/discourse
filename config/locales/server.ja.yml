@@ -53,7 +53,6 @@ ja:
       has_already_been_used: "は既に使用されています"
       inclusion: は一覧にありません
       invalid: は正しくありません
-      is_invalid: "に問題があります。長さなど、不備が無いか確認してください。"
       less_than: は%{count}より小さい値にしてください
       less_than_or_equal_to: は%{count}以下の値にしてください
       not_a_number: は数値で入力してください
@@ -78,8 +77,6 @@ ja:
       load_from_remote: "投稿の読み込みに失敗しました。"
     site_settings:
       min_username_length_range: "最小値を最大値より上にすることはできません。"
-  bulk_invite:
-    file_should_be_csv: "アップロードするファイルは、csv または txt 形式である必要があります。"
   backup:
     operation_already_running: "操作を実行しています。他の操作はできません。"
     backup_file_should_be_tar_gz: "バックアップファイルは .tar.gz形式である必要があります。"
@@ -103,14 +100,13 @@ ja:
     in_reply_to: "▶ %{username}"
     replies:
       other: "%{count} 通の返信"
-  no_mentions_allowed: "あなたは他のユーザへメンションを送ることができません。"
-  no_images_allowed: "新規ユーザは投稿に画像を付ける事はできません。"
+  no_mentions_allowed: "あなたは他のユーザーへメンションを送ることができません。"
+  no_images_allowed: "新規ユーザーは投稿に画像を付ける事はできません。"
   spamming_host: "申し訳ありませんが、このホストへのリンクを貼ることはできません。"
-  user_is_suspended: "凍結中のユーザは投稿できません。"
+  user_is_suspended: "凍結中のユーザーは投稿できません。"
   topic_not_found: "問題が発生しました。トピックがクローズしたか、閲覧中に削除された可能性があります。"
   just_posted_that: "は最近の投稿と内容がほぼ一緒です"
   invalid_characters: "は不正な文字を含んでいます"
-  is_invalid: "に問題があります。長さなど、不備が無いか確認してください。"
   next_page: "次のページ →"
   prev_page: "← 前のページ"
   page_num: "%{num} ページ"
@@ -153,20 +149,20 @@ ja:
     until_posts:
       other: "%{count} 投稿"
     new-topic: |
-      %{site_name} へようこそ！&mdash; ** 新たなトピックの作成ありがとうございます！**
+      %{site_name} へようこそ！&mdash; **新たなトピックの作成ありがとうございます!**
 
       - タイトルはトピックの内容を正しく説明していますか？他の人にとって興味深いタイトルになっていますか？
 
       - このトピックは何をカバーするものですか？このトピックに興味を示しそうなのは誰でしょう？なぜこのトピックは重要なのでしょうか？コミュニティよりどのような回答を期待していますか？
 
-      - トピックに適切な検索用ワードを含めると、他の人がトピックを *発見* しやすくなります。詳細は [コミュニティガイドライン](/guidelines) を参照してください。このパネルは最初から %{education_posts_text} 回目までの投稿のときにだけ表示されます。
+      - トピックに適切な検索用ワードを含めると、他の人がトピックを *発見* しやすくなります。詳細は [コミュニティガイドライン](/guidelines) を参照してください。このメッセージは最初の %{education_posts_text} まで表示されます。
     new-reply: |
       %{site_name} へようこそ &mdash; **コミュニティへの貢献ありがとうございます!**
       - あなたの回答は議論に何らかの形で貢献していますか?
-      - コミュニティメンバー同士のやりとりは礼儀正しく、マナーを保ちましょう。
-      - 建設的な批判は歓迎します。ただし批判は「人」に対してではなく「アイデア」に対して行いましょう。
-      詳細は[コミュニティガイドライン](/guidelines)を参照してください。このパネルは最初の %{education_posts_text} のみに表示されます。
-    sequential_replies: |
+      - 会話は礼儀正しく、マナーを守りましょう。
+      - しっかりとした批判は良いかと思います。ただし「その人」に対してでは無く、「そのアイディア」に対してしましょう。
+      詳細は[コミュニティガイドライン](/guidelines)を参照してください。このメッセージは最初の %{education_posts_text} のみに表示されます。
+    sequential_replies: |+
       ### 一度に複数の投稿に返信する
 
       トピックにたくさん返信する代わりに、以前の投稿への @name メンションや引用などを活用して返信を一つの投稿にまとめましょう。
@@ -175,11 +171,11 @@ ja:
 
       こまごまと何度も返信するより、まとまって返信をすることで、より見やすく、より話しやすくなります。
     dominating_topic: |
-      ### 他のユーザも議論に参加させてあげましょう
+      ### 他のユーザーも議論に参加させてあげましょう
 
-      このトピックはあなたにとても重要なもののようですね &ndash; ここの回答のうち %{percent}% 以上があなたによってなされています。
+      このトピックはあなたにとても重要なもののようですね &ndash; ここへ %{percent}% 以上の返信をあなたが行っています。
 
-      他のユーザが回答するために十分な時間的猶予を与えているか、ちょっと振り返ってみませんか?
+      他のユーザーも返信するためにも、ある程度時間を開けているか確認してみましょう。
     too_many_replies: |
       ### このトピックに回答出来る制限を超えました
 
@@ -207,14 +203,14 @@ ja:
           attributes:
             base:
               warning_requires_pm: "プライベートメッセージでのみ警告を送ることができます"
-              too_many_users: "１度に１ユーザにしか警告を送る事はできません"
-              cant_send_pm: "申し訳ありません。このユーザにはプライベートメッセージを送る事ができません"
-              no_user_selected: "有効なユーザを選択してください"
+              too_many_users: "一度に1ユーザーにしか警告を送る事はできません"
+              cant_send_pm: "申し訳ありません。このユーザーにはプライベートメッセージを送る事ができません"
+              no_user_selected: "有効なユーザーを選択してください"
         user:
           attributes:
             password:
               common: "は10000最も一般的なパスワードのいずれかである。より安全なパスワードを使用してください。"
-              same_as_username: "はあなたのユーザ名と同じです。より安全なパスワードを使用してください"
+              same_as_username: "はあなたのユーザー名と同じです。より安全なパスワードを使用してください"
               same_as_email: "はあなたのメールアドレスと同じです。より安全なパスワードを使用してください"
             ip_address:
               signup_not_allowed: "このアカウントからのサインアップできません。"
@@ -235,7 +231,7 @@ ja:
   assets_topic_body: "これはパーマネントトピックです。スタッフのみが閲覧でき、サイトデザインに使用する画像とファイルを保存するために使用します。削除しないでください！\n\n利用方法:\n\n\n1. このトピックに回答\n2. ロゴやファビコンなどに使用する全ての画像をアップロード(エディタのアップロードアイコンか、ドラッグアンドドロップで画像を貼付ける)\n3. 回答を投稿\n4. 新しい投稿の画像を右クリックしてアップロード済み画像のパスを取得するか、編集アイコンをクリックして画像のパスを探し、画像パスをコピーする\n5. 画像パスを[基本設定](/admin/site_settings/category/required)に貼付ける\n\nもし、別のファイルタイプが必要な場合、[ファイル設定](/admin/site_settings/category/files)の`サポートするファイルの拡張` を編集してください"
   lounge_welcome:
     title: "ラウンジへようこそ"
-    body: |
+    body: |2
 
       素晴らしい! :confetti_ball:
 
@@ -269,12 +265,14 @@ ja:
       topic_exists_no_oldest: "%{count}個のトピックを持っているため、このカテゴリを削除できません。"
   trust_levels:
     newuser:
-      title: "新しいユーザ"
+      title: "新しいユーザー"
     basic:
-      title: "ベーシックユーザ"
-    change_failed_explanation: "%{user_name} を '%{new_trust_level}' に格下げしようとしましたが、既にトラストレベルが '%{current_trust_level}' です。%{user_name} は '%{current_trust_level}' のままになります - もしユーザーを降格させたい場合は、トラストレベルをロックしてください"
+      title: "ベーシックユーザー"
+    change_failed_explanation: "%{user_name} を '%{new_trust_level}' に下げようとしましたが、既にトラストレベルが '%{current_trust_level}' です。%{user_name} は '%{current_trust_level}' のままになります - もしユーザーを降格させたい場合は、トラストレベルをロックしてください"
   rate_limiter:
     too_many_requests: "このアクションを一日の間に実施可能な回数が決まっています。%{time_left}待ってから再度試してください。"
+    by_type:
+      public_group_membership: "グループへの参加/離脱が多すぎます。%{time_left}お待ち下さい。"
     hours:
       other: "%{count} 時間"
     minutes:
@@ -368,7 +366,7 @@ ja:
       long_form: '不適切として通報する'
     notify_user:
       title: '@{{username}}へメッセージを送る'
-      long_form: 'メッセージが送られたユーザ'
+      long_form: 'メッセージが送られたユーザー'
       email_title: '「%{title}」にの投稿'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
@@ -403,28 +401,33 @@ ja:
       email_title: 'トピック"%{title}" は不適切な可能性があるため、管理人による確認を必要とする。'
       email_body: "%{link}\n\n%{message}"
   flagging:
-    you_must_edit: '<p>投稿が他のユーザから通報されました。<a href="/my/messages">投稿したメッセージ</a>を確認してください。</p>'
-    user_must_edit: '<p>この投稿は他のユーザから通報されたため、非表示にされています。</p>'
+    you_must_edit: '<p>投稿が他のユーザーから通報されました。<a href="/my/messages">投稿したメッセージ</a>を確認してください。</p>'
+    user_must_edit: '<p>この投稿は他のユーザーから通報されたため、非表示にされています。</p>'
   archetypes:
     regular:
       title: "通常のトピック"
     banner:
       title: "バナートピック"
       message:
-        make: "このトピックはバナートピックに設定されています。ユーザが解除しない限り、ページ毎の一番上に表示されます"
+        make: "このトピックはバナートピックに設定されています。ユーザーが解除しない限り、ページ毎の一番上に表示されます"
         remove: "このトピックはバナーではなくなりました。トップページには表示されなくなります"
+  unsubscribe:
+    unwatch_category: "%{category}内の全トピックのウォッチを解除"
+  user_api_key:
+    title: "アプリケーションアクセスの認証"
+    description: "\"%{application_name}\" があなたのアカウントへのアクセスを要求しています: "
   reports:
     visits:
-      title: "訪問ユーザ"
+      title: "訪問ユーザー"
       xaxis: "日"
       yaxis: "訪問者数"
     signups:
-      title: "新規ユーザ"
+      title: "新規ユーザー"
       xaxis: "日"
-      yaxis: "新規ユーザ数"
+      yaxis: "新規ユーザー数"
     profile_views:
       xaxis: "日"
-      yaxis: "ユーザプロフィールの閲覧数"
+      yaxis: "ユーザープロフィールの閲覧数"
     topics:
       title: "トピック"
       xaxis: "日"
@@ -452,13 +455,13 @@ ja:
     users_by_trust_level:
       title: "ユーザーごとのトラストレベル"
       xaxis: "トラストレベル"
-      yaxis: "ユーザ数"
+      yaxis: "ユーザー数"
     emails:
       title: "送信メール"
       xaxis: "日"
       yaxis: "メールの数"
     user_to_user_private_messages:
-      title: "ユーザ to ユーザ"
+      title: "ユーザーからユーザーへ"
       xaxis: "日"
       yaxis: "メッセージ数"
     system_private_messages:
@@ -474,12 +477,12 @@ ja:
       xaxis: "日"
       yaxis: "メッセージ数"
     notify_user_private_messages:
-      title: "ユーザ通知"
+      title: "ユーザーの通知"
       xaxis: "日"
       yaxis: "メッセージ数"
     top_referrers:
       title: "トップリファラ"
-      xaxis: "ユーザ"
+      xaxis: "ユーザー"
       num_clicks: "クリック"
       num_topics: "トピック"
     top_traffic_sources:
@@ -487,19 +490,19 @@ ja:
       xaxis: "ドメイン"
       num_clicks: "クリック"
       num_topics: "トピック"
-      num_users: "ユーザ"
+      num_users: "ユーザー"
     top_referred_topics:
       title: "トップ被参照トピック"
       xaxis: "トピック"
       num_clicks: "クリック"
     page_view_anon_reqs:
-      title: "匿名ユーザ"
+      title: "匿名ユーザー"
       xaxis: "日"
-      yaxis: "匿名ユーザからの閲覧数"
+      yaxis: "匿名ユーザーからの閲覧数"
     page_view_logged_in_reqs:
       title: "ログイン"
       xaxis: "日"
-      yaxis: "ログインユーザからの閲覧数"
+      yaxis: "ログインユーザーからの閲覧数"
     page_view_crawler_reqs:
       title: "クローラー"
       xaxis: "日"
@@ -509,13 +512,13 @@ ja:
       xaxis: "日"
       yaxis: "合計閲覧数"
     page_view_logged_in_mobile_reqs:
-      title: "ログインユーザからの閲覧数"
+      title: "ログインユーザーからの閲覧数"
       xaxis: "日"
-      yaxis: "モバイルでログインしているユーザからの閲覧数"
+      yaxis: "モバイルでログインしているユーザーからの閲覧数"
     page_view_anon_mobile_reqs:
-      title: "匿名ユーザからの閲覧数"
+      title: "匿名ユーザーからの閲覧数"
       xaxis: "日"
-      yaxis: "モバイルで閲覧している匿名ユーザの閲覧数"
+      yaxis: "モバイルで閲覧している匿名ユーザーの閲覧数"
     http_background_reqs:
       title: "背景"
       xaxis: "日"
@@ -549,7 +552,7 @@ ja:
       xaxis: "日"
       yaxis: "合計"
     mobile_visits:
-      title: "訪問ユーザ"
+      title: "訪問ユーザー"
       xaxis: "日"
       yaxis: "訪問者数"
   dashboard:
@@ -566,19 +569,11 @@ ja:
     s3_config_warning: 'サーバが S3 にファイルをアップロードするように設定されていますが、次のうち少なくとも1つが設定されていません: s3_access_key_id, s3_secret_access_key or s3_upload_bucket。<a href="/admin/site_settings">サイトの設定</a> にて設定を更新してください。<a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">詳しくは "How to set up image uploads to S3?" を参考にしてください</a>。'
     s3_backup_config_warning: 'サーバが S3 にバックアップをアップロードするように設定されていますが、次のうち少なくとも1つが設定されていません: s3_access_key_id, s3_secret_access_key or s3_upload_bucket。<a href="/admin/site_settings">サイトの設定</a> にて設定を更新してください。<a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">詳しくは "How to set up image uploads to S3?" を参考にしてください</a>'
     image_magick_warning: 'サーバが大きな画像のサムネイルを作成する設定になっていますが、ImageMagick がインストールされていません。お好きなパッケージマネージャを使って ImageMagick をインストールするか、<a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">最新のリリースをダウンロードしてください</a>。'
-    default_logo_warning: "あなたのサイトのロゴを設定しましょう。<a href='/admin/site_settings'>サイトの設定</a>で logo_url, logo_small_url, favicon_url を更新してください。"
-    contact_email_missing: "サイトに関する緊急連絡が行えるように、連絡先メールアドレスを入力してください。<a href='/admin/site_settings'>サイトの設定</a>で更新できます"
-    contact_email_invalid: "サイトの連絡先メールアドレスが正しくありません。<a href='/admin/site_settings'>サイトの設定</a>で更新してください"
-    title_nag: "サイトの名前が正しくありません。<a href='/admin/site_settings'>サイトの設定</a>で更新してください"
-    site_description_missing: "検索結果に表示される説明文を入力してください。<a href='/admin/site_settings'>サイトの設定</a>で更新してください"
-    consumer_email_warning: "サイトはメール送信に Gmail (または他のカスタムメールサービス) を利用するように設定されています。<a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>Gmail で送信可能なメール数には制限があります</a>。メールを確実に送信するために mandrill.com などのメールサービスプロバイダーの利用を検討してください。"
-    site_contact_username_warning: "重要なメッセージを送るために、スタッフユーザの名前を入力してください。<a href='/admin/site_settings'>サイト設定</a> のsite_contact_username を更新してください。"
-    notification_email_warning: "通知用メールがあなたのドメインで有効なメールアドレスから送信されていません。メール配信が不安定になり、信頼性が低くなります。\n<a href='/admin/site_settings'>サイトの設定</a>で更新してください"
   site_settings:
     censored_words: "自動的に &#9632;&#9632;&#9632;&#9632; で置換されます"
     delete_old_hidden_posts: "30日以上非表示になっている投稿を自動で削除します"
     default_locale: "この Discourse インスタンスのデフォルト言語 (ISO 639-1 Code)"
-    allow_user_locale: "ユーザーが各自の言語設定を選択できるようにする"
+    allow_user_locale: "ユーザーが言語を選択できるようにする"
     min_post_length: "投稿を許可する最少の文字数"
     min_first_post_length: "最初の投稿(投稿本文)を許可する最少の文字数"
     min_private_message_post_length: "メッセージに投稿可能な最少の文字数"
@@ -613,7 +608,6 @@ ja:
     exclude_rel_nofollow_domains: "nofollowを付与すべきではないドメインのリスト。tld.comは、sub.tld.com も許可します。最低でもクローラーが全てのコンテンツを見つけるために、このサイトのトップレベルドメインを追加する必要があります。このサイトの他の部分が別ドメインに存在している場合、それも追加します"
     post_excerpt_maxlength: "投稿の引用/サマリの最大文字数"
     post_onebox_maxlength: "Discourse OneBox投稿の最大文字数"
-    onebox_domains_whitelist: "OneBoxを許可するドメインのリスト。これらのドメインはOpenGraphかoEmbedをサポートしている必要があります。http://iframely.com/debug でテストできます"
     logo_url: "サイトの左上に表示されるロゴ画像です。横幅の大きい長方形にする必要があります。空欄の場合、サイトタイトルが表示されます"
     logo_small_url: "サイトの左上に表示される小さいロゴ画像です。正方形である必要があります。下にスクロールすると表示されます。空欄の場合、ホームアイコンが表示されます"
     mobile_logo_url: "モバイルサイトの左上に固定で表示されるロゴ画像です。正方形である必要があります。空欄の場合 `logo_url` が利用されます 例: http://example.com/uploads/default/logo.png"
@@ -662,7 +656,6 @@ ja:
     redirect_users_to_top_page: "新規ユーザーと長く不在のユーザーをトップページに自動的にリダイレクトさせる"
     show_email_on_profile: "プロフィールのメールアドレスを表示(自分とスタッフのみ閲覧できます)"
     email_token_valid_hours: "パスワードリマインダ、アカウントアクティベート時のトークンを何時間有効にするか"
-    email_token_grace_period_hours: "パスワードリマインダ、アカウントアクティベート時のトークンを無効するときに、何時間猶予を与えるか"
     enable_badges: "バッジ機能を有効にする"
     allow_index_in_robots_txt: "サーチエンジンにインデックスを許可するようにrobots.txtを指定する"
     email_domains_blacklist: "ユーザーがアカウント登録をすることができない、パイプ区切りのドメイン名のリスト。 例 : mailinator.com|trashmail.net"
@@ -794,8 +787,8 @@ ja:
     topic_post_like_heat_medium: "いいね数/ ポスト数の比率がこの比率を超えると、ポスト数のフィールドが適度に強調されます"
     topic_post_like_heat_high: "いいね数/ ポスト数の比率がこの比率を超えると、ポスト数のフィールドが強く強調されます"
     faq_url: "FAQが他のサイトにある場合、URLをここに指定します。"
-    tos_url: "他サイトに利用規約をホストしている場合は、フル URL をここに指定。"
-    privacy_policy_url: "他サイトにプライバシーポリシーをホストしている場合は、フル URL を個々に指定。"
+    tos_url: "他のサイトに利用規約を掲載している場合は、URLをここに指定してください。"
+    privacy_policy_url: "他のサイトにプライバシーポリシーを掲載している場合は、URLをここに指定してください。"
     white_listed_spam_host_domains: "スパムホスト検査から除外するドメインのリスト。新規ユーザはこれらのドメインでポスト内にリンクを作成することを制限されません"
     staff_like_weight: "スタッフにより「いいね!」された場合、どのくらい重み付けをするか"
     levenshtein_distance_spammer_emails: "スパマーのメールアドレスとマッチさせるとき、数文字違いの曖昧な一致でも許可する"
@@ -870,7 +863,6 @@ ja:
     embed_whitelist_selector: "embedを許可するエレメントのCSS Selector"
     embed_blacklist_selector: "embedから削除するエレメントのCSS Selector"
     notify_about_flags_after: "この数時間後に処理されていない通報がある場合は、contact_emailにメールを送信する。0を設定すると無効になります"
-    enable_cdn_js_debugging: "全てのJSにcrossorigin権限を追加することで、/logsに適切なエラーを表示することを許可する"
     show_create_topics_notice: "サイトにpublicなトピックが5よりも少ない場合、トピックを作成するための通知が管理者に表示される"
     delete_drafts_older_than_n_days: (n) 日間経過したドラフトを削除
     prevent_anons_from_downloading_files: "匿名ユーザーが添付ファイルをダウンロードするのを防止。警告: 画像ではなく、添付ファイルとして投稿された全てのファイルが対象です"
@@ -1015,34 +1007,8 @@ ja:
     subject_template: "[%{site_name}] メール送信テスト"
   new_version_mailer:
     subject_template: "[%{site_name}] Discourseの新しいバージョンがあります。"
-    text_body_template: |
-      最新版の[Discourse](http://www.discourse.org)が利用出来ます！
-
-      現在利用しているバージョン: %{installed_version}
-      新しいバージョン: **%{new_version}**
-
-      - 更新は**[ワンクリックブラウザ・アップグレード](%{base_url}/admin/upgrade)**から簡単にできます。
-
-      - 更新内容は[GitHubの更新履歴](https://github.com/discourse/discourse/commits/master)をご覧ください。
-
-      - [meta.discourse.org](http://meta.discourse.org)にて、Discourseに関するお知らせ、話し合い、サポートを行っています。
   new_version_mailer_with_notes:
     subject_template: "[%{site_name}] アップデートがあります"
-    text_body_template: |
-      最新版の[Discourse](http://www.discourse.org)が利用出来ます！
-
-      現在利用しているバージョン: %{installed_version}
-      新しいバージョン: **%{new_version}**
-
-      - 更新は**[ワンクリックブラウザ・アップグレード](%{base_url}/admin/upgrade)**から簡単にできます。
-
-      - 更新内容は[GitHubの更新履歴](https://github.com/discourse/discourse/commits/master)をご覧ください。
-
-      - [meta.discourse.org](http://meta.discourse.org)にて、Discourseに関するお知らせ、話し合い、サポートを行っています。
-
-      ### リリースノート
-
-      %{notes}
   queued_posts_reminder:
     subject_template:
       other: "[%{site_name}] %{count} 件の投稿がレビュー待ちです"
@@ -1062,61 +1028,45 @@ ja:
     welcome_user:
       subject_template: "%{site_name} へようこそ!"
       text_body_template: |
-        %{site_name}への参加ありがとうございます。ようこそ！
+        %{site_name}に参加していただきありがとうございます。
+        そしてようこそ！
 
         %{new_user_tips}
 
-        私たちは、[ガイドライン](%{base_url}/guidelines) を常に信じています
+        [ガイドライン](%{base_url}/guidelines) をよく読み、しっかり守りましょう。
 
-        楽しんでください!
+        それでは、楽しんでください！
 
         (もし[スタッフメンバー](%{base_url}/about) に新規ユーザーとして連絡する必要がある場合、このメッセージに返信してください)
     welcome_invite:
       subject_template: "%{site_name}へようこそ!"
       text_body_template: |
-        ようこそ%{site_name} へ！
-        あなたのアカウント**%{username}** を作成して、あなたはログインしています。
-        氏名の変更は [your user profile][prefs] より行ってください。
+        %{site_name}へようこそ！
+        アカウント **%{username}** を作成し、ログインしています。
 
-        次回ログインするときは、
+        名前の変更は [自分のユーザプロフィール][prefs] より行ってください。
 
-        1. かならず招待をうけたメールアドレスを使ってログインしてください。
+        次回からログインする際は、
 
-        2.[your user profile][prefs]でパスワードを設定して、ログインのときはそれを使用してください。
+        1. 招待時に使用したメールアドレスを使用してください。
+
+        2.[自分のユーザプロフィール][prefs]からパスワードを設定して、ログインのときは設定したパスワードを使用してください。
 
         %{new_user_tips} [civilized community behavior](%{base_url}/guidelines)をお守りいただき、健全なコミュニティとなるよう皆様のご協力をお願いいたします。
 
         それではお楽しみください!
 
-        (もし個人的に [staff members](%{base_url}/about) と連絡を取る必要がある場合、このメッセージに返信してください)
+        (もし、[スタッフ](%{base_url}/about) と連絡を取る必要がある場合はこのメッセージに返信してください)
 
         [prefs]: %{user_preferences_url}
     backup_succeeded:
       subject_template: "バックアップは正常に完了しました"
-      text_body_template: "バックアップが成功しました。\n [admin > backup section](%{base_url}/admin/backups) から、バックアップをダウンロードしてください"
     backup_failed:
       subject_template: "バックアップ失敗"
-      text_body_template: |
-        バックアップが失敗しました
-
-        ログ:
-
-        ```
-        %{logs}
-        ```
     restore_succeeded:
       subject_template: "復元が正常に完了しました"
-      text_body_template: "復元が完了しました。"
     restore_failed:
       subject_template: "復元に失敗しました"
-      text_body_template: |
-        リストアが失敗しました
-
-        ログ:
-
-        ```
-        %{logs}
-        ```
     bulk_invite_succeeded:
       subject_template: "ユーザの一括招待に成功しました。"
       text_body_template: "ユーザの一括招待が処理され、%{sent}通の招待メールを送信しました"
@@ -1146,7 +1096,6 @@ ja:
     email_reject_empty:
       subject_template: "[%{site_name}] Email issue -- 本文なし"
     email_reject_parsing:
-      subject_template: "[%{site_name}] Email issue -- 認識されていないコンテンツ"
       text_body_template: |
         申し訳ありません,あなたの %{destination} へのメール(titled %{former_title}) は動きませんでした
         メールから回答を見つける事ができませんでした。返信はメールのトップにあることを確認してください。インライン回答を見つける事はできません。
@@ -1200,13 +1149,8 @@ ja:
       subject_template: "[%{site_name}] [プライベートメッセージ] %{topic_title}"
     digest:
       why: "あなたが最後にアクセスした %{last_seen_at} 以降の %{site_link} のまとめです"
-      new_activity: "あなたのトピックおよびポストにおけるアクティビティ:"
-      top_topics: "人気の投稿"
-      other_new_topics: "人気のトピック"
+      unsubscribe: "このお知らせは%{site_link}から送信されました。購読を解除したい場合は%{unsubscribe_link}してください。"
       click_here: "ここをクリック"
-      read_more: "もっと読む"
-      more_topics: " %{new_topics_since_seen}個の新しいトピックがありました"
-      more_topics_category: "もっと新しいトピック:"
     mailing_list:
       new_topics: "新着トピック"
     forgot_password:
@@ -1244,6 +1188,23 @@ ja:
         %{base_url}/users/authorize-email/%{email_token}
     signup_after_approval:
       subject_template: "%{site_name} への参加承認完了!"
+      text_body_template: |
+        %{site_name}へようこそ！
+
+        スタッフが%{site_name}でのアカウントを承認しました。
+
+        アカウントを有効にするには以下のリンクをクリックしてください:
+        %{base_url}/users/activate-account/%{email_token}
+
+        上記のURLがクリック出来ない場合は、コピーし、ウェブブラウザのアドレスバーに貼り付けてください。
+
+        %{new_user_tips}
+
+        [ガイドライン](%{base_url}/guidelines)をよく読み、しっかり守りましょう。
+
+        それでは、お楽しみください！
+
+        (もし[スタッフメンバー](%{base_url}/about) に新規ユーザーとして連絡する必要がある場合、このメッセージに返信してください)
     signup:
       subject_template: "[%{site_name}] アカウントの確認"
       text_body_template: |
@@ -1310,10 +1271,91 @@ ja:
     title: "利用規約"
   privacy_topic:
     title: "プライバシーポリシー"
+    body: |
+      <a name="collect"></a>
+
+      ## [どのような情報を収集するのですか？](#collect)
+
+      あなたがこのサイトに登録すると、ここで共有された情報を読んだり、書いたり、評価したりして、フォーラムでの情報を集める事ができます。
+
+      このサイトに登録する際には、名前とメールアドレスの入力を求めることがあります。ただし、登録をすることなくこのサイトを利用することも可能です。あなたのメールアドレスは、固有のリンクを含んだメールで確認されます。そのリンクにアクセスした場合にメールアドレスを制御することとなります。
+
+      アカウントを登録し、投稿を行った際にはその投稿が行われたIPアドレスを記録します。また、このサーバーに対する全てのリクエストはIPアドレスを含むサーバーログとして保管されます。
+
+      <a name="use"></a>
+
+      ## [自分の情報を何に使うのですか？](#use)
+
+      このサイトで収集された情報は、次のいくつかの方法で使用されます:
+
+      *   パーソナライズ・エクスペリエンス &mdash; あなたの情報は、あなたや他のユーザーのニーズに対応するために役立ちます。
+      *   サイトの改善・最適化 &mdash; このサービスはあなたから受け取った情報やフィードバックに基づいて提供されるサイトの改善を行いつづけます。
+      *   サービスの向上 &mdash; あなたの情報は、ユーザーからの要求やサポートへより効果的に対応するために役立ちます。
+      *   定期メールの送信 &mdash; メールアドレスは、情報の送信、トピックの変更やユーザー名に関係するお知らせ、お問い合わせに関する返答、その他のリクエストや質問に関してお知らせするために使用されます。
+
+      <a name="protect"></a>
+
+      ## [自分の情報はどのように保護されるのですか？](#protect)
+
+      このサービスはあなたの個人情報の入力、送信、またはアクセスに際してあなたの個人情報の安全性を維持するために様々なセキュリティ手段をとっています
+      <a name="data-retention"></a>
+
+      ## [どのようにデータは保存されますか？](#data-retention)
+
+      このサービスは次のことを行います:
+
+      *   このサーバーへのすべての要求に対して、IPアドレスを含むサーバーログを90日以内に渡って保持します。
+      *   登録されたユーザーとその投稿に関連付けされたIPアドレスを5年以内に渡って保持します。
+      <a name="cookies"></a>
+
+      ## [クッキーを使用していますか？](#cookies)
+
+      はい。クッキーはあなたがウェブブラウザ上で許可した場合にコンピュータのストレージに転送される小さなファイルです。
+      これらのクッキーを使用すると、サイトでブラウザが識別され、登録済みのアカウントを持っている場合は登録済みのアカウントに関連付けがされます。
+
+      クッキーを使用して、今後再度閲覧された場合に前回のデータから設定を呼び出したり、今後の改善のためにサイトのトラフィックやサイトの相互作用に関する集計データを作成します。このサービスは、サイトを訪れた方との理解を深めるために、第三者のサービス提供者と契約することがあります。これらのサービス提供者というものは、このサービスでの業務を行ったり、改善するためにこのサービスの代わって収集された情報を使用することはできません。
+
+      <a name="disclose"></a>
+
+      ## [このサイトは外部に何らかの情報を開示していますか？](#disclose)
+
+      私たちは、個人を特定出来る情報を外部へ販売、取引、または他の方法で渡すことはありません。これには、このサイトを操作したり、業務を行ったり、サービスを提供するのに役立つ信頼できる第三者は含まれません。法令遵守、サイトポリシーの施行、このサービスや他の人の権利、財産または安全の保護のために適切であると判断した場合に、あなたの情報を公開する場合があります。ただし、マーケティングや広告、その他の目的で匿名での訪問者情報を他者へ提供することができます。
+
+      <a name="third-party"></a>
+
+      ## [サードパーティのリンク](#third-party)
+
+      ときどき、このサービスの方針にもとづいてこのサイトや第三者のサービスを提供することがあります。これらの第三者のサイトには、個別の独立したプライバシーポリシーがあります。従って、これらのリンク先のサイトに関するコンテンツや活動にかんしては一切責任を負いません。ですが、サイトの完全性やこれらのサイトに関するフィードバックは非常に重要なものであると認識しております。
+
+      <a name="coppa"></a>
+
+      ## [子供のオンライン・プライバシー保護法](#coppa)
+
+      このサイト、製品、サービスはすべて13歳以上の人を対象としております。このサーバーが米国にあり、13歳未満の場合はCOPPA ([Children's Online Privacy Protection Act](https://en.wikipedia.org/wiki/Children%27s_Online_Privacy_Protection_Act))にもとづいてこのサイトを使用しないでください。
+
+      <a name="online"></a>
+
+      ## [オンライン限定のプライバシーポリシー](#online)
+
+      このオンライン・プライバシーポリシーは、このサイトを通じて収集された情報のみに適用され、オフラインで収集される情報には適用されません。
+
+      <a name="consent"></a>
+
+      ## [あなたの同意](#consent)
+
+      このサービスを使用することにより、このサイトのプライバシーポリシーに同意するものとします。
+
+      <a name="changes"></a>
+
+      ## [プライバシーポリシーの変更](#changes)
+
+      プライバシーポリシーを変更する場合は、このページへ変更内容を掲載します。
+
+      この文章のライセンスはCC-BY-SAです。このページは2013年5月31日が最終更新です
   badges:
     editor:
       name: 編集者
-      description: 最初の投稿を編集する
+      description: はじめて投稿を編集する
     autobiographer:
       name: あなたはだれ？
       description: <a href="/my/preferences">プロフィール</a>をすべて書く

@@ -11,8 +11,18 @@ const CategoryList = Ember.ArrayProxy.extend({
 CategoryList.reopenClass({
   categoriesFrom(store, result) {
     const categories = CategoryList.create();
-    const users = Discourse.Model.extractByKey(result.featured_users, Discourse.User);
     const list = Discourse.Category.list();
+
+    let statPeriod = "all";
+    const minCategories = result.category_list.categories.length * 0.66;
+
+    ["week", "month"].some(period => {
+      const filteredCategories = result.category_list.categories.filter(c => c[`topics_${period}`] > 0);
+      if (filteredCategories.length >= minCategories) {
+        statPeriod = period;
+        return true;
+      }
+    });
 
     result.category_list.categories.forEach(c => {
       if (c.parent_category_id) {
@@ -23,12 +33,27 @@ CategoryList.reopenClass({
         c.subcategories = c.subcategory_ids.map(scid => list.findBy('id', parseInt(scid, 10)));
       }
 
-      if (c.featured_user_ids) {
-        c.featured_users = c.featured_user_ids.map(u => users[u]);
-      }
-
       if (c.topics) {
         c.topics = c.topics.map(t => Discourse.Topic.create(t));
+      }
+
+
+      switch(statPeriod) {
+        case "week":
+        case "month":
+          const stat = c[`topics_${statPeriod}`];
+          const unit = I18n.t(statPeriod);
+          if (stat > 0) {
+            c.stat = `<span class="value">${stat}</span> / <span class="unit">${unit}</span>`;
+            c.statTitle = I18n.t("categories.topic_stat_sentence", { count: stat, unit: unit });
+            c["pick" + statPeriod[0].toUpperCase() + statPeriod.slice(1)] = true;
+            break;
+          }
+        default:
+          c.stat = `<span class="value">${c.topics_all_time}</span>`;
+          c.statTitle = I18n.t("categories.topic_sentence", { count: c.topics_all_time });
+          c.pickAll = true;
+          break;
       }
 
       categories.pushObject(store.createRecord('category', c));

@@ -6,6 +6,7 @@ class Category < ActiveRecord::Base
   include Positionable
   include HasCustomFields
   include CategoryHashtag
+  include AnonCacheInvalidator
 
   belongs_to :topic, dependent: :destroy
   belongs_to :topic_only_relative_url,
@@ -15,6 +16,8 @@ class Category < ActiveRecord::Base
 
   belongs_to :user
   belongs_to :latest_post, class_name: "Post"
+  belongs_to :uploaded_logo, class_name: "Upload"
+  belongs_to :uploaded_background, class_name: "Upload"
 
   has_many :topics
   has_many :category_users
@@ -27,6 +30,8 @@ class Category < ActiveRecord::Base
   has_many :category_groups, dependent: :destroy
   has_many :groups, through: :category_groups
 
+  has_and_belongs_to_many :web_hooks
+
   validates :user_id, presence: true
   validates :name, if: Proc.new { |c| c.new_record? || c.name_changed? },
                    presence: true,
@@ -36,24 +41,27 @@ class Category < ActiveRecord::Base
 
   validate :email_in_validator
 
-  validates :logo_url, upload_url: true
-  validates :background_url, upload_url: true
-
   validate :ensure_slug
+
+  after_create :create_category_definition
+
   before_save :apply_permissions
   before_save :downcase_email
   before_save :downcase_name
-  after_create :create_category_definition
-
-  after_save :publish_category
-  after_destroy :publish_category_deletion
-
-  after_update :rename_category_definition, if: :name_changed?
-
-  after_create :delete_category_permalink
-  after_update :create_category_permalink, if: :slug_changed?
 
   after_save :publish_discourse_stylesheet
+  after_save :publish_category
+  after_save :reset_topic_ids_cache
+  after_save :clear_url_cache
+  after_save :index_search
+
+  after_destroy :reset_topic_ids_cache
+  after_destroy :publish_category_deletion
+
+  after_create :delete_category_permalink
+
+  after_update :rename_category_definition, if: :name_changed?
+  after_update :create_category_permalink, if: :slug_changed?
 
   has_one :category_search_data
   belongs_to :parent_category, class_name: 'Category'
@@ -64,8 +72,6 @@ class Category < ActiveRecord::Base
   has_many :category_tag_groups, dependent: :destroy
   has_many :tag_groups, through: :category_tag_groups
 
-  after_save :reset_topic_ids_cache
-  after_destroy :reset_topic_ids_cache
 
   scope :latest, -> { order('topic_count DESC') }
 
@@ -187,9 +193,7 @@ SQL
     self.topic_id ? query.where(['topics.id <> ?', self.topic_id]) : query
   end
 
-
-  # Internal: Generate the text of post prompting to enter category
-  # description.
+  # Internal: Generate the text of post prompting to enter category description.
   def self.post_template
     I18n.t("category.post_template", replace_paragraph: I18n.t("category.replace_paragraph"))
   end
@@ -213,13 +217,12 @@ SQL
   end
 
   def description_text
-    return nil unless description
+    return nil unless self.description
 
     @@cache ||= LruRedux::ThreadSafeCache.new(1000)
     @@cache.getset(self.description) do
-      Nokogiri::HTML(self.description).text
+      Nokogiri::HTML.fragment(self.description).text.strip
     end
-
   end
 
   def duplicate_slug?
@@ -427,9 +430,7 @@ SQL
 
   @@url_cache = DistributedCache.new('category_url')
 
-  after_save do
-    # parent takes part in url calculation
-    # any change could invalidate multiples
+  def clear_url_cache
     @@url_cache.clear
   end
 
@@ -468,9 +469,15 @@ SQL
   def create_category_permalink
     old_slug = changed_attributes["slug"]
     if self.parent_category
-      Permalink.create(url: "c/#{self.parent_category.slug}/#{old_slug}", category_id: id)
+      url = "c/#{self.parent_category.slug}/#{old_slug}"
     else
-      Permalink.create(url: "c/#{old_slug}", category_id: id)
+      url = "c/#{old_slug}"
+    end
+
+    if Permalink.where(url: url).exists?
+      Permalink.where(url: url).update_all(category_id: id)
+    else
+      Permalink.create(url: url, category_id: id)
     end
   end
 
@@ -485,6 +492,10 @@ SQL
 
   def publish_discourse_stylesheet
     DiscourseStylesheets.cache.clear
+  end
+
+  def index_search
+    SearchIndexer.index(self)
   end
 
   def self.find_by_slug(category_slug, parent_category_slug=nil)
@@ -529,14 +540,17 @@ end
 #  email_in_allow_strangers      :boolean          default(FALSE)
 #  topics_day                    :integer          default(0)
 #  posts_day                     :integer          default(0)
-#  logo_url                      :string
-#  background_url                :string
 #  allow_badges                  :boolean          default(TRUE), not null
 #  name_lower                    :string(50)       not null
 #  auto_close_based_on_last_post :boolean          default(FALSE)
 #  topic_template                :text
 #  suppress_from_homepage        :boolean          default(FALSE)
+#  all_topics_wiki               :boolean          default(FALSE)
 #  contains_messages             :boolean
+#  sort_order                    :string
+#  sort_ascending                :boolean
+#  uploaded_logo_id              :integer
+#  uploaded_background_id        :integer
 #
 # Indexes
 #

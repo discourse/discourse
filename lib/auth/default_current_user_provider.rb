@@ -5,7 +5,10 @@ class Auth::DefaultCurrentUserProvider
 
   CURRENT_USER_KEY ||= "_DISCOURSE_CURRENT_USER".freeze
   API_KEY ||= "api_key".freeze
+  USER_API_KEY ||= "HTTP_USER_API_KEY".freeze
+  USER_API_CLIENT_ID ||= "HTTP_USER_API_CLIENT_ID".freeze
   API_KEY_ENV ||= "_DISCOURSE_API".freeze
+  USER_API_KEY_ENV ||= "_DISCOURSE_USER_API".freeze
   TOKEN_COOKIE ||= "_t".freeze
   PATH_INFO ||= "PATH_INFO".freeze
   COOKIE_ATTEMPTS_PER_MIN ||= 10
@@ -75,13 +78,38 @@ class Auth::DefaultCurrentUserProvider
       @env[API_KEY_ENV] = true
     end
 
+    # user api key handling
+    if api_key = @env[USER_API_KEY]
+
+      limiter_min = RateLimiter.new(nil, "user_api_min_#{api_key}", SiteSetting.max_user_api_reqs_per_minute, 60)
+      limiter_day = RateLimiter.new(nil, "user_api_day_#{api_key}", SiteSetting.max_user_api_reqs_per_day, 86400)
+
+      unless limiter_day.can_perform?
+        limiter_day.performed!
+      end
+
+      unless  limiter_min.can_perform?
+        limiter_min.performed!
+      end
+
+      current_user = lookup_user_api_user_and_update_key(api_key, @env[USER_API_CLIENT_ID])
+      raise Discourse::InvalidAccess unless current_user
+
+      limiter_min.performed!
+      limiter_day.performed!
+
+      @env[USER_API_KEY_ENV] = true
+    end
+
     @env[CURRENT_USER_KEY] = current_user
   end
 
   def refresh_session(user, session, cookies)
+    return if is_api?
+
     if user && (!user.auth_token_updated_at || user.auth_token_updated_at <= 1.hour.ago)
       user.update_column(:auth_token_updated_at, Time.zone.now)
-      cookies[TOKEN_COOKIE] = { value: user.auth_token, httponly: true, expires: SiteSetting.maximum_session_age.hours.from_now }
+      cookies[TOKEN_COOKIE] = cookie_hash(user)
     end
     if !user && cookies.key?(TOKEN_COOKIE)
       cookies.delete(TOKEN_COOKIE)
@@ -97,10 +125,19 @@ class Auth::DefaultCurrentUserProvider
                           auth_token_updated_at: Time.zone.now)
     end
 
-    cookies[TOKEN_COOKIE] = { value: user.auth_token, httponly: true, expires: SiteSetting.maximum_session_age.hours.from_now }
+    cookies[TOKEN_COOKIE] = cookie_hash(user)
     make_developer_admin(user)
     enable_bootstrap_mode(user)
     @env[CURRENT_USER_KEY] = user
+  end
+
+  def cookie_hash(user)
+    {
+      value: user.auth_token,
+      httponly: true,
+      expires: SiteSetting.maximum_session_age.hours.from_now,
+      secure: SiteSetting.force_https
+    }
   end
 
   def make_developer_admin(user)
@@ -136,7 +173,12 @@ class Auth::DefaultCurrentUserProvider
   # api has special rights return true if api was detected
   def is_api?
     current_user
-    @env[API_KEY_ENV]
+    !!(@env[API_KEY_ENV])
+  end
+
+  def is_user_api?
+    current_user
+    !!(@env[USER_API_KEY_ENV])
   end
 
   def has_auth_cookie?
@@ -149,6 +191,20 @@ class Auth::DefaultCurrentUserProvider
   end
 
   protected
+
+  def lookup_user_api_user_and_update_key(user_api_key, client_id)
+    if api_key = UserApiKey.where(key: user_api_key, revoked_at: nil).includes(:user).first
+      unless api_key.allow?(@env)
+        raise Discourse::InvalidAccess
+      end
+
+      if client_id.present? && client_id != api_key.client_id
+        api_key.update_columns(client_id: client_id)
+      end
+
+      api_key.user
+    end
+  end
 
   def lookup_api_user(api_key_value, request)
     if api_key = ApiKey.where(key: api_key_value).includes(:user).first

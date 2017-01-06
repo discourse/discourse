@@ -40,10 +40,9 @@ end
 if seed_welcome_topics
   puts "Seeding welcome topics"
 
-  PostCreator.create(Discourse.system_user, raw: I18n.t('assets_topic_body'), title: "Assets for the site design", skip_validations: true, category: staff ? staff.name : nil)
+  PostCreator.create(Discourse.system_user, raw: I18n.t('assets_topic_body'), title: I18n.t('assets_topic_title'), skip_validations: true, category: staff ? staff.name : nil)
 
-  welcome = File.read(Rails.root + 'docs/WELCOME-TO-DISCOURSE.md')
-  post = PostCreator.create(Discourse.system_user, raw: welcome, title: "Welcome to Discourse", skip_validations: true)
+  post = PostCreator.create(Discourse.system_user, raw: I18n.t('discourse_welcome_topic.body'), title: I18n.t('discourse_welcome_topic.title'), skip_validations: true)
   post.topic.update_pinned(true, true)
 
   lounge = Category.find_by(id: SiteSetting.lounge_category_id)
@@ -63,4 +62,33 @@ if seed_welcome_topics
                       title: DiscoursePluginRegistry.seed_data["admin_quick_start_title"] || "READ ME FIRST: Admin Quick Start Guide",
                       skip_validations: true,
                       category: staff ? staff.name : nil)
+end
+
+
+
+# run this later, cause we need to make sure new application controller resilience is in place first
+duration = Rails.env.production? ? 60 : 0
+if Topic.exec_sql("SELECT 1 FROM schema_migration_details
+                  WHERE EXISTS(
+                      SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS
+                      WHERE table_schema = 'public' AND table_name = 'topics' AND column_name = 'inappropriate_count'
+                    ) AND
+                    name = 'AddTopicColumnsBack' AND
+                    created_at < (current_timestamp at time zone 'UTC' - interval '#{duration} minutes')
+                 ").to_a.length > 0
+
+
+  Topic.transaction do
+    STDERR.puts "Removing superflous topic columns!"
+    %w[
+    inappropriate_count
+    bookmark_count
+    off_topic_count
+    illegal_count
+    notify_user_count
+].each do |column|
+      User.exec_sql("ALTER TABLE topics DROP COLUMN IF EXISTS #{column}")
+    end
+
+  end
 end

@@ -97,29 +97,64 @@ class UserNotifications < ActionMailer::Base
     build_summary_for(user)
     min_date = opts[:since] || user.last_emailed_at || user.last_seen_at || 1.month.ago
 
-    @last_seen_at = short_date(user.last_seen_at || user.created_at)
+    # Fetch some topics and posts to show
+    digest_opts = {limit: SiteSetting.digest_topics + SiteSetting.digest_other_topics, top_order: true}
+    topics_for_digest = Topic.for_digest(user, min_date, digest_opts).to_a
+    if topics_for_digest.empty? && !user.user_option.try(:include_tl0_in_digests)
+      # Find some topics from new users that are at least 24 hours old
+      topics_for_digest = Topic.for_digest(user, min_date, digest_opts.merge(include_tl0: true)).where('topics.created_at < ?', 24.hours.ago).to_a
+    end
 
-    # A list of topics to show the user
-    @featured_topics = Topic.for_digest(user, min_date, limit: SiteSetting.digest_topics, top_order: true).to_a
+    @popular_topics = topics_for_digest[0,SiteSetting.digest_topics]
+    @other_new_for_you = topics_for_digest.size > SiteSetting.digest_topics ? topics_for_digest[SiteSetting.digest_topics..-1] : []
 
-    # Don't send email unless there is content in it
-    if @featured_topics.present?
-      featured_topic_ids = @featured_topics.map(&:id)
+    @popular_posts = if SiteSetting.digest_posts > 0
+      Post.order("posts.score DESC")
+          .for_mailing_list(user, min_date)
+          .where('posts.post_type = ?', Post.types[:regular])
+          .where('posts.deleted_at IS NULL AND posts.hidden = false AND posts.user_deleted = false')
+          .where("posts.post_number > ? AND posts.score > ?", 1, ScoreCalculator.default_score_weights[:like_score] * 5.0)
+          .limit(SiteSetting.digest_posts)
+    else
+      []
+    end
 
-      @new_topics_since_seen = Topic.new_since_last_seen(user, min_date, featured_topic_ids).count
-      if @new_topics_since_seen > SiteSetting.digest_topics
-        category_counts = Topic.new_since_last_seen(user, min_date, featured_topic_ids).group(:category_id).count
+    if @popular_topics.present?
+      # Try to find 3 interesting stats for the top of the digest
 
-        @new_by_category = []
-        if category_counts.present?
-          Category.where(id: category_counts.keys).each do |c|
-            @new_by_category << [c, category_counts[c.id]]
-          end
-          @new_by_category.sort_by! {|c| -c[1]}
-        end
+      new_topics_count = Topic.new_since_last_seen(user, min_date).count
+      if new_topics_count == 0
+        # We used topics from new users instead, so count should match
+        new_topics_count = topics_for_digest.size
+      end
+      @counts = [{label_key: 'user_notifications.digest.new_topics',
+                  value: new_topics_count,
+                  href: "#{Discourse.base_url}/new"}]
+
+      value = user.unread_notifications
+      @counts << {label_key: 'user_notifications.digest.unread_notifications', value: value, href: "#{Discourse.base_url}/my/notifications"} if value > 0
+
+      value = user.unread_private_messages
+      @counts << {label_key: 'user_notifications.digest.unread_messages', value: value, href: "#{Discourse.base_url}/my/messages"} if value > 0
+
+      if @counts.size < 3
+        value = user.unread_notifications_of_type(Notification.types[:liked])
+        @counts << {label_key: 'user_notifications.digest.liked_received', value: value, href: "#{Discourse.base_url}/my/notifications"} if value > 0
       end
 
-      @featured_topics, @new_topics = @featured_topics[0..4], @featured_topics[5..-1]
+      if @counts.size < 3
+        value = Post.for_mailing_list(user, min_date).where("posts.post_number > ?", 1).count
+        @counts << { label_key: 'user_notifications.digest.new_posts', value: value, href: "#{Discourse.base_url}/new" } if value > 0
+      end
+
+      if @counts.size < 3
+        value = User.real.where(active: true, staged: false).not_suspended.where("created_at > ?", min_date).count
+        @counts << { label_key: 'user_notifications.digest.new_users', value: value, href: "#{Discourse.base_url}/about" } if value > 0
+      end
+
+      @last_seen_at = short_date(user.last_seen_at || user.created_at)
+
+      @preheader_text = I18n.t('user_notifications.digest.preheader', last_seen_at: @last_seen_at)
 
       opts = {
         from_alias: I18n.t('user_notifications.digest.from', site_name: SiteSetting.title),
@@ -131,6 +166,7 @@ class UserNotifications < ActionMailer::Base
       build_email(user.email, opts)
     end
   end
+
 
   def user_replied(user, opts)
     opts[:allow_reply_by_email] = true
@@ -421,7 +457,8 @@ class UserNotifications < ActionMailer::Base
     @date            = short_date(Time.now)
     @base_url        = Discourse.base_url
     @site_name       = SiteSetting.email_prefix.presence || SiteSetting.title
-    @header_color    = ColorScheme.hex_for_name('header_background')
+    @header_color    = ColorScheme.hex_for_name('header_primary')
+    @header_bgcolor  = ColorScheme.hex_for_name('header_background')
     @anchor_color    = ColorScheme.hex_for_name('tertiary')
     @markdown_linker = MarkdownLinker.new(@base_url)
     @unsubscribe_key = UnsubscribeKey.create_key_for(@user, "digest")

@@ -33,6 +33,8 @@
 
   {{#if hasTopics}}
       {{topic-list
+          highlightLastVisited=true
+          top=top
           showTopicPostBadges=showTopicPostBadges
           showPosters=true
           currentUser=currentUser
@@ -46,6 +48,7 @@
           selected=selected
           expandGloballyPinned=expandGloballyPinned
           expandAllPinned=expandAllPinned
+          category=category
           topics=model.topics}}
   {{/if}}
 {{/discovery-topics-list}}

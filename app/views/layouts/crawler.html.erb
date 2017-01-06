@@ -5,53 +5,23 @@
     <title><%= content_for?(:title) ? yield(:title) + ' - ' + SiteSetting.title : SiteSetting.title %></title>
     <meta name="description" content="<%= @description_meta || SiteSetting.site_description %>">
     <%= render partial: "layouts/head" %>
+    <%- if rtl? %>
+        <%= DiscourseStylesheets.stylesheet_link_tag(mobile_view? ? :mobile_rtl : :desktop_rtl) %>
+    <%- else %>
+        <%= DiscourseStylesheets.stylesheet_link_tag(mobile_view? ? :mobile : :desktop) %>
+    <%- end %>
     <%- unless customization_disabled? %>
       <%= raw SiteCustomization.custom_head_tag(session[:preview_style]) %>
     <%- end %>
     <%= render_google_universal_analytics_code %>
     <%= yield :head %>
-    <style>
-      header img {
-        max-width: 90% !important;
-        padding-bottom: 10px;
-      }
-
-      img { max-width: 100%; width: auto; height: auto; }
-
-      #main-outlet > div {
-        margin-bottom: 15px;
-      }
-
-      footer nav a {
-        margin-right: 15px;
-      }
-
-      footer nav {
-        line-height: 30px;
-      }
-
-      body {
-        max-width: 98%;
-        padding-left: 1%;
-      }
-      .topic-list > div > a {
-        margin-right: 10px;
-      }
-      .topic-list > div .posts {
-          margin-left: 10px;
-      }
-      .topic-list > div {
-        margin-bottom: 15px;
-      }
-
-    </style>
   </head>
-  <body>
+  <body class="crawler">
     <%- unless customization_disabled? %>
       <%= SiteCustomization.custom_header(session[:preview_style], mobile_view? ? :mobile : :desktop) %>
     <%- end %>
     <header>
-      <a href="<%= path "/" %>"><img src="<%=SiteSetting.logo_url%>" alt="<%=SiteSetting.title%>" id="site-logo" style="max-width: 400px;"></a>
+      <a href="<%= path "/" %>"><img src="<%=SiteSetting.logo_url%>" alt="<%=SiteSetting.title%>" id="site-logo" style="max-width: 150px;"></a>
     </header>
     <div id="main-outlet" class="wrap">
       <%= yield %>
@@ -71,4 +41,5 @@
       <%= raw SiteCustomization.custom_body_tag(session[:preview_style]) %>
     <%- end %>
   </body>
+  <%= yield :after_body %>
 </html>

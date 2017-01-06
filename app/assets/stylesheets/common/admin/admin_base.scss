@@ -297,7 +297,7 @@ td.flaggers td {
   height: 150px;
 }
 
-.groups, .badges {
+.groups, .badges, .web-hook-container {
   .form-horizontal {
     label {
       font-weight: bold;
@@ -311,10 +311,22 @@ td.flaggers td {
       width: 350px;
     }
 
-    input[type="checkbox"] {
+    input[type="checkbox"], input[type="radio"] {
       width: 20px;
     }
   }
+}
+
+.text-successful {
+  color: $success;
+}
+
+.text-danger {
+  color: $danger;
+}
+
+.text-muted {
+  color: lighten($primary, 40);
 }
 
 .admin-nav {
@@ -394,7 +406,7 @@ td.flaggers td {
       float: left;
       width: 53%;
       padding-right: 20px;
-      .category-group {
+      .category-selector {
         width: 95%;
       }
       @media (max-width: $mobile-breakpoint) {
@@ -1216,6 +1228,21 @@ table.api-keys {
 
 }
 
+.hook-event {
+  display: inline-block;
+  width: 40%;
+
+  margin-left: 20px;
+
+  label {
+    display: inline-block;
+  }
+
+  p {
+    margin: 0 0 5px 25px;
+  }
+}
+
 .email-template {
   input {
     width: 100%;
@@ -1360,7 +1387,7 @@ table.api-keys {
   position: absolute;
 }
 
-.staff-actions, .screened-emails, .screened-urls, .screened-ip-addresses, .permalinks {
+.staff-actions, .screened-emails, .screened-urls, .screened-ip-addresses, .permalinks, .web-hook-events {
 
   border-bottom: dotted 1px dark-light-choose(scale-color($primary, $lightness: 75%), scale-color($secondary, $lightness: 25%));
 
@@ -1770,6 +1797,110 @@ table#user-badges {
     height: 150px;
     font-family: monospace;
     box-shadow: none;
+  }
+}
+
+.admin-list-item {
+  width: 100%;
+  border-top: 1px solid #e9e9e9;
+  padding: 0.25em 0;
+}
+
+// Webhook
+
+.web-hook-container {
+  > p {
+    padding-bottom: 10px;
+    border-bottom: darken($secondary, 10%) 1px solid;
+  }
+  .filters {
+    margin: 5px 0;
+    padding-bottom: 5px;
+    border-bottom: darken($secondary, 5%) 1px solid;
+  }
+  .instructions {
+    margin-top: 5px;
+  }
+  .subscription-choice {
+    margin-bottom: 10px;
+  }
+}
+
+.web-hook-direction {
+  button {
+    margin-right: 10px;
+  }
+}
+
+.web-hook-events {
+  li {
+    padding: 2px 0;
+  }
+
+  .col {
+    display: inline-block;
+    padding-top: 6px;
+    vertical-align: top;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+
+  .col.first {
+    width: 90px;
+  }
+
+  .col.event-id {
+    width: 300px;
+  }
+
+  .col.timestamp {
+    width: 150px;
+  }
+
+  .col.completion {
+    width: 220px;
+  }
+
+  .col.actions {
+    width: 305px;
+    padding-top: 0;
+    a {
+      text-decoration: underline;
+    }
+  }
+
+  .col.heading.actions {
+    padding: 4px 0;
+  }
+
+  .details {
+    display: block;
+    margin-top: 10px;
+  }
+  label {
+    font-size: 1.05em;
+  }
+}
+
+.web-hook-events-listing {
+  margin-top: 15px;
+  .alert {
+    margin: 15px 0 0 0;
+  }
+}
+
+.email-preview-digest {
+  .controls {
+    margin-left: 20px;
+    label {
+      display: inline;
+    }
+  }
+
+  .preview-output iframe {
+    width: 100%;
+    height: 600px;
+    border-width: 1px;
   }
 }
 

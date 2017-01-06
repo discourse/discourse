@@ -10,36 +10,38 @@ export default function(name, opts) {
     const appEvents = AppEvents.create();
     this.site = Discourse.Site.current();
 
-    this.container.register('site-settings:main', Discourse.SiteSettings, { instantiate: false });
-    this.container.register('app-events:main', appEvents, { instantiate: false });
-    this.container.register('capabilities:main', Ember.Object);
-    this.container.register('site:main', this.site, { instantiate: false });
-    this.container.injection('component', 'siteSettings', 'site-settings:main');
-    this.container.injection('component', 'appEvents', 'app-events:main');
-    this.container.injection('component', 'capabilities', 'capabilities:main');
-    this.container.injection('component', 'site', 'site:main');
+    this.registry.register('site-settings:main', Discourse.SiteSettings, { instantiate: false });
+    this.registry.register('app-events:main', appEvents, { instantiate: false });
+    this.registry.register('capabilities:main', Ember.Object);
+    this.registry.register('site:main', this.site, { instantiate: false });
+    this.registry.injection('component', 'siteSettings', 'site-settings:main');
+    this.registry.injection('component', 'appEvents', 'app-events:main');
+    this.registry.injection('component', 'capabilities', 'capabilities:main');
+    this.registry.injection('component', 'site', 'site:main');
 
     this.siteSettings = Discourse.SiteSettings;
 
-    autoLoadModules();
+    autoLoadModules(this.registry, this.registry);
 
     const store = createStore();
     if (!opts.anonymous) {
       const currentUser = Discourse.User.create({ username: 'eviltrout' });
       this.currentUser = currentUser;
-      this.container.register('current-user:main', this.currentUser, { instantiate: false });
-      this.container.register('topic-tracking-state:main',
+      this.registry.register('current-user:main', this.currentUser, { instantiate: false });
+      this.registry.register('topic-tracking-state:main',
                               TopicTrackingState.create({ currentUser }),
                               { instantiate: false });
     }
 
-    this.container.register('store:main', store, { instantiate: false });
+    this.registry.register('store:main', store, { instantiate: false });
 
     if (opts.setup) {
       opts.setup.call(this, store);
     }
 
-    andThen(() => this.render(opts.template));
+    andThen(() => {
+      return this.render(opts.template);
+    });
     andThen(() => opts.test.call(this, assert));
   });
 }

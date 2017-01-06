@@ -1,4 +1,9 @@
+import { mapRoutes } from 'discourse/mapping-router';
+
 moduleFor("controller:create-account", "controller:create-account", {
+  setup() {
+    this.registry.register('router:main', mapRoutes());
+  },
   needs: ['controller:modal', 'controller:login']
 });
 

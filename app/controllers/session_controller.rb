@@ -11,13 +11,16 @@ class SessionController < ApplicationController
   end
 
   def sso
-    return_path = if params[:return_path]
-      params[:return_path]
-    elsif session[:destination_url]
-      URI::parse(session[:destination_url]).path
-    else
-      path('/')
+    destination_url = cookies[:destination_url] || session[:destination_url]
+    return_path = params[:return_path] || path('/')
+
+    if destination_url && return_path == path('/')
+      uri = URI::parse(destination_url)
+      return_path = "#{uri.path}#{uri.query ? "?" << uri.query : ""}"
     end
+
+    session.delete(:destination_url)
+    cookies.delete(:destination_url)
 
     if SiteSetting.enable_sso?
       sso = DiscourseSingleSignOn.generate_sso(return_path)
@@ -115,7 +118,7 @@ class SessionController < ApplicationController
         if return_path !~ /^\/[^\/]/
           begin
             uri = URI(return_path)
-            return_path = path("/") unless uri.host == Discourse.current_hostname
+            return_path = path("/") unless SiteSetting.sso_allows_all_return_paths || uri.host == Discourse.current_hostname
           rescue
             return_path = path("/")
           end
@@ -166,7 +169,6 @@ class SessionController < ApplicationController
     login = params[:login].strip
     login = login[1..-1] if login[0] == "@"
 
-
     if user = User.find_by_username_or_email(login)
 
       # If their password is correct
@@ -215,6 +217,9 @@ class SessionController < ApplicationController
 
     RateLimiter.new(nil, "forgot-password-hr-#{request.remote_ip}", 6, 1.hour).performed!
     RateLimiter.new(nil, "forgot-password-min-#{request.remote_ip}", 3, 1.minute).performed!
+
+    RateLimiter.new(nil, "forgot-password-login-hour-#{params[:login].to_s[0..100]}", 12, 1.hour).performed!
+    RateLimiter.new(nil, "forgot-password-login-min-#{params[:login].to_s[0..100]}", 3, 1.minute).performed!
 
     user = User.find_by_username_or_email(params[:login])
     user_presence = user.present? && user.id != Discourse::SYSTEM_USER_ID && !user.staged

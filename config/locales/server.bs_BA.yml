@@ -10,13 +10,32 @@ bs_BA:
     short_date_no_year: "D MMM"
     short_date: "D MMM, YYYY"
     long_date: "MMMM D, YYYY h:mma"
+  datetime_formats: &datetime_formats
+    formats:
+      short: "%d.%m.%Y."
+      short_no_year: "%B %-d"
+      date_only: "%B %-d, %Y"
+      long: "%B %-d, %Y, %l:%M%P"
+  date:
+    month_names: [null, Januar, Februar, Mart, April, Maj, Juni, Juli, August, Septembar, Oktobar, Novembar, Decembar]
+    <<: *datetime_formats
+  time:
+    am: "am"
+    pm: "pm"
+    <<: *datetime_formats
   title: "Discourse"
   topics: "Topics"
   posts: "posts"
   loading: "Loading"
   powered_by_html: 'Powered by <a href="http://www.discourse.org">Discourse</a>, best viewed with JavaScript enabled'
   log_in: "Log In"
+  purge_reason: "Automatski obrisan kao napušten, deaktiviran račun"
   disable_remote_images_download_reason: "Remote images download was disabled because there wasn't enough disk space available."
+  anonymous: "Anoniman"
+  emails:
+    incoming:
+      default_subject: "Dolazna poruka pošte %{email}"
+      show_trimmed_content: "Prikaži skraćeni sadržaj"
   errors: &errors
     messages:
       too_long_validation: "is limited to %{max} characters; you entered %{length}."
@@ -24,8 +43,6 @@ bs_BA:
       taken: "has already been taken"
     embed:
       load_from_remote: "There was an error loading that post."
-  bulk_invite:
-    file_should_be_csv: "The uploaded file should be of csv or txt format."
   backup:
     operation_already_running: "An operation is currently running. Can't start a new job right now."
     backup_file_should_be_tar_gz: "The backup file should be a .tar.gz archive."
@@ -43,7 +60,6 @@ bs_BA:
   user_is_suspended: "Suspended users are not allowed to post."
   just_posted_that: "is too similar to what you recently posted"
   invalid_characters: "contains invalid characters"
-  is_invalid: "is invalid; try to be a little more descriptive"
   next_page: "next page →"
   prev_page: "← previous page"
   page_num: "Page %{num}"
@@ -152,7 +168,7 @@ bs_BA:
   assets_topic_body: "This is a permanent topic, visible only to staff, for storing images and files used in the site design. Don't delete it!\n\n\nHere's how:\n\n\n1. Reply to this topic.\n2. Upload all the images you wish to use for logos, favicons, and so forth here. (Use the upload toolbar icon in the post editor, or drag-and-drop or paste images.)\n3. Submit your reply to post it.\n4. Right click the images in your new post to get the path to the uploaded images, or click the edit icon to edit your post and retrieve the path to the images. Copy the image paths.\n5. Paste those image paths into [basic settings](/admin/site_settings/category/required).\n\n\nIf you need to enable different file type uploads, edit `authorized_extensions` in the [file settings](/admin/site_settings/category/files)."
   lounge_welcome:
     title: "Welcome to the Lounge"
-    body: |
+    body: |2
 
       Congratulations! :confetti_ball:
 
@@ -191,11 +207,19 @@ bs_BA:
     change_failed_explanation: "You attempted to demote %{user_name} to '%{new_trust_level}'. However their trust level is already '%{current_trust_level}'. %{user_name} will remain at '%{current_trust_level}' - if you wish to demote user lock trust level first"
   rate_limiter:
     too_many_requests: "We have a daily limit on how many times that action can be taken. Please wait %{time_left} before trying again."
+    hours:
+      one: "1 sat"
+      few: "Par sati"
+      other: "%{count} sati"
   datetime:
     distance_in_words:
       half_a_minute: "< 1m"
     distance_in_words_verbose:
       half_a_minute: "just now"
+      about_x_hours:
+        one: "Pred 1 sat"
+        few: "Pred par sati"
+        other: "Pred %{count} sata"
   password_reset:
     choose_new: "Odaberite novu šifru"
     choose: "Molimo vas odaberite šifru"
@@ -204,7 +228,7 @@ bs_BA:
     title: 'Resetuj Šifru'
     success: "Uspješno ste promjenili šifru i sada se možete ulogovati."
     success_unapproved: "Uspješno ste promjenili šifru."
-    continue: "Idi na Revolucionar.com"
+    continue: "Idi na %{site_name}"
   change_email:
     confirmed: "Your email has been updated."
     please_continue: "Continue to %{site_name}"
@@ -212,7 +236,7 @@ bs_BA:
   activation:
     already_done: "Link za konfirmaciju nije validan. Možda ste već aktivirani?"
     please_continue: "Vaš novi nalog je verifikovan, i možete se ulogovati."
-    continue_button: "Idi na Revolucionar.com"
+    continue_button: "Nastavi na %{site_name}"
     welcome_to: "Dobrodošli na %{site_name}!"
     approval_required: "A moderator must manually approve your new account before you can access this forum. You'll get an email when your account is approved!"
   post_action_types:
@@ -226,7 +250,7 @@ bs_BA:
       long_form: 'opomeni kao spam'
     inappropriate:
       title: 'Neprikladno'
-      description: 'Ovaj post sadrži tekst koji je uvredljiv i pogrdan. I kao takav kosi se sa <a href="/t/dobrodosli-na-revolucionar/8">našim pravilima korišćenja</a>.'
+      description: 'Ovaj post sadrži tekst koji bi razumna osoba smatrala uvredljivim, pogrdnim i neprikladan prema <a href="/guidelines">pravilima naše zajednice</a>.'
       long_form: 'opomeni kao neprikladno'
     notify_user:
       long_form: 'korisnik obavješten'
@@ -254,7 +278,7 @@ bs_BA:
       long_form: 'opomenuo kao spam'
     inappropriate:
       title: 'Inappropriate'
-      description: 'Ova tema sadrži tekst koji je uvredljiv i pogrdan. I kao takav kosi se sa <a href="/t/dobrodosli-na-revolucionar/8">našim pravilima korišćenja</a>.'
+      description: 'Ova tema sadrži tekst koji bi razumna osoba smatrala uvredljivim, pogrdnim i neprikladan prema <a href="/guidelines">pravilima naše zajednice</a>.'
       long_form: 'opomenuto kao neprikladno'
     notify_moderators:
       title: "Obavijesti Moderatore"
@@ -347,6 +371,8 @@ bs_BA:
       title: "Top Referred Topics"
       xaxis: "Topic"
       num_clicks: "Clicks"
+    time_to_first_response:
+      yaxis: "Prosječno vrijeme (hours)"
   dashboard:
     rails_env_warning: "Your server is running in %{env} mode."
     host_names_warning: "Your config/database.yml file is using the default localhost hostname. Update it to use your site's hostname."
@@ -360,14 +386,6 @@ bs_BA:
     s3_config_warning: 'The server is configured to upload files to s3, but at least one the following setting is not set: s3_access_key_id, s3_secret_access_key or s3_upload_bucket. Go to <a href="/admin/site_settings">the Site Settings</a> and update the settings. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">See "How to set up image uploads to S3?" to learn more</a>.'
     s3_backup_config_warning: 'The server is configured to upload backups to s3, but at least one the following setting is not set: s3_access_key_id, s3_secret_access_key or s3_backup_bucket. Go to <a href="/admin/site_settings">the Site Settings</a> and update the settings. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">See "How to set up image uploads to S3?" to learn more</a>.'
     image_magick_warning: 'The server is configured to create thumbnails of large images, but ImageMagick is not installed. Install ImageMagick using your favorite package manager or <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">download the latest release</a>.'
-    default_logo_warning: "You haven't customized the logo images for your site. Update logo_url, logo_small_url, and favicon_url in the <a href='/admin/site_settings'>Site Settings</a>."
-    contact_email_missing: "You haven't provided a contact email for your site. Please update contact_email in the <a href='/admin/site_settings'>Site Settings</a>."
-    contact_email_invalid: "The site contact email is invalid. Please update contact_email in the <a href='/admin/site_settings'>Site Settings</a>."
-    title_nag: "The title Site Setting is still set to the default value. Please update it with your site's title in the <a href='/admin/site_settings'>Site Settings</a>."
-    site_description_missing: "The site_description setting is blank. Write a brief description of this forum in the <a href='/admin/site_settings'>Site Settings</a>."
-    consumer_email_warning: "Your site is configured to use Gmail (or another consumer email service) to send email. <a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>Gmail limits how many emails you can send</a>. Consider using an email service provider like mandrill.com to ensure email deliverability."
-    site_contact_username_warning: "The site_contact_username setting is blank. Please update it in the <a href='/admin/site_settings'>Site Settings</a>. Set it to the username of an admin user who should be the sender of system messages."
-    notification_email_warning: "The notification_email setting is blank. Please update it in the <a href='/admin/site_settings'>Site Settings</a>."
   site_settings:
     censored_words: "Words that will be automatically replaced with &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Auto-delete any hidden posts that stay hidden for more than 30 days."
@@ -402,7 +420,6 @@ bs_BA:
     add_rel_nofollow_to_user_content: "Add rel nofollow to all submitted user content, except for internal links (including parent domains). If you change this, you must rebake all posts with: \"rake posts:rebake\""
     post_excerpt_maxlength: "Maximum length of a post excerpt / summary."
     post_onebox_maxlength: "Maximum length of a oneboxed Discourse post in characters."
-    onebox_domains_whitelist: "A list of domains to allow oneboxing for; these domains should support OpenGraph or oEmbed. Test them at http://iframely.com/debug"
     apple_touch_icon_url: "Icon used for Apple touch devices. Recommended size is 144px by 144px."
     notification_email: "The from: email address used when sending all essential system emails. The domain specified here must have SPF, DKIM and reverse PTR records set correctly for email to arrive."
     email_custom_headers: "A pipe-delimited list of custom email headers"
@@ -441,7 +458,6 @@ bs_BA:
     redirect_users_to_top_page: "Automatically redirect new and long absent users to the top page."
     show_email_on_profile: "Show a user's email on their profile (only visible to themselves and staff)"
     email_token_valid_hours: "Forgot password / activate account tokens are valid for (n) hours."
-    email_token_grace_period_hours: "Forgot password / activate account tokens are still valid for a grace period of (n) hours after being redeemed."
     enable_badges: "Enable the badge system"
     allow_index_in_robots_txt: "Specify in robots.txt that this site is allowed to be indexed by web search engines."
     email_domains_blacklist: "A list of email domains that users are not allowed to register accounts with. Example: mailinator.com trashmail.net"
@@ -603,7 +619,6 @@ bs_BA:
     embed_whitelist_selector: "CSS selector for elements that are allowed in embeds."
     embed_blacklist_selector: "CSS selector for elements that are removed from embeds."
     notify_about_flags_after: "If there are flags that haven't been handled after this many hours, send an email to the contact_email. Set to 0 to disable."
-    enable_cdn_js_debugging: "Allow /logs to display proper errors by adding crossorigin permissions on all js includes."
     show_create_topics_notice: "If the site has fewer than 5 public topics, show a notice asking admins to create some topics."
     prevent_anons_from_downloading_files: "Prevent anonymous users from downloading files. WARNING: this will prevent any site assets posted as attachments from working."
     errors:
@@ -629,7 +644,7 @@ bs_BA:
   most_recent_poster: "Posljednji Autor"
   frequent_poster: "Čest Autor"
   redirected_to_top_reasons:
-    new_user: "Dobrodošli na Revolucionar! Ovo su najnovije popularne teme."
+    new_user: "Dobrodošli u našu zajednicu! Ovo su najnovije popularne teme."
     not_seen_in_a_month: "Dobrodošli nazad! Nismo vas odavno vidjeli. Ovo su najnovije popularne teme od vaše zadnje posjete."
   change_owner:
     post_revision_text: "Ownership transferred from %{old_user} to %{new_user}"
@@ -683,7 +698,7 @@ bs_BA:
       >
       > %{topic_excerpt}
 
-      na  Revolucionar.com
+      na
 
       > %{site_title} -- %{site_description}
 
@@ -691,9 +706,9 @@ bs_BA:
 
       %{invite_link}
 
-      Ova pozivnica dolazi od člana koji je zaslužio povjerenje na našem sajtu te smo mu/joj omogućili opciju slanja pozivnica. Što vama kao zvanici daje mogućnost da odgovorite na diskusiju bez registracije.
+      Ova pozivnica dolazi od člana koji je zaslužio povjerenje na našem sajtu, što vama kao zvanici daje mogućnost da odmah odgovorite na diskusiju.
   invite_forum_mailer:
-    subject_template: "%{invitee_name} vas poziva na novu socijalnu mrežu Revolucionar.com"
+    subject_template: "%{invitee_name} vas poziva da se pridružite %{site_domain_name}"
   invite_password_instructions:
     subject_template: "Set password for your %{site_name} account"
   test_mailer:
@@ -715,17 +730,19 @@ bs_BA:
     deferred_and_deleted: "Thanks for letting us know. We've removed the post."
   system_messages:
     welcome_user:
-      subject_template: "Dobrodošli na Revolucionar.com!"
+      subject_template: "Dobrodošli na %{site_name}!"
       text_body_template: |
-        Hvala što ste se pridružili Revolucionaru, dobrodošli!
+        Hvala što ste se pridružili %{site_name}, dobrodošli!
 
         %{new_user_tips}
 
         Mi vjerujemo u [civilizovanu diskusiju](%{base_url}/guidelines) na svakom nivou u svako doba.
 
         Uživajte!
+
+        (Ako trebate razgovarati s nekim od [članova osoblja](%{base_url}/about) kao novi korisnik, samo odgovorite na ovu poruku.)
     welcome_invite:
-      subject_template: "Dobrodošli na Revolucionar.com!"
+      subject_template: "Dobrodošli na %{site_name}!"
       text_body_template: |
         Hvala vam što ste primili pozivnicu na %{site_name} -- dobrodošli!
 
@@ -748,27 +765,10 @@ bs_BA:
       subject_template: "Backup completed successfully"
     backup_failed:
       subject_template: "Backup failed"
-      text_body_template: |
-        The backup has failed.
-
-        Here's the log:
-
-        ```
-        %{logs}
-        ```
     restore_succeeded:
       subject_template: "Restore completed successfully"
-      text_body_template: "The restore was successful."
     restore_failed:
       subject_template: "Restore failed"
-      text_body_template: |
-        The restore has failed.
-
-        Here's the log:
-
-        ```
-        %{logs}
-        ```
     bulk_invite_succeeded:
       subject_template: "Bulk user invite processed successfully"
       text_body_template: "Your bulk user invite file was processed, %{sent} invites mailed."
@@ -797,8 +797,6 @@ bs_BA:
       subject_template: "Email issue -- No Account"
     email_reject_empty:
       subject_template: "Email issue -- No Content"
-    email_reject_parsing:
-      subject_template: "Email issue -- Content unrecognized"
     email_reject_reply_key:
       subject_template: "Email issue -- Bad Reply Key"
     email_error_notification:
@@ -835,13 +833,7 @@ bs_BA:
       subject_template: "[%{site_name}] [PM] %{topic_title}"
     digest:
       why: "Ukratko šta se dešavalo na %{site_link} od vaše zadnje posjete %{last_seen_at}."
-      new_activity: "Nove aktivnosti ba vašim temama i postovima:"
-      top_topics: "Popularni postovi"
-      other_new_topics: "Popularne teme"
       click_here: "klikni ovdje"
-      read_more: "Pročitaj Više"
-      more_topics: "Postoji %{new_topics_since_seen} drugih novih tema otkako ste nas zadnji put posjetili %{last_seen_at}."
-      more_topics_category: "Postoji %{new_topics_since_seen} drugih novih tema u ovim kategorijama otkako ste nas zadnji put posjetili %{last_seen_at}:"
     forgot_password:
       subject_template: "[%{site_name}] Obnova Šifre"
       text_body_template: |
@@ -896,7 +888,7 @@ bs_BA:
     popular_topics: "Popularne"
     recent_topics: "Nove"
     see_more: "Više"
-    search_title: "Pretraži Revolucionar"
+    search_title: "Pretraži stranicu"
     search_google: "Google"
   login_required:
     welcome_message: |

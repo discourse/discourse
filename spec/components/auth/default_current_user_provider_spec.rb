@@ -153,5 +153,80 @@ describe Auth::DefaultCurrentUserProvider do
     freeze_time 3.hours.from_now
     expect(provider("/", "HTTP_COOKIE" => "_t=#{user.auth_token}").current_user).to eq(nil)
   end
+
+  context "user api" do
+    let :user do
+      Fabricate(:user)
+    end
+
+    let :api_key do
+      UserApiKey.create!(
+        application_name: 'my app',
+        client_id: '1234',
+        scopes: ['read'],
+        key: SecureRandom.hex,
+        user_id: user.id
+      )
+    end
+
+    it "allows user API access correctly" do
+      params = {
+        "REQUEST_METHOD" => "GET",
+        "HTTP_USER_API_KEY" => api_key.key,
+      }
+
+      good_provider = provider("/", params)
+
+      expect(good_provider.current_user.id).to eq(user.id)
+      expect(good_provider.is_api?).to eq(false)
+      expect(good_provider.is_user_api?).to eq(true)
+
+      expect {
+        provider("/", params.merge({"REQUEST_METHOD" => "POST"})).current_user
+      }.to raise_error(Discourse::InvalidAccess)
+
+    end
+
+    it "rate limits api usage" do
+
+      RateLimiter.stubs(:disabled?).returns(false)
+      limiter1 = RateLimiter.new(nil, "user_api_day_#{api_key.key}", 10, 60)
+      limiter2 = RateLimiter.new(nil, "user_api_min_#{api_key.key}", 10, 60)
+      limiter1.clear!
+      limiter2.clear!
+
+      SiteSetting.max_user_api_reqs_per_day = 3
+      SiteSetting.max_user_api_reqs_per_minute = 4
+
+      params = {
+        "REQUEST_METHOD" => "GET",
+        "HTTP_USER_API_KEY" => api_key.key,
+      }
+
+      3.times do
+        provider("/", params).current_user
+      end
+
+      expect {
+        provider("/", params).current_user
+      }.to raise_error(RateLimiter::LimitExceeded)
+
+
+      SiteSetting.max_user_api_reqs_per_day = 4
+      SiteSetting.max_user_api_reqs_per_minute = 3
+
+      limiter1.clear!
+      limiter2.clear!
+
+      3.times do
+        provider("/", params).current_user
+      end
+
+      expect {
+        provider("/", params).current_user
+      }.to raise_error(RateLimiter::LimitExceeded)
+
+    end
+  end
 end
 

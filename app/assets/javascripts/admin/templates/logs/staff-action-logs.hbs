@@ -1,0 +1,87 @@
+<div class="staff-action-logs-controls">
+  <a {{action "clearAllFilters"}} class="clear-filters filter {{unless filtersExists 'invisible'}}">
+    <span class="label">{{i18n 'admin.logs.staff_actions.clear_filters'}}</span>
+  </a>
+  {{#if actionFilter}}
+    <a {{action "clearFilter" "actionFilter"}} class="filter">
+      <span class="label">{{i18n 'admin.logs.action'}}</span>: {{actionFilter}}
+      {{fa-icon "times-circle"}}
+    </a>
+  {{/if}}
+  {{#if filters.acting_user}}
+    <a {{action "clearFilter" "acting_user"}} class="filter">
+      <span class="label">{{i18n 'admin.logs.staff_actions.staff_user'}}</span>: {{filters.acting_user}}
+      {{fa-icon "times-circle"}}
+    </a>
+  {{/if}}
+  {{#if filters.target_user}}
+    <a {{action "clearFilter" "target_user"}} class="filter">
+      <span class="label">{{i18n 'admin.logs.staff_actions.target_user'}}</span>: {{filters.target_user}}
+      {{fa-icon "times-circle"}}
+    </a>
+  {{/if}}
+  {{#if filters.subject}}
+    <a {{action "clearFilter" "subject"}} class="filter">
+      <span class="label">{{i18n 'admin.logs.staff_actions.subject'}}</span>: {{filters.subject}}
+      {{fa-icon "times-circle"}}
+    </a>
+  {{/if}}
+</div>
+
+<div class="pull-right">
+  {{d-button action="exportStaffActionLogs" label="admin.export_csv.button_text" icon="download"}}
+</div>
+<br>
+
+<div class="staff-action-logs-instructions {{unless showInstructions 'invisible'}}">
+  {{i18n 'admin.logs.staff_actions.instructions'}}
+</div>
+
+<div class='table staff-actions'>
+  <div class="heading-container">
+    <div class="col heading first staff_user">{{i18n 'admin.logs.staff_actions.staff_user'}}</div>
+    <div class="col heading action">{{i18n 'admin.logs.action'}}</div>
+    <div class="col heading subject">{{i18n 'admin.logs.staff_actions.subject'}}</div>
+    <div class="col heading created_at">{{i18n 'admin.logs.staff_actions.when'}}</div>
+    <div class="col heading details">{{i18n 'admin.logs.staff_actions.details'}}</div>
+    <div class="col heading context">{{i18n 'admin.logs.staff_actions.context'}}</div>
+    <div class="clearfix"></div>
+  </div>
+
+  {{#conditional-loading-spinner condition=loading}}
+    {{#each model as |item|}}
+      <div class='admin-list-item'>
+        <div class="col value first staff_user">
+          {{#link-to 'adminUser' item.acting_user}}{{avatar item.acting_user imageSize="tiny"}}{{/link-to}}
+          <a {{action "filterByStaffUser" item.acting_user}} class="btn btn-small">{{item.acting_user.username}}</a>
+        </div>
+        <div class="col value action">
+          <a {{action "filterByAction" item}} class="btn btn-small">{{item.actionName}}</a>
+        </div>
+        <div class="col value subject">
+          {{#if item.target_user}}
+            {{#link-to 'adminUser' item.target_user}}{{avatar item.target_user imageSize="tiny"}}{{/link-to}}
+            <a {{action "filterByTargetUser" item.target_user}} class="btn btn-small">{{item.target_user.username}}</a>
+          {{/if}}
+          {{#if item.subject}}
+            <a {{action "filterBySubject" item.subject}} title={{item.subject}}  class="btn btn-small">{{item.subject}}</a>
+          {{/if}}
+        </div>
+        <div class="col value created_at">{{age-with-tooltip item.created_at}}</div>
+        <div class="col value details">
+          {{{item.formattedDetails}}}
+          {{#if item.useCustomModalForDetails}}
+            <a {{action "showCustomDetailsModal" item}}>{{i18n 'admin.logs.staff_actions.show'}}</a>
+          {{/if}}
+          {{#if item.useModalForDetails}}
+            <a {{action "showDetailsModal" item}}>{{i18n 'admin.logs.staff_actions.show'}}</a>
+          {{/if}}
+        </div>
+        <div class="col value context">{{item.context}}</div>
+        <div class="clearfix"></div>
+      </div>
+    {{else}}
+      {{i18n 'search.no_results'}}
+    {{/each}}
+  {{/conditional-loading-spinner}}
+</div>

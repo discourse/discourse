@@ -6,6 +6,10 @@ class TopicEmbed < ActiveRecord::Base
   validates_presence_of :embed_url
   validates_uniqueness_of :embed_url
 
+  class FetchResponse
+    attr_accessor :title, :body, :author
+  end
+
   def self.normalize_url(url)
     url.downcase.sub(/\/$/, '').sub(/\-+/, '-').strip
   end
@@ -33,7 +37,7 @@ class TopicEmbed < ActiveRecord::Base
     # If there is no embed, create a topic, post and the embed.
     if embed.blank?
       Topic.transaction do
-        eh = EmbeddableHost.record_for_host(url)
+        eh = EmbeddableHost.record_for_url(url)
 
         creator = PostCreator.new(user,
                                   title: title,
@@ -76,11 +80,28 @@ class TopicEmbed < ActiveRecord::Base
     opts[:blacklist] = SiteSetting.embed_blacklist_selector if SiteSetting.embed_blacklist_selector.present?
     embed_classname_whitelist = SiteSetting.embed_classname_whitelist if SiteSetting.embed_classname_whitelist.present?
 
-    doc = Readability::Document.new(open(url).read, opts)
+    response = FetchResponse.new
+    html = open(url, allow_redirections: :safe).read
+
+    raw_doc = Nokogiri::HTML(html)
+    auth_element = raw_doc.at('meta[@name="author"]')
+    if auth_element.present?
+      response.author = User.where(username_lower: auth_element[:content].strip).first
+    end
+
+    read_doc = Readability::Document.new(html, opts)
+
+    title = raw_doc.title || ''
+    title.strip!
+
+    if SiteSetting.embed_title_scrubber.present?
+      title.sub!(Regexp.new(SiteSetting.embed_title_scrubber), '')
+      title.strip!
+    end
+    response.title = title
+    doc = Nokogiri::HTML(read_doc.content)
 
     tags = {'img' => 'src', 'script' => 'src', 'a' => 'href'}
-    title = doc.title
-    doc = Nokogiri::HTML(doc.content)
     doc.search(tags.keys.join(',')).each do |node|
       url_param = tags[node.name]
       src = node[url_param]
@@ -108,13 +129,17 @@ class TopicEmbed < ActiveRecord::Base
       end
     end
 
-    [title, doc.to_html]
+    response.body = doc.to_html
+    response
   end
 
-  def self.import_remote(user, url, opts=nil)
+  def self.import_remote(import_user, url, opts=nil)
     opts = opts || {}
-    title, body = find_remote(url)
-    TopicEmbed.import(user, url, opts[:title] || title, body)
+    response = find_remote(url)
+    response.title = opts[:title] if opts[:title].present?
+    import_user = response.author if response.author.present?
+
+    TopicEmbed.import(import_user, url, response.title, response.body)
   end
 
   # Convert any relative URLs to absolute. RSS is annoying for this.
@@ -164,7 +189,9 @@ class TopicEmbed < ActiveRecord::Base
   def self.expanded_for(post)
     Rails.cache.fetch("embed-topic:#{post.topic_id}", expires_in: 10.minutes) do
       url = TopicEmbed.where(topic_id: post.topic_id).pluck(:embed_url).first
-      _title, body = TopicEmbed.find_remote(url)
+      response = TopicEmbed.find_remote(url)
+
+      body = response.body
       body << TopicEmbed.imported_from_html(url)
       body
     end

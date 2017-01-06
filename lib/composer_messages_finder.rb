@@ -17,6 +17,8 @@ class ComposerMessagesFinder
 
   # Determines whether to show the user education text
   def check_education_message
+    return if @topic && @topic.archetype == Archetype.private_message
+
     if creating_topic?
       count = @user.created_topic_count
       education_key = 'education.new-topic'

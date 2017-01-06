@@ -1,0 +1,65 @@
+.groups-page {
+  h1 {
+    margin: 20px 0px;
+  }
+}
+
+.groups-table {
+  width: 100%;
+
+  th {
+    border-bottom: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
+    padding: 5px 0px;
+    text-align: left;
+  }
+
+  tr {
+    border-bottom: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
+
+    td {
+      color: dark-light-diff($primary, $secondary, 50%, -50%);
+      padding: 0.8em 0;
+    }
+
+    td.groups-user-count {
+      font-size: 1.2em;
+    }
+  }
+
+  .groups-info {
+    .groups-info-name {
+      font-weight: bold;
+      color: $primary;
+      color: dark-light-choose(scale-color($primary, $lightness: 30%), scale-color($secondary, $lightness: 70%));
+    }
+
+    .groups-info-full-name {
+      color: dark-light-choose(scale-color($primary, $lightness: 30%), scale-color($secondary, $lightness: 70%));
+    }
+
+    .groups-info-title {
+      font-size: 0.9em;
+      color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
+    }
+
+    span {
+      display: inline-block;
+      vertical-align: middle;
+    }
+
+    $size: 40px;
+
+    .avatar-flair {
+      background-size: $size;
+      height: $size;
+
+      i {
+        font-size: $size !important;
+      }
+    }
+
+    .avatar-flair-image {
+      width: $size;
+    }
+  }
+}

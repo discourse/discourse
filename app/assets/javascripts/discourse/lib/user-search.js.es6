@@ -59,7 +59,7 @@ function organizeResults(r, options) {
 
   if (r.groups) {
     r.groups.every(function(g) {
-      if (results.length > limit) return false;
+      if (results.length > limit && options.term !== g.name) return false;
       if (exclude.indexOf(g.name) === -1) {
         groups.push(g);
         results.push(g);

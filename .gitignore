@@ -8,13 +8,14 @@
 ._.DS_Store
 dump.rdb
 
+bin/*
+
 .sass-cache/*
 public/csv/*
 public/plugins/*
 public/tombstone/*
 
 # Ignore bundler config
-/bin
 /.bundle
 /.vagrant
 /.vagrantfile
@@ -29,9 +30,9 @@ config/discourse.pill
 config/discourse.conf
 
 # Ignore the default SQLite database and db dumps
+*.sql
+*.sql.gz
 /db/*.sqlite3
-/dbs/*.sql
-/dbs/*.sql.gz
 /db/structure.sql
 
 # Ignore all logfiles and tempfiles.
@@ -108,3 +109,6 @@ bundler_stubs/*
 
 vendor/bundle/*
 *.db
+
+#ignore jetbrains ide file
+*.iml

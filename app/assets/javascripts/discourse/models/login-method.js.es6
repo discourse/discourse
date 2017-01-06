@@ -22,7 +22,7 @@ const LoginMethod = Ember.Object.extend({
 let methods;
 let preRegister;
 
-export function findAll(siteSettings) {
+export function findAll(siteSettings, capabilities, isMobileDevice) {
   if (methods) { return methods; }
 
   methods = [];
@@ -34,7 +34,9 @@ export function findAll(siteSettings) {
         params.frameWidth = 850;
         params.frameHeight = 500;
       } else if (name === "facebook") {
-        params.frameHeight = 450;
+        params.frameWidth= 580;
+        params.frameHeight = 400;
+        params.displayPopup = true;
       }
 
       params.siteSettings = siteSettings;
@@ -55,6 +57,12 @@ export function findAll(siteSettings) {
     });
     preRegister = undefined;
   }
+
+  // On Mobile, Android or iOS always go with full screen
+  if (isMobileDevice || capabilities.isIOS || capabilities.isAndroid) {
+    methods.forEach(m=>m.set("fullScreenLogin", true));
+  }
+
   return methods;
 }
 

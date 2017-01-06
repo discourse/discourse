@@ -68,11 +68,11 @@ task "uploads:backfill_shas" => :environment do
     Upload.where(sha1: nil).find_each do |u|
       begin
         path = Discourse.store.path_for(u)
-        u.sha1 = Digest::SHA1.file(path).hexdigest
+        u.sha1 = Upload.generate_digest(path)
         u.save!
         putc "."
-      rescue Errno::ENOENT
-        putc "X"
+      rescue => e
+        puts "Skipping #{u.original_filename} (#{u.url}) #{e.message}"
       end
     end
   end
@@ -238,78 +238,96 @@ end
 ################################################################################
 
 task "uploads:clean_up" => :environment do
+  if ENV["RAILS_DB"]
+    clean_up_uploads
+  else
+    RailsMultisite::ConnectionManagement.each_connection { clean_up_uploads }
+  end
+end
 
-  RailsMultisite::ConnectionManagement.each_connection do |db|
-    puts "Cleaning up uploads and thumbnails for '#{db}'..."
+def clean_up_uploads
+  db = RailsMultisite::ConnectionManagement.current_db
 
-    if Discourse.store.external?
-      puts "This task only works for internal storages."
-      next
-    end
+  puts "Cleaning up uploads and thumbnails for '#{db}'..."
 
-    public_directory = "#{Rails.root}/public"
-
-    ##
-    ## DATABASE vs FILE SYSTEM
-    ##
-
-    # uploads & avatars
-    Upload.find_each do |upload|
-      path = "#{public_directory}#{upload.url}"
-      if !File.exists?(path)
-        upload.destroy rescue nil
-        putc "#"
-      else
-        putc "."
-      end
-    end
-
-    # optimized images
-    OptimizedImage.find_each do |optimized_image|
-      path = "#{public_directory}#{optimized_image.url}"
-      if !File.exists?(path)
-        optimized_image.destroy rescue nil
-        putc "#"
-      else
-        putc "."
-      end
-    end
-
-    ##
-    ## FILE SYSTEM vs DATABASE
-    ##
-
-    uploads_directory = "#{public_directory}/uploads/#{db}"
-
-    # avatars (no avatar should be stored in that old directory)
-    FileUtils.rm_rf("#{uploads_directory}/avatars") rescue nil
-
-    # uploads
-    Dir.glob("#{uploads_directory}/*/*.*").each do |f|
-      url = "/uploads/#{db}/" << f.split("/uploads/#{db}/")[1]
-      if !Upload.where(url: url).exists?
-        FileUtils.rm(f) rescue nil
-        putc "#"
-      else
-        putc "."
-      end
-    end
-
-    # optimized images
-    Dir.glob("#{uploads_directory}/_optimized/*/*/*.*").each do |f|
-      url = "/uploads/#{db}/_optimized/" << f.split("/uploads/#{db}/_optimized/")[1]
-      if !OptimizedImage.where(url: url).exists?
-        FileUtils.rm(f) rescue nil
-        putc "#"
-      else
-        putc "."
-      end
-    end
-
-    puts
-
+  if Discourse.store.external?
+    puts "This task only works for internal storages."
+    exit 1
   end
 
+  puts <<~OUTPUT
+  This task will remove upload records and files permanently.
+
+  Would you like to take a full backup before the clean up? (Y/N)
+  OUTPUT
+
+  if STDIN.gets.chomp.downcase == 'y'
+    puts "Starting backup..."
+    backuper = BackupRestore::Backuper.new(Discourse.system_user.id)
+    backuper.run
+    exit 1 unless backuper.success
+  end
+
+  public_directory = Rails.root.join("public").to_s
+
+  ##
+  ## DATABASE vs FILE SYSTEM
+  ##
+
+  # uploads & avatars
+  Upload.find_each do |upload|
+    path = File.join(public_directory, upload.url)
+
+    if !File.exists?(path)
+      upload.destroy!
+      putc "#"
+    else
+      putc "."
+    end
+  end
+
+  # optimized images
+  OptimizedImage.find_each do |optimized_image|
+    path = File.join(public_directory, optimized_image.url)
+
+    if !File.exists?(path)
+      optimized_image.destroy!
+      putc "#"
+    else
+      putc "."
+    end
+  end
+
+  ##
+  ## FILE SYSTEM vs DATABASE
+  ##
+
+  uploads_directory = File.join(public_directory, 'uploads', db).to_s
+
+  # avatars (no avatar should be stored in that old directory)
+  FileUtils.rm_rf("#{uploads_directory}/avatars")
+
+  # uploads and optimized images
+  Dir.glob("#{uploads_directory}/**/*.*").each do |file_path|
+    sha1 = Upload.generate_digest(file_path)
+    url = file_path.split(public_directory, 2)[1]
+
+    if (Upload.where(sha1: sha1).empty? &&
+        Upload.where(url: url).empty?) &&
+       (OptimizedImage.where(sha1: sha1).empty? &&
+        OptimizedImage.where(url: url).empty?)
+
+      FileUtils.rm(file_path)
+      putc "#"
+    else
+      putc "."
+    end
+  end
+
+  puts "Removing empty directories..."
+  puts `find #{uploads_directory} -type d -empty -exec rmdir {} \\;`
+
+  puts "Done!"
 end
 
 ################################################################################
@@ -318,50 +336,125 @@ end
 
 # list all missing uploads and optimized images
 task "uploads:missing" => :environment do
+  if ENV["RAILS_DB"]
+    list_missing_uploads
+  else
+    RailsMultisite::ConnectionManagement.each_connection do |db|
+      list_missing_uploads
+    end
+  end
+end
+
+def list_missing_uploads
+  if Discourse.store.external?
+    puts "This task only works for internal storages."
+    return
+  end
 
   public_directory = "#{Rails.root}/public"
 
-  RailsMultisite::ConnectionManagement.each_connection do |db|
+  Upload.find_each do |upload|
 
-    if Discourse.store.external?
-      puts "This task only works for internal storages."
-      next
+    # could be a remote image
+    next unless upload.url =~ /^\/[^\/]/
+
+    path = "#{public_directory}#{upload.url}"
+    bad = true
+    begin
+      bad = false if File.size(path) != 0
+    rescue
+      # something is messed up
     end
-
-
-    Upload.find_each do |upload|
-
-      # could be a remote image
-      next unless upload.url =~ /^\/[^\/]/
-
-      path = "#{public_directory}#{upload.url}"
-      bad = true
-      begin
-        bad = false if File.size(path) != 0
-      rescue
-        # something is messed up
-      end
-      puts path if bad
-    end
-
-    OptimizedImage.find_each do |optimized_image|
-
-      # remote?
-      next unless optimized_image.url =~ /^\/[^\/]/
-
-      path = "#{public_directory}#{optimized_image.url}"
-
-      bad = true
-      begin
-        bad = false if File.size(path) != 0
-      rescue
-        # something is messed up
-      end
-      puts path if bad
-    end
-
+    puts path if bad
   end
 
+  OptimizedImage.find_each do |optimized_image|
+
+    # remote?
+    next unless optimized_image.url =~ /^\/[^\/]/
+
+    path = "#{public_directory}#{optimized_image.url}"
+
+    bad = true
+    begin
+      bad = false if File.size(path) != 0
+    rescue
+      # something is messed up
+    end
+    puts path if bad
+  end
+end
+
+################################################################################
+#                              Recover from tombstone                          #
+################################################################################
+
+task "uploads:recover_from_tombstone" => :environment do
+  if ENV["RAILS_DB"]
+    recover_from_tombstone
+  else
+    RailsMultisite::ConnectionManagement.each_connection { recover_from_tombstone }
+  end
+end
+
+def recover_from_tombstone
+  if Discourse.store.external?
+    puts "This task only works for internal storages."
+    return
+  end
+
+  begin
+    original_setting = SiteSetting.max_image_size_kb
+    SiteSetting.max_image_size_kb = 10240
+    current_db = RailsMultisite::ConnectionManagement.current_db
+
+    public_path = Rails.root.join("public")
+    paths = Dir.glob(File.join(public_path, 'uploads', 'tombstone', current_db, '**', '*.*'))
+    max = paths.length
+
+    paths.each_with_index do |path, index|
+      filename = File.basename(path)
+      printf("%9d / %d (%5.1f%%)\n", (index + 1), max, (((index + 1).to_f / max.to_f) * 100).round(1))
+
+      Post.where("raw LIKE ?", "%#{filename}%").each do |post|
+        doc = Nokogiri::HTML::fragment(post.raw)
+        updated = false
+
+        doc.css("img[src]").each do |img|
+          url = img["src"]
+
+          next unless url =~ /^\/uploads\//
+
+          upload = Upload.find_by(url: url)
+
+          if !upload && url
+            printf "Restoring #{path}..."
+            tombstone_path = File.join(public_path, 'uploads', 'tombstone', url.gsub(/^\/uploads\//, ""))
+
+            if File.exists?(tombstone_path)
+              File.open(tombstone_path) do |file|
+                new_upload = Upload.create_for(Discourse::SYSTEM_USER_ID, file, File.basename(url), File.size(file))
+
+                if new_upload.persisted?
+                  printf "Restored into #{new_upload.url}\n"
+                  DbHelper.remap(url, new_upload.url)
+                  updated = true
+                else
+                  puts "Failed to create upload for #{url}: #{new_upload.errors.full_messages}."
+                end
+              end
+            else
+              puts "Failed to find file (#{tombstone_path}) in tombstone."
+            end
+          end
+        end
+
+        post.rebake! if updated
+      end
+    end
+  ensure
+    SiteSetting.max_image_size_kb = original_setting
+  end
 end
 
 ################################################################################
@@ -370,11 +463,11 @@ end
 
 # regenerate missing optimized images
 task "uploads:regenerate_missing_optimized" => :environment do
-  ENV["RAILS_DB"] ? regenerate_missing_optimized : regenerate_missing_optimized_all_sites
-end
-
-def regenerate_missing_optimized_all_sites
-  RailsMultisite::ConnectionManagement.each_connection { regenerate_missing_optimized }
+  if ENV["RAILS_DB"]
+    regenerate_missing_optimized
+  else
+    RailsMultisite::ConnectionManagement.each_connection { regenerate_missing_optimized }
+  end
 end
 
 def regenerate_missing_optimized
@@ -390,44 +483,54 @@ def regenerate_missing_optimized
   public_directory = "#{Rails.root}/public"
   missing_uploads = Set.new
 
-  OptimizedImage.includes(:upload)
-                .where("LENGTH(COALESCE(url, '')) > 0")
-                .where("width > 0 AND height > 0")
-                .find_each do |optimized_image|
+  avatar_upload_ids = UserAvatar.all.pluck(:custom_upload_id, :gravatar_upload_id).flatten.compact
 
-    upload = optimized_image.upload
+  default_scope = OptimizedImage.includes(:upload)
 
-    next unless optimized_image.url =~ /^\/[^\/]/
-    next unless upload.url =~ /^\/[^\/]/
+  [
+    default_scope
+      .where("optimized_images.upload_id IN (?)", avatar_upload_ids),
 
-    thumbnail = "#{public_directory}#{optimized_image.url}"
-    original = "#{public_directory}#{upload.url}"
+    default_scope
+      .where("optimized_images.upload_id NOT IN (?)", avatar_upload_ids)
+      .where("LENGTH(COALESCE(url, '')) > 0")
+      .where("width > 0 AND height > 0")
+  ].each do |scope|
+    scope.find_each do |optimized_image|
+      upload = optimized_image.upload
 
-    if !File.exists?(thumbnail) || File.size(thumbnail) <= 0
-      # make sure the original image exists locally
-      if (!File.exists?(original) || File.size(original) <= 0) && upload.origin.present?
-        # try to fix it by redownloading it
-        begin
-          downloaded = FileHelper.download(upload.origin, SiteSetting.max_image_size_kb.kilobytes, "discourse-missing", true) rescue nil
-          if downloaded && downloaded.size > 0
-            FileUtils.mkdir_p(File.dirname(original))
-            File.open(original, "wb") { |f| f.write(downloaded.read) }
+      next unless optimized_image.url =~ /^\/[^\/]/
+      next unless upload.url =~ /^\/[^\/]/
+
+      thumbnail = "#{public_directory}#{optimized_image.url}"
+      original = "#{public_directory}#{upload.url}"
+
+      if !File.exists?(thumbnail) || File.size(thumbnail) <= 0
+        # make sure the original image exists locally
+        if (!File.exists?(original) || File.size(original) <= 0) && upload.origin.present?
+          # try to fix it by redownloading it
+          begin
+            downloaded = FileHelper.download(upload.origin, SiteSetting.max_image_size_kb.kilobytes, "discourse-missing", true) rescue nil
+            if downloaded && downloaded.size > 0
+              FileUtils.mkdir_p(File.dirname(original))
+              File.open(original, "wb") { |f| f.write(downloaded.read) }
+            end
+          ensure
+            downloaded.try(:close!) if downloaded.respond_to?(:close!)
           end
-        ensure
-          downloaded.try(:close!) if downloaded.respond_to?(:close!)
         end
-      end
 
-      if File.exists?(original) && File.size(original) > 0
-        FileUtils.mkdir_p(File.dirname(thumbnail))
-        OptimizedImage.resize(original, thumbnail, optimized_image.width, optimized_image.height)
-        putc "#"
+        if File.exists?(original) && File.size(original) > 0
+          FileUtils.mkdir_p(File.dirname(thumbnail))
+          OptimizedImage.resize(original, thumbnail, optimized_image.width, optimized_image.height)
+          putc "#"
+        else
+          missing_uploads << original
+          putc "X"
+        end
       else
-        missing_uploads << original
-        putc "X"
+        putc "."
       end
-    else
-      putc "."
     end
   end
 
@@ -451,4 +554,99 @@ end
 task "uploads:stop_migration" => :environment do
   SiteSetting.migrate_to_new_scheme = false
   puts "Migration stoped!"
+end
+
+task "uploads:analyze", [:cache_path, :limit] => :environment do |_, args|
+  now = Time.zone.now
+  current_db = RailsMultisite::ConnectionManagement.current_db
+
+  puts "Analyzing uploads for '#{current_db}'... This may take awhile...\n"
+  cache_path = args[:cache_path]
+
+  current_db = RailsMultisite::ConnectionManagement.current_db
+  uploads_path = Rails.root.join('public', 'uploads', current_db)
+
+  path =
+    if cache_path
+      cache_path
+    else
+      path = "/tmp/#{current_db}-#{now.to_i}-paths.txt"
+      FileUtils.touch("/tmp/#{now.to_i}-paths.txt")
+      `find #{uploads_path} -type f -printf '%s %h/%f\n' > #{path}`
+      path
+    end
+
+  extensions = {}
+  paths_count = 0
+
+  File.readlines(path).each do |line|
+    size, file_path = line.split(" ", 2)
+
+    paths_count += 1
+    extension = File.extname(file_path).chomp.downcase
+    extensions[extension] ||= {}
+    extensions[extension]["count"] ||= 0
+    extensions[extension]["count"] += 1
+    extensions[extension]["size"] ||= 0
+    extensions[extension]["size"] += size.to_i
+  end
+
+  uploads_count = Upload.count
+  optimized_images_count = OptimizedImage.count
+
+  puts <<~REPORT
+  Report for '#{current_db}'
+  -----------#{'-' * current_db.length}
+  Number of `Upload` records in DB: #{uploads_count}
+  Number of `OptimizedImage` records in DB: #{optimized_images_count}
+  **Total DB records: #{uploads_count + optimized_images_count}**
+
+  Number of images in uploads folder: #{paths_count}
+  ------------------------------------#{'-' * paths_count.to_s.length}
+
+  REPORT
+
+  helper = Class.new do
+    include ActionView::Helpers::NumberHelper
+  end
+
+  helper = helper.new
+
+  printf "%-15s | %-15s | %-15s\n", 'extname', 'total size', 'count'
+  puts "-" * 45
+
+  extensions.sort_by { |_, value| value['size'] }.reverse.each do |extname, value|
+    printf "%-15s | %-15s | %-15s\n", extname, helper.number_to_human_size(value['size']), value['count']
+  end
+
+  puts "\n"
+
+  limit = args[:limit] || 10
+
+  sql = <<~SQL
+    SELECT
+      users.username,
+      COUNT(uploads.user_id) AS num_of_uploads,
+      SUM(uploads.filesize) AS total_size_of_uploads,
+      COUNT(optimized_images.id) AS num_of_optimized_images
+    FROM users
+    INNER JOIN uploads ON users.id = uploads.user_id
+    INNER JOIN optimized_images ON uploads.id = optimized_images.upload_id
+    GROUP BY users.id
+    ORDER BY total_size_of_uploads DESC
+    LIMIT #{limit}
+  SQL
+
+  puts "Users using the most disk space"
+  puts "-------------------------------\n"
+  printf "%-25s | %-25s | %-25s | %-25s\n", 'username', 'total size of uploads', 'number of uploads', 'number of optimized images'
+  puts "-" * 110
+
+  User.exec_sql(sql).values.each do |username, num_of_uploads, total_size_of_uploads, num_of_optimized_images|
+    printf "%-25s | %-25s | %-25s | %-25s\n", username, helper.number_to_human_size(total_size_of_uploads), num_of_uploads, num_of_optimized_images
+  end
+
+  puts "\n"
+  puts "List of file paths @ #{path}"
+  puts "Duration: #{Time.zone.now - now} seconds"
 end

@@ -1,13 +1,17 @@
 require_dependency 'discourse_hub'
 require_dependency 'user_name_suggester'
 require_dependency 'rate_limiter'
+require_dependency 'wizard'
+require_dependency 'wizard/builder'
 
 class UsersController < ApplicationController
 
   skip_before_filter :authorize_mini_profiler, only: [:avatar]
   skip_before_filter :check_xhr, only: [:show, :password_reset, :update, :account_created, :activate_account, :perform_account_activation, :user_preferences_redirect, :avatar, :my_redirect, :toggle_anon, :admin_login]
 
-  before_filter :ensure_logged_in, only: [:username, :update, :user_preferences_redirect, :upload_user_image, :pick_avatar, :destroy_user_image, :destroy, :check_emails]
+  before_filter :ensure_logged_in, only: [:username, :update, :user_preferences_redirect, :upload_user_image,
+                                          :pick_avatar, :destroy_user_image, :destroy, :check_emails, :topic_tracking_state]
+
   before_filter :respond_to_suspicious_request, only: [:create]
 
   # we need to allow account creation with bad CSRF tokens, if people are caching, the CSRF token on the
@@ -31,7 +35,11 @@ class UsersController < ApplicationController
   def show
     raise Discourse::InvalidAccess if SiteSetting.hide_user_profiles_from_public && !current_user
 
-    @user = fetch_user_from_params(include_inactive: current_user.try(:staff?))
+    @user = fetch_user_from_params(
+      { include_inactive: current_user.try(:staff?) },
+      [{ user_profile: :card_image_badge }]
+    )
+
     user_serializer = UserSerializer.new(@user, scope: guardian, root: 'user')
 
     # TODO remove this options from serializer
@@ -140,6 +148,16 @@ class UsersController < ApplicationController
     render json: failed_json, status: 403
   end
 
+  def topic_tracking_state
+    user = fetch_user_from_params
+    guardian.ensure_can_edit!(user)
+
+    report = TopicTrackingState.report(user)
+    serializer = ActiveModel::ArraySerializer.new(report, each_serializer: TopicTrackingStateSerializer)
+
+    render json: MultiJson.dump(serializer)
+  end
+
   def badge_title
     params.require(:user_badge_id)
 
@@ -224,11 +242,20 @@ class UsersController < ApplicationController
     usernames -= groups
     usernames.each(&:downcase!)
 
+    # Create a New Topic Scenario is not supported (per conversation with codinghorror)
+    # https://meta.discourse.org/t/taking-another-1-7-release-task/51986/7
+    cannot_see = []
+    topic_id = params[:topic_id]
+    unless topic_id.blank?
+      topic = Topic.find_by(id: topic_id)
+      usernames.each{ |username| cannot_see.push(username) unless Guardian.new(User.find_by_username(username)).can_see?(topic) }
+    end
+
     result = User.where(staged: false)
                  .where(username_lower: usernames)
                  .pluck(:username_lower)
 
-    render json: {valid: result, valid_groups: groups, mentionable_groups: mentionable_groups}
+    render json: {valid: result, valid_groups: groups, mentionable_groups: mentionable_groups, cannot_see: cannot_see}
   end
 
   def render_available_true
@@ -397,6 +424,8 @@ class UsersController < ApplicationController
           Invite.invalidate_for_email(@user.email) # invite link can't be used to log in anymore
           secure_session["password-#{token}"] = nil
           logon_after_password_reset
+
+          return redirect_to(wizard_path) if Wizard.user_requires_completion?(@user)
         end
       end
     end
@@ -493,6 +522,7 @@ class UsersController < ApplicationController
       if Guardian.new(@user).can_access_forum?
         @user.enqueue_welcome_message('welcome_user') if @user.send_welcome_message
         log_on_user(@user)
+        return redirect_to(wizard_path) if Wizard.user_requires_completion?(@user)
       else
         @needs_approval = true
       end
@@ -538,7 +568,7 @@ class UsersController < ApplicationController
 
     if params[:include_groups] == "true"
       to_render[:groups] = Group.search_group(term).map do |m|
-        {name: m.name, usernames: []}
+        { name: m.name, full_name: m.full_name }
       end
     end
 
@@ -546,7 +576,7 @@ class UsersController < ApplicationController
       to_render[:groups] = Group.mentionable(current_user)
                                 .where("name ILIKE :term_like", term_like: "#{term}%")
                                 .map do |m|
-        {name: m.name, usernames: []}
+        { name: m.name, full_name: m.full_name }
       end
     end
 
@@ -678,7 +708,7 @@ class UsersController < ApplicationController
     end
 
     def user_params
-      result = params.permit(:name, :email, :password, :username)
+      result = params.permit(:name, :email, :password, :username, :date_of_birth)
                      .merge(ip_address: request.remote_ip,
                             registration_ip_address: request.remote_ip,
                             locale: user_locale)

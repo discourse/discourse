@@ -48,9 +48,6 @@ nl:
         x_seconds:
           one: "1s"
           other: "%{count}s"
-        less_than_x_minutes:
-          one: "< 1m"
-          other: "< %{count}m"
         x_minutes:
           one: "1m"
           other: "%{count}m"
@@ -139,6 +136,7 @@ nl:
         enabled: 'zichtbaar %{when}'
         disabled: 'niet zichtbaar %{when}'
     topic_admin_menu: "Adminacties voor topic"
+    wizard_required: "Het is tijd om je forum te configureren! <a href='%{url}' data-auto-route='true'>Start de Setup Wizard</a>!"
     emails_are_disabled: "Alle uitgaande e-mails zijn uitgeschakeld door een beheerder. Geen enkele vorm van e-mail notificatie wordt verstuurd."
     bootstrap_mode_enabled: "Om het lanceren van een website makkelijker te maken, zit je nu in bootstrapmodus. Alle nieuwe gebruikers krijgen trustlevel 1 en zullen dagelijkse e-mailupdates krijgen. Dit wordt automatisch uitgeschakeld wanneer het totale gebruikersaantal hoger dan %{min_users} gebruikers wordt."
     bootstrap_mode_disabled: "Bootstrap modus zal uitgeschakeld worden in de komende 24 uur."
@@ -324,17 +322,10 @@ nl:
         one: "1 lid"
         other: "%{count} leden"
     groups:
-      empty:
-        posts: "Er is geen enkel bericht door leden van deze groep."
-        members: "Er zijn geen leden in deze groep."
-        mentions: "Deze groep wordt niet benoemd."
-        messages: "Er zijn geen berichten voor deze groep."
-        topics: "Er is geen topic gemaakt door de leden van deze groep."
       add: "Voeg toe"
       selector_placeholder: "Voeg leden toe"
       owner: "eigenaar"
       visible: "Groep is zichtbaar voor alle gebruikers"
-      index: "Groepen"
       title:
         one: "groep"
         other: "groepen"
@@ -356,10 +347,10 @@ nl:
       notifications:
         watching:
           title: "In de gaten houden"
-          description: "Je krijgt een notificatie bij elke nieuwe post of bericht, en het aantal nieuwe reacties wordt weergeven."
+          description: "Je krijgt een notificatie bij elk nieuw bericht, en het aantal nieuwe reacties wordt weergeven."
         watching_first_post:
           title: "Eerste bericht in de gaten houden"
-          description: "Je krijgt alleen een notificatie van de eerste post in elk nieuw topic in deze groep."
+          description: "Je krijgt alleen een notificatie van het eerste bericht in elk nieuw topic in deze groep."
         tracking:
           title: "Volgen"
           description: "Je krijgt een notificatie wanneer iemand jouw @name noemt of reageert, en het aantal nieuwe reacties wordt weergeven."
@@ -402,14 +393,12 @@ nl:
       latest_by: "Laatste door"
       toggle_ordering: "schakel sorteermethode"
       subcategories: "Subcategorieën"
-      topic_stats: "Het aantal nieuwe topics."
+      topic_sentence:
+        one: "1 topic"
+        other: "%{count} topics"
       topic_stat_sentence:
         one: "%{count} nieuw topic in de afgelopen %{unit}."
         other: "%{count} nieuwe topics in de afgelopen %{unit}."
-      post_stats: "Het aantal nieuwe berichten."
-      post_stat_sentence:
-        one: "%{count} nieuw bericht in de afgelopen %{unit}."
-        other: "%{count} nieuwe berichten in de afgelopen %{unit}."
     ip_lookup:
       title: IP-adres lookup
       hostname: Hostname
@@ -432,7 +421,11 @@ nl:
       profile: "Profiel"
       mute: "Negeer"
       edit: "Wijzig voorkeuren"
-      download_archive: "Download mijn berichten"
+      download_archive:
+        button_text: "Download mijn berichten"
+        confirm: "Weet je zeker dat je je berichten wilt downloaden?"
+        success: "Downloaden is gestart, je krijgt een bericht als het proces is afgerond."
+        rate_limit_error: "Berichten kunnen slechts één keer per dag gedownload worden, probeer het morgen nog eens."
       new_private_message: "Nieuw bericht"
       private_message: "Bericht"
       private_messages: "Berichten"
@@ -456,6 +449,7 @@ nl:
         each_browser_note: "Let op: Je moet deze optie instellen voor elke browser die je gebruikt."
       dismiss_notifications: "Markeer alles als gelezen"
       dismiss_notifications_tooltip: "Markeer alle ongelezen berichten als gelezen"
+      first_notification: "Je eerste notificatie! Selecteer het om te beginnen."
       disable_jump_reply: "Niet naar je nieuwe bericht gaan na reageren"
       dynamic_favicon: "Laat aantal nieuwe / bijgewerkte topics zien in favicon"
       external_links_in_new_tab: "Open alle externe links in een nieuw tabblad"
@@ -478,6 +472,7 @@ nl:
           Genegeerde topics en categorieën zitten niet in deze e-mails.
         daily: "Verzend dagelijkse updates"
         individual: "Verstuur een e-mail voor elk nieuw bericht"
+        individual_no_echo: "Stuur een e-mail voor elk nieuw bericht behalve die van mijzelf."
         many_per_day: "Stuur mij een e-mail voor elk nieuw bericht (ongeveer {{dailyEmailEstimate}} per dag)"
         few_per_day: "Stuur mij een e-mail voor elk nieuw bericht (ongeveer 2 per dag)"
       tag_settings: "Tags"
@@ -509,6 +504,10 @@ nl:
       muted_topics_link: "Toon genegeerde topics"
       watched_topics_link: "Toon in de gaten gehouden topics"
       automatically_unpin_topics: "Topics automatisch lospinnen als ik het laatste bericht bereik."
+      apps: "Apps"
+      revoke_access: "Toegang Intrekken"
+      undo_revoke_access: "Toegang Intrekken Ongedaan Maken"
+      api_approved: "Goedgekeurd:"
       staff_counters:
         flags_given: "behulpzame markeringen"
         flagged_posts: "gemarkeerde berichten"
@@ -597,6 +596,7 @@ nl:
         title: "Interfacetaal"
         instructions: "De taal waarin het forum wordt getoond. Deze verandert als je de pagina herlaadt."
         default: "(standaard)"
+        any: "elke"
       password_confirmation:
         title: "Nogmaals het wachtwoord"
       last_posted: "Laatste bericht"
@@ -654,6 +654,7 @@ nl:
         after_4_minutes: "na 4 minuten"
         after_5_minutes: "na 5 minuten"
         after_10_minutes: "na 10 minuten"
+      notification_level_when_replying: "Als ik een bericht in een topic plaats , zet dat topic op"
       invited:
         search: "Typ om uitnodigingen te zoeken..."
         title: "Uitnodigingen"
@@ -684,13 +685,12 @@ nl:
         account_age_days: "leeftijd van account in dagen"
         create: "Stuur een uitnodiging"
         generate_link: "Kopieer uitnodigingslink"
-        generated_link_message: '<p>Uitnodigingslink succesvol aangemaakt!</p><p><input class="invite-link-input" style="width: 75%;" type="text" value="%{inviteLink}"></p><p>Uitnodigingslink is alleen geldig voor dit e-mailadres: <b>%{invitedEmail}</b></p>'
+        link_generated: "Uitnodigingslink is succesvol aangemaakt!"
+        valid_for: "De uitnodigingslink is alleen geldig voor dit e-mailadres: %{email}"
         bulk_invite:
-          none: "Je hebt nog niemand uitgenodigd. Je kan individueel uitnodigen of een groep mensen tegelijk door <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>een groepsuitnodiging-bestand te uploaden</a>"
+          none: "Je hebt nog niemand hier uitgenodigd. Je kunt individueel uitnodigen, of een groep mensen tegelijk uitnodigen door <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>een CSV-bestand te uploaden</a>."
           text: "Groepsuitnodiging via bestand"
-          uploading: "Uploaden..."
           success: "Het uploaden van het bestand is gelukt, je krijgt een notificatie via een bericht als het proces afgerond is."
-          error: "Het uploaden van '{{filename}}' is niet gelukt: {{message}}"
       password:
         title: "Wachtwoord"
         too_short: "Je wachtwoord is te kort."
@@ -788,12 +788,14 @@ nl:
     too_few_topics_notice: "Laten <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>we de discussie starten!</a> Er zijn al <strong>%{currentTopics} / %{requiredTopics}</strong> topics. Nieuwe bezoekers hebben conversaties nodig om te lezen en reageren."
     too_few_posts_notice: "Laten <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>we de discussie starten!</a>. Er zijn op dit moment <strong>%{currentPosts} / %{requiredPosts}</strong> berichten. Nieuwe bezoekers hebben conversaties nodig om te lezen en reageren."
     logs_error_rate_notice:
-      reached: "<b>[%{relativeAge}]</b> Huidige waarde van <a href='%{url}' target='_blank'>%{rate}</a> heeft de limiet van %{siteSettingRate} bereikt, zoals ingesteld in de site-instellingen."
-      exceeded: "<b>[%{relativeAge}]</b> Huidige waarde van <a href='%{url}' target='_blank'>%{rate}</a> heeft de limiet van %{siteSettingRate} overschreden, zoals ingesteld in de site-instellingen."
+      reached: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> heeft site-instelling limiet van %{siteSettingRate} bereikt."
+      exceeded: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> heeft site-instelling limiet van %{siteSettingRate} overschreden."
       rate:
         one: "1 fout/%{duration}"
         other: "%{count} fouten/%{duration}"
     learn_more: "leer meer..."
+    all_time: 'totaal'
+    all_time_desc: 'aantal aangemaakte topics'
     year: 'jaar'
     year_desc: 'topics die in de afgelopen 365 dagen gemaakt zijn'
     month: 'maand'
@@ -815,7 +817,7 @@ nl:
       hide_forever: "nee, dank je"
       hidden_for_session: "Ok, ik vraag het je morgen. Je kunt altijd 'Log in' gebruiken om in te loggen."
       intro: "Hey! :heart_eyes: Praat mee in deze discussie, meld je aan met een account"
-      value_prop: "Wanneer je een account aangemaakt hebt, wordt daarin bijgehouden wat je gelezen hebt, zodat je direct door kan lezen vanaf waar je gestopt bent. Je kan op de site en via e-mail notificaties krijgen wanneer nieuwe posts gemaakt zijn, en je kan ook nog posts liken. :heartbeat:"
+      value_prop: "Wanneer je een account aangemaakt hebt, wordt daarin bijgehouden wat je gelezen hebt, zodat je direct door kan lezen vanaf waar je gestopt bent. Je kan op de site en via e-mail notificaties krijgen wanneer nieuwe berichten geplaatst zijn, en je kan ook nog berichten liken. :heartbeat:"
     summary:
       enabled_description: "Je leest een samenvatting van dit topic: alleen de meeste interessante berichten zoals bepaald door de community. "
       description: "Er zijn <b>{{replyCount}}</b> reacties."
@@ -904,6 +906,10 @@ nl:
       twitter: "Twitter"
       emoji_one: "Emoji One"
       win10: "Win10"
+    category_page_style:
+      categories_only: "Alleen categorieën"
+      categories_with_featured_topics: "Categorieën met aanbevolen topics"
+      categories_and_latest_topics: "Categorieën en recente topics"
     shortcut_modifier_key:
       shift: 'Shift'
       ctrl: 'Ctrl'
@@ -913,16 +919,23 @@ nl:
       more_emoji: "meer..."
       options: "Opties"
       whisper: "Fluister"
+      unlist: "onzichtbaar"
       add_warning: "Dit is een officiële waarschuwing."
       toggle_whisper: "Fluistermode in- of uitschakelen"
+      toggle_unlisted: "Onzichtbaar in- of uitschakelen"
       posting_not_on_topic: "In welke topic wil je je antwoord plaatsen?"
       saving_draft_tip: "opslaan..."
       saved_draft_tip: "opgeslagen"
       saved_local_draft_tip: "lokaal opgeslagen"
       similar_topics: "Jouw topic lijkt op..."
       drafts_offline: "concepten offline"
-      group_mentioned: "Door het noemen van {{group}}, sta je op het punt om <a href='{{group_link}}'>{{count}} mensen</a> op de hoogte te brengen - weet je dit zeker?"
-      duplicate_link: "Het ziet er naar uit dat je link naar <b>{{domain}}</b> al genoemd is in deze topic door <b>@{{username}}</b> in <a href='{{post_url}}'>een bericht {{ago}}</a> – weet je zeker dat je dit opnieuw wilt posten?"
+      group_mentioned:
+        one: "Door het noemen van de groep {{group}}, sta je op het punt om <a href='{{group_link}}'>1 persoon</a> op de hoogte te brengen – weet je dit zeker?"
+        other: "Door het noemen van de groep {{group}}, sta je op het punt om <a href='{{group_link}}'>{{count}} personen</a> op de hoogte te brengen – weet je dit zeker?"
+      cannot_see_mention:
+        category: "Je hebt {{username}} genoemd, maar het lid zal geen notificatie krijgen omdat het geen toegang heeft tot deze categorie. Je zult {{username}} moeten toevoegen aan een groep die toegang heeft tot deze categorie."
+        private: "Je hebt {{username}} genoemd, maar het lid zal geen notificatie krijgen omdat het dit persoonlijke bericht niet kan zien. Je zult {{username}} moeten uitnodigen voor dit PB."
+      duplicate_link: "Het ziet er naar uit dat je link naar <b>{{domain}}</b> al genoemd is in deze topic door <b>@{{username}}</b> in <a href='{{post_url}}'>een bericht {{ago}}</a> – weet je zeker dat je dit opnieuw wilt plaatsen?"
       error:
         title_missing: "Titel is verplicht"
         title_too_short: "Titel moet uit minstens {{min}} tekens bestaan"
@@ -943,6 +956,7 @@ nl:
       title_placeholder: "Waar gaat de discussie over in één korte zin?"
       edit_reason_placeholder: "vanwaar de wijziging?"
       show_edit_reason: "(geef een reden)"
+      topic_featured_link_placeholder: "Plaats gegeven link met titel."
       reply_placeholder: "Typ hier. Gebruik Markdown, BBCode, of HTML om op te maken. Sleep of plak afbeeldingen."
       view_new_post: "Bekijk je nieuwe bericht."
       saving: "Opslaan"
@@ -952,8 +966,10 @@ nl:
       show_preview: 'toon voorbeeld &raquo;'
       hide_preview: '&laquo; verberg voorbeeld'
       quote_post_title: "Citeer hele bericht"
+      bold_label: "B"
       bold_title: "Vet"
       bold_text: "Vetgedrukte tekst"
+      italic_label: "I"
       italic_title: "Cursief"
       italic_text: "Cursieve tekst"
       link_title: "Weblink"
@@ -971,6 +987,7 @@ nl:
       olist_title: "Genummerde lijst"
       ulist_title: "Lijst met bullets"
       list_item: "Lijstonderdeel"
+      heading_label: "H"
       heading_title: "Kop"
       heading_text: "Kop"
       hr_title: "Horizontale lijn"
@@ -979,6 +996,9 @@ nl:
       modal_ok: "OK"
       modal_cancel: "Annuleer"
       cant_send_pm: "Sorry, je kan geen bericht sturen naar %{username}."
+      yourself_confirm:
+        title: "Ben je vergeten om ontvangers toe te voegen?"
+        body: "Het bericht wordt nu alleen naar jezelf verzonden!"
       admin_options_title: "Optionele stafinstellingen voor deze topic"
       auto_close:
         label: "Tijd waarna topic automatisch wordt gesloten:"
@@ -1062,13 +1082,13 @@ nl:
       most_liked: "Meest geliked"
       select_all: "Alles selecteren"
       clear_all: "Wis Alles"
+      too_short: "Je zoekterm is te kort."
       result_count:
         one: "1 resultaat voor <span class='term'>\"{{term}}\"</span>"
         other: "{{count}} resultaat voor <span class='term'>\"{{term}}\"</span>"
       title: "zoek naar topics, berichten, gebruikers of categorieën"
       no_results: "Geen resultaten gevonden."
       no_more_results: "Geen resultaten meer gevonden."
-      search_help: Zoek in help
       searching: "Zoeken..."
       post_format: "#{{post_number}} door {{username}}"
       context:
@@ -1076,13 +1096,54 @@ nl:
         category: "Doorzoek de #{{category}} categorie"
         topic: "Zoek in deze topic"
         private_messages: "Zoek berichten"
+      advanced:
+        title: Uitgebreid Zoeken
+        posted_by:
+          label: Gepost door
+        in_category:
+          label: In Categorie
+        in_group:
+          label: In Groep
+        with_badge:
+          label: Meld Badge
+        with_tags:
+          label: Met Tags
+        filters:
+          label: Alleen topics/posts vinden...
+          likes: die ik geliked heb
+          posted: waar ik in gepost heb
+          watching: die ik watch
+          tracking: die ik volg
+          private: die in mijn berichten staan
+          bookmarks: die ik opgeslagen heb als favoriet
+          first: die het eerste bericht zijn
+          pinned: die gepind zijn
+          unpinned: die niet gepind zijn
+          wiki: die een wiki zijn
+        statuses:
+          label: Waar onderwerpen
+          open: open zijn
+          closed: gesloten zijn
+          archived: gearchiveerd zijn
+          noreplies: geen reacties hebben
+          single_user: een enkele gebruiker bevatten
+        post:
+          count:
+            label: Minimaal Bericht Aantal
+          time:
+            label: Geplaatst
+            before: voor
+            after: na
     hamburger_menu: "ga naar een andere topiclijst of categorie"
     new_item: "nieuw"
     go_back: 'ga terug'
     not_logged_in_user: 'gebruikerspagina met samenvatting van huidige activiteit en voorkeuren'
     current_user: 'ga naar je gebruikerspagina'
     topics:
+      new_messages_marker: "laatste bezoek"
       bulk:
+        select_all: "Alles selecteren"
+        clear_all: "Alles wissen"
         unlist_topics: "Topics van lijst halen"
         reset_read: "markeer als ongelezen"
         delete: "Verwijder topics"
@@ -1134,7 +1195,9 @@ nl:
       unsubscribe:
         stop_notifications: "Je zal nu minder notificaties ontvangen voor <strong>{{title}}</strong>"
         change_notification_state: "Je huidige notificatiestatus is"
-      filter_to: "{{post_count}} berichten in topic"
+      filter_to:
+        one: "1 bericht in topic"
+        other: "{{count}} berichten in topic"
       create: 'Nieuw topic'
       create_long: 'Maak een nieuw topic'
       private_message: 'Stuur een bericht'
@@ -1194,11 +1257,12 @@ nl:
       auto_close_title: 'Instellingen voor automatisch sluiten'
       auto_close_save: "Opslaan"
       auto_close_remove: "Sluit deze topic niet automatisch"
-      auto_close_immediate: "De laatste post in deze topic is al %{hours} uur oud, dus deze topic wordt meteen gesloten."
+      auto_close_immediate:
+        one: "Het laatste bericht in deze topic is al 1 uur oud, dus de topic zal meteen gesloten worden."
+        other: "Het laatste bericht in deze topic is al %{count} uur oud, dus de topic zal meteen gesloten worden."
       timeline:
         back: "Terug"
         back_description: "Keer terug naar je laatste ongelezen bericht"
-        replies: "%{current} / %{total} antwoorden"
         replies_short: "%{current} / %{total}"
       progress:
         title: topicvoortgang
@@ -1211,12 +1275,11 @@ nl:
         jump_bottom_with_number: "spring naar bericht %{post_number}"
         total: totaal aantal berichten
         current: huidige bericht
-        position: "bericht %{current} van %{total}"
       notifications:
         title: verander de frequentie van notificaties over deze topic
         reasons:
           mailing_list_mode: "De mailinglijstmodus staat ingeschakeld, dus zul je via e-mail notificaties ontvangen bij nieuwe antwoorden in deze topic."
-          '3_10': 'Je zal notificaties ontvangen omdat je een tag op deze topic in de gaten houdt.'
+          '3_10': 'Je ontvangt notificaties omdat je een tag in deze topic in de gaten houdt.'
           '3_6': 'Je ontvangt notificaties omdat je deze categorie in de gaten houdt.'
           '3_5': 'Je ontvangt notificaties omdat je deze topic automatisch in de gaten houdt.'
           '3_2': 'Je ontvangt notificaties omdat je deze topic in de gaten houdt.'
@@ -1286,6 +1349,9 @@ nl:
       share:
         title: 'Deel'
         help: 'deel een link naar deze topic'
+      print:
+        title: 'Printen'
+        help: 'Open een printervriendelijke versie van dit topic'
       flag_topic:
         title: 'Markeer'
         help: 'geef een privé-markering aan deze topic of stuur er een privé-bericht over'
@@ -1398,7 +1464,7 @@ nl:
     post:
       reply: "<i class='fa fa-mail-forward'></i> {{replyAvatar}} {{usernameLink}}"
       reply_topic: "<i class='fa fa-mail-forward'></i> {{link}}"
-      quote_reply: "citeer"
+      quote_reply: "Citeer"
       edit: "Aan het bewerken {{link}} {{replyAvatar}} {{username}}"
       edit_reason: "Reden: "
       post_number: "bericht {{number}}"
@@ -1415,7 +1481,6 @@ nl:
       gap:
         one: "bekijk 1 verborgen reactie"
         other: "bekijk {{count}} verborgen reacties"
-      more_links: "{{count}} meer..."
       unread: "Bericht is ongelezen"
       has_replies:
         one: "{{count}} Reactie"
@@ -1484,14 +1549,6 @@ nl:
         defer_flags:
           one: "Markering negeren"
           other: "Markeringen negeren"
-        it_too:
-          off_topic: "Markeer het ook"
-          spam: "Markeer het ook"
-          inappropriate: "Markeer deze ook"
-          custom_flag: "Markeer het ook"
-          bookmark: "Voeg ook toe aan favorieten"
-          like: "Like het ook"
-          vote: "Stem ook"
         undo:
           off_topic: "Verwijder markering"
           spam: "Verwijder markering"
@@ -1645,6 +1702,7 @@ nl:
       email_in_disabled: "Het plaatsen van nieuwe topics via e-mail is uitgeschakeld in de webite-instellingen. Om het plaatsen van nieuwe topic via e-mail mogelijk te maken,"
       email_in_disabled_click: 'schakel "e-mail in" instelling in.'
       suppress_from_homepage: "Negeer deze categorie op de homepage"
+      sort_order: "Standaardsortering:"
       allow_badges_label: "Laat badges toekennen voor deze categorie"
       edit_permissions: "Wijzig permissies"
       add_permission: "Nieuwe permissie"
@@ -1670,14 +1728,19 @@ nl:
         muted:
           title: "Genegeerd"
           description: "Je zult niet op de hoogte worden gebracht over nieuwe topics in deze categorie en ze zullen niet verschijnen in Recent."
+      sort_options:
+        default: "standaard"
+        category: "Categorie"
+      sort_ascending: 'Oplopend'
+      sort_descending: 'Aflopend'
     flagging:
-      title: 'Bedankt voor het helpen beleefd houden van onze gemeenschap!'
+      title: 'Bedankt voor het beleefd houden van onze gemeenschap!'
       action: 'Meld bericht'
       take_action: "Onderneem actie"
       notify_action: 'Bericht'
       official_warning: 'Officiële waarschuwing'
       delete_spammer: "Verwijder spammer"
-      delete_confirm: "Je gaat nu <b>%{posts}</b> berichten en <b>%{topics}</b> topics van deze gebruiker verwijderen, het account verwijderen, nieuwe aanmeldingen vanaf het IP-adres <b>%{ip_address}</b> blokkeren en het e-mailadres <b>%{email}</b> op een permanente blokkeerlijst zetten. Weet je zeker dat dit een spammer is?"
+      delete_confirm_MF: "Je gaat nu {POSTS, plural, one {<b>1</b> bericht} other {<b>#</b> berichten}} en {TOPICS, plural, one {<b>1</b> topic} other {<b>#</b> topics}} van deze gebruiker verwijderen, het account verwijderen, nieuwe aanmeldingen vanaf het IP-adres <b>{ip_address}</b> blokkeren en het e-mailadres <b>{email}</b> op een permanente blokkeerlijst zetten. Weet je zeker dat dit een spammer is?"
       yes_delete_spammer: "Ja, verwijder spammer"
       ip_address_missing: "(N.V.T.)"
       hidden_email_address: "(verborgen)"
@@ -1692,11 +1755,17 @@ nl:
       custom_placeholder_notify_user: "Wees specifiek, opbouwend en blijf altijd beleefd."
       custom_placeholder_notify_moderators: "Laat ons specifiek weten waar je je zorgen om maakt en stuur relevante links en voorbeelden mee waar mogelijk."
       custom_message:
-        at_least: "Gebruik ten minste {{n}} tekens"
-        more: "Nog {{n}} te gaan..."
-        left: "Nog {{n}}"
+        at_least:
+          one: "gebruik ten minste 1 teken"
+          other: "gebruik ten minste {{count}} tekens"
+        more:
+          one: "1 teken te gaan..."
+          other: "{{count}} tekens te gaan..."
+        left:
+          one: "1 resterend"
+          other: "{{count}} resterend"
     flagging_topic:
-      title: "Bedankt voor het helpen beleefd houden van onze gemeenschap!"
+      title: "Bedankt voor het beleefd houden van onze gemeenschap!"
       action: "Markeer topic"
       notify_action: "Bericht"
     topic_map:
@@ -1735,7 +1804,6 @@ nl:
       invisible:
         help: "Dit topic is niet zichtbaar; het zal niet verschijnen in de topiclijst en kan alleen bekeken worden met een directe link"
     posts: "Berichten"
-    posts_lowercase: "berichten"
     posts_long: "er zijn {{number}} berichten in deze topic"
     posts_likes_MF: |
       Dit topic heeft {count, plural, one {1 antwoord} other {# antwoorden}} {ratio, select,
@@ -1849,8 +1917,6 @@ nl:
       readonly: "Bekijk"
     lightbox:
       download: "download"
-    search_help:
-      title: 'Zoeken in Help'
     keyboard_shortcuts_help:
       title: 'Sneltoetsen'
       jump_to:
@@ -1902,6 +1968,7 @@ nl:
         mark_regular: '<b>m</b>, <b>r</b> Markeer topic als normaal'
         mark_tracking: '<b>m</b>, <b>t</b> Volg topic'
         mark_watching: '<b>m</b>, <b>w</b> Houd topic in de gaten'
+        print: '<b>ctrl</b>+<b>p</b> Print topic'
     badges:
       earned_n_times:
         one: "Deze badge is 1 keer verdiend"
@@ -2144,15 +2211,12 @@ nl:
         refresh: "Herlaad"
         new: "Nieuw"
         selector_placeholder: "vul gebruikersnaam in"
-        name_placeholder: "Groepsnaam, geen spaties, zelfde regels als bij een gebruikersnaam"
         about: "Wijzig hier je deelname aan groepen en je namen"
         group_members: "Groepsleden"
         delete: "Verwijder"
         delete_confirm: "Verwijder deze groepen?"
         delete_failed: "Kan groep niet verwijderen. Als dit een automatische groep is, kan deze niet verwijderd worden."
-        delete_member_confirm: "Verwijder '%{username}' uit de '%{group'} groep?"
         delete_owner_confirm: "Verwijder eigenaarsprivileges van '% {username}'?"
-        name: "Naam"
         add: "Voeg toe"
         add_members: "Voeg leden toe"
         custom: "Aangepast"
@@ -2183,6 +2247,75 @@ nl:
         info_html: "Met deze API-key kun je met behulp van JSON-calls topics maken en bewerken."
         all_users: "Alle gebruikers"
         note_html: "Houd deze key <strong>geheim</strong>, alle gebruikers die hierover beschikken kunnen berichten plaatsen als elke andere gebruiker."
+      web_hooks:
+        title: "Webhooks"
+        none: "Er zijn geen actieve webhooks."
+        instruction: "Webhooks laten Discourse externe services notificeren wanneer bepaalde gebeurtenissen plaatsvinden in je site. Wanneer een webhook afgevuurd wordt zal een POST-verzoek gestuurd worden naar de opgegeven URL."
+        detailed_instruction: "Wanneer de gekozen gebeurtenis plaatsvindt zal er een POST-verzoek gestuurd worden naar de opgegeven URL."
+        new: "Nieuwe webhook"
+        create: "Aanmaken"
+        save: "Opslaan"
+        destroy: "Verwijder"
+        description: "Omschrijving"
+        controls: "Controlepaneel"
+        go_back: "Terug naar lijst"
+        payload_url: "Payload URL"
+        payload_url_placeholder: "https://example.com/postreceive"
+        warn_local_payload_url: "Zo te zien probeer je een webhook naar een lokale URL te laten wijzen. Gebeurtenissen die hierheen gestuurd worden kunnen mogelijk resulteren in onverwacht gedrag. Doorgaan?"
+        secret_invalid: "Secret mag geen lege tekens bevatten."
+        secret_too_short: "Secret moet uit minimaal 12 tekens bestaan."
+        secret_placeholder: "Een optionele waarde, gebruikt bij het maken van een handtekening"
+        event_type_missing: "Stel minstens één event type in."
+        content_type: "Type inhoud"
+        secret: "Secret"
+        event_chooser: "Welke gebeurtenissen moeten deze webhook afvuren?"
+        wildcard_event: "Stuur mij alles."
+        individual_event: "Selecteer individuele gebeurtenissen."
+        verify_certificate: "Controleer het TLS-certificaat van de payload URL"
+        active: "Actief"
+        active_notice: "We sturen details over de gebeurtenis wanneer deze plaatsvindt."
+        categories_filter_instructions: "Alleen als de gebeurtenis bij specifieke categorieën hoort worden de relevante webhooks afgevuurd. Laat leeg om webhooks bij alle categorieën af te vuren."
+        categories_filter: "Vuur af bij categorieën "
+        groups_filter_instructions: "Alleen als de gebeurtenis bij specifieke groepen hoort worden de relevante webhooks afgevuurd. Laat leeg om webhooks bij alle groepen af te vuren."
+        groups_filter: "Vuur af bij groepen"
+        delete_confirm: "Deze webhook verwijderen?"
+        topic_event:
+          name: "Topicgebeurtenis"
+          details: "Wanneer een nieuwe topic geplaatst, gereviseerd, veranderd of verwijderd wordt."
+        post_event:
+          name: "Berichtgebeurtenis"
+          details: "Wanneer een nieuw bericht geplaatst, bewerkt, verwijderd of hersteld wordt."
+        user_event:
+          name: "Gebruikersgebeurtenis"
+        delivery_status:
+          title: "Afleveringsstatus"
+          inactive: "Inactief"
+          failed: "Mislukt"
+          successful: "Succesvol "
+        events:
+          none: "Er zijn geen verwante gebeurtenissen."
+          redeliver: "Opnieuw afleveren"
+          incoming:
+            one: "Er is een nieuwe gebeurtenis."
+            other: "Er zijn {{count}} nieuwe gebeurtenissen."
+          completed_in:
+            one: "Voltooid in 1 seconde."
+            other: "Voltooid in {{count}} seconden."
+          request: "Verzoek"
+          response: "Reactie"
+          redeliver_confirm: "Weet je zeker dat je dezelfde payload opnieuw wilt afleveren?"
+          headers: "Koppen"
+          payload: "Payload"
+          body: "Inhoud"
+          go_list: "Naar lijst"
+          go_details: "Webhook bewerken"
+          go_events: "Naar gebeurtenissen"
+          ping: "Ping"
+          status: "Statuscode"
+          event_id: "ID"
+          timestamp: "Gemaakt"
+          completion: "Verstreken tijd"
+          actions: "Acties"
       plugins:
         title: "Plugins"
         installed: "Geïnstalleerde plugins"
@@ -2248,10 +2381,8 @@ nl:
             title: "Herstel de database naar de laatst werkende versie"
             confirm: "Weet je zeker dat je de database wilt terugzetten naar de vorige werkende staat?"
       export_csv:
-        user_archive_confirm: "Weet je zeker dat je al je berichten wilt downloaden?"
         success: "Exporteren is gestart, je zult een bericht ontvangen als het proces is afgerond."
         failed: "Exporteren is mislukt. Controleer de logbestanden."
-        rate_limit_error: "Berichten kunnen één keer per dag gedownload worden, probeer het morgen nog eens."
         button_text: "Exporteren"
         button_title:
           user: "Exporteer volledige gebruikerslijst in CSV-formaat"
@@ -2268,7 +2399,7 @@ nl:
         title: "Aanpassingen"
         long_title: "Aanpassingen aan de site"
         css: "CSS"
-        header: "Header"
+        header: "Koptekst"
         top: "Top"
         footer: "Voettekst"
         embedded_css: "Embedded CSS"
@@ -2293,7 +2424,7 @@ nl:
         import_title: "Selecteer een bestand of plak tekst"
         delete: "Verwijder"
         delete_confirm: "Verwijder deze aanpassing?"
-        about: "Pas CSS stylesheets en HTML headers aan op de site. Voeg een aanpassing toe om te beginnen."
+        about: "Pas CSS-stylesheets en HTML-kopteksten aan op de site. Voeg een aanpassing toe om te beginnen."
         color: "Kleur"
         opacity: "Doorzichtigheid"
         copy: "Kopieër"
@@ -2332,11 +2463,11 @@ nl:
             name: "quaternaire"
             description: "Navigatie."
           header_background:
-            name: "headerachtergrond"
-            description: "Achtergrondkleur van de header."
+            name: "koptekstachtergrond"
+            description: "Achtergrondkleur van de koptekst."
           header_primary:
-            name: "eerste header"
-            description: "Tekst en iconen in de header."
+            name: "eerste koptekst"
+            description: "Tekst en iconen in de koptekst."
           highlight:
             name: 'opvallen'
             description: 'De achtergrondkleur van gemarkeerde elementen op de pagina, zoals berichten en topics. '
@@ -2373,6 +2504,8 @@ nl:
         delivery_method: "Verzendmethode"
         preview_digest_desc: "Bekijk een voorbeeld van de digest e-mails die gestuurd worden naar inactieve leden."
         refresh: "Verniew"
+        send_digest_label: "Stuur dit resultaat naar:"
+        sending_email: "E-mail wordt verzonden..."
         format: "Formaat"
         html: "html"
         text: "text"
@@ -2566,7 +2699,7 @@ nl:
         suspend_reason: "Reden"
         suspended_by: "Geschorst door"
         delete_all_posts: "Verwijder alle berichten"
-        delete_all_posts_confirm: "Je staat op het punt om %{posts} berichten en %{topics} topics verwijderen. Weet je het zeker?"
+        delete_all_posts_confirm_MF: "Je staat op het punt om {POSTS, plural, one {1 bericht} other {# berichten}} en {TOPICS, plural, one {1 topic} other {# topics}} te verwijderen. Weet je het zeker?"
         suspend: "Schors"
         unsuspend: "Herstel schorsing"
         suspended: "Geschorst?"
@@ -2662,7 +2795,9 @@ nl:
         unlock_trust_level: "Geef trustlevel vrij"
         tl3_requirements:
           title: "Vereisten voor trustlevel 3"
-          table_title: "In de laatste %{time_period} dagen:"
+          table_title:
+            one: "In de laatste dag:"
+            other: "In de laatste %{count} dagen:"
           value_heading: "Waarde"
           requirement_heading: "Vereiste"
           visits: "Bezoeken"
@@ -2762,12 +2897,14 @@ nl:
           developer: 'Ontwikkelaar'
           embedding: "Embedden"
           legal: "Juridisch"
+          user_api: 'Gebruikers-API'
           uncategorized: 'Overige'
           backups: "Backups"
           login: "Gebruikersnaam"
           plugins: "Plugins"
           user_preferences: "Gebruikersvoorkeuren"
           tags: "Tags"
+          search: "Zoek"
       badges:
         title: Badges
         new_badge: Nieuwe badge
@@ -2849,6 +2986,7 @@ nl:
         sample: "Gebruik de volgende HTML-code om discourse topics te maken en te embedden in je website. Vervang <b>REPLACE_ME</b> met de volledige URL van de pagina waarin je het topic wilt embedden."
         title: "Embedden"
         host: "Toegestane hosts"
+        path_whitelist: "Toegestane paden"
         edit: "wijzig"
         category: "Bericht naar categorie"
         add_host: "Voeg host toe"
@@ -2860,6 +2998,7 @@ nl:
         embed_by_username: "Gebruikersnaam voor het maken van topics"
         embed_post_limit: "Maximaal aantal berichten om te embedden"
         embed_username_key_from_feed: "Key om de discourse gebruikersnaam uit de feed te halen"
+        embed_title_scrubber: "Reguliere expressie voor het afleiden van de titels van berichten"
         embed_truncate: "Embedde berichten inkorten"
         embed_whitelist_selector: "CSS selector voor elementen die worden toegestaan bij embedding"
         embed_blacklist_selector: "CSS selector voor elementen die worden verwijderd bij embedding"
@@ -2882,3 +3021,22 @@ nl:
           label: "Nieuw:"
           add: "Voeg toe"
           filter: "Zoeken (URL of Externe URL)"
+  wizard_js:
+    wizard:
+      done: "Klaar"
+      back: "Vorige"
+      next: "Volgende"
+      step: "%{current} van %{total}"
+      upload: "Uploaden"
+      uploading: "Uploaden..."
+      quit: "Misschien Later"
+      staff_count:
+        one: "Jouw community heeft 1 staflid."
+        other: "Jouw community heeft %{count} stafleden."
+      invites:
+        add_user: "toevoegen"
+        none_added: "Je hebt geen stafleden uitgenodigd. Weet je zeker dat je verder wilt gaan?"
+        roles:
+          admin: "Beheerder"
+          moderator: "Moderator"
+          regular: "Normale Gebruiker"

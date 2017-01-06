@@ -1,9 +1,9 @@
 {{#if filteredContent}}
-  <div class='form-horizontal settings'>
+  {{#d-section class="form-horizontal settings"}}
     {{#each filteredContent as |setting|}}
       {{site-setting setting=setting saveAction="saveSetting"}}
     {{/each}}
-  </div>
+  {{/d-section}}
 {{else}}
   <br/>
   {{i18n 'admin.site_settings.no_results'}}

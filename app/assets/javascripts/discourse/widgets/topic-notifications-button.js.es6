@@ -12,7 +12,7 @@ createWidget('notification-option', {
         h('span.icon', { className: `fa fa-${attrs.icon} ${attrs.key}`}),
         h('div', [
           h('span.title', I18n.t(`topic.notifications.${attrs.key}.title`)),
-          h('span', I18n.t(`topic.notifications.${attrs.key}.description`)),
+          h('span.desc', I18n.t(`topic.notifications.${attrs.key}.description`)),
         ])
     ]);
   },

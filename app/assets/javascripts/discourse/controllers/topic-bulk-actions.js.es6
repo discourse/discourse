@@ -17,14 +17,14 @@ addBulkButton('unlistTopics', 'unlist_topics');
 addBulkButton('showTagTopics', 'change_tags');
 
 // Modal for performing bulk actions on topics
-export default Ember.ArrayController.extend(ModalFunctionality, {
+export default Ember.Controller.extend(ModalFunctionality, {
   tags: null,
   buttonRows: null,
 
   emptyTags: Ember.computed.empty('tags'),
 
   onShow() {
-    this.set('controllers.modal.modalClass', 'topic-bulk-actions-modal small');
+    this.set('modal.modalClass', 'topic-bulk-actions-modal small');
 
     const buttonRows = [];
     let row = [];
@@ -38,7 +38,7 @@ export default Ember.ArrayController.extend(ModalFunctionality, {
     if (row.length) { buttonRows.push(row); }
 
     this.set('buttonRows', buttonRows);
-    this.send('changeBulkTemplate', 'modal/bulk_actions_buttons');
+    this.send('changeBulkTemplate', 'modal/bulk-actions-buttons');
   },
 
   perform(operation) {
@@ -85,12 +85,12 @@ export default Ember.ArrayController.extend(ModalFunctionality, {
     },
 
     showChangeCategory() {
-      this.send('changeBulkTemplate', 'modal/bulk_change_category');
-      this.set('controllers.modal.modalClass', 'topic-bulk-actions-modal full');
+      this.send('changeBulkTemplate', 'modal/bulk-change-category');
+      this.set('modal.modalClass', 'topic-bulk-actions-modal full');
     },
 
     showNotificationLevel() {
-      this.send('changeBulkTemplate', 'modal/bulk_notification_level');
+      this.send('changeBulkTemplate', 'modal/bulk-notification-level');
     },
 
     deleteTopics() {

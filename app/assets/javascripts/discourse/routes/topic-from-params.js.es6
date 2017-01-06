@@ -56,8 +56,10 @@ export default Discourse.Route.extend({
           ignoreIfChanged: true
         });
       }
-    }).catch(function(e) {
-      Ember.warn('Could not view topic', e);
+    }).catch(e => {
+      if (!Ember.testing) {
+        console.log('Could not view topic', e);
+      }
     });
   }
 

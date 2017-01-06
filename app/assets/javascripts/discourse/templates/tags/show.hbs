@@ -5,8 +5,10 @@
 <div class="list-controls">
   <div class="container">
     {{#if tagNotification}}
-      {{tag-notifications-button action="changeTagNotification"
-                                 notificationLevel=tagNotification.notification_level}}
+      {{#unless additionalTags}}
+        {{tag-notifications-button action="changeTagNotification"
+                                   notificationLevel=tagNotification.notification_level}}
+      {{/unless}}
     {{/if}}
 
     {{#if showAdminControls}}
@@ -31,12 +33,16 @@
         {{#link-to 'tags'}}{{i18n "tagging.tags"}}{{/link-to}}
         {{fa-icon "angle-right"}}
         {{discourse-tag-bound tagRecord=tag style="simple"}}
+        {{#each additionalTags as |tag|}}
+          <span>&amp;</span>
+          {{discourse-tag tag style="simple"}}
+        {{/each}}
       </h2>
     {{/if}}
   </div>
 </div>
 
-{{plugin-outlet "discovery-list-container-top"}}
+{{plugin-outlet name="discovery-list-container-top"}}
 
 <footer class='topic-list-bottom'>
   {{conditional-loading-spinner condition=loading}}

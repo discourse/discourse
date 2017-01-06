@@ -45,6 +45,16 @@ describe Middleware::AnonymousCache::Helper do
       crawler.clear_cache
     end
 
+    it "handles brotli switching" do
+      helper.cache([200, {"HELLO" => "WORLD"}, ["hello ", "my world"]])
+
+      helper = new_helper("ANON_CACHE_DURATION" => 10)
+      expect(helper.cached).to eq([200, {"X-Discourse-Cached" => "true", "HELLO" => "WORLD"}, ["hello my world"]])
+
+      helper = new_helper("ANON_CACHE_DURATION" => 10, "HTTP_ACCEPT_ENCODING" => "gz, br")
+      expect(helper.cached).to eq(nil)
+    end
+
     it "returns cached data for cached requests" do
       helper.is_mobile = true
       expect(helper.cached).to eq(nil)

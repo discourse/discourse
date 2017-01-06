@@ -1,23 +1,39 @@
-import ContainerView from 'discourse/views/container';
+import computed from 'ember-addons/ember-computed-decorators';
 
-export default ContainerView.extend({
+export default Ember.Component.extend({
   elementId: 'topic-footer-buttons',
 
-  init() {
-    this._super();
+  // Allow us to extend it
+  layoutName: 'components/topic-footer-buttons',
 
-    if (this.currentUser) {
-      const viewArgs = this.getProperties('topic', 'topicDelegated');
-      viewArgs.currentUser = this.currentUser;
+  @computed('topic.details.can_invite_to')
+  canInviteTo(result) {
+    return !this.site.mobileView && result;
+  },
 
-      this.attachViewWithArgs(viewArgs, 'topic-footer-main-buttons');
-      this.attachViewWithArgs(viewArgs, 'pinned-button');
-      this.attachViewWithArgs(viewArgs, 'topic-notifications-button');
+  inviteDisabled: Ember.computed.or('topic.archived', 'topic.closed', 'topic.deleted'),
 
-      this.trigger('additionalButtons', this);
-    } else {
-      // If not logged in give them a login control
-      this.attachViewClass('login-reply-button');
-    }
-  }
+  @computed
+  showAdminButton() {
+    return !this.site.mobileView && this.currentUser.get('canManageTopic');
+  },
+
+  @computed('topic.message_archived')
+  archiveIcon: archived => archived ? '' : 'folder',
+
+  @computed('topic.message_archived')
+  archiveTitle: archived => archived ? 'topic.move_to_inbox.help' : 'topic.archive_message.help',
+
+  @computed('topic.message_archived')
+  archiveLabel: archived => archived ? "topic.move_to_inbox.title" : "topic.archive_message.title",
+
+  @computed('topic.bookmarked')
+  bookmarkClass: bookmarked => bookmarked ? 'bookmark bookmarked' : 'bookmark',
+
+  @computed('topic.bookmarked')
+  bookmarkLabel: bookmarked => bookmarked ? 'bookmarked.clear_bookmarks' : 'bookmarked.title',
+
+  @computed('topic.bookmarked')
+  bookmarkTitle: bookmarked => bookmarked ? "bookmarked.help.unbookmark" : "bookmarked.help.bookmark",
+
 });

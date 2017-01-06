@@ -96,7 +96,7 @@ const AdminUser = Discourse.User.extend({
 
   deleteAllPosts() {
     const user = this,
-          message = I18n.t('admin.user.delete_all_posts_confirm', { posts: user.get('post_count'), topics: user.get('topic_count') }),
+          message = I18n.messageFormat('admin.user.delete_all_posts_confirm_MF', { "POSTS": user.get('post_count'), "TOPICS": user.get('topic_count') }),
           buttons = [{
             "label": I18n.t("composer.cancel"),
             "class": "cancel-inline",
@@ -257,7 +257,7 @@ const AdminUser = Discourse.User.extend({
     });
   },
 
-  log_out() {
+  logOut() {
     return ajax("/admin/users/" + this.id + "/log_out", {
       type: 'POST',
       data: { username_or_email: this.get('username') }
@@ -467,13 +467,13 @@ const AdminUser = Discourse.User.extend({
 
     user.checkEmail().then(function() {
       const data = {
-        posts: user.get('post_count'),
-        topics: user.get('topic_count'),
+        "POSTS": user.get('post_count'),
+        "TOPICS": user.get('topic_count'),
         email: user.get('email') || I18n.t("flagging.hidden_email_address"),
         ip_address: user.get('ip_address') || I18n.t("flagging.ip_address_missing")
         };
 
-      const message = I18n.t('flagging.delete_confirm', data),
+      const message = I18n.messageFormat('flagging.delete_confirm_MF', data),
             buttons = [{
         "label": I18n.t("composer.cancel"),
         "class": "cancel-inline",

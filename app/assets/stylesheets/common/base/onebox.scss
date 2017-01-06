@@ -96,7 +96,7 @@ aside.onebox {
 
   header {
     a[href] {
-      color: $primary;
+      color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
       text-decoration: none;
     }
   }
@@ -110,6 +110,7 @@ aside.onebox {
   @include onebox-favicon('githubissue', 'github');
   @include onebox-favicon('githubgist', 'github');
   @include onebox-favicon('amazon', 'amazon');
+  @include onebox-favicon('googledocs', 'google_branding/logo_drive_48px');
 
 
   .onebox-body {
@@ -117,7 +118,7 @@ aside.onebox {
 
     h3, h4 {
       font-size: 1.17em;
-      margin: 10px 0;
+      margin: 0 0 10px 0;
     }
 
     a[href] {
@@ -130,7 +131,7 @@ aside.onebox {
     }
 
     img {
-      max-height: 80%;
+      max-height: 170px;
       max-width: 20%;
       height: auto;
       float: left;
@@ -153,10 +154,23 @@ aside.onebox {
 
 @mixin gdocs-logo($type) {
   &.g-#{$type}-logo {
-    background: image-url("favicons/google_branding/logo_#{$type}_128px.png") no-repeat;
+    background: image-url("favicons/google_branding/logo_#{$type}_48px.png") no-repeat;
   }
 }
 
+.googledocs-onebox-logo {
+  width: 60px;
+  height: 50px;
+  float: left;
+  @include gdocs-logo('docs');
+  @include gdocs-logo('forms');
+  @include gdocs-logo('sheets');
+  @include gdocs-logo('slides');
+  @include gdocs-logo('calendar');
+  @include gdocs-logo('drive');
+}
+
+// Google Calendar Placeholder
 .gdocs-onebox-splash {
   background-color: blend-primary-secondary(30%);
   color: $primary;
@@ -165,12 +179,9 @@ aside.onebox {
     display: inline-block;
     width: 128px;
     height: 128px;
-    @include gdocs-logo('docs');
-    @include gdocs-logo('forms');
-    @include gdocs-logo('sheets');
-    @include gdocs-logo('slides');
-    @include gdocs-logo('calendar');
-    @include gdocs-logo('drive');
+    &.g-calendar-logo {
+      background: image-url("favicons/google_branding/logo_calendar_128px.png") no-repeat;
+    }
   }
 }
 
@@ -348,4 +359,11 @@ aside.onebox.stackexchange .onebox-body {
 // mobile specific style
 .mobile-view article.onebox-body {
   border-top: none;
+}
+
+.onebox.xkcd .onebox-body {
+  img {
+    max-width: 100% !important;
+    float: none !important;
+  }
 }

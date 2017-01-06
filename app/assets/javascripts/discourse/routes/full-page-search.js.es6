@@ -2,13 +2,14 @@ import { ajax } from 'discourse/lib/ajax';
 import { translateResults, getSearchKey, isValidSearchTerm } from "discourse/lib/search";
 import Composer from 'discourse/models/composer';
 import PreloadStore from 'preload-store';
+import { getTransient, setTransient } from 'discourse/lib/page-tracker';
+import { getOwner } from 'discourse-common/lib/get-owner';
 
 export default Discourse.Route.extend({
-  queryParams: { q: {}, context_id: {}, context: {}, skip_context: {} },
+  queryParams: { q: {}, expanded: false, context_id: {}, context: {}, skip_context: {} },
 
   model(params) {
-    const router = Discourse.__container__.lookup('router:main');
-    var cached = router.transientCache('lastSearch');
+    const cached = getTransient('lastSearch');
     var args = { q: params.q };
     if (params.context_id && !args.skip_context) {
       args.search_context = {
@@ -21,7 +22,7 @@ export default Discourse.Route.extend({
 
     if (cached && cached.data.searchKey === searchKey) {
       // extend expiry
-      router.transientCache('lastSearch', { searchKey, model: cached.data.model }, 5);
+      setTransient('lastSearch', { searchKey, model: cached.data.model }, 5);
       return cached.data.model;
     }
 
@@ -33,7 +34,7 @@ export default Discourse.Route.extend({
       }
     }).then(results => {
       const model = (results && translateResults(results)) || {};
-      router.transientCache('lastSearch', { searchKey, model }, 5);
+      setTransient('lastSearch', { searchKey, model }, 5);
       return model;
     });
   },
@@ -52,7 +53,7 @@ export default Discourse.Route.extend({
           category = match[1];
         }
       }
-      this.container.lookup('controller:composer').open({action: Composer.CREATE_TOPIC, draftKey: Composer.CREATE_TOPIC, topicCategory: category});
+      getOwner(this).lookup('controller:composer').open({action: Composer.CREATE_TOPIC, draftKey: Composer.CREATE_TOPIC, topicCategory: category});
     }
   }
 

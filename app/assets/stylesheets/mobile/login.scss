@@ -1,8 +1,10 @@
 // style that apply to the login popup
 
 .btn-social {
-  width: 250px;
+  width: 150px;
   font-size: 1.143em;
+  overflow: hidden;
+  white-space: nowrap;
 }
 
 #login-buttons {
@@ -17,7 +19,11 @@
     color: dark-light-choose(scale-color($primary, $lightness: 35%), scale-color($secondary, $lightness: 65%));
   }
   label { float: left; display: block; }
-  textarea, input, select {font-size: 1.143em; clear: left; margin-top: 0; }
+  textarea, input, select {
+    font-size: 1.143em;
+    clear: left;
+    margin-top: 0;
+    }
   td { padding: 4px; }
 }
 

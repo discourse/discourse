@@ -45,8 +45,6 @@ fa_IR:
           other: "< %{count} ثانیه"
         x_seconds:
           other: "%{count} ثانیه"
-        less_than_x_minutes:
-          other: "< %{count} دقیقه"
         x_minutes:
           other: "%{count} دقیقه"
         about_x_hours:
@@ -266,16 +264,12 @@ fa_IR:
       total_rows:
         other: "%{count} کاربران"
     groups:
-      empty:
-        posts: "در این گروه هیچ پستی توسط کاربران "
-        members: "هیچ عضوی در این گروه وجود ندارد."
-        mentions: "هیچ کجا به این گروه اشاره‌ای نشده است."
-        messages: "پیامی در این گروه وجود ندارد."
-        topics: "در این گروه هیچ موضوعی توسط کاربران ارسال نشده."
       add: "افزودن"
       selector_placeholder: "افزودن عضو"
       owner: "مالک"
       visible: "همهٔ کاربران گروه را می‌بینند"
+      index:
+        title: "گروه‌ها"
       title:
         other: "گروه‌ها"
       members: "اعضا"
@@ -336,12 +330,8 @@ fa_IR:
       latest_by: "آخرین توسط"
       toggle_ordering: "ضامن کنترل مرتب سازی"
       subcategories: "زیر دسته‌ بندی ها"
-      topic_stats: "شمار موضوعات تازه."
       topic_stat_sentence:
         other: "%{count} موضوعات تازه در %{unit} گذشته."
-      post_stats: "تعداد نوشته های جدید."
-      post_stat_sentence:
-        other: "%{count} نوشته تازه در %{unit} گذشته."
     ip_lookup:
       title: جستجوی نشانی IP
       hostname: نام میزبان
@@ -364,7 +354,6 @@ fa_IR:
       profile: "نمایه"
       mute: "بی صدا"
       edit: "ویرایش تنظیمات"
-      download_archive: "دانلود نوشته های من"
       new_private_message: "پیام های جدید"
       private_message: "پیام"
       private_messages: "پیام‌ها"
@@ -565,13 +554,9 @@ fa_IR:
         account_age_days: "عمر حساب بر اساس روز"
         create: "فرستادن یک دعوتنامه"
         generate_link: "کپی لینک دعوت"
-        generated_link_message: '<p>لینک دعوت با موفقیت تولید شد!</p><p><input class="invite-link-input" style="width: 75%;" type="text" value="%{inviteLink}"></p><p>لینک دعوت فقط برای این ایمیل آدرس معتبر است: <b>%{invitedEmail}</b></p>'
         bulk_invite:
-          none: "شما هنوز کسی را اینجا دعوت نکرده اید. می توانید بصورت تکی یا گروهی یکجا دعوتنامه را بفرستید از طریق  <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>بارگذار فراخوانه فله ای </a>."
           text: "دعوت گروهی از طریق فایل"
-          uploading: "بارگذاری..."
           success: "فایل با موفقیت بارگذاری شد٬  وقتی که پروسه تمام شد  به شما را از طریق پیام اطلاع می دهیم. "
-          error: "در بارگذاری «{{filename}}» خطایی روی داد: {{message}}"
       password:
         title: "رمزعبور"
         too_short: "رمز عبورتان خیلی کوتاه است"
@@ -580,6 +565,10 @@ fa_IR:
         same_as_email: "رمز عبورتان با ایمیل شما برابر است. "
         ok: "گذرواژهٔ خوبی است."
         instructions: "در آخرین %{count} کاراکتر"
+      summary:
+        top_badges: "مدال های برتر"
+        no_badges: "هنوز مدالی نیست."
+        more_badges: "مدال های بیشتر"
       associated_accounts: "ورود ها"
       ip_address:
         title: "آخرین نشانی IP"
@@ -870,7 +859,6 @@ fa_IR:
       title: "جستجوی موضوعات، نوشته ها، کاربران یا دسته‌ بندی ها"
       no_results: "چیزی یافت نشد."
       no_more_results: "نتایجی بیشتری یافت نشد."
-      search_help: راهنمای جستجو
       searching: "جستجو کردن..."
       post_format: "#{{post_number}} توسط {{username}}"
       context:
@@ -913,6 +901,8 @@ fa_IR:
         category: "هیچ موضوعاتی در {{category}} نیست."
         top: "موضوع برتر وجود ندارد."
         search: " هیچ نتیجه جستجویی وجود ندارد."
+        educate:
+          unread: '<p>موضوعات جدید در اینجا قرار می گیرند.</p><p>به طور پیش فرض، موضوعات جدید در نظر گرفته خواهند شد و نشان داده می شوند <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">جدید</span> شاخص اگر آنها در 2 روز گذشته ایجاد شده باشند </p><p>شما می توانید این را برای خود تغییر دهید <a href="%{userPrefsUrl}">تنظیمات</a>.</p>'
       bottom:
         latest: "موضوع تازهٔ دیگری نیست."
         hot: "موضوع داغ دیگری نیست."
@@ -928,7 +918,6 @@ fa_IR:
       unsubscribe:
         stop_notifications: "حالا شما اعلانات کمتری برای <strong>{{title}}</strong> دریافت میکنید"
         change_notification_state: "وضعیت فعلی اعلانات شما این هست"
-      filter_to: "نوشته در موضوع {{post_count}}  "
       create: 'موضوع جدید'
       create_long: 'ساخت یک موضوع جدید'
       private_message: 'شروع یک پیام'
@@ -976,7 +965,6 @@ fa_IR:
       auto_close_title: 'تنضیمات قفل خوکار'
       auto_close_save: "‌ذخیره"
       auto_close_remove: "این موضوع را خوکار قفل نکن"
-      auto_close_immediate: "زمان ارسال آخرین پست در موضوع برای %{hours} ساعت پیش است، بنابر این موضوع بلافاصله بسته می‌شود."
       progress:
         title: نوشته ی در حال اجرا
         go_top: "بالا"
@@ -986,7 +974,6 @@ fa_IR:
         jump_bottom_with_number: "رفتن به نوشته ی %{post_number}"
         total: همهٔ نوشته‌ها
         current: نوشته کنونی
-        position: "نوشته %{current} از %{total}"
       notifications:
         reasons:
           '3_6': 'شما آگاه‌سازی‌ها را دریافت خواهید کرد، زیرا شما در حال مشاهده ی این  دسته بندی هستید.'
@@ -1155,7 +1142,6 @@ fa_IR:
     post:
       reply: "<i class='fa fa-mail-forward'></i> {{replyAvatar}} {{usernameLink}}"
       reply_topic: "<i class='fa fa-mail-forward'></i> {{link}}"
-      quote_reply: "پاسخ با نقل قول"
       edit: "در حال ویرایش {{link}} {{replyAvatar}} {{username}}"
       edit_reason: "دلیل:"
       post_number: "نوشته {{number}}"
@@ -1170,7 +1156,6 @@ fa_IR:
       expand_collapse: "باز کردن/گستردن"
       gap:
         other: "{{count}} پاسخ پنهان را مشاهده کنید"
-      more_links: "{{count}} مورد دیگر..."
       unread: "نوشته خوانده نشده است"
       has_replies:
         other: "{{count}} پاسخ"
@@ -1227,14 +1212,6 @@ fa_IR:
         flag: 'پرچم'
         defer_flags:
           other: "پرچم تسلیم"
-        it_too:
-          off_topic: "هم‌چنین آن یکی را پرچم بزنید"
-          spam: "هم‌چنین آن یکی را پرچم بزنید"
-          inappropriate: "هم‌چنین آن یکی را پرچم بزنید"
-          custom_flag: "هم‌چنین آن یکی را پرچم بزنید"
-          bookmark: "هم‌چنین نشانک‌گذاری آن یکی"
-          like: "همچنین آن یکی را پسند کنید"
-          vote: "هم‌چنین به آن یکی رأی دهید"
         undo:
           off_topic: "برداشتن پرچم"
           spam: "برداشتن پرچم"
@@ -1378,7 +1355,6 @@ fa_IR:
       take_action: "اقدام"
       notify_action: 'پیام'
       delete_spammer: "پاک کردن هرزنگار"
-      delete_confirm: "شما در مورد حذف <b>%{posts}</b> نوشته ها و  <b>%{topics}</b> موضوغات این کاربر،و حذف حساب کاربری وی، مسدود شدن ثبت نام از این آدرس آی پی<b>%{ip_address}</b> و اضافه شدن ایمیل <b>%{email}</b> به لیست مسدودیت دائمی.\nآیا اطمینان دارید که این کاربر یک اسپمر است ؟"
       yes_delete_spammer: "بله، پاک‌کردن هرزنگار"
       ip_address_missing: "(N/A)"
       hidden_email_address: "(مخفی)"
@@ -1391,10 +1367,6 @@ fa_IR:
         spam: "آن هرزنامه است"
       custom_placeholder_notify_user: "خاص، سودمند باشید و همیشه مهربان."
       custom_placeholder_notify_moderators: "به ما اجازه دهید بدانیم  شما در مورد چه چیز آن نگران هستید، و ارائه لینک مربوطه و نمونه آن امکان پذیر است."
-      custom_message:
-        at_least: "دست‌کم {{n}} نویسه بنویسید"
-        more: "{{n}} نویسهٔ دیگر تا..."
-        left: "{{n}} مانده"
     flagging_topic:
       title: "تشکر برای کمک به جامعه مدنی انجمن ما!"
       action: "پرچم‌گذاری موضوع"
@@ -1428,7 +1400,6 @@ fa_IR:
       invisible:
         help: "این موضوع از لیست خارج شد: آن درلیست موضوعات نمایش داده نخواهد شد، و فقط از طریق لینک مستقیم در دسترس خواهد بود. "
     posts: "نوشته‌ها"
-    posts_lowercase: "نوشته ها"
     posts_long: "این موضوع {{number}} نوشته دارد"
     posts_likes_MF: |
       این موضوع است {count, plural, one {1 reply} other {# replies}} {ratio, select,
@@ -1531,6 +1502,14 @@ fa_IR:
       full: "ساختن / پاسخ دادن / دیدن"
       create_post: "پاسخ دادن / دیدن"
       readonly: "دیدن"
+    badges:
+      earned_n_times:
+        other: "این مدال را %{count} بار به دست آورده"
+      others_count: "بقیه با این مدال (%{count})"
+      title: مدال ها
+      badge_count:
+        other: "%{count} مدال"
+      select_badge_for_title: انتخاب یک مدال برای استفاده در عنوان خود
   admin_js:
     type_to_filter: "بنویسید تا فیلتر کنید..."
     admin:
@@ -1649,15 +1628,12 @@ fa_IR:
         refresh: "تازه کردن"
         new: "جدید"
         selector_placeholder: "نام کاربری را وارد نمایید ."
-        name_placeholder: "نام گروه، بدون فاصله، همان قاعده نام کاربری"
         about: "اعضای گروهت و نام ها  را اینجا ویرایش کن"
         group_members: "اعضای گروه"
         delete: "حذف"
         delete_confirm: "حفظ کردن این گروه؟"
         delete_failed: "قادر به حذف گروه نیستیم. اگر این یک گروه خودکار است، نمی توان آن را از بین برد."
-        delete_member_confirm: "حذف کردن '%{username}' از '%{group}' گروه؟"
         delete_owner_confirm: "حذف حق مالکیت برای '%{username}'؟"
-        name: "نام"
         add: "اضافه کردن"
         add_members: "اضافه کردن عضو"
         custom: "دلخواه"
@@ -1688,6 +1664,19 @@ fa_IR:
         info_html: "موضوعات تازه پس از آخرین بازدید شما"
         all_users: "همه کاربران"
         note_html: "این کلید را <strong>امن</strong> نگهدارید، تمام  کاربرانی که آن را دارند می توانند نوشته های دلخواه بسازند به عنوان هر کاربری"
+      web_hooks:
+        active: "فعال"
+        delivery_status:
+          failed: "ناموفق"
+          successful: "موفق"
+        events:
+          request: "درخواست"
+          response: "پاسخ"
+          body: "بدنه"
+          go_list: "برو به لیست"
+          event_id: "آی دی"
+          timestamp: "ساخته شده"
+          actions: "کار ها"
       plugins:
         title: "افزونه ها"
         installed: "افزونه های نصب شده"
@@ -1739,14 +1728,13 @@ fa_IR:
             is_disabled: "بازگردانی در تنظیمات سایت از کار انداخته شده است."
             label: "بازیابی"
             title: "بازیابی  پشتیبان"
+            confirm: "آیا از بازگردانی این پشتیبان مطمئن هستید ؟"
           rollback:
             label: "عقبگرد"
             title: "عقب گرد پایگاه داده به حالت کار قبلی"
       export_csv:
-        user_archive_confirm: "آیا مطمئنید که می‌خواهید نوشته‌هایتان را دانلود کنید؟"
         success: "فرایند برون ریزی، به شما از طریق پیام اطلاع رسانی خواهد شد وقتی این فرایند تکمیل شود."
         failed: "برون ریزی شکست خورد.  لطفا لوگ گزارشات را مشاهده فرمایید."
-        rate_limit_error: "نوشته ها را می توانید روزی فقط یک بار دانلود کنید. لطفا فردا دوباره امتحان کنید."
         button_text: "خروجی گرفتن"
         button_title:
           user: "برون ریزی لیست کاربر در قالب CSV ."
@@ -1845,13 +1833,17 @@ fa_IR:
             name: 'دوست داشتن'
             description: "رنگ دکمه های لایک"
       email:
+        title: "رایانامه ها "
         settings: "تنظیمات"
+        templates: "قالب ها"
         preview_digest: "پیشنمایش خلاصه"
         sending_test: "فرستادن ایمیل آزمایشی..."
         error: "<b>خطا</b> - %{server_error}"
         test_error: "در ارسال ایمیل آزمایشی مشکلی وجود داشته است. لطفاً مجدداً تنظیمات ایمیل خود را بررسی کنید، از این که هاستتان اتصالات ایمیل را مسدود نکرده اطمینان حاصل کرده و مجدداً تلاش کنید."
         sent: "فرستاده شده"
         skipped: "رد داده شده"
+        received: "دریافت شده"
+        rejected: "رد شده"
         sent_at: "ارسال شده در"
         time: "زمان"
         user: "کاربر"
@@ -1869,6 +1861,8 @@ fa_IR:
         last_seen_user: "آخرین مشاهده کاربر :"
         reply_key: "کلید پاسخ"
         skipped_reason: "رد دادن دلیل"
+        incoming_emails:
+          from_address: "از طرف"
         logs:
           none: "هیچ آماری یافت نشد."
           filters:
@@ -2022,7 +2016,6 @@ fa_IR:
         suspend_reason: "دلیل"
         suspended_by: "تعلیق شده توسط"
         delete_all_posts: "پاک کردن همهٔ نوشته‌ها"
-        delete_all_posts_confirm: "شما می خواهید تعداد %{posts}  نوشته و تعداد %{topics} موضوع خذف کنید،آیا مطمئن هستید؟"
         suspend: "تعلیق"
         unsuspend: "خارج کردن از تعلیق"
         suspended: "تعلیق شد ؟"
@@ -2103,7 +2096,6 @@ fa_IR:
         unlock_trust_level: "باز کردن سطح اعتماد"
         tl3_requirements:
           title: "شرایط لازم برای سطح اعتماد 3."
-          table_title: "در %{time_period} روز گذشته:"
           value_heading: "مقدار"
           requirement_heading: "نیازمندی‌ها"
           visits: "بازدیدها"

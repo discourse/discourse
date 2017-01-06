@@ -1,0 +1,25 @@
+<div class="user-preferences">
+  <form class="form-horizontal">
+
+    <div class="control-group">
+      <div class="controls">
+        <h3>{{i18n 'user.change_about.title'}}</h3>
+      </div>
+    </div>
+
+    <div class="control-group">
+      <label class="control-label">{{i18n 'user.bio'}}</label>
+      <div class="controls">
+        {{d-editor value=model.bio_raw class="raw-bio" autofocus="autofocus"}}
+      </div>
+    </div>
+
+    <div class="control-group">
+      <div class="controls">
+        {{#d-button action="changeAbout" class="btn btn-primary"}}
+          {{saveButtonText}}
+        {{/d-button}}
+      </div>
+    </div>
+  </form>
+</div>

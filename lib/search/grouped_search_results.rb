@@ -49,7 +49,7 @@ class Search
 
 
     def self.blurb_for(cooked, term=nil, blurb_length=200)
-      cooked = SearchObserver::HtmlScrubber.scrub(cooked).squish
+      cooked = SearchIndexer::HtmlScrubber.scrub(cooked).squish
 
       blurb = nil
       if term

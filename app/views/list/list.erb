@@ -33,7 +33,7 @@
       <a href='<%= t.relative_url %>' itemprop='item'>
         <span itemprop='name'><%= t.title %></span>
       </a>
-      <%= page_links(t) %>
+      <span class="page-links"><%= page_links(t) %></span>
       <% if (!@category || @category.has_children?) && t.category %>
         <span class='category'>[<a href='<%= t.category.url %>'><%= t.category.name %></a>]</span>
       <% end %>
@@ -64,6 +64,10 @@
   <% content_for :head do %>
     <%= auto_discovery_link_tag(:rss, { action: :category_feed }, title: t('rss_topics_in_category', category: @category.name)) %>
     <%= raw crawlable_meta_data(title: @category.name, description: @category.description) %>
+  <% end %>
+<% else %>
+  <% content_for :head do %>
+    <%= raw crawlable_meta_data(title: SiteSetting.title, description: SiteSetting.site_description) %>
   <% end %>
 <% end %>
 

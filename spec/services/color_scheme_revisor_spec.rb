@@ -18,6 +18,11 @@ describe ColorSchemeRevisor do
       expect(color_scheme.reload.name).to eq("Changed Name")
     end
 
+    it "can update the theme_id" do
+      described_class.revise(color_scheme, valid_params.merge(theme_id: 'test'))
+      expect(color_scheme.reload.theme_id).to eq('test')
+    end
+
     it "can enable and disable" do
       described_class.revise(color_scheme, valid_params.merge(enabled: true))
       expect(color_scheme.reload).to be_enabled

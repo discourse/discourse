@@ -6,6 +6,16 @@ class EmbedController < ApplicationController
 
   layout 'embed'
 
+  rescue_from Discourse::InvalidAccess do
+    response.headers['X-Frame-Options'] = "ALLOWALL"
+    if current_user.try(:admin?)
+      @setup_url = "#{Discourse.base_url}/admin/customize/embedding"
+      @show_reason = true
+      @hosts = EmbeddableHost.all
+    end
+    render 'embed_error'
+  end
+
   def comments
     embed_url = params[:embed_url]
     embed_username = params[:discourse_username]
@@ -69,7 +79,11 @@ class EmbedController < ApplicationController
       topic_embeds.each do |te|
         url = te.embed_url
         url = "#{url}#discourse-comments" unless params[:embed_url].include?(url)
-        by_url[url] = I18n.t('embed.replies', count: te.topic.posts_count - 1)
+        if te.topic.present?
+          by_url[url] = I18n.t('embed.replies', count: te.topic.posts_count - 1)
+        else
+          by_url[url] = I18n.t('embed.replies', count: 0)
+        end
       end
     end
 
@@ -85,7 +99,7 @@ class EmbedController < ApplicationController
     def ensure_embeddable
 
       if !(Rails.env.development? && current_user.try(:admin?))
-        raise Discourse::InvalidAccess.new('invalid referer host') unless EmbeddableHost.host_allowed?(request.referer)
+        raise Discourse::InvalidAccess.new('invalid referer host') unless EmbeddableHost.url_allowed?(request.referer)
       end
 
       response.headers['X-Frame-Options'] = "ALLOWALL"

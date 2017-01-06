@@ -15,7 +15,7 @@ module TopicsHelper
       breadcrumb.push url: category.url, name: category.name
     end
 
-    if (tags = topic.tags).present?
+    if SiteSetting.tagging_enabled && (tags = topic.tags).present?
       tags.each do |tag|
         url = "#{Discourse.base_url}/tags/#{tag.name}"
         breadcrumb << {url: url, name: tag.name}

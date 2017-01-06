@@ -30,16 +30,7 @@ task 'assets:precompile:before' do
 
   if $node_uglify
     Rails.configuration.assets.js_compressor = nil
-
-    module ::Sprockets
-      # TODO: https://github.com/rails/sprockets-rails/pull/342
-      # Rails.configuration.assets.gzip = false
-      class Base
-        def skip_gzip?
-          true
-        end
-      end
-    end
+    Rails.configuration.assets.gzip = false
   end
 
 end

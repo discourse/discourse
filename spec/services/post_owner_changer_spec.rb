@@ -51,6 +51,13 @@ describe PostOwnerChanger do
       expect(p2.user).not_to eq(user_a)
     end
 
+    it "skips creating new post revision if skip_revision is true" do
+      described_class.new(post_ids: [p1.id, p2.id], topic_id: topic.id, new_owner: user_a, acting_user: editor, skip_revision: true).change_owner!
+      p1.reload; p2.reload
+      expect(p1.revisions.size).to eq(0)
+      expect(p2.revisions.size).to eq(0)
+    end
+
     context "integration tests" do
       let(:p1user) { p1.user }
       let(:p2user) { p2.user }
@@ -67,7 +74,8 @@ describe PostOwnerChanger do
         UserAction.create!( action_type: UserAction::REPLY, user_id: p2user.id, acting_user_id: p2user.id,
                             target_post_id: p2.id, target_topic_id: p2.topic_id, created_at: p2.created_at )
 
-        ActiveRecord::Base.observers.enable :user_action_observer
+
+        UserActionCreator.enable
       end
 
       subject(:change_owners) { described_class.new(post_ids: [p1.id, p2.id], topic_id: topic.id, new_owner: user_a, acting_user: editor).change_owner! }

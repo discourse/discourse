@@ -1,0 +1,50 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-org/
+
+ur:
+  js:
+    number:
+      format:
+        separator: "."
+        delimiter: "،"
+      human:
+        storage_units:
+          units:
+            gb: جی بی
+            kb: کے بی
+            mb: ایم بی
+            tb: ٹی بی
+    dates:
+      medium_with_ago:
+        x_minutes:
+          one: "1 منٹ قبل"
+          other: "%{count} منٹ قبل"
+        x_hours:
+          one: "1 گھنٹہ قبل "
+          other: " %{count} گھنٹے قبل "
+    no_value: "نہیں "
+    yes_value: "ہاں "
+    age: "عمر "
+    show_more: "مزید "
+    you: "آپ "
+    or: "یا "
+    now: "ابھی "
+    read_more: 'مزید پڑھیں '
+    more: "مزید "
+    less: "کم "
+    never: "کبھی نہیں "
+    daily: "روزانہ "
+    weekly: "ہفتہ وار "
+    user:
+      desktop_notifications:
+        each_browser_note: "نوٹ: آپ کو ہر براؤزر پر اس سیٹنگ کو تبدیل کرنا ہوگا."
+  admin_js:
+    admin:
+      export_json:
+        button_text: "برآمد"
+      badges:
+        name: نام

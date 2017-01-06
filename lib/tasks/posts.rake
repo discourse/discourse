@@ -18,9 +18,44 @@ task 'posts:fix_letter_avatars' => :environment do
   rebaked = 0
   total = search.count
 
-  search.order(updated_at: :asc).find_each do |post|
+  search.find_each do |post|
     rebake_post(post)
     print_status(rebaked += 1, total)
+  end
+
+  puts "", "#{rebaked} posts done!", ""
+end
+
+desc 'Rebake all posts matching string/regex and optionally delay the loop'
+task 'posts:rebake_match', [:pattern, :type, :delay] => [:environment] do |_,args|
+  pattern = args[:pattern]
+  type = args[:type]
+  type = type.downcase if type
+  delay = args[:delay].to_i if args[:delay]
+  if !pattern
+    puts "ERROR: Expecting rake posts:rebake_match[pattern,type,delay]"
+    exit 1
+  elsif delay && delay < 1
+    puts "ERROR: delay parameter should be an integer and greater than 0"
+    exit 1
+  end
+
+  if type == "regex"
+    search = Post.where("raw ~ ?", pattern)
+  elsif type == "string" || !type
+    search = Post.where("raw ILIKE ?", "%#{pattern}%")
+  else
+    puts "ERROR: Expecting rake posts:rebake_match[pattern,type] where type is string or regex"
+    exit 1
+  end
+
+  rebaked = 0
+  total = search.count
+
+  search.find_each do |post|
+    rebake_post(post)
+    print_status(rebaked += 1, total)
+    sleep(delay) if delay
   end
 
   puts "", "#{rebaked} posts done!", ""
@@ -41,7 +76,7 @@ def rebake_posts(opts = {})
   total = Post.count
   rebaked = 0
 
-  Post.order(updated_at: :asc).find_each do |post|
+  Post.find_each do |post|
     rebake_post(post, opts)
     print_status(rebaked += 1, total)
   end
@@ -79,4 +114,28 @@ task 'posts:normalize_code' => :environment do
 
   puts
   puts "#{i} posts normalized!"
+end
+
+desc 'Remap all posts matching specific string'
+task 'posts:remap', [:find, :replace] => [:environment] do |_,args|
+  find = args[:find]
+  replace = args[:replace]
+  if !find || !replace
+    puts "ERROR: Expecting rake posts:rebake_match[find,replace]"
+    exit 1
+  end
+
+  puts "Remapping"
+  i = 0
+  Post.where("raw LIKE ?", "%#{find}%").each do |p|
+    new_raw = p.raw.dup
+    new_raw = new_raw.gsub!(/#{Regexp.escape(find)}/, replace) || new_raw
+
+    if new_raw != p.raw
+      p.revise(Discourse.system_user, { raw: new_raw }, { bypass_bump: true, skip_revision: true })
+      putc "."
+      i += 1
+    end
+  end
+  puts "", "#{i} posts remapped!", ""
 end

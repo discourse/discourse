@@ -56,7 +56,7 @@
 
   > tbody > tr {
     &.highlighted {
-        background-color: dark-light-diff($tertiary, $secondary, 85%, -65%);
+      animation: background-fade-highlight 2.5s ease-out;
     }
   }
   button.bulk-select {
@@ -193,8 +193,6 @@
     }
   }
   .category{
-    width: 45%;
-
     h3 {
       display: inline-block;
       font-size: 1.286em;

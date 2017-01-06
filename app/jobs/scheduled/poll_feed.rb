@@ -55,6 +55,9 @@ module Jobs
       def topics
         feed_topics = []
 
+        rss = fetch_rss
+        return feed_topics unless rss.present?
+
         rss.items.each do |i|
           current_feed_topic = FeedTopic.new(i)
           feed_topics << current_feed_topic if current_feed_topic.content
@@ -65,8 +68,10 @@ module Jobs
 
       private
 
-      def rss
+      def fetch_rss
         SimpleRSS.parse open(@feed_url, allow_redirections: :all)
+      rescue OpenURI::HTTPError
+        nil
       end
 
     end
@@ -86,11 +91,11 @@ module Jobs
       end
 
       def content
-        @article_rss_item.content.try(:scrub) || @article_rss_item.description.try(:scrub)
+        @article_rss_item.content.try(:force_encoding, "UTF-8").try(:scrub) || @article_rss_item.description.try(:force_encoding, "UTF-8").try(:scrub)
       end
 
       def title
-        @article_rss_item.title.scrub
+        @article_rss_item.title.force_encoding("UTF-8").scrub
       end
 
       def user

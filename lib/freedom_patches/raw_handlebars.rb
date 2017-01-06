@@ -9,7 +9,7 @@ class Barber::Precompiler
   def precompiler
     if !@precompiler
 
-      source = File.read("#{Rails.root}/app/assets/javascripts/discourse/lib/raw-handlebars.js.es6")
+      source = File.read("#{Rails.root}/app/assets/javascripts/discourse-common/lib/raw-handlebars.js.es6")
       template = Tilt::ES6ModuleTranspilerTemplate.new {}
       transpiled = template.babel_transpile(source)
 
@@ -40,11 +40,11 @@ module Discourse
     module Handlebars
       module Helper
         def precompile_handlebars(string)
-          "require('discourse/lib/raw-handlebars').template(#{Barber::Precompiler.compile(string)});"
+          "require('discourse-common/lib/raw-handlebars').template(#{Barber::Precompiler.compile(string)});"
         end
 
         def compile_handlebars(string)
-          "require('discourse/lib/raw-handlebars').compile(#{indent(string).inspect});"
+          "require('discourse-common/lib/raw-handlebars').compile(#{indent(string).inspect});"
         end
       end
     end
@@ -53,6 +53,18 @@ end
 
 class Ember::Handlebars::Template
   include Discourse::Ember::Handlebars::Helper
+
+  def precompile_handlebars(string, input=nil)
+    "require('discourse-common/lib/raw-handlebars').template(#{Barber::Precompiler.compile(string)});"
+  end
+
+  def compile_handlebars(string, input=nil)
+    "require('discourse-common/lib/raw-handlebars').compile(#{indent(string).inspect});"
+  end
+
+  def global_template_target(namespace, module_name, config)
+    "#{namespace}[#{template_path(module_name, config).inspect}]"
+  end
 
   # FIXME: Previously, ember-handlebars-templates uses the logical path which incorrectly
   # returned paths with the `.raw` extension and our code is depending on the `.raw`

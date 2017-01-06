@@ -1,5 +1,5 @@
 import { createWidget } from 'discourse/widgets/widget';
-import { iconNode } from 'discourse/helpers/fa-icon';
+import { iconNode } from 'discourse/helpers/fa-icon-node';
 import { avatarImg } from 'discourse/widgets/post';
 import DiscourseURL from 'discourse/lib/url';
 import { wantsNewWindow } from 'discourse/lib/intercept-click';
@@ -21,11 +21,17 @@ const dropdown = {
 };
 
 createWidget('header-notifications', {
+  settings: {
+    avatarSize: 'medium'
+  },
+
   html(attrs) {
     const { currentUser } = this;
 
-    const contents = [ avatarImg('medium', { template: currentUser.get('avatar_template'),
-                                             username: currentUser.get('username') }) ];
+    const contents = [ avatarImg(this.settings.avatarSize, {
+      template: currentUser.get('avatar_template'),
+      username: currentUser.get('username')
+    }) ];
 
     const unreadNotifications = currentUser.get('unread_notifications');
     if (!!unreadNotifications) {
@@ -36,6 +42,17 @@ createWidget('header-notifications', {
 
     const unreadPMs = currentUser.get('unread_private_messages');
     if (!!unreadPMs) {
+      if (!currentUser.get('read_first_notification')) {
+        contents.push(h('span.ring'));
+        if (!attrs.active && attrs.ringBackdrop) {
+          contents.push(h('span.ring-backdrop-spotlight'));
+          contents.push(h('span.ring-backdrop',
+            {},
+            h('h1.ring-first-notification', {} ,I18n.t('user.first_notification'))
+          ));
+        }
+      };
+
       contents.push(this.attach('link', { action: attrs.action,
                                           className: 'badge-notification unread-private-messages',
                                           rawLabel: unreadPMs }));
@@ -96,7 +113,7 @@ createWidget('header-icons', {
                         contents() {
                           if (!attrs.flagCount) { return; }
                           return this.attach('link', {
-                            href: '/admin/flags/active',
+                            href: Discourse.getURL('/admin/flags/active'),
                             title: 'notifications.total_flagged',
                             rawLabel: attrs.flagCount,
                             className: 'badge-notification flagged-posts'
@@ -110,13 +127,14 @@ createWidget('header-icons', {
                      iconId: 'search-button',
                      action: 'toggleSearchMenu',
                      active: attrs.searchVisible,
-                     href: '/search'
+                     href: Discourse.getURL('/search')
                    });
 
     const icons = [search, hamburger];
     if (this.currentUser) {
       icons.push(this.attach('user-dropdown', { active: attrs.userVisible,
-                                                action: 'toggleUserMenu' }));
+                                                action: 'toggleUserMenu',
+                                                ringBackdrop: attrs.ringBackdrop }));
     }
 
     return icons;
@@ -151,10 +169,19 @@ export default createWidget('header', {
   buildKey: () => `header`,
 
   defaultState() {
-    return { searchVisible: false,
-             hamburgerVisible: false,
-             userVisible: false,
-             contextEnabled: false };
+    let states =  {
+      searchVisible: false,
+      hamburgerVisible: false,
+      userVisible: false,
+      contextEnabled: false,
+      ringBackdrop: true
+    };
+
+    if (this.site.mobileView) {
+      states.skipSearchContext = true;
+    }
+
+    return states;
   },
 
   html(attrs, state) {
@@ -162,6 +189,7 @@ export default createWidget('header', {
                     this.attach('header-icons', { hamburgerVisible: state.hamburgerVisible,
                                                   userVisible: state.userVisible,
                                                   searchVisible: state.searchVisible,
+                                                  ringBackdrop: state.ringBackdrop,
                                                   flagCount: attrs.flagCount })];
 
     if (state.searchVisible) {
@@ -184,7 +212,7 @@ export default createWidget('header', {
 
   updateHighlight() {
     if (!this.state.searchVisible) {
-      const service = this.container.lookup('search-service:main');
+      const service = this.register.lookup('search-service:main');
       service.set('highlightTerm', '');
     }
   },
@@ -202,12 +230,12 @@ export default createWidget('header', {
 
   toggleSearchMenu() {
     if (this.site.mobileView) {
-      const searchService = this.container.lookup('search-service:main');
+      const searchService = this.register.lookup('search-service:main');
       const context = searchService.get('searchContext');
       var params = "";
 
       if (context) {
-        params = `?context=${context.type}&context_id=${context.id}&skip_context=true`;
+        params = `?context=${context.type}&context_id=${context.id}&skip_context=${this.state.skipSearchContext}`;
       }
 
       return DiscourseURL.routeTo('/search' + params);
@@ -222,6 +250,7 @@ export default createWidget('header', {
   },
 
   toggleUserMenu() {
+    this.state.ringBackdrop = false;
     this.state.userVisible = !this.state.userVisible;
   },
 
@@ -234,7 +263,7 @@ export default createWidget('header', {
 
     state.contextEnabled = false;
 
-    const currentPath = this.container.lookup('controller:application').get('currentPath');
+    const currentPath = this.register.lookup('controller:application').get('currentPath');
     const blacklist = [ /^discovery\.categories/ ];
     const whitelist = [ /^topic\./ ];
     const check = function(regex) { return !!currentPath.match(regex); };
@@ -243,7 +272,7 @@ export default createWidget('header', {
     // If we're viewing a topic, only intercept search if there are cloaked posts
     if (showSearch && currentPath.match(/^topic\./)) {
       showSearch = ($('.topic-post .cooked, .small-action:not(.time-gap)').length <
-                    this.container.lookup('controller:topic').get('model.postStream.stream.length'));
+                    this.register.lookup('controller:topic').get('model.postStream.stream.length'));
     }
 
     if (state.searchVisible) {

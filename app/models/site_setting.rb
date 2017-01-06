@@ -94,14 +94,14 @@ class SiteSetting < ActiveRecord::Base
       SiteSetting.default_categories_watching.split("|"),
       SiteSetting.default_categories_tracking.split("|"),
       SiteSetting.default_categories_muted.split("|"),
+      SiteSetting.default_categories_watching_first_post.split("|")
     ].flatten.to_set
   end
 
-  def self.min_redirected_to_top_period
-    TopTopic.sorted_periods.each do |p|
-      period = p[0]
-      return period if TopTopic.topics_per_period(period) >= SiteSetting.topics_per_period_in_top_page
-    end
+  def self.min_redirected_to_top_period(duration)
+    period = ListController.best_period_with_topics_for(duration)
+    return period if period
+
     # not enough topics
     nil
   end

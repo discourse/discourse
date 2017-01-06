@@ -38,6 +38,19 @@ describe NotificationsController do
       expect(user.reload.total_unread_notifications).to eq(1)
     end
 
+    it "can update a single notification" do
+      notification = Fabricate(:notification, user: user)
+      notification2 = Fabricate(:notification, user: user)
+      xhr :put, :mark_read, id: notification.id
+      expect(response).to be_success
+
+      notification.reload
+      notification2.reload
+
+      expect(notification.read).to eq(true)
+      expect(notification2.read).to eq(false)
+    end
+
     it "updates the `read` status" do
       notification = Fabricate(:notification, user: user)
       expect(user.reload.unread_notifications).to eq(1)

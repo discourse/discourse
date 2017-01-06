@@ -14,6 +14,14 @@ export default Discourse.Route.extend({
     var tag = this.store.createRecord("tag", { id: Handlebars.Utils.escapeExpression(params.tag_id) }),
         f = '';
 
+    if (params.additional_tags) {
+      this.set("additionalTags", params.additional_tags.split('/').map((t) => {
+        return this.store.createRecord("tag", { id: Handlebars.Utils.escapeExpression(t) }).id;
+      }));
+    } else {
+      this.set('additionalTags', null);
+    }
+
     if (params.category) {
       f = 'c/';
       if (params.parent_category) { f += params.parent_category + '/'; }
@@ -56,6 +64,9 @@ export default Discourse.Route.extend({
       }
 
       this.set('category', category);
+    } else if (this.get("additionalTags")) {
+      params.filter = `tags/intersection/${tag_id}/${this.get('additionalTags').join('/')}`;
+      this.set('category', null);
     } else {
       params.filter = `tags/${tag_id}/l/${filter}`;
       this.set('category', null);
@@ -64,9 +75,6 @@ export default Discourse.Route.extend({
     return findTopicList(this.store, this.topicTrackingState, params.filter, params, {}).then(function(list) {
       controller.set('list', list);
       controller.set('canCreateTopic', list.get('can_create_topic'));
-      if (list.topic_list.tags) {
-        Discourse.Site.currentProp('top_tags', list.topic_list.tags);
-      }
       controller.set('loading', false);
     });
   },
@@ -94,6 +102,7 @@ export default Discourse.Route.extend({
     this.controllerFor('tags.show').setProperties({
       model,
       tag: model,
+      additionalTags: this.get('additionalTags'),
       category: this.get('category'),
       filterMode: this.get('filterMode'),
       navMode: this.get('navMode'),
@@ -123,23 +132,13 @@ export default Discourse.Route.extend({
         // Pre-fill the tags input field
         if (controller.get('model.id')) {
           var c = self.controllerFor('composer').get('model');
-          c.set('tags', [controller.get('model.id')]);
+          c.set('tags', _.flatten([controller.get('model.id')], controller.get('additionalTags')));
         }
       });
     },
 
     didTransition() {
       this.controllerFor("tags.show")._showFooter();
-      return true;
-    },
-
-    willTransition(transition) {
-      if (!Discourse.SiteSettings.show_filter_by_tag) { return true; }
-
-      if ((transition.targetName.indexOf("discovery.parentCategory") !== -1 ||
-            transition.targetName.indexOf("discovery.category") !== -1) && !transition.queryParams.allTags ) {
-        this.transitionTo("/tags" + transition.intent.url + "/" + this.currentModel.get("id"));
-      }
       return true;
     }
   }

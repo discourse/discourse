@@ -170,7 +170,7 @@ describe UploadsController do
       expect(response.response_code).to eq(404)
     end
 
-    it "returns 404 when the upload doens't exist" do
+    it "returns 404 when the upload doesn't exist" do
       Upload.stubs(:find_by).returns(nil)
 
       get :show, site: site, sha: sha, extension: "pdf"
@@ -185,6 +185,16 @@ describe UploadsController do
       controller.expects(:send_file)
 
       get :show, site: site, sha: sha, extension: "zip"
+    end
+
+    it "handles file without extension" do
+      SiteSetting.authorized_extensions = "*"
+      upload = Fabricate(:upload, original_filename: "image_file", sha1: sha)
+      controller.stubs(:render)
+      controller.expects(:send_file)
+
+      get :show, site: site, sha: sha
+      expect(response).to be_success
     end
 
     context "prevent anons from downloading files" do

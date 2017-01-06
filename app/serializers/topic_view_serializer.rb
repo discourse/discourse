@@ -56,7 +56,8 @@ class TopicViewSerializer < ApplicationSerializer
              :chunk_size,
              :bookmarked,
              :message_archived,
-             :tags
+             :tags,
+             :featured_link
 
   # TODO: Split off into proper object / serializer
   def details
@@ -243,8 +244,17 @@ class TopicViewSerializer < ApplicationSerializer
   def include_tags?
     SiteSetting.tagging_enabled
   end
+
   def tags
     object.topic.tags.map(&:name)
+  end
+
+  def include_featured_link?
+    SiteSetting.topic_featured_link_enabled
+  end
+
+  def featured_link
+    object.topic.featured_link
   end
 
 end

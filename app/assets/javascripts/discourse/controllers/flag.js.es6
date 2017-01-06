@@ -1,6 +1,7 @@
 import ModalFunctionality from 'discourse/mixins/modal-functionality';
 import ActionSummary from 'discourse/models/action-summary';
 import { MAX_MESSAGE_LENGTH } from 'discourse/models/post-action-type';
+import computed from 'ember-addons/ember-computed-decorators';
 
 export default Ember.Controller.extend(ModalFunctionality, {
   userDetails: null,
@@ -14,13 +15,18 @@ export default Ember.Controller.extend(ModalFunctionality, {
     this.set('selected', null);
   },
 
+  @computed('flagTopic')
+  title(flagTopic) {
+    return flagTopic ? 'flagging_topic.title' : 'flagging.title';
+  },
+
   flagsAvailable: function() {
     if (!this.get('flagTopic')) {
       // flagging post
       let flagsAvailable = this.get('model.flagsAvailable');
 
       // "message user" option should be at the top
-      const notifyUserIndex = flagsAvailable.indexOf(flagsAvailable.filterProperty('name_key', 'notify_user')[0]);
+      const notifyUserIndex = flagsAvailable.indexOf(flagsAvailable.filterBy('name_key', 'notify_user')[0]);
       if (notifyUserIndex !== -1) {
         const notifyUser = flagsAvailable[notifyUserIndex];
         flagsAvailable.splice(notifyUserIndex, 1);
@@ -93,7 +99,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
       let postAction; // an instance of ActionSummary
 
       if (!this.get('flagTopic')) {
-        postAction = this.get('model.actions_summary').findProperty('id', this.get('selected.id'));
+        postAction = this.get('model.actions_summary').findBy('id', this.get('selected.id'));
       } else {
         postAction = this.get('topicActionByName.' + this.get('selected.name_key'));
       }

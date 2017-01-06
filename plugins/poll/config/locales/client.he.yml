@@ -20,13 +20,13 @@ he:
       multiple:
         help:
           at_least_min_options:
-            one: "בחרו לפחות <strong>1</strong> אפשרויות"
+            one: "בחרו לפחות אפשרות אחת"
             other: "בחרו לפחות <strong>%{count}</strong> אפשרויות"
           up_to_max_options:
-            one: "בחרו עד <strong>1</strong>  אפשרויות"
+            one: "בחרו לכל היותר אפשרות אחת."
             other: "בחרו עד <strong>%{count}</strong> אפשרויות"
           x_options:
-            one: "בחרו <strong>1</strong> אפשרויות"
+            one: "בחרו אפשרות אחת"
             other: "בחרו <strong>%{count}</strong> אפשרויות"
           between_min_and_max_options: "בחרו בין <strong>%{min}</strong> ל-<strong>%{max}</strong> אפשרויות"
       cast-votes:
@@ -41,11 +41,11 @@ he:
       open:
         title: "פתיחת הסקר"
         label: "פתיחה"
-        confirm: "האם את/ה בטוח/ה שאת/ה רוצה לפתוח את הסקר הזה?"
+        confirm: "האם אתם בטוחים שאתם רוצים לפתוח את הסקר הזה?"
       close:
         title: "סגירת הסקר"
         label: "סגירה"
-        confirm: "האם את/ה בטוח/ה שאת/ה רוצה לסגור סקר זה?"
+        confirm: "האם אתם בטוחים שאתם רוצים לסגור סקר זה?"
       error_while_toggling_status: "מצטערים, חלה שגיאה בשינוי המצב של סקר זה."
       error_while_casting_votes: "מצטערים, ארעה שגיאה בהצבעתכם."
       error_while_fetching_voters: "מצטערים, ארעה שגיאה בהצגת המצביעים."
@@ -64,6 +64,6 @@ he:
           min: מינימום
           step: צעד
         poll_public:
-          label: הציג מי הצביעו
+          label: הצג מי הצביעו
         poll_options:
           label: הכניסו אפשרות בחירה אחת בכל שורה

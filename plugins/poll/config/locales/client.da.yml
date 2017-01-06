@@ -15,6 +15,20 @@ da:
         one: "afgiven stemme"
         other: "afgivne stemmer"
       average_rating: "Gennemsnitlig rating: <strong>%{average}</strong>."
+      public:
+        title: "Stemmer er offentlige."
+      multiple:
+        help:
+          at_least_min_options:
+            one: "Vælg mindst <strong>1</strong> mulighed"
+            other: "Vælg mindst <strong>%{count}</strong> muligheder"
+          up_to_max_options:
+            one: "Vælg op til <strong>1</strong> mulighed"
+            other: "Vælg op til <strong>%{count}</strong> muligheder"
+          x_options:
+            one: "Vælg <strong>1</strong> mulighed"
+            other: "Vælg <strong>%{count}</strong> muligheder"
+          between_min_and_max_options: "Vælg imellem <strong>%{min}</strong> og <strong>%{max}</strong> valgmuligheder"
       cast-votes:
         title: "Afgiv dine stemmer"
         label: "Stem nu!"
@@ -32,3 +46,24 @@ da:
         title: "Luk afstemningen"
         label: "Luk"
         confirm: "Er du sikker på, at du vil lukke denne afstemning?"
+      error_while_toggling_status: "Undskyld, der var en fejl i skifte status på denne afstemning."
+      error_while_casting_votes: "Undskyld, der var en fejl i din stemmeafgivning."
+      error_while_fetching_voters: "Beklager, der opstod en fejl med at vise deltagerne."
+      ui_builder:
+        title: Opret afstemning
+        insert: Indsæt afstemning
+        help:
+          options_count: Vælg mindst 2 muligheder
+        poll_type:
+          label: Type
+          regular: Enkelt valg
+          multiple: Flere valg
+          number: Nummerbedømmelse
+        poll_config:
+          max: Maks
+          min: Min
+          step: Trin
+        poll_public:
+          label: Vis hvem der stemte
+        poll_options:
+          label: Indtast en afstemning pr. linje

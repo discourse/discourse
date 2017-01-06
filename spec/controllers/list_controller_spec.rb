@@ -313,28 +313,22 @@ describe ListController do
 
   end
 
-  describe "categories suppression" do
-    let(:category_one) { Fabricate(:category) }
-    let(:sub_category) { Fabricate(:category, parent_category: category_one, suppress_from_homepage: true) }
-    let!(:topic_in_sub_category) { Fabricate(:topic, category: sub_category) }
+  describe "safe mode" do
+    render_views
 
-    let(:category_two) { Fabricate(:category, suppress_from_homepage: true) }
-    let!(:topic_in_category_two) { Fabricate(:topic, category: category_two) }
+    it "handles safe mode" do
+      get :latest
+      expect(response.body).to match(/plugin\.js/)
+      expect(response.body).to match(/plugin-third-party\.js/)
 
-    it "suppresses categories from the homepage" do
-      get SiteSetting.homepage, format: :json
-      expect(response).to be_success
+      get :latest, safe_mode: "no_plugins"
+      expect(response.body).not_to match(/plugin\.js/)
+      expect(response.body).not_to match(/plugin-third-party\.js/)
 
-      topic_titles = JSON.parse(response.body)["topic_list"]["topics"].map { |t| t["title"] }
-      expect(topic_titles).not_to include(topic_in_sub_category.title, topic_in_category_two.title)
-    end
+      get :latest, safe_mode: "only_official"
+      expect(response.body).to match(/plugin\.js/)
+      expect(response.body).not_to match(/plugin-third-party\.js/)
 
-    it "does not suppress" do
-      get SiteSetting.homepage, category: category_one.id, format: :json
-      expect(response).to be_success
-
-      topic_titles = JSON.parse(response.body)["topic_list"]["topics"].map { |t| t["title"] }
-      expect(topic_titles).to include(topic_in_sub_category.title)
     end
 
   end

@@ -42,7 +42,7 @@ export default function(options) {
 
   if (this.length === 0) return;
 
-  if (options === 'destroy') {
+  if (options === 'destroy' || options.updateData) {
     Ember.run.cancel(inputTimeout);
 
     $(this).off('keyup.autocomplete')
@@ -50,7 +50,10 @@ export default function(options) {
            .off('paste.autocomplete')
            .off('click.autocomplete');
 
-    return;
+    $(window).off('click.autocomplete');
+
+    if (options === 'destroy')
+      return;
   }
 
   if (options && options.cancel && this.data("closeAutocomplete")) {
@@ -162,28 +165,46 @@ export default function(options) {
 
   if (isInput) {
     const width = this.width();
-    wrap = this.wrap("<div class='ac-wrap clearfix" + (disabled ? " disabled": "") +  "'/>").parent();
-    wrap.width(width);
+
+    if (options.updateData) {
+      wrap = this.parent();
+      wrap.find('.item').remove();
+      me.show();
+    } else {
+      wrap = this.wrap("<div class='ac-wrap clearfix" + (disabled ? " disabled" : "") + "'/>").parent();
+      wrap.width(width);
+    }
+
     if(options.single) {
       this.css("width","100%");
     } else {
       this.width(150);
     }
-    this.attr('name', this.attr('name') + "-renamed");
+
+    this.attr('name', (options.updateData) ? this.attr('name') : this.attr('name') + "-renamed");
+
     var vals = this.val().split(",");
     _.each(vals,function(x) {
       if (x !== "") {
         if (options.reverseTransform) {
           x = options.reverseTransform(x);
         }
+        if(options.single){
+          me.hide();
+        }
         addInputSelectedItem(x);
       }
     });
+
     if(options.items) {
       _.each(options.items, function(item){
+        if(options.single){
+          me.hide();
+        }
         addInputSelectedItem(item);
       });
     }
+
     this.val("");
     completeStart = 0;
     wrap.click(function() {
@@ -237,15 +258,19 @@ export default function(options) {
 
     me.parent().append(div);
 
-    if(!isInput){
+    if (!isInput) {
       vOffset = div.height();
-    }
 
-    if (Discourse.Site.currentProp('mobileView') && !isInput) {
-      div.css('width', 'auto');
+      if ((window.innerHeight - me.outerHeight() - $("header.d-header").innerHeight()) < vOffset) {
+        vOffset = -23;
+      }
 
-      if ((me.height() / 2) >= pos.top) { vOffset = -23; }
-      if ((me.width() / 2) <= pos.left) { hOffset = -div.width(); }
+      if (Discourse.Site.currentProp('mobileView')) {
+        div.css('width', 'auto');
+
+        if ((me.height() / 2) >= pos.top) { vOffset = -23; }
+        if ((me.width() / 2) <= pos.left) { hOffset = -div.width(); }
+      }
     }
 
     var mePos = me.position();
@@ -308,6 +333,7 @@ export default function(options) {
     closeAutocomplete();
   });
 
+  $(window).on('click.autocomplete', () => closeAutocomplete());
   $(this).on('click.autocomplete', () => closeAutocomplete());
 
   $(this).on('paste.autocomplete', function() {

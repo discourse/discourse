@@ -13,7 +13,7 @@ export default Ember.Route.extend({
         name: I18n.t('admin.badges.new_badge')
       });
     }
-    return this.modelFor('adminBadges').findProperty('id', parseInt(params.badge_id));
+    return this.modelFor('adminBadges').findBy('id', parseInt(params.badge_id));
   },
 
   actions: {
@@ -27,7 +27,7 @@ export default Ember.Route.extend({
 
     editGroupings() {
       const model = this.controllerFor('admin-badges').get('badgeGroupings');
-      showModal('modals/admin-edit-badge-groupings', { model });
+      showModal('admin-edit-badge-groupings', { model, admin: true });
     },
 
     preview(badge, explain) {
@@ -42,7 +42,7 @@ export default Ember.Route.extend({
         }
       }).then(function(model) {
         badge.set('preview_loading', false);
-        showModal('modals/admin-badge-preview', { model });
+        showModal('admin-badge-preview', { model, admin: true });
       }).catch(function(error) {
         badge.set('preview_loading', false);
         Em.Logger.error(error);

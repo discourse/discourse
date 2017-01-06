@@ -41,6 +41,9 @@ class DiscourseCLI < Thor
     backup = backuper.run
     if filename.present?
       puts "Moving '#{backup}' to '#{filename}'"
+      puts "Including version number into '#{filename}'"
+      version_string = File.basename(backup)[/-#{BackupRestore::VERSION_PREFIX}\d{14}/]
+      filename = filename.dup.insert(filename.index('.'), version_string)
       FileUtils.mv(backup, filename)
       backup = filename
     end

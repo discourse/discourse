@@ -12,11 +12,11 @@
     {{/if}}
   </ul>
 
-  <div class="modal-body">
+  {{#d-modal-body}}
     {{#each panels as |tab|}}
       {{component tab selectedTab=selectedTab category=model}}
     {{/each}}
-  </div>
+  {{/d-modal-body}}
 
   <div class="modal-footer">
     {{d-button id="save-category" class="btn-primary" disabled=disabled action="saveCategory" label=saveLabel}}

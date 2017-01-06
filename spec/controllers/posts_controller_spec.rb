@@ -578,34 +578,57 @@ describe PostsController do
       let(:moderator) { log_in(:moderator) }
       let(:new_post) { Fabricate.build(:post, user: user) }
 
-      it "raises an exception without a raw parameter" do
-	      expect { xhr :post, :create }.to raise_error(ActionController::ParameterMissing)
-      end
+      context "fast typing" do
+        before do
+          SiteSetting.min_first_post_typing_time = 3000
+          SiteSetting.auto_block_fast_typers_max_trust_level = 1
+        end
 
-      it 'queues the post if min_first_post_typing_time is not met' do
+        it 'queues the post if min_first_post_typing_time is not met' do
+          xhr :post, :create, {raw: 'this is the test content', title: 'this is the test title for the topic'}
 
-        SiteSetting.min_first_post_typing_time = 3000
-        # our logged on user here is tl1
-        SiteSetting.auto_block_fast_typers_max_trust_level = 1
+          expect(response).to be_success
+          parsed = ::JSON.parse(response.body)
 
-        xhr :post, :create, {raw: 'this is the test content', title: 'this is the test title for the topic'}
+          expect(parsed["action"]).to eq("enqueued")
 
-        expect(response).to be_success
-        parsed = ::JSON.parse(response.body)
+          user.reload
+          expect(user.blocked).to eq(true)
 
-        expect(parsed["action"]).to eq("enqueued")
+          qp = QueuedPost.first
 
-        user.reload
-        expect(user.blocked).to eq(true)
+          mod = Fabricate(:moderator)
+          qp.approve!(mod)
 
-        qp = QueuedPost.first
+          user.reload
+          expect(user.blocked).to eq(false)
+        end
 
-        mod = Fabricate(:moderator)
-        qp.approve!(mod)
+        it "doesn't enqueue replies when the topic is closed" do
+          topic = Fabricate(:closed_topic)
 
-        user.reload
-        expect(user.blocked).to eq(false)
+          xhr :post, :create, {
+            raw: 'this is the test content',
+            title: 'this is the test title for the topic',
+            topic_id: topic.id
+          }
 
+          expect(response).not_to be_success
+          parsed = ::JSON.parse(response.body)
+          expect(parsed["action"]).not_to eq("enqueued")
+        end
+
+        it "doesn't enqueue replies when the post is too long" do
+          SiteSetting.max_post_length = 10
+          xhr :post, :create, {
+            raw: 'this is the test content',
+            title: 'this is the test title for the topic',
+          }
+
+          expect(response).not_to be_success
+          parsed = ::JSON.parse(response.body)
+          expect(parsed["action"]).not_to eq("enqueued")
+        end
       end
 
       it 'blocks correctly based on auto_block_first_post_regex' do
@@ -743,8 +766,8 @@ describe PostsController do
         end
 
         it "passes category through" do
-          xhr :post, :create, {raw: 'hello', category: 'cool'}
-          expect(assigns(:manager_params)['category']).to eq('cool')
+          xhr :post, :create, {raw: 'hello', category: 1}
+          expect(assigns(:manager_params)['category']).to eq('1')
         end
 
         it "passes target_usernames through" do

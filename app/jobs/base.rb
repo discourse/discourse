@@ -236,18 +236,22 @@ module Jobs
     enqueue_in(secs, job_name, opts)
   end
 
-  def self.cancel_scheduled_job(job_name, params={})
-    scheduled_for(job_name, params).each(&:delete)
+  def self.cancel_scheduled_job(job_name, opts={})
+    scheduled_for(job_name, opts).each(&:delete)
   end
 
-  def self.scheduled_for(job_name, params={})
-    params = params.with_indifferent_access
+  def self.scheduled_for(job_name, opts={})
+    opts = opts.with_indifferent_access
+    unless opts.delete(:all_sites)
+      opts[:current_site_id] ||= RailsMultisite::ConnectionManagement.current_db
+    end
+
     job_class = "Jobs::#{job_name.to_s.camelcase}"
     Sidekiq::ScheduledSet.new.select do |scheduled_job|
       if scheduled_job.klass.to_s == job_class
         matched = true
         job_params = scheduled_job.item["args"][0].with_indifferent_access
-        params.each do |key, value|
+        opts.each do |key, value|
           if job_params[key] != value
             matched = false
             break

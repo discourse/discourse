@@ -10,8 +10,7 @@ class Validators::PostValidator < ActiveModel::Validator
     return if record.acting_user.try(:staged?)
     return if record.acting_user.try(:admin?) && Discourse.static_doc_topic_ids.include?(record.topic_id)
 
-    stripped_length(record)
-    raw_quality(record)
+    post_body_validator(record)
     max_posts_validator(record)
     max_mention_validator(record)
     max_images_validator(record)
@@ -21,8 +20,6 @@ class Validators::PostValidator < ActiveModel::Validator
   end
 
   def presence(post)
-    post.errors.add(:raw, :blank, options) if post.raw.blank?
-
     unless options[:skip_topic]
       post.errors.add(:topic_id, :blank, options) if post.topic_id.blank?
     end
@@ -32,13 +29,19 @@ class Validators::PostValidator < ActiveModel::Validator
     end
   end
 
+  def post_body_validator(post)
+    return if options[:skip_post_body]
+    stripped_length(post)
+    raw_quality(post)
+  end
+
   def stripped_length(post)
     range = if private_message?(post)
       # private message
       SiteSetting.private_message_post_length
     elsif post.is_first_post? || (post.topic.present? && post.topic.posts_count == 0)
       # creating/editing first post
-      SiteSetting.first_post_length
+      post.topic&.featured_link&.present? ? (0..SiteSetting.max_post_length) : SiteSetting.first_post_length
     else
       # regular post
       SiteSetting.post_length
@@ -91,7 +94,7 @@ class Validators::PostValidator < ActiveModel::Validator
   def unique_post_validator(post)
     return if SiteSetting.unique_posts_mins == 0
     return if post.skip_unique_check
-    return if post.acting_user.staff?
+    return if post.acting_user.try(:staff?)
 
     # If the post is empty, default to the validates_presence_of
     return if post.raw.blank?

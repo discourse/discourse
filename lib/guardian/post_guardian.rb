@@ -58,7 +58,10 @@ module PostGuardian
     return false unless topic
 
     type_symbol = PostActionType.types[post_action_type_id]
+
     return false if type_symbol == :bookmark
+    return false if type_symbol == :notify_user && !is_moderator?
+
     return can_see_flags?(topic) if PostActionType.is_flag?(type_symbol)
 
     if type_symbol == :vote
@@ -104,6 +107,10 @@ module PostGuardian
 
     if post.wiki && (@user.trust_level >= SiteSetting.min_trust_to_edit_wiki_post.to_i)
       return true
+    end
+
+    if @user.trust_level < SiteSetting.min_trust_to_edit_post
+      return false
     end
 
     if is_my_own?(post)
@@ -180,6 +187,10 @@ module PostGuardian
   end
 
   def can_change_post_owner?
+    is_admin?
+  end
+
+  def can_change_post_timestamps?
     is_admin?
   end
 

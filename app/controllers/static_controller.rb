@@ -4,7 +4,7 @@ require_dependency 'file_helper'
 class StaticController < ApplicationController
 
   skip_before_filter :check_xhr, :redirect_to_login_if_required
-  skip_before_filter :verify_authenticity_token, only: [:cdn_asset, :enter, :favicon]
+  skip_before_filter :verify_authenticity_token, only: [:brotli_asset, :cdn_asset, :enter, :favicon]
 
   PAGES_WITH_EMAIL_PARAM = ['login', 'password_reset', 'signup']
 
@@ -81,7 +81,7 @@ class StaticController < ApplicationController
            uri.path !~ /\./
 
           destination = uri.path
-          destination = "#{uri.path}?#{uri.query}" if uri.path =~ /new-topic/ || uri.path =~ /new-message/
+          destination = "#{uri.path}?#{uri.query}" if uri.path =~ /new-topic/ || uri.path =~ /new-message/ || uri.path =~ /user-api-key/
         end
       rescue URI::InvalidURIError
         # Do nothing if the URI is invalid
@@ -123,7 +123,37 @@ class StaticController < ApplicationController
       response.headers["Last-Modified"] = Time.new('2000-01-01').httpdate
       render text: data, content_type: "image/png"
     end
+  end
 
+  def brotli_asset
+    path = File.expand_path(Rails.root + "public/assets/" + params[:path])
+    path += ".br"
+
+    # SECURITY what if path has /../
+    raise Discourse::NotFound unless path.start_with?(Rails.root.to_s + "/public/assets")
+
+    opts = { disposition: nil }
+    opts[:type] = "application/javascript" if path =~ /\.js.br$/
+
+    begin
+      response.headers["Last-Modified"] = File.ctime(path).httpdate
+      response.headers["Content-Length"] = File.size(path).to_s
+    rescue Errno::ENOENT
+      response.headers["Expires"] = 5.seconds.from_now.httpdate
+      response.headers["Cache-Control"] = 'max-age=5, public'
+      expires_in 5.seconds, public: true, must_revalidate: false
+
+      render text: "missing brotli asset", status: 404
+      return
+    end
+
+    response.headers["Expires"] = 1.year.from_now.httpdate
+    response.headers["Cache-Control"] = 'max-age=31557600, public'
+    response.headers["Content-Encoding"] = 'br'
+
+    expires_in 1.year, public: true, must_revalidate: false
+
+    send_file(path, opts)
   end
 
 

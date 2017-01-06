@@ -16,7 +16,10 @@ display: none !important; // can be removed if inline JS CSS is removed from com
 input {
   background: $secondary;
   color: $primary;
-  border-color: blend-primary-secondary(15%);
+  padding: 4px;
+  border-radius: 3px;
+  box-shadow: inset 0 1px 1px rgba(0,0,0, .3);
+  border: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
 }
 
 #reply-control {
@@ -94,13 +97,21 @@ input {
     border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
     .draft-text {
       display: block;
-          position: absolute;
-          margin-right: 40px;
+      position: absolute;
+      margin-right: 40px;
+      max-width: 80%;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+
+      i {
+        color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
+      }
     }
     .toggler {
       &:before {
         font-family: "FontAwesome";
-        content: "\f077";
+        content: "\f00d";
       }
     }
   }

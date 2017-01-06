@@ -3,8 +3,14 @@ require 'rails_helper'
 describe TagsController do
   describe 'show_latest' do
     let(:tag)         { Fabricate(:tag) }
+    let(:other_tag)   { Fabricate(:tag) }
+    let(:third_tag)   { Fabricate(:tag) }
     let(:category)    { Fabricate(:category) }
     let(:subcategory) { Fabricate(:category, parent_category_id: category.id) }
+
+    let(:single_tag_topic) { Fabricate(:topic, tags: [tag]) }
+    let(:multi_tag_topic)  { Fabricate(:topic, tags: [tag, other_tag]) }
+    let(:all_tag_topic)    { Fabricate(:topic, tags: [tag, other_tag, third_tag]) }
 
     context 'tagging disabled' do
       it "returns 404" do
@@ -23,6 +29,31 @@ describe TagsController do
         expect(response).to be_success
       end
 
+      it "can filter by two tags" do
+        single_tag_topic; multi_tag_topic; all_tag_topic
+        xhr :get, :show_latest, tag_id: tag.name, additional_tag_ids: other_tag.name
+        expect(response).to be_success
+        expect(assigns(:list).topics).to include all_tag_topic
+        expect(assigns(:list).topics).to include multi_tag_topic
+        expect(assigns(:list).topics).to_not include single_tag_topic
+      end
+
+      it "can filter by multiple tags" do
+        single_tag_topic; multi_tag_topic; all_tag_topic
+        xhr :get, :show_latest, tag_id: tag.name, additional_tag_ids: "#{other_tag.name}/#{third_tag.name}"
+        expect(response).to be_success
+        expect(assigns(:list).topics).to include all_tag_topic
+        expect(assigns(:list).topics).to_not include multi_tag_topic
+        expect(assigns(:list).topics).to_not include single_tag_topic
+      end
+
+      it "does not find any tags when a tag which doesn't exist is passed" do
+        single_tag_topic
+        xhr :get, :show_latest, tag_id: tag.name, additional_tag_ids: "notatag"
+        expect(response).to be_success
+        expect(assigns(:list).topics).to_not include single_tag_topic
+      end
+
       it "can filter by category and tag" do
         xhr :get, :show_latest, tag_id: tag.name, category: category.slug
         expect(response).to be_success
@@ -35,6 +66,25 @@ describe TagsController do
 
       it "can filter by category, no sub-category, and tag" do
         xhr :get, :show_latest, tag_id: tag.name, category: 'none', parent_category: category.slug
+        expect(response).to be_success
+      end
+
+      it "can handle subcategories with the same name" do
+        category2 = Fabricate(:category)
+        subcategory2 = Fabricate(:category,
+          parent_category_id: category2.id,
+          name: subcategory.name,
+          slug: subcategory.slug
+        )
+        t = Fabricate(:topic, category_id: subcategory2.id, tags: [other_tag])
+        xhr :get, :show_latest, tag_id: other_tag.name, category: subcategory2.slug, parent_category: category2.slug
+        expect(response).to be_success
+        expect(assigns(:list).topics).to include(t)
+      end
+
+      it "can filter by bookmarked" do
+        log_in(:user)
+        xhr :get, :show_bookmarks, tag_id: tag.name
         expect(response).to be_success
       end
     end

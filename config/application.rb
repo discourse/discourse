@@ -72,20 +72,13 @@ module Discourse
     config.assets.precompile += ['vendor.js', 'common.css', 'desktop.css', 'mobile.css',
                                  'admin.js', 'admin.css', 'shiny/shiny.css', 'preload-store.js.es6',
                                  'browser-update.js', 'embed.css', 'break_string.js', 'ember_jquery.js',
-                                 'pretty-text-bundle.js']
+                                 'pretty-text-bundle.js', 'wizard.css', 'wizard-application.js',
+                                 'wizard-vendor.js', 'plugin.js', 'plugin-third-party.js']
 
     # Precompile all available locales
     Dir.glob("#{config.root}/app/assets/javascripts/locales/*.js.erb").each do |file|
       config.assets.precompile << "locales/#{file.match(/([a-z_A-Z]+\.js)\.erb$/)[1]}"
     end
-
-    # Activate observers that should always be running.
-    config.active_record.observers = [
-        :user_email_observer,
-        :user_action_observer,
-        :post_alert_observer,
-        :search_observer
-    ]
 
     # Set Time.zone default to the specified zone and make Active Record auto-convert to this zone.
     # Run "rake -D time" for a list of tasks for finding time zone names. Default is UTC.
@@ -102,6 +95,7 @@ module Discourse
     config.filter_parameters += [
         :password,
         :pop3_polling_password,
+        :api_key,
         :s3_secret_access_key,
         :twitter_consumer_secret,
         :facebook_app_secret,
@@ -140,7 +134,7 @@ module Discourse
 
     # Our templates shouldn't start with 'discourse/templates'
     config.handlebars.templates_root = 'discourse/templates'
-    config.handlebars.raw_template_namespace = "Ember.TEMPLATES"
+    config.handlebars.raw_template_namespace = "Discourse.RAW_TEMPLATES"
 
     require 'discourse_redis'
     require 'logster/redis_store'
@@ -167,6 +161,22 @@ module Discourse
     end
 
     config.after_initialize do
+      # require common dependencies that are often required by plugins
+      # in the past observers would load them as side-effects
+      # correct behavior is for plugins to require stuff they need,
+      # however it would be a risky and breaking change not to require here
+      require_dependency 'category'
+      require_dependency 'post'
+      require_dependency 'topic'
+      require_dependency 'user'
+      require_dependency 'post_action'
+      require_dependency 'post_revision'
+      require_dependency 'notification'
+      require_dependency 'topic_user'
+      require_dependency 'group'
+      require_dependency 'user_field'
+      require_dependency 'post_action_type'
+
       # So open id logs somewhere sane
       OpenID::Util.logger = Rails.logger
       if plugins = Discourse.plugins
@@ -176,6 +186,10 @@ module Discourse
 
     if ENV['RBTRACE'] == "1"
       require 'rbtrace'
+    end
+
+    config.generators do |g|
+      g.test_framework :rspec, fixture: false
     end
 
   end

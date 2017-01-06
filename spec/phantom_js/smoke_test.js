@@ -27,7 +27,7 @@ page.onInitialized = function() {
 
 page.onConsoleMessage = function(msg) {
   console.log(msg);
-}
+};
 
 page.waitFor = function(desc, fn, cb) {
   var start = +new Date();
@@ -63,9 +63,9 @@ function test(desc, fn) {
   actions.push({ test: fn, desc: desc });
 };
 
-function wait(delay) {
-  actions.push({ wait: delay });
-}
+// function wait(delay) {
+//   actions.push({ wait: delay });
+// }
 
 function exec(desc, fn) {
   actions.push({ exec: fn, desc: desc });
@@ -75,13 +75,13 @@ function execAsync(desc, delay, fn) {
   actions.push({ execAsync: fn, delay: delay, desc: desc });
 };
 
-function upload(input, path) {
-  actions.push({ upload: path, input: input });
-};
+// function upload(input, path) {
+//   actions.push({ upload: path, input: input });
+// };
 
-function screenshot(filename) {
-  actions.push({ screenshot: filename });
-}
+// function screenshot(filename) {
+//   actions.push({ screenshot: filename });
+// }
 
 function run() {
   var allPassed = true;
@@ -139,19 +139,15 @@ var runTests = function() {
   });
 
   test("at least one topic shows up", function() {
-    return document.querySelector(".topic-list tbody tr");
+    return $(".topic-list tbody tr").length;
   });
 
   execAsync("navigate to 1st topic", 500, function() {
-    if ($(".main-link > a:first").length > 0) {
-      $(".main-link > a:first").click(); // topic list page
-    } else {
-      $(".featured-topic a.title:first").click(); // categories page
-    }
+    $(".main-link a.title:first").click();
   });
 
   test("at least one post body", function() {
-    return document.querySelector(".topic-post");
+    return $(".topic-post").length;
   });
 
   execAsync("click on the 1st user", 500, function() {
@@ -161,7 +157,7 @@ var runTests = function() {
   });
 
   test("user has details", function() {
-    return document.querySelector("#user-card .names");
+    return $("#user-card .names").length;
   });
 
   exec("open login modal", function() {
@@ -169,7 +165,7 @@ var runTests = function() {
   });
 
   test("login modal is open", function() {
-    return document.querySelector(".login-modal");
+    return $(".login-modal").length;
   });
 
   exec("type in credentials & log in", function() {
@@ -179,7 +175,7 @@ var runTests = function() {
   });
 
   test("is logged in", function() {
-    return document.querySelector(".current-user");
+    return $(".current-user").length;
   });
 
   exec("go home", function() {
@@ -187,11 +183,11 @@ var runTests = function() {
   });
 
   test("it shows a topic list", function() {
-    return document.querySelector(".topic-list");
+    return $(".topic-list").length;
   });
 
   test('we have a create topic button', function() {
-    return document.querySelector("#create-topic");
+    return $("#create-topic").length;
   });
 
   exec("open composer", function() {
@@ -199,7 +195,7 @@ var runTests = function() {
   });
 
   test('the editor is visible', function() {
-    return document.querySelector(".d-editor");
+    return $(".d-editor").length;
   });
 
   exec("compose new topic", function() {
@@ -213,7 +209,7 @@ var runTests = function() {
   });
 
   test("updates preview", function() {
-    return document.querySelector(".d-editor-preview p");
+    return $(".d-editor-preview p").length;
   });
 
   exec("open upload modal", function() {
@@ -221,7 +217,7 @@ var runTests = function() {
   });
 
   test("upload modal is open", function() {
-    return document.querySelector("#filename-input");
+    return $("#filename-input").length;
   });
 
   // TODO: Looks like PhantomJS 2.0.0 has a bug with `uploadFile`
@@ -250,7 +246,7 @@ var runTests = function() {
   });
 
   test("topic is created", function() {
-    return document.querySelector(".fancy-title");
+    return $(".fancy-title").length;
   });
 
   exec("click reply button", function() {
@@ -258,7 +254,7 @@ var runTests = function() {
   });
 
   test("composer is open", function() {
-    return document.querySelector("#reply-control .d-editor-input");
+    return $("#reply-control .d-editor-input").length;
   });
 
   exec("compose reply", function() {

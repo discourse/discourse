@@ -11,13 +11,17 @@ const AuthErrors =
    'not_allowed_from_ip_address'];
 
 export default Ember.Controller.extend(ModalFunctionality, {
-  needs: ['modal', 'createAccount', 'forgotPassword', 'application'],
+
+  createAccount: Ember.inject.controller(),
+  forgotPassword: Ember.inject.controller(),
+  application: Ember.inject.controller(),
+
   authenticate: null,
   loggingIn: false,
   loggedIn: false,
 
   canLoginLocal: setting('enable_local_logins'),
-  loginRequired: Em.computed.alias('controllers.application.loginRequired'),
+  loginRequired: Em.computed.alias('application.loginRequired'),
 
   resetForm: function() {
     this.set('authenticate', null);
@@ -37,7 +41,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
   loginDisabled: Em.computed.or('loggingIn', 'loggedIn'),
 
   showSignupLink: function() {
-    return this.get('controllers.application.canSignUp') &&
+    return this.get('application.canSignUp') &&
            !this.get('loggingIn') &&
            Ember.isEmpty(this.get('authenticate'));
   }.property('loggingIn', 'authenticate'),
@@ -47,8 +51,9 @@ export default Ember.Controller.extend(ModalFunctionality, {
   }.property('loggingIn', 'authenticate'),
 
   actions: {
-    login: function() {
+    login() {
       const self = this;
+      if (this.get('loginDisabled')) { return; }
 
       if(Ember.isEmpty(this.get('loginName')) || Ember.isEmpty(this.get('loginPassword'))){
         self.flash(I18n.t('login.blank_username_or_password'), 'error');
@@ -130,8 +135,9 @@ export default Ember.Controller.extend(ModalFunctionality, {
       if(customLogin){
         customLogin();
       } else {
-        const authUrl = loginMethod.get('customUrl') || Discourse.getURL("/auth/" + name);
+        let authUrl = loginMethod.get('customUrl') || Discourse.getURL("/auth/" + name);
         if (loginMethod.get("fullScreenLogin")) {
+          document.cookie = "fsl=true";
           window.location = authUrl;
         } else {
           this.set('authenticate', name);
@@ -140,6 +146,11 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
           const height = loginMethod.get("frameHeight") || 400;
           const width = loginMethod.get("frameWidth") || 800;
+
+          if (loginMethod.get("displayPopup")) {
+            authUrl = authUrl + "?display=popup";
+          }
+
           const w = window.open(authUrl, "_blank",
               "menubar=no,status=no,height=" + height + ",width=" + width +  ",left=" + left + ",top=" + top);
           const self = this;
@@ -154,7 +165,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
     },
 
     createAccount: function() {
-      const createAccountController = this.get('controllers.createAccount');
+      const createAccountController = this.get('createAccount');
       if (createAccountController) {
         createAccountController.resetForm();
         const loginName = this.get('loginName');
@@ -168,7 +179,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
     },
 
     forgotPassword: function() {
-      const forgotPasswordController = this.get('controllers.forgotPassword');
+      const forgotPasswordController = this.get('forgotPassword');
       if (forgotPasswordController) { forgotPasswordController.set("accountEmailOrUsername", this.get("loginName")); }
       this.send("showForgotPassword");
     }
@@ -176,7 +187,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
   authMessage: (function() {
     if (Ember.isEmpty(this.get('authenticate'))) return "";
-    const method = findAll(this.siteSettings).findProperty("name", this.get("authenticate"));
+    const method = findAll(this.siteSettings, this.capabilities, this.isMobileDevice).findBy("name", this.get("authenticate"));
     if(method){
       return method.get('message');
     }
@@ -223,7 +234,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
       return;
     }
 
-    const createAccountController = this.get('controllers.createAccount');
+    const createAccountController = this.get('createAccount');
     createAccountController.setProperties({
       accountEmail: options.email,
       accountUsername: options.username,

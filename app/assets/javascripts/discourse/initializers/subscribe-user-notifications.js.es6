@@ -8,6 +8,7 @@ import {
 export default {
   name: 'subscribe-user-notifications',
   after: 'message-bus',
+
   initialize(container) {
     const user = container.lookup('current-user:main'),
           site = container.lookup('site:main'),
@@ -22,12 +23,11 @@ export default {
     keyValueStore.remove('recent-notifications');
 
     if (user) {
-
       if (user.get('staff')) {
-        bus.subscribe('/flagged_counts', (data) => {
+        bus.subscribe('/flagged_counts', data => {
           user.set('site_flagged_posts_count', data.total);
         });
-        bus.subscribe('/queue_counts', (data) => {
+        bus.subscribe('/queue_counts', data => {
           user.set('post_queue_new_count', data.post_queue_new_count);
           if (data.post_queue_new_count > 0) {
             user.set('show_queued_posts', 1);
@@ -35,12 +35,13 @@ export default {
         });
       }
 
-      bus.subscribe(`/notification/${user.get('id')}`, function(data) {
+      bus.subscribe(`/notification/${user.get('id')}`, data => {
         const oldUnread = user.get('unread_notifications');
         const oldPM = user.get('unread_private_messages');
 
         user.set('unread_notifications', data.unread_notifications);
         user.set('unread_private_messages', data.unread_private_messages);
+        user.set('read_first_notification', data.read_first_notification);
 
         if (oldUnread !== data.unread_notifications || oldPM !== data.unread_private_messages) {
           appEvents.trigger('notifications:changed');
@@ -50,27 +51,23 @@ export default {
         const lastNotification = data.last_notification && data.last_notification.notification;
 
         if (stale && stale.hasResults && lastNotification) {
-
           const oldNotifications = stale.results.get('content');
           const staleIndex = _.findIndex(oldNotifications, {id: lastNotification.id});
 
           if (staleIndex === -1) {
             // this gets a bit tricky, uread pms are bumped to front
-            var insertPosition = 0;
+            let insertPosition = 0;
             if (lastNotification.notification_type !== 6) {
-              insertPosition = _.findIndex(oldNotifications, function(n){
-                return n.notification_type !== 6 || n.read;
-              });
+              insertPosition = _.findIndex(oldNotifications, n => n.notification_type !== 6 || n.read);
               insertPosition = insertPosition === -1 ? oldNotifications.length - 1 : insertPosition;
             }
-
             oldNotifications.insertAt(insertPosition, Em.Object.create(lastNotification));
           }
 
-          for (var idx=0; idx < data.recent.length; idx++) {
-            var old;
+          for (let idx=0; idx < data.recent.length; idx++) {
+            let old;
             while(old = oldNotifications[idx]) {
-              var info = data.recent[idx];
+              const info = data.recent[idx];
 
               if (old.get('id') !== info[0]) {
                 oldNotifications.removeAt(idx);
@@ -81,24 +78,18 @@ export default {
                 break;
               }
             }
-            if ( !old ) { break; }
+            if (!old) { break; }
           }
 
         }
       }, user.notification_channel_position);
 
-      bus.subscribe("/categories", function(data) {
-        _.each(data.categories, function(c) {
-          site.updateCategory(c);
-        });
-        _.each(data.deleted_categories,function(id) {
-          site.removeCategory(id);
-        });
+      bus.subscribe("/categories", data => {
+        _.each(data.categories, c => site.updateCategory(c));
+        _.each(data.deleted_categories, id => site.removeCategory(id));
       });
 
-      bus.subscribe("/client_settings", function(data) {
-        siteSettings[data.name] = data.value;
-      });
+      bus.subscribe("/client_settings", data => Ember.set(siteSettings, data.name, data.value));
 
       if (!Ember.testing) {
         if (!site.mobileView) {

@@ -4,13 +4,23 @@
     {{#if model.automatic}}
       <h3>{{model.name}}</h3>
     {{else}}
-      <label for="name">{{i18n 'admin.groups.name'}}</label>
-      {{text-field name="name" value=model.name placeholderKey="admin.groups.name_placeholder"}}
+      <label for="name">{{i18n 'groups.name'}}</label>
+      {{text-field name="name" value=model.name placeholderKey="groups.name_placeholder"}}
     {{/if}}
   </div>
 
   {{#if model.id}}
     {{#unless model.automatic}}
+      <div>
+        <label for='full_name'>{{i18n 'groups.edit.full_name'}}</label>
+        {{input type='text' name='full_name' value=model.full_name class='group-edit-full-name'}}
+      </div>
+
+      <div>
+        <label for="bio">{{i18n 'groups.bio'}}</label>
+        {{d-editor value=model.bio_raw}}
+      </div>
+
       {{#if model.hasOwners}}
       <div>
         <label for='owner-list'>{{i18n 'admin.groups.group_owners'}}</label>
@@ -28,26 +38,8 @@
       </div>
     {{/unless}}
     <div>
-      <label>{{i18n 'admin.groups.group_members'}} ({{model.user_count}})</label>
-      <div>
-        <a class="previous {{if showingFirst 'disabled'}}" {{action "previous"}}>{{fa-icon "fast-backward"}}</a>
-        {{currentPage}}/{{totalPages}}
-        <a class="next {{if showingLast 'disabled'}}" {{action "next"}}>{{fa-icon "fast-forward"}}</a>
-      </div>
-      <div class="ac-wrap clearfix">
-        {{#each model.members as |member|}}
-          {{group-member member=member automatic=model.automatic removeAction="removeMember"}}
-        {{/each}}
-      </div>
+      {{group-members-input model=model}}
     </div>
-
-    {{#unless model.automatic}}
-      <div>
-        <label for="user-selector">{{i18n 'admin.groups.add_members'}}</label>
-        {{user-selector usernames=model.usernames placeholderKey="admin.groups.selector_placeholder" id="user-selector"}}
-        {{d-button action="addMembers" class="add" icon="plus" label="admin.groups.add"}}
-      </div>
-    {{/unless}}
   {{/if}}
 
   <div>
@@ -58,12 +50,32 @@
   </div>
 
   {{#unless model.automatic}}
-  <div>
-    <label for="primary_group">
-      {{input type="checkbox" checked=model.primary_group}}
-      {{i18n 'admin.groups.primary_group'}}
-    </label>
-  </div>
+    <div>
+      <label>
+        {{input type="checkbox"
+            checked=model.public
+            disabled=disablePublicSetting}}
+
+        {{i18n 'groups.public'}}
+      </label>
+    </div>
+
+    <div>
+      <label>
+        {{input type="checkbox"
+            checked=model.allow_membership_requests
+            disabled=disableMembershipRequestSetting}}
+
+        {{i18n 'groups.allow_membership_requests'}}
+      </label>
+    </div>
+
+    <div>
+      <label for="primary_group">
+        {{input type="checkbox" checked=model.primary_group}}
+        {{i18n 'admin.groups.primary_group'}}
+      </label>
+    </div>
   {{/unless}}
 
   <div>
@@ -94,11 +106,14 @@
     </div>
 
     {{#if siteSettings.email_in}}
-      {{#plugin-outlet "group-email-in"}}
         <label for="incoming_email">{{i18n 'admin.groups.incoming_email'}}</label>
         {{text-field name="incoming_email" value=model.incoming_email placeholderKey="admin.groups.incoming_email_placeholder"}}
-      {{/plugin-outlet}}
+      {{plugin-outlet name="group-email-in" args=(hash model=model)}}
     {{/if}}
+  {{/unless}}
+
+  {{#unless model.automatic}}
+    {{group-flair-inputs model=model}}
   {{/unless}}
 
   <div class='buttons'>

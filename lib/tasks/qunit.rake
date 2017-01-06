@@ -1,6 +1,6 @@
 desc "Runs the qunit test suite"
 
-task "qunit:test" => :environment do
+task "qunit:test", [:timeout] => :environment do |_, args|
 
   require "rack"
   require "socket"
@@ -35,7 +35,7 @@ task "qunit:test" => :environment do
   begin
     success = true
     test_path = "#{Rails.root}/vendor/assets/javascripts"
-    cmd = "phantomjs #{test_path}/run-qunit.js http://localhost:#{port}/qunit"
+    cmd = "phantomjs #{test_path}/run-qunit.js http://localhost:#{port}/qunit #{args[:timeout]}"
 
     options = {}
 
@@ -55,15 +55,15 @@ task "qunit:test" => :environment do
       exit if ENV['RETRY'].present? && ENV['RETRY'] == 'false'
       sleep 2
       tries += 1
-      retry unless tries == 10
+      retry unless tries == 3
     end
 
     # A bit of a hack until we can figure this out on Travis
     tries = 0
-    while tries < 3 && $?.exitstatus == 124 && !quit
+    while tries < 3 && $?.exitstatus == 124
       tries += 1
       puts "\nTimed Out. Trying again...\n"
-      rake_system(cmd)
+      sh(cmd)
     end
 
     success &&= $?.success?

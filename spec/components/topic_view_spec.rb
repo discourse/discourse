@@ -35,6 +35,11 @@ describe TopicView do
       tv = TopicView.new(topic.id, coding_horror, slow_platform: true)
       expect(tv.chunk_size).to eq(TopicView.slow_chunk_size)
     end
+
+    it "returns `print_chunk_size` when print param is true" do
+      tv = TopicView.new(topic.id, coding_horror, print: true)
+      expect(tv.chunk_size).to eq(TopicView.print_chunk_size)
+    end
   end
 
   context "with a few sample posts" do

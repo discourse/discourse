@@ -1,20 +1,18 @@
-import { defaultHomepage } from 'discourse/lib/utilities';
-
 export default function() {
   // Error page
   this.route('exception', { path: '/exception' });
 
-  this.resource('about', { path: '/about' });
+  this.route('about', { path: '/about', resetNamespace: true });
 
   // Topic routes
-  this.resource('topic', { path: '/t/:slug/:id' }, function() {
+  this.route('topic', { path: '/t/:slug/:id', resetNamespace: true }, function() {
     this.route('fromParams', { path: '/' });
     this.route('fromParamsNear', { path: '/:nearPost' });
   });
-  this.resource('topicBySlug', { path: '/t/:slug' });
+  this.route('topicBySlug', { path: '/t/:slug', resetNamespace: true });
   this.route('topicUnsubscribe', { path: '/t/:slug/:id/unsubscribe' });
 
-  this.resource('discovery', { path: '/' }, function() {
+  this.route('discovery', { path: '/', resetNamespace: true }, function() {
     // top
     this.route('top');
     this.route('topParentCategory', { path: '/c/:slug/l/top' });
@@ -45,24 +43,29 @@ export default function() {
     this.route('categoryNone', { path: '/c/:slug/none' });
     this.route('category', { path: '/c/:parentSlug/:slug' });
     this.route('categoryWithID', { path: '/c/:parentSlug/:slug/:id' });
-
-    // homepage
-    this.route(defaultHomepage(), { path: '/' });
   });
 
-  this.resource('group', { path: '/groups/:name' }, function() {
+  this.route('groups', { resetNamespace: true });
+
+  this.route('group', { path: '/groups/:name', resetNamespace: true }, function() {
     this.route('members');
-    this.route('posts');
-    this.route('topics');
-    this.route('mentions');
-    this.route('messages');
+
+    this.route('activity', function() {
+      this.route('posts');
+      this.route('topics');
+      this.route('mentions');
+      this.route('messages');
+    });
+
+    this.route('logs');
+    this.route('edit');
   });
 
   // User routes
-  this.resource('users');
-  this.resource('user', { path: '/users/:username' }, function() {
+  this.route('users', { resetNamespace: true });
+  this.route('user', { path: '/users/:username', resetNamespace: true }, function() {
     this.route('summary');
-    this.resource('userActivity', { path: '/activity' }, function() {
+    this.route('userActivity', { path: '/activity', resetNamespace: true }, function() {
       this.route('topics');
       this.route('replies');
       this.route('likesGiven', {path: 'likes-given'});
@@ -70,7 +73,7 @@ export default function() {
       this.route('pending');
     });
 
-    this.resource('userNotifications', {path: '/notifications'}, function(){
+    this.route('userNotifications', {path: '/notifications', resetNamespace: true}, function(){
       this.route('responses');
       this.route('likesReceived', { path: 'likes-received'});
       this.route('mentions');
@@ -81,14 +84,14 @@ export default function() {
     this.route('flaggedPosts', { path: '/flagged-posts' });
     this.route('deletedPosts', { path: '/deleted-posts' });
 
-    this.resource('userPrivateMessages', { path: '/messages' }, function() {
+    this.route('userPrivateMessages', { path: '/messages', resetNamespace: true }, function() {
       this.route('sent');
       this.route('archive');
       this.route('group', { path: 'group/:name'});
       this.route('groupArchive', { path: 'group/:name/archive'});
     });
 
-    this.resource('preferences', function() {
+    this.route('preferences', { resetNamespace: true }, function() {
       this.route('username');
       this.route('email');
       this.route('about', { path: '/about-me' });
@@ -96,7 +99,7 @@ export default function() {
       this.route('card-badge', { path: '/card-badge' });
     });
 
-    this.resource('userInvited', { path: '/invited' }, function() {
+    this.route('userInvited', { path: '/invited', resetNamespace: true }, function() {
       this.route('show', { path: '/:filter' });
     });
 
@@ -114,15 +117,15 @@ export default function() {
   this.route('new-topic', {path: '/new-topic'});
   this.route('new-message', {path: '/new-message'});
 
-  this.resource('badges', function() {
+  this.route('badges', { resetNamespace: true }, function() {
     this.route('show', {path: '/:id/:slug'});
   });
 
-  this.resource('queued-posts', { path: '/queued-posts' });
+  this.route('queued-posts', { path: '/queued-posts', resetNamespace: true });
 
   this.route('full-page-search', {path: '/search'});
 
-  this.resource('tags', function() {
+  this.route('tags', { resetNamespace: true }, function() {
     this.route('show', {path: '/:tag_id'});
     this.route('showCategory', {path: '/c/:category/:tag_id'});
     this.route('showParentCategory', {path: '/c/:parent_category/:category/:tag_id'});
@@ -132,9 +135,10 @@ export default function() {
       this.route('showCategory' + filter.capitalize(), {path: '/c/:category/:tag_id/l/' + filter});
       this.route('showParentCategory' + filter.capitalize(), {path: '/c/:parent_category/:category/:tag_id/l/' + filter});
     });
+    this.route('intersection', {path: 'intersection/:tag_id/*additional_tags'});
   });
 
-  this.resource('tagGroups', {path: '/tag_groups'}, function() {
+  this.route('tagGroups', {path: '/tag_groups', resetNamespace: true}, function() {
     this.route('show', {path: '/:id'});
   });
 }

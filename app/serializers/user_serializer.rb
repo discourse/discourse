@@ -65,10 +65,15 @@ class UserSerializer < BasicUserSerializer
              :user_fields,
              :topic_post_count,
              :pending_count,
-             :profile_view_count
+             :profile_view_count,
+             :primary_group_name,
+             :primary_group_flair_url,
+             :primary_group_flair_bg_color,
+             :primary_group_flair_color
 
   has_one :invited_by, embed: :object, serializer: BasicUserSerializer
   has_many :groups, embed: :object, serializer: BasicGroupSerializer
+  has_many :group_users, embed: :object, serializer: BasicGroupUserSerializer
   has_many :featured_user_badges, embed: :ids, serializer: UserBadgeSerializer, root: :user_badges
   has_one  :card_badge, embed: :object, serializer: BadgeSerializer
   has_one :user_option, embed: :object, serializer: UserOptionSerializer
@@ -102,7 +107,8 @@ class UserSerializer < BasicUserSerializer
                      :card_image_badge_id,
                      :muted_usernames,
                      :mailing_list_posts_per_day,
-                     :can_change_bio
+                     :can_change_bio,
+                     :user_api_keys
 
   untrusted_attributes :bio_raw,
                        :bio_cooked,
@@ -122,11 +128,17 @@ class UserSerializer < BasicUserSerializer
   end
 
   def groups
+    groups = object.groups.order(:id)
+
     if scope.is_admin? || object.id == scope.user.try(:id)
-      object.groups
+      groups
     else
-      object.groups.where(visible: true)
+      groups.where(visible: true)
     end
+  end
+
+  def group_users
+    object.group_users.order(:group_id)
   end
 
   def include_email?
@@ -135,6 +147,20 @@ class UserSerializer < BasicUserSerializer
 
   def can_change_bio
     !(SiteSetting.enable_sso && SiteSetting.sso_overrides_bio)
+  end
+
+
+  def user_api_keys
+    keys = object.user_api_keys.where(revoked_at: nil).map do |k|
+      {
+        id: k.id,
+        application_name: k.application_name,
+        scopes: k.scopes.map{|s| I18n.t("user_api_key.scopes.#{s}")},
+        created_at: k.created_at
+      }
+    end
+
+    keys.length > 0 ? keys : nil
   end
 
   def card_badge
@@ -235,6 +261,22 @@ class UserSerializer < BasicUserSerializer
 
   def include_suspended_till?
     object.suspended?
+  end
+
+  def primary_group_name
+    object.primary_group.try(:name)
+  end
+
+  def primary_group_flair_url
+    object.try(:primary_group).try(:flair_url)
+  end
+
+  def primary_group_flair_bg_color
+    object.try(:primary_group).try(:flair_bg_color)
+  end
+
+  def primary_group_flair_color
+    object.try(:primary_group).try(:flair_color)
   end
 
   ###
