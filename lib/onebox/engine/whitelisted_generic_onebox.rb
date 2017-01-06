@@ -209,7 +209,7 @@ module Onebox
 
           if !Onebox::Helpers.blank?(d[:domain])
             d[:domain] = "http://#{d[:domain]}" unless d[:domain] =~ /^https?:\/\//
-            d[:domain] = URI(d[:domain]).host.to_s.sub(/^www\./, '')
+            d[:domain] = URI(d[:domain]).host.to_s.sub(/^www\./, '') rescue nil
           end
 
           # prefer secure URLs
