@@ -111,7 +111,7 @@ const Group = RestModel.extend({
   @observes("visible", "canEveryoneMention")
   _updateAllowMembershipRequests() {
     if (!this.get('visible') || !this.get('canEveryoneMention')) {
-      this.set('allow_membership_requests', false);
+      this.set ('allow_membership_requests', false);
     }
   },
 

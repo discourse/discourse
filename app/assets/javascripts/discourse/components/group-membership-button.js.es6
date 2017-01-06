@@ -41,10 +41,6 @@ export default Ember.Component.extend({
       this.set('updatingMembership', true);
       const model = this.get('model');
 
-      if (!!(this.currentUser)) {
-
-      }
-
       model.addMembers(this.currentUser.get('username')).then(() => {
         model.set('is_group_user', true);
       }).catch(popupAjaxError).finally(() => {
