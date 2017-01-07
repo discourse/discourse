@@ -1,4 +1,4 @@
-**Set up Discourse in the cloud in under 30 minutes** with zero knowledge of Rails or Linux shell using our Discourse Docker image. We recommend [DigitalOcean][do], but these steps will work on any Docker-compatible cloud provider or local server.
+**Set up Discourse in the cloud in under 30 minutes** with zero knowledge of Rails or Linux shell. We recommend [DigitalOcean][do], but these steps will work on any **Docker-compatible** cloud provider or local server.
 
 >  🔔 Don't have 30 minutes to set this up? For a flat one-time fee of $99, the community can install Discourse in the cloud for you. [Click here to purchase a self-supported community install](https://www.literatecomputing.com/product/discourse-install/).
 
