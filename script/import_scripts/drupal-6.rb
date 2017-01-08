@@ -70,8 +70,8 @@ class ImportScripts::Drupal < ImportScripts::Base
 	n.created created,
 	n.sticky sticky,
 	nr.body body
-      FROM node n,
-      LEFT JOIN node_revision nr ON nr.vid=n.vid
+      FROM node n
+      LEFT JOIN node_revisions nr ON nr.vid=n.vid
       WHERE n.type = 'blog'
         AND n.status = 1
     ", cache_rows: false)
