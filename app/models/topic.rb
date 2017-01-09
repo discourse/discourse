@@ -54,6 +54,7 @@ class Topic < ActiveRecord::Base
   validates :title, :if => Proc.new { |t| t.new_record? || t.title_changed? },
                     :presence => true,
                     :topic_title_length => true,
+                    :censored_words => true,
                     :quality_title => { :unless => :private_message? },
                     :unique_among  => { :unless => Proc.new { |t| (SiteSetting.allow_duplicate_topic_titles? || t.private_message?) },
                                         :message => :has_already_been_used,
