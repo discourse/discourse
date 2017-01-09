@@ -10,7 +10,6 @@ export default RestModel.extend({
   verify_certificate: true,
   active: false,
   web_hook_event_types: null,
-  categoriesFilter: null,
   groupsFilterInName: null,
 
   @computed('wildcard_web_hook')
@@ -23,9 +22,9 @@ export default RestModel.extend({
     }
   },
 
-  @observes('category_ids')
-  updateCategoriesFilter() {
-    this.set('categoriesFilter', Category.findByIds(this.get('category_ids')));
+  @computed('category_ids')
+  categories(categoryIds) {
+    return Category.findByIds(categoryIds);
   },
 
   @observes('group_ids')
@@ -55,7 +54,9 @@ export default RestModel.extend({
 
   createProperties() {
     const types = this.get('web_hook_event_types');
-    const categories = this.get('categoriesFilter');
+    const categories = this.get('categories');
+    const categoryIds = this.get('categories').map(c => c.id);
+
     // Hack as {{group-selector}} accepts a comma-separated string as data source, but
     // we use an array to populate the datasource above.
     const groupsFilter = this.get('groupsFilterInName');
@@ -69,7 +70,7 @@ export default RestModel.extend({
       verify_certificate: this.get('verify_certificate'),
       active: this.get('active'),
       web_hook_event_type_ids: Ember.isEmpty(types) ? [null] : types.map(type => type.id),
-      category_ids: Ember.isEmpty(categories) ? [null] : categories.map(c => c.id),
+      category_ids: Ember.isEmpty(categoryIds) ? [null] : categoryIds,
       group_ids: Ember.isEmpty(groupNames) || Ember.isEmpty(groupNames[0]) ? [null] : Discourse.Site.currentProp('groups')
         .reduce((groupIds, g) => {
           if (groupNames.includes(g.name)) { groupIds.push(g.id); }
