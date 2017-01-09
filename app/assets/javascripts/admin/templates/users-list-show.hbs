@@ -55,8 +55,8 @@
           <td class='email'>{{unbound user.email}}</td>
           <td>{{{unbound user.last_emailed_age}}}</td>
           <td>{{{unbound user.last_seen_age}}}</td>
-          <td>{{{unbound user.topics_entered}}}</td>
-          <td>{{{unbound user.posts_read_count}}}</td>
+          <td>{{number user.topics_entered}}</td>
+          <td>{{number user.posts_read_count}}</td>
           <td>{{{unbound user.time_read}}}</td>
 
           <td>{{{unbound user.created_at_age}}}</td>

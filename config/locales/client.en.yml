@@ -2081,7 +2081,9 @@ en:
       one: "view"
       other: "views"
     replies: "Replies"
-    views_long: "this topic has been viewed {{number}} times"
+    views_long:
+      one: "this topic has been viewed 1 time"
+      other: "this topic has been viewed {{number}} times"
     activity: "Activity"
     likes: "Likes"
     likes_lowercase:
