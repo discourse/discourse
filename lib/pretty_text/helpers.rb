@@ -50,7 +50,7 @@ module PrettyText
       topic = Topic.find_by(id: topic_id)
       if topic && Guardian.new.can_see?(topic)
         {
-          title: topic.title,
+          title: Rack::Utils.escape_html(topic.title),
           href: topic.url
         }
       end
