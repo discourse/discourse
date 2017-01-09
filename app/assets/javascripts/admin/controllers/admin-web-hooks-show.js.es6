@@ -65,10 +65,16 @@ export default Ember.Controller.extend({
       this.set('saved', false);
       const url = extractDomainFromUrl(this.get('model.payload_url'));
       const model = this.get('model');
+      const isNew = model.get('isNew');
+
       const saveWebHook = () => {
         return model.save().then(() => {
           this.set('saved', true);
           this.get('adminWebHooks').get('model').addObject(model);
+
+          if (isNew) {
+            this.transitionToRoute('adminWebHooks.show', model.get('id'));
+          }
         }).catch(popupAjaxError);
       };
 
