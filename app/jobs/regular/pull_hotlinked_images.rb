@@ -113,7 +113,7 @@ module Jobs
           # TODO suicide if needed, let's gather a few here first
           Rails.logger.warn("Cooked post processor in FATAL state, bypassing. You need to urgently restart sidekiq\norig: #{orig_cooked}\ncooked: #{cooked}\npost id: #{post.id}")
         else
-          post.update_column(:cooked, cooked)
+          post.update_columns(cooked: cooked, updated_at: Time.zone.now)
           post.publish_change_to_clients! :revised
         end
       end
