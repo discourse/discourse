@@ -239,6 +239,8 @@ module Email
     end
 
     def parse_from_field(mail)
+      return unless mail[:from]
+
       if mail[:from].errors.blank?
         mail[:from].address_list.addresses.each do |address_field|
           address_field.decoded
