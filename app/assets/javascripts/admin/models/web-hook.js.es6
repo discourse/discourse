@@ -54,7 +54,6 @@ export default RestModel.extend({
 
   createProperties() {
     const types = this.get('web_hook_event_types');
-    const categories = this.get('categories');
     const categoryIds = this.get('categories').map(c => c.id);
 
     // Hack as {{group-selector}} accepts a comma-separated string as data source, but
