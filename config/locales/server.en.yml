@@ -95,6 +95,8 @@ en:
       inclusion: is not included in the list
       invalid: is invalid
       is_invalid: "seems unclear, is it a complete sentence?"
+      contains_censored_words: "includes one or more of the censored words: %{censored_words}"
+      matches_censored_pattern: "matches the following censored Regex: %{censored_pattern}"
       less_than: must be less than %{count}
       less_than_or_equal_to: must be less than or equal to %{count}
       not_a_number: is not a number
@@ -1342,7 +1344,7 @@ en:
 
     hide_user_profiles_from_public: "Disable user cards, user profiles and user directory for anonymous users."
 
-    user_website_domains_whitelist: "User website will be verified against these domains. Pipe-delimited list." 
+    user_website_domains_whitelist: "User website will be verified against these domains. Pipe-delimited list."
 
     allow_profile_backgrounds: "Allow users to upload profile backgrounds."
 

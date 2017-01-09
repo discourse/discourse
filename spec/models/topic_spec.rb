@@ -4,11 +4,53 @@ require 'rails_helper'
 require_dependency 'post_destroyer'
 
 describe Topic do
-
   let(:now) { Time.zone.local(2013,11,20,8,0) }
   let(:user) { Fabricate(:user) }
 
-  it { is_expected.to validate_presence_of :title }
+  context 'validations' do
+    let(:topic) { Fabricate.build(:topic) }
+
+    context "#title" do
+      it { is_expected.to validate_presence_of :title }
+
+      describe 'censored words' do
+        site_setting(:censored_words, 'pineapple|pen')
+        site_setting(:censored_pattern, 'orange.*')
+
+        describe 'when title contains censored words' do
+          it 'should not be valid' do
+            topic.title = 'I have a Pineapple'
+
+            expect(topic).to_not be_valid
+
+            expect(topic.errors.full_messages.first).to include(I18n.t(
+              'errors.messages.contains_censored_words', censored_words: SiteSetting.censored_words
+            ))
+          end
+        end
+
+        describe 'when title matches censored pattern' do
+          it 'should not be valid' do
+            topic.title = 'I have orangEjuice'
+
+            expect(topic).to_not be_valid
+
+            expect(topic.errors.full_messages.first).to include(I18n.t(
+              'errors.messages.matches_censored_pattern', censored_pattern: SiteSetting.censored_pattern
+            ))
+          end
+        end
+
+        describe 'when title does not contain censored words' do
+          it 'should be valid' do
+            topic.title = 'The cake is a lie'
+
+            expect(topic).to be_valid
+          end
+        end
+      end
+    end
+  end
 
   it { is_expected.to rate_limit }
 
