@@ -6,8 +6,15 @@ require_relative '../lib/discourse_event'
 require_relative '../lib/discourse_plugin'
 require_relative '../lib/discourse_plugin_registry'
 
+require_relative '../lib/plugin_gem'
+
 # Global config
 require_relative '../app/models/global_setting'
+GlobalSetting.configure!
+unless Rails.env.test? && ENV['LOAD_PLUGINS'] != "1"
+  require_relative '../lib/custom_setting_providers'
+end
+GlobalSetting.load_defaults
 
 require 'pry-rails' if Rails.env.development?
 
@@ -15,8 +22,10 @@ if defined?(Bundler)
   Bundler.require(*Rails.groups(assets: %w(development test profile)))
 end
 
+
 module Discourse
   class Application < Rails::Application
+
     def config.database_configuration
       if Rails.env.production?
         GlobalSetting.database_config
