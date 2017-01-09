@@ -11,9 +11,9 @@ registerUnbound('number', (orig, params) => {
   orig = parseInt(orig, 10);
   if (isNaN(orig)) { orig = 0; }
 
-  let title = orig;
+  let title = I18n.toNumber(orig, { precision: 0 });
   if (params.numberKey) {
-    title = I18n.t(params.numberKey, { number: orig });
+    title = I18n.t(params.numberKey, { number: title });
   }
 
   let classNames = 'number';
