@@ -156,7 +156,7 @@ module Email
           elsif bounce_score >= SiteSetting.bounce_score_threshold
             # NOTE: we check bounce_score before sending emails, nothing to do
             # here other than log it happened.
-            reason = I18n.t("user.email.revoked", email: user.email, date: user.user_stat.reset_bounce_score_after)
+            reason = I18n.t("user.email.revoked", date: user.user_stat.reset_bounce_score_after)
             StaffActionLogger.new(Discourse.system_user).log_revoke_email(user, reason)
           end
         end
