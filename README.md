@@ -15,7 +15,7 @@ To learn more about the philosophy and goals of the project, [visit **discourse.
 <a href="http://discuss.howtogeek.com"><img src="https://www.discourse.org/faq/17/how-to-geek-discourse.png" width="720px"></a>
 <a href="https://talk.turtlerockstudios.com/"><img src="https://www.discourse.org/faq/17/turtle-rock-discourse.png" width="720px"></a>
 
-<a href="https://discuss.atom.io"><img src="https://www.discourse.org/faq/15/nexus-7-2013-mobile-discourse.png?v=2" alt="Atom" width="430px"></a> &nbsp;
+<a href="https://discuss.atom.io"><img src="https://www.discourse.org/faq/17/nexus-7-2013-mobile-discourse.png" alt="Atom" width="430px"></a> &nbsp;
 <a href="//discourse.soylent.com"><img src="https://www.discourse.org/faq/15/iphone-5s-mobile-discourse.png" alt="Soylent" width="270px"></a>
 
 Browse [lots more notable Discourse instances](http://www.discourse.org/faq/customers/).
