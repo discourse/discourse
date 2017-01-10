@@ -328,7 +328,7 @@ const DiscourseURL = Ember.Object.extend({
     const transition = router.handleURL(path);
     transition._discourse_intercepted = true;
 
-    if (transition.targetName == "unknown")
+    if (transition.targetName === "unknown")
     {
       transition.abort();
       document.location = fullpath;
