@@ -316,12 +316,7 @@ const DiscourseURL = Ember.Object.extend({
 
     const router = this.get('router');
 
-    if (opts.replaceURL) {
-      this.replaceState(path);
-    } else {
-      router.router.updateURL(path);
-    }
-
+    const fullpath = path;
     const split = path.split('#');
     let elementId;
 
@@ -332,6 +327,20 @@ const DiscourseURL = Ember.Object.extend({
 
     const transition = router.handleURL(path);
     transition._discourse_intercepted = true;
+
+    if (transition.targetName == "unknown")
+    {
+      transition.abort();
+      document.location = fullpath;
+      return;
+    }
+
+    if (opts.replaceURL) {
+      this.replaceState(path);
+    } else {
+      router.router.updateURL(path);
+    }
+
     const promise = transition.promise || transition;
     promise.then(() => jumpToElement(elementId));
   }
