@@ -17,8 +17,11 @@ class UserBlocker
     unless @user.blocked?
       @user.blocked = true
       if @user.save
-        SystemMessage.create(@user, @opts[:message] || :blocked_by_staff)
-        StaffActionLogger.new(@by_user).log_block_user(@user) if @by_user
+        message_type = @opts[:message] || :blocked_by_staff
+        post = SystemMessage.create(@user, message_type)
+        if post && @by_user
+          StaffActionLogger.new(@by_user).log_block_user(@user, {context: "#{message_type}: '#{post.topic&.title rescue ''}'"})
+        end
       end
     else
       false
