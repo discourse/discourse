@@ -192,6 +192,11 @@ export function validateUploadedFile(file, opts) {
       bootbox.alert(I18n.t('post.errors.upload_not_authorized', { authorized_extensions: authorizedImagesExtensions() }));
       return false;
     }
+  } else if (opts["csvOnly"]) {
+    if (!(/\.csv$/i).test(name)) {
+      bootbox.alert(I18n.t('user.invited.bulk_invite.error'));
+      return false;
+    }
   } else {
     if (!authorizesAllExtensions() && !isAuthorizedFile(name)) {
       bootbox.alert(I18n.t('post.errors.upload_not_authorized', { authorized_extensions: authorizedExtensions() }));
