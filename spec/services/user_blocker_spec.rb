@@ -58,6 +58,14 @@ describe UserBlocker do
       SystemMessage.expects(:create).never
       expect(block_user).to eq(false)
     end
+
+    it "logs it with context" do
+      SystemMessage.stubs(:create).returns(Fabricate.build(:post))
+      expect {
+        UserBlocker.block(user, Fabricate(:admin))
+      }.to change { UserHistory.count }.by(1)
+      expect(UserHistory.last.context).to be_present
+    end
   end
 
   describe 'unblock' do
@@ -80,6 +88,12 @@ describe UserBlocker do
       SystemMessage.unstub(:create)
       SystemMessage.expects(:create).never
       unblock_user
+    end
+
+    it "logs it" do
+      expect {
+        unblock_user
+      }.to change { UserHistory.count }.by(1)
     end
   end
 
