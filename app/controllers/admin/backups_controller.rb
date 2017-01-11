@@ -103,6 +103,8 @@ class Admin::BackupsController < Admin::AdminController
       Discourse.disable_readonly_mode(readonly_mode_key)
     end
 
+    StaffActionLogger.new(current_user).log_change_readonly_mode(enable)
+
     render nothing: true
   end
 
