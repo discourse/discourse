@@ -4,14 +4,8 @@ module Onebox
       return {} if hash.nil?
 
       hash.inject({}){|result, (key, value)|
-        new_key = case key
-                  when String then key.to_sym
-                  else key
-                  end
-        new_value = case value
-                    when Hash then symbolize_keys(value)
-                    else value
-                    end
+        new_key = key.is_a?(String) ? key.to_sym : key
+        new_value = value.is_a?(Hash) ? symbolize_keys(value) : value
         result[new_key] = new_value
         result
       }

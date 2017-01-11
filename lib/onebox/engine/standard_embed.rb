@@ -1,3 +1,5 @@
+require "cgi"
+
 module Onebox
   module Engine
     module StandardEmbed
@@ -93,14 +95,14 @@ module Onebox
           html_doc.css('meta').each do |m|
             if (m["property"] && m["property"][/^og:(.+)$/i]) || (m["name"] && m["name"][/^og:(.+)$/i])
               value = (m["content"] || m["value"]).to_s
-              og[$1.tr('-:','_').to_sym] ||= value unless Onebox::Helpers::blank?(value)
+              og[$1.tr('-:','_').to_sym] ||= CGI.escapeHTML(value) unless Onebox::Helpers::blank?(value)
             end
           end
 
           # Attempt to retrieve the title from the meta tag
           title_element = html_doc.at_css('title')
           if title_element && title_element.text
-            og[:title] ||= title_element.text unless Onebox::Helpers.blank?(title_element.text)
+            og[:title] ||= CGI.escapeHTML(title_element.text) unless Onebox::Helpers.blank?(title_element.text)
           end
 
           og
@@ -114,7 +116,7 @@ module Onebox
           html_doc.css('meta').each do |m|
             if (m["property"] && m["property"][/^twitter:(.+)$/i]) || (m["name"] && m["name"][/^twitter:(.+)$/i])
               value = (m["content"] || m["value"]).to_s
-              twitter[$1.tr('-:','_').to_sym] ||= value unless Onebox::Helpers::blank?(value)
+              twitter[$1.tr('-:','_').to_sym] ||= CGI.escapeHTML(value) unless Onebox::Helpers::blank?(value)
             end
           end
 
