@@ -192,12 +192,12 @@ module Discourse
     base_url_no_prefix + base_uri
   end
 
-  READONLY_MODE_KEY_TTL ||= 60
-  READONLY_MODE_KEY ||= 'readonly_mode'.freeze
-  PG_READONLY_MODE_KEY ||= 'readonly_mode:postgres'.freeze
+  READONLY_MODE_KEY_TTL  ||= 60
+  READONLY_MODE_KEY      ||= 'readonly_mode'.freeze
+  PG_READONLY_MODE_KEY   ||= 'readonly_mode:postgres'.freeze
   USER_READONLY_MODE_KEY ||= 'readonly_mode:user'.freeze
 
-  READONLY_KEYS = [
+  READONLY_KEYS ||= [
     READONLY_MODE_KEY,
     PG_READONLY_MODE_KEY,
     USER_READONLY_MODE_KEY
@@ -234,9 +234,7 @@ module Discourse
   end
 
   def self.readonly_mode?
-    return true if recently_readonly?
-    READONLY_KEYS.each { |key| return true if !!$redis.get(key) }
-    false
+    recently_readonly? || READONLY_KEYS.any? { |key| !!$redis.get(key) }
   end
 
   def self.last_read_only
@@ -244,8 +242,7 @@ module Discourse
   end
 
   def self.recently_readonly?
-    read_only = last_read_only[$redis.namespace]
-    return false unless read_only
+    return false unless read_only = last_read_only[$redis.namespace]
     read_only > 15.seconds.ago
   end
 
