@@ -2409,8 +2409,8 @@ en:
         backups: "backups"
         traffic_short: "Traffic"
         traffic: "Application web requests"
-        page_views: "API Requests"
-        page_views_short: "API Requests"
+        page_views: "Pageviews"
+        page_views_short: "Pageviews"
         show_traffic_report: "Show Detailed Traffic Report"
 
         reports:
