@@ -701,7 +701,7 @@ files:
     default: 3072
   authorized_extensions:
     client: true
-    default: 'jpg|jpeg|png|gif|csv'
+    default: 'jpg|jpeg|png|gif'
     refresh: true
     type: list
   crawl_images:

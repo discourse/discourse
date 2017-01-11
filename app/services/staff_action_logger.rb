@@ -14,7 +14,6 @@ class StaffActionLogger
     raise Discourse::InvalidParameters.new(:deleted_user) unless deleted_user && deleted_user.is_a?(User)
     UserHistory.create( params(opts).merge({
       action: UserHistory.actions[:delete_user],
-      email: deleted_user.email,
       ip_address: deleted_user.ip_address.to_s,
       details: [:id, :username, :name, :created_at, :trust_level, :last_seen_at, :last_emailed_at].map { |x| "#{x}: #{deleted_user.send(x)}" }.join("\n")
     }))
@@ -93,6 +92,14 @@ class StaffActionLogger
       action: UserHistory.actions[:change_trust_level],
       target_user_id: user.id,
       details: "old trust level: #{old_trust_level}\nnew trust level: #{new_trust_level}"
+    }))
+  end
+
+  def log_lock_trust_level(user, opts={})
+    raise Discourse::InvalidParameters.new(:user) unless user && user.is_a?(User)
+    UserHistory.create!( params(opts).merge({
+      action: UserHistory.actions[user.trust_level_locked ? :lock_trust_level : :unlock_trust_level],
+      target_user_id: user.id
     }))
   end
 
@@ -348,6 +355,15 @@ class StaffActionLogger
     raise Discourse::InvalidParameters.new(:user) unless user
     UserHistory.create(params(opts).merge({
       action: UserHistory.actions[:deactivate_user],
+      target_user_id: user.id,
+      details: reason
+    }))
+  end
+
+  def log_user_activate(user, reason, opts={})
+    raise Discourse::InvalidParameters.new(:user) unless user
+    UserHistory.create(params(opts).merge({
+      action: UserHistory.actions[:activate_user],
       target_user_id: user.id,
       details: reason
     }))

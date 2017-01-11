@@ -383,37 +383,46 @@ describe Email::Receiver do
       expect(Post.last.raw).to match(/discourse\.rb/)
     end
 
-    it "handles forwarded emails" do
-      SiteSetting.enable_forwarded_emails = true
-      expect { process(:forwarded_email_1) }.to change(Topic, :count)
+    context "with forwarded emails enabled" do
+      before { SiteSetting.enable_forwarded_emails = true }
 
-      forwarded_post, last_post = *Post.last(2)
+      it "handles forwarded emails" do
+        expect { process(:forwarded_email_1) }.to change(Topic, :count)
 
-      expect(forwarded_post.user.email).to eq("some@one.com")
-      expect(last_post.user.email).to eq("ba@bar.com")
+        forwarded_post, last_post = *Post.last(2)
 
-      expect(forwarded_post.raw).to match(/XoXo/)
-      expect(last_post.raw).to match(/can you have a look at this email below/)
+        expect(forwarded_post.user.email).to eq("some@one.com")
+        expect(last_post.user.email).to eq("ba@bar.com")
 
-      expect(last_post.post_type).to eq(Post.types[:regular])
-    end
+        expect(forwarded_post.raw).to match(/XoXo/)
+        expect(last_post.raw).to match(/can you have a look at this email below/)
 
-    it "handles weirdly forwarded emails" do
-      group.add(Fabricate(:user, email: "ba@bar.com"))
-      group.save
+        expect(last_post.post_type).to eq(Post.types[:regular])
+      end
 
-      SiteSetting.enable_forwarded_emails = true
-      expect { process(:forwarded_email_2) }.to change(Topic, :count)
+      it "handles weirdly forwarded emails" do
+        group.add(Fabricate(:user, email: "ba@bar.com"))
+        group.save
 
-      forwarded_post, last_post = *Post.last(2)
+        SiteSetting.enable_forwarded_emails = true
+        expect { process(:forwarded_email_2) }.to change(Topic, :count)
 
-      expect(forwarded_post.user.email).to eq("some@one.com")
-      expect(last_post.user.email).to eq("ba@bar.com")
+        forwarded_post, last_post = *Post.last(2)
 
-      expect(forwarded_post.raw).to match(/XoXo/)
-      expect(last_post.raw).to match(/can you have a look at this email below/)
+        expect(forwarded_post.user.email).to eq("some@one.com")
+        expect(last_post.user.email).to eq("ba@bar.com")
 
-      expect(last_post.post_type).to eq(Post.types[:whisper])
+        expect(forwarded_post.raw).to match(/XoXo/)
+        expect(last_post.raw).to match(/can you have a look at this email below/)
+
+        expect(last_post.post_type).to eq(Post.types[:whisper])
+      end
+
+      # Who thought this was a good idea?!
+      it "doesn't blow up with localized email headers" do
+        expect { process(:forwarded_email_3) }.to change(Topic, :count)
+      end
+
     end
 
   end

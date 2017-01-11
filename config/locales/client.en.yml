@@ -833,6 +833,7 @@ en:
           none: "You haven't invited anyone here yet. You can send individual invites, or invite a bunch of people at once by <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>uploading a CSV file</a>."
           text: "Bulk Invite from File"
           success: "File uploaded successfully, you will be notified via message when the process is complete."
+          error: "Sorry, file should be of csv format."
 
       password:
         title: "Password"
@@ -2409,8 +2410,8 @@ en:
         backups: "backups"
         traffic_short: "Traffic"
         traffic: "Application web requests"
-        page_views: "API Requests"
-        page_views_short: "API Requests"
+        page_views: "Pageviews"
+        page_views_short: "Pageviews"
         show_traffic_report: "Show Detailed Traffic Report"
 
         reports:
@@ -2914,6 +2915,10 @@ en:
             deleted_tag: "deleted tag"
             renamed_tag: "renamed tag"
             revoke_email: "revoke email"
+            lock_trust_level: "lock trust level"
+            unlock_trust_level: "unlock trust level"
+            activate_user: "activate user"
+            deactivate_user: "deactivate user"
         screened_emails:
           title: "Screened Emails"
           description: "When someone tries to create a new account, the following email addresses will be checked and the registration will be blocked, or some other action performed."

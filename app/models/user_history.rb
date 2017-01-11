@@ -55,7 +55,10 @@ class UserHistory < ActiveRecord::Base
                           rate_limited_like: 37, # not used anymore
                           revoke_email: 38,
                           deactivate_user: 39,
-                          wizard_step: 40
+                          wizard_step: 40,
+                          lock_trust_level: 41,
+                          unlock_trust_level: 42,
+                          activate_user: 43
                          )
   end
 
@@ -91,7 +94,10 @@ class UserHistory < ActiveRecord::Base
                         :revoke_moderation,
                         :backup_operation,
                         :revoke_email,
-                        :deactivate_user]
+                        :deactivate_user,
+                        :lock_trust_level,
+                        :unlock_trust_level,
+                        :activate_user]
   end
 
   def self.staff_action_ids
