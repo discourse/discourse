@@ -84,7 +84,7 @@ class ImportScripts::Bbpress < ImportScripts::Base
           id: u["id"].to_i,
           username: u["user_nicename"],
           email: u["user_email"].downcase,
-          name: u["display_name"].length > 0 ? u["display_name"] : u['user_nicename'],
+          name: u["display_name"].presence || u['user_nicename'],
           created_at: u["user_registered"],
           website: u["user_url"],
           bio_raw: users_description[u["id"]],
