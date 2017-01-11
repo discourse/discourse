@@ -833,6 +833,7 @@ en:
           none: "You haven't invited anyone here yet. You can send individual invites, or invite a bunch of people at once by <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>uploading a CSV file</a>."
           text: "Bulk Invite from File"
           success: "File uploaded successfully, you will be notified via message when the process is complete."
+          error: "Sorry, file should be of csv format."
 
       password:
         title: "Password"
