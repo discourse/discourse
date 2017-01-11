@@ -4,7 +4,7 @@ module Onebox
       include Engine
       include StandardEmbed
 
-      matches_regexp(/^https?:\/\/.*soundcloud\.com/)
+      matches_regexp(/^https?:\/\/soundcloud\.com/)
       always_https
 
       def to_html
