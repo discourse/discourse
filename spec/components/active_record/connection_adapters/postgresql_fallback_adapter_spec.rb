@@ -42,8 +42,13 @@ describe ActiveRecord::ConnectionHandling do
       end
 
       after do
-        with_multisite_db(multisite_db) { Discourse.disable_readonly_mode }
-        Discourse.disable_readonly_mode
+        pg_readonly_mode_key = Discourse::PG_READONLY_MODE_KEY
+
+        with_multisite_db(multisite_db) do
+          Discourse.disable_readonly_mode(pg_readonly_mode_key)
+        end
+
+        Discourse.disable_readonly_mode(pg_readonly_mode_key)
         ActiveRecord::Base.establish_connection(ActiveRecord::Base.configurations[Rails.env])
       end
 

@@ -52,7 +52,7 @@ class PostgreSQLFallbackHandler
             logger.warn "#{log_prefix}: Master server is active. Reconnecting..."
 
             self.master_up(key)
-            Discourse.disable_readonly_mode
+            Discourse.disable_readonly_mode(Discourse::PG_READONLY_MODE_KEY)
           end
         rescue => e
           logger.warn "#{log_prefix}: Connection to master PostgreSQL server failed with '#{e.message}'"
@@ -103,7 +103,7 @@ module ActiveRecord
         }))
 
         verify_replica(connection)
-        Discourse.enable_readonly_mode
+        Discourse.enable_readonly_mode(Discourse::PG_READONLY_MODE_KEY)
       else
         begin
           connection = postgresql_connection(config)
