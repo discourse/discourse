@@ -1,9 +1,18 @@
 import { register } from 'pretty-text/engines/discourse-markdown/bbcode';
+import { registerOption } from 'pretty-text/pretty-text';
+import { performEmojiUnescape } from 'pretty-text/emoji';
+
+registerOption((siteSettings, opts) => {
+  opts.enableEmoji = siteSettings.enable_emoji;
+  opts.emojiSet = siteSettings.emoji_set;
+});
+
 
 export function setup(helper) {
   register(helper, 'quote', {noWrap: true, singlePara: true}, (contents, bbParams, options) => {
     const params = {'class': 'quote'};
     let username = null;
+    const opts = helper.getOptions();
 
     if (bbParams) {
       const paramsSplit = bbParams.split(/\,\s*/);
@@ -52,7 +61,16 @@ export function setup(helper) {
         if (postNumber > 0) { href += "/" + postNumber; }
         // get rid of username said stuff
         header.pop();
-        header.push(['a', {'href': href}, topicInfo.title]);
+
+        let title = topicInfo.title;
+
+        if (opts.enableEmoji) {
+          title = performEmojiUnescape(topicInfo.title, {
+            getURL: opts.getURL, emojiSet: opts.emojiSet
+          });
+        }
+
+        header.push(['a', {'href': href}, title]);
       }
     }
 
