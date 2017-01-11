@@ -17,6 +17,10 @@ describe Upload do
   let(:image_svg) { file_from_fixtures(image_svg_filename) }
   let(:image_svg_filesize) { File.size(image_svg) }
 
+  let(:huge_image_filename) { "huge.jpg" }
+  let(:huge_image) { file_from_fixtures(huge_image_filename) }
+  let(:huge_image_filesize) { File.size(huge_image) }
+
   let(:attachment_path) { __FILE__ }
   let(:attachment) { File.new(attachment_path) }
   let(:attachment_filename) { File.basename(attachment_path) }
@@ -55,6 +59,12 @@ describe Upload do
       expect(Upload.create_for(user_id, image, image_filename, image_filesize)).to eq(upload)
     end
 
+    it "ensures images isn't huge before processing it" do
+      Upload.expects(:fix_image_orientation).never
+      upload = Upload.create_for(user_id, huge_image, huge_image_filename, huge_image_filesize)
+      expect(upload.errors.size).to be > 0
+    end
+
     it "fix image orientation" do
       Upload.expects(:fix_image_orientation).with(image.path)
       Upload.create_for(user_id, image, image_filename, image_filesize)
@@ -62,7 +72,6 @@ describe Upload do
 
     it "computes width & height for images" do
       ImageSizer.expects(:resize)
-      image.expects(:rewind).times(3)
       Upload.create_for(user_id, image, image_filename, image_filesize)
     end
 

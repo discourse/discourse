@@ -699,6 +699,10 @@ files:
   max_attachment_size_kb:
     client: true
     default: 3072
+  max_image_megapixels:
+    default: 40
+    min: 5
+    max: 100
   authorized_extensions:
     client: true
     default: 'jpg|jpeg|png|gif'

@@ -95,6 +95,8 @@ class Upload < ActiveRecord::Base
   #   - image_type ("avatar", "profile_background", "card_background")
   #   - is_attachment_for_group_message (boolean)
   def self.create_for(user_id, file, filename, filesize, options = {})
+    upload = Upload.new
+
     DistributedMutex.synchronize("upload_#{user_id}_#{filename}") do
       # do some work on images
       if FileHelper.is_image?(filename) && is_actual_image?(file)
@@ -105,13 +107,19 @@ class Upload < ActiveRecord::Base
           File.write(file.path, doc.to_s)
           file.rewind
         else
+          # ensure image isn't huge
+          w, h = FastImage.size(file) || [0, 0]
+          if w * h >= SiteSetting.max_image_megapixels * 1_000_000
+            upload.errors.add(:base, I18n.t("upload.images.larger_than_x_megapixels", max_image_megapixels: SiteSetting.max_image_megapixels))
+            return upload
+          end
+
           # fix orientation first
           fix_image_orientation(file.path) if should_optimize?(file.path)
         end
 
         # retrieve image info
-        image_info = FastImage.new(file)
-        w, h = *(image_info.try(:size) || [0, 0])
+        w, h = FastImage.size(file) || [0, 0]
 
         # default size
         width, height = ImageSizer.resize(w, h)
@@ -214,8 +222,7 @@ class Upload < ActiveRecord::Base
     # don't optimize GIFs or SVGs
     return false if path =~ /\.(gif|svg)$/i
     return true  if path !~ /\.png$/i
-    image_info = FastImage.new(path) rescue nil
-    w, h = *(image_info.try(:size) || [0, 0])
+    w, h = FastImage.size(path) || [0, 0]
     # don't optimize large PNGs
     w > 0 && h > 0 && w * h < LARGE_PNG_SIZE
   end
