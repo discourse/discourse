@@ -53,6 +53,7 @@ en:
   purge_reason: "Automatically deleted as abandoned, deactivated account"
   disable_remote_images_download_reason: "Remote images download was disabled because there wasn't enough disk space available."
   anonymous: "Anonymous"
+  remove_posts_deleted_by_author: "Deleted by author"
 
   emails:
     incoming:
@@ -1615,6 +1616,8 @@ en:
   user:
     no_accounts_associated: "No accounts associated"
     deactivated: "Was deactivated due to too many bounced emails to '%{email}'."
+    deactivated_by_staff: "Deactivated by staff"
+    activated_by_staff: "Activated by staff"
     username:
       short: "must be at least %{min} characters"
       long: "must be no more than %{max} characters"
