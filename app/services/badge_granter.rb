@@ -274,7 +274,7 @@ class BadgeGranter
             /*where*/
             RETURNING id, user_id, granted_at
             )
-            select w.*, username, locale, u.admin FROM w
+            select w.*, username, locale, (u.admin OR u.moderator) AS staff FROM w
             JOIN users u on u.id = w.user_id
             "
 
@@ -315,7 +315,7 @@ class BadgeGranter
       # Make this variable in this scope
       notification = nil
 
-      next if (row.admin && badge.awarded_for_trust_level?)
+      next if (row.staff && badge.awarded_for_trust_level?)
 
       I18n.with_locale(notification_locale) do
         notification = Notification.create!(
