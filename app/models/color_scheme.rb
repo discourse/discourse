@@ -92,15 +92,21 @@ class ColorScheme < ActiveRecord::Base
     new_color_scheme
   end
 
-  def self.hex_for_name(name)
-    val = begin
-      hex_cache[name] ||= begin
-        # Can't use `where` here because base doesn't allow it
-        (enabled || base).colors.find {|c| c.name == name }.try(:hex) || :nil
+  def self.lookup_hex_for_name(name)
+    Discourse.plugin_themes.each do |pt|
+      if pt.color_scheme
+        found = pt.color_scheme[name.to_sym]
+        return found if found
       end
     end
 
-    val == :nil ? nil : val
+    # Can't use `where` here because base doesn't allow it
+    (enabled || base).colors.find {|c| c.name == name }.try(:hex) || :nil
+  end
+
+  def self.hex_for_name(name)
+    hex_cache[name] ||= lookup_hex_for_name(name)
+    hex_cache[name] == :nil ? nil : hex_cache[name]
   end
 
   def colors=(arr)

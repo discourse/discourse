@@ -20,11 +20,11 @@
   {{outlet "user-card"}}
 </div>
 
-{{plugin-outlet name="above-footer"}}
+{{plugin-outlet name="above-footer" args=(hash showFooter=showFooter)}}
 {{#if showFooter}}
   {{custom-html name="footer"}}
 {{/if}}
-{{plugin-outlet name="below-footer"}}
+{{plugin-outlet name="below-footer" args=(hash showFooter=showFooter)}}
 
 {{outlet "modal"}}
 {{topic-entrance}}
