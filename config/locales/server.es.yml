@@ -2001,7 +2001,6 @@ es:
       join_the_discussion: "Leer más"
       popular_posts: "Temas populares"
       from_topic_label: "Formulario"
-      more_new: "Nuevos temas en las categorías que sigues"
       subject_template: "Resumen de [%{site_name}]"
       unsubscribe: "Este resumen se envía desde %{site_link} cuando pasa un tiempo desde tu última visita. Para cancelar tu suscripción %{unsubscribe_link}."
       click_here: "clic aquí"

@@ -1270,7 +1270,6 @@ nl:
         go_bottom: "onderkant"
         go: "ga"
         jump_bottom: "spring naar laatste bericht"
-        jump_prompt: "spring naar bericht"
         jump_prompt_long: "Naar welk bericht wil je springen?"
         jump_bottom_with_number: "spring naar bericht %{post_number}"
         total: totaal aantal berichten
@@ -1502,7 +1501,6 @@ nl:
         file_too_large: "Sorry, dit bestand is te groot (maximumgrootte is {{max_size_kb}}kb). Misschien kun je dit bestand uploaden naar een cloudopslagdienst en de link er naar delen?"
         too_many_uploads: "Sorry, je kan maar één afbeelding tegelijk uploaden."
         too_many_dragged_and_dropped_files: "Sorry, je kan maar 10 bestanden tegelijk uploaden."
-        upload_not_authorized: "Sorry, je mag dat type bestand niet uploaden (toegestane extensies: {{authorized_extensions}})."
         image_upload_not_allowed_for_new_user: "Sorry, nieuwe gebruikers mogen nog geen afbeeldingen uploaden."
         attachment_upload_not_allowed_for_new_user: "Sorry, nieuwe gebruikers mogen nog geen bestanden uploaden."
         attachment_download_requires_login: "Sorry, maar je moet ingelogd zijn om bijlages te downloaden."

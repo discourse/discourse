@@ -2088,7 +2088,6 @@ pt:
       join_the_discussion: "Ler Mais"
       popular_posts: "Publicações Populares"
       from_topic_label: "De"
-      more_new: "Novidades em tópicos e categorias que acompanha"
       subject_template: "Sumário de [%{site_name}] "
       unsubscribe: "Este resumo é enviado de %{site_link} quando não o vemos há algum tempo. Para anular a subscrição %{unsubscribe_link}."
       click_here: "clique aqui"
