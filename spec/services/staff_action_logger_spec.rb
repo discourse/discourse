@@ -370,7 +370,6 @@ describe StaffActionLogger do
     end
   end
 
-<<<<<<< 240c4870cfa43dea222ed52d4ce57b6ac186588d
   describe 'log_lock_trust_level' do
     let(:user) { Fabricate(:user) }
 
