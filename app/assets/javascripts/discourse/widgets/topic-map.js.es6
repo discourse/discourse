@@ -116,7 +116,14 @@ createWidget('topic-map-link', {
   },
 
   html(attrs) {
-    return attrs.title ? replaceEmoji(attrs.title) : attrs.url;
+    let content = attrs.title || attrs.url;
+    const truncateLength = 85;
+
+    if (content.length > truncateLength) {
+      content = `${content.substr(0, truncateLength).trim()}...`;
+    }
+
+    return attrs.title ? replaceEmoji(content) : content;
   }
 });
 
