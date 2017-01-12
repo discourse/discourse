@@ -41,15 +41,9 @@ class DiscourseSassImporter < Sass::Importers::Filesystem
         case name
         when "theme_variables"
           contents = ""
-          if color_scheme = ColorScheme.enabled
-            ColorScheme.base_colors.each do |n, base_hex|
-              override = color_scheme.colors_by_name[n]
-              contents << "$#{n}: ##{override ? override.hex : base_hex} !default;\n"
-            end
-          else
-            special_imports[name].each do |css_file|
-              contents << File.read(css_file)
-            end
+          ColorScheme.base_colors.each do |n, base_hex|
+            hex_val = ColorScheme.hex_for_name(n) || base_hex
+            contents << "$#{n}: ##{hex_val} !default;\n"
           end
         when "category_backgrounds"
           contents = ""
