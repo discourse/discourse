@@ -370,6 +370,7 @@ describe StaffActionLogger do
     end
   end
 
+<<<<<<< 240c4870cfa43dea222ed52d4ce57b6ac186588d
   describe 'log_lock_trust_level' do
     let(:user) { Fabricate(:user) }
 
@@ -405,6 +406,25 @@ describe StaffActionLogger do
       user_history = UserHistory.last
       expect(user_history.action).to eq(UserHistory.actions[:activate_user])
       expect(user_history.details).to eq(reason)
+  end
+
+  describe '#log_readonly_mode' do
+    it "creates a new record" do
+      expect { logger.log_change_readonly_mode(true) }.to change { UserHistory.count }.by(1)
+
+      user_history = UserHistory.last
+
+      expect(user_history.action).to eq(UserHistory.actions[:change_readonly_mode])
+      expect(user_history.new_value).to eq('t')
+      expect(user_history.previous_value).to eq('f')
+
+      expect { logger.log_change_readonly_mode(false) }.to change { UserHistory.count }.by(1)
+
+      user_history = UserHistory.last
+
+      expect(user_history.action).to eq(UserHistory.actions[:change_readonly_mode])
+      expect(user_history.new_value).to eq('f')
+      expect(user_history.previous_value).to eq('t')
     end
   end
 end
