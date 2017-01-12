@@ -405,6 +405,7 @@ describe StaffActionLogger do
       user_history = UserHistory.last
       expect(user_history.action).to eq(UserHistory.actions[:activate_user])
       expect(user_history.details).to eq(reason)
+    end
   end
 
   describe '#log_readonly_mode' do
