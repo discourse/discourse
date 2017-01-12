@@ -1040,7 +1040,6 @@ da:
       new_posts: "Nye indlæg"
       popular_topics: "Populære emner"
       join_the_discussion: "Læs mere"
-      more_new: "Nyt i emner og kategorier, som du følger"
       subject_template: "[%{site_name}] Resumé"
       unsubscribe: "Dette resumé sendes fra %{site_link} når vi ikke har set dig i et stykke tid. For at afmelde %{unsubscribe_link}."
       click_here: "klik her"

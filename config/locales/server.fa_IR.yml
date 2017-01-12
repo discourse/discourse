@@ -15,8 +15,13 @@ fa_IR:
       short: "%m-%d-%Y"
       short_no_year: "%B %-d"
       date_only: "%B %-d, %Y"
+      long: "%B %-d, %Y, %l:%M%P"
   date:
     month_names: [null, ژانویه, فوریه, مارچ, آپریل, می, جون, جولای, آگوست, سپتامبر, اکتبر, نوامبر, دسامبر]
+    <<: *datetime_formats
+  time:
+    am: "ق.ظ"
+    pm: "ب.ظ"
     <<: *datetime_formats
   title: "گفتمان"
   topics: "موضوعات"
@@ -139,6 +144,7 @@ fa_IR:
   topic_not_found: "یک مشکلی وجود دارد.  شاید این جستار بسته شده یا پاک شده همزمان که داشتی نگاهش می کردی ؟"
   just_posted_that: "به آن‌چه که به‌تازگی فرستادید بسیار نزدیک است"
   invalid_characters: "نویسه‌های نامعتبر در بر دارد."
+  is_invalid: "نامعتبر است. تلاش کنید که کمی بیش‌ترتوضیح بگذارید."
   next_page: "صفحه بعد ←"
   prev_page: "→ صفحه قبل"
   page_num: "صفحه %{num}"
@@ -1301,6 +1307,9 @@ fa_IR:
     title: "شرایط استفاده از خدمات"
   privacy_topic:
     title: "سیاست حفظ حریم خصوصی"
+  badges:
+    welcome:
+      name: خوش آمدید
   admin_login:
     success: "ایمیل ارسال شد "
     error: "خطا!"
@@ -1311,8 +1320,17 @@ fa_IR:
   performance_report:
     initial_post_raw: این مطلب شامل گزارش عملکرد روزانه سایت شماست.
     initial_topic_title: گزارش عملکرد وب‌سایت
-  time:
-    <<: *datetime_formats
+  wizard:
+    step:
+      forum_title:
+        title: "نام"
+      contact:
+        fields:
+          contact_email:
+            label: "ایمیل"
+            placeholder: "name@example.com"
+          contact_url:
+            placeholder: "http://www.example.com/contact-us"
   activemodel:
     errors:
       <<: *errors

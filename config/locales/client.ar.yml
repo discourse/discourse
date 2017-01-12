@@ -427,10 +427,19 @@ ar:
         other: "%{count} عضو"
     group_histories:
       actions:
+        change_group_setting: "تغيير إعدادات المجموعة"
         add_user_to_group: "إضافة مستخدم"
+        remove_user_from_group: "حذف العضو"
+        make_user_group_owner: "تعيين كمالك"
+        remove_user_as_group_owner: "سحب صلاحية المالك"
     groups:
       logs:
         title: "السجلات"
+        when: "حين"
+        action: "إجراء"
+        acting_user: "العضو المسؤول"
+        target_user: "العضو المستهدف"
+        subject: "الموضوع"
         details: "التفاصيل"
         from: "من"
         to: "إلى"
@@ -438,10 +447,37 @@ ar:
         title: 'تعديل المجموعة'
         full_name: 'الإسم الكامل'
         add_members: "إضافة أعضاء"
+        delete_member_confirm: "إزالة '%{username}' من المجموعة '%{group}'؟"
+      request_membership_pm:
+        title: "طلب العضوية"
+        body: "أود تسجيل العضوية في المجموعة @%{groupName}"
+      name_placeholder: "اسم المجموعة، بدون مسافات. يتبع قواعد اسم المستخدم"
+      public: "السماح للأعضاء للإنضمام / ترك المجموعة (يطبق على المجموعات الظاهرة)"
+      empty:
+        posts: "لا مواضيع لأعضاء هذه المجموعة."
+        members: "لا أعضاء في هذه المجموعة."
+        mentions: "لا توجد إشارات في هذه المجموعة."
+        messages: "لا توجد رسائل في هذه المجموعة."
+        topics: "لا توجد مواضيع لأعضاء هذه المجموعة."
+        logs: "لا توجد سجلات في هذ المجموعة."
       add: "أضف"
+      join: "إنضمام للمجموعة"
+      leave: "ترك المجموعة"
+      request: "طلب الإنضمام للمجموعة"
+      automatic_group: مجموعة تلقائية
+      closed_group: مجموعة مغلقة
+      is_group_user: "أنت عضو في هذه المجموعة."
+      allow_membership_requests: "السماح للأعضاء لإرسال طلبات الإنضمام إلى أصحاب المجموعات (يجب أن يسمح للجميع بذكر هذه المجموعة)"
+      membership: "العضوية"
+      name: "الاسم"
+      user_count: "عدد اﻷعضاء"
+      bio: "عن المجموعة"
       selector_placeholder: "أضف أعضاء"
       owner: "المالك"
       visible: "المجموعة مرئية لكل المستخدمين"
+      index:
+        title: "المجموعات"
+        empty: "لا توجد مجموعات ظاهرة"
       title:
         zero: "مجموعات"
         one: "مجموعات"
@@ -449,6 +485,7 @@ ar:
         few: "مجموعات"
         many: "مجموعات"
         other: "مجموعات"
+      activity: "نشاط"
       members: "الأعضاء"
       topics: "المواضيع"
       posts: "المشاركات"
@@ -480,6 +517,15 @@ ar:
         muted:
           title: "مكتوم"
           description: "لن نرسل لك أي إشعار لأي من المواضيع الجديدة في هذه المجموعة."
+      flair_url: "الصورة الرمزية المميزة"
+      flair_url_placeholder: "(إختياري) رابط الصورة أو صنف Font Awesome"
+      flair_bg_color: "خلفية الصورة الرمزية المميزة"
+      flair_bg_color_placeholder: "(إختياري) اللون برقم الهكس"
+      flair_color: "لون الصورة الرمزية"
+      flair_color_placeholder: "(إختياري) اللون برقم الهكس"
+      flair_preview_icon: "معاينة الأيقونة"
+      flair_preview_image: "معاينة الصورة"
+      flair_note: "ملاحظة: الصورة المميزة تظهر فقط لمجموعة العضو الرئيسية."
     user_action_groups:
       '1': "الإعجابات المعطاة"
       '2': "الإعجابات المستلمة"
@@ -549,6 +595,11 @@ ar:
       profile: "الصفحة الشخصية"
       mute: "كتم"
       edit: "تعديل التفضيلات"
+      download_archive:
+        button_text: "تحميل مواضيعي"
+        confirm: "هل أنت متأكد من رغبتك في تحميل جميع مشاركاتك ؟"
+        success: "بدأ التحميل, سيتم إعلامك برسالة عند اكتمال العملية."
+        rate_limit_error: "المشاركات يمكن تحميلها لمرة واحدة في اليوم , الرجاء المحاولة غدا."
       new_private_message: "رسالة جديدة"
       private_message: "رسالة"
       private_messages: "الرسائل"
@@ -572,6 +623,7 @@ ar:
         each_browser_note: "ملاحظة: عليك تغيير هذا الإعداد في كل متصفح تستخدمه."
       dismiss_notifications: "تجاهل الكل"
       dismiss_notifications_tooltip: "جعل جميع اشعارات غيرمقروء الى مقروء"
+      first_notification: "إشعارك الأول! قم بإختياره للبدء."
       disable_jump_reply: "لا تنتقل إلى مشاركتي بعد ما أردّ"
       dynamic_favicon: "إعرض عدد المواضيع الجديدة والمحدثة في أيقونة المتصفح"
       external_links_in_new_tab: "فتح الروابط الخارجية في ألسنة جديدة"
@@ -815,6 +867,8 @@ ar:
         account_age_days: "عمر الحساب بالأيام"
         create: "أرسل دعوة"
         generate_link: "انسخ رابط الدعوة"
+        link_generated: "تم إنشاء رابط الدعوة بنجاح!"
+        valid_for: "رابط الدعوة صحيح فقط للبريد الإلكتروني %{email}"
         bulk_invite:
           text: "الدعوة من ملف"
           success: "رُفع الملف بنجاح. سيصلك إشعارا عبر رسالة عند اكتمال العملية."
@@ -922,6 +976,8 @@ ar:
     too_few_topics_notice: "دعونا <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>الحصول على هذه المناقشة التي!</a> وهناك حاليا <strong>%{currentTopics} / %{requiredTopics}</strong> المواضيع. الزوار الجديدة بحاجة إلى بعض الأحاديث قراءة والرد عليها."
     too_few_posts_notice: "دعونا <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>الحصول على هذه المناقشة التي بدأت!</a> يوجد حاليا <strong>%{currentPosts} / %{requiredPosts}</strong> مشاركات. الزوار الجديدة بحاجة إلى بعض الأحاديث قراءة والرد عليها."
     learn_more: "تعلم المزيد..."
+    all_time: 'المجموع'
+    all_time_desc: 'عدد المواضيع المنشأة'
     year: 'عام'
     year_desc: 'المواضيع المكتوبة خلال 365 يوم الماضية'
     month: 'شهر'
@@ -1036,6 +1092,9 @@ ar:
       twitter: "تويتر"
       emoji_one: "إموجي واحد"
       win10: "وندوز10"
+    category_page_style:
+      categories_only: "الفئات فقط"
+      categories_with_featured_topics: "فئات ذات مواضيع متميزة"
     shortcut_modifier_key:
       shift: 'Shift'
       ctrl: 'Ctrl'
@@ -1219,6 +1278,8 @@ ar:
           label: في المجموعة
         with_badge:
           label: مع الشعارات
+        with_tags:
+          label: مع أوسمة
         filters:
           label: استرجع فقط المواضيع/المشاركات التي...
           likes: أعجبني
@@ -1250,6 +1311,7 @@ ar:
     topics:
       new_messages_marker: "آخر مشاهدة"
       bulk:
+        clear_all: "مسح الكل"
         unlist_topics: "ازالة المواضيع من القائمة"
         reset_read: "تصفير القراءات"
         delete: "المواضيع المحذوفة"
@@ -1398,7 +1460,6 @@ ar:
         go_bottom: "أسفل"
         go: "اذهب"
         jump_bottom: "انتقل لآخر مشاركة"
-        jump_prompt: "اقفز الى المشاركة"
         jump_prompt_long: "إلى أي مشاركة تريد الانتقال؟"
         jump_bottom_with_number: "انتقل إلى المشاركة %{post_number}"
         total: مجموع المشاركات
@@ -1678,7 +1739,6 @@ ar:
         file_too_large: "آسفون، الملف هذا كبير جدا (أقصى حجم هو {{max_size_kb}}ك.بايت). ما رأيك برفع الملف على خدمة سحابيّة، ومن ثمّ تشارك الوصلة؟"
         too_many_uploads: "آسفون، يمكنك فقط رفع ملفّ واحد كلّ مرة."
         too_many_dragged_and_dropped_files: "آسفون، يمكنك فقط رفع 10 ملفّات كلّ مرة."
-        upload_not_authorized: "المعذرة، الملف الذي تحاول رفعه غير مسموح به، الامتدادات المسموح بها هي {{authorized_extensions}}."
         image_upload_not_allowed_for_new_user: "آسفون، لا يمكن للمستخدمين الجدد رفع الصور."
         attachment_upload_not_allowed_for_new_user: "آسفون، لا يمكن للمستخدمين الجدد رفع المرفقات."
         attachment_download_requires_login: "آسفون، عليك الولوج لتنزيل المرفقات."

@@ -285,7 +285,7 @@ ru:
       few: "{{count}} новые темы."
       many: "{{count}} новых тем."
       other: "{{count}} новых тем."
-    click_to_show: "Показать."
+    click_to_show: "Нажмите чтобы показать."
     preview: "предпросмотр"
     cancel: "отмена"
     save: "Сохранить"
@@ -372,16 +372,65 @@ ru:
         few: "%{count} пользователя"
         many: "%{count} пользователей"
         other: "%{count} пользователей"
+    group_histories:
+      actions:
+        change_group_setting: "Настроить группу"
+        add_user_to_group: "Добавить пользователя"
+        remove_user_from_group: "Удалить пользователя"
+        make_user_group_owner: "Сделать владельцем"
+        remove_user_as_group_owner: "Лишить прав владельца"
     groups:
+      logs:
+        title: "Логи"
+        when: "Когда"
+        action: "Действие"
+        acting_user: "Действующий пользователь"
+        target_user: "Целевой пользователь"
+        subject: "Тема"
+        details: "Подробности"
+        from: "От"
+        to: "Кому"
+      edit:
+        title: 'Редактировать Группу'
+        full_name: 'Полное Имя'
+        add_members: "Добавить Участников"
+        delete_member_confirm: "Удалить '%{username}' из группы '%{group}'?"
+      request_membership_pm:
+        title: "Запрос на Вступление"
+        body: "Я бы хотел вступить в @%{groupName}."
+      name_placeholder: "Название группы, без пробелов, по тем же правилам, что и для псевдонимов."
+      public: "Позволить пользователям свободно вступать/покидать группу (Группа должна быть видимой)"
+      empty:
+        posts: "Участниками этой группы не создано ни одной записи."
+        members: "Нет участников в этой группе."
+        mentions: "Нет ссылок на эту группу."
+        messages: "Нет сообщений для этой группы."
+        topics: "Нет тем от участников этой группы."
+        logs: "Нет логов для этой группы."
       add: "Добавить"
+      join: "Вступить в Группу"
+      leave: "Покинуть Группу"
+      request: "Попроситься в Группу"
+      automatic_group: Автоматическая Группа
+      closed_group: Закрытая Группа
+      is_group_user: "Вы участник этой группы"
+      allow_membership_requests: "Позволить пользователям проситься в группу владельцев (Необходима возможность упоминания группы всеми)"
+      membership: "Участие"
+      name: "Название"
+      user_count: "Количество Участников"
+      bio: "О Группе"
       selector_placeholder: "Добавить участников"
       owner: "владелец"
       visible: "Группа видима всем пользователям"
+      index:
+        title: "Группы"
+        empty: "Нет видимых групп."
       title:
         one: "группа"
         few: "группы"
         many: "групп"
         other: "групп"
+      activity: "Деятельность"
       members: "Участники"
       topics: "Темы"
       posts: "Сообщения"
@@ -413,6 +462,15 @@ ru:
         muted:
           title: "Выключено"
           description: "Не уведомлять о новых темах в этой группе."
+      flair_url: "Изображение Аватара"
+      flair_url_placeholder: "(Необязательно) Ссылка на изображение или класс шрифта Font Awesome"
+      flair_bg_color: "Фоновый Цвет Аватара"
+      flair_bg_color_placeholder: "(Необязательно) Hex-код цвета"
+      flair_color: "Цвет Аватара"
+      flair_color_placeholder: "(Необязательно) Hex-код цвета"
+      flair_preview_icon: "Иконка Предпросмотра"
+      flair_preview_image: "Изображение Предпросмотра"
+      flair_note: "Внимание: Флаер будет показываться только основной группе пользователей."
     user_action_groups:
       '1': "Выразил симпатий"
       '2': "Получил симпатий"
@@ -478,6 +536,11 @@ ru:
       profile: "Профиль"
       mute: "Отключить"
       edit: "Настройки"
+      download_archive:
+        button_text: "Скачать мои сообщения"
+        confirm: "Вы уверены, что хотите скачать свои сообщения?"
+        success: "Скачивание началось, вы будете уведомлены, когда процесс завершится."
+        rate_limit_error: "Сообщения могут быть скачаны лишь раз в день, попробуйте завтра."
       new_private_message: "Новое сообщение"
       private_message: "Личное сообщение"
       private_messages: "Личные сообщения"
@@ -501,6 +564,7 @@ ru:
         each_browser_note: "Примечание: эта настройка устанавливается в каждом браузере индивидуально."
       dismiss_notifications: "Отложить все"
       dismiss_notifications_tooltip: "Пометить все непрочитанные уведомления прочитанными"
+      first_notification: "Ваше первое уведомление! Выберите его, чтобы начать."
       disable_jump_reply: "Не переходить к вашему новому сообщению после ответа"
       dynamic_favicon: "Показывать количество новых / обновленных тем на иконке сообщений"
       external_links_in_new_tab: "Открывать все внешние ссылки в новой вкладке"
@@ -620,6 +684,7 @@ ru:
         ok: "Мы вышлем вам письмо для подтверждения"
         invalid: "Введите действующий адрес электронной почты"
         authenticated: "Ваш адрес электронной почты подтвержден {{provider}}"
+        frequency_immediately: "Получать уведомления о новых непрочитанных сообщениях незамедлительно."
         frequency:
           one: "Мы отправим вам письмо только в том случае, если вы более {{count}} минуты находитесь оффлайн."
           few: "Мы отправим вам письмо только в том случае, если вы не были онлайн последние {{count}} минуты."
@@ -739,7 +804,10 @@ ru:
         account_age_days: "Дней с момента регистрации"
         create: "Отправить приглашение"
         generate_link: "Скопировать ссылку для приглашений"
+        link_generated: "Пригласительная ссылка успешно создана!"
+        valid_for: "Пригласительная ссылка действительна только для этого адреса электропочты: %{email}"
         bulk_invite:
+          none: "Вы еще никого не приглашали сюда. Вы можете отправить индивидуальные приглашения или пригласить группу людей сразу <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>загрузив CSV файл</a>."
           text: "Пригласить всех из файла"
           success: "Файл успешно загружен, вы получите сообщение, когда процесс будет завершен."
       password:
@@ -853,6 +921,8 @@ ru:
     too_few_topics_notice: "Давайте <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>приступим к обсуждению!</a> Сейчас <strong>%{currentTopics} / %{requiredTopics}</strong> тем. Новым пользователям будет интереснее тут, если появится больше тем для обсуждений."
     too_few_posts_notice: "Давайте <a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>приступим к обсуждению!</a>  Сейчас <strong>%{currentPosts} / %{requiredPosts}</strong> сообщений. Новым пользователям будет интереснее тут, если появится больше сообщений для обсуждения."
     logs_error_rate_notice:
+      reached: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> достигнут установленный для сайта предел %{siteSettingRate}."
+      exceeded: "<b>%{relativeAge}</b> – <a href='%{url}' target='_blank'>%{rate}</a> превышен установленный для сайта предел %{siteSettingRate}."
       rate:
         one: "1 ошибка/%{duration}"
         few: "%{count} ошибок/%{duration}"
@@ -908,6 +978,7 @@ ru:
     trust_level: 'Уровень доверия'
     search_hint: 'Псевдоним, e-mail или IP адрес'
     create_account:
+      disclaimer: "Регистрируясь, Вы соглашаетесь с <a href='{{privacy_link}}'>политикой конфиденциальности</a> и <a href='{{tos_link}}'>условиями предоставления услуг</a>."
       title: "Зарегистрироваться"
       failed: "Произошла ошибка. Возможно, этот Email уже используется. Попробуйте восстановить пароль"
     forgot_password:
@@ -1000,6 +1071,9 @@ ru:
         few: "Упоминая группу {{group}}, вы тем самым отправите уведомление <a href='{{group_link}}'>{{count}} пользователям</a> – вы уверены?"
         many: "Упоминая группу {{group}}, вы тем самым отправите уведомление <a href='{{group_link}}'>{{count}} пользователям</a> – вы уверены?"
         other: "Упоминая группу {{group}}, вы тем самым отправите уведомление <a href='{{group_link}}'>{{count}} пользователям</a> – вы уверены?"
+      cannot_see_mention:
+        category: "Вы упомянули {{username}}, но они не будут уведомлены, потому что у них нет доступа к этому разделу. Вам нужно добавить их в группу, имеющую доступ к этому разделу."
+        private: "Вы упомянули {{username}}, но они не будут уведомлены, потому что они не могут видеть это личное сообщение. Вам нужно пригласить их в это ЛС."
       duplicate_link: "Эту же самую ссылку на <b>{{domain}}</b> уже писал <b>@{{username}}</b> в <a href='{{post_url}}'>своем ответе {{ago}}</a> – вы уверены, что хотите повторить ссылку снова?"
       error:
         title_missing: "Требуется название темы"
@@ -1019,8 +1093,10 @@ ru:
       title: "Или нажмите Ctrl+Enter"
       users_placeholder: "Добавить пользователя"
       title_placeholder: "Название: суть темы коротким предложением"
+      title_or_link_placeholder: "Введите название или вставьте здесь ссылку"
       edit_reason_placeholder: "Причина редактирования..."
       show_edit_reason: "(добавить причину редактирования)"
+      topic_featured_link_placeholder: "Введите ссылку, отображаемую с названием."
       reply_placeholder: "Поддерживаемые форматы: Markdown, BBCode и HTML. Чтобы вставить картинку, перетащите ее сюда или вставьте с помощью Ctrl+V, Command-V, или нажмите правой кнопкой мыши и выберите меню \"вставить\"."
       view_new_post: "Посмотреть созданное вами сообщение."
       saving: "Сохранение..."
@@ -1080,10 +1156,13 @@ ru:
       more: "посмотреть более ранние уведомления"
       total_flagged: "всего сообщений с жалобами"
       mentioned: "<i title='mentioned' class='fa fa-at'></i><p><span>{{username}}</span> {{description}}</p>"
+      group_mentioned: "<i title='group mentioned' class='fa fa-at'></i><p><span>{{username}}</span> {{description}}</p>"
       quoted: "<i title='quoted' class='fa fa-quote-right'></i><p><span>{{username}}</span> {{description}}</p>"
       replied: "<i title='replied' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
+      posted: "<i title='posted' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
       edited: "<i title='edited' class='fa fa-pencil'></i><p><span>{{username}}</span> {{description}}</p>"
       liked: "<i title='liked' class='fa fa-heart'></i><p><span>{{username}}</span> {{description}}</p>"
+      liked_2: "<i title='liked' class='fa fa-heart'></i><p><span>{{username}}, {{username2}}</span> {{description}}</p>"
       liked_many:
         one: "<i title='liked' class='fa fa-heart'></i><p><span>{{username}}, {{username2}} и ещё {{count}}</span> {{description}}</p>"
         few: "<i title='liked' class='fa fa-heart'></i><p><span>{{username}}, {{username2}} и ещё {{count}}</span> {{description}}</p>"
@@ -1094,7 +1173,14 @@ ru:
       invited_to_topic: "<i title='приглашен в тему' class='fa fa-hand-o-right'></i><p><span>{{username}}</span> {{description}}</p>"
       invitee_accepted: "<i title='accepted your invitation' class='fa fa-user'></i><p><span>{{username}}</span> принял(а) ваше приглашение</p>"
       moved_post: "<i title='moved post' class='fa fa-sign-out'></i><p><span>{{username}}</span> переместил(а) {{description}}</p>"
+      linked: "<i title='linked post' class='fa fa-link'></i><p><span>{{username}}</span> {{description}}</p>"
       granted_badge: "<i title='badge granted' class='fa fa-certificate'></i><p>Вы награждены: {{description}}</p>"
+      watching_first_post: "<i title='new topic' class='fa fa-dot-circle-o'></i><p><span>Новая Тема</span> {{description}}</p>"
+      group_message_summary:
+        one: "<i title='messages in group inbox' class='fa fa-group'></i><p> {{count}} входящее сообщение в Вашей группе {{group_name}}</p>"
+        few: "<i title='messages in group inbox' class='fa fa-group'></i><p> {{count}} входящих сообщения в Вашей группе {{group_name}}</p>"
+        many: "<i title='messages in group inbox' class='fa fa-group'></i><p> {{count}} входящих сообщений в Вашей группе {{group_name}}</p>"
+        other: "<i title='messages in group inbox' class='fa fa-group'></i><p> {{count}} входящих сообщений в Вашей группе {{group_name}}</p>"
       alt:
         mentioned: "Упомянуто"
         quoted: "Процитировано пользователем"
@@ -1109,6 +1195,7 @@ ru:
         moved_post: "Ваша тема перенесена участником "
         linked: "Ссылка на ваше сообщение"
         granted_badge: "Награда получена от"
+        group_message_summary: "Входящие сообщения группы"
       popup:
         mentioned: '{{username}} упомянул вас в "{{topic}}" - {{site_title}}'
         group_mentioned: '{{username}} упомянул вас в "{{topic}}" - {{site_title}}'
@@ -1254,6 +1341,7 @@ ru:
         search: "Больше ничего не найдено."
     topic:
       unsubscribe:
+        stop_notifications: "Вы будете получать меньше уведомлений для <strong>{{title}}</strong>"
         change_notification_state: "Ваше текущее состояние уведомлений"
       filter_to:
         one: "1 сообщение в теме"
@@ -1331,6 +1419,11 @@ ru:
       auto_close_title: 'Настройки закрытия темы'
       auto_close_save: "Сохранить"
       auto_close_remove: "Не закрывать тему автоматически"
+      auto_close_immediate:
+        one: "Последнее сообщение в этой теме отправлено 1 час назад, поэтому данная тема будет закрыта незамедлительно."
+        few: "Последнее сообщение в этой теме отправлено %{count} часа назад, поэтому данная тема будет закрыта незамедлительно."
+        many: "Последнее сообщение в этой теме отправлено %{count} часов назад, поэтому данная тема будет закрыта незамедлительно."
+        other: "Последнее сообщение в этой теме отправлено %{count} часов назад, поэтому данная тема будет закрыта незамедлительно."
       timeline:
         back: "Вернуться"
         back_description: "Перейти к последнему непрочитанному сообщению"
@@ -1341,7 +1434,8 @@ ru:
         go_bottom: "перейти вниз"
         go: "=>"
         jump_bottom: "перейти к последнему сообщению"
-        jump_prompt: "перейти к сообщению"
+        jump_prompt: "перейти к..."
+        jump_prompt_of: "из %{count} сообщений"
         jump_prompt_long: "К какому сообщению вы хотите перейти?"
         jump_bottom_with_number: "перейти к сообщению %{post_number}"
         total: всего сообщений
@@ -1349,6 +1443,7 @@ ru:
       notifications:
         title: изменить частоту уведомлений об этой теме
         reasons:
+          mailing_list_mode: "Вы включили режим почтовой рассылки, поэтому Вы будете получать уведомления об ответах в этой теме через e-mail."
           '3_10': 'Вы будете получать уведомления, т.к. наблюдаете за тэгом этой темы.'
           '3_6': 'Вы будете получать уведомления, т.к. наблюдаете за этим разделом.'
           '3_5': 'Вы будете получать уведомления, т.к. наблюдение темы началось автоматически.'
@@ -1464,6 +1559,7 @@ ru:
         email_or_username_placeholder: "e-mail или псевдоним"
         action: "Пригласить"
         success: "Мы пригласили этого пользователя принять участие в беседе."
+        success_group: "Мы пригласили эту группу принять участие в беседе."
         error: "К сожалению, в процессе приглашения пользователя произошла ошибка."
         group_name: "название группы"
       controls: "Управление темой"
@@ -1594,6 +1690,7 @@ ru:
         create: "К сожалению, не удалось создать сообщение из-за ошибки. Попробуйте еще раз."
         edit: "К сожалению, не удалось изменить сообщение. Попробуйте еще раз."
         upload: "К сожалению, не удалось загрузить файл. Попробуйте еще раз."
+        file_too_large: "К сожалению, этот файл слишком большой (максимально допустимый размер {{max_size_kb}} КБ). Почему бы не загрузить Ваш большой файл в службу облачного обмена, а затем поделиться ссылкой?"
         too_many_uploads: "К сожалению, за один раз можно загрузить только одно изображение."
         too_many_dragged_and_dropped_files: "К сожалению, за один раз можно загрузить только 10 файлов."
         upload_not_authorized: "К сожалению, вы не можете загрузить файл данного типа (список разрешенных типов файлов: {{authorized_extensions}})."
@@ -1605,11 +1702,13 @@ ru:
         no_value: "Нет, оставить"
         yes_value: "Да, отказаться"
       via_email: "это сообщение пришло с почты"
+      via_auto_generated_email: "это сообщение пришло с автосгенерированого e-mail"
       whisper: "Это внутреннее сообщение, т.е. оно видно только модераторам"
       wiki:
         about: "это вики-сообщение"
       archetypes:
         save: 'Параметры сохранения'
+      few_likes_left: "Спасибо, что делитесь любовью. На сегодня у Вас осталось несколько лайков."
       controls:
         reply: "начать составление ответа на сообщение"
         like: "мне нравится"
@@ -1798,6 +1897,7 @@ ru:
       tags_allowed_tag_groups: "Группы тегов, которые могут быть использованы только в этом разделе:"
       tags_placeholder: "(Необязательно) список доступных тегов"
       tag_groups_placeholder: "(Необязательно) список доступных групп тегов"
+      topic_featured_link_allowed: "Разрешить популярные ссылки в этой категории"
       delete: 'Удалить раздел'
       create: 'Создать Раздел'
       create_long: 'Создать новый раздел'
@@ -1832,6 +1932,7 @@ ru:
       email_in_disabled: "Создание новых тем через электронную почту отключено в настройках сайта. Чтобы разрешить создание новых тем через электронную почту,"
       email_in_disabled_click: 'активируйте настройку "email in".'
       suppress_from_homepage: "Не отображать этот раздел на главной странице."
+      all_topics_wiki: "Создавать новые темы в вики-формате по умолчанию."
       sort_order: "Порядок сортировки:"
       allow_badges_label: "Разрешить вручение наград в этом разделе"
       edit_permissions: "Изменить права доступа"
@@ -1877,6 +1978,7 @@ ru:
       notify_action: 'Сообщение'
       official_warning: 'Официальное предупреждение'
       delete_spammer: "Удалить спамера"
+      delete_confirm_MF: "Вы собираетесь удалить {POSTS, plural, one {<b>1</b> сообщение} other {<b>#</b> сообщений}} и {TOPICS, plural, one {<b>1</b> тему} other {<b>#</b> темы}} этого пользователя, а так же удалить его учетную запись, добавить его IP адрес  <b>{ip_address}</b> и его почтовый адрес <b>{email}</b> в черный список. Вы действительно уверены, что ваши помыслы чисты и действия не продиктованы гневом?"
       yes_delete_spammer: "Да, удалить спамера"
       ip_address_missing: "(не доступно)"
       hidden_email_address: "(скрыто)"
@@ -1922,6 +2024,11 @@ ru:
         other: "%{count} кликов"
     post_links:
       about: "gjrfpf"
+      title:
+        one: "ещё 1"
+        few: "ещё %{count}"
+        many: "ещё %{count}"
+        other: "ещё %{count}"
     topic_statuses:
       warning:
         help: "Это официальное предупреждение."
@@ -2126,9 +2233,16 @@ ru:
         mark_watching: '<b>m</b>, <b>w</b> Наблюдать за темой'
         print: '<b>ctrl</b>+<b>p</b> Печатать тему'
     badges:
+      earned_n_times:
+        one: "Заработал эту награду 1 раз"
+        few: "Заработали эту награду %{count} раз"
+        many: "Заработали эту награду %{count} раз"
+        other: "Заработали эту награду %{count} раз"
       granted_on: "Выдана %{date}"
       others_count: "Другие с этой наградой (%{count})"
       title: Награды
+      allow_title: "доступный заголовок"
+      multiple_grant: "награждён множество раз"
       badge_count:
         one: "1 награда"
         few: "%{count} наград"
@@ -2139,6 +2253,12 @@ ru:
         few: "+ еще %{count}"
         many: "+ еще %{count}"
         other: "+ еще %{count}"
+      granted:
+        one: "выдано 1"
+        few: "выдано %{count}"
+        many: "выдано %{count}"
+        other: "выдано %{count}"
+      select_badge_for_title: Использовать награду в качестве Вашего титула
       none: "<отсутствует>"
       badge_grouping:
         getting_started:
@@ -2149,6 +2269,8 @@ ru:
           name: Уровень доверия
         other:
           name: Прочее
+        posting:
+          name: Публикации
     google_search: |
       <h3>Искать с помощью Google</h3>
       <p>
@@ -2235,6 +2357,8 @@ ru:
       custom_message_placeholder: "Напишите сюда ваше личное сообщение"
       custom_message_template_forum: "Привет. Подумал, что тебе будет интересно зарегистрироваться на этом форуме!"
       custom_message_template_topic: "Привет! Подумал, что тебя может заинтересовать эта тема!"
+    safe_mode:
+      enabled: "Включен безопасный режим, чтобы выйти из безопасного режима, закройте текущее окно браузера"
   admin_js:
     type_to_filter: "Введите текст для фильтрации..."
     admin:
@@ -2417,8 +2541,15 @@ ru:
         description: "Описание"
         go_back: "Вернуться к списку"
         payload_url_placeholder: "https://example.com/postreceive"
+        secret_invalid: "Ключ не должен содержать пустых символов."
+        secret_too_short: "Ключ должен быть не менее 12 символов."
         secret_placeholder: "Необязательная строка, используется для генерации подписи"
         event_type_missing: "Вам необходимо настроить по крайней мере один тип событий."
+        secret: "Ключ"
+        wildcard_event: "Присылать мне всё."
+        individual_event: "Выбрать отдельные события."
+        active: "Активный"
+        active_notice: "Мы будем отправлять подробности события, когда оно будет происходить."
         delete_confirm: "Удалить Webhook?"
         topic_event:
           name: "Событие темы"
@@ -2428,6 +2559,7 @@ ru:
           details: "Происходит, когда сообщение создается, редактируется, удаляется или восстанавливается."
         user_event:
           name: "Событие пользователя"
+          details: "Когда пользователь создаётся, утверждается или обновляется."
         delivery_status:
           title: "Статус передачи"
           inactive: "Неактивна"
@@ -2436,6 +2568,16 @@ ru:
         events:
           none: "Нет связанных событий."
           redeliver: "Возврат"
+          incoming:
+            one: "Есть новое событие."
+            few: "{{count}} новых события."
+            many: "{{count}} новых событий."
+            other: "{{count}} новых событий."
+          completed_in:
+            one: "Завершится через 1 секунду."
+            few: "Завершится через {{count}} секунд."
+            many: "Завершится через {{count}} секунд."
+            other: "Завершится через {{count}} секунд."
           request: "Запрос"
           response: "Ответ"
           headers: "Заголовки"
@@ -2562,9 +2704,11 @@ ru:
         email_templates:
           title: "Шаблоны писем"
           subject: "Тема"
+          multiple_subjects: "Этот шаблон электронной почты имеет множество тем."
           body: "Текст сообщения"
           none_selected: "Выберите шаблон письма, чтобы начать редактирование."
           revert: "Отменить изменения"
+          revert_confirm: "Вы уверены, что хотите отменить Ваши изменения?"
         css_html:
           title: "CSS/HTML"
           long_title: "Настройка CSS и HTML"
@@ -2633,12 +2777,14 @@ ru:
         delivery_method: "Метод отправки"
         preview_digest_desc: "Предпросмотр сводки новостей на отправку неактивным пользователям."
         refresh: "Обновить"
+        send_digest_label: "Отправить этот результат на:"
         send_digest: "Отправить"
         sending_email: "Отправка письма..."
         format: "Формат"
         html: "html"
         text: "текст"
         last_seen_user: "Последний раз был:"
+        no_result: "Ничего не найдено для сводки новостей."
         reply_key: "Ключ ответа"
         skipped_reason: "Причина пропуска"
         incoming_emails:
@@ -2732,6 +2878,8 @@ ru:
             revoke_moderation: "отозваны права модератора"
             backup_operation: "операции резервного копирования"
             deleted_tag: "удаленный тег"
+            renamed_tag: "переименованный тэг"
+            revoke_email: "отозвать e-mail"
         screened_emails:
           title: "Почтовые адреса"
           description: "Когда кто-то создает новую учетную запись, проверяется данный почтовый адрес и регистрация блокируется или производятся другие дополнительные действия."
@@ -2834,6 +2982,7 @@ ru:
         suspend_reason: "Причина"
         suspended_by: "Заморожен"
         delete_all_posts: "Удалить все сообщения"
+        delete_all_posts_confirm_MF: "Вы собираетесь удалить {POSTS, plural, one {1 сообщение} other {# сообщений}} и {TOPICS, plural, one {1 тему} other {# тем}}. Вы уверены?"
         suspend: "Заморозить"
         unsuspend: "Разморозить"
         suspended: "Заморожен?"
@@ -2927,6 +3076,11 @@ ru:
         unlock_trust_level: "Разморозить уровень доверия"
         tl3_requirements:
           title: "Требования для 3 уровня доверия"
+          table_title:
+            one: "За последний день:"
+            few: "За последние %{count} дней:"
+            many: "За последние %{count} дней:"
+            other: "За последние %{count} дней:"
           value_heading: "Значение"
           requirement_heading: "Требование"
           visits: "Посещений"
@@ -3026,6 +3180,7 @@ ru:
           developer: 'Программистам'
           embedding: "Встраивание"
           legal: "Юридическое"
+          user_api: 'Пользовательский API'
           uncategorized: 'Вне разделов'
           backups: "Резервные копии"
           login: "Учетные записи"
@@ -3033,6 +3188,7 @@ ru:
           user_preferences: "Пользовательские настройки"
           tags: "Тэги"
           search: "Поиск"
+          groups: "Группы"
       badges:
         title: Награды
         new_badge: Новая награда
@@ -3159,8 +3315,15 @@ ru:
       upload: "Загрузить"
       uploading: "Загрузка..."
       quit: "Может быть позже"
+      staff_count:
+        one: "В Вашем сообществе 1 сотрудник."
+        few: "В Вашем сообществе %{count} сотрудника."
+        many: "В Вашем сообществе %{count} сотрудников."
+        other: "В Вашем сообществе %{count} сотрудников."
       invites:
         add_user: "добавить"
+        none_added: "Вы ещё не пригласили сотрудников. Вы уверены, что хотите продолжить?"
         roles:
           admin: "Администратор"
           moderator: "Модератор"
+          regular: "Постоянный Пользователь"
