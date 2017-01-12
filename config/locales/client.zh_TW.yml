@@ -94,10 +94,10 @@ zh_TW:
     action_codes:
       public_topic: "%{when}時讓大家看到這個主題"
       private_topic: "%{when}時讓其他人看不到這個主題"
-      split_topic: "於 %{when} 切分此討論話題"
+      split_topic: "於 %{when} 分割此討論話題"
       invited_user: "邀請 %{who} 於 %{when} "
       invited_group: "邀請 %{who} %{when}"
-      removed_user: "移除 %{who} 於 %{when} "
+      removed_user: "刪除 %{who} 於 %{when} "
       removed_group: "刪除 %{who} %{when}"
       autoclosed:
         enabled: '於 %{when} 關閉'
@@ -117,10 +117,10 @@ zh_TW:
       visible:
         enabled: '於 %{when} 列出'
         disabled: '於 %{when} 除名'
-    topic_admin_menu: "討論話題管理員操作"
+    topic_admin_menu: "版區管理員操作"
     wizard_required: "是時候配置你的論壇啦！<a href='%{url}' data-auto-route='true'>點擊開始設置嚮導</a>！"
     emails_are_disabled: "管理員已經停用了所有外寄郵件功能。通知信件都不會寄出。"
-    bootstrap_mode_enabled: "為方便站點準備發佈，其正處於初始化模式中。所有新用戶將被授予信任等級1，併為他們設置接受每日郵件摘要。初始化模式會在用戶數超過 %{min_users} 個時關閉。"
+    bootstrap_mode_enabled: "為方便站點準備發佈，現正處於初始化模式中。所有新用戶將被授予信任等級1，並為他們設置接受每日郵件摘要。初始化模式會在用戶數超過 %{min_users} 個時關閉。"
     bootstrap_mode_disabled: "初始化模式將會在24小時後關閉。"
     s3:
       regions:
@@ -638,10 +638,10 @@ zh_TW:
       website: "網站"
       email_settings: "電子郵件"
       like_notification_frequency:
-        title: "用戶被贊時通知提醒"
+        title: "用戶被讚時通知提醒"
         always: "總是"
-        first_time_and_daily: "每天首個被贊"
-        first_time: "歷史首個被贊"
+        first_time_and_daily: "每天首個被讚"
+        first_time: "歷史首個被讚"
         never: "永不"
       email_previous_replies:
         title: "郵件底部包含歷史回覆"
@@ -755,10 +755,10 @@ zh_TW:
         more_badges: "更多徽章"
         top_links: "最佳連結"
         no_links: "暫無連結"
-        most_liked_by: "誰贊最多"
-        most_liked_users: "贊誰最多"
+        most_liked_by: "誰得到最多讚"
+        most_liked_users: "讚誰最多"
         most_replied_to_users: "最多回覆至"
-        no_likes: "暫無贊"
+        no_likes: "暫無讚"
       associated_accounts: "登入"
       ip_address:
         title: "最近的 IP 位址"
@@ -768,7 +768,7 @@ zh_TW:
         title: "個人資料圖片"
         header_title: "個人頁面、消息、書籤和設置"
       title:
-        title: "標題"
+        title: "用戶標題"
       filters:
         all: "全部"
       stream:
@@ -801,7 +801,7 @@ zh_TW:
     logout: "已登出"
     refresh: "重新整理"
     read_only_mode:
-      enabled: "站點正處於只讀模式。你可以繼續瀏覽，但是回覆、贊和其他操作暫時被禁用。"
+      enabled: "站點正處於只讀模式。你可以繼續瀏覽，但是回覆、讚和其他操作暫時被禁用。"
       login_disabled: "在唯讀模式下不能登入"
       logout_disabled: "站點在只讀模式下無法登出。"
     too_few_topics_and_posts_notice: "讓我們<a href='http://blog.discourse.org/2014/08/building-a-discourse-community/'>開始討論！</a>目前有 <strong>%{currentTopics} / %{requiredTopics}</strong> 個主題和 <strong>%{currentPosts} / %{requiredPosts}</strong> 個帖子。新訪客需要能夠閲讀和回覆一些討論。"
@@ -835,7 +835,7 @@ zh_TW:
       hide_forever: "不了"
       hidden_for_session: "好的，我會在明天提醒你。不過你隨時都可以使用“登錄”來創建賬戶。"
       intro: "你好！:heart_eyes: 看起來你挺喜歡這樣的討論，可是你還沒有註冊賬戶。"
-      value_prop: "當你創建賬戶後，我們可以準確地記錄你的閲讀進度，這樣你能夠在下一次訪問時回到你上次閲讀到的地方。你也可以選擇接受新帖子的網頁和郵件通知。並且你可以贊任何帖子來分享你的感謝。:heartbeat:"
+      value_prop: "當你創建賬戶後，我們可以準確地記錄你的閲讀進度，這樣你能夠在下一次訪問時回到你上次閲讀到的地方。你也可以選擇接受新帖子的網頁和郵件通知。並且你可以讚任何帖子來分享你的感謝。:heartbeat:"
     summary:
       enabled_description: "你正在檢視此討論話題的摘要：在這個社群裡最熱門的文章。"
       description: "有 <b>{{replyCount}}</b> 個回覆。"
@@ -972,7 +972,7 @@ zh_TW:
       title: "或者按 Ctrl+Enter"
       users_placeholder: "新增用戶"
       title_placeholder: "用一個簡短的句子來描述想討論的內容。"
-      title_or_link_placeholder: "鍵入標題，或粘貼一個連結在這裡"
+      title_or_link_placeholder: "鍵入標題，或貼上一個連結在這裡"
       edit_reason_placeholder: "你為什麼做編輯?"
       show_edit_reason: "(請加入編輯原因)"
       topic_featured_link_placeholder: "在標題裡輸入連結"
@@ -1041,9 +1041,9 @@ zh_TW:
       posted: "<i title='回覆' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
       edited: "<i title='edited' class='fa fa-pencil'></i><p><span>{{username}}</span> {{description}}</p>"
       liked: "<i title='liked' class='fa fa-heart'></i><p><span>{{username}}</span> {{description}}</p>"
-      liked_2: "<i title='贊' class='fa fa-heart'></i><p><span>{{username}}、{{username2}}</span> {{description}}</p>"
+      liked_2: "<i title='讚' class='fa fa-heart'></i><p><span>{{username}}、{{username2}}</span> {{description}}</p>"
       liked_many:
-        other: "<i title='贊' class='fa fa-heart'></i><p><span>{{username}}、{{username2}}</span>和其他 {{count}} 人</span>{{description}}</p>"
+        other: "<i title='讚' class='fa fa-heart'></i><p><span>{{username}}、{{username2}}</span>和其他 {{count}} 人</span>{{description}}</p>"
       private_message: "<i title='private message' class='fa fa-envelope-o'></i><p><span>{{username}}</span> {{description}}</p>"
       invited_to_private_message: "<i title='private message' class='fa fa-envelope-o'></i><p><span>{{username}}</span> {{description}}</p>"
       invited_to_topic: "<i title='邀請至主題' class='fa fa-heart'></i><p><span>{{username}}</span>{{description}}</p>"
@@ -1096,7 +1096,7 @@ zh_TW:
       relevance: "最相關"
       latest_post: "最新發帖"
       most_viewed: "最多閲讀"
-      most_liked: "最多贊"
+      most_liked: "最多讚"
       select_all: "選擇全部"
       clear_all: "清除全部"
       too_short: "你的搜索詞太短。"
@@ -1512,7 +1512,7 @@ zh_TW:
         about: "此帖允許被公共編輯"
       archetypes:
         save: '儲存選項'
-      few_likes_left: "謝謝你的熱情！你今天的贊快用完了。"
+      few_likes_left: "謝謝你的熱情！你今天的讚快用完了。"
       controls:
         reply: "開始編寫對此文章的回覆"
         like: "給此文章按讚"
@@ -1707,8 +1707,8 @@ zh_TW:
           description: "在這些分類裡面，你將不會收到新主題任何通知，它們也不會出現在“最新”主題列表。 "
       sort_options:
         default: "預設"
-        likes: "贊"
-        op_likes: "原始帖子贊"
+        likes: "讚"
+        op_likes: "原始帖子讚"
         views: "瀏覽"
         posts: "帖子"
         activity: "活動"
@@ -1929,7 +1929,7 @@ zh_TW:
         reply_topic: '<b>shift</b>+<b>r</b> 回覆主題'
         reply_post: '<b>r</b> 回覆帖子'
         quote_post: '<b>q</b> 引用帖子'
-        like: '<b>l</b> 贊帖子'
+        like: '<b>l</b> 讚帖子'
         flag: '<b>!</b> 標記帖子'
         bookmark: '<b>b</b> 收藏帖子'
         edit: '<b>e</b> 編輯帖子'
@@ -2954,7 +2954,7 @@ zh_TW:
         embed_by_username: "主題創建者的用戶名"
         embed_post_limit: "嵌入的最大帖子數量。"
         embed_username_key_from_feed: "從流中拉取 Discourse 用戶名的 Key "
-        embed_title_scrubber: "從帖子中提取標題的正則表達式"
+        embed_title_scrubber: "從帖子中提取標題的正則表達式 \"regular expression\""
         embed_truncate: "截斷嵌入的帖子"
         embed_whitelist_selector: "使用 CSS 選擇器選擇允許的嵌入元素"
         embed_blacklist_selector: "使用 CSS 選擇器移除嵌入元素"

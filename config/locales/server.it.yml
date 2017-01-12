@@ -570,7 +570,7 @@ it:
     read_write: "lettura/scrittura"
     scopes:
       message_bus: "Aggiornamenti in tempo reale"
-      notifications: "Leggi e elimina tutte le notifiche"
+      notifications: "Leggi e elimina le notifiche"
       read: "Leggi tutto"
       write: "Scrivi tutto"
   reports:
@@ -1587,6 +1587,73 @@ it:
     title: "Etichette"
     staff_tag_remove_disallowed: "L'etichetta \"%{tag}\" può essere cancellata soltanto dallo staff."
   rss_by_tag: "Argomenti etichettati %{tag}"
+  wizard:
+    step:
+      introduction:
+        title: "Introduzione"
+        fields:
+          welcome:
+            label: "Argomento di Benvenuto"
+      privacy:
+        title: "Accesso"
+        fields:
+          privacy:
+            choices:
+              open:
+                label: "Pubblico"
+              restricted:
+                label: "Privato"
+      contact:
+        title: "Contatto"
+        fields:
+          contact_email:
+            label: "Email"
+            placeholder: "nome@esempio.com"
+          contact_url:
+            label: "Sito Web"
+          site_contact:
+            label: "Messaggi Automatici"
+      corporate:
+        title: "Società"
+        fields:
+          company_short_name:
+            label: "Nome Azienda (breve)"
+          company_full_name:
+            label: "Nome Azienda (completo)"
+          company_domain:
+            label: "Nome Dominio Azienda"
+      colors:
+        title: "Tema"
+        fields:
+          theme_id:
+            choices:
+              default:
+                label: "Semplice Chiaro"
+              dark:
+                label: "Semplice Scuro"
+      logos:
+        title: "Loghi"
+        fields:
+          logo_url:
+            label: "Logo Primario"
+          logo_small_url:
+            label: "Logo Piccolo"
+      icons:
+        title: "Icone"
+        fields:
+          favicon_url:
+            label: "Icona Piccola"
+          apple_touch_icon_url:
+            label: "Icona Grande"
+      homepage:
+        title: "Homepage"
+        fields:
+          homepage_style:
+            choices:
+              categories:
+                label: "Categorie"
+      emoji:
+        title: "Emoji"
   activemodel:
     errors:
       <<: *errors

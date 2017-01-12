@@ -296,6 +296,11 @@ tr_TR:
       total_rows:
         other: "%{count} kullanıcı"
     groups:
+      logs:
+        when: "Ne zaman"
+        action: "Eylem"
+        subject: "Konu"
+        details: "Ayrıntılar"
       add: "Ekle"
       selector_placeholder: "Üye ekle"
       owner: "sahip"
@@ -393,8 +398,8 @@ tr_TR:
       mute: "Sustur"
       edit: "Tercihleri Düzenle"
       download_archive:
-        button_text: "İletilerimi indir"
-        confirm: "İletilerinizi indirmek istediğinize emin'misiniz?"
+        button_text: "Gönderilerimi İndir"
+        confirm: "Gönderilerinizi indirmek istediğinize emin misiniz?"
       new_private_message: "Yeni İleti"
       private_message: "İleti"
       private_messages: "İletiler"
@@ -1202,7 +1207,6 @@ tr_TR:
         go_bottom: "en alt"
         go: "git"
         jump_bottom: "son gönderiye geç"
-        jump_prompt: "gönderiye git"
         jump_prompt_long: "Hangi gönderiye gitmek istersin?"
         jump_bottom_with_number: "%{post_number} numaralı gönderiye geç"
         total: tüm gönderiler
@@ -1420,7 +1424,6 @@ tr_TR:
         file_too_large: "Üzgünüz, bu dosya çok büyük (en fazla {{max_size_kb}}kb). Neden büyük boyutlu dosyanı bir paylaşım servisine yükleyip, sonra bağlantını paylaşmıyorsun ?"
         too_many_uploads: "Üzgünüz, aynı anda birden fazla dosya yükleyemezsiniz."
         too_many_dragged_and_dropped_files: "Üzgünüz, aynı anda 10'dan fazla dosya yükleyemezsiniz."
-        upload_not_authorized: "Üzgünüz, yüklemeye çalıştığınız dosya tipine izin verilmiyor. (izin verilen uzantılar: {{authorized_extensions}})."
         image_upload_not_allowed_for_new_user: "Üzgünüz, yeni kullanıcılar resim yükleyemezler."
         attachment_upload_not_allowed_for_new_user: "Üzgünüz, yeni kullanıcılar dosya yükleyemezler."
         attachment_download_requires_login: "Üzgünüz, eklentileri indirebilmek için oturum açmanız gerekiyor."

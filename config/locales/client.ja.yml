@@ -1043,7 +1043,6 @@ ja:
         go_bottom: "下"
         go: "へ"
         jump_bottom: "最後の投稿へ"
-        jump_prompt: "投稿へジャンプ"
         jump_prompt_long: "どの投稿へジャンプしますか？"
         jump_bottom_with_number: "%{post_number}番へジャンプ"
         total: 投稿の合計
@@ -1235,7 +1234,6 @@ ja:
         edit: "申し訳ありませんが、投稿の編集中にエラーが発生しました。もう一度やり直してください。"
         upload: "申し訳ありません、ファイルのアップロード中にエラーが発生しました。再度お試しください。"
         too_many_uploads: "申し訳ありませんが、複数のファイルは同時にアップロードできません。"
-        upload_not_authorized: "申し訳ありませんが、対象ファイルをアップロードする権限がありません (利用可能な拡張子: {{authorized_extensions}})."
         image_upload_not_allowed_for_new_user: "申し訳ありませんが、新規ユーザは画像のアップロードができません。"
         attachment_upload_not_allowed_for_new_user: "申し訳ありませんが、新規ユーザはファイルの添付ができません。"
         attachment_download_requires_login: "ファイルをダウンロードするには、ログインする必要があります"

@@ -1193,7 +1193,6 @@ da:
         go_bottom: "bund"
         go: "start"
         jump_bottom: "Hop til sidste indlæg"
-        jump_prompt: "hop til indlæg"
         jump_prompt_long: "Hvilket indlæg vil du gerne springe til?"
         jump_bottom_with_number: "hop til indlæg %{post_number}"
         total: antal indlæg
@@ -1421,7 +1420,6 @@ da:
         file_too_large: "Beklager, filen du prøver at uploade er for stor (den maksimale størrelse er {{max_size_kb}}kb). Du kan evt. uploade filen til en fildelings service og dele linket her."
         too_many_uploads: "Beklager, men du kan kun uploade én fil ad gangen."
         too_many_dragged_and_dropped_files: "Beklager, du kan maksimalt uploade 10 filer ad gangen"
-        upload_not_authorized: "Beklager, filen, som du forsøger at uploade, er ikke godkendt (godkendte filendelser: {{authorized_extensions}})."
         image_upload_not_allowed_for_new_user: "Beklager, nye brugere kan ikke uploade billeder."
         attachment_upload_not_allowed_for_new_user: "Beklager, nye brugere kan ikke uploade vedhæftede filer."
         attachment_download_requires_login: "Beklager, du skal være logget på for at downloade vedhæftede filer."

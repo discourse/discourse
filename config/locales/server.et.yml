@@ -570,6 +570,7 @@ et:
   topic_flag_types:
     spam:
       title: 'Spämm'
+      description: 'See teema on reklaam. See ei ole ei kasulik ega teemakohane.'
       long_form: 'tähistasin selle kui spämmi'
     inappropriate:
       title: 'Ebasobiv'
