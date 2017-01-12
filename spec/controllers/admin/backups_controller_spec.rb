@@ -179,17 +179,29 @@ describe Admin::BackupsController do
       it "enables readonly mode" do
         Discourse.expects(:enable_readonly_mode)
 
-        xhr :put, :readonly, enable: true
+        expect { xhr :put, :readonly, enable: true }
+          .to change { UserHistory.count }.by(1)
 
         expect(response).to be_success
+
+        user_history = UserHistory.last
+
+        expect(UserHistory.last.action).to eq(UserHistory.actions[:change_readonly_mode])
+        expect(UserHistory.last.new_value).to eq('t')
       end
 
       it "disables readonly mode" do
         Discourse.expects(:disable_readonly_mode)
 
-        xhr :put, :readonly, enable: false
+        expect { xhr :put, :readonly, enable: false }
+          .to change { UserHistory.count }.by(1)
 
         expect(response).to be_success
+
+        user_history = UserHistory.last
+
+        expect(UserHistory.last.action).to eq(UserHistory.actions[:change_readonly_mode])
+        expect(UserHistory.last.new_value).to eq('f')
       end
 
     end

@@ -58,7 +58,8 @@ class UserHistory < ActiveRecord::Base
                           wizard_step: 40,
                           lock_trust_level: 41,
                           unlock_trust_level: 42,
-                          activate_user: 43
+                          activate_user: 43,
+                          change_readonly_mode: 44
                          )
   end
 
@@ -97,7 +98,8 @@ class UserHistory < ActiveRecord::Base
                         :deactivate_user,
                         :lock_trust_level,
                         :unlock_trust_level,
-                        :activate_user]
+                        :activate_user,
+                        :change_readonly_mode]
   end
 
   def self.staff_action_ids

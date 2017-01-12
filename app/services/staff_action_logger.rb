@@ -373,8 +373,15 @@ class StaffActionLogger
     raise Discourse::InvalidParameters.new(:step) unless step
     UserHistory.create(params(opts).merge({
       action: UserHistory.actions[:wizard_step],
-      acting_user_id: @admin.id,
       context: step.id
+    }))
+  end
+
+  def log_change_readonly_mode(state)
+    UserHistory.create(params.merge({
+      action: UserHistory.actions[:change_readonly_mode],
+      previous_value: !state,
+      new_value: state
     }))
   end
 
