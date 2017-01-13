@@ -1382,7 +1382,6 @@ ro:
         go_bottom: "sfârșit"
         go: "mergi"
         jump_bottom: "sari la ultimul mesaj"
-        jump_prompt: "sari la postarea"
         jump_prompt_long: "La ce postare dorești să sari?"
         jump_bottom_with_number: "sari la mesajul %{post_number}"
         total: toate postările
@@ -1627,7 +1626,6 @@ ro:
         file_too_large: "Ne pare rău, fișierul este prea mare (mărimea maximă este {{max_size_kb}}kb). De ce nu încarci  acest fișier mare pe un serviciu de distribuție prin cloud și apoi să îi partajezi link-ul?"
         too_many_uploads: "Ne pare rău, poți încărca doar câte un fișier."
         too_many_dragged_and_dropped_files: "Ne pare rău, poți încărca doar 10 fișiere simultan."
-        upload_not_authorized: "Ne pare rău, fișierul pe care-l încarci nu este permis (extensii permise: {{authorized_extensions}})."
         image_upload_not_allowed_for_new_user: "Ne pare rău, un utilizator nou nu poate încărca imagini."
         attachment_upload_not_allowed_for_new_user: "Ne pare rău, un utilizator nou nu poate încărca atașamente."
         attachment_download_requires_login: "Ne pare rău, dar trebuie să fii autentificat pentru a descărca ataşamente."

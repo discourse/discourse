@@ -1297,7 +1297,6 @@ pt:
         go_bottom: "fim"
         go: "ir"
         jump_bottom: "ir para a última publicação"
-        jump_prompt: "ir para publicação"
         jump_prompt_long: "Para que publicação gostaria de ir?"
         jump_bottom_with_number: "ir para a publicação %{post_number}"
         total: total de publicações
@@ -1529,7 +1528,6 @@ pt:
         file_too_large: "Lamentamos mas esse ficheiro é demasiado grande (o tamanho máximo é de {{max_size_kb}}kb). Porque não carregar o seu ficheiro grande para um serviço de partilha na nuvem e depois partilhar o link?"
         too_many_uploads: "Pedimos desculpa, só pode carregar um ficheiro de cada vez."
         too_many_dragged_and_dropped_files: "Lamentamos mas só pode carregar 10 ficheiros de cada vez."
-        upload_not_authorized: "Pedimos desculpa, o tipo de ficheiro que está a carregar não está autorizado (extensões autorizadas: {{authorized_extensions}})."
         image_upload_not_allowed_for_new_user: "Pedimos desculpa, os novos utilizadores não podem carregar imagens."
         attachment_upload_not_allowed_for_new_user: "Pedimos desculpa, os novos utilizadores não podem carregar anexos."
         attachment_download_requires_login: "Pedimos desculpa, os novos utilizadores não podem carregar anexos."

@@ -1198,7 +1198,7 @@ vi:
   test_mailer:
     subject_template: "[%{site_name}] Email Thử Nghiệm"
   new_version_mailer:
-    subject_template: "[%{site_name}] Phiên bạn Discourse mới, cập nhật đã sẵn sàng"
+    subject_template: "[%{site_name}] Phiên bản Discourse mới, cập nhật đã sẵn sàng"
   new_version_mailer_with_notes:
     subject_template: "[%{site_name}] cập nhật đã sẵn sàng"
   queued_posts_reminder:

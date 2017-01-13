@@ -4,7 +4,7 @@ We take security very seriously at Discourse. We welcome any peer review of our 
 
 ### Where should I report security issues?
 
-In order to give the community time to respond and upgrade we strongly urge you report all security issues privately. Please email us at `team@discourse.org` with details and we will respond ASAP. Security issues *always* take precedence over bug fixes and feature work. We can and do mark releases as "urgent" if they contain serious security fixes.
+In order to give the community time to respond and upgrade we strongly urge you report all security issues privately. Please use our [vulnerability disclosure program at Hacker One](https://hackerone.com/discourse) to provide details and repro steps and we will respond ASAP. If you prefer not to use Hacker One, email us directly at `team@discourse.org` with details and repro steps. Security issues *always* take precedence over bug fixes and feature work. We can and do mark releases as "urgent" if they contain serious security fixes.
 
 ### Password Storage
 

@@ -8,6 +8,19 @@
 uk:
   js:
     poll:
+      total_votes:
+        one: "голос"
+        few: "голосів"
+        other: "голоси"
+      average_rating: "Середній рейтинг: <strong>%{average}</strong>."
+      multiple:
+        help:
+          at_least_min_options:
+            one: "Виберіть хоча б <strong>1</strong> варіант"
+            few: "Виберіть хоча б <strong>%{count}</strong> варіантів"
+            other: "Виберіть хоча б <strong>%{count}</strong> варіанти"
+      cast-votes:
+        label: "Проголосувати!"
       show-results:
         label: "Показати результати"
       hide-results:

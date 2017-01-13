@@ -1714,7 +1714,6 @@ tr_TR:
       follow_topic: "Bu konuyu takip et"
       join_the_discussion: "Devamını Oku"
       popular_posts: "Gözde Gönderiler"
-      more_new: "Takip ettiğiniz konu ve kategorideki yeniler"
       subject_template: "[%{site_name}] Özeti"
       unsubscribe: "Bir süredir görünmediğiniz için bu e-posta size %{site_link} topluluğundan gönderildi. Bu e-postaları almak istemiyorsanız %{unsubscribe_link}."
       click_here: "buraya tıklayın"

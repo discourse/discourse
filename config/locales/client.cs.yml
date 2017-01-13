@@ -1302,7 +1302,6 @@ cs:
         go_bottom: "dolů"
         go: "go"
         jump_bottom: "na poslední příspěvek"
-        jump_prompt: "přejít na příspěvek"
         jump_prompt_long: "Na který příspěvek chcete přejít?"
         jump_bottom_with_number: "Skočit na příspěvěk %{post_number}"
         total: celkem příspěvků
@@ -1545,7 +1544,6 @@ cs:
         file_too_large: "Soubor, který se snažíte nahrát, je bohužel příliš velký (maximální velikost je {{max_size_kb}}kb). Co třeba jej nahrát na cloudovou službu a nasdílet sem odkaz?"
         too_many_uploads: "Bohužel, najednou smíte nahrát jen jeden soubor."
         too_many_dragged_and_dropped_files: "Bohužel, najednou smíte nahrát jen 10 souborů."
-        upload_not_authorized: "Bohužel, soubor, který se snažíte nahrát, není povolený (povolené přípony: {{authorized_extensions}})."
         image_upload_not_allowed_for_new_user: "Bohužel, noví uživatelé nemohou nahrávat obrázky."
         attachment_upload_not_allowed_for_new_user: "Bohužel, noví uživatelé nemohou nahrávat přílohy."
         attachment_download_requires_login: "Omlouváme se, ale pro stáhnutí přílohy musíte být přihlášen."

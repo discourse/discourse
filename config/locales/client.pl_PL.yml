@@ -1562,7 +1562,6 @@ pl_PL:
         upload: "Przepraszamy, wystąpił błąd podczas wczytywania Twojego pliku. Proszę, spróbuj ponownie."
         too_many_uploads: "Przepraszamy, ale możesz wgrać tylko jeden plik naraz."
         too_many_dragged_and_dropped_files: "Przepraszamy, ale możesz wgrać tylko 10 plików naraz."
-        upload_not_authorized: "Przepraszamy, ale plik który chcesz wgrać jest niedozwolony (dozwolone rozszerzenia: {{authorized_extensions}})."
         image_upload_not_allowed_for_new_user: "Przepraszamy, ale nowi użytkownicy nie mogą wgrywać obrazów."
         attachment_upload_not_allowed_for_new_user: "Przepraszamy, ale nowi użytkownicy nie mogą wgrywać załączników."
         attachment_download_requires_login: "Przepraszamy, musisz się zalogować, aby pobierać załączniki."

@@ -72,7 +72,7 @@
             {{#if model.website_name}}
               {{fa-icon "globe"}}
               {{#if linkWebsite}}
-                <a href={{model.website}} rel={{unless removeNoFollow 'nofollow'}} target="_blank">{{model.website_name}}</a>
+                <a href={{model.website}} rel={{unless removeNoFollow 'nofollow noopener'}} target="_blank">{{model.website_name}}</a>
               {{else}}
                 <span title={{model.website}}>{{model.website_name}}</span>
               {{/if}}

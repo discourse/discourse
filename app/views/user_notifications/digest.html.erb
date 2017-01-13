@@ -149,7 +149,7 @@ body, table, td, th, h1, h2, h3 {font-family: Helvetica, Arial, sans-serif !impo
           <p style="color:inherit;font-size:14px;font-weight:400;line-height:1.3;margin:0 0 8px 0;padding:0;word-wrap:normal;"><%= t.user.username -%></p>
         <% end %>
       </td>
-      <%- if show_image_with_url(t.image_url) && t.featured_link.nil? -%>
+      <%- if show_image_with_url(t.image_url) && t.featured_link.nil? && !(@excerpts[t.first_post&.id]||"").include?(t.image_url) -%>
         <td style="margin:0;padding:0 16px 0 8px;text-align:right;" align="right">
           <img src="<%= url_for_email(t.image_url) -%>" height="64" style="margin:auto;max-height:64px;max-width:100%;outline:0;text-align:right;text-decoration:none;">
         </td>
@@ -163,7 +163,7 @@ body, table, td, th, h1, h2, h3 {font-family: Helvetica, Arial, sans-serif !impo
   <tbody>
     <tr>
       <td class="post-excerpt" style="color:#0a0a0a;font-size:14px;padding:0 16px 0 16px;text-align:left;width:100%;font-weight:normal;">
-        <%= email_excerpt(t.first_post.cooked) %>
+        <%= @excerpts[t.first_post.id] %>
       </td>
     </tr>
   </tbody>

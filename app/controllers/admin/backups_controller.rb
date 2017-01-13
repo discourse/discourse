@@ -95,7 +95,16 @@ class Admin::BackupsController < Admin::AdminController
 
   def readonly
     enable = params.fetch(:enable).to_s == "true"
-    enable ? Discourse.enable_readonly_mode(user_enabled: true) : Discourse.disable_readonly_mode(user_enabled: true)
+    readonly_mode_key = Discourse::USER_READONLY_MODE_KEY
+
+    if enable
+      Discourse.enable_readonly_mode(readonly_mode_key)
+    else
+      Discourse.disable_readonly_mode(readonly_mode_key)
+    end
+
+    StaffActionLogger.new(current_user).log_change_readonly_mode(enable)
+
     render nothing: true
   end
 

@@ -2149,7 +2149,6 @@ ro:
       join_the_discussion: "Citește mai mult"
       popular_posts: "Postări notorii"
       from_topic_label: "De la"
-      more_new: "Noutăți în subiectele și categoriile pe care le urmărești"
       subject_template: "[%{site_name}] Rezumat"
       unsubscribe: "Acest rezumat este transmis de pe %{site_link} când a trecut ceva vreme de când nu te-am mai văzut. Pentru a te dezabona, %{unsubscribe_link}."
       click_here: "click aici"

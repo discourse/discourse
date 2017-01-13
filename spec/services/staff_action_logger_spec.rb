@@ -369,4 +369,62 @@ describe StaffActionLogger do
       expect(user_history.action).to eq(UserHistory.actions[:create_category])
     end
   end
+
+  describe 'log_lock_trust_level' do
+    let(:user) { Fabricate(:user) }
+
+    it "raises an error when argument is missing" do
+      expect { logger.log_lock_trust_level(nil) }.to raise_error(Discourse::InvalidParameters)
+    end
+
+    it "creates a new UserHistory record" do
+      user.trust_level_locked = true
+      expect { logger.log_lock_trust_level(user) }.to change { UserHistory.count }.by(1)
+      user_history = UserHistory.last
+      expect(user_history.action).to eq(UserHistory.actions[:lock_trust_level])
+
+      user.trust_level_locked = false
+      expect { logger.log_lock_trust_level(user) }.to change { UserHistory.count }.by(1)
+      user_history = UserHistory.last
+      expect(user_history.action).to eq(UserHistory.actions[:unlock_trust_level])
+    end
+  end
+
+  describe 'log_user_activate' do
+    let(:user) { Fabricate(:user) }
+
+    it "raises an error when argument is missing" do
+      expect { logger.log_user_activate(nil, nil) }.to raise_error(Discourse::InvalidParameters)
+    end
+
+    it "creates a new UserHistory record" do
+      reason = "Staff activated from admin"
+      expect {
+        logger.log_user_activate(user, reason)
+      }.to change { UserHistory.count }.by(1)
+      user_history = UserHistory.last
+      expect(user_history.action).to eq(UserHistory.actions[:activate_user])
+      expect(user_history.details).to eq(reason)
+    end
+  end
+
+  describe '#log_readonly_mode' do
+    it "creates a new record" do
+      expect { logger.log_change_readonly_mode(true) }.to change { UserHistory.count }.by(1)
+
+      user_history = UserHistory.last
+
+      expect(user_history.action).to eq(UserHistory.actions[:change_readonly_mode])
+      expect(user_history.new_value).to eq('t')
+      expect(user_history.previous_value).to eq('f')
+
+      expect { logger.log_change_readonly_mode(false) }.to change { UserHistory.count }.by(1)
+
+      user_history = UserHistory.last
+
+      expect(user_history.action).to eq(UserHistory.actions[:change_readonly_mode])
+      expect(user_history.new_value).to eq('f')
+      expect(user_history.previous_value).to eq('t')
+    end
+  end
 end

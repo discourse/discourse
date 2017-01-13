@@ -156,9 +156,9 @@ class InvitesController < ApplicationController
 
     Scheduler::Defer.later("Upload CSV") do
       begin
-        data = if extension == ".csv"
+        data = if extension.downcase == ".csv"
           path = Invite.create_csv(file, name)
-          Jobs.enqueue(:bulk_invite, filename: "#{name}.csv", current_user_id: current_user.id)
+          Jobs.enqueue(:bulk_invite, filename: "#{name}#{extension}", current_user_id: current_user.id)
           {url: path}
         else
           failed_json.merge(errors: [I18n.t("bulk_invite.file_should_be_csv")])

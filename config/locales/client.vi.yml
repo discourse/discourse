@@ -1272,7 +1272,6 @@ vi:
         edit: "Xin lỗi, có lỗi xảy ra khi sửa bài viết của bạn. Vui lòng thử lại."
         upload: "Xin lỗi, có lỗi xảy ra khi tải lên tập tin này. Vui lòng thử lại."
         too_many_uploads: "Xin lỗi, bạn chỉ có thể tải lên 1 file cùng 1 lúc."
-        upload_not_authorized: "Xin lỗi, tập tin của bạn tải lên chưa được cho phép (định dạng cho phép: {{authorized_extensions}})."
         image_upload_not_allowed_for_new_user: "Xin lỗi, tài khoản mới không thể tải lên ảnh."
         attachment_upload_not_allowed_for_new_user: "Xin lỗi, tài khoản mới không thể tải lên đính kèm."
         attachment_download_requires_login: "Xin lỗi, bạn cần đăng nhập để tải về đính kèm."

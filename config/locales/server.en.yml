@@ -53,6 +53,7 @@ en:
   purge_reason: "Automatically deleted as abandoned, deactivated account"
   disable_remote_images_download_reason: "Remote images download was disabled because there wasn't enough disk space available."
   anonymous: "Anonymous"
+  remove_posts_deleted_by_author: "Deleted by author"
 
   emails:
     incoming:
@@ -95,6 +96,8 @@ en:
       inclusion: is not included in the list
       invalid: is invalid
       is_invalid: "seems unclear, is it a complete sentence?"
+      contains_censored_words: "includes one or more of the censored words: %{censored_words}"
+      matches_censored_pattern: "matches the following censored Regex: %{censored_pattern}"
       less_than: must be less than %{count}
       less_than_or_equal_to: must be less than or equal to %{count}
       not_a_number: is not a number
@@ -1210,6 +1213,8 @@ en:
     authorized_extensions: "A list of file extensions allowed for upload (use '*' to enable all file types)"
     max_similar_results: "How many similar topics to show above the editor when composing a new topic. Comparison is based on title and body."
 
+    max_image_megapixels: "Maximum number of megapixels allowed for an image."
+
     title_prettify: "Prevent common title typos and errors, including all caps, lowercase first character, multiple ! and ?, extra . at end, etc."
 
     topic_views_heat_low: "After this many views, the views field is slightly highlighted."
@@ -1343,7 +1348,7 @@ en:
 
     hide_user_profiles_from_public: "Disable user cards, user profiles and user directory for anonymous users."
 
-    user_website_domains_whitelist: "User website will be verified against these domains. Pipe-delimited list." 
+    user_website_domains_whitelist: "User website will be verified against these domains. Pipe-delimited list."
 
     allow_profile_backgrounds: "Allow users to upload profile backgrounds."
 
@@ -1614,6 +1619,8 @@ en:
   user:
     no_accounts_associated: "No accounts associated"
     deactivated: "Was deactivated due to too many bounced emails to '%{email}'."
+    deactivated_by_staff: "Deactivated by staff"
+    activated_by_staff: "Activated by staff"
     username:
       short: "must be at least %{min} characters"
       long: "must be no more than %{max} characters"
@@ -2636,6 +2643,7 @@ en:
       too_large: "Sorry, the file you are trying to upload is too big (maximum size is %{max_size_kb}KB)."
     images:
       too_large: "Sorry, the image you are trying to upload is too big (maximum size is %{max_size_kb}KB), please resize it and try again."
+      larger_than_x_megapixels: "Sorry, the image you are trying to upload is too large (maximum dimension is %{max_image_megapixels}-megapixels), please resize it and try again."
       size_not_found: "Sorry, but we couldn't determine the size of the image. Maybe your image is corrupted?"
 
   avatar:

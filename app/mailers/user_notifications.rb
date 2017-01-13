@@ -3,6 +3,7 @@ require_dependency 'email/message_builder'
 require_dependency 'age_words'
 
 class UserNotifications < ActionMailer::Base
+  include UserNotificationsHelper
   helper :application
   default charset: 'UTF-8'
 
@@ -106,20 +107,27 @@ class UserNotifications < ActionMailer::Base
     end
 
     @popular_topics = topics_for_digest[0,SiteSetting.digest_topics]
-    @other_new_for_you = topics_for_digest.size > SiteSetting.digest_topics ? topics_for_digest[SiteSetting.digest_topics..-1] : []
-
-    @popular_posts = if SiteSetting.digest_posts > 0
-      Post.order("posts.score DESC")
-          .for_mailing_list(user, min_date)
-          .where('posts.post_type = ?', Post.types[:regular])
-          .where('posts.deleted_at IS NULL AND posts.hidden = false AND posts.user_deleted = false')
-          .where("posts.post_number > ? AND posts.score > ?", 1, ScoreCalculator.default_score_weights[:like_score] * 5.0)
-          .limit(SiteSetting.digest_posts)
-    else
-      []
-    end
 
     if @popular_topics.present?
+      @other_new_for_you = topics_for_digest.size > SiteSetting.digest_topics ? topics_for_digest[SiteSetting.digest_topics..-1] : []
+
+      @popular_posts = if SiteSetting.digest_posts > 0
+        Post.order("posts.score DESC")
+            .for_mailing_list(user, min_date)
+            .where('posts.post_type = ?', Post.types[:regular])
+            .where('posts.deleted_at IS NULL AND posts.hidden = false AND posts.user_deleted = false')
+            .where("posts.post_number > ? AND posts.score > ?", 1, ScoreCalculator.default_score_weights[:like_score] * 5.0)
+            .limit(SiteSetting.digest_posts)
+      else
+        []
+      end
+
+      @excerpts = {}
+
+      @popular_topics.map do |t|
+        @excerpts[t.first_post.id] = email_excerpt(t.first_post.cooked) if t.first_post.present?
+      end
+
       # Try to find 3 interesting stats for the top of the digest
 
       new_topics_count = Topic.new_since_last_seen(user, min_date).count
