@@ -137,6 +137,21 @@ describe UserNotifications do
         expect(subject.subject).to match(/Try Discourse/)
         expect(subject.subject).not_to match(/Discourse Meta/)
       end
+
+      it "excludes whispers" do
+        new_post_in_old_topic
+        whisper = Fabricate(:post, topic: old_topic, created_at: 1.hour.ago, raw: "This is secret", post_type: Post.types[:whisper])
+        expect(subject.html_part.body.to_s).to include old_topic.title
+        expect(subject.html_part.body.to_s).to_not include whisper.cooked
+      end
+
+      it "includes whispers for staff" do
+        user.admin = true; user.save!
+        new_post_in_old_topic
+        whisper = Fabricate(:post, topic: old_topic, created_at: 1.hour.ago, raw: "This is secret", post_type: Post.types[:whisper])
+        expect(subject.html_part.body.to_s).to include old_topic.title
+        expect(subject.html_part.body.to_s).to include whisper.cooked
+      end
     end
   end
 
