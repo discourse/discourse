@@ -573,6 +573,10 @@ module Email
 
       # ensure posts aren't created in the future
       options[:created_at] ||= @mail.date
+      if options[:created_at].nil?
+        raise InvalidPost, "No post creation date found. Is the e-mail missing a Date: header?"
+      end
+
       options[:created_at]   = DateTime.now if options[:created_at] > DateTime.now
 
       is_private_message = options[:archetype] == Archetype.private_message ||
