@@ -1,4 +1,4 @@
-bump finalizer debug new master
+bump finalizer debug new master 2
 
 <a href="http://www.discourse.org/">![Logo](images/discourse.png)</a>
 
