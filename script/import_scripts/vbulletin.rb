@@ -7,10 +7,16 @@ class ImportScripts::VBulletin < ImportScripts::Base
   BATCH_SIZE = 1000
 
   # CHANGE THESE BEFORE RUNNING THE IMPORTER
-  DATABASE = "q23"
-  TABLE_PREFIX = "vb_"
-  TIMEZONE = "America/Los_Angeles"
-  ATTACHMENT_DIR = '/path/to/your/attachment/folder'
+
+  DB_HOST ||= ENV['DB_HOST'] || "localhost"
+  DB_NAME ||= ENV['DB_NAME'] || "vbulletin"
+  DB_PW ||= ENV['DB_PW'] || ""
+  DB_USER ||= ENV['DB_USER'] || "root"
+  TIMEZONE ||= ENV['TIMEZONE'] || "America/Los_Angeles"
+  TABLE_PREFIX ||= ENV['TABLE_PREFIX'] || "vb_"
+  ATTACHMENT_DIR ||= ENV['ATTACHMENT_DIR'] || '/path/to/your/attachment/folder'
+
+  puts "#{DB_USER}:#{DB_PW}@#{DB_HOST} wants #{DB_NAME}"
 
   def initialize
     super
@@ -22,11 +28,36 @@ class ImportScripts::VBulletin < ImportScripts::Base
     @htmlentities = HTMLEntities.new
 
     @client = Mysql2::Client.new(
-      host: "localhost",
-      username: "root",
-      database: DATABASE
+      host: DB_HOST,
+      username: DB_USER,
+      password: DB_PW,
+      database: DB_NAME
     )
+    rescue Exception => e
+      puts '='*50
+      puts e.message
+      puts <<EOM
+Cannot connect in to database.
+
+Hostname: #{DB_HOST}
+Username: #{DB_USER}
+Password: #{DB_PW}
+database: #{DB_NAME}
+
+Edit the script or set these environment variables:
+
+export DB_HOST="localhost"
+export DB_NAME="vbulletin"
+export DB_PW=""
+export DB_USER="root"
+export TABLE_PREFIX="vb_"
+export ATTACHMENT_DIR '/path/to/your/attachment/folder'
+
+Exiting.
+EOM
+      exit
   end
+
 
   def execute
     import_groups
@@ -141,6 +172,7 @@ class ImportScripts::VBulletin < ImportScripts::Base
     picture = query.first
 
     return if picture.nil?
+    return if picture["filedata"].nil?
 
     file = Tempfile.new("profile-picture")
     file.write(picture["filedata"].encode("ASCII-8BIT").force_encoding("UTF-8"))
@@ -170,6 +202,7 @@ class ImportScripts::VBulletin < ImportScripts::Base
     background = query.first
 
     return if background.nil?
+    return if background["filedata"].nil?
 
     file = Tempfile.new("profile-background")
     file.write(background["filedata"].encode("ASCII-8BIT").force_encoding("UTF-8"))
