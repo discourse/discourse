@@ -69,10 +69,13 @@ class Post < ActiveRecord::Base
   scope :visible, -> { joins(:topic).where('topics.visible = true').where(hidden: false) }
   scope :secured, lambda { |guardian| where('posts.post_type in (?)', Topic.visible_post_types(guardian && guardian.user))}
   scope :for_mailing_list, ->(user, since) {
-     created_since(since)
-    .joins(:topic)
-    .where(topic: Topic.for_digest(user, 100.years.ago)) # we want all topics with new content, regardless when they were created
-    .order('posts.created_at ASC')
+    q = created_since(since)
+      .joins(:topic)
+      .where(topic: Topic.for_digest(user, 100.years.ago)) # we want all topics with new content, regardless when they were created
+
+    q = q.where.not(post_type: Post.types[:whisper]) unless user.staff?
+
+    q.order('posts.created_at ASC')
   }
   scope :mailing_list_new_topics, ->(user, since) { for_mailing_list(user, since).where('topics.created_at > ?', since) }
   scope :mailing_list_updates,    ->(user, since) { for_mailing_list(user, since).where('topics.created_at <= ?', since) }
