@@ -121,6 +121,10 @@ module Discourse
     @plugins ||= []
   end
 
+  def self.plugin_themes
+    @plugin_themes ||= plugins.map(&:themes).flatten
+  end
+
   def self.official_plugins
     plugins.find_all{|p| p.metadata.official?}
   end
