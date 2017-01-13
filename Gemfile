@@ -183,11 +183,3 @@ gem 'memory_profiler', require: false, platform: :mri
 gem 'rmmseg-cpp', require: false
 
 gem 'logster'
-
-# perftools only works on 1.9 atm
-group :profile do
-  # travis refuses to install this, instead of fuffing, just avoid it for now
-  #
-  # if you need to profile, uncomment out this line
-  # gem 'rack-perftools_profiler', require: 'rack/perftools_profiler', platform: :mri_19
-end
