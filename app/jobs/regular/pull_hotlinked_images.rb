@@ -26,7 +26,7 @@ module Jobs
       downloaded_urls = {}
 
       extract_images_from(post.cooked).each do |image|
-        src = image['src']
+        src = original_src = image['src']
         src = "http:" + src if src.start_with?("//")
 
         if is_valid_image_url(src)
@@ -53,7 +53,7 @@ module Jobs
             # have we successfully downloaded that file?
             if downloaded_urls[src].present?
               url = downloaded_urls[src]
-              escaped_src = Regexp.escape(src)
+              escaped_src = Regexp.escape(original_src)
               # there are 6 ways to insert an image in a post
               # HTML tag - <img src="http://...">
               raw.gsub!(/src=["']#{escaped_src}["']/i, "src='#{url}'")
