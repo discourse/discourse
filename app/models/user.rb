@@ -90,13 +90,13 @@ class User < ActiveRecord::Base
   after_create :create_user_option
   after_create :create_user_profile
   after_create :ensure_in_trust_level_group
-  after_create :automatic_group_membership
   after_create :set_default_categories_preferences
   after_create :trigger_user_created_event
 
   before_save :update_username_lower
   before_save :ensure_password_is_hashed
 
+  after_save :automatic_group_membership
   after_save :clear_global_notice_if_needed
   after_save :refresh_avatar
   after_save :badge_grant
@@ -935,10 +935,13 @@ class User < ActiveRecord::Base
     Group.where(automatic: false)
          .where("LENGTH(COALESCE(automatic_membership_email_domains, '')) > 0")
          .each do |group|
+
       domains = group.automatic_membership_email_domains.gsub('.', '\.')
-      if self.email =~ Regexp.new("@(#{domains})$", true) && !group.users.include?(self)
-        group.add(self)
-        GroupActionLogger.new(Discourse.system_user, group).log_add_user_to_group(self)
+      user = User.find(self.id)
+
+      if user.reload.email =~ Regexp.new("@(#{domains})$", true) && !group.users.include?(user)
+        group.add(user)
+        GroupActionLogger.new(Discourse.system_user, group).log_add_user_to_group(user)
       end
     end
   end
