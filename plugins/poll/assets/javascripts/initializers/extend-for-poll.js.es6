@@ -43,6 +43,7 @@ function initializePolls(api) {
           }
         });
         this.set("pollsObject", this._polls);
+        _glued.forEach(g => g.queueRerender());
       }
     }
   });
