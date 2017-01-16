@@ -13,6 +13,22 @@ describe Topic do
     context "#title" do
       it { is_expected.to validate_presence_of :title }
 
+      describe 'censored pattern' do
+        describe 'when title matches censored pattern' do
+          it 'should not be valid' do
+            SiteSetting.censored_pattern = 'orange.*'
+
+            topic.title = 'I have orangEjuice orange monkey orange stuff'
+
+            expect(topic).to_not be_valid
+
+            expect(topic.errors.full_messages.first).to include(I18n.t(
+              'errors.messages.matches_censored_pattern', censored_words: 'orangejuice orange monkey orange stuff'
+            ))
+          end
+        end
+      end
+
       describe 'censored words' do
         describe 'when title contains censored words' do
           it 'should not be valid' do
@@ -28,25 +44,28 @@ describe Topic do
           end
         end
 
-        describe 'when title matches censored pattern' do
-          it 'should not be valid' do
-            SiteSetting.censored_pattern = 'orange.*'
-
-            topic.title = 'I have orangEjuice orange monkey orange stuff'
-
-            expect(topic).to_not be_valid
-
-            expect(topic.errors.full_messages.first).to include(I18n.t(
-              'errors.messages.matches_censored_pattern', censored_words: 'orangejuice orange monkey orange stuff'
-            ))
-          end
-        end
-
         describe 'when title does not contain censored words' do
           it 'should be valid' do
             topic.title = 'The cake is a lie'
 
             expect(topic).to be_valid
+          end
+        end
+
+        describe 'escape special characters in censored words' do
+          before do
+            SiteSetting.censored_words = 'co(onut|coconut|a**le'
+          end
+
+          it 'should not valid' do
+            topic.title = "I have a co(onut a**le"
+
+            expect(topic.valid?).to eq(false)
+
+            expect(topic.errors.full_messages.first).to include(I18n.t(
+              'errors.messages.contains_censored_words',
+              censored_words: 'co(onut, a**le'
+            ))
           end
         end
       end
