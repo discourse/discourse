@@ -61,7 +61,9 @@ class Backup
   end
 
   def self.base_directory
-    File.join(Rails.root, "public", "backups", RailsMultisite::ConnectionManagement.current_db)
+    base_directory = File.join(Rails.root, "public", "backups", RailsMultisite::ConnectionManagement.current_db)
+    FileUtils.mkdir_p(base_directory) unless Dir.exists?(base_directory)
+    base_directory
   end
 
   def self.chunk_path(identifier, filename, chunk_number)
