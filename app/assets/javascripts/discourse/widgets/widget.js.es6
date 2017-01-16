@@ -125,6 +125,17 @@ export function createWidget(name, opts) {
   return result;
 }
 
+export function reopenWidget(name, opts) {
+  let existing = _registry[name]
+  if (!existing) {
+    console.error(`Could not find widget ${name} in registry`);
+    return
+  }
+
+  Object.keys(opts).forEach(k => existing.prototype[k] = opts[k])
+  return existing
+}
+
 export default class Widget {
   constructor(attrs, register, opts) {
     opts = opts || {};
