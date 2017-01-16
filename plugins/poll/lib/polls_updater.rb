@@ -64,7 +64,10 @@ module DiscoursePoll
           end
 
           polls[poll_name]["voters"] = previous_polls[poll_name]["voters"]
-          polls[poll_name]["anonymous_voters"] = previous_polls[poll_name]["anonymous_voters"] if previous_polls[poll_name].has_key?("anonymous_voters")
+
+          if previous_polls[poll_name].has_key?("anonymous_voters")
+            polls[poll_name]["anonymous_voters"] = previous_polls[poll_name]["anonymous_voters"]
+          end
 
           previous_options = previous_polls[poll_name]["options"]
           public_poll = polls[poll_name]["public"] == "true"
@@ -72,7 +75,19 @@ module DiscoursePoll
           polls[poll_name]["options"].each_with_index do |option, index|
             previous_option = previous_options[index]
             option["votes"] = previous_option["votes"]
-            option["anonymous_votes"] = previous_option["anonymous_votes"] if previous_option.has_key?("anonymous_votes")
+
+            if previous_option["id"] != option["id"]
+              if votes_fields = post.custom_fields[DiscoursePoll::VOTES_CUSTOM_FIELD]
+                votes_fields.each do |key, value|
+                  index = value[poll_name].index(previous_option["id"])
+                  votes_fields[key][poll_name][index] = option["id"] if index
+                end
+              end
+            end
+
+            if previous_option.has_key?("anonymous_votes")
+              option["anonymous_votes"] = previous_option["anonymous_votes"]
+            end
 
             if public_poll && previous_option.has_key?("voter_ids")
               option["voter_ids"] = previous_option["voter_ids"]
