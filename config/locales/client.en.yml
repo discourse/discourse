@@ -2911,7 +2911,7 @@ en:
             revoke_admin: "revoke admin"
             grant_moderation: "grant moderation"
             revoke_moderation: "revoke moderation"
-            backup_operation: "backup operation"
+            backup_create: "create backup"
             deleted_tag: "deleted tag"
             renamed_tag: "renamed tag"
             revoke_email: "revoke email"
@@ -2920,6 +2920,8 @@ en:
             activate_user: "activate user"
             deactivate_user: "deactivate user"
             change_readonly_mode: "change readonly mode"
+            backup_download: "download backup"
+            backup_destroy: "destroy backup"
         screened_emails:
           title: "Screened Emails"
           description: "When someone tries to create a new account, the following email addresses will be checked and the registration will be blocked, or some other action performed."
