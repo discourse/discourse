@@ -107,7 +107,7 @@ GEM
       rake
       rake-compiler
     fast_xs (0.8.0)
-    ffi (1.9.10)
+    ffi (1.9.17)
     flamegraph (0.9.5)
     foreman (0.82.0)
       thor (~> 0.19.1)
@@ -162,7 +162,7 @@ GEM
       metaclass (~> 0.0.1)
     mock_redis (0.15.4)
     moneta (0.8.1)
-    msgpack (0.7.6)
+    msgpack (1.0.2)
     multi_json (1.12.1)
     multi_xml (0.5.5)
     multipart-post (2.0.0)
