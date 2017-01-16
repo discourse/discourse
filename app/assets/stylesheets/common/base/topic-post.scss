@@ -220,16 +220,17 @@ aside.quote {
 }
 
 .post-info {
-  &.wiki, &.via-email, &.whisper {
+  &.via-email, &.whisper {
     margin-right: 5px;
     i.fa {
       font-size: 1em;
     }
   }
-  &.wiki {
-    cursor: pointer;
-    color: #408040;
+
+  .wiki {
+    color: green !important;
   }
+
   &.via-email {
     color: dark-light-choose(scale-color($primary, $lightness: 70%), scale-color($secondary, $lightness: 30%));
   }
