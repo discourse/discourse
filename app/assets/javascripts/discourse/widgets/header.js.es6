@@ -104,6 +104,8 @@ createWidget('header-icons', {
   },
 
   html(attrs) {
+    if (this.siteSettings.login_required && !this.currentUser) { return []; }
+
     const hamburger = this.attach('header-dropdown', {
                         title: 'hamburger_menu',
                         icon: 'bars',

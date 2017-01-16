@@ -26,19 +26,4 @@ test("redirect", () => {
   andThen(() => {
     ok(invisible('.login-modal'), "it closes the login modal");
   });
-
-  click('#search-button');
-  andThen(() => {
-    ok(exists('.login-modal'), "clicking search opens the login modal");
-  });
-
-  click('.modal-header .close');
-  andThen(() => {
-    ok(invisible('.login-modal'), "it closes the login modal");
-  });
-
-  click('#toggle-hamburger-menu');
-  andThen(() => {
-    ok(exists('.login-modal'), "site map opens the login modal");
-  });
 });
