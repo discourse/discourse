@@ -105,7 +105,7 @@ describe UserAction do
 
   describe 'when user likes' do
 
-    let!(:post) { Fabricate(:post) }
+    let(:post) { Fabricate(:post) }
     let(:likee) { post.user }
     let(:liker) { Fabricate(:coding_horror) }
 
@@ -138,6 +138,23 @@ describe UserAction do
         PostAction.remove_act(liker, post, PostActionType.types[:like])
         expect(likee.user_stat.reload.likes_received).to eq(0)
         expect(liker.user_stat.reload.likes_given).to eq(0)
+      end
+
+      context 'private message' do
+        let(:post) { Fabricate(:private_message_post) }
+        let(:likee) { post.topic.topic_allowed_users.first.user }
+        let(:liker) { post.topic.topic_allowed_users.last.user }
+
+        it 'should not increase user stats' do
+          expect(@liker_action).not_to eq(nil)
+          expect(liker.user_stat.reload.likes_given).to eq(0)
+          expect(@likee_action).not_to eq(nil)
+          expect(likee.user_stat.reload.likes_received).to eq(0)
+
+          PostAction.remove_act(liker, post, PostActionType.types[:like])
+          expect(liker.user_stat.reload.likes_given).to eq(0)
+          expect(likee.user_stat.reload.likes_received).to eq(0)
+        end
       end
 
     end
