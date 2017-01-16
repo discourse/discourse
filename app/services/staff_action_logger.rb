@@ -336,10 +336,28 @@ class StaffActionLogger
     }))
   end
 
-  def log_backup_operation(opts={})
+  def log_backup_create(opts={})
     UserHistory.create(params(opts).merge({
-      action: UserHistory.actions[:backup_operation],
+      action: UserHistory.actions[:backup_create],
       ip_address: @admin.ip_address.to_s
+    }))
+  end
+
+  def log_backup_download(backup, opts={})
+    raise Discourse::InvalidParameters.new(:backup) unless backup
+    UserHistory.create(params(opts).merge({
+      action: UserHistory.actions[:backup_download],
+      ip_address: @admin.ip_address.to_s,
+      details: backup.filename
+    }))
+  end
+
+  def log_backup_destroy(backup, opts={})
+    raise Discourse::InvalidParameters.new(:backup) unless backup
+    UserHistory.create(params(opts).merge({
+      action: UserHistory.actions[:backup_destroy],
+      ip_address: @admin.ip_address.to_s,
+      details: backup.filename
     }))
   end
 
