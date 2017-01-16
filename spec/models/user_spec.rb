@@ -1196,17 +1196,6 @@ describe User do
       expect(group_history.target_user).to eq(user)
     end
 
-    it "get attributes from the group" do
-      group = Fabricate(:group, automatic_membership_email_domains: "bar.com|wat.com", grant_trust_level: 1, title: "bars and wats", primary_group: true)
-      user = Fabricate.build(:user, trust_level: 0, email: "foo@bar.com", password: "strongpassword4Uguys")
-      user.password_required!
-      expect(user.save).to eq(true)
-      user.reload
-      expect(user.title).to eq("bars and wats")
-      expect(user.trust_level).to eq(1)
-      expect(user.trust_level_locked).to eq(true)
-    end
-
   end
 
   describe "number_of_flags_given" do
