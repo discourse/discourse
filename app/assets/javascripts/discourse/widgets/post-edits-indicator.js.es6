@@ -22,12 +22,22 @@ export default createWidget('post-edits-indicator', {
   },
 
   html(attrs) {
-    const contents = [attrs.version - 1, ' ', iconNode('pencil')];
+    let icon = 'pencil';
+    let titleKey = 'post.last_edited_on';
     const updatedAt = new Date(attrs.updated_at);
+    let className = this.historyHeat(updatedAt);
 
-    const title = `${I18n.t('post.last_edited_on')} ${longDate(updatedAt)}`;
+    if (attrs.wiki) {
+      icon = 'pencil-square-o';
+      titleKey = 'post.wiki_last_edited_on';
+      className = `${className} wiki`;
+    }
+
+    const contents = [attrs.version - 1, ' ', iconNode(icon)];
+
+    const title = `${I18n.t(titleKey)} ${longDate(updatedAt)}`;
     return h('a', {
-      className: this.historyHeat(updatedAt),
+      className,
       attributes: { title }
     }, contents);
   },
