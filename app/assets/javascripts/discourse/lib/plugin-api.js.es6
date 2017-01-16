@@ -5,7 +5,7 @@ import { addButton } from 'discourse/widgets/post-menu';
 import { includeAttributes } from 'discourse/lib/transform-post';
 import { addToolbarCallback } from 'discourse/components/d-editor';
 import { addWidgetCleanCallback } from 'discourse/components/mount-widget';
-import { createWidget, decorateWidget, changeSetting } from 'discourse/widgets/widget';
+import { createWidget, reopenWidget, decorateWidget, changeSetting } from 'discourse/widgets/widget';
 import { onPageChange } from 'discourse/lib/page-tracker';
 import { preventCloak } from 'discourse/widgets/post-stream';
 import { h } from 'virtual-dom';
@@ -305,6 +305,16 @@ class PluginApi {
    **/
   createWidget(name, args) {
     return createWidget(name, args);
+  }
+
+  /**
+   * Exposes the widget update ability to plugins. Updates the widget
+   * registry for the given widget name to include the properties on args
+   * See `reopenWidget` in `discourse/widgets/widget` from more ifo.
+  **/
+
+  reopenWidget(name, args) {
+    return reopenWidget(name, args);
   }
 
   /**
