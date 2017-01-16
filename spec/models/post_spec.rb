@@ -493,7 +493,7 @@ describe Post do
       expect(Fabricate.build(:post, post_args)).to be_valid
     end
 
-    it 'treate blank posts as invalid' do
+    it 'create blank posts as invalid' do
       expect(Fabricate.build(:post, raw: "")).not_to be_valid
     end
   end

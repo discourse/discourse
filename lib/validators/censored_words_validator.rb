@@ -1,6 +1,6 @@
 class CensoredWordsValidator < ActiveModel::EachValidator
   def validate_each(record, attribute, value)
-    if !SiteSetting.censored_words.blank? && value =~ /#{SiteSetting.censored_words}/i
+    if !SiteSetting.censored_words.blank? && value =~ /#{escape_censored_words}/i
       record.errors.add(
         attribute, :contains_censored_words,
         censored_words: SiteSetting.censored_words
@@ -11,5 +11,17 @@ class CensoredWordsValidator < ActiveModel::EachValidator
         censored_pattern: SiteSetting.censored_pattern
       )
     end
+  end
+
+  private
+
+  def escape_censored_words
+    # TODO escape with single slashes
+    SiteSetting.censored_words
+                              .gsub('*', '\*')
+                              .gsub(')', '\)')
+                              .gsub('(', '\(')
+                              .gsub('[', '\[')
+                              .gsub(']', '\]')
   end
 end
