@@ -191,6 +191,8 @@ export default createWidget('search-menu', {
     if (url) {
       this.sendWidgetEvent('linkClicked');
       DiscourseURL.routeTo(url);
+    } else if (searchData.contextEnabled) {
+      this.triggerSearch();
     }
   }
 });
