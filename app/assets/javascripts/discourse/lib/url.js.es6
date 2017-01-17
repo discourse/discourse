@@ -15,6 +15,8 @@ const SERVER_SIDE_ONLY = [
   /^\/posts\/\d+\/raw/,
   /\.rss$/,
   /\.json$/,
+  /^\/viewtopic.php/,
+  /^\/viewforum.php/,
 ];
 
 let _jumpScheduled = false;
