@@ -298,12 +298,12 @@ export default class Widget {
     return result;
   }
 
-  sendWidgetEvent(name) {
+  sendWidgetEvent(name, attrs) {
     const methodName = `${name}Event`;
     return this.rerenderResult(() => {
       const widget = this._findAncestorWithProperty(methodName);
       if (widget) {
-        return widget[methodName]();
+        return widget[methodName](attrs);
       }
     });
   }
