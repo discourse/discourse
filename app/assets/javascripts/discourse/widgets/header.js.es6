@@ -226,7 +226,7 @@ export default createWidget('header', {
   },
 
   linkClickedEvent(attrs) {
-    if (!attrs.searchContextEnabled) this.closeAll();
+    if (!(attrs && attrs.searchContextEnabled)) this.closeAll();
     this.updateHighlight();
   },
 
