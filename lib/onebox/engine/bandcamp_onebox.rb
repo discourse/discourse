@@ -4,7 +4,7 @@ module Onebox
       include Engine
       include StandardEmbed
 
-      matches_regexp(/^https?:\/\/.*\.bandcamp\.com\/album\//)
+      matches_regexp(/^https?:\/\/.*\.bandcamp\.com\/(album|track)\//)
       always_https
 
       def placeholder_html
