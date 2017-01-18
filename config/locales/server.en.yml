@@ -566,8 +566,8 @@ en:
 
   password_reset:
     no_token: "Sorry, that password change link is too old. Select the Log In button and use 'I forgot my password' to get a new link."
-    choose_new: "Please choose a new password"
-    choose: "Please choose a password"
+    choose_new: "Choose a new password"
+    choose: "Choose a password"
     update: 'Update Password'
     save: 'Set Password'
     title: 'Reset Password'
