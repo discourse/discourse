@@ -36,8 +36,4 @@ describe Onebox::Engine::ImageOnebox do
   it "includes a direct link to the image" do
     expect(Onebox.preview('http://www.discourse.org/images/logo.png').to_s).to match(/<a.*png/)
   end
-
-  it "doesn't inline single quotes" do
-    expect(Onebox.preview("http://host/path/to/Image'withquote.png").to_s).to match(/Image&apos;withquote/)
-  end
 end

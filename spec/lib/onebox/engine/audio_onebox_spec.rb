@@ -28,8 +28,4 @@ describe Onebox::Engine::AudioOnebox do
   it "includes a fallback direct link to the audio" do
     expect(Onebox.preview('http://kolber.github.io/audiojs/demos/mp3/juicy.mp3').to_s).to match(/<a.*mp3/)
   end
-
-  it "correctly escapes single quotes" do
-    expect(Onebox.preview("http://test.com/test'ing.mp3").to_s).not_to match(/test'ing/)
-  end
 end

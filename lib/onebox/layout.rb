@@ -42,7 +42,7 @@ module Onebox
       end
 
       def link
-        record[:link]
+        ::Onebox::Helpers.normalize_url_for_output(record[:link])
       end
 
       def domain

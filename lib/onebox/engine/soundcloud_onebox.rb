@@ -13,7 +13,8 @@ module Onebox
 
       def placeholder_html
         return if Onebox::Helpers.blank?(oembed_data[:thumbnail_url])
-        "<img src='#{oembed_data[:thumbnail_url]}' #{Helpers.title_attr(oembed_data)}>"
+        escaped_src = ::Onebox::Helpers.normalize_url_for_output(oembed_data[:thumbnail_url])
+        "<img src='#{escaped_src}' #{Helpers.title_attr(oembed_data)}>"
       end
 
       private

@@ -9,15 +9,17 @@ module Onebox
 
       def placeholder_html
         og = get_opengraph
-        "<img src='#{og[:image]}' height='#{og[:video_height]}' #{Helpers.title_attr(og)}>"
+        escaped_src = ::Onebox::Helpers.normalize_url_for_output(og[:image])
+        "<img src='#{escaped_src}' height='#{og[:video_height]}' #{Helpers.title_attr(og)}>"
       end
 
       def to_html
         og = get_opengraph
         src = og[:video_secure_url] || og[:video]
+        escaped_src = ::Onebox::Helpers.normalize_url_for_output(src)
 
         <<-HTML
-          <iframe src="#{src}"
+          <iframe src="#{escaped_src}"
                   width="#{og[:video_width]}"
                   height="#{og[:video_height]}"
                   scrolling="no"

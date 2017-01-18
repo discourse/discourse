@@ -21,7 +21,8 @@ module Onebox
       end
 
       def placeholder_html
-        "<img src='#{raw[:image]}'>"
+        escaped_src = ::Onebox::Helpers.normalize_url_for_output(raw[:image])
+        "<img src='#{escaped_src}'>"
       end
 
     end

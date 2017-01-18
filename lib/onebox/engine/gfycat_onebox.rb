@@ -10,9 +10,10 @@ module Onebox
       def to_html
         oembed = get_oembed
         src = Nokogiri::HTML::fragment(oembed[:html]).at_css("iframe")["src"]
+        escaped_src = ::Onebox::Helpers.normalize_url_for_output(src)
 
         <<-HTML
-          <iframe src="#{src}"
+          <iframe src="#{escaped_src}"
                   width="#{oembed[:width]}"
                   height="#{oembed[:height]}"
                   scrolling="no"
@@ -23,10 +24,11 @@ module Onebox
       end
 
       def placeholder_html
-        opengraph = get_opengraph
+        og = get_opengraph
+        escaped_src = ::Onebox::Helpers.normalize_url_for_output(og[:image])
 
         <<-HTML
-          <img src="#{opengraph[:image]}" width=""#{opengraph[:image_width]}" height=""#{opengraph[:image_height]}">
+          <img src="#{escaped_src}" width="#{og[:image_width]}" height="#{og[:image_height]}">
         HTML
       end
 

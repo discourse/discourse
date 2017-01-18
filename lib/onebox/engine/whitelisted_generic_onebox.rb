@@ -278,13 +278,18 @@ module Onebox
         def image_html
           return if Onebox::Helpers.blank?(data[:image])
 
+          escaped_src = ::Onebox::Helpers.normalize_url_for_output(data[:image])
+
           alt    = data[:description]  || data[:title]
           width  = data[:image_width]  || data[:thumbnail_width]  || data[:width]
           height = data[:image_height] || data[:thumbnail_height] || data[:height]
-          "<img src='#{data[:image]}' alt='#{alt}' width='#{width}' height='#{height}'>"
+
+          "<img src='#{escaped_src}' alt='#{alt}' width='#{width}' height='#{height}'>"
         end
 
         def video_html
+          escaped_src = ::Onebox::Helpers.normalize_url_for_output(data[:video])
+
           if data[:video_type] == "video/mp4"
             <<-HTML
               <video title='#{data[:title]}'
@@ -292,12 +297,12 @@ module Onebox
                      height='#{data[:video_height]}'
                      style='max-width:100%'
                      controls=''>
-                <source src='#{data[:video]}'>
+                <source src='#{escaped_src}'>
               </video>
             HTML
           else
             <<-HTML
-              <iframe src='#{data[:video]}'
+              <iframe src='#{escaped_src}'
                       title='#{data[:title]}'
                       width='#{data[:video_width]}'
                       height='#{data[:video_height]}'

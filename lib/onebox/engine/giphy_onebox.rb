@@ -9,10 +9,12 @@ module Onebox
 
       def to_html
         oembed = get_oembed
+        escaped_url = ::Onebox::Helpers.normalize_url_for_output(oembed[:url])
+        escaped_src = ::Onebox::Helpers.normalize_url_for_output(oembed[:image])
 
         <<-HTML
-          <a href="#{oembed[:url]}" target="_blank">
-            <img src="#{oembed[:image]}" width="#{oembed[:width]}" height="#{oembed[:height]}" #{Helpers.title_attr(oembed)}>
+          <a href="#{escaped_url}" target="_blank">
+            <img src="#{escaped_src}" width="#{oembed[:width]}" height="#{oembed[:height]}" #{Helpers.title_attr(oembed)}>
           </a>
         HTML
       end

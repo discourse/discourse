@@ -52,9 +52,9 @@ module Onebox
       end
 
       def placeholder_html
-        width = @placeholder_width || 690
+        width  = @placeholder_width  || 690
         height = @placeholder_height || 400
-        "<img src=\"#{CGI.escapeHTML(@placeholder)}\" width=\"#{width}\" height=\"#{height}\"/>"
+        "<img src='#{@placeholder}' width='#{width}' height='#{height}'/>"
       end
 
       private

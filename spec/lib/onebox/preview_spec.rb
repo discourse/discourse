@@ -82,4 +82,19 @@ describe Onebox::Preview do
       expect(preview.send(:engine)).to be_an(Onebox::Engine)
     end
   end
+
+  describe "xss" do
+    let(:xss) { "wat' onerror='alert(/XSS/)" }
+    let(:img_html) { "<img src='#{xss}'>" }
+
+    it "prevents XSS" do
+      preview = described_class.new(preview_url)
+      preview.expects(:engine_html).returns(img_html)
+
+      result = preview.to_s
+      expect(result).not_to match(/onerror/)
+    end
+
+  end
+
 end

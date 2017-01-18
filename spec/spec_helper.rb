@@ -26,10 +26,6 @@ shared_context "engines" do
   let(:html) { @html }
   let(:data) { @data }
   let(:link) { @link }
-
-  def escaped_data(key)
-    CGI.escapeHTML(data[key])
-  end
 end
 
 shared_examples_for "an engine" do
@@ -64,7 +60,7 @@ shared_examples_for "a layout engine" do
     end
 
     it "includes title" do
-      expect(html).to include(escaped_data(:title))
+      expect(html).to include(data[:title])
     end
 
     it "includes link" do
@@ -76,7 +72,7 @@ shared_examples_for "a layout engine" do
     end
 
     it "includes domain" do
-      expect(html).to include(%|class="domain" href="#{escaped_data(:domain)}|)
+      expect(html).to include(%|class="domain" href="#{data[:domain]}|)
     end
   end
 end

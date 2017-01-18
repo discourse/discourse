@@ -11,9 +11,10 @@ module Onebox
         opengraph = get_opengraph
 
         src = opengraph[:video_url].gsub("?autostart=1", "")
+        escaped_src = ::Onebox::Helpers.normalize_url_for_output(src)
 
         <<-HTML
-          <iframe src="#{src}"
+          <iframe src="#{escaped_src}"
                   width="#{opengraph[:video_width]}"
                   height="#{opengraph[:video_height]}"
                   scrolling="no"
@@ -25,7 +26,8 @@ module Onebox
 
       def placeholder_html
         opengraph = get_opengraph
-        "<img src='#{opengraph[:image]}'>"
+        escaped_src = ::Onebox::Helpers.normalize_url_for_output(opengraph[:image])
+        "<img src='#{escaped_src}'>"
       end
 
     end

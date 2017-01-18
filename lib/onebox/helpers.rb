@@ -19,9 +19,8 @@ module Onebox
       raise Net::HTTPError.new('HTTP redirect too deep', location) if limit == 0
 
       uri = URI(location)
-      if !uri.host
-        uri = URI("#{domain}#{location}")
-      end
+      uri = URI("#{domain}#{location}") if !uri.host
+
       http = Net::HTTP.new(uri.host, uri.port)
       http.open_timeout = Onebox.options.connect_timeout
       http.read_timeout = Onebox.options.timeout
@@ -32,10 +31,10 @@ module Onebox
 
       response = http.request_get(uri.request_uri,headers)
 
-      cookie = response.get_fields('set-cookie')
-      if (cookie)
-        header = {'cookie' => cookie.join("")}
+      if cookie = response.get_fields('set-cookie')
+        header = { 'cookie' => cookie.join }
       end
+
       header = nil unless header.is_a? Hash
 
       case response
@@ -63,15 +62,16 @@ module Onebox
     end
 
     def self.title_attr(meta)
-      (meta && !blank?(meta[:title])) ? "title='#{CGI.escapeHTML(meta[:title])}'" : ""
+      (meta && !blank?(meta[:title])) ? "title='#{meta[:title]}'" : ""
     end
 
     def self.normalize_url_for_output(url)
+      return "" unless url
       url = url.dup
       # expect properly encoded url, remove any unsafe chars
       url.gsub!("'", "&apos;")
       url.gsub!('"', "&quot;")
-      url.gsub!(/[^a-zA-Z0-9%\-`._~:\/?#\[\]@!$&'\(\)*+,;=]/, "")
+      url.gsub!(/[^\w\-`._~:\/?#\[\]@!$&'\(\)*+,;=]/, "")
       url
     end
 

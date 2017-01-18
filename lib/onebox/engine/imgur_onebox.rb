@@ -8,46 +8,67 @@ module Onebox
       always_https
 
       def to_html
-        imgur_data = get_imgur_data
-        return "<video width='#{imgur_data[:"video:width"]}' height='#{imgur_data[:"video:height"]}' #{Helpers.title_attr(imgur_data)} controls autoplay loop><source src='#{imgur_data[:"video:secure_url"]}' type='video/mp4'><source src='#{imgur_data[:"video:secure_url"].gsub('mp4', 'webm')}' type='video/webm'></video>" if imgur_data[:"video:secure_url"]
-        return "<div class='onebox imgur-album'><a href='#{url}' target='_blank'><span class='outer-box' style='width:#{imgur_data[:"image:width"]}px'><span class='inner-box'><span class='album-title'>[Album] #{imgur_data[:title]}</span></span></span><img src='#{get_secure_link(imgur_data[:image])}' #{Helpers.title_attr(imgur_data)} height='#{imgur_data[:"image:height"]}' width='#{imgur_data[:"image:width"]}'></a></div>" if is_album?
-        return "<a href='#{url}' target='_blank'><img src='#{get_secure_link(imgur_data[:image])}' #{Helpers.title_attr(imgur_data)} alt='Imgur' height='#{imgur_data[:"image:height"]}' width='#{imgur_data[:"image:width"]}'></a>" if imgur_data[:image]
-        return nil
-      end
-
-      def placeholder_html
-        imgur_data = get_imgur_data
-        return "<video width='#{imgur_data[:"video:width"]}' height='#{imgur_data[:"video:height"]}' #{Helpers.title_attr(imgur_data)} controls autoplay loop><source src='#{imgur_data[:"video:secure_url"]}' type='video/mp4'><source src='#{imgur_data[:"video:secure_url"].gsub('mp4', 'webm')}' type='video/webm'></video>" if imgur_data[:"video:secure_url"]
-        return "<img src='#{get_secure_link(imgur_data[:image])}' #{Helpers.title_attr(imgur_data)} alt='Imgur' height='#{imgur_data[:"image:height"]}' width='#{imgur_data[:"image:width"]}'>"
-        return nil
+        og = get_opengraph
+        return video_html(og) if !Onebox::Helpers::blank?(og[:video_secure_url])
+        return album_html(og) if is_album?
+        return image_html(og) if !Onebox::Helpers::blank?(og[:image])
+        nil
       end
 
       private
-      def get_imgur_data
-        response = Onebox::Helpers.fetch_response(url)
-        html = Nokogiri::HTML(response.body)
-        imgur_data = {}
-        html.css('meta').each do |m|
-          if m.attribute('property') && m.attribute('property').to_s.match(/^og:/i)
-            m_content = m.attribute('content').to_s.strip
-            m_property = m.attribute('property').to_s.gsub('og:', '')
-            imgur_data[m_property.to_sym] = m_content
-          end
+
+        def video_html(og)
+          escaped_src = ::Onebox::Helpers.normalize_url_for_output(og[:video_secure_url])
+
+          <<-HTML
+            <video width='#{og[:video_width]}' height='#{og[:video_height]}' #{Helpers.title_attr(og)} controls loop>
+              <source src='#{escaped_src}' type='video/mp4'>
+              <source src='#{escaped_src.gsub('mp4', 'webm')}' type='video/webm'>
+            </video>
+          HTML
         end
-        return imgur_data
-      end
 
-      def is_album?
-        oembed_data = Onebox::Helpers.symbolize_keys(::MultiJson.load(Onebox::Helpers.fetch_response("http://api.imgur.com/oembed.json?url=#{url}").body))
-        imgur_data_id = Nokogiri::HTML(oembed_data[:html]).xpath("//blockquote").attr("data-id")
-        return !!(imgur_data_id.to_s =~ /a\//)
-      end
+        def album_html(og)
+          escaped_url = ::Onebox::Helpers.normalize_url_for_output(url)
+          escaped_src = ::Onebox::Helpers.normalize_url_for_output(get_secure_link(og[:image]))
 
-      def get_secure_link(link)
-        secure_link = URI(link)
-        secure_link.scheme = 'https'
-        secure_link.to_s
-      end
+          <<-HTML
+            <div class='onebox imgur-album'>
+              <a href='#{escaped_url}' target='_blank'>
+                <span class='outer-box' style='width:#{og[:image_width]}px'>
+                  <span class='inner-box'>
+                    <span class='album-title'>[Album] #{og[:title]}</span>
+                  </span>
+                </span>
+                <img src='#{escaped_src}' #{Helpers.title_attr(og)} height='#{og[:image_height]}' width='#{og[:image_width]}'>
+              </a>
+            </div>
+          HTML
+        end
+
+        def is_album?
+          oembed_data = Onebox::Helpers.symbolize_keys(::MultiJson.load(Onebox::Helpers.fetch_response("http://api.imgur.com/oembed.json?url=#{url}").body))
+          imgur_data_id = Nokogiri::HTML(oembed_data[:html]).xpath("//blockquote").attr("data-id")
+          imgur_data_id.to_s[/a\//]
+        end
+
+        def image_html(og)
+          escaped_url = ::Onebox::Helpers.normalize_url_for_output(url)
+          escaped_src = ::Onebox::Helpers.normalize_url_for_output(get_secure_link(og[:image]))
+
+          <<-HTML
+            <a href='#{escaped_url}' target='_blank'>
+              <img src='#{escaped_src}' #{Helpers.title_attr(og)} alt='Imgur' height='#{og[:image_height]}' width='#{og[:image_width]}'>
+            </a>
+          HTML
+        end
+
+        def get_secure_link(link)
+          secure_link = URI(link)
+          secure_link.scheme = 'https'
+          secure_link.to_s
+        end
+
     end
   end
 end

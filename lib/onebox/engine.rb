@@ -42,8 +42,8 @@ module Onebox
       @timeout = timeout || Onebox.options.timeout
     end
 
-    # raises error if not defined in onebox engine. This is the output method for
-    # an engine.
+    # raises error if not defined in onebox engine.
+    # This is the output method for an engine.
     def to_html
       fail NoMethodError, "Engines need to implement this method"
     end

@@ -9,11 +9,10 @@ module Onebox
 
       def placeholder_html
         oembed = get_oembed
-
-        # we want the image to have the same dimensions as the embedded html
+        escaped_src = ::Onebox::Helpers.normalize_url_for_output(oembed[:thumbnail_url])
 
         <<-HTML
-          <img src="#{oembed[:thumbnail_url]}" style="max-width: #{oembed[:width]}px; max-height: #{oembed[:height]}px;" #{Helpers.title_attr(oembed)}>
+          <img src="#{escaped_src}" style="max-width: #{oembed[:width]}px; max-height: #{oembed[:height]}px;" #{Helpers.title_attr(oembed)}>
         HTML
       end
 

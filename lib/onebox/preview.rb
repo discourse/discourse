@@ -1,3 +1,6 @@
+require "sanitize"
+require_relative "onebox_sanitize_config"
+
 module Onebox
   class Preview
     attr_reader :cache
@@ -11,14 +14,14 @@ module Onebox
 
     def to_s
       return "" unless engine
-      process_html(engine_html)
+      sanitize process_html engine_html
     rescue *Onebox::Preview.web_exceptions
       ""
     end
 
     def placeholder_html
       return "" unless engine
-      process_html(engine.placeholder_html)
+      sanitize process_html engine.placeholder_html
     rescue *Onebox::Preview.web_exceptions
       ""
     end
@@ -60,6 +63,10 @@ module Onebox
       end
 
       html
+    end
+
+    def sanitize(html)
+      Sanitize.fragment(html, Sanitize::Config::ONEBOX)
     end
 
     def engine

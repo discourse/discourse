@@ -18,17 +18,11 @@ describe Onebox::Engine do
   end
 
   describe "#link" do
-    before { allow(Onebox::View).to receive(:template) { %|this shold be a template| } }
+    before { allow(Onebox::View).to receive(:template) { %|this should be a template| } }
 
     it "escapes `link`" do
       html = OneboxEngineExample.new(%|http://foo.com/'?a=1&b=2|).to_html
       expect(html).not_to match(/&(?!amp;)(?!#39;)/)
-    end
-
-    it "escapes xss" do
-      skip 'this is checking the wrong thing'
-      html = OneboxEngineExample.new(%|http://foo.com/'?%20onmouseover=alert(/foo/)|).to_html
-      expect(html).not_to include(%|onmouseover=alert(/foo/)|)
     end
   end
 
