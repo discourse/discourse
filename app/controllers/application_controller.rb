@@ -213,15 +213,8 @@ class ApplicationController < ActionController::Base
   end
 
   def set_locale
-    if !current_user
-      if SiteSetting.set_locale_from_accept_language_header
-        I18n.locale = locale_from_header
-      else
-        I18n.locale = SiteSetting.default_locale
-      end
-    else
-      I18n.locale = current_user.effective_locale
-    end
+    I18n.locale = resolve_locale
+
     I18n.ensure_all_loaded!
   end
 
@@ -388,6 +381,18 @@ class ApplicationController < ActionController::Base
   end
 
   private
+
+    def resolve_locale
+      if !current_user
+        if SiteSetting.set_locale_from_accept_language_header
+          locale_from_header
+        else
+          SiteSetting.default_locale
+        end
+      else
+        current_user.effective_locale
+      end
+    end
 
     def locale_from_header
       begin
