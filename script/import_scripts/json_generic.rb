@@ -27,20 +27,26 @@ class ImportScripts::JsonGeneric < ImportScripts::Base
     JSON.parse(File.read(JSON_FILE_PATH))
   end
 
+  def username_for(name)
+    name.downcase.gsub(/[^a-z0-9\-\_]/, '')
+  end
+
   def import_users
     puts '', "Importing users"
 
     users = []
     @imported_json['topics'].each do |t|
       t['posts'].each do |p|
-        users << p['author']
+        users << p['author'].scrub
       end
     end
     users.uniq!
 
     create_users(users) do |u|
       {
-        id: u,
+        id: username_for(u),
+        username: username_for(u),
+        name: u,
         email: "#{u}@example.com",
         created_at: Time.now
       }
@@ -60,7 +66,7 @@ class ImportScripts::JsonGeneric < ImportScripts::Base
 
       topic = {
         id: t["id"],
-        user_id: user_id_from_imported_user_id(first_post["author"]) || -1,
+        user_id: user_id_from_imported_user_id(username_for(first_post["author"])) || -1,
         raw: first_post["body"],
         created_at: Time.zone.parse(first_post["date"]),
         cook_method: Post.cook_methods[:raw_html],
@@ -77,7 +83,7 @@ class ImportScripts::JsonGeneric < ImportScripts::Base
         create_post({
           id: p["id"],
           topic_id: parent_post.topic_id,
-          user_id: user_id_from_imported_user_id(p["author"]) || -1,
+          user_id: user_id_from_imported_user_id(username_for(p["author"])) || -1,
           raw: p["body"],
           created_at: Time.zone.parse(p["date"]),
           cook_method: Post.cook_methods[:raw_html],
