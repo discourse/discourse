@@ -158,15 +158,17 @@ aside.quote {
   position: relative;
 }
 
-.topic-avatar .avatar-flair, .avatar-flair-preview .avatar-flair, .user-card-avatar .avatar-flair {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-repeat: no-repeat;
-  background-position: center;
-  position: absolute;
-  bottom: 0;
-  right: -6px;
+.topic-avatar, .avatar-flair-preview, .user-card-avatar, .topic-map .poster {
+  .avatar-flair {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-repeat: no-repeat;
+    background-position: center;
+    position: absolute;
+    bottom: 0;
+    right: -6px;
+  }
 }
 .topic-avatar .avatar-flair, .avatar-flair-preview .avatar-flair {
   background-size: 20px 20px;
@@ -195,6 +197,24 @@ aside.quote {
   }
   .fa {
     font-size: 24px;
+  }
+}
+.topic-map .poster .avatar-flair {
+  right: 0;
+  background-size: 12px 12px;
+  width: 16px;
+  height: 16px;
+  bottom: -3px;
+  &.rounded {
+    background-size: 12px 12px;
+    border-radius: 8px;
+    width: 16px;
+    height: 16px;
+    bottom: -2px;
+    right: 0;
+  }
+  .fa {
+    font-size: 14px;
   }
 }
 .topic-avatar .poster-avatar-extra {

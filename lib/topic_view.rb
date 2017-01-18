@@ -280,7 +280,7 @@ class TopicView
   def participants
     @participants ||= begin
       participants = {}
-      User.where(id: post_counts_by_user.map {|k,v| k}).each {|u| participants[u.id] = u}
+      User.where(id: post_counts_by_user.map {|k,v| k}).includes(:primary_group).each {|u| participants[u.id] = u}
       participants
     end
   end
