@@ -1694,6 +1694,7 @@ en:
 
       > %{site_title} -- %{site_description}
 
+      With this note
 
       > %{user_custom_message}
 
@@ -1729,6 +1730,7 @@ en:
       >
       > %{site_description}
 
+      With this note
 
       > %{user_custom_message}
 
