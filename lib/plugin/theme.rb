@@ -17,14 +17,12 @@ class Plugin::Theme
   def register_public
     public_dir = "#{@plugin.directory}/public"
     if File.exist?(public_dir)
-      if Rails.env.development?
-        Rails.application.config.before_initialize do |app|
-          app.middleware.insert_before(
-            ::ActionDispatch::Static,
-            ::ActionDispatch::Static,
-            public_dir
-          )
-        end
+      Rails.application.config.before_initialize do |app|
+        app.middleware.insert_before(
+          ::ActionDispatch::Static,
+          ::ActionDispatch::Static,
+          public_dir
+        )
       end
     end
   end
