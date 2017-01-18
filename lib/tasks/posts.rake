@@ -121,7 +121,7 @@ task 'posts:remap', [:find, :replace] => [:environment] do |_,args|
   find = args[:find]
   replace = args[:replace]
   if !find || !replace
-    puts "ERROR: Expecting rake posts:rebake_match[find,replace]"
+    puts "ERROR: Expecting rake posts:remap[find,replace]"
     exit 1
   end
 
