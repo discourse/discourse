@@ -22,6 +22,9 @@ class Group < ActiveRecord::Base
   after_save :update_primary_group
   after_save :update_title
 
+  after_save :enqueue_update_mentions_job,
+    if: Proc.new { |g| g.name_was && g.name_changed? }
+
   after_save :expire_cache
   after_destroy :expire_cache
 
@@ -492,6 +495,15 @@ SQL
 
         builder.exec
       end
+    end
+
+  private
+
+    def enqueue_update_mentions_job
+      Jobs.enqueue(:update_group_mentions,
+        previous_name: self.name_was,
+        group_id: self.id
+      )
     end
 end
 
