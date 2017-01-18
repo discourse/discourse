@@ -696,7 +696,7 @@ en:
 
       email:
         title: "Email"
-        instructions: "Never shown to the public"
+        instructions: "never shown to the public"
         ok: "We will email you to confirm"
         invalid: "Please enter a valid email address"
         authenticated: "Your email has been authenticated by {{provider}}"
@@ -707,13 +707,13 @@ en:
 
       name:
         title: "Name"
-        instructions: "Your full name (optional)"
+        instructions: "your full name (optional)"
         instructions_required: "Your full name"
         too_short: "Your name is too short"
         ok: "Your name looks good"
       username:
         title: "Username"
-        instructions: "Unique, no spaces, short"
+        instructions: "unique, no spaces, short"
         short_instructions: "People can mention you as @{{username}}"
         available: "Your username is available"
         global_match: "Email matches the registered username"
@@ -842,7 +842,7 @@ en:
         same_as_username: "Your password is the same as your username."
         same_as_email: "Your password is the same as your email."
         ok: "Your password looks good."
-        instructions: "At least %{count} characters."
+        instructions: "at least %{count} characters"
 
       summary:
         title: "Summary"
