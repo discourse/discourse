@@ -32,6 +32,7 @@ he:
   purge_reason: "נמחק אוטומטית כחשבון נטוש ולא פעיל"
   disable_remote_images_download_reason: "הורדת תמונות מרחוק נחסמה בשל היעדר מספיק שטח אחסון פנוי."
   anonymous: "אנונימי"
+  remove_posts_deleted_by_author: "נמחק על ידי הכותב"
   emails:
     incoming:
       default_subject: "התקבל מייל מ %{email}"
@@ -72,6 +73,8 @@ he:
       inclusion: לא נכלל ברשימה
       invalid: לא תקין
       is_invalid: "נראה לא ברור, האם זה משפט שלם?"
+      contains_censored_words: "כולל אחת או יותר מהמילים המצונזרות הבאות: %{censored_words}"
+      matches_censored_pattern: "מתאים לביטוי הרגולרי המצונזר: %{censored_pattern}"
       less_than: חייב להיות פחות מ-%{count}
       less_than_or_equal_to: חייב להיות פחות או שווה ל-%{count}
       not_a_number: אינו מספר
@@ -1069,6 +1072,7 @@ he:
     max_attachment_size_kb: "הגודל המקסימלי בקילו-בתים (kBs) של קבצים להעלאה. הגדרה זו חייבת להיות מוגדרת ב-nginx (client_max_body_size) / apache או בפרוקסי."
     authorized_extensions: "רשימה של סיומות מותרות להעלאה (השתמשו ב '*' כדי לאפשר את כל סוגי הקבצים)"
     max_similar_results: "כמה נושאים דומים להציג מעל לעורך כאשר מחברים נושא חדש. ההשוואה מבוססת על הכותרת וגוף הפוסט."
+    max_image_megapixels: "מספר מקסימלי מותר של מגה-פיקסלים לתמונה."
     title_prettify: "מניעת טעויות נפוצות בכותרת, בכללן טעויות עם אותיות גדולות באנגלית, מספר ! ו ?, נקודה מיותרת בסוף, וכד׳"
     topic_views_heat_low: "לאחר כמות זו של צפיות, שדה הצפיות יהיה קצת יותר בהיר."
     topic_views_heat_medium: "לאחר כמות צפיות זו, שדה הצפיות יודגש באופן בינוני."
@@ -1401,6 +1405,8 @@ he:
   user:
     no_accounts_associated: "אין חשבונות מקושרים."
     deactivated: "הושבת בעקבות מיילים רבים מידי שהוחזרו ל '%{email}'."
+    deactivated_by_staff: "נוטרל על ידי הצוות"
+    activated_by_staff: "הופעל על ידי הצוות"
     username:
       short: "חייבים להיות לפחות %{min} תווים"
       long: "נדרשים לא יותר מ-%{max} תווים"
@@ -1428,6 +1434,7 @@ he:
       one: "דגל אחד ממתין לטיפול"
       other: "%{count} דגלים ממתינים לטיפול"
   unsubscribe_mailer:
+    title: "שולח-מיילים לביטול מנוי"
     subject_template: "אשרו שאינכם מעוניינים יותר לקבל עדכוני דוא\"ל מ%{site_title}"
     text_body_template: |
       מישהו (כנראה אתם?) ביקש לא לקבל יותר עדכוני מייל מ %{site_domain_name} לכתובת זו.
@@ -1438,6 +1445,7 @@ he:
 
       אם אתם מעוניינים להמשיך לקבל עדכונים במייל, אתם יכולים להתעלם ממייל זה.
   invite_mailer:
+    title: "שולח-מיילים להזמנה"
     subject_template: "הוזמנת על ידי %{invitee_name} ל '%{topic_title}' ב%{site_domain_name}"
     text_body_template: |
       %{invitee_name} הזמין/הזמינה אותך לדיון
@@ -1456,6 +1464,7 @@ he:
 
       הזמנה זו נשלחה על ידי משתמש/ת מוכר/ת ולכן אתם יכולים להשיב לדיון הנ"ל באופן מיידי.
   custom_invite_mailer:
+    title: "שולח-מיילים מותאם-אישית להזמנה"
     subject_template: "%{invitee_name} הזמין/הזמינה אותך לדיון  '%{topic_title}' באתר %{site_domain_name}"
     text_body_template: |
       %{invitee_name} הזמין/הזמינה אותך לדיון
@@ -1477,6 +1486,7 @@ he:
 
       הזמנה זו נשלחה על ידי משתמש מוכר, כך שתוכלו להגיב לדיון מיידית.
   invite_forum_mailer:
+    title: "שולח-מיילים להזמנה לפורום"
     subject_template: "%{invitee_name} הזמינ/ה אתכם להצטרף ל%{site_domain_name}"
     text_body_template: |
       %{invitee_name} הזמין/ה אתכם להצטרף ל
@@ -1489,8 +1499,9 @@ he:
 
       %{invite_link}
 
-      הזמנה זו נשלחה ממשתמש/ת מוכר/ת באתר. החשבון יווצר עבורכם באופן אוטומטי.
+      הזמנה זו נשלחה ממשתמש/ת מוכר/ת באתר, כך שהחשבון יווצר עבורכם באופן אוטומטי עם כתובת מייל זו.
   custom_invite_forum_mailer:
+    title: "שולח-מיילים להזמנה לפורום"
     subject_template: "%{invitee_name} הזמין/ה אתכם להצטרף ל %{site_domain_name}"
     text_body_template: |
       %{invitee_name} הזמינו אתכם להצטרף ל
@@ -1507,14 +1518,16 @@ he:
 
       %{invite_link}
 
-      הזמנה זו נשלחה ממשתמשים מוכרים באתר, כך שהחשבון שלכם יווצר באופן אוטומטי.
+      הזמנה זו נשלחה ממשתמשים מוכרים באתר, כך שהחשבון שלכם יווצר באופן אוטומטי עבור כתובת מייל זו.
   invite_password_instructions:
+    title: "הנחיות סיסמה למוזמנים"
     subject_template: "צרו סיסמה עבור חשבון ה-%{site_name} שלכם."
     text_body_template: |
       תודה שקיבלתם את ההזמנה שלכם ל %{site_name} -- ברוכים הבאים!
       לחצו על הקישור בשביל לבחור סיסמה: %{base_url}/users/password-reset/%{email_token}
       (אם הקישור פג תוקף, בחרו ב"שכחתי את הסיסמה שלי" בהתחברות.)
   test_mailer:
+    title: "שולח-מיילים לבדיקה"
     subject_template: "[%{site_name}] מייל בדיקת שליחתיות"
     text_body_template: |
       זהו מייל בדיקה מ
@@ -1558,6 +1571,7 @@ he:
       [mj]: https://www.mailjet.com/pricing
       [mt]: http://www.mail-tester.com/
   new_version_mailer:
+    title: "שולח-מיילים של גרסה חדשה"
     subject_template: "[%{site_name}] גרסת Discourse חדשה, עדכון זמין."
     text_body_template: |
       יש! יצאה גרסה חדשה של [Discourse](http://www.discourse.org)
@@ -1571,6 +1585,7 @@ he:
 
       - בקרו את [meta.discourse.org](https://meta.discourse.org) לחדשות, דיונים, ותמיכה ב Discourse
   new_version_mailer_with_notes:
+    title: "שולח-מיילים של גרסה חדשה עם הערות"
     subject_template: "[%{site_name}] עדכון זמין"
     text_body_template: |
       יש! יצאה גרסה חדשה של [Discourse](http://www.discourse.org)
@@ -1588,6 +1603,7 @@ he:
 
       %{notes}
   queued_posts_reminder:
+    title: "תזכורת פוסטים בתור"
     subject_template:
       one: "[%{site_name}] פוסט 1 מחכה לסקירה"
       other: "[%{site_name}] %{count} פוסטים ממתינים לסקירה"
@@ -1609,6 +1625,7 @@ he:
   temporarily_closed_due_to_flags: "נושא זה סגור באופן זמני בעקבות מספר רב של דגלים של הקהילה. "
   system_messages:
     post_hidden:
+      title: "פוסט חבוי"
       subject_template: "פוסט הוסתר על ידי דגלים של הקהילה"
       text_body_template: |
         שלום,
@@ -1630,6 +1647,7 @@ he:
 
         ככל שתשתתפו כאן, נכיר אתכם, ומגבלות זמניות על משתמשים חדשים יוסרו. במהלך הזמן תצבעו [דרגות אמון](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924) שכוללות יכולות לסייע לנו לנהל את הקהילה שלנו ביחד.
     welcome_user:
+      title: "ברוכים הבאים למשתמש/ת"
       subject_template: "ברוכים הבאים ל %{site_name}!"
       text_body_template: |
         תודה שהצטרפתם ל %{site_name}!
@@ -1642,17 +1660,14 @@ he:
 
         (אם ברצונכם לתקשר עם [מנהל האתר](%{base_url}/about) כמשתמשים חדשים, השיבו להודעה הזו.)
     welcome_invite:
+      title: "הזמנת ברוכים הבאים"
       subject_template: "ברוכים הבאים ל %{site_name}!"
       text_body_template: |
-        תודה שקיבלתם את ההזמנה שלכם ל %{site_name} - ברוכים הבאים!
+        תודה שקיבלתם את ההזמנה שלכם ל %{site_name} -- ברוכים הבאים!
 
-        יצרנו חשבון חדש **%{username}** בשבילכם, ואתם מחוברים. תוכלו תמיד לשנות את שמכם באמצעות ביקור [בפרופיל שלכם][prefs].
+        - יצרנו חשבון חדש **%{username}** בשבילכם. שנו את שימכם או את הסיסמה על ידי ביקור ב[פרופיל שלכם][prefs].
 
-        על מנת להתחבר שוב:
-
-        1. השתמשו תמיד **באותו חשבון מייל מההזמנה המקורית** בעת ההתחברות. אחרת לא נוכל לדעת שאלו אתם!
-
-        2. צרו סיסמה ייחודית עבור [הפרופיל שלכם] [prefs] והשתמשו בה בשביל להתחבר.
+        - כאשר אתם מתחברים, אנא **השתמשו באותו חשבון מייל מההזמנה המקורית** — אחרת לא נוכל לדעת שאלו אתם!
 
         %{new_user_tips}
 
@@ -1664,6 +1679,7 @@ he:
 
         [prefs]: %{user_preferences_url}
     backup_succeeded:
+      title: "גיבוי הצליח"
       subject_template: "הגיבוי הושלם בהצלחה."
       text_body_template: |
         הגיבוי הצליח.
@@ -1676,6 +1692,7 @@ he:
         %{logs}
         ```
     backup_failed:
+      title: "גיבוי נכשל"
       subject_template: "הגיבוי נכשל."
       text_body_template: |
         הגיבוי נכשל.
@@ -1686,6 +1703,7 @@ he:
         %{logs}
         ```
     restore_succeeded:
+      title: "שחזור הצליח"
       subject_template: "השחזור הסתיים בהצלחה."
       text_body_template: |
         השחזור הצליח.
@@ -1696,6 +1714,7 @@ he:
         %{logs}
         ```
     restore_failed:
+      title: "שחזור נכשל"
       subject_template: "השחזור נכשל"
       text_body_template: |
         השחזור נכשל.
@@ -1706,9 +1725,11 @@ he:
         %{logs}
         ```
     bulk_invite_succeeded:
+      title: "הזמנה קבוצתית הצליחה"
       subject_template: "ההזמנה הקבוצתית עובדה בהצלחה"
       text_body_template: "ההזמנה המרוכזת שלכם עובדה, %{sent} הזמנות נשלחו."
     bulk_invite_failed:
+      title: "הזמנה קבוצתית נכשלה"
       subject_template: "ההזמנה המרוכזת עובדה עם שגיאות"
       text_body_template: |
         ההזמנה הקבוצתית שלך עובדה,  %{sent} הזמנות נשלחו עם %{failed} תקלה/ות.
@@ -1721,6 +1742,7 @@ he:
         %{logs}
         ```
     csv_export_succeeded:
+      title: "יצוא CSV הצליח"
       subject_template: "יצוא הנתונים הושלם"
       text_body_template: |
         הנתונים שלך יוצאו בהצלחה! :dvd:
@@ -1729,51 +1751,60 @@ he:
 
         לינק ההורדה יהיה זמין במשך 48 שעות.
     csv_export_failed:
+      title: "יצוא CSV נכשל"
       subject_template: "ייצוא הנתונים נכשל"
       text_body_template: "צר לנו, אך ייצוא הנתונים שלכם נכשל. אנא בדקו את רישומי המערכת או צרו קשר עם איש/אשת צוות."
     email_reject_insufficient_trust_level:
+      title: "מייל נדחה, רמת אמון לא מספיקה"
       subject_template: "[%{site_name}] בעיית מייל -- רמת אמון לא מספיקה"
       text_body_template: |
         אנחנו מצטערים, אך הודעת המייל שלכם ל %{destination} (עם הכותרת %{former_title}) לא עבדה.
 
         לחשבון שלכם אין את רמת האמון הנדרשת כדי לפרסם נושאים חדשים לכתובת מייל זו. אם אתם חושבים שזו טעות, אנא פנו לחבר צוות.
     email_reject_user_not_found:
+      title: "מייל נדחה, משתמש לא נמצא"
       subject_template: "[%{site_name}] בעיית מייל -- משתמש לא נמצא"
       text_body_template: |
         אנחנו מצטערים, אבל הודעת המייל שלכם ל %{destination} (עם הכותרת %{former_title}) לא עבדה.
 
         התגובה שלכם נשלחה מכתובת מייל לא ידועה. נסו לשלוח מכתובת מייל אחרת, או ליצור קשר עם חבר צוות.
     email_reject_screened_email:
+      title: "מייל נדחה, מייל מסונן"
       subject_template: "[%{site_name}] בעיית מייל -- מייל חסום"
       text_body_template: |
         אנחנו מצטערים, אך הודעת המייל ל %{destination} (עם הכותרת %{former_title}) לא עבדה.
 
         התשובה שלכם נשלחה מכתובת מייל חסומה. נסו לשלוח מכתובת מייל אחרת, או צרו קשר עם חבר צוות.
     email_reject_inactive_user:
+      title: "מייל נדחה, משתמש לא פעיל"
       subject_template: "[%{site_name}] בעיית מייל -- משתמש לא-פעיל"
       text_body_template: |
         אנחנו מצטערים, אך הודעת המייל שלכם ל %{destination} (עם הכותרת %{former_title}) לא עבדה.
 
         החשבון שלכם שמקושר לכתובת המייל הזו לא הופעל. אנא הפעילו את החשבון שלכם לפני שאתם שולחים מיילים למערכת.
     email_reject_blocked_user:
+      title: "מייל נדחה, משתמש חסום"
       subject_template: "[%{site_name}] בעיית מייל -- משתמש חסום"
       text_body_template: |
         אנחנו מצטערים, אך הודעת המייל שלכם ל %{destination} (עם הכותרת %{former_title}) לא עבדה.
 
         חשבונכם שקשור לכתובת מייל זו נחסם.
     email_reject_reply_user_not_matching:
+      title: "דחיית מייל משתמש/ת לא מתאימים"
       subject_template: "[%{site_name}] בעיית מייל -- נמען לא תואם"
       text_body_template: |
         אנחנו מצטערים, אך הודעת המייל שלכם ל %{destination} (עם הכותרת %{former_title}) לא עבדה.
 
         התשובה שלכם נשלחה מכתובת מייל שונה מזו שציפינו לה, אז אנחנו לא בטוחים אם זה אותו אדם. נסו לשלוח מכתובת מייל אחרת, או ליצור קשר עם חבר צוות.
     email_reject_no_account:
+      title: "מייל נדחה, אין חשבון"
       subject_template: "[%{site_name}]  בעיית מייל -- חשבון לא מזוהה"
       text_body_template: |
         אנחנו מצטערים, אך הודעת המייל שלכם ל %{destination} (עם הכותרת %{former_title}) לא עבדה.
 
         אנחנו לא מוצאים חשבונות שמתאימים לכתובת המייל שלכם. נסו לשלוח מכתובת מייל אחרת, או צרו קשר עם חבר צוות.
     email_reject_empty:
+      title: "מייל נדחה, ריק"
       subject_template: "[%{site_name}]  בעיית מייל -- ללא תוכן"
       text_body_template: |
         אנחנו מצטערים, אך הודעת המייל שלכם ל %{destination} (עם הכותרת %{former_title}) לא עבדה.
@@ -1782,30 +1813,35 @@ he:
 
         אם אתם מקבלים את ההודעה הזו ו_כן_ כללתם תגובה, נסו שוב עם סיגנון פשוט יותר.
     email_reject_parsing:
+      title: "מייל נדחה, פענוח"
       subject_template: "[%{site_name}]  בעיית מייל -- תוכן לא זוהה."
       text_body_template: |
         אנחנו מצטערים, אך הודעת המייל שלכם ל- %{destination} (עם הכותרת %{former_title}) לא עבדה.
 
         לא מצאנו תוכן במייל שלכם. **אנא ודאו שהתגובה שלכם בראש המייל** -- אנחנו לא יכולים לעבד תגובות בין השורות.
     email_reject_invalid_access:
+      title: "דחיית מייל גישה לא-מורשית"
       subject_template: "[%{site_name}]  בעיית מייל -- גישה לא תקינה"
       text_body_template: |
         אנחנו מצטערים, אבל הודעת המייל שלכם ל %{destination} (עם הכותרת %{former_title}) לא עבדה.
 
         לחשבון שלכם אין מספיק הרשאות כדי לפרסם נושאים חדשים בקטגוריה זו. אם אתם מאמינים שזו טעות, צרו קשר עם חבר צוות.
     email_reject_strangers_not_allowed:
+      title: "דחיית מייל זרים לא מורשים"
       subject_template: "[%{site_name}] בעיית מייל -- גישה לא נכונה"
       text_body_template: |
         אנחנו מצטערים, אבל הודעת המייל שלכם ל %{destination} (עם הכותרת %{former_title}) לא עבדה.
 
         הקטגוריה ששלחתם אליה את המייל הזה מאפשרת רק תגובות ממשתמשים עם חשבונות תקינים וכתובות מייל ידועות. אם אתם מאמינים שזו טעות, אנא פנו לחבר צוות.
     email_reject_invalid_post:
+      title: "דחיית מייל פוסט לא-תקין"
       subject_template: "[%{site_name}] בעיית מייל -- תקלה בפרסום"
       text_body_template: |
         אנחנו מצטערים, אך הודעת המייל שלכם ל %{destination} (עם הכותרת %{former_title}) לא עבדה.
 
         גורמים אפשריים: עיצוב מורכב, הודעה ארוכה מידי, הודעה קצרה מידי. אנא נסו שוב, או פרסמו דרך האתר אם התקלה חוזרת.
     email_reject_invalid_post_specified:
+      title: "דחיית מייל הוגדר פוסט לא-תקני"
       subject_template: "[%{site_name}] בעיית מייל -- תקלה בפרסום"
       text_body_template: |
         אנחנו מצטערים, אך הודעת המייל שלכם ל %{destination} (עם הכותרת %{former_title}) לא עבדה.
@@ -1816,42 +1852,49 @@ he:
 
         אם תוכלו לתקן את הבעיה, אנא נסו שוב.
     email_reject_invalid_post_action:
+      title: "דחיית מייל פעולת פוסט לא-תקנית"
       subject_template: "[%{site_name}] בעיית מייל -- פעולה לא-תקנית"
       text_body_template: |
         אנחנו מצטערים, אך הודעת המייל שלכם ל %{destination} (עם הכותרת %{former_title}) לא עבדה.
 
         הפעולה לא זוהתה. אנא נסו שוב, או פרסמו דרך האתר אם התקלה נמשכת.
     email_reject_reply_key:
+      title: "דחיית מייל מפתח תגובה"
       subject_template: "[%{site_name}]  בעיית מייל -- תו תגובה לא מוכר"
       text_body_template: |
         אנחנו מצטערים, אך הודעת המייל שלכם ל %{destination} (עם הכותרת %{former_title}) לא עבדה.
 
         מפתח התגובה במייל לא תקין או לא ידוע, אז לא יכולנו להבין למה המייל הזה מגיב. אנא פנו לחבר צוות.
     email_reject_bad_destination_address:
+      title: "דחיית מייל כתובת יעד לא-נכונה"
       subject_template: "[%{site_name}] בעיית מייל -- כתובת To: לא ידועה"
       text_body_template: |
         אנחנו מצטערים, אבל הודעת המייל שלכם ל %{destination} (עם הכותרת %{former_title}) לא עבדה.
 
         אף אחד מייעדי המייל לא זוהה. אנא וודאו שאתם שולחים לכתובת המייל הנכונה שניתנה על-ידי הצוות.
     email_reject_topic_not_found:
+      title: "דחיית מייל נושא לא נמצא"
       subject_template: "[%{site_name}]  בעיית מייל -- לא נמצא נושא"
       text_body_template: |
         אנחנו מצטערים, אך הודעת המייל ל %{destination} (עם הכותרת %{former_title}) לא עבדה.
 
         הנושא שאתם מנסים להגיב אליו כבר לא קיים -- אולי הוא נמחק? אם אתם מאמינים שזו טעות, אנא פנו לחבר צוות.
     email_reject_topic_closed:
+      title: "דחיית מייל נושא סגור"
       subject_template: "[%{site_name}]  בעיית מייל -- נושא נסגר"
       text_body_template: |
         אנחנו מצטערים, אך הודעת המייל ל %{destination} (עם הכותרת %{former_title}) לא עבדה.
 
         הנושא שאתם מגיבים אליו סגור כרגע ולא מקבל יותר תגובות. אם אתם מאמינים שזו טעות, אנא פנו לחבר צוות.
     email_reject_auto_generated:
+      title: "דחיית מייל נוצר אוטומטית"
       subject_template: "[%{site_name}]  בעיית מייל -- תגובה נוצרה אוטומטית"
       text_body_template: |
         אנחנו מצטערים, אבל משהו לא עבד עם הודעת הדוא"ל שלך, שנשלחה אל %{destination} (titled %{former_title}).
 
         המייל ששלחת סומן כ"נכתב אוטומטית", מה שאומר שהוא נכתב על ידי מחשב ולא הוקלד על ידי אדם; איננו יכולים לקבל מיילים שכאלה. אם אתם מאמינים שזוהי תקלה, אנא צרו קשר עם איש/אשת צוות.
     email_error_notification:
+      title: "התראת בעיית מייל"
       subject_template: "[%{site_name}]  בעיית מייל -- בעיית אימות POP"
       text_body_template: |
         למרבה הצער, ארעה תקלה בזמן תשאול מיילים משרת ה POP.
@@ -1860,6 +1903,7 @@ he:
 
         אם יש ממשק ווב לחשבון ה POP, ייתכן ותצטרכו להתחבר לאתר וקבוע את ההגדרות שלכם שם.
     too_many_spam_flags:
+      title: "יותר מידי דיגלי ספאם"
       subject_template: "חשבון חדש בהשהיה"
       text_body_template: |
         שלום,
@@ -1870,6 +1914,7 @@ he:
 
         להנחיות נוספות, אנא פנו ל[הנחיות הקהילה](%{base_url}/guidelines).
     too_many_tl3_flags:
+      title: "יותר מידי דגלי רמת-אמון 3"
       subject_template: "חשבון חדש בהשהיה"
       text_body_template: |
         שלום,
@@ -1880,6 +1925,7 @@ he:
 
         לפרטים נוספים, אנא פנו ל[הנחיות הקהילה](%{base_url}/guidelines).
     blocked_by_staff:
+      title: "נחסם על ידי הצוות"
       subject_template: "חשבון זמנית בהשהיה"
       text_body_template: |
         שלום,
@@ -1890,6 +1936,7 @@ he:
 
         להנחיות נוספות, אנא פנו ל[הנחיות הקהילה](%{base_url}/guidelines).
     user_automatically_blocked:
+      title: "משתמש נחסם אוטומטית"
       subject_template: "המשתמש החדש %{username} נחסם על ידי דגלים של הקהילה"
       text_body_template: |
         זוהי הודעה אוטומטית.
@@ -1900,6 +1947,7 @@ he:
 
         סף זה ניתן לשינוי באמצעות הגדרת האתר `block_new_user`.
     spam_post_blocked:
+      title: "פוסט ספאם נחסם"
       subject_template: "פוסים של המשתמש/ת החדש/ה %{username} נחסמו בשל קישורים חוזרים."
       text_body_template: |
         זוהי הודעה אוטומטית.
@@ -1910,6 +1958,7 @@ he:
 
         ניתן לכוון זאת בהגדרות האתר `newuser_spam_host_threshold` ו`white_listed_spam_host_domains`.
     unblocked:
+      title: "לא-חסום"
       subject_template: "החשבון כבר לא מושהה"
       text_body_template: |
         שלום,
@@ -1918,6 +1967,7 @@ he:
 
         אתם יכולים עכשיו ליצור נושאים חדשים, ושוב להגיב לנושאים קיימים. תודה על הסבלנות.
     pending_users_reminder:
+      title: "תזכורת משתמשים ממתינים"
       subject_template:
         one: "משתמש 1 ממתין לאישורכם"
         other: "%{count} משתמשים ממתינים לאישורכם"
@@ -1926,9 +1976,11 @@ he:
 
         [אנא סיקרו אותם באזור הניהול](%{base_url}/admin/users/list/pending).
     download_remote_images_disabled:
+      title: "הורדת תמונות מרוחקות מנוטרלת"
       subject_template: "הורדת תמונות מרחוק מנוטרלת"
       text_body_template: "האפשרות \"הורדת תמונות מרוחקות\" נוטרלה בגלל שכל שטח האכסון שמוקצה ל\"תמונות שהורדו מרחוק\" נוצל."
     dashboard_problems:
+      title: "בעיות בלוח המכוונים"
       subject_template: "נמצאו בעיות"
       text_body_template: |
         כמה בעיות מדווחות ללוח המכוונים של האדמיניסטרטור.
@@ -1980,6 +2032,7 @@ he:
 
       > %{site_title} -- %{site_description}
     user_invited_to_private_message_pm:
+      title: "משתמש/ת הוזמן/ה להודעה פרטית"
       subject_template: "[%{site_name}] %{username} הזמין אותך להודעה '%{topic_title}'"
       text_body_template: |
         %{header_instructions}
@@ -1988,6 +2041,7 @@ he:
 
         %{respond_instructions}
     user_invited_to_private_message_pm_staged:
+      title: "משתמש/ת הוזמן/ה להודעה פרטית מדורגת"
       subject_template: "הוזמנת לדיון '%{topic_title}' על ידי [%{site_name}] %{username}"
       text_body_template: |
         %{header_instructions}
@@ -1996,6 +2050,7 @@ he:
 
         %{respond_instructions}
     user_invited_to_topic:
+      title: "משתמש/ת הוזמן/ה לנושא"
       subject_template: "הוזמנת לדיון שכותרתו '%{topic_title}' על ידי [%{site_name}] %{username}"
       text_body_template: |
         %{header_instructions}
@@ -2004,6 +2059,7 @@ he:
 
         %{respond_instructions}
     user_replied:
+      title: "משתמש/ת הגיב"
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -2014,6 +2070,7 @@ he:
 
         %{respond_instructions}
     user_replied_pm:
+      title: "משתמש/ת הגיב/ה בהודעה פרטית"
       subject_template: "[%{site_name}] [PM] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -2024,6 +2081,7 @@ he:
 
         %{respond_instructions}
     user_quoted:
+      title: "משתמש/ת צוטט/ה"
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -2034,6 +2092,7 @@ he:
 
         %{respond_instructions}
     user_linked:
+      title: "משתמש/ת קושר/ה"
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -2044,6 +2103,7 @@ he:
 
         %{respond_instructions}
     user_mentioned:
+      title: "משתמש/ת הוזכר/ה"
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -2054,6 +2114,7 @@ he:
 
         %{respond_instructions}
     user_group_mentioned:
+      title: "קבוצת משתמש הוזכרה"
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -2064,6 +2125,7 @@ he:
 
         %{respond_instructions}
     user_posted:
+      title: "משתמש/ה פרסם/ה"
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -2074,6 +2136,7 @@ he:
 
         %{respond_instructions}
     user_watching_first_post:
+      title: "משתמש/ת צופה בפוסט ראשון"
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -2084,6 +2147,7 @@ he:
 
         %{respond_instructions}
     user_posted_pm:
+      title: "משתמש/ת פרסם/ה הודעה פרטית"
       subject_template: "[%{site_name}] [PM] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -2094,6 +2158,7 @@ he:
 
         %{respond_instructions}
     user_posted_pm_staged:
+      title: "משתמש/ת פרסם/ה הודעה פרטית מדורגת"
       subject_template: "%{optional_re}%{topic_title}"
       text_body_template: |2
 
@@ -2128,6 +2193,7 @@ he:
       view_this_topic: "צפו בנושא זה"
       back_to_top: "חזרה למעלה"
     forgot_password:
+      title: "שכח/ה סיסמה"
       subject_template: "[%{site_name}] איפוס סיסמה"
       text_body_template: |
         מישהו ביקש לאפס את הסיסמה שלכם ב [%{site_name}](%{base_url}).
@@ -2137,6 +2203,7 @@ he:
         לחצו על הקישור הבא כדי לבחור סיסמה חדשה:
         %{base_url}/users/password-reset/%{email_token}
     set_password:
+      title: "קביעת סיסמה"
       subject_template: "[%{site_name}] קביעת סיסמה"
       text_body_template: |
         מישהו ביקש להוסיף סיסמה לחשבון שלכם ב [%{site_name}](%{base_url}). לחילופין, תוכלו להתחבר באמצעות כל שירות נתמך (גוגל, פייסבוק, וכד׳) שמקושר לכתובת מייל תקינה.
@@ -2146,6 +2213,7 @@ he:
         לחצו על הלינק הבא כדי לבחור סיסמה:
         %{base_url}/users/password-reset/%{email_token}
     admin_login:
+      title: "התחברות אדמיניסטרטור"
       subject_template: "[%{site_name}] התחברות"
       text_body_template: |
         מישהו ביקש להתחבר לחשבונכם ב [%{site_name}](%{base_url}).
@@ -2153,6 +2221,7 @@ he:
         לחצו על הקישור הבא להתחבר:
         %{base_url}/users/admin-login/%{email_token}
     account_created:
+      title: "חשבון נוצר"
       subject_template: "[%{site_name}] החשבון החדש שלך"
       text_body_template: |
         חשבון חדש נוצר עבורך ב%{site_name}
@@ -2160,12 +2229,14 @@ he:
         הקישו על הקישור המצורף כדי להגדיר סיסמה לחשבונכם החדש:
         %{base_url}/users/password-reset/%{email_token}
     confirm_new_email:
+      title: "אישור מייל חדש"
       subject_template: "[%{site_name}] אשרו את כתובת המייל החדשה שלכם"
       text_body_template: |
         אשרו את כתובת המייל החדשה שלכם עבור %{site_name} על ידי לחיצה על הקישור הבא:
 
         %{base_url}/users/authorize-email/%{email_token}
     confirm_old_email:
+      title: "אישור מייל ישן"
       subject_template: "[%{site_name}] אשרו את כתובת המייל הנוכחית שלכם"
       text_body_template: |
         לפני שתוכלו להחליף את כתובת המייל שלכם, אנחנו צריכים שתאשרו שאתם שולטים
@@ -2176,6 +2247,7 @@ he:
 
         %{base_url}/users/authorize-email/%{email_token}
     notify_old_email:
+      title: "התראת מייל ישן"
       subject_template: "[%{site_name}] כתובת המייל שלכם שונתה"
       text_body_template: |
         זוהי הודעה אוטומטית כדי ליידע אתכם שכתובת המייל שלכם עבור %{site_name} שונתה. אם זה נעשה בטעות, אנא צרו קשר עם מנהל האתר.
@@ -2184,6 +2256,7 @@ he:
 
         %{new_email}
     signup_after_approval:
+      title: "הרשמה אחרי אישור"
       subject_template: "אושרתם באתר %{site_name}!"
       text_body_template: |
         ברוכים הבאים ל%{site_name}!
@@ -2203,6 +2276,7 @@ he:
 
         (אם אתם צריכים ליצור קשר עם [חברי צוות](%{base_url}/about) כחברים חדשים, רק השיבו להודעה זאת.)
     signup:
+      title: "הרשמה"
       subject_template: "[%{site_name}] אשרו את חשבונכם החדש"
       text_body_template: |
         ברוכים הבאים ל %{site_name}!
@@ -2236,6 +2310,7 @@ he:
       too_large: "מצטערים, הקובץ שאתם מנסים להעלות גדול מידי (הגודל המקסימלי המותר הוא %{max_size_kb}KB)."
     images:
       too_large: "סליחה, אך התמונה שאתם מנסים להעלות גדולה מידי. (הגודל המקסימלי הוא %{max_size_kb}KB), אנא שנו את הגודל ונסו שנית."
+      larger_than_x_megapixels: "מצטערים, התמונה שאתם מנסים להעלות היא גדולמה מידי (הגודל המירבי הוא %{max_image_megapixels}-מגה-פיקסלים), אנא שנו את גודלה ונסו שוב."
       size_not_found: "מצטערים, אבל לא יכולנו לקבוע את גודל התמונה. אולי יש בעיה טכנית בתמונה?"
   avatar:
     missing: "מצטערים, אנחנו לא יכולים למצוא אף דמות שמקושרת לכתובת מייל זו. תוכלו להעלות זאת שוב?"
@@ -2874,7 +2949,7 @@ he:
         fields:
           welcome:
             label: "נושא ברוכים-הבאים"
-            description: "<p>כיצד הייתם מתארים את הקהילה שלכם לאדם זר במעלית אם יש לכם רק דקה אחת?</p> <ul> <li>עבור מי נועדו דיונים אלו?</li> <li>מה אוכל למצוא פה?</li> <li>למה כדאי לי לבקר?</li> </ul> <p>נושא הברוכים-הבאים שלכם הוא הדבר הראשון שמבקרים חדשים יראו. חישבו עליו כ<b>פסקה אחת</b> של ׳נאום המעלית׳ או ׳הצהרת הכוונות׳ שלכם.</p>"
+            description: "<p>כיצד הייתם מתארים את הקהילה שלכם לאדם זר במעלית אם יש לכם רק דקה 1?</p> <ul> <li>עבור מי נועדו דיונים אלו?</li> <li>מה אוכל למצוא פה?</li> <li>למה כדאי לי לבקר?</li> </ul> <p>נושא הברוכים-הבאים שלכם הוא הדבר הראשון שמבקרים חדשים יקראו. חישבו עליו כ<b>פסקה אחת</b> של ׳נאום המעלית׳ או ׳הצהרת הכוונות׳ שלכם.</p>"
             one_paragraph: "אנא הגבילו את הודעת הברוכים-הבאים שלכם לפסקה אחת."
       privacy:
         title: "גישה"
@@ -2919,7 +2994,7 @@ he:
         title: "תמה"
         fields:
           theme_id:
-            description: "האם אתם מעדיפים להתחיל עם סכמת צבעים בהירה או כהה? תמיד תוכלו להמשיך ולהתאים את המראה של האתר שלכם באמצעות ״ניהול״ > ״התאמה-אישית״."
+            description: "האם אתם מעדיפים להתחיל עם סכמת צבעים בהירה או כהה? תוכלו בהמשך להתאים אישית את הנראות של האתר שלכם תחת ניהול, התאמה-אישית."
             choices:
               default:
                 label: "בהיר פשוט"
@@ -2944,7 +3019,7 @@ he:
             label: "אייקון גדול"
             description: "תמונה שמשמשת לייצוג האתר שלכם במכשירים מודרניים ונראית טוב בגדלים גדולים יותר. הגודל המומלץ הוא לפחות 144 על 144 פיקסלים."
       homepage:
-        description: "אנחנו ממליצים להציג את הנושאים האחרונים בדף הבית שלכם, אבל אתם יכולים לבחור להראות קטגוריות (קבוצות של נושאים) על דף הבית אם אתם מעדיפים."
+        description: "אנחנו ממליצים להציג את הנושאים האחרונים בדף הבית שלכם, אבל אתם יכולים גם להציג קטגוריות (קבוצות נושאים) בדף הבית אם תעדיפו."
         title: "דף הבית"
         fields:
           homepage_style:
@@ -2955,7 +3030,7 @@ he:
                 label: "קטגוריות"
       emoji:
         title: "אמוג׳י"
-        description: "איזה סגנון אמוג׳י אתם מעדיפים עבור הקהילה שלכם? תמיד תוכלו להוסיף עוד אמוג׳י בהמשך באמצעות ״ניהול״ > ״התאמה״ > ״אמוג׳י״."
+        description: "איזה סגנון אמוג׳יז תעדיפו לקהילה שלכם? אתם יכולים להוסיף עוד אמוג׳יז מותאמים אישית תחת ניהול, התאמה אישית, אמוג׳י."
       invites:
         title: "הזמינו צוות"
         description: "כמעט סיימתם! בואו נזמין כמ חברי צוות כדי לסייע <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>לזרוע את הדיונים</a> עם נושאים מעניינים ותגובות שיניעו קדימה את הקהילה שלכם."

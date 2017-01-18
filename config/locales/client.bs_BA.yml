@@ -1246,7 +1246,6 @@ bs_BA:
     original_post: "Originalni Odgovor"
     views: "Pregleda"
     replies: "Odgovora"
-    views_long: "ova tema je pregledana {{number}} puta"
     activity: "Aktivnost"
     likes: "Lajkovi"
     likes_long: "postoji {{number}} lajkova u ovoj temi"
@@ -1339,7 +1338,6 @@ bs_BA:
         space_free: "{{size}} slobodno"
         uploads: "Učitavanja"
         backups: "backupovi"
-        page_views_short: "API pozivi"
         show_traffic_report: "Pokaži detaljan izvještaj prometa"
         reports:
           today: "Today"

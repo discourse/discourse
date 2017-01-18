@@ -71,7 +71,7 @@ zh_CN:
       has_already_been_used: "不能和其他%{attribute}重复"
       inclusion: 不包括在列表中
       invalid: 无效
-      is_invalid: "這句似乎不清晰，这是个完整的句子吗？"
+      is_invalid: "似乎不清楚，这是一个完整的句子？"
       less_than: 必须小于 %{count}
       less_than_or_equal_to: 必须小于等于 %{count}
       not_a_number: 不是数字
@@ -154,7 +154,7 @@ zh_CN:
   not_accepting_pms: "对不起，%{username} 目前不接收讯息。"
   just_posted_that: "太类似于你最近发表的内容"
   invalid_characters: "包含无效字符"
-  is_invalid: "似乎不清晰，这是个完整的句子吗？"
+  is_invalid: "似乎不清楚，这是一个完整的句子？ "
   next_page: "下一页 →"
   prev_page: "← 上一页"
   page_num: "第%{num}页"
@@ -1429,36 +1429,8 @@ zh_CN:
       这封邀请发自受信任的用户，所以你可以立即回复主题。
   invite_forum_mailer:
     subject_template: "%{invitee_name} 邀请你加入 %{site_domain_name}"
-    text_body_template: |
-      %{invitee_name} 邀请你加入
-
-      > **%{site_title}**
-      >
-      > %{site_description}
-
-      如果你感兴趣，点击下面的链接：
-
-      %{invite_link}
-
-      这封邀请发自受信任的用户，所以你的帐户将被自动创建。
   custom_invite_forum_mailer:
     subject_template: "%{invitee_name}邀请你加入%{site_domain_name}"
-    text_body_template: |
-      %{invitee_name}邀请你加入
-
-      > **%{site_title}**
-      >
-      > %{site_description}
-
-      %{invitee_name}的留言：
-
-      %{user_custom_message}
-
-      如果你感兴趣，点击下面的链接：
-
-      %{invite_link}
-
-      这封邀请发自受信任的用户，所以你的帐户将被自动创建。
   invite_password_instructions:
     subject_template: "为 %{site_name} 账户设置密码"
     text_body_template: |
@@ -1593,26 +1565,6 @@ zh_CN:
         （如果你在新用户级别需要和[管理人员](%{base_url}/about)沟通的话，直接回复这个消息。）
     welcome_invite:
       subject_template: "欢迎来到 %{site_name}！"
-      text_body_template: |
-        感谢你接受邀请加入%{site_name} —— 欢迎！
-
-        我们为你创建了账号：**%{username}**，同时你已经登录了。你可以在任何时候访问[你的用户设置][prefs]来修改它。
-
-        要再次登入，或者：
-
-        1. 永远 **使用收到邀请的邮箱地址**登录。否则我们就无法分辨是不是你本人！
-
-        2. 在 [你的用户设置][prefs]页面创建一个密码，然后使用该密码来登入。
-
-        %{new_user_tips}
-
-        我们始终相信[讨论应该文明](%{base_url}/guidelines)。
-
-        好好享受你在论坛的时光吧！
-
-        ( 如果你在新用户级别需要和[管理人员](%{base_url}/about)沟通的话，直接回复这个消息。)
-
-        [prefs]: %{user_preferences_url}
     backup_succeeded:
       subject_template: "备份成功完成"
       text_body_template: |
@@ -2815,11 +2767,9 @@ zh_CN:
         fields:
           welcome:
             label: "欢迎主题"
-            description: "<p>你将怎么在一分钟内向陌生人描述你的社群？</p> <ul> <li>谁会对这些讨论感兴趣？</li> <li>我能获得什么？</li> <li>为什么我应该访问？</li> </ul> <p>你的欢迎主题是新访客将先看到的东西。把它想象为<b>一段</b>“电梯宣传”或者“使命声明”。</p>"
             one_paragraph: "请限制你的欢迎消息至一段话。"
       privacy:
         title: "访问"
-        description: "<p>你的社群对所有人可见或者需要限制为会员许可、邀请许可或者审核许可？如果你愿意，你可以将其设为私密，然后再切换至公开。</p> <p>记住你永远可以在主题中邀请别人，或者从你的用户页面里也行。</p>"
         fields:
           privacy:
             choices:
@@ -2845,7 +2795,6 @@ zh_CN:
             description: "所有自动发送自 Discourse 的私人消息将以该用户的名义发送。最重要的是，这个用户将被指定为发送给每个新用户的欢迎消息的发送人。"
       corporate:
         title: "组织"
-        description: "这些名字将显示于<a href='/privacy' target='blank'>隐私策略</a>和<a href='/tos' target='blank'>服务条款</a>中，你可以随时在工作人员分类中编辑他们。如果你没有公司，你可以跳过这个步骤。"
         fields:
           company_short_name:
             label: "公司名（短）"
@@ -2860,7 +2809,6 @@ zh_CN:
         title: "主题"
         fields:
           theme_id:
-            description: "你喜欢亮色还是暗色的颜色方案？你永远可以在管理-自定义中修改站点的观感。"
             choices:
               default:
                 label: "简洁亮"
@@ -2885,7 +2833,6 @@ zh_CN:
             label: "大图标"
             description: "现代设备中你站点显示的图标，要在大一点尺寸的情况下表现出色。推荐的尺寸至少要达到144px X 144px。"
       homepage:
-        description: "我们推荐在你的主页显示最新主题，但是如果你喜欢，你也可以选择显示分类（一组主题）。"
         title: "主页"
         fields:
           homepage_style:
@@ -2896,7 +2843,6 @@ zh_CN:
                 label: "分类"
       emoji:
         title: "Emoji"
-        description: "你喜欢你的社群使用哪一种 Emoji 样式？你永远可以在管理-自定义-Emoji中增加更多的定制 Emoji。"
       invites:
         title: "邀请工作人员"
         description: "你快做完啦！让我们邀请一些工作人员来帮助你<a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>创建一些讨论主题</a>以方便你发布社群。"

@@ -749,6 +749,7 @@ fr:
           none: "Vous n'avez invité personne pour le moment. Vous pouvez envoyer des invitations individuelles ou inviter plusieurs personnes à la fois en <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>envoyant un fichier CSV</a>."
           text: "Invitation massive depuis un fichier"
           success: "Le fichier a été correctement importé. Vous serez notifié par message privé lorsque le traitement sera terminé."
+          error: "Désolé, le fichier doit être au format CSV."
       password:
         title: "Mot de passe"
         too_short: "Votre mot de passe est trop court."
@@ -1887,7 +1888,6 @@ fr:
       one: "vue"
       other: "vues"
     replies: "Réponses"
-    views_long: "ce sujet a été vu {{number}} fois"
     activity: "Activité"
     likes: "J'aime"
     likes_lowercase:
@@ -2192,8 +2192,6 @@ fr:
         backups: "sauvegardes"
         traffic_short: "Trafic"
         traffic: "Requêtes Web Application"
-        page_views: "Requêtes API"
-        page_views_short: "Requêtes API"
         show_traffic_report: "Afficher le rapport de trafic détaillé"
         reports:
           today: "Aujourd'hui"
@@ -2336,7 +2334,6 @@ fr:
         warn_local_payload_url: "Il semble que vous essayez de configurer le Webhook vers une URL locale. Les événements délivrés à une adresse locale peuvent causer des effets de bords ou des comportements inattendus. Continuer ?"
         secret_invalid: "La clé secrète ne doit pas contenir d'espaces."
         secret_too_short: "La clé secrète doit contenir au moins 12 caractères."
-        secret_placeholder: "Une chaîne de caractères facultative pour générer la signature"
         event_type_missing: "Vous devez configurer au moins un type d'évènement."
         content_type: "Type de contenu"
         secret: "Clé secrète"
@@ -2575,7 +2572,7 @@ fr:
         send_test: "Envoyer un courriel de test"
         sent_test: "Envoyé !"
         delivery_method: "Méthode d'envoi"
-        preview_digest_desc: "Prévisualiser le contenu des courriels hebdomadaires sommaires envoyés aux utilisateurs inactifs."
+        preview_digest_desc: "Prévisualiser le contenu des résumés par courriel envoyés aux utilisateurs inactifs."
         refresh: "Rafraîchir"
         send_digest_label: "Envoyer ce résultat à :"
         send_digest: "Envoyer"

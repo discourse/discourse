@@ -338,9 +338,9 @@ zh_CN:
       closed_group: 封闭群组
       is_group_user: "你是该群组的一个成员"
       allow_membership_requests: "允许用户向群组拥有者发送加入小组请求（群组需要能让所有人提及）"
-      membership: "成员"
+      membership: "成员资格"
       name: "名字"
-      user_count: "成员数量"
+      user_count: "成员数目"
       bio: "关于群组"
       selector_placeholder: "添加成员"
       owner: "所有者"
@@ -1795,7 +1795,6 @@ zh_CN:
     views_lowercase:
       other: "浏览"
     replies: "回复"
-    views_long: "本主题已经被浏览过 {{number}} 次"
     activity: "活动"
     likes: "赞"
     likes_lowercase:
@@ -2088,8 +2087,6 @@ zh_CN:
         backups: "备份"
         traffic_short: "流量"
         traffic: "应用 web 请求"
-        page_views: "API 请求"
-        page_views_short: "API 请求"
         show_traffic_report: "显示详细的流量报告"
         reports:
           today: "今天"
@@ -2227,7 +2224,6 @@ zh_CN:
         warn_local_payload_url: "你好像将 webhook 指向了一个本地地址。把相关事件发送到本地可能产生副作用或未预期的行为。继续吗？"
         secret_invalid: "密钥不能包含空白字符。"
         secret_too_short: "密钥必须至少有 12 个字符。"
-        secret_placeholder: "可选字符串，用于生成签名"
         event_type_missing: "你必须设置一个事件类型。"
         content_type: "内容格式"
         secret: "密钥"

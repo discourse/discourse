@@ -1715,7 +1715,6 @@ da:
       one: "visning"
       other: "visninger"
     replies: "Svar"
-    views_long: "dette emne er blevet vist {{number}} gange"
     activity: "Aktivitet"
     likes: "Likes"
     likes_lowercase:
@@ -1965,8 +1964,6 @@ da:
         backups: "backups"
         traffic_short: "Trafik"
         traffic: "Applikation web forespørgsler"
-        page_views: "API Forespørgsler"
-        page_views_short: "API Forespørgsler"
         show_traffic_report: "Vist detaljeret trafik rapport"
         reports:
           today: "I dag"

@@ -748,6 +748,7 @@ fi:
           none: "Et ole kutsunut vielä ketään tänne. Voit lähettää yksittäisiä kutsuja tai kutsua joukon ihmisiä kerralla <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>lataamalla CSV-tiedoston</a>."
           text: "Lähetä massakutsu tiedostosta"
           success: "Tiedoston lähettäminen onnistui. Saat viestin, kun prosessi on valmis."
+          error: "Pahoittelut, tiedoston tulee olla CSV-muodossa."
       password:
         title: "Salasana"
         too_short: "Salasanasi on liian lyhyt."
@@ -1886,7 +1887,9 @@ fi:
       one: "katselu"
       other: "katselut"
     replies: "Vastauksia"
-    views_long: "tätä ketjua on katseltu {{number}} kertaa"
+    views_long:
+      one: "ketjua on katseltu yhden kerran"
+      other: "ketjua on katseltu {{number}} kertaa"
     activity: "Toiminta"
     likes: "Tykkäykset"
     likes_lowercase:
@@ -2191,8 +2194,8 @@ fi:
         backups: "varmuuskopiot"
         traffic_short: "Liikenne"
         traffic: "Sovelluksen web-pyynnöt"
-        page_views: "API pyynnöt"
-        page_views_short: "API pyynnöt"
+        page_views: "Sivunkatselut"
+        page_views_short: "Sivunkatselut"
         show_traffic_report: "Näytä yksityiskohtainen liikenneraportti"
         reports:
           today: "Tänään"
@@ -2618,6 +2621,8 @@ fi:
             deleted_tag: "poistettu tunniste"
             renamed_tag: "uudelleen nimetty tunniste"
             revoke_email: "peru sähköpostiosoite"
+            unlock_trust_level: "poista luottamustason lukitus"
+            activate_user: "aktivoi käyttäjä"
         screened_emails:
           title: "Seulottavat sähköpostiosoitteet"
           description: "Uuden käyttäjätunnuksen luonnin yhteydessä annettua sähköpostiosoitetta verrataan alla olevaan listaan ja tarvittaessa tunnuksen luonti joko estetään tai suoritetaan muita toimenpiteitä."

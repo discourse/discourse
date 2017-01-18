@@ -755,13 +755,13 @@ ko:
       complete_email_not_found: "<b>%{email}</b>과 일치하는 계정이 없습니다."
     login:
       title: "로그인"
-      username: "사용자"
+      username: "아이디"
       password: "비밀번호"
-      email_placeholder: "이메일 주소 또는 사용자 이름"
+      email_placeholder: "이메일 주소 또는 아이디"
       caps_lock_warning: "Caps Lock 켜짐"
       error: "알 수없는 오류"
       rate_limit: "다시 로그인 하기전에 잠시만 기다려주세요."
-      blank_username_or_password: "이메일 또는 사용자명과 비밀번호를 입력해 주세요."
+      blank_username_or_password: "이메일 또는 아이디, 비밀번호를 입력해 주세요."
       reset_password: '암호 재설정'
       logging_in: "로그인 중.."
       or: "또는"
@@ -1508,7 +1508,6 @@ ko:
     views_lowercase:
       other: "조회"
     replies: "답변"
-    views_long: "이 주제는 {{number}}번 읽혔습니다."
     activity: "활동"
     likes: "좋아요"
     likes_lowercase:
@@ -1639,8 +1638,6 @@ ko:
         backups: "백업"
         traffic_short: "트래픽"
         traffic: "어플리케이션 웹 요청"
-        page_views: "API 요청"
-        page_views_short: "API 응답"
         show_traffic_report: "자세한 트래픽 리포트 보기"
         reports:
           today: "오늘"
@@ -1965,7 +1962,7 @@ ko:
           none: "로그가 없습니다."
           filters:
             title: "필터"
-            user_placeholder: "사용자명"
+            user_placeholder: "아이디"
             address_placeholder: "name@example.com"
             type_placeholder: "다이제스트, 가입..."
             reply_key_placeholder: "답글 키"
@@ -1988,7 +1985,7 @@ ko:
           do_nothing: "아무것도 하지 않음"
         staff_actions:
           title: "스태프 기록"
-          instructions: "사용자 이름을 클릭하여 목록에서 차단하십시오. 프로필 사진을 클릭하여 사용자 페이지로 갑니다."
+          instructions: "사용자 아이디을 클릭하여 목록에서 차단하십시오. 프로필 사진을 클릭하여 사용자 페이지로 갑니다."
           clear_filters: "전체 보기"
           staff_user: "스태프 사용자"
           target_user: "타겟 사용자"

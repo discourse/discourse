@@ -1022,7 +1022,6 @@ et:
         title: "Kujundusteema"
         fields:
           theme_id:
-            description: "Kas soovid kasutada heledat või tumedat kujundust? Võid kujundusseadeid alati muuta läbi Admin paneeli ja seadistuste."
             choices:
               default:
                 label: "Lihtne hele"

@@ -749,6 +749,7 @@ he:
           none: "עדיין לא הזמנתם לכאן אף אחד. תוכלו לשלוח הזמנות פרטניות, או להזמין כמה אנשים יחד על ידי <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>העלאת קובץ CSV</a>."
           text: "הזמנה קבוצתית מקובץ"
           success: "העלאת הקובץ החלה בהצלחה, תקבלו התראה באמצעות מסר כאשר התהליך יושלם."
+          error: "מצטערים, הקובץ צריך להיות בפורמט csv."
       password:
         title: "סיסמה"
         too_short: "הסיסמה שלך קצרה מידי."
@@ -1889,7 +1890,9 @@ he:
       one: "צפיה"
       other: "צפיות"
     replies: "תגובות"
-    views_long: "הנושא הזה נצפה {{number}} פעמים"
+    views_long:
+      one: "נושא זה נצפה פעם 1"
+      other: "נושא זה נצפה {{number}} פעמים"
     activity: "פעילות"
     likes: "לייקים"
     likes_lowercase:
@@ -2194,8 +2197,8 @@ he:
         backups: "גיבויים"
         traffic_short: "תנועה"
         traffic: "בקשות יישום web"
-        page_views: "בקשות API"
-        page_views_short: "בקשות API"
+        page_views: "צפיות-דף"
+        page_views_short: "צפיות-דף"
         show_traffic_report: "הצגת דו\"ח תנועה מפורט"
         reports:
           today: "היום"
@@ -2338,7 +2341,7 @@ he:
         warn_local_payload_url: "נראה שאתם מנסים להגדיר webhook ל url מקומי. אירוע שנשלח לכתובת מקומית עלול לגרום לתופעות בלתי-צפויות מראש. האם להמשיך?"
         secret_invalid: "אסור שהסוד יכיל תווי רווח כלשהם."
         secret_too_short: "הסוד אמור להכיל לפחות 12 תווים."
-        secret_placeholder: "מחרוזת אופציונלית, משמשת ליצירת חתימות"
+        secret_placeholder: "מחרוזת אופציונלית, משמשת ליצירת חתימה"
         event_type_missing: "אתם צריכים לקבוע לפחות סוג אירועים אחד."
         content_type: "סוג תוכן"
         secret: "סוד"
@@ -2682,6 +2685,11 @@ he:
             deleted_tag: "תגית נמחקה"
             renamed_tag: "תגית שונתה"
             revoke_email: "שללו מייל"
+            lock_trust_level: "נעילת רמת אמון"
+            unlock_trust_level: "שחרור רמת אמון מנעילה"
+            activate_user: "הפעלת משתמש/ת"
+            deactivate_user: "ניטרול משתמש/ת"
+            change_readonly_mode: "שינוי מצב קריאה בלבד"
         screened_emails:
           title: "הודעות דואר מסוננות"
           description: "כשמישהו מנסה ליצור חשבון חדש, כתובות הדואר האלקטרוני הבאות ייבדקו וההרשמה תחסם או שיבוצו פעולות אחרות."

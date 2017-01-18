@@ -32,6 +32,7 @@ nl:
   purge_reason: "Automatisch verwijderd, account gedeactiveerd."
   disable_remote_images_download_reason: "Het downloaden van plaatjes is uitgeschakeld omdat er niet genoeg schijfruimte beschikbaar is."
   anonymous: "Anoniem"
+  remove_posts_deleted_by_author: "Verwijderd door gebruiker"
   emails:
     incoming:
       default_subject: "Inkomende e-mail van %{email}"
@@ -125,6 +126,8 @@ nl:
   embed:
     start_discussion: "Reageer"
     continue: "Ga verder met de discussie"
+    error: "Fout bij embedden"
+    configure: "Configureer Embedden"
     more_replies:
       one: "Nog 1 reactie"
       other: "Nog %{count} reacties"
@@ -1253,21 +1256,43 @@ nl:
     welcome_invite:
       subject_template: "Welkom bij %{site_name}!"
     backup_succeeded:
+      title: "Backup Geslaagd"
       subject_template: "Backup succesvol uitgevoerd"
     backup_failed:
+      title: "Backup Mislukt"
       subject_template: "Backup mislukt"
     restore_succeeded:
+      title: "Terugzetten van backup geslaagd"
       subject_template: "Het terugzetten van de backup is geslaagd."
     restore_failed:
+      title: "Terugzetten van backup mislukt"
       subject_template: "Terugzetten van backup is mislukt"
     bulk_invite_succeeded:
+      title: "Bulk Uitnodiging Geslaagd"
       subject_template: "Massale uitnodiging aan gebruikers met succes verwerkt"
       text_body_template: "Je bestand voor een massale uitnodiging aan gebruikers is verwerkt. Er zijn %{sent} uitnodigingen verstuurd."
     bulk_invite_failed:
+      title: "Groepsuitnodiging Mislukt"
       subject_template: "Massale uitnodiging aan gebruikers verwerkt, met fouten"
+      text_body_template: |
+        Je bestand met gebruikers uitnodigingen is verwerkt, %{sent} uitnodigingen zijn verzonden met %{failed} fout(en).
+
+        Verslag:
+
+        ```
+        %{logs}
+        ```
     csv_export_succeeded:
+      title: "CSV Export Geslaagd"
       subject_template: "Export succesvol afgerond."
+      text_body_template: |
+        Data export was succesvol!:dvd:
+
+        <a class="attachment" href="%{download_link}">%{file_name}</a> (%{file_size})
+
+        Bovenstaande download link is 48 uur geldig.
     csv_export_failed:
+      title: "CSV Export Mislukt"
       subject_template: "Export mislukt"
       text_body_template: "Het spijt ons, maar de export is mislukt. Bekijk de logbestanden of neem contact op met de staf."
     email_reject_insufficient_trust_level:
@@ -1356,8 +1381,23 @@ nl:
       subject_template: "[%{site_name}] E-mailprobleem -- Automatisch gegenereerde reactie"
     email_error_notification:
       subject_template: "[%{site_name}] Email probleem -- POP authenticatie fout"
+    blocked_by_staff:
+      subject_template: "Account tijdelijk geblokkeerd"
+    user_automatically_blocked:
+      title: "Gebruiker Automatisch Geblokkeerd"
+      subject_template: "Nieuwe gebruiker %{username} geblokkeerd wegens meldingen van andere gebruikers"
     spam_post_blocked:
+      title: "Spam bericht geblokkeerd"
       subject_template: "Berichten van nieuwe gebruiker %{username} geblokkeerd vanwege herhaalde links"
+    unblocked:
+      title: "Gedeblokkeerd"
+      subject_template: "Account niet langer geblokkeerd"
+      text_body_template: |
+        Hallo,
+
+        Dit is een automatisch bericht van %{site_name} om je te informeren dat de staff naar je account hebben gekeken en je account is nu niet langer geblokkeerd.
+
+        Je kan weer nieuwe topics beginnen en reageren op bestaande topics. Bedankt voor je geduld.
     pending_users_reminder:
       subject_template:
         one: "1 gebruiker wacht op goedkeuring"
@@ -1368,6 +1408,8 @@ nl:
         [Beoordeel deze gebruikers in het admingedeelte](/admin/users/list/pending).
     download_remote_images_disabled:
       subject_template: "Het downloaden van externe afbeeldingen is uitgeschakeld"
+    dashboard_problems:
+      title: "Dashboard Problemen"
   subject_re: "Re:"
   subject_pm: "[PM]"
   user_notifications:

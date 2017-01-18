@@ -1891,7 +1891,6 @@ cs:
       few: "zobrazení"
       other: "zobrazení"
     replies: "Odpovědi"
-    views_long: "toto téma bylo zobrazeno {{number}}krát"
     activity: "Aktivita"
     likes: "Líbí se"
     likes_lowercase:
@@ -2195,8 +2194,6 @@ cs:
         backups: "zálohy"
         traffic_short: "Provoz"
         traffic: "Webové požadavky na aplikaci"
-        page_views: "API požadavky"
-        page_views_short: "API požadavky"
         show_traffic_report: "Zobrazit detailní zprávu o provozu"
         reports:
           today: "Dnes"

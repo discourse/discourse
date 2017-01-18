@@ -32,6 +32,7 @@ fr:
   purge_reason: "Supprimé automatiquement comme compte abandonné et non activé"
   disable_remote_images_download_reason: "Le téléchargement des images externes a été désactivé faute de place suffisante sur le disque."
   anonymous: "Anonyme"
+  remove_posts_deleted_by_author: "Supprimé par l'auteur"
   emails:
     incoming:
       default_subject: "Courriel entrant de %{email}"
@@ -1404,6 +1405,8 @@ fr:
   user:
     no_accounts_associated: "Aucun compte associé"
     deactivated: "A été désactivé à cause de trop de courriels rejetés vers '%{email}'."
+    deactivated_by_staff: "Désactivé par un responsable"
+    activated_by_staff: "Activé par un responsable"
     username:
       short: "doit être d'au moins %{min} caractères"
       long: "ne doit pas être supérieur à %{max} caractères"
@@ -1482,36 +1485,8 @@ fr:
       Cette invitation provient d'un utilisateur de confiance, vous pouvez donc répondre immédiatement.
   invite_forum_mailer:
     subject_template: "%{invitee_name} vous a invité(e) à rejoindre %{site_domain_name}"
-    text_body_template: |
-      %{invitee_name} vous a invité(e) à rejoindre
-
-      > **%{site_title}**
-      >
-      > %{site_description}
-
-      Si cela vous intéresse, cliquez sur le lien ci-dessous :
-
-      %{invite_link}
-
-      Cette invitation provient d'un utilisateur de confiance, un compte sera automatiquement créé pour vous.
   custom_invite_forum_mailer:
     subject_template: "%{invitee_name} vous a invité(e) à rejoindre %{site_domain_name}"
-    text_body_template: |
-      %{invitee_name} vous a invité(e) à rejoindre
-
-      > **%{site_title}**
-      >
-      > %{site_description}
-
-      Message de %{invitee_name} :
-
-      %{user_custom_message}
-
-      Si cela vous intéresse, cliquez sur le lien ci-dessous :
-
-      %{invite_link}
-
-      Cette invitation provient d'un utilisateur de confiance, un compte sera automatiquement créé pour vous.
   invite_password_instructions:
     subject_template: "Renseignez le mot de passe pour votre compte utilisateur %{site_name} "
     text_body_template: |
@@ -1647,26 +1622,6 @@ fr:
         (Si, en tant que nouvel utilisateur, vous avez besoin de communiquer avec un [responsable](%{base_url}/about), répondez simplement à ce message.)
     welcome_invite:
       subject_template: "Bienvenue sur %{site_name} !"
-      text_body_template: |
-        Merci d'avoir accepté votre invitation sur %{site_name} et bienvenue !
-
-        Nous avons créé un nouveau compte : **%{username}**, et vous y êtes connecté. Vous pouvez changer votre pseudo en allant sur [votre profil][prefs].
-
-        Pour vous reconnecter :
-
-        1. Toujours **utiliser la même adresse de courriel que celle de l'invitation** que vous avez reçue. Autrement, nous ne pourrons pas vous reconnaître.
-
-        2. Créer un mot de passe unique sur votre [sur votre profil][prefs] et connectez-vous avec.
-
-        %{new_user_tips}
-
-        Nous croyons au [comportement communautaire civilisé](%{base_url}/guidelines) en tous temps.
-
-        Amusez-vous bien !
-
-        (Si, en tant que nouvel utilisateur, vous avez besoin de communiquer avec un [responsable](%{base_url}/about), répondez simplement à ce message).
-
-        [prefs]: %{user_preferences_url}
     backup_succeeded:
       subject_template: "Sauvegarde terminée avec succès"
       text_body_template: |
@@ -2734,11 +2689,9 @@ fr:
         fields:
           welcome:
             label: "Sujet de bienvenue"
-            description: "<p>Comment décririez-vous votre communauté à un inconnu en environ 1 minute ?</p> <ul> <li>Pour qui sont destinées ces discussions ?</li> <li>Que puis-je trouver ici ?</li> <li>Pourquoi dois-je la visiter ?</li> </ul> <p>Votre sujet de bienvenue est la première chose que les nouveaux visiteurs vont voir. Voyez le comme votre <b>unique paragraphe</b> qui définit votre mission et différence. </p>"
             one_paragraph: "Veuillez restreindre votre message de bienvenue à un paragraphe."
       privacy:
         title: "Accès"
-        description: "<p>Votre communauté est-elle ouverte à tous ou restreinte par adhésion, invitation et approbation ? Si vous préférez, vous pouvez préparer le site en mode privé puis passer en public par la suite.</p> <p>Rappelez-vous aussi que vous pouvez toujours envoyer des invitations depuis les sujets ou votre page de profil utilisateur.</p>"
         fields:
           privacy:
             choices:
@@ -2764,7 +2717,6 @@ fr:
             description: "Tous les messages privés automatiques de Discourse seront envoyés par cet utilisateur. Plus important, cet utilisateur sera l'envoyeur désigné de tous les messages de bienvenue à destination des nouveaux utilisateurs."
       corporate:
         title: "Organisation"
-        description: "Ces noms seront renseignés dans les pages <a href='/privacy' target='blank'>Politique de confidentialité</a> et <a href='/tos' target='blank'>Conditions générales d'utilisation</a> que vous pouvez modifier à tout moment depuis la catégorie Staff. Si vous n'avez pas de société, vous pouvez ignorer cette étape pour le moment."
         fields:
           company_short_name:
             label: "Nom de société (court)"
@@ -2779,7 +2731,6 @@ fr:
         title: "Thème"
         fields:
           theme_id:
-            description: "Préférez-vous une palette de couleurs claires ou sombres pour commencer ? Vous pouvez toujours personnaliser l'aspect du site dans Administration, Personaliser."
             choices:
               default:
                 label: "Clair"
@@ -2804,7 +2755,6 @@ fr:
             label: "Grande icône"
             description: "Icône utilisée pour représenter le site sur les appareils modernes et que rend bien à des tailles plus grandes. La taille minimale conseillée est de 144px par 144px."
       homepage:
-        description: "Nous recommandons d'afficher les sujets récents sur votre page d'accueil mais vous pouvez choisir d'y afficher les catégories (groupes de sujets) si vous préférez."
         title: "Page d'accueil"
         fields:
           homepage_style:
@@ -2815,7 +2765,6 @@ fr:
                 label: "Catégories"
       emoji:
         title: "Emoji"
-        description: "Quel style d'Emoji préférez-vous pour votre communauté ? Vous pouvez toujours ajouter des Emoji supplémentaires dans Administration, Personnaliser, Emoji."
       invites:
         title: "Inviter des responsables"
         description: "Vous avez presque fini ! Invitons quelques responsables pour aider à <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>entamer les discussions</a> avec des sujets et réponses intéressantes pour lancer la communauté."

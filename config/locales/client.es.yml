@@ -358,7 +358,7 @@ es:
         logs: "No hay registros para este grupo."
       add: "Añadir"
       join: "Unirse al grupo"
-      leave: "Salirse del grupo"
+      leave: "Salir del grupo"
       request: "Solicitar unirse al grupo"
       automatic_group: Grupo automático
       closed_group: Grupo cerrado
@@ -749,6 +749,7 @@ es:
           none: "Aún no has invitado a nadie aquí. Puedes enviar invitaciones individuales, o invitar varias personas a la vez <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>subiendo un archivo CSV</a>."
           text: "Archivo de Invitación en Masa"
           success: "Archivo subido correctamente, se te notificará con un mensaje cuando se complete el proceso."
+          error: "Lo sentimos, el archivo debería tener formato csv."
       password:
         title: "Contraseña"
         too_short: "Tu contraseña es demasiada corta."
@@ -1887,7 +1888,9 @@ es:
       one: "visita"
       other: "visitas"
     replies: "Respuestas"
-    views_long: "este tema se ha visto {{number}} veces"
+    views_long:
+      one: "este tema se ha visto 1 vez"
+      other: "este tema se ha visto {{number}} veces"
     activity: "Actividad"
     likes: "Likes"
     likes_lowercase:
@@ -2192,8 +2195,8 @@ es:
         backups: "backups"
         traffic_short: "Tráfico"
         traffic: "Peticiones web de la app"
-        page_views: "Peticiones de API"
-        page_views_short: "Peticiones de API"
+        page_views: "Páginas vistas"
+        page_views_short: "Páginas vistas"
         show_traffic_report: "Mostrar informe detallado del tráfico"
         reports:
           today: "Hoy"
@@ -2336,7 +2339,7 @@ es:
         warn_local_payload_url: "Parece que estás estableciendo el webhook a una url local. El evento enviado a una dirección local podría causar algún efecto secundario o comportamientos inesperados. ¿Continuar?"
         secret_invalid: "Secret no debe tener espacios en blanco."
         secret_too_short: "Secret debería tener al menos 12 caracteres."
-        secret_placeholder: "Una cadena opcional, para generar firma"
+        secret_placeholder: "Una cadena opcional, utilizada para generar una firma"
         event_type_missing: "Necesitas establecer al menos un tipo de evento."
         content_type: "Tipo de contenido"
         secret: "Secret"
@@ -2680,6 +2683,11 @@ es:
             deleted_tag: "etiqueta eliminada"
             renamed_tag: "etiqueta renombrada"
             revoke_email: "revocar email"
+            lock_trust_level: "Bloqueó el nivel de confianza"
+            unlock_trust_level: "Desbloqueó el nivel de confianza"
+            activate_user: "activó a un usuario"
+            deactivate_user: "desactivó a un usuario"
+            change_readonly_mode: "cambio a modo de sólo lectura"
         screened_emails:
           title: "Correos bloqueados"
           description: "Cuando alguien trata de crear una cuenta nueva, los siguientes correos serán revisados y el registro será bloqueado, o alguna otra acción será realizada."

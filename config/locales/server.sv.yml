@@ -1356,36 +1356,8 @@ sv:
       Denna inbjudan är från en betrodd användare, så du kan direkt delta och svara i diskussionen.
   invite_forum_mailer:
     subject_template: "%{invitee_name} har bjudit in dig till %{site_domain_name}"
-    text_body_template: |
-      %{invitee_name} har bjudit in dig till
-
-      > **%{site_title}**
-      >
-      > %{site_description}
-
-      Om du är intresserad, klicka på länken nedan:
-
-      %{invite_link}
-
-      Denna inbjudan kommer från en betrodd användare, så ett konto kommer att skapas åt dig automatiskt.
   custom_invite_forum_mailer:
     subject_template: "%{invitee_name} har bjudit in dig till %{site_domain_name}"
-    text_body_template: |
-      %{invitee_name} har bjudit in dig till
-
-      > **%{site_title}**
-      >
-      > %{site_description}
-
-      Meddelande från %{invitee_name}:
-
-      %{user_custom_message}
-
-      Om du är intresserad, klicka på länken nedan:
-
-      %{invite_link}
-
-      Denna inbjudan kommer från en betrodd användare, så ett konto kommer att skapas åt dig automatiskt.
   invite_password_instructions:
     subject_template: "Ange lösenord för ditt konto på %{site_name}"
     text_body_template: |
@@ -1452,26 +1424,6 @@ sv:
         (Om du som ny användare behöver komma i kontakt med vår [personal](%{base_url}/about), svara bara på detta meddelande)
     welcome_invite:
       subject_template: "Välkommen till %{site_name}!"
-      text_body_template: |
-        Tack för att du accepterade din inbjudan till %{site_name} -- välkommen!
-
-        Vi har skapat ett nytt konto **%{username}** till dig och du är inloggad. Du kan byta namn genom att besöka [din användarprofil][prefs].
-
-        För att logga in senare:
-
-        1. Använda alltid **samma e-postadress som från din ursprungliga inbjudan** när du loggar in. Annars vet vi inte att det är du!
-
-        2. Skapa ett unikt lösenord för [din användarprofil][prefs], och använd det för att logga in.
-
-        %{new_user_tips}
-
-        Vi tror på ett [civiliserat beteende](%{base_url}/guidelines) vid alla tillfällen.
-
-        Njut av din vistelse!
-
-        (Om du som ny användare behöver komma i kontakt med vår [personal](%{base_url}/about), svara bara på detta meddelande.)
-
-        [prefs]: %{user_preferences_url}
     backup_succeeded:
       subject_template: "Säkerhetskopia skapades utan problem"
     backup_failed:

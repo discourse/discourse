@@ -1064,33 +1064,6 @@ fa_IR:
         (اگر نیاز به تماس با یکی از مدیران[staff members] را دارید(%{base_url}/about) به عنوان یک کاربر جدید٬ فقط به این پیام پاسخ دهید.)
     welcome_invite:
       subject_template: "به %{site_name} خوش آمدید!"
-      text_body_template: |
-        ممنون برای قبول دعتونامه به %{site_name} -- خوش آمدید!
-
-
-        برای شما یک حساب کاربری جدید ساختیم **%{username}** و شما الان در سیستم هستید. می توانید اسم خود را عوض کنید با مراجعه به [your user profile][prefs].
-
-        برای ورود بعدتر :
-
-
-        1.  همیشه برای ورود ** از ایمیل آدرسی استفاده کن که در دعوتنامه اصلی استفاده کردید**. در غیر اینصورت نمی تونیم بگوییم این شمایید!
-
-
-        2.  رمز عبور خیلی خوبی بساز برای  [کاربری نمایه ات][prefs]٬ و برای ورود از آن استفاده کن.
-
-        %{new_user_tips}
-
-
-        ما به [رفتار جامعه ای متمدن] همیشه اعتقاد داریم (%{base_url}/guidelines).
-
-
-        از بودنتان در انجمن لذت ببرید!
-
-
-        (اگر نیاز به تماس با یکی از مدیران[staff members] را دارید(%{base_url}/about) به عنوان یک کاربر جدید٬ فقط به این پیام پاسخ دهید. )
-
-
-        [prefs]: %{user_preferences_url}
     backup_succeeded:
       subject_template: "پشتیبان گیری با موفقیت انجام شد"
     backup_failed:
@@ -1320,6 +1293,8 @@ fa_IR:
   performance_report:
     initial_post_raw: این مطلب شامل گزارش عملکرد روزانه سایت شماست.
     initial_topic_title: گزارش عملکرد وب‌سایت
+  tags:
+    title: "برچسب"
   wizard:
     step:
       forum_title:
@@ -1331,6 +1306,17 @@ fa_IR:
             placeholder: "name@example.com"
           contact_url:
             placeholder: "http://www.example.com/contact-us"
+      homepage:
+        title: "صفحه اصلی"
+        fields:
+          homepage_style:
+            choices:
+              latest:
+                label: "آخرین‌ ارسال‌ها"
+              categories:
+                label: "دسته‌بندی‌ها"
+      emoji:
+        title: "شکلک"
   activemodel:
     errors:
       <<: *errors
