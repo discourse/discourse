@@ -1694,9 +1694,8 @@ en:
 
       > %{site_title} -- %{site_description}
 
-      Message from %{invitee_name}:
 
-      %{user_custom_message}
+      > %{user_custom_message}
 
       If you're interested, click the link below:
 
@@ -1730,9 +1729,8 @@ en:
       >
       > %{site_description}
 
-      Message from %{invitee_name}:
 
-      %{user_custom_message}
+      > %{user_custom_message}
 
       If you're interested, click the link below:
 
