@@ -32,6 +32,7 @@ es:
   purge_reason: "Cuenta eliminada automáticamente al detectarse como abandonada, desactivada"
   disable_remote_images_download_reason: "La descarga de imágenes remotas se desactivó porque no había suficiente espacio disponible en disco."
   anonymous: "Anónimos"
+  remove_posts_deleted_by_author: "Eliminado por su autor"
   emails:
     incoming:
       default_subject: "Email entrante desde %{email}"
@@ -72,6 +73,8 @@ es:
       inclusion: no está incluido en la lista
       invalid: no es válido
       is_invalid: "parece poco claro, es una oración completa?"
+      contains_censored_words: "incluye una o más palabras censuradas: %{censored_words}"
+      matches_censored_pattern: "coincide con la siguiente expresión regular censurada: %{censored_pattern}"
       less_than: debe ser menor que %{count}
       less_than_or_equal_to: debe ser menor o igual que %{count}
       not_a_number: no es un número
@@ -1072,6 +1075,7 @@ es:
     max_attachment_size_kb: "El tamaño máximo, en kB, para adjuntar archivos. Debe ser configurado también en nginx (client_max_body_size) / apache o proxy."
     authorized_extensions: "Una lista de las extensiones de archivo permitidas para subir (usa \"*\" para habilitar todos los tipos de archivo)"
     max_similar_results: "Cuántos temas similares se mostrarán encima del editor cuando estés creando un nuevo tema. La comparación se basa en el título y el cuerpo del tema."
+    max_image_megapixels: "Máximo de megapíxeles permitidos por una imagen."
     title_prettify: "Prevenir errores comunes en el título, incluyendo \"todo mayúsculas\", primera letra minúscula, multiples signos ! o ?, . extra al final, etc."
     topic_views_heat_low: "Después de este número de vistas, el campo vistas será ligeramente resaltado."
     topic_views_heat_medium: "Después de este número de visitas, el campo visitas será moderadamente resaltado."
@@ -1479,36 +1483,8 @@ es:
       Esta invitación viene de un usuario en el que confiamos, por lo que podrás responder inmediatamente.
   invite_forum_mailer:
     subject_template: "%{invitee_name} te invitó a unirte a %{site_domain_name}"
-    text_body_template: |
-      %{invitee_name} te ha invitado a unirte a
-
-      > **%{site_title}**
-      >
-      > %{site_description}
-
-      Si estás interesado, haz clic en el botón debajo:
-
-      %{invite_link}
-
-      Esta invitación viene de un usuario en el que confiamos, por lo que se te creará una cuenta automáticamente.
   custom_invite_forum_mailer:
     subject_template: "%{invitee_name} te ha invitado a %{site_domain_name}"
-    text_body_template: |
-      %{invitee_name} te ha invitado a
-
-      > **%{site_title}**
-      >
-      > %{site_description}
-
-      Mensaje de %{invitee_name}:
-
-      %{user_custom_message}
-
-      Si estás interesado en unirte, haz clic en el enlace debajo:
-
-      %{invite_link}
-
-      Esta invitación viene de un usuario en el que confiamos, por lo que se te creará una cuenta automáticamente.
   invite_password_instructions:
     subject_template: "Asigna una contraseña para tu cuenta en %{site_name}"
     text_body_template: |
@@ -1602,26 +1578,6 @@ es:
         (Si necesitas comunicarte con [algún miembro del staff](%{base_url}/about) como nuevo usuario, puedes responder a este mensaje.)
     welcome_invite:
       subject_template: "¡Bienvenido a %{site_name}!"
-      text_body_template: |
-        Gracias por aceptar tu invitación a %{site_name} -- ¡Te damos la bienvenida!
-
-        Hemos creado automáticamente una nueva cuenta para ti: **%{username}**. Puedes cambiar tu nombre de usuario en cualquier momento visitando [tu perfil][prefs].
-
-        Para iniciar sesión en adelante:
-
-        1. Usa siempre la **misma dirección de correo** en la que recibiste tu invitación original. ¡De otra manera no seremos capaces de reconocer que eres tú!
-
-        2. Crea una contraseña unica para [tu perfil de usuario][prefs], y úsala para iniciar sesión.
-
-        %{new_user_tips}
-
-        Creemos en una comunidad con un [comportamiento civilizado](%{base_url}/guidelines).
-
-        ¡Disfruta de tu estancia!
-
-        (Si necesitas comunicarte por privado con [algún miembro del staff](%{base_url}/about) como nuevo usuario, puedes responder a este mensaje.)
-
-        [prefs]: %{user_preferences_url}
     backup_succeeded:
       subject_template: "La copia de seguridad se completo exitosamente"
       text_body_template: |+
@@ -1869,6 +1825,7 @@ es:
 
       > %{site_title} -- %{site_description}
     user_invited_to_private_message_pm:
+      title: "Usuario invitado a MP"
       subject_template: "[%{site_name}] %{username} te ha invitado a un hilo de mensajes '%{topic_title}'"
       text_body_template: |
         %{header_instructions}
@@ -1877,6 +1834,7 @@ es:
 
         %{respond_instructions}
     user_invited_to_private_message_pm_staged:
+      title: "Usuario invitado a MP provisional"
       subject_template: "[%{site_name}] %{username} te ha invitado a un mensaje '%{topic_title}'"
       text_body_template: |
         %{header_instructions}
@@ -1885,6 +1843,7 @@ es:
 
         %{respond_instructions}
     user_invited_to_topic:
+      title: "Usuario invitado a tema"
       subject_template: "[%{site_name}] %{username} te invitó a '%{topic_title}'"
       text_body_template: |
         %{header_instructions}
@@ -1893,6 +1852,7 @@ es:
 
         %{respond_instructions}
     user_replied:
+      title: "Usuario respondió"
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -1903,6 +1863,7 @@ es:
 
         %{respond_instructions}
     user_replied_pm:
+      title: "Usuario respondió por MP"
       subject_template: "[%{site_name}] [MP] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -1913,6 +1874,7 @@ es:
 
         %{respond_instructions}
     user_quoted:
+      title: "Usuario citado"
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -1923,6 +1885,7 @@ es:
 
         %{respond_instructions}
     user_linked:
+      title: "Usuario enlazado"
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -1933,6 +1896,7 @@ es:
 
         %{respond_instructions}
     user_mentioned:
+      title: "Usuario mencionado"
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -1943,6 +1907,7 @@ es:
 
         %{respond_instructions}
     user_group_mentioned:
+      title: "Grupo del usuario mencionado"
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -1953,6 +1918,7 @@ es:
 
         %{respond_instructions}
     user_posted:
+      title: "Usuario publicó"
       subject_template: "[%{site_name}] %{subject_prefix}%{username} publicó en '%{topic_title}'"
       text_body_template: |
         %{header_instructions}
@@ -2757,11 +2723,9 @@ es:
         fields:
           welcome:
             label: "Tema de bienvenida"
-            description: "<p>¿Cómo le describirías tu comunidad a un desconocido en alrededor de 1 minuto?</p> <ul> <li>¿A quién están enfocado el contenido?</li> <li> ¿Qué puedo encontrar aquí?</li> <li>¿Por qué debería visitar esta página</li> <p> Tu tema de bienvenida es la primera cosa que los nuevos visitantes verán. Piensa que es el <p>párrafo</p> que define tu comunidad.</p>"
             one_paragraph: "El mensaje de bienvenida no debería ser más de un párrafo."
       privacy:
         title: "Acceso"
-        description: "<p>¿Es tu comunidad abierta a todo el mundo o está restringida a ciertos miembros, ya sea por invitación o aprobación? Si lo prefieres, puedes hacer que sea privada, y hacerla pública más tarde.</p> <p>Recuerda que siempre puedes enviar invitaciones desde temas, o desde tu página de perfil.</p>"
         fields:
           privacy:
             choices:
@@ -2787,7 +2751,6 @@ es:
             description: "Todos los mensajes privados automáticos de Discourse serán mandados desde este usuarios. Más importante, este usuario será el que envíe el mensaje de bienvenida que se manda automáticamente a todos los usuarios."
       corporate:
         title: "Organización"
-        description: "Estos nombres se usarán en tu <a href='/privacy' target='blank'>Política de privacidad</a> y <a href='/tos' target='blank'>Términos y condiciones</a>, que podrás editar en todo momento en la categoría Staff. Si no tienes una empresa, puedes saltarte este paso por ahora."
         fields:
           company_short_name:
             label: "Nombre de la empresa (corto)"
@@ -2802,7 +2765,6 @@ es:
         title: "Tema"
         fields:
           theme_id:
-            description: "¿Prefieres un tema oscuro o claro para empezar? Siempre lo puedes personalizar a través del panel del Administrador."
             choices:
               default:
                 label: "Simple y claro"
@@ -2827,7 +2789,6 @@ es:
             label: "Icono grande"
             description: "Icono usado para representar tu página en dispositivos modernos y que se ve bien para tamaños grandes. El tamaño recomendado es al menos de 144px por 144px."
       homepage:
-        description: "Recomendamos mostrar los últimos temas en tu página principal, pero siempre puedes mostrar categorías (grupos de temas) en la página principal si prefieres."
         title: "Página de inicio"
         fields:
           homepage_style:
@@ -2838,7 +2799,6 @@ es:
                 label: "Categorías"
       emoji:
         title: "Emoji"
-        description: "¿Qué estilo de Emoji prefieres para tu comunidad? Siempre puedes añadir más Emojis personalizados a trvés de Admin, Personalizar, Emoji."
       invites:
         title: "Invitar staff"
         description: "¡Ya casi está! Invita algunos miembros del staff para ayudar a <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>iniciar conversaciones</a> con temas interesantes y respuestas para dar tu comunidad por empezadas."

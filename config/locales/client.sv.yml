@@ -1811,7 +1811,6 @@ sv:
       one: "visning"
       other: "visningar"
     replies: "Svar"
-    views_long: "detta ämne har visats {{number}} gånger"
     activity: "Aktivitet"
     likes: "Gillningar"
     likes_lowercase:
@@ -2113,8 +2112,6 @@ sv:
         backups: "säkerhetskopior"
         traffic_short: "Trafik"
         traffic: "Applikations-webbegäran"
-        page_views: "API-förfrågningar"
-        page_views_short: "API-förfrågningar"
         show_traffic_report: "Visa detaljerad trafikrapport"
         reports:
           today: "Idag"
@@ -2253,7 +2250,6 @@ sv:
         payload_url_placeholder: "https://example.com/postreceive"
         secret_invalid: "Hemligheten får inte ha några blanka tecken."
         secret_too_short: "Hemligheten bör vara minst 12 tecken."
-        secret_placeholder: "En valfri sträng, används för att generera signatur"
         content_type: "Innehållstyp"
         secret: "Hemlighet"
         event_chooser: "Vilka event vill du ska utlösa den här webhooken?"

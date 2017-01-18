@@ -317,7 +317,7 @@ zh_TW:
         title: '編輯群組'
         full_name: '全名'
         add_members: "增加成員"
-        delete_member_confirm: "從 '%{group}' 群組刪除 '%{username}' ?"
+        delete_member_confirm: "從「%{group}」群組移除「%{username}」？"
       request_membership_pm:
         title: "請求會員資格"
         body: "我想申請 @%{groupName} 的成員資格。"
@@ -375,13 +375,13 @@ zh_TW:
           description: "你只會收到此組中每個新主題的第一帖的通知。"
         tracking:
           title: "追蹤"
-          description: "只有當有人@您或者回覆您的文章時，您才會收到通知，並且會顯示新回覆的次數。"
+          description: "只有當有人 @您 或者回覆您的文章時您才會收到通知，並且會顯示新回覆的數目。"
         regular:
           title: "一般"
-          description: "只有當有人@您或者回覆您的文章時，您才會收到通知。"
+          description: "只有當有人 @您 或者回覆您的文章時您才會收到通知。"
         muted:
           title: "靜音"
-          description: "你將不會再收到任何關於此群組的新通知。"
+          description: "您將不會再收到任何關於此群組新討論話題的通知。"
       flair_url: "頭像圖片"
       flair_url_placeholder: "（可選）圖片 URL 或 Font Awesome class"
       flair_bg_color: "頭像背景顏色"
@@ -453,7 +453,7 @@ zh_TW:
       download_archive:
         button_text: "下載我的文章"
         confirm: "你確定要下載你的文章嗎?"
-        success: "開始下載，處理完畢後將以私人訊息通知你。"
+        success: "開始下載，處理完畢後將以私人訊息通知您。"
         rate_limit_error: "帖子只能每天下載一次，請明天再重試。"
       new_private_message: "新訊息"
       private_message: "訊息"
@@ -718,6 +718,7 @@ zh_TW:
           none: "你還沒有邀請過任何人。你可以邀請一個人，或者<a href='https://meta.discourse.org/t/send-bulk-invites/16468'>上傳 CSV 檔案</a>邀請一批人。"
           text: "從檔案大量邀請"
           success: "檔案已上傳成功，處理完畢後將以私人訊息通知你。"
+          error: "抱歉，檔案應該要用 CSV 格式。"
       password:
         title: "密碼"
         too_short: "你的密碼太短。"
@@ -1795,7 +1796,8 @@ zh_TW:
     views_lowercase:
       other: "觀看"
     replies: "回覆"
-    views_long: "此討論話題已被看過 {{number}} 次"
+    views_long:
+      other: "這個討論話題已經被檢視過 {{number}} 次"
     activity: "活動"
     likes: "讚"
     likes_lowercase:
@@ -2088,8 +2090,8 @@ zh_TW:
         backups: "備份檔"
         traffic_short: "流量"
         traffic: "網頁應用程式請求數"
-        page_views: "API 請求數量"
-        page_views_short: "API 請求數量"
+        page_views: "瀏覽數"
+        page_views_short: "瀏覽數"
         show_traffic_report: "顯示詳細的流量報表"
         reports:
           today: "今天"
@@ -2227,7 +2229,6 @@ zh_TW:
         warn_local_payload_url: "你好像將 webhook 指向了一個本地地址。把相關事件發送到本地可能產生副作用或未預期的行為。繼續嗎？"
         secret_invalid: "密鑰不能包含空白字元。"
         secret_too_short: "密鑰必須至少有 12 個字元。"
-        secret_placeholder: "可選字元串，用於生成簽名"
         event_type_missing: "你必須設置一個事件類型。"
         content_type: "內容格式"
         secret: "密鑰"
@@ -2569,6 +2570,11 @@ zh_TW:
             deleted_tag: "刪除的標籤"
             renamed_tag: "重命名的標籤"
             revoke_email: "撤銷郵件"
+            lock_trust_level: "鎖定信任等級"
+            unlock_trust_level: "解除信任等級鎖定"
+            activate_user: "啟動使用者"
+            deactivate_user: "撤銷使用者"
+            change_readonly_mode: "變更唯讀模式"
         screened_emails:
           title: "過濾的電子郵件地址"
           description: "以下的電子郵件地址將無法用來建立新用戶。"

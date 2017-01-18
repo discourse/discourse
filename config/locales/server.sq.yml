@@ -1021,32 +1021,8 @@ sq:
 
   invite_forum_mailer:
     subject_template: "%{invitee_name} ju ka ftuar të bëheni pjesë e %{site_domain_name}"
-    text_body_template: |
-      %{invitee_name} ju ka ftuar të bëheni pjesë e
-      > **%{site_title}**
-      >
-      > %{site_description}
-
-      Nëse jeni i interesuar, klikoni lidhjen e mëposhtme:
-      %{invite_link}
-
-      Kjo ftesë vjen nga një përdorues i besuar, si rrjedhojë një llogari do të krijohet automatikisht për ju.
   custom_invite_forum_mailer:
     subject_template: "%{invitee_name} ju ka ftuar të bëheni pjesë e %{site_domain_name}"
-    text_body_template: |
-      %{invitee_name} ju ka ftuar të bëheni pjesë e
-      > **%{site_title}**
-      >
-      > %{site_description}
-
-      Mesazhi nga %{invitee_name}:
-
-      %{user_custom_message}
-
-      Nëse jeni i interesuar, klikoni lidhjen e mëposhtme:
-      %{invite_link}
-
-      Kjo ftesë vjen nga një përdorues i besuar, si rrjedhojë një llogari do të krijohet automatikisht për ju.
   invite_password_instructions:
     subject_template: "Vendos fjalëkalimin për llogarinë tek %{site_name}"
     text_body_template: |+
@@ -1110,26 +1086,6 @@ sq:
         (Nëse ju duhet të komunikoni me [anëtarët e stafit](%{base_url}/about) si një anëtar i ri, thjesht përgjigjuni këtij mesazhi.)
     welcome_invite:
       subject_template: "Mirë se vini tek %{site_name}!"
-      text_body_template: |
-        Thanks for accepting your invitation to %{site_name} -- welcome!
-
-        We've created a new account **%{username}** for you, and you are logged in. You can change your name by visiting [your user profile][prefs].
-
-        To log in again later:
-
-        1. Always **use the same email address from your original invitation** when logging in. Otherwise we won't be able to tell it's you!
-
-        2. Create a unique password for [your user profile][prefs], and use it to log in.
-
-        %{new_user_tips}
-
-        We believe in [civilized community behavior](%{base_url}/guidelines) at all times.
-
-        Enjoy your stay!
-
-        (If you need to communicate with [staff members](%{base_url}/about) as a new user, just reply to this message.)
-
-        [prefs]: %{user_preferences_url}
     backup_succeeded:
       subject_template: "Backup completed successfully"
     backup_failed:

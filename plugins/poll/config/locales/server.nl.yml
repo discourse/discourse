@@ -30,8 +30,8 @@ nl:
     named_cannot_be_made_public: "De poll genaamd <strong>%{name}</strong> heeft stemmen die niet openbaar gemaakt kunnen worden"
     edit_window_expired:
       cannot_change_polls: "Je kunt na %{minutes} minuten geen polls meer toevoegen, verwijderen of hernoemen."
-      op_cannot_edit_options: "Je kunt na %{minutes} minuten geen polls meer toevoegen, verwijderen of hernoemen. Neem contact op met een moderator als je een poll optie wilt wijzigen."
-      staff_cannot_add_or_remove_options: "Je kunt na %{minutes} minuten geen polls meer toevoegen, verwijderen of hernoemen. Sluit deze topic en maak een nieuwe."
+      op_cannot_edit_options: "Je kunt na %{minutes} minuten geen poll opties meer toevoegen of verwijderen. Neem contact op met een moderator als je een poll optie wilt wijzigen."
+      staff_cannot_add_or_remove_options: "Je kunt na %{minutes} minuten geen poll opties meer toevoegen of verwijderen. Je kan dit topic sluiten en een nieuw topic maken."
     no_polls_associated_with_this_post: "Er bestaan geen polls voor dit bericht."
     no_poll_with_this_name: "Er bestaat geen poll met de naam <strong>%{name}</strong> voor dit bericht."
     post_is_deleted: "Dit kan niet bij een verwijderd bericht."

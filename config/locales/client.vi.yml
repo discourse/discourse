@@ -1526,7 +1526,6 @@ vi:
     views_lowercase:
       other: "lượt xem"
     replies: "Trả lời"
-    views_long: "chủ đề đã được xem {{number}} lần"
     activity: "Hoạt động"
     likes: "Lượt thích"
     likes_lowercase:
@@ -1650,8 +1649,6 @@ vi:
         backups: "sao lưu"
         traffic_short: "Băng thông"
         traffic: "Application web requests"
-        page_views: "API Requests"
-        page_views_short: "API Requests"
         show_traffic_report: "Xem chi tiết Báo cáo Lưu lượng"
         reports:
           today: "Hôm nay"

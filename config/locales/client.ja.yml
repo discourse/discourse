@@ -1474,7 +1474,6 @@ ja:
     views_lowercase:
       other: " 閲覧"
     replies: "返信"
-    views_long: "このトピックは{{number}}回閲覧されました"
     activity: "アクティビティ"
     likes: "いいね！"
     likes_lowercase:
@@ -1659,8 +1658,6 @@ ja:
         backups: "バックアップ"
         traffic_short: "トラフィック"
         traffic: "Application web requests"
-        page_views: "API Requests"
-        page_views_short: "API Requests"
         show_traffic_report: "Show Detailed Traffic Report"
         reports:
           today: "今日"

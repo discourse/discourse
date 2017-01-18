@@ -1876,7 +1876,6 @@ pl_PL:
       few: "odsłony"
       other: "odsłon"
     replies: "Odpowiedzi"
-    views_long: "ten temat był oglądany {number}} razy"
     activity: "Aktywność"
     likes: "Lajki"
     likes_lowercase:
@@ -2178,8 +2177,6 @@ pl_PL:
         backups: "kopie zapasowe"
         traffic_short: "Ruch"
         traffic: "Zapytania do aplikacji"
-        page_views: "Zapytania API"
-        page_views_short: "Zapytania API"
         show_traffic_report: "Pokaż szczegółowy raport ruchu"
         reports:
           today: "Dzisiaj"

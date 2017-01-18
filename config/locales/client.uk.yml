@@ -1059,7 +1059,6 @@ uk:
     original_post: "Перший допис"
     views: "Перегляди"
     replies: "Відповіді"
-    views_long: "цю тему переглянули {{number}} разів"
     activity: "Активність"
     likes: "Вподобання"
     likes_long: "в цій темі {{number}} вподобань"

@@ -321,7 +321,19 @@ nl:
       total_rows:
         one: "1 lid"
         other: "%{count} leden"
+    group_histories:
+      actions:
+        change_group_setting: "Wijzig groepsinstellingen"
+        add_user_to_group: "Gebruiker toevoegen"
+        remove_user_from_group: "Gebruiker verwijderen"
+        make_user_group_owner: "Maak eigenaar"
+        remove_user_as_group_owner: "Eigenaar intrekken"
     groups:
+      edit:
+        title: 'Wijzig groep'
+        full_name: 'Volledige Naam'
+        add_members: "Voeg leden toe"
+        delete_member_confirm: "Verwijder '%{username}' uit de '%{group}' groep?"
       add: "Voeg toe"
       selector_placeholder: "Voeg leden toe"
       owner: "eigenaar"
@@ -1815,7 +1827,6 @@ nl:
       one: "weergave"
       other: "weergaves"
     replies: "Reacties"
-    views_long: "deze topic is {{number}} keer bekeken"
     activity: "Activiteit"
     likes: "Likes"
     likes_lowercase:
@@ -2118,8 +2129,6 @@ nl:
         backups: "backups"
         traffic_short: "Verkeer"
         traffic: "Applicatie webverzoeken"
-        page_views: "API-verzoeken"
-        page_views_short: "API-verzoeken"
         show_traffic_report: "Laat gedetailleerd verkeersrapport zien"
         reports:
           today: "Vandaag"
@@ -2262,7 +2271,6 @@ nl:
         warn_local_payload_url: "Zo te zien probeer je een webhook naar een lokale URL te laten wijzen. Gebeurtenissen die hierheen gestuurd worden kunnen mogelijk resulteren in onverwacht gedrag. Doorgaan?"
         secret_invalid: "Secret mag geen lege tekens bevatten."
         secret_too_short: "Secret moet uit minimaal 12 tekens bestaan."
-        secret_placeholder: "Een optionele waarde, gebruikt bij het maken van een handtekening"
         event_type_missing: "Stel minstens één event type in."
         content_type: "Type inhoud"
         secret: "Secret"
@@ -2903,6 +2911,7 @@ nl:
           user_preferences: "Gebruikersvoorkeuren"
           tags: "Tags"
           search: "Zoek"
+          groups: "Groepen"
       badges:
         title: Badges
         new_badge: Nieuwe badge

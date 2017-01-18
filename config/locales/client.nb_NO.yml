@@ -749,6 +749,7 @@ nb_NO:
           none: "Du har ikke invitert noen hit enda. Du kan sende individuelle invitasjoner, eller du kan invitere flere personer samtidig ved å <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>laste opp en CSV-fil</a>."
           text: "Masseinvitasjon fra fil"
           success: "Filen er lastet opp, du vil motta en melding når prosessesen er ferdig"
+          error: "Beklager, filen skal være i CSV-format."
       password:
         title: "Passord"
         too_short: "Passordet ditt er for kort"
@@ -1887,7 +1888,9 @@ nb_NO:
       one: "visninger"
       other: "visninger"
     replies: "Svar"
-    views_long: "dette emnet har blit sett {{number}} ganger"
+    views_long:
+      one: "dette emnet er vist 1 gang"
+      other: "dette emnet er vist {{number}} ganger"
     activity: "Aktivitet"
     likes: "Liker"
     likes_lowercase:
@@ -2192,8 +2195,8 @@ nb_NO:
         backups: "sikkerhetskopier"
         traffic_short: "Trafikk"
         traffic: "Applikasjon webforespørsler"
-        page_views: "API forespørsler"
-        page_views_short: "API forespørsler"
+        page_views: "Sidevisninger"
+        page_views_short: "Sidevisninger"
         show_traffic_report: "Vis detaljert trafikkrapport"
         reports:
           today: "I dag"
@@ -2336,7 +2339,7 @@ nb_NO:
         warn_local_payload_url: "Det ser ut som du prøver å sende webhooken til en lokal URL. Hendelser som sendes til lokale adresser kan gi sideeffekter eller føre til uventet oppførsel. Fortsette?"
         secret_invalid: "Delt hemmelighet kan ikke inneholde blanke tegn."
         secret_too_short: "Delt hemmelighet må være minst 12 tegn."
-        secret_placeholder: "En valgfri streng, brukt til å generere signatur"
+        secret_placeholder: "En valgfri streng som brukes for å lage signatur"
         event_type_missing: "Du må sette opp minst en type hendelse."
         content_type: "Content Type"
         secret: "Delt hemmelighet"
@@ -2680,6 +2683,8 @@ nb_NO:
             deleted_tag: "slettet stikkord"
             renamed_tag: "stikkord med nytt navn"
             revoke_email: "tilbakekall e-post"
+            lock_trust_level: "lås tillitsnivå"
+            unlock_trust_level: "lås opp tillitsnivå"
         screened_emails:
           title: "Kontrollerte e-poster"
           description: "Når noen forsøker å lage en ny konto, vil de følgende e-postadressene bli sjekket, og registreringen vil bli blokkert, eller en annen handling vil bli utført."
@@ -3038,7 +3043,7 @@ nb_NO:
           error_help: "Se følgende lenker for hjelp til spørringer for merker."
           bad_count_warning:
             header: "ADVARSEL!"
-            text: "Det er manglende grant samples. Dette skjer når merkesøket returnerer bruker-ID-er eller innleggs-ID-er som ikke eksisterer. Dette kan føre til uventede resultater senere - dobbeltsjekk søket ditt."
+            text: "Det er manglende grant samples. Dette skjer når merke-søket returnerer bruker-IDer eller innleggs-ID-er som ikke eksisterer. Dette kan føre til uventede resultater senere - dobbeltsjekk søket ditt."
           no_grant_count: "Ingen merker å tildele."
           grant_count:
             one: "<b>Ett</b> merke å tildele."
@@ -3062,7 +3067,7 @@ nb_NO:
         sample: "Bruk følgende HTML-kode på siden din for å bygge inn Discourse-emner. Erstatt <b>ERSTATT_MEG</b> med kanonisk nettadresse fra siden du bygger den inn i."
         title: "Innbygging"
         host: "Tillatte verter"
-        path_whitelist: "Hvitliste for søkesti"
+        path_whitelist: "Tillatte stier"
         edit: "rediger"
         category: "Legg til innlegg i kategori"
         add_host: "Legg til vert"

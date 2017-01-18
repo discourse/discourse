@@ -20,8 +20,8 @@ zh_TW:
     month_names: [null, 一月, 二月, 三月, 四月, 五月, 六月, 七月, 八月, 九月, 十月, 十一月, 十二月]
     <<: *datetime_formats
   time:
-    am: "AM"
-    pm: "PM"
+    am: "上午"
+    pm: "下午"
     <<: *datetime_formats
   title: "論壇"
   topics: "討論話題"
@@ -29,27 +29,28 @@ zh_TW:
   loading: "載入中"
   powered_by_html: 'Powered by <a href="http://www.discourse.org">Discourse</a>, 請啟用 Javascript 以獲得最佳瀏覽效果'
   log_in: "登入"
-  purge_reason: "自動當成遺棄、未啟動的帳號刪除"
+  purge_reason: "自動當成遺棄、未啟動的帳戶刪除"
   disable_remote_images_download_reason: "磁盤空間不足，圖像下載已被禁用。"
   anonymous: "匿名"
+  remove_posts_deleted_by_author: "已由作者刪除"
   emails:
     incoming:
-      default_subject: "收入email從%{email}"
-      show_trimmed_content: "顯示之前刪除的內容"
+      default_subject: "來自 %{email} 的電子郵件"
+      show_trimmed_content: "顯示刪減後的內容"
       maximum_staged_user_per_email_reached: "以達成分期使用者能創造的最大數量信件"
       errors:
-        empty_email_error: "當收到的未加工訊息是空白時發生"
-        no_message_id_error: "當信件沒有訊息名稱時發生"
+        empty_email_error: "當我們收到的原生郵件空白時發生。"
+        no_message_id_error: "當郵件沒有「Message-Id」標頭訊息時發生。"
         auto_generated_email_error: "郵件頭部的“precedence”為：list、junk、bulk 或 auto_reply，或者頭部包含了：auto-submitted、auto-replied 或 auto-generated。"
         no_body_detected_error: "無法解析正文並且沒有附件。"
-        inactive_user_error: "當寄件者不是主動時發生"
-        blocked_user_error: "當寄件者被阻擋時發生"
+        inactive_user_error: "當寄件者處於非啟動狀態時發生。"
+        blocked_user_error: "當寄件者已被封鎖時發生。"
         bad_destination_address: "發至/抄送/密送欄中的所有郵件都不匹配進站郵件地址。"
-        strangers_not_allowed_error: "當使用者想在不屬於他的分類中開創一個新的主題時發生"
+        strangers_not_allowed_error: "當用戶試圖在尚未晉身為成員之一的分類中新建討論話題時發生。"
         insufficient_trust_level_error: "用戶嘗試在用戶等級不滿足分類要求時發帖。"
         reply_user_not_matching_error: "回覆郵箱地址與通知發送至的郵件地址不同。"
-        topic_not_found_error: "當得到回應，但相關主題已經被刪除時發生"
-        topic_closed_error: "當得到回應，但相關主題已經被關閉時發生"
+        topic_not_found_error: "當得到回應，但相關討論話題已經刪除時發生。"
+        topic_closed_error: "當得到回應，但相關討論話題已經關閉時發生。"
         bounced_email_error: "郵件是投遞失敗的錯誤報告。"
         screened_email_error: "發件人郵箱已經被封禁。"
   errors: &errors
@@ -71,7 +72,7 @@ zh_TW:
       has_already_been_used: "已經被使用"
       inclusion: 不包括在這列表中
       invalid: 無效的
-      is_invalid: "似乎不清楚，這是個完整的句子嗎?"
+      is_invalid: "似乎不清楚，這是完整的句子嗎？"
       less_than: 必須少於 %{count}
       less_than_or_equal_to: 必須少於或等於 %{count}
       not_a_number: 不是數字
@@ -102,7 +103,7 @@ zh_TW:
       default_categories_already_selected: "不能選擇一個已經用於另一個列表的分類。"
       s3_upload_bucket_is_required: "你沒有填寫“s3_upload_bucket”，不能開啟上傳至 S3。"
   bulk_invite:
-    file_should_be_csv: "上傳檔必須是CSV的格式"
+    file_should_be_csv: "上傳的檔案必須是 CSV 格式。"
     error: "上傳檔案有錯誤，請再試一次。"
   backup:
     operation_already_running: "%{operation} 操作正在運行。 目前無法執行新的 %{operation} 操作。"
@@ -113,17 +114,17 @@ zh_TW:
   not_found: "所請求的URL或資源無法找到。"
   invalid_access: "你不允許查看所請求的資源。"
   read_only_mode_enabled: "這個網站目前在唯讀模式，無法進行互動功能。"
-  reading_time: "看時間"
-  likes: "讚"
+  reading_time: "閱讀時間"
+  likes: "個讚"
   too_many_replies:
     other: "我們非常抱歉，新用戶被臨時限制在同一個主題上，只能回覆 %{count} 次"
   embed:
     start_discussion: "開始討論"
     continue: "繼續討論"
-    error: "錯誤嵌入"
-    referer: "引薦"
-    mismatch: "引薦來源與下列任何主機不符"
-    no_hosts: "未設置嵌入的主機"
+    error: "嵌入時遭遇錯誤"
+    referer: "Referer："
+    mismatch: "referer 來源與下列任何主機不符："
+    no_hosts: "未設置內嵌用的主機。"
     configure: "配置嵌入"
     more_replies:
       other: "%{count} 個更多回覆"
@@ -133,28 +134,28 @@ zh_TW:
     in_reply_to: "▶ %{username}"
     replies:
       other: "%{count} 個回覆"
-  no_mentions_allowed: "抱歉，你不能提及其他使用者"
+  no_mentions_allowed: "抱歉，您無法提及其他用戶。"
   too_many_mentions:
-    other: "抱歉，你只能提及帖子中%{count} 的使用者"
-  no_mentions_allowed_newuser: "抱歉，新使用者不能提及其他使用者"
+    other: "抱歉，您的貼文中只能提及 %{count} 位用戶。"
+  no_mentions_allowed_newuser: "抱歉，新用戶不能提及其他用戶。"
   too_many_mentions_newuser:
-    other: "抱歉，新使用者只能提及帖子中%{count}的使用者。"
-  no_images_allowed: "抱歉，新使用者不能在帖子中發布圖片"
+    other: "抱歉，新用戶只能在貼文中提及 %{count} 位用戶。"
+  no_images_allowed: "抱歉，新用戶不能在貼文中放置圖片。"
   too_many_images:
-    other: "抱歉，新者用者只能在帖子裡放%{count}張圖片"
-  no_attachments_allowed: "抱歉，新使用者不能在帖子中發布附件"
+    other: "抱歉，新者用者只能在貼文中放置 %{count} 張圖片。"
+  no_attachments_allowed: "抱歉，新用戶不能在貼文中放置附件。"
   too_many_attachments:
-    other: "抱歉，新使用者只能在帖子裡發布%{count} 個附件"
-  no_links_allowed: "抱歉，新使用者不能在帖子裡放置連結"
+    other: "抱歉，新用戶只能在貼文中放置 %{count} 個附件。"
+  no_links_allowed: "抱歉，新用戶不能在貼文中放置連結。"
   too_many_links:
-    other: "抱歉，新使用者只能在帖子裡放置%{count}個連結"
+    other: "抱歉，新用戶只能在貼文中放置 %{count} 個連結。"
   spamming_host: "抱歉，你不能張貼該網站之連結。"
   user_is_suspended: "被停權的用戶無法張貼文章。"
   topic_not_found: "出現問題。也許這個話題被關閉或刪除。"
   not_accepting_pms: "對不起，%{username} 目前不接收訊息。"
   just_posted_that: "與你最近發表的內容太相似"
   invalid_characters: "包含無效字詞"
-  is_invalid: "似乎不清楚，這是個完整的句子嗎?"
+  is_invalid: "似乎不清楚，這是完整的句子嗎？"
   next_page: "下一頁 &rarr;"
   prev_page: "← 上一頁"
   page_num: "%{num} 頁"
@@ -170,16 +171,16 @@ zh_TW:
   rss_description:
     latest: "最新討論話題"
     hot: "熱門討論話題"
-    top: "熱門話題"
+    top: "熱門討論話題"
     posts: " 最近文章"
-    private_posts: "最近的私人訊息"
-    group_posts: "%{group_name}發布的最新帖子"
-    group_mentions: "%{group_name}最近提及的事物"
-    user_posts: "@%{username}發布的最新公告"
-    user_topics: "@%{username}發布的最新主題"
+    private_posts: "最新的私人訊息"
+    group_posts: "%{group_name} 的最新貼文"
+    group_mentions: "%{group_name} 的最近提及"
+    user_posts: "@%{username} 的最新貼文"
+    user_topics: "@%{username} 的的最新討論話題"
     tag: "主題標籤"
   too_late_to_edit: "這文章建立很久了，它已經無法被編輯或刪除"
-  revert_version_same: "你試圖回復的版本和當前版本相同。"
+  revert_version_same: "您試圖回復的版本和當前版本相同。"
   excerpt_image: "圖片"
   queue:
     delete_reason: "通過帖子審核隊列刪除"
@@ -188,9 +189,9 @@ zh_TW:
       can_not_modify_automatic: "你不能修改自動組"
       member_already_exist: "'%{username}' 已經是群組成員了。"
       invalid_domain: "'%{domain}' 不是有效的域名."
-      invalid_incoming_email: "'%{email}'不是有效的電子郵件位址"
-      email_already_used_in_group: "'%{email}' 已經被組織'%{group_name}'使用"
-      email_already_used_in_category: "'%{email}'已經被分類 '%{category_name}'使用"
+      invalid_incoming_email: "「%{email}」不是有效的電子郵件位址。"
+      email_already_used_in_group: "「%{email}」已經被「%{group_name}」群組使用。"
+      email_already_used_in_category: "「%{email}」已經被「%{category_name}」類別使用。"
     default_names:
       everyone: "所有人"
       admins: "管理員"
@@ -264,7 +265,7 @@ zh_TW:
         name: "分類名稱"
       topic:
         title: '標題'
-        featured_link: '有特色的連結'
+        featured_link: '特選連結'
       post:
         raw: "內容"
       user_profile:
@@ -280,14 +281,14 @@ zh_TW:
               no_user_selected: "你必須選擇有效用戶。"
             featured_link:
               invalid: "不合法。URL 應包括 http:// 或 https://。"
-              invalid_category: "在這個分類中無法編輯"
+              invalid_category: "無法在這個類別中編輯。"
         user:
           attributes:
             password:
               common: "這個密碼是 10000 個最常用密碼之一，請使用一個更安全的密碼"
-              same_as_username: "與你的使用者名稱相同。請使用其他更安全的密碼。"
+              same_as_username: "與你的用戶名稱相同。請使用其他更安全的密碼。"
               same_as_email: "與你的電郵相同。請使用其他更安全的密碼。"
-              same_as_current: "與你當前的密碼相同"
+              same_as_current: "與您目前的密碼相同。"
             ip_address:
               signup_not_allowed: "不能使用這個帳戶進行登入"
         color_scheme_color:
@@ -296,7 +297,7 @@ zh_TW:
               invalid: "不是一個有效顏色"
         post_reply:
           base:
-            different_topic: "帖子和回復必須都是回在相同的主題"
+            different_topic: "貼文和回覆都必須處在相同的討論話題下。"
         web_hook:
           attributes:
             payload_url:
@@ -314,7 +315,7 @@ zh_TW:
   assets_topic_title: "站點設計資料"
   assets_topic_body: "這是一個永久主題，僅對管理人員可見，用於存儲論壇設計使用的圖像和檔案。不要刪除它！\n\n\n詳細教程：\n\n\n1. 回覆到這個主題。\n2. 上傳你想用作站點標誌、表徵圖和其他所有圖片到這兒。（使用帖子編輯器工具欄中的上傳表徵圖，或者拖拽或者粘貼圖像。）\n3. 提交你的回覆添加帖子。\n4. 在你的新帖子裡右鍵點擊圖片獲得這些已上傳圖片的連結，或者點擊編輯按鈕來編輯帖子，獲得到圖片的相對地址。複製這些相對地址。\n5. 粘貼這些圖像的路徑到[基礎設置](/admin/site_settings/category/required)。\n\n\n如果你需要運行額外的上傳檔案類型，在[檔案設置](/admin/site_settings/category/files)中編輯 `authorized_extensions`。"
   discourse_welcome_topic:
-    title: "歡迎來到Discourse"
+    title: "歡迎來到 Discourse"
     body: |2
 
       置頂主題的第一段是訪客在主頁看到的歡迎消息。這很重要！
@@ -360,9 +361,9 @@ zh_TW:
       uncategorized_parent: "未分類不能有一個父分類"
       self_parent: "一個子分類的上層不能是自己"
       depth: "你不能在子分類下再包含子分類"
-      invalid_email_in: "'%{email}'不是有效的電子郵件位址"
-      email_already_used_in_group: "%{email}' 已經被組織'%{group_name}'使用"
-      email_already_used_in_category: "%{email}'已經被分類 '%{category_name}'使用"
+      invalid_email_in: "「%{email}」不是有效的電子郵件位址。"
+      email_already_used_in_group: "「%{email}」已被「%{group_name}」群組數用。"
+      email_already_used_in_category: "「%{email}」已被「%{category_name}」類別使用。"
     cannot_delete:
       uncategorized: "不能刪除該分類"
       has_subcategories: "不能刪除該分類，因為它有子分類"
@@ -383,21 +384,21 @@ zh_TW:
       title: "資深"
     change_failed_explanation: "你嘗試將%{user_name}降至%{new_trust_level}。然而他們的信任等級已經是%{current_trust_level}。%{user_name}將仍處于%{current_trust_level}——如果你想要降級用戶，先鎖定信任等級。"
   rate_limiter:
-    slow_down: "你重複這個行動太多次了，請稍後再試"
+    slow_down: "您這個動作重複太多次，請稍後再試。"
     too_many_requests: "你的瀏覽速度過於頻繁，請等待 %{time_left} 後再試。"
     by_type:
       first_day_replies_per_day: "你回帖的數量已經超出身為新用戶當天允許的上限，請等待%{time_left}之後再試。"
       first_day_topics_per_day: "你創建新主題的數量已經超出身為新用戶當天允許的上限，請等待%{time_left}之後再試。"
-      create_topic: "你創建主題過於快速。請等待 %{time_left}再行嘗試"
+      create_topic: "您創建討論話題過於倉猝。請稍等 %{time_left} 再試一次。"
       create_post: "你的回覆過快。請等待%{time_left}再重試。"
-      delete_post: "你刪除主題過於快速。請等待 %{time_left}再行嘗試"
-      public_group_membership: "你加入/離開團隊過於頻繁。請等待 %{time_left}再行嘗試"
-      topics_per_day: "你今天發布的主題已經達到上限次數。請等待%{time_left}再行嘗試。"
-      pms_per_day: "你今天發表的訊息已經達到上限次數。請等待%{time_left}再行嘗試。"
-      create_like: "你今天發表讚的次數已經達到上限。請等待%{time_left}再行嘗試。"
-      create_bookmark: "你今天存取的書籤已經達到上限次數。請等待%{time_left}再行嘗試。"
-      edit_post: "你今天編輯的次數已經達到上限。請等待%{time_left}再行嘗試。"
-      live_post_counts: "你要求即時帖子過於快速。請等待%{time_left}再行嘗試。"
+      delete_post: "您刪除討論話題過於倉猝。請稍待 %{time_left} 後再試一次。"
+      public_group_membership: "您加入/離開群組過於頻繁。請稍等 %{time_left} 後再試一次。"
+      topics_per_day: "您今天新發佈的討論話題已經達到上限。請稍待 %{time_left} 後再試一次。"
+      pms_per_day: "您今天發表的訊息數已經達到上限。請等待 %{time_left} 後再行嘗試。"
+      create_like: "您今天給予讚的次數已經達到上限。請等待 %{time_left} 再行嘗試。"
+      create_bookmark: "您今天加入書籤的數目已經達到上限。請等待 %{time_left} 再行嘗試。"
+      edit_post: "您今天編輯的次數已達到上限。請等待 %{time_left} 再行嘗試。"
+      live_post_counts: "您要求的即時文章計數過於快速。請等待 %{time_left} 再行嘗試。"
       unsubscribe_via_email: "你已經達到了今日用郵件解除訂閲的最大數量限制。請等待%{time_left}之後再試。"
       topic_invitations_per_day: "你已經達到了今日主題邀請的最大數量限制。請等待%{time_left}之後再試。"
     hours:
@@ -499,8 +500,8 @@ zh_TW:
       long_form: '投訴為不當內容'
     notify_user:
       title: '給 @{{username}} 送出一則訊息'
-      description: '我想要直接且隱密的和那個人討論這個帖子'
-      long_form: '訊息使用者'
+      description: '我想要直接且私下地和這位朋友討論其文章。'
+      long_form: '傳訊給用戶'
       email_title: '你的文章在"%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
@@ -524,9 +525,9 @@ zh_TW:
   user_activity:
     no_bookmarks:
       self: "你沒有收藏帖子，收藏帖子能讓你之後輕鬆找到他們。"
-      others: "沒有書籤"
+      others: "沒有書籤。"
     no_likes_given:
-      self: "你沒有喜歡任何帖子"
+      self: "你沒有對任何文章按讚。"
       others: "沒有被讚的帖子。"
   topic_flag_types:
     spam:
@@ -560,7 +561,7 @@ zh_TW:
     topic_description: "點擊連結 %{link} 重新訂閲，或是使用主題底部或右側的通知控制。"
   unsubscribe:
     title: "退訂"
-    stop_watching_topic: "停止觀看這個主題， %{link}"
+    stop_watching_topic: "停止關注這個討論話題，%{link}"
     mute_topic: "關閉此主題的所有通知，%{link}"
     unwatch_category: "停止監看%{category}分類中的所有主題"
     mailing_list_mode: "停用郵件列表模式"
@@ -1032,6 +1033,7 @@ zh_TW:
     max_attachment_size_kb: "允許用戶上傳的最大文件大小（以kB為單位）。確保也在nginx（client_max_body_size），apache 或代理中進行限制文件大小的設定。"
     authorized_extensions: "允許上傳文件的副檔名列表（'*' 表示允許所有文件類型）"
     max_similar_results: "當用戶撰寫新主題時，顯示多少類似主題給用戶。比較根據標題和內容進行。"
+    max_image_megapixels: "圖像所允許的最大百萬畫素數質。"
     title_prettify: "防止常見標題裡的錯別字和錯誤，包括全部大寫，首字小寫，多個！和？，結尾多餘的. 等等。"
     topic_views_heat_low: "多少次瀏覽後，該視圖將稍稍高亮。"
     topic_views_heat_medium: "多少次瀏覽後，該視圖將明顯高亮。"
@@ -1353,6 +1355,8 @@ zh_TW:
   user:
     no_accounts_associated: "無關聯的帳戶"
     deactivated: "因發送至“%{email}”的郵件被多次退信，取消激活"
+    deactivated_by_staff: "已由管理員撤銷"
+    activated_by_staff: "已由管理員啟動"
     username:
       short: "必須至少 %{min} 個字"
       long: "不能超過 %{max} 個字"
@@ -1378,6 +1382,7 @@ zh_TW:
     subject_template:
       other: "%{count} 個標記需要被處理"
   unsubscribe_mailer:
+    title: "取消訂閱 Mailer"
     subject_template: "確認你不想要收到%{site_title}的電子郵件更新"
     text_body_template: |
       有人（可能是你？）請求不再接受來自%{site_domain_name}的郵件更新。
@@ -1388,6 +1393,7 @@ zh_TW:
 
       如果你想要繼續接受郵件更新，你可以忽略這封郵件。
   invite_mailer:
+    title: "邀請 Mailer"
     subject_template: "%{invitee_name} 邀請你參與在 %{site_domain_name} 討論的話題 '%{topic_title}'"
     text_body_template: |
       %{invitee_name} 邀請你參與討論
@@ -1406,6 +1412,7 @@ zh_TW:
 
       這封邀請來組于受信任的用戶，所以你可以立即回覆。
   custom_invite_mailer:
+    title: "客製邀請 Mailer"
     subject_template: "%{invitee_name}邀請你'%{topic_title}'在%{site_domain_name}"
     text_body_template: |
       %{invitee_name}邀請你參與
@@ -1428,38 +1435,13 @@ zh_TW:
 
       這封邀請發自受信任的用戶，所以你可以立即回覆主題。
   invite_forum_mailer:
+    title: "邀請論壇 Mailer"
     subject_template: "%{invitee_name} 邀請你加入 %{site_domain_name}"
-    text_body_template: |
-      %{invitee_name} 邀請你加入
-
-      > **%{site_title}**
-      >
-      > %{site_description}
-
-      如果你感興趣，點擊下面的連結：
-
-      %{invite_link}
-
-      這封邀請發自受信任的用戶，所以你的帳戶將被自動創建。
   custom_invite_forum_mailer:
+    title: "邀請論壇 Mailer"
     subject_template: "%{invitee_name}邀請你加入%{site_domain_name}"
-    text_body_template: |
-      %{invitee_name}邀請你加入
-
-      > **%{site_title}**
-      >
-      > %{site_description}
-
-      %{invitee_name}的留言：
-
-      %{user_custom_message}
-
-      如果你感興趣，點擊下面的連結：
-
-      %{invite_link}
-
-      這封邀請發自受信任的用戶，所以你的帳戶將被自動創建。
   invite_password_instructions:
+    title: "邀請密碼的說明"
     subject_template: "為 %{site_name} 的帳戶設置密碼"
     text_body_template: |
       感謝你接受來自%{site_name}的邀請——歡迎！
@@ -1469,6 +1451,7 @@ zh_TW:
 
       （如果連結已經過期，在登錄時用，選擇“我忘記了密碼”，再次輸入你的郵箱即可。）
   test_mailer:
+    title: "測試 Mailer"
     subject_template: "[%{site_name}] 電子郵件發送測試"
     text_body_template: |
       這是一封測試電子郵件，發自：
@@ -1512,6 +1495,7 @@ zh_TW:
       [mj]: https://www.mailjet.com/pricing
       [mt]: http://www.mail-tester.com/
   new_version_mailer:
+    title: "新版本 Mailer"
     subject_template: "[%{site_name}] 有可用的新版 Discourse 更新"
     text_body_template: |
       哇哦，有新版本的 [Discourse](http://www.discourse.org) 可以升級！
@@ -1525,6 +1509,7 @@ zh_TW:
 
       - 訪問 [meta.discourse.org（英文）](https://meta.discourse.org) 獲取 Discourse 的最新資訊、討論和支持。也可訪問 [meta.discoursecn.org 非官方的中文支持論壇](https://meta.discoursecn.org) 獲得支持。
   new_version_mailer_with_notes:
+    title: "包含提醒的新版本 Mailer"
     subject_template: "[%{site_name}] 可以升級"
     text_body_template: |
       哇哦，有新版本的 [Discourse](http://www.discourse.org) 可以升級！
@@ -1542,6 +1527,7 @@ zh_TW:
 
       %{notes}
   queued_posts_reminder:
+    title: "排定中的文章提醒"
     subject_template:
       other: "[%{site_name}] %{count} 個帖子等待審核"
     text_body_template: |
@@ -1562,6 +1548,7 @@ zh_TW:
   temporarily_closed_due_to_flags: "主題因為大量的社群標記暫時關閉"
   system_messages:
     post_hidden:
+      title: "文章已隱藏"
       subject_template: "帖子因社群標記隱藏"
       text_body_template: |
         你好，
@@ -1580,6 +1567,7 @@ zh_TW:
     usage_tips:
       text_body_template: "要查看給新用戶的簡要技巧，[（英文）看看這篇博客文章](http://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/)。\n\n只要你參與，我們將更瞭解你，並且新用戶的臨時限制將被移除。\b隨着時間，你將獲得[信任等級](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924)，這將提供一些特殊功能來幫助我們更好地管理社群。\n"
     welcome_user:
+      title: "歡迎使用者"
       subject_template: "歡迎來到 %{site_name}！"
       text_body_template: |+
         感謝你加入%{site_name}，歡迎討論！
@@ -1591,30 +1579,10 @@ zh_TW:
         （如果身為新的使用者你需要聯絡[工作人員](%{base_url}/about)，請直接回覆本訊息）
 
     welcome_invite:
+      title: "歡迎邀請"
       subject_template: "歡迎來到 %{site_name}！"
-      text_body_template: |+
-        歡迎你接受邀請加入 %{site_name} 的 Discourse。
-
-        你已經登入你的新帳號 **%{username}** 。你可以在[你的個人檔案][prefs]更改你的使用者名稱。
-
-        之後要再登入：
-
-        1. 永遠 **使用當初註冊的 email ** 登入，不然我們不知道是你！
-
-        2. 為[你的個人檔案][prefs]創立一個獨立的密碼，用它登入。
-
-        %{new_user_tips}
-
-        我們相信[公民社群守則](%{base_url}/guidelines)。
-
-        享受你在 Discourse 上的時光！
-
-        (如果身為新的使用者你需要聯絡[工作人員](%{base_url}/about) ，請直接回覆此訊息。
-
-        [prefs]: %{user_preferences_url}
-
-
     backup_succeeded:
+      title: "備份成功"
       subject_template: "備份成功完成"
       text_body_template: |
         備份成功。
@@ -1627,6 +1595,7 @@ zh_TW:
         %{logs}
         ```
     backup_failed:
+      title: "備份失敗"
       subject_template: "備份失敗"
       text_body_template: |
         備份已經失敗了。
@@ -1637,6 +1606,7 @@ zh_TW:
         %{logs}
         ```
     restore_succeeded:
+      title: "復原成功"
       subject_template: "恢復成功完成"
       text_body_template: |
         恢復成功。
@@ -1647,6 +1617,7 @@ zh_TW:
         %{logs}
         ```
     restore_failed:
+      title: "復原失敗"
       subject_template: "復原失敗"
       text_body_template: |
         恢復失敗。
@@ -1660,6 +1631,7 @@ zh_TW:
       subject_template: "批次用戶邀請已完成處理"
       text_body_template: "你的批量邀請用戶已經完成，發送了 %{sent} 個邀請。"
     bulk_invite_failed:
+      title: "批量邀請失敗"
       subject_template: "批次使用者邀請處理已經完成，發生了些錯誤"
       text_body_template: |
         批量邀請已經完成，發出了 %{sent} 個邀請並且 %{failed} 個失敗。
@@ -1670,6 +1642,7 @@ zh_TW:
         %{logs}
         ```
     csv_export_succeeded:
+      title: "CSV 檔匯出成功"
       subject_template: "資料匯出完成"
       text_body_template: |
         數據成功導出！:dvd:
@@ -1678,51 +1651,60 @@ zh_TW:
 
         以上的下載連結將在 48 小時後失效。
     csv_export_failed:
+      title: "CSV 檔匯出失敗"
       subject_template: "資料匯出失敗"
       text_body_template: "我們很抱歉，但是你的數據導出請求失敗了。請檢查日誌或聯繫一位管理人員。"
     email_reject_insufficient_trust_level:
+      title: "電子郵件拒絕 信任等級不足"
       subject_template: "[%{site_name}] 電子郵件錯誤 -- 信任等級不足"
       text_body_template: |
         我們很抱歉，但是你發送至%{destination}（名為 %{former_title}）的郵件出問題了。
 
         你的賬戶沒有足夠的信任等級以該郵件地址發佈新主題。如果你有異議，聯繫管理人員。
     email_reject_user_not_found:
+      title: "電子郵件拒絕 找不到用戶"
       subject_template: "[%{site_name}] 郵件問題 -- 用戶未找到"
       text_body_template: |
         我們非常抱歉，但是你發送至 %{destination}（名為%{former_title}） 的郵件出問題了。
 
         你發送回覆的郵件地址是未知的郵件地址。試試從另外一個郵件地址發送，或者聯繫管理人員。
     email_reject_screened_email:
+      title: "電子郵件拒絕 屏蔽的電子郵件地址"
       subject_template: "[%{site_name}] 電子郵件錯誤 -- 被封禁的郵件地址"
       text_body_template: |
         我們非常抱歉，但是你發送至%{destination}（名為%{former_title}）的郵件出問題了。
 
         你發送回覆的郵件地址是已被封禁的郵件地址。試試從另外一個郵件地址發送，或者聯繫管理人員。
     email_reject_inactive_user:
+      title: "電子郵件拒絕 用戶尚未啟動"
       subject_template: "[%{site_name}] 電子郵件錯誤 -- 未激活用戶"
       text_body_template: |
         我們非常抱歉，但是你發送至 %{destination}（名為%{former_title}） 的郵件出問題了。
 
         與你賬戶關聯的郵件地址沒有激活，請先激活你的賬號再發送郵件。
     email_reject_blocked_user:
+      title: "電子郵件拒絕 已封鎖的用戶"
       subject_template: "[%{site_name}] 電子郵件錯誤 -- 被封禁的用戶"
       text_body_template: |
         我們非常抱歉，但是你發送至 %{destination}（名為%{former_title}） 的郵件出問題了。
 
         與你賬戶關聯的郵件地址已經被封禁。
     email_reject_reply_user_not_matching:
+      title: "點子郵件拒絕 未找到符合的用戶"
       subject_template: "[%{site_name}] 電子郵件錯誤 -- 未預期的回覆地址"
       text_body_template: |
         我們非常抱歉，但是你發送至 %{destination}（名為%{former_title}） 的郵件出問題了。
 
         你發送回覆的郵件地址與我們等待的地址不同，所以我們不確定你是不是同一個人。試試從另外一個郵件地址發送，或者聯繫管理人員。
     email_reject_no_account:
+      title: "電子郵件拒絕 沒有帳號"
       subject_template: "[%{site_name}] 電子郵件錯誤 -- 未知賬戶"
       text_body_template: |
         我們非常抱歉，但是你發送至 %{destination}（名為%{former_title}） 的郵件出問題了。
 
         我們找不到匹配你郵件地址的賬號。試試從另外一個郵件地址發送，或者聯繫管理人員。
     email_reject_empty:
+      title: "電子郵件拒絕 空白"
       subject_template: "[%{site_name}] 電子郵件錯誤 -- 無內容"
       text_body_template: |
         我們很抱歉，但是你發送至 %{destination}（名為 %{former_title}）的郵件沒有成功。
@@ -1731,18 +1713,21 @@ zh_TW:
 
         如果你**確定**你的郵件中有回覆內容，試試用更簡單的格式。
     email_reject_parsing:
+      title: "電子郵件拒絕 分析"
       subject_template: "[%{site_name}] 電子郵件錯誤 -- 內容無法識別"
       text_body_template: |
         我們很抱歉，但是你發送至 %{destination}（名為 %{former_title}）的郵件無法發送。
 
         我們不能找到你郵件中的回覆。**請確認將你的回覆置於郵件頂端**——我們不能處理行內回覆。
     email_reject_invalid_access:
+      title: "電子郵件拒絕 無效存取"
       subject_template: "[%{site_name}] 電子郵件錯誤 -- 無權限"
       text_body_template: |
         我們很抱歉，但是你發送至%{destination}（名為 %{former_title}）的郵件出問題了。
 
         你的賬戶沒有達到足夠的信任等級在該分類發佈新主題。如果你有異議，聯繫管理人員。
     email_reject_strangers_not_allowed:
+      title: "電子郵件拒絕 陌生人禁止"
       subject_template: "[%{site_name}] 電子郵件錯誤 -- 無權限"
       text_body_template: |+
         我們非常抱歉，但是你發送至%{destination}（名為%{former_title}）的郵件出問題了。
@@ -1750,6 +1735,7 @@ zh_TW:
         郵件發至的分類只接受來自合法帳戶且郵件地址已確認的用戶的有郵件。如果你有異議，聯繫管理人員。
 
     email_reject_invalid_post:
+      title: "電子郵件拒絕 無效貼文"
       subject_template: "[%{site_name}] 郵件問題 -- 發佈時錯誤"
       text_body_template: |
         我們非常抱歉，但是你發送至%{destination}（名為%{former_title}）的郵件出問題了。
@@ -1766,42 +1752,49 @@ zh_TW:
 
         如果你能解決錯誤，請再試一次。
     email_reject_invalid_post_action:
+      title: "電子郵件拒絕 無效貼文動作"
       subject_template: "[%{site_name}] 電子郵件錯誤 -- 無發表權限"
       text_body_template: |
         我們非常抱歉，但是你發送至%{destination}（名為%{former_title}）的郵件出問題了。
 
         發送的命令無法被識別。請再試一次，如果還有問題，使用網站發表。
     email_reject_reply_key:
+      title: "電子郵件拒絕 復原金鑰"
       subject_template: "[%{site_name}] 電子郵件錯誤 -- 未知回覆指紋"
       text_body_template: |
         我們非常抱歉，但是你發送至%{destination}（名為%{former_title}）的郵件出問題了。
 
         郵件中的回覆信令是無效或者未知的，所以我們不知道這封郵件回覆給誰了。請聯繫管理人員。
     email_reject_bad_destination_address:
+      title: "電子郵件拒絕 不良目的地位址"
       subject_template: "[%{site_name}] 電子郵件錯誤 -- 未知的回覆至地址"
       text_body_template: |
         我們非常抱歉，但是你發送至%{destination}（名為%{former_title}） 郵件出問題了。
 
         目標郵件地址無法識別。請確保你在向管理人員提供的郵件地址發信。
     email_reject_topic_not_found:
+      title: "電子郵件拒絕 未找到討論話題"
       subject_template: "[%{site_name}] 郵件問題 -- 主題未找到"
       text_body_template: |
         我們很抱歉，但是你發送至%{destination}（名為 %{former_title}）的郵件出問題了。
 
         你回覆的主題不存在——可能已經被刪除了？如果你有異議，聯繫管理人員。
     email_reject_topic_closed:
+      title: "電子郵件拒絕 討論話題已關閉"
       subject_template: "[%{site_name}] 郵件問題 -- 主題已關閉"
       text_body_template: |
         我們很抱歉，但是你發送至 %{destination} ( 名為 %{former_title} )的郵件出問題了。
 
         你回覆的主題已經被關閉，不允許回覆。如果你有異議，聯繫管理人員。
     email_reject_auto_generated:
+      title: "電子郵件拒絕 自動生成"
       subject_template: "[%{site_name}] 郵件問題 -- 自動生成的回覆"
       text_body_template: |
         我們很抱歉，但是你發送至%{destination}（名為 %{former_title}）的郵件出問題了。
 
         系統覺得你的郵件是“自動生成”的，即電腦生成了該郵件而不是由你輸入的；我們不能接受這樣的郵件。如果你有異議，聯繫管理人員。
     email_error_notification:
+      title: "電子郵件錯誤通知"
       subject_template: "[%{site_name}] 電子郵件錯誤 -- POP 驗證錯誤"
       text_body_template: |
         不幸的是，從 POP 伺服器查詢郵件時遇到了驗證錯誤。
@@ -1810,6 +1803,7 @@ zh_TW:
 
         如果 POP 郵件賬號有圖形界面，你可以登錄後查看郵箱設置。
     too_many_spam_flags:
+      title: "過多垃圾文章投訴"
       subject_template: "新賬戶被暫時封禁"
       text_body_template: |
         你好，
@@ -1820,6 +1814,7 @@ zh_TW:
 
         要查看更多指引，請參考我們的[社群指引](%{base_url}/guidelines)。
     too_many_tl3_flags:
+      title: "過多 TL3 投訴"
       subject_template: "新賬戶被暫時封禁"
       text_body_template: |
         你好，
@@ -1830,6 +1825,7 @@ zh_TW:
 
         要查看更多指引，請參考我們的[社群指引](%{base_url}/guidelines)。
     blocked_by_staff:
+      title: "被管理員封鎖"
       subject_template: "賬戶被暫時封禁"
       text_body_template: |
         你好，
@@ -1840,6 +1836,7 @@ zh_TW:
 
         要查看更多指引，請參考我們的[社群指引](%{base_url}/guidelines)。
     user_automatically_blocked:
+      title: "用戶自動封鎖"
       subject_template: "新用戶%{username}因社群標記而被封禁"
       text_body_template: |
         這是自動發出的郵件。
@@ -1850,6 +1847,7 @@ zh_TW:
 
         該閾值可以通過站點設置中的 `block_new_user` 更改。
     spam_post_blocked:
+      title: "因垃圾貼文而被封鎖"
       subject_template: "新用戶 %{username} 由於重複貼連結，文章已被封鎖"
       text_body_template: |
         這是自動發出的郵件。
@@ -1860,6 +1858,7 @@ zh_TW:
 
         該閾值可以通過站點設置中的 `newuser_spam_host_threshold` 和 `white_listed_spam_host_domains` 更改。
     unblocked:
+      title: "解除封鎖"
       subject_template: "賬戶已解除封禁"
       text_body_template: |
         你好，
@@ -1875,9 +1874,11 @@ zh_TW:
 
         [請在管理欄目中審核他們](%{base_url}/admin/users/list/pending)。
     download_remote_images_disabled:
+      title: "停用遠端圖片下載"
       subject_template: "停用下載遠端圖片"
       text_body_template: "`download_remote_images_to_local` 設定已被禁用，因為已經達到 ``download_remote_images_threshold` 設定中的磁碟空間限制。"
     dashboard_problems:
+      title: "控制台問題"
       subject_template: "發現問題了"
       text_body_template: |
         系統在管理員面板中報告了發現的問題。
@@ -1928,6 +1929,7 @@ zh_TW:
 
       > %{site_title} -- %{site_description}
     user_invited_to_private_message_pm:
+      title: "用戶被邀請至私人訊息"
       subject_template: "[%{site_name}] %{username} 邀請你參與討論 '%{topic_title}'"
       text_body_template: |
         %{header_instructions}
@@ -1936,6 +1938,7 @@ zh_TW:
 
         %{respond_instructions}
     user_invited_to_private_message_pm_staged:
+      title: "用戶被邀請至私人訊息狀態"
       subject_template: "[%{site_name}] %{username} 邀請你加入消息交流：'%{topic_title}'"
       text_body_template: |
         %{header_instructions}
@@ -1944,6 +1947,7 @@ zh_TW:
 
         %{respond_instructions}
     user_invited_to_topic:
+      title: "用戶被邀請至討論話題"
       subject_template: "[%{site_name}] %{username}邀請你參與“%{topic_title}”"
       text_body_template: |
         %{header_instructions}
@@ -1952,6 +1956,7 @@ zh_TW:
 
         %{respond_instructions}
     user_replied:
+      title: "用戶回覆"
       subject_template: "[%{site_name}] %{username} 在 '%{topic_title}' 討論話題回覆了你的文章"
       text_body_template: |
         %{header_instructions}
@@ -1962,6 +1967,7 @@ zh_TW:
 
         %{respond_instructions}
     user_replied_pm:
+      title: "用戶回復私人訊息"
       subject_template: "[%{site_name}] [PM] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -1972,6 +1978,7 @@ zh_TW:
 
         %{respond_instructions}
     user_quoted:
+      title: "用戶引述"
       subject_template: "[%{site_name}] %{username} 在 '%{topic_title}' 討論話題引用了你的內容"
       text_body_template: |
         %{header_instructions}
@@ -1982,6 +1989,7 @@ zh_TW:
 
         %{respond_instructions}
     user_linked:
+      title: "用戶連結"
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -1992,6 +2000,7 @@ zh_TW:
 
         %{respond_instructions}
     user_mentioned:
+      title: "用戶提及"
       subject_template: "[%{site_name}] %{username} 在 '%{topic_title}' 討論話題提及了你"
       text_body_template: |
         %{header_instructions}
@@ -2002,6 +2011,7 @@ zh_TW:
 
         %{respond_instructions}
     user_group_mentioned:
+      title: "用戶群組提及"
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -2012,6 +2022,7 @@ zh_TW:
 
         %{respond_instructions}
     user_posted:
+      title: "用戶貼文"
       subject_template: "[%{site_name}] %{subject_prefix}%{username} 在 '%{topic_title}' 討論話題發表了文章"
       text_body_template: |
         %{header_instructions}
@@ -2022,6 +2033,7 @@ zh_TW:
 
         %{respond_instructions}
     user_watching_first_post:
+      title: "用戶觀看第一個主題"
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -2032,6 +2044,7 @@ zh_TW:
 
         %{respond_instructions}
     user_posted_pm:
+      title: "用戶發表私人訊息"
       subject_template: "[%{site_name}] [PM] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -2042,6 +2055,7 @@ zh_TW:
 
         %{respond_instructions}
     user_posted_pm_staged:
+      title: "用戶發表私人訊息後備"
       subject_template: "%{optional_re}%{topic_title}"
       text_body_template: |2
 
@@ -2076,6 +2090,7 @@ zh_TW:
       view_this_topic: "查看此主題"
       back_to_top: "回到頂部"
     forgot_password:
+      title: "忘記密碼"
       subject_template: "[%{site_name}] 密碼重設"
       text_body_template: |
         有人請求重設你在 [%{site_name}](%{base_url}) 上的密碼。
@@ -2085,6 +2100,7 @@ zh_TW:
         點擊下面的連結來選擇一個新密碼：
         %{base_url}/users/password-reset/%{email_token}
     set_password:
+      title: "設定密碼"
       subject_template: "[%{site_name}] 設定密碼"
       text_body_template: |
         有人請求添加你在 [%{site_name}](%{base_url}) 的密碼。除此之外，你可以通過已驗證過你郵件地址的在綫服務商登錄。
@@ -2094,6 +2110,7 @@ zh_TW:
         點擊下面的連結來選擇一個新密碼：
         %{base_url}/users/password-reset/%{email_token}
     admin_login:
+      title: "管理員登入"
       subject_template: "[%{site_name}]登錄"
       text_body_template: |
         有人嘗試登錄你在[%{site_name}](%{base_url})的賬戶。
@@ -2103,6 +2120,7 @@ zh_TW:
         點擊下面的連結登錄：
         %{base_url}/users/admin-login/%{email_token}
     account_created:
+      title: "建立用戶"
       subject_template: "[%{site_name}] 你的新帳號"
       text_body_template: |
         你在 %{site_name} 上建立了一個新賬號
@@ -2110,12 +2128,14 @@ zh_TW:
         點擊下面的連結來為新賬戶設置密碼：
         %{base_url}/users/password-reset/%{email_token}
     confirm_new_email:
+      title: "確認新郵件"
       subject_template: "[%{site_name}] 確認你的電子郵件位址"
       text_body_template: |
         點擊以下連結確認你在[%{site_name}]上的新電子郵件：
 
         %{base_url}/users/authorize-email/%{email_token}
     confirm_old_email:
+      title: "確認舊郵件"
       subject_template: "[%{site_name}] 確認你的新電子郵箱地址"
       text_body_template: |
         在我們修改你的郵箱地址前，我們需要你確認你擁有當前的郵件賬號。在你完成這步之後，我們將確認你的新郵件地址。
@@ -2124,6 +2144,7 @@ zh_TW:
 
         %{base_url}/users/authorize-email/%{email_token}
     notify_old_email:
+      title: "通知舊的郵件"
       subject_template: "[%{site_name}] 你的郵箱地址已經修改成功"
       text_body_template: |
         這是%{site_name}自動發出的郵件，以告知你的郵箱地址已經被修改了。如果這是一個錯誤，請聯繫站點管理人員。
@@ -2132,6 +2153,7 @@ zh_TW:
 
         %{new_email}
     signup_after_approval:
+      title: "在同意之後註冊"
       subject_template: "你已受到 %{site_name} 的認可！"
       text_body_template: |
         歡迎加入%{site_name}！
@@ -2151,6 +2173,7 @@ zh_TW:
 
         （如果你在新用戶級別需要和[管理人員](%{base_url/about)溝通的話，直接回覆這個消息。）
     signup:
+      title: "註冊"
       subject_template: "[%{site_name}] 確認你的新賬戶"
       text_body_template: |
         歡迎來到 %{site_name}！
@@ -2184,6 +2207,7 @@ zh_TW:
       too_large: "抱歉，你試圖上傳的檔案太大了（最大限製為%{max_size_kb}%KB）。"
     images:
       too_large: "抱歉，你試圖上傳的圖片太大了（最大限製為%{max_size_kb}%KB），請裁剪它並重試。"
+      larger_than_x_megapixels: "對不起，您試圖上傳的影像太大了（最大限制是%{max_image_megapixels} 百萬畫素），請調整大小後重試。"
       size_not_found: "抱歉，我們無法獲取圖片大小，請檢查你的圖片是否已損壞。"
   avatar:
     missing: "抱歉，我們沒法找到與你郵件地址關聯的頭像。你能再上傳一次試試嗎？"
@@ -2816,11 +2840,9 @@ zh_TW:
         fields:
           welcome:
             label: "歡迎主題"
-            description: "<p>你將怎麼在一分鐘內向陌生人描述你的社群？</p> <ul> <li>誰會對這些討論感興趣？</li> <li>我能獲得什麼？</li> <li>為什麼我應該訪問？</li> </ul> <p>你的歡迎主題是新訪客將先看到的東西。把它想象為<b>一段</b>“電梯宣傳”或者“使命聲明”。</p>"
             one_paragraph: "請限制你的歡迎消息至一段話。"
       privacy:
         title: "訪問"
-        description: "<p>你的社群對所有人可見或者需要限製為會員許可、邀請許可或者審核許可？如果你願意，你可以將其設為私密，然後再切換至公開。</p> <p>記住你永遠可以在主題中邀請別人，或者從你的用戶頁面裡也行。</p>"
         fields:
           privacy:
             choices:
@@ -2846,7 +2868,6 @@ zh_TW:
             description: "所有自動發送自 Discourse 的私人消息將以該用戶的名義發送。最重要的是，這個用戶將被指定為發送給每個新用戶的歡迎消息的發送人。"
       corporate:
         title: "組織"
-        description: "這些名字將顯示于<a href='/privacy' target='blank'>隱私策略</a>和<a href='/tos' target='blank'>服務條款</a>中，你可以隨時在工作人員分類中編輯他們。如果你沒有公司，你可以跳過這個步驟。"
         fields:
           company_short_name:
             label: "公司名（短）"
@@ -2861,7 +2882,6 @@ zh_TW:
         title: "主題"
         fields:
           theme_id:
-            description: "你喜歡亮色還是暗色的顏色方案？你永遠可以在管理-自定義中修改站點的觀感。"
             choices:
               default:
                 label: "簡潔亮"
@@ -2886,7 +2906,6 @@ zh_TW:
             label: "大表徵圖"
             description: "現代設備中你站點顯示的表徵圖，要在大一點尺寸的情況下表現出色。推薦的尺寸至少要達到144px X 144px。"
       homepage:
-        description: "我們推薦在你的主頁顯示最新主題，但是如果你喜歡，你也可以選擇顯示分類（一組主題）。"
         title: "主頁"
         fields:
           homepage_style:
@@ -2897,10 +2916,9 @@ zh_TW:
                 label: "分類"
       emoji:
         title: "Emoji"
-        description: "你喜歡你的社群使用哪一種 Emoji 樣式？你永遠可以在管理-自定義-Emoji中增加更多的定製 Emoji。"
       invites:
         title: "邀請工作人員"
-        description: "你快做完啦！讓我們邀請一些工作人員來幫助你<a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>創建一些討論主題</a>以方便你發佈社群。"
+        description: "您就快完成啦！讓我們邀請一些工作人員來幫您<a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>創建一些種子討論話題</a>，好讓您的社群朋友產生興趣並開始回覆。"
       finished:
         title: "你的 Discourse 已經準備就緒！"
         description: |

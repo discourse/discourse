@@ -1568,7 +1568,6 @@ gl:
       one: "vista"
       other: "vistas"
     replies: "Respostas"
-    views_long: "este tema visitouse {{number}} veces"
     activity: "Actividade"
     likes: "Gústames"
     likes_lowercase:
@@ -1700,8 +1699,6 @@ gl:
         backups: "copias de seguranza"
         traffic_short: "Tráfico"
         traffic: "Peticións web de aplicativos"
-        page_views: "Peticións API"
-        page_views_short: "Peticións API"
         show_traffic_report: "Amosar o informe detallado do tráfico"
         reports:
           today: "Hoxe"

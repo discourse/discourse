@@ -749,6 +749,7 @@ de:
           none: "Du hast hier noch niemanden eingeladen. Du kannst einzelne Einladungen versenden, oder eine Reihe von Leuten auf einmal einladen, indem du <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>eine CSV-Datei hochlädst</a>."
           text: "Masseneinladung aus Datei"
           success: "Die Datei wurde erfolgreich hochgeladen. Du erhältst eine Nachricht, sobald der Vorgang abgeschlossen ist."
+          error: "Entschuldige, die Datei sollte im CSV-Format sein."
       password:
         title: "Passwort"
         too_short: "Dein Passwort ist zu kurz."
@@ -1883,7 +1884,9 @@ de:
       one: "Aufruf"
       other: "Aufrufe"
     replies: "Antworten"
-    views_long: "dieses Thema wurde {{number}} mal betrachtet"
+    views_long:
+      one: "dieses Thema wurde 1-mal betrachtet"
+      other: "dieses Thema wurde {{number}}-mal betrachtet"
     activity: "Aktivität"
     likes: "Likes"
     likes_lowercase:
@@ -2188,8 +2191,8 @@ de:
         backups: "Backups"
         traffic_short: "Traffic"
         traffic: "Web Requests der Applikation"
-        page_views: "API Requests"
-        page_views_short: "API Requests"
+        page_views: "Seitenaufrufe"
+        page_views_short: "Seitenaufrufe"
         show_traffic_report: "Zeige detaillierten Traffic-Bericht"
         reports:
           today: "Heute"
@@ -2676,6 +2679,11 @@ de:
             deleted_tag: "Schlagwort gelöscht"
             renamed_tag: "Schlagwort umbenannt"
             revoke_email: "E-Mail widerrufen"
+            lock_trust_level: "Vertrauensstufe sperren"
+            unlock_trust_level: "Vertrauensstufe entsperren"
+            activate_user: "Benutzer aktivieren"
+            deactivate_user: "Benutzer deaktivieren"
+            change_readonly_mode: "Nur-Lesen-Modus ändern"
         screened_emails:
           title: "Gefilterte E-Mails"
           description: "Wenn jemand ein Konto erstellt, werden die folgenden E-Mail-Adressen überprüft und es wird die Anmeldung blockiert oder eine andere Aktion ausgeführt."

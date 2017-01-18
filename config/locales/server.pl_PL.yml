@@ -32,6 +32,7 @@ pl_PL:
   purge_reason: "Automatycznie usunięte jako porzucone, dezaktywowane konto."
   disable_remote_images_download_reason: "Pobieranie zewnętrznych grafik zostało wyłączone z uwagi na niską ilość wolnego miejsca na dysku."
   anonymous: "Anonim"
+  remove_posts_deleted_by_author: "Usunięte przez autora"
   emails:
     incoming:
       default_subject: "Przychodzący email od %{email}"
@@ -342,6 +343,7 @@ pl_PL:
         few: "Nie można usunąć tej kategorii ponieważ zawiera %{count} tematy. Najstarszy z nich: %{topic_link}."
         other: "Nie można usunąć tej kategorii ponieważ zawiera %{count} tematów. Najstarszy z nich: %{topic_link}."
       topic_exists_no_oldest: "Nie można usunąć tej kategorii z uwagi na liczbę tematów: %{count}."
+    uncategorized_description: "Tematy które nie potrzebują kategorii, albo nie nadają się do żadnej innej."
   trust_levels:
     newuser:
       title: "nowy"

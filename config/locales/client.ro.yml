@@ -1975,7 +1975,6 @@ ro:
       few: "vizualizări"
       other: "de vizualizări"
     replies: "Răspunsuri"
-    views_long: "acest subiect a fost vizualizat de {{number}} (de) ori"
     activity: "Activitate"
     likes: "Aprecieri"
     likes_lowercase:
@@ -2292,8 +2291,6 @@ ro:
         backups: "back-up"
         traffic_short: "Trafic"
         traffic: "Cereri web"
-        page_views: "Cereri API"
-        page_views_short: "Cereri API"
         show_traffic_report: "Arată raportul detaliat cu privire la trafic"
         reports:
           today: "Astăzi"
@@ -2441,7 +2438,6 @@ ro:
         warn_local_payload_url: "Se pare că dorești să setezi un webhook pentru un url local. Un eveniment livrat către o adresă locală ar putea avea efecte secundare și genera comportamente neașteptate. Continuă?"
         secret_invalid: "Secretul nu trebuie să aibă nici un caracter spațiu-gol."
         secret_too_short: "Secretul trebuie sa conțină cel puțin 12 caractere."
-        secret_placeholder: "Un șir opțional, folosit la generarea semnăturii"
         event_type_missing: "Va trebui să setezi cel puțin un tip de evenimente."
         content_type: "Tip conținut"
         secret: "Secret"

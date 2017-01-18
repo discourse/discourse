@@ -2127,7 +2127,6 @@ ar:
       many: "المشاهدات"
       other: "المشاهدات"
     replies: "الردود"
-    views_long: "هذا الموضوع قد تمت مشاهدته  {{number}} مرات"
     activity: "النشاط"
     likes: "اعجابات"
     likes_lowercase:
@@ -2456,8 +2455,6 @@ ar:
         backups: "النسخ الاحتياطية"
         traffic_short: "المرور"
         traffic: "طلبات تطبيقات الويب"
-        page_views: "طلبات API "
-        page_views_short: "طلبات API "
         show_traffic_report: "عرض تقرير مرور مفصل"
         reports:
           today: "اليوم"

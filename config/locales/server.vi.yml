@@ -1231,26 +1231,6 @@ vi:
         (Nếu bạn cần giao tiếp với BQT [thành viên quản trị](%{base_url}/about), bạn có thể gửi trả lời email này).
     welcome_invite:
       subject_template: "Chào mừng đến với %{site_name}!"
-      text_body_template: |
-        Chào mừng bạn gia nhập %{site_name}!
-
-        Chúng tôi đã tạo một tài khoản mới **%{username}** cho bạn, bạn có thể thay đổi tên của mình bằng cách truy cập [your user profile][prefs].
-
-        Cho lần đăng nhập sau:
-
-        1. Luôn **sử dụng cùng một địa chỉ email từ lời mời ban đầu của bạn** khi đăng nhập. Nếu không chúng ta sẽ không thể biết đó là bạn!
-
-        2. Tạo một mật khẩu cho [your user profile][prefs], và sử dụng nó để đăng nhập.
-
-        %{new_user_tips}
-
-        Chúng tôi tin rằng bạn sẽ cùng chúng tôi phát triển một cộng đồng văn minh [hành vi ứng xử](%{base_url}/guidelines).
-
-        Chúc vui vẻ!
-
-        (Nếu bạn cần giao tiếp với BQT [thành viên quản trị](%{base_url}/about), bạn có thể gửi trả lời email này).
-
-        [prefs]: %{user_preferences_url}
     backup_succeeded:
       subject_template: "Sản sao lưu hoàn tất thành công"
     backup_failed:

@@ -1411,7 +1411,6 @@ fa_IR:
     views_lowercase:
       other: "بازدیدها"
     replies: "پاسخ‌ها"
-    views_long: "از این موضوع {{number}} بار بازدید شده"
     activity: "فعالیت"
     likes: "پسندها"
     likes_lowercase:
@@ -1543,8 +1542,6 @@ fa_IR:
         backups: "پشتیبان ها"
         traffic_short: "ترافیک"
         traffic: "درخواست های نرم افزار وب"
-        page_views: "درخواست های API"
-        page_views_short: "درخواست های API"
         show_traffic_report: "نمایش دقیق گزارش ترافیک"
         reports:
           today: "امروز"

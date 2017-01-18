@@ -1767,7 +1767,6 @@ sk:
       few: "zobrazenia"
       other: "zobrazení"
     replies: "Odpovede"
-    views_long: "táto téma bola prezeraná {{number}} krát "
     activity: "Aktivita"
     likes: "Páči sa mi"
     likes_lowercase:
@@ -2054,8 +2053,6 @@ sk:
         backups: "zálohy"
         traffic_short: "Vyťaženie"
         traffic: "Požiadavky webových aplikácií"
-        page_views: "Požiadavky API"
-        page_views_short: "Požiadavky API"
         show_traffic_report: "Zobraziť detaily vyťaženia"
         reports:
           today: "Dnes"

@@ -1849,7 +1849,6 @@ pt:
       one: "vista"
       other: "vistas"
     replies: "Respostas"
-    views_long: "este tópico foi visto {{number}} vezes"
     activity: "Atividade"
     likes: "Gostos"
     likes_lowercase:
@@ -2154,8 +2153,6 @@ pt:
         backups: "fazer cópias de segurança"
         traffic_short: "Tráfego"
         traffic: "Pedidos de aplicação web"
-        page_views: "Pedidos API"
-        page_views_short: "Pedidos API"
         show_traffic_report: "Mostrar Relatório Detalhado do Tráfego"
         reports:
           today: "Hoje"
@@ -2298,7 +2295,6 @@ pt:
         warn_local_payload_url: "Parece que está a tentar configurar um webhook para um url local. Eventos entregues num endereço local poderão causar efeitos secundários ou comportamentos inesperados. Continuar?"
         secret_invalid: "O segredo não pode ter espaços."
         secret_too_short: "O segredo tem de ter pelo menos 12 caracteres."
-        secret_placeholder: "Um texto adicional, usado para gerar uma assinatura"
         event_type_missing: "Tem de configurar pelo menos um tipo de evento."
         content_type: "Tipo de Conteúdo"
         secret: "Segredo"
