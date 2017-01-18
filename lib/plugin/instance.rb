@@ -263,11 +263,6 @@ class Plugin::Instance
     themes << theme
   end
 
-  # def register_public
-  #   return unless enabled?
-  #
-  # end
-
   def automatic_assets
     css = styles.join("\n")
     js = javascripts.join("\n")
