@@ -47,7 +47,7 @@ class ImportScripts::JsonGeneric < ImportScripts::Base
         id: username_for(u),
         username: username_for(u),
         name: u,
-        email: "#{u}@example.com",
+        email: "#{username_for(u)}@example.com",
         created_at: Time.now
       }
     end
