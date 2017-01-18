@@ -19,7 +19,7 @@ class Plugin::Theme
     if File.exist?(public_dir)
       Rails.application.config.before_initialize do |app|
         app.middleware.insert_before(
-          ::ActionDispatch::Static,
+          ::Rack::Runtime,
           ::ActionDispatch::Static,
           public_dir
         )
