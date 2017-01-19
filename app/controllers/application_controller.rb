@@ -384,17 +384,15 @@ class ApplicationController < ActionController::Base
 
     def resolve_locale
       if !current_user
-        if SiteSetting.set_locale_from_accept_language_header
-          locale_from_header
-        else
-          SiteSetting.default_locale
-        end
+        locale_from_header || SiteSetting.default_locale
       else
         current_user.effective_locale
       end
     end
 
     def locale_from_header
+      return unless SiteSetting.set_locale_from_accept_language_header
+
       begin
         # Rails I18n uses underscores between the locale and the region; the request
         # headers use hyphens.
@@ -404,7 +402,7 @@ class ApplicationController < ActionController::Base
         parser.language_region_compatible_from(available_locales).tr('-', '_')
       rescue
         # If Accept-Language headers are not set.
-        I18n.default_locale
+        nil
       end
     end
 
