@@ -57,7 +57,7 @@ en:
 
   emails:
     incoming:
-      default_subject: "Incoming email from %{email}"
+      default_subject: "This topic needs a title"
       show_trimmed_content: "Show trimmed content"
       maximum_staged_user_per_email_reached: "Reached maximum number of staged users created per email."
       errors:
