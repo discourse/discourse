@@ -1991,6 +1991,8 @@ en:
 
         The above download link will be valid for 48 hours.
 
+        The data is compressed as a gzip archive. If the archive does not extract itself when you open it, use the tools recommended here: http://www.gzip.org/#faq4
+
     csv_export_failed:
       title: "CSV Export Failed"
       subject_template: "Data export failed"
