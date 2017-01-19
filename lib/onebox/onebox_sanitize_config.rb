@@ -12,6 +12,7 @@ class Sanitize
         'iframe' => %w[allowfullscreen frameborder height scrolling src width],
         'source' => %w[src type],
         'video'  => %w[controls height loop width],
+        'div'    => [:data], # any data-* attributes
       ),
 
       protocols: merge(RELAXED[:protocols],
