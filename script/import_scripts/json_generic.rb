@@ -28,7 +28,13 @@ class ImportScripts::JsonGeneric < ImportScripts::Base
   end
 
   def username_for(name)
-    name.downcase.gsub(/[^a-z0-9\-\_]/, '')
+    result = name.downcase.gsub(/[^a-z0-9\-\_]/, '')
+
+    if result.blank?
+      result = Digest::SHA1.hexdigest(name)[0...10]
+    end
+
+    result
   end
 
   def import_users
