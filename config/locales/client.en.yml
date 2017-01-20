@@ -1753,6 +1753,9 @@ en:
       via_auto_generated_email: "this post arrived via an auto generated email"
       whisper: "this post is a private whisper for moderators"
 
+      wiki:
+        about: "this post is a wiki"
+
       archetypes:
         save: 'Save Options'
 

@@ -30,6 +30,20 @@ widgetTest('wiki', {
   }
 });
 
+widgetTest('wiki without revision', {
+  template: '{{mount-widget widget="post" args=args editPost="editPost"}}',
+  setup() {
+    this.set('args', { wiki: true, version: 1, canViewEditHistory: true });
+    this.on('editPost', () => this.editPostCalled = true);
+  },
+  test(assert) {
+    click('.post-info .wiki');
+    andThen(() => {
+      assert.ok(this.editPostCalled, 'clicking wiki icon edits the post');
+    });
+  }
+});
+
 widgetTest('via-email', {
   template: '{{mount-widget widget="post" args=args showRawEmail="showRawEmail"}}',
   setup() {

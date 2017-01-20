@@ -465,6 +465,20 @@ describe PostsController do
         expect(response).to be_forbidden
       end
 
+      it "toggle wiki status should not create a new version" do
+        admin = log_in(:admin)
+        another_user = Fabricate(:user)
+        another_post = Fabricate(:post, user: another_user)
+
+        expect { xhr :put, :wiki, post_id: another_post.id, wiki: 'true' }
+          .to_not change { another_post.reload.version }
+
+        another_admin = log_in(:admin)
+
+        expect { xhr :put, :wiki, post_id: another_post.id, wiki: 'false' }
+          .to_not change { another_post.reload.version }
+      end
+
       it "can wiki a post" do
         Guardian.any_instance.expects(:can_wiki?).with(post).returns(true)
 

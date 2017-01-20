@@ -132,7 +132,8 @@ class Post < ActiveRecord::Base
       updated_at: Time.now,
       user_id: user_id,
       last_editor_id: last_editor_id,
-      type: type
+      type: type,
+      version: version
     }.merge(options)
 
     if Topic.visible_post_types.include?(post_type)

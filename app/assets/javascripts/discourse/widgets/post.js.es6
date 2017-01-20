@@ -167,7 +167,7 @@ createWidget('post-meta-data', {
       result.push(this.attach('post-email-indicator', attrs));
     }
 
-    if (attrs.version > 1) {
+    if (attrs.version > 1 || attrs.wiki) {
       result.push(this.attach('post-edits-indicator', attrs));
     }
 
