@@ -23,19 +23,30 @@ export default createWidget('post-edits-indicator', {
 
   html(attrs) {
     let icon = 'pencil';
-    let titleKey = 'post.last_edited_on';
     const updatedAt = new Date(attrs.updated_at);
     let className = this.historyHeat(updatedAt);
+    const date = longDate(updatedAt);
+    let title;
 
     if (attrs.wiki) {
       icon = 'pencil-square-o';
-      titleKey = 'post.wiki_last_edited_on';
       className = `${className} wiki`;
+
+      if (attrs.version > 1) {
+        title = `${I18n.t('post.last_edited_on')} ${date}`;
+      } else {
+        title = I18n.t('post.wiki.about');
+      }
+    } else {
+      title = `${I18n.t('post.last_edited_on')} ${date}`;
     }
 
-    const contents = [attrs.version - 1, ' ', iconNode(icon)];
+    const contents = [
+      attrs.version > 1 ? attrs.version - 1 : '',
+      ' ',
+      iconNode(icon)
+    ];
 
-    const title = `${I18n.t(titleKey)} ${longDate(updatedAt)}`;
     return h('a', {
       className,
       attributes: { title }
@@ -43,7 +54,9 @@ export default createWidget('post-edits-indicator', {
   },
 
   click() {
-    if (this.attrs.canViewEditHistory) {
+    if (this.attrs.wiki && this.attrs.version === 1) {
+      this.sendWidgetAction('editPost');
+    } else if (this.attrs.canViewEditHistory) {
       this.sendWidgetAction('showHistory');
     }
   }
