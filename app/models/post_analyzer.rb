@@ -12,8 +12,34 @@ class PostAnalyzer
     @found_oneboxes
   end
 
+#to add margin between youtube links
+def newlinereplace(*args)
+    sp = args[0].split(/\n+/)
+    a = 0
+    x = 0
+    replacem = []
+ while a<sp.length do
+   if sp[a].length > 0
+    replacem[x] =sp[a]
+      x+=1
+   end
+   if a!= sp.length-1
+    replacem[x]="\n"
+      x+=1
+   end
+    a+=1
+ end
+   args[0]=replacem.join()
+   return *args
+end
+
   # What we use to cook posts
   def cook(*args)
+    yt_string = args[0]
+    if yt_string.include? "www.youtube"
+      *args = newlinereplace(*args)
+    end
+
     cooked = PrettyText.cook(*args)
 
     result = Oneboxer.apply(cooked, topic_id: @topic_id) do |url, _|
@@ -21,7 +47,6 @@ class PostAnalyzer
       Oneboxer.invalidate(url) if args.last[:invalidate_oneboxes]
       Oneboxer.cached_onebox(url)
     end
-
     cooked = result.to_html if result.changed?
     cooked
   end
