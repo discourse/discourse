@@ -1,7 +1,7 @@
 import componentTest from 'helpers/component-test';
 import { withPluginApi } from 'discourse/lib/plugin-api';
 
-moduleForComponent('d-editor', {integration: true});
+moduleForComponent('d-editor', { integration: true });
 
 componentTest('preview updates with markdown', {
   template: '{{d-editor value=value}}',
@@ -728,6 +728,8 @@ testCase(`doesn't jump to bottom with long text`, function(assert, textarea) {
 componentTest('emoji', {
   template: '{{d-editor value=value}}',
   setup() {
+    Discourse.SiteSettings.emojis = "grinning";
+
     // Test adding a custom button
     withPluginApi('0.1', api => {
       api.onToolbarCreate(toolbar => {
@@ -740,6 +742,9 @@ componentTest('emoji', {
       });
     });
     this.set('value', 'hello world.');
+  },
+  teardown() {
+    Discourse.SiteSettings.emojis = "";
   },
   test(assert) {
     assert.equal($('.emoji-modal').length, 0);

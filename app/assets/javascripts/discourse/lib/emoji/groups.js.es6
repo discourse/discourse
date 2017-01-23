@@ -1,5 +1,3 @@
-import { emojiExists } from 'pretty-text/emoji';
-
 // note that these categories are copied from Slack
 // be careful, there are ~20 differences in synonyms, e.g. :boom: vs. :collision:
 // a few Emoji are actually missing from the Slack categories as well (?), and were added
@@ -1125,10 +1123,5 @@ const groups = [
     ]
   }
 ];
-
-// scrub groups
-groups.forEach(group => {
-  group.icons = group.icons.reject(obj => !emojiExists(obj));
-});
 
 export default groups;

@@ -368,7 +368,10 @@ export default Ember.Component.extend({
             return resolve([translations[full]]);
           }
 
-          const options = emojiSearch(term, {maxResults: 5});
+          const options = emojiSearch(term, {
+            maxResults: 5,
+            emojis: (self.siteSettings.emojis || "").split("|")
+          });
 
           return resolve(options);
         }).then(list => list.map(code => {

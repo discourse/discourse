@@ -3,8 +3,12 @@ import { emojiUnescape } from 'discourse/lib/text';
 
 module('lib:emoji');
 
+const emojiOptions = {
+  emojis: ["slight_smile", "smile", "frog", "o"]
+};
+
 function testUnescape(input, expected, description) {
-  equal(emojiUnescape(input), expected, description);
+  equal(emojiUnescape(input, emojiOptions), expected, description);
 };
 
 test("emojiUnescape", () => {
@@ -24,9 +28,8 @@ test("emojiUnescape", () => {
 test("Emoji search", () => {
 
   // able to find an alias
-  equal(emojiSearch("+1").length, 1);
+  equal(emojiSearch("+1", emojiOptions).length, 1);
 
   // able to find middle of line search
-  equal(emojiSearch("check", {maxResults: 3}).length, 3);
-
+  equal(emojiSearch("smile", _.assign(emojiOptions, { maxResults: 2 })).length, 2);
 });

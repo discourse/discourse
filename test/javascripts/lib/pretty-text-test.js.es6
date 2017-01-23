@@ -3,18 +3,29 @@ import Post from 'discourse/models/post';
 import { default as PrettyText, buildOptions } from 'pretty-text/pretty-text';
 import { IMAGE_VERSION as v} from 'pretty-text/emoji';
 
-module("lib:pretty-text");
+let defaultOpts;
 
-const defaultOpts = buildOptions({
-  siteSettings: {
-    enable_emoji: true,
-    emoji_set: 'emoji_one',
-    highlighted_languages: 'json|ruby|javascript',
-    default_code_lang: 'auto',
-    censored_words: 'shucks|whiz|whizzer',
-    censored_pattern: '\\d{3}-\\d{4}|tech\\w*'
+module("lib:pretty-text", {
+  setup() {
+    defaultOpts = buildOptions({
+      siteSettings: {
+        enable_emoji: true,
+        emoji_set: 'emoji_one',
+        emojis: 'slight_smile|sunglasses|frowning|smile',
+        highlighted_languages: 'json|ruby|javascript',
+        default_code_lang: 'auto',
+        censored_words: 'shucks|whiz|whizzer',
+        censored_pattern: '\\d{3}-\\d{4}|tech\\w*'
+      },
+      getURL: url => url
+    });
   },
-  getURL: url => url
+
+  after() {
+    buildOptions({
+      siteSettings: {}
+    });
+  }
 });
 
 function cooked(input, expected, text) {
@@ -706,7 +717,9 @@ test("emoji", () => {
 });
 
 test("emoji - emojiSet", () => {
-  cookedOptions(":smile:",
-                { emojiSet: 'twitter' },
-                `<p><img src="/images/emoji/twitter/smile.png?v=${v}" title=":smile:" class="emoji" alt=":smile:"></p>`);
+  cookedOptions(
+    ":smile:",
+    { emojiSet: 'twitter' },
+    `<p><img src="/images/emoji/twitter/smile.png?v=${v}" title=":smile:" class="emoji" alt=":smile:"></p>`
+  );
 });

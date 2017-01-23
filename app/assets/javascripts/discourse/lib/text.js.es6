@@ -26,7 +26,11 @@ function emojiOptions() {
   const siteSettings = Discourse.__container__.lookup('site-settings:main');
   if (!siteSettings.enable_emoji) { return; }
 
-  return { getURL: Discourse.getURLWithCDN, emojiSet: siteSettings.emoji_set };
+  return {
+    getURL: Discourse.getURLWithCDN,
+    emojiSet: siteSettings.emoji_set,
+    emojis: (siteSettings.emojis || "").split("|")
+  };
 }
 
 export function emojiUnescape(string, options) {

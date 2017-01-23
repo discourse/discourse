@@ -5,6 +5,7 @@ import { performEmojiUnescape } from 'pretty-text/emoji';
 registerOption((siteSettings, opts) => {
   opts.enableEmoji = siteSettings.enable_emoji;
   opts.emojiSet = siteSettings.emoji_set;
+  opts.emojis = (siteSettings.emojis || "").split("|");
 });
 
 
@@ -66,7 +67,7 @@ export function setup(helper) {
 
         if (opts.enableEmoji) {
           title = performEmojiUnescape(topicInfo.title, {
-            getURL: opts.getURL, emojiSet: opts.emojiSet
+            getURL: opts.getURL, emojiSet: opts.emojiSet, emojis: opts.emojis
           });
         }
 
