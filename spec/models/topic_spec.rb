@@ -10,6 +10,24 @@ describe Topic do
   context 'validations' do
     let(:topic) { Fabricate.build(:topic) }
 
+    describe 'escape special characters in censored words' do
+      site_setting(:censored_words, 'co(onut')
+
+      it 'is valid' do
+        topic.title = 'I have a coconut'
+
+        expect(topic).to be_valid
+        expect(topic.errors.full_messages).to be_empty
+      end
+
+      it 'is not valid' do
+        topic.title = "I have a co(onut"
+
+        expect(topic).to_not be_valid
+        expect(topic.errors.full_messages.first).to include(I18n.t('errors.messages.contains_censored_words', censored_words: SiteSetting.censored_words))
+      end
+    end
+
     context "#title" do
       it { is_expected.to validate_presence_of :title }
 
