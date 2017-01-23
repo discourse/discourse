@@ -114,12 +114,9 @@ createWidget('header-icons', {
                         action: 'toggleHamburger',
                         contents() {
                           if (!attrs.flagCount) { return; }
-                          return this.attach('link', {
-                            href: Discourse.getURL('/admin/flags/active'),
-                            title: 'notifications.total_flagged',
-                            rawLabel: attrs.flagCount,
-                            className: 'badge-notification flagged-posts'
-                          });
+                          return h('div.badge-notification.flagged-posts', { attributes: {
+                            title: I18n.t('notifications.total_flagged')
+                          } }, attrs.flagCount);
                         }
                       });
 
