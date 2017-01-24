@@ -136,9 +136,16 @@ en:
     errors:
       <<: *errors
 
+  invite:
+    accept_invite: "Accept Invitation"
+    not_found: "Your invite token is invalid. Please contact the site's administrator."
+
   bulk_invite:
     file_should_be_csv: "The uploaded file should be of csv format."
     error: "There was an error uploading that file. Please try again later."
+
+  topic_invite:
+    user_exists: "Sorry, that user has already been invited. You may only invite a user to a topic once."
 
   backup:
     operation_already_running: "An operation is currently running. Can't start a new job right now."
@@ -3242,9 +3249,6 @@ en:
   performance_report:
     initial_post_raw: This topic includes daily performance reports for your site.
     initial_topic_title: Website performance reports
-
-  topic_invite:
-    user_exists: "Sorry, that user has already been invited. You may only invite a user to a topic once."
 
   tags:
     title: "Tags"

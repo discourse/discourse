@@ -123,15 +123,16 @@ describe InvitesController do
     end
   end
 
-  context '.show' do
+  context '.perform_accept_invitation' do
 
     context 'with an invalid invite id' do
       before do
-        get :show, id: "doesn't exist"
+        put :perform_accept_invitation, id: "doesn't exist"
       end
 
       it "redirects to the root" do
-        expect(response).to redirect_to("/")
+        expect(response).to be_success
+        expect(flash[:error]).to be_present
       end
 
       it "should not change the session" do
@@ -144,11 +145,12 @@ describe InvitesController do
       let(:invite) { topic.invite_by_email(topic.user, "iceking@adventuretime.ooo") }
       let(:deleted_invite) { invite.destroy; invite }
       before do
-        get :show, id: deleted_invite.invite_key
+        put :perform_accept_invitation, id: deleted_invite.invite_key
       end
 
       it "redirects to the root" do
-        expect(response).to redirect_to("/")
+        expect(response).to be_success
+        expect(flash[:error]).to be_present
       end
 
       it "should not change the session" do
@@ -160,10 +162,9 @@ describe InvitesController do
       let(:topic) { Fabricate(:topic) }
       let(:invite) { topic.invite_by_email(topic.user, "iceking@adventuretime.ooo") }
 
-
       it 'redeems the invite' do
         Invite.any_instance.expects(:redeem)
-        get :show, id: invite.invite_key
+        put :perform_accept_invitation, id: invite.invite_key
       end
 
       context 'when redeem returns a user' do
@@ -172,7 +173,7 @@ describe InvitesController do
         context 'success' do
           before do
             Invite.any_instance.expects(:redeem).returns(user)
-            get :show, id: invite.invite_key
+            put :perform_accept_invitation, id: invite.invite_key
           end
 
           it 'logs in the user' do
@@ -193,18 +194,15 @@ describe InvitesController do
           it 'sends a welcome message if set' do
             user.send_welcome_message = true
             user.expects(:enqueue_welcome_message).with('welcome_invite')
-            get :show, id: invite.invite_key
+            put :perform_accept_invitation, id: invite.invite_key
           end
 
           it "doesn't send a welcome message if not set" do
             user.expects(:enqueue_welcome_message).with('welcome_invite').never
-            get :show, id: invite.invite_key
+            put :perform_accept_invitation, id: invite.invite_key
           end
-
         end
-
       end
-
     end
 
     context 'new registrations are disabled' do
@@ -214,7 +212,7 @@ describe InvitesController do
 
       it "doesn't redeem the invite" do
         Invite.any_instance.stubs(:redeem).never
-        get :show, id: invite.invite_key
+        put :perform_accept_invitation, id: invite.invite_key
       end
     end
 
@@ -225,7 +223,7 @@ describe InvitesController do
 
       it "doesn't redeem the invite" do
         Invite.any_instance.stubs(:redeem).never
-        get :show, id: invite.invite_key
+        put :perform_accept_invitation, id: invite.invite_key
       end
     end
   end
