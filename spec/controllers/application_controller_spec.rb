@@ -133,9 +133,10 @@ describe TopicsController do
 
   describe "set_locale" do
     context "allow_user_locale disabled" do
-      context "accept-language header differs from default locale" do
+      before { SiteSetting.stubs(:allow_user_locale).returns(false) }
+
+      context "accept_accept-language header differs from default locale" do
         before do
-          SiteSetting.stubs(:allow_user_locale).returns(false)
           SiteSetting.stubs(:default_locale).returns("en")
           set_accept_language("fr")
         end
