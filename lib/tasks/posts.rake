@@ -128,6 +128,7 @@ task 'posts:remap', [:find, :replace] => [:environment] do |_,args|
   elsif !replace
     confirm_replace = ask("Are you sure you want to remove all occurences of '#{find}'? (Y/n)  ")
     exit 1 unless (confirm_replace == "" || confirm_replace.downcase == 'y')
+    replace = ""
   end
 
   puts "Remapping"
