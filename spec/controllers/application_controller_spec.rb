@@ -180,12 +180,12 @@ describe TopicsController do
 
         context "with a logged in user" do
           it "uses the user's preferred locale" do
-            user = Fabricate(:user, locale: :fr)
+            user = Fabricate(:user, locale: :es)
             log_in_user(user)
 
             get :show, {topic_id: topic.id}
 
-            expect(I18n.locale).to eq(:fr)
+            expect(I18n.locale).to eq(:es)
           end
         end
       end
