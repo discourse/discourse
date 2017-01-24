@@ -558,6 +558,7 @@ posting:
   emoji_set:
     default: 'emoji_one'
     client: true
+    refresh: true
     enum: 'EmojiSetSiteSetting'
   enforce_square_emoji:
     default: true

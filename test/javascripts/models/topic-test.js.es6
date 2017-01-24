@@ -70,9 +70,14 @@ test("recover", function() {
 });
 
 test('fancyTitle', function() {
+  const originalValue = Discourse.__container__.lookup("site-settings:main").emojis;
+  Discourse.__container__.lookup("site-settings:main").emojis = "smile|peach|pear|slight_smile";
+
   var topic = Topic.create({ fancy_title: ":smile: with all :) the emojis :pear::peach:" });
 
   equal(topic.get('fancyTitle'),
         `<img src='/images/emoji/emoji_one/smile.png?v=${v}' title='smile' alt='smile' class='emoji'> with all <img src='/images/emoji/emoji_one/slight_smile.png?v=${v}' title='slight_smile' alt='slight_smile' class='emoji'> the emojis <img src='/images/emoji/emoji_one/pear.png?v=${v}' title='pear' alt='pear' class='emoji'><img src='/images/emoji/emoji_one/peach.png?v=${v}' title='peach' alt='peach' class='emoji'>`,
         "supports emojis");
+
+  Discourse.__container__.lookup("site-settings:main").emojis = originalValue;
 });

@@ -30,6 +30,7 @@ registerOption((siteSettings, opts, state) => {
   opts.features.emoji = !!siteSettings.enable_emoji;
   opts.emojiSet = siteSettings.emoji_set || "";
   opts.customEmoji = state.customEmoji;
+  opts.emojis = (siteSettings.emojis || "").split("|");
 });
 
 export function setup(helper) {

@@ -1,4 +1,4 @@
-import { emoji, aliases, translations } from 'pretty-text/emoji/data';
+import { aliases, translations } from 'pretty-text/emoji/data';
 
 // bump up this number to expire all emojis
 export const IMAGE_VERSION = "3";
@@ -10,16 +10,22 @@ export function registerEmoji(code, url) {
   extendedEmoji[code] = url;
 }
 
-export function emojiList() {
-  const result = emoji.slice(0);
+export function emojiList(emojis) {
+  const result = emojis.slice(0);
   _.each(extendedEmoji, (v,k) => result.push(k));
   return result;
 }
 
 const emojiHash = {};
 
-// add all default emojis
-emoji.forEach(code => emojiHash[code] = true);
+function buildEmojiHash(emojis) {
+  if (Object.keys(emojiHash) !== emojis) {
+    // add all default emojis
+    emojis.forEach(code => emojiHash[code] = true);
+  }
+
+  return emojiHash;
+}
 
 // and their aliases
 const aliasHash = {};
@@ -64,7 +70,7 @@ export function buildEmojiUrl(code, opts) {
     url = opts.customEmoji[code];
   }
 
-  if (!url && emojiHash.hasOwnProperty(code)) {
+  if (!url && buildEmojiHash(opts.emojis).hasOwnProperty(code)) {
     url = opts.getURL(`/images/emoji/${opts.emojiSet}/${code}.png`);
   }
 
@@ -75,9 +81,9 @@ export function buildEmojiUrl(code, opts) {
   return url;
 }
 
-export function emojiExists(code) {
+export function emojiExists(code, opts) {
   code = code.toLowerCase();
-  return !!(extendedEmoji.hasOwnProperty(code) || emojiHash.hasOwnProperty(code));
+  return !!(extendedEmoji.hasOwnProperty(code) || buildEmojiHash(opts.emojis).hasOwnProperty(code));
 };
 
 let toSearch;
@@ -85,7 +91,7 @@ export function emojiSearch(term, options) {
   const maxResults = (options && options["maxResults"]) || -1;
   if (maxResults === 0) { return []; }
 
-  toSearch = toSearch || _.union(_.keys(emojiHash), _.keys(extendedEmoji), _.keys(aliasHash)).sort();
+  toSearch = toSearch || _.union(_.keys(buildEmojiHash(options.emojis)), _.keys(extendedEmoji), _.keys(aliasHash)).sort();
 
   const results = [];
 

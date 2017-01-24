@@ -1,6 +1,6 @@
 import groups from 'discourse/lib/emoji/groups';
 import KeyValueStore from "discourse/lib/key-value-store";
-import { emojiList } from 'pretty-text/emoji';
+import { emojiList, emojiExists } from 'pretty-text/emoji';
 import { emojiUrlFor } from 'discourse/lib/text';
 import { findRawTemplate } from 'discourse/lib/raw-templates';
 
@@ -23,14 +23,19 @@ function closeSelector() {
 
 function initializeUngroupedIcons() {
   const groupedIcons = {};
+  const siteSettings = Discourse.__container__.lookup("site-settings:main");
+  const emojis = (siteSettings.emojis || "").split("|");
 
   groups.forEach(group => {
-    group.icons.forEach(icon => groupedIcons[icon] = true);
+    group.icons.forEach(icon => {
+      if (emojiExists(icon, { emojis })) {
+        groupedIcons[icon] = true;
+      }
+    });
   });
 
   ungroupedIcons = [];
-  const emojis = emojiList();
-  emojis.forEach(emoji => {
+  emojiList(emojis).forEach(emoji => {
     if (groupedIcons[emoji] !== true) {
       ungroupedIcons.push(emoji);
     }

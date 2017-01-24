@@ -40,7 +40,10 @@ task "emoji:update" => :environment do
 
     code = cells[1].at_css("a")["name"]
 
-    next unless emojis[code]
+    unless emojis[code]
+      code = code.gsub(/_fe0f/, "")
+      next unless emojis[code]
+    end
 
     apple = cell_to_image(cells[4])
     google = cell_to_image(cells[5])
@@ -50,12 +53,7 @@ task "emoji:update" => :environment do
     if WINDOWS_FLAGS.include?(code)
       windows = custom_windows_flag(code)
     else
-      windows = cell_to_image(cells[9])
-    end
-
-    if apple.blank? || google.blank? || twitter.blank? || one.blank? || windows.blank?
-      emojis.delete(code)
-      next
+      windows = cell_to_image(cells[11])
     end
 
     emojis[code][:apple] = apple
@@ -66,6 +64,7 @@ task "emoji:update" => :environment do
   end
 
   puts "Writing emojis..."
+
   write_emojis(emojis, aliases, :apple, "apple")
   write_emojis(emojis, aliases, :google, "google")
   write_emojis(emojis, aliases, :twitter, "twitter")
@@ -94,13 +93,15 @@ def custom_windows_flag(code)
 end
 
 def write_emojis(emojis, aliases, style, folder)
-  path = "public/images/emoji/#{folder}/"
+  path = "public/images/emoji/#{folder}"
 
   FileUtils.rm_f Dir.glob("#{path}/*")
 
   puts folder
 
   emojis.values.each do |emoji|
+    next if emoji[style].nil?
+
     write_emoji("#{path}/#{emoji[:name]}.png", emoji[style])
     if aliases[emoji[:name]]
       aliases[emoji[:name]].each do |new_name|
@@ -113,7 +114,13 @@ def write_emojis(emojis, aliases, style, folder)
 end
 
 def write_emoji(path, emoji)
-  open(path, "wb") { |f| f << emoji }
-  `pngout #{path}`
-  putc "."
+  begin
+    open(path, "wb") { |f| f << emoji }
+    `pngout #{path}`
+    putc "."
+  ensure
+    if !File.size?(path)
+      raise "Failed to write emoji: #{path}"
+    end
+  end
 end

@@ -37,6 +37,12 @@ class SiteSetting < ActiveRecord::Base
     LocaleSiteSetting.values.map{ |e| e[:value] }.join('|')
   end
 
+  client_settings << :emojis
+
+  def self.emojis
+    Emoji.standard.map(&:name).flatten.join("|")
+  end
+
   def self.topic_title_length
     min_topic_title_length..max_topic_title_length
   end

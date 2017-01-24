@@ -57,6 +57,11 @@ class Emoji
   def self.create_from_db_item(emoji)
     name = emoji["name"]
     filename = "#{emoji['filename'] || name}.png"
+    url = "/images/emoji/#{SiteSetting.emoji_set}/#{filename}"
+    path = "#{Rails.root}/public/#{url}"
+
+    return unless File.size?(path)
+
     Emoji.new.tap do |e|
       e.name = name
       e.url = "/images/emoji/#{SiteSetting.emoji_set}/#{filename}"
@@ -106,7 +111,7 @@ class Emoji
   end
 
   def self.load_standard
-    db['emojis'].map {|e| Emoji.create_from_db_item(e) }
+    db['emojis'].map {|e| Emoji.create_from_db_item(e) }.compact
   end
 
   def self.load_aliases
