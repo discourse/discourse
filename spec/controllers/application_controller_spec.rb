@@ -135,8 +135,9 @@ describe TopicsController do
     context "allow_user_locale disabled" do
       before { SiteSetting.stubs(:allow_user_locale).returns(false) }
 
-      context "accept_accept-language header differs from default locale" do
+      context "set_locale_from_accept_language_header disabled" do
         before do
+          SiteSetting.stubs(:set_locale_from_accept_language_header).returns(false)
           SiteSetting.stubs(:default_locale).returns("en")
           set_accept_language("fr")
         end
@@ -157,6 +158,33 @@ describe TopicsController do
             get :show, {topic_id: topic.id}
 
             expect(I18n.locale).to eq(:en)
+          end
+        end
+      end
+
+      context "set_locale_from_accept_language_header enabled" do
+        before do
+          SiteSetting.stubs(:set_locale_from_accept_language_header).returns(true)
+          SiteSetting.stubs(:default_locale).returns("en")
+          set_accept_language("fr")
+        end
+
+        context "with an anonymous user" do
+          it "uses the headers locale" do
+            get :show, {topic_id: topic.id}
+
+            expect(I18n.locale).to eq(:fr)
+          end
+        end
+
+        context "with a logged in user" do
+          it "it uses the headers locale" do
+            user = Fabricate(:user, locale: :fr)
+            log_in_user(user)
+
+            get :show, {topic_id: topic.id}
+
+            expect(I18n.locale).to eq(:fr)
           end
         end
       end

@@ -78,7 +78,6 @@ basic:
     default: false
   set_locale_from_accept_language_header:
     default: false
-    validator: "AllowUserLocaleEnabledValidator"
   categories_topics:
     default: 20
     min: 5
