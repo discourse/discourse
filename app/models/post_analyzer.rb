@@ -14,13 +14,14 @@ class PostAnalyzer
 
   # What we use to cook posts
   def cook(*args)
-
     cooked = PrettyText.cook(*args)
+
     result = Oneboxer.apply(cooked, topic_id: @topic_id) do |url, _|
       @found_oneboxes = true
       Oneboxer.invalidate(url) if args.last[:invalidate_oneboxes]
       Oneboxer.cached_onebox(url)
     end
+
     cooked = result.to_html if result.changed?
     cooked
   end
