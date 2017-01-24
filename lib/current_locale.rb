@@ -2,11 +2,13 @@ module CurrentLocale
   private
 
   def resolve_locale
-    if !current_user
-      locale_from_header || SiteSetting.default_locale
-    else
-      current_user.effective_locale
-    end
+    locale_from_user || locale_from_header || SiteSetting.default_locale
+  end
+
+  def locale_from_user
+    return unless current_user && SiteSetting.allow_user_locale
+
+    current_user.locale.presence
   end
 
   def locale_from_header
