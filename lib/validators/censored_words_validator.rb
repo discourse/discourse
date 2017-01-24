@@ -10,7 +10,6 @@ class CensoredWordsValidator < ActiveModel::EachValidator
     elsif !SiteSetting.censored_pattern.blank? &&
       !(censored_words = value.scan(/#{SiteSetting.censored_pattern}/i)).empty?
 
-      byebug
       record.errors.add(
         attribute, :matches_censored_pattern,
         censored_words: join_censored_words(censored_words)
