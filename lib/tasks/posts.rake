@@ -118,11 +118,16 @@ end
 
 desc 'Remap all posts matching specific string'
 task 'posts:remap', [:find, :replace] => [:environment] do |_,args|
+  require 'highline/import'
+
   find = args[:find]
   replace = args[:replace]
-  if !find || !replace
+  if !find
     puts "ERROR: Expecting rake posts:remap[find,replace]"
     exit 1
+  elsif !replace
+    confirm_replace = ask("Are you sure you want to remove all occurences of '#{find}'? (Y/n)  ")
+    exit 1 unless (confirm_replace == "" || confirm_replace.downcase == 'y')
   end
 
   puts "Remapping"
