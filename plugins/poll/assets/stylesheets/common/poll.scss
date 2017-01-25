@@ -1,6 +1,5 @@
 $border-color: rgb(219,219,219);
 $text-color: #9E9E9E;
-
 $option-background: dark-light-diff($primary, $secondary, 90%, -65%);
 
 div.poll {
@@ -18,6 +17,7 @@ div.poll {
   }
 
   li {
+    position: relative;
     cursor: pointer;
     font-size: 15px;
     margin-bottom: 10px;
@@ -89,25 +89,33 @@ div.poll {
 
     .option {
       padding-bottom: 5px;
+      font-size: 16px;
+      margin: 0px 5px;
+      position: relative;
+      z-index: 1;
+
       p {
         margin: 0;
       }
     }
 
     .percentage {
-      font-size: 20px;
       float: right;
-      color: $text-color;
       margin-left: 5px;
     }
 
-    .bar-back {
+    .bar {
+      z-index: 0;
+      height: 25px;
+      position: absolute;
+      top: -3px;
       background: $option-background;
     }
 
-    .bar {
-      height: 10px;
-      background: $primary;
+    .chosen {
+      .bar {
+        background: $tertiary;
+      }
     }
   }
 
