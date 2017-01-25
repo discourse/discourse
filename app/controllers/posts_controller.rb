@@ -394,7 +394,7 @@ class PostsController < ApplicationController
     post = find_post_from_params
     guardian.ensure_can_wiki!(post)
 
-    post.revise(current_user, { wiki: params[:wiki] }, { skip_revision: true })
+    post.revise(current_user, { wiki: params[:wiki] })
 
     render nothing: true
   end
