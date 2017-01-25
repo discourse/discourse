@@ -116,22 +116,7 @@ task 'posts:normalize_code' => :environment do
   puts "#{i} posts normalized!"
 end
 
-desc 'Remap all posts matching specific string'
-task 'posts:remap', [:find, :replace] => [:environment] do |_,args|
-  require 'highline/import'
-
-  find = args[:find]
-  replace = args[:replace]
-  if !find
-    puts "ERROR: Expecting rake posts:remap[find,replace]"
-    exit 1
-  elsif !replace
-    confirm_replace = ask("Are you sure you want to remove all occurrences of '#{find}'? (Y/n)  ")
-    exit 1 unless (confirm_replace == "" || confirm_replace.downcase == 'y')
-    replace = ""
-  end
-
-  puts "Remapping"
+def remap_posts(find, replace="")
   i = 0
   Post.where("raw LIKE ?", "%#{find}%").each do |p|
     new_raw = p.raw.dup
@@ -143,5 +128,41 @@ task 'posts:remap', [:find, :replace] => [:environment] do |_,args|
       i += 1
     end
   end
-  puts "", "#{i} posts remapped!", ""
+  i
+end
+
+desc 'Remap all posts matching specific string'
+task 'posts:remap', [:find, :replace] => [:environment] do |_,args|
+
+  find = args[:find]
+  replace = args[:replace]
+  if !find
+    puts "ERROR: Expecting rake posts:remap['find','replace']"
+    exit 1
+  elsif !replace
+    puts "ERROR: Expecting rake posts:remap['find','replace']. Want to delete a word/string instead? Try rake posts:delete_word['word-to-delete']"
+    exit 1
+  end
+
+  puts "Remapping"
+  total = remap_posts(find, replace)
+  puts "", "#{total} posts remapped!", ""
+end
+
+desc 'Delete occurrence of a word/string'
+task 'posts:delete_word', [:find] => [:environment] do |_,args|
+  require 'highline/import'
+
+  find = args[:find]
+  if !find
+    puts "ERROR: Expecting rake posts:delete_word['word-to-delete']"
+    exit 1
+  else
+    confirm_replace = ask("Are you sure you want to remove all occurences of '#{find}'? (Y/n)  ")
+    exit 1 unless (confirm_replace == "" || confirm_replace.downcase == 'y')
+  end
+
+  puts "Processing"
+  total = remap_posts(find)
+  puts "", "#{total} posts updated!", ""
 end
