@@ -126,7 +126,7 @@ task 'posts:remap', [:find, :replace] => [:environment] do |_,args|
     puts "ERROR: Expecting rake posts:remap[find,replace]"
     exit 1
   elsif !replace
-    confirm_replace = ask("Are you sure you want to remove all occurences of '#{find}'? (Y/n)  ")
+    confirm_replace = ask("Are you sure you want to remove all occurrences of '#{find}'? (Y/n)  ")
     exit 1 unless (confirm_replace == "" || confirm_replace.downcase == 'y')
     replace = ""
   end
