@@ -109,6 +109,11 @@ export default Ember.Controller.extend(ModalFunctionality, {
     return !prevHidden && this.currentUser && this.currentUser.get('staff');
   },
 
+  @computed("model.wiki", "model.last_revision", "model.current_revision")
+  displayEdit(wiki, lastRevision, currentRevision) {
+    return wiki && (lastRevision === currentRevision);
+  },
+
   @computed()
   displayRevert() {
     return this.currentUser && this.currentUser.get('staff');
@@ -186,6 +191,11 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
     hideVersion() { this.hide(this.get("model.post_id"), this.get("model.current_revision")); },
     showVersion() { this.show(this.get("model.post_id"), this.get("model.current_revision")); },
+
+    editWiki() {
+      this.get('topicController').send('editPost', this.get('post'));
+      this.send('closeModal');
+    },
 
     revertToVersion() { this.revert(this.get("post"), this.get("model.current_revision")); },
 
