@@ -29,8 +29,8 @@ module Onebox
 
       def lines
         return @lines if @lines
-        response = Onebox::Helpers.fetch_response("http://pastebin.com/raw/#{paste_key}", 1)
-        @lines = response.body.split("\n")
+        response = Onebox::Helpers.fetch_response("http://pastebin.com/raw/#{paste_key}", 1) rescue ""
+        @lines = response.split("\n")
       end
 
       def paste_key

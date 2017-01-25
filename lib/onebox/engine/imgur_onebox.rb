@@ -47,7 +47,8 @@ module Onebox
         end
 
         def is_album?
-          oembed_data = Onebox::Helpers.symbolize_keys(::MultiJson.load(Onebox::Helpers.fetch_response("http://api.imgur.com/oembed.json?url=#{url}").body))
+          response = Onebox::Helpers.fetch_response("http://api.imgur.com/oembed.json?url=#{url}") rescue "{}"
+          oembed_data = Onebox::Helpers.symbolize_keys(::MultiJson.load(response))
           imgur_data_id = Nokogiri::HTML(oembed_data[:html]).xpath("//blockquote").attr("data-id")
           imgur_data_id.to_s[/a\//]
         end

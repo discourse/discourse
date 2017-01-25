@@ -84,7 +84,8 @@ module Onebox
         def list_thumbnail_url
           @list_thumbnail_url ||= begin
             url = "https://www.youtube.com/oembed?format=json&url=https://www.youtube.com/playlist?list=#{list_id}"
-            data = Onebox::Helpers.symbolize_keys(::MultiJson.load(Onebox::Helpers.fetch_response(url).body))
+            response = Onebox::Helpers.fetch_response(url) rescue "{}"
+            data = Onebox::Helpers.symbolize_keys(::MultiJson.load(response))
             data[:thumbnail_url]
           rescue
             nil
@@ -93,12 +94,14 @@ module Onebox
 
         def video_oembed_data
           url = "https://www.youtube.com/oembed?format=json&url=https://www.youtube.com/watch?v=#{video_id}"
-          Onebox::Helpers.symbolize_keys(::MultiJson.load(Onebox::Helpers.fetch_response(url).body))
+          response = Onebox::Helpers.fetch_response(url) rescue "{}"
+          Onebox::Helpers.symbolize_keys(::MultiJson.load(response))
         end
 
         def list_oembed_data
           url = "https://www.youtube.com/oembed?format=json&url=https://www.youtube.com/playlist?list=#{list_id}"
-          Onebox::Helpers.symbolize_keys(::MultiJson.load(Onebox::Helpers.fetch_response(url).body))
+          response = Onebox::Helpers.fetch_response(url) rescue "{}"
+          Onebox::Helpers.symbolize_keys(::MultiJson.load(response))
         end
 
         def embed_params

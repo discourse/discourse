@@ -24,4 +24,22 @@ RSpec.describe Onebox::Helpers do
     it { expect(described_class.truncate(test_string,100)).to eq("Chops off on spaces") }
     it { expect(described_class.truncate(" #{test_string} ",6)).to eq(" Chops...") }
   end
+
+  describe "fetch_response" do
+    after(:each) do
+      Onebox.options = Onebox::DEFAULTS
+    end
+
+    before do
+      Onebox.options = { max_download_kb: 1 }
+      fake("http://example.com/large-file", response("slides"))
+    end
+
+    it "raises an exception when responses are larger than our limit" do
+      expect {
+        described_class.fetch_response('http://example.com/large-file')
+      }.to raise_error(Onebox::Helpers::DownloadTooLarge)
+    end
+  end
+
 end

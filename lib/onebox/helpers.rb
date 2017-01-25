@@ -1,5 +1,8 @@
 module Onebox
   module Helpers
+
+    class DownloadTooLarge < Exception; end;
+
     def self.symbolize_keys(hash)
       return {} if hash.nil?
 
@@ -15,33 +18,54 @@ module Onebox
       html.gsub(/<[^>]+>/, ' ').gsub(/\n/, '')
     end
 
-    def self.fetch_response(location, limit = 5, domain = nil, headers = nil)
+    def self.fetch_response(location, limit=5, domain=nil, headers=nil)
       raise Net::HTTPError.new('HTTP redirect too deep', location) if limit == 0
 
       uri = URI(location)
       uri = URI("#{domain}#{location}") if !uri.host
 
-      http = Net::HTTP.new(uri.host, uri.port)
-      http.open_timeout = Onebox.options.connect_timeout
-      http.read_timeout = Onebox.options.timeout
-      if uri.is_a?(URI::HTTPS)
-        http.use_ssl = true
-        http.verify_mode = OpenSSL::SSL::VERIFY_NONE
-      end
+      result = StringIO.new
+      Net::HTTP.start(uri.host, uri.port, use_ssl: uri.is_a?(URI::HTTPS)) do |http|
+        http.open_timeout = Onebox.options.connect_timeout
+        http.read_timeout = Onebox.options.timeout
+        if uri.is_a?(URI::HTTPS)
+          http.use_ssl = true
+          http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+        end
 
-      response = http.request_get(uri.request_uri,headers)
+        request = Net::HTTP::Get.new(uri.request_uri, headers)
+        start_time = Time.now
 
-      if cookie = response.get_fields('set-cookie')
-        header = { 'cookie' => cookie.join }
-      end
+        puts Onebox.options.max_download_kb
+        size_bytes = Onebox.options.max_download_kb * 1024
+        puts "size_byes: #{size_bytes}"
+        http.request(request) do |response|
 
-      header = nil unless header.is_a? Hash
+          if cookie = response.get_fields('set-cookie')
+            header = { 'cookie' => cookie.join }
+          end
 
-      case response
-        when Net::HTTPSuccess     then response
-        when Net::HTTPRedirection then fetch_response(response['location'], limit - 1, "#{uri.scheme}://#{uri.host}",header)
-        else
-          response.error!
+          header = nil unless header.is_a? Hash
+
+          code = response.code.to_i
+          unless code === 200
+            response.error! unless [301, 302].include?(code)
+            return fetch_response(
+              response['location'],
+              limit - 1,
+              "#{uri.scheme}://#{uri.host}",
+              header
+            )
+          end
+
+          response.read_body do |chunk|
+            result.write(chunk)
+            raise DownloadTooLarge.new if result.size > size_bytes
+            raise Timeout::Error.new if (Time.now - start_time) > Onebox.options.timeout
+          end
+
+          return result.string
+        end
       end
     end
 
@@ -71,7 +95,7 @@ module Onebox
       # expect properly encoded url, remove any unsafe chars
       url.gsub!("'", "&apos;")
       url.gsub!('"', "&quot;")
-      url.gsub!(/[^\w\-`._~:\/?#\[\]@!$&'\(\)*+,;=]/, "")
+      url.gsub!(/[^\w\-`.~:\/?#\[\]@!$&'\(\)*+,;=]/, "")
       url
     end
 

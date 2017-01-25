@@ -50,7 +50,7 @@ module Onebox
       protected
 
         def html_doc
-          @html_doc ||= Nokogiri::HTML(Onebox::Helpers.fetch_response(url).body) rescue nil
+          @html_doc ||= Nokogiri::HTML((Onebox::Helpers.fetch_response(url) rescue nil))
         end
 
         def get_oembed
@@ -77,7 +77,8 @@ module Onebox
 
           return {} if Onebox::Helpers.blank?(oembed_url)
 
-          oe = Onebox::Helpers.symbolize_keys(::MultiJson.load(Onebox::Helpers.fetch_response(oembed_url).body))
+          json_response = Onebox::Helpers.fetch_response(oembed_url) rescue "{}"
+          oe = Onebox::Helpers.symbolize_keys(::MultiJson.load(json_response))
 
           # never use oembed from WordPress 4.4 (it's broken)
           oe.delete(:html) if oe[:html] && oe[:html]["wp-embedded-content"]
