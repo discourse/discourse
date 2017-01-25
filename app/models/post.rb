@@ -454,7 +454,7 @@ class Post < ActiveRecord::Base
     new_cooked = cook(raw, topic_id: topic_id, invalidate_oneboxes: opts.fetch(:invalidate_oneboxes, false))
     old_cooked = cooked
 
-    update_columns(cooked: new_cooked, baked_at: Time.new, baked_version: BAKED_VERSION)
+    self.update!(cooked: new_cooked, baked_at: Time.new, baked_version: BAKED_VERSION)
 
     # Extracts urls from the body
     TopicLink.extract_from(self)
