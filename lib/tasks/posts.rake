@@ -158,7 +158,7 @@ task 'posts:delete_word', [:find] => [:environment] do |_,args|
     puts "ERROR: Expecting rake posts:delete_word['word-to-delete']"
     exit 1
   else
-    confirm_replace = ask("Are you sure you want to remove all occurences of '#{find}'? (Y/n)  ")
+    confirm_replace = ask("Are you sure you want to remove all occurrences of '#{find}'? (Y/n)  ")
     exit 1 unless (confirm_replace == "" || confirm_replace.downcase == 'y')
   end
 
