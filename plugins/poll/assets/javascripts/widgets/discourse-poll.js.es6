@@ -160,15 +160,14 @@ createWidget('discourse-poll-standard-results', {
 
       return ordered.map((option, idx) => {
         const contents = [];
-
         const per = rounded[idx].toString();
+        const chosen = attrs.vote.includes(option.id);
+
         contents.push(h('div.option',
                        h('p', [ h('span.percentage', `${per}%`), optionHtml(option) ])
                      ));
 
-        contents.push(h('div.bar-back',
-                       h('div.bar', { attributes: { style: `width:${per}%` }})
-                     ));
+        contents.push(h('div.bar', { attributes: { style: `width:${per}%` }}));
 
         if (poll.get('public')) {
           contents.push(this.attach('discourse-poll-voters', {
@@ -178,7 +177,7 @@ createWidget('discourse-poll-standard-results', {
           }));
         }
 
-        return h('li', contents);
+        return h('li', { className: `${chosen ? 'chosen' : ''}` }, contents);
       });
     }
   }
