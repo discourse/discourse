@@ -7,10 +7,15 @@ class InvitesController < ApplicationController
   skip_before_filter :redirect_to_login_if_required
 
   before_filter :ensure_logged_in, only: [:destroy, :create, :create_invite_link, :resend_invite, :resend_all_invites, :upload_csv]
-  before_filter :ensure_new_registrations_allowed, only: [:show, :redeem_disposable_invite]
-  before_filter :ensure_not_logged_in, only: [:show, :redeem_disposable_invite]
+  before_filter :ensure_new_registrations_allowed, only: [:show, :perform_accept_invitation, :redeem_disposable_invite]
+  before_filter :ensure_not_logged_in, only: [:show, :perform_accept_invitation, :redeem_disposable_invite]
 
   def show
+    expires_now
+    render layout: 'no_ember'
+  end
+
+  def perform_accept_invitation
     invite = Invite.find_by(invite_key: params[:id])
 
     if invite.present?
@@ -27,9 +32,12 @@ class InvitesController < ApplicationController
           return
         end
       end
-    end
 
-    redirect_to path("/")
+      redirect_to path("/")
+    else
+      flash.now[:error] = I18n.t('invite.not_found')
+      render layout: 'no_ember'
+    end
   end
 
   def create
