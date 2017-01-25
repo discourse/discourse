@@ -36,9 +36,7 @@ module Onebox
         request = Net::HTTP::Get.new(uri.request_uri, headers)
         start_time = Time.now
 
-        puts Onebox.options.max_download_kb
         size_bytes = Onebox.options.max_download_kb * 1024
-        puts "size_byes: #{size_bytes}"
         http.request(request) do |response|
 
           if cookie = response.get_fields('set-cookie')
