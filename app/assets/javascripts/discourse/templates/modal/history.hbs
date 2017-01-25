@@ -34,7 +34,7 @@
         &rarr; {{bound-avatar-template model.user_changes.current.avatar_template "small"}} {{model.user_changes.current.username}}
       {{/if}}
       {{#if model.wiki_changes}}
-        &mdash; {{disabled-icon icon="pencil-square-o" disabled=wikiDisabled}}
+        &mdash; {{disabled-icon icon="pencil-square-o" secondary=wikiDisabled}}
       {{/if}}
       {{#if model.post_type_changes}}
         &mdash; {{disabled-icon icon="shield" disabled=postTypeDisabled}}
@@ -59,7 +59,7 @@
       {{/if}}
       {{#if model.wiki_changes}}
         <div class="row">
-          {{disabled-icon icon="pencil-square-o" disabled=wikiDisabled}}
+          {{disabled-icon icon="pencil-square-o" secondary=wikiDisabled}}
         </div>
       {{/if}}
       {{#if model.post_type_changes}}
