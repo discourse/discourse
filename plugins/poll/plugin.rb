@@ -247,11 +247,11 @@ after_initialize do
     end
   end
 
-  validate(:post, :validate_polls) do
+  validate(:post, :validate_polls) do |force=nil|
     return if !SiteSetting.poll_enabled? && (self.user && !self.user.staff?)
 
     # only care when raw has changed!
-    return unless self.raw_changed?
+    return unless self.raw_changed? || force
 
     validator = DiscoursePoll::PollsValidator.new(self)
     return unless (polls = validator.validate_polls)
@@ -266,6 +266,29 @@ after_initialize do
     end
 
     true
+  end
+
+  NewPostManager.add_handler(1) do |manager|
+    post = Post.new(raw: manager.args[:raw])
+
+    if !DiscoursePoll::PollsValidator.new(post).validate_polls
+      result = NewPostResult.new(:poll, false)
+
+      post.errors.full_messages.each do |message|
+        result.errors[:base] << message
+      end
+
+      result
+    else
+      manager.args["is_poll"] = true
+      nil
+    end
+  end
+
+  on(:approved_post) do |queued_post, created_post|
+    if queued_post.post_options["is_poll"]
+      created_post.validate_polls(true)
+    end
   end
 
   Post.register_custom_field_type(DiscoursePoll::POLLS_CUSTOM_FIELD, :json)
