@@ -1276,8 +1276,11 @@ da:
         make_banner: "Gør emnet til en banner"
         remove_banner: "Emnet skal ikke være banner længere"
       reply:
-        title: 'Svar'
-        help: 'begynd at skrive et svar til dette emne'
+        post:
+          title: 'Svar'
+        topic:
+          title: 'Svar'
+          help: 'begynd at skrive et svar til dette emne'
       clear_pin:
         title: "Fjern tegnestift"
         help: "Fjern tegnestiften på dette emne så det ikke længere vises i toppen af emnelisten"

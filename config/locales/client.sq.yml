@@ -1268,8 +1268,11 @@ sq:
         make_banner: "Temë banderolë"
         remove_banner: "Çaktivizo temën banderolë"
       reply:
-        title: 'Përgjigju'
-        help: 'shkruaj një përgjigje tek kjo temë'
+        post:
+          title: 'Përgjigju'
+        topic:
+          title: 'Përgjigju'
+          help: 'shkruaj një përgjigje tek kjo temë'
       clear_pin:
         title: "Clear pin"
         help: "Hiqeni statusin \"e ngjitur\" të kësaj teme që të mos afishohet më në majë të listës së temave"
