@@ -1397,8 +1397,11 @@ it:
         make_banner: "Argomento Annuncio"
         remove_banner: "Rimuovi Argomento Annuncio"
       reply:
-        title: 'Rispondi'
-        help: 'inizia a scrivere una risposta a questo argomento'
+        post:
+          title: 'Rispondi'
+        topic:
+          title: 'Rispondi'
+          help: 'inizia a scrivere una risposta a questo argomento'
       clear_pin:
         title: "Spunta"
         help: "Rimuovi la spunta da questo argomento, così non comparirà più in cima alla lista degli argomenti"

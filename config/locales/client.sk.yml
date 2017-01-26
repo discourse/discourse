@@ -1288,8 +1288,11 @@ sk:
         make_banner: "Banerová téma"
         remove_banner: "Odstrániť banerovú tému"
       reply:
-        title: 'Odpovedať'
-        help: 'vytvor odpoveď k tejto téme'
+        post:
+          title: 'Odpovedať'
+        topic:
+          title: 'Odpovedať'
+          help: 'vytvor odpoveď k tejto téme'
       clear_pin:
         title: "Zruš pripnutie"
         help: "Zruší pripnutie tejto témy takže sa už viac nebude objavovať na vrchu Vášho zoznamu tém"

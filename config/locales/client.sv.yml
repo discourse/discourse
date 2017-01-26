@@ -1333,8 +1333,11 @@ sv:
         make_banner: "Gör ämne till banderoll"
         remove_banner: "Ta bort banderollämne"
       reply:
-        title: 'Svara'
-        help: 'börja komponera ett svar till detta ämne'
+        post:
+          title: 'Svara'
+        topic:
+          title: 'Svara'
+          help: 'börja komponera ett svar till detta ämne'
       clear_pin:
         title: "Ta bort nål"
         help: "Ta bort den klistrade statusen från detta ämne så den inte längre hamnar i toppen av din ämneslista"

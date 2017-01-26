@@ -1403,8 +1403,11 @@ es:
         make_banner: "Tema de encabezado"
         remove_banner: "Remover tema de encabezado"
       reply:
-        title: 'Responder'
-        help: 'comienza a escribir una respuesta a este tema'
+        post:
+          title: 'Responder'
+        topic:
+          title: 'Responder'
+          help: 'comienza a escribir una respuesta a este tema'
       clear_pin:
         title: "Eliminar Destacado"
         help: "Elimina el estado 'Destacado' de este tema para que no aparezca más en lo más alto de tu lista de temas"
