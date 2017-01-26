@@ -22,6 +22,9 @@ class Group < ActiveRecord::Base
   after_save :update_primary_group
   after_save :update_title
 
+  after_save :enqueue_update_mentions_job,
+    if: Proc.new { |g| g.name_was && g.name_changed? }
+
   after_save :expire_cache
   after_destroy :expire_cache
 
@@ -161,7 +164,13 @@ class Group < ActiveRecord::Base
     # don't allow shoddy localization to break this
     localized_name = I18n.t("groups.default_names.#{name}")
     validator = UsernameValidator.new(localized_name)
-    group.name = validator.valid_format? ? localized_name : name
+
+    group.name =
+      if !Group.where(name: localized_name).exists? && validator.valid_format?
+        localized_name
+      else
+        name
+      end
 
     # the everyone group is special, it can include non-users so there is no
     # way to have the membership in a table
@@ -486,6 +495,15 @@ SQL
 
         builder.exec
       end
+    end
+
+  private
+
+    def enqueue_update_mentions_job
+      Jobs.enqueue(:update_group_mentions,
+        previous_name: self.name_was,
+        group_id: self.id
+      )
     end
 end
 
