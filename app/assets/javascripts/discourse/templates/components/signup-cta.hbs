@@ -2,7 +2,6 @@
   {{#if session.hideSignupCta}}
     <p>
       {{i18n "signup_cta.hidden_for_session"}}
-      <a {{action "neverShow"}}>{{i18n "signup_cta.hide_forever"}}</a>
     </p>
   {{else}}
     <p>{{replace-emoji (i18n "signup_cta.intro")}}</p>
