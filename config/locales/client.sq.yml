@@ -1268,8 +1268,11 @@ sq:
         make_banner: "Temë banderolë"
         remove_banner: "Çaktivizo temën banderolë"
       reply:
-        title: 'Përgjigju'
-        help: 'shkruaj një përgjigje tek kjo temë'
+        post:
+          title: 'Përgjigju'
+        topic:
+          title: 'Përgjigju'
+          help: 'shkruaj një përgjigje tek kjo temë'
       clear_pin:
         title: "Clear pin"
         help: "Hiqeni statusin \"e ngjitur\" të kësaj teme që të mos afishohet më në majë të listës së temave"
@@ -1707,7 +1710,6 @@ sq:
       one: "shikim"
       other: "shikime"
     replies: "Përgjigjet"
-    views_long: "kjo temë është parë {{number}} herë"
     activity: "Aktiviteti"
     likes: "Pëlqimet"
     likes_lowercase:
@@ -2002,8 +2004,6 @@ sq:
         backups: "backupe"
         traffic_short: "Trafik"
         traffic: "Kërkesat web të aplikimit"
-        page_views: "Kërkesat në API"
-        page_views_short: "Kërkesat në API"
         show_traffic_report: "Trego raportin e detajuar të trafikut"
         reports:
           today: "Sot"

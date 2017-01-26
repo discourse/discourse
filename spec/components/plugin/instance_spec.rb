@@ -160,6 +160,27 @@ describe Plugin::Instance do
     end
   end
 
+  context "themes" do
+    it "can register a theme" do
+      plugin = Plugin::Instance.new nil, "/tmp/test.rb"
+      plugin.register_theme('plugin') do |theme|
+        theme.set_color_scheme(
+          primary: 'ffff00',
+          secondary: '222222',
+          tertiary: '0f82af',
+          quaternary: 'c14924',
+          header_background: '111111',
+          header_primary: '333333',
+          highlight: 'a87137',
+          danger: 'e45735',
+          success: '1ca551',
+          love: 'fa6c8d'
+        )
+      end
+      expect(plugin.themes).to be_present
+    end
+  end
+
   context "register_color_scheme" do
     it "can add a color scheme for the first time" do
       plugin = Plugin::Instance.new nil, "/tmp/test.rb"
@@ -207,7 +228,7 @@ describe Plugin::Instance do
     it 'should add the right callback' do
       called = 0
 
-      method_name = plugin_instance.add_model_callback(User, :after_create) do
+      plugin_instance.add_model_callback(User, :after_create) do
         called += 1
       end
 
@@ -223,7 +244,7 @@ describe Plugin::Instance do
     it 'should add the right callback with options' do
       called = 0
 
-      method_name = plugin_instance.add_model_callback(User, :after_commit, on: :create) do
+      plugin_instance.add_model_callback(User, :after_commit, on: :create) do
         called += 1
       end
 

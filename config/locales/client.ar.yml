@@ -1530,8 +1530,11 @@ ar:
         make_banner: "موضوع دعائي"
         remove_banner: "إزالة موضوع دعائي"
       reply:
-        title: 'ردّ'
-        help: 'ابدأ بكتابة رد على هذا الموضوع'
+        post:
+          title: 'ردّ'
+        topic:
+          title: 'ردّ'
+          help: 'ابدأ بكتابة رد على هذا الموضوع'
       clear_pin:
         title: "إلغاء التثبيت"
         help: "إلغاء تثبيت الموضوع حتى لا يظهر في أعلى القائمة"
@@ -2127,7 +2130,6 @@ ar:
       many: "المشاهدات"
       other: "المشاهدات"
     replies: "الردود"
-    views_long: "هذا الموضوع قد تمت مشاهدته  {{number}} مرات"
     activity: "النشاط"
     likes: "اعجابات"
     likes_lowercase:
@@ -2456,8 +2458,6 @@ ar:
         backups: "النسخ الاحتياطية"
         traffic_short: "المرور"
         traffic: "طلبات تطبيقات الويب"
-        page_views: "طلبات API "
-        page_views_short: "طلبات API "
         show_traffic_report: "عرض تقرير مرور مفصل"
         reports:
           today: "اليوم"

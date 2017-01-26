@@ -118,6 +118,16 @@ describe UserBlocker do
       expect(post.reload).to_not be_hidden
       expect(post.topic.reload).to be_visible
     end
+
+    it "only hides posts from the past 24 hours" do
+      old_post = Fabricate(:post, user: user, created_at: 2.days.ago)
+      subject.block
+      expect(post.reload).to be_hidden
+      expect(post.topic.reload).to_not be_visible
+      old_post.reload
+      expect(old_post).to_not be_hidden
+      expect(old_post.topic).to be_visible
+    end
   end
 
 end

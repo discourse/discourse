@@ -29,11 +29,14 @@ nb_NO:
   loading: "Laster"
   powered_by_html: 'Drevet av <a href="http://www.discourse.org">Discourse</a>, best nyttet med JavaScript på'
   log_in: "Logg inn"
+  purge_reason: "Automatisk slettet som som forlatt, uaktivert konto"
   disable_remote_images_download_reason: "Nedlasting av bilder ble deaktivert grunnet mangel på tilgjengelig diskplass."
   anonymous: "Anonym"
+  remove_posts_deleted_by_author: "Slettet av forfatter"
   emails:
     incoming:
       default_subject: "Innkommende e-post fra %{email}"
+      show_trimmed_content: "Vis beskjært innhold"
       errors:
         no_message_id_error: "Skjer når en e-post ikke har noen «Message-Id»-header."
         auto_generated_email_error: "Skjer når «Precedence»-headeren er satt til list, junk, bulk eller auto_reply eller når en annen header innholder auto-submitted, auto-replied eller auto-generated."
@@ -275,12 +278,16 @@ nb_NO:
               common: "er et av de 10000 mest vanlige passordene. Venligst benytt et mer sikkert passord."
               same_as_username: "er det somme som brukernavnet ditt. Benytt et sikrere passord."
               same_as_email: "er det samme som din e-mail. Benytt et sikrere passord."
+              same_as_current: "er det samme som nåværende passord."
             ip_address:
               signup_not_allowed: "Registrering er ikke tillatt fra denne kontoen."
         color_scheme_color:
           attributes:
             hex:
               invalid: "er ikke en gyldig farge"
+        post_reply:
+          base:
+            different_topic: "Innlegg og svar må tilhøre samme kategori."
         web_hook:
           attributes:
             payload_url:
@@ -1183,8 +1190,6 @@ nb_NO:
           contact_email:
             label: "E-post"
             placeholder: "navn@example.com"
-      corporate:
-        description: "Disse navnene vil bli satt inn i din <a href='/privacy' target='blank'>Personvernerklæring</a> og dine <a href='/tos' target='blank'>Bruksvilkår</a>, som du kan endre når som helst i stab-kategorien. Hvis du ikke har et firma, kan du gjerne hoppe over dette steget."
       logos:
         title: "Logoer"
         fields:

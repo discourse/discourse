@@ -19,6 +19,17 @@ ur:
             mb: ایم بی
             tb: ٹی بی
     dates:
+      time: "h:mm a"
+      medium:
+        x_minutes:
+          one: "1 منٹ"
+          other: "%{گنتی} منٹس"
+        x_hours:
+          one: "1 گھنٹا"
+          other: "%{گنتی} گھنٹے"
+        x_days:
+          one: "1 دن"
+          other: "%{گنتی} دن"
       medium_with_ago:
         x_minutes:
           one: "1 منٹ قبل"
@@ -26,6 +37,23 @@ ur:
         x_hours:
           one: "1 گھنٹہ قبل "
           other: " %{count} گھنٹے قبل "
+        x_days:
+          one: "1 دن قبل"
+          other: "%{گنتی} دن قبل"
+      later:
+        x_days:
+          one: "1 دن بعد"
+          other: "%{گنتی} دن بعد"
+        x_months:
+          one: "1 مہینے بعد"
+          other: "%{گنتی} مہینے بعد"
+        x_years:
+          one: "1 سال بعد"
+          other: "%{گنتی} سال بعد"
+      previous_month: 'پچھلے ماہ'
+      next_month: 'اگلے ماہ'
+    share:
+      topic: 'اس ٹاپک کا لنک شیئرکریں'
     no_value: "نہیں "
     yes_value: "ہاں "
     age: "عمر "
@@ -42,6 +70,13 @@ ur:
     user:
       desktop_notifications:
         each_browser_note: "نوٹ: آپ کو ہر براؤزر پر اس سیٹنگ کو تبدیل کرنا ہوگا."
+      name:
+        instructions: "آپ کا پورا نام (اختیاری)"
+        instructions_required: "آپ کا پورا نام"
+        too_short: "آپ کا نام بہت چھوٹا ہے"
+        ok: "آپ کا نام صحیح لگ رہا ہے"
+      username:
+        title: "صارف کا نام"
   admin_js:
     admin:
       export_json:

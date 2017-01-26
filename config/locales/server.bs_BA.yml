@@ -743,24 +743,6 @@ bs_BA:
         (Ako trebate razgovarati s nekim od [članova osoblja](%{base_url}/about) kao novi korisnik, samo odgovorite na ovu poruku.)
     welcome_invite:
       subject_template: "Dobrodošli na %{site_name}!"
-      text_body_template: |
-        Hvala vam što ste primili pozivnicu na %{site_name} -- dobrodošli!
-
-        Mi smo automatski kreirali vaše korisničko ime: **%{username}**, ali možete ga promjeniti preko [tvoj profil][postavke].
-
-        Da se opet ulogujete:
-
-        1. Log in using any method you like -- but it must resolve to the **same email address** that you received your original invitation email at. Otherwise we won't be able to tell it is you!
-
-        2. Create a unique password for [your user profile][prefs], and use it to log in.
-
-        %{new_user_tips}
-
-        We believe in [civilized community behavior](%{base_url}/guidelines) at all times.
-
-        Enjoy your stay!
-
-        [prefs]: %{user_preferences_url}
     backup_succeeded:
       subject_template: "Backup completed successfully"
     backup_failed:

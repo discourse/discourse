@@ -76,7 +76,7 @@ button {
     margin:10px 0 10px 0;
   }
   &.has-like {color: $love;}
-  &.wikied { color: green; }
+
   .read-icon {
     &:before {
       font-family: "FontAwesome";
@@ -221,7 +221,7 @@ a.star {
     }
     .post-count {
       position: absolute;
-      right: 3px;
+      right: 0;
       border-radius: 100px;
       padding: 4px 5px 2px 5px;
       text-align: center;

@@ -1452,36 +1452,8 @@ pt:
       Este convite é de um utilizador confiável, por isso pode responder ao debate imediatamente.
   invite_forum_mailer:
     subject_template: "%{invitee_name} convidou-o a juntar-se a %{site_domain_name}"
-    text_body_template: |
-      %{invitee_name} convidou-o para
-
-      > **%{site_title}**
-      >
-      > %{site_description}
-
-      Se está interessado, clique na ligação abaixo:
-
-      %{invite_link}
-
-      Este convite é de um utilizador confiável, por isso uma conta será criada para si automaticamente.
   custom_invite_forum_mailer:
     subject_template: "%{invitee_name} convidou-o para %{site_domain_name}"
-    text_body_template: |
-      %{invitee_name} convidou-o para
-
-      > **%{site_title}**
-      >
-      > %{site_description}
-
-      Mensagem de %{invitee_name}:
-
-      %{user_custom_message}
-
-      Se está interessado, clique na ligação abaixo:
-
-      %{invite_link}
-
-      Este convite é de um utilizador confiável, por isso uma conta será criada para si automaticamente.
   invite_password_instructions:
     subject_template: "Configurar a palavra-passe para a sua conta %{site_name}"
     text_body_template: |
@@ -1615,26 +1587,6 @@ pt:
         (Se precisar de comunicar com [membros do pessoal](%{base_url}/about) como um novo utilizador, simplesmente responda a esta mensagem.)
     welcome_invite:
       subject_template: "Bem-vindo a %{site_name}!"
-      text_body_template: |
-        Obrigado por ter aceitado o convite para %{site_name} -- bem-vindo!
-
-        Criámos uma nova conta **%{username}** para si, e neste momento encontra-se com sessão iniciada. Pode mudar o seu nome ao visitar [o seu perfil de utilizador][prefs].
-
-        Para iniciar sessão novamente mais tarde:
-
-        1. Use sempre **o mesmo endereço de email do convite original** quando iniciar sessão. De outra forma não saberemos que é você!
-
-        2. Crie uma palavra-passe única para [o seu perfil de utilizador][prefs], e use-o para iniciar sessão.
-
-        %{new_user_tips}
-
-        Nós acreditamos num [comportamento civilizado da comunidade](%{base_url}/guidelines) em qualquer altura.
-
-        Desfrute da sua estadia!
-
-        (Se precisar de comunicar com [membros do pessoal](%{base_url}/about) como um novo utilizador, simplesmente responda a esta mensagem.)
-
-        [prefs]: %{user_preferences_url}
     backup_succeeded:
       subject_template: "Cópia de segurança completa corretamente"
       text_body_template: |
@@ -2846,11 +2798,9 @@ pt:
         fields:
           welcome:
             label: "Tópico de Boas-vindas"
-            description: "<p>Como é que descreveria a sua comunidade a um estranho num elevador em cerca de 1 minuto?</p> <ul> <li>Para quem são estas conversas?</li> <li>O que posso encontrar aqui?</li> <li>Porque devo vir cá?</li> </ul> <p>O tópico de boas-vindas é a primeira coisa que visitantes verão. Pense nele como num discurso curto ou introdução de <b> um paragrafo</b>.</p>"
             one_paragraph: "Por favor limite a sua mensagem de boas-vindas a um paragrafo."
       privacy:
         title: "Acesso"
-        description: "<p>A sua comunidade é aberta a todos, ou é restrita por inscrição, convite ou aprovação? Se preferir, pode configurar o sítio em privado, e depois torná-lo público.</p> <p>Lembre-se que pode sempre mandar convites a partir de um tópico, ou da sua página de utilizador também.</p>"
         fields:
           privacy:
             choices:
@@ -2876,7 +2826,6 @@ pt:
             description: "Todas as mensagens pessoais automatizadas do Discourse serão enviadas deste utilizador. Acima de tudo, este utilizador será o remetente de todas as mensagens de boas-vindas automaticamente enviadas a novos utilizadores."
       corporate:
         title: "Organização"
-        description: "Estes nomes serão introduzidos na sua <a href='/privacy' target='blank'>Política de Privacidade</a>, que pode editar a qualquer instante na categoria da Equipa de Apoio. Se não tiver uma empresa, sinta-se à vontade para saltar este passo."
         fields:
           company_short_name:
             label: "Nome da Empresa (curto)"
@@ -2891,7 +2840,6 @@ pt:
         title: "Tema"
         fields:
           theme_id:
-            description: "Prefere um tema claro ou escuro para começar? Pode sempre personalizar a aparência do seu sítio via Administração, Personalizar."
             choices:
               default:
                 label: "Claro Simples"
@@ -2916,7 +2864,6 @@ pt:
             label: "Ícone Grande"
             description: "Imagem do ícone usado para representar o seu sítio em navegadores da internet que têm bom aspecto em tamanhos grandes como 144px por 144px."
       homepage:
-        description: "Recomendamos que mostre tópicos recentes na sua página de início, mas pode escolher mostrar categorias (grupos de tópicos) na sua página de início se preferir."
         title: "Página de início"
         fields:
           homepage_style:
@@ -2927,7 +2874,6 @@ pt:
                 label: "Categorias"
       emoji:
         title: "Emoji"
-        description: "Que estilo de Emoji prefere para a sua comunidade? Pode sempre adicionar mais Emoji personalizados via Administração, Personalizar, Emoji."
       invites:
         title: "Convidar Equipa de Apoio"
         description: "Está quase completo! Vamos convidar algumas pessoas para a equipa de apoio para ajudar a <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>disseminar as suas conversas</a>  com tópicos e respostas interessantes para que a sua comunidade ganhe tração."

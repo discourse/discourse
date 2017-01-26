@@ -7,9 +7,15 @@ const TOPIC_REGEXP = /\/t\/([^\/]+)\/(\d+)\/?(\d+)?/;
 
 // We can add links here that have server side responses but not client side.
 const SERVER_SIDE_ONLY = [
+  /^\/assets\//,
+  /^\/uploads\//,
+  /^\/stylesheets\//,
+  /^\/site_customizations\//,
+  /^\/raw\//,
   /^\/posts\/\d+\/raw/,
+  /^\/raw\/\d+/,
   /\.rss$/,
-  /\.json/,
+  /\.json$/,
 ];
 
 let _jumpScheduled = false;
@@ -121,8 +127,9 @@ const DiscourseURL = Ember.Object.extend({
       return;
     }
 
+    const pathname = path.replace(/(https?\:)?\/\/[^\/]+/, '');
     const serverSide = SERVER_SIDE_ONLY.some(r => {
-      if (path.match(r)) {
+      if (pathname.match(r)) {
         document.location = path;
         return true;
       }

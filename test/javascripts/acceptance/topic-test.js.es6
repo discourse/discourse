@@ -48,3 +48,27 @@ test("Updating the topic title and category", () => {
     equal(find('.fancy-title').text().trim(), 'this is the new title', 'it displays the new title');
   });
 });
+
+test("Marking a topic as wiki", () => {
+  server.put('/posts/398/wiki', () => { // eslint-disable-line no-undef
+    return [
+      200,
+      { "Content-Type": "application/json" },
+      {}
+    ];
+  });
+
+  visit("/t/internationalization-localization/280");
+
+  andThen(() => {
+    ok(find('a.wiki').length === 0, 'it does not show the wiki icon');
+  });
+
+  click('.topic-post:eq(0) button.show-more-actions');
+  click('.topic-post:eq(0) button.show-post-admin-menu');
+  click('.btn.wiki');
+
+  andThen(() => {
+    ok(find('a.wiki').length === 1, 'it shows the wiki icon');
+  });
+});

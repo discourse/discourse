@@ -1110,8 +1110,11 @@ ja:
         make_banner: "バナートピック"
         remove_banner: "バナートピックを削除"
       reply:
-        title: '返信'
-        help: 'このトピックに返信する'
+        post:
+          title: '返信'
+        topic:
+          title: '返信'
+          help: 'このトピックに返信する'
       clear_pin:
         title: "ピンを解除する"
         help: "このトピックのピンを外し、トピックリストの先頭に表示されないようにする"
@@ -1474,7 +1477,6 @@ ja:
     views_lowercase:
       other: " 閲覧"
     replies: "返信"
-    views_long: "このトピックは{{number}}回閲覧されました"
     activity: "アクティビティ"
     likes: "いいね！"
     likes_lowercase:
@@ -1659,8 +1661,6 @@ ja:
         backups: "バックアップ"
         traffic_short: "トラフィック"
         traffic: "Application web requests"
-        page_views: "API Requests"
-        page_views_short: "API Requests"
         show_traffic_report: "Show Detailed Traffic Report"
         reports:
           today: "今日"

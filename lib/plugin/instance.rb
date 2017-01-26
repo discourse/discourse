@@ -2,6 +2,7 @@ require 'digest/sha1'
 require 'fileutils'
 require_dependency 'plugin/metadata'
 require_dependency 'plugin/auth_provider'
+require_dependency 'plugin/theme'
 
 class Plugin::CustomEmoji
   def self.cache_key
@@ -24,7 +25,13 @@ class Plugin::Instance
   attr_reader :admin_route
 
   # Memoized array readers
-  [:assets, :auth_providers, :color_schemes, :initializers, :javascripts, :styles].each do |att|
+  [:assets,
+   :auth_providers,
+   :color_schemes,
+   :initializers,
+   :javascripts,
+   :styles,
+   :themes].each do |att|
     class_eval %Q{
       def #{att}
         @#{att} ||= []
@@ -173,6 +180,10 @@ class Plugin::Instance
     end
   end
 
+  def directory
+    File.dirname(path)
+  end
+
   def auto_generated_path
     File.dirname(path) << "/auto_generated"
   end
@@ -242,6 +253,14 @@ class Plugin::Instance
 
   def register_emoji(name, url)
     Plugin::CustomEmoji.register(name, url)
+  end
+
+  def register_theme(name)
+    return unless enabled?
+
+    theme = Plugin::Theme.new(self, name)
+    yield theme
+    themes << theme
   end
 
   def automatic_assets

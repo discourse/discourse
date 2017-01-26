@@ -13,6 +13,7 @@
   padding: 0 0 56.25% 0;
   overflow: hidden;
   background-color: #000000;
+  margin-bottom: 12px;
 }
 
 .lazyYT-container iframe {

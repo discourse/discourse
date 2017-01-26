@@ -14,29 +14,30 @@ describe Topic do
       it { is_expected.to validate_presence_of :title }
 
       describe 'censored words' do
-        site_setting(:censored_words, 'pineapple|pen')
-        site_setting(:censored_pattern, 'orange.*')
-
         describe 'when title contains censored words' do
+          site_setting(:censored_words, 'pineapple|pen')
+
           it 'should not be valid' do
-            topic.title = 'I have a Pineapple'
+            topic.title = 'pen PinEapple apple pen '
 
             expect(topic).to_not be_valid
 
             expect(topic.errors.full_messages.first).to include(I18n.t(
-              'errors.messages.contains_censored_words', censored_words: SiteSetting.censored_words
+              'errors.messages.contains_censored_words', censored_words: 'pen, pineapple'
             ))
           end
         end
 
         describe 'when title matches censored pattern' do
+          site_setting(:censored_pattern, 'orange.*')
+
           it 'should not be valid' do
-            topic.title = 'I have orangEjuice'
+            topic.title = 'I have orangEjuice orange monkey orange stuff'
 
             expect(topic).to_not be_valid
 
             expect(topic.errors.full_messages.first).to include(I18n.t(
-              'errors.messages.matches_censored_pattern', censored_pattern: SiteSetting.censored_pattern
+              'errors.messages.matches_censored_pattern', censored_words: 'orange monkey orange stuff'
             ))
           end
         end

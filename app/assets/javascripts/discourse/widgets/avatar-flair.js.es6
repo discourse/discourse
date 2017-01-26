@@ -38,7 +38,10 @@ createWidget('avatar-flair', {
 
   html(attrs) {
     if (this.isIcon(attrs)) {
-      return [h('i', { className: 'fa ' + attrs.primary_group_flair_url })];
+      return [h('i', {
+        className: 'fa ' + attrs.primary_group_flair_url,
+        attributes: { style: attrs.primary_group_flair_color ? 'color: #' + Handlebars.Utils.escapeExpression(attrs.primary_group_flair_color) + '; ' : '' }
+      })];
     } else {
       return [];
     }

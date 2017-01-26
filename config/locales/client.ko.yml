@@ -26,6 +26,7 @@ ko:
         millions: "{{number}}백만"
     dates:
       time: "a h:mm"
+      timeline_date: "YYYY MMM"
       long_no_year: "M D a h:mm"
       long_no_year_no_time: "MMM D"
       full_no_year_no_time: "MMMM Do"
@@ -117,6 +118,7 @@ ko:
         enabled: '%{when} 목록에 게시'
         disabled: '%{when} 목록에서 감춤'
     topic_admin_menu: "주제 관리자 기능"
+    wizard_required: "포럼을 설정하세요! <a href='%{url}' data-auto-route='true'>설치 마법사를 시작하세요</a>!"
     emails_are_disabled: "관리자가 이메일 송신을 전체 비활성화 했습니다. 어떤 종류의 이메일 알림도 보내지지 않습니다."
     bootstrap_mode_enabled: "쉬운 시작을 위해 부트스트랩 모드로 구동 되었습니다. 모든 새로운 사용자에게 신뢰 수준 1이 부여되고 매일 이메일 다이제스트가 보내집니다. 이 기능은 총 사용자 수가% {min_users} 를 초과 할 때 자동으로 꺼집니다."
     bootstrap_mode_disabled: "부트스트랩 모드는 24시간 뒤 비활성화 될 것입니다."
@@ -293,7 +295,28 @@ ko:
       posts_read_long: "게시글 읽음"
       total_rows:
         other: "%{count} 사용자"
+    group_histories:
+      actions:
+        change_group_setting: "그룹 설정 변경"
+        add_user_to_group: "사용자 추가"
+        remove_user_from_group: "사용자 삭제"
     groups:
+      logs:
+        title: "로그"
+        when: "언제"
+        action: "액션"
+        subject: "주제"
+        from: "부터"
+        to: "까지"
+      edit:
+        title: '그룹 편집'
+        full_name: '전체 이름'
+        add_members: "구성원 추가"
+        delete_member_confirm: "'%{username}'를 '%{group}' 그룹에서 삭제하겠습니까?"
+      request_membership_pm:
+        title: "멤버십 요청"
+        body: "@%{groupName} 에 멤버십을 요청합니다."
+      name_placeholder: "그룹 이름, 공백 없이 username 규칙과 동일하게 입력하세요."
       add: "추가"
       selector_placeholder: "멤버 추가"
       owner: "소유자"
@@ -755,13 +778,13 @@ ko:
       complete_email_not_found: "<b>%{email}</b>과 일치하는 계정이 없습니다."
     login:
       title: "로그인"
-      username: "사용자"
+      username: "아이디"
       password: "비밀번호"
-      email_placeholder: "이메일 주소 또는 사용자 이름"
+      email_placeholder: "이메일 주소 또는 아이디"
       caps_lock_warning: "Caps Lock 켜짐"
       error: "알 수없는 오류"
       rate_limit: "다시 로그인 하기전에 잠시만 기다려주세요."
-      blank_username_or_password: "이메일 또는 사용자명과 비밀번호를 입력해 주세요."
+      blank_username_or_password: "이메일 또는 아이디, 비밀번호를 입력해 주세요."
       reset_password: '암호 재설정'
       logging_in: "로그인 중.."
       or: "또는"
@@ -1128,8 +1151,11 @@ ko:
         make_banner: "배너 주제"
         remove_banner: "배너 주제 제거"
       reply:
-        title: '답글'
-        help: '이 주제에 대한 답글 작성 시작'
+        post:
+          title: '답글'
+        topic:
+          title: '답글'
+          help: '이 주제에 대한 답글 작성 시작'
       clear_pin:
         title: "고정 취소"
         help: "더 이상 목록의 맨 위에 표시하지 않도록 이 주제의 고정 상태를 해제합니다."
@@ -1508,7 +1534,6 @@ ko:
     views_lowercase:
       other: "조회"
     replies: "답변"
-    views_long: "이 주제는 {{number}}번 읽혔습니다."
     activity: "활동"
     likes: "좋아요"
     likes_lowercase:
@@ -1639,8 +1664,6 @@ ko:
         backups: "백업"
         traffic_short: "트래픽"
         traffic: "어플리케이션 웹 요청"
-        page_views: "API 요청"
-        page_views_short: "API 응답"
         show_traffic_report: "자세한 트래픽 리포트 보기"
         reports:
           today: "오늘"
@@ -1965,7 +1988,7 @@ ko:
           none: "로그가 없습니다."
           filters:
             title: "필터"
-            user_placeholder: "사용자명"
+            user_placeholder: "아이디"
             address_placeholder: "name@example.com"
             type_placeholder: "다이제스트, 가입..."
             reply_key_placeholder: "답글 키"
@@ -1988,7 +2011,7 @@ ko:
           do_nothing: "아무것도 하지 않음"
         staff_actions:
           title: "스태프 기록"
-          instructions: "사용자 이름을 클릭하여 목록에서 차단하십시오. 프로필 사진을 클릭하여 사용자 페이지로 갑니다."
+          instructions: "사용자 아이디을 클릭하여 목록에서 차단하십시오. 프로필 사진을 클릭하여 사용자 페이지로 갑니다."
           clear_filters: "전체 보기"
           staff_user: "스태프 사용자"
           target_user: "타겟 사용자"

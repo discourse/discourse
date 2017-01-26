@@ -125,7 +125,8 @@ export default createWidget('search-menu', {
         results.push(this.attach('search-menu-results', { term: searchData.term,
                                                           noResults: searchData.noResults,
                                                           results: searchData.results,
-                                                          invalidTerm: searchData.invalidTerm }));
+                                                          invalidTerm: searchData.invalidTerm,
+                                                          searchContextEnabled: searchData.contextEnabled }));
       }
     }
 
@@ -191,6 +192,8 @@ export default createWidget('search-menu', {
     if (url) {
       this.sendWidgetEvent('linkClicked');
       DiscourseURL.routeTo(url);
+    } else if (searchData.contextEnabled) {
+      this.triggerSearch();
     }
   }
 });

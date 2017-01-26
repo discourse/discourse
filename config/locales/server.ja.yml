@@ -1041,25 +1041,6 @@ ja:
         (もし[スタッフメンバー](%{base_url}/about) に新規ユーザーとして連絡する必要がある場合、このメッセージに返信してください)
     welcome_invite:
       subject_template: "%{site_name}へようこそ!"
-      text_body_template: |
-        %{site_name}へようこそ！
-        アカウント **%{username}** を作成し、ログインしています。
-
-        名前の変更は [自分のユーザプロフィール][prefs] より行ってください。
-
-        次回からログインする際は、
-
-        1. 招待時に使用したメールアドレスを使用してください。
-
-        2.[自分のユーザプロフィール][prefs]からパスワードを設定して、ログインのときは設定したパスワードを使用してください。
-
-        %{new_user_tips} [civilized community behavior](%{base_url}/guidelines)をお守りいただき、健全なコミュニティとなるよう皆様のご協力をお願いいたします。
-
-        それではお楽しみください!
-
-        (もし、[スタッフ](%{base_url}/about) と連絡を取る必要がある場合はこのメッセージに返信してください)
-
-        [prefs]: %{user_preferences_url}
     backup_succeeded:
       subject_template: "バックアップは正常に完了しました"
     backup_failed:

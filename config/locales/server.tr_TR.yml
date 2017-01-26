@@ -1260,36 +1260,8 @@ tr_TR:
       Bu davet güvenilir bir kullanıcı tarafından gönderilmiştir, cevap yazarak tartışmaya hemen katılabilirsiniz.
   invite_forum_mailer:
     subject_template: "%{invitee_name} sizi %{site_domain_name} sitesine katılmanız için davet etti"
-    text_body_template: |
-      %{invitee_name} sizi foruma katılmaya davet ediyor
-
-      > **%{site_title}**
-      >
-      > %{site_description}
-
-      Eğer ilgileniyorsanız, aşağıdaki bağlantıya tıklayın:
-
-      %{invite_link}
-
-      Bu davet güvenilir bir üyeden gönderildi, bu nedenle hesabınız sizin için otomatik olarak oluşturulacak.
   custom_invite_forum_mailer:
     subject_template: "%{invitee_name} sizi %{site_domain_name} sitesine katılmaya davet etti"
-    text_body_template: |
-      %{invitee_name} sizi foruma katılmaya davet ediyor
-
-      > **%{site_title}**
-      >
-      > %{site_description}
-
-      %{invitee_name} diyor ki:
-
-      %{user_custom_message}
-
-      Eğer ilgileniyorsanız, aşağıdaki bağlantıya tıklayın:
-
-      %{invite_link}
-
-      Bu davet güvenilir bir üyeden gönderildi, bu nedenle hesabınız sizin için otomatik olarak oluşturulacak.
   invite_password_instructions:
     subject_template: "%{site_name} hesabınız için parola oluşturun"
     text_body_template: |
@@ -1363,26 +1335,6 @@ tr_TR:
         (Eğer yeni bir kullanıcı olarak [görevlilerle](%{base_url}/about) iletişim kurmak isterseniz, bu iletiyi cevaplamanız yeterli.)
     welcome_invite:
       subject_template: "%{site_name} topluluğuna hoş geldiniz!"
-      text_body_template: |
-        %{site_name} davetiyenizi onayladığınız için teşekkürler -- hoş geldiniz!
-
-        Sizin için yeni bir hesap oluşturduk: **%{username}**, ve sisteme girişiniz yapıldı. [Kullanıcı profilinizi][prefs] ziyaret ederek kullanıcı adınızı değiştirebilirsiniz.
-
-        Daha sonra tekrar giriş yapmak için:
-
-        1. Giriş yaparken her zaman **ilk davetiyenizdeki ile aynı e-posta adresini kullanın**. Yoksa sizin olduğunuzu anlayamayız!
-
-        2. [Kullanıcı profiliniz][prefs] için yeni bir parola oluşturun ve o parola ile giriş yapın.
-
-        %{new_user_tips}
-
-        Biz her zaman [topluluk yönergelerimize](%{base_url}/guidelines) inanıyoruz.
-
-        Ziyaretinizin keyfini çıkarın!
-
-        (Eğer yeni bir kullanıcı olarak [görevlilerle](%{base_url}/about) iletişim kurmak isterseniz, bu iletiyi cevaplamanız yeterli.)
-
-        [prefs]: %{user_preferences_url}
     backup_succeeded:
       subject_template: "Yedekleme başarıyla tamamlandı"
       text_body_template: |
@@ -2140,11 +2092,9 @@ tr_TR:
         fields:
           welcome:
             label: "Hoş geldiniz Konusu"
-            description: "<p>Bir çay evindeki birine topluluğunuzu 1 dakikada nasıl anlatırsınız?</p> <ul> <li>Bu tartışmalar kimler için?</li> <li>Burada ne bulabilirim?</li> <li>Neden ziyaret etmeliyim?</li> </ul> <p>Hoş geldiniz konusu yeni ziyaretçilerin ilk göreceği şeydir. Bunu sizin <b>tek nefeslik</b> 'çay konunuz' veya 'ısmarlama çayınız' olarak görebilirsiniz. </p>"
             one_paragraph: "Lütfen hoş geldiniz iletinizi bir paragraf kadar uzunlukta tutun."
       privacy:
         title: "Erişim"
-        description: "<p>Topluluğunuz herkese açık mı yoksa üyelik, davet veya onaylama ile kısıtlı mı? Dilerseniz bu seçeneği daha sonra değiştirebilirsiniz.</p> <p>Kullanıcı sayfanızdan ve konulardan davetiye gönderebileceğini unutmayın.</p>"
         fields:
           privacy:
             choices:
@@ -2167,7 +2117,6 @@ tr_TR:
             label: "Otomatik İletiler"
             description: "Discourse tarafından gönderilen tüm otomatik kişisel iletiler bu kullanıcı tarafından gönderilecek. Daha da önemlisi, kullanıcılara gidecek olan hoş geldiniz mesajları da bu kullanıcı tarafından gönderilecek."
       corporate:
-        description: "Bu isimler sonradan düzenleyebileceğiniz <a href='/privacy' target='blank'>Gizlilik Politikası</a> ve <a href='/tos' target='blank'>Hizmet Şartları</a> metinlerinde kullanılacak. Eğer bir şirket söz konusu değilse bu adımı geçebilirsiniz."
         fields:
           company_short_name:
             label: "Firma İsmi (kısa)"
@@ -2182,7 +2131,6 @@ tr_TR:
         title: "Tema"
         fields:
           theme_id:
-            description: "Başlamak için renk düzeni olarak karanlık mı yoksa aydınlık mı istersiniz? Dilediğiniz zaman daha fazla seçeneği Yönetici, Özelleştir alanında bulabilirsiniz."
             choices:
               default:
                 label: "Basit Aydınlık"

@@ -95,6 +95,7 @@ aside.onebox {
   font-size: 1em;
 
   header {
+    margin-bottom: 8px;
     a[href] {
       color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
       text-decoration: none;

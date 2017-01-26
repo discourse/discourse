@@ -1371,8 +1371,11 @@ cs:
         make_banner: "Banner Topic"
         remove_banner: "Remove Banner Topic"
       reply:
-        title: 'Odpovědět'
-        help: 'začněte psát odpověď na toto téma'
+        post:
+          title: 'Odpovědět'
+        topic:
+          title: 'Odpovědět'
+          help: 'začněte psát odpověď na toto téma'
       clear_pin:
         title: "Odstranit připnutí"
         help: "Odebere připnutí tohoto tématu, takže se již nebude zobrazovat na vrcholu seznamu témat"
@@ -1891,7 +1894,6 @@ cs:
       few: "zobrazení"
       other: "zobrazení"
     replies: "Odpovědi"
-    views_long: "toto téma bylo zobrazeno {{number}}krát"
     activity: "Aktivita"
     likes: "Líbí se"
     likes_lowercase:
@@ -2195,8 +2197,6 @@ cs:
         backups: "zálohy"
         traffic_short: "Provoz"
         traffic: "Webové požadavky na aplikaci"
-        page_views: "API požadavky"
-        page_views_short: "API požadavky"
         show_traffic_report: "Zobrazit detailní zprávu o provozu"
         reports:
           today: "Dnes"

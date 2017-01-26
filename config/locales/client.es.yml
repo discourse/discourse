@@ -271,7 +271,7 @@ es:
       reject: 'Rechazar'
       delete_user: 'Eliminar usuario'
       title: "Necesita aprobación"
-      none: "No hay posts para revisar"
+      none: "No hay posts para revisar."
       edit: "Editar"
       cancel: "Cancelar"
       view_pending: "ver posts pendientes"
@@ -312,7 +312,7 @@ es:
       topic_count: "Temas"
       topic_count_long: "Temas creados"
       post_count: "Respuestas"
-      post_count_long: "Posts escritos"
+      post_count_long: "Respuestas publicadas"
       no_results: "No se encontraron resultados."
       days_visited: "Visitas"
       days_visited_long: "Días visitados"
@@ -358,7 +358,7 @@ es:
         logs: "No hay registros para este grupo."
       add: "Añadir"
       join: "Unirse al grupo"
-      leave: "Salirse del grupo"
+      leave: "Salir del grupo"
       request: "Solicitar unirse al grupo"
       automatic_group: Grupo automático
       closed_group: Grupo cerrado
@@ -623,7 +623,7 @@ es:
         instructions: "Imágenes de fondo serán centrados y tendrán un ancho por default de 590px."
       email:
         title: "E-mail"
-        instructions: "Nunca se mostrará públicamente"
+        instructions: "nunca se mostrará al público"
         ok: "Te enviaremos un email para confirmar"
         invalid: "Por favor, introduce una dirección de correo válida"
         authenticated: "Tu dirección de correo ha sido autenticada por {{provider}}"
@@ -633,13 +633,13 @@ es:
           other: "Sólo te enviaremos si no te hemos visto en los últimos {{count}} minutos."
       name:
         title: "Nombre"
-        instructions: "Tu nombre completo (opcional)"
+        instructions: "tu nombre completo (opcional)"
         instructions_required: "Tu nombre completo"
         too_short: "Tu nombre es demasiado corto"
         ok: "Tu nombre es válido"
       username:
         title: "Nombre de usuario"
-        instructions: "Debe ser único, sin espacios y conciso"
+        instructions: "único, sin espacios y corto"
         short_instructions: "Los demás usuarios pueden mencionarte como @{{username}}"
         available: "Tu nombre de usuario está disponible"
         global_match: "La dirección coincide con la del nombre de usuario registrado"
@@ -749,6 +749,7 @@ es:
           none: "Aún no has invitado a nadie aquí. Puedes enviar invitaciones individuales, o invitar varias personas a la vez <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>subiendo un archivo CSV</a>."
           text: "Archivo de Invitación en Masa"
           success: "Archivo subido correctamente, se te notificará con un mensaje cuando se complete el proceso."
+          error: "Lo sentimos, el archivo debería tener formato csv."
       password:
         title: "Contraseña"
         too_short: "Tu contraseña es demasiada corta."
@@ -756,7 +757,7 @@ es:
         same_as_username: "Tu contraseña es la misma que tu nombre de usuario."
         same_as_email: "Tu contraseña es la misma que tu dirección de correo electrónico."
         ok: "Tu contraseña es válida."
-        instructions: "Debe contener al menos %{count} caracteres."
+        instructions: "debe tener al menos %{count} caracteres"
       summary:
         title: "Resumen"
         stats: "Estadísticas"
@@ -1402,8 +1403,11 @@ es:
         make_banner: "Tema de encabezado"
         remove_banner: "Remover tema de encabezado"
       reply:
-        title: 'Responder'
-        help: 'comienza a escribir una respuesta a este tema'
+        post:
+          title: 'Responder'
+        topic:
+          title: 'Responder'
+          help: 'comienza a escribir una respuesta a este tema'
       clear_pin:
         title: "Eliminar Destacado"
         help: "Elimina el estado 'Destacado' de este tema para que no aparezca más en lo más alto de tu lista de temas"
@@ -1529,6 +1533,7 @@ es:
       edit: "Editando {{link}} {{replyAvatar}} {{username}}"
       edit_reason: "Motivo:"
       post_number: "post {{number}}"
+      wiki_last_edited_on: "wiki editada por última vez"
       last_edited_on: "post editado por última ven en"
       reply_as_new_topic: "Responder como tema enlazado"
       continue_discussion: "Continuando la discusión desde {{postLink}}:"
@@ -1887,7 +1892,9 @@ es:
       one: "visita"
       other: "visitas"
     replies: "Respuestas"
-    views_long: "este tema se ha visto {{number}} veces"
+    views_long:
+      one: "este tema se ha visto 1 vez"
+      other: "este tema se ha visto {{number}} veces"
     activity: "Actividad"
     likes: "Likes"
     likes_lowercase:
@@ -2192,8 +2199,8 @@ es:
         backups: "backups"
         traffic_short: "Tráfico"
         traffic: "Peticiones web de la app"
-        page_views: "Peticiones de API"
-        page_views_short: "Peticiones de API"
+        page_views: "Páginas vistas"
+        page_views_short: "Páginas vistas"
         show_traffic_report: "Mostrar informe detallado del tráfico"
         reports:
           today: "Hoy"
@@ -2336,7 +2343,7 @@ es:
         warn_local_payload_url: "Parece que estás estableciendo el webhook a una url local. El evento enviado a una dirección local podría causar algún efecto secundario o comportamientos inesperados. ¿Continuar?"
         secret_invalid: "Secret no debe tener espacios en blanco."
         secret_too_short: "Secret debería tener al menos 12 caracteres."
-        secret_placeholder: "Una cadena opcional, para generar firma"
+        secret_placeholder: "Una cadena opcional, utilizada para generar una firma"
         event_type_missing: "Necesitas establecer al menos un tipo de evento."
         content_type: "Tipo de contenido"
         secret: "Secret"
@@ -2676,10 +2683,17 @@ es:
             revoke_admin: "revocar administración"
             grant_moderation: "conceder moderación"
             revoke_moderation: "revocar moderación"
-            backup_operation: "operación de copia de seguridad de respaldo"
+            backup_create: "crear copia de seguridad"
             deleted_tag: "etiqueta eliminada"
             renamed_tag: "etiqueta renombrada"
             revoke_email: "revocar email"
+            lock_trust_level: "Bloqueó el nivel de confianza"
+            unlock_trust_level: "Desbloqueó el nivel de confianza"
+            activate_user: "activó a un usuario"
+            deactivate_user: "desactivó a un usuario"
+            change_readonly_mode: "cambio a modo de sólo lectura"
+            backup_download: "descargar copia de seguridad"
+            backup_destroy: "destruir copia de seguridad"
         screened_emails:
           title: "Correos bloqueados"
           description: "Cuando alguien trata de crear una cuenta nueva, los siguientes correos serán revisados y el registro será bloqueado, o alguna otra acción será realizada."

@@ -1136,8 +1136,11 @@ vi:
         make_banner: "Banner chủ đề"
         remove_banner: "Bỏ banner chủ đề"
       reply:
-        title: 'Trả lời'
-        help: 'bắt đầu soạn một trả lời mới cho chủ đề này'
+        post:
+          title: 'Trả lời'
+        topic:
+          title: 'Trả lời'
+          help: 'bắt đầu soạn một trả lời mới cho chủ đề này'
       clear_pin:
         title: "Xóa ghim"
         help: "Xóa trạng thái ghim của chủ đề này để nó không còn xuất hiện trên cùng danh sách chủ đề của bạn"
@@ -1526,7 +1529,6 @@ vi:
     views_lowercase:
       other: "lượt xem"
     replies: "Trả lời"
-    views_long: "chủ đề đã được xem {{number}} lần"
     activity: "Hoạt động"
     likes: "Lượt thích"
     likes_lowercase:
@@ -1650,8 +1652,6 @@ vi:
         backups: "sao lưu"
         traffic_short: "Băng thông"
         traffic: "Application web requests"
-        page_views: "API Requests"
-        page_views_short: "API Requests"
         show_traffic_report: "Xem chi tiết Báo cáo Lưu lượng"
         reports:
           today: "Hôm nay"
