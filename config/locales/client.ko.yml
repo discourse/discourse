@@ -26,6 +26,7 @@ ko:
         millions: "{{number}}백만"
     dates:
       time: "a h:mm"
+      timeline_date: "YYYY MMM"
       long_no_year: "M D a h:mm"
       long_no_year_no_time: "MMM D"
       full_no_year_no_time: "MMMM Do"
@@ -117,6 +118,7 @@ ko:
         enabled: '%{when} 목록에 게시'
         disabled: '%{when} 목록에서 감춤'
     topic_admin_menu: "주제 관리자 기능"
+    wizard_required: "포럼을 설정하세요! <a href='%{url}' data-auto-route='true'>설치 마법사를 시작하세요</a>!"
     emails_are_disabled: "관리자가 이메일 송신을 전체 비활성화 했습니다. 어떤 종류의 이메일 알림도 보내지지 않습니다."
     bootstrap_mode_enabled: "쉬운 시작을 위해 부트스트랩 모드로 구동 되었습니다. 모든 새로운 사용자에게 신뢰 수준 1이 부여되고 매일 이메일 다이제스트가 보내집니다. 이 기능은 총 사용자 수가% {min_users} 를 초과 할 때 자동으로 꺼집니다."
     bootstrap_mode_disabled: "부트스트랩 모드는 24시간 뒤 비활성화 될 것입니다."
@@ -293,7 +295,28 @@ ko:
       posts_read_long: "게시글 읽음"
       total_rows:
         other: "%{count} 사용자"
+    group_histories:
+      actions:
+        change_group_setting: "그룹 설정 변경"
+        add_user_to_group: "사용자 추가"
+        remove_user_from_group: "사용자 삭제"
     groups:
+      logs:
+        title: "로그"
+        when: "언제"
+        action: "액션"
+        subject: "주제"
+        from: "부터"
+        to: "까지"
+      edit:
+        title: '그룹 편집'
+        full_name: '전체 이름'
+        add_members: "구성원 추가"
+        delete_member_confirm: "'%{username}'를 '%{group}' 그룹에서 삭제하겠습니까?"
+      request_membership_pm:
+        title: "멤버십 요청"
+        body: "@%{groupName} 에 멤버십을 요청합니다."
+      name_placeholder: "그룹 이름, 공백 없이 username 규칙과 동일하게 입력하세요."
       add: "추가"
       selector_placeholder: "멤버 추가"
       owner: "소유자"

@@ -136,6 +136,7 @@ da:
         enabled: 'listet %{when}'
         disabled: 'aflistet %{when}'
     topic_admin_menu: "administrationshandlinger på emne"
+    wizard_required: "Det er tid til at konfigurere dig forum! <a href='%{url}' data-auto-route='true'>Start Konfigurations Guiden</a>!"
     emails_are_disabled: "Alle udgående emails er blevet deaktiveret globalt af en administrator. Ingen emailnotifikationer af nogen slags vil blive sendt."
     bootstrap_mode_enabled: "For at gøre det nemmere at lancere dit nye website, er du i bootstrap tilstand. Alle nye brugere vil blive tildelt niveau 1 og daglige email updateringer vil være slået til. Dette vil blive automatisk slået fra når total antal brugere overskrider %{min_users} brugere."
     bootstrap_mode_disabled: "Bootstrap tilstand vil blive deaktiveret indenfor de næste 24 timer."
@@ -320,7 +321,19 @@ da:
       total_rows:
         one: "1 bruger"
         other: "%{count} brugere"
+    group_histories:
+      actions:
+        change_group_setting: "Skift gruppe indstilling"
+        add_user_to_group: "Tilføj bruger"
+        remove_user_from_group: "Fjern bruger"
+        make_user_group_owner: "Gør til ejer"
+        remove_user_as_group_owner: "Fjern ejer"
     groups:
+      logs:
+        title: "Logs"
+        when: "Når"
+        action: "Handling"
+        acting_user: "Fungerende bruger"
       add: "Tilføj"
       selector_placeholder: "Tilføj medlemmer"
       owner: "ejer"

@@ -32,6 +32,7 @@ it:
   purge_reason: "Account cancellato automaticamente perché abbandonato o disattivato"
   disable_remote_images_download_reason: "Lo scaricamento delle immagini remote è stato disabilitato perché non c'è abbastanza spazio disco disponibile."
   anonymous: "Anonimo"
+  remove_posts_deleted_by_author: "Cancellato dall'autore"
   emails:
     incoming:
       default_subject: "Email in arrivo da %{email}"

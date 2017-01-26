@@ -186,7 +186,7 @@ pl_PL:
     admin_title: "Administracja"
     flags_title: "Flagi"
     show_more: "pokaż więcej"
-    show_help: "pomoc"
+    show_help: "opcje"
     links: "Odnośniki"
     links_lowercase:
       one: "link"
@@ -240,7 +240,7 @@ pl_PL:
       contact_info: "W sprawach wymagających szybkiej reakcji lub związanych z poprawnym funkcjonowaniem serwisu, prosimy o kontakt: %{contact_info}."
     bookmarked:
       title: "Zakładka"
-      clear_bookmarks: "Usuń z zakładek"
+      clear_bookmarks: "Wyczyść zakładki"
       help:
         bookmark: "Kliknij, aby dodać pierwszy wpis tematu do zakładek"
         unbookmark: "Kliknij, aby usunąć wszystkie zakładki z tego tematu"
@@ -359,7 +359,7 @@ pl_PL:
         title: "Logi"
         when: "Kiedy"
         action: "Akcja"
-        subject: "Kontekst"
+        subject: "Temat"
         details: "Szczegóły"
         from: "Od"
         to: "Do"
@@ -769,7 +769,7 @@ pl_PL:
         same_as_username: "Twoje hasło jest takie samo jak nazwa użytkownika."
         same_as_email: "Twoje hasło jest takie samo jak twój e-mail."
         ok: "Twoje hasło jest poprawne."
-        instructions: "Co najmniej %{count} znaków."
+        instructions: "przynajmniej  %{count} znaków"
       summary:
         title: "Podsumowanie"
         stats: "Statystyki"

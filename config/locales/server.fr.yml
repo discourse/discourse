@@ -73,6 +73,8 @@ fr:
       inclusion: n'est pas inclus dans la liste
       invalid: est invalide
       is_invalid: "ne semble pas clair, est-ce une phrase complète ?"
+      contains_censored_words: "inclut un ou plusieurs mots censurés : %{censored_words}"
+      matches_censored_pattern: "correspond à l'expression régulière censurée : %{censored_pattern}"
       less_than: doit être inférieure à %{count}
       less_than_or_equal_to: doit être inférieur ou égal à %{count}
       not_a_number: n'est pas un nombre
@@ -497,8 +499,8 @@ fr:
         other: "il y a presque %{count} ans"
   password_reset:
     no_token: "Désolé, le lien pour le changement de mot de passe est trop ancien. Cliquez sur Connexion puis redemandez un mot de passe afin d'obtenir un nouveau lien. "
-    choose_new: "Veuillez choisir un nouveau mot de passe"
-    choose: "Veuillez choisir un mot de passe"
+    choose_new: "Choisir un nouveau mot de passe"
+    choose: "Choisir un mot de passe"
     update: 'Mettre à jour le mot de passe '
     save: 'Définir le mot de passe'
     title: 'Réinitialiser le mot de passe'
@@ -1073,6 +1075,7 @@ fr:
     max_attachment_size_kb: "La taille maximale des fichiers envoyés en Ko. Doit être configurer dans nginx (client_max_body_size) / apache ou proxy aussi."
     authorized_extensions: "Une liste d'extensions de fichier autorisées pour les envois sur le serveur (mettre '*' pour autoriser tous les types)"
     max_similar_results: "Combien de sujets similaires sont afficher lorsqu'un utilisateur est en train de créer un nouveau sujet. La comparaison se base sur le titre et le contenu."
+    max_image_megapixels: "Nombre maximum autorisé de mégapixels pour une image."
     title_prettify: "Corrige les coquilles les plus communes dans les titres (intégralité du titre en majuscule, première lettre en minuscule, de multiples ! et ?, un . inutile à la fin, etc.)"
     topic_views_heat_low: "Après ce nombre de vues, le champ Vues sera légèrement mis en évidence."
     topic_views_heat_medium: "Après ce nombre de vues, le champ Vues sera modérément mis en évidence."
@@ -1592,6 +1595,7 @@ fr:
   temporarily_closed_due_to_flags: "Ce sujet est temporairement fermé à cause d'un grand nombre de signalements de la communauté."
   system_messages:
     post_hidden:
+      title: "Message caché"
       subject_template: "Message caché suite à des signalements de la communauté"
       text_body_template: |+
         Bonjour,
@@ -1623,6 +1627,7 @@ fr:
     welcome_invite:
       subject_template: "Bienvenue sur %{site_name} !"
     backup_succeeded:
+      title: "Sauvegarde réussie"
       subject_template: "Sauvegarde terminée avec succès"
       text_body_template: |
         La sauvegarde a réussi.
@@ -1635,6 +1640,7 @@ fr:
         %{logs}
         ```
     backup_failed:
+      title: "Sauvegarde échouée"
       subject_template: "Échec de la sauvegarde"
       text_body_template: |
         La sauvegarde a échoué.
@@ -1645,6 +1651,7 @@ fr:
         %{logs}
         ```
     restore_succeeded:
+      title: "Restauration réussie"
       subject_template: "Restauration terminée avec succès"
       text_body_template: |
         La restauration a réussi.
@@ -1655,6 +1662,7 @@ fr:
         %{logs}
         ```
     restore_failed:
+      title: "Restauration échouée"
       subject_template: "Échec de la restauration"
       text_body_template: |
         La restauration a échoué.
@@ -1837,6 +1845,7 @@ fr:
 
         Pour plus d'informations, merci de vous en référer à la [charte de la communauté](%{base_url}/guidelines).
     blocked_by_staff:
+      title: "Bloqué par un responsable"
       subject_template: "Compte bloqué temporairement"
       text_body_template: |
         Bonjour,
@@ -1847,6 +1856,7 @@ fr:
 
         Pour plus d'informations, merci de vous référer à la [charte de la communauté](%{base_url}/guidelines).
     user_automatically_blocked:
+      title: "Utilisateur bloqué automatiquement"
       subject_template: "Nouvel utilisateur %{username} bloqué suite à des signalements de la communauté"
       text_body_template: |
         Ceci est un message automatique
@@ -1857,6 +1867,7 @@ fr:
 
         Cette limite peut être changée par le paramètre du site `block_new_user`.
     spam_post_blocked:
+      title: "Message spam bloqué"
       subject_template: "Les messages du nouvel utilisateur %{username} sont bloqués pour des liens répétés"
       text_body_template: |
         Ceci est un message automatique.
@@ -1867,6 +1878,7 @@ fr:
 
         Ceci peut être modifier via les options `newuser_spam_host_threshold` et white_listed_spam_host_domains`.
     unblocked:
+      title: "Débloqué"
       subject_template: "Compte débloqué"
       text_body_template: |
         Bonjour,
@@ -1875,6 +1887,7 @@ fr:
 
         Vous pouvez à nouveau créer des nouveaux messages et sujets. Merci pour votre patience.
     pending_users_reminder:
+      title: "Rappel d'utilisateurs en attente"
       subject_template:
         one: "1 utilisateur en attente d'approbation"
         other: "%{count} utilisateurs en attente d'approbation"
@@ -1883,9 +1896,11 @@ fr:
 
         [Veuillez les examiner dans la section d'administration](%{base_url}/admin/users/list/pending).
     download_remote_images_disabled:
+      title: "Téléchargement d'images distantes désactivé"
       subject_template: "Téléchargement d'images distantes désactivé"
       text_body_template: "Le paramètre `download_remote_images_to_local` a été désactivé car la limite (`download_remote_images_threshold`) d'espace disque utilisé par les images vient d'être dépassée."
     dashboard_problems:
+      title: "Problèmes du tableau de bord"
       subject_template: "Des problèmes ont été trouvés"
       text_body_template: |
         Des problèmes ont été reportés dans votre panel d'administration.
@@ -1937,6 +1952,7 @@ fr:
 
       > %{site_title} -- %{site_description}
     user_invited_to_private_message_pm:
+      title: "Utilisateur invité au MP"
       subject_template: "[%{site_name}] %{username} vous a invité dans la conversation « %{topic_title} »"
       text_body_template: |
         %{header_instructions}
@@ -1953,6 +1969,7 @@ fr:
 
         %{respond_instructions}
     user_invited_to_topic:
+      title: "Utilisateur invité au sujet"
       subject_template: "[%{site_name}] %{username} vous a invité dans « %{topic_title} »"
       text_body_template: |
         %{header_instructions}
@@ -1961,6 +1978,7 @@ fr:
 
         %{respond_instructions}
     user_replied:
+      title: "Utilisateur a répondu"
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -1971,6 +1989,7 @@ fr:
 
         %{respond_instructions}
     user_replied_pm:
+      title: "Utilisateur a répondu au MP"
       subject_template: "[%{site_name}] [MP] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -1981,6 +2000,7 @@ fr:
 
         %{respond_instructions}
     user_quoted:
+      title: "Utilisateur a cité"
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -2001,6 +2021,7 @@ fr:
 
         %{respond_instructions}
     user_mentioned:
+      title: "Utilisateur a mentionné"
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -2085,6 +2106,7 @@ fr:
       view_this_topic: "Voir ce sujet"
       back_to_top: "Aller en haut"
     forgot_password:
+      title: "Mot de passe oublié"
       subject_template: "[%{site_name}] Réinitialisation du mot de passe"
       text_body_template: |
         Quelqu'un a demandé la réinitialisation de votre mot de passe sur [%{site_name}](%{base_url}).
@@ -2094,6 +2116,7 @@ fr:
         Cliquez sur le lien ci-dessous pour choisir un nouveau mot de passe :
         %{base_url}/users/password-reset/%{email_token}
     set_password:
+      title: "Définir le mot de passe"
       subject_template: "[%{site_name}] Définir le mot de passe"
       text_body_template: |
         Quelqu'un a demandé d'ajouter un mot de passe à votre compte sur  [%{site_name}](%{base_url}). Alternativement, vous pouvez vous connecter en utilisant un service en ligne pris en charge (Google, Facebook, etc) déjà associé à cette adresse de courriel validée.
@@ -2145,6 +2168,7 @@ fr:
 
         %{new_email}
     signup_after_approval:
+      title: "Inscription après approbation"
       subject_template: "Votre compte a été approuvé sur %{site_name} !"
       text_body_template: |
         Bienvenue sur %{site_name} !
@@ -2163,6 +2187,7 @@ fr:
 
         (Si, en tant que nouvel utilisateur, vous avez besoin de communiquer avec un [responsable](%{base_url}/about), répondez simplement à ce message.)
     signup:
+      title: "Inscription"
       subject_template: "[%{site_name}] Confirmer votre nouveau compte"
       text_body_template: |
         Bienvenue sur %{site_name} !
@@ -2196,6 +2221,7 @@ fr:
       too_large: "Désolé, le fichier que vous essayez d'envoyer est trop gros (taille maximale de %{max_size_kb} Ko)."
     images:
       too_large: "Désolé, l'image que vous essayez d'envoyer est trop grande (taille maximale de %{max_size_kb} Ko), merci de le redimensionner et de réessayer."
+      larger_than_x_megapixels: "Désolé, l'image que vous essayez d'envoyer est trop grande (la dimension maximale est de %{max_image_megapixels} mégapixels) ; veuillez la redimensionner et réessayer."
       size_not_found: "Désolé, mais nous n'avons pas pu déterminer la taille de votre image. Peut-être est-elle corrompue ?"
   avatar:
     missing: "Désolé, nous ne parvenons pas à trouver un avatar associé à cette adresse mail. Pouvez-vous essayer de la télécharger à nouveau ?"
@@ -2689,9 +2715,11 @@ fr:
         fields:
           welcome:
             label: "Sujet de bienvenue"
+            description: "<p>Comment décririez-vous votre communauté à un inconnu en environ 1 minute ?</p> <ul> <li>Pour qui sont destinées ces discussions ?</li> <li>Que puis-je trouver ici ?</li> <li>Pourquoi dois-je la visiter ?</li> </ul> <p>Votre sujet de bienvenue est la première chose que les nouveaux visiteurs vont voir. Voyez le comme votre <b>unique paragraphe</b> qui définit votre mission et différence. </p>"
             one_paragraph: "Veuillez restreindre votre message de bienvenue à un paragraphe."
       privacy:
         title: "Accès"
+        description: "<p>Votre communauté est-elle ouverte à tous ou restreinte par adhésion, invitation et approbation ? Si vous préférez, vous pouvez préparer le site en mode privé puis passer en public par la suite.</p> <p>Rappelez-vous aussi que vous pouvez toujours envoyer des invitations depuis les sujets ou votre page de profil utilisateur.</p>"
         fields:
           privacy:
             choices:
@@ -2717,6 +2745,7 @@ fr:
             description: "Tous les messages privés automatiques de Discourse seront envoyés par cet utilisateur. Plus important, cet utilisateur sera l'envoyeur désigné de tous les messages de bienvenue à destination des nouveaux utilisateurs."
       corporate:
         title: "Organisation"
+        description: "Ces noms seront renseignés dans les pages <a href='/privacy' target='blank'>Politique de confidentialité</a> et <a href='/tos' target='blank'>Conditions générales d'utilisation</a> que vous pouvez modifier à tout moment depuis la catégorie Staff. Si vous n'avez pas de société, vous pouvez ignorer cette étape pour le moment."
         fields:
           company_short_name:
             label: "Nom de société (court)"
@@ -2731,6 +2760,7 @@ fr:
         title: "Thème"
         fields:
           theme_id:
+            description: "Préférez-vous une palette de couleurs claires ou sombres pour commencer ? Vous pouvez personnaliser l'aspect du site dans Administration, Personaliser."
             choices:
               default:
                 label: "Clair"
@@ -2755,6 +2785,7 @@ fr:
             label: "Grande icône"
             description: "Icône utilisée pour représenter le site sur les appareils modernes et que rend bien à des tailles plus grandes. La taille minimale conseillée est de 144px par 144px."
       homepage:
+        description: "Nous recommandons d'afficher les sujets récents sur votre page d'accueil mais vous pouvez choisir d'y afficher les catégories (groupes de sujets) si vous préférez."
         title: "Page d'accueil"
         fields:
           homepage_style:
@@ -2765,6 +2796,7 @@ fr:
                 label: "Catégories"
       emoji:
         title: "Emoji"
+        description: "Quel style d'Emoji préférez-vous pour votre communauté ? Vous pouvez ajouter des Emoji supplémentaires dans Administration, Personnaliser, Emoji."
       invites:
         title: "Inviter des responsables"
         description: "Vous avez presque fini ! Invitons quelques responsables pour aider à <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>entamer les discussions</a> avec des sujets et réponses intéressantes pour lancer la communauté."

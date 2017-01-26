@@ -168,7 +168,7 @@ fi:
     admin_title: "Ylläpito"
     flags_title: "Liput"
     show_more: "näytä lisää"
-    show_help: "ohjeet"
+    show_help: "valinnat"
     links: "Linkit"
     links_lowercase:
       one: "linkki"
@@ -337,6 +337,8 @@ fi:
         target_user: "Kohdekäyttäjä"
         subject: "Aihe"
         details: "Yksityiskohdat"
+        from: "Lähettäjä"
+        to: "Vastaanottaja"
       edit:
         title: 'Muuta ryhmää'
         full_name: 'Täysimittainen nimi'
@@ -622,7 +624,7 @@ fi:
         instructions: "Taustakuvan leveys on 590 pikseliä."
       email:
         title: "Sähköposti"
-        instructions: "Ei tule julkiseksi"
+        instructions: "ei näytetä julkisesti missään"
         ok: "Lähetämme sinulle sähköpostin varmistukseksi."
         invalid: "Sähköpostiosoite ei kelpaa."
         authenticated: "{{provider}} on todentanut sähköpostiosoitteesi"
@@ -632,13 +634,13 @@ fi:
           other: "Lähetämme sähköpostia vain, jos emme ole nähneet sinua edellisen {{count}} minuutin aikana."
       name:
         title: "Nimi"
-        instructions: "Koko nimesi (valinnainen)"
+        instructions: "koko nimesi (valinnainen)"
         instructions_required: "Koko nimesi"
         too_short: "Nimesi on liian lyhyt"
         ok: "Nimesi vaikuttaa hyvältä"
       username:
         title: "Käyttäjätunnus"
-        instructions: "Uniikki, lyhyt, ei välilyöntejä"
+        instructions: "uniikki, ei välilyöntejä, lyhyt"
         short_instructions: "Muut käyttäjät voivat viitata sinuun nimellä @{{username}}"
         available: "Käyttäjätunnus on vapaana"
         global_match: "Sähköposti vastaa rekisteröityä käyttäjänimeä"
@@ -756,7 +758,7 @@ fi:
         same_as_username: "Salasanasi on sama kuin käyttäjätunnuksesi."
         same_as_email: "Salasanasi on sama kuin sähköpostisi."
         ok: "Salasana vaikuttaa hyvältä."
-        instructions: "Vähintään %{count} merkkiä."
+        instructions: "vähintään %{count} merkkiä."
       summary:
         title: "Yhteenveto"
         stats: "Tilastot"
@@ -1322,7 +1324,7 @@ fi:
         other: "Ketjun viimeisin viesti on jo %{hours} tuntia vanha, joten ketju suljetaan heti."
       timeline:
         back: "Takaisin"
-        back_description: "Siirry takaisin viimeisimpään lukemattomaan viestiin"
+        back_description: "Siirry takaisin ensimmäiseen lukemattomaan viestiin"
         replies_short: "%{current} / %{total}"
       progress:
         title: ketjun edistyminen
@@ -1529,6 +1531,7 @@ fi:
       edit: "Muokataan {{link}} {{replyAvatar}} {{username}}"
       edit_reason: "Syy:"
       post_number: "viesti {{number}}"
+      wiki_last_edited_on: "wikiä muokattiin viimeksi"
       last_edited_on: "viestin viimeisin muokkausaika"
       reply_as_new_topic: "Vastaa aihetta sivuavassa ketjussa"
       continue_discussion: "Jatkoa ketjulle {{postLink}}:"
@@ -1586,7 +1589,7 @@ fi:
         undo_like: "peru tykkäys"
         edit: "muokkaa viestiä"
         edit_anonymous: "Pahoittelut, sinun täytyy ensin kirjautua sisään voidaksesi muokata tätä viestiä."
-        flag: "liputa tämä viesti tai lähetä käyttäjälle yksityisviesti"
+        flag: "liputa tämä viesti tai lähetä käyttäjälle yksityisesti siihen liittyvä huomio"
         delete: "poista tämä viesti"
         undelete: "peru viestin poistaminen"
         share: "jaa linkki tähän viestiin"
@@ -1618,18 +1621,18 @@ fi:
           like: "Peru tykkäys"
           vote: "Peru ääni"
         people:
-          off_topic: "liputti tämän asiaan kuulumattomaksi"
+          off_topic: "liputti tämän eksyvän aiheesta"
           spam: "liputti tämän roskapostiksi"
-          inappropriate: "liputti tämän asiattomaksi"
+          inappropriate: "liputti tämän sopimattomaksi"
           notify_moderators: "ilmoitti valvojille"
           notify_user: "lähetti viestin"
           bookmark: "lisäsi tämän kirjanmerkkeihin"
           like: "tykkäsi tästä"
           vote: "äänesti tätä"
         by_you:
-          off_topic: "Liputit tämän asiaankuulumattomaksi"
+          off_topic: "Liputit tämän eksyvän aiheesta"
           spam: "Liputit tämän roskapostiksi"
-          inappropriate: "Liputit tämän asiattomaksi"
+          inappropriate: "Liputit tämän sopimattomaksi"
           notify_moderators: "Liputit tämän valvojille tiedoksi"
           notify_user: "Lähetit viestin tälle käyttäjälle"
           bookmark: "Olet lisännyt viestin kirjainmerkkeihisi"
@@ -1637,39 +1640,39 @@ fi:
           vote: "Olet äänestänyt tätä viestiä"
         by_you_and_others:
           off_topic:
-            one: "Sinä ja yksi muu käyttäjä liputitte tämän asiaankuulumattomaksi"
-            other: "Sinä ja {{count}} muuta liputtivat tämän asiaankuulumattomaksi"
+            one: "Sinä ja toinen käyttäjä liputitte tämän eksyvän aiheesta"
+            other: "Sinä ja {{count}} muuta liputitte tämän eksyvän aiheesta"
           spam:
-            one: "Sinä ja yksi muu käyttäjä liputitte tämän roskapostiksi"
-            other: "Sinä ja {{count}} muuta liputtivat tämän roskapostiksi"
+            one: "Sinä ja toinen käyttäjä liputitte tämän roskapostiksi"
+            other: "Sinä ja {{count}} muuta liputitte tämän roskapostiksi"
           inappropriate:
-            one: "Sinä ja yksi muu käyttäjä liputitte tämän asiattomaksi"
-            other: "Sinä ja {{count}} muuta liputtivat tämän asiattomaksi"
+            one: "Sinä ja toinen käyttäjä liputitte tämän sopimattomaksi"
+            other: "Sinä ja {{count}} muuta liputitte tämän sopimattomaksi"
           notify_moderators:
-            one: "Sinä ja yksi muu käyttäjä liputitte tämän valvojille tiedoksi"
-            other: "Sinä ja {{count}} muuta liputtivat tämän valvojille tiedoksi"
+            one: "Sinä ja toinen käyttäjä liputitte tämän valvojille tiedoksi"
+            other: "Sinä ja {{count}} muuta liputitte tämän valvojille tiedoksi"
           notify_user:
-            one: "Sinä ja 1 muuta lähetitte tälle käyttäjälle yksityisviestin"
+            one: "Sinä ja toinen käyttäjä lähetitte tälle käyttäjälle yksityisviestin"
             other: "Sinä ja {{count}} muuta lähetitte tälle käyttäjälle viestin"
           bookmark:
-            one: "Sinä ja yksi muu käyttäjä lisäsitte tämän kirjanmerkkeihinne"
-            other: "Sinä ja {{count}} muuta lisäsivät tämän kirjanmerkkeihinsä"
+            one: "Sinä ja toinen käyttäjä lisäsitte tämän kirjanmerkkeihinne"
+            other: "Sinä ja {{count}} muuta lisäsitte tämän kirjanmerkkeihinne"
           like:
-            one: "Sinä ja yksi muu käyttäjä tykkäsitte tästä"
-            other: "Sinä ja {{count}} muuta tykkäsivät tästä"
+            one: "Sinä ja toinen käyttäjä tykkäsitte tästä"
+            other: "Sinä ja {{count}} muuta tykkäsitte tästä"
           vote:
-            one: "Sinä ja yksi muu käyttäjä äänestitte tätä viestiä"
-            other: "Sinä ja {{count}} muuta äänestivät tätä viestiä"
+            one: "Sinä ja toinen käyttäjä äänestitte tätä viestiä"
+            other: "Sinä ja {{count}} muuta äänestitte tätä viestiä"
         by_others:
           off_topic:
-            one: "Yksi käyttäjä liputti tämän asiaankuulumattomaksi"
-            other: "{{count}} käyttäjää liputtivat tämän asiaankuulumattomaksi"
+            one: "Yksi liputti tämän eksyvän aiheesta"
+            other: "{{count}} käyttäjää liputtivat tämän eksyvän aiheesta"
           spam:
             one: "yksi käyttäjä liputti tämän roskapostiksi"
             other: "{{count}} käyttäjää liputti tämän roskapostiksi"
           inappropriate:
-            one: "yksi käyttäjä liputti tämän epäasialliseksi"
-            other: "{{count}} käyttäjää liputti tämän epäasialliseksi"
+            one: "yksi liputti tämän sopimattomaksi"
+            other: "{{count}} käyttäjää liputti tämän sopimattomaksi"
           notify_moderators:
             one: "yksi käyttäjä liputti tämän tiedoksi valvojalle"
             other: "{{count}} käyttäjää liputti tämän tiedoksi valvojalle"
@@ -1815,12 +1818,12 @@ fi:
       ip_address_missing: "-"
       hidden_email_address: "(piilotettu)"
       submit_tooltip: "Toimita lippu"
-      take_action_tooltip: "Saavuta liputusraja välittömästi, ennemmin kuin odota muidenkin käyttäjien liputuksia."
+      take_action_tooltip: "Saavuta liputusraja välittömästi; ei tarvetta odottaa muiden käyttäjien liputuksia."
       cant: "Pahoittelut, et pysty liputtamaan tätä viestiä tällä hetkellä."
       notify_staff: 'Ilmoita ylläpidolle yksityisesti'
       formatted_name:
-        off_topic: "Se on asiaankuulumaton"
-        inappropriate: "Se on asiaton"
+        off_topic: "Se eksyy aiheesta"
+        inappropriate: "Se on sopimaton"
         spam: "Se on roskapostia"
       custom_placeholder_notify_user: "Esitä asiasi ymmärrettäväsi, ole rakentava ja kohtelias."
       custom_placeholder_notify_moderators: "Kerro ymmärrettävästi ja selvästi, mistä olet huolestunut ja lisää viestiin oleelliset esimerkit ja linkit, jos mahdollista."
@@ -2264,10 +2267,10 @@ fi:
         summary:
           action_type_3:
             one: "asiaankuulumaton"
-            other: "asiaankuulumaton x{{count}}"
+            other: "eksyy aiheesta x{{count}}"
           action_type_4:
-            one: "asiaton"
-            other: "asiaton x{{count}}"
+            one: "sopimaton"
+            other: "sopimaton x{{count}}"
           action_type_6:
             one: "mukautettu"
             other: "mukautettu x{{count}}"

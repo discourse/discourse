@@ -5,4 +5,8 @@
 # To work with us on translations, join this project:
 # https://www.transifex.com/projects/p/discourse-org/
 
-ur: {}
+ur:
+  poll:
+    poll_must_be_open_to_vote: "ووٹ کرنے کیلیے پول کا کھلا ہونا ضروری ہے۔"
+    email:
+      link_to_poll: "پول دیکھنے کیلیے کلک کریں۔"

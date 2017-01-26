@@ -271,7 +271,7 @@ es:
       reject: 'Rechazar'
       delete_user: 'Eliminar usuario'
       title: "Necesita aprobación"
-      none: "No hay posts para revisar"
+      none: "No hay posts para revisar."
       edit: "Editar"
       cancel: "Cancelar"
       view_pending: "ver posts pendientes"
@@ -312,7 +312,7 @@ es:
       topic_count: "Temas"
       topic_count_long: "Temas creados"
       post_count: "Respuestas"
-      post_count_long: "Posts escritos"
+      post_count_long: "Respuestas publicadas"
       no_results: "No se encontraron resultados."
       days_visited: "Visitas"
       days_visited_long: "Días visitados"
@@ -623,7 +623,7 @@ es:
         instructions: "Imágenes de fondo serán centrados y tendrán un ancho por default de 590px."
       email:
         title: "E-mail"
-        instructions: "Nunca se mostrará públicamente"
+        instructions: "nunca se mostrará al público"
         ok: "Te enviaremos un email para confirmar"
         invalid: "Por favor, introduce una dirección de correo válida"
         authenticated: "Tu dirección de correo ha sido autenticada por {{provider}}"
@@ -633,13 +633,13 @@ es:
           other: "Sólo te enviaremos si no te hemos visto en los últimos {{count}} minutos."
       name:
         title: "Nombre"
-        instructions: "Tu nombre completo (opcional)"
+        instructions: "tu nombre completo (opcional)"
         instructions_required: "Tu nombre completo"
         too_short: "Tu nombre es demasiado corto"
         ok: "Tu nombre es válido"
       username:
         title: "Nombre de usuario"
-        instructions: "Debe ser único, sin espacios y conciso"
+        instructions: "único, sin espacios y corto"
         short_instructions: "Los demás usuarios pueden mencionarte como @{{username}}"
         available: "Tu nombre de usuario está disponible"
         global_match: "La dirección coincide con la del nombre de usuario registrado"
@@ -757,7 +757,7 @@ es:
         same_as_username: "Tu contraseña es la misma que tu nombre de usuario."
         same_as_email: "Tu contraseña es la misma que tu dirección de correo electrónico."
         ok: "Tu contraseña es válida."
-        instructions: "Debe contener al menos %{count} caracteres."
+        instructions: "debe tener al menos %{count} caracteres"
       summary:
         title: "Resumen"
         stats: "Estadísticas"
@@ -1530,6 +1530,7 @@ es:
       edit: "Editando {{link}} {{replyAvatar}} {{username}}"
       edit_reason: "Motivo:"
       post_number: "post {{number}}"
+      wiki_last_edited_on: "wiki editada por última vez"
       last_edited_on: "post editado por última ven en"
       reply_as_new_topic: "Responder como tema enlazado"
       continue_discussion: "Continuando la discusión desde {{postLink}}:"
@@ -2679,7 +2680,7 @@ es:
             revoke_admin: "revocar administración"
             grant_moderation: "conceder moderación"
             revoke_moderation: "revocar moderación"
-            backup_operation: "operación de copia de seguridad de respaldo"
+            backup_create: "crear copia de seguridad"
             deleted_tag: "etiqueta eliminada"
             renamed_tag: "etiqueta renombrada"
             revoke_email: "revocar email"
@@ -2688,6 +2689,8 @@ es:
             activate_user: "activó a un usuario"
             deactivate_user: "desactivó a un usuario"
             change_readonly_mode: "cambio a modo de sólo lectura"
+            backup_download: "descargar copia de seguridad"
+            backup_destroy: "destruir copia de seguridad"
         screened_emails:
           title: "Correos bloqueados"
           description: "Cuando alguien trata de crear una cuenta nueva, los siguientes correos serán revisados y el registro será bloqueado, o alguna otra acción será realizada."

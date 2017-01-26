@@ -496,8 +496,8 @@ he:
         other: "לפני כמעט %{count} שנים"
   password_reset:
     no_token: "מצטערים, הקישור לשינוי הסיסמה ישן מדי. לחצו על כפתור הכניסה ובחרו ב\"שכחתי את הסיסמה שלי\" כדי לקבל קישור חדש."
-    choose_new: "אנא ביחרו סיסמה חדשה"
-    choose: "אנא בחרו סיסמה"
+    choose_new: "בחרו סיסמה חדשה"
+    choose: "בחרו סיסמה"
     update: 'עידכון סיסמה'
     save: 'שמירת סיסמה'
     title: 'איפוס סיסמה'
@@ -1477,11 +1477,12 @@ he:
 
       > %{site_title} -- %{site_description}
 
-      מסר מ%{invitee_name}:
+      עם מסר זה
 
-      %{user_custom_message}
+      > %{user_custom_message}
 
       אם את/ה מעוניינ/ת, לחצו על הקישור:
+
       %{invite_link}
 
       הזמנה זו נשלחה על ידי משתמש מוכר, כך שתוכלו להגיב לדיון מיידית.
@@ -1510,9 +1511,9 @@ he:
       >
       > %{site_description}
 
-      הודעה מ %{invitee_name}:
+      עם מסר זה:
 
-      %{user_custom_message}
+      > %{user_custom_message}
 
       אם אתם מעוניינים, לחצו על הקישור הבא:
 

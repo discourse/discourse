@@ -73,6 +73,8 @@ zh_TW:
       inclusion: 不包括在這列表中
       invalid: 無效的
       is_invalid: "似乎不清楚，這是完整的句子嗎？"
+      contains_censored_words: "包含一或多個過濾詞彙: %{censored_words}"
+      matches_censored_pattern: "與下列正則表達式相匹配: %{censored_pattern}"
       less_than: 必須少於 %{count}
       less_than_or_equal_to: 必須少於或等於 %{count}
       not_a_number: 不是數字
@@ -458,8 +460,8 @@ zh_TW:
         other: "約 %{count} 年前"
   password_reset:
     no_token: "抱歉，密碼修改連結已過期。選擇登錄按鈕再使用“我忘記了密碼”獲得一個新連結。"
-    choose_new: "請選擇一個新密碼"
-    choose: "請選擇一個密碼"
+    choose_new: "選擇一個新密碼"
+    choose: "選擇一個密碼"
     update: '更新密碼'
     save: '設定密碼'
     title: '重設密碼'
@@ -1628,6 +1630,7 @@ zh_TW:
         %{logs}
         ```
     bulk_invite_succeeded:
+      title: "批量邀請成功"
       subject_template: "批次用戶邀請已完成處理"
       text_body_template: "你的批量邀請用戶已經完成，發送了 %{sent} 個邀請。"
     bulk_invite_failed:
@@ -1742,6 +1745,7 @@ zh_TW:
 
         可能的原因是：複雜的格式、消息超長、消息太短。請再試一次，如果還不行，使用網站發表。
     email_reject_invalid_post_specified:
+      title: "電子郵件拒絕 無效貼文認定"
       subject_template: "[%{site_name}] 郵件問題 -- 發佈時錯誤"
       text_body_template: |
         我們非常抱歉，但是你發送至%{destination}（名為%{former_title}）的郵件出問題了。
@@ -1867,6 +1871,7 @@ zh_TW:
 
         你現在可以創建新回覆和主題了。感謝你的耐心等待。
     pending_users_reminder:
+      title: "待審用戶提醒"
       subject_template:
         other: "%{count} 個用戶等待審核"
       text_body_template: |
@@ -2868,6 +2873,7 @@ zh_TW:
             description: "所有自動發送自 Discourse 的私人消息將以該用戶的名義發送。最重要的是，這個用戶將被指定為發送給每個新用戶的歡迎消息的發送人。"
       corporate:
         title: "組織"
+        description: "這些名字將顯示於<a href='/privacy' target='blank'>隱私策略</a>和<a href='/tos' target='blank'>服務條款</a>中，你可以在工作人員分類中編輯這些主題。如果你沒有公司，你可以跳過這個步驟。"
         fields:
           company_short_name:
             label: "公司名（短）"
@@ -2882,6 +2888,7 @@ zh_TW:
         title: "主題"
         fields:
           theme_id:
+            description: "你喜歡亮色還是暗色的顏色方案？你可進一步在管理-自定義中修改網站的觀感。"
             choices:
               default:
                 label: "簡潔亮"
@@ -2906,6 +2913,7 @@ zh_TW:
             label: "大表徵圖"
             description: "現代設備中你站點顯示的表徵圖，要在大一點尺寸的情況下表現出色。推薦的尺寸至少要達到144px X 144px。"
       homepage:
+        description: "我們推薦在你的主頁顯示最新主題，但若你喜歡也可以顯示分類 ( 一組主題 )。"
         title: "主頁"
         fields:
           homepage_style:
@@ -2916,6 +2924,7 @@ zh_TW:
                 label: "分類"
       emoji:
         title: "Emoji"
+        description: "你喜歡你的社群使用哪一種 Emoji 樣式？你可以在管理-自定義-Emoji中增加更多的定製 Emoji。"
       invites:
         title: "邀請工作人員"
         description: "您就快完成啦！讓我們邀請一些工作人員來幫您<a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>創建一些種子討論話題</a>，好讓您的社群朋友產生興趣並開始回覆。"
