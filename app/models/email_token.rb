@@ -23,10 +23,6 @@ class EmailToken < ActiveRecord::Base
     SiteSetting.email_token_valid_hours.hours.ago
   end
 
-  def self.confirm_valid_after
-    SiteSetting.email_token_grace_period_hours.hours.ago
-  end
-
   def self.unconfirmed
     where(confirmed: false)
   end
@@ -52,7 +48,7 @@ class EmailToken < ActiveRecord::Base
 
     user = email_token.user
     failure[:user] = user
-    row_count = EmailToken.where(id: email_token.id, expired: false).update_all 'confirmed = true'
+    row_count = EmailToken.where(confirmed: false, id: email_token.id, expired: false).update_all 'confirmed = true'
 
     if row_count == 1
       { success: true, user: user, email_token: email_token }
@@ -85,8 +81,8 @@ class EmailToken < ActiveRecord::Base
 
   def self.confirmable(token)
     EmailToken.where(token: token)
-              .where(expired: false)
-              .where("(NOT confirmed AND created_at >= ?) OR (confirmed AND created_at >= ?)", EmailToken.valid_after, EmailToken.confirm_valid_after)
+              .where(expired: false, confirmed: false)
+              .where("created_at >= ?", EmailToken.valid_after)
               .includes(:user)
               .first
   end

@@ -227,9 +227,6 @@ class ImportScripts::VBulletin < ImportScripts::Base
   def import_topics
     puts "", "importing topics..."
 
-    # keep track of closed topics
-    @closed_topic_ids = []
-
     topic_count = mysql_query("SELECT COUNT(threadid) count FROM #{TABLE_PREFIX}thread").first["count"]
 
     batches(BATCH_SIZE) do |offset|
@@ -250,7 +247,6 @@ class ImportScripts::VBulletin < ImportScripts::Base
         raw = preprocess_post_raw(topic["raw"]) rescue nil
         next if raw.blank?
         topic_id = "thread-#{topic["threadid"]}"
-        @closed_topic_ids << topic_id if topic["open"] == 0
         t = {
           id: topic_id,
           user_id: user_id_from_imported_user_id(topic["postuserid"]) || Discourse::SYSTEM_USER_ID,
@@ -509,6 +505,20 @@ class ImportScripts::VBulletin < ImportScripts::Base
   def close_topics
     puts "", "Closing topics..."
 
+    # keep track of closed topics
+    closed_topic_ids = []
+
+    topics = mysql_query <<-MYSQL
+        SELECT t.threadid threadid, firstpostid, open
+          FROM #{TABLE_PREFIX}thread t
+          JOIN #{TABLE_PREFIX}post p ON p.postid = t.firstpostid
+      ORDER BY t.threadid
+    MYSQL
+    topics.each do |topic|
+      topic_id = "thread-#{topic["threadid"]}"
+      closed_topic_ids << topic_id if topic["open"] == 0
+    end
+
     sql = <<-SQL
       WITH closed_topic_ids AS (
         SELECT t.id AS topic_id
@@ -523,7 +533,7 @@ class ImportScripts::VBulletin < ImportScripts::Base
       WHERE id IN (SELECT topic_id FROM closed_topic_ids)
     SQL
 
-    Topic.exec_sql(sql, @closed_topic_ids)
+    Topic.exec_sql(sql, closed_topic_ids)
   end
 
   def post_process_posts

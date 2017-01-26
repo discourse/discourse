@@ -291,17 +291,10 @@ vi:
       total_rows:
         other: "%{count} người dùng"
     groups:
-      empty:
-        posts: "Không có chủ đề của các thành viên trong nhóm"
-        members: "Không có thành viên nào trong nhóm"
-        mentions: "Không có thành viên nào trong nhóm"
-        messages: "Không có tin nhắn nào trong nhóm"
-        topics: "Không có chủ đề của các thành viên trong nhóm"
       add: "Thêm"
       selector_placeholder: "Thêm thành viên"
       owner: "chủ"
       visible: "Mọi thành viên có thể nhìn thấy nhóm"
-      index: "Nhóm"
       title:
         other: "các nhóm"
       members: "Các thành viên"
@@ -620,11 +613,8 @@ vi:
         create: "Gửi một lời mời"
         generate_link: "Chép liên kết Mời"
         bulk_invite:
-          none: "Bạn đã mời ai ở đây chưa. Bạn có thể mời một hoặc một nhóm bằng <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>tải lên hàng loạt file mời</a>."
           text: "Mời hàng loạt bằng file"
-          uploading: "Uploading..."
           success: "Tải lên thành công, bạn sẽ được thông báo qua tin nhắn khi quá trình hoàn tất."
-          error: "Có lỗi xảy ra khi upload '{{filename}}': {{message}}"
       password:
         title: "Mật khẩu"
         too_short: "Mật khẩu của bạn quá ngắn."
@@ -1282,7 +1272,6 @@ vi:
         edit: "Xin lỗi, có lỗi xảy ra khi sửa bài viết của bạn. Vui lòng thử lại."
         upload: "Xin lỗi, có lỗi xảy ra khi tải lên tập tin này. Vui lòng thử lại."
         too_many_uploads: "Xin lỗi, bạn chỉ có thể tải lên 1 file cùng 1 lúc."
-        upload_not_authorized: "Xin lỗi, tập tin của bạn tải lên chưa được cho phép (định dạng cho phép: {{authorized_extensions}})."
         image_upload_not_allowed_for_new_user: "Xin lỗi, tài khoản mới không thể tải lên ảnh."
         attachment_upload_not_allowed_for_new_user: "Xin lỗi, tài khoản mới không thể tải lên đính kèm."
         attachment_download_requires_login: "Xin lỗi, bạn cần đăng nhập để tải về đính kèm."
@@ -1537,7 +1526,6 @@ vi:
     views_lowercase:
       other: "lượt xem"
     replies: "Trả lời"
-    views_long: "chủ đề đã được xem {{number}} lần"
     activity: "Hoạt động"
     likes: "Lượt thích"
     likes_lowercase:
@@ -1661,8 +1649,6 @@ vi:
         backups: "sao lưu"
         traffic_short: "Băng thông"
         traffic: "Application web requests"
-        page_views: "API Requests"
-        page_views_short: "API Requests"
         show_traffic_report: "Xem chi tiết Báo cáo Lưu lượng"
         reports:
           today: "Hôm nay"
@@ -1746,15 +1732,12 @@ vi:
         refresh: "Làm mới"
         new: "Mới"
         selector_placeholder: "nhập tên tài khoản"
-        name_placeholder: "Tên nhóm, không khoản trắng, cùng luật với tên tài khoản"
         about: "Chỉnh sửa nhóm thành viên và tên của bạn ở đây"
         group_members: "Nhóm thành viên"
         delete: "Xóa"
         delete_confirm: "Xóa nhóm này?"
         delete_failed: "Không thể xóa nhóm. Nếu đây là một nhóm tự động, nó không thể hủy bỏ."
-        delete_member_confirm: "Loại bỏ '%{username}' khỏi nhóm '%{group}'?"
         delete_owner_confirm: "Loại bỏ quyền sở hữu của '%{username}'?"
-        name: "Tên"
         add: "Thêm"
         add_members: "Thêm thành viên"
         custom: "Tùy biến"

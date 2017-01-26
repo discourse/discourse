@@ -169,5 +169,11 @@ describe Email::Styles do
     end
   end
 
+  context "onebox_styles" do
+    it "renders quote as <blockquote>" do
+      fragment = html_fragment('<aside class="quote"> <div class="title"> <div class="quote-controls"> <i class="fa fa-chevron-down" title="expand/collapse"></i><a href="/t/xyz/123" title="go to the quoted post" class="back"></a> </div> <img alt="" width="20" height="20" src="https://cdn-enterprise.discourse.org/boingboing/user_avatar/bbs.boingboing.net/techapj/40/54379_1.png" class="avatar">techAPJ: </div> <blockquote> <p>lorem ipsum</p> </blockquote> </aside>')
+      expect(fragment.to_s.squish).to match(/^<blockquote.+<\/blockquote>$/)
+    end
+  end
 
 end

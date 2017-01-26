@@ -1,18 +1,42 @@
-.group-header {
-  font-size: 2.142em;
-  font-weight: normal;
-}
-
-.group-name {
-  font-weight: normal;
-  margin-top: 5px;
-  color: dark-light-diff($primary, $secondary, 50%, -50%);
-}
-
 .group-details-container {
   background: rgba(230, 230, 230, 0.3);
   padding: 20px;
-  margin-bottom: 30px;
+  margin-bottom: 15px;
+}
+
+.group-info {
+  width: 100%;
+
+  .group-info-name {
+    font-size: 1.4em;
+    font-weight: bold;
+    color: $primary;
+  }
+
+  .group-info-full-name {
+    font-size: 1.2em;
+    color: dark-light-choose(scale-color($primary, $lightness: 30%), scale-color($secondary, $lightness: 70%));
+  }
+
+  span {
+    display: inline-block;
+    vertical-align: middle;
+  }
+
+  $size: 50px;
+
+  .avatar-flair-image {
+    width: $size;
+  }
+
+  .avatar-flair {
+    background-size: $size;
+    height: $size;
+
+    i {
+      font-size: $size !important;
+    }
+  }
 }
 
 .group-logs-filter {
@@ -21,10 +45,6 @@
   &:hover {
     background-color: $danger;
   }
-}
-
-.group-index-request, .group-index-join, .group-index-leave {
-  float: right;
 }
 
 table.group-logs {
@@ -56,30 +76,35 @@ table.group-members {
   width: 100%;
   table-layout: fixed;
 
-  th, tr {
+  tr {
     border-bottom: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
   }
 
   th:first-child {
     width: 60%;
+    text-align: left;
   }
 
-  th:last-child {
+  th.group-members-actions {
     width: 5%;
   }
 
   th {
-    text-align: left;
-    padding: 5px 0px;
+    border-bottom: 3px solid dark-light-diff($primary, $secondary, 90%, -60%);
+    text-align: center;
+    padding: 5px 0px 5px 5px;
+    color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
+    font-weight: normal;
+  }
 
+  th.sortable {
     i {
       margin-left: 5px;
     }
 
     &:hover {
-      color: $tertiary;
       cursor: pointer;
-      text-decoration: underline;
+      background-color: dark-light-diff($primary, $secondary, 90%, -75%);
     }
   }
 
@@ -88,7 +113,12 @@ table.group-members {
       display: block;
     }
 
+    td:first-child {
+      text-align: left;
+    }
+
     td {
+      text-align: center;
       color: dark-light-diff($primary, $secondary, 50%, -50%);
       padding: 0.8em 0;
     }
@@ -99,37 +129,9 @@ table.group-members {
   color: $primary;
 }
 
-.group-details {
-  width: 100%;
-}
-
-.group-details {
-  span {
-    display: inline-block;
-    vertical-align: middle;
-  }
-
-  .avatar-flair {
-    $size: 50px;
-
-    background-size: $size;
-    height: $size;
-    width: $size;
-
-    i {
-      font-size: $size !important;
-    }
-  }
-}
-
-.group-edit {
-  float: right;
-}
-
 .form-horizontal {
   .group-flair-inputs {
     display: inline-block;
-    margin: 15px 0px;
 
     input[type="text"] {
       width: 80% !important;
@@ -156,13 +158,11 @@ table.group-members {
   }
 }
 
-.groups.edit-group .form-horizontal {
-  textarea {
-    width: 99%;
-  }
-
-  label {
-    font-weight: bold;
+.group-edit {
+  .form-horizontal {
+    label {
+      font-weight: bold;
+    }
   }
 }
 

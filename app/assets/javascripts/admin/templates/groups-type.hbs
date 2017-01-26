@@ -6,7 +6,7 @@
         <li>
           {{#link-to "adminGroup" group.type group.name}}{{group.name}}
             {{#if group.userCountDisplay}}
-              <span class="count">{{group.userCountDisplay}}</span>
+              <span class="count">{{number group.userCountDisplay}}</span>
             {{/if}}
           {{/link-to}}
         </li>

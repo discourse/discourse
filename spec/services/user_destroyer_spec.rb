@@ -82,7 +82,25 @@ describe UserDestroyer do
         UserDestroyer.new(admin).destroy(user)
         expect(QueuedPost.where(user_id: user.id).count).to eq(0)
       end
+    end
 
+    context "with a directory item record" do
+      let(:user) { Fabricate(:user) }
+      let(:admin) { Fabricate(:admin) }
+
+      it "removes the directory item" do
+        DirectoryItem.create!(
+          user: user,
+          period_type: 1,
+          likes_received: 0,
+          likes_given: 0,
+          topics_entered: 0,
+          topic_count: 0,
+          post_count: 0
+        )
+        UserDestroyer.new(admin).destroy(user)
+        expect(DirectoryItem.where(user_id: user.id).count).to eq(0)
+      end
     end
 
     context "with a draft" do
@@ -146,7 +164,7 @@ describe UserDestroyer do
 
           it "deletes topics started by the deleted user" do
             spammer_topic = Fabricate(:topic, user: @user)
-            spammer_post = Fabricate(:post, user: @user, topic: spammer_topic)
+            Fabricate(:post, user: @user, topic: spammer_topic)
             destroy
             expect(spammer_topic.reload.deleted_at).not_to eq(nil)
             expect(spammer_topic.user_id).to eq(nil)
@@ -239,12 +257,12 @@ describe UserDestroyer do
 
         it "doesn't add ScreenedUrl records by default" do
           ScreenedUrl.expects(:watch).never
-          UserDestroyer.new(@admin).destroy(@user, {delete_posts: true})
+          UserDestroyer.new(@admin).destroy(@user, delete_posts: true)
         end
 
         it "adds ScreenedUrl records when :block_urls is true" do
           ScreenedUrl.expects(:watch).with(anything, anything, has_key(:ip_address)).at_least_once
-          UserDestroyer.new(@admin).destroy(@user, {delete_posts: true, block_urls: true})
+          UserDestroyer.new(@admin).destroy(@user, delete_posts: true, block_urls: true)
         end
       end
 

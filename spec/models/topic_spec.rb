@@ -4,11 +4,54 @@ require 'rails_helper'
 require_dependency 'post_destroyer'
 
 describe Topic do
-
   let(:now) { Time.zone.local(2013,11,20,8,0) }
   let(:user) { Fabricate(:user) }
 
-  it { is_expected.to validate_presence_of :title }
+  context 'validations' do
+    let(:topic) { Fabricate.build(:topic) }
+
+    context "#title" do
+      it { is_expected.to validate_presence_of :title }
+
+      describe 'censored words' do
+        describe 'when title contains censored words' do
+          site_setting(:censored_words, 'pineapple|pen')
+
+          it 'should not be valid' do
+            topic.title = 'pen PinEapple apple pen '
+
+            expect(topic).to_not be_valid
+
+            expect(topic.errors.full_messages.first).to include(I18n.t(
+              'errors.messages.contains_censored_words', censored_words: 'pen, pineapple'
+            ))
+          end
+        end
+
+        describe 'when title matches censored pattern' do
+          site_setting(:censored_pattern, 'orange.*')
+
+          it 'should not be valid' do
+            topic.title = 'I have orangEjuice orange monkey orange stuff'
+
+            expect(topic).to_not be_valid
+
+            expect(topic.errors.full_messages.first).to include(I18n.t(
+              'errors.messages.matches_censored_pattern', censored_words: 'orange monkey orange stuff'
+            ))
+          end
+        end
+
+        describe 'when title does not contain censored words' do
+          it 'should be valid' do
+            topic.title = 'The cake is a lie'
+
+            expect(topic).to be_valid
+          end
+        end
+      end
+    end
+  end
 
   it { is_expected.to rate_limit }
 
@@ -303,7 +346,7 @@ describe Topic do
 
     context 'with a similar topic' do
       let!(:topic) {
-        ActiveRecord::Base.observers.enable :search_observer
+        SearchIndexer.enable
         post = create_post(title: "Evil trout is the dude who posted this topic")
         post.topic
       }
@@ -429,7 +472,7 @@ describe Topic do
       let(:actions) { topic.user.user_actions }
 
       it "should set up actions correctly" do
-        ActiveRecord::Base.observers.enable :all
+        UserActionCreator.enable
 
         expect(actions.map{|a| a.action_type}).not_to include(UserAction::NEW_TOPIC)
         expect(actions.map{|a| a.action_type}).to include(UserAction::NEW_PRIVATE_MESSAGE)
@@ -1354,6 +1397,13 @@ describe Topic do
       expect(Topic.for_digest(user, 1.year.ago, top_order: true)).to be_blank
     end
 
+    it "returns topics from TL0 users if given include_tl0" do
+      new_user = Fabricate(:user, trust_level: 0)
+      topic = Fabricate(:topic, user_id: new_user.id)
+
+      expect(Topic.for_digest(user, 1.year.ago, top_order: true, include_tl0: true)).to eq([topic])
+    end
+
     it "returns topics from TL0 users if enabled in preferences" do
       new_user = Fabricate(:user, trust_level: 0)
       topic = Fabricate(:topic, user_id: new_user.id)
@@ -1755,7 +1805,7 @@ describe Topic do
       topic.featured_link = '  https://github.com/discourse/discourse'
 
       expect(topic.save).to be_truthy
-      expect(topic.custom_fields['featured_link']).to eq('https://github.com/discourse/discourse')
+      expect(topic.featured_link).to eq('https://github.com/discourse/discourse')
     end
 
     context 'when category restricts present' do
@@ -1766,12 +1816,23 @@ describe Topic do
       it 'can save the featured link if it belongs to that category' do
         link_topic.featured_link = 'https://github.com/discourse/discourse'
         expect(link_topic.save).to be_truthy
-        expect(link_topic.custom_fields['featured_link']).to eq('https://github.com/discourse/discourse')
+        expect(link_topic.featured_link).to eq('https://github.com/discourse/discourse')
       end
 
-      it 'can not save the featured link if it belongs to that category' do
+      it 'can not save the featured link if category does not allow it' do
+        topic.category = Fabricate(:category, topic_featured_link_allowed: false)
         topic.featured_link = 'https://github.com/discourse/discourse'
         expect(topic.save).to be_falsey
+      end
+
+      it 'if category changes to disallow it, topic remains valid' do
+        t = Fabricate(:topic, category: link_category, featured_link: "https://github.com/discourse/discourse")
+
+        link_category.topic_featured_link_allowed = false
+        link_category.save!
+        t.reload
+
+        expect(t.valid?).to eq(true)
       end
     end
   end

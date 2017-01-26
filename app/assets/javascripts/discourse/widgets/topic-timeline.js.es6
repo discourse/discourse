@@ -7,33 +7,39 @@ import RawHtml from 'discourse/widgets/raw-html';
 const SCROLLAREA_HEIGHT = 300;
 const SCROLLER_HEIGHT = 50;
 const SCROLLAREA_REMAINING = SCROLLAREA_HEIGHT - SCROLLER_HEIGHT;
+const LAST_READ_HEIGHT = 20;
 
 function clamp(p, min=0.0, max=1.0) {
   return Math.max(Math.min(p, max), min);
+}
+
+function attachBackButton(widget) {
+  return widget.attach('button', {
+    className: 'btn btn-primary btn-small back-button',
+    label: 'topic.timeline.back',
+    title: 'topic.timeline.back_description',
+    action: 'goBack'
+  });
 }
 
 createWidget('timeline-last-read', {
   tagName: 'div.timeline-last-read',
 
   buildAttributes(attrs) {
-    return { style: `height: 40px; top: ${attrs.top}px` };
+    const bottom = SCROLLAREA_HEIGHT - (LAST_READ_HEIGHT / 2);
+    const top = attrs.top > bottom ? bottom : attrs.top;
+    return { style: `height: ${LAST_READ_HEIGHT}px; top: ${top}px` };
   },
 
-  html() {
-    return [
-      iconNode('circle', { class: 'progress' }),
-      this.attach('button', {
-        className: 'btn btn-primary btn-small',
-        label: 'topic.timeline.back',
-        title: 'topic.timeline.back_description',
-        action: 'goBack'
-      })
-    ];
+  html(attrs) {
+    const result = [ iconNode('minus', { class: 'progress' }) ];
+    if (attrs.showButton) {
+      result.push(attachBackButton(this));
+    }
+
+    return result;
   },
 
-  goBack() {
-    this.sendWidgetAction('jumpToPost', this.attrs.lastRead);
-  }
 });
 
 function timelineDate(date) {
@@ -43,12 +49,17 @@ function timelineDate(date) {
 
 createWidget('timeline-scroller', {
   tagName: 'div.timeline-scroller',
+  buildKey: () => `timeline-scroller`,
+
+  defaultState() {
+    return { dragging: false };
+  },
 
   buildAttributes() {
     return { style: `height: ${SCROLLER_HEIGHT}px` };
   },
 
-  html(attrs) {
+  html(attrs, state) {
     const { current, total, date } = attrs;
 
     const contents = [
@@ -59,6 +70,9 @@ createWidget('timeline-scroller', {
       contents.push(h('div.timeline-ago', timelineDate(date)));
     }
 
+    if (attrs.showDockedButton && !state.dragging) {
+      contents.push(attachBackButton(this));
+    }
     let result = [ h('div.timeline-handle'), h('div.timeline-scroller-content', contents) ];
 
     if (attrs.fullScreen) {
@@ -69,11 +83,17 @@ createWidget('timeline-scroller', {
   },
 
   drag(e) {
+    this.state.dragging = true;
     this.sendWidgetAction('updatePercentage', e.pageY);
   },
 
-  dragEnd() {
-    this.sendWidgetAction('commit');
+  dragEnd(e) {
+    this.state.dragging = false;
+    if ($(e.target).is('button')) {
+      this.sendWidgetAction('goBack');
+    } else {
+      this.sendWidgetAction('commit');
+    }
   }
 });
 
@@ -151,17 +171,41 @@ createWidget('timeline-scrollarea', {
     const before = SCROLLAREA_REMAINING * percentage;
     const after = (SCROLLAREA_HEIGHT - before) - SCROLLER_HEIGHT;
 
+    let showButton = false;
+    const hasBackPosition =
+      position.lastRead > 3 &&
+      Math.abs(position.lastRead - position.current) > 3 &&
+      Math.abs(position.lastRead - position.total) > 1 &&
+      (position.lastRead && position.lastRead !== position.total);
+
+    if (hasBackPosition) {
+      const lastReadTop = Math.round(position.lastReadPercentage * SCROLLAREA_HEIGHT);
+      showButton = ((before + SCROLLER_HEIGHT - 5) < lastReadTop) ||
+                    (before > (lastReadTop + 25));
+
+
+      // Don't show if at the bottom of the timeline
+      if (lastReadTop > (SCROLLAREA_HEIGHT - (LAST_READ_HEIGHT / 2))) {
+        showButton = false;
+      }
+    }
+
     const result = [
       this.attach('timeline-padding', { height: before }),
-      this.attach('timeline-scroller', _.merge(position, {fullScreen: attrs.fullScreen})),
+      this.attach('timeline-scroller', _.merge(position, {
+        showDockedButton: !attrs.mobileView && hasBackPosition && !showButton,
+        fullScreen: attrs.fullScreen
+      })),
       this.attach('timeline-padding', { height: after })
     ];
 
-    if (position.lastRead && position.lastRead !== position.total) {
+    if (hasBackPosition) {
       const lastReadTop = Math.round(position.lastReadPercentage * SCROLLAREA_HEIGHT);
-      if ((lastReadTop > (before + SCROLLER_HEIGHT)) && (lastReadTop < (SCROLLAREA_HEIGHT - SCROLLER_HEIGHT))) {
-        result.push(this.attach('timeline-last-read', { top: lastReadTop, lastRead: position.lastRead }));
-      }
+      result.push(this.attach('timeline-last-read', {
+        top: lastReadTop,
+        lastRead: position.lastRead,
+        showButton
+      }));
     }
 
     return result;
@@ -190,6 +234,10 @@ createWidget('timeline-scrollarea', {
   _percentFor(topic, postIndex) {
     const total = topic.get('postStream.filteredPostsCount');
     return clamp(parseFloat(postIndex - 1.0) / total);
+  },
+
+  goBack() {
+    this.sendWidgetAction('jumpToIndex', this.position().lastRead);
   }
 });
 

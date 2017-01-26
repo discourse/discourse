@@ -8,6 +8,18 @@ export default {
     withPluginApi('0.1', api => {
       api.decorateCooked(highlightSyntax);
       api.decorateCooked(lightbox);
+
+      api.decorateCooked($elem => {
+        const players = $('audio', $elem);
+        if (players.length) {
+          players.on('play', () => {
+            const postId = parseInt($elem.closest('article').data('post-id'));
+            if (postId) {
+              api.preventCloak(postId);
+            }
+          });
+        }
+      });
     });
   }
 };

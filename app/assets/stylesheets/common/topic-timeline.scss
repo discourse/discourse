@@ -49,8 +49,12 @@
     left: 0;
     right: 0;
     border-top: 1px solid dark-light-choose(scale-color($primary, $lightness: 90%), scale-color($secondary, $lightness: 90%));
+    box-shadow: 0px -2px 4px -1px rgba(0,0,0,.25);
     padding-top: 20px;
     z-index: 100000;
+    .back-button {
+      display: none;
+    }
     .topic-timeline {
       width: 100%;
       table-layout: fixed;
@@ -106,8 +110,7 @@
         right: 0px;
         margin-left: 0;
         i.progress {
-          margin-right: -3px;
-          margin-left: 1em;
+          display: none
         }
       }
       .timeline-footer-controls {
@@ -254,6 +257,10 @@
       cursor: ns-resize;
       display: flex;
       align-items: center;
+
+      .back-button {
+        margin-top: 1em;
+      }
     }
 
     .timeline-replies {
@@ -262,17 +269,17 @@
 
     .timeline-last-read {
       position: absolute;
-      margin-left: -0.19em;
-
-      .btn-small {
-        padding: 2px 5px;
-      }
+      margin-left: -0.35em;
 
       i.progress {
-        font-size: 0.5em;
-        color: dark-light-choose(scale-color($tertiary, $lightness: 80%), scale-color($tertiary, $lightness: 20%));
+        font-size: 0.8em;
+        color: $tertiary;
         margin-right: 1em;
       }
+    }
+
+    .back-button {
+      padding: 2px 5px;
     }
 
     .now-date {

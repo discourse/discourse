@@ -1,5 +1,3 @@
-import { defaultHomepage } from 'discourse/lib/utilities';
-
 export default function() {
   // Error page
   this.route('exception', { path: '/exception' });
@@ -45,18 +43,22 @@ export default function() {
     this.route('categoryNone', { path: '/c/:slug/none' });
     this.route('category', { path: '/c/:parentSlug/:slug' });
     this.route('categoryWithID', { path: '/c/:parentSlug/:slug/:id' });
-
-    // homepage
-    this.route(defaultHomepage(), { path: '/' });
   });
+
+  this.route('groups', { resetNamespace: true });
 
   this.route('group', { path: '/groups/:name', resetNamespace: true }, function() {
     this.route('members');
-    this.route('posts');
-    this.route('topics');
-    this.route('mentions');
-    this.route('messages');
+
+    this.route('activity', function() {
+      this.route('posts');
+      this.route('topics');
+      this.route('mentions');
+      this.route('messages');
+    });
+
     this.route('logs');
+    this.route('edit');
   });
 
   // User routes

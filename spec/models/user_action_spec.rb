@@ -3,7 +3,7 @@ require 'rails_helper'
 describe UserAction do
 
   before do
-    ActiveRecord::Base.observers.enable :all
+    UserActionCreator.enable
   end
 
   it { is_expected.to validate_presence_of :action_type }
@@ -19,6 +19,7 @@ describe UserAction do
     let(:private_topic) do
       topic = private_post.topic
       topic.update_columns(category_id: nil, archetype: Archetype::private_message)
+      TopicAllowedUser.create(topic_id: topic.id, user_id: user.id)
       topic
     end
 
@@ -49,6 +50,8 @@ describe UserAction do
     end
 
     it 'includes the events correctly' do
+      PostActionNotifier.enable
+
       mystats = stats_for_user(user)
       expecting = [UserAction::NEW_TOPIC, UserAction::NEW_PRIVATE_MESSAGE, UserAction::GOT_PRIVATE_MESSAGE, UserAction::BOOKMARK].sort
       expect(mystats).to eq(expecting)
@@ -102,7 +105,7 @@ describe UserAction do
 
   describe 'when user likes' do
 
-    let!(:post) { Fabricate(:post) }
+    let(:post) { Fabricate(:post) }
     let(:likee) { post.user }
     let(:liker) { Fabricate(:coding_horror) }
 
@@ -135,6 +138,23 @@ describe UserAction do
         PostAction.remove_act(liker, post, PostActionType.types[:like])
         expect(likee.user_stat.reload.likes_received).to eq(0)
         expect(liker.user_stat.reload.likes_given).to eq(0)
+      end
+
+      context 'private message' do
+        let(:post) { Fabricate(:private_message_post) }
+        let(:likee) { post.topic.topic_allowed_users.first.user }
+        let(:liker) { post.topic.topic_allowed_users.last.user }
+
+        it 'should not increase user stats' do
+          expect(@liker_action).not_to eq(nil)
+          expect(liker.user_stat.reload.likes_given).to eq(0)
+          expect(@likee_action).not_to eq(nil)
+          expect(likee.user_stat.reload.likes_received).to eq(0)
+
+          PostAction.remove_act(liker, post, PostActionType.types[:like])
+          expect(liker.user_stat.reload.likes_given).to eq(0)
+          expect(likee.user_stat.reload.likes_received).to eq(0)
+        end
       end
 
     end
@@ -223,13 +243,13 @@ describe UserAction do
     end
   end
 
-  describe 'private messages' do
+  describe 'secures private messages' do
 
     let(:user) do
       Fabricate(:user)
     end
 
-    let(:target_user) do
+    let(:user2) do
       Fabricate(:user)
     end
 
@@ -237,22 +257,35 @@ describe UserAction do
       PostCreator.create( user,
                           raw: 'this is a private message',
                           title: 'this is the pm title',
-                          target_usernames: target_user.username,
+                          target_usernames: user2.username,
                           archetype: Archetype::private_message
                         )
     end
 
-    let!(:response) do
-      PostCreator.create(user, raw: 'oops I forgot to mention this', topic_id: private_message.topic_id)
+    def count_bookmarks
+      UserAction.stream(
+        user_id: user.id,
+        action_types: [UserAction::BOOKMARK],
+        ignore_private_messages: false,
+        guardian: Guardian.new(user)
+      ).count
     end
 
-    let!(:private_message2) do
-      PostCreator.create( target_user,
-                          raw: 'this is a private message',
-                          title: 'this is the pm title',
-                          target_usernames: user.username,
-                          archetype: Archetype::private_message
-                        )
+    it 'correctly secures stream' do
+      PostAction.act(user, private_message, PostActionType.types[:bookmark])
+
+      expect(count_bookmarks).to eq(1)
+
+      private_message.topic.topic_allowed_users.where(user_id: user.id).destroy_all
+
+      expect(count_bookmarks).to eq(0)
+
+      group = Fabricate(:group)
+      group.add(user)
+      private_message.topic.topic_allowed_groups.create(group_id: group.id)
+
+      expect(count_bookmarks).to eq(1)
+
     end
 
   end

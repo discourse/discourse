@@ -25,7 +25,8 @@ function createSearchResult(type, linkField, fn) {
         return h('li', this.attach('link', {
           href: r.get(linkField),
           contents: () => fn.call(this, r, attrs.term),
-          className: 'search-link'
+          className: 'search-link',
+          searchContextEnabled: this.attrs.searchContextEnabled
         }));
       });
     }
@@ -98,7 +99,11 @@ createWidget('search-menu-results', {
       }
 
       return [
-        h('ul', this.attach(rt.componentName, { results: rt.results, term: attrs.term })),
+        h('ul', this.attach(rt.componentName, {
+          searchContextEnabled: this.attrs.searchContextEnabled,
+          results: rt.results,
+          term: attrs.term
+        })),
         h('div.no-results', more)
       ];
     });

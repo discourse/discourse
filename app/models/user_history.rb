@@ -51,12 +51,17 @@ class UserHistory < ActiveRecord::Base
                           revoke_admin: 33,
                           grant_moderation: 34,
                           revoke_moderation: 35,
-                          backup_operation: 36,
+                          backup_create: 36,
                           rate_limited_like: 37, # not used anymore
                           revoke_email: 38,
                           deactivate_user: 39,
-                          wizard_step: 40
-                         )
+                          wizard_step: 40,
+                          lock_trust_level: 41,
+                          unlock_trust_level: 42,
+                          activate_user: 43,
+                          change_readonly_mode: 44,
+                          backup_download: 45,
+                          backup_destroy: 46)
   end
 
   # Staff actions is a subset of all actions, used to audit actions taken by staff users.
@@ -89,9 +94,15 @@ class UserHistory < ActiveRecord::Base
                         :revoke_admin,
                         :grant_moderation,
                         :revoke_moderation,
-                        :backup_operation,
+                        :backup_create,
                         :revoke_email,
-                        :deactivate_user]
+                        :deactivate_user,
+                        :lock_trust_level,
+                        :unlock_trust_level,
+                        :activate_user,
+                        :change_readonly_mode,
+                        :backup_download,
+                        :backup_destroy]
   end
 
   def self.staff_action_ids

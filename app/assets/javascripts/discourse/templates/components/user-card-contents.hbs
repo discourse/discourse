@@ -30,7 +30,7 @@
           <h2>{{user.title}}</h2>
         {{/if}}
 
-        {{plugin-outlet "user-card-post-names"}}
+        {{plugin-outlet name="user-card-post-names" args=(hash user=user) tagName='div'}}
       </span>
     </div>
 
@@ -78,14 +78,14 @@
           <span class='website-name'>
             {{fa-icon "globe"}}
             {{#if linkWebsite}}
-              <a href={{user.website}} rel={{unless removeNoFollow 'nofollow'}} target="_blank">{{user.website_name}}</a>
+              <a href={{user.website}} rel={{unless removeNoFollow 'nofollow noopener'}} target="_blank">{{user.website_name}}</a>
             {{else}}
               <span title={{user.website}}>{{user.website_name}}</span>
             {{/if}}
           </span>
         {{/if}}
 
-        {{plugin-outlet "user-card-location-and-website"}}
+        {{plugin-outlet name="user-card-location-and-website" args=(hash user=user)}}
       </div>
     {{/if}}
 
@@ -95,7 +95,7 @@
           <h3><span class='desc'>{{i18n 'last_post'}}</span> {{format-date user.last_posted_at leaveAgo="true"}}</h3>
         {{/if}}
         <h3><span class='desc'>{{i18n 'joined'}}</span> {{format-date user.created_at leaveAgo="true"}}</h3>
-        {{plugin-outlet "user-card-metadata"}}
+        {{plugin-outlet name="user-card-metadata" args=(hash user=user)}}
       </div>
     {{/if}}
 

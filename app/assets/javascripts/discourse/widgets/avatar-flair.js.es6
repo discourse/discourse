@@ -13,7 +13,13 @@ createWidget('avatar-flair', {
   },
 
   buildClasses(attrs) {
-    return 'avatar-flair-' + attrs.primary_group_name + (attrs.primary_group_flair_bg_color ? ' rounded' : '');
+    let defaultClass = `avatar-flair-${attrs.primary_group_name} ${(attrs.primary_group_flair_bg_color ? 'rounded' : '')}`;
+
+    if (!this.isIcon(attrs)) {
+      defaultClass += ' avatar-flair-image';
+    }
+
+    return defaultClass;
   },
 
   buildAttributes(attrs) {
@@ -32,7 +38,10 @@ createWidget('avatar-flair', {
 
   html(attrs) {
     if (this.isIcon(attrs)) {
-      return [h('i', { className: 'fa ' + attrs.primary_group_flair_url })];
+      return [h('i', {
+        className: 'fa ' + attrs.primary_group_flair_url,
+        attributes: { style: attrs.primary_group_flair_color ? 'color: #' + Handlebars.Utils.escapeExpression(attrs.primary_group_flair_color) + '; ' : '' }
+      })];
     } else {
       return [];
     }

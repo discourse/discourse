@@ -10,8 +10,40 @@ class GroupsController < ApplicationController
 
   skip_before_filter :preload_json, :check_xhr, only: [:posts_feed, :mentions_feed]
 
+  def index
+    unless SiteSetting.enable_group_directory?
+      raise Discourse::InvalidAccess.new(:enable_group_directory)
+    end
+
+    page_size = 30
+    page = params[:page]&.to_i || 0
+
+    groups = Group.order(name: :asc).where(visible: true)
+
+    if !guardian.is_admin?
+      groups = groups.where(automatic: false)
+    end
+
+    count = groups.count
+    groups = groups.offset(page * page_size).limit(page_size)
+
+    group_user_ids = GroupUser.where(group: groups, user: current_user).pluck(:group_id)
+
+    render_json_dump(
+      groups: serialize_data(groups, BasicGroupSerializer),
+      extras: {
+        group_user_ids: group_user_ids
+      },
+      total_rows_groups: count,
+      load_more_groups: groups_path(page: page + 1)
+    )
+  end
+
   def show
     render_serialized(find_group(:id), GroupShowSerializer, root: 'basic_group')
+  end
+
+  def edit
   end
 
   def update
@@ -79,10 +111,10 @@ class GroupsController < ApplicationController
     limit = (params[:limit] || 20).to_i
     offset = params[:offset].to_i
     dir = (params[:desc] && !params[:desc].blank?) ? 'DESC' : 'ASC'
-    order = {}
+    order = ""
 
     if params[:order] && %w{last_posted_at last_seen_at}.include?(params[:order])
-      order.merge!(params[:order] => dir)
+      order = "#{params[:order]} #{dir} NULLS LAST"
     end
 
     total = group.users.count
@@ -109,6 +141,16 @@ class GroupsController < ApplicationController
     }
   end
 
+  def owners
+    group = find_group(:group_id)
+
+    owners = group.users.where('group_users.owner')
+      .order("users.last_seen_at DESC")
+      .limit(5)
+
+    render_serialized(owners, GroupUserSerializer)
+  end
+
   def add_members
     group = Group.find(params[:id])
     group.public ? ensure_logged_in : guardian.ensure_can_edit!(group)
@@ -129,7 +171,9 @@ class GroupsController < ApplicationController
     raise Discourse::NotFound if users.blank?
 
     if group.public
-      raise Discourse::InvalidAccess unless current_user == users.first
+      if !guardian.can_log_group_changes?(group) && current_user != users.first
+        raise Discourse::InvalidAccess
+      end
 
       unless current_user.staff?
         RateLimiter.new(current_user, "public_group_membership", 3, 1.minute).performed!
@@ -180,7 +224,9 @@ class GroupsController < ApplicationController
     raise Discourse::NotFound unless user
 
     if group.public
-      raise Discourse::InvalidAccess unless current_user == user
+      if !guardian.can_log_group_changes?(group) && current_user != user
+        raise Discourse::InvalidAccess
+      end
 
       unless current_user.staff?
         RateLimiter.new(current_user, "public_group_membership", 3, 1.minute).performed!
@@ -236,7 +282,7 @@ class GroupsController < ApplicationController
       :flair_bg_color,
       :flair_color,
       :bio_raw,
-      :title,
+      :full_name,
       :public,
       :allow_membership_requests
     )

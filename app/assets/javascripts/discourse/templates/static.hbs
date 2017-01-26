@@ -1,7 +1,7 @@
 {{#d-section bodyClass=bodyClass class="container"}}
   {{#watch-read action="markFaqRead" path=model.path}}
     <div class='contents clearfix body-page'>
-      {{plugin-outlet "above-static"}}
+      {{plugin-outlet name="above-static"}}
       {{{model.html}}}
 
       {{#if showSignupButton}}

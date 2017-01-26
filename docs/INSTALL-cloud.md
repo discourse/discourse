@@ -1,6 +1,6 @@
-**Set up Discourse in the cloud in under 30 minutes** with zero knowledge of Rails or Linux shell using our [Discourse Docker image][dd]. We recommend [DigitalOcean][do], but these steps will work on any Docker-compatible cloud provider or local server.
+**Set up Discourse in the cloud in under 30 minutes** with zero knowledge of Rails or Linux shell. We recommend [DigitalOcean][do], but these steps will work on any **Docker-compatible** cloud provider or local server.
 
->  🔔 Don't have 30 minutes to set this up? For a flat one-time fee of $99, the community can install Discourse in the cloud for you. [Click here to purchase a self-supported community install](http://jaypfaffman.com/product/99-install/).
+>  🔔 Don't have 30 minutes to set this up? For a flat one-time fee of $99, the community can install Discourse in the cloud for you. [Click here to purchase a self-supported community install](https://www.literatecomputing.com/product/discourse-install/).
 
 ### Create New Cloud Server
 
@@ -136,7 +136,11 @@ Do you want...
  
 - Free HTTPS / SSL support? [Configure Let's Encrypt](https://meta.discourse.org/t/setting-up-lets-encrypt-cert-with-discourse-docker/40709). Paid HTTPS / SSL support? [Configure SSL](https://meta.discourse.org/t/allowing-ssl-for-your-discourse-docker-setup/13847).
 
+- Use a plugin [from Discourse](https://github.com/discourse) or a third party? [Configure plugins](https://meta.discourse.org/t/install-a-plugin/19157) 
+
 - Multiple Discourse sites on the same server? [Configure multisite](https://meta.discourse.org/t/multisite-configuration-with-docker/14084).
+
+- Webhooks when events happen in Discourse? [Configure webhooks](https://meta.discourse.org/t/setting-up-webhooks/49045).
 
 - A Content Delivery Network to speed up worldwide access? [Configure a CDN](https://meta.discourse.org/t/enable-a-cdn-for-your-discourse/14857). We recommend [Fastly](http://www.fastly.com/).
 

@@ -143,6 +143,8 @@ const Composer = RestModel.extend({
     if (!this.siteSettings.topic_featured_link_enabled || !canEditTitle || creatingPrivateMessage) { return false; }
 
     const categoryIds = this.site.get('topic_featured_link_allowed_category_ids');
+    if (!categoryId && categoryIds &&
+          (categoryIds.indexOf(this.site.get('uncategorized_category_id')) !== -1 || !this.siteSettings.allow_uncategorized_topics)) { return true; }
     return categoryIds === undefined || !categoryIds.length || categoryIds.indexOf(categoryId) !== -1;
   },
 
@@ -552,8 +554,7 @@ const Composer = RestModel.extend({
         post.get('post_number') === 1 &&
         this.get('topic.details.can_edit')) {
       const topicProps = this.getProperties(Object.keys(_edit_topic_serializer));
-
-       promise = Topic.update(this.get('topic'), topicProps);
+      promise = Topic.update(this.get('topic'), topicProps);
     } else {
       promise = Ember.RSVP.resolve();
     }

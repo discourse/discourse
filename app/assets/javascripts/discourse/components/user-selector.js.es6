@@ -1,7 +1,7 @@
 import { observes } from 'ember-addons/ember-computed-decorators';
 import TextField from 'discourse/components/text-field';
 import userSearch from 'discourse/lib/user-search';
-import { getOwner } from 'discourse-common/lib/get-owner';
+import { findRawTemplate } from 'discourse/lib/raw-templates';
 
 export default TextField.extend({
   @observes('usernames')
@@ -31,7 +31,7 @@ export default TextField.extend({
     }
 
     this.$().val(this.get('usernames')).autocomplete({
-      template: getOwner(this).lookup('template:user-selector-autocomplete.raw'),
+      template: findRawTemplate('user-selector-autocomplete'),
       disabled: this.get('disabled'),
       single: this.get('single'),
       allowAny: this.get('allowAny'),

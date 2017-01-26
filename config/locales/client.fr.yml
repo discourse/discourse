@@ -321,21 +321,63 @@ fr:
       total_rows:
         one: "1 utilisateur"
         other: "%{count} utilisateurs"
+    group_histories:
+      actions:
+        change_group_setting: "Changer les paramètres du groupe"
+        add_user_to_group: "Ajouter l'utilisateur"
+        remove_user_from_group: "Supprimer l'utilisateur"
+        make_user_group_owner: "Rendre propriétaire"
+        remove_user_as_group_owner: "Retirer le propriétaire"
     groups:
+      logs:
+        title: "Journaux"
+        when: "Quand"
+        action: "Action"
+        acting_user: "Utilisateur agissant"
+        target_user: "Utilisateur cible"
+        subject: "Sujet"
+        details: "Détails"
+        from: "De"
+        to: "À"
+      edit:
+        title: 'Modifier le groupe'
+        full_name: 'Nom complet'
+        add_members: "Ajouter des membres"
+        delete_member_confirm: "Supprimer %{username} du groupe « %{group} » ?"
+      request_membership_pm:
+        title: "Demande d'adhésion"
+        body: "Je souhaiterais adhérer à @%{groupName}."
+      name_placeholder: "Nom du groupe, sans espaces, même règle que pour les pseudos"
+      public: "Autoriser les utilisateurs à rejoindre/quitter le groupe librement (nécessite que le groupe soit visible)"
       empty:
-        posts: "Il n'y a aucun message de la part des membres de ce groupe."
-        members: "Il n'y a aucun membre dans ce groupe."
+        posts: "Il n'y a aucun message de membres de ce groupe."
+        members: "Il n' y a aucun membre dans ce groupe."
         mentions: "Il n'y a aucune mention de ce groupe."
         messages: "Il n'y a aucun message pour ce groupe."
-        topics: "Il n'y a aucun sujet de la part des membres de ce groupe."
+        topics: "Il n'y a aucun sujet par des membres de ce groupe."
+        logs: "Il n'y a aucun journal pour ce groupe."
       add: "Ajouter"
+      join: "Rejoindre le groupe"
+      leave: "Quitter le groupe"
+      request: "Demander à rejoindre le groupe"
+      automatic_group: Groupe automatique
+      closed_group: Groupe fermé
+      is_group_user: "Vous êtes membre de ce groupe"
+      allow_membership_requests: "Autoriser les utilisateurs à envoyer des demandes d'adhésion aux propriétaires de groupe (nécessite que tout le monde puisse mentionner le groupe)"
+      membership: "Adhésion"
+      name: "Nom"
+      user_count: "Nombre de membres"
+      bio: "À propos du groupe"
       selector_placeholder: "Ajouter des membres"
       owner: "propriétaire"
       visible: "Ce groupe est visible par tous les utilisateurs"
-      index: "Groupes"
+      index:
+        title: "Groupes"
+        empty: "Il n'y a aucun groupe visible."
       title:
         one: "groupe"
         other: "groupes"
+      activity: "Activité"
       members: "Membres"
       topics: "Sujets"
       posts: "Messages"
@@ -367,6 +409,15 @@ fr:
         muted:
           title: "Silencieux"
           description: "Nous ne serez jamais notifié de quoi que ce soit à propos des nouveaux sujets dans ce groupe."
+      flair_url: "Image de la vignette d'avatar"
+      flair_url_placeholder: "(Facultatif) URL de l'image ou classe Font Awesome"
+      flair_bg_color: "Couleur de l'arrière-plan de la vignette d'avatar"
+      flair_bg_color_placeholder: "(Facultatif) Couleur en héxadécimal"
+      flair_color: "Couleur de la vignette d'avatar"
+      flair_color_placeholder: "(Facultatif) Couleur en héxadécimal"
+      flair_preview_icon: "Prévisualiser l'icône"
+      flair_preview_image: "Prévisualiser l'image"
+      flair_note: "Note : la vignette d'avatar sera uniquement affichée pour le groupe principal d'un utilisateur."
     user_action_groups:
       '1': "J'aime donnés"
       '2': "J'aime reçus"
@@ -431,6 +482,8 @@ fr:
       download_archive:
         button_text: "Télécharger mes messages"
         confirm: "Êtes-vous sûr de vouloir télécharger vos messages ?"
+        success: "Le téléchargement a démarré ; vous serez notifié par message lorsqu'il est terminé."
+        rate_limit_error: "Les messages peuvent être téléchargés une fois par jour, veuillez ressayer demain."
       new_private_message: "Créer un message privé"
       private_message: "Message privé"
       private_messages: "Messages privés"
@@ -693,11 +746,10 @@ fr:
         link_generated: "Lien d'invitation généré avec succés !"
         valid_for: "Le lien d'invitation est seulement valide pour cette adresse courriel : %{email}"
         bulk_invite:
-          none: "Vous n'avez encore invité personne. Vous pouvez envoyé des invitations individuelles, ou en masse en <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>envoyant un fichier d'invitation contenant la liste des courriels</a>."
+          none: "Vous n'avez invité personne pour le moment. Vous pouvez envoyer des invitations individuelles ou inviter plusieurs personnes à la fois en <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>envoyant un fichier CSV</a>."
           text: "Invitation massive depuis un fichier"
-          uploading: "Envoi en cours…"
           success: "Le fichier a été correctement importé. Vous serez notifié par message privé lorsque le traitement sera terminé."
-          error: "Il y a eu une erreur lors de l'envoi de « {{filename}} » : {{message}}"
+          error: "Désolé, le fichier doit être au format CSV."
       password:
         title: "Mot de passe"
         too_short: "Votre mot de passe est trop court."
@@ -962,8 +1014,10 @@ fr:
       title: "ou appuyez sur Ctrl+Entrée"
       users_placeholder: "Ajouter un utilisateur"
       title_placeholder: "Quel est le sujet en une courte phrase ?"
+      title_or_link_placeholder: "Entrez un titre, ou copiez un lien ici"
       edit_reason_placeholder: "pourquoi modifiez-vous le message ?"
       show_edit_reason: "(ajouter la raison de la modification)"
+      topic_featured_link_placeholder: "Entrez un lien affiché avec le titre."
       reply_placeholder: "Écrivez ici. Utilisez Markdown, BBCode, ou HTML pour mettre en forme. Glissez ou collez des images."
       view_new_post: "Voir votre nouveau message."
       saving: "Sauvegarde"
@@ -1008,7 +1062,7 @@ fr:
         body: "Pour le moment, ce message est uniquement envoyé à vous-même !"
       admin_options_title: "Paramètres optionnels pour ce sujet"
       auto_close:
-        label: "Heure de fermeture automatique de ce sujet :"
+        label: "Heure de fermeture automatique du sujet :"
         error: "Merci d'entrer une valeur valide."
         based_on_last_post: "Ne pas fermer tant que le dernier message du sujet n'a pas atteint cette ancienneté."
         all:
@@ -1277,7 +1331,8 @@ fr:
         go_bottom: "bas"
         go: "aller"
         jump_bottom: "aller au dernier message"
-        jump_prompt: "aller au message"
+        jump_prompt: "aller à…"
+        jump_prompt_of: "de %{count} messages"
         jump_prompt_long: "À quel message voulez-vous aller ?"
         jump_bottom_with_number: "aller au message %{post_number}"
         total: total de messages
@@ -1509,7 +1564,7 @@ fr:
         file_too_large: "Désolé, ce fichier est trop gros (la taille maximale est {{max_size_kb}}kb). Pourquoi ne pas télécharger votre gros fichier sur un service partagé cloud, puis partager le lien?"
         too_many_uploads: "Désolé, vous ne pouvez envoyer qu'un seul fichier à la fois."
         too_many_dragged_and_dropped_files: "Désolé, vous ne pouvez télécharger que 10 fichiers à la fois."
-        upload_not_authorized: "Désolé, le fichier que vous êtes en train d'envoyer n'est pas autorisé (extensions autorisées : {{authorized_extensions}})."
+        upload_not_authorized: "Désolé, le fichier que vous essayez d'envoyer n'est pas autorisé (extensions autorisées : {{authorized_extensions}})."
         image_upload_not_allowed_for_new_user: "Désolé, les nouveaux utilisateurs ne peuvent pas envoyer d'images."
         attachment_upload_not_allowed_for_new_user: "Désolé, les nouveaux utilisateurs ne peuvent pas envoyer de fichier."
         attachment_download_requires_login: "Désolé, vous devez être connecté pour télécharger une pièce jointe."
@@ -1666,7 +1721,7 @@ fr:
       choose: 'Sélectionner une catégorie&hellip;'
       edit: 'modifier'
       edit_long: "Modifier"
-      view: 'Voir les sujets dans cette catégorie'
+      view: 'Voir les sujets dans la catégorie'
       general: 'Général'
       settings: 'Paramètres'
       topic_template: "Modèle de sujet"
@@ -1675,6 +1730,7 @@ fr:
       tags_allowed_tag_groups: "Groupes de tags pouvant être utilisés uniquement dans cette catégorie :"
       tags_placeholder: "(Facultatif) liste des tags autorisés"
       tag_groups_placeholder: "(Facultatif) liste des groupes de tags autorisés"
+      topic_featured_link_allowed: "Autoriser les sujets avec lien dans cette catégorie"
       delete: 'Supprimer la catégorie'
       create: 'Nouvelle catégorie'
       create_long: 'Créer une nouvelle catégorie'
@@ -1709,6 +1765,7 @@ fr:
       email_in_disabled: "La possibilité de créer des nouveaux sujets via courriel est désactivé dans les Paramètres. Pour l'activer,"
       email_in_disabled_click: 'activer le paramètre "email in".'
       suppress_from_homepage: "Retirer cette catégorie de la page d'accueil"
+      all_topics_wiki: "Faire des nouveaux sujets des Wikis par défaut"
       sort_order: "Tri par défaut :"
       allow_badges_label: "Autoriser les badges à être accordé dans cette catégorie"
       edit_permissions: "Modifier les permissions"
@@ -1831,7 +1888,6 @@ fr:
       one: "vue"
       other: "vues"
     replies: "Réponses"
-    views_long: "ce sujet a été vu {{number}} fois"
     activity: "Activité"
     likes: "J'aime"
     likes_lowercase:
@@ -2136,8 +2192,6 @@ fr:
         backups: "sauvegardes"
         traffic_short: "Trafic"
         traffic: "Requêtes Web Application"
-        page_views: "Requêtes API"
-        page_views_short: "Requêtes API"
         show_traffic_report: "Afficher le rapport de trafic détaillé"
         reports:
           today: "Aujourd'hui"
@@ -2227,15 +2281,12 @@ fr:
         refresh: "Actualiser"
         new: "Nouveau"
         selector_placeholder: "entrer le pseudo"
-        name_placeholder: "Nom du groupe, sans espace, mêmes règles que pour les pseudos"
         about: "Modifier votre adhésion et les noms ici"
         group_members: "Membres du groupe"
         delete: "Supprimer"
         delete_confirm: "Supprimer ce groupe ?"
         delete_failed: "Impossible de supprimer le groupe. Si c'est un groupe automatique il ne peut être détruit."
-        delete_member_confirm: "Enlever %{username} du groupe « %{group} » ?"
         delete_owner_confirm: "Retirer les privilèges de propriétaire pour %{username} ?"
-        name: "Nom"
         add: "Ajouter"
         add_members: "Ajouter des membres"
         custom: "Personnalisé"
@@ -2247,19 +2298,11 @@ fr:
         automatic_membership_email_domains: "Les utilisateurs qui s'enregistrent avec un domaine courriel qui correspond exactement à un élément de cette liste seront automatiquement ajoutés à ce groupe:"
         automatic_membership_retroactive: "Appliquer la même règle de domaine courriel pour les utilisateurs existants"
         default_title: "Titre par défaut pour tous les utilisateurs de ce groupe"
-        primary_group: "Définir comme groupe primaire automatiquement"
+        primary_group: "Définir comme groupe principal automatiquement"
         group_owners: Propriétaires
         add_owners: Ajouter des propriétaires
         incoming_email: "Adresse de courriel entrant personnalisée"
         incoming_email_placeholder: "Entrer une adresse de courriel"
-        flair_url: "Image de la vignette d'avatar"
-        flair_url_placeholder: "(Facultatif) URL de l'image ou classe Font Awesome"
-        flair_bg_color: "Couleur de l'arrière-plan de la vignette d'avatar"
-        flair_bg_color_placeholder: "(Facultatif) Couleur en héxadécimal"
-        flair_color: "Couleur de la vignette d'avatar"
-        flair_color_placeholder: "(Facultatif) Couleur en héxadécimal"
-        flair_preview: "Prévisualiser"
-        flair_note: "Note : la vignette d'avatar sera uniquement affichée pour le groupe principal d'un utilisateur."
       api:
         generate_master: "Générer une clé d'API maître"
         none: "Il n'y a pas de clés API actives en ce moment."
@@ -2291,7 +2334,6 @@ fr:
         warn_local_payload_url: "Il semble que vous essayez de configurer le Webhook vers une URL locale. Les événements délivrés à une adresse locale peuvent causer des effets de bords ou des comportements inattendus. Continuer ?"
         secret_invalid: "La clé secrète ne doit pas contenir d'espaces."
         secret_too_short: "La clé secrète doit contenir au moins 12 caractères."
-        secret_placeholder: "Une chaîne de caractères facultative pour générer la signature"
         event_type_missing: "Vous devez configurer au moins un type d'évènement."
         content_type: "Type de contenu"
         secret: "Clé secrète"
@@ -2314,7 +2356,7 @@ fr:
           details: "Quand il y a une réponse nouvelle, modifiée, supprimée ou rétablie."
         user_event:
           name: "Événement d'utilisateur"
-          details: "Quand un utilisateur est créé ou approuvé."
+          details: "Quand un utilisateur est créé, approuvé ou mis à jour."
         delivery_status:
           title: "État de l'envoi"
           inactive: "Inactif"
@@ -2530,7 +2572,7 @@ fr:
         send_test: "Envoyer un courriel de test"
         sent_test: "Envoyé !"
         delivery_method: "Méthode d'envoi"
-        preview_digest_desc: "Prévisualiser le contenu des courriels hebdomadaires sommaires envoyés aux utilisateurs inactifs."
+        preview_digest_desc: "Prévisualiser le contenu des résumés par courriel envoyés aux utilisateurs inactifs."
         refresh: "Rafraîchir"
         send_digest_label: "Envoyer ce résultat à :"
         send_digest: "Envoyer"
@@ -2935,6 +2977,7 @@ fr:
           user_preferences: "Préférences"
           tags: "Tags"
           search: "Rechercher"
+          groups: "Groupes"
       badges:
         title: Badges
         new_badge: Nouveau badge

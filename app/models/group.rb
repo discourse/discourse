@@ -1,5 +1,6 @@
 class Group < ActiveRecord::Base
   include HasCustomFields
+  include AnonCacheInvalidator
 
   has_many :category_groups, dependent: :destroy
   has_many :group_users, dependent: :destroy
@@ -514,6 +515,7 @@ end
 #  bio_cooked                         :text
 #  public                             :boolean          default(FALSE), not null
 #  allow_membership_requests          :boolean          default(FALSE), not null
+#  full_name                          :string
 #
 # Indexes
 #

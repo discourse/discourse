@@ -77,8 +77,6 @@ ja:
       load_from_remote: "投稿の読み込みに失敗しました。"
     site_settings:
       min_username_length_range: "最小値を最大値より上にすることはできません。"
-  bulk_invite:
-    file_should_be_csv: "アップロードするファイルは、csv または txt 形式である必要があります。"
   backup:
     operation_already_running: "操作を実行しています。他の操作はできません。"
     backup_file_should_be_tar_gz: "バックアップファイルは .tar.gz形式である必要があります。"
@@ -102,10 +100,10 @@ ja:
     in_reply_to: "▶ %{username}"
     replies:
       other: "%{count} 通の返信"
-  no_mentions_allowed: "あなたは他のユーザへメンションを送ることができません。"
-  no_images_allowed: "新規ユーザは投稿に画像を付ける事はできません。"
+  no_mentions_allowed: "あなたは他のユーザーへメンションを送ることができません。"
+  no_images_allowed: "新規ユーザーは投稿に画像を付ける事はできません。"
   spamming_host: "申し訳ありませんが、このホストへのリンクを貼ることはできません。"
-  user_is_suspended: "凍結中のユーザは投稿できません。"
+  user_is_suspended: "凍結中のユーザーは投稿できません。"
   topic_not_found: "問題が発生しました。トピックがクローズしたか、閲覧中に削除された可能性があります。"
   just_posted_that: "は最近の投稿と内容がほぼ一緒です"
   invalid_characters: "は不正な文字を含んでいます"
@@ -174,11 +172,11 @@ ja:
       こまごまと何度も返信するより、まとまって返信をすることで、より見やすく、より話しやすくなります。
 
     dominating_topic: |
-      ### 他のユーザも議論に参加させてあげましょう
+      ### 他のユーザーも議論に参加させてあげましょう
 
-      このトピックはあなたにとても重要なもののようですね &ndash; ここの回答のうち %{percent}% 以上があなたによってなされています。
+      このトピックはあなたにとても重要なもののようですね &ndash; ここへ %{percent}% 以上の返信をあなたが行っています。
 
-      他のユーザが回答するために十分な時間的猶予を与えているか、ちょっと振り返ってみませんか?
+      他のユーザーも返信するためにも、ある程度時間を開けているか確認してみましょう。
     too_many_replies: |
       ### このトピックに回答出来る制限を超えました
 
@@ -206,14 +204,14 @@ ja:
           attributes:
             base:
               warning_requires_pm: "プライベートメッセージでのみ警告を送ることができます"
-              too_many_users: "１度に１ユーザにしか警告を送る事はできません"
-              cant_send_pm: "申し訳ありません。このユーザにはプライベートメッセージを送る事ができません"
-              no_user_selected: "有効なユーザを選択してください"
+              too_many_users: "一度に1ユーザーにしか警告を送る事はできません"
+              cant_send_pm: "申し訳ありません。このユーザーにはプライベートメッセージを送る事ができません"
+              no_user_selected: "有効なユーザーを選択してください"
         user:
           attributes:
             password:
               common: "は10000最も一般的なパスワードのいずれかである。より安全なパスワードを使用してください。"
-              same_as_username: "はあなたのユーザ名と同じです。より安全なパスワードを使用してください"
+              same_as_username: "はあなたのユーザー名と同じです。より安全なパスワードを使用してください"
               same_as_email: "はあなたのメールアドレスと同じです。より安全なパスワードを使用してください"
             ip_address:
               signup_not_allowed: "このアカウントからのサインアップできません。"
@@ -268,12 +266,14 @@ ja:
       topic_exists_no_oldest: "%{count}個のトピックを持っているため、このカテゴリを削除できません。"
   trust_levels:
     newuser:
-      title: "新しいユーザ"
+      title: "新しいユーザー"
     basic:
-      title: "ベーシックユーザ"
-    change_failed_explanation: "%{user_name} を '%{new_trust_level}' に格下げしようとしましたが、既にトラストレベルが '%{current_trust_level}' です。%{user_name} は '%{current_trust_level}' のままになります - もしユーザーを降格させたい場合は、トラストレベルをロックしてください"
+      title: "ベーシックユーザー"
+    change_failed_explanation: "%{user_name} を '%{new_trust_level}' に下げようとしましたが、既にトラストレベルが '%{current_trust_level}' です。%{user_name} は '%{current_trust_level}' のままになります - もしユーザーを降格させたい場合は、トラストレベルをロックしてください"
   rate_limiter:
     too_many_requests: "このアクションを一日の間に実施可能な回数が決まっています。%{time_left}待ってから再度試してください。"
+    by_type:
+      public_group_membership: "グループへの参加/離脱が多すぎます。%{time_left}お待ち下さい。"
     hours:
       other: "%{count} 時間"
     minutes:
@@ -367,7 +367,7 @@ ja:
       long_form: '不適切として通報する'
     notify_user:
       title: '@{{username}}へメッセージを送る'
-      long_form: 'メッセージが送られたユーザ'
+      long_form: 'メッセージが送られたユーザー'
       email_title: '「%{title}」にの投稿'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
@@ -402,28 +402,33 @@ ja:
       email_title: 'トピック"%{title}" は不適切な可能性があるため、管理人による確認を必要とする。'
       email_body: "%{link}\n\n%{message}"
   flagging:
-    you_must_edit: '<p>投稿が他のユーザから通報されました。<a href="/my/messages">投稿したメッセージ</a>を確認してください。</p>'
-    user_must_edit: '<p>この投稿は他のユーザから通報されたため、非表示にされています。</p>'
+    you_must_edit: '<p>投稿が他のユーザーから通報されました。<a href="/my/messages">投稿したメッセージ</a>を確認してください。</p>'
+    user_must_edit: '<p>この投稿は他のユーザーから通報されたため、非表示にされています。</p>'
   archetypes:
     regular:
       title: "通常のトピック"
     banner:
       title: "バナートピック"
       message:
-        make: "このトピックはバナートピックに設定されています。ユーザが解除しない限り、ページ毎の一番上に表示されます"
+        make: "このトピックはバナートピックに設定されています。ユーザーが解除しない限り、ページ毎の一番上に表示されます"
         remove: "このトピックはバナーではなくなりました。トップページには表示されなくなります"
+  unsubscribe:
+    unwatch_category: "%{category}内の全トピックのウォッチを解除"
+  user_api_key:
+    title: "アプリケーションアクセスの認証"
+    description: "\"%{application_name}\" があなたのアカウントへのアクセスを要求しています: "
   reports:
     visits:
-      title: "訪問ユーザ"
+      title: "訪問ユーザー"
       xaxis: "日"
       yaxis: "訪問者数"
     signups:
-      title: "新規ユーザ"
+      title: "新規ユーザー"
       xaxis: "日"
-      yaxis: "新規ユーザ数"
+      yaxis: "新規ユーザー数"
     profile_views:
       xaxis: "日"
-      yaxis: "ユーザプロフィールの閲覧数"
+      yaxis: "ユーザープロフィールの閲覧数"
     topics:
       title: "トピック"
       xaxis: "日"
@@ -451,13 +456,13 @@ ja:
     users_by_trust_level:
       title: "ユーザーごとのトラストレベル"
       xaxis: "トラストレベル"
-      yaxis: "ユーザ数"
+      yaxis: "ユーザー数"
     emails:
       title: "送信メール"
       xaxis: "日"
       yaxis: "メールの数"
     user_to_user_private_messages:
-      title: "ユーザ to ユーザ"
+      title: "ユーザーからユーザーへ"
       xaxis: "日"
       yaxis: "メッセージ数"
     system_private_messages:
@@ -473,12 +478,12 @@ ja:
       xaxis: "日"
       yaxis: "メッセージ数"
     notify_user_private_messages:
-      title: "ユーザ通知"
+      title: "ユーザーの通知"
       xaxis: "日"
       yaxis: "メッセージ数"
     top_referrers:
       title: "トップリファラ"
-      xaxis: "ユーザ"
+      xaxis: "ユーザー"
       num_clicks: "クリック"
       num_topics: "トピック"
     top_traffic_sources:
@@ -486,19 +491,19 @@ ja:
       xaxis: "ドメイン"
       num_clicks: "クリック"
       num_topics: "トピック"
-      num_users: "ユーザ"
+      num_users: "ユーザー"
     top_referred_topics:
       title: "トップ被参照トピック"
       xaxis: "トピック"
       num_clicks: "クリック"
     page_view_anon_reqs:
-      title: "匿名ユーザ"
+      title: "匿名ユーザー"
       xaxis: "日"
-      yaxis: "匿名ユーザからの閲覧数"
+      yaxis: "匿名ユーザーからの閲覧数"
     page_view_logged_in_reqs:
       title: "ログイン"
       xaxis: "日"
-      yaxis: "ログインユーザからの閲覧数"
+      yaxis: "ログインユーザーからの閲覧数"
     page_view_crawler_reqs:
       title: "クローラー"
       xaxis: "日"
@@ -508,13 +513,13 @@ ja:
       xaxis: "日"
       yaxis: "合計閲覧数"
     page_view_logged_in_mobile_reqs:
-      title: "ログインユーザからの閲覧数"
+      title: "ログインユーザーからの閲覧数"
       xaxis: "日"
-      yaxis: "モバイルでログインしているユーザからの閲覧数"
+      yaxis: "モバイルでログインしているユーザーからの閲覧数"
     page_view_anon_mobile_reqs:
-      title: "匿名ユーザからの閲覧数"
+      title: "匿名ユーザーからの閲覧数"
       xaxis: "日"
-      yaxis: "モバイルで閲覧している匿名ユーザの閲覧数"
+      yaxis: "モバイルで閲覧している匿名ユーザーの閲覧数"
     http_background_reqs:
       title: "背景"
       xaxis: "日"
@@ -548,7 +553,7 @@ ja:
       xaxis: "日"
       yaxis: "合計"
     mobile_visits:
-      title: "訪問ユーザ"
+      title: "訪問ユーザー"
       xaxis: "日"
       yaxis: "訪問者数"
   dashboard:
@@ -569,7 +574,7 @@ ja:
     censored_words: "自動的に &#9632;&#9632;&#9632;&#9632; で置換されます"
     delete_old_hidden_posts: "30日以上非表示になっている投稿を自動で削除します"
     default_locale: "この Discourse インスタンスのデフォルト言語 (ISO 639-1 Code)"
-    allow_user_locale: "ユーザーが各自の言語設定を選択できるようにする"
+    allow_user_locale: "ユーザーが言語を選択できるようにする"
     min_post_length: "投稿を許可する最少の文字数"
     min_first_post_length: "最初の投稿(投稿本文)を許可する最少の文字数"
     min_private_message_post_length: "メッセージに投稿可能な最少の文字数"
@@ -652,7 +657,6 @@ ja:
     redirect_users_to_top_page: "新規ユーザーと長く不在のユーザーをトップページに自動的にリダイレクトさせる"
     show_email_on_profile: "プロフィールのメールアドレスを表示(自分とスタッフのみ閲覧できます)"
     email_token_valid_hours: "パスワードリマインダ、アカウントアクティベート時のトークンを何時間有効にするか"
-    email_token_grace_period_hours: "パスワードリマインダ、アカウントアクティベート時のトークンを無効するときに、何時間猶予を与えるか"
     enable_badges: "バッジ機能を有効にする"
     allow_index_in_robots_txt: "サーチエンジンにインデックスを許可するようにrobots.txtを指定する"
     email_domains_blacklist: "ユーザーがアカウント登録をすることができない、パイプ区切りのドメイン名のリスト。 例 : mailinator.com|trashmail.net"
@@ -860,7 +864,6 @@ ja:
     embed_whitelist_selector: "embedを許可するエレメントのCSS Selector"
     embed_blacklist_selector: "embedから削除するエレメントのCSS Selector"
     notify_about_flags_after: "この数時間後に処理されていない通報がある場合は、contact_emailにメールを送信する。0を設定すると無効になります"
-    enable_cdn_js_debugging: "全てのJSにcrossorigin権限を追加することで、/logsに適切なエラーを表示することを許可する"
     show_create_topics_notice: "サイトにpublicなトピックが5よりも少ない場合、トピックを作成するための通知が管理者に表示される"
     delete_drafts_older_than_n_days: (n) 日間経過したドラフトを削除
     prevent_anons_from_downloading_files: "匿名ユーザーが添付ファイルをダウンロードするのを防止。警告: 画像ではなく、添付ファイルとして投稿された全てのファイルが対象です"
@@ -1038,25 +1041,6 @@ ja:
         (もし[スタッフメンバー](%{base_url}/about) に新規ユーザーとして連絡する必要がある場合、このメッセージに返信してください)
     welcome_invite:
       subject_template: "%{site_name}へようこそ!"
-      text_body_template: |
-        %{site_name}へようこそ！
-        アカウント **%{username}** を作成し、ログインしています。
-
-        名前の変更は [自分のユーザプロフィール][prefs] より行ってください。
-
-        次回からログインする際は、
-
-        1. 招待時に使用したメールアドレスを使用してください。
-
-        2.[自分のユーザプロフィール][prefs]からパスワードを設定して、ログインのときは設定したパスワードを使用してください。
-
-        %{new_user_tips} [civilized community behavior](%{base_url}/guidelines)をお守りいただき、健全なコミュニティとなるよう皆様のご協力をお願いいたします。
-
-        それではお楽しみください!
-
-        (もし、[スタッフ](%{base_url}/about) と連絡を取る必要がある場合はこのメッセージに返信してください)
-
-        [prefs]: %{user_preferences_url}
     backup_succeeded:
       subject_template: "バックアップは正常に完了しました"
     backup_failed:

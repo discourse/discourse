@@ -294,17 +294,10 @@ ko:
       total_rows:
         other: "%{count} 사용자"
     groups:
-      empty:
-        posts: "이 그룹의 구성원에 의해 작성된 게시물은 없습니다."
-        members: "이 그룹에는 구성원이 없습니다."
-        mentions: "이 그룹에 대한 언급이 없습니다."
-        messages: "이 그룹에 대한 메시지는 없습니다."
-        topics: "이 그룹의 구성원에 의해 작성된 주제글이 없습니다."
       add: "추가"
       selector_placeholder: "멤버 추가"
       owner: "소유자"
       visible: "모든 사용자에게 보이는 그룹입니다."
-      index: "그룹"
       title:
         other: "그룹"
       members: "멤버"
@@ -624,11 +617,8 @@ ko:
         create: "이 포럼에 친구를 초대하기"
         generate_link: "초대 링크 복사"
         bulk_invite:
-          none: "아직 아무도 초대하지 않았습니다. 초대장을 각각 보내거나, <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>uploading a bulk invite file</a>을 이용하여 단체 초대를 보낼 수 있습니다."
           text: "파일로 대량 초대하기"
-          uploading: "업로드 중..."
           success: "파일이 성공적으로 업로드되었습니다. 완료되면 메시지로 알려드리겠습니다."
-          error: "'{{filename}}': {{message}} 업로드중 에러가 있었습니다."
       password:
         title: "비밀번호"
         too_short: "암호가 너무 짧습니다."
@@ -765,13 +755,13 @@ ko:
       complete_email_not_found: "<b>%{email}</b>과 일치하는 계정이 없습니다."
     login:
       title: "로그인"
-      username: "사용자"
+      username: "아이디"
       password: "비밀번호"
-      email_placeholder: "이메일 주소 또는 사용자 이름"
+      email_placeholder: "이메일 주소 또는 아이디"
       caps_lock_warning: "Caps Lock 켜짐"
       error: "알 수없는 오류"
       rate_limit: "다시 로그인 하기전에 잠시만 기다려주세요."
-      blank_username_or_password: "이메일 또는 사용자명과 비밀번호를 입력해 주세요."
+      blank_username_or_password: "이메일 또는 아이디, 비밀번호를 입력해 주세요."
       reset_password: '암호 재설정'
       logging_in: "로그인 중.."
       or: "또는"
@@ -1272,7 +1262,6 @@ ko:
         edit: "죄송합니다. 글을 수정하는 중에 오류가 발생했습니다. 다시 시도하십시오."
         upload: "죄송합니다. 파일을 업로드하는 동안 오류가 발생했습니다. 다시 시도하십시오."
         too_many_uploads: "한번에 한 파일만 업로드 하실 수 있습니다."
-        upload_not_authorized: "업로드 하시려는 파일 확장자는 사용이 불가능합니다 (사용가능 확장자: {{authorized_extensions}})."
         image_upload_not_allowed_for_new_user: "죄송합니다. 새로운 유저는 이미지를 업로드 하실 수 없습니다."
         attachment_upload_not_allowed_for_new_user: "죄송합니다. 새로운 유저는 파일 첨부를 업로드 하실 수 없습니다."
         attachment_download_requires_login: "죄송합니다. 첨부 파일을 받으려면 로그인이 필요합니다."
@@ -1519,7 +1508,6 @@ ko:
     views_lowercase:
       other: "조회"
     replies: "답변"
-    views_long: "이 주제는 {{number}}번 읽혔습니다."
     activity: "활동"
     likes: "좋아요"
     likes_lowercase:
@@ -1650,8 +1638,6 @@ ko:
         backups: "백업"
         traffic_short: "트래픽"
         traffic: "어플리케이션 웹 요청"
-        page_views: "API 요청"
-        page_views_short: "API 응답"
         show_traffic_report: "자세한 트래픽 리포트 보기"
         reports:
           today: "오늘"
@@ -1735,15 +1721,12 @@ ko:
         refresh: "새로고침"
         new: "새로운"
         selector_placeholder: "아이디를 입력하세요"
-        name_placeholder: "그룹 이름, 사용자 이름처럼 빈칸 없이 작성"
         about: "회원과 이름을 변경"
         group_members: "그룹 멤버"
         delete: "삭제"
         delete_confirm: "이 그룹을 삭제 하시겠습니까?"
         delete_failed: "이것은 자동으로 생성된 그룹입니다. 삭제할 수 없습니다."
-        delete_member_confirm: "'%{group}' 그룹에서 '%{username}'을 제외시키겠습니까?"
         delete_owner_confirm: "'%{username}' 님에게서 소유자권한을 제거할까요?"
-        name: "이름"
         add: "추가"
         add_members: "사용자 추가하기"
         custom: "Custom"
@@ -1979,7 +1962,7 @@ ko:
           none: "로그가 없습니다."
           filters:
             title: "필터"
-            user_placeholder: "사용자명"
+            user_placeholder: "아이디"
             address_placeholder: "name@example.com"
             type_placeholder: "다이제스트, 가입..."
             reply_key_placeholder: "답글 키"
@@ -2002,7 +1985,7 @@ ko:
           do_nothing: "아무것도 하지 않음"
         staff_actions:
           title: "스태프 기록"
-          instructions: "사용자 이름을 클릭하여 목록에서 차단하십시오. 프로필 사진을 클릭하여 사용자 페이지로 갑니다."
+          instructions: "사용자 아이디을 클릭하여 목록에서 차단하십시오. 프로필 사진을 클릭하여 사용자 페이지로 갑니다."
           clear_filters: "전체 보기"
           staff_user: "스태프 사용자"
           target_user: "타겟 사용자"

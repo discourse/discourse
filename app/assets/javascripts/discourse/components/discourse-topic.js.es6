@@ -5,16 +5,10 @@ import { selectedText } from 'discourse/lib/utilities';
 import { observes } from 'ember-addons/ember-computed-decorators';
 
 function highlight(postNumber) {
-  const $contents = $(`#post_${postNumber} .topic-body`),
-        origColor = $contents.data('orig-color') || $contents.css('backgroundColor');
+  const $contents = $(`#post_${postNumber} .topic-body`);
 
-  $contents.data("orig-color", origColor)
-    .addClass('highlighted')
-    .stop()
-    .animate({ backgroundColor: origColor }, 2500, 'swing', function() {
-      $contents.removeClass('highlighted');
-      $contents.css({'background-color': ''});
-    });
+  $contents.addClass('highlighted');
+  $contents.on('animationend', () => $contents.removeClass('highlighted'));
 }
 
 export default Ember.Component.extend(AddArchetypeClass, Scrolling, {

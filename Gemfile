@@ -9,7 +9,6 @@ end
 if rails_master?
   gem 'arel', git: 'https://github.com/rails/arel.git'
   gem 'rails', git: 'https://github.com/rails/rails.git'
-  gem 'rails-observers', git: 'https://github.com/rails/rails-observers.git'
   gem 'seed-fu', git: 'https://github.com/SamSaffron/seed-fu.git', branch: 'discourse'
 else
   # Rails 5 is going to ship with Action Cable, we have no use for it as
@@ -29,8 +28,6 @@ else
   # gem 'railties'
   # gem 'sprockets-rails'
   gem 'rails', '~> 4.2'
-
-  gem 'rails-observers'
   gem 'seed-fu', '~> 2.3.5'
 end
 
@@ -48,7 +45,8 @@ gem 'onebox'
 gem 'http_accept_language', '~>2.0.5', require: false
 
 gem 'ember-rails', '0.18.5'
-gem 'ember-source', '2.4.6'
+gem 'ember-source', '2.10.0'
+gem 'ember-handlebars-template', '0.7.5'
 gem 'barber'
 gem 'babel-transpiler'
 
@@ -107,7 +105,6 @@ gem 'sidekiq-statistic'
 gem 'sinatra', require: false
 gem 'execjs', require: false
 gem 'mini_racer'
-gem 'thin', require: false
 gem 'highline', require: false
 gem 'rack-protection' # security
 
@@ -138,8 +135,6 @@ group :test, :development do
   gem 'rb-inotify', '~> 0.9', require: RUBY_PLATFORM =~ /linux/i ? 'rb-inotify' : false
   gem 'rspec-rails', require: false
   gem 'shoulda', require: false
-  gem 'simplecov', require: false
-  gem 'rspec-given'
   gem 'rspec-html-matchers'
   gem 'spork-rails'
   gem 'pry-nav'
@@ -168,44 +163,22 @@ gem 'htmlentities', require: false
 #  If you want to amend mini profiler to do the monkey patches in the railties
 #  we are open to it. by deferring require to the initializer we can configure discourse installs without it
 
-gem 'fast_stack', require: false, platform: [:mri_20]
 gem 'flamegraph', require: false
 gem 'rack-mini-profiler', require: false
 
 gem 'unicorn', require: false
 gem 'puma', require: false
 gem 'rbtrace', require: false, platform: :mri
+gem 'gc_tracer', require: false, platform: :mri
 
 # required for feed importing and embedding
 #
 gem 'ruby-readability', require: false
-
 gem 'simple-rss', require: false
 
-gem 'gctools', require: false, platform: :mri_21
-
-begin
-  gem 'stackprof', require: false, platform: [:mri_21, :mri_22, :mri_23]
-  gem 'memory_profiler', require: false, platform: [:mri_21, :mri_22, :mri_23]
-rescue Bundler::GemfileError
-  begin
-    STDERR.puts "You are running an old version of bundler, please upgrade bundler ASAP, if you are using Discourse docker, rebuild your container."
-    gem 'stackprof', require: false, platform: [:mri_21, :mri_22]
-    gem 'memory_profiler', require: false, platform: [:mri_21, :mri_22]
-  rescue Bundler::GemfileError
-     gem 'stackprof', require: false, platform: [:mri_21]
-     gem 'memory_profiler', require: false, platform: [:mri_21]
-  end
-end
+gem 'stackprof', require: false, platform: :mri
+gem 'memory_profiler', require: false, platform: :mri
 
 gem 'rmmseg-cpp', require: false
 
 gem 'logster'
-
-# perftools only works on 1.9 atm
-group :profile do
-  # travis refuses to install this, instead of fuffing, just avoid it for now
-  #
-  # if you need to profile, uncomment out this line
-  # gem 'rack-perftools_profiler', require: 'rack/perftools_profiler', platform: :mri_19
-end

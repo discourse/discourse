@@ -94,8 +94,6 @@ vi:
       max_username_length_range: "Bạn không thể thiết lập số tối đa nhỏ hơn số tối thiểu"
       default_categories_already_selected: "Bạn không thể chọn một danh mục được sử dụng trong danh sách khác."
       s3_upload_bucket_is_required: "Bạn không thể tải lên S3 mà chưa thiết lập 's3_upload_bucket'."
-  bulk_invite:
-    file_should_be_csv: "Tập tin tải lên nên ở dạng csv hoặc txt."
   backup:
     operation_already_running: "Một tiến trình đang được thực hiện. Không thể bắt đầu một tiến trình mới ngay bây giờ."
     backup_file_should_be_tar_gz: "Tập tin sao lưu nên nên ở dạng .tar.gz."
@@ -755,9 +753,7 @@ vi:
     top_page_default_timeframe: "Khung thời gian mặc định cho trang xem trên cùng."
     show_email_on_profile: "Hiển thị email thành viên trên trang hồ hơ (chỉ cho họ và quản trị viên)"
     email_token_valid_hours: "Token quyên mật khẩu / kích hoạt tài khoản có giá trị trong (n) giờ."
-    email_token_grace_period_hours: "Token quyên mật khẩu / kích hoạt tài khoản vẫn còn giá trị (n) giờ sau khi được gia hạn"
     enable_badges: "Kích hoạt hệ thống huy hiệu"
-    enable_whispers: "Cho phép quản trị viên giao tiếp riêng trong chủ đề. (thực nghiệm)"
     allow_index_in_robots_txt: "Chỉ rõ trong robots.txt trang web này cho phép tạo chỉ mục bởi web search engines."
     email_domains_blacklist: "Một danh sách đuôi email mà người dùng không được phép dùng để đăng ký tài khoản. Ví dụ: maillinator.com|trashmail.net. Lưu ý mỗi tên miền cách nhau bởi dấu \"|\"."
     email_domains_whitelist: "Danh sách tên miền người dùng ĐƯỢC PHÉP đăng ký tài khoản. CẢNH BÁO: người dùng với  tên miền email khác trong danh sách sẽ không được phép đăng ký!"
@@ -1009,7 +1005,6 @@ vi:
     embed_whitelist_selector: "Bộ chọn các thành phần CSS được hỗ trợ khi nhúng."
     embed_blacklist_selector: "Bộ chọn các thành phần CSS được loại bỏ khi nhúng."
     notify_about_flags_after: "Nếu có các đánh dấu chưa được xử lý sau số giờ được thiết lập ở đây, gửi email đến contact_email. Đặt là 0 để vô hiệu hóa."
-    enable_cdn_js_debugging: "Cho phép /logs hiển thị lỗi thích hợp bằng cách thêm quyền cross-origin trên tất cả js kèm theo."
     show_create_topics_notice: "Nếu trang có ít hơn 5 chủ đề công khai, hiển thị một thông báo yêu cầu quản trị tạo thêm các chủ đề mới"
     delete_drafts_older_than_n_days: Xóa các bản nháp cũ hơn (n) ngày.
     vacuum_db_days: "Chạy VACUUM ANALYZE để lấy lại khoảng trống DB sau khi migration (đặt là 0 để tắt)"
@@ -1203,7 +1198,7 @@ vi:
   test_mailer:
     subject_template: "[%{site_name}] Email Thử Nghiệm"
   new_version_mailer:
-    subject_template: "[%{site_name}] Phiên bạn Discourse mới, cập nhật đã sẵn sàng"
+    subject_template: "[%{site_name}] Phiên bản Discourse mới, cập nhật đã sẵn sàng"
   new_version_mailer_with_notes:
     subject_template: "[%{site_name}] cập nhật đã sẵn sàng"
   queued_posts_reminder:
@@ -1236,26 +1231,6 @@ vi:
         (Nếu bạn cần giao tiếp với BQT [thành viên quản trị](%{base_url}/about), bạn có thể gửi trả lời email này).
     welcome_invite:
       subject_template: "Chào mừng đến với %{site_name}!"
-      text_body_template: |
-        Chào mừng bạn gia nhập %{site_name}!
-
-        Chúng tôi đã tạo một tài khoản mới **%{username}** cho bạn, bạn có thể thay đổi tên của mình bằng cách truy cập [your user profile][prefs].
-
-        Cho lần đăng nhập sau:
-
-        1. Luôn **sử dụng cùng một địa chỉ email từ lời mời ban đầu của bạn** khi đăng nhập. Nếu không chúng ta sẽ không thể biết đó là bạn!
-
-        2. Tạo một mật khẩu cho [your user profile][prefs], và sử dụng nó để đăng nhập.
-
-        %{new_user_tips}
-
-        Chúng tôi tin rằng bạn sẽ cùng chúng tôi phát triển một cộng đồng văn minh [hành vi ứng xử](%{base_url}/guidelines).
-
-        Chúc vui vẻ!
-
-        (Nếu bạn cần giao tiếp với BQT [thành viên quản trị](%{base_url}/about), bạn có thể gửi trả lời email này).
-
-        [prefs]: %{user_preferences_url}
     backup_succeeded:
       subject_template: "Sản sao lưu hoàn tất thành công"
     backup_failed:

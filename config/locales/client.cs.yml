@@ -347,17 +347,10 @@ cs:
         few: "%{count} uživatelé"
         other: "%{count} uživatelů"
     groups:
-      empty:
-        posts: "V této skupině není od žádného člena ani jeden příspěvek."
-        members: "V této skupině není žádny uživatel."
-        mentions: "Tato skupina nebyla ještě @zmíněna."
-        messages: "Pro tuto skupinu není žádná zpráva."
-        topics: "V této skupině není od žádného člena ani jedno téma."
       add: "Přidat"
       selector_placeholder: "Přidat členy"
       owner: "Vlastník"
       visible: "Skupina je viditelná pro všechny uživatele"
-      index: "Skupiny"
       title:
         one: "skupina"
         few: "skupiny"
@@ -715,11 +708,8 @@ cs:
         create: "Poslat pozvánku"
         generate_link: "Zkopírovat odkaz na pozvánku"
         bulk_invite:
-          none: "Zatím jste nikoho nepozval. Můžete poslat individuální pozvánku nebo pozvat skupinu lidí naráz pomocí <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>nahrání souboru</a>."
           text: "Hromadné pozvání s pomocí souboru"
-          uploading: "Nahrávám..."
           success: "Nahrání souboru proběhlo úspěšně. O dokončení celého procesu budete informování pomocí zprávy."
-          error: "Nastala chyba při nahrávání '{{filename}}': {{message}}"
       password:
         title: "Heslo"
         too_short: "Vaše heslo je příliš krátké."
@@ -1312,7 +1302,6 @@ cs:
         go_bottom: "dolů"
         go: "go"
         jump_bottom: "na poslední příspěvek"
-        jump_prompt: "přejít na příspěvek"
         jump_prompt_long: "Na který příspěvek chcete přejít?"
         jump_bottom_with_number: "Skočit na příspěvěk %{post_number}"
         total: celkem příspěvků
@@ -1555,7 +1544,6 @@ cs:
         file_too_large: "Soubor, který se snažíte nahrát, je bohužel příliš velký (maximální velikost je {{max_size_kb}}kb). Co třeba jej nahrát na cloudovou službu a nasdílet sem odkaz?"
         too_many_uploads: "Bohužel, najednou smíte nahrát jen jeden soubor."
         too_many_dragged_and_dropped_files: "Bohužel, najednou smíte nahrát jen 10 souborů."
-        upload_not_authorized: "Bohužel, soubor, který se snažíte nahrát, není povolený (povolené přípony: {{authorized_extensions}})."
         image_upload_not_allowed_for_new_user: "Bohužel, noví uživatelé nemohou nahrávat obrázky."
         attachment_upload_not_allowed_for_new_user: "Bohužel, noví uživatelé nemohou nahrávat přílohy."
         attachment_download_requires_login: "Omlouváme se, ale pro stáhnutí přílohy musíte být přihlášen."
@@ -1903,7 +1891,6 @@ cs:
       few: "zobrazení"
       other: "zobrazení"
     replies: "Odpovědi"
-    views_long: "toto téma bylo zobrazeno {{number}}krát"
     activity: "Aktivita"
     likes: "Líbí se"
     likes_lowercase:
@@ -2207,8 +2194,6 @@ cs:
         backups: "zálohy"
         traffic_short: "Provoz"
         traffic: "Webové požadavky na aplikaci"
-        page_views: "API požadavky"
-        page_views_short: "API požadavky"
         show_traffic_report: "Zobrazit detailní zprávu o provozu"
         reports:
           today: "Dnes"
@@ -2303,15 +2288,12 @@ cs:
         refresh: "Obnovit"
         new: "Nová"
         selector_placeholder: "zadejte uživatelské jméno"
-        name_placeholder: "Název skupiny, bez mezer, stejná pravidla jako pro uživatelská jména"
         about: "Zde můžete upravit názvy skupin a členství"
         group_members: "Členové skupiny"
         delete: "Smazat"
         delete_confirm: "Smazat toto skupiny?"
         delete_failed: "Unable to delete group. If this is an automatic group, it cannot be destroyed."
-        delete_member_confirm: "Odstranit '%{username}' ze '%{group}' skupiny?"
         delete_owner_confirm: "Odstranit vlastnickou výsadu od '%{username}'?"
-        name: "Jméno"
         add: "Přidat"
         add_members: "Přidat členy"
         custom: "Přizpůsobené"
@@ -2328,11 +2310,6 @@ cs:
         add_owners: Přidat vlastníky
         incoming_email: "Vlastní příchozí emailová adresa"
         incoming_email_placeholder: "zadej emailovou adresu"
-        flair_url: "Avatar Flair Image"
-        flair_url_placeholder: "(Volitelné) URL obrázku nebo třídy Font Awesome "
-        flair_bg_color: "Avatar Flair Barva pozadí"
-        flair_color: "Avatar Flair Color"
-        flair_preview: "Náhled"
       api:
         generate_master: "Vygenerovat Master API Key"
         none: "Nejsou tu žádné aktivní API klíče."

@@ -89,8 +89,6 @@ tr_TR:
       max_username_length_range: "En küçük değer altında en büyük değer ayarlayamazsınız."
       default_categories_already_selected: "Bir başka listede kullanılan bir kategoriyi seçemezsiniz."
       s3_upload_bucket_is_required: "Bir 's3_upload_bucket' tanımlamadıysanız, S3 yüklemelerini etkinleştiremezsiniz."
-  bulk_invite:
-    file_should_be_csv: "Yüklenen dosya csv veya txt biçiminde olmalı. "
   backup:
     operation_already_running: "Devam eden bir işlem var. Yeni bir işlem başlatılamaz."
     backup_file_should_be_tar_gz: "Yedekleme dosyası .tar.gz uzantılı olmalı."
@@ -785,9 +783,7 @@ tr_TR:
     show_email_on_profile: "Kullanıcının e-posta adresini profilinde göster (sadece kendilerine ve site görevlilerine gözükür)"
     prioritize_username_in_ux: "Kullanıcı sayfası, kullanıcı kartı ve gönderilerde kullanıcı adını ilk olarak göster(devre dışı ise gerçek isim önce gözükür)"
     email_token_valid_hours: "Parolamı unuttum / hesap etkinleştirme jetonları (n) saat geçerlidir."
-    email_token_grace_period_hours: "Parolamı unuttum / hesabı etkinleştir jetonları kullanıldıktan sonra (n) saat boyunca hala geçerlidir."
     enable_badges: "Rozet sistemini etkinleştir"
-    enable_whispers: "Konu içerisinde görevlilerin birbirleriyle gizli olarak iletişim kurmasına izin ver. (deneyseldir)"
     allow_index_in_robots_txt: "robots.txt dosyasında bu sitenin arama motorları tarafından dizinlenmesine izin verildiğini belirt."
     email_domains_blacklist: "Kullanıcıların kayıt olurken kullanamayacağı e-posta alan adlarının, dikey çizgilerle ayrıştırılmış listesi. Örneğin: mailinator.com|trashmail.net"
     email_domains_whitelist: "Kullanıcıların kayıt olurken kullanmak ZORUNDA olduğu e-posta alan adlarının, dikey çizgilerle ayrıştırılmış listesi. UYARI: Bu listede yer almayan e-posta alan adları kabul edilmeyecektir!"
@@ -1040,7 +1036,6 @@ tr_TR:
     embed_whitelist_selector: "Yerleştirmelerde kullanılmasına izin verilen öğeler için CSS seçicisi."
     embed_blacklist_selector: "Yerleştirmelerden çıkartılmış öğeler için CSS seçicisi."
     notify_about_flags_after: "Bu kadar saat geçmesine rağmen hala ilgilenilmemiş bildirimler varsa, contact_email adresine e-posta gönder. Devre dışı bırakmak için 0 girin. "
-    enable_cdn_js_debugging: "/logs 'ların asli hataları tüm js içeriklerine crossorigin izinleri ekleyerek göstermesine izin ver."
     show_create_topics_notice: "Eğer sitede herkese açık konu sayısı 5'den az ise, yöneticiden yeni konular oluşturmasını isteyen bir uyarı iletisi göster. "
     delete_drafts_older_than_n_days: (n) günden eski taslakları sil.
     bootstrap_mode_min_users: "bootstrap modunun edilgen olması için gereken en az kullanıcı sayısı (edilgen bırakmak için 0 yapın)"
@@ -1265,36 +1260,8 @@ tr_TR:
       Bu davet güvenilir bir kullanıcı tarafından gönderilmiştir, cevap yazarak tartışmaya hemen katılabilirsiniz.
   invite_forum_mailer:
     subject_template: "%{invitee_name} sizi %{site_domain_name} sitesine katılmanız için davet etti"
-    text_body_template: |
-      %{invitee_name} sizi foruma katılmaya davet ediyor
-
-      > **%{site_title}**
-      >
-      > %{site_description}
-
-      Eğer ilgileniyorsanız, aşağıdaki bağlantıya tıklayın:
-
-      %{invite_link}
-
-      Bu davet güvenilir bir üyeden gönderildi, bu nedenle hesabınız sizin için otomatik olarak oluşturulacak.
   custom_invite_forum_mailer:
     subject_template: "%{invitee_name} sizi %{site_domain_name} sitesine katılmaya davet etti"
-    text_body_template: |
-      %{invitee_name} sizi foruma katılmaya davet ediyor
-
-      > **%{site_title}**
-      >
-      > %{site_description}
-
-      %{invitee_name} diyor ki:
-
-      %{user_custom_message}
-
-      Eğer ilgileniyorsanız, aşağıdaki bağlantıya tıklayın:
-
-      %{invite_link}
-
-      Bu davet güvenilir bir üyeden gönderildi, bu nedenle hesabınız sizin için otomatik olarak oluşturulacak.
   invite_password_instructions:
     subject_template: "%{site_name} hesabınız için parola oluşturun"
     text_body_template: |
@@ -1354,99 +1321,6 @@ tr_TR:
   system_messages:
     post_hidden:
       subject_template: "Gönderi topluluk bildirimleri tarafından gizlendi"
-    usage_tips:
-      text_body_template: |
-        İşte başlangıç için birkaç ipucu:
-
-        ## Okuma
-
-        Daha fazla okumak için, **yalnızca aşağı kaydırmaya devam edin!**
-
-        As new replies or new topics arrive, they will appear automatically – no need to refresh the page.
-
-        ## Gezinti
-
-        - For search, your user page, or the <kbd>☰</kbd> menu, use the **icon buttons at upper right**.
-
-        - Selecting a topic title will always take you to your **next unread reply** in the topic. To enter at the top or bottom instead, select the reply count or last reply date.
-
-        <img src="%{base_url}/images/welcome/topic-list-select-areas-2x.png" width="593" height="59">
-
-        - While reading a topic, use the timeline on the right to jump to the top, bottom, or your last read position. On smaller screens, select the progress bar at bottom right to expand it:
-
-        <img src="%{base_url}/images/welcome/progress-bar-2x.png" width="153" height="181">
-
-        Ayrıca süper hızlı klavye kısayollarının listesini görmek için <kbd>?</kbd> tuşuna basabilirsiniz.
-
-        ## Cevaplama
-
-        To insert a quote, select the text you wish to quote, then press any <img src="%{base_url}/images/welcome/reply-post-2x.png" width="25" height="23"> Reply button to open the editor. Repeat for multiple quotes.
-
-        <img src="%{base_url}/images/welcome/quote-reply-2x.png" width="326" height="128">
-
-        You can always continue reading while you compose your reply, and we automatically save drafts as you write.
-
-        Birine cevabınız hakkında bildirim yollamak için ismini kullanın. `@` yazarak kullanıcı ismi aramaya başlayabilirsiniz.
-
-        <img src="%{base_url}/images/welcome/username-completion-2x.png" width="191" height="125">
-
-        To use [standard Emoji](http://www.emoji.codes/), just type `:` to match by name, or use the traditional smileys `;)`
-
-        <img src="%{base_url}/images/welcome/emoji-completion-2x.png" width="144" height="153">
-
-        To generate a summary for a link, paste it on a line by itself:
-
-        <img src="%{base_url}/images/welcome/link-oneboxing-animation.gif" width="480" height="228">
-
-        Cevabınız basit HTML, BBCode, veya [Markdown](http://commonmark.org/help/) kullanılarak biçimlendirilebilir:
-
-        Bu <b>kalın</b>.
-        Bu da [b]kalın[/b].
-        E bu da **kalın**.
-
-        Daha fazla biçimlendirme ipucu için [10 dakikalık öğreticiyi](http://commonmark.org/help/tutorial/) deneyebilirsiniz!
-
-        ## Eylemler
-
-        Tüm gönderilerin altında eylem düğmeleri bulunur:
-
-        <img src="%{base_url}/images/welcome/like-link-flag-bookmark-2x.png" width="162" height="42">
-
-        - To let someone know that you enjoyed and appreciated their post, use the **like** button. Share the love!
-
-        - Grab a copy-pasteable link to any reply or topic via the **link** button.
-
-        - Use the <kbd>&hellip;</kbd> show more button to reveal more actions. **Flag** to privately let the author, or [our staff](%{base_url}/about), know about a problem. **Bookmark** to find this post later on your profile page.
-
-        ## Bildirimler
-
-        When someone replies to you, quotes your post, mentions your `@username`, or even links to your post, a number will immediately appear at the top right of the page. Select it to access your **notifications**.
-
-        <img src="%{base_url}/images/welcome/notification-panel-2x.png" width="160" height="54">
-
-        Don't worry about missing a reply – you'll be emailed any notifications that arrive when you are away.
-
-        ## Tercihler
-
-        - All topics less than **two days old** are considered new.
-
-        - Any topic you've **actively participated in** (by creating it, replying to it, or reading it for an extended period) will be automatically tracked on your behalf.
-
-        You will see the new and unread number indicators next to these topics:
-
-        <img src="%{base_url}/images/welcome/topics-new-unread-2x.png" width="341" height="106">
-
-        You can change your notifications for any topic via the notification control at the bottom, and right hand side, of each topic.
-
-        <img src="%{base_url}/images/welcome/topic-notification-control-2x.png" width="608" height="312">
-
-        You can also set notification state per category, if you want to watch or mute every new topic in a specific category.
-
-        Bu ayarların herhangi birini değiştirmek için [kullanıcı tercihleri](%{base_url}/my/preferences) sayfasını ziyaret edin.
-
-        ## Topluluk Güvenilirliği
-
-        It's great to meet you! As you participate here, over time we'll get to know you, and your temporary new user limitations will be lifted. Keep participating, and over time you'll gain new [trust levels](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924) that include special abilities to help us manage our community together.
     welcome_user:
       subject_template: "%{site_name} topluluğuna hoş geldiniz!"
       text_body_template: |
@@ -1461,26 +1335,6 @@ tr_TR:
         (Eğer yeni bir kullanıcı olarak [görevlilerle](%{base_url}/about) iletişim kurmak isterseniz, bu iletiyi cevaplamanız yeterli.)
     welcome_invite:
       subject_template: "%{site_name} topluluğuna hoş geldiniz!"
-      text_body_template: |
-        %{site_name} davetiyenizi onayladığınız için teşekkürler -- hoş geldiniz!
-
-        Sizin için yeni bir hesap oluşturduk: **%{username}**, ve sisteme girişiniz yapıldı. [Kullanıcı profilinizi][prefs] ziyaret ederek kullanıcı adınızı değiştirebilirsiniz.
-
-        Daha sonra tekrar giriş yapmak için:
-
-        1. Giriş yaparken her zaman **ilk davetiyenizdeki ile aynı e-posta adresini kullanın**. Yoksa sizin olduğunuzu anlayamayız!
-
-        2. [Kullanıcı profiliniz][prefs] için yeni bir parola oluşturun ve o parola ile giriş yapın.
-
-        %{new_user_tips}
-
-        Biz her zaman [topluluk yönergelerimize](%{base_url}/guidelines) inanıyoruz.
-
-        Ziyaretinizin keyfini çıkarın!
-
-        (Eğer yeni bir kullanıcı olarak [görevlilerle](%{base_url}/about) iletişim kurmak isterseniz, bu iletiyi cevaplamanız yeterli.)
-
-        [prefs]: %{user_preferences_url}
     backup_succeeded:
       subject_template: "Yedekleme başarıyla tamamlandı"
       text_body_template: |
@@ -1812,7 +1666,6 @@ tr_TR:
       follow_topic: "Bu konuyu takip et"
       join_the_discussion: "Devamını Oku"
       popular_posts: "Gözde Gönderiler"
-      more_new: "Takip ettiğiniz konu ve kategorideki yeniler"
       subject_template: "[%{site_name}] Özeti"
       unsubscribe: "Bir süredir görünmediğiniz için bu e-posta size %{site_link} topluluğundan gönderildi. Bu e-postaları almak istemiyorsanız %{unsubscribe_link}."
       click_here: "buraya tıklayın"
@@ -2239,11 +2092,9 @@ tr_TR:
         fields:
           welcome:
             label: "Hoş geldiniz Konusu"
-            description: "<p>Bir çay evindeki birine topluluğunuzu 1 dakikada nasıl anlatırsınız?</p> <ul> <li>Bu tartışmalar kimler için?</li> <li>Burada ne bulabilirim?</li> <li>Neden ziyaret etmeliyim?</li> </ul> <p>Hoş geldiniz konusu yeni ziyaretçilerin ilk göreceği şeydir. Bunu sizin <b>tek nefeslik</b> 'çay konunuz' veya 'ısmarlama çayınız' olarak görebilirsiniz. </p>"
             one_paragraph: "Lütfen hoş geldiniz iletinizi bir paragraf kadar uzunlukta tutun."
       privacy:
         title: "Erişim"
-        description: "<p>Topluluğunuz herkese açık mı yoksa üyelik, davet veya onaylama ile kısıtlı mı? Dilerseniz bu seçeneği daha sonra değiştirebilirsiniz.</p> <p>Kullanıcı sayfanızdan ve konulardan davetiye gönderebileceğini unutmayın.</p>"
         fields:
           privacy:
             choices:
@@ -2266,7 +2117,6 @@ tr_TR:
             label: "Otomatik İletiler"
             description: "Discourse tarafından gönderilen tüm otomatik kişisel iletiler bu kullanıcı tarafından gönderilecek. Daha da önemlisi, kullanıcılara gidecek olan hoş geldiniz mesajları da bu kullanıcı tarafından gönderilecek."
       corporate:
-        description: "Bu isimler sonradan düzenleyebileceğiniz <a href='/privacy' target='blank'>Gizlilik Politikası</a> ve <a href='/tos' target='blank'>Hizmet Şartları</a> metinlerinde kullanılacak. Eğer bir şirket söz konusu değilse bu adımı geçebilirsiniz."
         fields:
           company_short_name:
             label: "Firma İsmi (kısa)"
@@ -2281,7 +2131,6 @@ tr_TR:
         title: "Tema"
         fields:
           theme_id:
-            description: "Başlamak için renk düzeni olarak karanlık mı yoksa aydınlık mı istersiniz? Dilediğiniz zaman daha fazla seçeneği Yönetici, Özelleştir alanında bulabilirsiniz."
             choices:
               default:
                 label: "Basit Aydınlık"

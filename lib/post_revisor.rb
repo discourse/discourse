@@ -250,7 +250,7 @@ class PostRevisor
       prev_owner = User.find(@post.user_id)
       new_owner = User.find(@fields["user_id"])
 
-      # UserActionObserver will create new UserAction records for the new owner
+      # UserActionCreator will create new UserAction records for the new owner
 
       UserAction.where(target_post_id: @post.id)
                 .where(user_id: prev_owner.id)
@@ -287,22 +287,26 @@ class PostRevisor
                         .where(action_type: UserAction::WAS_LIKED)
                         .update_all(user_id: new_owner.id)
 
-      prev_owner.user_stat.post_count -= 1
-      prev_owner.user_stat.topic_count -= 1 if @post.is_first_post?
-      prev_owner.user_stat.likes_received -= likes
-      prev_owner.user_stat.update_topic_reply_count
+      private_message = @post.topic.private_message?
+
+      prev_owner_user_stat = prev_owner.user_stat
+      prev_owner_user_stat.post_count -= 1
+      prev_owner_user_stat.topic_count -= 1 if @post.is_first_post?
+      prev_owner_user_stat.likes_received -= likes if !private_message
+      prev_owner_user_stat.update_topic_reply_count
 
       if @post.created_at == prev_owner.user_stat.first_post_created_at
-        prev_owner.user_stat.first_post_created_at = prev_owner.posts.order('created_at ASC').first.try(:created_at)
+        prev_owner_user_stat.first_post_created_at = prev_owner.posts.order('created_at ASC').first.try(:created_at)
       end
 
-      prev_owner.user_stat.save
+      prev_owner_user_stat.save!
 
-      new_owner.user_stat.post_count += 1
-      new_owner.user_stat.topic_count += 1 if @post.is_first_post?
-      new_owner.user_stat.likes_received += likes
-      new_owner.user_stat.update_topic_reply_count
-      new_owner.user_stat.save
+      new_owner_user_stat = new_owner.user_stat
+      new_owner_user_stat.post_count += 1
+      new_owner_user_stat.topic_count += 1 if @post.is_first_post?
+      new_owner_user_stat.likes_received += likes if !private_message
+      new_owner_user_stat.update_topic_reply_count
+      new_owner_user_stat.save!
     end
   end
 

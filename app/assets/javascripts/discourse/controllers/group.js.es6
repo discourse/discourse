@@ -13,17 +13,18 @@ var Tab = Em.Object.extend({
 });
 
 export default Ember.Controller.extend({
+  application: Ember.inject.controller(),
   counts: null,
   showing: 'members',
+
   tabs: [
-    Tab.create({ name: 'members', active: true, 'location': 'group.index' }),
-    Tab.create({ name: 'posts' }),
-    Tab.create({ name: 'topics' }),
-    Tab.create({ name: 'mentions' }),
-    Tab.create({ name: 'messages', requiresMembership: true }),
+    Tab.create({ name: 'members', 'location': 'group.index', icon: 'users' }),
+    Tab.create({ name: 'activity' }),
     Tab.create({
-      name: 'logs', i18nKey: 'logs.title', icon: 'shield',
-      requiresMembership: true, requiresGroupAdmin: true
+      name: 'edit', i18nKey: 'edit.title', icon: 'pencil', requiresGroupAdmin: true
+    }),
+    Tab.create({
+      name: 'logs', i18nKey: 'logs.title', icon: 'list-alt', requiresGroupAdmin: true
     })
   ],
 
@@ -32,9 +33,9 @@ export default Ember.Controller.extend({
     return !automatic && isGroupOwner;
   },
 
-  @computed('model.name', 'model.title')
-  groupName(name, title) {
-    return (title || name).capitalize();
+  @computed('model.name', 'model.full_name')
+  groupName(name, fullName) {
+    return (fullName || name).capitalize();
   },
 
   @computed('model.name', 'model.flair_url', 'model.flair_bg_color', 'model.flair_color')
@@ -52,31 +53,18 @@ export default Ember.Controller.extend({
     this.get('tabs')[0].set('count', this.get('model.user_count'));
   },
 
-  @observes('showing')
-  showingChanged() {
-    const showing = this.get('showing');
-
-    this.get('tabs').forEach(tab => {
-      tab.set('active', showing === tab.get('name'));
-    });
-  },
-
-  @computed('model.is_group_user', 'model.is_group_owner')
-  getTabs(isGroupUser, isGroupOwner) {
+  @computed('model.is_group_user', 'model.is_group_owner', 'model.automatic')
+  getTabs(isGroupUser, isGroupOwner, automatic) {
     return this.get('tabs').filter(t => {
-      let isMember = false;
+      let display = true;
 
-      if (this.currentUser) {
-        let admin = this.currentUser.admin;
-
-        if (t.get('requiresGroupAdmin')) {
-          isMember = admin || isGroupOwner;
-        } else {
-          isMember = admin || isGroupUser;
-        }
+      if (this.currentUser && t.get('requiresGroupAdmin')) {
+        display = automatic ? false : (this.currentUser.admin || isGroupOwner);
+      } else if (t.get('requiresGroupAdmin')) {
+        display = false;
       }
 
-      return isMember || !t.get('requiresMembership');
+      return display;
     });
   }
 });

@@ -248,3 +248,11 @@ test("title placeholder depends on what you're doing", function() {
   composer = createComposer({action: Composer.PRIVATE_MESSAGE});
   equal(composer.get('titlePlaceholder'), 'composer.title_placeholder', "placeholder for private message with topic links enabled");
 });
+
+test("allows featured link before choosing a category", function() {
+  Discourse.SiteSettings.topic_featured_link_enabled = true;
+  Discourse.SiteSettings.allow_uncategorized_topics = false;
+  let composer = createComposer({action: Composer.CREATE_TOPIC});
+  equal(composer.get('titlePlaceholder'), 'composer.title_or_link_placeholder', "placeholder invites you to paste a link");
+  ok(composer.get('canEditTopicFeaturedLink'), "can paste link");
+});

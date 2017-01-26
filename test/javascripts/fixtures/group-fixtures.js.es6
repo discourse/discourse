@@ -4,10 +4,11 @@ export default {
       "id":47,
       "automatic":false,
       "name":"discourse",
-      "title":"Awesome Team",
+      "full_name":"Awesome Team",
       "user_count":8,
       "alias_level":0,
       "visible":true,
+      "public":true,
       "flair_url": 'fa-adjust',
       "is_group_owner":true
     }

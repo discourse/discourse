@@ -6,8 +6,15 @@ require_relative '../lib/discourse_event'
 require_relative '../lib/discourse_plugin'
 require_relative '../lib/discourse_plugin_registry'
 
+require_relative '../lib/plugin_gem'
+
 # Global config
 require_relative '../app/models/global_setting'
+GlobalSetting.configure!
+unless Rails.env.test? && ENV['LOAD_PLUGINS'] != "1"
+  require_relative '../lib/custom_setting_providers'
+end
+GlobalSetting.load_defaults
 
 require 'pry-rails' if Rails.env.development?
 
@@ -15,8 +22,10 @@ if defined?(Bundler)
   Bundler.require(*Rails.groups(assets: %w(development test profile)))
 end
 
+
 module Discourse
   class Application < Rails::Application
+
     def config.database_configuration
       if Rails.env.production?
         GlobalSetting.database_config
@@ -80,14 +89,6 @@ module Discourse
       config.assets.precompile << "locales/#{file.match(/([a-z_A-Z]+\.js)\.erb$/)[1]}"
     end
 
-    # Activate observers that should always be running.
-    config.active_record.observers = [
-        :user_email_observer,
-        :user_action_observer,
-        :post_alert_observer,
-        :search_observer
-    ]
-
     # Set Time.zone default to the specified zone and make Active Record auto-convert to this zone.
     # Run "rake -D time" for a list of tasks for finding time zone names. Default is UTC.
     config.time_zone = 'UTC'
@@ -142,7 +143,7 @@ module Discourse
 
     # Our templates shouldn't start with 'discourse/templates'
     config.handlebars.templates_root = 'discourse/templates'
-    config.handlebars.raw_template_namespace = "Ember.TEMPLATES"
+    config.handlebars.raw_template_namespace = "Discourse.RAW_TEMPLATES"
 
     require 'discourse_redis'
     require 'logster/redis_store'
@@ -169,6 +170,22 @@ module Discourse
     end
 
     config.after_initialize do
+      # require common dependencies that are often required by plugins
+      # in the past observers would load them as side-effects
+      # correct behavior is for plugins to require stuff they need,
+      # however it would be a risky and breaking change not to require here
+      require_dependency 'category'
+      require_dependency 'post'
+      require_dependency 'topic'
+      require_dependency 'user'
+      require_dependency 'post_action'
+      require_dependency 'post_revision'
+      require_dependency 'notification'
+      require_dependency 'topic_user'
+      require_dependency 'group'
+      require_dependency 'user_field'
+      require_dependency 'post_action_type'
+
       # So open id logs somewhere sane
       OpenID::Util.logger = Rails.logger
       if plugins = Discourse.plugins

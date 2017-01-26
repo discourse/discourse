@@ -1,5 +1,6 @@
 require_dependency 'email'
 require_dependency 'email_token'
+require_dependency 'email_validator'
 require_dependency 'trust_level'
 require_dependency 'pbkdf2'
 require_dependency 'discourse'
@@ -39,6 +40,7 @@ class User < ActiveRecord::Base
   has_many :warnings
   has_many :user_archived_messages, dependent: :destroy
   has_many :email_change_requests, dependent: :destroy
+  has_many :directory_items, dependent: :delete_all
 
 
   has_one :user_option, dependent: :destroy
@@ -76,9 +78,10 @@ class User < ActiveRecord::Base
   validates_presence_of :username
   validate :username_validator, if: :username_changed?
   validates :email, presence: true, uniqueness: true
+  validates :email, format: { with: EmailValidator.email_regex }, if: :email_changed?
   validates :email, email: true, if: :should_validate_email?
   validate :password_validator
-  validates :name, user_full_name: true, if: :name_changed?
+  validates :name, user_full_name: true, if: :name_changed?, length: { maximum: 255 }
   validates :ip_address, allowed_ip_address: {on: :create, message: :signup_not_allowed}
 
   after_initialize :add_trust_level
@@ -88,17 +91,18 @@ class User < ActiveRecord::Base
   after_create :create_user_option
   after_create :create_user_profile
   after_create :ensure_in_trust_level_group
-  after_create :automatic_group_membership
   after_create :set_default_categories_preferences
   after_create :trigger_user_created_event
 
   before_save :update_username_lower
   before_save :ensure_password_is_hashed
 
+  after_save :automatic_group_membership
   after_save :clear_global_notice_if_needed
   after_save :refresh_avatar
   after_save :badge_grant
   after_save :expire_old_email_tokens
+  after_save :index_search
 
   before_destroy do
     # These tables don't have primary keys, so destroying them with activerecord is tricky:
@@ -913,6 +917,10 @@ class User < ActiveRecord::Base
     end
   end
 
+  def index_search
+    SearchIndexer.index(self)
+  end
+
   def clear_global_notice_if_needed
     if admin && SiteSetting.has_login_hint
       SiteSetting.has_login_hint = false
@@ -928,10 +936,13 @@ class User < ActiveRecord::Base
     Group.where(automatic: false)
          .where("LENGTH(COALESCE(automatic_membership_email_domains, '')) > 0")
          .each do |group|
+
       domains = group.automatic_membership_email_domains.gsub('.', '\.')
-      if self.email =~ Regexp.new("@(#{domains})$", true) && !group.users.include?(self)
-        group.add(self)
-        GroupActionLogger.new(Discourse.system_user, group).log_add_user_to_group(self)
+      user = User.find(self.id)
+
+      if user.reload.email =~ Regexp.new("@(#{domains})$", true) && !group.users.include?(user)
+        group.add(user)
+        GroupActionLogger.new(Discourse.system_user, group).log_add_user_to_group(user)
       end
     end
   end

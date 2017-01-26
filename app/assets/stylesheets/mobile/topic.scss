@@ -19,7 +19,6 @@
   h1 {
     font-size: 1.5em;
     line-height: 1.25em;
-    margin: 0;
     a {
       color: $primary;
       vertical-align: middle;
@@ -192,6 +191,6 @@ sup sup, sub sup, sup sub, sub sub { top: 0; }
 
 // make mobile timeline top and bottom dates easier to select
 .topic-timeline { 
-  .start-date { font-size: 120%; padding: 5px; }
-  .now-date { font-size: 120%; padding: 5px; }
+  .start-date { font-size: 110%; padding: 5px; }
+  .now-date { font-size: 110%; padding: 5px; }
 }

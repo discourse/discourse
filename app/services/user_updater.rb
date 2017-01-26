@@ -98,7 +98,9 @@ class UserUpdater
         update_muted_users(attributes[:muted_usernames])
       end
 
-      (!save_options || user.user_option.save) && user_profile.save && user.save
+      saved = (!save_options || user.user_option.save) && user_profile.save && user.save
+      DiscourseEvent.trigger(:user_updated, user) if saved
+      saved
     end
   end
 

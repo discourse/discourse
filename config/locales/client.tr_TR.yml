@@ -295,20 +295,62 @@ tr_TR:
       posts_read_long: "Okunmuş Gönderiler"
       total_rows:
         other: "%{count} kullanıcı"
+    group_histories:
+      actions:
+        change_group_setting: "Grup ayarlarını değiştir"
+        add_user_to_group: "Kullanıcı ekle"
+        remove_user_from_group: "Kullanıcıyı kaldır"
+        make_user_group_owner: "Sahip yap"
+        remove_user_as_group_owner: "Sahipliğini İptal Et"
     groups:
+      logs:
+        title: "Kayıtlar"
+        when: "Ne zaman"
+        action: "Eylem"
+        acting_user: "Temsili Kullanıcılar"
+        target_user: "Hedef Kullanıcı"
+        subject: "Konu"
+        details: "Ayrıntılar"
+        from: "Gönderen"
+        to: "Kime"
+      edit:
+        title: 'Grubu düzenle'
+        full_name: 'Tam İsim'
+        add_members: "Üyeleri ekle"
+        delete_member_confirm: "'%{username}' adlı kullanıcıyı '%{group}' grubundan çıkart?"
+      request_membership_pm:
+        title: "Üyelik isteği"
+        body: "@%{groupName} adlı gruba üye olarak başvurmak istiyorum."
+      name_placeholder: "Grup adı, kullanıcı adındaki gibi boşluksuz olmalı"
+      public: "Kullanıcıların gruptan serbest bir şekilde ayrılıp/katılmasına izin ver (grubun görünür olması gerekmekte)"
       empty:
-        posts: "Bu grubun üyelerinden gönderi yok."
-        members: "Bu grupta üye yok."
-        mentions: "Bu gruptan söz edilmemiş."
-        messages: "Bu grup için bir ileti yok."
-        topics: "Bu grubun üyelerinden konu yok."
+        posts: "Bu grubun üyelerinden konu yok."
+        members: "Bu grupta üye bulunmamaktır."
+        mentions: "Bu grupta kimseden bahsedilmemiştir."
+        messages: "Bu grupta mesaj bulunmamaktadır."
+        topics: "Bu grubun üyeleri tarafından oluşturulmuştur başlık yoktur."
+        logs: "Bu grup için log kaydı bulunmamaktadır."
       add: "Ekle"
+      join: "Gruba katıl"
+      leave: "Gruptan ayrıl"
+      request: "Gruba katılmak için istek yolla"
+      automatic_group: Otomatik Grup
+      closed_group: Kapanmış Grup
+      is_group_user: "Bu grubun bir üyesisiniz."
+      allow_membership_requests: "Kullanıcıların Grup başlarına üyelik istekleri göndermelerine izin ver ( Herkesin grupta birbirleri hakkında bahsetme özelliğinin açık olması gerekmektedir.)"
+      membership: "Üyelik"
+      name: "İsim"
+      user_count: "Grup Sayısı"
+      bio: "Grup Hakkında"
       selector_placeholder: "Üye ekle"
       owner: "sahip"
       visible: "Grup tüm kullanıcılar tarafından görüntülenebiliyor"
-      index: "Gruplar"
+      index:
+        title: "Gruplar"
+        empty: "Görünen hiç bir grup bulunmamaktadır."
       title:
         other: "gruplar"
+      activity: "Etkinlik"
       members: "Üyeler"
       topics: "Konular"
       posts: "Gönderiler"
@@ -340,6 +382,15 @@ tr_TR:
         muted:
           title: "Susturuldu"
           description: "Bu gruptaki herhangi yeni bir konuyla ilgili asla bildirim almayacaksınız."
+      flair_url: "Avatar Kabiliyet Resmi"
+      flair_url_placeholder: "(İsteğe bağlı) Resim URL'si veya Font Awesome Class'ı"
+      flair_bg_color: "Avatar Kabiliyet Arkaplan Rengi"
+      flair_bg_color_placeholder: "(İsteğe bağlı) Hex renk değeri"
+      flair_color: "Avatar Kabiliyet Rengi"
+      flair_color_placeholder: "(İsteğe bağlı) Hex renk değeri"
+      flair_preview_icon: "İkonu önizle"
+      flair_preview_image: "Resimi önizle"
+      flair_note: "Not: Kabiliyet sadece bir kullanıcının birincil grubu için gösterecek."
     user_action_groups:
       '1': "Verilen Beğeniler"
       '2': "Alınan Beğeniler"
@@ -399,6 +450,11 @@ tr_TR:
       profile: "Profil"
       mute: "Sustur"
       edit: "Tercihleri Düzenle"
+      download_archive:
+        button_text: "Gönderilerimi İndir"
+        confirm: "Gönderilerinizi indirmek istediğinize emin misiniz?"
+        success: "İndirme başlatıldı, İşlem tamamlandığında mesaj ile bilgilendirileceksiniz."
+        rate_limit_error: "Gönderiler günde bir kez indirilebilir, lütfen yarın tekrar deneyin."
       new_private_message: "Yeni İleti"
       private_message: "İleti"
       private_messages: "İletiler"
@@ -422,6 +478,7 @@ tr_TR:
         each_browser_note: "Not: Bu ayarı kullandığınız her tarayıcıda değiştirmelisiniz."
       dismiss_notifications: "Tümünü Yoksay"
       dismiss_notifications_tooltip: "Tüm okunmamış bildirileri okunmuş olarak işaretle"
+      first_notification: "İlk bilidiriminiz! Başlamak için seçiniz"
       disable_jump_reply: "Cevapladıktan sonra gönderime atlama"
       dynamic_favicon: "Tarayıcı simgesinde yeni / güncellenen konu sayısını göster"
       external_links_in_new_tab: "Tüm dış bağlantıları yeni sekmede aç"
@@ -444,6 +501,7 @@ tr_TR:
           Susturulmuş konular ve kategoriler bu e-postalarda yer almaz.
         daily: "Günlük güncellemeleri gönder"
         individual: "Her yeni gönderi için bir e-posta gönder"
+        individual_no_echo: "Benim gönderilerim haricindeki her gönderi için mail gönder"
         many_per_day: "Her yeni gönderi için bir e-posta gönder (günde yaklaşık {{dailyEmailEstimate}})."
         few_per_day: "Her yeni gönderi için bana e-posta gönder ( günlük yaklaşık 2 )"
       tag_settings: "Etiketler"
@@ -654,12 +712,13 @@ tr_TR:
         account_age_days: "Hesabın gün olarak yaşı"
         create: "Davet Yolla"
         generate_link: "Davet bağlantısını kopyala"
+        link_generated: "Davet linki başarılı bir şekilde oluşturuldu"
+        valid_for: "Davet linki sadece bu adres için geçerlidir: %{email}"
         bulk_invite:
-          none: "Henüz kimseyi buraya davet etmediniz. Tek tek davetiye gönderebilirsiniz, ya da <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>toplu bir davetiye dosyası yükleyerek</a> birçok kişiyi aynı anda davet edebilirsiniz. "
+          none: "Henüz kimseyi davet etmemiş görünüyorsun. İstersen bireysel davetler gönderebilir veya  <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>CSV dosyası yükleyerek</a> bir çok insanı aynı anda davet edebilirsin."
           text: "Dosyadan Toplu Davet Gönder"
-          uploading: "Yükleniyor..."
           success: "Dosya başarıyla yüklendi, işlem tamamlandığında iletiyle bilgilendirileceksiniz."
-          error: "'{{filename}}' yüklenirken bir hata oluştu: {{message}}"
+          error: "Üzgünüz, Dosya csv formatında olmalı"
       password:
         title: "Parola"
         too_short: "Parolanız çok kısa."
@@ -802,6 +861,7 @@ tr_TR:
     trust_level: 'Güven Seviyesi'
     search_hint: 'kullanıcı adı, e-posta veya IP adresi'
     create_account:
+      disclaimer: "Kayıt olarak, <a href='{{privacy_link}}'> gizlilik ilkesi </a> ve <a href='{{tos_link}}'>hizmet kullanım şartlarını </a> kabul etmiş olmaktasınız."
       title: "Yeni Hesap Oluştur"
       failed: "Bir şeyler ters gitti. Bu e-posta adına daha önce bir kayıt oluşturulmuş olabilir, parolamı unuttum bağlantısını dene."
     forgot_password:
@@ -891,6 +951,9 @@ tr_TR:
       drafts_offline: "çevrimdışı taslaklar"
       group_mentioned:
         other: "{{group}} hakkında konuşarak <a href='{{group_link}}'>{{count}} kişiyi</a> bilgilendirmek üzeresin, emin misin?"
+      cannot_see_mention:
+        category: "{{username}}  adlı kullanıcıdan bahsettiniz fakat Ona bildirim gönderilmeyecek çünkü bu kategoriye ulaşma izni yok. Bunun gerçekleşmesi için kişi bu gruba eklemeniz gerekmektedir."
+        private: "{{username}} adlı kullanıcıdan bahsettiniz fakat Ona bildirim gönderilmeyecek çünkü bu kişisel mesaja ulaşma izni yok. Bunun gerçekleşmesi için kişiyi bu PM'ye eklemeniz gerekmektedir."
       duplicate_link: "Görünüşe göre <b>{{domain}}</b> alan adına bağlanan bağlantınız <b>@{{username}}</b> tarafından <a href='{{post_url}}'>a cevabı içerisinde {{ago}} yayınlanmış görünüyor. </a> – tekrar yayınlamak istediğinize emin misiniz?"
       error:
         title_missing: "Başlık gerekli"
@@ -910,8 +973,10 @@ tr_TR:
       title: "Ya da Ctrl+Enter'a bas"
       users_placeholder: "Kullanıcı ekle"
       title_placeholder: "Bir cümlede açıklamak gerekirse bu tartışmanın konusu nedir?"
+      title_or_link_placeholder: "Buraya bir başlık girin veya bir link paylaşın"
       edit_reason_placeholder: "neden düzenleme yapıyorsunuz?"
       show_edit_reason: "(düzenleme sebebi ekle)"
+      topic_featured_link_placeholder: "Başlığı olan bir link giriniz."
       reply_placeholder: "Buraya yazın. Biçimlendirmek için Markdown, BBCode ya da HTML kullanabilirsin. Resimleri sürükleyebilir ya da yapıştırabilirsin."
       view_new_post: "Yeni gönderinizi görüntüleyin."
       saving: "Kaydediliyor"
@@ -1056,6 +1121,8 @@ tr_TR:
           label: Şu Kategoride
         in_group:
           label: Şu Grupta
+        with_badge:
+          label: Rozetle
         with_tags:
           label: Şu Etiketli
         filters:
@@ -1066,6 +1133,7 @@ tr_TR:
           tracking: takip ettiğim
           private: iletilerimde olan
           bookmarks: imlediğim
+          first: en ilk gönderidir.
           pinned: tutturulmuş
           unpinned: tutturulmamış
           wiki: wiki olan
@@ -1092,6 +1160,7 @@ tr_TR:
       new_messages_marker: "son ziyaret"
       bulk:
         select_all: "Tümünü Seç"
+        clear_all: "Tümünü Temizle"
         unlist_topics: "Konuları Listeleme"
         reset_read: "Okunmuşları Sıfırla"
         delete: "Konuları Sil"
@@ -1209,7 +1278,8 @@ tr_TR:
         go_bottom: "en alt"
         go: "git"
         jump_bottom: "son gönderiye geç"
-        jump_prompt: "gönderiye git"
+        jump_prompt: "atla"
+        jump_prompt_of: " %{count}  gönderinin"
         jump_prompt_long: "Hangi gönderiye gitmek istersin?"
         jump_bottom_with_number: "%{post_number} numaralı gönderiye geç"
         total: tüm gönderiler
@@ -1396,6 +1466,7 @@ tr_TR:
     post:
       reply: "<i class='fa fa-mail-forward'></i> {{replyAvatar}} {{usernameLink}}"
       reply_topic: "<i class='fa fa-mail-forward'></i> {{link}}"
+      quote_reply: "Alıntı"
       edit: "{{link}} {{replyAvatar}} {{username}} düzenleniyor"
       edit_reason: "Neden: "
       post_number: "gönderi {{number}}"
@@ -1427,7 +1498,7 @@ tr_TR:
         file_too_large: "Üzgünüz, bu dosya çok büyük (en fazla {{max_size_kb}}kb). Neden büyük boyutlu dosyanı bir paylaşım servisine yükleyip, sonra bağlantını paylaşmıyorsun ?"
         too_many_uploads: "Üzgünüz, aynı anda birden fazla dosya yükleyemezsiniz."
         too_many_dragged_and_dropped_files: "Üzgünüz, aynı anda 10'dan fazla dosya yükleyemezsiniz."
-        upload_not_authorized: "Üzgünüz, yüklemeye çalıştığınız dosya tipine izin verilmiyor. (izin verilen uzantılar: {{authorized_extensions}})."
+        upload_not_authorized: "Üzgünüz, yüklemeye çalıştığınız dosya izinli değil (authorized extensions: {{authorized_extensions}})."
         image_upload_not_allowed_for_new_user: "Üzgünüz, yeni kullanıcılar resim yükleyemezler."
         attachment_upload_not_allowed_for_new_user: "Üzgünüz, yeni kullanıcılar dosya yükleyemezler."
         attachment_download_requires_login: "Üzgünüz, eklentileri indirebilmek için oturum açmanız gerekiyor."
@@ -1573,6 +1644,7 @@ tr_TR:
       tags_allowed_tag_groups: "Yalnızca bu kategoride kullanılabilir etiket grupları:"
       tags_placeholder: "(Seçmeli) izin verilen etiketlerin listesi"
       tag_groups_placeholder: "(Seçmeli) izin verilen etiket gruplarının listesi"
+      topic_featured_link_allowed: " Featured link'lere bu kategoride izin ver"
       delete: 'Kategoriyi Sil'
       create: 'Yeni Kategori'
       create_long: 'Yeni bir kategori oluştur'
@@ -1607,6 +1679,7 @@ tr_TR:
       email_in_disabled: "E-posta üzerinden yeni konu oluşturma özelliği Site Ayarları'nda devre dışı bırakılmış. E-posta üzerinden yeni konu oluşturma özelliğini etkinleştirmek için,"
       email_in_disabled_click: '"e-postala" ayarını etkinleştir'
       suppress_from_homepage: "Bu kategoriyi ana sayfadan gizle"
+      all_topics_wiki: "Yeni konuyu varsayılan olarak wiki yap"
       sort_order: "Öntanımlı Sıralama:"
       allow_badges_label: "Bu kategoride rozet verilmesine izin ver"
       edit_permissions: "İzinleri Düzenle"
@@ -1636,11 +1709,15 @@ tr_TR:
       sort_options:
         default: "öntanımlı"
         likes: "Beğeniler"
+        op_likes: "Orijinal Gönderi Beğenileri"
         views: "Gösterimler"
         posts: "Gönderiler"
         activity: "Etkinlik"
+        posters: "Yazanlar"
         category: "Kategori"
         created: "Oluşturulma"
+      sort_ascending: 'Artan'
+      sort_descending: 'Azalan'
     flagging:
       title: 'Topluluğumuzun düzenli kalmasına desteğiniz için teşekkürler!'
       action: 'Gönderiyi Bildir'
@@ -1719,7 +1796,8 @@ tr_TR:
     views_lowercase:
       other: "gösterim"
     replies: "Cevap"
-    views_long: "bu konu {{number}} defa görüntülendi"
+    views_long:
+      other: "bu konu {{number}} defa görüntülendi"
     activity: "Etkinlik"
     likes: "Beğeni"
     likes_lowercase:
@@ -2012,8 +2090,8 @@ tr_TR:
         backups: "yedekler"
         traffic_short: "Trafik"
         traffic: "Uygulama web istekleri"
-        page_views: "API istekleri"
-        page_views_short: "API istekleri"
+        page_views: "Sayfa Görüntülemeleri"
+        page_views_short: "Sayfa Görüntülemeleri"
         show_traffic_report: "Ayrıntılı Trafik Raporunu Görüntüle"
         reports:
           today: "Bugün"
@@ -2098,15 +2176,12 @@ tr_TR:
         refresh: "Yenile"
         new: "Yeni"
         selector_placeholder: "kullanıcı adı girin"
-        name_placeholder: "Grup adı, kullanıcı adındaki gibi boşluksuz olmalı"
         about: "Grup üyeliğinizi ve isimleri burada düzenleyin"
         group_members: "Grup üyeleri"
         delete: "Sil"
         delete_confirm: "Grup silinsin mi?"
         delete_failed: "Grup silinemedi. Bu otomatik oluşturulmuş bir grup ise, yok edilemez."
-        delete_member_confirm: "'%{username}' adlı kullanıcıyı '%{group}' grubundan çıkart?"
         delete_owner_confirm: "'%{username}' için sahiplik izni kaldırılsın mı?"
-        name: "Ad"
         add: "Ekle"
         add_members: "Üye ekle"
         custom: "Özel"
@@ -2123,14 +2198,6 @@ tr_TR:
         add_owners: Sahiplik ekle
         incoming_email: "Özel gelen e-posta adresi"
         incoming_email_placeholder: "e-posta adresi girin"
-        flair_url: "Avatar Kabiliyet Resmi"
-        flair_url_placeholder: "(İsteğe bağlı) Resim URL'i ya da Font Awesome sınıfı"
-        flair_bg_color: "Avatar Kabiliyet Arkaplan Rengi"
-        flair_bg_color_placeholder: "(İsteğe bağlı) Hex renk değeri"
-        flair_color: "Avatar Kabiliyet Resmi"
-        flair_color_placeholder: "(İsteğe bağlı) Hex renk değeri"
-        flair_preview: "Önizleme"
-        flair_note: "Not: Kabiliyet sadece bir kullanıcının birincil grubu için gösterecek."
       api:
         generate_master: "Ana API Anahtarı Üret"
         none: "Şu an etkin API anahtarı bulunmuyor."
@@ -2162,7 +2229,7 @@ tr_TR:
         warn_local_payload_url: "Öyle görünüyor ki, web kancasını yerel bir URL'e ayarlamaya çalışıyorsunuz. Yerel bir adrese iletilen olay yan etki veya beklenmedik davranışlara neden olabilir. Devam edilsin mi?"
         secret_invalid: "Gizli alanında boş karakter olamaz."
         secret_too_short: "Gizi en azından 12 karakter olmalı."
-        secret_placeholder: "İsteğe bağlı bir kelime, imza oluşturmak için kullanılacak"
+        secret_placeholder: "İmza oluşturmak için isteğe bağlı bir dizi"
         event_type_missing: "En az bir olay tipi ayarlamalısınız."
         content_type: "İçerik Türü"
         secret: "Gizli"
@@ -2185,7 +2252,7 @@ tr_TR:
           details: "Yeni bir cevap oluşturulduğunda, düzenlendiğinde veya silindiğinde."
         user_event:
           name: "Kullanıcı Olayı"
-          details: "Kullanıcı oluşturulduğunda veya onaylandığında."
+          details: "Bir kullanıcı oluşturulduğunda, onaylandığında veya güncellendiğinde"
         delivery_status:
           title: "Teslim Durumu"
           inactive: "Etkin Değil"
@@ -2408,6 +2475,7 @@ tr_TR:
         html: "html"
         text: "yazı"
         last_seen_user: "Son Görülen Kullanıcı:"
+        no_result: "Derleme için hiç bir sonuç bulunamadı."
         reply_key: "Cevapla Tuşu"
         skipped_reason: "Nedeni Atla"
         incoming_emails:
@@ -2503,6 +2571,11 @@ tr_TR:
             deleted_tag: "silinmiş etiket"
             renamed_tag: "yeniden adlandırılmış etiket"
             revoke_email: "e-postayı kaldır"
+            lock_trust_level: "Güven Seviyesini Kilitle"
+            unlock_trust_level: "Güvenlik Seviyesi Kilidini Aç"
+            activate_user: "Kullanıcıyı etkinleştir."
+            deactivate_user: "Kullanıcıyı dondur"
+            change_readonly_mode: "Salt-okunur modunu değiştir"
         screened_emails:
           title: "Taranmış E-postalar"
           description: "Biri yeni bir hesap oluşturmaya çalıştığında, aşağıdaki e-posta adresleri kontrol edilecek ve kayıt önlenecek veya başka bir eylem gerçekleşecek."
@@ -2795,6 +2868,7 @@ tr_TR:
           user_preferences: "Kullanıcı Tercihleri"
           tags: "Etiketler"
           search: "Arama"
+          groups: "Gruplar"
       badges:
         title: Rozetler
         new_badge: Yeni Rozet

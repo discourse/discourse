@@ -322,17 +322,10 @@ sv:
         one: "1 användare"
         other: "%{count} användare"
     groups:
-      empty:
-        posts: "Det finns inga inlägg från medlemmar in denna grupp."
-        members: "Det finns ingen medlem i den här gruppen."
-        mentions: "Det finns ingen omnämnande i den här gruppen."
-        messages: "Det finns inget meddelande för den här gruppen."
-        topics: "Det finns inget ämne från medlemmar i den här gruppen."
       add: "Lägg till"
       selector_placeholder: "Lägg till medlemmar"
       owner: "ägare"
       visible: "Gruppen är synlig för alla användare"
-      index: "Grupper"
       title:
         one: "grupp"
         other: "grupper"
@@ -695,11 +688,8 @@ sv:
         link_generated: "Länk för inbjudan framgångsrikt skapad!"
         valid_for: "Länk för inbjudan är endast giltig för denna email adress: %{email}"
         bulk_invite:
-          none: "Du har inte skickat några inbjudningar. Du kan skicka individuella inbjudningar, eller så kan du bjuda in flera på en gång genom att <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>ladda upp en bulkfil.</a>"
           text: "Massinbjudan från fil"
-          uploading: "Laddar upp..."
           success: "Filen laddades upp, du blir underrättad via meddelande när processen är klar"
-          error: "Det blev ett fel vid uppladdning av '{{filename}}': {{message}}"
       password:
         title: "Lösenord"
         too_short: "Ditt lösenord är för kort."
@@ -1273,7 +1263,6 @@ sv:
         go_bottom: "botten"
         go: "gå"
         jump_bottom: "hoppa till sista inlägget"
-        jump_prompt: "hoppa till inlägg"
         jump_prompt_long: "Vilket inlägg vill du hoppa till?"
         jump_bottom_with_number: "hoppa till inlägg %{post_number}"
         total: antal inlägg
@@ -1505,7 +1494,6 @@ sv:
         file_too_large: "Tyvärr, filen är för stor (maximal filstorlek är {{max_size_kb}}kb). Varför inte ladda upp din stora fil till en moln-delningstjänst och sen dela länken?"
         too_many_uploads: "Tyvärr, du kan bara ladda upp en bild i taget."
         too_many_dragged_and_dropped_files: "Tyvärr, du kan bara ladda upp 10 filer åt gången."
-        upload_not_authorized: "Tyvärr, filen du försökte ladda upp är inte tillåten (tillåtna filtyper: {{authorized_extensions}})."
         image_upload_not_allowed_for_new_user: "Tyvärr, nya användare kan inte ladda upp bilder."
         attachment_upload_not_allowed_for_new_user: "Tyvärr, nya användare kan inte bifoga filer."
         attachment_download_requires_login: "Tyvärr, du måste vara inloggad för att kunna ladda ned bifogade filer."
@@ -1823,7 +1811,6 @@ sv:
       one: "visning"
       other: "visningar"
     replies: "Svar"
-    views_long: "detta ämne har visats {{number}} gånger"
     activity: "Aktivitet"
     likes: "Gillningar"
     likes_lowercase:
@@ -2125,8 +2112,6 @@ sv:
         backups: "säkerhetskopior"
         traffic_short: "Trafik"
         traffic: "Applikations-webbegäran"
-        page_views: "API-förfrågningar"
-        page_views_short: "API-förfrågningar"
         show_traffic_report: "Visa detaljerad trafikrapport"
         reports:
           today: "Idag"
@@ -2216,15 +2201,12 @@ sv:
         refresh: "Uppdatera"
         new: "Ny"
         selector_placeholder: "ange användarnamn"
-        name_placeholder: "Gruppnamn, inga mellanslag, samma regler som för användarnamn"
         about: "Redigera dina gruppmedlemskap och -namn här."
         group_members: "Gruppmedlemmar"
         delete: "Radera"
         delete_confirm: "Ta bort den här gruppen?"
         delete_failed: "Oförmögen att ta bort grupp. Om det här är en automatisk grupp så kan den inte raderas."
-        delete_member_confirm: "Ta bort '%{username}' från '%{group}' gruppen?"
         delete_owner_confirm: "Ta bort användarprivilegier för '\"{username}'?"
-        name: "Namn"
         add: "Lägg till"
         add_members: "Lägg till medlemmar"
         custom: "Anpassad"
@@ -2241,9 +2223,6 @@ sv:
         add_owners: Lägg till ägare
         incoming_email: "Egenvald inkommande e-postadress"
         incoming_email_placeholder: "Ange e-postadress"
-        flair_bg_color_placeholder: "(Valfritt) Hexadecimal färgkod"
-        flair_color_placeholder: "(Valfritt) Hexadecimal färgkod"
-        flair_preview: "Förhandsgranska"
       api:
         generate_master: "Generera API-huvudnyckel"
         none: "Det finns inga aktiva API-nycklar just nu."
@@ -2271,7 +2250,6 @@ sv:
         payload_url_placeholder: "https://example.com/postreceive"
         secret_invalid: "Hemligheten får inte ha några blanka tecken."
         secret_too_short: "Hemligheten bör vara minst 12 tecken."
-        secret_placeholder: "En valfri sträng, används för att generera signatur"
         content_type: "Innehållstyp"
         secret: "Hemlighet"
         event_chooser: "Vilka event vill du ska utlösa den här webhooken?"
@@ -2292,7 +2270,6 @@ sv:
           details: "När det finns ett nytt svar, redigerat, borttaget eller återskapat."
         user_event:
           name: "Användarevent"
-          details: "När en användare är skapad eller godkänd."
         delivery_status:
           title: "Leveransstatus"
           inactive: "Inaktiv"

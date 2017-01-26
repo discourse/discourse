@@ -72,8 +72,12 @@ const TopicRoute = Discourse.Route.extend({
 
     showHistory(model) {
       showModal('history', { model });
-      this.controllerFor('history').refresh(model.get("id"), "latest");
-      this.controllerFor('history').set('post', model);
+      const historyController = this.controllerFor('history');
+
+      historyController.refresh(model.get("id"), "latest");
+      historyController.set('post', model);
+      historyController.set('topicController', this.controllerFor('topic'));
+
       this.controllerFor('modal').set('modalClass', 'history-modal');
     },
 
@@ -117,7 +121,6 @@ const TopicRoute = Discourse.Route.extend({
 
     willTransition() {
       this._super();
-      this.controllerFor("topic").send('deselectText');
       Em.run.cancel(scheduledReplace);
       isTransitioning = true;
       return true;
@@ -207,6 +210,7 @@ const TopicRoute = Discourse.Route.extend({
 
     // close the multi select when switching topics
     controller.set('multiSelect', false);
+    controller.get('quoteState').clear();
 
     this.controllerFor('composer').set('topic', model);
     this.topicTrackingState.trackIncoming('all');

@@ -373,6 +373,20 @@
 
 .reply-to {
   margin-bottom: 10px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  color: $tertiary;
+
+  @media (min-width: 1101px) {
+    max-width: 80%;
+  }
+  @media (max-width: 1100px) {
+    max-width: 500px;
+  }
+  @media (max-width: 600px) {
+    max-width: 300px;
+  }
 
   i {
     color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));

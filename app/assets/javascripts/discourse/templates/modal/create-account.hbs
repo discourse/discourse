@@ -52,7 +52,11 @@
             </tr>
           {{/if}}
 
-          {{plugin-outlet "create-account-before-password"}}
+          {{plugin-outlet name="create-account-before-password"
+                          args=(hash accountName=accountName
+                                     accountUsername=accountUsername
+                                     accountPassword=accountPassword
+                                     userFields=userFields)}}
 
           {{#if passwordRequired}}
             <tr class="input">

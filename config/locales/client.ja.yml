@@ -188,8 +188,8 @@ ja:
       like_count: "いいね！"
       topic_count: "トピック"
       post_count: "投稿"
-      user_count: "新規ユーザ"
-      active_user_count: "アクティブユーザ"
+      user_count: "新規ユーザー"
+      active_user_count: "アクティブユーザー"
       contact: "お問い合わせ"
       contact_info: "このサイトに影響を与える重要な問題や緊急の問題が発生した場合は、 %{contact_info}までご連絡ください"
     bookmarked:
@@ -238,7 +238,7 @@ ja:
       topic: "トピック："
       approve: '承認'
       reject: 'リジェクト'
-      delete_user: '削除されたユーザ'
+      delete_user: '削除されたユーザー'
       title: "承認待ち"
       none: "レビュー待ちの投稿はありません。"
       edit: "編集"
@@ -269,8 +269,8 @@ ja:
       sent_by_user: "<a href='{{userUrl}}'>{{user}}</a> が送信"
       sent_by_you: "<a href='{{userUrl}}'>あなた</a> が送信"
     directory:
-      filter_name: "ユーザ名でフィルタ"
-      title: "ユーザ"
+      filter_name: "ユーザー名でフィルタ"
+      title: "ユーザー"
       likes_given: "与えた"
       likes_received: "もらった"
       topics_entered: "閲覧数"
@@ -286,18 +286,22 @@ ja:
       posts_read: "既読"
       posts_read_long: "投稿の閲覧数"
       total_rows:
-        other: "%{count}人のユーザ"
+        other: "%{count}人のユーザー"
     groups:
-      empty:
-        posts: "このグループのメンバーからの投稿はありません。"
-        members: "このグループからの投稿はありません。"
-        mentions: "このグループのメンションはありません。"
-        messages: "このグループへのメッセージはありません。"
-        topics: "このグループのメンバーのトピックは何もありません。"
+      request_membership_pm:
+        title: "メンバーシップリクエスト"
       add: "追加"
+      automatic_group: 自動作成グループ
+      closed_group: クローズドグループ
+      allow_membership_requests: "ユーザーがグループオーナーに対してメンバーシップリクエストを送信できるようにする(全ユーザーがグループへメンション出来るようにする必要があります。)"
+      membership: "メンバーシップ"
+      user_count: "メンバー数"
       selector_placeholder: "メンバーを追加"
       owner: "オーナー"
-      visible: "このグループは全てのユーザに表示されています。"
+      visible: "このグループは全てのユーザーに表示されています。"
+      index:
+        title: "グループ"
+        empty: "表示するグループはありません。"
       title:
         other: "グループ"
       members: "メンバー"
@@ -367,7 +371,7 @@ ja:
       phone: 電話
       other_accounts: "同じIPアドレスを持つアカウント"
       delete_other_accounts: "%{count}件削除"
-      username: "ユーザ名"
+      username: "ユーザー名"
       trust_level: "トラストレベル"
       read_time: "読んだ時間"
       topics_entered: "入力したトピック"
@@ -401,6 +405,7 @@ ja:
         disable: "通知を無効にする"
         enable: "通知を有効にする"
         each_browser_note: "注意: 利用するすべてのブラウザでこの設定を変更する必要があります"
+      dismiss_notifications: "すべて既読にする"
       dismiss_notifications_tooltip: "全ての未読の通知を既読にします"
       disable_jump_reply: "返信した後に投稿へ移動しない"
       dynamic_favicon: "新規/更新トピックの件数をブラウザのアイコンに表示する"
@@ -409,10 +414,10 @@ ja:
       change: "変更"
       moderator: "{{user}} はモデレータです"
       admin: "{{user}} は管理者です"
-      moderator_tooltip: "このユーザはモデレータです"
-      admin_tooltip: "このユーザは管理者です"
-      blocked_tooltip: "このユーザはブロックされています"
-      suspended_notice: "このユーザは {{date}} まで凍結状態です。"
+      moderator_tooltip: "このユーザーはモデレータです"
+      admin_tooltip: "このユーザーは管理者です"
+      blocked_tooltip: "このユーザーはブロックされています"
+      suspended_notice: "このユーザーは {{date}} まで凍結状態です。"
       suspended_reason: "理由: "
       github_profile: "Github"
       email_activity_summary: "アクティビティの情報"
@@ -433,9 +438,9 @@ ja:
       delete_yourself_not_allowed: "アカウントを削除できませんでした。サイトの管理者へ連絡してください。"
       unread_message_count: "メッセージ"
       admin_delete: "削除"
-      users: "ユーザ"
+      users: "ユーザー"
       muted_users: "ミュート"
-      muted_users_instructions: "ユーザからの通知をすべて行いません"
+      muted_users_instructions: "ユーザーからの通知をすべて行いません"
       muted_topics_link: "ミュートしたトピックを表示する"
       staff_counters:
         flags_given: "役に立った通報"
@@ -464,10 +469,10 @@ ja:
         title: "プロフィールを変更"
         error: "変更中にエラーが発生しました。"
       change_username:
-        title: "ユーザ名を変更"
-        taken: "このユーザ名は既に使われています。"
-        error: "ユーザ名変更中にエラーが発生しました。"
-        invalid: "このユーザ名は無効です。英数字のみ利用可能です。"
+        title: "ユーザー名を変更"
+        taken: "このユーザー名は既に使われています。"
+        error: "ユーザー名の変更中にエラーが発生しました。"
+        invalid: "このユーザー名は無効です。英数字のみ利用可能です。"
       change_email:
         title: "メールアドレスを変更"
         taken: "このメールアドレスは既に使われています。"
@@ -489,7 +494,7 @@ ja:
         title: "プロフィールの背景画像"
         instructions: "プロフィールの背景画像は、幅850pxで中央揃えになります"
       change_card_background:
-        title: "ユーザカードの背景画像"
+        title: "ユーザーカードの背景画像"
         instructions: "背景画像は、幅590pxで中央揃えになります"
       email:
         title: "メールアドレス"
@@ -506,7 +511,7 @@ ja:
         too_short: "名前が短いです"
         ok: "問題ありません"
       username:
-        title: "ユーザ名"
+        title: "ユーザー名"
         instructions: "空白を含まず、被らない名前を入力してください"
         short_instructions: "@{{username}} であなたにメンションを送ることができます"
         available: "ユーザ名は利用可能です"
@@ -596,11 +601,8 @@ ja:
         create: "招待を送る"
         generate_link: "招待リンクをコピー"
         bulk_invite:
-          none: "まだだれも招待していません。ひとりひとりを招待することもできますが、<a href='https://meta.discourse.org/t/send-bulk-invites/16468'>一括招待ファイルをアップロード</a>することで、一度に複数のユーザを招待する事ができます。"
           text: "ファイルからまとめて招待をする"
-          uploading: "アップロードしています..."
           success: "ファイルは無事にアップロードされました。完了されましたらメッセージでお知らせをさせていただきます。"
-          error: "ファイルアップロードエラー：'{{filename}}': {{message}}"
       password:
         title: "パスワード"
         too_short: "パスワードが短すぎます。"
@@ -941,6 +943,10 @@ ja:
         unlist_topics: "トピックをリストから非表示にする"
         reset_read: "未読に設定"
         delete: "トピックを削除"
+        dismiss: "既読"
+        dismiss_read: "未読をすべて既読にする"
+        dismiss_button: "既読..."
+        dismiss_tooltip: "新規投稿を既読にしてトピックの追跡を停止"
         dismiss_new: "既読にする"
         toggle: "選択したトピックを切り替え"
         actions: "操作"
@@ -1037,7 +1043,6 @@ ja:
         go_bottom: "下"
         go: "へ"
         jump_bottom: "最後の投稿へ"
-        jump_prompt: "投稿へジャンプ"
         jump_prompt_long: "どの投稿へジャンプしますか？"
         jump_bottom_with_number: "%{post_number}番へジャンプ"
         total: 投稿の合計
@@ -1229,7 +1234,6 @@ ja:
         edit: "申し訳ありませんが、投稿の編集中にエラーが発生しました。もう一度やり直してください。"
         upload: "申し訳ありません、ファイルのアップロード中にエラーが発生しました。再度お試しください。"
         too_many_uploads: "申し訳ありませんが、複数のファイルは同時にアップロードできません。"
-        upload_not_authorized: "申し訳ありませんが、対象ファイルをアップロードする権限がありません (利用可能な拡張子: {{authorized_extensions}})."
         image_upload_not_allowed_for_new_user: "申し訳ありませんが、新規ユーザは画像のアップロードができません。"
         attachment_upload_not_allowed_for_new_user: "申し訳ありませんが、新規ユーザはファイルの添付ができません。"
         attachment_download_requires_login: "ファイルをダウンロードするには、ログインする必要があります"
@@ -1470,7 +1474,6 @@ ja:
     views_lowercase:
       other: " 閲覧"
     replies: "返信"
-    views_long: "このトピックは{{number}}回閲覧されました"
     activity: "アクティビティ"
     likes: "いいね！"
     likes_lowercase:
@@ -1572,21 +1575,26 @@ ja:
         profile: '<b>g</b>, <b>p</b> プロフィール'
         messages: '<b>g</b>, <b>m</b> メッセージ'
       navigation:
+        title: 'ナビゲーション'
         jump: '<b>#</b> # 投稿へ'
         back: '<b>u</b> 戻る'
+        up_down: '<b>k</b>/<b>j</b> 選択を移動 &uarr; &darr;'
         open: '<b>o</b> or <b>Enter</b> トピックへ'
+        next_prev: '<b>shift</b>+<b>j</b>/<b>shift</b>+<b>k</b> 選択を次/前へ移動'
       application:
+        title: 'アプリケーション'
         create: '<b>c</b> 新しいトピックを作成'
         notifications: '<b>n</b> お知らせを開く'
         hamburger_menu: '<b>=</b> メニューを開く'
-        user_profile_menu: '<b>p</b> ユーザメニュを開く'
+        user_profile_menu: '<b>p</b> ユーザーメニューを開く'
         show_incoming_updated_topics: '<b>.</b> 更新されたトピックを表示する'
         search: '<b>/</b> 検索'
         help: '<b>?</b> キーボードヘルプを表示する'
-        dismiss_new_posts: '<b>x</b>, <b>r</b> 新しい投稿を非表示にする'
-        dismiss_topics: 'Dismiss Topics'
+        dismiss_new_posts: '<b>x</b>, <b>r</b> 新規投稿を非表示にする'
+        dismiss_topics: '<b>x</b>, <b>t</b> トピックを既読にする'
         log_out: '<b>shift</b>+<b>j</b>/<b>shift</b>+<b>k</b> 次のセクション/前のセクション'
       actions:
+        title: 'アクション'
         bookmark_topic: '<b>f</b> トピックのブックマークを切り替え'
         pin_unpin_topic: '<b>shift</b>+<b>p</b>トピックを ピン留め/ピン留め解除'
         share_topic: '<b>shift</b>+<b>s</b> トピックをシェア'
@@ -1650,8 +1658,6 @@ ja:
         backups: "バックアップ"
         traffic_short: "トラフィック"
         traffic: "Application web requests"
-        page_views: "API Requests"
-        page_views_short: "API Requests"
         show_traffic_report: "Show Detailed Traffic Report"
         reports:
           today: "今日"
@@ -1666,6 +1672,7 @@ ja:
           refresh_report: "Refresh Report"
           start_date: "Start Date"
           end_date: "End Date"
+          groups: "すべてのグループ"
       commits:
         latest_changes: "最新の更新内容:"
         by: "by"
@@ -1734,14 +1741,11 @@ ja:
         refresh: "更新"
         new: "新規"
         selector_placeholder: "ユーザ名を入力"
-        name_placeholder: "グループ名を入力 (ユーザ名同様にスペースなし)"
         about: "グループメンバーとグループ名を編集"
         group_members: "グループメンバー"
         delete: "削除"
         delete_confirm: "このグループを削除しますか?"
         delete_failed: "グループの削除に失敗しました。自動作成グループを削除することはできません。"
-        delete_member_confirm: "'%{group}' グループから'%{username}' を削除しますか?"
-        name: "名前"
         add: "追加"
         add_members: "メンバーを追加"
         custom: "カスタム"
@@ -1773,6 +1777,8 @@ ja:
       web_hooks:
         title: "Webhooks"
         none: "現在、Webhooksはありません。"
+        events:
+          actions: "アクション"
       plugins:
         title: "プラグイン"
         installed: "インストール済みプラグイン"
@@ -2307,6 +2313,7 @@ ja:
           login: "ログイン"
           plugins: "プラグイン"
           user_preferences: "ユーザ設定"
+          groups: "グループ"
       badges:
         title: バッジ
         new_badge: 新しいバッジ

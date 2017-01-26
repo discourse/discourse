@@ -1,3 +1,3 @@
 Fabricator(:group) do
-  name 'my_group'
+  name { sequence(:name) { |n| "my_group_#{n}" } }
 end

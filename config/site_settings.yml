@@ -298,6 +298,7 @@ login:
   enable_sso:
     client: true
     default: false
+  sso_allows_all_return_paths: false
   enable_sso_provider: false
   verbose_sso_logging: false
   sso_url:
@@ -388,7 +389,6 @@ users:
   email_token_valid_hours:
     default: 48
     min: 1
-  email_token_grace_period_hours: 0
   purge_unactivated_users_grace_period_days: 14
   public_user_custom_fields:
     type: list
@@ -410,6 +410,14 @@ users:
   hide_user_profiles_from_public:
     default: false
     client: true
+  user_website_domains_whitelist:
+    default: ''
+    type: list
+
+groups:
+  enable_group_directory:
+    client: true
+    default: true
 
 posting:
   min_post_length:
@@ -599,6 +607,9 @@ email:
   disable_digest_emails:
     default: false
     client: true
+  email_accent_bg_color: "#2F70AC"
+  email_accent_fg_color: "#FFFFFF"
+  email_link_color: "#006699"
   show_topic_featured_link_in_digest: false
   email_custom_headers: 'Auto-Submitted: auto-generated'
   email_subject: '[%{site_name}] %{optional_pm}%{optional_cat}%{topic_title}'
@@ -688,9 +699,13 @@ files:
   max_attachment_size_kb:
     client: true
     default: 3072
+  max_image_megapixels:
+    default: 40
+    min: 5
+    max: 100
   authorized_extensions:
     client: true
-    default: 'jpg|jpeg|png|gif|csv'
+    default: 'jpg|jpeg|png|gif'
     refresh: true
     type: list
   crawl_images:
@@ -883,8 +898,8 @@ spam:
   cooldown_minutes_after_hiding_posts: 10
   num_spam_flags_to_block_new_user: 3
   num_users_to_block_new_user: 3
-  num_tl3_flags_to_block_new_user: 6
-  num_tl3_users_to_block_new_user: 4
+  num_tl3_flags_to_block_new_user: 4
+  num_tl3_users_to_block_new_user: 2
   notify_mods_when_user_blocked: false
   flag_sockpuppets: false
   newuser_spam_host_threshold: 3
@@ -1211,7 +1226,7 @@ uncategorized:
 
   disable_edit_notifications: false
 
-  vacuum_db_days: 9000
+  vacuum_db_days: 90
   last_vacuum:
     default: 0
     hidden: true
@@ -1248,6 +1263,8 @@ uncategorized:
     client: true
 
   topic_page_title_includes_category: true
+
+  native_app_install_banner: false
 
 
 user_preferences:

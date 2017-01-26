@@ -1,4 +1,5 @@
 import { observes } from 'ember-addons/ember-computed-decorators';
+import showModal from 'discourse/lib/show-modal';
 
 export default Ember.Component.extend({
   composerOpen: null,
@@ -93,19 +94,13 @@ export default Ember.Component.extend({
   },
 
   keyboardTrigger(e) {
-    if(e.type === "jump") {
-      bootbox.prompt(I18n.t('topic.progress.jump_prompt_long'), postIndex => {
-        if (postIndex === null) { return; }
-        this.sendAction('jumpToIndex', postIndex);
+    if (e.type === "jump") {
+      const controller = showModal('jump-to-post');
+      controller.setProperties({
+        topic: this.get('topic'),
+        postNumber: 1,
+        jumpToIndex: this.attrs.jumpToIndex
       });
-
-      // this is insanely hacky, for some reason shown event never fires,
-      // something is bust in bootbox
-      // TODO upgrade bootbox to see if this hack can be removed
-      setTimeout(()=>{
-        $('.bootbox.modal').trigger('shown');
-      },50);
-
     }
   },
 

@@ -110,21 +110,21 @@ describe Jobs::UserEmail do
       let(:post) { Fabricate(:post, user: user) }
 
       it 'passes a post as an argument when a post_id is present' do
-        UserNotifications.expects(:private_message).with(user, {post: post}).returns(mailer)
+        UserNotifications.expects(:user_private_message).with(user, {post: post}).returns(mailer)
         Email::Sender.any_instance.expects(:send)
-        Jobs::UserEmail.new.execute(type: :private_message, user_id: user.id, post_id: post.id)
+        Jobs::UserEmail.new.execute(type: :user_private_message, user_id: user.id, post_id: post.id)
       end
 
       it "doesn't send the email if you've seen the post" do
         Email::Sender.any_instance.expects(:send).never
         PostTiming.record_timing(topic_id: post.topic_id, user_id: user.id, post_number: post.post_number, msecs: 6666)
-        Jobs::UserEmail.new.execute(type: :private_message, user_id: user.id, post_id: post.id)
+        Jobs::UserEmail.new.execute(type: :user_private_message, user_id: user.id, post_id: post.id)
       end
 
       it "doesn't send the email if the user deleted the post" do
         Email::Sender.any_instance.expects(:send).never
         post.update_column(:user_deleted, true)
-        Jobs::UserEmail.new.execute(type: :private_message, user_id: user.id, post_id: post.id)
+        Jobs::UserEmail.new.execute(type: :user_private_message, user_id: user.id, post_id: post.id)
       end
 
       it "doesn't send the email if user of the post has been deleted" do
@@ -136,14 +136,14 @@ describe Jobs::UserEmail do
       context 'user is suspended' do
         it "doesn't send email for a pm from a regular user" do
           Email::Sender.any_instance.expects(:send).never
-          Jobs::UserEmail.new.execute(type: :private_message, user_id: suspended.id, post_id: post.id)
+          Jobs::UserEmail.new.execute(type: :user_private_message, user_id: suspended.id, post_id: post.id)
         end
 
-        it "doesn't send email for a pm from a staff user" do
+        it "does send an email for a pm from a staff user" do
           pm_from_staff = Fabricate(:post, user: Fabricate(:moderator))
           pm_from_staff.topic.topic_allowed_users.create!(user_id: suspended.id)
-          Email::Sender.any_instance.expects(:send).never
-          Jobs::UserEmail.new.execute(type: :private_message, user_id: suspended.id, post_id: pm_from_staff.id)
+          Email::Sender.any_instance.expects(:send)
+          Jobs::UserEmail.new.execute(type: :user_private_message, user_id: suspended.id, post_id: pm_from_staff.id)
         end
       end
 
@@ -152,14 +152,14 @@ describe Jobs::UserEmail do
 
         it "doesn't send email for a pm from a regular user" do
           Email::Sender.any_instance.expects(:send).never
-          Jobs::UserEmail.new.execute(type: :private_message, user_id: anonymous.id, post_id: post.id)
+          Jobs::UserEmail.new.execute(type: :user_private_message, user_id: anonymous.id, post_id: post.id)
         end
 
         it "doesn't send email for a pm from a staff user" do
           pm_from_staff = Fabricate(:post, user: Fabricate(:moderator))
           pm_from_staff.topic.topic_allowed_users.create!(user_id: anonymous.id)
           Email::Sender.any_instance.expects(:send).never
-          Jobs::UserEmail.new.execute(type: :private_message, user_id: anonymous.id, post_id: pm_from_staff.id)
+          Jobs::UserEmail.new.execute(type: :user_private_message, user_id: anonymous.id, post_id: pm_from_staff.id)
         end
       end
     end

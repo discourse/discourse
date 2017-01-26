@@ -6,6 +6,8 @@ class PostRevision < ActiveRecord::Base
 
   serialize :modifications, Hash
 
+  after_create :create_notification
+
   def self.ensure_consistency!
     # 1 - fix the numbers
     PostRevision.exec_sql <<-SQL
@@ -32,6 +34,10 @@ class PostRevision < ActiveRecord::Base
 
   def show!
     update_column(:hidden, false)
+  end
+
+  def create_notification
+    PostActionNotifier.after_create_post_revision(self)
   end
 
 end

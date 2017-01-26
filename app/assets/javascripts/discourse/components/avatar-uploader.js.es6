@@ -11,6 +11,10 @@ export default Em.Component.extend(UploadMixin, {
     return uploading ? I18n.t("uploading") : I18n.t("user.change_avatar.upload_picture");
   },
 
+  validateUploadedFilesOptions() {
+    return { imagesOnly: true };
+  },
+
   uploadDone(upload) {
     this.setProperties({
       imageIsNotASquare: upload.width !== upload.height,

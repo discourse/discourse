@@ -15,4 +15,10 @@ export default Ember.Controller.extend({
   loginRequired() {
     return Discourse.SiteSettings.login_required && !Discourse.User.current();
   },
+
+  actions: {
+    appRouteAction(name) {
+      return this.send(name);
+    }
+  }
 });

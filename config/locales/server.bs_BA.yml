@@ -43,8 +43,6 @@ bs_BA:
       taken: "has already been taken"
     embed:
       load_from_remote: "There was an error loading that post."
-  bulk_invite:
-    file_should_be_csv: "The uploaded file should be of csv or txt format."
   backup:
     operation_already_running: "An operation is currently running. Can't start a new job right now."
     backup_file_should_be_tar_gz: "The backup file should be a .tar.gz archive."
@@ -460,7 +458,6 @@ bs_BA:
     redirect_users_to_top_page: "Automatically redirect new and long absent users to the top page."
     show_email_on_profile: "Show a user's email on their profile (only visible to themselves and staff)"
     email_token_valid_hours: "Forgot password / activate account tokens are valid for (n) hours."
-    email_token_grace_period_hours: "Forgot password / activate account tokens are still valid for a grace period of (n) hours after being redeemed."
     enable_badges: "Enable the badge system"
     allow_index_in_robots_txt: "Specify in robots.txt that this site is allowed to be indexed by web search engines."
     email_domains_blacklist: "A list of email domains that users are not allowed to register accounts with. Example: mailinator.com trashmail.net"
@@ -622,7 +619,6 @@ bs_BA:
     embed_whitelist_selector: "CSS selector for elements that are allowed in embeds."
     embed_blacklist_selector: "CSS selector for elements that are removed from embeds."
     notify_about_flags_after: "If there are flags that haven't been handled after this many hours, send an email to the contact_email. Set to 0 to disable."
-    enable_cdn_js_debugging: "Allow /logs to display proper errors by adding crossorigin permissions on all js includes."
     show_create_topics_notice: "If the site has fewer than 5 public topics, show a notice asking admins to create some topics."
     prevent_anons_from_downloading_files: "Prevent anonymous users from downloading files. WARNING: this will prevent any site assets posted as attachments from working."
     errors:
@@ -747,24 +743,6 @@ bs_BA:
         (Ako trebate razgovarati s nekim od [članova osoblja](%{base_url}/about) kao novi korisnik, samo odgovorite na ovu poruku.)
     welcome_invite:
       subject_template: "Dobrodošli na %{site_name}!"
-      text_body_template: |
-        Hvala vam što ste primili pozivnicu na %{site_name} -- dobrodošli!
-
-        Mi smo automatski kreirali vaše korisničko ime: **%{username}**, ali možete ga promjeniti preko [tvoj profil][postavke].
-
-        Da se opet ulogujete:
-
-        1. Log in using any method you like -- but it must resolve to the **same email address** that you received your original invitation email at. Otherwise we won't be able to tell it is you!
-
-        2. Create a unique password for [your user profile][prefs], and use it to log in.
-
-        %{new_user_tips}
-
-        We believe in [civilized community behavior](%{base_url}/guidelines) at all times.
-
-        Enjoy your stay!
-
-        [prefs]: %{user_preferences_url}
     backup_succeeded:
       subject_template: "Backup completed successfully"
     backup_failed:

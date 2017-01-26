@@ -1,4 +1,3 @@
-import computed from 'ember-addons/ember-computed-decorators';
 import { selectedText } from 'discourse/lib/utilities';
 
 // we don't want to deselect when we click on buttons that use it
@@ -10,17 +9,22 @@ function willQuote(e) {
 export default Ember.Component.extend({
   classNames: ['quote-button'],
   classNameBindings: ['visible'],
-
-  @computed('quoteState.buffer')
-  visible: buffer => buffer && buffer.length > 0,
+  visible: false,
 
   _isMouseDown: false,
   _reselected: false,
 
+  _hideButton() {
+    this.get('quoteState').clear();
+    this.set('visible', false);
+  },
+
   _selectionChanged() {
+    const quoteState = this.get('quoteState');
+
     const selection = window.getSelection();
     if (selection.isCollapsed) {
-      if (this.get("visible")) this.sendAction("deselectText");
+      if (this.get("visible")) { this._hideButton(); }
       return;
     }
 
@@ -28,18 +32,22 @@ export default Ember.Component.extend({
     let firstRange, postId;
     for (let r = 0; r < selection.rangeCount; r++) {
       const range = selection.getRangeAt(r);
+
+      if ($(range.endContainer).closest('.cooked').length === 0) return;
+
       const $ancestor = $(range.commonAncestorContainer);
 
       firstRange = firstRange || range;
       postId = postId || $ancestor.closest('.boxed, .reply').data('post-id');
 
       if ($ancestor.closest(".contents").length === 0 || !postId) {
-        if (this.get("visible")) this.sendAction("deselectText");
+        if (this.get("visible")) { this._hideButton(); }
         return;
       }
     }
 
-    this.get("quoteState").setProperties({ postId, buffer: selectedText() });
+    quoteState.selected(postId, selectedText());
+    this.set('visible', quoteState.buffer.length > 0);
 
     // on Desktop, shows the button at the beginning of the selection
     // on Mobile, shows the button at the end of the selection
@@ -97,11 +105,11 @@ export default Ember.Component.extend({
     const wait = (isWinphone || isAndroid) ? 250 : 25;
     const onSelectionChanged = _.debounce(() => this._selectionChanged(), wait);
 
-    $(document).on("mousedown.quote-button", (e) => {
+    $(document).on("mousedown.quote-button", e => {
       this._isMouseDown = true;
       this._reselected = false;
       if (!willQuote(e)) {
-        this.sendAction("deselectText");
+        this._hideButton();
       }
     }).on("mouseup.quote-button", () => {
       this._isMouseDown = false;
@@ -120,7 +128,8 @@ export default Ember.Component.extend({
   },
 
   click() {
-    this.sendAction("selectText");
+    const { postId, buffer } = this.get('quoteState');
+    this.attrs.selectText(postId, buffer).then(() => this._hideButton());
     return false;
   }
 });

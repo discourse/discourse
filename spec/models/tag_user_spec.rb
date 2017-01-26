@@ -68,12 +68,7 @@ describe TagUser do
   end
 
   context "integration" do
-    before do
-      ActiveRecord::Base.observers.enable :all
-    end
-
     let(:user) { Fabricate(:user) }
-
     let(:watched_tag) { Fabricate(:tag) }
     let(:muted_tag)   { Fabricate(:tag) }
     let(:tracked_tag) { Fabricate(:tag) }

@@ -389,19 +389,21 @@ class UsersController < ApplicationController
   def password_reset
     expires_now
 
-    if EmailToken.valid_token_format?(params[:token])
+    token = params[:token]
+
+    if EmailToken.valid_token_format?(token)
       if request.put?
-        @user = EmailToken.confirm(params[:token])
+        @user = EmailToken.confirm(token)
       else
-        email_token = EmailToken.confirmable(params[:token])
+        email_token = EmailToken.confirmable(token)
         @user = email_token.try(:user)
       end
 
       if @user
-        session["password-#{params[:token]}"] = @user.id
+        secure_session["password-#{token}"] = @user.id
       else
-        user_id = session["password-#{params[:token]}"]
-        @user = User.find(user_id) if user_id
+        user_id = secure_session["password-#{token}"].to_i
+        @user = User.find(user_id) if user_id > 0
       end
     else
       @invalid_token = true
@@ -420,7 +422,7 @@ class UsersController < ApplicationController
         @user.auth_token = nil
         if @user.save
           Invite.invalidate_for_email(@user.email) # invite link can't be used to log in anymore
-          session["password-#{params[:token]}"] = nil
+          secure_session["password-#{token}"] = nil
           logon_after_password_reset
 
           return redirect_to(wizard_path) if Wizard.user_requires_completion?(@user)
@@ -566,7 +568,7 @@ class UsersController < ApplicationController
 
     if params[:include_groups] == "true"
       to_render[:groups] = Group.search_group(term).map do |m|
-        {name: m.name, usernames: []}
+        { name: m.name, full_name: m.full_name }
       end
     end
 
@@ -574,7 +576,7 @@ class UsersController < ApplicationController
       to_render[:groups] = Group.mentionable(current_user)
                                 .where("name ILIKE :term_like", term_like: "#{term}%")
                                 .map do |m|
-        {name: m.name, usernames: []}
+        { name: m.name, full_name: m.full_name }
       end
     end
 

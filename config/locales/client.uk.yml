@@ -228,15 +228,31 @@ uk:
       days_visited: "Відвідини"
       days_visited_long: "Днів відвідано"
       posts_read: "Прочитані"
+      posts_read_long: "Повідомлень Прочитано"
       total_rows:
         one: "%{count} користувач"
         few: "%{count} користувачі"
         other: "%{count} користувачів"
+    group_histories:
+      actions:
+        change_group_setting: "Змінити налаштування групи"
+        add_user_to_group: "Добавити користувача"
+        remove_user_from_group: "Видалити користувача"
     groups:
+      logs:
+        subject: "Тема"
+        details: "Деталі"
+        from: "Від"
+        to: "До"
+      edit:
+        title: 'Редагувати Групу'
+        full_name: 'Повне Ім''я'
+        add_members: "Добавити учасників"
+        delete_member_confirm: "Видалити '%{username}' з групи '%{group}'?"
       add: "Додати"
+      closed_group: Закрита Група
       selector_placeholder: "Додати учасників"
       visible: "Група видна всім користувачам"
-      index: "Групи"
       title:
         one: "група"
         few: "групи"
@@ -479,8 +495,6 @@ uk:
         create: "Надіслати Запрошення"
         bulk_invite:
           text: "Масове Запрошення з Файлу"
-          uploading: "Вивантаження..."
-          error: "Під час завантаження '{{filename}}' сталася помилка: {{message}}"
       password:
         title: "Пароль"
         too_short: "Ваш пароль надто короткий."
@@ -492,6 +506,7 @@ uk:
         title: "Підсумок"
         stats: "Статистика"
         time_read: "час читання"
+        more_topics: "Більше тем"
       ip_address:
         title: "Остання IP-адреса"
       registration_ip_address:
@@ -787,7 +802,6 @@ uk:
         title: просування по темі
         go_bottom: "Кнопка"
         jump_bottom: "перейти до останнього допису"
-        jump_prompt: "перейти до допису"
         jump_bottom_with_number: "перейти до допису %{post_number}"
         total: всього дописів
         current: поточний допис
@@ -899,7 +913,6 @@ uk:
         edit: "Даруйте, під час редагування допису трапилася помилка. Будь ласка, спробуйте ще раз."
         upload: "Даруйте, під час завантаження цього файлу трапилася помилка. Будь ласка, спробуйте ще раз."
         too_many_uploads: "Даруйте, але Ви можете одночасно завантажувати тільки один файл."
-        upload_not_authorized: "Даруйте, але файл, який Ви намагаєтеся завантажити, є недозволеним (дозволені розширення: {{authorized_extensions}})."
         image_upload_not_allowed_for_new_user: "Даруйте, нові користувачі не можуть завантажувати зображення."
         attachment_upload_not_allowed_for_new_user: "Даруйте, нові користувачі не можуть завантажувати прикріплення."
       abandon:
@@ -1046,7 +1059,6 @@ uk:
     original_post: "Перший допис"
     views: "Перегляди"
     replies: "Відповіді"
-    views_long: "цю тему переглянули {{number}} разів"
     activity: "Активність"
     likes: "Вподобання"
     likes_long: "в цій темі {{number}} вподобань"
@@ -1218,17 +1230,14 @@ uk:
         refresh: "Оновити"
         new: "Новий"
         selector_placeholder: "введіть ім'я користувача"
-        name_placeholder: "Group name, no spaces, same as username rule"
         about: "Edit your group membership and names here"
         group_members: "Учасники групи"
         delete: "Видалити"
         delete_confirm: "Видалити цю групу?"
         delete_failed: "Не вдалося видалити групу. Якщо це - автоматична група, її неможливо знищити."
-        name: "Ім'я"
         add: "Додати"
         add_members: "Додати учасників"
         bulk_select: "(обрати групу)"
-        flair_preview: "Попередній перегляд"
       api:
         generate_master: "Згенерувати Головний ключ API"
         none: "Наразі немає жодного активного ключа API."

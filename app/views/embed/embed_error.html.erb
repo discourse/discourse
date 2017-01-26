@@ -1,0 +1,25 @@
+<header class='discourse'>
+  <h3><%= t 'embed.error' %></h3>
+  <%= link_to(image_tag(SiteSetting.logo_url, class: 'logo'), Discourse.base_url) %>
+  <div class='clearfix'></div>
+</header>
+<%- if @show_reason %>
+  <div class='embed-error'>
+    <%- if @hosts.present? %>
+      <p><%= t 'embed.referer' %><code><%= request.referer %></code></p>
+      <p><%= t 'embed.mismatch' %></p>
+
+      <ul>
+        <%- @hosts.each do |eh| %>
+          <li>
+            <%= eh.host %><%- if eh.path_whitelist.present? %><%= eh.path_whitelist %><% end %>
+          </li>
+        <%- end %>
+      </ul>
+    <%- else %>
+      <p><%= t 'embed.no_hosts' %></p>
+    <%- end %>
+
+    <p><%= link_to(t('embed.configure'), @setup_url, target: '_blank') %></p>
+  </div>
+<%- end %>

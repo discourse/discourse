@@ -32,6 +32,7 @@ he:
   purge_reason: "נמחק אוטומטית כחשבון נטוש ולא פעיל"
   disable_remote_images_download_reason: "הורדת תמונות מרחוק נחסמה בשל היעדר מספיק שטח אחסון פנוי."
   anonymous: "אנונימי"
+  remove_posts_deleted_by_author: "נמחק על ידי הכותב"
   emails:
     incoming:
       default_subject: "התקבל מייל מ %{email}"
@@ -72,6 +73,8 @@ he:
       inclusion: לא נכלל ברשימה
       invalid: לא תקין
       is_invalid: "נראה לא ברור, האם זה משפט שלם?"
+      contains_censored_words: "כולל אחת או יותר מהמילים המצונזרות הבאות: %{censored_words}"
+      matches_censored_pattern: "מתאים לביטוי הרגולרי המצונזר: %{censored_pattern}"
       less_than: חייב להיות פחות מ-%{count}
       less_than_or_equal_to: חייב להיות פחות או שווה ל-%{count}
       not_a_number: אינו מספר
@@ -106,7 +109,8 @@ he:
       default_categories_already_selected: "לא ניתן לבחור קטגוריה שהשתמשו בה ברשימה אחרת."
       s3_upload_bucket_is_required: "אינכם יכולים להעלות ל-S3 ללא 's3_upload_bucket'."
   bulk_invite:
-    file_should_be_csv: "הקובץ המועלה צריך להיות בפורמט csv או txt."
+    file_should_be_csv: "הקובץ שמועלה אמור להיות בפורמט csv."
+    error: "ארעה שגיאה בהעלת הקובץ. אנא נסו שוב מאוחר יותר."
   backup:
     operation_already_running: "פעולה רצה כרגע. לא יכול להתחיל עבודה חדשה עכשיו."
     backup_file_should_be_tar_gz: "קובץ הגיבוי צריך להיות .tar.gz."
@@ -124,6 +128,11 @@ he:
   embed:
     start_discussion: "התחלת דיון"
     continue: "המשך דיון"
+    error: "תקלה בשילוב"
+    referer: "מפנה:"
+    mismatch: "המפנה לא התאים לאף אחד מהשרתים הבאים:"
+    no_hosts: "אף שרת לא הוגדר לשילוב."
+    configure: "הגדרת שילוב (Embedding)"
     more_replies:
       one: "עוד תגובה אחת"
       other: "עוד %{count} תגובות"
@@ -157,6 +166,7 @@ he:
   spamming_host: "סליחה אך אינכם יכולים להוסיף קישור לאתר זה."
   user_is_suspended: "משתמשים מושעים אינם מורשים לפרסם."
   topic_not_found: "משהו השתבש אולי נושא זה נסגר או נמחק בזמן שקראתם אותו?"
+  not_accepting_pms: "מצטעים,  %{username} לא מקבל הודעות כרגע."
   just_posted_that: "דומה מידי למה שפרסמתם לאחרונה"
   invalid_characters: "מכיל תווים לא תקניים"
   is_invalid: "נראה לא ברור, האם זה משפט שלם?"
@@ -268,6 +278,7 @@ he:
         name: "שם קטגוריה"
       topic:
         title: 'כותרת'
+        featured_link: 'קישור מומלץ'
       post:
         raw: "גוף"
       user_profile:
@@ -281,6 +292,9 @@ he:
               too_many_users: "אתם יכולים לשלוח אזהרות רק למשתמש/ת אחד בכל פעם."
               cant_send_pm: "מצטערים, אינכם יכולים לשלוח הודעה פרטית למשתמש זה."
               no_user_selected: "עליכם לבחור משתמש/ת תקניים."
+            featured_link:
+              invalid: "אינו תקין. URL אמור לכלול http:// או https://."
+              invalid_category: "לא ניתן לעריכה בקטגוריה זו."
         user:
           attributes:
             password:
@@ -311,7 +325,24 @@ he:
   meta_category_description: "דיון אודות אתר זה, הארגון שמאחוריו, איך הוא פועל ואיך נוכל לשפר אותו."
   staff_category_name: "צוות"
   staff_category_description: "קטגוריה פרטית לדיוני הצוות. נושאים נראים רק למנהלים ומנהלים ראשיים."
+  assets_topic_title: "נכסים לעיצוב האתר"
   assets_topic_body: "זהו נושא קבוע, הגלוי רק לצוות, לשמירת תמונות וקבצים שמשמשים לעיצוב האתר. אל תמחקו אותו!\n\n\nכיצד:\n\n\n1. הגיבו לנושא זה.\n2. העלו כאן את כל התמונות שברצונכם שישמשו כלוגואים, לוגואים מוקטנים (favicons) וכן הלאה. (השתמשו בלוגו ההעלאה בסרגל הכלים בעורך הפוסט, או גררו-שחררו או הדביקו את התמונות.)\n3. שלחו את התגובה כדי לפרסם אותה.\n4. הקליקו עם הכפתור הימני על התמונות בפרסום החדש שלכם כדי להשיג את הכתובת של התמונה שהועלתה, או הקליקו על סמל העריכה כדי לערוך את הפוסט ולאחזר את הכתובת של התמונות. העתיקו את הכתובות.\n5. הדביקו את כתובות התמונות אל תוך [הגדרות בסיסיות](/admin/site_settings/category/required).\n\nאם אתכם צריכים לאפשר העלאת קבצים מסוגים שונים, ערכו את \"הרחבות מאושרות\" בתוך [הגדרות_קובץ](/admin/site_settings/category/files)."
+  discourse_welcome_topic:
+    title: "ברוכים הבאים לדיסקורס"
+    body: |2
+
+      הפסקה הראשונה של נושא נעוץ זה תראה כהודעת ״ברוכים הבאים״ לכל המבקרים החדשים באתר הבית שלכם. היא חשובה!
+
+      **עירכו זאת** לתיאור קצר של הקהילה שלכם:
+
+      - למי היא נועדה?
+      - מה הם יכולים למצוא כאן?
+      - למה כדאי להם לבוא לפה?
+      - איפה אפשר לקרוא עוד (קישורים, מקורות, וכד׳)?
+
+      <img src="/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
+
+      ייתכן ותרצו לסגור נושא זה באמצעות :wrench: הניהול (בפינות משמאל למעלה ולמטה), כדי שתגובות לא ייערמו על גבי כרזה.
   lounge_welcome:
     title: "ברוכים הבאים ללאונג'"
     body: |2
@@ -374,6 +405,7 @@ he:
       create_topic: "אתם יוצרים נושא חדש מהר מדי. אנא המתנו %{time_left} לפני ניסיון חוזר לבצע פעולה זו."
       create_post: "אתם מגיבים מהר מדי. אנא המתינו %{time_left} לפני ניסיון חוזר לבצע פעולה זו."
       delete_post: "אתם מוחקים פוסטים מהר מידי. אנא המתינו %{time_left} לפני שאתם מנסים שוב."
+      public_group_membership: "אתם מצטרפים/עוזבים קבוצות בתדירות גבוהה מידי. אנא המתינו %{time_left} לפני שתנסו שוב."
       topics_per_day: "הגעתם למספר המירבי של נושאים חדשים היום. אנא המתינו %{time_left} לפני ניסיון חוזר לבצע פעולה זו."
       pms_per_day: "הגעתם למספר המירבי של הודעות היום. אנא המתינו %{time_left} לפני ניסיון חוזר לבצע פעולה זו."
       create_like: "הגעתם למספר המירבי של לייקים היום. אנא המתינו %{time_left} לפני ניסיון חוזר לבצע פעולה זו."
@@ -765,6 +797,8 @@ he:
     min_first_post_length: "אורך מינימלי מותר לפוסט ראשון (בגוף הנושא) בתווים "
     min_private_message_post_length: "אורך הפוסט המינימלי המותר בתווים להודעות"
     max_post_length: "מספר התווים המקסימלי כאורך פוסט"
+    topic_featured_link_enabled: "איפשור של פרסום קישור עם נושאים."
+    show_topic_featured_link_in_digest: "הצגת קישור מומלץ של הנושא במייל התמצות."
     min_topic_title_length: "מספר התווים המינימלי הנדרש לכותרת נושא"
     max_topic_title_length: "מספר התווים המקסימלי המותר לכותרת נושא"
     min_private_message_title_length: "אורך הכותרת המנימילי המותר להודעה בתווים"
@@ -873,9 +907,8 @@ he:
     show_email_on_profile: "הצגת כתובת הדוא\"ל של המשתמשים בעמוד הפרופיל שלהם (גלוי רק להם ולצוות)"
     prioritize_username_in_ux: "הציגו שם-משתמש ראשון בדף המשתמש, כרטיס המשתמש ופוסטים (כשמנוטרל השם מופיע קודם)"
     email_token_valid_hours: "סיסמאות שכחת סיסמה / הפעלת חשבון תקפים במשך (n) שעות."
-    email_token_grace_period_hours: "סיסמאות שכחת סיסמה / הפעלת חשבון עדיין זמינים לזמן חסד של (n) שעות לאחר שהופקו."
     enable_badges: "הפעלת מערכת העיטורים"
-    enable_whispers: "הודעות פרטיות בין חברי הצוות אפשריות בתוך הנושא (ניסיוני)"
+    enable_whispers: "אפשרו לצוות לקיים תקשורת פרטית בתוך נושאים."
     allow_index_in_robots_txt: "פרטו ב-robots.txt שלאתר זה מותר להיות מאונדקס על ידי מנועי חיפוש."
     email_domains_blacklist: "רשימה מופרדת בצינור (pipe) של דומיינים של אימייל אשר מהם משתמשים לא מורשים לרשום חשבונות. למשל: mailinator.com|trashmail.net"
     email_domains_whitelist: "רשימה מופרדת בצינור (pipe) אשר ר-ק ממנה משתמשים יכולים לרשום חשבונות. א-ז-ה-ר-ה: משתמשים עם אימיילים מדומיינים אחרים לא יורשו!"
@@ -906,6 +939,7 @@ he:
     sso_overrides_name: "דורס שם מלא מקומי עם שם מלא מאתר חיצוני מתוכן SSO בכל התחברות, מונע שינויים מקומיים."
     sso_overrides_avatar: "מעקף אווטאר של משתמש בעזרת אווטר אתר חיצוני מ-SSO Payload. אם אפשרות זו מופעלת, מומלץ מאוד לבטל את האפשרות להעלאת אווטר."
     sso_not_approved_url: "SSO של חשבונות שלא אושרו יופנו ל URL זה"
+    sso_allows_all_return_paths: "אל תגבילו את שמות המתחם של נתיבי החזרה (return_paths) שניתנים על ידי ה-SSO (כברירת מחדל, נתיבי החזרה חייבים להיות באתר הנוכחי)"
     enable_local_logins: "אפשרו התחברות שמבוססת על שמות משתמשים וסיסמאות מקומיים. (שימו לב: אפשרות זו חייבת להיות מותרת כדי שהזמנות להצטרפות יפעלו)"
     allow_new_registrations: "אפשרו הרשמות משתמשים חדשים. בטלו סימון זה כדי למנוע יצירת חשבונות חדשים."
     enable_signup_cta: "הציגו מודעה למשתמשים אנונימיים חוזרים שמציעה להם להרשם כדי לקבל חשבון."
@@ -932,7 +966,7 @@ he:
     automatic_backups_enabled: "הרץ גיבויים אוטומטים כמו שמוגדר בתדירות הגיבויים"
     backup_frequency: "באיזו תכיפות אנחנו מגבים את האתר, בימים."
     enable_s3_backups: "העלאת גיבויים ל-S3 לאחר השלמתם. חשוב: דורש הזנת הרשאות S3 תקפות להגדרות הקבצים."
-    s3_backup_bucket: "הדלי המרוחק שבו לשמור גיבויים. אזהרה: סימו לב שהוא דלי פרטי."
+    s3_backup_bucket: "הדלי המרוחק שבו לשמור גיבויים. אזהרה: שימו לב שהוא דלי פרטי."
     s3_disable_cleanup: "בטלו את ההסרה של גיבויים מ S3 כאשר הם מוסרים מקומית."
     backup_time_of_day: "הגדרת זמן לגיבוי לפי UTC."
     backup_with_uploads: "כללו העלאות בגיבויים התקופתיים. ביטול של אפשרות זו תגבה רק את בסיס הנתונים."
@@ -1038,6 +1072,7 @@ he:
     max_attachment_size_kb: "הגודל המקסימלי בקילו-בתים (kBs) של קבצים להעלאה. הגדרה זו חייבת להיות מוגדרת ב-nginx (client_max_body_size) / apache או בפרוקסי."
     authorized_extensions: "רשימה של סיומות מותרות להעלאה (השתמשו ב '*' כדי לאפשר את כל סוגי הקבצים)"
     max_similar_results: "כמה נושאים דומים להציג מעל לעורך כאשר מחברים נושא חדש. ההשוואה מבוססת על הכותרת וגוף הפוסט."
+    max_image_megapixels: "מספר מקסימלי מותר של מגה-פיקסלים לתמונה."
     title_prettify: "מניעת טעויות נפוצות בכותרת, בכללן טעויות עם אותיות גדולות באנגלית, מספר ! ו ?, נקודה מיותרת בסוף, וכד׳"
     topic_views_heat_low: "לאחר כמות זו של צפיות, שדה הצפיות יהיה קצת יותר בהיר."
     topic_views_heat_medium: "לאחר כמות צפיות זו, שדה הצפיות יודגש באופן בינוני."
@@ -1131,15 +1166,20 @@ he:
     delete_digest_email_after_days: "השתקת מיילי סיכום למשתמשים שלא ביקרו באתר למעלה מ (n) ימים."
     digest_suppress_categories: "וותרו על קטגוריות אלו במיילים מסכמים."
     disable_digest_emails: "בטל סיכומי מיילים לכל המשתמשים."
+    email_accent_bg_color: "צבע האקסנט שיעשה בו שימוש כרקע לחלק מהאלמנטים של מיילים מסוג HTML. הכניסו שם צבע ('red') או ערך הקסדצימלי ('#FF000')."
+    email_accent_fg_color: "צבע הטקסט שמופיע על צבע הרקע של מיילים מסוג HTML. הכניסו שם צבע ('white') או ערך הקסדצימלי ('#FFFFFF')."
+    email_link_color: "צבע הקישורים במיילים מסוג HTML. הכניסו שם צבע ('blue') או ערך הקסדצימלי ('#0000FF')."
     detect_custom_avatars: "האם לבדוק או לא לבדוק שמשתמשים העלו תמונות פרופיל אישיות."
     max_daily_gravatar_crawls: "מספר הפעמים המקסימלי ש-Discourse יבדוק אווטרים ב-Gravatar ביום"
     public_user_custom_fields: "רשימה לבנה (whitelist) של שדות מותאמים למשתמש שיכולים להיות מוצגים באופן פומבי."
     staff_user_custom_fields: "רשימה לבנה (whitelist) של שדות מותאמים למשתמש שיכולים להיות מוצגים לאנשי צוות."
     enable_user_directory: "ספקו ספריייה של משתמשים לגלישה"
+    enable_group_directory: "ספקו ספריה של קבוצות לסיור"
     allow_anonymous_posting: "אפשרו למשתמשים לעבור למצב אנונימי"
     anonymous_posting_min_trust_level: "רמת האמון המינמלית הנדרשת כדי לאפשר פרסום אנונימי"
     anonymous_account_duration_minutes: "בכדי להגן על האנונימות צרו חשבון אנונימי כל N דקות לכל משתמש. לדוגמה: אם מכוון ל-600, כאשר יעברו 600 דקות מהפרסום האחרון והמשתמש/ת יחליפו לזהות אנונימית, חשבון אנונימי חדש יווצר."
     hide_user_profiles_from_public: "נטרלו כרטיסי משתמשים, פרופילי משתמשים ומדריך משתמשים למשתמשים אנונימיים."
+    user_website_domains_whitelist: "אתרי משתמשים יאומתו עם מתחמים אלו. רשימה מופרדת על ידי קווים-אנכיים."
     allow_profile_backgrounds: "אפשרו למשתמשים להעלות רקעים לפרופיל."
     sequential_replies_threshold: "מספר הפוסטים שעל משתמש לפרסם אחד-לאחר-השני בנושא לפני שמזכירים לו שהוא משאיר יותר מידי תגובות ברצף."
     enable_mobile_theme: "מכשירים ניידים משתמשים בתבנית ידידותית אליהם, עם היכולת להחליף אותה לאתר המלא. נטרלו זאת אם אתם מעוניינים ב stylesheet מותאם שהוא רספונסיבי לחלוטין."
@@ -1152,6 +1192,7 @@ he:
     automatically_unpin_topics: "הסרת נעיצה אוטומטית של נושאים כאשר המשתמשים מגיעים לתחתית."
     read_time_word_count: "מספר המילים לדקה כדי להעריך את זמן הקריאה."
     topic_page_title_includes_category: "כותרת דף נושא כוללת את שם הקטגוריה."
+    native_app_install_banner: "בקשו ממבקרים חוזרים להתקין את אפליקציית Discourse."
     max_prints_per_hour_per_user: "מספר מקסימלי של צפיות בדף /print (הדפסה) (קיבעו ל 0 כדי לנטרל)"
     full_name_required: "שם מלא הוא שדה נדרש לפרופיל משתמש/ת."
     enable_names: "הצגת השם המלא של המשתמש/ת בעמודי הפרופיל שלהם, בכרטיסי המשתמש ובדוא\"ל שלהם. נטרלו להסתרת השם המלא בכל מקום."
@@ -1175,7 +1216,6 @@ he:
     embed_whitelist_selector: "בוררי CSS לאלמנטים שיותר להטמיע."
     embed_blacklist_selector: "בוררי CSS לאלמנטים שיוסרו מן ההטמעות."
     notify_about_flags_after: "אם יש דגלים שלא טופלו לאחר כמות זו של שעות, שילחו אימייל ל contact_email. קבעו 0 לניטרול."
-    enable_cdn_js_debugging: "אפשרו ל-/logs להציג שגיאות בצורה נכונה באמצעות הוספת הרשאות לגישה בין אתרים (crossorigin permissions) בכל ה-js הכלולים."
     show_create_topics_notice: "אם לאתר פחות מ-5 נושאים פומביים, הציגו מודעה המבקשת מן המנהלים ליצור עוד נושאים."
     delete_drafts_older_than_n_days: מחקו טיוטות בנות יותר מ (n) ימים.
     bootstrap_mode_min_users: "מספר משתמשים מינימלי שנדרש כדי לנטרל מצב איתחול (קבעו ל 0 כדי לנטרל)"
@@ -1365,6 +1405,8 @@ he:
   user:
     no_accounts_associated: "אין חשבונות מקושרים."
     deactivated: "הושבת בעקבות מיילים רבים מידי שהוחזרו ל '%{email}'."
+    deactivated_by_staff: "נוטרל על ידי הצוות"
+    activated_by_staff: "הופעל על ידי הצוות"
     username:
       short: "חייבים להיות לפחות %{min} תווים"
       long: "נדרשים לא יותר מ-%{max} תווים"
@@ -1382,6 +1424,8 @@ he:
     ip_address:
       blocked: "הרשמות חדשות אסורות מכתובת ה-IP שלך."
       max_new_accounts_per_registration_ip: "הרשמות חדשות אסורות מכתובת ה-IP שלך. (עברת את הסף המותר) צרו קשר עם איש צוות."
+    website:
+      domain_not_allowed: "אתר לא תקין. מתחמים מותרים: %{domains}"
   flags_reminder:
     flags_were_submitted:
       one: "דגלים נשלחו לפני למעלה משעה. אנא סיקרו אותם."
@@ -1390,6 +1434,7 @@ he:
       one: "דגל אחד ממתין לטיפול"
       other: "%{count} דגלים ממתינים לטיפול"
   unsubscribe_mailer:
+    title: "שולח-מיילים לביטול מנוי"
     subject_template: "אשרו שאינכם מעוניינים יותר לקבל עדכוני דוא\"ל מ%{site_title}"
     text_body_template: |
       מישהו (כנראה אתם?) ביקש לא לקבל יותר עדכוני מייל מ %{site_domain_name} לכתובת זו.
@@ -1400,6 +1445,7 @@ he:
 
       אם אתם מעוניינים להמשיך לקבל עדכונים במייל, אתם יכולים להתעלם ממייל זה.
   invite_mailer:
+    title: "שולח-מיילים להזמנה"
     subject_template: "הוזמנת על ידי %{invitee_name} ל '%{topic_title}' ב%{site_domain_name}"
     text_body_template: |
       %{invitee_name} הזמין/הזמינה אותך לדיון
@@ -1418,6 +1464,7 @@ he:
 
       הזמנה זו נשלחה על ידי משתמש/ת מוכר/ת ולכן אתם יכולים להשיב לדיון הנ"ל באופן מיידי.
   custom_invite_mailer:
+    title: "שולח-מיילים מותאם-אישית להזמנה"
     subject_template: "%{invitee_name} הזמין/הזמינה אותך לדיון  '%{topic_title}' באתר %{site_domain_name}"
     text_body_template: |
       %{invitee_name} הזמין/הזמינה אותך לדיון
@@ -1439,6 +1486,7 @@ he:
 
       הזמנה זו נשלחה על ידי משתמש מוכר, כך שתוכלו להגיב לדיון מיידית.
   invite_forum_mailer:
+    title: "שולח-מיילים להזמנה לפורום"
     subject_template: "%{invitee_name} הזמינ/ה אתכם להצטרף ל%{site_domain_name}"
     text_body_template: |
       %{invitee_name} הזמין/ה אתכם להצטרף ל
@@ -1451,8 +1499,9 @@ he:
 
       %{invite_link}
 
-      הזמנה זו נשלחה ממשתמש/ת מוכר/ת באתר. החשבון יווצר עבורכם באופן אוטומטי.
+      הזמנה זו נשלחה ממשתמש/ת מוכר/ת באתר, כך שהחשבון יווצר עבורכם באופן אוטומטי עם כתובת מייל זו.
   custom_invite_forum_mailer:
+    title: "שולח-מיילים להזמנה לפורום"
     subject_template: "%{invitee_name} הזמין/ה אתכם להצטרף ל %{site_domain_name}"
     text_body_template: |
       %{invitee_name} הזמינו אתכם להצטרף ל
@@ -1469,14 +1518,16 @@ he:
 
       %{invite_link}
 
-      הזמנה זו נשלחה ממשתמשים מוכרים באתר, כך שהחשבון שלכם יווצר באופן אוטומטי.
+      הזמנה זו נשלחה ממשתמשים מוכרים באתר, כך שהחשבון שלכם יווצר באופן אוטומטי עבור כתובת מייל זו.
   invite_password_instructions:
+    title: "הנחיות סיסמה למוזמנים"
     subject_template: "צרו סיסמה עבור חשבון ה-%{site_name} שלכם."
     text_body_template: |
       תודה שקיבלתם את ההזמנה שלכם ל %{site_name} -- ברוכים הבאים!
       לחצו על הקישור בשביל לבחור סיסמה: %{base_url}/users/password-reset/%{email_token}
       (אם הקישור פג תוקף, בחרו ב"שכחתי את הסיסמה שלי" בהתחברות.)
   test_mailer:
+    title: "שולח-מיילים לבדיקה"
     subject_template: "[%{site_name}] מייל בדיקת שליחתיות"
     text_body_template: |
       זהו מייל בדיקה מ
@@ -1520,6 +1571,7 @@ he:
       [mj]: https://www.mailjet.com/pricing
       [mt]: http://www.mail-tester.com/
   new_version_mailer:
+    title: "שולח-מיילים של גרסה חדשה"
     subject_template: "[%{site_name}] גרסת Discourse חדשה, עדכון זמין."
     text_body_template: |
       יש! יצאה גרסה חדשה של [Discourse](http://www.discourse.org)
@@ -1533,6 +1585,7 @@ he:
 
       - בקרו את [meta.discourse.org](https://meta.discourse.org) לחדשות, דיונים, ותמיכה ב Discourse
   new_version_mailer_with_notes:
+    title: "שולח-מיילים של גרסה חדשה עם הערות"
     subject_template: "[%{site_name}] עדכון זמין"
     text_body_template: |
       יש! יצאה גרסה חדשה של [Discourse](http://www.discourse.org)
@@ -1550,6 +1603,7 @@ he:
 
       %{notes}
   queued_posts_reminder:
+    title: "תזכורת פוסטים בתור"
     subject_template:
       one: "[%{site_name}] פוסט 1 מחכה לסקירה"
       other: "[%{site_name}] %{count} פוסטים ממתינים לסקירה"
@@ -1571,6 +1625,7 @@ he:
   temporarily_closed_due_to_flags: "נושא זה סגור באופן זמני בעקבות מספר רב של דגלים של הקהילה. "
   system_messages:
     post_hidden:
+      title: "פוסט חבוי"
       subject_template: "פוסט הוסתר על ידי דגלים של הקהילה"
       text_body_template: |
         שלום,
@@ -1588,95 +1643,11 @@ he:
         להנחיות נוספות, אנא פנו ל[הנחיות הקהילה](%{base_url}/guidelines).
     usage_tips:
       text_body_template: |
-        כמה טיפים לשימוש במערכת::
-        איך קוראים
+        כמה טיפים לגבי איך להתחיל כמשתמשים חדשים, [ראו את הפוסט הזה](http://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/).
 
-        כדי לקרוא עוד, פשוט המשיכו לגלול מטה!
-
-        כאשר יופיעו תגובות נוספות או נושאים חדשים, הם יצוצו אוטומטית - אין צורך לרענן את העמוד.
-        ניווט
-
-        כדי לחפש, להגיע לעמוד המשתמש/ת שלך או להגיע לתפריט ☰, השתמשו באייקונים הקטנים שלמעלה מימין.
-
-        כשתבחר/י בכותרת של נושא, מיד תועברו לתשובה הראשונה שלא קראתם עדיין באותו הנושא. כדי להיכנס ישר לראש רשימת הפרסומים, או לתחתית שלה, לחצו על מספר התגובות המופיע לצד שם הנושא, או על התאריך.
-
-        <img src="%{base_url}/images/welcome/topic-list-select-areas-2x.png" width="593" height="59">
-
-        כשאתם קוראים נושא, השתמשו בסרגל הזמנים שלצידו כדי לדלג למעלה, למטה או לחלק האחרון שקראתם. במסכים קטנים, לחצו על סרגל ההתקדמות שלמטה על מנת להרחיבו:
-
-        <img src="%{base_url}/images/welcome/progress-bar-2x.png" width="153" height="181">
-
-        אתם יכולים גם ללחוץ על ? במקלת כדי לראות רשימה של קיצורי מקלדת סופר-מהירים.
-        משלוח תגובות
-
-        כדי להכניס ציטוט, סמנו את הטקסט שברצונכם לצטט, ואז לחצו על <img src="%{base_url}/images/welcome/reply-post-2x.png" width="25" height="23"> כדי לפתוח את העורך. עשו זאת כמה פעמים כדי להוסיף ציטוטים נוספים:
-
-        <img src="%{base_url}/images/welcome/quote-reply-2x.png" width="326" height="128">
-
-        את/ה תמיד יכולים להמשיך לקרוא בזמן שאתם מחברים תגובה, ואנחנו נשמור עבורכם את הטיוטה ככל שתתקדמו בכתיבתה.
-
-        כדי לעדכן מישהו או מישהי בתגובה שכתבתם, הזכירו את שמם. הקלידו @ כדי להתחיל בבחירת שם המשתמש/ת שלהם:
-
-        <img src="%{base_url}/images/welcome/username-completion-2x.png" width="191" height="125">
-
-        כדי להשתמש ב[אימו'גים סטנדרטיים](http://www.emoji.codes/), פשוט הקלידו : כדי לבחור בהם לפי שם, או השתמשו בצירופי הסמיילים המקובלים :wink:.
-
-        <img src="%{base_url}/images/welcome/emoji-completion-2x.png" width="144" height="153">
-
-        כדי ליצור סיכום של קישור מהאינטרנט, הדיברו אותו בשורה נפרדת משל עצמו:
-
-        <img src="%{base_url}/images/welcome/link-oneboxing-animation.gif" width="480" height="228">
-
-        התגובה שלכם יכולה להיבנות באמצעות קוד HTML פשוט, BBCode או [Markdown](http://commonmark.org/help/):
-
-        This is **bold**.
-        This is <b>bold</b>.
-        This is [b]bold[/b].
-
-        כדי לקבל עוד טיפים לעיצוב טקסט, נסו את ההדרכה האינטרקטיבית הכיפית שלנו. זה לוקח רק 10 דקות!(http://commonmark.org/help/tutorial/)
-
-        פעולות
-
-        יש לחצני פעולות מתחת לכל פרסום:
-
-
-        <img src="%{base_url}/images/welcome/like-link-flag-bookmark-2x.png" width="162" height="42">
-
-        - כדי לספר למישהו/מישהי שנהניתם והערכתם את הפרסום שלהם, השתמש בלחצן like/אהבתי. שתפו את שאהבתם!
-
-        - העתיקו והדביקו קישור לכל תגובה או נושאים שאהבתים בעזרת לחצן ה**link/קישור**.
-
-        - השתמשו ב<kbd>&hellip;</kbd> כדי להציג עוד לחצנים ועוד פעולות. Flag/סמנו כדי לדווח למי שכתבו את הפרסום, או  [לצוות שלנו](%{base_url}/about), על בעיה. הוסיפו Bookmark/סימניה כדי לאתר לאתר את הפרסום הזה בהמשך בעמוד דרך עמוד הפרופיל שלכם.
-
-        ## התראות
-
-        כאשר מישהו או מישהי מגיבים אליכם, מצטטים את הפרסום שלכם, מזכירים את @שם_המשתמש/ת שלכם או אפילו מקשרים אל הפרסום שלכם, מיד יופיע מספר בפינה השמאלית העליונה של המסך. לחצו עליו על מנת להציג את ההתראות שלכם.
-
-        <img src="%{base_url}/images/welcome/notification-panel-2x.png" width="160" height="54">
-
-        אל תחששו להחמיץ תגובות - תקבלו דוא"ל על כל התראה שמגיעה כשאתם לא מחוברים.
-
-        ## העדפות
-
-        - כל הנושאים שפורסמו לפני פחות מיומיים נחשבים חדשים.
-        - כל נושא בו השתתפתם באופן פעיל (אם יצרתם אותו, הגבתם אליו או קראתם אותו במשך זמן כלשהו) יהיה באופן אוטומטי תחת מעקב שלכם.
-
-        תוכלו לראות את האינדיקציות למספרי ההודעות החדשות ואלו שלא קראתם לצד הנושאים:
-
-        <img src="%{base_url}/images/welcome/topics-new-unread-2x.png" width="341" height="106">
-
-        תוכלו לשנות את סוג ההתראות לכל נושא בעזרת סרגל ההתראות שמתחת ומצד שמאל לכל נושא.
-
-        <img src="%{base_url}/images/welcome/topic-notification-control-2x.png" width="608" height="312">
-
-        תוכלו גם לכוון התראות לפי קטגוריה, אם תרצו לצפות או להשתיק כל נושא בקטגוריה מסויימת.
-
-        כדי לשנות את ההעדפות הללו, ראו את [עמוד העדפות המשתמש/ת](%{base_url}/my/preferences) שלך.
-
-        ## אמון הקהילה
-
-        זה נהדר לפגוש אתכם כאן! ככל שתפעלו כאן, וככל שיעבור הזמן, נלמד להכיר וחלק ממגבלות המשתמש/ת החדשים יוסרו. המשיכו להשתתף, ועם הזמן תזכו בעוד [רמות אמון](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924) שמאפשרות יכולות מיוחדות שיאפשרו לכם לסייע בניהול המשותף של הקהילה.
+        ככל שתשתתפו כאן, נכיר אתכם, ומגבלות זמניות על משתמשים חדשים יוסרו. במהלך הזמן תצבעו [דרגות אמון](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924) שכוללות יכולות לסייע לנו לנהל את הקהילה שלנו ביחד.
     welcome_user:
+      title: "ברוכים הבאים למשתמש/ת"
       subject_template: "ברוכים הבאים ל %{site_name}!"
       text_body_template: |
         תודה שהצטרפתם ל %{site_name}!
@@ -1689,17 +1660,14 @@ he:
 
         (אם ברצונכם לתקשר עם [מנהל האתר](%{base_url}/about) כמשתמשים חדשים, השיבו להודעה הזו.)
     welcome_invite:
+      title: "הזמנת ברוכים הבאים"
       subject_template: "ברוכים הבאים ל %{site_name}!"
       text_body_template: |
-        תודה שקיבלתם את ההזמנה שלכם ל %{site_name} - ברוכים הבאים!
+        תודה שקיבלתם את ההזמנה שלכם ל %{site_name} -- ברוכים הבאים!
 
-        יצרנו חשבון חדש **%{username}** בשבילכם, ואתם מחוברים. תוכלו תמיד לשנות את שמכם באמצעות ביקור [בפרופיל שלכם][prefs].
+        - יצרנו חשבון חדש **%{username}** בשבילכם. שנו את שימכם או את הסיסמה על ידי ביקור ב[פרופיל שלכם][prefs].
 
-        על מנת להתחבר שוב:
-
-        1. השתמשו תמיד **באותו חשבון מייל מההזמנה המקורית** בעת ההתחברות. אחרת לא נוכל לדעת שאלו אתם!
-
-        2. צרו סיסמה ייחודית עבור [הפרופיל שלכם] [prefs] והשתמשו בה בשביל להתחבר.
+        - כאשר אתם מתחברים, אנא **השתמשו באותו חשבון מייל מההזמנה המקורית** — אחרת לא נוכל לדעת שאלו אתם!
 
         %{new_user_tips}
 
@@ -1711,6 +1679,7 @@ he:
 
         [prefs]: %{user_preferences_url}
     backup_succeeded:
+      title: "גיבוי הצליח"
       subject_template: "הגיבוי הושלם בהצלחה."
       text_body_template: |
         הגיבוי הצליח.
@@ -1723,6 +1692,7 @@ he:
         %{logs}
         ```
     backup_failed:
+      title: "גיבוי נכשל"
       subject_template: "הגיבוי נכשל."
       text_body_template: |
         הגיבוי נכשל.
@@ -1733,6 +1703,7 @@ he:
         %{logs}
         ```
     restore_succeeded:
+      title: "שחזור הצליח"
       subject_template: "השחזור הסתיים בהצלחה."
       text_body_template: |
         השחזור הצליח.
@@ -1743,6 +1714,7 @@ he:
         %{logs}
         ```
     restore_failed:
+      title: "שחזור נכשל"
       subject_template: "השחזור נכשל"
       text_body_template: |
         השחזור נכשל.
@@ -1753,9 +1725,11 @@ he:
         %{logs}
         ```
     bulk_invite_succeeded:
+      title: "הזמנה קבוצתית הצליחה"
       subject_template: "ההזמנה הקבוצתית עובדה בהצלחה"
       text_body_template: "ההזמנה המרוכזת שלכם עובדה, %{sent} הזמנות נשלחו."
     bulk_invite_failed:
+      title: "הזמנה קבוצתית נכשלה"
       subject_template: "ההזמנה המרוכזת עובדה עם שגיאות"
       text_body_template: |
         ההזמנה הקבוצתית שלך עובדה,  %{sent} הזמנות נשלחו עם %{failed} תקלה/ות.
@@ -1768,6 +1742,7 @@ he:
         %{logs}
         ```
     csv_export_succeeded:
+      title: "יצוא CSV הצליח"
       subject_template: "יצוא הנתונים הושלם"
       text_body_template: |
         הנתונים שלך יוצאו בהצלחה! :dvd:
@@ -1776,51 +1751,60 @@ he:
 
         לינק ההורדה יהיה זמין במשך 48 שעות.
     csv_export_failed:
+      title: "יצוא CSV נכשל"
       subject_template: "ייצוא הנתונים נכשל"
       text_body_template: "צר לנו, אך ייצוא הנתונים שלכם נכשל. אנא בדקו את רישומי המערכת או צרו קשר עם איש/אשת צוות."
     email_reject_insufficient_trust_level:
+      title: "מייל נדחה, רמת אמון לא מספיקה"
       subject_template: "[%{site_name}] בעיית מייל -- רמת אמון לא מספיקה"
       text_body_template: |
         אנחנו מצטערים, אך הודעת המייל שלכם ל %{destination} (עם הכותרת %{former_title}) לא עבדה.
 
         לחשבון שלכם אין את רמת האמון הנדרשת כדי לפרסם נושאים חדשים לכתובת מייל זו. אם אתם חושבים שזו טעות, אנא פנו לחבר צוות.
     email_reject_user_not_found:
+      title: "מייל נדחה, משתמש לא נמצא"
       subject_template: "[%{site_name}] בעיית מייל -- משתמש לא נמצא"
       text_body_template: |
         אנחנו מצטערים, אבל הודעת המייל שלכם ל %{destination} (עם הכותרת %{former_title}) לא עבדה.
 
         התגובה שלכם נשלחה מכתובת מייל לא ידועה. נסו לשלוח מכתובת מייל אחרת, או ליצור קשר עם חבר צוות.
     email_reject_screened_email:
+      title: "מייל נדחה, מייל מסונן"
       subject_template: "[%{site_name}] בעיית מייל -- מייל חסום"
       text_body_template: |
         אנחנו מצטערים, אך הודעת המייל ל %{destination} (עם הכותרת %{former_title}) לא עבדה.
 
         התשובה שלכם נשלחה מכתובת מייל חסומה. נסו לשלוח מכתובת מייל אחרת, או צרו קשר עם חבר צוות.
     email_reject_inactive_user:
+      title: "מייל נדחה, משתמש לא פעיל"
       subject_template: "[%{site_name}] בעיית מייל -- משתמש לא-פעיל"
       text_body_template: |
         אנחנו מצטערים, אך הודעת המייל שלכם ל %{destination} (עם הכותרת %{former_title}) לא עבדה.
 
         החשבון שלכם שמקושר לכתובת המייל הזו לא הופעל. אנא הפעילו את החשבון שלכם לפני שאתם שולחים מיילים למערכת.
     email_reject_blocked_user:
+      title: "מייל נדחה, משתמש חסום"
       subject_template: "[%{site_name}] בעיית מייל -- משתמש חסום"
       text_body_template: |
         אנחנו מצטערים, אך הודעת המייל שלכם ל %{destination} (עם הכותרת %{former_title}) לא עבדה.
 
         חשבונכם שקשור לכתובת מייל זו נחסם.
     email_reject_reply_user_not_matching:
+      title: "דחיית מייל משתמש/ת לא מתאימים"
       subject_template: "[%{site_name}] בעיית מייל -- נמען לא תואם"
       text_body_template: |
         אנחנו מצטערים, אך הודעת המייל שלכם ל %{destination} (עם הכותרת %{former_title}) לא עבדה.
 
         התשובה שלכם נשלחה מכתובת מייל שונה מזו שציפינו לה, אז אנחנו לא בטוחים אם זה אותו אדם. נסו לשלוח מכתובת מייל אחרת, או ליצור קשר עם חבר צוות.
     email_reject_no_account:
+      title: "מייל נדחה, אין חשבון"
       subject_template: "[%{site_name}]  בעיית מייל -- חשבון לא מזוהה"
       text_body_template: |
         אנחנו מצטערים, אך הודעת המייל שלכם ל %{destination} (עם הכותרת %{former_title}) לא עבדה.
 
         אנחנו לא מוצאים חשבונות שמתאימים לכתובת המייל שלכם. נסו לשלוח מכתובת מייל אחרת, או צרו קשר עם חבר צוות.
     email_reject_empty:
+      title: "מייל נדחה, ריק"
       subject_template: "[%{site_name}]  בעיית מייל -- ללא תוכן"
       text_body_template: |
         אנחנו מצטערים, אך הודעת המייל שלכם ל %{destination} (עם הכותרת %{former_title}) לא עבדה.
@@ -1829,30 +1813,35 @@ he:
 
         אם אתם מקבלים את ההודעה הזו ו_כן_ כללתם תגובה, נסו שוב עם סיגנון פשוט יותר.
     email_reject_parsing:
+      title: "מייל נדחה, פענוח"
       subject_template: "[%{site_name}]  בעיית מייל -- תוכן לא זוהה."
       text_body_template: |
         אנחנו מצטערים, אך הודעת המייל שלכם ל- %{destination} (עם הכותרת %{former_title}) לא עבדה.
 
         לא מצאנו תוכן במייל שלכם. **אנא ודאו שהתגובה שלכם בראש המייל** -- אנחנו לא יכולים לעבד תגובות בין השורות.
     email_reject_invalid_access:
+      title: "דחיית מייל גישה לא-מורשית"
       subject_template: "[%{site_name}]  בעיית מייל -- גישה לא תקינה"
       text_body_template: |
         אנחנו מצטערים, אבל הודעת המייל שלכם ל %{destination} (עם הכותרת %{former_title}) לא עבדה.
 
         לחשבון שלכם אין מספיק הרשאות כדי לפרסם נושאים חדשים בקטגוריה זו. אם אתם מאמינים שזו טעות, צרו קשר עם חבר צוות.
     email_reject_strangers_not_allowed:
+      title: "דחיית מייל זרים לא מורשים"
       subject_template: "[%{site_name}] בעיית מייל -- גישה לא נכונה"
       text_body_template: |
         אנחנו מצטערים, אבל הודעת המייל שלכם ל %{destination} (עם הכותרת %{former_title}) לא עבדה.
 
         הקטגוריה ששלחתם אליה את המייל הזה מאפשרת רק תגובות ממשתמשים עם חשבונות תקינים וכתובות מייל ידועות. אם אתם מאמינים שזו טעות, אנא פנו לחבר צוות.
     email_reject_invalid_post:
+      title: "דחיית מייל פוסט לא-תקין"
       subject_template: "[%{site_name}] בעיית מייל -- תקלה בפרסום"
       text_body_template: |
         אנחנו מצטערים, אך הודעת המייל שלכם ל %{destination} (עם הכותרת %{former_title}) לא עבדה.
 
         גורמים אפשריים: עיצוב מורכב, הודעה ארוכה מידי, הודעה קצרה מידי. אנא נסו שוב, או פרסמו דרך האתר אם התקלה חוזרת.
     email_reject_invalid_post_specified:
+      title: "דחיית מייל הוגדר פוסט לא-תקני"
       subject_template: "[%{site_name}] בעיית מייל -- תקלה בפרסום"
       text_body_template: |
         אנחנו מצטערים, אך הודעת המייל שלכם ל %{destination} (עם הכותרת %{former_title}) לא עבדה.
@@ -1863,42 +1852,49 @@ he:
 
         אם תוכלו לתקן את הבעיה, אנא נסו שוב.
     email_reject_invalid_post_action:
+      title: "דחיית מייל פעולת פוסט לא-תקנית"
       subject_template: "[%{site_name}] בעיית מייל -- פעולה לא-תקנית"
       text_body_template: |
         אנחנו מצטערים, אך הודעת המייל שלכם ל %{destination} (עם הכותרת %{former_title}) לא עבדה.
 
         הפעולה לא זוהתה. אנא נסו שוב, או פרסמו דרך האתר אם התקלה נמשכת.
     email_reject_reply_key:
+      title: "דחיית מייל מפתח תגובה"
       subject_template: "[%{site_name}]  בעיית מייל -- תו תגובה לא מוכר"
       text_body_template: |
         אנחנו מצטערים, אך הודעת המייל שלכם ל %{destination} (עם הכותרת %{former_title}) לא עבדה.
 
         מפתח התגובה במייל לא תקין או לא ידוע, אז לא יכולנו להבין למה המייל הזה מגיב. אנא פנו לחבר צוות.
     email_reject_bad_destination_address:
+      title: "דחיית מייל כתובת יעד לא-נכונה"
       subject_template: "[%{site_name}] בעיית מייל -- כתובת To: לא ידועה"
       text_body_template: |
         אנחנו מצטערים, אבל הודעת המייל שלכם ל %{destination} (עם הכותרת %{former_title}) לא עבדה.
 
         אף אחד מייעדי המייל לא זוהה. אנא וודאו שאתם שולחים לכתובת המייל הנכונה שניתנה על-ידי הצוות.
     email_reject_topic_not_found:
+      title: "דחיית מייל נושא לא נמצא"
       subject_template: "[%{site_name}]  בעיית מייל -- לא נמצא נושא"
       text_body_template: |
         אנחנו מצטערים, אך הודעת המייל ל %{destination} (עם הכותרת %{former_title}) לא עבדה.
 
         הנושא שאתם מנסים להגיב אליו כבר לא קיים -- אולי הוא נמחק? אם אתם מאמינים שזו טעות, אנא פנו לחבר צוות.
     email_reject_topic_closed:
+      title: "דחיית מייל נושא סגור"
       subject_template: "[%{site_name}]  בעיית מייל -- נושא נסגר"
       text_body_template: |
         אנחנו מצטערים, אך הודעת המייל ל %{destination} (עם הכותרת %{former_title}) לא עבדה.
 
         הנושא שאתם מגיבים אליו סגור כרגע ולא מקבל יותר תגובות. אם אתם מאמינים שזו טעות, אנא פנו לחבר צוות.
     email_reject_auto_generated:
+      title: "דחיית מייל נוצר אוטומטית"
       subject_template: "[%{site_name}]  בעיית מייל -- תגובה נוצרה אוטומטית"
       text_body_template: |
         אנחנו מצטערים, אבל משהו לא עבד עם הודעת הדוא"ל שלך, שנשלחה אל %{destination} (titled %{former_title}).
 
         המייל ששלחת סומן כ"נכתב אוטומטית", מה שאומר שהוא נכתב על ידי מחשב ולא הוקלד על ידי אדם; איננו יכולים לקבל מיילים שכאלה. אם אתם מאמינים שזוהי תקלה, אנא צרו קשר עם איש/אשת צוות.
     email_error_notification:
+      title: "התראת בעיית מייל"
       subject_template: "[%{site_name}]  בעיית מייל -- בעיית אימות POP"
       text_body_template: |
         למרבה הצער, ארעה תקלה בזמן תשאול מיילים משרת ה POP.
@@ -1907,6 +1903,7 @@ he:
 
         אם יש ממשק ווב לחשבון ה POP, ייתכן ותצטרכו להתחבר לאתר וקבוע את ההגדרות שלכם שם.
     too_many_spam_flags:
+      title: "יותר מידי דיגלי ספאם"
       subject_template: "חשבון חדש בהשהיה"
       text_body_template: |
         שלום,
@@ -1917,6 +1914,7 @@ he:
 
         להנחיות נוספות, אנא פנו ל[הנחיות הקהילה](%{base_url}/guidelines).
     too_many_tl3_flags:
+      title: "יותר מידי דגלי רמת-אמון 3"
       subject_template: "חשבון חדש בהשהיה"
       text_body_template: |
         שלום,
@@ -1927,6 +1925,7 @@ he:
 
         לפרטים נוספים, אנא פנו ל[הנחיות הקהילה](%{base_url}/guidelines).
     blocked_by_staff:
+      title: "נחסם על ידי הצוות"
       subject_template: "חשבון זמנית בהשהיה"
       text_body_template: |
         שלום,
@@ -1937,6 +1936,7 @@ he:
 
         להנחיות נוספות, אנא פנו ל[הנחיות הקהילה](%{base_url}/guidelines).
     user_automatically_blocked:
+      title: "משתמש נחסם אוטומטית"
       subject_template: "המשתמש החדש %{username} נחסם על ידי דגלים של הקהילה"
       text_body_template: |
         זוהי הודעה אוטומטית.
@@ -1947,6 +1947,7 @@ he:
 
         סף זה ניתן לשינוי באמצעות הגדרת האתר `block_new_user`.
     spam_post_blocked:
+      title: "פוסט ספאם נחסם"
       subject_template: "פוסים של המשתמש/ת החדש/ה %{username} נחסמו בשל קישורים חוזרים."
       text_body_template: |
         זוהי הודעה אוטומטית.
@@ -1957,6 +1958,7 @@ he:
 
         ניתן לכוון זאת בהגדרות האתר `newuser_spam_host_threshold` ו`white_listed_spam_host_domains`.
     unblocked:
+      title: "לא-חסום"
       subject_template: "החשבון כבר לא מושהה"
       text_body_template: |
         שלום,
@@ -1965,6 +1967,7 @@ he:
 
         אתם יכולים עכשיו ליצור נושאים חדשים, ושוב להגיב לנושאים קיימים. תודה על הסבלנות.
     pending_users_reminder:
+      title: "תזכורת משתמשים ממתינים"
       subject_template:
         one: "משתמש 1 ממתין לאישורכם"
         other: "%{count} משתמשים ממתינים לאישורכם"
@@ -1973,9 +1976,11 @@ he:
 
         [אנא סיקרו אותם באזור הניהול](%{base_url}/admin/users/list/pending).
     download_remote_images_disabled:
+      title: "הורדת תמונות מרוחקות מנוטרלת"
       subject_template: "הורדת תמונות מרחוק מנוטרלת"
       text_body_template: "האפשרות \"הורדת תמונות מרוחקות\" נוטרלה בגלל שכל שטח האכסון שמוקצה ל\"תמונות שהורדו מרחוק\" נוצל."
     dashboard_problems:
+      title: "בעיות בלוח המכוונים"
       subject_template: "נמצאו בעיות"
       text_body_template: |
         כמה בעיות מדווחות ללוח המכוונים של האדמיניסטרטור.
@@ -2027,6 +2032,7 @@ he:
 
       > %{site_title} -- %{site_description}
     user_invited_to_private_message_pm:
+      title: "משתמש/ת הוזמן/ה להודעה פרטית"
       subject_template: "[%{site_name}] %{username} הזמין אותך להודעה '%{topic_title}'"
       text_body_template: |
         %{header_instructions}
@@ -2035,6 +2041,7 @@ he:
 
         %{respond_instructions}
     user_invited_to_private_message_pm_staged:
+      title: "משתמש/ת הוזמן/ה להודעה פרטית מדורגת"
       subject_template: "הוזמנת לדיון '%{topic_title}' על ידי [%{site_name}] %{username}"
       text_body_template: |
         %{header_instructions}
@@ -2043,6 +2050,7 @@ he:
 
         %{respond_instructions}
     user_invited_to_topic:
+      title: "משתמש/ת הוזמן/ה לנושא"
       subject_template: "הוזמנת לדיון שכותרתו '%{topic_title}' על ידי [%{site_name}] %{username}"
       text_body_template: |
         %{header_instructions}
@@ -2051,6 +2059,7 @@ he:
 
         %{respond_instructions}
     user_replied:
+      title: "משתמש/ת הגיב"
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -2061,6 +2070,7 @@ he:
 
         %{respond_instructions}
     user_replied_pm:
+      title: "משתמש/ת הגיב/ה בהודעה פרטית"
       subject_template: "[%{site_name}] [PM] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -2071,6 +2081,7 @@ he:
 
         %{respond_instructions}
     user_quoted:
+      title: "משתמש/ת צוטט/ה"
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -2081,6 +2092,7 @@ he:
 
         %{respond_instructions}
     user_linked:
+      title: "משתמש/ת קושר/ה"
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -2091,6 +2103,7 @@ he:
 
         %{respond_instructions}
     user_mentioned:
+      title: "משתמש/ת הוזכר/ה"
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -2101,6 +2114,7 @@ he:
 
         %{respond_instructions}
     user_group_mentioned:
+      title: "קבוצת משתמש הוזכרה"
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -2111,6 +2125,7 @@ he:
 
         %{respond_instructions}
     user_posted:
+      title: "משתמש/ה פרסם/ה"
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -2121,6 +2136,7 @@ he:
 
         %{respond_instructions}
     user_watching_first_post:
+      title: "משתמש/ת צופה בפוסט ראשון"
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -2131,6 +2147,7 @@ he:
 
         %{respond_instructions}
     user_posted_pm:
+      title: "משתמש/ת פרסם/ה הודעה פרטית"
       subject_template: "[%{site_name}] [PM] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -2141,6 +2158,7 @@ he:
 
         %{respond_instructions}
     user_posted_pm_staged:
+      title: "משתמש/ת פרסם/ה הודעה פרטית מדורגת"
       subject_template: "%{optional_re}%{topic_title}"
       text_body_template: |2
 
@@ -2151,6 +2169,7 @@ he:
       new_topics: "נושאים חדשים"
       unread_messages: "הודעות שלא נקראו"
       unread_notifications: "התראות שלא נקראו"
+      liked_received: "לייקים שהתקבלו"
       new_posts: "פוסטים חדשים"
       new_users: "משתמשים חדשים"
       popular_topics: "נושאים פופולאריים"
@@ -2158,7 +2177,7 @@ he:
       join_the_discussion: "קראו עוד"
       popular_posts: "פוסטים פופולאריים"
       from_topic_label: "מאת"
-      more_new: "חדש בנושאים וקרטגוריות שאתם עוקבים אחריהם"
+      more_new: "חדש בשבילכם"
       subject_template: "[%{site_name}] סיכום"
       unsubscribe: "סיכום זה נשלח מ %{site_link} כאשר אנחנו לא רואים אתכם לאורך זמן. כדי לבטל את המנוי %{unsubscribe_link}."
       click_here: "לחצו כאן"
@@ -2174,6 +2193,7 @@ he:
       view_this_topic: "צפו בנושא זה"
       back_to_top: "חזרה למעלה"
     forgot_password:
+      title: "שכח/ה סיסמה"
       subject_template: "[%{site_name}] איפוס סיסמה"
       text_body_template: |
         מישהו ביקש לאפס את הסיסמה שלכם ב [%{site_name}](%{base_url}).
@@ -2183,6 +2203,7 @@ he:
         לחצו על הקישור הבא כדי לבחור סיסמה חדשה:
         %{base_url}/users/password-reset/%{email_token}
     set_password:
+      title: "קביעת סיסמה"
       subject_template: "[%{site_name}] קביעת סיסמה"
       text_body_template: |
         מישהו ביקש להוסיף סיסמה לחשבון שלכם ב [%{site_name}](%{base_url}). לחילופין, תוכלו להתחבר באמצעות כל שירות נתמך (גוגל, פייסבוק, וכד׳) שמקושר לכתובת מייל תקינה.
@@ -2192,6 +2213,7 @@ he:
         לחצו על הלינק הבא כדי לבחור סיסמה:
         %{base_url}/users/password-reset/%{email_token}
     admin_login:
+      title: "התחברות אדמיניסטרטור"
       subject_template: "[%{site_name}] התחברות"
       text_body_template: |
         מישהו ביקש להתחבר לחשבונכם ב [%{site_name}](%{base_url}).
@@ -2199,6 +2221,7 @@ he:
         לחצו על הקישור הבא להתחבר:
         %{base_url}/users/admin-login/%{email_token}
     account_created:
+      title: "חשבון נוצר"
       subject_template: "[%{site_name}] החשבון החדש שלך"
       text_body_template: |
         חשבון חדש נוצר עבורך ב%{site_name}
@@ -2206,12 +2229,14 @@ he:
         הקישו על הקישור המצורף כדי להגדיר סיסמה לחשבונכם החדש:
         %{base_url}/users/password-reset/%{email_token}
     confirm_new_email:
+      title: "אישור מייל חדש"
       subject_template: "[%{site_name}] אשרו את כתובת המייל החדשה שלכם"
       text_body_template: |
         אשרו את כתובת המייל החדשה שלכם עבור %{site_name} על ידי לחיצה על הקישור הבא:
 
         %{base_url}/users/authorize-email/%{email_token}
     confirm_old_email:
+      title: "אישור מייל ישן"
       subject_template: "[%{site_name}] אשרו את כתובת המייל הנוכחית שלכם"
       text_body_template: |
         לפני שתוכלו להחליף את כתובת המייל שלכם, אנחנו צריכים שתאשרו שאתם שולטים
@@ -2222,6 +2247,7 @@ he:
 
         %{base_url}/users/authorize-email/%{email_token}
     notify_old_email:
+      title: "התראת מייל ישן"
       subject_template: "[%{site_name}] כתובת המייל שלכם שונתה"
       text_body_template: |
         זוהי הודעה אוטומטית כדי ליידע אתכם שכתובת המייל שלכם עבור %{site_name} שונתה. אם זה נעשה בטעות, אנא צרו קשר עם מנהל האתר.
@@ -2230,6 +2256,7 @@ he:
 
         %{new_email}
     signup_after_approval:
+      title: "הרשמה אחרי אישור"
       subject_template: "אושרתם באתר %{site_name}!"
       text_body_template: |
         ברוכים הבאים ל%{site_name}!
@@ -2249,6 +2276,7 @@ he:
 
         (אם אתם צריכים ליצור קשר עם [חברי צוות](%{base_url}/about) כחברים חדשים, רק השיבו להודעה זאת.)
     signup:
+      title: "הרשמה"
       subject_template: "[%{site_name}] אשרו את חשבונכם החדש"
       text_body_template: |
         ברוכים הבאים ל %{site_name}!
@@ -2282,6 +2310,7 @@ he:
       too_large: "מצטערים, הקובץ שאתם מנסים להעלות גדול מידי (הגודל המקסימלי המותר הוא %{max_size_kb}KB)."
     images:
       too_large: "סליחה, אך התמונה שאתם מנסים להעלות גדולה מידי. (הגודל המקסימלי הוא %{max_size_kb}KB), אנא שנו את הגודל ונסו שנית."
+      larger_than_x_megapixels: "מצטערים, התמונה שאתם מנסים להעלות היא גדולמה מידי (הגודל המירבי הוא %{max_image_megapixels}-מגה-פיקסלים), אנא שנו את גודלה ונסו שוב."
       size_not_found: "מצטערים, אבל לא יכולנו לקבוע את גודל התמונה. אולי יש בעיה טכנית בתמונה?"
   avatar:
     missing: "מצטערים, אנחנו לא יכולים למצוא אף דמות שמקושרת לכתובת מייל זו. תוכלו להעלות זאת שוב?"
@@ -2920,7 +2949,7 @@ he:
         fields:
           welcome:
             label: "נושא ברוכים-הבאים"
-            description: "<p>כיצד הייתם מתארים את הקהילה שלכם לאדם זר במעלית אם יש לכם רק דקה אחת?</p> <ul> <li>עבור מי נועדו דיונים אלו?</li> <li>מה אוכל למצוא פה?</li> <li>למה כדאי לי לבקר?</li> </ul> <p>נושא הברוכים-הבאים שלכם הוא הדבר הראשון שמבקרים חדשים יראו. חישבו עליו כ<b>פסקה אחת</b> של ׳נאום המעלית׳ או ׳הצהרת הכוונות׳ שלכם.</p>"
+            description: "<p>כיצד הייתם מתארים את הקהילה שלכם לאדם זר במעלית אם יש לכם רק דקה 1?</p> <ul> <li>עבור מי נועדו דיונים אלו?</li> <li>מה אוכל למצוא פה?</li> <li>למה כדאי לי לבקר?</li> </ul> <p>נושא הברוכים-הבאים שלכם הוא הדבר הראשון שמבקרים חדשים יקראו. חישבו עליו כ<b>פסקה אחת</b> של ׳נאום המעלית׳ או ׳הצהרת הכוונות׳ שלכם.</p>"
             one_paragraph: "אנא הגבילו את הודעת הברוכים-הבאים שלכם לפסקה אחת."
       privacy:
         title: "גישה"
@@ -2965,7 +2994,7 @@ he:
         title: "תמה"
         fields:
           theme_id:
-            description: "האם אתם מעדיפים להתחיל עם סכמת צבעים בהירה או כהה? תמיד תוכלו להמשיך ולהתאים את המראה של האתר שלכם באמצעות ״ניהול״ > ״התאמה-אישית״."
+            description: "האם אתם מעדיפים להתחיל עם סכמת צבעים בהירה או כהה? תוכלו בהמשך להתאים אישית את הנראות של האתר שלכם תחת ניהול, התאמה-אישית."
             choices:
               default:
                 label: "בהיר פשוט"
@@ -2990,7 +3019,7 @@ he:
             label: "אייקון גדול"
             description: "תמונה שמשמשת לייצוג האתר שלכם במכשירים מודרניים ונראית טוב בגדלים גדולים יותר. הגודל המומלץ הוא לפחות 144 על 144 פיקסלים."
       homepage:
-        description: "אנחנו ממליצים להציג את הנושאים האחרונים בדף הבית שלכם, אבל אתם יכולים לבחור להראות קטגוריות (קבוצות של נושאים) על דף הבית אם אתם מעדיפים."
+        description: "אנחנו ממליצים להציג את הנושאים האחרונים בדף הבית שלכם, אבל אתם יכולים גם להציג קטגוריות (קבוצות נושאים) בדף הבית אם תעדיפו."
         title: "דף הבית"
         fields:
           homepage_style:
@@ -3001,7 +3030,7 @@ he:
                 label: "קטגוריות"
       emoji:
         title: "אמוג׳י"
-        description: "איזה סגנון אמוג׳י אתם מעדיפים עבור הקהילה שלכם? תמיד תוכלו להוסיף עוד אמוג׳י בהמשך באמצעות ״ניהול״ > ״התאמה״ > ״אמוג׳י״."
+        description: "איזה סגנון אמוג׳יז תעדיפו לקהילה שלכם? אתם יכולים להוסיף עוד אמוג׳יז מותאמים אישית תחת ניהול, התאמה אישית, אמוג׳י."
       invites:
         title: "הזמינו צוות"
         description: "כמעט סיימתם! בואו נזמין כמ חברי צוות כדי לסייע <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>לזרוע את הדיונים</a> עם נושאים מעניינים ותגובות שיניעו קדימה את הקהילה שלכם."

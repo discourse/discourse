@@ -1,4 +1,6 @@
-<li><a {{action 'toggleExpanded'}}>{{{selectedHtml}}} <i class='fa fa-caret-down'></i></a></li>
+{{#if selectedHtml}}
+  <li><a {{action 'toggleExpanded'}}>{{{selectedHtml}}} <i class='fa fa-caret-down'></i></a></li>
+{{/if}}
 <ul class='drop {{if expanded 'expanded'}}'>
 {{yield}}
 </ul>

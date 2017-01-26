@@ -248,7 +248,7 @@ en:
       like_count: "Likes"
       topic_count: "Topics"
       post_count: "Posts"
-      user_count: "New Users"
+      user_count: "Users"
       active_user_count: "Active Users"
       contact: "Contact Us"
       contact_info: "In the event of a critical issue or urgent matter affecting this site, please contact us at %{contact_info}."
@@ -396,33 +396,43 @@ en:
         to: "To"
       edit:
         title: 'Edit Group'
-        group_title: 'Title'
+        full_name: 'Full Name'
+        add_members: "Add Members"
+        delete_member_confirm: "Remove '%{username}' from the '%{group}' group?"
       request_membership_pm:
         title: "Membership Request"
-        body: "I would like to request membership in @%{groupName}."
+        body: "I would like to apply for membership in @%{groupName}."
       name_placeholder: "Group name, no spaces, same as username rule"
       public: "Allow users to join/leave the group freely (Requires group to be visible)"
       empty:
-        posts: "There is no post by members of this group."
-        members: "There is no member in this group."
-        mentions: "There is no mention of this group."
-        messages: "There is no message for this group."
-        topics: "There is no topic by members of this group."
-        logs: "There is no logs for this group."
+        posts: "There are no posts by members of this group."
+        members: "There are no members in this group."
+        mentions: "There are no mentions of this group."
+        messages: "There are no messages for this group."
+        topics: "There are no topics by members of this group."
+        logs: "There are no logs for this group."
       add: "Add"
       join: "Join Group"
       leave: "Leave Group"
       request: "Request to Join Group"
+      automatic_group: Automatic Group
+      closed_group: Closed Group
+      is_group_user: "You are a member of this group"
       allow_membership_requests: "Allow users to send membership requests to group owners (Requires everyone to be able to mention the group)"
+      membership: "Membership"
       name: "Name"
+      user_count: "Number of Members"
       bio: "About Group"
       selector_placeholder: "Add members"
       owner: "owner"
       visible: "Group is visible to all users"
-      index: "Groups"
+      index:
+        title: "Groups"
+        empty: "There are no visible groups."
       title:
         one: "group"
         other: "groups"
+      activity: "Activity"
       members: "Members"
       topics: "Topics"
       posts: "Posts"
@@ -686,7 +696,7 @@ en:
 
       email:
         title: "Email"
-        instructions: "Never shown to the public"
+        instructions: "never shown to the public"
         ok: "We will email you to confirm"
         invalid: "Please enter a valid email address"
         authenticated: "Your email has been authenticated by {{provider}}"
@@ -697,13 +707,13 @@ en:
 
       name:
         title: "Name"
-        instructions: "Your full name (optional)"
+        instructions: "your full name (optional)"
         instructions_required: "Your full name"
         too_short: "Your name is too short"
         ok: "Your name looks good"
       username:
         title: "Username"
-        instructions: "Unique, no spaces, short"
+        instructions: "unique, no spaces, short"
         short_instructions: "People can mention you as @{{username}}"
         available: "Your username is available"
         global_match: "Email matches the registered username"
@@ -823,6 +833,7 @@ en:
           none: "You haven't invited anyone here yet. You can send individual invites, or invite a bunch of people at once by <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>uploading a CSV file</a>."
           text: "Bulk Invite from File"
           success: "File uploaded successfully, you will be notified via message when the process is complete."
+          error: "Sorry, file should be of csv format."
 
       password:
         title: "Password"
@@ -831,7 +842,7 @@ en:
         same_as_username: "Your password is the same as your username."
         same_as_email: "Your password is the same as your email."
         ok: "Your password looks good."
-        instructions: "At least %{count} characters."
+        instructions: "at least %{count} characters"
 
       summary:
         title: "Summary"
@@ -1467,7 +1478,8 @@ en:
         go_bottom: "bottom"
         go: "go"
         jump_bottom: "jump to last post"
-        jump_prompt: "jump to post"
+        jump_prompt: "jump to..."
+        jump_prompt_of: "of %{count} posts"
         jump_prompt_long: "What post would you like to jump to?"
         jump_bottom_with_number: "jump to post %{post_number}"
         total: total posts
@@ -1692,6 +1704,7 @@ en:
       edit: "Editing {{link}} {{replyAvatar}} {{username}}"
       edit_reason: "Reason: "
       post_number: "post {{number}}"
+      wiki_last_edited_on: "wiki last edited on"
       last_edited_on: "post last edited on"
       reply_as_new_topic: "Reply as linked Topic"
       continue_discussion: "Continuing the discussion from {{postLink}}:"
@@ -1730,7 +1743,7 @@ en:
         file_too_large: "Sorry, that file is too big (maximum size is {{max_size_kb}}kb). Why not upload your large file to a cloud sharing service, then share the link?"
         too_many_uploads: "Sorry, you can only upload one file at a time."
         too_many_dragged_and_dropped_files: "Sorry, you can only upload 10 files at a time."
-        upload_not_authorized: "Sorry, the file you are trying to upload is not authorized (authorized extension: {{authorized_extensions}})."
+        upload_not_authorized: "Sorry, the file you are trying to upload is not authorized (authorized extensions: {{authorized_extensions}})."
         image_upload_not_allowed_for_new_user: "Sorry, new users can not upload images."
         attachment_upload_not_allowed_for_new_user: "Sorry, new users can not upload attachments."
         attachment_download_requires_login: "Sorry, you need to be logged in to download attachments."
@@ -1879,17 +1892,18 @@ en:
           hide: "Hide revision"
           show: "Show revision"
           revert: "Revert to this revision"
+          edit_wiki: "Edit wiki"
           comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> <i class='fa fa-arrows-h'></i> <strong>{{current}}</strong> / {{total}}"
         displays:
           inline:
             title: "Show the rendered output with additions and removals inline"
-            button: '<i class="fa fa-square-o"></i> HTML'
+            button: 'HTML'
           side_by_side:
             title: "Show the rendered output diffs side-by-side"
-            button: '<i class="fa fa-columns"></i> HTML'
+            button: 'HTML'
           side_by_side_markdown:
             title: "Show the raw source diffs side-by-side"
-            button: '<i class="fa fa-columns"></i> Raw'
+            button: 'Raw'
 
     category:
       can: 'can&hellip; '
@@ -1907,7 +1921,7 @@ en:
       tags_allowed_tag_groups: "Tag groups that can only be used in this category:"
       tags_placeholder: "(Optional) list of allowed tags"
       tag_groups_placeholder: "(Optional) list of allowed tag groups"
-      topic_featured_link_allowed: "Restricts editing the topic featured link in this category. Require site setting topic_featured_link_enabled is checked."
+      topic_featured_link_allowed: "Allow featured links in this category"
       delete: 'Delete Category'
       create: 'New Category'
       create_long: 'Create a new category'
@@ -1942,6 +1956,7 @@ en:
       email_in_disabled: "Posting new topics via email is disabled in the Site Settings. To enable posting new topics via email, "
       email_in_disabled_click: 'enable the "email in" setting.'
       suppress_from_homepage: "Suppress this category from the homepage."
+      all_topics_wiki: "Make new topics wikis by default."
       sort_order: "Default Sort:"
       allow_badges_label: "Allow badges to be awarded in this category"
       edit_permissions: "Edit Permissions"
@@ -2073,7 +2088,9 @@ en:
       one: "view"
       other: "views"
     replies: "Replies"
-    views_long: "this topic has been viewed {{number}} times"
+    views_long:
+      one: "this topic has been viewed 1 time"
+      other: "this topic has been viewed {{number}} times"
     activity: "Activity"
     likes: "Likes"
     likes_lowercase:
@@ -2399,8 +2416,8 @@ en:
         backups: "backups"
         traffic_short: "Traffic"
         traffic: "Application web requests"
-        page_views: "API Requests"
-        page_views_short: "API Requests"
+        page_views: "Pageviews"
+        page_views_short: "Pageviews"
         show_traffic_report: "Show Detailed Traffic Report"
 
         reports:
@@ -2503,7 +2520,6 @@ en:
         delete: "Delete"
         delete_confirm: "Delete this group?"
         delete_failed: "Unable to delete group. If this is an automatic group, it cannot be destroyed."
-        delete_member_confirm: "Remove '%{username}' from the '%{group}' group?"
         delete_owner_confirm: "Remove owner privilege for '%{username}'?"
         add: "Add"
         add_members: "Add members"
@@ -2554,7 +2570,7 @@ en:
         warn_local_payload_url: "It seems you are trying to set up the webhook to a local url. Event delivered to a local address may cause side-effect or unexpected behaviours. Continue?"
         secret_invalid: "Secret must not have any blank characters."
         secret_too_short: "Secret should be at least 12 characters."
-        secret_placeholder: "A optional string, used for generating signature"
+        secret_placeholder: "An optional string, used for generating signature"
         event_type_missing: "You need to set up at least one event type."
         content_type: "Content Type"
         secret: "Secret"
@@ -2577,7 +2593,7 @@ en:
           details: "When there is a new reply, edit, deleted or recovered."
         user_event:
           name: "User Event"
-          details: "When a user is created or approved."
+          details: "When a user is created, approved or updated."
         delivery_status:
           title: "Delivery Status"
           inactive: "Inactive"
@@ -2901,10 +2917,17 @@ en:
             revoke_admin: "revoke admin"
             grant_moderation: "grant moderation"
             revoke_moderation: "revoke moderation"
-            backup_operation: "backup operation"
+            backup_create: "create backup"
             deleted_tag: "deleted tag"
             renamed_tag: "renamed tag"
             revoke_email: "revoke email"
+            lock_trust_level: "lock trust level"
+            unlock_trust_level: "unlock trust level"
+            activate_user: "activate user"
+            deactivate_user: "deactivate user"
+            change_readonly_mode: "change readonly mode"
+            backup_download: "download backup"
+            backup_destroy: "destroy backup"
         screened_emails:
           title: "Screened Emails"
           description: "When someone tries to create a new account, the following email addresses will be checked and the registration will be blocked, or some other action performed."
@@ -3214,6 +3237,7 @@ en:
           user_preferences: "User Preferences"
           tags: "Tags"
           search: "Search"
+          groups: "Groups"
 
       badges:
         title: Badges

@@ -137,7 +137,7 @@ module ApplicationHelper
   end
 
   def rtl?
-    ["ar", "fa_IR", "he"].include? I18n.locale.to_s
+    ["ar", "ur", "fa_IR", "he"].include? I18n.locale.to_s
   end
 
   def user_locale
@@ -241,19 +241,35 @@ module ApplicationHelper
     MobileDetection.mobile_device?(request.user_agent)
   end
 
+  NO_CUSTOM = "no_custom".freeze
+  NO_PLUGINS = "no_plugins".freeze
+  ONLY_OFFICIAL = "only_official".freeze
+  SAFE_MODE = "safe_mode".freeze
+
   def customization_disabled?
-    safe_mode = params["safe_mode"]
-    session[:disable_customization] || (safe_mode && safe_mode.include?("no_custom"))
+    safe_mode = params[SAFE_MODE]
+    session[:disable_customization] || (safe_mode && safe_mode.include?(NO_CUSTOM))
   end
 
   def allow_plugins?
-    safe_mode = params["safe_mode"]
-    !(safe_mode && safe_mode.include?("no_plugins"))
+    safe_mode = params[SAFE_MODE]
+    !(safe_mode && safe_mode.include?(NO_PLUGINS))
   end
 
   def allow_third_party_plugins?
-    safe_mode = params["safe_mode"]
-    !(safe_mode && (safe_mode.include?("no_plugins") || safe_mode.include?("only_official")))
+    safe_mode = params[SAFE_MODE]
+    !(safe_mode && (safe_mode.include?(NO_PLUGINS) || safe_mode.include?(ONLY_OFFICIAL)))
+  end
+
+  def normalized_safe_mode
+    mode_string = params["safe_mode"]
+    safe_mode = nil
+    (safe_mode ||= []) << NO_CUSTOM if mode_string.include?(NO_CUSTOM)
+    (safe_mode ||= []) << NO_PLUGINS if mode_string.include?(NO_PLUGINS)
+    (safe_mode ||= []) << ONLY_OFFICIAL if mode_string.include?(ONLY_OFFICIAL)
+    if safe_mode
+      safe_mode.join(",").html_safe
+    end
   end
 
   def loading_admin?

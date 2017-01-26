@@ -6,6 +6,23 @@ function applicable() {
          !navigator.userAgent.match(/Trident/g);
 }
 
+
+function calcHeight(composingTopic) {
+  const winHeight = window.innerHeight;
+
+  // Hard code some known iOS resolutions
+  switch(winHeight) {
+    case 460: return composingTopic ? 250 : 260;
+    case 559: return composingTopic ? 325 : 308;
+    case 627:
+    case 628: return 360;
+  }
+
+  const ratio = composingTopic ? 0.54 : 0.6;
+  const min = composingTopic ? 300 : 350;
+  return Math.max(parseInt(winHeight*ratio), min);
+}
+
 let workaroundActive = false;
 let composingTopic = false;
 
@@ -86,19 +103,9 @@ function positioningWorkaround($fixedElement) {
 
     fixedElement.style.top = '0px';
 
-    let ratio = 0.6;
-    let min = 350;
+    composingTopic = $('#reply-control select.category-combobox').length > 0;
 
-    composingTopic = false;
-
-    if ($('#reply-control select.category-combobox').length > 0) {
-      composingTopic = true;
-      // creating a topic, less height
-      ratio = 0.54;
-      min = 300;
-    }
-
-    const height = Math.max(parseInt(window.innerHeight*ratio), min);
+    const height = calcHeight(composingTopic);
 
     fixedElement.style.height = height + "px";
 

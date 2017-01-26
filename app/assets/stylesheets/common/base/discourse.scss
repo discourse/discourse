@@ -80,15 +80,6 @@ body {
   .coldmap-low {
     color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%)) !important;
   }
-  .heatmap-high {
-    color: #fe7a15 !important;
-  }
-  .heatmap-med {
-    color: #cf7721 !important;
-  }
-  .heatmap-low {
-    color: #9b764f !important;
-  }
 
   #loading-message {
     position: absolute;
@@ -338,4 +329,13 @@ body {
 //
 span.relative-date {
   white-space:nowrap;
+}
+
+@keyframes background-fade-highlight {
+  0% {
+    background-color: dark-light-diff($tertiary, $secondary, 85%, -65%);
+  }
+  100% {
+    background-color: transparent;
+  }
 }

@@ -321,17 +321,10 @@ da:
         one: "1 bruger"
         other: "%{count} brugere"
     groups:
-      empty:
-        posts: "Der er ingen indlæg af medlemmer af denne gruppe."
-        members: "Der er ingen medlemmer i denne gruppe."
-        mentions: "Denne gruppe er ikke nævnt."
-        messages: "Der er ingen besked til denne gruppe."
-        topics: "Der er intet emne af medlemmer af denne gruppe."
       add: "Tilføj"
       selector_placeholder: "Tilføj medlemmer"
       owner: "ejer"
       visible: "Gruppen er synlige for alle brugere"
-      index: "Grupper"
       title:
         one: "gruppe"
         other: "grupper"
@@ -683,11 +676,8 @@ da:
         create: "Send en invitation"
         generate_link: "Kopier invitations-link"
         bulk_invite:
-          none: "Du har ikke inviteret nogen her endnu. Du kan sende individuelle invitationer eller invitere en masse mennesker på én gang ved at <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>uploade en samlet liste over invitationer</a>."
           text: "Masse invitering fra en fil"
-          uploading: "Uploader..."
           success: "Fil uploaded successfuldt, du vil blive meddelt via en beskede når processen er fuldendt."
-          error: "Der var en fejl ved upload af filen '{{filename}}': {{message}}"
       password:
         title: "Adgangskode"
         too_short: "Din adgangskode er for kort."
@@ -1203,7 +1193,6 @@ da:
         go_bottom: "bund"
         go: "start"
         jump_bottom: "Hop til sidste indlæg"
-        jump_prompt: "hop til indlæg"
         jump_prompt_long: "Hvilket indlæg vil du gerne springe til?"
         jump_bottom_with_number: "hop til indlæg %{post_number}"
         total: antal indlæg
@@ -1431,7 +1420,6 @@ da:
         file_too_large: "Beklager, filen du prøver at uploade er for stor (den maksimale størrelse er {{max_size_kb}}kb). Du kan evt. uploade filen til en fildelings service og dele linket her."
         too_many_uploads: "Beklager, men du kan kun uploade én fil ad gangen."
         too_many_dragged_and_dropped_files: "Beklager, du kan maksimalt uploade 10 filer ad gangen"
-        upload_not_authorized: "Beklager, filen, som du forsøger at uploade, er ikke godkendt (godkendte filendelser: {{authorized_extensions}})."
         image_upload_not_allowed_for_new_user: "Beklager, nye brugere kan ikke uploade billeder."
         attachment_upload_not_allowed_for_new_user: "Beklager, nye brugere kan ikke uploade vedhæftede filer."
         attachment_download_requires_login: "Beklager, du skal være logget på for at downloade vedhæftede filer."
@@ -1727,7 +1715,6 @@ da:
       one: "visning"
       other: "visninger"
     replies: "Svar"
-    views_long: "dette emne er blevet vist {{number}} gange"
     activity: "Aktivitet"
     likes: "Likes"
     likes_lowercase:
@@ -1977,8 +1964,6 @@ da:
         backups: "backups"
         traffic_short: "Trafik"
         traffic: "Applikation web forespørgsler"
-        page_views: "API Forespørgsler"
-        page_views_short: "API Forespørgsler"
         show_traffic_report: "Vist detaljeret trafik rapport"
         reports:
           today: "I dag"
@@ -2067,15 +2052,12 @@ da:
         refresh: "Genindlæs"
         new: "Nye"
         selector_placeholder: "indtast brugernavn"
-        name_placeholder: "Gruppenavn, ingen mellemrum, på samme måde som brugernavne"
         about: "Redigér gruppemedlemsskaber og gruppenavne her"
         group_members: "Gruppe medlemmer"
         delete: "Slet"
         delete_confirm: "Slet denne gruppe?"
         delete_failed: "Kan ikke slette gruppen. Hvis dette er en automatisk gruppe, kan den ikke ødelægges."
-        delete_member_confirm: "Fjern '%{username}' fra gruppen '%{group}'?"
         delete_owner_confirm: "Fjern ejer-privilegier for '%{username}'?"
-        name: "Navn"
         add: "Tilføj"
         add_members: "Tilføj medlemmer"
         custom: "Brugerdefineret"
@@ -2092,8 +2074,6 @@ da:
         add_owners: Tilføj ejere
         incoming_email: "Brugerdefineret indkommende email"
         incoming_email_placeholder: "indtast email"
-        flair_bg_color_placeholder: "(Valgfrit) Hex farveværdi"
-        flair_preview: "Vis"
       api:
         generate_master: "Generér API-nøgle"
         none: "Der er ingen aktive API-nøgler i øjeblikket."
