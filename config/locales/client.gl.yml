@@ -27,6 +27,7 @@ gl:
         millions: "{{number}}M"
     dates:
       time: "h:mm a"
+      timeline_date: "MMM YYYY"
       long_no_year: "D MMM h:mm a"
       long_no_year_no_time: "D MMM"
       full_no_year_no_time: "D MMMM"
@@ -38,6 +39,7 @@ gl:
       long_date_with_year_without_time: "D MMM, 'YY"
       long_date_without_year_with_linebreak: "D MMM <br/>LT"
       long_date_with_year_with_linebreak: "D MMM, 'YY <br/>LT"
+      wrap_ago: "fai %{date}"
       tiny:
         half_a_minute: "< 1m"
         less_than_x_seconds:
@@ -108,9 +110,13 @@ gl:
       google+: 'compartir esta ligazón no Google+'
       email: 'enviar esta ligazón nun correo electrónico'
     action_codes:
+      public_topic: "fixo esta publicación pública no %{when}"
+      private_topic: "fixo esta publicación privada no %{when}"
       split_topic: "este tema dividiuse o %{when}"
       invited_user: "convidou a %{who} %{when}"
+      invited_group: "invitou %{who} o %{when}"
       removed_user: "eliminou a %{who} %{when}"
+      removed_group: "eliminou %{who} o %{when}"
       autoclosed:
         enabled: 'pechado o %{when}'
         disabled: 'aberto o %{when}'
@@ -130,6 +136,7 @@ gl:
         enabled: 'listado o %{when}'
         disabled: 'retirado da lista o %{when}'
     topic_admin_menu: "accións do administrador de temas"
+    wizard_required: "É hora de configura-lo teu foro! <a href='%{url}' data-auto-route='true'>Inicie o Asistente de Configuración</a>!"
     emails_are_disabled: "Todos os correos electrónicos saíntes foron desactivados globalmente por un administrador. Non se enviará ningún tipo de notificación por correo electrónico."
     s3:
       regions:
@@ -307,12 +314,6 @@ gl:
         one: "Un usuario"
         other: "%{count} usuarios"
     groups:
-      empty:
-        posts: "Non hai publicacións de membros deste grupo."
-        members: "Non hai ningún membro neste grupo."
-        mentions: "Non hai ningunha mención deste grupo."
-        messages: "Non hai ningunha mensaxe para este grupo."
-        topics: "Non hai temas por membros deste grupo."
       add: "Engadir"
       selector_placeholder: "Engadir membros"
       owner: "propietario"
@@ -626,11 +627,8 @@ gl:
         create: "Enviar un convite"
         generate_link: "Copiar a ligazón do convite"
         bulk_invite:
-          none: "Aínda non convidaches a ninguén. Podes enviar convites individuais ou en grupo se <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>subes un ficheiro para convites múltiples</a>."
           text: "Convidar en grupo desde un ficheiro"
-          uploading: "Enviando..."
           success: "O ficheiro enviouse correctamente, notificaráseche por mensaxe cando remate o proceso."
-          error: "Produciuse un erro ao subir «{{filename}}»: {{message}}"
       password:
         title: "Contrasinal"
         too_short: "O teu contrasinal é demasiado curto."
@@ -1296,7 +1294,6 @@ gl:
         edit: "Sentímolo pero produciuse un erro editando a publicación. Téntao de novo."
         upload: "Sentímolo pero produciuse un erro enviando a publicación. Téntao de novo."
         too_many_uploads: "Sentímolo pero só podes enviar un ficheiro de cada vez."
-        upload_not_authorized: "Sentímolo pero o ficheiro que tentas enviar non está autorizado (extensións autorizadas: {{authorized_extensions}})."
         image_upload_not_allowed_for_new_user: "Sentímolo pero os novos usuarios non poden subir imaxes."
         attachment_upload_not_allowed_for_new_user: "Sentímolo pero os novos usuarios non poden subir anexos."
         attachment_download_requires_login: "Sentímolo pero debes iniciar sesión para descargar anexos."
@@ -1571,7 +1568,6 @@ gl:
       one: "vista"
       other: "vistas"
     replies: "Respostas"
-    views_long: "este tema visitouse {{number}} veces"
     activity: "Actividade"
     likes: "Gústames"
     likes_lowercase:
@@ -1703,8 +1699,6 @@ gl:
         backups: "copias de seguranza"
         traffic_short: "Tráfico"
         traffic: "Peticións web de aplicativos"
-        page_views: "Peticións API"
-        page_views_short: "Peticións API"
         show_traffic_report: "Amosar o informe detallado do tráfico"
         reports:
           today: "Hoxe"
@@ -1793,15 +1787,12 @@ gl:
         refresh: "Actualizar"
         new: "Novo"
         selector_placeholder: "escribe o nome do usuario"
-        name_placeholder: "Nome do grupo sen espazos, como na regra do nome do usuario"
         about: "Edita aquí a túa pertenza a un grupo e nomes"
         group_members: "Membros do grupo"
         delete: "Eliminar"
         delete_confirm: "Eliminar este grupo?"
         delete_failed: "Non é posíbel eliminar o grupo. Se este é un grupo automático, non se pode destruír."
-        delete_member_confirm: "Queres eliminar a «%{username}» do grupo «%{group}»?"
         delete_owner_confirm: "Eliminar os privilexios de usuario de «%{username}»?"
-        name: "Nome"
         add: "Engadir"
         add_members: "Engadir membros"
         custom: "Personalizar"

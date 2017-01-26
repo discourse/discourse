@@ -23,7 +23,8 @@ class PostRevisionSerializer < ApplicationSerializer
              :body_changes,
              :title_changes,
              :user_changes,
-             :tags_changes
+             :tags_changes,
+             :wiki
 
 
   # Creates a field called field_name_changes with previous and
@@ -93,6 +94,10 @@ class PostRevisionSerializer < ApplicationSerializer
 
   def avatar_template
     user.avatar_template
+  end
+
+  def wiki
+    object.post.wiki
   end
 
   def edit_reason

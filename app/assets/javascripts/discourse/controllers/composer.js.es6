@@ -404,7 +404,6 @@ export default Ember.Controller.extend({
 
   save(force) {
     const composer = this.get('model');
-    const self = this;
 
     // Clear the warning state if we're not showing the checkbox anymore
     if (!this.get('showWarning')) {
@@ -437,10 +436,10 @@ export default Ember.Controller.extend({
           buttons.push({
             "label": I18n.t("composer.reply_here") + "<br/><div class='topic-title overflow-ellipsis'>" + currentTopic.get('fancyTitle') + "</div>",
             "class": "btn btn-reply-here",
-            "callback": function() {
+            callback: () => {
               composer.set('topic', currentTopic);
               composer.set('post', null);
-              self.save(true);
+              this.save(true);
             }
           });
         }
@@ -448,9 +447,7 @@ export default Ember.Controller.extend({
         buttons.push({
           "label": I18n.t("composer.reply_original") + "<br/><div class='topic-title overflow-ellipsis'>" + this.get('model.topic.fancyTitle') + "</div>",
           "class": "btn-primary btn-reply-on-original",
-          "callback": function() {
-            self.save(true);
-          }
+          callback: () => this.save(true)
         });
 
         bootbox.dialog(message, buttons, { "classes": "reply-where-modal" });
@@ -471,29 +468,32 @@ export default Ember.Controller.extend({
       }
     });
 
-    const promise = composer.save({ imageSizes, editReason: this.get("editReason")}).then(function(result) {
+    const promise = composer.save({ imageSizes, editReason: this.get("editReason")}).then(result=> {
       if (result.responseJson.action === "enqueued") {
-        self.send('postWasEnqueued', result.responseJson);
-        self.destroyDraft();
-        self.close();
-        self.appEvents.trigger('post-stream:refresh');
+        this.send('postWasEnqueued', result.responseJson);
+        this.destroyDraft();
+        this.close();
+        this.appEvents.trigger('post-stream:refresh');
         return result;
       }
 
       // If user "created a new topic/post" or "replied as a new topic" successfully, remove the draft.
-      if (result.responseJson.action === "create_post" || self.get('replyAsNewTopicDraft')) {
-        self.destroyDraft();
+      if (result.responseJson.action === "create_post" || this.get('replyAsNewTopicDraft')) {
+        this.destroyDraft();
       }
-      if (self.get('model.action') === 'edit') {
-        self.appEvents.trigger('post-stream:refresh', { id: parseInt(result.responseJson.id) });
+      if (this.get('model.action') === 'edit') {
+        this.appEvents.trigger('post-stream:refresh', { id: parseInt(result.responseJson.id) });
+        if (result.responseJson.post.post_number === 1) {
+          this.appEvents.trigger('header:show-topic', composer.get('topic'));
+        }
       } else {
-        self.appEvents.trigger('post-stream:refresh');
+        this.appEvents.trigger('post-stream:refresh');
       }
 
       if (result.responseJson.action === "create_post") {
-        self.appEvents.trigger('post:highlight', result.payload.post_number);
+        this.appEvents.trigger('post:highlight', result.payload.post_number);
       }
-      self.close();
+      this.close();
 
       const currentUser = Discourse.User.current();
       if (composer.get('creatingTopic')) {
@@ -510,9 +510,9 @@ export default Ember.Controller.extend({
         }
       }
 
-    }).catch(function(error) {
+    }).catch(error => {
       composer.set('disableDrafts', false);
-      self.appEvents.one('composer:will-open', () => bootbox.alert(error));
+      this.appEvents.one('composer:will-open', () => bootbox.alert(error));
     });
 
     if (this.get('application.currentRouteName').split('.')[0] === 'topic' &&

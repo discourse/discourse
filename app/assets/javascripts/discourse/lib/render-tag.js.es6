@@ -5,7 +5,7 @@ export default function renderTag(tag, params) {
   tag = Handlebars.Utils.escapeExpression(tag);
   const classes = ['tag-' + tag, 'discourse-tag'];
   const tagName = params.tagName || "a";
-  const href = tagName === "a" ? " href='" + Discourse.getURL("/tags/" + tag) + "' " : "";
+  const href = (tagName === "a" && !params.noHref) ? " href='" + Discourse.getURL("/tags/" + tag) + "' " : "";
 
   if (Discourse.SiteSettings.tag_style || params.style) {
     classes.push(params.style || Discourse.SiteSettings.tag_style);

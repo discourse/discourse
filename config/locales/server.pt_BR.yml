@@ -8,7 +8,7 @@
 pt_BR:
   dates:
     short_date_no_year: "D MMM"
-    short_date: "D MMM, YYYY"
+    short_date: "D MMM, AAAA"
     long_date: "D de MMMM de YYYY h:mma"
   datetime_formats: &datetime_formats
     formats:
@@ -105,8 +105,6 @@ pt_BR:
       max_username_length_range: "Você não pode definir o máximo abaixo no mínimo."
       default_categories_already_selected: "Você não pode selecionar uma categoria usada noutra lista."
       s3_upload_bucket_is_required: "Você não pode habilitar uploads para o S3 a não ser que tenha provido o 's3_upload_bucket'."
-  bulk_invite:
-    file_should_be_csv: "O arquivo enviado deve ser do formado csv ou txt."
   backup:
     operation_already_running: "Uma operação está sendo executada. Não é possível iniciar um novo trabalho agora."
     backup_file_should_be_tar_gz: "O arquivo de backup deve ser um arquivo .tar.gz."
@@ -270,6 +268,7 @@ pt_BR:
         name: "Nome da Categoria"
       topic:
         title: 'Título'
+        featured_link: 'Link Em Destaque'
       post:
         raw: "Corpo"
       user_profile:
@@ -531,6 +530,9 @@ pt_BR:
       title: 'Vote'
       description: 'Votar nesta postagem'
       long_form: 'voto computado para esta postagem'
+  user_activity:
+    no_bookmarks:
+      others: "Nenhum favorito."
   topic_flag_types:
     spam:
       title: 'Spam'
@@ -866,9 +868,7 @@ pt_BR:
     show_email_on_profile: "Mostrar o email de um usuário em seus perfis (apenas visível a eles mesmos e staff)"
     prioritize_username_in_ux: "Mostrar primeiro o nome de usuário na página do usuário, cartão do usuário e publicações (quando desabilitado, o nome será mostrado primeiro) "
     email_token_valid_hours: "Tokens de Esqueceu senha / ativar conta são válidas por (n) horas."
-    email_token_grace_period_hours: "Tokens de esqueceu senha / ativar conta ainda serão válidas por um período extra de (n) horas depois de serem resgatados."
     enable_badges: "Habilita o sistema de emblemas"
-    enable_whispers: "Permitir comunicação privativa da equipe dentro de um tópico. (experimental)"
     allow_index_in_robots_txt: "Especificar no robots.txt que este site é permitido de ser indexado por sistemas de busca na web."
     email_domains_blacklist: "Lista delimitada por barras (|) de domínios de email que não são permitidos registros de contas. Exemplo: mailinator.com|trashmail.net"
     email_domains_whitelist: "Lista separada por barra (|) de domínios de email que usuários DEVEM usar para registrar contas. CUIDADO: Usuário com domínio de email diferentes da lista não serão permitidos!"
@@ -1103,7 +1103,6 @@ pt_BR:
     embed_whitelist_selector: "Seletor CSS para os elementos que são permitidos em embeds."
     embed_blacklist_selector: "Selector CSS para elementos que são removidos dos embeds."
     notify_about_flags_after: "Se houver sinalizações sem ações após muitas horas, envia um e-mail para contact_email. Ajuste para 0 para desligar."
-    enable_cdn_js_debugging: "Permitir /logs de mostrar os devidos erros ao adicionar permissões de crossorigin em todos os includes de js."
     show_create_topics_notice: "Se o site tem menos de 5 tópicos públicos, mostrar um aviso pedindo para os administradores criarem alguns tópicos."
     delete_drafts_older_than_n_days: Apagar rascunhos mais antigos do que (N) dias.
     prevent_anons_from_downloading_files: "Impedir que usuários anônimos façam download de arquivos anexados. AVISO: isso irá impedir quaisquer componentes do site que não sejam imagens, tendo sido postados como anexos, de funcionar."
@@ -1300,100 +1299,6 @@ pt_BR:
     deferred_and_deleted: "Obrigado por nos avisar. Nós removemos o post."
   temporarily_closed_due_to_flags: "Este tópico foi temporariamente fechado devido a um grande número de sinalizações da comunidade."
   system_messages:
-    usage_tips:
-      text_body_template: |
-        Eis algumas dicas rápidas para iniciar:
-
-        ## Leitura
-
-        Para ler mais, **basta continuar rolando a página para baixo!**
-
-        À medida que novas respostas ou tópicos forem chegando, eles irão aparecer automaticamente -- não há necessidade de refrescar a página.
-
-        ## Navegação
-
-        - Para fazer buscas, voltar para a sua página de usuário, ou acessar o menu <kbd>☰</kbd>, use os **botões com ícone no lado superior direito**.
-
-        - Selecionando o título do tópico sempre leva para a próxima **mensagem não lida** daquele tópico. Para entrar no início ou no final, selecione o contador de mensagens ou a data da última mensagem.
-
-        <img src="%{base_url}/images/welcome/topic-list-select-areas-2x.png" width="593" height="59">
-
-        - Enquanto estiver lendo um tópico, use a linha do tempo do lado direito para ir ao início, final ou a local da última leitura. Em telas pequenas, selecione a barra de progresso verde no canto inferior direito para acessar os controles de navegação:
-
-        <img src="%{base_url}/images/welcome/progress-bar-2x.png" width="153" height="181">
-
-        Você também pode selecionar a tecla <kbd>?</kbd> para ver uma lista com todos os atalhos do teclado.
-
-        ## Respostas
-
-        Para inserir uma citação, selecione o texto desejado e pressione qualquer botão de Resposta para abrir o editor:
-
-        <img src="/images/welcome/quote-reply.png" width="350" height="129">
-
-        Para citações múltiplas, repita o mesmo processo.
-
-        <img src="%{base_url}/images/welcome/quote-reply-2x.png" width="326" height="128">
-
-        Você pode continuar lendo enquanto compõe uma resposta. O rascunho da sua mensagem é salvo automaticamente enquanto você escreve.
-
-        Para notificar alguém da sua resposta, mencione o nome da pessoa. Digite `@` para selecionar o nome de um usuário.
-
-        <img src="%{base_url}/images/welcome/username-completion-2x.png" width="191" height="125">
-
-        Para usar [Emojis comuns](http://www.emoji.codes/), basta ou digitar `:` para ver a lista de opções, ou usar um dos sorrisos tradicionais `:)` :smile:
-
-        <img src="%{base_url}/images/welcome/emoji-completion-2x.png" width="144" height="153">
-
-        Para gerar o resumo de um link, copie-o em uma linha por conta própria:
-        <img src="%{base_url}/images/welcome/link-oneboxing-animation.gif" width="480" height="228">
-
-        Você pode formatar as suas respostas usando HTML simples, BBCode, ou [Markdown](http://commonmark.org/help/):
-
-        Este está em <b>negrito</b>.
-        Este está em  [b]negrito[/b].
-        Este está em  **negrito**.
-
-        Para outras dicas de formatação, [experimente os nossos tutoriais interativos de 10 minutos!](http://commonmark.org/help/tutorial/)
-
-        ## Ações
-
-        Há "botões de ação" embaixo de cada resposta.
-
-        <img src="/images/welcome/like-link-flag-bookmark.png" width="169" height="46">
-
-        - Para indicar que você gostou de uma resposta, use o botão **Like** ("Curtir").
-
-        - Use o botão **Link** para pegar um link direto para qualquer tópico ou resposta.
-
-        - Use o botão <kbd>&hellip;</kbd> para revelar mais ações. O botão **Flag** notifica, de forma privada, o autor ou a [nossa equipe](%{base_url}/about), de algum problema. O **Bookmark** serve para consultar depois o tópico na sua página de usuário.
-
-        ## Notificações
-
-        Quando alguém responder a uma mensagem sua, citar sua mensagem, mencionar o seu `@nomedeusuário`, ou mesmo criar um link para um comentário seu, um número irá aparecer imediatamente próximo ao seu avatar no canto superior direito da página. Clique neste número para acessar as suas **notificações**.
-
-        <img src="%{base_url}/images/welcome/notification-panel-2x.png" width="160" height="54">
-
-        Não se preocupe se perder uma resposta – você receberá um email com as respostas (e mensagens) caso não esteja online quando elas chegarem.
-
-        ## Preferências
-
-        - Todos os tópicos com menos de dois dias são considerados novos.
-
-        - Todos os tópicos dos quais você tenha **participado ativamente** (que tenha respondido, criado, ou lido por um certo tempo) serão automaticamente rastreados para você.
-
-        Você irá ver números indicando respostas novas e não lidas próximos a estes tópicos:
-
-        <img src="%{base_url}/images/welcome/topics-new-unread-2x.png" width="341" height="106">
-
-        Você pode mudar as notificações de qualquer tópico por meio do controle de notificações que fica embaixo, no lado direito de cada tópico.
-
-        <img src="%{base_url}/images/welcome/topic-notification-control-2x.png" width="608" height="312">
-
-        Você também pode configurar as notificações por categoria. Para mudar as configurações, veja as [suas preferências de usuário](%{base_url}/my/preferences).
-
-        ## Níveis de Confiança Comunitária
-
-        É um prazer conhecer você! Conforme for participando, irá ganhando confiança da comunidade e as suas restrições de usuário novato serão removidas automaticamente. Ao atingir [níveis de confiança](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924) mais altos, você ganhará habilidades especiais que lhe permitirão ajudar a gerenciar a comunidade junto conosco.
     welcome_user:
       subject_template: "Bem-vindo ao %{site_name}!"
       text_body_template: |
@@ -1408,26 +1313,6 @@ pt_BR:
         (Se precisar se comunicar com [membros da equipe](%{base_url}/about) como um novo usuário, apenas responda a esta mensagem.)
     welcome_invite:
       subject_template: "Bem-vindo ao %{site_name}!"
-      text_body_template: |
-        Obrigado por aceitar seu convite para %{site_name} -- bem vindo!
-
-        Nós criamos uma nova conta **%{username}** para você, e você está autenticado. Pode mudar seu nome visitando o [perfil de seu usuário][prefs].
-
-        Para entrar novamente depois:
-
-        1. Sempre **use o mesmo endereço de email de seu convite original** quando se registrou. Caso contrário não saberemos que é você!
-
-        2. Crie uma senha única para o [perfil de seu usuário][prefs], e use para entrar.
-
-        %{new_user_tips}
-
-        Nós acreditamos sempre em [comportamento comunitário civilizado](%{base_url}/guidelines).
-
-        Aproveite sua participação!
-
-        (Se precisar se comunicar com um [membro da equipe](%{base_url}/about) como novo usuário, apenas responda a esta mensagem.)
-
-        [prefs]: %{user_preferences_url}
     backup_succeeded:
       subject_template: "Backup completado com sucesso"
     backup_failed:
@@ -1644,10 +1529,17 @@ pt_BR:
         %{message}
     digest:
       why: "Um breve resumo de %{site_link} desde que viu pela última vez em %{last_seen_at}."
+      since_last_visit: "Desde a sua última visita"
       new_topics: "Novos Tópicos"
+      unread_messages: "Mensagens Não-lidas"
+      unread_notifications: "Notificações Não-lidas"
+      new_posts: "Novas Mensagens"
       new_users: "Usuários Novos"
       popular_topics: "Tópicos Populares"
+      follow_topic: "Seguir esse tópico"
       join_the_discussion: "Leia Mais"
+      popular_posts: "Publicações Populares"
+      from_topic_label: "De"
       subject_template: "[%{site_name}] Resumo das discussões"
       unsubscribe: "Este resumo é enviado por %{site_link} quando não o vemos há algum tempo. Para cancelar a assinatura %{unsubscribe_link}."
       click_here: "clique aqui"
@@ -2043,7 +1935,6 @@ pt_BR:
         title: "Tema"
         fields:
           theme_id:
-            description: "Você prefere um esquema de cores claro ou escuro para começar? Você poderá, futuramente, trocar o esquema de cores do seu site através da Aba: Admin, Configurações."
             choices:
               default:
                 label: "Claro Simples"
@@ -2068,7 +1959,6 @@ pt_BR:
             label: "Ícone Largo"
             description: "Ícone usado para representar seu site em dispositivos modernos, que tenha boa aparência em tamanhos maiores. O tamanho recomendado é pelo menos 144px por 144px."
       homepage:
-        description: "Recomendamos mostrar os últimos tópicos na sua página inicial, mas você pode escolher mostrar categorias (grupos de tópicos) na página inicial, se preferir."
         title: "Página Inicial"
         fields:
           homepage_style:
@@ -2079,7 +1969,6 @@ pt_BR:
                 label: "Categorias"
       emoji:
         title: "Emoji"
-        description: "Qual estilo de Emoji se adequa melhor para sua comunidade? Você poderá sempre adicionar novas customizações de Emojis através da aba: Admin > Customizar > Emoji."
       invites:
         title: "Convidar um grupo"
       finished:

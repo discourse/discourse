@@ -145,14 +145,14 @@ class GlobalSetting
     attr_accessor :provider
   end
 
-
-  if Rails.env == "test"
-    @provider = BlankProvider.new
-  else
-    @provider =
-      FileProvider.from(File.expand_path('../../../config/discourse.conf', __FILE__)) ||
-      EnvProvider.new
+  def self.configure!
+    if Rails.env == "test"
+      @provider = BlankProvider.new
+    else
+      @provider =
+        FileProvider.from(File.expand_path('../../../config/discourse.conf', __FILE__)) ||
+        EnvProvider.new
+    end
   end
 
-  load_defaults
 end

@@ -75,8 +75,6 @@ ko:
         other: '%{model} 저장 시에 %{count}개의 에러가 발생하여 진행을 못했습니다.'
     embed:
       load_from_remote: "글 로딩 중 오류가 발생하였습니다."
-  bulk_invite:
-    file_should_be_csv: "CSV 또는 TXT형식의 파일을 업로드해야 합니다."
   backup:
     operation_already_running: "현재 %{operation} 작업중입니다. %{operation} 작업을 지금 시작할 수 없습니다."
     backup_file_should_be_tar_gz: "백업 파일은 .tar.gz형식의 파일이어야 합니다."
@@ -655,7 +653,6 @@ ko:
     redirect_users_to_top_page: "신규 사용자와 오랜만에 방문한 사용자를 인기글 페이지로 리다이렉트."
     show_email_on_profile: "사용자 프로필에서 자신의 이메일 주소 보기(본인과 관리자만 볼 수 있음)"
     email_token_valid_hours: "비밀번호 찾기, 계정 활성화에 사용되는 토큰의 유효 기간(시간)"
-    email_token_grace_period_hours: "비밀번호 찾기, 계정 활성화에 사용되는 토큰은 사용되어진 이후 유효한 기간(시간)"
     enable_badges: "배지 기능 사용"
     allow_index_in_robots_txt: "이 사이트가 검색엔진에 의해 인덱스되는 것을 허용합니다.(robots.txt 수정)"
     email_domains_blacklist: "가입 금지된 이메일 도메인 목록, 파이프 기호로 구분. 예: mailinator.com|trashmail.net"
@@ -854,7 +851,6 @@ ko:
     embed_whitelist_selector: "embed에서 보여져야 할 DOM element 선택하는 CSS 셀렉터"
     embed_blacklist_selector: "embed에서 지워져야 할 DOM element 선택하는 CSS 셀렉터"
     notify_about_flags_after: "이 시간동안 처리되지 않은 신고가 들어와 있으면, contact_email 주소로 이메일을 보냅니다. 0으로 넣으면 비활성화됩니다."
-    enable_cdn_js_debugging: "/logs에서 적절한 모든 js를 포함해 crossorigin 권한 오류가 뜨도록 합니다."
     show_create_topics_notice: "이 사이트에 5개 이하의 공개 글타래가 있으면, 관리자에게 글타래 좀 만들라고 알려줍니다."
     delete_drafts_older_than_n_days: (n) 일지난 임시 보관글 삭제하기
     prevent_anons_from_downloading_files: "익명 사용자가 다운로드를 받지 못하게 합니다. 경고: 이미지 파일 외 모든 첨부파일이 다운로드 받지 못하게 됩니다."
@@ -1016,26 +1012,6 @@ ko:
         (할 말이 있을 땐 새 사용자로서 [스태프](%{base_url}/about)들에게 이야기 주세요, 이 메세지에 답글로 주시면 바로 올라갑니다.)
     welcome_invite:
       subject_template: "%{site_name} 사이트에 오신것을 환영합니다!"
-      text_body_template: |
-        %{site_name}의 초대에 응해주셔서 감사합니다 반갑습니다!
-
-        **%{username}**로 새 사용자를 만들었고 로그인된 상태입니다. [사용자 정보][prefs]에 들어가 이름을 바꿀 수 있습니다.
-
-        나중에 다시 로그인하려면:
-
-        1. 항상 **초대 받은 이메일 주소를 사용해서** 로그인해주셔야지 안 그러면 같은 사람이라고 인식 못할 겁니다!
-
-        2. [사용자 정보][prefs],에서 유니크한 비밀번호를 만들어 사용해주세요.
-
-        %{new_user_tips}
-
-        우리는 [문화시민의 커뮤니티 활동 지침](%{base_url}/guidelines)을 항상 따릅니다.
-
-        커뮤니티를 즐려주세요!
-
-        (할 말이 있을 땐 새 사용자로서 [스태프](%{base_url}/about)들에게 이야기주세요, 이 메세지에 답글로 주시면 바로 올라갑니다.)
-
-        [사용자 정보 설정]: %{user_preferences_url}
     backup_succeeded:
       subject_template: "백업 성공"
     backup_failed:

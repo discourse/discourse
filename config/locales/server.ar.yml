@@ -120,8 +120,6 @@ ar:
       max_username_length_range: "لا يمكن أن تكون القيمة العليا أصغر من الدنيا."
       default_categories_already_selected: "لا يمكنك تحديد فئة تستخدم في قائمة أخرى."
       s3_upload_bucket_is_required: "لا يمكنك تفعيل الرفع إلى S3 حتّى توفّر 's3_upload_bucket'."
-  bulk_invite:
-    file_should_be_csv: "على نسق الملف الملف المرفوع أن يكون إمّا csv أو txt."
   backup:
     operation_already_running: "ثمّة عملية تجري حاليا. لا يمكنك بدء مهمة جديدة الآن."
     backup_file_should_be_tar_gz: "على الملف الاحتياطي أن يكون أرشيف \"‎.tar.gz\"."
@@ -1006,9 +1004,7 @@ ar:
     top_page_default_timeframe: "الوقت المثبت علي الصفحة الأكثر مشاهدة."
     show_email_on_profile: "إظهار بريدك المستخدم على صفحته الشخصية (مرئية فقط لأنفسهم والموظفين)"
     email_token_valid_hours: "نسيت كلمه السر/ تنشيط رموز الحساب صالحه ل(n)  ساعات"
-    email_token_grace_period_hours: "نسيت كلمه السر/ تنشيط رموز الحساب لا تزال صالحة لفترة سماح بالـ(n) ساعات بعد استبدالها."
     enable_badges: "تفعيل نظام الأوسمة."
-    enable_whispers: "السماح للموظفين الخصوصين التواصل ضمن موضوع.(تجريبي)"
     allow_index_in_robots_txt: "تحديد في ملف robots.txt أن يسمح هذا الموقع ليتم فهرستها من قبل محركات البحث على شبكة الإنترنت."
     email_domains_blacklist: "قائمة pipe-delimited المجالات البريد الإلكتروني الذي لا يسمح للمستخدمين تسجيل حسابات مع. مثال: mailinator.com | trashmail.net"
     email_domains_whitelist: "قائمة pipe-delimited من مجالات البريد الإلكتروني التي يجب على المستخدمين تسجيل حسابات مع. تحذير: لن يسمح للمستخدمين مع مجالات البريد الإلكتروني الأخرى غير المذكورة هنا!"
@@ -1250,7 +1246,6 @@ ar:
     embed_whitelist_selector: "منتقي CSS للعناصر التي تسمح في التضمينات."
     embed_blacklist_selector: "منتقي CSS للعناصر التي حذفت من التضمينات."
     notify_about_flags_after: "اذا كانت هناك علامه انه لم يتم تاتعامل معه بعد هذه الساعات, ارسال رساله الي جهه الاتصال_بريده الالكتروني. اضبط 0 للتعطيل"
-    enable_cdn_js_debugging: "السماح/logs لعرض أخطاء المناسبة عن طريق إضافة تتضمن تحليل عرض كل شبيبة."
     show_create_topics_notice: "إذا كان الموقع يحتوي على أقل من 5 مواضيع عامة , إظهار إشعار مطالبة المسؤولين إنشاء بعض المواضيع."
     delete_drafts_older_than_n_days: حذف المسودات مضى عليها أكثر من (ن) يوما.
     prevent_anons_from_downloading_files: "امنع  المستخدمين المجهولين من تحميل المرفقات. تحذير:سوف تمنع اي شخص ليس لديه صوره موقع  اصول نشره كمرفقات من العمل."
@@ -1501,26 +1496,6 @@ ar:
         (أذا كنت بحاجة للتواصل مع  [الموظفين](%{base_url}/about) كمستخدم جديد, فقط مجرد الرد على هذه الرسالة.)
     welcome_invite:
       subject_template: "مرحبا بك في %{site_name}!"
-      text_body_template: |
-        شكرًا لقبولك الدعوة إلى موقع  %{site_name}  أهلا بك .
-
-        انشأنا حساب جديد لك **%{username}** وستقوم بتسجيل الدخول، وستتمكن من تغيير اسمك من  [your user profile][prefs].
-
-        لتسجيل الدخول لاحقا:
-
-        1.دائما **استخدم نفس البريد الالكتروني الذي استقبلت فيه الدعوة** عند تسجيل الدخول، وإلا فإننا لن نستطيع معرفة أنه أنت !
-
-        2. أنشأ كلمة مرور فريدة  [your user profile][prefs] واستخدمها لتسجيل الدخول .
-
-        %{new_user_tips}
-
-        ونحن نتبع  [civilized community behavior](%{base_url}/guidelines)دائما..
-
-        استمتع بوجودك بيننا !
-
-        (إذا كنت تريد التواصل مع  [staff members](%{base_url}/about) كمستخدم جديد، رد على هذه الرسالة فقط لتتواصل معهم)
-
-        [prefs]: %{user_preferences_url}
     backup_succeeded:
       subject_template: "اكتملت عملية النسخ الإحتياطي بنجاح"
     backup_failed:

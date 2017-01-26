@@ -77,7 +77,7 @@ div.poll {
       display: inline;
     }
 
-    margin-top: 10px;
+    margin-top: 4px;
   }
 
   .poll-voters-toggle-expand {
@@ -107,7 +107,11 @@ div.poll {
 
     .bar {
       height: 10px;
-      background: $primary;
+      background: dark-light-diff($primary, $secondary, 50%, -25%);;
+    }
+
+    .chosen .bar {
+      background: $tertiary;
     }
   }
 

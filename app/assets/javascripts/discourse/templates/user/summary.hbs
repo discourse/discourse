@@ -37,7 +37,9 @@
       <li>
           {{user-stat value=model.likes_received label="user.summary.likes_received"}}
       </li>
-      {{plugin-outlet "user-summary-stat" tagName="li"}}
+      {{plugin-outlet name="user-summary-stat"
+                      connectorTagName="li"
+                      args=(hash model=model)}}
     </ul>
   </div>
 
@@ -104,7 +106,7 @@
               <a class='domain'
                  href='{{unbound link.url}}'
                  title='{{unbound link.title}}'
-                 rel='{{unless user.removeNoFollow 'nofollow'}}'
+                 rel='{{unless user.removeNoFollow 'nofollow noopener'}}'
                  target='_blank'>
                 {{shorten-url link.url}}
               </a>

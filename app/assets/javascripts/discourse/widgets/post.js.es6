@@ -110,20 +110,6 @@ createWidget('post-avatar', {
   }
 });
 
-
-createWidget('wiki-edit-button', {
-  tagName: 'div.post-info.wiki',
-  title: 'post.wiki.about',
-
-  html() {
-    return iconNode('pencil-square-o');
-  },
-
-  click() {
-    this.sendWidgetAction('editPost');
-  }
-});
-
 createWidget('post-email-indicator', {
   tagName: 'div.post-info.via-email',
 
@@ -181,12 +167,8 @@ createWidget('post-meta-data', {
       result.push(this.attach('post-email-indicator', attrs));
     }
 
-    if (attrs.version > 1) {
+    if (attrs.version > 1 || attrs.wiki) {
       result.push(this.attach('post-edits-indicator', attrs));
-    }
-
-    if (attrs.wiki) {
-      result.push(this.attach('wiki-edit-button', attrs));
     }
 
     if (attrs.multiSelect) {

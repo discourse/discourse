@@ -23,7 +23,7 @@
           {{nav-item route='admin.backups' label='admin.backups.title'}}
         {{/if}}
         {{nav-item route='adminPlugins' label='admin.plugins.title'}}
-        {{plugin-outlet "admin-menu" tagName="li"}}
+        {{plugin-outlet name="admin-menu" connectorTagName="li"}}
       </ul>
 
       <div class='boxed white admin-content'>

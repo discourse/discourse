@@ -1,4 +1,7 @@
 import { propertyEqual } from 'discourse/lib/computed';
+import InputValidation from 'discourse/models/input-validation';
+import { emailValid } from 'discourse/lib/utilities';
+import computed from 'ember-addons/ember-computed-decorators';
 
 export default Ember.Controller.extend({
   taken: false,
@@ -8,7 +11,7 @@ export default Ember.Controller.extend({
   newEmail: null,
 
   newEmailEmpty: Em.computed.empty('newEmail'),
-  saveDisabled: Em.computed.or('saving', 'newEmailEmpty', 'taken', 'unchanged'),
+  saveDisabled: Em.computed.or('saving', 'newEmailEmpty', 'taken', 'unchanged', 'invalidEmail'),
   unchanged: propertyEqual('newEmailLower', 'currentUser.email'),
 
   newEmailLower: function() {
@@ -19,6 +22,21 @@ export default Ember.Controller.extend({
     if (this.get('saving')) return I18n.t("saving");
     return I18n.t("user.change");
   }.property('saving'),
+
+  @computed('newEmail')
+  invalidEmail(newEmail) {
+    return !emailValid(newEmail);
+  },
+
+  @computed('invalidEmail')
+  emailValidation(invalidEmail) {
+    if (invalidEmail) {
+      return InputValidation.create({
+        failed: true,
+        reason: I18n.t('user.email.invalid')
+      });
+    }
+  },
 
   actions: {
     changeEmail: function() {

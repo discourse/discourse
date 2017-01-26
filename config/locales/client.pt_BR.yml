@@ -321,18 +321,15 @@ pt_BR:
       total_rows:
         one: "1 usuário"
         other: "%{count} usuários"
+    group_histories:
+      actions:
+        add_user_to_group: "Adicionar usuário"
+        remove_user_from_group: "Remover usuário"
     groups:
-      empty:
-        posts: "Não há postagens por membros deste grupo."
-        members: "Não há membros neste grupo."
-        mentions: "Não há menção a este grupo."
-        messages: "Não há mensagens para este grupo."
-        topics: "Não há topicos por membros deste grupo."
       add: "Adicionar"
       selector_placeholder: "Adicionar membros"
       owner: "proprietário"
       visible: "Grupo é visível para todos os usuários"
-      index: "Grupos"
       title:
         one: "grupo"
         other: "grupos"
@@ -428,6 +425,10 @@ pt_BR:
       profile: "Perfil"
       mute: "Silenciar"
       edit: "Editar Preferências"
+      download_archive:
+        button_text: "Baixar Minhas Publicações"
+        confirm: "Você tem certeza de que quer baixar as suas publicações?"
+        rate_limit_error: "Publicações podem ser baixadas somente uma vez por dia, por favor tente novamente amanhã."
       new_private_message: "Nova Mensagem"
       private_message: "Mensagem"
       private_messages: "Mensagens"
@@ -690,11 +691,8 @@ pt_BR:
         link_generated: "Link de convite gerado com sucesso!"
         valid_for: "Link de convite é válido apenas para esse endereço de email: %{email}"
         bulk_invite:
-          none: "Você ainda não convidou ninguém. Você pode enviar convites individuais, ou enviar vários de uma vez através da ferramenta de <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>enviar em massa</a>."
           text: "Convidar em massa a partir de arquivo"
-          uploading: "Subindo..."
           success: "Arquivo enviado com sucesso, você será notificado por mensagem quando o processo estiver completo."
-          error: "Houve um erro ao enviar '{{filename}}': {{message}}"
       password:
         title: "Senha"
         too_short: "A sua senha é muito curta."
@@ -961,6 +959,7 @@ pt_BR:
       title_placeholder: "Sobre o que é esta discussão em uma pequena frase?"
       edit_reason_placeholder: "por que você está editando?"
       show_edit_reason: "(adicione motivo da edição)"
+      topic_featured_link_placeholder: "Entre com o link mostrado no título."
       reply_placeholder: "Escreva aqui. Use Markdown, BBCode ou HTML para formatar. Arraste ou cole uma imagens."
       view_new_post: "Ver sua nova resposta."
       saving: "Salvando"
@@ -1120,6 +1119,7 @@ pt_BR:
           tracking: Eu estou rastreando
           private: estão em minhas mensagens
           bookmarks: Eu marquei
+          first: são a primeira publicação
           pinned: está fixado
           unpinned: não está fixado
         statuses:
@@ -1143,6 +1143,7 @@ pt_BR:
     topics:
       new_messages_marker: "última visita"
       bulk:
+        select_all: "Selecionar Tudo"
         unlist_topics: "Tópicos Não Listados"
         reset_read: "Redefinir Lido"
         delete: "Apagar Tópicos"
@@ -1269,7 +1270,6 @@ pt_BR:
         go_bottom: "último"
         go: "ir"
         jump_bottom: "ir para a última mensagem"
-        jump_prompt: "ir para a mensagem"
         jump_prompt_long: "Gostaria de ir para qual mensagem?"
         jump_bottom_with_number: "ir para a mensagem %{post_number}"
         total: total de mensagens
@@ -1463,6 +1463,7 @@ pt_BR:
     post:
       reply: "<i class='fa fa-mail-forward'></i> {{replyAvatar}} {{usernameLink}}"
       reply_topic: "<i class='fa fa-mail-forward'></i> {{link}}"
+      quote_reply: "Citação"
       edit: "Em resposta a {{link}} por {{replyAvatar}} {{username}}"
       edit_reason: "Motivo:"
       post_number: "resposta {{number}}"
@@ -1500,7 +1501,6 @@ pt_BR:
         file_too_large: "Desculpe, o arquivo que você está tentando enviar é muito grande (o tamanho máximo permitido é {{max_size_kb}}kb). Que tal enviar o seu arquivo grande para um serviço de hospedagem na nuvem e depois compartilhar o link?"
         too_many_uploads: "Desculpe, você pode enviar apenas um arquivos por vez."
         too_many_dragged_and_dropped_files: "Desculpe, você só pode subir até 10 arquivos de cada vez."
-        upload_not_authorized: "Desculpe, o tipo de arquivo que você está tentando enviar não está autorizado (extensões autorizadas: {{authorized_extensions}})."
         image_upload_not_allowed_for_new_user: "Desculpe, novos usuário não podem enviar imagens."
         attachment_upload_not_allowed_for_new_user: "Desculpe, usuários novos não podem enviar anexos."
         attachment_download_requires_login: "Desculpe, você precisa estar logado para baixar arquivos anexos."
@@ -1821,7 +1821,6 @@ pt_BR:
       one: "visualizar"
       other: "visualizações"
     replies: "Respostas"
-    views_long: "este tópico foi visto {{number}} vezes"
     activity: "Atividade"
     likes: "Curtidas"
     likes_lowercase:
@@ -2124,8 +2123,6 @@ pt_BR:
         backups: "backups"
         traffic_short: "Tráfego"
         traffic: "Solicitações do aplicativo pela web"
-        page_views: "Solicitações de API"
-        page_views_short: "Solicitações de API"
         show_traffic_report: "Mostrar Relatório de Tráfego Detalhado"
         reports:
           today: "Hoje"
@@ -2215,15 +2212,12 @@ pt_BR:
         refresh: "Atualizar"
         new: "Novo"
         selector_placeholder: "digite o nome de usuário"
-        name_placeholder: "Nome do grupo, sem espaços, regras iguais ao nome de usuário"
         about: "Editar participação no grupo e nomes aqui"
         group_members: "Membros do grupo"
         delete: "Apagar"
         delete_confirm: "Apagar este grupos?"
         delete_failed: "Unable to delete group. If this is an automatic group, it cannot be destroyed."
-        delete_member_confirm: "Remover '%{username}' do grupo '%{group}'?"
         delete_owner_confirm: "Remover privilégio de proprietário de '%{username}'?"
-        name: "Nome"
         add: "Adicionar"
         add_members: "Adicionar membros"
         custom: "Definidos"
@@ -2240,10 +2234,6 @@ pt_BR:
         add_owners: Adicionar proprietários
         incoming_email: "Endereço de email de entrada personalizado"
         incoming_email_placeholder: "Insira um endereço de email"
-        flair_url_placeholder: "(Opcional) URL de imagem ou classe Font Awesome"
-        flair_bg_color_placeholder: "(Opcional) Valor em hexadecimal da cor"
-        flair_color_placeholder: "(Opcional) Valor em hexadecimal da cor"
-        flair_preview: "Pré-visualizar"
       api:
         generate_master: "Gerar chave Mestra de API"
         none: "Não existem chaves API ativas no momento."
@@ -2275,7 +2265,6 @@ pt_BR:
         warn_local_payload_url: "Parece que você está tentando configurar um webhook para uma URL local. Eventos entregues a endereços locais podem causar efeitos colaterais ou comportamentos inesperados. Continuar?"
         secret_invalid: "O segredo não deve conter caracteres em branco."
         secret_too_short: "O segredo deve ter pelo menos 12 caracteres."
-        secret_placeholder: "Uma string opcional, usada para gerar assinaturas"
         event_type_missing: "Você deve configurar apenas um tipo de evento."
         content_type: "Tipo de Conteúdo"
         secret: "Segredo"
@@ -2297,7 +2286,6 @@ pt_BR:
           details: "Quando existir uma nova resposta, edição, deleção ou recuperação."
         user_event:
           name: "Evento de Usuário"
-          details: "When um usuário é criado ou aprovado."
         delivery_status:
           title: "Status de Entrega"
           inactive: "Inativo"
@@ -2515,6 +2503,9 @@ pt_BR:
         delivery_method: "Delivery Method"
         preview_digest_desc: "Pré-visualizar o conteúdo do e-mail de resumo enviado para usuários inativos."
         refresh: "Atualizar"
+        send_digest_label: "Enviar esse resultado para:"
+        send_digest: "Enviar"
+        sending_email: "Enviando email..."
         format: "Formato"
         html: "html"
         text: "texto"

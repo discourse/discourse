@@ -71,6 +71,7 @@ et:
       has_already_been_used: "on juba kasutusel"
       inclusion: puudub nimekirjas
       invalid: pole korrektne
+      is_invalid: "tundub segane. kas see on terve lause?"
       less_than: peab olema väiksem kui %{count}
       less_than_or_equal_to: peab olema väiksem või võrdne kui %{count}
       not_a_number: ei ole number
@@ -105,11 +106,13 @@ et:
       default_categories_already_selected: "Sa ei saa valida teises nimekirjas valitud liiki."
       s3_upload_bucket_is_required: "Ei saa aktiveerida S3 üleslaadimist, kui 's3_upload_bucket' ei ole määratud."
   bulk_invite:
-    file_should_be_csv: "Üles laetud fail peab olema kas csv või txt formaadis."
+    file_should_be_csv: "Üles laetav fail peab olema CSV vormingus."
+    error: "Selle faili üleslaadimisel tekkis viga. Palun proovi hiljem uuesti."
   backup:
     operation_already_running: "Praegu on üks protsess pooleli. Uut tegevust ei saa hetkel käivitada."
     backup_file_should_be_tar_gz: "Varukoopia peab olema .tar.gz arhiivifail."
     not_enough_space_on_disk: "Varukoopia üleslaadimiseks pole piisavalt kettaruumi."
+    invalid_filename: "Varundusfaili nimi sisaldab keelatud sümboleid. Lubatud sümbolid on a-z 0-9 . - _."
   not_logged_in: "Selleks peate olema sisse logitud."
   not_found: "Päritud URLi või ressurssi ei leitud."
   invalid_access: "Päritud ressursi vaatamiseks puuduvad õigused."
@@ -122,6 +125,11 @@ et:
   embed:
     start_discussion: "Alusta vestlust"
     continue: "Jätka arutelu"
+    error: "Sängitamine ebaõnnestus"
+    referer: "Sissetulev link:"
+    mismatch: "Sissetulev link ei kattu ühegagi järgmistest hostidest:"
+    no_hosts: "Sängitamiseks pole ühtegi hosti seadistatud."
+    configure: "Sängitamise seadistamine"
     more_replies:
       one: "veel 1 vastus"
       other: "veel %{count} vastust"
@@ -155,8 +163,10 @@ et:
   spamming_host: "Vabandust, sa ei tohi sellele domeenile viidata."
   user_is_suspended: "Peatatud kasutajatel pole lubatud postitada."
   topic_not_found: "Midagi on valesti. Kas on võimalik, et antud teema suleti või kustutati samal ajal, kui te seda vaatasite?"
+  not_accepting_pms: "Kahjuks ei aktsepteeri %{username} hetkel sõnumeid."
   just_posted_that: "on liiga sarnane sellele, mida sa hiljuti postitasid"
   invalid_characters: "sisaldab ebasobivaid tähemärke"
+  is_invalid: "tundub segane. kas see on terve lause?"
   next_page: "järgmine leht →"
   prev_page: "← eelmine leht"
   page_num: "Leht %{num}"
@@ -249,12 +259,25 @@ et:
       See teema on Sulle kindlasti väga tähtis &ndash; enam kui %{percent}% vastustest siin on Sinu postitatud.
 
       Kas oled kindel, et jätad ka teistele piisavalt aega ja võimalust oma arvamuse avaldamiseks?
+    too_many_replies: |
+      ### Oled selle teema vastuste limiidi saavutanud
+
+      Vabandame, kuid uutele kasutajatele on ajutiselt seatud limiit %{newuser_max_replies_per_topic} vastust teema kohta.
+
+      Uue vastuse lisamise asemel kaalu oma varasema vastuse muutmist või teiste teemade külastust.
+    reviving_old_topic: |
+      ### Vana teema taaselustamine?
+
+      Viimane vastus sellele teemale on rohkem kui %{days} päeva vana. Sinu vastus tõstab selle teema nimekirja ette ning teavitab kõiki, kes selle teemaga seotud olid.
+
+      Oled sa kindel, et soovid seda vana arutelu jätkata?
   activerecord:
     attributes:
       category:
         name: "Liigi nimetus"
       topic:
         title: 'Pealkiri'
+        featured_link: 'Põhiloo viide'
       post:
         raw: "Sisu"
       user_profile:
@@ -268,12 +291,16 @@ et:
               too_many_users: "Saad hoiatusi saata vaid ühele kasutajale korraga."
               cant_send_pm: "Vabanda, sa ei saa sellele kasutajale privaatsõnumit saata."
               no_user_selected: "Pead valima sobiva kasutaja."
+            featured_link:
+              invalid: "on vigane. URL peab sisaldama http:// või https://."
+              invalid_category: "ei saa selles foorumis redigeerida."
         user:
           attributes:
             password:
               common: "on üks 10000 enim kasutatud salasõnast. Palun kasuta turvalisemat parooli."
               same_as_username: "on sama mis su kasutajanimi. Palun kasuta turvalisemat parooli."
               same_as_email: "on sama mis su meiliaadress. Palun kasuta turvalisemat parooli."
+              same_as_current: "ühtib sinu hetkel kehtiva parooliga."
             ip_address:
               signup_not_allowed: "Sellelt kontolt pole liitumine lubatud."
         color_scheme_color:
@@ -283,6 +310,10 @@ et:
         post_reply:
           base:
             different_topic: "Postitus ja vastus peavad kuuluma samasse teemasse."
+        web_hook:
+          attributes:
+            payload_url:
+              invalid: "URL on vigane. URL peab sisaldama http:// või https://. Ning tühikud ei ole lubatud."
       <<: *errors
   user_profile:
     no_info_me: "<div class='missing-profile'>Sinu profiili väli 'Minust' on hetkel tühi, <a href='/users/%{username_lower}/preferences/about-me'>kas sooviksid selle ära täita?</a></div>"
@@ -293,7 +324,24 @@ et:
   meta_category_description: "Arutelu selle saidi, tema korralduse, töömeetodite ja arenguvõimaluste kohta."
   staff_category_name: "Meeskond"
   staff_category_description: "Privaatfoorum meeskonnasisesteks aruteludeks. Teemad on nähtavad vaid adminnidele ja moderaatoritele."
+  assets_topic_title: "Saidi kujunduse vahendid"
   assets_topic_body: "See on püsiteema, nähtav vaid meeskonnale, selle saidi kujunduses kasutatavate piltide ja failide talletamiseks. Ära seda kustuta!\n\n\nTee nii:\n\n\n1. Vasta siia teemasse.\n2. Lae üles kõik pildid, mida soovida kasutada logodena, ikoonidena, vms. (Kasuta üleslaadimise ikooni postituse redaktori tööriistaribal, võid pildid siia ka lohistada või kleepida.)\n3. Postita oma vastus.\n4. Tee üleslaetud pildifailini leiad kas oma uues postituses oleval pildil paremklikates, või postituse muutmise ikooni klikkides ja kopeerides postitusest redaktoris. Kopeeri teed pildifailideni.\n5. Kleebi need teed sättesse [basic settings](/admin/site_settings/category/required).\n\n\nKui soovid lubada einevate failitüüpide üleslaadimist, muuda `authorized_extensions` sättes [file settings](/admin/site_settings/category/files)."
+  discourse_welcome_topic:
+    title: "Teretulemast Discourse'i"
+    body: |2
+
+      Selle märgistatud teema esimene lõik saab olema kõikidele uutele külastajatele nähtav kui tervitustekst sinu avalehel. See on oluline!
+
+      **Muuda see** enda kommuuni lühitutvustuseks:
+
+      - Kellele see on?
+      - Mida siit leiab?
+      - Miks peaks keegi siia tulema?
+      - Kust saab rohkem infot (lingid, ressursid jne)?
+
+      <img src="/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
+
+      Ilmselt peaksid sa selle teema administreerimise alt sulgema :wrench: (üleval paremal ja allääres), et teadandele vastuseid ei kuhjuks.
   lounge_welcome:
     title: "Teretulemast Lounge'i"
     body: |2
@@ -319,6 +367,8 @@ et:
       [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
   category:
     topic_prefix: "Liigist %{category}"
+    replace_paragraph: "(Asenda see paragrahv oma uues kategoorias kategooria lühitutvustusega. See juhis ilmub siis kategooriate vaates. Seega, katsu hoida kirjeldus alla 200 tähemärgi. **Kuniks sa pole muutnud seda kirjeldust või kuni sa pole loonud teemasid, ei ole seda kategooriat kategooriate lehel näha.**)"
+    post_template: "%{replace_paragraph}\n\nKasuta järgnevaid lõikusid pikema kirjelduse jaoks või foorumi juhendi või reeglite jaoks:\n\n- Miks peaksid inimesed seda foorumit kasutama? Mille jaoks see on?\n\n- Mille poolest erineb see meie teistest foorumitest?\n\n- Mis infot peaksid selle foorumi teemad sisaldama?\n\n- Kas meil on seda foorumit vaja? Kas me saame seda foorumit ühendada teise foorumiga või alamfoorumiga?\n"
     errors:
       uncategorized_parent: "'Liigitamata' ei saa omada vanem-liiki"
       self_parent: "Alamliigi vanemaks ei tohi olla alamliik ise"
@@ -345,6 +395,7 @@ et:
       title: "tavaline"
     leader:
       title: "juht"
+    change_failed_explanation: "Üritasid alandada %{user_name} tasemele '%{new_trust_level}'. Samas on tal juba tase'%{current_trust_level}'. %{user_name} jääb tasemele '%{current_trust_level}' - kui soovid alandada kasutaja taset, siis lukusta kõigepealt usaldustase."
   rate_limiter:
     slow_down: "Oled antud seda toimingut liiga palju proovinud. Proovi hiljem uuesti."
     too_many_requests: "Antud tegevuse jaoks on meil päevane kordade limiit. Palun oota %{time_left} enne kui uuesti proovid."
@@ -354,6 +405,7 @@ et:
       create_topic: "Lisad teemasid liiga kiiresti. Palun oota %{time_left} enne kui uuesti proovid."
       create_post: "Vastad liiga kiiresti. Palun oota %{time_left} enne kui uuesti proovid."
       delete_post: "Kustutad postitusi liiga kiiresti. Palun oota %{time_left} enne kui uuesti proovid."
+      public_group_membership: "Liitud gruppidega/lahkud neist liiga sageli. Palun oota %{time_left} enne kui uuesti proovid."
       topics_per_day: "Oled ületanud tänaseks lubatud uute teemade lisamise limiidi. Palun oota %{time_left} enne kui uuesti proovid."
       pms_per_day: "Oled ületanud tänaseks lubatud sõnumite limiidi. Palun oota %{time_left} enne kui uuesti proovid."
       create_like: "Oled ületanud tänaseks lubatud meeldimiste lisamise limiidi. Palun oota %{time_left} enne kui uuesti proovid."
@@ -443,36 +495,50 @@ et:
         one: "peaaegu 1 aasta tagasi"
         other: "peaaegu %{count} aastat tagasi"
   password_reset:
+    no_token: "Vabandust, see parooli uuendamise link on liiga vana. Vajuta sisselogimise nuppu ja kasuta värske lingi saamiseks 'Unustasin parooli'."
     choose_new: "Palun vali uus parool"
     choose: "Palun vali parool"
     update: 'Uuenda parooli'
     save: 'Määra Parool'
     title: 'Uuenda Parool'
+    success: "Sinu parooli muutmine õnnestus ja oled nüüd sisse logitud."
     success_unapproved: "Sinu parooli muutmine õnnestus."
     continue: "Edasi saidile %{site_name}"
   change_email:
     confirmed: "Sinu meiliaadress on uuendatud."
     please_continue: "Edasi saidile %{site_name}"
+    error: "Sinu meiliaadressi muutmisel esines tõrge. Äkki on see juba kasutuses?"
+    error_staged: "Sinu meiliaadressi muutmisel esines tõrge. Ettevalmistamisel olev kasutaja juba kasutab seda."
+    already_done: "Vabandust, see kinnitamise link ei kehti enam. Äkki on teie meiliaadress juba muudetud?"
     authorizing_old:
       title: "Täname, et oma kehtiva meiliaadressi kinnitasid"
+      description: "Saadame nüüd kinnituse Teie uuele meiliaadressile."
   activation:
     action: "Oma konto aktiveerimiseks kliki siia"
+    already_done: "Vabandust, see konto kinnitamise link ei kehti enam. Äkki on Teie konto juba aktiveeritud?"
+    please_continue: "Teie uus konto on kinnitatud; Teid suunatakse nüüd avalehele."
     continue_button: "Edasi saidile %{site_name}"
     welcome_to: "Tere tulemast %{site_name}!"
+    approval_required: "Enne, kui saate foorumit kasutada, peab moderaator Teie uue konto käsitsi kinnitama. Konto kinnitamise kohta tuleb teade meilile."
+    missing_session: "Me ei saa kontrollida kas Teie konto on loodud, palun kontrolli et brauseris oleks küpsised lubatud."
   post_action_types:
     off_topic:
       title: 'Teemaväline'
+      description: 'Arvestades postituse pealkirja ja sisu, ei ole see postitus käesoleva vestlusega seotud ning see tuleks tõenäoliselt mujale liigutada.'
       long_form: 'tähistasin selle kui teemavälise'
     spam:
       title: 'Spämm'
+      description: 'See postitus on reklaam. Käesoleva vestlusega seoses ei ole see ei kasulik ega asjakohane vaid pigem millegi reklaamimine.'
       long_form: 'tähistasin selle kui spämmi'
       email_title: '"%{title}" tähistati spämmina'
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: 'Ebasünnis'
+      description: 'Selle postituse sisu on iga mõistliku inimese hinnangul solvav, ahistav või rikub <a href="/guidelines">meie kommuuni reegleid</a>.'
       long_form: 'tähistasin selle kui sobimatu'
     notify_user:
       title: 'Saada kasutajale @{{username}} sõnum'
+      description: 'Soovin selle isikuga tema postituse osas otse ja privaatselt suhelda.'
       long_form: 'saatsin kasutajale sõnumi'
       email_title: 'Sinu postitus teemas "%{title}"'
       email_body: "%{link}\n\n%{message}"
@@ -494,17 +560,36 @@ et:
       title: 'Hääleta'
       description: 'Hääleta selle postituse poolt'
       long_form: 'hääletas selle postituse poolt'
+  user_activity:
+    no_bookmarks:
+      self: "Te ei ole postitustele järjehoidjaid lisanud. Postitustele järjehoidjate lisamine lubab nende juurde hiljem hõlpsasti tagasi pöörduda."
+      others: "Järjehoidjad puuduvad."
+    no_likes_given:
+      self: "Sa pole oma meeldimist ühelegi postitusele andnud."
+      others: "Meeldimisega postitusi veel pole."
   topic_flag_types:
     spam:
       title: 'Spämm'
+      description: 'See teema on reklaam. See ei ole ei kasulik ega teemakohane.'
       long_form: 'tähistasin selle kui spämmi'
     inappropriate:
       title: 'Ebasobiv'
       long_form: 'tähistasin selle kui sobimatu'
+    notify_moderators:
+      title: "Miski muu"
+      long_form: 'tähistasin selle kui moderaatori tähelepanu vajava'
+      email_title: 'Teema "%{title}" nõuab moderaatori tähelepanu'
+      email_body: "%{link}\n\n%{message}"
   archetypes:
+    regular:
+      title: "Tavaline teema"
     banner:
       title: "Teema Bänneriks"
+  unsubscribed:
+    title: "Tellimus tühistatud!"
   unsubscribe:
+    title: "Tühista tellimus"
+    mailing_list_mode: "Lülita postiloendi režiim välja"
     log_out: "Logi välja"
   user_api_key:
     read: "lugemine"
@@ -623,12 +708,41 @@ et:
     mobile_visits:
       xaxis: "Päev"
       yaxis: "Külastuste arv"
+  dashboard:
+    host_names_warning: "Sinu config/database.yml fail kasutab vaikimisi hostinime localhost. Kirjuta sinna oma saidi hostinimi."
   site_settings:
     min_post_length: "Lühim lubatud postituse pikkus"
     max_post_length: "Maksimaalne lubatud postituse pikkus tähemärkides"
     min_topic_title_length: "Lühim lubatud teema pealkirja pikkus tähemärkides"
     max_topic_title_length: "Maksimaalne lubatud teema pealkirja pikkus tähemärkides"
     min_private_message_title_length: "Minimaalne lubatud teema pealkirja pikkus tähemärkides"
+    enable_instagram_logins: "Luba autentimine Instagrami abil, nõuab instagram_consumer_key ja instagram_consumer_secret"
+    instagram_consumer_key: "Teenusekasutaja avalik võti Instagrami abil autentimiseks"
+    instagram_consumer_secret: "Teenusekasutaja salajane võti Instagrami abil autentimiseks"
+    enable_staged_users: "Sissetulevate meilide töötlemisel loo kasutajad ettevalmistamiseks automaatselt."
+    maximum_staged_users_per_email: "Ettevalmistamisel olevate kasutajate maksimaalne arv sai sissetuleva meili töötlemisel täis."
+    dominating_topic_minimum_percent: "Mitu protsenti teema postitustest peab kasutaja tegema, et talle saadetaks meeldetuletus teema liigse domineerimise kohta."
+    feed_polling_enabled: "VAID SÄNGITAMISEL: Kas sängitada RSS/ATOM voog postitusena."
+    feed_polling_url: "VAID SÄNGITAMISEL: URL või RSS/ATOM voog, mida sängitada."
+    embed_by_username: "Sängitatud teemasid lisava kasutaja Discourse kasutajanimi."
+    embed_title_scrubber: "Regex sängitatavate päiste puhastamiseks."
+    embed_truncate: "Lühenda sängitatud postitused."
+    embed_post_limit: "Maksimaalne postituste arv, mida sängitada."
+    embed_whitelist_selector: "CSS valik elementidele, mida lubada sängitamistes."
+    embed_blacklist_selector: "CSS valik elementidele, mida eemaldada sängitamistes."
+    tagging_enabled: "Luba silte teemadel?"
+    min_trust_to_create_tag: "Sildi lisamiseks nõutav minimaalne usaldustase."
+    max_tags_per_topic: "Teemale liidetavate siltide maksimaalne arv."
+    max_tag_length: "Sildis kasutatavate tähemärkide maksimaalne arv."
+    max_tag_search_results: "Siltide otsimisel maksimaalselt kuvatavate tulemuste arv."
+    show_filter_by_tag: "Näita rippmenüüd teemade loetelu filtreerimiseks siltide alusel."
+    max_tags_in_filter_list: "Filtri rippmenüüs kuvatavate siltide maksimaalne arv. Kuvatakse enimkasutatud sildid."
+    tags_sort_alphabetically: "Kuva sildid tähestikulises järjekorras. Vaikimisi kuvatakse need populaarsuse järjekorras."
+    tag_style: "Siltide vimplite visuaalne stiil."
+    staff_tags: "Siltide loetelu, mida võib lisada ainult meeskonna liige"
+    min_trust_level_to_tag_topics: "Teemade sildistamiseks on nõutav minimaalne usaldustase"
+    suppress_overlapping_tags_in_list: "Ära näita silti, kui see ühtib täpselt sõnaga teema päses"
+    remove_muted_tags_from_latest: "Ära näita värskete teemade nimistus teemasid, millel on vaigistatud silt."
   search:
     types:
       category: 'Liigid'
@@ -639,6 +753,7 @@ et:
   frequent_poster: "Tihedam postitaja"
   login:
     admin_not_allowed_from_ip_address: "Sellelt IP-aadressilt ei saa adminnina sisse logida."
+    already_logged_in: "Oih, näib, et üritad vastu võtta võõra kasutaja kutset. Kui Sa ei ole kasutaja %{current_user}, logi palun välja ja proovi uuesti."
   system_messages:
     backup_failed:
       subject_template: "Varundamine ebaõnnestus"
@@ -649,12 +764,39 @@ et:
     csv_export_failed:
       subject_template: "Andmete eksportimine ebaõnnestus"
   user_notifications:
+    unsubscribe:
+      title: "Tühista tellimus"
+    user_posted_pm_staged:
+      subject_template: "%{optional_re}%{topic_title}"
+      text_body_template: |2
+
+        %{message}
     mailing_list:
+      why: "Saidi %{site_link} kõik toimingud päeval %{date}"
+      subject_template: "[%{site_name}] Kokkuvõte päeval %{date}"
+      from: "%{site_name} kokkuvõte"
       new_topics: "Uued teemad"
       topic_updates: "eemade uuendused"
       view_this_topic: "Vaata seda teemat"
       back_to_top: "Tagasi üles"
+    forgot_password:
+      subject_template: "[%{site_name}] Parooli uuendamine"
+    set_password:
+      subject_template: "[%{site_name}] Määra parool"
+    admin_login:
+      subject_template: "[%{site_name}] Logi sisse"
+    account_created:
+      subject_template: "[%{site_name}] Sinu uus konto"
+    confirm_old_email:
+      subject_template: "[%{site_name}] Kinnita oma kehtiv meiliaadress"
+    notify_old_email:
+      subject_template: "[%{site_name}] Sinu meiliaadress on muudetud"
+    signup_after_approval:
+      subject_template: "Oled saidil %{site_name} heaks kiidetud!"
+    signup:
+      subject_template: "[%{site_name}] Kinnita oma uus konto"
   page_not_found:
+    title: "Oih! Soovitud lehte ei ole või on see privaatne."
     popular_topics: "Populaarsed"
     recent_topics: "Viimased"
     see_more: "Veel"
@@ -666,7 +808,10 @@ et:
   email_log:
     anonymous_user: "Kasutaja on anonüümne"
     seen_recently: "Kasutajat nähti hiljuti"
+    topic_nil: "post.topic tühi hulk"
     message_blank: "sõnum on tühi"
+    message_to_blank: "message.to on tühi"
+    text_part_body_blank: "text_part.body on tühi"
     body_blank: "sisu on tühi"
   about: "Teave"
   guidelines: "Juhendid"
@@ -692,39 +837,52 @@ et:
       name: Vedaja
     welcome:
       name: Teretulemast
+      description: Sai like'i
     autobiographer:
       name: Autobiograaf
     anniversary:
       name: Tähtpäev
+      description: Olnud aktiivne kasutaja vähemalt aasta, postitanud vähemalt ühe korra
     nice_post:
       name: Mõnus vastus
     good_post:
       name: Hea vastus
+      description: Kogus vastusele 25 like'i
     great_post:
       name: Suurepärane vastus
+      description: Kogus vastusele 50 like'i
     nice_topic:
       name: Mõnus teema
+      description: Kogus teemale 10 like'i
     good_topic:
       name: Hea teema
+      description: Kogus teemale 25 like'i
     great_topic:
       name: Suurepärane teema
+      description: Kogus teemale 50 like'i
     nice_share:
       name: Mõnus jagamine
+      description: Jagas postitust 25 unikaalse kasutajaga
     good_share:
       name: Hea jagamine
+      description: Jagas postitust 300 unikaalse külastajaga
     great_share:
       name: Suurepärane jagamine
     first_like:
       name: Esimene meeldimine
+      description: Laikis postitust
     first_flag:
       name: Esimene tähis
       description: Teatas lipuga postitusest
     promoter:
       name: Promootor
+      description: Kutsus kasutaja
     campaigner:
       name: Aktiivne promootor
+      description: Kutsus 3 tavakasutajat
     champion:
       name: Tšempion
+      description: Kutsus 5 liiget
     first_share:
       name: Esimene jagamine
       description: Jagas postitust
@@ -740,10 +898,13 @@ et:
       name: Lugeja
     popular_link:
       name: Populaarne viide
+      description: Postitas välise lingi, millel 50 klikki
     hot_link:
       name: Kuum viide
+      description: Postitas välise lingi, millel 300 klikki
     famous_link:
       name: Kuulus viide
+      description: Postitas välise lingi, millel 1000 klikki
     appreciated:
       name: Hinnatud
     respected:
@@ -758,16 +919,24 @@ et:
       name: Hullult armunud
     thank_you:
       name: Tänud
+      description: Omab 20 laigitud postitust ja laikis 10 postitust
     gives_back:
       name: Annab tagasi
+      description: Omab 100 laigitud postitust ja laikis 100 postitust
     empathetic:
       name: Empaatiline
+      description: Omab 500 laigitud postitust ja laikis 1000 postitust
+      long_description: |
+        Saad selle märgise, kui sul on 500 laigitud postitust ning oled ise laikunud 1000 või enam postitust. Oled tõeline lahkuse ja vastastikuse lugupidamise eeskuju :two_hearts:
     first_emoji:
       name: Esimene emotikon
+      description: Kasutasid postituses emotikoni
     first_mention:
       name: Esimene mainimine
+      description: Mainisid postituses kasutajat
     first_reply_by_email:
       name: Esimene vastamine meiliga
+      description: Vastasid postitusele läbi e-maili
   admin_login:
     success: "Kiri saadetud"
     error: "Viga!"
@@ -775,6 +944,121 @@ et:
     submit_button: "Saada kiri"
   tags:
     title: "Sildid"
+    staff_tag_disallowed: "Sildi \"%{tag}\" võib lisada ainult meeskonna liige."
+    staff_tag_remove_disallowed: "Sildi \"%{tag}\" võib eemaldada ainult meeskonna liige."
+  rss_by_tag: "%{tag}-ga sildistatud teemad"
+  finish_installation:
+    congratulations: "Palju õnne, Discourse on paigaldatud!"
+    register:
+      button: "Registreeru"
+      title: "Registreeri adminni konto"
+      help: "alustamiseks registreeri uus konto"
+    resend_email:
+      title: "Saada aktiveerimismeil uuesti"
+  safe_mode:
+    title: "Sisene turvalisse režiimi"
+    no_customizations: "Keela kõik saidi kohandused"
+    only_official: "Keela kõik mitteametlikud pluginad"
+    no_plugins: "Keela kõik pluginad"
+    enter: "Sisene turvalisse režiimi"
+  wizard:
+    title: "Discourse sätted"
+    step:
+      locale:
+        title: "Tere tulemast oma Discourse'i!"
+        fields:
+          default_locale:
+            description: "Mis on Sinu kogukonna vaikekeel?"
+      forum_title:
+        title: "Nimi"
+        fields:
+          title:
+            label: "Sinu kogukonna nimi"
+            placeholder: "Jane ajaviitenurgake"
+          site_description:
+            label: "Kirjelda oma kogukonda ühe lühikese lausega"
+            placeholder: "Koht Janele ja tema sõpradele lahedate arutelude jaoks"
+      introduction:
+        title: "Sissejuhatus"
+        fields:
+          welcome:
+            label: "Tervitusteema"
+            one_paragraph: "Palun koonda oma tervitustekst ühte lõiku."
+      privacy:
+        title: "Juurdepääs"
+        fields:
+          privacy:
+            choices:
+              open:
+                label: "Avalik"
+                description: "Kogukonnale pääseb ligi igaüks ning võib liituda"
+              restricted:
+                label: "Privaatne"
+                description: "Kogukonnaga saavad liituda ainult minu poolt kutsutud või heakskiidetud inimesed"
+      contact:
+        title: "Kontakt"
+        fields:
+          contact_email:
+            label: "Meil"
+            placeholder: "nimi@kuskil.ee"
+          contact_url:
+            label: "Veebileht"
+            placeholder: "http://www.example.com/contact-us"
+          site_contact:
+            label: "Automaatsed sõnumid"
+      corporate:
+        title: "Organisatsioon"
+        fields:
+          company_short_name:
+            label: "Ettevõtte nimi (lühike)"
+            placeholder: "Juurutajad"
+          company_full_name:
+            label: "Ettevõtte nimi (täielik)"
+            placeholder: "Juurutajad OÜ"
+          company_domain:
+            label: "Ettevõtte domeeni nimi"
+            placeholder: "juurutajad.ee"
+      colors:
+        title: "Kujundusteema"
+        fields:
+          theme_id:
+            choices:
+              default:
+                label: "Lihtne hele"
+              dark:
+                label: "Lihtne tume"
+      logos:
+        title: "Logod"
+        fields:
+          logo_url:
+            label: "Peamine logo"
+            description: "Logo kujutis Sinu saidi vasakul ülanurgas. Kasuta laia ristküliku kujulist pilti."
+          logo_small_url:
+            label: "Kompaktne logo"
+            description: "Sinu logo kompaktne versioon, kuvatakse alla kerimisel Sinu saidi vasakul ülanurgas. Kasuta ruudu kujulist pilti."
+      icons:
+        title: "Ikoonid"
+        fields:
+          favicon_url:
+            label: "Väike ikoon"
+          apple_touch_icon_url:
+            label: "Suur ikoon"
+            description: "Soovitame kasutada ikooni, et kuvada oma saiti uuematel seadmetel, mille pilt on suurem. Soovitatud ikooni suurus on vähemalt 144px x 144px"
+      homepage:
+        title: "Avaleht"
+        fields:
+          homepage_style:
+            choices:
+              latest:
+                label: "Viimased teemad"
+              categories:
+                label: "Foorumid"
+      emoji:
+        title: "Emotikon"
+      invites:
+        title: "Kutsu meeskonda"
+      finished:
+        title: "Sinu Discourse on valmis!"
   activemodel:
     errors:
       <<: *errors

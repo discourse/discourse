@@ -41,6 +41,7 @@ before_install:
   - git clone --depth=1 https://github.com/discourse/discourse-backup-uploads-to-s3.git plugins/discourse-backup-uploads-to-s3
   - git clone --depth=1 https://github.com/discourse/discourse-spoiler-alert.git plugins/discourse-spoiler-alert
   - git clone --depth=1 https://github.com/discourse/discourse-cakeday.git plugins/discourse-cakeday
+  - git clone --depth=1 https://github.com/discourse/discourse-canned-replies.git plugins/discourse-canned-replies
   - npm i -g eslint babel-eslint
   - eslint app/assets/javascripts
   - eslint --ext .es6 app/assets/javascripts
@@ -52,7 +53,7 @@ before_script:
   - bundle exec rake db:create db:migrate
 
 install:
-  - bash -c "if [ '$RAILS_MASTER' == '1' ]; then bundle update --retry=3 --jobs=3 arel rails rails-observers seed-fu; fi"
+  - bash -c "if [ '$RAILS_MASTER' == '1' ]; then bundle update --retry=3 --jobs=3 arel rails seed-fu; fi"
   - bash -c "if [ '$RAILS_MASTER' == '0' ]; then bundle install --without development --deployment --retry=3 --jobs=3; fi"
 
 script: "bundle exec rspec && bundle exec rake plugin:spec && bundle exec rake qunit:test['200000']"

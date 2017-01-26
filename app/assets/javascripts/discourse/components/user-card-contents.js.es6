@@ -12,7 +12,7 @@ const clickMention = "click.discourse-user-mention";
 
 export default Ember.Component.extend(CleansUp, {
   elementId: 'user-card',
-  classNameBindings: ['visible:show', 'showBadges', 'hasCardBadgeImage'],
+  classNameBindings: ['visible:show', 'showBadges', 'hasCardBadgeImage', 'user.card_background::no-bg'],
   allowBackgrounds: setting('allow_profile_backgrounds'),
 
   postStream: Ember.computed.alias('topic.postStream'),
@@ -71,18 +71,14 @@ export default Ember.Component.extend(CleansUp, {
 
   @observes('user.card_background')
   addBackground() {
-    const url = this.get('user.card_background');
-
     if (!this.get('allowBackgrounds')) { return; }
 
     const $this = this.$();
     if (!$this) { return; }
 
-    if (Ember.isEmpty(url)) {
-      $this.css('background-image', '').addClass('no-bg');
-    } else {
-      $this.css('background-image', `url(${Discourse.getURLWithCDN(url)})`).removeClass('no-bg');
-    }
+    const url = this.get('user.card_background');
+    const bg = Ember.isEmpty(url) ? '' : `url(${Discourse.getURLWithCDN(url)})`;
+    $this.css('background-image', bg);
   },
 
   _show(username, $target) {

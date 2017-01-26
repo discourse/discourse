@@ -132,8 +132,6 @@ SQL
 
         if rows == 0
           create_missing_record(user_id, topic_id, attrs)
-        else
-          observe_after_save_callbacks_for topic_id, user_id
         end
       end
 
@@ -203,8 +201,6 @@ SQL
 
       if rows == 0
         change(user_id, topic_id, last_visited_at: now, first_visited_at: now)
-      else
-        observe_after_save_callbacks_for(topic_id, user_id)
       end
     end
 
@@ -323,11 +319,6 @@ SQL
       end
     end
 
-    def observe_after_save_callbacks_for(topic_id, user_id)
-      TopicUser.where(topic_id: topic_id, user_id: user_id).each do |topic_user|
-        UserActionObserver.instance.after_save topic_user
-      end
-    end
   end
 
   def self.update_post_action_cache(opts={})

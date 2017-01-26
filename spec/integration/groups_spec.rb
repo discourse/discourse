@@ -4,12 +4,61 @@ describe "Groups" do
   let(:user) { Fabricate(:user) }
   let(:group) { Fabricate(:group, users: [user]) }
 
-  def sign_in(user)
-    password = 'somecomplicatedpassword'
-    user.update!(password: password)
-    Fabricate(:email_token, confirmed: true, user: user)
-    post "/session.json", { login: user.username, password: password }
-    expect(response).to be_success
+  describe 'viewing groups' do
+    let(:other_group) do
+      Fabricate(:group, name: '0000', visible: true, automatic: false)
+    end
+
+    before do
+      other_group
+      group.update_attributes!(automatic: true, visible: true)
+    end
+
+    context 'when group directory is disabled' do
+      site_setting(:enable_group_directory, false)
+
+      it 'should deny access' do
+        get "/groups.json"
+        expect(response).to be_forbidden
+      end
+    end
+
+    it 'should return the right response' do
+      get "/groups.json"
+
+      expect(response).to be_success
+
+      response_body = JSON.parse(response.body)
+
+      group_ids = response_body["groups"].map { |g| g["id"] }
+
+      expect(response_body["extras"]["group_user_ids"]).to eq([])
+      expect(group_ids).to include(other_group.id)
+      expect(group_ids).to_not include(group.id)
+      expect(response_body["load_more_groups"]).to eq("/groups?page=1")
+      expect(response_body["total_rows_groups"]).to eq(1)
+    end
+
+    context 'viewing as an admin' do
+      it 'should display automatic groups' do
+        admin = Fabricate(:admin)
+        sign_in(admin)
+        group.add(admin)
+
+        get "/groups.json"
+
+        expect(response).to be_success
+
+        response_body = JSON.parse(response.body)
+
+        group_ids = response_body["groups"].map { |g| g["id"] }
+
+        expect(response_body["extras"]["group_user_ids"]).to eq([group.id])
+        expect(group_ids).to include(group.id, other_group.id)
+        expect(response_body["load_more_groups"]).to eq("/groups?page=1")
+        expect(response_body["total_rows_groups"]).to eq(10)
+      end
+    end
   end
 
   describe "checking if a group can be mentioned" do
@@ -48,13 +97,15 @@ describe "Groups" do
       end
 
       it "should be able update the group" do
+        group.update!(allow_membership_requests: false)
+
         expect do
           xhr :put, "/groups/#{group.id}", { group: {
             flair_bg_color: 'FFF',
             flair_color: 'BBB',
             flair_url: 'fa-adjust',
             bio_raw: 'testing',
-            title: 'awesome team',
+            full_name: 'awesome team',
             public: true,
             allow_membership_requests: true
           } }
@@ -68,7 +119,7 @@ describe "Groups" do
         expect(group.flair_color).to eq('BBB')
         expect(group.flair_url).to eq('fa-adjust')
         expect(group.bio_raw).to eq('testing')
-        expect(group.title).to eq('awesome team')
+        expect(group.full_name).to eq('awesome team')
         expect(group.public).to eq(true)
         expect(group.allow_membership_requests).to eq(true)
         expect(GroupHistory.last.subject).to eq('allow_membership_requests')
@@ -100,6 +151,26 @@ describe "Groups" do
     end
   end
 
+  describe 'owners' do
+    let(:user1) { Fabricate(:user, last_seen_at: Time.zone.now) }
+    let(:user2) { Fabricate(:user, last_seen_at: Time.zone.now - 1 .day) }
+    let(:group) { Fabricate(:group, users: [user, user1, user2]) }
+
+    it 'should return the right list of owners' do
+      group.add_owner(user1)
+      group.add_owner(user2)
+
+      xhr :get, "/groups/#{group.name}/owners"
+
+      expect(response).to be_success
+
+      owners = JSON.parse(response.body)
+
+      expect(owners.count).to eq(2)
+      expect(owners.map { |o| o["id"] }.sort).to eq([user1.id, user2.id])
+    end
+  end
+
   describe 'members' do
     let(:user1) do
       Fabricate(:user,
@@ -117,7 +188,15 @@ describe "Groups" do
       )
     end
 
-    let(:group) { Fabricate(:group, users: [user1, user2]) }
+    let(:user3) do
+      Fabricate(:user,
+        last_seen_at: nil,
+        last_posted_at: nil,
+        email: 'c@test.org'
+      )
+    end
+
+    let(:group) { Fabricate(:group, users: [user1, user2, user3]) }
 
     it "should allow members to be sorted by" do
       xhr :get, "/groups/#{group.name}/members", order: 'last_seen_at', desc: true
@@ -126,7 +205,7 @@ describe "Groups" do
 
       members = JSON.parse(response.body)["members"]
 
-      expect(members.map { |m| m["id"] }).to eq([user1.id, user2.id])
+      expect(members.map { |m| m["id"] }).to eq([user1.id, user2.id, user3.id])
 
       xhr :get, "/groups/#{group.name}/members", order: 'last_seen_at'
 
@@ -134,7 +213,7 @@ describe "Groups" do
 
       members = JSON.parse(response.body)["members"]
 
-      expect(members.map { |m| m["id"] }).to eq([user2.id, user1.id])
+      expect(members.map { |m| m["id"] }).to eq([user2.id, user1.id, user3.id])
 
       xhr :get, "/groups/#{group.name}/members", order: 'last_posted_at', desc: true
 
@@ -142,7 +221,7 @@ describe "Groups" do
 
       members = JSON.parse(response.body)["members"]
 
-      expect(members.map { |m| m["id"] }).to eq([user2.id, user1.id])
+      expect(members.map { |m| m["id"] }).to eq([user2.id, user1.id, user3.id])
     end
 
     it "should not allow members to be sorted by columns that are not allowed" do
@@ -152,7 +231,7 @@ describe "Groups" do
 
       members = JSON.parse(response.body)["members"]
 
-      expect(members.map { |m| m["id"] }).to eq([user1.id, user2.id])
+      expect(members.map { |m| m["id"] }).to eq([user1.id, user2.id, user3.id])
     end
   end
 
@@ -237,20 +316,6 @@ describe "Groups" do
         expect(group_history.target_user).to eq(user2)
       end
 
-      it "can make incremental deletes" do
-        expect do
-          xhr :delete, "/groups/#{group.id}/members", username: user.username
-        end.to change { group.users.count }.by(-1)
-
-        expect(response).to be_success
-
-        group_history = GroupHistory.last
-
-        expect(group_history.action).to eq(GroupHistory.actions[:remove_user_from_group])
-        expect(group_history.acting_user).to eq(admin)
-        expect(group_history.target_user).to eq(user)
-      end
-
       it "cannot add members to automatic groups" do
         group.update!(automatic: true)
 
@@ -296,6 +361,22 @@ describe "Groups" do
           group.update!(public: true)
         end
 
+        context 'admin' do
+          it "can make incremental adds" do
+            expect do
+              xhr :put, "/groups/#{group.id}/members", usernames: other_user.username
+            end.to change { group.users.count }.by(1)
+
+            expect(response).to be_success
+
+            group_history = GroupHistory.last
+
+            expect(group_history.action).to eq(GroupHistory.actions[:add_user_to_group])
+            expect(group_history.acting_user).to eq(admin)
+            expect(group_history.target_user).to eq(other_user)
+          end
+        end
+
         it 'should allow a user to join the group' do
           sign_in(other_user)
 
@@ -305,7 +386,9 @@ describe "Groups" do
           expect(response).to be_success
         end
 
-        it 'should not allow a user to add another user to a group' do
+        it 'should not allow an underprivilege user to add another user to a group' do
+          sign_in(user)
+
           xhr :put, "/groups/#{group.id}/members", usernames: other_user.username
 
           expect(response).to be_forbidden
@@ -364,6 +447,15 @@ describe "Groups" do
             group.update!(public: true)
           end
 
+          context "admin" do
+            it "removes by username" do
+              expect { xhr :delete, "/groups/#{group.id}/members", username: other_user.username }
+                .to change { group.users.count }.by(-1)
+
+              expect(response).to be_success
+            end
+          end
+
           it 'should allow a user to leave a group' do
             sign_in(other_user)
 
@@ -373,7 +465,9 @@ describe "Groups" do
             expect(response).to be_success
           end
 
-          it 'should not allow a user to leave a group for another user' do
+          it 'should not allow a underprivilege user to leave a group for another user' do
+            sign_in(user)
+
             xhr :delete, "/groups/#{group.id}/members", username: other_user.username
 
             expect(response).to be_forbidden

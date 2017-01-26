@@ -5,7 +5,7 @@ require_dependency 'distributed_cache'
 class SiteCustomization < ActiveRecord::Base
   ENABLED_KEY = '7e202ef2-56d7-47d5-98d8-a9c8d15e57dd'
 
-  COMPILER_VERSION = 2
+  COMPILER_VERSION = 4
 
   @cache = DistributedCache.new('site_customization')
 
@@ -45,20 +45,27 @@ PLUGIN_API_JS
     doc = Nokogiri::HTML.fragment(html)
     doc.css('script[type="text/x-handlebars"]').each do |node|
       name = node["name"] || node["data-template-name"] || "broken"
-      precompiled =
-        if name =~ /\.raw$/
-          "require('discourse-common/lib/raw-handlebars').template(#{Barber::Precompiler.compile(node.inner_html)})"
-        else
-          "Ember.HTMLBars.template(#{Barber::Ember::Precompiler.compile(node.inner_html)})"
-        end
-
-      node.replace <<COMPILED
-        <script>
-          (function() {
-            Ember.TEMPLATES[#{name.inspect}] = #{precompiled};
-          })();
-        </script>
+      is_raw = name =~ /\.raw$/
+      if is_raw
+        template = "require('discourse-common/lib/raw-handlebars').template(#{Barber::Precompiler.compile(node.inner_html)})"
+        node.replace <<COMPILED
+          <script>
+            (function() {
+              Discourse.RAW_TEMPLATES[#{name.sub(/\.raw$/, '').inspect}] = #{template};
+            })();
+          </script>
 COMPILED
+      else
+        template = "Ember.HTMLBars.template(#{Barber::Ember::Precompiler.compile(node.inner_html)})"
+        node.replace <<COMPILED
+          <script>
+            (function() {
+              Ember.TEMPLATES[#{name.inspect}] = #{template};
+            })();
+          </script>
+COMPILED
+      end
+
     end
 
     doc.css('script[type="text/discourse-plugin"]').each do |node|

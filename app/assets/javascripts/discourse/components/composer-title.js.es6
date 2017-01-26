@@ -31,7 +31,7 @@ export default Ember.Component.extend({
     }
   },
 
-  @observes('composer.titleLength')
+  @observes('composer.titleLength', 'watchForLink')
   _titleChanged() {
     if (this.get('composer.titleLength') === 0) { this.set('autoPosted', false); }
     if (this.get('autoPosted') || !this.get('watchForLink')) { return; }
@@ -51,15 +51,16 @@ export default Ember.Component.extend({
   },
 
   _checkForUrl() {
+    if (!this.element || this.isDestroying || this.isDestroyed) { return; }
+
     if (this.get('isAbsoluteUrl') && (this.get('composer.reply')||"").length === 0) {
       // Try to onebox. If success, update post body and title.
-
       this.set('composer.loading', true);
 
       const link = document.createElement('a');
       link.href = this.get('composer.title');
 
-      let loadOnebox = load(link, false, ajax);
+      let loadOnebox = load(link, false, ajax, this.currentUser.id, true);
 
       if (loadOnebox && loadOnebox.then) {
         loadOnebox.then( () => {
@@ -82,15 +83,17 @@ export default Ember.Component.extend({
       this.set('composer.featuredLink', this.get('composer.title'));
 
       const $h = $(html),
-            header = $h.find('h4').length > 0 ? $h.find('h4') : $h.find('h3');
+            heading = $h.find('h3').length > 0 ? $h.find('h3') : $h.find('h4');
 
       this.set('composer.reply', this.get('composer.title'));
 
-      if (header.length > 0 && header.text().length > 0) {
-        this.changeTitle(header.text());
+      if (heading.length > 0 && heading.text().length > 0) {
+        this.changeTitle(heading.text());
       } else {
-        const filename = (this.get('composer.featuredLink')||"").split("/").pop();
-        this.changeTitle(filename);
+        const firstTitle = $h.attr('title') || $h.find("[title]").attr("title");
+        if (firstTitle && firstTitle.length > 0) {
+          this.changeTitle(firstTitle);
+        }
       }
     }
   },

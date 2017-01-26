@@ -26,7 +26,7 @@ test("onebox result doesn't include a title", () => {
   andThen(() => {
     ok(find('.d-editor-preview').html().trim().indexOf('onebox') > 0, "it pastes the link into the body and previews it");
     ok(exists('.d-editor-textarea-wrapper .popup-tip.good'), 'the body is now good');
-    equal(find('.title-input input').val(), "no-title.html", "title is from the end of the url");
+    equal(find('.title-input input').val(), "http://www.example.com/no-title.html", "title is unchanged");
   });
 });
 

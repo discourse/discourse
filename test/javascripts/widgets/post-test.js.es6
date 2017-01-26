@@ -17,15 +17,29 @@ widgetTest('basic elements', {
 });
 
 widgetTest('wiki', {
+  template: '{{mount-widget widget="post" args=args showHistory="showHistory"}}',
+  setup() {
+    this.set('args', { wiki: true, version: 2, canViewEditHistory: true });
+    this.on('showHistory', () => this.historyShown = true);
+  },
+  test(assert) {
+    click('.post-info .wiki');
+    andThen(() => {
+      assert.ok(this.historyShown, 'clicking the wiki icon displays the post history');
+    });
+  }
+});
+
+widgetTest('wiki without revision', {
   template: '{{mount-widget widget="post" args=args editPost="editPost"}}',
   setup() {
-    this.set('args', { wiki: true });
+    this.set('args', { wiki: true, version: 1, canViewEditHistory: true });
     this.on('editPost', () => this.editPostCalled = true);
   },
   test(assert) {
-    click('.post-info.wiki');
+    click('.post-info .wiki');
     andThen(() => {
-      assert.ok(this.editPostCalled, 'clicking the wiki icon edits the post');
+      assert.ok(this.editPostCalled, 'clicking wiki icon edits the post');
     });
   }
 });

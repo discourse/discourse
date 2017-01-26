@@ -320,17 +320,10 @@ sq:
         one: "1 anëtar"
         other: "%{count} anëtarë"
     groups:
-      empty:
-        posts: "Nuk ka postim nga anëtarët e këtij grupi."
-        members: "Nuk ka asnjë anëtar në këtë grup."
-        mentions: "Nuk ka përmendje për këtë grup."
-        messages: "Nuk ka mesazhe për këtë grup."
-        topics: "Nuk ka asnjë temë nga anëtarët e këtij grupi."
       add: "Shto"
       selector_placeholder: "Shto anëtarë"
       owner: "autori"
       visible: "Grupi është i dukshëm për të gjithë përdoruesit"
-      index: "Grupet"
       title:
         one: "grup"
         other: "grupe"
@@ -458,7 +451,7 @@ sq:
       moderator_tooltip: "Ky anëtar është moderator"
       admin_tooltip: "Ky anëtar është administrator"
       blocked_tooltip: "Ky anëtar është i bllokuar"
-      suspended_notice: "Ky anëtarë është përjashtuar deri më {{date}}."
+      suspended_notice: "Ky anëtar është përjashtuar deri më {{date}}."
       suspended_reason: "Arsyeja:"
       github_profile: "Github"
       email_activity_summary: "Përmbledhja e aktivitetit"
@@ -676,11 +669,8 @@ sq:
         create: "Dërgo një ftesë"
         generate_link: "Kopjo lidhjen e ftesës"
         bulk_invite:
-          none: "Ju nuk keni ftuar askënd deri tani. Mund të dërgoni ftesa individuale ose mund të ftoni një grup personash duke <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>ngarkuar skedarin</a>."
           text: "Skedari për ftesat në grup"
-          uploading: "Duke ngarkuar..."
           success: "Skedari u ngarkua, do njoftoheni me mesazh kur procesi të mbarojë. "
-          error: "Pati një gabi gjatë ngarkimit të skedarit '{{filename}}': {{message}}"
       password:
         title: "Fjalëkalimi"
         too_short: "Fjalëkalimi është shumë i shkurër."
@@ -1210,7 +1200,6 @@ sq:
         go_bottom: "poshtë"
         go: "shko"
         jump_bottom: "hidhu tek përgjigja e fundit"
-        jump_prompt: "hidhu tek tema"
         jump_prompt_long: "Tek cila temë doni të shkoni?"
         jump_bottom_with_number: "shko tek përgjigja %{post_number}"
         total: totali i postimeve
@@ -1425,7 +1414,6 @@ sq:
         file_too_large: "Na vjen keq, skedari është shumë i madh (maksimumi i lejuar është {{max_size_kb}}kb). Mund t'a vendosni këtë skedar të madh në një faqe tjetër dhe të vendosni këtu vetëm lidhjen."
         too_many_uploads: "Na vjen keq, por duhet t'i ngarkoni skedarët një nga një."
         too_many_dragged_and_dropped_files: "Na vjen keq, po ju mund të ngarkoni vetëm 10 skedarë njëkohësisht. "
-        upload_not_authorized: "Na vjen keq, skedari që po ngarkoni nuk është i autorizuar (tipet e skedarëve të lejuar: {{authorized_extensions}})."
         image_upload_not_allowed_for_new_user: "Na vjen keq, anëtarët e rinj nuk mund të ngarkojnë skedarë. "
         attachment_upload_not_allowed_for_new_user: "Na vjen keq, anëtarët e rinj nuk mund të ngarkojnë skedarë. "
         attachment_download_requires_login: "Na vjen keq, duhet të identifikoheni për të shkarkuar një dokument. "
@@ -1719,7 +1707,6 @@ sq:
       one: "shikim"
       other: "shikime"
     replies: "Përgjigjet"
-    views_long: "kjo temë është parë {{number}} herë"
     activity: "Aktiviteti"
     likes: "Pëlqimet"
     likes_lowercase:
@@ -2014,8 +2001,6 @@ sq:
         backups: "backupe"
         traffic_short: "Trafik"
         traffic: "Kërkesat web të aplikimit"
-        page_views: "Kërkesat në API"
-        page_views_short: "Kërkesat në API"
         show_traffic_report: "Trego raportin e detajuar të trafikut"
         reports:
           today: "Sot"
@@ -2104,15 +2089,12 @@ sq:
         refresh: "Rifresko"
         new: "I Ri"
         selector_placeholder: "vendos emrin e përdoruesit"
-        name_placeholder: "Emri i grupit, pa hapësira, si username-t"
         about: "Modifiko anëtarët e grupit dhe emrin këtu"
         group_members: "Përdorues grupi"
         delete: "Fshij"
         delete_confirm: "Fshije këtë grup?"
         delete_failed: "Nuk e fshimë dot grupin. Nëse ky është një grup automatik, nuk fshihet dot. "
-        delete_member_confirm: "Do të heqësh '%{username}' nga grupi '%{group}'?"
         delete_owner_confirm: "Hiqe privilegjin e pronarit për '%{username}'?"
-        name: "Emri"
         add: "Shto"
         add_members: "Shto Anëtar"
         custom: "Grupet e krijuara"
@@ -2123,7 +2105,6 @@ sq:
         automatic: "Automatik"
         group_owners: Pronarët
         add_owners: Shto pronarë
-        flair_preview: "Parashikimi"
       api:
         generate_master: "Gjenero Master API Key"
         none: "Për momentin, nuk ka çelësa API aktivë."

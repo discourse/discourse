@@ -343,7 +343,7 @@ class PostAlerter
       end
     end
 
-    UserActionObserver.log_notification(original_post, user, type, opts[:acting_user_id])
+    UserActionCreator.log_notification(original_post, user, type, opts[:acting_user_id])
 
     topic_title = post.topic.title
     # when sending a private message email, keep the original title

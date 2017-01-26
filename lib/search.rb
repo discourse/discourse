@@ -54,7 +54,7 @@ class Search
     posts.each do |post|
       # force indexing
       post.cooked += " "
-      SearchObserver.index(post)
+      SearchIndexer.index(post)
     end
 
     posts = Post.joins(:topic)
@@ -67,7 +67,7 @@ class Search
     posts.each do |post|
       # force indexing
       post.cooked += " "
-      SearchObserver.index(post)
+      SearchIndexer.index(post)
     end
 
     nil

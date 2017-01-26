@@ -25,7 +25,8 @@
       <div class="control-group">
         <label class="control-label">{{i18n 'user.email.title'}}</label>
         <div class="controls">
-          {{text-field value=newEmail id="change_email" classNames="input-xxlarge" autofocus="autofocus"}}
+          {{text-field value=newEmail id="change-email" classNames="input-xxlarge" autofocus="autofocus"}}
+          {{input-tip validation=emailValidation}}
         </div>
         <div class='instructions'>
           {{#if taken}}

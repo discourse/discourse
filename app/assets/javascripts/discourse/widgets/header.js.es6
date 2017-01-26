@@ -104,6 +104,8 @@ createWidget('header-icons', {
   },
 
   html(attrs) {
+    if (this.siteSettings.login_required && !this.currentUser) { return []; }
+
     const hamburger = this.attach('header-dropdown', {
                         title: 'hamburger_menu',
                         icon: 'bars',
@@ -112,12 +114,9 @@ createWidget('header-icons', {
                         action: 'toggleHamburger',
                         contents() {
                           if (!attrs.flagCount) { return; }
-                          return this.attach('link', {
-                            href: Discourse.getURL('/admin/flags/active'),
-                            title: 'notifications.total_flagged',
-                            rawLabel: attrs.flagCount,
-                            className: 'badge-notification flagged-posts'
-                          });
+                          return h('div.badge-notification.flagged-posts', { attributes: {
+                            title: I18n.t('notifications.total_flagged')
+                          } }, attrs.flagCount);
                         }
                       });
 
@@ -223,8 +222,8 @@ export default createWidget('header', {
     this.state.searchVisible = false;
   },
 
-  linkClickedEvent() {
-    this.closeAll();
+  linkClickedEvent(attrs) {
+    if (!(attrs && attrs.searchContextEnabled)) this.closeAll();
     this.updateHighlight();
   },
 

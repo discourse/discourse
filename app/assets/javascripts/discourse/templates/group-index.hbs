@@ -1,37 +1,14 @@
-{{#if model}}
-  {{#if isOwner}}
-    <form id='add-user-to-group' autocomplete="off">
-      {{user-selector usernames=usernames placeholderKey="groups.selector_placeholder" id="user-search-selector" name="usernames"}}
-      {{d-button action="addMembers" class="add" icon="plus" label="groups.add"}}
-    </form>
-  {{else if canJoinGroup}}
-    {{#if model.is_group_user}}
-      {{d-button action="leaveGroup"
-          class="btn-danger group-index-leave"
-          icon="minus"
-          label="groups.leave"
-          disabled=updatingMembership}}
-    {{else}}
-      {{d-button action="joinGroup"
-          class="group-index-join"
-          icon="plus"
-          label="groups.join"
-          disabled=updatingMembership}}
-    {{/if}}
-  {{else if canRequestMembership}}
-    {{d-button action="requestMembership"
-        class="group-index-request"
-        icon="envelope"
-        label="groups.request"}}
-  {{/if}}
+{{group-membership-button model=model
+    createNewMessageViaParams='createNewMessageViaParams'
+    showLogin='showLogin'}}
 
+{{#if hasMembers}}
   {{#load-more selector=".group-members tr" action="loadMore"}}
     <table class='group-members'>
       <thead>
         {{group-index-toggle order=order desc=desc field='username_lower' i18nKey='username'}}
         {{group-index-toggle order=order desc=desc field='last_posted_at' i18nKey='last_post'}}
         {{group-index-toggle order=order desc=desc field='last_seen_at'  i18nKey='last_seen'}}
-        <th></th>
       </thead>
 
       <tbody>
@@ -48,13 +25,6 @@
             <td>
               <span class="text">{{bound-date m.last_seen_at}}</span>
             </td>
-            <td class='remove-user'>
-              {{#if isOwner}}
-                {{#unless m.owner}}
-                  <a class="remove-link" {{action "removeMember" m}}><i class="fa fa-times"></i></a>
-                {{/unless}}
-              {{/if}}
-            </td>
           </tr>
         {{/each}}
       </tbody>
@@ -63,5 +33,7 @@
 
   {{conditional-loading-spinner condition=loading}}
 {{else}}
-  <div>{{i18n "groups.empty.users"}}</div>
+  <br>
+
+  <div>{{i18n "groups.empty.members"}}</div>
 {{/if}}

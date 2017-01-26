@@ -27,5 +27,5 @@ Fabricator(:private_category, from: :category) do
 end
 
 Fabricator(:link_category, from: :category) do
-  before_validation { |category, transients| category.custom_fields['topic_featured_link_allowed'] = 'true' }
+  before_validation { |category, transients| category.topic_featured_link_allowed = true }
 end

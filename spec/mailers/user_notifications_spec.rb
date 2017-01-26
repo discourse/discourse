@@ -137,6 +137,21 @@ describe UserNotifications do
         expect(subject.subject).to match(/Try Discourse/)
         expect(subject.subject).not_to match(/Discourse Meta/)
       end
+
+      it "excludes whispers" do
+        new_post_in_old_topic
+        whisper = Fabricate(:post, topic: old_topic, created_at: 1.hour.ago, raw: "This is secret", post_type: Post.types[:whisper])
+        expect(subject.html_part.body.to_s).to include old_topic.title
+        expect(subject.html_part.body.to_s).to_not include whisper.cooked
+      end
+
+      it "includes whispers for staff" do
+        user.admin = true; user.save!
+        new_post_in_old_topic
+        whisper = Fabricate(:post, topic: old_topic, created_at: 1.hour.ago, raw: "This is secret", post_type: Post.types[:whisper])
+        expect(subject.html_part.body.to_s).to include old_topic.title
+        expect(subject.html_part.body.to_s).to include whisper.cooked
+      end
     end
   end
 
@@ -150,6 +165,18 @@ describe UserNotifications do
         expect(subject.to).to be_blank
       end
 
+    end
+
+    context "with topics only from new users" do
+      let!(:new_today)     { Fabricate(:topic, user: Fabricate(:user, trust_level: TrustLevel[0], created_at: 10.minutes.ago), title: "Hey everyone look at me") }
+      let!(:new_yesterday) { Fabricate(:topic, user: Fabricate(:user, trust_level: TrustLevel[0], created_at: 25.hours.ago), created_at: 25.hours.ago, title: "This topic is of interest to you") }
+
+      it "returns topics from new users if they're more than 24 hours old" do
+        expect(subject.to).to eq([user.email])
+        html = subject.html_part.body.to_s
+        expect(html).to include(new_yesterday.title)
+        expect(html).to_not include(new_today.title)
+      end
     end
 
     context "with new topics" do

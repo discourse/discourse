@@ -11,11 +11,11 @@ To learn more about the philosophy and goals of the project, [visit **discourse.
 ## Screenshots
 
 <a href="https://bbs.boingboing.net"><img src="https://www.discourse.org/faq/14/boing-boing-discourse.png" width="720px"></a>
-<a href="https://discuss.newrelic.com/"><img src="https://www.discourse.org/faq/14/new-relic-discourse.png" width="720px"></a>
-<a href="http://discuss.howtogeek.com"><img src="https://www.discourse.org/faq/14/how-to-geek-discourse.png" width="720px"></a>
-<a href="https://talk.turtlerockstudios.com/"><img src="https://www.discourse.org/faq/14/turtle-rock-discourse.jpg" width="720px"></a>
+<a href="https://twittercommunity.com/"><img src="https://www.discourse.org/faq/17/twitter-discourse.png" width="720px"></a>
+<a href="http://discuss.howtogeek.com"><img src="https://www.discourse.org/faq/17/how-to-geek-discourse.png" width="720px"></a>
+<a href="https://talk.turtlerockstudios.com/"><img src="https://www.discourse.org/faq/17/turtle-rock-discourse.png" width="720px"></a>
 
-<a href="https://discuss.atom.io"><img src="https://www.discourse.org/faq/15/nexus-7-2013-mobile-discourse.png?v=2" alt="Atom" width="430px"></a> &nbsp;
+<a href="https://discuss.atom.io"><img src="https://www.discourse.org/faq/17/nexus-7-2013-mobile-discourse.png" alt="Atom" width="430px"></a> &nbsp;
 <a href="//discourse.soylent.com"><img src="https://www.discourse.org/faq/15/iphone-5s-mobile-discourse.png" alt="Soylent" width="270px"></a>
 
 Browse [lots more notable Discourse instances](http://www.discourse.org/faq/customers/).
@@ -84,7 +84,7 @@ The original Discourse code contributors can be found in [**AUTHORS.MD**](docs/A
 
 ## Copyright / License
 
-Copyright 2014 - 2016 Civilized Discourse Construction Kit, Inc.
+Copyright 2014 - 2017 Civilized Discourse Construction Kit, Inc.
 
 Licensed under the GNU General Public License Version 2.0 (or later);
 you may not use this work except in compliance with the License.

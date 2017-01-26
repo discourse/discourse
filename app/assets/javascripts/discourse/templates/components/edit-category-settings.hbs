@@ -19,11 +19,18 @@
   </label>
 </section>
 
+<section class="field">
+  <label>
+    {{input type="checkbox" checked=category.all_topics_wiki}}
+    {{i18n "category.all_topics_wiki"}}
+  </label>
+</section>
+
 {{#if siteSettings.topic_featured_link_enabled}}
   <section class='field'>
     <div class="allowed-topic-featured-link-category">
       <label class="checkbox-label">
-        {{input type="checkbox" checked=category.topicFeaturedLinkAllowed}}
+        {{input type="checkbox" checked=category.topic_featured_link_allowed}}
         {{i18n 'category.topic_featured_link_allowed'}}
       </label>
     </div>
@@ -56,7 +63,7 @@
       </label>
     </section>
 
-  {{plugin-outlet "category-email-in"}}
+  {{plugin-outlet name="category-email-in" args=(hash category=category)}}
 {{/if}}
 
 {{#if showPositionInput}}
@@ -82,4 +89,4 @@
   </section>
 {{/unless}}
 
-{{plugin-outlet "category-custom-settings"}}
+{{plugin-outlet name="category-custom-settings" args=(hash category=category)}}

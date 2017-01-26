@@ -106,7 +106,7 @@ it:
       default_categories_already_selected: "Non puoi selezionare una categoria usata in un'altra lista."
       s3_upload_bucket_is_required: "Non è possibile attivare i caricamenti da S3 a meno che non imposti l'opzione 's3_upload_bucket'."
   bulk_invite:
-    file_should_be_csv: "Il file caricato deve essere in formato csv o txt."
+    file_should_be_csv: "Il file caricato deve essere in formato csv."
   backup:
     operation_already_running: "Una operazione è in esecuzione. Non è possibile avviarne una nuova adesso."
     backup_file_should_be_tar_gz: "Il file di backup deve essere un archivio .tar.gz"
@@ -558,7 +558,7 @@ it:
     stop_watching_topic: "Smetti di osservare questo argomento, %{link}"
     mute_topic: "Silenziare tutte le notifiche per questo argomento, %{link}"
     unwatch_category: "Smetti di osservare tutti gli argomenti in %{category}"
-    mailing_list_mode: "Disabilita la modalità Mailing list"
+    mailing_list_mode: "Disabilita la modalità mailing list"
     disable_digest_emails: "Smetti di inviarmi email ripielogative"
     all: "Non inviare alcuna email da %{sitename}"
     different_user_description: "Sei attualmente connesso con un utente diverso da quello a cui abbiamo scritto. Per favore disconnettiti, oppure attiva la modalità anonima, e riprova."
@@ -569,8 +569,8 @@ it:
     read: "lettura"
     read_write: "lettura/scrittura"
     scopes:
-      message_bus: "Aggiornamenti in Tempo Reale"
-      notifications: "Leggi e elimina tutte le notifiche"
+      message_bus: "Aggiornamenti in tempo reale"
+      notifications: "Leggi e elimina le notifiche"
       read: "Leggi tutto"
       write: "Scrivi tutto"
   reports:
@@ -674,9 +674,9 @@ it:
       xaxis: "Giorno"
       yaxis: "Pagine viste da utenti connessi su mobile"
     page_view_anon_mobile_reqs:
-      title: "Visualizzazioni pagina da visitatori Anonimi"
+      title: "Visualizzazioni pagina da visitatori anonimi"
       xaxis: "Giorno"
-      yaxis: "Visualizzazioni pagina da visitatori Anonimi su dispositivi mobili"
+      yaxis: "Visualizzazioni pagina da visitatori anonimi su dispositivi mobili"
     http_background_reqs:
       title: "Background"
       xaxis: "Giorno"
@@ -818,7 +818,6 @@ it:
     redirect_users_to_top_page: "Redirigi automaticamente i nuovi utenti e quelli assenti da tempo sulla pagina degli argomenti di punta."
     show_email_on_profile: "Mostra l'email di un utente nel suo profilo (visibile solo a se stesso e allo staff)"
     email_token_valid_hours: "I messaggi di password dimenticata / attivazione account sono validi per (n) ore."
-    email_token_grace_period_hours: "I messaggi di password dimenticata / attivazione account sono ancora validi per un periodo di grazia di (n) ore dopo essere stati convalidati."
     enable_badges: "Attiva il sistema a distintivi"
     allow_index_in_robots_txt: "Specifica nel file robots.txt che questo sito permette l'indicizzazione da parte dei motori di ricerca."
     email_domains_blacklist: "Una lista di domini email separati dal carattere pipe \"|\" con cui gli utenti non possono registrare un account. Ad esempio: mailinator.com/trashmail.net"
@@ -1588,6 +1587,73 @@ it:
     title: "Etichette"
     staff_tag_remove_disallowed: "L'etichetta \"%{tag}\" può essere cancellata soltanto dallo staff."
   rss_by_tag: "Argomenti etichettati %{tag}"
+  wizard:
+    step:
+      introduction:
+        title: "Introduzione"
+        fields:
+          welcome:
+            label: "Argomento di Benvenuto"
+      privacy:
+        title: "Accesso"
+        fields:
+          privacy:
+            choices:
+              open:
+                label: "Pubblico"
+              restricted:
+                label: "Privato"
+      contact:
+        title: "Contatto"
+        fields:
+          contact_email:
+            label: "Email"
+            placeholder: "nome@esempio.com"
+          contact_url:
+            label: "Sito Web"
+          site_contact:
+            label: "Messaggi Automatici"
+      corporate:
+        title: "Società"
+        fields:
+          company_short_name:
+            label: "Nome Azienda (breve)"
+          company_full_name:
+            label: "Nome Azienda (completo)"
+          company_domain:
+            label: "Nome Dominio Azienda"
+      colors:
+        title: "Tema"
+        fields:
+          theme_id:
+            choices:
+              default:
+                label: "Semplice Chiaro"
+              dark:
+                label: "Semplice Scuro"
+      logos:
+        title: "Loghi"
+        fields:
+          logo_url:
+            label: "Logo Primario"
+          logo_small_url:
+            label: "Logo Piccolo"
+      icons:
+        title: "Icone"
+        fields:
+          favicon_url:
+            label: "Icona Piccola"
+          apple_touch_icon_url:
+            label: "Icona Grande"
+      homepage:
+        title: "Homepage"
+        fields:
+          homepage_style:
+            choices:
+              categories:
+                label: "Categorie"
+      emoji:
+        title: "Emoji"
   activemodel:
     errors:
       <<: *errors

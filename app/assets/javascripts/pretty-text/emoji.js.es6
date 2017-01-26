@@ -38,7 +38,7 @@ export function performEmojiUnescape(string, opts) {
       const classes = isCustomEmoji(emojiVal, opts) ? "emoji emoji-custom" : "emoji";
 
       return url && (isEmoticon || hasEndingColon) ?
-             `<img src='${url}' title='${emojiVal}' alt='${emojiVal}' class='${classes}'>` : m;
+             `<img src='${url}' ${opts.skipTitle ? '' : `title='${emojiVal}'`} alt='${emojiVal}' class='${classes}'>` : m;
     });
   }
 

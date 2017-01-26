@@ -10,19 +10,19 @@ describe Onebox::Engine::DiscourseLocalOnebox do
 
     it "returns a link if post isn't found" do
       url = "#{Discourse.base_url}/t/not-exist/3/2"
-      expect(Onebox.preview(url).to_s).to eq("<a href='#{url}'>#{url}</a>")
+      expect(Onebox.preview(url).to_s).to eq(%|<a href="#{url}">#{url}</a>|)
     end
 
     it "returns a link if not allowed to see the post" do
       url = "#{Discourse.base_url}#{post2.url}"
       Guardian.any_instance.expects(:can_see_post?).returns(false)
-      expect(Onebox.preview(url).to_s).to eq("<a href='#{url}'>#{url}</a>")
+      expect(Onebox.preview(url).to_s).to eq(%|<a href="#{url}">#{url}</a>|)
     end
 
     it "returns a link if post is hidden" do
       hidden_post = Fabricate(:post, topic: post.topic, post_number: 2, hidden: true, hidden_reason_id: Post.hidden_reasons[:flag_threshold_reached])
       url = "#{Discourse.base_url}#{hidden_post.url}"
-      expect(Onebox.preview(url).to_s).to eq("<a href='#{url}'>#{url}</a>")
+      expect(Onebox.preview(url).to_s).to eq(%|<a href="#{url}">#{url}</a>|)
     end
 
     it "returns some onebox goodness if post exists and can be seen" do
@@ -43,13 +43,13 @@ describe Onebox::Engine::DiscourseLocalOnebox do
 
     it "returns a link if topic isn't found" do
       url = "#{Discourse.base_url}/t/not-found/123"
-      expect(Onebox.preview(url).to_s).to eq("<a href='#{url}'>#{url}</a>")
+      expect(Onebox.preview(url).to_s).to eq(%|<a href="#{url}">#{url}</a>|)
     end
 
     it "returns a link if not allowed to see the topic" do
       url = topic.url
       Guardian.any_instance.expects(:can_see_topic?).returns(false)
-      expect(Onebox.preview(url).to_s).to eq("<a href='#{url}'>#{url}</a>")
+      expect(Onebox.preview(url).to_s).to eq(%|<a href="#{url}">#{url}</a>|)
     end
 
     it "replaces emoji in the title" do
@@ -66,22 +66,27 @@ describe Onebox::Engine::DiscourseLocalOnebox do
 
   context "for a link to an internal audio or video file" do
 
+    let(:sha) { Digest::SHA1.hexdigest("discourse") }
+    let(:path) { "/uploads/default/original/3X/5/c/#{sha}" }
+
     it "returns nil if file type is not audio or video" do
-      url = "#{Discourse.base_url}/uploads/default/original/3X/5/c/24asdf42.pdf"
+      url = "#{Discourse.base_url}#{path}.pdf"
       FakeWeb.register_uri(:get, url, body: "")
       expect(Onebox.preview(url).to_s).to eq("")
     end
 
     it "returns some onebox goodness for audio file" do
-      url = "#{Discourse.base_url}/uploads/default/original/3X/5/c/24asdf42.mp3"
+      url = "#{Discourse.base_url}#{path}.MP3"
       html = Onebox.preview(url).to_s
-      expect(html).to eq("<audio controls><source src='#{url}'><a href='#{url}'>#{url}</a></audio>")
+      # </source> will be removed by the browser
+      # need to fix https://github.com/rubys/nokogumbo/issues/14
+      expect(html).to eq(%|<audio controls=""><source src="#{url}"></source><a href="#{url}">#{url}</a></audio>|)
     end
 
     it "returns some onebox goodness for video file" do
-      url = "#{Discourse.base_url}/uploads/default/original/3X/5/c/24asdf42.mp4"
+      url = "#{Discourse.base_url}#{path}.mov"
       html = Onebox.preview(url).to_s
-      expect(html).to eq("<video width='100%' height='100%' controls><source src='#{url}'><a href='#{url}'>#{url}</a></video>")
+      expect(html).to eq(%|<video width="100%" height="100%" controls=""><source src="#{url}"></source><a href="#{url}">#{url}</a></video>|)
     end
   end
 

@@ -586,11 +586,8 @@ bs_BA:
         create: "Pošalji Pozivnicu"
         generate_link: "Kopiraj link za invite"
         bulk_invite:
-          none: "Još niste nikoga pozvali ovdje. Moete slati pojedinačne pozivnice ili pozvati više ljudi odjednom <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>učitavanjem datoteke za grupno pozivanje</a>."
           text: "Bulk Invite from File"
-          uploading: "Uploading..."
           success: "File uploaded successfully, you will be notified shortly with progress."
-          error: "There was an error uploading '{{filename}}': {{message}}"
       password:
         title: "Šifra"
         too_short: "Vaša šifra je prekratka."
@@ -1074,7 +1071,6 @@ bs_BA:
         edit: "Sorry, there was an error editing your post. Please try again."
         upload: "Sorry, there was an error uploading that file. Please try again."
         too_many_uploads: "Sorry, you can only upload one file at a time."
-        upload_not_authorized: "Sorry, the file you are trying to upload is not authorized (authorized extension: {{authorized_extensions}})."
         image_upload_not_allowed_for_new_user: "Sorry, new users can not upload images."
         attachment_upload_not_allowed_for_new_user: "Sorry, new users can not upload attachments."
         attachment_download_requires_login: "Sorry, you need to be logged in to download attachments."
@@ -1250,7 +1246,6 @@ bs_BA:
     original_post: "Originalni Odgovor"
     views: "Pregleda"
     replies: "Odgovora"
-    views_long: "ova tema je pregledana {{number}} puta"
     activity: "Aktivnost"
     likes: "Lajkovi"
     likes_long: "postoji {{number}} lajkova u ovoj temi"
@@ -1343,7 +1338,6 @@ bs_BA:
         space_free: "{{size}} slobodno"
         uploads: "Učitavanja"
         backups: "backupovi"
-        page_views_short: "API pozivi"
         show_traffic_report: "Pokaži detaljan izvještaj prometa"
         reports:
           today: "Today"
@@ -1412,7 +1406,6 @@ bs_BA:
         refresh: "Refresh"
         new: "New"
         selector_placeholder: "add users"
-        name_placeholder: "Group name, no spaces, same as username rule"
         about: "Edit your group membership and names here"
         group_members: "Group members"
         delete: "Delete"

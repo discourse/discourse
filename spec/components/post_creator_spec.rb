@@ -5,7 +5,6 @@ require 'topic_subtype'
 describe PostCreator do
 
   before do
-    ActiveRecord::Base.observers.enable :all
   end
 
   let(:user) { Fabricate(:user) }
@@ -32,6 +31,14 @@ describe PostCreator do
       p = PostCreator.create(user, basic_topic_params.merge(auto_track: false))
       # must be 0 otherwise it will think we read the topic which is clearly untrue
       expect(TopicUser.where(user_id: p.user_id, topic_id: p.topic_id).count).to eq(0)
+    end
+
+    it "can be created with first post as wiki" do
+      cat = Fabricate(:category)
+      cat.all_topics_wiki = true
+      cat.save
+      post = PostCreator.create(user, basic_topic_params.merge(category: cat.id ))
+      expect(post.wiki).to eq(true)
     end
 
     it "ensures the user can create the topic" do
@@ -99,6 +106,8 @@ describe PostCreator do
 
       it "generates the correct messages for a secure topic" do
 
+        UserActionCreator.enable
+
         admin = Fabricate(:admin)
 
         cat = Fabricate(:category)
@@ -131,6 +140,8 @@ describe PostCreator do
       end
 
       it 'generates the correct messages for a normal topic' do
+
+        UserActionCreator.enable
 
         p = nil
         messages = MessageBus.track_publish do
@@ -893,4 +904,39 @@ describe PostCreator do
     end
   end
 
+  context "private message to a muted user" do
+    let(:muted_me) { Fabricate(:evil_trout) }
+
+    it 'should fail' do
+      updater = UserUpdater.new(muted_me, muted_me)
+      updater.update_muted_users("#{user.username}")
+
+      pc = PostCreator.new(
+        user,
+        title: 'this message is to someone who muted me!',
+        raw: "you will have to see this even if you muted me!",
+        archetype: Archetype.private_message,
+        target_usernames: "#{muted_me.username}"
+      )
+      expect(pc).not_to be_valid
+      expect(pc.errors).to be_present
+    end
+
+    let(:staff_user) { Fabricate(:admin) }
+
+    it 'succeeds if the user is staff' do
+      updater = UserUpdater.new(muted_me, muted_me)
+      updater.update_muted_users("#{staff_user.username}")
+
+      pc = PostCreator.new(
+        staff_user,
+        title: 'this message is to someone who muted me!',
+        raw: "you will have to see this even if you muted me!",
+        archetype: Archetype.private_message,
+        target_usernames: "#{muted_me.username}"
+      )
+      expect(pc).to be_valid
+      expect(pc.errors).to be_blank
+    end
+  end
 end

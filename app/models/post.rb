@@ -51,6 +51,9 @@ class Post < ActiveRecord::Base
 
   validates_with ::Validators::PostValidator
 
+  after_save :index_search
+  after_save :create_user_action
+
   # We can pass several creating options to a post via attributes
   attr_accessor :image_sizes, :quoted_post_numbers, :no_bump, :invalidate_oneboxes, :cooking_options, :skip_unique_check
 
@@ -66,10 +69,13 @@ class Post < ActiveRecord::Base
   scope :visible, -> { joins(:topic).where('topics.visible = true').where(hidden: false) }
   scope :secured, lambda { |guardian| where('posts.post_type in (?)', Topic.visible_post_types(guardian && guardian.user))}
   scope :for_mailing_list, ->(user, since) {
-     created_since(since)
-    .joins(:topic)
-    .where(topic: Topic.for_digest(user, 100.years.ago)) # we want all topics with new content, regardless when they were created
-    .order('posts.created_at ASC')
+    q = created_since(since)
+      .joins(:topic)
+      .where(topic: Topic.for_digest(user, 100.years.ago)) # we want all topics with new content, regardless when they were created
+
+    q = q.where.not(post_type: Post.types[:whisper]) unless user.staff?
+
+    q.order('posts.created_at ASC')
   }
   scope :mailing_list_new_topics, ->(user, since) { for_mailing_list(user, since).where('topics.created_at > ?', since) }
   scope :mailing_list_updates,    ->(user, since) { for_mailing_list(user, since).where('topics.created_at <= ?', since) }
@@ -126,7 +132,8 @@ class Post < ActiveRecord::Base
       updated_at: Time.now,
       user_id: user_id,
       last_editor_id: last_editor_id,
-      type: type
+      type: type,
+      version: version
     }.merge(options)
 
     if Topic.visible_post_types.include?(post_type)
@@ -447,7 +454,7 @@ class Post < ActiveRecord::Base
     new_cooked = cook(raw, topic_id: topic_id, invalidate_oneboxes: opts.fetch(:invalidate_oneboxes, false))
     old_cooked = cooked
 
-    update_columns(cooked: new_cooked, baked_at: Time.new, baked_version: BAKED_VERSION)
+    self.update!(cooked: new_cooked, baked_at: Time.new, baked_version: BAKED_VERSION)
 
     # Extracts urls from the body
     TopicLink.extract_from(self)
@@ -634,6 +641,14 @@ class Post < ActiveRecord::Base
 
   def seen?(user)
     PostTiming.where(topic_id: topic_id, post_number: post_number, user_id: user.id).exists?
+  end
+
+  def index_search
+    SearchIndexer.index(self)
+  end
+
+  def create_user_action
+    UserActionCreator.log_post(self)
   end
 
   private

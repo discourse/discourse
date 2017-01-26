@@ -7,7 +7,7 @@ require_dependency "permalink_constraint"
 
 # This used to be User#username_format, but that causes a preload of the User object
 # and makes Guard not work properly.
-USERNAME_ROUTE_FORMAT = /[\w.\-]+/ unless defined? USERNAME_ROUTE_FORMAT
+USERNAME_ROUTE_FORMAT = /[\w.\-]+?/ unless defined? USERNAME_ROUTE_FORMAT
 
 BACKUP_ROUTE_FORMAT = /.+\.(sql\.gz|tar\.gz|tgz)/i unless defined? BACKUP_ROUTE_FORMAT
 
@@ -183,7 +183,8 @@ Discourse::Application.routes.draw do
     post "flags/disagree/:id" => "flags#disagree"
     post "flags/defer/:id" => "flags#defer"
     resources :site_customizations, constraints: AdminConstraint.new
-    scope "/customize" do
+
+    scope "/customize", constraints: AdminConstraint.new do
       resources :user_fields, constraints: AdminConstraint.new
       resources :emojis, constraints: AdminConstraint.new
 
@@ -326,8 +327,8 @@ Discourse::Application.routes.draw do
   get "users/:username/messages/group/:group_name/archive" => "user_actions#private_messages", constraints: {username: USERNAME_ROUTE_FORMAT, group_name: USERNAME_ROUTE_FORMAT}
 
   get "users/:username.json" => "users#show", constraints: {username: USERNAME_ROUTE_FORMAT}, defaults: {format: :json}
-  get "users/:username" => "users#show", as: 'user', constraints: {username: USERNAME_ROUTE_FORMAT}
-  put "users/:username" => "users#update", constraints: {username: USERNAME_ROUTE_FORMAT}
+  get "users/:username" => "users#show", as: 'user', constraints: {username: USERNAME_ROUTE_FORMAT, format: /(json|html)/}
+  put "users/:username" => "users#update", constraints: {username: USERNAME_ROUTE_FORMAT}, defaults: { format: :json }
   get "users/:username/emails" => "users#check_emails", constraints: {username: USERNAME_ROUTE_FORMAT}
   get "users/:username/preferences" => "users#preferences", constraints: {username: USERNAME_ROUTE_FORMAT}, as: :email_preferences
   get "users/:username/preferences/email" => "users_email#index", constraints: {username: USERNAME_ROUTE_FORMAT}
@@ -384,11 +385,11 @@ Discourse::Application.routes.draw do
   post "uploads" => "uploads#create"
 
   # used to download original images
-  get "uploads/:site/:sha" => "uploads#show", constraints: { site: /\w+/, sha: /[a-f0-9]{40}/ }
+  get "uploads/:site/:sha(.:extension)" => "uploads#show", constraints: { site: /\w+/, sha: /\h{40}/, extension: /[a-z0-9\.]+/i }
   # used to download attachments
-  get "uploads/:site/original/:tree:sha" => "uploads#show", constraints: { site: /\w+/, tree: /(\w+\/)+/i, sha: /[a-f0-9]{40}/ }
+  get "uploads/:site/original/:tree:sha(.:extension)" => "uploads#show", constraints: { site: /\w+/, tree: /([a-z0-9]+\/)+/i, sha: /\h{40}/, extension: /[a-z0-9\.]+/i }
   # used to download attachments (old route)
-  get "uploads/:site/:id/:sha" => "uploads#show", constraints: { site: /\w+/, id: /\d+/, sha: /[a-f0-9]{16}/ }
+  get "uploads/:site/:id/:sha" => "uploads#show", constraints: { site: /\w+/, id: /\d+/, sha: /\h{16}/ }
 
   get "posts" => "posts#latest", id: "latest_posts"
   get "private-posts" => "posts#latest", id: "private_posts"
@@ -397,13 +398,14 @@ Discourse::Application.routes.draw do
   get "posts/:username/deleted" => "posts#deleted_posts", constraints: {username: USERNAME_ROUTE_FORMAT}
   get "posts/:username/flagged" => "posts#flagged_posts", constraints: {username: USERNAME_ROUTE_FORMAT}
 
-  get "groups/:id.json" => 'groups#show', constraints: {id: USERNAME_ROUTE_FORMAT}, defaults: {format: 'json'}
-
   resources :groups, id: USERNAME_ROUTE_FORMAT do
     get "posts.rss" => "groups#posts_feed", format: :rss
     get "mentions.rss" => "groups#mentions_feed", format: :rss
 
+    get 'activity' => "groups#show"
+    get 'activity/:filter' => "groups#show"
     get 'members'
+    get 'owners'
     get 'posts'
     get 'topics'
     get 'mentions'
@@ -422,10 +424,6 @@ Discourse::Application.routes.draw do
   # aliases so old API code works
   delete "admin/groups/:id/members" => "groups#remove_member", constraints: AdminConstraint.new
   put "admin/groups/:id/members" => "groups#add_members", constraints: AdminConstraint.new
-
-  # In case people try the wrong URL
-  get '/group/:id', to: redirect('/groups/%{id}')
-  get '/group/:id/members', to: redirect('/groups/%{id}/members')
 
   resources :posts do
     put "bookmark"
@@ -626,6 +624,7 @@ Discourse::Application.routes.draw do
   post "invites/disposable" => "invites#create_disposable_invite"
   get "invites/redeem/:token" => "invites#redeem_disposable_invite"
   delete "invites" => "invites#destroy"
+  put "invites/show/:id" => "invites#perform_accept_invitation", as: 'perform_accept_invite'
 
   resources :export_csv do
     collection do

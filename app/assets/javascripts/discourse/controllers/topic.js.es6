@@ -11,6 +11,7 @@ import { categoryBadgeHTML } from 'discourse/helpers/category-link';
 import Post from 'discourse/models/post';
 import debounce from 'discourse/lib/debounce';
 import isElementInViewport from "discourse/lib/is-element-in-viewport";
+import QuoteState from 'discourse/lib/quote-state';
 
 export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
   composer: Ember.inject.controller(),
@@ -31,30 +32,6 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
   username_filters: null,
   filter: null,
   quoteState: null,
-
-  topicDelegated: [
-    'toggleMultiSelect',
-    'deleteTopic',
-    'recoverTopic',
-    'toggleClosed',
-    'showAutoClose',
-    'showFeatureTopic',
-    'showChangeTimestamp',
-    'toggleArchived',
-    'toggleVisibility',
-    'convertToPublicTopic',
-    'convertToPrivateMessage',
-    'jumpTop',
-    'jumpToPost',
-    'jumpToPostPrompt',
-    'jumpToIndex',
-    'jumpBottom',
-    'replyToPost',
-    'toggleArchiveMessage',
-    'showInvite',
-    'toggleBookmark',
-    'showFlagTopic'
-  ],
 
   updateQueryParams() {
     const postStream = this.get('model.postStream');
@@ -143,7 +120,7 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
     this._super();
     this.set('selectedPosts', []);
     this.set('selectedReplies', []);
-    this.set('quoteState', Ember.Object.create({ buffer: null, postId: null }));
+    this.set('quoteState', new QuoteState());
   },
 
   showCategoryChooser: Ember.computed.not("model.isPrivateMessage"),
@@ -175,18 +152,29 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
 
   actions: {
 
-    deselectText() {
-      this.get('quoteState').setProperties({ buffer: null, postId: null });
+    showPostFlags(post) {
+      return this.send('showFlags', post);
     },
 
-    selectText() {
-      const { postId, buffer } = this.get('quoteState');
+    topicRouteAction(name, model) {
+      return this.send(name, model);
+    },
 
-      this.send('deselectText');
+    openAutoClose() {
+      this.send('showAutoClose');
+    },
 
-      this.get('model.postStream').loadPost(postId).then(post => {
+    openFeatureTopic() {
+      this.send('showFeatureTopic');
+    },
+
+    selectText(postId, buffer) {
+      return this.get('model.postStream').loadPost(postId).then(post => {
+        const composer = this.get('composer');
+        const viewOpen = composer.get('model.viewOpen');
+
         // If we can't create a post, delegate to reply as new topic
-        if (!this.get('model.details.can_create_post')) {
+        if ((!viewOpen) && (!this.get('model.details.can_create_post'))) {
           this.send('replyAsNewTopic', post);
           return;
         }
@@ -203,16 +191,19 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
         }
 
         // If the composer is associated with a different post, we don't change it.
-        const composer = this.get('composer');
-        const composerPost = composer.get('content.post');
+        const composerPost = composer.get('model.post');
         if (composerPost && (composerPost.get('id') !== this.get('post.id'))) {
           composerOpts.post = composerPost;
         }
 
         const quotedText = Quote.build(post, buffer);
         composerOpts.quote = quotedText;
-        if (composer.get('content.viewOpen') || composer.get('content.viewDraft')) {
+        if (composer.get('model.viewOpen')) {
           this.appEvents.trigger('composer:insert-text', quotedText);
+        } else if (composer.get('model.viewDraft')) {
+          const model = composer.get('model');
+          model.set('reply', model.get('reply') + quotedText);
+          composer.send('openIfDraft');
         } else {
           composer.open(composerOpts);
         }
@@ -322,9 +313,10 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
 
       const quoteState = this.get('quoteState');
       const postStream = this.get('model.postStream');
-      const quotedPost = postStream.findLoadedPost(quoteState.get('postId'));
-      const quotedText = Quote.build(quotedPost, quoteState.get('buffer'));
-      this.send('deselectText');
+      const quotedPost = postStream.findLoadedPost(quoteState.postId);
+      const quotedText = Quote.build(quotedPost, quoteState.buffer);
+
+      quoteState.clear();
 
       if (composerController.get('content.topic.id') === topic.get('id') &&
           composerController.get('content.action') === Composer.REPLY) {
@@ -462,7 +454,15 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
     },
 
     jumpToPost(postNumber) {
-      this._jumpToPostId(this.get('model.postStream').findPostIdForPostNumber(postNumber));
+      const postStream = this.get('model.postStream');
+      let postId = postStream.findPostIdForPostNumber(postNumber);
+
+      // If we couldn't find the post, find the closest post to it
+      if (!postId) {
+        const closest = postStream.closestPostNumberFor(postNumber);
+        postId = postStream.findPostIdForPostNumber(closest);
+      }
+      this._jumpToPostId(postId);
     },
 
     jumpTop() {
@@ -652,10 +652,9 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
     replyAsNewTopic(post) {
       const composerController = this.get('composer');
 
-      const quoteState = this.get('quoteState');
-      post = post || quoteState.get('post');
-      const quotedText = Quote.build(post, quoteState.get('buffer'));
-      this.send('deselectText');
+      const { quoteState } = this;
+      const quotedText = Quote.build(post, quoteState.buffer);
+      quoteState.clear();
 
       composerController.open({
         action: Composer.CREATE_TOPIC,
@@ -818,7 +817,7 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
 
   postSelected(post) {
     if (this.get('allPostsSelected')) { return true; }
-    if (this.get('selectedPosts').contains(post)) { return true; }
+    if (this.get('selectedPosts').includes(post)) { return true; }
     if (this.get('selectedReplies').findBy('post_number', post.get('reply_to_post_number'))) { return true; }
 
     return false;

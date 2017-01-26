@@ -21,6 +21,7 @@ function initializeDetails(api) {
           "details_text",
           { multiline: false }
         );
+        this.set('optionsVisible', false);
       }
     }
   });

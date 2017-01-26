@@ -158,7 +158,7 @@ export function setCaretPosition(ctrl, pos) {
   }
 }
 
-export function validateUploadedFiles(files, bypassNewUserRestriction) {
+export function validateUploadedFiles(files, opts) {
   if (!files || files.length === 0) { return false; }
 
   if (files.length > 1) {
@@ -166,29 +166,48 @@ export function validateUploadedFiles(files, bypassNewUserRestriction) {
     return false;
   }
 
-  var upload = files[0];
+  const upload = files[0];
 
   // CHROME ONLY: if the image was pasted, sets its name to a default one
   if (typeof Blob !== "undefined" && typeof File !== "undefined") {
     if (upload instanceof Blob && !(upload instanceof File) && upload.type === "image/png") { upload.name = "blob.png"; }
   }
 
-  var type = uploadTypeFromFileName(upload.name);
+  opts = opts || {};
+  opts["type"] = uploadTypeFromFileName(upload.name);
 
-  return validateUploadedFile(upload, type, bypassNewUserRestriction);
+  return validateUploadedFile(upload, opts);
 }
 
-export function validateUploadedFile(file, type, bypassNewUserRestriction) {
+export function validateUploadedFile(file, opts) {
+  opts = opts || {};
+
+  const name = file && file.name;
+
+  if (!name) { return false; }
+
   // check that the uploaded file is authorized
-  if (!authorizesAllExtensions() && !isAuthorizedUpload(file)) {
-    bootbox.alert(I18n.t('post.errors.upload_not_authorized', { authorized_extensions: authorizedExtensions() }));
-    return false;
+  if (opts["imagesOnly"]) {
+    if (!isAnImage(name) && !isAuthorizedImage(name)) {
+      bootbox.alert(I18n.t('post.errors.upload_not_authorized', { authorized_extensions: authorizedImagesExtensions() }));
+      return false;
+    }
+  } else if (opts["csvOnly"]) {
+    if (!(/\.csv$/i).test(name)) {
+      bootbox.alert(I18n.t('user.invited.bulk_invite.error'));
+      return false;
+    }
+  } else {
+    if (!authorizesAllExtensions() && !isAuthorizedFile(name)) {
+      bootbox.alert(I18n.t('post.errors.upload_not_authorized', { authorized_extensions: authorizedExtensions() }));
+      return false;
+    }
   }
 
-  if (!bypassNewUserRestriction) {
+  if (!opts["bypassNewUserRestriction"]) {
     // ensures that new users can upload a file
-    if (!Discourse.User.current().isAllowedToUploadAFile(type)) {
-      bootbox.alert(I18n.t('post.errors.' + type + '_upload_not_allowed_for_new_user'));
+    if (!Discourse.User.current().isAllowedToUploadAFile(opts["type"])) {
+      bootbox.alert(I18n.t(`post.errors.${opts["type"]}_upload_not_allowed_for_new_user`));
       return false;
     }
   }
@@ -197,13 +216,7 @@ export function validateUploadedFile(file, type, bypassNewUserRestriction) {
   return true;
 }
 
-export function uploadTypeFromFileName(fileName) {
-  return isAnImage(fileName) ? 'image' : 'attachment';
-}
-
-export function authorizesAllExtensions() {
-  return Discourse.SiteSettings.authorized_extensions.indexOf("*") >= 0;
-}
+const IMAGES_EXTENSIONS_REGEX = /(png|jpe?g|gif|bmp|tiff?|svg|webp|ico)/i;
 
 function extensions() {
   return Discourse.SiteSettings.authorized_extensions
@@ -213,16 +226,52 @@ function extensions() {
                                .filter(ext => ext.indexOf("*") === -1);
 }
 
+function imagesExtensions() {
+  return extensions().filter(ext => IMAGES_EXTENSIONS_REGEX.test(ext));
+}
+
 function extensionsRegex() {
   return new RegExp("\\.(" + extensions().join("|") + ")$", "i");
 }
 
-export function isAuthorizedUpload(file) {
-  return file && file.name && extensionsRegex().test(file.name);
+function imagesExtensionsRegex() {
+  return new RegExp("\\.(" + imagesExtensions().join("|") + ")$", "i");
+}
+
+function isAuthorizedFile(fileName) {
+  return extensionsRegex().test(fileName);
+}
+
+function isAuthorizedImage(fileName){
+  return imagesExtensionsRegex().test(fileName);
 }
 
 export function authorizedExtensions() {
-  return extensions().join(", ");
+  return authorizesAllExtensions() ? "*" : extensions().join(", ");
+}
+
+export function authorizedImagesExtensions() {
+  return authorizesAllExtensions() ? "png, jpg, jpeg, gif, bmp, tiff, svg, webp, ico" : imagesExtensions().join(", ");
+}
+
+export function authorizesAllExtensions() {
+  return Discourse.SiteSettings.authorized_extensions.indexOf("*") >= 0;
+}
+
+export function isAnImage(path) {
+  return (/\.(png|jpe?g|gif|bmp|tiff?|svg|webp|ico)$/i).test(path);
+}
+
+function uploadTypeFromFileName(fileName) {
+  return isAnImage(fileName) ? 'image' : 'attachment';
+}
+
+export function allowsImages() {
+  return authorizesAllExtensions() || IMAGES_EXTENSIONS_REGEX.test(authorizedExtensions());
+}
+
+export function allowsAttachments() {
+  return authorizesAllExtensions() || extensions().length > imagesExtensions().length;
 }
 
 export function uploadLocation(url) {
@@ -243,25 +292,10 @@ export function getUploadMarkdown(upload) {
   if (isAnImage(upload.original_filename)) {
     return '<img src="' + upload.url + '" width="' + upload.width + '" height="' + upload.height + '">';
   } else if (!Discourse.SiteSettings.prevent_anons_from_downloading_files && (/\.(mov|mp4|webm|ogv|mp3|ogg|wav|m4a)$/i).test(upload.original_filename)) {
-    // is Audio/Video
     return uploadLocation(upload.url);
   } else {
     return '<a class="attachment" href="' + upload.url + '">' + upload.original_filename + '</a> (' + I18n.toHumanSize(upload.filesize) + ')\n';
   }
-}
-
-export function isAnImage(path) {
-  return (/\.(png|jpe?g|gif|bmp|tiff?|svg|webp|ico)$/i).test(path);
-}
-
-export function allowsImages() {
-  return authorizesAllExtensions() ||
-    (/(png|jpe?g|gif|bmp|tiff?|svg|webp|ico)/i).test(authorizedExtensions());
-}
-
-export function allowsAttachments() {
-  return authorizesAllExtensions() ||
-    !/^((png|jpe?g|gif|bmp|tiff?|svg|webp|ico)(,\s)?)+$/i.test(authorizedExtensions());
 }
 
 export function displayErrorForUpload(data) {
@@ -298,6 +332,36 @@ export function displayErrorForUpload(data) {
 export function defaultHomepage() {
   // the homepage is the first item of the 'top_menu' site setting
   return Discourse.SiteSettings.top_menu.split("|")[0].split(",")[0];
+}
+
+export function determinePostReplaceSelection({ selection, needle, replacement }) {
+  const diff = (replacement.end - replacement.start) - (needle.end - needle.start);
+
+  if (selection.end <= needle.start) {
+    // Selection ends (and starts) before needle.
+    return { start: selection.start, end: selection.end };
+  } else if (selection.start <= needle.start) {
+    // Selection starts before needle...
+    if (selection.end < needle.end) {
+      // ... and ends inside needle.
+      return { start: selection.start, end: needle.start };
+    } else {
+      // ... and spans needle completely.
+      return { start: selection.start, end: selection.end + diff };
+    }
+  } else if (selection.start < needle.end) {
+    // Selection starts inside needle...
+    if (selection.end <= needle.end) {
+      // ... and ends inside needle.
+      return { start: replacement.end, end: replacement.end };
+    } else {
+      // ... and spans end of needle.
+      return { start: replacement.end, end: selection.end + diff };
+    }
+  } else {
+    // Selection starts (and ends) behind needle.
+    return { start: selection.start + diff, end: selection.end + diff };
+  }
 }
 
 // This prevents a mini racer crash

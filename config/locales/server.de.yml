@@ -32,6 +32,7 @@ de:
   purge_reason: "Verlassenes, deaktiviertes Konto automatisch gelöscht"
   disable_remote_images_download_reason: "Der Download von Bildern wurde deaktiviert, weil nicht mehr genug Plattenplatz vorhanden war."
   anonymous: "Anonym"
+  remove_posts_deleted_by_author: "Gelöscht vom Verfasser"
   emails:
     incoming:
       default_subject: "Eingehende E-Mail von %{email}"
@@ -71,6 +72,9 @@ de:
       has_already_been_used: "wird bereits verwendet"
       inclusion: ist nicht in der Liste enthalten
       invalid: ist ungültig
+      is_invalid: "scheint unklar, ist das ein ganzer Satz?"
+      contains_censored_words: "Beinhaltet ein oder mehrere verbotene Wörter: %{censored_words}"
+      matches_censored_pattern: "stimmt mit dem folgenden verbotenen regulären Ausdruck überein: %{censored_pattern}"
       less_than: muss weniger als %{count} sein
       less_than_or_equal_to: muss weniger oder gleich %{count} sein
       not_a_number: ist keine Zahl
@@ -105,7 +109,8 @@ de:
       default_categories_already_selected: "Du kannst keine Kategorie auswählen, welche bereits in einer anderen Liste benutzt wird. "
       s3_upload_bucket_is_required: "Uploads auf Amazon S3 können nicht aktiviert werden, bevor der 's3_upload_bucket' eingetragen wurde."
   bulk_invite:
-    file_should_be_csv: "Die hochgeladene Datei sollte im CSV oder TXT Format vorliegen."
+    file_should_be_csv: "Die hochzuladende Datei sollte im CSV-Format vorliegen."
+    error: "Es gab einen Fehler beim Hochladen dieser Datei. Bitte versuche es später noch einmal."
   backup:
     operation_already_running: "Eine Arbeitsschritt wird momentan bearbeitet. Im Moment kann kein neuer Vorgang gestartet werden."
     backup_file_should_be_tar_gz: "Die Sicherungsdatei sollte ein .tar.gz-Archiv sein."
@@ -123,6 +128,11 @@ de:
   embed:
     start_discussion: "Diskussion beginnen"
     continue: "Diskussion fortsetzen"
+    error: "Fehler bei der Einbettung"
+    referer: "Referrer:"
+    mismatch: "Der Referrer entsprach keiner der folgenden Hostnamen:"
+    no_hosts: "Es wurden keine Hostnamen für die Einbettung konfiguriert."
+    configure: "Einbettung konfigurieren"
     more_replies:
       one: "1 weitere Antwort"
       other: "%{count} weitere Antworten"
@@ -156,8 +166,10 @@ de:
   spamming_host: "Entschuldigung, du kannst keine Links zu diesem Webserver posten."
   user_is_suspended: "Gesperrte Benutzer dürfen keine Beiträge schreiben."
   topic_not_found: "Etwas ist schief gelaufen. Wurde das Thema eventuell geschlossen oder gelöscht, während du es angeschaut hast?"
+  not_accepting_pms: "Entschuldige, %{username} akzeptiert gerade keine Nachrichten."
   just_posted_that: "ist einer einer vor Kurzem von dir geschriebenen Nachricht zu ähnlich"
   invalid_characters: "enthält ungültige Zeichen"
+  is_invalid: "scheint unklar, ist das ein ganzer Satz?"
   next_page: "nächste Seite →"
   prev_page: "← vorherige Seite"
   page_num: "Seite %{num}"
@@ -198,7 +210,7 @@ de:
       everyone: "jeder"
       admins: "admins"
       moderators: "moderatoren"
-      staff: "mitarbeiter"
+      staff: "team"
       trust_level_0: "vertrauensstufe_0"
       trust_level_1: "vertrauensstufe_1"
       trust_level_2: "vertrauensstufe_2"
@@ -268,6 +280,7 @@ de:
         name: "Name der Kategorie"
       topic:
         title: 'Titel'
+        featured_link: 'Hervorgehobener Link'
       post:
         raw: "Hauptteil"
       user_profile:
@@ -281,6 +294,9 @@ de:
               too_many_users: "Du kannst eine Warnung nur an einen Benutzer zugleich anhängen."
               cant_send_pm: "Entschuldigung, du kannst diesem Benutzer keine Direktnachricht schicken."
               no_user_selected: "Du musst einen gültigen Benutzer auswählen."
+            featured_link:
+              invalid: "ist ungültig. URL sollte http:// oder https:// enthalten."
+              invalid_category: "kann in dieser Kategorie nicht bearbeitet werden."
         user:
           attributes:
             password:
@@ -309,9 +325,26 @@ de:
   vip_category_description: "Eine Kategorie exklusiv für Mitglieder mit Vertrauensstufe 3 oder höher."
   meta_category_name: "Feedback"
   meta_category_description: "Diskussionen über dieses Forum, seine Organisation, wie es funktioniert und wie wir es verbessern können."
-  staff_category_name: "Mitarbeiter"
-  staff_category_description: "Geschützte Kategorie für Mitarbeiter. Themen sind nur für Administratoren und Moderatoren sichtbar."
-  assets_topic_body: "Dies ist ein fester Beitrag, der nur für Mitarbeiter sichtbar ist, um Bilder und Dateien, die im Forum benutzt werden zu speichern. Lösche diese nicht!\n\n\nAnleitung:\n\n\n1. Antworte auf dieses Thema.\n2. Lade alle Bilder, die du für Logos, Favicons und usw. nutzen willst, hier hoch. (Nutze dazu das Symbol für Lade-Symbolleiste im Beitrags-Editor oder ziehe und lasse die Bilder hier fallen oder füge sie eins.)\n3. Sende deine Antwort. \n4. Klicke mit der rechten Maustaste auf die Bilder in deinem neuen Beitrag, um die den Pfad zu bekommen oder klicke das Editier-Symbol, um deinen Beitrag zu editieren und dadurch den Pfad zu den Bildern zu bekommen. Kopiere die Bild-Pfade.\n5. Füge die Bild-Pfade in [basic settings](/admin/site_settings/category/required) ein.\n\n\nWenn du andere Dateityp-Uploads aktivieren willst, editiere `authorized_extensions` in [file settings](/admin/site_settings/category/files)."
+  staff_category_name: "Team"
+  staff_category_description: "Geschützte Kategorie für das Team-Diskussionen. Themen sind nur für Administratoren und Moderatoren sichtbar."
+  assets_topic_title: "Mediendateien für das Seitendesign"
+  assets_topic_body: "Dies ist ein fester Beitrag, der nur für das Team sichtbar ist, um Bilder und Dateien, die im Forum benutzt werden zu speichern. Lösche diese nicht!\n\n\nAnleitung:\n\n\n1. Antworte auf dieses Thema.\n2. Lade alle Bilder, die du für Logos, Favicons und usw. nutzen willst, hier hoch. (Nutze dazu das Symbol für Lade-Symbolleiste im Beitrags-Editor oder ziehe und lasse die Bilder hier fallen oder füge sie eins.)\n3. Sende deine Antwort. \n4. Klicke mit der rechten Maustaste auf die Bilder in deinem neuen Beitrag, um die den Pfad zu bekommen oder klicke das Editier-Symbol, um deinen Beitrag zu editieren und dadurch den Pfad zu den Bildern zu bekommen. Kopiere die Bild-Pfade.\n5. Füge die Bild-Pfade in [basic settings](/admin/site_settings/category/required) ein.\n\n\nWenn du andere Dateityp-Uploads aktivieren willst, editiere `authorized_extensions` in [file settings](/admin/site_settings/category/files)."
+  discourse_welcome_topic:
+    title: "Willkommen bei Discourse"
+    body: |2
+
+      Der erste Absatz dieses angehefteten Themas wird allen neuen Besuchern deiner Webseite als Willkommensnachricht angezeigt. Er ist wichtig!
+
+      **Bearbeite dies** und erstelle eine kurze Beschreibung deiner Community:
+
+      - Für wen ist sie?
+      - Was findet man hier?
+      - Warum sollte man hier vorbeischauen?
+      - Wo kann man mehr erfahren (Links, Dokumente, usw.)?
+
+      <img src="/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
+
+      Du solltest dieses Thema eventuell schließen über die Administration :wrench: (oben rechts oder unten), damit sich an einer Ankündigung wie dieser nicht die Antworten aufstapeln.
   lounge_welcome:
     title: "Willkommen in der Lounge"
     body: |2
@@ -375,9 +408,10 @@ de:
       create_topic: "Du erstellst zu schnell zu viele Themen hintereinander. Bitte warte %{time_left}, bis Du es wieder versuchst."
       create_post: "Du antwortest zu schnell. Bitte warte %{time_left}, bis Du es wieder versuchst."
       delete_post: "Du löschst zu schnell Beiträge. Bitte warte %{time_left}, bis Du es wieder versuchst."
+      public_group_membership: "Du wechselst die Gruppenzugehörigkeit zu häufig. Bitte warte %{time_left}, bevor du es erneut versuchst."
       topics_per_day: "Du hast die maximale Anzahl an neuen Themen für heute erreicht. Bitte warte %{time_left}, bis Du es wieder versuchst."
       pms_per_day: "Du hast die maximale Anzahl an Nachrichten für heute erreicht. Bitte warte %{time_left}, bis Du es wieder versuchst."
-      create_like: "Du hast die maximale Anzahl „Gefällt mir“ für heute erreicht. Bitte warte %{time_left}, bis Du es wieder versuchst."
+      create_like: "Du hast die maximale Anzahl an Likes für heute erreicht. Bitte warte %{time_left}, bevor du es wieder versuchst."
       create_bookmark: "Du hast die maximale Anzahl an Lesezeichen für heute erreicht. Bitte warte %{time_left}, bis Du es wieder versuchst."
       edit_post: "Du hast die maximale Anzahl an Änderungen für heute erreicht. Bitte warte %{time_left}, bis Du es wieder versuchst."
       live_post_counts: "Du forderst die Live-Anzahl der Antworten zu schnell neu an. Bitte warte %{time_left}, bis du es wieder versuchst."
@@ -529,6 +563,13 @@ de:
       title: 'Abstimmung'
       description: 'Stimme für diesen Beitrag'
       long_form: 'für diesen Beitrag gestimmt'
+  user_activity:
+    no_bookmarks:
+      self: "Du hast keine Beiträge mit Lesezeichen, Lesezeichen ermöglichen es dir, diese später einfach zu finden."
+      others: "Keine Lesezeichen."
+    no_likes_given:
+      self: "Du hast noch keine Beiträge mit einem „Like“ markiert."
+      others: "Keine Beiträge mit „Like“."
   topic_flag_types:
     spam:
       title: 'Spam'
@@ -540,7 +581,7 @@ de:
       long_form: 'als unangemessen gemeldet'
     notify_moderators:
       title: "Irgendetwas anderes"
-      description: 'Dieser Beitrag muss von einem Mitarbeiter begutachtet werden, da er entweder nicht mit den <a href="/guidelines">Richtlinien</a> oder den <a href="%{tos_url}">Nutzungsbedingungen</a> in Einklang zu bringen ist, oder aus sonstigen oben nicht genannten Gründen.'
+      description: 'Dieser Beitrag erfordert die allgemeine Aufmerksamkeit des Teams, da er entweder nicht mit den <a href="/guidelines">Richtlinien</a> oder den <a href="%{tos_url}">Nutzungsbedingungen</a> in Einklang zu bringen ist, oder aus anderen Gründen.'
       long_form: ' hast dies den Moderatoren gemeldet'
       email_title: 'Das Thema "%{title}" benötigt die Aufmerksamkeit eines Moderators'
       email_body: "%{link}\n\n%{message}"
@@ -575,8 +616,16 @@ de:
     authorize: "Genehmigen"
     read: "Lesen"
     read_write: "Lesen/Schreiben"
+    description: "\"%{application_name}\" fordert den folgenden Zugriff auf dein Konto:"
     no_trust_level: "Entschuldige, du hast nicht die erforderliche Vertrauensstufe, um die Benutzer API zu nutzen."
     generic_error: "Entschuldige, wir können keinen Benutzer API Schlüssel erstellen. Dieses Feature ist möglicherweise vom Site Administrator deaktiviert worden."
+    scopes:
+      message_bus: "Live-Aktualisierungen"
+      notifications: "Benachrichtigungen lesen und leeren"
+      push: "Push-Benachrichtigungen an externe Dienste"
+      session_info: "Informationen zur Benutzersitzung lesen"
+      read: "Alles lesen"
+      write: "Alles schreiben"
   reports:
     visits:
       title: "Nutzerbesuche"
@@ -599,9 +648,9 @@ de:
       xaxis: "Tag"
       yaxis: "Anzahl neuer Beiträge"
     likes:
-      title: "„Gefällt mir“"
+      title: "Likes"
       xaxis: "Tag"
-      yaxis: "Anzahl neuer „Gefällt mir“"
+      yaxis: "Anzahl neuer Likes"
     flags:
       title: "Meldungen"
       xaxis: "Tag"
@@ -742,14 +791,17 @@ de:
     poll_pop3_auth_error: "Die Verbindung zum POP3-Server schlägt mit einem Authentisierungsfehler fehl. Überprüfe deine <a href='/admin/site_settings/category/email'>POP3-Einstellungen</a>."
   site_settings:
     censored_words: "Wörter, die automatisch durch &#9632;&#9632;&#9632;&#9632; ersetzt werden"
+    censored_pattern: "Regex-Muster das automatisch ersetzt wird mit &#9632;&#9632;&#9632;&#9632;"
     delete_old_hidden_posts: "Automatisch alle Beiträge löschen, die länger als 30 Tage versteckt bleiben."
     default_locale: "Die Standardsprache dieser Discourse-Instanz (kodiert in ISO 639-1)."
-    allow_user_locale: "Erlaube Benutzern, ihre eigene Interfacesprache zu wählen"
+    allow_user_locale: "Erlaube Benutzern, ihre eigene Oberflächensprache zu wählen"
     set_locale_from_accept_language_header: "Sprache der Benutzeroberfläche für anonyme Benutzer an Hand der Spracheinstellung ihres Browsers wählen (EXPERIMENTELL, funktioniert nicht mit Caches für anonyme Benutzer)"
     min_post_length: "Minimal zulässige Beitragslänge in Zeichen."
     min_first_post_length: "Minimal zulässige Länge des ersten Beitrags (eines Themas) in Zeichen"
     min_private_message_post_length: "Minimale zulässige Beitragslänge in Zeichen für Nachrichten"
     max_post_length: "Maximale zulässige Beitragslänge in Zeichen."
+    topic_featured_link_enabled: "Beitrag mit Link zu hervorgehobenen Themen erlauben"
+    show_topic_featured_link_in_digest: "Zeige den Hervorgehobene Themen Link in der E-Mail-Zusammenfassung."
     min_topic_title_length: "Minimale zulässige Titellänge von Themen in Zeichen."
     max_topic_title_length: "Maximale zulässige Titellänge von Themen in Zeichen."
     min_private_message_title_length: "Minimale zulässige Titellänge von Nachrichten in Zeichen."
@@ -773,7 +825,7 @@ de:
     disabled_image_download_domains: "Liste von Domänen, von denen verlinkte Bilder niemals heruntergeladen werden sollen."
     editing_grace_period: "Für (n) Sekunden wird nach dem Bearbeiten keine neue Revision im Beitragsverlauf angelegt."
     post_edit_time_limit: "Der Verfasser eines Beitrags kann diesen nur für (n) Minuten nach Absenden des Beitrags bearbeiten. 0 deaktiviert diese Beschränkung."
-    edit_history_visible_to_public: "Erlaube jedem, vorherige Versionen eines bearbeiteten Beitrags zu sehen. Wenn deaktiviert sind diese nur für Mitarbeiter sichtbar."
+    edit_history_visible_to_public: "Erlaube jedem, vorherige Versionen eines bearbeiteten Beitrags zu sehen. Wenn deaktiviert sind diese nur für Team-Mitglieder sichtbar."
     delete_removed_posts_after: "Beiträge, die deren Verfasser selbst entfernt hat, werden nach (n) Stunden automatisch gelöscht. Die Beiträge werden sofort gelöscht, wenn dieser Wert auf 0 gesetzt wird."
     max_image_width: "Maximale Breite von Thumbnails von Bildern in einem Beitrag."
     max_image_height: "Maximale Höhe von Vorschaubildern in einer Nachricht"
@@ -784,9 +836,11 @@ de:
     add_rel_nofollow_to_user_content: "Füge mit Ausnahme interner Links (schließt übergeordnete Domains ein) allen benutzergenerierten Inhalten 'rel nofollow' hinzu. Die Änderung dieser Einstellung erfordert, dass du sämtliche Markdown-Beiträge aktualisierst: \"rake posts:rebake\""
     exclude_rel_nofollow_domains: "Eine Liste von Domains auf welchen das Attribut nofollow nicht auf Links gesetzt werden sollte (tld.com erlaubt auch sub.tld.com). Du solltest mindestens die Top-Level Domain dieser Site hinzufügen, damit die Crawler der Suchmaschinen all deinen Content indexieren können. Wenn weitere Teile deiner Website unter anderen Domains zu finden sind, kannst du diese hier ebenfalls hinzufügen."
     post_excerpt_maxlength: "Maximale Länge eines Beitrags-Auszuges bzw. -Zusammfassung."
-    show_pinned_excerpt_mobile: "Zeige einen Auszug hervorgehobener Beiträge in der mobilen Ansicht."
-    show_pinned_excerpt_desktop: "Zeige einen Auszug hervorgehobener Beiträge in der Desktop-Ansicht."
+    show_pinned_excerpt_mobile: "Zeige einen Auszug angehefteter Themen in der mobilen Ansicht."
+    show_pinned_excerpt_desktop: "Zeige einen Auszug angehefteter Themen in der Desktop-Ansicht."
     post_onebox_maxlength: "Maximale Länge eines Onebox-Discourse-Beitrags in Zeichen."
+    onebox_domains_blacklist: "Eine Liste von Domains, die nie in eine Onebox umgewandelt wird."
+    max_oneboxes_per_post: "Maximale Anzahl von Oneboxes in einem Beitrag."
     logo_url: "Das Logo oben links auf deiner Site sollte eine breite, rechteckige Form haben. Wenn du kein Logo auswählst, wird stattdessen `title` angezeigt."
     digest_logo_url: "Das alternative Logo oben in den E-Mail-Zusammenfassungen deiner Site. Sollte eine breite, rechteckige Form haben. Sollte kein SVG-Bild sein. Wenn leer, wird `logo_url` verwendet."
     logo_small_url: "Dein Logo in klein für die obere linke Seite deiner Site, in Form eines rechteckigen Quadrates. Es wird angezeigt, wenn der Benutzer scrollt. Wenn du dieses Feld frei lässt, wird stattdessen ein Haus-Symbol angezeigt."
@@ -799,10 +853,10 @@ de:
     force_https: "Erzwinge HTTPS für deine Site. ACHTUNG: Aktiviere dies nicht, bevor HTTPS nicht vollständig eingerichtet ist und auf jeden Fall überall funktioniert! Hast du alle CDN-Netzwerke, alle Logins über Soziale Netzwerke, alle externe Logos / Abhängigkeiten geprüft, um sicherzustellen, dass sie auch alle HTTPS-kompatibel sind?"
     summary_score_threshold: "Mindestpunktzahl, die ein Beitrag benötigt, um in der \"Thema zusammenfassen\"-Ansicht zu erscheinen."
     summary_posts_required: "Mindestanzahl an Beiträgen in einem Thema, bevor die \"Thema zusammenfassen\"-Funktion aktiviert wird."
-    summary_likes_required: "Mindestanzahl an \"Gefällt mir\" Wertungen in einem Thema, bevor die \"Thema zusammenfassen\" Funktion aktiviert wird."
+    summary_likes_required: "Mindestanzahl an Likes in einem Thema, bevor die \"Thema zusammenfassen\" Funktion aktiviert wird."
     summary_percent_filter: "Zeige die besten (n)% der Beiträge eines Themas in der \"Thema zusammenfassen\"-Ansicht."
     summary_max_results: "Maximale Anzahl der sichtbaren Beiträge beim Zusammenfassen von Themen"
-    enable_private_messages: "Erlaube Benutzer mit der Vertrauensstufe 1 (konfigurierbar über die minimale Vertrauensstufe zum Senden von Nachrichten), Nachrichten zu erstellen und auf Nachrichten zu antworten. Beachte, dass Mitarbeiter immer Nachrichten und Antworten senden können."
+    enable_private_messages: "Erlaube Benutzer mit der Vertrauensstufe 1 (konfigurierbar über die minimale Vertrauensstufe zum Senden von Nachrichten), Nachrichten zu erstellen und auf Nachrichten zu antworten. Beachte, dass das Team immer Nachrichten und Antworten senden können."
     enable_long_polling: "Nachrichtenbus für Benachrichtigungen kann Long-Polling nutzen."
     long_polling_base_url: "Basis-URL für Long Polling (wenn zum Ausliefern von dynamischen Inhalten ein CDN verwendet wird, setze es auf Origin Pull), z. B. http://origin.site.com"
     long_polling_interval: "Wartezeit, bevor der Server auf Clients reagiert, wenn keine Daten gesendet werden müssen (nur für angemeldete Benutzer)"
@@ -825,7 +879,7 @@ de:
     traditional_markdown_linebreaks: "Traditionelle Zeilenumbrüche in Markdown, die zwei nachfolgende Leerzeichen für einen Zeilenumbruch benötigen."
     allow_html_tables: "Erlaube es, Tabellen in Markdown mit HTML-Tags einzugeben. TABLE, THEAD, TD, TR, TH werden erlaubt (alle Beiträge mit Tabellen müssen ihr HTML erneuern)"
     post_undo_action_window_mins: "Minuten, die ein Benutzer hat, um Aktionen auf einen Beitrag rückgängig zu machen (Gefällt mir, Meldung, usw.)."
-    must_approve_users: "Mitarbeiter müssen alle neuen Benutzerkonten freischalten, bevor diese Zugriff auf die Website erhalten. ACHTUNG: Das Aktivieren dieser Option für eine Live-Site entfernt den Zugriff auch für alle existierenden Benutzer ausser Mitarbeiter!"
+    must_approve_users: "Team-Mitglieder müssen alle neuen Benutzerkonten freischalten, bevor diese Zugriff auf die Website erhalten. ACHTUNG: Das Aktivieren dieser Option für eine Live-Site entfernt den Zugriff auch für alle existierenden Benutzer außer für Team-Mitglieder!"
     pending_users_reminder_delay: "Benachrichtige die Moderatoren, falls neue Benutzer mehr als so viele Stunden auf ihre Genehmigung gewartet haben. Stelle -1 ein, um diese Benachrichtigungen zu deaktivieren."
     maximum_session_age: "Benutzer bleiben (n) Stunden nach ihrem letzten Besuch angemeldet"
     ga_tracking_code: "VERALTET: Google Analytics (analytics.js) tracking code code, z.B.: UA-12345678-9; siehe http://google.com/analytics"
@@ -843,7 +897,7 @@ de:
     post_menu_hidden_items: "Die Einträge im Menü eines Beitrags, die standardmäßig hinter einer erweiterbaren Ellipse versteckt werden sollen."
     share_links: "Legt fest, welche Dienste in welcher Reihenfolge im Teilen-Dialog auftauchen."
     track_external_right_clicks: "Verfolge, welche externen Links per Rechtsklick geöffnet werden (zum Beispiel in einem neuen Browser-Tab). Standardmäßig deaktiviert, da dies URL-Rewrites erfordert."
-    site_contact_username: "Gültiger Benutzername eines Mitarbeiters, in dessen Name alle automatisch erzeugten Direktnachrichten versendet werden sollen. Falls leer wird das Standardkonto \"system\" verwendet."
+    site_contact_username: "Gültiger Benutzername eines Team-Mitglieds, in dessen Name alle automatisch erzeugten Direktnachrichten versendet werden sollen. Falls leer wird das Standardkonto \"system\" verwendet."
     send_welcome_message: "Sende allen neuen Benutzern eine Willkommensnachricht mit Hinweisen zur Benutzung des Forums."
     suppress_reply_directly_below: "Zeige die erweiterbare Anzahl der Antworten auf einen Beitrag nicht, falls die einzige Antwort direkt darunter folgt."
     suppress_reply_directly_above: "Verstecke das erweiterbare „Antwort auf“-Feld in einem Beitrag, wenn der beantwortete Beitrag direkt darüber angezeigt wird."
@@ -853,12 +907,11 @@ de:
     topics_per_period_in_top_page: "Anzahl der Themen, die in der mit \"Mehr zeigen\" erweiterten Top-Themenübersicht angezeigt werden."
     redirect_users_to_top_page: "Verweise neue und länger abwesende Benutzer automatisch zur Angesagt-Seite"
     top_page_default_timeframe: "Standardzeitfenster für die oberste, angezeigte Seite."
-    show_email_on_profile: "Im Profil die E-Mail-Adresse des Benutzers anzeigen (ist nur für den Benutzer selbst und Mitarbeiter sichtbar)."
+    show_email_on_profile: "Im Profil die E-Mail-Adresse des Benutzers anzeigen (ist nur für den Benutzer selbst und das Team sichtbar)."
     prioritize_username_in_ux: "Zeige den Benutzernamen auf der Benutzerseite, der Benutzerkarte und in Beiträgen an erster Stelle (wenn deaktiviert, wird der Name an erster Stelle angezeigt)"
     email_token_valid_hours: "Tokens zur Passwort-Wiederherstellung / Aktivierung eines Kontos sind für (n) Stunden gültig."
-    email_token_grace_period_hours: "Tokens zur Passwort-Wiederherstellung / Aktivierung eines Kontos sind auch nach ihrer Verwendung noch für eine Frist von (n) Stunden gültig."
     enable_badges: "Abzeichen aktivieren"
-    enable_whispers: "Erlaube Moderatoren und Administratoren in Beiträgen privat zu kommunizieren (experimentell)"
+    enable_whispers: "Erlaube dem Team private Kommunikation innerhalb von Themen."
     allow_index_in_robots_txt: "Suchmaschinen mittels der robots.txt Datei erlauben, die Site zu indizieren."
     email_domains_blacklist: "Eine durch senkrechte Striche getrennte Liste von E-Mail-Domains, die für die Registrierung neuer Konten nicht verwendet werden dürfen. Beispiel: mailinator.com|trashmail.net"
     email_domains_whitelist: "Eine durch senkrechte Striche getrennte Liste von E-Mail-Domains, die für die Registrierung neuer Konten verwendet werden können. ACHTUNG: Benutzer mit E-Mail-Adressen anderer Domains werden nicht zugelassen!"
@@ -870,7 +923,7 @@ de:
     force_hostname: "NUR FÜR ENTWICKLER! ACHTUNG! Spezifiziere einen Hostnamen in der URL. Dieses Feld leer lassen heißt 'keinen'. Dient hauptsächlich Entwicklungszwecken."
     invite_expiry_days: "Tage, die Benutzereinladungen gültig bleiben."
     invite_passthrough_hours: "Wie viele Stunden ein Benutzer einen bereits eingelösten Einladungsschlüssel zum Anmelden verwenden kann"
-    invite_only: "Deaktiviere die öffentliche Registrierung, neue Benutzer können nur durch eine Einladung von existierenden Mitgliedern oder Mitarbeitern beitreten."
+    invite_only: "Deaktiviere die öffentliche Registrierung, neue Benutzer können nur durch eine Einladung von anderen Mitgliedern oder dem Team beitreten."
     login_required: "Nur angemeldete Benutzer dürfen Inhalte der Site lesen, anonyme Zugriffe sind verboten."
     min_username_length: "Minimale Benutzernamenlänge in Zeichen."
     max_username_length: "Maximale Benutzernamenlänge in Zeichen."
@@ -889,6 +942,7 @@ de:
     sso_overrides_name: "Überschreibt den vollen Namen des Benutzers mit den Daten von der externen Site aus dem SSO-Payload bei jedem Login. Außerdem werden lokale Änderungen verhindert."
     sso_overrides_avatar: "Überschreibt das Profilbild des Benutzers mit dem Profilbild aus dem SSO-Payload. Wenn aktiv, dann sollte allow_uploaded_avatars deaktiviert werden."
     sso_not_approved_url: "Nicht genehmigte SSO-Konten zu dieser URL weiterleiten"
+    sso_allows_all_return_paths: "Beschränke die Domain für SSO-Return-Paths (standardmäßig muss der Return Path auf der aktuellen Seite sein)"
     enable_local_logins: "Aktiviere Login mit lokal gespeicherten Benutzernamen und Passwörtern. (Anmerkung: muss aktiviert sein, damit Einladungen funktionieren)"
     allow_new_registrations: "Erlaube das Registrieren neuer Benutzerkonten. Wird dies deaktiviert, so kann niemand mehr ein neues Konto erstellen."
     enable_signup_cta: "Zeige wiederkehrenden Gästen einen Hinweis, dass diese sich Anmelden oder Registrieren sollen."
@@ -930,7 +984,7 @@ de:
     rate_limit_create_post: "Nach Schreiben eines Beitrags muss ein Benutzer (n) Sekunden warten, bevor ein weiterer Beitrag erstellt werden kann."
     rate_limit_new_user_create_topic: "Nach Erstellen eines Themas muss ein neuer Benutzer (n) Sekunden warten, bevor ein weiteres Thema erstellt werden kann."
     rate_limit_new_user_create_post: "Nach Schreiben eines Beitrags muss ein neuer Benutzer (n) Sekunden warten, bevor ein weiterer Beitrag erstellt werden kann."
-    max_likes_per_day: "Maximale Anzahl der „Gefällt mir“-Angaben pro Benutzer und Tag."
+    max_likes_per_day: "Maximale Anzahl der Likes pro Benutzer und Tag."
     max_flags_per_day: "Maximale Anzahl der Meldungen pro Benutzer und Tag."
     max_bookmarks_per_day: "Maximale Anzahl der Lesezeichen pro Benutzer und Tag."
     max_edits_per_day: "Maximale Anzahl der Bearbeitungen pro Benutzer und Tag."
@@ -987,8 +1041,8 @@ de:
     tl3_requires_posts_read_all_time: "Mindestanzahl Beiträge, die ein Benutzer gelesen haben muss, um die Vertrauensstufe Anführer (3) erreichen zu können."
     tl3_requires_max_flagged: "Um die Vertrauensstufe 3 erhalten zu können, dürfen in den letzten (tl3 time period) Tagen höchstens X Beiträge eines Benutzer von X verschiedenen anderen Benutzer gemeldet worden sein, wobei X diesem Wert entspricht. (0 oder mehr)"
     tl3_promotion_min_duration: "Mindestanzahl an Tagen, die ein Benutzer auf Vertrauensstufe 3 beförderter Benutzer auf dieser Stufe verbleibt, bevor er automatisch wieder auf Vertrauensstufe 2 heruntergestuft werden kann."
-    tl3_requires_likes_given: "Mindestanzahl an „Gefällt mir“-Angaben, die ein Benutzer innerhalb der letzten (tl3 time period) gegeben haben muss, um Vertrauensstufe 3 erreichen zu können."
-    tl3_requires_likes_received: "Mindestanzahl an „Gefällt mir“-Angaben die ein Benutzer innerhalb der letzten (tl3 time period) bekommen haben muss, um Vertrauensstufe 3 erreichen zu können."
+    tl3_requires_likes_given: "Mindestanzahl an Likes, die ein Benutzer innerhalb der letzten (tl3 time period) gegeben haben muss, um Vertrauensstufe 3 erreichen zu können."
+    tl3_requires_likes_received: "Mindestanzahl an Likes die ein Benutzer innerhalb der letzten (tl3 time period) bekommen haben muss, um Vertrauensstufe 3 erreichen zu können."
     tl3_links_no_follow: "rel=nofollow nicht von Links entfernen, die von Benutzern mit Vertrauensstufe 3 erstellt wurden."
     min_trust_to_create_topic: "Die minimale Vertrauensstufe wird benötigt um eine neues Thema zu erstellen."
     min_trust_to_edit_wiki_post: "Die minimal benötigte Vertrauensstufe, um als Wiki markierte Beiträge bearbeiten zu können."
@@ -1021,6 +1075,7 @@ de:
     max_attachment_size_kb: "Maximale Größe hochgeladener Dateianhänge in kB. Dieser Wert muss auch in Nginx (client_max_body_size), Apache oder anderen Proxies entsprechend konfiguriert werden."
     authorized_extensions: "Liste von erlaubten Dateiendungen für hochgeladene Dateien ('*' um alle Dateiendungen zu erlauben)"
     max_similar_results: "Anzahl ähnlicher Themen, die beim Erstellen eines neuen Themas über dem Editor angezeigt werden. Ähnlichkeit wird an Hand des Titels und Inhalts bestimmt."
+    max_image_megapixels: "Maximale erlaubte Auflösung für Bilder (in Megapixeln)."
     title_prettify: "Verhindert gängige Fehler im Titel, wie reine Grossschreibung, Kleinbuchstaben am Anfang, mehrere ! und ?, überflüssiger . am Ende, etc."
     topic_views_heat_low: "Aufrufe-Feld leicht hervorheben, sobald das Thema so oft gelesen wurde."
     topic_views_heat_medium: "Aufrufe-Feld mäßig hervorheben, sobald das Thema so oft gelesen wurde."
@@ -1031,19 +1086,19 @@ de:
     history_hours_low: "Bearbeitungs-Symbol leicht hervorheben, wenn der Beitrag innerhalb so vieler Stunden nach Erstellen bearbeitet wird."
     history_hours_medium: "Bearbeitungs-Symbol mäßig hervorheben, wenn der Beitrag innerhalb so vieler Stunden nach Erstellen bearbeitet wird."
     history_hours_high: "Bearbeitungs-Symbol stark hervorheben, wenn der Beitrag innerhalb so vieler Stunden nach Erstellen bearbeitet wird."
-    topic_post_like_heat_low: "Feld für Anzahl der Antworten leicht hervorheben, wenn das Verhältnis von „Gefällt mir“-Angaben zu Antworten diesen Wert übersteigt."
-    topic_post_like_heat_medium: "Feld für Anzahl der Antworten mäßig hervorheben, wenn das Verhältnis von „Gefällt mir“-Angaben zu Antworten diesen Wert übersteigt."
-    topic_post_like_heat_high: "Feld für Anzahl der Antworten stark hervorheben, wenn das Verhältnis von „Gefällt mir“-Angaben zu Antworten diesen Wert übersteigt."
+    topic_post_like_heat_low: "Feld für Anzahl der Antworten leicht hervorheben, wenn das Verhältnis von Likes zu Antworten diesen Wert übersteigt."
+    topic_post_like_heat_medium: "Feld für Anzahl der Antworten mäßig hervorheben, wenn das Verhältnis von Likes zu Antworten diesen Wert übersteigt."
+    topic_post_like_heat_high: "Feld für Anzahl der Antworten stark hervorheben, wenn das Verhältnis von Likes zu Antworten diesen Wert übersteigt."
     faq_url: "Vollständige URL zu einer externen FAQ, welche du gerne verwenden möchtest."
     tos_url: "Die vollständige URL zu deinen extern gehosteten Nutzungsbedingungen, sofern vorhanden."
     privacy_policy_url: "Die vollständige URL zu deinen extern gehosteten Datenschutzrichtlinien, sofern vorhanden."
     newuser_spam_host_threshold: "Wie häufig kann ein neuer Benutzer Links der gleichen Domain innerhalb ihrer `newuser_spam_host_threshold` Beiträge schreiben, ohne als Spam eingeordnet zu werden."
     white_listed_spam_host_domains: "Liste von Domänen, die keinem Spam-Host Test unterzogen werden. Neue Benutzer werden niemals daran gehindert, Beiträge mit Links zu diesen Domains zu erstellen."
-    staff_like_weight: "Zusätzlicher Gewichtungsfaktor für \"Gefällt mir\" Wertungen von Mitarbeitern."
+    staff_like_weight: "Zusätzlicher Gewichtungsfaktor für Likes vom Team."
     topic_view_duration_hours: "Alle (n) Stunden einen neuen Themenaufruf pro IP/Benutzer zählen."
     user_profile_view_duration_hours: "Alle (n) Stunden einen neuen Profilaufruf pro IP/Benutzer zählen."
     levenshtein_distance_spammer_emails: "E-Mail-Adressen, die sich um so viele Zeichen unterscheiden, werden beim Abgleich mit Adressen der Spammer dennoch als identisch betrachtet."
-    max_new_accounts_per_registration_ip: "Keine neuen Registrierungen von einer IP-Adresse annehmen, zu der bereits (n) Benutzerkonten mit Vertrauensstufe 0 (und keine davon sind Mitarbeiter oder mit Vertrauensstufe 2 oder höher) gehören."
+    max_new_accounts_per_registration_ip: "Keine neuen Registrierungen von einer IP-Adresse annehmen, wenn bereits (n) Benutzerkonten mit Vertrauensstufe 0 zugeordnet sind (und keines davon ein Team-Mitglied ist oder eine Vertrauensstufe 2 oder höher hat)."
     min_ban_entries_for_roll_up: "Ein Klick auf den \"Zusammenfassen\" Knopf führt (N) oder mehr Sperren zu einer einzelnen Subnetz-Sperre zusammen."
     max_age_unmatched_emails: "Gefilterte E-Mail-Adressen nach (N) Tagen ohne Treffer löschen."
     max_age_unmatched_ips: "Gefilterte IP-Adressen nach (N) Tagen ohne Treffer löschen."
@@ -1079,9 +1134,12 @@ de:
     reset_bounce_score_after_days: "Bounce-Score automatisch nach X Tagen zurücksetzen."
     attachment_content_type_blacklist: "Liste der Schlüsselwörter für die Ablehnung von Anhängen basierend auf Inhaltstypen."
     attachment_filename_blacklist: "Liste der Schlüsselwörter für die Ablehnung von Anhängen basierend auf dem Dateinamen."
+    enable_forwarded_emails: "[Beta] Erlaube Benutzern, ein Thema zu erstellen, indem sie eine E-Mail weiterleiten."
+    always_show_trimmed_content: "Immer den gekürzten Teil von eingehenden E-Mails anzeigen. WARNUNG: lässt möglicherweise E-Mail-Adressen erkennen."
     manual_polling_enabled: "Eingehende E-Mails über die API für E-Mail-Antworten annehmen."
     pop3_polling_enabled: "E-Mail-Antworten über POP3 abholen."
     pop3_polling_ssl: "SSL für die Verbindung zum POP3-Server verwenden. (Empfohlen)"
+    pop3_polling_openssl_verify: "Überprüfe TLS-Server-Zertifikat (Standard: aktiviert)"
     pop3_polling_period_mins: "Intervall in Minuten zum Abholen neuer E-Mails vom POP3-Konto. HINWEIS: benötigt Neustart."
     pop3_polling_port: "Port für die POP3-Abfrage."
     pop3_polling_host: "Hostname für die POP3-Abfrage."
@@ -1104,19 +1162,27 @@ de:
     allow_animated_thumbnails: "Generiert animierte Vorschaubilder aus animierten GIFs."
     default_avatars: "URLs zu Bildern, die als Standard-Profilbilder verwendet werden sollen, bis neue Benutzer ihr Profilbild geändert haben."
     automatically_download_gravatars: "Profilbilder von Gravatar herunterladen, wenn ein Benutzer sich registriert oder seine E-Mail-Adresse ändert."
+    digest_topics: "Die maximale Anzahl von Top-Beiträgen, die in der E-Mail-Zusammenfassung angezeigt werden sollen."
+    digest_posts: "Die maximale Anzahl von beliebten Beiträgen, die in der E-Mail-Zusammenfassung angezeigt werden sollen."
+    digest_other_topics: "Die maximale Anzahl von Themen, die in dem Bereich 'Neues in Themen und Kategorien, denen du folgst' in der E-Mail-Zusammenfassung angezeigt werden sollen."
     digest_min_excerpt_length: "Minimale Zeichenlänge für Auszüge von Beiträgen in der E-Mail-Zusammenfassung."
     delete_digest_email_after_days: "Unterdrücke E-Mail-Zusammenfassungen für Benutzer, die länger als (n) Tage nicht auf der Site gesehen wurden."
     digest_suppress_categories: "Unterdrücke diese Kategorien in E-Mail-Zusammenfassungen."
     disable_digest_emails: "Deaktiviere E-Mail-Zusammenfassungen für alle Benutzer."
+    email_accent_bg_color: "Die Hervorhebungsfarbe, die als Hintergrund mancher Elemente in HTML-E-Mails verwendet wird. Gib’ einen Namen ('red') oder einen Hex-Wert ('#FF000') der Farbe an."
+    email_accent_fg_color: "Gib’ einen Namen ('white') oder einen Hex-Wert ('#FFFFFF') der Farbe an."
+    email_link_color: "Die Farbe von Links in HTML-Mails. Gib’ einen Namen ('blue') oder einen Hex-Wert ('#0000FF') der Farbe an."
     detect_custom_avatars: "Aktiviere diese Option, um zu überprüfen, ob Benutzer eigene Profilbilder hochgeladen haben."
     max_daily_gravatar_crawls: "Wie oft pro Tag Discourse höchstens auf Gravatar nach benuterdefinierten Avataren suchen soll."
     public_user_custom_fields: "Liste selbst definierter Profil-Felder, die öffentlich angezeigt werden dürfen."
-    staff_user_custom_fields: "Liste selbst definierter Profil-Felder, die Mitarbeitern angezeigt werden dürfen."
+    staff_user_custom_fields: "Eine Liste von benutzerdefinierten Benutzerfeldern, die vom Team eingesehen werden können."
     enable_user_directory: "Aktiviert ein durchsuchbares Benutzerverzeichnis"
+    enable_group_directory: "Aktiviert ein durchsuchbares Gruppenverzeichnis"
     allow_anonymous_posting: "Benutzern erlauben, in den anonymen Modus zu wechseln"
     anonymous_posting_min_trust_level: "Vertrauensstufe, ab der das Schreiben anonymer Beiträge erlaubt ist"
     anonymous_account_duration_minutes: "Erzeuge alle (n) Minuten ein neues anonymes Konto je Benutzer, um die Anonymität der virtuellen anonymen Benutzer zu gewährleisten. Beispiel: Ein Wert von 600 sorgt dafür, dass ein neues anonymes Konto erzeugt wird, wenn ein Benutzer in den anonymen Modus wechselt UND mindestens 600 Minuten seit der letzten anonymen Nachricht dieses Benutzers vergangen sind."
     hide_user_profiles_from_public: "Deaktiviert Benutzerkarten, Benutzerprofile und das Benutzerverzeichnis für anonyme Benutzer."
+    user_website_domains_whitelist: "Benutzer-Webseiten werden mit diesen Domains abgeglichen. Mehrere Domains können mit einem Pipe-Symbol „|“ getrennt angegeben werden."
     allow_profile_backgrounds: "Erlaubt es Benutzern, Profilhintergründe hochzuladen."
     sequential_replies_threshold: "Anzahl an Beiträgen die ein Benutzer machen muss, um benachrichtigt zu werden, dass er zu viele aufeinanderfolgende Antworten schreibt."
     enable_mobile_theme: "Mobilgeräte verwenden eine mobile Darstellung mit der Möglichkeit zur vollständigen Site zu wechseln. Deaktiviere diese Option, wenn du ein eigenes Full-Responsive-Stylesheet verwenden möchtest."
@@ -1129,6 +1195,7 @@ de:
     automatically_unpin_topics: "Themen automatisch loslösen, wenn ein Benutzer das Ende erreicht."
     read_time_word_count: "Wörter pro Minute für die Berechnung der geschätzten Lesezeit."
     topic_page_title_includes_category: "Name des Themas enthält den Namen der Kategorie."
+    native_app_install_banner: "Wiederkehrende Benutzer dazu einladen, die native Discourse-App herunterzuladen."
     max_prints_per_hour_per_user: "Maximale Anzahl von Aufrufen der Druckansicht pro Nutzer pro Stunde (0 zum deaktivieren)"
     full_name_required: "Der voller Name wird für das Benutzerprofil benötigt."
     enable_names: "Zeigt den vollen Namen eines Benutzers auf dem Profil, der Benutzerkarte und in E-Mails an. Wenn deaktiviert wird der volle Name überall ausgeblendet."
@@ -1146,15 +1213,15 @@ de:
     embed_username_key_from_feed: "Schlüssel, um Discourse-Benutzernamen aus Feed zu ermitteln."
     embed_title_scrubber: "Regulärer Ausdruck (Regex) um eingebettete Titel zu bereinigen"
     embed_truncate: "Kürze die eingebetteten Beiträge"
+    allowed_href_schemes: "URI-Schemas, die in Links zusätzlich zu http und https erlaubt sind."
     embed_post_limit: "Maximale Anzahl der Beiträge die eingebettet werden."
     embed_username_required: "Der Benutzername ist für die Themenerstellung notwendig"
     embed_whitelist_selector: "CSS-Selektor für Elemente, die in Einbettungen erlaubt sind."
     embed_blacklist_selector: "CSS-Selektor für Elemente, die in Einbettungen entfernt werden."
     notify_about_flags_after: "Wenn es Meldungen gibt, die nicht nach dieser Anzahl von Stunden behandelt wurden, sende eine E-Mail an contact_email. Setze dies auf 0 um es zu deaktivieren."
-    enable_cdn_js_debugging: "Ermöglicht die Anzeige vollständiger Fehler auf /logs, indem alle eingebetteten JavaScripts Cross-Origin Zugriffsberechtigungen erhalten."
     show_create_topics_notice: "Administratoren eine Warnmeldung anzeigen, wenn im Forum weniger als 5 öffentlich sichtbare Themen existieren."
     delete_drafts_older_than_n_days: Lösche Entwürfe, die mehr als (n) Tage alt sind.
-    bootstrap_mode_min_users: "Erforderliche Benutzeranzahl, um den Bootstrapping-Modus zu deaktivieren (0 = ausgeschaltet)"
+    bootstrap_mode_min_users: "Erforderliche Benutzeranzahl, um den Starthilfe-Modus zu deaktivieren (0 = ausgeschaltet)"
     vacuum_db_days: "Führe VACUUM ANALYZE aus, um Datenbankspeicher nach Migrationen zurückzuerhalten (0 um zu deaktivieren)"
     prevent_anons_from_downloading_files: "Nichtangemeldeten Benutzern das Herunterladen von Anhängen verbieten. WARNUNG: dies verhindert auch das Herunterladen jeglicher Ressourcen für Website-Anpassungen, die als Anhänge gespeichert wurden."
     slug_generation_method: "Gib eine Methode an, wie Kürzel in URLs generiert werden sollen. 'encoded' verwendet einen Prozent-Encodierten String, bei 'none' wird kein Kürzel verwendet."
@@ -1180,17 +1247,21 @@ de:
     default_email_in_reply_to: "Standardmäßig einen Anriss des Beitrags, auf den geantwortet wurde, in E-Mails einfügen."
     default_other_new_topic_duration_minutes: "Zeit wie lange ein Thema als \"Neu\" markiert werden soll. "
     default_other_auto_track_topics_after_msecs: "Zeit bevor ein Thema automatisch verfolg wird. "
+    default_other_notification_level_when_replying: "Globales Standard-Benachrichtigungslevel, wenn ein Benutzer auf ein Thema antwortet."
     default_other_external_links_in_new_tab: "Öffne externe Links standardmäßig in einem neuen Tab."
     default_other_enable_quoting: "Aktiviere standardmäßig die Zitat-Antwort Funktion für hervorgehobenen Text."
     default_other_dynamic_favicon: "Zeige standardmäßig die Anzahl von neuen und geänderten Beiträgen im Browser-Symbol an."
     default_other_disable_jump_reply: "Springe standardmäßig nicht zum neusten Beitrag des Users, wenn dieser geantwortet hat."
-    default_other_like_notification_frequency: "Benutzer standardmäßig bei „Gefällt mir“-Angaben benachrichtigen."
+    default_other_like_notification_frequency: "Benutzer standardmäßig bei erhaltenen Likes benachrichtigen."
     default_topics_automatic_unpin: "Standardmäßig Themen automatisch loslösen, wenn ein Benutzer das Ende erreicht."
     default_categories_watching: "Liste der standardmäßig beobachteten Kategorien."
     default_categories_tracking: "Liste der standardmäßig gefolgten Kategorien."
     default_categories_muted: "Liste der standardmäßig stummgeschalteten Kategorien."
+    default_categories_watching_first_post: "Liste von Kategorien, in denen der erste Beiträge in jedem neuen Thema automatisch beobachtet wird."
     max_user_api_reqs_per_day: "Maximale Zahl der Benutzer API Anfragen pro Schlüssel pro Tag"
     max_user_api_reqs_per_minute: "Maximale Zahl der Benutzer API Anfragen pro Schlüssel pro Minute"
+    allow_user_api_keys: "Erlaube das Generieren von Benutzer-API-Schlüsseln"
+    allow_user_api_key_scopes: "Liste erlaubter Scopes für Benutzer-API-Schlüssel"
     max_api_keys_per_user: "Maximale Zahl der Benutzer API Anfragen pro Benutzer"
     min_trust_level_for_user_api_key: "Erforderliche Vertrauensstufe für die Generierung von Benutzer API Schlüsseln"
     allowed_user_api_auth_redirects: "Erlaubte URL für die Authentifizierungs-Umleitung von Benutzer API Schlüsseln"
@@ -1204,12 +1275,13 @@ de:
     max_tags_in_filter_list: "Maximale Anzahl von Schlagwörtern, die in einer Dropdown-Liste angezeigt werden. Es werden die am häufigsten verwendeten Schlagwörter angezeigt."
     tags_sort_alphabetically: "Zeige Schlagwörter in alphabetischer Reihenfolge. Standardmäßig werden sie nach Beliebtheit sortiert."
     tag_style: "Visueller Stil für Schlagwort-Abzeichen."
-    staff_tags: "Eine Liste von Schlagwörtern, die nur von Mitarbeitern angewendet werden können."
+    staff_tags: "Eine Liste von Schlagwörtern, die nur von Team-Mitgliedern angewendet werden können."
     min_trust_level_to_tag_topics: "Minimale Vertrauensstufe, um Schlagwörter zu Themen hinzuzufügen."
     suppress_overlapping_tags_in_list: "Schlagwort nicht zeigen, wenn es genau so im Thementitel vorkommt"
-    remove_muted_tags_from_latest: "Zeige in der Liste der neusten Beiträge keine Themen mit stummgeschalteten Schlagwörtern."
+    remove_muted_tags_from_latest: "Zeige in der Liste der neuesten Beiträge keine Themen mit stummgeschalteten Schlagwörtern."
     company_short_name: "Firmenname (kurz)"
     company_full_name: "Firmenname (komplett)"
+    company_domain: "Firmendomain"
     errors:
       invalid_email: "Ungültige E-Mail-Ad­res­se"
       invalid_username: "Es gibt keinen Benutzer mit diesem Benutzernamen."
@@ -1232,6 +1304,7 @@ de:
       reply_by_email_address_is_empty: "Du musst 'reply by email address' definieren, bevor per E-Mail antworten aktiviert wird"
       email_polling_disabled: "Du musst entweder manuelles oder POP3 polling aktivieren, bevor per E-Mail antworten aktiviert wird"
       user_locale_not_enabled: "Du musst zuerst 'allow user locale' aktivieren bevor du dies aktivierst"
+      invalid_regex: "Regulärer Ausdruck ist ungültig oder nicht erlaubt."
   search:
     within_post: "#%{post_number} von %{username}"
     types:
@@ -1302,10 +1375,10 @@ de:
       other: "Dieses Thema wurde automatisch %{count} Minuten nach der letzten Antwort geschlossen. Es sind keine neuen Nachrichten mehr erlaubt."
     autoclosed_disabled: "Dieses Thema ist nun offen. Neue Beiträge werden angenommen."
     autoclosed_disabled_lastpost: "Dieses Thema ist jetzt geöffnet. Neue Antworten sind erlaubt."
-    pinned_enabled: "Dieses Thema ist nun angepinnt. In seiner Kategorie wird es nun oben aufgelistet, solange der Pin nicht von einem Mitarbeiter gelöst wird, oder nicht jeder Benutzer selbst den Pin löst."
-    pinned_disabled: "Dieses Thema ist nun nicht mehr angepinnt. In seiner Kategorie wird es nicht länger oben aufgelistet."
-    pinned_globally_enabled: "Dieses Thema ist nun global angepinnt. Es wird sowohl in seiner Kategorie als auch in allen anderen Themenlisten oben aufgelistet, solange der Pin nicht von einem Mitarbeiter gelöst wird, oder nicht jeder Benutzer selbst den Pin löst."
-    pinned_globally_disabled: "Dieses Thema ist nun nicht mehr angepinnt. In seiner Kategorie wird es nicht länger oben aufgelistet."
+    pinned_enabled: "Dieses Thema ist nun angeheftet. In seiner Kategorie wird es nun oben erscheinen, bis es vom Team oder von einzelnen Benutzer losgelöst wird."
+    pinned_disabled: "Dieses Thema ist nun nicht mehr angeheftet. In seiner Kategorie erscheint es nicht länger oben."
+    pinned_globally_enabled: "Dieses Thema ist nun global angeheftet. Es wird in seiner Kategorie und in allen Themenlisten oben erscheinen, bis es vom Team oder von einzelnen Benutzer losgelöst wird."
+    pinned_globally_disabled: "Dieses Thema ist nicht mehr angeheftet. In seiner Kategorie wird es nicht länger oben erscheinen."
     visible_enabled: "Das Thema ist jetzt gelistet. Es wird in der Themenliste angezeigt."
     visible_disabled: "Das Thema ist jetzt ungelistet. Es wird nicht mehr in der Themenliste angezeigt. Dieses Thema kann nur mit einem direkten Link erreicht werden."
   login:
@@ -1324,6 +1397,7 @@ de:
     something_already_taken: "Etwas ist schief gelaufen. Möglicherweise ist der Benutzername bereits registriert. Probiere den 'Passwort vergessen'-Link."
     omniauth_error: "Entschuldigung, bei der Autorisierung deines Kontos ist ein Fehler aufgetreten. Hast du die Autorisierung möglicherweise abgelehnt?"
     omniauth_error_unknown: "Während des Anmeldens ist etwas schief gelaufen, bitte versuche es noch einmal."
+    authenticator_error_no_valid_email: "E-Mail-Adressen mit %{account} sind nicht erlaubt. Du musst möglicherweise dein Konto mit einer anderen E-Mail-Adresse einrichten."
     new_registrations_disabled: "Leider können derzeit keine neuen Konten registriert werden."
     password_too_long: "Passwörter sind beschränkt auf 200 Zeichen."
     email_too_long: "Die von dir eingegebene E-Mail-Adresse ist zu lang. Der Teil vor dem @ darf maximal 254 Zeichen lang sein und Domain-Namen maximal 253 Zeichen."
@@ -1334,6 +1408,8 @@ de:
   user:
     no_accounts_associated: "Es sind keine Konten zugeordnet"
     deactivated: "Deaktiviert wegen zu vielen unzustellbaren E-Mails an '%{email}'."
+    deactivated_by_staff: "Deaktiviert vom Team"
+    activated_by_staff: "Aktiviert vom Team"
     username:
       short: "muss mindestens %{min} Zeichen lang sein"
       long: "darf nicht länger als %{max} Zeichen sein"
@@ -1351,6 +1427,8 @@ de:
     ip_address:
       blocked: "Neue Registrierungen sind von deiner IP-Adresse aus nicht erlaubt."
       max_new_accounts_per_registration_ip: "Weitere Registrierungen sind von deiner IP-Adresse aus nicht gestattet (limit erreicht). Kontaktiere einen Administrator mit dem Problem damit er dir helfen kann."
+    website:
+      domain_not_allowed: "Webseite ist ungültig. Erlaubte Domains sind: %{domains}"
   flags_reminder:
     flags_were_submitted:
       one: "Vor über einer Stunde wurden Meldungen gesendet. Bitte überprüfe sie."
@@ -1359,6 +1437,7 @@ de:
       one: "Eine Markierung wartet auf Bearbeitung"
       other: "%{count} Markierungen warten auf Bearbeitung"
   unsubscribe_mailer:
+    title: "Abbestellung von E-Mail-Updates"
     subject_template: "Bitte bestätige, dass du keine E-Mail-Updates mehr von %{site_title} erhalten möchtest."
     text_body_template: |
       Jemand (wahrscheinlich du?) hat angefragt, keine E-Mail-Updates mehr von %{site_domain_name} auf dieser Adresse zu erhalten.
@@ -1369,6 +1448,7 @@ de:
 
       Wenn du weiterhin E-Mail-Updates erhalten möchtest, dann kannst du diese E-Mail ignorieren.
   invite_mailer:
+    title: "Einladung zu einem Thema"
     subject_template: "%{invitee_name} hat dich zum Thema '%{topic_title}' auf %{site_domain_name} eingeladen"
     text_body_template: |
       %{invitee_name} hat dich dazu eingeladen, an einer Diskussion teilzunehmen:
@@ -1385,6 +1465,7 @@ de:
 
       Dies ist eine Einladung von einem vertrauenswürdigen Benutzer. Du kannst deshalb sofort auf die Diskussion antworten.
   custom_invite_mailer:
+    title: "Einladung zu einem Thema (mit Nachricht)"
     subject_template: "%{invitee_name} hat dich eingeladen zu '%{topic_title}' auf %{site_domain_name}"
     text_body_template: |
       %{invitee_name} hat dich zu einer Diskussion eingeladen
@@ -1407,38 +1488,45 @@ de:
 
       Diese Einladung stammt von einem vertrauenswürdigen Benutzer, daher kannst du direkt auf die Diskussion antworten.
   invite_forum_mailer:
+    title: "Einladung zur Teilnahme"
     subject_template: "%{invitee_name} hat dich eingeladen %{site_domain_name} beizutreten"
     text_body_template: |
-      %{invitee_name} hat dich zur Teilnahme eingeladen
+      %{invitee_name} hat dich eingeladen,
 
       > **%{site_title}**
       >
       > %{site_description}
 
-      Wenn du Interesse hast, klicke auf den nachfolgenden Link:
+      beizutreten.
+
+      Wenn du interessiert bist, folge dem folgenden Link:
 
       %{invite_link}
 
-      Diese Einladung stammt von einem vertrauenswürdigen Benutzer. Daher wird für dich automatisch ein Konto erstellt.
+      Die Einladung kommt von einem vertrauenswürdigen Benutzer. Daher wird für dich beim Betreten automatisch ein Benutzerkonto mit dieser E-Mail-Adresse erstellt.
   custom_invite_forum_mailer:
+    title: "Einladung zur Teilnahme"
     subject_template: "%{invitee_name} hat dich eingeladen %{site_domain_name} beizutreten"
     text_body_template: |
-      %{invitee_name} hat dich zur Teilnahme eingeladen
+      %{invitee_name} hat dich eingeladen,
 
       > **%{site_title}**
       >
       > %{site_description}
+
+      beizutreten.
 
       Nachricht von %{invitee_name}:
 
       %{user_custom_message}
 
-      Wenn du Interesse hast, klicke auf den nachfolgenden Link:
+      Wenn du interessiert bist, folge einfach diesem Link:
 
       %{invite_link}
 
-      Diese Einladung stammt von einem vertrauenswürdigen Benutzer. Daher wird für dich automatisch ein Konto erstellt.
+      Diese Einladung kommt von einem vertrauenswürdigen Benutzer. Daher wird für dich beim Betreten automatisch ein Benutzerkonto mit dieser E-Mail-Adresse erstellt.
   invite_password_instructions:
+    title: "Passwort festlegen"
     subject_template: "Lege ein Passwort für dein %{site_name}-Konto fest"
     text_body_template: |
       Schön, dass du die Einladung zu %{site_name} angenommen hast -- Willkommen!
@@ -1448,6 +1536,7 @@ de:
 
       (Wenn der Link abgelaufen ist, wähle "Passwort vergessen" aus, wenn du dich mit deiner E-Mail-Adresse einloggen möchtest.)
   test_mailer:
+    title: "Test-E-Mail"
     subject_template: "[%{site_name}] Test der E-Mail-Zustellbarkeit"
     text_body_template: |
       Dies ist eine Test-E-Mail von
@@ -1491,6 +1580,7 @@ de:
       [mj]: https://www.mailjet.com/pricing
       [mt]: http://www.mail-tester.com/
   new_version_mailer:
+    title: "Neue Version"
     subject_template: "[%{site_name}] Neue Discourse Version, Update verfügbar"
     text_body_template: |
       Hurra, eine neue Version von [Discourse](http://www.discourse.org) ist verfügbar!
@@ -1504,6 +1594,7 @@ de:
 
       - Besuche [meta.discourse.org](https://meta.discourse.org) für Neuigkeiten, Diskussionen und Support für Discourse
   new_version_mailer_with_notes:
+    title: "Neue Version mit Versionshinweisen"
     subject_template: "[%{site_name}] Update verfügbar"
     text_body_template: |
       Hurra, eine neue Version von [Discourse](http://www.discourse.org) ist verfügbar!
@@ -1521,6 +1612,7 @@ de:
 
       %{notes}
   queued_posts_reminder:
+    title: "Erinnerung an Freischaltung wartender Beiträge"
     subject_template:
       one: "[%{site_name}] %{count} auf Freischaltung wartender Beitrag."
       other: "[%{site_name}] %{count} auf Freischaltung wartende Beiträge."
@@ -1542,6 +1634,7 @@ de:
   temporarily_closed_due_to_flags: "Dieses Thema ist vorrübergehend geschlossen. Mehrere User haben dieses Thema gemeldet. "
   system_messages:
     post_hidden:
+      title: "Benachrichtigung: Beitrag versteckt"
       subject_template: "Beitrag versteckt wegen Community-Meldungen"
       text_body_template: |
         Hallo,
@@ -1554,82 +1647,16 @@ de:
 
         Mehrere Community-Mitglieder haben diesen Beitrag gemeldet, bevor er ausgeblendet wurde, daher prüfe bitte, wie du deinen Beitrag möglicherweise anpassen kannst, um ihr Feedback zu berücksichtigen. **Du kannst deinen Beitrag nach %{edit_delay} Minuten bearbeiten und er wird automatisch wieder sichtbar.**
 
-        Wenn der Beitrag jedoch von der Community erneut ausgeblendet wurde, wird er ausgeblendet bleiben, bis sich ein Mitarbeiter darum kümmert – und möglicherweise gibt es weitere Maßnahmen, einschließlich einer möglichen Sperrung deines Kontos.
+        Wenn der Beitrag jedoch von der Community erneut ausgeblendet wurde, wird er ausgeblendet bleiben, bis sich das Team darum kümmert – und möglicherweise gibt es weitere Maßnahmen, einschließlich einer möglichen Sperrung deines Kontos.
 
         Weitre Hinweise findest du in unseren [Community-Richtlinien](%{base_url}/guidelines).
     usage_tips:
       text_body_template: |
-        In dieser Nachricht findest du einige Tipps um dir den Einstieg zu erleichtern.
+        Ein paar Tipps für die ersten Schritte als neuer Benutzer [findest du in diesem Blog-Eintrag](http://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/).
 
-        ## Einfach weiterscrollen
-
-        Es gibt keine Knöpfe um auf die nächste Seite zu gelangen oder Seitenzahlen – um mehr zu lesen, **scrolle einfach weiter nach unten!**
-
-        Wenn neue Beiträge eingebracht werden, erscheinen diese automatisch - ohne dass die Seite neu geladen werden muss.
-
-        ## Wo bin ich?
-
-        - Um die Suche, das Menü <kbd>☰</kbd> oder deine Profilseite aufzurufen, benutze die **Schaltflächen oben rechts**.
-
-        - Das Klicken auf den Titel eines Themas bringt dich zu **deinem nächsten ungelesenen Beitrag** in diesem Thema. Um stattdessen ganz oben oder ganz unten einzusteigen, klicke die Beitragszahl oder das Datum der letzten Antwort.
-
-        <img src="%{base_url}/images/welcome/topic-list-select-areas-2x.png" width="593" height="59">
-
-        - Während des Lesens eines Themas kannst du mit Hilfe dessen Titels zum &uarr; Anfang springen. Die grüne Fortschrittsanzeige unten rechts erlaubt weitere Navigation.
-
-        <img src="%{base_url}/images/welcome/progress-bar-2x.png" width="153" height="181">
-
-        Du kannst auch <kbd>?</kbd> auf der Tastatur drücken, für eine Liste super-schneller Tastaturkürzel.
-
-        ## Wie antworte ich?
-
-        - Um auf das gesamte Thema zu antworten, benutze den Antwortknopf <img src="%{base_url}/images/welcome/reply-topic.png" width="29" height="25"> ganz unten auf der Seite.
-
-        - Um auf einen bestimmten Beitrag zu antworten kannst du die Schaltfläche <img src="%{base_url}/images/welcome/reply-post.png" width="29" height="25"> direkt unter diesem Beitrag verwenden.
-
-        Das Zitieren eines Beitrags ist mit dem Auswählen des gewünschten Texts gefolgt von einem beliebigen Antwortknopf möglich.
-
-        <img src="%{base_url}/images/welcome/quote-reply.png" width="350" height="129">
-
-        Um jemanden in auf deinen Beitrag aufmerksam zu machen, erwähne ihn durch das Eingeben von `@` gefolgt von seinem Benutzernamen.
-
-        <img src="%{base_url}/images/welcome/username-completion.png" width="230" height="131">
-
-        - Um die Diskussion in eine andere Richtung zu lenken, die beiden Themen aber zu verknüpfen, benutze bitte <img src="%{base_url}/images/welcome/reply-as-linked-topic.png" width="15" height="25"> <kbd>Mit verknüpftem Thema antworten` rechts des passenden Beitrags.
-
-
-        ## Was kann ich sonst noch machen?
-
-        Unter jedem Beitrag befinden sich Aktionsbuttons:
-
-        <img src="%{base_url}/images/welcome/like-link-flag-bookmark.png" width="169" height="46">
-
-        Um zu Zeigen, dass dir der Beitrag gefallen hat, drücke den **❤**-Knopf. Wenn du ein Problem mit einem Beitrag feststellst, mach den Autor oder die Moderatoren durch **Melden** darauf aufmerksam.
-
-        Du kannst außerdem einen Link zu einem Beitrag **teilen**, oder ihn zum Merken mit einem [**Lesezeichen**](/my/activity/bookmarks) versehen.
-
-        ## Wer schreibt mir?
-
-        Wenn jemand auf deinen Beitrag antwortet, deinen Beitrag zitiert, oder deinen `@Benutzernamen` erwähnt, zeigt sich sofort eine Zahl oben rechts auf der Seite. Dort kannst du auch deine **Benachrichtigungen** abrufen.
-
-        <img src="%{base_url}/images/welcome/notification-panel.png" width="178" height="59">
-
-        Um das Verpassen von Antworten (und Nachrichten) musst du dir keine Sorgen machen – diese werden dir 3 Minuten nach ihrer Erstellung automatisch per E-Mail zugeschickt, für den Fall dass du nicht online sein solltest wenn sie ankommen.
-
-        ## Wann sind Themen neu?
-
-        Standardmäßig gelten alle Themen die weniger als zwei Tage alt sind als neu. Alle Themen an denen du teilgenommen hast (durch Antwort, eigene Erstellung, oder längeres Lesen) werden automatisch verfolgt.
-
-        Neben diesen Themen wirst du blaue Indikatoren finden, die dich über die Aktualität informieren:
-
-        <img src="%{base_url}/images/welcome/topics-new-unread.png" width="368" height="89">
-
-        Du kannst den Informationsmodus eines Themas mit dem Menü am Ende anpassen (auch für ganze Kategorien möglich). Du kannst damit Stummstellen, Verfolgen oder Benachrichtigungen über alles Neue erhalten. Um diese Funktion zu konfigurieren, gehe in [deine Einstellungen](/my/preferences).
-
-        ## Warum kann ich manche Sachen nicht machen?
-
-        Aus Sicherheitsgründen sind neue Benutzer etwas eingeschränkt in ihren Befugnissen. Mit dem Teilnehmen hier und dem Gewinnen von Vertrauen werden diese Einschränkungen automatisch aufgehoben. Wenn du eine höhere Vertrauensstufe erlangst, kannst du außerdem ein wenig beim Moderieren helfen.
+        Während du hier teilnimmst, werden wir dich kennenlernen und die vorübergehenden Einschränkungen für neue Benutzer werden aufgehoben. Über die Zeit, erreichst du [Vertrauensstufen](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924), die spezielle Fähigkeiten beinhalten, um die Community gemeinsam zu verwalten.
     welcome_user:
+      title: "Willkommen: Benutzer"
       subject_template: "Willkommen bei %{site_name}!"
       text_body_template: |
         Danke fürs Anmelden bei %{site_name}, sei willkommen!
@@ -1640,30 +1667,28 @@ de:
 
         Viel Spaß!
 
-        (Wenn du als neuer Benutzer unter vier Augen mit einem unserer [Mitarbeiter](%{base_url}/about) reden möchtest, antworte einfach auf diese Nachricht.)
+        (Wenn du als neuer Benutzer unter vier Augen mit einem unserer [Team-Mitglieder](%{base_url}/about) reden möchtest, antworte einfach auf diese Nachricht.)
     welcome_invite:
+      title: "Willkommen: Einladung"
       subject_template: "Willkommen bei %{site_name}!"
       text_body_template: |
-        Danke, dass du der Einladung zu %{site_name} gefolgt bist -- herzlich willkommen!
+        Danke, dass du die Einladung zu %{site_name} angenommen hast -- und willkommen!
 
-        Wir haben automatisch das Konto **%{username}** für dich angelegt und du bist bereits angemeldet, aber du kannst deinen Benutzernamen in [deinem Profil][prefs] noch ändern.
+        - Wir haben dieses neue Konto **%{username}** für dich erstellt. Ändere deinen Namen oder dein Passwort, indem du [dein Benutzerprofil][prefs] aufrufst.
 
-        Um dich später wieder anzumelden:
-
-        1. Verwende bitte **dieselbe E-Mail-Adresse, unter der du die ursprüngliche Einladung erhalten hast**. Ansonsten können wir nicht erkennen, dass du es bist!
-
-        2. Wähle ein eindeutiges Passwort in [deinem Profil][prefs] und verwende dieses, um dich anzumelden.
+        - Wenn du dich anmeldest, **verwende immer die gleiche E-Mail-Adresse wie von deiner ursprünglichen Einladung** – sonst wissen wir nicht, ob du es wirklich bist!
 
         %{new_user_tips}
 
-        Wir wünschen uns ein stets [zivilisiertes Verhalten in unserer Community](%{base_url}/guidelines).
+        Wir glauben an [zivilisiertes Verhalten in unserer Community(%{base_url}/guidelines) zu jeder Zeit.
 
-        Viel Spaß!
+        Genieße deinen Aufenthalt!
 
-        (Wenn du als neuer Benutzer unter vier Augen mit einem unserer [Mitarbeiter](%{base_url}/about) reden möchtest, antworte einfach auf diese Nachricht.)
+        (Wenn du als neuer Benutzer mit [Team-mitgliedern](%{base_url}/about) kommunizieren möchtest, antworte einfach auf diese Nachricht.)
 
         [prefs]: %{user_preferences_url}
     backup_succeeded:
+      title: "Backup erfolgreich"
       subject_template: "Sicherung erfolgreich abgeschlossen"
       text_body_template: |
         Backup erfolgreich erstellt.
@@ -1676,6 +1701,7 @@ de:
         %{logs}
         ```
     backup_failed:
+      title: "Backup fehlgeschlagen"
       subject_template: "Sicherung fehlgeschlagen"
       text_body_template: |
         Die Sicherung ist fehlgeschlagen.
@@ -1686,6 +1712,7 @@ de:
         %{logs}
         ```
     restore_succeeded:
+      title: "Wiederherstellung erfolgreich"
       subject_template: "Wiederherstellung erfolgreich abgeschlossen"
       text_body_template: |
         Die Wiederherstellung war erfolgreich.
@@ -1696,6 +1723,7 @@ de:
         %{logs}
         ```
     restore_failed:
+      title: "Wiederherstellung fehlgeschlagen"
       subject_template: "Wiederherstellung fehlgeschlagen"
       text_body_template: |
         Die Wiederherstellung ist fehlgeschlagen.
@@ -1706,9 +1734,11 @@ de:
         %{logs}
         ```
     bulk_invite_succeeded:
+      title: "Masseneinladung erfolgreich"
       subject_template: "Masseneinladung von Benutzern erfolgreich verarbeitet"
       text_body_template: "Deine Masseneinladung von Benutzern wurde erfolgreich verarbeitet, insgesamt wurden %{sent} Einladungen per E-Mail verschickt."
     bulk_invite_failed:
+      title: "Masseneinladung fehlgeschlagen"
       subject_template: "Bei der Verarbeitung der Masseneinladung von Benutzern sind Fehler aufgetreten"
       text_body_template: |
         Deine Masseneinladungs-Datei wurde verarbeitet, insgesamt wurden %{sent} Einladungen verschickt und dabei traten %{failed} Fehler auf.
@@ -1719,6 +1749,7 @@ de:
         %{logs}
         ```
     csv_export_succeeded:
+      title: "CSV-Export erfolgreich"
       subject_template: "Datenexport abgeschlossen"
       text_body_template: |
         Deine Daten wurden erfolgreich exportiert! :dvd:
@@ -1727,51 +1758,60 @@ de:
 
         Dieser Download-Link ist für die nächsten 48 Stunden gültig.
     csv_export_failed:
+      title: "CSV-Export fehlgeschlagen"
       subject_template: "Datenexport fehlgeschlagen"
-      text_body_template: "Entschuldigung, beim Exportieren deiner Daten trat ein Fehler auf. Bitte kontaktiere einen Mitarbeiter oder sieh in die Logs."
+      text_body_template: "Entschuldigung, beim Exportieren deiner Daten trat ein Fehler auf. Bitte kontaktiere ein Team-Mitglied oder überprüfe die Logdateien."
     email_reject_insufficient_trust_level:
+      title: "E-Mail abgelehnt weil Vertrauensstufe unzureichend"
       subject_template: "[%{site_name}] E-Mail-Problem -- Unzureichende Vertrauensstufe"
       text_body_template: |
-        Es tut uns leid, aber deine E-Mail-Nachricht an %{destination} (Titel: %{former_title}) hat nicht funktioniert.
+        Entschuldige, aber deine E-Mail-Nachricht an %{destination} (Titel: %{former_title}) konnte nicht zugestellt werden.
 
-        Du hast nicht die notwendige Vertrauensstufe, um neue Themen über diese E-Mail-Adresse zu erstellen. Wenn du glaubst, dass das ein Irrtum ist, dann kontaktiere einen Mitarbeiter.
+        Du hast nicht die notwendige Vertrauensstufe, um neue Themen über diese E-Mail-Adresse zu erstellen. Wenn du glaubst, dass das ein Irrtum ist, dann kontaktiere ein Team-Mitglied.
     email_reject_user_not_found:
+      title: "E-Mail abgelehnt weil Benutzer nicht gefunden"
       subject_template: "[%{site_name}] E-Mail-Problem -- Benutzer nicht gefunden"
       text_body_template: |
-        Es tut uns leid, aber deine E-Mail-Nachricht an %{destination} (betitelt mit %{former_title}) hat nicht funktioniert.
+        Entschuldige, aber deine E-Mail-Nachricht an %{destination} (betitelt mit %{former_title}) konnte nicht zugestellt werden.
 
-        Deine Antwort wurde von einer unbekannten E-Mail-Adresse gesendet. Probiere eine andere Absende-Adresse oder wende dich an einen Mitarbeiter.
+        Deine Antwort wurde von einer unbekannten E-Mail-Adresse gesendet. Probiere eine andere Absende-Adresse oder wende dich an ein Team-Mitglied.
     email_reject_screened_email:
+      title: "E-Mail abgelehnt weil E-Mail-Adresse gesperrt"
       subject_template: "[%{site_name}] E-Mail-Problem -- Blockiertee E-Mail-Adresse"
       text_body_template: |
-        Es tut uns leid, aber deine E-Mail-Nachricht an %{destination} (betitelt mit %{former_title}) hat nicht funktioniert.
+        Entschuldige, aber deine E-Mail-Nachricht an %{destination} (betitelt mit %{former_title}) konnte nicht zugestellt werden.
 
-        Deine Antwort wurde von einer blockierten E-Mail-Adresse gesendet. Probiere eine andere Absende-Adresse oder wende dich an einen Mitarbeiter.
+        Deine Antwort wurde von einer blockierten E-Mail-Adresse gesendet. Probiere eine andere Absende-Adresse oder wende dich an ein Team-Mitglied.
     email_reject_inactive_user:
+      title: "E-Mail abgelehnt weil Benutzer inaktiv"
       subject_template: "[%{site_name}] E-Mail-Problem -- Inaktiver Benutzer"
       text_body_template: |
         Es tut uns leid, aber deine E-Mail-Nachricht an %{destination} (betitelt mit %{former_title}) hat nicht funktioniert.
 
         Dein mit dieser E-Mail-Adresse verbundenes Benutzerkonto ist nicht aktiviert. Bitte aktiviere dein Konto bevor du E-Mails sendest.
     email_reject_blocked_user:
+      title: "E-Mail abgelehnt weil Benutzer gesperrt"
       subject_template: "[%{site_name}] E-Mail-Problem -- Blockierter Benutzer"
       text_body_template: |
         Es tut uns leid, aber deine E-Mail-Nachricht an %{destination} (betitelt mit %{former_title}) hat nicht funktioniert.
 
         Dein mit dieser E-Mail-Adresse verbundenes Konto wurde blockiert.
     email_reject_reply_user_not_matching:
+      title: "E-Mail abgelehnt weil E-Mail-Adresse abweichend"
       subject_template: "[%{site_name}] E-Mail-Problem -- Unerwartete Antwort-Adresse"
       text_body_template: |
-        Es tut uns leid, aber deine E-Mail-Nachricht an %{destination} (betitelt mit %{former_title}) hat nicht funktioniert.
+        Entschuldige, aber deine E-Mail-Nachricht an %{destination} (betitelt mit %{former_title}) konnte nicht zugestellt werden.
 
-        Deine Antwort wurde von einer anderen E-Mail-Adresse versandt als wir erwartet haben, weshalb wir nicht sicher wissen ob das die gleiche Person ist. Probiere eine andere Absende-Adresse oder wende dich an einen Mitarbeiter.
+        Deine Antwort wurde von einer anderen E-Mail-Adresse versandt als wir erwartet haben, weshalb wir nicht sicher wissen ob das die gleiche Person ist. Probiere eine andere Absende-Adresse oder wende dich an ein Team-Mitglied.
     email_reject_no_account:
+      title: "E-Mail abgelehnt weil unbekanntes Konto"
       subject_template: "[%{site_name}] E-Mail-Problem -- Unbekanntes Konto"
       text_body_template: |
-        Es tut uns leid, aber deine E-Mail-Nachricht an %{destination} (betitelt mit %{former_title}) hat nicht funktioniert.
+        Entschuldige, aber deine E-Mail-Nachricht an %{destination} (betitelt mit %{former_title}) konnte nicht zugestellt werden.
 
-        Wir konnten kein Konto finden, das zu deiner E-Mail-Adresse passt. Probiere eine andere Absende-Adresse oder wende dich an einen Mitarbeiter.
+        Wir konnten kein Konto finden, das zu deiner E-Mail-Adresse passt. Probiere eine andere Absende-Adresse oder wende dich an ein Team-Mitglied.
     email_reject_empty:
+      title: "E-Mail abgelehnt weil kein Inhalt"
       subject_template: "[%{site_name}] E-Mail-Problem -- Kein Inhalt"
       text_body_template: |
         Es tut uns leid, aber deine E-Mail-Nachricht an %{destination} (betitelt mit %{former_title}) hat nicht funktioniert.
@@ -1780,30 +1820,35 @@ de:
 
         Wenn du diese E-Mail bekommst, obwohl deine E-Mail Inhalt enthalten hat, versuche es erneut mit weniger Formatierung.
     email_reject_parsing:
+      title: "E-Mail abgelehnt weil Inhalt nicht erkannt"
       subject_template: "[%{site_name}] E-Mail-Problem -- Inhalt nicht erkannt"
       text_body_template: |
         Es tut uns leid, aber deine E-Mail-Nachricht an %{destination} (betitelt mit %{former_title}) hat nicht funktioniert.
 
         Wir konnten keinen Inhalt in deiner E-Mail feststellen. **Versichere dich, dass du den Inhalt oberhalb der erhaltenen E-Mail eingegeben hast** -- Eingebettete Antworten können wir nicht verarbeiten.
     email_reject_invalid_access:
+      title: "E-Mail abgelehnt weil nicht erlaubt"
       subject_template: "[%{site_name}] E-Mail-Problem -- Nicht erlaubt"
       text_body_template: |
-        Es tut uns leid, aber deine E-Mail-Nachricht an %{destination} (Titel: %{former_title}) hat nicht funktioniert.
+        Entschuldige, aber deine E-Mail-Nachricht an %{destination} (betitelt mit %{former_title}) konnte nicht zugestellt werden.
 
-        Du hast nicht die notwendigen Zugriffsrechte, um neue Themen in dieser Kategorie zu erstellen. Wenn du glaubst, dass das ein Irrtum ist, dann kontaktiere einen Mitarbeiter.
+        Du hast nicht die notwendigen Zugriffsrechte, um neue Themen in dieser Kategorie zu erstellen. Wenn du glaubst, dass das ein Irrtum ist, dann kontaktiere ein Team-Mitglied.
     email_reject_strangers_not_allowed:
+      title: "E-Mail abgelehnt weil Zugriff nicht erlaubt"
       subject_template: "[%{site_name}] E-Mail-Problem -- Zugriff nicht erlaubt"
       text_body_template: |
-        Es tut uns leid, aber deine E-Mail-Nachricht an %{destination} (Titel: %{former_title}) hat nicht funktioniert.
+        Entschuldige, aber deine E-Mail-Nachricht an %{destination} (betitelt mit %{former_title}) konnte nicht zugestellt werden.
 
-        Die Kategorie, an die du die E-Mail geschickt hast, erlaubt nur Antworten von Benutzern mit gültigem Konto und von bekannten E-Mail-Adressen. Wenn du glaubst, dass das ein Irrtum ist, dann kontaktiere einen Mitarbeiter.
+        Die Kategorie, an die du die E-Mail geschickt hast, erlaubt nur Antworten von Benutzern mit gültigem Konto und von bekannten E-Mail-Adressen. Wenn du glaubst, dass das ein Irrtum ist, dann kontaktiere ein Team-Mitglied.
     email_reject_invalid_post:
+      title: "E-Mail abgelehnt weil ungültiger Beitrag"
       subject_template: "[%{site_name}] E-Mail-Problem -- Ungültiger Beitrag"
       text_body_template: |
         Es tut uns leid, aber deine E-Mail-Nachricht an %{destination} (betitelt mit %{former_title}) hat nicht funktioniert.
 
         Mögliche Gründe sind komplizierte Formatierung und zu lange oder kurze Nachrichten. Bitte versuche es erneut oder schreibe deinen Beitrag über die Website.
     email_reject_invalid_post_specified:
+      title: "E-Mail abgelehnt weil ungültiger Beitrag"
       subject_template: "[%{site_name}] E-Mail-Problem -- Ungültiger Beitrag"
       text_body_template: |
         Es tut uns leid, aber deine E-Mail-Nachricht an %{destination} (betitelt mit %{former_title}) hat nicht funktioniert.
@@ -1814,42 +1859,49 @@ de:
 
         Bitte versuch es erneut, wenn du das Problem beheben kannst.
     email_reject_invalid_post_action:
+      title: "E-Mail abgelehnt weil fehlerhafte Beitragsaktion"
       subject_template: "[%{site_name}] E-Mail-Problem -- Fehlerhafte Beitragsaktion"
       text_body_template: |
         Es tut uns leid, aber deine E-Mail-Nachricht an %{destination} (betitelt mit %{former_title}) hat nicht funktioniert.
 
         Die Beitragsaktion wurde nicht erkannt. Bitte versuche es erneut oder erstelle deinen Beitrag auf der Website, wenn der Fehler weiterhin auftritt.
     email_reject_reply_key:
+      title: "E-Mail abgelehnt weil unbekannter Antwort-Schlüssel"
       subject_template: "[%{site_name}] E-Mail-Problem -- Unbekannter Antwort-Schlüssel"
       text_body_template: |
-        Es tut uns leid, aber deine E-Mail-Nachricht an %{destination} (betitelt mit %{former_title}) hat nicht funktioniert.
+        Entschuldige, aber deine E-Mail-Nachricht an %{destination} (betitelt mit %{former_title}) konnte nicht zugestellt werden.
 
-        Der angegebene Antwort-Schlüssel ist ungültig oder unbekannt. Wir wissen daher nicht auf welchen Beitrag diese E-Mail antwortet. Bitte kontaktiere einen Mitarbeiter.
+        Der angegebene Antwort-Schlüssel ist ungültig oder unbekannt. Wir wissen daher nicht auf welchen Beitrag diese E-Mail antwortet. Bitte kontaktiere ein Team-Mitglied.
     email_reject_bad_destination_address:
+      title: "E-Mail abgelehnt weil unbekannte Empfänger-Adresse"
       subject_template: "[%{site_name}] E-Mail Problem -- Unbekannte An:-Adresse"
       text_body_template: |
-        Es tut uns leid, aber deine E-Mail-Nachricht an %{destination} (betitelt mit %{former_title}) hat nicht funktioniert.
+        Entschuldige, aber deine E-Mail-Nachricht an %{destination} (betitelt mit %{former_title}) konnte nicht zugestellt werden.
 
-        Keine der Ziel-E-Mail-Adressen wurde erkannt.  Bitte stell sicher, dass du die E-Mail an die richtige Adresse schickst, die dir von unseren Mitarbeitern genannt wurde.
+        Keine der Ziel-E-Mail-Adressen wurde erkannt.  Bitte stelle sicher, dass du die E-Mail an die richtige Adresse schickst, die dir von unserem Team genannt wurde.
     email_reject_topic_not_found:
+      title: "E-Mail abgelehnt weil Thema nicht gefunden"
       subject_template: "[%{site_name}] E-Mail-Problem -- Thema nicht gefunden"
       text_body_template: |
-        Es tut uns leid, aber deine E-Mail-Nachricht an %{destination} (betitelt mit %{former_title}) hat nicht funktioniert.
+        Entschuldige, aber deine E-Mail-Nachricht an %{destination} (betitelt mit %{former_title}) konnte nicht zugestellt werden.
 
-        Das Thema, auf das du geantwortet hast, existiert nicht mehr -- vielleicht wurde es gelöscht? Wenn du glaubst, dass dies ein Irrtum ist, nimm Bitte Kontakt mit einem Mitarbeiter auf.
+        Das Thema, auf das du geantwortet hast, existiert nicht mehr -- vielleicht wurde es gelöscht? Wenn du glaubst, dass dies ein Irrtum ist, nimm Bitte Kontakt mit einem Team-Mitglied auf.
     email_reject_topic_closed:
+      title: "E-Mail abgelehnt weil Thema geschlossen"
       subject_template: "[%{site_name}] E-Mail-Problem -- Thema geschlossen"
       text_body_template: |
-        Es tut uns leid, aber deine E-Mail-Nachricht an %{destination} (betitelt mit %{former_title}) hat nicht funktioniert.
+        Entschuldige, aber deine E-Mail-Nachricht an %{destination} (betitelt mit %{former_title}) konnte nicht zugestellt werden.
 
-        Das Thema, auf das du geantwortet hast, ist derzeit geschlossen und akzeptiert keine Antworten mehr. Wenn du glaubst, dass dies ein Irrtum ist, nimm bitte Kontakt mit einem Mitarbeiter auf.
+        Das Thema, auf das du geantwortet hast, ist derzeit geschlossen und akzeptiert keine Antworten mehr. Wenn du glaubst, dass dies ein Irrtum ist, nimm bitte Kontakt mit einem Team-Mitglied auf.
     email_reject_auto_generated:
+      title: "E-Mail abgelehnt weil automatisch generierte Antwort"
       subject_template: "[%{site_name}] E-Mail-Problem -- Automatisch erzeugte Antwort"
       text_body_template: |
-        Es tut uns leid, aber deine E-Mail-Nachricht an %{destination} (betitelt mit %{former_title}) hat nicht funktioniert.
+        Entschuldige, aber deine E-Mail-Nachricht an %{destination} (betitelt mit %{former_title}) konnte nicht zugestellt werden.
 
-        Deine E-Mail wurde als „automatisch generiert“ markiert, was bedeutet, dass sie automatisch von einem Computer erstellt wurde statt von einem Menschen getippt; wir können diese Arten von E-Mails nicht akzeptieren. Wenn du glaubst, dass dies ein Irrtum ist, nimm bitte Kontakt mit einem Mitarbeiter auf.
+        Deine E-Mail wurde als „automatisch generiert“ markiert, was bedeutet, dass sie automatisch von einem Computer erstellt wurde statt von einem Menschen getippt; wir können diese Arten von E-Mails nicht akzeptieren. Wenn du glaubst, dass dies ein Irrtum ist, nimm bitte Kontakt mit einem Team-Mitglied auf.
     email_error_notification:
+      title: "Benachrichtigung zu E-Mail-POP-Authentifizierungsfehler"
       subject_template: "[%{site_name}] E-Mail-Problem -- POP-Authentifizierungsfehler"
       text_body_template: |
         Leider gab es einen Authentifizierungsfehler beim Abrufen von E-Mails vom POP-Server.
@@ -1858,36 +1910,40 @@ de:
 
         Wenn es eine Weboberfläche für das POP-E-Mail-Postfach gibt, möchtest du dich eventuell dort anmelden und die Einstellungen überprüfen.
     too_many_spam_flags:
+      title: "Neues Konto gesperrt wegen zu viel Spam"
       subject_template: "Neues Konto gesperrt"
       text_body_template: |
         Hallo,
 
         dies ist eine automatisch erzeugte Nachricht von %{site_name}, um dich darüber zu informieren, dass deine Beitrage vorübergehend ausgeblendet wurden, weil sie von der Community gemeldet wurden.
 
-        Als Vorsichtsmaßnahme wurde dein neues Konto für das Erstellen neuer Antworten und Themen gesperrt, bis ein Mitarbeiter dein Konto überprüfen kann. Wir bitten um Entschuldigung für die Unannehmlichkeiten.
+        Als Vorsichtsmaßnahme wurde dein neues Konto für das Erstellen neuer Antworten und Themen gesperrt, bis ein Team-Mitglied dein Konto überprüfen kann. Wir bitten um Entschuldigung für die Unannehmlichkeiten.
 
         Weitere Hinweise findest du in unseren [Community-Richtlinien](%{base_url}/guidelines).
     too_many_tl3_flags:
+      title: "E-Mail abgelehnt wegen Meldungen durch Vertrauensstufe 3"
       subject_template: "Neues Konto gesperrt"
       text_body_template: |
         Hallo,
 
         dies ist eine automatisch erzeugte Nachricht von %{site_name}, um dich darüber zu informieren, dass dein Konto aufgrund einer großen Anzahl von Community-Meldungen vorübergehend gesperrt wurde.
 
-        Als Vorsichtsmaßnahme wurde dein neues Konto für das Erstellen neuer Antworten und Themen gesperrt, bis ein Mitarbeiter dein Konto überprüfen kann. Wir bitten um Entschuldigung für die Unannehmlichkeiten.
+        Als Vorsichtsmaßnahme wurde dein neues Konto für das Erstellen neuer Antworten und Themen gesperrt, bis ein Team-Mitglied dein Konto überprüfen kann. Wir bitten um Entschuldigung für die Unannehmlichkeiten.
 
         Weitere Hinweise findest du in unseren [Community-Richtlinien](%{base_url}/guidelines).
     blocked_by_staff:
+      title: "Gesperrt vom Team"
       subject_template: "Konto vorübergehend gesperrt"
       text_body_template: |
         Hallo,
 
         dies ist eine automatisch erzeugte Nachricht von %{site_name}, um dich darüber zu informieren, dass als Vorsichtsmaßnahme vorübergehend gesperrt wurde.
 
-        Bitte schaue dir weiter Inhalte an, aber du kannst zunächst keine Antworten oder Themen erstellen, [Mitarbeiter](%{base_url}/about) deine aktuellesten Beiträge überprüft hat. Wir bitten um Entschuldigung für die Unannemlichkeiten.
+        Bitte schaue dir weiter Inhalte an, aber du kannst zunächst keine Antworten oder Themen erstellen, bis ein [Team-Mitglied](%{base_url}/about) deine aktuellesten Beiträge überprüft hat. Wir bitten um Entschuldigung für die Unannemlichkeiten.
 
         Weitere Hinweise findest du in unseren [Community-Richtlinien](%{base_url}/guidelines).
     user_automatically_blocked:
+      title: "Benutzer automatisch gesperrt"
       subject_template: "Neuer Benutzer %{username} gesperrt wegen Community-Meldungen"
       text_body_template: |
         Dies ist eine automatisierte Nachricht.
@@ -1898,6 +1954,7 @@ de:
 
         Der Schwellenwert kann über die Einstellung `block_new_user` geändert werden.
     spam_post_blocked:
+      title: "Spam-Beitrag gesperrt"
       subject_template: "Beiträge des neuen Benutzers ${username} wegen mehrfacher Verlinkung blockiert"
       text_body_template: |
         Dies ist eine automatisierte Nachricht.
@@ -1908,14 +1965,16 @@ de:
 
         Dies kann über die Einstellungen `newuser_spam_host_threshold` und `white_listed_spam_host_domains` geändert werden.
     unblocked:
+      title: "Entsperrt"
       subject_template: "Konto nicht mehr gesperrt"
       text_body_template: |
         Hallo,
 
-        dies ist eine automatische Nachricht von %{site_name}, um dich darüber zu informieren, dass dein Benutzerkonto nach der Überprüfung durch einen Mitarbeiter nicht mehr länger gesperrt ist.
+        dies ist eine automatische Nachricht von %{site_name}, um dich darüber zu informieren, dass dein Benutzerkonto nach der Überprüfung durch ein Team-Mitglied nicht mehr länger gesperrt ist.
 
         Du kannst nun wieder neue Antworten und Themen erstellen. Vielen Dank für deine Geduld.
     pending_users_reminder:
+      title: "Benachrichtigung: Benutzer warten auf Freigabe"
       subject_template:
         one: "Es gibt einen nicht freigegebenen Benutzer"
         other: "Es gibt %{count} nicht freigegebene Benutzer"
@@ -1924,9 +1983,11 @@ de:
 
         [Bitte bewerte diese im Administrationsbereich](/admin/users/list/pending).
     download_remote_images_disabled:
+      title: "Download von externen Bildern deaktiviert"
       subject_template: "Download von externen Bildern deaktiviert"
       text_body_template: "Die `download_remote_images_to_local` Einstellung wurde deaktiviert, da das Speicherplatz Limit von `download_remote_images_threshold` erreicht wurde."
     dashboard_problems:
+      title: "Dashboard-Probleme"
       subject_template: "Probleme wurden festgestellt"
       text_body_template: |
         Es wurden Probleme in deinem Admin-Dashboard gemeldet.
@@ -1978,6 +2039,7 @@ de:
 
       > %{site_title} -- %{site_description}
     user_invited_to_private_message_pm:
+      title: "Benutzer zu Nachricht eingeladen"
       subject_template: "[%{site_name}] %{username} hat dich zur Unterhaltung '%{topic_title}' eingeladen"
       text_body_template: |
         %{header_instructions}
@@ -1986,6 +2048,7 @@ de:
 
         %{respond_instructions}
     user_invited_to_private_message_pm_staged:
+      title: "Benutzer zu Nachricht eingeladen (automatisch)"
       subject_template: "[%{site_name}] %{username} hat dich zur Unterhaltung '%{topic_title}' eingeladen"
       text_body_template: |
         %{header_instructions}
@@ -1994,6 +2057,7 @@ de:
 
         %{respond_instructions}
     user_invited_to_topic:
+      title: "Benutzer zu Thema eingeladen"
       subject_template: "[%{site_name}] %{username} hat dich zum Thema '%{topic_title}' eingeladen"
       text_body_template: |
         %{header_instructions}
@@ -2002,6 +2066,7 @@ de:
 
         %{respond_instructions}
     user_replied:
+      title: "Benutzer hat auf Beitrag geantwortet"
       subject_template: "[%{site_name}] %{username} hat auf deinen Beitrag '%{topic_title}' geantwortet"
       text_body_template: |
         %{header_instructions}
@@ -2012,6 +2077,7 @@ de:
 
         %{respond_instructions}
     user_replied_pm:
+      title: "Benutzer hat auf Nachricht geantwortet"
       subject_template: "[%{site_name}] [PN] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -2022,6 +2088,7 @@ de:
 
         %{respond_instructions}
     user_quoted:
+      title: "Benutzer wurde zitiert"
       subject_template: "[%{site_name}] %{username} hat Dich in '%{topic_title}' zitiert"
       text_body_template: |
         %{header_instructions}
@@ -2032,6 +2099,7 @@ de:
 
         %{respond_instructions}
     user_linked:
+      title: "Benutzer wurde verlinkt"
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -2042,6 +2110,7 @@ de:
 
         %{respond_instructions}
     user_mentioned:
+      title: "Benutzer wurde erwähnt"
       subject_template: "[%{site_name}] %{username} hat Dich in '%{topic_title}' erwähnt"
       text_body_template: |
         %{header_instructions}
@@ -2052,6 +2121,7 @@ de:
 
         %{respond_instructions}
     user_group_mentioned:
+      title: "Gruppe wurde erwähnt"
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -2062,6 +2132,7 @@ de:
 
         %{respond_instructions}
     user_posted:
+      title: "Benutzer hat in Thema geantwortet"
       subject_template: "[%{site_name}] %{subject_prefix}%{username} hat auf '%{topic_title}' geantwortet"
       text_body_template: |
         %{header_instructions}
@@ -2072,6 +2143,7 @@ de:
 
         %{respond_instructions}
     user_watching_first_post:
+      title: "Benutzer folgt erstem Beitrag"
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -2082,6 +2154,7 @@ de:
 
         %{respond_instructions}
     user_posted_pm:
+      title: "Benutzer hat Nachricht geschrieben"
       subject_template: "[%{site_name}] [PN] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -2092,16 +2165,31 @@ de:
 
         %{respond_instructions}
     user_posted_pm_staged:
+      title: "Benutzer hat Nachricht geschrieben (automatisch)"
       subject_template: "%{optional_re}%{topic_title}"
       text_body_template: |2
 
         %{message}
     digest:
       why: "Eine kurze Zusammenfassung von %{site_link} seit deinem letzten Besuch am %{last_seen_at}"
+      since_last_visit: "Seit deinem letzten Besuch"
+      new_topics: "Neue Themen"
+      unread_messages: "Ungelesene Nachrichten"
+      unread_notifications: "Ungelesene Benachrichtigungen"
+      liked_received: "Erhaltene Likes"
+      new_posts: "Neue Beiträge"
+      new_users: "Neue Benutzer"
+      popular_topics: "Beliebte Themen"
+      follow_topic: "Diesem Thema folgen"
+      join_the_discussion: "Mehr lesen"
+      popular_posts: "Beliebte Beiträge"
+      from_topic_label: "Von"
+      more_new: "Neu für dich"
       subject_template: "Zusammenfassung für [%{site_name}]"
       unsubscribe: "Diese Zusammenfassung wird von %{site_link} gesendet, wenn wir dich einige Zeit lang nicht gesehen haben. Abbestellen unter %{unsubscribe_link}."
       click_here: "klicke hier"
       from: "Zusammenfassung für %{site_name}"
+      preheader: "Eine kurze Zusammenfassung seit deinem letzten Besuch am %{last_seen_at}"
     mailing_list:
       why: "Alle Aktivitäten auf %{site_link} am %{date}"
       subject_template: "[%{site_name}] Zusammenfassung für den %{date}"
@@ -2112,6 +2200,7 @@ de:
       view_this_topic: "Thema anzeigen"
       back_to_top: "Zurück nach oben"
     forgot_password:
+      title: "Passwort vergessen"
       subject_template: "[%{site_name}] Passwort zurückgesetzt"
       text_body_template: |
         Jemand hat darum gebeten, dein Passwort auf [%{site_name}](%{base_url}) zurückzusetzen.
@@ -2121,6 +2210,7 @@ de:
         Andernfalls besuche den folgenden Link, um ein neues Passwort zu wählen:
         %{base_url}/users/password-reset/%{email_token}
     set_password:
+      title: "Passwort setzen"
       subject_template: "[%{site_name}] Setze Passwort"
       text_body_template: |
         Jemand hat ein Passwort für dein Konto auf [%{site_name}](%{base_url}) beantragt. Alternativ kannst du dich mit einem unterstützen Online-Service (Google, Facebook, etc), der mit dieser validierten E-Mail-Adresse verknüpft ist, anmelden.
@@ -2130,6 +2220,7 @@ de:
         Klicke auf den folgenden Link, um ein Passwort auszuwählen:
         %{base_url}/users/password-reset/%{email_token}
     admin_login:
+      title: "Administrator-Anmeldung"
       subject_template: "[%{site_name}] Anmeldung"
       text_body_template: |
         Jemand hat versucht sich in dein Konto auf [%{site_name}](%{base_url}) anzumelden.
@@ -2139,6 +2230,7 @@ de:
         Klicke den folgenden Link, um dich anzumelden:
         %{base_url}/users/admin-login/%{email_token}
     account_created:
+      title: "Konto erstellt"
       subject_template: "[%{site_name}] Dein neues Konto"
       text_body_template: |
         Ein neues Konto wurde für dich auf %{site_name} erstellt.
@@ -2146,12 +2238,14 @@ de:
         Klicke auf den folgenden Link, um ein Passwort für dein neues Konto festzulegen:
         %{base_url}/users/password-reset/%{email_token}
     confirm_new_email:
+      title: "E-Mail-Adresse bestätigen (an neue)"
       subject_template: "[%{site_name}] Bestätige deine neue E-Mail-Adresse"
       text_body_template: |
         Um deine E-Mail-Adresse für %{site_name} zu bestätigen, klicke auf den folgenden Link:
 
         %{base_url}/users/authorize-email/%{email_token}
     confirm_old_email:
+      title: "E-Mail-Adresse bestätigen (an alte)"
       subject_template: "[%{site_name}] Bestätige deine aktuelle E-Mail-Adresse"
       text_body_template: |
         Bevor wir deine E-Mail-Adresse ändern können, müssen wir dich bitten zu bestätigen, dass du das E-Mail-Konto kontrollierst. Nach diesem Schritt, werden wir dich bitten die neue E-Mail-Adresse zu bestätigen.
@@ -2160,19 +2254,21 @@ de:
 
         %{base_url}/users/authorize-email/%{email_token}
     notify_old_email:
+      title: "Benachrichtigung an alte E-Mail-Adresse"
       subject_template: "[%{site_name}] Deine E-Mail-Adresse wurde geändert"
       text_body_template: |
-        Dies ist eine automatisierte Nachricht, um eine Änderung deiner E-Mail-Adresse für %{site_name} mitzuteilen. Bitte kontaktiere einen Mitarbeiter, wenn du von einem Fehler ausgehst.
+        Dies ist eine automatisierte Nachricht, um eine Änderung deiner E-Mail-Adresse für %{site_name} mitzuteilen. Bitte kontaktiere ein Team-Mitglied, wenn du von einem Fehler ausgehst.
 
         Deine E-Mail-Adresse wurde geändert zu:
 
         %{new_email}
     signup_after_approval:
+      title: "Konto bestätigen nach Genehmigung"
       subject_template: "You've been approved on %{site_name}!"
       text_body_template: |
         Willkommen bei %{site_name}!
 
-        Einer unserer Mitarbeiter hat dein Benutzerkonto bei %{site_name} genehmigt.
+        Einer unserer Team-Mitglieder hat dein Benutzerkonto bei %{site_name} genehmigt.
 
         Klicke auf den folgenden Link, um dein neues Konto zu bestätigen und zu aktivieren:
         %{base_url}/users/activate-account/%{email_token}
@@ -2185,8 +2281,9 @@ de:
 
         Viel Spaß!
 
-        (Wenn du als neuer Benutzer unter vier Augen mit einem unserer [Mitarbeiter](%{base_url}/about) reden möchtest, antworte einfach auf diese Nachricht.)
+        (Wenn du als neuer Benutzer unter vier Augen mit einem unserer [Team-Mitglieder](%{base_url}/about) reden möchtest, antworte einfach auf diese Nachricht.)
     signup:
+      title: "Konto bestätigen nach Anmeldung"
       subject_template: "[%{site_name}] Bestätige deinen neuen Account"
       text_body_template: |
         Willkommen bei %{site_name}!
@@ -2220,6 +2317,7 @@ de:
       too_large: "Entschuldigung, die Datei die du hochladen möchtest, ist zu groß (maximale Dateigröße ist %{max_size_kb}KB)."
     images:
       too_large: "Entschuldigung, das Bild das du hochladen möchtest, ist zu groß (maximale Dateigröße ist %{max_size_kb}KB). Bitte verkleinere es und versuche es erneut."
+      larger_than_x_megapixels: "Entschuldige, das Bild, das du versucht hast hochzuladen, ist zu groß (maximale Auflösung beträgt %{max_image_megapixels} Megapixel), bitte verkleinere es und versuche es erneut."
       size_not_found: "Entschuldige, aber wir konnten die Größe des Bildes nicht bestimmen. Vielleicht ist das Bild defekt?"
   avatar:
     missing: "Hoppla, wir können kein Profilbild für diese E-Mail-Adresse finden. Kannst du versuchen es erneut hochzuladen?"
@@ -2244,6 +2342,7 @@ de:
     message_to_blank: "message.to ist leer"
     text_part_body_blank: "text_part.body ist leer"
     body_blank: "body ist leer"
+    no_echo_mailing_list_mode: "Mailinglisten-Benachrichtigung für eigene Beiträge deaktivieren"
   color_schemes:
     base_theme_name: "Basis"
   about: "Über uns"
@@ -2348,7 +2447,7 @@ de:
 
       ## [Betrieben von Euch](#power)
 
-      Diese Site wird von euren [freundlichen Mitarbeitern](/about) und *euch* betrieben, der Community. Wenn du irgendwelche weiteren Fragen dazu hast, wie Dinge hier funktionieren sollten, öffne ein neues Thema in der Kategorie [Feedback zur Site](/c/site-feedback) und lass es uns diskutieren! Wenn es ein kritisches oder dringendes Problem gibt, dass nicht mit einem Meta-Thema oder einer Meldung behandelt werden kann, kontaktiere uns über die [Mitarbeiter-Seite](/about).
+      Diese Site wird von eurem [freundlichen Team](/about) und *euch* betrieben, der Community. Wenn du irgendwelche weiteren Fragen dazu hast, wie Dinge hier funktionieren sollten, öffne ein neues Thema in der Kategorie [Feedback zur Site](/c/site-feedback) und lass es uns diskutieren! Wenn es ein kritisches oder dringendes Problem gibt, dass nicht mit einem Meta-Thema oder einer Meldung behandelt werden kann, kontaktiere uns über die [Team-Seite](/about).
 
       <a name="tos"></a>
 
@@ -2483,7 +2582,7 @@ de:
 
       ## [17. Schadloshaltung](#17)
 
-      Du stimmst zu, %{company_name}, Vertragspartnern und Lizenznehmern, und jeweiligen Vorstandsmitglieder, Amtsträger, Mitarbeiter und Vertreter gegen jegliche Haftungsfälle, Ansprüche und Ausgaben schadlos zu halten, einschließlich angemessener Anwaltskosten, die den schadlos gehaltenen Parteien im Zusammenhang mit jeglichen Ansprüchen entstehen, die sich aus jeglicher Verletzung dieser Vereinbarung ergeben.
+      Du stimmst zu, %{company_name}, Vertragspartnern und Lizenznehmern, und jeweiligen Vorstandsmitglieder, Amtsträger, Team-Mitglieder und Vertreter gegen jegliche Haftungsfälle, Ansprüche und Ausgaben schadlos zu halten, einschließlich angemessener Anwaltskosten, die den schadlos gehaltenen Parteien im Zusammenhang mit jeglichen Ansprüchen entstehen, die sich aus jeglicher Verletzung dieser Vereinbarung ergeben.
 
       <a name="18"></a>
 
@@ -2591,24 +2690,24 @@ de:
         Das Abzeichen wird verliehen, wenn du Vertrauensstufe 1 erreichst. Danke, dass du eine Weile dageblieben bist und ein paar Themen gelesen hast um zu lernen, worum es in unserer Community geht. Für dich gelten die Einschränkungen für neue Nutzer nicht mehr und du hast nun Zugriff auf alle wichtigen Funktionen, beispielsweise persönliche Nachrichten, die Melden-Funktion, das Bearbeiten von Wiki-Beiträgen und die Fähigkeit, mehrere Bilder und Links in Beiträgen zu verwenden.
     member:
       name: Mitglied
-      description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/5">Ermöglicht</a> das Versenden von Einladungen, Gruppen-Nachrichten, mehr „Gefällt mir“-Angaben
+      description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/5">Ermöglicht</a> das Versenden von Einladungen, Gruppen-Nachrichten, mehr Likes
       long_description: |
-        Das Abzeichen wird verliehen, wenn du Vertrauensstufe 2 erreichst. Danke, dass du einige Wochen mitgemacht hast, um unserer Community richtig beizutreten. Du kannst nun von deiner Benutzerseite und einzelnen Themen-Seiten aus Einladungen versenden, Gruppennachrichten erstellen und ein paar mehr „Gefällt mir“-Angaben pro Tag vergeben.
+        Das Abzeichen wird verliehen, wenn du Vertrauensstufe 2 erreichst. Danke, dass du einige Wochen mitgemacht hast, um unserer Community richtig beizutreten. Du kannst nun von deiner Benutzerseite und einzelnen Themen-Seiten aus Einladungen versenden, Gruppennachrichten erstellen und ein paar mehr Likes pro Tag vergeben.
     regular:
       name: Stammgast
-      description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/6">Ermöglicht</a> verschieben und umbenennen von Themen, veröffentlichen <a href="http://de.wikipedia.org/wiki/Nofollow">verfolgbarer Links</a>, Aktivierung der Wiki-Funktion, mehr „Gefällt mir“-Angaben
+      description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/6">Ermöglicht</a> verschieben und umbenennen von Themen, veröffentlichen <a href="http://de.wikipedia.org/wiki/Nofollow">verfolgbarer Links</a>, Aktivierung der Wiki-Funktion, mehr Likes
       long_description: |
-        Das Abzeichen wird verliehen, wenn du Vertrauensstufe 3 erreichst. Danke, dass du in unserer Community über mehrere Monate ein Stammgast gewesen bist. Du bist nun einer unserer aktivsten Leser und ein zuverlässiges Mitglied, das diese Community großartig macht. Du kannst nun Themen neu kategorisieren und umbenennen, mächtigere Spam-Meldungen nutzen, eine private Lounge nutzen und kannst viel mehr „Gefällt mir“-Angaben pro Tag erhalten.
+        Das Abzeichen wird verliehen, wenn du Vertrauensstufe 3 erreichst. Danke, dass du in unserer Community über mehrere Monate ein Stammgast gewesen bist. Du bist nun einer unserer aktivsten Leser und ein zuverlässiges Mitglied, das diese Community großartig macht. Du kannst nun Themen neu kategorisieren und umbenennen, mächtigere Spam-Meldungen nutzen, eine private Lounge nutzen und kannst viel mehr Likes pro Tag erhalten.
     leader:
       name: Anführer
-      description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/7">Ermöglicht</a> bearbeiten aller Beiträge, anheften, schließen, archivieren, aufteilen und zusammenfügen von Themen, mehr „Gefällt mir“-Angaben
+      description: <a href="https://meta.discourse.org/t/what-do-user-trust-levels-do/4924/7">Ermöglicht</a> bearbeiten aller Beiträge, anheften, schließen, archivieren, aufteilen und zusammenfügen von Themen, mehr Likes
       long_description: |
-        Das Abzeichen wird verliehen, wenn du Vertrauensstufe 4 erreichst. Du bist ein von den Mitarbeitern ausgezeichneter Anführer und hast durch deine Aktivität und Worte ein positives Beispiel für die übrige Community abgegeben. Du kannst alle Beiträge bearbeiten, Moderator-Aktionen wie das Anpinnen, Schließen, Unsichtbar machen, Archivieren, Teilen und Zusammenführen von Themen durchführen und viel mehr „Gefällt mir“-Angaben pro Tag vergeben.
+        Das Abzeichen wird verliehen, wenn du Vertrauensstufe 4 erreichst. Du bist ein vom Team ausgezeichneter Anführer und hast durch deine Aktivität und Worte ein positives Beispiel für die übrige Community abgegeben. Du kannst alle Beiträge bearbeiten, Moderator-Aktionen wie das Anheften, Schließen, Unsichtbar machen, Archivieren, Teilen und Zusammenführen von Themen durchführen und viel mehr Likes pro Tag vergeben.
     welcome:
       name: Willkommen
-      description: Hat eine „Gefällt mir“-Angabe erhalten
+      description: Hat ein Like erhalten
       long_description: |
-        Das Abzeichen wird verliehen, wenn du die erster „Gefällt mir“-Angabe auf einen Beitrag erhältst. Glückwunsch, du hast einen Beitrag geschrieben, den deine Mitbenutzer interessant, cool oder nützlich finden!
+        Das Abzeichen wird verliehen, wenn du den ersten Like auf einen Beitrag erhältst. Glückwunsch, du hast einen Beitrag geschrieben, den deine Mitbenutzer interessant, cool oder nützlich finden!
     autobiographer:
       name: Autobiograf
       description: Hat <a href="/my/preferences">Benutzerprofil</a> ausgefüllt
@@ -2621,34 +2720,34 @@ de:
         Das Abzeichen wird verliehen, wenn du ein Jahr lang Mitglied warst und in diesem Jahr mindestens einen Beitrag geschrieben hast. Danke, dass du hier geblieben bist und zu unserer Community beiträgst. Ohne dich könnten wir dies nicht tun.
     nice_post:
       name: Schöne Antwort
-      description: Hat 10 „Gefällt mir“-Angaben für eine Antwort erhalten
+      description: Hat 10 Likes für eine Antwort erhalten
       long_description: |
-        Das Abzeichen wird verliehen, wenn eine deiner Antworten 10 „Gefällt mir“-Angaben erhält. Deine Antwort hat die Community wirklich beeindruckt und dabei geholfen, den Dialog voranzubringen!
+        Das Abzeichen wird verliehen, wenn eine deiner Antworten 10 Likes erhält. Deine Antwort hat die Community wirklich beeindruckt und dabei geholfen, den Dialog voranzubringen!
     good_post:
       name: Gute Antwort
-      description: Hat 25 „Gefällt mir“-Angaben für eine Antwort erhalten
+      description: Hat 25 Likes für eine Antwort erhalten
       long_description: |
-        Das Abzeichen wird verliehen, wenn eine deiner Antworten 25 „Gefällt mir“-Angaben erhält. Deine Antwort war außergewöhnlich und hat den Dialog sehr viel besser für alle gemacht!
+        Das Abzeichen wird verliehen, wenn eine deiner Antworten 25 Likes erhält. Deine Antwort war außergewöhnlich und hat den Dialog sehr viel besser für alle gemacht!
     great_post:
       name: Großartige Antwort
-      description: Hat 50 „Gefällt mir“-Angaben für eine Antwort erhalten
+      description: Hat 50 Likes für eine Antwort erhalten
       long_description: |
-        Das Abzeichen wird verliehen, wenn eine deiner Antworten 50 „Gefällt mir“-Angaben erhält. Wow! Deine Antwort war inspierend, faszinierend, wahnsinnig komisch oder aufschlussreich und die Community hat sie geliebt.
+        Das Abzeichen wird verliehen, wenn eine deiner Antworten 50 Likes erhält. Wow! Deine Antwort war inspirierend, faszinierend, wahnsinnig komisch oder aufschlussreich und die Community hat sie geliebt.
     nice_topic:
       name: Schönes Thema
-      description: Hat 10 „Gefällt mir“-Angaben für ein Thema erhalten
+      description: Hat 10 Likes für ein Thema erhalten
       long_description: |
-        Das Abzeichen wird verliehen, wenn eines deiner Themen 10 „Gefällt mir“-Angaben erhält. Hey, du hast einen interessanten Dialog begonnen, den die Community genossen hat!
+        Das Abzeichen wird verliehen, wenn eines deiner Themen 10 Likes erhält. Hey, du hast einen interessanten Dialog begonnen, den die Community genossen hat!
     good_topic:
       name: Gutes Thema
-      description: Hat 25 „Gefällt mir“-Angaben für ein Thema erhalten
+      description: Hat 25 Likes für ein Thema erhalten
       long_description: |
-        Das Abzeichen wird verliehen, wenn eines deiner Themen 25 „Gefällt mir“-Angaben erhält. Du hast einen lebendigen Dialog gestartet, die die Community versammelt hat und von dieser geliebt wurde!
+        Das Abzeichen wird verliehen, wenn eines deiner Themen 25 Likes erhält. Du hast einen lebendigen Dialog gestartet, die die Community versammelt hat und von dieser geliebt wurde!
     great_topic:
       name: Großartiges Thema
-      description: Hat 50 „Gefällt mir“-Angaben für ein Thema erhalten
+      description: Hat 50 Likes für ein Thema erhalten
       long_description: |
-        Das Abzeichen wird verliehen, wenn eines deiner Themen 50 „Gefällt mir“-angaben erhält. Du hast einen faszinierenden Dialog losgetreten und die Community hat die daraus enstandene, dynamische Diskussion genossen!
+        Das Abzeichen wird verliehen, wenn eines deiner Themen 50 Likes erhält. Du hast einen faszinierenden Dialog losgetreten und die Community hat die daraus entstandene, dynamische Diskussion genossen!
     nice_share:
       name: Schön geteilt
       description: Hat einen Beitrag mit 25 Besuchern geteilt
@@ -2665,7 +2764,7 @@ de:
       long_description: |
         Das Abzeichen wird verliehen, wenn du einen Link teilst, der von 1000 Besuchern angeklickt wurde. Wow! Du hast eine interessante Diskussion einer riesigen Leserschaft näher gebracht und unserer Community sehr geholfen zu wachsen!
     first_like:
-      name: Erste „Gefällt mir“-Angabe
+      name: Erster Like
       description: Hat einen Beitrag mit „Gefällt mir“ markiert
       long_description: |
         Das Abzeichen wird verliehen, wenn du das erste Mal auf die :heart:-Schaltfläche unter einem Beitrag klickst. Beiträge mit „Gefällt mir“ zu markieren, ist eine tolle Art, den Community-Kollegen wissen zu lassen, dass sein Beitrag interessant, nützlich, cool oder witzig war. Teile die Liebe!
@@ -2731,49 +2830,49 @@ de:
         Das Abzeichen wird verliehen, wenn ein von dir geteilter Link 1000 Klicks erhält. Wow! Du hast einen Link geteilt, der den Dialog signifikant verbessert hat, indem es ein wesentliches Detail, Kontext und Information geliefert hat. Großartige Arbeit!
     appreciated:
       name: Geschätzt
-      description: Hat je eine „Gefällt mir“-Angabe auf 20 Beiträge erhalten.
+      description: Hat je ein Like auf 20 Beiträge erhalten
       long_description: |
-        Das Abzeichen wird verliehen, wenn du mindestens eine „Gefällt mir“-Angabe an 20 verschiedenen Beiträgen erhältst. Die Community genießt deine Beiträge zu den Dialogen!
+        Das Abzeichen wird verliehen, wenn du mindestens ein Like auf 20 verschiedenen Beiträgen erhältst. Die Community genießt deine Beiträge zu den Dialogen!
     respected:
       name: Respektiert
-      description: Hat je zwei „Gefällt mir“-Angaben auf 100 Beiträge erhalten.
+      description: Hat je zwei Likes auf 100 Beiträge erhalten
       long_description: |
-        Das Abzeichen wird verliehen, wenn 100 deiner Beiträge mindestens 2 „Gefällt mir“-Angaben erhalten. Die Community wächst und respektiert deine zahlreichen Beiträge zu den Dialogen!
+        Das Abzeichen wird verliehen, wenn 100 deiner Beiträge mindestens 2 Likes erhalten. Die Community wächst und respektiert deine zahlreichen Beiträge zu den Dialogen!
     admired:
       name: Bewundert
-      description: Hat je fünf „Gefällt mir“-Angaben auf 300 Beiträge erhalten.
+      description: Hat je fünf Likes auf 300 Beiträge erhalten
       long_description: |
-        Das Abzeichen wird verliehen, wenn 300 deiner Beiträge mindestens 5 „Gefällt mir“-Angaben erhalten. Wow! Die Community bewundert deine regelmäßigen, hochwertigen Beiträge zu den Dialogen!
+        Das Abzeichen wird verliehen, wenn 300 deiner Beiträge mindestens 5 Likes erhalten. Wow! Die Community bewundert deine regelmäßigen, hochwertigen Beiträge zu den Dialogen!
     out_of_love:
       name: Out of Love
-      description: Hat 50 „Gefällt mir“-Angaben an einem Tag vergeben
+      description: Hat 50 Likes an einem Tag vergeben
       long_description: |
-        Das Abzeichen wird verliehen, wenn du alle deiner 50 täglichen „Gefällt mir“-Angaben nutzt. Daran zu denken, sich einen Moment zu nehmen und die Beiträge mit „Gefällt mir“ zu markieren, die du genießt und schätzt, ermuntert deine Community-Kollegen, in der Zukunft noch großartigere Diskussionen zu erstellen.
+        Das Abzeichen wird verliehen, wenn du alle deiner 50 täglichen Likes nutzt. Daran zu denken, sich einen Moment zu nehmen und die Beiträge mit „Gefällt mir“ zu markieren, die du genießt und schätzt, ermuntert deine Community-Kollegen, in der Zukunft noch großartigere Diskussionen zu erstellen.
     higher_love:
       name: Higher Love
-      description: Hat fünfmal je 50 „Gefällt mir“-Angaben an einem Tag vergeben
+      description: Hat fünfmal je 50 Likes an einem Tag vergeben
       long_description: |
-        Das Abzeichen wird verliehen, wenn du fünf Tage lang alle deiner 50 täglichen „Gefällt mir“-Angaben nutzt. Danke, dass du dir die Zeit nimmst, die besten Dialoge täglich zu fördern!
+        Das Abzeichen wird verliehen, wenn du fünf Tage lang alle deiner 50 täglichen Likes nutzt. Danke, dass du dir die Zeit nimmst, die besten Dialoge täglich zu fördern!
     crazy_in_love:
       name: Crazy in Love
-      description: Hat 20-mal je 50 „Gefällt mir“-Angaben an einem Tag vergeben
+      description: Hat 20-mal je 50 Likes an einem Tag vergeben
       long_description: |
-        Das Abzeichen wird verliehen, wenn du 20 Tage lang alle deiner 50 täglichen „Gefällt mir“-Angaben nutzt. Wow! Du bist ein Vorbild für die regelmäßige Ermunterung deiner Community-Kollegen!
+        Das Abzeichen wird verliehen, wenn du 20 Tage lang alle deiner 50 täglichen Likes nutzt. Wow! Du bist ein Vorbild für die regelmäßige Ermunterung deiner Community-Kollegen!
     thank_you:
       name: Dankeschön
-      description: Hat 20 „Gefällt mir“-Angaben für Beiträge erhalten und 10 „Gefällt mir“-Angaben vergeben
+      description: Hat 20 Likes für Beiträge erhalten und 10 Likes vergeben
       long_description: |
-        Das Abzeichen wird verliehen, wenn du 20 Beiträge mit „Gefällt mir“-Angaben hast und im Gegenzug mindestens 10 „Gefällt mir“-Angaben vergeben hast. Wenn jemand deine Beiträge mit „Gefällt mir“ markiert, findest du auch die Zeit, mit „Gefällt mir“ zu markieren, was andere schreiben.
+        Das Abzeichen wird verliehen, wenn du 20 Beiträge mit Likes hast und im Gegenzug mindestens 10 Likes vergeben hast. Wenn jemand deine Beiträge mit „Gefällt mir“ markiert, findest du auch die Zeit, mit „Gefällt mir“ zu markieren, was andere schreiben.
     gives_back:
       name: Geben & Nehmen
-      description: Hat 100 „Gefällt mir“-Angaben für Beiträge erhalten und 100 „Gefällt mir“-Angaben vergeben
+      description: Hat 100 Likes für Beiträge erhalten und 100 Likes vergeben
       long_description: |
-        Das Abzeichen wird verliehen, wenn du 100 Beiträge mit „Gefällt mir“-Angaben hast und im Gegenzug mindestens 100 „Gefällt mir“-Angaben vergeben hast. Danke, dass du vorab bezahlst!
+        Das Abzeichen wird verliehen, wenn du bei 100 Beiträgen Likes erhalten und im Gegenzug mindestens 100 Likes vergeben hast. Danke, dass du vorab bezahlst!
     empathetic:
       name: Empathisch
-      description: Hat 500 „Gefällt mir“-Angaben für Beiträge erhalten und 1000 „Gefällt mir“-Angaben vergeben
+      description: Hat 500 Likes für Beiträge erhalten und 1000 Likes vergeben
       long_description: |
-        Das Abzeichen wird verliehen, wenn du 500 Beiträge mit „Gefällt mir“-Angaben hast und im Gegenzug mindestens 1000 „Gefällt mir“-Angaben vergeben hast. Wow! Du bist ein Vorbild von Großzügigkeit und gegenseitige Wertschätzung :two_hearts:.
+        Das Abzeichen wird verliehen, wenn du bei 500 Beiträgen Likes erhalten und im Gegenzug mindestens 1000 Likes vergeben hast. Wow! Du bist ein Vorbild von Großzügigkeit und gegenseitige Wertschätzung :two_hearts:.
     first_emoji:
       name: Erstes Emoji
       description: Hat ein Emoji in einem Beitrag verwendet
@@ -2806,39 +2905,142 @@ de:
     user_exists: "Entschuldige, dieser Benutzer ist bereits eingeladen worden. Du kannst einen Benutzer nur einmal zu einem Thema einladen."
   tags:
     title: "Schlagwörter"
-    staff_tag_disallowed: "Das Schlagwort \"%{tag}\" kann nur von Mitarbeitern angewendet werden."
-    staff_tag_remove_disallowed: "Das Schlagwort \"%{tag}\" kann nur von Mitarbeitern entfernt werden."
+    staff_tag_disallowed: "Das Schlagwort \"%{tag}\" darf nur vom Team verwendet werden."
+    staff_tag_remove_disallowed: "Das Schlagwort \"%{tag}\" darf nur vom Team entfernt werden."
   rss_by_tag: "Themen mit dem Schlagwort %{tag}"
+  finish_installation:
+    congratulations: "Glückwunsch, du hast Discourse installiert!"
+    register:
+      button: "Registrieren"
+      title: "Administrator-Konto registrieren"
+      help: "registriere ein neues Konto, um loszulegen"
+      no_emails: "Leider wurden bei der Einrichtung keine Administrator-Mails festgelegt, sodass <a href='https://meta.discourse.org/t/how-to-create-an-administrator-account-after-install/14046'>es schwer sein dürfte</a>, die Konfiguration abzuschließen."
+    confirm_email:
+      title: "Bestätige deine E-Mail-Adresse"
+      message: "<p>Wir haben eine Aktivierungsmail an <b>%{email}</b> gesendet. Bitte folge den Anweisungen in der E-Mail, um dein Konto zu aktivieren.</p><p>Wenn diese nicht ankommst, stelle sicher, dass du E-Mail für dein Discourse richtig eingestellt hast und prüfe deinen Spamordner.</p>"
+    resend_email:
+      title: "Aktivierungsmail erneut senden"
+      message: "<p>Wir haben die Aktivierungsmail noch einmal an <b>%{email}</b> gesendet"
+  safe_mode:
+    title: "Abgesicherten Modus betreten"
+    description: "Der abgesicherte Modus ermöglicht es dir, deine Seite zu testen, ohne Plugins oder Seiten-Anpassungen zu laden."
+    no_customizations: "Alle Seiten-Anpassungen deaktivieren"
+    only_official: "Inoffizielle Plugins deaktivieren"
+    no_plugins: "Alle Plugins deaktivieren"
+    enter: "Abgesicherten Modus betreten"
   wizard:
+    title: "Discourse einrichten"
     step:
+      locale:
+        title: "Willkommen zu Discourse!"
+        fields:
+          default_locale:
+            description: "Was ist die Standardsprache für deine Community?"
       forum_title:
         title: "Name"
+        description: "Der Name ist ein Zeichen, das aus der Ferne sichtbar ist, wahrscheinlich die <i>erste</i> Sache, die mögliche Besucher über deine Community bemerken werden Was sagt dein Name und Titel über deine Community aus?"
+        fields:
+          title:
+            label: "Name deiner Community"
+            placeholder: "Erikas Stammtisch"
+          site_description:
+            label: "Beschreibe deine Community in einem kurzen Satz"
+            placeholder: "Ein Ort für Erika und ihre Bekannten, um coole Sachen zu besprechen"
       introduction:
         title: "Einführung"
+        fields:
+          welcome:
+            label: "Willkommen-Thema"
+            description: "<p>Wie würdest du deine Community einem Fremden im Fahrstuhl in etwa 1 Minute beschreiben?</p> <ul> <li>An wen richten sich die Diskussionen?</li> <li>Was kann ich hier finden?</li> <li>Warum lohnt es sich, vorbeizuschauen?</li> </ul> <p>Dein Willkommen-Thema ist die erste Sache, die neue Besucher sehen werden. Betrachte es als dein 'Fahrstuhl-Vorstellungsgespräch' oder als 'Leitbild'. </p>"
+            one_paragraph: "Bitte begrenze deine Willkommensnachricht auf einen Absatz."
       privacy:
         title: "Zugriff"
+        description: "<p>Ist deine Community offen für alle oder beschränkt durch Mitgliedschaft, Einladung oder Genehmigung? Wenn du dies bevorzugst, kannst du alles zunächst privat einrichten und dann später auf öffentlich umschalten.</p> <p>Bitte denke daran, dass du Einladungen auch immer aus Themen oder von deiner Benutzerprofil-Seite aus schicken kannst.</p>"
         fields:
           privacy:
             choices:
               open:
                 label: "Öffentlich"
+                description: "Jeder kann auf diese Community zugreifen, der ein Konto registriert."
               restricted:
                 label: "Privat"
+                description: "Nur Personen, die ich eingeladen oder genehmigt habe, können auf diese Community zugreifen."
       contact:
         title: "Kontakt"
         fields:
           contact_email:
             label: "Mail"
             placeholder: "name@example.com"
+            description: "E-Mail-Adresse der verantwortlichen Person oder Gruppe für diese Community. Wird verwendet für kritische Benachrichtigungen wie unbehandelte Meldungen, Sicherheitsaktualisierungen sowie auf <a href='/about' target='_blank'>eurer „Über uns“-Seite</a> für dringenden Community-Kontakt."
+          contact_url:
+            label: "Webseite"
+            placeholder: "http://www.example.com/kontaktiere-uns"
+            description: "Allgemeines Kontaktformular für euch oder eure Organisation. Wird angezeigt auf <a href='/about' target='_blank'>eurer „Über uns“-Seite</a>."
+          site_contact:
+            label: "Automatische Nachrichten"
+            description: "Alle automatischen, persönlichen Discourse-Nachrichten werden von diesem Benutzer versandt. Insbesondere wird dieser Benutzer der ausgewiesene Absender jeder Willkommensnachricht sein, die automatisch an neue Benutzer geschickt werden."
       corporate:
         title: "Organisation"
+        description: "Diese Namen werden in eure <a href='/privacy' target='blank'>Datenschutzerklärung</a> und <a href='/tos' target='blank'>Nutzungsbedingungen</a> eingefügt, die du jederzeit in der Team-Kategorie ändern kannst Wenn du keine Firma hast, kannst du diesen Schritt auch überspringen."
         fields:
           company_short_name:
             label: "Firmenname (kurz)"
+            placeholder: "Musterfirma"
           company_full_name:
             label: "Firmenname (komplett)"
+            placeholder: "Musterfirma GmbH"
+          company_domain:
+            label: "Firmen-Domainname"
+            placeholder: "musterfirma.com"
+      colors:
+        title: "Design"
+        fields:
+          theme_id:
+            description: "Bevorzugst du ein helles oder dunkles Farbschema? Du kannst das Erscheinungsbild deiner Seite jederzeit weiter anpassen unter Administration, Anpassen."
+            choices:
+              default:
+                label: "Simple Light (Hell)"
+              dark:
+                label: "Simple Dark (Dunkel)"
+      logos:
+        title: "Logos"
+        fields:
+          logo_url:
+            label: "Hauptlogo"
+            description: "Das Logobild für den linken, oberen Bereich deiner Seite. Verwende eine weite, rechteckige Form."
+          logo_small_url:
+            label: "Kompaktes Logo"
+            description: "Eine kompakte Version deines Logos, das auf deiner Seite oben links angezeigt wird, wenn man herunterscollt. Verwende eine quadratische Form."
+      icons:
+        title: "Icons"
+        fields:
+          favicon_url:
+            label: "Kleines Icon"
+            description: "Icon-Bild, das in Webbrowsern mit kleineren Dimensionen gut aussieht. Die empfohlene Größe beträgt 32x32 Pixel."
+          apple_touch_icon_url:
+            label: "Großes Icon"
+            description: "Icon-Bild, das auf modernen Geräten mit größeren Dimensionen gut aussieht. Die empfohlene Größe beträgt mindestens 144x144 Pixel."
+      homepage:
+        description: "Wir empfehlen, die aktuellen Themen auf deiner Startseite anzuzeigen, aber du kannst dich auch dafür entscheiden, Kategorien (Gruppen von Themen) auf der Startseite anzuzeigen, wenn dir das lieber ist."
+        title: "Homepage"
+        fields:
+          homepage_style:
+            choices:
+              latest:
+                label: "Neueste Beiträge"
+              categories:
+                label: "Kategorien"
       emoji:
         title: "Emoji"
+        description: "Welches Emoji-Design bevorzugst du für deine Community? Du kannst später jederzeit mehr benutzerdefinierte Emoji einfügen unter Administration, Anpassen, Emoji."
+      invites:
+        title: "Team einladen"
+        description: "Du hast es fast geschafft! Lass uns ein paar Team-Mitglieder einladen, um <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>eure Diskussionen in Gang zu bringen</a> mit interessanten Themen und Antworten und deine Community zu beginnen."
+      finished:
+        title: "Dein Discourse ist bereit!"
+        description: |
+          <p>Wenn du diese Einstellungen jemals ändern möchtest, besuche <a href='/admin' target='_blank'>deinen Administrationsbereich</a>; finde ihn neben dem Schraubenschüssel-Symbol im Seitenmenü..</p>
+          <p>Viel Spaß, und viel Glück <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'>beim Aufbauen deiner neuen Community!</a></p>
   activemodel:
     errors:
       <<: *errors

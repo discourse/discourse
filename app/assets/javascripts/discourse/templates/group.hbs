@@ -1,6 +1,6 @@
 <div class="container group">
   <div class='group-details-container'>
-    <div class='group-details'>
+    <div class='group-info'>
       {{#if model.flair_url}}
         <span class='group-avatar-flair'>
           {{avatar-flair
@@ -12,20 +12,12 @@
       {{/if}}
 
       <span>
-        <h1 class='group-header'>
-          <span class='group-title'>{{groupName}}</span>
-        </h1>
+        <span class='group-info-name'>{{groupName}}</span>
 
-        {{#if model.title}}
-          <h3 class='group-name'>@{{model.name}}</h3>
-        {{/if}}
+        <div>
+          {{#if model.full_name}}<span class='group-info-full-name'>{{model.name}}</span>{{/if}}
+        </div>
       </span>
-
-      {{#if canEditGroup}}
-        <span class="group-edit">
-          {{d-button action="showGroupEditor" label="groups.edit.title" class="group-edit-btn" icon="pencil"}}
-        </span>
-      {{/if}}
     </div>
 
     {{#if model.bio_cooked}}
@@ -37,9 +29,9 @@
     {{/if}}
   </div>
 
-  {{#mobile-nav class='group-nav' desktopClass="pull-left nav nav-stacked" currentPath=currentPath}}
+  {{#mobile-nav class='group-nav' desktopClass="nav nav-pills" currentPath=application.currentPath}}
     {{#each getTabs as |tab|}}
-      <li class="{{if tab.active 'active'}}">
+      <li>
         {{#link-to tab.location model title=tab.message}}
           {{#if tab.icon}}{{fa-icon tab.icon}}{{/if}}
           {{tab.message}}
@@ -49,9 +41,7 @@
     {{/each}}
   {{/mobile-nav}}
 
-  <div class='pull-left group-outlet'>
-    <div class='user-main'>
-      {{outlet}}
-    </div>
+  <div class='group-outlet'>
+    {{outlet}}
   </div>
 </div>

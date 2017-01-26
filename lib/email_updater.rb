@@ -40,14 +40,14 @@ class EmailUpdater
 
       if authorize_both?
         args[:change_state] = EmailChangeRequest.states[:authorizing_old]
-        email_token = @user.email_tokens.create(email: args[:old_email])
+        email_token = @user.email_tokens.create!(email: args[:old_email])
         args[:old_email_token] = email_token
       else
         args[:change_state] = EmailChangeRequest.states[:authorizing_new]
-        email_token = @user.email_tokens.create(email: args[:new_email])
+        email_token = @user.email_tokens.create!(email: args[:new_email])
         args[:new_email_token] = email_token
       end
-      @user.email_change_requests.create(args)
+      @user.email_change_requests.create!(args)
 
       if args[:change_state] == EmailChangeRequest.states[:authorizing_new]
         send_email(:confirm_new_email, email_token)

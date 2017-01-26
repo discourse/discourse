@@ -1,8 +1,10 @@
 import { ajax } from 'discourse/lib/ajax';
 import { default as computed, observes } from "ember-addons/ember-computed-decorators";
 import GroupHistory from 'discourse/models/group-history';
+import RestModel from 'discourse/models/rest';
+import { popupAjaxError } from 'discourse/lib/ajax-error';
 
-const Group = Discourse.Model.extend({
+const Group = RestModel.extend({
   limit: 50,
   offset: 0,
   user_count: 0,
@@ -109,7 +111,7 @@ const Group = Discourse.Model.extend({
   @observes("visible", "canEveryoneMention")
   _updateAllowMembershipRequests() {
     if (!this.get('visible') || !this.get('canEveryoneMention')) {
-      this.set('allow_membership_requests', false);
+      this.set ('allow_membership_requests', false);
     }
   },
 
@@ -134,7 +136,8 @@ const Group = Discourse.Model.extend({
       flair_color: this.get('flairHexColor'),
       bio_raw: this.get('bio_raw'),
       public: this.get('public'),
-      allow_membership_requests: this.get('allow_membership_requests')
+      allow_membership_requests: this.get('allow_membership_requests'),
+      full_name: this.get('full_name')
     };
   },
 
@@ -204,6 +207,10 @@ Group.reopenClass({
 
   find(name) {
     return ajax("/groups/" + name + ".json").then(result => Group.create(result.basic_group));
+  },
+
+  loadOwners(name) {
+    return ajax('/groups/' + name + '/owners.json').catch(popupAjaxError);
   },
 
   loadMembers(name, offset, limit, params) {

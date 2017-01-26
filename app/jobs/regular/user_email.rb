@@ -74,7 +74,7 @@ module Jobs
       set_skip_context(type, user.id, to_address || user.email, post.try(:id))
 
       return skip_message(I18n.t("email_log.anonymous_user"))   if user.anonymous?
-      return skip_message(I18n.t("email_log.suspended_not_pm")) if user.suspended? && type != :user_private_message
+      return skip_message(I18n.t("email_log.suspended_not_pm")) if user.suspended? && type.to_s != "user_private_message"
 
       return if user.staged && type == :digest
 

@@ -347,18 +347,59 @@ ro:
         one: "1 utilizator"
         few: "%{count} utilizatori"
         other: "%{count} de utilizatori"
+    group_histories:
+      actions:
+        change_group_setting: "Schimbă setarea grupului"
+        add_user_to_group: "Adaugă utilizator"
+        remove_user_from_group: "Șterge utilizator"
+        make_user_group_owner: "Fă proprietar"
+        remove_user_as_group_owner: "Revocă proprietar"
     groups:
+      logs:
+        title: "Jurnale"
+        when: "Când"
+        action: "Acțiune"
+        acting_user: "Utilizator temporar"
+        target_user: "Utilizator țintă"
+        subject: "Subiect"
+        details: "Detalii"
+        from: "De la"
+        to: "Către"
+      edit:
+        title: 'Editează grup'
+        full_name: 'Nume complet'
+        add_members: "Adaugă membri"
+        delete_member_confirm: "Șterge utilizatorul '%{username}' din grupul '%{group}'?"
+      request_membership_pm:
+        title: "Cerere de adăugare ca membru"
+        body: "Aș dori să fac o cerere de adăugare ca membru în @%{groupName}."
+      name_placeholder: "Numele grupului, fără spații, la fel ca regula pentru nume utilizator"
+      public: "Permite utilizatorilor să intre/iasă din grup fără restricții. (Presupune ca grupul să fie vizibil)"
       empty:
-        posts: "Nu există nici o postare a membrilor acestui grup."
+        posts: "Nu există postări ale membrilor acestui grup."
         members: "Nu există nici un membru în acest grup."
-        mentions: "Nu sunt mențiuni ale acestui grup."
-        messages: "Nu este nici un mesaj pentru acest grup."
-        topics: "Nu exista nici un subiect postat de membrii acestui grup."
+        mentions: "Nu există nicio menționare în acest grup."
+        messages: "Nu există nici un mesaj în acest grup."
+        topics: "Nu există nici un subiect creat de vreun membru al acestui grup."
+        logs: "Nu există nici un jurnal pentru acest grup."
       add: "Adaugă"
+      join: "Alătură-te grupului"
+      leave: "Părăsește grupul"
+      request: "Cere să te alături grupului"
+      automatic_group: Grup automat
+      closed_group: Grup închis
+      is_group_user: "Ești membru al acestui grup"
+      allow_membership_requests: "Permite utilizatorilor să trimită cereri de adăugare ca membri către proprietarii grupului. (Presupune ca toată lumea să aibă posibilitatea de a menționa grupul)"
+      membership: "Apartenență"
+      name: "Nume"
+      user_count: "Număr de membri"
+      bio: "Despre grup"
       selector_placeholder: "Adaugă membri"
       owner: "Proprietar"
       visible: "Grupul este vizibil tuturor utilizatorilor"
-      index: "Grupuri"
+      index:
+        title: "Grupuri"
+        empty: "Nu există nici un grup vizibil."
       title:
         one: "Grup"
         few: "Grupuri"
@@ -394,6 +435,15 @@ ro:
         muted:
           title: "Setat pe silențios"
           description: "Nu vei fi niciodată notificat despre nimic legat de noile subiecte din acest grup."
+      flair_url: "Imagine avatar cu element distinct"
+      flair_url_placeholder: "(Opțional) URL imagine sau clasă Font Awesome"
+      flair_bg_color: "Culoarea de fundal a avatarului cu element distinct"
+      flair_bg_color_placeholder: "(Opțional) Valoarea Hex a culorii"
+      flair_color: "Culoarea avatarului cu element distinct"
+      flair_color_placeholder: "(Opțional) Valoarea Hex a culorii"
+      flair_preview_icon: "Previzualizează iconiță"
+      flair_preview_image: "Previzualizează imagine"
+      flair_note: "Observație: Elementul distinct va fi afișat doar pentru grupul principal al utilizatorului."
     user_action_groups:
       '1': "Aprecieri date"
       '2': "Aprecieri primite"
@@ -726,11 +776,9 @@ ro:
         link_generated: "Link de invitare generat cu succes!"
         valid_for: "Link-ul de invitare este valid doar pentru următoarele adrese de email:  %{email}"
         bulk_invite:
-          none: "Nu ai invitat încă pe nimeni. Poți trimite invitații individuale sau mai multor oameni deodată prin <a href='https://meta.discourse.org/t/send-bulk-invites/16468'> încărcarea fișierului de invitații multiple</a>."
+          none: "Nu ai invitat încă pe nimeni aici. Poți trimite invitații individuale sau poți invita mai multe persoane odată <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>încărcând un fișier CSV</a>."
           text: "Invitație multiplă din fișier"
-          uploading: "Se încarcă..."
           success: "Fișier încărcat cu succes, vei fi înștiințat printr-un mesaj când procesarea este completă."
-          error: "A apărut o eroare la încărcarea fișierului '{{filename}}': {{message}}"
       password:
         title: "Parolă"
         too_short: "Parola este prea scurtă."
@@ -1005,8 +1053,10 @@ ro:
       title: "Sau apasă Ctrl+Enter"
       users_placeholder: "Adaugă un utilizator"
       title_placeholder: "Despre ce e vorba în acest  subiect - pe scurt?"
+      title_or_link_placeholder: "Introdu titlul, sau copiază aici un link"
       edit_reason_placeholder: "de ce editezi?"
       show_edit_reason: "(adaugă motivul editării)"
+      topic_featured_link_placeholder: "Introdu link afișat cu titlu."
       reply_placeholder: "Scrie aici. Utilizează formatarea Markdown, BBCode sau HTML. Trage sau lipește imagini."
       view_new_post: "Vezi noua ta postare."
       saving: "Se salvează"
@@ -1332,7 +1382,6 @@ ro:
         go_bottom: "sfârșit"
         go: "mergi"
         jump_bottom: "sari la ultimul mesaj"
-        jump_prompt: "sari la postarea"
         jump_prompt_long: "La ce postare dorești să sari?"
         jump_bottom_with_number: "sari la mesajul %{post_number}"
         total: toate postările
@@ -1577,7 +1626,6 @@ ro:
         file_too_large: "Ne pare rău, fișierul este prea mare (mărimea maximă este {{max_size_kb}}kb). De ce nu încarci  acest fișier mare pe un serviciu de distribuție prin cloud și apoi să îi partajezi link-ul?"
         too_many_uploads: "Ne pare rău, poți încărca doar câte un fișier."
         too_many_dragged_and_dropped_files: "Ne pare rău, poți încărca doar 10 fișiere simultan."
-        upload_not_authorized: "Ne pare rău, fișierul pe care-l încarci nu este permis (extensii permise: {{authorized_extensions}})."
         image_upload_not_allowed_for_new_user: "Ne pare rău, un utilizator nou nu poate încărca imagini."
         attachment_upload_not_allowed_for_new_user: "Ne pare rău, un utilizator nou nu poate încărca atașamente."
         attachment_download_requires_login: "Ne pare rău, dar trebuie să fii autentificat pentru a descărca ataşamente."
@@ -1763,6 +1811,7 @@ ro:
       tags_allowed_tag_groups: "În această categorie se pot folosi numai grupurile de etichete:"
       tags_placeholder: "(Opțional) lista etichetelor permise"
       tag_groups_placeholder: "(Opțional) lista grupurilor de etichete permise"
+      topic_featured_link_allowed: "Permite link-uri promovate în această categorie."
       delete: 'Șterge categorie'
       create: 'Categorie nouă'
       create_long: 'Creează o categorie nouă'
@@ -1797,6 +1846,7 @@ ro:
       email_in_disabled: "Postarea subiectelor noi prin email este dezactivată din setările siteului. Pentru a activa postarea subiectelor noi prin email,"
       email_in_disabled_click: 'activează opțiunea "primire email ".'
       suppress_from_homepage: "Elimină această categorie de pe pagina principală."
+      all_topics_wiki: "Transformă subiectele noi în wiki-uri, implicit."
       sort_order: "Sortare implicită:"
       allow_badges_label: "Permite acordarea de ecusoane în această categorie"
       edit_permissions: "Editează permisiuni"
@@ -1925,7 +1975,6 @@ ro:
       few: "vizualizări"
       other: "de vizualizări"
     replies: "Răspunsuri"
-    views_long: "acest subiect a fost vizualizat de {{number}} (de) ori"
     activity: "Activitate"
     likes: "Aprecieri"
     likes_lowercase:
@@ -2242,8 +2291,6 @@ ro:
         backups: "back-up"
         traffic_short: "Trafic"
         traffic: "Cereri web"
-        page_views: "Cereri API"
-        page_views_short: "Cereri API"
         show_traffic_report: "Arată raportul detaliat cu privire la trafic"
         reports:
           today: "Astăzi"
@@ -2338,15 +2385,12 @@ ro:
         refresh: "Reîmprospătează"
         new: "Noi"
         selector_placeholder: "introdu nume de utilizator"
-        name_placeholder: "Numele grupului, fără spații, asemenea regulii de la numele de utilizator"
         about: "Editează aici numele și apartenența la grupuri"
         group_members: "Membrii grupului"
         delete: "Șterge"
         delete_confirm: "Ștergi acest grup?"
         delete_failed: "Imposibil de șters grupul. Dacă este unul automat, nu se poate șterge."
-        delete_member_confirm: "Şterge '%{username}' din grupul '%{group}'?"
         delete_owner_confirm: "Revocă dreptul de proprietar pentru '%{username}'?"
-        name: "Nume"
         add: "Adaugă"
         add_members: "Adaugă membri"
         custom: "Personalizat"
@@ -2363,14 +2407,6 @@ ro:
         add_owners: Adaugă proprietari
         incoming_email: "Adresă de primire emailuri personalizată"
         incoming_email_placeholder: "introducere adresă de email"
-        flair_url: "Imagine avatar cu element distinct"
-        flair_url_placeholder: "(Opțional) URL-ul imagine sau clasă Font Awesome"
-        flair_bg_color: "Culoarea de fundal a avatarului cu element distinct"
-        flair_bg_color_placeholder: "(Opțional) Valoarea Hex a culorii"
-        flair_color: "Culoarea avatarului cu element distinct"
-        flair_color_placeholder: "(Opțional) Valoarea Hex a culorii"
-        flair_preview: "Previzualizare"
-        flair_note: "Observație: Elementul distinct va fi afișat doar pentru grupul principal al utilizatorului."
       api:
         generate_master: "Generează cheie API principală"
         none: "Nu sunt chei API principale active deocamdată."
@@ -2402,7 +2438,6 @@ ro:
         warn_local_payload_url: "Se pare că dorești să setezi un webhook pentru un url local. Un eveniment livrat către o adresă locală ar putea avea efecte secundare și genera comportamente neașteptate. Continuă?"
         secret_invalid: "Secretul nu trebuie să aibă nici un caracter spațiu-gol."
         secret_too_short: "Secretul trebuie sa conțină cel puțin 12 caractere."
-        secret_placeholder: "Un șir opțional, folosit la generarea semnăturii"
         event_type_missing: "Va trebui să setezi cel puțin un tip de evenimente."
         content_type: "Tip conținut"
         secret: "Secret"
@@ -2425,7 +2460,7 @@ ro:
           details: "Atunci când exista un răspuns nou, editat, șters sau recuperat."
         user_event:
           name: "Eveniment utilizator"
-          details: "Atunci când un utilizator este creat sau aprobat."
+          details: "Când un utilizator este creat, aprobat sau actualizat."
         delivery_status:
           title: "Starea livrării"
           inactive: "Inactivă"

@@ -138,7 +138,7 @@ he:
     topic_admin_menu: "פעולות ניהול לנושא"
     wizard_required: "הגיע הזמן לכוונן את הפורום שלכם! <a href='%{url}' data-auto-route='true'>התחילו את אשף ההקמה</a>!"
     emails_are_disabled: "כל הדוא\"ל היוצא נוטרל באופן גורף על ידי מנהל אתר. שום הודעת דוא\"ל, מכל סוג שהוא, לא תשלח."
-    bootstrap_mode_enabled: "כדי להקל על הקמת האתר החדש שלכם, אתם במצב איתחול-ראשוני. כל המשתמשים החדשים יקבלו רמת אמון 1 ויקבלו סיכומים יומיים במייל. אפשרות זו תכובה אוטומטית כאשר יהיו יותר מ %{min_users} משתמשים."
+    bootstrap_mode_enabled: "כדי להקל על הקמת האתר החדש שלכם, אתם במצב איתחול-ראשוני. כל המשתמשים החדשים יקבלו רמת אמון 1 ויקבלו תמצות יומי במייל. אפשרות זו תכובה אוטומטית כאשר יהיו יותר מ %{min_users} משתמשים."
     bootstrap_mode_disabled: "מצב איתחול-ראשוני יכובה ב 24 השעות הקרובות."
     s3:
       regions:
@@ -183,7 +183,7 @@ he:
     you: "אתם"
     or: "או"
     now: "ממש עכשיו"
-    read_more: 'קרא עוד'
+    read_more: 'קראו עוד'
     more: "עוד"
     less: "פחות"
     never: "אף פעם"
@@ -321,21 +321,63 @@ he:
       total_rows:
         one: "משתמש/ת 1"
         other: "%{count} משתמשים"
+    group_histories:
+      actions:
+        change_group_setting: "שינוי הגדרות קבוצה"
+        add_user_to_group: "הוספת משתמש/ת"
+        remove_user_from_group: "הסרת משתמש/ת"
+        make_user_group_owner: "הפיכה לבעלים"
+        remove_user_as_group_owner: "שלילת בעלות"
     groups:
+      logs:
+        title: "לוגים"
+        when: "מתי"
+        action: "פעולה"
+        acting_user: "משתמשים פועלים"
+        target_user: "משתמשי מטרה"
+        subject: "נושא"
+        details: "פרטים"
+        from: "מאת"
+        to: "אל"
+      edit:
+        title: 'עריכת קבוצה'
+        full_name: 'שם מלא'
+        add_members: "הוספת חברים"
+        delete_member_confirm: "הסרת '%{username}' מהקבוצה '%{group}'?"
+      request_membership_pm:
+        title: "בקשת חברות"
+        body: "הייתי מעוניין להגיש בקשת חברות ב-@%{groupName}."
+      name_placeholder: "שם קבוצה, ללא רווחים, לפי הכללים של שמות משתמשים"
+      public: "אפשרו למשתמשים להצטרף/לעזוב את הקבוצה בחופשיות (על הקבוצה להיות נראית)"
       empty:
-        posts: "אין פוסט של חברים בקבוצה זו"
+        posts: "אין פוסטים של חברי קבוצה זו."
         members: "אין חברים בקבוצה זו."
-        mentions: "אין אזכורים של קבוצה זו."
+        mentions: "אין איזכורים של קבוצה זו."
         messages: "אין הודעות לקבוצה זו."
-        topics: "אין נושא מטעם חברים בקבוצה זו."
+        topics: "אין נושאים שנוצרו על ידי חברים של קבוצה זו."
+        logs: "אין לוגים עבור קבוצה זו."
       add: "הוספה"
+      join: "הצטרפות לקבוצה"
+      leave: "עזיבת קבוצה"
+      request: "בקשה להצטרפות לקבוצה"
+      automatic_group: קבוצה אוטומטית
+      closed_group: קבוצה סגורה
+      is_group_user: "אתם חברים בקבוצה זו."
+      allow_membership_requests: "אפשרו למשתמשים לשלוח בקשות חברות לבעלי הקבוצה (מצריך שכולם יוכלו לאזכר את הקבוצה)"
+      membership: "חברות"
+      name: "שם"
+      user_count: "מספר חברים"
+      bio: "אודות הקבוצה"
       selector_placeholder: "הוספת חברים וחברות"
       owner: "מנהל"
       visible: "הקבוצה זמינה לכל המשתמשים"
-      index: "קבוצות"
+      index:
+        title: "קבוצות"
+        empty: "אין קבוצות נראות."
       title:
         one: "קבוצה"
         other: "קבוצות"
+      activity: "פעילות"
       members: "חברים"
       topics: "נושאים"
       posts: "פוסטים"
@@ -367,6 +409,15 @@ he:
         muted:
           title: "מושתק"
           description: "לעולם לא תקבלו התראה על נושאים חדשים בקבוצה זו."
+      flair_url: "תמונת פלייר אווטר"
+      flair_url_placeholder: "(אופציונלי) URL של תמונה או מחלקה של Font Awesome"
+      flair_bg_color: "צבע רקע של פלייר לאווטר"
+      flair_bg_color_placeholder: "(אופציונלי) ערך הקסדצימלי של הצבע"
+      flair_color: "צבע פלייר אווטר"
+      flair_color_placeholder: "(אופציונלי) ערך הקסדצימלי של הצבע"
+      flair_preview_icon: "תצוגה מקדימה של אייקון"
+      flair_preview_image: "תצוגה מקדימה של תמונה"
+      flair_note: "שימו לב: פלייר יופיע רק עבור הקבוצה הראשית של משתמשים."
     user_action_groups:
       '1': "לייקים שניתנו"
       '2': "לייקים שהתקבלו"
@@ -695,11 +746,10 @@ he:
         link_generated: "קישור הזמנה יוצר בהצלחה!"
         valid_for: "קישור הזמנה תקף רק לכתובת המייל הזו: %{email}"
         bulk_invite:
-          none: "נכון לעכשיו לא הזמנת לכאן אף אחד. תוכלו לשלוח הזמנות אישיות, או להזמין כמה אנשים בבת אחת באמצעות   <a href='https://meta.discourse.org/t/send-bulk-invites/16468'> העלאת קובץ הזמנה קבוצתית</a>."
+          none: "עדיין לא הזמנתם לכאן אף אחד. תוכלו לשלוח הזמנות פרטניות, או להזמין כמה אנשים יחד על ידי <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>העלאת קובץ CSV</a>."
           text: "הזמנה קבוצתית מקובץ"
-          uploading: "העלאה..."
           success: "העלאת הקובץ החלה בהצלחה, תקבלו התראה באמצעות מסר כאשר התהליך יושלם."
-          error: "חלה תקלה בהעלאת \"'{{filename}}': \n{{message}}"
+          error: "מצטערים, הקובץ צריך להיות בפורמט csv."
       password:
         title: "סיסמה"
         too_short: "הסיסמה שלך קצרה מידי."
@@ -964,8 +1014,10 @@ he:
       title: "או לחצו Ctrl+Enter"
       users_placeholder: "הוספת משתמש"
       title_placeholder: " במשפט אחד, במה עוסק הדיון הזה?"
+      title_or_link_placeholder: "הקלידו כותרת, או הדביקו קישור כאן"
       edit_reason_placeholder: "מדוע ערכת?"
       show_edit_reason: "(הוספת סיבת עריכה)"
+      topic_featured_link_placeholder: "הזינו קישור שיוצג עם הכותרת."
       reply_placeholder: "הקלידו כאן. השתמשו ב Markdown, BBCode או HTML כדי לערוך. גררו או הדביקו תמונות."
       view_new_post: "צפו בפוסט החדש שלכם."
       saving: "שומר"
@@ -1281,7 +1333,8 @@ he:
         go_bottom: "למטה"
         go: "קדימה"
         jump_bottom: "מעבר לפוסט האחרון"
-        jump_prompt: "קפיצה לפוסט"
+        jump_prompt: "קפצו אל..."
+        jump_prompt_of: "מתוך %{count} פוסטים"
         jump_prompt_long: "לאיזה פוסט הייתם רוצים לקפוץ?"
         jump_bottom_with_number: "קפיצה לפוסט %{post_number}"
         total: סך הכל הפוסטים
@@ -1513,7 +1566,7 @@ he:
         file_too_large: "מצטערים, הקובץ גדול מידי (הגודל המירבי הוא {{max_size_kb}}kb). אולי תקצו להעלות קבצים גדולים לשירות שיתוף בענן ולשתף את הקישור."
         too_many_uploads: "סליחה, אך ניתן להעלות רק קובץ אחת כל פעם."
         too_many_dragged_and_dropped_files: "מצטערים, אתם יכולים להעלות עד 10 קבצים בו זמנית."
-        upload_not_authorized: "סליחה, אך סוג הקובץ שאתם מנסים להעלות אינו מורשה (סיומות מורשות: {{authorized_extensions}})."
+        upload_not_authorized: "מצטערים, הקובץ שאתם מנסים להעלות אינו מורשה (סיומות מורשות: {{authorized_extensions}})."
         image_upload_not_allowed_for_new_user: "סליחה, משתמשים חדשים לא יכולים להעלות תמונות."
         attachment_upload_not_allowed_for_new_user: "סליחה, משתמשים חדשים לא יכולים להעלות קבצים."
         attachment_download_requires_login: "מצטערים, עליכם להיות מחוברים כדי להוריד את הקבצים המצורפים."
@@ -1679,6 +1732,7 @@ he:
       tags_allowed_tag_groups: "קבוצות תגים שניתנות לשימוש בקטגוריה זו:"
       tags_placeholder: "(אופציונלי) רשימת תגים מותרים"
       tag_groups_placeholder: "(אופציונלי) רשימת קבוצות תגים"
+      topic_featured_link_allowed: "אפשרו קישורים מומלצים בקטגוריה זו"
       delete: 'מחק קטגוריה'
       create: 'קטגוריה חדשה'
       create_long: 'יצירת קטגוריה חדשה'
@@ -1713,6 +1767,7 @@ he:
       email_in_disabled: "אפשרות הפרסום של נושאים חדשים דרך דוא\"ל נוטרלה בהגדרות האתר. כדי לאפשר פרסום באמצעות  משלוח דוא\"ל,"
       email_in_disabled_click: 'אפשרו את את ההגדרה "דוא"ל נכנס"'
       suppress_from_homepage: "הרחיקו קטגוריה זו מהעמוד הראשי."
+      all_topics_wiki: "כברירת מחדל נושאים חדשים יהיו וויקי."
       sort_order: "סידור ברירת מחדל:"
       allow_badges_label: "הרשו לעיטורים להיות מוענקים בקטגוריה זו"
       edit_permissions: "ערוך הרשאות"
@@ -1835,7 +1890,9 @@ he:
       one: "צפיה"
       other: "צפיות"
     replies: "תגובות"
-    views_long: "הנושא הזה נצפה {{number}} פעמים"
+    views_long:
+      one: "נושא זה נצפה פעם 1"
+      other: "נושא זה נצפה {{number}} פעמים"
     activity: "פעילות"
     likes: "לייקים"
     likes_lowercase:
@@ -2140,8 +2197,8 @@ he:
         backups: "גיבויים"
         traffic_short: "תנועה"
         traffic: "בקשות יישום web"
-        page_views: "בקשות API"
-        page_views_short: "בקשות API"
+        page_views: "צפיות-דף"
+        page_views_short: "צפיות-דף"
         show_traffic_report: "הצגת דו\"ח תנועה מפורט"
         reports:
           today: "היום"
@@ -2231,15 +2288,12 @@ he:
         refresh: "רענן"
         new: "חדש"
         selector_placeholder: "הזינו שם משתמש/ת"
-        name_placeholder: "שם הקבוצה, ללא רווחים, בזהה לחוקי שם המשתמש"
         about: "ערוך את חברות הקבוצה שלך והשמות כאן"
         group_members: "חברי הקבוצה"
         delete: "מחק"
         delete_confirm: "למחוק קבוצה זו?"
         delete_failed: "לא ניתן למחוק קבוצה זו. אם זו קבוצה אוטומטית, היא בלתי ניתנת למחיקה."
-        delete_member_confirm: "להסיר את '%{username}' מהקבוצה '%{group}'?"
         delete_owner_confirm: "הסרת הרשאות מנהל עבור '%{username}'?"
-        name: "שם"
         add: "הוספה"
         add_members: "הוספת חברים וחברות"
         custom: "מותאם"
@@ -2256,14 +2310,6 @@ he:
         add_owners: הוספת בעלים
         incoming_email: "התאימו אישית כתובת מייל נכנס"
         incoming_email_placeholder: "הכניסו כתובת מייל"
-        flair_url: "תמונת פלייר אווטר"
-        flair_url_placeholder: "(אופציונלי) URL של תמונה או Font Awesome class"
-        flair_bg_color: "צבע רקע של פלייר לאווטר"
-        flair_bg_color_placeholder: "(אופציונלי) ערך צבע ב Hex"
-        flair_color: "צבע פלייר אווטר"
-        flair_color_placeholder: "(אופציונלי) ערך צבע הקסדצימלי"
-        flair_preview: "תצוגה מקדימה"
-        flair_note: "שימו לב: פלייר יופיע רק עבור הקבוצה הראשית של משתמשים."
       api:
         generate_master: "ייצר מפתח מאסטר ל-API"
         none: "אין מפתחות API פעילים כרגע."
@@ -2295,7 +2341,7 @@ he:
         warn_local_payload_url: "נראה שאתם מנסים להגדיר webhook ל url מקומי. אירוע שנשלח לכתובת מקומית עלול לגרום לתופעות בלתי-צפויות מראש. האם להמשיך?"
         secret_invalid: "אסור שהסוד יכיל תווי רווח כלשהם."
         secret_too_short: "הסוד אמור להכיל לפחות 12 תווים."
-        secret_placeholder: "מחרוזת אופציונלית, משמשת ליצירת חתימות"
+        secret_placeholder: "מחרוזת אופציונלית, משמשת ליצירת חתימה"
         event_type_missing: "אתם צריכים לקבוע לפחות סוג אירועים אחד."
         content_type: "סוג תוכן"
         secret: "סוד"
@@ -2318,7 +2364,7 @@ he:
           details: "כאשר יש תגובה חדשה, עריכה, מחיקה או שחזור."
         user_event:
           name: "אירוע משתמש"
-          details: "כאשר משתמש נוצר או מאושר."
+          details: "כאשר משתמש נוצר, מאושר, או מעודכן."
         delivery_status:
           title: "מצב שליחה"
           inactive: "לא פעיל"
@@ -2387,7 +2433,7 @@ he:
           error: "הייתה שגיאה במהלך העלאת '{{filename}}': {{message}}"
         operations:
           is_running: "פעולה רצה כרגע..."
-          failed: "ה{{operation}} נכשלה. אנא בדוק את הלוגים."
+          failed: "ה-{{operation}} נכשל/ה. אנא בידקו את הלוגים."
           cancel:
             label: "ביטול"
             title: "בטל את הפעולה הנוכחית"
@@ -2516,7 +2562,7 @@ he:
         title: "מיילים"
         settings: "הגדרות"
         templates: "תבניות"
-        preview_digest: "תצוגה מקדימה של סיכום"
+        preview_digest: "תצוגה מקדימה של תמצית"
         sending_test: "שולח דואר אלקטרוני לבדיקה..."
         error: "<b>שגיאה</b> - %{server_error}"
         test_error: "הייתה בעיה בשליחת הדואר האלקטרוני. בבקשה בידקו את ההגדרות שלכם ונסו שנית."
@@ -2534,7 +2580,7 @@ he:
         send_test: "שליחת מייל בדיקה"
         sent_test: "נשלח!"
         delivery_method: "שיטת העברה"
-        preview_digest_desc: "תצוגה מקדימה של מייל סיכום שנשלח למשתמשים לא פעילים. "
+        preview_digest_desc: "תצוגה מקדימה של מייל תמצות שנשלח למשתמשים לא פעילים. "
         refresh: "רענן"
         send_digest_label: "שילחו תוצאה זו אל:"
         send_digest: "שליחה"
@@ -2543,7 +2589,7 @@ he:
         html: "html"
         text: "טקסט"
         last_seen_user: "משתמש שנראה לאחרונה:"
-        no_result: "לא נמצאו תוצאות לסיכום."
+        no_result: "לא נמצאו תוצאות לתמצית."
         reply_key: "מפתח תגובה"
         skipped_reason: "דלג על סיבה"
         incoming_emails:
@@ -2572,7 +2618,7 @@ he:
             title: "סינון"
             user_placeholder: "שם משתמש"
             address_placeholder: "name@example.com"
-            type_placeholder: "סיכום, הרשמה..."
+            type_placeholder: "תמצית, הרשמה..."
             reply_key_placeholder: "מפתח תגובה"
             skipped_reason_placeholder: "סיבה"
       logs:
@@ -2639,6 +2685,11 @@ he:
             deleted_tag: "תגית נמחקה"
             renamed_tag: "תגית שונתה"
             revoke_email: "שללו מייל"
+            lock_trust_level: "נעילת רמת אמון"
+            unlock_trust_level: "שחרור רמת אמון מנעילה"
+            activate_user: "הפעלת משתמש/ת"
+            deactivate_user: "ניטרול משתמש/ת"
+            change_readonly_mode: "שינוי מצב קריאה בלבד"
         screened_emails:
           title: "הודעות דואר מסוננות"
           description: "כשמישהו מנסה ליצור חשבון חדש, כתובות הדואר האלקטרוני הבאות ייבדקו וההרשמה תחסם או שיבוצו פעולות אחרות."
@@ -2939,6 +2990,7 @@ he:
           user_preferences: "העדפות משתמש"
           tags: "תגיות"
           search: "חיפוש"
+          groups: "קבוצות"
       badges:
         title: עיטורים
         new_badge: עיטור חדש
@@ -2975,7 +3027,7 @@ he:
         enabled: אפשרו עיטור
         icon: סמליל
         image: תמונה
-        icon_help: "השתמשו ב-class בשם Font Awesome או ב-URL לתמונה"
+        icon_help: "השתמשו במחלקה של Font Awesome או ב-URL לתמונה"
         query: שאילתת עיטור (SQL)
         target_posts: פרסומי מטרות שאילתה
         auto_revoke: הפעלת שאילתת ביטול יומית

@@ -254,7 +254,7 @@ const User = RestModel.extend({
 
     // TODO: We can remove this when migrated fully to rest model.
     this.set('isSaving', true);
-    return ajax(`/users/${this.get('username_lower')}`, {
+    return ajax(`/users/${this.get('username_lower')}.json`, {
       data: data,
       type: 'PUT'
     }).then(result => {

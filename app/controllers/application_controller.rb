@@ -9,6 +9,7 @@ require_dependency 'json_error'
 require_dependency 'letter_avatar'
 require_dependency 'distributed_cache'
 require_dependency 'global_path'
+require_dependency 'secure_session'
 
 class ApplicationController < ActionController::Base
   include CurrentUser
@@ -25,7 +26,7 @@ class ApplicationController < ActionController::Base
   #  and then raising a CSRF exception
   def handle_unverified_request
     # NOTE: API key is secret, having it invalidates the need for a CSRF token
-    unless is_api?
+    unless is_api? || is_user_api?
       super
       clear_current_user
       render text: "['BAD CSRF']", status: 403
@@ -381,6 +382,11 @@ class ApplicationController < ActionController::Base
     end
   end
 
+
+  def secure_session
+    SecureSession.new(session["secure_session_id"] ||= SecureRandom.hex)
+  end
+
   private
 
     def locale_from_header
@@ -501,7 +507,7 @@ class ApplicationController < ActionController::Base
 
     def check_xhr
       # bypass xhr check on PUT / POST / DELETE provided api key is there, otherwise calling api is annoying
-      return if !request.get? && is_api?
+      return if !request.get? && (is_api? || is_user_api?)
       raise RenderEmpty.new unless ((request.format && request.format.json?) || request.xhr?)
     end
 
@@ -557,6 +563,7 @@ class ApplicationController < ActionController::Base
       @slug.tr!('-',' ')
       render_to_string status: status, layout: layout, formats: [:html], template: '/exceptions/not_found'
     end
+
 
   protected
 

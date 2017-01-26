@@ -10,6 +10,9 @@
     <div class='main-link'>
       {{raw "topic-status" topic=topic}}
       {{topic-link topic}}
+      {{#if topic.featured_link}}
+        {{topic-featured-link topic}}
+      {{/if}}
       {{#if topic.unseen}}
         <span class="badge-notification new-topic"></span>
       {{/if}}
@@ -29,15 +32,15 @@
         </div>
       {{/unless}}
 
-      {{#if context.topic.tags}}
+      {{#if topic.tags}}
         <div class='discourse-tags'>
-        {{#each context.topic.visibleListTags as |tag|}}
+        {{#each topic.visibleListTags as |tag|}}
           {{discourse-tag tag}}
         {{/each}}
         </div>
       {{/if}}
 
-      {{plugin-outlet "topic-list-tags"}}
+      {{raw-plugin-outlet name="topic-list-tags"}}
 
       <div class="pull-right">
         <div class='num activity last'>

@@ -175,7 +175,11 @@ describe Auth::DefaultCurrentUserProvider do
         "HTTP_USER_API_KEY" => api_key.key,
       }
 
-      expect(provider("/", params).current_user.id).to eq(user.id)
+      good_provider = provider("/", params)
+
+      expect(good_provider.current_user.id).to eq(user.id)
+      expect(good_provider.is_api?).to eq(false)
+      expect(good_provider.is_user_api?).to eq(true)
 
       expect {
         provider("/", params.merge({"REQUEST_METHOD" => "POST"})).current_user

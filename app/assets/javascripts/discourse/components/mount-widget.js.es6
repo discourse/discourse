@@ -23,8 +23,6 @@ export default Ember.Component.extend({
     this._super();
     const name = this.get('widget');
 
-    (this.get('delegated') || []).forEach(m => this.set(m, m));
-
     this.register = getRegister(this);
 
     this._widgetClass = queryRegistry(name) || this.register.lookupFactory(`widget:${name}`);
@@ -32,7 +30,6 @@ export default Ember.Component.extend({
     if (!this._widgetClass) {
       console.error(`Error: Could not find widget: ${name}`);
     }
-
 
     this._childEvents = [];
     this._connected = [];

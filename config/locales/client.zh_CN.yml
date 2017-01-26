@@ -115,7 +115,7 @@ zh_CN:
         enabled: '于%{when}全站置顶'
         disabled: '于%{when}解除全站置顶'
       visible:
-        enabled: '于%{when}解除隐藏'
+        enabled: '%{when}列出'
         disabled: '于%{when}隐藏'
     topic_admin_menu: "管理主题"
     wizard_required: "是时候配置你的论坛啦！<a href='%{url}' data-auto-route='true'>点击开始设置向导</a>！"
@@ -295,20 +295,62 @@ zh_CN:
       posts_read_long: "阅读帖子"
       total_rows:
         other: "%{count} 位用户"
+    group_histories:
+      actions:
+        change_group_setting: "更改小组设置"
+        add_user_to_group: "增加用户"
+        remove_user_from_group: "移除用户"
+        make_user_group_owner: "设为所有者"
+        remove_user_as_group_owner: "撤销所有者"
     groups:
+      logs:
+        title: "日志"
+        when: "时间"
+        action: "操作"
+        acting_user: "操作用户"
+        target_user: "目标用户"
+        subject: "主题"
+        details: "详情"
+        from: "来自"
+        to: "发至"
+      edit:
+        title: '编辑群组'
+        full_name: '名字'
+        add_members: "增加组员"
+        delete_member_confirm: "从“%{group}”群组中移除用户“%{username}'？"
+      request_membership_pm:
+        title: "成员申请"
+        body: "我想申请 @%{groupName} 的成员资格。"
+      name_placeholder: "群组名，没有空格，和用户名一样的规则"
+      public: "允许用户自由加入/离开群组（需要群组是可见）"
       empty:
-        posts: "群组的成员从未发表帖子。"
+        posts: "群组成员没有发布帖子。"
         members: "群组没有成员。"
         mentions: "群组从未被提及过。"
         messages: "群组从未发送过消息。"
         topics: "群组的成员从未发表主题。"
+        logs: "没有关于群组的日志。"
       add: "添加"
+      join: "加入群组"
+      leave: "离开群组"
+      request: "请求加入群组"
+      automatic_group: 自动群组
+      closed_group: 封闭群组
+      is_group_user: "你是该群组的一个成员"
+      allow_membership_requests: "允许用户向群组拥有者发送加入小组请求（群组需要能让所有人提及）"
+      membership: "成员资格"
+      name: "名字"
+      user_count: "成员数目"
+      bio: "关于群组"
       selector_placeholder: "添加成员"
       owner: "所有者"
       visible: "群组对所有用户可见"
-      index: "群组"
+      index:
+        title: "群组"
+        empty: "没有可见的群组。"
       title:
         other: "群组"
+      activity: "活动"
       members: "成员"
       topics: "主题"
       posts: "帖子"
@@ -340,6 +382,15 @@ zh_CN:
         muted:
           title: "静音"
           description: "你不会收到组内关于新主题中的任何通知。"
+      flair_url: "头像图片"
+      flair_url_placeholder: "（可选）图片 URL 或 Font Awesome class"
+      flair_bg_color: "头像背景颜色"
+      flair_bg_color_placeholder: "（可选）十六进制色彩值"
+      flair_color: "头像颜色"
+      flair_color_placeholder: "（可选）十六进制色彩值"
+      flair_preview_icon: "预览图标"
+      flair_preview_image: "预览图片"
+      flair_note: "注意：标示将只在用户的主要群组显示"
     user_action_groups:
       '1': "送出赞"
       '2': "获得赞"
@@ -399,6 +450,11 @@ zh_CN:
       profile: "个人资料"
       mute: "防打扰"
       edit: "修改设置"
+      download_archive:
+        button_text: "下载我的帖子"
+        confirm: "你确定要下载你的帖子吗？"
+        success: "下载开始，完成后将有消息通知你。"
+        rate_limit_error: "帖子只能每天下载一次，请明天再重试。"
       new_private_message: "发新私信"
       private_message: "私信"
       private_messages: "私信"
@@ -659,11 +715,9 @@ zh_CN:
         link_generated: "邀请链接生成成功！"
         valid_for: "邀请链接只对这个邮件地址有效：%{email}"
         bulk_invite:
-          none: "你从未邀请过他人。你可以发送单个邀请，或者<a href='https://meta.discourse.org/t/send-bulk-invites/16468'>上传批量邀请文件</a>一次邀请多人。"
+          none: "你还没有邀请过任何人。你可以邀请一个人，或者<a href='https://meta.discourse.org/t/send-bulk-invites/16468'>上传 CSV 文件</a>邀请一批人。"
           text: "通过文件批量邀请"
-          uploading: "上传中..."
           success: "文件上传成功，当操作完成时将通过消息通知你。"
-          error: "在上传 '{{filename}}' 时出现错误：{{message}}"
       password:
         title: "密码"
         too_short: "密码过短"
@@ -795,7 +849,7 @@ zh_CN:
       disable: "显示已删除的帖子"
     private_message_info:
       title: "私信"
-      invite: "邀请其他..."
+      invite: "邀请其他人..."
       remove_allowed_user: "确定将 {{name}} 从本条消息中移除？"
       remove_allowed_group: "确定将 {{name}} 从本条消息中移除？"
     email: '邮箱'
@@ -887,7 +941,7 @@ zh_CN:
       unlist: "隐藏"
       add_warning: "正式警告"
       toggle_whisper: "折叠或展开密语"
-      toggle_unlisted: "解除隐藏"
+      toggle_unlisted: "未列表切换"
       posting_not_on_topic: "你想回复哪一个主题？"
       saving_draft_tip: "保存中..."
       saved_draft_tip: "已保存"
@@ -918,8 +972,10 @@ zh_CN:
       title: "或 Ctrl + 回车"
       users_placeholder: "添加用户"
       title_placeholder: "一句话告诉讨论什么..."
+      title_or_link_placeholder: "键入标题，或粘贴一个链接在这里"
       edit_reason_placeholder: "编辑理由"
       show_edit_reason: "添加理由"
+      topic_featured_link_placeholder: "在标题里输入链接"
       reply_placeholder: "在此键入。使用Markdown，BBCode，或HTML格式。可拖拽或粘贴图片。"
       view_new_post: "浏览新帖。"
       saving: "保存中"
@@ -1070,16 +1126,16 @@ zh_CN:
           label: 有该标签
         filters:
           label: 只返回主题/帖子符合...
-          likes: 我赞了
-          posted: 我曾发表过恢复
+          likes: 我给了赞的
+          posted: 我参与发帖
           watching: 我正在监看
           tracking: 我正在追踪
-          private: 在我的消息中
+          private: 在我的私信中
           bookmarks: 我已经收藏了
           first: 是第一帖
           pinned: 是置顶的
           unpinned: 不是置顶的
-          wiki: 是协同编辑的
+          wiki: 公共编辑
         statuses:
           label: 当主题
           open: 是开放的
@@ -1221,7 +1277,8 @@ zh_CN:
         go_bottom: "底部"
         go: "前往"
         jump_bottom: "跳至最后一个帖子"
-        jump_prompt: "跳至帖子"
+        jump_prompt: "跳到..."
+        jump_prompt_of: "%{count} 帖子"
         jump_prompt_long: "你想跳转至哪一贴？"
         jump_bottom_with_number: "跳至第 %{post_number} 帖"
         total: 全部帖子
@@ -1440,7 +1497,7 @@ zh_CN:
         file_too_large: "文件过大（最大 {{max_size_kb}}KB）。为什么不就大文件上传至云存储服务后再分享链接呢？"
         too_many_uploads: "抱歉，一次只能上传一张图片。"
         too_many_dragged_and_dropped_files: "抱歉，一次只能上传 10 个文件。"
-        upload_not_authorized: "抱歉，你不能上传此类型文件（可上传的文件类型有：{{authorized_extensions}}）。"
+        upload_not_authorized: "抱歉，你没有上传文件的权限 (验证扩展：{{authorized_extensions}})。"
         image_upload_not_allowed_for_new_user: "抱歉，新用户无法上传图片。"
         attachment_upload_not_allowed_for_new_user: "抱歉，新用户无法上传附件。"
         attachment_download_requires_login: "抱歉，你需要登录后才能下载附件。"
@@ -1586,6 +1643,7 @@ zh_CN:
       tags_allowed_tag_groups: "仅在该分类内可以使用的标签组"
       tags_placeholder: "（可选）允许使用的标签列表"
       tag_groups_placeholder: "（可选）允许使用的标签组列表"
+      topic_featured_link_allowed: "运行在该分类中发布特色链接"
       delete: '删除分类'
       create: '新分类'
       create_long: '创建新的分类'
@@ -1620,6 +1678,7 @@ zh_CN:
       email_in_disabled: "站点设置中已经禁用通过邮件发表新主题。欲启用通过邮件发表新主题，"
       email_in_disabled_click: '启用“邮件发表”设置。'
       suppress_from_homepage: "不在主页中显示这个分类。"
+      all_topics_wiki: "默认将新主题设为维基主题"
       sort_order: "默认排序："
       allow_badges_label: "允许在这个分类中授予徽章"
       edit_permissions: "编辑权限"
@@ -1736,7 +1795,6 @@ zh_CN:
     views_lowercase:
       other: "浏览"
     replies: "回复"
-    views_long: "本主题已经被浏览过 {{number}} 次"
     activity: "活动"
     likes: "赞"
     likes_lowercase:
@@ -2029,8 +2087,6 @@ zh_CN:
         backups: "备份"
         traffic_short: "流量"
         traffic: "应用 web 请求"
-        page_views: "API 请求"
-        page_views_short: "API 请求"
         show_traffic_report: "显示详细的流量报告"
         reports:
           today: "今天"
@@ -2115,15 +2171,12 @@ zh_CN:
         refresh: "刷新"
         new: "新群组"
         selector_placeholder: "输入用户名"
-        name_placeholder: "群组名，不能含有空格，与用户名规则一致"
         about: "在这里编辑群组的名字和成员"
         group_members: "群组成员"
         delete: "删除"
         delete_confirm: "删除这个群组吗？"
         delete_failed: "无法删除群组。如果该群组是自动生成的，则不可删除。"
-        delete_member_confirm: "从群组“%{group}”中移除“%{username}”？"
         delete_owner_confirm: "移除“%{username}”的权限？"
-        name: "名字"
         add: "添加"
         add_members: "添加成员"
         custom: "定制"
@@ -2140,10 +2193,6 @@ zh_CN:
         add_owners: 添加所有者
         incoming_email: "自定义进站电子邮件地址"
         incoming_email_placeholder: "输入邮箱地址"
-        flair_url_placeholder: "（可选）图片 URL 或 Font Awesome class"
-        flair_bg_color_placeholder: "（可选）十六进制色彩值"
-        flair_color_placeholder: "（可选）十六进制色彩值"
-        flair_preview: "预览"
       api:
         generate_master: "生成主 API 密钥"
         none: "当前没有可用的 API 密钥。"
@@ -2175,7 +2224,6 @@ zh_CN:
         warn_local_payload_url: "你好像将 webhook 指向了一个本地地址。把相关事件发送到本地可能产生副作用或未预期的行为。继续吗？"
         secret_invalid: "密钥不能包含空白字符。"
         secret_too_short: "密钥必须至少有 12 个字符。"
-        secret_placeholder: "可选字符串，用于生成签名"
         event_type_missing: "你必须设置一个事件类型。"
         content_type: "内容格式"
         secret: "密钥"
@@ -2198,7 +2246,7 @@ zh_CN:
           details: "当有新回复、编辑、帖子被删除或者恢复时。"
         user_event:
           name: "用户事件"
-          details: "当用户被创建或者通过时。"
+          details: "当用户被创建、审核通过或更新时。"
         delivery_status:
           title: "分发状态"
           inactive: "不活跃"
@@ -2421,6 +2469,7 @@ zh_CN:
         html: "html"
         text: "text"
         last_seen_user: "用户最后登录时间:"
+        no_result: "没有找到摘要信息。"
         reply_key: "回复关键字"
         skipped_reason: "跳过理由"
         incoming_emails:
@@ -2808,6 +2857,7 @@ zh_CN:
           user_preferences: "用户设置"
           tags: "标签"
           search: "搜索"
+          groups: "群组"
       badges:
         title: 徽章
         new_badge: 新徽章

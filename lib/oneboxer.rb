@@ -16,13 +16,13 @@ module Oneboxer
 
   def self.preview(url, options=nil)
     options ||= {}
-    Oneboxer.invalidate(url) if options[:invalidate_oneboxes]
+    invalidate(url) if options[:invalidate_oneboxes]
     onebox_raw(url)[:preview]
   end
 
   def self.onebox(url, options=nil)
     options ||= {}
-    Oneboxer.invalidate(url) if options[:invalidate_oneboxes]
+    invalidate(url) if options[:invalidate_oneboxes]
     onebox_raw(url)[:onebox]
   end
 
@@ -44,10 +44,6 @@ module Oneboxer
     invalidate(url)
     Rails.logger.warn("invalid cached preview for #{url} #{e}")
     ""
-  end
-
-  def self.oneboxer_exists_for_url?(url)
-    Onebox.has_matcher?(url)
   end
 
   def self.invalidate(url)
@@ -88,7 +84,7 @@ module Oneboxer
     doc = Nokogiri::HTML::fragment(doc) if doc.is_a?(String)
     changed = false
 
-    Oneboxer.each_onebox_link(doc) do |url, element|
+    each_onebox_link(doc) do |url, element|
       if args && args[:topic_id]
         url = append_source_topic_id(url, args[:topic_id])
       end
@@ -112,7 +108,27 @@ module Oneboxer
     Result.new(doc, changed)
   end
 
+  def self.is_previewing?(user_id)
+    $redis.get(preview_key(user_id)) == "1"
+  end
+
+  def self.preview_onebox!(user_id)
+    $redis.setex(preview_key(user_id), 1.minute, "1")
+  end
+
+  def self.onebox_previewed!(user_id)
+    $redis.del(preview_key(user_id))
+  end
+
+  def self.engine(url)
+    Onebox::Matcher.new(url).oneboxed
+  end
+
   private
+
+    def self.preview_key(user_id)
+      "onebox:preview:#{user_id}"
+    end
 
     def self.blank_onebox
       { preview: "", onebox: "" }

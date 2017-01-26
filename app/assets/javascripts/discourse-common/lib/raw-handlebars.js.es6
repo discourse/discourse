@@ -18,6 +18,10 @@ RawHandlebars.helpers['get'] = function(context, options) {
   var firstContext =  options.contexts[0];
   var val = firstContext[context];
 
+  if (context.indexOf('controller') === 0) {
+    context = context.replace(/^controller\./, '');
+  }
+
   if (val && val.isDescriptor) { return Em.get(firstContext, context); }
   val = val === undefined ? Em.get(firstContext, context): val;
   return val;

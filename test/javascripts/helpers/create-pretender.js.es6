@@ -113,7 +113,7 @@ export default function() {
       return response({});
     });
 
-    this.put('/users/eviltrout', () => response({ user: {} }));
+    this.put('/users/eviltrout.json', () => response({ user: {} }));
 
     this.get("/t/280.json", () => response(fixturesByUrl['/t/280/1.json']));
     this.get("/t/28830.json", () => response(fixturesByUrl['/t/28830/1.json']));
@@ -240,6 +240,10 @@ export default function() {
                                            title: data.title,
                                            fancy_title: data.title,
                                            slug: request.params.slug } });
+    });
+
+    this.get("groups", () => {
+      return response(200, fixturesByUrl['/groups.json']);
     });
 
     this.get("/groups/discourse/topics.json", () => {

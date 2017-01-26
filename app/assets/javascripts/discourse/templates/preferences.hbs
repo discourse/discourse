@@ -248,7 +248,7 @@
       {{preference-checkbox labelKey="user.enable_quoting" checked=model.user_option.enable_quoting}}
       {{preference-checkbox labelKey="user.dynamic_favicon" checked=model.user_option.dynamic_favicon}}
       {{preference-checkbox labelKey="user.disable_jump_reply" checked=model.user_option.disable_jump_reply}}
-      {{plugin-outlet "user-custom-preferences"}}
+      {{plugin-outlet name="user-custom-preferences" args=(hash model=model)}}
     </div>
 
     <div class="control-group category">
@@ -350,7 +350,7 @@
     </div>
     {{/if}}
 
-    {{plugin-outlet "user-custom-controls"}}
+    {{plugin-outlet name="user-custom-controls" args=(hash model=model)}}
 
     <div class="control-group save-button">
       <div class="controls">

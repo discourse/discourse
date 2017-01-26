@@ -10,7 +10,7 @@ describe Search do
   end
 
   before do
-    ActiveRecord::Base.observers.enable :search_observer
+    SearchIndexer.enable
   end
 
   context 'post indexing observer' do

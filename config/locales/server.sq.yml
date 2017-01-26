@@ -62,8 +62,6 @@ sq:
       load_from_remote: "Postimi nuk mundi të ngarkohet. Riprovoheni!"
     site_settings:
       default_categories_already_selected: "Nuk mund të zgjidhni një kategori të përdorur në një tjetër listë."
-  bulk_invite:
-    file_should_be_csv: "Skedari duhet të jete i formatit csv ose txt"
   not_logged_in: "Ju duhet të identifikoheni për këtë veprim."
   invalid_access: "Ju nuk jeni të drejta për të parë burimin e kërkuar."
   reading_time: "Koha e leximit"
@@ -657,7 +655,6 @@ sq:
     redirect_users_to_top_page: "Automatically redirect new and long absent users to the top page."
     show_email_on_profile: "Show a user's email on their profile (only visible to themselves and staff)"
     email_token_valid_hours: "Forgot password / activate account tokens are valid for (n) hours."
-    email_token_grace_period_hours: "Forgot password / activate account tokens are still valid for a grace period of (n) hours after being redeemed."
     enable_badges: "Aktivizo sistemin e targetave"
     allow_index_in_robots_txt: "Specify in robots.txt that this site is allowed to be indexed by web search engines."
     email_domains_blacklist: "A pipe-delimited list of email domains that users are not allowed to register accounts with. Example: mailinator.com|trashmail.net"
@@ -863,7 +860,6 @@ sq:
     embed_whitelist_selector: "CSS selector for elements that are allowed in embeds."
     embed_blacklist_selector: "CSS selector for elements that are removed from embeds."
     notify_about_flags_after: "If there are flags that haven't been handled after this many hours, send an email to the contact_email. Set to 0 to disable."
-    enable_cdn_js_debugging: "Allow /logs to display proper errors by adding crossorigin permissions on all js includes."
     show_create_topics_notice: "If the site has fewer than 5 public topics, show a notice asking admins to create some topics."
     delete_drafts_older_than_n_days: Delete drafts older than (n) days.
     prevent_anons_from_downloading_files: "Prevent anonymous users from downloading attachments. WARNING: this will prevent any non-image site assets posted as attachments from working."
@@ -1025,32 +1021,8 @@ sq:
 
   invite_forum_mailer:
     subject_template: "%{invitee_name} ju ka ftuar të bëheni pjesë e %{site_domain_name}"
-    text_body_template: |
-      %{invitee_name} ju ka ftuar të bëheni pjesë e
-      > **%{site_title}**
-      >
-      > %{site_description}
-
-      Nëse jeni i interesuar, klikoni lidhjen e mëposhtme:
-      %{invite_link}
-
-      Kjo ftesë vjen nga një përdorues i besuar, si rrjedhojë një llogari do të krijohet automatikisht për ju.
   custom_invite_forum_mailer:
     subject_template: "%{invitee_name} ju ka ftuar të bëheni pjesë e %{site_domain_name}"
-    text_body_template: |
-      %{invitee_name} ju ka ftuar të bëheni pjesë e
-      > **%{site_title}**
-      >
-      > %{site_description}
-
-      Mesazhi nga %{invitee_name}:
-
-      %{user_custom_message}
-
-      Nëse jeni i interesuar, klikoni lidhjen e mëposhtme:
-      %{invite_link}
-
-      Kjo ftesë vjen nga një përdorues i besuar, si rrjedhojë një llogari do të krijohet automatikisht për ju.
   invite_password_instructions:
     subject_template: "Vendos fjalëkalimin për llogarinë tek %{site_name}"
     text_body_template: |+
@@ -1114,26 +1086,6 @@ sq:
         (Nëse ju duhet të komunikoni me [anëtarët e stafit](%{base_url}/about) si një anëtar i ri, thjesht përgjigjuni këtij mesazhi.)
     welcome_invite:
       subject_template: "Mirë se vini tek %{site_name}!"
-      text_body_template: |
-        Thanks for accepting your invitation to %{site_name} -- welcome!
-
-        We've created a new account **%{username}** for you, and you are logged in. You can change your name by visiting [your user profile][prefs].
-
-        To log in again later:
-
-        1. Always **use the same email address from your original invitation** when logging in. Otherwise we won't be able to tell it's you!
-
-        2. Create a unique password for [your user profile][prefs], and use it to log in.
-
-        %{new_user_tips}
-
-        We believe in [civilized community behavior](%{base_url}/guidelines) at all times.
-
-        Enjoy your stay!
-
-        (If you need to communicate with [staff members](%{base_url}/about) as a new user, just reply to this message.)
-
-        [prefs]: %{user_preferences_url}
     backup_succeeded:
       subject_template: "Backup completed successfully"
     backup_failed:

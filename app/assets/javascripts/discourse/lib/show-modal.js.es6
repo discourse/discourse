@@ -11,26 +11,22 @@ export default function(name, opts) {
 
   const controllerName = opts.admin ? `modals/${name}` : name;
 
-  const viewClass = container.lookupFactory('view:' + name);
   const controller = container.lookup('controller:' + controllerName);
-  if (viewClass) {
-    route.render(name, { into: 'modal', outlet: 'modalBody' });
-  } else {
-    const templateName = opts.templateName || Ember.String.dasherize(name);
+  const templateName = opts.templateName || Ember.String.dasherize(name);
 
-    const renderArgs = { into: 'modal', outlet: 'modalBody'};
-    if (controller) { renderArgs.controller = controllerName; }
+  const renderArgs = { into: 'modal', outlet: 'modalBody'};
+  if (controller) { renderArgs.controller = controllerName; }
 
-    if (opts.addModalBodyView) {
-      renderArgs.view = 'modal-body';
-    }
+  if (opts.addModalBodyView) {
+    renderArgs.view = 'modal-body';
+  }
 
-    const modalName = `modal/${templateName}`;
-    const fullName = opts.admin ? `admin/templates/${modalName}` : modalName;
-    route.render(fullName, renderArgs);
-    if (opts.title) {
-      modalController.set('title', I18n.t(opts.title));
-    }
+
+  const modalName = `modal/${templateName}`;
+  const fullName = opts.admin ? `admin/templates/${modalName}` : modalName;
+  route.render(fullName, renderArgs);
+  if (opts.title) {
+    modalController.set('title', I18n.t(opts.title));
   }
 
   if (controller) {

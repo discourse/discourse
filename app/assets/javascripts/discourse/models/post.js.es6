@@ -70,7 +70,6 @@ const Post = RestModel.extend({
 
     return ajax(`/posts/${this.get('id')}/${field}`, { type: 'PUT', data }).then(() => {
       this.set(field, value);
-      this.incrementProperty("version");
     }).catch(popupAjaxError);
   },
 

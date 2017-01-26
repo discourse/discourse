@@ -47,7 +47,7 @@ body, table, td, th, h1, h2, h3 {font-family: Helvetica, Arial, sans-serif !impo
 <table class="body" style="width:100%;background:#f3f3f3;padding:0;border-spacing:0;font-family:Helvetica,Arial,sans-serif;font-size:14px;font-weight:200;line-height:1.3;vertical-align:top;">
   <tr>
     <td class="side-spacer" style="width:5%;vertical-align:top;padding:0;">
-      <div style="background-color:#2F70AC;">
+      <div class="with-accent-colors">
         <table class="spacer" style="border-spacing:0;padding:0;width:100%">
           <tbody>
             <tr>
@@ -58,13 +58,13 @@ body, table, td, th, h1, h2, h3 {font-family: Helvetica, Arial, sans-serif !impo
       </div>
     </td>
     <td style="vertical-align:top;padding:0;font-family:Helvetica,Arial,sans-serif;">
-      <table align="center" style="border-spacing:0;background:#fefefe;background-color:#2F70AC;margin:0;padding:0;text-align:inherit;vertical-align:top;width:100%">
+      <table align="center" class="with-accent-colors" style="border-spacing:0;margin:0;padding:0;text-align:inherit;vertical-align:top;width:100%">
         <tbody>
           <tr>
             <td style="border-collapse:collapse!important;color:#0a0a0a;line-height:1.3;margin:0;padding:0;text-align:left;vertical-align:top;word-wrap:normal">
 
 <br/>
-<center style="color:#fff;font-size:22px;font-weight:400;"><%=t 'user_notifications.digest.since_last_visit' %></center>
+<center class="with-accent-colors" style="font-size:22px;font-weight:400;"><%=t 'user_notifications.digest.since_last_visit' %></center>
 
 
 
@@ -72,22 +72,22 @@ body, table, td, th, h1, h2, h3 {font-family: Helvetica, Arial, sans-serif !impo
 <tbody>
   <tr>
     <%- @counts.each do |count| -%>
-      <td style="text-align:center;color:#fff;font-size:36px;font-weight:400;">
-        <a style="color:#fff;" href="<%= count[:href] -%>"><strong><%= count[:value] -%></strong></a>
+      <td style="text-align:center;font-size:36px;font-weight:400;">
+        <a class="with-accent-colors" href="<%= count[:href] -%>"><strong><%= count[:value] -%></strong></a>
       </td>
     <%- end -%>
   </tr>
   <tr>
     <%- @counts.each do |count| -%>
-      <td style="color:#fff;font-size:14px;font-weight:400;text-align:center;">
-        <a style="color:#fff;" href="<%= count[:href] -%>"><strong><%=t count[:label_key] -%></strong></a>
+      <td style="font-size:14px;font-weight:400;text-align:center;">
+        <a class="with-accent-colors" href="<%= count[:href] -%>"><strong><%=t count[:label_key] -%></strong></a>
       </td>
     <%- end -%>
   </tr>
 </tbody>
 </table>
 
-<center style="color:#fff;font-size:22px;font-weight:400;margin-bottom: 8px;"><%=t 'user_notifications.digest.popular_topics' %></center>
+<center class="with-accent-colors" style="font-size:22px;font-weight:400;margin-bottom: 8px;"><%=t 'user_notifications.digest.popular_topics' %></center>
 
 
             </td>
@@ -121,10 +121,10 @@ body, table, td, th, h1, h2, h3 {font-family: Helvetica, Arial, sans-serif !impo
 <table style="vertical-align:top;width:100%">
   <tbody>
     <tr>
-      <td style="padding: 0 8px 0 16px; text-align:left; width:100%;">
+      <td style="padding: 0 8px 8px 16px; text-align:left; width:100%;">
         <h2 style="font-size:18px;font-weight:400;line-height:1.3;margin:0;padding:0;word-wrap:normal">
-          <a href="<%= Discourse.base_url_no_prefix + t.relative_url %>" style="color:#2F70AC;font-weight:400;line-height:1.3;margin:0;padding:0;text-decoration:none">
-            <strong><%= t.title -%></strong>
+          <a href="<%= Discourse.base_url_no_prefix + t.relative_url %>" style="font-weight:400;line-height:1.3;margin:0;padding:0;text-decoration:none">
+            <strong><%= t.title.truncate(60, separator: /\s/) -%></strong>
           </a>
         </h2>
         <%- if SiteSetting.show_topic_featured_link_in_digest && t.featured_link %>
@@ -138,18 +138,18 @@ body, table, td, th, h1, h2, h3 {font-family: Helvetica, Arial, sans-serif !impo
 <table style="padding:0;position:relative;text-align:left;vertical-align:top;width:100%">
   <tbody>
     <tr>
-      <td style="color:#0a0a0a;line-height:1.3;margin:0 auto;padding:0 8px 0 16px;width:60px;">
+      <td style="color:#0a0a0a;line-height:1.3;margin:0 auto;padding:0 0 0 16px;width:50px;">
         <img src="<%= t.user.small_avatar_url -%>" style="border-radius:50%;clear:both;display:block;float:none;height:50px;width:50px;margin:0;max-width:100%;outline:0;text-align:center;text-decoration:none;" align="center">
       </td>
-      <td style="color:#0a0a0a;padding:0 16px 0 8px;text-align:left;">
+      <td style="color:#0a0a0a;padding:0 16px 0 8px;text-align:left;vertical-align:top;">
         <% if t.user %>
-          <h6 style="color:inherit;font-size:16px;font-weight:400;line-height:1.3;margin:0;padding:0;word-wrap:normal;"><%= t.user.username -%></h6>
           <% if SiteSetting.enable_names? && t.user.name.present? && t.user.name.downcase != t.user.username.downcase %>
-            <p style="color:#8f8f8f;line-height:1.3;margin:0 0 16px 0;padding:0;"><%= t.user.name -%></p>
+            <h6 style="color:inherit;line-height:1.3;margin:0;padding:0;font-weight: normal;font-size:16px;"><%= t.user.name -%></h6>
           <% end %>
+          <p style="color:inherit;font-size:14px;font-weight:400;line-height:1.3;margin:0 0 8px 0;padding:0;word-wrap:normal;"><%= t.user.username -%></p>
         <% end %>
       </td>
-      <%- if show_image_with_url(t.image_url) -%>
+      <%- if show_image_with_url(t.image_url) && t.featured_link.nil? && !(@excerpts[t.first_post&.id]||"").include?(t.image_url) -%>
         <td style="margin:0;padding:0 16px 0 8px;text-align:right;" align="right">
           <img src="<%= url_for_email(t.image_url) -%>" height="64" style="margin:auto;max-height:64px;max-width:100%;outline:0;text-align:right;text-decoration:none;">
         </td>
@@ -162,8 +162,8 @@ body, table, td, th, h1, h2, h3 {font-family: Helvetica, Arial, sans-serif !impo
 <table style="border-bottom:1px solid #f3f3f3;padding:0;text-align:left;vertical-align:top;width:100%">
   <tbody>
     <tr>
-      <td style="color:#0a0a0a;font-size:14px;padding:0 16px 0 16px;text-align:left;width:100%;font-weight:normal;">
-        <%= email_excerpt(t.first_post.cooked) %>
+      <td class="post-excerpt" style="color:#0a0a0a;font-size:14px;padding:0 16px 0 16px;text-align:left;width:100%;font-weight:normal;">
+        <%= @excerpts[t.first_post.id] %>
       </td>
     </tr>
   </tbody>
@@ -189,7 +189,7 @@ body, table, td, th, h1, h2, h3 {font-family: Helvetica, Arial, sans-serif !impo
         <% end %>
       </td>
       <td style="line-height:1.3;padding:0 16px 0 8px;text-align:right;white-space:nowrap;vertical-align:top;">
-        <a href="<%= Discourse.base_url_no_prefix + t.relative_url %>" style="width:100%;background-color:#2199e8;color:#fff;text-decoration:none;padding:8px 16px;white-space:nowrap;">
+        <a href="<%= Discourse.base_url_no_prefix + t.relative_url %>" class="with-accent-colors" style="width:100%;text-decoration:none;padding:8px 16px;white-space:nowrap;">
           <%=t 'user_notifications.digest.join_the_discussion' %>
         </a>
       </td>
@@ -215,8 +215,8 @@ body, table, td, th, h1, h2, h3 {font-family: Helvetica, Arial, sans-serif !impo
       </table>
     </td>
     <td class="side-spacer" style="width:5%;vertical-align:top;padding:0;">
-      <!-- Blue background that goes down part-way behind content -->
-      <div style="background-color:#2F70AC;">
+      <!-- Background that goes down part-way behind content -->
+      <div class="with-accent-colors">
         <table class="spacer" style="border-spacing:0;padding:0;width:100%">
           <tbody>
             <tr>
@@ -231,15 +231,9 @@ body, table, td, th, h1, h2, h3 {font-family: Helvetica, Arial, sans-serif !impo
 
 <% if @popular_posts.present? %>
 
-<table style="background-color: #f3f3f3; width: 100%;">
-  <tr>
-    <td>
-      <h1 style="color:#0a0a0a;font-size:22px;line-height:1.3;text-align:center;font-family:Helvetica,Arial,sans-serif;">
-        <%=t 'user_notifications.digest.popular_posts' %>
-      </h1>
-    </td>
-  </tr>
-</table>
+<center style="color:#0a0a0a;background:#f3f3f3;font-size:22px;font-weight:400;padding: 20px 0;font-family:Helvetica,Arial,sans-serif;">
+  <%=t 'user_notifications.digest.popular_posts' %>
+</center>
 
 <table class="body" style="width:100%;background:#f3f3f3;border-spacing:0;border-collapse:collapse!important;font-family:Helvetica,Arial,sans-serif;font-size:14px;font-weight:200;line-height:1.3;padding:0;text-align:left;vertical-align:top;">
   <tr>
@@ -252,7 +246,7 @@ body, table, td, th, h1, h2, h3 {font-family: Helvetica, Arial, sans-serif !impo
 <table style="width:100%;background:#fefefe;border-spacing:0;padding:0;text-align:left;vertical-align:top;">
   <tbody>
     <tr>
-      <td style="color:#0a0a0a;font-size:14px;font-weight:200;padding:16px;text-align:left;width:100%;">
+      <td class="post-excerpt" style="color:#0a0a0a;font-size:14px;font-weight:200;padding:16px;text-align:left;width:100%;">
         <%= email_excerpt(post.cooked) %>
       </td>
     </tr>
@@ -272,23 +266,23 @@ body, table, td, th, h1, h2, h3 {font-family: Helvetica, Arial, sans-serif !impo
 <table style="background-color:#f3f3f3;padding:0;position:relative;text-align:left;vertical-align:top;width:100%">
   <tbody>
     <tr>
-      <td style="padding:0 8px 8px 8px;text-align:left;width:60px;vertical-align:top;">
+      <td style="padding:0 8px 8px 8px;text-align:left;width:50px;vertical-align:top;">
         <img src="<%= post.user.small_avatar_url -%>" style="border-radius:50%;clear:both;display:block;height:50px;width:50px;outline:0;">
       </td>
       <td style="color:#0a0a0a;line-height:1.3;padding:0 8px 8px 8px;vertical-align:top;">
         <% if post.user %>
-          <h6 style="color:inherit;font-size:14px;font-weight:400;margin:0;padding:0;text-align:left;word-wrap:normal;"><%= post.user.username -%></h6>
           <% if SiteSetting.enable_names? && post.user.name && post.user.name.downcase != post.user.username.downcase %>
-            <p style="color:#8f8f8f;font-size:14px;line-height:1.3;margin:0;padding:0;text-align:left;"><%= post.user.name -%></p>
+            <h6 style="color:inherit;line-height:1.3;margin:0;padding:0;font-weight: normal;font-size:16px;"><%= post.user.name -%></h6>
           <% end %>
+          <p style="color:inherit;font-size:14px;font-weight:400;line-height:1.3;margin:0 0 8px 0;padding:0;word-wrap:normal;"><%= post.user.username -%></p>
         <% end %>
       </td>
       <td style="color:#0a0a0a;line-height:1.3;padding:0 8px 8px 8px;text-align:right;">
         <p style="color:#8f8f8f;line-height:1.3;margin:0 0 10px 0;padding:0;text-align:right;">
           <%=t 'user_notifications.digest.from_topic_label' %>
-          <a href="<%= post.full_url -%>" style="color:#2199e8;font-weight:400;line-height:1.3;margin:0;padding:0;text-align:left;text-decoration:none"><%= post.topic.title -%></a>
+          <a href="<%= post.full_url -%>" style="font-weight:400;line-height:1.3;margin:0;padding:0;text-align:left;text-decoration:none"><%= post.topic.title.truncate(60, separator: /\s/) -%></a>
         </p>
-        <a href="<%= post.full_url -%>" style="width:100%;background-color:#2199e8;color:#fff;text-decoration:none;padding:8px 16px;white-space: nowrap;">
+        <a href="<%= post.full_url -%>" class="with-accent-colors" style="width:100%;text-decoration:none;padding:8px 16px;white-space: nowrap;">
           <%=t 'user_notifications.digest.join_the_discussion' %>
         </a>
       </td>
@@ -331,13 +325,8 @@ body, table, td, th, h1, h2, h3 {font-family: Helvetica, Arial, sans-serif !impo
 <!--   Begin new topic  -->
     <tr style="vertical-align:top;">
       <td style="padding:8px;text-align:left;">
-        <p style="background:#2F70AC;border-radius:50%;color:#fff;height:30px;line-height:30px;margin:0 0 10px 0;padding:0;text-align:center;width:30px;">
-          <%= t.user_data ? (t.highest_post_number - (t.user_data.last_read_post_number || 0)) : t.highest_post_number %>
-        </p>
-      </td>
-      <td style="padding:8px;text-align:left;">
-        <a href="<%= Discourse.base_url_no_prefix + t.relative_url %>" style="color:#2F70AC;font-weight:400;line-height:1.3;margin:0;padding:0;text-decoration:none">
-          <strong><%= t.title -%></strong>
+        <a href="<%= Discourse.base_url_no_prefix + t.relative_url %>" style="font-weight:400;line-height:1.3;margin:0;padding:0;text-decoration:none">
+          <strong><%= t.title.truncate(60, separator: /\s/) -%></strong>
         </a>
         <%- if SiteSetting.show_topic_featured_link_in_digest && t.featured_link %>
           <a class='topic-featured-link' href='<%= t.featured_link %>'><%= raw topic_featured_link_domain(t.featured_link) %></a>

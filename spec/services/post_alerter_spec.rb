@@ -63,8 +63,7 @@ describe PostAlerter do
 
   context 'edits' do
     it 'notifies correctly on edits' do
-
-      ActiveRecord::Base.observers.enable :all
+      PostActionNotifier.enable
 
       post = Fabricate(:post, raw: 'I love waffles')
 
@@ -89,7 +88,7 @@ describe PostAlerter do
   context 'likes' do
 
     it 'notifies on likes after an undo' do
-      ActiveRecord::Base.observers.enable :all
+      PostActionNotifier.enable
 
       post = Fabricate(:post, raw: 'I love waffles')
 
@@ -101,7 +100,7 @@ describe PostAlerter do
     end
 
     it 'notifies on does not notify when never is selected' do
-      ActiveRecord::Base.observers.enable :all
+      PostActionNotifier.enable
 
       post = Fabricate(:post, raw: 'I love waffles')
 
@@ -110,12 +109,11 @@ describe PostAlerter do
 
       PostAction.act(evil_trout, post, PostActionType.types[:like])
 
-
       expect(Notification.where(post_number: 1, topic_id: post.topic_id).count).to eq(0)
     end
 
     it 'notifies on likes correctly' do
-      ActiveRecord::Base.observers.enable :all
+      PostActionNotifier.enable
 
       post = Fabricate(:post, raw: 'I love waffles')
 

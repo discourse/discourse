@@ -81,7 +81,8 @@ const Report = Discourse.Model.extend({
     switch (this.get("type")) {
       case "flags": return "flag";
       case "likes": return "heart";
-      default:      return null;
+      case "bookmarks": return "bookmark";
+      default: return null;
     }
   }.property("type"),
 

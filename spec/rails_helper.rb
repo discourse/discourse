@@ -43,6 +43,7 @@ Spork.prefork do
     config.include Helpers
     config.include MessageBus
     config.include RSpecHtmlMatchers
+    config.include IntegrationHelpers, type: :request
     config.mock_framework = :mocha
     config.order = 'random'
     config.infer_spec_type_from_file_location!
@@ -103,9 +104,11 @@ Spork.prefork do
       #
       # $redis = DiscourseMockRedis.new
       #
-      # disable all observers, enable as needed during specs
-      #
-      ActiveRecord::Base.observers.disable :all
+      PostActionNotifier.disable
+      SearchIndexer.disable
+      UserActionCreator.disable
+      NotificationEmailer.disable
+
       SiteSetting.provider.all.each do |setting|
         SiteSetting.remove_override!(setting.name)
       end

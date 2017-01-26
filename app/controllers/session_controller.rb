@@ -118,7 +118,7 @@ class SessionController < ApplicationController
         if return_path !~ /^\/[^\/]/
           begin
             uri = URI(return_path)
-            return_path = path("/") unless uri.host == Discourse.current_hostname
+            return_path = path("/") unless SiteSetting.sso_allows_all_return_paths || uri.host == Discourse.current_hostname
           rescue
             return_path = path("/")
           end
@@ -217,6 +217,9 @@ class SessionController < ApplicationController
 
     RateLimiter.new(nil, "forgot-password-hr-#{request.remote_ip}", 6, 1.hour).performed!
     RateLimiter.new(nil, "forgot-password-min-#{request.remote_ip}", 3, 1.minute).performed!
+
+    RateLimiter.new(nil, "forgot-password-login-hour-#{params[:login].to_s[0..100]}", 12, 1.hour).performed!
+    RateLimiter.new(nil, "forgot-password-login-min-#{params[:login].to_s[0..100]}", 3, 1.minute).performed!
 
     user = User.find_by_username_or_email(params[:login])
     user_presence = user.present? && user.id != Discourse::SYSTEM_USER_ID && !user.staged

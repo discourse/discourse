@@ -102,8 +102,6 @@ da:
       max_username_length_range: "Du kan ikke sætte maksimum til mindre end minimum."
       default_categories_already_selected: "Du kan ikke vælge en kategori der er brugt i en anden liste."
       s3_upload_bucket_is_required: "Du kan ikke oploade til S3 med mindre du har angivet 's3_upload_bucket'."
-  bulk_invite:
-    file_should_be_csv: "Den uploadede fil skal være i .csv eller .txt format."
   backup:
     operation_already_running: "Der kører allerede en %{operation}. Kan ikke starte et nyt %{operation} job lige nu."
     backup_file_should_be_tar_gz: "Backup filen skal være et .tar.gz arkiv."
@@ -835,7 +833,6 @@ da:
     topics_per_period_in_top_page: "Antallet af top emner der vises når 'Vis Mere' er aktiveret."
     show_email_on_profile: "Vis en brugers email på deres profil (kun synligt for brugerne selv - samt admin)"
     email_token_valid_hours: "Glemte password / konto aktiverings muligheder er gyldige i (n) timer."
-    email_token_grace_period_hours: "Glemt password / konto aktiverings muligheder er fortsat gyldige i (n) timer efter at være blevet indløst."
     enable_badges: "Aktiver badge systemet"
     log_out_strict: "Når brugeren logger af, log da ud af alle sessioner, på alle enheder"
     new_version_emails: "Send en email til contact_email adressen når der er en ny version af Discourse tilgængelig."
@@ -1038,10 +1035,16 @@ da:
       subject_template: "[%{site_name}] [PM] %{topic_title}"
     digest:
       why: "Et kort resumé af %{site_link} siden dit sidste besøg %{last_seen_at}"
+      since_last_visit: "Siden dit sidste besøg"
+      unread_messages: "Ulæste beskeder"
+      new_posts: "Nye indlæg"
+      popular_topics: "Populære emner"
+      join_the_discussion: "Læs mere"
       subject_template: "[%{site_name}] Resumé"
       unsubscribe: "Dette resumé sendes fra %{site_link} når vi ikke har set dig i et stykke tid. For at afmelde %{unsubscribe_link}."
       click_here: "klik her"
       from: "%{site_name} resumé"
+      preheader: "Et kort resume siden de sidste besøg %{last_seen_at}"
     mailing_list:
       subject_template: "[%{site_name}] Resumé for %{date}"
     forgot_password:

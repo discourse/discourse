@@ -89,8 +89,6 @@ cs:
       max_username_length_exists: "Nemůžeš nastavit délku maximální uživatelského jména kratší než je nejdelší uživatelské jméno. "
       max_username_length_range: "Nemůžeš nastavit maximum pod minimum."
       default_categories_already_selected: "Nemůžeš vybrat kategorii používanou v jiném seznamu."
-  bulk_invite:
-    file_should_be_csv: "Nahraný soubrou by měl být ve formátu csv nebo txt."
   backup:
     operation_already_running: "Právě probíhá operace %{operation}. V tuto chvíli nelze zahájit novou operaci %{operation}."
     backup_file_should_be_tar_gz: "Záloha by měla být archiv s příponou .tar.gz."
@@ -785,6 +783,9 @@ cs:
     title: "Podmínky používání"
   privacy_topic:
     title: "Ochrana soukromí"
+  badges:
+    admired:
+      name: Obdivovaný
   admin_login:
     success: "E-mail odeslán"
     error: "Chyba!"

@@ -321,28 +321,68 @@ fi:
       total_rows:
         one: "1 käyttäjä"
         other: "%{count} käyttäjää"
+    group_histories:
+      actions:
+        change_group_setting: "Muuta ryhmän asetusta"
+        add_user_to_group: "Lisää käyttäjä"
+        remove_user_from_group: "Poista käyttäjä"
+        make_user_group_owner: "Myönnä isännyys"
+        remove_user_as_group_owner: "Peru isännyys"
     groups:
+      logs:
+        title: "Lokit"
+        when: "Milloin"
+        action: "Toiminta"
+        acting_user: "Toimiva käyttäjä"
+        target_user: "Kohdekäyttäjä"
+        subject: "Aihe"
+        details: "Yksityiskohdat"
+      edit:
+        title: 'Muuta ryhmää'
+        full_name: 'Täysimittainen nimi'
+        add_members: "Lisää jäseniä"
+        delete_member_confirm: "Poista '%{username}' ryhmästä '%{group}'?"
+      request_membership_pm:
+        title: "Jäsenhakemus"
+        body: "Haluaisin ryhmään @%{groupName}."
+      name_placeholder: "Ryhmän nimi. Ei välilyöntejä, samat säännöt kuin käyttäjänimillä"
+      public: "Salli jäsenten liittyä/poistua ryhmästä vapaasti (ryhmän tulee olla näkyvillä)"
       empty:
-        posts: "Ryhmän jäsenet eivät ole kirjoittaneet viestejä."
-        members: "Kukaan ei kuulu tähän ryhmään."
+        posts: "Ryhmän jäsenet eivät ole lähettäneet viestejä."
+        members: "Ryhmässä ei ole jäseniä."
         mentions: "Ryhmää ei ole mainittu."
-        messages: "Tällä ryhmällä ei ole yksityistä ketjua."
-        topics: "Ryhmän jäsenet eivät ole aloittaneet ketjuja."
+        messages: "Ryhmälle ei ole yksityisviestejä."
+        topics: "Ryhmän jäsenet eivät ole luoneet ketjuja."
+        logs: "Ryhmälle ei ole lokitietoja."
       add: "Lisää"
+      join: "Liity ryhmään"
+      leave: "Poistu ryhmästä"
+      request: "Hae ryhmään"
+      automatic_group: Automaattinen ryhmä
+      closed_group: Suljettu ryhmä
+      is_group_user: "Olet tämän ryhmän jäsen"
+      allow_membership_requests: "Salli käyttäjien lähettää jäsenhakemuksia ryhmien isännille (vaatii että kaikki voivat mainita ryhmän)"
+      membership: "Jäsenyys"
+      name: "Nimi"
+      user_count: "Jäsenmäärä"
+      bio: "Tietoa ryhmästä"
       selector_placeholder: "Lisää jäseniä"
       owner: "omistaja"
       visible: "Ryhmä näkyy kaikille käyttäjille"
-      index: "Ryhmät"
+      index:
+        title: "Ryhmät"
+        empty: "Näkyvillä olevia ryhmiä ei ole."
       title:
         one: "ryhmä"
         other: "ryhmät"
+      activity: "Toiminta"
       members: "Jäsenet"
       topics: "Ketjut"
       posts: "Viestit"
-      mentions: "Viittaukset"
+      mentions: "Maininnat"
       messages: "Viestit"
       alias_levels:
-        title: "Ketkä voivat lähettää viestejä tälle ryhmälle tai @viitata siihen?"
+        title: "Ketkä voivat lähettää viestejä tälle ryhmälle tai @mainita sen?"
         nobody: "Ei kukaan"
         only_admins: "Vain ylläpitäjät"
         mods_and_admins: "Vain ylläpitäjät ja valvojat"
@@ -367,6 +407,15 @@ fi:
         muted:
           title: "Vaimennetut"
           description: "Et saa ilmoituksia uusista ketjuista tässä ryhmässä."
+      flair_url: "Avatarpinssin kuva"
+      flair_url_placeholder: "(Valinnainen) kuvan URL tai Font Awesome -luokka"
+      flair_bg_color: "Avatar-pinssin taustaväri"
+      flair_bg_color_placeholder: "(Valinnainen) värin Hex-arvo"
+      flair_color: "Avatarpinssin väri"
+      flair_color_placeholder: "(Valinnainen) värin Hex-arvo"
+      flair_preview_icon: "Ikonin esikatselu"
+      flair_preview_image: "Kuvan esikatselu"
+      flair_note: "Huom. Käyttäjän ensisijainen ryhmä määrää pinssin."
     user_action_groups:
       '1': "Annetut tykkäykset"
       '2': "Saadut tykkäykset"
@@ -374,7 +423,7 @@ fi:
       '4': "Ketjut"
       '5': "Vastauksia"
       '6': "Vastaukset"
-      '7': "Viittaukset"
+      '7': "Maininnat"
       '9': "Lainaukset"
       '11': "Muokkaukset"
       '12': "Lähetetyt"
@@ -432,7 +481,7 @@ fi:
         button_text: "Lataa viestini"
         confirm: "Haluatko varmasti ladata viestisi?"
         success: "Lataus aloitettu. Saat ilmoituksen yksityisviestinä, kun prosessi on valmis."
-        rate_limit_error: "Viestit voi ladata kerran vuorokaudessa. Ole hyvä ja yritä huomenna uudelleen."
+        rate_limit_error: "Viestit voi ladata kerran vuorokaudessa. Yritä huomenna uudelleen."
       new_private_message: "Uusi viesti"
       private_message: "Viesti"
       private_messages: "Viestit"
@@ -575,7 +624,7 @@ fi:
         title: "Sähköposti"
         instructions: "Ei tule julkiseksi"
         ok: "Lähetämme sinulle sähköpostin varmistukseksi."
-        invalid: "Ole hyvä ja anna toimiva sähköpostiosoite"
+        invalid: "Sähköpostiosoite ei kelpaa."
         authenticated: "{{provider}} on todentanut sähköpostiosoitteesi"
         frequency_immediately: "Saat sähköpostia välittömästi, jollet ole jo lukenut asiaa, jota sähköpostiviesti koskee."
         frequency:
@@ -638,7 +687,7 @@ fi:
         every_two_weeks: "joka toinen viikko"
       include_tl0_in_digests: "Sisällytä uusien käyttäjien viestit sähköpostikoosteisiin"
       email_in_reply_to: "Liitä sähköpostiin lyhennelmä viestistä, johon vastataan"
-      email_direct: "Lähetä minulle sähköposti, jos joku lainaa viestiäni, vastaa viestiini, viittaa @nimeeni tai kutsuu minut viestiketjuun"
+      email_direct: "Lähetä minulle sähköposti, jos joku lainaa viestiäni, vastaa viestiini, maintsee @nimeni tai kutsuu minut viestiketjuun"
       email_private_messages: "Lähetä minulle sähköposti, kun joku lähettää minulle viestin"
       email_always: "Lähetä sähköposti-ilmoitukset, vaikka olen aktiivinen palstalla."
       other_settings: "Muut"
@@ -696,11 +745,10 @@ fi:
         link_generated: "Kutsulinkki luotiin onnistuneesti!"
         valid_for: "Kutsulinkki on käypä tälle sähköpostiosoitteelle: %{email}"
         bulk_invite:
-          none: "Et ole kutsunut vielä ketään. Voit lähettää yksittäisiä kutsuja tai kutsua useita ihmisiä kerralla <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>lähettämällä massakutsun tiedostosta</a>."
+          none: "Et ole kutsunut vielä ketään tänne. Voit lähettää yksittäisiä kutsuja tai kutsua joukon ihmisiä kerralla <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>lataamalla CSV-tiedoston</a>."
           text: "Lähetä massakutsu tiedostosta"
-          uploading: "Lähettää..."
           success: "Tiedoston lähettäminen onnistui. Saat viestin, kun prosessi on valmis."
-          error: "Tiedoston '{{filename}}' lähetyksen aikana tapahtui virhe: {{message}}"
+          error: "Pahoittelut, tiedoston tulee olla CSV-muodossa."
       password:
         title: "Salasana"
         too_short: "Salasanasi on liian lyhyt."
@@ -873,7 +921,7 @@ fi:
       email_placeholder: "sähköposti tai käyttäjätunnus"
       caps_lock_warning: "Caps Lock on päällä"
       error: "Tuntematon virhe"
-      rate_limit: "Ole hyvä ja odota hetki ennen kuin yrität kirjautua uudelleen."
+      rate_limit: "Odota hetki ennen kuin yrität kirjautua uudelleen."
       blank_username_or_password: "Kirjoita sähköpostiosoite tai käyttäjänimi ja salasana."
       reset_password: 'Uusi salasana'
       logging_in: "Kirjaudutaan..."
@@ -941,8 +989,8 @@ fi:
       similar_topics: "Tämä ketju vaikuttaa samalta kuin.."
       drafts_offline: "offline luonnokset"
       group_mentioned:
-        one: "Jos viittaat ryhmään {{group}},  <a href='{{group_link}}'>1 käyttäjä</a> saa ilmoituksen – oletko varma?"
-        other: "Jos viittaat ryhmään {{group}}, <a href='{{group_link}}'>{{count}} käyttäjää</a> saa ilmoituksen – oletko varma?"
+        one: "Jos mainitset ryhmän {{group}},  <a href='{{group_link}}'>1 käyttäjä</a> saa ilmoituksen – oletko varma?"
+        other: "Jos mainitset ryhmän {{group}}, <a href='{{group_link}}'>{{count}} käyttäjää</a> saa ilmoituksen – oletko varma?"
       cannot_see_mention:
         category: "Mainitsit käyttäjän {{username}} mutta hän ei saa ilmoitusta, koska hänellä ei ole pääsyä tälle alueelle. Hänet tulee lisätä ryhmään, jolla on pääsy alueelle."
         private: "Mainitsit käyttäjän {{username}} mutta hän ei saa ilmoitusta, koska hän ei näe tätä yksityiskeskustelua. Hänet tulee kutsua tähän yksityiskeskusteluun."
@@ -965,8 +1013,10 @@ fi:
       title: "Tai paina Ctrl+Enter"
       users_placeholder: "Lisää käyttäjä"
       title_placeholder: "Kuvaile lyhyesti mistä tässä ketjussa on kyse?"
+      title_or_link_placeholder: "Kirjoita otsikko tai liitä linkki tähän"
       edit_reason_placeholder: "miksi muokkaat viestiä?"
       show_edit_reason: "(lisää syy muokkaukselle)"
+      topic_featured_link_placeholder: "Tähän linkki, joka näytetään otsikon yhteydessä."
       reply_placeholder: "Kirjoita tähän. Käytä Markdownia, BBCodea tai HTML:ää muotoiluun. Raahaa tai liitä kuvia."
       view_new_post: "Katsele uutta viestiäsi."
       saving: "Tallennetaan"
@@ -1012,7 +1062,7 @@ fi:
       admin_options_title: "Tämän ketjun vain henkilökunnalle näytettävät asetukset"
       auto_close:
         label: "Sulje ketju automaattisesti tämän ajan jälkeen:"
-        error: "Ole hyvä ja syötä kelpaava arvo."
+        error: "Arvo ei kelpaa."
         based_on_last_post: "Älä sulje ennen kuin viimeisin viesti ketjussa on vähintään näin vanha."
         all:
           examples: 'Syötä aika tunteina (24), absoluuttisena aikana (17:30) tai aikaleimana (2013-11-22 14:00).'
@@ -1048,7 +1098,7 @@ fi:
         one: "<i title='messages in group inbox' class='fa fa-group'></i><p> {{count}} viesti ryhmän {{group_name}} saapuneissa</p>"
         other: "<i title='messages in group inbox' class='fa fa-group'></i><p> {{count}} viestiä ryhmän {{group_name}} saapuneissa</p>"
       alt:
-        mentioned: "Viittaaja"
+        mentioned: "Mainitsija"
         quoted: "Lainaaja"
         replied: "Vastasi"
         posted: "Kirjoittaja"
@@ -1280,7 +1330,8 @@ fi:
         go_bottom: "loppuun"
         go: "siirry"
         jump_bottom: "hyppää viimeisimpään viestiin"
-        jump_prompt: "hyppää viestiin"
+        jump_prompt: "hyppää..."
+        jump_prompt_of: "%{count} viestistä"
         jump_prompt_long: "Mihin viestiin haluat siirtyä?"
         jump_bottom_with_number: "hyppää viestiin %{post_number}"
         total: yhteensä viestejä
@@ -1512,7 +1563,7 @@ fi:
         file_too_large: "Pahoittelut, tiedosto jonka latausta yritit on liian suuri (suurin tiedostokoko on {{max_size_kb}}kb). Mitäpä jos lataisit tiedoston johonkin pilvipalveluun ja jakaisit täällä siihen linkin?"
         too_many_uploads: "Pahoittelut, voit ladata vain yhden tiedoston kerrallaan."
         too_many_dragged_and_dropped_files: "Pahoittelut, voit ladata korkeintaan 10 tiedostoa kerrallaan."
-        upload_not_authorized: "Pahoittelut, tiedostomuoto ei ole sallittu (sallitut tiedostopäätteet: {{authorized_extensions}})."
+        upload_not_authorized: "Pahoittelut, tiedosto jota yrität ladata ei ole sallittu (sallitut laajennukset: {{authorized_extensions}})."
         image_upload_not_allowed_for_new_user: "Pahoittelut, uudet käyttjät eivät saa ladata kuvia."
         attachment_upload_not_allowed_for_new_user: "Pahoittelut, uudet käyttäjät eivät saa ladata liitteitä."
         attachment_download_requires_login: "Pahoittelut, sinun täytyy kirjautua sisään voidaksesi ladata liitetiedostoja."
@@ -1678,6 +1729,7 @@ fi:
       tags_allowed_tag_groups: "Tällä alueella sallitut tunnisteryhmät:"
       tags_placeholder: "(Valinnainen) lista sallituista tunnisteista"
       tag_groups_placeholder: "(Valinnainen) lista sallituista tunnisteryhmistä"
+      topic_featured_link_allowed: "Salli ketjulinkit tällä alueella"
       delete: 'Poista alue'
       create: 'Uusi alue'
       create_long: 'Luo uusi alue'
@@ -1712,6 +1764,7 @@ fi:
       email_in_disabled: "Uusien ketjujen luominen sähköpostitse on otettu pois käytöstä sivuston asetuksissa. Salliaksesi uusien ketjujen luomisen sähköpostilla, "
       email_in_disabled_click: 'ota käyttöön "email in" asetus.'
       suppress_from_homepage: "Vaimenna alue kotisivulta."
+      all_topics_wiki: "Tee uusista ketjuista wiki-viestejä oletuksena."
       sort_order: "Oletusjärjestys:"
       allow_badges_label: "Salli ansiomerkkien myöntäminen tältä alueelta"
       edit_permissions: "Muokkaa oikeuksia"
@@ -1834,7 +1887,9 @@ fi:
       one: "katselu"
       other: "katselut"
     replies: "Vastauksia"
-    views_long: "tätä ketjua on katseltu {{number}} kertaa"
+    views_long:
+      one: "ketjua on katseltu yhden kerran"
+      other: "ketjua on katseltu {{number}} kertaa"
     activity: "Toiminta"
     likes: "Tykkäykset"
     likes_lowercase:
@@ -2139,8 +2194,8 @@ fi:
         backups: "varmuuskopiot"
         traffic_short: "Liikenne"
         traffic: "Sovelluksen web-pyynnöt"
-        page_views: "API pyynnöt"
-        page_views_short: "API pyynnöt"
+        page_views: "Sivunkatselut"
+        page_views_short: "Sivunkatselut"
         show_traffic_report: "Näytä yksityiskohtainen liikenneraportti"
         reports:
           today: "Tänään"
@@ -2230,15 +2285,12 @@ fi:
         refresh: "Lataa uudelleen"
         new: "Uusi"
         selector_placeholder: "syötä käyttäjätunnus"
-        name_placeholder: "Ryhmän nimi, ei välilyöntejä, samat säännöt kuin käyttäjänimillä"
         about: "Muokkaa ryhmien jäsenyyksiä ja nimiä täällä"
         group_members: "Ryhmään kuuluvat"
         delete: "Poista"
         delete_confirm: "Poista tämä ryhmä?"
         delete_failed: "Ryhmän poistaminen ei onnistu. Jos tämä on automaattinen ryhmä, sitä ei voi poistaa."
-        delete_member_confirm: "Poista '%{username}' ryhmästä '%{group}'?"
         delete_owner_confirm: "Poista omistajan etuudet käyttäjältä '%{username}'?"
-        name: "Nimi"
         add: "Lisää"
         add_members: "Lisää jäseniä"
         custom: "Mukautetut"
@@ -2255,14 +2307,6 @@ fi:
         add_owners: Lisää omistajia
         incoming_email: "Saapuvan sähköpostin osoite"
         incoming_email_placeholder: "aseta sähköpostiosoite"
-        flair_url: "Avatarpinssikuva"
-        flair_url_placeholder: "(Valinnainen) Kuvan URL tai Font Awesome luokka"
-        flair_bg_color: "Avatarpinssin taustaväri"
-        flair_bg_color_placeholder: "(Valinnainen) värin Hex-arvo"
-        flair_color: "Avatarpinssin väri"
-        flair_color_placeholder: "(Valinnainen) värin Hex-arvo"
-        flair_preview: "Esikatselu"
-        flair_note: "Huom: Pinssi määräytyy käyttäjän ensisijaisen ryhmän mukaan."
       api:
         generate_master: "Luo rajapinnan pääavain"
         none: "Aktiivisia API avaimia ei ole määritelty."
@@ -2474,10 +2518,14 @@ fi:
         delivery_method: "Lähetystapa"
         preview_digest_desc: "Esikatsele inaktiivisille käyttäjille lähetettyjen tiivistelmäsähköpostien sisältöä."
         refresh: "Päivitä"
+        send_digest_label: "Lähetä tämä tulos:"
+        send_digest: "Lähetä"
+        sending_email: "Lähetetään sähköpostia..."
         format: "Muotoilu"
         html: "html"
         text: "teksti"
         last_seen_user: "Käyttäjän edellinen kirjautuminen:"
+        no_result: "Tuloksia ei löydetty tiivistelmää varten."
         reply_key: "Vastausavain"
         skipped_reason: "Syy väliinjättämiselle"
         incoming_emails:
@@ -2573,6 +2621,8 @@ fi:
             deleted_tag: "poistettu tunniste"
             renamed_tag: "uudelleen nimetty tunniste"
             revoke_email: "peru sähköpostiosoite"
+            unlock_trust_level: "poista luottamustason lukitus"
+            activate_user: "aktivoi käyttäjä"
         screened_emails:
           title: "Seulottavat sähköpostiosoitteet"
           description: "Uuden käyttäjätunnuksen luonnin yhteydessä annettua sähköpostiosoitetta verrataan alla olevaan listaan ja tarvittaessa tunnuksen luonti joko estetään tai suoritetaan muita toimenpiteitä."
@@ -2873,6 +2923,7 @@ fi:
           user_preferences: "Käyttäjäasetukset"
           tags: "Tunnisteet"
           search: "Haku"
+          groups: "Ryhmät"
       badges:
         title: Ansiomerkit
         new_badge: Uusi ansiomerkki

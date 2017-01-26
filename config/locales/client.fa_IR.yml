@@ -264,16 +264,12 @@ fa_IR:
       total_rows:
         other: "%{count} کاربران"
     groups:
-      empty:
-        posts: "در این گروه هیچ پستی توسط کاربران "
-        members: "هیچ عضوی در این گروه وجود ندارد."
-        mentions: "هیچ کجا به این گروه اشاره‌ای نشده است."
-        messages: "پیامی در این گروه وجود ندارد."
-        topics: "در این گروه هیچ موضوعی توسط کاربران ارسال نشده."
       add: "افزودن"
       selector_placeholder: "افزودن عضو"
       owner: "مالک"
       visible: "همهٔ کاربران گروه را می‌بینند"
+      index:
+        title: "گروه‌ها"
       title:
         other: "گروه‌ها"
       members: "اعضا"
@@ -559,11 +555,8 @@ fa_IR:
         create: "فرستادن یک دعوتنامه"
         generate_link: "کپی لینک دعوت"
         bulk_invite:
-          none: "شما هنوز کسی را اینجا دعوت نکرده اید. می توانید بصورت تکی یا گروهی یکجا دعوتنامه را بفرستید از طریق  <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>بارگذار فراخوانه فله ای </a>."
           text: "دعوت گروهی از طریق فایل"
-          uploading: "بارگذاری..."
           success: "فایل با موفقیت بارگذاری شد٬  وقتی که پروسه تمام شد  به شما را از طریق پیام اطلاع می دهیم. "
-          error: "در بارگذاری «{{filename}}» خطایی روی داد: {{message}}"
       password:
         title: "رمزعبور"
         too_short: "رمز عبورتان خیلی کوتاه است"
@@ -572,6 +565,10 @@ fa_IR:
         same_as_email: "رمز عبورتان با ایمیل شما برابر است. "
         ok: "گذرواژهٔ خوبی است."
         instructions: "در آخرین %{count} کاراکتر"
+      summary:
+        top_badges: "مدال های برتر"
+        no_badges: "هنوز مدالی نیست."
+        more_badges: "مدال های بیشتر"
       associated_accounts: "ورود ها"
       ip_address:
         title: "آخرین نشانی IP"
@@ -904,6 +901,8 @@ fa_IR:
         category: "هیچ موضوعاتی در {{category}} نیست."
         top: "موضوع برتر وجود ندارد."
         search: " هیچ نتیجه جستجویی وجود ندارد."
+        educate:
+          unread: '<p>موضوعات جدید در اینجا قرار می گیرند.</p><p>به طور پیش فرض، موضوعات جدید در نظر گرفته خواهند شد و نشان داده می شوند <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">جدید</span> شاخص اگر آنها در 2 روز گذشته ایجاد شده باشند </p><p>شما می توانید این را برای خود تغییر دهید <a href="%{userPrefsUrl}">تنظیمات</a>.</p>'
       bottom:
         latest: "موضوع تازهٔ دیگری نیست."
         hot: "موضوع داغ دیگری نیست."
@@ -1172,7 +1171,6 @@ fa_IR:
         edit: "متأسفیم، در ویرایش نوشته شما خطایی روی داد. لطفاً دوباره تلاش کنید."
         upload: "متأسفیم، در بارگذاری آن پرونده خطایی روی داد. لطفاً دوباره تلاش کنید."
         too_many_uploads: "متأسفیم، هر بار تنها می‌توانید یک پرونده را بار بگذارید."
-        upload_not_authorized: "متأسفیم، پرونده‌ای که تلاش دارید آن را بار بگذارید، پروانه‌دار نیست (پسوندهای پروانه‌دار: {{authorized_extensions})"
         image_upload_not_allowed_for_new_user: "با عرض پوزش، کاربران جدید نمی توانند تصویر بار گذاری نماییند."
         attachment_upload_not_allowed_for_new_user: "با عرض پوزش، کاربران جدید نمی توانند فایل پیوست بار گذاری نماییند."
         attachment_download_requires_login: "با عرض پوزش، شما برای دانلود فایل پیوست باید وارد سایت شوید."
@@ -1413,7 +1411,6 @@ fa_IR:
     views_lowercase:
       other: "بازدیدها"
     replies: "پاسخ‌ها"
-    views_long: "از این موضوع {{number}} بار بازدید شده"
     activity: "فعالیت"
     likes: "پسندها"
     likes_lowercase:
@@ -1503,6 +1500,14 @@ fa_IR:
       full: "ساختن / پاسخ دادن / دیدن"
       create_post: "پاسخ دادن / دیدن"
       readonly: "دیدن"
+    badges:
+      earned_n_times:
+        other: "این مدال را %{count} بار به دست آورده"
+      others_count: "بقیه با این مدال (%{count})"
+      title: مدال ها
+      badge_count:
+        other: "%{count} مدال"
+      select_badge_for_title: انتخاب یک مدال برای استفاده در عنوان خود
   admin_js:
     type_to_filter: "بنویسید تا فیلتر کنید..."
     admin:
@@ -1537,8 +1542,6 @@ fa_IR:
         backups: "پشتیبان ها"
         traffic_short: "ترافیک"
         traffic: "درخواست های نرم افزار وب"
-        page_views: "درخواست های API"
-        page_views_short: "درخواست های API"
         show_traffic_report: "نمایش دقیق گزارش ترافیک"
         reports:
           today: "امروز"
@@ -1621,15 +1624,12 @@ fa_IR:
         refresh: "تازه کردن"
         new: "جدید"
         selector_placeholder: "نام کاربری را وارد نمایید ."
-        name_placeholder: "نام گروه، بدون فاصله، همان قاعده نام کاربری"
         about: "اعضای گروهت و نام ها  را اینجا ویرایش کن"
         group_members: "اعضای گروه"
         delete: "حذف"
         delete_confirm: "حفظ کردن این گروه؟"
         delete_failed: "قادر به حذف گروه نیستیم. اگر این یک گروه خودکار است، نمی توان آن را از بین برد."
-        delete_member_confirm: "حذف کردن '%{username}' از '%{group}' گروه؟"
         delete_owner_confirm: "حذف حق مالکیت برای '%{username}'؟"
-        name: "نام"
         add: "اضافه کردن"
         add_members: "اضافه کردن عضو"
         custom: "دلخواه"

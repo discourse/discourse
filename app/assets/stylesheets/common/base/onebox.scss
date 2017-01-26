@@ -95,8 +95,9 @@ aside.onebox {
   font-size: 1em;
 
   header {
+    margin-bottom: 8px;
     a[href] {
-      color: $primary;
+      color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
       text-decoration: none;
     }
   }
@@ -118,7 +119,7 @@ aside.onebox {
 
     h3, h4 {
       font-size: 1.17em;
-      margin: 10px 0;
+      margin: 0 0 10px 0;
     }
 
     a[href] {
@@ -131,7 +132,7 @@ aside.onebox {
     }
 
     img {
-      max-height: 80%;
+      max-height: 170px;
       max-width: 20%;
       height: auto;
       float: left;

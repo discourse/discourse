@@ -7,7 +7,6 @@ require_dependency 'text_cleaner'
 require_dependency 'archetype'
 require_dependency 'html_prettify'
 require_dependency 'discourse_tagging'
-require_dependency 'discourse_featured_link'
 
 class Topic < ActiveRecord::Base
   include ActionView::Helpers::SanitizeHelper
@@ -55,6 +54,7 @@ class Topic < ActiveRecord::Base
   validates :title, :if => Proc.new { |t| t.new_record? || t.title_changed? },
                     :presence => true,
                     :topic_title_length => true,
+                    :censored_words => true,
                     :quality_title => { :unless => :private_message? },
                     :unique_among  => { :unless => Proc.new { |t| (SiteSetting.allow_duplicate_topic_titles? || t.private_message?) },
                                         :message => :has_already_been_used,
@@ -76,11 +76,12 @@ class Topic < ActiveRecord::Base
 
   validates :featured_link, allow_nil: true, format: URI::regexp(%w(http https))
   validate if: :featured_link do
-    errors.add(:featured_link, :invalid_category) unless Guardian.new.can_edit_featured_link?(category_id)
+    errors.add(:featured_link, :invalid_category) unless !featured_link_changed? || Guardian.new.can_edit_featured_link?(category_id)
   end
 
   before_validation do
     self.title = TextCleaner.clean_title(TextSentinel.title_sentinel(title).text) if errors[:title].empty?
+    self.featured_link.strip! if self.featured_link
   end
 
   belongs_to :category
@@ -198,6 +199,9 @@ class Topic < ActiveRecord::Base
       TagUser.auto_track(topic_id: id)
       self.tags_changed = false
     end
+
+    SearchIndexer.index(self)
+    UserActionCreator.log_topic(self)
   end
 
   def initialize_default_values
@@ -338,7 +342,7 @@ class Topic < ActiveRecord::Base
               .listable_topics
               .includes(:category)
 
-    unless user.user_option.try(:include_tl0_in_digests)
+    unless opts[:include_tl0] || user.user_option.try(:include_tl0_in_digests)
       topics = topics.where("COALESCE(users.trust_level, 0) > 0")
     end
 
@@ -381,14 +385,6 @@ class Topic < ActiveRecord::Base
   def self.new_since_last_seen(user, since, featured_topic_ids=nil)
     topics = Topic.for_digest(user, since)
     featured_topic_ids ? topics.where("topics.id NOT IN (?)", featured_topic_ids) : topics
-  end
-
-  def featured_link
-    custom_fields[DiscourseFeaturedLink::CUSTOM_FIELD_NAME]
-  end
-
-  def featured_link=(link)
-    custom_fields[DiscourseFeaturedLink::CUSTOM_FIELD_NAME] = link.strip
   end
 
   def meta_data=(data)
