@@ -22,6 +22,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
   buttonRows: null,
 
   emptyTags: Ember.computed.empty('tags'),
+  categoryId: Ember.computed.alias('model.category.id'),
 
   onShow() {
     this.set('modal.modalClass', 'topic-bulk-actions-modal small');
@@ -44,8 +45,8 @@ export default Ember.Controller.extend(ModalFunctionality, {
   perform(operation) {
     this.set('loading', true);
 
-    const topics = this.get('model');
-    return Discourse.Topic.bulkOperation(this.get('model'), operation).then(result => {
+    const topics = this.get('model.topics');
+    return Discourse.Topic.bulkOperation(topics, operation).then(result => {
       this.set('loading', false);
       if (result && result.topic_ids) {
         return result.topic_ids.map(t => topics.findBy('id', t));
