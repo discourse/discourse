@@ -1888,17 +1888,18 @@ en:
           hide: "Hide revision"
           show: "Show revision"
           revert: "Revert to this revision"
+          edit_wiki: "Edit wiki"
           comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> <i class='fa fa-arrows-h'></i> <strong>{{current}}</strong> / {{total}}"
         displays:
           inline:
             title: "Show the rendered output with additions and removals inline"
-            button: '<i class="fa fa-square-o"></i> HTML'
+            button: 'HTML'
           side_by_side:
             title: "Show the rendered output diffs side-by-side"
-            button: '<i class="fa fa-columns"></i> HTML'
+            button: 'HTML'
           side_by_side_markdown:
             title: "Show the raw source diffs side-by-side"
-            button: '<i class="fa fa-columns"></i> Raw'
+            button: 'Raw'
 
     category:
       can: 'can&hellip; '
