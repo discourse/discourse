@@ -179,7 +179,7 @@ describe TopicsController do
 
         context "with a logged in user" do
           it "it uses the headers locale" do
-            user = Fabricate(:user, locale: :fr)
+            user = Fabricate(:user, locale: :es)
             log_in_user(user)
 
             get :show, {topic_id: topic.id}
