@@ -8,12 +8,14 @@ export default Ember.TextField.extend({
 
   _initValue: function() {
     const names = this.get('tagGroups') || [];
-    this.set('value', names.join(", "));
+    this.set('value', names.join(","));
   }.on('init'),
 
   _valueChanged: function() {
     const names = this.get('value').split(',').map(v => v.trim()).reject(v => v.length === 0).uniq();
-    this.set('tagGroups', names);
+    if ( this.get('tagGroups').join(',') !== this.get('value') ) {
+      this.set('tagGroups', names);
+    }
   }.observes('value'),
 
   _tagGroupsChanged: function() {
