@@ -528,9 +528,9 @@ fi:
     missing_session: "Emme voineet havaita, onnistuiko tilisi luonti. Varmista, että selaimesi sallii evästeiden käytön."
   post_action_types:
     off_topic:
-      title: 'Asiaankuulumaton'
+      title: 'Se eksyy aiheesta'
       description: 'Tämä viesti ei ole relevantti tässä ketjussa, jonka määrittelee ketjun otsikko ja aloitusviesti, ja pitäisi todennäköisesti siirtää toiselle alueelle.'
-      long_form: 'liputti tämän asiaankuulumattomaksi'
+      long_form: 'liputti tämän eksyvän aiheesta'
     spam:
       title: 'Roskaposti'
       description: 'Tämä viesti on mainos. Se ei ole hyödyllinen tai relevantti tässä ketjussa, vaan luonteeltaan mainostamista.'
@@ -538,9 +538,9 @@ fi:
       email_title: '"%{title}" liputettiin roskapostiksi'
       email_body: "%{link}\n\n%{message}"
     inappropriate:
-      title: 'Asiaton'
+      title: 'Sopimaton'
       description: 'Tämän viestin sisältö on loukkaava, herjaava tai ristiriidassa <a href="/guidelines">palstan sääntöjen</a> kanssa.'
-      long_form: 'liputti tämän asiattomaksi'
+      long_form: 'liputti tämän sopimattomaksi'
     notify_user:
       title: 'Lähetä käyttäjälle @{{username}} viesti.'
       description: 'Haluan keskustella tästä viestistä kirjoittajan kanssa kahden kesken.'
@@ -576,20 +576,20 @@ fi:
     spam:
       title: 'Roskaposti'
       description: 'Tämä ketju on mainos. Se ei ole hyödyllinen tai relevantti tällä sivustolla, vaan on luonteeltaan mainostamista.'
-      long_form: 'merkitsi tämän roskapostiksi'
+      long_form: 'liputti tämän roskapostiksi'
     inappropriate:
-      title: 'Asiaton'
-      description: 'Tämän ketjun sisältö on loukkaava, herjaava tai ristiriidassa <a href="/guidelines">palstan sääntöjen</a> kanssa.'
-      long_form: 'liputti tämän asiattomaksi'
+      title: 'Sopimaton'
+      description: 'Ketjussa on loukkaavaa, herjaavaa tai <a href="/guidelines">palstan sääntöjen</a> kanssa ristiriitaista sisältöä.'
+      long_form: 'liputti tämän sopimattomaksi'
     notify_moderators:
       title: "Jotain muuta"
-      description: 'Valvojan tulee huomioida tämä ketju <a href="/guidelines">palstan sääntöjen</a>, <a href="%{tos_url}">palveluehtojen</a> tai muun syyn vuoksi.'
+      description: 'Valvojan tulee huomioida tämä ketju <a href="/guidelines">palstan sääntöjen</a>, <a href="%{tos_url}">palveluehtojen</a> tai jonkun muun syyn vuoksi.'
       long_form: 'liputit tämän valvojille tiedoksi'
-      email_title: 'Viestiketju"%{title}" kaipaa valvojan huomiota'
+      email_title: 'Ketju"%{title}" kaipaa valvojan huomiota'
       email_body: "%{link}\n\n%{message}"
   flagging:
-    you_must_edit: '<p>Viestisi on liputettu yhteisön toimesta. Käy lukemassa <a href="/my/messages">saapuneet viestisi</a>.</p>'
-    user_must_edit: '<p>Tämä viesti on liputettu ja siksi piilotettu väliaikaisesti.</p>'
+    you_must_edit: '<p>Muu yhteisö liputti viestisi. Käy lukemassa <a href="/my/messages">saapuneet viestisi</a>.</p>'
+    user_must_edit: '<p>Tämä viesti on liputettu ja on siksi piilotettu väliaikaisesti.</p>'
   archetypes:
     regular:
       title: "Tavallinen ketju"
@@ -876,7 +876,7 @@ fi:
     num_tl3_flags_to_block_new_user: "Jos uuden käyttäjän viesti saa näin monta lippua num_tl3_users_to_block_new_user eri lt3 käyttäjältä, piilota kaikki hänen viestinsä ja estä uusien viestien kirjoittaminen. 0 poistaa käytöstä."
     num_tl3_users_to_block_new_user: "Jos uuden käyttäjän viesti saa num_tl3_flags_to_block_new_user lippua näin monelta lt3 käyttäjältä, piilota kaikki hänen viestinsä ja estä uusien viestien kirjoittaminen. 0 poistaa käytöstä."
     notify_mods_when_user_blocked: "Jos käyttäjä estetään automaattisesti, lähetä viesti kaikille valvojille."
-    flag_sockpuppets: "Jos uusi käyttäjä vastaa toisen uuden käyttäjän luomaan ketjun samasta IP osoitteesta, liputa molemmat viestit mahdolliseksi roskapostiksi."
+    flag_sockpuppets: "Jos uuden käyttäjän luomaan ketjuun vastaa toinen uusi käyttäjä samasta IP-osoitteesta, liputa molemmat viestit mahdolliseksi roskapostiksi."
     traditional_markdown_linebreaks: "Käytä perinteisiä rivinvaihtoja Markdownissa, joka vaatii kaksi perättäistä välilyöntiä rivin vaihtoon."
     allow_html_tables: "Salli taulukoiden syöttäminen Markdowniin käyttäen HTML tageja. TABLE, THEAD, TD, TR, TH valkolistataan (edellyttää kaikkien taulukoita sisältävien vanhojen viestien uudelleen rakentamisen)"
     post_undo_action_window_mins: "Kuinka monta minuuttia käyttäjällä on aikaa perua viestiin kohdistuva toimi (tykkäys, liputus, etc)."
@@ -1449,11 +1449,11 @@ fi:
 
       > %{site_title} -- %{site_description}
 
-      Jos olet kiinnostunut, klikkaa alla olevaa linkkiä:
+      Jos kiinnostuit, klikkaa alla olevaa linkkiä:
 
       %{invite_link}
 
-      Tämän kutsun lähetti luotettu käyttäjä, joten voit vastata ketjuun välittömästi.
+      Tämän kutsun lähetti luotettu käyttäjä, joten voit osallistua keskusteluun välittömästi.
   custom_invite_mailer:
     subject_template: "%{invitee_name} kutsui sinut ketjuun '%{topic_title}' sivustolla %{site_domain_name}"
     text_body_template: |
@@ -1467,15 +1467,15 @@ fi:
 
       > %{site_title} -- %{site_description}
 
-      Viesti käyttäjältä %{invitee_name}:
+      tällaisin saatesanoin:
 
-      %{user_custom_message}
+      > %{user_custom_message}
 
-      Jos olet kiinnostunut, klikkaa alla olevaa linkkiä:
+      Jos kiinnostuit, klikkaa alla olevaa linkkiä:
 
       %{invite_link}
 
-      Tämän kutsun lähetti luotettu käyttäjä, joten voit vastata ketjuun välittömästi.
+      Tämän kutsun lähetti luotettu käyttäjä, joten voit osallistua keskusteluun välittömästi.
   invite_forum_mailer:
     subject_template: "%{invitee_name} kutsui sinut sivustolle %{site_domain_name}"
     text_body_template: |
@@ -1499,8 +1499,9 @@ fi:
       >
       > %{site_description}
 
-      Viesti käyttäjältä %{invitee_name} sinulle:
-      %{user_custom_message}
+      tällaisin saatesanoin:
+
+      > %{user_custom_message}
 
       Jos kiinnostuit, klikkaa alla olevaa linkkiä:
 
@@ -1598,16 +1599,16 @@ fi:
 
       Uusilta käyttäjiltä on hyväksyntää odottavia viestejä. [Niitä voi hyväksyä tai hylätä täällä](%{base_url}/queued-posts).
   flag_reasons:
-    off_topic: "Viestisi liputettiin **asiaan kuulumattomaksi**: se ei kuulu tähän ketjuun, jonka aiheen määrittelee aloitusviesti ja otsikko."
-    inappropriate: "Viestisi liputettiin **asiattomaksi**: se on loukkaava, herjaava tai rikkoo [palstan sääntöjä](/guidelines)."
-    spam: "Viestisi liputettiin **roskapostiksi**: siinä on ilmoitus, joka on luonteeltaan mainostamista sen sijaan, että olisi hyödyllinen tai relevantti tässä keskustelussa."
-    notify_moderators: "Viestisi liputettiin **valvojalle tiedoksi**: siinä on jotain, johon henkilökunnan pitäisi puuttua."
+    off_topic: "Viestisi liputettiin **eksyvän aiheesta**: koetaan, ettei se ei kuulu ketjun aiheeseen, jonka määrittelevät sen aloitusviesti ja otsikko."
+    inappropriate: "Viestisi liputettiin **sopimattomaksi**: se koetaan loukkaavaksi, herjaavaksi tai [palstan sääntöjen](/guidelines) vastaiseksi."
+    spam: "Viestisi liputettiin **roskapostiksi**: sen koetaan olevan luonteeltaan mainostamista eikä hyödyllinen tai asiallinen lisä keskusteluun."
+    notify_moderators: "Viestisi liputettiin **valvojalle tiedoksi**: siinä koetaan olevan jotain, johon henkilökunnan pitäisi puuttua."
   flags_dispositions:
     agreed: "Kiitos kun toit asian tietoomme. Olemme samaa mieltä ongelmasta ja selvitämme sitä."
-    agreed_and_deleted: "Kiitos kun toit asian tietoomme. Olemme samaa mieltä ongelmasta ja olemme poistaneet kyseisen viestin."
+    agreed_and_deleted: "Kiitos kun toit asian tietoomme. Olemme samaa mieltä ongelmasta ja poistimme kyseisen viestin."
     disagreed: "Kiitos kun toit asian tietoomme. Selvitämme asiaa."
     deferred: "Kiitos kun toit asian tietoomme. Selvitämme asiaa."
-    deferred_and_deleted: "Kiitos kun toit asian tietoomme. Olemme poistaneet kyseisen viestin."
+    deferred_and_deleted: "Kiitos kun toit asian tietoomme. Poistimme kyseisen viestin."
   temporarily_closed_due_to_flags: "Tämä ketju on väliaikaisesti suljettu, johtuen suuresta määrästä liputuksia."
   system_messages:
     post_hidden:
@@ -1885,21 +1886,23 @@ fi:
 
         Jos POP-sähköpostitilille on nettikäyttöliittymä, voit joutua kirjautumaan sinne ja tarkistamaan asetukset.
     too_many_spam_flags:
+      title: "Liian monta roskapostiliputusta"
       subject_template: "Uusi tili on estetty"
       text_body_template: |
         Hei,
 
-        Tämä automaattinen viesti on lähetetty sivustolta %{site_name} kertoaksemme, että viestejäsi on piilotettu yhteisön liputtamisen johdosta.
+        Tämä automaattinen viesti on lähetetty sivustolta %{site_name} kertoaksemme, että viestejäsi on piilotettu yhteisön liputusten perusteella.
 
         Varotoimena uudelta tilitäsi on estetty uusien ketjujen ja viestien luonti, kunnes henkilökunnan jäsen tarkastaa tilisi. Pahoittelemme tästä aiheutuvaa vaivaa.
 
         Saadaksesi lisätietoa, tutustu [yhteisön ohjeisiin](%{base_url}/guidelines).
     too_many_tl3_flags:
+      title: "Liian monta lt3-lippua"
       subject_template: "Uusi tili on estetty"
       text_body_template: |
         Hei,
 
-        Tämä automaattinen viesti on lähetetty sivustolta %{site_name} kertoaksemme, että viestejäsi on piilotettu yhteisön liputtamisen johdosta.
+        Tämä automaattinen viesti on lähetetty sivustolta %{site_name} kertoaksemme, että tilisi on jäädytetty yhteisön liputusten perusteella.
 
         Varotoimena uudelta tilitäsi on estetty uusien ketjujen ja viestien luonti, kunnes henkilökunnan jäsen tarkastaa tilisi. Pahoittelemme tästä aiheutuvaa vaivaa.
 
@@ -1985,7 +1988,7 @@ fi:
     visit_link_to_respond_pm: "[Vieraile ketjussa](%{base_url}%{url}) vastataksesi."
     posted_by: "Käyttäjältä %{username} %{post_date}"
     invited_to_private_message_body: |
-      %{username} kutsui sinut viestiketjuun
+      %{username} kutsui sinut yksityiskeskusteluun
 
       > **%{topic_title}**
       >
@@ -2005,7 +2008,8 @@ fi:
 
       > %{site_title} -- %{site_description}
     user_invited_to_private_message_pm:
-      subject_template: "[%{site_name}] %{username} kutsui sinut viestiin '%{topic_title}'"
+      title: "Käyttäjä kutsuttiin yksityiskeskusteluun"
+      subject_template: "[%{site_name}] %{username} kutsui sinut yksityiskeskusteluun '%{topic_title}'"
       text_body_template: |
         %{header_instructions}
 
@@ -2013,7 +2017,8 @@ fi:
 
         %{respond_instructions}
     user_invited_to_private_message_pm_staged:
-      subject_template: "[%{site_name}] %{username} kutsui sinut yksityiseen keskusteluun '%{topic_title}'"
+      title: "Esikäyttäjä kutsuttiin yksityiskeskusteluun"
+      subject_template: "[%{site_name}] %{username} kutsui sinut yksityiskeskusteluun '%{topic_title}'"
       text_body_template: |
         %{header_instructions}
 
@@ -2021,6 +2026,7 @@ fi:
 
         %{respond_instructions}
     user_invited_to_topic:
+      title: "Käyttäjä kutsuttiin ketjuun"
       subject_template: "[%{site_name}] %{username} kutsui sinut ketjuun '%{topic_title}'"
       text_body_template: |
         %{header_instructions}
@@ -2029,6 +2035,7 @@ fi:
 
         %{respond_instructions}
     user_replied:
+      title: "Käyttäjälle vastattiin"
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -2039,6 +2046,7 @@ fi:
 
         %{respond_instructions}
     user_replied_pm:
+      title: "Käyttäjän yksityisviestiin vastattiin"
       subject_template: "[%{site_name}] [YV] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -2049,6 +2057,7 @@ fi:
 
         %{respond_instructions}
     user_quoted:
+      title: "Käyttäjää lainattiin"
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -2059,6 +2068,7 @@ fi:
 
         %{respond_instructions}
     user_linked:
+      title: "Käyttäjä linkitettiin"
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -2069,6 +2079,7 @@ fi:
 
         %{respond_instructions}
     user_mentioned:
+      title: "Käyttäjä mainittiin"
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -2079,6 +2090,7 @@ fi:
 
         %{respond_instructions}
     user_group_mentioned:
+      title: "Käyttäjän ryhmä mainittiin"
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -2153,15 +2165,17 @@ fi:
       view_this_topic: "Katsele tätä ketjua"
       back_to_top: "Takaisin alkuun"
     forgot_password:
+      title: "Unohtunut salasana"
       subject_template: "[%{site_name}] Salasanan uusiminen"
       text_body_template: |
         Salasanasi uusimista pyydettiin sivustolla [%{site_name}](%{base_url}).
 
-        Jos et halua muuttaa salasanaasi, voi jättää tämän viestin huomiotta.
+        Jos et halua muuttaa salasanaasi, voit jättää tämän viestin huomiotta.
 
         Klikkaa alla olevaa linkkiä vaihtaaksesi salasanasi:
         %{base_url}/users/password-reset/%{email_token}
     set_password:
+      title: "Syötä salasana"
       subject_template: "[%{site_name}] Syötä salasana"
       text_body_template: |
         Joku on pyytänyt lisäämään salasanan tilillesi sivustolla [%{site_name}](%{base_url}). Vaihtoehtoisesti, voit kirjautua sisään muiden tuettujen palveluiden avulla (Google, Facebook, etc) joissa on käytössä tämä sama sähköpostiosoite.
@@ -2366,7 +2380,7 @@ fi:
 
       Nämä eivät ole tarkkarajaiset säännöt &mdash; vältä kaikkea kiellettyihin asioihin edes _viittaavaa_. Jos olet epävarma, kysy itseltäsi miltä tuntuisi, jos viestisi olisi lainattuna aamun sanomalehden kanteen.
 
-      Tämä on julkinen palsta ja hakukoneet johdattavat näihin keskusteluihin. Kiinnitä huomiota kielenkäyttöön ja linkkien ja kuvien tietoturvaan for family and friends.
+      Tämä on julkinen palsta ja hakukoneet johdattavat näihin keskusteluihin. Kiinnitä huomiota kielenkäyttöön ja linkkien ja kuvien tietoturvaan ja soveltuvuuteen kaiken ikäisille.
 
       <a name="keep-tidy"></a>
 
@@ -2398,7 +2412,7 @@ fi:
 
       ## [Käyttöehdot](#tos)
 
-      Kyllä, lakikieli on tylsää, mutta meidän on suojeltava itseämme &ndash; ja siinä sivussa sinua ja sinun tietojasi &ndash; epäsuotuisia tahoja vastaan. Palstalla on [käyttöehdot](/tos), jotka säätelevät sinun (ja meidän) toimintaa and oikeuksia sisältöön, yksityisyyteen ja lakeihin liittyen. Käyttääksesi palvelua sinun on hyväksyttävä [käyttöehdot](/tos).
+      Kyllä, lakikieli on tylsää, mutta meidän on suojeltava itseämme &ndash; ja siinä sivussa sinua ja sinun tietojasi &ndash; epäsuotuisia tahoja vastaan. Palstalla on [käyttöehdot](/tos), jotka säätelevät sinun (ja meidän) toimintaa ja oikeuksia sisältöön, yksityisyyteen ja lakeihin liittyen. Jotta voit käyttää palvelua, sinun on hyväksyttävä [käyttöehdot](/tos).
   tos_topic:
     title: "Käyttöehdot"
   privacy_topic:

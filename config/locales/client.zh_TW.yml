@@ -112,7 +112,7 @@ zh_TW:
         enabled: '於 %{when} 置頂'
         disabled: '於 %{when} 解除置頂'
       pinned_globally:
-        enabled: '於 %{when} 全局置頂'
+        enabled: '於 %{when} 全區置頂'
         disabled: '於 %{when} 解除置頂'
       visible:
         enabled: '於 %{when} 列出'
@@ -419,7 +419,7 @@ zh_TW:
         apply_all: "申請"
         position: "位置"
       posts: "貼文"
-      topics: "標題"
+      topics: "主題數"
       latest: "最近"
       latest_by: "最近由"
       toggle_ordering: "顯示/隱藏排序控制"
@@ -594,7 +594,7 @@ zh_TW:
         instructions: "背景會被置中，且默認寬度為850px。"
       email:
         title: "電子郵件"
-        instructions: "我們不會公開您的電子郵件信箱。"
+        instructions: "不會公開顯示"
         ok: "我們將寄一封確認郵件給您。"
         invalid: "請輸入有效的電子郵件地址。"
         authenticated: "你的 Email 已由 {{provider}} 驗證完成。"
@@ -603,13 +603,13 @@ zh_TW:
           other: "我們只會在您 {{count}} 分鐘內沒有活動時，才會寄送電郵通知給您。"
       name:
         title: "名稱"
-        instructions: "您的全名 (選填)。"
+        instructions: "您的全名 (選填)"
         instructions_required: "您的匿稱"
         too_short: "你的匿稱太短。"
         ok: "你的匿稱符合要求。"
       username:
         title: "用戶名稱"
-        instructions: "獨一無二，沒有空白，夠短。"
+        instructions: "獨一、無空格、短的"
         short_instructions: "其他人可以輸入 @{{username}} 提到你。"
         available: "你的用戶名稱可以使用。"
         global_match: "電子郵件地址與註冊的用戶名稱相符。"
@@ -726,7 +726,7 @@ zh_TW:
         same_as_username: "密碼與使用者名稱相同"
         same_as_email: "你的密碼與電郵相同。"
         ok: "你的密碼符合要求。"
-        instructions: "至少 %{count} 個字。"
+        instructions: "至少 %{count} 個字元"
       summary:
         title: "摘要"
         stats: "統計"
@@ -769,7 +769,7 @@ zh_TW:
         title: "個人資料圖片"
         header_title: "個人頁面、消息、書籤和設置"
       title:
-        title: "用戶標題"
+        title: "頭銜"
       filters:
         all: "全部"
       stream:
@@ -1470,6 +1470,7 @@ zh_TW:
       edit: "編輯 {{replyAvatar}} {{username}} 發表的 {{link}}"
       edit_reason: "原因: "
       post_number: "文章 {{number}}"
+      wiki_last_edited_on: "共筆最後編輯時間"
       last_edited_on: "文章最近編輯的時間"
       reply_as_new_topic: "回覆為關連的討論話題"
       continue_discussion: "繼續 {{postLink}} 的討論:"
@@ -1695,7 +1696,7 @@ zh_TW:
           title: "關注"
           description: "你將自動監看這些分類中的所有主題。每一個主題的每一個新帖，將通知你，還將顯示新回覆的數量。"
         watching_first_post:
-          title: "監看頭一帖"
+          title: "關注新的發文"
           description: "在這些分類裡面，只是每一個新主題的第一帖，才會通知你。"
         tracking:
           title: "追蹤"
@@ -2003,7 +2004,7 @@ zh_TW:
           title: "監看"
           description: "你將自動監看該標籤中的所有主題。新帖子和新主題會通知你，再者未讀和新帖的數量也將顯示在主題旁邊。"
         watching_first_post:
-          title: "監看頭一帖"
+          title: "關注新的發文"
           description: "在這個標籤中，只是每一個新主題的第一帖，才會通知你。"
         tracking:
           title: "跟蹤"
@@ -2229,6 +2230,7 @@ zh_TW:
         warn_local_payload_url: "你好像將 webhook 指向了一個本地地址。把相關事件發送到本地可能產生副作用或未預期的行為。繼續嗎？"
         secret_invalid: "密鑰不能包含空白字元。"
         secret_too_short: "密鑰必須至少有 12 個字元。"
+        secret_placeholder: "選填的字串，用來產生簽章"
         event_type_missing: "你必須設置一個事件類型。"
         content_type: "內容格式"
         secret: "密鑰"
@@ -2566,7 +2568,7 @@ zh_TW:
             revoke_admin: "撤銷管理員權限"
             grant_moderation: "授予板主權限"
             revoke_moderation: "撤銷板主權限"
-            backup_operation: "備份操作"
+            backup_create: "新增備份"
             deleted_tag: "刪除的標籤"
             renamed_tag: "重命名的標籤"
             revoke_email: "撤銷郵件"
@@ -2575,6 +2577,8 @@ zh_TW:
             activate_user: "啟動使用者"
             deactivate_user: "撤銷使用者"
             change_readonly_mode: "變更唯讀模式"
+            backup_download: "下載備份"
+            backup_destroy: "刪除備份"
         screened_emails:
           title: "過濾的電子郵件地址"
           description: "以下的電子郵件地址將無法用來建立新用戶。"
@@ -2674,8 +2678,8 @@ zh_TW:
         blocked: "已封鎖？"
         staged: "暫存？"
         show_admin_profile: "管理員"
-        edit_title: "編輯標題"
-        save_title: "儲存標題"
+        edit_title: "編輯頭銜"
+        save_title: "儲存頭銜"
         refresh_browsers: "強制瀏覽器重新整理"
         refresh_browsers_message: "訊息已寄出給所有用戶!"
         show_public_profile: "顯示公開的基本資料"

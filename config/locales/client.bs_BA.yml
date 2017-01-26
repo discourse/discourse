@@ -40,6 +40,7 @@ bs_BA:
       long_date_with_year_without_time: "MMM D, 'YY"
       long_date_without_year_with_linebreak: "MMM D <br/>LT"
       long_date_with_year_with_linebreak: "MMM D, 'YY <br/>LT"
+      wrap_ago: "%{date} prije"
       tiny:
         half_a_minute: "< 1m"
         less_than_x_seconds:
@@ -126,6 +127,7 @@ bs_BA:
         disabled: 'sklonjen %{when}'
     topic_admin_menu: "topic admin actions"
     emails_are_disabled: "Sve odlazeće email poruke su globalno onemogućene od strane administratora. Niti jedna notifikacija bilo kakve vrste neće biti poslana."
+    bootstrap_mode_disabled: "Bootstrap mod će biti ugašen u sljedećih 24 sata."
     edit: 'izmjeni naslov i kategoriju ove teme'
     not_implemented: "That feature hasn't been implemented yet, sorry!"
     no_value: "Ne"
@@ -282,6 +284,8 @@ bs_BA:
       title: "Korisnici"
       likes_given: "Dato"
       likes_received: "Primljeno"
+      topics_entered: "Pregledano"
+      topics_entered_long: "Pregledano tema"
       time_read: "Pročitano puta"
       topic_count: "Teme"
       topic_count_long: "Kreirano Temi"
@@ -296,8 +300,41 @@ bs_BA:
         one: "%{count} korisnik"
         few: "%{count} korisnika"
         other: "%{count} korisnika"
+    group_histories:
+      actions:
+        change_group_setting: "Promjeni grupne postavke"
+        add_user_to_group: "Dodaj korisnika"
+        remove_user_from_group: "Ukloni korisnika"
+        make_user_group_owner: "Napravi vlasnika"
+        remove_user_as_group_owner: "Ukloni vlasnika"
     groups:
+      logs:
+        title: "Logovi"
+        when: "Kad"
+        action: "Akcija"
+        acting_user: "Trenutni korisnik"
+        target_user: "Ciljani korisnik"
+        subject: "Subjekt"
+        details: "Detalji"
+        from: "Od"
+        to: "Za"
+      edit:
+        title: 'Edituj Grupu'
+        full_name: 'Puno ime'
+        add_members: "Dodaj Članove"
+        delete_member_confirm: "Ukloni '%{username}' iz '%{group}' grupe?"
+      request_membership_pm:
+        title: "Zahtjev za članstvom"
+        body: "Želio bi da apliciram u članstvo @%{groupName}."
+      name_placeholder: "Ime grupe, bez razmaka, ista pravila kao za korisničko ime"
       add: "Dodaj"
+      join: "Pridruži se grupi"
+      leave: "Napusti grupu"
+      request: "Zahtjevaj pristup grupi"
+      automatic_group: Automatska grupa
+      closed_group: Zatvorena grupa
+      is_group_user: "Vi ste član ove grupe"
+      membership: "Članstvo"
       selector_placeholder: "Dodaj članove"
       owner: "vlasnik"
       visible: "Grupa je vidljiva svim korisnicima"
