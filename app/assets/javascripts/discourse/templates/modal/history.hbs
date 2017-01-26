@@ -11,11 +11,25 @@
       {{d-button action="loadNextVersion" icon="forward" title="post.revisions.controls.next" disabled=loadNextDisabled}}
       {{d-button action="loadLastVersion" icon="fast-forward" title="post.revisions.controls.last" disabled=loadLastDisabled}}
     </div>
+
     <div id="display-modes">
-      {{d-button action="displayInline" label="post.revisions.displays.inline.button" title="post.revisions.displays.inline.title" class=inlineClass}}
+      {{d-button action="displayInline"
+          icon="square-o"
+          label="post.revisions.displays.inline.button"
+          title="post.revisions.displays.inline.title"
+          class=inlineClass}}
       {{#unless site.mobileView}}
-        {{d-button action="displaySideBySide" label="post.revisions.displays.side_by_side.button" title="post.revisions.displays.side_by_side.title" class=sideBySideClass}}
-        {{d-button action="displaySideBySideMarkdown" label="post.revisions.displays.side_by_side_markdown.button" title="post.revisions.displays.side_by_side_markdown.title" class=sideBySideMarkdownClass}}
+        {{d-button action="displaySideBySide"
+            icon="columns"
+            label="post.revisions.displays.side_by_side.button"
+            title="post.revisions.displays.side_by_side.title"
+            class=sideBySideClass}}
+
+        {{d-button action="displaySideBySideMarkdown"
+            icon="columns"
+            label="post.revisions.displays.side_by_side_markdown.button"
+            title="post.revisions.displays.side_by_side_markdown.title"
+            class=sideBySideMarkdownClass}}
       {{/unless}}
     </div>
   </div>
@@ -103,11 +117,19 @@
     {{#if displayRevert}}
       {{d-button action="revertToVersion" icon="undo" label="post.revisions.controls.revert" class="btn-danger" disabled=loading}}
     {{/if}}
+
     {{#if displayHide}}
       {{d-button action="hideVersion" icon="eye-slash" label="post.revisions.controls.hide" class="btn-danger" disabled=loading}}
     {{/if}}
+
     {{#if displayShow}}
       {{d-button action="showVersion" icon="eye" label="post.revisions.controls.show" disabled=loading}}
+    {{/if}}
+
+    {{#if displayEdit}}
+      {{d-button action="editWiki"
+          icon="pencil"
+          label="post.revisions.controls.edit_wiki"}}
     {{/if}}
   </div>
 {{/d-modal-body}}
