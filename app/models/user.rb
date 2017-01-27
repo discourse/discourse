@@ -933,12 +933,13 @@ class User < ActiveRecord::Base
   end
 
   def automatic_group_membership
+    user = User.find(self.id)
+
     Group.where(automatic: false)
          .where("LENGTH(COALESCE(automatic_membership_email_domains, '')) > 0")
          .each do |group|
 
       domains = group.automatic_membership_email_domains.gsub('.', '\.')
-      user = User.find(self.id)
 
       if user.reload.email =~ Regexp.new("@(#{domains})$", true) && !group.users.include?(user)
         group.add(user)
