@@ -368,7 +368,10 @@ users:
   enable_names:
     client: true
     default: true
-  invite_expiry_days: 30
+  invite_expiry_days:
+    default: 30
+    min: 0
+    max: 20000
   invite_passthrough_hours: 0
   invites_per_page:
     client: true
@@ -528,6 +531,8 @@ posting:
     default: false
   show_time_gap_days:
     default: 7
+    min: 0
+    max: 20000
     client: true
   short_progress_text_threshold:
     client: true
@@ -603,7 +608,10 @@ email:
     min: 1
   digest_posts: 3
   digest_other_topics: 5
-  delete_digest_email_after_days: 365
+  delete_digest_email_after_days:
+    default: 365
+    min: 0
+    max: 20000
   digest_suppress_categories:
     type: category_list
     default: ''
@@ -661,6 +669,7 @@ email:
   delete_email_logs_after_days:
     default: 365
     min: 0
+    max: 20000
   max_emails_per_day_per_user: 100
   enable_staged_users: true
   maximum_staged_users_per_email: 10
@@ -685,7 +694,10 @@ email:
   hard_bounce_score:
     default: 2
     min: 2
-  reset_bounce_score_after_days: 30
+  reset_bounce_score_after_days:
+    default: 30
+    min: 0
+    max: 20000
   attachment_content_type_blacklist:
     type: list
     default: "pkcs7|x-vcard"
@@ -736,7 +748,10 @@ files:
   create_thumbnails: true
   clean_up_uploads: true
   clean_orphan_uploads_grace_period_hours: 48
-  purge_deleted_uploads_grace_period_days: 30
+  purge_deleted_uploads_grace_period_days:
+    default: 30
+    min: 0
+    max: 20000
   prevent_anons_from_downloading_files:
     default: false
     client: true
@@ -819,7 +834,10 @@ trust:
   tl2_requires_topics_entered: 20
   tl2_requires_read_posts: 100
   tl2_requires_time_spent_mins: 60
-  tl2_requires_days_visited: 15
+  tl2_requires_days_visited:
+    default: 15
+    min: 0
+    max: 20000
   tl2_requires_likes_received: 1
   tl2_requires_likes_given: 1
   tl2_requires_topic_reply_count: 3
@@ -830,6 +848,7 @@ trust:
   tl3_requires_days_visited:
     default: 50
     min: 0
+    max: 20000
   tl3_requires_topics_replied_to:
     default: 10
     min: 0
@@ -1175,14 +1194,20 @@ uncategorized:
 
   # Cold map thresholds
   cold_age_days_low:
-    client: true
     default: 14
+    min: 0
+    max: 20000
+    client: true
   cold_age_days_medium:
-    client: true
     default: 90
-  cold_age_days_high:
+    min: 0
+    max: 20000
     client: true
+  cold_age_days_high:
     default: 180
+    min: 0
+    max: 20000
+    client: true
 
   # Warnings
   educate_until_posts: 2
@@ -1234,7 +1259,10 @@ uncategorized:
     default: 0
     hidden: true
 
-  delete_drafts_older_than_n_days: 180
+  delete_drafts_older_than_n_days:
+    default: 180
+    min: 0
+    max: 20000
 
   tos_topic_id:
     default: -1
