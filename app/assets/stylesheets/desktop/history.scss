@@ -8,6 +8,8 @@
   }
   #revision-controls {
     float: left;
+    padding-right: 5px;
+
     .btn[disabled] {
       cursor: not-allowed;
       background-color: dark-light-diff($primary, $secondary, 90%, -60%);
@@ -18,6 +20,9 @@
   }
   #display-modes {
     text-align: right;
+    display: inline-block;
+    float: right;
+
     .btn {
       background-color:inherit;
       color: dark-light-diff($primary, $secondary, 50%, -50%);

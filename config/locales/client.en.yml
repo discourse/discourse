@@ -1892,7 +1892,8 @@ en:
           hide: "Hide revision"
           show: "Show revision"
           revert: "Revert to this revision"
-          edit_wiki: "Edit wiki"
+          edit_wiki: "Edit Wiki"
+          edit_post: "Edit Post"
           comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> <i class='fa fa-arrows-h'></i> <strong>{{current}}</strong> / {{total}}"
         displays:
           inline:
