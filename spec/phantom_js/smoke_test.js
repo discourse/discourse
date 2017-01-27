@@ -46,6 +46,7 @@ page.waitFor = function(desc, fn, cb) {
       if (diff > TIMEOUT) {
         console.log("FAILED: " + desc + " - " + diff + "ms");
         page.render('/tmp/failed.png');
+        console.log('Content:' + page.content);
         cb(false);
       } else {
         setTimeout(check, 25);

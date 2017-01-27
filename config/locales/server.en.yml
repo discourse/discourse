@@ -57,7 +57,7 @@ en:
 
   emails:
     incoming:
-      default_subject: "Incoming email from %{email}"
+      default_subject: "This topic needs a title"
       show_trimmed_content: "Show trimmed content"
       maximum_staged_user_per_email_reached: "Reached maximum number of staged users created per email."
       errors:
@@ -96,8 +96,8 @@ en:
       inclusion: is not included in the list
       invalid: is invalid
       is_invalid: "seems unclear, is it a complete sentence?"
-      contains_censored_words: "includes one or more of the censored words: %{censored_words}"
-      matches_censored_pattern: "matches the following censored Regex: %{censored_pattern}"
+      contains_censored_words: "contains the following censored words: %{censored_words}"
+      matches_censored_pattern: "contains the following words that matches the site's censored regexp: %{censored_words}"
       less_than: must be less than %{count}
       less_than_or_equal_to: must be less than or equal to %{count}
       not_a_number: is not a number
@@ -136,9 +136,16 @@ en:
     errors:
       <<: *errors
 
+  invite:
+    accept_invite: "Accept Invitation"
+    not_found: "Your invite token is invalid. Please contact the site's administrator."
+
   bulk_invite:
     file_should_be_csv: "The uploaded file should be of csv format."
     error: "There was an error uploading that file. Please try again later."
+
+  topic_invite:
+    user_exists: "Sorry, that user has already been invited. You may only invite a user to a topic once."
 
   backup:
     operation_already_running: "An operation is currently running. Can't start a new job right now."
@@ -566,8 +573,8 @@ en:
 
   password_reset:
     no_token: "Sorry, that password change link is too old. Select the Log In button and use 'I forgot my password' to get a new link."
-    choose_new: "Please choose a new password"
-    choose: "Please choose a password"
+    choose_new: "Choose a new password"
+    choose: "Choose a password"
     update: 'Update Password'
     save: 'Set Password'
     title: 'Reset Password'
@@ -1694,9 +1701,9 @@ en:
 
       > %{site_title} -- %{site_description}
 
-      Message from %{invitee_name}:
+      With this note
 
-      %{user_custom_message}
+      > %{user_custom_message}
 
       If you're interested, click the link below:
 
@@ -1730,9 +1737,9 @@ en:
       >
       > %{site_description}
 
-      Message from %{invitee_name}:
+      With this note
 
-      %{user_custom_message}
+      > %{user_custom_message}
 
       If you're interested, click the link below:
 
@@ -1990,6 +1997,8 @@ en:
         <a class="attachment" href="%{download_link}">%{file_name}</a> (%{file_size})
 
         The above download link will be valid for 48 hours.
+
+        The data is compressed as a gzip archive. If the archive does not extract itself when you open it, use the tools recommended here: http://www.gzip.org/#faq4
 
     csv_export_failed:
       title: "CSV Export Failed"
@@ -3240,9 +3249,6 @@ en:
   performance_report:
     initial_post_raw: This topic includes daily performance reports for your site.
     initial_topic_title: Website performance reports
-
-  topic_invite:
-    user_exists: "Sorry, that user has already been invited. You may only invite a user to a topic once."
 
   tags:
     title: "Tags"

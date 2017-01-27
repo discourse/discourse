@@ -1145,8 +1145,11 @@ gl:
         make_banner: "Tema do báner"
         remove_banner: "Eliminar o tema do báner"
       reply:
-        title: 'Responder'
-        help: 'responder a este tema'
+        post:
+          title: 'Responder'
+        topic:
+          title: 'Responder'
+          help: 'responder a este tema'
       clear_pin:
         title: "Borrar o estado Pegar"
         help: "Borra o estado Pegado deste tema para que non apareza na banda superior da lista de temas."
@@ -1568,7 +1571,6 @@ gl:
       one: "vista"
       other: "vistas"
     replies: "Respostas"
-    views_long: "este tema visitouse {{number}} veces"
     activity: "Actividade"
     likes: "Gústames"
     likes_lowercase:
@@ -1700,8 +1702,6 @@ gl:
         backups: "copias de seguranza"
         traffic_short: "Tráfico"
         traffic: "Peticións web de aplicativos"
-        page_views: "Peticións API"
-        page_views_short: "Peticións API"
         show_traffic_report: "Amosar o informe detallado do tráfico"
         reports:
           today: "Hoxe"

@@ -1509,36 +1509,8 @@ ro:
       Această invitație este de la un utilizator verificat, deci poți răspunde de îndată ce dorești.
   invite_forum_mailer:
     subject_template: "%{invitee_name} te-a invitat să te alături pe %{site_domain_name}"
-    text_body_template: |
-      %{invitee_name} te-a invitat să te alături pe
-
-      > **%{site_title}**
-      >
-      > %{site_description}
-
-      Dacă te interesează, dă click pe link-ul de mai jos:
-
-      %{invite_link}
-
-      Această invitație vine de la un utilizator verificat, așa că ți se va crea automat un cont.
   custom_invite_forum_mailer:
     subject_template: "%{invitee_name} te-a invitat să te alături pe %{site_domain_name}"
-    text_body_template: |
-      %{invitee_name} te-a invitat să te alaturi pe
-
-      > **%{site_title}**
-      >
-      > %{site_description}
-
-      Mesaj de la %{invitee_name}:
-
-      %{user_custom_message}
-
-      Dacă te interesează, dă click pe link-ul de mai jos:
-
-      %{invite_link}
-
-      Această invitație vine de la un utilizator verificat, așa că ți se va crea automat un cont.
   invite_password_instructions:
     subject_template: "Setează parolă pentru contul tău %{site_name}"
     text_body_template: |
@@ -1678,26 +1650,6 @@ ro:
         (Dacă ai nevoie să comunici cu [membrii echipei](%{base_url}/about) din postura de nou utilizator, pur și simplu dă reply la acest mesaj.)
     welcome_invite:
       subject_template: "Bine ai venit pe %{site_name}!"
-      text_body_template: |
-        Îți mulțumim că ai acceptat invitația pe %{site_name} -- bun venit!
-
-        Am creat pentru tine un nou cont **%{username}**, și acum ești autentificat. Îți poți schimba numele vizitându-ți [profilul utilizator][prefs].
-
-        Pentru a te autentifica mai târziu:
-
-        1. Întotdeauna **folosește aceeași adresă de email ca cea din invitația originală** atunci când te autentifici. Altfel nu ne vom putea da seama că ești tu!
-
-        2. Creează o parolă unică pentru [profilul utilizator][prefs], și folosește-o la autentificare.
-
-        %{new_user_tips}
-
-        Noi credem într-un [comportament civilizat al comunității](%{base_url}/guidelines) indiferent de circumstanțe.
-
-        ședere plăcută!
-
-        (Dacă ai nevoie să comunici cu [membrii echipei](%{base_url}/about) din postura de nou utilizator, pur și simplu dă reply la acest mesaj.)
-
-        [prefs]: %{user_preferences_url}
     backup_succeeded:
       subject_template: "Backup terminat cu succes"
       text_body_template: |
@@ -2902,11 +2854,9 @@ ro:
         fields:
           welcome:
             label: "Subiect de bun venit"
-            description: "<p>Cum ți-ai descrie comunitatea unui străin din lift, într-un minut?</p> <ul> <li>Cui îi sunt destinate aceste discuții?</li> <li>Ce pot găsi aici?</li> <li>De ce să vă vizitez?</li> </ul> <p>Subiectul vostru de bun venit este primul lucru pe care îl vor vedea noii vizitatori Gândește-te la el ca la<b>un paragraf/b> de 'agățat în lift' sau 'declarație de misiune'. </p>"
             one_paragraph: "Te rugăm să îți restrângi mesajul de bun venit la un paragraf."
       privacy:
         title: "Acces"
-        description: "<p>Este comunitatea voastră deschisă tuturor, sau este limită prin apartenență, invitații, sau aprobare? Dacă preferi, poți să setezi lucrurile pe privat și să comuți mai târziu pe public.</p> <p>Amintește-ți că întotdeauna poți să trimiți invitații din subiecte sau din pagina cu profilul tău de utilizator</p>"
         fields:
           privacy:
             choices:
@@ -2932,7 +2882,6 @@ ro:
             description: "Toate mesajele personale automate din Discourse vor fi trimite de la acest utilizator. Ce-i mai important este că acest utilizator va fi desemnat să trimită fiecare mesaj de bun venit ce se trimite automat noilor utilizatori."
       corporate:
         title: "Organizație"
-        description: "Aceste nume vor fi introduse în <a href='/privacy' target='blank'>Politica de confidențialitate</a> și <a href='/tos' target='blank'>Condițiile generale de utilizare</a>, pe care le poți edita oricând în categoria Echipa. Dacă nu ai o firmă, poți sări momentan peste acest pas."
         fields:
           company_short_name:
             label: "Numele firmei (scurt)"
@@ -2947,7 +2896,6 @@ ro:
         title: "Temă"
         fields:
           theme_id:
-            description: "Preferi o schemă de culori luminoasă sau una întunecată pentru început? Întotdeauna poți continua personalizarea aspectului site-ului via Admin, Personalizare."
             choices:
               default:
                 label: "Luminos simplu"
@@ -2972,7 +2920,6 @@ ro:
             label: "Iconiță mare"
             description: "Iconiță utilizata pentru a-ți reprezenta site-ul pe dispozitive moderne și care arată bine la dimensiuni mai mari. Dimensiunea recomandată este de 144px pe 144px."
       homepage:
-        description: "Recomandăm afișarea celor subiectelor recente pe pagina principală, dar, dacă preferi, poți să alegi afișarea categoriilor (grupuri de subiecte)."
         title: "Pagina principală"
         fields:
           homepage_style:
@@ -2983,7 +2930,6 @@ ro:
                 label: "Categorii"
       emoji:
         title: "Emoji"
-        description: "Ce stil de Emoji preferi pentru comunitatea ta? Întotdeauna poți să adaugi mai multe emoji personalizate via Admin, Personalizări, Emoji."
       invites:
         title: "Invită membrii echipei"
         description: "Aproape ai terminat! Hai să invităm niște membri ai echipei să dea o mână de ajutor <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>și să presare discuțiile</a> cu subiecte și răspunsuri interesante, pentru a lansa comunitatea."

@@ -135,10 +135,10 @@ createWidget('discourse-poll-standard-results', {
   html(attrs) {
     const { poll } = attrs;
     const options = poll.get('options');
-    if (options) {
 
+    if (options) {
       const voters = poll.get('voters');
-      const ordered = options.sort((a, b) => {
+      const ordered = _.clone(options).sort((a, b) => {
         if (a.votes < b.votes) {
           return 1;
         } else if (a.votes === b.votes) {
@@ -160,8 +160,9 @@ createWidget('discourse-poll-standard-results', {
 
       return ordered.map((option, idx) => {
         const contents = [];
-
         const per = rounded[idx].toString();
+        const chosen = attrs.vote.includes(option.id);
+
         contents.push(h('div.option',
                        h('p', [ h('span.percentage', `${per}%`), optionHtml(option) ])
                      ));
@@ -178,7 +179,7 @@ createWidget('discourse-poll-standard-results', {
           }));
         }
 
-        return h('li', contents);
+        return h('li', { className: `${chosen ? 'chosen' : ''}` }, contents);
       });
     }
   }

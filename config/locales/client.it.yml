@@ -985,12 +985,12 @@ it:
       similar_topics: "Il tuo argomento è simile a..."
       drafts_offline: "bozze offline"
       group_mentioned:
-        one: "Menzionando {{group}}, stai per notificare <a href='{{group_link}}'>1 persona</a> – sei sicuro?"
-        other: "Menzionando {{group}}, stai per notificare <a href='{{group_link}}'>{{count}} persone</a> – sei sicuro?"
+        one: "Menzionando {{group}}, verrà notificata <a href='{{group_link}}'>1 persona</a> – sei sicuro?"
+        other: "Menzionando {{group}}, verranno notificate <a href='{{group_link}}'>{{count}} persone</a> – sei sicuro?"
       cannot_see_mention:
-        category: "Hai menzionato {{username}} ma non saranno notificati perché non hanno accesso a questa categoria. Dovrai aggiungerli ad un gruppo che ha accesso a questa categoria."
-        private: "Hai menzionato {{username}} ma non saranno notificati perché non hanno accesso a questo messaggio personale. Dovrai invitarli a questo MP."
-      duplicate_link: "Sembra che il tuo link a <b>{{domain}}</b> sia già stato pubblicato nell'argomento di <b>@{{username}}</b> <a href='{{post_url}}'>una risposta {{ago}}</a> – sei sicuro di volerlo pubblicare ancora?"
+        category: "Hai menzionato {{username}} ma non verranno notificati perché non hanno accesso a questa categoria. Dovrai aggiungerli ad un gruppo che ha accesso a questa categoria."
+        private: "Hai menzionato {{username}} ma non verranno notificati perché non hanno accesso a questo messaggio personale. Dovrai invitarli a questo MP."
+      duplicate_link: "Sembra che il collegamento a <b>{{domain}}</b> sia già stato pubblicato nell'argomento di <b>@{{username}}</b> in <a href='{{post_url}}'>una risposta {{ago}}</a> – sei sicuro di volerlo pubblicare ancora?"
       error:
         title_missing: "Il titolo è richiesto"
         title_too_short: "Il titolo deve essere lungo almeno {{min}} caratteri"
@@ -1397,8 +1397,11 @@ it:
         make_banner: "Argomento Annuncio"
         remove_banner: "Rimuovi Argomento Annuncio"
       reply:
-        title: 'Rispondi'
-        help: 'inizia a scrivere una risposta a questo argomento'
+        post:
+          title: 'Rispondi'
+        topic:
+          title: 'Rispondi'
+          help: 'inizia a scrivere una risposta a questo argomento'
       clear_pin:
         title: "Spunta"
         help: "Rimuovi la spunta da questo argomento, così non comparirà più in cima alla lista degli argomenti"
@@ -1874,7 +1877,6 @@ it:
       one: "visita"
       other: "visite"
     replies: "Risposte"
-    views_long: "questo argomento è stato visto {{number}} volte"
     activity: "Attività"
     likes: "Mi piace"
     likes_lowercase:
@@ -2179,8 +2181,6 @@ it:
         backups: "backup"
         traffic_short: "Traffico"
         traffic: "Richieste web dell'applicazione"
-        page_views: "Richieste API"
-        page_views_short: "Richieste API"
         show_traffic_report: "Mostra rapporto di traffico dettagliato"
         reports:
           today: "Oggi"
@@ -2323,7 +2323,6 @@ it:
         warn_local_payload_url: "Stai impostando un webhook che punta ad un indirizzo locale. Eventi inviati ad un indirizzo locale possono causare effetti collaterali o risultati inaspettati. Vuoi continuare?"
         secret_invalid: "La chiave segreta non può contenere spazi vuoti."
         secret_too_short: "La chiave segreta deve contenere almeno 12 caratteri."
-        secret_placeholder: "Una stringa opzionale, usata per generare la firma"
         event_type_missing: "Devi impostare almeno un tipo di evento."
         content_type: "Tipo Contenuto"
         secret: "Chiave segreta"
@@ -2616,7 +2615,7 @@ it:
           do_nothing: "non fare nulla"
         staff_actions:
           title: "Azioni Staff"
-          instructions: "Fai clic sui nomi utenti e sulle azioni per filtrare la lista. Fai clic sulle immagini del profilo per andare alle pagine utenti."
+          instructions: "Fai clic sul nome utente o sulle azioni per filtrare la lista. Fai clic sulle immagini del profilo per andare alla pagina utente."
           clear_filters: "Mostra Tutto"
           staff_user: "Utente"
           target_user: "Destinatario"
@@ -2658,10 +2657,17 @@ it:
             revoke_admin: "revoca amministrazione"
             grant_moderation: "assegna moderazione"
             revoke_moderation: "revoca moderazione"
-            backup_operation: "operazione di backup"
+            backup_create: "crea backup"
             deleted_tag: "etichetta cancellata"
             renamed_tag: "etichetta rinominata"
             revoke_email: "revoca email"
+            lock_trust_level: "C"
+            unlock_trust_level: "sblocca livello di esperienza"
+            activate_user: "attiva utente"
+            deactivate_user: "disattiva utente"
+            change_readonly_mode: "cambia la modalità di sola lettura"
+            backup_download: "scarica backup"
+            backup_destroy: "distruggi backup"
         screened_emails:
           title: "Email Scansionate"
           description: "Quando qualcuno cerca di creare un nuovo account, verrando controllati i seguenti indirizzi email  e la registrazione viene bloccata, o eseguita qualche altra azione."

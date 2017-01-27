@@ -40,6 +40,7 @@ class User < ActiveRecord::Base
   has_many :warnings
   has_many :user_archived_messages, dependent: :destroy
   has_many :email_change_requests, dependent: :destroy
+  has_many :directory_items, dependent: :delete_all
 
 
   has_one :user_option, dependent: :destroy
@@ -90,13 +91,13 @@ class User < ActiveRecord::Base
   after_create :create_user_option
   after_create :create_user_profile
   after_create :ensure_in_trust_level_group
-  after_create :automatic_group_membership
   after_create :set_default_categories_preferences
   after_create :trigger_user_created_event
 
   before_save :update_username_lower
   before_save :ensure_password_is_hashed
 
+  after_save :automatic_group_membership
   after_save :clear_global_notice_if_needed
   after_save :refresh_avatar
   after_save :badge_grant
@@ -932,21 +933,19 @@ class User < ActiveRecord::Base
   end
 
   def automatic_group_membership
-    Group.grants_by_email_domain.each do |group|
+    user = User.find(self.id)
+
+    Group.where(automatic: false)
+         .where("LENGTH(COALESCE(automatic_membership_email_domains, '')) > 0")
+         .each do |group|
+
       domains = group.automatic_membership_email_domains.gsub('.', '\.')
-      if self.email =~ Regexp.new("@(#{domains})$", true) && !group.users.include?(self)
-        group.add(self)
-        GroupActionLogger.new(Discourse.system_user, group).log_add_user_to_group(self)
+
+      if user.reload.email =~ Regexp.new("@(#{domains})$", true) && !group.users.include?(user)
+        group.add(user)
+        GroupActionLogger.new(Discourse.system_user, group).log_add_user_to_group(user)
       end
     end
-  end
-
-  def automatic_group_from_email
-    Group.grants_by_email_domain.each do |group|
-      domains = group.automatic_membership_email_domains.gsub('.', '\.')
-      return group if self.email =~ Regexp.new("@(#{domains})$", true)
-    end
-    nil
   end
 
   def create_user_stat
@@ -978,15 +977,7 @@ class User < ActiveRecord::Base
   def add_trust_level
     # there is a possibility we did not load trust level column, skip it
     return unless has_attribute? :trust_level
-
     self.trust_level ||= SiteSetting.default_trust_level
-
-    group_from_email = automatic_group_from_email
-    if group_from_email&.grant_trust_level &&
-        group_from_email.grant_trust_level > self.trust_level
-      self.trust_level = group_from_email.grant_trust_level
-      self.trust_level_locked = true
-    end
   end
 
   def update_username_lower

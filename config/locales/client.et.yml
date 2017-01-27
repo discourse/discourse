@@ -1401,8 +1401,11 @@ et:
         make_banner: "Tee teema bänneriks"
         remove_banner: "Eemalda teema bännerist"
       reply:
-        title: 'vasta'
-        help: 'alusta selle teema vastuse koostamist'
+        post:
+          title: 'vasta'
+        topic:
+          title: 'vasta'
+          help: 'alusta selle teema vastuse koostamist'
       clear_pin:
         title: "Kustuta esiletõstmine"
         help: "Eemalda sellelt teemalt esiletõstetu staatus nii, et ta enam ei ilmuks teemade loetelu tipus"
@@ -1885,7 +1888,6 @@ et:
       one: "vaatamine"
       other: "vaatamisi"
     replies: "Vastuseid"
-    views_long: "seda teemat on vaadatud {{number}} korda"
     activity: "Aktiivsus"
     likes: "Meeldimisi"
     likes_lowercase:
@@ -2192,8 +2194,6 @@ et:
         backups: "varundusi"
         traffic_short: "Liiklus"
         traffic: "Rakenduse veebipäringud"
-        page_views: "API päringuid"
-        page_views_short: "API päringuid"
         show_traffic_report: "Näita liikluse detailraportit"
         reports:
           today: "Täna"
@@ -2336,7 +2336,6 @@ et:
         warn_local_payload_url: "Näib, et püüad seada veebihaaki lokaalsele URL-le. Lokaalsele aadressile saadetud sündmus võib esile kusuda kõrvalnähte või ootamatusi. Kas jätkame?"
         secret_invalid: "Salavõti ei tohi sisaldada tühikuid."
         secret_too_short: "Salavõti peab olema vähemalt 12 sümbolit pikk."
-        secret_placeholder: "Valikuline tekst, kasutatakse allkirja genereerimiseks"
         event_type_missing: "Pead seadistama vähemalt ühe sündmuse liigi."
         content_type: "Sisutüüp"
         secret: "Salavõti"

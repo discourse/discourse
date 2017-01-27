@@ -277,7 +277,9 @@ SQL
       MessageBus.publish("/user/#{hash[:user_id]}", {user_action_id: action.id, remove: true})
     end
 
-    update_like_count(hash[:user_id], hash[:action_type], -1)
+    if !Topic.where(id: hash[:target_topic_id], archetype: Archetype.private_message).exists?
+      update_like_count(hash[:user_id], hash[:action_type], -1)
+    end
   end
 
   def self.synchronize_target_topic_ids(post_ids = nil)

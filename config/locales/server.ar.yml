@@ -1496,26 +1496,6 @@ ar:
         (أذا كنت بحاجة للتواصل مع  [الموظفين](%{base_url}/about) كمستخدم جديد, فقط مجرد الرد على هذه الرسالة.)
     welcome_invite:
       subject_template: "مرحبا بك في %{site_name}!"
-      text_body_template: |
-        شكرًا لقبولك الدعوة إلى موقع  %{site_name}  أهلا بك .
-
-        انشأنا حساب جديد لك **%{username}** وستقوم بتسجيل الدخول، وستتمكن من تغيير اسمك من  [your user profile][prefs].
-
-        لتسجيل الدخول لاحقا:
-
-        1.دائما **استخدم نفس البريد الالكتروني الذي استقبلت فيه الدعوة** عند تسجيل الدخول، وإلا فإننا لن نستطيع معرفة أنه أنت !
-
-        2. أنشأ كلمة مرور فريدة  [your user profile][prefs] واستخدمها لتسجيل الدخول .
-
-        %{new_user_tips}
-
-        ونحن نتبع  [civilized community behavior](%{base_url}/guidelines)دائما..
-
-        استمتع بوجودك بيننا !
-
-        (إذا كنت تريد التواصل مع  [staff members](%{base_url}/about) كمستخدم جديد، رد على هذه الرسالة فقط لتتواصل معهم)
-
-        [prefs]: %{user_preferences_url}
     backup_succeeded:
       subject_template: "اكتملت عملية النسخ الإحتياطي بنجاح"
     backup_failed:

@@ -624,6 +624,7 @@ Discourse::Application.routes.draw do
   post "invites/disposable" => "invites#create_disposable_invite"
   get "invites/redeem/:token" => "invites#redeem_disposable_invite"
   delete "invites" => "invites#destroy"
+  put "invites/show/:id" => "invites#perform_accept_invitation", as: 'perform_accept_invite'
 
   resources :export_csv do
     collection do

@@ -341,7 +341,7 @@ describe Email::Receiver do
 
     it "handles email with no subject" do
       expect { process(:no_subject) }.to change(Topic, :count)
-      expect(Topic.last.title).to eq("Incoming email from some@one.com")
+      expect(Topic.last.title).to eq("This topic needs a title")
     end
 
     it "invites everyone in the chain but emails configured as 'incoming' (via reply, group or category)" do

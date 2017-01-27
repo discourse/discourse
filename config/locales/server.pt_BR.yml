@@ -1313,26 +1313,6 @@ pt_BR:
         (Se precisar se comunicar com [membros da equipe](%{base_url}/about) como um novo usuário, apenas responda a esta mensagem.)
     welcome_invite:
       subject_template: "Bem-vindo ao %{site_name}!"
-      text_body_template: |
-        Obrigado por aceitar seu convite para %{site_name} -- bem vindo!
-
-        Nós criamos uma nova conta **%{username}** para você, e você está autenticado. Pode mudar seu nome visitando o [perfil de seu usuário][prefs].
-
-        Para entrar novamente depois:
-
-        1. Sempre **use o mesmo endereço de email de seu convite original** quando se registrou. Caso contrário não saberemos que é você!
-
-        2. Crie uma senha única para o [perfil de seu usuário][prefs], e use para entrar.
-
-        %{new_user_tips}
-
-        Nós acreditamos sempre em [comportamento comunitário civilizado](%{base_url}/guidelines).
-
-        Aproveite sua participação!
-
-        (Se precisar se comunicar com um [membro da equipe](%{base_url}/about) como novo usuário, apenas responda a esta mensagem.)
-
-        [prefs]: %{user_preferences_url}
     backup_succeeded:
       subject_template: "Backup completado com sucesso"
     backup_failed:
@@ -1955,7 +1935,6 @@ pt_BR:
         title: "Tema"
         fields:
           theme_id:
-            description: "Você prefere um esquema de cores claro ou escuro para começar? Você poderá, futuramente, trocar o esquema de cores do seu site através da Aba: Admin, Configurações."
             choices:
               default:
                 label: "Claro Simples"
@@ -1980,7 +1959,6 @@ pt_BR:
             label: "Ícone Largo"
             description: "Ícone usado para representar seu site em dispositivos modernos, que tenha boa aparência em tamanhos maiores. O tamanho recomendado é pelo menos 144px por 144px."
       homepage:
-        description: "Recomendamos mostrar os últimos tópicos na sua página inicial, mas você pode escolher mostrar categorias (grupos de tópicos) na página inicial, se preferir."
         title: "Página Inicial"
         fields:
           homepage_style:
@@ -1991,7 +1969,6 @@ pt_BR:
                 label: "Categorias"
       emoji:
         title: "Emoji"
-        description: "Qual estilo de Emoji se adequa melhor para sua comunidade? Você poderá sempre adicionar novas customizações de Emojis através da aba: Admin > Customizar > Emoji."
       invites:
         title: "Convidar um grupo"
       finished:

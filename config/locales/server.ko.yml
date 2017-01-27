@@ -1012,26 +1012,6 @@ ko:
         (할 말이 있을 땐 새 사용자로서 [스태프](%{base_url}/about)들에게 이야기 주세요, 이 메세지에 답글로 주시면 바로 올라갑니다.)
     welcome_invite:
       subject_template: "%{site_name} 사이트에 오신것을 환영합니다!"
-      text_body_template: |
-        %{site_name}의 초대에 응해주셔서 감사합니다 반갑습니다!
-
-        **%{username}**로 새 사용자를 만들었고 로그인된 상태입니다. [사용자 정보][prefs]에 들어가 이름을 바꿀 수 있습니다.
-
-        나중에 다시 로그인하려면:
-
-        1. 항상 **초대 받은 이메일 주소를 사용해서** 로그인해주셔야지 안 그러면 같은 사람이라고 인식 못할 겁니다!
-
-        2. [사용자 정보][prefs],에서 유니크한 비밀번호를 만들어 사용해주세요.
-
-        %{new_user_tips}
-
-        우리는 [문화시민의 커뮤니티 활동 지침](%{base_url}/guidelines)을 항상 따릅니다.
-
-        커뮤니티를 즐려주세요!
-
-        (할 말이 있을 땐 새 사용자로서 [스태프](%{base_url}/about)들에게 이야기주세요, 이 메세지에 답글로 주시면 바로 올라갑니다.)
-
-        [사용자 정보 설정]: %{user_preferences_url}
     backup_succeeded:
       subject_template: "백업 성공"
     backup_failed:

@@ -1821,7 +1821,6 @@ pt_BR:
       one: "visualizar"
       other: "visualizações"
     replies: "Respostas"
-    views_long: "este tópico foi visto {{number}} vezes"
     activity: "Atividade"
     likes: "Curtidas"
     likes_lowercase:
@@ -2124,8 +2123,6 @@ pt_BR:
         backups: "backups"
         traffic_short: "Tráfego"
         traffic: "Solicitações do aplicativo pela web"
-        page_views: "Solicitações de API"
-        page_views_short: "Solicitações de API"
         show_traffic_report: "Mostrar Relatório de Tráfego Detalhado"
         reports:
           today: "Hoje"
@@ -2268,7 +2265,6 @@ pt_BR:
         warn_local_payload_url: "Parece que você está tentando configurar um webhook para uma URL local. Eventos entregues a endereços locais podem causar efeitos colaterais ou comportamentos inesperados. Continuar?"
         secret_invalid: "O segredo não deve conter caracteres em branco."
         secret_too_short: "O segredo deve ter pelo menos 12 caracteres."
-        secret_placeholder: "Uma string opcional, usada para gerar assinaturas"
         event_type_missing: "Você deve configurar apenas um tipo de evento."
         content_type: "Tipo de Conteúdo"
         secret: "Segredo"
