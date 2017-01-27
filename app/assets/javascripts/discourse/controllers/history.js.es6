@@ -2,6 +2,7 @@ import ModalFunctionality from 'discourse/mixins/modal-functionality';
 import { categoryBadgeHTML } from 'discourse/helpers/category-link';
 import computed from 'ember-addons/ember-computed-decorators';
 import { propertyGreaterThan, propertyLessThan } from 'discourse/lib/computed';
+import { on } from 'ember-addons/ember-computed-decorators';
 
 function customTagArray(fieldName) {
   return function() {
@@ -17,9 +18,10 @@ export default Ember.Controller.extend(ModalFunctionality, {
   loading: true,
   viewMode: "side_by_side",
 
-  _changeViewModeOnMobile: function() {
-    if (this.site.mobileView) { this.set("viewMode", "inline"); }
-  }.on("init"),
+  @on('init')
+  _changeViewModeOnMobile() {
+    if (this.site && this.site.mobileView) { this.set("viewMode", "inline"); }
+  },
 
   previousFeaturedLink: Em.computed.alias('model.featured_link_changes.previous'),
   currentFeaturedLink: Em.computed.alias('model.featured_link_changes.current'),
@@ -109,9 +111,14 @@ export default Ember.Controller.extend(ModalFunctionality, {
     return !prevHidden && this.currentUser && this.currentUser.get('staff');
   },
 
-  @computed("model.wiki", "model.last_revision", "model.current_revision")
-  displayEdit(wiki, lastRevision, currentRevision) {
-    return wiki && (lastRevision === currentRevision);
+  @computed("model.last_revision", "model.current_revision", "model.can_edit")
+  displayEdit(lastRevision, currentRevision, canEdit) {
+    return canEdit && (lastRevision === currentRevision);
+  },
+
+  @computed("model.wiki")
+  editButtonLabel(wiki) {
+    return `post.revisions.controls.${wiki ? 'edit_wiki' : 'edit_post'}`;
   },
 
   @computed()
@@ -192,7 +199,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
     hideVersion() { this.hide(this.get("model.post_id"), this.get("model.current_revision")); },
     showVersion() { this.show(this.get("model.post_id"), this.get("model.current_revision")); },
 
-    editWiki() {
+    editPost() {
       this.get('topicController').send('editPost', this.get('post'));
       this.send('closeModal');
     },
