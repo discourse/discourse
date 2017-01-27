@@ -168,7 +168,7 @@ GEM
     netrc (0.11.0)
     nokogiri (1.6.8.1)
       mini_portile2 (~> 2.1.0)
-    nokogumbo (1.4.7)
+    nokogumbo (1.4.10)
       nokogiri
     oauth (0.5.1)
     oauth2 (1.0.0)
@@ -206,7 +206,7 @@ GEM
     omniauth-twitter (1.3.0)
       omniauth-oauth (~> 1.1)
       rack
-    onebox (1.7.7)
+    onebox (1.7.8)
       fast_blank (>= 1.0.0)
       htmlentities (~> 4.3.4)
       moneta (~> 0.8)
@@ -314,7 +314,7 @@ GEM
     ruby-readability (0.7.0)
       guess_html_encoding (>= 0.0.4)
       nokogiri (>= 1.6.0)
-    sanitize (4.0.1)
+    sanitize (4.4.0)
       crass (~> 1.0.2)
       nokogiri (>= 1.4.4)
       nokogumbo (~> 1.4.1)
