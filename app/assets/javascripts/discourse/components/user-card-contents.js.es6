@@ -84,7 +84,7 @@ export default Ember.Component.extend(CleansUp, {
   _show(username, $target) {
     // No user card for anon
     if (this.siteSettings.hide_user_profiles_from_public && !this.currentUser) {
-      return true;
+      return false;
     }
 
     // XSS protection (should be encapsulated)
