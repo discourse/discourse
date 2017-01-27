@@ -37,7 +37,7 @@ describe Topic do
             expect(topic).to_not be_valid
 
             expect(topic.errors.full_messages.first).to include(I18n.t(
-              'errors.messages.matches_censored_pattern', censored_words: 'orange monkey orange stuff'
+              'errors.messages.matches_censored_pattern', censored_words: 'orangejuice orange monkey orange stuff'
             ))
           end
         end
