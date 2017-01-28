@@ -3,6 +3,7 @@ require 'rails_helper'
 RSpec.describe "Post rake tasks" do
   before do
     Discourse::Application.load_tasks
+    IO.any_instance.stubs(:puts)
   end
 
   describe 'remap' do
