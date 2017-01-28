@@ -15,9 +15,9 @@ describe Topic do
 
       describe 'censored words' do
         describe 'when title contains censored words' do
-          site_setting(:censored_words, 'pineapple|pen')
-
           it 'should not be valid' do
+            SiteSetting.censored_words = 'pineapple|pen'
+
             topic.title = 'pen PinEapple apple pen '
 
             expect(topic).to_not be_valid
@@ -29,9 +29,9 @@ describe Topic do
         end
 
         describe 'when title matches censored pattern' do
-          site_setting(:censored_pattern, 'orange.*')
-
           it 'should not be valid' do
+            SiteSetting.censored_pattern = 'orange.*'
+
             topic.title = 'I have orangEjuice orange monkey orange stuff'
 
             expect(topic).to_not be_valid
