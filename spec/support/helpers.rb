@@ -1,20 +1,6 @@
 module Helpers
   extend ActiveSupport::Concern
 
-  class_methods do
-    def site_setting(setting_name, value)
-      original_value = SiteSetting.public_send(setting_name.to_sym)
-
-      self.before do
-        SiteSetting.public_send("#{setting_name}=", value)
-      end
-
-      self.after do
-        SiteSetting.public_send("#{setting_name}=", original_value)
-      end
-    end
-  end
-
   def self.next_seq
     @next_seq = (@next_seq || 0) + 1
   end
