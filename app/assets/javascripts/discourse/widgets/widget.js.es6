@@ -145,12 +145,12 @@ export default class Widget {
     this.keyValueStore = register.lookup('key-value-store:main');
 
     // Helps debug widgets
-    if (Ember.testing) {
+    if (Discourse.Environment === "development" || Ember.testing) {
       const ds = this.defaultState(attrs);
       if (typeof ds !== "object") {
-        Ember.warn(`defaultState must return an object`);
+        throw `defaultState must return an object`;
       } else if (Object.keys(ds).length > 0 && !this.key) {
-        Ember.warn(`you need a key when using state ${this.name}`);
+        throw `you need a key when using state in ${this.name}`;
       }
     }
 
