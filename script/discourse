@@ -5,7 +5,29 @@ require "thor"
 class DiscourseCLI < Thor
   class_option :verbose, default: false, aliases: :v
 
-  desc "remap", "Remap a string sequence accross all tables"
+  desc "remap [--global,--regex] FROM TO", "Remap a string sequence accross all tables"
+  long_desc <<-LONGDESC
+    Replace a string sequence FROM with TO across all tables.
+
+    With --global option, the remapping is run on ***ALL***
+    databases. Instead of just running on the current database, run on
+    every database on this machine. This option is useful for
+    multi-site setups.
+
+    With --regex option, use PostgreSQL function regexp_replace to do
+    the remapping. Enabling this interprets FROM as a PostgreSQL
+    regular expression. TO can contain references to captures in the
+    FROM match. See the "Regular Expression Details" section and
+    "regexp_replace" documentation in the PostgreSQL manual for more
+    details.
+
+
+    Examples:
+
+    discourse remap talk.foo.com talk.bar.com # renaming a Discourse domain name
+
+    discourse remap --regex "\[\/?color(=[^\]]*)*]" "" # removing "color" bbcodes
+  LONGDESC
   option :global, :type => :boolean
   option :regex, :type => :boolean
   def remap(from, to)
