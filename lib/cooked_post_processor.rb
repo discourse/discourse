@@ -35,14 +35,7 @@ class CookedPostProcessor
       optimize_urls
       pull_hotlinked_images(bypass_bump)
       grant_badges
-      extract_links
     end
-  end
-
-  # onebox may have added some links, so extract them now
-  def extract_links
-    TopicLink.extract_from(@post)
-    QuotedPost.extract_from(@post)
   end
 
   def has_emoji?
