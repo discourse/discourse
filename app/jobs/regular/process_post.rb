@@ -33,11 +33,17 @@ module Jobs
           Rails.logger.warn("Cooked post processor in FATAL state, bypassing. You need to urgently restart sidekiq\norig: #{orig_cooked}\nrecooked: #{recooked}\ncooked: #{cooked}\npost id: #{post.id}")
         else
           post.update_column(:cooked, cp.html)
+          extract_links(post)
           post.publish_change_to_clients! :revised
         end
       end
     end
 
+    # onebox may have added some links, so extract them now
+    def extract_links(post)
+      TopicLink.extract_from(post)
+      QuotedPost.extract_from(post)
+    end
   end
 
 end
