@@ -37,25 +37,20 @@ module Email
       @fragment.css('img').each do |img|
         next if img['class'] == 'site-logo'
 
-        if img['class'] == "emoji" || img['src'] =~ /(plugins|images)\/emoji/
-          img['width'] = 20
-          img['height'] = 20
+        if (img['class'] && img['class']['emoji']) || (img['src'] && img['src'][/\/_?emoji\//])
+          img['width'] = img['height'] = 20
         else
           # use dimensions of original iPhone screen for 'too big, let device rescale'
           if img['width'].to_i > 320 or img['height'].to_i > 480
-            img['width'] = 'auto'
-            img['height'] = 'auto'
+            img['width'] = img['height'] = 'auto'
           end
         end
 
-        # ensure all urls are absolute
-        if img['src'] =~ /^\/[^\/]/
-          img['src'] = "#{Discourse.base_url}#{img['src']}"
-        end
-
-        # ensure no schemaless urls
-        if img['src'] && img['src'].starts_with?("//")
-          img['src'] = "#{uri.scheme}:#{img['src']}"
+        if img['src']
+          # ensure all urls are absolute
+          img['src'] = "#{Discourse.base_url}#{img['src']}" if img['src'][/^\/[^\/]/]
+          # ensure no schemaless urls
+          img['src'] = "#{uri.scheme}:#{img['src']}" if img['src'][/^\/\//]
         end
       end
 
@@ -199,12 +194,12 @@ module Email
 
     def strip_avatars_and_emojis
       @fragment.search('img').each do |img|
-        if img['src'] =~ /_avatar/
+        if img['src'][/_avatar/]
           img.parent['style'] = "vertical-align: top;" if img.parent.name == 'td'
           img.remove
         end
 
-        if img['title'] && (img['src'] =~ /images\/emoji/ || img['src'] =~ /uploads\/default\/_emoji/)
+        if img['title'] && img['src'][/\/_?emoji\//]
           img.add_previous_sibling(img['title'] || "emoji")
           img.remove
         end
