@@ -46,6 +46,13 @@ describe Jobs::ProcessPost do
       expect(post.cooked).not_to match(/http/)
     end
 
+    it "always re-extracts links on post process" do
+      post.update_columns(raw: "sam has a blog at https://samsaffron.com")
+      TopicLink.destroy_all
+      Jobs::ProcessPost.new.execute(post_id: post.id)
+      expect(TopicLink.count).to eq(1)
+    end
+
   end
 
 
