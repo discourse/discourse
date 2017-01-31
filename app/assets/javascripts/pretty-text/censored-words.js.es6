@@ -1,5 +1,5 @@
 function escapeRegexp(text) {
-  return text.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&')
+  return text.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&');
 }
 
 export function censor(text, censoredWords, censoredPattern) {
