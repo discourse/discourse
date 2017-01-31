@@ -405,8 +405,6 @@ class UsersController < ApplicationController
         user_id = secure_session["password-#{token}"].to_i
         @user = User.find(user_id) if user_id > 0
       end
-    else
-      @invalid_token = true
     end
 
     if !@user
@@ -424,12 +422,42 @@ class UsersController < ApplicationController
           Invite.invalidate_for_email(@user.email) # invite link can't be used to log in anymore
           secure_session["password-#{token}"] = nil
           logon_after_password_reset
-
-          return redirect_to(wizard_path) if Wizard.user_requires_completion?(@user)
         end
       end
     end
-    render layout: 'no_ember'
+
+    respond_to do |format|
+      format.html do
+        if @error
+          render layout: 'no_ember'
+        else
+          store_preloaded("password_reset", MultiJson.dump({ is_developer: UsernameCheckerService.is_developer?(@user.email) }))
+        end
+        return redirect_to(wizard_path) if Wizard.user_requires_completion?(@user)
+      end
+
+      format.json do
+        if request.put?
+          if @error || @user&.errors&.any?
+            render json: {
+              success: false,
+              message: @error,
+              errors: @user&.errors&.to_hash,
+              is_developer: UsernameCheckerService.is_developer?(@user.email)
+            }
+          else
+            render json: {
+              success: true,
+              message: @success,
+              requires_approval: !Guardian.new(@user).can_access_forum?,
+              redirect_to: Wizard.user_requires_completion?(@user) ? wizard_path : nil
+            }
+          end
+        else
+          render json: {is_developer: UsernameCheckerService.is_developer?(@user.email)}
+        end
+      end
+    end
   end
 
   def confirm_email_token

@@ -63,6 +63,7 @@ export default function() {
 
   // User routes
   this.route('users', { resetNamespace: true });
+  this.route('password-reset', { path: '/users/password-reset/:token' });
   this.route('user', { path: '/users/:username', resetNamespace: true }, function() {
     this.route('summary');
     this.route('userActivity', { path: '/activity', resetNamespace: true }, function() {
