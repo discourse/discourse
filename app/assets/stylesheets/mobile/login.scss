@@ -84,3 +84,32 @@ $input-width: 184px;
     }
   }
 }
+
+
+.password-reset {
+  margin-top: 30px;
+  .col-image {
+    padding-top: 12px;
+  }
+  .password-reset-img {
+    width: 50px;
+    height: 50px;
+  }
+  .col-form {
+    padding-left: 8px;
+  }
+  h2 {
+    margin-bottom: 12px;
+  }
+  .tip {
+    display: block;
+    margin: 6px 0;
+    max-width: 180px;
+  }
+}
+
+.discourse-touch .password-reset {
+  .instructions {
+    margin-bottom: 16px;
+  }
+}
