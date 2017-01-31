@@ -211,13 +211,61 @@ after_initialize do
     end
 
     def voters
-      user_ids = params.require(:user_ids)
+      post_id = params.require(:post_id)
+      poll_name = params.require(:poll_name)
 
-      users = User.where(id: user_ids).map do |user|
-        UserNameSerializer.new(user).serializable_hash
+      post = Post.find_by(id: post_id)
+      raise Discourse::InvalidParameters.new("post_id is invalid") if !post
+
+      poll = post.custom_fields[DiscoursePoll::POLLS_CUSTOM_FIELD][poll_name]
+      raise Discourse::InvalidParameters.new("poll_name is invalid") if !poll
+
+      user_ids = []
+      options = poll["options"]
+
+      if poll["type"] != "number"
+        options.each do |option|
+          if (params[:option_id])
+            next unless option["id"] == params[:option_id].to_s
+          end
+
+          next unless option["voter_ids"]
+          user_ids << option["voter_ids"].slice((params[:offset].to_i || 0)  * 25, 25)
+        end
+
+        user_ids.flatten!
+        user_ids.uniq!
+
+        poll_votes = post.custom_fields[DiscoursePoll::VOTES_CUSTOM_FIELD]
+
+        result = {}
+
+        User.where(id: user_ids).map do |user|
+          user_hash = UserNameSerializer.new(user).serializable_hash
+
+          poll_votes[user.id.to_s][poll_name].each do |option_id|
+            if (params[:option_id])
+              next unless option_id == params[:option_id].to_s
+            end
+
+            result[option_id] ||= []
+            result[option_id] << user_hash
+          end
+        end
+      else
+        user_ids = options.map { |option| option["voter_ids"] }.sort!
+        user_ids.flatten!
+        user_ids.uniq!
+        user_ids = user_ids.slice((params[:offset].to_i || 0) * 25, 25)
+
+        result = []
+
+        users = User.where(id: user_ids).map do |user|
+          result << UserNameSerializer.new(user).serializable_hash
+        end
       end
 
-      render json: { users: users }
+      render json: { poll_name => result }
     end
   end
 
@@ -294,7 +342,16 @@ after_initialize do
                          polls: post.custom_fields[DiscoursePoll::POLLS_CUSTOM_FIELD]})
   end
 
-  add_to_serializer(:post, :polls, false) { post_custom_fields[DiscoursePoll::POLLS_CUSTOM_FIELD] }
+  add_to_serializer(:post, :polls, false) do
+    polls = post_custom_fields[DiscoursePoll::POLLS_CUSTOM_FIELD].dup
+
+    polls.each do |_, poll|
+      poll["options"].each do |option|
+        option.delete("voter_ids")
+      end
+    end
+  end
+
   add_to_serializer(:post, :include_polls?) { post_custom_fields.present? && post_custom_fields[DiscoursePoll::POLLS_CUSTOM_FIELD].present? }
 
   add_to_serializer(:post, :polls_votes, false) do
