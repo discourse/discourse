@@ -417,7 +417,7 @@ class UsersController < ApplicationController
       else
         @user.password = params[:password]
         @user.password_required!
-        @user.auth_token = nil
+        @user.user_auth_tokens.destroy_all
         if @user.save
           Invite.invalidate_for_email(@user.email) # invite link can't be used to log in anymore
           secure_session["password-#{token}"] = nil
@@ -701,7 +701,7 @@ class UsersController < ApplicationController
   private
 
     def honeypot_value
-      Digest::SHA1::hexdigest("#{Discourse.current_hostname}:#{Discourse::Application.config.secret_token}")[0,15]
+      Digest::SHA1::hexdigest("#{Discourse.current_hostname}:#{GlobalSetting.safe_secret_key_base}")[0,15]
     end
 
     def challenge_value

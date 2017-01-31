@@ -41,6 +41,7 @@ class User < ActiveRecord::Base
   has_many :user_archived_messages, dependent: :destroy
   has_many :email_change_requests, dependent: :destroy
   has_many :directory_items, dependent: :delete_all
+  has_many :user_auth_tokens, dependent: :destroy
 
 
   has_one :user_option, dependent: :destroy
@@ -97,6 +98,7 @@ class User < ActiveRecord::Base
   before_save :update_username_lower
   before_save :ensure_password_is_hashed
 
+  after_save :expire_tokens_if_password_changed
   after_save :automatic_group_membership
   after_save :clear_global_notice_if_needed
   after_save :refresh_avatar
@@ -420,7 +422,6 @@ class User < ActiveRecord::Base
     # special case for passwordless accounts
     unless password.blank?
       @raw_password = password
-      self.auth_token = nil
     end
   end
 
@@ -971,6 +972,18 @@ class User < ActiveRecord::Base
     end
   end
 
+  def expire_tokens_if_password_changed
+    # NOTE: setting raw password is the only valid way of changing a password
+    # the password field in the DB is actually hashed, nobody should be amending direct
+    if @raw_password
+      # Association in model may be out-of-sync
+      UserAuthToken.where(user_id: id).destroy_all
+      # We should not carry this around after save
+      @raw_password = nil
+    end
+  end
+
+
   def hash_password(password, salt)
     raise StandardError.new("password is too long") if password.size > User.max_password_length
     Pbkdf2.hash_password(password, salt, Rails.configuration.pbkdf2_iterations, Rails.configuration.pbkdf2_algorithm)
@@ -1076,7 +1089,7 @@ end
 #  username                :string(60)       not null
 #  created_at              :datetime         not null
 #  updated_at              :datetime         not null
-#  name                    :string
+#  name                    :string(255)
 #  seen_notification_id    :integer          default(0), not null
 #  last_posted_at          :datetime
 #  email                   :string(513)      not null
@@ -1101,7 +1114,7 @@ end
 #  ip_address              :inet
 #  moderator               :boolean          default(FALSE)
 #  blocked                 :boolean          default(FALSE)
-#  title                   :string
+#  title                   :string(255)
 #  uploaded_avatar_id      :integer
 #  locale                  :string(10)
 #  primary_group_id        :integer
