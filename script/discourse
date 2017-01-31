@@ -5,28 +5,54 @@ require "thor"
 class DiscourseCLI < Thor
   class_option :verbose, default: false, aliases: :v
 
-  desc "remap", "Remap a string sequence accross all tables"
-  def remap(from, to, global=nil)
+  desc "remap [--global,--regex] FROM TO", "Remap a string sequence accross all tables"
+  long_desc <<-LONGDESC
+    Replace a string sequence FROM with TO across all tables.
+
+    With --global option, the remapping is run on ***ALL***
+    databases. Instead of just running on the current database, run on
+    every database on this machine. This option is useful for
+    multi-site setups.
+
+    With --regex option, use PostgreSQL function regexp_replace to do
+    the remapping. Enabling this interprets FROM as a PostgreSQL
+    regular expression. TO can contain references to captures in the
+    FROM match. See the "Regular Expression Details" section and
+    "regexp_replace" documentation in the PostgreSQL manual for more
+    details.
+
+
+    Examples:
+
+    discourse remap talk.foo.com talk.bar.com # renaming a Discourse domain name
+
+    discourse remap --regex "\[\/?color(=[^\]]*)*]" "" # removing "color" bbcodes
+  LONGDESC
+  option :global, :type => :boolean
+  option :regex, :type => :boolean
+  def remap(from, to)
     load_rails
 
-    global = global == "--global"
-
-    puts "Rewriting all occurences of #{from} to #{to}"
+    if options[:regex]
+      puts "Rewriting all occurences of #{from} to #{to} using regexp_replace"
+    else
+      puts "Rewriting all occurences of #{from} to #{to}"
+    end
     puts "THIS TASK WILL REWRITE DATA, ARE YOU SURE (type YES)"
-    puts "WILL RUN ON ALL #{RailsMultisite::ConnectionManagement.all_dbs.length} DBS" if global
+    puts "WILL RUN ON ALL #{RailsMultisite::ConnectionManagement.all_dbs.length} DBS" if options[:global]
     text = STDIN.gets
     if text.strip != "YES"
       puts "aborting."
       exit
     end
 
-    if global
+    if options[:global]
       RailsMultisite::ConnectionManagement.each_connection do |db|
         puts "","Remapping tables on #{db}...",""
-        do_remap(from, to)
+        do_remap(from, to, options[:regex])
       end
     else
-      do_remap(from, to)
+      do_remap(from, to, options[:regex])
     end
   end
 
@@ -199,7 +225,7 @@ class DiscourseCLI < Thor
     require File.expand_path(File.dirname(__FILE__) + "/../lib/import_export/import_export")
   end
 
-  def do_remap(from, to)
+  def do_remap(from, to, regex=false)
     sql = "SELECT table_name, column_name
 FROM information_schema.columns
 WHERE table_schema='public' and (data_type like 'char%' or data_type like 'text%') and is_updatable = 'YES'"
@@ -213,10 +239,17 @@ WHERE table_schema='public' and (data_type like 'char%' or data_type like 'text%
       column_name = result["column_name"]
       puts "Remapping #{table_name} #{column_name}"
       begin
-        result = cnn.async_exec("UPDATE #{table_name}
-                        SET #{column_name} = replace(#{column_name}, $1, $2)
-                        WHERE NOT #{column_name} IS NULL
-                          AND #{column_name} <> replace(#{column_name}, $1, $2)", [from, to])
+        result = if regex
+          cnn.async_exec("UPDATE #{table_name}
+            SET #{column_name} = regexp_replace(#{column_name}, $1, $2, 'g')
+            WHERE NOT #{column_name} IS NULL
+              AND #{column_name} <> regexp_replace(#{column_name}, $1, $2, 'g')", [from, to])
+        else
+          cnn.async_exec("UPDATE #{table_name}
+            SET #{column_name} = replace(#{column_name}, $1, $2)
+            WHERE NOT #{column_name} IS NULL
+              AND #{column_name} <> replace(#{column_name}, $1, $2)", [from, to])
+        end
         puts "#{result.cmd_tuples} rows affected!"
       rescue => ex
         puts "Error: #{ex}"
