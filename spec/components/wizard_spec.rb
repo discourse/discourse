@@ -122,7 +122,8 @@ describe Wizard do
 
     it "it's true for the first admin who logs in" do
       admin = Fabricate(:admin)
-      second_admin = Fabricate(:admin, auth_token_updated_at: Time.now)
+      second_admin = Fabricate(:admin)
+      UserAuthToken.generate!(user_id: second_admin.id)
 
       expect(build_simple(admin).requires_completion?).to eq(false)
       expect(build_simple(second_admin).requires_completion?).to eq(true)

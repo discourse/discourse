@@ -1,6 +1,7 @@
 require_dependency 'wizard/step'
 require_dependency 'wizard/field'
 require_dependency 'wizard/step_updater'
+require_dependency 'wizard/builder'
 
 class Wizard
   attr_reader :steps, :user
@@ -76,11 +77,10 @@ class Wizard
   def requires_completion?
     return false unless SiteSetting.wizard_enabled?
 
-
     first_admin = User.where(admin: true)
                       .where.not(id: Discourse.system_user.id)
-                      .where.not(auth_token_updated_at: nil)
-                      .order(:auth_token_updated_at)
+                      .joins(:user_auth_tokens)
+                      .order('user_auth_tokens.created_at')
 
     if @user.present? && first_admin.first == @user && (Topic.count < 15)
       !Wizard::Builder.new(@user).build.completed?

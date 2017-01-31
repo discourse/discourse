@@ -3,10 +3,17 @@ require_dependency 'auth/default_current_user_provider'
 
 describe Auth::DefaultCurrentUserProvider do
 
+  class TestProvider < Auth::DefaultCurrentUserProvider
+    attr_reader :env
+    def initialize(env)
+      super(env)
+    end
+  end
+
   def provider(url, opts=nil)
     opts ||= {method: "GET"}
     env = Rack::MockRequest.env_for(url, opts)
-    Auth::DefaultCurrentUserProvider.new(env)
+    TestProvider.new(env)
   end
 
   it "raises errors for incorrect api_key" do
@@ -73,21 +80,83 @@ describe Auth::DefaultCurrentUserProvider do
     expect(provider("/topic/anything/goes", method: "GET").should_update_last_seen?).to eq(true)
   end
 
-  it "correctly renews session once an hour" do
+  it "correctly supports legacy tokens" do
+    user = Fabricate(:user)
+    token = SecureRandom.hex(16)
+    user_token = UserAuthToken.create!(user_id: user.id, auth_token: token,
+                                       prev_auth_token: token, legacy: true,
+                                       rotated_at: Time.zone.now
+                                      )
+
+    prov = provider("/", "HTTP_COOKIE" => "_t=#{user_token.auth_token}")
+    expect(prov.current_user.id).to eq(user.id)
+
+    # sets a new token up cause it got a global token
+    cookies = {}
+    prov.refresh_session(user, {}, cookies)
+    user.reload
+
+    expect(user.user_auth_tokens.count).to eq(2)
+    expect(cookies["_t"][:value]).not_to eq(token)
+  end
+
+  it "correctly rotates tokens" do
     SiteSetting.maximum_session_age = 3
     user = Fabricate(:user)
-    provider('/').log_on_user(user, {}, {})
-
-    freeze_time 2.hours.from_now
+    @provider = provider('/')
     cookies = {}
-    provider("/", "HTTP_COOKIE" => "_t=#{user.auth_token}").refresh_session(user, {}, cookies)
+    @provider.log_on_user(user, {}, cookies)
 
-    expect(user.auth_token_updated_at - Time.now).to eq(0)
+    unhashed_token = cookies["_t"][:value]
+
+    token = UserAuthToken.find_by(user_id: user.id)
+
+    expect(token.auth_token_seen).to eq(false)
+    expect(token.auth_token).not_to eq(unhashed_token)
+    expect(token.auth_token).to eq(UserAuthToken.hash_token(unhashed_token))
+
+    # at this point we are going to try to rotate token
+    freeze_time 20.minutes.from_now
+
+    provider2 = provider("/", "HTTP_COOKIE" => "_t=#{unhashed_token}")
+    provider2.current_user
+
+    token.reload
+    expect(token.auth_token_seen).to eq(true)
+
+    cookies = {}
+    provider2.refresh_session(user, {}, cookies)
+    expect(cookies["_t"][:value]).not_to eq(unhashed_token)
+
+    token.reload
+    expect(token.auth_token_seen).to eq(false)
+
+
+    freeze_time 21.minutes.from_now
+
+
+    old_token = token.prev_auth_token
+    unverified_token = token.auth_token
+
+    # old token should still work
+    provider2 = provider("/", "HTTP_COOKIE" => "_t=#{unhashed_token}")
+    expect(provider2.current_user.id).to eq(user.id)
+
+    provider2.refresh_session(user, {}, cookies)
+
+    token.reload
+
+    # because this should cause a rotation since we can safely
+    # assume it never reached the client
+    expect(token.prev_auth_token).to eq(old_token)
+    expect(token.auth_token).not_to eq(unverified_token)
+
   end
 
   it "can only try 10 bad cookies a minute" do
-
     user = Fabricate(:user)
+    token = UserAuthToken.generate!(user_id: user.id)
+
     provider('/').log_on_user(user, {}, {})
 
     RateLimiter.stubs(:disabled?).returns(false)
@@ -107,12 +176,15 @@ describe Auth::DefaultCurrentUserProvider do
     }.to raise_error(Discourse::InvalidAccess)
 
     expect {
-      env["HTTP_COOKIE"] = "_t=#{user.auth_token}"
+      env["HTTP_COOKIE"] = "_t=#{token.unhashed_auth_token}"
       provider("/", env).current_user
     }.to raise_error(Discourse::InvalidAccess)
 
     env["REMOTE_ADDR"] = "10.0.0.2"
-    provider('/', env).current_user
+
+    expect {
+      provider('/', env).current_user
+    }.not_to raise_error
   end
 
   it "correctly removes invalid cookies" do
@@ -123,35 +195,26 @@ describe Auth::DefaultCurrentUserProvider do
     expect(cookies.key?("_t")).to eq(false)
   end
 
-  it "recycles existing auth_token correctly" do
-    SiteSetting.maximum_session_age = 3
+  it "logging on user always creates a new token" do
     user = Fabricate(:user)
-    provider('/').log_on_user(user, {}, {})
-
-    original_auth_token = user.auth_token
-
-    freeze_time 2.hours.from_now
-    provider('/').log_on_user(user, {}, {})
-
-    user.reload
-    expect(user.auth_token).to eq(original_auth_token)
-
-    freeze_time 10.hours.from_now
 
     provider('/').log_on_user(user, {}, {})
-    user.reload
-    expect(user.auth_token).not_to eq(original_auth_token)
+    provider('/').log_on_user(user, {}, {})
+
+    expect(UserAuthToken.where(user_id: user.id).count).to eq(2)
   end
 
   it "correctly expires session" do
     SiteSetting.maximum_session_age = 2
     user = Fabricate(:user)
+    token = UserAuthToken.generate!(user_id: user.id)
+
     provider('/').log_on_user(user, {}, {})
 
-    expect(provider("/", "HTTP_COOKIE" => "_t=#{user.auth_token}").current_user.id).to eq(user.id)
+    expect(provider("/", "HTTP_COOKIE" => "_t=#{token.unhashed_auth_token}").current_user.id).to eq(user.id)
 
     freeze_time 3.hours.from_now
-    expect(provider("/", "HTTP_COOKIE" => "_t=#{user.auth_token}").current_user).to eq(nil)
+    expect(provider("/", "HTTP_COOKIE" => "_t=#{token.unhashed_auth_token}").current_user).to eq(nil)
   end
 
   context "user api" do
