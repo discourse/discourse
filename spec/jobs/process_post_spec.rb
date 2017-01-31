@@ -48,9 +48,7 @@ describe Jobs::ProcessPost do
 
     it "always re-extracts links on post process" do
       post.update_columns(raw: "sam has a blog at https://samsaffron.com")
-      TopicLink.destroy_all
-      Jobs::ProcessPost.new.execute(post_id: post.id)
-      expect(TopicLink.count).to eq(1)
+      expect { Jobs::ProcessPost.new.execute(post_id: post.id) }.to change { TopicLink.count }.by(1)
     end
 
   end
