@@ -2,7 +2,7 @@
 <html lang="<%= SiteSetting.default_locale %>">
 <head>
   <meta charset="utf-8">
-  <title><%=SiteSetting.title%></title>
+  <title><%= content_for?(:title) ? yield(:title) + ' - ' + SiteSetting.title : SiteSetting.title %></title>
   <meta name="description" content="">
   <%= render partial: "layouts/head" %>
   <%= render partial: "common/special_font_face" %>

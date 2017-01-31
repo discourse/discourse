@@ -1,7 +1,7 @@
 import storePretender from 'helpers/store-pretender';
 import fixturePretender from 'helpers/fixture-pretender';
 
-function parsePostData(query) {
+export function parsePostData(query) {
   const result = {};
   query.split("&").forEach(function(part) {
     const item = part.split("=");
@@ -18,7 +18,7 @@ function parsePostData(query) {
 
   });
   return result;
-}
+};
 
 function response(code, obj) {
   if (typeof code === "object") {

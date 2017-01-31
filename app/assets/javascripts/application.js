@@ -33,6 +33,7 @@
 //= require ./discourse/models/permission-type
 //= require ./discourse/models/user-action-group
 //= require ./discourse/models/category
+//= require ./discourse/models/input-validation
 //= require ./discourse/lib/ajax-error
 //= require ./discourse/lib/search
 //= require ./discourse/lib/user-search

@@ -655,6 +655,8 @@ en:
         error: "(error)"
         action: "Send Password Reset Email"
         set_password: "Set Password"
+        choose_new: "Choose a new password"
+        choose: "Choose a password"
 
       change_about:
         title: "Change About Me"
@@ -1041,6 +1043,7 @@ en:
       to_continue: "Please Log In"
       preferences: "You need to be logged in to change your user preferences."
       forgot: "I don't recall my account details"
+      not_approved: "Your account hasn't been approved yet. You will be notified by email when you are ready to log in."
       google:
         title: "with Google"
         message: "Authenticating with Google (make sure pop up blockers are not enabled)"
@@ -1062,6 +1065,9 @@ en:
       github:
         title: "with GitHub"
         message: "Authenticating with GitHub (make sure pop up blockers are not enabled)"
+
+    password_reset:
+      continue: "Continue to %{site_name}"
 
     emoji_set:
       apple_international: "Apple/International"
