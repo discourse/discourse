@@ -170,7 +170,7 @@ export function validateUploadedFiles(files, opts) {
 
   // CHROME ONLY: if the image was pasted, sets its name to a default one
   if (typeof Blob !== "undefined" && typeof File !== "undefined") {
-    if (upload instanceof Blob && !(upload instanceof File) && upload.type === "image/png") { upload.name = "__blob__.png"; }
+    if (upload instanceof Blob && !(upload instanceof File) && upload.type === "image/png") { upload.name = "image.png"; }
   }
 
   opts = opts || {};
