@@ -73,6 +73,8 @@ EOM
 
 
   def execute
+    mysql_query("CREATE INDEX firstpostid_index ON #{TABLE_PREFIX}thread (firstpostid)") rescue nil
+
     import_groups
     import_users
     create_groups_membership
@@ -111,27 +113,35 @@ EOM
 
     user_count = mysql_query("SELECT COUNT(userid) count FROM #{TABLE_PREFIX}user").first["count"]
 
+    last_user_id = -1
+
     batches(BATCH_SIZE) do |offset|
-      users = mysql_query <<-SQL
+      users = mysql_query(<<-SQL
           SELECT userid, username, homepage, usertitle, usergroupid, joindate, email
             FROM #{TABLE_PREFIX}user
+           WHERE userid > #{last_user_id}
         ORDER BY userid
            LIMIT #{BATCH_SIZE}
-          OFFSET #{offset}
       SQL
+      ).to_a
 
-      break if users.size < 1
+      break if users.empty?
 
-      next if all_records_exist? :users, users.map {|u| u["userid"].to_i}
+      last_user_id = users[-1]["userid"]
+      before = users.size
+      users.reject! { |u| @lookup.user_already_imported?(u["userid"].to_i) }
 
       create_users(users, total: user_count, offset: offset) do |user|
+        email = user["email"].presence || fake_email
+        email = fake_email unless email[EmailValidator.email_regex]
+
         username = @htmlentities.decode(user["username"]).strip
 
         {
           id: user["userid"],
           name: username,
           username: username,
-          email: user["email"].presence || fake_email,
+          email: email,
           website: user["homepage"].strip,
           title: @htmlentities.decode(user["usertitle"]).strip,
           primary_group_id: group_id_from_imported_group_id(user["usergroupid"].to_i),
@@ -275,19 +285,24 @@ EOM
 
     topic_count = mysql_query("SELECT COUNT(threadid) count FROM #{TABLE_PREFIX}thread").first["count"]
 
+    last_topic_id = -1
+
     batches(BATCH_SIZE) do |offset|
-      topics = mysql_query <<-SQL
+      topics = mysql_query(<<-SQL
           SELECT t.threadid threadid, t.title title, forumid, open, postuserid, t.dateline dateline, views, t.visible visible, sticky,
                  p.pagetext raw
             FROM #{TABLE_PREFIX}thread t
             JOIN #{TABLE_PREFIX}post p ON p.postid = t.firstpostid
+           WHERE t.threadid > #{last_topic_id}
         ORDER BY t.threadid
            LIMIT #{BATCH_SIZE}
-          OFFSET #{offset}
       SQL
+      ).to_a
 
-      break if topics.size < 1
-      next if all_records_exist? :posts, topics.map {|t| "thread-#{t["threadid"]}" }
+      break if topics.empty?
+
+      last_topic_id = topics[-1]["threadid"]
+      topics.reject! { |t| @lookup.post_already_imported?("thread-#{t["threadid"]}") }
 
       create_posts(topics, total: topic_count, offset: offset) do |topic|
         raw = preprocess_post_raw(topic["raw"]) rescue nil
@@ -324,27 +339,32 @@ EOM
   def import_posts
     puts "", "importing posts..."
 
-    # make sure `firstpostid` is indexed
-    begin
-      mysql_query("CREATE INDEX firstpostid_index ON #{TABLE_PREFIX}thread (firstpostid)")
-    rescue Mysql2::Error
-      puts 'Index already exists'
-    end
+    post_count = mysql_query(<<-SQL
+      SELECT COUNT(postid) count
+        FROM #{TABLE_PREFIX}post p
+        JOIN #{TABLE_PREFIX}thread t ON t.threadid = p.threadid
+       WHERE t.firstpostid <> p.postid
+    SQL
+    ).first["count"]
 
-    post_count = mysql_query("SELECT COUNT(postid) count FROM #{TABLE_PREFIX}post WHERE postid NOT IN (SELECT firstpostid FROM #{TABLE_PREFIX}thread)").first["count"]
+    last_post_id = -1
 
     batches(BATCH_SIZE) do |offset|
-      posts = mysql_query <<-SQL
-          SELECT postid, userid, threadid, pagetext raw, dateline, visible, parentid
-            FROM #{TABLE_PREFIX}post
-           WHERE postid NOT IN (SELECT firstpostid FROM #{TABLE_PREFIX}thread)
-        ORDER BY postid
+      posts = mysql_query(<<-SQL
+          SELECT p.postid, p.userid, p.threadid, p.pagetext raw, p.dateline, p.visible, p.parentid
+            FROM #{TABLE_PREFIX}post p
+            JOIN #{TABLE_PREFIX}thread t ON t.threadid = p.threadid
+           WHERE t.firstpostid <> p.postid
+             AND p.postid > #{last_post_id}
+        ORDER BY p.postid
            LIMIT #{BATCH_SIZE}
-          OFFSET #{offset}
       SQL
+      ).to_a
 
-      break if posts.size < 1
-      next if all_records_exist? :posts, posts.map {|p| p["postid"] }
+      break if posts.empty?
+
+      last_post_id = posts[-1]["postid"]
+      posts.reject! { |p| @lookup.post_already_imported?(p["postid"].to_i) }
 
       create_posts(posts, total: post_count, offset: offset) do |post|
         raw = preprocess_post_raw(post["raw"]) rescue nil
@@ -374,16 +394,17 @@ EOM
             WHERE a.attachmentid = #{attachment_id}"
     results = mysql_query(sql)
 
-    unless (row = results.first)
+    unless row = results.first
       puts "Couldn't find attachment record for post.id = #{post.id}, import_id = #{post.custom_fields['import_id']}"
-      return nil
+      return
     end
 
     filename = File.join(ATTACHMENT_DIR, row['user_id'].to_s.split('').join('/'), "#{row['file_id']}.attach")
     unless File.exists?(filename)
       puts "Attachment file doesn't exist: #{filename}"
-      return nil
+      return
     end
+
     real_filename = row['filename']
     real_filename.prepend SecureRandom.hex if real_filename[0] == '.'
     upload = create_upload(post.user.id, filename, real_filename)
@@ -391,15 +412,14 @@ EOM
     if upload.nil? || !upload.valid?
       puts "Upload not valid :("
       puts upload.errors.inspect if upload
-      return nil
+      return
     end
 
-    return upload, real_filename
+    [upload, real_filename]
   rescue Mysql2::Error => e
     puts "SQL Error"
     puts e.message
     puts sql
-    return nil
   end
 
 
@@ -408,17 +428,22 @@ EOM
 
     topic_count = mysql_query("SELECT COUNT(pmtextid) count FROM #{TABLE_PREFIX}pmtext").first["count"]
 
-    batches(BATCH_SIZE) do |offset|
-      private_messages = mysql_query <<-SQL
-          SELECT pmtextid, fromuserid, title, message, touserarray, dateline
-          FROM #{TABLE_PREFIX}pmtext
-          ORDER BY pmtextid
-          LIMIT #{BATCH_SIZE}
-          OFFSET #{offset}
-      SQL
+    last_private_message_id = -1
 
-      break if private_messages.size < 1
-      next if all_records_exist? :posts, private_messages.map {|pm| "pm-#{pm['pmtextid']}" }
+    batches(BATCH_SIZE) do |offset|
+      private_messages = mysql_query(<<-SQL
+          SELECT pmtextid, fromuserid, title, message, touserarray, dateline
+            FROM #{TABLE_PREFIX}pmtext
+           WHERE pmtextid > #{last_private_message_id}
+        ORDER BY pmtextid
+           LIMIT #{BATCH_SIZE}
+      SQL
+      ).to_a
+
+      break if private_messages.empty?
+
+      last_private_message_id = private_messages[-1]["pmtextid"]
+      private_messages.reject! { |pm| @lookup.post_already_imported?("pm-#{pm['pmtextid']}") }
 
       title_username_of_pm_first_post = {}
 
@@ -476,12 +501,13 @@ EOM
 
         if title =~ /^Re:/
 
-          parent_id = title_username_of_pm_first_post[[title[3..-1], participants]]
-          parent_id = title_username_of_pm_first_post[[title[4..-1], participants]] unless parent_id
-          parent_id = title_username_of_pm_first_post[[title[5..-1], participants]] unless parent_id
-          parent_id = title_username_of_pm_first_post[[title[6..-1], participants]] unless parent_id
-          parent_id = title_username_of_pm_first_post[[title[7..-1], participants]] unless parent_id
-          parent_id = title_username_of_pm_first_post[[title[8..-1], participants]] unless parent_id
+          parent_id = title_username_of_pm_first_post[[title[3..-1], participants]] ||
+                      title_username_of_pm_first_post[[title[4..-1], participants]] ||
+                      title_username_of_pm_first_post[[title[5..-1], participants]] ||
+                      title_username_of_pm_first_post[[title[6..-1], participants]] ||
+                      title_username_of_pm_first_post[[title[7..-1], participants]] ||
+                      title_username_of_pm_first_post[[title[8..-1], participants]]
+
           if parent_id
             if t = topic_lookup_from_imported_post_id("pm-#{parent_id}")
               topic_id = t[:topic_id]
@@ -496,7 +522,7 @@ EOM
           mapped[:archetype] = Archetype.private_message
           mapped[:target_usernames] = target_usernames.join(',')
 
-          if mapped[:target_usernames].empty? # pm with yourself?
+          if mapped[:target_usernames].size < 1 # pm with yourself?
             # skip = true
             mapped[:target_usernames] = "system"
             puts "pm-#{m['pmtextid']} has no target (#{m['touserarray']})"
@@ -515,7 +541,14 @@ EOM
     puts '', 'importing attachments...'
 
     current_count = 0
-    total_count = mysql_query("SELECT COUNT(postid) count FROM #{TABLE_PREFIX}post WHERE postid NOT IN (SELECT firstpostid FROM #{TABLE_PREFIX}thread)").first["count"]
+
+    total_count = mysql_query(<<-SQL
+      SELECT COUNT(postid) count
+        FROM #{TABLE_PREFIX}post p
+        JOIN #{TABLE_PREFIX}thread t ON t.threadid = p.threadid
+       WHERE t.firstpostid <> p.postid
+    SQL
+    ).first["count"]
 
     success_count = 0
     fail_count = 0
