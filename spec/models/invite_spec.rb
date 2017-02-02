@@ -330,25 +330,24 @@ describe Invite do
     end
 
     context 'invited to topics' do
-      let!(:topic) { Fabricate(:private_message_topic) }
+      let(:tl2_user) { Fabricate(:user, trust_level: 2) }
+      let!(:topic) { Fabricate(:private_message_topic, user: tl2_user) }
       let!(:invite) {
         topic.invite(topic.user, 'jake@adventuretime.ooo')
       }
 
       context 'redeem topic invite' do
-
         it 'adds the user to the topic_users' do
           user = invite.redeem
           topic.reload
           expect(topic.allowed_users.include?(user)).to eq(true)
           expect(Guardian.new(user).can_see?(topic)).to eq(true)
         end
-
       end
 
       context 'invited by another user to the same topic' do
-        let(:coding_horror) { User.find_by(username: "CodingHorror") }
-        let!(:another_invite) { topic.invite(coding_horror, 'jake@adventuretime.ooo') }
+        let(:another_tl2_user) { Fabricate(:user, trust_level: 2) }
+        let!(:another_invite) { topic.invite(another_tl2_user, 'jake@adventuretime.ooo') }
         let!(:user) { invite.redeem }
 
         it 'adds the user to the topic_users' do
@@ -358,25 +357,14 @@ describe Invite do
       end
 
       context 'invited by another user to a different topic' do
-        let!(:another_invite) { another_topic.invite(coding_horror, 'jake@adventuretime.ooo') }
         let!(:user) { invite.redeem }
-
-        let(:coding_horror) { User.find_by(username: "CodingHorror") }
-        let(:another_topic) { Fabricate(:topic, category_id: nil, archetype: "private_message", user: coding_horror) }
+        let(:another_tl2_user) { Fabricate(:user, trust_level: 2) }
+        let(:another_topic) { Fabricate(:topic, user: another_tl2_user) }
 
         it 'adds the user to the topic_users of the first topic' do
+          expect(another_topic.invite(another_tl2_user, user.username)).to be_truthy # invited via username
           expect(topic.allowed_users.include?(user)).to eq(true)
           expect(another_topic.allowed_users.include?(user)).to eq(true)
-          duplicate_invite = Invite.find_by(id: another_invite.id)
-          expect(duplicate_invite).to be_nil
-        end
-
-        context 'if they redeem the other invite afterwards' do
-
-          it 'wont redeem a duplicate invite' do
-            expect(another_invite.redeem).to be_blank
-          end
-
         end
       end
     end
