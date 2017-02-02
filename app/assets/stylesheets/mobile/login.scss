@@ -104,5 +104,12 @@ $input-width: 184px;
   .tip {
     display: block;
     margin: 6px 0;
+    max-width: 180px;
+  }
+}
+
+.discourse-touch .password-reset {
+  .instructions {
+    margin-bottom: 16px;
   }
 }
