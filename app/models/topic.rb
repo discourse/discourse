@@ -1118,6 +1118,7 @@ SQL
     builder.where("p.post_number > 1")
     builder.where("p.user_id != t.user_id")
     builder.where("p.user_id in (:user_ids)", {user_ids: opts[:user_ids]}) if opts[:user_ids]
+    builder.where("p.post_type = :post_type", post_type: Post.types[:regular])
     builder.where("EXTRACT(EPOCH FROM p.created_at - t.created_at) > 0")
     builder.exec
   end
@@ -1136,11 +1137,11 @@ SQL
     FROM (
       SELECT t.id, t.created_at::date AS created_at, MIN(p.post_number) first_reply
       FROM topics t
-      LEFT JOIN posts p ON p.topic_id = t.id AND p.user_id != t.user_id AND p.deleted_at IS NULL
+      LEFT JOIN posts p ON p.topic_id = t.id AND p.user_id != t.user_id AND p.deleted_at IS NULL AND p.post_type = #{Post.types[:regular]}
       /*where*/
       GROUP BY t.id
     ) tt
-    WHERE tt.first_reply IS NULL
+    WHERE tt.first_reply IS NULL OR tt.first_reply < 2
     GROUP BY tt.created_at
     ORDER BY tt.created_at
   SQL
@@ -1160,11 +1161,11 @@ SQL
     FROM (
       SELECT t.id, MIN(p.post_number) first_reply
       FROM topics t
-      LEFT JOIN posts p ON p.topic_id = t.id AND p.user_id != t.user_id AND p.deleted_at IS NULL
+      LEFT JOIN posts p ON p.topic_id = t.id AND p.user_id != t.user_id AND p.deleted_at IS NULL AND p.post_type = #{Post.types[:regular]}
       /*where*/
       GROUP BY t.id
     ) tt
-    WHERE tt.first_reply IS NULL
+    WHERE tt.first_reply IS NULL OR tt.first_reply < 2
   SQL
 
   def self.with_no_response_total(opts={})
