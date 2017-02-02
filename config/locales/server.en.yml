@@ -878,8 +878,6 @@ en:
     download_remote_images_to_local: "Convert remote images to local images by downloading them; this prevents broken images."
     download_remote_images_threshold: "Minimum disk space necessary to download remote images locally (in percent)"
     download_remote_images_max_days_old: "Don't download remote images for posts that are more than n days old."
-    download_onebox_images_to_local: "Convert onebox images to local images by downloading them; this prevents broken images."
-    download_only_http_onebox_images: "Download onebox images only if it does not have SSL certificate."
     disabled_image_download_domains: "Remote images will never be downloaded from these domains. Pipe-delimited list."
     editing_grace_period: "For (n) seconds after posting, editing will not create a new version in the post history."
     post_edit_time_limit: "The author can edit or delete their post for (n) minutes after posting. Set to 0 for forever."

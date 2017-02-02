@@ -720,12 +720,6 @@ files:
     default: 30
     min: 1
     max: 10000
-  download_onebox_images_to_local:
-    default:
-      default: true
-  download_only_http_onebox_images:
-    default:
-      default: false
   disabled_image_download_domains:
     type: list
     default: ''
