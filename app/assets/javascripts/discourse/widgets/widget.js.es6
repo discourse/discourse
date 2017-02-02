@@ -129,7 +129,7 @@ export function reopenWidget(name, opts) {
   let existing = _registry[name];
   if (!existing) {
     console.error(`Could not find widget ${name} in registry`);
-    return
+    return;
   }
 
   Object.keys(opts).forEach(k => existing.prototype[k] = opts[k]);
