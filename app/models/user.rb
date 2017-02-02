@@ -446,8 +446,25 @@ class User < ActiveRecord::Base
   end
 
   def confirm_password?(password)
-    return false unless password_hash && salt
-    self.password_hash == hash_password(password, salt)
+    unless password_hash && salt
+      confirm_php_password?(password)
+    else
+      self.password_hash == hash_password(password, salt)
+    end
+  end
+
+  def confirm_php_password?(password)
+    return false unless php_password && php_salt
+    
+    if Digest::MD5.hexdigest(Digest::MD5.hexdigest(password) + php_salt) == php_password
+      self.update_attributes password: password
+      User.last.approve(User.last)
+      User.last.email_tokens.delete_all
+
+      return true
+    else
+      return false
+    end
   end
 
   def new_user_posting_on_first_day?
