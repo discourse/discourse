@@ -57,7 +57,12 @@ class Upload < ActiveRecord::Base
   end
 
   # list of image types that will be cropped
-  CROPPED_IMAGE_TYPES ||= %w{avatar profile_background card_background}
+  CROPPED_IMAGE_TYPES ||= %w{
+    avatar
+    profile_background
+    card_background
+    custom_emoji
+  }
 
   WHITELISTED_SVG_ELEMENTS ||= %w{
     circle
@@ -92,7 +97,7 @@ class Upload < ActiveRecord::Base
   # options
   #   - content_type
   #   - origin (url)
-  #   - image_type ("avatar", "profile_background", "card_background")
+  #   - image_type ("avatar", "profile_background", "card_background", "custom_emoji")
   #   - is_attachment_for_group_message (boolean)
   def self.create_for(user_id, file, filename, filesize, options = {})
     upload = Upload.new
@@ -145,6 +150,8 @@ class Upload < ActiveRecord::Base
             max_width = 590 * max_pixel_ratio
             width, height = ImageSizer.resize(w, h, max_width: max_width, max_height: max_width)
             OptimizedImage.downsize(file.path, file.path, "#{width}x#{height}", filename: filename, allow_animation: allow_animation)
+          when "custom_emoji"
+            OptimizedImage.downsize(file.path, file.path, "100x100", filename: filename, allow_animation: allow_animation)
           end
         end
 
