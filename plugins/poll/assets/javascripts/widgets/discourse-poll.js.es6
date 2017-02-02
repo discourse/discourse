@@ -99,7 +99,7 @@ createWidget('discourse-poll-voters', {
       state.loaded = 'loaded';
       state.offset += 1;
 
-      const pollResult = result[attrs.pollName]
+      const pollResult = result[attrs.pollName];
       const newVoters = attrs.pollType === 'number' ? pollResult : pollResult[attrs.optionId];
       state.pollVoters = state.pollVoters.concat(newVoters);
 
@@ -118,8 +118,6 @@ createWidget('discourse-poll-voters', {
 
     console.log(state.pollVoters);
     const contents = state.pollVoters.map(user => {
-      if (user === undefined) debugger;
-
       return h('li', [avatarFor('tiny', {
         username: user.username,
         template: user.avatar_template
