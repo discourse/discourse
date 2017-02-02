@@ -116,7 +116,6 @@ createWidget('discourse-poll-voters', {
       state.pollVoters = attrs.pollVoters;
     }
 
-    console.log(state.pollVoters);
     const contents = state.pollVoters.map(user => {
       return h('li', [avatarFor('tiny', {
         username: user.username,
