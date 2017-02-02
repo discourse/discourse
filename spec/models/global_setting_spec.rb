@@ -1,6 +1,26 @@
 require 'rails_helper'
 require 'tempfile'
 
+describe GlobalSetting do
+  describe '.redis_config' do
+    describe 'when slave config is not present' do
+      it "should not set any connector" do
+        expect(GlobalSetting.redis_config[:connector]).to eq(nil)
+      end
+    end
+
+    describe 'when slave config is present' do
+      it "should set the right connector" do
+        GlobalSetting.reset_redis_config!
+        GlobalSetting.expects(:redis_slave_port).returns(6379).at_least_once
+        GlobalSetting.expects(:redis_slave_host).returns('0.0.0.0').at_least_once
+
+        expect(GlobalSetting.redis_config[:connector]).to eq(DiscourseRedis::Connector)
+      end
+    end
+  end
+end
+
 describe GlobalSetting::EnvProvider do
   it "can detect keys from env" do
     ENV['DISCOURSE_BLA'] = '1'
@@ -9,6 +29,7 @@ describe GlobalSetting::EnvProvider do
     expect(GlobalSetting::EnvProvider.new.keys).to include(:bla_2)
   end
 end
+
 describe GlobalSetting::FileProvider do
   it "can parse a simple file" do
     f = Tempfile.new('foo')
@@ -48,5 +69,4 @@ describe GlobalSetting::FileProvider do
 
     f.unlink
   end
-
 end
