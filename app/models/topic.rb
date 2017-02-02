@@ -744,7 +744,7 @@ SQL
       end
     end
 
-    if username_or_email =~ /^.+@.+$/ && !SiteSetting.enable_sso && SiteSetting.enable_local_logins
+    if username_or_email =~ /^.+@.+$/ && Guardian.new(invited_by).can_invite_via_email?(self)
       # rate limit topic invite
       RateLimiter.new(invited_by, "topic-invitations-per-day", SiteSetting.max_topic_invitations_per_day, 1.day.to_i).performed!
 
