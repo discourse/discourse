@@ -14,6 +14,8 @@ export default Discourse.Route.extend({
 
   afterModel(model) {
     // confirm token here so email clients who crawl URLs don't invalidate the link
-    ajax({ url: `/users/confirm-email-token/${model.token}.json`, dataType: 'json' });
+    if (model) {
+      return ajax({ url: `/users/confirm-email-token/${model.token}.json`, dataType: 'json' });
+    }
   }
 });

@@ -12,17 +12,13 @@ export default Ember.Controller.extend(PasswordValidation, {
 
   @computed()
   continueButtonText() {
-    return I18n.t('password_reset.continue', {site_name: Discourse.SiteSettings.title});
+    return I18n.t('password_reset.continue', {site_name: this.siteSettings.title});
   },
 
-  @computed()
-  lockImageUrl() {
-    return getUrl('/images/lock.svg');
-  },
+  lockImageUrl: getUrl('/images/lock.svg'),
 
   actions: {
     submit() {
-      const self = this;
       ajax({
         url: `/users/password-reset/${this.get('model.token')}.json`,
         type: 'PUT',
@@ -31,18 +27,18 @@ export default Ember.Controller.extend(PasswordValidation, {
         }
       }).then(result => {
         if (result.success) {
-          self.set('successMessage', result.message);
-          self.set('redirectTo', result.redirect_to);
+          this.set('successMessage', result.message);
+          this.set('redirectTo', result.redirect_to);
           if (result.requires_approval) {
-            self.set('requiresApproval', true);
+            this.set('requiresApproval', true);
           }
         } else {
           if (result.errors && result.errors.password && result.errors.password.length > 0) {
-            self.get('rejectedPasswords').pushObject(self.get('accountPassword'));
-            self.get('rejectedPasswordsMessages').set(self.get('accountPassword'), result.errors.password[0]);
+            this.get('rejectedPasswords').pushObject(this.get('accountPassword'));
+            this.get('rejectedPasswordsMessages').set(this.get('accountPassword'), result.errors.password[0]);
           }
           if (result.message) {
-            self.set('errorMessage', result.message);
+            this.set('errorMessage', result.message);
           }
         }
       }).catch(response => {
