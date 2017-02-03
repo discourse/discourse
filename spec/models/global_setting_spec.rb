@@ -10,8 +10,15 @@ describe GlobalSetting do
     end
 
     describe 'when slave config is present' do
-      it "should set the right connector" do
+      before do
         GlobalSetting.reset_redis_config!
+      end
+
+      after do
+        GlobalSetting.reset_redis_config!
+      end
+
+      it "should set the right connector" do
         GlobalSetting.expects(:redis_slave_port).returns(6379).at_least_once
         GlobalSetting.expects(:redis_slave_host).returns('0.0.0.0').at_least_once
 
