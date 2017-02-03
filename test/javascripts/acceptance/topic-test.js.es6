@@ -83,12 +83,11 @@ test("Reply as new topic", () => {
 
     equal(
       find('.d-editor-input').val().trim(),
-      "Continuing the discussion from [Internationalization / localization](http://localhost:3000/t/internationalization-localization/280):",
+      `Continuing the discussion from [Internationalization / localization](${window.location.origin}/t/internationalization-localization/280):`,
       "it fills composer with the ring string"
     );
-
     equal(
-      find('#select2-chosen-1').text().trim(), "feature",
+      find('.category-combobox').select2('data').text, "feature",
       "it fills category selector with the right category"
     );
   });
@@ -104,7 +103,7 @@ test("Reply as new message", () => {
 
     equal(
       find('.d-editor-input').val().trim(),
-      "Continuing the discussion from [PM for testing](http://localhost:3000/t/pm-for-testing/12):",
+      `Continuing the discussion from [PM for testing](${window.location.origin}/t/pm-for-testing/12):`,
       "it fills composer with the ring string"
     );
 
