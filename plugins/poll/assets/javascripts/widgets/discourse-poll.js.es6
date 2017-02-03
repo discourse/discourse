@@ -190,7 +190,7 @@ createWidget('discourse-poll-standard-results', {
       return ordered.map((option, idx) => {
         const contents = [];
         const per = rounded[idx].toString();
-        const chosen = attrs.vote.includes(option.id);
+        const chosen = (attrs.vote || []).includes(option.id);
 
         contents.push(h('div.option',
                        h('p', [ h('span.percentage', `${per}%`), optionHtml(option) ])
