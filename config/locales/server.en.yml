@@ -316,6 +316,13 @@ en:
 
       Are you sure you're providing adequate time for other people to share their points of view, too?
 
+    get_a_room: |
+      ### You're replying a lot to the same person
+
+      You've replied %{count} times to that person in a row already.
+
+      Perhaps you're making things too personal, rather than allowing for a community discussion? You could try sending them a message instead.
+
     too_many_replies: |
       ### You have reached the reply limit for this topic
 
@@ -1358,6 +1365,8 @@ en:
     allow_profile_backgrounds: "Allow users to upload profile backgrounds."
 
     sequential_replies_threshold: "Number of posts a user has to make in a row in a topic before being reminded about too many sequential replies."
+
+    get_a_room_threshold: "Number of posts a user has to make to the same person in the same topic before being warned."
 
     enable_mobile_theme: "Mobile devices use a mobile-friendly theme, with the ability to switch to the full site. Disable this if you want to use a custom stylesheet that is fully responsive."
 

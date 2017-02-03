@@ -15,6 +15,7 @@ describe ComposerMessagesFinder do
       finder.expects(:check_sequential_replies).once
       finder.expects(:check_dominating_topic).once
       finder.expects(:check_reviving_old_topic).once
+      finder.expects(:check_get_a_room).once
       finder.find
     end
 
@@ -197,7 +198,7 @@ describe ComposerMessagesFinder do
         expect(finder.check_sequential_replies).to be_blank
       end
 
-      it "doesn't notify in message" do
+      it "doesn't notify in a message" do
         Topic.any_instance.expects(:private_message?).returns(true)
         expect(finder.check_sequential_replies).to be_blank
       end
@@ -302,6 +303,111 @@ describe ComposerMessagesFinder do
     end
 
   end
+
+  context '.check_get_a_room' do
+    let(:user) { Fabricate(:user) }
+    let(:other_user) { Fabricate(:user) }
+    let(:third_user) { Fabricate(:user) }
+    let(:topic) { Fabricate(:topic, user: other_user) }
+    let(:op) { Fabricate(:post, topic_id: topic.id, user: other_user) }
+
+    let!(:other_user_reply) {
+      Fabricate(:post, topic: topic, user: third_user, reply_to_user_id: op.user_id)
+    }
+
+    let!(:first_reply) {
+      Fabricate(:post, topic: topic, user: user, reply_to_user_id: op.user_id)
+    }
+
+    let!(:second_reply) {
+      Fabricate(:post, topic: topic, user: user, reply_to_user_id: op.user_id)
+    }
+
+    before do
+      SiteSetting.educate_until_posts = 10
+      user.stubs(:post_count).returns(11)
+      SiteSetting.get_a_room_threshold = 2
+    end
+
+    it "does not show the message for new topics" do
+      finder = ComposerMessagesFinder.new(user, composer_action: 'createTopic')
+      expect(finder.check_get_a_room).to be_blank
+    end
+
+    it "does not give a message without a topic id" do
+      expect(ComposerMessagesFinder.new(user, composer_action: 'reply').check_get_a_room).to be_blank
+    end
+
+    context "reply" do
+      let(:finder) { ComposerMessagesFinder.new(user, composer_action: 'reply', topic_id: topic.id, post_id: op.id) }
+
+      it "does not give a message to users who are still in the 'education' phase" do
+        user.stubs(:post_count).returns(9)
+        expect(finder.check_get_a_room).to be_blank
+      end
+
+      it "doesn't notify a user it has already notified about sequential replies" do
+        UserHistory.create!(
+          action: UserHistory.actions[:notified_about_get_a_room],
+          target_user_id: user.id,
+          topic_id: topic.id
+        )
+        expect(finder.check_get_a_room).to be_blank
+      end
+
+      it "will notify you if it hasn't in the current topic" do
+        UserHistory.create!(
+          action: UserHistory.actions[:notified_about_get_a_room],
+          target_user_id: user.id,
+          topic_id: topic.id+1
+        )
+        expect(finder.check_get_a_room).to be_present
+      end
+
+      it "won't notify you if you haven't had enough posts" do
+        SiteSetting.get_a_room_threshold = 10
+        expect(finder.check_get_a_room).to be_blank
+      end
+
+      it "doesn't notify you if the posts aren't all to the same person" do
+        first_reply.update_column(:reply_to_user_id, user.id)
+        expect(finder.check_get_a_room).to be_blank
+      end
+
+      it "doesn't notify you of posts to yourself" do
+        first_reply.update_column(:reply_to_user_id, user.id)
+        second_reply.update_column(:reply_to_user_id, user.id)
+        expect(finder.check_get_a_room).to be_blank
+      end
+
+      it "doesn't notify in a message" do
+        Topic.any_instance.expects(:private_message?).returns(true)
+        expect(finder.check_get_a_room).to be_blank
+      end
+
+      it "doesn't notify when replying to a different user" do
+        other_finder = ComposerMessagesFinder.new(
+          user,
+          composer_action: 'reply',
+          topic_id: topic.id,
+          post_id: other_user_reply.id
+        )
+
+        expect(other_finder.check_get_a_room).to be_blank
+      end
+
+      context "success" do
+        let!(:message) { finder.check_get_a_room }
+
+        it "works as expected" do
+          expect(message).to be_present
+          expect(UserHistory.exists_for_user?(user, :notified_about_get_a_room)).to eq(true)
+        end
+      end
+    end
+
+  end
+
 
   context '.check_reviving_old_topic' do
     let(:user)  { Fabricate(:user) }

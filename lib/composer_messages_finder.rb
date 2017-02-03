@@ -6,13 +6,16 @@ class ComposerMessagesFinder
     @topic = Topic.find_by(id: details[:topic_id]) if details[:topic_id]
   end
 
+  def self.check_methods
+    @check_methods ||= instance_methods.find_all {|m| m =~ /^check\_/}
+  end
+
   def find
-    check_reviving_old_topic    ||
-    check_education_message     ||
-    check_new_user_many_replies ||
-    check_avatar_notification   ||
-    check_sequential_replies    ||
-    check_dominating_topic
+    self.class.check_methods.each do |m|
+      msg = send(m)
+      return msg if msg.present?
+    end
+    nil
   end
 
   # Determines whether to show the user education text
@@ -79,18 +82,7 @@ class ComposerMessagesFinder
 
   # Is a user replying too much in succession?
   def check_sequential_replies
-
-    # We only care about replies to topics
-    return unless replying? && @details[:topic_id] &&
-
-                  # And who have posted enough
-                  (@user.post_count >= SiteSetting.educate_until_posts) &&
-
-                  # And it's not a message
-                  (@topic.present? && !@topic.private_message?) &&
-
-                  # And who haven't been notified about sequential replies already
-                  !UserHistory.exists_for_user?(@user, :notified_about_sequential_replies, topic_id: @details[:topic_id])
+    return unless educate_reply?(:notified_about_sequential_replies)
 
     # Count the topics made by this user in the last day
     recent_posts_user_ids = Post.where(topic_id: @details[:topic_id])
@@ -118,12 +110,7 @@ class ComposerMessagesFinder
   end
 
   def check_dominating_topic
-
-    # We only care about replies to topics for a user who has posted enough
-    return unless replying? &&
-                  @details[:topic_id] &&
-                  (@user.post_count >= SiteSetting.educate_until_posts) &&
-                  !UserHistory.exists_for_user?(@user, :notified_about_dominating_topic, topic_id: @details[:topic_id])
+    return unless educate_reply?(:notified_about_dominating_topic)
 
     return if @topic.blank? ||
               @topic.user_id == @user.id ||
@@ -149,6 +136,37 @@ class ComposerMessagesFinder
     }
   end
 
+  def check_get_a_room
+    return unless educate_reply?(:notified_about_get_a_room)
+    return unless @details[:post_id].present?
+
+    reply_to_user_id = Post.where(id: @details[:post_id]).pluck(:user_id)[0]
+
+    # Users's last x posts in the topic
+    last_x_replies = @topic.
+      posts.
+      where(user_id: @user.id).
+      limit(SiteSetting.get_a_room_threshold).
+      pluck(:reply_to_user_id).
+      find_all {|uid| uid != @user.id && uid == reply_to_user_id}
+
+    return unless last_x_replies.size == SiteSetting.get_a_room_threshold
+
+    UserHistory.create!(action: UserHistory.actions[:notified_about_get_a_room],
+                        target_user_id: @user.id,
+                        topic_id: @details[:topic_id])
+
+    {
+      id: 'get_a_room',
+      templateName: 'education',
+      wait_for_typing: true,
+      extraClass: 'education-message',
+      body: PrettyText.cook(
+        I18n.t('education.get_a_room', count: SiteSetting.get_a_room_threshold)
+      )
+    }
+  end
+
   def check_reviving_old_topic
     return unless replying?
     return if @topic.nil? ||
@@ -166,6 +184,14 @@ class ComposerMessagesFinder
   end
 
   private
+
+    def educate_reply?(type)
+      replying? &&
+      @details[:topic_id] &&
+      (@topic.present? && !@topic.private_message?) &&
+      (@user.post_count >= SiteSetting.educate_until_posts) &&
+      !UserHistory.exists_for_user?(@user, type, topic_id: @details[:topic_id])
+    end
 
     def creating_topic?
       @details[:composer_action] == "createTopic"
