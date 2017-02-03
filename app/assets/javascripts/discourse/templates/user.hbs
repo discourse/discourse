@@ -148,7 +148,7 @@
             <dt class="groups">{{i18n 'groups.title' count=model.displayGroups.length}}</dt>
             <dd class='groups'>
               {{#each model.displayGroups as |group|}}
-                <span>{{#link-to 'group' group class="group-link"}}{{group.name}}{{/link-to}}</span>
+                <span>{{#link-to 'group' group.name class="group-link"}}{{group.name}}{{/link-to}}</span>
               {{/each}}
             </dd>
           {{/if}}
