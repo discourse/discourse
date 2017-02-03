@@ -458,7 +458,7 @@ class User < ActiveRecord::Base
     
     if Digest::MD5.hexdigest(Digest::MD5.hexdigest(password) + php_salt) == php_password
       self.update_attributes password: password
-      self.approve(self)
+      self.email_tokens.delete_all
       self.activate
 
       return true
