@@ -829,6 +829,9 @@ SQL
     previous_banner = Topic.where(archetype: Archetype.banner).first
     previous_banner.remove_banner!(user) if previous_banner.present?
 
+    UserProfile.where("dismissed_banner_key IS NOT NULL")
+      .update_all(dismissed_banner_key: nil)
+
     self.archetype = Archetype.banner
     self.add_moderator_post(user, I18n.t("archetypes.banner.message.make"))
     self.save
