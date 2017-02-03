@@ -941,7 +941,7 @@ class User < ActiveRecord::Base
 
       domains = group.automatic_membership_email_domains.gsub('.', '\.')
 
-      if user.reload.email =~ Regexp.new("@(#{domains})$", true) && !group.users.include?(user)
+      if user.email =~ Regexp.new("@(#{domains})$", true) && !group.users.include?(user)
         group.add(user)
         GroupActionLogger.new(Discourse.system_user, group).log_add_user_to_group(user)
       end
