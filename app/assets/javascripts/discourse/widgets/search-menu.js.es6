@@ -85,7 +85,7 @@ export default createWidget('search-menu', {
 
       query += `q=${encodeURIComponent(searchData.term)}`;
 
-      if (contextEnabled) {
+      if (contextEnabled && ctx) {
         if (this.currentUser &&
             ctx.id.toString().toLowerCase() === this.currentUser.username_lower &&
             type === "private_messages") {
