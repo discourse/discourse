@@ -68,9 +68,16 @@ export default Ember.Controller.extend(ModalFunctionality, {
     return this.get('model') !== this.currentUser;
   }.property('model'),
 
-  @computed('isMessage', 'model.details.can_invite_via_email')
-  showCopyInviteButton(isMessage, can_invite_via_email) {
-    return (can_invite_via_email && !isMessage);
+  @computed('model', 'model.details.can_invite_via_email')
+  canInviteViaEmail(model, can_invite_via_email) {
+    return (this.get('model') === this.currentUser) ?
+            true :
+            can_invite_via_email;
+  },
+
+  @computed('isMessage', 'canInviteViaEmail')
+  showCopyInviteButton(isMessage, canInviteViaEmail) {
+    return (canInviteViaEmail && !isMessage);
   },
 
   topicId: Ember.computed.alias('model.id'),
@@ -87,10 +94,10 @@ export default Ember.Controller.extend(ModalFunctionality, {
   }.property('invitingToTopic'),
 
   // Show Groups? (add invited user to private group)
-  @computed('isAdmin', 'emailOrUsername', 'isPrivateTopic', 'isMessage', 'invitingToTopic', 'model.details.can_invite_via_email')
-  showGroups(isAdmin, emailOrUsername, isPrivateTopic, isMessage, invitingToTopic, can_invite_via_email) {
+  @computed('isAdmin', 'emailOrUsername', 'isPrivateTopic', 'isMessage', 'invitingToTopic', 'canInviteViaEmail')
+  showGroups(isAdmin, emailOrUsername, isPrivateTopic, isMessage, invitingToTopic, canInviteViaEmail) {
     return isAdmin &&
-           can_invite_via_email &&
+           canInviteViaEmail &&
            !isMessage &&
            (emailValid(emailOrUsername) || isPrivateTopic || !invitingToTopic);
   },
@@ -101,9 +108,9 @@ export default Ember.Controller.extend(ModalFunctionality, {
   },
 
   // Instructional text for the modal.
-  @computed('isMessage', 'invitingToTopic', 'emailOrUsername', 'isPrivateTopic', 'isAdmin', 'model.details.can_invite_via_email')
-  inviteInstructions(isMessage, invitingToTopic, emailOrUsername, isPrivateTopic, isAdmin, can_invite_via_email) {
-    if (!can_invite_via_email) {
+  @computed('isMessage', 'invitingToTopic', 'emailOrUsername', 'isPrivateTopic', 'isAdmin', 'canInviteViaEmail')
+  inviteInstructions(isMessage, invitingToTopic, emailOrUsername, isPrivateTopic, isAdmin, canInviteViaEmail) {
+    if (!canInviteViaEmail) {
       // can't invite via email, only existing users
       return I18n.t('topic.invite_reply.sso_enabled');
     } else if (isMessage) {
@@ -157,9 +164,9 @@ export default Ember.Controller.extend(ModalFunctionality, {
     return this.get('isMessage') ? I18n.t('topic.invite_private.error') : I18n.t('topic.invite_reply.error');
   }.property('isMessage'),
 
-  @computed('model.details.can_invite_via_email')
-  placeholderKey(can_invite_via_email) {
-    return (can_invite_via_email) ?
+  @computed('canInviteViaEmail')
+  placeholderKey(canInviteViaEmail) {
+    return (canInviteViaEmail) ?
             'topic.invite_private.email_or_username_placeholder' :
             'topic.invite_reply.username_placeholder';
   },
