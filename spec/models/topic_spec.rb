@@ -809,6 +809,14 @@ describe Topic do
         expect(Topic.where(archetype: Archetype.banner).count).to eq(1)
       end
 
+      it "removes any dismissed banner keys" do
+        user.user_profile.update_column(:dismissed_banner_key, topic.id)
+
+        topic.make_banner!(user)
+        user.user_profile.reload
+        expect(user.user_profile.dismissed_banner_key).to be_nil
+      end
+
     end
 
     describe "remove_banner!" do
@@ -1442,7 +1450,7 @@ describe Topic do
       user = Fabricate(:user)
       tag = Fabricate(:tag)
       TagUser.change(user.id, tag.id, TagUser.notification_levels[:muted])
-      topic = Fabricate(:topic, tags: [tag])
+      Fabricate(:topic, tags: [tag])
 
       expect(Topic.for_digest(user, 1.year.ago, top_order: true)).to be_blank
     end
@@ -1868,23 +1876,23 @@ describe Topic do
 
     it "should have no results if there is only a topic with no replies" do
       topic = Fabricate(:topic, created_at: 1.hour.ago)
-      post1 = Fabricate(:post, topic: topic, user: topic.user, post_number: 1)
+      Fabricate(:post, topic: topic, user: topic.user, post_number: 1)
       expect(Topic.time_to_first_response_per_day(5.days.ago, Time.zone.now).count).to eq(0)
       expect(Topic.time_to_first_response_total).to eq(0)
     end
 
     it "should have no results if reply is from first poster" do
       topic = Fabricate(:topic, created_at: 1.hour.ago)
-      post1 = Fabricate(:post, topic: topic, user: topic.user, post_number: 1)
-      post2 = Fabricate(:post, topic: topic, user: topic.user, post_number: 2)
+      Fabricate(:post, topic: topic, user: topic.user, post_number: 1)
+      Fabricate(:post, topic: topic, user: topic.user, post_number: 2)
       expect(Topic.time_to_first_response_per_day(5.days.ago, Time.zone.now).count).to eq(0)
       expect(Topic.time_to_first_response_total).to eq(0)
     end
 
     it "should have results if there's a topic with replies" do
       topic = Fabricate(:topic, created_at: 3.hours.ago)
-      post1 = Fabricate(:post, topic: topic, user: topic.user, post_number: 1, created_at: 3.hours.ago)
-      post2 = Fabricate(:post, topic: topic, post_number: 2, created_at: 2.hours.ago)
+      Fabricate(:post, topic: topic, user: topic.user, post_number: 1, created_at: 3.hours.ago)
+      Fabricate(:post, topic: topic, post_number: 2, created_at: 2.hours.ago)
       r = Topic.time_to_first_response_per_day(5.days.ago, Time.zone.now)
       expect(r.count).to eq(1)
       expect(r[0]["hours"].to_f.round).to eq(1)
@@ -1892,12 +1900,12 @@ describe Topic do
     end
 
     it "should only count regular posts as the first response" do
-      topic   = Fabricate(:topic, created_at: 5.hours.ago)
-      post1   = Fabricate(:post, topic: topic, user: topic.user, post_number: 1, created_at: 5.hours.ago)
-      whisper = Fabricate(:post, topic: topic, post_number: 2, created_at: 4.hours.ago, post_type: Post.types[:whisper])
-      mod     = Fabricate(:post, topic: topic, post_number: 3, created_at: 3.hours.ago, post_type: Post.types[:moderator_action])
-      small   = Fabricate(:post, topic: topic, post_number: 4, created_at: 2.hours.ago, post_type: Post.types[:small_action])
-      post3   = Fabricate(:post, topic: topic, post_number: 5, created_at: 1.hour.ago)
+      topic = Fabricate(:topic, created_at: 5.hours.ago)
+      Fabricate(:post, topic: topic, user: topic.user, post_number: 1, created_at: 5.hours.ago)
+      Fabricate(:post, topic: topic, post_number: 2, created_at: 4.hours.ago, post_type: Post.types[:whisper])
+      Fabricate(:post, topic: topic, post_number: 3, created_at: 3.hours.ago, post_type: Post.types[:moderator_action])
+      Fabricate(:post, topic: topic, post_number: 4, created_at: 2.hours.ago, post_type: Post.types[:small_action])
+      Fabricate(:post, topic: topic, post_number: 5, created_at: 1.hour.ago)
       r = Topic.time_to_first_response_per_day(5.days.ago, Time.zone.now)
       expect(r.count).to eq(1)
       expect(r[0]["hours"].to_f.round).to eq(4)
@@ -1911,23 +1919,23 @@ describe Topic do
     end
 
     it "returns 1 with one topic that has no replies" do
-      topic   = Fabricate(:topic, created_at: 5.hours.ago)
-      post1   = Fabricate(:post, topic: topic, user: topic.user, post_number: 1, created_at: 5.hours.ago)
+      topic = Fabricate(:topic, created_at: 5.hours.ago)
+      Fabricate(:post, topic: topic, user: topic.user, post_number: 1, created_at: 5.hours.ago)
       expect(Topic.with_no_response_per_day(5.days.ago, Time.zone.now).count).to eq(1)
       expect(Topic.with_no_response_total).to eq(1)
     end
 
     it "returns 1 with one topic that has no replies and author was changed on first post" do
-      topic   = Fabricate(:topic, created_at: 5.hours.ago)
-      post1   = Fabricate(:post, topic: topic, user: Fabricate(:user), post_number: 1, created_at: 5.hours.ago)
+      topic = Fabricate(:topic, created_at: 5.hours.ago)
+      Fabricate(:post, topic: topic, user: Fabricate(:user), post_number: 1, created_at: 5.hours.ago)
       expect(Topic.with_no_response_per_day(5.days.ago, Time.zone.now).count).to eq(1)
       expect(Topic.with_no_response_total).to eq(1)
     end
 
     it "returns 1 with one topic that has a reply by the first poster" do
-      topic   = Fabricate(:topic, created_at: 5.hours.ago)
-      post1   = Fabricate(:post, topic: topic, user: topic.user, post_number: 1, created_at: 5.hours.ago)
-      post2   = Fabricate(:post, topic: topic, user: topic.user, post_number: 2, created_at: 2.hours.ago)
+      topic = Fabricate(:topic, created_at: 5.hours.ago)
+      Fabricate(:post, topic: topic, user: topic.user, post_number: 1, created_at: 5.hours.ago)
+      Fabricate(:post, topic: topic, user: topic.user, post_number: 2, created_at: 2.hours.ago)
       expect(Topic.with_no_response_per_day(5.days.ago, Time.zone.now).count).to eq(1)
       expect(Topic.with_no_response_total).to eq(1)
     end
@@ -1941,11 +1949,11 @@ describe Topic do
     end
 
     it "returns 1 with one topic that doesn't have regular replies" do
-      topic   = Fabricate(:topic, created_at: 5.hours.ago)
-      post1   = Fabricate(:post, topic: topic, user: topic.user, post_number: 1, created_at: 5.hours.ago)
-      whisper = Fabricate(:post, topic: topic, post_number: 2, created_at: 4.hours.ago, post_type: Post.types[:whisper])
-      mod     = Fabricate(:post, topic: topic, post_number: 3, created_at: 3.hours.ago, post_type: Post.types[:moderator_action])
-      small   = Fabricate(:post, topic: topic, post_number: 4, created_at: 2.hours.ago, post_type: Post.types[:small_action])
+      topic = Fabricate(:topic, created_at: 5.hours.ago)
+      Fabricate(:post, topic: topic, user: topic.user, post_number: 1, created_at: 5.hours.ago)
+      Fabricate(:post, topic: topic, post_number: 2, created_at: 4.hours.ago, post_type: Post.types[:whisper])
+      Fabricate(:post, topic: topic, post_number: 3, created_at: 3.hours.ago, post_type: Post.types[:moderator_action])
+      Fabricate(:post, topic: topic, post_number: 4, created_at: 2.hours.ago, post_type: Post.types[:small_action])
       expect(Topic.with_no_response_per_day(5.days.ago, Time.zone.now).count).to eq(1)
       expect(Topic.with_no_response_total).to eq(1)
     end
