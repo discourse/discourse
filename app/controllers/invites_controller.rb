@@ -49,7 +49,7 @@ class InvitesController < ApplicationController
 
     invite_exists = Invite.where(email: params[:email], invited_by_id: current_user.id).first
     if invite_exists && !guardian.can_send_multiple_invites?(current_user)
-      render json: failed_json, status: 422
+      return render json: failed_json, status: 422
     end
 
     begin
@@ -71,7 +71,7 @@ class InvitesController < ApplicationController
 
     invite_exists = Invite.where(email: params[:email], invited_by_id: current_user.id).first
     if invite_exists && !guardian.can_send_multiple_invites?(current_user)
-      render json: failed_json, status: 422
+      return render json: failed_json, status: 422
     end
 
     begin
