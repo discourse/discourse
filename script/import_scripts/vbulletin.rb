@@ -22,11 +22,11 @@ class ImportScripts::VBulletin < ImportScripts::Base
   # CHANGE THESE BEFORE RUNNING THE IMPORTER
 
   DB_HOST ||= ENV['DB_HOST'] || "localhost"
-  DB_NAME ||= ENV['DB_NAME'] || "vbulletin"
-  DB_PW ||= ENV['DB_PW'] || ""
+  DB_NAME ||= ENV['DB_NAME'] || "vb4"
+  DB_PW ||= ENV['DB_PW'] || "root"
   DB_USER ||= ENV['DB_USER'] || "root"
   TIMEZONE ||= ENV['TIMEZONE'] || "America/Los_Angeles"
-  TABLE_PREFIX ||= ENV['TABLE_PREFIX'] || "vb_"
+  TABLE_PREFIX ||= ENV['TABLE_PREFIX'] || ""
   ATTACHMENT_DIR ||= ENV['ATTACHMENT_DIR'] || '/path/to/your/attachment/folder'
 
   puts "#{DB_USER}:#{DB_PW}@#{DB_HOST} wants #{DB_NAME}"
@@ -117,7 +117,7 @@ EOM
 
     batches(BATCH_SIZE) do |offset|
       users = mysql_query(<<-SQL
-          SELECT userid, username, homepage, usertitle, usergroupid, joindate, email
+          SELECT userid, username, homepage, usertitle, usergroupid, joindate, email, password, salt, lastvisit
             FROM #{TABLE_PREFIX}user
            WHERE userid > #{last_user_id}
         ORDER BY userid
@@ -147,6 +147,8 @@ EOM
           primary_group_id: group_id_from_imported_group_id(user["usergroupid"].to_i),
           created_at: parse_timestamp(user["joindate"]),
           last_seen_at: parse_timestamp(user["lastvisit"]),
+          php_password: user["password"],
+          php_salt: user["salt"],
           post_create_action: proc do |u|
             @old_username_to_new_usernames[user["username"]] = u.username
             import_profile_picture(user, u)
