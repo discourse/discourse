@@ -1423,9 +1423,7 @@ en:
     delete_drafts_older_than_n_days: Delete drafts older than (n) days.
 
     bootstrap_mode_min_users: "Minimum number of users required to disable bootstrap mode (set to 0 to disable)"
-
-    vacuum_db_days: "Run VACUUM ANALYZE to reclaim DB space after migrations (set to 0 to disable)"
-
+    
     prevent_anons_from_downloading_files: "Prevent anonymous users from downloading attachments. WARNING: this will prevent any non-image site assets posted as attachments from working."
 
     slug_generation_method: "Choose a slug generation method. 'encoded' will generate percent encoding string. 'none' will disable slug at all."

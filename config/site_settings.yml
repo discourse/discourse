@@ -1261,11 +1261,6 @@ uncategorized:
 
   disable_edit_notifications: false
 
-  vacuum_db_days: 90
-  last_vacuum:
-    default: 0
-    hidden: true
-
   delete_drafts_older_than_n_days:
     default: 180
     min: 0

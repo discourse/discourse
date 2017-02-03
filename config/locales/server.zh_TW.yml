@@ -1187,7 +1187,6 @@ zh_TW:
     show_create_topics_notice: "如果網站的公開討論話題少於 5 個，顯示通知要求管理員建立一些討論話題。"
     delete_drafts_older_than_n_days: 刪除超過 n 天得草稿。
     bootstrap_mode_min_users: "禁用摘要模式的用戶數下限（0 為禁用）。"
-    vacuum_db_days: "在資料庫遷移後使用完整掃瞄回收資料庫空間（設置 0 為禁用）"
     prevent_anons_from_downloading_files: "禁止匿名用戶下載附件。警告：這將禁止他們訪問任何發表在帖子中的非圖片資源。"
     slug_generation_method: "選擇一個連結生成方式。“encoded”將生成以百分號編碼的連結。“none”將禁用自定義連結，只生成預設連結。"
     enable_emoji: "啟用表情符號"
