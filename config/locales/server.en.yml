@@ -294,46 +294,48 @@ en:
     avatar: |
       ### How about a picture for your account?
 
-      You've posted a few topics and replies, but your profile picture isn't as unique as you are -- it's just a letter.
+      You’ve posted a few topics and replies, but your profile picture isn’t as unique as you are – it’s just a letter.
 
       Have you considered **[visiting your user profile](%{profile_path})** and uploading a picture that represents you?
 
-      It's easier to follow discussions and find interesting people in conversations when everyone has a unique profile picture!
+      It’s easier to follow discussions and find interesting people in conversations when everyone has a unique profile picture!
 
     sequential_replies: |
       ### Consider replying to several posts at once
 
-      Rather than many sequential replies to a topic, please consider a single reply that includes quotes from previous posts or @name references.
+      Rather than several replies to a topic in a row, please consider a single reply that includes quotes from previous posts or @name references.
 
       You can edit your previous reply to add a quote by highlighting text and selecting the <b>quote reply</b> button that appears.
 
-      It's easier for everyone to read topics that have fewer in-depth replies versus lots of small, individual replies.
+      It’s easier for everyone to read topics that have fewer in-depth replies versus lots of small, individual replies.
 
     dominating_topic: |
       ### Let others join the conversation
 
       This topic is clearly important to you &ndash; you've posted more than %{percent}% of the replies here.
 
-      Are you sure you're providing adequate time for other people to share their points of view, too?
+      Are you sure you’re providing adequate time for other people to share their points of view, too?
 
     get_a_room: |
-      ### You're replying a lot to the same person
+      ### You’re replying a lot to the same person
 
-      You've replied %{count} times to that person in a row already.
+      You’ve already replied %{count} times to this person in this particular topic.
 
-      Perhaps you're making things too personal, rather than allowing for a community discussion? You could try sending them a message instead.
+      Have you considered replying to *other* people in the discussion, too? A great discussion involves many voices and perspectives.
+      
+      If you’d like to continue your conversation with this particular user at length, consider sending them a personal message.
 
     too_many_replies: |
       ### You have reached the reply limit for this topic
 
-      We're sorry, but new users are temporarily limited to %{newuser_max_replies_per_topic} replies in the same topic.
+      We’re sorry, but new users are temporarily limited to %{newuser_max_replies_per_topic} replies in the same topic.
 
       Instead of adding another reply, please consider editing your previous replies, or visiting other topics.
 
     reviving_old_topic: |
       ### Revive this topic?
 
-      The last reply to this topic is now over %{days} days old. Your reply will bump the topic to the top of its list and notify anyone previously involved in the conversation.
+      The last reply to this topic was **%{days}** days ago. Your reply will bump the topic to the top of its list and notify anyone previously involved in the conversation.
 
       Are you sure you want to continue this old conversation?
 
