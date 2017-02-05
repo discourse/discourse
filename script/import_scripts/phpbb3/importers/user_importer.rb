@@ -51,7 +51,7 @@ module ImportScripts::PhpBB3
 
       {
         id: username,
-        email: "anonymous_no_email_#{SecureRandom.hex}",
+        email: "anonymous_#{SecureRandom.hex}@no-email.invalid",
         username: username,
         name: @settings.username_as_name ? username : '',
         created_at: Time.zone.at(row[:first_post_time]),
