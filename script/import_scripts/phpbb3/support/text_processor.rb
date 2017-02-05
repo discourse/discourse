@@ -137,7 +137,7 @@ module ImportScripts::PhpBB3
 
     def create_internal_link_regexps(original_site_prefix)
       host = original_site_prefix.gsub('.', '\.')
-      link_regex = "http(?:s)?://#{host}/viewtopic\\.php\\?(?:\\S*)(?:t=(\\d+)|p=(\\d+)(?:#p\\d+)?)(?:\\S*)"
+      link_regex = "http(?:s)?://#{host}/viewtopic\\.php\\?(?:\\S*)(?:t=(\\d+)|p=(\\d+)(?:#p\\d+)?)(?:[^\\s\\)\\]]*)"
 
       @long_internal_link_regexp = Regexp.new(%Q|<!-- l --><a(?:.+)href="#{link_regex}"(?:.*)</a><!-- l -->|, Regexp::IGNORECASE)
       @short_internal_link_regexp = Regexp.new(link_regex, Regexp::IGNORECASE)
