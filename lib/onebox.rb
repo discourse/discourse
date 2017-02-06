@@ -9,6 +9,8 @@ require "cgi"
 require "net/http"
 require "digest"
 require "fast_blank"
+require "sanitize"
+require_relative "onebox/sanitize_config"
 
 module Onebox
   DEFAULTS = {
@@ -19,6 +21,7 @@ module Onebox
     load_paths: [File.join(Gem::Specification.find_by_name("onebox").gem_dir, "templates")],
     allowed_ports: [80, 443],
     allowed_schemes: ["http", "https"],
+    sanitize_config: Sanitize::Config::ONEBOX,
   }
 
   @@options = DEFAULTS

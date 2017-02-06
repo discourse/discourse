@@ -1,6 +1,3 @@
-require "sanitize"
-require_relative "onebox_sanitize_config"
-
 module Onebox
   class Preview
     attr_reader :cache
@@ -64,7 +61,7 @@ module Onebox
       end
 
       def sanitize(html)
-        Sanitize.fragment(html, Sanitize::Config::ONEBOX)
+        Sanitize.fragment(html, @options[:sanitize_config] || Sanitize::Config::ONEBOX)
       end
 
       def engine
