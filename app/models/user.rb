@@ -935,6 +935,8 @@ class User < ActiveRecord::Base
   def automatic_group_membership
     user = User.find(self.id)
 
+    return unless user && user.active && !user.staged
+
     Group.where(automatic: false)
          .where("LENGTH(COALESCE(automatic_membership_email_domains, '')) > 0")
          .each do |group|
