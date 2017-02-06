@@ -18,6 +18,23 @@
 </div>
 <% end %>
 
+<% if SiteSetting.tagging_enabled %>
+  <% @tags = @topic_view.topic.tags %>
+  <% if @tags.present? %>
+    <div class='tags-list' itemscope itemtype='http://schema.org/ItemList'>
+      <% @tags.each do |tag| %>
+        <div itemprop='itemListElement' itemscope itemtype='http://schema.org/ListItem'>
+          <meta itemprop='url' content='<%= "#{Discourse.base_url}/tags/#{tag.name}" %>'>
+          <a href='<%= "#{Discourse.base_url}/tags/#{tag.name}" %>' itemprop='item'>
+            <span itemprop='name'><%= tag.name -%></span>
+          </a>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+<% end %>
+
+
 <%= server_plugin_outlet "topic_header" %>
 
 <hr>
