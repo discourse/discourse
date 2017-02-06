@@ -1183,9 +1183,29 @@ describe User do
 
   describe "automatic group membership" do
 
+    let!(:group) {
+      Fabricate(:group,
+        automatic_membership_email_domains: "bar.com|wat.com",
+        grant_trust_level: 1,
+        title: "bars and wats",
+        primary_group: true
+      )
+    }
+
+    it "doesn't automatically add inactive users" do
+      inactive_user = Fabricate(:user, active: false, email: "wat@wat.com")
+      group.reload
+      expect(group.users.include?(inactive_user)).to eq(false)
+    end
+
+    it "doesn't automatically add staged users" do
+      staged_user = Fabricate(:user, active: true, staged: true, email: "wat@wat.com")
+      group.reload
+      expect(group.users.include?(staged_user)).to eq(false)
+    end
+
     it "is automatically added to a group when the email matches" do
-      group = Fabricate(:group, automatic_membership_email_domains: "bar.com|wat.com")
-      user = Fabricate(:user, email: "foo@bar.com")
+      user = Fabricate(:user, active: true, email: "foo@bar.com")
       group.reload
       expect(group.users.include?(user)).to eq(true)
 
@@ -1197,14 +1217,8 @@ describe User do
     end
 
     it "get attributes from the group" do
-      group = Fabricate(:group,
-        automatic_membership_email_domains: "bar.com|wat.com",
-        grant_trust_level: 1,
-        title: "bars and wats",
-        primary_group: true
-      )
-
       user = Fabricate.build(:user,
+        active: true,
         trust_level: 0,
         email: "foo@bar.com",
         password: "strongpassword4Uguys"
