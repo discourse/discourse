@@ -171,6 +171,15 @@ aside.onebox {
   @include gdocs-logo('drive');
 }
 
+.pdf-onebox-logo {
+  width: 60px;
+  height: 50px;
+  float: left;
+  background: image-url("favicons/pdf_64px.png") no-repeat;
+  background-size: 48px 48px;
+  display: inline-block;
+}
+
 // Google Calendar Placeholder
 .gdocs-onebox-splash {
   background-color: blend-primary-secondary(30%);
