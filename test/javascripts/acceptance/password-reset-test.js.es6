@@ -57,7 +57,6 @@ test("Password Reset Page", () => {
   click('.password-reset form button');
   andThen(() => {
     ok(!exists(".password-reset form"), "form is gone");
-    ok(exists(".password-reset .btn"), "button is shown");
   });
 });
 
