@@ -33,7 +33,6 @@ test("Password Reset Page", () => {
   visit("/users/password-reset/myvalidtoken");
   andThen(() => {
     ok(exists(".password-reset input"), "shows the input");
-    ok(find('.password-reset .instructions').html().indexOf('8 char') !== -1, "shows correct min length");
   });
 
   fillIn('.password-reset input', 'perf3ctly5ecur3');
