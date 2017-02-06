@@ -33,7 +33,7 @@ test("Password Reset Page", () => {
   visit("/users/password-reset/myvalidtoken");
   andThen(() => {
     ok(exists(".password-reset input"), "shows the input");
-    ok(find('.password-reset .instructions').html().trim().includes(`${Discourse.SiteSettings.min_password_length} char`), "shows correct min length");
+    ok(find('.password-reset .instructions').html().indexOf('8 char') !== -1, "shows correct min length");
   });
 
   fillIn('.password-reset input', 'perf3ctly5ecur3');
@@ -44,14 +44,14 @@ test("Password Reset Page", () => {
   fillIn('.password-reset input', '123');
   andThen(() => {
     ok(exists(".password-reset .tip.bad"), "input is not valid");
-    ok(find(".password-reset .tip.bad").html().trim().includes(I18n.t('user.password.too_short')), "password too short");
+    ok(find(".password-reset .tip.bad").html().indexOf(I18n.t('user.password.too_short')) > -1, "password too short");
   });
 
   fillIn('.password-reset input', 'jonesyAlienSlayer');
   click('.password-reset form button');
   andThen(() => {
     ok(exists(".password-reset .tip.bad"), "input is not valid");
-    ok(find(".password-reset .tip.bad").html().trim().includes("is the name of your cat"), "server validation error message shows");
+    ok(find(".password-reset .tip.bad").html().indexOf("is the name of your cat") > -1, "server validation error message shows");
   });
 
   fillIn('.password-reset input', 'perf3ctly5ecur3');
