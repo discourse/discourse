@@ -270,44 +270,36 @@ module PrettyText
     end
   end
 
-  class DetectedLink
-    attr_accessor :is_quote, :url
-
-    def initialize(url, is_quote=false)
-      @url = url
-      @is_quote = is_quote
-    end
-  end
-
+  class DetectedLink < Struct.new(:url, :is_quote); end
 
   def self.extract_links(html)
     links = []
     doc = Nokogiri::HTML.fragment(html)
+
     # remove href inside quotes & elided part
-    doc.css("aside.quote:not(.topic-onebox) a, .elided a").each { |l| l["href"] = "" }
+    doc.css("aside.quote a, .elided a").each { |a| a["href"] = "" }
 
-    # extract all links from the post
-    doc.css("a").each { |l|
-      unless l["href"].blank? || "#".freeze == l["href"][0]
-        links << DetectedLink.new(l["href"])
+    # extract all links
+    doc.css("a").each do |a|
+      if a["href"].present? && a["href"][0] != "#".freeze
+        links << DetectedLink.new(a["href"], false)
       end
-    }
-
-    # extract links to quotes
-    doc.css("aside.quote[data-topic]").each do |a|
-      topic_id = a['data-topic']
-
-      url = "/t/topic/#{topic_id}"
-      if post_number = a['data-post']
-        url << "/#{post_number}"
-      end
-
-      links << DetectedLink.new(url, true)
     end
 
-    # Extract Youtube links
-    doc.css("div[data-youtube-id]").each do |d|
-      links << DetectedLink.new("https://www.youtube.com/watch?v=#{d['data-youtube-id']}", false)
+    # extract quotes
+    doc.css("aside.quote[data-topic]").each do |aside|
+      if aside["data-topic"].present?
+        url = "/t/topic/#{aside["data-topic"]}"
+        url << "/#{aside["data-post"]}" if aside["data-post"].present?
+        links << DetectedLink.new(url, true)
+      end
+    end
+
+    # extract Youtube links
+    doc.css("div[data-youtube-id]").each do |div|
+      if div["data-youtube-id"].present?
+        links << DetectedLink.new("https://www.youtube.com/watch?v=#{div['data-youtube-id']}", false)
+      end
     end
 
     links

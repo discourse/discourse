@@ -9,9 +9,7 @@ describe Jobs::ProcessPost do
 
   context 'with a post' do
 
-    let(:post) do
-      Fabricate(:post)
-    end
+    let(:post) { Fabricate(:post) }
 
     it 'does not erase posts when CookedPostProcessor malfunctions' do
       # Look kids, an actual reason why you want to use mocks
@@ -35,7 +33,6 @@ describe Jobs::ProcessPost do
     end
 
     it 'processes posts' do
-
       post = Fabricate(:post, raw: "<img src='#{Discourse.base_url_no_prefix}/awesome/picture.png'>")
       expect(post.cooked).to match(/http/)
 
@@ -51,7 +48,20 @@ describe Jobs::ProcessPost do
       expect { Jobs::ProcessPost.new.execute(post_id: post.id) }.to change { TopicLink.count }.by(1)
     end
 
-  end
+    it "extracts links to quoted posts" do
+      quoted_post = Fabricate(:post, raw: "This is a post with a link to https://www.discourse.org", post_number: 42)
+      post.update_columns(raw: "This quote is the best\n\n[quote=\"#{quoted_post.user.username}, topic:#{quoted_post.topic_id}, post:#{quoted_post.post_number}\"]#{quoted_post.excerpt}[/quote]")
+      # when creating a quote, we also create the reflexion link
+      expect { Jobs::ProcessPost.new.execute(post_id: post.id) }.to change { TopicLink.count }.by(2)
+    end
 
+    it "extracts links to oneboxed topics" do
+      oneboxed_post = Fabricate(:post)
+      post.update_columns(raw: "This post is the best\n\n#{oneboxed_post.full_url}")
+      # when creating a quote, we also create the reflexion link
+      expect { Jobs::ProcessPost.new.execute(post_id: post.id) }.to change { TopicLink.count }.by(2)
+    end
+
+  end
 
 end
