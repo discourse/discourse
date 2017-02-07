@@ -4,7 +4,7 @@ describe UserAnonymizer do
 
   describe "make_anonymous" do
     let(:admin) { Fabricate(:admin) }
-    let(:user) { Fabricate(:user, username: "edward", auth_token: "mysecretauthtoken") }
+    let(:user) { Fabricate(:user, username: "edward") }
 
     subject(:make_anonymous) { described_class.make_anonymous(user, admin) }
 
@@ -51,6 +51,8 @@ describe UserAnonymizer do
 
         prev_username = user.username
 
+        UserAuthToken.generate!(user_id: user.id)
+
         make_anonymous
         user.reload
 
@@ -58,7 +60,7 @@ describe UserAnonymizer do
         expect(user.name).not_to be_present
         expect(user.date_of_birth).to eq(nil)
         expect(user.title).not_to be_present
-        expect(user.auth_token).to eq(nil)
+        expect(user.user_auth_tokens.count).to eq(0)
 
         profile = user.user_profile(true)
         expect(profile.location).to eq(nil)

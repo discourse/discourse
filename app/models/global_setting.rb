@@ -6,6 +6,35 @@ class GlobalSetting
     end
   end
 
+  VALID_SECRET_KEY = /^[0-9a-f]{128}$/
+  # this is named SECRET_TOKEN as opposed to SECRET_KEY_BASE
+  # for legacy reasons
+  REDIS_SECRET_KEY = 'SECRET_TOKEN'
+
+  # In Rails secret_key_base is used to encrypt the cookie store
+  # the cookie store contains session data
+  # Discourse also uses this secret key to digest user auth tokens
+  # This method will
+  # - use existing token if already set in ENV or discourse.conf
+  # - generate a token on the fly if needed and cache in redis
+  # - enforce rules about token format falling back to redis if needed
+  def self.safe_secret_key_base
+    @safe_secret_key_base ||= begin
+      token = secret_key_base
+      if token.blank? || token !~ VALID_SECRET_KEY
+        token = $redis.without_namespace.get(REDIS_SECRET_KEY)
+        unless token && token =~ VALID_SECRET_KEY
+          token = SecureRandom.hex(64)
+          $redis.without_namespace.set(REDIS_SECRET_KEY,token)
+        end
+      end
+      if !secret_key_base.blank? && token != secret_key_base
+        STDERR.puts "WARNING: DISCOURSE_SECRET_KEY_BASE is invalid, it was re-generated"
+      end
+      token
+    end
+  end
+
   def self.load_defaults
     default_provider = FileProvider.from(File.expand_path('../../../config/discourse_defaults.conf', __FILE__))
     default_provider.keys.concat(@provider.keys).uniq.each do |key|
