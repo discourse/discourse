@@ -27,6 +27,7 @@ describe DiscourseSingleSignOn do
     sso.moderator = false
     sso.suppress_welcome_message = false
     sso.require_activation = false
+    sso.title = "user title"
     sso.custom_fields["a"] = "Aa"
     sso.custom_fields["b.b"] = "B.b"
     sso
@@ -45,6 +46,7 @@ describe DiscourseSingleSignOn do
     expect(parsed.moderator).to eq sso.moderator
     expect(parsed.suppress_welcome_message).to eq sso.suppress_welcome_message
     expect(parsed.require_activation).to eq false
+    expect(parsed.title).to eq sso.title
     expect(parsed.custom_fields["a"]).to eq "Aa"
     expect(parsed.custom_fields["b.b"]).to eq "B.b"
   end
@@ -267,6 +269,33 @@ describe DiscourseSingleSignOn do
       User.any_instance.expects(:enqueue_welcome_message).never
       sso.suppress_welcome_message = true
       user = sso.lookup_or_create_user(ip_address)
+    end
+  end
+
+  context 'setting title for a user' do
+    let(:sso) {
+      sso = DiscourseSingleSignOn.new
+      sso.username = 'test'
+      sso.name = 'test'
+      sso.email = 'test@test.com'
+      sso.external_id = '100'
+      sso.title = "The User's Title"
+      sso
+    }
+
+    it 'can set title if supplied on new users' do
+      user = sso.lookup_or_create_user(ip_address)
+      expect(user.title).to eq(sso.title)
+    end
+
+    it 'sets the title if user has an empty title' do
+      sso.title = ' '
+      user = sso.lookup_or_create_user(ip_address)
+
+      sso.title = 'I am a new title'
+      user = sso.lookup_or_create_user(ip_address)
+
+      expect(user.title).to eq(sso.title)
     end
   end
 
