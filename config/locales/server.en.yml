@@ -1037,8 +1037,8 @@ en:
 
     login_required: "Require authentication to read content on this site, disallow anonymous access."
 
-    min_username_length: "Minimum username length in characters."
-    max_username_length: "Maximum username length in characters."
+    min_username_length: "Minimum username length in characters. WARNING: if any existing users or groups have names shorter than this, your site will break!"
+    max_username_length: "Maximum username length in characters. WARNING: if any existing users or groups have names longer than this, your site will break!"
 
     reserved_usernames: "Usernames for which signup is not allowed."
 
