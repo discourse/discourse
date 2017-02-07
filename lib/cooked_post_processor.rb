@@ -308,8 +308,8 @@ class CookedPostProcessor
   end
 
   def optimize_urls
-    # when login is required, attachments can't be on the CDN
-    if SiteSetting.login_required
+    # attachments can't be on the CDN when either setting is enabled
+    if SiteSetting.login_required || SiteSetting.prevent_anons_from_downloading_files
       @doc.css("a.attachment[href]").each do |a|
         href = a["href"].to_s
         a["href"] = UrlHelper.schemaless UrlHelper.absolute_without_cdn(href) if UrlHelper.is_local(href)
