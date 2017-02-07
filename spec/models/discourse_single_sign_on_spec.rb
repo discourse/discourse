@@ -283,19 +283,19 @@ describe DiscourseSingleSignOn do
       sso
     }
 
-    it 'can set title if supplied on new users' do
+    it 'sets title correctly' do
       user = sso.lookup_or_create_user(ip_address)
       expect(user.title).to eq(sso.title)
-    end
 
-    it 'sets the title if user has an empty title' do
-      sso.title = ' '
+      sso.title = "farmer"
       user = sso.lookup_or_create_user(ip_address)
 
-      sso.title = 'I am a new title'
+      expect(user.title).to eq("farmer")
+
+      sso.title = nil
       user = sso.lookup_or_create_user(ip_address)
 
-      expect(user.title).to eq(sso.title)
+      expect(user.title).to eq("farmer")
     end
   end
 
