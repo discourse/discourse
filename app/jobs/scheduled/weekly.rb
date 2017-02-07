@@ -13,6 +13,7 @@ module Jobs
       ScoreCalculator.new.calculate
       SchedulerStat.purge_old
       Draft.cleanup!
+      UserAuthToken.cleanup!
     end
   end
 end

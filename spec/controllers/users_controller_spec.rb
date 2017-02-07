@@ -155,21 +155,13 @@ describe UsersController do
           put :perform_account_activation, token: 'asdfasdf'
         end
 
-        it 'returns success' do
+        it 'correctly logs on user' do
           expect(response).to be_success
-        end
-
-        it "doesn't set an error" do
           expect(flash[:error]).to be_blank
-        end
-
-        it 'logs in as the user' do
           expect(session[:current_user_id]).to be_present
-        end
-
-        it "doesn't set @needs_approval" do
           expect(assigns[:needs_approval]).to be_blank
         end
+
       end
 
       context 'user is not approved' do
@@ -241,7 +233,7 @@ describe UsersController do
         render_views
 
         it 'renders referrer never on get requests' do
-          user = Fabricate(:user, auth_token: SecureRandom.hex(16))
+          user = Fabricate(:user)
           token = user.email_tokens.create(email: user.email).token
           get :password_reset, token: token
 
@@ -250,25 +242,25 @@ describe UsersController do
       end
 
       it 'returns success' do
-        user = Fabricate(:user, auth_token: SecureRandom.hex(16))
+        user = Fabricate(:user)
+        user_auth_token = UserAuthToken.generate!(user_id: user.id)
         token = user.email_tokens.create(email: user.email).token
-
-        old_token = user.auth_token
 
         get :password_reset, token: token
         put :password_reset, token: token, password: 'hg9ow8yhg98o'
+
         expect(response).to be_success
         expect(assigns[:error]).to be_blank
 
         user.reload
-        expect(user.auth_token).to_not eq old_token
-        expect(user.auth_token.length).to eq 32
+
         expect(session["password-#{token}"]).to be_blank
+
+        expect(UserAuthToken.where(id: user_auth_token.id).count).to eq(0)
       end
 
       it 'disallows double password reset' do
-
-        user = Fabricate(:user, auth_token: SecureRandom.hex(16))
+        user = Fabricate(:user)
         token = user.email_tokens.create(email: user.email).token
 
         get :password_reset, token: token
@@ -277,10 +269,13 @@ describe UsersController do
 
         user.reload
         expect(user.confirm_password?('hg9ow8yhg98o')).to eq(true)
+
+        # logged in now
+        expect(user.user_auth_tokens.count).to eq(1)
       end
 
       it "redirects to the wizard if you're the first admin" do
-        user = Fabricate(:admin, auth_token: SecureRandom.hex(16), auth_token_updated_at: Time.now)
+        user = Fabricate(:admin)
         token = user.email_tokens.create(email: user.email).token
         get :password_reset, token: token
         put :password_reset, token: token, password: 'hg9ow8yhg98oadminlonger'
@@ -288,13 +283,17 @@ describe UsersController do
       end
 
       it "doesn't invalidate the token when loading the page" do
-        user = Fabricate(:user, auth_token: SecureRandom.hex(16))
+        user = Fabricate(:user)
+        user_token = UserAuthToken.generate!(user_id: user.id)
+
         email_token = user.email_tokens.create(email: user.email)
 
         get :password_reset, token: email_token.token
 
         email_token.reload
+
         expect(email_token.confirmed).to eq(false)
+        expect(UserAuthToken.where(id: user_token.id).count).to eq(1)
       end
     end
 

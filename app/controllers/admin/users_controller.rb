@@ -72,8 +72,7 @@ class Admin::UsersController < Admin::AdminController
 
   def log_out
     if @user
-      @user.auth_token = nil
-      @user.save!
+      @user.user_auth_tokens.destroy_all
       @user.logged_out
       render json: success_json
     else

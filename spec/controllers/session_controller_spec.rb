@@ -505,8 +505,8 @@ describe SessionController do
           user.reload
 
           expect(session[:current_user_id]).to eq(user.id)
-          expect(user.auth_token).to be_present
-          expect(cookies[:_t]).to eq(user.auth_token)
+          expect(user.user_auth_tokens.count).to eq(1)
+          expect(UserAuthToken.hash_token(cookies[:_t])).to eq(user.user_auth_tokens.first.auth_token)
         end
       end
 
