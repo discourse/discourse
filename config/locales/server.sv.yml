@@ -1075,7 +1075,7 @@ sv:
     default_avatars: "URL:er till avatarer som kommer att användas utgångsläge för nya användare tills de ändrar dem."
     automatically_download_gravatars: "Ladda ned Gravatars för användare vid kontoregistrering eller e-postadressbyte."
     digest_min_excerpt_length: "Minsta antal inläggsutdrag i e-postsammanfattningen, i tecken."
-    delete_digest_email_after_days: "Undertryck e-postsammanfattningar för användare som inte har besökt webbplatsen i mer än (n) dagar."
+    suppress_digest_email_after_days: "Undertryck e-postsammanfattningar för användare som inte har besökt webbplatsen i mer än (n) dagar."
     digest_suppress_categories: "Undertryck de här kategorierna från e-postsammanfattningar."
     disable_digest_emails: "Inaktivera e-postsammanfattningar för alla användare."
     detect_custom_avatars: "Huruvida det ska kontrolleras att användare har laddat upp anpassade profilbilder."

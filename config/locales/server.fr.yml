@@ -1166,7 +1166,7 @@ fr:
     digest_posts: "Le nombre maximum de messages populaires à afficher dans le résumé par courriel."
     digest_other_topics: "Le nombre maximum de sujets à afficher dans la section « Nouveautés dans les sujets et catégories que vous suivez » du résumé par courriel."
     digest_min_excerpt_length: "Longueur minimale (en caractères) de l'extrait des messages dans le résumé par courriel."
-    delete_digest_email_after_days: "Ne pas envoyer de résumés par courriel aux utilisateurs qui n'ont pas visité le site depuis plus de (n) jours."
+    suppress_digest_email_after_days: "Ne pas envoyer de résumés par courriel aux utilisateurs qui n'ont pas visité le site depuis plus de (n) jours."
     digest_suppress_categories: "Ne pas inclure ces catégories dans les résumés par courriel."
     disable_digest_emails: "Désactiver les résumés par courriel pour tous les utilisateurs."
     email_accent_bg_color: "La couleur d'accentuation utilisée comme arrière-plan de certains éléments des courriels HTML. Entrez un nom de couleur (« red ») ou une valeur hexadécimale (« #FF0000 »)."

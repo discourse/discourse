@@ -608,7 +608,7 @@ email:
     min: 1
   digest_posts: 3
   digest_other_topics: 5
-  delete_digest_email_after_days:
+  suppress_digest_email_after_days:
     default: 365
     min: 0
     max: 20000

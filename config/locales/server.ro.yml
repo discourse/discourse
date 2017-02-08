@@ -1184,7 +1184,7 @@ ro:
     digest_posts: "Numărul maxim de postări notorii care să se afișeze în rezumatul-email."
     digest_other_topics: "Numărul maxim de subiecte care să fie afișate în secțiunea „Noutăți în subiectele și categoriile pe care le urmărești” din rezumatul pe email."
     digest_min_excerpt_length: "Lungimea minimă (în caractere) a extraselor de postări, ce vor fi incluse în emailul-rezumat."
-    delete_digest_email_after_days: "Nu trimite emailuri-rezumat utilizatorilor care nu au fost văzuți pe site de mai mult de (n) zile."
+    suppress_digest_email_after_days: "Nu trimite emailuri-rezumat utilizatorilor care nu au fost văzuți pe site de mai mult de (n) zile."
     digest_suppress_categories: "Nu include aceste categorii în emailurile-rezumat."
     disable_digest_emails: "Dezactivează emailurile-rezumat pentru toți utilizatorii."
     email_accent_bg_color: "Culoarea accent care să fie folosită ca fundal pentru unele elemente din emailurile HTML. Introdu numele culorii („roșu”) sau valoarea hex ('#FF000')."

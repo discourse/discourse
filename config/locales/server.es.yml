@@ -1166,7 +1166,7 @@ es:
     digest_posts: "El número máximo de temas populares que se mostrarán en el email de resumen."
     digest_other_topics: "El número máximo de temas que se mostrarán en la sección del email de resumen 'Nuevo en temas y categorías'."
     digest_min_excerpt_length: "Mínimo de caracteres del extracto de posts en el resumen por email."
-    delete_digest_email_after_days: "Suprimir los emails de resumen para aquellos usuarios que no han visto el sitio desde más de (n) días."
+    suppress_digest_email_after_days: "Suprimir los emails de resumen para aquellos usuarios que no han visto el sitio desde más de (n) días."
     digest_suppress_categories: "Suprimir estas categorías de los emails de resumen."
     disable_digest_emails: "Desactivar emails de resumen para todos los usuarios."
     email_accent_bg_color: "El color de realce utilizado como fondo en algunos elementos del HTML en los emails. Introduce un nombre de color ('red') o un valor hexadecimal ('#FF000')."
