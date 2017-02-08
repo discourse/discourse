@@ -19,6 +19,7 @@ class UserAction < ActiveRecord::Base
   GOT_PRIVATE_MESSAGE = 13
   PENDING = 14
   SOLVED = 15
+  ASSIGNED = 16
 
   ORDER = Hash[*[
     GOT_PRIVATE_MESSAGE,
@@ -34,6 +35,7 @@ class UserAction < ActiveRecord::Base
     BOOKMARK,
     EDIT,
     SOLVED,
+    ASSIGNED,
   ].each_with_index.to_a.flatten]
 
   # note, this is temporary until we upgrade to rails 4
