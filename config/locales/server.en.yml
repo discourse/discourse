@@ -319,7 +319,7 @@ en:
     get_a_room: |
       ### You’re replying a lot to @%{reply_username}
 
-      You’ve already replied %{count} times to this person in this particular topic.
+      You’ve already replied %{count} times to @%{reply_username} in this particular topic.
 
       Have you considered replying to *other* people in the discussion, too? A great discussion involves many voices and perspectives.
 
