@@ -317,13 +317,13 @@ en:
       Are you sure you’re providing adequate time for other people to share their points of view, too?
 
     get_a_room: |
-      ### You’re replying a lot to the same person
+      ### You’re replying a lot to @%{reply_username}
 
       You’ve already replied %{count} times to this person in this particular topic.
 
       Have you considered replying to *other* people in the discussion, too? A great discussion involves many voices and perspectives.
 
-      If you’d like to continue your conversation with this particular user at length, consider sending them a personal message.
+      If you’d like to continue your conversation with this particular user at length, consider [sending them a personal message](/users/%{reply_username}).
 
     too_many_replies: |
       ### You have reached the reply limit for this topic
