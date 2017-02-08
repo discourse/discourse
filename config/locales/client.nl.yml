@@ -1352,11 +1352,8 @@ nl:
         make_banner: "Maak bannertopic"
         remove_banner: "Verwijder bannertopic"
       reply:
-        post:
-          title: 'Reageer'
-        topic:
-          title: 'Reageer'
-          help: 'Schrijf een reactie op deze topic'
+        title: 'Reageer'
+        help: 'Schrijf een reactie op deze topic'
       clear_pin:
         title: "Verwijder pin"
         help: "Verwijder de gepinde status van deze topic, zodat het niet langer bovenaan je topiclijst verschijnt."

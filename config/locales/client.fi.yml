@@ -1404,11 +1404,8 @@ fi:
         make_banner: "Tee ketjusta banneri"
         remove_banner: "Poista banneri"
       reply:
-        post:
-          title: 'Vastaa'
-        topic:
-          title: 'Vastaa'
-          help: 'aloita kirjottamaan uutta vastausta tähän ketjuun'
+        title: 'Vastaa'
+        help: 'aloita kirjottamaan uutta vastausta tähän ketjuun'
       clear_pin:
         title: "Poista kiinnitys"
         help: "Poista kiinnitys, jotta ketju ei enää pysy listauksen ylimpänä"

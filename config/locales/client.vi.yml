@@ -1136,11 +1136,8 @@ vi:
         make_banner: "Banner chủ đề"
         remove_banner: "Bỏ banner chủ đề"
       reply:
-        post:
-          title: 'Trả lời'
-        topic:
-          title: 'Trả lời'
-          help: 'bắt đầu soạn một trả lời mới cho chủ đề này'
+        title: 'Trả lời'
+        help: 'bắt đầu soạn một trả lời mới cho chủ đề này'
       clear_pin:
         title: "Xóa ghim"
         help: "Xóa trạng thái ghim của chủ đề này để nó không còn xuất hiện trên cùng danh sách chủ đề của bạn"
