@@ -171,15 +171,6 @@ aside.onebox {
   @include gdocs-logo('drive');
 }
 
-.pdf-onebox-logo {
-  width: 60px;
-  height: 50px;
-  float: left;
-  background: image-url("favicons/pdf_64px.png") no-repeat;
-  background-size: 48px 48px;
-  display: inline-block;
-}
-
 // Google Calendar Placeholder
 .gdocs-onebox-splash {
   background-color: blend-primary-secondary(30%);
@@ -366,14 +357,29 @@ aside.onebox.stackexchange .onebox-body {
   color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
 }
 
-// mobile specific style
-.mobile-view article.onebox-body {
-  border-top: none;
-}
-
 .onebox.xkcd .onebox-body {
   img {
     max-width: 100% !important;
     float: none !important;
   }
+}
+
+// pdf onebox
+.onebox.pdf .onebox-body {
+  .pdf-onebox-logo {
+    width: 60px;
+    height: 50px;
+    float: left;
+    background: image-url("favicons/pdf_64px.png") no-repeat;
+    background-size: 48px 48px;
+    display: inline-block;
+  }
+  .filesize {
+    color: gray;
+  }
+}
+
+// mobile specific style
+.mobile-view article.onebox-body {
+  border-top: none;
 }
