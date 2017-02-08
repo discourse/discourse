@@ -317,7 +317,7 @@ en:
       Are you sure you’re providing adequate time for other people to share their points of view, too?
 
     get_a_room: |
-      ### You’re replying a lot to @%{reply_username}
+      ### Consider replying to more people
 
       You’ve already replied %{count} times to @%{reply_username} in this particular topic.
 
