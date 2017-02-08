@@ -156,13 +156,19 @@ class ComposerMessagesFinder
                         target_user_id: @user.id,
                         topic_id: @details[:topic_id])
 
+    reply_username = User.where(id: last_x_replies[0]).pluck(:username).first
+
     {
       id: 'get_a_room',
       templateName: 'education',
       wait_for_typing: true,
       extraClass: 'education-message',
       body: PrettyText.cook(
-        I18n.t('education.get_a_room', count: SiteSetting.get_a_room_threshold)
+        I18n.t(
+          'education.get_a_room',
+          count: SiteSetting.get_a_room_threshold,
+          reply_username: reply_username
+        )
       )
     }
   end
