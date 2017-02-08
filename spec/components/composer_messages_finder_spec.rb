@@ -311,17 +311,17 @@ describe ComposerMessagesFinder do
     let(:topic) { Fabricate(:topic, user: other_user) }
     let(:op) { Fabricate(:post, topic_id: topic.id, user: other_user) }
 
-    let!(:other_user_reply) {
+    let!(:other_user_reply) do
       Fabricate(:post, topic: topic, user: third_user, reply_to_user_id: op.user_id)
-    }
+    end
 
-    let!(:first_reply) {
+    let!(:first_reply) do
       Fabricate(:post, topic: topic, user: user, reply_to_user_id: op.user_id)
-    }
+    end
 
-    let!(:second_reply) {
+    let!(:second_reply) do
       Fabricate(:post, topic: topic, user: user, reply_to_user_id: op.user_id)
-    }
+    end
 
     before do
       SiteSetting.educate_until_posts = 10
@@ -381,7 +381,7 @@ describe ComposerMessagesFinder do
       end
 
       it "doesn't notify in a message" do
-        Topic.any_instance.expects(:private_message?).returns(true)
+        topic.update_columns(category_id: nil, archetype: 'private_message')
         expect(finder.check_get_a_room).to be_blank
       end
 
@@ -401,6 +401,10 @@ describe ComposerMessagesFinder do
 
         it "works as expected" do
           expect(message).to be_present
+          expect(message[:id]).to eq('get_a_room')
+          expect(message[:wait_for_typing]).to eq(true)
+          expect(message[:templateName]).to eq('education')
+
           expect(UserHistory.exists_for_user?(user, :notified_about_get_a_room)).to eq(true)
         end
       end
