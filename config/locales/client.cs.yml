@@ -1371,11 +1371,8 @@ cs:
         make_banner: "Banner Topic"
         remove_banner: "Remove Banner Topic"
       reply:
-        post:
-          title: 'Odpovědět'
-        topic:
-          title: 'Odpovědět'
-          help: 'začněte psát odpověď na toto téma'
+        title: 'Odpovědět'
+        help: 'začněte psát odpověď na toto téma'
       clear_pin:
         title: "Odstranit připnutí"
         help: "Odebere připnutí tohoto tématu, takže se již nebude zobrazovat na vrcholu seznamu témat"

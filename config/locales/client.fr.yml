@@ -1403,11 +1403,8 @@ fr:
         make_banner: "Sujet à la une"
         remove_banner: "Retirer le sujet à la une"
       reply:
-        post:
-          title: 'Répondre'
-        topic:
-          title: 'Répondre'
-          help: 'commencez à répondre à ce sujet'
+        title: 'Répondre'
+        help: 'commencez à répondre à ce sujet'
       clear_pin:
         title: "Désépingler"
         help: "Retirer l'épingle de ce sujet afin qu'il n'apparaisse plus en tête de votre liste de sujet"

@@ -1145,11 +1145,8 @@ gl:
         make_banner: "Tema do báner"
         remove_banner: "Eliminar o tema do báner"
       reply:
-        post:
-          title: 'Responder'
-        topic:
-          title: 'Responder'
-          help: 'responder a este tema'
+        title: 'Responder'
+        help: 'responder a este tema'
       clear_pin:
         title: "Borrar o estado Pegar"
         help: "Borra o estado Pegado deste tema para que non apareza na banda superior da lista de temas."

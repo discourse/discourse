@@ -1560,12 +1560,8 @@ en:
         remove_banner: "Remove Banner Topic"
 
       reply:
-        post:
-          title: 'Reply'
-          # help i.e. tooltop is at controls.reply
-        topic:
-          title: 'Reply'
-          help: 'begin composing a reply to this topic'
+        title: 'Reply'
+        help: 'begin composing a reply to this topic'
 
       clear_pin:
         title: "Clear pin"

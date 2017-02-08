@@ -1393,11 +1393,8 @@ pl_PL:
         make_banner: "Ustaw jako baner"
         remove_banner: "Wyłącz baner"
       reply:
-        post:
-          title: 'Odpowiedz'
-        topic:
-          title: 'Odpowiedz'
-          help: 'zacznij pisać odpowiedź'
+        title: 'Odpowiedz'
+        help: 'zacznij pisać odpowiedź'
       clear_pin:
         title: "Odepnij"
         help: "Odepnij ten temat. Przestanie wyświetlać się na początku listy tematów."

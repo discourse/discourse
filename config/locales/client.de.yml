@@ -1403,11 +1403,8 @@ de:
         make_banner: "Ankündigungsbanner"
         remove_banner: "Ankündigungsbanner entfernen"
       reply:
-        post:
-          title: 'Antworten'
-        topic:
-          title: 'Antworten'
-          help: 'beginne damit eine Antwort auf dieses Thema zu verfassen'
+        title: 'Antworten'
+        help: 'beginne damit eine Antwort auf dieses Thema zu verfassen'
       clear_pin:
         title: "Loslösen"
         help: "Dieses Thema von der Themenliste loslösen, sodass es nicht mehr am Anfang der Liste steht."

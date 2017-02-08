@@ -377,7 +377,7 @@ export default createWidget('topic-timeline', {
         controls.push(this.attach('button', {
           className: 'btn create',
           icon: 'reply',
-          title: 'topic.reply.topic.help',
+          title: 'topic.reply.help',
           action: 'replyToPost'
         }));
       }

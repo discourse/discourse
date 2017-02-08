@@ -1367,11 +1367,8 @@ pt:
         make_banner: "Tópico de Faixa"
         remove_banner: "Remover Tópico de Faixa"
       reply:
-        post:
-          title: 'Responder'
-        topic:
-          title: 'Responder'
-          help: 'começa a compor uma resposta a este tópico'
+        title: 'Responder'
+        help: 'começa a compor uma resposta a este tópico'
       clear_pin:
         title: "Remover destaque"
         help: "Remover destaque deste tópico para que o mesmo deixe de aparecer no topo da sua lista de tópicos"
