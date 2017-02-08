@@ -343,6 +343,14 @@ export default function() {
         ];
       }
 
+      if (request.queryParams.url.indexOf('/internal-page.html') > -1) {
+        return [
+          200,
+          {"Content-Type": "application/html"},
+          '<aside class="onebox"><article class="onebox-body"><h3><a href="/internal-page.html">Internal Page 4 U</a></h3></article></aside>'
+        ];
+      }
+
       return [404, {"Content-Type": "application/html"}, ''];;
     });
   });

@@ -40,3 +40,15 @@ test("no onebox result", () => {
     equal(find('.title-input input').val(), "http://www.example.com/nope-onebox.html", "title is unchanged");
   });
 });
+
+test("ignore internal links", () => {
+  visit("/");
+  click('#create-topic');
+  const title = "http://" + window.location.hostname + "/internal-page.html";
+  fillIn('#reply-title', title);
+  andThen(() => {
+    equal(find('.d-editor-preview').html().trim().indexOf('onebox'), -1, "onebox preview doesn't show");
+    equal(find('.d-editor-input').val().length, 0, "link isn't put into the post");
+    equal(find('.title-input input').val(), title, "title is unchanged");
+  });
+});
