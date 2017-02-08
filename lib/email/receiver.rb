@@ -367,12 +367,13 @@ module Email
                      raw: body,
                      elided: elided,
                      post: email_log.post,
-                     topic: email_log.post.topic)
+                     topic: email_log.post.topic,
+                     skip_validations: user.staged?)
       end
     end
 
     def has_been_forwarded?
-      subject[/^[[:blank]]*(fwd?|tr)[[:blank]]?:/i] && embedded_email_raw.present?
+      subject[/^[[:blank:]]*(fwd?|tr)[[:blank:]]?:/i] && embedded_email_raw.present?
     end
 
     def embedded_email_raw
@@ -434,7 +435,8 @@ module Email
                        raw: @before_embedded,
                        post: post,
                        topic: post.topic,
-                       post_type: post_type)
+                       post_type: post_type,
+                       skip_validations: user.staged?)
         end
       end
 
@@ -447,9 +449,9 @@ module Email
            SiteSetting.reply_by_email_address,
           *(SiteSetting.alternative_reply_by_email_addresses.presence || "").split("|")
         ]
-        escaped_reply_addresses = reply_addresses.select { |a| a.present? }
+        escaped_reply_addresses = reply_addresses.select(&:present?)
                                                  .map { |a| Regexp.escape(a) }
-                                                 .map { |a| a.gsub(Regexp.escape("%{reply_key}"), "([[:xdigit:]]{32})") }
+                                                 .map { |a| a.gsub(Regexp.escape("%{reply_key}"), "(\\h{32})") }
         Regexp.new(escaped_reply_addresses.join("|"))
       end
     end
@@ -469,16 +471,31 @@ module Email
       message_ids.uniq!
       return if message_ids.empty?
 
-      Post.where(id: IncomingEmail.where(message_id: message_ids).select(:post_id))
-          .order(created_at: :desc)
-          .first
+      message_ids = message_ids.first(5)
+
+      host = Email::Sender.host_for(Discourse.base_url)
+      post_id_regexp  = Regexp.new "topic/\\d+/(\\d+)@#{Regexp.escape(host)}"
+      topic_id_regexp = Regexp.new "topic/(\\d+)@#{Regexp.escape(host)}"
+
+      post_ids =  message_ids.map { |message_id| message_id[post_id_regexp, 1] }
+      post_ids << Post.where(topic_id: message_ids.map { |message_id| message_id[topic_id_regexp, 1] }.compact, post_number: 1).pluck(:id)
+      post_ids << EmailLog.where(message_id: message_ids).pluck(:post_id)
+      post_ids << IncomingEmail.where(message_id: message_ids).pluck(:post_id)
+
+      post_ids.flatten!
+      post_ids.compact!
+      post_ids.uniq!
+
+      return if post_ids.empty?
+
+      Post.where(id: post_ids).order(:created_at).last
     end
 
     def self.extract_references(references)
       if Array === references
         references
       elsif references.present?
-        references.split(/[\s,]/).map { |r| r.sub(/^</, "").sub(/>$/, "") }
+        references.split(/[\s,]/).map { |r| r.tr("<>", "") }
       end
     end
 
