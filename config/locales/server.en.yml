@@ -323,7 +323,7 @@ en:
 
       Have you considered replying to *other* people in the discussion, too? A great discussion involves many voices and perspectives.
 
-      If you’d like to continue your conversation with this particular user at length, consider [sending them a personal message](/users/%{reply_username}).
+      If you’d like to continue your conversation with this particular user at length, [send them a personal message](/users/%{reply_username}).
 
     too_many_replies: |
       ### You have reached the reply limit for this topic
