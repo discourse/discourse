@@ -1166,7 +1166,7 @@ de:
     digest_posts: "Die maximale Anzahl von beliebten Beiträgen, die in der E-Mail-Zusammenfassung angezeigt werden sollen."
     digest_other_topics: "Die maximale Anzahl von Themen, die in dem Bereich 'Neues in Themen und Kategorien, denen du folgst' in der E-Mail-Zusammenfassung angezeigt werden sollen."
     digest_min_excerpt_length: "Minimale Zeichenlänge für Auszüge von Beiträgen in der E-Mail-Zusammenfassung."
-    delete_digest_email_after_days: "Unterdrücke E-Mail-Zusammenfassungen für Benutzer, die länger als (n) Tage nicht auf der Site gesehen wurden."
+    suppress_digest_email_after_days: "Unterdrücke E-Mail-Zusammenfassungen für Benutzer, die länger als (n) Tage nicht auf der Site gesehen wurden."
     digest_suppress_categories: "Unterdrücke diese Kategorien in E-Mail-Zusammenfassungen."
     disable_digest_emails: "Deaktiviere E-Mail-Zusammenfassungen für alle Benutzer."
     email_accent_bg_color: "Die Hervorhebungsfarbe, die als Hintergrund mancher Elemente in HTML-E-Mails verwendet wird. Gib’ einen Namen ('red') oder einen Hex-Wert ('#FF000') der Farbe an."

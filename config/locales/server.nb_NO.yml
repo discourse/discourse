@@ -745,7 +745,7 @@ nb_NO:
     digest_posts: "Maksimalt antall populære innlegg å vise i oppsummerings-e-posten."
     digest_other_topics: "Maksimalt antall emner å vise i delen 'Nytt i emner og kategorier du følger' i oppsummerings-e-posten."
     digest_min_excerpt_length: "Minimal lengde på utdrag av innlegg i e-post-oppsummeringen, i antall tegn."
-    delete_digest_email_after_days: "Utelat oppsummerings-eposter for brukere ikke sett på nettstedet siden mer enn (n) dager."
+    suppress_digest_email_after_days: "Utelat oppsummerings-eposter for brukere ikke sett på nettstedet siden mer enn (n) dager."
     digest_suppress_categories: "Utelat disse kategoriene i oppsummerings-eposter"
     disable_digest_emails: "Deaktivér oppsummerings-eposter for alle brukere."
     allow_profile_backgrounds: "Gi brukere mulighet til å laste opp profilbakgrunner."

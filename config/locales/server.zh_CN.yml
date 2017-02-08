@@ -1122,7 +1122,7 @@ zh_CN:
     digest_posts: "邮件摘要中显示的最流行帖子的数量。"
     digest_other_topics: "邮件摘要中“你关注的主题和分类中的新内容”栏目显示的主题数目上限。"
     digest_min_excerpt_length: "邮件摘要中显示的帖子摘要字符数下限。"
-    delete_digest_email_after_days: "不发送摘要邮件给超过（n）天没访问的用户。"
+    suppress_digest_email_after_days: "不发送摘要邮件给超过（n）天没访问的用户。"
     digest_suppress_categories: "不在摘要邮件中显示这些分类的内容。"
     disable_digest_emails: "禁用所有用户摘要邮件功能。"
     email_accent_bg_color: "HTML 邮件中某些元素的背景使用的强调颜色。输入色彩名（“red”）或十六进制值（“#FF0000”）。"

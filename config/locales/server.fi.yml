@@ -1164,7 +1164,7 @@ fi:
     digest_posts: "Yläraja sähköpostikoosteessa näytettävien suosittujen viestien määrälle."
     digest_other_topics: "Yläraja sähköpostikoosteen 'Uutta seuraamissasi ketjuissa ja alueissa' -osiossa näytettävien ketjujen määrälle."
     digest_min_excerpt_length: "Vähimmäispituus merkeissä viestin katkelmalle, joka näytetään sähköpostikoosteissa."
-    delete_digest_email_after_days: "Älä lähetä sähköpostikoosteita käyttäjille, joita ei ole nähty sivustolla yli (n) päivään."
+    suppress_digest_email_after_days: "Älä lähetä sähköpostikoosteita käyttäjille, joita ei ole nähty sivustolla yli (n) päivään."
     digest_suppress_categories: "Älä liitä näiden alueiden viestejä sähköpostikoosteisiin."
     disable_digest_emails: "Poista sähköpostikoosteet kaikilta käyttäjiltä."
     email_accent_bg_color: "Kakkosväri, jota käytetään joidenkin elementtien taustavärinä sähköpostiviesteissä. Anna värin nimi englanniksi ('red') tai sen Hex-arvo ('#FF000')."

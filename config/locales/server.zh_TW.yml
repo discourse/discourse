@@ -1126,7 +1126,7 @@ zh_TW:
     digest_posts: "郵件摘要中顯示的最流行帖子的數量。"
     digest_other_topics: "郵件摘要中“你關注的主題和分類中的新內容”欄目顯示的主題數目上限。"
     digest_min_excerpt_length: "郵件摘要中顯示的帖子摘要字元數下限。"
-    delete_digest_email_after_days: "不發送摘要郵件給超過（n）天沒訪問的用戶。"
+    suppress_digest_email_after_days: "不發送摘要郵件給超過（n）天沒訪問的用戶。"
     digest_suppress_categories: "不在摘要郵件中顯示這些分類的內容。"
     disable_digest_emails: "禁用所有用戶摘要郵件功能。"
     email_accent_bg_color: "HTML 郵件中某些元素的背景使用的強調顏色。輸入色彩名（“red”）或十六進制值（“#FF0000”）。"
