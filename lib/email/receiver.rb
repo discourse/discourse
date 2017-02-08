@@ -477,7 +477,7 @@ module Email
       post_id_regexp  = Regexp.new "topic/\\d+/(\\d+)@#{Regexp.escape(host)}"
       topic_id_regexp = Regexp.new "topic/(\\d+)@#{Regexp.escape(host)}"
 
-      post_ids =  message_ids.map { |message_id| message_id[post_id_regexp, 1] }
+      post_ids =  message_ids.map { |message_id| message_id[post_id_regexp, 1] }.compact.map(&:to_i)
       post_ids << Post.where(topic_id: message_ids.map { |message_id| message_id[topic_id_regexp, 1] }.compact, post_number: 1).pluck(:id)
       post_ids << EmailLog.where(message_id: message_ids).pluck(:post_id)
       post_ids << IncomingEmail.where(message_id: message_ids).pluck(:post_id)
