@@ -67,6 +67,45 @@ module Onebox
       end
     end
 
+    def self.fetch_content_length(location)
+      uri = URI(location)
+
+      Net::HTTP.start(uri.host, uri.port, use_ssl: uri.is_a?(URI::HTTPS)) do |http|
+        http.open_timeout = Onebox.options.connect_timeout
+        http.read_timeout = Onebox.options.timeout
+        if uri.is_a?(URI::HTTPS)
+          http.use_ssl = true
+          http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+        end
+
+        http.request_head([uri.path, uri.query].join("?")) do |response|
+          code = response.code.to_i
+          unless code === 200 || response.header['content-length'].blank?
+            return nil
+          end
+          return response.header['content-length']
+        end
+      end
+    end
+
+    def self.pretty_filesize(size)
+      conv = [ 'B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB' ];
+      scale = 1024;
+
+      ndx=1
+      if( size < 2*(scale**ndx)  ) then
+        return "#{(size)} #{conv[ndx-1]}"
+      end
+      size=size.to_f
+      [2,3,4,5,6,7].each do |ndx|
+        if( size < 2*(scale**ndx)  ) then
+          return "#{'%.2f' % (size/(scale**(ndx-1)))} #{conv[ndx-1]}"
+        end
+      end
+      ndx=7
+      return "#{'%.2f' % (size/(scale**(ndx-1)))} #{conv[ndx-1]}"
+    end
+
     def self.click_to_scroll_div(width = 690, height = 400)
       "<div style=\"background:transparent;position:relative;width:#{width}px;height:#{height}px;top:#{height}px;margin-top:-#{height}px;\" onClick=\"style.pointerEvents='none'\"></div>"
     end

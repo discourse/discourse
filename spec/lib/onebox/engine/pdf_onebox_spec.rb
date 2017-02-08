@@ -5,20 +5,16 @@ describe Onebox::Engine::PdfOnebox do
   let(:html) { described_class.new(link).to_html }
 
   before do
-    fake(link, response("pdf"))
+    FakeWeb.register_uri(:head, link, :content_length => "335562")
   end
 
   describe "#to_html" do
-    it "includes title" do
-      expect(html).to include("Merge multiple files into one PDF file with Acrobat XI")
+    it "includes filename" do
+      expect(html).to include("adobe-acrobat-xi-merge-pdf-files-tutorial-ue.pdf")
     end
 
-    it "includes description" do
-      expect(html).to include("Learn more about Adobe Acrobat XI: Merge multiple files into one PDF file with Acrobat XI")
-    end
-
-    it "includes author" do
-      expect(html).to include("Adobe Systems, Inc.")
+    it "includes filesize" do
+      expect(html).to include("327.70 KB")
     end
   end
 end
