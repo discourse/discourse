@@ -15,7 +15,7 @@ class WebHookEventType < ActiveRecord::Base
     end
 
     def self.serializer
-      TopicViewSerializer
+      WebHookTopicViewSerializer
     end
   end
 
@@ -25,7 +25,7 @@ class WebHookEventType < ActiveRecord::Base
     end
 
     def self.serializer
-      PostSerializer
+      WebHookPostSerializer
     end
   end
 
@@ -35,7 +35,7 @@ class WebHookEventType < ActiveRecord::Base
     end
 
     def self.serializer
-      UserSerializer
+      WebHookUserSerializer
     end
   end
 end
