@@ -1403,8 +1403,11 @@ nb_NO:
         make_banner: "Banneremne"
         remove_banner: "Fjern banneremne"
       reply:
-        title: 'Svar'
-        help: 'begynn å skrive et svar til dette emnet'
+        post:
+          title: 'Svar'
+        topic:
+          title: 'Svar'
+          help: 'begynn å skrive et svar til dette emnet'
       clear_pin:
         title: "Løsne emne"
         help: "Løsne feste-statusen til dette emnet slik at det ikke lenger vises på toppen av din emneliste"
