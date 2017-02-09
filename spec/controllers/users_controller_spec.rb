@@ -752,7 +752,7 @@ describe UsersController do
       context "with values for the fields" do
         let(:create_params) { {
           name: @user.name,
-          password: 'watwatwatwat',
+          password: 'suChS3cuRi7y',
           username: @user.username,
           email: @user.email,
           user_fields: {
@@ -802,7 +802,7 @@ describe UsersController do
       context "without values for the fields" do
         let(:create_params) { {
           name: @user.name,
-          password: 'watwatwatwat',
+          password: 'suChS3cuRi7y',
           username: @user.username,
           email: @user.email,
         } }

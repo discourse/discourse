@@ -18,6 +18,8 @@ class PasswordValidator < ActiveModel::EachValidator
       record.errors.add(attribute, :same_as_current)
     elsif SiteSetting.block_common_passwords && CommonPasswords.common_password?(value)
       record.errors.add(attribute, :common)
+    elsif value.chars.uniq.size < SiteSetting.password_unique_characters
+      record.errors.add(attribute, :unique_characters)
     end
   end
 
