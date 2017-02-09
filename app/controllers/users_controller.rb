@@ -587,7 +587,17 @@ class UsersController < ApplicationController
     topic_id = topic_id.to_i if topic_id
     topic_allowed_users = params[:topic_allowed_users] || false
 
-    results = UserSearch.new(term, topic_id: topic_id, topic_allowed_users: topic_allowed_users, searching_user: current_user).search
+    if params[:group].present?
+      @group = Group.find_by(name: params[:group])
+    end
+
+
+    results = UserSearch.new(term,
+                             topic_id: topic_id,
+                             topic_allowed_users: topic_allowed_users,
+                             searching_user: current_user,
+                             group: @group
+                            ).search
 
     user_fields = [:username, :upload_avatar_template]
     user_fields << :name if SiteSetting.enable_names?
