@@ -292,21 +292,29 @@ aside.onebox.twitterstatus .onebox-body {
     margin-bottom: 0;
   }
 }
+
+// thumbnail, oddly, ONLY applies to twitter avatar
 .onebox.twitterstatus {
   .thumbnail {
-    float: left;
+    width: 48px;
+    height: 48px;
   }
   p, .tweet {
     float: left;
     display: inline-block;
     white-space: pre-wrap;
     padding-top: 3px;
-    width: 85%;
+    width: 580px;
   }
   .date {
     clear: left;
     padding-top: 5px;
   }
+}
+
+// only use percentages on mobile
+.mobile-view .onebox.twitterstatus div.tweet {
+  width: 81%;
 }
 
 // Onebox - Imgur - Album
