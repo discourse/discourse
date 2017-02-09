@@ -372,6 +372,7 @@ en:
               same_as_username: "is the same as your username. Please use a more secure password."
               same_as_email: "is the same as your email. Please use a more secure password."
               same_as_current: "is the same as your current password."
+              unique_characters: "has too few unique characters. Please use a more secure password."
             ip_address:
               signup_not_allowed: "Signup is not allowed from this account."
         color_scheme_color:
@@ -1044,6 +1045,7 @@ en:
 
     min_password_length: "Minimum password length."
     min_admin_password_length: "Minimum password length for Admin."
+    password_unique_characters: "Minimum number of unique characters that a password must have."
     block_common_passwords: "Don't allow passwords that are in the 10,000 most common passwords."
 
     enable_sso: "Enable single sign on via an external site (WARNING: USERS' EMAIL ADDRESSES *MUST* BE VALIDATED BY THE EXTERNAL SITE!)"

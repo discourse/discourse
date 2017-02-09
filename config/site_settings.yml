@@ -350,6 +350,9 @@ users:
     client: true
     default: 15
     min: 1
+  password_unique_characters:
+    default: 5
+    min: 1
   block_common_passwords: true
   enforce_global_nicknames:
     default: false

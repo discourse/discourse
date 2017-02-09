@@ -3,6 +3,10 @@ require_dependency "common_passwords/common_passwords"
 
 describe PasswordValidator do
 
+  def password_error_message(key)
+    I18n.t("activerecord.errors.models.user.attributes.password.#{key.to_s}")
+  end
+
   let(:validator) { described_class.new({attributes: :password}) }
   subject(:validate) { validator.validate_each(record,:password,@password) }
 
@@ -72,7 +76,7 @@ describe PasswordValidator do
         SiteSetting.stubs(:block_common_passwords).returns(true)
         @password = "password"
         validate
-        expect(record.errors[:password]).to be_present
+        expect(record.errors[:password]).to include(password_error_message(:common))
       end
 
       it "doesn't add an error when block_common_passwords is disabled" do
@@ -83,18 +87,42 @@ describe PasswordValidator do
       end
     end
 
+    context "password_unique_characters is 5" do
+      before do
+        SiteSetting.password_unique_characters = 5
+      end
+
+      it "adds an error when there are too few unique characters" do
+        @password = "cheeeeeeeese"
+        validate
+        expect(record.errors[:password]).to include(password_error_message(:unique_characters))
+      end
+
+      it "doesn't add an error when there are enough unique characters" do
+        @password = "spooooooorts"
+        validate
+        expect(record.errors[:password]).not_to be_present
+      end
+
+      it "counts capital letters as unique" do
+        @password = "cHeEeeeeesE"
+        validate
+        expect(record.errors[:password]).not_to be_present
+      end
+    end
+
     it "adds an error when password is the same as the username" do
       @password = "porkchops1234"
       record.username = @password
       validate
-      expect(record.errors[:password]).to be_present
+      expect(record.errors[:password]).to include(password_error_message(:same_as_username))
     end
 
     it "adds an error when password is the same as the email" do
       @password = "pork@chops.com"
       record.email = @password
       validate
-      expect(record.errors[:password]).to be_present
+      expect(record.errors[:password]).to include(password_error_message(:same_as_email))
     end
 
     it "adds an error when new password is same as current password" do
@@ -103,7 +131,7 @@ describe PasswordValidator do
       record.reload
       record.password = @password
       validate
-      expect(record.errors[:password]).to be_present
+      expect(record.errors[:password]).to include(password_error_message(:same_as_current))
     end
   end
 
