@@ -300,22 +300,15 @@ aside.onebox.twitterstatus .onebox-body {
     height: 48px;
   }
   p, .tweet {
-    float: left;
-    display: inline-block;
     white-space: pre-wrap;
     padding-top: 3px;
-    width: 580px;
+    margin-left: 58px;
   }
   .date {
     clear: left;
     padding-top: 5px;
     margin-left: 58px;
   }
-}
-
-// only use percentages on mobile
-.mobile-view .onebox.twitterstatus div.tweet {
-  width: 81%;
 }
 
 // Onebox - Imgur - Album
