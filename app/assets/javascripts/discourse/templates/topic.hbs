@@ -200,7 +200,9 @@
                     replyToPost=(action "replyToPost")
                     }}
                 {{else}}
-                  {{d-button icon="reply" class="btn-primary" action="showLogin" label="topic.reply.title"}}
+                  <div id="topic-footer-button">
+                    {{d-button icon="reply" class="btn-primary pull-right" action="showLogin" label="topic.reply.title"}}
+                  </div>
                 {{/if}}
               {{/if}}
 
