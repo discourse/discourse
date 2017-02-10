@@ -93,19 +93,19 @@ describe PasswordValidator do
       end
 
       it "adds an error when there are too few unique characters" do
-        @password = "cheeeeeeeese"
+        @password = "aaaaaa5432"
         validate
         expect(record.errors[:password]).to include(password_error_message(:unique_characters))
       end
 
       it "doesn't add an error when there are enough unique characters" do
-        @password = "spooooooorts"
+        @password = "aaaaa54321"
         validate
         expect(record.errors[:password]).not_to be_present
       end
 
-      it "counts capital letters as unique" do
-        @password = "cHeEeeeeesE"
+      it "counts capital letters as different" do
+        @password = "aaaAaa5432"
         validate
         expect(record.errors[:password]).not_to be_present
       end
