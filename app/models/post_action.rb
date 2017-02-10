@@ -308,6 +308,19 @@ SQL
     PostAction.where(where_attrs).first
   end
 
+  def self.copy(original_post, target_post)
+    cols_to_copy = (column_names - %w{id post_id}).join(', ')
+
+    exec_sql <<~SQL
+    INSERT INTO post_actions(post_id, #{cols_to_copy})
+    SELECT #{target_post.id}, #{cols_to_copy}
+    FROM post_actions
+    WHERE post_id = #{original_post.id}
+    SQL
+
+    target_post.post_actions.each { |post_action| post_action.update_counters }
+  end
+
   def self.remove_act(user, post, post_action_type_id)
 
     limit_action!(user,post,post_action_type_id)
