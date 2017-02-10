@@ -264,11 +264,11 @@ describe UsersController do
         token = user.email_tokens.create(email: user.email).token
 
         get :password_reset, token: token
-        put :password_reset, token: token, password: 'hg9ow8yhg98o'
-        put :password_reset, token: token, password: 'test123123Asdfsdf'
+        put :password_reset, token: token, password: 'hg9ow8yHG32O'
+        put :password_reset, token: token, password: 'test123987AsdfXYZ'
 
         user.reload
-        expect(user.confirm_password?('hg9ow8yhg98o')).to eq(true)
+        expect(user.confirm_password?('hg9ow8yHG32O')).to eq(true)
 
         # logged in now
         expect(user.user_auth_tokens.count).to eq(1)
