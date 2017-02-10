@@ -256,10 +256,7 @@ describe PostMover do
           new_topic = topic.move_posts(user, [p1.id, p2.id], title: "new testing topic name")
 
           expect(new_topic).to be_present
-          new_topic.posts.reload
           expect(new_topic.posts.by_post_number.first.raw).to eq(p1.raw)
-
-          new_topic.reload
           expect(new_topic.posts_count).to eq(2)
           expect(new_topic.highest_post_number).to eq(2)
 
