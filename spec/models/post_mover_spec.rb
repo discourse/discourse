@@ -284,6 +284,18 @@ describe PostMover do
           expect(topic.highest_post_number).to eq(p4.post_number)
         end
 
+        it "preserves post actions in the new post" do
+          PostAction.act(another_user, p1, PostActionType.types[:like])
+          topic.expects(:add_moderator_post).once
+
+          new_topic = topic.move_posts(user, [p1.id], title: "new testing topic name")
+          expect(new_topic.like_count).to eq(1)
+
+          new_first = new_topic.posts.where(post_number: 1).first
+          expect(new_first.like_count).to eq(1)
+          expect(new_first.post_actions.size).to eq(1)
+        end
+
       end
 
       context "to an existing topic with a deleted post" do
