@@ -267,7 +267,7 @@ describe PostMover do
           p1.reload
           expect(p1.sort_order).to eq(1)
           expect(p1.post_number).to eq(1)
-          p1.topic_id == topic.id
+          expect(p1.topic_id).to eq(topic.id)
           expect(p1.reply_count).to eq(0)
 
           # New first post
@@ -278,7 +278,7 @@ describe PostMover do
           p2.reload
           expect(p2.post_number).to eq(2)
           expect(p2.sort_order).to eq(2)
-          p2.topic_id == new_topic.id
+          expect(p2.topic_id).to eq(new_topic.id)
           expect(p2.reply_to_post_number).to eq(1)
           expect(p2.reply_count).to eq(0)
 
