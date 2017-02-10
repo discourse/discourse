@@ -12,6 +12,10 @@ import { h } from 'virtual-dom';
 import { addFlagProperty } from 'discourse/components/site-header';
 import { addPopupMenuOptionsCallback } from 'discourse/controllers/composer';
 import { extraConnectorClass } from 'discourse/lib/plugin-connectors';
+import { addPostSmallActionIcon } from 'discourse/widgets/post-small-action';
+
+// If you add any methods to the API ensure you bump up this number
+const PLUGIN_API_VERSION = 0.8;
 
 class PluginApi {
   constructor(version, container) {
@@ -362,12 +366,23 @@ class PluginApi {
   registerConnectorClass(outletName, connectorName, klass) {
     extraConnectorClass(`${outletName}/${connectorName}`, klass);
   }
+
+  /**
+   * Register a small icon to be used for custom small post actions
+   *
+   * ```javascript
+   * api.registerPostSmallActionIcon('assign-to', 'user-add');
+   * ```
+   **/
+  addPostSmallActionIcon(key, icon) {
+    addPostSmallActionIcon(key, icon);
+  }
 }
 
 let _pluginv01;
 function getPluginApi(version) {
   version = parseFloat(version);
-  if (version <= 0.7) {
+  if (version <= PLUGIN_API_VERSION) {
     if (!_pluginv01) {
       _pluginv01 = new PluginApi(version, Discourse.__container__);
     }
