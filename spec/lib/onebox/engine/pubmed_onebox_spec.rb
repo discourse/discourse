@@ -29,5 +29,51 @@ describe Onebox::Engine::PubmedOnebox do
   it "has the URL to the resource" do
     expect(html).to include(link)
   end
+
+  context "Pubmed electronic print" do
+    let(:link) { "http://www.ncbi.nlm.nih.gov/pubmed/24737116" }
+    let(:xml_link) { "http://www.ncbi.nlm.nih.gov/pubmed/24737116?report=xml&format=text" }
+    let(:html) { described_class.new(link).to_html }
+
+    before do
+      fake(link, response("pubmed-electronic"))
+      fake(xml_link, response("pubmed-electronic-xml"))
+    end
+
+    it "has the paper's title" do
+      expect(html).to include("Cushingoid facies on (18)F-FDG PET/CT.")
+    end
+
+    it "has the paper's author" do
+      expect(html).to include("van Rheenen")
+    end
+
+    it "has the paper's date" do
+      expect(html).to include("Jul 2014")
+    end
+
+    it "has the URL to the resource" do
+      expect(html).to include(link)
+    end
+  end
+
+  context "regex URI match" do
+
+    it "matches on specific articles" do
+      expect(match("http://www.ncbi.nlm.nih.gov/pubmed/7288891")).to eq true
+    end
+
+    it "does not match on search" do
+      expect(match("http://www.ncbi.nlm.nih.gov/pubmed/?term=rheenen+r")).to eq false
+    end
+
+    it "does not match on the root" do
+      expect(match("http://www.ncbi.nlm.nih.gov/pubmed/")).to eq false
+    end
+
+    def match(url)
+      Onebox::Engine::PubmedOnebox === URI(url)
+    end
+  end
 end
 
