@@ -330,6 +330,11 @@ a.star {
   color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
 }
 
+#topic-footer-button {
+  width: 100px;
+  margin: 0 auto;
+}
+
 #suggested-topics {
   clear: left;
   padding: 20px 0 15px 0;
