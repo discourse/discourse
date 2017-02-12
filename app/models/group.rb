@@ -63,6 +63,20 @@ class Group < ActiveRecord::Base
 
   validates :alias_level, inclusion: { in: ALIAS_LEVELS.values}
 
+  scope :visible_groups, ->(user) {
+    groups = Group.order(name: :asc).where("groups.id > 0")
+
+    if !user || !user.admin
+      owner_group_ids = GroupUser.where(user: user, owner: true).pluck(:group_id)
+
+      groups = groups.where("
+        (groups.automatic = false AND groups.visible = true) OR groups.id IN (?)
+      ", owner_group_ids)
+    end
+
+    groups
+  }
+
   scope :mentionable, lambda {|user|
 
     levels = [ALIAS_LEVELS[:everyone]]
