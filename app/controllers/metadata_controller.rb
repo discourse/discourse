@@ -17,7 +17,7 @@ class MetadataController < ApplicationController
       name: SiteSetting.title,
       short_name: SiteSetting.title,
       display: 'standalone',
-      orientation: 'any',
+      orientation: 'natural',
       start_url: "#{Discourse.base_uri}/",
       background_color: "##{ColorScheme.hex_for_name('secondary')}",
       theme_color: "##{ColorScheme.hex_for_name('header_background')}",
