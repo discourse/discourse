@@ -61,18 +61,24 @@ vi:
         date_year: "MMM 'YY"
       medium:
         x_minutes:
+          one: "1 phút"
           other: "%{count} phút"
         x_hours:
+          one: "1 giờ"
           other: "%{count} giờ"
         x_days:
+          one: "1 ngày"
           other: "%{count} ngày"
         date_year: "MMM D, 'YY"
       medium_with_ago:
         x_minutes:
+          one: "1 phút trước"
           other: " %{count} phút trước"
         x_hours:
+          one: "1 giờ trước"
           other: "%{count} giờ trước"
         x_days:
+          one: "1 ngày trước"
           other: "%{count} ngày trước"
       later:
         x_days:
@@ -85,7 +91,7 @@ vi:
       next_month: 'Tháng Sau'
     share:
       topic: 'chia sẻ chủ đề này'
-      post: 'đăng #%{Bài đăng số}'
+      post: 'đăng #%{postNumber}'
       close: 'đóng lại'
       twitter: 'chia sẻ lên Twitter'
       facebook: 'chia sẻ lên Facebook'
@@ -400,8 +406,8 @@ vi:
       notifications: "Thông báo"
       statistics: "Thống kê"
       desktop_notifications:
-        label: "Desktop Notifications"
-        not_supported: "Xin lỗi. Trình duyệt của bạn không hỗ trợ Notification."
+        label: "Notification trên trình duyệt"
+        not_supported: "Xin lỗi. Trình duyệt của bạn không hỗ trợ chức năng Notification."
         perm_default: "Mở thông báo"
         perm_denied_btn: "Không có quyền"
         perm_denied_expl: "Bạn đã từ chối nhận thông báo, để nhận lại bạn cần thiết lập trình duyệt."
@@ -417,23 +423,27 @@ vi:
       change: "thay đổi"
       moderator: "{{user}} trong ban quản trị"
       admin: "{{user}} là người điều hành"
-      moderator_tooltip: "Thành viên này là MOD"
-      admin_tooltip: "Thành viên này là admin"
+      moderator_tooltip: "Thành viên này thuộc ban quản trị"
+      admin_tooltip: "Thành viên này là người điều hành"
       blocked_tooltip: "Tài khoản này bị khóa"
       suspended_notice: "Thành viên này bị đình chỉ cho đến ngày {{date}}. "
       suspended_reason: "Lý do: "
       github_profile: "Github"
       email_activity_summary: "Tóm tắt hoạt động"
       mailing_list_mode:
+        instructions: "
+          Cài đặt này sẽ ghi đè báo cáo tổng quan về hoạt động.<br />
+          Các chủ đề và chuyên mục được đánh dấu là im lặng sẽ không xuất hiện trong thư."
         label: "Chế độ mailing list"
         enabled: "Bật chế độ mailing list"
         daily: "Gửi cập nhật hàng ngày"
         individual: "Gửi email cho mỗi bài viết mới."
-      watched_categories: "Xem"
-      tracked_categories: "Theo dõi"
-      muted_categories: "Im lặng"
+      tag_settings: "Gắn thẻ"
+      watched_categories: "Đang được giám sát"
+      tracked_categories: "Đang được theo dõi"
+      muted_categories: "Bị đánh dấu là im lặng"
       muted_categories_instructions: "Bạn sẽ không bao giờ được thông báo về bất cứ điều gì về các chủ đề mới trong các chuyên mục này, và chúng sẽ không hiển thị mới nhất"
-      delete_account: "Xoá Tài khoản của tôi"
+      delete_account: "Xoá tài khoản"
       delete_account_confirm: "Bạn có chắc chắn muốn xóa vĩnh viễn tài khoản của bạn? Hành động này không thể được hoàn tác!"
       deleted_yourself: "Tài khoản của bạn đã được xóa thành công."
       delete_yourself_not_allowed: "Bạn không thể xóa tài khoản của bạn ngay bây giờ. Liên lạc với admin để làm xóa tài khoản  cho bạn."
@@ -1092,11 +1102,11 @@ vi:
           '0_2': 'Bạn đang bỏ qua tất cả các thông báo trong chủ đề này'
           '0': 'Bạn đang bỏ qua tất cả các thông báo trong chủ đề này'
         watching_pm:
-          title: "Đang xem"
-          description: "Bạn sẽ được thông báo về từng trả lời mới trong tin nhắn này, và một số trả lời mới sẽ được hiển thị"
+          title: "Đang giám sát"
+          description: "Bạn sẽ được thông báo về từng trả lời mới trong tin nhắn này, và một số trả lời mới sẽ được hiển thị."
         watching:
-          title: "Dang theo dõi"
-          description: "Bạn sẽ được thông báo về từng trả lời mới trong tin nhắn này, và một số trả lời mới sẽ được hiển thị"
+          title: "Đang giám sát"
+          description: "Bạn sẽ được thông báo về từng trả lời mới trong tin chủ đề, và một số trả lời mới sẽ được hiển thị."
         tracking_pm:
           title: "Đang theo dõi"
           description: "Một số trả lời mới sẽ được hiển thị trong tin nhắn này. Bạn sẽ được thông báo nếu ai đó đề cập đến @tên của bạn hoặc trả lời bạn"
@@ -1114,7 +1124,7 @@ vi:
           description: "Bạn sẽ không bao giờ được thông báo về bất cứ điều gì về tin nhắn này. "
         muted:
           title: "Im lặng"
-          description: "Bạn sẽ không nhận được bất kỳ thông báo nào trong chủ đề này, và chúng sẽ không hiển thị là mới nhất."
+          description: "Bạn sẽ không nhận được bất kỳ thông báo nào về chủ đề này, và chúng sẽ không hiển thị là mới nhất."
       actions:
         recover: "Không-Xóa Chủ Đề Này"
         delete: "Xóa-Chủ Đề Này"
@@ -1256,6 +1266,7 @@ vi:
         other: "(bài viết theo tác giả sẽ được xóa tự động sau %{count} giờ, trừ khi đã đánh dấu)"
       expand_collapse: "mở/đóng"
       gap:
+        one: "xem {{count}} trả lời bị ẩn"
         other: "xem {{count}} trả lời bị ẩn"
       unread: "Bài viết chưa đọc"
       has_replies:
@@ -1533,6 +1544,7 @@ vi:
     likes_long: "Có {{number}} thích trong chủ đề này"
     users: "Người dùng"
     users_lowercase:
+      one: "người dùng"
       other: "người dùng"
     category_title: "Danh mục"
     history: "Lịch sử"
@@ -1547,6 +1559,7 @@ vi:
       latest:
         title: "Mới nhất"
         title_with_count:
+          one: "{{count}} chưa đọc"
           other: "Mới nhất ({{count}})"
         help: "chủ đề với bài viết gần nhất"
       hot:
@@ -1565,16 +1578,20 @@ vi:
       unread:
         title: "Chưa đọc"
         title_with_count:
+          one: "Chưa đọc (1)"
           other: "Chưa đọc ({{count}})"
         help: "chủ đề bạn đang xem hoặc theo dõi có bài viết chưa đọc"
         lower_title_with_count:
+          one: "Chưa đọc (1)"
           other: "{{count}} chưa đọc"
       new:
         lower_title_with_count:
+          one: "Mới (1)"
           other: "{{count}} mới"
         lower_title: "mới"
         title: "Mới"
         title_with_count:
+          one: "Mới (1)"
           other: "Mới ({{count}})"
         help: "chủ đề đã tạo cách đây vài ngày"
       posted:
@@ -1621,6 +1638,7 @@ vi:
       title: 'Quản trị Diễn đàn'
       moderator: 'Điều hành'
       dashboard:
+        page_views_short: "Lượt xem"
         title: "Bảng điều khiển"
         last_updated: "Bảng điều khiển cập nhật gần nhất:"
         version: "Phiên bản"
@@ -1933,6 +1951,7 @@ vi:
             name: 'đáng yêu'
             description: "Màu của nút like"
       email:
+        bounced: "Bị trả về"
         title: "Emails"
         settings: "Cấu hình"
         templates: "Templates"
@@ -2307,6 +2326,12 @@ vi:
         add_url: "thêm URL"
         add_host: "thêm host"
         categories:
+          groups: "Nhóm"
+          search: "Tìm kiếm"
+          user_api: "API người dùng"
+          tags: "Gắn thẻ"
+          awesome_bbcodes_plugin: "BBCode"
+          mathjax_plugin: "MathJax"
           all_results: 'Tất cả'
           required: 'Bắt buộc'
           basic: 'Cài đặt cơ bản'
@@ -2435,7 +2460,7 @@ vi:
         category_id: "ID Danh mục"
         category_title: "Danh mục"
         external_url: "URL Bên ngoài"
-        delete_confirm: Bạn có chắc chắn muốn xóa liên kết tĩnh này?
+        delete_confirm: "Bạn có chắc chắn muốn xóa liên kết tĩnh này?"
         form:
           label: "Mới:"
           add: "Thêm"
