@@ -60,6 +60,14 @@
       <meta itemprop='interactionCount' content='UserLikes:<%= post.like_count %>'>
       <meta itemprop='interactionCount' content='UserComments:<%= post.reply_count %>'>
       <hr>
+      <% if @topic_view.link_counts[post.id] && @topic_view.link_counts[post.id].length > 0 %>
+        <% @topic_view.link_counts[post.id].each do |link| %>
+          <% if link[:reflection] && link[:title].present? %>
+            <a href="<%=link[:url]%>"><%=link[:title]%></a>
+            <hr>
+          <% end %>
+        <% end %>
+      <% end %>
     <% end %>
   </div>
 <% end %>
