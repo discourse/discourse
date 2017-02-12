@@ -42,7 +42,7 @@
 <%- if include_crawler_content? %>
 
 <% @topic_view.posts.each do |post| %>
-  <div itemscope itemtype='http://schema.org/Article'>
+  <div itemscope itemtype='http://schema.org/DiscussionForumPosting'>
     <% if (u = post.user) %>
       <div class='creator'>
         <span>
