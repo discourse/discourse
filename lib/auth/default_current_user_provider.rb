@@ -44,7 +44,11 @@ class Auth::DefaultCurrentUserProvider
       limiter = RateLimiter.new(nil, "cookie_auth_#{request.ip}", COOKIE_ATTEMPTS_PER_MIN ,60)
 
       if limiter.can_perform?
-        @user_token = UserAuthToken.lookup(auth_token, seen: true)
+        @user_token = UserAuthToken.lookup(auth_token,
+                                           seen: true,
+                                           user_agent: @env['HTTP_USER_AGENT'],
+                                           client_ip: @request.ip)
+
         current_user = @user_token.try(:user)
       end
 
