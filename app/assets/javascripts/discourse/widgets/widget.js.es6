@@ -125,6 +125,17 @@ export function createWidget(name, opts) {
   return result;
 }
 
+export function reopenWidget(name, opts) {
+  let existing = _registry[name];
+  if (!existing) {
+    console.error(`Could not find widget ${name} in registry`);
+    return;
+  }
+
+  Object.keys(opts).forEach(k => existing.prototype[k] = opts[k]);
+  return existing;
+}
+
 export default class Widget {
   constructor(attrs, register, opts) {
     opts = opts || {};
@@ -145,12 +156,12 @@ export default class Widget {
     this.keyValueStore = register.lookup('key-value-store:main');
 
     // Helps debug widgets
-    if (Ember.testing) {
+    if (Discourse.Environment === "development" || Ember.testing) {
       const ds = this.defaultState(attrs);
       if (typeof ds !== "object") {
-        Ember.warn(`defaultState must return an object`);
+        throw `defaultState must return an object`;
       } else if (Object.keys(ds).length > 0 && !this.key) {
-        Ember.warn(`you need a key when using state ${this.name}`);
+        throw `you need a key when using state in ${this.name}`;
       }
     }
 

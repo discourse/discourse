@@ -30,8 +30,14 @@ describe Email::Styles do
       expect(frag.at("img")["style"]).to match("max-width")
     end
 
-    it "adds a width and height to images with an emoji path" do
+    it "adds a width and height to emojis" do
       frag = basic_fragment("<img src='/images/emoji/fish.png' class='emoji'>")
+      expect(frag.at("img")["width"]).to eq("20")
+      expect(frag.at("img")["height"]).to eq("20")
+    end
+
+    it "adds a width and height to custom emojis" do
+      frag = basic_fragment("<img src='/uploads/default/_emoji/fish.png' class='emoji emoji-custom'>")
       expect(frag.at("img")["width"]).to eq("20")
       expect(frag.at("img")["height"]).to eq("20")
     end

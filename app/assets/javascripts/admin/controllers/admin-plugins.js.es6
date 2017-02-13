@@ -1,16 +1,9 @@
-import computed from 'ember-addons/ember-computed-decorators';
-
 export default Ember.Controller.extend({
-  @computed('model.@each.enabled_setting')
-  adminRoutes() {
-    let routes = [];
-
-    this.get('model').forEach(p => {
-      if (this.siteSettings[p.get('enabled_setting')] && p.get('admin_route')) {
-        routes.push(p.get('admin_route'));
+  adminRoutes: function() {
+    return this.get('model').map(p => {
+      if (p.get('enabled')) {
+        return p.admin_route;
       }
-    });
-
-    return routes;
-  }
+    }).compact();
+  }.property()
 });

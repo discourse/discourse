@@ -24,7 +24,8 @@ class PostRevisionSerializer < ApplicationSerializer
              :title_changes,
              :user_changes,
              :tags_changes,
-             :wiki
+             :wiki,
+             :can_edit
 
 
   # Creates a field called field_name_changes with previous and
@@ -98,6 +99,10 @@ class PostRevisionSerializer < ApplicationSerializer
 
   def wiki
     object.post.wiki
+  end
+
+  def can_edit
+    scope.can_edit?(object.post)
   end
 
   def edit_reason

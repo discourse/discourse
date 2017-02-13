@@ -32,9 +32,10 @@ duration = Rails.env.production? ? 60 : 0
 if User.exec_sql("SELECT 1 FROM schema_migration_details
                   WHERE EXISTS(
                       SELECT 1 FROM INFORMATION_SCHEMA.COLUMNS
-                      WHERE table_schema = 'public' AND table_name = 'users' AND column_name = 'last_redirected_to_top_at'
+                      WHERE table_schema = 'public' AND table_name = 'users'
+                      AND column_name = 'auth_token'
                     ) AND
-                    name = 'MoveTrackingOptionsToUserOptions' AND
+                    name = 'AddUserAuthTokens' AND
                     created_at < (current_timestamp at time zone 'UTC' - interval '#{duration} minutes')
                  ").to_a.length > 0
 
@@ -57,6 +58,8 @@ if User.exec_sql("SELECT 1 FROM schema_migration_details
       auto_track_topics_after_msecs
       new_topic_duration_minutes
       last_redirected_to_top_at
+      auth_token
+      auth_token_updated_at
 ].each do |column|
       User.exec_sql("ALTER TABLE users DROP column IF EXISTS #{column}")
     end

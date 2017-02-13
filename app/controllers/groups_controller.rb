@@ -18,12 +18,7 @@ class GroupsController < ApplicationController
     page_size = 30
     page = params[:page]&.to_i || 0
 
-    groups = Group.order(name: :asc).where(visible: true)
-
-    if !guardian.is_admin?
-      groups = groups.where(automatic: false)
-    end
-
+    groups = Group.visible_groups(current_user)
     count = groups.count
     groups = groups.offset(page * page_size).limit(page_size)
 

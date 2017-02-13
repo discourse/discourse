@@ -1,7 +1,7 @@
 import storePretender from 'helpers/store-pretender';
 import fixturePretender from 'helpers/fixture-pretender';
 
-function parsePostData(query) {
+export function parsePostData(query) {
   const result = {};
   query.split("&").forEach(function(part) {
     const item = part.split("=");
@@ -18,7 +18,7 @@ function parsePostData(query) {
 
   });
   return result;
-}
+};
 
 function response(code, obj) {
   if (typeof code === "object") {
@@ -118,6 +118,7 @@ export default function() {
     this.get("/t/280.json", () => response(fixturesByUrl['/t/280/1.json']));
     this.get("/t/28830.json", () => response(fixturesByUrl['/t/28830/1.json']));
     this.get("/t/9.json", () => response(fixturesByUrl['/t/9/1.json']));
+    this.get("/t/12.json", () => response(fixturesByUrl['/t/12/1.json']));
 
     this.get("/t/id_for/:slug", () => {
       return response({id: 280, slug: "internationalization-localization", url: "/t/internationalization-localization/280"});
@@ -339,6 +340,14 @@ export default function() {
           200,
           {"Content-Type": "application/html"},
           '<aside class="onebox"><article class="onebox-body"><p>No title</p></article></aside>'
+        ];
+      }
+
+      if (request.queryParams.url.indexOf('/internal-page.html') > -1) {
+        return [
+          200,
+          {"Content-Type": "application/html"},
+          '<aside class="onebox"><article class="onebox-body"><h3><a href="/internal-page.html">Internal Page 4 U</a></h3></article></aside>'
         ];
       }
 

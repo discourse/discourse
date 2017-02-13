@@ -74,6 +74,7 @@ class UserNotifications < ActionMailer::Base
     end
   end
 
+  # This is the "mailing list summary email"
   def mailing_list(user, opts={})
     @since = opts[:since] || 1.day.ago
     @since_formatted = short_date(@since)

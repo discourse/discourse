@@ -35,7 +35,7 @@ nl:
   remove_posts_deleted_by_author: "Verwijderd door gebruiker"
   emails:
     incoming:
-      default_subject: "Inkomende e-mail van %{email}"
+      default_subject: "Dit topic heeft een titel nodig"
       show_trimmed_content: "Toon getrimde inhoud"
       maximum_staged_user_per_email_reached: "Het maximum aantal staged gebruikers dat per e-mail kan worden aangemaakt is bereikt."
       errors:
@@ -73,6 +73,8 @@ nl:
       inclusion: komt niet voor in de lijst
       invalid: is ongeldig
       is_invalid: "lijkt onduidelijk, is het een volledige zin?"
+      contains_censored_words: "bevat de volgende gecensureerde woorden: %{censored_words}"
+      matches_censored_pattern: "bevat de volgende woorden die met de gecensureerde regexp van de website overeenkomen: %{censored_words}"
       less_than: moet minder zijn dan %{count}
       less_than_or_equal_to: moet minder zijn dan of gelijk zijn aan %{count}
       not_a_number: is niet een getal
@@ -106,9 +108,14 @@ nl:
       max_username_length_range: "Je kan het maximum niet lager instellen dan het minimun."
       default_categories_already_selected: "Je kan geen categorie selecteren die wordt gebruikt in een andere lijst."
       s3_upload_bucket_is_required: "U kunt niet de uploads van de S3 toestaan totdat u de 's3_upload_bucket' hebt verleend."
+  invite:
+    accept_invite: "Uitnodiging accepteren"
+    not_found: "Uw uitnodigingstoken is ongeldig. Neem contact op met de beheerder van de website."
   bulk_invite:
     file_should_be_csv: "Het geüploade bestand moet in csv-formaat zijn."
     error: "Er trad een fout op tijdens het uploaden van dat bestand. Probeer het later nog eens."
+  topic_invite:
+    user_exists: "Sorry, die gebruiker is al uitgenodigd. Je kan een gebruiker maar een keer voor een topic uitnodigen."
   backup:
     operation_already_running: "Er wordt al een opdracht uitgevoerd. Kan nu niet een nieuwe opdracht starten."
     backup_file_should_be_tar_gz: "Het backupbestand moet een .tar.gz archief zijn."
@@ -774,7 +781,7 @@ nl:
     logo_small_url: "De kleine logo afbeelding links boven aan je site moet de vorm van een vierkant hebben en wordt getoond als naar beneden wordt gescrold. Indien leeg wordt een homepage symbool getoond."
     favicon_url: "Een favicon voor je site, zie http://nl.wikipedia.org/wiki/Favicon. Voor een correcte werking via CDN moet het een png zijn."
     mobile_logo_url: "De logo afbeelding met vaste positie voor linksboven op je mobiele site. De afbeelding moet vierkant zijn. Indien leeg wordt `logo_url` gebruikt. Bijv.: http://example.com/uploads/default/logo.png"
-    apple_touch_icon_url: "Icoon voor Apple touch devices. Aanbevolen grootte is 144px bij 144px."
+    apple_touch_icon_url: "Pictogram voor Apple touch-apparaten. Aanbevolen grootte is 144px bij 144px."
     notification_email: "Het afzender email adres dat wordt gebruikt voor het verzenden van alle essentiële systeem emails. Voor het domein dat hier gespecificeerd is moeten de SPF, DKIM en reverse PTR records goed ingesteld zijn om de mails te doen aankomen."
     email_custom_headers: "Een lijst van custom email headers, gescheiden door een pipe (|)"
     email_subject: "Wijzigbaar onderwerp formaat voor standaard emails. Bekijk https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801 voor meer informatie"
@@ -1067,7 +1074,7 @@ nl:
     default_other_auto_track_topics_after_msecs: "Globale standaard tijdbestek voordat een onderwerp automatisch wordt bijgehouden."
     default_other_external_links_in_new_tab: "Open externe links standaard in een nieuw tabblad."
     default_other_enable_quoting: "Citeer antwoord standaard inschakelen voor gemarkeerde tekst."
-    default_other_dynamic_favicon: "Toon standaard een teller van nieuwe/bijgewerkte topics op browser icoon."
+    default_other_dynamic_favicon: "Standaard teller voor nieuwe/bijgewerkte topics op browserpictogram tonen"
     default_other_disable_jump_reply: "Spring standaard niet naar de gebruiker post nadat ze hebben geantwoord."
     default_other_like_notification_frequency: "Stuur gebruikers standaard een bericht bij een like"
     default_topics_automatic_unpin: "Standaard automatisch topics ontpinnen wanneer de gebruiker het einde van de pagina heeft bereikt."
@@ -1574,6 +1581,13 @@ nl:
     step:
       forum_title:
         title: "Naam"
+      icons:
+        title: "Pictogrammen"
+        fields:
+          favicon_url:
+            label: "Klein pictogram"
+          apple_touch_icon_url:
+            label: "Groot pictogram"
       homepage:
         fields:
           homepage_style:
@@ -1585,8 +1599,8 @@ nl:
       finished:
         title: "Je Discourse staat klaar!"
         description: |
-          <p>Als je deze instellingen ooit aan wilt passen, bezoek dan <a href='/admin' target='_blank'>je beheerafdeling</a>; vind het naast het moersleutelicoon in het sitemenu.</p>
-          <p>Veel plezier, en succes met <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'>het opbouwen van je nieuwe gemeenschap!</a></p>
+          <p>Als u deze instellingen ooit wilt wijzigen, bezoek dan <a href='/admin' target='_blank'>uw beheersectie</a>; deze vindt u naast het moersleutelpictogram in het websitemenu.</p>
+          <p>Veel plezier, en succes met <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'>het opbouwen van uw nieuwe gemeenschap!</a></p>
   activemodel:
     errors:
       <<: *errors

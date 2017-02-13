@@ -104,6 +104,8 @@ sv:
       max_username_length_range: "Du kan inte sätta maximum högre än minimum."
       default_categories_already_selected: "Du kan inte välja en kategori som används i en annan lista. "
       s3_upload_bucket_is_required: "Du kan inte aktivera uppladdning till S3 innan du har angivit 's3_upload_bucket'."
+  topic_invite:
+    user_exists: "Tyvärr, den användaren har redan bjudits in. Du kan endast bjuda in en användare till ett ämne en gång."
   backup:
     operation_already_running: "En operation är redan igång. Kan inte starta ett nytt jobb just nu."
     backup_file_should_be_tar_gz: "Backup-filen ska vara ett .tar.gz arkiv."

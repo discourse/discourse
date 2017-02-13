@@ -18,6 +18,7 @@ const CLOSED = 'closed',
       REPLY = 'reply',
       EDIT = 'edit',
       REPLY_AS_NEW_TOPIC_KEY = "reply_as_new_topic",
+      REPLY_AS_NEW_PRIVATE_MESSAGE_KEY = "reply_as_new_private_message",
 
       // When creating, these fields are moved into the post model from the composer model
       _create_serializer = {
@@ -814,7 +815,8 @@ Composer.reopenClass({
   EDIT,
 
   // Draft key
-  REPLY_AS_NEW_TOPIC_KEY
+  REPLY_AS_NEW_TOPIC_KEY,
+  REPLY_AS_NEW_PRIVATE_MESSAGE_KEY
 });
 
 export default Composer;

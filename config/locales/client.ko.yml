@@ -1151,11 +1151,8 @@ ko:
         make_banner: "배너 주제"
         remove_banner: "배너 주제 제거"
       reply:
-        post:
-          title: '답글'
-        topic:
-          title: '답글'
-          help: '이 주제에 대한 답글 작성 시작'
+        title: '답글'
+        help: '이 주제에 대한 답글 작성 시작'
       clear_pin:
         title: "고정 취소"
         help: "더 이상 목록의 맨 위에 표시하지 않도록 이 주제의 고정 상태를 해제합니다."

@@ -27,6 +27,10 @@ const icons = {
   'private_topic': 'envelope'
 };
 
+export function addPostSmallActionIcon(key, icon) {
+  icons[key] = icon;
+};
+
 export default createWidget('post-small-action', {
   buildKey: attrs => `post-small-act-${attrs.id}`,
   tagName: 'div.small-action.onscreen-post.clearfix',

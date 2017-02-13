@@ -49,6 +49,13 @@
     <% end %>
     <span itemprop='url'><b><a href='<%= @list.more_topics_url %>' rel='next' itemprop='name'><%= t 'next_page' %></a></b></span>
   </div>
+
+  <% content_for :head do %>
+    <% if params[:page].to_i > 0 %>
+      <link rel="prev" href="<%= @list.prev_topics_url -%>">
+    <% end %>
+    <link rel="next" href="<%= @list.more_topics_url -%>">
+  <% end %>
 <% end %>
 
 <%- end %>

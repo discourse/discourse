@@ -67,8 +67,8 @@ module Email
 
       host = Email::Sender.host_for(Discourse.base_url)
 
-      topic_id = header_value('X-Discourse-Topic-Id')
-      post_id = header_value('X-Discourse-Post-Id')
+      post_id   = header_value('X-Discourse-Post-Id')
+      topic_id  = header_value('X-Discourse-Topic-Id')
       reply_key = header_value('X-Discourse-Reply-Key')
 
       # always set a default Message ID from the host
@@ -79,32 +79,42 @@ module Email
 
         post = Post.find_by(id: post_id)
         topic = Topic.find_by(id: topic_id)
+        first_post = topic.ordered_posts.first
 
-        topic_message_id = "<topic/#{topic_id}@#{host}>"
-        post_message_id = "<topic/#{topic_id}/#{post_id}@#{host}>"
+        topic_message_id = first_post.incoming_email&.message_id.present? ? 
+          "<#{first_post.incoming_email.message_id}>" :
+          "<topic/#{topic_id}@#{host}>"
 
-        incoming_email = IncomingEmail.find_by(post_id: post_id, topic_id: topic_id)
-        incoming_message_id = "<#{incoming_email.message_id}>" if incoming_email&.message_id.present?
+        post_message_id = post.incoming_email&.message_id.present? ?
+          "<#{post.incoming_email.message_id}>" :
+          "<topic/#{topic_id}/#{post_id}@#{host}>"
 
         referenced_posts = Post.includes(:incoming_email)
                                .where(id: PostReply.where(reply_id: post_id).select(:post_id))
                                .order(id: :desc)
 
         referenced_post_message_ids = referenced_posts.map do |post|
-          if post&.incoming_email&.message_id.present?
+          if post.incoming_email&.message_id.present?
             "<#{post.incoming_email.message_id}>"
           else
-            "<topic/#{topic_id}/#{post.id}@#{host}>"
+            if post.post_number == 1
+              "<topic/#{topic_id}@#{host}>"
+            else
+              "<topic/#{topic_id}/#{post.id}@#{host}>"
+            end
           end
         end
 
-        @message.header['Message-ID'] = incoming_message_id || post_message_id
-        if post && post.post_number > 1
-          @message.header['In-Reply-To'] = referenced_post_message_ids.first || topic_message_id
-          @message.header['References'] = [topic_message_id, referenced_post_message_ids].flatten.compact.uniq
+        # https://www.ietf.org/rfc/rfc2822.txt
+        if post.post_number == 1
+          @message.header['Message-ID']  = topic_message_id
+        else
+          @message.header['Message-ID']  = post_message_id
+          @message.header['In-Reply-To'] = referenced_post_message_ids[0] || topic_message_id
+          @message.header['References']  = [referenced_post_message_ids, topic_message_id].flatten.compact.uniq
         end
 
-        # http://www.ietf.org/rfc/rfc2919.txt
+        # https://www.ietf.org/rfc/rfc2919.txt
         if topic && topic.category && !topic.category.uncategorized?
           list_id = "<#{topic.category.name.downcase.tr(' ', '-')}.#{host}>"
 
@@ -117,7 +127,7 @@ module Email
           list_id = "<#{host}>"
         end
 
-        # http://www.ietf.org/rfc/rfc3834.txt
+        # https://www.ietf.org/rfc/rfc3834.txt
         @message.header['Precedence']   = 'list'
         @message.header['List-ID']      = list_id
         @message.header['List-Archive'] = topic.url if topic

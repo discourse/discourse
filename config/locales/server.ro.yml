@@ -112,6 +112,8 @@ ro:
   bulk_invite:
     file_should_be_csv: "Fișierul de încărcat trebuie să fie în format csv."
     error: "A apărut o eroare la încărcarea acestui fișier. Te rugăm să încerci din nou, mai târziu."
+  topic_invite:
+    user_exists: "Ne pare rău, acest utilizator a fost deja invitat. Nu poți să inviți un utilizator la un subiect decât o singură dată."
   backup:
     operation_already_running: "O operație este în desfășurare. Nu poți începe alta nouă."
     backup_file_should_be_tar_gz: "Fișierul backup ar trebui să fie arhivat cu extensia .tar.gz."

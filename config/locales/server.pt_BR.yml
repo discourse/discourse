@@ -32,9 +32,10 @@ pt_BR:
   purge_reason: "Automaticamente eliminada por ser uma conta abandonada, não ativada"
   disable_remote_images_download_reason: "Download de imagens remotas foi desativado porque não havia espaço suficiente em disco disponível."
   anonymous: "Anônimo"
+  remove_posts_deleted_by_author: "Deletado pelo autor"
   emails:
     incoming:
-      default_subject: "Email recebido de %{email}"
+      default_subject: "Este tópico necessita de um título"
       show_trimmed_content: "Exibir conteúdo abreviado"
       maximum_staged_user_per_email_reached: "Atingido número máximo de usuários de teste criados por email."
       errors:
@@ -105,6 +106,12 @@ pt_BR:
       max_username_length_range: "Você não pode definir o máximo abaixo no mínimo."
       default_categories_already_selected: "Você não pode selecionar uma categoria usada noutra lista."
       s3_upload_bucket_is_required: "Você não pode habilitar uploads para o S3 a não ser que tenha provido o 's3_upload_bucket'."
+  invite:
+    accept_invite: "Convite aceito"
+  bulk_invite:
+    file_should_be_csv: "O arquivo atualizado deve ter o formato csv."
+  topic_invite:
+    user_exists: "Desculpe, este usuário já foi convidado. Você pode convidar um usuário para um tópico apenas uma única vez."
   backup:
     operation_already_running: "Uma operação está sendo executada. Não é possível iniciar um novo trabalho agora."
     backup_file_should_be_tar_gz: "O arquivo de backup deve ser um arquivo .tar.gz."
@@ -155,6 +162,7 @@ pt_BR:
   spamming_host: "Desculpe, você não pode colocar um link para este site."
   user_is_suspended: "Usuários suspensos não tem permissão para postar."
   topic_not_found: "Ocorreu um erro. Talvez este tópico foi fechado ou removido enquanto você estava visualizando?"
+  not_accepting_pms: "Desculpe, %{username} não está aceitando mensagens no momento."
   just_posted_that: "é demasiado similar ao que postaste recentemente"
   invalid_characters: "contém caracteres inválidos"
   is_invalid: "parece pouco claro; é uma frase completa?"
@@ -282,6 +290,8 @@ pt_BR:
               too_many_users: "Você só pode enviar avisos para um usuário de cada vez."
               cant_send_pm: "Desculpe, você não pode enviar uma mensagem privada para este usuário."
               no_user_selected: "Você deve escolher um usuário válido."
+            featured_link:
+              invalid: "é inválida. A URL deve conter http:// ou https://."
         user:
           attributes:
             password:
@@ -313,6 +323,8 @@ pt_BR:
   staff_category_name: "Equipe"
   staff_category_description: "Categoria particular para as discussões da equipe. Tópicos só são visíveis para os administradores e moderadores."
   assets_topic_body: "Esse é um tópico permanente, visível apenas para a equipe, para arquivar imagens e arquivos usados no design do fórum. Não o delete!\n\n\nAqui está como:\n\n\n1. Responda a esse tópico.\n2. Envie todas as imagens que você deseja para serem usadas como logos, favicons e assim por diante aqui. (Utilize o ícone da barra de upload no editor de post, arraste e solte ou cole imagens.)\n3. Enviar sua resposta para publicá-la.\n4. Clique com o botão direito do mouse nas imagens em sua nova postagem para obter o endereço das imagens enviadas, ou clique no ícone de edição para editar o seu post e recuperar o caminho para as imagens. Copie o endereço da imagem.\n5. Copie o endereço das imagens nas [configurações básicas](/admin/site_settings/category/required).\n\nTambém, se você precisa ativar diferentes tipos de envios de arquivos, edite o `authorized_extensions` em [configurações de arquivo](/admin/site_settings/category/files)."
+  discourse_welcome_topic:
+    title: "Bem vindo ao Discourse"
   lounge_welcome:
     title: "Bem-vindo ao Salão"
     body: |2
@@ -466,8 +478,8 @@ pt_BR:
         other: "há quase %{count} anos atrás"
   password_reset:
     no_token: "Desculpe, essa alteração de senha é muito antiga. Selecione o botão Login e use 'Esqueci minha senha' para obter um novo link."
-    choose_new: "Por favor escolhe uma password nova"
-    choose: "Por favor, escolha uma senha"
+    choose_new: "Escolha uma nova senha"
+    choose: "Escolha uma senha"
     update: 'Atualizar Senha'
     save: 'Definir Senha'
     title: 'Redefinir Senha'
@@ -1016,6 +1028,7 @@ pt_BR:
     max_attachment_size_kb: "O tamanho máximo de upload de arquivos anexos em kB. Isso precisa ser configurado no nginx (client_max_body_size) / apache ou também proxy."
     authorized_extensions: "Uma lista de extensões de arquivo permitidas para upload (use '*' para permitir todos os tipos de arquivos)"
     max_similar_results: "Quantos tópicos semelhantes exibir acima do editor quando compondo um novo tópico. A comparação é baseada no título e no corpo."
+    max_image_megapixels: "Número máximo de megapixels permitidos em uma imagem."
     title_prettify: "Prevenir erros comuns em títulos, incluindo caps-lock ligado, primeira letra minúscula, excesso de ! e ?, pontos extras no final, etc."
     topic_views_heat_low: "Após este tanto de visualizações, o campo de visualizações é levemente realçado."
     topic_views_heat_medium: "Após este tanto de visualizações, o campo de visualizações é moderadamente realçado."
@@ -1100,6 +1113,7 @@ pt_BR:
     embed_username_key_from_feed: "Chave para puxar nome do usuário discourse a partir do feed."
     embed_truncate: "Cortar os posts embutidos."
     embed_post_limit: "Número máximo de respostas para embutir"
+    embed_username_required: "Nome de usuário para criação do tópico é obrigatório."
     embed_whitelist_selector: "Seletor CSS para os elementos que são permitidos em embeds."
     embed_blacklist_selector: "Selector CSS para elementos que são removidos dos embeds."
     notify_about_flags_after: "Se houver sinalizações sem ações após muitas horas, envia um e-mail para contact_email. Ajuste para 0 para desligar."
@@ -1111,6 +1125,7 @@ pt_BR:
     emoji_set: "Como você gostaria do seu emoji?"
     enforce_square_emoji: "Forçar proporção quadrangular para todos emojis."
     approve_unless_trust_level: "Mensagens para os usuários abaixo deste nível de confiança devem ser aprovados"
+    approve_new_topics_unless_trust_level: "Mensagens para os usuários abaixo deste nível de confiança devem ser aprovados."
     default_other_external_links_in_new_tab: "Abrir links externos em uma nova aba por padrão."
     default_other_like_notification_frequency: "Notificar usuários de curtidas por padrão"
     default_categories_watching: "Lista de categorias que são observadas por padrão."
@@ -1410,6 +1425,16 @@ pt_BR:
     visit_link_to_respond: "[Visite o Tópico](%{base_url}%{url}) para responder."
     visit_link_to_respond_pm: "[Visite o Mensagem](%{base_url}%{url}) para responder."
     posted_by: "Postado por %{username} em %{post_date}"
+    invited_to_topic_body: |
+      %{username} convidou você para uma discussão
+
+      > **%{topic_title}**
+      >
+      > %{topic_excerpt}
+
+      em
+
+      > %{site_title} -- %{site_description}
     user_invited_to_private_message_pm:
       subject_template: "[%{site_name}] %{username} convidou você para uma mensagem '%{topic_title}'"
       text_body_template: |
@@ -1588,6 +1613,7 @@ pt_BR:
         Clique no link a seguir para escolher uma senha para a sua nova conta:
         %{base_url}/users/password-reset/%{email_token}
     confirm_new_email:
+      title: "Confirmar novo e-mail"
       subject_template: "[%{site_name}] Confirme seu novo endereço de email"
       text_body_template: |
         Confirme seu novo endereço de email para %{site_name} clicando no link a seguir:
@@ -1876,6 +1902,8 @@ pt_BR:
     resend_email:
       title: "Reenviar Email de Confirmação"
       message: "<p>Reenviamos o email de confirmação para <b>%{email}</b>"
+  safe_mode:
+    no_plugins: "Desabilitar todos os plugins"
   wizard:
     title: "Configuração do Discourse"
     step:

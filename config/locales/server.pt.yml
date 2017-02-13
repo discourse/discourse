@@ -108,6 +108,8 @@ pt:
   bulk_invite:
     file_should_be_csv: "O ficheiro carregado deve ser do formato CSV."
     error: "Ocorreu um erro ao carregar esse ficheiro. Por favor tente mais tarde."
+  topic_invite:
+    user_exists: "Pedimos desculpa, esse utilizador já foi convidado. Pode convidar um utilizador para um tópico apenas uma vez."
   backup:
     operation_already_running: "Existe atualmente uma operação em execução. Neste momento não é possível iniciar um novo trabalho. "
     backup_file_should_be_tar_gz: "O ficheiro da cópia de segurança deve ser um arquivo .tar.gz"

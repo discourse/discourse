@@ -11,7 +11,7 @@ test('basicUsernameValidation', function() {
   var subject = this.subject;
 
   var testInvalidUsername = function(username, expectedReason) {
-    var controller = subject();
+    var controller = subject({ siteSettings: Discourse.SiteSettings });
     controller.set('accountUsername', username);
     equal(controller.get('basicUsernameValidation.failed'), true, 'username should be invalid: ' + username);
     equal(controller.get('basicUsernameValidation.reason'), expectedReason, 'username validation reason: ' + username + ', ' + expectedReason);
@@ -21,7 +21,7 @@ test('basicUsernameValidation', function() {
   testInvalidUsername('x', I18n.t('user.username.too_short'));
   testInvalidUsername('123456789012345678901', I18n.t('user.username.too_long'));
 
-  var controller = subject();
+  var controller = subject({ siteSettings: Discourse.SiteSettings });
   controller.set('accountUsername',   'porkchops');
   controller.set('prefilledUsername', 'porkchops');
   equal(controller.get('basicUsernameValidation.ok'), true, 'Prefilled username is valid');
@@ -31,7 +31,7 @@ test('basicUsernameValidation', function() {
 test('passwordValidation', function() {
   var subject = this.subject;
 
-  var controller = subject();
+  var controller = subject({ siteSettings: Discourse.SiteSettings });
   controller.set('passwordRequired', true);
   controller.set('accountEmail', 'pork@chops.com');
   controller.set('accountUsername', 'porkchops');
@@ -42,7 +42,7 @@ test('passwordValidation', function() {
   equal(controller.get('passwordValidation.reason'), I18n.t('user.password.ok'), 'Password is valid');
 
   var testInvalidPassword = function(password, expectedReason) {
-    var c = subject();
+    var c = subject({ siteSettings: Discourse.SiteSettings });
     c.set('accountPassword', password);
     equal(c.get('passwordValidation.failed'), true, 'password should be invalid: ' + password);
     equal(c.get('passwordValidation.reason'), expectedReason, 'password validation reason: ' + password + ', ' + expectedReason);

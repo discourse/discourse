@@ -592,21 +592,18 @@ describe User do
       @user.password = "ilovepasta"
       @user.save!
 
-      @user.auth_token = SecureRandom.hex(16)
-      @user.save!
-
       expect(@user.active).to eq(false)
       expect(@user.confirm_password?("ilovepasta")).to eq(true)
 
-
       email_token = @user.email_tokens.create(email: 'pasta@delicious.com')
 
-      old_token = @user.auth_token
+      UserAuthToken.generate!(user_id: @user.id)
+
       @user.password = "passwordT"
       @user.save!
 
       # must expire old token on password change
-      expect(@user.auth_token).to_not eq(old_token)
+      expect(@user.user_auth_tokens.count).to eq(0)
 
       email_token.reload
       expect(email_token.expired).to eq(true)
@@ -1183,9 +1180,29 @@ describe User do
 
   describe "automatic group membership" do
 
+    let!(:group) {
+      Fabricate(:group,
+        automatic_membership_email_domains: "bar.com|wat.com",
+        grant_trust_level: 1,
+        title: "bars and wats",
+        primary_group: true
+      )
+    }
+
+    it "doesn't automatically add inactive users" do
+      inactive_user = Fabricate(:user, active: false, email: "wat@wat.com")
+      group.reload
+      expect(group.users.include?(inactive_user)).to eq(false)
+    end
+
+    it "doesn't automatically add staged users" do
+      staged_user = Fabricate(:user, active: true, staged: true, email: "wat@wat.com")
+      group.reload
+      expect(group.users.include?(staged_user)).to eq(false)
+    end
+
     it "is automatically added to a group when the email matches" do
-      group = Fabricate(:group, automatic_membership_email_domains: "bar.com|wat.com")
-      user = Fabricate(:user, email: "foo@bar.com")
+      user = Fabricate(:user, active: true, email: "foo@bar.com")
       group.reload
       expect(group.users.include?(user)).to eq(true)
 
@@ -1197,14 +1214,8 @@ describe User do
     end
 
     it "get attributes from the group" do
-      group = Fabricate(:group,
-        automatic_membership_email_domains: "bar.com|wat.com",
-        grant_trust_level: 1,
-        title: "bars and wats",
-        primary_group: true
-      )
-
       user = Fabricate.build(:user,
+        active: true,
         trust_level: 0,
         email: "foo@bar.com",
         password: "strongpassword4Uguys"
@@ -1417,4 +1428,35 @@ describe User do
       expect(user.featured_user_badges.length).to eq(1)
     end
   end
+
+  describe ".clear_global_notice_if_needed" do
+
+    let(:user) { Fabricate(:user) }
+    let(:admin) { Fabricate(:admin) }
+
+    before do
+      SiteSetting.has_login_hint = true
+      SiteSetting.global_notice = "some notice"
+    end
+
+    it "doesn't clear the login hint when a regular user is saved" do
+      user.save
+      expect(SiteSetting.has_login_hint).to eq(true)
+      expect(SiteSetting.global_notice).to eq("some notice")
+    end
+
+    it "doesn't clear the notice when a system user is saved" do
+      Discourse.system_user.save
+      expect(SiteSetting.has_login_hint).to eq(true)
+      expect(SiteSetting.global_notice).to eq("some notice")
+    end
+
+    it "clears the notice when the admin is saved" do
+      admin.save
+      expect(SiteSetting.has_login_hint).to eq(false)
+      expect(SiteSetting.global_notice).to eq("")
+    end
+
+  end
+
 end

@@ -43,12 +43,6 @@
     }
   }
 
-  tr.instructions {
-    label {
-      color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
-    }
-  }
-
   .tos-agree {
     margin-bottom: 12px;
   }
@@ -57,4 +51,24 @@
     margin-top: 15px;
   }
 
+  .instructions {
+    label {
+      color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
+    }
+  }
+
+}
+
+.password-reset {
+  .col-form {
+    padding-top: 40px;
+    padding-left: 20px;
+  }
+  h2 {
+    margin-bottom: 12px;
+  }
+  .password-reset-img {
+    width: 200px;
+    height: 200px;
+  }
 }

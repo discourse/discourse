@@ -225,12 +225,11 @@ HTML
         <a href='http://body_and_quote.com'>http://useless2.com</a>
         ")
 
-      expect(links.map{|l| [l.url, l.is_quote]}.to_a.sort).to eq(
-        [["http://body_only.com",false],
-         ["http://body_and_quote.com", false],
-         ["/t/topic/1234",true]
-        ].sort
-      )
+      expect(links.map { |l| [l.url, l.is_quote] }.sort).to eq([
+        ["http://body_only.com", false],
+        ["http://body_and_quote.com", false],
+        ["/t/topic/1234", true],
+      ].sort)
     end
 
     it "should not preserve tags in code blocks" do

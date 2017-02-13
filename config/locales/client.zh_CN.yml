@@ -1349,8 +1349,11 @@ zh_CN:
         make_banner: "横幅主题"
         remove_banner: "取消横幅主题"
       reply:
-        title: '回复'
-        help: '开始为该主题撰写回复'
+        post:
+          title: '回复'
+        topic:
+          title: '回复'
+          help: '开始为该主题撰写回复'
       clear_pin:
         title: "取消置顶"
         help: "取消本主题的置顶状态，将不再固定显示在主题列表顶部。"
@@ -1508,13 +1511,11 @@ zh_CN:
       via_email: "通过邮件发表的帖子"
       via_auto_generated_email: "通过自动生成邮件发表的帖子"
       whisper: "设置帖子为密语，只对版主可见"
-      wiki:
-        about: "此帖允许被公共编辑"
       archetypes:
         save: '保存选项'
       few_likes_left: "谢谢你的热情！你今天的赞快用完了。"
       controls:
-        reply: "回复本帖"
+        reply: "开始撰写该帖子的回复"
         like: "赞一下此帖"
         has_liked: "已赞"
         undo_like: "取消赞"
@@ -2087,6 +2088,8 @@ zh_CN:
         backups: "备份"
         traffic_short: "流量"
         traffic: "应用 web 请求"
+        page_views: "浏览量"
+        page_views_short: "浏览量"
         show_traffic_report: "显示详细的流量报告"
         reports:
           today: "今天"

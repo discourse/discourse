@@ -13,11 +13,27 @@ describe Topic do
     context "#title" do
       it { is_expected.to validate_presence_of :title }
 
+      describe 'censored pattern' do
+        describe 'when title matches censored pattern' do
+          it 'should not be valid' do
+            SiteSetting.censored_pattern = 'orange.*'
+
+            topic.title = 'I have orangEjuice orange monkey orange stuff'
+
+            expect(topic).to_not be_valid
+
+            expect(topic.errors.full_messages.first).to include(I18n.t(
+              'errors.messages.matches_censored_pattern', censored_words: 'orangejuice orange monkey orange stuff'
+            ))
+          end
+        end
+      end
+
       describe 'censored words' do
         describe 'when title contains censored words' do
-          site_setting(:censored_words, 'pineapple|pen')
-
           it 'should not be valid' do
+            SiteSetting.censored_words = 'pineapple|pen'
+
             topic.title = 'pen PinEapple apple pen '
 
             expect(topic).to_not be_valid
@@ -28,25 +44,28 @@ describe Topic do
           end
         end
 
-        describe 'when title matches censored pattern' do
-          site_setting(:censored_pattern, 'orange.*')
-
-          it 'should not be valid' do
-            topic.title = 'I have orangEjuice orange monkey orange stuff'
-
-            expect(topic).to_not be_valid
-
-            expect(topic.errors.full_messages.first).to include(I18n.t(
-              'errors.messages.matches_censored_pattern', censored_words: 'orange monkey orange stuff'
-            ))
-          end
-        end
-
         describe 'when title does not contain censored words' do
           it 'should be valid' do
             topic.title = 'The cake is a lie'
 
             expect(topic).to be_valid
+          end
+        end
+
+        describe 'escape special characters in censored words' do
+          before do
+            SiteSetting.censored_words = 'co(onut|coconut|a**le'
+          end
+
+          it 'should not valid' do
+            topic.title = "I have a co(onut a**le"
+
+            expect(topic.valid?).to eq(false)
+
+            expect(topic.errors.full_messages.first).to include(I18n.t(
+              'errors.messages.contains_censored_words',
+              censored_words: 'co(onut, a**le'
+            ))
           end
         end
       end
@@ -483,28 +502,33 @@ describe Topic do
 
   end
 
-  it "rate limits topic invitations" do
-    SiteSetting.stubs(:max_topic_invitations_per_day).returns(2)
-    RateLimiter.stubs(:disabled?).returns(false)
-    RateLimiter.clear_all!
+  context 'rate limits' do
 
-    start = Time.now.tomorrow.beginning_of_day
-    freeze_time(start)
+    it "rate limits topic invitations" do
+      SiteSetting.stubs(:max_topic_invitations_per_day).returns(2)
+      RateLimiter.stubs(:disabled?).returns(false)
+      RateLimiter.clear_all!
 
-    user = Fabricate(:user)
-    topic = Fabricate(:topic)
+      start = Time.now.tomorrow.beginning_of_day
+      freeze_time(start)
 
-    freeze_time(start + 10.minutes)
-    topic.invite(topic.user, user.username)
+      user = Fabricate(:user)
+      trust_level_2 = Fabricate(:user, trust_level: 2)
+      topic = Fabricate(:topic, user: trust_level_2)
 
-    freeze_time(start + 20.minutes)
-    topic.invite(topic.user, "walter@white.com")
+      freeze_time(start + 10.minutes)
+      topic.invite(topic.user, user.username)
 
-    freeze_time(start + 30.minutes)
+      freeze_time(start + 20.minutes)
+      topic.invite(topic.user, "walter@white.com")
 
-    expect {
-      topic.invite(topic.user, "user@example.com")
-    }.to raise_error(RateLimiter::LimitExceeded)
+      freeze_time(start + 30.minutes)
+
+      expect {
+        topic.invite(topic.user, "user@example.com")
+      }.to raise_error(RateLimiter::LimitExceeded)
+    end
+
   end
 
   context 'bumping topics' do
@@ -783,6 +807,14 @@ describe Topic do
 
         topic.make_banner!(user)
         expect(Topic.where(archetype: Archetype.banner).count).to eq(1)
+      end
+
+      it "removes any dismissed banner keys" do
+        user.user_profile.update_column(:dismissed_banner_key, topic.id)
+
+        topic.make_banner!(user)
+        user.user_profile.reload
+        expect(user.user_profile.dismissed_banner_key).to be_nil
       end
 
     end
@@ -1418,7 +1450,7 @@ describe Topic do
       user = Fabricate(:user)
       tag = Fabricate(:tag)
       TagUser.change(user.id, tag.id, TagUser.notification_levels[:muted])
-      topic = Fabricate(:topic, tags: [tag])
+      Fabricate(:topic, tags: [tag])
 
       expect(Topic.for_digest(user, 1.year.ago, top_order: true)).to be_blank
     end
@@ -1834,6 +1866,96 @@ describe Topic do
 
         expect(t.valid?).to eq(true)
       end
+    end
+  end
+
+  describe '#time_to_first_response' do
+    it "should have no results if no topics in range" do
+      expect(Topic.time_to_first_response_per_day(5.days.ago, Time.zone.now).count).to eq(0)
+    end
+
+    it "should have no results if there is only a topic with no replies" do
+      topic = Fabricate(:topic, created_at: 1.hour.ago)
+      Fabricate(:post, topic: topic, user: topic.user, post_number: 1)
+      expect(Topic.time_to_first_response_per_day(5.days.ago, Time.zone.now).count).to eq(0)
+      expect(Topic.time_to_first_response_total).to eq(0)
+    end
+
+    it "should have no results if reply is from first poster" do
+      topic = Fabricate(:topic, created_at: 1.hour.ago)
+      Fabricate(:post, topic: topic, user: topic.user, post_number: 1)
+      Fabricate(:post, topic: topic, user: topic.user, post_number: 2)
+      expect(Topic.time_to_first_response_per_day(5.days.ago, Time.zone.now).count).to eq(0)
+      expect(Topic.time_to_first_response_total).to eq(0)
+    end
+
+    it "should have results if there's a topic with replies" do
+      topic = Fabricate(:topic, created_at: 3.hours.ago)
+      Fabricate(:post, topic: topic, user: topic.user, post_number: 1, created_at: 3.hours.ago)
+      Fabricate(:post, topic: topic, post_number: 2, created_at: 2.hours.ago)
+      r = Topic.time_to_first_response_per_day(5.days.ago, Time.zone.now)
+      expect(r.count).to eq(1)
+      expect(r[0]["hours"].to_f.round).to eq(1)
+      expect(Topic.time_to_first_response_total).to eq(1)
+    end
+
+    it "should only count regular posts as the first response" do
+      topic = Fabricate(:topic, created_at: 5.hours.ago)
+      Fabricate(:post, topic: topic, user: topic.user, post_number: 1, created_at: 5.hours.ago)
+      Fabricate(:post, topic: topic, post_number: 2, created_at: 4.hours.ago, post_type: Post.types[:whisper])
+      Fabricate(:post, topic: topic, post_number: 3, created_at: 3.hours.ago, post_type: Post.types[:moderator_action])
+      Fabricate(:post, topic: topic, post_number: 4, created_at: 2.hours.ago, post_type: Post.types[:small_action])
+      Fabricate(:post, topic: topic, post_number: 5, created_at: 1.hour.ago)
+      r = Topic.time_to_first_response_per_day(5.days.ago, Time.zone.now)
+      expect(r.count).to eq(1)
+      expect(r[0]["hours"].to_f.round).to eq(4)
+      expect(Topic.time_to_first_response_total).to eq(4)
+    end
+  end
+
+  describe '#with_no_response' do
+    it "returns nothing with no topics" do
+      expect(Topic.with_no_response_per_day(5.days.ago, Time.zone.now).count).to eq(0)
+    end
+
+    it "returns 1 with one topic that has no replies" do
+      topic = Fabricate(:topic, created_at: 5.hours.ago)
+      Fabricate(:post, topic: topic, user: topic.user, post_number: 1, created_at: 5.hours.ago)
+      expect(Topic.with_no_response_per_day(5.days.ago, Time.zone.now).count).to eq(1)
+      expect(Topic.with_no_response_total).to eq(1)
+    end
+
+    it "returns 1 with one topic that has no replies and author was changed on first post" do
+      topic = Fabricate(:topic, created_at: 5.hours.ago)
+      Fabricate(:post, topic: topic, user: Fabricate(:user), post_number: 1, created_at: 5.hours.ago)
+      expect(Topic.with_no_response_per_day(5.days.ago, Time.zone.now).count).to eq(1)
+      expect(Topic.with_no_response_total).to eq(1)
+    end
+
+    it "returns 1 with one topic that has a reply by the first poster" do
+      topic = Fabricate(:topic, created_at: 5.hours.ago)
+      Fabricate(:post, topic: topic, user: topic.user, post_number: 1, created_at: 5.hours.ago)
+      Fabricate(:post, topic: topic, user: topic.user, post_number: 2, created_at: 2.hours.ago)
+      expect(Topic.with_no_response_per_day(5.days.ago, Time.zone.now).count).to eq(1)
+      expect(Topic.with_no_response_total).to eq(1)
+    end
+
+    it "returns 0 with a topic with 1 reply" do
+      topic   = Fabricate(:topic, created_at: 5.hours.ago)
+      post1   = Fabricate(:post, topic: topic, user: topic.user, post_number: 1, created_at: 5.hours.ago)
+      post1   = Fabricate(:post, topic: topic, post_number: 2, created_at: 2.hours.ago)
+      expect(Topic.with_no_response_per_day(5.days.ago, Time.zone.now).count).to eq(0)
+      expect(Topic.with_no_response_total).to eq(0)
+    end
+
+    it "returns 1 with one topic that doesn't have regular replies" do
+      topic = Fabricate(:topic, created_at: 5.hours.ago)
+      Fabricate(:post, topic: topic, user: topic.user, post_number: 1, created_at: 5.hours.ago)
+      Fabricate(:post, topic: topic, post_number: 2, created_at: 4.hours.ago, post_type: Post.types[:whisper])
+      Fabricate(:post, topic: topic, post_number: 3, created_at: 3.hours.ago, post_type: Post.types[:moderator_action])
+      Fabricate(:post, topic: topic, post_number: 4, created_at: 2.hours.ago, post_type: Post.types[:small_action])
+      expect(Topic.with_no_response_per_day(5.days.ago, Time.zone.now).count).to eq(1)
+      expect(Topic.with_no_response_total).to eq(1)
     end
   end
 end

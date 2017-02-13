@@ -102,6 +102,8 @@ da:
       max_username_length_range: "Du kan ikke sætte maksimum til mindre end minimum."
       default_categories_already_selected: "Du kan ikke vælge en kategori der er brugt i en anden liste."
       s3_upload_bucket_is_required: "Du kan ikke oploade til S3 med mindre du har angivet 's3_upload_bucket'."
+  topic_invite:
+    user_exists: "Beklager, men brugeren er allerede inviteret. Du kan kun invitere en bruger til et emne én gang."
   backup:
     operation_already_running: "Der kører allerede en %{operation}. Kan ikke starte et nyt %{operation} job lige nu."
     backup_file_should_be_tar_gz: "Backup filen skal være et .tar.gz arkiv."

@@ -405,8 +405,6 @@ class UsersController < ApplicationController
         user_id = secure_session["password-#{token}"].to_i
         @user = User.find(user_id) if user_id > 0
       end
-    else
-      @invalid_token = true
     end
 
     if !@user
@@ -419,17 +417,47 @@ class UsersController < ApplicationController
       else
         @user.password = params[:password]
         @user.password_required!
-        @user.auth_token = nil
+        @user.user_auth_tokens.destroy_all
         if @user.save
           Invite.invalidate_for_email(@user.email) # invite link can't be used to log in anymore
           secure_session["password-#{token}"] = nil
           logon_after_password_reset
-
-          return redirect_to(wizard_path) if Wizard.user_requires_completion?(@user)
         end
       end
     end
-    render layout: 'no_ember'
+
+    respond_to do |format|
+      format.html do
+        if @error
+          render layout: 'no_ember'
+        else
+          store_preloaded("password_reset", MultiJson.dump({ is_developer: UsernameCheckerService.is_developer?(@user.email) }))
+        end
+        return redirect_to(wizard_path) if Wizard.user_requires_completion?(@user)
+      end
+
+      format.json do
+        if request.put?
+          if @error || @user&.errors&.any?
+            render json: {
+              success: false,
+              message: @error,
+              errors: @user&.errors&.to_hash,
+              is_developer: UsernameCheckerService.is_developer?(@user.email)
+            }
+          else
+            render json: {
+              success: true,
+              message: @success,
+              requires_approval: !Guardian.new(@user).can_access_forum?,
+              redirect_to: Wizard.user_requires_completion?(@user) ? wizard_path : nil
+            }
+          end
+        else
+          render json: {is_developer: UsernameCheckerService.is_developer?(@user.email)}
+        end
+      end
+    end
   end
 
   def confirm_email_token
@@ -559,7 +587,17 @@ class UsersController < ApplicationController
     topic_id = topic_id.to_i if topic_id
     topic_allowed_users = params[:topic_allowed_users] || false
 
-    results = UserSearch.new(term, topic_id: topic_id, topic_allowed_users: topic_allowed_users, searching_user: current_user).search
+    if params[:group].present?
+      @group = Group.find_by(name: params[:group])
+    end
+
+
+    results = UserSearch.new(term,
+                             topic_id: topic_id,
+                             topic_allowed_users: topic_allowed_users,
+                             searching_user: current_user,
+                             group: @group
+                            ).search
 
     user_fields = [:username, :upload_avatar_template]
     user_fields << :name if SiteSetting.enable_names?
@@ -673,7 +711,7 @@ class UsersController < ApplicationController
   private
 
     def honeypot_value
-      Digest::SHA1::hexdigest("#{Discourse.current_hostname}:#{Discourse::Application.config.secret_token}")[0,15]
+      Digest::SHA1::hexdigest("#{Discourse.current_hostname}:#{GlobalSetting.safe_secret_key_base}")[0,15]
     end
 
     def challenge_value
