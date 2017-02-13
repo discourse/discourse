@@ -1,4 +1,4 @@
 // Hide button 'Create topic'
 body:not([class*='category-']) #create-topic {
- // display: none;
+  display: none;
 }
