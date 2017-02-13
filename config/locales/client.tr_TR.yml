@@ -1350,8 +1350,11 @@ tr_TR:
         make_banner: "Manşet Konusu"
         remove_banner: "Manşet Konusunu Kaldır"
       reply:
-        title: 'Cevapla'
-        help: 'bu konuya bir cevap oluşturmaya başlayın'
+        post:
+          title: 'Cevapla'
+        topic:
+          title: 'Cevapla'
+          help: 'bu konuya bir cevap oluşturmaya başlayın'
       clear_pin:
         title: "Başa tutturmayı iptal et"
         help: "Bu konunun başa tutturulması iptal edilsin ki artık konu listenizin en üstünde gözükmesin"

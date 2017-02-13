@@ -1350,8 +1350,11 @@ zh_TW:
         make_banner: "討論話題橫幅"
         remove_banner: "移除討論話題橫幅"
       reply:
-        title: '回覆'
-        help: '回覆此討論話題'
+        post:
+          title: '回覆'
+        topic:
+          title: '回覆'
+          help: '回覆此討論話題'
       clear_pin:
         title: "取消置頂"
         help: "取消討論話題的置頂狀態。"

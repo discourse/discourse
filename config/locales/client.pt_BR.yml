@@ -1340,8 +1340,11 @@ pt_BR:
         make_banner: "Banner Tópico"
         remove_banner: "Remover Banner Tópico"
       reply:
-        title: 'Responder'
-        help: 'comece a compor uma resposta a este tópico'
+        post:
+          title: 'Responder'
+        topic:
+          title: 'Responder'
+          help: 'comece a compor uma resposta a este tópico'
       clear_pin:
         title: "Remover destaque"
         help: "Retirar destaque deste tópico para que ele não apareça mais no topo da sua lista de tópicos"

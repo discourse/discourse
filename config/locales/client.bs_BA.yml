@@ -1034,8 +1034,11 @@ bs_BA:
         pin: "Prikači temu"
         unpin: "Otkači temu"
       reply:
-        title: 'Odgovori'
-        help: 'počni sa pisanjem odgovora na ovu temu'
+        post:
+          title: 'Odgovori'
+        topic:
+          title: 'Odgovori'
+          help: 'počni sa pisanjem odgovora na ovu temu'
       clear_pin:
         title: "Clear pin"
         help: "Clear the pinned status of this topic so it no longer appears at the top of your topic list"

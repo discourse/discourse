@@ -1349,8 +1349,11 @@ zh_CN:
         make_banner: "横幅主题"
         remove_banner: "取消横幅主题"
       reply:
-        title: '回复'
-        help: '开始为该主题撰写回复'
+        post:
+          title: '回复'
+        topic:
+          title: '回复'
+          help: '开始为该主题撰写回复'
       clear_pin:
         title: "取消置顶"
         help: "取消本主题的置顶状态，将不再固定显示在主题列表顶部。"
