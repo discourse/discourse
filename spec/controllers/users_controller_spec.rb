@@ -14,7 +14,7 @@ describe UsersController do
       end
 
       it "raises an error for anon when profiles are hidden" do
-        SiteSetting.stubs(:hide_user_profiles_from_public).returns(true)
+        SiteSetting.hide_user_profiles_from_public = true
         xhr :get, :show, username: user.username, format: :json
         expect(response).not_to be_success
       end
@@ -322,7 +322,7 @@ describe UsersController do
       end
 
       it "doesn't log in the user when not approved" do
-        SiteSetting.expects(:must_approve_users?).returns(true)
+        SiteSetting.must_approve_users = true
         put :password_reset, token: token, password: 'ksjafh928r'
         expect(assigns(:user).errors).to be_blank
         expect(session[:current_user_id]).to be_blank
@@ -410,7 +410,7 @@ describe UsersController do
     before do
       UsersController.any_instance.stubs(:honeypot_value).returns(nil)
       UsersController.any_instance.stubs(:challenge_value).returns(nil)
-      SiteSetting.stubs(:allow_new_registrations).returns(true)
+      SiteSetting.allow_new_registrations = true
       @user = Fabricate.build(:user)
       @user.password = "strongpassword"
     end
@@ -428,7 +428,7 @@ describe UsersController do
 
     context 'when creating a user' do
       it 'sets the user locale to I18n.locale' do
-        SiteSetting.stubs(:default_locale).returns('en')
+        SiteSetting.default_locale = 'en'
         I18n.stubs(:locale).returns(:fr)
         post_user
         expect(User.find_by(username: @user.username).locale).to eq('fr')
@@ -438,14 +438,14 @@ describe UsersController do
     context 'when creating a non active user (unconfirmed email)' do
 
       it 'returns a 500 when local logins are disabled' do
-        SiteSetting.expects(:enable_local_logins).returns(false)
+        SiteSetting.enable_local_logins = false
         post_user
 
         expect(response.status).to eq(500)
       end
 
       it 'returns an error when new registrations are disabled' do
-        SiteSetting.stubs(:allow_new_registrations).returns(false)
+        SiteSetting.allow_new_registrations = false
         post_user
         json = JSON.parse(response.body)
         expect(json['success']).to eq(false)
@@ -465,7 +465,7 @@ describe UsersController do
       end
 
       context "and 'must approve users' site setting is enabled" do
-        before { SiteSetting.expects(:must_approve_users).returns(true) }
+        before { SiteSetting.must_approve_users = true }
 
         it 'does not enqueue an email' do
           Jobs.expects(:enqueue).never
@@ -594,8 +594,10 @@ describe UsersController do
       end
 
       it 'returns 500 status when new registrations are disabled' do
-        SiteSetting.stubs(:allow_new_registrations).returns(false)
+        SiteSetting.allow_new_registrations = false
+
         post_user
+
         json = JSON.parse(response.body)
         expect(json['success']).to eq(false)
         expect(json['message']).to be_present
@@ -603,16 +605,14 @@ describe UsersController do
 
       context 'authentication records for' do
 
-        before do
-          SiteSetting.expects(:must_approve_users).returns(true)
-        end
-
         it 'should create twitter user info if required' do
-          SiteSetting.stubs(:enable_twitter_logins?).returns(true)
+          SiteSetting.must_approve_users = true
+          SiteSetting.enable_twitter_logins = true
           twitter_auth = { twitter_user_id: 42, twitter_screen_name: "bruce" }
           auth = session[:authentication] = {}
           auth[:authenticator_name] = 'twitter'
           auth[:extra_data] = twitter_auth
+
           TwitterUserInfo.expects(:create)
 
           post_user
@@ -676,7 +676,7 @@ describe UsersController do
     end
 
     context "when 'invite only' setting is enabled" do
-      before { SiteSetting.expects(:invite_only?).returns(true) }
+      before { SiteSetting.invite_only = true }
 
       let(:create_params) {{
         name: @user.name,
@@ -1388,7 +1388,7 @@ describe UsersController do
 
     context "when `enable_names` is false" do
       before do
-        SiteSetting.stubs(:enable_names?).returns(false)
+        SiteSetting.enable_names = false
       end
 
       it "returns names" do
@@ -1458,13 +1458,13 @@ describe UsersController do
       end
 
       it "raises an error when sso_overrides_avatar is disabled" do
-        SiteSetting.stubs(:sso_overrides_avatar).returns(true)
+        SiteSetting.sso_overrides_avatar = true
         xhr :put, :pick_avatar, username: user.username, upload_id: upload.id, type: "custom"
         expect(response).to_not be_success
       end
 
       it "raises an error when selecting the custom/uploaded avatar and allow_uploaded_avatars is disabled" do
-        SiteSetting.stubs(:allow_uploaded_avatars).returns(false)
+        SiteSetting.allow_uploaded_avatars = false
         xhr :put, :pick_avatar, username: user.username, upload_id: upload.id, type: "custom"
         expect(response).to_not be_success
       end
