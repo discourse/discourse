@@ -12,42 +12,53 @@ vi:
         other: "người bình chọn"
       total_votes:
         other: "tổng số bình chọn"
-      average_rating: "Đánh giá trung bình: <strong>%{average}</strong>."
+      average_rating: "Trung bình: <strong>%{average}</strong>."
       public:
-        title: "Bình chọn công khai."
+        title: "Thăm dò này là công khai."
       multiple:
         help:
           at_least_min_options:
-            other: "Chọn ít nhất <strong>%{count}</strong> tùy chọn"
+            other: "Chọn ít nhất <strong>%{count}</strong> lựa chọn"
           up_to_max_options:
-            other: "Chọn tối đa <strong>%{count}</strong> tùy chọn"
+            other: "Chọn tối đa <strong>%{count}</strong> lựa chọn"
           x_options:
-            other: "Chọn <strong>%{count}</strong> tùy chọn"
+            other: "Chọn <strong>%{count}</strong> lựa chọn"
+          between_min_and_max_options: "Chọn giữa <strong>%{min}</strong> và <strong>%{max}</strong> lựa chọn."
       cast-votes:
-        title: "Bỏ phiếu của bạn"
+        title: "Thay đổi bình chọn của bạn"
         label: "Bình chọn ngay!"
       show-results:
-        title: "Hiển thị kết quả cuộc thăm dò"
+        title: "Hiển thị kết quả thăm dò"
         label: "Hiện kết quả"
       hide-results:
         title: "Trở lại bình chọn của bạn"
         label: "Ẩn kết quả"
       open:
-        title: "Mở bình chọn"
+        title: "Mở thăm dò"
         label: "Mở"
-        confirm: "Bạn có chắc bạn muốn mở bình chọn này?"
+        confirm: "Bạn có muốn mở thăm dò này?"
       close:
-        title: "Đóng bình chọn"
-        label: "Đóng lại"
-        confirm: "Bạn có chắc chắn muốn đóng bình chọn này?"
+        title: "Đóng thăm dò"
+        label: "Đóng"
+        confirm: "Bạn có muốn đóng thăm dò này ?"
+      error_while_toggling_status: "Đã có lỗi xảy ra khi chuyển trạng thái của thăm dò."
+      error_while_casting_votes: "Đã có lỗi xảy ra làm ảnh hưởng đến bình chọn của bạn."
+      error_while_fetching_voters: "Đã có lỗi xảy ra khi hiển thị những người tham gia bình chọn."
       ui_builder:
+        title: Tạo thăm dò
+        insert: Chèn thăm dò
         help:
-          options_count: Nhập vào ít nhất 2 tùy chọn
+          options_count: Nhập vào ít nhất 2 lựa chọn
         poll_type:
           label: Loại
+          regular: Một lựa chọn
+          multiple: Nhiều lựa chọn
+          number: Xếp hạng
         poll_config:
           max: Tối đa
           min: Tối thiểu
           step: Bước
         poll_public:
-          label: Hiển thị ai đã bình chọn
+          label: Hiển thị người đã bình chọn
+        poll_options:
+          label: Nhập mỗi lựa chọn trong thăm dò vào một dòng

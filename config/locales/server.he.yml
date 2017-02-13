@@ -35,7 +35,7 @@ he:
   remove_posts_deleted_by_author: "נמחק על ידי הכותב"
   emails:
     incoming:
-      default_subject: "התקבל מייל מ %{email}"
+      default_subject: "נושא זה צריך כותרת"
       show_trimmed_content: "הצגת תוכן גזום"
       maximum_staged_user_per_email_reached: "הגעתם למספר המירבי של משתמשים מועמדים למייל."
       errors:
@@ -73,8 +73,8 @@ he:
       inclusion: לא נכלל ברשימה
       invalid: לא תקין
       is_invalid: "נראה לא ברור, האם זה משפט שלם?"
-      contains_censored_words: "כולל אחת או יותר מהמילים המצונזרות הבאות: %{censored_words}"
-      matches_censored_pattern: "מתאים לביטוי הרגולרי המצונזר: %{censored_pattern}"
+      contains_censored_words: "מכיל את המילים המצונזרות הבאות: %{censored_words}"
+      matches_censored_pattern: "מכיל את המילים הבאות שמתאימות לביטוי הרגולרי המצונזר הבא: %{censored_words}"
       less_than: חייב להיות פחות מ-%{count}
       less_than_or_equal_to: חייב להיות פחות או שווה ל-%{count}
       not_a_number: אינו מספר
@@ -108,9 +108,14 @@ he:
       max_username_length_range: "לא ניתן לקבוע את המקסימום מתחת למינימום."
       default_categories_already_selected: "לא ניתן לבחור קטגוריה שהשתמשו בה ברשימה אחרת."
       s3_upload_bucket_is_required: "אינכם יכולים להעלות ל-S3 ללא 's3_upload_bucket'."
+  invite:
+    accept_invite: "קבלת הזמנה"
+    not_found: "אסימון ההזמנה שלכם אינו תקין. אנא צרו קשר עם האדמיניסטרטור של האתר."
   bulk_invite:
     file_should_be_csv: "הקובץ שמועלה אמור להיות בפורמט csv."
     error: "ארעה שגיאה בהעלת הקובץ. אנא נסו שוב מאוחר יותר."
+  topic_invite:
+    user_exists: "מצטערים, המשתמשים כבר הוזמנו. ניתן להזמין משתמשים לנושא רק פעם אחת."
   backup:
     operation_already_running: "פעולה רצה כרגע. לא יכול להתחיל עבודה חדשה עכשיו."
     backup_file_should_be_tar_gz: "קובץ הגיבוי צריך להיות .tar.gz."
@@ -1163,7 +1168,7 @@ he:
     digest_posts: "המספר המקסימלי של פוסטים פופולאריים להצגה במייל סיכום."
     digest_other_topics: "המספר המקסימלי של נושאים להצגה בקטע 'חדש בנושאים וקטגוריות שאתם עוקבים אחריהם' של מייל הסיכום."
     digest_min_excerpt_length: "אורך קטע מינימלי מהפוסט למיילי הסיכום, בתווים."
-    suppress_digest_email_after_days: "השתקת מיילי סיכום למשתמשים שלא ביקרו באתר למעלה מ (n) ימים."
+    delete_digest_email_after_days: "השתקת מיילי סיכום למשתמשים שלא ביקרו באתר למעלה מ (n) ימים."
     digest_suppress_categories: "וותרו על קטגוריות אלו במיילים מסכמים."
     disable_digest_emails: "בטל סיכומי מיילים לכל המשתמשים."
     email_accent_bg_color: "צבע האקסנט שיעשה בו שימוש כרקע לחלק מהאלמנטים של מיילים מסוג HTML. הכניסו שם צבע ('red') או ערך הקסדצימלי ('#FF000')."
@@ -1746,11 +1751,13 @@ he:
       title: "יצוא CSV הצליח"
       subject_template: "יצוא הנתונים הושלם"
       text_body_template: |
-        הנתונים שלך יוצאו בהצלחה! :dvd:
+        ייצוא המידע שלכם הצליח! :dvd:
 
         <a class="attachment" href="%{download_link}">%{file_name}</a> (%{file_size})
 
-        לינק ההורדה יהיה זמין במשך 48 שעות.
+        קישור ההורדה למעלה יהיה בתוקף ל 48 שעות.
+
+        המידע מכווץ כקובץ gzip. אם הקובץ לא נפתח אוטומטית כשאתם פותחים אותו, השתמשו בכלים שמומלצים כאן: http://www.gzip.org/#faq4
     csv_export_failed:
       title: "יצוא CSV נכשל"
       subject_template: "ייצוא הנתונים נכשל"

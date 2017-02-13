@@ -214,7 +214,7 @@ it:
       like_count: "Mi piace"
       topic_count: "Argomenti"
       post_count: "Messaggi"
-      user_count: "Nuovi Utenti"
+      user_count: "Utenti"
       active_user_count: "Utenti Attivi"
       contact: "Contattaci"
       contact_info: "Nel caso di un problema grave o urgente riguardante il sito, per favore contattaci all'indirizzo %{contact_info}."
@@ -409,11 +409,15 @@ it:
         muted:
           title: "Silenziato"
           description: "Non verrai mai avvertito per i nuovi argomenti in questo gruppo."
+      flair_url: "Immagine Avatar Flair"
       flair_url_placeholder: "(Facoltativo) URL Immagine o classe Font Awesome"
+      flair_bg_color: "Colore di background Avatar Flair"
       flair_bg_color_placeholder: "(Facoltativo) Codice esadecimale del colore"
+      flair_color: "Colore Avatar Flair"
       flair_color_placeholder: "(Facoltativo) Codice esadecimale del colore"
       flair_preview_icon: "Anteprima Icona"
       flair_preview_image: "Anteprima Immagine"
+      flair_note: "Nota: Flair sarà mostrato solo per i primary group dell'utente."
     user_action_groups:
       '1': "Mi piace - Assegnati"
       '2': "Mi piace - Ricevuti"
@@ -619,7 +623,7 @@ it:
         instructions: "Le immagini di sfondo saranno centrate e per difetto avranno un'ampiezza di 590px."
       email:
         title: "Email"
-        instructions: "Mai mostrato pubblicamente"
+        instructions: "mai mostrare al pubblico"
         ok: "Ti invieremo una email di conferma"
         invalid: "Inserisci un indirizzo email valido"
         authenticated: "{{provider}} ha autenticato la tua email"
@@ -629,13 +633,13 @@ it:
           other: "Ti invieremo una email solo se non ti si vede da almeno {{count}} minuti."
       name:
         title: "Nome"
-        instructions: "Nome completo (facoltativo)"
+        instructions: "il tuo nome completo (opzionale)"
         instructions_required: "Il tuo nome completo"
         too_short: "Il nome è troppo breve"
         ok: "Il nome sembra adeguato"
       username:
         title: "Nome utente"
-        instructions: "Deve essere univoco, senza spazi e breve"
+        instructions: "deve essere unico, senza spazi e breve"
         short_instructions: "Gli utenti possono citarti scrivendo @{{username}}"
         available: "Il nome utente è disponibile"
         global_match: "L'email corrisponde al nome utente registrato"
@@ -745,6 +749,7 @@ it:
           none: "Non hai ancora invitato nessuno. Puoi invitare persone singole, o più persone insieme <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>caricando un file CSV</a>."
           text: "Invito di Massa da File"
           success: "Il file è stato caricato con successo, riceverai un messaggio di notifica quando il processo sarà completato."
+          error: "Spiacenti, il file dovrebbe essere in formato CSV."
       password:
         title: "Password"
         too_short: "La password è troppo breve."
@@ -752,7 +757,7 @@ it:
         same_as_username: "La tua password è uguale al tuo nome utente."
         same_as_email: "La password coincide con l'email."
         ok: "La password è adeguata"
-        instructions: "Minimo %{count} caratteri."
+        instructions: "Minimo %{count} caratteri"
       summary:
         title: "Riepilogo"
         stats: "Statistiche"
@@ -2328,6 +2333,7 @@ it:
         individual_event: "Seleziona eventi singoli."
         verify_certificate: "Verifica il certificato TLS della URL payload"
         active: "Attivo"
+        groups_filter: "Gruppi triggered"
         delete_confirm: "Eliminare questo webhook?"
         topic_event:
           name: "Evento Argomento"
@@ -2840,6 +2846,7 @@ it:
         deactivate_explanation: "Un utente disattivato deve riconvalidare la propria email."
         suspended_explanation: "Un utente sospeso non può connettersi."
         block_explanation: "Un utente bloccato non può pubblicare messaggi o iniziare argomenti."
+        staged_explanation: "Un utente staged può solo postare via email in specifici topic."
         bounce_score_explanation:
           none: "L'indirizzo email non ha causato nessun errore di ritorno recentemente."
           some: "Sono stati ricevuti alcuni errori di ritorno per quell'indirizzo email."

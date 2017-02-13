@@ -108,6 +108,8 @@ pt:
   bulk_invite:
     file_should_be_csv: "O ficheiro carregado deve ser do formato CSV."
     error: "Ocorreu um erro ao carregar esse ficheiro. Por favor tente mais tarde."
+  topic_invite:
+    user_exists: "Pedimos desculpa, esse utilizador já foi convidado. Pode convidar um utilizador para um tópico apenas uma vez."
   backup:
     operation_already_running: "Existe atualmente uma operação em execução. Neste momento não é possível iniciar um novo trabalho. "
     backup_file_should_be_tar_gz: "O ficheiro da cópia de segurança deve ser um arquivo .tar.gz"
@@ -1140,7 +1142,7 @@ pt:
     digest_posts: "Número máximo de publicações populares a mostrar no resumo do email."
     digest_other_topics: "O número máximo de tópicos a mostrar na secção de  \"Novos em tópicos e categorias que segue\" do email de resumo."
     digest_min_excerpt_length: "Tamanho mínimo dos excertos de publicações no email de resumo, em caracteres."
-    suppress_digest_email_after_days: "Suprimir emails de resumos para utilizadores não vistos no sítio por mais de (n) dias."
+    delete_digest_email_after_days: "Suprimir emails de resumos para utilizadores não vistos no sítio por mais de (n) dias."
     digest_suppress_categories: "Suprimir estas categorias dos emails de resumo."
     disable_digest_emails: "Desativar os emails de resumo para todos os utilizadores."
     detect_custom_avatars: "Se deve ou não verificar que os utilizadores carregaram fotografias de perfil personalizadas."

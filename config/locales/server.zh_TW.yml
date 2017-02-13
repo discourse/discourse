@@ -35,7 +35,7 @@ zh_TW:
   remove_posts_deleted_by_author: "已由作者刪除"
   emails:
     incoming:
-      default_subject: "來自 %{email} 的電子郵件"
+      default_subject: "無標題的討論話題"
       show_trimmed_content: "顯示刪減後的內容"
       maximum_staged_user_per_email_reached: "以達成分期使用者能創造的最大數量信件"
       errors:
@@ -73,8 +73,8 @@ zh_TW:
       inclusion: 不包括在這列表中
       invalid: 無效的
       is_invalid: "似乎不清楚，這是完整的句子嗎？"
-      contains_censored_words: "包含一或多個過濾詞彙: %{censored_words}"
-      matches_censored_pattern: "與下列正則表達式相匹配: %{censored_pattern}"
+      contains_censored_words: "包含下列過濾詞彙: %{censored_words}"
+      matches_censored_pattern: "包含下列過濾詞彙（依照站方設定的正規表達式 %{censored_words}）"
       less_than: 必須少於 %{count}
       less_than_or_equal_to: 必須少於或等於 %{count}
       not_a_number: 不是數字
@@ -104,9 +104,14 @@ zh_TW:
       max_username_length_range: "你不能設定「最大」小於「最小」。"
       default_categories_already_selected: "不能選擇一個已經用於另一個列表的分類。"
       s3_upload_bucket_is_required: "你沒有填寫“s3_upload_bucket”，不能開啟上傳至 S3。"
+  invite:
+    accept_invite: "接受邀請"
+    not_found: "您的邀請碼無效。請聯絡管理人員。"
   bulk_invite:
     file_should_be_csv: "上傳的檔案必須是 CSV 格式。"
     error: "上傳檔案有錯誤，請再試一次。"
+  topic_invite:
+    user_exists: "抱歉，用戶已經被邀請了。你可能只想邀請用戶參與主題一次。"
   backup:
     operation_already_running: "%{operation} 操作正在運行。 目前無法執行新的 %{operation} 操作。"
     backup_file_should_be_tar_gz: "備份檔案應使用 .tar.gz 歸檔"
@@ -1126,7 +1131,7 @@ zh_TW:
     digest_posts: "郵件摘要中顯示的最流行帖子的數量。"
     digest_other_topics: "郵件摘要中“你關注的主題和分類中的新內容”欄目顯示的主題數目上限。"
     digest_min_excerpt_length: "郵件摘要中顯示的帖子摘要字元數下限。"
-    suppress_digest_email_after_days: "不發送摘要郵件給超過（n）天沒訪問的用戶。"
+    delete_digest_email_after_days: "不發送摘要郵件給超過（n）天沒訪問的用戶。"
     digest_suppress_categories: "不在摘要郵件中顯示這些分類的內容。"
     disable_digest_emails: "禁用所有用戶摘要郵件功能。"
     email_accent_bg_color: "HTML 郵件中某些元素的背景使用的強調顏色。輸入色彩名（“red”）或十六進制值（“#FF0000”）。"

@@ -120,6 +120,8 @@ ar:
       max_username_length_range: "لا يمكن أن تكون القيمة العليا أصغر من الدنيا."
       default_categories_already_selected: "لا يمكنك تحديد فئة تستخدم في قائمة أخرى."
       s3_upload_bucket_is_required: "لا يمكنك تفعيل الرفع إلى S3 حتّى توفّر 's3_upload_bucket'."
+  topic_invite:
+    user_exists: "آسف، ذلك المستخدم قد تمت دعوته من قبل. تستطيع فقط أن تدعوا عضواً لموضوعِ مرة واحدة."
   backup:
     operation_already_running: "ثمّة عملية تجري حاليا. لا يمكنك بدء مهمة جديدة الآن."
     backup_file_should_be_tar_gz: "على الملف الاحتياطي أن يكون أرشيف \"‎.tar.gz\"."

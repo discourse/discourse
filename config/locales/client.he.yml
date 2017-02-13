@@ -214,7 +214,7 @@ he:
       like_count: "לייקים"
       topic_count: "נושאים"
       post_count: "פוסטים"
-      user_count: "חדשים"
+      user_count: "משתמשים"
       active_user_count: "משתמשים פעילים"
       contact: "צרו קשר"
       contact_info: "במקרה של ארוע קריטי או דחוף המשפיע על האתר, אנא צרו איתנו קשר ב: %{contact_info}."
@@ -1405,8 +1405,11 @@ he:
         make_banner: "נושא באנר"
         remove_banner: "הסרת נושא באנר"
       reply:
-        title: 'תגובה'
-        help: 'התחילו לכתוב תגובה לנושא זה'
+        post:
+          title: 'תגובה'
+        topic:
+          title: 'תגובה'
+          help: 'התחילו לחבר תגובה לנושא זה'
       clear_pin:
         title: "נקה נעיצה"
         help: "נקה סטטוס נעוץ של נושא זה כדי שהוא לא יופיע עוד בראש רשימת הנושאים שלכם"
@@ -1579,7 +1582,7 @@ he:
       via_auto_generated_email: "פוסט זה הגיע דרך מייל שנוצר אוטומטית"
       whisper: "פוסט זה הוא לחישה פרטית למנחים"
       wiki:
-        about: "פוסט זה הוא ויקי"
+        about: "הפוסט הוא ויקי"
       archetypes:
         save: 'שמור אפשרויות'
       few_likes_left: "תודה שאתם מפזרים אהבה! נותרו לכם מעט לייקים להיום."
@@ -1706,17 +1709,18 @@ he:
           hide: "הסתרת שינויים"
           show: "הצגת שינויים"
           revert: "חזרה לגרסה זו"
+          edit_wiki: "עריכת ויקי"
           comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> <i class='fa fa-arrows-h'></i> <strong>{{current}}</strong> / {{total}}"
         displays:
           inline:
             title: "הצג את הפלט עם תוספות והסרות בתוכו"
-            button: '<i class="fa fa-square-o"></i> HTML'
+            button: 'HTML'
           side_by_side:
             title: "הצג את הפרשי הפלט אחד ליד השני"
-            button: '<i class="fa fa-columns"></i> HTML'
+            button: 'HTML'
           side_by_side_markdown:
             title: "הציגו את ההבדלי המקור הגולמיים זה לצד זה"
-            button: '<i class="fa fa-columns"></i> גלם'
+            button: 'גולמי'
     category:
       can: 'יכול&hellip; '
       none: '(ללא קטגוריה)'

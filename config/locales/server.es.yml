@@ -35,7 +35,7 @@ es:
   remove_posts_deleted_by_author: "Eliminado por su autor"
   emails:
     incoming:
-      default_subject: "Email entrante desde %{email}"
+      default_subject: "Este tema necesita un título"
       show_trimmed_content: "Mostrar contenido recortado"
       maximum_staged_user_per_email_reached: "Alcanzado el número máximo de usuarios provisionales creados por email."
       errors:
@@ -73,8 +73,8 @@ es:
       inclusion: no está incluido en la lista
       invalid: no es válido
       is_invalid: "parece poco claro, es una oración completa?"
-      contains_censored_words: "incluye una o más palabras censuradas: %{censored_words}"
-      matches_censored_pattern: "coincide con la siguiente expresión regular censurada: %{censored_pattern}"
+      contains_censored_words: "contiene las siguientes palabras censuradas: %{censored_words}"
+      matches_censored_pattern: "contiene las siguientes palabras que coinciden con el regexp de censuras: %{censored_words}"
       less_than: debe ser menor que %{count}
       less_than_or_equal_to: debe ser menor o igual que %{count}
       not_a_number: no es un número
@@ -108,9 +108,14 @@ es:
       max_username_length_range: "No puedes poner el máximo por debajo del mínimo."
       default_categories_already_selected: "No se puede seleccionar una categoría ya utilizada en otra lista."
       s3_upload_bucket_is_required: "No se pueden activar las subidas a S3 a menos que se haya proporcionado un valor a 's3_upload_bucket'."
+  invite:
+    accept_invite: "Aceptar invitación"
+    not_found: "El código de la invitación es inválido. Por favor, ponte en contacto con un administrador."
   bulk_invite:
     file_should_be_csv: "El archivo subido debería ser de formato csv."
     error: "Ha ocurrido un error al subir ese archivo. Por favor, inténtalo más tarde de nuevo."
+  topic_invite:
+    user_exists: "Lo sentimos, ese usuario ya ha sido invitado. Solo se puede invitar una vez a un usuario a un tema."
   backup:
     operation_already_running: "Actualmente se está ejecutando una operación. No se puede iniciar un nuevo trabajo en este momento."
     backup_file_should_be_tar_gz: "El archivo de la copia de seguridad debería ser del tipo .tar.gz"
@@ -499,8 +504,8 @@ es:
         other: "hace casi %{count} años"
   password_reset:
     no_token: "Lo sentimos, ese enlace para cambiar la contraseña es demasiado antiguo. Haz clic en el botón Iniciar sesión y utiliza el 'olvidé mi contraseña' para obtener un nuevo enlace. "
-    choose_new: "Por favor elige un nuevo password"
-    choose: "Por favor, elige una contraseña"
+    choose_new: "Escoge una nueva contraseña"
+    choose: "Escoge una contraseñ"
     update: 'Actualizar contraseña'
     save: 'Establecer contraseña'
     title: 'Restablecer contraseña'
@@ -1166,7 +1171,7 @@ es:
     digest_posts: "El número máximo de temas populares que se mostrarán en el email de resumen."
     digest_other_topics: "El número máximo de temas que se mostrarán en la sección del email de resumen 'Nuevo en temas y categorías'."
     digest_min_excerpt_length: "Mínimo de caracteres del extracto de posts en el resumen por email."
-    suppress_digest_email_after_days: "Suprimir los emails de resumen para aquellos usuarios que no han visto el sitio desde más de (n) días."
+    delete_digest_email_after_days: "Suprimir los emails de resumen para aquellos usuarios que no han visto el sitio desde más de (n) días."
     digest_suppress_categories: "Suprimir estas categorías de los emails de resumen."
     disable_digest_emails: "Desactivar emails de resumen para todos los usuarios."
     email_accent_bg_color: "El color de realce utilizado como fondo en algunos elementos del HTML en los emails. Introduce un nombre de color ('red') o un valor hexadecimal ('#FF000')."
@@ -1405,6 +1410,8 @@ es:
   user:
     no_accounts_associated: "No hay cuentas relacionadas."
     deactivated: "Ha sido desactivado a causa de muchos rebotes al email '%{email}'."
+    deactivated_by_staff: "Desactivado por el staff"
+    activated_by_staff: "Activado por el staff"
     username:
       short: "debe contener al menos %{min} caracteres"
       long: "debe contener no más de %{max} caracteres"
@@ -1549,6 +1556,7 @@ es:
   temporarily_closed_due_to_flags: "Este tema está temporalmente cerrado debido a un gran número de reportes de la comunidad."
   system_messages:
     post_hidden:
+      title: "Post oculto"
       subject_template: "Mensaje ocultado debido a varios reportes de la comnuidad"
       text_body_template: |
         Hola,
@@ -1564,6 +1572,11 @@ es:
         Sin embargo, si el mensaje es ocultado por la comunidad una segunda vez, seguirá ocultado hasta que el staff lo revise – y se podrían tomar medidas incluida la posible suspensión de tu cuenta.
 
         Para más información sobre lo que consideramos adecuado, lee las [directrices de la comunidad](%{base_url}/guidelines).
+    usage_tips:
+      text_body_template: |
+        Si quieres unos consejos para empezar, [echa un vistazo a esta entrada de blog](http://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/).
+
+        Conforme vayas participando por aquí, te iremos conociendo más, y tus limitaciones temporales como nuevo usuario serán levantadas. Con el tiempo ganarás [niveles de confianza](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924) que incluyen habilidades especiales para ayudarnos a gestionar la comunidad juntos.
     welcome_user:
       subject_template: "¡Bienvenido a %{site_name}!"
       text_body_template: |
@@ -1579,6 +1592,7 @@ es:
     welcome_invite:
       subject_template: "¡Bienvenido a %{site_name}!"
     backup_succeeded:
+      title: "Copia de seguridad completada con éxito"
       subject_template: "La copia de seguridad se completo exitosamente"
       text_body_template: |+
         Copia de seguridad realizada con éxito.
@@ -1592,6 +1606,7 @@ es:
         ```
 
     backup_failed:
+      title: "Error en la copia de seguridad"
       subject_template: "La copia de seguridad falló"
       text_body_template: |
         La copia de seguridad ha fallado.
@@ -1602,6 +1617,7 @@ es:
         %{logs}
         ```
     restore_succeeded:
+      title: "Restauración completada con éxito"
       subject_template: "Restauración completada exitosamente."
       text_body_template: |
         La restauración se ha completado con éxito.
@@ -1612,6 +1628,7 @@ es:
         %{logs}
         ```
     restore_failed:
+      title: "Error en la restauración"
       subject_template: "La restauración falló."
       text_body_template: |
         La restauración ha fallado.
@@ -1622,9 +1639,11 @@ es:
         %{logs}
         ```
     bulk_invite_succeeded:
+      title: "Invitación en masa completada con éxito"
       subject_template: "Invitación masiva procesada con éxito"
       text_body_template: "Tu archivo de invitación masiva ha sido procesado, se han enviado %{sent} invitaciones."
     bulk_invite_failed:
+      title: "Error en la invitación en masa"
       subject_template: "Invitación masiva procesada con algunos errores"
       text_body_template: |
         Tu archivo de invitación masiva ha sido procesada, se han enviado %{sent} invitaciones y se han producido %{failed} error(es).
@@ -1635,14 +1654,18 @@ es:
         %{logs}
         ```
     csv_export_succeeded:
+      title: "Exportación de datos en CSV completada con éxito"
       subject_template: "Exportación de datos completada"
       text_body_template: |
-        ¡Tu exportación de datos ha sido exitosa! :dvd:
+        ¡Se han exportado tus datos correctamente! :dvd:
 
         <a class="attachment" href="%{download_link}">%{file_name}</a> (%{file_size})
 
-        Este enlace de descarga será válido durante 48 horas.
+        El enlace estará disponible durante 48 horas.
+
+        Los datos están comprimidos en un archivo gzip. Si el archivo no se extrae cuando lo abras, usa las herramientas recomendadas aquí: http://www.gzip.org/#faq4
     csv_export_failed:
+      title: "Error en la exportación de datos en CSV"
       subject_template: "La exportación de datos falló"
       text_body_template: "Lo sentimos, pero la exportación de datos falló. Por favor, verifica los registros o contacta a un miembro del staff."
     email_reject_insufficient_trust_level:

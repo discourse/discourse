@@ -32,9 +32,10 @@ zh_CN:
   purge_reason: "自动删除废弃，停用账户"
   disable_remote_images_download_reason: "磁盘空间不足，远程图像下载已经被停用。"
   anonymous: "匿名"
+  remove_posts_deleted_by_author: "被作者删除"
   emails:
     incoming:
-      default_subject: "来自%{email}的邮件"
+      default_subject: "这个主题需要个标题"
       show_trimmed_content: "显示被截短的内容"
       maximum_staged_user_per_email_reached: "为邮件创建的暂存用户数达到上限。"
       errors:
@@ -72,6 +73,8 @@ zh_CN:
       inclusion: 不包括在列表中
       invalid: 无效
       is_invalid: "似乎不清楚，这是一个完整的句子？"
+      contains_censored_words: "包含了以下敏感词:%{censored_words}"
+      matches_censored_pattern: "包含了以下网站过滤系统中的敏感词%{censored_words}"
       less_than: 必须小于 %{count}
       less_than_or_equal_to: 必须小于等于 %{count}
       not_a_number: 不是数字
@@ -101,9 +104,14 @@ zh_CN:
       max_username_length_range: "不能将最大值设置为一个小于最小值的值。"
       default_categories_already_selected: "不能选择一个已经用于另一个列表的分类。"
       s3_upload_bucket_is_required: "你没有填写“s3_upload_bucket”，不能开启上传至 S3。"
+  invite:
+    accept_invite: "接受邀请"
+    not_found: "你的邀请码不正确。请联系网站管理员。"
   bulk_invite:
     file_should_be_csv: "上传的文件应为 csv 格式。"
     error: "上传文件的时候出错了。请重试。"
+  topic_invite:
+    user_exists: "抱歉，用户已经被邀请了。你可能只想邀请用户参与主题一次。"
   backup:
     operation_already_running: "有操作正在运行。目前无法开始新的操作。"
     backup_file_should_be_tar_gz: "备份文件应为 .tar.gz 存档文件。"
@@ -150,7 +158,7 @@ zh_CN:
     other: "抱歉，访客一次仅能贴 %{count} 条链接。"
   spamming_host: "抱歉，你不能添加一个链接到那个地址的链接。"
   user_is_suspended: "被封禁的用户不允许发贴。"
-  topic_not_found: "出现问题。也许这个话题被关闭或删除。"
+  topic_not_found: "出现问题。或许这个主题在你看的时候已经被关闭或删除了。"
   not_accepting_pms: "对不起，%{username} 目前不接收讯息。"
   just_posted_that: "太类似于你最近发表的内容"
   invalid_characters: "包含无效字符"
@@ -457,8 +465,8 @@ zh_CN:
         other: "将近%{count}年前"
   password_reset:
     no_token: "抱歉，密码修改链接已过期。选择登录按钮再使用“我忘记了密码”获得一个新链接。"
-    choose_new: "请选择一个新密码"
-    choose: "请选择一个密码"
+    choose_new: "选择一个新密码"
+    choose: "选择一个密码"
     update: '更新密码'
     save: '设置密码'
     title: '重置密码'
@@ -868,7 +876,7 @@ zh_CN:
     prioritize_username_in_ux: "在用户页、用户卡片和帖子上优先显示用户名（未选时，昵称将先显示）"
     email_token_valid_hours: "“忘记密码”/“激活账户”令牌有效的小时数(n)。"
     enable_badges: "启用徽章系统"
-    enable_whispers: "允许工作人员在主题中私密交流。"
+    enable_whispers: "允许管理人员在主题中私密交流。"
     allow_index_in_robots_txt: "在 robots.txt 中详细指出这个站点允许被网页搜索引擎检索。"
     email_domains_blacklist: "用管道符“|”分隔的邮箱域名黑名单列表，其中的域名将不能用来注册账户，例如：mailinator.com|trashmail.net"
     email_domains_whitelist: "用管道符“|”分隔的电子邮箱域名的列表，用户必须使用这些邮箱域名注册。警告：用户使用不包含在这个列表里的邮箱域名，将无法成功注册。"
@@ -1032,6 +1040,7 @@ zh_CN:
     max_attachment_size_kb: "允许用户上传的最大文件大小（单位：KB）——同时在 nginx（client_max_body_size），apache 或代理中配置他们。"
     authorized_extensions: "允许上传文件的扩展名列表（'*' 表示允许所有文件类型）"
     max_similar_results: "当用户撰写新主题时，显示多少类似主题给用户。比较是根据标题和内容进行的。"
+    max_image_megapixels: "图片允许的最大像素。"
     title_prettify: "防止常见标题里的错别字和错误，包括全部大写，第一个字符小写，多个'！'和'？'，结尾多余的'.'等等。"
     topic_views_heat_low: "多少次浏览后，该视图将稍稍高亮。"
     topic_views_heat_medium: "多少次浏览后，该视图将明显高亮。"
@@ -1122,7 +1131,7 @@ zh_CN:
     digest_posts: "邮件摘要中显示的最流行帖子的数量。"
     digest_other_topics: "邮件摘要中“你关注的主题和分类中的新内容”栏目显示的主题数目上限。"
     digest_min_excerpt_length: "邮件摘要中显示的帖子摘要字符数下限。"
-    suppress_digest_email_after_days: "不发送摘要邮件给超过（n）天没访问的用户。"
+    delete_digest_email_after_days: "不发送摘要邮件给超过（n）天没访问的用户。"
     digest_suppress_categories: "不在摘要邮件中显示这些分类的内容。"
     disable_digest_emails: "禁用所有用户摘要邮件功能。"
     email_accent_bg_color: "HTML 邮件中某些元素的背景使用的强调颜色。输入色彩名（“red”）或十六进制值（“#FF0000”）。"
@@ -1353,6 +1362,8 @@ zh_CN:
   user:
     no_accounts_associated: "无关联账户"
     deactivated: "因发送至“%{email}”的邮件被多次退信，取消激活"
+    deactivated_by_staff: "被管理人员禁用"
+    activated_by_staff: "被管理人员激活"
     username:
       short: "必须超过 %{min} 个字"
       long: "必须不超过 %{max} 个字"
@@ -1552,6 +1563,7 @@ zh_CN:
     usage_tips:
       text_body_template: "要查看给新用户的简要技巧，[（英文）看看这篇博客文章](http://blog.discourse.org/2016/12/discourse-new-user-tips-and-tricks/)。\n\n只要你参与，我们将更了解你，并且新用户的临时限制将被移除。\b随着时间，你将获得[信任等级](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924)，这将提供一些特殊功能来帮助我们更好地管理社群。\n"
     welcome_user:
+      title: "欢迎用户"
       subject_template: "欢迎来到 %{site_name}！"
       text_body_template: |
         感谢驻足%{site_name}，欢迎！
@@ -1578,6 +1590,7 @@ zh_CN:
         %{logs}
         ```
     backup_failed:
+      title: "备份失败"
       subject_template: "备份失败"
       text_body_template: |
         备份已经失败了。
@@ -1588,6 +1601,7 @@ zh_CN:
         %{logs}
         ```
     restore_succeeded:
+      title: "成功恢复"
       subject_template: "恢复成功完成"
       text_body_template: |
         恢复成功。
@@ -1598,6 +1612,7 @@ zh_CN:
         %{logs}
         ```
     restore_failed:
+      title: "恢复失败"
       subject_template: "恢复失败"
       text_body_template: |
         恢复失败。
@@ -1608,9 +1623,11 @@ zh_CN:
         %{logs}
         ```
     bulk_invite_succeeded:
+      title: "批量邀请成功"
       subject_template: "批量用户邀请成功完成"
       text_body_template: "你的批量邀请用户已经完成，发送了 %{sent} 个邀请。"
     bulk_invite_failed:
+      title: "批量邀请失败"
       subject_template: "批量邀请完成，并有一些错误"
       text_body_template: |
         批量邀请已经完成，发出了 %{sent} 个邀请并且 %{failed} 个失败。
@@ -1621,14 +1638,10 @@ zh_CN:
         %{logs}
         ```
     csv_export_succeeded:
+      title: "成功导致CSV格式"
       subject_template: "数据导出完成"
-      text_body_template: |
-        数据成功导出！:dvd:
-
-        <a class="attachment" href="%{download_link}">%{file_name}</a>（%{file_size}）
-
-        以上的下载链接将在 48 小时后失效。
     csv_export_failed:
+      title: "导致CSV失败"
       subject_template: "数据导出失败"
       text_body_template: "我们很抱歉，但是你的数据导出请求失败了。请检查日志或联系一位管理人员。"
     email_reject_insufficient_trust_level:
@@ -1638,42 +1651,49 @@ zh_CN:
 
         你的账户没有足够的信任等级以该邮件地址发布新主题。如果你有异议，联系管理人员。
     email_reject_user_not_found:
+      title: "Email被拒绝：用户未找到"
       subject_template: "[%{site_name}] 邮件问题 -- 用户未找到"
       text_body_template: |
         我们非常抱歉，但是你发送至 %{destination}（名为%{former_title}） 的邮件出问题了。
 
         你发送回复的邮件地址是未知的邮件地址。试试从另外一个邮件地址发送，或者联系管理人员。
     email_reject_screened_email:
+      title: "Email被拒绝：被屏蔽的Email地址"
       subject_template: "[%{site_name}] 电子邮件错误 -- 被封禁的邮件地址"
       text_body_template: |
         我们非常抱歉，但是你发送至%{destination}（名为%{former_title}）的邮件出问题了。
 
         你发送回复的邮件地址是已被封禁的邮件地址。试试从另外一个邮件地址发送，或者联系管理人员。
     email_reject_inactive_user:
+      title: "Email被拒绝：未激活的用户"
       subject_template: "[%{site_name}] 电子邮件错误 -- 未激活用户"
       text_body_template: |
         我们非常抱歉，但是你发送至 %{destination}（名为%{former_title}） 的邮件出问题了。
 
         与你账户关联的邮件地址没有激活，请先激活你的账号再发送邮件。
     email_reject_blocked_user:
+      title: "Email被拒绝：被禁用的用户"
       subject_template: "[%{site_name}] 电子邮件错误 -- 被封禁的用户"
       text_body_template: |
         我们非常抱歉，但是你发送至 %{destination}（名为%{former_title}） 的邮件出问题了。
 
         与你账户关联的邮件地址已经被封禁。
     email_reject_reply_user_not_matching:
+      title: "Email被拒绝：用户未找到"
       subject_template: "[%{site_name}] 电子邮件错误 -- 未预期的回复地址"
       text_body_template: |
         我们非常抱歉，但是你发送至 %{destination}（名为%{former_title}） 的邮件出问题了。
 
         你发送回复的邮件地址与我们等待的地址不同，所以我们不确定你是不是同一个人。试试从另外一个邮件地址发送，或者联系管理人员。
     email_reject_no_account:
+      title: "Email被拒绝：帐户不存在"
       subject_template: "[%{site_name}] 电子邮件错误 -- 未知账户"
       text_body_template: |
         我们非常抱歉，但是你发送至 %{destination}（名为%{former_title}） 的邮件出问题了。
 
         我们找不到匹配你邮件地址的账号。试试从另外一个邮件地址发送，或者联系管理人员。
     email_reject_empty:
+      title: "Email被拒绝：空"
       subject_template: "[%{site_name}] 电子邮件错误 -- 无内容"
       text_body_template: |
         我们很抱歉，但是你发送至 %{destination}（名为 %{former_title}）的邮件没有成功。
@@ -1688,12 +1708,14 @@ zh_CN:
 
         我们不能找到你邮件中的回复。**请确认将你的回复置于邮件顶端**——我们不能处理行内回复。
     email_reject_invalid_access:
+      title: "Email被拒绝：无效访问"
       subject_template: "[%{site_name}] 电子邮件错误 -- 无权限"
       text_body_template: |
         我们很抱歉，但是你发送至%{destination}（名为 %{former_title}）的邮件出问题了。
 
         你的账户没有达到足够的信任等级在该分类发布新主题。如果你有异议，联系管理人员。
     email_reject_strangers_not_allowed:
+      title: "Email被拒绝：不允许陌生人"
       subject_template: "[%{site_name}] 电子邮件错误 -- 无权限"
       text_body_template: |+
         我们非常抱歉，但是你发送至%{destination}（名为%{former_title}）的邮件出问题了。
@@ -1729,18 +1751,21 @@ zh_CN:
 
         邮件中的回复信令是无效或者未知的，所以我们不知道这封邮件回复给谁了。请联系管理人员。
     email_reject_bad_destination_address:
+      title: "Email被拒绝：收件人地址不正确"
       subject_template: "[%{site_name}] 电子邮件错误 -- 未知的回复至地址"
       text_body_template: |
         我们非常抱歉，但是你发送至%{destination}（名为%{former_title}） 邮件出问题了。
 
         目标邮件地址无法识别。请确保你在向管理人员提供的邮件地址发信。
     email_reject_topic_not_found:
+      title: "Email被拒绝：主题不存"
       subject_template: "[%{site_name}] 邮件问题 -- 主题未找到"
       text_body_template: |
         我们很抱歉，但是你发送至%{destination}（名为 %{former_title}）的邮件出问题了。
 
         你回复的主题不存在——可能已经被删除了？如果你有异议，联系管理人员。
     email_reject_topic_closed:
+      title: "Email被拒绝：主题已关闭"
       subject_template: "[%{site_name}] 邮件问题 -- 主题已关闭"
       text_body_template: |
         我们很抱歉，但是你发送至 %{destination} ( 名为 %{former_title} )的邮件出问题了。
@@ -2027,6 +2052,7 @@ zh_CN:
       view_this_topic: "查看此主题"
       back_to_top: "回到顶部"
     forgot_password:
+      title: "忘记密码"
       subject_template: "[%{site_name}] 密码重置"
       text_body_template: |
         有人请求重置你在 [%{site_name}](%{base_url}) 上的密码。
@@ -2102,6 +2128,7 @@ zh_CN:
 
         （如果你在新用户级别需要和[管理人员](%{base_url/about)沟通的话，直接回复这个消息。）
     signup:
+      title: "注册"
       subject_template: "[%{site_name}] 确认你的新账户"
       text_body_template: |
         欢迎来到 %{site_name}！
@@ -2844,7 +2871,7 @@ zh_CN:
       emoji:
         title: "Emoji"
       invites:
-        title: "邀请工作人员"
+        title: "邀请管理人员"
         description: "你快做完啦！让我们邀请一些工作人员来帮助你<a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>创建一些讨论主题</a>以方便你发布社群。"
       finished:
         title: "你的 Discourse 已经准备就绪！"

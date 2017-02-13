@@ -32,9 +32,10 @@ tr_TR:
   purge_reason: "terkedilmiş, edilgen hesap olarak otomatik olarak silindi"
   disable_remote_images_download_reason: "Yeterli disk alanı kalmaması sebebiyle uzaktan görüntü indirme devre dışı bırakıldı."
   anonymous: "Anonim"
+  remove_posts_deleted_by_author: "Yazar tarafından silindi"
   emails:
     incoming:
-      default_subject: "%{email} adresinden gelen e-posta"
+      default_subject: "Konuya bir başlık konulmalı"
       show_trimmed_content: "Kısaltılmış olan içeriği göster"
       errors:
         empty_email_error: "Bize ulaşan ham posta boş olduğunda olur."
@@ -89,6 +90,8 @@ tr_TR:
       max_username_length_range: "En küçük değer altında en büyük değer ayarlayamazsınız."
       default_categories_already_selected: "Bir başka listede kullanılan bir kategoriyi seçemezsiniz."
       s3_upload_bucket_is_required: "Bir 's3_upload_bucket' tanımlamadıysanız, S3 yüklemelerini etkinleştiremezsiniz."
+  topic_invite:
+    user_exists: "Üzgünüz, bu kullanıcı zaten davet edildi. Konuya yalnızca bir kullanıcı davet edebilirsiniz."
   backup:
     operation_already_running: "Devam eden bir işlem var. Yeni bir işlem başlatılamaz."
     backup_file_should_be_tar_gz: "Yedekleme dosyası .tar.gz uzantılı olmalı."

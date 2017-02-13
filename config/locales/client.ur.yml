@@ -14,12 +14,41 @@ ur:
       human:
         storage_units:
           units:
+            byte:
+              one: بائٹ
+              other: بائٹس
             gb: جی بی
             kb: کے بی
             mb: ایم بی
             tb: ٹی بی
     dates:
       time: "h:mm a"
+      wrap_ago: "٪{تاریخ} پہلے"
+      tiny:
+        less_than_x_seconds:
+          one: "< 1 سیکنڈ"
+          other: "< ٪{گنتی} سیکنڈ"
+        x_seconds:
+          one: "1 سیکنڈ"
+          other: "٪{گنتی} سیکنڈ"
+        x_minutes:
+          one: "1 منٹ"
+          other: "٪{گنتی} منٹس"
+        about_x_hours:
+          one: "1 گھنٹا"
+          other: "٪{گنتی} گھنٹے"
+        x_days:
+          one: "1 دن"
+          other: "٪{گنتی} دن"
+        about_x_years:
+          one: "1 سال"
+          other: "٪{گنتی} سال"
+        over_x_years:
+          one: "> 1 سال"
+          other: "> ٪{گنتی} سال"
+        almost_x_years:
+          one: "1 سال"
+          other: "٪{گنتی} سال"
       medium:
         x_minutes:
           one: "1 منٹ"
@@ -54,10 +83,83 @@ ur:
       next_month: 'اگلے ماہ'
     share:
       topic: 'اس ٹاپک کا لنک شیئرکریں'
+      post: 'پوسٹ #%{پوسٹنمبر}'
+      close: 'بند کریں'
+      twitter: 'ٹوئٹر پر اس لنک کو شیئرکریں'
+      facebook: 'فیس بک پر اس لنک کو شیئرکریں'
+      google+: 'گُوگَل+ پر اس لنک کو شیئرکریں'
+      email: 'اس لنک کو ایک ای میل میں بھیجیں'
+    action_codes:
+      public_topic: "اس ٹاپک کو پبلک بنایا گیا ٪{کب}"
+      private_topic: "اس ٹاپک کو پرائیویٹ بنایا گیا ٪{کب}"
+      split_topic: "اس ٹاپک کو تقسیم کیا گیا ٪{کب}"
+      invited_user: "دعوت دی ٪{کسے} ٪{کب}"
+      invited_group: "دعوت دی ٪{کسے} ٪{کب}"
+      removed_user: "ہٹایا ٪{کسے} ٪{کب}"
+      removed_group: "ہٹایا ٪{کسے} ٪{کب}"
+      autoclosed:
+        enabled: 'بند کیا ٪{کب}'
+        disabled: 'کھولا ٪{کب}'
+      closed:
+        enabled: 'بند کیا ٪{کب}'
+        disabled: 'کھولا ٪{کب}'
+      archived:
+        enabled: 'آرکائیو کیا ٪{کب}'
+        disabled: 'آرکائیو سے نکال دیا ٪{کب}'
+      pinned:
+        enabled: 'پن کر دیا ٪{کب}'
+        disabled: 'پن ہٹا دیا ٪{کب}'
+      pinned_globally:
+        enabled: 'عالمی سطح پر پن کر دیا ٪{کب}'
+        disabled: 'پن ہٹا دیا ٪{کب}'
+      visible:
+        enabled: 'مندرج ٪{کب}'
+        disabled: 'غیر مندرج ٪{کب}'
+    topic_admin_menu: "ٹاپک کے ایڈمن کی کارروائیاں"
+    wizard_required: "یہ اس فورم کو ترتیب دینے کا وقت ہے! <a href='%{url}' data-auto-route='true'>سیٹ اپ وزرڈ شروع کریں</a>!"
+    emails_are_disabled: "تمام سبکدوش ہونے والے ای میل کو عالمی سطح پر ایک منتظم کی طرف سے غیر فعال کر دیا گیا ہے. کسی بھی قسم کی ای میل اطلاعات نہیں بھیجی جائیں گی۔"
+    bootstrap_mode_enabled: "آپ کی نئی ویب سائٹ شروع کرنے کو آسان بنانے کے لئے، آپ بوٹسٹریپ کے موڈ میں ہیں۔ تمام نئے صارفین کے اعتماد کی سطح 1 دی گئی ہے اور روزانہ کی ای میل اپ ڈیٹس فعال کیے جا چکے ہیں۔ یہ خود کار طریقے سے غیر فعال کر دیا جائے گا جب کل صارف شمار %{min_users} سے تجاوز کر جائے گا۔"
+    bootstrap_mode_disabled: "بوٹسٹریپ کا موڈ اگلے 24 گھنٹوں میں غیر فعال کر دیا جائے گا۔"
+    s3:
+      regions:
+        us_east_1: "امریکی مشرق (شمالی ورجینیا)"
+        us_west_1: "امریکی مغرب (شمالی کیلی فورنیا)"
+        us_west_2: "امریکی مغرب (اوریگن)"
+        us_gov_west_1: "اے ڈبلیو ایس گَو کلاوڈ (امریکہ)"
+        eu_west_1: "یورپی یونین (آئر لینڈ)"
+        eu_central_1: "یورپی یونین (فرینکفرٹ)"
+        ap_southeast_1: "ایشیا پیسفک (سنگاپور)"
+        ap_southeast_2: "ایشیا پیسفک (سڈنی)"
+        ap_south_1: "ایشیا پیسفک (ممبئی)"
+        ap_northeast_1: "ایشیا پیسفک (ٹوکیو)"
+        ap_northeast_2: "ایشیا پیسفک (سیول)"
+        sa_east_1: "ایشیا پیسفک (ساؤ پالو)"
+        cn_north_1: "چین (بیجنگ)"
+    edit: 'اس ٹاپک کے عنوان اور زمرے میں ترمیم کریں'
+    not_implemented: "یہ خصوصیت ابھی تک لاگو نہیں کی گئی، معضرت!"
     no_value: "نہیں "
     yes_value: "ہاں "
+    generic_error: "معذرت، ایک تکنیکی خرابی کا سامنا کرنا پڑا ہے۔"
+    generic_error_with_reason: "ایک تکنیکی خرابی پیش آئی: %{خرابی}"
+    sign_up: "سائن اپ"
+    log_in: "لاگ ان"
     age: "عمر "
+    joined: "شمولیت اختیار کر لی"
+    admin_title: "منتظم"
+    flags_title: "جھنڈے"
     show_more: "مزید "
+    show_help: "اختیارات"
+    links: "لنکس"
+    links_lowercase:
+      one: "لنک"
+      other: "لنکس"
+    faq: "عمومی سوالات"
+    guidelines: "ہدایات"
+    privacy_policy: "نجی معلومات کی حفاظت پالیسی"
+    privacy: "جی معلومات کی حفاظت"
+    terms_of_service: "سروس کی شرائط"
+    mobile_view: "موبائل وِیو"
+    desktop_view: "ڈیسک ٹاپ وِیو"
     you: "آپ "
     or: "یا "
     now: "ابھی "
@@ -65,13 +167,154 @@ ur:
     more: "مزید "
     less: "کم "
     never: "کبھی نہیں "
+    every_30_minutes: "ہر 30 منٹ"
+    every_hour: "ہر گھنٹے"
     daily: "روزانہ "
     weekly: "ہفتہ وار "
+    every_two_weeks: "ہر دو ہفتے"
+    every_three_days: "ہر تین دن"
+    max_of_count: "زیادہ سے زیادہ {{شمار}}"
+    alternation: "یا "
+    character_count:
+      one: "{{شمار}} حرف"
+      other: "{{شمار}} حروف"
+    suggested_topics:
+      title: "تجویز کیے گئے ٹاپک"
+      pm_title: "تجویز کیے گئے پیغامات"
+    about:
+      simple_title: "بارے میں"
+      title: "٪{عنوان} کے بارے میں"
+      stats: "سائٹ کے اعدادوشمار"
+      our_admins: "ہمارے ایڈمن"
+      our_moderators: "ہمارے ماڈریٹرز"
+      stat:
+        all_time: "تمام اوقات"
+        last_7_days: "گزشتہ 7 دن"
+        last_30_days: "گزشتہ 30 دن"
+      like_count: "لائیکس"
+      topic_count: "ٹاپک"
+      post_count: "پوسٹ"
+      user_count: "صارفین"
+      active_user_count: "متحرک صارفین"
+      contact: "ہم سے رابطہ کریں"
+      contact_info: "اس سائٹ کے بارے میں کسی اہم مسئلہ یا فوری معاملہ کی صورت میں، براہ مہربانی ٪{contact_info} پر رابطہ کریں۔"
+    bookmarked:
+      title: "بُک مارک"
+      clear_bookmarks: "بک مارکس ختم کریں"
+      help:
+        bookmark: "اِس ٹاپک کی پہلی پوسٹ بُک مارک کرنے کے لئے کلک کریں"
+        unbookmark: "اِس ٹاپک کے تمام بُک مارک ہٹانے کے لئے کلک کریں"
+    bookmarks:
+      not_logged_in: "معذرت، پوسٹ بُک مارک کرنے کے لئے آپ کا لاگڈ ان ہونا ضروری ہے"
+      created: "آپ نے یہ پوسٹ بُک مارک کرلی ہے"
+      not_bookmarked: "آپ یہ پوسٹ پڑھ چکے ہیں؛ بُک مارک کرنے کے لئے کلک کریں"
+      last_read: "یہ آخری پوسٹ آپ نے پڑھی ہے؛ اِسے بُک مارک کرنے کے لئے کلک کریں"
+      remove: "بُک مارک ہٹائیں"
+      confirm_clear: "کیا آپ کو یقین ہے کہ آپ اِس ٹاپک سے تمام بُک مارکس ہٹانا چاہتے ہیں؟"
+    topic_count_latest:
+      one: "{{شمار}} نئے اور اپ ڈیٹ کیے گئے ٹاپک۔"
+      other: "{{شمار}} نئے اور اپ ڈیٹ کیے گئے ٹاپک۔"
+    topic_count_unread:
+      one: "{{شمار}} نہ پڑھے گئے ٹاپک۔"
+      other: "{{شمار}} نہ پڑھے گئے ٹاپک۔"
+    topic_count_new:
+      one: "{{شمار}} نئے ٹاپک۔"
+      other: "{{شمار}} نئے ٹاپک۔"
+    click_to_show: "ظاہر کرنے کے لئے کلک کریں۔"
+    preview: "پیشگی دیکھنا"
+    cancel: "منسوخ"
+    save: "تبدیلیاں محفوظ کریں"
+    saving: "محفوظ کی جا رہی ہیں..."
+    saved: "محفوظ کر لیا گیا ہے!"
+    upload: "اَپ لوڈ"
+    uploading: "اَپ لوڈ کیا جا رہا ہے..."
+    uploading_filename: "{{فائل کا نام}} اَپ لوڈ کیا جا رہا ہے..."
+    uploaded: "اَپ لوڈ کیا جا چکا ہے!"
+    enable: "فعال کریں"
+    disable: "غیر فعال کریں"
+    failed: "عمل ناکام رہا"
+    switch_to_anon: "گمنام موڈ میں داخل ہوں"
+    switch_from_anon: "گمنام موڈ سے باہر نکلیں"
+    banner:
+      close: "اس بینر کو برخاست کریں۔"
+      edit: "اس بینر میں ترمیم کریں >>"
+    choose_topic:
+      none_found: "کوئی ٹاپک نہیں ملے۔"
+      title:
+        search: "ٹاپک کو اُس کے نام، یو آر ایل یا آئی ڈی کے زریعے سے تلاش کریں:"
+        placeholder: "یہاں ٹاپک کا عنوان لکھیں"
+    queue:
+      topic: "ٹاپک:"
+      approve: 'منظور کریں'
+      reject: 'مسترد کریں'
+      delete_user: 'صارف کو حذف کریں'
+      title: "منظوری کی ضرورت ہے"
+      none: "جائزہ لینے کے لئے کوئی پوسٹس نہیں ہیں۔"
+      edit: "ترمیم کریں"
+      cancel: "منسوخ"
+      view_pending: "زیر التوا پوسٹس دیکھیں"
+      has_pending_posts:
+        one: "اِس ٹاپک کی <b>1</b> پوسٹس منظوری کا انتظار کر رہی ہیں"
+        other: "اِس ٹاپک کی <b>{{count}}</b> پوسٹس منظوری کا انتظار کر رہی ہیں"
+      confirm: "تبدیلیاں محفوظ کریں"
+      delete_prompt: "کیا آپ <b>%{صارف نام}</b> حذف کرنا چاہتے ہیں؟ اِس طرح سے اُن کی تمام پوسٹس حذف ہو جائیں گی اور  اُن کے ای میل اور IP ایڈریس کو بلاک کردیا جائے گا۔"
+      approval:
+        title: "پوسٹ کو منظوری کی ضرورت ہے"
+        description: "ہمیں آپ کی نئی پوسٹ موصول ہو چکی ہے لیکن یہ ظاہر ہونے سے پہلے ایک منتظم سے منظور ہونا ضروری ہے۔ براہ مہربانی صبر کریں۔"
+        pending_posts:
+          one: "آپ کی <strong>1</strong> پوسٹ زیر التوا ہیں۔"
+          other: "آپ کی <strong>{{شمار}}</strong> پوسٹس زیر التوا ہیں۔"
+        ok: "ٹھیک"
+    directory:
+      filter_name: "صارفین کے ناموں کے حساب سے فلٹر کریں"
+      title: "صارفین"
+      likes_given: "دیا گیا"
+      likes_received: "موصول ہوا"
+      topics_entered: "دیکھ لیا گیا"
+      topics_entered_long: "دیکھ لیے گئے ٹاپک"
+      time_read: "وقت جو پڑھنے میں لگا"
+      topic_count: "ٹاپک"
+      topic_count_long: "بنائے گئے ٹاپک"
+      post_count: "جوابات"
+      post_count_long: "پوسٹ کیے گئے جوابات"
+      no_results: "کوئی نتائج نہیں پائے گئے۔"
+      days_visited: "زائرین کی تعداد"
+      posts_read: "پڑھ لیا گیا"
+      posts_read_long: "پوسٹ جو پڑھ لی گئیں"
+      total_rows:
+        one: "1 صارف"
+        other: "%{شمار} صارفین"
+    group_histories:
+      actions:
+        change_group_setting: "گروپ کی سیٹنگ تبدیل کریں"
+        add_user_to_group: "صارف شامل کریں"
+        remove_user_from_group: "صارف خارج کریں"
+        make_user_group_owner: "مالک بنائیں"
+        remove_user_as_group_owner: "ماک منسوخ کریں"
+    groups:
+      logs:
+        title: "نوشتہ جات"
+        when: "کب"
+        action: "عمل"
+        acting_user: "عمل کرنے والا صارف"
+        target_user: "ہدف صارف"
+        subject: "موضوع"
+        details: "تفصیلات"
+        from: "سے"
+        to: "کے لئے"
+      name: "نام"
+    user_action_groups:
+      '3': "بُکمارکس"
+      '4': "ٹاپکس"
     user:
       desktop_notifications:
         each_browser_note: "نوٹ: آپ کو ہر براؤزر پر اس سیٹنگ کو تبدیل کرنا ہوگا."
+      moderator_tooltip: "یہ صارف ایک ماڈریٹر ہے"
+      admin_tooltip: "یہ صارف ایک ایڈمِن ہے"
+      blocked_tooltip: "یہ صارف بلاک کیا ہوا ہے"
+      suspended_reason: "وجہ:"
+      github_profile: "گِٹ حَب"
       name:
-        instructions: "آپ کا پورا نام (اختیاری)"
         instructions_required: "آپ کا پورا نام"
         too_short: "آپ کا نام بہت چھوٹا ہے"
         ok: "آپ کا نام صحیح لگ رہا ہے"

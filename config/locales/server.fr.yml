@@ -73,8 +73,7 @@ fr:
       inclusion: n'est pas inclus dans la liste
       invalid: est invalide
       is_invalid: "ne semble pas clair, est-ce une phrase complète ?"
-      contains_censored_words: "inclut un ou plusieurs mots censurés : %{censored_words}"
-      matches_censored_pattern: "correspond à l'expression régulière censurée : %{censored_pattern}"
+      contains_censored_words: "contient les mots censurés suivants : %[censored_words]"
       less_than: doit être inférieure à %{count}
       less_than_or_equal_to: doit être inférieur ou égal à %{count}
       not_a_number: n'est pas un nombre
@@ -108,9 +107,13 @@ fr:
       max_username_length_range: "Il n'est pas possible de définir un maximum plus petit que le minimum."
       default_categories_already_selected: "Vous ne pouvez pas séléctionner une catégorie qui est utilisée dans une autre liste."
       s3_upload_bucket_is_required: "Vous ne pouvez pas activer l'upload sur S3 avant d'avoir renseigné le 's3_upload_bucket'."
+  invite:
+    accept_invite: "Accepter l'invitation"
   bulk_invite:
     file_should_be_csv: "Le fichier envoyé doit être au format CSV."
     error: "Il y a eu une erreur en envoyant ce fichier. Merci de réessayer plus tard."
+  topic_invite:
+    user_exists: "Désolé, cet utilisateur a déjà été invité. Vous ne pouvez inviter un utilisateur qu'une seule fois par sujet."
   backup:
     operation_already_running: "Une opération est en cours d'exécution. Vous ne pouvez pas démarrer un nouveau processus pour l'instant."
     backup_file_should_be_tar_gz: "Le fichier de sauvegarde doit être une archive .tar.gz."
@@ -1166,7 +1169,7 @@ fr:
     digest_posts: "Le nombre maximum de messages populaires à afficher dans le résumé par courriel."
     digest_other_topics: "Le nombre maximum de sujets à afficher dans la section « Nouveautés dans les sujets et catégories que vous suivez » du résumé par courriel."
     digest_min_excerpt_length: "Longueur minimale (en caractères) de l'extrait des messages dans le résumé par courriel."
-    suppress_digest_email_after_days: "Ne pas envoyer de résumés par courriel aux utilisateurs qui n'ont pas visité le site depuis plus de (n) jours."
+    delete_digest_email_after_days: "Ne pas envoyer de résumés par courriel aux utilisateurs qui n'ont pas visité le site depuis plus de (n) jours."
     digest_suppress_categories: "Ne pas inclure ces catégories dans les résumés par courriel."
     disable_digest_emails: "Désactiver les résumés par courriel pour tous les utilisateurs."
     email_accent_bg_color: "La couleur d'accentuation utilisée comme arrière-plan de certains éléments des courriels HTML. Entrez un nom de couleur (« red ») ou une valeur hexadécimale (« #FF0000 »)."

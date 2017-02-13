@@ -214,7 +214,7 @@ fi:
       like_count: "Tykkäyksiä"
       topic_count: "Ketjuja"
       post_count: "Viestejä"
-      user_count: "Uusia käyttäjiä"
+      user_count: "Käyttäjät"
       active_user_count: "Aktiivisia käyttäjiä"
       contact: "Yhteystiedot"
       contact_info: "Sivustoon liittyvissä kiireellisissä asioissa, ota yhteyttä osoitteeseen %{contact_info}."
@@ -1404,8 +1404,11 @@ fi:
         make_banner: "Tee ketjusta banneri"
         remove_banner: "Poista banneri"
       reply:
-        title: 'Vastaa'
-        help: 'aloita kirjottamaan uutta vastausta tähän ketjuun'
+        post:
+          title: 'Vastaa'
+        topic:
+          title: 'Vastaa'
+          help: 'aloita kirjoittamaan vastausta tähän ketjuun'
       clear_pin:
         title: "Poista kiinnitys"
         help: "Poista kiinnitys, jotta ketju ei enää pysy listauksen ylimpänä"
@@ -1578,7 +1581,7 @@ fi:
       via_auto_generated_email: "tämä viesti saapui automaattisesti generoituna sähköpostina"
       whisper: "tämä viesti on yksityinen kuiskaus valvojille"
       wiki:
-        about: "tämä viesti on wiki"
+        about: "tämä viesti on wiki-viesti"
       archetypes:
         save: 'Tallennusasetukset'
       few_likes_left: "Kiitos hyvän mielen levittämisestä! Sinulla on enää muutama tykkäys jäljellä tälle päivälle."
@@ -1705,17 +1708,18 @@ fi:
           hide: "Piilota revisio"
           show: "Näytä revisio"
           revert: "Palaa tähän revisioon"
+          edit_wiki: "Muokkaa wikiä"
           comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> <i class='fa fa-arrows-h'></i> <strong>{{current}}</strong> / {{total}}"
         displays:
           inline:
             title: "Näytä lisäykset ja poistot tekstin osana"
-            button: '<i class="fa fa-square-o"></i> HTML'
+            button: 'HTML'
           side_by_side:
             title: "Näytä muokkauksen versiot vierekkäin"
-            button: '<i class="fa fa-columns"></i> HTML'
+            button: 'HTML'
           side_by_side_markdown:
             title: "Näytä viestien lähdekoodit vierekkäin"
-            button: '<i class="fa fa-columns"></i> Teksti'
+            button: 'Raaka'
     category:
       can: 'voivat&hellip; '
       none: '(ei aluetta)'
@@ -1758,7 +1762,7 @@ fi:
       change_in_category_topic: "Muokkaa kuvausta"
       already_used: 'Tämä väri on jo käytössä toisella alueella'
       security: "Turvallisuus"
-      special_warning: "Varoitus: Tämä alue on esituotettu ja sen turvallisuusasetuksia ei voi muuttaa. Jos et halua käyttää sitä, poista se sen sijaan."
+      special_warning: "Varoitus: Tämä on valmiiksi luotu alue, ja sen turvallisuusasetuksia ei voi muuttaa. Jos et näe käyttöä alueelle, älä muuta sen tarkoitusta vaan poista se."
       images: "Kuvat"
       auto_close_label: "Sulje ketjut automaattisesti tämän ajan jälkeen:"
       auto_close_units: "tuntia"
@@ -2620,12 +2624,17 @@ fi:
             revoke_admin: "peru ylläpitäjän oikeudet"
             grant_moderation: "myönnä valvojan oikeudet"
             revoke_moderation: "peru valvojan oikeudet"
-            backup_operation: "varmuuskopiointi"
+            backup_create: "luo varmuuskopio"
             deleted_tag: "poistettu tunniste"
             renamed_tag: "uudelleen nimetty tunniste"
             revoke_email: "peru sähköpostiosoite"
+            lock_trust_level: "lukitse luottamustaso"
             unlock_trust_level: "poista luottamustason lukitus"
             activate_user: "aktivoi käyttäjä"
+            deactivate_user: "poista käyttäjätili käytöstä"
+            change_readonly_mode: "muuta vain luku -tilaa"
+            backup_download: "lataa varmuuskopio"
+            backup_destroy: "tuhoa varmuuskopio"
         screened_emails:
           title: "Seulottavat sähköpostiosoitteet"
           description: "Uuden käyttäjätunnuksen luonnin yhteydessä annettua sähköpostiosoitetta verrataan alla olevaan listaan ja tarvittaessa tunnuksen luonti joko estetään tai suoritetaan muita toimenpiteitä."
