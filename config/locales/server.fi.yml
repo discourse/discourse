@@ -35,7 +35,7 @@ fi:
   remove_posts_deleted_by_author: "Kirjoittajan poistama"
   emails:
     incoming:
-      default_subject: "Uusi sähköposti osoitteesta %{email}"
+      default_subject: "Tämä ketju tarvitsee otsikon"
       show_trimmed_content: "Näytä piilotettu sisältö"
       maximum_staged_user_per_email_reached: "Saavutti maksimimäärän automaattisesti luotuja tunnuksia per sähköpostiosoite"
       errors:
@@ -73,8 +73,8 @@ fi:
       inclusion: ei ole listalla
       invalid: ei kelpaa
       is_invalid: "vaikuttaa epäselvältä, olihan se kokonainen virke?"
-      contains_censored_words: "sisältää yhden tai useamman sensuroidun sanan: %{censored_words}"
-      matches_censored_pattern: "täyttää sensuroidun säännöllisen lausekkeen: %{censored_pattern}"
+      contains_censored_words: "sisältää nämä sensuroidut sanat: %{censored_words}"
+      matches_censored_pattern: "sisältää nämä sivustolla sensuroidun säännöllisen lausekkeen täyttävät sanat: %{censored_words}"
       less_than: täytyy olla vähemmän kuin %{count}
       less_than_or_equal_to: täytyy olla yhtä suuri tai pienempi kuin %{count}
       not_a_number: ei ole numero
@@ -108,9 +108,14 @@ fi:
       max_username_length_range: "Et voi asettaa maksimia minimin alle."
       default_categories_already_selected: "Et voi valita aluetta, joka on käytössä toisella listalla"
       s3_upload_bucket_is_required: "Et voi ottaa s3 latausta käyttöön, jos et ole määrittänyt 's3_upload_bucket'."
+  invite:
+    accept_invite: "Hyväksy kutsu"
+    not_found: "Kutsusi tunnistusväline ei kelpaa. Ota yhteyttä sivuston ylläpitäjään."
   bulk_invite:
     file_should_be_csv: "Ladattavan tiedoston tulee olla CSV-muodossa."
     error: "Tiedoston lataus epäonnistui. Yritä myöhemmin uudelleen."
+  topic_invite:
+    user_exists: "Pahoittelut, tämä käyttäjä on jo kutsuttu. Voit kutsua toisen käyttäjän ketjuun vain yhden kerran."
   backup:
     operation_already_running: "Tehtävä on parhaillaan käynnissä. Uutta tehtävää ei voi aloittaa juuri nyt."
     backup_file_should_be_tar_gz: "Varmuuskopion tulisi olla .tar.gz-pakattu tiedosto."
@@ -361,13 +366,13 @@ fi:
       * Siirtää minkä tahansa ketjun toiselle alueelle
       * Lisätä linkkejä, joita hakukoneet seuraavat ([nofollow](http://en.wikipedia.org/wiki/Nofollow) on poistettu)
       * Päästä suljetulle Lounge-alueelle, joka näkyy vain luottamustason 3 ja korkeammille käyttäjille
-      * Piilottaa viestin yhdellä liputuksella
+      * Piilottaa roskapostiviestin yhdellä liputuksella
 
       Tässä on nykyinen [lista mestareista](/badges/3/leader). Muista käydä moikkaamassa.
 
       Kiitos, että olet tämän yhteisön arvokas jäsen!
 
-      (Saadaksesi lisätietoja luottamustasoista, [katso tämä englanninkielinen ketju][trust]. Huomaa, että pysyäksesi mestarina sinun pitää täyttää vaatimukset jatkossakin.)
+      (Lisää tietoa luottamustasoista saat [tästä englanninkielisestä ketjusta][trust]. Huomaa, että pysyäksesi mestarina sinun pitää täyttää vaatimukset jatkossakin.)
 
       [trust]: https://meta.discourse.org/t/what-do-user-trust-levels-do/4924
   category:
@@ -1164,7 +1169,7 @@ fi:
     digest_posts: "Yläraja sähköpostikoosteessa näytettävien suosittujen viestien määrälle."
     digest_other_topics: "Yläraja sähköpostikoosteen 'Uutta seuraamissasi ketjuissa ja alueissa' -osiossa näytettävien ketjujen määrälle."
     digest_min_excerpt_length: "Vähimmäispituus merkeissä viestin katkelmalle, joka näytetään sähköpostikoosteissa."
-    suppress_digest_email_after_days: "Älä lähetä sähköpostikoosteita käyttäjille, joita ei ole nähty sivustolla yli (n) päivään."
+    delete_digest_email_after_days: "Älä lähetä sähköpostikoosteita käyttäjille, joita ei ole nähty sivustolla yli (n) päivään."
     digest_suppress_categories: "Älä liitä näiden alueiden viestejä sähköpostikoosteisiin."
     disable_digest_emails: "Poista sähköpostikoosteet kaikilta käyttäjiltä."
     email_accent_bg_color: "Kakkosväri, jota käytetään joidenkin elementtien taustavärinä sähköpostiviesteissä. Anna värin nimi englanniksi ('red') tai sen Hex-arvo ('#FF000')."
@@ -1401,6 +1406,8 @@ fi:
   user:
     no_accounts_associated: "Ei liittyviä käyttäjätilejä"
     deactivated: "Käyttäjätili poistettiin käytöstä osoitteesta '%{email}' palautettujen sähköpostien vuoksi."
+    deactivated_by_staff: "Henkilökunta poisti käytöstä"
+    activated_by_staff: "Henkilökunta vahvisti"
     username:
       short: "täytyy olla vähintään %{min} merkkiä"
       long: "ei saa olla yli %{max} merkkiä"
@@ -1612,6 +1619,7 @@ fi:
   temporarily_closed_due_to_flags: "Tämä ketju on väliaikaisesti suljettu, johtuen suuresta määrästä liputuksia."
   system_messages:
     post_hidden:
+      title: "Viesti piilotettu"
       subject_template: "Yhteisön piiloon liputtama viesti"
       text_body_template: |
         Hei,
@@ -1633,6 +1641,7 @@ fi:
 
         Sitä mukaa kun toimit täällä, opimme tuntemaan sinut ja väliaikaisia uuden käyttäjän rajoitteita poistetaan automaattisesti. Ajan myötä nouset ylemmille [luottamustasoille](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924) ja saat valtuuksia joiden avulla voit osallistua yhteisömme ylläpitoon.
     welcome_user:
+      title: "Tervetuloa käyttäjä"
       subject_template: "Tervetuloa sivustolle %{site_name}!"
       text_body_template: |
         Kiitos liittymisestä sivustolle %{site_name}, ja tervetuloa!
@@ -1645,6 +1654,7 @@ fi:
 
         (Jos haluat keskustella [henkilökunnan jäsenten](%{base_url}/about) kanssa, vastaa vain tähän viestiin)
     welcome_invite:
+      title: "Tervetuloa kutsuttu"
       subject_template: "Tervetuloa sivustolle %{site_name}!"
       text_body_template: |
         Kiitos kun hyväksyit kutsun sivustolle %{site_name} -- tervetuloa!
@@ -1727,11 +1737,13 @@ fi:
       title: "CSV:n vienti onnistui"
       subject_template: "Datan vieminen on tehty"
       text_body_template: |
-        Datan vienti onnistui.
+        Tietojen vienti onnistui! :dvd:
 
         <a class="attachment" href="%{download_link}">%{file_name}</a> (%{file_size})
 
-        Linkki tiedostoon on voimassa 48 tuntia.
+        Yllä oleva latauslinkki toimii 48 tunnin ajan.
+
+        Tiedot on pakattu GZIP-arkistoksi. Jos arkisto ei purkaudu kun avaat sen, käytä täällä suositeltuja työkaluja: http://www.gzip.org/#faq4
     csv_export_failed:
       title: "CSV:n vienti epäonnistui"
       subject_template: "Datan vienti epäonnistui"

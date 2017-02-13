@@ -253,7 +253,7 @@ ru:
       like_count: "Симпатии"
       topic_count: "Темы"
       post_count: "Сообщения"
-      user_count: "Новые пользователи"
+      user_count: "Пользователей"
       active_user_count: "Активные пользователи"
       contact: "Контакты"
       contact_info: "В случае возникновения критической ошибки или срочного дела, касающегося этого сайта, свяжитесь с нами по адресу %{contact_info}."
@@ -1346,8 +1346,8 @@ ru:
         change_notification_state: "Ваше текущее состояние уведомлений"
       filter_to:
         one: "1 сообщение в теме"
-        few: "{{post_count}} сообщений в теме"
-        many: "{{post_count}} сообщений в теме"
+        few: "{{count}} сообщения в теме"
+        many: "{{count}} сообщений в теме"
         other: "{{count}} сообщений в теме"
       create: 'Создать Тему'
       create_long: 'Создать новую тему'
@@ -1507,8 +1507,11 @@ ru:
         make_banner: "Создать объявление"
         remove_banner: "Удалить объявление"
       reply:
-        title: 'Ответить'
-        help: 'ответить в теме'
+        post:
+          title: 'Ответить'
+        topic:
+          title: 'Ответить'
+          help: 'начать составление ответа к этой теме'
       clear_pin:
         title: "Открепить"
         help: "Открепить тему, чтобы она более не показывалась в самом начале списка тем"
@@ -1872,17 +1875,18 @@ ru:
           hide: "Скрыть редакцию"
           show: "Показать редакцию"
           revert: "Откат до этой версии"
+          edit_wiki: "Редактирование вики"
           comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> <i class='fa fa-arrows-h'></i> <strong>{{current}}</strong> / {{total}}"
         displays:
           inline:
             title: "Отобразить сообщение с включенными добавлениями и удалениями."
-            button: '<i class="fa fa-square-o"></i> HTML'
+            button: 'HTML'
           side_by_side:
             title: "Отобразить сообщение с построчными изменениями"
-            button: '<i class="fa fa-columns"></i> HTML'
+            button: 'HTML'
           side_by_side_markdown:
             title: "Показать отличия редакций бок о бок"
-            button: '<i class="fa fa-columns"></i> Исходный текст'
+            button: 'Необработанный'
     category:
       can: 'может&hellip; '
       none: '(вне раздела)'
@@ -3090,7 +3094,7 @@ ru:
         block_failed: 'Не удалось заблокировать пользователя.'
         block_confirm: 'Вы уверены что хотите заблокировать этого пользователя? Он больше не сможет создавать темы и отправлять сообщения.'
         block_accept: 'Подтвердить блокировку'
-        bounce_score: "Карма"
+        bounce_score: "Возвратов Писем"
         reset_bounce_score:
           label: "Сбросить"
           title: "сбросить карму к 0"

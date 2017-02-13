@@ -1157,7 +1157,7 @@ sq:
         login_required: "Duhet të identifikoheni për të parë këtë temë. "
       server_error:
         title: "Temën nuk e hapëm dot"
-        description: "Na vjen keq, nuk arritëm t'a ngarkojmue këtë temë, problem serveri. Provoni përsëri më vonë. Nëse problemi vazhdon, ju lutemi të na njoftoni. "
+        description: "Na vjen keq, nuk arritëm t'a ngarkojmuë këtë temë, problem serveri. Provoni përsëri më vonë. Nëse problemi vazhdon, ju lutemi të na njoftoni. "
       not_found:
         title: "Tema nuk u gjet"
         description: "Na vjen keq, nuk e gjetëm dot temën. Mund të jetë fshirë nga një moderator... "
@@ -1272,7 +1272,7 @@ sq:
           title: 'Përgjigju'
         topic:
           title: 'Përgjigju'
-          help: 'shkruaj një përgjigje tek kjo temë'
+          help: 'nis shkrimin e një përgjigjeje në këtë temë'
       clear_pin:
         title: "Clear pin"
         help: "Hiqeni statusin \"e ngjitur\" të kësaj teme që të mos afishohet më në majë të listës së temave"
@@ -1311,15 +1311,15 @@ sq:
         title: 'Ftoje në këtë mesazh'
         email_or_username: "Emaili ose emri i përdoruesit të të ftuarit"
         email_or_username_placeholder: "adresa email ose emri i përdoruesit"
-        action: "Ftoni"
+        action: "Fto"
         success: "Anëtari u ftua të marrë pjesë në këtë mesazh. "
         group_name: "emri i grupit"
       controls: "Veprimet e temës"
       invite_reply:
-        title: 'Ftoni'
+        title: 'Fto'
         username_placeholder: "emri i përdoruesit"
         action: 'Dërgoni ftesën'
-        help: 'ftoni të tjerë në këtë temë nëpërmjet emailit ose njoftimeve'
+        help: 'fto të tjerë në këtë temë nëpërmjet emailit ose njoftimeve'
         to_forum: "Do të dërgojmë një email të shkurtër që do ta lejojë mikun tuaj të regjistrohet menjëherë duke klikuar një lidhje, pa kërkuar hyrjen në sistem."
         sso_enabled: "Vendosni emrin e përdoruesit që dëshironi të ftoni në këtë temë"
         to_topic_blank: "Vendosni emrin e përdoruesit ose adresën email të personit që dëshironi të ftoni në këtë temë"

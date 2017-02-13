@@ -11,10 +11,12 @@ pl_PL:
       voters:
         one: "głosujący"
         few: "głosujących"
+        many: "głosujących"
         other: "głosujących"
       total_votes:
         one: "oddanych głosów"
         few: "oddanych głosów"
+        many: "oddanych głosów"
         other: "oddanych głosów"
       average_rating: "Średnia ocena: <strong>%{average}</strong>."
       public:
@@ -24,14 +26,17 @@ pl_PL:
           at_least_min_options:
             one: "Wybierz co najmniej <strong>1</strong> opcję"
             few: "Wybierz co najmniej <strong>%{count}</strong> opcji"
+            many: "Wybierz co najmniej <strong>%{count}</strong> opcji"
             other: "Wybierz co najmniej <strong>%{count}</strong> opcji"
           up_to_max_options:
             one: "Wybierz co najwyżej <strong>1</strong> opcję"
             few: "Wybierz co najwyżej <strong>%{count}</strong> opcji"
+            many: "Wybierz co najwyżej <strong>%{count}</strong> opcji"
             other: "Wybierz co najwyżej <strong>%{count}</strong> opcji"
           x_options:
             one: "Wybierz <strong>1</strong> opcję"
             few: "Wybierz <strong>%{count}</strong> opcji"
+            many: "Wybierz <strong>%{count}</strong> opcji"
             other: "Wybierz <strong>%{count}</strong> opcji"
           between_min_and_max_options: "Wybierz pomiędzy <strong>%{min}</strong> a <strong>%{max}</strong> opcjami"
       cast-votes:

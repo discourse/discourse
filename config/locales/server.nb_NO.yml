@@ -27,7 +27,7 @@ nb_NO:
   topics: "Emner"
   posts: "innlegg"
   loading: "Laster"
-  powered_by_html: 'Drevet av <a href="http://www.discourse.org">Discourse</a>, best nyttet med JavaScript på'
+  powered_by_html: 'Drevet av <a href="http://www.discourse.org">Discourse</a>, best nyttet med JavaScript påslått'
   log_in: "Logg inn"
   purge_reason: "Automatisk slettet som som forlatt, uaktivert konto"
   disable_remote_images_download_reason: "Nedlasting av bilder ble deaktivert grunnet mangel på tilgjengelig diskplass."
@@ -99,13 +99,16 @@ nb_NO:
       min_username_length_range: "Du kan ikke sette minimum høyere enn maksimum."
       max_username_length_range: "Du kan ikke sette maksimum under minimum."
       default_categories_already_selected: "Du kan ikke velge en annen kategori brukt i en annen liste."
+  invite:
+    accept_invite: "Godta invitasjon"
+    not_found: "Ditt invitasjonssymbol er ugyldig. Kontakt sidens administrator."
   bulk_invite:
     file_should_be_csv: "Filen som lastes opp burde være i csv format."
     error: "Det skjedde en feil når filen ble lastet opp. Prøv igjen senere. "
   backup:
     operation_already_running: "En prosess kjører allerede. Kan ikke starte en ny jobb akkurat nå."
-    backup_file_should_be_tar_gz: "Backup-filen må være en .tar.gz arkiveringsfil."
-    not_enough_space_on_disk: "Det er ikke nok plass på disk til å laste opp denne backupen."
+    backup_file_should_be_tar_gz: "Backup-filen må være en .tar.gz -arkiveringsfil."
+    not_enough_space_on_disk: "Det er ikke nok diskplass til å laste opp denne backupen."
     invalid_filename: "Det sikkerhetskopierte filnavnet inneholder ugyldige tegn. Gyldige tegn er a-z 0-9 . - _."
   not_logged_in: "Du må være logget inn for å gjøre dette."
   not_found: "Den etterspurte URL eller ressurs ble ikke funnet"
@@ -117,8 +120,8 @@ nb_NO:
     one: "Vi beklager, men nye brukere er midlertidig begrenset til 1 svar i det samme emnet."
     other: "Vi beklager, men nye brukere er midlertidig begrenset til %{count} svar i det samme emnet."
   embed:
-    start_discussion: "Start Diskusjon"
-    continue: "Fortsett Diskusjon"
+    start_discussion: "Start diskusjon"
+    continue: "Fortsett diskusjon"
     error: "Feil ved innbygging"
     referer: "Referer:"
     mismatch: "Referer passet ikke med noen av de følgende vertsnavnene:"
@@ -127,7 +130,7 @@ nb_NO:
     more_replies:
       one: "1 svar til"
       other: "%{count} svar til"
-    loading: "Laster inn diskusjon..."
+    loading: "Laster inn diskusjon…"
     permalink: "Permalink"
     imported_from: "Dette er en relatert diskusjon ved siden av det originale innlegget ved %{link}"
     in_reply_to: "▶ %{username}"
@@ -158,8 +161,8 @@ nb_NO:
   page_num: "Side %{num}"
   home_title: "Hjem"
   topics_in_category: "Emner i '%{category}' kategorien"
-  rss_posts_in_topic: "RSS feed av '%{topic}'"
-  rss_topics_in_category: "RSS feed av emner i '%{category}' kategorien"
+  rss_posts_in_topic: "RSS-strøm av '%{topic}'"
+  rss_topics_in_category: "RSS-strøm av emner i '%{category}' kategorien"
   author_wrote: "%{author} skrev:"
   num_posts: "Innlegg:"
   num_participants: "Deltakere:"
@@ -175,7 +178,7 @@ nb_NO:
     user_posts: "Siste innlegg av @%{username}"
     user_topics: "Siste emner av @%{username}"
     tag: "Emner merket med stikkord"
-  too_late_to_edit: "Det innlegget ble laget for lenge siden. Det kan ikke lenger bli redigert eller slettet."
+  too_late_to_edit: "Det innlegget ble laget for lenge siden. Det kan ikke lenger redigeres eller slettes."
   excerpt_image: "bilde"
   queue:
     delete_reason: "Slettet via køen for innleggmoderering"
@@ -275,7 +278,7 @@ nb_NO:
         user:
           attributes:
             password:
-              common: "er et av de 10000 mest vanlige passordene. Venligst benytt et mer sikkert passord."
+              common: "er ett av de 10000 mest vanlige passordene. Benytt et sikrere passord."
               same_as_username: "er det somme som brukernavnet ditt. Benytt et sikrere passord."
               same_as_email: "er det samme som din e-mail. Benytt et sikrere passord."
               same_as_current: "er det samme som nåværende passord."
@@ -356,7 +359,7 @@ nb_NO:
     leader:
       title: "leder"
   rate_limiter:
-    too_many_requests: "Vi har en daglig begrensning for hvor mange ganger den handlingen kan utføres. Venligst vent %{time_left} før du prøver igjen."
+    too_many_requests: "Vi har en daglig begrensning for hvor mange ganger den handlingen kan utføres. Vent %{time_left} før du prøver igjen."
     by_type:
       first_day_replies_per_day: "Du har nådd det maksimale antall svar en ny bruker kan publisere på sin første dag. Vær så snill og vent %{time_left} før du prøver igjen."
       first_day_topics_per_day: "Du har nådd det maksimale antall emner en ny bruker kan publisere på sin første dag. Vær så snill og vent %{time_left} før du prøver igjen."
@@ -443,8 +446,7 @@ nb_NO:
         other: "nesten %{count} år siden"
   password_reset:
     no_token: "Beklager, den lenken for å endre passord er for gammel. Velg logg inn-knappen bruk 'Jeg glemte passordet mitt' for å motta en ny lenke."
-    choose_new: "Venligst velg et nytt passord"
-    choose: "Venligst velg et passord"
+    choose_new: "Velg et nytt passord"
     update: 'Oppdater passord'
     save: 'Sett passord'
     title: 'Tilbakestill passord'
@@ -745,7 +747,7 @@ nb_NO:
     digest_posts: "Maksimalt antall populære innlegg å vise i oppsummerings-e-posten."
     digest_other_topics: "Maksimalt antall emner å vise i delen 'Nytt i emner og kategorier du følger' i oppsummerings-e-posten."
     digest_min_excerpt_length: "Minimal lengde på utdrag av innlegg i e-post-oppsummeringen, i antall tegn."
-    suppress_digest_email_after_days: "Utelat oppsummerings-eposter for brukere ikke sett på nettstedet siden mer enn (n) dager."
+    delete_digest_email_after_days: "Utelat oppsummerings-eposter for brukere ikke sett på nettstedet siden mer enn (n) dager."
     digest_suppress_categories: "Utelat disse kategoriene i oppsummerings-eposter"
     disable_digest_emails: "Deaktivér oppsummerings-eposter for alle brukere."
     allow_profile_backgrounds: "Gi brukere mulighet til å laste opp profilbakgrunner."

@@ -194,7 +194,7 @@ zh_TW:
       like_count: "讚"
       topic_count: "討論話題"
       post_count: "文章"
-      user_count: "新用戶"
+      user_count: "用戶數量"
       active_user_count: "啟用的用戶"
       contact: "聯絡我們"
       contact_info: "當網站發生嚴重錯誤或緊急事件，請聯絡我們 %{contact_info}"
@@ -1350,8 +1350,11 @@ zh_TW:
         make_banner: "討論話題橫幅"
         remove_banner: "移除討論話題橫幅"
       reply:
-        title: '回覆'
-        help: '回覆此討論話題'
+        post:
+          title: '回覆'
+        topic:
+          title: '回覆'
+          help: '開始編寫對此討論話題的回覆'
       clear_pin:
         title: "取消置頂"
         help: "取消討論話題的置頂狀態。"
@@ -1511,7 +1514,7 @@ zh_TW:
       via_auto_generated_email: "通過自動生成郵件發表的帖子"
       whisper: "這文章是版主私人密談"
       wiki:
-        about: "此帖允許被公共編輯"
+        about: "這篇文章是共筆"
       archetypes:
         save: '儲存選項'
       few_likes_left: "謝謝你的熱情！你今天的讚快用完了。"
@@ -1618,17 +1621,18 @@ zh_TW:
           hide: "隱藏修訂紀錄"
           show: "顯示修訂紀錄"
           revert: "還原至該版本"
+          edit_wiki: "編輯共筆"
           comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> <i class='fa fa-arrows-h'></i> <strong>{{current}}</strong> / {{total}}"
         displays:
           inline:
             title: "以單一網頁模式檢視，並標示增加與刪減的內容"
-            button: '<i class="fa fa-square-o"></i> HTML'
+            button: 'HTML'
           side_by_side:
             title: "以並排網頁模式檢視，分開標示增加與刪減的內容"
-            button: '<i class="fa fa-columns"></i> HTML'
+            button: 'HTML'
           side_by_side_markdown:
             title: "顯示原始碼左右比對"
-            button: '<i class="fa fa-columns"></i> 原碼'
+            button: '原始'
     category:
       can: '可以&hellip; '
       none: '( 無分類 )'

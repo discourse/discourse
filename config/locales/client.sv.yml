@@ -214,7 +214,7 @@ sv:
       like_count: "Gillningar"
       topic_count: "Ämnen"
       post_count: "Inlägg"
-      user_count: "Nya Användare"
+      user_count: "Användare"
       active_user_count: "Aktiva Användare"
       contact: "Kontakta Oss"
       contact_info: "Vid brådskande ärenden rörande webbplatsen, kontakta oss på %{contact_info}."
@@ -321,6 +321,11 @@ sv:
       total_rows:
         one: "1 användare"
         other: "%{count} användare"
+    group_histories:
+      actions:
+        change_group_setting: "Ändra gruppinställningar"
+        add_user_to_group: "Lägg till användare"
+        remove_user_from_group: "Ta bort användare"
     groups:
       add: "Lägg till"
       selector_placeholder: "Lägg till medlemmar"

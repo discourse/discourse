@@ -214,7 +214,7 @@ fr:
       like_count: "J'aime"
       topic_count: "Sujets"
       post_count: "Nombre de messages"
-      user_count: "Nouveaux utilisateurs"
+      user_count: "Utilisateurs"
       active_user_count: "Utilisateurs actifs"
       contact: "Nous contacter"
       contact_info: "En cas de problème critique ou urgent sur ce site, veuillez nous contacter : %{contact_info}"
@@ -1403,8 +1403,11 @@ fr:
         make_banner: "Sujet à la une"
         remove_banner: "Retirer le sujet à la une"
       reply:
-        title: 'Répondre'
-        help: 'commencez à répondre à ce sujet'
+        post:
+          title: 'Répondre'
+        topic:
+          title: 'Répondre'
+          help: 'commencez à répondre à ce sujet'
       clear_pin:
         title: "Désépingler"
         help: "Retirer l'épingle de ce sujet afin qu'il n'apparaisse plus en tête de votre liste de sujet"
@@ -1704,17 +1707,18 @@ fr:
           hide: "Masquer la révision"
           show: "Afficher la révision"
           revert: "Revenir à cette révision"
+          edit_wiki: "Modifier le wiki"
           comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> <i class='fa fa-arrows-h'></i> <strong>{{current}}</strong> / {{total}}"
         displays:
           inline:
             title: "Afficher le rendu avec les ajouts et les retraits en ligne"
-            button: '<i class="fa fa-square-o"></i> HTML'
+            button: 'HTML'
           side_by_side:
             title: "Afficher les différences de rendu côte-à-côte"
-            button: '<i class="fa fa-columns"></i> HTML'
+            button: 'HTML'
           side_by_side_markdown:
             title: "Afficher les différences de la source côte-à-côte"
-            button: '<i class="fa fa-columns"></i> Brut'
+            button: 'Brut'
     category:
       can: 'peut&hellip; '
       none: '(aucune catégorie)'

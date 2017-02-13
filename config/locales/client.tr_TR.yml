@@ -194,7 +194,7 @@ tr_TR:
       like_count: "Beğeni"
       topic_count: "Konular"
       post_count: "Gönderiler"
-      user_count: "Yeni Kullanıcılar"
+      user_count: "Kullanıcılar"
       active_user_count: "Etkin Kullanıcılar"
       contact: "Bize Ulaşın"
       contact_info: "Bu siteyi etkileyen ciddi bir sorun ya da acil bir durum oluştuğunda, lütfen %{contact_info} adresi üzerinden bizimle iletişime geçin."
@@ -594,7 +594,7 @@ tr_TR:
         instructions: "Profil arkaplanları ortalanacak ve genişlikleri 590px olacak. "
       email:
         title: "E-posta"
-        instructions: "Herkese gösterilmeyecek"
+        instructions: "Kimseye gösterilmeyecek"
         ok: "Onay için size e-posta atacağız"
         invalid: "Lütfen geçerli bir e-posta adresini giriniz"
         authenticated: "E-posta adresiniz {{provider}} tarafından doğrulanmıştır"
@@ -603,13 +603,13 @@ tr_TR:
           other: "Sadece son {{count}} dakika içinde sizi görmediysek e-posta yollayacağız."
       name:
         title: "İsim"
-        instructions: "Tam adınız (isteğe bağlı)"
+        instructions: "tam adınız (opsiyonel)"
         instructions_required: "Tam adınız"
         too_short: "İsminiz çok kısa"
         ok: "İsminiz iyi görünüyor"
       username:
         title: "Kullanıcı adı"
-        instructions: "Özgün, boşluksuz ve kısa"
+        instructions: "Özgün, boşluksuz, kısa"
         short_instructions: "Kullanıcılar sizden @{{username}} olarak bahsedebilirler."
         available: "Kullanıcı adınız müsait"
         global_match: "E-posta kayıtlı kullanıcı adıyla eşleşiyor"
@@ -726,7 +726,7 @@ tr_TR:
         same_as_username: "Parolanız kullanıcı adınızla aynı."
         same_as_email: "Parolanız e-posta adresinizle aynı."
         ok: "Parolanız uygun gözüküyor."
-        instructions: "En az %{count} karakter."
+        instructions: "en az %{count} karakter"
       summary:
         title: "Özet"
         stats: "Sayıtımlar"
@@ -1350,8 +1350,11 @@ tr_TR:
         make_banner: "Manşet Konusu"
         remove_banner: "Manşet Konusunu Kaldır"
       reply:
-        title: 'Cevapla'
-        help: 'bu konuya bir cevap oluşturmaya başlayın'
+        post:
+          title: 'Cevapla'
+        topic:
+          title: 'Cevapla'
+          help: 'bu konuya bir cevap oluşturmaya başlayın'
       clear_pin:
         title: "Başa tutturmayı iptal et"
         help: "Bu konunun başa tutturulması iptal edilsin ki artık konu listenizin en üstünde gözükmesin"
@@ -1470,6 +1473,7 @@ tr_TR:
       edit: "{{link}} {{replyAvatar}} {{username}} düzenleniyor"
       edit_reason: "Neden: "
       post_number: "gönderi {{number}}"
+      wiki_last_edited_on: "wiki en son düzenlendi"
       last_edited_on: "gönderinin en son düzenlenme tarihi"
       reply_as_new_topic: "Bağlantılı Konu Olarak Cevapla"
       continue_discussion: "{{postLink}} Gönderisinden tartışmaya devam ediliyor:"
@@ -1510,7 +1514,7 @@ tr_TR:
       via_auto_generated_email: "bu gönderi otomatik bir e-posta yoluyla gönderildi"
       whisper: "bu gönderi yöneticiler için özel bir fısıltıdır"
       wiki:
-        about: "bu gönderi bir wiki"
+        about: "bu gönderi bir wiki'dir"
       archetypes:
         save: 'Seçenekleri kaydet'
       few_likes_left: "Sevgiyi paylaştığınız için teşekkürler! Bugün için sadece birkaç beğeniniz kaldı. "
@@ -1617,17 +1621,18 @@ tr_TR:
           hide: "Düzenlemeyi gizle"
           show: "Düzenlemeyi göster"
           revert: "Bu sürüme geri dön"
+          edit_wiki: "wiki düzenle"
           comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> <i class='fa fa-arrows-h'></i> <strong>{{current}}</strong> / {{total}}"
         displays:
           inline:
             title: "İşlenmiş çıktıyı ekleme ve çıkarmalarla birlikte göster"
-            button: '<i class="fa fa-square-o"></i> HTML'
+            button: 'HTML'
           side_by_side:
             title: "İşlenmiş diff çıktılarını yan yana göster"
-            button: '<i class="fa fa-columns"></i> HTML'
+            button: 'HTML'
           side_by_side_markdown:
             title: "İşlenmemiş diff kaynaklarını yan yana göster"
-            button: '<i class="fa fa-columns"></i> Raw'
+            button: 'Raw'
     category:
       can: 'yapabilir&hellip;'
       none: '(kategori yok)'
@@ -2567,7 +2572,7 @@ tr_TR:
             revoke_admin: "yönetici yetkisini kaldır"
             grant_moderation: "moderasyon yetkisi ver"
             revoke_moderation: "moderasyon yetkisini kaldır"
-            backup_operation: "yedekleme operasyonu"
+            backup_create: "yedek oluştur"
             deleted_tag: "silinmiş etiket"
             renamed_tag: "yeniden adlandırılmış etiket"
             revoke_email: "e-postayı kaldır"
@@ -2576,6 +2581,8 @@ tr_TR:
             activate_user: "Kullanıcıyı etkinleştir."
             deactivate_user: "Kullanıcıyı dondur"
             change_readonly_mode: "Salt-okunur modunu değiştir"
+            backup_download: "yedeği yükle"
+            backup_destroy: "yedeği sil"
         screened_emails:
           title: "Taranmış E-postalar"
           description: "Biri yeni bir hesap oluşturmaya çalıştığında, aşağıdaki e-posta adresleri kontrol edilecek ve kayıt önlenecek veya başka bir eylem gerçekleşecek."
