@@ -1,4 +1,4 @@
-InviteRedeemer = Struct.new(:invite, :username, :name) do
+InviteRedeemer = Struct.new(:invite, :username, :name, :password) do
 
   def redeem
     Invite.transaction do
@@ -18,7 +18,7 @@ InviteRedeemer = Struct.new(:invite, :username, :name) do
   end
 
   # extracted from User cause it is very specific to invites
-  def self.create_user_from_invite(invite, username, name)
+  def self.create_user_from_invite(invite, username, name, password=nil)
     user_exists = User.find_by_email(invite.email)
     return user if user_exists
 
@@ -30,6 +30,11 @@ InviteRedeemer = Struct.new(:invite, :username, :name) do
     available_name = name || available_username
 
     user = User.new(email: invite.email, username: available_username, name: available_name, active: true, trust_level: SiteSetting.default_invitee_trust_level)
+
+    if password
+      user.password_required!
+      user.password = password
+    end
 
     user.moderator = true if invite.moderator? && invite.invited_by.staff?
     user.save!
@@ -66,7 +71,7 @@ InviteRedeemer = Struct.new(:invite, :username, :name) do
 
   def get_invited_user
     result = get_existing_user
-    result ||= InviteRedeemer.create_user_from_invite(invite, username, name)
+    result ||= InviteRedeemer.create_user_from_invite(invite, username, name, password)
     result.send_welcome_message = false
     result
   end

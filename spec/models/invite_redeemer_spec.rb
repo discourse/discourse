@@ -3,13 +3,30 @@ require 'rails_helper'
 describe InviteRedeemer do
 
   describe '#create_user_from_invite' do
-    let(:user) { InviteRedeemer.create_user_from_invite(Fabricate(:invite, email: 'walter.white@email.com'), 'walter', 'Walter White') }
-
     it "should be created correctly" do
+      user = InviteRedeemer.create_user_from_invite(Fabricate(:invite, email: 'walter.white@email.com'), 'walter', 'Walter White')
       expect(user.username).to eq('walter')
       expect(user.name).to eq('Walter White')
       expect(user).to be_active
       expect(user.email).to eq('walter.white@email.com')
+    end
+
+    it "can set the password too" do
+      password = 's3cure5tpasSw0rD'
+      user = InviteRedeemer.create_user_from_invite(Fabricate(:invite, email: 'walter.white@email.com'), 'walter', 'Walter White', password)
+      expect(user).to have_password
+      expect(user.confirm_password?(password)).to eq(true)
+    end
+
+    it "raises exception with record and errors" do
+      error = nil
+      begin
+        InviteRedeemer.create_user_from_invite(Fabricate(:invite, email: 'walter.white@email.com'), 'walter', 'Walter White', 'aaa')
+      rescue ActiveRecord::RecordInvalid => e
+        error = e
+      end
+      expect(error).to be_present
+      expect(error.record.errors[:password]).to be_present
     end
   end
 
@@ -17,6 +34,7 @@ describe InviteRedeemer do
     let(:invite) { Fabricate(:invite) }
     let(:name) { 'john snow' }
     let(:username) { 'kingofthenorth' }
+    let(:password) { 'know5nOthiNG'}
     let(:invite_redeemer) { InviteRedeemer.new(invite, username, name) }
 
     it "should redeem the invite" do
@@ -38,6 +56,13 @@ describe InviteRedeemer do
       expect(user.name).to eq(name)
       expect(user.username).to eq(username)
       expect(user.invited_by).to eq(nil)
+    end
+
+    it "can set password" do
+      inviter = invite.invited_by
+      user = InviteRedeemer.new(invite, username, name, password).redeem
+      expect(user).to have_password
+      expect(user.confirm_password?(password)).to eq(true)
     end
   end
 end

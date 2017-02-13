@@ -59,16 +59,46 @@
 
 }
 
-.password-reset {
+.password-reset, .invites-show {
   .col-form {
-    padding-top: 40px;
     padding-left: 20px;
   }
   h2 {
     margin-bottom: 12px;
   }
-  .password-reset-img {
+  .col-image img {
     width: 200px;
     height: 200px;
+  }
+}
+
+.password-reset {
+  .col-form {
+    padding-top: 40px;
+  }
+}
+
+.invites-show {
+  padding-top: 20px;
+
+  .two-col {
+    margin-top: 30px;
+  }
+  .col-image {
+    width: 200px;
+    img {
+      width: 200px;
+    }
+  }
+  .col-form {
+    margin-left: 200px;
+    .inline-invite-img {
+      display: none;
+    }
+  }
+  form {
+    label, .input {
+      margin-left: 20px;
+    }
   }
 }
