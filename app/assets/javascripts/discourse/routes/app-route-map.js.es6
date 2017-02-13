@@ -142,4 +142,8 @@ export default function() {
   this.route('tagGroups', {path: '/tag_groups', resetNamespace: true}, function() {
     this.route('show', {path: '/:id'});
   });
+
+  this.route('invites', { path: '/invites', resetNamespace: true }, function() {
+    this.route('show', { path: '/:token' });
+  });
 }

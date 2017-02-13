@@ -51,8 +51,8 @@ class Invite < ActiveRecord::Base
     invalidated_at.nil?
   end
 
-  def redeem
-    InviteRedeemer.new(self).redeem unless expired? || destroyed? || !link_valid?
+  def redeem(username: nil, name: nil, password: nil)
+    InviteRedeemer.new(self, username, name, password).redeem unless expired? || destroyed? || !link_valid?
   end
 
   def self.extend_permissions(topic, user, invited_by)

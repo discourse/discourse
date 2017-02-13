@@ -137,7 +137,6 @@ en:
       <<: *errors
 
   invite:
-    accept_invite: "Accept Invitation"
     not_found: "Your invite token is invalid. Please contact the site's administrator."
 
   bulk_invite:

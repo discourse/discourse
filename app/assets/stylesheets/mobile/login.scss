@@ -86,7 +86,7 @@ $input-width: 184px;
 }
 
 
-.password-reset {
+.password-reset, .invites-show {
   margin-top: 30px;
   .col-image {
     padding-top: 12px;
@@ -104,12 +104,22 @@ $input-width: 184px;
   .tip {
     display: block;
     margin: 6px 0;
-    max-width: 180px;
   }
+}
+
+.password-reset .tip {
+  max-width: 180px;
 }
 
 .discourse-touch .password-reset {
   .instructions {
     margin-bottom: 16px;
+  }
+}
+
+
+.invites-show {
+  .col-image {
+    display: none;
   }
 }

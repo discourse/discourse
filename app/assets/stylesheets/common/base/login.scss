@@ -72,6 +72,25 @@ $input-width: 220px;
   }
 }
 
+.invites-show {
+  .two-col {
+    position: relative;
+  }
+
+  .col-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+
+  form {
+    margin-top: 24px;
+    label {
+      font-weight: bold;
+    }
+  }
+}
+
 
 // alternate login / create new account buttons should be de-emphasized
 
