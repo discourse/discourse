@@ -1,5 +1,6 @@
 #!/bin/bash
 
+cd /var/www/discourse
 export RAILS_ENV=production
 echo "$(tput setaf 2) Fetching data from git$(tput sgr 0)"
 git pull origin master
