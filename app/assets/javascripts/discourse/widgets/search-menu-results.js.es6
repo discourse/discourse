@@ -46,7 +46,7 @@ function postResult(result, link, term) {
 }
 
 createSearchResult('user', 'path', function(u) {
-  return [ avatarImg('small', { template: u.avatar_template, username: u.username }), ' ', u.username ];
+  return [ avatarImg('small', { template: u.avatar_template, username: u.username }), ' ', h('span.user-results', h('b', u.username)), ' ',  h('span.user-results', u.name ? u.name : '') ];
 });
 
 createSearchResult('topic', 'url', function(result, term) {
