@@ -120,9 +120,8 @@ describe StaffActionLogger do
 
   describe "log_site_setting_change" do
     it "raises an error when params are invalid" do
-      SiteSetting.stubs(:respond_to?).with('abc').returns(false)
       expect { logger.log_site_setting_change(nil, '1', '2') }.to raise_error(Discourse::InvalidParameters)
-      expect { logger.log_site_setting_change('abc', '1', '2') }.to raise_error(Discourse::InvalidParameters)
+      expect { logger.log_site_setting_change('i_am_a_site_setting_that_will_never_exist', '1', '2') }.to raise_error(Discourse::InvalidParameters)
     end
 
     it "creates a new UserHistory record" do
