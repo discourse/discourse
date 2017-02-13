@@ -4,6 +4,8 @@ describe UserAuthToken do
 
   it "can remove old expired tokens" do
 
+    SiteSetting.verbose_auth_token_logging = true
+
     freeze_time Time.zone.now
     SiteSetting.maximum_session_age = 1
 
@@ -118,6 +120,68 @@ describe UserAuthToken do
       looked_up = UserAuthToken.lookup(unhashed_prev)
       expect(looked_up).to eq(nil)
     end
+  end
+
+  it "can correctly log auth tokens" do
+    SiteSetting.verbose_auth_token_logging = true
+
+    user = Fabricate(:user)
+
+    token = UserAuthToken.generate!(user_id: user.id,
+                                    user_agent: "some user agent",
+                                    client_ip: "1.1.2.3")
+
+    expect(UserAuthTokenLog.where(
+      action: 'generate',
+      user_id: user.id,
+      user_agent: "some user agent",
+      client_ip: "1.1.2.3",
+      user_auth_token_id: token.id,
+    ).count).to eq(1)
+
+    UserAuthToken.lookup(token.unhashed_auth_token,
+      seen: true,
+      user_agent: "something diff",
+      client_ip: "1.2.3.3"
+    )
+
+    UserAuthToken.lookup(token.unhashed_auth_token,
+      seen: true,
+      user_agent: "something diff2",
+      client_ip: "1.2.3.3"
+    )
+
+    expect(UserAuthTokenLog.where(
+      action: "seen token",
+      user_id: user.id,
+      auth_token: token.auth_token,
+      client_ip: "1.2.3.3",
+      user_auth_token_id: token.id
+    ).count).to eq(1)
+
+    fake_token = SecureRandom.hex
+    UserAuthToken.lookup(fake_token, seen: true, user_agent: "bob", client_ip: "127.0.0.1")
+
+    expect(UserAuthTokenLog.where(
+      action: "miss token",
+      auth_token: UserAuthToken.hash_token(fake_token),
+      user_agent: "bob",
+      client_ip: "127.0.0.1"
+    ).count).to eq(1)
+
+
+    freeze_time(UserAuthToken::ROTATE_TIME.from_now)
+
+    token.rotate!(user_agent: "firefox", client_ip: "1.1.1.1")
+
+    expect(UserAuthTokenLog.where(
+      action: "rotate",
+      auth_token: token.auth_token,
+      user_agent: "firefox",
+      client_ip: "1.1.1.1",
+      user_auth_token_id: token.id
+    ).count).to eq(1)
+
   end
 
 end

@@ -22,6 +22,18 @@ class UserAuthToken < ActiveRecord::Base
       rotated_at: Time.zone.now
     )
     user_auth_token.unhashed_auth_token = token
+
+    if SiteSetting.verbose_auth_token_logging
+      UserAuthTokenLog.create!(
+        action: 'generate',
+        user_auth_token_id: user_auth_token.id,
+        user_id: info[:user_id],
+        user_agent: info[:user_agent],
+        client_ip: info[:client_ip],
+        auth_token: hashed_token
+      )
+    end
+
     user_auth_token
   end
 
@@ -37,16 +49,41 @@ class UserAuthToken < ActiveRecord::Base
                           (auth_token = :unhashed_token AND legacy)) AND created_at > :expire_before",
                           token: token, unhashed_token: unhashed_token, expire_before: expire_before)
 
-    if user_token &&
+    token_expired =
+       user_token &&
        user_token.auth_token_seen &&
        user_token.prev_auth_token == token &&
        user_token.prev_auth_token != user_token.auth_token &&
        user_token.rotated_at > 1.minute.ago
+
+    if token_expired || !user_token
+
+      if SiteSetting.verbose_auth_token_logging
+        UserAuthTokenLog.create(
+          action: "miss token",
+          user_id: user_token&.user_id,
+          auth_token: token,
+          user_agent: opts && opts[:user_agent],
+          client_ip: opts && opts[:client_ip]
+        )
+      end
+
       return nil
     end
 
     if mark_seen && user_token && !user_token.auth_token_seen && user_token.auth_token == token
       user_token.update_columns(auth_token_seen: true)
+
+      if SiteSetting.verbose_auth_token_logging
+        UserAuthTokenLog.create(
+          action: "seen token",
+          user_auth_token_id: user_token.id,
+          user_id: user_token.user_id,
+          auth_token: user_token.auth_token,
+          user_agent: opts && opts[:user_agent],
+          client_ip: opts && opts[:client_ip]
+        )
+      end
     end
 
     user_token
@@ -57,6 +94,12 @@ class UserAuthToken < ActiveRecord::Base
   end
 
   def self.cleanup!
+
+    if SiteSetting.verbose_auth_token_logging
+      UserAuthTokenLog.where('created_at < :time',
+            time: SiteSetting.maximum_session_age.hours.ago - ROTATE_TIME).delete_all
+    end
+
     where('rotated_at < :time',
           time: SiteSetting.maximum_session_age.hours.ago - ROTATE_TIME).delete_all
 
@@ -89,6 +132,18 @@ class UserAuthToken < ActiveRecord::Base
     if result.cmdtuples > 0
       reload
       self.unhashed_auth_token = token
+
+      if SiteSetting.verbose_auth_token_logging
+        UserAuthTokenLog.create(
+          action: "rotate",
+          user_auth_token_id: id,
+          user_id: user_id,
+          auth_token: auth_token,
+          user_agent: user_agent,
+          client_ip: client_ip
+        )
+      end
+
       true
     else
       false

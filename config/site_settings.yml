@@ -301,6 +301,9 @@ login:
   sso_allows_all_return_paths: false
   enable_sso_provider: false
   verbose_sso_logging: false
+  verbose_auth_token_logging:
+    hidden: true
+    default: false
   sso_url:
     default: ''
     regex: '^https?:\/\/.+[^\/]$'
