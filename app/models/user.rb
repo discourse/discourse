@@ -923,6 +923,8 @@ class User < ActiveRecord::Base
   end
 
   def clear_global_notice_if_needed
+    return if id === Discourse.system_user.id
+
     if admin && SiteSetting.has_login_hint
       SiteSetting.has_login_hint = false
       SiteSetting.global_notice = ""

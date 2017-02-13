@@ -1428,4 +1428,35 @@ describe User do
       expect(user.featured_user_badges.length).to eq(1)
     end
   end
+
+  describe ".clear_global_notice_if_needed" do
+
+    let(:user) { Fabricate(:user) }
+    let(:admin) { Fabricate(:admin) }
+
+    before do
+      SiteSetting.has_login_hint = true
+      SiteSetting.global_notice = "some notice"
+    end
+
+    it "doesn't clear the login hint when a regular user is saved" do
+      user.save
+      expect(SiteSetting.has_login_hint).to eq(true)
+      expect(SiteSetting.global_notice).to eq("some notice")
+    end
+
+    it "doesn't clear the notice when a system user is saved" do
+      Discourse.system_user.save
+      expect(SiteSetting.has_login_hint).to eq(true)
+      expect(SiteSetting.global_notice).to eq("some notice")
+    end
+
+    it "clears the notice when the admin is saved" do
+      admin.save
+      expect(SiteSetting.has_login_hint).to eq(false)
+      expect(SiteSetting.global_notice).to eq("")
+    end
+
+  end
+
 end
