@@ -1,7 +1,12 @@
 require 'rails_helper'
 
 describe TopicList do
-  let!(:topic) { Fabricate(:topic) }
+  let!(:topic) {
+    t = Fabricate(:topic)
+    t.allowed_user_ids = [t.user.id]
+    t
+  }
+
   let(:user) { topic.user }
   let(:topic_list) { TopicList.new("liked", user, [topic]) }
 
@@ -20,6 +25,23 @@ describe TopicList do
       TopicList.preloaded_custom_fields << "apple"
 
       expect(TopicList.preloaded_custom_fields).to eq(Set.new(%w{test apple}))
+    end
+  end
+
+  context "preload" do
+    it "allows preloading of data" do
+      preloaded_topic = false
+      preloader = lambda do |topics|
+        expect(topics.length).to eq(1)
+        preloaded_topic = true
+      end
+
+      TopicList.on_preload(preloader)
+
+      topic_list.topics
+      expect(preloaded_topic).to eq(true)
+
+      TopicList.cancel_preload(preloader)
     end
   end
 
