@@ -72,11 +72,16 @@ class UserAuthToken < ActiveRecord::Base
     end
 
     if mark_seen && user_token && !user_token.auth_token_seen && user_token.auth_token == token
-      user_token.update_columns(auth_token_seen: true)
+      # we must protect against concurrency issues here
+      changed_rows = UserAuthToken.where(id: user_token.id, auth_token: token).update_all(auth_token_seen: true)
+      if changed_rows
+        # not doing a reload so we don't risk loading a rotated token
+        user_token.auth_token_seen = true
+      end
 
       if SiteSetting.verbose_auth_token_logging
         UserAuthTokenLog.create(
-          action: "seen token",
+          action: changed_rows == 0 ? "seen wrong token" : "seen token",
           user_auth_token_id: user_token.id,
           user_id: user_token.user_id,
           auth_token: user_token.auth_token,
