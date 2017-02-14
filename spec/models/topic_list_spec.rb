@@ -36,12 +36,12 @@ describe TopicList do
         preloaded_topic = true
       end
 
-      TopicList.on_preload(preloader)
+      TopicList.on_preload(&preloader)
 
       topic_list.topics
       expect(preloaded_topic).to eq(true)
 
-      TopicList.cancel_preload(preloader)
+      TopicList.cancel_preload(&preloader)
     end
   end
 
