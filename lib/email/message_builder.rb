@@ -40,7 +40,7 @@ module Email
             string = allow_reply_by_email? ? "user_notifications.reply_by_email" : "user_notifications.visit_link_to_respond"
             string << "_pm" if @opts[:private_reply]
           end
-          @template_args[:respond_instructions] = "-- \n" + I18n.t(string, @template_args)
+          @template_args[:respond_instructions] = "---\n" + I18n.t(string, @template_args)
         end
 
         if @opts[:add_unsubscribe_link]
