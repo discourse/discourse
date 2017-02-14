@@ -74,7 +74,7 @@ class UserAuthToken < ActiveRecord::Base
     if mark_seen && user_token && !user_token.auth_token_seen && user_token.auth_token == token
       # we must protect against concurrency issues here
       changed_rows = UserAuthToken.where(id: user_token.id, auth_token: token).update_all(auth_token_seen: true)
-      if changed_rows
+      if changed_rows == 1
         # not doing a reload so we don't risk loading a rotated token
         user_token.auth_token_seen = true
       end
