@@ -6,11 +6,11 @@ class TopicList
   cattr_accessor :preloaded_custom_fields
   self.preloaded_custom_fields = Set.new
 
-  def self.on_preload(blk)
+  def self.on_preload(&blk)
     (@preload ||= Set.new) << blk
   end
 
-  def self.cancel_preload(blk)
+  def self.cancel_preload(&blk)
     if @preload
       @preload.delete blk
       if @preload.length == 0
