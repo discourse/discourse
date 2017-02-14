@@ -613,9 +613,9 @@ describe UsersController do
           auth[:authenticator_name] = 'twitter'
           auth[:extra_data] = twitter_auth
 
-          TwitterUserInfo.expects(:create)
-
           post_user
+
+          expect(TwitterUserInfo.count).to eq(1)
         end
       end
     end
