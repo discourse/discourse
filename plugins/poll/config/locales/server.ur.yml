@@ -1,0 +1,43 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-org/
+
+ur:
+  site_settings:
+    poll_enabled: "کیا صارفین کو پول بنانے کی اجازت دی جاے؟"
+    poll_maximum_options: "ایک پول میں رکھے جانے والی آپشنز کی زیادہ سے زیادہ تعداد۔"
+    poll_edit_window_mins: "پوسٹ بنانے کے بعد کتنے منت تک پولز کی ترمیم کی جاسکتی ہے۔"
+  poll:
+    multiple_polls_without_name: "نام کے بغیر ایک سے زیادہ پولزموجود ہیں۔ اپنے پولز کو منفرد شناخت دینے کیلیے '<code>نام</code>' صفت کا استعمال کریں۔"
+    multiple_polls_with_same_name: "ایک ہی نام والے ایک سے زیادہ پولزموجود ہیں: <strong>%{نام}</strong>۔ اپنے پولز کو منفرد شناخت دینے کیلیے '<code>نام</code>' صفت کا استعمال کریں۔"
+    default_poll_must_have_at_least_2_options: "پول کی کم ازکم 2 آپشنز ہونا ضروری ہے۔"
+    named_poll_must_have_at_least_2_options: "پول جس کا نام <strong>%{نام}</strong> ہے، کی کم ازکم 2 آپشنز ہونا ضروری ہے۔"
+    default_poll_must_have_less_options:
+      one: "پول کی 1 سے کم آپشن ہونا ضروری ہے۔"
+      other: "پول کی %{گنتی} سے کم آپشنز ہونا ضروری ہے۔"
+    named_poll_must_have_less_options:
+      one: "پول جس کا نام <strong>%{نام}</strong> ہے، کی 1 سے کم آپشن ہونا ضروری ہے۔"
+      other: "پول جس کا نام <strong>%{نام}</strong> ہے، کی %{count} سے کم آپشنز ہونا ضروری ہے۔"
+    default_poll_must_have_different_options: "پول کی مختلف آپشنز ہونا ضروری ہے۔"
+    named_poll_must_have_different_options: "پول جس کا نام <strong>%{نام}</strong> ہے، کی آپشنز مختلف ہونا ضروری ہے۔"
+    default_poll_with_multiple_choices_has_invalid_parameters: "ایک سے زیادہ انتخاب والے پول کے غلط پیرامیٹرز ہیں۔"
+    named_poll_with_multiple_choices_has_invalid_parameters: "ایک سے زیادہ انتخاب والے پول جس کا نام <strong>%{نام}</strong> ہے، کے غلط پیرامیٹرز ہیں۔"
+    requires_at_least_1_valid_option: "آپ کو کم از کم 1 جائز آپشن منتخب کرنا ضروری ہے۔"
+    default_cannot_be_made_public: "ووٹ کے ساتھ والے پول کو پبلک نہیں کیا جا سکتا۔"
+    named_cannot_be_made_public: "<strong>%{نام}</strong> نام والے پول کے ووٹ ہیں، جو کہ پبلک نہیں کیے جا سکتے۔"
+    edit_window_expired:
+      cannot_change_polls: "آپ پہلے %{منٹ} منٹ بعد پولز میں اضافہ، کمی یا ان کے نام میں تبدیلی نہیں کر سکتے۔"
+      op_cannot_edit_options: "پہلے %{منٹ} منٹ بعد آپ پول کی آپشنز میں اضافہ یا کمی نہیں کر سکتے۔ اگر آپ نے کسی پول آپشن میں ترمیم کرنی ہے تو براہ مہربانی کسی ماڈریٹر سے رابطہ کریں۔"
+      staff_cannot_add_or_remove_options: "پہلے %{منٹ} منٹ بعد آپ پول کی آپشنز میں اضافہ یا کمی نہیں کر سکتے۔ اِس کے بجاے، آپ کو یہ ٹاپک بند کر کہ ایک نیا ٹاپک بنا لینا چاہیے۔"
+    no_polls_associated_with_this_post: "کوئی پول اس پوسٹ کے ساتھ منسلک نہیں ہیں۔"
+    no_poll_with_this_name: "کوئی پول جس کا نام <strong>%{نام}</strong> ہو، اس پوسٹ کے ساتھ منسلک نہیں ہے۔"
+    post_is_deleted: "حذف کر دی گی پوست پر کام نہیں کیا جا سکتا۔"
+    topic_must_be_open_to_vote: "ووٹ کرنے کیلیے ٹاپک کا کھلا ہونا ضروری ہے۔"
+    poll_must_be_open_to_vote: "ووٹ کرنے کیلیے پول کا کھلا ہونا ضروری ہے۔"
+    topic_must_be_open_to_toggle_status: "سٹیٹس بدلنے کیلیے ٹاپک کا کھلا ہونا ضروری ہے۔"
+    only_staff_or_op_can_toggle_status: "صرف عملے کے رکن یا اصل پوسٹر ایک پول کا سٹیٹس تبدیل کر سکتے ہیں۔"
+    email:
+      link_to_poll: "پول دیکھنے کیلیے کلک کریں۔"

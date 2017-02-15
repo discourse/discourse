@@ -2,7 +2,7 @@ import NotificationsButton from 'discourse/components/notifications-button';
 
 export default NotificationsButton.extend({
   classNames: ['notification-options', 'group-notification-menu'],
-  notificationLevel: Em.computed.alias('group.notification_level'),
+  notificationLevel: Em.computed.alias('group.group_user.notification_level'),
   i18nPrefix: 'groups.notifications',
 
   clicked(id) {

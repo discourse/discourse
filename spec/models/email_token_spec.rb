@@ -90,16 +90,6 @@ describe EmailToken do
         expect(user.send_welcome_message).to eq true
       end
 
-      context "when using the code a second time" do
-
-        it "doesn't send the welcome message" do
-          SiteSetting.email_token_grace_period_hours = 1
-          EmailToken.confirm(email_token.token)
-          user = EmailToken.confirm(email_token.token)
-          expect(user.send_welcome_message).to eq false
-        end
-      end
-
     end
 
     context 'success' do
@@ -120,13 +110,7 @@ describe EmailToken do
         expect(email_token).to be_confirmed
       end
 
-      it "can be confirmed again" do
-        EmailToken.stubs(:confirm_valid_after).returns(1.hour.ago)
-
-        expect(EmailToken.confirm(email_token.token)).to eq user
-
-        # Unless `confirm_valid_after` has passed
-        EmailToken.stubs(:confirm_valid_after).returns(1.hour.from_now)
+      it "will not confirm again" do
         expect(EmailToken.confirm(email_token.token)).to be_blank
       end
     end

@@ -3,9 +3,10 @@ import { translateResults, getSearchKey, isValidSearchTerm } from "discourse/lib
 import Composer from 'discourse/models/composer';
 import PreloadStore from 'preload-store';
 import { getTransient, setTransient } from 'discourse/lib/page-tracker';
+import { getOwner } from 'discourse-common/lib/get-owner';
 
 export default Discourse.Route.extend({
-  queryParams: { q: {}, context_id: {}, context: {}, skip_context: {} },
+  queryParams: { q: {}, expanded: false, context_id: {}, context: {}, skip_context: {} },
 
   model(params) {
     const cached = getTransient('lastSearch');
@@ -52,7 +53,7 @@ export default Discourse.Route.extend({
           category = match[1];
         }
       }
-      this.container.lookup('controller:composer').open({action: Composer.CREATE_TOPIC, draftKey: Composer.CREATE_TOPIC, topicCategory: category});
+      getOwner(this).lookup('controller:composer').open({action: Composer.CREATE_TOPIC, draftKey: Composer.CREATE_TOPIC, topicCategory: category});
     }
   }
 

@@ -1,0 +1,7 @@
+{{#d-modal-body title="admin.flags.delete_flag_modal_title"}}
+  <button title="{{i18n 'admin.flags.delete_post_defer_flag_title'}}" {{action "deletePostDeferFlag"}} class="btn"><i class="fa fa-trash-o"></i><i class="fa fa-external-link"></i>{{i18n 'admin.flags.delete_post_defer_flag'}}</button>
+  <button title="{{i18n 'admin.flags.delete_post_agree_flag_title'}}" {{action "deletePostAgreeFlag"}} class="btn"><i class="fa fa-trash-o"></i><i class="fa fa-thumbs-o-up"></i>{{i18n 'admin.flags.delete_post_agree_flag'}}</button>
+  {{#if model.canDeleteAsSpammer}}
+    <button title="{{i18n 'admin.flags.delete_spammer_title'}}" {{action "deleteSpammer" model.user}} class="btn btn-danger"><i class="fa fa-exclamation-triangle"></i>{{i18n 'admin.flags.delete_spammer'}}</button>
+  {{/if}}
+{{/d-modal-body}}

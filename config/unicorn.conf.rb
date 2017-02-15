@@ -168,5 +168,10 @@ after_fork do |server, worker|
   # it may cause issues if bg threads in a v8 isolate randomly stop
   # working due to fork
   Discourse.after_fork
-  PrettyText.cook("warm up **pretty text**")
+
+  begin
+    PrettyText.cook("warm up **pretty text**")
+  rescue => e
+    Rails.logger.error("Failed to warm up pretty text: #{e}")
+  end
 end

@@ -1,6 +1,7 @@
 import { ajax } from 'discourse/lib/ajax';
+
 export default Discourse.Route.extend({
-  model: function() {
+  model() {
     return ajax("/404-body", { dataType: 'html' });
   }
 });

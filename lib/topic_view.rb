@@ -5,11 +5,15 @@ require_dependency 'gaps'
 
 class TopicView
 
-  attr_reader :topic, :posts, :guardian, :filtered_posts, :chunk_size
+  attr_reader :topic, :posts, :guardian, :filtered_posts, :chunk_size, :print
   attr_accessor :draft, :draft_key, :draft_sequence, :user_custom_fields, :post_custom_fields
 
   def self.slow_chunk_size
     10
+  end
+
+  def self.print_chunk_size
+    1000
   end
 
   def self.chunk_size
@@ -37,6 +41,7 @@ class TopicView
     @user = user
     @guardian = Guardian.new(@user)
     @topic = find_topic(topic_id)
+    @print = options[:print].present?
     check_and_raise_exceptions
 
     options.each do |key, value|
@@ -44,7 +49,11 @@ class TopicView
     end
 
     @page = 1 if (!@page || @page.zero?)
-    @chunk_size = options[:slow_platform] ? TopicView.slow_chunk_size : TopicView.chunk_size
+    @chunk_size = case
+                    when options[:slow_platform] then TopicView.slow_chunk_size
+                    when @print then TopicView.print_chunk_size
+                    else TopicView.chunk_size
+                  end
     @limit ||= @chunk_size
 
     setup_filtered_posts
@@ -71,7 +80,7 @@ class TopicView
   end
 
   def canonical_path
-    path = @topic.relative_url
+    path = relative_url
     path << if @post_number
       page = ((@post_number.to_i - 1) / @limit) + 1
       (page > 1) ? "?page=#{page}" : ""
@@ -113,28 +122,32 @@ class TopicView
 
   def prev_page_path
     if prev_page > 1
-      "#{@topic.relative_url}?page=#{prev_page}"
+      "#{relative_url}?page=#{prev_page}"
     else
-      @topic.relative_url
+      relative_url
     end
   end
 
   def next_page_path
-    "#{@topic.relative_url}?page=#{next_page}"
+    "#{relative_url}?page=#{next_page}"
   end
 
   def absolute_url
-    "#{Discourse.base_url}#{@topic.relative_url}"
+    "#{Discourse.base_url}#{relative_url}"
   end
 
   def relative_url
-    @topic.relative_url
+    "#{@topic.relative_url}#{@print ? '/print' : ''}"
   end
 
   def page_title
     title = @topic.title
-    if SiteSetting.topic_page_title_includes_category && @topic.category_id != SiteSetting.uncategorized_category_id && @topic.category_id && @topic.category
-      title += " - #{topic.category.name}"
+    if SiteSetting.topic_page_title_includes_category
+      if @topic.category_id != SiteSetting.uncategorized_category_id && @topic.category_id && @topic.category
+        title += " - #{@topic.category.name}"
+      elsif SiteSetting.tagging_enabled && @topic.tags.exists?
+        title += " - #{@topic.tags.order('tags.topic_count DESC').first.name}"
+      end
     end
     title
   end
@@ -171,8 +184,12 @@ class TopicView
 
   def image_url
     if @post_number.present? && @post_number.to_i != 1 && @desired_post.present?
-      # show poster avatar
-      @desired_post.user.avatar_template_url.gsub("{size}", "100") if @desired_post.user
+      if @desired_post.image_url.present?
+        @desired_post.image_url
+      elsif @desired_post.user
+        # show poster avatar
+        @desired_post.user.avatar_template_url.gsub("{size}", "200")
+      end
     else
       @topic.image_url
     end
@@ -267,7 +284,7 @@ class TopicView
   def participants
     @participants ||= begin
       participants = {}
-      User.where(id: post_counts_by_user.map {|k,v| k}).each {|u| participants[u.id] = u}
+      User.where(id: post_counts_by_user.map {|k,v| k}).includes(:primary_group).each {|u| participants[u.id] = u}
       participants
     end
   end

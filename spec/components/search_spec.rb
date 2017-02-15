@@ -10,7 +10,7 @@ describe Search do
   end
 
   before do
-    ActiveRecord::Base.observers.enable :search_observer
+    SearchIndexer.enable
   end
 
   context 'post indexing observer' do
@@ -323,6 +323,11 @@ describe Search do
     end
   end
 
+  it 'does not tokenize search term' do
+    Fabricate(:post, raw: 'thing is canned should still be found!')
+    expect(Search.execute('canned').posts).to be_present
+  end
+
   context 'categories' do
 
     let!(:category) { Fabricate(:category) }
@@ -527,6 +532,7 @@ describe Search do
       expect(Search.execute('test status:closed').posts.length).to eq(0)
       expect(Search.execute('test status:open').posts.length).to eq(1)
       expect(Search.execute('test posts_count:1').posts.length).to eq(1)
+      expect(Search.execute('test min_post_count:1').posts.length).to eq(1)
 
       topic.closed = true
       topic.save
@@ -574,21 +580,22 @@ describe Search do
       # main category
       category = Fabricate(:category, name: 'category 24', slug: 'category-24')
       topic = Fabricate(:topic, created_at: 3.months.ago, category: category)
-      post = Fabricate(:post, raw: 'hi this is a test 123', topic: topic)
+      post = Fabricate(:post, raw: 'Sams first post', topic: topic)
 
-      expect(Search.execute('this is a test #category-24').posts.length).to eq(1)
-      expect(Search.execute("this is a test category:#{category.id}").posts.length).to eq(1)
-      expect(Search.execute('this is a test #category-25').posts.length).to eq(0)
+      expect(Search.execute('sams post #category-24').posts.length).to eq(1)
+      expect(Search.execute("sams post category:#{category.id}").posts.length).to eq(1)
+      expect(Search.execute('sams post #category-25').posts.length).to eq(0)
 
-      # sub category
       sub_category = Fabricate(:category, name: 'sub category', slug: 'sub-category', parent_category_id: category.id)
       second_topic = Fabricate(:topic, created_at: 3.months.ago, category: sub_category)
-      Fabricate(:post, raw: 'hi testing again 123', topic: second_topic)
+      Fabricate(:post, raw: 'sams second post', topic: second_topic)
 
-      expect(Search.execute('testing again #category-24:sub-category').posts.length).to eq(1)
-      expect(Search.execute("testing again category:#{category.id}").posts.length).to eq(2)
-      expect(Search.execute("testing again category:#{sub_category.id}").posts.length).to eq(1)
-      expect(Search.execute('testing again #sub-category').posts.length).to eq(0)
+      expect(Search.execute("sams post category:category-24").posts.length).to eq(2)
+      expect(Search.execute("sams post category:=category-24").posts.length).to eq(1)
+
+      expect(Search.execute("sams post #category-24").posts.length).to eq(2)
+      expect(Search.execute("sams post #=category-24").posts.length).to eq(1)
+      expect(Search.execute("sams post #sub-category").posts.length).to eq(1)
 
       # tags
       topic.tags = [Fabricate(:tag, name: 'alpha')]

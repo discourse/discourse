@@ -1,5 +1,5 @@
 import { createWidget } from 'discourse/widgets/widget';
-import { iconNode } from 'discourse/helpers/fa-icon';
+import { iconNode } from 'discourse/helpers/fa-icon-node';
 import { h } from 'virtual-dom';
 import { escapeExpression } from 'discourse/lib/utilities';
 

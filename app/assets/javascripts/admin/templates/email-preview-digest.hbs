@@ -1,0 +1,54 @@
+<p>{{i18n 'admin.email.preview_digest_desc'}}</p>
+
+<div class='admin-controls'>
+  <div class='span7 controls'>
+    <label for='last-seen'>{{i18n 'admin.email.last_seen_user'}}</label>
+    {{date-picker-past value=lastSeen id="last-seen"}}
+    <label>{{i18n 'admin.email.user'}}:</label>
+    {{user-selector single="true" usernames=username}}
+    <button class='btn' {{action "refresh"}}>{{i18n 'admin.email.refresh'}}</button>
+    <div class="toggle">
+      <label>{{i18n 'admin.email.format'}}</label>
+      {{#if showHtml}}
+        <span>{{i18n 'admin.email.html'}}</span> | <a href {{action "toggleShowHtml"}}>{{i18n 'admin.email.text'}}</a>
+      {{else}}
+        <a href {{action "toggleShowHtml"}}>{{i18n 'admin.email.html'}}</a> | <span>{{i18n 'admin.email.text'}}</span>
+      {{/if}}
+    </div>
+  </div>
+</div>
+
+{{#conditional-loading-spinner condition=loading}}
+
+<div class="email-preview-digest">
+  {{#if showSendEmailForm}}
+    <br/>
+    <div class="controls">
+      {{#if sendingEmail}}
+        {{i18n 'admin.email.sending_test'}}
+      {{else}}
+        <label>{{i18n 'admin.email.send_digest_label'}}</label>
+        {{text-field value=email placeholderKey="admin.email.test_email_address"}}
+        <button class='btn' {{action "sendEmail"}} disabled={{sendEmailDisabled}}>{{i18n 'admin.email.send_digest'}}</button>
+        {{#if sentEmail}}
+          <span class='result-message'>{{i18n 'admin.email.sent_test'}}</span>
+        {{/if}}
+      {{/if}}
+    </div>
+    <br/>
+  {{/if}}
+
+  <div class="preview-output">
+    {{#if showHtml}}
+      {{#if htmlEmpty}}
+        <p>{{i18n 'admin.email.no_result'}}</p>
+      {{else}}
+        <iframe src="{{iframeSrc}}" />
+      {{/if}}
+    {{else}}
+      <pre>{{{model.text_content}}}</pre>
+    {{/if}}
+  </div>
+</div>
+
+{{/conditional-loading-spinner}}

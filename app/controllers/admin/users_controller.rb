@@ -46,6 +46,7 @@ class Admin::UsersController < Admin::AdminController
   def delete_all_posts
     @user = User.find_by(id: params[:user_id])
     @user.delete_all_posts!(guardian)
+    # staff action logs will have an entry for each post
     render nothing: true
   end
 
@@ -71,8 +72,7 @@ class Admin::UsersController < Admin::AdminController
 
   def log_out
     if @user
-      @user.auth_token = nil
-      @user.save!
+      @user.user_auth_tokens.destroy_all
       @user.logged_out
       render json: success_json
     else
@@ -127,8 +127,8 @@ class Admin::UsersController < Admin::AdminController
     group = Group.find(params[:group_id].to_i)
     return render_json_error group unless group && !group.automatic
 
-    # We don't care about duplicate group assignment
-    group.users << @user rescue ActiveRecord::RecordNotUnique
+    group.add(@user)
+    GroupActionLogger.new(current_user, group).log_add_user_to_group(@user)
 
     render nothing: true
   end
@@ -136,7 +136,8 @@ class Admin::UsersController < Admin::AdminController
   def remove_group
     group = Group.find(params[:group_id].to_i)
     return render_json_error group unless group && !group.automatic
-    group.users.delete(@user)
+    group.remove(@user)
+    GroupActionLogger.new(current_user, group).log_remove_user_from_group(@user)
     render nothing: true
   end
 
@@ -181,6 +182,8 @@ class Admin::UsersController < Admin::AdminController
     @user.trust_level_locked = new_lock == "true"
     @user.save
 
+    StaffActionLogger.new(current_user).log_lock_trust_level(@user)
+
     unless @user.trust_level_locked
       p = Promotion.new(@user)
       2.times{ p.review }
@@ -209,12 +212,14 @@ class Admin::UsersController < Admin::AdminController
   def activate
     guardian.ensure_can_activate!(@user)
     @user.activate
+    StaffActionLogger.new(current_user).log_user_activate(@user, I18n.t('user.activated_by_staff'))
     render json: success_json
   end
 
   def deactivate
     guardian.ensure_can_deactivate!(@user)
     @user.deactivate
+    StaffActionLogger.new(current_user).log_user_deactivate(@user, I18n.t('user.deactivated_by_staff'))
     refresh_browser @user
     render nothing: true
   end

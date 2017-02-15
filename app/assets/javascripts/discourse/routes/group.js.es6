@@ -14,12 +14,6 @@ export default Discourse.Route.extend({
     return { name: model.get('name').toLowerCase() };
   },
 
-  afterModel(model) {
-    return Group.findGroupCounts(model.get('name')).then(counts => {
-      this.set('counts', counts);
-    });
-  },
-
   setupController(controller, model) {
     controller.setProperties({ model, counts: this.get('counts') });
   }

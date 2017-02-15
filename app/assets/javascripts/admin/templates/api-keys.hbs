@@ -1,0 +1,33 @@
+{{#if model}}
+  <table class='api-keys'>
+  <tr>
+    <th>{{i18n 'admin.api.key'}}</th>
+    <th>{{i18n 'admin.api.user'}}</th>
+    <th>&nbsp;</th>
+  </tr>
+  {{#each model as |k|}}
+    <tr>
+      <td class='key'>{{k.key}}</td>
+      <td>
+        {{#if k.user}}
+          {{#link-to 'adminUser' k.user}}
+            {{avatar k.user imageSize="small"}}
+          {{/link-to}}
+        {{else}}
+          {{i18n 'admin.api.all_users'}}
+        {{/if}}
+      </td>
+      <td>
+        {{d-button action="regenerateKey" actionParam=k icon="undo" label='admin.api.regenerate'}}
+        {{d-button action="revokeKey" actionParam=k icon="times" label='admin.api.revoke'}}
+      </td>
+    </tr>
+  {{/each}}
+  </table>
+{{else}}
+  <p>{{i18n 'admin.api.none'}}</p>
+{{/if}}
+
+{{#unless hasMasterKey}}
+  <button class='btn' {{action "generateMasterKey"}}><i class="fa fa-key"></i>{{i18n 'admin.api.generate_master'}}</button>
+{{/unless}}

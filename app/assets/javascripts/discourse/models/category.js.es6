@@ -91,14 +91,18 @@ const Category = RestModel.extend({
         email_in: this.get('email_in'),
         email_in_allow_strangers: this.get('email_in_allow_strangers'),
         parent_category_id: this.get('parent_category_id'),
-        logo_url: this.get('logo_url'),
-        background_url: this.get('background_url'),
+        uploaded_logo_id: this.get('uploaded_logo.id'),
+        uploaded_background_id: this.get('uploaded_background.id'),
         allow_badges: this.get('allow_badges'),
         custom_fields: this.get('custom_fields'),
         topic_template: this.get('topic_template'),
         suppress_from_homepage: this.get('suppress_from_homepage'),
+        all_topics_wiki: this.get('all_topics_wiki'),
         allowed_tags: this.get('allowed_tags'),
-        allowed_tag_groups: this.get('allowed_tag_groups')
+        allowed_tag_groups: this.get('allowed_tag_groups'),
+        sort_order: this.get('sort_order'),
+        sort_ascending: this.get('sort_ascending'),
+        topic_featured_link_allowed: this.get('topic_featured_link_allowed')
       },
       type: id ? 'PUT' : 'POST'
     });

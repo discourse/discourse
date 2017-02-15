@@ -29,6 +29,7 @@ class UserUpdater
     :digest_after_minutes,
     :new_topic_duration_minutes,
     :auto_track_topics_after_msecs,
+    :notification_level_when_replying,
     :email_previous_replies,
     :email_in_reply_to,
     :like_notification_frequency,
@@ -53,6 +54,7 @@ class UserUpdater
 
     user.name = attributes.fetch(:name) { user.name }
     user.locale = attributes.fetch(:locale) { user.locale }
+    user.date_of_birth = attributes.fetch(:date_of_birth) { user.date_of_birth }
 
     if guardian.can_grant_title?(user)
       user.title = attributes.fetch(:title) { user.title }
@@ -68,14 +70,13 @@ class UserUpdater
       TagUser.batch_set(user, level, attributes[attribute])
     end
 
-
     save_options = false
 
     OPTION_ATTR.each do |attribute|
       if attributes.key?(attribute)
         save_options = true
 
-        if [true,false].include?(user.user_option.send(attribute))
+        if [true, false].include?(user.user_option.send(attribute))
           val = attributes[attribute].to_s == 'true'
           user.user_option.send("#{attribute}=", val)
         else
@@ -83,6 +84,9 @@ class UserUpdater
         end
       end
     end
+
+    # automatically disable digests when mailing_list_mode is enabled
+    user.user_option.email_digests = false if user.user_option.mailing_list_mode
 
     fields = attributes[:custom_fields]
     if fields.present?
@@ -94,7 +98,9 @@ class UserUpdater
         update_muted_users(attributes[:muted_usernames])
       end
 
-      (!save_options || user.user_option.save) && user_profile.save && user.save
+      saved = (!save_options || user.user_option.save) && user_profile.save && user.save
+      DiscourseEvent.trigger(:user_updated, user) if saved
+      saved
     end
   end
 

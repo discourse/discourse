@@ -26,6 +26,7 @@ ko:
         millions: "{{number}}백만"
     dates:
       time: "a h:mm"
+      timeline_date: "YYYY MMM"
       long_no_year: "M D a h:mm"
       long_no_year_no_time: "MMM D"
       full_no_year_no_time: "MMMM Do"
@@ -91,9 +92,13 @@ ko:
       google+: 'Google+로 공유'
       email: '이메일로 공유'
     action_codes:
+      public_topic: "이 토픽을 %{when} 에 공개"
+      private_topic: "이 토픽을 %{when} 에 비공개"
       split_topic: "이 주제를 ${when} 분리"
       invited_user: "%{who}이(가) %{when}에 초대됨"
+      invited_group: "%{who} 이(가) %{when} 에 초대됨"
       removed_user: "%{who}이(가) %{when}에 삭제됨"
+      removed_group: "%{who}이(가) %{when}에 삭제됨"
       autoclosed:
         enabled: '%{when}에 닫힘'
         disabled: '%{when}에 열림'
@@ -113,7 +118,10 @@ ko:
         enabled: '%{when} 목록에 게시'
         disabled: '%{when} 목록에서 감춤'
     topic_admin_menu: "주제 관리자 기능"
+    wizard_required: "포럼을 설정하세요! <a href='%{url}' data-auto-route='true'>설치 마법사를 시작하세요</a>!"
     emails_are_disabled: "관리자가 이메일 송신을 전체 비활성화 했습니다. 어떤 종류의 이메일 알림도 보내지지 않습니다."
+    bootstrap_mode_enabled: "쉬운 시작을 위해 부트스트랩 모드로 구동 되었습니다. 모든 새로운 사용자에게 신뢰 수준 1이 부여되고 매일 이메일 다이제스트가 보내집니다. 이 기능은 총 사용자 수가% {min_users} 를 초과 할 때 자동으로 꺼집니다."
+    bootstrap_mode_disabled: "부트스트랩 모드는 24시간 뒤 비활성화 될 것입니다."
     s3:
       regions:
         us_east_1: "미국 동부 (N. 버지니아)"
@@ -124,9 +132,11 @@ ko:
         eu_central_1: "유럽연합 (프랑크푸르트)"
         ap_southeast_1: "아시아 태평양 (싱가폴)"
         ap_southeast_2: "아시아 태평양 (시드니)"
+        ap_south_1: "아시아 태평양 (뭄바이)"
         ap_northeast_1: "아시아 태평양 (토쿄)"
         ap_northeast_2: "아시아 태평양 (서울)"
         sa_east_1: "남 아메리카 (상파울로)"
+        cn_north_1: "중국 (북경)"
     edit: '이 주제의 제목과 카테고리 편집'
     not_implemented: "죄송합니다. 아직 사용할 수 없는 기능입니다."
     no_value: "아니오"
@@ -222,6 +232,8 @@ ko:
     undo: "실행 취소"
     revert: "되돌리기"
     failed: "실패"
+    switch_to_anon: "익명 모드 들어가기"
+    switch_from_anon: "익명 모드 나가기"
     banner:
       close: "배너 닫기"
       edit: "이 배너 수정 >>"
@@ -283,13 +295,28 @@ ko:
       posts_read_long: "게시글 읽음"
       total_rows:
         other: "%{count} 사용자"
+    group_histories:
+      actions:
+        change_group_setting: "그룹 설정 변경"
+        add_user_to_group: "사용자 추가"
+        remove_user_from_group: "사용자 삭제"
     groups:
-      empty:
-        posts: "이 그룹의 구성원에 의해 작성된 게시물은 없습니다."
-        members: "이 그룹에는 구성원이 없습니다."
-        mentions: "이 그룹에 대한 언급이 없습니다."
-        messages: "이 그룹에 대한 메시지는 없습니다."
-        topics: "이 그룹의 구성원에 의해 작성된 주제글이 없습니다."
+      logs:
+        title: "로그"
+        when: "언제"
+        action: "액션"
+        subject: "주제"
+        from: "부터"
+        to: "까지"
+      edit:
+        title: '그룹 편집'
+        full_name: '전체 이름'
+        add_members: "구성원 추가"
+        delete_member_confirm: "'%{username}'를 '%{group}' 그룹에서 삭제하겠습니까?"
+      request_membership_pm:
+        title: "멤버십 요청"
+        body: "@%{groupName} 에 멤버십을 요청합니다."
+      name_placeholder: "그룹 이름, 공백 없이 username 규칙과 동일하게 입력하세요."
       add: "추가"
       selector_placeholder: "멤버 추가"
       owner: "소유자"
@@ -357,6 +384,8 @@ ko:
       latest_by: "가장 최근"
       toggle_ordering: "정렬 컨트롤 토글"
       subcategories: "하위 카테고리"
+      topic_sentence:
+        other: "%{count}개의 주제"
       topic_stat_sentence:
         other: "지난 %{unit} 동안 %{count}개의 새로운 주제가 있습니다."
     ip_lookup:
@@ -381,7 +410,6 @@ ko:
       profile: "프로필"
       mute: "알림 끄기"
       edit: "환경 설정 편집"
-      download_archive: "내 게시글 다운로드"
       new_private_message: "새로운 메시지"
       private_message: "메시지"
       private_messages: "메시지"
@@ -403,6 +431,7 @@ ko:
         disable: "알림 비활성화"
         enable: "알림 활성화"
         each_browser_note: "노트: 사용하시는 모든 브라우저에서 이 설정을 변경해야합니다."
+      dismiss_notifications: "모두 해지"
       dismiss_notifications_tooltip: "읽지 않은 알림을 모두 읽음으로 표시"
       disable_jump_reply: "댓글을 작성했을 때, 새로 작성한 댓글로 화면을 이동하지 않습니다."
       dynamic_favicon: "새 글이나 업데이트된 글 수를 브라우저 아이콘에 보이기"
@@ -418,6 +447,16 @@ ko:
       suspended_reason: "이유: "
       github_profile: "Github"
       email_activity_summary: "활동 요약"
+      mailing_list_mode:
+        label: "메일링 리스트 모드"
+        enabled: "메일링 리스트 모드 활성화"
+        individual: "모든 새로운 게시글에 대해 메일을 보내주세요."
+        few_per_day: "모든 새로운 게시글에 대해 메일을 보내주세요 (하루에 약 2개)."
+      tag_settings: "태그"
+      watched_tags: "지켜보기"
+      tracked_tags: "추적하기"
+      muted_tags: "알람 끄기"
+      muted_tags_instructions: "이 태그의 새 주제에 대해 어떠한 알림도 받을 수 없으며, 최근의 주제도 나타나지 않습니다."
       watched_categories: "지켜보기"
       tracked_categories: "추적하기"
       muted_categories: "알림 끄기"
@@ -433,6 +472,7 @@ ko:
       muted_users_instructions: "이 회원이 보낸 알림 모두 숨김"
       muted_topics_link: "알림을 끈 주제 보기"
       automatically_unpin_topics: "글 끝에 다다르면 자동으로 주제 고정을 해제합니다."
+      api_approved: "승인됨:"
       staff_counters:
         flags_given: "유용한 신고"
         flagged_posts: "신고된 글"
@@ -599,13 +639,9 @@ ko:
         account_age_days: "일일 계정 나이"
         create: "이 포럼에 친구를 초대하기"
         generate_link: "초대 링크 복사"
-        generated_link_message: '<p>초대 링크가 성공적으로 생성되었습니다!</p><p><input class="invite-link-input" style="width: 75%;" type="text" value="%{inviteLink}"></p><p>초대 링크는 다음 이메일에 한해 유효합니다: <b>%{invitedEmail}</b></p>'
         bulk_invite:
-          none: "아직 아무도 초대하지 않았습니다. 초대장을 각각 보내거나, <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>uploading a bulk invite file</a>을 이용하여 단체 초대를 보낼 수 있습니다."
           text: "파일로 대량 초대하기"
-          uploading: "업로드 중..."
           success: "파일이 성공적으로 업로드되었습니다. 완료되면 메시지로 알려드리겠습니다."
-          error: "'{{filename}}': {{message}} 업로드중 에러가 있었습니다."
       password:
         title: "비밀번호"
         too_short: "암호가 너무 짧습니다."
@@ -627,8 +663,10 @@ ko:
         likes_received:
           other: "받음"
         top_replies: "인기 댓글"
+        no_replies: "아직 답글이 없습니다."
         more_replies: "답글 더 보기"
         top_topics: "인기 주제"
+        no_topics: "아직 주제가 없습니다."
         more_topics: "주제 더 보기"
         top_badges: "인기 배지"
         no_badges: "아직 배지가 없습니다."
@@ -740,13 +778,13 @@ ko:
       complete_email_not_found: "<b>%{email}</b>과 일치하는 계정이 없습니다."
     login:
       title: "로그인"
-      username: "사용자"
+      username: "아이디"
       password: "비밀번호"
-      email_placeholder: "이메일 주소 또는 사용자 이름"
+      email_placeholder: "이메일 주소 또는 아이디"
       caps_lock_warning: "Caps Lock 켜짐"
       error: "알 수없는 오류"
       rate_limit: "다시 로그인 하기전에 잠시만 기다려주세요."
-      blank_username_or_password: "이메일 또는 사용자명과 비밀번호를 입력해 주세요."
+      blank_username_or_password: "이메일 또는 아이디, 비밀번호를 입력해 주세요."
       reset_password: '암호 재설정'
       logging_in: "로그인 중.."
       or: "또는"
@@ -930,7 +968,6 @@ ko:
       title: "주제, 글, 사용자, 카테고리 검색"
       no_results: "검색 결과가 없습니다"
       no_more_results: "더 이상 결과가 없습니다."
-      search_help: 검색 도움말
       searching: "검색중..."
       post_format: "#{{post_number}} by {{username}}"
       context:
@@ -1219,7 +1256,6 @@ ko:
     post:
       reply: "<i class='fa fa-mail-forward'></i> {{replyAvatar}} {{usernameLink}}"
       reply_topic: "<i class='fa fa-mail-forward'></i> {{link}}"
-      quote_reply: "인용한 답글"
       edit: "{{link}} {{replyAvatar}} {{username}} 편집"
       edit_reason: "Reason: "
       post_number: "{{number}}번째 글"
@@ -1249,7 +1285,6 @@ ko:
         edit: "죄송합니다. 글을 수정하는 중에 오류가 발생했습니다. 다시 시도하십시오."
         upload: "죄송합니다. 파일을 업로드하는 동안 오류가 발생했습니다. 다시 시도하십시오."
         too_many_uploads: "한번에 한 파일만 업로드 하실 수 있습니다."
-        upload_not_authorized: "업로드 하시려는 파일 확장자는 사용이 불가능합니다 (사용가능 확장자: {{authorized_extensions}})."
         image_upload_not_allowed_for_new_user: "죄송합니다. 새로운 유저는 이미지를 업로드 하실 수 없습니다."
         attachment_upload_not_allowed_for_new_user: "죄송합니다. 새로운 유저는 파일 첨부를 업로드 하실 수 없습니다."
         attachment_download_requires_login: "죄송합니다. 첨부 파일을 받으려면 로그인이 필요합니다."
@@ -1496,7 +1531,6 @@ ko:
     views_lowercase:
       other: "조회"
     replies: "답변"
-    views_long: "이 주제는 {{number}}번 읽혔습니다."
     activity: "활동"
     likes: "좋아요"
     likes_lowercase:
@@ -1627,8 +1661,6 @@ ko:
         backups: "백업"
         traffic_short: "트래픽"
         traffic: "어플리케이션 웹 요청"
-        page_views: "API 요청"
-        page_views_short: "API 응답"
         show_traffic_report: "자세한 트래픽 리포트 보기"
         reports:
           today: "오늘"
@@ -1712,15 +1744,12 @@ ko:
         refresh: "새로고침"
         new: "새로운"
         selector_placeholder: "아이디를 입력하세요"
-        name_placeholder: "그룹 이름, 사용자 이름처럼 빈칸 없이 작성"
         about: "회원과 이름을 변경"
         group_members: "그룹 멤버"
         delete: "삭제"
         delete_confirm: "이 그룹을 삭제 하시겠습니까?"
         delete_failed: "이것은 자동으로 생성된 그룹입니다. 삭제할 수 없습니다."
-        delete_member_confirm: "'%{group}' 그룹에서 '%{username}'을 제외시키겠습니까?"
         delete_owner_confirm: "'%{username}' 님에게서 소유자권한을 제거할까요?"
-        name: "이름"
         add: "추가"
         add_members: "사용자 추가하기"
         custom: "Custom"
@@ -1807,10 +1836,8 @@ ko:
             title: "데이터베이스를 이전 workiong state로 되돌리기"
             confirm: "데이타베이스를 이전 상태로 롤백 또는 되돌리기 할까요?"
       export_csv:
-        user_archive_confirm: "정말로 내 글을 다운로드 받습니까?"
         success: "Export initiated, you will be notified via message when the process is complete."
         failed: "내보내기가 실패했습니다. 로그를 확인해주세요"
-        rate_limit_error: "글은 하루에 한번 다운로드 받을 수 있습니다. 내일 다시 시도해주십시요."
         button_text: "내보니기"
         button_title:
           user: "모든 사용자 목록을 CSV 형식으로 내보내기"
@@ -1958,7 +1985,7 @@ ko:
           none: "로그가 없습니다."
           filters:
             title: "필터"
-            user_placeholder: "사용자명"
+            user_placeholder: "아이디"
             address_placeholder: "name@example.com"
             type_placeholder: "다이제스트, 가입..."
             reply_key_placeholder: "답글 키"
@@ -1981,7 +2008,7 @@ ko:
           do_nothing: "아무것도 하지 않음"
         staff_actions:
           title: "스태프 기록"
-          instructions: "사용자 이름을 클릭하여 목록에서 차단하십시오. 프로필 사진을 클릭하여 사용자 페이지로 갑니다."
+          instructions: "사용자 아이디을 클릭하여 목록에서 차단하십시오. 프로필 사진을 클릭하여 사용자 페이지로 갑니다."
           clear_filters: "전체 보기"
           staff_user: "스태프 사용자"
           target_user: "타겟 사용자"

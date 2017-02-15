@@ -5,7 +5,7 @@ export default Ember.Controller.extend({
   queryParams: ['username'],
   noMoreBadges: false,
   userBadges: null,
-  needs: ["application"],
+  application: Ember.inject.controller(),
 
   @computed('username')
   user(username) {
@@ -55,7 +55,7 @@ export default Ember.Controller.extend({
 
   @observes('canLoadMore')
   _showFooter() {
-    this.set("controllers.application.showFooter", !this.get("canLoadMore"));
+    this.set("application.showFooter", !this.get("canLoadMore"));
   }
 
 });

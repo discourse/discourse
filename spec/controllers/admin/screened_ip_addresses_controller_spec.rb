@@ -16,10 +16,15 @@ describe Admin::ScreenedIpAddressesController do
       Fabricate(:screened_ip_address, ip_address: "1.2.3.6")
       Fabricate(:screened_ip_address, ip_address: "4.5.6.7")
 
-      xhr :get, :index, filter: "4.*"
+      xhr :get, :index, filter: "1.2.*"
 
       expect(response).to be_success
+      result = JSON.parse(response.body)
+      expect(result.length).to eq(3)
 
+      xhr :get, :index, filter: "4.5.6.7"
+
+      expect(response).to be_success
       result = JSON.parse(response.body)
       expect(result.length).to eq(1)
     end

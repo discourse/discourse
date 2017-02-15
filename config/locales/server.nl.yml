@@ -32,14 +32,15 @@ nl:
   purge_reason: "Automatisch verwijderd, account gedeactiveerd."
   disable_remote_images_download_reason: "Het downloaden van plaatjes is uitgeschakeld omdat er niet genoeg schijfruimte beschikbaar is."
   anonymous: "Anoniem"
+  remove_posts_deleted_by_author: "Verwijderd door gebruiker"
   emails:
     incoming:
-      default_subject: "Inkomende email van %{email}"
+      default_subject: "Dit topic heeft een titel nodig"
       show_trimmed_content: "Toon getrimde inhoud"
       maximum_staged_user_per_email_reached: "Het maximum aantal staged gebruikers dat per e-mail kan worden aangemaakt is bereikt."
       errors:
-        empty_email_error: "Gebeurt wanneer de mail die wij ontvangen hebben leeg is."
-        no_message_id_error: "Gebeurt wanneer de mail geen 'Message-Id' header heeft."
+        empty_email_error: "Gebeurt wanneer de e-mail die wij ontvangen hebben leeg is."
+        no_message_id_error: "Gebeurt wanneer de e-mail geen 'Message-Id' header heeft."
         auto_generated_email_error: "Gebeurt wanneer de 'voorrang' header is ingesteld op: lijst, ongewenst, bulk of auto_reply, of wanneer een andere header het volgende bevat: auto-submitted, auto-replied of auto-generated."
         no_body_detected_error: "Gebeurt wanneer er geen body uit de mail gehaald kan worden, en er geen bijlagen gevonden worden."
         inactive_user_error: "Gebeurt wanneer de afzender niet actief is."
@@ -71,7 +72,9 @@ nl:
       has_already_been_used: "is al gebruikt"
       inclusion: komt niet voor in de lijst
       invalid: is ongeldig
-      is_invalid: "is ongeldig; probeer een betere omschrijving"
+      is_invalid: "lijkt onduidelijk, is het een volledige zin?"
+      contains_censored_words: "bevat de volgende gecensureerde woorden: %{censored_words}"
+      matches_censored_pattern: "bevat de volgende woorden die met de gecensureerde regexp van de website overeenkomen: %{censored_words}"
       less_than: moet minder zijn dan %{count}
       less_than_or_equal_to: moet minder zijn dan of gelijk zijn aan %{count}
       not_a_number: is niet een getal
@@ -105,12 +108,19 @@ nl:
       max_username_length_range: "Je kan het maximum niet lager instellen dan het minimun."
       default_categories_already_selected: "Je kan geen categorie selecteren die wordt gebruikt in een andere lijst."
       s3_upload_bucket_is_required: "U kunt niet de uploads van de S3 toestaan totdat u de 's3_upload_bucket' hebt verleend."
+  invite:
+    accept_invite: "Uitnodiging accepteren"
+    not_found: "Uw uitnodigingstoken is ongeldig. Neem contact op met de beheerder van de website."
   bulk_invite:
-    file_should_be_csv: "Het bestand moet in csv- of txt-formaat zijn."
+    file_should_be_csv: "Het geüploade bestand moet in csv-formaat zijn."
+    error: "Er trad een fout op tijdens het uploaden van dat bestand. Probeer het later nog eens."
+  topic_invite:
+    user_exists: "Sorry, die gebruiker is al uitgenodigd. Je kan een gebruiker maar een keer voor een topic uitnodigen."
   backup:
     operation_already_running: "Er wordt al een opdracht uitgevoerd. Kan nu niet een nieuwe opdracht starten."
     backup_file_should_be_tar_gz: "Het backupbestand moet een .tar.gz archief zijn."
     not_enough_space_on_disk: "Er is niet voldoende ruimte op de schijf vrij om deze backup te uploaden."
+    invalid_filename: "De naam van het backup-bestand bevat ongeldige tekens. Geldige tekens zijn a-z 0-9 . - _."
   not_logged_in: "Om dat te kunnen doen moet je ingelogd zijn."
   not_found: "De opgevraagde URL of resource kan niet gevonden worden."
   invalid_access: "Je hebt geen permissie om de opgevraagde resource te bekijken."
@@ -123,6 +133,8 @@ nl:
   embed:
     start_discussion: "Reageer"
     continue: "Ga verder met de discussie"
+    error: "Fout bij embedden"
+    configure: "Configureer Embedden"
     more_replies:
       one: "Nog 1 reactie"
       other: "Nog %{count} reacties"
@@ -158,7 +170,7 @@ nl:
   topic_not_found: "Er is iets fout gegaan. Wellicht is het topic gesloten of verwijderd terwijl je er naar keek?"
   just_posted_that: "lijkt teveel op het bericht dat je net geschreven hebt"
   invalid_characters: "bevat ongeldige tekens"
-  is_invalid: "is niet geldig; probeer het iets beter te omschrijven"
+  is_invalid: "lijkt onduidelijk, is het een volledige zin?"
   next_page: "volgende pagina →"
   prev_page: "← vorige pagina"
   page_num: "Pagina %{num}"
@@ -269,6 +281,7 @@ nl:
         name: "Naam categorie"
       topic:
         title: 'Titel'
+        featured_link: 'Uitgelichte link'
       post:
         raw: "Inhoud"
       user_profile:
@@ -282,18 +295,29 @@ nl:
               too_many_users: "Je kunt een waarschuwing per keer slechts naar één ander lid sturen."
               cant_send_pm: "Sorry, je kan geen privébericht sturen naar deze persoon."
               no_user_selected: "Je moet een geldige gebruiker selecteren."
+            featured_link:
+              invalid: "is ongeldig. URL moet http:// of https:// bevatten."
+              invalid_category: "kan niet worden gewijzigd in deze categorie."
         user:
           attributes:
             password:
               common: "is een van de 10000 meest gebruikte wachtwoorden. Gebruik een veiliger wachtwoord."
               same_as_username: "is hetzelfde als je gebruikersnaam. Gebruik een veiliger wachtwoord."
-              same_as_email: "is hetzelfde als je email. Gebruik een veiliger wachtwoord."
+              same_as_email: "is hetzelfde als je e-mailadres. Gebruik een veiliger wachtwoord."
+              same_as_current: "is hetzelfde als je huidige wachtwoord."
             ip_address:
               signup_not_allowed: "Inschrijven vanaf dit account is niet toegestaan."
         color_scheme_color:
           attributes:
             hex:
               invalid: "is niet een geldige kleur"
+        post_reply:
+          base:
+            different_topic: "Het bericht en antwoord moeten bij hetzelfde topic horen."
+        web_hook:
+          attributes:
+            payload_url:
+              invalid: "De URL is ongeldig. URL's moeten http:// of https:// bevatten. En een leeg veld is niet toegestaan."
       <<: *errors
   user_profile:
     no_info_me: "<div class='missing-profile'>Het Over Mij-profielveld is nog leeg, <a href='/users/%{username_lower}/preferences/about-me'>zou je deze willen invullen?</a></div>"
@@ -305,6 +329,8 @@ nl:
   staff_category_name: "Staf"
   staff_category_description: "Privécategorie voor stafgesprekken. Topics zijn alleen zichtbaar voor admins en moderatoren."
   assets_topic_body: "Dit is een permanent topic, dat alleen zichtbaar is voor de staf, en dient als opslag voor afbeeldingen en documenten die worden gebruikt in het design van de site . Gooi deze niet weg!\n\n\nHoe het werkt:\n\n\n1. Antwoord op dit topic.\n2. Upload hier alle afbeeldingen die je wenst te gebruiken als logo's, favicons enzovoort. (Gebruik het upload icoon in de toolbar, sleep afbeeldingen, of plak afbeeldingen.)\n3. Verzend je bericht om het te posten.\n4. Klik met de rechtermuisknop op de afbeeldingen in je nieuwe bericht om het pad naar de geüploade afbeelding te verkrijgen, of klik het bewerken icoon om je bericht te wijzigen en zo het pad naar de afbeeldingen te verkrijgen. Kopieer het pad naar de afbeeldingen.\n5. Plak deze paden naar de afbeeldingen in [basic settings](/admin/site_settings/category/required).\n\n\nAls je andere bestandstypen wilt kunnen uploaden, moet je dit instellen in `authorized_extensions` in de [file settings](/admin/site_settings/category/files)."
+  discourse_welcome_topic:
+    title: "Welkom bij Discourse"
   lounge_welcome:
     title: "Welkom in de Lounge"
     body: |2
@@ -470,6 +496,7 @@ nl:
     please_continue: "Ga verder naar %{site_name}"
     error: "Er ging iets mis bij het wijzigen van je e-mailadres. Wellicht is deze al in gebruik?"
     error_staged: "Er ging iets mis bij het wijzigen van je e-mailadres. Het adres is reeds in gebruik door een staged gebruiker."
+    already_done: "Sorry, de bevestigingslink is niet langer geldig. Misschien is je e-mail al veranderd?"
     authorizing_old:
       title: "Dank voor het bevestigen van je e-mailadres"
       description: "We sturen nu ter bevestiging een e-mail naar je nieuwe adres."
@@ -480,6 +507,7 @@ nl:
     continue_button: "Ga verder naar %{site_name}"
     welcome_to: "Welkom bij %{site_name}!"
     approval_required: "Een moderator moet je nieuwe account handmatig activeren voordat je toegang krijgt tot dit forum. Je krijgt een e-mail van ons wanneer je account is goedgekeurd!"
+    missing_session: "We kunnen niet vaststellen of je account is aangemaakt, wees er alsjeblieft zeker van dat je cookies accepteert."
   post_action_types:
     off_topic:
       title: 'Off-topic'
@@ -519,6 +547,9 @@ nl:
       title: 'Stem'
       description: 'Stem op dit bericht'
       long_form: 'heeft op dit bericht gestemd'
+  user_activity:
+    no_bookmarks:
+      self: "Je hebt geen favoriete berichten, als favoriet gemarkeerde berichten kun je later makkelijk terugvinden."
   topic_flag_types:
     spam:
       title: 'Spam'
@@ -633,19 +664,27 @@ nl:
     page_view_anon_reqs:
       title: "Anoniem"
       xaxis: "Dag"
+      yaxis: "Anonieme paginaweergaven"
     page_view_logged_in_reqs:
       title: "Ingelogd"
       xaxis: "Dag"
+      yaxis: "Ingelogde paginaweergaven"
     page_view_crawler_reqs:
       title: "Web Crawlers"
       xaxis: "Dag"
+      yaxis: "Web Crawler paginaweergaven"
     page_view_total_reqs:
       title: "Totaal"
       xaxis: "Dag"
+      yaxis: "Totaal paginaweergaven"
     page_view_logged_in_mobile_reqs:
+      title: "Ingelogde paginaweergaven"
       xaxis: "Dag"
+      yaxis: "Mobiele ingelogde paginaweergaven"
     page_view_anon_mobile_reqs:
+      title: "Anonieme paginaweergaven"
       xaxis: "Dag"
+      yaxis: "Mobiele anonieme paginaweergaven"
     http_background_reqs:
       title: "Achtergrond"
       xaxis: "Dag"
@@ -697,14 +736,6 @@ nl:
     s3_backup_config_warning: 'De server is geconfigureerd om backups naar s3 toe te staan, maar op zijn minst een van de volgende instellingen is niet ingesteld: s3_access_key_id, s3_secret_access_key of s3_backup_bucket. Ga naar <a href="/admin/site_settings">de Site Instellingen</a> en stel deze in. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Bekijk "How to set up image uploads to S3?" voor meer informatie</a>.'
     image_magick_warning: 'De server is geconfigureerd om thumbnails te maken van grote afbeeldingen, maar ImageMagick is niet geïnstalleerd. Installeer ImageMagick met je favoriete package manager of <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">download de laatste release</a>.'
     failing_emails_warning: 'Er zijn %{num_failed_jobs} e-mail jobs mislukt. Controleer in app.yml of de e-mailserver instelling correct zijn. <a href="/sidekiq/retries" target="_blank">Toon de mislukte jobs in Sidekiq</a>.'
-    default_logo_warning: "Stel de grafische logos voor je site in. Stel logo_url, logo_small_url, en favicon_url in in <a href='/admin/site_settings'>Site Instellingen</a>."
-    contact_email_missing: "Vul een site contact email adres in zodat je te bereiken bent voor dringende zaken aangaande je site. Stel deze in via <a href='/admin/site_settings'>Site Instellingen</a>."
-    contact_email_invalid: "De site contact email is ongeldig. Verander deze in <a href='/admin/site_settings'>Site Instellingen</a>."
-    title_nag: "Vul de naam van je site in. Verander titel in <a href='/admin/site_settings'>Site Instellingen</a>."
-    site_description_missing: "Vul een omschrijving in van een regel over je site welke tevoorschijn zal komen in zoekresultaten. Verander site_description in <a href='/admin/site_settings'>Site Instellingen</a>."
-    consumer_email_warning: "Je site is ingesteld om Gmail te gebruiken voor het versturen van mails. <a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>Gmail heeft limieten voor het aantal mails dat je kan versturen</a>. Overweeg om een andere e-mailprovider te gebruiken om er zeker van te zijn dat mails aankomen."
-    site_contact_username_warning: "Vul de naam in van een vriendelijke staf gebruikersaccount om belangrijke geautomatiseerde berichten vandaan te verzenden. Verander site_contact_username in <a href='/admin/site_settings'>Site Instellingen</a>."
-    notification_email_warning: "Notificatie e-mails worden niet verzonden van een geldig email-adres op je domein; email bezorging zal onberekenbaar en onbetrouwbaar zijn. Verander a.u.b. notification_email naar een geldig lokaal email adres in <a href='/admin/site_settings'>Site Instellingen</a>."
     subfolder_ends_in_slash: "Je submap setup is onjuist; de DISCOURSE_RELATIVE_URL_ROOT eindigt in een schuine streep."
   site_settings:
     censored_words: "Woorden welke automatisch vervangen zullen worden met &#9632;&#9632;&#9632;&#9632;"
@@ -746,12 +777,11 @@ nl:
     exclude_rel_nofollow_domains: "Een lijst van domeinen waar ´nofollow´ niet aan de links moet worden toegevoegd. (voorbeelddomein.com staat automatisch sub.voorbeelddomein toe). Voeg minimaal het 'top-level' domein van deze site toe om web crawlers alle content te laten vinden. Als delen van deze site zich op andere domeinen bevinden, voeg deze eveneens toe."
     post_excerpt_maxlength: "Maximale lengte van een uittreksel / samenvatting van een bericht."
     post_onebox_maxlength: "Maximale lengte van een 'oneboxed Discourse' bericht in tekens."
-    onebox_domains_whitelist: "Een lijst met domeinen waarvoor oneboxing is toegestaan; deze domeinen moeten OpenGraph of oEmbed ondersteunen. Dit kun je testen op http://iframely.com/debug"
     logo_url: "De logo afbeelding links bovenaan je site moet de vorm hebben van een brede rechthoek. Indien leeg wordt de site titeltekst getoond."
     logo_small_url: "De kleine logo afbeelding links boven aan je site moet de vorm van een vierkant hebben en wordt getoond als naar beneden wordt gescrold. Indien leeg wordt een homepage symbool getoond."
     favicon_url: "Een favicon voor je site, zie http://nl.wikipedia.org/wiki/Favicon. Voor een correcte werking via CDN moet het een png zijn."
     mobile_logo_url: "De logo afbeelding met vaste positie voor linksboven op je mobiele site. De afbeelding moet vierkant zijn. Indien leeg wordt `logo_url` gebruikt. Bijv.: http://example.com/uploads/default/logo.png"
-    apple_touch_icon_url: "Icoon voor Apple touch devices. Aanbevolen grootte is 144px bij 144px."
+    apple_touch_icon_url: "Pictogram voor Apple touch-apparaten. Aanbevolen grootte is 144px bij 144px."
     notification_email: "Het afzender email adres dat wordt gebruikt voor het verzenden van alle essentiële systeem emails. Voor het domein dat hier gespecificeerd is moeten de SPF, DKIM en reverse PTR records goed ingesteld zijn om de mails te doen aankomen."
     email_custom_headers: "Een lijst van custom email headers, gescheiden door een pipe (|)"
     email_subject: "Wijzigbaar onderwerp formaat voor standaard emails. Bekijk https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801 voor meer informatie"
@@ -800,9 +830,7 @@ nl:
     top_page_default_timeframe: "Standaard tijdspanne voor de top overzicht pagina."
     show_email_on_profile: "Laat e-mail van gebruikers zien in hun profiel (alleen zichtbaar voor henzelf en staf)"
     email_token_valid_hours: "Wachtwoord vergeten / activeer account tokens zijn (n) uur geldig."
-    email_token_grace_period_hours: "Wachtwoord vergeten / activeer account tokens zijn nog geldig gedurende een respijtperiode van (n) uur na het benutten."
     enable_badges: "Activeer het badgesysteem"
-    enable_whispers: "Sta private communicatie tussen medewerkers toe in een topic. (experimenteel)"
     allow_index_in_robots_txt: "Specificeer in robots.txt dat de site geïndexeerd mag worden door zoekmachines."
     email_domains_blacklist: "Een lijst van e-maildomeinen gescheiden door een vertikaal streepje (pipe), die niet worden toegestaan. Voorbeeld: mailingen.com|trashmail.net"
     email_domains_whitelist: "Een lijst van e-maildomeinen gescheiden door een vertikaal streepje (pipe), die zijn voorgeschreven om te worden toegelaten. WAARSCHUWING: Gebruikers met andere e-maildomeinen dan opgenomen in de lijst worden NIET toegelaten."
@@ -1029,7 +1057,6 @@ nl:
     embed_whitelist_selector: "CSS-selector voor de elementen die zijn toegestaan in invoegberichten."
     embed_blacklist_selector: "CSS-selector voor de elementen die zijn verwijderd uit invoegberichten."
     notify_about_flags_after: "Als er vlaggen zijn die nog niet zijn afgehandeld na dit aantal uren, stuur dan een e-mail naar de contact_email. Zet op 0 om uit te schakelen."
-    enable_cdn_js_debugging: "Laat /logs juiste errors weergeven door crossorigin toestemmingen toe te voegen op alle js includes."
     show_create_topics_notice: "Als de site minder dan 5 publieke topics heeft, toon dan een melding waarin admins gevraagd wordt om een aantal topics te creëren."
     delete_drafts_older_than_n_days: Verwijder concepten ouder dan (n) dagen.
     prevent_anons_from_downloading_files: "Voorkom dat anonieme gebruikers bijlagen mogen downloaden. WAARSCHUWING: hierdoor zullen website onderdelen, anders dan afbeeldingen, die zijn gepost als bijlage niet langer werken."
@@ -1047,7 +1074,7 @@ nl:
     default_other_auto_track_topics_after_msecs: "Globale standaard tijdbestek voordat een onderwerp automatisch wordt bijgehouden."
     default_other_external_links_in_new_tab: "Open externe links standaard in een nieuw tabblad."
     default_other_enable_quoting: "Citeer antwoord standaard inschakelen voor gemarkeerde tekst."
-    default_other_dynamic_favicon: "Toon standaard een teller van nieuwe/bijgewerkte topics op browser icoon."
+    default_other_dynamic_favicon: "Standaard teller voor nieuwe/bijgewerkte topics op browserpictogram tonen"
     default_other_disable_jump_reply: "Spring standaard niet naar de gebruiker post nadat ze hebben geantwoord."
     default_other_like_notification_frequency: "Stuur gebruikers standaard een bericht bij een like"
     default_topics_automatic_unpin: "Standaard automatisch topics ontpinnen wanneer de gebruiker het einde van de pagina heeft bereikt."
@@ -1236,21 +1263,43 @@ nl:
     welcome_invite:
       subject_template: "Welkom bij %{site_name}!"
     backup_succeeded:
+      title: "Backup Geslaagd"
       subject_template: "Backup succesvol uitgevoerd"
     backup_failed:
+      title: "Backup Mislukt"
       subject_template: "Backup mislukt"
     restore_succeeded:
+      title: "Terugzetten van backup geslaagd"
       subject_template: "Het terugzetten van de backup is geslaagd."
     restore_failed:
+      title: "Terugzetten van backup mislukt"
       subject_template: "Terugzetten van backup is mislukt"
     bulk_invite_succeeded:
+      title: "Bulk Uitnodiging Geslaagd"
       subject_template: "Massale uitnodiging aan gebruikers met succes verwerkt"
       text_body_template: "Je bestand voor een massale uitnodiging aan gebruikers is verwerkt. Er zijn %{sent} uitnodigingen verstuurd."
     bulk_invite_failed:
+      title: "Groepsuitnodiging Mislukt"
       subject_template: "Massale uitnodiging aan gebruikers verwerkt, met fouten"
+      text_body_template: |
+        Je bestand met gebruikers uitnodigingen is verwerkt, %{sent} uitnodigingen zijn verzonden met %{failed} fout(en).
+
+        Verslag:
+
+        ```
+        %{logs}
+        ```
     csv_export_succeeded:
+      title: "CSV Export Geslaagd"
       subject_template: "Export succesvol afgerond."
+      text_body_template: |
+        Data export was succesvol!:dvd:
+
+        <a class="attachment" href="%{download_link}">%{file_name}</a> (%{file_size})
+
+        Bovenstaande download link is 48 uur geldig.
     csv_export_failed:
+      title: "CSV Export Mislukt"
       subject_template: "Export mislukt"
       text_body_template: "Het spijt ons, maar de export is mislukt. Bekijk de logbestanden of neem contact op met de staf."
     email_reject_insufficient_trust_level:
@@ -1268,7 +1317,6 @@ nl:
 
         Het account dat bij dit e-mailadres hoort, is geblokkeerd.
     email_reject_reply_user_not_matching:
-      subject_template: "[%{site_name}] E-mailprobleem -- Reagerende gebruiker komt niet overeen"
       text_body_template: |
         Het spijt ons, maar het plaatsen van je e-mail op %{destination} (met onderwerp %{former_title}) is niet gelukt.
 
@@ -1290,7 +1338,6 @@ nl:
 
 
     email_reject_parsing:
-      subject_template: "[%{site_name}] E-mailprobleem -- Inhoud niet herkend"
       text_body_template: |
         Het spijt ons, maar het plaatsen van je e-mail op %{destination} (met onderwerp %{former_title}) is niet gelukt.
 
@@ -1341,8 +1388,23 @@ nl:
       subject_template: "[%{site_name}] E-mailprobleem -- Automatisch gegenereerde reactie"
     email_error_notification:
       subject_template: "[%{site_name}] Email probleem -- POP authenticatie fout"
+    blocked_by_staff:
+      subject_template: "Account tijdelijk geblokkeerd"
+    user_automatically_blocked:
+      title: "Gebruiker Automatisch Geblokkeerd"
+      subject_template: "Nieuwe gebruiker %{username} geblokkeerd wegens meldingen van andere gebruikers"
     spam_post_blocked:
+      title: "Spam bericht geblokkeerd"
       subject_template: "Berichten van nieuwe gebruiker %{username} geblokkeerd vanwege herhaalde links"
+    unblocked:
+      title: "Gedeblokkeerd"
+      subject_template: "Account niet langer geblokkeerd"
+      text_body_template: |
+        Hallo,
+
+        Dit is een automatisch bericht van %{site_name} om je te informeren dat de staff naar je account hebben gekeken en je account is nu niet langer geblokkeerd.
+
+        Je kan weer nieuwe topics beginnen en reageren op bestaande topics. Bedankt voor je geduld.
     pending_users_reminder:
       subject_template:
         one: "1 gebruiker wacht op goedkeuring"
@@ -1353,6 +1415,8 @@ nl:
         [Beoordeel deze gebruikers in het admingedeelte](/admin/users/list/pending).
     download_remote_images_disabled:
       subject_template: "Het downloaden van externe afbeeldingen is uitgeschakeld"
+    dashboard_problems:
+      title: "Dashboard Problemen"
   subject_re: "Re:"
   subject_pm: "[PM]"
   user_notifications:
@@ -1376,13 +1440,7 @@ nl:
       subject_template: "[%{site_name}] [PM] %{topic_title}"
     digest:
       why: "Een korte samenvatting van %{site_link} sinds we je voor het laatst zagen op %{last_seen_at}."
-      new_activity: "Nieuwe reacties op je topics en berichten:"
-      top_topics: "Populaire berichten"
-      other_new_topics: "Populaire topics"
       click_here: "klik hier"
-      read_more: "Lees verder"
-      more_topics: "Er waren %{new_topics_since_seen} andere nieuwe topics gepost."
-      more_topics_category: "Meer nieuwe topics:"
     forgot_password:
       subject_template: "[%{site_name}] Wachtwoord herstellen"
       text_body_template: |
@@ -1515,6 +1573,34 @@ nl:
     initial_topic_title: Performancerapportages van de website
   topic_invite:
     user_exists: "Sorry, die gebruiker is al uitgenodigd. Je kan een gebruiker maar een keer voor een topic uitnodigen."
+  safe_mode:
+    no_customizations: "Alle website-aanpassingen uitschakelen"
+    only_official: "Niet-officiële plug-ins uitschakelen"
+    no_plugins: "Alle plug-ins uitschakelen"
+  wizard:
+    step:
+      forum_title:
+        title: "Naam"
+      icons:
+        title: "Pictogrammen"
+        fields:
+          favicon_url:
+            label: "Klein pictogram"
+          apple_touch_icon_url:
+            label: "Groot pictogram"
+      homepage:
+        fields:
+          homepage_style:
+            choices:
+              categories:
+                label: "Categorieën"
+      invites:
+        description: "Je bent bijna klaar! Nodig wat stafleden uit om te helpen met <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>het starten van discussies</a> met interessante topics en berichten om je gemeenschap op te zetten."
+      finished:
+        title: "Je Discourse staat klaar!"
+        description: |
+          <p>Als u deze instellingen ooit wilt wijzigen, bezoek dan <a href='/admin' target='_blank'>uw beheersectie</a>; deze vindt u naast het moersleutelpictogram in het websitemenu.</p>
+          <p>Veel plezier, en succes met <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'>het opbouwen van uw nieuwe gemeenschap!</a></p>
   activemodel:
     errors:
       <<: *errors

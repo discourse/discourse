@@ -18,6 +18,10 @@ end
 #  link             :string
 #  created_at       :datetime         not null
 #  updated_at       :datetime         not null
+#  avatar_url       :string
+#  about_me         :text
+#  location         :string
+#  website          :text
 #
 # Indexes
 #

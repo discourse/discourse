@@ -9,6 +9,7 @@ zh_CN:
   site_settings:
     poll_enabled: "允许用户创建投票？"
     poll_maximum_options: "投票允许的最大选项数。"
+    poll_edit_window_mins: "投票创建后多少分钟内可以编辑？"
   poll:
     multiple_polls_without_name: "有多个投票没有名字。使用“<code>name</code>”属性区分各投票。"
     multiple_polls_with_same_name: "有多个投票的名字相同：<strong>%{name}</strong>。使用“<code>name</code>”属性区分各投票。"
@@ -25,6 +26,10 @@ zh_CN:
     requires_at_least_1_valid_option: "你必须选择至少 1 个有效的选项。"
     default_cannot_be_made_public: "投票调查不能公开。"
     named_cannot_be_made_public: "投票“<strong>%{name}</strong>”有投票不能公开。"
+    edit_window_expired:
+      cannot_change_polls: "在创建话题%{minutes}分钟后，你不可以增加、删除或者重命名该投票。"
+      op_cannot_edit_options: "在创建话题%{minutes}分钟后，你不可以增加、删除投票选项。如果你需要修改投票选项，请联系管理员。"
+      staff_cannot_add_or_remove_options: "在创建话题%{minutes}分钟后，你不能增加或者删除投票选项。你可以选择删除该话题然后重新创建一个。"
     no_polls_associated_with_this_post: "这个帖子中没有投票。"
     no_poll_with_this_name: "投票“<strong>%{name}</strong>”没有被关联到帖子。"
     post_is_deleted: "帖子已经删除，无法操作。"

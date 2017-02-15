@@ -1,0 +1,7 @@
+fi:
+  js:
+    details:
+      title: Yhteenveto
+    composer:
+      details_title: Yhteenveto
+      details_text: "Tämä teksti piilotetaan otsikon alle."

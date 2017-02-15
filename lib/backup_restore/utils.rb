@@ -1,14 +1,16 @@
+require 'open3'
+
 module BackupRestore
   module Utils
-    def execute_command(command, failure_message = "")
-      output = `#{command} 2>&1`
+    def execute_command(*command, failure_message: "")
+      stdout, stderr, status = Open3.capture3(*command)
 
-      if !$?.success?
+      if !status.success?
         failure_message = "#{failure_message}\n" if !failure_message.blank?
-        raise "#{failure_message}#{output}"
+        raise "#{failure_message}#{stderr}"
       end
 
-      output
+      stdout
     end
 
     def pretty_logs(logs)

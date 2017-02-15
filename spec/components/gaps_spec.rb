@@ -3,7 +3,6 @@ require 'cache'
 
 describe Gaps do
 
-
   it 'returns no gaps for empty data' do
     expect(Gaps.new(nil, nil)).to be_blank
   end

@@ -17,9 +17,9 @@ module FileStore
       store_file(file, path, filename: upload.original_filename, content_type: content_type, cache_locally: true)
     end
 
-    def store_optimized_image(file, optimized_image)
+    def store_optimized_image(file, optimized_image, content_type = nil)
       path = get_path_for_optimized_image(optimized_image)
-      store_file(file, path)
+      store_file(file, path, content_type: content_type)
     end
 
     # options
@@ -27,16 +27,16 @@ module FileStore
     #   - content_type
     #   - cache_locally
     def store_file(file, path, opts={})
-      filename     = opts[:filename].presence
-      content_type = opts[:content_type].presence
+      filename = opts[:filename].presence || File.basename(path)
       # cache file locally when needed
       cache_file(file, File.basename(path)) if opts[:cache_locally]
       # stored uploaded are public by default
-      options = { acl: "public-read" }
+      options = {
+        acl: "public-read",
+        content_type: opts[:content_type].presence || Rack::Mime.mime_type(File.extname(filename))
+      }
       # add a "content disposition" header for "attachments"
-      options[:content_disposition] = "attachment; filename=\"#{filename}\"" if filename && !FileHelper.is_image?(filename)
-      # add a "content type" header when provided
-      options[:content_type] = content_type if content_type
+      options[:content_disposition] = "attachment; filename=\"#{filename}\"" unless FileHelper.is_image?(filename)
       # if this fails, it will throw an exception
       path = @s3_helper.upload(file, path, options)
       # return the upload url

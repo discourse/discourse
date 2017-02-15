@@ -21,7 +21,7 @@ class TopicRetriever
       return false if @opts[:no_throttle]
 
       # Throttle other users to once every 60 seconds
-      retrieved_key = "retrieved:#{@embed_url}"
+      retrieved_key = "retrieved_topic"
       if $redis.setnx(retrieved_key, "1")
         $redis.expire(retrieved_key, 60)
         return false

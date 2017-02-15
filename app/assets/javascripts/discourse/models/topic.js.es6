@@ -120,7 +120,7 @@ const Topic = RestModel.extend({
     const categoryName = this.get('categoryName');
     let category;
     if (categoryName) {
-      category = Discourse.Category.list().findProperty('name', categoryName);
+      category = Discourse.Category.list().findBy('name', categoryName);
     }
     this.set('category', category);
   }.observes('categoryName'),
@@ -133,6 +133,11 @@ const Topic = RestModel.extend({
     const user = Discourse.User.current();
     return this.get('url') + (user ? '?u=' + user.get('username_lower') : '');
   }.property('url'),
+
+  @computed('url')
+  printUrl(url) {
+    return url + '/print';
+  },
 
   url: function() {
     let slug = this.get('slug') || '';
@@ -208,7 +213,7 @@ const Topic = RestModel.extend({
   }.property('views'),
 
   archetypeObject: function() {
-    return Discourse.Site.currentProp('archetypes').findProperty('id', this.get('archetype'));
+    return Discourse.Site.currentProp('archetypes').findBy('id', this.get('archetype'));
   }.property('archetype'),
 
   isPrivateMessage: Em.computed.equal('archetype', 'private_message'),
@@ -551,7 +556,6 @@ Topic.reopenClass({
       opts.userFilters.forEach(function(username) {
         data.username_filters.push(username);
       });
-      data.show_deleted = true;
     }
 
     // Add the summary of filter if we have it

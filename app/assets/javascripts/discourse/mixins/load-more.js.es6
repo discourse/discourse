@@ -3,7 +3,7 @@ import Scrolling from 'discourse/mixins/scrolling';
 import { on } from 'ember-addons/ember-computed-decorators';
 
 // Provides the ability to load more items for a view which is scrolled to the bottom.
-export default Ember.Mixin.create(Ember.ViewTargetActionSupport, Scrolling, {
+export default Ember.Mixin.create(Scrolling, {
 
   scrolled() {
     const eyeline = this.get('eyeline');

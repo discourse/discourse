@@ -30,6 +30,8 @@ InviteRedeemer = Struct.new(:invite, :username, :name) do
     available_name = name || available_username
 
     user = User.new(email: invite.email, username: available_username, name: available_name, active: true, trust_level: SiteSetting.default_invitee_trust_level)
+
+    user.moderator = true if invite.moderator? && invite.invited_by.staff?
     user.save!
 
     user

@@ -5,6 +5,16 @@ describe Validators::PostValidator do
   let(:post) { build(:post) }
   let(:validator) { Validators::PostValidator.new({}) }
 
+  context "when empty raw can bypass post body validation" do
+    let(:validator) { Validators::PostValidator.new(skip_post_body: true) }
+
+    it "should be allowed for empty raw based on site setting" do
+      post.raw = ""
+      validator.post_body_validator(post)
+      expect(post.errors).to be_empty
+    end
+  end
+
   context "stripped_length" do
     it "adds an error for short raw" do
       post.raw = "abc"

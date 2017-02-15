@@ -1,7 +1,9 @@
-{{bread-crumbs categories=categories}}
+{{#d-section bodyClass="navigation-topics" scrollTop="false"}}
+  {{bread-crumbs categories=categories}}
 
-{{navigation-bar navItems=navItems filterMode=filterMode}}
+  {{navigation-bar navItems=navItems filterMode=filterMode}}
 
-{{#if canCreateTopic}}
-  <button id="create-topic" class='btn btn-default' {{action "createTopic"}}><i class='fa fa-plus'></i>{{i18n 'topic.create'}}</button>
-{{/if}}
+  {{#if canCreateTopic}}
+    <button id="create-topic" class='btn btn-default' {{action "createTopic"}}><i class='fa fa-plus'></i>{{i18n 'topic.create'}}</button>
+  {{/if}}
+{{/d-section}}

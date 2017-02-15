@@ -1,6 +1,8 @@
 require_dependency 'discourse_hub'
 require_dependency 'user_name_suggester'
 require_dependency 'rate_limiter'
+require_dependency 'wizard'
+require_dependency 'wizard/builder'
 
 class UsersController < ApplicationController
 
@@ -33,7 +35,11 @@ class UsersController < ApplicationController
   def show
     raise Discourse::InvalidAccess if SiteSetting.hide_user_profiles_from_public && !current_user
 
-    @user = fetch_user_from_params(include_inactive: current_user.try(:staff?))
+    @user = fetch_user_from_params(
+      { include_inactive: current_user.try(:staff?) },
+      [{ user_profile: :card_image_badge }]
+    )
+
     user_serializer = UserSerializer.new(@user, scope: guardian, root: 'user')
 
     # TODO remove this options from serializer
@@ -146,7 +152,7 @@ class UsersController < ApplicationController
     user = fetch_user_from_params
     guardian.ensure_can_edit!(user)
 
-    report = TopicTrackingState.report(user.id)
+    report = TopicTrackingState.report(user)
     serializer = ActiveModel::ArraySerializer.new(report, each_serializer: TopicTrackingStateSerializer)
 
     render json: MultiJson.dump(serializer)
@@ -236,11 +242,20 @@ class UsersController < ApplicationController
     usernames -= groups
     usernames.each(&:downcase!)
 
+    # Create a New Topic Scenario is not supported (per conversation with codinghorror)
+    # https://meta.discourse.org/t/taking-another-1-7-release-task/51986/7
+    cannot_see = []
+    topic_id = params[:topic_id]
+    unless topic_id.blank?
+      topic = Topic.find_by(id: topic_id)
+      usernames.each{ |username| cannot_see.push(username) unless Guardian.new(User.find_by_username(username)).can_see?(topic) }
+    end
+
     result = User.where(staged: false)
                  .where(username_lower: usernames)
                  .pluck(:username_lower)
 
-    render json: {valid: result, valid_groups: groups, mentionable_groups: mentionable_groups}
+    render json: {valid: result, valid_groups: groups, mentionable_groups: mentionable_groups, cannot_see: cannot_see}
   end
 
   def render_available_true
@@ -374,22 +389,22 @@ class UsersController < ApplicationController
   def password_reset
     expires_now
 
-    if EmailToken.valid_token_format?(params[:token])
+    token = params[:token]
+
+    if EmailToken.valid_token_format?(token)
       if request.put?
-        @user = EmailToken.confirm(params[:token])
+        @user = EmailToken.confirm(token)
       else
-        email_token = EmailToken.confirmable(params[:token])
+        email_token = EmailToken.confirmable(token)
         @user = email_token.try(:user)
       end
 
       if @user
-        session["password-#{params[:token]}"] = @user.id
+        secure_session["password-#{token}"] = @user.id
       else
-        user_id = session["password-#{params[:token]}"]
-        @user = User.find(user_id) if user_id
+        user_id = secure_session["password-#{token}"].to_i
+        @user = User.find(user_id) if user_id > 0
       end
-    else
-      @invalid_token = true
     end
 
     if !@user
@@ -402,14 +417,47 @@ class UsersController < ApplicationController
       else
         @user.password = params[:password]
         @user.password_required!
-        @user.auth_token = nil
+        @user.user_auth_tokens.destroy_all
         if @user.save
           Invite.invalidate_for_email(@user.email) # invite link can't be used to log in anymore
+          secure_session["password-#{token}"] = nil
           logon_after_password_reset
         end
       end
     end
-    render layout: 'no_ember'
+
+    respond_to do |format|
+      format.html do
+        if @error
+          render layout: 'no_ember'
+        else
+          store_preloaded("password_reset", MultiJson.dump({ is_developer: UsernameCheckerService.is_developer?(@user.email) }))
+        end
+        return redirect_to(wizard_path) if Wizard.user_requires_completion?(@user)
+      end
+
+      format.json do
+        if request.put?
+          if @error || @user&.errors&.any?
+            render json: {
+              success: false,
+              message: @error,
+              errors: @user&.errors&.to_hash,
+              is_developer: UsernameCheckerService.is_developer?(@user.email)
+            }
+          else
+            render json: {
+              success: true,
+              message: @success,
+              requires_approval: !Guardian.new(@user).can_access_forum?,
+              redirect_to: Wizard.user_requires_completion?(@user) ? wizard_path : nil
+            }
+          end
+        else
+          render json: {is_developer: UsernameCheckerService.is_developer?(@user.email)}
+        end
+      end
+    end
   end
 
   def confirm_email_token
@@ -502,6 +550,7 @@ class UsersController < ApplicationController
       if Guardian.new(@user).can_access_forum?
         @user.enqueue_welcome_message('welcome_user') if @user.send_welcome_message
         log_on_user(@user)
+        return redirect_to(wizard_path) if Wizard.user_requires_completion?(@user)
       else
         @needs_approval = true
       end
@@ -538,7 +587,17 @@ class UsersController < ApplicationController
     topic_id = topic_id.to_i if topic_id
     topic_allowed_users = params[:topic_allowed_users] || false
 
-    results = UserSearch.new(term, topic_id: topic_id, topic_allowed_users: topic_allowed_users, searching_user: current_user).search
+    if params[:group].present?
+      @group = Group.find_by(name: params[:group])
+    end
+
+
+    results = UserSearch.new(term,
+                             topic_id: topic_id,
+                             topic_allowed_users: topic_allowed_users,
+                             searching_user: current_user,
+                             group: @group
+                            ).search
 
     user_fields = [:username, :upload_avatar_template]
     user_fields << :name if SiteSetting.enable_names?
@@ -547,7 +606,7 @@ class UsersController < ApplicationController
 
     if params[:include_groups] == "true"
       to_render[:groups] = Group.search_group(term).map do |m|
-        {name: m.name, usernames: []}
+        { name: m.name, full_name: m.full_name }
       end
     end
 
@@ -555,7 +614,7 @@ class UsersController < ApplicationController
       to_render[:groups] = Group.mentionable(current_user)
                                 .where("name ILIKE :term_like", term_like: "#{term}%")
                                 .map do |m|
-        {name: m.name, usernames: []}
+        { name: m.name, full_name: m.full_name }
       end
     end
 
@@ -652,7 +711,7 @@ class UsersController < ApplicationController
   private
 
     def honeypot_value
-      Digest::SHA1::hexdigest("#{Discourse.current_hostname}:#{Discourse::Application.config.secret_token}")[0,15]
+      Digest::SHA1::hexdigest("#{Discourse.current_hostname}:#{GlobalSetting.safe_secret_key_base}")[0,15]
     end
 
     def challenge_value
@@ -687,7 +746,7 @@ class UsersController < ApplicationController
     end
 
     def user_params
-      result = params.permit(:name, :email, :password, :username)
+      result = params.permit(:name, :email, :password, :username, :date_of_birth)
                      .merge(ip_address: request.remote_ip,
                             registration_ip_address: request.remote_ip,
                             locale: user_locale)

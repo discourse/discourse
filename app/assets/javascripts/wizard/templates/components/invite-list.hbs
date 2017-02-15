@@ -1,0 +1,20 @@
+
+{{#if users}}
+<div class="users-list">
+  {{#each users as |user|}}
+    {{invite-list-user user=user roles=roles removeUser="removeUser"}}
+  {{/each}}
+</div>
+{{/if}}
+
+<div class="new-user">
+  <div class="text-field {{if invalid 'invalid'}}">
+    {{input class="invite-email wizard-focusable" value=inviteEmail placeholder="user@example.com" tabindex="9"}}
+  </div>
+
+  {{combo-box value=inviteRole content=roles nameProperty="label" width="200px"}}
+
+  <button class="wizard-btn small add-user" {{action "addUser"}}>
+    {{fa-icon "plus"}}{{i18n "wizard.invites.add_user"}}
+  </button>
+</div>

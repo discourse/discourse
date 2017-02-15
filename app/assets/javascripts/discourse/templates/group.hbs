@@ -1,27 +1,47 @@
-<div class="container user-table">
-  <div class="wrapper">
-  <section class='user-navigation'>
-    <ul class='action-list nav-stacked'>
-      {{#each getTabs as |tab|}}
-        <li class="{{if tab.active 'active'}}">
-          {{#link-to tab.location model title=tab.message}}
-            {{tab.message}}
-            {{#if tab.count}}<span class='count'>({{tab.count}})</span>{{/if}}
-          {{/link-to}}
-        </li>
-      {{/each}}
-    </ul>
-  </section>
+<div class="container group">
+  <div class='group-details-container'>
+    <div class='group-info'>
+      {{#if model.flair_url}}
+        <span class='group-avatar-flair'>
+          {{avatar-flair
+            flairURL=model.flair_url
+            flairBgColor=model.flair_bg_color
+            flairColor=model.flair_color
+            groupName=model.name}}
+        </span>
+      {{/if}}
 
-  <section class='user-main'>
-    <section class='user-right groups'>
-      <section class='about group'>
-        <div class='details'>
-          <h1>{{model.name}}</h1>
+      <span>
+        <span class='group-info-name'>{{groupName}}</span>
+
+        <div>
+          {{#if model.full_name}}<span class='group-info-full-name'>{{model.name}}</span>{{/if}}
         </div>
-      </section>
-      {{outlet}}
-    </section>
-  </section>
+      </span>
+    </div>
+
+    {{#if model.bio_cooked}}
+      <hr/>
+
+      <div class='group-bio'>
+        <p>{{{model.bio_cooked}}}</p>
+      </div>
+    {{/if}}
+  </div>
+
+  {{#mobile-nav class='group-nav' desktopClass="nav nav-pills" currentPath=application.currentPath}}
+    {{#each getTabs as |tab|}}
+      <li>
+        {{#link-to tab.location model title=tab.message}}
+          {{#if tab.icon}}{{fa-icon tab.icon}}{{/if}}
+          {{tab.message}}
+          {{#if tab.count}}<span class='count'>({{tab.count}})</span>{{/if}}
+        {{/link-to}}
+      </li>
+    {{/each}}
+  {{/mobile-nav}}
+
+  <div class='group-outlet'>
+    {{outlet}}
   </div>
 </div>

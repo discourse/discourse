@@ -1,0 +1,15 @@
+<label for={{field.id}}>
+  <span class='label-value'>{{field.label}}</span>
+
+  {{#if field.description}}
+    <div class='field-description'>{{{field.description}}}</div>
+  {{/if}}
+</label>
+
+<div class='input-area'>
+  {{component inputComponentName field=field step=step fieldClass=fieldClass wizard=wizard}}
+</div>
+
+{{#if field.errorDescription}}
+  <div class='field-error-description'>{{field.errorDescription}}</div>
+{{/if}}

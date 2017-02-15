@@ -32,7 +32,8 @@ module SiteSettingExtension
                         url_list: 9,
                         host_list: 10,
                         category_list: 11,
-                        value_list: 12)
+                        value_list: 12,
+                        regex: 13)
   end
 
   def mutex
@@ -348,12 +349,9 @@ module SiteSettingExtension
   end
 
   def filter_value(name, value)
-    # filter domain name
-    if %w[disabled_image_download_domains onebox_domains_whitelist exclude_rel_nofollow_domains email_domains_blacklist email_domains_whitelist white_listed_spam_host_domains].include? name
+    if %w[disabled_image_download_domains onebox_domains_blacklist exclude_rel_nofollow_domains email_domains_blacklist email_domains_whitelist white_listed_spam_host_domains].include? name
       domain_array = []
-      value.split('|').each { |url|
-        domain_array.push(get_hostname(url))
-      }
+      value.split('|').each { |url| domain_array << get_hostname(url) }
       value = domain_array.join("|")
     end
     value
@@ -446,7 +444,8 @@ module SiteSettingExtension
       types[:fixnum] => IntegerSettingValidator,
       types[:string] => StringSettingValidator,
       'list' => StringSettingValidator,
-      'enum' => StringSettingValidator
+      'enum' => StringSettingValidator,
+      'regex' => RegexSettingValidator
     }
     @validator_mapping[type_name]
   end

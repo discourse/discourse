@@ -128,7 +128,7 @@ class PostsController < ApplicationController
     end
 
     guardian.ensure_can_see!(post)
-    redirect_to post.url
+    redirect_to path(post.url)
   end
 
   def create
@@ -467,7 +467,7 @@ class PostsController < ApplicationController
       json_obj = json_obj[:post]
     end
 
-    if !success && GlobalSetting.try(:verbose_api_logging) && is_api?
+    if !success && GlobalSetting.try(:verbose_api_logging) && (is_api? || is_user_api?)
       Rails.logger.error "Error creating post via API:\n\n#{json_obj.inspect}"
     end
 
@@ -574,7 +574,6 @@ class PostsController < ApplicationController
 
     end
 
-    params.require(:raw)
     result = params.permit(*permitted).tap do |whitelisted|
       whitelisted[:image_sizes] = params[:image_sizes]
       # TODO this does not feel right, we should name what meta_data is allowed

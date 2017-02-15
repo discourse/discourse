@@ -5,22 +5,19 @@ describe DiscourseEvent do
 
   describe "#events" do
     it "defaults to {}" do
-      DiscourseEvent.instance_variable_set(:@events, nil)
-      expect(DiscourseEvent.events).to eq({})
+      begin
+        original_events = DiscourseEvent.events
+        DiscourseEvent.instance_variable_set(:@events, nil)
+        expect(DiscourseEvent.events).to eq({})
+      ensure
+        DiscourseEvent.instance_variable_set(:@events, original_events)
+      end
     end
 
     describe "key value" do
       it "defaults to an empty set" do
         expect(DiscourseEvent.events["event42"]).to eq(Set.new)
       end
-    end
-  end
-
-  describe ".clear" do
-    it "clears out events" do
-      DiscourseEvent.events["event42"] << "test event"
-      DiscourseEvent.clear
-      expect(DiscourseEvent.events).to be_empty
     end
   end
 

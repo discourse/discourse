@@ -97,6 +97,7 @@ module Discourse
     set
   end
 
+
   def self.activate_plugins!
     all_plugins = Plugin::Instance.find_all("#{Rails.root}/plugins")
 
@@ -112,30 +113,24 @@ module Discourse
     end
   end
 
-  def self.last_read_only
-    @last_read_only ||= {}
-  end
-
-  def self.recently_readonly?
-    read_only = last_read_only[$redis.namespace]
-    return false unless read_only
-    read_only > 15.seconds.ago
-  end
-
-  def self.received_readonly!
-    last_read_only[$redis.namespace] = Time.zone.now
-  end
-
-  def self.clear_readonly!
-    last_read_only[$redis.namespace] = nil
-  end
-
   def self.disabled_plugin_names
     plugins.select { |p| !p.enabled? }.map(&:name)
   end
 
   def self.plugins
     @plugins ||= []
+  end
+
+  def self.plugin_themes
+    @plugin_themes ||= plugins.map(&:themes).flatten
+  end
+
+  def self.official_plugins
+    plugins.find_all{|p| p.metadata.official?}
+  end
+
+  def self.unofficial_plugins
+    plugins.find_all{|p| !p.metadata.official?}
   end
 
   def self.assets_digest
@@ -201,41 +196,66 @@ module Discourse
     base_url_no_prefix + base_uri
   end
 
-  READONLY_MODE_KEY_TTL ||= 60
-  READONLY_MODE_KEY ||= 'readonly_mode'.freeze
+  READONLY_MODE_KEY_TTL  ||= 60
+  READONLY_MODE_KEY      ||= 'readonly_mode'.freeze
+  PG_READONLY_MODE_KEY   ||= 'readonly_mode:postgres'.freeze
   USER_READONLY_MODE_KEY ||= 'readonly_mode:user'.freeze
 
-  def self.enable_readonly_mode(user_enabled: false)
-    if user_enabled
-      $redis.set(USER_READONLY_MODE_KEY, 1)
+  READONLY_KEYS ||= [
+    READONLY_MODE_KEY,
+    PG_READONLY_MODE_KEY,
+    USER_READONLY_MODE_KEY
+  ]
+
+  def self.enable_readonly_mode(key = READONLY_MODE_KEY)
+    if key == USER_READONLY_MODE_KEY
+      $redis.set(key, 1)
     else
-      $redis.setex(READONLY_MODE_KEY, READONLY_MODE_KEY_TTL, 1)
-      keep_readonly_mode
+      $redis.setex(key, READONLY_MODE_KEY_TTL, 1)
+      keep_readonly_mode(key)
     end
 
     MessageBus.publish(readonly_channel, true)
     true
   end
 
-  def self.keep_readonly_mode
+  def self.keep_readonly_mode(key)
     # extend the expiry by 1 minute every 30 seconds
-    Thread.new do
-      while readonly_mode?
-        $redis.expire(READONLY_MODE_KEY, READONLY_MODE_KEY_TTL)
-        sleep 30.seconds
+    unless Rails.env.test?
+      Thread.new do
+        while readonly_mode?
+          $redis.expire(key, READONLY_MODE_KEY_TTL)
+          sleep 30.seconds
+        end
       end
     end
   end
 
-  def self.disable_readonly_mode(user_enabled: false)
-    key = user_enabled ? USER_READONLY_MODE_KEY : READONLY_MODE_KEY
+  def self.disable_readonly_mode(key = READONLY_MODE_KEY)
     $redis.del(key)
     MessageBus.publish(readonly_channel, false)
     true
   end
 
   def self.readonly_mode?
-    recently_readonly? || !!$redis.get(READONLY_MODE_KEY) || !!$redis.get(USER_READONLY_MODE_KEY)
+    recently_readonly? || READONLY_KEYS.any? { |key| !!$redis.get(key) }
+  end
+
+  def self.last_read_only
+    @last_read_only ||= {}
+  end
+
+  def self.recently_readonly?
+    return false unless read_only = last_read_only[$redis.namespace]
+    read_only > 15.seconds.ago
+  end
+
+  def self.received_readonly!
+    last_read_only[$redis.namespace] = Time.zone.now
+  end
+
+  def self.clear_readonly!
+    last_read_only[$redis.namespace] = nil
   end
 
   def self.request_refresh!
@@ -328,6 +348,9 @@ module Discourse
 
     # in case v8 was initialized we want to make sure it is nil
     PrettyText.reset_context
+
+    Tilt::ES6ModuleTranspilerTemplate.reset_context if defined? Tilt::ES6ModuleTranspilerTemplate
+    JsLocaleHelper.reset_context if defined? JsLocaleHelper
     nil
   end
 
@@ -357,9 +380,11 @@ module Discourse
     end
   end
 
+  SIDEKIQ_NAMESPACE ||= 'sidekiq'.freeze
+
   def self.sidekiq_redis_config
     conf = GlobalSetting.redis_config.dup
-    conf[:namespace] = 'sidekiq'
+    conf[:namespace] = SIDEKIQ_NAMESPACE
     conf
   end
 

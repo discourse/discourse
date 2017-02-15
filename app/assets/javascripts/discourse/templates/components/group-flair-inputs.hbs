@@ -1,0 +1,47 @@
+<div class="group-flair-left">
+  <div>
+    <label for="flair_url">{{i18n 'groups.flair_url'}}</label>
+    {{text-field name="flair_url"
+        value=model.flair_url
+        placeholderKey="groups.flair_url_placeholder"}}
+  </div>
+
+  <div>
+    <label for="flair_bg_color">{{i18n 'groups.flair_bg_color'}}</label>
+    {{text-field name="flair_bg_color"
+        class="group-flair-bg-color"
+        value=model.flair_bg_color
+        placeholderKey="groups.flair_bg_color_placeholder"}}
+  </div>
+
+  {{#if flairPreviewIcon}}
+    <div>
+      <label for="flair_color">{{i18n 'groups.flair_color'}}</label>
+      {{text-field name="flair_color"
+          class="group-flair-color"
+          value=model.flair_color
+          placeholderKey="groups.flair_color_placeholder"}}
+    </div>
+  {{/if}}
+
+  <div>
+    <strong>{{i18n 'groups.flair_note'}}</strong>
+  </div>
+</div>
+
+<div class="group-flair-right">
+  <label>{{flairPreviewLabel}}</label>
+  <div class="avatar-flair-preview">
+    <div class="avatar-wrapper">
+      <img width="45" height="45" src="{{demoAvatarUrl}}" class="avatar actor">
+    </div>
+
+    {{#if flairPreviewImage}}
+      <div class="avatar-flair demo {{flairPreviewClasses}}" style={{flairPreviewStyle}}></div>
+    {{else}}
+      <div class="avatar-flair demo {{flairPreviewClasses}}" style={{flairPreviewStyle}}>
+        <i class="fa {{model.flair_url}}"></i>
+      </div>
+    {{/if}}
+  </div>
+</div>

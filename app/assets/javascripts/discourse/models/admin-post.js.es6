@@ -9,7 +9,7 @@ export default Post.extend({
     }
   }.on("init"),
 
-  presentName: Em.computed.any('name', 'username'),
+  presentName: Ember.computed.or('name', 'username'),
 
   sameUser: function() {
     return this.get("username") === Discourse.User.currentProp("username");

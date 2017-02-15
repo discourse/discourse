@@ -21,10 +21,11 @@ export default function interceptClick(e) {
       $currentTarget.data('ember-action') ||
       $currentTarget.data('auto-route') ||
       $currentTarget.data('share-url') ||
-      $currentTarget.data('user-card') ||
       $currentTarget.hasClass('widget-link') ||
       $currentTarget.hasClass('mention') ||
-      (!$currentTarget.hasClass('d-link') && $currentTarget.hasClass('ember-view')) ||
+      (!$currentTarget.hasClass('d-link') &&
+       !$currentTarget.data('user-card') &&
+       $currentTarget.hasClass('ember-view')) ||
       $currentTarget.hasClass('lightbox') ||
       href.indexOf("mailto:") === 0 ||
       (href.match(/^http[s]?:\/\//i) && !href.match(new RegExp("^https?:\\/\\/" + window.location.hostname, "i")))) {

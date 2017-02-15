@@ -1,6 +1,6 @@
 import FlaggedPost from 'admin/models/flagged-post';
 
-export default Ember.ArrayController.extend({
+export default Ember.Controller.extend({
   query: null,
 
   adminOldFlagsView: Em.computed.equal("query", "old"),
@@ -8,18 +8,16 @@ export default Ember.ArrayController.extend({
 
   actions: {
     disagreeFlags(flaggedPost) {
-      var self = this;
-      flaggedPost.disagreeFlags().then(function () {
-        self.removeObject(flaggedPost);
+      flaggedPost.disagreeFlags().then(() => {
+        this.get('model').removeObject(flaggedPost);
       }, function () {
         bootbox.alert(I18n.t("admin.flags.error"));
       });
     },
 
     deferFlags(flaggedPost) {
-      var self = this;
-      flaggedPost.deferFlags().then(function () {
-        self.removeObject(flaggedPost);
+      flaggedPost.deferFlags().then(() => {
+        this.get('model').removeObject(flaggedPost);
       }, function () {
         bootbox.alert(I18n.t("admin.flags.error"));
       });
@@ -29,7 +27,7 @@ export default Ember.ArrayController.extend({
       this.send("disagreeFlags", item);
     },
 
-    loadMore(){
+    loadMore() {
       const flags = this.get('model');
       return FlaggedPost.findAll(this.get('query'), flags.length+1).then(data => {
         if (data.length===0) {

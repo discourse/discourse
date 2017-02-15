@@ -1,0 +1,295 @@
+.timeline-loading {
+  width: 900px;
+}
+
+.timeline-container {
+  box-sizing: border-box;
+  z-index: 499;
+  margin-left: 757px;
+
+  @media all and (min-width: 1140px) {
+    margin-left: 820px;
+  }
+  @media all and (min-width: 1250px) {
+    margin-left: 900px;
+  }
+
+  position: fixed;
+  -webkit-transform: translate3d(0,0,0);
+
+  &.timeline-docked {
+    position: absolute;
+  }
+
+  &.timeline-docked-bottom {
+    .timeline-footer-controls {
+      opacity: 0;
+      pointer-events: none;
+      cursor: default;
+    }
+  }
+
+  &.timeline-fullscreen.show {
+    max-height: 700px;
+    transition: max-height 0.4s ease-out;
+    .topic-timeline {
+      .timeline-footer-controls {
+        display: inherit;
+      }
+    }
+  }
+
+  &.timeline-fullscreen {
+    max-height: 0;
+    transition: max-height 0.3s ease-in;
+    position: fixed;
+    margin-left: 0;
+    background-color: $secondary;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    border-top: 1px solid dark-light-choose(scale-color($primary, $lightness: 90%), scale-color($secondary, $lightness: 90%));
+    box-shadow: 0px -2px 4px -1px rgba(0,0,0,.25);
+    padding-top: 20px;
+    z-index: 100000;
+    .back-button {
+      display: none;
+    }
+    .topic-timeline {
+      width: 100%;
+      table-layout: fixed;
+      margin-left: 0;
+      margin-right: 0;
+      display: table;
+      .timeline-date-wrapper {
+        float: right;
+        text-align: right;
+        font-size: 1.1em;
+      }
+      .post-excerpt {
+        max-width: 650px;
+        max-height: 155px;
+        line-height: 1.4em;
+        overflow: hidden;
+        word-wrap: break-word;
+        text-overflow: ellipsis;
+        display: block;
+        display: -webkit-box;
+        -webkit-line-clamp: 8;
+        -webkit-box-orient: vertical;
+      }
+      .username {
+        color: dark-light-choose(scale-color($primary, $lightness: 30%), scale-color($secondary, $lightness: 70%));
+        word-wrap: break-word;
+        font-weight: bold;
+      }
+      .title {
+        margin-top: 0;
+        padding-left: 1em;
+        display: table-cell;
+        vertical-align: top;
+        width: 100%;
+        h2 {
+          margin-top: 0;
+          display: block;
+          display: -webkit-box;
+          -webkit-line-clamp: 4;
+          -webkit-box-orient: vertical;
+          max-height: 110px;
+          line-height: 1.3em;
+          word-wrap: break-word;
+          text-overflow: ellipsis;
+          overflow: hidden;
+          font-size: 1.3em;
+        }
+        a {
+          color: $primary;
+        }
+      }
+      .timeline-last-read {
+        right: 0px;
+        margin-left: 0;
+        i.progress {
+          display: none
+        }
+      }
+      .timeline-footer-controls {
+        display: none;
+        position: absolute;
+        bottom: 10px;
+        left: 10px;
+
+        .dropdown-menu {
+          position: absolute;
+          left: 0;
+          bottom: 30px;
+        }
+
+        button, .btn-group {
+          float: none;
+          display: inline-block;
+          margin-bottom: 0;
+          margin-right: 15px;
+          position: static;
+        }
+      }
+      .timeline-scrollarea-wrapper {
+        display: table-cell;
+        padding-bottom: 20px;
+        padding-right: 1.5em;
+        width: 100px;
+      }
+      .timeline-scrollarea {
+        border-left: 0;
+        border-right-style: solid;
+        border-right-width: 1px;
+        max-width: 120px;
+        float: right;
+
+        .timeline-scroller {
+          position: relative;
+          margin-right: -1.5em;
+          padding-right: 1.5em;
+          justify-content: flex-end;
+          .timeline-scroller-content {
+            text-align: right;
+            padding-left: 0;
+            padding-right: 1em;
+          }
+          .timeline-handle {
+            float: none;
+            width: 11px;
+            position: relative;
+            right: -6px;
+          }
+        }
+      }
+    }
+
+
+    .timeline-scrollarea-wrapper::after {
+      content: "";
+      display: table;
+      clear: both;
+    }
+
+  }
+
+  &.timeline-fullscreen .topic-timeline .timeline-footer-controls ul.dropdown-menu {
+    width: auto;
+    min-width: 250px;
+    right: auto;
+    .desc {
+      display: none;
+    }
+    .title {
+      padding-left: 0;
+    }
+  }
+
+  .topic-timeline {
+    margin-left: 3em;
+    width: 150px;
+    transition: opacity 0.2s ease-in;
+
+    .timeline-controls {
+      margin-bottom: 1em;
+    }
+
+    .timeline-footer-controls {
+      margin-top: 1em;
+      line-height: 2.5em;
+      transition: opacity 0.2s ease-in;
+
+      button {
+        margin-right: 0.5em;
+      }
+
+      ul.dropdown-menu {
+        right: 0.5em;
+        top: auto;
+        bottom: 25px;
+        left: auto;
+      }
+    }
+
+    .start-date {
+      @include unselectable;
+      color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
+    }
+
+    .timeline-scrollarea {
+      margin-top: 0.5em;
+      margin-left: 0.5em;
+      border-left: 1px solid;
+      border-color: dark-light-choose(scale-color($tertiary, $lightness: 80%), scale-color($tertiary, $lightness: 20%));
+      position: relative;
+      -webkit-transform: translate3d(0,0,0);
+    }
+
+    .timeline-padding {
+      transition: height 0.15s ease-out;
+      cursor: pointer;
+      .widget-dragging & {
+        transition: none;
+      }
+    }
+
+    .timeline-handle {
+      @include border-radius-all(0.8em);
+      width: 0.35em;
+      background-color: dark-light-choose(scale-color($tertiary, $lightness: 80%), scale-color($tertiary, $lightness: 20%));
+      height: 100%;
+      float: left;
+    }
+
+    .timeline-scroller-content {
+      padding-left: 1em;
+    }
+
+    .timeline-ago {
+      color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
+    }
+
+    .timeline-scroller {
+      @include unselectable;
+      margin-left: -0.19em;
+      cursor: ns-resize;
+      display: flex;
+      align-items: center;
+
+      .back-button {
+        margin-top: 1em;
+      }
+    }
+
+    .timeline-replies {
+      font-weight: bold;
+    }
+
+    .timeline-last-read {
+      position: absolute;
+      margin-left: -0.35em;
+
+      i.progress {
+        font-size: 0.8em;
+        color: $tertiary;
+        margin-right: 1em;
+      }
+    }
+
+    .back-button {
+      padding: 2px 5px;
+    }
+
+    .now-date {
+      @include unselectable;
+      display: inline-block;
+      color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
+      margin-top: 0.5em;
+      i {
+        margin-left: 0.15em;
+      }
+    }
+  }
+}

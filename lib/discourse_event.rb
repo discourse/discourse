@@ -21,8 +21,4 @@ module DiscourseEvent
     events[event_name].delete(block)
   end
 
-  def self.clear
-    @events = nil
-  end
-
 end

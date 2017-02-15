@@ -97,6 +97,30 @@
   }
 }
 
+.search-advanced {
+  margin-bottom: 15px;
+
+  .search-advanced-btn {
+    padding: 8px 10px;
+    width: 100%;
+    text-align: left;
+    font-weight: bold;
+  }
+
+  .search-advanced-options {
+    border: 1px solid dark-light-diff($primary, $secondary, 90%, -75%);
+    padding: 10px;
+
+    .control-group.pull-left {
+      width: 50%;
+    }
+
+    input[type="checkbox"] {
+      height: auto;
+    }
+  }
+}
+
 .search-footer {
   margin-bottom: 30px;
 }

@@ -2,6 +2,7 @@ require 'digest/sha1'
 require 'fileutils'
 require_dependency 'plugin/metadata'
 require_dependency 'plugin/auth_provider'
+require_dependency 'plugin/theme'
 
 class Plugin::CustomEmoji
   def self.cache_key
@@ -24,7 +25,13 @@ class Plugin::Instance
   attr_reader :admin_route
 
   # Memoized array readers
-  [:assets, :auth_providers, :color_schemes, :initializers, :javascripts, :styles].each do |att|
+  [:assets,
+   :auth_providers,
+   :color_schemes,
+   :initializers,
+   :javascripts,
+   :styles,
+   :themes].each do |att|
     class_eval %Q{
       def #{att}
         @#{att} ||= []
@@ -112,7 +119,7 @@ class Plugin::Instance
     end
   end
 
-  def add_model_callback(klass, callback, &block)
+  def add_model_callback(klass, callback, options = {}, &block)
     klass = klass.to_s.classify.constantize rescue klass.to_s.constantize
     plugin = self
 
@@ -122,10 +129,11 @@ class Plugin::Instance
     hidden_method_name = :"#{method_name}_without_enable_check"
     klass.send(:define_method, hidden_method_name, &block)
 
-    klass.send(callback) do |*args|
+    klass.send(callback, options) do |*args|
       send(hidden_method_name, *args) if plugin.enabled?
     end
 
+    hidden_method_name
   end
 
   # Add validation method but check that the plugin is enabled
@@ -172,6 +180,10 @@ class Plugin::Instance
     end
   end
 
+  def directory
+    File.dirname(path)
+  end
+
   def auto_generated_path
     File.dirname(path) << "/auto_generated"
   end
@@ -201,6 +213,11 @@ class Plugin::Instance
         raise e unless e.message.try(:include?, "PG::UndefinedTable")
       end
     end
+  end
+
+  def register_seedfu_fixtures(paths)
+    paths = [paths] if !paths.kind_of?(Array)
+    SeedFu.fixture_paths.concat(paths)
   end
 
   def listen_for(event_name)
@@ -236,6 +253,14 @@ class Plugin::Instance
 
   def register_emoji(name, url)
     Plugin::CustomEmoji.register(name, url)
+  end
+
+  def register_theme(name)
+    return unless enabled?
+
+    theme = Plugin::Theme.new(self, name)
+    yield theme
+    themes << theme
   end
 
   def automatic_assets
@@ -357,27 +382,7 @@ JS
   #
   # This is a very rough initial implementation
   def gem(name, version, opts = {})
-    gems_path = File.dirname(path) + "/gems/#{RUBY_VERSION}"
-    spec_path = gems_path + "/specifications"
-    spec_file = spec_path + "/#{name}-#{version}.gemspec"
-    unless File.exists? spec_file
-      command = "gem install #{name} -v #{version} -i #{gems_path} --no-document --ignore-dependencies"
-      if opts[:source]
-        command << " --source #{opts[:source]}"
-      end
-      puts command
-      puts `#{command}`
-    end
-    if File.exists? spec_file
-      spec = Gem::Specification.load spec_file
-      spec.activate
-      unless opts[:require] == false
-        require opts[:require_name] ? opts[:require_name] : name
-      end
-    else
-      puts "You are specifying the gem #{name} in #{path}, however it does not exist!"
-      exit(-1)
-    end
+    PluginGem.load(path, name, version, opts)
   end
 
   def enabled_site_setting(setting=nil)
@@ -385,6 +390,37 @@ JS
       @enabled_site_setting = setting
     else
       @enabled_site_setting
+    end
+  end
+
+  def handlebars_includes
+    assets.map do |asset, opts|
+      next if opts == :admin
+      next unless asset =~ DiscoursePluginRegistry::HANDLEBARS_REGEX
+      asset
+    end.compact
+  end
+
+  def javascript_includes
+    assets.map do |asset, opts|
+      next if opts == :admin
+      next unless asset =~ DiscoursePluginRegistry::JS_REGEX
+      asset
+    end.compact
+  end
+
+  def each_globbed_asset
+    if @path
+      # Automatically include all ES6 JS and hbs files
+      root_path = "#{File.dirname(@path)}/assets/javascripts"
+
+      Dir.glob("#{root_path}/**/*") do |f|
+        if File.directory?(f)
+          yield [f,true]
+        elsif f.to_s.ends_with?(".js.es6") || f.to_s.ends_with?(".hbs")
+          yield [f,false]
+        end
+      end
     end
   end
 

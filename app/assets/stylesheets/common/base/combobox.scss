@@ -1,3 +1,8 @@
+.select2-results .select2-highlighted {
+    background: dark-light-diff($highlight, $secondary, 50%, -80%);
+    color: $primary;
+}
+
 .category-combobox, .select2-drop {
 
   .badge-category {
@@ -32,6 +37,8 @@
 .select2-container {
   border-radius: 3px;
   border: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
+  min-width: 200px;
+
   &.select2-dropdown-open {
     border: 0;
     margin-bottom: 2px;

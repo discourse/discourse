@@ -1,16 +1,14 @@
 import debounce from 'discourse/lib/debounce';
 import Permalink from 'admin/models/permalink';
 
-export default Ember.ArrayController.extend({
+export default Ember.Controller.extend({
   loading: false,
   filter: null,
 
   show: debounce(function() {
-    var self = this;
-    self.set('loading', true);
-    Permalink.findAll(self.get("filter")).then(function(result) {
-      self.set('model', result);
-      self.set('loading', false);
+    Permalink.findAll(this.get("filter")).then(result => {
+      this.set('model', result);
+      this.set('loading', false);
     });
   }, 250).observes("filter"),
 
@@ -20,12 +18,11 @@ export default Ember.ArrayController.extend({
     },
 
     destroy: function(record) {
-      const self = this;
-      return bootbox.confirm(I18n.t("admin.permalink.delete_confirm"), I18n.t("no_value"), I18n.t("yes_value"), function(result) {
+      return bootbox.confirm(I18n.t("admin.permalink.delete_confirm"), I18n.t("no_value"), I18n.t("yes_value"), result => {
         if (result) {
-          record.destroy().then(function(deleted) {
+          record.destroy().then(deleted => {
             if (deleted) {
-              self.removeObject(record);
+              this.get('model').removeObject(record);
             } else {
               bootbox.alert(I18n.t("generic_error"));
             }

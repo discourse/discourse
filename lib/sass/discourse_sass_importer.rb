@@ -23,7 +23,7 @@ class DiscourseSassImporter < Sass::Importers::Filesystem
         "plugins_desktop" => DiscoursePluginRegistry.desktop_stylesheets,
         "plugins_variables" => DiscoursePluginRegistry.sass_variables,
         "theme_variables" => [ColorScheme::BASE_COLORS_FILE],
-        "category_backgrounds" => Proc.new { |c| "body.category-#{c.full_slug} { background-image: url(#{apply_cdn(c.background_url)}) }\n" }
+        "category_backgrounds" => Proc.new { |c| "body.category-#{c.full_slug} { background-image: url(#{apply_cdn(c.uploaded_background.url)}) }\n" }
       }
     end
 
@@ -41,20 +41,14 @@ class DiscourseSassImporter < Sass::Importers::Filesystem
         case name
         when "theme_variables"
           contents = ""
-          if color_scheme = ColorScheme.enabled
-            ColorScheme.base_colors.each do |n, base_hex|
-              override = color_scheme.colors_by_name[n]
-              contents << "$#{n}: ##{override ? override.hex : base_hex} !default;\n"
-            end
-          else
-            special_imports[name].each do |css_file|
-              contents << File.read(css_file)
-            end
+          ColorScheme.base_colors.each do |n, base_hex|
+            hex_val = ColorScheme.hex_for_name(n) || base_hex
+            contents << "$#{n}: ##{hex_val} !default;\n"
           end
         when "category_backgrounds"
           contents = ""
-          Category.where('background_url IS NOT NULL').each do |c|
-            contents << special_imports[name].call(c) if c.background_url.present?
+          Category.where('uploaded_background_id IS NOT NULL').each do |c|
+            contents << special_imports[name].call(c) if c.uploaded_background
           end
         else
           stylesheets = special_imports[name]

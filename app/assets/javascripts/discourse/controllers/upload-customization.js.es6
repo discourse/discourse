@@ -2,7 +2,7 @@ import ModalFunctionality from 'discourse/mixins/modal-functionality';
 
 export default Ember.Controller.extend(ModalFunctionality, {
   notReady: Em.computed.not('ready'),
-  needs: ['adminCustomizeCssHtml'],
+  adminCustomizeCssHtml: Ember.inject.controller(),
 
   ready: function() {
     try {
@@ -22,7 +22,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
       delete object.id;
       delete object.key;
 
-      const controller = this.get('controllers.adminCustomizeCssHtml');
+      const controller = this.get('adminCustomizeCssHtml');
       controller.send('newCustomization', object);
     }
   }

@@ -1,5 +1,6 @@
 import createStore from 'helpers/create-store';
 import AdminUser from 'admin/models/admin-user';
+import { mapRoutes } from 'discourse/mapping-router';
 
 var buildPost = function(args) {
   return Discourse.Post.create(_.merge({
@@ -17,6 +18,9 @@ var buildAdminUser = function(args) {
 };
 
 moduleFor("controller:flag", "controller:flag", {
+  setup() {
+    this.registry.register('router:main', mapRoutes());
+  },
   needs: ['controller:modal']
 });
 

@@ -3,7 +3,7 @@ class UploadUrlValidator < ActiveModel::EachValidator
     if value.present?
       uri = URI.parse(value) rescue nil
 
-      unless uri && Discourse.store.has_been_uploaded?(value)
+      unless uri && Upload.exists?(url: value)
         record.errors[attribute] << (options[:message] || I18n.t('errors.messages.invalid'))
       end
     end

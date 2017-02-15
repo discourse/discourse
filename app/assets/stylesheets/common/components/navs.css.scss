@@ -8,7 +8,7 @@
 %nav {
   margin-left: 0;
   list-style: none;
-  > li > a {
+  li > a {
     display: block;
     text-decoration: none;
   }
@@ -50,7 +50,7 @@
   padding: 0;
   overflow: hidden;
   background: dark-light-diff($primary, $secondary, 90%, -75%);
-  > li {
+  li {
     border-bottom: 1px solid dark-light-diff($primary, $secondary, 80%, -60%);
     position: relative;
     &:last-of-type {

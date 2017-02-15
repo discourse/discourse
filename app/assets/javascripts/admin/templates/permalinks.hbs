@@ -17,7 +17,35 @@
         <div class="col heading actions"></div>
         <div class="clearfix"></div>
       </div>
-      {{permalinks-list content=model}}
+      {{#each model as |pl|}}
+        <div class="admin-list-item">
+          <div class="col first url">{{pl.url}}</div>
+          <div class="col topic">
+            {{#if pl.topic_id}}
+              <a href='{{unbound pl.topic_url}}'>{{pl.topic_title}}</a>
+            {{/if}}
+          </div>
+          <div class="col post">
+            {{#if pl.post_id}}
+              <a href='{{unbound pl.post_url}}'>#{{pl.post_number}} {{pl.post_topic_title}}</a>
+            {{/if}}
+          </div>
+          <div class="col category">
+            {{#if pl.category_id}}
+              <a href='{{unbound pl.category_url}}'>{{pl.category_name}}</a>
+            {{/if}}
+          </div>
+          <div class="col external_url">
+            {{#if pl.external_url}}
+              <a href='{{unbound pl.external_url}}'>{{pl.external_url}}</a>
+            {{/if}}
+          </div>
+          <div class="col action">
+            {{d-button action="destroy" actionParam=pl icon="trash-o" class="btn-danger"}}
+          </div>
+          <div class="clearfix"></div>
+        </div>
+      {{/each}}
     </div>
   {{else}}
     {{i18n 'search.no_results'}}

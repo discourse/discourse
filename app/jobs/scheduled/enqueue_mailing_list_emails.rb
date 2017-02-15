@@ -13,9 +13,11 @@ module Jobs
     def target_user_ids
       # Users who want to receive daily mailing list emails
       User.real
+          .activated
           .not_suspended
+          .not_blocked
           .joins(:user_option)
-          .where(active: true, staged: false, user_options: {mailing_list_mode: true, mailing_list_mode_frequency: 0})
+          .where(staged: false, user_options: { mailing_list_mode: true, mailing_list_mode_frequency: 0 })
           .where("#{!SiteSetting.must_approve_users?} OR approved OR moderator OR admin")
           .where("date_part('hour', first_seen_at) = date_part('hour', CURRENT_TIMESTAMP)")           # where the hour of first_seen_at is the same as the current hour
           .where("COALESCE(first_seen_at, '2010-01-01') <= CURRENT_TIMESTAMP - '23 HOURS'::INTERVAL") # don't send unless you've been around for a day already

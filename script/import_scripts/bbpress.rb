@@ -1,18 +1,31 @@
 require 'mysql2'
 require File.expand_path(File.dirname(__FILE__) + "/base.rb")
 
+
+# Before running this script, paste these lines into your shell,
+# then use arrow keys to edit the values
+=begin
+export BBPRESS_USER="root"
+export BBPRESS_DB="bbpress"
+export BBPRESS_PW=""
+=end
+
 class ImportScripts::Bbpress < ImportScripts::Base
 
   BB_PRESS_DB ||= ENV['BBPRESS_DB'] || "bbpress"
   BATCH_SIZE  ||= 1000
+  BB_PRESS_PW ||= ENV['BBPRESS_PW'] || ""
+  BB_PRESS_USER ||= ENV['BBPRESS_USER'] || "root"
+  BB_PRESS_PREFIX ||= ENV['BBPRESS_PREFIX'] || "wp_"
 
   def initialize
     super
 
     @client = Mysql2::Client.new(
       host: "localhost",
-      username: "root",
+      username: BB_PRESS_USER,
       database: BB_PRESS_DB,
+      password: BB_PRESS_PW,
     )
   end
 
@@ -26,12 +39,12 @@ class ImportScripts::Bbpress < ImportScripts::Base
     puts "", "importing users..."
 
     last_user_id = -1
-    total_users = bbpress_query("SELECT COUNT(*) count FROM wp_users WHERE user_email LIKE '%@%'").first["count"]
+    total_users = bbpress_query("SELECT COUNT(*) count FROM #{BB_PRESS_PREFIX}users WHERE user_email LIKE '%@%'").first["count"]
 
     batches(BATCH_SIZE) do |offset|
       users = bbpress_query(<<-SQL
         SELECT id, user_nicename, display_name, user_email, user_registered, user_url
-          FROM wp_users
+          FROM #{BB_PRESS_PREFIX}users
          WHERE user_email LIKE '%@%'
            AND id > #{last_user_id}
       ORDER BY id
@@ -51,7 +64,7 @@ class ImportScripts::Bbpress < ImportScripts::Base
       users_description = {}
       bbpress_query(<<-SQL
         SELECT user_id, meta_value description
-          FROM wp_usermeta
+          FROM #{BB_PRESS_PREFIX}usermeta
          WHERE user_id IN (#{user_ids_sql})
            AND meta_key = 'description'
       SQL
@@ -60,7 +73,7 @@ class ImportScripts::Bbpress < ImportScripts::Base
       users_last_activity = {}
       bbpress_query(<<-SQL
         SELECT user_id, meta_value last_activity
-          FROM wp_usermeta
+          FROM #{BB_PRESS_PREFIX}usermeta
          WHERE user_id IN (#{user_ids_sql})
            AND meta_key = 'last_activity'
       SQL
@@ -71,7 +84,7 @@ class ImportScripts::Bbpress < ImportScripts::Base
           id: u["id"].to_i,
           username: u["user_nicename"],
           email: u["user_email"].downcase,
-          name: u["display_name"],
+          name: u["display_name"].presence || u['user_nicename'],
           created_at: u["user_registered"],
           website: u["user_url"],
           bio_raw: users_description[u["id"]],
@@ -86,7 +99,7 @@ class ImportScripts::Bbpress < ImportScripts::Base
 
     categories = bbpress_query(<<-SQL
       SELECT id, post_name, post_parent
-        FROM wp_posts
+        FROM #{BB_PRESS_PREFIX}posts
        WHERE post_type = 'forum'
          AND LENGTH(COALESCE(post_name, '')) > 0
     ORDER BY post_parent, id
@@ -108,7 +121,7 @@ class ImportScripts::Bbpress < ImportScripts::Base
     last_post_id = -1
     total_posts = bbpress_query(<<-SQL
       SELECT COUNT(*) count
-        FROM wp_posts
+        FROM #{BB_PRESS_PREFIX}posts
        WHERE post_status <> 'spam'
          AND post_type IN ('topic', 'reply')
     SQL
@@ -123,7 +136,7 @@ class ImportScripts::Bbpress < ImportScripts::Base
                post_title,
                post_type,
                post_parent
-          FROM wp_posts
+          FROM #{BB_PRESS_PREFIX}posts
          WHERE post_status <> 'spam'
            AND post_type IN ('topic', 'reply')
            AND id > #{last_post_id}
@@ -144,7 +157,7 @@ class ImportScripts::Bbpress < ImportScripts::Base
       posts_likes = {}
       bbpress_query(<<-SQL
         SELECT post_id, meta_value likes
-          FROM wp_postmeta
+          FROM #{BB_PRESS_PREFIX}postmeta
          WHERE post_id IN (#{post_ids_sql})
            AND meta_key = 'Likes'
       SQL

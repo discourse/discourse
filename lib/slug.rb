@@ -2,6 +2,8 @@
 
 module Slug
 
+  CHAR_FILTER_REGEXP = /[:\/\?#\[\]@!\$&'\(\)\*\+,;=_\.~%\\`^\s|\{\}"<>]+/ # :/?#[]@!$&'()*+,;=_.~%\`^|{}"<>
+
   def self.for(string, default = 'topic')
     slug = case (SiteSetting.slug_generation_method || :ascii).to_sym
            when :ascii then self.ascii_generator(string)
@@ -31,7 +33,7 @@ module Slug
     # See also URI::REGEXP::PATTERN.
     string.strip
           .gsub(/\s+/, '-')
-          .gsub(/[:\/\?#\[\]@!\$&'\(\)\*\+,;=_\.~%\\`^\s|\{\}"<>]+/, '') # :/?#[]@!$&'()*+,;=_.~%\`^|{}"<>
+          .gsub(CHAR_FILTER_REGEXP, '')
           .gsub(/\A-+|-+\z/, '') # remove possible trailing and preceding dashes
           .squeeze('-') # squeeze continuous dashes to prettify slug
   end

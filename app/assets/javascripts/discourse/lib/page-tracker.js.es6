@@ -1,3 +1,5 @@
+import deprecated from 'discourse-common/lib/deprecated';
+
 const PageTracker = Ember.Object.extend(Ember.Evented);
 let _pageTracker = PageTracker.create();
 
@@ -42,7 +44,7 @@ export function onPageChange(fn) {
 // backwards compatibility
 const BackwardsCompat = {
   current() {
-    console.warn(`Using PageTracker.current() is deprecated. Your plugin should use the PluginAPI`);
+    deprecated(`Using PageTracker.current() is deprecated. Your plugin should use the PluginAPI`);
     return _pageTracker;
   }
 };

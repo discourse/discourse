@@ -1,5 +1,5 @@
-<section class='user-navigation'>
-  {{#mobile-nav class='notifications-nav' desktopClass='notification-list action-list nav-stacked' currentPath=currentPath}}
+{{#d-section pageClass="user-notifications" class="user-navigation"}}
+  {{#mobile-nav class='notifications-nav' desktopClass='notification-list action-list nav-stacked' currentPath=application.currentPath}}
     <li class='no-glyph'>
       {{#link-to 'userNotifications.index'}}{{i18n 'user.filters.all'}}{{/link-to}}
     </li>
@@ -26,7 +26,7 @@
                icon='check'
                disabled=allNotificationsRead}}
   {{/if}}
-</section>
+{{/d-section}}
 
 <section class='user-right'>
   {{#load-more class="notification-history user-stream" selector=".user-stream .notification" action="loadMore"}}

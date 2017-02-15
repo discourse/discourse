@@ -2,6 +2,7 @@ import groups from 'discourse/lib/emoji/groups';
 import KeyValueStore from "discourse/lib/key-value-store";
 import { emojiList } from 'pretty-text/emoji';
 import { emojiUrlFor } from 'discourse/lib/text';
+import { findRawTemplate } from 'discourse/lib/raw-templates';
 
 const keyValueStore = new KeyValueStore("discourse_emojis_");
 const EMOJI_USAGE = "emojiUsage";
@@ -68,7 +69,7 @@ function initializeRecentlyUsedIcons() {
 
     recent.forEach(emoji => recentlyUsedIcons.push(emoji.title));
 
-    const recentGroup = groups.findProperty('name', 'recent');
+    const recentGroup = groups.findBy('name', 'recent');
     if (recentGroup) {
       recentGroup.icons = recentlyUsedIcons;
     } else {
@@ -151,7 +152,7 @@ function render(page, offset, options) {
   };
 
   $('.emoji-modal', options.appendTo).remove();
-  const template = options.container.lookup('template:emoji-toolbar.raw');
+  const template = findRawTemplate('emoji-toolbar');
   options.appendTo.append(template(model));
 
   bindEvents(page, offset, options);

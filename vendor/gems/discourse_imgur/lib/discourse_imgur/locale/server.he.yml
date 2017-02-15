@@ -7,6 +7,6 @@
 
 he:
   site_settings:
-    enable_imgur: "אפשר להעלות imgur API , אל תאכסן קבצים באופן מקומי."
+    enable_imgur: "אפשר להעלות imgur API, אל תאכסן קבצים באופן מקומי."
     imgur_client_id: "זהות הלקוח (Client ID) שלך ב-imgur.com נדרשת לשם העלאת התמונה."
     imgur_client_secret: "סיסמת הלקוח (client secret) שלך לא נדרשת כרגע כדי לאפשר העלאת התמונה, אבל עשוייה להידרש בשלב כלשהו בהמשך."

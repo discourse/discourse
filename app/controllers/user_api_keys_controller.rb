@@ -6,7 +6,7 @@ class UserApiKeysController < ApplicationController
   skip_before_filter :check_xhr, :preload_json
   before_filter :ensure_logged_in, only: [:create, :revoke, :undo_revoke]
 
-  AUTH_API_VERSION ||= 1
+  AUTH_API_VERSION ||= 2
 
   def new
 
@@ -20,23 +20,28 @@ class UserApiKeysController < ApplicationController
 
     unless current_user
       cookies[:destination_url] = request.fullpath
-      redirect_to path('/login')
+
+      if SiteSetting.enable_sso?
+        redirect_to path('/session/sso')
+      else
+        redirect_to path('/login')
+      end
       return
     end
 
-    if current_user.trust_level < SiteSetting.min_trust_level_for_user_api_key
+    unless meets_tl?
       @no_trust_level = true
       return
     end
 
-    @access_description = params[:access].include?("w") ? t("user_api_key.read_write") : t("user_api_key.read")
     @application_name = params[:application_name]
     @public_key = params[:public_key]
     @nonce = params[:nonce]
-    @access = params[:access]
     @client_id = params[:client_id]
     @auth_redirect = params[:auth_redirect]
     @push_url = params[:push_url]
+    @localized_scopes = params[:scopes].split(",").map{|s| I18n.t("user_api_key.scopes.#{s}")}
+    @scopes = params[:scopes]
 
   rescue Discourse::InvalidAccess
     @generic_error = true
@@ -53,11 +58,7 @@ class UserApiKeysController < ApplicationController
         raise Discourse::InvalidAccess
     end
 
-    raise Discourse::InvalidAccess if current_user.trust_level < SiteSetting.min_trust_level_for_user_api_key
-
-    request_read = params[:access].include? 'r'
-    request_read ||= params[:access].include? 'p'
-    request_write = params[:access].include? 'w'
+    raise Discourse::InvalidAccess unless meets_tl?
 
     validate_params
 
@@ -67,12 +68,10 @@ class UserApiKeysController < ApplicationController
     key = UserApiKey.create!(
       application_name: params[:application_name],
       client_id: params[:client_id],
-      read: request_read,
-      push: params[:push_url].present?,
       user_id: current_user.id,
-      write: request_write,
+      push_url: params[:push_url],
       key: SecureRandom.hex,
-      push_url: params[:push_url]
+      scopes: params[:scopes].split(",")
     )
 
     # we keep the payload short so it encrypts easily with public key
@@ -80,7 +79,8 @@ class UserApiKeysController < ApplicationController
     payload = {
       key: key.key,
       nonce: params[:nonce],
-      access: key.access
+      push: key.has_push?,
+      api: AUTH_API_VERSION
     }.to_json
 
     public_key = OpenSSL::PKey::RSA.new(params[:public_key])
@@ -90,7 +90,20 @@ class UserApiKeysController < ApplicationController
   end
 
   def revoke
-    find_key.update_columns(revoked_at: Time.zone.now)
+    revoke_key = find_key if params[:id]
+
+    if current_key = request.env['HTTP_USER_API_KEY']
+      request_key = UserApiKey.find_by(key: current_key)
+      revoke_key ||= request_key
+      if request_key && request_key.id != revoke_key.id && !request_key.scopes.include?("write")
+        raise Discourse::InvalidAccess
+      end
+    end
+
+    raise Discourse::NotFound unless revoke_key
+
+    revoke_key.update_columns(revoked_at: Time.zone.now)
+
     render json: success_json
   end
 
@@ -109,7 +122,7 @@ class UserApiKeysController < ApplicationController
     [
      :public_key,
      :nonce,
-     :access,
+     :scopes,
      :client_id,
      :auth_redirect,
      :application_name
@@ -117,16 +130,16 @@ class UserApiKeysController < ApplicationController
   end
 
   def validate_params
-    request_read = params[:access].include? 'r'
-    request_read ||= params[:access].include? 'p'
-    request_write = params[:access].include? 'w'
+    requested_scopes = Set.new(params[:scopes].split(","))
 
-    raise Discourse::InvalidAccess unless request_read || request_push
-    raise Discourse::InvalidAccess if request_read && !SiteSetting.allow_read_user_api_keys
-    raise Discourse::InvalidAccess if request_write && !SiteSetting.allow_write_user_api_keys
+    raise Discourse::InvalidAccess unless UserApiKey.allowed_scopes.superset?(requested_scopes)
 
     # our pk has got to parse
     OpenSSL::PKey::RSA.new(params[:public_key])
+  end
+
+  def meets_tl?
+    current_user.staff? || current_user.trust_level >= SiteSetting.min_trust_level_for_user_api_key
   end
 
 end

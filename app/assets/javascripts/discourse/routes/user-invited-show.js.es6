@@ -33,14 +33,6 @@ export default Discourse.Route.extend({
     showInvite() {
       showModal("invite", { model: this.currentUser });
       this.controllerFor("invite").reset();
-    },
-
-    uploadSuccess(filename) {
-      bootbox.alert(I18n.t("user.invited.bulk_invite.success", { filename: filename }));
-    },
-
-    uploadError(filename, message) {
-      bootbox.alert(I18n.t("user.invited.bulk_invite.error", { filename: filename, message: message }));
     }
   }
 });

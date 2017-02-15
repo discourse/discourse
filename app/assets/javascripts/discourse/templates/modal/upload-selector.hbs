@@ -1,6 +1,6 @@
-<div class="modal-body">
+{{#d-modal-body title=title class="upload-selector"}}
   <div class="radios">
-    <input type="radio" id="local" value="local" name="upload" {{action "useLocal"}}>
+    {{radio-button name="upload" id="local" value="local" selection=selection}}
     <label class="radio" for="local">{{i18n 'upload_selector.from_my_computer'}}</label>
     {{#if local}}
       <div class="inputs">
@@ -10,7 +10,7 @@
     {{/if}}
   </div>
   <div class="radios">
-    <input type="radio" id="remote" value="remote" name="upload" {{action "useRemote"}}>
+    {{radio-button name="upload" id="remote" value="remote" selection=selection}}
     <label class="radio" for="remote">{{i18n 'upload_selector.from_the_web'}}</label>
     {{#if remote}}
       <div class="inputs">
@@ -38,7 +38,7 @@
       </p>
     </div>
   </div>
-</div>
+{{/d-modal-body}}
 
 <div class="modal-footer">
   {{d-button action="upload" class='btn-primary' icon=uploadIcon label='upload'}}

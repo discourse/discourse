@@ -123,15 +123,16 @@ describe InvitesController do
     end
   end
 
-  context '.show' do
+  context '.perform_accept_invitation' do
 
     context 'with an invalid invite id' do
       before do
-        get :show, id: "doesn't exist"
+        put :perform_accept_invitation, id: "doesn't exist"
       end
 
       it "redirects to the root" do
-        expect(response).to redirect_to("/")
+        expect(response).to be_success
+        expect(flash[:error]).to be_present
       end
 
       it "should not change the session" do
@@ -144,11 +145,12 @@ describe InvitesController do
       let(:invite) { topic.invite_by_email(topic.user, "iceking@adventuretime.ooo") }
       let(:deleted_invite) { invite.destroy; invite }
       before do
-        get :show, id: deleted_invite.invite_key
+        put :perform_accept_invitation, id: deleted_invite.invite_key
       end
 
       it "redirects to the root" do
-        expect(response).to redirect_to("/")
+        expect(response).to be_success
+        expect(flash[:error]).to be_present
       end
 
       it "should not change the session" do
@@ -160,10 +162,9 @@ describe InvitesController do
       let(:topic) { Fabricate(:topic) }
       let(:invite) { topic.invite_by_email(topic.user, "iceking@adventuretime.ooo") }
 
-
       it 'redeems the invite' do
         Invite.any_instance.expects(:redeem)
-        get :show, id: invite.invite_key
+        put :perform_accept_invitation, id: invite.invite_key
       end
 
       context 'when redeem returns a user' do
@@ -172,7 +173,7 @@ describe InvitesController do
         context 'success' do
           before do
             Invite.any_instance.expects(:redeem).returns(user)
-            get :show, id: invite.invite_key
+            put :perform_accept_invitation, id: invite.invite_key
           end
 
           it 'logs in the user' do
@@ -193,18 +194,15 @@ describe InvitesController do
           it 'sends a welcome message if set' do
             user.send_welcome_message = true
             user.expects(:enqueue_welcome_message).with('welcome_invite')
-            get :show, id: invite.invite_key
+            put :perform_accept_invitation, id: invite.invite_key
           end
 
           it "doesn't send a welcome message if not set" do
             user.expects(:enqueue_welcome_message).with('welcome_invite').never
-            get :show, id: invite.invite_key
+            put :perform_accept_invitation, id: invite.invite_key
           end
-
         end
-
       end
-
     end
 
     context 'new registrations are disabled' do
@@ -214,7 +212,7 @@ describe InvitesController do
 
       it "doesn't redeem the invite" do
         Invite.any_instance.stubs(:redeem).never
-        get :show, id: invite.invite_key
+        put :perform_accept_invitation, id: invite.invite_key
       end
     end
 
@@ -225,7 +223,7 @@ describe InvitesController do
 
       it "doesn't redeem the invite" do
         Invite.any_instance.stubs(:redeem).never
-        get :show, id: invite.invite_key
+        put :perform_accept_invitation, id: invite.invite_key
       end
     end
   end
@@ -367,33 +365,10 @@ describe InvitesController do
 
   end
 
-  context '.check_csv_chunk' do
+  context '.upload_csv' do
     it 'requires you to be logged in' do
       expect {
-        post :check_csv_chunk
-      }.to raise_error(Discourse::NotLoggedIn)
-    end
-
-    context 'while logged in' do
-      let(:resumableChunkNumber) { 1 }
-      let(:resumableCurrentChunkSize) { 46 }
-      let(:resumableIdentifier) { '46-discoursecsv' }
-      let(:resumableFilename) { 'discourse.csv' }
-
-      it "fails if you can't bulk invite to the forum" do
-        log_in
-        post :check_csv_chunk, resumableChunkNumber: resumableChunkNumber, resumableCurrentChunkSize: resumableCurrentChunkSize.to_i, resumableIdentifier: resumableIdentifier, resumableFilename: resumableFilename
-        expect(response).not_to be_success
-      end
-
-    end
-
-  end
-
-  context '.upload_csv_chunk' do
-    it 'requires you to be logged in' do
-      expect {
-        post :upload_csv_chunk
+        xhr :post, :upload_csv
       }.to raise_error(Discourse::NotLoggedIn)
     end
 
@@ -402,27 +377,19 @@ describe InvitesController do
       let(:file) do
         ActionDispatch::Http::UploadedFile.new({ filename: 'discourse.csv', tempfile: csv_file })
       end
-      let(:resumableChunkNumber) { 1 }
-      let(:resumableChunkSize) { 1048576 }
-      let(:resumableCurrentChunkSize) { 46 }
-      let(:resumableTotalSize) { 46 }
-      let(:resumableType) { 'text/csv' }
-      let(:resumableIdentifier) { '46-discoursecsv' }
-      let(:resumableFilename) { 'discourse.csv' }
-      let(:resumableRelativePath) { 'discourse.csv' }
+      let(:filename) { 'discourse.csv' }
 
       it "fails if you can't bulk invite to the forum" do
         log_in
-        post :upload_csv_chunk, file: file, resumableChunkNumber: resumableChunkNumber.to_i, resumableChunkSize: resumableChunkSize.to_i, resumableCurrentChunkSize: resumableCurrentChunkSize.to_i, resumableTotalSize: resumableTotalSize.to_i, resumableType: resumableType, resumableIdentifier: resumableIdentifier, resumableFilename: resumableFilename
+        xhr :post, :upload_csv, file: file, name: filename
         expect(response).not_to be_success
       end
 
-      it "allows admins to bulk invite" do
+      it "allows admin to bulk invite" do
         log_in(:admin)
-        post :upload_csv_chunk, file: file, resumableChunkNumber: resumableChunkNumber.to_i, resumableChunkSize: resumableChunkSize.to_i, resumableCurrentChunkSize: resumableCurrentChunkSize.to_i, resumableTotalSize: resumableTotalSize.to_i, resumableType: resumableType, resumableIdentifier: resumableIdentifier, resumableFilename: resumableFilename
+        xhr :post, :upload_csv, file: file, name: filename
         expect(response).to be_success
       end
-
     end
 
   end

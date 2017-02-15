@@ -71,7 +71,6 @@ sv:
       has_already_been_used: "har redan använts"
       inclusion: är inte inkluderad i listan
       invalid: är ogiltig
-      is_invalid: "är ogiltig; försök att vara lite mer beskrivande"
       less_than: måste vara mindre än %{count}
       less_than_or_equal_to: måste vara mindre eller lika med %{count}
       not_a_number: är inte ett nummer
@@ -105,12 +104,13 @@ sv:
       max_username_length_range: "Du kan inte sätta maximum högre än minimum."
       default_categories_already_selected: "Du kan inte välja en kategori som används i en annan lista. "
       s3_upload_bucket_is_required: "Du kan inte aktivera uppladdning till S3 innan du har angivit 's3_upload_bucket'."
-  bulk_invite:
-    file_should_be_csv: "Den uppladdade filen ska vara i csv eller txt format."
+  topic_invite:
+    user_exists: "Tyvärr, den användaren har redan bjudits in. Du kan endast bjuda in en användare till ett ämne en gång."
   backup:
     operation_already_running: "En operation är redan igång. Kan inte starta ett nytt jobb just nu."
     backup_file_should_be_tar_gz: "Backup-filen ska vara ett .tar.gz arkiv."
     not_enough_space_on_disk: "Det finns inte tillräckligt mycket utrymme på disken för att ladda upp denna backup."
+    invalid_filename: "Backupfilnamnet innehåller ogiltiga tecken. Giltiga tecken är a-z 0-9 . - _."
   not_logged_in: "Du måste vara inloggad för att göra detta."
   not_found: "Den efterfrågade URL:en eller resursen kan inte hittas."
   invalid_access: "Du har inte behörighet att visa den efterfrågade resursen."
@@ -158,7 +158,6 @@ sv:
   topic_not_found: "Något har gått fel. Kanske har ämnet stängts eller raderats medan du tittade på det?"
   just_posted_that: "är för likt det du nyligen postade"
   invalid_characters: "innehåller otillåtna tecken"
-  is_invalid: "är ogiltig; försök att skriva lite mer detaljerad"
   next_page: "nästa sida →"
   prev_page: "← föregående sida"
   page_num: "Sida %{num}"
@@ -525,6 +524,11 @@ sv:
       title: 'Rösta'
       description: 'Rösta för detta inlägg'
       long_form: 'röstade för detta inlägg'
+  user_activity:
+    no_bookmarks:
+      others: "Inga bokmärken."
+    no_likes_given:
+      others: "Inga gillade inlägg."
   topic_flag_types:
     spam:
       title: 'Spam'
@@ -566,6 +570,14 @@ sv:
     different_user_description: "Du är för tillfället inloggad som en annan användare än den vi skickade e-post till. Var vänlig och logga ut, eller aktivera anonymt läge, och försök igen."
     not_found_description: "Tyvärr, vi kunde inte hitta den här avprenumerationen. Är det möjligt att länken i din e-post har löpt ut?"
     log_out: "Logga ut"
+  user_api_key:
+    authorize: "Auktorisera"
+    read: "läs"
+    read_write: "läs/skriv"
+    scopes:
+      message_bus: "Live uppdateringar"
+      read: "Läs alla"
+      write: "Skriv alla"
   reports:
     visits:
       title: "Användarbesök"
@@ -721,14 +733,6 @@ sv:
     s3_backup_config_warning: 'Servern är konfigurerad till att ladda upp säkerhetskopior till s3, men minst en av följande inställningar är inte satta: s3_access_key_id, s3_secret_access_key eller s3_backup_bucket. Gå till <a href="/admin/site_settings">Webbplatsinställningarna</a> och uppdatera inställningarna. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Se "How to set up image uploads to S3?" för att lära dig mer</a>.'
     image_magick_warning: 'Servern är konfigurerad att skapa ikoner av stora bilder, men ImageMagick är inte installerad. Installera ImageMagick med din föredragna pakethanterare eller <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">ladda hem den senaste utgåvan</a>.'
     failing_emails_warning: 'Det finns %{num_failed_jobs} e-postutskick som har misslyckats. Kontrollera din app.yml-fil för att säkerställa att serverinställningarna för e-post är korrekta. <a href="/sidekiq/retries" target="_blank">Se alla misslyckade utskick i Sidekiq</a>.'
-    default_logo_warning: "Ange de grafiska logotyperna för din webbplats. Uppdatera logo_url, logo_small och favicon_url i <a href='/admin/site_settings'>webbplatsinställningarna</a>."
-    contact_email_missing: "Ange en e-postadress för webbplatsen så att du kan nås vid brådskande ärenden. Uppdatera i <a href='/admin/site_settings'>webbplatsinställningarna</a>."
-    contact_email_invalid: "Webbplatsens e-postadress för kontakt är ogiltig. Uppdatera den i  <a href='/admin/site_settings'>webbplatsinställningarna</a>."
-    title_nag: "Ange namnet på webbplatsen. Uppdatera titeln i <a href='/admin/site_settings'>webbplatsinställningarna</a>."
-    site_description_missing: "Ange en beskrivning om din webbplats i en mening, som dyker upp i sökresultat. Uppdatera site_description i <a href='/admin/site_settings'>webbplatsinställningarna</a>."
-    consumer_email_warning: "Din sida är konfigurerad till att använda Gmail (eller någon annan konsumenttjänst) för att skicka e-post. <a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>Gmail begränsar antalet e-post du kan skicka</a>. Överväg att använda en tjänsteleverantör som exempelvis mandrill.com för att säkerställa att all e-post levereras."
-    site_contact_username_warning: "Ange namnet på en vänlig person ur personalen att skicka viktiga automatiserade meddelanden från. Uppdatera site_contact_username i <a href='/admin/site_settings'>webbplatsinställningarna</a>."
-    notification_email_warning: "E-postmeddelanden med notiser skickas inte från en giltig e-postadress från din domän; e-postleverering kommer att vara erratisk och oberäknelig. Var vänlig och ställ in notification_email till en giltig lokal e-postadress i <a href='/admin/site_settings'>webbplatsinställningarna</a>."
     subfolder_ends_in_slash: "Inställningarna för dina undermappar är inte korrekt; DISCOURSE_RELATIV_URL_ROOT slutar med ett snedstreck."
     email_polling_errored_recently:
       one: "E-postpolling har genererat ett fel de senaste 24 timmarna. Se <a href='/logs' target='_blank'>loggarna</a> för mer detaljer."
@@ -782,7 +786,6 @@ sv:
     show_pinned_excerpt_mobile: "Visa inte utdrag för klistrade ämnen i mobilen."
     show_pinned_excerpt_desktop: "Visa inte utdrag för klistrade ämnen på datorn."
     post_onebox_maxlength: "Maxlängd på ett onebox:at Discourse-inlägg i antal tecken."
-    onebox_domains_whitelist: "En lista över alla domäner som tillåter onebox; dessa domäner bör stödja OpenGraph eller oEmbed. Testa dem på http://iframely.com/debug"
     logo_url: "Logotypen i övre vänstra sidan av din webbplats bör ha en bred rektangulär form. Om den lämnas blank kommer webbplatsens titel att visas. "
     digest_logo_url: "Den alternativa logotypen används överst i din webbplats e-postsammanfattning. Den bör ha en bred rektangulär form. Den borde inte vara en SVG-bild. Om den lämnas blank kommer `logo_url` att användas."
     logo_small_url: "Den lilla logotypen som visas i övre vänstra hörnet av hemsidan när man bläddrar ned i ämnen. Om den lämnas blank kommer hemloggan visas."
@@ -849,9 +852,7 @@ sv:
     show_email_on_profile: "Visa en användares e-postadress på deras profil (endast synlig för de själva och för personal)"
     prioritize_username_in_ux: "Använd användarnamn först på användarsidan, användarkortet och inlägg (när inaktiverad så visas namnet först)"
     email_token_valid_hours: "Glömt lösenord / aktivera konto länkar är giltiga i (n) timmar."
-    email_token_grace_period_hours: "Glömt lösenord / aktivera konto länkar är fortfarande giltiga i en nådefrist på (n) timmar efter att ha  blivit utlösta."
     enable_badges: "Aktivera utmärkelsesystemet"
-    enable_whispers: "Tillåt privat kommunikation mellan personal inom ett ämne. (experimentellt)"
     allow_index_in_robots_txt: "Specificera i robots.txt att den här webbplatsen tillåter att bli indexerad av sökmotorer. "
     email_domains_blacklist: "En pipe-avgränsad lista av alla e-postdomän som användare inte tillåts registrera konton med. Exempel: mailinator.com, trashmail.net"
     email_domains_whitelist: "En pipe-avgränsad lista av alla e-postdomän som användare MÅSTE registrera konton med. VARNING: Användare med e-postdomän som inte finns på listan kommer inte att tillåtas!"
@@ -1075,7 +1076,6 @@ sv:
     allow_animated_thumbnails: "Genererar animerade ikoner av animerade gif:ar."
     default_avatars: "URL:er till avatarer som kommer att användas utgångsläge för nya användare tills de ändrar dem."
     automatically_download_gravatars: "Ladda ned Gravatars för användare vid kontoregistrering eller e-postadressbyte."
-    digest_topics: "Högsta antal ämnen att visa i e-postsammanfattningen."
     digest_min_excerpt_length: "Minsta antal inläggsutdrag i e-postsammanfattningen, i tecken."
     delete_digest_email_after_days: "Undertryck e-postsammanfattningar för användare som inte har besökt webbplatsen i mer än (n) dagar."
     digest_suppress_categories: "Undertryck de här kategorierna från e-postsammanfattningar."
@@ -1120,7 +1120,6 @@ sv:
     embed_whitelist_selector: "CSS-väljare för element som tillåts bäddas in. "
     embed_blacklist_selector: "CSS-väljare för element som tas bort från inbäddningar."
     notify_about_flags_after: "Skicka ett e-postmeddelande till contact_email om det finns flaggor som inte har hanterats efter så här många timmar. Ange 0 för att inaktivera."
-    enable_cdn_js_debugging: "Tillåt /logs att visa lämpliga fel genom att lägga till ursprungstillståndet på alla js-inkluderingar."
     show_create_topics_notice: "Visa en notis som ber administratörerna att skapa några ämnen om webbplatsen har färre än 5 publika ämnen."
     delete_drafts_older_than_n_days: Ta bort utkast som är äldre än (n) dagar.
     bootstrap_mode_min_users: "Minsta antal användare som krävs för att inaktivera bootstrap-läget (ange 0 för att inaktivera)"
@@ -1359,36 +1358,8 @@ sv:
       Denna inbjudan är från en betrodd användare, så du kan direkt delta och svara i diskussionen.
   invite_forum_mailer:
     subject_template: "%{invitee_name} har bjudit in dig till %{site_domain_name}"
-    text_body_template: |
-      %{invitee_name} har bjudit in dig till
-
-      > **%{site_title}**
-      >
-      > %{site_description}
-
-      Om du är intresserad, klicka på länken nedan:
-
-      %{invite_link}
-
-      Denna inbjudan kommer från en betrodd användare, så ett konto kommer att skapas åt dig automatiskt.
   custom_invite_forum_mailer:
     subject_template: "%{invitee_name} har bjudit in dig till %{site_domain_name}"
-    text_body_template: |
-      %{invitee_name} har bjudit in dig till
-
-      > **%{site_title}**
-      >
-      > %{site_description}
-
-      Meddelande från %{invitee_name}:
-
-      %{user_custom_message}
-
-      Om du är intresserad, klicka på länken nedan:
-
-      %{invite_link}
-
-      Denna inbjudan kommer från en betrodd användare, så ett konto kommer att skapas åt dig automatiskt.
   invite_password_instructions:
     subject_template: "Ange lösenord för ditt konto på %{site_name}"
     text_body_template: |
@@ -1441,97 +1412,6 @@ sv:
         Om meddelandet flaggas av medlemmarna och döljs en andra gång så kommer det att fortsätta döljas tills det har hanterats av personal – och det är möjligt att det leder till andra åtgärder, bland annat avstängning av ditt konto.
 
         För ytterligare information, se våra [riktlinjer](%{base_url}/guidelines).
-    usage_tips:
-      text_body_template: |
-        Här är några snabba tips för att komma igång:
-
-        ## Att läsa
-
-        **Fortsätt bara bläddra** för att läsa mer!
-
-        När nya inlägg och ämnen skrivs så dyker de automatiskt upp - du behöver inte uppdatera sidan.
-
-        ## Navigering
-
-        - Använd **ikonerna i övre högra hörnet** för att söka, få tillgång till din användarsida eller <kbd>☰</kbd>-menyn.
-
-        - När du väljer ett ämne tas du alltid till ditt **senaste olästa inlägg** i ämnet. Välj antal svar-räknaren för att börja vid början eller slutet istället.
-
-        <img src="%{base_url}/images/welcome/topic-list-select-areas-2x.png" width="593" height="59">
-
-        - När du läser i ett ämne kan du använda tidslinjen på höger sida för att hoppa till början eller slutet, eller dit du senast läste. På mindre skärmar kan du välja förloppsmätaren i nedre högra hörnet för att utvidga den:
-
-        <img src="%{base_url}/images/welcome/progress-bar-2x.png" width="153" height="181">
-
-        Du kan också klicka på <kbd>?</kbd> på ditt tangentbord för att få en förteckning över alla snabbkommandon på tangentbordet.
-
-        För att lägga till ett citat, välj texten som du vill citera och klicka på någon <img src="%{base_url}/images/welcome/reply-post-2x.png" width="25" height="23"> Svarsknapp för att öpnna redigeraren. Upprepa för flera citeringar.
-
-        <img src="%{base_url}/images/welcome/quote-reply-2x.png" width="326" height="128">
-
-        Du kan alltid fortsätta läsa under tiden som du författar ditt svar och vi kommer automatiskt att spara utkast som du skriver.
-
-        För att notifiera någon om ditt svar, nämn deras namn. Skriv '@' för att börja välja användarnamn.
-
-        <img src="%{base_url}/images/welcome/username-completion-2x.png" width="191" height="125">
-
-        För att använda [standard Emojis](http://www.emoji.codes/), skriv bara `:` för att matcha med namn eller använd traditionella smileys `;)`.
-
-        <img src="%{base_url}/images/welcome/emoji-completion-2x.png" width="144" height="153">
-
-        För att generera en sammanfattning för en länk, klistra in den på en rad för sig själv:
-
-        <img src="%{base_url}/images/welcome/link-oneboxing-animation.gif" width="480" height="228">
-
-        Ditt svar kan formatteras med simpel HTML, BBCode eller [Markdown](http://commonmark.org/help/):
-
-        Det här är **fet stil**.
-        Det här är <b>fet stil</b>.
-        Det här är [b]fet stil[/b].
-
-        För fler tips om formattering, [testa vår roliga 10-minuters interaktiva tutorial!](http://commonmark.org/help/tutorial/)
-
-        ## Handlingar
-
-        Det finns handlingsknappar längst ned på varje inlägg:
-
-        <img src="%{base_url}/images/welcome/like-link-flag-bookmark-2x.png" width="162" height="42">
-
-        - Använd **gilla*-knappen för att visa för någon att du tyckte om och uppskattade deras inlägg. Sprid kärleken!
-
-        - Få en inklistringsbar länk till ett inlägg eller ett ämne via **länk**-knappen.
-
-        - Använd <kbd>&hellip;</kbd> knappen för att visa fler handlingar. **Flagga* för att på ett diskret sätt notifiera författaren eller [personalen](%{base_url}/about) om ett problem. **Bokmärk** för att hitta ett inlägg senare på din profilsida.
-
-        ## Notifieringar
-
-        När någon svarar dig, citerar ditt inlägg, nämner ditt `@användarnamn` eller länkar till ditt inlägg kommer ett nummer omedelbart dyka upp i övre högra hörnet av sidan. Välj den för att få tillgång till dina **notifieringar**.
-
-        <img src="%{base_url}/images/welcome/notification-panel-2x.png" width="160" height="54">
-
-        Oroa dig inte om att missa ett svar – du får e-post om alla notifieringar som kommer in när du är borta.
-
-        ## Preferenser
-
-        - Alla ämnen som är mindre än **två dagar gamla** anses nya.
-
-        - Alla ämnen som du **aktivt deltagit i** (genom att skapa det, svara i det eller läsa det en längre period) kommer automatiskt att bevakas å dina vägnar.
-
-        Du kommer att se notifieringar för nya och antal olästa bredvid sådana ämnen:
-
-        <img src="%{base_url}/images/welcome/topics-new-unread-2x.png" width="341" height="106">
-
-        Du kan ändra dina notifieringar för ämnen via notifieringskontrollen vid botten, och högra sidan, av varje ämne.
-
-        <img src="%{base_url}/images/welcome/topic-notification-control-2x.png" width="608" height="312">
-
-        Du kan också ställa in notifieringspreferenser per kategori, om du vill följa eller dölja varje nytt ämne i en specifik kategori.
-
-        För att ändra någon av dessa inställningar, se dina [användarinställningar](%{base_url}/my/preferences).
-
-        ## Gemenskapsförtroende
-
-        Det är fantastiskt att träffa dig! När du medverkar här kommer vi över tid att lära känna dig och dina temporära nya användarbegränsningar kommer att upphävas. Fortsätt delta så kommer du med tiden att förtjäna nya [förtroendenivåer](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924) som inkluderar specialförmågor som hjälper oss att ta hand om forumet tillsammans.
     welcome_user:
       subject_template: "Välkommen till %{site_name}!"
       text_body_template: |
@@ -1546,26 +1426,6 @@ sv:
         (Om du som ny användare behöver komma i kontakt med vår [personal](%{base_url}/about), svara bara på detta meddelande)
     welcome_invite:
       subject_template: "Välkommen till %{site_name}!"
-      text_body_template: |
-        Tack för att du accepterade din inbjudan till %{site_name} -- välkommen!
-
-        Vi har skapat ett nytt konto **%{username}** till dig och du är inloggad. Du kan byta namn genom att besöka [din användarprofil][prefs].
-
-        För att logga in senare:
-
-        1. Använda alltid **samma e-postadress som från din ursprungliga inbjudan** när du loggar in. Annars vet vi inte att det är du!
-
-        2. Skapa ett unikt lösenord för [din användarprofil][prefs], och använd det för att logga in.
-
-        %{new_user_tips}
-
-        Vi tror på ett [civiliserat beteende](%{base_url}/guidelines) vid alla tillfällen.
-
-        Njut av din vistelse!
-
-        (Om du som ny användare behöver komma i kontakt med vår [personal](%{base_url}/about), svara bara på detta meddelande.)
-
-        [prefs]: %{user_preferences_url}
     backup_succeeded:
       subject_template: "Säkerhetskopia skapades utan problem"
     backup_failed:
@@ -1629,7 +1489,6 @@ sv:
 
         Kontot associerat till den här e-postadressen har blockerats.
     email_reject_reply_user_not_matching:
-      subject_template: "[%{site_name}] E-postfel -- Svar matchar inte användare"
       text_body_template: |
         Tyvärr har ditt e-postmeddelande till %{destination} (med ämnet %{former_title}) inte kunnat skickas.
 
@@ -1649,7 +1508,6 @@ sv:
 
         Om du har fått det här meddelandet och vet att du _har_ skrivit ett svar, försök igen med simplare formattering.
     email_reject_parsing:
-      subject_template: "[%{site_name}] E-postfel -- Innehåll oigenkänningsbart"
       text_body_template: |
         Tyvärr har ditt e-postmeddelande till %{destination} (med ämnet %{former_title}) inte kunnat skickas.
 
@@ -1964,15 +1822,9 @@ sv:
     digest:
       why: "En kortfattad sammanfattning av %{site_link} sedan ditt senaste besök den %{last_seen_at}"
       subject_template: "[%{site_name}] Sammanfattning"
-      new_activity: "Ny aktivitet i dina ämnen och inlägg:"
-      top_topics: "Populära inlägg"
-      other_new_topics: "Populära ämnen"
       unsubscribe: "Den här sammanfattningen har skickats från %{site_link} där vi inte har sett dig på ett tag. För att säga upp dig %{unsubscribe_link}."
       click_here: "klicka här"
       from: "%{site_name} sammanfattning"
-      read_more: "Läs mer"
-      more_topics: "Det finns %{new_topics_since_seen} nya ämnen."
-      more_topics_category: "Fler nya ämnen:"
     mailing_list:
       why: "All aktivitet på %{site_link} den %{date}"
       subject_template: "[%{site_name}] Sammanfattning för %{date}"
@@ -2232,35 +2084,6 @@ sv:
     title: "Villkor"
   privacy_topic:
     title: "Integritetspolicy"
-  static:
-    search_help: |
-      <h3>Tips</h3>
-      <p>
-      <ul>
-      <li>Matchande rubriker prioriteras &ndash; sök efter rubriker om du är osäker</li>
-      <li>Unika, ovanliga ord kommer att ge bäst resultat</li>
-      <li>Försök att söka inom en kategori, ett ämne eller en användare</li>
-      </ul>
-      </p>
-      <h3>Alternativ</h3>
-      <p>
-      <table>
-      <tr><td><code>order:views</code></td><td><code>order:latest</code></td><td><code>order:likes</code></td><td><code>@username</code></td><td><code>user:foo</code></td></tr>
-      <tr><td><code>status:open</code></td><td><code>status:closed</code></td><td><code>status:archived</code></td><td><code>status:noreplies</code></td><td><code>status:single_user</code></td></tr>
-      <tr><td><code>#category-slug</code></td><td><code>category:foo</code></td><td><code>group:foo</code></td><td><code>badge:foo</code></td><td></td></tr>
-      <tr><td><code>in:likes</code></td><td><code>in:posted</code></td><td><code>in:watching</code></td><td><code>in:tracking</code></td><td><code>in:private</code></td></tr>
-      <tr><td><code>in:bookmarks</code></td><td><code>in:first</code></td><td><code>in:pinned</code></td><td><code>in:unpinned</code></td><td><code>in:wiki</code></td></tr>
-      <tr><td><code>posts_count:num</code></td><td><code>before:days or date</code></td><td><code>after:days or date</code></td><td><code>tags:one,two</code></td><td></td></tr>
-      </table>
-      </p>
-      <h3>Exempel</h3>
-      <p>
-      <ul>
-      <li><code>rainbows #parks</code> kommer att söka efter ämnen som innehåller ordet "rainbows" i kategorin "parks".</li>
-      <li><code>rainbows category:parks status:open order:latest</code> kommer att söka efter ämnen som innehåller ordet "rainbows" i kategorin "parks" som inte är stängda eller arkiverade, sorterade efter datum på senaste inlägget.</li>
-      <li><code>rainbows category:"parks and gardens" in:bookmarks</code> kommer att söka efter ämnen som innehåller ordet "rainbows" i kategorin "parks and gardens" som är bokmärkta av dig.</li>
-      </ul>
-      </p>
   badges:
     editor:
       name: Redigerare

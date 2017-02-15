@@ -11,7 +11,8 @@ const defaultOpts = buildOptions({
     emoji_set: 'emoji_one',
     highlighted_languages: 'json|ruby|javascript',
     default_code_lang: 'auto',
-    censored_words: 'shucks|whiz|whizzer'
+    censored_words: 'shucks|whiz|whizzer|a**le',
+    censored_pattern: '\\d{3}-\\d{4}|tech\\w*'
   },
   getURL: url => url
 });
@@ -159,9 +160,18 @@ test("Links", function() {
          "<p><a href=\"http://discourse.org\">http://google.com ... wat</a></p>",
          "it supports links within links");
 
+  cooked("[http://google.com](http://discourse.org)",
+         "<p><a href=\"http://discourse.org\">http://google.com</a></p>",
+         "it supports markdown links where the name and link match");
+
+
   cooked("[Link](http://www.example.com) (with an outer \"description\")",
          "<p><a href=\"http://www.example.com\">Link</a> (with an outer \"description\")</p>",
          "it doesn't consume closing parens as part of the url");
+
+  cooked("A link inside parentheses (http://www.example.com)",
+         "<p>A link inside parentheses (<a href=\"http://www.example.com\">http://www.example.com</a>)</p>",
+         "it auto-links a url within parentheses");
 
   cooked("[ul][1]\n\n[1]: http://eviltrout.com",
          "<p><a href=\"http://eviltrout.com\">ul</a></p>",
@@ -514,15 +524,26 @@ test("censoring", function() {
   cooked("aw shucks, golly gee whiz.",
          "<p>aw &#9632;&#9632;&#9632;&#9632;&#9632;&#9632;, golly gee &#9632;&#9632;&#9632;&#9632;.</p>",
          "it censors words in the Site Settings");
+
   cooked("you are a whizzard! I love cheesewhiz. Whiz.",
          "<p>you are a whizzard! I love cheesewhiz. &#9632;&#9632;&#9632;&#9632;.</p>",
          "it doesn't censor words unless they have boundaries.");
+
   cooked("you are a whizzer! I love cheesewhiz. Whiz.",
          "<p>you are a &#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;! I love cheesewhiz. &#9632;&#9632;&#9632;&#9632;.</p>",
          "it censors words even if previous partial matches exist.");
+
   cooked("The link still works. [whiz](http://www.whiz.com)",
          "<p>The link still works. <a href=\"http://www.whiz.com\">&#9632;&#9632;&#9632;&#9632;</a></p>",
          "it won't break links by censoring them.");
+
+  cooked("Call techapj the computer whiz at 555-555-1234 for free help.",
+         "<p>Call &#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632; the computer &#9632;&#9632;&#9632;&#9632; at 555-&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632;&#9632; for free help.</p>",
+         "uses both censored words and patterns from site settings");
+
+  cooked("I have a pen, I have an a**le",
+         "<p>I have a pen, I have an &#9632;&#9632;&#9632;&#9632;&#9632;</p>",
+         "it escapes regexp chars");
 });
 
 test("code blocks/spans hoisting", function() {

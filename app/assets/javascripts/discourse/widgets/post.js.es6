@@ -1,7 +1,7 @@
 import PostCooked from 'discourse/widgets/post-cooked';
 import DecoratorHelper from 'discourse/widgets/decorator-helper';
 import { createWidget, applyDecorators } from 'discourse/widgets/widget';
-import { iconNode } from 'discourse/helpers/fa-icon';
+import { iconNode } from 'discourse/helpers/fa-icon-node';
 import { transformBasicPost } from 'discourse/lib/transform-post';
 import { h } from 'virtual-dom';
 import DiscourseURL from 'discourse/lib/url';
@@ -77,43 +77,6 @@ createWidget('reply-to-tab', {
   }
 });
 
-createWidget('post-avatar-flair', {
-  tagName: 'div.avatar-flair',
-
-  isIcon(attrs) {
-    return (attrs.primaryGroupFlairUrl && attrs.primaryGroupFlairUrl.substr(0,3) === 'fa-');
-  },
-
-  title(attrs) {
-    return attrs.primaryGroupName;
-  },
-
-  buildClasses(attrs) {
-    return 'avatar-flair-' + attrs.primaryGroupName + (attrs.primaryGroupFlairBgColor ? ' rounded' : '');
-  },
-
-  buildAttributes(attrs) {
-    var style = '';
-    if (!this.isIcon(attrs)) {
-      style += 'background-image: url(' + Handlebars.Utils.escapeExpression(attrs.primaryGroupFlairUrl) + '); ';
-    }
-    if (attrs.primaryGroupFlairBgColor) {
-      style += 'background-color: #' + Handlebars.Utils.escapeExpression(attrs.primaryGroupFlairBgColor) + '; ';
-    }
-    if (attrs.primaryGroupFlairColor) {
-      style += 'color: #' + Handlebars.Utils.escapeExpression(attrs.primaryGroupFlairColor) + '; ';
-    }
-    return {style: style};
-  },
-
-  html(attrs) {
-    if (this.isIcon(attrs)) {
-      return [h('i', { className: 'fa ' + attrs.primaryGroupFlairUrl })];
-    } else {
-      return [];
-    }
-  }
-});
 
 createWidget('post-avatar', {
   tagName: 'div.topic-avatar',
@@ -131,35 +94,19 @@ createWidget('post-avatar', {
         template: attrs.avatar_template,
         username: attrs.username,
         url: attrs.usernameUrl,
-        className: 'main-avatar',
-        flairUrl: attrs.primaryGroupFlairUrl,
-        flairBgColor: attrs.primaryGroupFlairBgColor
+        className: 'main-avatar'
       });
     }
 
     const result = [body];
 
-    if (attrs.primaryGroupFlairUrl || attrs.primaryGroupFlairBgColor) {
-      result.push(this.attach('post-avatar-flair', attrs));
+    if (attrs.primary_group_flair_url || attrs.primary_group_flair_bg_color) {
+      result.push(this.attach('avatar-flair', attrs));
     }
 
     result.push(h('div.poster-avatar-extra'));
 
     return result;
-  }
-});
-
-
-createWidget('wiki-edit-button', {
-  tagName: 'div.post-info.wiki',
-  title: 'post.wiki.about',
-
-  html() {
-    return iconNode('pencil-square-o');
-  },
-
-  click() {
-    this.sendWidgetAction('editPost');
   }
 });
 
@@ -220,12 +167,8 @@ createWidget('post-meta-data', {
       result.push(this.attach('post-email-indicator', attrs));
     }
 
-    if (attrs.version > 1) {
+    if (attrs.version > 1 || attrs.wiki) {
       result.push(this.attach('post-edits-indicator', attrs));
-    }
-
-    if (attrs.wiki) {
-      result.push(this.attach('wiki-edit-button', attrs));
     }
 
     if (attrs.multiSelect) {
@@ -454,7 +397,7 @@ export default createWidget('post', {
     if (attrs.topicOwner) { classNames.push('topic-owner'); }
     if (attrs.hidden) { classNames.push('post-hidden'); }
     if (attrs.deleted) { classNames.push('deleted'); }
-    if (attrs.primaryGroupName) { classNames.push(`group-${attrs.primaryGroupName}`); }
+    if (attrs.primary_group_name) { classNames.push(`group-${attrs.primary_group_name}`); }
     if (attrs.wiki) { classNames.push(`wiki`); }
     if (attrs.isWhisper) { classNames.push('whisper'); }
     if (attrs.isModeratorAction || (attrs.isWarning && attrs.firstPost)) {
@@ -502,11 +445,11 @@ export default createWidget('post', {
 
   undoPostAction(typeId) {
     const post = this.model;
-    return post.get('actions_summary').findProperty('id', typeId).undo(post);
+    return post.get('actions_summary').findBy('id', typeId).undo(post);
   },
 
   deferPostActionFlags(typeId) {
     const post = this.model;
-    return post.get('actions_summary').findProperty('id', typeId).deferFlags(post);
+    return post.get('actions_summary').findBy('id', typeId).deferFlags(post);
   }
 });

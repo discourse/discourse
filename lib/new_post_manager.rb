@@ -73,12 +73,34 @@ class NewPostManager
 
     (user.trust_level <= TrustLevel.levels[:basic] && user.post_count < SiteSetting.approve_post_count) ||
     (user.trust_level < SiteSetting.approve_unless_trust_level.to_i) ||
+    (manager.args[:title].present? && user.trust_level < SiteSetting.approve_new_topics_unless_trust_level.to_i) ||
     is_fast_typer?(manager) ||
     matches_auto_block_regex?(manager)
   end
 
   def self.default_handler(manager)
     if user_needs_approval?(manager)
+
+      validator = Validators::PostValidator.new
+      post = Post.new(raw: manager.args[:raw])
+      post.user = manager.user
+      validator.validate(post)
+      if post.errors[:raw].present?
+        result = NewPostResult.new(:created_post, false)
+        result.errors[:base] = post.errors[:raw]
+        return result
+      end
+
+      # Can the user create the post in the first place?
+      if manager.args[:topic_id]
+        topic = Topic.unscoped.where(id: manager.args[:topic_id]).first
+
+        unless manager.user.guardian.can_create_post_on_topic?(topic)
+          result = NewPostResult.new(:created_post, false)
+          result.errors[:base] << I18n.t(:topic_not_found)
+          return result
+        end
+      end
 
       result = manager.enqueue('default')
 
@@ -93,6 +115,7 @@ class NewPostManager
   def self.queue_enabled?
     SiteSetting.approve_post_count > 0 ||
     SiteSetting.approve_unless_trust_level.to_i > 0 ||
+    SiteSetting.approve_new_topics_unless_trust_level.to_i > 0 ||
     handlers.size > 1
   end
 

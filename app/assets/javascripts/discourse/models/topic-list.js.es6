@@ -2,27 +2,6 @@ import { ajax } from 'discourse/lib/ajax';
 import RestModel from 'discourse/models/rest';
 import Model from 'discourse/models/model';
 
-function topicsFrom(result, store) {
-  if (!result) { return; }
-
-  // Stitch together our side loaded data
-  const categories = Discourse.Category.list(),
-        users = Model.extractByKey(result.users, Discourse.User);
-
-  return result.topic_list.topics.map(function (t) {
-    t.category = categories.findBy('id', t.category_id);
-    t.posters.forEach(function(p) {
-      p.user = users[p.user_id];
-    });
-    if (t.participants) {
-      t.participants.forEach(function(p) {
-        p.user = users[p.user_id];
-      });
-    }
-    return store.createRecord('topic', t);
-  });
-}
-
 const TopicList = RestModel.extend({
   canLoadMore: Em.computed.notEmpty("more_topics_url"),
 
@@ -66,8 +45,8 @@ const TopicList = RestModel.extend({
 
         if (result) {
           // the new topics loaded from the server
-          const newTopics = topicsFrom(result, store),
-              topics = self.get("topics");
+          const newTopics = TopicList.topicsFrom(store, result);
+          const topics = self.get("topics");
 
           self.forEachNew(newTopics, function(t) {
             t.set('highlight', topicsAdded++ === 0);
@@ -103,7 +82,7 @@ const TopicList = RestModel.extend({
 
     return ajax({ url }).then(result => {
       let i = 0;
-      topicList.forEachNew(topicsFrom(result, store), function(t) {
+      topicList.forEachNew(TopicList.topicsFrom(store, result), function(t) {
         // highlight the first of the new topics so we can get a visual feedback
         t.set('highlight', true);
         topics.insertAt(i,t);
@@ -115,6 +94,26 @@ const TopicList = RestModel.extend({
 });
 
 TopicList.reopenClass({
+  topicsFrom(store, result) {
+    if (!result) { return; }
+
+    // Stitch together our side loaded data
+    const categories = Discourse.Category.list(),
+          users = Model.extractByKey(result.users, Discourse.User);
+
+    return result.topic_list.topics.map(function (t) {
+      t.category = categories.findBy('id', t.category_id);
+      t.posters.forEach(function(p) {
+        p.user = users[p.user_id];
+      });
+      if (t.participants) {
+        t.participants.forEach(function(p) {
+          p.user = users[p.user_id];
+        });
+      }
+      return store.createRecord('topic', t);
+    });
+  },
 
   munge(json, store) {
     json.inserted = json.inserted || [];
@@ -126,7 +125,7 @@ TopicList.reopenClass({
     json.for_period = json.topic_list.for_period;
     json.loaded = true;
     json.per_page = json.topic_list.per_page;
-    json.topics = topicsFrom(json, store);
+    json.topics = this.topicsFrom(store, json);
 
     return json;
   },

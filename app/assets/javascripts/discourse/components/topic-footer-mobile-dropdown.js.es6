@@ -1,5 +1,5 @@
-import { iconHTML } from 'discourse/helpers/fa-icon';
-import Combobox from 'discourse/components/combo-box';
+import { iconHTML } from 'discourse-common/helpers/fa-icon';
+import Combobox from 'discourse-common/components/combo-box';
 import { on, observes } from 'ember-addons/ember-computed-decorators';
 
 export default Combobox.extend({
@@ -27,7 +27,7 @@ export default Combobox.extend({
     }
 
     this.comboTemplate = (item) => {
-      const contentItem = content.findProperty('id', item.id);
+      const contentItem = content.findBy('id', item.id);
       if (!contentItem) { return item.text; }
       return `${iconHTML(contentItem.icon)}&nbsp; ${item.text}`;
     };
@@ -38,7 +38,6 @@ export default Combobox.extend({
   @observes('value')
   _valueChanged() {
     const value = this.get('value');
-    const controller = this.get('parentView.controller');
     const topic = this.get('topic');
 
     const refresh = () => {
@@ -48,7 +47,7 @@ export default Combobox.extend({
 
     switch(value) {
       case 'invite':
-        controller.send('showInvite');
+        this.attrs.showInvite();
         refresh();
         break;
       case 'bookmark':
@@ -59,7 +58,7 @@ export default Combobox.extend({
         refresh();
         break;
       case 'flag':
-        controller.send('showFlagTopic', topic);
+        this.attrs.showFlagTopic();
         refresh();
         break;
     }

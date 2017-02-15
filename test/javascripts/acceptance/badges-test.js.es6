@@ -5,6 +5,7 @@ acceptance("Badges");
 test("Visit Badge Pages", () => {
   visit("/badges");
   andThen(() => {
+    ok($('body.badges-page').length, "has body class");
     ok(exists('.badge-groups .badge-card'), "has a list of badges");
   });
 

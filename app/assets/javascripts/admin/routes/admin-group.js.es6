@@ -7,8 +7,7 @@ export default Discourse.Route.extend({
       return Group.create({ automatic: false, visible: true });
     }
 
-    const group = this.modelFor('adminGroupsType')
-                      .findProperty('name', params.name);
+    const group = this.modelFor('adminGroupsType').findBy('name', params.name);
 
     if (!group) { return this.transitionTo('adminGroups.index'); }
 

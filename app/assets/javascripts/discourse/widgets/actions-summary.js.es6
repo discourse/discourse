@@ -1,6 +1,6 @@
 import { createWidget } from 'discourse/widgets/widget';
 import { avatarFor } from 'discourse/widgets/post';
-import { iconNode } from 'discourse/helpers/fa-icon';
+import { iconNode } from 'discourse/helpers/fa-icon-node';
 import { h } from 'virtual-dom';
 import { dateNode } from 'discourse/helpers/node';
 

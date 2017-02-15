@@ -1,8 +1,8 @@
-<div class="modal-body">
+{{#d-modal-body}}
   <p>{{{description}}}</p>
 
   <p>{{{i18n "queue.approval.pending_posts" count=model.pending_count}}}</p>
-</div>
+{{/d-modal-body}}
 <div class="modal-footer">
   {{d-button action="closeModal" class="btn-primary" label="queue.approval.ok"}}
 </div>

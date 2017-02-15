@@ -1,0 +1,49 @@
+{{#d-modal-body title="admin.badges.preview.modal_title" class="badge-query-preview"}}
+  {{#if errors}}
+    <p class="error-header">{{i18n 'admin.badges.preview.sql_error_header'}}</p>
+
+    <pre class="badge-errors">{{errors}}</pre>
+
+    <!--
+    TODO we want some help pages for this, link to those instead
+    <p>
+      {{i18n 'admin.badges.preview.error_help'}}
+    </p>
+    <ul>
+      <li><a href="https://meta.discourse.org/t/triggered-custom-badge-queries/19336">https://meta.discourse.org/t/triggered-custom-badge-queries/19336</a></li>
+    </ul>
+    -->
+  {{else}}
+    <p class="grant-count">
+      {{#if count}}
+        {{{i18n 'admin.badges.preview.grant_count' count=count}}}
+      {{else}}
+        {{{i18n 'admin.badges.preview.no_grant_count'}}}
+      {{/if}}
+    </p>
+
+    {{#if count_warning}}
+      <div class="count-warning">
+        <p class="heading"><i class="fa fa-warning"></i> {{i18n 'admin.badges.preview.bad_count_warning.header'}}</p>
+        <p class="body">{{i18n 'admin.badges.preview.bad_count_warning.text'}}</p>
+      </div>
+    {{/if}}
+
+    {{#if sample}}
+      <p class="sample">
+        {{i18n 'admin.badges.preview.sample'}}
+      </p>
+      <ul>
+        {{#each processed_sample as |html|}}
+          <li>{{{html}}}</li>
+        {{/each}}
+      </ul>
+    {{/if}}
+
+    {{#if has_query_plan}}
+        <div class="badge-query-plan">
+          {{{query_plan_html}}}
+        </div>
+    {{/if}}
+  {{/if}}
+{{/d-modal-body}}

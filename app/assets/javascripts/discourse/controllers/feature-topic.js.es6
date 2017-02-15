@@ -5,7 +5,7 @@ import computed from 'ember-addons/ember-computed-decorators';
 import InputValidation from 'discourse/models/input-validation';
 
 export default Ember.Controller.extend(ModalFunctionality, {
-  needs: ["topic"],
+  topicController: Ember.inject.controller('topic'),
 
   loading: true,
   pinnedInCategoryCount: 0,
@@ -106,7 +106,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
   },
 
   _forwardAction(name) {
-    this.get("controllers.topic").send(name);
+    this.get("topicController").send(name);
     this.send("closeModal");
   },
 

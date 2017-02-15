@@ -16,6 +16,10 @@ class DiscoursePluginRegistry
 
     attr_accessor :custom_html
 
+    def plugins
+      @plugins ||= []
+    end
+
     # Default accessor values
     def javascripts
       @javascripts ||= Set.new
@@ -93,8 +97,11 @@ class DiscoursePluginRegistry
     end
   end
 
+  JS_REGEX = /\.js$|\.js\.erb$|\.js\.es6$/
+  HANDLEBARS_REGEX = /\.hbs$|\.js\.handlebars$/
+
   def self.register_asset(asset, opts=nil)
-    if asset =~ /\.js$|\.js\.erb$|\.js\.es6$/
+    if asset =~ JS_REGEX
       if opts == :admin
         self.admin_javascripts << asset
       else
@@ -111,9 +118,7 @@ class DiscoursePluginRegistry
         self.stylesheets << asset
       end
 
-    elsif asset =~ /\.hbs$/
-      self.handlebars << asset
-    elsif asset =~ /\.js\.handlebars$/
+    elsif asset =~ HANDLEBARS_REGEX
       self.handlebars << asset
     end
   end

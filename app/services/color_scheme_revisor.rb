@@ -21,6 +21,7 @@ class ColorSchemeRevisor
 
       @color_scheme.name    = @params[:name]    if @params.has_key?(:name)
       @color_scheme.enabled = @params[:enabled] if @params.has_key?(:enabled)
+      @color_scheme.theme_id = @params[:theme_id] if @params.has_key?(:theme_id)
       new_version = false
 
       if @params[:colors]
@@ -30,7 +31,7 @@ class ColorSchemeRevisor
       end
 
       if new_version
-        old_version = ColorScheme.create(
+        ColorScheme.create(
           name: @color_scheme.name,
           enabled: false,
           colors: @color_scheme.colors_hashes,

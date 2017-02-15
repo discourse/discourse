@@ -28,8 +28,15 @@
     <%= script "vendor" %>
     <%= script "pretty-text-bundle" %>
     <%= script "application" %>
+    <%- if allow_plugins? %>
+    <%= script "plugin" %>
+    <%- end %>
+    <%- if allow_third_party_plugins? %>
+    <%= script "plugin-third-party" %>
+    <%- end %>
 
     <%- if staff? %>
+      <script src="<%= Discourse.base_uri %>/extra-locales/admin"></script>
       <%= script "admin" %>
     <%- end %>
 
@@ -39,6 +46,10 @@
 
     <%= render_google_universal_analytics_code %>
     <link rel="manifest" href="<%= Discourse.base_uri %>/manifest.json">
+
+    <%- if SiteSetting.native_app_install_banner? %>
+        <meta name="apple-itunes-app" content="app-id=1173672076">
+    <%- end %>
 
     <%= yield :head %>
   </head>

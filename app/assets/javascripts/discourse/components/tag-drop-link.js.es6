@@ -17,10 +17,6 @@ export default Ember.Component.extend({
     return "tag-" + this.get('tagId');
   }.property('tagId'),
 
-  render(buffer) {
-    buffer.push(Handlebars.Utils.escapeExpression(this.get('tagId')));
-  },
-
   click(e) {
     e.preventDefault();
     DiscourseURL.routeTo(this.get('href'));

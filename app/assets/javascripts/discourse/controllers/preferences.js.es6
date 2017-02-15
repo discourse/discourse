@@ -3,6 +3,7 @@ import CanCheckEmails from 'discourse/mixins/can-check-emails';
 import { popupAjaxError } from 'discourse/lib/ajax-error';
 import computed from "ember-addons/ember-computed-decorators";
 import { cook } from 'discourse/lib/text';
+import { NotificationLevels } from 'discourse/lib/notification-levels';
 
 export default Ember.Controller.extend(CanCheckEmails, {
 
@@ -24,7 +25,7 @@ export default Ember.Controller.extend(CanCheckEmails, {
 
       // Staff can edit fields that are not `editable`
       if (!this.get('currentUser.staff')) {
-        siteUserFields = siteUserFields.filterProperty('editable', true);
+        siteUserFields = siteUserFields.filterBy('editable', true);
       }
       return siteUserFields.sortBy('position').map(function(field) {
         const value = userFields ? userFields[field.get('id').toString()] : null;
@@ -60,11 +61,6 @@ export default Ember.Controller.extend(CanCheckEmails, {
   },
 
   @computed()
-  canReceiveDigest() {
-    return !this.siteSettings.disable_digest_emails;
-  },
-
-  @computed()
   availableLocales() {
     return this.siteSettings.available_locales.split('|').map(s => ({ name: s, value: s }));
   },
@@ -83,7 +79,8 @@ export default Ember.Controller.extend(CanCheckEmails, {
   mailingListModeOptions() {
     return [
       {name: I18n.t('user.mailing_list_mode.daily'), value: 0},
-      {name: this.get('frequencyEstimate'), value: 1}
+      {name: this.get('frequencyEstimate'), value: 1},
+      {name: I18n.t('user.mailing_list_mode.individual_no_echo'), value: 2}
     ];
   },
 
@@ -114,6 +111,10 @@ export default Ember.Controller.extend(CanCheckEmails, {
                        { name: I18n.t('user.auto_track_options.after_4_minutes'), value: 240000 },
                        { name: I18n.t('user.auto_track_options.after_5_minutes'), value: 300000 },
                        { name: I18n.t('user.auto_track_options.after_10_minutes'), value: 600000 }],
+
+  notificationLevelsForReplying: [{ name: I18n.t('topic.notifications.watching.title'), value: NotificationLevels.WATCHING },
+                                  { name: I18n.t('topic.notifications.tracking.title'), value: NotificationLevels.TRACKING }],
+
 
   considerNewTopicOptions: [{ name: I18n.t('user.new_topic_duration.not_viewed'), value: -1 },
                             { name: I18n.t('user.new_topic_duration.after_1_day'), value: 60 * 24 },
@@ -156,9 +157,7 @@ export default Ember.Controller.extend(CanCheckEmails, {
 
       // Cook the bio for preview
       model.set('name', this.get('newNameInput'));
-      var options = {};
-
-      return model.save(options).then(() => {
+      return model.save().then(() => {
         if (Discourse.User.currentProp('id') === model.get('id')) {
           Discourse.User.currentProp('name', model.get('name'));
         }

@@ -24,6 +24,9 @@ test("Root URL", () => {
 
 test("Filters", () => {
   visit("/users/eviltrout/activity");
+  andThen(() => {
+    ok($('body.user-activity-page').length, "has the body class");
+  });
   hasStream();
 
   visit("/users/eviltrout/activity/topics");
@@ -31,6 +34,14 @@ test("Filters", () => {
 
   visit("/users/eviltrout/activity/replies");
   hasStream();
+});
+
+test("Badges", () => {
+  visit("/users/eviltrout/badges");
+  andThen(() => {
+    ok($('body.user-badges-page').length, "has the body class");
+    ok(exists(".user-badges-list .badge-card"), "shows a badge");
+  });
 });
 
 test("Restricted Routes", () => {

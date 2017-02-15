@@ -493,7 +493,7 @@ describe Post do
       expect(Fabricate.build(:post, post_args)).to be_valid
     end
 
-    it 'treate blank posts as invalid' do
+    it 'create blank posts as invalid' do
       expect(Fabricate.build(:post, raw: "")).not_to be_valid
     end
   end
@@ -628,6 +628,21 @@ describe Post do
 
   end
 
+  describe 'before save' do
+    let(:cooked) { "<p><div class=\"lightbox-wrapper\"><a data-download-href=\"//localhost:3000/uploads/default/34784374092783e2fef84b8bc96d9b54c11ceea0\" href=\"//localhost:3000/uploads/default/original/1X/34784374092783e2fef84b8bc96d9b54c11ceea0.gif\" class=\"lightbox\" title=\"Sword reworks.gif\"><img src=\"//localhost:3000/uploads/default/optimized/1X/34784374092783e2fef84b8bc96d9b54c11ceea0_1_690x276.gif\" width=\"690\" height=\"276\"><div class=\"meta\">\n<span class=\"filename\">Sword reworks.gif</span><span class=\"informations\">1000x400 1000 KB</span><span class=\"expand\"></span>\n</div></a></div></p>" }
+
+    let(:post) do
+      Fabricate(:post,
+        raw: "<img src=\"/uploads/default/original/1X/34784374092783e2fef84b8bc96d9b54c11ceea0.gif\" width=\"690\" height=\"276\">",
+        cooked: cooked
+      )
+    end
+
+    it 'should not cook the post if raw has not been changed' do
+      post.save!
+      expect(post.cooked).to eq(cooked)
+    end
+  end
 
   describe 'after save' do
 
@@ -797,7 +812,7 @@ describe Post do
     it "should add nofollow to links in the post for trust levels below 3" do
       post.user.trust_level = 2
       post.save
-      expect(post.cooked).to match(/nofollow/)
+      expect(post.cooked).to match(/nofollow noopener/)
     end
 
     it "when tl3_links_no_follow is false, should not add nofollow for trust level 3 and higher" do
@@ -811,7 +826,7 @@ describe Post do
       SiteSetting.stubs(:tl3_links_no_follow).returns(true)
       post.user.trust_level = 3
       post.save
-      expect(post.cooked).to match(/nofollow/)
+      expect(post.cooked).to match(/nofollow noopener/)
     end
   end
 

@@ -21,11 +21,11 @@ export default Discourse.Route.extend({
           });
         } else if (params.groupname) {
           // send a message to a group
-          Group.find(params.groupname).then(group => {
-            if (group.mentionable) {
-              Ember.run.next(() => e.send("createNewMessageViaParams", group.name, params.title, params.body));
+          Group.mentionable(params.groupname).then(result => {
+            if (result.mentionable) {
+              Ember.run.next(() => e.send("createNewMessageViaParams", params.groupname, params.title, params.body));
             } else {
-              bootbox.alert(I18n.t("composer.cant_send_pm", { username: group.name }));
+              bootbox.alert(I18n.t("composer.cant_send_pm", { username: params.groupname }));
             }
           }).catch(function() {
             bootbox.alert(I18n.t("generic_error"));

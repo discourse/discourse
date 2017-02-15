@@ -1,4 +1,4 @@
-import { htmlHelper } from 'discourse/lib/helpers';
+import { htmlHelper } from 'discourse-common/lib/helpers';
 
 const TITLE_SUBS = {
   all: 'all_time',

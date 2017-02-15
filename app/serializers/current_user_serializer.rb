@@ -6,6 +6,7 @@ class CurrentUserSerializer < BasicUserSerializer
              :total_unread_notifications,
              :unread_notifications,
              :unread_private_messages,
+             :read_first_notification?,
              :admin?,
              :notification_channel_position,
              :site_flagged_posts_count,
@@ -34,7 +35,8 @@ class CurrentUserSerializer < BasicUserSerializer
              :read_faq,
              :automatically_unpin_topics,
              :mailing_list_mode,
-             :previous_visit_at
+             :previous_visit_at,
+             :seen_notification_id
 
   def include_site_flagged_posts_count?
     object.staff?

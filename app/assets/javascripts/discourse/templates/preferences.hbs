@@ -1,0 +1,370 @@
+{{#d-section pageClass="user-preferences" class="user-content user-preferences"}}
+
+  <form class="form-horizontal">
+
+    <div class="control-group save-button" id='save-button-top'>
+      <div class="controls">
+        {{partial 'user/preferences/save-button'}}
+      </div>
+    </div>
+
+    <div class="control-group pref-username">
+      <label class="control-label">{{i18n 'user.username.title'}}</label>
+      <div class="controls">
+        <span class='static'>{{model.username}}</span>
+        {{#if model.can_edit_username}}
+          {{#link-to "preferences.username" class="btn btn-small pad-left no-text"}}<i class="fa fa-pencil"></i>{{/link-to}}
+        {{/if}}
+      </div>
+      <div class='instructions'>
+        {{{i18n 'user.username.short_instructions' username=model.username}}}
+      </div>
+    </div>
+
+    {{#if canEditName}}
+      <div class="control-group pref-name">
+        <label class="control-label">{{i18n 'user.name.title'}}</label>
+        <div class="controls">
+          {{#if model.can_edit_name}}
+            {{text-field value=newNameInput classNames="input-xxlarge"}}
+          {{else}}
+            <span class='static'>{{model.name}}</span>
+          {{/if}}
+        </div>
+        <div class='instructions'>
+          {{nameInstructions}}
+        </div>
+      </div>
+    {{/if}}
+
+    {{#if canSelectTitle}}
+      <div class="control-group pref-title">
+        <label class="control-label">{{i18n 'user.title.title'}}</label>
+        <div class="controls">
+          <span class="static">{{model.title}}</span>
+          {{#link-to "preferences.badgeTitle" class="btn btn-small pad-left no-text"}}{{fa-icon "pencil"}}{{/link-to}}
+        </div>
+      </div>
+    {{/if}}
+
+    {{#if canCheckEmails}}
+      <div class="control-group pref-email">
+        <label class="control-label">{{i18n 'user.email.title'}}</label>
+        {{#if model.email}}
+          <div class="controls">
+            <span class='static'>{{model.email}}</span>
+            {{#if model.can_edit_email}}
+              {{#link-to "preferences.email" class="btn btn-small pad-left no-text"}}{{fa-icon "pencil"}}{{/link-to}}
+            {{/if}}
+          </div>
+          <div class='instructions'>
+            {{i18n 'user.email.instructions'}}
+          </div>
+        {{else}}
+          <div class="controls">
+            {{d-button action="checkEmail" actionParam=model title="admin.users.check_email.title" icon="envelope-o" label="admin.users.check_email.text"}}
+          </div>
+        {{/if}}
+      </div>
+    {{/if}}
+
+    {{#if canChangePassword}}
+    <div class="control-group pref-password">
+      <label class="control-label">{{i18n 'user.password.title'}}</label>
+      <div class="controls">
+        <a href {{action "changePassword"}} class='btn'>
+          {{fa-icon "envelope"}}
+          {{#if model.no_password}}
+            {{i18n 'user.change_password.set_password'}}
+          {{else}}
+            {{i18n 'user.change_password.action'}}
+          {{/if}}
+        </a>
+        {{passwordProgress}}
+      </div>
+    </div>
+    {{/if}}
+
+    <div class="control-group pref-avatar">
+      <label class="control-label">{{i18n 'user.avatar.title'}}</label>
+      <div class="controls">
+        {{! we want the "huge" version even though we're downsizing it to "large" in CSS }}
+        {{bound-avatar model "huge"}}
+        {{#unless siteSettings.sso_overrides_avatar}}
+          {{d-button action="showAvatarSelector" class="pad-left" icon="pencil"}}
+        {{/unless}}
+      </div>
+    </div>
+
+    {{#if siteSettings.allow_profile_backgrounds}}
+      <div class="control-group pref-profile-bg">
+        <label class="control-label">{{i18n 'user.change_profile_background.title'}}</label>
+        <div class="controls">
+          {{image-uploader imageUrl=model.profile_background type="profile_background"}}
+        </div>
+        <div class='instructions'>
+          {{i18n 'user.change_profile_background.instructions'}}
+        </div>
+      </div>
+
+      <div class="control-group pref-profile-bg">
+        <label class="control-label">{{i18n 'user.change_card_background.title'}}</label>
+        <div class="controls">
+          {{image-uploader imageUrl=model.card_background type="card_background"}}
+        </div>
+        <div class='instructions'>
+          {{i18n 'user.change_card_background.instructions'}}
+        </div>
+      </div>
+    {{/if}}
+
+    {{#if siteSettings.allow_user_locale}}
+      <div class="control-group pref-locale">
+        <label class="control-label">{{i18n 'user.locale.title'}}</label>
+        <div class="controls">
+          {{combo-box valueAttribute="value" content=availableLocales value=model.locale none="user.locale.default"}}
+        </div>
+        <div class='instructions'>
+          {{i18n 'user.locale.instructions'}}
+        </div>
+      </div>
+    {{/if}}
+
+    {{#if canChangeBio}}
+    <div class="control-group pref-bio">
+      <label class="control-label">{{i18n 'user.bio'}}</label>
+      <div class="controls bio-composer">
+        {{d-editor value=model.bio_raw}}
+      </div>
+    </div>
+    {{/if}}
+
+    {{#each userFields as |uf|}}
+      {{user-field field=uf.field value=uf.value}}
+    {{/each}}
+    <div class='clearfix'></div>
+
+    <div class="control-group pref-location">
+      <label class="control-label">{{i18n 'user.location'}}</label>
+      <div class="controls">
+        {{input type="text" value=model.location class="input-xxlarge" id='edit-location'}}
+      </div>
+    </div>
+
+    <div class="control-group pref-website">
+      <label class="control-label">{{i18n 'user.website'}}</label>
+      <div class="controls">
+        {{input type="text" value=model.website class="input-xxlarge"}}
+      </div>
+    </div>
+
+    <div class="control-group pref-card-badge">
+      <label class="control-label">{{i18n 'user.card_badge.title'}}</label>
+      <div class="controls">
+        {{#if model.card_image_badge}}
+          {{icon-or-image model.card_image_badge}}
+        {{/if}}
+        {{#link-to "preferences.card-badge" class="btn btn-small pad-left no-text"}}{{fa-icon "pencil"}}{{/link-to}}
+      </div>
+    </div>
+
+    <div class="control-group pref-email-settings">
+      <label class="control-label">{{i18n 'user.email_settings'}}</label>
+      <div class='controls controls-dropdown'>
+        <label>{{i18n 'user.email_previous_replies.title'}}</label>
+        {{combo-box valueAttribute="value" content=previousRepliesOptions value=model.user_option.email_previous_replies}}
+      </div>
+      {{preference-checkbox labelKey="user.email_in_reply_to" checked=model.user_option.email_in_reply_to}}
+      {{preference-checkbox labelKey="user.email_private_messages" checked=model.user_option.email_private_messages}}
+      {{preference-checkbox labelKey="user.email_direct" checked=model.user_option.email_direct}}
+      {{preference-checkbox labelKey="user.email_always" checked=model.user_option.email_always}}
+      {{#unless model.user_option.email_always}}
+      <div class='instructions'>
+        {{#if siteSettings.email_time_window_mins}}
+          {{i18n 'user.email.frequency' count=siteSettings.email_time_window_mins}}
+        {{else}}
+          {{i18n 'user.email.frequency_immediately'}}
+        {{/if}}
+      </div>
+      {{/unless}}
+    </div>
+
+    {{#unless siteSettings.disable_digest_emails}}
+      <div class='control-group pref-activity-summary'>
+        <label class="control-label">{{i18n 'user.email_activity_summary'}}</label>
+        {{preference-checkbox labelKey="user.email_digests.title" disabled=model.user_option.mailing_list_mode checked=model.user_option.email_digests}}
+        {{#if model.user_option.email_digests}}
+          <div class='controls controls-dropdown'>
+            {{combo-box valueAttribute="value" content=digestFrequencies value=model.user_option.digest_after_minutes}}
+          </div>
+          {{preference-checkbox labelKey="user.include_tl0_in_digests" disabled=model.user_option.mailing_list_mode checked=model.user_option.include_tl0_in_digests}}
+        {{/if}}
+      </div>
+    {{/unless}}
+
+    {{#unless siteSettings.disable_mailing_list_mode}}
+      <div class='control-group pref-mailing-list-mode'>
+        <label class="control-label">{{i18n 'user.mailing_list_mode.label'}}</label>
+        {{preference-checkbox labelKey="user.mailing_list_mode.enabled" checked=model.user_option.mailing_list_mode}}
+        <div class='instructions'>{{{i18n 'user.mailing_list_mode.instructions'}}}</div>
+        {{#if model.user_option.mailing_list_mode}}
+          <div class='controls controls-dropdown'>
+            {{combo-box valueAttribute="value" content=mailingListModeOptions value=model.user_option.mailing_list_mode_frequency}}
+          </div>
+        {{/if}}
+      </div>
+    {{/unless}}
+
+    <div class="control-group notifications">
+      <label class="control-label">{{i18n 'user.desktop_notifications.label'}}</label>
+      {{desktop-notification-config}}
+      <div class="instructions">{{i18n 'user.desktop_notifications.each_browser_note'}}</div>
+    </div>
+
+    <div class="control-group other">
+      <label class="control-label">{{i18n 'user.other_settings'}}</label>
+
+      <div class="controls controls-dropdown">
+        <label>{{i18n 'user.new_topic_duration.label'}}</label>
+        {{combo-box valueAttribute="value" content=considerNewTopicOptions value=model.user_option.new_topic_duration_minutes}}
+      </div>
+
+      <div class="controls controls-dropdown">
+        <label>{{i18n 'user.auto_track_topics'}}</label>
+        {{combo-box valueAttribute="value" content=autoTrackDurations value=model.user_option.auto_track_topics_after_msecs}}
+      </div>
+
+      <div class="controls controls-dropdown">
+        <label>{{i18n 'user.notification_level_when_replying'}}</label>
+        {{combo-box valueAttribute="value" content=notificationLevelsForReplying value=model.user_option.notification_level_when_replying}}
+      </div>
+
+      <div class="controls controls-dropdown">
+        <label>{{i18n 'user.like_notification_frequency.title'}}</label>
+        {{combo-box valueAttribute="value" content=likeNotificationFrequencies value=model.user_option.like_notification_frequency}}
+      </div>
+
+      {{preference-checkbox labelKey="user.external_links_in_new_tab" checked=model.user_option.external_links_in_new_tab}}
+      {{preference-checkbox labelKey="user.enable_quoting" checked=model.user_option.enable_quoting}}
+      {{preference-checkbox labelKey="user.dynamic_favicon" checked=model.user_option.dynamic_favicon}}
+      {{preference-checkbox labelKey="user.disable_jump_reply" checked=model.user_option.disable_jump_reply}}
+      {{plugin-outlet name="user-custom-preferences" args=(hash model=model)}}
+    </div>
+
+    <div class="control-group category">
+      <label class="control-label">{{i18n 'user.categories_settings'}}</label>
+      <div class="controls category-controls">
+        <label><span class="icon fa fa-exclamation-circle watching"></span> {{i18n 'user.watched_categories'}}</label>
+        {{category-selector categories=model.watchedCategories blacklist=selectedCategories}}
+      </div>
+      <div class="instructions">{{i18n 'user.watched_categories_instructions'}}</div>
+      <div class="controls category-controls">
+      <a href="{{unbound model.watchingTopicsPath}}">{{i18n 'user.watched_topics_link'}}</a>
+      </div>
+      <div class="instructions"></div>
+      <div class="controls category-controls">
+        <label><span class="icon fa fa-circle tracking"></span> {{i18n 'user.tracked_categories'}}</label>
+        {{category-selector categories=model.trackedCategories blacklist=selectedCategories}}
+      </div>
+      <div class="instructions">{{i18n 'user.tracked_categories_instructions'}}</div>
+      <div class="controls category-controls">
+        <label><span class="icon fa fa-dot-circle-o watching-first-post"></span> {{i18n 'user.watched_first_post_categories'}}</label>
+        {{category-selector categories=model.watchedFirstPostCategories}}
+      </div>
+      <div class="instructions">{{i18n 'user.watched_first_post_categories_instructions'}}</div>
+      <div class="controls category-controls">
+        <label><span class="icon fa fa-times-circle muted"></span> {{i18n 'user.muted_categories'}}</label>
+        {{category-selector categories=model.mutedCategories blacklist=selectedCategories}}
+      </div>
+      <div class="instructions">{{i18n 'user.muted_categories_instructions'}}</div>
+      <div class="controls category-controls">
+      <a href="{{unbound model.mutedTopicsPath}}">{{i18n 'user.muted_topics_link'}}</a>
+      </div>
+    </div>
+
+    {{#if siteSettings.tagging_enabled}}
+    <div class="control-group tags">
+      <label class="control-label">{{i18n 'user.tag_settings'}}</label>
+      <div class="controls tag-controls">
+        <label><span class="icon fa fa-exclamation-circle watching"></span> {{i18n 'user.watched_tags'}}</label>
+        {{tag-chooser tags=model.watched_tags blacklist=selectedTags allowCreate=false placeholder="" everyTag="true" unlimitedTagCount="true"}}
+      </div>
+      <div class="instructions">{{i18n 'user.watched_tags_instructions'}}</div>
+      <div class="controls tag-controls">
+        <label><span class="icon fa fa-circle tracking"></span> {{i18n 'user.tracked_tags'}}</label>
+        {{tag-chooser tags=model.tracked_tags blacklist=selectedTags allowCreate=false placeholder="" everyTag="true" unlimitedTagCount="true"}}
+      </div>
+      <div class="instructions">{{i18n 'user.tracked_tags_instructions'}}</div>
+      <div class="controls tag-controls">
+        <label><span class="icon fa fa-dot-circle-o watching-first-post"></span> {{i18n 'user.watched_first_post_tags'}}</label>
+        {{tag-chooser tags=model.watching_first_post_tags blacklist=selectedTags allowCreate=false placeholder="" everyTag="true" unlimitedTagCount="true"}}
+      </div>
+      <div class="instructions">{{i18n 'user.watched_first_post_tags_instructions'}}</div>
+      <div class="controls tag-controls">
+        <label><span class="icon fa fa-times-circle muted"></span> {{i18n 'user.muted_tags'}}</label>
+        {{tag-chooser tags=model.muted_tags blacklist=selectedTags allowCreate=false placeholder="" everyTag="true" unlimitedTagCount="true"}}
+      </div>
+      <div class="instructions">{{i18n 'user.muted_tags_instructions'}}</div>
+    </div>
+    {{/if}}
+
+    <div class="control-group muting">
+      <label class="control-label">{{i18n 'user.users'}}</label>
+      <div class="controls category-controls">
+        <label><span class="icon fa fa-times-circle muted"></span> {{i18n 'user.muted_users'}}</label>
+        {{user-selector excludeCurrentUser=true usernames=model.muted_usernames class="user-selector"}}
+      </div>
+      <div class="instructions">{{i18n 'user.muted_users_instructions'}}</div>
+    </div>
+
+    {{#if siteSettings.automatically_unpin_topics}}
+    <div class="control-group topics">
+      <label class="control-label">{{i18n 'categories.topics'}}</label>
+        {{preference-checkbox labelKey="user.automatically_unpin_topics" checked=model.user_option.automatically_unpin_topics}}
+    </div>
+    {{/if}}
+
+    {{#if model.userApiKeys}}
+    <div class="control-group apps">
+      <label class="control-label">{{i18n 'user.apps'}}</label>
+      <div class="controls">
+        {{#each model.userApiKeys as |key|}}
+        <div>
+          <span>{{key.application_name}}</span>
+          {{#if key.revoked}}
+            {{d-button action="undoRevokeApiKey" actionParam=key class="btn" label="user.undo_revoke_access"}}
+          {{else}}
+            {{d-button action="revokeApiKey" actionParam=key class="btn" label="user.revoke_access"}}
+          {{/if}}
+          <p>
+            <ul>
+              {{#each key.scopes as |scope|}}
+              <li>{{scope}}</li>
+              {{/each}}
+            </ul>
+          </p>
+          <p><span>{{i18n "user.api_approved"}}</span> {{bound-date key.created_at}}</p>
+        </div>
+        {{/each}}
+      </div>
+    </div>
+    {{/if}}
+
+    {{plugin-outlet name="user-custom-controls" args=(hash model=model)}}
+
+    <div class="control-group save-button">
+      <div class="controls">
+        {{partial 'user/preferences/save-button'}}
+      </div>
+    </div>
+
+    {{#if model.canDeleteAccount}}
+      <div class="control-group delete-account">
+        <hr/>
+        <div class="controls">
+          {{d-button action="delete" disabled=deleteDisabled class="btn-danger" icon="trash-o" label="user.delete_account"}}
+        </div>
+      </div>
+    {{/if}}
+  </form>
+{{/d-section}}

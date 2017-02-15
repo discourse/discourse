@@ -4,11 +4,73 @@ require 'rails_helper'
 require_dependency 'post_destroyer'
 
 describe Topic do
-
   let(:now) { Time.zone.local(2013,11,20,8,0) }
   let(:user) { Fabricate(:user) }
 
-  it { is_expected.to validate_presence_of :title }
+  context 'validations' do
+    let(:topic) { Fabricate.build(:topic) }
+
+    context "#title" do
+      it { is_expected.to validate_presence_of :title }
+
+      describe 'censored pattern' do
+        describe 'when title matches censored pattern' do
+          it 'should not be valid' do
+            SiteSetting.censored_pattern = 'orange.*'
+
+            topic.title = 'I have orangEjuice orange monkey orange stuff'
+
+            expect(topic).to_not be_valid
+
+            expect(topic.errors.full_messages.first).to include(I18n.t(
+              'errors.messages.matches_censored_pattern', censored_words: 'orangejuice orange monkey orange stuff'
+            ))
+          end
+        end
+      end
+
+      describe 'censored words' do
+        describe 'when title contains censored words' do
+          it 'should not be valid' do
+            SiteSetting.censored_words = 'pineapple|pen'
+
+            topic.title = 'pen PinEapple apple pen '
+
+            expect(topic).to_not be_valid
+
+            expect(topic.errors.full_messages.first).to include(I18n.t(
+              'errors.messages.contains_censored_words', censored_words: 'pen, pineapple'
+            ))
+          end
+        end
+
+        describe 'when title does not contain censored words' do
+          it 'should be valid' do
+            topic.title = 'The cake is a lie'
+
+            expect(topic).to be_valid
+          end
+        end
+
+        describe 'escape special characters in censored words' do
+          before do
+            SiteSetting.censored_words = 'co(onut|coconut|a**le'
+          end
+
+          it 'should not valid' do
+            topic.title = "I have a co(onut a**le"
+
+            expect(topic.valid?).to eq(false)
+
+            expect(topic.errors.full_messages.first).to include(I18n.t(
+              'errors.messages.contains_censored_words',
+              censored_words: 'co(onut, a**le'
+            ))
+          end
+        end
+      end
+    end
+  end
 
   it { is_expected.to rate_limit }
 
@@ -303,7 +365,7 @@ describe Topic do
 
     context 'with a similar topic' do
       let!(:topic) {
-        ActiveRecord::Base.observers.enable :search_observer
+        SearchIndexer.enable
         post = create_post(title: "Evil trout is the dude who posted this topic")
         post.topic
       }
@@ -429,7 +491,7 @@ describe Topic do
       let(:actions) { topic.user.user_actions }
 
       it "should set up actions correctly" do
-        ActiveRecord::Base.observers.enable :all
+        UserActionCreator.enable
 
         expect(actions.map{|a| a.action_type}).not_to include(UserAction::NEW_TOPIC)
         expect(actions.map{|a| a.action_type}).to include(UserAction::NEW_PRIVATE_MESSAGE)
@@ -440,28 +502,33 @@ describe Topic do
 
   end
 
-  it "rate limits topic invitations" do
-    SiteSetting.stubs(:max_topic_invitations_per_day).returns(2)
-    RateLimiter.stubs(:disabled?).returns(false)
-    RateLimiter.clear_all!
+  context 'rate limits' do
 
-    start = Time.now.tomorrow.beginning_of_day
-    freeze_time(start)
+    it "rate limits topic invitations" do
+      SiteSetting.stubs(:max_topic_invitations_per_day).returns(2)
+      RateLimiter.stubs(:disabled?).returns(false)
+      RateLimiter.clear_all!
 
-    user = Fabricate(:user)
-    topic = Fabricate(:topic)
+      start = Time.now.tomorrow.beginning_of_day
+      freeze_time(start)
 
-    freeze_time(start + 10.minutes)
-    topic.invite(topic.user, user.username)
+      user = Fabricate(:user)
+      trust_level_2 = Fabricate(:user, trust_level: 2)
+      topic = Fabricate(:topic, user: trust_level_2)
 
-    freeze_time(start + 20.minutes)
-    topic.invite(topic.user, "walter@white.com")
+      freeze_time(start + 10.minutes)
+      topic.invite(topic.user, user.username)
 
-    freeze_time(start + 30.minutes)
+      freeze_time(start + 20.minutes)
+      topic.invite(topic.user, "walter@white.com")
 
-    expect {
-      topic.invite(topic.user, "user@example.com")
-    }.to raise_error(RateLimiter::LimitExceeded)
+      freeze_time(start + 30.minutes)
+
+      expect {
+        topic.invite(topic.user, "user@example.com")
+      }.to raise_error(RateLimiter::LimitExceeded)
+    end
+
   end
 
   context 'bumping topics' do
@@ -740,6 +807,14 @@ describe Topic do
 
         topic.make_banner!(user)
         expect(Topic.where(archetype: Archetype.banner).count).to eq(1)
+      end
+
+      it "removes any dismissed banner keys" do
+        user.user_profile.update_column(:dismissed_banner_key, topic.id)
+
+        topic.make_banner!(user)
+        user.user_profile.reload
+        expect(user.user_profile.dismissed_banner_key).to be_nil
       end
 
     end
@@ -1354,6 +1429,13 @@ describe Topic do
       expect(Topic.for_digest(user, 1.year.ago, top_order: true)).to be_blank
     end
 
+    it "returns topics from TL0 users if given include_tl0" do
+      new_user = Fabricate(:user, trust_level: 0)
+      topic = Fabricate(:topic, user_id: new_user.id)
+
+      expect(Topic.for_digest(user, 1.year.ago, top_order: true, include_tl0: true)).to eq([topic])
+    end
+
     it "returns topics from TL0 users if enabled in preferences" do
       new_user = Fabricate(:user, trust_level: 0)
       topic = Fabricate(:topic, user_id: new_user.id)
@@ -1368,7 +1450,7 @@ describe Topic do
       user = Fabricate(:user)
       tag = Fabricate(:tag)
       TagUser.change(user.id, tag.id, TagUser.notification_levels[:muted])
-      topic = Fabricate(:topic, tags: [tag])
+      Fabricate(:topic, tags: [tag])
 
       expect(Topic.for_digest(user, 1.year.ago, top_order: true)).to be_blank
     end
@@ -1723,5 +1805,157 @@ describe Topic do
     topic.reload
 
     expect(@topic_status_event_triggered).to eq(true)
+  end
+
+  it 'allows users to normalize counts' do
+
+    topic = Fabricate(:topic, last_posted_at: 1.year.ago)
+    post1 = Fabricate(:post, topic: topic, post_number: 1)
+    post2 = Fabricate(:post, topic: topic, post_type: Post.types[:whisper], post_number: 2)
+
+    Topic.reset_all_highest!
+    topic.reload
+
+    expect(topic.posts_count).to eq(1)
+    expect(topic.highest_post_number).to eq(post1.post_number)
+    expect(topic.highest_staff_post_number).to eq(post2.post_number)
+    expect(topic.last_posted_at).to be_within(1.second).of (post1.created_at)
+  end
+
+  context 'featured link' do
+    before { SiteSetting.topic_featured_link_enabled = true }
+    let(:topic) { Fabricate(:topic) }
+
+    it 'can validate featured link' do
+      topic.featured_link = ' invalid string'
+
+      expect(topic).not_to be_valid
+      expect(topic.errors[:featured_link]).to be_present
+    end
+
+    it 'can properly save the featured link' do
+      topic.featured_link = '  https://github.com/discourse/discourse'
+
+      expect(topic.save).to be_truthy
+      expect(topic.featured_link).to eq('https://github.com/discourse/discourse')
+    end
+
+    context 'when category restricts present' do
+      let!(:link_category) { Fabricate(:link_category) }
+      let(:topic) { Fabricate(:topic) }
+      let(:link_topic) { Fabricate(:topic, category: link_category) }
+
+      it 'can save the featured link if it belongs to that category' do
+        link_topic.featured_link = 'https://github.com/discourse/discourse'
+        expect(link_topic.save).to be_truthy
+        expect(link_topic.featured_link).to eq('https://github.com/discourse/discourse')
+      end
+
+      it 'can not save the featured link if category does not allow it' do
+        topic.category = Fabricate(:category, topic_featured_link_allowed: false)
+        topic.featured_link = 'https://github.com/discourse/discourse'
+        expect(topic.save).to be_falsey
+      end
+
+      it 'if category changes to disallow it, topic remains valid' do
+        t = Fabricate(:topic, category: link_category, featured_link: "https://github.com/discourse/discourse")
+
+        link_category.topic_featured_link_allowed = false
+        link_category.save!
+        t.reload
+
+        expect(t.valid?).to eq(true)
+      end
+    end
+  end
+
+  describe '#time_to_first_response' do
+    it "should have no results if no topics in range" do
+      expect(Topic.time_to_first_response_per_day(5.days.ago, Time.zone.now).count).to eq(0)
+    end
+
+    it "should have no results if there is only a topic with no replies" do
+      topic = Fabricate(:topic, created_at: 1.hour.ago)
+      Fabricate(:post, topic: topic, user: topic.user, post_number: 1)
+      expect(Topic.time_to_first_response_per_day(5.days.ago, Time.zone.now).count).to eq(0)
+      expect(Topic.time_to_first_response_total).to eq(0)
+    end
+
+    it "should have no results if reply is from first poster" do
+      topic = Fabricate(:topic, created_at: 1.hour.ago)
+      Fabricate(:post, topic: topic, user: topic.user, post_number: 1)
+      Fabricate(:post, topic: topic, user: topic.user, post_number: 2)
+      expect(Topic.time_to_first_response_per_day(5.days.ago, Time.zone.now).count).to eq(0)
+      expect(Topic.time_to_first_response_total).to eq(0)
+    end
+
+    it "should have results if there's a topic with replies" do
+      topic = Fabricate(:topic, created_at: 3.hours.ago)
+      Fabricate(:post, topic: topic, user: topic.user, post_number: 1, created_at: 3.hours.ago)
+      Fabricate(:post, topic: topic, post_number: 2, created_at: 2.hours.ago)
+      r = Topic.time_to_first_response_per_day(5.days.ago, Time.zone.now)
+      expect(r.count).to eq(1)
+      expect(r[0]["hours"].to_f.round).to eq(1)
+      expect(Topic.time_to_first_response_total).to eq(1)
+    end
+
+    it "should only count regular posts as the first response" do
+      topic = Fabricate(:topic, created_at: 5.hours.ago)
+      Fabricate(:post, topic: topic, user: topic.user, post_number: 1, created_at: 5.hours.ago)
+      Fabricate(:post, topic: topic, post_number: 2, created_at: 4.hours.ago, post_type: Post.types[:whisper])
+      Fabricate(:post, topic: topic, post_number: 3, created_at: 3.hours.ago, post_type: Post.types[:moderator_action])
+      Fabricate(:post, topic: topic, post_number: 4, created_at: 2.hours.ago, post_type: Post.types[:small_action])
+      Fabricate(:post, topic: topic, post_number: 5, created_at: 1.hour.ago)
+      r = Topic.time_to_first_response_per_day(5.days.ago, Time.zone.now)
+      expect(r.count).to eq(1)
+      expect(r[0]["hours"].to_f.round).to eq(4)
+      expect(Topic.time_to_first_response_total).to eq(4)
+    end
+  end
+
+  describe '#with_no_response' do
+    it "returns nothing with no topics" do
+      expect(Topic.with_no_response_per_day(5.days.ago, Time.zone.now).count).to eq(0)
+    end
+
+    it "returns 1 with one topic that has no replies" do
+      topic = Fabricate(:topic, created_at: 5.hours.ago)
+      Fabricate(:post, topic: topic, user: topic.user, post_number: 1, created_at: 5.hours.ago)
+      expect(Topic.with_no_response_per_day(5.days.ago, Time.zone.now).count).to eq(1)
+      expect(Topic.with_no_response_total).to eq(1)
+    end
+
+    it "returns 1 with one topic that has no replies and author was changed on first post" do
+      topic = Fabricate(:topic, created_at: 5.hours.ago)
+      Fabricate(:post, topic: topic, user: Fabricate(:user), post_number: 1, created_at: 5.hours.ago)
+      expect(Topic.with_no_response_per_day(5.days.ago, Time.zone.now).count).to eq(1)
+      expect(Topic.with_no_response_total).to eq(1)
+    end
+
+    it "returns 1 with one topic that has a reply by the first poster" do
+      topic = Fabricate(:topic, created_at: 5.hours.ago)
+      Fabricate(:post, topic: topic, user: topic.user, post_number: 1, created_at: 5.hours.ago)
+      Fabricate(:post, topic: topic, user: topic.user, post_number: 2, created_at: 2.hours.ago)
+      expect(Topic.with_no_response_per_day(5.days.ago, Time.zone.now).count).to eq(1)
+      expect(Topic.with_no_response_total).to eq(1)
+    end
+
+    it "returns 0 with a topic with 1 reply" do
+      topic   = Fabricate(:topic, created_at: 5.hours.ago)
+      post1   = Fabricate(:post, topic: topic, user: topic.user, post_number: 1, created_at: 5.hours.ago)
+      post1   = Fabricate(:post, topic: topic, post_number: 2, created_at: 2.hours.ago)
+      expect(Topic.with_no_response_per_day(5.days.ago, Time.zone.now).count).to eq(0)
+      expect(Topic.with_no_response_total).to eq(0)
+    end
+
+    it "returns 1 with one topic that doesn't have regular replies" do
+      topic = Fabricate(:topic, created_at: 5.hours.ago)
+      Fabricate(:post, topic: topic, user: topic.user, post_number: 1, created_at: 5.hours.ago)
+      Fabricate(:post, topic: topic, post_number: 2, created_at: 4.hours.ago, post_type: Post.types[:whisper])
+      Fabricate(:post, topic: topic, post_number: 3, created_at: 3.hours.ago, post_type: Post.types[:moderator_action])
+      Fabricate(:post, topic: topic, post_number: 4, created_at: 2.hours.ago, post_type: Post.types[:small_action])
+      expect(Topic.with_no_response_per_day(5.days.ago, Time.zone.now).count).to eq(1)
+      expect(Topic.with_no_response_total).to eq(1)
+    end
   end
 end

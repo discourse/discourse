@@ -6,6 +6,11 @@ class BadgesController < ApplicationController
 
     badges = Badge.all
 
+    if search = params[:search]
+      search = search.to_s
+      badges = badges.where("name ILIKE ?", "%#{search}%")
+    end
+
     if (params[:only_listable] == "true") || !request.xhr?
       # NOTE: this is sorted client side if needed
       badges = badges.includes(:badge_grouping)

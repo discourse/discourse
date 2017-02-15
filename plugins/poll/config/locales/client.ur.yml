@@ -1,0 +1,69 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-org/
+
+ur:
+  js:
+    poll:
+      voters:
+        one: "1 ووٹر"
+        other: "ووٹرز"
+      total_votes:
+        one: "کُل ووٹ"
+        other: "کُل ووٹ"
+      average_rating: "اوسط ریٹینگ: <strong>%{اوسط}</strong>۔"
+      public:
+        title: "ووٹ پبلک ہیں۔"
+      multiple:
+        help:
+          at_least_min_options:
+            one: "کم از کم <strong>1</strong> آپشن کا انتخاب کریں"
+            other: "کم از کم <strong>%{شمار}</strong> آپشنس کا انتخاب کریں"
+          up_to_max_options:
+            one: "<strong>1</strong> آپشن کا انتخاب کریں"
+            other: "<strong>%{شمار}</strong> تک آپشنس کا انتخاب کریں"
+          x_options:
+            one: "<strong>1</strong> آپشن انتخاب کریں"
+            other: "<strong>%{شمار}</strong> آپشنس انتخاب کریں"
+          between_min_and_max_options: "<strong>%{کم از کم}</strong> سے <strong>%{زیادہ سے زیادہ}</strong> آپشنس کا انتخاب کریں"
+      cast-votes:
+        title: "اپنے ووٹ دیں۔"
+        label: "ابھی ووٹ دیں۔"
+      show-results:
+        title: "سروے کے نتائج ظاہر کریں"
+        label: "نتائج دکھائیں"
+      hide-results:
+        title: "وآپس اپنے ووٹس پر"
+        label: "نتائج چھپائیں"
+      open:
+        title: "پول کھولیں"
+        label: "کھولیں"
+        confirm: "کیا آپ واقعی یہ پول کھولنا چاہتے ہیں؟"
+      close:
+        title: "پول بند کریں"
+        label: "بند کریں"
+        confirm: "کیا آپ واقعی یہ پول بند کرنا چاہتے ہیں؟"
+      error_while_toggling_status: "معذرت، اِس پول کا سٹیٹس تبدیل کرتے وقت ایک تکنیکی خرابی کا سامنا کرنا پڑا۔"
+      error_while_casting_votes: "معذرت، آپ کا ووٹ ڈالتے وقت ایک تکنیکی خرابی کا سامنا کرنا پڑا"
+      error_while_fetching_voters: "معذرت، ووٹرز کو دکھاتے وقت ایک تکنیکی خرابی کا سامنا کرنا پڑا"
+      ui_builder:
+        title: پول شروع کریے
+        insert: پول شامل کریے
+        help:
+          options_count: کم از کم 2 آپشنس اینٹر کریں
+        poll_type:
+          label: قِسم
+          regular: اکیلا انتخاب
+          multiple: ایک سے زیادہ انتخاب
+          number: نمبر کی درجہ بندی
+        poll_config:
+          max: زیادہ سے زیادہ
+          min: کم از کم
+          step: قدم
+        poll_public:
+          label: دکھایں جنہوں نے ووٹ دیا
+        poll_options:
+          label: فی سطر پول کی ہر ایک آپشن درج کریں

@@ -1,0 +1,46 @@
+<div class='group-edit'>
+  <form class="form-horizontal">
+    <div class="control-group">
+      <label for='full_name'>{{i18n 'groups.edit.full_name'}}</label>
+      {{input type='text' name='full_name' value=model.full_name class='group-edit-full-name'}}
+    </div>
+
+    <div class="control-group">
+      <label for='bio'>{{i18n 'groups.bio'}}</label>
+      {{d-editor value=model.bio_raw class="group-edit-bio"}}
+    </div>
+
+    <div class="control-group">
+      {{group-members-input model=model}}
+    </div>
+
+    <div class="control-group">
+      {{group-flair-inputs model=model}}
+    </div>
+
+    <div class="control-group">
+      <label>
+        {{input type='checkbox'
+            checked=model.public
+            class="group-edit-public"
+            disabled=model.allow_membership_requests}}
+
+        {{i18n 'groups.public'}}
+      </label>
+    </div>
+
+    <div class="control-group">
+      <label>
+        {{input type='checkbox'
+            checked=model.allow_membership_requests
+            class="group-edit-allow-membership-requests"
+            disabled=model.public}}
+
+        {{i18n 'groups.allow_membership_requests'}}
+      </label>
+    </div>
+
+    {{d-button action="save" class="btn-primary" disabled=saving label="save"}}
+    {{savingText}}
+  </form>
+</div>

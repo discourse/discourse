@@ -5,13 +5,14 @@ import { endWith } from 'discourse/lib/computed';
 import showModal from 'discourse/lib/show-modal';
 
 const controllerOpts = {
-  needs: ['discovery'],
+  discovery: Ember.inject.controller(),
+  discoveryTopics: Ember.inject.controller('discovery/topics'),
+
   period: null,
 
-  canStar: Em.computed.alias('controllers.discovery/topics.currentUser.id'),
-  showTopicPostBadges: Em.computed.not('controllers.discovery/topics.new'),
-
-  redirectedReason: Em.computed.alias('currentUser.redirected_to_top.reason'),
+  canStar: Ember.computed.alias('currentUser.id'),
+  showTopicPostBadges: Ember.computed.not('discoveryTopics.new'),
+  redirectedReason: Ember.computed.alias('currentUser.redirected_to_top.reason'),
 
   order: 'default',
   ascending: false,
@@ -46,12 +47,12 @@ const controllerOpts = {
       this.setProperties({ order: "default", ascending: false });
 
       // Don't refresh if we're still loading
-      if (this.get('controllers.discovery.loading')) { return; }
+      if (this.get('discovery.loading')) { return; }
 
       // If we `send('loading')` here, due to returning true it bubbles up to the
       // router and ember throws an error due to missing `handlerInfos`.
       // Lesson learned: Don't call `loading` yourself.
-      this.set('controllers.discovery.loading', true);
+      this.set('discovery.loading', true);
 
       this.store.findFiltered('topicList', {filter}).then(list => {
         const TopicList = require('discourse/models/topic-list').default;

@@ -1,7 +1,4 @@
-<div class='modal-body'>
-
-  <p>{{{i18n 'topics.bulk.selected' count=length}}}</p>
-
+{{#d-modal-body}}
+  <p>{{{i18n 'topics.bulk.selected' count=model.topics.length}}}</p>
   {{outlet "bulkOutlet"}}
-
-</div>
+{{/d-modal-body}}

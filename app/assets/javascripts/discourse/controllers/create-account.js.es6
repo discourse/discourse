@@ -5,9 +5,10 @@ import { setting } from 'discourse/lib/computed';
 import { on } from 'ember-addons/ember-computed-decorators';
 import { emailValid } from 'discourse/lib/utilities';
 import InputValidation from 'discourse/models/input-validation';
+import PasswordValidation from "discourse/mixins/password-validation";
 
-export default Ember.Controller.extend(ModalFunctionality, {
-  needs: ['login'],
+export default Ember.Controller.extend(ModalFunctionality, PasswordValidation, {
+  login: Ember.inject.controller(),
 
   uniqueUsernameValidation: null,
   globalNicknameExists: false,
@@ -16,7 +17,6 @@ export default Ember.Controller.extend(ModalFunctionality, {
   accountChallenge: 0,
   formSubmitted: false,
   rejectedEmails: Em.A([]),
-  rejectedPasswords: Em.A([]),
   prefilledUsername: null,
   userFields: null,
   isDeveloper: false,
@@ -56,7 +56,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
     // Validate required fields
     let userFields = this.get('userFields');
-    if (userFields) { userFields = userFields.filterProperty('field.required'); }
+    if (userFields) { userFields = userFields.filterBy('field.required'); }
     if (!Ember.isEmpty(userFields)) {
       const anyEmpty = userFields.any(function(uf) {
         const val = uf.get('value');
@@ -78,9 +78,12 @@ export default Ember.Controller.extend(ModalFunctionality, {
     return Ember.isEmpty(this.get('authOptions.auth_provider'));
   }.property('authOptions.auth_provider'),
 
-  passwordInstructions: function() {
-    return this.get('isDeveloper') ? I18n.t('user.password.instructions', {count: Discourse.SiteSettings.min_admin_password_length}) : I18n.t('user.password.instructions', {count: Discourse.SiteSettings.min_password_length});
-  }.property('isDeveloper'),
+  disclaimerHtml: function() {
+    return I18n.t('create_account.disclaimer', {
+      tos_link: this.get('siteSettings.tos_url') || Discourse.getURL('/tos'),
+      privacy_link: this.get('siteSettings.privacy_policy_url') || Discourse.getURL('/privacy')
+    });
+  }.property(),
 
   nameInstructions: function() {
     return I18n.t(Discourse.SiteSettings.full_name_required ? 'user.name.instructions_required' : 'user.name.instructions');
@@ -107,7 +110,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
     email = this.get("accountEmail");
 
-    if (this.get('rejectedEmails').contains(email)) {
+    if (this.get('rejectedEmails').includes(email)) {
       return InputValidation.create({
         failed: true,
         reason: I18n.t('user.email.invalid')
@@ -286,55 +289,6 @@ export default Ember.Controller.extend(ModalFunctionality, {
     return( this.get('globalNicknameExists') || false );
   },
 
-  // Validate the password
-  passwordValidation: function() {
-    if (!this.get('passwordRequired')) {
-      return InputValidation.create({ ok: true });
-    }
-
-    // If blank, fail without a reason
-    const password = this.get("accountPassword");
-    if (Ember.isEmpty(this.get('accountPassword'))) {
-      return InputValidation.create({ failed: true });
-    }
-
-    // If too short
-    const passwordLength = this.get('isDeveloper') ? Discourse.SiteSettings.min_admin_password_length : Discourse.SiteSettings.min_password_length;
-    if (password.length < passwordLength) {
-      return InputValidation.create({
-        failed: true,
-        reason: I18n.t('user.password.too_short')
-      });
-    }
-
-    if (this.get('rejectedPasswords').contains(password)) {
-      return InputValidation.create({
-        failed: true,
-        reason: I18n.t('user.password.common')
-      });
-    }
-
-    if (!Ember.isEmpty(this.get('accountUsername')) && this.get('accountPassword') === this.get('accountUsername')) {
-      return InputValidation.create({
-        failed: true,
-        reason: I18n.t('user.password.same_as_username')
-      });
-    }
-
-    if (!Ember.isEmpty(this.get('accountEmail')) && this.get('accountPassword') === this.get('accountEmail')) {
-      return InputValidation.create({
-        failed: true,
-        reason: I18n.t('user.password.same_as_email')
-      });
-    }
-
-    // Looks good!
-    return InputValidation.create({
-      ok: true,
-      reason: I18n.t('user.password.ok')
-    });
-  }.property('accountPassword', 'rejectedPasswords.[]', 'accountUsername', 'accountEmail', 'isDeveloper'),
-
   @on('init')
   fetchConfirmationValue() {
     return ajax('/users/hp.json').then(json => {
@@ -345,7 +299,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
   actions: {
     externalLogin(provider) {
-      this.get('controllers.login').send('externalLogin', provider);
+      this.get('login').send('externalLogin', provider);
     },
 
     createAccount() {

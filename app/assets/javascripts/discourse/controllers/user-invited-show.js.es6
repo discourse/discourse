@@ -18,8 +18,6 @@ export default Ember.Controller.extend({
     this.set('searchTerm', '');
   },
 
-  uploadText: function() { return I18n.t("user.invited.bulk_invite.text"); }.property(),
-
   /**
     Observe the search term box with a debouncer and change the results.
 

@@ -29,7 +29,7 @@ const NavItem = Discourse.Model.extend({
   categorySlug: function() {
     var split = this.get('name').split('/');
     if (split[0] === 'category' && split[1]) {
-      var cat = Discourse.Site.current().categories.findProperty('nameLower', split[1].toLowerCase());
+      var cat = Discourse.Site.current().categories.findBy('nameLower', split[1].toLowerCase());
       return cat ? Discourse.Category.slugFor(cat) : null;
     }
     return null;
@@ -86,9 +86,9 @@ NavItem.reopenClass({
         testName = name.split("/")[0],
         anonymous = !Discourse.User.current();
 
-    if (anonymous && !Discourse.Site.currentProp('anonymous_top_menu_items').contains(testName)) return null;
+    if (anonymous && !Discourse.Site.currentProp('anonymous_top_menu_items').includes(testName)) return null;
     if (!Discourse.Category.list() && testName === "categories") return null;
-    if (!Discourse.Site.currentProp('top_menu_items').contains(testName)) return null;
+    if (!Discourse.Site.currentProp('top_menu_items').includes(testName)) return null;
 
     var args = { name: name, hasIcon: name === "unread" }, extra = null, self = this;
     if (opts.category) { args.category = opts.category; }

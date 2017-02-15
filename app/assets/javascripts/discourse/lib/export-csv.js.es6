@@ -8,9 +8,9 @@ function exportEntityByType(type, entity, args) {
 
 export function exportUserArchive() {
   return exportEntityByType('user', 'user_archive').then(function() {
-    bootbox.alert(I18n.t("admin.export_csv.success"));
+    bootbox.alert(I18n.t("user.download_archive.success"));
   }).catch(function() {
-    bootbox.alert(I18n.t("admin.export_csv.rate_limit_error"));
+    bootbox.alert(I18n.t("user.download_archive.rate_limit_error"));
   });
 }
 

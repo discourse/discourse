@@ -1,4 +1,3 @@
-require "digest/sha1"
 require_dependency "file_helper"
 require_dependency "url_helper"
 require_dependency "db_helper"
@@ -54,7 +53,7 @@ class OptimizedImage < ActiveRecord::Base
         if resized
           thumbnail = OptimizedImage.create!(
             upload_id: upload.id,
-            sha1: Digest::SHA1.file(temp_path).hexdigest,
+            sha1: Upload.generate_digest(temp_path),
             extension: extension,
             width: width,
             height: height,
@@ -98,7 +97,24 @@ class OptimizedImage < ActiveRecord::Base
    !(url =~ /^(https?:)?\/\//)
   end
 
+  def self.safe_path?(path)
+    # this matches instructions which call #to_s
+    path = path.to_s
+    return false if path != File.expand_path(path)
+    return false if path !~ /\A[\w\-\.\/]+\z/m
+    true
+  end
+
+  def self.ensure_safe_paths!(*paths)
+    paths.each do |path|
+      raise Discourse::InvalidAccess unless safe_path?(path)
+    end
+  end
+
+
   def self.resize_instructions(from, to, dimensions, opts={})
+    ensure_safe_paths!(from, to)
+
     # NOTE: ORDER is important!
     %W{
       convert
@@ -116,6 +132,8 @@ class OptimizedImage < ActiveRecord::Base
   end
 
   def self.resize_instructions_animated(from, to, dimensions, opts={})
+    ensure_safe_paths!(from, to)
+
     %W{
       gifsicle
       --colors=256
@@ -127,6 +145,8 @@ class OptimizedImage < ActiveRecord::Base
   end
 
   def self.crop_instructions(from, to, dimensions, opts={})
+    ensure_safe_paths!(from, to)
+
     %W{
       convert
       #{from}[0]
@@ -142,6 +162,8 @@ class OptimizedImage < ActiveRecord::Base
   end
 
   def self.crop_instructions_animated(from, to, dimensions, opts={})
+    ensure_safe_paths!(from, to)
+
     %W{
       gifsicle
       --crop 0,0+#{dimensions}
@@ -153,6 +175,8 @@ class OptimizedImage < ActiveRecord::Base
   end
 
   def self.downsize_instructions(from, to, dimensions, opts={})
+    ensure_safe_paths!(from, to)
+
     %W{
       convert
       #{from}[0]
@@ -201,18 +225,20 @@ class OptimizedImage < ActiveRecord::Base
     false
   end
 
-  def self.migrate_to_new_scheme(limit=50)
+  def self.migrate_to_new_scheme(limit=nil)
     problems = []
 
     if SiteSetting.migrate_to_new_scheme
       max_file_size_kb = SiteSetting.max_image_size_kb.kilobytes
       local_store = FileStore::LocalStore.new
 
-      OptimizedImage.includes(:upload)
-                    .where("url NOT LIKE '%/optimized/_X/%'")
-                    .limit(limit)
-                    .order(id: :desc)
-                    .each do |optimized_image|
+      scope = OptimizedImage.includes(:upload)
+        .where("url NOT LIKE '%/optimized/_X/%'")
+        .order(id: :desc)
+
+      scope.limit(limit) if limit
+
+      scope.each do |optimized_image|
         begin
           # keep track of the url
           previous_url = optimized_image.url.dup
@@ -229,7 +255,7 @@ class OptimizedImage < ActiveRecord::Base
           end
           # compute SHA if missing
           if optimized_image.sha1.blank?
-            optimized_image.sha1 = Digest::SHA1.file(path).hexdigest
+            optimized_image.sha1 = Upload.generate_digest(path)
           end
           # optimize if image
           ImageOptim.new.optimize_image!(path)

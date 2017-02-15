@@ -70,7 +70,7 @@ ar:
       has_already_been_used: "مستخدم بالفعل "
       inclusion: غير متضمن في القائمة
       invalid: غير صالح
-      is_invalid: "غير صالح ، حاول ان تضع وصف اكثر"
+      is_invalid: "تبدو غير واضحة، هل هذه الجملة كاملة؟"
       less_than: يجب أن يكون أقل من %{count}
       less_than_or_equal_to: يجب أن تكون أقل من أو تساوي %{count}
       not_a_number: ليس عدد
@@ -120,12 +120,13 @@ ar:
       max_username_length_range: "لا يمكن أن تكون القيمة العليا أصغر من الدنيا."
       default_categories_already_selected: "لا يمكنك تحديد فئة تستخدم في قائمة أخرى."
       s3_upload_bucket_is_required: "لا يمكنك تفعيل الرفع إلى S3 حتّى توفّر 's3_upload_bucket'."
-  bulk_invite:
-    file_should_be_csv: "على نسق الملف الملف المرفوع أن يكون إمّا csv أو txt."
+  topic_invite:
+    user_exists: "آسف، ذلك المستخدم قد تمت دعوته من قبل. تستطيع فقط أن تدعوا عضواً لموضوعِ مرة واحدة."
   backup:
     operation_already_running: "ثمّة عملية تجري حاليا. لا يمكنك بدء مهمة جديدة الآن."
     backup_file_should_be_tar_gz: "على الملف الاحتياطي أن يكون أرشيف \"‎.tar.gz\"."
     not_enough_space_on_disk: "ليس ثمّة مساحة كافية على القرص لرفع النسخة الاحتياطية هذه."
+    invalid_filename: "اسم ملف النسخة الاحتياطية يحتوي على حروف غير صالحة. الحروف الصالحة هي a-z 0-9 .-_."
   not_logged_in: "عليك تسجيل الدخول لفعل ذلك."
   not_found: "تعذر العثور على رابط العنوان المطلوب"
   invalid_access: "لا تمتلك صلاحيات لعرض المطلوب "
@@ -205,7 +206,7 @@ ar:
   topic_not_found: "حدث خطب ما. قد يكون الموضوع أُغلق أو حُذف وأنت تشاهده؟"
   just_posted_that: "هذا مماثل لما شاركته مؤخرا"
   invalid_characters: "يحتوي احرف غير صالحة "
-  is_invalid: "غير صالح حاول ان تضع وصف اكثر"
+  is_invalid: "تبدو غير واضحة، هل هذه عبارة كاملة؟"
   next_page: "الصفحة التالية ←"
   prev_page: "→ الصفحة السابقة "
   page_num: "الصفحة %{num}"
@@ -340,6 +341,7 @@ ar:
               common: "هي واحدة من أكثر 10000 كلمة مرور شائعة. من فضلك استخدم كلمة مرور آمنة أكثر."
               same_as_username: "هي نفس اسم المستخدم. من فضلك استخدم كلمة مرور آمنة أكثر."
               same_as_email: "هي نفس بريدك الإلكتروني. من فضلك استخدم كلمة مرور آمنة أكثر."
+              same_as_current: "هي نفس كلمة السر الحاليةالخاصة بك"
             ip_address:
               signup_not_allowed: "التسجيل غير مسموح من هذا الحساب."
         color_scheme_color:
@@ -349,6 +351,10 @@ ar:
         post_reply:
           base:
             different_topic: "المشاركة والرد لابد ان يكونا في نفس الموضوع"
+        web_hook:
+          attributes:
+            payload_url:
+              invalid: "رابط غير صالح. يجب أن يحتوي الرابط على http://  او https://. المساحة الفارغة غير مسموح بها."
       <<: *errors
   user_profile:
     no_info_me: "<div class='missing-profile'>مجال المعلومات عني لملف تعريفك فارغ حاليا، <a href='/users/%{username_lower}/preferences/about-me'>هل تريد أن تملأه؟</a></div>"
@@ -502,19 +508,19 @@ ar:
         many: "أيام كثيرة"
         other: "%{count} أيام"
       about_x_months:
-        zero: "لا يوجد شهور"
-        one: "شهر فقط"
+        zero: "لا أشهر"
+        one: "شهر واحد"
         two: "شهران"
-        few: "شهور قليلة"
-        many: "شهور كثيرة"
-        other: "%{count}شهر"
+        few: "%{count} أشهر"
+        many: "%{count} شهرا"
+        other: "%{count} شهر"
       x_months:
-        zero: "1 شهر"
-        one: "1 شهر"
-        two: "شهرين{count}%"
-        few: "شهور{count}%"
-        many: "شهور{count}%"
-        other: "شهور{count}%"
+        zero: "لا أشهر"
+        one: "شهر واحد"
+        two: "شهران"
+        few: "%{count} أشهر"
+        many: "%{count} شهرا"
+        other: "%{count} شهر"
       about_x_years:
         zero: "1 س"
         one: "1 س"
@@ -710,6 +716,7 @@ ar:
   unsubscribed:
     title: "غير مشترك "
     description: "لقد تم الغاء اشتراكك. لتغير اختيارات بريدك الالكترونى <a href='%{url}'>زور اختياراتك الشخصية</a>"
+    topic_description: "لإعادة الاشتراك لل %{link}، استخدم ادارة التنبيهات في أسفل او يمين الموضوع."
   unsubscribe:
     title: "إلغاء الإشتراك"
     stop_watching_topic: "توقف عن مراقبة هذا الموضوع،  %{link}"
@@ -721,6 +728,17 @@ ar:
     different_user_description: "أنت حالياً سجلت دخولك كمستخدم مختلف عن الذي كان يُرسله له الملخص. الرجاء تسجيل الخروج  ثم  الدخول مرة أخرى  والمحاولة مجدداً."
     not_found_description: "نأسف ، لم نستطيع أن نلغي اشتراكك . من الممكن أن الرابط المرسل إليك قد انتهت مدته . "
     log_out: "تسجيل خروج"
+  user_api_key:
+    title: "منح الصلاحية لدخول التطبيق"
+    authorize: "منح الصلاحية"
+    read: "قراءة"
+    read_write: "قراءة/كتابة"
+    no_trust_level: "عذرا، ليس لديك درجة الموثوقية الكافية لدخول واجهة برمجة التطبيق الخاصة بالمستخدم."
+    scopes:
+      message_bus: "تحديثات فورية"
+      notifications: "قراءة  و مسح التنبيهات"
+      read: "قراءة الكل"
+      write: "كتابة الكل"
   reports:
     visits:
       title: "زيارات العضو"
@@ -876,14 +894,6 @@ ar:
     s3_backup_config_warning: 'تم تهيئة الخادم لرفع نسخة احتياطية إلى s3، لكن واحدة على الأقل من الإعدادات التالية لم تضبط: s3_access_key_id, s3_secret_access_key or s3_backup_bucket. أذهب إلى  <a href="/admin/site_settings">إعدادات الموقع</a> وتحديث الإعدادات. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">انظر "كيف ترفع الصور المرفوعة إلى S3؟" لتعلم المزيد</a>.'
     image_magick_warning: 'تم تهيئة الخادم لإنشاء صور مصغرة للصور الكبيرة، لكن ImageMagick لم يثبت. ثبته باستخدام مدير الحزم المفضل لك أو  <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">حمل أحدث نسخة</a>.'
     failing_emails_warning: 'يوجد %{num_failed_jobs} مهام بريد إلكتروني فشلت. تحقق من app.yml الخاص بك وتأكد من إعدادات خادم البريد أنها صحيحة. <a href="/sidekiq/retries" target="_blank">أنظر للمهام الفاشلة في Sidekiq</a>.'
-    default_logo_warning: "ضع الشعارات الرسومية لموقعك. حدث logo_url, logo_small_url, و favicon_url in <a href='/admin/site_settings'>إعدادات الموقع</a>."
-    contact_email_missing: "أدخل عنوان البريد الإلكتروني لجهة اتصال الموقع لتكون على وصول بالأمور العاجلة حول موقعك. حدثه في <a href='/admin/site_settings'>إعدادات الموقع</a>."
-    contact_email_invalid: "البريد الالكتروني للموقع معطل. حدّثه <a href='/admin/site_settings'>Site Settings</a>."
-    title_nag: "أدخل اسم موقعك. حدث العنوان في الاعدادات <a href='/admin/site_settings'>Site Settings</a>."
-    site_description_missing: "أدخل جملة وصفية واحدة لموقعك والتي ستظهر في نتائج البحث. حدّث وصف_الموقع في اعدادات الموقع <a href='/admin/site_settings'>Site Settings</a>."
-    consumer_email_warning: "موقعك مهيئ لاستخدام Gmail (أو مستهلك خدمة بريد إلكتروني أخر) لإرسال بريد إلكتروني. <a href='http://support.google.com/a/bin/answer.py?hl=en&answer=166852' target='_blank'>حدود Gmail كمية رسائل البريد الإلكتروني التي يمكنك إرسالها</a>. فكر باستخدام مزود خدمة بريد إلكتروني مثل mandrill.com لضمان أهداف البريد الإلكتروني."
-    site_contact_username_warning: "أدخل اسم حسابات الأعضاء العاملين الودودين لإرسال رسالة مهمة آليا من تحديث site_contact_username في <a href='/admin/site_settings'>إعدادات الموقع</a>."
-    notification_email_warning: "رسائل التنبية البريدية لم تكن مرسلة من عنوان بريدي صالح على مجالك؛ توصيل البريد سيكون غير منتظم ولايمكن الاعتماد عليها. الرجاء وضع رسائل التنبية في عنوان بريدي صالح في إعدادات الموقع  <a href='/admin/site_settings'>Site Settings</a>."
     subfolder_ends_in_slash: "إعدادات المجلدات الداخلية خاطئ;ال DISCOURSE_RELATIVE_URL_ROOT يجب ان تنتهي ب سلاش."
     missing_mailgun_api_key: "هذا الموقع معد لارسال البريد الالكترونى عن طريق خدمة mailgun لكنكم لم تزودونا بمفتاح  API الخاص بكم لتعريف رسائلكم للخدمة."
   site_settings:
@@ -931,7 +941,6 @@ ar:
     show_pinned_excerpt_mobile: "اظهر مقتطفات من المواضيع المثبتة فى منظر المحمول."
     show_pinned_excerpt_desktop: "اظهر مقتطفات من المواضيع المثبتة فى منظر سطح المكتب."
     post_onebox_maxlength: "الحد الأقصى لطول مشاركة oneboxed Discourse بالأحرف."
-    onebox_domains_whitelist: "قائمة بالمجالات للسماح روابط تفصيلي؛ وينبغي دعم هذه المجالات OpenGraph أو oEmbed. اختبار لهم في http://iframely.com/debug"
     logo_url: "صورة الشعار في الجزء العلوي الأيسر من موقع الويب الخاص بك، يجب أن تكون على شكل مستطيل واسع. إذا ترك الحقل فارغا فسيتم استخدام اسم الموقع."
     digest_logo_url: "صورة الشعار البديل المستخدم في الجزء العلوي لملخص البريد الالكترونى، يجب أن تكون على شكل مستطيل واسع. لا يجب أن تكون الصورة من نوع SVG.  إذا ترك الحقل فارغا فسيتم استخدام `logo_url`."
     logo_small_url: "صورة الشعار صغيرة في الجزء العلوي الأيسر من موقع الويب الخاص بك، يجب أن تكون على شكل مربع، وينظر عند التمرير لأسفل. وإذا ترك فارغا أن أظهرت الصورة الرمزية المنزل."
@@ -997,9 +1006,7 @@ ar:
     top_page_default_timeframe: "الوقت المثبت علي الصفحة الأكثر مشاهدة."
     show_email_on_profile: "إظهار بريدك المستخدم على صفحته الشخصية (مرئية فقط لأنفسهم والموظفين)"
     email_token_valid_hours: "نسيت كلمه السر/ تنشيط رموز الحساب صالحه ل(n)  ساعات"
-    email_token_grace_period_hours: "نسيت كلمه السر/ تنشيط رموز الحساب لا تزال صالحة لفترة سماح بالـ(n) ساعات بعد استبدالها."
     enable_badges: "تفعيل نظام الأوسمة."
-    enable_whispers: "السماح للموظفين الخصوصين التواصل ضمن موضوع.(تجريبي)"
     allow_index_in_robots_txt: "تحديد في ملف robots.txt أن يسمح هذا الموقع ليتم فهرستها من قبل محركات البحث على شبكة الإنترنت."
     email_domains_blacklist: "قائمة pipe-delimited المجالات البريد الإلكتروني الذي لا يسمح للمستخدمين تسجيل حسابات مع. مثال: mailinator.com | trashmail.net"
     email_domains_whitelist: "قائمة pipe-delimited من مجالات البريد الإلكتروني التي يجب على المستخدمين تسجيل حسابات مع. تحذير: لن يسمح للمستخدمين مع مجالات البريد الإلكتروني الأخرى غير المذكورة هنا!"
@@ -1175,6 +1182,10 @@ ar:
     display_name_on_email_from: "أعرض الاسماء كاملة في البريد الالكتروني من المجال."
     unsubscribe_via_email: "أسمح للمستخدمين بالغاء الاشتراك لرسائل البريد الالكتروني عن طريق أرسال بريد الكتروني يحتوي على 'unsubscribe' في العنوان او محتوى البريد"
     delete_email_logs_after_days: "حذف سجل البريد بعد (ن) يوم. 0 لحفظ السجل للابد"
+    max_emails_per_day_per_user: "العدد الأقصى لعدد الرسائل التي يتم إرسالها للأعضاء في اليوم. ضع 0 لإلغاء الحد."
+    block_auto_generated_emails: "منع رسائل البريد الإلكتروني الواردة التي تم تحديدها على أنها يتم إنشاؤها تلقائيا."
+    ignore_by_title: "تجاهل رسائل البريد الإلكتروني الواردة على أساس اللقب."
+    manual_polling_enabled: "دفع رسائل البريد الإلكتروني باستخدام API لردود البريد الإلكتروني."
     pop3_polling_enabled: "تصويت عبرPOP3 لردود البريد الإلكتروني."
     pop3_polling_ssl: "أستخدم SSL عند الأتصال بمخدم POP3.(مُستحسن)"
     pop3_polling_period_mins: "الفترة دقائق بين التحقق من حساب POP3 للبريد الإلكتروني. ملاحظة : تتطلب إعادة تشغيل."
@@ -1198,6 +1209,7 @@ ar:
     allow_animated_thumbnails: "يولد الصور المصغرة المتحركة للرسوم المتحركة. "
     default_avatars: "سيتم استخدام عناوين URL للصور الرمزية بشكل افتراضيًا للأعضاء الجدد حتى يغيروا صورهم."
     automatically_download_gravatars: "تحميل Gravatars للأعضاء عند تغيرهم البريد الإلكتروني الخاص بهم أو عند إنشائهم لحساب آخر."
+    disable_digest_emails: "تعطيل رسائل الملخص لجميع الأعضاء."
     detect_custom_avatars: "سواء او لا تفقد اذا كان المستخدم قام بتحميل صور شخصيه مخصصه"
     max_daily_gravatar_crawls: "العدد الاقصي من مرات Dicourse  سوف يتفقد Gravatar  لصور رمزيه مخصصه في اليوم"
     public_user_custom_fields: "حقول قائمه بيضاء مخصصه للمستدم يمكن رويتها علنا"
@@ -1236,7 +1248,6 @@ ar:
     embed_whitelist_selector: "منتقي CSS للعناصر التي تسمح في التضمينات."
     embed_blacklist_selector: "منتقي CSS للعناصر التي حذفت من التضمينات."
     notify_about_flags_after: "اذا كانت هناك علامه انه لم يتم تاتعامل معه بعد هذه الساعات, ارسال رساله الي جهه الاتصال_بريده الالكتروني. اضبط 0 للتعطيل"
-    enable_cdn_js_debugging: "السماح/logs لعرض أخطاء المناسبة عن طريق إضافة تتضمن تحليل عرض كل شبيبة."
     show_create_topics_notice: "إذا كان الموقع يحتوي على أقل من 5 مواضيع عامة , إظهار إشعار مطالبة المسؤولين إنشاء بعض المواضيع."
     delete_drafts_older_than_n_days: حذف المسودات مضى عليها أكثر من (ن) يوما.
     prevent_anons_from_downloading_files: "امنع  المستخدمين المجهولين من تحميل المرفقات. تحذير:سوف تمنع اي شخص ليس لديه صوره موقع  اصول نشره كمرفقات من العمل."
@@ -1487,26 +1498,6 @@ ar:
         (أذا كنت بحاجة للتواصل مع  [الموظفين](%{base_url}/about) كمستخدم جديد, فقط مجرد الرد على هذه الرسالة.)
     welcome_invite:
       subject_template: "مرحبا بك في %{site_name}!"
-      text_body_template: |
-        شكرًا لقبولك الدعوة إلى موقع  %{site_name}  أهلا بك .
-
-        انشأنا حساب جديد لك **%{username}** وستقوم بتسجيل الدخول، وستتمكن من تغيير اسمك من  [your user profile][prefs].
-
-        لتسجيل الدخول لاحقا:
-
-        1.دائما **استخدم نفس البريد الالكتروني الذي استقبلت فيه الدعوة** عند تسجيل الدخول، وإلا فإننا لن نستطيع معرفة أنه أنت !
-
-        2. أنشأ كلمة مرور فريدة  [your user profile][prefs] واستخدمها لتسجيل الدخول .
-
-        %{new_user_tips}
-
-        ونحن نتبع  [civilized community behavior](%{base_url}/guidelines)دائما..
-
-        استمتع بوجودك بيننا !
-
-        (إذا كنت تريد التواصل مع  [staff members](%{base_url}/about) كمستخدم جديد، رد على هذه الرسالة فقط لتتواصل معهم)
-
-        [prefs]: %{user_preferences_url}
     backup_succeeded:
       subject_template: "اكتملت عملية النسخ الإحتياطي بنجاح"
     backup_failed:
@@ -1550,7 +1541,6 @@ ar:
 
         إذا  حصل أنك لم تُشمِل الرد، حاول مرة أخرى مع التنسيق البسيط.
     email_reject_parsing:
-      subject_template: "[%{site_name}] بريد الكتروني -- محتواه غير معروف"
       text_body_template: |
         نحن آسفون ، ولكن رسالة البريد الإلكتروني إلى %{destination} (titled %{former_title})  لا تعمل.
 
@@ -1618,13 +1608,7 @@ ar:
       subject_template: "%{optional_re}%{topic_title}"
     digest:
       why: "ملخص المؤجز من %{site_link} منذ زيارتك الاخيره في  %{last_seen_at}"
-      new_activity: "يوجد نشاط جديد في المواضيع والمشاركات الخاصة بك:"
-      top_topics: "اشهر المشاركات "
-      other_new_topics: "اشهر المواضيع "
       click_here: "أنقر هنا"
-      read_more: "قراءة المزيد"
-      more_topics: "هناك %{new_topics_since_seen} مواضيع جديدة أخرى."
-      more_topics_category: "أكثر المواضيع الجديدة:"
     forgot_password:
       subject_template: "[%{site_name}] إعادة ضبط كلمة المرور"
       text_body_template: |
@@ -2095,6 +2079,12 @@ ar:
       name: أول إبلاغ
     promoter:
       description: عضو غير صحيح
+    first_share:
+      name: أول مشاركة
+    first_link:
+      name: أول رابط
+    first_quote:
+      name: أول إقتباس
     read_guidelines:
       name: إقرأ القواعد العامة
     reader:

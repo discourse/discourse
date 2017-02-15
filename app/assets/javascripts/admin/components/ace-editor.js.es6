@@ -1,6 +1,5 @@
-/* global ace:true */
 import loadScript from 'discourse/lib/load-script';
-import { escapeExpression } from 'discourse/lib/utilities';
+import { observes } from 'ember-addons/ember-computed-decorators';
 
 export default Ember.Component.extend({
   mode: 'css',
@@ -8,18 +7,11 @@ export default Ember.Component.extend({
   _editor: null,
   _skipContentChangeEvent: null,
 
-  contentChanged: function() {
+  @observes('content')
+  contentChanged() {
     if (this._editor && !this._skipContentChangeEvent) {
       this._editor.getSession().setValue(this.get('content'));
     }
-  }.observes('content'),
-
-  render(buffer) {
-    buffer.push("<div class='ace'>");
-    if (this.get('content')) {
-      buffer.push(escapeExpression(this.get('content')));
-    }
-    buffer.push("</div>");
   },
 
   _destroyEditor: function() {
@@ -39,31 +31,31 @@ export default Ember.Component.extend({
     }
   },
 
-  _initEditor: function() {
-    const self = this;
+  didInsertElement() {
+    this._super();
 
-    loadScript("/javascripts/ace/ace.js", { scriptTag: true }).then(function() {
-      ace.require(['ace/ace'], function(loadedAce) {
-        const editor = loadedAce.edit(self.$('.ace')[0]);
+    loadScript("/javascripts/ace/ace.js", { scriptTag: true }).then(() => {
+      window.ace.require(['ace/ace'], loadedAce => {
+        if (!this.element || this.isDestroying || this.isDestroyed) { return; }
+        const editor = loadedAce.edit(this.$('.ace')[0]);
 
         editor.setTheme("ace/theme/chrome");
         editor.setShowPrintMargin(false);
-        editor.getSession().setMode("ace/mode/" + self.get('mode'));
-        editor.on('change', function() {
-          self._skipContentChangeEvent = true;
-          self.set('content', editor.getSession().getValue());
-          self._skipContentChangeEvent = false;
+        editor.getSession().setMode("ace/mode/" + this.get('mode'));
+        editor.on('change', () => {
+          this._skipContentChangeEvent = true;
+          this.set('content', editor.getSession().getValue());
+          this._skipContentChangeEvent = false;
         });
         editor.$blockScrolling = Infinity;
 
-        self.$().data('editor', editor);
-        self._editor = editor;
-        if (self.appEvents) {
+        this.$().data('editor', editor);
+        this._editor = editor;
+        if (this.appEvents) {
           // xxx: don't run during qunit tests
-          self.appEvents.on('ace:resize', self, self.resize);
+          this.appEvents.on('ace:resize', self, self.resize);
         }
       });
     });
-
-  }.on('didInsertElement')
+  }
 });

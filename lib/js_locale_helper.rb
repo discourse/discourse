@@ -1,5 +1,21 @@
 module JsLocaleHelper
 
+  def self.plugin_translations(locale_str)
+    @plugin_translations ||= HashWithIndifferentAccess.new
+
+    @plugin_translations[locale_str] ||= begin
+      translations = {}
+
+      Dir["#{Rails.root}/plugins/*/config/locales/client.#{locale_str}.yml"].each do |file|
+        if plugin_translations = YAML::load(File.open(file))[locale_str]
+          translations.deep_merge!(plugin_translations)
+        end
+      end
+
+      translations
+    end
+  end
+
   def self.load_translations(locale, opts=nil)
     opts ||= {}
 
@@ -11,23 +27,9 @@ module JsLocaleHelper
 
       # load default translations
       translations = YAML::load(File.open("#{Rails.root}/config/locales/client.#{locale_str}.yml"))
-      # load plugins translations
-      plugin_translations = {}
-      Dir["#{Rails.root}/plugins/*/config/locales/client.#{locale_str}.yml"].each do |file|
-        plugin_translations.deep_merge! YAML::load(File.open(file))
-      end
 
       # merge translations (plugin translations overwrite default translations)
-      translations[locale_str]['js'].deep_merge!(plugin_translations[locale_str]['js']) if translations[locale_str] && plugin_translations[locale_str] && plugin_translations[locale_str]['js']
-
-      # We used to split the admin versus the client side, but it's much simpler to just
-      # include both for now due to the small size of the admin section.
-      #
-      # For now, let's leave it split out in the translation file in case we want to split
-      # it again later, so we'll merge the JSON ourselves.
-      admin_contents = translations[locale_str].delete('admin_js')
-      translations[locale_str]['js'].deep_merge!(admin_contents) if admin_contents.present?
-      translations[locale_str]['js'].deep_merge!(plugin_translations[locale_str]['admin_js']) if translations[locale_str] && plugin_translations[locale_str] && plugin_translations[locale_str]['admin_js']
+      translations[locale_str]['js'].deep_merge!(plugin_translations(locale_str)['js']) if translations[locale_str] && plugin_translations(locale_str) && plugin_translations(locale_str)['js']
 
       translations
     end
@@ -72,25 +74,36 @@ module JsLocaleHelper
     end
   end
 
-  def self.output_locale(locale)
-    locale_sym = locale.to_sym
-    locale_str = locale.to_s
+  def self.translations_for(locale_str)
+    locale_sym = locale_str.to_sym
 
     current_locale = I18n.locale
     I18n.locale = locale_sym
 
     site_locale = SiteSetting.default_locale.to_sym
 
-    if Rails.env.development?
-      translations = load_translations(locale_sym, force: true)
-    else
-      if locale_sym == :en
-        translations = load_translations(locale_sym)
+    translations =
+      if Rails.env.development?
+        load_translations(locale_sym, force: true)
+      elsif locale_sym == :en
+        load_translations(locale_sym)
       elsif locale_sym == site_locale || site_locale == :en
-        translations = load_translations_merged(locale_sym, :en)
+        load_translations_merged(locale_sym, :en)
       else
-        translations = load_translations_merged(locale_sym, site_locale, :en)
+        load_translations_merged(locale_sym, site_locale, :en)
       end
+
+    I18n.locale = current_locale
+
+    translations
+  end
+
+  def self.output_locale(locale)
+    locale_str = locale.to_s
+    translations = translations_for(locale_str).dup
+
+    translations[locale_str].keys.each do |k|
+      translations[locale_str].delete(k) unless k == "js"
     end
 
     message_formats = strip_out_message_formats!(translations[locale_str]['js'])
@@ -103,8 +116,6 @@ module JsLocaleHelper
     result << File.read("#{Rails.root}/lib/javascripts/moment.js")
     result << moment_locale(locale_str)
     result << moment_formats
-
-    I18n.locale = current_locale
 
     result
   end
@@ -152,6 +163,10 @@ module JsLocaleHelper
     result << File.read("#{Rails.root}/lib/javascripts/messageformat-lookup.js")
 
     result
+  end
+
+  def self.reset_context
+    @ctx = nil
   end
 
   @mutex = Mutex.new

@@ -2,8 +2,11 @@
 import { blank } from 'helpers/qunit-helpers';
 import {
   emailValid,
+  extractDomainFromUrl,
   isAnImage,
   avatarUrl,
+  authorizedExtensions,
+  allowsImages,
   allowsAttachments,
   getRawSize,
   avatarImg,
@@ -19,6 +22,13 @@ module("lib:utilities");
 test("emailValid", function() {
   ok(emailValid('Bob@example.com'), "allows upper case in the first part of emails");
   ok(emailValid('bob@EXAMPLE.com'), "allows upper case in the email domain");
+});
+
+test("extractDomainFromUrl", function() {
+  equal(extractDomainFromUrl('http://meta.discourse.org:443/random'), 'meta.discourse.org', "extract domain name from url");
+  equal(extractDomainFromUrl('meta.discourse.org:443/random'), 'meta.discourse.org', "extract domain regardless of scheme presence");
+  equal(extractDomainFromUrl('http://192.168.0.1:443/random'), '192.168.0.1', "works for IP address");
+  equal(extractDomainFromUrl('http://localhost:443/random'), 'localhost', "works for localhost");
 });
 
 var validUpload = validateUploadedFiles;
@@ -55,12 +65,11 @@ test("new user cannot upload attachments", function() {
 });
 
 test("ensures an authorized upload", function() {
-  var html = { name: "unauthorized.html" };
-  var extensions = Discourse.SiteSettings.authorized_extensions.replace(/\|/g, ", ");
+  const html = { name: "unauthorized.html" };
   sandbox.stub(bootbox, "alert");
 
   not(validUpload([html]));
-  ok(bootbox.alert.calledWith(I18n.t('post.errors.upload_not_authorized', { authorized_extensions: extensions })));
+  ok(bootbox.alert.calledWith(I18n.t('post.errors.upload_not_authorized', { authorized_extensions: authorizedExtensions() })));
 });
 
 var imageSize = 10 * 1024;
@@ -155,6 +164,21 @@ test("avatarImg", function() {
   setDevicePixelRatio(oldRatio);
 });
 
+test("allowsImages", function() {
+  Discourse.SiteSettings.authorized_extensions = "jpg|jpeg|gif";
+  ok(allowsImages(), "works");
+
+  Discourse.SiteSettings.authorized_extensions = ".jpg|.jpeg|.gif";
+  ok(allowsImages(), "works with old extensions syntax");
+
+  Discourse.SiteSettings.authorized_extensions = "txt|pdf|*";
+  ok(allowsImages(), "images are allowed when all extensions are allowed");
+
+  Discourse.SiteSettings.authorized_extensions = "json|jpg|pdf|txt";
+  ok(allowsImages(), "images are allowed when at least one extension is an image extension");
+});
+
+
 test("allowsAttachments", function() {
   Discourse.SiteSettings.authorized_extensions = "jpg|jpeg|gif";
   not(allowsAttachments(), "no attachments allowed by default");
@@ -164,6 +188,9 @@ test("allowsAttachments", function() {
 
   Discourse.SiteSettings.authorized_extensions = "jpg|jpeg|gif|pdf";
   ok(allowsAttachments(), "attachments are allowed when at least one extension is not an image extension");
+
+  Discourse.SiteSettings.authorized_extensions = ".jpg|.jpeg|.gif|.pdf";
+  ok(allowsAttachments(), "works with old extensions syntax");
 });
 
 test("defaultHomepage", function() {

@@ -67,32 +67,54 @@ module Email
 
       host = Email::Sender.host_for(Discourse.base_url)
 
-      topic_id = header_value('X-Discourse-Topic-Id')
-      post_id = header_value('X-Discourse-Post-Id')
+      post_id   = header_value('X-Discourse-Post-Id')
+      topic_id  = header_value('X-Discourse-Topic-Id')
       reply_key = header_value('X-Discourse-Reply-Key')
 
       # always set a default Message ID from the host
-      uuid = SecureRandom.uuid
-      @message.header['Message-ID'] = "<#{uuid}@#{host}>"
+      @message.header['Message-ID'] = "<#{SecureRandom.uuid}@#{host}>"
 
       if topic_id.present?
         email_log.topic_id = topic_id
 
-        incoming_email = IncomingEmail.find_by(post_id: post_id, topic_id: topic_id)
+        post = Post.find_by(id: post_id)
+        topic = Topic.find_by(id: topic_id)
+        first_post = topic.ordered_posts.first
 
-        incoming_message_id = nil
-        incoming_message_id = "<#{incoming_email.message_id}>" if incoming_email.try(:message_id).present?
+        topic_message_id = first_post.incoming_email&.message_id.present? ? 
+          "<#{first_post.incoming_email.message_id}>" :
+          "<topic/#{topic_id}@#{host}>"
 
-        topic_identifier = "<topic/#{topic_id}@#{host}>"
-        post_identifier = "<topic/#{topic_id}/#{post_id}@#{host}>"
+        post_message_id = post.incoming_email&.message_id.present? ?
+          "<#{post.incoming_email.message_id}>" :
+          "<topic/#{topic_id}/#{post_id}@#{host}>"
 
-        @message.header['Message-ID'] = post_identifier
-        @message.header['In-Reply-To'] = incoming_message_id || topic_identifier
-        @message.header['References'] = topic_identifier
+        referenced_posts = Post.includes(:incoming_email)
+                               .where(id: PostReply.where(reply_id: post_id).select(:post_id))
+                               .order(id: :desc)
 
-        topic = Topic.where(id: topic_id).first
+        referenced_post_message_ids = referenced_posts.map do |post|
+          if post.incoming_email&.message_id.present?
+            "<#{post.incoming_email.message_id}>"
+          else
+            if post.post_number == 1
+              "<topic/#{topic_id}@#{host}>"
+            else
+              "<topic/#{topic_id}/#{post.id}@#{host}>"
+            end
+          end
+        end
 
-        # http://www.ietf.org/rfc/rfc2919.txt
+        # https://www.ietf.org/rfc/rfc2822.txt
+        if post.post_number == 1
+          @message.header['Message-ID']  = topic_message_id
+        else
+          @message.header['Message-ID']  = post_message_id
+          @message.header['In-Reply-To'] = referenced_post_message_ids[0] || topic_message_id
+          @message.header['References']  = [referenced_post_message_ids, topic_message_id].flatten.compact.uniq
+        end
+
+        # https://www.ietf.org/rfc/rfc2919.txt
         if topic && topic.category && !topic.category.uncategorized?
           list_id = "<#{topic.category.name.downcase.tr(' ', '-')}.#{host}>"
 
@@ -105,7 +127,7 @@ module Email
           list_id = "<#{host}>"
         end
 
-        # http://www.ietf.org/rfc/rfc3834.txt
+        # https://www.ietf.org/rfc/rfc3834.txt
         @message.header['Precedence']   = 'list'
         @message.header['List-ID']      = list_id
         @message.header['List-Archive'] = topic.url if topic
@@ -133,12 +155,14 @@ module Email
       @message.header['X-Discourse-Post-Id']   = nil if post_id.present?
       @message.header['X-Discourse-Reply-Key'] = nil if reply_key.present?
 
-      # pass the original message_id when using mailjet/mandrill
+      # pass the original message_id when using mailjet/mandrill/sparkpost
       case ActionMailer::Base.smtp_settings[:address]
       when /\.mailjet\.com/
         @message.header['X-MJ-CustomID'] = @message.message_id
       when "smtp.mandrillapp.com"
-        @message.header['X-MC-Metadata'] = { message_id: @message.message_id }.to_json
+        merge_json_x_header('X-MC-Metadata', { message_id: @message.message_id })
+      when "smtp.sparkpostmail.com"
+        merge_json_x_header('X-MSYS-API', { metadata: { message_id: @message.message_id } })
       end
 
       # Suppress images from short emails
@@ -198,6 +222,19 @@ module Email
         skipped: true,
         skipped_reason: "[Sender] #{reason}"
       )
+    end
+
+    def merge_json_x_header(name, value)
+      data   = JSON.parse(@message.header[name].to_s) rescue nil
+      data ||= {}
+      data.merge!(value)
+      # /!\ @message.header is not a standard ruby hash.
+      # It can have multiple values attached to the same key...
+      # In order to remove all the previous keys, we have to "nil" it.
+      # But for "nil" to work, there must already be a key...
+      @message.header[name] = ""
+      @message.header[name] = nil
+      @message.header[name] = data.to_json
     end
 
   end

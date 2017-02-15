@@ -259,7 +259,7 @@ class ListController < ApplicationController
     parent_category_id = nil
     if parent_slug_or_id.present?
       parent_category_id = Category.query_parent_category(parent_slug_or_id)
-      redirect_or_not_found and return if parent_category_id.blank? && !id
+      permalink_redirect_or_not_found and return if parent_category_id.blank? && !id
     end
 
     @category = Category.query_category(slug_or_id, parent_category_id)
@@ -270,7 +270,7 @@ class ListController < ApplicationController
       (redirect_to category.url, status: 301) && return if category
     end
 
-    redirect_or_not_found and return if !@category
+    permalink_redirect_or_not_found and return if !@category
 
     @description_meta = @category.description_text
     raise Discourse::NotFound unless guardian.can_see?(@category)
@@ -291,7 +291,10 @@ class ListController < ApplicationController
       state: params[:state],
       search: params[:search],
       q: params[:q],
-      group_name: params[:group_name]
+      group_name: params[:group_name],
+      tags: params[:tags],
+      match_all_tags: params[:match_all_tags],
+      no_tags: params[:no_tags]
     }
     options[:no_subcategories] = true if params[:no_subcategories] == 'true'
     options[:slow_platform] = true if slow_platform?
@@ -327,14 +330,20 @@ class ListController < ApplicationController
     exclude_category_ids.pluck(:id)
   end
 
-  def self.best_period_for(previous_visit_at, category_id=nil)
+  def self.best_period_with_topics_for(previous_visit_at, category_id=nil)
     best_periods_for(previous_visit_at).each do |period|
       top_topics = TopTopic.where("#{period}_score > 0")
       top_topics = top_topics.joins(:topic).where("topics.category_id = ?", category_id) if category_id
-      return period if top_topics.count >= SiteSetting.topics_per_period_in_top_page
+      top_topics = top_topics.limit(SiteSetting.topics_per_period_in_top_page)
+      return period if top_topics.count == SiteSetting.topics_per_period_in_top_page
     end
-    # default period is yearly
-    SiteSetting.top_page_default_timeframe.to_sym
+
+    false
+  end
+
+  def self.best_period_for(previous_visit_at, category_id=nil)
+    best_period_with_topics_for(previous_visit_at, category_id) ||
+      SiteSetting.top_page_default_timeframe.to_sym
   end
 
   def self.best_periods_for(date)
@@ -347,25 +356,6 @@ class ListController < ApplicationController
     periods << :monthly       if :monthly != default_period && date > 180.days.ago
     periods << :yearly        if :yearly  != default_period
     periods
-  end
-
-  def redirect_or_not_found
-    url = request.fullpath
-    permalink = Permalink.find_by_url(url)
-
-    if permalink.present?
-      # permalink present, redirect to that URL
-      if permalink.external_url
-        redirect_to permalink.external_url, status: :moved_permanently
-      elsif permalink.target_url
-        redirect_to "#{Discourse::base_uri}#{permalink.target_url}", status: :moved_permanently
-      else
-        raise Discourse::NotFound
-      end
-    else
-      # redirect to 404
-      raise Discourse::NotFound
-    end
   end
 
 end

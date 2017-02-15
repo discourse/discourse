@@ -1,8 +1,7 @@
 import { ajax } from 'discourse/lib/ajax';
 import { hashString } from 'discourse/lib/hash';
 
-const ADMIN_MODELS = ['plugin', 'site-customization', 'embeddable-host'];
-
+const ADMIN_MODELS = ['plugin', 'site-customization', 'embeddable-host', 'web-hook', 'web-hook-event'];
 
 export function Result(payload, responseJson) {
   this.payload = payload;
@@ -57,8 +56,8 @@ export default Ember.Object.extend({
     return this.appendQueryParams(path, findArgs);
   },
 
-  findAll(store, type) {
-    return ajax(this.pathFor(store, type)).catch(rethrow);
+  findAll(store, type, findArgs) {
+    return ajax(this.pathFor(store, type, findArgs)).catch(rethrow);
   },
 
 

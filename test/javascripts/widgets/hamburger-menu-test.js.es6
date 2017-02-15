@@ -114,6 +114,7 @@ widgetTest('general links', {
   anonymous: true,
 
   test(assert) {
+    assert.ok(this.$("li[class='']").length === 0);
     assert.ok(this.$('.latest-topics-link').length);
     assert.ok(!this.$('.new-topics-link').length);
     assert.ok(!this.$('.unread-topics-link').length);

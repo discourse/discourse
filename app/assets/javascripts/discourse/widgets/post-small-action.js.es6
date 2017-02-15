@@ -1,6 +1,6 @@
 import { createWidget } from 'discourse/widgets/widget';
 import RawHtml from 'discourse/widgets/raw-html';
-import { iconNode } from 'discourse/helpers/fa-icon';
+import { iconNode } from 'discourse/helpers/fa-icon-node';
 import { h } from 'virtual-dom';
 import { actionDescriptionHtml } from 'discourse/components/small-action';
 import { avatarFor } from 'discourse/widgets/post';
@@ -25,6 +25,10 @@ const icons = {
   'removed_group': 'minus-circle',
   'public_topic': 'comment',
   'private_topic': 'envelope'
+};
+
+export function addPostSmallActionIcon(key, icon) {
+  icons[key] = icon;
 };
 
 export default createWidget('post-small-action', {

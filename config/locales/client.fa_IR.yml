@@ -264,16 +264,12 @@ fa_IR:
       total_rows:
         other: "%{count} کاربران"
     groups:
-      empty:
-        posts: "در این گروه هیچ پستی توسط کاربران "
-        members: "هیچ عضوی در این گروه وجود ندارد."
-        mentions: "هیچ کجا به این گروه اشاره‌ای نشده است."
-        messages: "پیامی در این گروه وجود ندارد."
-        topics: "در این گروه هیچ موضوعی توسط کاربران ارسال نشده."
       add: "افزودن"
       selector_placeholder: "افزودن عضو"
       owner: "مالک"
       visible: "همهٔ کاربران گروه را می‌بینند"
+      index:
+        title: "گروه‌ها"
       title:
         other: "گروه‌ها"
       members: "اعضا"
@@ -358,7 +354,6 @@ fa_IR:
       profile: "نمایه"
       mute: "بی صدا"
       edit: "ویرایش تنظیمات"
-      download_archive: "دانلود نوشته های من"
       new_private_message: "پیام های جدید"
       private_message: "پیام"
       private_messages: "پیام‌ها"
@@ -559,13 +554,9 @@ fa_IR:
         account_age_days: "عمر حساب بر اساس روز"
         create: "فرستادن یک دعوتنامه"
         generate_link: "کپی لینک دعوت"
-        generated_link_message: '<p>لینک دعوت با موفقیت تولید شد!</p><p><input class="invite-link-input" style="width: 75%;" type="text" value="%{inviteLink}"></p><p>لینک دعوت فقط برای این ایمیل آدرس معتبر است: <b>%{invitedEmail}</b></p>'
         bulk_invite:
-          none: "شما هنوز کسی را اینجا دعوت نکرده اید. می توانید بصورت تکی یا گروهی یکجا دعوتنامه را بفرستید از طریق  <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>بارگذار فراخوانه فله ای </a>."
           text: "دعوت گروهی از طریق فایل"
-          uploading: "بارگذاری..."
           success: "فایل با موفقیت بارگذاری شد٬  وقتی که پروسه تمام شد  به شما را از طریق پیام اطلاع می دهیم. "
-          error: "در بارگذاری «{{filename}}» خطایی روی داد: {{message}}"
       password:
         title: "رمزعبور"
         too_short: "رمز عبورتان خیلی کوتاه است"
@@ -574,6 +565,10 @@ fa_IR:
         same_as_email: "رمز عبورتان با ایمیل شما برابر است. "
         ok: "گذرواژهٔ خوبی است."
         instructions: "در آخرین %{count} کاراکتر"
+      summary:
+        top_badges: "مدال های برتر"
+        no_badges: "هنوز مدالی نیست."
+        more_badges: "مدال های بیشتر"
       associated_accounts: "ورود ها"
       ip_address:
         title: "آخرین نشانی IP"
@@ -864,7 +859,6 @@ fa_IR:
       title: "جستجوی موضوعات، نوشته ها، کاربران یا دسته‌ بندی ها"
       no_results: "چیزی یافت نشد."
       no_more_results: "نتایجی بیشتری یافت نشد."
-      search_help: راهنمای جستجو
       searching: "جستجو کردن..."
       post_format: "#{{post_number}} توسط {{username}}"
       context:
@@ -907,6 +901,8 @@ fa_IR:
         category: "هیچ موضوعاتی در {{category}} نیست."
         top: "موضوع برتر وجود ندارد."
         search: " هیچ نتیجه جستجویی وجود ندارد."
+        educate:
+          unread: '<p>موضوعات جدید در اینجا قرار می گیرند.</p><p>به طور پیش فرض، موضوعات جدید در نظر گرفته خواهند شد و نشان داده می شوند <span class="badge new-topic badge-notification" style="vertical-align:middle;line-height:inherit;">جدید</span> شاخص اگر آنها در 2 روز گذشته ایجاد شده باشند </p><p>شما می توانید این را برای خود تغییر دهید <a href="%{userPrefsUrl}">تنظیمات</a>.</p>'
       bottom:
         latest: "موضوع تازهٔ دیگری نیست."
         hot: "موضوع داغ دیگری نیست."
@@ -1146,7 +1142,6 @@ fa_IR:
     post:
       reply: "<i class='fa fa-mail-forward'></i> {{replyAvatar}} {{usernameLink}}"
       reply_topic: "<i class='fa fa-mail-forward'></i> {{link}}"
-      quote_reply: "پاسخ با نقل قول"
       edit: "در حال ویرایش {{link}} {{replyAvatar}} {{username}}"
       edit_reason: "دلیل:"
       post_number: "نوشته {{number}}"
@@ -1176,7 +1171,6 @@ fa_IR:
         edit: "متأسفیم، در ویرایش نوشته شما خطایی روی داد. لطفاً دوباره تلاش کنید."
         upload: "متأسفیم، در بارگذاری آن پرونده خطایی روی داد. لطفاً دوباره تلاش کنید."
         too_many_uploads: "متأسفیم، هر بار تنها می‌توانید یک پرونده را بار بگذارید."
-        upload_not_authorized: "متأسفیم، پرونده‌ای که تلاش دارید آن را بار بگذارید، پروانه‌دار نیست (پسوندهای پروانه‌دار: {{authorized_extensions})"
         image_upload_not_allowed_for_new_user: "با عرض پوزش، کاربران جدید نمی توانند تصویر بار گذاری نماییند."
         attachment_upload_not_allowed_for_new_user: "با عرض پوزش، کاربران جدید نمی توانند فایل پیوست بار گذاری نماییند."
         attachment_download_requires_login: "با عرض پوزش، شما برای دانلود فایل پیوست باید وارد سایت شوید."
@@ -1417,7 +1411,6 @@ fa_IR:
     views_lowercase:
       other: "بازدیدها"
     replies: "پاسخ‌ها"
-    views_long: "از این موضوع {{number}} بار بازدید شده"
     activity: "فعالیت"
     likes: "پسندها"
     likes_lowercase:
@@ -1507,6 +1500,14 @@ fa_IR:
       full: "ساختن / پاسخ دادن / دیدن"
       create_post: "پاسخ دادن / دیدن"
       readonly: "دیدن"
+    badges:
+      earned_n_times:
+        other: "این مدال را %{count} بار به دست آورده"
+      others_count: "بقیه با این مدال (%{count})"
+      title: مدال ها
+      badge_count:
+        other: "%{count} مدال"
+      select_badge_for_title: انتخاب یک مدال برای استفاده در عنوان خود
   admin_js:
     type_to_filter: "بنویسید تا فیلتر کنید..."
     admin:
@@ -1541,8 +1542,6 @@ fa_IR:
         backups: "پشتیبان ها"
         traffic_short: "ترافیک"
         traffic: "درخواست های نرم افزار وب"
-        page_views: "درخواست های API"
-        page_views_short: "درخواست های API"
         show_traffic_report: "نمایش دقیق گزارش ترافیک"
         reports:
           today: "امروز"
@@ -1625,15 +1624,12 @@ fa_IR:
         refresh: "تازه کردن"
         new: "جدید"
         selector_placeholder: "نام کاربری را وارد نمایید ."
-        name_placeholder: "نام گروه، بدون فاصله، همان قاعده نام کاربری"
         about: "اعضای گروهت و نام ها  را اینجا ویرایش کن"
         group_members: "اعضای گروه"
         delete: "حذف"
         delete_confirm: "حفظ کردن این گروه؟"
         delete_failed: "قادر به حذف گروه نیستیم. اگر این یک گروه خودکار است، نمی توان آن را از بین برد."
-        delete_member_confirm: "حذف کردن '%{username}' از '%{group}' گروه؟"
         delete_owner_confirm: "حذف حق مالکیت برای '%{username}'؟"
-        name: "نام"
         add: "اضافه کردن"
         add_members: "اضافه کردن عضو"
         custom: "دلخواه"
@@ -1664,6 +1660,19 @@ fa_IR:
         info_html: "موضوعات تازه پس از آخرین بازدید شما"
         all_users: "همه کاربران"
         note_html: "این کلید را <strong>امن</strong> نگهدارید، تمام  کاربرانی که آن را دارند می توانند نوشته های دلخواه بسازند به عنوان هر کاربری"
+      web_hooks:
+        active: "فعال"
+        delivery_status:
+          failed: "ناموفق"
+          successful: "موفق"
+        events:
+          request: "درخواست"
+          response: "پاسخ"
+          body: "بدنه"
+          go_list: "برو به لیست"
+          event_id: "آی دی"
+          timestamp: "ساخته شده"
+          actions: "کار ها"
       plugins:
         title: "افزونه ها"
         installed: "افزونه های نصب شده"
@@ -1715,14 +1724,13 @@ fa_IR:
             is_disabled: "بازگردانی در تنظیمات سایت از کار انداخته شده است."
             label: "بازیابی"
             title: "بازیابی  پشتیبان"
+            confirm: "آیا از بازگردانی این پشتیبان مطمئن هستید ؟"
           rollback:
             label: "عقبگرد"
             title: "عقب گرد پایگاه داده به حالت کار قبلی"
       export_csv:
-        user_archive_confirm: "آیا مطمئنید که می‌خواهید نوشته‌هایتان را دانلود کنید؟"
         success: "فرایند برون ریزی، به شما از طریق پیام اطلاع رسانی خواهد شد وقتی این فرایند تکمیل شود."
         failed: "برون ریزی شکست خورد.  لطفا لوگ گزارشات را مشاهده فرمایید."
-        rate_limit_error: "نوشته ها را می توانید روزی فقط یک بار دانلود کنید. لطفا فردا دوباره امتحان کنید."
         button_text: "خروجی گرفتن"
         button_title:
           user: "برون ریزی لیست کاربر در قالب CSV ."
@@ -1821,13 +1829,17 @@ fa_IR:
             name: 'دوست داشتن'
             description: "رنگ دکمه های لایک"
       email:
+        title: "رایانامه ها "
         settings: "تنظیمات"
+        templates: "قالب ها"
         preview_digest: "پیشنمایش خلاصه"
         sending_test: "فرستادن ایمیل آزمایشی..."
         error: "<b>خطا</b> - %{server_error}"
         test_error: "در ارسال ایمیل آزمایشی مشکلی وجود داشته است. لطفاً مجدداً تنظیمات ایمیل خود را بررسی کنید، از این که هاستتان اتصالات ایمیل را مسدود نکرده اطمینان حاصل کرده و مجدداً تلاش کنید."
         sent: "فرستاده شده"
         skipped: "رد داده شده"
+        received: "دریافت شده"
+        rejected: "رد شده"
         sent_at: "ارسال شده در"
         time: "زمان"
         user: "کاربر"
@@ -1845,6 +1857,8 @@ fa_IR:
         last_seen_user: "آخرین مشاهده کاربر :"
         reply_key: "کلید پاسخ"
         skipped_reason: "رد دادن دلیل"
+        incoming_emails:
+          from_address: "از طرف"
         logs:
           none: "هیچ آماری یافت نشد."
           filters:

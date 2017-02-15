@@ -33,6 +33,10 @@ JS
       ctx
     end
 
+    def self.reset_context
+      @ctx = nil
+    end
+
     def self.v8
       return @ctx if @ctx
 

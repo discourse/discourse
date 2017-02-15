@@ -1,6 +1,4 @@
-import VisibleComponent from "discourse/components/visible";
-
-export default VisibleComponent.extend({
+export default Ember.Component.extend({
 
   visible: function () {
     var bannerKey = this.get("banner.key"),
@@ -14,7 +12,7 @@ export default VisibleComponent.extend({
   }.property("user.dismissed_banner_key", "banner.key", "hide"),
 
   actions: {
-    dismiss: function () {
+    dismiss() {
       if (this.get("user")) {
         this.get("user").dismissBanner(this.get("banner.key"));
       } else {

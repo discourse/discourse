@@ -6,8 +6,8 @@ const MAX_SUMMARY_RESULTS = 6;
 const MAX_BADGES = 6;
 
 export default Ember.Controller.extend({
-  needs: ['user'],
-  user: Ember.computed.alias('controllers.user.model'),
+  userController: Ember.inject.controller('user'),
+  user: Ember.computed.alias('userController.model'),
 
   @computed("model.topics.length")
   moreTopics(topicsLength) { return topicsLength >= MAX_SUMMARY_RESULTS; },

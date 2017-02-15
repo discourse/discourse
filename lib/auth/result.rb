@@ -3,7 +3,8 @@ class Auth::Result
                 :email_valid, :extra_data, :awaiting_activation,
                 :awaiting_approval, :authenticated, :authenticator_name,
                 :requires_invite, :not_allowed_from_ip_address,
-                :admin_not_allowed_from_ip_address, :omit_username
+                :admin_not_allowed_from_ip_address, :omit_username,
+                :skip_email_validation
 
   attr_accessor :failed,
                 :failed_reason
@@ -23,7 +24,8 @@ class Auth::Result
       omit_username: omit_username,
       name: name,
       authenticator_name: authenticator_name,
-      extra_data: extra_data }
+      extra_data: extra_data,
+      skip_email_validation: !!skip_email_validation }
   end
 
   def to_client_hash

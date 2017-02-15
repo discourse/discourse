@@ -11,7 +11,7 @@ export default Discourse.Route.extend(OpenComposer, {
   },
 
   beforeModel(transition) {
-    if (transition.intent.url === "/" &&
+    if ((transition.intent.url === "/" || transition.intent.url === "/categories") &&
         transition.targetName.indexOf("discovery.top") === -1 &&
         Discourse.User.currentProp("should_be_redirected_to_top")) {
       Discourse.User.currentProp("should_be_redirected_to_top", false);

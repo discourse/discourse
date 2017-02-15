@@ -56,10 +56,10 @@ module PrettyText
     ctx.eval("window = {}; window.devicePixelRatio = 2;") # hack to make code think stuff is retina
 
     if Rails.env.development? || Rails.env.test?
-      ctx.attach("console.log", proc{|l| p l })
+      ctx.attach("console.log", proc { |l| p l })
     end
 
-    ctx_load(ctx, "vendor/assets/javascripts/loader.js")
+    ctx_load(ctx, "#{Rails.root}/app/assets/javascripts/discourse-loader.js")
     ctx_load(ctx, "vendor/assets/javascripts/lodash.js")
     manifest = File.read("#{Rails.root}/app/assets/javascripts/pretty-text-bundle.js")
     root_path = "#{Rails.root}/app/assets/javascripts/"
@@ -154,7 +154,7 @@ module PrettyText
       context.eval("__optInput.mentionLookup = __mentionLookup;")
 
       custom_emoji = {}
-      Emoji.custom.map {|e| custom_emoji[e.name] = e.url}
+      Emoji.custom.map { |e| custom_emoji[e.name] = e.url }
       context.eval("__optInput.customEmoji = #{custom_emoji.to_json};")
 
       context.eval('__textOptions = __buildOptions(__optInput);')
@@ -209,7 +209,18 @@ module PrettyText
     options[:topicId] = opts[:topic_id]
 
     working_text = text.dup
-    sanitized = markdown(working_text, options)
+
+    begin
+      sanitized = markdown(working_text, options)
+    rescue MiniRacer::ScriptTerminatedError => e
+      if SiteSetting.censored_pattern.present?
+        Rails.logger.warn "Post cooking timed out. Clearing the censored_pattern setting and retrying."
+        SiteSetting.censored_pattern = nil
+        sanitized = markdown(working_text, options)
+      else
+        raise e
+      end
+    end
 
     doc = Nokogiri::HTML.fragment(sanitized)
 
@@ -250,48 +261,45 @@ module PrettyText
            whitelist.any?{|u| uri.host == u || uri.host.ends_with?("." << u)}
           # we are good no need for nofollow
         else
-          l["rel"] = "nofollow"
+          l["rel"] = "nofollow noopener"
         end
       rescue URI::InvalidURIError, URI::InvalidComponentError
         # add a nofollow anyway
-        l["rel"] = "nofollow"
+        l["rel"] = "nofollow noopener"
       end
     end
   end
 
-  class DetectedLink
-    attr_accessor :is_quote, :url
-
-    def initialize(url, is_quote=false)
-      @url = url
-      @is_quote = is_quote
-    end
-  end
-
+  class DetectedLink < Struct.new(:url, :is_quote); end
 
   def self.extract_links(html)
     links = []
     doc = Nokogiri::HTML.fragment(html)
+
     # remove href inside quotes & elided part
-    doc.css("aside.quote a, .elided a").each { |l| l["href"] = "" }
+    doc.css("aside.quote a, .elided a").each { |a| a["href"] = "" }
 
-    # extract all links from the post
-    doc.css("a").each { |l|
-      unless l["href"].blank? || "#".freeze == l["href"][0]
-        links << DetectedLink.new(l["href"])
+    # extract all links
+    doc.css("a").each do |a|
+      if a["href"].present? && a["href"][0] != "#".freeze
+        links << DetectedLink.new(a["href"], false)
       end
-    }
+    end
 
-    # extract links to quotes
-    doc.css("aside.quote[data-topic]").each do |a|
-      topic_id = a['data-topic']
-
-      url = "/t/topic/#{topic_id}"
-      if post_number = a['data-post']
-        url << "/#{post_number}"
+    # extract quotes
+    doc.css("aside.quote[data-topic]").each do |aside|
+      if aside["data-topic"].present?
+        url = "/t/topic/#{aside["data-topic"]}"
+        url << "/#{aside["data-post"]}" if aside["data-post"].present?
+        links << DetectedLink.new(url, true)
       end
+    end
 
-      links << DetectedLink.new(url, true)
+    # extract Youtube links
+    doc.css("div[data-youtube-id]").each do |div|
+      if div["data-youtube-id"].present?
+        links << DetectedLink.new("https://www.youtube.com/watch?v=#{div['data-youtube-id']}", false)
+      end
     end
 
     links

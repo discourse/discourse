@@ -70,13 +70,12 @@ const Post = RestModel.extend({
 
     return ajax(`/posts/${this.get('id')}/${field}`, { type: 'PUT', data }).then(() => {
       this.set(field, value);
-      this.incrementProperty("version");
     }).catch(popupAjaxError);
   },
 
   internalLinks: function() {
     if (Ember.isEmpty(this.get('link_counts'))) return null;
-    return this.get('link_counts').filterProperty('internal').filterProperty('title');
+    return this.get('link_counts').filterBy('internal').filterBy('title');
   }.property('link_counts.@each.internal'),
 
   flagsAvailable: function() {

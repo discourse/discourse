@@ -1,9 +1,5 @@
-export default Em.Mixin.create({
-  flashMessage: null,
-
-  needs: ['modal'],
-
-  flash(message, messageClass) {
-    this.set('flashMessage', Em.Object.create({ message, messageClass }));
+export default Ember.Mixin.create({
+  flash(text, messageClass) {
+    this.appEvents.trigger('modal-body:flash', { text, messageClass });
   }
 });

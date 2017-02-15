@@ -1,4 +1,4 @@
-import { registerUnbound } from 'discourse/lib/helpers';
+import { registerUnbound } from 'discourse-common/lib/helpers';
 
 registerUnbound('topic-link', function(topic) {
   var title = topic.get('fancyTitle');

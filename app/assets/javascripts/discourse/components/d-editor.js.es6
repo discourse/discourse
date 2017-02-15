@@ -10,6 +10,10 @@ import { cook } from 'discourse/lib/text';
 import { translations } from 'pretty-text/emoji/data';
 import { emojiSearch } from 'pretty-text/emoji';
 import { emojiUrlFor } from 'discourse/lib/text';
+import { getRegister } from 'discourse-common/lib/get-owner';
+import { findRawTemplate } from 'discourse/lib/raw-templates';
+import { determinePostReplaceSelection } from 'discourse/lib/utilities';
+import deprecated from 'discourse-common/lib/deprecated';
 
 // Our head can be a static string or a function that returns a string
 // based on input (like for numbered lists).
@@ -123,7 +127,7 @@ class Toolbar {
   }
 
   addButton(button) {
-    const g = this.groups.findProperty('group', button.group);
+    const g = this.groups.findBy('group', button.group);
     if (!g) {
       throw `Couldn't find toolbar group ${button.group}`;
     }
@@ -182,7 +186,7 @@ export function addToolbarCallback(func) {
 }
 
 export function onToolbarCreate(func) {
-  console.warn('`onToolbarCreate` is deprecated, use the plugin api instead.');
+  deprecated('`onToolbarCreate` is deprecated, use the plugin api instead.');
   addToolbarCallback(func);
 };
 
@@ -201,18 +205,30 @@ export default Ember.Component.extend({
     return null;
   },
 
-  @on('didInsertElement')
-  _startUp() {
-    const container = this.get('container'),
-          $editorInput = this.$('.d-editor-input');
-
-    this._applyEmojiAutocomplete(container, $editorInput);
-    this._applyCategoryHashtagAutocomplete(container, $editorInput);
-
+  _readyNow() {
     this.set('ready', true);
 
-    const mouseTrap = Mousetrap(this.$('.d-editor-input')[0]);
+    if (this.get('autofocus')) {
+      this.$('textarea').focus();
+    }
+  },
 
+  init() {
+    this._super();
+    this.register = getRegister(this);
+  },
+
+  didInsertElement() {
+    this._super();
+
+    const $editorInput = this.$('.d-editor-input');
+
+    this._applyEmojiAutocomplete($editorInput);
+    this._applyCategoryHashtagAutocomplete($editorInput);
+
+    Ember.run.scheduleOnce('afterRender', this, this._readyNow);
+
+    const mouseTrap = Mousetrap(this.$('.d-editor-input')[0]);
     const shortcuts = this.get('toolbar.shortcuts');
     Object.keys(shortcuts).forEach(sc => {
       const button = shortcuts[sc];
@@ -232,7 +248,6 @@ export default Ember.Component.extend({
 
     this.appEvents.on('composer:insert-text', text => this._addText(this._getSelected(), text));
     this.appEvents.on('composer:replace-text', (oldVal, newVal) => this._replaceText(oldVal, newVal));
-
     this._mouseTrap = mouseTrap;
   },
 
@@ -267,7 +282,6 @@ export default Ember.Component.extend({
       if (this._state !== "inDOM") { return; }
       const $preview = this.$('.d-editor-preview');
       if ($preview.length === 0) return;
-
       this.sendAction('previewUpdated', $preview);
     });
   },
@@ -275,15 +289,20 @@ export default Ember.Component.extend({
   @observes('ready', 'value')
   _watchForChanges() {
     if (!this.get('ready')) { return; }
-    Ember.run.debounce(this, this._updatePreview, 30);
+
+    // Debouncing in test mode is complicated
+    if (Ember.testing) {
+      this._updatePreview();
+    } else {
+      Ember.run.debounce(this, this._updatePreview, 30);
+    }
   },
 
-  _applyCategoryHashtagAutocomplete(container) {
-    const template = container.lookup('template:category-tag-autocomplete.raw');
+  _applyCategoryHashtagAutocomplete() {
     const siteSettings = this.siteSettings;
 
     this.$('.d-editor-input').autocomplete({
-      template: template,
+      template: findRawTemplate('category-tag-autocomplete'),
       key: '#',
       transformComplete(obj) {
         if (obj.model) {
@@ -301,14 +320,14 @@ export default Ember.Component.extend({
     });
   },
 
-  _applyEmojiAutocomplete(container, $editorInput) {
+  _applyEmojiAutocomplete($editorInput) {
     if (!this.siteSettings.enable_emoji) { return; }
 
-    const template = container.lookup('template:emoji-selector-autocomplete.raw');
+    const register = this.register;
     const self = this;
 
     $editorInput.autocomplete({
-      template: template,
+      template: findRawTemplate('emoji-selector-autocomplete'),
       key: ":",
       afterComplete(text) {
         self.set('value', text);
@@ -320,7 +339,7 @@ export default Ember.Component.extend({
         } else {
           showSelector({
             appendTo: self.$(),
-            container,
+            register,
             onSelect: title => {
               // Remove the previously type characters when a new emoji is selected from the selector.
               let selected = self._getSelected();
@@ -441,7 +460,7 @@ export default Ember.Component.extend({
     }).join("\n");
   },
 
-  _applySurround(sel, head, tail, exampleKey) {
+  _applySurround(sel, head, tail, exampleKey, opts) {
     const pre = sel.pre;
     const post = sel.post;
 
@@ -453,6 +472,16 @@ export default Ember.Component.extend({
       const example = I18n.t(`composer.${exampleKey}`);
       this.set('value', `${pre}${hval}${example}${tail}${post}`);
       this._selectText(pre.length + hlen, example.length);
+    } else if (opts && !opts.multiline) {
+      const [hval, hlen] = getHead(head);
+
+      if (pre.slice(-hlen) === hval && post.slice(0, tail.length) === tail) {
+        this.set('value', `${pre.slice(0, -hlen)}${sel.value}${post.slice(tail.length)}`);
+        this._selectText(sel.start - hlen, sel.value.length);
+      } else {
+        this.set('value', `${pre}${hval}${sel.value}${tail}${post}`);
+        this._selectText(sel.start + hlen, sel.value.length);
+      }
     } else {
       const lines = sel.value.split("\n");
 
@@ -497,11 +526,27 @@ export default Ember.Component.extend({
 
   _replaceText(oldVal, newVal) {
     const val = this.get('value');
-    const loc = val.indexOf(oldVal);
-    if (loc !== -1) {
-      this.set('value', val.replace(oldVal, newVal));
-      this._selectText(loc + newVal.length, 0);
+    const needleStart = val.indexOf(oldVal);
+
+    if (needleStart === -1) {
+      // Nothing to replace.
+      return;
     }
+
+    const textarea = this.$('textarea.d-editor-input')[0];
+
+    // Determine post-replace selection.
+    const newSelection = determinePostReplaceSelection({
+      selection: { start: textarea.selectionStart, end: textarea.selectionEnd },
+      needle: { start: needleStart, end: needleStart + oldVal.length },
+      replacement: { start: needleStart, end: needleStart + newVal.length }
+    });
+
+    // Replace value (side effect: cursor at the end).
+    this.set('value', val.replace(oldVal, newVal));
+
+    // Restore cursor.
+    this._selectText(newSelection.start, newSelection.end - newSelection.start);
   },
 
   _addText(sel, text) {
@@ -521,9 +566,10 @@ export default Ember.Component.extend({
       const toolbarEvent = {
         selected,
         selectText: (from, length) => this._selectText(from, length),
-        applySurround: (head, tail, exampleKey) => this._applySurround(selected, head, tail, exampleKey),
+        applySurround: (head, tail, exampleKey, opts) => this._applySurround(selected, head, tail, exampleKey, opts),
         applyList: (head, exampleKey) => this._applyList(selected, head, exampleKey),
         addText: text => this._addText(selected, text),
+        replaceText: text => this._addText({pre: '', post: ''}, text),
         getText: () => this.get('value'),
       };
 
@@ -595,7 +641,7 @@ export default Ember.Component.extend({
     emoji() {
       showSelector({
         appendTo: this.$(),
-        container: this.container,
+        register: this.register,
         onSelect: title => this._addText(this._getSelected(), `:${title}:`)
       });
     }

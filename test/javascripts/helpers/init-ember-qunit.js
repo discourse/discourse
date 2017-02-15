@@ -1,2 +1,2 @@
-var resolver = require('discourse/ember/resolver').default;
-window.setResolver(resolver.create({ namespace: Discourse }));
+var buildResolver = require('discourse-common/resolver').buildResolver;
+window.setResolver(buildResolver('discourse').create({ namespace: Discourse }));

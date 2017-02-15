@@ -57,11 +57,11 @@ class LetterAvatar
     def cached_path(identity, size)
       dir = "#{cache_path}/#{identity.letter}/#{identity.color.join("_")}"
       FileUtils.mkdir_p(dir)
-      "#{dir}/#{size}.png"
+      File.expand_path "#{dir}/#{size}.png"
     end
 
     def fullsize_path(identity)
-      cached_path(identity, FULLSIZE)
+      File.expand_path cached_path(identity, FULLSIZE)
     end
 
     def generate_fullsize(identity)

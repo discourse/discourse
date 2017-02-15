@@ -529,6 +529,7 @@ describe TopicsController do
       get :show, topic_id: topic.id, slug: topic.slug
       expect(response).to be_success
       expect(css_select("link[rel=canonical]").length).to eq(1)
+      expect(response.headers["Cache-Control"]).to eq("no-store, must-revalidate, no-cache, private")
     end
   end
 
@@ -566,6 +567,15 @@ describe TopicsController do
 
     it 'can find a topic given a slug in the id param' do
       xhr :get, :show, id: topic.slug
+      expect(response).to redirect_to(topic.relative_url)
+    end
+
+    it 'can find a topic when a slug has a number in front' do
+      another_topic = Fabricate(:post).topic
+
+      topic.update_column(:slug, "#{another_topic.id}-reasons-discourse-is-awesome")
+      xhr :get, :show, id: "#{another_topic.id}-reasons-discourse-is-awesome"
+
       expect(response).to redirect_to(topic.relative_url)
     end
 
@@ -736,6 +746,21 @@ describe TopicsController do
       get :show, topic_id: topic.id, slug: topic.slug, u: user.username
 
       expect(IncomingLink.count).to eq(1)
+    end
+
+    context 'print' do
+
+      it "doesn't renders the print view when disabled" do
+        SiteSetting.max_prints_per_hour_per_user = 0
+        get :show, topic_id: topic.id, slug: topic.slug, print: true
+        expect(response).to be_forbidden
+      end
+
+      it 'renders the print view when enabled' do
+        SiteSetting.max_prints_per_hour_per_user = 10
+        get :show, topic_id: topic.id, slug: topic.slug, print: true
+        expect(response).to be_successful
+      end
     end
 
     it 'records redirects' do
@@ -1199,6 +1224,12 @@ describe TopicsController do
         expect { xhr :put, :bulk, topic_ids: topic_ids, operation: {}}.to raise_error(ActionController::ParameterMissing)
       end
 
+      it "can find unread" do
+        # mark all unread muted
+        xhr :put, :bulk, filter: 'unread', operation: {type: :change_notification_level, notification_level_id: 0}
+        expect(response.status).to eq(200)
+      end
+
       it "delegates work to `TopicsBulkAction`" do
         topics_bulk_action = mock
         TopicsBulkAction.expects(:new).with(user, topic_ids, operation, group: nil).returns(topics_bulk_action)
@@ -1223,6 +1254,15 @@ describe TopicsController do
 
       xhr :put, :remove_bookmarks, topic_id: post.topic_id
       expect(PostAction.where(user_id: user.id, post_action_type: bookmark).count).to eq(0)
+    end
+
+    it "should disallow bookmarks on posts you have no access to" do
+      log_in
+      user = Fabricate(:user)
+      pm = create_post(user: user, archetype: 'private_message', target_usernames: [user.username])
+
+      xhr :put, :bookmark, topic_id: pm.topic_id
+      expect(response).to be_forbidden
     end
   end
 
@@ -1279,6 +1319,36 @@ describe TopicsController do
 
       expect(response.headers['X-Robots-Tag']).to eq(nil)
     end
+  end
+
+  context "excerpts" do
+
+    it "can correctly get excerpts" do
+
+      first_post = create_post(raw: 'This is the first post :)', title: 'This is a test title I am making yay')
+      second_post = create_post(raw: 'This is second post', topic: first_post.topic)
+
+      random_post = Fabricate(:post)
+
+
+      xhr :get, :excerpts, topic_id: first_post.topic_id, post_ids: [first_post.id, second_post.id, random_post.id]
+
+      json = JSON.parse(response.body)
+      json.sort!{|a,b| a["post_id"] <=> b["post_id"]}
+
+      # no random post
+      expect(json.length).to eq(2)
+      # keep emoji images
+      expect(json[0]["excerpt"]).to match(/emoji/)
+      expect(json[0]["excerpt"]).to match(/first post/)
+      expect(json[0]["username"]).to eq(first_post.user.username)
+      expect(json[0]["post_id"]).to eq(first_post.id)
+
+      expect(json[1]["excerpt"]).to match(/second post/)
+
+
+    end
+
   end
 
   context "convert_topic" do

@@ -14,7 +14,7 @@ a.loading-onebox {
   @include post-aside;
 
   margin-top: 15px;
-  padding: 12px 25px 12px 12px;
+  padding: 12px;
   font-size: 1em;
   > .source {
     margin-bottom: 12px;
@@ -95,8 +95,9 @@ aside.onebox {
   font-size: 1em;
 
   header {
+    margin-bottom: 8px;
     a[href] {
-      color: $primary;
+      color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
       text-decoration: none;
     }
   }
@@ -118,7 +119,7 @@ aside.onebox {
 
     h3, h4 {
       font-size: 1.17em;
-      margin: 10px 0;
+      margin: 0 0 10px 0;
     }
 
     a[href] {
@@ -131,7 +132,7 @@ aside.onebox {
     }
 
     img {
-      max-height: 80%;
+      max-height: 170px;
       max-width: 20%;
       height: auto;
       float: left;
@@ -291,20 +292,22 @@ aside.onebox.twitterstatus .onebox-body {
     margin-bottom: 0;
   }
 }
+
+// thumbnail, oddly, ONLY applies to twitter avatar
 .onebox.twitterstatus {
   .thumbnail {
-    float: left;
+    width: 48px;
+    height: 48px;
   }
   p, .tweet {
-    float: left;
-    display: inline-block;
     white-space: pre-wrap;
     padding-top: 3px;
-    width: 85%;
+    margin-left: 58px;
   }
   .date {
     clear: left;
     padding-top: 5px;
+    margin-left: 58px;
   }
 }
 
@@ -354,6 +357,28 @@ aside.onebox.stackexchange .onebox-body {
 
 .onebox-metadata {
   color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
+}
+
+.onebox.xkcd .onebox-body {
+  img {
+    max-width: 100% !important;
+    float: none !important;
+  }
+}
+
+// pdf onebox
+.onebox.pdf .onebox-body {
+  .pdf-onebox-logo {
+    width: 60px;
+    height: 50px;
+    float: left;
+    background: image-url("favicons/pdf_64px.png") no-repeat;
+    background-size: 48px 48px;
+    display: inline-block;
+  }
+  .filesize {
+    color: gray;
+  }
 }
 
 // mobile specific style

@@ -95,6 +95,16 @@ class PostRevisor
     end
   end
 
+  track_topic_field(:featured_link) do |topic_changes, featured_link|
+    if SiteSetting.topic_featured_link_enabled &&
+       featured_link.present? &&
+       topic_changes.guardian.can_edit_featured_link?(topic_changes.topic.category_id)
+
+      topic_changes.record_change('featured_link', topic_changes.topic.featured_link, featured_link)
+      topic_changes.topic.featured_link = featured_link
+    end
+  end
+
   # AVAILABLE OPTIONS:
   # - revised_at: changes the date of the revision
   # - force_new_version: bypass ninja-edit window
@@ -240,7 +250,7 @@ class PostRevisor
       prev_owner = User.find(@post.user_id)
       new_owner = User.find(@fields["user_id"])
 
-      # UserActionObserver will create new UserAction records for the new owner
+      # UserActionCreator will create new UserAction records for the new owner
 
       UserAction.where(target_post_id: @post.id)
                 .where(user_id: prev_owner.id)
@@ -277,22 +287,26 @@ class PostRevisor
                         .where(action_type: UserAction::WAS_LIKED)
                         .update_all(user_id: new_owner.id)
 
-      prev_owner.user_stat.post_count -= 1
-      prev_owner.user_stat.topic_count -= 1 if @post.is_first_post?
-      prev_owner.user_stat.likes_received -= likes
-      prev_owner.user_stat.update_topic_reply_count
+      private_message = @post.topic.private_message?
+
+      prev_owner_user_stat = prev_owner.user_stat
+      prev_owner_user_stat.post_count -= 1
+      prev_owner_user_stat.topic_count -= 1 if @post.is_first_post?
+      prev_owner_user_stat.likes_received -= likes if !private_message
+      prev_owner_user_stat.update_topic_reply_count
 
       if @post.created_at == prev_owner.user_stat.first_post_created_at
-        prev_owner.user_stat.first_post_created_at = prev_owner.posts.order('created_at ASC').first.try(:created_at)
+        prev_owner_user_stat.first_post_created_at = prev_owner.posts.order('created_at ASC').first.try(:created_at)
       end
 
-      prev_owner.user_stat.save
+      prev_owner_user_stat.save!
 
-      new_owner.user_stat.post_count += 1
-      new_owner.user_stat.topic_count += 1 if @post.is_first_post?
-      new_owner.user_stat.likes_received += likes
-      new_owner.user_stat.update_topic_reply_count
-      new_owner.user_stat.save
+      new_owner_user_stat = new_owner.user_stat
+      new_owner_user_stat.post_count += 1
+      new_owner_user_stat.topic_count += 1 if @post.is_first_post?
+      new_owner_user_stat.likes_received += likes if !private_message
+      new_owner_user_stat.update_topic_reply_count
+      new_owner_user_stat.save!
     end
   end
 
@@ -425,18 +439,14 @@ class PostRevisor
   def update_category_description
     return unless category = Category.find_by(topic_id: @topic.id)
 
-    body = @post.cooked
-    matches = body.scan(/\<p\>(.*)\<\/p\>/)
+    doc = Nokogiri::HTML.fragment(@post.cooked)
+    doc.css("img").remove
 
-    matches.each do |match|
-      next if match[0] =~ /\<img(.*)src=/ || match[0].blank?
-      new_description = match[0]
-      # first 50 characters should be fine to test they haven't changed the default description
-      new_description = nil if new_description.starts_with?(I18n.t("category.replace_paragraph")[0..50])
-      category.update_column(:description, new_description)
-      @category_changed = category
-      break
-    end
+    html = doc.css("p").first.inner_html.strip
+    new_description = html unless html.starts_with?(Category.post_template[0..50])
+
+    category.update_column(:description, new_description)
+    @category_changed = category
   end
 
   def advance_draft_sequence
@@ -446,6 +456,7 @@ class PostRevisor
   def post_process_post
     @post.invalidate_oneboxes = true
     @post.trigger_post_process
+    DiscourseEvent.trigger(:post_edited, @post, self.topic_changed?)
   end
 
   def update_topic_word_counts

@@ -1,17 +1,24 @@
 import renderTag from 'discourse/lib/render-tag';
 
 function formatTag(t) {
-  return renderTag(t.id, {count: t.count});
+  return renderTag(t.id, {count: t.count, noHref: true});
 }
 
 export default Ember.TextField.extend({
   classNameBindings: [':tag-chooser'],
   attributeBindings: ['tabIndex', 'placeholderKey', 'categoryId'],
 
-  _initValue: function() {
+  init() {
+    this._super();
     const tags = this.get('tags') || [];
     this.set('value', tags.join(", "));
-  }.on('init'),
+
+    if (this.get('allowCreate') !== false) {
+      this.set('allowCreate', this.site.get('can_create_tag'));
+    }
+
+    this.set('termMatchesForbidden', false);
+  },
 
   _valueChanged: function() {
     const tags = this.get('value').split(',').map(v => v.trim()).reject(v => v.length === 0).uniq();
@@ -32,18 +39,13 @@ export default Ember.TextField.extend({
     }
   }.observes('tags'),
 
-  _initializeTags: function() {
-    const site = this.site,
-          self = this,
-          filterRegexp = new RegExp(this.site.tags_filter_regexp, "g");
+  didInsertElement() {
+    this._super();
 
-    var limit = this.siteSettings.max_tags_per_topic;
+    const self = this;
+    const filterRegexp = new RegExp(this.site.tags_filter_regexp, "g");
 
-    if (this.get('allowCreate') !== false) {
-      this.set('allowCreate', site.get('can_create_tag'));
-    }
-
-    this.set('termMatchesForbidden', false);
+    let limit = this.siteSettings.max_tags_per_topic;
 
     if (this.get('unlimitedTagCount')) {
       limit = null;
@@ -56,6 +58,7 @@ export default Ember.TextField.extend({
       placeholder: this.get('placeholder') === "" ? "" : I18n.t(this.get('placeholderKey') || 'tagging.choose_for_topic'),
       maximumInputLength: this.siteSettings.max_tag_length,
       maximumSelectionSize: limit,
+      width: this.get('width') || 'resolve',
       initSelection(element, callback) {
         const data = [];
 
@@ -76,8 +79,8 @@ export default Ember.TextField.extend({
 
         callback(data);
       },
-      createSearchChoice: function(term, data) {
-        term = term.replace(filterRegexp, '').trim();
+      createSearchChoice(term, data) {
+        term = term.replace(filterRegexp, '').trim().toLowerCase();
 
         // No empty terms, make sure the user has permission to create the tag
         if (!term.length || !self.get('allowCreate') || self.get('termMatchesForbidden')) return;
@@ -88,14 +91,14 @@ export default Ember.TextField.extend({
           return { id: term, text: term };
         }
       },
-      createSearchChoicePosition: function(list, item) {
+      createSearchChoicePosition(list, item) {
         // Search term goes on the bottom
         list.push(item);
       },
-      formatSelection: function (data) {
-        return data ? renderTag(this.text(data)) : undefined;
+      formatSelection(data) {
+        return data ? renderTag(this.text(data), {noHref: true}) : undefined;
       },
-      formatSelectionCssClass: function(){
+      formatSelectionCssClass() {
         return "discourse-tag-select2";
       },
       formatResult: formatTag,
@@ -126,10 +129,11 @@ export default Ember.TextField.extend({
         }
       },
     });
-  }.on('didInsertElement'),
+  },
 
-  _destroyTags: function() {
+  willDestroyElement() {
+    this._super();
     this.$().select2('destroy');
-  }.on('willDestroyElement')
+  }
 
 });

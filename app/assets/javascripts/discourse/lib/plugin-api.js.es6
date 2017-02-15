@@ -1,17 +1,21 @@
-import { iconNode } from 'discourse/helpers/fa-icon';
+import { iconNode } from 'discourse/helpers/fa-icon-node';
 import { addDecorator } from 'discourse/widgets/post-cooked';
 import ComposerEditor from 'discourse/components/composer-editor';
 import { addButton } from 'discourse/widgets/post-menu';
 import { includeAttributes } from 'discourse/lib/transform-post';
 import { addToolbarCallback } from 'discourse/components/d-editor';
 import { addWidgetCleanCallback } from 'discourse/components/mount-widget';
-import { createWidget, decorateWidget, changeSetting } from 'discourse/widgets/widget';
+import { createWidget, reopenWidget, decorateWidget, changeSetting } from 'discourse/widgets/widget';
 import { onPageChange } from 'discourse/lib/page-tracker';
 import { preventCloak } from 'discourse/widgets/post-stream';
 import { h } from 'virtual-dom';
 import { addFlagProperty } from 'discourse/components/site-header';
 import { addPopupMenuOptionsCallback } from 'discourse/controllers/composer';
-import { emojiUrlFor } from 'discourse/lib/text';
+import { extraConnectorClass } from 'discourse/lib/plugin-connectors';
+import { addPostSmallActionIcon } from 'discourse/widgets/post-small-action';
+
+// If you add any methods to the API ensure you bump up this number
+const PLUGIN_API_VERSION = 0.8;
 
 class PluginApi {
   constructor(version, container) {
@@ -93,12 +97,11 @@ class PluginApi {
         if (result.icon) {
           iconBody = iconNode(result.icon);
         } else if (result.emoji) {
-          iconBody = result.emoji.split('|').map(emoji => {
-            const src = emojiUrlFor(emoji);
-            return dec.h('img', { className: 'emoji', attributes: { src } });
+          iconBody = result.emoji.split('|').map(name => {
+            let widgetAttrs = { name };
+            if (result.emojiTitle) widgetAttrs.title = true;
+            return dec.attach('emoji', widgetAttrs);
           });
-
-          iconBody = result.emoji.split('|').map(name => dec.attach('emoji', { name }));
         }
 
         if (result.text) {
@@ -309,6 +312,16 @@ class PluginApi {
   }
 
   /**
+   * Exposes the widget update ability to plugins. Updates the widget
+   * registry for the given widget name to include the properties on args
+   * See `reopenWidget` in `discourse/widgets/widget` from more ifo.
+  **/
+
+  reopenWidget(name, args) {
+    return reopenWidget(name, args);
+  }
+
+  /**
    * Adds a property that can be summed for calculating the flag counter
    **/
   addFlagProperty(property) {
@@ -332,14 +345,51 @@ class PluginApi {
   addStorePluralization(thing, plural) {
     this.container.lookup("store:main").addPluralization(thing, plural);
   }
+
+  /**
+   * Register a Connector class for a particular outlet and connector.
+   *
+   * For example, if the outlet is `user-profile-primary` and your connector
+   * template is called `my-connector.hbs`:
+   *
+   * ```javascript
+   * api.registerConnectorClass('user-profile-primary', 'my-connector', {
+   *   shouldRender(args, component) {
+   *     return component.siteSettings.my_plugin_enabled;
+   *   }
+   * });
+   * ```
+   *
+   * For more information on connector classes, see:
+   * https://meta.discourse.org/t/important-changes-to-plugin-outlets-for-ember-2-10/54136
+   **/
+  registerConnectorClass(outletName, connectorName, klass) {
+    extraConnectorClass(`${outletName}/${connectorName}`, klass);
+  }
+
+  /**
+   * Register a small icon to be used for custom small post actions
+   *
+   * ```javascript
+   * api.registerPostSmallActionIcon('assign-to', 'user-add');
+   * ```
+   **/
+  addPostSmallActionIcon(key, icon) {
+    addPostSmallActionIcon(key, icon);
+  }
 }
 
 let _pluginv01;
 function getPluginApi(version) {
   version = parseFloat(version);
-  if (version <= 0.5) {
+  if (version <= PLUGIN_API_VERSION) {
     if (!_pluginv01) {
       _pluginv01 = new PluginApi(version, Discourse.__container__);
+    }
+
+    // We are recycling the compatible object, but let's update to the higher version
+    if (_pluginv01.version < version) {
+      _pluginv01.version = version;
     }
     return _pluginv01;
   } else {
@@ -368,6 +418,10 @@ function decorate(klass, evt, cb) {
   const mixin = {};
   mixin["_decorate_" + (_decorateId++)] = function($elem) { cb($elem); }.on(evt);
   klass.reopen(mixin);
+}
+
+export function resetPluginApi() {
+  _pluginv01 = null;
 }
 
 export function decorateCooked() {

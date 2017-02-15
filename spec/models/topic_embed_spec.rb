@@ -75,51 +75,73 @@ describe TopicEmbed do
       end
 
       it "doesn't scrub the title by default" do
-        title, _ = TopicEmbed.find_remote(url)
-        expect(title).to eq("Through the Looking Glass - Classic Books")
+        response = TopicEmbed.find_remote(url)
+        expect(response.title).to eq("Through the Looking Glass - Classic Books")
       end
 
       it "scrubs the title when the option is enabled" do
         SiteSetting.embed_title_scrubber = " - Classic Books$"
-        title, _ = TopicEmbed.find_remote(url)
-        expect(title).to eq("Through the Looking Glass")
+        response = TopicEmbed.find_remote(url)
+        expect(response.title).to eq("Through the Looking Glass")
       end
 
     end
 
     context 'post with allowed classes "foo" and "emoji"' do
-
       let(:user) { Fabricate(:user) }
       let(:url) { 'http://eviltrout.com/123' }
       let(:contents) { "my normal size emoji <p class='foo'>Hi</p> <img class='emoji other foo' src='/images/smiley.jpg'>" }
       let!(:embeddable_host) { Fabricate(:embeddable_host) }
       let!(:file) { StringIO.new }
 
-      content = ''
+      response = nil
 
       before(:each) do
         SiteSetting.stubs(:embed_classname_whitelist).returns 'emoji , foo'
         file.stubs(:read).returns contents
         TopicEmbed.stubs(:open).returns file
-        _, content = TopicEmbed.find_remote(url)
+        response = TopicEmbed.find_remote(url)
+      end
+
+      it "has no author tag" do
+        expect(response.author).to be_blank
       end
 
       it 'img node has emoji class' do
-        expect(content).to have_tag('img', with: { class: 'emoji' })
+        expect(response.body).to have_tag('img', with: { class: 'emoji' })
       end
 
       it 'img node has foo class' do
-        expect(content).to have_tag('img', with: { class: 'foo' })
+        expect(response.body).to have_tag('img', with: { class: 'foo' })
       end
 
       it 'p node has foo class' do
-        expect(content).to have_tag('p', with: { class: 'foo' })
+        expect(response.body).to have_tag('p', with: { class: 'foo' })
       end
 
       it 'nodes removes classes other than emoji' do
-        expect(content).to have_tag('img', without: { class: 'other' })
+        expect(response.body).to have_tag('img', without: { class: 'other' })
+      end
+    end
+
+    context 'post with author metadata' do
+      let!(:user) { Fabricate(:user, username: 'eviltrout') }
+      let(:url) { 'http://eviltrout.com/321' }
+      let(:contents) { '<html><head><meta name="author" content="eviltrout"></head><body>rich and morty</body></html>' }
+      let!(:embeddable_host) { Fabricate(:embeddable_host) }
+      let!(:file) { StringIO.new }
+
+      response = nil
+
+      before(:each) do
+        file.stubs(:read).returns contents
+        TopicEmbed.stubs(:open).returns file
+        response = TopicEmbed.find_remote(url)
       end
 
+      it "has no author tag" do
+        expect(response.author).to eq(user)
+      end
     end
 
     context 'post with no allowed classes' do
@@ -130,29 +152,29 @@ describe TopicEmbed do
       let!(:embeddable_host) { Fabricate(:embeddable_host) }
       let!(:file) { StringIO.new }
 
-      content = ''
+      response = nil
 
       before(:each) do
         SiteSetting.stubs(:embed_classname_whitelist).returns ' '
         file.stubs(:read).returns contents
         TopicEmbed.stubs(:open).returns file
-        _, content = TopicEmbed.find_remote(url)
+        response = TopicEmbed.find_remote(url)
       end
 
       it 'img node doesn\'t have emoji class' do
-        expect(content).to have_tag('img', without: { class: 'emoji' })
+        expect(response.body).to have_tag('img', without: { class: 'emoji' })
       end
 
       it 'img node doesn\'t have foo class' do
-        expect(content).to have_tag('img', without: { class: 'foo' })
+        expect(response.body).to have_tag('img', without: { class: 'foo' })
       end
 
       it 'p node doesn\'t foo class' do
-        expect(content).to have_tag('p', without: { class: 'foo' })
+        expect(response.body).to have_tag('p', without: { class: 'foo' })
       end
 
       it 'img node doesn\'t have other class' do
-        expect(content).to have_tag('img', without: { class: 'other' })
+        expect(response.body).to have_tag('img', without: { class: 'other' })
       end
 
     end

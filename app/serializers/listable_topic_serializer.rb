@@ -26,6 +26,10 @@ class ListableTopicSerializer < BasicTopicSerializer
 
   has_one :last_poster, serializer: BasicUserSerializer, embed: :objects
 
+  def highest_post_number
+    (scope.is_staff? && object.highest_staff_post_number) || object.highest_post_number
+  end
+
   def liked
     object.user_data && object.user_data.liked
   end
@@ -109,7 +113,7 @@ class ListableTopicSerializer < BasicTopicSerializer
   protected
 
     def unread_helper
-      @unread_helper ||= Unread.new(object, object.user_data)
+      @unread_helper ||= Unread.new(object, object.user_data, scope)
     end
 
 end

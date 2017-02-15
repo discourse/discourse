@@ -1,6 +1,7 @@
 import debounce from 'discourse/lib/debounce';
 
-export default Ember.ArrayController.extend({
+export default Ember.Controller.extend({
+  queryParams: ["filter"],
   filter: null,
   onlyOverridden: false,
   filtered: Ember.computed.notEmpty('filter'),

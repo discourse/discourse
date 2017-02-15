@@ -26,7 +26,7 @@ module Jobs
       downloaded_urls = {}
 
       extract_images_from(post.cooked).each do |image|
-        src = image['src']
+        src = original_src = image['src']
         src = "http:" + src if src.start_with?("//")
 
         if is_valid_image_url(src)
@@ -53,7 +53,7 @@ module Jobs
             # have we successfully downloaded that file?
             if downloaded_urls[src].present?
               url = downloaded_urls[src]
-              escaped_src = Regexp.escape(src)
+              escaped_src = Regexp.escape(original_src)
               # there are 6 ways to insert an image in a post
               # HTML tag - <img src="http://...">
               raw.gsub!(/src=["']#{escaped_src}["']/i, "src='#{url}'")
@@ -63,6 +63,10 @@ module Jobs
               raw.gsub!(/\[!\[([^\]]*)\]\(#{escaped_src}\)\]/) { "[<img src='#{url}' alt='#{$1}'>]" }
               # Markdown inline - ![alt](http://...)
               raw.gsub!(/!\[([^\]]*)\]\(#{escaped_src}\)/) { "![#{$1}](#{url})" }
+              # Markdown inline - ![](http://... "image title")
+              raw.gsub!(/!\[\]\(#{escaped_src} "([^\]]*)"\)/) { "![](#{url})" }
+              # Markdown inline - ![alt](http://... "image title")
+              raw.gsub!(/!\[([^\]]*)\]\(#{escaped_src} "([^\]]*)"\)/) { "![](#{url})" }
               # Markdown reference - [x]: http://
               raw.gsub!(/\[([^\]]+)\]:\s?#{escaped_src}/) { "[#{$1}]: #{url}" }
               # Direct link

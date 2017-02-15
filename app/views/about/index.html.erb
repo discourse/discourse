@@ -23,7 +23,7 @@
           </span>
           <span itemprop='name'>
             <%= user.username %>
-            <% if user.name.present? %>
+            <% if user.name.present? && SiteSetting.enable_names %>
               - <%= user.name %>
             <% end %>
           </span>
@@ -44,7 +44,7 @@
             </span>
             <span itemprop='name'>
               <%= user.username %>
-              <% if user.name.present? %>
+              <% if user.name.present? && SiteSetting.enable_names %>
                 - <%= user.name %>
               <% end %>
             </span>

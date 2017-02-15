@@ -1,12 +1,11 @@
 import BufferedContent from 'discourse/mixins/buffered-content';
-import ScrollTop from 'discourse/mixins/scroll-top';
 import SiteSetting from 'admin/models/site-setting';
 import { propertyNotEqual } from 'discourse/lib/computed';
 import computed from 'ember-addons/ember-computed-decorators';
 
 const CustomTypes = ['bool', 'enum', 'list', 'url_list', 'host_list', 'category_list', 'value_list'];
 
-export default Ember.Component.extend(BufferedContent, ScrollTop, {
+export default Ember.Component.extend(BufferedContent, {
   classNameBindings: [':row', ':setting', 'setting.overridden', 'typeClass'],
   content: Ember.computed.alias('setting'),
   dirty: propertyNotEqual('buffered.value', 'setting.value'),

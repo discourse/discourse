@@ -7,25 +7,21 @@
     </tr>
   </thead>
   <tbody>
-    {{#if loadingTopics}}
-      {{loading-spinner}}
+    {{#if topics}}
+      {{#each topics as |t|}}
+        {{latest-topic-list-item topic=t}}
+      {{/each}}
+      <tr class="more-topics">
+        <td>
+          <a href="/latest" class="btn pull-right">{{i18n "more"}}</a>
+        </td>
+      </tr>
     {{else}}
-      {{#if topics}}
-        {{#each topics as |t|}}
-          {{latest-topic-list-item topic=t}}
-        {{/each}}
-        <tr class="more-topics">
-          <td>
-            <a href="/latest" class="btn pull-right">{{i18n "more"}}</a>
-          </td>
-        </tr>
-      {{else}}
-        <tr class="no-topics">
-          <td>
-            <h3>{{i18n "topics.none.latest"}}</h3>
-          </td>
-        </tr>
-      {{/if}}
+      <tr class="no-topics">
+        <td>
+          <h3>{{i18n "topics.none.latest"}}</h3>
+        </td>
+      </tr>
     {{/if}}
   </tbody>
 </table>

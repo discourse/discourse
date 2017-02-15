@@ -1,7 +1,7 @@
 import storePretender from 'helpers/store-pretender';
 import fixturePretender from 'helpers/fixture-pretender';
 
-function parsePostData(query) {
+export function parsePostData(query) {
   const result = {};
   query.split("&").forEach(function(part) {
     const item = part.split("=");
@@ -18,7 +18,7 @@ function parsePostData(query) {
 
   });
   return result;
-}
+};
 
 function response(code, obj) {
   if (typeof code === "object") {
@@ -56,11 +56,20 @@ export default function() {
       return response(json);
     });
 
+    this.get('/tags', () => {
+      return response({ tags: [{
+        id: 'eviltrout',
+        count: 1
+      }] });
+    });
+
+    this.get(`/users/eviltrout/emails.json`, () => {
+      return response({ email: 'eviltrout@example.com' });
+    });
+
     this.get('/users/eviltrout.json', () => {
       const json = fixturesByUrl['/users/eviltrout.json'];
-      if (loggedIn()) {
-        json.user.can_edit = true;
-      }
+      json.user.can_edit = loggedIn();
       return response(json);
     });
 
@@ -74,6 +83,20 @@ export default function() {
         },
         topics: [],
       });
+    });
+
+    this.get('/users/eviltrout/invited_count.json', () => {
+      return response({
+        "counts": { "pending": 1, "redeemed": 0, "total": 0 }
+      });
+    });
+
+    this.get('/users/eviltrout/invited.json', () => {
+      return response({ "invites": [ {id: 1} ] });
+    });
+
+    this.get('/topics/private-messages/eviltrout.json', () => {
+      return response({ topic_list: { topics: [] } });
     });
 
     this.get('/clicks/track', success);
@@ -90,12 +113,12 @@ export default function() {
       return response({});
     });
 
-
-    this.put('/users/eviltrout', () => response({ user: {} }));
+    this.put('/users/eviltrout.json', () => response({ user: {} }));
 
     this.get("/t/280.json", () => response(fixturesByUrl['/t/280/1.json']));
     this.get("/t/28830.json", () => response(fixturesByUrl['/t/28830/1.json']));
     this.get("/t/9.json", () => response(fixturesByUrl['/t/9/1.json']));
+    this.get("/t/12.json", () => response(fixturesByUrl['/t/12/1.json']));
 
     this.get("/t/id_for/:slug", () => {
       return response({id: 280, slug: "internationalization-localization", url: "/t/internationalization-localization/280"});
@@ -132,6 +155,8 @@ export default function() {
     this.get('/category_hashtags/check', () => {
       return response({ valid: [{ slug: "bug", url: '/c/bugs' }] });
     });
+
+    this.get("/categories_and_latest", () => response(fixturesByUrl["/categories_and_latest.json"]));
 
     this.put('/categories/:category_id', request => {
 
@@ -218,6 +243,10 @@ export default function() {
                                            slug: request.params.slug } });
     });
 
+    this.get("groups", () => {
+      return response(200, fixturesByUrl['/groups.json']);
+    });
+
     this.get("/groups/discourse/topics.json", () => {
       return response(200, fixturesByUrl['/groups/discourse/posts.json']);
     });
@@ -296,6 +325,34 @@ export default function() {
     this.delete('/admin/users/:user_id/revoke_api_key', success);
     this.post('/admin/badges', success);
     this.delete('/admin/badges/:id', success);
+
+    this.get('/onebox', request => {
+      if (request.queryParams.url === 'http://www.example.com/has-title.html') {
+        return [
+          200,
+          {"Content-Type": "application/html"},
+          '<aside class="onebox"><article class="onebox-body"><h3><a href="http://www.example.com/article.html">An interesting article</a></h3></article></aside>'
+        ];
+      }
+
+      if (request.queryParams.url === 'http://www.example.com/no-title.html') {
+        return [
+          200,
+          {"Content-Type": "application/html"},
+          '<aside class="onebox"><article class="onebox-body"><p>No title</p></article></aside>'
+        ];
+      }
+
+      if (request.queryParams.url.indexOf('/internal-page.html') > -1) {
+        return [
+          200,
+          {"Content-Type": "application/html"},
+          '<aside class="onebox"><article class="onebox-body"><h3><a href="/internal-page.html">Internal Page 4 U</a></h3></article></aside>'
+        ];
+      }
+
+      return [404, {"Content-Type": "application/html"}, ''];;
+    });
   });
 
   server.prepareBody = function(body){

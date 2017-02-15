@@ -49,7 +49,13 @@ class CategoryList
     end
 
     def find_categories
-      @categories = Category.includes(:topic_only_relative_url, subcategories: [:topic_only_relative_url]).secured(@guardian)
+      @categories = Category.includes(
+        :uploaded_background,
+        :uploaded_logo,
+        :topic_only_relative_url,
+        subcategories: [:topic_only_relative_url]
+      ).secured(@guardian)
+
       @categories = @categories.where(suppress_from_homepage: false) if @options[:is_homepage]
       @categories = @categories.where("categories.parent_category_id = ?", @options[:parent_category_id].to_i) if @options[:parent_category_id].present?
 

@@ -37,7 +37,7 @@ class TopicLink < ActiveRecord::Base
   def self.topic_map(guardian, topic_id)
 
     # Sam: complicated reports are really hard in AR
-    builder = SqlBuilder.new <<SQL
+    builder = SqlBuilder.new <<-SQL
   SELECT ftl.url,
          COALESCE(ft.title, ftl.title) AS title,
          ftl.link_topic_id,
@@ -163,20 +163,20 @@ SQL
 
           added_urls << url
 
-          topic_link = TopicLink.find_by(topic_id: post.topic_id,
-                                         post_id: post.id,
-                                         url: url)
-
-          unless topic_link
-            TopicLink.create!(post_id: post.id,
-                              user_id: post.user_id,
-                              topic_id: post.topic_id,
-                              url: url,
-                              domain: parsed.host || Discourse.current_hostname,
-                              internal: internal,
-                              link_topic_id: topic_id,
-                              link_post_id: reflected_post.try(:id),
-                              quote: link.is_quote)
+          unless TopicLink.exists?(topic_id: post.topic_id, post_id: post.id, url: url)
+            begin
+              TopicLink.create!(post_id: post.id,
+                                user_id: post.user_id,
+                                topic_id: post.topic_id,
+                                url: url,
+                                domain: parsed.host || Discourse.current_hostname,
+                                internal: internal,
+                                link_topic_id: topic_id,
+                                link_post_id: reflected_post.try(:id),
+                                quote: link.is_quote)
+            rescue ActiveRecord::RecordNotUnique, PG::UniqueViolation
+              # it's fine
+            end
           end
 
           # Create the reflection if we can
@@ -184,17 +184,14 @@ SQL
             topic = Topic.find_by(id: topic_id)
 
             if topic && post.topic && post.topic.archetype != 'private_message' && topic.archetype != 'private_message'
-
               prefix = Discourse.base_url_no_prefix
-
               reflected_url = "#{prefix}#{post.topic.relative_url(post.post_number)}"
-
               tl = TopicLink.find_by(topic_id: topic_id,
                                      post_id: reflected_post.try(:id),
                                      url: reflected_url)
 
               unless tl
-                tl = TopicLink.create!(user_id: post.user_id,
+                tl = TopicLink.create(user_id: post.user_id,
                                     topic_id: topic_id,
                                     post_id: reflected_post.try(:id),
                                     url: reflected_url,
@@ -206,7 +203,7 @@ SQL
 
               end
 
-              reflected_ids << tl.try(:id)
+              reflected_ids << tl.id if tl.persisted?
             end
           end
 

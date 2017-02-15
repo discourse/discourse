@@ -1,4 +1,4 @@
-<div class="modal-body feature-topic">
+{{#d-modal-body class="feature-topic"}}
   {{#if model.pinned_at}}
     <div class="feature-section">
       <div class="desc">
@@ -105,7 +105,7 @@
       </p>
     </div>
   </div>
-</div>
+{{/d-modal-body}}
 <div class="modal-footer">
   <a class="pull-right" {{action "closeModal"}}>{{i18n "cancel"}}</a>
 </div>

@@ -219,6 +219,9 @@ begin
 
   puts "Your Results: (note for timings- percentile is first, duration is second in millisecs)"
 
+  # Prevent using external facts because it breaks when running in the
+  # discourse/discourse_bench docker container.
+  Facter::Util::Config.external_facts_dirs = []
   facts = Facter.to_hash
 
   facts.delete_if{|k,v|
@@ -270,8 +273,6 @@ begin
     end
   end
 
-
-  # TODO include Facter.to_hash ... for all facts
 ensure
   Process.kill "KILL", pid
 end

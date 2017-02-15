@@ -11,15 +11,18 @@ class BasicCategorySerializer < ApplicationSerializer
              :description,
              :description_text,
              :topic_url,
-             :logo_url,
-             :background_url,
              :read_restricted,
              :permission,
              :parent_category_id,
              :notification_level,
              :can_edit,
              :topic_template,
-             :has_children
+             :has_children,
+             :sort_order,
+             :sort_ascending
+
+  has_one :uploaded_logo, embed: :object, serializer: CategoryUploadSerializer
+  has_one :uploaded_background, embed: :object, serializer: CategoryUploadSerializer
 
   def include_parent_category_id?
     parent_category_id
@@ -39,15 +42,5 @@ class BasicCategorySerializer < ApplicationSerializer
 
   def notification_level
     object.notification_level
-  end
-
-  def logo_url
-    url = object.logo_url
-    url.present? && UrlHelper.is_local(url) ? UrlHelper.schemaless(UrlHelper.absolute(url)) : url
-  end
-
-  def background_url
-    url = object.background_url
-    url.present? && UrlHelper.is_local(url) ? UrlHelper.schemaless(UrlHelper.absolute(url)) : url
   end
 end

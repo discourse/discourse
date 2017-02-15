@@ -146,6 +146,10 @@ class ImportScripts::Base
     admin
   end
 
+  def created_group(group)
+    # override if needed
+  end
+
   # Iterate through a list of groups to be imported.
   # Takes a collection and yields to the block for each element.
   # Block should return a hash with the attributes for each element.
@@ -165,6 +169,7 @@ class ImportScripts::Base
         skipped += 1
       else
         new_group = create_group(g, g[:id])
+        created_group(new_group)
 
         if new_group.valid?
           @lookup.add_group(g[:id].to_s, new_group)
@@ -198,24 +203,27 @@ class ImportScripts::Base
   def all_records_exist?(type, import_ids)
     return false if import_ids.empty?
 
-    orig_conn = ActiveRecord::Base.connection
-    conn = orig_conn.raw_connection
-
-    conn.exec('CREATE TEMP TABLE import_ids(val varchar(200) PRIMARY KEY)')
+    connection = ActiveRecord::Base.connection.raw_connection
+    connection.exec('CREATE TEMP TABLE import_ids(val text PRIMARY KEY)')
 
     import_id_clause = import_ids.map { |id| "('#{PG::Connection.escape_string(id.to_s)}')" }.join(",")
 
-    conn.exec("INSERT INTO import_ids VALUES #{import_id_clause}")
+    connection.exec("INSERT INTO import_ids VALUES #{import_id_clause}")
 
-    existing = "#{type.to_s.classify}CustomField".constantize.where(name: 'import_id')
-    existing = existing.joins('JOIN import_ids ON val = value')
-
-    if existing.count == import_ids.length
+    existing = "#{type.to_s.classify}CustomField".constantize
+    existing = existing.where(name: 'import_id')
+                       .joins('JOIN import_ids ON val = value')
+                       .count
+    if existing == import_ids.length
       puts "Skipping #{import_ids.length} already imported #{type}"
       return true
     end
   ensure
-    conn.exec('DROP TABLE import_ids')
+    connection.exec('DROP TABLE import_ids')
+  end
+
+  def created_user(user)
+    # override if needed
   end
 
   # Iterate through a list of user records to be imported.
@@ -243,6 +251,7 @@ class ImportScripts::Base
           skipped += 1
         elsif u[:email].present?
           new_user = create_user(u, import_id)
+          created_user(new_user)
 
           if new_user && new_user.valid? && new_user.user_profile && new_user.user_profile.valid?
             @lookup.add_user(import_id.to_s, new_user)
@@ -347,6 +356,10 @@ class ImportScripts::Base
     u # If there was an error creating the user, u.errors has the messages
   end
 
+  def created_category(category)
+    # override if needed
+  end
+
   # Iterates through a collection to create categories.
   # The block should return a hash with attributes for the new category.
   # Required fields are :id and :name, where :id is the id of the
@@ -377,7 +390,8 @@ class ImportScripts::Base
           params[:parent_category_id] = top.id if top
         end
 
-        create_category(params, params[:id])
+        new_category = create_category(params, params[:id])
+        created_category(new_category)
 
         created += 1
       end
@@ -583,15 +597,21 @@ class ImportScripts::Base
 
   def update_user_stats
     puts "", "Updating topic reply counts..."
+
+    start_time = Time.now
+    progress_count = 0
+    total_count = User.real.count
+
     User.find_each do |u|
       u.create_user_stat if u.user_stat.nil?
       us = u.user_stat
       us.update_topic_reply_count
       us.save
-      print "."
+      progress_count += 1
+      print_status(progress_count, total_count, start_time)
     end
 
-    puts "Updating first_post_created_at..."
+    puts "." "Updating first_post_created_at..."
 
     sql = <<-SQL
       WITH sub AS (

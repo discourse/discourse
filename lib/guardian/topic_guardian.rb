@@ -20,6 +20,7 @@ module TopicGuardian
 
   def can_create_post_on_topic?(topic)
     # No users can create posts on deleted topics
+    return false if topic.blank?
     return false if topic.trashed?
     return true if is_admin?
 
@@ -68,7 +69,7 @@ module TopicGuardian
   end
 
   def can_reply_as_new_topic?(topic)
-    authenticated? && topic && !topic.private_message? && @user.has_trust_level?(TrustLevel[1])
+    authenticated? && topic && @user.has_trust_level?(TrustLevel[1])
   end
 
   def can_see_deleted_topics?
@@ -104,4 +105,8 @@ module TopicGuardian
     records
   end
 
+  def can_edit_featured_link?(category_id)
+    return false unless SiteSetting.topic_featured_link_enabled
+    Category.where(id: category_id||SiteSetting.uncategorized_category_id, topic_featured_link_allowed: true).exists?
+  end
 end

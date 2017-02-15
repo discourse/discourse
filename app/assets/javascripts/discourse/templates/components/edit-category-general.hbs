@@ -19,7 +19,7 @@
         {{/each}}
       {{else}}
         <label>{{i18n 'category.parent'}}</label>
-        {{category-chooser valueAttribute="id" value=category.parent_category_id categories=parentCategories rootNone=true}}
+        {{category-chooser valueAttribute="id" value=category.parent_category_id categories=parentCategories rootNone=true allowUncategorized="true"}}
       {{/if}}
     </section>
   {{/if}}

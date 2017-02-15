@@ -1,4 +1,6 @@
 # Searches for a user by username or full text or name (if enabled in SiteSettings)
+require_dependency 'search'
+
 class UserSearch
 
   def initialize(term, opts={})
@@ -8,10 +10,19 @@ class UserSearch
     @topic_allowed_users = opts[:topic_allowed_users]
     @searching_user = opts[:searching_user]
     @limit = opts[:limit] || 20
+    @group = opts[:group]
+    @guardian = Guardian.new(@searching_user)
+    @guardian.ensure_can_see_group!(@group) if @group
   end
 
   def scoped_users
     users = User.where(active: true, staged: false)
+
+    if @group
+      users = users.where('users.id IN (
+        SELECT user_id FROM group_users WHERE group_id = ?
+      )', @group.id)
+    end
 
     unless @searching_user && @searching_user.staff?
       users = users.not_suspended

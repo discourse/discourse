@@ -12,25 +12,6 @@ describe Category do
     is_expected.to validate_uniqueness_of(:name).scoped_to(:parent_category_id)
   end
 
-  context "url validation" do
-    let(:user) { Fabricate(:user) }
-    let(:upload) { Fabricate(:upload) }
-
-    it "ensures logo_url is valid" do
-      expect(Fabricate.build(:category, user: user, logo_url: "---%")).not_to be_valid
-      expect(Fabricate.build(:category, user: user, logo_url: "http://example.com/made-up.jpg")).not_to be_valid
-      expect(Fabricate.build(:category, user: user, logo_url: upload.url)).to be_valid
-      expect(Fabricate.build(:category, user: user, logo_url: UrlHelper.schemaless(UrlHelper.absolute(upload.url)))).to be_valid
-    end
-
-    it "ensures background_url is valid" do
-      expect(Fabricate.build(:category, user: user, background_url: ";test")).not_to be_valid
-      expect(Fabricate.build(:category, user: user, background_url: "http://example.com/no.jpg")).not_to be_valid
-      expect(Fabricate.build(:category, user: user, background_url: upload.url)).to be_valid
-      expect(Fabricate.build(:category, user: user, background_url: UrlHelper.schemaless(UrlHelper.absolute(upload.url)))).to be_valid
-    end
-  end
-
   it 'validates uniqueness in case insensitive way' do
     Fabricate(:category, name: "Cats")
     cats = Fabricate.build(:category, name: "cats")
@@ -422,14 +403,14 @@ describe Category do
   describe 'latest' do
     it 'should be updated correctly' do
       category = Fabricate(:category)
-      post = create_post(category: category.name)
+      post = create_post(category: category.id)
 
       category.reload
       expect(category.latest_post_id).to eq(post.id)
       expect(category.latest_topic_id).to eq(post.topic_id)
 
-      post2 = create_post(category: category.name)
-      post3 = create_post(topic_id: post.topic_id, category: category.name)
+      post2 = create_post(category: category.id)
+      post3 = create_post(topic_id: post.topic_id, category: category.id)
 
       category.reload
       expect(category.latest_post_id).to eq(post3.id)
@@ -452,7 +433,7 @@ describe Category do
 
     context 'with regular topics' do
       before do
-        create_post(user: @category.user, category: @category.name)
+        create_post(user: @category.user, category: @category.id)
         Category.update_stats
         @category.reload
       end
@@ -492,7 +473,7 @@ describe Category do
 
     context 'with revised post' do
       before do
-        post = create_post(user: @category.user, category: @category.name)
+        post = create_post(user: @category.user, category: @category.id)
 
         SiteSetting.stubs(:editing_grace_period).returns(1.minute.to_i)
         post.revise(post.user, { raw: 'updated body' }, revised_at: post.updated_at + 2.minutes)

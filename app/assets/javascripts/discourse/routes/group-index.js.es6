@@ -1,5 +1,4 @@
 export default Discourse.Route.extend({
-
   titleToken() {
     return I18n.t('groups.members');
   },
@@ -11,6 +10,6 @@ export default Discourse.Route.extend({
   setupController(controller, model) {
     this.controllerFor("group").set("showing", "members");
     controller.set("model", model);
-    model.findMembers();
+    controller.refreshMembers();
   }
 });

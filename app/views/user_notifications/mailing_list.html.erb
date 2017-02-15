@@ -1,7 +1,7 @@
 <div id="top"></div>
 <table style='width: 100%; border: 20px solid #eee;' cellspacing='0' cellpadding='0'>
   <thead>
-    <td style='padding: 10px 10px; background-color: #<%= @header_color %>;'>
+    <td style='padding: 10px 10px; background-color: #<%= @header_bgcolor %>;'>
       <a href='<%= Discourse.base_url %>' style='color: #<%= @anchor_color %>'>
         <% if logo_url.blank? %>
           <%= SiteSetting.title %>
@@ -56,7 +56,16 @@
           <div>
             <img style="float: left; width: 20px; padding-right: 5px;" src="<%= post.user.small_avatar_url %>" title="<%= post.user.username%>">
             <p style="font-size: 15px; color: #888">
-              <a href='<%= [Discourse.base_url, :users, post.user.username].join('/') %>'><%= post.user.name || post.user.username %></a>
+              <a href='<%= "#{Discourse.base_url}/users/#{post.user.username}" %>'>
+                <%- if show_username_on_post(post) %>
+                  <%= post.user.username %>
+                <% end %>
+
+                <%- if show_name_on_post(post) %>
+                  - <%= post.user.name %>
+                <% end %>
+              </a>
+
               <span> - </span>
               <span><%= I18n.l(post.created_at, format: :long) %></span>
             </p>

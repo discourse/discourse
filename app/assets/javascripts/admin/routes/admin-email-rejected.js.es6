@@ -6,7 +6,7 @@ export default AdminEmailIncomings.extend({
 
   actions: {
     showIncomingEmail(id) {
-      showModal('modals/admin-incoming-email');
+      showModal('admin-incoming-email', { admin: true });
       this.controllerFor("modals/admin-incoming-email").load(id);
     }
   }

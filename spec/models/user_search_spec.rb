@@ -18,7 +18,7 @@ describe UserSearch do
   let(:staged)    { Fabricate :staged }
 
   before do
-    ActiveRecord::Base.observers.enable :all
+    SearchIndexer.enable
 
     Fabricate :post, user: user1, topic: topic
     Fabricate :post, user: user2, topic: topic2
@@ -41,6 +41,16 @@ describe UserSearch do
 
     expect(search_for("under_sc").length).to eq(1)
     expect(search_for("under_").length).to eq(1)
+  end
+
+  it 'allows filtering by group' do
+    group = Fabricate(:group)
+    sam = Fabricate(:user, username: 'sam')
+    _samantha = Fabricate(:user, username: 'samantha')
+    group.add(sam)
+
+    results = search_for("sam", group: group)
+    expect(results.count).to eq(1)
   end
 
   # this is a seriously expensive integration test,

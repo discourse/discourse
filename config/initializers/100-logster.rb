@@ -7,7 +7,6 @@ if Rails.env.production?
 
     /^ActionController::UnknownFormat/,
     /^ActionController::UnknownHttpMethod/,
-
     /^AbstractController::ActionNotFound/,
 
     # alihack is really annoying, nothing really we can do about this
@@ -21,8 +20,8 @@ if Rails.env.production?
     #
     /(?m).*?Line: (?:\D|0).*?Column: (?:\D|0)/,
 
-    # also empty JS errors
-    /^Script error\..*Line: 0/m,
+    # suppress empty JS errors (covers MSIE 9, etc)
+    /^(Syntax|Script) error.*Line: (0|1)\b/m,
 
     # CSRF errors are not providing enough data
     # suppress unconditionally for now
@@ -85,4 +84,9 @@ RailsMultisite::ConnectionManagement.each_connection do
       MessageBus.publish("/logs_error_rate_exceeded", { rate: rate, duration: 'hour', publish_at: Time.current.to_i })
     end
   end
+end
+
+if Rails.configuration.multisite
+  chained = Rails.logger.instance_variable_get(:@chained)
+  chained && chained.first.formatter = RailsMultisite::Formatter.new
 end

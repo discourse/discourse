@@ -9,10 +9,6 @@ function findTextarea() {
 test('details button', () => {
   visit("/");
 
-  andThen(() => {
-    ok(exists('#create-topic'), 'the create button is visible');
-  });
-
   click('#create-topic');
   click('button.options');
   click('.popup-menu .fa-caret-right');
@@ -40,7 +36,7 @@ test('details button', () => {
     equal(
       find(".d-editor-input").val(),
       `[details=${I18n.t("composer.details_title")}]This is my title[/details]`,
-      'it should contain the right output'
+      'it should contain the right selected output'
     );
 
     const textarea = findTextarea();

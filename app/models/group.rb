@@ -1,5 +1,6 @@
 class Group < ActiveRecord::Base
   include HasCustomFields
+  include AnonCacheInvalidator
 
   has_many :category_groups, dependent: :destroy
   has_many :group_users, dependent: :destroy
@@ -9,13 +10,20 @@ class Group < ActiveRecord::Base
 
   has_many :categories, through: :category_groups
   has_many :users, through: :group_users
+  has_many :group_histories, dependent: :destroy
+
+  has_and_belongs_to_many :web_hooks
 
   before_save :downcase_incoming_email
+  before_save :cook_bio
 
   after_save :destroy_deletions
   after_save :automatic_group_membership
   after_save :update_primary_group
   after_save :update_title
+
+  after_save :enqueue_update_mentions_job,
+    if: Proc.new { |g| g.name_was && g.name_changed? }
 
   after_save :expire_cache
   after_destroy :expire_cache
@@ -55,6 +63,20 @@ class Group < ActiveRecord::Base
 
   validates :alias_level, inclusion: { in: ALIAS_LEVELS.values}
 
+  scope :visible_groups, ->(user) {
+    groups = Group.order(name: :asc).where("groups.id > 0")
+
+    if !user || !user.admin
+      owner_group_ids = GroupUser.where(user: user, owner: true).pluck(:group_id)
+
+      groups = groups.where("
+        (groups.automatic = false AND groups.visible = true) OR groups.id IN (?)
+      ", owner_group_ids)
+    end
+
+    groups
+  }
+
   scope :mentionable, lambda {|user|
 
     levels = [ALIAS_LEVELS[:everyone]]
@@ -79,6 +101,12 @@ class Group < ActiveRecord::Base
 
   def downcase_incoming_email
     self.incoming_email = (incoming_email || "").strip.downcase.presence
+  end
+
+  def cook_bio
+    if !self.bio_raw.blank?
+      self.bio_cooked = PrettyText.cook(self.bio_raw)
+    end
   end
 
   def incoming_email_validator
@@ -147,17 +175,21 @@ class Group < ActiveRecord::Base
       group.save!
     end
 
-    group.name = I18n.t("groups.default_names.#{name}")
-
     # don't allow shoddy localization to break this
-    validator = UsernameValidator.new(group.name)
-    unless validator.valid_format?
-      group.name = name
-    end
+    localized_name = I18n.t("groups.default_names.#{name}")
+    validator = UsernameValidator.new(localized_name)
+
+    group.name =
+      if !Group.where(name: localized_name).exists? && validator.valid_format?
+        localized_name
+      else
+        name
+      end
 
     # the everyone group is special, it can include non-users so there is no
     # way to have the membership in a table
     if name == :everyone
+      group.visible = false
       group.save!
       return group
     end
@@ -340,7 +372,8 @@ class Group < ActiveRecord::Base
   end
 
   def add(user)
-    self.users.push(user)
+    self.users.push(user) unless self.users.include?(user)
+    self
   end
 
   def remove(user)
@@ -349,7 +382,11 @@ class Group < ActiveRecord::Base
   end
 
   def add_owner(user)
-    self.group_users.create(user_id: user.id, owner: true)
+    if group_user = self.group_users.find_by(user: user)
+      group_user.update_attributes!(owner: true) if !group_user.owner
+    else
+      GroupUser.create!(user: user, group: self, owner: true)
+    end
   end
 
   def self.find_by_email(email)
@@ -379,10 +416,6 @@ class Group < ActiveRecord::Base
       end
     end
     true
-  end
-
-  def mentionable?(user, group_id)
-    Group.mentionable(user).where(id: group_id).exists?
   end
 
   def staff?
@@ -477,6 +510,15 @@ SQL
         builder.exec
       end
     end
+
+  private
+
+    def enqueue_update_mentions_job
+      Jobs.enqueue(:update_group_mentions,
+        previous_name: self.name_was,
+        group_id: self.id
+      )
+    end
 end
 
 # == Schema Information
@@ -498,6 +540,14 @@ end
 #  grant_trust_level                  :integer
 #  incoming_email                     :string
 #  has_messages                       :boolean          default(FALSE), not null
+#  flair_url                          :string
+#  flair_bg_color                     :string
+#  flair_color                        :string
+#  bio_raw                            :text
+#  bio_cooked                         :text
+#  public                             :boolean          default(FALSE), not null
+#  allow_membership_requests          :boolean          default(FALSE), not null
+#  full_name                          :string
 #
 # Indexes
 #

@@ -68,6 +68,25 @@ describe TagsController do
         xhr :get, :show_latest, tag_id: tag.name, category: 'none', parent_category: category.slug
         expect(response).to be_success
       end
+
+      it "can handle subcategories with the same name" do
+        category2 = Fabricate(:category)
+        subcategory2 = Fabricate(:category,
+          parent_category_id: category2.id,
+          name: subcategory.name,
+          slug: subcategory.slug
+        )
+        t = Fabricate(:topic, category_id: subcategory2.id, tags: [other_tag])
+        xhr :get, :show_latest, tag_id: other_tag.name, category: subcategory2.slug, parent_category: category2.slug
+        expect(response).to be_success
+        expect(assigns(:list).topics).to include(t)
+      end
+
+      it "can filter by bookmarked" do
+        log_in(:user)
+        xhr :get, :show_bookmarks, tag_id: tag.name
+        expect(response).to be_success
+      end
     end
   end
 

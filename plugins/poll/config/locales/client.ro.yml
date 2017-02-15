@@ -11,7 +11,7 @@ ro:
       voters:
         one: "participant"
         few: "participanți"
-        other: "participanți"
+        other: "de participanți"
       total_votes:
         one: "un vot"
         few: "total voturi"
@@ -19,6 +19,21 @@ ro:
       average_rating: "Media: <strong>%{average}</strong>."
       public:
         title: "Voturile sunt publice."
+      multiple:
+        help:
+          at_least_min_options:
+            one: "Trebuie să alegi minim <strong>o</strong> opţiune."
+            few: "Trebuie să alegi cel puțin <strong>%{count}</strong> opțiuni."
+            other: "Trebuie să alegi cel puțin <strong>%{count}</strong> opțiuni."
+          up_to_max_options:
+            one: "Trebuie să alegi maxim <strong>o</strong> opțiune."
+            few: "Trebuie să alegi maxim <strong>%{count}</strong> opțiuni."
+            other: "Trebuie să alegi maxim <strong>%{count}</strong> opțiuni."
+          x_options:
+            one: "Trebuie să alegi <strong>o</strong> opțiune."
+            few: "Trebuie să alegi <strong>%{count}</strong> opțiuni."
+            other: "Trebuie să alegi <strong>%{count}</strong> opțiuni."
+          between_min_and_max_options: "Trebuie să alegi între minim <strong>%{min}</strong> și maxim <strong>%{max}</strong> opțiuni"
       cast-votes:
         title: "Exprimă-ți votul"
         label: "Votează acum!"
@@ -35,4 +50,25 @@ ro:
       close:
         title: "Închide sondajul"
         label: "Închide sondajul"
-        confirm: "Sunteţi sigur că vreţi să închideţi acest sondaj?"
+        confirm: "Ești sigur că vrei să închizi acest sondaj?"
+      error_while_toggling_status: "Ne pare rău, a apărut o eroare la schimbarea stării acestui sondaj."
+      error_while_casting_votes: "Ne pare rău, a apărut o eroare la exercitarea voturilor tale."
+      error_while_fetching_voters: "Ne pare rău, a apărut o eroare la afișarea votanților."
+      ui_builder:
+        title: Creează sondaj
+        insert: Introdu sondaj
+        help:
+          options_count: Trebuie să introduci cel puțin 2 opțiuni
+        poll_type:
+          label: Tip
+          regular: Opțiune unică
+          multiple: Opțiune multiplă
+          number: Ordonare numerică
+        poll_config:
+          max: Maxim
+          min: Minim
+          step: Pas
+        poll_public:
+          label: Arată cine a votat
+        poll_options:
+          label: Arată o singură opțiune de sondaj pe linie

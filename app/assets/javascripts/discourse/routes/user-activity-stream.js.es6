@@ -6,7 +6,7 @@ export default Discourse.Route.extend(ViewingActionType, {
   },
 
   afterModel() {
-    return this.modelFor("user").get("stream").filterBy(this.get("userActionType"));
+    return this.modelFor("user").get("stream").filterBy(this.get("userActionType"), this.get("noContentHelpKey"));
   },
 
   renderTemplate() {

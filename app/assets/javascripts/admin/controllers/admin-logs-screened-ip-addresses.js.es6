@@ -3,7 +3,7 @@ import { outputExportResult } from 'discourse/lib/export-result';
 import { exportEntity } from 'discourse/lib/export-csv';
 import ScreenedIpAddress from 'admin/models/screened-ip-address';
 
-export default Ember.ArrayController.extend({
+export default Ember.Controller.extend({
   loading: false,
   filter: null,
   savedIpAddress: null,
@@ -63,16 +63,15 @@ export default Ember.ArrayController.extend({
     },
 
     destroy(record) {
-      const self = this;
       return bootbox.confirm(
         I18n.t("admin.logs.screened_ips.delete_confirm", { ip_address: record.get('ip_address') }),
         I18n.t("no_value"),
         I18n.t("yes_value"),
-        function (result) {
+        result => {
           if (result) {
             record.destroy().then(deleted => {
               if (deleted) {
-                self.get("content").removeObject(record);
+                this.get("model").removeObject(record);
               } else {
                 bootbox.alert(I18n.t("generic_error"));
               }

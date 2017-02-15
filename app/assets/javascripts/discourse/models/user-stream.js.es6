@@ -28,10 +28,20 @@ export default RestModel.extend({
 
   baseUrl: url('itemsLoaded', 'user.username_lower', '/user_actions.json?offset=%@&username=%@'),
 
-  filterBy(filter) {
-    this.setProperties({ filter, itemsLoaded: 0, content: [], lastLoadedUrl: null });
+  filterBy(filter, noContentHelpKey) {
+    this.setProperties({
+      filter,
+      itemsLoaded: 0,
+      content: [],
+      noContentHelpKey: noContentHelpKey,
+      lastLoadedUrl: null
+    });
     return this.findItems();
   },
+
+  noContent: function() {
+    return this.get('loaded') && this.get('content').length === 0;
+  }.property('loaded', 'content.@each'),
 
   remove(userAction) {
     // 1) remove the user action from the child groups
@@ -61,6 +71,9 @@ export default RestModel.extend({
     if (this.get('filterParam')) {
       findUrl += "&filter=" + this.get('filterParam');
     }
+    if (this.get('noContentHelpKey')) {
+      findUrl += "&no_results_help_key=" + this.get('noContentHelpKey');
+    }
 
     // Don't load the same stream twice. We're probably at the end.
     const lastLoadedUrl = this.get('lastLoadedUrl');
@@ -69,6 +82,9 @@ export default RestModel.extend({
     if (this.get('loading')) { return Ember.RSVP.resolve(); }
     this.set('loading', true);
     return ajax(findUrl, {cache: 'false'}).then( function(result) {
+      if (result && result.no_results_help) {
+        self.set('noContentHelp', result.no_results_help);
+      }
       if (result && result.user_actions) {
         const copy = Em.A();
         result.user_actions.forEach(function(action) {
@@ -78,11 +94,11 @@ export default RestModel.extend({
 
         self.get('content').pushObjects(UserAction.collapseStream(copy));
         self.setProperties({
-          loaded: true,
           itemsLoaded: self.get('itemsLoaded') + result.user_actions.length
         });
       }
     }).finally(function() {
+      self.set('loaded', true);
       self.set('loading', false);
       self.set('lastLoadedUrl', findUrl);
     });

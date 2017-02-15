@@ -165,6 +165,7 @@ en:
 
     topic_admin_menu: "topic admin actions"
 
+    wizard_required: "It's time to configure your forum! <a href='%{url}' data-auto-route='true'>Start the Setup Wizard</a>!"
     emails_are_disabled: "All outgoing email has been globally disabled by an administrator. No email notifications of any kind will be sent."
 
     bootstrap_mode_enabled: "To make launching your new site easier, you are in bootstrap mode. All new users will be granted trust level 1 and have daily email digest updates enabled. This will be automatically turned off when total user count exceeds %{min_users} users."
@@ -247,7 +248,7 @@ en:
       like_count: "Likes"
       topic_count: "Topics"
       post_count: "Posts"
-      user_count: "New Users"
+      user_count: "Users"
       active_user_count: "Active Users"
       contact: "Contact Us"
       contact_info: "In the event of a critical issue or urgent matter affecting this site, please contact us at %{contact_info}."
@@ -374,21 +375,64 @@ en:
         one: "1 user"
         other: "%{count} users"
 
+    group_histories:
+      actions:
+        change_group_setting: "Change group setting"
+        add_user_to_group: "Add user"
+        remove_user_from_group: "Remove user"
+        make_user_group_owner: "Make owner"
+        remove_user_as_group_owner: "Revoke owner"
+
     groups:
+      logs:
+        title: "Logs"
+        when: "When"
+        action: "Action"
+        acting_user: "Acting user"
+        target_user: "Target user"
+        subject: "Subject"
+        details: "Details"
+        from: "From"
+        to: "To"
+      edit:
+        title: 'Edit Group'
+        full_name: 'Full Name'
+        add_members: "Add Members"
+        delete_member_confirm: "Remove '%{username}' from the '%{group}' group?"
+      request_membership_pm:
+        title: "Membership Request"
+        body: "I would like to apply for membership in @%{groupName}."
+      name_placeholder: "Group name, no spaces, same as username rule"
+      public: "Allow users to join/leave the group freely (Requires group to be visible)"
       empty:
-        posts: "There is no post by members of this group."
-        members: "There is no member in this group."
-        mentions: "There is no mention of this group."
-        messages: "There is no message for this group."
-        topics: "There is no topic by members of this group."
+        posts: "There are no posts by members of this group."
+        members: "There are no members in this group."
+        mentions: "There are no mentions of this group."
+        messages: "There are no messages for this group."
+        topics: "There are no topics by members of this group."
+        logs: "There are no logs for this group."
       add: "Add"
+      join: "Join Group"
+      leave: "Leave Group"
+      request: "Request to Join Group"
+      automatic_group: Automatic Group
+      closed_group: Closed Group
+      is_group_user: "You are a member of this group"
+      allow_membership_requests: "Allow users to send membership requests to group owners (Requires everyone to be able to mention the group)"
+      membership: "Membership"
+      name: "Name"
+      user_count: "Number of Members"
+      bio: "About Group"
       selector_placeholder: "Add members"
       owner: "owner"
       visible: "Group is visible to all users"
-      index: "Groups"
+      index:
+        title: "Groups"
+        empty: "There are no visible groups."
       title:
         one: "group"
         other: "groups"
+      activity: "Activity"
       members: "Members"
       topics: "Topics"
       posts: "Posts"
@@ -420,6 +464,15 @@ en:
         muted:
           title: "Muted"
           description: "You will never be notified of anything about new topics in this group."
+      flair_url: "Avatar Flair Image"
+      flair_url_placeholder: "(Optional) Image URL or Font Awesome class"
+      flair_bg_color: "Avatar Flair Background Color"
+      flair_bg_color_placeholder: "(Optional) Hex color value"
+      flair_color: "Avatar Flair Color"
+      flair_color_placeholder: "(Optional) Hex color value"
+      flair_preview_icon: "Preview Icon"
+      flair_preview_image: "Preview Image"
+      flair_note: "Note: Flair will only show for a user's primary group."
 
     user_action_groups:
       "1": "Likes Given"
@@ -486,7 +539,11 @@ en:
       profile: "Profile"
       mute: "Mute"
       edit: "Edit Preferences"
-      download_archive: "Download My Posts"
+      download_archive:
+        button_text: "Download My Posts"
+        confirm: "Are you sure you want to download your posts?"
+        success: "Download initiated, you will be notified via message when the process is complete."
+        rate_limit_error: "Posts can be downloaded once per day, please try again tomorrow."
       new_private_message: "New Message"
       private_message: "Message"
       private_messages: "Messages"
@@ -512,6 +569,7 @@ en:
         each_browser_note: "Note: You have to change this setting on every browser you use."
       dismiss_notifications: "Dismiss All"
       dismiss_notifications_tooltip: "Mark all unread notifications as read"
+      first_notification: "Your first notification! Select it to begin."
       disable_jump_reply: "Don't jump to my post after I reply"
       dynamic_favicon: "Show new / updated topic count on browser icon"
       external_links_in_new_tab: "Open all external links in a new tab"
@@ -534,6 +592,7 @@ en:
           Muted topics and categories are not included in these emails.
         daily: "Send daily updates"
         individual: "Send an email for every new post"
+        individual_no_echo: "Send an email for every new post except my own"
         many_per_day: "Send me an email for every new post (about {{dailyEmailEstimate}} per day)"
         few_per_day: "Send me an email for every new post (about 2 per day)"
       tag_settings: "Tags"
@@ -569,10 +628,7 @@ en:
       apps: "Apps"
       revoke_access: "Revoke Access"
       undo_revoke_access: "Undo Revoke Access"
-      api_permissions: "Permissions:"
       api_approved: "Approved:"
-      api_read: "read"
-      api_read_write: "read and write"
 
       staff_counters:
         flags_given: "helpful flags"
@@ -599,6 +655,8 @@ en:
         error: "(error)"
         action: "Send Password Reset Email"
         set_password: "Set Password"
+        choose_new: "Choose a new password"
+        choose: "Choose a password"
 
       change_about:
         title: "Change About Me"
@@ -640,7 +698,7 @@ en:
 
       email:
         title: "Email"
-        instructions: "Never shown to the public"
+        instructions: "never shown to the public"
         ok: "We will email you to confirm"
         invalid: "Please enter a valid email address"
         authenticated: "Your email has been authenticated by {{provider}}"
@@ -651,13 +709,13 @@ en:
 
       name:
         title: "Name"
-        instructions: "Your full name (optional)"
+        instructions: "your full name (optional)"
         instructions_required: "Your full name"
         too_short: "Your name is too short"
         ok: "Your name looks good"
       username:
         title: "Username"
-        instructions: "Unique, no spaces, short"
+        instructions: "unique, no spaces, short"
         short_instructions: "People can mention you as @{{username}}"
         available: "Your username is available"
         global_match: "Email matches the registered username"
@@ -673,6 +731,7 @@ en:
         title: "Interface language"
         instructions: "User interface language. It will change when you refresh the page."
         default: "(default)"
+        any: "any"
 
       password_confirmation:
         title: "Password Again"
@@ -738,6 +797,8 @@ en:
         after_5_minutes: "after 5 minutes"
         after_10_minutes: "after 10 minutes"
 
+      notification_level_when_replying: "When I post in a topic, set that topic to"
+
       invited:
         search: "type to search invites..."
         title: "Invites"
@@ -768,13 +829,13 @@ en:
         account_age_days: "Account age in days"
         create: "Send an Invite"
         generate_link: "Copy Invite Link"
-        generated_link_message: '<p>Invite link generated successfully!</p><p><input class="invite-link-input" style="width: 75%;" type="text" value="%{inviteLink}"></p><p>Invite link is only valid for this email address: <b>%{invitedEmail}</b></p>'
+        link_generated: "Invite link generated successfully!"
+        valid_for: "Invite link is only valid for this email address: %{email}"
         bulk_invite:
-          none: "You haven't invited anyone here yet. You can send individual invites, or invite a bunch of people at once by <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>uploading a bulk invite file</a>."
+          none: "You haven't invited anyone here yet. You can send individual invites, or invite a bunch of people at once by <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>uploading a CSV file</a>."
           text: "Bulk Invite from File"
-          uploading: "Uploading..."
           success: "File uploaded successfully, you will be notified via message when the process is complete."
-          error: "There was an error uploading '{{filename}}': {{message}}"
+          error: "Sorry, file should be of csv format."
 
       password:
         title: "Password"
@@ -783,7 +844,7 @@ en:
         same_as_username: "Your password is the same as your username."
         same_as_email: "Your password is the same as your email."
         ok: "Your password looks good."
-        instructions: "At least %{count} characters."
+        instructions: "at least %{count} characters"
 
       summary:
         title: "Summary"
@@ -887,6 +948,8 @@ en:
 
     learn_more: "learn more..."
 
+    all_time: 'total'
+    all_time_desc: 'total topics created'
     year: 'year'
     year_desc: 'topics created in the last 365 days'
     month: 'month'
@@ -940,6 +1003,7 @@ en:
     search_hint: 'username, email or IP address'
 
     create_account:
+      disclaimer: "By registering, you agree to the <a href='{{privacy_link}}'>privacy policy</a> and <a href='{{tos_link}}'>terms of service</a>."
       title: "Create New Account"
       failed: "Something went wrong, perhaps this email is already registered, try the forgot password link"
 
@@ -979,6 +1043,7 @@ en:
       to_continue: "Please Log In"
       preferences: "You need to be logged in to change your user preferences."
       forgot: "I don't recall my account details"
+      not_approved: "Your account hasn't been approved yet. You will be notified by email when you are ready to log in."
       google:
         title: "with Google"
         message: "Authenticating with Google (make sure pop up blockers are not enabled)"
@@ -1000,6 +1065,9 @@ en:
       github:
         title: "with GitHub"
         message: "Authenticating with GitHub (make sure pop up blockers are not enabled)"
+
+    password_reset:
+      continue: "Continue to %{site_name}"
 
     emoji_set:
       apple_international: "Apple/International"
@@ -1038,6 +1106,9 @@ en:
       group_mentioned:
         one: "By mentioning {{group}}, you are about to notify <a href='{{group_link}}'>1 person</a> – are you sure?"
         other: "By mentioning {{group}}, you are about to notify <a href='{{group_link}}'>{{count}} people</a> – are you sure?"
+      cannot_see_mention:
+        category: "You mentioned {{username}} but they won't be notified because they do not have access to this category. You will need to add them to a group that has access to this category."
+        private: "You mentioned {{username}} but they won't be notified because they are unable to see this personal message. You will need to invite them to this PM."
       duplicate_link: "It looks like your link to <b>{{domain}}</b> was already posted in the topic by <b>@{{username}}</b> in <a href='{{post_url}}'>a reply {{ago}}</a> – are you sure you want to post it again?"
 
       error:
@@ -1060,8 +1131,10 @@ en:
 
       users_placeholder: "Add a user"
       title_placeholder: "What is this discussion about in one brief sentence?"
+      title_or_link_placeholder: "Type title, or paste a link here"
       edit_reason_placeholder: "why are you editing?"
       show_edit_reason: "(add edit reason)"
+      topic_featured_link_placeholder: "Enter link shown with title."
       reply_placeholder: "Type here. Use Markdown, BBCode, or HTML to format. Drag or paste images."
       view_new_post: "View your new post."
       saving: "Saving"
@@ -1204,7 +1277,6 @@ en:
       title: "search topics, posts, users, or categories"
       no_results: "No results found."
       no_more_results: "No more results found."
-      search_help: Search help
       searching: "Searching ..."
       post_format: "#{{post_number}} by {{username}}"
 
@@ -1214,6 +1286,45 @@ en:
         topic: "Search this topic"
         private_messages: "Search messages"
 
+      advanced:
+        title: Advanced Search
+        posted_by:
+          label: Posted by
+        in_category:
+          label: In Category
+        in_group:
+          label: In Group
+        with_badge:
+          label: With Badge
+        with_tags:
+          label: With Tags
+        filters:
+          label: Only return topics/posts that...
+          likes: I liked
+          posted: I posted in
+          watching: I'm watching
+          tracking: I'm tracking
+          private: are in my messages
+          bookmarks: I've bookmarked
+          first: are the very first post
+          pinned: are pinned
+          unpinned: are not pinned
+          wiki: are wiki
+        statuses:
+          label: Where topics
+          open: are open
+          closed: are closed
+          archived: are archived
+          noreplies: have zero replies
+          single_user: contain a single user
+        post:
+          count:
+            label: Minimum Post Count
+          time:
+            label: Posted
+            before: before
+            after: after
+
     hamburger_menu: "go to another topic list or category"
     new_item: "new"
     go_back: 'go back'
@@ -1221,7 +1332,10 @@ en:
     current_user: 'go to your user page'
 
     topics:
+      new_messages_marker: "last visit"
       bulk:
+        select_all: "Select All"
+        clear_all: "Clear All"
         unlist_topics: "Unlist Topics"
         reset_read: "Reset Read"
         delete: "Delete Topics"
@@ -1370,7 +1484,8 @@ en:
         go_bottom: "bottom"
         go: "go"
         jump_bottom: "jump to last post"
-        jump_prompt: "jump to post"
+        jump_prompt: "jump to..."
+        jump_prompt_of: "of %{count} posts"
         jump_prompt_long: "What post would you like to jump to?"
         jump_bottom_with_number: "jump to post %{post_number}"
         total: total posts
@@ -1455,6 +1570,10 @@ en:
       share:
         title: 'Share'
         help: 'share a link to this topic'
+
+      print:
+        title: 'Print'
+        help: 'Open a printer friendly version of this topic'
 
       flag_topic:
         title: 'Flag'
@@ -1583,12 +1702,14 @@ en:
     post:
       reply: "<i class='fa fa-mail-forward'></i> {{replyAvatar}} {{usernameLink}}"
       reply_topic: "<i class='fa fa-mail-forward'></i> {{link}}"
-      quote_reply: "quote reply"
+      quote_reply: "Quote"
       edit: "Editing {{link}} {{replyAvatar}} {{username}}"
       edit_reason: "Reason: "
       post_number: "post {{number}}"
+      wiki_last_edited_on: "wiki last edited on"
       last_edited_on: "post last edited on"
       reply_as_new_topic: "Reply as linked Topic"
+      reply_as_new_private_message: "Reply as new message to the same recipients"
       continue_discussion: "Continuing the discussion from {{postLink}}:"
       follow_quote: "go to the quoted post"
       show_full: "Show Full Post"
@@ -1625,7 +1746,7 @@ en:
         file_too_large: "Sorry, that file is too big (maximum size is {{max_size_kb}}kb). Why not upload your large file to a cloud sharing service, then share the link?"
         too_many_uploads: "Sorry, you can only upload one file at a time."
         too_many_dragged_and_dropped_files: "Sorry, you can only upload 10 files at a time."
-        upload_not_authorized: "Sorry, the file you are trying to upload is not authorized (authorized extension: {{authorized_extensions}})."
+        upload_not_authorized: "Sorry, the file you are trying to upload is not authorized (authorized extensions: {{authorized_extensions}})."
         image_upload_not_allowed_for_new_user: "Sorry, new users can not upload images."
         attachment_upload_not_allowed_for_new_user: "Sorry, new users can not upload attachments."
         attachment_download_requires_login: "Sorry, you need to be logged in to download attachments."
@@ -1774,17 +1895,19 @@ en:
           hide: "Hide revision"
           show: "Show revision"
           revert: "Revert to this revision"
+          edit_wiki: "Edit Wiki"
+          edit_post: "Edit Post"
           comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> <i class='fa fa-arrows-h'></i> <strong>{{current}}</strong> / {{total}}"
         displays:
           inline:
             title: "Show the rendered output with additions and removals inline"
-            button: '<i class="fa fa-square-o"></i> HTML'
+            button: 'HTML'
           side_by_side:
             title: "Show the rendered output diffs side-by-side"
-            button: '<i class="fa fa-columns"></i> HTML'
+            button: 'HTML'
           side_by_side_markdown:
             title: "Show the raw source diffs side-by-side"
-            button: '<i class="fa fa-columns"></i> Raw'
+            button: 'Raw'
 
     category:
       can: 'can&hellip; '
@@ -1802,6 +1925,7 @@ en:
       tags_allowed_tag_groups: "Tag groups that can only be used in this category:"
       tags_placeholder: "(Optional) list of allowed tags"
       tag_groups_placeholder: "(Optional) list of allowed tag groups"
+      topic_featured_link_allowed: "Allow featured links in this category"
       delete: 'Delete Category'
       create: 'New Category'
       create_long: 'Create a new category'
@@ -1836,6 +1960,8 @@ en:
       email_in_disabled: "Posting new topics via email is disabled in the Site Settings. To enable posting new topics via email, "
       email_in_disabled_click: 'enable the "email in" setting.'
       suppress_from_homepage: "Suppress this category from the homepage."
+      all_topics_wiki: "Make new topics wikis by default."
+      sort_order: "Default Sort:"
       allow_badges_label: "Allow badges to be awarded in this category"
       edit_permissions: "Edit Permissions"
       add_permission: "Add Permission"
@@ -1861,6 +1987,18 @@ en:
         muted:
           title: "Muted"
           description: "You will never be notified of anything about new topics in these categories, and they will not appear in latest."
+      sort_options:
+        default: "default"
+        likes: "Likes"
+        op_likes: "Original Post Likes"
+        views: "Views"
+        posts: "Posts"
+        activity: "Activity"
+        posters: "Posters"
+        category: "Category"
+        created: "Created"
+      sort_ascending: 'Ascending'
+      sort_descending: 'Descending'
 
     flagging:
       title: 'Thanks for helping to keep our community civil!'
@@ -1954,7 +2092,9 @@ en:
       one: "view"
       other: "views"
     replies: "Replies"
-    views_long: "this topic has been viewed {{number}} times"
+    views_long:
+      one: "this topic has been viewed 1 time"
+      other: "this topic has been viewed {{number}} times"
     activity: "Activity"
     likes: "Likes"
     likes_lowercase:
@@ -2061,9 +2201,6 @@ en:
     lightbox:
       download: "download"
 
-    search_help:
-      title: 'Search Help'
-
     keyboard_shortcuts_help:
       title: 'Keyboard Shortcuts'
       jump_to:
@@ -2115,6 +2252,7 @@ en:
         mark_regular: '<b>m</b>, <b>r</b> Regular (default) topic'
         mark_tracking: '<b>m</b>, <b>t</b> Track topic'
         mark_watching: '<b>m</b>, <b>w</b> Watch topic'
+        print: '<b>ctrl</b>+<b>p</b> Print topic'
 
     badges:
       earned_n_times:
@@ -2241,6 +2379,10 @@ en:
       custom_message_template_forum: "Hey, you should join this forum!"
       custom_message_template_topic: "Hey, I thought you might enjoy this topic!"
 
+    safe_mode:
+      enabled: "Safe mode is enabled, to exit safe mode close this browser window"
+
+
   # This section is exported to the javascript for i18n in the admin section
   admin_js:
     type_to_filter: "type to filter..."
@@ -2278,8 +2420,8 @@ en:
         backups: "backups"
         traffic_short: "Traffic"
         traffic: "Application web requests"
-        page_views: "API Requests"
-        page_views_short: "API Requests"
+        page_views: "Pageviews"
+        page_views_short: "Pageviews"
         show_traffic_report: "Show Detailed Traffic Report"
 
         reports:
@@ -2377,15 +2519,12 @@ en:
         refresh: "Refresh"
         new: "New"
         selector_placeholder: "enter username"
-        name_placeholder: "Group name, no spaces, same as username rule"
         about: "Edit your group membership and names here"
         group_members: "Group members"
         delete: "Delete"
         delete_confirm: "Delete this group?"
         delete_failed: "Unable to delete group. If this is an automatic group, it cannot be destroyed."
-        delete_member_confirm: "Remove '%{username}' from the '%{group}' group?"
         delete_owner_confirm: "Remove owner privilege for '%{username}'?"
-        name: "Name"
         add: "Add"
         add_members: "Add members"
         custom: "Custom"
@@ -2402,14 +2541,6 @@ en:
         add_owners: Add owners
         incoming_email: "Custom incoming email address"
         incoming_email_placeholder: "enter email address"
-        flair_url: "Avatar Flair Image"
-        flair_url_placeholder: "(Optional) Image URL or Font Awesome class"
-        flair_bg_color: "Avatar Flair Background Color"
-        flair_bg_color_placeholder: "(Optional) Hex color value"
-        flair_color: "Avatar Flair Color"
-        flair_color_placeholder: "(Optional) Hex color value"
-        flair_preview: "Preview"
-
 
       api:
         generate_master: "Generate Master API Key"
@@ -2426,6 +2557,76 @@ en:
         all_users: "All Users"
         note_html: "Keep this key <strong>secret</strong>, all users that have it may create arbitrary posts as any user."
 
+      web_hooks:
+        title: "Webhooks"
+        none: "There are no webhooks right now."
+        instruction: "Webhooks allows Discourse to notify external services when certain event happens in your site. When the webhook is triggered, a POST request will send to URLs provided."
+        detailed_instruction: "A POST request will be sent to provided URL when chosen event happens."
+        new: "New Webhook"
+        create: "Create"
+        save: "Save"
+        destroy: "Delete"
+        description: "Description"
+        controls: "Controls"
+        go_back: "Back to list"
+        payload_url: "Payload URL"
+        payload_url_placeholder: "https://example.com/postreceive"
+        warn_local_payload_url: "It seems you are trying to set up the webhook to a local url. Event delivered to a local address may cause side-effect or unexpected behaviours. Continue?"
+        secret_invalid: "Secret must not have any blank characters."
+        secret_too_short: "Secret should be at least 12 characters."
+        secret_placeholder: "An optional string, used for generating signature"
+        event_type_missing: "You need to set up at least one event type."
+        content_type: "Content Type"
+        secret: "Secret"
+        event_chooser: "Which events would you like to trigger this webhook?"
+        wildcard_event: "Send me everything."
+        individual_event: "Select individual events."
+        verify_certificate: "Check TLS certificate of payload url"
+        active: "Active"
+        active_notice: "We will deliver event details when it happens."
+        categories_filter_instructions: "Relevant webhooks will only be triggered if the event is related with specified categories. Leave blank to trigger webhooks for all categories."
+        categories_filter: "Triggered Categories"
+        groups_filter_instructions: "Relevant webhooks will only be triggered if the event is related with specified groups. Leave blank to trigger webhooks for all groups."
+        groups_filter: "Triggered Groups"
+        delete_confirm: "Delete this webhook?"
+        topic_event:
+          name: "Topic Event"
+          details: "When there is a new topic, revised, changed or deleted."
+        post_event:
+          name: "Post Event"
+          details: "When there is a new reply, edit, deleted or recovered."
+        user_event:
+          name: "User Event"
+          details: "When a user is created, approved or updated."
+        delivery_status:
+          title: "Delivery Status"
+          inactive: "Inactive"
+          failed: "Failed"
+          successful: "Successful"
+        events:
+          none: "There are no related events."
+          redeliver: "Redeliver"
+          incoming:
+            one: "There is a new event."
+            other: "There are {{count}} new events."
+          completed_in:
+            one: "Completed in 1 second."
+            other: "Completed in {{count}} seconds."
+          request: "Request"
+          response: "Response"
+          redeliver_confirm: "Are you sure you want to redeliver the same payload?"
+          headers: "Headers"
+          payload: "Payload"
+          body: "Body"
+          go_list: "Go to list"
+          go_details: "Edit webhook"
+          go_events: "Go to events"
+          ping: "Ping"
+          status: "Status Code"
+          event_id: "ID"
+          timestamp: "Created"
+          completion: "Completion Time"
+          actions: "Actions"
       plugins:
         title: "Plugins"
         installed: "Installed Plugins"
@@ -2493,10 +2694,8 @@ en:
             confirm: "Are you sure you want to rollback the database to the previous working state?"
 
       export_csv:
-        user_archive_confirm: "Are you sure you want to download your posts?"
         success: "Export initiated, you will be notified via message when the process is complete."
         failed: "Export failed. Please check the logs."
-        rate_limit_error: "Posts can be downloaded once per day, please try again tomorrow."
         button_text: "Export"
         button_title:
           user: "Export full user list in CSV format."
@@ -2622,10 +2821,14 @@ en:
         delivery_method: "Delivery Method"
         preview_digest_desc: "Preview the content of the digest emails sent to inactive users."
         refresh: "Refresh"
+        send_digest_label: "Send this result to:"
+        send_digest: "Send"
+        sending_email: "Sending email..."
         format: "Format"
         html: "html"
         text: "text"
         last_seen_user: "Last Seen User:"
+        no_result: "No results found for digest."
         reply_key: "Reply Key"
         skipped_reason: "Skip Reason"
         incoming_emails:
@@ -2718,10 +2921,17 @@ en:
             revoke_admin: "revoke admin"
             grant_moderation: "grant moderation"
             revoke_moderation: "revoke moderation"
-            backup_operation: "backup operation"
+            backup_create: "create backup"
             deleted_tag: "deleted tag"
             renamed_tag: "renamed tag"
             revoke_email: "revoke email"
+            lock_trust_level: "lock trust level"
+            unlock_trust_level: "unlock trust level"
+            activate_user: "activate user"
+            deactivate_user: "deactivate user"
+            change_readonly_mode: "change readonly mode"
+            backup_download: "download backup"
+            backup_destroy: "destroy backup"
         screened_emails:
           title: "Screened Emails"
           description: "When someone tries to create a new account, the following email addresses will be checked and the registration will be blocked, or some other action performed."
@@ -3031,6 +3241,7 @@ en:
           user_preferences: "User Preferences"
           tags: "Tags"
           search: "Search"
+          groups: "Groups"
 
       badges:
         title: Badges
@@ -3153,5 +3364,24 @@ en:
           add: "Add"
           filter: "Search (URL or External URL)"
 
-# WARNING! Keys added here will be in the admin_js section.
-#          Keys that don't belong in admin should be placed earlier in the file.
+  wizard_js:
+    wizard:
+      done: "Done"
+      back: "Back"
+      next: "Next"
+      step: "%{current} of %{total}"
+      upload: "Upload"
+      uploading: "Uploading..."
+      quit: "Maybe Later"
+
+      staff_count:
+        one: "Your community has 1 staff member. "
+        other: "Your community has %{count} staff members."
+
+      invites:
+        add_user: "add"
+        none_added: "You haven’t invited any staff. Are you sure you want to continue?"
+        roles:
+          admin: "Admin"
+          moderator: "Moderator"
+          regular: "Regular User"

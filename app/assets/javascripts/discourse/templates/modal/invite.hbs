@@ -1,4 +1,4 @@
-<div class="modal-body invite-modal">
+{{#d-modal-body id="invite-modal" title=title}}
   {{#if model.error}}
     <div class="alert alert-error">
       <button class="close" data-dismiss="alert">×</button>
@@ -6,7 +6,11 @@
     </div>
   {{/if}}
   {{#if model.finished}}
-    {{{successMessage}}}
+    {{#if model.inviteLink}}
+      {{generated-invite-link link=model.inviteLink email=emailOrUsername}}
+    {{else}}
+      {{{successMessage}}}
+    {{/if}}
   {{else}}
     <label>{{inviteInstructions}}</label>
     {{#if allowExistingMembers}}
@@ -44,7 +48,8 @@
     {{/if}}
 
   {{/if}}
-</div>
+{{/d-modal-body}}
+
 <div class="modal-footer">
   {{#if model.finished}}
     {{d-button class="btn-primary" action="closeModal" label="close"}}

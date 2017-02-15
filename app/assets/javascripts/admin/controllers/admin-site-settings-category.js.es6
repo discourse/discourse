@@ -1,16 +1,16 @@
 export default Ember.Controller.extend({
   categoryNameKey: null,
-  needs: ['adminSiteSettings'],
+  adminSiteSettings: Ember.inject.controller(),
 
   filteredContent: function() {
     if (!this.get('categoryNameKey')) { return []; }
 
-    const category = this.get('controllers.adminSiteSettings.content').findProperty('nameKey', this.get('categoryNameKey'));
+    const category = (this.get('adminSiteSettings.model') || []).findBy('nameKey', this.get('categoryNameKey'));
     if (category) {
       return category.siteSettings;
     } else {
       return [];
     }
-  }.property('controllers.adminSiteSettings.content', 'categoryNameKey')
+  }.property('adminSiteSettings.model', 'categoryNameKey')
 
 });

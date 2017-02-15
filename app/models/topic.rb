@@ -54,6 +54,7 @@ class Topic < ActiveRecord::Base
   validates :title, :if => Proc.new { |t| t.new_record? || t.title_changed? },
                     :presence => true,
                     :topic_title_length => true,
+                    :censored_words => true,
                     :quality_title => { :unless => :private_message? },
                     :unique_among  => { :unless => Proc.new { |t| (SiteSetting.allow_duplicate_topic_titles? || t.private_message?) },
                                         :message => :has_already_been_used,
@@ -73,9 +74,14 @@ class Topic < ActiveRecord::Base
                    (!t.user_id || !t.user.staff?)
             }
 
+  validates :featured_link, allow_nil: true, format: URI::regexp(%w(http https))
+  validate if: :featured_link do
+    errors.add(:featured_link, :invalid_category) unless !featured_link_changed? || Guardian.new.can_edit_featured_link?(category_id)
+  end
 
   before_validation do
     self.title = TextCleaner.clean_title(TextSentinel.title_sentinel(title).text) if errors[:title].empty?
+    self.featured_link.strip! if self.featured_link
   end
 
   belongs_to :category
@@ -193,6 +199,9 @@ class Topic < ActiveRecord::Base
       TagUser.auto_track(topic_id: id)
       self.tags_changed = false
     end
+
+    SearchIndexer.index(self)
+    UserActionCreator.log_topic(self)
   end
 
   def initialize_default_values
@@ -333,7 +342,7 @@ class Topic < ActiveRecord::Base
               .listable_topics
               .includes(:category)
 
-    unless user.user_option.try(:include_tl0_in_digests)
+    unless opts[:include_tl0] || user.user_option.try(:include_tl0_in_digests)
       topics = topics.where("COALESCE(users.trust_level, 0) > 0")
     end
 
@@ -373,9 +382,9 @@ class Topic < ActiveRecord::Base
   end
 
   # Using the digest query, figure out what's  new for a user since last seen
-  def self.new_since_last_seen(user, since, featured_topic_ids)
+  def self.new_since_last_seen(user, since, featured_topic_ids=nil)
     topics = Topic.for_digest(user, since)
-    topics.where("topics.id NOT IN (?)", featured_topic_ids)
+    featured_topic_ids ? topics.where("topics.id NOT IN (?)", featured_topic_ids) : topics
   end
 
   def meta_data=(data)
@@ -466,23 +475,103 @@ class Topic < ActiveRecord::Base
   end
 
   # Atomically creates the next post number
-  def self.next_post_number(topic_id, reply = false)
+  def self.next_post_number(topic_id, reply = false, whisper = false)
     highest = exec_sql("select coalesce(max(post_number),0) as max from posts where topic_id = ?", topic_id).first['max'].to_i
 
-    reply_sql = reply ? ", reply_count = reply_count + 1" : ""
-    result = exec_sql("UPDATE topics SET highest_post_number = ? + 1#{reply_sql}
-                       WHERE id = ? RETURNING highest_post_number", highest, topic_id)
-    result.first['highest_post_number'].to_i
+    if whisper
+
+      result = exec_sql("UPDATE topics
+                          SET highest_staff_post_number = ? + 1
+                          WHERE id = ?
+                          RETURNING highest_staff_post_number", highest, topic_id)
+
+      result.first['highest_staff_post_number'].to_i
+
+    else
+
+      reply_sql = reply ? ", reply_count = reply_count + 1" : ""
+
+      result = exec_sql("UPDATE topics
+                          SET highest_staff_post_number = :highest + 1,
+                              highest_post_number = :highest + 1#{reply_sql},
+                              posts_count = posts_count + 1
+                          WHERE id = :topic_id
+                          RETURNING highest_post_number", highest: highest, topic_id: topic_id)
+
+      result.first['highest_post_number'].to_i
+    end
   end
+
+
+  def self.reset_all_highest!
+    exec_sql <<SQL
+WITH
+X as (
+  SELECT topic_id,
+         COALESCE(MAX(post_number), 0) highest_post_number
+  FROM posts
+  WHERE deleted_at IS NULL
+  GROUP BY topic_id
+),
+Y as (
+  SELECT topic_id,
+         coalesce(MAX(post_number), 0) highest_post_number,
+         count(*) posts_count,
+         max(created_at) last_posted_at
+  FROM posts
+  WHERE deleted_at IS NULL AND post_type <> 4
+  GROUP BY topic_id
+)
+UPDATE topics
+SET
+  highest_staff_post_number = X.highest_post_number,
+  highest_post_number = Y.highest_post_number,
+  last_posted_at = Y.last_posted_at,
+  posts_count = Y.posts_count
+FROM X, Y
+WHERE
+  X.topic_id = topics.id AND
+  Y.topic_id = topics.id AND (
+    topics.highest_staff_post_number <> X.highest_post_number OR
+    topics.highest_post_number <> Y.highest_post_number OR
+    topics.last_posted_at <> Y.last_posted_at OR
+    topics.posts_count <> Y.posts_count
+  )
+SQL
+  end
+
 
   # If a post is deleted we have to update our highest post counters
   def self.reset_highest(topic_id)
     result = exec_sql "UPDATE topics
-                        SET highest_post_number = (SELECT COALESCE(MAX(post_number), 0) FROM posts WHERE topic_id = :topic_id AND deleted_at IS NULL),
-                            posts_count = (SELECT count(*) FROM posts WHERE deleted_at IS NULL AND topic_id = :topic_id),
-                            last_posted_at = (SELECT MAX(created_at) FROM POSTS WHERE topic_id = :topic_id AND deleted_at IS NULL)
+                        SET
+                        highest_staff_post_number = (
+                            SELECT COALESCE(MAX(post_number), 0) FROM posts
+                            WHERE topic_id = :topic_id AND
+                                  deleted_at IS NULL
+                          ),
+                        highest_post_number = (
+                            SELECT COALESCE(MAX(post_number), 0) FROM posts
+                            WHERE topic_id = :topic_id AND
+                                  deleted_at IS NULL AND
+                                  post_type <> 4
+                          ),
+                          posts_count = (
+                            SELECT count(*) FROM posts
+                            WHERE deleted_at IS NULL AND
+                                  topic_id = :topic_id AND
+                                  post_type <> 4
+                          ),
+
+                          last_posted_at = (
+                            SELECT MAX(created_at) FROM posts
+                            WHERE topic_id = :topic_id AND
+                                  deleted_at IS NULL AND
+                                  post_type <> 4
+                          )
                         WHERE id = :topic_id
                         RETURNING highest_post_number", topic_id: topic_id
+
     highest_post_number = result.first['highest_post_number'].to_i
 
     # Update the forum topic user records
@@ -655,7 +744,7 @@ class Topic < ActiveRecord::Base
       end
     end
 
-    if username_or_email =~ /^.+@.+$/ && !SiteSetting.enable_sso && SiteSetting.enable_local_logins
+    if username_or_email =~ /^.+@.+$/ && Guardian.new(invited_by).can_invite_via_email?(self)
       # rate limit topic invite
       RateLimiter.new(invited_by, "topic-invitations-per-day", SiteSetting.max_topic_invitations_per_day, 1.day.to_i).performed!
 
@@ -724,10 +813,7 @@ class Topic < ActiveRecord::Base
   end
 
   def update_action_counts
-    PostActionType.types.each_key do |type|
-      count_field = "#{type}_count"
-      update_column(count_field, Post.where(topic_id: id).sum(count_field))
-    end
+    update_column(:like_count, Post.where(topic_id: id).sum(:like_count))
   end
 
   def posters_summary(options = {})
@@ -742,6 +828,9 @@ class Topic < ActiveRecord::Base
     # only one banner at the same time
     previous_banner = Topic.where(archetype: Archetype.banner).first
     previous_banner.remove_banner!(user) if previous_banner.present?
+
+    UserProfile.where("dismissed_banner_key IS NOT NULL")
+      .update_all(dismissed_banner_key: nil)
 
     self.archetype = Archetype.banner
     self.add_moderator_post(user, I18n.t("archetypes.banner.message.make"))
@@ -1032,6 +1121,7 @@ SQL
     builder.where("p.post_number > 1")
     builder.where("p.user_id != t.user_id")
     builder.where("p.user_id in (:user_ids)", {user_ids: opts[:user_ids]}) if opts[:user_ids]
+    builder.where("p.post_type = :post_type", post_type: Post.types[:regular])
     builder.where("EXTRACT(EPOCH FROM p.created_at - t.created_at) > 0")
     builder.exec
   end
@@ -1050,11 +1140,11 @@ SQL
     FROM (
       SELECT t.id, t.created_at::date AS created_at, MIN(p.post_number) first_reply
       FROM topics t
-      LEFT JOIN posts p ON p.topic_id = t.id AND p.user_id != t.user_id AND p.deleted_at IS NULL
+      LEFT JOIN posts p ON p.topic_id = t.id AND p.user_id != t.user_id AND p.deleted_at IS NULL AND p.post_type = #{Post.types[:regular]}
       /*where*/
       GROUP BY t.id
     ) tt
-    WHERE tt.first_reply IS NULL
+    WHERE tt.first_reply IS NULL OR tt.first_reply < 2
     GROUP BY tt.created_at
     ORDER BY tt.created_at
   SQL
@@ -1074,11 +1164,11 @@ SQL
     FROM (
       SELECT t.id, MIN(p.post_number) first_reply
       FROM topics t
-      LEFT JOIN posts p ON p.topic_id = t.id AND p.user_id != t.user_id AND p.deleted_at IS NULL
+      LEFT JOIN posts p ON p.topic_id = t.id AND p.user_id != t.user_id AND p.deleted_at IS NULL AND p.post_type = #{Post.types[:regular]}
       /*where*/
       GROUP BY t.id
     ) tt
-    WHERE tt.first_reply IS NULL
+    WHERE tt.first_reply IS NULL OR tt.first_reply < 2
   SQL
 
   def self.with_no_response_total(opts={})
@@ -1141,10 +1231,8 @@ end
 #  deleted_at                    :datetime
 #  highest_post_number           :integer          default(0), not null
 #  image_url                     :string
-#  off_topic_count               :integer          default(0), not null
 #  like_count                    :integer          default(0), not null
 #  incoming_link_count           :integer          default(0), not null
-#  bookmark_count                :integer          default(0), not null
 #  category_id                   :integer
 #  visible                       :boolean          default(TRUE), not null
 #  moderator_posts_count         :integer          default(0), not null
@@ -1157,12 +1245,9 @@ end
 #  featured_user4_id             :integer
 #  notify_moderators_count       :integer          default(0), not null
 #  spam_count                    :integer          default(0), not null
-#  illegal_count                 :integer          default(0), not null
-#  inappropriate_count           :integer          default(0), not null
 #  pinned_at                     :datetime
 #  score                         :float
 #  percent_rank                  :float            default(1.0), not null
-#  notify_user_count             :integer          default(0), not null
 #  subtype                       :string
 #  slug                          :string
 #  auto_close_at                 :datetime
@@ -1177,6 +1262,7 @@ end
 #  auto_close_hours              :float
 #  pinned_until                  :datetime
 #  fancy_title                   :string(400)
+#  highest_staff_post_number     :integer          default(0), not null
 #
 # Indexes
 #

@@ -313,4 +313,24 @@ describe ListController do
 
   end
 
+  describe "safe mode" do
+    render_views
+
+    it "handles safe mode" do
+      get :latest
+      expect(response.body).to match(/plugin\.js/)
+      expect(response.body).to match(/plugin-third-party\.js/)
+
+      get :latest, safe_mode: "no_plugins"
+      expect(response.body).not_to match(/plugin\.js/)
+      expect(response.body).not_to match(/plugin-third-party\.js/)
+
+      get :latest, safe_mode: "only_official"
+      expect(response.body).to match(/plugin\.js/)
+      expect(response.body).not_to match(/plugin-third-party\.js/)
+
+    end
+
+  end
+
 end

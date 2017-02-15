@@ -35,9 +35,4 @@ export default Ember.Component.extend({
     });
   }.property('firstCategory', 'hideSubcategories'),
 
-  render(buffer) {
-    if (this.get('hidden')) { return; }
-    this._super(buffer);
-  }
-
 });

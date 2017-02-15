@@ -49,12 +49,10 @@ class Validators::UploadValidator < ActiveModel::Validator
     authorized_uploads = Set.new
 
     SiteSetting.authorized_extensions
-      .tr(" ", "")
+      .gsub(/[\s\.]+/, "")
+      .downcase
       .split("|")
-      .each do |extension|
-        next if extension.include?("*")
-        authorized_uploads << (extension.start_with?(".") ? extension[1..-1] : extension).downcase
-      end
+      .each { |extension| authorized_uploads << extension unless extension.include?("*") }
 
     authorized_uploads
   end

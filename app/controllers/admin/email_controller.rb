@@ -50,6 +50,25 @@ class Admin::EmailController < Admin::AdminController
     render json: MultiJson.dump(html_content: renderer.html, text_content: renderer.text)
   end
 
+  def send_digest
+    params.require(:last_seen_at)
+    params.require(:username)
+    params.require(:email)
+    user = User.find_by_username(params[:username])
+    message, skip_reason = UserNotifications.send(:digest, user, {since: params[:last_seen_at]})
+    if message
+      message.to = params[:email]
+      begin
+        Email::Sender.new(message, :digest).send
+        render json: success_json
+      rescue => e
+        render json: {errors: [e.message]}, status: 422
+      end
+    else
+      render json: {errors: skip_reason}
+    end
+  end
+
   def handle_mail
     params.require(:email)
     Email::Processor.process!(params[:email])

@@ -1,14 +1,16 @@
-<div class='container'>
-  <div class='contents clearfix body-page'>
-    {{plugin-outlet "above-static"}}
-    {{{model.html}}}
+{{#d-section bodyClass=bodyClass class="container"}}
+  {{#watch-read action="markFaqRead" path=model.path}}
+    <div class='contents clearfix body-page'>
+      {{plugin-outlet name="above-static"}}
+      {{{model.html}}}
 
-    {{#if showSignupButton}}
-      {{d-button action="showCreateAccount" class="btn-primary sign-up-button" label="sign_up"}}
-    {{/if}}
+      {{#if showSignupButton}}
+        {{d-button action="showCreateAccount" class="btn-primary sign-up-button" label="sign_up"}}
+      {{/if}}
 
-    {{#if showLoginButton}}
-      {{d-button action="showLogin" class="btn-primary login-button" icon="user" label="log_in"}}
-    {{/if}}
-  </div>
-</div>
+      {{#if showLoginButton}}
+        {{d-button action="showLogin" class="btn-primary login-button" icon="user" label="log_in"}}
+      {{/if}}
+    </div>
+  {{/watch-read}}
+{{/d-section}}

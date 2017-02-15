@@ -1,0 +1,69 @@
+.group {
+  margin-top: 15px;
+}
+
+.group-header {
+  margin: 0px;
+}
+
+.group-name {
+  margin: 5px 0px 0px 0px;
+}
+
+.group-nav {
+  width: 100%;
+}
+
+.group-details-container {
+  margin-bottom: 15px;
+}
+
+.group-nav.mobile-nav {
+  margin-bottom: 15px;
+}
+
+.group-activity {
+  position: relative;
+}
+
+.group-activity-nav.mobile-nav {
+  position: absolute;
+  right: 0px;
+  top: -50px;
+}
+
+.group-activity-outlet {
+  float: none;
+}
+
+.form-horizontal {
+  .control-group {
+    margin-bottom: 10px;
+  }
+
+  .group-flair-inputs {
+    .group-flair-right {
+      margin: 0px
+    }
+  }
+}
+
+table.group-logs {
+  width: 130%;
+}
+
+table.group-members {
+  th {
+    text-align: center;
+  }
+
+  tr {
+    .user-info {
+      width: auto;
+    }
+
+    td {
+      padding-left: 0.5em;
+    }
+  }
+}

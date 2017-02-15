@@ -18,9 +18,13 @@ describe Badge do
     badge = Badge.find_by_name("Basic User")
     name_english = badge.name
 
-    I18n.locale = 'fr'
+    begin
+      I18n.locale = 'fr'
 
-    expect(badge.display_name).not_to eq(name_english)
+      expect(badge.display_name).not_to eq(name_english)
+    ensure
+      I18n.locale = :en
+    end
   end
 
   it 'handles changes on badge description and long description correctly for system badges' do

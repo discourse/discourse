@@ -1,13 +1,11 @@
-export default {
-  resource: 'admin',
-
-  map() {
+export default function() {
+  this.route('admin', { resetNamespace: true }, function() {
     this.route('dashboard', { path: '/' });
-    this.resource('adminSiteSettings', { path: '/site_settings' }, function() {
-      this.resource('adminSiteSettingsCategory', { path: 'category/:category_id'} );
+    this.route('adminSiteSettings', { path: '/site_settings', resetNamespace: true }, function() {
+      this.route('adminSiteSettingsCategory', { path: 'category/:category_id', resetNamespace: true} );
     });
 
-    this.resource('adminEmail', { path: '/email'}, function() {
+    this.route('adminEmail', { path: '/email', resetNamespace: true}, function() {
       this.route('sent');
       this.route('skipped');
       this.route('bounced');
@@ -16,65 +14,77 @@ export default {
       this.route('previewDigest', { path: '/preview-digest' });
     });
 
-    this.resource('adminCustomize', { path: '/customize' } ,function() {
+    this.route('adminCustomize', { path: '/customize', resetNamespace: true } ,function() {
       this.route('colors');
 
-      this.resource('adminCustomizeCssHtml', { path: 'css_html' }, function() {
+      this.route('adminCustomizeCssHtml', { path: 'css_html', resetNamespace: true }, function() {
         this.route('show', {path: '/:site_customization_id/:section'});
       });
 
-      this.resource('adminSiteText', { path: '/site_texts' }, function() {
+      this.route('adminSiteText', { path: '/site_texts', resetNamespace: true }, function() {
         this.route('edit', { path: '/:id' });
       });
 
-      this.resource('adminUserFields', { path: '/user_fields' });
-      this.resource('adminEmojis', { path: '/emojis' });
-      this.resource('adminPermalinks', { path: '/permalinks' });
-      this.resource('adminEmbedding', { path: '/embedding' });
-      this.resource('adminCustomizeEmailTemplates', { path: '/email_templates' }, function() {
+      this.route('adminUserFields', { path: '/user_fields', resetNamespace: true });
+      this.route('adminEmojis', { path: '/emojis', resetNamespace: true });
+      this.route('adminPermalinks', { path: '/permalinks', resetNamespace: true });
+      this.route('adminEmbedding', { path: '/embedding', resetNamespace: true });
+      this.route('adminCustomizeEmailTemplates', { path: '/email_templates', resetNamespace: true }, function() {
         this.route('edit', { path: '/:id' });
       });
     });
-    this.route('api');
 
-    this.resource('admin.backups', { path: '/backups' }, function() {
+    this.route('adminApi', { path: '/api', resetNamespace: true }, function() {
+      this.route('adminApiKeys', { path: '/keys', resetNamespace: true });
+
+      this.route('adminWebHooks', { path: '/web_hooks', resetNamespace: true }, function() {
+        this.route('show', { path: '/:web_hook_id' });
+        this.route('showEvents', { path: '/:web_hook_id/events' });
+      });
+    });
+
+    this.route('admin.backups', { path: '/backups', resetNamespace: true }, function() {
       this.route('logs');
     });
 
-    this.resource('adminReports', { path: '/reports/:type' });
+    this.route('adminReports', { path: '/reports/:type', resetNamespace: true });
 
-    this.resource('adminFlags', { path: '/flags' }, function() {
+    this.route('adminFlags', { path: '/flags', resetNamespace: true }, function() {
       this.route('list', { path: '/:filter' });
     });
 
-    this.resource('adminLogs', { path: '/logs' }, function() {
+    this.route('adminLogs', { path: '/logs', resetNamespace: true }, function() {
       this.route('staffActionLogs', { path: '/staff_action_logs' });
       this.route('screenedEmails', { path: '/screened_emails' });
       this.route('screenedIpAddresses', { path: '/screened_ip_addresses' });
       this.route('screenedUrls', { path: '/screened_urls' });
     });
 
-    this.resource('adminGroups', { path: '/groups' }, function() {
+    this.route('adminGroups', { path: '/groups', resetNamespace: true }, function() {
       this.route('bulk');
       this.route('bulkComplete', { path: 'bulk-complete' });
-      this.resource('adminGroupsType', { path: '/:type' }, function() {
-        this.resource('adminGroup', { path: '/:name' });
+      this.route('adminGroupsType', { path: '/:type', resetNamespace: true }, function() {
+        this.route('adminGroup', { path: '/:name', resetNamespace: true });
       });
     });
 
-    this.resource('adminUsers', { path: '/users' }, function() {
-      this.resource('adminUser', { path: '/:user_id/:username' }, function() {
+    this.route('adminUsers', { path: '/users', resetNamespace: true }, function() {
+      this.route('adminUser', { path: '/:user_id/:username', resetNamespace: true }, function() {
         this.route('badges');
         this.route('tl3Requirements', { path: '/tl3_requirements' });
       });
 
-      this.resource('adminUsersList', { path: '/list' }, function() {
+      this.route('adminUsersList', { path: '/list', resetNamespace: true }, function() {
         this.route('show', { path: '/:filter' });
       });
     });
 
-    this.resource('adminBadges', { path: '/badges' }, function() {
+    this.route('adminBadges', { path: '/badges', resetNamespace: true }, function() {
       this.route('show', { path: '/:badge_id' });
     });
-  }
+
+    this.route('adminPlugins', { path: '/plugins', resetNamespace: true }, function() {
+      this.route('index', { path: '/' });
+    });
+  });
 };

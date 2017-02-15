@@ -135,7 +135,7 @@ Badge.reopenClass({
     if(opts && opts.onlyListable){
       listable = "?only_listable=true";
     }
-    return ajax('/badges.json' + listable).then(function(badgesJson) {
+    return ajax('/badges.json' + listable, { data: opts }).then(function(badgesJson) {
       return Badge.createFromJson(badgesJson);
     });
   },

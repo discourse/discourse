@@ -1,4 +1,4 @@
-<div class="modal-body change-timestamp">
+{{#d-modal-body class="change-timestamp"}}
   <p>
     {{i18n 'topic.change_timestamp.instructions'}}
   </p>
@@ -13,7 +13,7 @@
   </form>
 
   <div id="date-container" />
-</div>
+{{/d-modal-body}}
 
 <div class="modal-footer">
   <button class="btn btn-primary" disabled={{buttonDisabled}} {{action "changeTimestamp"}}>{{buttonTitle}}</button>

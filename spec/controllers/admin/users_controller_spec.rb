@@ -178,9 +178,15 @@ describe Admin::UsersController do
 
       it 'adds the user to the group' do
         xhr :post, :add_group, group_id: group.id, user_id: user.id
-        expect(response).to be_success
 
+        expect(response).to be_success
         expect(GroupUser.where(user_id: user.id, group_id: group.id).exists?).to eq(true)
+
+        group_history = GroupHistory.last
+
+        expect(group_history.action).to eq(GroupHistory.actions[:add_user_to_group])
+        expect(group_history.acting_user).to eq(@user)
+        expect(group_history.target_user).to eq(user)
 
         # Doing it again doesn't raise an error
         xhr :post, :add_group, group_id: group.id, user_id: user.id

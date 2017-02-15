@@ -1,6 +1,8 @@
+import { getOwner } from 'discourse-common/lib/get-owner';
+
 export default Ember.Component.extend({
   router: function() {
-    return this.container.lookup('router:main');
+    return getOwner(this).lookup('router:main');
   }.property(),
 
   active: function() {

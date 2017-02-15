@@ -6,6 +6,7 @@ class CategoryDetailedSerializer < BasicCategorySerializer
              :topics_week,
              :topics_month,
              :topics_year,
+             :topics_all_time,
              :description_excerpt,
              :is_uncategorized,
              :subcategory_ids
@@ -46,6 +47,10 @@ class CategoryDetailedSerializer < BasicCategorySerializer
 
   def topics_year
     count_with_subcategories(:topics_year)
+  end
+
+  def topics_all_time
+    count_with_subcategories(:topic_count)
   end
 
   def count_with_subcategories(method)

@@ -35,6 +35,11 @@ describe TopicView do
       tv = TopicView.new(topic.id, coding_horror, slow_platform: true)
       expect(tv.chunk_size).to eq(TopicView.slow_chunk_size)
     end
+
+    it "returns `print_chunk_size` when print param is true" do
+      tv = TopicView.new(topic.id, coding_horror, print: true)
+      expect(tv.chunk_size).to eq(TopicView.print_chunk_size)
+    end
   end
 
   context "with a few sample posts" do
@@ -419,6 +424,74 @@ describe TopicView do
           near_view = topic_view_near(p5, true)
           expect(near_view.posts).to eq([p1, p2, p3, p4, p5, p6, p7])
           expect(near_view.contains_gaps?).to eq(false)
+        end
+      end
+    end
+  end
+
+  context "page_title" do
+    let(:tag1) { Fabricate(:tag) }
+    let(:tag2) { Fabricate(:tag, topic_count: 2) }
+
+    subject { TopicView.new(topic.id, coding_horror).page_title }
+
+    context "uncategorized topic" do
+      context "topic_page_title_includes_category is false" do
+        before { SiteSetting.topic_page_title_includes_category = false }
+        it { should eq(topic.title) }
+      end
+
+      context "topic_page_title_includes_category is true" do
+        before { SiteSetting.topic_page_title_includes_category = true }
+        it { should eq(topic.title) }
+
+        context "tagged topic" do
+          before { topic.tags << [tag1, tag2] }
+
+          context "tagging enabled" do
+            before { SiteSetting.tagging_enabled = true }
+
+            it { should start_with(topic.title) }
+            it { should_not include(tag1.name) }
+            it { should end_with(tag2.name) } # tag2 has higher topic count
+          end
+
+          context "tagging disabled" do
+            before { SiteSetting.tagging_enabled = false }
+
+            it { should start_with(topic.title) }
+            it { should_not include(tag1.name) }
+            it { should_not include(tag2.name) }
+          end
+        end
+      end
+    end
+
+    context "categorized topic" do
+      let(:category) { Fabricate(:category) }
+
+      before { topic.update_attributes(category_id: category.id) }
+
+      context "topic_page_title_includes_category is false" do
+        before { SiteSetting.topic_page_title_includes_category = false }
+        it { should eq(topic.title) }
+      end
+
+      context "topic_page_title_includes_category is true" do
+        before { SiteSetting.topic_page_title_includes_category = true }
+        it { should start_with(topic.title) }
+        it { should end_with(category.name) }
+
+        context "tagged topic" do
+          before do
+            SiteSetting.tagging_enabled = true
+            topic.tags << [tag1, tag2]
+          end
+
+          it { should start_with(topic.title) }
+          it { should end_with(category.name) }
+          it { should_not include(tag1.name) }
+          it { should_not include(tag2.name) }
         end
       end
     end

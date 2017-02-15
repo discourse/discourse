@@ -13,12 +13,13 @@ function concatUniq(src, elems) {
 }
 
 export default class WhiteLister {
-  constructor(features) {
-    features.default = true;
+  constructor(options) {
+    options.features.default = true;
 
-    this._featureKeys = Object.keys(features).filter(f => features[f]);
+    this._featureKeys = Object.keys(options.features).filter(f => options.features[f]);
     this._key = this._featureKeys.join(':');
-    this._features = features;
+    this._features = options.features;
+    this._options = options||{};
   }
 
   getCustom() {
@@ -53,6 +54,10 @@ export default class WhiteLister {
       _whiteLists[this._key] = { tagList, attrList };
     }
     return _whiteLists[this._key];
+  }
+
+  getAllowedHrefSchemes() {
+    return this._options.allowedHrefSchemes || [];
   }
 }
 
@@ -105,7 +110,6 @@ whiteListFeature('default', [
   'a.mention-group',
   'a.onebox',
   'a[data-bbcode]',
-  'a[name]',
   'a[name]',
   'a[rel=nofollow]',
   'a[target=_blank]',

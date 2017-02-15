@@ -17,8 +17,58 @@ bs_BA:
         few: "ukupno glasova"
         other: "ukupno glasova"
       average_rating: "Prosječna ocjena: <strong>%{average}</strong>."
+      public:
+        title: "Glasovi su javni."
+      multiple:
+        help:
+          at_least_min_options:
+            one: "Odaberi barem <strong>1</strong> opciju"
+            few: "Odaberi barem <strong>%{name}</strong> opcije"
+            other: "Odaberi barem <strong>%{name}</strong> opcija"
+          up_to_max_options:
+            one: "Odaberi do <strong>1</strong> opcije"
+            few: "Odaberi do <strong>%{count}</strong> opcije"
+            other: "Odaberi do <strong>%{count}</strong> opcija"
+          x_options:
+            one: "Odaberi <strong>1</strong> opciju"
+            few: "Odaberi <strong>%{count}</strong> opcije"
+            other: "Odaberi <strong>%{count}</strong> opcija"
+          between_min_and_max_options: "Odaberi između <strong>%{min}</strong> i <strong>%{max}</strong> opcija"
       cast-votes:
         title: "ukupno glasova"
         label: "Glasaj"
+      show-results:
+        title: "Prikaži rezultate ankete"
+        label: "Prikaži rezultate"
+      hide-results:
+        title: "Nazad na glasove"
+        label: "Sakrij rezultate"
+      open:
+        title: "Otvori anketu"
+        label: "Otvori"
+        confirm: "Da li ste sigurni da želite da otvorite ovu anketu?"
       close:
+        title: "Zatvori anketu"
         label: "Zatvori"
+        confirm: "Da li ste sigurni da želite da zatvorite ovu anketu?"
+      error_while_toggling_status: "Izvinjavamo se, pojavio se problem u prebacivanju statutusa ove ankete"
+      error_while_casting_votes: "Izvinjavamo se, pojavila se greška prikazivanja vaših glasova"
+      error_while_fetching_voters: "Izvinjavamo se, pojavila se greška pri prikazivanju glasača"
+      ui_builder:
+        title: Izgradi anketu
+        insert: Umetni anketu
+        help:
+          options_count: Unesite bar 2. opcije
+        poll_type:
+          label: Tip
+          regular: Jedan izbor
+          multiple: Višestruki izbor
+          number: Rejting broja
+        poll_config:
+          max: Maksimalno
+          min: Minimalno
+          step: Korak
+        poll_public:
+          label: Pokaži ko je glasao
+        poll_options:
+          label: Upišite jednu opciju ankete po liniji

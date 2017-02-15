@@ -1,4 +1,12 @@
+import { mapRoutes } from 'discourse/mapping-router';
+
 moduleFor("controller:poll-ui-builder", "controller:poll-ui-builder", {
+  setup() {
+    this.registry.register('router:main', mapRoutes());
+    this.subject().set('toolbarEvent', {
+      getText: () => ""
+    });
+  },
   needs: ['controller:modal']
 });
 
@@ -165,21 +173,13 @@ test("number pollOutput", function() {
 
   equal(controller.get("pollOutput"), "[poll type=number min=1 max=20 step=1]\n[/poll]", "it should return the right output");
 
-  controller.set("pollName", 'test');
-
-  equal(controller.get("pollOutput"), "[poll name=test type=number min=1 max=20 step=1]\n[/poll]", "it should return the right output");
-
-  controller.set("pollName", ' test poll more ');
-
-  equal(controller.get("pollOutput"), "[poll name=test-poll-more type=number min=1 max=20 step=1]\n[/poll]", "it should return the right output");
-
   controller.set("pollStep", 2);
 
-  equal(controller.get("pollOutput"), "[poll name=test-poll-more type=number min=1 max=20 step=2]\n[/poll]", "it should return the right output");
+  equal(controller.get("pollOutput"), "[poll type=number min=1 max=20 step=2]\n[/poll]", "it should return the right output");
 
   controller.set("publicPoll", true);
 
-  equal(controller.get("pollOutput"), "[poll name=test-poll-more type=number min=1 max=20 step=2 public=true]\n[/poll]", "it should return the right output");
+  equal(controller.get("pollOutput"), "[poll type=number min=1 max=20 step=2 public=true]\n[/poll]", "it should return the right output");
 });
 
 test("regular pollOutput", function() {
@@ -191,13 +191,9 @@ test("regular pollOutput", function() {
 
   equal(controller.get("pollOutput"), "[poll]\n* 1\n* 2\n[/poll]", "it should return the right output");
 
-  controller.set("pollName", "test");
-
-  equal(controller.get("pollOutput"), "[poll name=test]\n* 1\n* 2\n[/poll]", "it should return the right output");
-
   controller.set("publicPoll", "true");
 
-  equal(controller.get("pollOutput"), "[poll name=test public=true]\n* 1\n* 2\n[/poll]", "it should return the right output");
+  equal(controller.get("pollOutput"), "[poll public=true]\n* 1\n* 2\n[/poll]", "it should return the right output");
 });
 
 
@@ -215,11 +211,7 @@ test("multiple pollOutput", function() {
 
   equal(controller.get("pollOutput"), "[poll type=multiple min=1 max=2]\n* 1\n* 2\n[/poll]", "it should return the right output");
 
-  controller.set("pollName", "test");
-
-  equal(controller.get("pollOutput"), "[poll name=test type=multiple min=1 max=2]\n* 1\n* 2\n[/poll]", "it should return the right output");
-
   controller.set("publicPoll", "true");
 
-  equal(controller.get("pollOutput"), "[poll name=test type=multiple min=1 max=2 public=true]\n* 1\n* 2\n[/poll]", "it should return the right output");
+  equal(controller.get("pollOutput"), "[poll type=multiple min=1 max=2 public=true]\n* 1\n* 2\n[/poll]", "it should return the right output");
 });

@@ -6,12 +6,11 @@ import DiscourseURL from 'discourse/lib/url';
 
 // Modal related to auto closing of topics
 export default Ember.Controller.extend(SelectedPostsCount, ModalFunctionality, {
-  needs: ['topic'],
   topicName: null,
   saving: false,
   categoryId: null,
 
-  topicController: Em.computed.alias('controllers.topic'),
+  topicController: Ember.inject.controller('topic'),
   selectedPosts: Em.computed.alias('topicController.selectedPosts'),
   selectedReplies: Em.computed.alias('topicController.selectedReplies'),
   allPostsSelected: Em.computed.alias('topicController.allPostsSelected'),
@@ -28,7 +27,7 @@ export default Ember.Controller.extend(SelectedPostsCount, ModalFunctionality, {
 
   onShow() {
     this.setProperties({
-      'controllers.modal.modalClass': 'split-modal',
+      'modal.modalClass': 'split-modal',
       saving: false,
       categoryId: null,
       topicName: ''

@@ -1,6 +1,6 @@
 var clock;
 
-import { relativeAge, autoUpdatingRelativeAge, updateRelativeAge, breakUp, number } from 'discourse/lib/formatter';
+import { relativeAge, autoUpdatingRelativeAge, updateRelativeAge, breakUp, number, longDate } from 'discourse/lib/formatter';
 
 module("lib:formatter", {
   setup: function() {
@@ -72,7 +72,7 @@ test("formating medium length dates", function() {
   equal(strip(formatDays(100)), shortDate(100)); // eg: Jan 23
   equal(strip(formatDays(500)), shortDateYear(500));
 
-  equal($(formatDays(0)).attr("title"), moment().format('MMMM D, YYYY h:mma'));
+  equal($(formatDays(0)).attr("title"), longDate(new Date()));
   equal($(formatDays(0)).attr("class"), "date");
 
   clock.restore();
@@ -157,12 +157,12 @@ test("autoUpdatingRelativeAge", function() {
   equal($elem.attr('title'), undefined);
 
   $elem = $(autoUpdatingRelativeAge(d, {title: true}));
-  equal($elem.attr('title'), moment(d).longDate());
+  equal($elem.attr('title'), longDate(d));
 
   $elem = $(autoUpdatingRelativeAge(d,{format: 'medium', title: true, leaveAgo: true}));
   equal($elem.data('format'), "medium-with-ago");
   equal($elem.data('time'), d.getTime());
-  equal($elem.attr('title'), moment(d).longDate());
+  equal($elem.attr('title'), longDate(d));
   equal($elem.html(), '1 day ago');
 
   $elem = $(autoUpdatingRelativeAge(d,{format: 'medium'}));

@@ -6,6 +6,15 @@
     min-width: 96px;
     text-align: center;
   }
+
+  #revision {
+    overflow: auto;
+  }
+
+  #revision-controls {
+    display: inline-block;
+  }
+
   #revisions .row:first-of-type {
     margin-top: 10px;
   }

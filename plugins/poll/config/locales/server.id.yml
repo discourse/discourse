@@ -9,6 +9,7 @@ id:
   site_settings:
     poll_enabled: "Perbolehkan pengguna untuk membuat polling?"
     poll_maximum_options: "Nomor maksimum dari pilihan yang diperbolehkan di sebuah polling."
+    poll_edit_window_mins: "Menit setelah postingan dibuat dimana polling masih bisa diedit."
   poll:
     multiple_polls_without_name: "Ada beberapa polling tanpa sebuah nama. Gunakan atribut '<code>nama</code>' untuk membuat identitas polling anda unik."
     multiple_polls_with_same_name: "Ada beberapa polling dengan nama yang sama: <strong>%{name}</strong>. Gunakan atribut '<code>nama</code>' untuk mengidentifikasi polling anda secara unik."
@@ -23,6 +24,12 @@ id:
     default_poll_with_multiple_choices_has_invalid_parameters: "Polling dengan pilihan ganda parameternya tidak benar."
     named_poll_with_multiple_choices_has_invalid_parameters: "Polling dengan nama <strong>%{name}</strong> dengan pilihan ganda parameternya tidak benar."
     requires_at_least_1_valid_option: "Anda harus memilih setidaknya 1 pilihan yang benar."
+    default_cannot_be_made_public: "Polling dengan pilihan tidak bisa dibuat publik."
+    named_cannot_be_made_public: "Polling berjudul <strong>%{name}</strong> memiliki pilihan yang tidak bisa dibuat publik."
+    edit_window_expired:
+      cannot_change_polls: "Anda tidak bisa membuat, menghapus atau mengubah polling setelah %{minutes} menit."
+      op_cannot_edit_options: "Anda tidak dapat menambahkan atau menghapus pilihan polling setelah %{minutes} menit pertama. Mohon hubungi moderator jika anda ingin mengubah pilihan dalam polling."
+      staff_cannot_add_or_remove_options: "Anda tidak dapat menambahkan atau menghapus pilihan polling setelah %{minutes} menit. Anda disarankan menutup topik ini dan membuat topik baru."
     no_polls_associated_with_this_post: "Tidak ada polling yang terkait dengan pos ini."
     no_poll_with_this_name: "Tidak ada pollig <strong>%{name}</strong> yang terkait dengan pos ini."
     post_is_deleted: "Tidak dapat beraksi pada sebuah pos yang dihapus."

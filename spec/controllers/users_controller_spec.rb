@@ -14,7 +14,7 @@ describe UsersController do
       end
 
       it "raises an error for anon when profiles are hidden" do
-        SiteSetting.stubs(:hide_user_profiles_from_public).returns(true)
+        SiteSetting.hide_user_profiles_from_public = true
         xhr :get, :show, username: user.username, format: :json
         expect(response).not_to be_success
       end
@@ -155,21 +155,13 @@ describe UsersController do
           put :perform_account_activation, token: 'asdfasdf'
         end
 
-        it 'returns success' do
+        it 'correctly logs on user' do
           expect(response).to be_success
-        end
-
-        it "doesn't set an error" do
           expect(flash[:error]).to be_blank
-        end
-
-        it 'logs in as the user' do
           expect(session[:current_user_id]).to be_present
-        end
-
-        it "doesn't set @needs_approval" do
           expect(assigns[:needs_approval]).to be_blank
         end
+
       end
 
       context 'user is not approved' do
@@ -218,8 +210,8 @@ describe UsersController do
       it 'disallows login' do
         expect(assigns[:error]).to be_present
         expect(session[:current_user_id]).to be_blank
-        expect(assigns[:invalid_token]).to eq(nil)
         expect(response).to be_success
+        expect(response).to render_template(layout: 'no_ember')
       end
     end
 
@@ -231,36 +223,77 @@ describe UsersController do
       it 'disallows login' do
         expect(assigns[:error]).to be_present
         expect(session[:current_user_id]).to be_blank
-        expect(assigns[:invalid_token]).to eq(true)
         expect(response).to be_success
+        expect(response).to render_template(layout: 'no_ember')
       end
     end
 
     context 'valid token' do
-      it 'returns success' do
-        user = Fabricate(:user, auth_token: SecureRandom.hex(16))
-        token = user.email_tokens.create(email: user.email).token
+      context 'when rendered' do
+        render_views
 
-        old_token = user.auth_token
+        it 'renders referrer never on get requests' do
+          user = Fabricate(:user)
+          token = user.email_tokens.create(email: user.email).token
+          get :password_reset, token: token
+
+          expect(response.body).to include('<meta name="referrer" content="never">')
+        end
+      end
+
+      it 'returns success' do
+        user = Fabricate(:user)
+        user_auth_token = UserAuthToken.generate!(user_id: user.id)
+        token = user.email_tokens.create(email: user.email).token
 
         get :password_reset, token: token
         put :password_reset, token: token, password: 'hg9ow8yhg98o'
+
         expect(response).to be_success
         expect(assigns[:error]).to be_blank
 
         user.reload
-        expect(user.auth_token).to_not eq old_token
-        expect(user.auth_token.length).to eq 32
+
+        expect(session["password-#{token}"]).to be_blank
+
+        expect(UserAuthToken.where(id: user_auth_token.id).count).to eq(0)
+      end
+
+      it 'disallows double password reset' do
+        user = Fabricate(:user)
+        token = user.email_tokens.create(email: user.email).token
+
+        get :password_reset, token: token
+        put :password_reset, token: token, password: 'hg9ow8yHG32O'
+        put :password_reset, token: token, password: 'test123987AsdfXYZ'
+
+        user.reload
+        expect(user.confirm_password?('hg9ow8yHG32O')).to eq(true)
+
+        # logged in now
+        expect(user.user_auth_tokens.count).to eq(1)
+      end
+
+      it "redirects to the wizard if you're the first admin" do
+        user = Fabricate(:admin)
+        token = user.email_tokens.create(email: user.email).token
+        get :password_reset, token: token
+        put :password_reset, token: token, password: 'hg9ow8yhg98oadminlonger'
+        expect(response).to be_redirect
       end
 
       it "doesn't invalidate the token when loading the page" do
-        user = Fabricate(:user, auth_token: SecureRandom.hex(16))
+        user = Fabricate(:user)
+        user_token = UserAuthToken.generate!(user_id: user.id)
+
         email_token = user.email_tokens.create(email: user.email)
 
         get :password_reset, token: email_token.token
 
         email_token.reload
+
         expect(email_token.confirmed).to eq(false)
+        expect(UserAuthToken.where(id: user_token.id).count).to eq(1)
       end
     end
 
@@ -289,7 +322,7 @@ describe UsersController do
       end
 
       it "doesn't log in the user when not approved" do
-        SiteSetting.expects(:must_approve_users?).returns(true)
+        SiteSetting.must_approve_users = true
         put :password_reset, token: token, password: 'ksjafh928r'
         expect(assigns(:user).errors).to be_blank
         expect(session[:current_user_id]).to be_blank
@@ -377,7 +410,7 @@ describe UsersController do
     before do
       UsersController.any_instance.stubs(:honeypot_value).returns(nil)
       UsersController.any_instance.stubs(:challenge_value).returns(nil)
-      SiteSetting.stubs(:allow_new_registrations).returns(true)
+      SiteSetting.allow_new_registrations = true
       @user = Fabricate.build(:user)
       @user.password = "strongpassword"
     end
@@ -395,7 +428,7 @@ describe UsersController do
 
     context 'when creating a user' do
       it 'sets the user locale to I18n.locale' do
-        SiteSetting.stubs(:default_locale).returns('en')
+        SiteSetting.default_locale = 'en'
         I18n.stubs(:locale).returns(:fr)
         post_user
         expect(User.find_by(username: @user.username).locale).to eq('fr')
@@ -405,14 +438,14 @@ describe UsersController do
     context 'when creating a non active user (unconfirmed email)' do
 
       it 'returns a 500 when local logins are disabled' do
-        SiteSetting.expects(:enable_local_logins).returns(false)
+        SiteSetting.enable_local_logins = false
         post_user
 
         expect(response.status).to eq(500)
       end
 
       it 'returns an error when new registrations are disabled' do
-        SiteSetting.stubs(:allow_new_registrations).returns(false)
+        SiteSetting.allow_new_registrations = false
         post_user
         json = JSON.parse(response.body)
         expect(json['success']).to eq(false)
@@ -432,7 +465,7 @@ describe UsersController do
       end
 
       context "and 'must approve users' site setting is enabled" do
-        before { SiteSetting.expects(:must_approve_users).returns(true) }
+        before { SiteSetting.must_approve_users = true }
 
         it 'does not enqueue an email' do
           Jobs.expects(:enqueue).never
@@ -561,8 +594,10 @@ describe UsersController do
       end
 
       it 'returns 500 status when new registrations are disabled' do
-        SiteSetting.stubs(:allow_new_registrations).returns(false)
+        SiteSetting.allow_new_registrations = false
+
         post_user
+
         json = JSON.parse(response.body)
         expect(json['success']).to eq(false)
         expect(json['message']).to be_present
@@ -570,19 +605,17 @@ describe UsersController do
 
       context 'authentication records for' do
 
-        before do
-          SiteSetting.expects(:must_approve_users).returns(true)
-        end
-
         it 'should create twitter user info if required' do
-          SiteSetting.stubs(:enable_twitter_logins?).returns(true)
+          SiteSetting.must_approve_users = true
+          SiteSetting.enable_twitter_logins = true
           twitter_auth = { twitter_user_id: 42, twitter_screen_name: "bruce" }
           auth = session[:authentication] = {}
           auth[:authenticator_name] = 'twitter'
           auth[:extra_data] = twitter_auth
-          TwitterUserInfo.expects(:create)
 
           post_user
+
+          expect(TwitterUserInfo.count).to eq(1)
         end
       end
     end
@@ -643,7 +676,7 @@ describe UsersController do
     end
 
     context "when 'invite only' setting is enabled" do
-      before { SiteSetting.expects(:invite_only?).returns(true) }
+      before { SiteSetting.invite_only = true }
 
       let(:create_params) {{
         name: @user.name,
@@ -719,7 +752,7 @@ describe UsersController do
       context "with values for the fields" do
         let(:create_params) { {
           name: @user.name,
-          password: 'watwatwatwat',
+          password: 'suChS3cuRi7y',
           username: @user.username,
           email: @user.email,
           user_fields: {
@@ -769,7 +802,7 @@ describe UsersController do
       context "without values for the fields" do
         let(:create_params) { {
           name: @user.name,
-          password: 'watwatwatwat',
+          password: 'suChS3cuRi7y',
           username: @user.username,
           email: @user.email,
         } }
@@ -1297,7 +1330,7 @@ describe UsersController do
     let(:user)  { Fabricate :user, username: "joecabot", name: "Lawrence Tierney" }
 
     before do
-      ActiveRecord::Base.observers.enable :all
+      SearchIndexer.enable
       Fabricate :post, user: user, topic: topic
     end
 
@@ -1355,7 +1388,7 @@ describe UsersController do
 
     context "when `enable_names` is false" do
       before do
-        SiteSetting.stubs(:enable_names?).returns(false)
+        SiteSetting.enable_names = false
       end
 
       it "returns names" do
@@ -1425,13 +1458,13 @@ describe UsersController do
       end
 
       it "raises an error when sso_overrides_avatar is disabled" do
-        SiteSetting.stubs(:sso_overrides_avatar).returns(true)
+        SiteSetting.sso_overrides_avatar = true
         xhr :put, :pick_avatar, username: user.username, upload_id: upload.id, type: "custom"
         expect(response).to_not be_success
       end
 
       it "raises an error when selecting the custom/uploaded avatar and allow_uploaded_avatars is disabled" do
-        SiteSetting.stubs(:allow_uploaded_avatars).returns(false)
+        SiteSetting.allow_uploaded_avatars = false
         xhr :put, :pick_avatar, username: user.username, upload_id: upload.id, type: "custom"
         expect(response).to_not be_success
       end
@@ -1593,6 +1626,9 @@ describe UsersController do
 
     let(:user) { Fabricate(:user) }
     let(:group) { Fabricate(:group, name: "Discourse") }
+    let(:topic) { Fabricate(:topic) }
+    let(:allowed_user) { Fabricate(:user) }
+    let(:private_topic) { Fabricate(:private_message_topic, user: allowed_user) }
 
     it "finds the user" do
       xhr :get, :is_local_username, username: user.username
@@ -1621,6 +1657,38 @@ describe UsersController do
       expect(response).to be_success
       json = JSON.parse(response.body)
       expect(json["valid"].size).to eq(0)
+    end
+
+    it "returns user who cannot see topic" do
+      Guardian.any_instance.expects(:can_see?).with(topic).returns(false)
+      xhr :get, :is_local_username, usernames: [user.username], topic_id: topic.id
+      expect(response).to be_success
+      json = JSON.parse(response.body)
+      expect(json["cannot_see"].size).to eq(1)
+    end
+
+    it "never returns a user who can see the topic" do
+      Guardian.any_instance.expects(:can_see?).with(topic).returns(true)
+      xhr :get, :is_local_username, usernames: [user.username], topic_id: topic.id
+      expect(response).to be_success
+      json = JSON.parse(response.body)
+      expect(json["cannot_see"].size).to eq(0)
+    end
+
+    it "returns user who cannot see a private topic" do
+      Guardian.any_instance.expects(:can_see?).with(private_topic).returns(false)
+      xhr :get, :is_local_username, usernames: [user.username], topic_id: private_topic.id
+      expect(response).to be_success
+      json = JSON.parse(response.body)
+      expect(json["cannot_see"].size).to eq(1)
+    end
+
+    it "never returns a user who can see the topic" do
+      Guardian.any_instance.expects(:can_see?).with(private_topic).returns(true)
+      xhr :get, :is_local_username, usernames: [allowed_user.username], topic_id: private_topic.id
+      expect(response).to be_success
+      json = JSON.parse(response.body)
+      expect(json["cannot_see"].size).to eq(0)
     end
 
   end

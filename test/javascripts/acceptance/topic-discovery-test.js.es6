@@ -4,6 +4,7 @@ acceptance("Topic Discovery");
 test("Visit Discovery Pages", () => {
   visit("/");
   andThen(() => {
+    ok($('body.navigation-topics').length, "has the default navigation");
     ok(exists(".topic-list"), "The list of topics was rendered");
     ok(exists('.topic-list .topic-list-item'), "has topics");
   });
@@ -17,6 +18,7 @@ test("Visit Discovery Pages", () => {
 
   visit("/categories");
   andThen(() => {
+    ok($('body.navigation-categories').length, "has the body class");
     ok($('body.category-bug').length === 0, "removes the custom category class");
     ok(exists('.category'), "has a list of categories");
     ok($('body.categories-list').length, "has a custom class to indicate categories");

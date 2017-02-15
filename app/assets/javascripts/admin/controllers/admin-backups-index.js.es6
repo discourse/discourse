@@ -1,19 +1,21 @@
+import DiscourseURL from 'discourse/lib/url';
 import { ajax } from 'discourse/lib/ajax';
-export default Ember.ArrayController.extend({
-  needs: ["adminBackups"],
-  status: Ember.computed.alias("controllers.adminBackups"),
+
+export default Ember.Controller.extend({
+  adminBackups: Ember.inject.controller(),
+  status: Ember.computed.alias('adminBackups.model'),
 
   uploadLabel: function() { return I18n.t("admin.backups.upload.label"); }.property(),
 
   restoreTitle: function() {
-    if (!this.get('status.model.allowRestore')) {
+    if (!this.get('status.allowRestore')) {
       return "admin.backups.operations.restore.is_disabled";
-    } else if (this.get("status.model.isOperationRunning")) {
+    } else if (this.get("status.isOperationRunning")) {
       return "admin.backups.operations.is_running";
     } else {
       return "admin.backups.operations.restore.title";
     }
-  }.property("status.model.{allowRestore,isOperationRunning}"),
+  }.property("status.{allowRestore,isOperationRunning}"),
 
   actions: {
 
@@ -34,8 +36,11 @@ export default Ember.ArrayController.extend({
       } else {
         this._toggleReadOnlyMode(false);
       }
-    }
+    },
 
+    download(backup) {
+      DiscourseURL.redirectTo(backup.get('link'));
+    }
   },
 
   _toggleReadOnlyMode(enable) {

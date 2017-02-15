@@ -1,10 +1,11 @@
 import UserBadge from 'discourse/models/user-badge';
 
-export default Ember.ArrayController.extend({
-  needs: ["adminUser"],
-  user: Em.computed.alias('controllers.adminUser.model'),
-  sortProperties: ['granted_at'],
-  sortAscending: false,
+export default Ember.Controller.extend({
+  adminUser: Ember.inject.controller(),
+  user: Ember.computed.alias('adminUser.model'),
+
+  sortedBadges: Ember.computed.sort('model', 'badgeSortOrder'),
+  badgeSortOrder: ['granted_at:desc'],
 
   groupedBadges: function(){
     const allBadges = this.get('model');
@@ -38,8 +39,6 @@ export default Ember.ArrayController.extend({
     });
 
     return _(expanded).sortBy(group => group.granted_at).reverse().value();
-
-
   }.property('model', 'model.[]', 'model.expandedBadges.[]'),
 
   /**
@@ -80,22 +79,15 @@ export default Ember.ArrayController.extend({
       model.get('expandedBadges').pushObject(userBadge.badge.id);
     },
 
-    /**
-      Grant the selected badge to the user.
-
-      @method grantBadge
-      @param {Integer} badgeId id of the badge we want to grant.
-    **/
-    grantBadge: function(badgeId) {
-      var self = this;
-      UserBadge.grant(badgeId, this.get('user.username'), this.get('badgeReason')).then(function(userBadge) {
-        self.set('badgeReason', '');
-        self.pushObject(userBadge);
-        Ember.run.next(function() {
+    grantBadge(badgeId) {
+      UserBadge.grant(badgeId, this.get('user.username'), this.get('badgeReason')).then(userBadge => {
+        this.set('badgeReason', '');
+        this.get('model').pushObject(userBadge);
+        Ember.run.next(() => {
           // Update the selected badge ID after the combobox has re-rendered.
-          var newSelectedBadge = self.get('grantableBadges')[0];
+          const newSelectedBadge = this.get('grantableBadges')[0];
           if (newSelectedBadge) {
-            self.set('selectedBadgeId', newSelectedBadge.get('id'));
+            this.set('selectedBadgeId', newSelectedBadge.get('id'));
           }
         });
       }, function() {
@@ -104,12 +96,11 @@ export default Ember.ArrayController.extend({
       });
     },
 
-    revokeBadge: function(userBadge) {
-      var self = this;
-      return bootbox.confirm(I18n.t("admin.badges.revoke_confirm"), I18n.t("no_value"), I18n.t("yes_value"), function(result) {
+    revokeBadge(userBadge) {
+      return bootbox.confirm(I18n.t("admin.badges.revoke_confirm"), I18n.t("no_value"), I18n.t("yes_value"), result => {
         if (result) {
-          userBadge.revoke().then(function() {
-            self.get('model').removeObject(userBadge);
+          userBadge.revoke().then(() => {
+            this.get('model').removeObject(userBadge);
           });
         }
       });

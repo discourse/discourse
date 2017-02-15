@@ -1,4 +1,9 @@
+import { mapRoutes } from 'discourse/mapping-router';
+
 moduleFor("controller:avatar-selector", "controller:avatar-selector", {
+  setup() {
+    this.registry.register('router:main', mapRoutes());
+  },
   needs: ['controller:modal']
 });
 

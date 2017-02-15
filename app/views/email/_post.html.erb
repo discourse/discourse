@@ -8,7 +8,9 @@
               <img src="<%= post.user.small_avatar_url %>" title="<%= post.user.username%>">
             </td>
             <td>
+              <%- if show_username_on_post(post) %>
               <a class="username" href="<%=Discourse.base_url%>/users/<%= post.user.username_lower%>" target="_blank"><%= post.user.username %></a>
+              <% end %>
               <%- if show_name_on_post(post) %>
                 <a class="user-name" href="<%=Discourse.base_url%>/users/<%= post.user.username_lower%>" target="_blank"><%= post.user.name %></a>
               <% end %>

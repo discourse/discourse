@@ -1,0 +1,45 @@
+<table>
+  <tr>
+    <th width="55%">{{i18n 'admin.backups.columns.filename'}}</th>
+    <th width="10%">{{i18n 'admin.backups.columns.size'}}</th>
+    <th>
+      <div class="pull-right">
+        {{resumable-upload target="/admin/backups/upload" success="uploadSuccess" error="uploadError" uploadText=uploadLabel title="admin.backups.upload.title"}}
+        {{#if site.isReadOnly}}
+          {{d-button icon="eye" action="toggleReadOnlyMode" disabled=status.isOperationRunning title="admin.backups.read_only.disable.title" label="admin.backups.read_only.disable.label"}}
+        {{else}}
+          {{d-button icon="eye" action="toggleReadOnlyMode" disabled=status.isOperationRunning title="admin.backups.read_only.enable.title" label="admin.backups.read_only.enable.label"}}
+        {{/if}}
+      </div>
+    </th>
+  </tr>
+  {{#each model as |backup|}}
+    <tr>
+      <td>{{backup.filename}}</td>
+      <td>{{human-size backup.size}}</td>
+      <td>
+        <div class="pull-right">
+          {{d-button class="download"
+                     action="download"
+                     actionParam=backup
+                     icon="download"
+                     title="admin.backups.operations.download.title"
+                     label="admin.backups.operations.download.label"}}
+          {{#if status.isOperationRunning}}
+            {{d-button icon="trash-o" action="destroyBackup" actionParam=backup class="btn-danger" disabled="true" title="admin.backups.operations.is_running"}}
+            {{d-button icon="play" action="startRestore" actionParam=backup disabled=status.restoreDisabled title=restoreTitle label="admin.backups.operations.restore.label"}}
+          {{else}}
+            {{d-button icon="trash-o" action="destroyBackup" actionParam=backup class="btn-danger" title="admin.backups.operations.destroy.title"}}
+            {{d-button icon="play" action="startRestore" actionParam=backup disabled=status.restoreDisabled title=restoreTitle label="admin.backups.operations.restore.label"}}
+          {{/if}}
+        </div>
+      </td>
+    </tr>
+  {{else}}
+    <tr>
+      <td>{{i18n 'admin.backups.none'}}</td>
+      <td></td>
+      <td></td>
+    </tr>
+  {{/each}}
+</table>

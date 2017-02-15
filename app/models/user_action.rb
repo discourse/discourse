@@ -18,6 +18,8 @@ class UserAction < ActiveRecord::Base
   NEW_PRIVATE_MESSAGE = 12
   GOT_PRIVATE_MESSAGE = 13
   PENDING = 14
+  SOLVED = 15
+  ASSIGNED = 16
 
   ORDER = Hash[*[
     GOT_PRIVATE_MESSAGE,
@@ -31,7 +33,9 @@ class UserAction < ActiveRecord::Base
     MENTION,
     QUOTE,
     BOOKMARK,
-    EDIT
+    EDIT,
+    SOLVED,
+    ASSIGNED,
   ].each_with_index.to_a.flatten]
 
   # note, this is temporary until we upgrade to rails 4
@@ -275,7 +279,9 @@ SQL
       MessageBus.publish("/user/#{hash[:user_id]}", {user_action_id: action.id, remove: true})
     end
 
-    update_like_count(hash[:user_id], hash[:action_type], -1)
+    if !Topic.where(id: hash[:target_topic_id], archetype: Archetype.private_message).exists?
+      update_like_count(hash[:user_id], hash[:action_type], -1)
+    end
   end
 
   def self.synchronize_target_topic_ids(post_ids = nil)
@@ -350,8 +356,24 @@ SQL
       builder.where('a.action_type <> :pending', pending: UserAction::PENDING)
     end
 
-    if !guardian.can_see_private_messages?(user_id) || ignore_private_messages
-      builder.where("t.archetype != :archetype", archetype: Archetype::private_message)
+    if !guardian.can_see_private_messages?(user_id) || ignore_private_messages || !guardian.user
+      builder.where("t.archetype <> :private_message", private_message: Archetype::private_message)
+    else
+      unless guardian.is_admin?
+        sql = <<~SQL
+        t.archetype <> :private_message OR
+        EXISTS (
+          SELECT 1 FROM topic_allowed_users tu WHERE tu.topic_id = t.id AND tu.user_id = :current_user_id
+        ) OR
+        EXISTS (
+          SELECT 1 FROM topic_allowed_groups tg WHERE tg.topic_id = t.id AND tg.group_id IN (
+            SELECT group_id FROM group_users gu WHERE gu.user_id = :current_user_id
+          )
+        )
+        SQL
+
+        builder.where(sql, private_message: Archetype::private_message, current_user_id: guardian.user.id)
+      end
     end
 
     unless guardian.is_admin?

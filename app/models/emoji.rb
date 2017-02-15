@@ -66,6 +66,7 @@ class Emoji
   def self.create_for(file, name)
     extension = File.extname(file.original_filename)
     path = "#{Emoji.base_directory}/#{name}#{extension}"
+    full_path = "#{Rails.root}/#{path}"
 
     # store the emoji
     FileUtils.mkdir_p(Pathname.new(path).dirname)
@@ -73,7 +74,7 @@ class Emoji
     # clear the cache
     Emoji.clear_cache
     # launch resize job
-    Jobs.enqueue(:resize_emoji, path: path)
+    Jobs.enqueue(:resize_emoji, path: full_path)
     # return created emoji
     Emoji[name]
   end
@@ -171,6 +172,19 @@ class Emoji
     @unicode_replacements["\u{2665}"] = 'heart'
 
     @unicode_replacements
+  end
+
+  def self.lookup_unicode(name)
+    @reverse_map ||= begin
+      map = {}
+      db['emojis'].each do |e|
+        next if e['name'] == 'tm'
+        code = replacement_code(e['code'])
+        map[e['name']] = code if code
+      end
+      map
+    end
+    @reverse_map[name]
   end
 
   def self.unicode_replacements_json

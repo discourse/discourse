@@ -1,3 +1,5 @@
+require_dependency 'slug'
+
 class Badge < ActiveRecord::Base
   # NOTE: These badge ids are not in order! They are grouped logically.
   #       When picking an id, *search* for it.
@@ -119,6 +121,10 @@ class Badge < ActiveRecord::Base
     }
   end
 
+  def awarded_for_trust_level?
+    id <= 4
+  end
+
   def reset_grant_count!
     self.grant_count = UserBadge.where(badge_id: id).count
     save!
@@ -129,8 +135,10 @@ class Badge < ActiveRecord::Base
   end
 
   def default_icon=(val)
-    self.icon ||= val
-    self.icon = val if self.icon = "fa-certificate"
+    unless self.image
+      self.icon ||= val
+      self.icon = val if self.icon = "fa-certificate"
+    end
   end
 
   def default_name=(val)
@@ -206,6 +214,7 @@ SQL
   def i18n_name
     self.name.downcase.tr(' ', '_')
   end
+
 end
 
 # == Schema Information

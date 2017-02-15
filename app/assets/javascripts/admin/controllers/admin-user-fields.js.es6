@@ -6,12 +6,8 @@ export default Ember.Controller.extend({
   fieldTypes: null,
   createDisabled: Em.computed.gte('model.length', MAX_FIELDS),
 
-  arrangedContent: function() {
-    return Ember.ArrayProxy.extend(Ember.SortableMixin).create({
-      sortProperties: ['position'],
-      content: this.get('model')
-    });
-  }.property('model'),
+  fieldSortOrder: ['position'],
+  sortedFields: Ember.computed.sort('model', 'fieldSortOrder'),
 
   actions: {
     createField() {
@@ -20,9 +16,9 @@ export default Ember.Controller.extend({
     },
 
     moveUp(f) {
-      const idx = this.get('arrangedContent').indexOf(f);
+      const idx = this.get('sortedFields').indexOf(f);
       if (idx) {
-        const prev = this.get('arrangedContent').objectAt(idx-1);
+        const prev = this.get('sortedFields').objectAt(idx-1);
         const prevPos = prev.get('position');
 
         prev.update({ position: f.get('position') });
@@ -31,9 +27,9 @@ export default Ember.Controller.extend({
     },
 
     moveDown(f) {
-      const idx = this.get('arrangedContent').indexOf(f);
+      const idx = this.get('sortedFields').indexOf(f);
       if (idx > -1) {
-        const next = this.get('arrangedContent').objectAt(idx+1);
+        const next = this.get('sortedFields').objectAt(idx+1);
         const nextPos = next.get('position');
 
         next.update({ position: f.get('position') });

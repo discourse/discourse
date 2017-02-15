@@ -39,10 +39,15 @@ class Users::OmniauthCallbacksController < ApplicationController
     @auth_result = authenticator.after_authenticate(auth)
 
     origin = request.env['omniauth.origin']
+    if cookies[:destination_url].present?
+      origin = cookies[:destination_url]
+      cookies.delete(:destination_url)
+    end
+
     if origin.present?
-      parsed = URI.parse(@origin) rescue nil
+      parsed = URI.parse(origin) rescue nil
       if parsed
-        @origin = parsed.path
+        @origin = "#{parsed.path}?#{parsed.query}"
       end
     end
 
@@ -57,7 +62,8 @@ class Users::OmniauthCallbacksController < ApplicationController
       @auth_result.authenticator_name = authenticator.name
       complete_response_data
 
-      if provider && provider.full_screen_login
+      if (provider && provider.full_screen_login) || cookies['fsl']
+        cookies.delete('fsl')
         cookies['_bypass_cache'] = true
         flash[:authentication_data] = @auth_result.to_client_hash.to_json
         redirect_to @origin

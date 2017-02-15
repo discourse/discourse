@@ -1,0 +1,86 @@
+{{#link-to 'adminWebHooks' class="go-back"}}
+  {{fa-icon 'arrow-left'}}
+  {{i18n 'admin.web_hooks.go_back'}}
+{{/link-to}}
+
+<div class='web-hook-container'>
+  <p>{{i18n 'admin.web_hooks.detailed_instruction'}}</p>
+  <form class='web-hook form-horizontal'>
+    <div>
+      <label for='payload-url'>{{i18n 'admin.web_hooks.payload_url'}}</label>
+      {{text-field name="payload-url" value=model.payload_url placeholderKey="admin.web_hooks.payload_url_placeholder"}}
+      {{input-tip validation=urlValidation}}
+    </div>
+
+    <div>
+      <label for='content-type'>{{i18n 'admin.web_hooks.content_type'}}</label>
+      {{combo-box content=contentTypes
+                  name="content-type"
+                  nameProperty="name"
+                  valueAttribute="id"
+                  value=model.content_type}}
+    </div>
+
+    <div>
+      <label for='secret'>{{i18n 'admin.web_hooks.secret'}}</label>
+      {{text-field name="secret" value=model.secret placeholderKey="admin.web_hooks.secret_placeholder"}}
+      {{input-tip validation=secretValidation}}
+    </div>
+
+    <div class="cbox10">
+      <label>{{i18n 'admin.web_hooks.event_chooser'}}</label>
+      <div>
+        {{radio-button class="subscription-choice" name="subscription-choice" value="individual" selection=model.webHookType}}
+        {{i18n 'admin.web_hooks.individual_event'}}
+        {{input-tip validation=eventTypeValidation}}
+      </div>
+      {{#unless model.wildcard_web_hook}}
+        <div class="event-selector">
+          {{#each eventTypes as |type|}}
+            {{admin-web-hook-event-chooser type=type model=model.web_hook_event_types}}
+          {{/each}}
+        </div>
+      {{/unless}}
+      <div>
+        {{radio-button class="subscription-choice" name="subscription-choice" value="wildcard" selection=model.webHookType}}
+        {{i18n 'admin.web_hooks.wildcard_event'}}
+      </div>
+    </div>
+
+    <div class='filters'>
+      <div>
+        <label>{{fa-icon 'circle' class='tracking'}}{{i18n 'admin.web_hooks.categories_filter'}}</label>
+        {{category-selector categories=model.categories blacklist=model.categories}}
+        <div class="instructions">{{i18n 'admin.web_hooks.categories_filter_instructions'}}</div>
+      </div>
+      <div>
+        <label>{{fa-icon 'circle' class='tracking'}}{{i18n 'admin.web_hooks.groups_filter'}}</label>
+        {{group-selector groupNames=model.groupsFilterInName groupFinder=model.groupFinder}}
+        <div class="instructions">{{i18n 'admin.web_hooks.groups_filter_instructions'}}</div>
+      </div>
+    </div>
+
+    <div>
+      {{input type="checkbox" name="verify_certificate" checked=model.verify_certificate}} {{i18n 'admin.web_hooks.verify_certificate'}}
+    </div>
+    <div>
+      <div>
+        {{input type="checkbox" name="active" checked=model.active}} {{i18n 'admin.web_hooks.active'}}
+      </div>
+      {{#if model.active}}
+        <div class="instructions">{{i18n 'admin.web_hooks.active_notice'}}</div>
+      {{/if}}
+    </div>
+  </form>
+
+  <div class='controls'>
+    <button class='btn btn-default' {{action 'save'}} disabled={{saveButtonDisabled}}>{{saveButtonText}}</button>
+    {{#unless model.isNew}}
+      {{d-button class="btn-danger" label="admin.web_hooks.destroy" action="destroy"}}
+      {{#link-to 'adminWebHooks.showEvents' model.id class="btn"}}
+        {{i18n 'admin.web_hooks.events.go_events'}}
+      {{/link-to}}
+    {{/unless}}
+    <span class='saving'>{{savingStatus}}</span>
+  </div>
+</div>

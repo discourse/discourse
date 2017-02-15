@@ -56,7 +56,8 @@ class TopicViewSerializer < ApplicationSerializer
              :chunk_size,
              :bookmarked,
              :message_archived,
-             :tags
+             :tags,
+             :featured_link
 
   # TODO: Split off into proper object / serializer
   def details
@@ -114,6 +115,7 @@ class TopicViewSerializer < ApplicationSerializer
     result[:can_recover] = true if scope.can_recover_topic?(object.topic)
     result[:can_remove_allowed_users] = true if scope.can_remove_allowed_users?(object.topic)
     result[:can_invite_to] = true if scope.can_invite_to?(object.topic)
+    result[:can_invite_via_email] = true if scope.can_invite_via_email?(object.topic)
     result[:can_create_post] = true if scope.can_create?(Post, object.topic)
     result[:can_reply_as_new_topic] = true if scope.can_reply_as_new_topic?(object.topic)
     result[:can_flag_topic] = actions_summary.any? { |a| a[:can_act] }
@@ -243,8 +245,17 @@ class TopicViewSerializer < ApplicationSerializer
   def include_tags?
     SiteSetting.tagging_enabled
   end
+
   def tags
     object.topic.tags.map(&:name)
+  end
+
+  def include_featured_link?
+    SiteSetting.topic_featured_link_enabled
+  end
+
+  def featured_link
+    object.topic.featured_link
   end
 
 end

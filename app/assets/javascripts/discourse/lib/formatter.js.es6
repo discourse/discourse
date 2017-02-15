@@ -74,7 +74,7 @@ export function toTitleCase(str) {
 
 export function longDate(dt) {
   if (!dt) return;
-  return moment(dt).longDate();
+  return moment(dt).format(I18n.t("dates.long_with_year"));
 }
 
 // suppress year, if current year
@@ -264,4 +264,21 @@ export function number(val) {
     return I18n.t("number.short.thousands", {number: formattedNumber});
   }
   return val.toString();
+}
+
+export function ensureJSON(json) {
+  return typeof json === 'string' ? JSON.parse(json) : json;
+}
+
+export function plainJSON(val) {
+  let json = ensureJSON(val);
+  let headers = '';
+  Object.keys(json).forEach(k => {
+    headers += `${k}: ${json[k]}\n`;
+  });
+  return headers;
+}
+
+export function prettyJSON(json) {
+  return JSON.stringify(ensureJSON(json), null, 2);
 }

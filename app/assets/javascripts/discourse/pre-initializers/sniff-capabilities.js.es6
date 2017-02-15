@@ -1,4 +1,4 @@
-/*global Modernizr:true*/
+/*global Modernizr:true safari:true*/
 
 // Initializes an object that lets us know about our capabilities.
 export default {
@@ -20,7 +20,7 @@ export default {
 
         caps.isOpera = !!window.opera || ua.indexOf(' OPR/') >= 0;
         caps.isFirefox =  typeof InstallTrigger !== 'undefined';
-        caps.isSafari = Object.prototype.toString.call(window.HTMLElement).indexOf('Constructor') > 0;
+        caps.isSafari = Object.prototype.toString.call(window.HTMLElement).indexOf('Constructor') > 0 || (function (p) { return p.toString() === "[object SafariRemoteNotification]"; })(!window['safari'] || safari.pushNotification);
         caps.isChrome = !!window.chrome && !caps.isOpera;
         caps.canPasteImages = caps.isChrome || caps.isFirefox;
       }

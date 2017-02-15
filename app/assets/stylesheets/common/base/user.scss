@@ -213,6 +213,17 @@
     padding: 10px 14px;
     margin: 0 5px 10px 0;
     background: dark-light-diff($primary, $secondary, 90%, -65%);
+
+    &.linked-stat { // This makes the entire "box" (the li) clickable instead of a narrow area.
+      padding: 0;
+      a {
+        padding: 10px 14px;
+        width: 100%;
+        height: 100%;
+        display: block;
+        color: black;
+      }
+    }
   }
 
   li:last-of-type {

@@ -1,0 +1,49 @@
+{{#if categories}}
+  <table class="category-list {{if showTopics 'with-topics'}}">
+    <thead>
+      <tr>
+        <th class="category">{{i18n 'categories.category'}}</th>
+        <th class="topics">{{i18n 'categories.topics'}}</th>
+        {{#if showTopics}}
+          <th class="latest">{{i18n 'categories.latest'}}</th>
+        {{/if}}
+      </tr>
+    </thead>
+    <tbody>
+      {{#each categories as |c|}}
+        <tr data-category-id={{c.id}} class="{{if c.description_excerpt 'has-description' 'no-description'}} {{if c.uploaded_logo.url 'has-logo' 'no-logo'}}">
+          <td class="category" style={{border-color c.color}}>
+            <div>
+              {{category-title-link category=c}}
+              <div class="category-description">
+                {{{c.description_excerpt}}}
+              </div>
+              <div class="clearfix"></div>
+            </div>
+            {{#if c.subcategories}}
+              <div class='subcategories'>
+                {{#each c.subcategories as |s|}}
+                  <span class='subcategory'>
+                    {{category-link s hideParent="true"}}
+                    {{category-unread category=s}}
+                  </span>
+                {{/each}}
+              </div>
+            {{/if}}
+          </td>
+          <td class="topics">
+            <div title={{c.statTitle}}>{{{c.stat}}}</div>
+            {{category-unread category=c tagName="div" class="unread-new"}}
+          </td>
+          {{#if showTopics}}
+            <td class="latest">
+              {{#each c.featuredTopics as |t|}}
+                {{featured-topic topic=t latestTopicOnly=latestTopicOnly}}
+              {{/each}}
+            </td>
+          {{/if}}
+        </tr>
+      {{/each}}
+    </tbody>
+  </table>
+{{/if}}

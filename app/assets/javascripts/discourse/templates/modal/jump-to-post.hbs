@@ -1,0 +1,11 @@
+{{#d-modal-body title="topic.progress.jump_prompt_long"}}
+  {{text-field value=postNumber insert-newline="jump"}}
+  <span class='input-hint-text'>
+    {{i18n "topic.progress.jump_prompt_of" count=topic.postStream.filteredPostsCount}}
+  </span>
+{{/d-modal-body}}
+
+<div class='modal-footer'>
+  {{d-button class="btn-primary" action="jump" label="composer.modal_ok"}}
+  {{d-button class="btn-danger" action="closeModal" label="composer.modal_cancel"}}
+</div>

@@ -1,0 +1,83 @@
+{{#if showAdminButton}}
+  {{topic-admin-menu-button
+    topic=topic
+    openUpwards="true"
+    toggleMultiSelect=toggleMultiSelect
+    deleteTopic=deleteTopic
+    recoverTopic=recoverTopic
+    toggleClosed=toggleClosed
+    toggleArchived=toggleArchived
+    toggleVisibility=toggleVisibility
+    showAutoClose=showAutoClose
+    showFeatureTopic=showFeatureTopic
+    showChangeTimestamp=showChangeTimestamp
+    convertToPublicTopic=convertToPublicTopic
+    convertToPrivateMessage=convertToPrivateMessage}}
+{{/if}}
+
+{{#unless topic.isPrivateMessage}}
+  {{#if site.mobileView}}
+    {{topic-footer-mobile-dropdown topic=topic
+                                   showInvite=showInvite
+                                   showFlagTopic=showFlagTopic}}
+  {{else}}
+    {{d-button class=bookmarkClass
+               title=bookmarkTitle
+               label=bookmarkLabel
+               icon="bookmark"
+               action=toggleBookmark}}
+
+    <button class="btn share" data-share-url={{topic.shareUrl}} title={{i18n "topic.share.help"}}>
+      {{fa-icon "link"}}
+      {{i18n "topic.share.title"}}
+    </button>
+
+    {{#if topic.details.can_flag_topic}}
+      {{d-button class="flag-topic"
+                 title="topic.flag_topic.help"
+                 label="topic.flag_topic.title"
+                 icon="flag"
+                 action=showFlagTopic}}
+    {{/if}}
+
+  {{/if}}
+{{/unless}}
+
+{{#if canInviteTo}}
+  {{d-button class="invite-topic"
+             title="topic.invite_reply.help"
+             label="topic.invite_reply.title"
+             icon="users"
+             action=showInvite
+             disabled=inviteDisabled}}
+{{/if}}
+
+{{#if topic.isPrivateMessage}}
+  {{d-button class="standard"
+             title=archiveTitle
+             label=archiveLabel
+             icon=archiveIcon
+             action=toggleArchiveMessage}}
+{{/if}}
+
+{{plugin-outlet name="topic-footer-main-buttons-before-create"
+                args=(hash topic=topic)
+                connectorTagName="span"}}
+
+{{#if topic.details.can_create_post}}
+  {{d-button class="btn-primary create"
+             icon="reply"
+             action=replyToPost
+             label="topic.reply.title"
+             title="topic.reply.help"}}
+{{/if}}
+
+{{plugin-outlet name="after-topic-footer-main-buttons"
+                args=(hash topic=topic)
+                connectorTagName="span"}}
+
+{{pinned-button topic=topic}}
+{{topic-notifications-button topic=topic}}
+{{plugin-outlet name="after-topic-footer-buttons"
+                args=(hash topic=topic)
+                connectorTagName="span"}}

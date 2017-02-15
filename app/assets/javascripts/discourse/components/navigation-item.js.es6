@@ -1,7 +1,7 @@
 import computed from "ember-addons/ember-computed-decorators";
-import StringBuffer from 'discourse/mixins/string-buffer';
+import { bufferedRender } from 'discourse-common/lib/buffered-render';
 
-export default Ember.Component.extend(StringBuffer, {
+export default Ember.Component.extend(bufferedRender({
   tagName: 'li',
   classNameBindings: ['active', 'content.hasIcon:has-icon'],
   attributeBindings: ['title'],
@@ -26,7 +26,7 @@ export default Ember.Component.extend(StringBuffer, {
            filterMode.indexOf(contentFilterMode) === 0;
   },
 
-  renderString(buffer) {
+  buildBuffer(buffer) {
     const content = this.get('content');
     buffer.push("<a href='" + content.get('href') + "'>");
     if (content.get('hasIcon')) {
@@ -35,4 +35,4 @@ export default Ember.Component.extend(StringBuffer, {
     buffer.push(this.get('content.displayName'));
     buffer.push("</a>");
   }
-});
+}));

@@ -4,9 +4,8 @@ import DiscourseURL from 'discourse/lib/url';
 
 // Modal related to changing the timestamp of posts
 export default Ember.Controller.extend(ModalFunctionality, {
-  needs: ['topic'],
 
-  topicController: Em.computed.alias('controllers.topic'),
+  topicController: Ember.inject.controller('topic'),
   saving: false,
   date: '',
   time: '',

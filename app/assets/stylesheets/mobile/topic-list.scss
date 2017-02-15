@@ -69,7 +69,7 @@
 
   > tbody > tr {
     &.highlighted {
-      background-color: dark-light-choose(scale-color($tertiary, $lightness: 85%), scale-color($tertiary, $lightness: -55%));
+      animation: background-fade-highlight 2.5s ease-out;
     }
   }
 

@@ -153,7 +153,7 @@ $user_card_background: $secondary;
     a.mention {
       text-decoration: none;
     }
-    
+
     .overflow {
       max-height: 60px;
       overflow: hidden;
@@ -172,7 +172,7 @@ $user_card_background: $secondary;
     }
   }
 
-  img.avatar {
+  .user-card-avatar {
     float: left;
     margin-right: 10px;
     margin-top: -53px;

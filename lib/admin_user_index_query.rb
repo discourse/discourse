@@ -79,6 +79,7 @@ class AdminUserIndexQuery
 
   def filter_by_search
     if params[:filter].present?
+      params[:filter].strip!
       if ip = IPAddr.new(params[:filter]) rescue nil
         @query.where('ip_address <<= :ip OR registration_ip_address <<= :ip', ip: ip.to_cidr_s)
       else
@@ -89,7 +90,7 @@ class AdminUserIndexQuery
 
   def filter_by_ip
     if params[:ip].present?
-      @query.where('ip_address = :ip OR registration_ip_address = :ip', ip: params[:ip])
+      @query.where('ip_address = :ip OR registration_ip_address = :ip', ip: params[:ip].strip)
     end
   end
 

@@ -1,4 +1,4 @@
-import { htmlHelper } from 'discourse/lib/helpers';
+import { htmlHelper } from 'discourse-common/lib/helpers';
 
 function renderSpinner(cssClass) {
   var html = "<div class='spinner";

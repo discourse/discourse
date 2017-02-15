@@ -54,7 +54,7 @@ class Search
     posts.each do |post|
       # force indexing
       post.cooked += " "
-      SearchObserver.index(post)
+      SearchIndexer.index(post)
     end
 
     posts = Post.joins(:topic)
@@ -67,7 +67,7 @@ class Search
     posts.each do |post|
       # force indexing
       post.cooked += " "
-      SearchObserver.index(post)
+      SearchIndexer.index(post)
     end
 
     nil
@@ -252,6 +252,10 @@ class Search
     posts.where("topics.posts_count = ?", match.to_i)
   end
 
+  advanced_filter(/min_post_count:(\d+)/) do |posts, match|
+    posts.where("topics.posts_count >= ?", match.to_i)
+  end
+
   advanced_filter(/in:first/) do |posts|
     posts.where("posts.post_number = 1")
   end
@@ -312,15 +316,32 @@ class Search
   end
 
   advanced_filter(/category:(.+)/) do |posts,match|
-    category_ids = Category.where('name ilike ? OR id = ? OR parent_category_id = ?', match, match.to_i, match.to_i).pluck(:id)
+    exact = false
+
+    if match[0] == "="
+      exact = true
+      match = match[1..-1]
+    end
+
+    category_ids = Category.where('slug ilike ? OR name ilike ? OR id = ?',
+                                  match, match, match.to_i).pluck(:id)
     if category_ids.present?
+
+      unless exact
+        category_ids +=
+          Category.where('parent_category_id = ?', category_ids.first).pluck(:id)
+      end
+
       posts.where("topics.category_id IN (?)", category_ids)
     else
       posts.where("1 = 0")
     end
   end
 
-  advanced_filter(/^\#([a-zA-Z0-9\-:]+)/) do |posts,match|
+  advanced_filter(/^\#([a-zA-Z0-9\-:=]+)/) do |posts,match|
+
+    exact = true
+
     slug = match.to_s.split(":")
     if slug[1]
       # sub category
@@ -328,11 +349,26 @@ class Search
       category_id = Category.where(slug: slug[1].downcase, parent_category_id: parent_category_id).pluck(:id).first
     else
       # main category
-      category_id = Category.where(slug: slug[0].downcase, parent_category_id: nil).pluck(:id).first
+      if slug[0][0] == "="
+        slug[0] = slug[0][1..-1]
+      else
+        exact = false
+      end
+
+      category_id = Category.where(slug: slug[0].downcase)
+        .order('case when parent_category_id is null then 0 else 1 end')
+        .pluck(:id)
+        .first
     end
 
     if category_id
-      posts.where("topics.category_id = ?", category_id)
+      category_ids = [category_id]
+
+      unless exact
+        category_ids +=
+          Category.where('parent_category_id = ?', category_id).pluck(:id)
+      end
+      posts.where("topics.category_id IN (?)", category_ids)
     else
       posts.where("topics.id IN (
         SELECT DISTINCT(tt.topic_id)
@@ -653,7 +689,7 @@ class Search
     end
 
     def self.query_locale
-      @query_locale ||= Post.sanitize(Search.long_locale)
+      "'#{Search.long_locale}'"
     end
 
     def query_locale
@@ -663,7 +699,7 @@ class Search
     def self.ts_query(term, locale = nil, joiner = "&")
 
       data = Post.exec_sql("SELECT to_tsvector(:locale, :term)",
-                            locale: locale || long_locale,
+                            locale: 'simple',
                             term: term
                           ).values[0][0]
 

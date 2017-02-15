@@ -1,0 +1,36 @@
+{{#d-modal-body title="user.change_avatar.title" class="avatar-selector"}}
+  <div>
+    <div>
+      {{radio-button id="system-avatar" name="avatar" value="system" selection=selected}}
+      <label class="radio" for="system-avatar">{{bound-avatar-template system_avatar_template "large"}} {{{i18n 'user.change_avatar.letter_based'}}}</label>
+    </div>
+    <div>
+      {{radio-button id="gravatar" name="avatar" value="gravatar" selection=selected}}
+      <label class="radio" for="gravatar">{{bound-avatar-template gravatar_avatar_template "large"}} {{{i18n 'user.change_avatar.gravatar'}}} {{email}}</label>
+      {{d-button action="refreshGravatar" title="user.change_avatar.refresh_gravatar_title" disabled=gravatarRefreshDisabled icon="refresh"}}
+    </div>
+    {{#if allowAvatarUpload}}
+      <div>
+        {{radio-button id="uploaded-avatar" name="avatar" value="uploaded" selection=selected}}
+        <label class="radio" for="uploaded-avatar">
+          {{#if custom_avatar_template}}
+            {{bound-avatar-template custom_avatar_template "large"}}
+            {{i18n 'user.change_avatar.uploaded_avatar'}}
+          {{else}}
+            {{i18n 'user.change_avatar.uploaded_avatar_empty'}}
+          {{/if}}
+        </label>
+        {{avatar-uploader user_id=id
+                          uploadedAvatarTemplate=custom_avatar_template
+                          uploadedAvatarId=custom_avatar_upload_id
+                          uploading=uploading
+                          done="uploadComplete"}}
+      </div>
+    {{/if}}
+  </div>
+{{/d-modal-body}}
+
+<div class="modal-footer">
+  {{d-button action="saveAvatarSelection" class="btn-primary" disabled=uploading label="save"}}
+  <a {{action "closeModal"}}>{{i18n 'cancel'}}</a>
+</div>

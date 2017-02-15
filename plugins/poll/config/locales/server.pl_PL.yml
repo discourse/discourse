@@ -18,10 +18,12 @@ pl_PL:
     default_poll_must_have_less_options:
       one: "Ankieta musi posiadać mniej niż 1 opcję  do wyboru."
       few: "Ankieta musi posiadać co najmniej %{count} pozycje."
+      many: "Ankieta musi posiadać co najmniej %{count} pozycji."
       other: "Ankieta musi posiadać co najmniej %{count} pozycji."
     named_poll_must_have_less_options:
       one: "Ankieta <strong>%{name}</strong> musi posiadać mniej niż 1 opcję."
       few: "Ankieta <strong>%{name}</strong> musi posiadać mniej niż %{count} opcje."
+      many: "Ankieta <strong>%{name}</strong> musi posiadać mniej niż %{count} opcji."
       other: "Ankieta <strong>%{name}</strong> musi posiadać mniej niż %{count} opcji."
     default_poll_must_have_different_options: "Ankieta musi posiadać kilka różnych opcji do wyboru."
     named_poll_must_have_different_options: "Ankieta <strong>%{name}</strong>  musi posiadać kilka różnych opcji do wyboru."

@@ -20,7 +20,12 @@ describe Auth::FacebookAuthenticator do
           }
         },
         "info" => {
-          :email => user.email
+          :email => user.email,
+          "location" => "America",
+          "description" => "bio",
+          "urls" => {
+            "Website" => "https://awesome.com"
+          }
         },
         "uid" => "100"
       }
@@ -28,6 +33,9 @@ describe Auth::FacebookAuthenticator do
       result = authenticator.after_authenticate(hash)
 
       expect(result.user.id).to eq(user.id)
+      expect(result.user.user_profile.website).to eq("https://awesome.com")
+      expect(result.user.user_profile.bio_raw).to eq("bio")
+      expect(result.user.user_profile.location).to eq("America")
     end
 
     it 'can create a proper result for non existing users' do

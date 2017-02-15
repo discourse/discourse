@@ -28,14 +28,5 @@ describe UserActivator do
       expect(user.email_tokens.last.created_at).to be_within_one_second_of(Time.zone.now)
     end
 
-    it "escapes the email in the message" do
-      user = Fabricate(:user, email: '<strike>eviltrout@example.com</strike>')
-      activator = EmailActivator.new(user, nil, nil, nil)
-      msg = activator.activate
-
-      expect(msg).to match(/eviltrout@example.com/)
-      expect(msg).not_to match(/<strike>/)
-    end
-
   end
 end

@@ -1,3 +1,5 @@
+require_dependency "db_helper"
+
 module BackupRestore
 
   class RestoreDisabledError < RuntimeError; end
@@ -112,18 +114,6 @@ module BackupRestore
       @meta_filename = File.join(@tmp_directory, BackupRestore::METADATA_FILE)
       @is_archive = !(@filename =~ /.sql.gz$/)
 
-      # For backwards compatibility
-      @dump_filename =
-        if @is_archive
-          if system("tar --list --file #{@source_filename} #{BackupRestore::OLD_DUMP_FILE}")
-            File.join(@tmp_directory, BackupRestore::OLD_DUMP_FILE)
-          else
-            File.join(@tmp_directory, BackupRestore::DUMP_FILE)
-          end
-        else
-          File.join(@tmp_directory, @filename)
-        end
-
       @logs = []
       @readonly_mode_was_enabled = Discourse.readonly_mode?
     end
@@ -176,7 +166,7 @@ module BackupRestore
 
     def copy_archive_to_tmp_directory
       log "Copying archive to tmp directory..."
-      execute_command("cp '#{@source_filename}' '#{@archive_filename}'", "Failed to copy archive to tmp directory.")
+      execute_command('cp', @source_filename, @archive_filename, failure_message: "Failed to copy archive to tmp directory.")
     end
 
     def unzip_archive
@@ -185,7 +175,7 @@ module BackupRestore
       log "Unzipping archive, this may take a while..."
 
       FileUtils.cd(@tmp_directory) do
-        execute_command("gzip --decompress '#{@archive_filename}'", "Failed to unzip archive.")
+        execute_command('gzip', '--decompress', @archive_filename, failure_message: "Failed to unzip archive.")
       end
     end
 
@@ -193,11 +183,11 @@ module BackupRestore
       log "Extracting metadata file..."
 
       @metadata =
-        if system("tar --list --file #{@source_filename} #{BackupRestore::METADATA_FILE}")
+        if system('tar', '--list', '--file', @tar_filename, BackupRestore::METADATA_FILE)
           FileUtils.cd(@tmp_directory) do
             execute_command(
-              "tar --extract --file '#{@tar_filename}' #{BackupRestore::METADATA_FILE}",
-              "Failed to extract metadata file."
+              'tar', '--extract', '--file', @tar_filename, BackupRestore::METADATA_FILE,
+              failure_message: "Failed to extract metadata file."
             )
           end
 
@@ -226,14 +216,26 @@ module BackupRestore
     end
 
     def extract_dump
+      @dump_filename =
+        if @is_archive
+          # For backwards compatibility
+          if system('tar', '--list', '--file', @tar_filename, BackupRestore::OLD_DUMP_FILE)
+            File.join(@tmp_directory, BackupRestore::OLD_DUMP_FILE)
+          else
+            File.join(@tmp_directory, BackupRestore::DUMP_FILE)
+          end
+        else
+          File.join(@tmp_directory, @filename)
+        end
+
       return unless @is_archive
 
       log "Extracting dump file..."
 
       FileUtils.cd(@tmp_directory) do
         execute_command(
-          "tar --extract --file '#{@tar_filename}' #{File.basename(@dump_filename)}",
-          "Failed to extract dump file."
+          'tar', '--extract', '--file', @tar_filename, File.basename(@dump_filename),
+          failure_message: "Failed to extract dump file."
         )
       end
     end
@@ -292,7 +294,7 @@ module BackupRestore
         "--dbname='#{db_conf.database}'", # connect to database *dbname*
         "--single-transaction",           # all or nothing (also runs COPY commands faster)
         host_argument,                    # the hostname to connect to (if any)
-        port_argument,                # the port to connect to (if any)
+        port_argument,                    # the port to connect to (if any)
         username_argument                 # the username to connect as (if any)
       ].join(" ")
     end
@@ -358,13 +360,33 @@ module BackupRestore
     end
 
     def extract_uploads
-      if system("tar --list --file '#{@tar_filename}' 'uploads'")
+      if system('tar', '--exclude=*/*', '--list', '--file', @tar_filename, 'uploads')
         log "Extracting uploads..."
-        FileUtils.cd(File.join(Rails.root, "public")) do
+
+        FileUtils.cd(@tmp_directory) do
           execute_command(
-            "tar --extract --keep-newer-files --file '#{@tar_filename}' uploads/",
-            "Failed to extract uploads."
+            'tar', '--extract', '--keep-newer-files', '--file', @tar_filename, 'uploads/',
+            failure_message: "Failed to extract uploads."
           )
+        end
+
+        public_uploads_path = File.join(Rails.root, "public")
+
+        FileUtils.cd(public_uploads_path) do
+          FileUtils.mkdir_p("uploads")
+
+          tmp_uploads_path = Dir.glob(File.join(@tmp_directory, "uploads", "*")).first
+          previous_db_name = File.basename(tmp_uploads_path)
+          current_db_name = RailsMultisite::ConnectionManagement.current_db
+
+          execute_command(
+            'rsync', '-avp', "#{tmp_uploads_path}/", "uploads/#{current_db_name}/",
+            failure_message: "Failed to restore uploads."
+          )
+
+          if previous_db_name != current_db_name
+            DbHelper.remap("uploads/#{previous_db_name}", "uploads/#{current_db_name}")
+          end
         end
       end
     end

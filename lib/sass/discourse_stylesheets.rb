@@ -14,7 +14,7 @@ class DiscourseStylesheets
     @cache ||= DistributedCache.new("discourse_stylesheet")
   end
 
-  def self.stylesheet_link_tag(target = :desktop)
+  def self.stylesheet_link_tag(target = :desktop, media = 'all')
 
     tag = cache[target]
 
@@ -24,7 +24,7 @@ class DiscourseStylesheets
       builder = self.new(target)
       builder.compile unless File.exists?(builder.stylesheet_fullpath)
       builder.ensure_digestless_file
-      tag = %[<link href="#{Rails.env.production? ? builder.stylesheet_cdnpath : builder.stylesheet_relpath_no_digest + '?body=1'}" media="all" rel="stylesheet" />]
+      tag = %[<link href="#{Rails.env.production? ? builder.stylesheet_cdnpath : builder.stylesheet_relpath_no_digest + '?body=1'}" media="#{media}" rel="stylesheet" />]
 
       cache[target] = tag
 
@@ -160,7 +160,7 @@ class DiscourseStylesheets
   def digest
     @digest ||= begin
       theme = (cs = ColorScheme.enabled) ? "#{cs.id}-#{cs.version}" : false
-      category_updated = Category.where("background_url IS NOT NULL and background_url != ''").last_updated_at
+      category_updated = Category.where("uploaded_background_id IS NOT NULL").last_updated_at
 
       if theme || category_updated > 0
         Digest::SHA1.hexdigest "#{RailsMultisite::ConnectionManagement.current_db}-#{theme}-#{DiscourseStylesheets.last_file_updated}-#{category_updated}"

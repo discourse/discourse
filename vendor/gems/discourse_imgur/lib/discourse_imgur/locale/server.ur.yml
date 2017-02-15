@@ -1,0 +1,12 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-org/
+
+ur:
+  site_settings:
+    enable_imgur: " اپلوڈنگ کیلئے imgur API فعال کریں، مقامی طور پر فائلوں کو سٹور نہ کریں۔"
+    imgur_client_id: "آپ کی imgur.com کلائنٹ ID، تصویر اّپلوڈ کرنے کے لئے درکار ہے۔"
+    imgur_client_secret: "آپ کا imgur.com کلائنٹ سیکرٹ۔ فی الحالل تصویر اپ لوڈ کرنے کے لئے ضروری نہیں، لیکن مستقبل میں ضرورت پر سکتی ہے۔"

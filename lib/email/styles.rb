@@ -37,25 +37,20 @@ module Email
       @fragment.css('img').each do |img|
         next if img['class'] == 'site-logo'
 
-        if img['class'] == "emoji" || img['src'] =~ /(plugins|images)\/emoji/
-          img['width'] = 20
-          img['height'] = 20
+        if (img['class'] && img['class']['emoji']) || (img['src'] && img['src'][/\/_?emoji\//])
+          img['width'] = img['height'] = 20
         else
           # use dimensions of original iPhone screen for 'too big, let device rescale'
           if img['width'].to_i > 320 or img['height'].to_i > 480
-            img['width'] = 'auto'
-            img['height'] = 'auto'
+            img['width'] = img['height'] = 'auto'
           end
         end
 
-        # ensure all urls are absolute
-        if img['src'] =~ /^\/[^\/]/
-          img['src'] = "#{Discourse.base_url}#{img['src']}"
-        end
-
-        # ensure no schemaless urls
-        if img['src'] && img['src'].starts_with?("//")
-          img['src'] = "#{uri.scheme}:#{img['src']}"
+        if img['src']
+          # ensure all urls are absolute
+          img['src'] = "#{Discourse.base_url}#{img['src']}" if img['src'][/^\/[^\/]/]
+          # ensure no schemaless urls
+          img['src'] = "#{uri.scheme}:#{img['src']}" if img['src'][/^\/\//]
         end
       end
 
@@ -65,6 +60,11 @@ module Email
                    @fragment.css('img.site-logo, img.emoji')
       big_images.each do |img|
         add_styles(img, 'max-width: 100%;') if img['style'] !~ /max-width/
+      end
+
+      # topic featured link
+      @fragment.css('a.topic-featured-link').each do |e|
+        e['style'] = "color:#858585;padding:2px 8px;border:1px solid #e6e6e6;border-radius:2px;box-shadow:0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);"
       end
 
       # attachments
@@ -104,22 +104,33 @@ module Email
 
     def onebox_styles
       # Links to other topics
-      style('aside.quote', 'border-left: 5px solid #e9e9e9; background-color: #f8f8f8; padding: 12px 25px 2px 12px; margin-bottom: 10px;')
-      style('aside.quote blockquote', 'border: 0px; padding: 0; margin: 7px 0; background-color: clear;')
-      style('aside.quote blockquote > p', 'padding: 0;')
+      style('aside.quote', 'padding: 12px 25px 2px 12px; margin-bottom: 10px;')
       style('aside.quote div.info-line', 'color: #666; margin: 10px 0')
-      style('aside.quote .avatar', 'margin-right: 5px; width:20px; height:20px')
+      style('aside.quote .avatar', 'margin-right: 5px; width:20px; height:20px; vertical-align:middle;')
 
       style('blockquote', 'border-left: 5px solid #e9e9e9; background-color: #f8f8f8; margin: 0;')
       style('blockquote > p', 'padding: 1em;')
 
       # Oneboxes
-      style('aside.onebox', "padding: 12px 25px 2px 12px; border-left: 5px solid #bebebe; background: #eee; margin-bottom: 10px;")
-      style('aside.onebox img', "max-height: 80%; max-width: 25%; height: auto; float: left; margin-right: 10px; margin-bottom: 10px")
-      style('aside.onebox h3', "border-bottom: 0")
-      style('aside.onebox .source', "margin-bottom: 8px")
-      style('aside.onebox .source a[href]', "color: #333; font-weight: normal")
-      style('aside.clearfix', "clear: both")
+      style('aside.onebox', "border: 5px solid #e9e9e9; padding: 12px 25px 12px 12px;")
+      style('aside.onebox header a[href]', "color: #222222; text-decoration: none;")
+      style('aside.onebox .onebox-body', "clear: both")
+      style('aside.onebox .onebox-body img', "max-height: 80%; max-width: 20%; height: auto; float: left; margin-right: 10px;")
+      style('aside.onebox .onebox-body h3, aside.onebox .onebox-body h4', "font-size: 1.17em; margin: 10px 0;")
+      style('.onebox-metadata', "color: #919191")
+
+      @fragment.css('aside.quote blockquote > p').each do |p|
+        p['style'] = 'padding: 0;'
+      end
+
+      # Convert all `aside.quote` tags to `blockquote`s
+      @fragment.css('aside.quote').each do |n|
+        original_node = n.dup
+        original_node.search('div.quote-controls').remove
+        blockquote = original_node.css('blockquote').inner_html.strip.start_with?("<p") ? original_node.css('blockquote').inner_html : "<p style='padding: 0;'>#{original_node.css('blockquote').inner_html}</p>"
+        n.inner_html = original_node.css('div.title').inner_html + blockquote
+        n.name = "blockquote"
+      end
 
       # Finally, convert all `aside` tags to `div`s
       @fragment.css('aside, article, header').each do |n|
@@ -129,36 +140,42 @@ module Email
       # iframes can't go in emails, so replace them with clickable links
       @fragment.css('iframe').each do |i|
         begin
-          src_uri = URI(i['src'])
+          # sometimes, iframes are blacklisted...
+          if i["src"].blank?
+            i.remove
+            next
+          end
 
+          src_uri = URI(i['src'])
           # If an iframe is protocol relative, use SSL when displaying it
           display_src = "#{src_uri.scheme || 'https'}://#{src_uri.host}#{src_uri.path}#{src_uri.query.nil? ? '' : '?' + src_uri.query}#{src_uri.fragment.nil? ? '' : '#' + src_uri.fragment}"
           i.replace "<p><a href='#{src_uri.to_s}'>#{CGI.escapeHTML(display_src)}</a><p>"
         rescue URI::InvalidURIError
-          # If the URL is weird, remove it
+          # If the URL is weird, remove the iframe
           i.remove
         end
       end
     end
 
     def format_html
+      style('.with-accent-colors', "background-color: #{SiteSetting.email_accent_bg_color}; color: #{SiteSetting.email_accent_fg_color};")
       style('h4', 'color: #222;')
       style('h3', 'margin: 15px 0 20px 0;')
       style('hr', 'background-color: #ddd; height: 1px; border: 1px;')
-      style('a', 'text-decoration: none; font-weight: bold; color: #006699;')
+      style('a', "text-decoration: none; font-weight: bold; color: #{SiteSetting.email_link_color};")
       style('ul', 'margin: 0 0 0 10px; padding: 0 0 0 20px;')
       style('li', 'padding-bottom: 10px')
-      style('div.digest-post', 'margin-left: 15px; margin-top: -5px; max-width: 694px;')
-      style('div.digest-post h1', 'font-size: 20px;')
       style('div.footer', 'color:#666; font-size:95%; text-align:center; padding-top:15px;')
       style('span.post-count', 'margin: 0 5px; color: #777;')
       style('pre', 'word-wrap: break-word; max-width: 694px;')
       style('code', 'background-color: #f1f1ff; padding: 2px 5px;')
       style('pre code', 'display: block; background-color: #f1f1ff; padding: 5px;')
-      style('.featured-topic a', 'text-decoration: none; font-weight: bold; color: #006699; line-height:1.5em;')
+      style('.featured-topic a', "text-decoration: none; font-weight: bold; color: #{SiteSetting.email_link_color}; line-height:1.5em;")
 
       onebox_styles
       plugin_styles
+
+      style('.post-excerpt img', "max-width: 50%; max-height: 400px;")
     end
 
     # this method is reserved for styles specific to plugin
@@ -177,12 +194,12 @@ module Email
 
     def strip_avatars_and_emojis
       @fragment.search('img').each do |img|
-        if img['src'] =~ /_avatar/
+        if img['src'][/_avatar/]
           img.parent['style'] = "vertical-align: top;" if img.parent.name == 'td'
           img.remove
         end
 
-        if img['title'] && (img['src'] =~ /images\/emoji/ || img['src'] =~ /uploads\/default\/_emoji/)
+        if img['title'] && img['src'][/\/_?emoji\//]
           img.add_previous_sibling(img['title'] || "emoji")
           img.remove
         end

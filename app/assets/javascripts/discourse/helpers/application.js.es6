@@ -1,4 +1,4 @@
-import { registerUnbound } from 'discourse/lib/helpers';
+import { registerUnbound } from 'discourse-common/lib/helpers';
 import { longDate, autoUpdatingRelativeAge, number } from 'discourse/lib/formatter';
 
 const safe = Handlebars.SafeString;
@@ -11,9 +11,9 @@ registerUnbound('number', (orig, params) => {
   orig = parseInt(orig, 10);
   if (isNaN(orig)) { orig = 0; }
 
-  let title = orig;
+  let title = I18n.toNumber(orig, { precision: 0 });
   if (params.numberKey) {
-    title = I18n.t(params.numberKey, { number: orig });
+    title = I18n.t(params.numberKey, { number: title, count: parseInt(orig) });
   }
 
   let classNames = 'number';

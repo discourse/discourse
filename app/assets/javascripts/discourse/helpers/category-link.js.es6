@@ -1,5 +1,5 @@
-import { registerUnbound } from 'discourse/lib/helpers';
-import { iconHTML } from 'discourse/helpers/fa-icon';
+import { registerUnbound } from 'discourse-common/lib/helpers';
+import { iconHTML } from 'discourse-common/helpers/fa-icon';
 
 var get = Em.get,
     escapeExpression = Handlebars.Utils.escapeExpression;

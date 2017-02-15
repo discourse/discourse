@@ -29,7 +29,7 @@ class PostDestroyer
                         pa.post_action_type_id IN (?)
               )", PostActionType.notify_flag_type_ids)
         .each do |post|
-      PostDestroyer.new(Discourse.system_user, post).destroy
+      PostDestroyer.new(Discourse.system_user, post, {context: I18n.t('remove_posts_deleted_by_author')}).destroy
     end
   end
 
@@ -47,6 +47,10 @@ class PostDestroyer
       mark_for_deletion
     end
     DiscourseEvent.trigger(:post_destroyed, @post, @opts, @user)
+
+    if @post.is_first_post? && @post.topic
+      DiscourseEvent.trigger(:topic_destroyed, @post.topic, @user)
+    end
   end
 
   def recover
@@ -60,6 +64,7 @@ class PostDestroyer
     topic.update_statistics
     recover_user_actions
     DiscourseEvent.trigger(:post_recovered, @post, @opts, @user)
+    DiscourseEvent.trigger(:topic_recovered, topic, @user) if @post.is_first_post?
   end
 
   def staff_recovered
@@ -182,7 +187,7 @@ class PostDestroyer
 
   def recover_user_actions
     # TODO: Use a trash concept for `user_actions` to avoid churn and simplify this?
-    UserActionObserver.log_post(@post)
+    UserActionCreator.log_post(@post)
   end
 
   def remove_associated_replies

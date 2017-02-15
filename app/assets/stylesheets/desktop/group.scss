@@ -1,0 +1,59 @@
+.group-nav {
+  li {
+    float: left;
+
+    a, i {
+      color: dark-light-choose(scale-color($primary, $lightness: 40%), scale-color($secondary, $lightness: 40%));
+    }
+
+    .active {
+      a, i {
+        color: $secondary;
+      }
+    }
+  }
+
+  margin-bottom: 30px;
+}
+
+.group-info {
+  margin-bottom: 20px;
+}
+
+.group-activity-nav {
+  width: 15%;
+  background-color: transparent;
+
+  li {
+    border: none;
+
+    a {
+      padding: 8px 13px;
+    }
+
+    a.active {
+      background-color: transparent;
+      font-weight: bold;
+      color: $primary;
+    }
+
+    a.active:after {
+      display: none;
+    }
+  }
+}
+
+.group-activity-outlet {
+  width: 85%;
+}
+
+.group-edit {
+  border: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
+  padding: 10px;
+
+  .form-horizontal {
+    button {
+      float: none;
+    }
+  }
+}

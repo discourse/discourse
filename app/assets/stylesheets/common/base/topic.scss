@@ -1,3 +1,26 @@
+@keyframes button-jump-up {
+  0% { bottom: 0;}
+  50% { bottom: 45px;}
+  65% { bottom: 40px;}
+  77% { bottom: 43px;}
+  100% { bottom: 40px;}
+}
+
+.progress-back-container {
+  position: fixed;
+  bottom: 40px;
+  z-index: 950;
+  margin-right: 0px;
+  animation-duration: 0.5s;
+  animation-name: button-jump-up;
+  width: 145px;
+  text-align: center;
+
+  .btn {
+    margin: 0;
+  }
+}
+
 #topic-title {
   .title-wrapper {
     float: left;
@@ -8,7 +31,16 @@
 
     .badge-wrapper {
       float: left;
+      margin-right: 12px;
     }
+
+    a.topic-featured-link {
+      display: inline-block;
+    }
+  }
+
+  h1 {
+    margin: 0 0 4px 0;
   }
 
   a.badge-category {
@@ -47,7 +79,7 @@
   display: inline;
 }
 
-#suggested-topics h3 .badge-wrapper.bullet span.badge-category, {
+#suggested-topics h3 .badge-wrapper.bullet span.badge-category {
   // Override vertical-align: text-top from `badges.css.scss`
   vertical-align: baseline;
   line-height: 1.2;
@@ -131,5 +163,20 @@
         background: dark-light-diff($tertiary, $secondary, 85%, -65%);
       }
     }
+  }
+}
+
+a.topic-featured-link {
+  display: inline-block;
+  text-transform: lowercase;
+  color: #858585;
+  font-size: 0.875rem;
+
+  &::before {
+    position: relative;
+    top: 0.1em;
+    padding-right: 3px;
+    font-family: FontAwesome;
+    content: "\f08e";
   }
 }

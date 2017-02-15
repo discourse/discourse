@@ -2,7 +2,6 @@ import { ajax } from 'discourse/lib/ajax';
 import PreloadStore from 'preload-store';
 
 const Backup = Discourse.Model.extend({
-
   destroy() {
     return ajax("/admin/backups/" + this.get("filename"), { type: "DELETE" });
   },
@@ -13,11 +12,9 @@ const Backup = Discourse.Model.extend({
       data: { client_id: window.MessageBus.clientId }
     });
   }
-
 });
 
 Backup.reopenClass({
-
   find() {
     return PreloadStore.getAndRemove("backups", () => ajax("/admin/backups.json"))
                        .then(backups => backups.map(backup => Backup.create(backup)));

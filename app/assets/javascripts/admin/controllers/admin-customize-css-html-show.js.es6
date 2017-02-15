@@ -33,7 +33,7 @@ export default Ember.Controller.extend(activeSections, {
     return !this.get('model.changed') || this.get('model.isSaving');
   }.property('model.changed', 'model.isSaving'),
 
-  needs: ['adminCustomizeCssHtml'],
+  adminCustomizeCssHtml: Ember.inject.controller(),
 
   undoPreviewUrl: url('/?preview-style='),
   defaultStyleUrl: url('/?preview-style=default'),
@@ -44,13 +44,12 @@ export default Ember.Controller.extend(activeSections, {
     },
 
     destroy() {
-      const self = this;
-      return bootbox.confirm(I18n.t("admin.customize.delete_confirm"), I18n.t("no_value"), I18n.t("yes_value"), function(result) {
+      return bootbox.confirm(I18n.t("admin.customize.delete_confirm"), I18n.t("no_value"), I18n.t("yes_value"), result => {
         if (result) {
-          const model = self.get('model');
-          model.destroyRecord().then(function() {
-            self.get('controllers.adminCustomizeCssHtml').get('model').removeObject(model);
-            self.transitionToRoute('adminCustomizeCssHtml');
+          const model = this.get('model');
+          model.destroyRecord().then(() => {
+            this.get('adminCustomizeCssHtml').get('model').removeObject(model);
+            this.transitionToRoute('adminCustomizeCssHtml');
           });
         }
       });

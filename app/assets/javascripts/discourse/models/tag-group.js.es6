@@ -9,9 +9,10 @@ const TagGroup = RestModel.extend({
   },
 
   save() {
-    var url = "/tag_groups",
-        self = this;
-    if (this.get('id')) {
+    let url = "/tag_groups";
+    const self = this,
+          isNew = this.get('id') === 'new';
+    if (!isNew) {
       url = "/tag_groups/" + this.get('id');
     }
 
@@ -25,9 +26,11 @@ const TagGroup = RestModel.extend({
         parent_tag_name: this.get('parent_tag_name') ? this.get('parent_tag_name') : undefined,
         one_per_topic: this.get('one_per_topic')
       },
-      type: this.get('id') ? 'PUT' : 'POST'
+      type: isNew ? 'POST' : 'PUT'
     }).then(function(result) {
-      if(result.id) { self.set('id', result.id); }
+      if(result.tag_group && result.tag_group.id) {
+        self.set('id', result.tag_group.id);
+      }
       self.set('savingStatus', I18n.t('saved'));
       self.set('saving', false);
     });

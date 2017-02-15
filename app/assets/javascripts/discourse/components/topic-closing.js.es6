@@ -1,6 +1,6 @@
-import StringBuffer from 'discourse/mixins/string-buffer';
+import { bufferedRender } from 'discourse-common/lib/buffered-render';
 
-export default Ember.Component.extend(StringBuffer, {
+export default Ember.Component.extend(bufferedRender({
   elementId: 'topic-closing-info',
   delayedRerender: null,
 
@@ -9,7 +9,7 @@ export default Ember.Component.extend(StringBuffer, {
                      'topic.details.auto_close_based_on_last_post',
                      'topic.details.auto_close_hours'],
 
-  renderString(buffer) {
+  buildBuffer(buffer) {
     if (!!Ember.isEmpty(this.get('topic.details.auto_close_at'))) return;
     if (this.get("topic.closed")) return;
 
@@ -48,4 +48,4 @@ export default Ember.Component.extend(StringBuffer, {
       Em.run.cancel(this.get('delayedRerender'));
     }
   }
-});
+}));

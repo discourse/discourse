@@ -1,3 +1,8 @@
+{{#if model.noContent}}
+  <div class='no-content'>
+    {{{model.noContentHelp}}}
+  </div>
+{{/if}}
 {{#user-stream stream=model}}
   {{#each model.content as |item|}}
     {{stream-item item=item removeBookmark="removeBookmark"}}

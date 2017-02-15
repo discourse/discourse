@@ -75,9 +75,6 @@ export default Discourse.Route.extend({
     return findTopicList(this.store, this.topicTrackingState, params.filter, params, {}).then(function(list) {
       controller.set('list', list);
       controller.set('canCreateTopic', list.get('can_create_topic'));
-      if (list.topic_list.tags) {
-        Discourse.Site.currentProp('top_tags', list.topic_list.tags);
-      }
       controller.set('loading', false);
     });
   },
@@ -142,16 +139,6 @@ export default Discourse.Route.extend({
 
     didTransition() {
       this.controllerFor("tags.show")._showFooter();
-      return true;
-    },
-
-    willTransition(transition) {
-      if (!Discourse.SiteSettings.show_filter_by_tag) { return true; }
-
-      if ((transition.targetName.indexOf("discovery.parentCategory") !== -1 ||
-            transition.targetName.indexOf("discovery.category") !== -1) && !transition.queryParams.allTags ) {
-        this.transitionTo("/tags" + transition.intent.url + "/" + this.currentModel.get("id"));
-      }
       return true;
     }
   }

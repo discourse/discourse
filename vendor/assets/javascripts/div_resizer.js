@@ -67,6 +67,7 @@ endDrag = function(e, opts) {
   if (typeof opts.resize === "function") {
     opts.resize();
   }
+  $(div).trigger("div-resized");
   div = null;
 };
 

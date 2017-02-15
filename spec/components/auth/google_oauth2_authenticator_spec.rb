@@ -6,9 +6,36 @@ load 'auth/google_oauth2_authenticator.rb'
 
 describe Auth::GoogleOAuth2Authenticator do
 
+  it 'does not look up user unless email is verified' do
+    # note, emails that come back from google via omniauth are always valid
+    # this protects against future regressions
+
+    authenticator = Auth::GoogleOAuth2Authenticator.new
+    user = Fabricate(:user)
+
+    hash = {
+      :uid => "123456789",
+      :info => {
+          :name => "John Doe",
+          :email => user.email
+      },
+      :extra => {
+        :raw_info => {
+          :email => user.email,
+          :email_verified => false,
+          :name => "John Doe"
+        }
+      }
+    }
+
+    result = authenticator.after_authenticate(hash)
+
+    expect(result.user).to eq(nil)
+  end
+
   context 'after_authenticate' do
     it 'can authenticate and create a user record for already existing users' do
-      authenticator = described_class.new
+      authenticator = Auth::GoogleOAuth2Authenticator.new
       user = Fabricate(:user)
 
       hash = {
@@ -19,7 +46,7 @@ describe Auth::GoogleOAuth2Authenticator do
         },
         :extra => {
           :raw_info => {
-            :email => "user@domain.example.com",
+            :email => user.email,
             :email_verified => true,
             :name => "John Doe"
           }

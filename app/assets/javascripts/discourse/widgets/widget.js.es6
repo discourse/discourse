@@ -1,4 +1,8 @@
-import { WidgetClickHook, WidgetClickOutsideHook, WidgetKeyUpHook, WidgetKeyDownHook, WidgetDragHook } from 'discourse/widgets/hooks';
+import { WidgetClickHook,
+         WidgetClickOutsideHook,
+         WidgetKeyUpHook,
+         WidgetKeyDownHook,
+         WidgetDragHook } from 'discourse/widgets/hooks';
 import { h } from 'virtual-dom';
 import DecoratorHelper from 'discourse/widgets/decorator-helper';
 
@@ -121,33 +125,45 @@ export function createWidget(name, opts) {
   return result;
 }
 
+export function reopenWidget(name, opts) {
+  let existing = _registry[name];
+  if (!existing) {
+    console.error(`Could not find widget ${name} in registry`);
+    return;
+  }
+
+  Object.keys(opts).forEach(k => existing.prototype[k] = opts[k]);
+  return existing;
+}
+
 export default class Widget {
-  constructor(attrs, container, opts) {
+  constructor(attrs, register, opts) {
     opts = opts || {};
     this.attrs = attrs || {};
     this.mergeState = opts.state;
-    this.container = container;
     this.model = opts.model;
+    this.register = register;
+
+    register.deprecateContainer(this);
 
     this.key = this.buildKey ? this.buildKey(attrs) : null;
+    this.site = register.lookup('site:main');
+    this.siteSettings = register.lookup('site-settings:main');
+    this.currentUser = register.lookup('current-user:main');
+    this.capabilities = register.lookup('capabilities:main');
+    this.store = register.lookup('store:main');
+    this.appEvents = register.lookup('app-events:main');
+    this.keyValueStore = register.lookup('key-value-store:main');
 
     // Helps debug widgets
-    if (Ember.testing) {
+    if (Discourse.Environment === "development" || Ember.testing) {
       const ds = this.defaultState(attrs);
       if (typeof ds !== "object") {
-        Ember.warn(`defaultState must return an object`);
+        throw `defaultState must return an object`;
       } else if (Object.keys(ds).length > 0 && !this.key) {
-        Ember.warn(`you need a key when using state ${this.name}`);
+        throw `you need a key when using state in ${this.name}`;
       }
     }
-
-    this.site = container.lookup('site:main');
-    this.siteSettings = container.lookup('site-settings:main');
-    this.currentUser = container.lookup('current-user:main');
-    this.capabilities = container.lookup('capabilities:main');
-    this.store = container.lookup('store:main');
-    this.appEvents = container.lookup('app-events:main');
-    this.keyValueStore = container.lookup('key-value-store:main');
 
     if (this.name) {
       const custom = _customSettings[this.name];
@@ -218,15 +234,15 @@ export default class Widget {
     let WidgetClass = _registry[widgetName];
 
     if (!WidgetClass) {
-      if (!this.container) {
-        console.error("couldn't find container");
+      if (!this.register) {
+        console.error("couldn't find register");
         return;
       }
-      WidgetClass = this.container.lookupFactory(`widget:${widgetName}`);
+      WidgetClass = this.register.lookupFactory(`widget:${widgetName}`);
     }
 
     if (WidgetClass) {
-      const result = new WidgetClass(attrs, this.container, opts);
+      const result = new WidgetClass(attrs, this.register, opts);
       result.parentWidget = this;
       return result;
     } else {
@@ -241,40 +257,34 @@ export default class Widget {
         keyDirty(widget.key);
       }
 
-      const emberView = widget._emberView;
-      if (emberView) {
-        return emberView.queueRerender();
+      const rerenderable = widget._rerenderable;
+      if (rerenderable) {
+        return rerenderable.queueRerender();
       }
+
       widget = widget.parentWidget;
     }
   }
 
   _sendComponentAction(name, param) {
-    const view = this._findAncestorWithProperty('_emberView');
-
     let promise;
-    if (view) {
-      // Peek into ember internals to allow us to return promises from actions
-      const ev = view._emberView;
-      const target = ev.get('targetObject');
 
-      const actionName = ev.get(name);
-      if (!actionName) {
-        Ember.warn(`${name} not found`);
+    const view = this._findView();
+    if (view) {
+      const method = view.get(name);
+      if (!method) {
+        console.warn(`${name} not found`);
         return;
       }
 
-      if (target) {
-        // TODO: Use ember closure actions
-        const actions = target._actions || target.actionHooks || {};
-        const method = actions[actionName];
-        if (method) {
-          promise = method.call(target, param);
-          if (!promise || !promise.then) {
-            promise = Ember.RSVP.resolve(promise);
-          }
-        } else {
-          return ev.sendAction(name, param);
+      if (typeof method === "string") {
+        view.sendAction(method, param);
+        promise = Ember.RSVP.resolve();
+      } else {
+        const target = view.get('targetObject');
+        promise = method.call(target, param);
+        if (!promise || !promise.then) {
+          promise = Ember.RSVP.resolve(promise);
         }
       }
     }
@@ -299,12 +309,12 @@ export default class Widget {
     return result;
   }
 
-  sendWidgetEvent(name) {
+  sendWidgetEvent(name, attrs) {
     const methodName = `${name}Event`;
     return this.rerenderResult(() => {
       const widget = this._findAncestorWithProperty(methodName);
       if (widget) {
-        return widget[methodName]();
+        return widget[methodName](attrs);
       }
     });
   }
@@ -313,7 +323,7 @@ export default class Widget {
     return this.rerenderResult(() => {
       const widget = this._findAncestorWithProperty(name);
       if (widget) {
-        return widget[name](param);
+        return widget[name].call(widget, param);
       }
 
       return this._sendComponentAction(name, param || this.findAncestorModel());

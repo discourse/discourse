@@ -1,17 +1,24 @@
-moduleForComponent("text-field", {needs: []});
+import componentTest from 'helpers/component-test';
 
-test("renders correctly with no properties set", function() {
-  var component = this.subject();
-  equal(component.get('type'), "text");
+moduleForComponent("text-field", { integration: true });
+
+componentTest("renders correctly with no properties set", {
+  template: `{{text-field}}`,
+
+  test(assert) {
+    assert.ok(this.$('input[type=text]').length);
+  }
 });
 
-test("support a placeholder", function() {
-  sandbox.stub(I18n, "t").returnsArg(0);
+componentTest("support a placeholder", {
+  template: `{{text-field placeholderKey="placeholder.i18n.key"}}`,
 
-  var component = this.subject({
-    placeholderKey: "placeholder.i18n.key"
-  });
+  setup() {
+    sandbox.stub(I18n, "t").returnsArg(0);
+  },
 
-  equal(component.get('type'), "text");
-  equal(component.get('placeholder'), "placeholder.i18n.key");
+  test(assert) {
+    assert.ok(this.$('input[type=text]').length);
+    assert.equal(this.$('input').prop('placeholder'), 'placeholder.i18n.key');
+  }
 });

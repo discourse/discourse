@@ -1,0 +1,7 @@
+{{#d-modal-body title="raw_email.title" maxHeight="80%"}}
+  {{#if rawEmail}}
+    {{textarea value=rawEmail class="raw-email-textarea"}}
+  {{else}}
+    {{i18n 'raw_email.not_available'}}
+  {{/if}}
+{{/d-modal-body}}

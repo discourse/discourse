@@ -1,7 +1,6 @@
-<div class="modal-body flag-modal">
-
+{{#d-modal-body class="flag-modal" title=title}}
   <form>
-    {{#each flagsAvailable as |f|}}
+    {{#flag-selection nameKey=selected.name_key flags=flagsAvailable as |f|}}
       {{flag-action-type flag=f
                          message=message
                          isWarning=isWarning
@@ -9,12 +8,10 @@
                          username=model.username
                          staffFlagsAvailable=staffFlagsAvailable
                          changePostActionType="changePostActionType"}}
-    {{else}}
-      {{i18n 'flagging.cant'}}
-    {{/each}}
+   {{/flag-selection}}
   </form>
+{{/d-modal-body}}
 
-</div>
 <div class="modal-footer">
   <button class='btn btn-primary' {{action "createFlag"}} disabled={{submitDisabled}} title="{{i18n 'flagging.submit_tooltip'}}">{{{submitText}}}</button>
 

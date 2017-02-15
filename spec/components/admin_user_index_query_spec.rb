@@ -110,12 +110,12 @@ describe AdminUserIndexQuery do
       before(:each) { Fabricate(:user, email: "test1@example.com") }
 
       it "matches the email" do
-        query = ::AdminUserIndexQuery.new({ filter: "est1" })
+        query = ::AdminUserIndexQuery.new({ filter: " est1" })
         expect(query.find_users.count()).to eq(1)
       end
 
       it "matches the email using any case" do
-        query = ::AdminUserIndexQuery.new({ filter: "Test1" })
+        query = ::AdminUserIndexQuery.new({ filter: "Test1\t" })
         expect(query.find_users.count()).to eq(1)
       end
 
@@ -126,12 +126,12 @@ describe AdminUserIndexQuery do
       before(:each) { Fabricate(:user, username: "test_user_1") }
 
       it "matches the username" do
-        query = ::AdminUserIndexQuery.new({ filter: "user" })
+        query = ::AdminUserIndexQuery.new({ filter: "user\n" })
         expect(query.find_users.count).to eq(1)
       end
 
       it "matches the username using any case" do
-        query = ::AdminUserIndexQuery.new({ filter: "User" })
+        query = ::AdminUserIndexQuery.new({ filter: "\r\nUser" })
         expect(query.find_users.count).to eq(1)
       end
     end
@@ -141,7 +141,7 @@ describe AdminUserIndexQuery do
       let!(:user) { Fabricate(:user, ip_address: "117.207.94.9") }
 
       it "matches the ip address" do
-        query = ::AdminUserIndexQuery.new({ filter: "117.207.94.9" })
+        query = ::AdminUserIndexQuery.new({ filter: " 117.207.94.9 " })
         expect(query.find_users.count()).to eq(1)
       end
 

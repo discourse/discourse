@@ -1,0 +1,57 @@
+<h1><%= t 'finish_installation.register.title' %></h1>
+
+<%- if @allowed_emails.present? %>
+  <%= form_tag(finish_installation_register_path) do %>
+
+    <div class='wizard-field text-field'>
+      <label for="email">
+        <span class="label-value"><%= t 'js.user.email.title' %></span>
+      </label>
+
+      <div class='input-area'>
+        <%= select_tag :email, options_for_select(@allowed_emails, selected: params[:email]), class: 'combobox' %>
+      </div>
+    </div>
+
+    <div class='wizard-field text-field <% if @user.errors[:username].present? %>invalid<% end %>'>
+      <label for="username">
+        <span class="label-value"><%= t 'js.user.username.title' %></span>
+      </label>
+
+      <div class='field-description'><%= t 'js.user.username.instructions' %></div>
+
+      <div class='input-area'>
+        <%= text_field_tag(:username, params[:username]) %>
+      </div>
+      <%- @user.errors[:username].each do |e| %>
+        <div class='field-error-description'><%= e.to_s %></div>
+      <%- end %>
+    </div>
+
+    <div class='wizard-field text-field <% if @user.errors[:username].present? %>invalid<% end %>'>
+      <label for="password">
+        <span class="label-value"><%= t 'js.user.password.title' %></span>
+      </label>
+
+      <div class='field-description'><%= t 'js.user.password.instructions', count: SiteSetting.min_admin_password_length  %></div>
+
+      <div class='input-area'>
+        <%= password_field_tag(:password, params[:password]) %>
+      </div>
+      <% @user.errors[:password].each do |e| %>
+        <div class='field-error-description'><%= e.to_s %></div>
+      <% end %>
+    </div>
+
+    <%= submit_tag(t('finish_installation.register.button'), class: 'wizard-btn primary') %>
+
+  <%- end %>
+<%- else -%>
+  <p><%= raw(t 'finish_installation.register.no_emails') %></p>
+<%- end %>
+
+<script>
+  (function() {
+    $('select').select2({ width: '400px' });
+  })();
+</script>

@@ -64,6 +64,7 @@ describe UserUpdater do
     it 'updates various fields' do
       user = Fabricate(:user)
       updater = UserUpdater.new(acting_user, user)
+      date_of_birth = Time.zone.now
 
       val = updater.update(bio_raw: 'my new bio',
                      email_always: 'true',
@@ -71,7 +72,9 @@ describe UserUpdater do
                      digest_after_minutes: "45",
                      new_topic_duration_minutes: 100,
                      auto_track_topics_after_msecs: 101,
-                     email_in_reply_to: false
+                     notification_level_when_replying: 3,
+                     email_in_reply_to: false,
+                     date_of_birth: date_of_birth
                     )
       expect(val).to be_truthy
 
@@ -83,7 +86,22 @@ describe UserUpdater do
       expect(user.user_option.digest_after_minutes).to eq 45
       expect(user.user_option.new_topic_duration_minutes).to eq 100
       expect(user.user_option.auto_track_topics_after_msecs).to eq 101
+      expect(user.user_option.notification_level_when_replying).to eq 3
       expect(user.user_option.email_in_reply_to).to eq false
+      expect(user.date_of_birth).to eq(date_of_birth.to_date)
+    end
+
+    it "disables email_digests when enabling mailing_list_mode" do
+      user = Fabricate(:user)
+      updater = UserUpdater.new(acting_user, user)
+
+      val = updater.update(mailing_list_mode: true, email_digests: true)
+      expect(val).to be_truthy
+
+      user.reload
+
+      expect(user.user_option.email_digests).to eq false
+      expect(user.user_option.mailing_list_mode).to eq true
     end
 
     context 'when sso overrides bio' do

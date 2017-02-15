@@ -15,12 +15,12 @@ export default Ember.Component.extend({
 
   didInsertElement() {
     this._super();
-    this.reset();
     this.appEvents.on('composer:typed-reply', this, this._typedReply);
     this.appEvents.on('composer:opened', this, this._findMessages);
     this.appEvents.on('composer:find-similar', this, this._findSimilar);
     this.appEvents.on('composer-messages:close', this, this._closeTop);
     this.appEvents.on('composer-messages:create', this, this._create);
+    Ember.run.scheduleOnce('afterRender', this, this.reset);
   },
 
   willDestroyElement() {
@@ -87,8 +87,13 @@ export default Ember.Component.extend({
 
     const composer = this.get('composer');
     if (composer.get('privateMessage')) {
-      const usernames = composer.get('targetUsernames').split(',');
-      if (usernames.length === 1 && usernames[0] === this.currentUser.get('username')) {
+      let usernames = composer.get('targetUsernames');
+
+      if (usernames) {
+        usernames = usernames.split(',');
+      }
+
+      if (usernames && usernames.length === 1 && usernames[0] === this.currentUser.get('username')) {
 
         const message = this._yourselfConfirm || composer.store.createRecord('composer-message', {
           id: 'yourself_confirm',

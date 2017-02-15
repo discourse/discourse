@@ -20,7 +20,7 @@ describe TopicTrackingState do
     user = Fabricate(:user)
     post
 
-    report = TopicTrackingState.report(user.id)
+    report = TopicTrackingState.report(user)
     expect(report.length).to eq(1)
 
     CategoryUser.create!(user_id: user.id,
@@ -30,12 +30,12 @@ describe TopicTrackingState do
 
     create_post(topic_id: post.topic_id)
 
-    report = TopicTrackingState.report(user.id)
+    report = TopicTrackingState.report(user)
     expect(report.length).to eq(0)
 
     TopicUser.create!(user_id: user.id, topic_id: post.topic_id, last_read_post_number: 1, notification_level: 3)
 
-    report = TopicTrackingState.report(user.id)
+    report = TopicTrackingState.report(user)
     expect(report.length).to eq(1)
   end
 
@@ -62,18 +62,18 @@ describe TopicTrackingState do
     TopicUser.change(user.id, post2.topic_id, tracking)
     TopicUser.change(user.id, post3.topic_id, tracking)
 
-    report = TopicTrackingState.report(user.id)
+    report = TopicTrackingState.report(user)
     expect(report.length).to eq(3)
 
   end
 
   it "correctly gets the tracking state" do
-    report = TopicTrackingState.report(user.id)
+    report = TopicTrackingState.report(user)
     expect(report.length).to eq(0)
 
     post.topic.notifier.watch_topic!(post.topic.user_id)
 
-    report = TopicTrackingState.report(user.id)
+    report = TopicTrackingState.report(user)
 
     expect(report.length).to eq(1)
     row = report[0]
@@ -84,18 +84,18 @@ describe TopicTrackingState do
     expect(row.user_id).to eq(user.id)
 
     # lets not leak out random users
-    expect(TopicTrackingState.report(post.user_id)).to be_empty
+    expect(TopicTrackingState.report(post.user)).to be_empty
 
     # lets not return anything if we scope on non-existing topic
-    expect(TopicTrackingState.report(user.id, post.topic_id + 1)).to be_empty
+    expect(TopicTrackingState.report(user, post.topic_id + 1)).to be_empty
 
     # when we reply the poster should have an unread row
     create_post(user: user, topic: post.topic)
 
-    report = TopicTrackingState.report(user.id)
+    report = TopicTrackingState.report(user)
     expect(report.length).to eq(0)
 
-    report = TopicTrackingState.report(post.user_id)
+    report = TopicTrackingState.report(post.user)
     expect(report.length).to eq(1)
 
     row = report[0]
@@ -111,7 +111,7 @@ describe TopicTrackingState do
     post.topic.category_id = category.id
     post.topic.save
 
-    expect(TopicTrackingState.report(post.user_id)).to be_empty
-    expect(TopicTrackingState.report(user.id)).to be_empty
+    expect(TopicTrackingState.report(post.user)).to be_empty
+    expect(TopicTrackingState.report(user)).to be_empty
   end
 end

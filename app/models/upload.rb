@@ -81,6 +81,10 @@ class Upload < ActiveRecord::Base
     use
   }
 
+  def self.generate_digest(path)
+    Digest::SHA1.file(path).hexdigest
+  end
+
   def self.svg_whitelist_xpath
     @@svg_whitelist_xpath ||= "//*[#{WHITELISTED_SVG_ELEMENTS.map { |e| "name()!='#{e}'" }.join(" and ") }]"
   end
@@ -91,6 +95,8 @@ class Upload < ActiveRecord::Base
   #   - image_type ("avatar", "profile_background", "card_background")
   #   - is_attachment_for_group_message (boolean)
   def self.create_for(user_id, file, filename, filesize, options = {})
+    upload = Upload.new
+
     DistributedMutex.synchronize("upload_#{user_id}_#{filename}") do
       # do some work on images
       if FileHelper.is_image?(filename) && is_actual_image?(file)
@@ -101,13 +107,19 @@ class Upload < ActiveRecord::Base
           File.write(file.path, doc.to_s)
           file.rewind
         else
+          # ensure image isn't huge
+          w, h = FastImage.size(file) || [0, 0]
+          if w * h >= SiteSetting.max_image_megapixels * 1_000_000
+            upload.errors.add(:base, I18n.t("upload.images.larger_than_x_megapixels", max_image_megapixels: SiteSetting.max_image_megapixels))
+            return upload
+          end
+
           # fix orientation first
           fix_image_orientation(file.path) if should_optimize?(file.path)
         end
 
         # retrieve image info
-        image_info = FastImage.new(file)
-        w, h = *(image_info.try(:size) || [0, 0])
+        w, h = FastImage.size(file) || [0, 0]
 
         # default size
         width, height = ImageSizer.resize(w, h)
@@ -145,7 +157,7 @@ class Upload < ActiveRecord::Base
       end
 
       # compute the sha of the file
-      sha1 = Digest::SHA1.file(file).hexdigest
+      sha1 = Upload.generate_digest(file)
 
       # do we already have that upload?
       upload = find_by(sha1: sha1)
@@ -210,8 +222,7 @@ class Upload < ActiveRecord::Base
     # don't optimize GIFs or SVGs
     return false if path =~ /\.(gif|svg)$/i
     return true  if path !~ /\.png$/i
-    image_info = FastImage.new(path) rescue nil
-    w, h = *(image_info.try(:size) || [0, 0])
+    w, h = FastImage.size(path) || [0, 0]
     # don't optimize large PNGs
     w > 0 && h > 0 && w * h < LARGE_PNG_SIZE
   end
@@ -226,6 +237,11 @@ class Upload < ActiveRecord::Base
     url = url.sub(Discourse.asset_host, "") if Discourse.asset_host.present?
     # when using s3, we need to replace with the absolute base url
     url = url.sub(SiteSetting.s3_cdn_url, Discourse.store.absolute_base_url) if SiteSetting.s3_cdn_url.present?
+
+    # always try to get the path
+    uri = URI(url) rescue nil
+    url = uri.path if uri.try(:scheme)
+
     Upload.find_by(url: url)
   end
 
@@ -233,17 +249,17 @@ class Upload < ActiveRecord::Base
     `convert #{path} -auto-orient #{path}`
   end
 
-  def self.migrate_to_new_scheme(limit=50)
+  def self.migrate_to_new_scheme(limit=nil)
     problems = []
 
     if SiteSetting.migrate_to_new_scheme
       max_file_size_kb = [SiteSetting.max_image_size_kb, SiteSetting.max_attachment_size_kb].max.kilobytes
       local_store = FileStore::LocalStore.new
 
-      Upload.where("url NOT LIKE '%/original/_X/%'")
-            .limit(limit)
-            .order(id: :desc)
-            .each do |upload|
+      scope = Upload.where("url NOT LIKE '%/original/_X/%'").order(id: :desc)
+      scope.limit(limit) if limit
+
+      scope.each do |upload|
         begin
           # keep track of the url
           previous_url = upload.url.dup
@@ -259,7 +275,7 @@ class Upload < ActiveRecord::Base
           end
           # compute SHA if missing
           if upload.sha1.blank?
-            upload.sha1 = Digest::SHA1.file(path).hexdigest
+            upload.sha1 = Upload.generate_digest(path)
           end
           # optimize if image
           if FileHelper.is_image?(File.basename(path))
@@ -269,7 +285,7 @@ class Upload < ActiveRecord::Base
           File.open(path) do |f|
             upload.url = Discourse.store.store_upload(f, upload)
             upload.filesize = f.size
-            upload.save
+            upload.save!
           end
           # remap the URLs
           DbHelper.remap(UrlHelper.absolute(previous_url), upload.url) unless external

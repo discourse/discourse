@@ -6,24 +6,33 @@ describe Jobs::EnqueueMailingListEmails do
   describe '#target_users' do
 
     context 'unapproved users' do
-      Given!(:unapproved_user) { Fabricate(:active_user, approved: false, first_seen_at: 24.hours.ago) }
-      When do
+      let!(:unapproved_user) { Fabricate(:active_user, approved: false, first_seen_at: 24.hours.ago) }
+
+      before do
+        @original_value = SiteSetting.must_approve_users
         SiteSetting.must_approve_users = true
-        unapproved_user.user_option.update(mailing_list_mode: true, mailing_list_mode_frequency: 0)
       end
-      Then { expect(Jobs::EnqueueMailingListEmails.new.target_user_ids.include?(unapproved_user.id)).to eq(false) }
 
-      # As a moderator
-      And { unapproved_user.update_column(:moderator, true) }
-      And { expect(Jobs::EnqueueMailingListEmails.new.target_user_ids.include?(unapproved_user.id)).to eq(true) }
+      after do
+        SiteSetting.must_approve_users = @original_value
+      end
 
-      # As an admin
-      And { unapproved_user.update_attributes(admin: true, moderator: false) }
-      And { expect(Jobs::EnqueueMailingListEmails.new.target_user_ids.include?(unapproved_user.id)).to eq(true) }
+      it 'should enqueue the right emails' do
+        unapproved_user.user_option.update(mailing_list_mode: true, mailing_list_mode_frequency: 0)
+        expect(Jobs::EnqueueMailingListEmails.new.target_user_ids.include?(unapproved_user.id)).to eq(false)
 
-      # As an approved user
-      And { unapproved_user.update_attributes(admin: false, moderator: false, approved: true ) }
-      And { expect(Jobs::EnqueueMailingListEmails.new.target_user_ids.include?(unapproved_user.id)).to eq(true) }
+        # As a moderator
+        unapproved_user.update_column(:moderator, true)
+        expect(Jobs::EnqueueMailingListEmails.new.target_user_ids.include?(unapproved_user.id)).to eq(true)
+
+        # As an admin
+        unapproved_user.update_attributes(admin: true, moderator: false)
+        expect(Jobs::EnqueueMailingListEmails.new.target_user_ids.include?(unapproved_user.id)).to eq(true)
+
+        # As an approved user
+        unapproved_user.update_attributes(admin: false, moderator: false, approved: true )
+        expect(Jobs::EnqueueMailingListEmails.new.target_user_ids.include?(unapproved_user.id)).to eq(true)
+      end
     end
 
     context 'staged users' do
@@ -79,6 +88,11 @@ describe Jobs::EnqueueMailingListEmails do
 
       it "doesn't return users with mailing list mode set to 'individual'" do
         user_option.update(mailing_list_mode_frequency: 1)
+        expect(subject).to_not include user.id
+      end
+
+      it "doesn't return users with mailing list mode set to 'individual_excluding_own'" do
+        user_option.update(mailing_list_mode_frequency: 2)
         expect(subject).to_not include user.id
       end
 

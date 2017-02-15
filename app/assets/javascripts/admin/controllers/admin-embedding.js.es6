@@ -9,7 +9,7 @@ export default Ember.Controller.extend({
   @computed('embedding.embeddable_hosts.@each.isCreated')
   showSecondary() {
     const hosts = this.get('embedding.embeddable_hosts');
-    return hosts.length && hosts.findProperty('isCreated');
+    return hosts.length && hosts.findBy('isCreated');
   },
 
   @computed('embedding.base_url')

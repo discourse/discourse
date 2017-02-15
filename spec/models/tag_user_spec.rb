@@ -68,12 +68,7 @@ describe TagUser do
   end
 
   context "integration" do
-    before do
-      ActiveRecord::Base.observers.enable :all
-    end
-
     let(:user) { Fabricate(:user) }
-
     let(:watched_tag) { Fabricate(:tag) }
     let(:muted_tag)   { Fabricate(:tag) }
     let(:tracked_tag) { Fabricate(:tag) }
@@ -155,6 +150,36 @@ describe TagUser do
         DiscourseTagging.tag_topic_by_names(post.topic, Guardian.new(user), [])
         post.topic.save!
         expect(TopicUser.get(post.topic, user).notification_level).to eq TopicUser.notification_levels[:tracking]
+
+      end
+
+      it "correctly handles staff tags" do
+
+        staff = Fabricate(:admin)
+        topic = create_post.topic
+
+        SiteSetting.staff_tags = "foo"
+
+        result = DiscourseTagging.tag_topic_by_names(topic, Guardian.new(user), ["foo"])
+        expect(result).to eq(false)
+        expect(topic.errors[:base].length).to eq(1)
+
+        result = DiscourseTagging.tag_topic_by_names(topic, Guardian.new(staff), ["foo"])
+        expect(result).to eq(true)
+
+        topic.errors[:base].clear
+
+        result = DiscourseTagging.tag_topic_by_names(topic, Guardian.new(user), [])
+        expect(result).to eq(false)
+        expect(topic.errors[:base].length).to eq(1)
+
+        topic.reload
+
+        result = DiscourseTagging.tag_topic_by_names(topic, Guardian.new(user), ["foo", "bar"])
+        expect(result).to eq(true)
+
+        topic.reload
+        expect(topic.tags.length).to eq(2)
 
       end
 

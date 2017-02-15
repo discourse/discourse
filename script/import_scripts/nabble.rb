@@ -199,28 +199,30 @@ class ImportScripts::Nabble < ImportScripts::Base
   def process_attachments(txt, postid)
     txt.gsub!(/<nabble_img src="(.*?)" (.*?)>/m) do |match|
       basename = Regexp.last_match[1]
-      fn = File.join('/tmp/nab', basename)
-
-      binary = @client.exec("SELECT content FROM file_node WHERE name='#{basename}' AND node_id = #{postid}")[0]['content']
-      File.open(fn, 'wb') { |f|
-        f.write(PG::Connection.unescape_bytea(binary))
-      }
-      upload = @uploader.create_upload(0, fn, basename)
-      @uploader.embedded_image_html(upload)
+      get_attachment_upload(basename, postid) do |upload|
+        @uploader.embedded_image_html(upload)
+      end
     end
 
     txt.gsub!(/<nabble_a href="(.*?)">(.*?)<\/nabble_a>/m) do |match|
       basename = Regexp.last_match[1]
-      fn = File.join('/tmp/nab', basename)
+      get_attachment_upload(basename, postid) do |upload|
+        @uploader.attachment_html(upload, basename)
+      end
+    end
+    txt
+  end
 
-      binary = @client.exec("SELECT content FROM file_node WHERE name='#{basename}' AND node_id = #{postid}")[0]['content']
+  def get_attachment_upload(basename, postid)
+    contents = @client.exec("SELECT content FROM file_node WHERE name='#{basename}' AND node_id = #{postid}")
+    if contents.any?
+      binary = contents[0]['content']
+      fn = File.join('/tmp/nab', basename)
       File.open(fn, 'wb') { |f|
         f.write(PG::Connection.unescape_bytea(binary))
       }
-      upload = @uploader.create_upload(0, fn, basename)
-      @uploader.attachment_html(upload, basename)
+      yield @uploader.create_upload(0, fn, basename)
     end
-    txt
   end
 
   def import_replies

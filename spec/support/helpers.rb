@@ -1,4 +1,6 @@
 module Helpers
+  extend ActiveSupport::Concern
+
   def self.next_seq
     @next_seq = (@next_seq || 0) + 1
   end
@@ -28,7 +30,7 @@ module Helpers
     args[:title] ||= "This is my title #{Helpers.next_seq}"
     user = args.delete(:user) || Fabricate(:user)
     guardian = Guardian.new(user)
-    args[:category] = args[:category].name if args[:category].is_a?(Category)
+    args[:category] = args[:category].id if args[:category].is_a?(Category)
     TopicCreator.create(user, guardian, args)
   end
 
@@ -37,7 +39,7 @@ module Helpers
     args[:raw] ||= "This is the raw body of my post, it is cool #{Helpers.next_seq}"
     args[:topic_id] = args[:topic].id if args[:topic]
     user = args.delete(:user) || Fabricate(:user)
-    args[:category] = args[:category].name if args[:category].is_a?(Category)
+    args[:category] = args[:category].id if args[:category].is_a?(Category)
     creator = PostCreator.new(user, args)
     post = creator.create
 

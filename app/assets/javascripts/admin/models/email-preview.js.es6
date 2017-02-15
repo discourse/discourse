@@ -5,7 +5,7 @@ EmailPreview.reopenClass({
   findDigest: function(lastSeenAt, username) {
 
     if (Em.isEmpty(lastSeenAt)) {
-      lastSeenAt = moment().subtract(7, 'days').format('YYYY-MM-DD');
+      lastSeenAt = this.oneWeekAgo();
     }
 
     if (Em.isEmpty(username)) {
@@ -17,6 +17,25 @@ EmailPreview.reopenClass({
     }).then(function (result) {
       return EmailPreview.create(result);
     });
+  },
+
+  sendDigest: function(lastSeenAt, username, email) {
+    if (Em.isEmpty(lastSeenAt)) {
+      lastSeenAt = this.oneWeekAgo();
+    }
+
+    if (Em.isEmpty(username)) {
+      username = Discourse.User.current().username;
+    }
+
+    return ajax("/admin/email/send-digest.json", {
+      data: { last_seen_at: lastSeenAt, username: username, email: email }
+    });
+  },
+
+  oneWeekAgo() {
+    const en = moment().locale('en');
+    return en.subtract(7, 'days').format('YYYY-MM-DD');
   }
 });
 
