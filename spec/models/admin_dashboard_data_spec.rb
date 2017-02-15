@@ -189,6 +189,98 @@ describe AdminDashboardData do
     end
   end
 
+  describe 's3_config_check' do
+    shared_examples 'problem detection for s3-dependent setting' do
+      subject { described_class.new.s3_config_check }
+      let(:access_keys) { [:s3_access_key_id, :s3_secret_access_key] }
+      let(:all_cred_keys) { access_keys + [:s3_use_iam_profile] }
+      let(:all_setting_keys) { all_cred_keys + [bucket_key] }
+
+      def all_setting_permutations(keys)
+        ['a', ''].repeated_permutation(keys.size) do |*values|
+          hash = Hash[keys.zip(values)]
+          hash.each do |key,value|
+            SiteSetting.stubs(key).returns(value)
+          end
+          yield hash
+        end
+      end
+
+      context 'when setting is enabled' do
+        let(:setting_enabled) { true }
+        before do
+          SiteSetting.stubs(setting_key).returns(setting_enabled)
+          SiteSetting.stubs(bucket_key).returns(bucket_value)
+        end
+
+        context 'when bucket is blank' do
+          let(:bucket_value) { '' }
+
+          it "always returns a string" do
+            all_setting_permutations(all_cred_keys) do
+              expect(subject).to_not be_nil
+            end
+          end
+        end
+
+        context 'when bucket is filled in' do
+          let(:bucket_value) { 'a' }
+          before do
+            SiteSetting.stubs(:s3_use_iam_profile).returns(use_iam_profile)
+          end
+
+          context 'when using iam profile' do
+            let(:use_iam_profile) { true }
+
+            it 'always returns nil' do
+              all_setting_permutations(access_keys) do
+                expect(subject).to be_nil
+              end
+            end
+          end
+
+          context 'when not using iam profile' do
+            let(:use_iam_profile) { false }
+
+            it 'returns nil only if both access key fields are filled in' do
+              all_setting_permutations(access_keys) do |settings|
+                if settings.values.all?
+                  expect(subject).to be_nil
+                else
+                  expect(subject).to_not be_nil
+                end
+              end
+            end
+          end
+        end
+      end
+
+      context 'when setting is not enabled' do
+        before do
+          SiteSetting.stubs(setting_key).returns(false)
+        end
+
+        it "always returns nil" do
+          all_setting_permutations(all_setting_keys) do
+            expect(subject).to be_nil
+          end
+        end
+      end
+    end
+
+    describe 'uploads' do
+      let(:setting_key) { :enable_s3_uploads }
+      let(:bucket_key) { :s3_upload_bucket }
+      include_examples 'problem detection for s3-dependent setting'
+    end
+
+    describe 'backups' do
+      let(:setting_key) { :enable_s3_backups }
+      let(:bucket_key) { :s3_backup_bucket }
+      include_examples 'problem detection for s3-dependent setting'
+    end
+  end
+
   describe 'stats cache' do
     include_examples 'stats cachable'
   end
