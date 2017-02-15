@@ -13,9 +13,10 @@ import { addFlagProperty } from 'discourse/components/site-header';
 import { addPopupMenuOptionsCallback } from 'discourse/controllers/composer';
 import { extraConnectorClass } from 'discourse/lib/plugin-connectors';
 import { addPostSmallActionIcon } from 'discourse/widgets/post-small-action';
+import { addDiscoveryQueryParam } from 'discourse/controllers/discovery-sortable';
 
 // If you add any methods to the API ensure you bump up this number
-const PLUGIN_API_VERSION = 0.8;
+const PLUGIN_API_VERSION = '0.8.1';
 
 class PluginApi {
   constructor(version, container) {
@@ -377,12 +378,42 @@ class PluginApi {
   addPostSmallActionIcon(key, icon) {
     addPostSmallActionIcon(key, icon);
   }
+
+  /**
+   * Register an additional query param with topic discovery,
+   * this allows for filters on the topic list
+   *
+   **/
+  addDiscoveryQueryParam(param, options) {
+    addDiscoveryQueryParam(param, options);
+  }
 }
 
 let _pluginv01;
+
+
+// from http://stackoverflow.com/questions/6832596/how-to-compare-software-version-number-using-js-only-number
+function cmpVersions (a, b) {
+    var i, diff;
+    var regExStrip0 = /(\.0+)+$/;
+    var segmentsA = a.replace(regExStrip0, '').split('.');
+    var segmentsB = b.replace(regExStrip0, '').split('.');
+    var l = Math.min(segmentsA.length, segmentsB.length);
+
+    for (i = 0; i < l; i++) {
+        diff = parseInt(segmentsA[i], 10) - parseInt(segmentsB[i], 10);
+        if (diff) {
+            return diff;
+        }
+    }
+    return segmentsA.length - segmentsB.length;
+}
+
+
+
 function getPluginApi(version) {
-  version = parseFloat(version);
-  if (version <= PLUGIN_API_VERSION) {
+  version = version.toString();
+  if (cmpVersions(version,PLUGIN_API_VERSION) <= 0) {
     if (!_pluginv01) {
       _pluginv01 = new PluginApi(version, Discourse.__container__);
     }
