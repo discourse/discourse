@@ -19,9 +19,9 @@ class TopicList
     end
   end
 
-  def self.preload(topics)
+  def self.preload(topics, object)
     if @preload
-      @preload.each{|preload| preload.call(topics)}
+      @preload.each{|preload| preload.call(topics, object)}
     end
   end
 
@@ -33,7 +33,8 @@ class TopicList
                 :filter,
                 :for_period,
                 :per_page,
-                :tags
+                :tags,
+                :current_user
 
   def initialize(filter, current_user, topics, opts=nil)
     @filter = filter
@@ -116,7 +117,7 @@ class TopicList
       Topic.preload_custom_fields(@topics, preloaded_custom_fields)
     end
 
-    TopicList.preload(@topics)
+    TopicList.preload(@topics, self)
 
     @topics
   end

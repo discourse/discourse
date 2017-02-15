@@ -31,7 +31,8 @@ describe TopicList do
   context "preload" do
     it "allows preloading of data" do
       preloaded_topic = false
-      preloader = lambda do |topics|
+      preloader = lambda do |topics, topic_list|
+        expect(TopicList === topic_list).to eq(true)
         expect(topics.length).to eq(1)
         preloaded_topic = true
       end
