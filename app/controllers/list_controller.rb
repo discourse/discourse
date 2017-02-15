@@ -278,7 +278,7 @@ class ListController < ApplicationController
 
   def build_topic_list_options
     options = {}
-    TopicQuery.valid_options.each do |key|
+    TopicQuery.public_valid_options.each do |key|
       options[key] = params[key]
     end
 
@@ -286,11 +286,6 @@ class ListController < ApplicationController
     options[:topic_ids] = param_to_integer_list(:topic_ids)
     options[:no_subcategories] = options[:no_subcategories] == 'true'
     options[:slow_platform] = slow_platform?
-    options.delete(:per_page)
-    options.delete(:limit)
-    options.delete(:except_topic_ids)
-    options.delete(:visible)
-    options.delete(:no_definitions)
 
     options
   end

@@ -10,32 +10,38 @@ require_dependency 'avatar_lookup'
 
 class TopicQuery
 
+  def self.public_valid_options
+    @public_valid_options ||=
+      %i(page
+         topic_ids
+         exclude_category_ids
+         category
+         order
+         ascending
+         min_posts
+         max_posts
+         status
+         filter
+         state
+         search
+         q
+         group_name
+         tags
+         match_all_tags
+         no_subcategories
+         slow_platform
+         no_tags)
+  end
+
   def self.valid_options
     @valid_options ||=
+      public_valid_options +
       %i(except_topic_ids
-         exclude_category_ids
          limit
          page
          per_page
-         min_posts
-         max_posts
-         topic_ids
          visible
-         category
-         tags
-         match_all_tags
-         no_tags
-         order
-         ascending
-         no_subcategories
-         no_definitions
-         status
-         state
-         search
-         slow_platform
-         filter
-         group_name
-         q)
+         no_definitions)
   end
 
 
@@ -59,11 +65,13 @@ class TopicQuery
   def self.add_custom_filter(key, &blk)
     @custom_filters ||= {}
     valid_options << key
+    public_valid_options << key
     @custom_filters[key] = blk
   end
 
   def self.remove_custom_filter(key)
     @custom_filters.delete(key)
+    public_valid_options.delete(key)
     valid_options.delete(key)
     @custom_filters = nil if @custom_filters.length == 0
   end
