@@ -138,7 +138,7 @@ describe AdminDashboardData do
           SiteSetting.stubs(enable_setting).returns(true)
         end
 
-        it 'returns nil key and secret are set' do
+        it 'returns nil when key and secret are set' do
           SiteSetting.stubs(key).returns('12313213')
           SiteSetting.stubs(secret).returns('12312313123')
           expect(subject).to be_nil
