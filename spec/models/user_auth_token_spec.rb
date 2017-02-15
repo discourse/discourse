@@ -110,16 +110,52 @@ describe UserAuthToken do
     expect(user_token.client_ip).to eq("1.1.2.4")
     expect(user_token.user_agent).to eq("a new user agent")
     expect(user_token.auth_token_seen).to eq(false)
+    expect(user_token.seen_at).to eq(nil)
     expect(user_token.prev_auth_token).to eq(prev_auth_token)
 
     # ability to auth using an old token
-    looked_up = UserAuthToken.lookup(unhashed_prev)
+    freeze_time
+
+    looked_up = UserAuthToken.lookup(user_token.unhashed_auth_token, seen: true)
+    expect(looked_up.id).to eq(user_token.id)
+    expect(looked_up.auth_token_seen).to eq(true)
+    expect(looked_up.seen_at).to be_within(1.second).of(Time.zone.now)
+
+    looked_up = UserAuthToken.lookup(unhashed_prev, seen: true)
     expect(looked_up.id).to eq(user_token.id)
 
-    freeze_time(2.minute.from_now) do
-      looked_up = UserAuthToken.lookup(unhashed_prev)
-      expect(looked_up).to eq(nil)
-    end
+    freeze_time(2.minute.from_now)
+
+    looked_up = UserAuthToken.lookup(unhashed_prev)
+    expect(looked_up).to eq(nil)
+
+    rotated = user_token.rotate!(user_agent: "a new user agent", client_ip: "1.1.2.4")
+    expect(rotated).to eq(true)
+    user_token.reload
+    expect(user_token.seen_at).to eq(nil)
+  end
+
+  it "keeps prev token valid for 1 minute after it is confirmed" do
+
+    user = Fabricate(:user)
+
+    token = UserAuthToken.generate!(user_id: user.id,
+                                    user_agent: "some user agent",
+                                    client_ip: "1.1.2.3")
+
+    UserAuthToken.lookup(token.unhashed_auth_token, seen: true)
+
+    freeze_time(10.minutes.from_now)
+
+    prev_token = token.unhashed_auth_token
+
+    token.rotate!(user_agent: "firefox", client_ip: "1.1.1.1")
+
+    freeze_time(10.minutes.from_now)
+
+    expect(UserAuthToken.lookup(token.unhashed_auth_token, seen: true)).not_to eq(nil)
+    expect(UserAuthToken.lookup(prev_token, seen: true)).not_to eq(nil)
+
   end
 
   it "can correctly log auth tokens" do

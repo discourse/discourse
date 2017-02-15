@@ -51,10 +51,11 @@ class UserAuthToken < ActiveRecord::Base
 
     token_expired =
        user_token &&
+       user_token.seen_at &&
        user_token.auth_token_seen &&
        user_token.prev_auth_token == token &&
        user_token.prev_auth_token != user_token.auth_token &&
-       user_token.rotated_at > 1.minute.ago
+       user_token.seen_at < 1.minute.ago
 
     if token_expired || !user_token
 
@@ -73,10 +74,14 @@ class UserAuthToken < ActiveRecord::Base
 
     if mark_seen && user_token && !user_token.auth_token_seen && user_token.auth_token == token
       # we must protect against concurrency issues here
-      changed_rows = UserAuthToken.where(id: user_token.id, auth_token: token).update_all(auth_token_seen: true)
+      changed_rows = UserAuthToken
+        .where(id: user_token.id, auth_token: token)
+        .update_all(auth_token_seen: true, seen_at: Time.zone.now)
+
       if changed_rows == 1
         # not doing a reload so we don't risk loading a rotated token
         user_token.auth_token_seen = true
+        user_token.seen_at = Time.zone.now
       end
 
       if SiteSetting.verbose_auth_token_logging
@@ -120,6 +125,7 @@ class UserAuthToken < ActiveRecord::Base
   UPDATE user_auth_tokens
   SET
     auth_token_seen = false,
+    seen_at = null,
     user_agent = :user_agent,
     client_ip = :client_ip,
     prev_auth_token = case when auth_token_seen then auth_token else prev_auth_token end,
