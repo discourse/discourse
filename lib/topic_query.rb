@@ -9,30 +9,35 @@ require_dependency 'topic_query_sql'
 require_dependency 'avatar_lookup'
 
 class TopicQuery
-  VALID_OPTIONS = %i(except_topic_ids
-                     exclude_category_ids
-                     limit
-                     page
-                     per_page
-                     min_posts
-                     max_posts
-                     topic_ids
-                     visible
-                     category
-                     tags
-                     match_all_tags
-                     no_tags
-                     order
-                     ascending
-                     no_subcategories
-                     no_definitions
-                     status
-                     state
-                     search
-                     slow_platform
-                     filter
-                     group_name
-                     q)
+
+  def self.valid_options
+    @valid_options ||=
+      %i(except_topic_ids
+         exclude_category_ids
+         limit
+         page
+         per_page
+         min_posts
+         max_posts
+         topic_ids
+         visible
+         category
+         tags
+         match_all_tags
+         no_tags
+         order
+         ascending
+         no_subcategories
+         no_definitions
+         status
+         state
+         search
+         slow_platform
+         filter
+         group_name
+         q)
+  end
+
 
   # Maps `order` to a columns in `topics`
   SORTABLE_MAPPING = {
@@ -49,8 +54,31 @@ class TopicQuery
   cattr_accessor :results_filter_callbacks
   self.results_filter_callbacks = []
 
+  attr_accessor :options, :user, :guardian
+
+  def self.add_custom_filter(key, &blk)
+    @custom_filters ||= {}
+    valid_options << key
+    @custom_filters[key] = blk
+  end
+
+  def self.remove_custom_filter(key)
+    @custom_filters.delete(key)
+    valid_options.delete(key)
+    @custom_filters = nil if @custom_filters.length == 0
+  end
+
+  def self.apply_custom_filters(results, topic_query)
+    if @custom_filters
+      @custom_filters.each do |key,filter|
+        results = filter.call(results, topic_query)
+      end
+    end
+    results
+  end
+
   def initialize(user=nil, options={})
-    options.assert_valid_keys(VALID_OPTIONS)
+    options.assert_valid_keys(TopicQuery.valid_options)
     @options = options.dup
     @user = user
     @guardian = Guardian.new(@user)
@@ -588,6 +616,8 @@ class TopicQuery
       result = result.where('topics.deleted_at IS NULL') if require_deleted_clause
       result = result.where('topics.posts_count <= ?', options[:max_posts]) if options[:max_posts].present?
       result = result.where('topics.posts_count >= ?', options[:min_posts]) if options[:min_posts].present?
+
+      result = TopicQuery.apply_custom_filters(result,self)
 
       @guardian.filter_allowed_categories(result)
     end
