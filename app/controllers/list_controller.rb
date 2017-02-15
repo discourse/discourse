@@ -277,27 +277,15 @@ class ListController < ApplicationController
   end
 
   def build_topic_list_options
-    options = {
-      page: params[:page],
-      topic_ids: param_to_integer_list(:topic_ids),
-      exclude_category_ids: params[:exclude_category_ids],
-      category: params[:category],
-      order: params[:order],
-      ascending: params[:ascending],
-      min_posts: params[:min_posts],
-      max_posts: params[:max_posts],
-      status: params[:status],
-      filter: params[:filter],
-      state: params[:state],
-      search: params[:search],
-      q: params[:q],
-      group_name: params[:group_name],
-      tags: params[:tags],
-      match_all_tags: params[:match_all_tags],
-      no_tags: params[:no_tags]
-    }
-    options[:no_subcategories] = true if params[:no_subcategories] == 'true'
-    options[:slow_platform] = true if slow_platform?
+    options = {}
+    TopicQuery.valid_options.each do |key|
+      options[key] = params[key]
+    end
+
+    # hacky columns get special handling
+    options[:topic_ids] = param_to_integer_list(:topic_ids)
+    options[:no_subcategories] = options[:no_subcategories] == 'true'
+    options[:slow_platform] = slow_platform?
 
     options
   end
