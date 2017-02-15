@@ -152,27 +152,28 @@ describe TopicUser do
 
   describe 'visited at' do
 
-    before do
-      TopicUser.track_visit!(topic.id, user.id)
-    end
-
     it 'set upon initial visit' do
-      freeze_time yesterday do
-        expect(topic_user.first_visited_at.to_i).to eq(yesterday.to_i)
-        expect(topic_user.last_visited_at.to_i).to eq(yesterday.to_i)
-      end
+      freeze_time yesterday
+
+      TopicUser.track_visit!(topic.id, user.id)
+
+      expect(topic_user.first_visited_at.to_i).to eq(yesterday.to_i)
+      expect(topic_user.last_visited_at.to_i).to eq(yesterday.to_i)
     end
 
     it 'updates upon repeat visit' do
-      today = yesterday.tomorrow
+      freeze_time yesterday
 
-      freeze_time today do
-        TopicUser.track_visit!(topic.id, user.id)
-        # reload is a no go
-        topic_user = TopicUser.get(topic,user)
-        expect(topic_user.first_visited_at.to_i).to eq(yesterday.to_i)
-        expect(topic_user.last_visited_at.to_i).to eq(today.to_i)
-      end
+      TopicUser.track_visit!(topic.id, user.id)
+
+      freeze_time Time.zone.now
+
+      TopicUser.track_visit!(topic.id, user.id)
+      # reload is a no go
+      topic_user = TopicUser.get(topic,user)
+      expect(topic_user.first_visited_at.to_i).to eq(yesterday.to_i)
+      expect(topic_user.last_visited_at.to_i).to eq(Time.zone.now.to_i)
+
     end
   end
 
@@ -180,29 +181,35 @@ describe TopicUser do
 
     context "without auto tracking" do
 
-      before do
-        TopicUser.update_last_read(user, topic.id, 1, 0)
-      end
-
       let(:topic_user) { TopicUser.get(topic,user) }
 
       it 'should create a new record for a visit' do
-        freeze_time yesterday do
-          expect(topic_user.last_read_post_number).to eq(1)
-          expect(topic_user.last_visited_at.to_i).to eq(yesterday.to_i)
-          expect(topic_user.first_visited_at.to_i).to eq(yesterday.to_i)
-        end
+        freeze_time yesterday
+
+        TopicUser.update_last_read(user, topic.id, 1, 0)
+
+        expect(topic_user.last_read_post_number).to eq(1)
+        expect(topic_user.last_visited_at.to_i).to eq(yesterday.to_i)
+        expect(topic_user.first_visited_at.to_i).to eq(yesterday.to_i)
       end
 
       it 'should update the record for repeat visit' do
-        freeze_time yesterday do
-          Fabricate(:post, topic: topic, user: user)
-          TopicUser.update_last_read(user, topic.id, 2, 0)
-          topic_user = TopicUser.get(topic,user)
-          expect(topic_user.last_read_post_number).to eq(2)
-          expect(topic_user.last_visited_at.to_i).to eq(yesterday.to_i)
-          expect(topic_user.first_visited_at.to_i).to eq(yesterday.to_i)
-        end
+
+        today = Time.zone.now
+        freeze_time Time.zone.now
+
+        TopicUser.update_last_read(user, topic.id, 1, 0)
+
+        tomorrow = 1.day.from_now
+        freeze_time tomorrow
+
+        Fabricate(:post, topic: topic, user: user)
+        TopicUser.update_last_read(user, topic.id, 2, 0)
+        topic_user = TopicUser.get(topic,user)
+
+        expect(topic_user.last_read_post_number).to eq(2)
+        expect(topic_user.last_visited_at.to_i).to eq(today.to_i)
+        expect(topic_user.first_visited_at.to_i).to eq(today.to_i)
       end
     end
 

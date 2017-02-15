@@ -757,24 +757,29 @@ describe Topic do
 
       context 'topic was set to close when it was created' do
         it 'puts the autoclose duration in the moderator post' do
-          freeze_time(Time.new(2000,1,1)) do
-            @topic.created_at = 3.days.ago
-            @topic.update_status(status, true, @user)
-            expect(@topic.posts.last.raw).to include "closed after 3 days"
-          end
+          freeze_time(Time.new(2000,1,1))
+          @topic.created_at = 3.days.ago
+          @topic.update_status(status, true, @user)
+          expect(@topic.posts.last.raw).to include "closed after 3 days"
         end
       end
 
       context 'topic was set to close after it was created' do
         it 'puts the autoclose duration in the moderator post' do
-          freeze_time(Time.new(2000,1,1)) do
-            @topic.created_at = 7.days.ago
-            freeze_time(2.days.ago) do
-              @topic.set_auto_close(48)
-            end
-            @topic.update_status(status, true, @user)
-            expect(@topic.posts.last.raw).to include "closed after 2 days"
-          end
+
+          freeze_time(Time.new(2000,1,1))
+
+          @topic.created_at = 7.days.ago
+
+          freeze_time(2.days.ago)
+
+          @topic.set_auto_close(48)
+
+          freeze_time(2.days.from_now)
+
+          @topic.update_status(status, true, @user)
+          expect(@topic.posts.last.raw).to include "closed after 2 days"
+
         end
       end
     end
