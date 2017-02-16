@@ -1,5 +1,5 @@
 {{#each navItems as |navItem|}}
   {{navigation-item content=navItem filterMode=filterMode}}
 {{/each}}
-{{custom-html name="extraNavItem"}}
-{{plugin-outlet name="extra-nav-item" connectorTagName="li"}}
+{{custom-html name="extraNavItem" tagName="li"}}
+{{plugin-outlet name="extra-nav-item" tagName="li"}}
