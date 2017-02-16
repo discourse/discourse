@@ -1069,7 +1069,6 @@ en:
       accept_title: "Invitation"
       welcome_to: "Welcome to %{site_name}!"
       invited_by: "You were invited by:"
-      form_instructions: "You can choose your username and set your password now, or later from your preferences."
       social_login_available: "After your account is created, you'll be able to sign in with social login."
       your_email: "Your account's email address will be <b>%{email}</b>."
       accept_invite: "Accept Invitation"
