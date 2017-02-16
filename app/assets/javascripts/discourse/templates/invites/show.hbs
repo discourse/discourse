@@ -14,12 +14,13 @@
 
       {{#if successMessage}}
         <p>{{successMessage}}</p>
-      {{else}}
-        <p>{{i18n 'invites.form_instructions'}}</p>
+      {{else}}        
 
+        <p>{{{yourEmailMessage}}} 
         {{#if externalAuthsEnabled}}
-          <p>{{i18n 'invites.social_login_available'}}</p>
+             {{i18n 'invites.social_login_available'}}
         {{/if}}
+        </p>
 
         <form>
           <label>{{i18n 'user.username.title'}}</label>
@@ -38,9 +39,7 @@
 
           <div class="instructions">
             <div class="caps-lock-warning {{unless capsLockOn 'invisible'}}"><i class="fa fa-exclamation-triangle"></i> {{i18n 'login.caps_lock_warning'}}</div>
-          </div>
-
-          <p>{{{yourEmailMessage}}}</p>
+          </div>         
 
           <button class='btn btn-primary' {{action "submit"}} disabled={{submitDisabled}}>{{i18n 'invites.accept_invite'}}</button>
 
