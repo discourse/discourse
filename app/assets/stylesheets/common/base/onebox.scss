@@ -139,6 +139,12 @@ aside.onebox {
       margin-right: 10px;
     }
 
+    // tighten bottom margin on last para
+    p:last-child {
+      margin-bottom: 4px;
+    }
+
+    // twitter fixes
     .tweet-images {
       display: block;
       clear: both;
@@ -150,6 +156,7 @@ aside.onebox {
         float: none;
       }
     }
+
   }
 }
 
