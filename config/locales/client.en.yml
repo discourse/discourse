@@ -718,13 +718,11 @@ en:
         instructions: "unique, no spaces, short"
         short_instructions: "People can mention you as @{{username}}"
         available: "Your username is available"
-        global_match: "Email matches the registered username"
-        global_mismatch: "Already registered. Try {{suggestion}}?"
         not_available: "Not available. Try {{suggestion}}?"
+        not_available_no_suggestion: "Not available"
         too_short: "Your username is too short"
         too_long: "Your username is too long"
         checking: "Checking username availability..."
-        enter_email: 'Username found; enter matching email'
         prefilled: "Email matches this registered username"
 
       locale:
