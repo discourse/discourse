@@ -31,7 +31,6 @@ export default Ember.Controller.extend(ModalFunctionality, PasswordValidation, U
       accountUsername: '',
       accountPassword: '',
       authOptions: null,
-      globalNicknameExists: false,
       complete: false,
       formSubmitted: false,
       rejectedEmails: [],
