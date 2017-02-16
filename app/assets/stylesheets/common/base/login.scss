@@ -85,6 +85,9 @@ $input-width: 220px;
 
   form {
     margin-top: 24px;
+    button.btn-primary {
+      margin-top: 10px;
+    }
     label {
       font-weight: bold;
     }
