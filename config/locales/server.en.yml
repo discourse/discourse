@@ -1696,8 +1696,6 @@ en:
 
       %{invite_link}
 
-      This invitation is from a trusted user, so you can reply to the discussion immediately.
-
   custom_invite_mailer:
     title: "Custom Invite Mailer"
     subject_template: "%{invitee_name} invited you to '%{topic_title}' on %{site_domain_name}"
@@ -1720,8 +1718,6 @@ en:
 
       %{invite_link}
 
-      This invitation is from a trusted user, so you can reply to the discussion immediately.
-
   invite_forum_mailer:
     title: "Invite Forum Mailer"
     subject_template: "%{invitee_name} invited you to join %{site_domain_name}"
@@ -1735,8 +1731,6 @@ en:
       If you're interested, click the link below:
 
       %{invite_link}
-
-      This invitation is from a trusted user, so an account will be created for you automatically using this email address.
 
   custom_invite_forum_mailer:
     title: "Invite Forum Mailer"
@@ -1755,8 +1749,6 @@ en:
       If you're interested, click the link below:
 
       %{invite_link}
-
-      This invitation is from a trusted user, so an account will be created for you automatically using this email address.
 
   invite_password_instructions:
     title: "Invite Password Instructions"
