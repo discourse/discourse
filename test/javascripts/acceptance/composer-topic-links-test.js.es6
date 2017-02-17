@@ -35,8 +35,8 @@ test("no onebox result", () => {
   click('#create-topic');
   fillIn('#reply-title', "http://www.example.com/nope-onebox.html");
   andThen(() => {
-    equal(find('.d-editor-preview').html().trim().indexOf('onebox'), -1, "link isn't put into the post");
-    equal(find('.d-editor-input').val().length, 0, "link isn't put into the post");
+    ok(find('.d-editor-preview').html().trim().indexOf('onebox') > 0, "it pastes the link into the body and previews it");
+    ok(exists('.d-editor-textarea-wrapper .popup-tip.good'), 'link is pasted into body');
     equal(find('.title-input input').val(), "http://www.example.com/nope-onebox.html", "title is unchanged");
   });
 });

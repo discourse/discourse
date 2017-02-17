@@ -68,7 +68,8 @@ export default Ember.Component.extend({
 
       if (loadOnebox && loadOnebox.then) {
         loadOnebox.then( () => {
-          this._updatePost(lookupCache(this.get('composer.title')));
+          const v = lookupCache(this.get('composer.title'));
+          this._updatePost(v ? v : link);
         }).finally(() => {
           this.set('composer.loading', false);
           Ember.run.schedule('afterRender', () => { this.$('input').putCursorAtEnd(); });
