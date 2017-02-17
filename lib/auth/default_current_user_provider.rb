@@ -36,7 +36,10 @@ class Auth::DefaultCurrentUserProvider
 
     request = @request
 
-    auth_token = request.cookies[TOKEN_COOKIE]
+    user_api_key = @env[USER_API_KEY]
+    api_key = request[API_KEY]
+
+    auth_token = request.cookies[TOKEN_COOKIE] unless user_api_key || api_key
 
     current_user = nil
 
@@ -59,10 +62,6 @@ class Auth::DefaultCurrentUserProvider
       end
     end
 
-    if current_user && (current_user.suspended? || !current_user.active)
-      current_user = nil
-    end
-
     if current_user && should_update_last_seen?
       u = current_user
       Scheduler::Defer.later "Updating Last Seen" do
@@ -72,17 +71,18 @@ class Auth::DefaultCurrentUserProvider
     end
 
     # possible we have an api call, impersonate
-    if api_key = request[API_KEY]
+    if api_key
       current_user = lookup_api_user(api_key, request)
       raise Discourse::InvalidAccess unless current_user
+      raise Discourse::InvalidAccess if current_user.suspended? || !current_user.active
       @env[API_KEY_ENV] = true
     end
 
     # user api key handling
-    if api_key = @env[USER_API_KEY]
+    if user_api_key
 
-      limiter_min = RateLimiter.new(nil, "user_api_min_#{api_key}", SiteSetting.max_user_api_reqs_per_minute, 60)
-      limiter_day = RateLimiter.new(nil, "user_api_day_#{api_key}", SiteSetting.max_user_api_reqs_per_day, 86400)
+      limiter_min = RateLimiter.new(nil, "user_api_min_#{user_api_key}", SiteSetting.max_user_api_reqs_per_minute, 60)
+      limiter_day = RateLimiter.new(nil, "user_api_day_#{user_api_key}", SiteSetting.max_user_api_reqs_per_day, 86400)
 
       unless limiter_day.can_perform?
         limiter_day.performed!
@@ -92,13 +92,20 @@ class Auth::DefaultCurrentUserProvider
         limiter_min.performed!
       end
 
-      current_user = lookup_user_api_user_and_update_key(api_key, @env[USER_API_CLIENT_ID])
+      current_user = lookup_user_api_user_and_update_key(user_api_key, @env[USER_API_CLIENT_ID])
       raise Discourse::InvalidAccess unless current_user
+      raise Discourse::InvalidAccess if current_user.suspended? || !current_user.active
 
       limiter_min.performed!
       limiter_day.performed!
 
       @env[USER_API_KEY_ENV] = true
+    end
+
+    # keep this rule here as a safeguard
+    # under no conditions to suspended or inactive accounts get current_user
+    if current_user && (current_user.suspended? || !current_user.active)
+      current_user = nil
     end
 
     @env[CURRENT_USER_KEY] = current_user
@@ -107,10 +114,11 @@ class Auth::DefaultCurrentUserProvider
   def refresh_session(user, session, cookies)
     return if is_api?
 
-    if user && (!user.auth_token_updated_at || user.auth_token_updated_at <= 1.hour.ago)
+    if user && !is_user_api? && (!user.auth_token_updated_at || user.auth_token_updated_at <= 1.hour.ago)
       user.update_column(:auth_token_updated_at, Time.zone.now)
       cookies[TOKEN_COOKIE] = cookie_hash(user)
     end
+
     if !user && cookies.key?(TOKEN_COOKIE)
       cookies.delete(TOKEN_COOKIE)
     end
