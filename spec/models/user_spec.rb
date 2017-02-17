@@ -1398,9 +1398,17 @@ describe User do
       end
     end
 
-    describe 'when user is not trust level 0' do
+    describe 'when user is trust level 1' do
       it 'should return the right value' do
         user.update_attributes!(trust_level: TrustLevel[1])
+
+        expect(user.read_first_notification?).to eq(false)
+      end
+    end
+
+    describe 'when user is trust level 2' do
+      it 'should return the right value' do
+        user.update_attributes!(trust_level: TrustLevel[2])
 
         expect(user.read_first_notification?).to eq(true)
       end

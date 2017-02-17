@@ -354,7 +354,7 @@ class User < ActiveRecord::Base
   TRACK_FIRST_NOTIFICATION_READ_DURATION = 1.week.to_i
 
   def read_first_notification?
-    if (trust_level > TrustLevel[0] ||
+    if (trust_level > TrustLevel[1] ||
         created_at < TRACK_FIRST_NOTIFICATION_READ_DURATION.seconds.ago)
 
       return true
