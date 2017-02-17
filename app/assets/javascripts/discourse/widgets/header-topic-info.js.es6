@@ -9,7 +9,7 @@ import { topicFeaturedLinkNode } from 'discourse/lib/render-topic-featured-link'
 export default createWidget('header-topic-info', {
   tagName: 'div.extra-info-wrapper',
 
-  html(attrs) {
+  html(attrs, state) {
     const topic = attrs.topic;
 
     const heading = [];
@@ -45,13 +45,16 @@ export default createWidget('header-topic-info', {
         title.push(this.attach('category-link', { category }));
       }
 
-      const extra = [];
+      let extra = [];
       if (this.siteSettings.tagging_enabled) {
         const tags = topic.get('tags') || [];
         if (tags.length) {
           extra.push(h('div.list-tags', tags.map(tagNode)));
         }
       }
+
+      extra = extra.concat(applyDecorators(this, 'after-tags', attrs, state));
+
       if (this.siteSettings.topic_featured_link_enabled) {
         const featured = topicFeaturedLinkNode(attrs.topic);
         if (featured) {
