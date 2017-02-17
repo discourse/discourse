@@ -26,6 +26,18 @@ describe Auth::DefaultCurrentUserProvider do
     user = Fabricate(:user)
     ApiKey.create!(key: "hello", user_id: user.id, created_by_id: -1)
     expect(provider("/?api_key=hello").current_user.id).to eq(user.id)
+
+    user.update_columns(active: false)
+
+    expect{
+      provider("/?api_key=hello").current_user
+    }.to raise_error(Discourse::InvalidAccess)
+
+    user.update_columns(active: true, suspended_till: 1.day.from_now)
+
+    expect{
+      provider("/?api_key=hello").current_user
+    }.to raise_error(Discourse::InvalidAccess)
   end
 
   it "raises for a user pretending" do
@@ -246,6 +258,13 @@ describe Auth::DefaultCurrentUserProvider do
 
       expect {
         provider("/", params.merge({"REQUEST_METHOD" => "POST"})).current_user
+      }.to raise_error(Discourse::InvalidAccess)
+
+
+      user.update_columns(suspended_till: 1.year.from_now)
+
+      expect {
+        provider("/", params).current_user
       }.to raise_error(Discourse::InvalidAccess)
 
     end
