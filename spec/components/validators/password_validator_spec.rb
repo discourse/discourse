@@ -100,13 +100,13 @@ describe PasswordValidator do
       end
 
       it "doesn't add an error when there are enough unique characters" do
-        @password = "aaaaa54322"
+        @password = "aaaaa12345"
         validate
         expect(record.errors[:password]).not_to be_present
       end
 
       it "counts capital letters as different" do
-        @password = "aaaAaa543A"
+        @password = "aaaAaa1234"
         validate
         expect(record.errors[:password]).not_to be_present
       end
