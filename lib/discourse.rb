@@ -392,4 +392,24 @@ module Discourse
     [SiteSetting.tos_topic_id, SiteSetting.guidelines_topic_id, SiteSetting.privacy_topic_id]
   end
 
+  cattr_accessor :last_ar_cache_reset
+
+  def self.reset_active_record_cache_if_needed(e)
+    last_cache_reset = Discourse.last_ar_cache_reset
+    if e && e.message =~ /UndefinedColumn/ && (last_cache_reset.nil?  || last_cache_reset < 30.seconds.ago)
+      Rails.logger.warn "Clear Active Record cache cause schema appears to have changed!"
+      Discourse.last_ar_cache_reset = Time.zone.now
+      Discourse.reset_active_record_cache
+    end
+  end
+
+  def self.reset_active_record_cache
+    ActiveRecord::Base.connection.query_cache.clear
+    (ActiveRecord::Base.connection.tables - %w[schema_migrations]).each do |table|
+      table.classify.constantize.reset_column_information rescue nil
+    end
+    nil
+  end
+
+
 end
