@@ -98,13 +98,22 @@ TopicList.reopenClass({
     if (!result) { return; }
 
     // Stitch together our side loaded data
+
     const categories = Discourse.Category.list(),
-          users = Model.extractByKey(result.users, Discourse.User);
+          users = Model.extractByKey(result.users, Discourse.User),
+          groups = Model.extractByKey(result.primary_groups, Ember.Object);
 
     return result.topic_list.topics.map(function (t) {
       t.category = categories.findBy('id', t.category_id);
       t.posters.forEach(function(p) {
         p.user = users[p.user_id];
+        p.extraClasses = p.extras;
+        if (p.primary_group_id) {
+          p.primary_group = groups[p.primary_group_id];
+          if (p.primary_group) {
+            p.extraClasses += ` group-${p.primary_group.name}`;
+          }
+        }
       });
       if (t.participants) {
         t.participants.forEach(function(p) {

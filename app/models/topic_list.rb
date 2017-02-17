@@ -1,4 +1,5 @@
 require_dependency 'avatar_lookup'
+require_dependency 'primary_group_lookup'
 
 class TopicList
   include ActiveModel::Serialization
@@ -108,7 +109,11 @@ class TopicList
         ft.user_data.post_action_data = {post_action_type => actions}
       end
 
-      ft.posters = ft.posters_summary(avatar_lookup: avatar_lookup)
+      ft.posters = ft.posters_summary(
+        avatar_lookup: avatar_lookup,
+        primary_group_lookup: PrimaryGroupLookup.new(user_ids)
+      )
+
       ft.participants = ft.participants_summary(avatar_lookup: avatar_lookup, user: @current_user)
       ft.topic_list = self
     end

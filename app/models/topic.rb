@@ -816,7 +816,7 @@ SQL
     update_column(:like_count, Post.where(topic_id: id).sum(:like_count))
   end
 
-  def posters_summary(options = {})
+  def posters_summary(options = {}) # avatar lookup in options
     @posters_summary ||= TopicPostersSummary.new(self, options).summary
   end
 
