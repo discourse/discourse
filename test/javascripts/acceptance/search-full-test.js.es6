@@ -16,7 +16,7 @@ acceptance("Search - Full Page", {
 
     server.get('/users/search/users', () => { //eslint-disable-line
       return response({users: [{username: "admin", name: "admin",
-        avatar_template: "/letter_avatar_proxy/v2/letter/a/3ec8ea/{size}.png"}]});
+        avatar_template: "/images/avatar.png"}]});
     });
 
     server.get('/admin/groups.json', () => { //eslint-disable-line

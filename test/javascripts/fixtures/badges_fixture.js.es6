@@ -429,577 +429,577 @@ export default {
         "id": 11209,
         "username": "icaroperseo",
         "uploaded_avatar_id": 33076,
-        "avatar_template": "\/user_avatar\/meta.discourse.org\/icaroperseo\/{size}\/33076.png"
+        "avatar_template":"/images/avatar.png"
       },
       {
         "id": -1,
         "username": "system",
         "uploaded_avatar_id": 5241,
-        "avatar_template": "\/user_avatar\/meta.discourse.org\/system\/{size}\/5241.png"
+        "avatar_template":"/images/avatar.png"
       },
       {
         "id": 11234,
         "username": "allard",
         "uploaded_avatar_id": 33117,
-        "avatar_template": "\/user_avatar\/meta.discourse.org\/allard\/{size}\/33117.png"
+        "avatar_template":"/images/avatar.png"
       },
       {
         "id": 8944,
         "username": "hunterboerner",
         "uploaded_avatar_id": 33072,
-        "avatar_template": "\/user_avatar\/meta.discourse.org\/hunterboerner\/{size}\/33072.png"
+        "avatar_template":"/images/avatar.png"
       },
       {
         "id": 11232,
         "username": "daydreamer",
         "uploaded_avatar_id": 33101,
-        "avatar_template": "\/user_avatar\/meta.discourse.org\/daydreamer\/{size}\/33101.png"
+        "avatar_template":"/images/avatar.png"
       },
       {
         "id": 11160,
         "username": "boomzilla",
         "uploaded_avatar_id": 33029,
-        "avatar_template": "\/user_avatar\/meta.discourse.org\/boomzilla\/{size}\/33029.png"
+        "avatar_template":"/images/avatar.png"
       },
       {
         "id": 5303,
         "username": "ybart",
         "uploaded_avatar_id": 14132,
-        "avatar_template": "\/user_avatar\/meta.discourse.org\/ybart\/{size}\/14132.png"
+        "avatar_template":"/images/avatar.png"
       },
       {
         "id": 11142,
         "username": "Fluffy",
         "uploaded_avatar_id": 32957,
-        "avatar_template": "\/user_avatar\/meta.discourse.org\/fluffy\/{size}\/32957.png"
+        "avatar_template":"/images/avatar.png"
       },
       {
         "id": 8843,
         "username": "timoroso",
         "uploaded_avatar_id": 19114,
-        "avatar_template": "\/user_avatar\/meta.discourse.org\/timoroso\/{size}\/19114.png"
+        "avatar_template":"/images/avatar.png"
       },
       {
         "id": 10990,
         "username": "Nagesh",
         "uploaded_avatar_id": 32736,
-        "avatar_template": "\/user_avatar\/meta.discourse.org\/nagesh\/{size}\/32736.png"
+        "avatar_template":"/images/avatar.png"
       },
       {
         "id": 11027,
         "username": "dullroar",
         "uploaded_avatar_id": 32801,
-        "avatar_template": "\/user_avatar\/meta.discourse.org\/dullroar\/{size}\/32801.png"
+        "avatar_template":"/images/avatar.png"
       },
       {
         "id": 10481,
         "username": "Air_Cooled_Nut",
         "uploaded_avatar_id": 31833,
-        "avatar_template": "\/user_avatar\/meta.discourse.org\/air_cooled_nut\/{size}\/31833.png"
+        "avatar_template":"/images/avatar.png"
       },
       {
         "id": 10977,
         "username": "stevebridger",
         "uploaded_avatar_id": 32705,
-        "avatar_template": "\/user_avatar\/meta.discourse.org\/stevebridger\/{size}\/32705.png"
+        "avatar_template":"/images/avatar.png"
       },
       {
         "id": 10921,
         "username": "lnikkila",
         "uploaded_avatar_id": 32627,
-        "avatar_template": "\/user_avatar\/meta.discourse.org\/lnikkila\/{size}\/32627.png"
+        "avatar_template":"/images/avatar.png"
       },
       {
         "id": 8493,
         "username": "PJH",
         "uploaded_avatar_id": 33082,
-        "avatar_template": "\/user_avatar\/meta.discourse.org\/pjh\/{size}\/33082.png"
+        "avatar_template":"/images/avatar.png"
       },
       {
         "id": 10635,
         "username": "Ganzuelo",
         "uploaded_avatar_id": 32217,
-        "avatar_template": "\/user_avatar\/meta.discourse.org\/ganzuelo\/{size}\/32217.png"
+        "avatar_template":"/images/avatar.png"
       },
       {
         "id": 8300,
         "username": "cpradio",
         "uploaded_avatar_id": 4970,
-        "avatar_template": "\/user_avatar\/meta.discourse.org\/cpradio\/{size}\/4970.png"
+        "avatar_template":"/images/avatar.png"
       },
       {
         "id": 8571,
         "username": "tobiaseigen",
         "uploaded_avatar_id": 9785,
-        "avatar_template": "\/user_avatar\/meta.discourse.org\/tobiaseigen\/{size}\/9785.png"
+        "avatar_template":"/images/avatar.png"
       },
       {
         "id": 4263,
         "username": "mcwumbly",
         "uploaded_avatar_id": 9796,
-        "avatar_template": "\/user_avatar\/meta.discourse.org\/mcwumbly\/{size}\/9796.png"
+        "avatar_template":"/images/avatar.png"
       },
       {
         "id": 471,
         "username": "BhaelOchon",
         "uploaded_avatar_id": 6069,
-        "avatar_template": "\/user_avatar\/meta.discourse.org\/bhaelochon\/{size}\/6069.png"
+        "avatar_template":"/images/avatar.png"
       },
       {
         "id": 5249,
         "username": "cawas",
         "uploaded_avatar_id": 14043,
-        "avatar_template": "\/user_avatar\/meta.discourse.org\/cawas\/{size}\/14043.png"
+        "avatar_template":"/images/avatar.png"
       },
       {
         "id": 5461,
         "username": "thepractice",
         "uploaded_avatar_id": 2397,
-        "avatar_template": "\/user_avatar\/meta.discourse.org\/thepractice\/{size}\/2397.png"
+        "avatar_template":"/images/avatar.png"
       },
       {
         "id": 10467,
         "username": "chris18890",
         "uploaded_avatar_id": 31806,
-        "avatar_template": "\/user_avatar\/meta.discourse.org\/chris18890\/{size}\/31806.png"
+        "avatar_template":"/images/avatar.png"
       },
       {
         "id": 375,
         "username": "weirdcanada",
         "uploaded_avatar_id": 5902,
-        "avatar_template": "\/user_avatar\/meta.discourse.org\/weirdcanada\/{size}\/5902.png"
+        "avatar_template":"/images/avatar.png"
       },
       {
         "id": 8617,
         "username": "Mittineague",
         "uploaded_avatar_id": 4462,
-        "avatar_template": "\/user_avatar\/meta.discourse.org\/mittineague\/{size}\/4462.png"
+        "avatar_template":"/images/avatar.png"
       },
       {
         "id": 5962,
         "username": "TheMarkus",
         "uploaded_avatar_id": 15186,
-        "avatar_template": "\/user_avatar\/meta.discourse.org\/themarkus\/{size}\/15186.png"
+        "avatar_template":"/images/avatar.png"
       },
       {
         "id": 2806,
         "username": "fayimora",
         "uploaded_avatar_id": 10007,
-        "avatar_template": "\/user_avatar\/meta.discourse.org\/fayimora\/{size}\/10007.png"
+        "avatar_template":"/images/avatar.png"
       },
       {
         "id": 8364,
         "username": "codetricity",
         "uploaded_avatar_id": 3773,
-        "avatar_template": "\/user_avatar\/meta.discourse.org\/codetricity\/{size}\/3773.png"
+        "avatar_template":"/images/avatar.png"
       },
       {
         "id": 3752,
         "username": "liberatiluca",
         "uploaded_avatar_id": 11568,
-        "avatar_template": "\/user_avatar\/meta.discourse.org\/liberatiluca\/{size}\/11568.png"
+        "avatar_template":"/images/avatar.png"
       },
       {
         "id": 3483,
         "username": "Packetknife",
         "uploaded_avatar_id": 11144,
-        "avatar_template": "\/user_avatar\/meta.discourse.org\/packetknife\/{size}\/11144.png"
+        "avatar_template":"/images/avatar.png"
       },
       {
         "id": 32,
         "username": "codinghorror",
         "uploaded_avatar_id": 5297,
-        "avatar_template": "\/user_avatar\/meta.discourse.org\/codinghorror\/{size}\/5297.png"
+        "avatar_template":"/images/avatar.png"
       },
       {
         "id": 19,
         "username": "eviltrout",
         "uploaded_avatar_id": 5275,
-        "avatar_template": "\/user_avatar\/meta.discourse.org\/eviltrout\/{size}\/5275.png"
+        "avatar_template":"/images/avatar.png"
       },
       {
         "id": 7229,
         "username": "DavidGNavas",
         "uploaded_avatar_id": 17081,
-        "avatar_template": "\/user_avatar\/meta.discourse.org\/davidgnavas\/{size}\/17081.png"
+        "avatar_template":"/images/avatar.png"
       },
       {
         "id": 1219,
         "username": "Gweebz",
         "uploaded_avatar_id": 7304,
-        "avatar_template": "\/user_avatar\/meta.discourse.org\/gweebz\/{size}\/7304.png"
+        "avatar_template":"/images/avatar.png"
       },
       {
         "id": 7743,
         "username": "ZeroFlux",
         "uploaded_avatar_id": 2256,
-        "avatar_template": "\/user_avatar\/meta.discourse.org\/zeroflux\/{size}\/2256.png"
+        "avatar_template":"/images/avatar.png"
       },
       {
         "id": 8510,
         "username": "tannerfilip",
         "uploaded_avatar_id": 18674,
-        "avatar_template": "\/user_avatar\/meta.discourse.org\/tannerfilip\/{size}\/18674.png"
+        "avatar_template":"/images/avatar.png"
       },
       {
         "id": 1496,
         "username": "cfstras",
         "uploaded_avatar_id": 7776,
-        "avatar_template": "\/user_avatar\/meta.discourse.org\/cfstras\/{size}\/7776.png"
+        "avatar_template":"/images/avatar.png"
       },
       {
         "id": 3986,
         "username": "creativetech",
         "uploaded_avatar_id": 11955,
-        "avatar_template": "\/user_avatar\/meta.discourse.org\/creativetech\/{size}\/11955.png"
+        "avatar_template":"/images/avatar.png"
       },
       {
         "id": 3800,
         "username": "stealthii",
         "uploaded_avatar_id": 11645,
-        "avatar_template": "\/user_avatar\/meta.discourse.org\/stealthii\/{size}\/11645.png"
+        "avatar_template":"/images/avatar.png"
       },
       {
         "id": 6613,
         "username": "haiku",
         "uploaded_avatar_id": 9781,
-        "avatar_template": "\/user_avatar\/meta.discourse.org\/haiku\/{size}\/9781.png"
+        "avatar_template":"/images/avatar.png"
       },
       {
         "id": 5351,
         "username": "erlend_sh",
         "uploaded_avatar_id": 9794,
-        "avatar_template": "\/user_avatar\/meta.discourse.org\/erlend_sh\/{size}\/9794.png"
+        "avatar_template":"/images/avatar.png"
       },
       {
         "id": 5983,
         "username": "JohnSReid",
         "uploaded_avatar_id": 32238,
-        "avatar_template": "\/user_avatar\/meta.discourse.org\/johnsreid\/{size}\/32238.png"
+        "avatar_template":"/images/avatar.png"
       },
       {
         "id": 701,
         "username": "johncoder",
         "uploaded_avatar_id": 6447,
-        "avatar_template": "\/user_avatar\/meta.discourse.org\/johncoder\/{size}\/6447.png"
+        "avatar_template":"/images/avatar.png"
       },
       {
         "id": 5707,
         "username": "trident",
         "uploaded_avatar_id": 31178,
-        "avatar_template": "\/user_avatar\/meta.discourse.org\/trident\/{size}\/31178.png"
+        "avatar_template":"/images/avatar.png"
       },
       {
         "id": 255,
         "username": "uwe_keim",
         "uploaded_avatar_id": 5697,
-        "avatar_template": "\/user_avatar\/meta.discourse.org\/uwe_keim\/{size}\/5697.png"
+        "avatar_template":"/images/avatar.png"
       },
       {
         "id": 9931,
         "username": "Frank",
         "uploaded_avatar_id": 32861,
-        "avatar_template": "\/user_avatar\/meta.discourse.org\/frank\/{size}\/32861.png"
+        "avatar_template":"/images/avatar.png"
       },
       {
         "id": 5543,
         "username": "trevor",
         "uploaded_avatar_id": 14507,
-        "avatar_template": "\/user_avatar\/meta.discourse.org\/trevor\/{size}\/14507.png"
+        "avatar_template":"/images/avatar.png"
       },
       {
         "id": 3987,
         "username": "Sander78",
         "uploaded_avatar_id": 9787,
-        "avatar_template": "\/user_avatar\/meta.discourse.org\/sander78\/{size}\/9787.png"
+        "avatar_template":"/images/avatar.png"
       },
       {
         "id": 7850,
         "username": "tudorv",
         "uploaded_avatar_id": 2568,
-        "avatar_template": "\/user_avatar\/meta.discourse.org\/tudorv\/{size}\/2568.png"
+        "avatar_template":"/images/avatar.png"
       },
       {
         "id": 6653,
         "username": "amitfrid",
         "uploaded_avatar_id": 16262,
-        "avatar_template": "\/user_avatar\/meta.discourse.org\/amitfrid\/{size}\/16262.png"
+        "avatar_template":"/images/avatar.png"
       },
       {
         "id": 4419,
         "username": "sasivarnakumar",
         "uploaded_avatar_id": 12661,
-        "avatar_template": "\/user_avatar\/meta.discourse.org\/sasivarnakumar\/{size}\/12661.png"
+        "avatar_template":"/images/avatar.png"
       },
       {
         "id": 5710,
         "username": "elvanja",
         "uploaded_avatar_id": 14781,
-        "avatar_template": "\/user_avatar\/meta.discourse.org\/elvanja\/{size}\/14781.png"
+        "avatar_template":"/images/avatar.png"
       },
       {
         "id": 5401,
         "username": "nilaykumar",
         "uploaded_avatar_id": 14275,
-        "avatar_template": "\/user_avatar\/meta.discourse.org\/nilaykumar\/{size}\/14275.png"
+        "avatar_template":"/images/avatar.png"
       },
       {
         "id": 6809,
         "username": "buster",
         "uploaded_avatar_id": 31175,
-        "avatar_template": "\/user_avatar\/meta.discourse.org\/buster\/{size}\/31175.png"
+        "avatar_template":"/images/avatar.png"
       },
       {
         "id": 169,
         "username": "blowmage",
         "uploaded_avatar_id": 5545,
-        "avatar_template": "\/user_avatar\/meta.discourse.org\/blowmage\/{size}\/5545.png"
+        "avatar_template":"/images/avatar.png"
       },
       {
         "id": 766,
         "username": "dworthley",
         "uploaded_avatar_id": 6561,
-        "avatar_template": "\/user_avatar\/meta.discourse.org\/dworthley\/{size}\/6561.png"
+        "avatar_template":"/images/avatar.png"
       },
       {
         "id": 1612,
         "username": "trottier",
         "uploaded_avatar_id": 7977,
-        "avatar_template": "\/user_avatar\/meta.discourse.org\/trottier\/{size}\/7977.png"
+        "avatar_template":"/images/avatar.png"
       },
       {
         "id": 6019,
         "username": "mandie",
         "uploaded_avatar_id": 15273,
-        "avatar_template": "\/user_avatar\/meta.discourse.org\/mandie\/{size}\/15273.png"
+        "avatar_template":"/images/avatar.png"
       },
       {
         "id": 3724,
         "username": "Manikin75",
         "uploaded_avatar_id": 11520,
-        "avatar_template": "\/user_avatar\/meta.discourse.org\/manikin75\/{size}\/11520.png"
+        "avatar_template":"/images/avatar.png"
       },
       {
         "id": 1556,
         "username": "OfferKaye",
         "uploaded_avatar_id": 7878,
-        "avatar_template": "\/user_avatar\/meta.discourse.org\/offerkaye\/{size}\/7878.png"
+        "avatar_template":"/images/avatar.png"
       },
       {
         "id": 4063,
         "username": "blanco",
         "uploaded_avatar_id": 12082,
-        "avatar_template": "\/user_avatar\/meta.discourse.org\/blanco\/{size}\/12082.png"
+        "avatar_template":"/images/avatar.png"
       },
       {
         "id": 1621,
         "username": "bnb",
         "uploaded_avatar_id": 7992,
-        "avatar_template": "\/user_avatar\/meta.discourse.org\/bnb\/{size}\/7992.png"
+        "avatar_template":"/images/avatar.png"
       },
       {
         "id": 3095,
         "username": "ayush",
         "uploaded_avatar_id": 10504,
-        "avatar_template": "\/user_avatar\/meta.discourse.org\/ayush\/{size}\/10504.png"
+        "avatar_template":"/images/avatar.png"
       },
       {
         "id": 754,
         "username": "danneu",
         "uploaded_avatar_id": 6540,
-        "avatar_template": "\/user_avatar\/meta.discourse.org\/danneu\/{size}\/6540.png"
+        "avatar_template":"/images/avatar.png"
       },
       {
         "id": 6548,
         "username": "michaeld",
         "uploaded_avatar_id": 1594,
-        "avatar_template": "\/user_avatar\/meta.discourse.org\/michaeld\/{size}\/1594.png"
+        "avatar_template":"/images/avatar.png"
       },
       {
         "id": 4457,
         "username": "Lee_Ars",
         "uploaded_avatar_id": 1597,
-        "avatar_template": "\/user_avatar\/meta.discourse.org\/lee_ars\/{size}\/1597.png"
+        "avatar_template":"/images/avatar.png"
       },
       {
         "id": 5160,
         "username": "eriko",
         "uploaded_avatar_id": 1915,
-        "avatar_template": "\/user_avatar\/meta.discourse.org\/eriko\/{size}\/1915.png"
+        "avatar_template":"/images/avatar.png"
       },
       {
         "id": 10150,
         "username": "ampburner",
         "uploaded_avatar_id": 5103,
-        "avatar_template": "\/user_avatar\/meta.discourse.org\/ampburner\/{size}\/5103.png"
+        "avatar_template":"/images/avatar.png"
       },
       {
         "id": 1,
         "username": "sam",
         "uploaded_avatar_id": 5243,
-        "avatar_template": "\/user_avatar\/meta.discourse.org\/sam\/{size}\/5243.png"
+        "avatar_template":"/images/avatar.png"
       },
       {
         "id": 1995,
         "username": "zogstrip",
         "uploaded_avatar_id": 8630,
-        "avatar_template": "\/user_avatar\/meta.discourse.org\/zogstrip\/{size}\/8630.png"
+        "avatar_template":"/images/avatar.png"
       },
       {
         "id": 9536,
         "username": "nahtnam",
         "uploaded_avatar_id": 20077,
-        "avatar_template": "\/user_avatar\/meta.discourse.org\/nahtnam\/{size}\/20077.png"
+        "avatar_template":"/images/avatar.png"
       },
       {
         "id": 5559,
         "username": "downey",
         "uploaded_avatar_id": 14532,
-        "avatar_template": "\/user_avatar\/meta.discourse.org\/downey\/{size}\/14532.png"
+        "avatar_template":"/images/avatar.png"
       },
       {
         "id": 6626,
         "username": "riking",
         "uploaded_avatar_id": 9779,
-        "avatar_template": "\/user_avatar\/meta.discourse.org\/riking\/{size}\/9779.png"
+        "avatar_template":"/images/avatar.png"
       },
       {
         "id": 562,
         "username": "nightpool",
         "uploaded_avatar_id": 6220,
-        "avatar_template": "\/user_avatar\/meta.discourse.org\/nightpool\/{size}\/6220.png"
+        "avatar_template":"/images/avatar.png"
       },
       {
         "id": 2770,
         "username": "awesomerobot",
         "uploaded_avatar_id": 32393,
-        "avatar_template": "\/user_avatar\/meta.discourse.org\/awesomerobot\/{size}\/32393.png"
+        "avatar_template":"/images/avatar.png"
       },
       {
         "id": 4385,
         "username": "jeans",
         "uploaded_avatar_id": 12606,
-        "avatar_template": "\/user_avatar\/meta.discourse.org\/jeans\/{size}\/12606.png"
+        "avatar_template":"/images/avatar.png"
       },
       {
         "id": 8222,
         "username": "techAPJ",
         "uploaded_avatar_id": 3281,
-        "avatar_template": "\/user_avatar\/meta.discourse.org\/techapj\/{size}\/3281.png"
+        "avatar_template":"/images/avatar.png"
       },
       {
         "id": 1274,
         "username": "binaryphile",
         "uploaded_avatar_id": 7399,
-        "avatar_template": "\/user_avatar\/meta.discourse.org\/binaryphile\/{size}\/7399.png"
+        "avatar_template":"/images/avatar.png"
       },
       {
         "id": 15,
         "username": "Hanzo",
         "uploaded_avatar_id": 5267,
-        "avatar_template": "\/user_avatar\/meta.discourse.org\/hanzo\/{size}\/5267.png"
+        "avatar_template":"/images/avatar.png"
       },
       {
         "id": 5199,
         "username": "sefier",
         "uploaded_avatar_id": 31207,
-        "avatar_template": "\/user_avatar\/meta.discourse.org\/sefier\/{size}\/31207.png"
+        "avatar_template":"/images/avatar.png"
       },
       {
         "id": 2316,
         "username": "pakl",
         "uploaded_avatar_id": 9157,
-        "avatar_template": "\/user_avatar\/meta.discourse.org\/pakl\/{size}\/9157.png"
+        "avatar_template":"/images/avatar.png"
       },
       {
         "id": 393,
         "username": "freney",
         "uploaded_avatar_id": 5932,
-        "avatar_template": "\/user_avatar\/meta.discourse.org\/freney\/{size}\/5932.png"
+        "avatar_template":"/images/avatar.png"
       },
       {
         "id": 8492,
         "username": "Onaldan",
         "uploaded_avatar_id": 18651,
-        "avatar_template": "\/user_avatar\/meta.discourse.org\/onaldan\/{size}\/18651.png"
+        "avatar_template":"/images/avatar.png"
       },
       {
         "id": 5002,
         "username": "jakeberger",
         "uploaded_avatar_id": 13630,
-        "avatar_template": "\/user_avatar\/meta.discourse.org\/jakeberger\/{size}\/13630.png"
+        "avatar_template":"/images/avatar.png"
       },
       {
         "id": 2544,
         "username": "davideyre",
         "uploaded_avatar_id": 9543,
-        "avatar_template": "\/user_avatar\/meta.discourse.org\/davideyre\/{size}\/9543.png"
+        "avatar_template":"/images/avatar.png"
       },
       {
         "id": 8342,
         "username": "sethuv",
         "uploaded_avatar_id": 3036,
-        "avatar_template": "\/user_avatar\/meta.discourse.org\/sethuv\/{size}\/3036.png"
+        "avatar_template":"/images/avatar.png"
       },
       {
         "id": 1128,
         "username": "Tigraine",
         "uploaded_avatar_id": 7152,
-        "avatar_template": "\/user_avatar\/meta.discourse.org\/tigraine\/{size}\/7152.png"
+        "avatar_template":"/images/avatar.png"
       },
       {
         "id": 2477,
         "username": "billybonks",
         "uploaded_avatar_id": 9430,
-        "avatar_template": "\/user_avatar\/meta.discourse.org\/billybonks\/{size}\/9430.png"
+        "avatar_template":"/images/avatar.png"
       },
       {
         "id": 4549,
         "username": "davidcelis",
         "uploaded_avatar_id": 12882,
-        "avatar_template": "\/user_avatar\/meta.discourse.org\/davidcelis\/{size}\/12882.png"
+        "avatar_template":"/images/avatar.png"
       },
       {
         "id": 7264,
         "username": "etrowbridge",
         "uploaded_avatar_id": 31199,
-        "avatar_template": "\/user_avatar\/meta.discourse.org\/etrowbridge\/{size}\/31199.png"
+        "avatar_template":"/images/avatar.png"
       },
       {
         "id": 413,
         "username": "adam_baldwin",
         "uploaded_avatar_id": 5962,
-        "avatar_template": "\/user_avatar\/meta.discourse.org\/adam_baldwin\/{size}\/5962.png"
+        "avatar_template":"/images/avatar.png"
       },
       {
         "id": 8658,
         "username": "Datachick",
         "uploaded_avatar_id": 18865,
-        "avatar_template": "\/user_avatar\/meta.discourse.org\/datachick\/{size}\/18865.png"
+        "avatar_template":"/images/avatar.png"
       },
       {
         "id": 5294,
         "username": "madbomber",
         "uploaded_avatar_id": 14118,
-        "avatar_template": "\/user_avatar\/meta.discourse.org\/madbomber\/{size}\/14118.png"
+        "avatar_template":"/images/avatar.png"
       },
       {
         "id": 4750,
         "username": "dainbinder",
         "uploaded_avatar_id": 13220,
-        "avatar_template": "\/user_avatar\/meta.discourse.org\/dainbinder\/{size}\/13220.png"
+        "avatar_template":"/images/avatar.png"
       },
       {
         "id": 2735,
         "username": "royce_williams",
         "uploaded_avatar_id": 9887,
-        "avatar_template": "\/user_avatar\/meta.discourse.org\/royce_williams\/{size}\/9887.png"
+        "avatar_template":"/images/avatar.png"
       },
       {
         "id": 9089,
         "username": "Keezer",
         "uploaded_avatar_id": 31186,
-        "avatar_template": "\/user_avatar\/meta.discourse.org\/keezer\/{size}\/31186.png"
+        "avatar_template":"/images/avatar.png"
       }
     ],
     "user_badges": [
@@ -1677,4 +1677,4 @@ export default {
       }
     ]
   }
-}
+};
