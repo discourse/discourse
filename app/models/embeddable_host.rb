@@ -17,20 +17,19 @@ class EmbeddableHost < ActiveRecord::Base
     host = uri.host
     return false unless host.present?
 
-    where("lower(host) = ?", host).first
+    path = uri.path
+    path << "?" << uri.query if uri.query.present?
+
+    where("lower(host) = ?", host).each do |eh|
+      return eh if eh.path_whitelist.blank? || !Regexp.new(eh.path_whitelist).match(path).nil?
+    end
+
+    nil
   end
 
   def self.url_allowed?(url)
     uri = URI(url) rescue nil
-    return false unless uri.present?
-
-    path = uri.path
-    path << "?" << uri.query if uri.query.present?
-
-    host = record_for_url(uri)
-
-    return host.present? &&
-           (host.path_whitelist.blank? || !Regexp.new(host.path_whitelist).match(path).nil?)
+    uri.present? && record_for_url(uri).present?
   end
 
   private

@@ -77,6 +77,13 @@ describe EmbeddableHost do
       expect(EmbeddableHost.url_allowed?('http://eviltrout.com/fp?test=1')).to eq(false)
       expect(EmbeddableHost.url_allowed?('http://eviltrout.com/fp')).to eq(true)
     end
+
+    it "allows multiple records with different paths" do
+      Fabricate(:embeddable_host, path_whitelist: '/rick/.*')
+      Fabricate(:embeddable_host, path_whitelist: '/morty/.*')
+      expect(EmbeddableHost.url_allowed?('http://eviltrout.com/rick/smith')).to eq(true)
+      expect(EmbeddableHost.url_allowed?('http://eviltrout.com/morty/sanchez')).to eq(true)
+    end
   end
 
 end
