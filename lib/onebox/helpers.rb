@@ -1,7 +1,7 @@
 module Onebox
   module Helpers
 
-    class DownloadTooLarge < Exception; end;
+    class DownloadTooLarge < StandardError; end;
 
     def self.symbolize_keys(hash)
       return {} if hash.nil?
@@ -97,9 +97,9 @@ module Onebox
         return "#{(size)} #{conv[ndx-1]}"
       end
       size=size.to_f
-      [2,3,4,5,6,7].each do |ndx|
-        if( size < 2*(scale**ndx)  ) then
-          return "#{'%.2f' % (size/(scale**(ndx-1)))} #{conv[ndx-1]}"
+      [2,3,4,5,6,7].each do |i|
+        if (size < 2*(scale**i)) then
+          return "#{'%.2f' % (size/(scale**(i-1)))} #{conv[i-1]}"
         end
       end
       ndx=7
