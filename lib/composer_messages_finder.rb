@@ -146,6 +146,7 @@ class ComposerMessagesFinder
     last_x_replies = @topic.
       posts.
       where(user_id: @user.id).
+      order('created_at desc').
       limit(SiteSetting.get_a_room_threshold).
       pluck(:reply_to_user_id).
       find_all {|uid| uid != @user.id && uid == reply_to_user_id}
