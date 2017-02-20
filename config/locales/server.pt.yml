@@ -2040,7 +2040,6 @@ pt:
       follow_topic: "Acompanhar este tópico"
       join_the_discussion: "Ler Mais"
       popular_posts: "Publicações Populares"
-      from_topic_label: "De"
       subject_template: "Sumário de [%{site_name}] "
       unsubscribe: "Este resumo é enviado de %{site_link} quando não o vemos há algum tempo. Para anular a subscrição %{unsubscribe_link}."
       click_here: "clique aqui"

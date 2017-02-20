@@ -2183,7 +2183,6 @@ he:
       follow_topic: "עיקבו אחרי נושא זה"
       join_the_discussion: "קראו עוד"
       popular_posts: "פוסטים פופולאריים"
-      from_topic_label: "מאת"
       more_new: "חדש בשבילכם"
       subject_template: "[%{site_name}] סיכום"
       unsubscribe: "סיכום זה נשלח מ %{site_link} כאשר אנחנו לא רואים אתכם לאורך זמן. כדי לבטל את המנוי %{unsubscribe_link}."

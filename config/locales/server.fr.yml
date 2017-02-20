@@ -2091,7 +2091,6 @@ fr:
       follow_topic: "Suivre ce sujet"
       join_the_discussion: "Lire la suite"
       popular_posts: "Messages populaires"
-      from_topic_label: "De"
       more_new: "Nouveau pour vous"
       subject_template: "[%{site_name}] Résumé"
       unsubscribe: "Ce résumé est envoyé depuis %{site_link} lorsque nous ne vous voyons plus depuis un moment. Pour se désabonner %{unsubscribe_link}."

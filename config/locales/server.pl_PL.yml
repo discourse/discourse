@@ -1465,7 +1465,6 @@ pl_PL:
       follow_topic: "Śledź ten temat"
       join_the_discussion: "Czytaj więcej"
       popular_posts: "Popularne wpisy"
-      from_topic_label: "Od"
       more_new: "Nowe dla ciebie"
       subject_template: "%{site_name} Podsumowanie"
       click_here: "kliknij tutaj"

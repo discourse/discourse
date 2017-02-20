@@ -2184,7 +2184,6 @@ de:
       follow_topic: "Diesem Thema folgen"
       join_the_discussion: "Mehr lesen"
       popular_posts: "Beliebte Beiträge"
-      from_topic_label: "Von"
       more_new: "Neu für dich"
       subject_template: "Zusammenfassung für [%{site_name}]"
       unsubscribe: "Diese Zusammenfassung wird von %{site_link} gesendet, wenn wir dich einige Zeit lang nicht gesehen haben. Abbestellen unter %{unsubscribe_link}."
