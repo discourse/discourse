@@ -172,7 +172,6 @@ export default createWidget('header', {
       searchVisible: false,
       hamburgerVisible: false,
       userVisible: false,
-      contextEnabled: false,
       ringBackdrop: true
     };
 
@@ -192,6 +191,19 @@ export default createWidget('header', {
                                                   flagCount: attrs.flagCount })];
 
     if (state.searchVisible) {
+      const contextType = this.searchContextType();
+
+      if (state.searchContextType !== contextType) {
+        state.contextEnabled = undefined;
+      }
+
+      state.searchContextType = contextType;
+
+      if (state.contextEnabled === undefined) {
+        if (contextType === 'category' || contextType === 'user') {
+          state.contextEnabled = true;
+        }
+      }
       panels.push(this.attach('search-menu', { contextEnabled: state.contextEnabled }));
     } else if (state.hamburgerVisible) {
       panels.push(this.attach('hamburger-menu'));
@@ -317,6 +329,16 @@ export default createWidget('header', {
           msg.event.stopPropagation();
         }
         break;
+    }
+  },
+
+  searchContextType() {
+    const service = this.register.lookup('search-service:main');
+    if (service) {
+      const ctx = service.get('searchContext');
+      if (ctx) {
+        return Ember.get(ctx, 'type');
+      }
     }
   }
 

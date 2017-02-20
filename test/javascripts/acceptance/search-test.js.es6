@@ -24,3 +24,26 @@ test("search", (assert) => {
     assert.ok(exists('.search-advanced-options'), 'advanced search is expanded');
   });
 });
+
+test("search scope checkbox", () => {
+  visit("/c/bug");
+  click('#search-button');
+  andThen(() => {
+    ok(exists('.search-context input:checked'), 'scope to category checkbox is checked');
+  });
+  click('#search-button');
+
+  visit("/t/internationalization-localization/280");
+  click('#search-button');
+  andThen(() => {
+    not(exists('.search-context input:checked'), 'scope to topic checkbox is not checked');
+  });
+  click('#search-button');
+
+  visit("/users/eviltrout");
+  click('#search-button');
+  andThen(() => {
+    ok(exists('.search-context input:checked'), 'scope to user checkbox is checked');
+  });
+});
+
