@@ -1,4 +1,4 @@
-function applicable() {
+export function applicable() {
   // IE has no DOMNodeInserted so can not get this hack despite saying it is like iPhone
   // This will apply hack on all iDevices
   return navigator.userAgent.match(/(iPad|iPhone|iPod)/g) &&
