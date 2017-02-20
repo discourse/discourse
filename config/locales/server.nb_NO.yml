@@ -887,7 +887,6 @@ nb_NO:
       follow_topic: "Følg dette emnet"
       join_the_discussion: "Les mer"
       popular_posts: "Populære innlegg"
-      from_topic_label: "Fra"
       more_new: "Nytt for deg"
       subject_template: "[%{site_name}] Oppsummering"
       unsubscribe: "Denne oppsummeringen blir sendt fra %{site_link} når vi ikke har sett deg på en stund. For å melde deg av %{unsubscribe_link}."

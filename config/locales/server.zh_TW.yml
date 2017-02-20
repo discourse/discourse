@@ -2082,7 +2082,6 @@ zh_TW:
       follow_topic: "關注主題"
       join_the_discussion: "閲讀更多"
       popular_posts: "流行帖子"
-      from_topic_label: "來自"
       more_new: "新內容"
       subject_template: "[%{site_name}] 摘要"
       unsubscribe: "這是封來自%{site_link}的摘要郵件，因為你長時間沒有訪問而發送。%{unsubscribe_link}取消訂閲。"

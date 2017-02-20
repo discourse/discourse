@@ -1564,7 +1564,6 @@ pt_BR:
       follow_topic: "Seguir esse tópico"
       join_the_discussion: "Leia Mais"
       popular_posts: "Publicações Populares"
-      from_topic_label: "De"
       subject_template: "[%{site_name}] Resumo das discussões"
       unsubscribe: "Este resumo é enviado por %{site_link} quando não o vemos há algum tempo. Para cancelar a assinatura %{unsubscribe_link}."
       click_here: "clique aqui"

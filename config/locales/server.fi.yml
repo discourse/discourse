@@ -2159,7 +2159,6 @@ fi:
       follow_topic: "Seuraa tätä ketjua"
       join_the_discussion: "Lue lisää"
       popular_posts: "Suosittuja viestejä"
-      from_topic_label: "Lähettäjä"
       more_new: "Uutta sinulle"
       subject_template: "[%{site_name}] Kooste"
       unsubscribe: "Tämä kooste lähetettiin sivustolta %{site_link}, koska emme ole nähneet sinua vähään aikaan. Jos et halua vastaanottaa näitä viestejä %{unsubscribe_link}."
