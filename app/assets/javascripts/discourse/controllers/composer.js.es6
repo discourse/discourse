@@ -404,12 +404,14 @@ export default Ember.Controller.extend({
   disableSubmit: Ember.computed.or("model.loading", "isUploading"),
 
   save(force) {
-    const composer = this.get('model');
+    if (this.get("disableSubmit")) return;
 
     // Clear the warning state if we're not showing the checkbox anymore
     if (!this.get('showWarning')) {
       this.set('model.isWarning', false);
     }
+
+    const composer = this.get('model');
 
     if (composer.get('cantSubmitPost')) {
       this.set('lastValidatedAt', Date.now());
