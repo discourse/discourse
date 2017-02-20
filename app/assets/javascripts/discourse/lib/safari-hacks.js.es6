@@ -1,4 +1,4 @@
-export function applicable() {
+export function isAppleDevice() {
   // IE has no DOMNodeInserted so can not get this hack despite saying it is like iPhone
   // This will apply hack on all iDevices
   return navigator.userAgent.match(/(iPad|iPhone|iPod)/g) &&
@@ -32,7 +32,7 @@ export function isWorkaroundActive() {
 
 // per http://stackoverflow.com/questions/29001977/safari-in-ios8-is-scrolling-screen-when-fixed-elements-get-focus/29064810
 function positioningWorkaround($fixedElement) {
-  if (!applicable()) {
+  if (!isAppleDevice()) {
     return;
   }
 
