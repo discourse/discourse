@@ -190,6 +190,8 @@ describe User do
 
       it "has correct settings" do
         expect(subject.email_tokens).to be_present
+        expect(subject.user_stat).to be_present
+        expect(subject.user_profile).to be_present
         expect(subject.user_option.email_private_messages).to eq(true)
         expect(subject.user_option.email_direct).to eq(true)
       end
