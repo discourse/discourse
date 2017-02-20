@@ -985,7 +985,6 @@ class User < ActiveRecord::Base
     end
   end
 
-
   def hash_password(password, salt)
     raise StandardError.new("password is too long") if password.size > User.max_password_length
     Pbkdf2.hash_password(password, salt, Rails.configuration.pbkdf2_iterations, Rails.configuration.pbkdf2_algorithm)

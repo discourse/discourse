@@ -77,6 +77,10 @@ class UserStat < ActiveRecord::Base
     cache_last_seen(Time.now.to_f)
   end
 
+  def reset_bounce_score!
+    update_columns(reset_bounce_score_after: nil, bounce_score: 0)
+  end
+
   protected
 
   def trigger_badges
