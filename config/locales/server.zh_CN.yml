@@ -1187,7 +1187,6 @@ zh_CN:
     show_create_topics_notice: "如果站点只有少于 5 篇的公开帖子时，显示一条请管理员创建帖子的提示。"
     delete_drafts_older_than_n_days: 删除超过 n 天得草稿。
     bootstrap_mode_min_users: "禁用摘要模式的用户数下限（0 为禁用）。"
-    vacuum_db_days: "在数据库迁移后使用完整扫描回收数据库空间（设置 0 为禁用）"
     prevent_anons_from_downloading_files: "禁止匿名用户下载附件。警告：这将禁止他们访问任何发表在帖子中的非图片资源。"
     slug_generation_method: "选择一个链接生成方式。“encoded”将生成以百分号编码的链接。“none”将禁用自定义链接，只生成默认链接。"
     enable_emoji: "启用绘文字（emoji）"

@@ -1042,7 +1042,6 @@ tr_TR:
     show_create_topics_notice: "Eğer sitede herkese açık konu sayısı 5'den az ise, yöneticiden yeni konular oluşturmasını isteyen bir uyarı iletisi göster. "
     delete_drafts_older_than_n_days: (n) günden eski taslakları sil.
     bootstrap_mode_min_users: "bootstrap modunun edilgen olması için gereken en az kullanıcı sayısı (edilgen bırakmak için 0 yapın)"
-    vacuum_db_days: "Geçiş sonrası DB alanı geri kazanmak için TAM VAKUM ANALİZİ'ni çalıştırın (devre dışı bırakmak için 0 girin)"
     prevent_anons_from_downloading_files: "Anonim kullanıcıların eklenti indirebilmesini önle. DİKKAT: Bu ayar, eklenti olarak gönderilen resim-dışı site içeriklerinin de çalışmasını engelleyebilir."
     slug_generation_method: "Slug üretim yöntemi seçin. 'kodlanmış' seçeneği yüzde kodlamalı metin oluşturur. 'hiçbiri' seçeneği slug'ı devre dışı bırakır."
     enable_emoji: "Emojiyi etkinleştir"
