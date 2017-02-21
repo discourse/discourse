@@ -30,11 +30,11 @@
         <th>{{i18n 'username'}}</th>
         <th>{{i18n 'email'}}</th>
         <th>{{i18n 'admin.users.last_emailed'}}</th>
-        {{admin-directory-toggle field="last_seen" order=order asc=asc}}
-        {{admin-directory-toggle field="admin.user.topics_entered" order=order asc=asc}}
-        {{admin-directory-toggle field="admin.user.posts_read_count" order=order asc=asc}}
-        {{admin-directory-toggle field="admin.user.time_read" order=order asc=asc}}
-        <th>{{i18n 'created'}}</th>
+        {{admin-directory-toggle field="seen" i18nKey='last_seen' order=order ascending=ascending}}
+        {{admin-directory-toggle field="topics_viewed" i18nKey="admin.user.topics_entered" order=order ascending=ascending}}
+        {{admin-directory-toggle field="posts_read" i18nKey="admin.user.posts_read_count" order=order ascending=ascending}}
+        {{admin-directory-toggle field="read_time" i18nKey="admin.user.time_read" order=order ascending=ascending}}
+        <th>{{admin-directory-toggle field="created" i18nKey="created" order=order ascending=ascending}}</th>
         {{#if showApproval}}
           <th>{{i18n 'admin.users.approved'}}</th>
         {{/if}}
@@ -44,22 +44,42 @@
         {{#each model as |user|}}
           <tr class="user {{user.selected}} {{unless user.active 'not-activated'}}">
             {{#if showApproval}}
-              <td>
-                {{#if user.can_approve}}
-                  {{input type="checkbox" checked=user.selected}}
-                {{/if}}
-              </td>
+            <td>
+              {{#if user.can_approve}}
+                {{input type="checkbox" checked=user.selected}}
+              {{/if}}
+            </td>
             {{/if}}
-            <td><a href="{{unbound user.path}}" data-user-card="{{unbound user.username}}">{{avatar user imageSize="small"}}</a></td>
-            <td>{{#link-to 'adminUser' user}}{{unbound user.username}}{{/link-to}}</td>
-            <td class='email'>{{unbound user.email}}</td>
-            <td>{{{unbound user.last_emailed_age}}}</td>
-            <td>{{{unbound user.last_seen_age}}}</td>
-            <td>{{number user.topics_entered}}</td>
-            <td>{{number user.posts_read_count}}</td>
-            <td>{{{unbound user.time_read}}}</td>
+            <td>
+              <a href="{{unbound user.path}}" data-user-card="{{unbound user.username}}">
+                {{avatar user imageSize="small"}}
+              </a>
+            </td>
+            <td>
+              {{#link-to 'adminUser' user}}{{unbound user.username}}{{/link-to}}
+            </td>
+            <td class='email'>
+              {{unbound user.email}}
+            </td>
+            <td>
+              {{{unbound user.last_emailed_age}}}
+            </td>
+            <td>
+              {{{unbound user.last_seen_age}}}
+            </td>
+            <td>
+              {{number user.topics_entered}}
+            </td>
+            <td>
+              {{number user.posts_read_count}}
+            </td>
+            <td>
+              {{{unbound user.time_read}}}
+            </td>
 
-            <td>{{{unbound user.created_at_age}}}</td>
+            <td>
+              {{{unbound user.created_at_age}}}
+            </td>
 
             {{#if showApproval}}
               <td>
@@ -82,7 +102,7 @@
         {{/each}}
       </tbody>
     </table>
-    {{conditional-loading-spinner condition=model.loadingMore}}
+
   {{else}}
     <p>{{i18n 'search.no_results'}}</p>
   {{/if}}

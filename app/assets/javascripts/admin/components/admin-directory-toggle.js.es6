@@ -4,13 +4,7 @@ import { bufferedRender } from 'discourse-common/lib/buffered-render';
 export default Ember.Component.extend(bufferedRender({
   tagName: 'th',
   classNames: ['sortable'],
-  attributeBindings: ['title'],
-  rerenderTriggers: ['order', 'asc'],
-
-  title: function() {
-    const labelKey = this.get('field');
-    return I18n.t(labelKey + '_long', { defaultValue: I18n.t(labelKey) });
-  }.property('field'),
+  rerenderTriggers: ['order', 'ascending'],
 
   buildBuffer(buffer) {
     const icon = this.get('icon');
@@ -18,23 +12,21 @@ export default Ember.Component.extend(bufferedRender({
       buffer.push(iconHTML(icon));
     }
 
-    const field = this.get('field');
-    buffer.push(I18n.t(field));
+    buffer.push(I18n.t(this.get('i18nKey')));
 
-    if (field === this.get('order')) {
-      buffer.push(iconHTML(this.get('asc') ? 'chevron-up' : 'chevron-down'));
+    if (this.get('field') === this.get('order')) {
+      buffer.push(iconHTML(this.get('ascending') ? 'chevron-up' : 'chevron-down'));
     }
   },
 
   click() {
-    const currentOrder = this.get('order'),
-          field = this.get('field');
-    console.log(this);
+    const currentOrder = this.get('order');
+    const field = this.get('field');
 
     if (currentOrder === field) {
-      this.set('asc', this.get('asc') ? null : true);
+      this.set('ascending', this.get('ascending') ? null : true);
     } else {
-      this.setProperties({ order: field, asc: null });
+      this.setProperties({ order: field, ascending: null });
     }
   }
 }));

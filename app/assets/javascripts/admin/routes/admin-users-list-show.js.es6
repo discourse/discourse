@@ -13,5 +13,6 @@ export default Discourse.Route.extend({
       showEmails: false,
       refreshing: false,
     });
+    controller.sortUsers();
   }
 });
