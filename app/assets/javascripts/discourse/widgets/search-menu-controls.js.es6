@@ -5,6 +5,11 @@ import { createWidget } from 'discourse/widgets/widget';
 createWidget('search-term', {
   tagName: 'input',
   buildId: () => 'search-term',
+  buildKey: (attrs) => `search-term-${attrs.id}`,
+
+  defaultState() {
+    return { autocompleteIsOpen: false };
+  },
 
   buildAttributes(attrs) {
     return { type: 'text',
@@ -12,8 +17,17 @@ createWidget('search-term', {
              placeholder: attrs.contextEnabled ? "" : I18n.t('search.title') };
   },
 
+  keyDown(e) {
+    const state = this.state;
+    if ($(`#${this.buildId()}`).parent().find('.autocomplete').length !== 0) {
+      state.autocompleteIsOpen = true;
+    } else  {
+      state.autocompleteIsOpen = false;
+    }
+  },
+
   keyUp(e) {
-    if (e.which === 13) {
+    if (e.which === 13 && !this.state.autocompleteIsOpen) {
       return this.sendWidgetAction('fullSearch');
     }
 

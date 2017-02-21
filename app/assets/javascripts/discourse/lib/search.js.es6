@@ -1,9 +1,14 @@
 import { ajax } from 'discourse/lib/ajax';
+import { findRawTemplate } from 'discourse/lib/raw-templates';
+import { TAG_HASHTAG_POSTFIX } from 'discourse/lib/tag-hashtags';
+import { SEPARATOR } from 'discourse/lib/category-hashtags';
+import Category from 'discourse/models/category';
+import { search as searchCategoryTag  } from 'discourse/lib/category-tag-search';
+import userSearch from 'discourse/lib/user-search';
 
 export function translateResults(results, opts) {
 
   const User = require('discourse/models/user').default;
-  const Category = require('discourse/models/category').default;
   const Post = require('discourse/models/post').default;
   const Topic = require('discourse/models/topic').default;
 
@@ -123,4 +128,32 @@ export function isValidSearchTerm(searchTerm) {
   } else {
     return false;
   }
+};
+
+export function applySearchAutocomplete($input, siteSettings) {
+  $input.autocomplete({
+    template: findRawTemplate('category-tag-autocomplete'),
+    key: '#',
+    width: '100%',
+    treatAsTextarea: true,
+    transformComplete(obj) {
+      if (obj.model) {
+        return Category.slugFor(obj.model, SEPARATOR);
+      } else {
+        return `${obj.text}${TAG_HASHTAG_POSTFIX}`;
+      }
+    },
+    dataSource(term) {
+      return searchCategoryTag(term, siteSettings);
+    }
+  });
+
+  $input.autocomplete({
+    template: findRawTemplate('user-selector-autocomplete'),
+    dataSource: term => userSearch({ term, undefined, includeGroups: true }),
+    key: "@",
+    width: '100%',
+    treatAsTextarea: true,
+    transformComplete: v => v.username || v.name
+  });
 };
