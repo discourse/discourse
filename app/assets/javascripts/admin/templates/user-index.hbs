@@ -7,6 +7,9 @@
         {{i18n 'admin.user.show_public_profile'}}
       {{/link-to}}
     {{/if}}
+    {{#if model.can_view_action_logs}}
+      {{d-button action="viewActionLogs" actionParam=model.username icon="list-alt" label="admin.user.action_logs"}}
+    {{/if}}
     {{#if model.active}}
       {{#if model.can_impersonate}}
         {{d-button class="btn-danger" action="impersonate" icon="crosshairs" label="admin.impersonate.title" title="admin.impersonate.help"}}

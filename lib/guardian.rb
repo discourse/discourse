@@ -158,6 +158,10 @@ class Guardian
     # make it impossible to be the same user.
   end
 
+  def can_view_action_logs?(target)
+    is_staff? && target && target.staff?
+  end
+
   # Can we approve it?
   def can_approve?(target)
     is_staff? && target && not(target.approved?)
