@@ -8,7 +8,6 @@ export default Discourse.Route.extend({
 
   setupController: function(controller) {
     controller.resetFilters();
-    controller.refresh();
   },
 
   actions: {

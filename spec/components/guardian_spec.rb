@@ -281,6 +281,24 @@ describe Guardian do
     end
   end
 
+  describe "can_view_action_logs?" do
+    it 'is false for non-staff acting user' do
+      expect(Guardian.new(user).can_view_action_logs?(moderator)).to be_falsey
+    end
+
+    it 'is false without a target user' do
+      expect(Guardian.new(moderator).can_view_action_logs?(nil)).to be_falsey
+    end
+
+    it 'is false for non-staff target user' do
+      expect(Guardian.new(moderator).can_view_action_logs?(user)).to be_falsey
+    end
+
+    it 'is true for staff target user' do
+      expect(Guardian.new(moderator).can_view_action_logs?(admin)).to be_truthy
+    end
+  end
+
   describe 'can_invite_to_forum?' do
     let(:user) { Fabricate.build(:user) }
     let(:moderator) { Fabricate.build(:moderator) }
