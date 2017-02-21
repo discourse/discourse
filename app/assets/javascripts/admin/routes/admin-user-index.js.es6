@@ -31,7 +31,7 @@ export default Discourse.Route.extend({
     },
 
     viewActionLogs(username) {
-      const controller = this.controllerFor('adminLogs.staffActionLogs')
+      const controller = this.controllerFor('adminLogs.staffActionLogs');
       this.transitionTo('adminLogs.staffActionLogs').then(() => {
         controller._changeFilters({ acting_user: username });
       });
