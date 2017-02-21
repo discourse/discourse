@@ -3,6 +3,12 @@ import { iconNode } from 'discourse/helpers/fa-icon-node';
 import { avatarImg } from 'discourse/widgets/post';
 import DiscourseURL from 'discourse/lib/url';
 import { wantsNewWindow } from 'discourse/lib/intercept-click';
+import { findRawTemplate } from 'discourse/lib/raw-templates';
+import { TAG_HASHTAG_POSTFIX } from 'discourse/lib/tag-hashtags';
+import { SEPARATOR } from 'discourse/lib/category-hashtags';
+import Category from 'discourse/models/category';
+import { search as searchCategoryTag  } from 'discourse/lib/category-tag-search';
+import userSearch from 'discourse/lib/user-search';
 
 import { h } from 'virtual-dom';
 
@@ -256,7 +262,11 @@ export default createWidget('header', {
     this.updateHighlight();
 
     if (this.state.searchVisible) {
-      Ember.run.schedule('afterRender', () => $('#search-term').focus().select());
+      Ember.run.schedule('afterRender', () => {
+        const $searchInput = $('#search-term');
+        $searchInput.focus().select();
+        this.applyAutocomplete($searchInput);
+      });
     }
   },
 
@@ -340,6 +350,36 @@ export default createWidget('header', {
         return Ember.get(ctx, 'type');
       }
     }
+  },
+
+  applyAutocomplete($searchInput) {
+    const siteSettings = this.siteSettings;
+
+    $searchInput.autocomplete({
+      template: findRawTemplate('category-tag-autocomplete'),
+      key: '#',
+      width: '100%',
+      treatAsTextarea: true,
+      transformComplete(obj) {
+        if (obj.model) {
+          return Category.slugFor(obj.model, SEPARATOR);
+        } else {
+          return `${obj.text}${TAG_HASHTAG_POSTFIX}`;
+        }
+      },
+      dataSource(term) {
+        return searchCategoryTag(term, siteSettings);
+      }
+    });
+
+    $searchInput.autocomplete({
+      template: findRawTemplate('user-selector-autocomplete'),
+      dataSource: term => userSearch({ term, undefined, includeGroups: true }),
+      key: "@",
+      width: '100%',
+      treatAsTextarea: true,
+      transformComplete: v => v.username || v.name
+    });
   }
 
 });
