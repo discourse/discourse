@@ -3,24 +3,26 @@ import { escapeExpression } from 'discourse/lib/utilities';
 
 const REGEXP_BLOCKS                = /(([^" \t\n\x0B\f\r]+)?(("[^"]+")?))/g;
 
-const REGEXP_USERNAME_PREFIX       = /(user:|@)/ig;
-const REGEXP_CATEGORY_PREFIX       = /(category:|#)/ig;
-const REGEXP_GROUP_PREFIX          = /group:/ig;
-const REGEXP_BADGE_PREFIX          = /badge:/ig;
-const REGEXP_TAGS_PREFIX           = /tags?:/ig;
-const REGEXP_IN_PREFIX             = /in:/ig;
-const REGEXP_STATUS_PREFIX         = /status:/ig;
-const REGEXP_MIN_POST_COUNT_PREFIX = /min_post_count:/ig;
-const REGEXP_POST_TIME_PREFIX      = /(before|after):/ig;
+const REGEXP_USERNAME_PREFIX       = /^(user:|@)/ig;
+const REGEXP_CATEGORY_PREFIX       = /^(category:|#)/ig;
+const REGEXP_GROUP_PREFIX          = /^group:/ig;
+const REGEXP_BADGE_PREFIX          = /^badge:/ig;
+const REGEXP_TAGS_PREFIX           = /^(tags?:|#(?=[a-z0-9\-]+::tag))/ig;
+const REGEXP_IN_PREFIX             = /^in:/ig;
+const REGEXP_STATUS_PREFIX         = /^status:/ig;
+const REGEXP_MIN_POST_COUNT_PREFIX = /^min_post_count:/ig;
+const REGEXP_POST_TIME_PREFIX      = /^(before|after):/ig;
+const REGEXP_TAGS_SUFFIX           = /::tag\s?$/ig;
 
-const REGEXP_IN_MATCH                 = /in:(posted|watching|tracking|bookmarks|first|pinned|unpinned)/ig;
-const REGEXP_SPECIAL_IN_LIKES_MATCH   = /in:likes/ig;
-const REGEXP_SPECIAL_IN_PRIVATE_MATCH = /in:private/ig;
-const REGEXP_SPECIAL_IN_WIKI_MATCH    = /in:wiki/ig;
 
-const REGEXP_CATEGORY_SLUG            = /(\#[a-zA-Z0-9\-:]+)/ig;
-const REGEXP_CATEGORY_ID              = /(category:[0-9]+)/ig;
-const REGEXP_POST_TIME_WHEN           = /(before|after)/ig;
+const REGEXP_IN_MATCH                 = /^in:(posted|watching|tracking|bookmarks|first|pinned|unpinned)/ig;
+const REGEXP_SPECIAL_IN_LIKES_MATCH   = /^in:likes/ig;
+const REGEXP_SPECIAL_IN_PRIVATE_MATCH = /^in:private/ig;
+const REGEXP_SPECIAL_IN_WIKI_MATCH    = /^in:wiki/ig;
+
+const REGEXP_CATEGORY_SLUG            = /^(\#[a-zA-Z0-9\-:]+)/ig;
+const REGEXP_CATEGORY_ID              = /^(category:[0-9]+)/ig;
+const REGEXP_POST_TIME_WHEN           = /^(before|after)/ig;
 
 export default Em.Component.extend({
   classNames: ['search-advanced-options'],
@@ -228,7 +230,7 @@ export default Em.Component.extend({
 
     if (match.length !== 0) {
       const existingInput = _.isArray(tags) ? tags.join(',') : tags;
-      const userInput = match[0].replace(REGEXP_TAGS_PREFIX, '');
+      const userInput = match[0].replace(REGEXP_TAGS_PREFIX, '').replace(REGEXP_TAGS_SUFFIX, '');
 
       if (existingInput !== userInput) {
         this.set('searchedTerms.tags', (userInput.length !== 0) ? userInput.split(',') : []);
