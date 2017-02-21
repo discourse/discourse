@@ -795,7 +795,6 @@ zh_TW:
     max_image_width: "文章中最大的縮圖寬度"
     max_image_height: "文章中的允許圖片最大的縮圖高度"
     category_featured_topics: "在分類 /categories 頁面每個分類顯示的討論話題數目。此數值的改變最多需要 15 分鐘才會反應在分類頁面上。"
-    show_subcategory_list: "進入分類時顯示子分類列表，而非話題列表"
     fixed_category_positions: "若勾選，你將能調整並固定分類的順序。若不勾選，分類將會依照活躍程度來排序。"
     fixed_category_positions_on_create: "如果選擇了，目錄排序將會在話題創建對話框中被包含(要求固定目錄位置選項)"
     add_rel_nofollow_to_user_content: "添加 rel nofollow 屬性到所有的用戶內容，除了內部鏈接（包括父域名）。如果你更改了這個，你必須重新調制所有帖子，而該命令為：“rake posts:rebake”"

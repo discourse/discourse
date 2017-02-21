@@ -51,7 +51,7 @@ export default (filter, params) => {
 
     _createSubcategoryList(category) {
       this._categoryList = null;
-      if (Em.isNone(category.get('parentCategory')) && Discourse.SiteSettings.show_subcategory_list) {
+      if (Em.isNone(category.get('parentCategory')) && category.get('show_subcategory_list')) {
         return CategoryList.listForParent(this.store, category).then(list => this._categoryList = list);
       }
 

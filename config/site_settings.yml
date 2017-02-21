@@ -214,9 +214,6 @@ basic:
   fixed_category_positions_on_create:
     client: true
     default: false
-  show_subcategory_list:
-    default: false
-    client: true
   enable_badges:
     client: true
     default: true

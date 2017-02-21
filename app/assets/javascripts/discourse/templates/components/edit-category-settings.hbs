@@ -19,6 +19,15 @@
   </label>
 </section>
 
+{{#unless category.parent_category_id}}
+  <section class="field">
+    <label>
+      {{input type="checkbox" checked=category.show_subcategory_list}}
+      {{i18n "category.show_subcategory_list"}}
+    </label>
+  </section>
+{{/unless}}
+
 <section class="field">
   <label>
     {{input type="checkbox" checked=category.all_topics_wiki}}
