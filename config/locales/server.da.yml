@@ -769,7 +769,6 @@ da:
     max_image_width: "Maximum thumbnail width of images in a post"
     max_image_height: "Maksimum miniaturebillede højde for billeder i et indlæg"
     category_featured_topics: "Antallet af emner der vises pr. kategori på /categories-siden. Efter ændring af denne værdi kan det tage op til 15 minutter før kategorisiden opdateres."
-    show_subcategory_list: "Vis subkategori liste i stedet for emneliste, når man åbner en ny kategori."
     fixed_category_positions: "Hvis krydset af, vil du være i stand til at arrangere ordnet visning af kategorier. Hvis ikke afkrydset vil de være listet i en rækkefølge baseret på aktivitet."
     fixed_category_positions_on_create: "Hvis afkrydset vil kategori visning blive vedligeholdt baseret på emne (kræver manuelt valgt visning af kategorier)."
     exclude_rel_nofollow_domains: "En liste af domæner hvor 'nofollow' skal tilføjes til links. tid.com vil desuden automatisk tillade sub.tid Som minimum bør du tilføje top level domænet til sitet, for at hjælpe webcrawlere finde alt indhold. Såfremt andre dele af jeres site er på andre domæner, så tilføj også disse."

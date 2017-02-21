@@ -808,7 +808,6 @@ pt:
     max_image_width: "Largura máxima de miniaturas de imagens numa mensagem."
     max_image_height: "Altura máxima de miniaturas de imagens numa mensagem."
     category_featured_topics: "Número de tópicos visíveis por categoria na página de /categorias. Após a alteração deste valor, irá demorar até 15 minutos para que a página de categorias fique atualizada."
-    show_subcategory_list: "Mostrar lista de subcategorias em vez de lista de tópicos quando inserida uma categoria."
     fixed_category_positions: "Se estiver marcado, irá conseguir organizar as categorias por uma ordem fixa. Se não estiver marcado, as categorias são listadas por ordem de actividade."
     fixed_category_positions_on_create: "Se marcado, a ordenação de categorias irá ser mantida no diálogo de criação do tópico (requer fixed_category_positions)"
     add_rel_nofollow_to_user_content: "Adicionar a etiqueta rel nofollow em todos os conteúdos submetidos pelo utilizador, excepto para hiperligações internas (incluindo domínios pai). Se mudar isto, terá que atualizar todas as suas mensagens com: \"rake posts:rebake\""

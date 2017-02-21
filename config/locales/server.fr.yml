@@ -833,7 +833,6 @@ fr:
     max_image_width: "Largeur maximale des images dans un message"
     max_image_height: "Hauteur maximale autorisée des images dans un message"
     category_featured_topics: "Nombre de sujets affichés par catégorie sur la page /categories. Après avoir modifié cette valeur, il faut jusqu'à 15 minutes pour que la page des catégories soit mise à jour."
-    show_subcategory_list: "Voir les sous-catégories à la place de la liste des sujets lorsqu'on entre dans la catégorie."
     fixed_category_positions: "Si coché, vous pourrez modifier l'ordre des catégories. Si décoché, elle seront triées par ordre d'activité."
     fixed_category_positions_on_create: "Si coché, le classement des catégories sera maintenu dans la fenêtre de création de sujet (nécessite fixed_category_positions)."
     add_rel_nofollow_to_user_content: "Ajouter rel nofollow à tous les contenus des utilisateurs, sauf les liens internes (incluant les domaines parents). Si vous modifiez ceci, vous devez exécuter la commande  \"rake posts:rebake\""

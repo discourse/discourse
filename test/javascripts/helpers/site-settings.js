@@ -21,7 +21,6 @@ Discourse.SiteSettingsOriginal = {
   "relative_date_duration":14,
   "category_featured_topics":4,
   "fixed_category_positions":false,
-  "show_subcategory_list":false,
   "enable_badges":true,
   "invite_only":false,
   "login_required":false,

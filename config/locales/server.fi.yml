@@ -836,7 +836,6 @@ fi:
     max_image_width: "Esikatselukuvan suurin sallittu leveys viestissä"
     max_image_height: "Esikatselukuvan suurin sallittu korkeus viestissä"
     category_featured_topics: "Näytettävien ketjujen lukumäärä alueittan Alueet-sivulla. Arvon muuttamisen jälkeen voi kestää jopa 15 minuuttia sivun päivittymiseen."
-    show_subcategory_list: "Näytä lista tytäralueista ketjulistauksen sijaan alueelle saavuttaessa."
     fixed_category_positions: "Jos tämä on valittuna, voit muokata alueiden järjestystä. Jos tätä ei valita, alueet järjetsetään aktiivisuuden mukaan."
     fixed_category_positions_on_create: "Jos tämä on valittuna, alueiden järjestys pysyy samana uuden ketjun luomisen dialogissa (edellyttää fixed_category_positions)"
     add_rel_nofollow_to_user_content: "Lisää rel nofollow kaikkeen käyttäjien lähettämään sisältöön, paitsi sivuston sisäisiin linkkeihin (sisältäen ylemmät verkkotunnukset). Jos muutat asetusta, sinun täytyy rakentaa viestit uudelleen komennolla: \"rake posts:rebake\""

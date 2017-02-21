@@ -768,7 +768,6 @@ sk:
     max_image_width: "Maximálna šírka náhľadu obrázkov v príspevku"
     max_image_height: "Maximálna výška náhľadu obrázkov v príspevku"
     category_featured_topics: "Počet zobrazených tém na jednu kategóriu na stránke /katgórie. Zmena hodnoty sa na stránkach prejaví do 15 minút."
-    show_subcategory_list: "Zobraz zoznam podkategórií namiesto zoznamu tém po vstupe do menu kategórií"
     fixed_category_positions: "Ak je to označené, budete môcť zoraďovať kategórie v pevnom poradí. Ak je neoznačené, kategórie budu zoradené podlľa aktivity."
     fixed_category_positions_on_create: "Ak je označené, triedenie kategórií bude spravované v dialógu na vytváranie témy (vyžaduje fixed_category_positions)."
     add_rel_nofollow_to_user_content: "Pridať rel nofollow ku všetkému zaslanému používateľskému kontextu s výnimkou interných odkazov (zahrňuje rodičovskú doménu). Ak to zmeníte, musíte vykonať prípaz rebake na všetky príspevky pomocou: \"rake posts:rebake\""

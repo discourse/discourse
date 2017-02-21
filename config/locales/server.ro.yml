@@ -851,7 +851,6 @@ ro:
     max_image_width: "Maximul lățimii unui thumbnail într-o postare"
     max_image_height: "Maximul înălțimii unui thumbnail într-o postare"
     category_featured_topics: "Numărul subiectelor afișate după categorie pe /pagina de categorii. După schimbarea valorii, e nevoie de până la 15 minute până ce pagina de categorii se va actualiza."
-    show_subcategory_list: "Arată lista de sub-categorii în loc de lista de subiecte când se introduce o categorie."
     fixed_category_positions: "Dacă e bifat, veți putea aranja categoriile într-o ordine fixă. Dacă e nebifat, categoriile sunt listate în ordinea activității."
     fixed_category_positions_on_create: "Dacă este bifat, ordonarea categoriilor va fi menținută în dialogul de creare a subiectelor (presupune fixed_category_positions)."
     add_rel_nofollow_to_user_content: "Adaugă atributul rel nofollow la toate conținuturile transmise de către utilizator, cu excepția link-urilor interne (includiv domeniile părinte). Dacă schimbi această setare, postările trebuie refăcute cu: \"rake posts:rebake\""

@@ -882,7 +882,6 @@ pl_PL:
     max_image_width: "Maksymalna szerokość miniaturki grafiki we wpisie. "
     max_image_height: "Maksymalna wysokość miniaturki grafiki we wpisie. "
     category_featured_topics: "Number of topics displayed per category on the /categories page. After changing this value, it takes up to 15 minutes for the categories page to update."
-    show_subcategory_list: "Po wejściu do kategorii, zamiast listy tematów wyświetlaj listę podkategorii."
     fixed_category_positions: "Zaznacz, aby ręcznie ustawiać kolejność kategorii. Odznacz, aby kategorie były sortowane na podstawie aktywności. "
     fixed_category_positions_on_create: "Jeżeli jest sprawdzone to porządkowanie kategorii będzie zależało od stworzonego tematu (requires fixed_category_positions). "
     post_excerpt_maxlength: "Maksymalna długość podsumowania / streszczenia wpisu."

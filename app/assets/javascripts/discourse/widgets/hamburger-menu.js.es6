@@ -117,11 +117,10 @@ export default createWidget('hamburger-menu', {
 
   listCategories() {
     const hideUncategorized = !this.siteSettings.allow_uncategorized_topics;
-    const showSubcatList = this.siteSettings.show_subcategory_list;
     const isStaff = Discourse.User.currentProp('staff');
 
     const categories = Discourse.Category.list().reject((c) => {
-      if (showSubcatList && c.get('parent_category_id')) { return true; }
+      if (c.get('show_subcategory_list') && c.get('parent_category_id')) { return true; }
       if (hideUncategorized && c.get('isUncategorizedCategory') && !isStaff) { return true; }
       return false;
     });
