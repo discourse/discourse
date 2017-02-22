@@ -1,6 +1,5 @@
 import computed from "ember-addons/ember-computed-decorators";
 import NavigationDefaultController from 'discourse/controllers/navigation/default';
-import { setting } from 'discourse/lib/computed';
 
 export default NavigationDefaultController.extend({
   showingParentCategory: Em.computed.none('category.parentCategory'),
