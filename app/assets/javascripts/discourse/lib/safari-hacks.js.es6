@@ -7,18 +7,14 @@ export function isAppleDevice() {
 }
 
 
+// we can't tell what the actual visible window height is 
+// because we cannot account for the height of the mobile keyboard 
+// and any other mobile autocomplete UI that may appear
+// so let's be conservative here rather than trying to max out every
+// available pixel of height for the editor
 function calcHeight(composingTopic) {
   const winHeight = window.innerHeight;
-
-  // Hard code some known iOS resolutions
-  switch(winHeight) {
-    case 460: return composingTopic ? 250 : 260;
-    case 559: return composingTopic ? 325 : 308;
-    case 627:
-    case 628: return 360;
-  }
-
-  const ratio = composingTopic ? 0.54 : 0.6;
+  const ratio = composingTopic ? 0.44 : 0.5;
   const min = composingTopic ? 300 : 350;
   return Math.max(parseInt(winHeight*ratio), min);
 }
