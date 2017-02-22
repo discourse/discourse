@@ -111,7 +111,7 @@ TopicList.reopenClass({
         if (p.primary_group_id) {
           p.primary_group = groups[p.primary_group_id];
           if (p.primary_group) {
-            p.extraClasses += ` group-${p.primary_group.name}`;
+            p.extraClasses = `${p.extraClasses||''} group-${p.primary_group.name}`;
           }
         }
       });
