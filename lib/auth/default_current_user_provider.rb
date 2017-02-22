@@ -12,6 +12,11 @@ class Auth::DefaultCurrentUserProvider
   TOKEN_COOKIE ||= "_t".freeze
   PATH_INFO ||= "PATH_INFO".freeze
   COOKIE_ATTEMPTS_PER_MIN ||= 10
+  # allow up to 20 cookie misses, this may be the case
+  # when requests are delayed in weird ways, for example
+  # on mobile when coming back online
+  MAX_COOKIE_MISSES ||= 10
+  COOKIE_MISS_KEY ||= "cookie_misses"
 
   # do all current user initialization here
   def initialize(env)
@@ -136,7 +141,12 @@ class Auth::DefaultCurrentUserProvider
     end
 
     if !user && cookies.key?(TOKEN_COOKIE)
-      cookies.delete(TOKEN_COOKIE)
+      cookie_miss_key = COOKIE_MISS_KEY + cookies[TOKEN_COOKIE]
+      misses = $redis.get(cookie_miss_key).to_i + 1
+      $redis.setex(cookie_miss_key, 1.hour.to_i, misses)
+      if misses > MAX_COOKIE_MISSES
+        cookies.delete(TOKEN_COOKIE)
+      end
     end
   end
 
