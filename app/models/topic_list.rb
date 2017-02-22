@@ -101,6 +101,7 @@ class TopicList
     end
 
     avatar_lookup = AvatarLookup.new(user_ids)
+    primary_group_lookup = PrimaryGroupLookup.new(user_ids)
 
     @topics.each do |ft|
       ft.user_data = @topic_lookup[ft.id] if @topic_lookup.present?
@@ -111,7 +112,7 @@ class TopicList
 
       ft.posters = ft.posters_summary(
         avatar_lookup: avatar_lookup,
-        primary_group_lookup: PrimaryGroupLookup.new(user_ids)
+        primary_group_lookup: primary_group_lookup
       )
 
       ft.participants = ft.participants_summary(avatar_lookup: avatar_lookup, user: @current_user)
