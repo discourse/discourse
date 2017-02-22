@@ -163,6 +163,8 @@ createWidget('header-buttons', {
   }
 });
 
+const forceContextEnabled = ['category', 'user', 'private_messages'];
+
 export default createWidget('header', {
   tagName: 'header.d-header.clearfix',
   buildKey: () => `header`,
@@ -200,7 +202,7 @@ export default createWidget('header', {
       state.searchContextType = contextType;
 
       if (state.contextEnabled === undefined) {
-        if (contextType === 'category' || contextType === 'user') {
+        if (forceContextEnabled.includes(contextType)) {
           state.contextEnabled = true;
         }
       }
