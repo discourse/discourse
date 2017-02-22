@@ -159,7 +159,7 @@ class Guardian
   end
 
   def can_view_action_logs?(target)
-    is_staff? && target && target.staff?
+    is_staff? && target
   end
 
   # Can we approve it?

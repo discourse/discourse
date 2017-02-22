@@ -289,12 +289,8 @@ describe Guardian do
       expect(Guardian.new(moderator).can_view_action_logs?(nil)).to be_falsey
     end
 
-    it 'is false for non-staff target user' do
-      expect(Guardian.new(moderator).can_view_action_logs?(user)).to be_falsey
-    end
-
-    it 'is true for staff target user' do
-      expect(Guardian.new(moderator).can_view_action_logs?(admin)).to be_truthy
+    it 'is true when target user is present' do
+      expect(Guardian.new(moderator).can_view_action_logs?(user)).to be_truthy
     end
   end
 
