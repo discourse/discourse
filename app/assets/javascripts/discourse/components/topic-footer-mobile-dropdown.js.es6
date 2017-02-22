@@ -1,13 +1,12 @@
 import { iconHTML } from 'discourse-common/helpers/fa-icon';
 import Combobox from 'discourse-common/components/combo-box';
-import { observes } from 'ember-addons/ember-computed-decorators';
+import { on, observes } from 'ember-addons/ember-computed-decorators';
 
 export default Combobox.extend({
   none: "topic.controls",
 
-  init() {
-    this._super();
-
+  @on('init')
+  _createContent() {
     const content = [];
     const topic = this.get('topic');
     const details = topic.get('details');
