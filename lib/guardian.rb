@@ -279,9 +279,7 @@ class Guardian
     # Have to be a basic level at least
     @user.has_trust_level?(SiteSetting.min_trust_to_send_messages) &&
     # PMs are enabled
-    (SiteSetting.enable_private_messages ||
-      @user.username == SiteSetting.site_contact_username ||
-      @user == Discourse.system_user) &&
+    (is_staff? || SiteSetting.enable_private_messages) &&
     # Can't send PMs to suspended users
     (is_staff? || target.is_a?(Group) || !target.suspended?) &&
     # Blocked users can only send PM to staff

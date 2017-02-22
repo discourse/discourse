@@ -168,14 +168,13 @@ describe Guardian do
     context "enable_private_messages is false" do
       before { SiteSetting.enable_private_messages = false }
 
-      it "returns false if user is not the contact user" do
-        expect(Guardian.new(user).can_send_private_message?(another_user)).to be_falsey
+      it "returns false if user is not staff member" do
+        expect(Guardian.new(trust_level_4).can_send_private_message?(another_user)).to be_falsey
       end
 
-      it "returns true for the contact user and system user" do
-        SiteSetting.site_contact_username = user.username
-        expect(Guardian.new(user).can_send_private_message?(another_user)).to be_truthy
-        expect(Guardian.new(Discourse.system_user).can_send_private_message?(another_user)).to be_truthy
+      it "returns true for staff member" do
+        expect(Guardian.new(moderator).can_send_private_message?(another_user)).to be_truthy
+        expect(Guardian.new(admin).can_send_private_message?(another_user)).to be_truthy
       end
     end
 
