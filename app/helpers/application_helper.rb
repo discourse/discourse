@@ -188,8 +188,9 @@ module ApplicationHelper
     [:url, :title, :description].each do |property|
       if opts[property].present?
         escape = (property != :image)
-        result << tag(:meta, { property: "og:#{property}", content: opts[property] }, nil, escape)
-        result << tag(:meta, { name: "twitter:#{property}", content: opts[property] }, nil, escape)
+        content = (property == :url ? opts[property] : gsub_emoji_to_unicode(opts[property]))
+        result << tag(:meta, { property: "og:#{property}", content: content }, nil, escape)
+        result << tag(:meta, { name: "twitter:#{property}", content: content }, nil, escape)
       end
     end
 
@@ -215,6 +216,12 @@ module ApplicationHelper
       }
     }
     content_tag(:script, MultiJson.dump(json).html_safe, type: 'application/ld+json'.freeze)
+  end
+
+  def gsub_emoji_to_unicode(str)
+    if str
+      str.gsub(/:([\w\-+]*):/) { |name| Emoji.lookup_unicode($1) || name }
+    end
   end
 
   def application_logo_url
