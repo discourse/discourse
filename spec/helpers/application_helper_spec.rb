@@ -106,4 +106,10 @@ describe ApplicationHelper do
     end
   end
 
+  describe 'gsub_emoji_to_unicode' do
+    it "converts all emoji to unicode" do
+      expect(helper.gsub_emoji_to_unicode('Boat Talk: my :sailboat: boat: why is it so slow? :snail:')).to eq("Boat Talk: my ⛵ boat: why is it so slow? 🐌")
+    end
+  end
+
 end
