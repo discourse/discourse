@@ -40,7 +40,7 @@ class UserAvatarsController < ApplicationController
 
     response.headers["Last-Modified"] = File.ctime(image).httpdate
     response.headers["Content-Length"] = File.size(image).to_s
-    expires_in 1.year, public: true
+    immutable_for(1.year)
     send_file image, disposition: nil
   end
 
@@ -57,7 +57,7 @@ class UserAvatarsController < ApplicationController
 
     response.headers["Last-Modified"] = File.ctime(image).httpdate
     response.headers["Content-Length"] = File.size(image).to_s
-    expires_in 1.year, public: true
+    immutable_for(1.year)
     send_file image, disposition: nil
   end
 
@@ -112,7 +112,7 @@ class UserAvatarsController < ApplicationController
     if image
       response.headers["Last-Modified"] = File.ctime(image).httpdate
       response.headers["Content-Length"] = File.size(image).to_s
-      expires_in 1.year, public: true
+      immutable_for 1.year
       send_file image, disposition: nil
     else
       render_blank
@@ -139,7 +139,7 @@ class UserAvatarsController < ApplicationController
     # putting a bogus date cause download is not retaining the data
     response.headers["Last-Modified"] = DateTime.parse("1-1-2000").httpdate
     response.headers["Content-Length"] = File.size(path).to_s
-    expires_in 1.year, public: true
+    immutable_for(1.year)
     send_file path, disposition: nil
   end
 

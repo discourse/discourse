@@ -41,7 +41,7 @@ class StylesheetsController < ApplicationController
     end
 
     response.headers['Last-Modified'] = stylesheet_time.httpdate if stylesheet_time
-    expires_in 1.year, public: true unless Rails.env == "development"
+    immutable_for(1.year) unless Rails.env == "development"
     send_file(location, disposition: :inline)
   end
 
