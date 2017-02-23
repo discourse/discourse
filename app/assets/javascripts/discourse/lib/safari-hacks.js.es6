@@ -14,8 +14,8 @@ export function isAppleDevice() {
 // available pixel of height for the editor
 function calcHeight(composingTopic) {
   const winHeight = window.innerHeight;
-  const ratio = composingTopic ? 0.45 : 0.48;
-  const min = composingTopic ? 300 : 350;
+  const ratio = composingTopic ? 0.45 : 0.45;
+  const min = composingTopic ? 300 : 300;
   return Math.max(parseInt(winHeight*ratio), min);
 }
 
