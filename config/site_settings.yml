@@ -896,6 +896,14 @@ security:
   force_https:
     default: false
     shadowed_by_global: true
+  same_site_cookies:
+    default: Lax
+    type: enum
+    choices:
+      - Lax
+      - Strict
+      - Disabled
+    regex: '^(Lax|Strict|Disabled)$'
   enable_escaped_fragments: true
   allow_index_in_robots_txt: true
   enable_noscript_support: true
