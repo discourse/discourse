@@ -143,9 +143,7 @@ describe Auth::DefaultCurrentUserProvider do
     token.reload
     expect(token.auth_token_seen).to eq(false)
 
-
     freeze_time 21.minutes.from_now
-
 
     old_token = token.prev_auth_token
     unverified_token = token.auth_token
@@ -220,6 +218,29 @@ describe Auth::DefaultCurrentUserProvider do
     provider('/').log_on_user(user, {}, {})
 
     expect(UserAuthToken.where(user_id: user.id).count).to eq(2)
+  end
+
+  it "sets secure, same site lax cookies" do
+    SiteSetting.force_https = false
+    SiteSetting.same_site_cookies = "Lax"
+
+    user = Fabricate(:user)
+    cookies = {}
+    provider('/').log_on_user(user, {}, cookies)
+
+
+    expect(cookies["_t"][:same_site]).to eq("Lax")
+    expect(cookies["_t"][:httponly]).to eq(true)
+    expect(cookies["_t"][:secure]).to eq(false)
+
+    SiteSetting.force_https = true
+    SiteSetting.same_site_cookies = "Disabled"
+
+    cookies = {}
+    provider('/').log_on_user(user, {}, cookies)
+
+    expect(cookies["_t"][:secure]).to eq(true)
+    expect(cookies["_t"].key?(:same_site)).to eq(false)
   end
 
   it "correctly expires session" do

@@ -162,12 +162,18 @@ class Auth::DefaultCurrentUserProvider
   end
 
   def cookie_hash(unhashed_auth_token)
-    {
+    hash = {
       value: unhashed_auth_token,
       httponly: true,
       expires: SiteSetting.maximum_session_age.hours.from_now,
       secure: SiteSetting.force_https
     }
+
+    if SiteSetting.same_site_cookies != "Disabled"
+      hash[:same_site] = SiteSetting.same_site_cookies
+    end
+
+    hash
   end
 
   def make_developer_admin(user)
