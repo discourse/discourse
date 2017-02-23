@@ -12,7 +12,7 @@ class Auth::DefaultCurrentUserProvider
   TOKEN_COOKIE ||= "_t".freeze
   PATH_INFO ||= "PATH_INFO".freeze
   COOKIE_ATTEMPTS_PER_MIN ||= 10
-  # allow up to 20 cookie misses, this may be the case
+  # allow up to 10 cookie misses, this may be the case
   # when requests are delayed in weird ways, for example
   # on mobile when coming back online
   MAX_COOKIE_MISSES ||= 10
