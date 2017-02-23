@@ -147,12 +147,11 @@ class StaticController < ApplicationController
       return
     end
 
-    response.headers["Expires"] = 1.year.from_now.httpdate
-    response.headers["Cache-Control"] = 'max-age=31557600, public'
     response.headers["Content-Encoding"] = 'br'
 
+    # disable NGINX mucking with transfer
+    request.env['sendfile.type'] = ''
     immutable_for 1.year
-
     send_file(path, opts)
   end
 
@@ -177,6 +176,8 @@ class StaticController < ApplicationController
 
     opts = { disposition: nil }
     opts[:type] = "application/javascript" if path =~ /\.js$/
+
+    immutable_for(1.year)
 
     # we must disable acceleration otherwise NGINX strips
     # access control headers
