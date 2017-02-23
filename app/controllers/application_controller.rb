@@ -66,6 +66,12 @@ class ApplicationController < ActionController::Base
     refresh_session(current_user)
   end
 
+  def immutable_for(duration)
+    response.cache_control[:max_age] = duration.to_i
+    response.cache_control[:public] = true
+    response.cache_control[:extras] = ["immutable"]
+  end
+
   def dont_cache_page
     if !response.headers["Cache-Control"] && response.cache_control.blank?
       response.headers["Cache-Control"] = "no-store, must-revalidate, no-cache, private"

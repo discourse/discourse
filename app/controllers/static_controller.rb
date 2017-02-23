@@ -117,7 +117,7 @@ class StaticController < ApplicationController
       response.headers["Content-Length"] = @@default_favicon.bytesize.to_s
       render text: @@default_favicon, content_type: "image/png"
     else
-      expires_in 1.year, public: true
+      immutable_for 1.year
       response.headers["Expires"] = 1.year.from_now.httpdate
       response.headers["Content-Length"] = data.bytesize.to_s
       response.headers["Last-Modified"] = Time.new('2000-01-01').httpdate
@@ -151,7 +151,7 @@ class StaticController < ApplicationController
     response.headers["Cache-Control"] = 'max-age=31557600, public'
     response.headers["Content-Encoding"] = 'br'
 
-    expires_in 1.year, public: true, must_revalidate: false
+    immutable_for 1.year
 
     send_file(path, opts)
   end
@@ -163,7 +163,7 @@ class StaticController < ApplicationController
     # SECURITY what if path has /../
     raise Discourse::NotFound unless path.start_with?(Rails.root.to_s + "/public/assets")
 
-    expires_in 1.year, public: true
+    immutable_for 1.year
 
     response.headers["Expires"] = 1.year.from_now.httpdate
     response.headers["Access-Control-Allow-Origin"] = params[:origin] if params[:origin]
