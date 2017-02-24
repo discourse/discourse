@@ -1,48 +1,17 @@
 /*global I18n:true */
 
-// https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Array/indexOf
-if (!Array.prototype.indexOf) {
-  Array.prototype.indexOf = function (searchElement, fromIndex) {
-    if ( this === undefined || this === null ) {
-      throw new TypeError( '"this" is null or not defined' );
-    }
-
-    var length = this.length >>> 0; // Hack to convert object.length to a UInt32
-
-    fromIndex = +fromIndex || 0;
-
-    if (Math.abs(fromIndex) === Infinity) {
-      fromIndex = 0;
-    }
-
-    if (fromIndex < 0) {
-      fromIndex += length;
-      if (fromIndex < 0) {
-        fromIndex = 0;
-      }
-    }
-
-    for (;fromIndex < length; fromIndex++) {
-      if (this[fromIndex] === searchElement) {
-        return fromIndex;
-      }
-    }
-
-    return -1;
-  };
-}
-
 // Instantiate the object
 var I18n = I18n || {};
 
 // Set default locale to english
 I18n.defaultLocale = "en";
 
-// Set default handling of translation fallbacks to false
-I18n.fallbacks = false;
-
-// Set default separator
-I18n.defaultSeparator = ".";
+// Set default pluralization rule
+I18n.pluralizationRules = {
+  en: function(n) {
+    return n === 0 ? ["zero", "none", "other"] : n === 1 ? "one" : "other";
+  }
+};
 
 // Set current locale to null
 I18n.locale = null;
@@ -50,43 +19,9 @@ I18n.locale = null;
 // Set the placeholder format. Accepts `{{placeholder}}` and `%{placeholder}`.
 I18n.PLACEHOLDER = /(?:\{\{|%\{)(.*?)(?:\}\}?)/gm;
 
-I18n.fallbackRules = {};
+I18n.SEPARATOR = ".";
 
 I18n.noFallbacks = false;
-
-I18n.pluralizationRules = {
-  en: function(n) {
-    return n === 0 ? ["zero", "none", "other"] : n === 1 ? "one" : "other";
-  },
-  "zh_CN": function(n) {
-    return n === 0 ? ["zero", "none", "other"] : "other";
-  },
-  "zh_TW": function(n) {
-    return n === 0 ? ["zero", "none", "other"] : "other";
-  },
-  "ko": function(n) {
-    return n === 0 ? ["zero", "none", "other"] : "other";
-  }
-};
-
-I18n.getFallbacks = function(locale) {
-  if (locale === I18n.defaultLocale) {
-    return [];
-  } else if (!I18n.fallbackRules[locale]) {
-    var rules = [],
-        components = locale.split("-");
-
-    for (var l = 1; l < components.length; l++) {
-      rules.push(components.slice(0, l).join("-"));
-    }
-
-    rules.push(I18n.defaultLocale);
-
-    I18n.fallbackRules[locale] = rules;
-  }
-
-  return I18n.fallbackRules[locale];
-};
 
 I18n.isValidNode = function(obj, node, undefined) {
   return obj[node] !== null && obj[node] !== undefined;
@@ -95,25 +30,24 @@ I18n.isValidNode = function(obj, node, undefined) {
 function checkExtras(origScope, sep, extras) {
   if (!extras || extras.length === 0) { return; }
 
-  for (var i=0; i<extras.length; i++) {
+  for (var i = 0; i < extras.length; i++) {
     var messages = extras[i];
     scope = origScope.split(sep);
-    if (scope[0] === 'js') {
-      scope.shift();
-    }
+
+    if (scope[0] === 'js') { scope.shift(); }
 
     while (messages && scope.length > 0) {
       currentScope = scope.shift();
       messages = messages[currentScope];
     }
-    if (messages !== undefined) {
-      return messages;
-    }
+
+    if (messages !== undefined) { return messages; }
   }
 }
 
 I18n.lookup = function(scope, options) {
   options = options || {};
+
   var lookupInitialScope = scope,
       translations = this.prepareOptions(I18n.translations),
       locale = options.locale || I18n.currentLocale(),
@@ -123,42 +57,23 @@ I18n.lookup = function(scope, options) {
   options = this.prepareOptions(options);
 
   if (typeof scope === "object") {
-    scope = scope.join(this.defaultSeparator);
+    scope = scope.join(this.SEPARATOR);
   }
 
   if (options.scope) {
-    scope = options.scope.toString() + this.defaultSeparator + scope;
+    scope = options.scope.toString() + this.SEPARATOR + scope;
   }
 
   var origScope = "" + scope;
 
-  scope = origScope.split(this.defaultSeparator);
+  scope = origScope.split(this.SEPARATOR);
 
   while (messages && scope.length > 0) {
     currentScope = scope.shift();
     messages = messages[currentScope];
   }
 
-  if (messages === undefined) {
-    messages = checkExtras(origScope, this.defaultSeparator, this.extras);
-  }
-
-
-  if (messages === undefined) {
-    if (I18n.fallbacks) {
-      var fallbacks = this.getFallbacks(locale);
-      for (var fallback = 0; fallback < fallbacks.length; fallbacks++) {
-        messages = I18n.lookup(lookupInitialScope, this.prepareOptions({locale: fallbacks[fallback]}, options));
-        if (messages !== undefined) {
-          break;
-        }
-      }
-    }
-
-    if (messages === undefined && this.isValidNode(options, "defaultValue")) {
-        messages = options.defaultValue;
-    }
-  }
+  messages = messages || checkExtras(origScope, this.SEPARATOR, this.extras) || options.defaultValue;
 
   return messages;
 };
@@ -193,14 +108,13 @@ I18n.prepareOptions = function() {
 
 I18n.interpolate = function(message, options) {
   options = this.prepareOptions(options);
+
   var matches = message.match(this.PLACEHOLDER),
       placeholder,
       value,
       name;
 
-  if (!matches) {
-    return message;
-  }
+  if (!matches) { return message; }
 
   for (var i = 0; placeholder = matches[i]; i++) {
     name = placeholder.replace(this.PLACEHOLDER, "$1");
@@ -219,18 +133,19 @@ I18n.interpolate = function(message, options) {
 };
 
 I18n.translate = function(scope, options) {
-
   options = this.prepareOptions(options);
 
   var translation = this.lookup(scope, options);
-  // Fallback to the default locale
-  if (!translation && this.currentLocale() !== this.defaultLocale && !this.noFallbacks) {
-    options.locale = this.defaultLocale;
-    translation = this.lookup(scope, options);
-  }
-  if (!translation && this.currentLocale() !== 'en' && !this.noFallbacks) {
-    options.locale = 'en';
-    translation = this.lookup(scope, options);
+
+  if (!this.noFallbacks) {
+    if (!translation && this.currentLocale() !== this.defaultLocale) {
+      options.locale = this.defaultLocale;
+      translation = this.lookup(scope, options);
+    }
+    if (!translation && this.currentLocale() !== 'en') {
+      options.locale = 'en';
+      translation = this.lookup(scope, options);
+    }
   }
 
   try {
@@ -248,158 +163,16 @@ I18n.translate = function(scope, options) {
   }
 };
 
-I18n.localize = function(scope, value) {
-  switch (scope) {
-    case "currency":
-      return this.toCurrency(value);
-    case "number":
-      scope = this.lookup("number.format");
-      return this.toNumber(value, scope);
-    case "percentage":
-      return this.toPercentage(value);
-    default:
-      if (scope.match(/^(date|time)/)) {
-        return this.toTime(scope, value);
-      } else {
-        return value.toString();
-      }
-  }
-};
-
-I18n.parseDate = function(date) {
-  var matches, convertedDate;
-
-  // we have a date, so just return it.
-  if (typeof date === "object") {
-    return date;
-  }
-
-  // it matches the following formats:
-  //   yyyy-mm-dd
-  //   yyyy-mm-dd[ T]hh:mm::ss
-  //   yyyy-mm-dd[ T]hh:mm::ss
-  //   yyyy-mm-dd[ T]hh:mm::ssZ
-  //   yyyy-mm-dd[ T]hh:mm::ss+0000
-  //
-  matches = date.toString().match(/(\d{4})-(\d{2})-(\d{2})(?:[ T](\d{2}):(\d{2}):(\d{2}))?(Z|\+0000)?/);
-
-  if (matches) {
-    for (var i = 1; i <= 6; i++) {
-      matches[i] = parseInt(matches[i], 10) || 0;
-    }
-
-    // month starts on 0
-    matches[2] -= 1;
-
-    if (matches[7]) {
-      convertedDate = new Date(Date.UTC(matches[1], matches[2], matches[3], matches[4], matches[5], matches[6]));
-    } else {
-      convertedDate = new Date(matches[1], matches[2], matches[3], matches[4], matches[5], matches[6]);
-    }
-  } else if (typeof date === "number") {
-    // UNIX timestamp
-    convertedDate = new Date();
-    convertedDate.setTime(date);
-  } else if (date.match(/\d+ \d+:\d+:\d+ [+-]\d+ \d+/)) {
-    // a valid javascript format with timezone info
-    convertedDate = new Date();
-    convertedDate.setTime(Date.parse(date));
-  } else {
-    // an arbitrary javascript string
-    convertedDate = new Date();
-    convertedDate.setTime(Date.parse(date));
-  }
-
-  return convertedDate;
-};
-
-I18n.toTime = function(scope, d) {
-  var date = this.parseDate(d),
-      format = this.lookup(scope);
-
-  if (date.toString().match(/invalid/i)) {
-    return date.toString();
-  }
-
-  if (!format) {
-    return date.toString();
-  }
-
-  return this.strftime(date, format);
-};
-
-I18n.strftime = function(date, format) {
-  var options = this.lookup("date");
-
-  if (!options) {
-    return date.toString();
-  }
-
-  options.meridian = options.meridian || ["AM", "PM"];
-
-  var weekDay = date.getDay(),
-      day = date.getDate(),
-      year = date.getFullYear(),
-      month = date.getMonth() + 1,
-      hour = date.getHours(),
-      hour12 = hour,
-      meridian = hour > 11 ? 1 : 0,
-      secs = date.getSeconds(),
-      mins = date.getMinutes(),
-      offset = date.getTimezoneOffset(),
-      absOffsetHours = Math.floor(Math.abs(offset / 60)),
-      absOffsetMinutes = Math.abs(offset) - (absOffsetHours * 60),
-      timezoneoffset = (offset > 0 ? "-" : "+") + (absOffsetHours.toString().length < 2 ? "0" + absOffsetHours : absOffsetHours) + (absOffsetMinutes.toString().length < 2 ? "0" + absOffsetMinutes : absOffsetMinutes);
-
-  if (hour12 > 12) {
-    hour12 = hour12 - 12;
-  } else if (hour12 === 0) {
-    hour12 = 12;
-  }
-
-  var padding = function(n) {
-    var s = "0" + n.toString();
-    return s.substr(s.length - 2);
-  };
-
-  var f = format;
-  f = f.replace("%a", options.abbr_day_names[weekDay]);
-  f = f.replace("%A", options.day_names[weekDay]);
-  f = f.replace("%b", options.abbr_month_names[month]);
-  f = f.replace("%B", options.month_names[month]);
-  f = f.replace("%d", padding(day));
-  f = f.replace("%e", day);
-  f = f.replace("%-d", day);
-  f = f.replace("%H", padding(hour));
-  f = f.replace("%-H", hour);
-  f = f.replace("%I", padding(hour12));
-  f = f.replace("%-I", hour12);
-  f = f.replace("%m", padding(month));
-  f = f.replace("%-m", month);
-  f = f.replace("%M", padding(mins));
-  f = f.replace("%-M", mins);
-  f = f.replace("%p", options.meridian[meridian]);
-  f = f.replace("%S", padding(secs));
-  f = f.replace("%-S", secs);
-  f = f.replace("%w", weekDay);
-  f = f.replace("%y", padding(year));
-  f = f.replace("%-y", padding(year).replace(/^0+/, ""));
-  f = f.replace("%Y", year);
-  f = f.replace("%z", timezoneoffset);
-
-  return f;
-};
-
 I18n.toNumber = function(number, options) {
   options = this.prepareOptions(
     options,
     this.lookup("number.format"),
-    {precision: 3, separator: ".", delimiter: ",", strip_insignificant_zeros: false}
+    {precision: 3, separator: this.SEPARATOR, delimiter: ",", strip_insignificant_zeros: false}
   );
 
   var negative = number < 0,
       string = Math.abs(number).toFixed(options.precision).toString(),
-      parts = string.split("."),
+      parts = string.split(this.SEPARATOR),
       precision,
       buffer = [],
       formattedNumber;
@@ -437,23 +210,6 @@ I18n.toNumber = function(number, options) {
   return formattedNumber;
 };
 
-I18n.toCurrency = function(number, options) {
-  options = this.prepareOptions(
-    options,
-    this.lookup("number.currency.format"),
-    this.lookup("number.format"),
-    {unit: "$", precision: 2, format: "%u%n", delimiter: ",", separator: "."}
-  );
-
-  number = this.toNumber(number, options);
-  number = options.format
-    .replace("%u", options.unit)
-    .replace("%n", number)
-  ;
-
-  return number;
-};
-
 I18n.toHumanSize = function(number, options) {
   var kb = 1024,
       size = number,
@@ -486,18 +242,6 @@ I18n.toHumanSize = function(number, options) {
   ;
 
   return number;
-};
-
-I18n.toPercentage = function(number, options) {
-  options = this.prepareOptions(
-    options,
-    this.lookup("number.percentage.format"),
-    this.lookup("number.format"),
-    {precision: 3, separator: ".", delimiter: ""}
-  );
-
-  number = this.toNumber(number, options);
-  return number + "%";
 };
 
 I18n.pluralizer = function(locale) {
@@ -534,52 +278,14 @@ I18n.pluralize = function(count, scope, options) {
 };
 
 I18n.missingTranslation = function(scope, key) {
-  var message = '[' + this.currentLocale() + "." + scope;
-  if (key) { message += "." + key; }
+  var message = '[' + this.currentLocale() + this.SEPARATOR + scope;
+  if (key) { message += this.SEPARATOR + key; }
   return message + ']';
 };
 
 I18n.currentLocale = function() {
-  return (I18n.locale || I18n.defaultLocale);
+  return I18n.locale || I18n.defaultLocale;
 };
 
 // shortcuts
 I18n.t = I18n.translate;
-I18n.l = I18n.localize;
-I18n.p = I18n.pluralize;
-
-I18n.enable_verbose_localization = function(){
-  var counter = 0;
-  var keys = {};
-  var t = I18n.t;
-
-  I18n.noFallbacks = true;
-
-  I18n.t = I18n.translate = function(scope, value){
-    var current = keys[scope];
-    if(!current) {
-      current = keys[scope] = ++counter;
-      var message = "Translation #" + current + ": " + scope;
-      if (!_.isEmpty(value)) {
-        message += ", parameters: " + JSON.stringify(value);
-      }
-      Em.Logger.info(message);
-    }
-    return t.apply(I18n, [scope, value]) + " (t" + current + ")";
-  };
-};
-
-
-I18n.verbose_localization_session = function(){
-  sessionStorage.setItem("verbose_localization", "true");
-  I18n.enable_verbose_localization();
-  return true;
-}
-
-try {
-  if(sessionStorage && sessionStorage.getItem("verbose_localization")) {
-    I18n.enable_verbose_localization();
-  }
-} catch(e){
-  // we don't care really, can happen if cookies disabled
-}
