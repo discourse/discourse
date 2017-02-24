@@ -2900,8 +2900,6 @@ de:
   performance_report:
     initial_post_raw: Dieser Beitrag enthält tägliche Leistungsberichte deiner Site.
     initial_topic_title: Berichte zur Websitegeschwindigkeit
-  topic_invite:
-    user_exists: "Entschuldige, dieser Benutzer ist bereits eingeladen worden. Du kannst einen Benutzer nur einmal zu einem Thema einladen."
   tags:
     title: "Schlagwörter"
     staff_tag_disallowed: "Das Schlagwort \"%{tag}\" darf nur vom Team verwendet werden."

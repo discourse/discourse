@@ -2120,8 +2120,6 @@ ar:
   performance_report:
     initial_post_raw: 'هذا الموضوع يحتوي على معلومات الاداء اليومي للموقع '
     initial_topic_title: التبليغ عن اداء الموقع
-  topic_invite:
-    user_exists: "آسف، ذلك المستخدم قد تمت دعوته من قبل. تستطيع فقط أن تدعوا عضواً لموضوعِ مرة واحدة."
   activemodel:
     errors:
       <<: *errors

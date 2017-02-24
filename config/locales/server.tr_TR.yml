@@ -2048,8 +2048,6 @@ tr_TR:
   performance_report:
     initial_post_raw: Bu konu siteniz hakkında günlük performans raporlarını içerir.
     initial_topic_title: Site performansı raporları
-  topic_invite:
-    user_exists: "Üzgünüz, bu kullanıcı zaten davet edildi. Konuya yalnızca bir kullanıcı davet edebilirsiniz."
   tags:
     title: "Etiketler"
     staff_tag_disallowed: " \"%{tag}\" etiketi yalnızca görevliler tarafından eklenebilir gözüküyor."

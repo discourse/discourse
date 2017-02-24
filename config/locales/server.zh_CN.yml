@@ -2741,8 +2741,6 @@ zh_CN:
   performance_report:
     initial_post_raw: 这个主题将用来展示网站每日性能报告。
     initial_topic_title: 网站性能报告
-  topic_invite:
-    user_exists: "抱歉，用户已经被邀请了。你可能只想邀请用户参与主题一次。"
   tags:
     title: "标签"
     staff_tag_disallowed: "“%{tag}”只可由管理人员使用。"

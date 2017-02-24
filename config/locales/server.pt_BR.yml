@@ -1882,8 +1882,6 @@ pt_BR:
   performance_report:
     initial_post_raw: Este tópico inclui relatórios de performance diários de seu site.
     initial_topic_title: Relatórios de performance do Site
-  topic_invite:
-    user_exists: "Desculpe, este usuário já foi convidado. Você pode convidar um usuário para um tópico apenas uma única vez."
   tags:
     title: "Marcações"
     staff_tag_disallowed: "A marcação \"%{tag}\" pode ser aplicada somente pelo pessoal de apoio."
