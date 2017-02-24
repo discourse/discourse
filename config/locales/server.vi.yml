@@ -1913,8 +1913,6 @@ vi:
   performance_report:
     initial_post_raw: Chủ đề này bao gồm các báo cáo hiệu suất hàng ngày của website.
     initial_topic_title: Báo cáo hiệu suất website
-  topic_invite:
-    user_exists: "Xin lỗi, thành viên này đã được mời. Bạn chỉ có thể mời một người dùng đến một chủ đề một lần."
   tags:
     title: "Thẻ"
   activemodel:

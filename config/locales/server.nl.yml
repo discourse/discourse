@@ -1570,8 +1570,6 @@ nl:
   performance_report:
     initial_post_raw: Deze topic bevat dagelijkse performancerapporten van je site
     initial_topic_title: Performancerapportages van de website
-  topic_invite:
-    user_exists: "Sorry, die gebruiker is al uitgenodigd. Je kan een gebruiker maar een keer voor een topic uitnodigen."
   safe_mode:
     no_customizations: "Alle website-aanpassingen uitschakelen"
     only_official: "Niet-officiële plug-ins uitschakelen"

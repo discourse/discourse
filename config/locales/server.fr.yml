@@ -2665,8 +2665,6 @@ fr:
   performance_report:
     initial_post_raw: Ce sujet comprend des rapports de performance journaliers concernant votre site.
     initial_topic_title: Rapports de performances du site
-  topic_invite:
-    user_exists: "Désolé, cet utilisateur a déjà été invité. Vous ne pouvez inviter un utilisateur qu'une seule fois par sujet."
   tags:
     title: "Tags"
     staff_tag_disallowed: "Le tag \"%{tag}\" ne peut être mis que par un responsable."

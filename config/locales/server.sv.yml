@@ -2306,8 +2306,6 @@ sv:
   performance_report:
     initial_post_raw: Det här ämnet innehåller dagliga prestandarapporter för din webbplats.
     initial_topic_title: Prestandarapporter för webbplatsen
-  topic_invite:
-    user_exists: "Tyvärr, den användaren har redan bjudits in. Du kan endast bjuda in en användare till ett ämne en gång."
   tags:
     title: "Taggar"
     staff_tag_disallowed: "Taggen \"%{tag}\" kan endast användas av personalen."

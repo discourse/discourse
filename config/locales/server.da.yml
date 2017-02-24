@@ -1197,8 +1197,6 @@ da:
   performance_report:
     initial_post_raw: Dette emne inkluderer daglige præstationsrapporter for dit site.
     initial_topic_title: Website præstationsrapport
-  topic_invite:
-    user_exists: "Beklager, men brugeren er allerede inviteret. Du kan kun invitere en bruger til et emne én gang."
   tags:
     title: "Tags"
     staff_tag_disallowed: "Tagget \"%{tag}\" kan kun tildeles af personalet."

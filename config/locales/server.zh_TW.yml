@@ -2797,8 +2797,6 @@ zh_TW:
   performance_report:
     initial_post_raw: 這個主題將用來展示網站每日性能報告。
     initial_topic_title: 網站效能報表
-  topic_invite:
-    user_exists: "抱歉，用戶已經被邀請了。你可能只想邀請用戶參與主題一次。"
   tags:
     title: "標籤"
     staff_tag_disallowed: "“%{tag}”只可由管理人員使用。"

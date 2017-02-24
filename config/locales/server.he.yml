@@ -2904,8 +2904,6 @@ he:
   performance_report:
     initial_post_raw: 'נושא זה כולל דוחות פעילות יומיים עבור האתר שלך. '
     initial_topic_title: דוחות פעילות לאתר
-  topic_invite:
-    user_exists: "מצטערים, המשתמשים כבר הוזמנו. ניתן להזמין משתמשים לנושא רק פעם אחת."
   tags:
     title: "תגיות"
     staff_tag_disallowed: "התג \"%{tag}\" ניתן רק על ידי הצוות."

@@ -2747,8 +2747,6 @@ pt:
   performance_report:
     initial_post_raw: Este tópico inclui relatórios diários de desempenho para o seu sítio.
     initial_topic_title: Relatórios de desempenho do sítio
-  topic_invite:
-    user_exists: "Pedimos desculpa, esse utilizador já foi convidado. Pode convidar um utilizador para um tópico apenas uma vez."
   tags:
     title: "Etiquetas"
     staff_tag_disallowed: "A etiqueta \"%{tag}\" pode ser aplicada pela equipa de apoio apenas."

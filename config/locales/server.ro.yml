@@ -2803,8 +2803,6 @@ ro:
   performance_report:
     initial_post_raw: Acest subiect include rapoarte zilnice de performanță referitoare la site-ul tău.
     initial_topic_title: Rapoarte de performanță website
-  topic_invite:
-    user_exists: "Ne pare rău, acest utilizator a fost deja invitat. Nu poți să inviți un utilizator la un subiect decât o singură dată."
   tags:
     title: "Etichete"
     staff_tag_disallowed: "Eticheta \"%{tag}\" poate fi pusă doar de un membru al echipei."
