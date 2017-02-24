@@ -426,7 +426,7 @@ class ApplicationController < ActionController::Base
       json = ApplicationController.banner_json_cache["json"]
 
       unless json
-        topic = Topic.where(archetype: Archetype.banner).limit(1).first
+        topic = Topic.where(archetype: Archetype.banner).first
         banner = topic.present? ? topic.banner : {}
         ApplicationController.banner_json_cache["json"] = json = MultiJson.dump(banner)
       end

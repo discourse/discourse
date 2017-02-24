@@ -848,7 +848,7 @@ SQL
   end
 
   def banner
-    post = self.posts.order(:post_number).limit(1).first
+    post = self.ordered_posts.first
 
     {
       html: post.cooked,
