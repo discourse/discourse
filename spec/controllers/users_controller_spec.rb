@@ -614,6 +614,9 @@ describe UsersController do
           auth = session[:authentication] = {}
           auth[:authenticator_name] = 'twitter'
           auth[:extra_data] = twitter_auth
+          auth[:email_valid] = true
+          auth[:email] = @user.email
+
           TwitterUserInfo.expects(:create)
 
           post_user
