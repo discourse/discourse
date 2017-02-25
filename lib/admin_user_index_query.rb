@@ -27,7 +27,7 @@ class AdminUserIndexQuery
   end
 
   def custom_direction
-    asc = params[:asc]
+    asc = params[:ascending]
     asc.present? && asc ? "ASC" : "DESC"
   end
 
