@@ -33,12 +33,12 @@ describe AdminUserIndexQuery do
     end
 
     it "allows custom ordering for stats wtih default direction" do
-      query = ::AdminUserIndexQuery.new({ order: "topics_entered" })
+      query = ::AdminUserIndexQuery.new({ order: "topics_viewed" })
       expect(query.find_users_query.to_sql).to match("topics_entered DESC")
     end
 
     it "allows custom ordering and direction for stats" do
-      query = ::AdminUserIndexQuery.new({ order: "topics_entered", ascending: true })
+      query = ::AdminUserIndexQuery.new({ order: "topics_viewed", ascending: true })
       expect(query.find_users_query.to_sql).to match("topics_entered ASC")
     end
   end
@@ -91,7 +91,7 @@ describe AdminUserIndexQuery do
     end
 
     it "shows nil values first with asc" do
-      users = ::AdminUserIndexQuery.new({ order: "last_emailed_at", ascending: true }).find_users
+      users = ::AdminUserIndexQuery.new({ order: "last_emailed", ascending: true }).find_users
 
       expect(users.count).to eq(2)
       expect(users.first.username).to eq("system")
@@ -99,7 +99,7 @@ describe AdminUserIndexQuery do
     end
 
     it "shows nil values last with desc" do
-      users = ::AdminUserIndexQuery.new({ order: "last_emailed_at"}).find_users
+      users = ::AdminUserIndexQuery.new({ order: "last_emailed"}).find_users
 
       expect(users.count).to eq(2)
       expect(users.first.last_emailed_at).to_not eq(nil)
