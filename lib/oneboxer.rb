@@ -1,4 +1,4 @@
-require_dependency "./lib/onebox/discourse_onebox_sanitize_config"
+require_dependency "#{Rails.root}/lib/onebox/discourse_onebox_sanitize_config"
 Dir["#{Rails.root}/lib/onebox/engine/*_onebox.rb"].sort.each { |f| require f }
 
 module Oneboxer
