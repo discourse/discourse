@@ -10,6 +10,20 @@ class AdminUserIndexQuery
 
   attr_reader :params, :trust_levels
 
+  SORTABLE_MAPPING = {
+    'created' => 'created_at',
+    'last_emailed' => "COALESCE(last_emailed_at, to_date('1970-01-01', 'YYYY-MM-DD'))",
+    'seen' => "COALESCE(last_seen_at, to_date('1970-01-01', 'YYYY-MM-DD'))",
+    'username' => 'username',
+    'email' => 'email',
+    'trust_level' => 'trust_level',
+    'days_visited' => 'user_stats.days_visited',
+    'posts_read' => 'user_stats.posts_read_count',
+    'topics_viewed' => 'user_stats.topics_entered',
+    'posts' => 'user_stats.post_count',
+    'read_time' => 'user_stats.time_read'
+  }
+
   def find_users(limit=100)
     find_users_query.limit(limit)
   end
@@ -18,21 +32,9 @@ class AdminUserIndexQuery
     find_users_query.count
   end
 
-  def self.orderable_user_columns
-    %w(created_at trust_level last_emailed_at last_seen_at username email)
-  end
-  
-  def self.orderable_stat_columns
-    %w(days_visited posts_read_count topics_entered post_count time_read)
-  end
-
   def custom_direction
     asc = params[:ascending]
     asc.present? && asc ? "ASC" : "DESC"
-  end
-
-  def pg_coalesce(column)
-    "COALESCE(#{column}, to_date('1970-01-01', 'YYYY-MM-DD'))"
   end
 
   def initialize_query_with_order(klass)
@@ -40,20 +42,13 @@ class AdminUserIndexQuery
 
     custom_order = params[:order]
     if custom_order.present? &&
-      without_dir = custom_order.downcase.sub(/ (asc|desc)$/, '')
-      if AdminUserIndexQuery.orderable_user_columns.include?(without_dir)
-        without_dir = (without_dir == "last_seen_at") ? pg_coalesce("last_seen_at") : without_dir
-        without_dir = (without_dir == "last_emailed_at") ? pg_coalesce("last_emailed_at") : without_dir
-        order << "#{without_dir} #{custom_direction}"
-      end
-      if AdminUserIndexQuery.orderable_stat_columns.include?(without_dir)
-        order << "user_stats.#{without_dir} #{custom_direction}"
-      end
+      without_dir = SORTABLE_MAPPING[custom_order.downcase.sub(/ (asc|desc)$/, '')]
+      order << "#{without_dir} #{custom_direction}"
     end
-    
+
     if !custom_order.present?
       if params[:query] == "active"
-        order << "#{pg_coalesce("last_seen_at")} DESC"
+        order << "COALESCE(last_seen_at, to_date('1970-01-01', 'YYYY-MM-DD')) DESC"
       else
         order << "users.created_at DESC"
       end
