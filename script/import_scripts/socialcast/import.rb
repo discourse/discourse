@@ -65,7 +65,6 @@ class ImportScripts::Socialcast < ImportScripts::Base
       post = Post.find(post_id) # already imported this topic
     else
       topic[:user_id] = user_id_from_imported_user_id(topic[:author_id]) || -1
-      topic[:category] = 'Socialcast Import'
 
       post = create_post(topic, topic[:id])
 
