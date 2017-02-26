@@ -85,6 +85,34 @@ describe UserAuthToken do
     expect(user_token.user_agent).to eq("some user agent 2")
   end
 
+  it "expires correctly" do
+
+    user = Fabricate(:user)
+
+    user_token = UserAuthToken.generate!(user_id: user.id,
+                                    user_agent: "some user agent 2",
+                                    client_ip: "1.1.2.3")
+
+    UserAuthToken.lookup(user_token.unhashed_auth_token, seen: true)
+
+    freeze_time (SiteSetting.maximum_session_age.hours - 1).from_now
+
+    user_token.reload
+
+    user_token.rotate!
+    UserAuthToken.lookup(user_token.unhashed_auth_token, seen: true)
+
+    freeze_time (SiteSetting.maximum_session_age.hours - 1).from_now
+
+    still_good = UserAuthToken.lookup(user_token.unhashed_auth_token, seen: true)
+    expect(still_good).not_to eq(nil)
+
+    freeze_time 2.hours.from_now
+
+    not_good = UserAuthToken.lookup(user_token.unhashed_auth_token, seen: true)
+    expect(not_good).to eq(nil)
+  end
+
   it "can properly rotate tokens" do
 
     user = Fabricate(:user)
@@ -127,7 +155,10 @@ describe UserAuthToken do
     freeze_time(2.minute.from_now)
 
     looked_up = UserAuthToken.lookup(unhashed_prev)
-    expect(looked_up).to eq(nil)
+    expect(looked_up).not_to eq(nil)
+
+    looked_up.reload
+    expect(looked_up.auth_token_seen).to eq(false)
 
     rotated = user_token.rotate!(user_agent: "a new user agent", client_ip: "1.1.2.4")
     expect(rotated).to eq(true)

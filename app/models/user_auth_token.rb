@@ -46,18 +46,10 @@ class UserAuthToken < ActiveRecord::Base
 
     user_token = find_by("(auth_token = :token OR
                           prev_auth_token = :token OR
-                          (auth_token = :unhashed_token AND legacy)) AND created_at > :expire_before",
+                          (auth_token = :unhashed_token AND legacy)) AND rotated_at > :expire_before",
                           token: token, unhashed_token: unhashed_token, expire_before: expire_before)
 
-    token_expired =
-       user_token &&
-       user_token.seen_at &&
-       user_token.auth_token_seen &&
-       user_token.prev_auth_token == token &&
-       user_token.prev_auth_token != user_token.auth_token &&
-       user_token.seen_at < 1.minute.ago
-
-    if token_expired || !user_token
+    if !user_token
 
       if SiteSetting.verbose_auth_token_logging
         UserAuthTokenLog.create(
@@ -70,6 +62,23 @@ class UserAuthToken < ActiveRecord::Base
       end
 
       return nil
+    end
+
+    if user_token.prev_auth_token == token && user_token.auth_token_seen
+      changed_rows = UserAuthToken
+        .where(id: user_token.id, prev_auth_token: token)
+        .update_all(auth_token_seen: false)
+
+      # not updating AR model cause we want to give it one more req
+      # with wrong cookie
+      UserAuthTokenLog.create(
+        action: changed_rows == 0 ? "prev seen token unchanged" : "prev seen token",
+        user_auth_token_id: user_token.id,
+        user_id: user_token.user_id,
+        auth_token: user_token.auth_token,
+        user_agent: opts && opts[:user_agent],
+        client_ip: opts && opts[:client_ip]
+      )
     end
 
     if mark_seen && user_token && !user_token.auth_token_seen && user_token.auth_token == token
