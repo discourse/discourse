@@ -1669,7 +1669,7 @@ en:
     subject_template: "Confirm you no longer want to receive email updates from %{site_title}"
     text_body_template: |
       Someone (possibly you?) requested to no longer send email updates from %{site_domain_name} to this address.
-      If you with to confirm this, please click this link:
+      If you wish to confirm this, please click this link:
 
       %{confirm_unsubscribe_link}
 
