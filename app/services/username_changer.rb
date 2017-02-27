@@ -11,7 +11,7 @@ class UsernameChanger
   end
 
   def change
-    if @actor
+    if @actor && @user.username != @new_username
       StaffActionLogger.new(@actor).log_username_change(@user, @user.username, @new_username)
     end
 
