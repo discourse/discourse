@@ -26,7 +26,7 @@ Discourse::Application.routes.draw do
     mount Sidekiq::Web => "/sidekiq"
     mount Logster::Web => "/logs"
   else
-    # only allow sidekie in master site
+    # only allow sidekiq in master site
     mount Sidekiq::Web => "/sidekiq", constraints: AdminConstraint.new(require_master: true)
     mount Logster::Web => "/logs", constraints: AdminConstraint.new
   end
