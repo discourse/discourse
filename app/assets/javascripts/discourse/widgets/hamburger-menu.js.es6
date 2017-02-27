@@ -120,7 +120,7 @@ export default createWidget('hamburger-menu', {
     const isStaff = Discourse.User.currentProp('staff');
 
     const categories = Discourse.Category.list().reject((c) => {
-      if (c.get('show_subcategory_list') && c.get('parent_category_id')) { return true; }
+      if (c.get('parentCategory.show_subcategory_list')) { return true; }
       if (hideUncategorized && c.get('isUncategorizedCategory') && !isStaff) { return true; }
       return false;
     });
