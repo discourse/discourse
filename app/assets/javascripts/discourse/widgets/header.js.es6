@@ -206,6 +206,7 @@ export default createWidget('header', {
           state.contextEnabled = true;
         }
       }
+
       panels.push(this.attach('search-menu', { contextEnabled: state.contextEnabled }));
     } else if (state.hamburgerVisible) {
       panels.push(this.attach('hamburger-menu'));
@@ -303,6 +304,7 @@ export default createWidget('header', {
   },
 
   searchMenuContextChanged(value) {
+    this.state.contextType = this.register.lookup('search-service:main').get('contextType');
     this.state.contextEnabled = value;
   },
 
