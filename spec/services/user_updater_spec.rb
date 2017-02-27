@@ -190,5 +190,10 @@ describe UserUpdater do
         expect(user.reload.custom_fields).to eq({'import_username' => 'my_old_username'})
       end
     end
+
+    it "logs the action" do
+      user = Fabricate(:user, name: 'Billy Bob')
+      expect { described_class.new(acting_user, user).update(name: 'Jim Tom') }.to change { UserHistory.count }.by(1)
+    end
   end
 end

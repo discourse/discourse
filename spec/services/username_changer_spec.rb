@@ -62,6 +62,10 @@ describe UsernameChanger do
         described_class.change(myself, "HanSolo")
         expect(myself.reload.username).to eq('HanSolo')
       end
+
+      it "logs the action" do
+        expect { described_class.change(myself, "HanSolo", myself) }.to change { UserHistory.count }.by(1)
+      end
     end
 
     describe 'allow custom minimum username length from site settings' do
