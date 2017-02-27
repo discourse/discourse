@@ -10,16 +10,31 @@ class AdminUserIndexQuery
 
   attr_reader :params, :trust_levels
 
+  SORTABLE_MAPPING = {
+    'created' => 'created_at',
+    'last_emailed' => "COALESCE(last_emailed_at, to_date('1970-01-01', 'YYYY-MM-DD'))",
+    'seen' => "COALESCE(last_seen_at, to_date('1970-01-01', 'YYYY-MM-DD'))",
+    'username' => 'username',
+    'email' => 'email',
+    'trust_level' => 'trust_level',
+    'days_visited' => 'user_stats.days_visited',
+    'posts_read' => 'user_stats.posts_read_count',
+    'topics_viewed' => 'user_stats.topics_entered',
+    'posts' => 'user_stats.post_count',
+    'read_time' => 'user_stats.time_read'
+  }
+
   def find_users(limit=100)
-    find_users_query.includes(:user_stat).limit(limit)
+    find_users_query.limit(limit)
   end
 
   def count_users
     find_users_query.count
   end
 
-  def self.orderable_columns
-    %w(created_at days_visited posts_read_count topics_entered post_count trust_level)
+  def custom_direction
+    asc = params[:ascending]
+    asc.present? && asc ? "ASC" : "DESC"
   end
 
   def initialize_query_with_order(klass)
@@ -27,21 +42,25 @@ class AdminUserIndexQuery
 
     custom_order = params[:order]
     if custom_order.present? &&
-      without_dir = custom_order.downcase.sub(/ (asc|desc)$/, '')
-      if AdminUserIndexQuery.orderable_columns.include?(without_dir)
-        order << custom_order
+      without_dir = SORTABLE_MAPPING[custom_order.downcase.sub(/ (asc|desc)$/, '')]
+      order << "#{without_dir} #{custom_direction}"
+    end
+
+    if !custom_order.present?
+      if params[:query] == "active"
+        order << "COALESCE(last_seen_at, to_date('1970-01-01', 'YYYY-MM-DD')) DESC"
+      else
+        order << "users.created_at DESC"
       end
+
+      order << "users.username"
     end
 
-    if params[:query] == "active"
-      order << "COALESCE(last_seen_at, to_date('1970-01-01', 'YYYY-MM-DD')) DESC"
+    if params[:stats].present? && params[:stats] == false
+      klass.order(order.reject(&:blank?).join(","))
     else
-      order << "users.created_at DESC"
+      klass.includes(:user_stat).order(order.reject(&:blank?).join(","))
     end
-
-    order << "users.username"
-
-    klass.order(order.reject(&:blank?).join(","))
   end
 
   def filter_by_trust
