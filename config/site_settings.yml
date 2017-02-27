@@ -988,6 +988,14 @@ rate_limits:
   max_prints_per_hour_per_user:
     default: 5
     client: true
+  max_logins_per_ip_per_hour:
+    min: 1
+    max: 20000
+    default: 30
+  max_logins_per_ip_per_minute:
+    min: 1
+    max: 20000
+    default: 6
 
 developer:
   force_hostname:
