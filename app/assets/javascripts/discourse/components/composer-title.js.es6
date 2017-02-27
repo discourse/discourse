@@ -54,6 +54,10 @@ export default Ember.Component.extend({
     if (!this.element || this.isDestroying || this.isDestroyed) { return; }
 
     if (this.get('isAbsoluteUrl') && (this.get('composer.reply')||"").length === 0) {
+
+      // only feature links to external sites
+      if (this.get('composer.title').match(new RegExp("^https?:\\/\\/" + window.location.hostname, "i"))) { return; }
+
       // Try to onebox. If success, update post body and title.
       this.set('composer.loading', true);
 
@@ -64,7 +68,8 @@ export default Ember.Component.extend({
 
       if (loadOnebox && loadOnebox.then) {
         loadOnebox.then( () => {
-          this._updatePost(lookupCache(this.get('composer.title')));
+          const v = lookupCache(this.get('composer.title'));
+          this._updatePost(v ? v : link);
         }).finally(() => {
           this.set('composer.loading', false);
           Ember.run.schedule('afterRender', () => { this.$('input').putCursorAtEnd(); });

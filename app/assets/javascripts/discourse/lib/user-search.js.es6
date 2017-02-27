@@ -6,7 +6,7 @@ var cache = {},
     currentTerm,
     oldSearch;
 
-function performSearch(term, topicId, includeGroups, includeMentionableGroups, allowedUsers, resultsFn) {
+function performSearch(term, topicId, includeGroups, includeMentionableGroups, allowedUsers, group, resultsFn) {
   var cached = cache[term];
   if (cached) {
     resultsFn(cached);
@@ -19,6 +19,7 @@ function performSearch(term, topicId, includeGroups, includeMentionableGroups, a
             topic_id: topicId,
             include_groups: includeGroups,
             include_mentionable_groups: includeMentionableGroups,
+            group: group,
             topic_allowed_users: allowedUsers }
   });
 
@@ -79,7 +80,8 @@ export default function userSearch(options) {
       includeGroups = options.includeGroups,
       includeMentionableGroups = options.includeMentionableGroups,
       allowedUsers = options.allowedUsers,
-      topicId = options.topicId;
+      topicId = options.topicId,
+      group = options.group;
 
 
   if (oldSearch) {
@@ -105,10 +107,16 @@ export default function userSearch(options) {
       resolve(CANCELLED_STATUS);
     }, 5000);
 
-    debouncedSearch(term, topicId, includeGroups, includeMentionableGroups, allowedUsers, function(r) {
-      clearTimeout(clearPromise);
-      resolve(organizeResults(r, options));
-    });
+    debouncedSearch(term,
+        topicId,
+        includeGroups,
+        includeMentionableGroups,
+        allowedUsers,
+        group,
+        function(r) {
+          clearTimeout(clearPromise);
+          resolve(organizeResults(r, options));
+        });
 
   });
 }

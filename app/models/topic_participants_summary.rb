@@ -1,3 +1,4 @@
+# This is used on a topic page
 class TopicParticipantsSummary
   attr_reader :topic, :options
 

@@ -64,6 +64,37 @@ $input-width: 220px;
   }
 }
 
+.password-reset {
+  .instructions {
+    label {
+      color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 50%));
+    }
+  }
+}
+
+.invites-show {
+  .two-col {
+    position: relative;
+  }
+
+  .col-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+
+  form {
+    margin-top: 24px;
+    button.btn-primary {
+      margin-top: 10px;
+    }
+    label {
+      font-weight: bold;
+    }
+  }
+}
+
+
 // alternate login / create new account buttons should be de-emphasized
 
 button#login-link, button#new-account-link

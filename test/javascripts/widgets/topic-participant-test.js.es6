@@ -8,7 +8,7 @@ widgetTest('one post', {
   setup() {
     this.set('args', {
       username: 'test',
-      avatar_template: 'stubbed',
+      avatar_template: '/images/avatar.png',
       post_count: 1
     });
   },
@@ -26,10 +26,10 @@ widgetTest('many posts, a primary group with flair', {
   setup() {
     this.set('args', {
       username: 'test',
-      avatar_template: 'stubbed',
+      avatar_template: '/images/avatar.png',
       post_count: 5,
       primary_group_name: 'devs',
-      primary_group_flair_url: "http://devs.example.com/img/devs.png",
+      primary_group_flair_url: "/images/d-logo-sketch-small.png",
       primary_group_flair_bg_color: "222"
     });
   },

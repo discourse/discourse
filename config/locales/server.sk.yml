@@ -768,7 +768,6 @@ sk:
     max_image_width: "Maximálna šírka náhľadu obrázkov v príspevku"
     max_image_height: "Maximálna výška náhľadu obrázkov v príspevku"
     category_featured_topics: "Počet zobrazených tém na jednu kategóriu na stránke /katgórie. Zmena hodnoty sa na stránkach prejaví do 15 minút."
-    show_subcategory_list: "Zobraz zoznam podkategórií namiesto zoznamu tém po vstupe do menu kategórií"
     fixed_category_positions: "Ak je to označené, budete môcť zoraďovať kategórie v pevnom poradí. Ak je neoznačené, kategórie budu zoradené podlľa aktivity."
     fixed_category_positions_on_create: "Ak je označené, triedenie kategórií bude spravované v dialógu na vytváranie témy (vyžaduje fixed_category_positions)."
     add_rel_nofollow_to_user_content: "Pridať rel nofollow ku všetkému zaslanému používateľskému kontextu s výnimkou interných odkazov (zahrňuje rodičovskú doménu). Ak to zmeníte, musíte vykonať prípaz rebake na všetky príspevky pomocou: \"rake posts:rebake\""
@@ -1063,7 +1062,6 @@ sk:
     notify_about_flags_after: "Ak existujú príznaky ktoré neboli vyriešené po uvedenom počte hodín, pošli email na contact_email. Pre vypnutie nastavte 0."
     show_create_topics_notice: "Zobraz výzvu žiadajúcu administrátorov o vytvorenie nejakých tém, ak majú stránky menej ako 5 verejných tém."
     delete_drafts_older_than_n_days: Vymazať návrhy staršie ako (n) dní.
-    vacuum_db_days: "Spustiť VACUUM ANALYZE na získanie DB miesto po migráciách (pre vypnutie nastavte na 0)"
     prevent_anons_from_downloading_files: "Zabrániť anonymným používateľom sťahovať prílohy. VAROVANIE: toto nastavenie zneprístupní akékoľvek neobrázkové súbory na stánkach uložené ako prílohy."
     slug_generation_method: "Vybrať metódu generovania koncovej časti adresy. 'encoded' vygeneruje percentami zakódovaní reťazec. 'none' vypne koncovú časť adresy úplne."
     enable_emoji: "Zapnúť emoji"

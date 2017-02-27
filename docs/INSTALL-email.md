@@ -14,7 +14,7 @@ Enter these values when prompted by `./discourse-setup` per the [install guide](
     SMTP user name?      SMTP_Injection
     SMTP password?       [Any API key with Send via SMTP permission]
 
-#### [SendGrid][sg] &mdash; 12k emails/month
+#### [SendGrid][sg] &mdash; 40k emails on a 30 day trial
 
     SMTP server address? smtp.sendgrid.net
     SMTP user name?      apikey

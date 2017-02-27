@@ -7,7 +7,7 @@ database:
   username: root
   password:
   schema: phpbb
-  table_prefix: phpbb_ # Usually all table names start with phpbb_. Change this, if your forum is using a different prefix.
+  table_prefix: phpbb_ # Change this, if your forum is using a different prefix. Usually all table names start with phpbb_
   batch_size: 1000 # Don't change this unless you know what you're doing. The default (1000) should work just fine.
 
 import:

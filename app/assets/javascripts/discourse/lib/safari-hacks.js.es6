@@ -1,4 +1,4 @@
-function applicable() {
+export function isAppleDevice() {
   // IE has no DOMNodeInserted so can not get this hack despite saying it is like iPhone
   // This will apply hack on all iDevices
   return navigator.userAgent.match(/(iPad|iPhone|iPod)/g) &&
@@ -7,19 +7,15 @@ function applicable() {
 }
 
 
+// we can't tell what the actual visible window height is 
+// because we cannot account for the height of the mobile keyboard 
+// and any other mobile autocomplete UI that may appear
+// so let's be conservative here rather than trying to max out every
+// available pixel of height for the editor
 function calcHeight(composingTopic) {
   const winHeight = window.innerHeight;
-
-  // Hard code some known iOS resolutions
-  switch(winHeight) {
-    case 460: return composingTopic ? 250 : 260;
-    case 559: return composingTopic ? 325 : 308;
-    case 627:
-    case 628: return 360;
-  }
-
-  const ratio = composingTopic ? 0.54 : 0.6;
-  const min = composingTopic ? 300 : 350;
+  const ratio = composingTopic ? 0.45 : 0.45;
+  const min = composingTopic ? 300 : 300;
   return Math.max(parseInt(winHeight*ratio), min);
 }
 
@@ -32,7 +28,7 @@ export function isWorkaroundActive() {
 
 // per http://stackoverflow.com/questions/29001977/safari-in-ios8-is-scrolling-screen-when-fixed-elements-get-focus/29064810
 function positioningWorkaround($fixedElement) {
-  if (!applicable()) {
+  if (!isAppleDevice()) {
     return;
   }
 

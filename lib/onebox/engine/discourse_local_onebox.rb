@@ -69,7 +69,7 @@ module Onebox
             first_post = topic.ordered_posts.first
 
             args = {
-              topic: topic.id,
+              topic_id: topic.id,
               avatar: PrettyText.avatar_img(topic.user.avatar_template, "tiny"),
               original_url: @url,
               title: PrettyText.unescape_emoji(CGI::escapeHTML(topic.title)),

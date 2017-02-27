@@ -29,11 +29,18 @@ cs:
   loading: "Nahrávám"
   powered_by_html: 'Systém běží na <a href="http://www.discourse.org">Discourse</a>, nejlépe funguje se zapnutým JavaScriptem'
   log_in: "Přihlásit se"
+  purge_reason: "Tento účet byl automaticky smazán a deaktivován jako opuštěný"
   disable_remote_images_download_reason: "Stahování obrázků z cizích serverů bylo vypnuto protože na disku není dostatek místa."
   anonymous: "Anonymní"
+  remove_posts_deleted_by_author: "Smazáno autorem"
   emails:
     incoming:
-      default_subject: "Příchozí email z %{email}"
+      default_subject: "Toto téma vyžaduje název"
+      show_trimmed_content: "Ukázat upravený obsah"
+      maximum_staged_user_per_email_reached: "Dosáhli jste maximálního počtu uživatelů na jeden e-mail."
+      errors:
+        empty_email_error: "Toto se stává, když e-mail, který obdržíme, je prázdný."
+        no_message_id_error: "Toto se stává, když e-mail nemá žádnou hlavičku s \"ID zprávy\"."
   errors: &errors
     format: '%{attribute} %{message}'
     messages:
@@ -784,6 +791,12 @@ cs:
   privacy_topic:
     title: "Ochrana soukromí"
   badges:
+    welcome:
+      name: Vítejte
+    first_like:
+      name: První "to se mi líbí"
+    first_share:
+      name: První sdílení
     admired:
       name: Obdivovaný
   admin_login:
@@ -792,6 +805,8 @@ cs:
     submit_button: "Odeslat e-mail"
   wizard:
     step:
+      locale:
+        title: "Vítejte ve vašem Discourse!"
       privacy:
         title: "Přístup"
       corporate:

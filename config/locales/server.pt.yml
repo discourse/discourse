@@ -108,6 +108,8 @@ pt:
   bulk_invite:
     file_should_be_csv: "O ficheiro carregado deve ser do formato CSV."
     error: "Ocorreu um erro ao carregar esse ficheiro. Por favor tente mais tarde."
+  topic_invite:
+    user_exists: "Pedimos desculpa, esse utilizador já foi convidado. Pode convidar um utilizador para um tópico apenas uma vez."
   backup:
     operation_already_running: "Existe atualmente uma operação em execução. Neste momento não é possível iniciar um novo trabalho. "
     backup_file_should_be_tar_gz: "O ficheiro da cópia de segurança deve ser um arquivo .tar.gz"
@@ -806,7 +808,6 @@ pt:
     max_image_width: "Largura máxima de miniaturas de imagens numa mensagem."
     max_image_height: "Altura máxima de miniaturas de imagens numa mensagem."
     category_featured_topics: "Número de tópicos visíveis por categoria na página de /categorias. Após a alteração deste valor, irá demorar até 15 minutos para que a página de categorias fique atualizada."
-    show_subcategory_list: "Mostrar lista de subcategorias em vez de lista de tópicos quando inserida uma categoria."
     fixed_category_positions: "Se estiver marcado, irá conseguir organizar as categorias por uma ordem fixa. Se não estiver marcado, as categorias são listadas por ordem de actividade."
     fixed_category_positions_on_create: "Se marcado, a ordenação de categorias irá ser mantida no diálogo de criação do tópico (requer fixed_category_positions)"
     add_rel_nofollow_to_user_content: "Adicionar a etiqueta rel nofollow em todos os conteúdos submetidos pelo utilizador, excepto para hiperligações internas (incluindo domínios pai). Se mudar isto, terá que atualizar todas as suas mensagens com: \"rake posts:rebake\""
@@ -1190,7 +1191,6 @@ pt:
     show_create_topics_notice: "Se o sítio tem menos de 5 tópicos públicos, mostrar um aviso pedindo aos administradores a criação de mais tópicos."
     delete_drafts_older_than_n_days: Eliminar rascunhos mais antigos que (n) days.
     bootstrap_mode_min_users: "Número mínimo de utilizadores necessários para desactivar o modo de inicialização (coloque 0 para desactivar)"
-    vacuum_db_days: "Executar VACUUM ANALYZE para reclamar espaço na BD após as migrações (configurar a 0 para desativar)"
     prevent_anons_from_downloading_files: "Previna que utilizadores anónimos descarreguem anexos. AVISO: isto irá fazer com que quaisquer atributos (que não sejam imagens) publicados como anexos não funcionem."
     slug_generation_method: "Escolha um método de geração slug. 'encoded' irá gerar sequências de caracteres com código percentual. 'none' irá desativar slug por completo."
     enable_emoji: "Ativar emoji"
@@ -2039,7 +2039,6 @@ pt:
       follow_topic: "Acompanhar este tópico"
       join_the_discussion: "Ler Mais"
       popular_posts: "Publicações Populares"
-      from_topic_label: "De"
       subject_template: "Sumário de [%{site_name}] "
       unsubscribe: "Este resumo é enviado de %{site_link} quando não o vemos há algum tempo. Para anular a subscrição %{unsubscribe_link}."
       click_here: "clique aqui"
@@ -2748,8 +2747,6 @@ pt:
   performance_report:
     initial_post_raw: Este tópico inclui relatórios diários de desempenho para o seu sítio.
     initial_topic_title: Relatórios de desempenho do sítio
-  topic_invite:
-    user_exists: "Pedimos desculpa, esse utilizador já foi convidado. Pode convidar um utilizador para um tópico apenas uma vez."
   tags:
     title: "Etiquetas"
     staff_tag_disallowed: "A etiqueta \"%{tag}\" pode ser aplicada pela equipa de apoio apenas."

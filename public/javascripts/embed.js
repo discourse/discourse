@@ -11,6 +11,10 @@
   var queryParams = {};
 
   if (DE.discourseEmbedUrl) {
+    if (DE.discourseEmbedUrl.indexOf('/') === 0) {
+      console.error("discourseEmbedUrl must be a full URL, not a relative path");
+    }
+
     queryParams.embed_url = encodeURIComponent(DE.discourseEmbedUrl);
   }
 

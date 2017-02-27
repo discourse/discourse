@@ -242,6 +242,7 @@ class CategoriesController < ApplicationController
                         :sort_order,
                         :sort_ascending,
                         :topic_featured_link_allowed,
+                        :show_subcategory_list,
                         :custom_fields => [params[:custom_fields].try(:keys)],
                         :permissions => [*p.try(:keys)],
                         :allowed_tags => [],

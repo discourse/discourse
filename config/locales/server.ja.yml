@@ -602,7 +602,6 @@ ja:
     max_image_width: "投稿内での画像サムネイルの最大の幅"
     max_image_height: "投稿内での画像サムネイルの最大の高さ"
     category_featured_topics: "/categories ページに表示されるカテゴリ毎のトピックの数。変更後、カテゴリページの更新におよそ15分程かかります。"
-    show_subcategory_list: "カテゴリを表示する際にトピック一覧の代わりにサブカテゴリ一覧を表示"
     fixed_category_positions: "チェックすると、カテゴリの表示順をコントロールできます。チェックしない場合、アクティビティ順に表示されます"
     fixed_category_positions_on_create: "チェックすると、トピック作成ダイアログ上でカテゴリの順序が維持されます(fixed category positions が必要)。"
     add_rel_nofollow_to_user_content: " 内部リンク(親ドメインを含む)を除き、投稿されたすべてのユーザコンテンツに rel nofollow を追加する。この設定を反映するには \"rake posts:rebake\" を実行して baked markdown をすべて更新する必要があります"

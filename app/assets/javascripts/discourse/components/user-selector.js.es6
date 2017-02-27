@@ -44,7 +44,8 @@ export default TextField.extend({
           exclude: excludedUsernames(),
           includeGroups,
           allowedUsers,
-          includeMentionableGroups
+          includeMentionableGroups,
+          group: self.get("group")
         });
 
         return results;

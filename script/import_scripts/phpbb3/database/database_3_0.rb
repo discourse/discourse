@@ -7,7 +7,6 @@ module ImportScripts::PhpBB3
       count(<<-SQL)
         SELECT COUNT(*) AS count
         FROM #{@table_prefix}users u
-          JOIN #{@table_prefix}groups g ON g.group_id = u.group_id
         WHERE u.user_type != #{Constants::USER_TYPE_IGNORE}
       SQL
     end
@@ -18,7 +17,7 @@ module ImportScripts::PhpBB3
           u.user_type, u.user_inactive_reason, g.group_name, b.ban_start, b.ban_end, b.ban_reason,
           u.user_posts, u.user_website, u.user_from, u.user_birthday, u.user_avatar_type, u.user_avatar
         FROM #{@table_prefix}users u
-          JOIN #{@table_prefix}groups g ON (g.group_id = u.group_id)
+          LEFT OUTER JOIN #{@table_prefix}groups g ON (g.group_id = u.group_id)
           LEFT OUTER JOIN #{@table_prefix}banlist b ON (
             u.user_id = b.ban_userid AND b.ban_exclude = 0 AND
             (b.ban_end = 0 OR b.ban_end >= UNIX_TIMESTAMP())

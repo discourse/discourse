@@ -35,7 +35,7 @@ zh_TW:
   remove_posts_deleted_by_author: "已由作者刪除"
   emails:
     incoming:
-      default_subject: "來自 %{email} 的電子郵件"
+      default_subject: "無標題的討論話題"
       show_trimmed_content: "顯示刪減後的內容"
       maximum_staged_user_per_email_reached: "以達成分期使用者能創造的最大數量信件"
       errors:
@@ -73,8 +73,8 @@ zh_TW:
       inclusion: 不包括在這列表中
       invalid: 無效的
       is_invalid: "似乎不清楚，這是完整的句子嗎？"
-      contains_censored_words: "包含一或多個過濾詞彙: %{censored_words}"
-      matches_censored_pattern: "與下列正則表達式相匹配: %{censored_pattern}"
+      contains_censored_words: "包含下列過濾詞彙: %{censored_words}"
+      matches_censored_pattern: "包含下列過濾詞彙（依照站方設定的正規表達式 %{censored_words}）"
       less_than: 必須少於 %{count}
       less_than_or_equal_to: 必須少於或等於 %{count}
       not_a_number: 不是數字
@@ -104,9 +104,14 @@ zh_TW:
       max_username_length_range: "你不能設定「最大」小於「最小」。"
       default_categories_already_selected: "不能選擇一個已經用於另一個列表的分類。"
       s3_upload_bucket_is_required: "你沒有填寫“s3_upload_bucket”，不能開啟上傳至 S3。"
+  invite:
+    accept_invite: "接受邀請"
+    not_found: "您的邀請碼無效。請聯絡管理人員。"
   bulk_invite:
     file_should_be_csv: "上傳的檔案必須是 CSV 格式。"
     error: "上傳檔案有錯誤，請再試一次。"
+  topic_invite:
+    user_exists: "抱歉，用戶已經被邀請了。你可能只想邀請用戶參與主題一次。"
   backup:
     operation_already_running: "%{operation} 操作正在運行。 目前無法執行新的 %{operation} 操作。"
     backup_file_should_be_tar_gz: "備份檔案應使用 .tar.gz 歸檔"
@@ -790,7 +795,6 @@ zh_TW:
     max_image_width: "文章中最大的縮圖寬度"
     max_image_height: "文章中的允許圖片最大的縮圖高度"
     category_featured_topics: "在分類 /categories 頁面每個分類顯示的討論話題數目。此數值的改變最多需要 15 分鐘才會反應在分類頁面上。"
-    show_subcategory_list: "進入分類時顯示子分類列表，而非話題列表"
     fixed_category_positions: "若勾選，你將能調整並固定分類的順序。若不勾選，分類將會依照活躍程度來排序。"
     fixed_category_positions_on_create: "如果選擇了，目錄排序將會在話題創建對話框中被包含(要求固定目錄位置選項)"
     add_rel_nofollow_to_user_content: "添加 rel nofollow 屬性到所有的用戶內容，除了內部鏈接（包括父域名）。如果你更改了這個，你必須重新調制所有帖子，而該命令為：“rake posts:rebake”"
@@ -1182,7 +1186,6 @@ zh_TW:
     show_create_topics_notice: "如果網站的公開討論話題少於 5 個，顯示通知要求管理員建立一些討論話題。"
     delete_drafts_older_than_n_days: 刪除超過 n 天得草稿。
     bootstrap_mode_min_users: "禁用摘要模式的用戶數下限（0 為禁用）。"
-    vacuum_db_days: "在資料庫遷移後使用完整掃瞄回收資料庫空間（設置 0 為禁用）"
     prevent_anons_from_downloading_files: "禁止匿名用戶下載附件。警告：這將禁止他們訪問任何發表在帖子中的非圖片資源。"
     slug_generation_method: "選擇一個連結生成方式。“encoded”將生成以百分號編碼的連結。“none”將禁用自定義連結，只生成預設連結。"
     enable_emoji: "啟用表情符號"
@@ -2078,7 +2081,6 @@ zh_TW:
       follow_topic: "關注主題"
       join_the_discussion: "閲讀更多"
       popular_posts: "流行帖子"
-      from_topic_label: "來自"
       more_new: "新內容"
       subject_template: "[%{site_name}] 摘要"
       unsubscribe: "這是封來自%{site_link}的摘要郵件，因為你長時間沒有訪問而發送。%{unsubscribe_link}取消訂閲。"
@@ -2795,8 +2797,6 @@ zh_TW:
   performance_report:
     initial_post_raw: 這個主題將用來展示網站每日性能報告。
     initial_topic_title: 網站效能報表
-  topic_invite:
-    user_exists: "抱歉，用戶已經被邀請了。你可能只想邀請用戶參與主題一次。"
   tags:
     title: "標籤"
     staff_tag_disallowed: "“%{tag}”只可由管理人員使用。"

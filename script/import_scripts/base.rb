@@ -203,24 +203,23 @@ class ImportScripts::Base
   def all_records_exist?(type, import_ids)
     return false if import_ids.empty?
 
-    orig_conn = ActiveRecord::Base.connection
-    conn = orig_conn.raw_connection
-
-    conn.exec('CREATE TEMP TABLE import_ids(val varchar(200) PRIMARY KEY)')
+    connection = ActiveRecord::Base.connection.raw_connection
+    connection.exec('CREATE TEMP TABLE import_ids(val text PRIMARY KEY)')
 
     import_id_clause = import_ids.map { |id| "('#{PG::Connection.escape_string(id.to_s)}')" }.join(",")
 
-    conn.exec("INSERT INTO import_ids VALUES #{import_id_clause}")
+    connection.exec("INSERT INTO import_ids VALUES #{import_id_clause}")
 
-    existing = "#{type.to_s.classify}CustomField".constantize.where(name: 'import_id')
-    existing = existing.joins('JOIN import_ids ON val = value')
-
-    if existing.count == import_ids.length
+    existing = "#{type.to_s.classify}CustomField".constantize
+    existing = existing.where(name: 'import_id')
+                       .joins('JOIN import_ids ON val = value')
+                       .count
+    if existing == import_ids.length
       puts "Skipping #{import_ids.length} already imported #{type}"
       return true
     end
   ensure
-    conn.exec('DROP TABLE import_ids')
+    connection.exec('DROP TABLE import_ids')
   end
 
   def created_user(user)

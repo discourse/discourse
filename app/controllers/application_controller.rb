@@ -66,6 +66,12 @@ class ApplicationController < ActionController::Base
     refresh_session(current_user)
   end
 
+  def immutable_for(duration)
+    response.cache_control[:max_age] = duration.to_i
+    response.cache_control[:public] = true
+    response.cache_control[:extras] = ["immutable"]
+  end
+
   def dont_cache_page
     if !response.headers["Cache-Control"] && response.cache_control.blank?
       response.headers["Cache-Control"] = "no-store, must-revalidate, no-cache, private"
@@ -111,29 +117,8 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def self.last_ar_cache_reset
-    @last_ar_cache_reset
-  end
-
-  def self.last_ar_cache_reset=(val)
-    @last_ar_cache_reset
-  end
-
   rescue_from ActiveRecord::StatementInvalid do |e|
-
-    last_cache_reset = ApplicationController.last_ar_cache_reset
-
-    if e.message =~ /UndefinedColumn/ && (last_cache_reset.nil?  || last_cache_reset < 30.seconds.ago)
-      Rails.logger.warn "Clear Active Record cache cause schema appears to have changed!"
-
-      ApplicationController.last_ar_cache_reset = Time.zone.now
-
-      ActiveRecord::Base.connection.query_cache.clear
-      (ActiveRecord::Base.connection.tables - %w[schema_migrations]).each do |table|
-        table.classify.constantize.reset_column_information rescue nil
-      end
-    end
-
+    Discourse.reset_active_record_cache_if_needed(e)
     raise e
   end
 
@@ -441,7 +426,7 @@ class ApplicationController < ActionController::Base
       json = ApplicationController.banner_json_cache["json"]
 
       unless json
-        topic = Topic.where(archetype: Archetype.banner).limit(1).first
+        topic = Topic.where(archetype: Archetype.banner).first
         banner = topic.present? ? topic.banner : {}
         ApplicationController.banner_json_cache["json"] = json = MultiJson.dump(banner)
       end

@@ -19,4 +19,14 @@ const controllerOpts = {
 // Aliases for the values
 controllerOpts.queryParams.forEach(p => controllerOpts[p] = Ember.computed.alias(`discoveryTopics.${p}`));
 
-export default Ember.Controller.extend(controllerOpts);
+const Controller = Ember.Controller.extend(controllerOpts);
+
+export const addDiscoveryQueryParam = function(p, opts) {
+  queryParams[p] = opts;
+  const cOpts = {};
+  cOpts[p] = Ember.computed.alias(`discoveryTopics.${p}`);
+  cOpts["queryParams"] = Object.keys(queryParams);
+  Controller.reopen(cOpts);
+};
+
+export default Controller;

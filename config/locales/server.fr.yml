@@ -73,8 +73,7 @@ fr:
       inclusion: n'est pas inclus dans la liste
       invalid: est invalide
       is_invalid: "ne semble pas clair, est-ce une phrase complète ?"
-      contains_censored_words: "inclut un ou plusieurs mots censurés : %{censored_words}"
-      matches_censored_pattern: "correspond à l'expression régulière censurée : %{censored_pattern}"
+      contains_censored_words: "contient les mots censurés suivants : %[censored_words]"
       less_than: doit être inférieure à %{count}
       less_than_or_equal_to: doit être inférieur ou égal à %{count}
       not_a_number: n'est pas un nombre
@@ -108,9 +107,13 @@ fr:
       max_username_length_range: "Il n'est pas possible de définir un maximum plus petit que le minimum."
       default_categories_already_selected: "Vous ne pouvez pas séléctionner une catégorie qui est utilisée dans une autre liste."
       s3_upload_bucket_is_required: "Vous ne pouvez pas activer l'upload sur S3 avant d'avoir renseigné le 's3_upload_bucket'."
+  invite:
+    accept_invite: "Accepter l'invitation"
   bulk_invite:
     file_should_be_csv: "Le fichier envoyé doit être au format CSV."
     error: "Il y a eu une erreur en envoyant ce fichier. Merci de réessayer plus tard."
+  topic_invite:
+    user_exists: "Désolé, cet utilisateur a déjà été invité. Vous ne pouvez inviter un utilisateur qu'une seule fois par sujet."
   backup:
     operation_already_running: "Une opération est en cours d'exécution. Vous ne pouvez pas démarrer un nouveau processus pour l'instant."
     backup_file_should_be_tar_gz: "Le fichier de sauvegarde doit être une archive .tar.gz."
@@ -830,7 +833,6 @@ fr:
     max_image_width: "Largeur maximale des images dans un message"
     max_image_height: "Hauteur maximale autorisée des images dans un message"
     category_featured_topics: "Nombre de sujets affichés par catégorie sur la page /categories. Après avoir modifié cette valeur, il faut jusqu'à 15 minutes pour que la page des catégories soit mise à jour."
-    show_subcategory_list: "Voir les sous-catégories à la place de la liste des sujets lorsqu'on entre dans la catégorie."
     fixed_category_positions: "Si coché, vous pourrez modifier l'ordre des catégories. Si décoché, elle seront triées par ordre d'activité."
     fixed_category_positions_on_create: "Si coché, le classement des catégories sera maintenu dans la fenêtre de création de sujet (nécessite fixed_category_positions)."
     add_rel_nofollow_to_user_content: "Ajouter rel nofollow à tous les contenus des utilisateurs, sauf les liens internes (incluant les domaines parents). Si vous modifiez ceci, vous devez exécuter la commande  \"rake posts:rebake\""
@@ -1222,7 +1224,6 @@ fr:
     show_create_topics_notice: "Si le site contient moins de 5 sujets publics, afficher un message pour demander aux administrateurs de créer d'autres sujets."
     delete_drafts_older_than_n_days: Supprimer les brouillons plus vieux que (n) jours.
     bootstrap_mode_min_users: "Nombre minimum d'utilisateurs nécessaire pour désactiver le mode de démarrage (mettre à 0 pour désactiver)"
-    vacuum_db_days: "Exécuter VACUUM ANALYZE pour récupérer de l'espace dans la base de données après une migration (mettre à 0 pour désactiver)"
     prevent_anons_from_downloading_files: "Refuser le téléchargement de pièces jointes aux visiteurs. ATTENTION : cela empêchera de fonctionner les ressources envoyées en pièce jointe qui ne sont pas des images."
     slug_generation_method: "Choisissez une méthode de génération d'identifiant. \"encodé\" générera des chaines de caractères encodées avec des pourcentages. \"aucune\" désactivera complètement les identifiants."
     enable_emoji: "Activer les emojis"
@@ -2089,7 +2090,6 @@ fr:
       follow_topic: "Suivre ce sujet"
       join_the_discussion: "Lire la suite"
       popular_posts: "Messages populaires"
-      from_topic_label: "De"
       more_new: "Nouveau pour vous"
       subject_template: "[%{site_name}] Résumé"
       unsubscribe: "Ce résumé est envoyé depuis %{site_link} lorsque nous ne vous voyons plus depuis un moment. Pour se désabonner %{unsubscribe_link}."
@@ -2665,8 +2665,6 @@ fr:
   performance_report:
     initial_post_raw: Ce sujet comprend des rapports de performance journaliers concernant votre site.
     initial_topic_title: Rapports de performances du site
-  topic_invite:
-    user_exists: "Désolé, cet utilisateur a déjà été invité. Vous ne pouvez inviter un utilisateur qu'une seule fois par sujet."
   tags:
     title: "Tags"
     staff_tag_disallowed: "Le tag \"%{tag}\" ne peut être mis que par un responsable."

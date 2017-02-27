@@ -76,6 +76,19 @@ describe Admin::BadgesController do
 
     context '.update' do
 
+      it 'does not update the name of system badges' do
+        editor_badge = Badge.find(Badge::Editor)
+        editor_badge_name = editor_badge.name
+
+        xhr :put, :update,
+            id: editor_badge.id,
+            name: "123456"
+
+        expect(response).to be_success
+        editor_badge.reload
+        expect(editor_badge.name).to eq(editor_badge_name)
+      end
+
       it 'does not allow query updates if badge_sql is disabled' do
         badge.query = "select 123"
         badge.save

@@ -84,10 +84,6 @@
 .user-table {
   margin-top: 30px;
   width: 100%;
-  display: table;
-  .wrapper {
-    display: table-row;
-  }
 }
 
 .user-navigation .nav-stacked .glyph {
@@ -635,7 +631,7 @@
   }
   background-color: transparent;
 
-  > li {
+  li {
     border-bottom: none;
     > a {
       padding: 8px 13px;

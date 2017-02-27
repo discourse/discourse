@@ -79,6 +79,8 @@ class DiscourseSingleSignOn < SingleSignOn
     user.admin = admin unless admin.nil?
     user.moderator = moderator unless moderator.nil?
 
+    user.title = title unless title.nil?
+
     # optionally save the user and sso_record if they have changed
     user.user_avatar.save! if user.user_avatar
     user.save!

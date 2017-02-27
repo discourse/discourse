@@ -23,6 +23,7 @@
     {{#each topic.visibleListTags as |tag|}}
       {{discourse-tag tag}}
     {{/each}}
+    {{raw-plugin-outlet name="topic-list-custom-tags"}}
     </div>
   {{/if}}
   {{raw-plugin-outlet name="topic-list-tags"}}

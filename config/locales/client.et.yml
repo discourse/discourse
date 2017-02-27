@@ -1401,11 +1401,8 @@ et:
         make_banner: "Tee teema bänneriks"
         remove_banner: "Eemalda teema bännerist"
       reply:
-        post:
-          title: 'vasta'
-        topic:
-          title: 'vasta'
-          help: 'alusta selle teema vastuse koostamist'
+        title: 'vasta'
+        help: 'alusta selle teema vastuse koostamist'
       clear_pin:
         title: "Kustuta esiletõstmine"
         help: "Eemalda sellelt teemalt esiletõstetu staatus nii, et ta enam ei ilmuks teemade loetelu tipus"

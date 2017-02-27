@@ -1452,11 +1452,8 @@ ro:
         make_banner: "Adaugă statutul de banner"
         remove_banner: "Șterge statutul de banner"
       reply:
-        post:
-          title: 'Răspunde'
-        topic:
-          title: 'Răspunde'
-          help: 'începe să scrii un răspuns la acest subiect'
+        title: 'Răspunde'
+        help: 'începe să scrii un răspuns la acest subiect'
       clear_pin:
         title: "Anulează subiect fixat"
         help: "Elimină  subiectul fixat pentru a nu mai apărea la începutul listei de subiecte."

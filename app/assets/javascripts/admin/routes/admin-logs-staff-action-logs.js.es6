@@ -6,11 +6,6 @@ export default Discourse.Route.extend({
     this.render('admin/templates/logs/staff-action-logs', {into: 'adminLogs'});
   },
 
-  setupController: function(controller) {
-    controller.resetFilters();
-    controller.refresh();
-  },
-
   actions: {
     showDetailsModal(model) {
       showModal('admin-staff-action-log-details', { model, admin: true });

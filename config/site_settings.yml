@@ -214,9 +214,6 @@ basic:
   fixed_category_positions_on_create:
     client: true
     default: false
-  show_subcategory_list:
-    default: false
-    client: true
   enable_badges:
     client: true
     default: true
@@ -301,6 +298,9 @@ login:
   sso_allows_all_return_paths: false
   enable_sso_provider: false
   verbose_sso_logging: false
+  verbose_auth_token_logging:
+    hidden: true
+    default: false
   sso_url:
     default: ''
     regex: '^https?:\/\/.+[^\/]$'
@@ -349,6 +349,9 @@ users:
   min_admin_password_length:
     client: true
     default: 15
+    min: 1
+  password_unique_characters:
+    default: 6
     min: 1
   block_common_passwords: true
   enforce_global_nicknames:
@@ -608,7 +611,7 @@ email:
     min: 1
   digest_posts: 3
   digest_other_topics: 5
-  delete_digest_email_after_days:
+  suppress_digest_email_after_days:
     default: 365
     min: 0
     max: 20000
@@ -893,6 +896,14 @@ security:
   force_https:
     default: false
     shadowed_by_global: true
+  same_site_cookies:
+    default: Lax
+    type: enum
+    choices:
+      - Lax
+      - Strict
+      - Disabled
+    regex: '^(Lax|Strict|Disabled)$'
   enable_escaped_fragments: true
   allow_index_in_robots_txt: true
   enable_noscript_support: true
@@ -977,6 +988,14 @@ rate_limits:
   max_prints_per_hour_per_user:
     default: 5
     client: true
+  max_logins_per_ip_per_hour:
+    min: 1
+    max: 20000
+    default: 30
+  max_logins_per_ip_per_minute:
+    min: 1
+    max: 20000
+    default: 6
 
 developer:
   force_hostname:
@@ -1212,6 +1231,7 @@ uncategorized:
   # Warnings
   educate_until_posts: 2
   sequential_replies_threshold: 2
+  get_a_room_threshold: 3
   dominating_topic_minimum_percent: 20
   disable_avatar_education_message: false
 
@@ -1253,11 +1273,6 @@ uncategorized:
     default: true
 
   disable_edit_notifications: false
-
-  vacuum_db_days: 90
-  last_vacuum:
-    default: 0
-    hidden: true
 
   delete_drafts_older_than_n_days:
     default: 180

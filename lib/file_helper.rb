@@ -28,7 +28,7 @@ class FileHelper
   private
 
   def self.images
-    @@images ||= Set.new ["jpg", "jpeg", "png", "gif", "tif", "tiff", "bmp", "svg", "webp", "ico"]
+    @@images ||= Set.new %w{jpg jpeg png gif tif tiff bmp svg webp ico}
   end
 
   def self.images_regexp

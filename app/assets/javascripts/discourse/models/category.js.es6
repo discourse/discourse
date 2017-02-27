@@ -102,7 +102,8 @@ const Category = RestModel.extend({
         allowed_tag_groups: this.get('allowed_tag_groups'),
         sort_order: this.get('sort_order'),
         sort_ascending: this.get('sort_ascending'),
-        topic_featured_link_allowed: this.get('topic_featured_link_allowed')
+        topic_featured_link_allowed: this.get('topic_featured_link_allowed'),
+        show_subcategory_list: this.get('show_subcategory_list')
       },
       type: id ? 'PUT' : 'POST'
     });

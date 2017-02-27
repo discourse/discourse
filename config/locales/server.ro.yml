@@ -112,6 +112,8 @@ ro:
   bulk_invite:
     file_should_be_csv: "Fișierul de încărcat trebuie să fie în format csv."
     error: "A apărut o eroare la încărcarea acestui fișier. Te rugăm să încerci din nou, mai târziu."
+  topic_invite:
+    user_exists: "Ne pare rău, acest utilizator a fost deja invitat. Nu poți să inviți un utilizator la un subiect decât o singură dată."
   backup:
     operation_already_running: "O operație este în desfășurare. Nu poți începe alta nouă."
     backup_file_should_be_tar_gz: "Fișierul backup ar trebui să fie arhivat cu extensia .tar.gz."
@@ -849,7 +851,6 @@ ro:
     max_image_width: "Maximul lățimii unui thumbnail într-o postare"
     max_image_height: "Maximul înălțimii unui thumbnail într-o postare"
     category_featured_topics: "Numărul subiectelor afișate după categorie pe /pagina de categorii. După schimbarea valorii, e nevoie de până la 15 minute până ce pagina de categorii se va actualiza."
-    show_subcategory_list: "Arată lista de sub-categorii în loc de lista de subiecte când se introduce o categorie."
     fixed_category_positions: "Dacă e bifat, veți putea aranja categoriile într-o ordine fixă. Dacă e nebifat, categoriile sunt listate în ordinea activității."
     fixed_category_positions_on_create: "Dacă este bifat, ordonarea categoriilor va fi menținută în dialogul de creare a subiectelor (presupune fixed_category_positions)."
     add_rel_nofollow_to_user_content: "Adaugă atributul rel nofollow la toate conținuturile transmise de către utilizator, cu excepția link-urilor interne (includiv domeniile părinte). Dacă schimbi această setare, postările trebuie refăcute cu: \"rake posts:rebake\""
@@ -1237,7 +1238,6 @@ ro:
     show_create_topics_notice: "Dacă site-ul are mai puțin de 5 subiecte publice, afișează o notificare prin care se cere adminilor să creeze subiecte."
     delete_drafts_older_than_n_days: șterge drafturile mai vechi de (n) zile.
     bootstrap_mode_min_users: "Numărul minim de utilizatori necesar pentru dezactivarea modului bootstrap (0 pentru dezactivare)"
-    vacuum_db_days: "Rulează VACUUM ANALYZE pentru a recupera spațiul din baza de date după o migrare (0 pentru dezactivare)"
     prevent_anons_from_downloading_files: "Blochează utilizatorii anonimi de la descărcarea de atașamente. ATENȚIE: aceasta va face ca toate resursele site-ului care sunt postate ca atașamente să nu mai meargă."
     slug_generation_method: "Alege o metodă de generare de identificator. 'encodat' va genera șir de caractere encodate cu procentaje. 'nimic' va dezactiva complet identificatorii."
     enable_emoji: "Activează emoji"
@@ -2100,7 +2100,6 @@ ro:
       follow_topic: "Urmărește acest subiect"
       join_the_discussion: "Citește mai mult"
       popular_posts: "Postări notorii"
-      from_topic_label: "De la"
       subject_template: "[%{site_name}] Rezumat"
       unsubscribe: "Acest rezumat este transmis de pe %{site_link} când a trecut ceva vreme de când nu te-am mai văzut. Pentru a te dezabona, %{unsubscribe_link}."
       click_here: "click aici"
@@ -2804,8 +2803,6 @@ ro:
   performance_report:
     initial_post_raw: Acest subiect include rapoarte zilnice de performanță referitoare la site-ul tău.
     initial_topic_title: Rapoarte de performanță website
-  topic_invite:
-    user_exists: "Ne pare rău, acest utilizator a fost deja invitat. Nu poți să inviți un utilizator la un subiect decât o singură dată."
   tags:
     title: "Etichete"
     staff_tag_disallowed: "Eticheta \"%{tag}\" poate fi pusă doar de un membru al echipei."

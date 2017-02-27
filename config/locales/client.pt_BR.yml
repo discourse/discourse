@@ -214,7 +214,7 @@ pt_BR:
       like_count: "Curtidas"
       topic_count: "Tópicos"
       post_count: "Mensagens"
-      user_count: "Novos Usuários"
+      user_count: "Usuários"
       active_user_count: "Usuários Ativos"
       contact: "Contate-nos"
       contact_info: "Em caso de um evento crítico ou de urgência afetando este site, por favor contacte-nos em %{contact_info}."
@@ -326,6 +326,17 @@ pt_BR:
         add_user_to_group: "Adicionar usuário"
         remove_user_from_group: "Remover usuário"
     groups:
+      logs:
+        title: "Registros"
+        subject: "Assunto"
+        details: "Detalhes"
+        from: "De"
+        to: "Para"
+      edit:
+        title: 'Editar Grupo'
+        full_name: 'Nome Completo'
+        add_members: "Adicionar Membros"
+        delete_member_confirm: "Remover '%{username}' do grupo '%{group}'?"
       add: "Adicionar"
       selector_placeholder: "Adicionar membros"
       owner: "proprietário"
@@ -1144,6 +1155,7 @@ pt_BR:
       new_messages_marker: "última visita"
       bulk:
         select_all: "Selecionar Tudo"
+        clear_all: "Limpar Tudo"
         unlist_topics: "Tópicos Não Listados"
         reset_read: "Redefinir Lido"
         delete: "Apagar Tópicos"

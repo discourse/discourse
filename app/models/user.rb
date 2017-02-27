@@ -41,6 +41,7 @@ class User < ActiveRecord::Base
   has_many :user_archived_messages, dependent: :destroy
   has_many :email_change_requests, dependent: :destroy
   has_many :directory_items, dependent: :delete_all
+  has_many :user_auth_tokens, dependent: :destroy
 
 
   has_one :user_option, dependent: :destroy
@@ -97,6 +98,7 @@ class User < ActiveRecord::Base
   before_save :update_username_lower
   before_save :ensure_password_is_hashed
 
+  after_save :expire_tokens_if_password_changed
   after_save :automatic_group_membership
   after_save :clear_global_notice_if_needed
   after_save :refresh_avatar
@@ -352,7 +354,7 @@ class User < ActiveRecord::Base
   TRACK_FIRST_NOTIFICATION_READ_DURATION = 1.week.to_i
 
   def read_first_notification?
-    if (trust_level > TrustLevel[0] ||
+    if (trust_level > TrustLevel[1] ||
         created_at < TRACK_FIRST_NOTIFICATION_READ_DURATION.seconds.ago)
 
       return true
@@ -420,7 +422,6 @@ class User < ActiveRecord::Base
     # special case for passwordless accounts
     unless password.blank?
       @raw_password = password
-      self.auth_token = nil
     end
   end
 
@@ -922,6 +923,8 @@ class User < ActiveRecord::Base
   end
 
   def clear_global_notice_if_needed
+    return if id == Discourse::SYSTEM_USER_ID
+
     if admin && SiteSetting.has_login_hint
       SiteSetting.has_login_hint = false
       SiteSetting.global_notice = ""
@@ -935,13 +938,15 @@ class User < ActiveRecord::Base
   def automatic_group_membership
     user = User.find(self.id)
 
+    return unless user && user.active && !user.staged
+
     Group.where(automatic: false)
          .where("LENGTH(COALESCE(automatic_membership_email_domains, '')) > 0")
          .each do |group|
 
       domains = group.automatic_membership_email_domains.gsub('.', '\.')
 
-      if user.reload.email =~ Regexp.new("@(#{domains})$", true) && !group.users.include?(user)
+      if user.email =~ Regexp.new("@(#{domains})$", true) && !group.users.include?(user)
         group.add(user)
         GroupActionLogger.new(Discourse.system_user, group).log_add_user_to_group(user)
       end
@@ -966,6 +971,17 @@ class User < ActiveRecord::Base
     if @raw_password
       self.salt = SecureRandom.hex(16)
       self.password_hash = hash_password(@raw_password, salt)
+    end
+  end
+
+  def expire_tokens_if_password_changed
+    # NOTE: setting raw password is the only valid way of changing a password
+    # the password field in the DB is actually hashed, nobody should be amending direct
+    if @raw_password
+      # Association in model may be out-of-sync
+      UserAuthToken.where(user_id: id).destroy_all
+      # We should not carry this around after save
+      @raw_password = nil
     end
   end
 
@@ -1074,7 +1090,7 @@ end
 #  username                :string(60)       not null
 #  created_at              :datetime         not null
 #  updated_at              :datetime         not null
-#  name                    :string
+#  name                    :string(255)
 #  seen_notification_id    :integer          default(0), not null
 #  last_posted_at          :datetime
 #  email                   :string(513)      not null
@@ -1099,7 +1115,7 @@ end
 #  ip_address              :inet
 #  moderator               :boolean          default(FALSE)
 #  blocked                 :boolean          default(FALSE)
-#  title                   :string
+#  title                   :string(255)
 #  uploaded_avatar_id      :integer
 #  locale                  :string(10)
 #  primary_group_id        :integer

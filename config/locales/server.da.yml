@@ -102,6 +102,8 @@ da:
       max_username_length_range: "Du kan ikke sætte maksimum til mindre end minimum."
       default_categories_already_selected: "Du kan ikke vælge en kategori der er brugt i en anden liste."
       s3_upload_bucket_is_required: "Du kan ikke oploade til S3 med mindre du har angivet 's3_upload_bucket'."
+  topic_invite:
+    user_exists: "Beklager, men brugeren er allerede inviteret. Du kan kun invitere en bruger til et emne én gang."
   backup:
     operation_already_running: "Der kører allerede en %{operation}. Kan ikke starte et nyt %{operation} job lige nu."
     backup_file_should_be_tar_gz: "Backup filen skal være et .tar.gz arkiv."
@@ -767,7 +769,6 @@ da:
     max_image_width: "Maximum thumbnail width of images in a post"
     max_image_height: "Maksimum miniaturebillede højde for billeder i et indlæg"
     category_featured_topics: "Antallet af emner der vises pr. kategori på /categories-siden. Efter ændring af denne værdi kan det tage op til 15 minutter før kategorisiden opdateres."
-    show_subcategory_list: "Vis subkategori liste i stedet for emneliste, når man åbner en ny kategori."
     fixed_category_positions: "Hvis krydset af, vil du være i stand til at arrangere ordnet visning af kategorier. Hvis ikke afkrydset vil de være listet i en rækkefølge baseret på aktivitet."
     fixed_category_positions_on_create: "Hvis afkrydset vil kategori visning blive vedligeholdt baseret på emne (kræver manuelt valgt visning af kategorier)."
     exclude_rel_nofollow_domains: "En liste af domæner hvor 'nofollow' skal tilføjes til links. tid.com vil desuden automatisk tillade sub.tid Som minimum bør du tilføje top level domænet til sitet, for at hjælpe webcrawlere finde alt indhold. Såfremt andre dele af jeres site er på andre domæner, så tilføj også disse."
@@ -1196,8 +1197,6 @@ da:
   performance_report:
     initial_post_raw: Dette emne inkluderer daglige præstationsrapporter for dit site.
     initial_topic_title: Website præstationsrapport
-  topic_invite:
-    user_exists: "Beklager, men brugeren er allerede inviteret. Du kan kun invitere en bruger til et emne én gang."
   tags:
     title: "Tags"
     staff_tag_disallowed: "Tagget \"%{tag}\" kan kun tildeles af personalet."

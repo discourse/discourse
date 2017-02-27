@@ -1,7 +1,7 @@
 import storePretender from 'helpers/store-pretender';
 import fixturePretender from 'helpers/fixture-pretender';
 
-function parsePostData(query) {
+export function parsePostData(query) {
   const result = {};
   query.split("&").forEach(function(part) {
     const item = part.split("=");
@@ -18,7 +18,7 @@ function parsePostData(query) {
 
   });
   return result;
-}
+};
 
 function response(code, obj) {
   if (typeof code === "object") {
@@ -340,6 +340,14 @@ export default function() {
           200,
           {"Content-Type": "application/html"},
           '<aside class="onebox"><article class="onebox-body"><p>No title</p></article></aside>'
+        ];
+      }
+
+      if (request.queryParams.url.indexOf('/internal-page.html') > -1) {
+        return [
+          200,
+          {"Content-Type": "application/html"},
+          '<aside class="onebox"><article class="onebox-body"><h3><a href="/internal-page.html">Internal Page 4 U</a></h3></article></aside>'
         ];
       }
 

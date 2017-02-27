@@ -22,7 +22,8 @@ class AdminDetailedUserSerializer < AdminUserSerializer
              :warnings_received_count,
              :user_fields,
              :bounce_score,
-             :reset_bounce_score_after
+             :reset_bounce_score_after,
+             :can_view_action_logs
 
   has_one :approved_by, serializer: BasicUserSerializer, embed: :objects
   has_one :api_key, serializer: ApiKeySerializer, embed: :objects
@@ -84,6 +85,10 @@ class AdminDetailedUserSerializer < AdminUserSerializer
 
   def reset_bounce_score_after
     object.user_stat.reset_bounce_score_after
+  end
+
+  def can_view_action_logs
+    scope.can_view_action_logs?(object)
   end
 
 end

@@ -505,8 +505,8 @@ describe SessionController do
           user.reload
 
           expect(session[:current_user_id]).to eq(user.id)
-          expect(user.auth_token).to be_present
-          expect(cookies[:_t]).to eq(user.auth_token)
+          expect(user.user_auth_tokens.count).to eq(1)
+          expect(UserAuthToken.hash_token(cookies[:_t])).to eq(user.user_auth_tokens.first.auth_token)
         end
       end
 
@@ -657,6 +657,23 @@ describe SessionController do
             I18n.t 'login.not_approved'
           )
         end
+      end
+    end
+
+    context 'rate limited' do
+      it 'rate limits login' do
+        SiteSetting.max_logins_per_ip_per_hour = 2
+        RateLimiter.stubs(:disabled?).returns(false)
+        RateLimiter.clear_all!
+
+        2.times do
+          xhr :post, :create, login: user.username, password: 'myawesomepassword'
+          expect(response).to be_success
+        end
+        xhr :post, :create, login: user.username, password: 'myawesomepassword'
+        expect(response).not_to be_success
+        json = JSON.parse(response.body)
+        expect(json["error_type"]).to eq("rate_limit")
       end
     end
   end

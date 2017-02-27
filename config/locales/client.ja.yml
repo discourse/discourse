@@ -1110,11 +1110,8 @@ ja:
         make_banner: "バナートピック"
         remove_banner: "バナートピックを削除"
       reply:
-        post:
-          title: '返信'
-        topic:
-          title: '返信'
-          help: 'このトピックに返信する'
+        title: '返信'
+        help: 'このトピックに返信する'
       clear_pin:
         title: "ピンを解除する"
         help: "このトピックのピンを外し、トピックリストの先頭に表示されないようにする"

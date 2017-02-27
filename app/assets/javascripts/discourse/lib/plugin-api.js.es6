@@ -5,13 +5,18 @@ import { addButton } from 'discourse/widgets/post-menu';
 import { includeAttributes } from 'discourse/lib/transform-post';
 import { addToolbarCallback } from 'discourse/components/d-editor';
 import { addWidgetCleanCallback } from 'discourse/components/mount-widget';
-import { createWidget, decorateWidget, changeSetting } from 'discourse/widgets/widget';
+import { createWidget, reopenWidget, decorateWidget, changeSetting } from 'discourse/widgets/widget';
 import { onPageChange } from 'discourse/lib/page-tracker';
 import { preventCloak } from 'discourse/widgets/post-stream';
 import { h } from 'virtual-dom';
 import { addFlagProperty } from 'discourse/components/site-header';
 import { addPopupMenuOptionsCallback } from 'discourse/controllers/composer';
 import { extraConnectorClass } from 'discourse/lib/plugin-connectors';
+import { addPostSmallActionIcon } from 'discourse/widgets/post-small-action';
+import { addDiscoveryQueryParam } from 'discourse/controllers/discovery-sortable';
+
+// If you add any methods to the API ensure you bump up this number
+const PLUGIN_API_VERSION = '0.8.1';
 
 class PluginApi {
   constructor(version, container) {
@@ -308,6 +313,16 @@ class PluginApi {
   }
 
   /**
+   * Exposes the widget update ability to plugins. Updates the widget
+   * registry for the given widget name to include the properties on args
+   * See `reopenWidget` in `discourse/widgets/widget` from more ifo.
+  **/
+
+  reopenWidget(name, args) {
+    return reopenWidget(name, args);
+  }
+
+  /**
    * Adds a property that can be summed for calculating the flag counter
    **/
   addFlagProperty(property) {
@@ -352,12 +367,53 @@ class PluginApi {
   registerConnectorClass(outletName, connectorName, klass) {
     extraConnectorClass(`${outletName}/${connectorName}`, klass);
   }
+
+  /**
+   * Register a small icon to be used for custom small post actions
+   *
+   * ```javascript
+   * api.registerPostSmallActionIcon('assign-to', 'user-add');
+   * ```
+   **/
+  addPostSmallActionIcon(key, icon) {
+    addPostSmallActionIcon(key, icon);
+  }
+
+  /**
+   * Register an additional query param with topic discovery,
+   * this allows for filters on the topic list
+   *
+   **/
+  addDiscoveryQueryParam(param, options) {
+    addDiscoveryQueryParam(param, options);
+  }
 }
 
 let _pluginv01;
+
+
+// from http://stackoverflow.com/questions/6832596/how-to-compare-software-version-number-using-js-only-number
+function cmpVersions (a, b) {
+    var i, diff;
+    var regExStrip0 = /(\.0+)+$/;
+    var segmentsA = a.replace(regExStrip0, '').split('.');
+    var segmentsB = b.replace(regExStrip0, '').split('.');
+    var l = Math.min(segmentsA.length, segmentsB.length);
+
+    for (i = 0; i < l; i++) {
+        diff = parseInt(segmentsA[i], 10) - parseInt(segmentsB[i], 10);
+        if (diff) {
+            return diff;
+        }
+    }
+    return segmentsA.length - segmentsB.length;
+}
+
+
+
 function getPluginApi(version) {
-  version = parseFloat(version);
-  if (version <= 0.6) {
+  version = version.toString();
+  if (cmpVersions(version,PLUGIN_API_VERSION) <= 0) {
     if (!_pluginv01) {
       _pluginv01 = new PluginApi(version, Discourse.__container__);
     }

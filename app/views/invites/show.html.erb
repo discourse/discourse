@@ -3,11 +3,5 @@
     <div class='alert alert-error'>
       <%=flash[:error]%>
     </div>
-  <%else%>
-    <h2><%= t 'activation.welcome_to', site_name: SiteSetting.title %></h2>
-    <br/>
-    <%= button_to(perform_accept_invite_path, method: :put, class: 'btn btn-primary') do %>
-      <%= t 'invite.accept_invite' %>
-    <% end %>
   <%end%>
 </div>
