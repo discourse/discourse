@@ -162,7 +162,7 @@ class User < ActiveRecord::Base
     lower = username.downcase
 
     User.where(username_lower: lower).blank? &&
-      !SiteSetting.reserved_usernames.split("|").any? { |reserved| reserved.casecmp(username) == 0 }
+      SiteSetting.reserved_usernames.split("|").all? { |reserved| !lower.match('^' + Regexp.escape(reserved).gsub('\*', '.*') + '$') }
   end
 
   def self.plugin_staff_user_custom_fields
