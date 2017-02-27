@@ -237,7 +237,13 @@ describe Email::MessageBuilder do
   context "from field" do
 
     it "has the default from" do
+      SiteSetting.title = ""
       expect(build_args[:from]).to eq(SiteSetting.notification_email)
+    end
+
+    it "title setting will be added if present" do
+      SiteSetting.title = "Dog Talk"
+      expect(build_args[:from]).to eq("Dog Talk <#{SiteSetting.notification_email}>")
     end
 
     let(:finn_email) { 'finn@adventuretime.ooo' }
@@ -262,7 +268,13 @@ describe Email::MessageBuilder do
     end
 
     it "email_site_title will be added if it's set" do
-      SiteSetting.stubs(:email_site_title).returns("The Forum")
+      SiteSetting.email_site_title = "The Forum"
+      expect(build_args[:from]).to eq("The Forum <#{SiteSetting.notification_email}>")
+    end
+
+    it "email_site_title overrides title" do
+      SiteSetting.title = "Dog Talk"
+      SiteSetting.email_site_title = "The Forum"
       expect(build_args[:from]).to eq("The Forum <#{SiteSetting.notification_email}>")
     end
 
