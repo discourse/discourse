@@ -6,7 +6,7 @@
 # team will pull them in.
 
 require 'open3'
-require_relative '../lib/locale_file_walker'
+require_relative '../lib/i18n/locale_file_walker'
 
 if `which tx`.strip.empty?
   puts '', 'The Transifex client needs to be installed to use this script.'
