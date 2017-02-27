@@ -6,6 +6,8 @@
 # team will pull them in.
 
 require 'open3'
+require 'psych'
+require 'set'
 require_relative '../lib/i18n/locale_file_walker'
 
 if `which tx`.strip.empty?
