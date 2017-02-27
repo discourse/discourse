@@ -149,7 +149,7 @@ describe UserUpdater do
         guardian = stub
         guardian.stubs(:can_grant_title?).with(user).returns(false)
         Guardian.stubs(:new).with(acting_user).returns(guardian)
-        updater = described_class.new(acting_user, user)
+        updater = UserUpdater.new(acting_user, user)
 
         updater.update(title: 'Minion')
 
@@ -160,7 +160,7 @@ describe UserUpdater do
     context 'when website includes http' do
       it 'does not add http before updating' do
         user = Fabricate(:user)
-        updater = described_class.new(acting_user, user)
+        updater = UserUpdater.new(acting_user, user)
 
         updater.update(website: 'http://example.com')
 
@@ -171,7 +171,7 @@ describe UserUpdater do
     context 'when website does not include http' do
       it 'adds http before updating' do
         user = Fabricate(:user)
-        updater = described_class.new(acting_user, user)
+        updater = UserUpdater.new(acting_user, user)
 
         updater.update(website: 'example.com')
 
@@ -184,7 +184,7 @@ describe UserUpdater do
         user = Fabricate(:user)
         user.custom_fields = {'import_username' => 'my_old_username'}
         user.save
-        updater = described_class.new(acting_user, user)
+        updater = UserUpdater.new(acting_user, user)
 
         updater.update(website: 'example.com', custom_fields: '')
         expect(user.reload.custom_fields).to eq({'import_username' => 'my_old_username'})
@@ -193,7 +193,8 @@ describe UserUpdater do
 
     it "logs the action" do
       user = Fabricate(:user, name: 'Billy Bob')
-      expect { described_class.new(acting_user, user).update(name: 'Jim Tom') }.to change { UserHistory.count }.by(1)
+      expect { UserUpdater.new(acting_user, user).update(name: 'Jim Tom') }.to change { UserHistory.count }.by(1)
+      expect { UserUpdater.new(acting_user, user).update(name: 'Jim Tom') }.to change { UserHistory.count }.by(0) # make sure it does not log a dupe
     end
   end
 end
