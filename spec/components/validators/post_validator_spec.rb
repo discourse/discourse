@@ -63,7 +63,7 @@ describe Validators::PostValidator do
       expect(post.errors.count).to be > 0
     end
 
-    it "should be invalid when elder user exceeds max mentions limit" do
+    it "should be invalid when leader user exceeds max mentions limit" do
       post.acting_user = build(:trust_level_4)
       post.expects(:raw_mentions).returns(['jake', 'finn', 'jake_old', 'jake_new'])
       validator.max_mention_validator(post)
@@ -85,7 +85,7 @@ describe Validators::PostValidator do
       expect(post.errors.count).to be(0)
     end
 
-    it "should be valid when elder user does not exceed max mentions limit" do
+    it "should be valid when leader user does not exceed max mentions limit" do
       post.acting_user = build(:trust_level_4)
       post.expects(:raw_mentions).returns(['jake', 'finn', 'jake_old'])
       validator.max_mention_validator(post)
