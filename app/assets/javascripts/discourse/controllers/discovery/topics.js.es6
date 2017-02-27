@@ -19,6 +19,10 @@ const controllerOpts = {
   expandGloballyPinned: false,
   expandAllPinned: false,
 
+  resetParams() {
+    this.setProperties({ order: "default", ascending: false });
+  },
+
   actions: {
 
     changeSort(sortBy) {
@@ -43,8 +47,7 @@ const controllerOpts = {
 
     refresh() {
       const filter = this.get('model.filter');
-
-      this.setProperties({ order: "default", ascending: false });
+      this.resetParams();
 
       // Don't refresh if we're still loading
       if (this.get('discovery.loading')) { return; }
