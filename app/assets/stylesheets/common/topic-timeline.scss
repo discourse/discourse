@@ -61,6 +61,8 @@
       margin-left: 0;
       margin-right: 0;
       display: table;
+      touch-action: none;
+
       .timeline-date-wrapper {
         float: right;
         text-align: right;
@@ -191,6 +193,7 @@
     margin-left: 3em;
     width: 150px;
     transition: opacity 0.2s ease-in;
+    touch-action: none;
 
     .timeline-controls {
       margin-bottom: 1em;
