@@ -247,6 +247,13 @@ export default function(options) {
       };
       vOffset = -32;
       hOffset = 0;
+    } if (options.treatAsTextarea) {
+      pos = me.caretPosition({
+        pos: completeStart,
+        key: options.key
+      });
+      hOffset = 27;
+      vOffset = -32;
     } else {
       pos = me.caretPosition({
         pos: completeStart,

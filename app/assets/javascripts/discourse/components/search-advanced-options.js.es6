@@ -12,7 +12,7 @@ const REGEXP_IN_PREFIX             = /^in:/ig;
 const REGEXP_STATUS_PREFIX         = /^status:/ig;
 const REGEXP_MIN_POST_COUNT_PREFIX = /^min_post_count:/ig;
 const REGEXP_POST_TIME_PREFIX      = /^(before|after):/ig;
-const REGEXP_TAGS_SUFFIX           = /::tag\s?$/ig;
+const REGEXP_TAGS_REPLACE          = /(^(tags?:|#(?=[a-z0-9\-]+::tag))|::tag\s?$)/ig;
 
 
 const REGEXP_IN_MATCH                 = /^in:(posted|watching|tracking|bookmarks|first|pinned|unpinned)/ig;
@@ -230,7 +230,7 @@ export default Em.Component.extend({
 
     if (match.length !== 0) {
       const existingInput = _.isArray(tags) ? tags.join(',') : tags;
-      const userInput = match[0].replace(REGEXP_TAGS_PREFIX, '').replace(REGEXP_TAGS_SUFFIX, '');
+      const userInput = match[0].replace(REGEXP_TAGS_REPLACE, '');
 
       if (existingInput !== userInput) {
         this.set('searchedTerms.tags', (userInput.length !== 0) ? userInput.split(',') : []);
