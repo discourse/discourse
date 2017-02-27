@@ -164,6 +164,16 @@ class StaffActionLogger
     }))
   end
 
+  def log_name_change(user_id, old_name, new_name, opts={})
+    raise Discourse::InvalidParameters.new(:user) unless user_id
+    UserHistory.create( params(opts).merge({
+      action: UserHistory.actions[:change_name],
+      target_user_id: user_id,
+      previous_value: old_name,
+      new_value: new_name
+    }))
+  end
+
   def log_user_suspend(user, reason, opts={})
     raise Discourse::InvalidParameters.new(:user) unless user
     UserHistory.create( params(opts).merge({
