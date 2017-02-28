@@ -13,6 +13,14 @@ module("lib:i18n", {
             "reply": {
               "title": "Répondre",
             }
+          },
+          "character_count": {
+            "zero": "{{count}} ZERO",
+            "one": "{{count}} ONE",
+            "two": "{{count}} TWO",
+            "few": "{{count}} FEW",
+            "many": "{{count}} MANY",
+            "other": "{{count}} OTHER"
           }
         }
       },
@@ -25,10 +33,24 @@ module("lib:i18n", {
             "reply": {
               "help": "begin composing a reply to this topic"
             }
+          },
+          "word_count": {
+            "one": "1 word",
+            "other": "{{count}} words"
           }
         }
       }
     };
+
+    // fake pluralization rules
+    I18n.pluralizationRules.fr = function(n) {
+      if (n == 0) return "zero";
+      if (n == 1) return "one";
+      if (n == 2) return "two";
+      if (n >=  3 && n <=  9) return "few";
+      if (n >= 10 && n <= 99) return "many";
+      return "other";
+    }
   },
 
   teardown() {
@@ -52,4 +74,20 @@ test("extra translations", function() {
   I18n.extras = [{ "admin": { "title": "Discourse Admin" }}];
 
   equal(I18n.t("admin.title"), "Discourse Admin", "it check extra translations when they exists");
+});
+
+test("pluralizations", function() {
+  equal(I18n.t("character_count", { count: 0 }), "0 ZERO");
+  equal(I18n.t("character_count", { count: 1 }), "1 ONE");
+  equal(I18n.t("character_count", { count: 2 }), "2 TWO");
+  equal(I18n.t("character_count", { count: 3 }), "3 FEW");
+  equal(I18n.t("character_count", { count: 10 }), "10 MANY");
+  equal(I18n.t("character_count", { count: 100 }), "100 OTHER");
+
+  equal(I18n.t("word_count", { count: 0 }), "0 words");
+  equal(I18n.t("word_count", { count: 1 }), "1 word");
+  equal(I18n.t("word_count", { count: 2 }), "2 words");
+  equal(I18n.t("word_count", { count: 3 }), "3 words");
+  equal(I18n.t("word_count", { count: 10 }), "10 words");
+  equal(I18n.t("word_count", { count: 100 }), "100 words");
 });

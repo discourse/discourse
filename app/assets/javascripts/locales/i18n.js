@@ -151,7 +151,7 @@ I18n.translate = function(scope, options) {
   try {
     if (typeof translation === "object") {
       if (typeof options.count === "number") {
-        return this.pluralize(options.count, scope, options);
+        return this.pluralize(translation, scope, options);
       } else {
         return translation;
       }
@@ -258,16 +258,11 @@ I18n.findAndTranslateValidNode = function(keys, translation) {
   return null;
 };
 
-I18n.pluralize = function(count, scope, options) {
-  var translation;
-
-  try { translation = this.lookup(scope, options); } catch (error) {}
-  if (!translation) { return this.missingTranslation(scope); }
-
+I18n.pluralize = function(translation, scope, options) {
   options = this.prepareOptions(options);
-  options.count = count.toString();
+  var count = options.count.toString();
 
-  var pluralizer = this.pluralizer(this.currentLocale());
+  var pluralizer = this.pluralizer(options.locale || this.currentLocale());
   var key = pluralizer(Math.abs(count));
   var keys = ((typeof key === "object") && (key instanceof Array)) ? key : [key];
 
