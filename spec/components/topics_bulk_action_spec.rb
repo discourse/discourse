@@ -232,4 +232,62 @@ describe TopicsBulkAction do
       end
     end
   end
+
+  describe "append tags" do
+    let(:topic) { Fabricate(:topic) }
+    let(:tag1)  { Fabricate(:tag) }
+    let(:tag2)  { Fabricate(:tag) }
+    let(:tag3)  { Fabricate(:tag) }
+
+    before do
+      SiteSetting.tagging_enabled = true
+      SiteSetting.min_trust_level_to_tag_topics = 0
+      topic.tags = [tag1, tag2]
+    end
+
+    it "can append new or existing tags" do
+      SiteSetting.min_trust_to_create_tag = 0
+      tba = TopicsBulkAction.new(topic.user, [topic.id], type: 'append_tags', tags: [tag1.name, tag3.name, 'newtag'])
+      topic_ids = tba.perform!
+      expect(topic_ids).to eq([topic.id])
+      topic.reload
+      expect(topic.tags.map(&:name).sort).to eq([tag1.name, tag2.name, tag3.name, 'newtag'].sort)
+    end
+
+    it "can append empty tags" do
+      tba = TopicsBulkAction.new(topic.user, [topic.id], type: 'append_tags', tags: [])
+      topic_ids = tba.perform!
+      expect(topic_ids).to eq([topic.id])
+      topic.reload
+      expect(topic.tags.map(&:name).sort).to eq([tag1.name, tag2.name].sort)
+    end
+
+    context "when the user can't create new topics" do
+      before do
+        SiteSetting.min_trust_to_create_tag = 4
+      end
+
+      it "can append existing tags but doesn't append new tags" do
+        tba = TopicsBulkAction.new(topic.user, [topic.id], type: 'append_tags', tags: [tag3.name, 'newtag'])
+        topic_ids = tba.perform!
+        expect(topic_ids).to eq([topic.id])
+        topic.reload
+        expect(topic.tags.map(&:name)).to eq([tag1.name, tag2.name, tag3.name])
+      end
+    end
+
+    context "when user can't edit topic" do
+      before do
+        Guardian.any_instance.expects(:can_edit?).returns(false)
+      end
+
+      it "doesn't change the tags" do
+        tba = TopicsBulkAction.new(topic.user, [topic.id], type: 'append_tags', tags: ['newtag', tag3.name])
+        topic_ids = tba.perform!
+        expect(topic_ids).to eq([])
+        topic.reload
+        expect(topic.tags.map(&:name)).to eq([tag1.name, tag2.name])
+      end
+    end
+  end
 end
