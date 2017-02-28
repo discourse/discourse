@@ -21,7 +21,10 @@ class UserAuthenticator
   end
 
   def finish
-    authenticator.after_create_account(@user, @session) if authenticator
+    if authenticator && authenticated?
+      authenticator.after_create_account(@user, @session)
+    end
+
     @session = nil
   end
 
