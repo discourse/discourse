@@ -3,7 +3,7 @@ import { h } from 'virtual-dom';
 import { iconNode } from 'discourse/helpers/fa-icon-node';
 import DiscourseURL from 'discourse/lib/url';
 import RawHtml from 'discourse/widgets/raw-html';
-import { tagNode } from 'discourse/lib/render-tag';
+import renderTags from 'discourse/lib/render-tags';
 import { topicFeaturedLinkNode } from 'discourse/lib/render-topic-featured-link';
 
 export default createWidget('header-topic-info', {
@@ -46,11 +46,9 @@ export default createWidget('header-topic-info', {
       }
 
       let extra = [];
-      if (this.siteSettings.tagging_enabled) {
-        const tags = topic.get('tags') || [];
-        if (tags.length) {
-          extra.push(h('div.list-tags', tags.map(tagNode)));
-        }
+      const tags = renderTags(topic);
+      if (tags && tags.length > 0) {
+        extra.push(new RawHtml({html: tags}));
       }
 
       extra = extra.concat(applyDecorators(this, 'after-tags', attrs, state));
