@@ -197,9 +197,8 @@ export default createWidget('header', {
 
       if (state.searchContextType !== contextType) {
         state.contextEnabled = undefined;
+        state.searchContextType = contextType;
       }
-
-      state.searchContextType = contextType;
 
       if (state.contextEnabled === undefined) {
         if (forceContextEnabled.includes(contextType)) {
