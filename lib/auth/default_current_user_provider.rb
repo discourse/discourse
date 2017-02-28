@@ -225,7 +225,11 @@ class Auth::DefaultCurrentUserProvider
   end
 
   def should_update_last_seen?
-    !(@request.path =~ /^\/message-bus\//)
+    if @request.xhr?
+      @env["HTTP_DISCOURSE_VISIBLE".freeze] == "true".freeze
+    else
+      true
+    end
   end
 
   protected

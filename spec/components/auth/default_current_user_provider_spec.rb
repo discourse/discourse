@@ -82,12 +82,22 @@ describe Auth::DefaultCurrentUserProvider do
     expect(provider("/?api_key=hello&api_username=#{user.username.downcase}").current_user.id).to eq(user.id)
   end
 
-  it "should not update last seen for message bus" do
-    expect(provider("/message-bus/anything/goes", method: "POST").should_update_last_seen?).to eq(false)
-    expect(provider("/message-bus/anything/goes", method: "GET").should_update_last_seen?).to eq(false)
+  it "should not update last seen for ajax calls without Discourse-Visible header" do
+    expect(provider("/topic/anything/goes",
+                    :method => "POST",
+                    "HTTP_X_REQUESTED_WITH" => "XMLHttpRequest"
+          ).should_update_last_seen?).to eq(false)
   end
 
-  it "should update last seen for others" do
+  it "should update ajax reqs with discourse visible" do
+    expect(provider("/topic/anything/goes",
+                    :method => "POST",
+                    "HTTP_X_REQUESTED_WITH" => "XMLHttpRequest",
+                    "HTTP_DISCOURSE_VISIBLE" => "true"
+          ).should_update_last_seen?).to eq(true)
+  end
+
+  it "should update last seen for non ajax" do
     expect(provider("/topic/anything/goes", method: "POST").should_update_last_seen?).to eq(true)
     expect(provider("/topic/anything/goes", method: "GET").should_update_last_seen?).to eq(true)
   end
