@@ -153,7 +153,7 @@ class TopicsBulkAction
       topics.each do |t|
         if guardian.can_edit?(t)
           if tags.present?
-            DiscourseTagging.tag_topic_by_names(t, guardian, tags, append=true)
+            DiscourseTagging.tag_topic_by_names(t, guardian, tags, append: true)
           end
         @changed_ids << t.id
         end
