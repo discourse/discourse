@@ -4,7 +4,7 @@ module DiscourseTagging
   TAGS_FILTER_REGEXP = /[\/\?#\[\]@!\$&'\(\)\*\+,;=\.%\\`^\s|\{\}"<>]+/ # /?#[]@!$&'()*+,;=.%\`^|{}"<>
 
 
-  def self.tag_topic_by_names(topic, guardian, tag_names_arg, append=false)
+  def self.tag_topic_by_names(topic, guardian, tag_names_arg, append: false)
     if SiteSetting.tagging_enabled
       tag_names = DiscourseTagging.tags_for_saving(tag_names_arg, guardian) || []
 
