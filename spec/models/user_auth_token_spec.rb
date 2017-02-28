@@ -251,4 +251,18 @@ describe UserAuthToken do
 
   end
 
+  it "will not mark token unseen when prev and current are the same" do
+    user = Fabricate(:user)
+
+    token = UserAuthToken.generate!(user_id: user.id,
+                                    user_agent: "some user agent",
+                                    client_ip: "1.1.2.3")
+
+
+    lookup = UserAuthToken.lookup(token.unhashed_auth_token, seen: true)
+    lookup = UserAuthToken.lookup(token.unhashed_auth_token, seen: true)
+    lookup.reload
+    expect(lookup.auth_token_seen).to eq(true)
+  end
+
 end

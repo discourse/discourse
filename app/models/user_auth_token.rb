@@ -64,7 +64,7 @@ class UserAuthToken < ActiveRecord::Base
       return nil
     end
 
-    if user_token.prev_auth_token == token && user_token.auth_token_seen
+    if user_token.auth_token != token && user_token.prev_auth_token == token && user_token.auth_token_seen
       changed_rows = UserAuthToken
         .where(id: user_token.id, prev_auth_token: token)
         .update_all(auth_token_seen: false)
