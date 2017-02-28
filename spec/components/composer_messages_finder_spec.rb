@@ -331,11 +331,11 @@ describe ComposerMessagesFinder do
 
     it "does not show the message for new topics" do
       finder = ComposerMessagesFinder.new(user, composer_action: 'createTopic')
-      expect(finder.check_get_a_room).to be_blank
+      expect(finder.check_get_a_room(min_users_posted: 2)).to be_blank
     end
 
     it "does not give a message without a topic id" do
-      expect(ComposerMessagesFinder.new(user, composer_action: 'reply').check_get_a_room).to be_blank
+      expect(ComposerMessagesFinder.new(user, composer_action: 'reply').check_get_a_room(min_users_posted: 2)).to be_blank
     end
 
     context "reply" do
@@ -343,7 +343,7 @@ describe ComposerMessagesFinder do
 
       it "does not give a message to users who are still in the 'education' phase" do
         user.stubs(:post_count).returns(9)
-        expect(finder.check_get_a_room).to be_blank
+        expect(finder.check_get_a_room(min_users_posted: 2)).to be_blank
       end
 
       it "doesn't notify a user it has already notified about sequential replies" do
@@ -352,7 +352,7 @@ describe ComposerMessagesFinder do
           target_user_id: user.id,
           topic_id: topic.id
         )
-        expect(finder.check_get_a_room).to be_blank
+        expect(finder.check_get_a_room(min_users_posted: 2)).to be_blank
       end
 
       it "will notify you if it hasn't in the current topic" do
@@ -361,28 +361,28 @@ describe ComposerMessagesFinder do
           target_user_id: user.id,
           topic_id: topic.id+1
         )
-        expect(finder.check_get_a_room).to be_present
+        expect(finder.check_get_a_room(min_users_posted: 2)).to be_present
       end
 
       it "won't notify you if you haven't had enough posts" do
         SiteSetting.get_a_room_threshold = 10
-        expect(finder.check_get_a_room).to be_blank
+        expect(finder.check_get_a_room(min_users_posted: 2)).to be_blank
       end
 
       it "doesn't notify you if the posts aren't all to the same person" do
         first_reply.update_column(:reply_to_user_id, user.id)
-        expect(finder.check_get_a_room).to be_blank
+        expect(finder.check_get_a_room(min_users_posted: 2)).to be_blank
       end
 
       it "doesn't notify you of posts to yourself" do
         first_reply.update_column(:reply_to_user_id, user.id)
         second_reply.update_column(:reply_to_user_id, user.id)
-        expect(finder.check_get_a_room).to be_blank
+        expect(finder.check_get_a_room(min_users_posted: 2)).to be_blank
       end
 
       it "doesn't notify in a message" do
         topic.update_columns(category_id: nil, archetype: 'private_message')
-        expect(finder.check_get_a_room).to be_blank
+        expect(finder.check_get_a_room(min_users_posted: 2)).to be_blank
       end
 
       it "doesn't notify when replying to a different user" do
@@ -393,11 +393,19 @@ describe ComposerMessagesFinder do
           post_id: other_user_reply.id
         )
 
-        expect(other_finder.check_get_a_room).to be_blank
+        expect(other_finder.check_get_a_room(min_users_posted: 2)).to be_blank
+      end
+
+      context "with a default min_users_posted value" do
+        let!(:message) { finder.check_get_a_room }
+
+        it "works as expected" do
+          expect(message).to be_blank
+        end
       end
 
       context "success" do
-        let!(:message) { finder.check_get_a_room }
+        let!(:message) { finder.check_get_a_room(min_users_posted: 2) }
 
         it "works as expected" do
           expect(message).to be_present
