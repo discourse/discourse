@@ -136,7 +136,7 @@ class ComposerMessagesFinder
     }
   end
 
-  def check_get_a_room
+  def check_get_a_room(min_users_posted: 5)
     return unless educate_reply?(:notified_about_get_a_room)
     return unless @details[:post_id].present?
 
@@ -152,6 +152,7 @@ class ComposerMessagesFinder
       find_all {|uid| uid != @user.id && uid == reply_to_user_id}
 
     return unless last_x_replies.size == SiteSetting.get_a_room_threshold
+    return unless @topic.posts.count('distinct user_id') >= min_users_posted
 
     UserHistory.create!(action: UserHistory.actions[:notified_about_get_a_room],
                         target_user_id: @user.id,
