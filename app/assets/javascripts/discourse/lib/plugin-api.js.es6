@@ -14,9 +14,10 @@ import { addPopupMenuOptionsCallback } from 'discourse/controllers/composer';
 import { extraConnectorClass } from 'discourse/lib/plugin-connectors';
 import { addPostSmallActionIcon } from 'discourse/widgets/post-small-action';
 import { addDiscoveryQueryParam } from 'discourse/controllers/discovery-sortable';
+import { addTagsHtmlCallback } from 'discourse/lib/render-tags';
 
 // If you add any methods to the API ensure you bump up this number
-const PLUGIN_API_VERSION = '0.8.1';
+const PLUGIN_API_VERSION = '0.8.2';
 
 class PluginApi {
   constructor(version, container) {
@@ -387,6 +388,21 @@ class PluginApi {
   addDiscoveryQueryParam(param, options) {
     addDiscoveryQueryParam(param, options);
   }
+
+  /**
+   * Register a callback to be called every time tags render
+   * example:
+   *
+   * callback = function(topic, params) {
+   *    if (topic.get("created_at") < "2000-00-01") {
+   *      return "<span class='discourse-tag'>ANCIENT</span>"
+   *    }
+   * }
+   *
+   **/
+  addTagsHtmlCallback(callback) {
+    addTagsHtmlCallback(callback);
+  };
 }
 
 let _pluginv01;
