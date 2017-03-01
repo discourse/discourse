@@ -32,13 +32,7 @@
         </div>
       {{/unless}}
 
-      {{#if topic.tags}}
-        <div class='discourse-tags'>
-        {{#each topic.visibleListTags as |tag|}}
-          {{discourse-tag tag}}
-        {{/each}}
-        </div>
-      {{/if}}
+      {{discourse-tags topic mode="list"}}
 
       {{raw-plugin-outlet name="topic-list-tags"}}
 

@@ -42,7 +42,7 @@ export default function(topic, params){
   if (customHtml || (tags && tags.length > 0)) {
     buffer = "<div class='discourse-tags'>";
     if (tags) {
-      for(var i=0; i<tags.length; i++){
+      for(let i=0; i<tags.length; i++){
         buffer += renderTag(tags[i]);
       }
     }
