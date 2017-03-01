@@ -1,4 +1,3 @@
-import DiscourseURL from 'discourse/lib/url';
 import { ajax } from 'discourse/lib/ajax';
 
 export default Ember.Controller.extend({
@@ -39,7 +38,11 @@ export default Ember.Controller.extend({
     },
 
     download(backup) {
-      DiscourseURL.redirectTo(backup.get('link'));
+      let link = backup.get('filename');
+      ajax("/admin/backups/" + link, { type: "PUT" })
+      .then(() => {
+        bootbox.alert(I18n.t("admin.backups.operations.download.alert"));
+      });
     }
   },
 
@@ -48,7 +51,7 @@ export default Ember.Controller.extend({
     ajax("/admin/backups/readonly", {
       type: "PUT",
       data: { enable: enable }
-    }).then(function() {
+    }).then(() => {
       site.set("isReadOnly", enable);
     });
   }

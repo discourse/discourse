@@ -2689,7 +2689,8 @@ en:
             without_uploads: "Yes (do not include files)"
           download:
             label: "Download"
-            title: "Download the backup"
+            title: "Send email with download link"
+            alert: "A link to download this backup has been emailed to you."
           destroy:
             title: "Remove the backup"
             confirm: "Are you sure you want to destroy this backup?"
