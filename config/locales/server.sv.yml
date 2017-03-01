@@ -32,9 +32,10 @@ sv:
   purge_reason: "Automatiskt borttaget som övergett, avaktiverat konto"
   disable_remote_images_download_reason: "Nedladdning av externa bilder är inaktiverat eftersom det inte fanns tillräckligt mycket lagringsutrymme tillgängligt."
   anonymous: "Anonym"
+  remove_posts_deleted_by_author: "Borttaget av författaren"
   emails:
     incoming:
-      default_subject: "Inkommande e-post från %{email}"
+      default_subject: "Detta ämnet behöver en titel"
       show_trimmed_content: "Visa trimmat innehåll"
       maximum_staged_user_per_email_reached: "Uppnått maximalt antal iscensatta användare skapade per e-post."
       errors:
@@ -71,6 +72,8 @@ sv:
       has_already_been_used: "har redan använts"
       inclusion: är inte inkluderad i listan
       invalid: är ogiltig
+      is_invalid: "Verkar oklart, det ären komplett mening"
+      contains_censored_words: "innehåller följande censurerade ord:%(censurerade_ord)"
       less_than: måste vara mindre än %{count}
       less_than_or_equal_to: måste vara mindre eller lika med %{count}
       not_a_number: är inte ett nummer
@@ -104,6 +107,11 @@ sv:
       max_username_length_range: "Du kan inte sätta maximum högre än minimum."
       default_categories_already_selected: "Du kan inte välja en kategori som används i en annan lista. "
       s3_upload_bucket_is_required: "Du kan inte aktivera uppladdning till S3 innan du har angivit 's3_upload_bucket'."
+  invite:
+    not_found: "Ert invitations lösenord är ogiltigt. Vänlig kontakta webbplatsens administratör."
+  bulk_invite:
+    file_should_be_csv: "De uppladdade filerna skall vara i csv format."
+    error: "Det uppstod ett problem när filerna skulle laddas upp. Vad snäll och försök senare igen."
   topic_invite:
     user_exists: "Tyvärr, den användaren har redan bjudits in. Du kan endast bjuda in en användare till ett ämne en gång."
   backup:
@@ -123,6 +131,11 @@ sv:
   embed:
     start_discussion: "Starta diskussion"
     continue: "Fortsätt diskussion"
+    error: "Fel vid inbäddningen"
+    referer: "Hänvisning:"
+    mismatch: "Hänvisningarna matchade inte någon av följande ägare"
+    no_hosts: "Inga värdar var uppsatta för textinbäddningen"
+    configure: "konfigurera inbäddningen"
     more_replies:
       one: "1 till svar"
       other: "%{count} till svar"
@@ -156,8 +169,10 @@ sv:
   spamming_host: "Tyvärr, du kan inte posta en länk till det värdnamnet."
   user_is_suspended: "Avstängda användare är inte tillåtna att göra inlägg"
   topic_not_found: "Något har gått fel. Kanske har ämnet stängts eller raderats medan du tittade på det?"
+  not_accepting_pms: "Ledsen, %[användarnamn] tar inte emot meddelande för tillfället."
   just_posted_that: "är för likt det du nyligen postade"
   invalid_characters: "innehåller otillåtna tecken"
+  is_invalid: "verkar oklart, det är en komplett mening"
   next_page: "nästa sida →"
   prev_page: "← föregående sida"
   page_num: "Sida %{num}"
@@ -228,46 +243,13 @@ sv:
       - Konstruktiv kritik välkomnas, men kritisera då *idéer* och inte personer.
 
       För mer, [läs våra riktlinjer](/guidelines). Detta meddelande visas enbart vid ditt första %{education_posts_text}.
-    avatar: |
-      ### Vad sägs om en ny bild för ditt konto?
-
-      Du har skapat några ämnen och skrivit några svar, men din profilbild är inte lika unik som dig - det är samma standardbild som alla nya användare får.
-
-      Har du inte funderat på att **[besöka din användarprofil](%{profile_path})** och ladda upp ett eget foto som representerar dig?
-
-      Det är lättare att följa diskussioner och hitta intressanta personer i konversationer när alla har en unik profilbild!
-    sequential_replies: |
-      ### Överväg att svara på flera inlägg på en och samma gång
-
-      Istället för flera svar i följd till ett ämne, kan du överväga ett enda svar som innehåller citat från tidigare inlägg eller @namn-referenser.
-
-      Du kan redigera ditt tidigare svar och lägga till ett citat genom att markera text och välja knappen <b>citera</b> som dyker upp.
-
-      Det blir lättare för alla att läsa ämnen som har färre in-på-djupet-svar istället för flera små, individuella svar.
-    dominating_topic: |
-      ### Låt andra gå med i konversationen
-
-      Detta ämne är uppenbarligen viktigt för dig &ndash; du har postat mer än %{percent}% av alla svar här.
-
-      Är du säker på att du ger tillräckligt med tid till andra personer att också få dela med sig av deras synpunkt?
-    too_many_replies: |
-      ### Du har nått svarsgränsen för detta ämne
-
-      Tyvärr, men nya användare är tillfälligt begränsade till %{newuser_max_replies_per_topic} svar i samma ämne.
-
-      Istället för att lägga till ytterligare ett svar, vänligen överväg att redigera dina tidigare svar, eller besök andra ämnen.
-    reviving_old_topic: |
-      ### Återuppliva detta ämne?
-
-      Senaste svaret i detta ämne är nu över %{days} dagar gammalt. Ditt svar kommer att lyfta upp ämnet till toppen av listan och notifiera alla tidigare involverade i ämnet.
-
-      Är du säker på att du vill fortsätta denna gamla konversation?
   activerecord:
     attributes:
       category:
         name: "Kategorinamn"
       topic:
         title: 'Rubrik'
+        featured_link: 'Skiss länk'
       post:
         raw: "Inlägg"
       user_profile:
@@ -281,12 +263,16 @@ sv:
               too_many_users: "Du kan endast skicka varningar till en användare åt gången."
               cant_send_pm: "Tyvärr, du kan inte skicka ett privat medelande till den användaren. "
               no_user_selected: "Du måste välja en giltig användare."
+            featured_link:
+              invalid: "är ogiltig. URL måste innehålla http:// eller http://."
+              invalid_category: "kan inte redigeras i denna kategori"
         user:
           attributes:
             password:
               common: "är ett av de 10000 vanligaste lösenorden. Vänligen använd ett säkrare lösenord."
               same_as_username: "är samma som ditt användarnamn. Vänligen använd ett säkrare lösenord."
               same_as_email: "är samma som din e-postadress. Vänligen använd ett säkrare lösenord."
+              same_as_current: "är samma som ert nuvarande lösenord"
             ip_address:
               signup_not_allowed: "Registrering är inte tillåtet från detta konto."
         color_scheme_color:
@@ -296,6 +282,10 @@ sv:
         post_reply:
           base:
             different_topic: "Inlägg och svar måste tillhöra samma ämne."
+        web_hook:
+          attributes:
+            payload_url:
+              invalid: "Webbadressen är ogiltig. Webbadressen skall inkludera :// eller https://. Inga blanktecken är tillåtna"
       <<: *errors
   user_profile:
     no_info_me: "<div class='missing-profile'>Din profils Om Mig-fält är för närvarande tomt, <a href='/users/%{username_lower}/preferences/about-me'>skulle du vilja fylla i det?</a></div>"
@@ -306,7 +296,10 @@ sv:
   meta_category_description: "Diskussion om den här webbplatsen, dess organisation, hur den fungerar och hur vi kan förbättra den."
   staff_category_name: "Personal"
   staff_category_description: "Privat kategori för personaldiskussioner. Ämnen är bara synliga för administratörer och moderatorer."
+  assets_topic_title: "Tillgångar för webb designen"
   assets_topic_body: "Detta är ett permanent ämne, endast synligt för personal, med syfte att lagra bilder och filer som ska användas till webbplatsens design. Radera ej detta ämne!\n\n\nSå här fungerar det:\n\n\n1. Svara på detta ämne.\n2. Ladda upp alla bilder du vill använda som logotyp, favicon och så vidare här. (Använd verktygfältets uppladdningsikon i inläggsredigeraren, eller dra-och-släpp eller klistra in bilder)\n3. Skicka ditt svar för att posta det.\n4. Högerklicka på bilderna i ditt nya inlägg för att få sökvägen till de uppladdade bilderna, eller klicka på redigera-ikonen för att redigera inlägget och på så sätt hämta sökvägen till bilderna. Kopiera bildernas sökväg. \n5. Klistra in bildernas sökvägar i de [grundläggande inställningarna](/admin/site_settings/category/required).\n\n\nOm du behöver möjliggöra uppladdning av flera olika filtyper, redigera `authorized_extensions` i [inställningarna för filer](/admin/site_settings/category/files)."
+  discourse_welcome_topic:
+    title: "Välkommen till diskussionen"
   lounge_welcome:
     title: "Välkommen till loungen"
     body: |2
@@ -370,6 +363,7 @@ sv:
       create_topic: "Du skapar nya ämnen för snabbt. Var god vänta %{time_left} innan du försöker igen."
       create_post: "Du svarar för snabbt. Var god vänta %{time_left} innan du försöker igen."
       delete_post: "Du raderar inlägg för snabbt. Var god vänta %{time_left} innan du försöker igen."
+      public_group_membership: "Du deltar/lämnar grupper för frekvent. Vad god och vänta %[tid_kvar] innan du försöker igen."
       topics_per_day: "Du har uppnått maximalt antal nya ämnen idag. Var god vänta %{time_left} innan du försöker igen."
       pms_per_day: "Du har uppnått maximalt antal inlägg idag. Var god vänta %{time_left} innan du försöker igen."
       create_like: "Du har uppnått maximalt antal gillningar idag. Var god vänta %{time_left} innan du försöker igen."
@@ -460,14 +454,13 @@ sv:
         other: "nästan %{count} år sedan"
   password_reset:
     no_token: "Tyvärr, din lösenordslänk har löpt ut. Klicka på inloggningsknappen och välj \"jag har glömt mitt lösenord\" för att få en ny länk."
-    choose_new: "Var god välj ett nytt lösenord"
-    choose: "Var god välj ett lösenord"
+    choose_new: "Välj ett nytt lösenord"
+    choose: "Välj ett lösenord"
     update: 'Uppdatera lösenord'
     save: 'Välj lösenord'
     title: 'Återställ lösenord'
     success: "Du har lyckats med att byta ditt lösenord och är nu inloggad."
     success_unapproved: "Du lyckades med att byta ditt lösenord."
-    continue: "Fortsätt till %{site_name}"
   change_email:
     confirmed: "Din e-post har uppdaterats."
     please_continue: "Fortsätt till %{site_name}"
@@ -526,8 +519,10 @@ sv:
       long_form: 'röstade för detta inlägg'
   user_activity:
     no_bookmarks:
+      self: "Du har inga märkta inlägg, märkta inlägg möjliggör att du enkelt når dem vid ett senare tillfälle."
       others: "Inga bokmärken."
     no_likes_given:
+      self: "Du har inte gillat några inlägg."
       others: "Inga gillade inlägg."
   topic_flag_types:
     spam:
@@ -571,11 +566,17 @@ sv:
     not_found_description: "Tyvärr, vi kunde inte hitta den här avprenumerationen. Är det möjligt att länken i din e-post har löpt ut?"
     log_out: "Logga ut"
   user_api_key:
+    title: "Godkänna programåtkomst"
     authorize: "Auktorisera"
     read: "läs"
     read_write: "läs/skriv"
+    no_trust_level: "Tyvärr har ni inte den nödvändiga förtroendenivån för att få tillgång till användar API"
+    generic_error: "Ledsen, vi kan inte lämna ut API nycklar, denna funktion kan inaktiveras av administratören"
     scopes:
       message_bus: "Live uppdateringar"
+      notifications: "läs och förtydliga aviseringarna"
+      push: "Flytta aviseringar till externa service"
+      session_info: "Läs användar sessions information"
       read: "Läs alla"
       write: "Skriv alla"
   reports:
@@ -729,8 +730,6 @@ sv:
     facebook_config_warning: 'Servern är konfigurerad till att tillåta registrering och inloggning med Facebook (inställningen enable_facebook_logins). men app-id och appens hemlighetsvärden är inte satta. Gå till <a href="/admin/site_settings">Webbplatsinställningarna</a> och uppdatera inställningarna. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Läs den här guiden för att lära dig mer</a>.'
     twitter_config_warning: 'Servern är konfigurerad till att tillåta registrering och inloggning med Twitter (inställningen twitter_logins). men nyckel- och hemlighetsvärden är inte satta. Gå till <a href="/admin/site_settings">Webbplatsinställningarna</a> och uppdatera inställningarna. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">Läs den här guiden för att lära dig mer</a>.'
     github_config_warning: 'Servern är konfigurerad till att tillåta registrering och inloggning med GitHub (inställningen twitter_logins). men klient-id och hemlighetsvärden är inte satta. Gå till <a href="/admin/site_settings">Webbplatsinställningarna</a> och uppdatera inställningarna. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">Läs den här guiden för att lära dig mer</a>.'
-    s3_config_warning: 'Servern är konfigurerad till att ladda upp filer till s3, men minst en av följande inställningar är inte satt: s3_access_key_id, s3_secret_access_key eller s3_upload_bucket. Gå till <a href="/admin/site_settings">Inställningar</a> och uppdatera dem. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Se "How to set up image uploads to S3?" för att lära dig mer</a>.'
-    s3_backup_config_warning: 'Servern är konfigurerad till att ladda upp säkerhetskopior till s3, men minst en av följande inställningar är inte satta: s3_access_key_id, s3_secret_access_key eller s3_backup_bucket. Gå till <a href="/admin/site_settings">Webbplatsinställningarna</a> och uppdatera inställningarna. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Se "How to set up image uploads to S3?" för att lära dig mer</a>.'
     image_magick_warning: 'Servern är konfigurerad att skapa ikoner av stora bilder, men ImageMagick är inte installerad. Installera ImageMagick med din föredragna pakethanterare eller <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">ladda hem den senaste utgåvan</a>.'
     failing_emails_warning: 'Det finns %{num_failed_jobs} e-postutskick som har misslyckats. Kontrollera din app.yml-fil för att säkerställa att serverinställningarna för e-post är korrekta. <a href="/sidekiq/retries" target="_blank">Se alla misslyckade utskick i Sidekiq</a>.'
     subfolder_ends_in_slash: "Inställningarna för dina undermappar är inte korrekt; DISCOURSE_RELATIV_URL_ROOT slutar med ett snedstreck."
@@ -751,11 +750,15 @@ sv:
     min_first_post_length: "Lägsta antal tillåtna tecken i första inlägget (ämnestext)"
     min_private_message_post_length: "Lägst antal tillåtna tecken i inlägg för meddelanden"
     max_post_length: "Högsta tillåtna längd på inlägg i antal tecken"
+    topic_featured_link_enabled: "Möjliggör att lägga upp en länk med ämnen."
+    show_topic_featured_link_in_digest: "Visa ämnet i skiss länken som fanns i det nerkortade emailet."
     min_topic_title_length: "Lägsta tillåtna längd på ämnesrubrik i antal tecken"
     max_topic_title_length: "Högsta tillåtna längd på ämnesrubrik i antal tecken"
     min_private_message_title_length: "Lägst tillåtna längd på rubrik för ett meddelande i antal tecken"
     min_search_term_length: "Lägsta giltiga teckenlängd på sökterm"
     search_tokenize_chinese_japanese_korean: "Framtvinga sökning för att tokenisera kinesiska/japanska/koreanska även på webbplatser som inte är på dessa språk"
+    search_prefer_recent_posts: "Om sökningar på ditt stora forum går långsamt, försök detta alternativ som är ett index av de senaste inläggen först."
+    search_recent_posts_size: "Hur många nya inlägg för att hålla index"
     allow_uncategorized_topics: "Tillåt att ämnen skapas utan en kategori. VARNING: Om det finns några okategoriserade ämnen så måste dessa omkategoriseras innan den här inställningen stängs av. "
     allow_duplicate_topic_titles: "Tillåt ämnen med identiska rubriker."
     unique_posts_mins: "Hur många minuter innan en användare kan göra ett inlägg med precis samma innehåll igen"
@@ -777,6 +780,7 @@ sv:
     max_image_width: "Maxbredd för bildikoner i ett inlägg"
     max_image_height: "Maxhöjd för bildikoner i ett inlägg"
     category_featured_topics: "Antal ämnen som visas per kategori på /kategorier-sidan. Efter att ha ändrat det här värdet så tar det upp till 15 minuter för kategori-sidan att uppdateras."
+    show_subcategory_list: "Visa listan med underkategorier istället för ämneslistan när en kategori väljs."
     fixed_category_positions: "Om aktiverad, kommer du kunna ordna kategorier i en bestämd ordning. Om inaktiverad, sorteras kategorierna baserat på aktivitet."
     fixed_category_positions_on_create: "Kategoriordningen kommer att upprätthållas vid dialogen för skapandet av ämnen om den här bockas i (kräver fixed_category_positions)."
     add_rel_nofollow_to_user_content: "Lägg till rel nofollow på allt användargenererat innehåll, förutom interna länkar (inklusive förälderdomän). Om du ändrar det här så måste du uppdatera alla inlägg med \"rake posts:rebake\""
@@ -785,6 +789,7 @@ sv:
     show_pinned_excerpt_mobile: "Visa inte utdrag för klistrade ämnen i mobilen."
     show_pinned_excerpt_desktop: "Visa inte utdrag för klistrade ämnen på datorn."
     post_onebox_maxlength: "Maxlängd på ett onebox:at Discourse-inlägg i antal tecken."
+    onebox_domains_blacklist: "En lista av domäner som aldrig blir oneboxed."
     logo_url: "Logotypen i övre vänstra sidan av din webbplats bör ha en bred rektangulär form. Om den lämnas blank kommer webbplatsens titel att visas. "
     digest_logo_url: "Den alternativa logotypen används överst i din webbplats e-postsammanfattning. Den bör ha en bred rektangulär form. Den borde inte vara en SVG-bild. Om den lämnas blank kommer `logo_url` att användas."
     logo_small_url: "Den lilla logotypen som visas i övre vänstra hörnet av hemsidan när man bläddrar ned i ämnen. Om den lämnas blank kommer hemloggan visas."
@@ -852,6 +857,7 @@ sv:
     prioritize_username_in_ux: "Använd användarnamn först på användarsidan, användarkortet och inlägg (när inaktiverad så visas namnet först)"
     email_token_valid_hours: "Glömt lösenord / aktivera konto länkar är giltiga i (n) timmar."
     enable_badges: "Aktivera utmärkelsesystemet"
+    enable_whispers: "Tiliåt privat kommunikation inom ämnena."
     allow_index_in_robots_txt: "Specificera i robots.txt att den här webbplatsen tillåter att bli indexerad av sökmotorer. "
     email_domains_blacklist: "En pipe-avgränsad lista av alla e-postdomän som användare inte tillåts registrera konton med. Exempel: mailinator.com, trashmail.net"
     email_domains_whitelist: "En pipe-avgränsad lista av alla e-postdomän som användare MÅSTE registrera konton med. VARNING: Användare med e-postdomän som inte finns på listan kommer inte att tillåtas!"
@@ -865,17 +871,19 @@ sv:
     invite_passthrough_hours: "Hur länge en användare kan använda en tidigare utlöst inbjudningsnyckel för att logga in, i timmar"
     invite_only: "Allmän registrering är avstängt, alla nya användare måste vara explicit inbjudna av andra medlemmar eller personal."
     login_required: "Kräv autentisering för att läsa innehåll på den här webbplatsen, avvisa anonym tillgång."
-    min_username_length: "Minsta längd för lösenord i antal tecken."
-    max_username_length: "Högsta längd för användarnamn i antal tecken."
+    min_username_length: "Minsta längd på användarnamnet. Varning: om någon existerande användare eller grupp har namn kortare än detta, er sida kommer att gå sönder!"
+    max_username_length: "Längsta användarnamn. Varning: om någon existerande användare eller grupp har ett namn längre än detta, er sida kommer att gå sönder."
     reserved_usernames: "Användarnamn som inte tillåter registrering."
     min_password_length: "Minsta lösenordslängd."
     min_admin_password_length: "Högsta lösenordslängd för administratör."
+    password_unique_characters: "Minsta antalet unika tecken som ett lösenord måste ha."
     block_common_passwords: "Tillåt inte lösenord som är bland de 10000 vanligaste lösenorden."
     enable_sso: "Aktivera Single sign on via en extern sida (VARNING: ANVÄNDARENS E-POSTADRESS *MÅSTE* VARA VALIDERAD AV DEN EXTERNA SIDAN!)"
     verbose_sso_logging: "Logga mångordiga SSO relaterade diagnostiker till /logs"
     enable_sso_provider: "Implementera Discourse SSO leverantörsprotokoll vid /session/sso_provider endpoint, kräver att sso_secret är inställd"
     sso_url: "URL för single sign on endpoint (måste inkludera http:// eller https://)"
     sso_secret: "Hemlig sträng som används för att kryptografiskt autentisera SSO-information, se till att den är 10 tecken eller mer"
+    sso_overrides_bio: "Åsidosätter användar bio i användarprofil och förhindrar användare från att ändra det"
     sso_overrides_email: "Åsidosätter lokal e-post med externa webbplatsers e-post från SSO-nyttolast vid varje inloggning, och förhindrar lokala ändringar (VARNING: diskrepanser kan inträffa på grund av normalisering av lokala e-poster)"
     sso_overrides_username: "Åsidosätter lokala användarnamn med externa webbplatsers användarnamn från SSO-nyttolast vid varje inloggning, och förhindrar lokala ändringar. (VARNING: diskrepanser kan inträffa på grund av skillnader i användarnamnets längd/krav)"
     sso_overrides_name: "Åsidosätter lokala fullständiga namn med externa webbplatsers fullständiga namn från SSO-nyttolast vid varje inloggning, och förhindrar lokala ändringar."
@@ -913,6 +921,7 @@ sv:
     active_user_rate_limit_secs: "Hur frekvent vi uppdaterar 'last_seen_at'-fältet, i sekunder"
     verbose_localization: "Visa utvidgade lokaliseringstips i gränssnittet"
     previous_visit_timeout_hours: "Hur länge ett besök varar innan vi betraktar det som ett 'tidigare' besök, i timmar "
+    rebake_old_posts_count: "Antalet gamla inlägg som kommer att bakas in var 15 minut"
     rate_limit_create_topic: "Efter att ha skapat ett ämne, måste användare vänta (n) sekunder innan de kan skapa ett nytt."
     rate_limit_create_post: "Efter att ha skrivit ett inlägg, måste användare vänta (n) sekunder innan de skriver ett nytt."
     rate_limit_new_user_create_topic: "Efter att ha skapat ett ämne, måste nya användare vänta (n) sekunder innan de kan skapa ett nytt."
@@ -927,6 +936,7 @@ sv:
     max_topic_invitations_per_day: "Max antal ämnesinbjudningar en användare kan skicka per dag."
     alert_admins_if_errors_per_minute: "Antal felindikeringar per minut för att utlösa ett administratörslarm. Ange 0 för att inaktivera den här funktionen. OBS: kräver omstart."
     alert_admins_if_errors_per_hour: "Antal felindikeringar per timme för att utlösa ett administratörslarm. Ange 0 för att inaktivera den här funktione. OBS: kräver omstart."
+    categories_topics: "Antalet ämnen som visas /kategori sida."
     suggested_topics: "Antal föreslagna ämnen som visas i botten av ett ämne."
     limit_suggested_to_category: "Visa bara ämnen från den aktuella kategorin bland föreslagna ämnen."
     suggested_topics_max_days_old: "Föreslagna ämnen bör inte vara mer än n dagar gamla."
@@ -946,6 +956,7 @@ sv:
     default_opengraph_image_url: "URL för standard opengraphbilden."
     allow_all_attachments_for_group_messages: "Tillåt alla e-postbilagor för gruppmeddelanden."
     convert_pasted_images_to_hq_jpg: "Konvertera inklistrade bilder till högkvalitativa JPG-filer."
+    convert_pasted_images_quality: "Kvaliten av den konverterade JPG filen (1 är den lägsta kvaliten, 100 är den bästa kvaliten)."
     enable_flash_video_onebox: "Aktivera inbäddning av swf- och fic- (Adobe Flash) länkar i onebox:ar. VARNING: det kan introducera säkerhetsrisker."
     default_invitee_trust_level: "Förvald förtroendenivå (0-4) för inbjudna användare."
     default_trust_level: "Förvald förtroendenivå (0-4) för alla nya användare. VARNING! En ändring av detta sätter dig i stor risk för skräppost."
@@ -975,6 +986,7 @@ sv:
     tl3_links_no_follow: "Radera ej rel=nofollow från länkarna som lagts upp av användare med förtroendenivå 3."
     min_trust_to_create_topic: "Lägsta förtroendenivå som krävs för att skapa ett nytt ämne."
     min_trust_to_edit_wiki_post: "Lägsta förtroendenivå som krävs för att redigera inlägg markerade som wiki. "
+    min_trust_to_edit_post: "Lägsta förtroende nivån som krävs för att skapa ett inlägg."
     min_trust_to_allow_self_wiki: "Lägsta förtroendenivå som krävs för att göra användares egna inlägg wiki."
     min_trust_to_send_messages: "Lägsta förtroendenivå som krävs för att skapa nya privata meddelanden."
     newuser_max_links: "Antalet länkar en ny användare kan lägga till i ett inlägg."
@@ -983,6 +995,7 @@ sv:
     newuser_max_mentions_per_post: "Max antal @namn-omnämningar en ny användare kan göra i ett inlägg."
     newuser_max_replies_per_topic: "Max antal svar en ny användare kan göra i ett enda ämne innan någon svarar dem."
     max_mentions_per_post: "Max antal @namn-omnämningar vem som helst kan göra i ett inlägg."
+    max_users_notified_per_group_mention: "Maximalt antal användare som kan få ett meddelande om en grupp anges (om tröskeln är uppfyllt kommer inga meddelande att skickas)"
     create_thumbnails: "Skapa miniatyrer och \"lightboxa\" bilder som är för stora för att passa in i ett inlägg."
     email_time_window_mins: "Vänta (n) minuter innan något notifikationsmejl skickas ut, för att ge användare chansen att redigera och slutföra deras inlägg."
     private_email_time_window_seconds: "Vänta (n) sekunder innan någon privat e-postnotifikation skickas ut för att ge användare chansen att redigera och slutföra deras meddelande."
@@ -995,12 +1008,14 @@ sv:
     title_fancy_entities: "Konvertera vanliga ASCII-tecken till fancy HTML-enheter i ämnesrubriker, à la SmartyPants http://daringfireball.net/projects/smartypants/"
     min_title_similar_length: "Minsta längd för en rubrik innan den kommer att kontrolleras för liknande ämnen."
     min_body_similar_length: "Minsta längd på ett ämnes innehåll innan den kommer att kontrolleras för liknande ämnen."
+    desktop_category_page_style: "Visuell stil för den/kategori sidan."
     category_colors: "En lista över tillåtna hexadecimala färgvärden för kategorier."
     category_style: "Visuell stil för kategori-utmärkelser."
     max_image_size_kb: "Högsta bilduppladdningsstorlek i kB. Konfiguration krävs i nginx (client_max_body_size) / apache eller proxy också."
     max_attachment_size_kb: "Högsta storlek på uppladdad bilaga i kB. Konfiguration krävs i nginx (client_max_body_size) / apace eller proxy också."
     authorized_extensions: "En lista av alla filändelser som är tillåtna för uppladdning (använd '*' för att aktivera alla filtyper)"
     max_similar_results: "Hur många liknande ämnen som visas ovanför redigeraren vid författandet av ett nytt ämne. Jämförelsen är baserad på ämnesrubrik och innehåll."
+    max_image_megapixels: "Maximalt antal megapixlar tillåtet för en bild."
     title_prettify: "Förhindra vanliga felskrivningar och misstag, inklusive endast versaler, inledande gemen, flera ! och ?, extra . i slutet osv."
     topic_views_heat_low: "Efter så här många visningar, blir visningsfältet något betonat."
     topic_views_heat_medium: "Efter så här många visningar, blir visningsfältet måttligt betonat."
@@ -1050,8 +1065,16 @@ sv:
     block_auto_generated_emails: "Blockera inkommande e-post som identifieras som autogenererat."
     ignore_by_title: "Ignorera inkommande e-post baserat på dess rubrik."
     mailgun_api_key: "Mailgun Secret API-nyckel att använda för att verifiera webhook-meddelanden."
+    soft_bounce_score: "Studspoäng har lagt till hos användaren när en tillfällig studs händer."
+    hard_bounce_score: "Studspoäng har lagt på användarens profil när en permanent studs sker."
+    bounce_score_threshold: "Max antal studsar före vi stoppar emaila en användare"
+    bounce_score_threshold_deactivate: "Max antal studsare innan vi inaktiverar en användare"
+    reset_bounce_score_after_days: "Nollställ studspoäng automatiskt efter X dagar."
     attachment_content_type_blacklist: "lista av fraser som används till att svartlista bilagor baserade på innehållstyper"
     attachment_filename_blacklist: "Lista över fraser som används till att svartlista bilagor baserade på filnamnet"
+    enable_forwarded_emails: "[BETA] Tillåt användare att skapa ett ämne genom att vidarebefordra ett email"
+    always_show_trimmed_content: "Tillåt visning av trimmade delar av incomna emails. Varning: kan avslöja emailadresser."
+    manual_polling_enabled: "Flytta emails med hjälp av API för email svar."
     pop3_polling_enabled: "Poll via POP3 för e-postsvar."
     pop3_polling_ssl: "Använd SSL vid anslutning till POP3-servern. (Rekommenderat)"
     pop3_polling_period_mins: "Tidsintervall i minuter mellan varje kontroll av POP3-kontot för e-post. OBS: kräver omstart."
@@ -1075,8 +1098,11 @@ sv:
     allow_animated_thumbnails: "Genererar animerade ikoner av animerade gif:ar."
     default_avatars: "URL:er till avatarer som kommer att användas utgångsläge för nya användare tills de ändrar dem."
     automatically_download_gravatars: "Ladda ned Gravatars för användare vid kontoregistrering eller e-postadressbyte."
+    digest_topics: "Det maximala antalet populära ämnen som visas i email sammanfattningen"
+    digest_posts: "Det maximala antalet populära inlägg som visas i emailsammanställningen"
+    digest_other_topics: "Det maximala antalet ämnen som visas i \"Nya ämnen och kategorier som du följer\" sektionen av email sammanfattningen."
     digest_min_excerpt_length: "Minsta antal inläggsutdrag i e-postsammanfattningen, i tecken."
-    delete_digest_email_after_days: "Undertryck e-postsammanfattningar för användare som inte har besökt webbplatsen i mer än (n) dagar."
+    suppress_digest_email_after_days: "Undertryck email sammanfattningar för användare som inte har besökt sidan på (x) dagar."
     digest_suppress_categories: "Undertryck de här kategorierna från e-postsammanfattningar."
     disable_digest_emails: "Inaktivera e-postsammanfattningar för alla användare."
     detect_custom_avatars: "Huruvida det ska kontrolleras att användare har laddat upp anpassade profilbilder."
@@ -1084,12 +1110,15 @@ sv:
     public_user_custom_fields: "En vitlista av anpassade fält för en användare som kan visas publikt. "
     staff_user_custom_fields: "En vitlista av anpassade fält för en användare som kan visas för personalen."
     enable_user_directory: "Tillhandahåll en bläddringsbar användarkatalog"
+    enable_group_directory: "Förse en fil till grupper som surfar"
     allow_anonymous_posting: "Tillåt användare att växla till anonymt läge"
     anonymous_posting_min_trust_level: "Lägsta förtroendenivå som krävs för att aktivera anonyma inlägg"
     anonymous_account_duration_minutes: "Skapa ett nytt anonymt konto var N minut för varje användare för att skydda anonymiteten. Exempel: om satt till 600: så snart som 600 minuter har gått sedan senaste inlägget OCH användaren väljer anon, så skapas ett nytt anonymt konto.  "
     hide_user_profiles_from_public: "Inaktivera användarkort, användarprofiler och användarförteckningar för anonyma användare."
+    user_website_domains_whitelist: "Användare websidor kommer att verifieras mot dessa domäner. Pipe- avgränsad lista."
     allow_profile_backgrounds: "Tillåt användare att ladda upp profilbakgrunder."
     sequential_replies_threshold: "Antal inlägg en användare måste ha skrivit i rad i ett ämne innan användaren blir påmind om för många svar i sekvens. "
+    get_a_room_threshold: "Antalet inlägg en användare kan göra till samma person inom samma ämnet före det sker en varning."
     enable_mobile_theme: "Mobila enheter använder ett mobilvänligt tema, med möjligheten att byta till standardsidan. Inaktivera detta om du vill använda en anpassad stilmall som är helt responsiv."
     dominating_topic_minimum_percent: "Procent av antalet inlägg en användare måste skriva i ett ämne innan de blir påminda om dominering av ämnet. "
     disable_avatar_education_message: "Inaktivera hjälpmeddelande för byte av avatar."
@@ -1100,6 +1129,8 @@ sv:
     automatically_unpin_topics: "Avklistra automatiskt ämnen när användaren når botten."
     read_time_word_count: "Ordräknare per minut för att beräkna uppskattad lästid."
     topic_page_title_includes_category: "Ämnestitel för sidan inkluderar kategorinamnet. "
+    native_app_install_banner: "Uppmanar återkommande besökare att installera diskussionens special utvecklade app."
+    max_prints_per_hour_per_user: "Maximalt antal av /printade sidhänvisnigar ( satt till 0 för att inaktivera)"
     full_name_required: "Fullständigt namn är ett obligatoriskt fält i en användares profil."
     enable_names: "Visa användarens fullständiga namn på dess profil, användarkort och e-post. Inaktivera för att dölja det fullständiga namnet överallt."
     display_name_on_posts: "Visa en användares fullständiga namn på deras inlägg som tillägg till deras @användarnamn."
@@ -1109,11 +1140,13 @@ sv:
     default_code_lang: "Standardspråk för syntaxmarkering som appliceras på kodblock från GitHub (lang-auto, ruby, python etc)."
     warn_reviving_old_topic_age: "En varning visas när någon börjar skriva ett svar på ett ämne och senaste inlägget är äldre än så här många dagar. Ange 0 för att inaktivera."
     autohighlight_all_code: "Tvinga applicerad syntaxmarkering på alla förformatterade kodblock även när de inte explicit har specifierat språket."
+    highlighted_languages: "Ingår syntax höjda regler. (Varning: att inkludera för många språk kan ha påverkan på prestandan) se: https://highlightjs.org/static/demo/ för en demo"
     feed_polling_enabled: "ENDAST INBÄDDNING: Huruvida RSS/ATOM-flöde ska bäddas in som inlägg."
     feed_polling_url: "ENDAST INBÄDDNING: URL för RSS/ATOM-flöde att bädda in."
     embed_by_username: "Discourse användarnamn för användaren som skapar inbäddade ämnen."
     embed_username_key_from_feed: "Nyckel för att hämta discourse användarnamn från flöde. "
     embed_truncate: "Trunkera de inbäddade inläggen."
+    allowed_href_schemes: "System tillåtna i länkar i motsatsen till http och https."
     embed_post_limit: "Högsta antal inlägg att bädda in."
     embed_username_required: "Användarnamn krävs för skapade av ämne."
     embed_whitelist_selector: "CSS-väljare för element som tillåts bäddas in. "
@@ -1129,6 +1162,7 @@ sv:
     enforce_square_emoji: "Tvinga fram en kvadratisk bildkvot för alla emojis."
     approve_post_count: "Antalet inlägg från en ny användare eller basanvändare som måste godkännas"
     approve_unless_trust_level: "Inlägg för användare under den här förtroendenivån måste godkännas"
+    approve_new_topics_unless_trust_level: "Nya ämnen för användare under denna förtroendenivå måste bli godkända"
     notify_about_queued_posts_after: "Om det finns inlägg som väntat på att granskas i fler än så här många timmar så skickas ett e-postmeddelande till contact_email. Ange 0 för att inaktivera de här e-postmeddelandena."
     auto_close_messages_post_count: "Högsta antal inlägg som tillåts i ett meddelande innan det automatiskt stängs (ange 0 för att inaktivera)"
     auto_close_topics_post_count: "Högsta antal inlägg som tillåts i ett ämne innan det automatiskt stängs (ange 0 för att inaktivera)"
@@ -1145,6 +1179,7 @@ sv:
     default_email_in_reply_to: "Ange standardinställningen till att inkludera ett utdrag av svar till inlägg i e-post."
     default_other_new_topic_duration_minutes: "Global standardförutsättning för vilken ett ämne anses nytt. "
     default_other_auto_track_topics_after_msecs: "Global standardtid innan ett ämne är automatiskt bevakat. "
+    default_other_notification_level_when_replying: "Global standard anmälningsnivå när en användare svarar på ett ämne."
     default_other_external_links_in_new_tab: "Ange standardinställningen till att öppna externa länkar i en ny flik."
     default_other_enable_quoting: "Ange standardinställningen till att aktivera svar med citat för markerad text."
     default_other_dynamic_favicon: "Ange standardinställningen till att visa räknaren för nya/uppdaterade ämnen i webbläsaren."
@@ -1154,17 +1189,28 @@ sv:
     default_categories_watching: "Lista av kategorier som är bevakade som standard."
     default_categories_tracking: "Lista av kategorier som är följda som standard."
     default_categories_muted: "Lista av kategorier som är tystade som standard."
+    default_categories_watching_first_post: "Förteckning över kategorier i vilket första inlägget i varje nytt ämnet kommer att ses som standard."
+    max_user_api_reqs_per_day: "Maximalt antal användare som API´t kräver per nyckel/dag"
+    max_user_api_reqs_per_minute: "Maximalt antal användare API kräver på nyckel/minut"
+    allow_user_api_key_scopes: "Lista över samtliga tillåtna användar-API nycklar "
+    max_api_keys_per_user: "Maximalt antal användar API nycklar per användare"
+    min_trust_level_for_user_api_key: "Förtroende nivå som krävs för att generera användar API nycklar"
     tagging_enabled: "Aktivera taggar för ämnen?"
     min_trust_to_create_tag: "Lägsta förtroendenivå som krävs för att skapa en tagg."
     max_tags_per_topic: "Högsta antal taggar som kan tillskrivas ett ämne."
     max_tag_length: "Högsta antal tecken som kan användas i en tagg."
+    max_tag_search_results: "När man letar efter taggar , maximalt antal resultat som visas"
     show_filter_by_tag: "Visa en rullgardin för att filtrera ämneslistor efter taggar."
     max_tags_in_filter_list: "Högsta antal taggar att visa i filtreringsrullgardinen. De taggar som är mest använda kommer att visas."
     tags_sort_alphabetically: "Visa taggar i alfabetisk ordning. Standard är att visa i popularitetsordning."
     tag_style: "Visuell stil för tagg-utmärkelser."
     staff_tags: "En lista av taggar som endast kan användas av personalen"
     min_trust_level_to_tag_topics: "Lägsta förtroendenivå som krävs för att tagga ämnen"
+    suppress_overlapping_tags_in_list: "Om taggen exakt matchar orden i ämnets titel, visa inte taggen"
     remove_muted_tags_from_latest: "Visa inte ämnen som taggats med dolda taggar i listan med senaste ämnen."
+    company_short_name: "Företagsnamn (kort)"
+    company_full_name: "Företagsnamn (hela)"
+    company_domain: "Företags domän"
     errors:
       invalid_email: "Felaktig e-postadress."
       invalid_username: "Det finns ingen användare med detta användarnamn."
@@ -1205,6 +1251,10 @@ sv:
   redirected_to_top_reasons:
     new_user: "Välkommen till vårt forum! De här är våra mest populära nya ämnen."
     not_seen_in_a_month: "Välkommen tillbaka! Vi har inte sett dig på ett tag. Dessa ämnen har varit mest aktiva med du har varit borta. "
+  merge_posts:
+    errors:
+      different_topics: "Inlägg som härrör sig till olika ämnen kan inte läggas ihop."
+      different_users: "Inlägg som hör till olika användare kan inte lägga ihop."
   move_posts:
     new_topic_moderator_post:
       one: "Ett inlägg har delats in i ett nytt ämne: %{topic_link}"
@@ -1281,6 +1331,8 @@ sv:
     already_logged_in: "Hoppsan, det ser ut som att du försöker acceptera en inbjudan för en annan användare. Logga ut och försök igen om du inte är %{current_user}. "
   user:
     no_accounts_associated: "Inga kopplade konton"
+    deactivated_by_staff: "Avaktiverades av personalen"
+    activated_by_staff: "Aktiverades av personalen"
     username:
       short: "måste var minst %{min} tecken"
       long: "får högst vara %{max} tecken"
@@ -1305,6 +1357,7 @@ sv:
       one: "1 flagga väntar på att bli hanterad"
       other: "%{count} flaggor väntar på att bli hanterade"
   unsubscribe_mailer:
+    title: "stäng av mail skrivaren"
     subject_template: "Bekräfta att du inte längre vill motta e-postuppdateringar från %{site_title}"
     text_body_template: |
       Någon (kanske du?) begärde att inte längre motta e-postuppdateringar från %{site_domain_name}  till den här adressen.
@@ -1315,50 +1368,19 @@ sv:
 
       Om du vill fortsätta att motta e-postuppdateringar så kan du bortse från det här meddelandet.
   invite_mailer:
+    title: "Invitera mail skrivaren"
     subject_template: "%{invitee_name} har bjudit in dig till '%{topic_title}' på %{site_domain_name}"
-    text_body_template: |
-      %{invitee_name} har bjudit in dig till en diskussion
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      på
-
-      > %{site_title} -- %{site_description}
-
-      Om du är intresserad, klicka på länken nedan:
-
-      %{invite_link}
-
-      Denna inbjudan är från en betrodd användare, så du kan direkt delta och svara i diskussionen.
   custom_invite_mailer:
+    title: "Kund inviterar mail skrivare"
     subject_template: "%{invitee_name} har bjudit in dig till '%{topic_title}' på %{site_domain_name}"
-    text_body_template: |
-      %{invitee_name} har bjudit in dig till en diskussion
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      på
-
-      > %{site_title} -- %{site_description}
-
-      Meddelande från %{invitee_name}:
-
-      %{user_custom_message}
-
-      Om du är intresserad, klick på länken nedan:
-
-      %{invite_link}
-
-      Denna inbjudan är från en betrodd användare, så du kan direkt delta och svara i diskussionen.
   invite_forum_mailer:
+    title: "Invitera forumets skrivare"
     subject_template: "%{invitee_name} har bjudit in dig till %{site_domain_name}"
   custom_invite_forum_mailer:
+    title: "Invitera forumets skrivare"
     subject_template: "%{invitee_name} har bjudit in dig till %{site_domain_name}"
   invite_password_instructions:
+    title: "Invitera lösenords instruktioner"
     subject_template: "Ange lösenord för ditt konto på %{site_name}"
     text_body_template: |
       Tack för att du har accepterat inbjudan till %{site_name} -- välkommen hit!
@@ -1368,12 +1390,16 @@ sv:
 
       (Om länken ovanför har löpt ut, klicka på "jag har glömt mitt lösenord" när du loggar in med din e-postadress).
   test_mailer:
+    title: "test mail skrivare"
     subject_template: "[%{site_name}] E-postlevereringstest"
   new_version_mailer:
+    title: "Ny version mail skrivare"
     subject_template: "[%{site_name}] Ny version av Discourse, uppdatering tillgänglig"
   new_version_mailer_with_notes:
+    title: "Ny version mail skrivare med anteckningar"
     subject_template: "[%{site_name}] uppdatering tillgänglig"
   queued_posts_reminder:
+    title: "Påminnelse om köande inlägg"
     subject_template:
       one: "[%{site_name}] 1 användare väntar på att granskas"
       other: "[%{site_name}] %{count} användare väntar på att granskas"
@@ -1395,6 +1421,7 @@ sv:
   temporarily_closed_due_to_flags: "Detta ämne är tillfälligt stängt på grund av ett stort antal flaggor."
   system_messages:
     post_hidden:
+      title: "Gömda inlägg"
       subject_template: "Inlägg dolt på grund av att det flaggats av forumets medlemmar"
       text_body_template: |
         Hej!
@@ -1411,6 +1438,7 @@ sv:
 
         För ytterligare information, se våra [riktlinjer](%{base_url}/guidelines).
     welcome_user:
+      title: "Välkommen Användare"
       subject_template: "Välkommen till %{site_name}!"
       text_body_template: |
         Tack för att du gått med i %{site_name}, och välkommen!
@@ -1423,19 +1451,26 @@ sv:
 
         (Om du som ny användare behöver komma i kontakt med vår [personal](%{base_url}/about), svara bara på detta meddelande)
     welcome_invite:
+      title: "Välkomst invitation"
       subject_template: "Välkommen till %{site_name}!"
     backup_succeeded:
+      title: "Säkerhetskopieringen var framgångsrik"
       subject_template: "Säkerhetskopia skapades utan problem"
     backup_failed:
+      title: "Säkerhetskopieringen misslyckades"
       subject_template: "Säkerhetskopiering misslyckades"
     restore_succeeded:
+      title: "restaureringen lyckades"
       subject_template: "Återställningen lyckades!"
     restore_failed:
+      title: "Restaureringen misslyckades"
       subject_template: "Återställningen misslyckades"
     bulk_invite_succeeded:
+      title: "Mängd inbjudningarna lyckades"
       subject_template: "Massinbjudning av användare behandlades utan fel "
       text_body_template: "Din massinbjudning av användare behandlades, %{sent} inbjudningar skickades."
     bulk_invite_failed:
+      title: "Mängd invitationerna misslyckades"
       subject_template: "Massrekrytering av användare genererade fel"
       text_body_template: |
         Din massrekrytering av användare behandlades, %{sent} inbjudningar skickades med %{failed} fel.
@@ -1446,58 +1481,62 @@ sv:
         %{logs}
         ```
     csv_export_succeeded:
+      title: "CSV exporten lyckades"
       subject_template: "Dataexport lyckades"
-      text_body_template: |
-        Din dataexport lyckades! :dvd:
-
-        <a class="attachment" href="%{download_link}">%{file_name}</a> (%{file_size})
-
-        Länken ovanför löper ut om 48 timmar.
     csv_export_failed:
+      title: "CSV exporten misslyckades"
       subject_template: "Dataexport misslyckades"
       text_body_template: "Tyvärr har din dataexport misslyckats. Var god kontrollera loggarna eller kontakta personal."
     email_reject_insufficient_trust_level:
+      title: "email avslår otillräcklig förtroendenivå"
       subject_template: " [%{site_name}] E-postfel -- Otillräcklig förtroendenivå"
       text_body_template: |
         Tyvärr har ditt e-postmeddelande till %{destination} (med ämnet %{former_title}) inte kunnat skickas.
 
         Ditt konto har inte tillräckligt hög förtroendenivå för att skriva nya inlägg från den e-postadressen. Kontakta personal om du tror att det här är ett misstag.
     email_reject_user_not_found:
+      title: "Emailet avslås användare kunde inte finnas"
       subject_template: "[%{site_name}] E-postfel --  Okänd användare"
       text_body_template: |
         Tyvärr har ditt e-postmeddelande till %{destination} (med ämnet %{former_title}) inte kunnat skickas.
 
         Ditt svarsmeddelande skickades från en okänd e-postadress. Försök skicka meddelandet från en annan e-postadress, eller kontakta personal.
     email_reject_screened_email:
+      title: "Email avslås screenade email"
       subject_template: "[%{site_name}] E-postfel -- Blockerad e-postadress"
       text_body_template: |
         Tyvärr har ditt e-postmeddelande till %{destination} (med ämnet %{former_title}) inte kunnat skickas.
 
         Ditt svarsmeddelande skickades från en blockerad e-postadress. Försök skicka svaret från en annan e-postadress eller kontakta personal.
     email_reject_inactive_user:
+      title: "Emailet avslås Inaktiverad användare"
       subject_template: "[%{site_name}] E-postfel -- Inaktiv användare"
       text_body_template: |
         Tyvärr har ditt e-postmeddelande till %{destination} (med ämnet %{former_title}) inte kunnat skickas.
 
         Kontot associerat till den här e-postadressen är inte aktiverat. Var god se till att ditt konto är aktiverat innan du skickar e-post.
     email_reject_blocked_user:
+      title: "Email avslås blockerad användare"
       subject_template: "[%{site_name}] E-postfel -- Användare blockerad"
       text_body_template: |
         Tyvärr har ditt e-postmeddelande till %{destination} (med ämnet %{former_title}) inte kunnat skickas.
 
         Kontot associerat till den här e-postadressen har blockerats.
     email_reject_reply_user_not_matching:
+      title: "Emailet avslås användare hittas ej"
       text_body_template: |
         Tyvärr har ditt e-postmeddelande till %{destination} (med ämnet %{former_title}) inte kunnat skickas.
 
         Ditt svarsmeddelande skickades från en annan e-postadress än den vi väntat oss, så vi är inte säkra på att det är från samma person. Försök skicka svaret från en annan e-postadress eller kontakta personal.
     email_reject_no_account:
+      title: "Emailet avslås det finns inget konto"
       subject_template: "[%{site_name}] E-postfel -- Okänt konto"
       text_body_template: |
         Tyvärr har ditt e-postmeddelande till %{destination} (med ämnet %{former_title}) inte kunnat skickas.
 
         Vi kan inte hitta något konto som matchar din e-postadress. Försök skicka meddelandet från en annan e-postadress eller kontakta personal.
     email_reject_empty:
+      title: "Emailet avslås - tomt"
       subject_template: "[%{site_name}] E-postfel -- Innehåll saknas"
       text_body_template: |
         Tyvärr har ditt e-postmeddelande till %{destination} (med ämnet %{former_title}) inte kunnat skickas.
@@ -1511,24 +1550,28 @@ sv:
 
         Vi kunde inte hitta något svar i ditt e-postmeddelande. **Se till att ditt svar är högst upp i e-postmeddelandet** -- vi kan inte hantera inbäddad text.
     email_reject_invalid_access:
+      title: "Emailet avslås ogiltig åtkomst"
       subject_template: "[%{site_name}] E-postfel -- Ogiltig åtkomst"
       text_body_template: |
         Tyvärr har ditt e-postmeddelande till %{destination} (med ämnet %{former_title}) inte kunnat skickas.
 
         Ditt konto har inte rättighet att skriva nya inlägg i den kategorin. Kontakta personal om du tror att det här är ett misstag.
     email_reject_strangers_not_allowed:
+      title: "Emailet avslås okända är ej tillåtna"
       subject_template: "[%{site_name}] E-postfel -- Ogiltig åtkomst"
       text_body_template: |
         Tyvärr har ditt e-postmeddelande till %{destination} (med ämnet %{former_title}) inte kunnat skickas.
 
         Kategorin som du skickat e-postmeddelandet till godkänner endast inlägg från användare med giltiga konton och kända e-postadresser. Kontakta personal om du tror att det här är ett misstag.
     email_reject_invalid_post:
+      title: "Emailet avslås ogiltigt inlägg"
       subject_template: "[%{site_name}] E-postfel -- Inläggsfel"
       text_body_template: |
         Tyvärr har ditt e-postmeddelande till %{destination} (med ämnet %{former_title}) inte kunnat skickas.
 
         Några möjliga anledningar är: för komplex formattering, meddelandet är för stort, meddelandet är för litet. Var vänlig försök igen, eller gör ett inlägg via hemsidan om problemet fortsätter.
     email_reject_invalid_post_specified:
+      title: "Emailet avslås ogiltigt inlägg specificerat"
       subject_template: "[%{site_name}] E-postfel -- Inläggsfel"
       text_body_template: |
         Tyvärr har ditt e-postmeddelande till %{destination} (med ämnet %{former_title}) inte kunnat skickas.
@@ -1539,42 +1582,49 @@ sv:
 
         Om du kan åtgärda problemet, var vänlig försök igen.
     email_reject_invalid_post_action:
+      title: "Emailet avslås ogiltigt inlägg"
       subject_template: "[%{site_name}] E-postfel -- Ogiltig poståtgärd"
       text_body_template: |
         Tyvärr har ditt e-postmeddelande till %{destination} (med ämnet %{former_title}) inte kunnat skickas.
 
         Poståtgärden kändes inte igen. Var vänlig försök igen, eller gör ett inlägg via hemsidan om problemet fortsätter.
     email_reject_reply_key:
+      title: "Emailet avvisar svars nyckeln"
       subject_template: "[%{site_name}] E-postfel -- Okänd svarsnyckel"
       text_body_template: |
         Tyvärr har ditt e-postmeddelande till %{destination} (med ämnet %{former_title}) inte kunnat skickas.
 
         Svarsnyckeln i e-postmeddelandet är ogiltigt eller okänt, så vi vet inte vad det är e-postmeddelandet är ett svar till. Kontakta personal.
     email_reject_bad_destination_address:
+      title: "Emailet avslås dålig mottagaradress"
       subject_template: "[%{site_name}] E-postfel -- Okänd mottagaradress"
       text_body_template: |
         Tyvärr har ditt e-postmeddelande till %{destination} (med ämnet %{former_title}) inte kunnat skickas.
 
         Inga av mottagaradresserna kunde identifieras. Var god se till att du skickar till en korrekt e-postadress tillhandahållen av personalen.
     email_reject_topic_not_found:
+      title: "Emailet avslås ämnet fanns ej"
       subject_template: "[%{site_name}] E-postfel -- Okänt ämne"
       text_body_template: |
         Tyvärr har ditt e-postmeddelande till %{destination} (med ämnet %{former_title}) inte kunnat skickas.
 
         Ämnet du försöker svara i finns inte längre, kanske har den raderats? Kontakta personal om du tror att det här är ett misstag.
     email_reject_topic_closed:
+      title: "Emailet avslås ämnet är stängt"
       subject_template: "[%{site_name}] E-postfel -- Ämne avstängt"
       text_body_template: |
         Tyvärr har ditt e-postmeddelande till %{destination} (med ämnet %{former_title}) inte kunnat skickas.
 
         Ämnet som du svarar i är för närvarande avstängt och tar inte emot svarsmeddelanden. Kontakta personal om du tror att det här är ett misstag.
     email_reject_auto_generated:
+      title: "Emailet avslås detta är autogenererat"
       subject_template: "[%{site_name}] E-postfel -- Autogenererat svar"
       text_body_template: |
         Tyvärr har ditt e-postmeddelande till %{destination} (med ämnet %{former_title}) inte kunnat skickas.
 
         Ditt e-postmeddelande har flaggats som "autogenererat", vilket betyder att e-postmeddelandet är skapat av en dator och inte skrivet av en människa. Vi kan tyvärr inte acceptera den typen av e-post. Kontakta personal om du tror att det här är ett misstag.
     email_error_notification:
+      title: "Email felmeddelanden"
       subject_template: "[%{site_name}] E-postfel --  POP autentisieringsfel"
       text_body_template: |
         Tyvärr uppstod ett autentiseringsproblem vid sökningen efter e-post från POP-servern.
@@ -1583,6 +1633,7 @@ sv:
 
         Om det finns ett gränssnitt för e-postkontot till POP så kan du behöva logga in och kontrollera dina inställningar där.
     too_many_spam_flags:
+      title: "För många skräppost flaggningar"
       subject_template: "Nytt konto pausat"
       text_body_template: |
         Hej!
@@ -1603,6 +1654,7 @@ sv:
 
         För ytterligare information, se våra [riktlinjer](%{base_url}/guidelines).
     blocked_by_staff:
+      title: "Blockerat av personal"
       subject_template: "Konto tillfälligt pausat"
       text_body_template: |
         Hej!
@@ -1613,6 +1665,7 @@ sv:
 
         För mer information, se våra [riktlinjer](%{base_url}/guidelines).
     user_automatically_blocked:
+      title: "Användare blir automatiskt blockerad"
       subject_template: "Ny användare  %{username} blockerad på grund av flaggningar från forumet"
       text_body_template: |
         Det här är ett automatiserat meddelande.
@@ -1623,6 +1676,7 @@ sv:
 
         Du kan också modifiera inställningen `block_new_user` via Webbplatsinställningar.
     spam_post_blocked:
+      title: "Skräppost är blockerat"
       subject_template: "Ny användare %{username} har fått meddelanden blockerade pga. upprepade länkar "
       text_body_template: |
         Det här är ett automatiserat meddelande.
@@ -1633,6 +1687,7 @@ sv:
 
         Du kan också modifiera webbplatsinställningarna `newuser_spam_host_threshold`och `white_listed_spam_host_domains`.
     unblocked:
+      title: "Avblockerat"
       subject_template: "Konto ej längre pausat"
       text_body_template: |
         Hej!
@@ -1641,6 +1696,7 @@ sv:
 
         Du kan nu skriva inlägg och skapa nya ämnen igen. Tack för ditt tålamod.
     pending_users_reminder:
+      title: "Påminnelse om väntande användare"
       subject_template:
         one: "1 användare väntar på godkännande"
         other: "%{count} användare väntar på godkännande"
@@ -1649,9 +1705,11 @@ sv:
 
         [Var vänlig och granska dem på administratörssidan](%{base_url}/admin/users/list/pending).
     download_remote_images_disabled:
+      title: "Nerladdningen av externa bilder är avaktiverad"
       subject_template: "Nedladdning av externa bilder har avaktiverats"
       text_body_template: "Inställningen `download_remote_images_to_local` har avaktiverats eftersom att diskutrymmet har nått sin övre gräns."
     dashboard_problems:
+      title: "Instrumentpanels problem"
       subject_template: "Problem har upptäckts"
       text_body_template: |
         Några problem har rapporterats på din översiktspanel på administrationssidorna.
@@ -1699,6 +1757,7 @@ sv:
 
       > %{site_title} -- %{site_description}
     user_invited_to_private_message_pm:
+      title: "Användare invitera personligt"
       subject_template: "[%{site_name}] %{username} har bjudit in dig till en privat konversation '%{topic_title}'"
       text_body_template: |
         %{header_instructions}
@@ -1715,6 +1774,7 @@ sv:
 
         %{respond_instructions}
     user_invited_to_topic:
+      title: "Användare inviterad till ämnet"
       subject_template: "[%{site_name}] %{username} bjöd in dig till '%{topic_title}'"
       text_body_template: |
         %{header_instructions}
@@ -1723,6 +1783,7 @@ sv:
 
         %{respond_instructions}
     user_replied:
+      title: "Användare svarade"
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -1733,6 +1794,7 @@ sv:
 
         %{respond_instructions}
     user_replied_pm:
+      title: "Användare svarade personligen"
       subject_template: "[%{site_name}] [PM] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -1743,6 +1805,7 @@ sv:
 
         %{respond_instructions}
     user_quoted:
+      title: "Användare citerade"
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -1753,6 +1816,7 @@ sv:
 
         %{respond_instructions}
     user_linked:
+      title: "Användares länk"
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -1763,6 +1827,7 @@ sv:
 
         %{respond_instructions}
     user_mentioned:
+      title: "Användare som nämns"
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -1773,6 +1838,7 @@ sv:
 
         %{respond_instructions}
     user_group_mentioned:
+      title: "Användargrupp som nämns"
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -1783,6 +1849,7 @@ sv:
 
         %{respond_instructions}
     user_posted:
+      title: "Användare publicerade"
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -1793,6 +1860,7 @@ sv:
 
         %{respond_instructions}
     user_watching_first_post:
+      title: "Användare bevakar första inlägget"
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -1819,6 +1887,18 @@ sv:
         %{message}
     digest:
       why: "En kortfattad sammanfattning av %{site_link} sedan ditt senaste besök den %{last_seen_at}"
+      since_last_visit: "Sedan ditt senaste besök"
+      new_topics: "Nya ämnen"
+      unread_messages: "olästa meddelanden"
+      unread_notifications: "Olästa meddelanden"
+      liked_received: "Gillanden mottagna"
+      new_posts: "Nytt meddelande"
+      new_users: "Ny användare"
+      popular_topics: "Populära ämnen"
+      follow_topic: "Glöm detta ämne"
+      join_the_discussion: "Läs mer"
+      popular_posts: "Populära meddelanden"
+      more_new: "Nytt för er"
       subject_template: "[%{site_name}] Sammanfattning"
       unsubscribe: "Den här sammanfattningen har skickats från %{site_link} där vi inte har sett dig på ett tag. För att säga upp dig %{unsubscribe_link}."
       click_here: "klicka här"
@@ -1833,6 +1913,7 @@ sv:
       view_this_topic: "Se det här ämnet"
       back_to_top: "Tillbaka till början"
     forgot_password:
+      title: "Glömt lösenord"
       subject_template: "[%{site_name}] Återställning av lösenord"
       text_body_template: |
         Någon bad om att få återställa ditt lösenord på [%{site_name}](%{base_url}).
@@ -1842,6 +1923,7 @@ sv:
         Klicka på följande länk för att välja ett nytt lösenord:
         %{base_url}/users/password-reset/%{email_token}
     set_password:
+      title: "Välj lösenord"
       subject_template: "[%{site_name}] Ange lösenord"
       text_body_template: |
         Någon har begärt att lägga till ett lösenord till ditt konto på [%{site_name}](%{base_url}). Du kan också logga in genom att använda någon av våra alternativa onlinetjänster (Google eller Facebook) som är kopplat till din validerade e-postadress.
@@ -1851,6 +1933,7 @@ sv:
         Följ nedanstående länk för att välja ett nytt lösenord:
         %{base_url}/users/password-reset/%{email_token}
     admin_login:
+      title: "Administratörs login"
       subject_template: "[%{site_name}] Logga in"
       text_body_template: |
         Någon bad om att få återställa ditt lösenord på [%{site_name}](%{base_url}).
@@ -1860,6 +1943,7 @@ sv:
         Klicka på följande länk för att logga in:
         %{base_url}/users/password-reset/%{email_token}
     account_created:
+      title: "Konto skapat"
       subject_template: "[%{site_name}] Ditt nya konto"
       text_body_template: |
         Ett nytt konto har skapats för dig på %{site_name}
@@ -1867,12 +1951,14 @@ sv:
         Klicka på följande länk för att välja ett nytt lösenord för ditt nya konto:
         %{base_url}/users/password-reset/%{email_token}
     confirm_new_email:
+      title: "Bekräfta den nya emailadressen"
       subject_template: "[%{site_name}] Bekräfta din nya e-postadress"
       text_body_template: |
         Bekräfta din nya e-postadress för %{site_name} genom att klicka på länken nedanför:
 
         %{base_url}/users/authorize-email/%{email_token}
     confirm_old_email:
+      title: "Bekräfta den gamla email adressen"
       subject_template: "[%{site_name}] Bekräfta din nuvarande e-postadress"
       text_body_template: |
         Vänligen bekräfta att du kontrollerar den här e-postadressen innan vi ändrar din e-postadress.
@@ -1881,6 +1967,7 @@ sv:
 
         %{base_url}/users/authorize-email/%{email_token}
     notify_old_email:
+      title: "Meddela gamla epostmeddelanden"
       subject_template: "[%{site_name}] Din e-postadress har ändrats "
       text_body_template: |
         Det här är ett automatiserat meddelande för att informera dig om att din e-postadress för %{site_name} har ändrats. Var vänlig kontakta en administratör om det inte var din avsikt.
@@ -1889,6 +1976,7 @@ sv:
 
         %{new_email}
     signup_after_approval:
+      title: "Bli medlem efter godkännande"
       subject_template: "Du har blivit godkänd på %{site_name}!"
       text_body_template: |
         Välkommen till %{site_name}!
@@ -1908,6 +1996,7 @@ sv:
 
         (Om du som ny användare behöver komma i kontakt med vår [personal](%{base_url}/about), svara bara på detta meddelande.)
     signup:
+      title: "Bli medlem"
       subject_template: "[%{site_name}] Verifiera ditt nya konto"
       text_body_template: |
         Välkommen till %{site_name}!
@@ -1965,6 +2054,7 @@ sv:
     message_to_blank: "message.to är tomt"
     text_part_body_blank: "text_part.body är tomt"
     body_blank: "body är tom"
+    no_echo_mailing_list_mode: "Email list meddelande är inaktiverat för användarens egna meddelanden"
   color_schemes:
     base_theme_name: "Bas"
   about: "Om"
@@ -2311,6 +2401,117 @@ sv:
     staff_tag_disallowed: "Taggen \"%{tag}\" kan endast användas av personalen."
     staff_tag_remove_disallowed: "Taggen \"%{tag}\" kan endast tas bort av personalen."
   rss_by_tag: "Ämnen taggade med %{tag}"
+  finish_installation:
+    congratulations: "Grattis, ert diskussionsforum är installerat"
+    register:
+      button: "Registrera"
+      title: "Registrera ett admin konto"
+      help: "registrera en nytt konto för att kunna starta"
+    confirm_email:
+      title: "Bekräfta er email"
+    resend_email:
+      title: "Återsänd aktiverings emial"
+  safe_mode:
+    title: "ange felsäkert läge"
+    description: "I felsäkert läge kan du testa din webplats utan att ladda ner några plugins eller anpassade webplatser."
+    no_customizations: "Inaktivera alla webplats inställningar"
+    only_official: "Inaktivera alla inofficiella plugins"
+    no_plugins: "Inaktivera alla plugins"
+    enter: "Starta felsäkert läge"
+  wizard:
+    title: "Diskussions inställningar"
+    step:
+      locale:
+        title: "Välkomment till ditt diskussionsforum"
+        fields:
+          default_locale:
+            description: "Vilket är standardspråket för din grupp?"
+      forum_title:
+        title: "Namn"
+        fields:
+          title:
+            label: "Er forums namn"
+            placeholder: "Jane´s hangout"
+          site_description:
+            label: "Beskriv er grupp i en kort mening"
+            placeholder: "En plats för Jane och hennes vänner för att diskutera häftiga ämnen"
+      introduction:
+        title: "Introduktion"
+        fields:
+          welcome:
+            label: "Välkomst ämne"
+            one_paragraph: "Var vänlig begränsa er välkomst meddelande till en paragraf."
+      privacy:
+        title: "Tillgång"
+        fields:
+          privacy:
+            choices:
+              open:
+                label: "Publikt"
+                description: "Alla har tillgång till denna grupp och kan söka medlemskap"
+              restricted:
+                label: "Privat"
+                description: "Enbart människor som jag har inviterat eller gett tilåtelse till har åtkomst till denna grupp"
+      contact:
+        title: "kontakt"
+        fields:
+          contact_email:
+            label: "mail"
+            placeholder: "namn@exempel.com"
+          contact_url:
+            label: "Web sida"
+          site_contact:
+            label: "Automatiska meddelanden"
+      corporate:
+        title: "Organisation"
+        fields:
+          company_short_name:
+            label: "(korta) företagsnamnet"
+          company_full_name:
+            label: "(Hela) företagsnamnet"
+          company_domain:
+            label: "Företagsdomän namn"
+      colors:
+        title: "Tema"
+        fields:
+          theme_id:
+            description: "Föredrar du en ljus eller mörk färgkarta att starta med? Du kan längre fram skräddarsy utseende och känsla på din sida via Admin, Customize."
+            choices:
+              default:
+                label: "Enkelt ljus"
+              dark:
+                label: "Enkelt mörkt"
+      logos:
+        title: "Logotyper"
+        fields:
+          logo_url:
+            label: "Primär logo"
+            description: "Logon i övre vänster sida av din webplats. Använd en bred rektangulär form."
+          logo_small_url:
+            label: "Kompakt logo"
+      icons:
+        title: "Ikoner"
+        fields:
+          favicon_url:
+            label: "Små ikoner"
+          apple_touch_icon_url:
+            label: "Stora ikoner"
+      homepage:
+        title: "Hemsida"
+        fields:
+          homepage_style:
+            choices:
+              latest:
+                label: "Senaste ämnen"
+              categories:
+                label: "Kategorier"
+      emoji:
+        title: "Emojer"
+        description: "Vilken emoj stil föredrar du för din grupp? Du kan addera fler personliga Emojer senare via Admin, Customize, Emoj."
+      invites:
+        title: "Invitera personal"
+      finished:
+        title: "Er diskussionsgrupp är klar!"
   activemodel:
     errors:
       <<: *errors

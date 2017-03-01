@@ -395,7 +395,7 @@ pl_PL:
         title: 'Edytuj grupę'
         full_name: 'Pełna nazwa'
         add_members: "Dodaj użytkowników"
-        delete_member_confirm: "Usuń '%{username}' z grupy '%{group}'?"
+        delete_member_confirm: "Czy usunąć użytkownika '%{username}' z grupy '%{group}'?"
       request_membership_pm:
         title: "Prośba o członkostwo"
         body: "Chciałbym(-am) poprosić o członkostwo w grupie @%{groupName}."
@@ -646,6 +646,8 @@ pl_PL:
         error: "(błąd)"
         action: "Wyślij wiadomość email resetującą hasło"
         set_password: "Ustaw hasło"
+        choose_new: "Wyberz nowe hasło"
+        choose: "Wybierz hasło"
       change_about:
         title: "Zmień O mnie"
         error: "Wystąpił błąd podczas zmiany tej wartości."
@@ -701,13 +703,11 @@ pl_PL:
         instructions: "unikalna, bez spacji, krótka"
         short_instructions: "Inni mogą o tobie wspomnieć pisząc @{{username}}"
         available: "Nazwa użytkownika jest dostępna"
-        global_match: "Email zgadza się z zarejestrowaną nazwą użytkownika"
-        global_mismatch: "Zajęta. Może spróbuj {{suggestion}}?"
         not_available: "Niedostępna. Może spróbuj {{suggestion}}?"
+        not_available_no_suggestion: "Niedostępne"
         too_short: "Nazwa użytkownika jest zbyt krótka"
         too_long: "Nazwa użytkownika jest zbyt długa"
         checking: "Sprawdzanie, czy nazwa jest dostępna…"
-        enter_email: 'Nazwa użytkownika znaleziona – wpisz przypisany adres email'
         prefilled: "Email zgadza się z zarejestrowaną nazwą użytkownika"
       locale:
         title: "Język interfejsu"
@@ -807,10 +807,10 @@ pl_PL:
         link_generated: "Link z zaproszenie został poprawnie wygenerowany!"
         valid_for: "Link do zaproszenia jest ważny tylko dla tego adresu: %{email}"
         bulk_invite:
-          none: "Jeszcze nikogo nie zaprosiłeś. Możesz wysłać pojedyncze zaproszenie lub zaprosić wiele osób na raz poprzez <a href='https://meta.discourse.org/t/send-bulk-invites/16468'> wysłanie pliku CSV</a>."
+          none: "Jeszcze nikogo nie zaprosiłeś. Możesz wysłać pojedyncze zaproszenia lub zaprosić wiele osób na raz poprzez <a href='https://meta.discourse.org/t/send-bulk-invites/16468'> wysłanie pliku CSV</a>."
           text: "Zaproszenia hurtowe z pliku"
           success: "Plik został przesłany pomyślnie: otrzymasz prywatną wiadomość, gdy proces zostanie zakończony."
-          error: "Przepraszam, plik powinien być w formacie csv."
+          error: "Przykro nam, ale wymagany format pliku to CSV."
       password:
         title: "Hasło"
         too_short: "Hasło jest za krótkie."
@@ -1017,6 +1017,7 @@ pl_PL:
       to_continue: "Zaloguj się"
       preferences: "Musisz się zalogować, aby zmieniać swoje ustawienia."
       forgot: "Nie pamiętam konta"
+      not_approved: "Twoje konto nie zostało jeszcze aktywowane. Zostaniesz powiadomiony emailem gdy będziesz mógł się zalogować."
       google:
         title: "przez Google"
         message: "Uwierzytelnianie przy pomocy konta Google (upewnij się, że blokada wyskakujących okienek nie jest włączona)"
@@ -1038,6 +1039,16 @@ pl_PL:
       github:
         title: "przez GitHub"
         message: "Uwierzytelnianie przez GitHub (upewnij się, że blokada wyskakujących okienek nie jest włączona)"
+    invites:
+      accept_title: "Zaproszenie"
+      welcome_to: "Witaj na %{site_name}!"
+      invited_by: "Zostałeś zaproszony przez:"
+      your_email: "Adres e-mail przypisany do twojego konta to <b>%{email}</b>."
+      accept_invite: "Akceptuj zaproszenie"
+      success: "Twje konto zostało utworzone i zostałeś zalogowany."
+      password_label: "Ustaw hasło (opcjonalne)"
+    password_reset:
+      continue: "Przejdź do %{site_name}"
     emoji_set:
       apple_international: "Apple/Międzynarodowy"
       google: "Google"
@@ -1504,11 +1515,8 @@ pl_PL:
         make_banner: "Ustaw jako baner"
         remove_banner: "Wyłącz baner"
       reply:
-        post:
-          title: 'Odpowiedz'
-        topic:
-          title: 'Odpowiedz'
-          help: 'zacznij tworzyć odpowiedź na ten temat'
+        title: 'Odpowiedz'
+        help: 'zacznij tworzyć odpowiedź do tego tematu'
       clear_pin:
         title: "Odepnij"
         help: "Odepnij ten temat. Przestanie wyświetlać się na początku listy tematów."
@@ -1651,6 +1659,7 @@ pl_PL:
       wiki_last_edited_on: "wiki ostatnio edytowane w"
       last_edited_on: "ostatnia edycja wpisu"
       reply_as_new_topic: "Odpowiedz w nowym temacie"
+      reply_as_new_private_message: "Odpowiedź w nowej wiadomości do tego samego odbiorcy"
       continue_discussion: "Kontynuując dyskusję z {{postLink}}:"
       follow_quote: "idź do cytowanego wpisu"
       show_full: "Pokaż pełny wpis"
@@ -1874,7 +1883,8 @@ pl_PL:
           hide: "Ukryj tę wersję"
           show: "Pokaż tę wersję"
           revert: "Przywróć do tej wersji"
-          edit_wiki: "Edytuj wiki"
+          edit_wiki: "Edytuj Wiki"
+          edit_post: "Edytuj wpis"
           comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> <i class='fa fa-arrows-h'></i> <strong>{{current}}</strong> / {{total}}"
         displays:
           inline:

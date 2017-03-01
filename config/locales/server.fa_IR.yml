@@ -34,7 +34,6 @@ fa_IR:
   anonymous: "ناشناس"
   emails:
     incoming:
-      default_subject: "ایمیل دریافتی از %{email}"
       show_trimmed_content: "نمایش محتوای پنهان شده."
       maximum_staged_user_per_email_reached: "تکمیل ظرفیت تعداد حساب های کاربری با هر ایمیل."
       errors:
@@ -202,32 +201,6 @@ fa_IR:
       - Constructive criticism is welcome, but criticize *ideas*, not people.
 
       For more, [see our community guidelines](/guidelines). This panel will only appear for your first %{education_posts_text}.
-    sequential_replies: |
-      ### Consider replying to several posts at once
-
-      Rather than many sequential replies to a topic, please consider a single reply that includes quotes from previous posts or @name references.
-
-      You can edit your previous reply to add a quote by highlighting text and selecting the <b>quote reply</b> button that appears.
-
-      It's easier for everyone to read topics that have fewer in-depth replies versus lots of small, individual replies.
-    dominating_topic: |
-      ### Let others join the conversation
-
-      This topic is clearly important to you &ndash; you've posted more than %{percent}% of the replies here.
-
-      Are you sure you're providing adequate time for other people to share their points of view, too?
-    too_many_replies: |
-      ### You have reached the reply limit for this topic
-
-      We're sorry, but new users are temporarily limited to %{newuser_max_replies_per_topic} replies in the same topic.
-
-      Instead of adding another reply, please consider editing your previous replies, or visiting other topics.
-    reviving_old_topic: |
-      ### Revive this topic?
-
-      The last reply to this topic is now over %{days} days old. Your reply will bump the topic to the top of its list and notify anyone previously involved in the conversation.
-
-      Are you sure you want to continue this old conversation?
   activerecord:
     attributes:
       category:
@@ -385,14 +358,11 @@ fa_IR:
         other: "حداقل %{count} سال قبل"
   password_reset:
     no_token: "متآسفیم, پیوند تغییر رمز عبور بسیار قدیمی است. دکمه ورود را انتخاب کنید و از 'من رمز عبور خود را فراموش کرده ام' برای دریافت یک پیوند جدید استفاده کنید."
-    choose_new: "لطفا یک رمز عبور جدید وارد کنید"
-    choose: "لطفا یک رمز عبور وارد کنید"
     update: 'به‌روز کردن گذرواژه'
     save: 'تنظیم رمز عبور'
     title: 'بازیابی گذرواژه'
     success: "شما با موفقیت رمز عبورتان را تغییر دادید و الان وارد سیستم هستید. "
     success_unapproved: "شما با موفقیت رمز عبورتان را تغییر دادید."
-    continue: "برو به %{site_name}"
   change_email:
     confirmed: "ایمیل شما به روز شد."
     please_continue: "برو به %{site_name}"
@@ -611,8 +581,6 @@ fa_IR:
     facebook_config_warning: 'سرور تنظیم شده تا اجازه دهد به ثبت نام و وارد شدن یا فیس بوک (enable_facebook_logins), ولی ID برنامه٬  ارزش های مخفی برنامه تنظیم نشده است. برو به  <a href="/admin/site_settings"> تنظیمات سایت </a> و بروز رسانی تنظیمات  <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank"> راهنما را ببین برای دانستن بیشتر</a>.'
     twitter_config_warning: 'سرور تنظیم شده تا اجازه دهد برای ثبت نام و وارد شدن با تیوتر (enable_twitter_logins), ولی کلید و ارزش های مخفی تنظیم نشده شده است. برو به  <a href="/admin/site_settings"> تنظیمات سایت </a> بروز رسانی و تنظیمات. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank"> راهنما را ببین برای دانستن بیشتر</a>.'
     github_config_warning: 'سرور تنظیم شده تا اجازه دهد برای ثبت نام و وارد شدن با GitHub (enable_github_logins), ولی مشتری و ارزش های مخقی تنظیم نشده است.  برو به <a href="/admin/site_settings"> تنظیمات سایت </a> بروز رسانی و تنظیمات.  <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank"> راهنما را ببین برای دانستن بیشتر</a>.'
-    s3_config_warning: 'سرور تنظیم شده برای بارگزاری فایل به  s3 ولی حداقل یکی از تنظیمات پیش رو تنظیم نشده است:  s3_access_key_id, s3_secret_access_key or s3_upload_bucket.  برو به <a href="/admin/site_settings"> تنظیمات سایت </a>  و بروز رسانی و تنظیمات. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank"> این را ببین برای بارگزاری های  عکس به  S3؟"  برای کسب اطلاعات بیشتر </a>.'
-    s3_backup_config_warning: 'سرور تنظیم شده برای بارگزاری نسخه پشتیبان  به  s3 ولی حداقل یکی از تنظیمات پیش رو تنظیم نشده است:  : s3_access_key_id, s3_secret_access_key or s3_backup_bucket. برو به <a href="/admin/site_settings"> تنظیمات سایت </a> و بروز رسانی و تنظیمات  <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">  این را ببین برای تنظیم ارسال عکس ها به S3؟ "  برای کسب اطلاعات بیشتر </a>.'
     image_magick_warning: 'سرور تنظیم شده برای ساخت تامبنیل های عکس های بزرگ. ولی  ImageMagick نصب نشده است. ImageMagick را نصب کن با استفاده از بسته مدیریت یا <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank"> آخرین نسخه را دانلود کن. '
   site_settings:
     censored_words: "کلماتی که به صورت خودکار جایگزین می شوند با  &#9632;&#9632;&#9632;&#9632;"
@@ -646,6 +614,7 @@ fa_IR:
     max_image_width: "حداکثر عرض تامبنیل عکس ها در نوشته."
     max_image_height: "حداکثر طول تامبنیل عکس ها در نوشته."
     category_featured_topics: "تعداد جستارهای نمایش داداه شده به دسته بندی در صفحه دسته بندی ها. بعد از عوض کردن این مقدار٬ تا 15 دقیقه زمان می برد تا صفحه دسته بندی ها به روز شود. "
+    show_subcategory_list: "نمایش زیر دسته بندی ها به جای لیست موضوع هنگام ورود به یک دسته بندی."
     fixed_category_positions: "اگر چک شده باشد٬ شما این امکان را دارید تا دسته بندی ها را به ترتیب در یک نظم ثابت قرار دهید. اگر چک نشده باشد٬ دسته بندی ها بر اساس فعالیتشان قرار می گیرند. "
     fixed_category_positions_on_create: "اگر انتخاب شود بدین معنی است که ترتیب دسته‌ها در پنجره ایجاد یک عنوان جدید مدیریت خواهد شد (نیازمند  fixed_category_positions است)."
     add_rel_nofollow_to_user_content: "nofollow REL را اضافه کن به تمام محتویات ارسال شده کاربر٬ بجر برای پیوندهای داخلی (به همراه دامنه های والد). اگر این را عوض کردی٬‌ باید تمام پست ها را rebake کنی با : \"rake posts:rebake\""
@@ -1003,22 +972,6 @@ fa_IR:
       other: "%{count} نشانه ها منتظر استفاده"
   invite_mailer:
     subject_template: "%{invitee_name} شما را دعوت کرده به %{topic_title}' در  %{site_domain_name}"
-    text_body_template: |
-      %{invitee_name} شما را دعوت کرده به یک گفتگو
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      در
-
-      > %{site_title} -- %{site_description}
-
-      اگر علاقه مند هستید بر روی پیوند پایین کلیک کنید:‌
-
-      %{invite_link}
-
-      این دعوتنامه از طرف یک کاربر قابل اعتماد است٬ پس شما نیازی به ورود ندارید.
   invite_forum_mailer:
     subject_template: "%{invitee_name} دعوت شدید به عضویت در %{site_domain_name}"
   invite_password_instructions:
@@ -1087,14 +1040,6 @@ fa_IR:
         ```
     csv_export_succeeded:
       subject_template: "خارج کردن اطلاعات کامل شد"
-      text_body_template: |+
-        خارج کردن فایل ها با موفقیت انجام شد! :dvd:
-
-
-        <a class="attachment" href="%{download_link}">%{file_name}</a> (%{file_size})
-
-        پیوند زیر برای دانلود فقط برای 48 ساعت اعتبار دارد.
-
     csv_export_failed:
       subject_template: "خارج کردن فایل ها ناموفق شد"
       text_body_template: "ما متاسفیم٬ ولی خارج کردن اطلاعات ناموفق شد. لطفا سیستم را چک کنید یا با یکی از مدیران تماس بگیرید. "

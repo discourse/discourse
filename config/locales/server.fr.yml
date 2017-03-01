@@ -35,7 +35,6 @@ fr:
   remove_posts_deleted_by_author: "Supprimé par l'auteur"
   emails:
     incoming:
-      default_subject: "Courriel entrant de %{email}"
       show_trimmed_content: "Montrer le contenu raccourci"
       maximum_staged_user_per_email_reached: "Vous avez atteint le nombre maximal d'utilisateurs qui peuvent être créés par courriel."
       errors:
@@ -107,8 +106,6 @@ fr:
       max_username_length_range: "Il n'est pas possible de définir un maximum plus petit que le minimum."
       default_categories_already_selected: "Vous ne pouvez pas séléctionner une catégorie qui est utilisée dans une autre liste."
       s3_upload_bucket_is_required: "Vous ne pouvez pas activer l'upload sur S3 avant d'avoir renseigné le 's3_upload_bucket'."
-  invite:
-    accept_invite: "Accepter l'invitation"
   bulk_invite:
     file_should_be_csv: "Le fichier envoyé doit être au format CSV."
     error: "Il y a eu une erreur en envoyant ce fichier. Merci de réessayer plus tard."
@@ -243,40 +240,6 @@ fr:
       - Les critiques constructives sont les bienvenues, mais critiquez les *idées*, pas les gens.
 
       Pour plus d'informations, [consulter la charte de la communauté](/guidelines). Cet encart apparaîtra pour votre premier %{education_posts_text}.
-    avatar: |
-      ### Avez-vous pensé à une photo de profil ?
-
-      Vous avez posté quelques sujets et réponses, mais votre photo de profil n'est pas unique comme vous -- c'est juste une lettre.
-
-      Avez-vous pensé à **[visiter votre profil utilisateur](%{profile_path})** et télécharger une photo qui vous représente ?
-
-      C'est plus facile de suivre les discussions et de rencontrer des personnes intéressantes dans les conversations lorsque tout le monde a une photo de profil unique !
-    sequential_replies: |
-      ### Envisagez de répondre à plusieurs messages en même temps
-
-      Plutôt que plusieurs réponses en séquence à une discussion, envisagez une seule réponse incluant plusieurs citations ou @pseudo en référence à des précédents messages.
-
-      Vous pouvez utilisez vos précédentes réponses pour ajouter une citation en surlignant et en cliquant sur le bouton <b>Citer</b>.
-
-      Il est plus facile pour tout le monde de lire des discussions avec peu de réponses mais traités avec profondeur que beaucoup de réponses individuelles courtes.
-    dominating_topic: |
-      ### Laisser les autres se joindre à la conversation
-
-      Ce sujet est évidemment important pour vous &ndash; vous avez posté plus de %{percent}% des réponses ici.
-
-      Êtes-vous sûr de laissez suffisamment de temps aux autres personnes afin qu'ils partagent aussi leurs points de vue?
-    too_many_replies: |
-      # # # Vous avez atteint la limite de réponse pour ce sujet
-
-      Nous sommes désolés, mais les nouveaux utilisateurs sont temporairement limités à %{newuser_max_replies_per_topic} réponses par sujet.
-
-      Au lieu d'ajouter une autre réponse, veuillez envisager de modifier vos réponses précédentes, ou visiter d'autres sujets.
-    reviving_old_topic: |
-      ### Déterrer ce sujet ?
-
-      La dernière réponse à ce sujet date d'il y a plus de %{days} jours. Votre réponse va faire remonter ce sujet en haut de la liste et notifier chaque personne qui suit cette conversation.
-
-      Êtes-vous sûr de vouloir continuer cette vieille conversation ?
   activerecord:
     attributes:
       category:
@@ -509,7 +472,6 @@ fr:
     title: 'Réinitialiser le mot de passe'
     success: "Vous avez modifié votre mot de passe avec succès et vous êtes maintenant connecté."
     success_unapproved: "Vous avez modifié votre mot de passe avec succès."
-    continue: "Continuez vers %{site_name}"
   change_email:
     confirmed: "Votre adresse de courriel a été mise à jour."
     please_continue: "Continuer vers %{site_name}"
@@ -780,8 +742,6 @@ fr:
     facebook_config_warning: 'Le serveur est configuré pour permettre l''authentification par Facebook (enable_facebook_logins), mais les paramètres facebook_app_id et facebook_app_secret ne sont pas renseignés. Allez dans les <a href="/admin/site_settings">Paramètres</a> et mettez les à jour. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Voir le guide pour en savoir plus</a>.'
     twitter_config_warning: 'Le serveur est configuré pour permettre l''authentification par Twitter (enable_twitter_logins), mais les paramètres key et secret ne sont pas renseignés. Allez dans les <a href="/admin/site_settings">Paramétres</a> et mettez les à jour. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">Voir le guide pour en savoir plus</a>.'
     github_config_warning: 'Le serveur est configuré pour permettre l''authentification par GitHub (enable_github_logins), mais les paramètres github_client_id et github_client_secret ne sont pas renseignés. Allez dans les <a href=\"/admin/site_settings\">Paramètres</a> et mettez les à jour. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">Voir le guide pour en savoir plus</a>.'
-    s3_config_warning: 'Le serveur est configuré pour charger les fichiers vers s3, mais au moins un de ces paramètre n''est pas configuré : s3_access_key_id, s3_secret_access_key or s3_upload_bucket. Allez dans les <a href=\"/admin/site_settings\">Paramètres</a> pour les renseignés. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Voir le guide "Comment charger les images sur S3 ?" pour en savoir plus</a>'
-    s3_backup_config_warning: 'Le serveur est configuré pour envoyer les sauvegardes sur S3, mais l''un des paramètres suivants n''est pas renseigné : s3_access_key_id, s3_secret_access_key ou s3_backup_bucket. Allez dans les <a href="/admin/site_settings">Paramètres</a> et mettez les à jour. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Voir « Comment mettre en place une sauvegarde sur S3 ? » pour en savoir plus</a>.'
     image_magick_warning: 'Le serveur est configuré pour créer des aperçus des grandes images, mais ImageMagick n''est pas installé. Installez ImageMagick en utilisant votre gestionnaire de paquets favori ou bien allez ici <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">pour télécharger la dernière version</a>.'
     failing_emails_warning: 'Il y a %{num_failed_jobs} tâches d''envois de courriel en erreur. Vérifiez votre fichier app.yml et assurez-vous de la conformité des paramètres du serveur de courriel. <a href="/sidekiq/retries" target="_blank">Voir aussi les processus en échec dans Sidekiq</a>.'
     subfolder_ends_in_slash: "Votre configuration de sous-répertoire est erronée; DISCOURSE_RELATIVE_URL_ROOT se termine avec une barre oblique ."
@@ -833,6 +793,7 @@ fr:
     max_image_width: "Largeur maximale des images dans un message"
     max_image_height: "Hauteur maximale autorisée des images dans un message"
     category_featured_topics: "Nombre de sujets affichés par catégorie sur la page /categories. Après avoir modifié cette valeur, il faut jusqu'à 15 minutes pour que la page des catégories soit mise à jour."
+    show_subcategory_list: "Voir les sous-catégories à la place de la liste des sujets lorsqu'on entre dans la catégorie."
     fixed_category_positions: "Si coché, vous pourrez modifier l'ordre des catégories. Si décoché, elle seront triées par ordre d'activité."
     fixed_category_positions_on_create: "Si coché, le classement des catégories sera maintenu dans la fenêtre de création de sujet (nécessite fixed_category_positions)."
     add_rel_nofollow_to_user_content: "Ajouter rel nofollow à tous les contenus des utilisateurs, sauf les liens internes (incluant les domaines parents). Si vous modifiez ceci, vous devez exécuter la commande  \"rake posts:rebake\""
@@ -927,8 +888,6 @@ fr:
     invite_passthrough_hours: "Combien de temps un utilisateur peut encore utilisé une clé d'invitation après son expiration, en heure"
     invite_only: "L'inscription publique est désactivée, tous les nouveaux utilisateurs doivent explicitement être invités par les membres ou l'équipe du forum."
     login_required: "Authentification requise pour lire le contenu du site, interdit l'accès anonyme."
-    min_username_length: "Longueur minimum des pseudos en caractères."
-    max_username_length: "Longueur maximum des pseudos en nombre de caractères."
     reserved_usernames: "Pseudos pour lesquels l'inscription n'est pas autorisée."
     min_password_length: "Longueur minimale du mot de passe."
     min_admin_password_length: "Longueur minimale du mot de passe pour l'administrateur."
@@ -1168,7 +1127,6 @@ fr:
     digest_posts: "Le nombre maximum de messages populaires à afficher dans le résumé par courriel."
     digest_other_topics: "Le nombre maximum de sujets à afficher dans la section « Nouveautés dans les sujets et catégories que vous suivez » du résumé par courriel."
     digest_min_excerpt_length: "Longueur minimale (en caractères) de l'extrait des messages dans le résumé par courriel."
-    delete_digest_email_after_days: "Ne pas envoyer de résumés par courriel aux utilisateurs qui n'ont pas visité le site depuis plus de (n) jours."
     digest_suppress_categories: "Ne pas inclure ces catégories dans les résumés par courriel."
     disable_digest_emails: "Désactiver les résumés par courriel pour tous les utilisateurs."
     email_accent_bg_color: "La couleur d'accentuation utilisée comme arrière-plan de certains éléments des courriels HTML. Entrez un nom de couleur (« red ») ou une valeur hexadécimale (« #FF0000 »)."
@@ -1449,44 +1407,8 @@ fr:
       Si vous souhaitez continuer à recevoir ces courriels, vous pouvez ignorer ce message.
   invite_mailer:
     subject_template: "%{invitee_name} vous a invité(e) à participer à « %{topic_title} » sur %{site_domain_name}"
-    text_body_template: |
-      %{invitee_name} vous a invité(e) dans une discussion
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      sur
-
-      > %{site_title} -- %{site_description}
-
-      Si cela vous intéresse, cliquez sur le lien ci-dessous :
-
-      %{invite_link}
-
-      Cette invitation provient d'un utilisateur de confiance, vous pouvez donc répondre immédiatement.
   custom_invite_mailer:
     subject_template: "%{invitee_name} vous a invité(e) à participer à « %{topic_title} » sur %{site_domain_name}"
-    text_body_template: |
-      %{invitee_name} vous a invité(e) dans une discussion
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      sur
-
-      > %{site_title} -- %{site_description}
-
-      Message de %{invitee_name} :
-
-      %{user_custom_message}
-
-      Si cela vous intéresse, cliquez sur le lien ci-dessous :
-
-      %{invite_link}
-
-      Cette invitation provient d'un utilisateur de confiance, vous pouvez donc répondre immédiatement.
   invite_forum_mailer:
     subject_template: "%{invitee_name} vous a invité(e) à rejoindre %{site_domain_name}"
   custom_invite_forum_mailer:
@@ -1688,12 +1610,6 @@ fr:
         ```
     csv_export_succeeded:
       subject_template: "Exportation des données terminée"
-      text_body_template: |
-        L'exportation de vos données a réussi!  :dvd:
-
-        <a class="attachment" href="%{download_link}">%{file_name}</a> (%{file_size})
-
-        Le lien de téléchargement ci-dessus expire après 48h.
     csv_export_failed:
       subject_template: "Échec de l'exportation des données "
       text_body_template: "Nous sommes désolés, l'exportation de vos données a échoué. Veuillez consulter les journaux ou contacter un responsable."

@@ -326,14 +326,57 @@ sv:
         change_group_setting: "Ändra gruppinställningar"
         add_user_to_group: "Lägg till användare"
         remove_user_from_group: "Ta bort användare"
+        make_user_group_owner: "Gör till ägare"
+        remove_user_as_group_owner: "Återkalla ägare"
     groups:
+      logs:
+        title: "Loggar"
+        when: "När"
+        action: "Handling"
+        acting_user: "Agerar användare"
+        target_user: "Specifik användare"
+        subject: "Ämne"
+        details: "Detaljer"
+        from: "Från"
+        to: "Till"
+      edit:
+        title: 'Redigera grupp'
+        full_name: 'Fullständigt namn'
+        add_members: "Lägg till medlemmar"
+      request_membership_pm:
+        title: "Begäran om medlemskap"
+        body: "Jag skulle vilja ansöka om medlemskap i @%(namn på gruppen)."
+      name_placeholder: "Gruppnamn, inga mellanslag, samma regler som för användarnamn"
+      public: "Tillåt användare att delta/lämna gruppen av egen vilja (Kräver gruppen att vara synlig)"
+      empty:
+        posts: "Det är inga kommentarer från medlemmar i denna grupp"
+        members: "Det finns inga medlemmar i denna grupp"
+        mentions: "Det finns inga omnämnande av denna grupp"
+        messages: "Det finns inga meddelanden för denna grupp."
+        topics: "Det finns inga trådar från medlemmar av denna grupp"
+        logs: "Det finns inga loggar för denna grupp"
       add: "Lägg till"
+      join: "Gå med i grupp"
+      leave: "Lämna grupp"
+      request: "Förfrågan om att gå med i grupp"
+      automatic_group: Automatisk grupp
+      closed_group: Stängd grupp
+      is_group_user: "Du är en medlem av denna grupp"
+      allow_membership_requests: "Tillåt användare att sända medlemskaps förfrågan till gruppmedlemmar (Kräver att alla skall kunna nämna gruppen)"
+      membership: "Medlemskap"
+      name: "Namn"
+      user_count: "Antal medlemmar"
+      bio: "Om grupp"
       selector_placeholder: "Lägg till medlemmar"
       owner: "ägare"
       visible: "Gruppen är synlig för alla användare"
+      index:
+        title: "Grupper"
+        empty: "Det finns inga synliga grupper"
       title:
         one: "grupp"
         other: "grupper"
+      activity: "Aktivitet"
       members: "Medlemmar"
       topics: "Ämnen"
       posts: "Inlägg"
@@ -365,6 +408,10 @@ sv:
         muted:
           title: "Tystad"
           description: "Du kommer aldrig att bli notifierad om något gällande nya ämnen i den här gruppen."
+      flair_bg_color_placeholder: "Hex färgvärde"
+      flair_color: "En Avatar som ändrar färg beroende på ljuset"
+      flair_preview_icon: "Förhandsvisa icon"
+      flair_preview_image: "förhandsvisa bild"
     user_action_groups:
       '1': "Gillningar givna"
       '2': "Gillningar mottagna"
@@ -536,6 +583,8 @@ sv:
         error: "(fel)"
         action: "Skicka e-post för att återställa lösenord"
         set_password: "Ange lösenord"
+        choose_new: "Välj ett nytt lösenord"
+        choose: "Välj ett  lösenord"
       change_about:
         title: "Ändra Om Mig"
         error: "Ett fel inträffade vid ändringen av det här värdet."
@@ -570,7 +619,7 @@ sv:
         instructions: "Bakgrundsbilder kommer att vara centrerade och ha en standardbredd på 590 px."
       email:
         title: "E-post"
-        instructions: "Visas aldrig publikt"
+        instructions: "aldrig visat för allmänheten"
         ok: "Vi skickar e-post till dig för bekräftelse"
         invalid: "Vänligen ange en giltig e-postadress"
         authenticated: "Din e-postadress har blivit verifierad av {{provider}}"
@@ -580,22 +629,19 @@ sv:
           other: "Vi skickar bara e-post om du inte synts till de senaste {{count}} minuterna."
       name:
         title: "Namn"
-        instructions: "Ditt fullständiga namn (valfritt)"
+        instructions: "ditt fullständiga namn (tillval)"
         instructions_required: "Ditt fullständiga namn"
         too_short: "Ditt namn är för kort"
         ok: "Ditt namn ser bra ut"
       username:
         title: "Användarnamn"
-        instructions: "Unikt, inga mellanrum, kort"
+        instructions: "unikt, inga mellanrum, kort"
         short_instructions: "Folk kan nämna dig som @{{username}}"
         available: "Ditt användarnamn är tillgängligt"
-        global_match: "E-postadressen matchar det registrerade användarnamnet"
-        global_mismatch: "Redan registrerat. Prova {{suggestion}}?"
         not_available: "Inte tillgängligt. Prova {{suggestion}}?"
         too_short: "Ditt användarnamn är för kort"
         too_long: "Ditt användarnamn är för långt"
         checking: "Kollar användarnamnets tillgänglighet..."
-        enter_email: 'Annvändarnamn hittat; ange matchande e-postadress'
         prefilled: "E-postadressen matchar det här registrerade användarnamnet"
       locale:
         title: "Gränssnittsspråk"
@@ -702,7 +748,6 @@ sv:
         same_as_username: "Ditt lösenord är detsamma som ditt användarnamn."
         same_as_email: "Ditt lösenord är detsamma som din e-postadress."
         ok: "Ditt lösenord ser bra ut."
-        instructions: "Måste vara minst %{count} tecken lång."
       summary:
         title: "Sammanfattning"
         stats: "Statistik"
@@ -884,6 +929,7 @@ sv:
       to_continue: "Var vänligen och logga in"
       preferences: "Du behöver logga in för att ändra dina användarpreferenser."
       forgot: "Jag kommer inte ihåg mina kontouppgifter"
+      not_approved: "Ert konto har inte blivit godkänt än. Du kommer att meddelas via email när det är klart att logga in."
       google:
         title: "med Google"
         message: "Autentiserar med Google (kolla så att pop up-blockare inte är aktiverade)"
@@ -958,8 +1004,10 @@ sv:
       title: "eller tryck Ctrl+Enter"
       users_placeholder: "Lägg till en användare"
       title_placeholder: "Vad handlar ämnet om i en kort mening?"
+      title_or_link_placeholder: "Skriv in en titel, eller klistra in en länk här"
       edit_reason_placeholder: "varför redigerar du?"
       show_edit_reason: "(lägg till anledningar för redigering)"
+      topic_featured_link_placeholder: "Ange länken som visas med titeln"
       reply_placeholder: "Skriv här. Använd Markdown, BBCode eller HTML för formattering. Släpp eller klistra in bilder."
       view_new_post: "Visa ditt nya inlägg."
       saving: "Sparar"
@@ -1107,9 +1155,12 @@ sv:
           label: I kategorin
         in_group:
           label: I gruppen
+        with_badge:
+          label: Med märke
         with_tags:
           label: Med taggar
         filters:
+          label: Sänd bara tillbaka ämnen/inlägg som...
           likes: Jag gillade
           posted: Jag postade i
           watching: Jag tittar
@@ -1128,6 +1179,8 @@ sv:
           noreplies: har noll svar
           single_user: innehåller en ensam användare
         post:
+          count:
+            label: Minsta antalet inlägg
           time:
             label: Publicerad
             before: innan
@@ -1268,6 +1321,7 @@ sv:
         go_bottom: "botten"
         go: "gå"
         jump_bottom: "hoppa till sista inlägget"
+        jump_prompt: "hoppa till"
         jump_prompt_long: "Vilket inlägg vill du hoppa till?"
         jump_bottom_with_number: "hoppa till inlägg %{post_number}"
         total: antal inlägg
@@ -1338,8 +1392,8 @@ sv:
         make_banner: "Gör ämne till banderoll"
         remove_banner: "Ta bort banderollämne"
       reply:
-        title: 'Svara'
-        help: 'börja komponera ett svar till detta ämne'
+        title: 'svara'
+        help: 'Börja komponera ett svar på detta ämne'
       clear_pin:
         title: "Ta bort nål"
         help: "Ta bort den klistrade statusen från detta ämne så den inte längre hamnar i toppen av din ämneslista"
@@ -1465,8 +1519,10 @@ sv:
       edit: "Redigerar {{link}} {{replyAvatar}} {{username}}"
       edit_reason: "Anledning:"
       post_number: "inlägg {{number}}"
+      wiki_last_edited_on: "Senast gången som wiki redigerades"
       last_edited_on: "inlägg senast ändrat den"
       reply_as_new_topic: "Svara som länkat ämne"
+      reply_as_new_private_message: "Svara som nytt meddelande till samma mottagare"
       continue_discussion: "Fortsätter diskussionen från {{postLink}}:"
       follow_quote: "gå till det citerade inlägget"
       show_full: "Via hela inlägget"
@@ -1510,7 +1566,7 @@ sv:
       via_auto_generated_email: "det här inlägget anlände via ett autogenererat e-postmeddelande"
       whisper: "det här inlägget är en privat viskning för moderatorer"
       wiki:
-        about: "det här inlägget är en wiki"
+        about: "Detta inlägg är en wiki"
       archetypes:
         save: 'Spara inställningar'
       few_likes_left: "Tack för att du sprider kärleken! Du har bara några få gillningar kvar idag."
@@ -1637,17 +1693,19 @@ sv:
           hide: "Göm version"
           show: "Visa version"
           revert: "Återgå till den här revisionen"
+          edit_wiki: "Uppdatera Wiki"
+          edit_post: "Ändra meddelandet"
           comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> <i class='fa fa-arrows-h'></i> <strong>{{current}}</strong> / {{total}}"
         displays:
           inline:
             title: "Visa resultat med tillägg och borttagningar inline"
-            button: '<i class="fa fa-square-o"></i> HTML'
+            button: 'HTML'
           side_by_side:
             title: "Visa skillnader i renderad utmatning sida vid sida"
-            button: '<i class="fa fa-columns"></i> HTML'
+            button: 'HTML'
           side_by_side_markdown:
             title: "Visa skillnader i rådatan sida vid sida"
-            button: '<i class="fa fa-columns"></i> Rå'
+            button: 'Rå'
     category:
       can: 'can&hellip; '
       none: '(ingen kategori)'
@@ -1664,6 +1722,7 @@ sv:
       tags_allowed_tag_groups: "Grupptaggar som endast kan användas i den här kategorin:"
       tags_placeholder: "(Valfritt) lista av tillåtna taggar"
       tag_groups_placeholder: "(Valfritt) lista av tillåtna grupptaggar"
+      topic_featured_link_allowed: "Tillåt utvalda länkar i denna kategori"
       delete: 'Radera kategori'
       create: 'Ny kategori'
       create_long: 'Skapa en ny kategori'
@@ -1698,6 +1757,8 @@ sv:
       email_in_disabled: "Att skapa nya ämnen via e-post är avaktiverat i webbplatsinställningarna. För att aktivera ämnen skapade via e-post,"
       email_in_disabled_click: 'aktivera "inkommande e-post" inställningen.'
       suppress_from_homepage: "Undanta den här kategorin från hemsidan."
+      all_topics_wiki: "Gör nya inlägg till wikis som standard"
+      sort_order: "Standard slag:"
       allow_badges_label: "Tillåt utmärkelser i den här kategorin"
       edit_permissions: "Redigera behörigheter"
       add_permission: "Lägg till behörighet"
@@ -1724,10 +1785,13 @@ sv:
           title: "Tystad"
           description: "Du kommer aldrig att notifieras om något som rör nya ämnen i de här kategorierna och de kommer inte att dyka upp i din olästa tabb."
       sort_options:
+        default: "Standard"
         likes: "Gillar"
+        op_likes: "Ursprungliga inlägget gillar"
         views: "Visningar"
         posts: "Poster"
         activity: "Aktiviteter"
+        posters: "Affischer"
         category: "Kategori"
         created: "Skapad"
       sort_ascending: 'Stigande'
@@ -2083,6 +2147,8 @@ sv:
       custom_message_placeholder: "Skriv ditt personliga meddelande"
       custom_message_template_forum: "Hej! Du borde gå med i det här forumet!"
       custom_message_template_topic: "Hej! Jag tror att du kanske skulle uppskatta det här ämnet!"
+    safe_mode:
+      enabled: "Säkert läge är aktiverat, för att lämna säkert läge stäng detta webläsarfönster"
   admin_js:
     type_to_filter: "skriv för att filtrera..."
     admin:
@@ -2117,6 +2183,8 @@ sv:
         backups: "säkerhetskopior"
         traffic_short: "Trafik"
         traffic: "Applikations-webbegäran"
+        page_views: "Sidvisningar"
+        page_views_short: "Sidvisningar"
         show_traffic_report: "Visa detaljerad trafikrapport"
         reports:
           today: "Idag"
@@ -2255,6 +2323,8 @@ sv:
         payload_url_placeholder: "https://example.com/postreceive"
         secret_invalid: "Hemligheten får inte ha några blanka tecken."
         secret_too_short: "Hemligheten bör vara minst 12 tecken."
+        secret_placeholder: "En alternativ sträng, använd för att generera signature"
+        event_type_missing: "Du behöver sätta upp åtminstone en händelse."
         content_type: "Innehållstyp"
         secret: "Hemlighet"
         event_chooser: "Vilka event vill du ska utlösa den här webhooken?"
@@ -2275,6 +2345,7 @@ sv:
           details: "När det finns ett nytt svar, redigerat, borttaget eller återskapat."
         user_event:
           name: "Användarevent"
+          details: "När en användare är skapad, godkänd eller uppdaterad."
         delivery_status:
           title: "Leveransstatus"
           inactive: "Inaktiv"
@@ -2499,6 +2570,7 @@ sv:
         html: "html"
         text: "text"
         last_seen_user: "Senast sedd användare:"
+        no_result: "Inga resultat är funna."
         reply_key: "Svarsnyckel"
         skipped_reason: "Anledning för överhoppning"
         incoming_emails:
@@ -2590,10 +2662,17 @@ sv:
             revoke_admin: "återkalla administratör"
             grant_moderation: "bevilja moderering"
             revoke_moderation: "återkalla moderering"
-            backup_operation: "säkerhetskopieringsdriften"
+            backup_create: "Skapa en säkerhetskopia"
             deleted_tag: "raderad tagg"
             renamed_tag: "omdöpt tagg"
             revoke_email: "återkalla e-post"
+            lock_trust_level: "lås förtroende nivån"
+            unlock_trust_level: "lås upp förtroende nivån"
+            activate_user: "aktivera användare"
+            deactivate_user: "avaktivera användare"
+            change_readonly_mode: "ändra skrivskyddat läge"
+            backup_download: "Ladda ner säkerhetskopia"
+            backup_destroy: "förstör säkerhetskopia"
         screened_emails:
           title: "Kontrollerad e-post"
           description: "När någon försöker skapa ett nytt konto, kommer följande e-postadresser att kontrolleras och registreringen blockeras, eller någon annan åtgärd vidtas."
@@ -2894,6 +2973,7 @@ sv:
           user_preferences: "Användarinställningar"
           tags: "Taggar"
           search: "Sök"
+          groups: "Grupper"
       badges:
         title: Utmärkelser
         new_badge: Ny utmärkelse

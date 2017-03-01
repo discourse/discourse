@@ -214,7 +214,6 @@ et:
       like_count: "Meeldimisi"
       topic_count: "Teemad"
       post_count: "Postitused"
-      user_count: "Uued kasutajad"
       active_user_count: "Aktiivsed kasutajad"
       contact: "Võta meiega ühendust"
       contact_info: "Kriitilise vea või edasilükkamatu probleemi korral võta palun meiega ühendust aadressil %{contact_info}."
@@ -623,7 +622,6 @@ et:
         instructions: "Taustapildidd tsentreeritakse ja on vaikimisi 590 pikslit laiad."
       email:
         title: "Meiliaadress"
-        instructions: "Avalikkusele ei näidata kunagi"
         ok: "Saadame sulle kinnituseks meili"
         invalid: "Sisesta palun korrektne meiliaadress"
         authenticated: "Sinu meil on autenditud {{provider}} poolt"
@@ -633,22 +631,17 @@ et:
           other: "Saadame meili vaid siis, kui pole Sind viimase {{count}} minuti jooksul näinud."
       name:
         title: "Nimi"
-        instructions: "Sinu täisnimi (vabatahtlik)"
         instructions_required: "Sinu täisnimi"
         too_short: "Sinu antud nimi on liiga lühike"
         ok: "Paistab, et nimega on asjad korras"
       username:
         title: "Kasutajanimi"
-        instructions: "Unikaalne, tühikuteta ja lühikene"
         short_instructions: "Inimesed võivad sind mainda nimega @{{username}}"
         available: "Sinu poolt valitud kasutajanimi on vaba"
-        global_match: "Meiliaadress kattub registreeritud kasutajanimega"
-        global_mismatch: "Juba registreeritud. Proovime {{suggestion}}?"
         not_available: "Pole saadaval. Proovime {{suggestion}}?"
         too_short: "Sinu poolt valitud kasutajanimi on liiga lühike"
         too_long: "Sinu poolt valitud kasutajanimi on liiga pikk"
         checking: "Teen kindlaks, kas kasutajanimi on vaba..."
-        enter_email: 'Kasutajanimi leitud; sisesta vastav meil'
         prefilled: "Meiliaadress kattub registreeritud kasutajanimega"
       locale:
         title: "Kasutujaliidese keel"
@@ -746,7 +739,6 @@ et:
         link_generated: "Kutse link edukalt genereeritud!"
         valid_for: "Kutse link kehtib vaid meiliaadressile:  %{email}"
         bulk_invite:
-          none: "Sa ei ole kedagi veel siia kutsunud. Võid saata kutsed personaalselt või korraga tervele nimekirjale <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>laadides üles CSV faili</a>."
           text: "Masskutse Failist"
           success: "Fail edukalt üles laetud. Sulle saabub teade, kui protsess on lõpule jõudnud."
       password:
@@ -756,7 +748,6 @@ et:
         same_as_username: "Parool ühtib sinu kasutajanimega."
         same_as_email: "Parool ühtib sinu meiliaadressiga."
         ok: "See parool on sobilik."
-        instructions: "Vähemalt %{count} sümbolit."
       summary:
         title: "Kokkuvõte"
         stats: "Statistika"
@@ -1400,9 +1391,6 @@ et:
         pin_globally: "Tõsta teema esile igal pool"
         make_banner: "Tee teema bänneriks"
         remove_banner: "Eemalda teema bännerist"
-      reply:
-        title: 'vasta'
-        help: 'alusta selle teema vastuse koostamist'
       clear_pin:
         title: "Kustuta esiletõstmine"
         help: "Eemalda sellelt teemalt esiletõstetu staatus nii, et ta enam ei ilmuks teemade loetelu tipus"
@@ -1572,8 +1560,6 @@ et:
       via_email: "see postitus saabus meili teel"
       via_auto_generated_email: "see postitus saabus automaatselt genereeritud meili teel"
       whisper: "see postitus on vaikne sosin moderaatoritele"
-      wiki:
-        about: "see postitus on wiki"
       archetypes:
         save: 'Salvesta suvandid'
       few_likes_left: "Aitäh poolehoiu jagamise eest! Tänaseks on vaid mõned meeldimised jäänud jagada."
@@ -1704,13 +1690,10 @@ et:
         displays:
           inline:
             title: "Näita renderdatud väljundit koos lisamiste ja eemaldamistega tekstisiseselt"
-            button: '<i class="fa fa-square-o"></i> HTML'
           side_by_side:
             title: "Näita renderdatud väljundi erinevusi kõrvuti"
-            button: '<i class="fa fa-columns"></i> HTML'
           side_by_side_markdown:
             title: "Näita töötlemata lähteandmete erinevusi kõrvuti"
-            button: '<i class="fa fa-columns"></i> Toores'
     category:
       can: 'saab&hellip; '
       none: '(foorum puudub)'
@@ -2672,7 +2655,6 @@ et:
             revoke_admin: "võta admin-õigus ära"
             grant_moderation: "anna modereerimisõigus"
             revoke_moderation: "võta modereerimisõigus ära"
-            backup_operation: "varundustoiming"
             deleted_tag: "kustutatud silt"
             renamed_tag: "ümbernimetatud silt"
             revoke_email: "kutsu meil tagasi"

@@ -34,7 +34,6 @@ et:
   anonymous: "Anonüümne"
   emails:
     incoming:
-      default_subject: "%{email} saatis kirja"
       show_trimmed_content: "Näita lühendatud sisu"
       maximum_staged_user_per_email_reached: "Meili teel loodud ettevalmistamisel olevate kasutajate maksimaalne arv on täis."
       errors:
@@ -237,40 +236,6 @@ et:
       - Konstruktiivne kriitika on tervitatav aga kritiseeri *ideid*, mitte inimesi.
 
       Rohkema info saamiseks [vaata meie kommuuni juhiseid](/guidelines). See paneel ilmub ainult esimesel %{education_posts_text}.
-    avatar: |
-      ### Kuidas oleks, kui lisaksid oma kontole pildi?
-
-      Oled postitanud mõned teemad ja vastused aga sinu profiilipilt pole hetkel sama unikaalne nagu sina... see on lihtsalt üks täht.
-
-      Kas sa oled kaalunud **[külastada oma profiili](%{profile_path})** laadimaks üles sind ennast kujutav pilt?
-
-      Diskussioone jälgida ja vestlustest huvitavaid inimesi leida on lihtsam, kui kõigil on unikaalne profiilipilt!
-    sequential_replies: |
-      ### Kaalu mitmele postitusele samaaegset vastamist
-
-      Selle asemel, et vastata mitu korda järjest paljudele sõnumitele, palun kaalu ühe postituse kasutamist eelnevaid postitusi tsiteerides või kasutades viidet @nimi.
-
-      Saad muuta oma varasemat postitust ning lisada tsitaati valides teksti ning vajutades nähtavale ilmunud nuppu <b>tsiteeri</b>.
-
-      Kõigil on lihtsam lugeda teemasid, milles on põhjalikumad vastused paljude pisikeste vastuste asemel.
-    dominating_topic: |
-      ### Anna teistele mahti vestlusega liituda
-
-      See teema on Sulle kindlasti väga tähtis &ndash; enam kui %{percent}% vastustest siin on Sinu postitatud.
-
-      Kas oled kindel, et jätad ka teistele piisavalt aega ja võimalust oma arvamuse avaldamiseks?
-    too_many_replies: |
-      ### Oled selle teema vastuste limiidi saavutanud
-
-      Vabandame, kuid uutele kasutajatele on ajutiselt seatud limiit %{newuser_max_replies_per_topic} vastust teema kohta.
-
-      Uue vastuse lisamise asemel kaalu oma varasema vastuse muutmist või teiste teemade külastust.
-    reviving_old_topic: |
-      ### Vana teema taaselustamine?
-
-      Viimane vastus sellele teemale on rohkem kui %{days} päeva vana. Sinu vastus tõstab selle teema nimekirja ette ning teavitab kõiki, kes selle teemaga seotud olid.
-
-      Oled sa kindel, et soovid seda vana arutelu jätkata?
   activerecord:
     attributes:
       category:
@@ -496,14 +461,11 @@ et:
         other: "peaaegu %{count} aastat tagasi"
   password_reset:
     no_token: "Vabandust, see parooli uuendamise link on liiga vana. Vajuta sisselogimise nuppu ja kasuta värske lingi saamiseks 'Unustasin parooli'."
-    choose_new: "Palun vali uus parool"
-    choose: "Palun vali parool"
     update: 'Uuenda parooli'
     save: 'Määra Parool'
     title: 'Uuenda Parool'
     success: "Sinu parooli muutmine õnnestus ja oled nüüd sisse logitud."
     success_unapproved: "Sinu parooli muutmine õnnestus."
-    continue: "Edasi saidile %{site_name}"
   change_email:
     confirmed: "Sinu meiliaadress on uuendatud."
     please_continue: "Edasi saidile %{site_name}"

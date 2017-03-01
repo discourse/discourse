@@ -606,13 +606,10 @@ vi:
         instructions: "Duy nhất, không có khoảng trống, ngắn"
         short_instructions: "Mọi người có thể nhắc tới bạn bằng @{{username}}"
         available: "Tên đăng nhập của bạn có sẵn"
-        global_match: "Email đúng với username đã được đăng ký"
-        global_mismatch: "Đã đăng ký rồi. Thử {{suggestion}}?"
         not_available: "Chưa có sẵn. Thử {{suggestion}}?"
         too_short: "Tên đăng nhập của bạn quá ngắn"
         too_long: "Tên đăng nhập của bạn quá dài"
         checking: "Đang kiểm tra username sẵn sàng để sử dụng...."
-        enter_email: 'Đã tìm được tên đăng nhập. Điền thư điện tử phù hợp.'
         prefilled: "Thư điện tử trủng với tên đăng nhập này."
       locale:
         title: "Ngôn ngữ hiển thị"
@@ -1287,12 +1284,6 @@ vi:
         pin_globally: "Ghim Chủ Đề Tổng Thể"
         make_banner: "Banner chủ đề"
         remove_banner: "Bỏ banner chủ đề"
-      reply:
-        post:
-          title: 'Trả lời'
-        topic:
-          title: 'Trả lời'
-          help: 'bắt đầu soạn phản hồi cho chủ đề này'
       clear_pin:
         title: "Xóa ghim"
         help: "Xóa trạng thái ghim của chủ đề này để nó không còn xuất hiện trên cùng danh sách chủ đề của bạn"
@@ -1544,7 +1535,6 @@ vi:
           hide: "Ẩn sửa đổi"
           show: "Hiện sửa đổi"
           revert: "Hoàn nguyên sửa đổi"
-          edit_wiki: "Sửa wiki"
           comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> <i class='fa fa-arrows-h'></i> <strong>{{current}}</strong> / {{total}}"
         displays:
           inline:
@@ -2301,7 +2291,6 @@ vi:
             revoke_admin: "hủy bỏ quản trị"
             grant_moderation: "cấp điều hành"
             revoke_moderation: "hủy bỏ điều hành"
-            backup_operation: "hoạt động sao lưu"
         screened_emails:
           title: "Screened Emails"
           description: "Khi ai đó cố gắng tạo tài khoản mới, các địa chỉ email sau sẽ được kiểm tra và đăng ký sẽ bị chặn, hoặc một số hành động khác được thực hiện."

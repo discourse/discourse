@@ -589,6 +589,8 @@ he:
         error: "(שגיאה)"
         action: "שלח דואר אלקטרוני לשחזור סיסמה"
         set_password: "הזן סיסמה"
+        choose_new: "בחרו סיסמה חדשה"
+        choose: "בחרו סיסמה"
       change_about:
         title: "שינוי בנוגע אליי"
         error: "ארעה שגיאה בשינוי ערך זה."
@@ -642,13 +644,11 @@ he:
         instructions: "ייחודי, ללא רווחים, קצר"
         short_instructions: "אנשים יכולים לאזכר אותך כ @{{username}}"
         available: "שם המשתמש שלך פנוי"
-        global_match: "הדואר האלקטרוני תואם את שם המשתמש הרשום"
-        global_mismatch: "כבר רשום. נסו {{suggestion}}?"
         not_available: "לא זמין. נסו {{suggestion}}?"
+        not_available_no_suggestion: "לא זמין"
         too_short: "שם המשתמש שלך קצר מידי"
         too_long: "שם המשתמש שלך ארוך מידי"
         checking: "בודק זמינות שם משתמש..."
-        enter_email: 'נמצא שם משתמש - הכנס דואר אלקטרוני תואם'
         prefilled: "הדואר האלקטרוני תואם לשם משתמש זה"
       locale:
         title: "שפת ממשק"
@@ -746,10 +746,10 @@ he:
         link_generated: "קישור הזמנה יוצר בהצלחה!"
         valid_for: "קישור הזמנה תקף רק לכתובת המייל הזו: %{email}"
         bulk_invite:
-          none: "עדיין לא הזמנתם לכאן אף אחד. תוכלו לשלוח הזמנות פרטניות, או להזמין כמה אנשים יחד על ידי <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>העלאת קובץ CSV</a>."
+          none: "עדיין לא הזמנתם לכאן אף אחד. שילחו הזמנות אישיות, או הזמינו הרבה אנשים ביחד על ידי <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>העלאת קובץ CSV</a>."
           text: "הזמנה קבוצתית מקובץ"
           success: "העלאת הקובץ החלה בהצלחה, תקבלו התראה באמצעות מסר כאשר התהליך יושלם."
-          error: "מצטערים, הקובץ צריך להיות בפורמט csv."
+          error: "מצטערים, לקובץ צריך להיות פורמט CSV"
       password:
         title: "סיסמה"
         too_short: "הסיסמה שלך קצרה מידי."
@@ -939,6 +939,7 @@ he:
       to_continue: "התחברו בבקשה"
       preferences: "אתם צריכים להיות מחוברים כדי לשנות את העדפות המשתמש שלכם."
       forgot: "אין לי את פרטי החשבון שלי"
+      not_approved: "החשבון שלכם עדיין לא אושר. אתם תיודעו במייל כשתוכלו להתחבר."
       google:
         title: "עם גוגל"
         message: "התחברות עם גוגל (יש לוודא שחוסם חלונות קופצים אינו פעיל)"
@@ -960,6 +961,17 @@ he:
       github:
         title: "עם GitHub"
         message: "התחברות עם GitHub (יש לוודא שחוסם חלונות קופצים אינו פעיל)"
+    invites:
+      accept_title: "הזמנה"
+      welcome_to: "ברוכים הבאים ל-%{site_name}!"
+      invited_by: "הוזמנתם על ידי:"
+      social_login_available: "תוכלו גם להתחבר עם כל התחברות חברתית באמצעות כתובת מייל זו."
+      your_email: "כתובת המייל של החשבון שלכם היא <b>%{email}</b>."
+      accept_invite: "קבלת הזמנה"
+      success: "החשבון שלכם נוצר ואתם מחוברים עכשיו."
+      password_label: "קביעת סיסמה (אופציונלי)"
+    password_reset:
+      continue: "המשיכו ל-%{site_name}"
     emoji_set:
       apple_international: "אפל/בינלאומי"
       google: "גוגל"
@@ -1405,11 +1417,8 @@ he:
         make_banner: "נושא באנר"
         remove_banner: "הסרת נושא באנר"
       reply:
-        post:
-          title: 'תגובה'
-        topic:
-          title: 'תגובה'
-          help: 'התחילו לחבר תגובה לנושא זה'
+        title: 'תגובה'
+        help: 'התחילו לערוך תגובה לנושא זה'
       clear_pin:
         title: "נקה נעיצה"
         help: "נקה סטטוס נעוץ של נושא זה כדי שהוא לא יופיע עוד בראש רשימת הנושאים שלכם"
@@ -1538,6 +1547,7 @@ he:
       wiki_last_edited_on: "וויקי נערך לאחרונה ב"
       last_edited_on: "הפוסט נערך לאחרונה ב"
       reply_as_new_topic: "תגובה כנושא מקושר"
+      reply_as_new_private_message: "תגובה כהודעה חדשה לאותם נמענים"
       continue_discussion: "ממשיך את הדיון מ {{postLink}}:"
       follow_quote: "מעבר לפוסט המצוטט"
       show_full: "הצגת פוסט מלא"
@@ -1709,7 +1719,8 @@ he:
           hide: "הסתרת שינויים"
           show: "הצגת שינויים"
           revert: "חזרה לגרסה זו"
-          edit_wiki: "עריכת ויקי"
+          edit_wiki: "עריכת וויקי"
+          edit_post: "עריכת פוסט"
           comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> <i class='fa fa-arrows-h'></i> <strong>{{current}}</strong> / {{total}}"
         displays:
           inline:

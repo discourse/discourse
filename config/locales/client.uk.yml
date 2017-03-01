@@ -137,7 +137,6 @@ uk:
       like_count: "Вподобання"
       topic_count: "Теми"
       post_count: "Дописи:"
-      user_count: "Нові користувачі"
       active_user_count: "Діючі користувачі"
       contact: "Зв’язатися з нами"
       contact_info: "У випадку серйозних проблем з цим сайтом, будь ласка, зв’яжіться з нами через %{contact_info}."
@@ -418,14 +417,12 @@ uk:
         invalid: "Будь ласка, введіть вірний email"
       name:
         title: "Ім'я"
-        instructions: "Ваше повне ім’я (необов’язково)"
         instructions_required: "Ваше повне ім’я"
         too_short: "Ваше ім’я надто коротке"
         ok: "Ваше ім’я виглядає добре"
       username:
         title: "Ім'я користувача"
         available: "Ваше ім'я доступне"
-        global_mismatch: "Вже зареєстровано. Спробуєте {{suggestion}}?"
         not_available: "Не доступно. Спробуєте {{suggestion}}?"
         too_short: "Ваше ім'я закоротке"
         too_long: "Ваше ім'я довге"
@@ -838,9 +835,6 @@ uk:
         unarchive: "Розархівувати тему"
         archive: "Заархівувати тему"
         reset_read: "Скинути дані про прочитаність"
-      reply:
-        title: 'Відповісти'
-        help: 'почати складати відповідь на цю тему'
       clear_pin:
         title: "Відкріпити"
         help: "Скасувати закріплення цієї теми, щоб вона більше не з'являлася на початку Вашого переліку тем"
@@ -971,10 +965,8 @@ uk:
         displays:
           inline:
             title: "Показати результат виведення зі змінами на місці"
-            button: '<i class="fa fa-square-o"></i> HTML'
           side_by_side:
             title: "Показати бік-о-бік результати виведення"
-            button: '<i class="fa fa-columns"></i> HTML'
     category:
       can: 'може&hellip; '
       none: '(без категорії)'

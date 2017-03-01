@@ -35,7 +35,6 @@ nb_NO:
   remove_posts_deleted_by_author: "Slettet av forfatter"
   emails:
     incoming:
-      default_subject: "Innkommende e-post fra %{email}"
       show_trimmed_content: "Vis beskjært innhold"
       errors:
         no_message_id_error: "Skjer når en e-post ikke har noen «Message-Id»-header."
@@ -100,7 +99,6 @@ nb_NO:
       max_username_length_range: "Du kan ikke sette maksimum under minimum."
       default_categories_already_selected: "Du kan ikke velge en annen kategori brukt i en annen liste."
   invite:
-    accept_invite: "Godta invitasjon"
     not_found: "Ditt invitasjonssymbol er ugyldig. Kontakt sidens administrator."
   bulk_invite:
     file_should_be_csv: "Filen som lastes opp burde være i csv format."
@@ -219,40 +217,6 @@ nb_NO:
       - Konstruktiv kritikk er velkommen, men husk å kritisere *idéer,* ikke mennesker.
 
       For mer informasjon [se retningslinjene våre](/guidelines). Dette panelet vil kun vises for ditt/dine første %{education_posts_text}.
-    avatar: |
-      ### Hva med et bilde til kontoen din?
-
-      Du har opprettet noen innlegg og svar, men profilbildet ditt er ikke så unikt som du er -- det er bare en bokstav.
-
-      Har du tenkt på å **[gå til brukerprofilen din](%{profile_path})** og laste opp et bilde som representerer deg?
-
-      Det er enklere å følge diskusjoner og finne interessante personer i samtaler når alle har et unikt profilbilde!
-    sequential_replies: |
-      ### Vurder å svare til flere innlegg på samme tid
-
-      I stedet for mange sekvensielle svar til et emne så kan du vurdere ett enkelt svar som inkluderer sitater fra tidligere innlegg og @navn referanser.
-
-      Du kan redigere og legge til sitater i tidligere svar ved å markere tekst og velge <b>quote reply</b> knappen som dukker opp.
-
-      Det er lettere for alle å lese emner som har færre og dypere svar enn mange små individuelle svar.
-    dominating_topic: |
-      ### La andre delta i diskusjonen
-
-      Dette emnet er tydeligvis viktig for deg &ndash; du har skrevet mer enn %{percent}% av svarene her.
-
-      Er du sikker du gir nok tid til andre å dele sine innspill også?
-    too_many_replies: |
-      ### Du har nådd maksimalt antallet mulige svar for dette emnet
-
-      Vi beklager, men nye brukere er midlertidig begrenset til %{newuser_max_replies_per_topic} svar per emne.
-
-      Fremfor å legge inn nok et svar kan du vurdere å redigere dine tidligere svar eller delta i andre diskusjoner.
-    reviving_old_topic: |
-      ### Gjenoppliv dette emnet?
-
-      Det siste innlegget er nå mer enn %{days} dager gammelt. Svaret ditt vil bumpe emnet opp til toppen av listen og vil varsle alle som tidligere har vært involvert i samtalen.
-
-      Er du sikker du vil fortsette denne gamle samtalen?
   activerecord:
     attributes:
       category:
@@ -452,7 +416,6 @@ nb_NO:
     title: 'Tilbakestill passord'
     success: "Du har endret passordet og er nå logget inn."
     success_unapproved: "Du har endret ditt passord."
-    continue: "Fortsett til %{site_name}"
   change_email:
     confirmed: "E-postaddressen din er blitt oppdatert."
     please_continue: "Fortsett til %{site_name}"
@@ -728,8 +691,6 @@ nb_NO:
     enable_badges: "Aktiver badge system"
     log_out_strict: "Ved utlogging, logg ut av ALLE enheter som er pålogget"
     invite_expiry_days: "Hvor lenge en bruker invitasjons nøkkel er gyldig i dager"
-    min_username_length: "Minste antall tegn tillatt for brukernavn."
-    max_username_length: "Største antall tegn tillatt for brukernavn."
     min_password_length: "Minimums passordslengde."
     min_admin_password_length: "Minimums passordslengde for administrator."
     rate_limit_create_post: "Etter et innlegg må ny brukere vente (n) sekunder før de kan skrive et nytt"
@@ -747,7 +708,6 @@ nb_NO:
     digest_posts: "Maksimalt antall populære innlegg å vise i oppsummerings-e-posten."
     digest_other_topics: "Maksimalt antall emner å vise i delen 'Nytt i emner og kategorier du følger' i oppsummerings-e-posten."
     digest_min_excerpt_length: "Minimal lengde på utdrag av innlegg i e-post-oppsummeringen, i antall tegn."
-    delete_digest_email_after_days: "Utelat oppsummerings-eposter for brukere ikke sett på nettstedet siden mer enn (n) dager."
     digest_suppress_categories: "Utelat disse kategoriene i oppsummerings-eposter"
     disable_digest_emails: "Deaktivér oppsummerings-eposter for alle brukere."
     allow_profile_backgrounds: "Gi brukere mulighet til å laste opp profilbakgrunner."

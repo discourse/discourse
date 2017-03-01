@@ -33,7 +33,6 @@ da:
   anonymous: "Anonym"
   emails:
     incoming:
-      default_subject: "Indgående email fra %{email}"
       show_trimmed_content: "Vis trimmet indhold"
       maximum_staged_user_per_email_reached: "Maksimalt antal af brugere oprettet pr. email."
       errors:
@@ -225,40 +224,6 @@ da:
       - Det er godt med kritik, men husk at kritisere *ideer*, ikke personer.
 
       For flere tips, [se vores retningslinier](/guidelines). Denne boks dukker kun op for dine første %{education_posts_text}.
-    avatar: |
-      ### Hvad med et billede til din konto?
-
-      Du har oprettet et par emner og svar, men dit avatar er ikke så unik som du er -- det er bare et bogstav.
-
-      Har du overvejet at **[gå til din brugerprofil](%{profile_path})** og uploade et billede, der repræsenterer dig?
-
-      Det er lettere at følge diskussioner og finde interessant mennesker i samtaler, hvor alle har en unik avatar!
-    sequential_replies: |
-      ### Overvej at svare på flere indlæg på en gang
-
-      Istedet for at lave mange små individuelle kommentarer, overvej at lave et enkelt svar som inkluderer "citater" fra tidligere indlæg eller ved at nævne andre brugere med et @.
-
-      Benyt et citat fra et tidligere svar ved at markere den ønskede tekst og herefter vælge <b>opret citat</b> knappen som vises.
-
-      Det er nemmere for alle at læse om emner som har færre svar som går i dybden, end mange små individuelle svar.
-    dominating_topic: |
-      ### Lad andre deltage i samtalen
-
-      Dette emne er åbenbart vigtigt for dig &ndash; du har oprettet mere end %{percent}% af svarene her.
-
-      Er du sikker på, at du giver tilstrækkelig tid til, at andre folk kan dele deres synspunkter?
-    too_many_replies: |
-      ### Du kan ikke skrive flere indlæg i dette emne
-
-      Beklager, men nye brugere er begrænset til %{newuser_max_replies_per_topic} svar i hvert emne.
-
-      I stedet for at tilføje endnu et svar, bør du overveje at redigere et af dine eksisterende svar eller at besøge andre emner.
-    reviving_old_topic: |
-      ### Genopliv dette emne?
-
-      Det sidste svar på dette emne er nu over %{days} gammelt. dit svar vil trække dette emne til toppen af listen og vil påminde alle der tidligere have været med i samtalen.
-
-      Er du sikker på du vil vække dette emne til live igen?
   activerecord:
     attributes:
       category:
@@ -457,14 +422,11 @@ da:
         other: "næsten %{count} år siden"
   password_reset:
     no_token: "Beklager, dit kodeords-reset link er udløbet. Vælg 'Log ind' knappen og brug 'Jeg har glemt mit kodeord' for at få et nyt link."
-    choose_new: "Vælg et nyt kodeord"
-    choose: "Vælg et kodeord"
     update: 'opdatér kodeord'
     save: 'Set kodeord'
     title: 'nulstil kodeord'
     success: "Dit kodeord er ændret og du er nu logget ind."
     success_unapproved: "Dit kodeord er ændret."
-    continue: "Fortsæt til %{site_name}"
   change_email:
     confirmed: "Din e-mail-adresse er opdateret."
     please_continue: "Fortsæt til %{site_name}"
@@ -720,7 +682,6 @@ da:
     facebook_config_warning: 'Serveren er konfigureret til at tillade tilmelding og login med Facebook (enable_facebook_logins), men app id og app secret værdierne er ikke angivet. Gå til <a href="/admin/site_settings">indstillinger</a> og opdatér indstillingerne. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-facebook-logins" target="_blank">Se denne vejledning for mere information</a>.'
     twitter_config_warning: 'Serveren er konfigureret til at tillade tilmelding og login med Twitter (enable_twitter_logins), men key og secret værdierne er ikke angivet. Gå til <a href="/admin/site_settings">indstillinger</a> og opdatér indstillingerne. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-twitter-logins" target="_blank">Se denne vejledning for mere information</a>.'
     github_config_warning: 'Serveren er konfigureret til at tillade tilmelding og login med GitHub (enable_github_logins), men client id og secret værdierne er ikke angivet. Gå til <a href="/admin/site_settings">indstillinger</a> og opdatér indstillingerne. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide" target="_blank">Se denne vejledning for mere information</a>.'
-    s3_config_warning: 'Serveren er konfigureret til at uploade filer til s3, men mindst én af følgende indstillinger er ikke angivet: s3_access_key_id, s3_secret_access_key eller s3_upload_bucket. Gå til <a href="/admin/site_settings">indstillinger</a> og opdatér indstillingerne. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Se "How to set up image uploads to S3?" for mere information</a>.'
     image_magick_warning: 'Serveren er konfigureret til at lave thumbnails af store billeder, men ImageMagick er ikke installeret. Installér ImageMagick med din foretrukne package manager eller <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">download den seneste udgave</a>.'
     failing_emails_warning: 'Der er %{num_failed_jobs} email operationer der mislykkede. Tjek din app.yml for at sikre at din mail server indstillinger er korrekte. <a href="/sidekiq/retries" target="_blank">Se mislykkede operationer i Sidekiq</a>.'
     subfolder_ends_in_slash: "Din undermappe er ikke opsat korrekt; DISCOURSE_RELATIVE_URL_ROOT ender med en slash."
@@ -769,6 +730,7 @@ da:
     max_image_width: "Maximum thumbnail width of images in a post"
     max_image_height: "Maksimum miniaturebillede højde for billeder i et indlæg"
     category_featured_topics: "Antallet af emner der vises pr. kategori på /categories-siden. Efter ændring af denne værdi kan det tage op til 15 minutter før kategorisiden opdateres."
+    show_subcategory_list: "Vis subkategori liste i stedet for emneliste, når man åbner en ny kategori."
     fixed_category_positions: "Hvis krydset af, vil du være i stand til at arrangere ordnet visning af kategorier. Hvis ikke afkrydset vil de være listet i en rækkefølge baseret på aktivitet."
     fixed_category_positions_on_create: "Hvis afkrydset vil kategori visning blive vedligeholdt baseret på emne (kræver manuelt valgt visning af kategorier)."
     exclude_rel_nofollow_domains: "En liste af domæner hvor 'nofollow' skal tilføjes til links. tid.com vil desuden automatisk tillade sub.tid Som minimum bør du tilføje top level domænet til sitet, for at hjælpe webcrawlere finde alt indhold. Såfremt andre dele af jeres site er på andre domæner, så tilføj også disse."
@@ -843,8 +805,6 @@ da:
     invite_passthrough_hours: "Hvor længe kan en bruger benytte en tidligere benyttet invitation til at logge ind, i timer."
     invite_only: "Offentlig registrering er deaktiveret, alle nye brugere skal inviteres af andre medlemmer eller Staff."
     login_required: "Kræv godkendelse til at læse indhold på dette site, og tillad ikke anonym adgang."
-    min_username_length: "Minimumslængde på et brugernavn i antal karakterer."
-    max_username_length: "Maksimal længde af et brugernavn i antal karakterer."
     reserved_usernames: "Brugernavne for hvem oprettelse ikke er mulig."
     min_password_length: "Mindste adgangskodelængde."
     min_admin_password_length: "Minimumslængde for Admin adgangskoder."

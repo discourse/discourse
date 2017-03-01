@@ -590,6 +590,8 @@ fi:
         error: "(virhe)"
         action: "Lähetä sähköposti salasanan uusimista varten"
         set_password: "Aseta salasana"
+        choose_new: "Valitse uusi salasana"
+        choose: "Valitse salasana"
       change_about:
         title: "Muokkaa kuvaustasi"
         error: "Arvon muuttamisessa tapahtui virhe."
@@ -643,13 +645,11 @@ fi:
         instructions: "uniikki, ei välilyöntejä, lyhyt"
         short_instructions: "Muut käyttäjät voivat viitata sinuun nimellä @{{username}}"
         available: "Käyttäjätunnus on vapaana"
-        global_match: "Sähköposti vastaa rekisteröityä käyttäjänimeä"
-        global_mismatch: "Nimi on jo käytössä. Kokeile {{suggestion}}?"
         not_available: "Ei saatavilla. Kokeile {{suggestion}}?"
+        not_available_no_suggestion: "Ei saatavilla"
         too_short: "Käyttäjätunnus on liian lyhyt"
         too_long: "Käyttäjätunnus on liian pitkä"
         checking: "Tarkistetaan käyttäjätunnusta..."
-        enter_email: 'Käyttäjänimi löydetty; kirjoita sitä vastaava sähköpostiosoite.'
         prefilled: "Sähköposti vastaa tätä käyttäjänimeä"
       locale:
         title: "Käyttöliittymän kieli"
@@ -940,6 +940,7 @@ fi:
       to_continue: "Ole hyvä ja kirjaudu sisään"
       preferences: "Sinun täytyy olla kirjautuneena sisään muokataksesi tilisi asetuksia"
       forgot: "En muista käyttäjätilini tietoja"
+      not_approved: "Tiliäsi ei ole vielä hyväksytty. Saat ilmoituksen sähköpostilla, kun voit kirjautua sisään."
       google:
         title: "Googlella"
         message: "Todennetaan Googlen kautta (varmista, että ponnahdusikkunoiden esto ei ole päällä)"
@@ -961,6 +962,17 @@ fi:
       github:
         title: "GitHubilla"
         message: "Todennetaan Githubin kautta (varmista, että ponnahdusikkunoiden esto ei ole päällä)"
+    invites:
+      accept_title: "Kutsu"
+      welcome_to: "Tervetuloa sivustolle %{site_name}!"
+      invited_by: "Sinut kutsui"
+      social_login_available: "Voit myös kirjautua some-tilin avulla, joka on saman sähköpostiosoitteen alainen."
+      your_email: "Tilisi sähköpostiosoite on <b>%{email}</b>."
+      accept_invite: "Hyväksy kutsu"
+      success: "Tili luotiin, ja olet nyt kirjautunut sisään."
+      password_label: "Aseta salasana (valinnainen)"
+    password_reset:
+      continue: "Jatka sivustolle %{site_name}"
     emoji_set:
       apple_international: "Apple/Kansainvälinen"
       google: "Google"
@@ -1404,11 +1416,8 @@ fi:
         make_banner: "Tee ketjusta banneri"
         remove_banner: "Poista banneri"
       reply:
-        post:
-          title: 'Vastaa'
-        topic:
-          title: 'Vastaa'
-          help: 'aloita kirjoittamaan vastausta tähän ketjuun'
+        title: 'Vastaa'
+        help: 'aloita kirjoittamaan vastausta tähän ketjuun'
       clear_pin:
         title: "Poista kiinnitys"
         help: "Poista kiinnitys, jotta ketju ei enää pysy listauksen ylimpänä"
@@ -1537,6 +1546,7 @@ fi:
       wiki_last_edited_on: "wikiä muokattiin viimeksi"
       last_edited_on: "viestin viimeisin muokkausaika"
       reply_as_new_topic: "Vastaa aihetta sivuavassa ketjussa"
+      reply_as_new_private_message: "Vastaa samoille vastaanottajille uudessa yksityisviestiketjussa"
       continue_discussion: "Jatkoa ketjulle {{postLink}}:"
       follow_quote: "siirry lainattuun viestiin"
       show_full: "Näytä koko viesti"
@@ -1709,6 +1719,7 @@ fi:
           show: "Näytä revisio"
           revert: "Palaa tähän revisioon"
           edit_wiki: "Muokkaa wikiä"
+          edit_post: "Muokkaa viestiä"
           comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> <i class='fa fa-arrows-h'></i> <strong>{{current}}</strong> / {{total}}"
         displays:
           inline:

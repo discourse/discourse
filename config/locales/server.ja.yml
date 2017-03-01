@@ -32,7 +32,6 @@ ja:
   anonymous: "匿名"
   emails:
     incoming:
-      default_subject: "%{email}からメール"
       show_trimmed_content: "続きを読む"
   errors: &errors
     format: '%{attribute} %{message}'
@@ -162,34 +161,6 @@ ja:
       - 会話は礼儀正しく、マナーを守りましょう。
       - しっかりとした批判は良いかと思います。ただし「その人」に対してでは無く、「そのアイディア」に対してしましょう。
       詳細は[コミュニティガイドライン](/guidelines)を参照してください。このメッセージは最初の %{education_posts_text} のみに表示されます。
-    sequential_replies: |+
-      ### 一度に複数の投稿に返信する
-
-      トピックにたくさん返信する代わりに、以前の投稿への @name メンションや引用などを活用して返信を一つの投稿にまとめましょう。
-
-      文章を選択し、<b>引用して返信</b>ボタンをクリックすることで、文章を引用して編集することができます。
-
-      こまごまと何度も返信するより、まとまって返信をすることで、より見やすく、より話しやすくなります。
-
-    dominating_topic: |
-      ### 他のユーザーも議論に参加させてあげましょう
-
-      このトピックはあなたにとても重要なもののようですね &ndash; ここへ %{percent}% 以上の返信をあなたが行っています。
-
-      他のユーザーも返信するためにも、ある程度時間を開けているか確認してみましょう。
-    too_many_replies: |
-      ### このトピックに回答出来る制限を超えました
-
-      申し訳ありません。新しいユーザーの同じトピックへの返信は%{newuser_max_replies_per_topic} 回に一時的に制限されています。
-
-      回答を追加する代わりに、以前の回答を編集するか、別のトピックを訪れる事を検討してください。
-    reviving_old_topic: |
-      ### このトピックを復活させてもよろしいですか？
-
-      このトピックへの最後の返信は%{days}日前です。
-      あなたの返信はトピック一覧の一番上に移動させ、以前に返信した人宛に通知が送られます。
-
-      本当に過去の会話を復元してもよろしいですか？
   activerecord:
     attributes:
       category:
@@ -331,14 +302,11 @@ ja:
         other: "だいたい %{count} 年前"
   password_reset:
     no_token: "申し訳ありません。パスワード変更のためのリンクは古いようです。ログインボタンを選択し、再度パスワード変更を行ってください"
-    choose_new: "新しいパスワードを選択してください"
-    choose: "パスワードを入力ください"
     update: 'パスワード更新'
     save: 'パスワードを設定する'
     title: 'パスワードリセット'
     success: "パスワードを更新し、ログインしました。"
     success_unapproved: "パスワードを更新しました。"
-    continue: "%{site_name} に進む"
   change_email:
     confirmed: "メールアドレスが更新されました。"
     please_continue: "%{site_name}へ"
@@ -567,8 +535,6 @@ ja:
     facebook_config_warning: 'サーバが Facebook アカウントによるサインアップ・ログイン可能な設定 (enable_facebook_logins) になっていますが、app id と app secret が設定されていません。<a href="/admin/site_settings">サイトの設定</a> にて設定を更新してください。<a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-facebook-logins" target="_blank">詳しくはこちらを参考にしてください</a>。'
     twitter_config_warning: 'サーバが Twitter アカウントによるサインアップ・ログイン可能な設定 (enable_twitter_logins) になっていますが、key と secret が設定されていません。<a href="/admin/site_settings">サイトの設定</a> にて設定を更新してください。<a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-twitter-logins" target="_blank">詳しくはこちらを参考にしてください</a>。'
     github_config_warning: 'サーバが Github アカウントによるサインアップ・ログイン可能な設定 (enable_github_logins) になっていますが、client id と secret が設定されていません。<a href="/admin/site_settings">サイトの設定</a> にて設定を更新してください。<a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide" target="_blank">詳しくはこちらを参考にしてください</a>。'
-    s3_config_warning: 'サーバが S3 にファイルをアップロードするように設定されていますが、次のうち少なくとも1つが設定されていません: s3_access_key_id, s3_secret_access_key or s3_upload_bucket。<a href="/admin/site_settings">サイトの設定</a> にて設定を更新してください。<a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">詳しくは "How to set up image uploads to S3?" を参考にしてください</a>。'
-    s3_backup_config_warning: 'サーバが S3 にバックアップをアップロードするように設定されていますが、次のうち少なくとも1つが設定されていません: s3_access_key_id, s3_secret_access_key or s3_upload_bucket。<a href="/admin/site_settings">サイトの設定</a> にて設定を更新してください。<a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">詳しくは "How to set up image uploads to S3?" を参考にしてください</a>'
     image_magick_warning: 'サーバが大きな画像のサムネイルを作成する設定になっていますが、ImageMagick がインストールされていません。お好きなパッケージマネージャを使って ImageMagick をインストールするか、<a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">最新のリリースをダウンロードしてください</a>。'
   site_settings:
     censored_words: "自動的に &#9632;&#9632;&#9632;&#9632; で置換されます"
@@ -602,6 +568,7 @@ ja:
     max_image_width: "投稿内での画像サムネイルの最大の幅"
     max_image_height: "投稿内での画像サムネイルの最大の高さ"
     category_featured_topics: "/categories ページに表示されるカテゴリ毎のトピックの数。変更後、カテゴリページの更新におよそ15分程かかります。"
+    show_subcategory_list: "カテゴリを表示する際にトピック一覧の代わりにサブカテゴリ一覧を表示"
     fixed_category_positions: "チェックすると、カテゴリの表示順をコントロールできます。チェックしない場合、アクティビティ順に表示されます"
     fixed_category_positions_on_create: "チェックすると、トピック作成ダイアログ上でカテゴリの順序が維持されます(fixed category positions が必要)。"
     add_rel_nofollow_to_user_content: " 内部リンク(親ドメインを含む)を除き、投稿されたすべてのユーザコンテンツに rel nofollow を追加する。この設定を反映するには \"rake posts:rebake\" を実行して baked markdown をすべて更新する必要があります"
@@ -978,20 +945,6 @@ ja:
       other: "%{count}件の通報が対応待ちです"
   invite_mailer:
     subject_template: "%{invitee_name} があなたを %{site_domain_name}の'%{topic_title}'に招待しました"
-    text_body_template: |
-      %{invitee_name} があなたを招待しました
-
-      > %{site_title} -- %{site_description}
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      もし興味があれば下のリンクをクリックしてください:
-
-      %{invite_link}
-
-      これは信頼されたユーザからの招待のため、すぐに議論に返答することができます
   invite_forum_mailer:
     subject_template: "%{invitee_name} あなたを %{site_domain_name}に招待しました。"
   invite_password_instructions:
@@ -1063,12 +1016,6 @@ ja:
         ```
     csv_export_succeeded:
       subject_template: "データのダウンロード準備が完了しました"
-      text_body_template: |
-        データ出力が完了しました! :dvd:
-
-        <a class="attachment" href="%{download_link}">%{file_name}</a> (%{file_size})
-
-        このダウンロードリンクは48時間有効です
     csv_export_failed:
       subject_template: "データのエクスポートに失敗しました"
       text_body_template: "申し訳ありません。データのエクスポートに失敗しました。ログを確認するかスタッフメンバーにお問い合わせください。"

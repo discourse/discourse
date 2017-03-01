@@ -105,7 +105,6 @@ zh_CN:
       default_categories_already_selected: "不能选择一个已经用于另一个列表的分类。"
       s3_upload_bucket_is_required: "你没有填写“s3_upload_bucket”，不能开启上传至 S3。"
   invite:
-    accept_invite: "接受邀请"
     not_found: "你的邀请码不正确。请联系网站管理员。"
   bulk_invite:
     file_should_be_csv: "上传的文件应为 csv 格式。"
@@ -233,39 +232,13 @@ zh_CN:
 
       欲查看更多，[请查看我们的社群准则](/guidelines)。此信息面板只会在你发表前 %{education_posts_text} 时显示。
     avatar: |
-      ### 给你的账户设置头像如何？
+      ### 想更改你的头像吗?
 
-      你已经发表了一些主题和回复，但是你的个人头像并不像你一样独特——只是一些字母而已。
+      你已经发表和回复了几个主题，但你的头像并不像你自己一样独一无二 – 它仅仅是一个字母.
 
-      你考虑过**[访问你的用户页面](%{profile_path})**，再上传一个代表你的图片？
+      你想过更改你的头像 **[查看你的个人资料](%{profile_path})** 并上传一张代表你自己的照片吗?
 
-      当所有人都有独特的头像时，这会让专注讨论和找到有趣的人更加轻松。
-    sequential_replies: |
-      ### 考虑一次性回复多个帖子
-
-      与其接连回复主题几次，不如在一个回复中引用相关内容或者@用户名引用前面的帖子。
-
-      你可以编辑你之前的回复以添加引用。添加引用需要选择文字并且点击出现的<b>引用回复</b>按钮。
-
-      当主题中的帖子的内容不是多个小且独立的回复，而是更少的更有深度的帖子时，我们会更认真地阅读这个主题。
-    dominating_topic: |
-      ### 让其他人加入讨论
-
-      很明显这个主题对你很重要 &ndash; 你已经发表的帖子占该主题 %{percent}% 的回复。
-
-      你有让其他人自由地表达他们的观点了吗？
-    too_many_replies: |
-      ### 你发表的回复数量已经达到该主题的回复上限。
-
-      非常抱歉，但新用户被临时限制，只能在同一主题中回复 %{newuser_max_replies_per_topic} 次。
-
-      想要添加另一个回复不如考虑编辑原先的回复或访问其他主题。
-    reviving_old_topic: |
-      ### 复活这个主题？
-
-      这个主题的最后一个回复距今已有 %{days} 天了。你的回复将让主题重新出现在列表的顶端并通知原先参与讨论的人。
-
-      你确定要继续这个老的话题吗？
+      如果每个人都有自己独特的头像会让人更加容易参与讨论和发现有趣的人!
   activerecord:
     attributes:
       category:
@@ -296,6 +269,7 @@ zh_CN:
               same_as_username: "与你的用户名相同。请使用一个更安全的密码。"
               same_as_email: "与你的邮件地址相同。请使用一个更安全的密码。"
               same_as_current: "和你当前的密码相同"
+              unique_characters: "包含太多重复的字符。请使用一个更安全的密码。"
             ip_address:
               signup_not_allowed: "不能使用这个账户登录。"
         color_scheme_color:
@@ -472,7 +446,6 @@ zh_CN:
     title: '重置密码'
     success: "你的密码已经修改成功，你现在已经登录。"
     success_unapproved: "你的密码已经修改成功。"
-    continue: "转入到 %{site_name}"
   change_email:
     confirmed: "你的电子邮箱已被更新。"
     please_continue: "转入到%{site_name}"
@@ -743,8 +716,6 @@ zh_CN:
     facebook_config_warning: '服务器允许使用 Facebook 账号登录（enable_facebook_logins），但是 app id 和 app secret 没有被设定。 到<a href="/admin/site_settings">站点设置</a>更新此设定。<a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-facebook-logins" target="_blank">参考设定指南</a>。'
     twitter_config_warning: '服务器允许使用 Twitter 账号登录（enable_twitter_logins），但是 key 和 secret 没有被设定。 到<a href="/admin/site_settings">站点设置</a>更新此设定。<a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-twitter-logins" target="_blank">参考设定指南</a>。'
     github_config_warning: '服务器允许使用 GitHub 账号登录（enable_github_logins），但是 client id 和 secret 没有被设定。 到<a href="/admin/site_settings">站点设置</a>更新此设定。<a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide" target="_blank">参考设定指南</a>。'
-    s3_config_warning: '服务器被配置为上传文件到 s3，但是至少有一个值未被设定： s3_access_key_id, s3_secret_access_key 或 s3_upload_bucket。到<a href="/admin/site_settings">站点设置</a>更新此设定。<a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">参考如何设置图片上传至 S3</a>。'
-    s3_backup_config_warning: '服务器被配置为上传备份到 s3，但是至少有一个值未被设定： s3_access_key_id, s3_secret_access_key 或 s3_upload_bucket。到<a href="/admin/site_settings">站点设置</a>更新此设定。<a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">参考如何设置图片上传至 S3</a>。'
     image_magick_warning: '服务器被设置为给大图片创建缩略图，但是 ImageMagick 没有被安装。用你最喜爱的包管理器安装 ImageMagick 或<a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">下载最新版</a>。'
     failing_emails_warning: '有 %{num_failed_jobs} 个邮件任务失败。请检查 app.yml 文件是否正确配置了邮件服务器。<a href="/sidekiq/retries" target="_blank">查看 Sidekiq 中失败的任务</a>。'
     subfolder_ends_in_slash: "你的子目录设置不正确；DISCOURSE_RELATIVE_URL_ROOT以斜杠结尾。"
@@ -795,6 +766,7 @@ zh_CN:
     max_image_width: "帖子中图片允许的最大缩略图宽度"
     max_image_height: "帖子中图片允许的最大缩略图宽度"
     category_featured_topics: "在分类 /categories 页面中每个分类显示的主题数目。在修改这个值之后，分类页面需要 15 分钟后完成更新。"
+    show_subcategory_list: "进入分类时显示子分类列表而不是主题列表。"
     fixed_category_positions: "如果选择，你将可以设置一个固定的分类顺序。如果不选择，分类将按照活动的顺序显示。"
     fixed_category_positions_on_create: "如果选择了，目录排序将会在话题创建对话框中被包含(要求固定目录位置选项)"
     add_rel_nofollow_to_user_content: "添加 rel nofollow 属性到所有的用户内容，除了内部链接（包括父域名）。如果你更改了这个，你必须重新调制所有帖子，以该命令：“rake posts:rebake”"
@@ -889,8 +861,6 @@ zh_CN:
     invite_passthrough_hours: "用户多久才能使用一个已经使用过的邀请代码，以小时计"
     invite_only: "公开注册已禁用，新用户必须被其他成员或管理人员邀请。"
     login_required: "需要验证才能继续在该站阅读，不允许匿名访问。"
-    min_username_length: "最小用户名长度。"
-    max_username_length: "最大用户名长度。"
     reserved_usernames: "注册时不可使用的用户名。"
     min_password_length: "最小密码长度。"
     min_admin_password_length: "管理员最短密码长度"
@@ -1130,7 +1100,6 @@ zh_CN:
     digest_posts: "邮件摘要中显示的最流行帖子的数量。"
     digest_other_topics: "邮件摘要中“你关注的主题和分类中的新内容”栏目显示的主题数目上限。"
     digest_min_excerpt_length: "邮件摘要中显示的帖子摘要字符数下限。"
-    delete_digest_email_after_days: "不发送摘要邮件给超过（n）天没访问的用户。"
     digest_suppress_categories: "不在摘要邮件中显示这些分类的内容。"
     disable_digest_emails: "禁用所有用户摘要邮件功能。"
     email_accent_bg_color: "HTML 邮件中某些元素的背景使用的强调颜色。输入色彩名（“red”）或十六进制值（“#FF0000”）。"
@@ -1366,7 +1335,7 @@ zh_CN:
       short: "必须超过 %{min} 个字"
       long: "必须不超过 %{max} 个字"
       characters: "必须只包含字母、数字和下划线"
-      unique: "必须是唯一的"
+      unique: "已被使用"
       blank: "必须存在"
       must_begin_with_alphanumeric_or_underscore: "必须以字母、数字或下划线开头"
       must_end_with_alphanumeric: "必须以字母或数字结尾"
@@ -1398,44 +1367,8 @@ zh_CN:
       如果你想要继续接受邮件更新，你可以忽略这封邮件。
   invite_mailer:
     subject_template: "%{invitee_name} 邀请你参与 %{site_domain_name} 主题 '%{topic_title}' "
-    text_body_template: |
-      %{invitee_name} 邀请你参与讨论
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      位于站点
-
-      > %{site_title} -- %{site_description}
-
-      如果你有兴趣，点击下面的链接：
-
-      %{invite_link}
-
-      这封邀请来组于受信任的用户，所以你可以立即回复。
   custom_invite_mailer:
     subject_template: "%{invitee_name}邀请你'%{topic_title}'在%{site_domain_name}"
-    text_body_template: |
-      %{invitee_name}邀请你参与
-
-      > %{site_title} -- %{site_description}
-
-      中的
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      %{invitee_name}的留言：
-
-      %{user_custom_message}
-
-      如果你有兴趣，点击下面的链接：
-
-      %{invite_link}
-
-      这封邀请发自受信任的用户，所以你可以立即回复主题。
   invite_forum_mailer:
     subject_template: "%{invitee_name} 邀请你加入 %{site_domain_name}"
   custom_invite_forum_mailer:
@@ -2792,6 +2725,7 @@ zh_CN:
             one_paragraph: "请限制你的欢迎消息至一段话。"
       privacy:
         title: "访问"
+        description: "<p>你的社群是对所有人公开开放吗？还是需要邀请/审批？你可以先做一些设置工作，以后再对所有人开放.</p> <p>你同样也可以从主题或用户个人资料页面来发送邀请。</p>"
         fields:
           privacy:
             choices:
@@ -2831,6 +2765,7 @@ zh_CN:
         title: "主题"
         fields:
           theme_id:
+            description: "你想喜欢白色还是深色的界面？你可以以后在\"管理员/定制”界面更改这个设置。"
             choices:
               default:
                 label: "简洁亮"
@@ -2855,6 +2790,7 @@ zh_CN:
             label: "大图标"
             description: "现代设备中你站点显示的图标，要在大一点尺寸的情况下表现出色。推荐的尺寸至少要达到144px X 144px。"
       homepage:
+        description: "我们建议你在主页显示最后发点的主题，但你也可以选择在主页显示主题分类列表。"
         title: "主页"
         fields:
           homepage_style:
@@ -2865,6 +2801,7 @@ zh_CN:
                 label: "分类"
       emoji:
         title: "Emoji"
+        description: "你想使用哪种样式的表情符号？你可以以后在\"管理员/定制/表情符号（Emoji）\"界面增加更多定制的表情符号。"
       invites:
         title: "邀请管理人员"
         description: "你快做完啦！让我们邀请一些工作人员来帮助你<a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>创建一些讨论主题</a>以方便你发布社群。"

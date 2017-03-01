@@ -18,7 +18,6 @@ uk:
   log_in: "Вхід"
   emails:
     incoming:
-      default_subject: "Вхідна пошта від %{email}"
       errors:
         inactive_user_error: "Таке трапляється, якщо відправник не активний"
         blocked_user_error: "Таке трапляється, якщо відправника було заблоковано"
@@ -109,25 +108,6 @@ uk:
       trust_level_2: "trust_level_2"
       trust_level_3: "trust_level_3"
       trust_level_4: "trust_level_4"
-  education:
-    dominating_topic: |
-      ### Дайте можливість іншим включитися до обговорення
-
-      Ця тема однозначно важлива для Вас &ndash; Ви опублікували тут більше %{percent}% відповідей.
-
-      Ви впевнені, що даєте достатньо часу для того, щоб інші люди також мали можливість поділитися своїми думками?
-    too_many_replies: |
-      ### Ви досягли обмеження на кількість відповідей для цієї теми
-
-      Даруйте, але нові користувачі мають тимчасове обмеження до %{newuser_max_replies_per_topic} відповідей на одну тему.
-
-      Замість того, щоб додавати нову відповідь, спробуйте відредагувати свої старі відповіді, або відвідайте інші теми.
-    reviving_old_topic: |
-      ### Revive this topic?
-
-      The last reply to this topic is now over %{days} days old. Your reply will bump the topic to the top of its list and notify anyone previously involved in the conversation.
-
-      Are you sure you want to continue this old conversation?
   activerecord:
     attributes:
       category:
@@ -190,14 +170,11 @@ uk:
         few: "%{count} секунд тому"
         other: "%{count} секунд тому"
   password_reset:
-    choose_new: "Будь ласка, оберіть новий пароль"
-    choose: "Будь ласка, оберіть пароль"
     update: 'Оновити пароль'
     save: 'Встановити пароль'
     title: 'Скинути пароль'
     success: "Ви успішно змінили свій пароль і зараз Ви в системі."
     success_unapproved: "Ви успішно змінили свій пароль."
-    continue: "Продовжити у %{site_name}"
   change_email:
     confirmed: "Адресу вашої електронної скриньки оновлено."
     error: "Під час зміни адреси Вашої електронної скриньки трапилася помилка. Можливо, ця адреса вже використовується?"
@@ -324,7 +301,6 @@ uk:
     facebook_config_warning: 'The server is configured to allow signup and log in with Facebook (enable_facebook_logins), but the app id and app secret values are not set. Go to <a href="/admin/site_settings">the Site Settings</a> and update the settings. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-facebook-logins" target="_blank">See this guide to learn more</a>.'
     twitter_config_warning: 'The server is configured to allow signup and log in with Twitter (enable_twitter_logins), but the key and secret values are not set. Go to <a href="/admin/site_settings">the Site Settings</a> and update the settings. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-twitter-logins" target="_blank">See this guide to learn more</a>.'
     github_config_warning: 'The server is configured to allow signup and log in with GitHub (enable_github_logins), but the client id and secret values are not set. Go to <a href="/admin/site_settings">the Site Settings</a> and update the settings. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide" target="_blank">See this guide to learn more</a>.'
-    s3_config_warning: 'The server is configured to upload files to s3, but at least one the following setting is not set: s3_access_key_id, s3_secret_access_key or s3_upload_bucket. Go to <a href="/admin/site_settings">the Site Settings</a> and update the settings. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">See "How to set up image uploads to S3?" to learn more</a>.'
     image_magick_warning: 'The server is configured to create thumbnails of large images, but ImageMagick is not installed. Install ImageMagick using your favorite package manager or <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">download the latest release</a>.'
   site_settings:
     default_locale: "Мова за замовчуванням для цього екземпляра Discourse (Код ISO 639-1)"
@@ -335,6 +311,7 @@ uk:
     queue_jobs: "ТІЛЬКИ ДЛЯ РОЗРОБНИКІВ! УВАГА! За замовчуванням, додавати завдання до черги в sidekiq. Якщо вимкнути, Ваш сайт зламається."
     crawl_images: "Отримувати зображення з віддалених адрес, щоб встановити правильні розміри ширини і висоти."
     category_featured_topics: "Кількість тем на одну категорію, що показуються на сторінці /categories. Після зміни цього значення, оновлення категорій займе до 15 хвилин."
+    show_subcategory_list: "Показувати перелік підкатегорій замість переліку тем при вході у категорію."
     apple_touch_icon_url: "Піктограма, що використовується для сенсорних пристроїв Apple. Рекмоендований розмір 144px на 144px."
     email_custom_headers: "Список заголовків електронної пошти, розділених вертикальною рискою"
     enable_long_polling: "Message bus used for notification can use long polling"

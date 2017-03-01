@@ -560,6 +560,8 @@ tr_TR:
         error: "(hata)"
         action: "Parola Sıfırlama E-postası Gönder"
         set_password: "Parola Belirle"
+        choose_new: "Yeni bir parola seçiniz"
+        choose: "Paralo seçiniz"
       change_about:
         title: "Hakkımda'yı Değiştir"
         error: "Bu değeri değiştirirken bir hata oluştu."
@@ -612,13 +614,11 @@ tr_TR:
         instructions: "Özgün, boşluksuz, kısa"
         short_instructions: "Kullanıcılar sizden @{{username}} olarak bahsedebilirler."
         available: "Kullanıcı adınız müsait"
-        global_match: "E-posta kayıtlı kullanıcı adıyla eşleşiyor"
-        global_mismatch: "Zaten kayıtlı. {{suggestion}} deneyin?"
         not_available: "Uygun değil. {{suggestion}} deneyin?"
+        not_available_no_suggestion: "Kullanılabilir değil"
         too_short: "Kullanıcı adınız çok kısa"
         too_long: "Kullanıcı adınız çok uzun"
         checking: "Kullanıcı adı müsait mi kontrol ediliyor..."
-        enter_email: 'Kullanıcı adı bulundu; eşleşen e-posta adresini girin'
         prefilled: "E-posta bu kullanıcı adı ile eşleşiyor"
       locale:
         title: "Arayüz dili"
@@ -715,10 +715,10 @@ tr_TR:
         link_generated: "Davet linki başarılı bir şekilde oluşturuldu"
         valid_for: "Davet linki sadece bu adres için geçerlidir: %{email}"
         bulk_invite:
-          none: "Henüz kimseyi davet etmemiş görünüyorsun. İstersen bireysel davetler gönderebilir veya  <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>CSV dosyası yükleyerek</a> bir çok insanı aynı anda davet edebilirsin."
+          none: "Henüz kimseyi davet etmediniz.. Kişsel davet gönderebilir  , veya bir çok kişiyi  <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>CSV dosyası yüklerek toplu olarak davet edebilirsiniz.</a>."
           text: "Dosyadan Toplu Davet Gönder"
           success: "Dosya başarıyla yüklendi, işlem tamamlandığında iletiyle bilgilendirileceksiniz."
-          error: "Üzgünüz, Dosya csv formatında olmalı"
+          error: "Üzgünüm, dosya CSV formatında olmak zorundadır."
       password:
         title: "Parola"
         too_short: "Parolanız çok kısa."
@@ -899,6 +899,7 @@ tr_TR:
       to_continue: "Lütfen Giriş Yap"
       preferences: "Tercihlerinizi değiştirebilmek için giriş yapmanız gerekiyor."
       forgot: "Hesap bilgilerimi hatırlamıyorum"
+      not_approved: "Hesabınız henüz onaylanmış değil. Onaylandığında mail ile bilgilendirileceksiniz."
       google:
         title: "Google ile"
         message: "Google ile kimlik doğrulaması yapılıyor (pop-up engelleyicilerin etkinleştirilmediğinden emin olun)"
@@ -920,6 +921,12 @@ tr_TR:
       github:
         title: "GitHub ile"
         message: "GitHub ile kimlik doğrulaması yapılıyor (pop-up engelleyicilerin etkinleştirilmediğinden emin olun)"
+    invites:
+      accept_title: "Davet"
+      welcome_to: "%{site_name} topluluğuna hoş geldiniz!"
+      invited_by: "Davet gönderen:"
+    password_reset:
+      continue: "%{site_name} devam edin"
     emoji_set:
       apple_international: "Apple/Uluslararası"
       google: "Google"
@@ -1350,11 +1357,8 @@ tr_TR:
         make_banner: "Manşet Konusu"
         remove_banner: "Manşet Konusunu Kaldır"
       reply:
-        post:
-          title: 'Cevapla'
-        topic:
-          title: 'Cevapla'
-          help: 'bu konuya bir cevap oluşturmaya başlayın'
+        title: 'Cevapla'
+        help: 'bu konuya bir cevap oluşturmaya başlayın'
       clear_pin:
         title: "Başa tutturmayı iptal et"
         help: "Bu konunun başa tutturulması iptal edilsin ki artık konu listenizin en üstünde gözükmesin"
@@ -1476,6 +1480,7 @@ tr_TR:
       wiki_last_edited_on: "wiki en son düzenlendi"
       last_edited_on: "gönderinin en son düzenlenme tarihi"
       reply_as_new_topic: "Bağlantılı Konu Olarak Cevapla"
+      reply_as_new_private_message: "Aynı alıcıyı yeni bir mesajla cevapla"
       continue_discussion: "{{postLink}} Gönderisinden tartışmaya devam ediliyor:"
       follow_quote: "alıntılanan iletiye git"
       show_full: "Gönderinin Tamamını Göster"
@@ -1621,7 +1626,7 @@ tr_TR:
           hide: "Düzenlemeyi gizle"
           show: "Düzenlemeyi göster"
           revert: "Bu sürüme geri dön"
-          edit_wiki: "wiki düzenle"
+          edit_wiki: "Wiki'yi düzenle"
           comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> <i class='fa fa-arrows-h'></i> <strong>{{current}}</strong> / {{total}}"
         displays:
           inline:

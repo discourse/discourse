@@ -353,14 +353,31 @@ cs:
         add_user_to_group: "Přidat uživatele"
         remove_user_from_group: "Odebrat uživatele"
     groups:
+      logs:
+        title: "Logy"
+        when: "Když"
+        action: "Akce"
+        target_user: "Cílový uživatel"
+        subject: "Předmět"
+        details: "Detail"
+        from: "Od"
+        to: "Komu"
+      edit:
+        title: 'Editovat skupinu'
+        full_name: 'Celé jméno'
       add: "Přidat"
+      bio: "O skupině"
       selector_placeholder: "Přidat členy"
       owner: "Vlastník"
       visible: "Skupina je viditelná pro všechny uživatele"
+      index:
+        title: "Skupiny"
+        empty: "Žádné viditelné skupiny."
       title:
         one: "skupina"
         few: "skupiny"
         other: "skupiny"
+      activity: "Aktivita"
       members: "Členové"
       topics: "Témata"
       posts: "Odpovědi"
@@ -392,6 +409,8 @@ cs:
         muted:
           title: "Ztišený"
           description: "Nikdy nedostanete oznámení o nových tématech v této skupině."
+      flair_preview_icon: "Náhled ikony"
+      flair_preview_image: "Náhled obrázku"
     user_action_groups:
       '1': "Rozdaných 'líbí se'"
       '2': "Obdržených 'líbí se'"
@@ -455,6 +474,8 @@ cs:
       profile: "Profil"
       mute: "Ignorovat"
       edit: "Upravit nastavení"
+      download_archive:
+        button_text: "Download mých příspěvků"
       new_private_message: "Nová zpráva"
       private_message: "Zpráva"
       private_messages: "Zprávy"
@@ -593,7 +614,6 @@ cs:
         instructions: "Obrázky pozadí jsou zarovnány a mají výchozí šířku 590px. "
       email:
         title: "Emailová adresa"
-        instructions: "Nebude zveřejněno"
         ok: "Pro potvrzení vám pošleme email."
         invalid: "Zadejte prosím správnou emailovou adresu"
         authenticated: "Vaše emailová adresa byla autorizována přes službu {{provider}}."
@@ -604,27 +624,24 @@ cs:
           other: "Email vám zašleme pouze pokud jste se neukázali během posledních {{count}} minut."
       name:
         title: "Jméno"
-        instructions: "Celé jméno (volitelně)"
+        instructions: "vaše celé jméno (nepovinné)"
         instructions_required: "Vaše celé jméno"
         too_short: "Máte moc krátké jméno"
         ok: "Parádní jméno"
       username:
         title: "Uživatelské jméno"
-        instructions: "Unikátní, bez mezer, radši kratší"
         short_instructions: "Lidé vás mohou zmínit pomocí @{{username}}"
         available: "Vaše uživatelské jméno je volné"
-        global_match: "Email odpovídá registrovanému uživatelskému jménu."
-        global_mismatch: "již zaregistrováno. Co třeba {{suggestion}}?"
         not_available: "Není k dispozici. Co třeba {{suggestion}}?"
         too_short: "Uživatelské jméno je moc krátké"
         too_long: "Uživatelské jméno je moc dlouhé"
         checking: "Zjišťuji, zda je uživatelské jméno volné..."
-        enter_email: 'Uživatelské jméno nalezeno; vyplňte propojený email'
         prefilled: "Email je propojen s tímto uživatelským jménem"
       locale:
         title: "Jazyk rozhraní"
         instructions: "Jazyk uživatelského prostředí. Změna obnoví stránku."
         default: "(výchozí)"
+        any: "jakýkoliv"
       password_confirmation:
         title: "Heslo znovu"
       last_posted: "Poslední příspěvek"
@@ -724,7 +741,6 @@ cs:
         same_as_username: "Vaše heslo je stejné jako Vaše uživatelské jméno."
         same_as_email: "Vaše heslo je stejné jako váš e-mail."
         ok: "Vaše heslo je v pořádku."
-        instructions: "Alespo %{count} znaků."
       summary:
         title: "Souhrn"
         stats: "Statistiky"
@@ -932,6 +948,9 @@ cs:
       github:
         title: "přes GitHub"
         message: "Autentizuji přes GitHub (ujistěte se, že nemáte zablokovaná popup okna)"
+    invites:
+      accept_title: "Pozvání"
+      invited_by: "Pozvání od:"
     emoji_set:
       apple_international: "Apple/Mezinárodní"
       google: "Google"
@@ -1378,9 +1397,6 @@ cs:
         pin_globally: "Připnout téma globálně"
         make_banner: "Banner Topic"
         remove_banner: "Remove Banner Topic"
-      reply:
-        title: 'Odpovědět'
-        help: 'začněte psát odpověď na toto téma'
       clear_pin:
         title: "Odstranit připnutí"
         help: "Odebere připnutí tohoto tématu, takže se již nebude zobrazovat na vrcholu seznamu témat"
@@ -1562,8 +1578,6 @@ cs:
       via_email: "tento příspěvek byl přijat přes email"
       via_auto_generated_email: "tento příspěvek byl přijat přes automaticky generovaný email"
       whisper: "tento příspěvek je soukromé šeptání pro moderátory"
-      wiki:
-        about: "toto je wiki příspěvek"
       archetypes:
         save: 'Uložit nastavení'
       few_likes_left: "Díky za šíření lásky! Zbývá ti pro dnešek už jen několi \"líbí se\"."
@@ -1714,13 +1728,10 @@ cs:
         displays:
           inline:
             title: "Vykreslený příspěvek se změnami zobrazenými v textu"
-            button: '<i class="fa fa-square-o"></i> HTML'
           side_by_side:
             title: "Rozdíli mezi vykreslenými příspěveky vedle sebe"
-            button: '<i class="fa fa-columns"></i> HTML'
           side_by_side_markdown:
             title: "Show the raw source diffs side-by-side"
-            button: '<i class="fa fa-columns"></i> Kód'
     category:
       can: 'smí&hellip; '
       none: '(bez kategorie)'
@@ -2640,7 +2651,6 @@ cs:
             revoke_admin: "odebrat administrátorská práva"
             grant_moderation: "udělit moderátorská práva"
             revoke_moderation: "odebrat moderátorská práva"
-            backup_operation: "zálohování"
             deleted_tag: "smazaný štítek"
             renamed_tag: "přejmenovaný štítek"
             revoke_email: "Odebrat email"

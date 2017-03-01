@@ -34,7 +34,6 @@ bs_BA:
   anonymous: "Anoniman"
   emails:
     incoming:
-      default_subject: "Dolazna poruka pošte %{email}"
       show_trimmed_content: "Prikaži skraćeni sadržaj"
   errors: &errors
     messages:
@@ -107,32 +106,6 @@ bs_BA:
       - Constructive criticism is welcome, but criticize *ideas*, not people.
 
       For more, [see our community guidelines](/guidelines). This panel will only appear for your first %{education_posts_text}.
-    sequential_replies: |
-      ### Consider replying to several posts at once
-
-      Rather than many sequential replies to a topic, please consider a single reply that includes quotes or @name references to previous posts.
-
-      You can edit your previous reply to add a quote by highlighting text and selecting the <b>quote reply</b> button that appears.
-
-      It's easier for everyone to read topics that have fewer in-depth replies versus lots of small, individual replies.
-    dominating_topic: |
-      ### Let others join the conversation
-
-      This topic is clearly important to you &ndash; you've posted more than %{percent}% of the replies here.
-
-      Are you sure you're providing adequate time for other people to share their points of view, too?
-    too_many_replies: |
-      ### You have reached the reply limit for this topic
-
-      We're sorry, but new users are temporarily limited to %{newuser_max_replies_per_topic} replies in the same topic.
-
-      Instead of adding another reply, please consider editing your previous replies, or visiting other topics.
-    reviving_old_topic: |
-      ### Revive this topic?
-
-      The last reply to this topic is now over %{days} days old. Your reply will bump the topic to the top of its list and notify anyone previously involved in the conversation.
-
-      Are you sure you want to continue this old conversation?
   activerecord:
     attributes:
       category:
@@ -221,14 +194,11 @@ bs_BA:
         few: "Pred par sati"
         other: "Pred %{count} sata"
   password_reset:
-    choose_new: "Odaberite novu šifru"
-    choose: "Molimo vas odaberite šifru"
     update: 'Obnovi Šifru'
     save: 'Namjesti Šifru'
     title: 'Resetuj Šifru'
     success: "Uspješno ste promjenili šifru i sada se možete ulogovati."
     success_unapproved: "Uspješno ste promjenili šifru."
-    continue: "Idi na %{site_name}"
   change_email:
     confirmed: "Your email has been updated."
     please_continue: "Continue to %{site_name}"
@@ -383,8 +353,6 @@ bs_BA:
     facebook_config_warning: 'The server is configured to allow signup and log in with Facebook (enable_facebook_logins), but the app id and app secret values are not set. Go to <a href="/admin/site_settings">the Site Settings</a> and update the settings. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">See this guide to learn more</a>.'
     twitter_config_warning: 'The server is configured to allow signup and log in with Twitter (enable_twitter_logins), but the key and secret values are not set. Go to <a href="/admin/site_settings">the Site Settings</a> and update the settings. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">See this guide to learn more</a>.'
     github_config_warning: 'The server is configured to allow signup and log in with GitHub (enable_github_logins), but the client id and secret values are not set. Go to <a href="/admin/site_settings">the Site Settings</a> and update the settings. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">See this guide to learn more</a>.'
-    s3_config_warning: 'The server is configured to upload files to s3, but at least one the following setting is not set: s3_access_key_id, s3_secret_access_key or s3_upload_bucket. Go to <a href="/admin/site_settings">the Site Settings</a> and update the settings. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">See "How to set up image uploads to S3?" to learn more</a>.'
-    s3_backup_config_warning: 'The server is configured to upload backups to s3, but at least one the following setting is not set: s3_access_key_id, s3_secret_access_key or s3_backup_bucket. Go to <a href="/admin/site_settings">the Site Settings</a> and update the settings. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">See "How to set up image uploads to S3?" to learn more</a>.'
     image_magick_warning: 'The server is configured to create thumbnails of large images, but ImageMagick is not installed. Install ImageMagick using your favorite package manager or <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">download the latest release</a>.'
   site_settings:
     censored_words: "Words that will be automatically replaced with &#9632;&#9632;&#9632;&#9632;"
@@ -415,6 +383,7 @@ bs_BA:
     max_image_width: "Maximum thumbnail width of images in a post"
     max_image_height: "Maximum thumbnail height of images in a post"
     category_featured_topics: "Number of topics displayed per category on the /categories page. After changing this value, it takes up to 15 minutes for the categories page to update."
+    show_subcategory_list: "Show subcategory list instead of topic list when entering a category."
     fixed_category_positions: "If checked, you will be able to arrange categories into a fixed order. If unchecked, categories are listed in order of activity."
     add_rel_nofollow_to_user_content: "Add rel nofollow to all submitted user content, except for internal links (including parent domains). If you change this, you must rebake all posts with: \"rake posts:rebake\""
     post_excerpt_maxlength: "Maximum length of a post excerpt / summary."
@@ -690,22 +659,6 @@ bs_BA:
       blocked: "is not allowed."
   invite_mailer:
     subject_template: "%{invitee_name} vas poziva da pogledate '%{topic_title}' na sajtu %{site_domain_name}"
-    text_body_template: |
-      %{invitee_name} vas poziva na diskusiju:
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      na
-
-      > %{site_title} -- %{site_description}
-
-      Ako ste zainteresovani, kliknite na link ispod:
-
-      %{invite_link}
-
-      Ova pozivnica dolazi od člana koji je zaslužio povjerenje na našem sajtu, što vama kao zvanici daje mogućnost da odmah odgovorite na diskusiju.
   invite_forum_mailer:
     subject_template: "%{invitee_name} vas poziva da se pridružite %{site_domain_name}"
   invite_password_instructions:
@@ -765,12 +718,6 @@ bs_BA:
         ```
     csv_export_succeeded:
       subject_template: "Data Export completed successfully"
-      text_body_template: |
-        The data export was successful.
-
-        Download CSV file: <a class="attachment" href="%{download_link}">%{file_name}</a>
-
-        <small>CSV file download link will expire after 48 hours.</small>
     csv_export_failed:
       subject_template: "Export failed"
       text_body_template: "The export has failed. Please check the logs."

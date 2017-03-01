@@ -194,7 +194,6 @@ ko:
       like_count: "좋아요"
       topic_count: "주제"
       post_count: "게시글"
-      user_count: "새로운 사용자"
       active_user_count: "활성화된 사용자"
       contact: "문의"
       contact_info: "사이트 운영과 관련된 사항이나 요청이 있으시다면 이메일 %{contact_info}로 연락주시기 바랍니다."
@@ -529,7 +528,6 @@ ko:
         instructions: "배경 이미지는 가운데를 기준으로 표시되며 590px이 기본 가로 사이즈 입니다."
       email:
         title: "이메일"
-        instructions: "절대로 공개되지 않습니다."
         ok: "내 이메일로 확인 메일이 전송됩니다."
         invalid: "유효한 이메일 주소를 입력해주세요."
         authenticated: "내 이메일이 {{provider}}에 의해 인증되었습니다."
@@ -538,22 +536,17 @@ ko:
           other: "최근  {{count}}분 동안접속하지 않을 경우에만 메일이 전송됩니다."
       name:
         title: "이름"
-        instructions: "이름을 적어주세요. (선택사항)"
         instructions_required: "이름"
         too_short: "이름이 너무 짧습니다."
         ok: "사용 가능한 이름입니다."
       username:
         title: "아이디"
-        instructions: "중복될 수 없으며 띄어쓰기 사용이 불가합니다. 짧을 수록 좋아요."
         short_instructions: "@{{username}}으로 멘션이 가능합니다."
         available: "아이디\x1D로 사용가능합니다."
-        global_match: "이메일이 등록된 아이디와 연결되어 있습니다."
-        global_mismatch: "이미 등록된 아이디입니다. 다시 시도해보세요. {{suggestion}}"
         not_available: "사용할 수 없는 아이디입니다. 다시 시도해보세요. {{suggestion}}"
         too_short: "아이디가 너무 짧습니다"
         too_long: "아이디가 너무 깁니다."
         checking: "사용가능한지 확인 중..."
-        enter_email: '아이디를 찾았습니다. 일치하는 이메일을 입력해주세요.'
         prefilled: "이메일이 등록된 아이디와 연결되어 있습니다."
       locale:
         title: "인터페이스 언어"
@@ -649,7 +642,6 @@ ko:
         same_as_username: "비밀번호가 아이디와 동일합니다."
         same_as_email: "비밀번호가 이메일과 동일합니다."
         ok: "적절한 암호입니다."
-        instructions: "글자 수가 %{count}자 이상이어야 합니다."
       summary:
         title: "요약"
         stats: "통계"
@@ -1150,9 +1142,6 @@ ko:
         pin_globally: "전체 공지글로 설정하기"
         make_banner: "배너 주제"
         remove_banner: "배너 주제 제거"
-      reply:
-        title: '답글'
-        help: '이 주제에 대한 답글 작성 시작'
       clear_pin:
         title: "고정 취소"
         help: "더 이상 목록의 맨 위에 표시하지 않도록 이 주제의 고정 상태를 해제합니다."
@@ -1294,8 +1283,6 @@ ko:
         yes_value: "예"
       via_email: "이 주제는 이메일을 통해 등록되었습니다."
       whisper: "이 포스트는 운영자를 위한 비공개 귓말입니다."
-      wiki:
-        about: "이 글은 위키(wiki) 입니다."
       archetypes:
         save: '옵션 저장'
       controls:
@@ -1401,13 +1388,10 @@ ko:
         displays:
           inline:
             title: "Show the rendered output with additions and removals inline"
-            button: '<i class="fa fa-square-o"></i> HTML'
           side_by_side:
             title: "Show the rendered output diffs side-by-side"
-            button: '<i class="fa fa-columns"></i> HTML'
           side_by_side_markdown:
             title: "Raw source diff를 양쪽으로 보기"
-            button: '<i class="fa fa-columns"></i> Raw'
     category:
       can: '허용'
       none: '(카테고리 없음)'
@@ -2050,7 +2034,6 @@ ko:
             revoke_admin: "관리자권한 회수"
             grant_moderation: "운영자권한 부여"
             revoke_moderation: "운영자권한 회수"
-            backup_operation: "백업 작업"
         screened_emails:
           title: "블락된 이메일들"
           description: "누군가가 새로운 계정을 만들면 아래 이메일 주소는 체크되고 등록은 블락됩니다, 또는 다른 조치가 취해집니다."

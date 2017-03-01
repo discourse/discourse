@@ -307,7 +307,7 @@ bs_BA:
       likes_given: "Dato"
       likes_received: "Primljeno"
       topics_entered: "Pregledano"
-      topics_entered_long: "Pregledano tema"
+      topics_entered_long: "Pregledano Tema"
       time_read: "Pročitano puta"
       topic_count: "Teme"
       topic_count_long: "Kreirano Temi"
@@ -584,6 +584,8 @@ bs_BA:
         error: "(greška)"
         action: "Pošalji Email za Resetovanje Šifre"
         set_password: "Namjesti Šifru"
+        choose_new: "Zaberite novu šifru"
+        choose: "Izaberite šifru"
       change_about:
         title: "Promjeni o Meni"
         error: "Desila se greška prilikom promjene."
@@ -634,13 +636,11 @@ bs_BA:
         instructions: "unikatno, bez tipke praznog prostora, kratko"
         short_instructions: "Ljudi vas mogu spomenuti preko @{{username}}."
         available: "Vaš nadimak je dostupan."
-        global_match: "Email već postoji kao član foruma."
-        global_mismatch: "Već ste registrovani. Probajte {{suggestion}}?"
         not_available: "Nije dostupan. Pokušaj {{suggestion}}?"
+        not_available_no_suggestion: "Nedostupno"
         too_short: "Vaš nadimak je prekratak."
         too_long: "Vaš nadima je predugačak."
         checking: "Provjeravamo dostupnost..."
-        enter_email: 'Nadimak nađen. Unesite vaš email.'
         prefilled: "Email je registrovan na ovaj nadimak."
       locale:
         title: "Interface language"
@@ -735,10 +735,8 @@ bs_BA:
         link_generated: "Link pozivnice je uspješno generisan!"
         valid_for: "Link pozvinice je validan jedino za ovu e-mail adresu: %{email}"
         bulk_invite:
-          none: "Još uvijek niste ovdje pozvali nikoga. Možete slati individualne pozivnice, ili pozvati mnogo ljudi od jednom koristeći se <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>dizanjem CSV datoteke</a>."
           text: "Bulk Invite from File"
           success: "File uploaded successfully, you will be notified shortly with progress."
-          error: "Neuspješno, datoteka bi trebala biti u .csv formatu."
       password:
         title: "Šifra"
         too_short: "Vaša šifra je prekratka."
@@ -994,6 +992,7 @@ bs_BA:
       link_description: "ubaci opis linka"
       link_dialog_title: "Unesi Link"
       link_optional_text: "naslov neobavezan"
+      link_url_placeholder: "http://example.com"
       quote_title: "Blok Citat"
       quote_text: "citat u bloku"
       code_title: "Formatiran Tekst"
@@ -1004,11 +1003,13 @@ bs_BA:
       olist_title: "Numbered List"
       ulist_title: "Bulleted List"
       list_item: "List item"
+      heading_label: "H"
       heading_title: "Naslov"
       heading_text: "Naslov"
       hr_title: "Horizontalna Crta"
       help: "Markdown Editing Help"
       toggler: "sakrij ili pokaži komposer"
+      modal_ok: "OK"
       modal_cancel: "Otkaži"
       cant_send_pm: "Neuspješno, ne možete slati poruke ka %{username}."
       yourself_confirm:
@@ -1315,12 +1316,6 @@ bs_BA:
         pin_globally: "Okači temu globalno"
         make_banner: "Banner tema"
         remove_banner: "Odstrani Banner temu"
-      reply:
-        post:
-          title: 'Odgovori'
-        topic:
-          title: 'Odgovori'
-          help: 'odpočni odgovor na ovu temu'
       clear_pin:
         title: "Clear pin"
         help: "Clear the pinned status of this topic so it no longer appears at the top of your topic list"
@@ -1487,13 +1482,10 @@ bs_BA:
         displays:
           inline:
             title: "Show the rendered output with additions and removals inline"
-            button: '<i class="fa fa-square-o"></i> HTML'
           side_by_side:
             title: "Show the rendered output diffs side-by-side"
-            button: '<i class="fa fa-columns"></i> HTML'
           side_by_side_markdown:
             title: "Show the raw source diffs side-by-side"
-            button: '<i class="fa fa-columns"></i> Raw'
     category:
       can: 'can&hellip; '
       none: '(no category)'

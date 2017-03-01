@@ -105,7 +105,6 @@ zh_TW:
       default_categories_already_selected: "不能選擇一個已經用於另一個列表的分類。"
       s3_upload_bucket_is_required: "你沒有填寫“s3_upload_bucket”，不能開啟上傳至 S3。"
   invite:
-    accept_invite: "接受邀請"
     not_found: "您的邀請碼無效。請聯絡管理人員。"
   bulk_invite:
     file_should_be_csv: "上傳的檔案必須是 CSV 格式。"
@@ -232,40 +231,6 @@ zh_TW:
       - 歡迎有建設性的評論，但是評論的應該是觀點，而不是人身攻擊。
 
       欲查看更多，[請查看我們的社群守則](/guidelines)。此訊息面板只會在你發表前 %{education_posts_text} 時顯示。
-    avatar: |
-      ### 給你的賬戶設置頭像如何？
-
-      你已經發表了一些主題和回覆，但是你的個人頭像並不像你一樣獨特——只是一些字母而已。
-
-      你考慮過**[訪問你的用戶頁面](%{profile_path})**，再上傳一個代表你的圖片？
-
-      當所有人都有獨特的頭像時，這會讓專注討論和找到有趣的人更加輕鬆。
-    sequential_replies: |
-      ### 考慮一次性回覆多個帖子
-
-      與其接連回覆主題幾次，不如在一個回覆中引用相關內容或者@用戶名引用前面的帖子。
-
-      你可以編輯你之前的回覆以添加引用。添加引用需要選擇文字並且點擊出現的<b>引用回覆</b>按鈕。
-
-      當主題中的帖子的內容不是多個小且獨立的回覆，而是更少的更有深度的帖子時，我們會更認真地閲讀這個主題。
-    dominating_topic: |
-      ### 讓其他人加入討論
-
-      很明顯這個主題對你很重要 &ndash; 你已經發表的帖子占該主題 %{percent}% 的回覆。
-
-      你有讓其他人自由地表達他們的觀點了嗎？
-    too_many_replies: |
-      ### 你發表的回覆數量已經達到該主題的回覆上限。
-
-      非常抱歉，但新用戶被臨時限制，只能在同一主題中回覆 %{newuser_max_replies_per_topic} 次。
-
-      想要添加另一個回覆不如考慮編輯原先的回覆或訪問其他主題。
-    reviving_old_topic: |
-      ### 復活這個主題？
-
-      這個主題的最後一個回覆距今已有 %{days} 天了。你的回覆將讓主題重新出現在列表的頂端並通知原先參與討論的人。
-
-      你確定要繼續這個老的話題嗎？
   activerecord:
     attributes:
       category:
@@ -472,7 +437,6 @@ zh_TW:
     title: '重設密碼'
     success: "密碼修改成功，現在已為你登入。"
     success_unapproved: "你的密碼已成功修改。"
-    continue: "繼續連接至 %{site_name}"
   change_email:
     confirmed: "你的電子郵箱已更新。"
     please_continue: "繼續連接至 %{site_name}"
@@ -743,8 +707,6 @@ zh_TW:
     facebook_config_warning: '伺服器允許使用 Facebook 帳號登入 (enable_facebook_logins), 但未有設定 app id 及 app secret values 。 請在 <a href="/admin/site_settings">網站設定</a> 裡更改設定。 <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-facebook-logins" target="_blank">設定教學指南</a>。'
     twitter_config_warning: '伺服器允許使用 Twitter 帳號登入 (enable_twitter_logins), 但未有設定 key 和 secret values 。 請在 <a href="/admin/site_settings">網站設定</a> 裡更改設定。 <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-twitter-logins" target="_blank">設定教學指南</a>。'
     github_config_warning: '伺服器允許使用 GitHub 帳號登入  (enable_github_logins), 但未有設定 client id 和 secret values。 請在 <a href="/admin/site_settings">網站設定</a> 裡更改設定。 <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide" target="_blank">設定教學指南</a>。'
-    s3_config_warning: '伺服器被設定為上傳文件到 s3，但是至少有一個值未被設定： s3_access_key_id, s3_secret_access_key 或 s3_upload_bucket。到<a href="/admin/site_settings">設定</a>更新此設定。<a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">參考如何設置圖片上傳至 S3</a>。'
-    s3_backup_config_warning: '伺服器被設置為上傳備份到 s3，但是至少有一個值未被設定： s3_access_key_id, s3_secret_access_key 或 s3_upload_bucket。到<a href="/admin/site_settings">設定</a>更新此設定。<a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">參考如何設置圖片上傳至 S3</a>。'
     image_magick_warning: '伺服器被設置為給大圖片創建縮略圖，但是 ImageMagick 沒有被安裝。使用你喜愛的包裝管理器安裝 ImageMagick 或<a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">下載最新版</a>。'
     failing_emails_warning: '有 %{num_failed_jobs} 個郵件任務失敗。請檢查 app.yml 檔案是否正確配置了郵件伺服器。<a href="/sidekiq/retries" target="_blank">查看 Sidekiq 中失敗的任務</a>。'
     subfolder_ends_in_slash: "你的子目錄設置不正確；DISCOURSE_RELATIVE_URL_ROOT以斜杠結尾。"
@@ -795,6 +757,7 @@ zh_TW:
     max_image_width: "文章中最大的縮圖寬度"
     max_image_height: "文章中的允許圖片最大的縮圖高度"
     category_featured_topics: "在分類 /categories 頁面每個分類顯示的討論話題數目。此數值的改變最多需要 15 分鐘才會反應在分類頁面上。"
+    show_subcategory_list: "進入分類時顯示子分類列表，而非話題列表"
     fixed_category_positions: "若勾選，你將能調整並固定分類的順序。若不勾選，分類將會依照活躍程度來排序。"
     fixed_category_positions_on_create: "如果選擇了，目錄排序將會在話題創建對話框中被包含(要求固定目錄位置選項)"
     add_rel_nofollow_to_user_content: "添加 rel nofollow 屬性到所有的用戶內容，除了內部鏈接（包括父域名）。如果你更改了這個，你必須重新調制所有帖子，而該命令為：“rake posts:rebake”"
@@ -889,8 +852,6 @@ zh_TW:
     invite_passthrough_hours: "邀請號碼如已被使用，用戶仍可使用多少小時"
     invite_only: "已經禁止開放註冊，新的使用者必須取得其他用戶，或是管理員的邀請"
     login_required: "需要登入才能進入網站，不允許匿名操作"
-    min_username_length: "最少用戶名長度"
-    max_username_length: "最大用戶名長度"
     reserved_usernames: "註冊時不可使用的用戶名。"
     min_password_length: "最小密碼長度"
     min_admin_password_length: "管理員最短密碼長度"
@@ -1130,7 +1091,6 @@ zh_TW:
     digest_posts: "郵件摘要中顯示的最流行帖子的數量。"
     digest_other_topics: "郵件摘要中“你關注的主題和分類中的新內容”欄目顯示的主題數目上限。"
     digest_min_excerpt_length: "郵件摘要中顯示的帖子摘要字元數下限。"
-    delete_digest_email_after_days: "不發送摘要郵件給超過（n）天沒訪問的用戶。"
     digest_suppress_categories: "不在摘要郵件中顯示這些分類的內容。"
     disable_digest_emails: "禁用所有用戶摘要郵件功能。"
     email_accent_bg_color: "HTML 郵件中某些元素的背景使用的強調顏色。輸入色彩名（“red”）或十六進制值（“#FF0000”）。"
@@ -1400,45 +1360,9 @@ zh_TW:
   invite_mailer:
     title: "邀請 Mailer"
     subject_template: "%{invitee_name} 邀請你參與在 %{site_domain_name} 討論的話題 '%{topic_title}'"
-    text_body_template: |
-      %{invitee_name} 邀請你參與討論
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      位於站點
-
-      > %{site_title} -- %{site_description}
-
-      如果你有興趣，點擊下面的連結：
-
-      %{invite_link}
-
-      這封邀請來組于受信任的用戶，所以你可以立即回覆。
   custom_invite_mailer:
     title: "客製邀請 Mailer"
     subject_template: "%{invitee_name}邀請你'%{topic_title}'在%{site_domain_name}"
-    text_body_template: |
-      %{invitee_name}邀請你參與
-
-      > %{site_title} -- %{site_description}
-
-      中的
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      %{invitee_name}的留言：
-
-      %{user_custom_message}
-
-      如果你有興趣，點擊下面的連結：
-
-      %{invite_link}
-
-      這封邀請發自受信任的用戶，所以你可以立即回覆主題。
   invite_forum_mailer:
     title: "邀請論壇 Mailer"
     subject_template: "%{invitee_name} 邀請你加入 %{site_domain_name}"
@@ -1650,12 +1574,6 @@ zh_TW:
     csv_export_succeeded:
       title: "CSV 檔匯出成功"
       subject_template: "資料匯出完成"
-      text_body_template: |
-        數據成功導出！:dvd:
-
-        <a class="attachment" href="%{download_link}">%{file_name}</a>（%{file_size}）
-
-        以上的下載連結將在 48 小時後失效。
     csv_export_failed:
       title: "CSV 檔匯出失敗"
       subject_template: "資料匯出失敗"
