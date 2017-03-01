@@ -6,9 +6,13 @@ import { findAll } from 'discourse/models/login-method';
 import { escape } from 'pretty-text/sanitizer';
 
 // This is happening outside of the app via popup
-const AuthErrors =
-  ['requires_invite', 'awaiting_approval', 'awaiting_confirmation', 'admin_not_allowed_from_ip_address',
-   'not_allowed_from_ip_address'];
+const AuthErrors = [
+  'requires_invite',
+  'awaiting_approval',
+  'awaiting_activation',
+  'admin_not_allowed_from_ip_address',
+  'not_allowed_from_ip_address'
+];
 
 export default Ember.Controller.extend(ModalFunctionality, {
 
