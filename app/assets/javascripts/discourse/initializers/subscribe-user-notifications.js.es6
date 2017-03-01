@@ -55,7 +55,7 @@ export default {
           const staleIndex = _.findIndex(oldNotifications, {id: lastNotification.id});
 
           if (staleIndex === -1) {
-            // this gets a bit tricky, uread pms are bumped to front
+            // this gets a bit tricky, unread pms are bumped to front
             let insertPosition = 0;
             if (lastNotification.notification_type !== 6) {
               insertPosition = _.findIndex(oldNotifications, n => n.notification_type !== 6 || n.read);
