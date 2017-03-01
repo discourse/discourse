@@ -192,9 +192,12 @@ describe UserUpdater do
     end
 
     it "logs the action" do
+      user_without_name = Fabricate(:user, name: nil)
       user = Fabricate(:user, name: 'Billy Bob')
       expect { UserUpdater.new(acting_user, user).update(name: 'Jim Tom') }.to change { UserHistory.count }.by(1)
       expect { UserUpdater.new(acting_user, user).update(name: 'Jim Tom') }.to change { UserHistory.count }.by(0) # make sure it does not log a dupe
+      expect { UserUpdater.new(acting_user, user_without_name).update(bio_raw: 'foo bar') }.to change { UserHistory.count }.by(0) # make sure user without name (name = nil) does not raise an error
+      expect { UserUpdater.new(acting_user, user_without_name).update(name: 'Jim Tom') }.to change { UserHistory.count }.by(1)
     end
   end
 end
