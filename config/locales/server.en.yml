@@ -1762,6 +1762,14 @@ en:
 
       (If the link above has expired, choose "I forgot my password" when logging in with your email address.)
 
+  download_backup_mailer:
+    title: "Download Backup Mailer"
+    subject_template: "[%{site_name}] Backup Download"
+    text_body_template: |
+      Click this link to download your backup file: %{backup_file_path}
+    no_token: |
+      Sorry, this backup download link has already been used or has expired.
+
   test_mailer:
     title: "Test Mailer"
     subject_template: "[%{site_name}] Email Deliverability Test"
