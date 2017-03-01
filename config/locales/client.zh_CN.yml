@@ -194,7 +194,7 @@ zh_CN:
       like_count: "赞"
       topic_count: "主题"
       post_count: "帖子"
-      user_count: "新用户"
+      user_count: "用户"
       active_user_count: "活跃用户"
       contact: "联系我们"
       contact_info: "重要事件或紧急事件，请通过 %{contact_info} 联系我们。"
@@ -560,6 +560,8 @@ zh_CN:
         error: "（错误）"
         action: "发送密码重置邮件"
         set_password: "设置密码"
+        choose_new: "输入新密码"
+        choose: "输入密码"
       change_about:
         title: "更改个人信息"
         error: "提交修改时出错了"
@@ -594,7 +596,7 @@ zh_CN:
         instructions: "显示在用户卡片中，上传的图片将被居中且默认宽度为 590px。"
       email:
         title: "邮箱"
-        instructions: "不会公开显示"
+        instructions: "永不公开显示"
         ok: "将通过邮件验证确认"
         invalid: "请填写正确的邮箱地址"
         authenticated: "邮箱已经由 {{provider}} 验证了。"
@@ -603,22 +605,20 @@ zh_CN:
           other: "仅在 {{count}} 分钟内没有访问时发送邮件给你。"
       name:
         title: "昵称"
-        instructions: "你的昵称（可选）"
+        instructions: "你的全名（可选）"
         instructions_required: "你的昵称"
         too_short: "昵称过短"
         ok: "昵称可用"
       username:
         title: "用户名"
-        instructions: "你注册的用户名"
+        instructions: "不重复，无空格，短"
         short_instructions: "其他人可以用 @{{username}} 来提及你"
         available: "用户名可用"
-        global_match: "邮箱与用户名匹配"
-        global_mismatch: "已被占用。试试 {{suggestion}} ？"
         not_available: "不可用。试试 {{suggestion}} ？"
+        not_available_no_suggestion: "不可用"
         too_short: "用户名过短"
         too_long: "用户名过长"
         checking: "查看用户名是否可用..."
-        enter_email: '找到此用户，请输入对应邮箱'
         prefilled: "邮箱与用户匹配成功"
       locale:
         title: "界面语言"
@@ -715,9 +715,10 @@ zh_CN:
         link_generated: "邀请链接生成成功！"
         valid_for: "邀请链接只对这个邮件地址有效：%{email}"
         bulk_invite:
-          none: "你还没有邀请过任何人。你可以邀请一个人，或者<a href='https://meta.discourse.org/t/send-bulk-invites/16468'>上传 CSV 文件</a>邀请一批人。"
+          none: "你还没有邀请任何人。你可以单独邀请，也可以通过 <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>上传CSV文件</a>批量邀请。"
           text: "通过文件批量邀请"
           success: "文件上传成功，当操作完成时将通过消息通知你。"
+          error: "抱歉，文件必须是CSV格式。"
       password:
         title: "密码"
         too_short: "密码过短"
@@ -725,7 +726,7 @@ zh_CN:
         same_as_username: "密码不能与用户名相同"
         same_as_email: "密码不能与邮箱相同"
         ok: "密码符合要求"
-        instructions: "至少 %{count} 个字符"
+        instructions: "至少%{count}个字母。"
       summary:
         title: "概要"
         stats: "统计"
@@ -898,6 +899,7 @@ zh_CN:
       to_continue: "请登录"
       preferences: "需要登入后更改设置"
       forgot: "我记不清账号详情了"
+      not_approved: "你的帐号还未通过审核。一旦审核通过，我们将邮件通知你。"
       google:
         title: "使用 Google 帐号登录"
         message: "正在通过 Google 帐号验证登录（请确保浏览器没有禁止弹出窗口）"
@@ -919,6 +921,8 @@ zh_CN:
       github:
         title: "使用 GitHub 帐号登录"
         message: "正在通过 GitHub 帐号验证登录（请确保浏览器没有禁止弹出窗口）"
+    invites:
+      accept_title: "邀请"
     emoji_set:
       apple_international: "Apple/国际化"
       google: "Google"
@@ -1349,11 +1353,8 @@ zh_CN:
         make_banner: "横幅主题"
         remove_banner: "取消横幅主题"
       reply:
-        post:
-          title: '回复'
-        topic:
-          title: '回复'
-          help: '开始为该主题撰写回复'
+        title: '回复'
+        help: '开始撰写此主题的回复'
       clear_pin:
         title: "取消置顶"
         help: "取消本主题的置顶状态，将不再固定显示在主题列表顶部。"
@@ -1515,7 +1516,7 @@ zh_CN:
         save: '保存选项'
       few_likes_left: "谢谢你的热情！你今天的赞快用完了。"
       controls:
-        reply: "开始撰写该帖子的回复"
+        reply: "开始撰写本帖的回复"
         like: "赞一下此帖"
         has_liked: "已赞"
         undo_like: "取消赞"
@@ -1621,13 +1622,10 @@ zh_CN:
         displays:
           inline:
             title: "行内显示渲染后的页面，并标示增加和删除的内容"
-            button: '<i class="fa fa-square-o"></i> HTML'
           side_by_side:
             title: "并排显示渲染后的页面，分开标示增加和删除的内容"
-            button: '<i class="fa fa-columns"></i> HTML'
           side_by_side_markdown:
             title: "并排显示源码，分开标示增加和删除的内容"
-            button: '<i class="fa fa-columns"></i> 原始'
     category:
       can: '能够&hellip; '
       none: '（未分类）'
@@ -2564,7 +2562,6 @@ zh_CN:
             revoke_admin: "撤销管理员权限"
             grant_moderation: "授予版主权限"
             revoke_moderation: "撤销版主权限"
-            backup_operation: "备份操作"
             deleted_tag: "删除的标签"
             renamed_tag: "重命名的标签"
             revoke_email: "撤销邮件"

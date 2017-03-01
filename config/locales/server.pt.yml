@@ -34,7 +34,6 @@ pt:
   anonymous: "Anónimo"
   emails:
     incoming:
-      default_subject: "Email recebido de %{email}"
       show_trimmed_content: "Mostrar conteúdo aparado"
       maximum_staged_user_per_email_reached: "Foi atingido o número máximo de utilizadores temporários por email."
       errors:
@@ -233,42 +232,6 @@ pt:
       - Críticas construtivas são bem-vindas, mas critique *ideias*, não pessoas.
 
       Para mais, [verifique as orientações da comunidade](/guidelines). Este painel irá aparecer apenas para o seu primeiro %{education_posts_text}.
-    avatar: |
-      ### E que tal uma fotografia para a sua conta?
-
-      Publicou alguns tópicos e respostas, mas a sua fotografia de perfil não é tão única como você o é -- é apenas uma letra.
-
-      Considerou **[visitar o seu perfil de utilizador](%{profile_path})** e carregar uma fotografia que o represente?
-
-      É mais fácil seguir discussões e encontrar pessoas interessantes em conversações quando toda a gente tem uma fotografia de perfil única!
-    sequential_replies: |
-      ### Considere responder a várias mensagens de uma única vez
-
-      Em vez de várias respostas sequenciais a um tópico, por favor considere uma única resposta que inclua citações de mensagens anteriores ou referências a @nome.
-
-      Pode editar a sua resposta anterior para adicionar uma citação ao destacar o texto e selecionar o botão  <b>resposta com citação</b> que aparece.
-
-      É mais fácil para todos ler tópicos que tenham poucas respostas em profundidade em vez de muitas mas pequenas respostas individuais.
-    dominating_topic: |+
-      ### Deixe que os outros se juntem à conversa
-
-      Este tópico é claramente importante para si &ndash; publicou mais de %{percent}% das respostas aqui.
-
-      Tem a certeza de que está a fornecer o tempo adequado para que outras pessoas também possam partilhar os seus pontos de vista?
-
-    too_many_replies: |+
-      ### Chegou ao limite de respostas para este tópico
-
-      Pedimos desculpa mas novos utilizadores estão temporariamente limitados a %{newuser_max_replies_per_topic} respostas no mesmo tópico.
-
-      Em vez de adicionar outra resposta, por favor considere editar as suas respostas anteriores, ou visitar outros tópicos.
-
-    reviving_old_topic: |
-      ### Reavivar este tópico?
-
-      A última resposta a este tópico tem agora %{days} dias. A sua resposta irá sobressair no tópico, no topo da sua lista e notificar todos os que anteriormente estavam envolvidos nesta conversação.
-
-      Tem a certeza que pretende continuar esta conversação antiga?
   activerecord:
     attributes:
       category:
@@ -477,14 +440,11 @@ pt:
         other: "há quase %{count} anos atrás"
   password_reset:
     no_token: "Desculpe, essa hiperligação para alterar a palavra-passe é muito antiga. Selecione o botão Iniciar Sessão e utilize 'Esqueci a minha palavra-passe' para obter uma nova hiperligação."
-    choose_new: "Por favor escolha uma nova palavra-passe"
-    choose: "Por favor escolha uma palavra-passe"
     update: 'Atualizar Palavra-passe'
     save: 'Definir Palavra-passe'
     title: 'Redefinir Palavra-passe'
     success: "A sua palavra-passe foi alterada com sucesso e está agora ligado."
     success_unapproved: "Palavra-passe modificada com sucesso."
-    continue: "Continuar para %{site_name}"
   change_email:
     confirmed: "O seu email foi atualizado."
     please_continue: "Continuar para %{site_name}"
@@ -755,8 +715,6 @@ pt:
     facebook_config_warning: 'O servidor está configurado para permitir inscrever-se e entrar com o Facebook (enable_facebook_logins), mas o id e os valores privados da aplicação não estão configurados. Vá  <a href="/admin/site_settings">às Configurações do Sítio</a> e atualize as definições. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Veja este guia para saber mais</a>.'
     twitter_config_warning: 'O servidor está configurado para permitir inscrever-se e entrar com o Twitter (enable_twitter_logins), mas a chave e os valores privados não estão configurados. Vá <a href="/admin/site_settings">às Configurações do Sítio</a> e atualize as definições. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">Veja este guia para saber mais</a>.'
     github_config_warning: 'O servidor está configurado para permitir inscrever-se e entrar com o GitHub (enable_github_logins), mas o id e valores privados do cliente não estão configurados. Vá <a href="/admin/site_settings">às Configurações do Sítio</a> e atualize as definições. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">Veja este guia para saber mais</a>.'
-    s3_config_warning: 'O servidor está configurado para fazer carregamento de ficheiros para o s3, mas pelo menos uma destas configurações não está definida: s3_access_key_id, s3_secret_access_key ou s3_upload_bucket. Vá até as <a href="/admin/site_settings">Configurações do Sítio</a> e atualize estas definições. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Veja "How to set up image uploads to S3?" para saber mais</a>.'
-    s3_backup_config_warning: 'O servidor está configurado para carregar cópias de segurança para s3, mas pelo menos uma das seguintes configurações não está definida: s3_access_key_id, s3_secret_access_key ou s3_backup_bucket. Vá <a href="/admin/site_settings">às Configurações do Sítio</a> e atualize as definições. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank"> Veja "How to set up image uploads to S3?" para saber mais</a>.'
     image_magick_warning: 'O servidor está configurado para criar miniaturas de imagens grandes, mas o ImageMagick não está instalado. Instale o ImageMagick usando o seu gestor de pacotes preferido ou aceda a <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">para descarregar a última versão</a>.'
     failing_emails_warning: 'Há %{num_failed_jobs} tarefas de email que falharam. Verifique o seu app.yml e assegure-se que as configurações do servidor de email estão corretas. <a href="/sidekiq/retries" target="_blank"> Veja as tarefas que falharam no Sidekiq</a>.'
     subfolder_ends_in_slash: "A configuração da sua sub-página está incorreta; o DISCOURSE_RELATIVE_URL_ROOT termina com um traço."
@@ -808,6 +766,7 @@ pt:
     max_image_width: "Largura máxima de miniaturas de imagens numa mensagem."
     max_image_height: "Altura máxima de miniaturas de imagens numa mensagem."
     category_featured_topics: "Número de tópicos visíveis por categoria na página de /categorias. Após a alteração deste valor, irá demorar até 15 minutos para que a página de categorias fique atualizada."
+    show_subcategory_list: "Mostrar lista de subcategorias em vez de lista de tópicos quando inserida uma categoria."
     fixed_category_positions: "Se estiver marcado, irá conseguir organizar as categorias por uma ordem fixa. Se não estiver marcado, as categorias são listadas por ordem de actividade."
     fixed_category_positions_on_create: "Se marcado, a ordenação de categorias irá ser mantida no diálogo de criação do tópico (requer fixed_category_positions)"
     add_rel_nofollow_to_user_content: "Adicionar a etiqueta rel nofollow em todos os conteúdos submetidos pelo utilizador, excepto para hiperligações internas (incluindo domínios pai). Se mudar isto, terá que atualizar todas as suas mensagens com: \"rake posts:rebake\""
@@ -902,8 +861,6 @@ pt:
     invite_passthrough_hours: "Quanto tempo pode um utilizador utilizar uma chave de convite previamente recuperada, em horas"
     invite_only: "O registo público está desativado, todos os novos utilizadores devem ser explicitamente convidados por outros membros ou pelo pessoal."
     login_required: "Requerer autenticação para ler conteúdo neste sítio, não permitir acesso anónimo."
-    min_username_length: "Comprimento mínimo do nome de utilizador, em caracteres."
-    max_username_length: "Comprimento máximo do nome de utilizador, em caracteres."
     reserved_usernames: "Nomes de utilizadores para os quais o registo não é permitido."
     min_password_length: "Tamanho mínimo da palavra-passe."
     min_admin_password_length: "Tamanho mínimo da palavra-passe para Administração."
@@ -1141,7 +1098,6 @@ pt:
     digest_posts: "Número máximo de publicações populares a mostrar no resumo do email."
     digest_other_topics: "O número máximo de tópicos a mostrar na secção de  \"Novos em tópicos e categorias que segue\" do email de resumo."
     digest_min_excerpt_length: "Tamanho mínimo dos excertos de publicações no email de resumo, em caracteres."
-    delete_digest_email_after_days: "Suprimir emails de resumos para utilizadores não vistos no sítio por mais de (n) dias."
     digest_suppress_categories: "Suprimir estas categorias dos emails de resumo."
     disable_digest_emails: "Desativar os emails de resumo para todos os utilizadores."
     detect_custom_avatars: "Se deve ou não verificar que os utilizadores carregaram fotografias de perfil personalizadas."
@@ -1412,44 +1368,8 @@ pt:
       Se quiser continuar a receber emails com actualizações pode ignorar este email.
   invite_mailer:
     subject_template: "%{invitee_name} convidou-o a juntar-se a '%{topic_title}' em %{site_domain_name}"
-    text_body_template: |
-      %{invitee_name} convidou-o para um debate
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      em
-
-      > %{site_title} -- %{site_description}
-
-      Se está interessado, clique na hiperligação abaixo:
-
-      %{invite_link}
-
-      Este convite é de um utilizador confiável, por isso pode responder ao debate imediatamente.
   custom_invite_mailer:
     subject_template: "%{invitee_name} convidou-o para '%{topic_title}' em %{site_domain_name}"
-    text_body_template: |
-      %{invitee_name} convidou-o para um debate
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      em
-
-      > %{site_title} -- %{site_description}
-
-      Mensagem de %{invitee_name}:
-
-      %{user_custom_message}
-
-      Se está interessado, clique na ligação abaixo:
-
-      %{invite_link}
-
-      Este convite é de um utilizador confiável, por isso pode responder ao debate imediatamente.
   invite_forum_mailer:
     subject_template: "%{invitee_name} convidou-o a juntar-se a %{site_domain_name}"
   custom_invite_forum_mailer:
@@ -1644,12 +1564,6 @@ pt:
         ```
     csv_export_succeeded:
       subject_template: "Exportação de dados completa"
-      text_body_template: |
-        A sua exportação dos dados foi bem-sucedida! :dvd:
-
-        <a class="attachment" href="%{download_link}">%{file_name}</a> (%{file_size})
-
-        A hiperligação acima será válida por 48 horas..
     csv_export_failed:
       subject_template: "A exportação dos dados falhou"
       text_body_template: "Pedimos desculpa mas a sua exportação de dados falhou. Por favor verifique os registos do log ou contacte um membro do pessoal."

@@ -214,7 +214,7 @@ da:
       like_count: "Synes godt om"
       topic_count: "Emner"
       post_count: "Indlæg"
-      user_count: "Nye brugere"
+      user_count: "Brugere"
       active_user_count: "Aktive brugere"
       contact: "Kontakt os"
       contact_info: "I tilfælde af kritiske situationer eller vigtige spørgsmål angående denne side, kontakt os venligst på %{contact_info}."
@@ -334,6 +334,19 @@ da:
         when: "Når"
         action: "Handling"
         acting_user: "Fungerende bruger"
+        subject: "Emne"
+        details: "Detaljer"
+        from: "Fra"
+        to: "Til"
+      edit:
+        title: 'Redigér Gruppe'
+        full_name: 'Fulde Navn'
+        add_members: "Tilføj Medlemmer"
+        delete_member_confirm: "Fjern '%{username}' fra '%{group}' gruppen?"
+      request_membership_pm:
+        title: "Medlemskabsanmodning"
+        body: "Jeg vil gerne ansøge om medlemskab i @%{groupName}."
+      name_placeholder: "Gruppe navn, ingen mellemrum, samme som reglen for brugernavn"
       add: "Tilføj"
       selector_placeholder: "Tilføj medlemmer"
       owner: "ejer"
@@ -570,7 +583,6 @@ da:
         instructions: "Baggrunds billeder vil blive centreret og have en standard bredde på 590px."
       email:
         title: "E-mail"
-        instructions: "Aldrig vist offentligt"
         ok: "Vi vil sende dig en bekræftelses email"
         invalid: "Indtast venligst en gyldig email adresse"
         authenticated: "Din email er blevet bekræftet af {{provider}}"
@@ -580,22 +592,17 @@ da:
           other: "Vi sender dig kun email. hvis vi ikke har set dig i de sidste {{count}} minutter."
       name:
         title: "Navn"
-        instructions: "Dit fulde navn (valgfrit)"
         instructions_required: "Dit fulde navn"
         too_short: "Dit navn er for kort"
         ok: "Dit navn ser fint ud"
       username:
         title: "Brugernavn"
-        instructions: "Unikt, ingen mellemrum, kort"
         short_instructions: "Folk kan benævne dig som @{{username}}"
         available: "Dit brugernavn er tilgængeligt"
-        global_match: "E-mail svarer til det registrerede brugernavn"
-        global_mismatch: "Allerede registreret. Prøv {{suggestion}}?"
         not_available: "Ikke ledigt. Prøv {{suggestion}}?"
         too_short: "Dit brugernavn er for kort"
         too_long: "Dit brugernavn er for langt"
         checking: "Kontrollerer om brugernavnet er ledigt…"
-        enter_email: 'Brugernavn fundet; indtast tilsvarende e-mail'
         prefilled: "E-mail svarer til dette registrerede brugernavn"
       locale:
         title: "sprog"
@@ -698,7 +705,6 @@ da:
         same_as_username: "Dit password er det samme som dit brugernavn."
         same_as_email: "Dit password er det samme som din email adresse."
         ok: "Din adgangskode ser fin ud."
-        instructions: "Mindst %{count} tegn"
       summary:
         title: "Statistik"
         stats: "Statistik"
@@ -1275,9 +1281,6 @@ da:
         pin_globally: "Fastgør emne globalt"
         make_banner: "Gør emnet til en banner"
         remove_banner: "Emnet skal ikke være banner længere"
-      reply:
-        title: 'Svar'
-        help: 'begynd at skrive et svar til dette emne'
       clear_pin:
         title: "Fjern tegnestift"
         help: "Fjern tegnestiften på dette emne så det ikke længere vises i toppen af emnelisten"
@@ -1443,8 +1446,6 @@ da:
       via_email: "dette indlæg blev oprettet via email"
       via_auto_generated_email: "dette indlæg blev oprettet af en auto genereret e-mail"
       whisper: "dette indlæg er en privat hvisken for moderatorer"
-      wiki:
-        about: "dette indlæg er en wiki"
       archetypes:
         save: 'Gem indstillinger'
       few_likes_left: "Tak fordi du liker! Du har kun få likes tilbage i dag."
@@ -1575,13 +1576,10 @@ da:
         displays:
           inline:
             title: "Vis det renderede output med tilføjelser og ændringer indlejret"
-            button: '<i class="fa fa-square-o"></i> HTML'
           side_by_side:
             title: "Vis de renderede output-diffs ved siden af hinanden"
-            button: '<i class="fa fa-columns"></i> HTML'
           side_by_side_markdown:
             title: "Vis forskellen på den rå kildekode side om side"
-            button: '<i class="fa fa-columns"></i> Kildekode'
     category:
       can: 'kan&hellip; '
       none: '(ingen kategori)'
@@ -2389,7 +2387,6 @@ da:
             revoke_admin: "fjern admin"
             grant_moderation: "tildel moderation"
             revoke_moderation: "fjern moderation"
-            backup_operation: "backup operation"
             deleted_tag: "slettet tag"
             renamed_tag: "omdøbt tag"
             revoke_email: "tilbagekald email"

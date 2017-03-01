@@ -32,7 +32,6 @@ vi:
   anonymous: "Ẩn danh"
   emails:
     incoming:
-      default_subject: "Email đến từ %{email}"
       show_trimmed_content: "Hiện nội dung đã cắt"
       errors:
         empty_email_error: "Xảy ra khi thư nguồn hệ thống nhận được là trống."
@@ -208,40 +207,6 @@ vi:
       - Lời phê bình mang tính đóng góp cũng được chào đón, nhưng bạn nên phê bình *ý tưởng* chứ không phải con người.
 
       [Đọc hướng dẫn cộng đồng](/guidelines) để có thêm thông tin. Bảng này chỉ xuất hiện cho bài viết đầu tiên của bạn %{education_posts_text}.
-    avatar: |
-      ### How about a picture for your account?
-
-      You've posted a few topics and replies, but your profile picture isn't as unique as you are -- it's just a letter.
-
-      Have you considered **[visiting your user profile](%{profile_path})** and uploading a picture that represents you?
-
-      It's easier to follow discussions and find interesting people in conversations when everyone has a unique profile picture!
-    sequential_replies: |
-      ### Xem xét việc trả lời nhiều bài viết cùng lúc
-
-      Thay vì trả lời nhiều tuần tự đến từng chủ đề, xin vui lòng xem xét một bài trả lời duy nhất mà bao gồm các trích dẫn từ bài viết trước hoặc dùng tham chiếu @name.
-
-      Bạn có thể sửa bài trả lời trước đó của bạn để thêm một trích dẫn bằng cách bôi đen và nhấn chọn nút <b>quote reply</b> vừa xuất hiện.
-
-      Sẽ dễ dàng hơn cho tất cả mọi người để đọc chủ đề mà có ít câu trả lời sâu với nhiều cấp, trả lời cá nhân
-    dominating_topic: |
-      ### Hãy để người khác tham gia vào cuộc thảo luận
-
-      Chủ đề này rõ ràng là quan trọng với bạn & ndash; bạn đã đăng nhiều hơn% %{percent}% của các câu trả lời tại đây.
-
-      Bạn có chắc chắn bạn đang cung cấp đủ thời gian cho những người khác để chia sẻ quan điểm của mình?
-    too_many_replies: |
-      ### Bạn đã đạt đến giới hạn trả lời cho chủ đề này
-
-      Chúng tôi xin lỗi, nhưng người dùng mới bị giới hạn %{newuser_max_replies_per_topic} trả lời trong cùng một chủ đề.
-
-      Thay vì thêm một câu trả lời khác, xin vui lòng xem xét chỉnh sửa trả lời trước đó của bạn, hoặc truy cập vào các chủ đề khác.
-    reviving_old_topic: |
-      ### Xem lại chủ đề này?
-
-      Câu trả lời cuối cùng cho chủ đề này đã hơn hơn %{days} ngày. Trả lời của bạn sẽ đẩy chủ đề đó lên đầu danh sách và thông báo cho bất cứ ai liên quan đến cuộc thảo luận.
-
-      Bạn có chắc chắn bạn muốn tiếp tục cuộc trò chuyện cũ này?
   activerecord:
     attributes:
       category:
@@ -411,14 +376,11 @@ vi:
         other: "gần %{count} năm trước"
   password_reset:
     no_token: "Xin lỗi, liên kết đổi mật khẩu đã cũ. Chọn \"Đăng nhập\" và sử dụng chức năng \"Quên mật khẩu\" để lấy liên kết mới."
-    choose_new: "Vui lòng chọn mật khẩu mới"
-    choose: "Bạn phải nhập mật khẩu"
     update: 'Cập nhật mật khẩu'
     save: 'Nhập mật khẩu'
     title: 'Thiết lập lại mật khẩu'
     success: "Bạn đã thay đổi mật khẩu thành công và đã được đăng nhập."
     success_unapproved: "Bạn đã thay đổi mật khẩu thành công."
-    continue: "Tiếp tục đến %{site_name}"
   change_email:
     confirmed: "Email của bạn đã được cập nhật."
     please_continue: "Tiếp tục đến %{site_name}"
@@ -649,8 +611,6 @@ vi:
     facebook_config_warning: 'Máy chủ được cấu hình cho phép đăng ký và đăng nhập với Facebook  (enable_facebook_logins), tuy nhiên giá trị của client id và client secret thì không được thiết lập. Truy cập <a href="/admin/site_settings">Cấu hình Site</a> và bổ sung các thiết lập đó. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Xem hướng dẫn này để biết thêm chi tiết</a>.'
     twitter_config_warning: 'Máy chủ được cấu hình cho phép đăng ký và đăng nhập với Twitter   (enable_twitter_logins), tuy nhiên giá trị của client id và client secret thì không được thiết lập. Truy cập <a href="/admin/site_settings">Cấu hình Site</a> và bổ sung các thiết lập đó. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">Xem hướng dẫn này để biết thêm chi tiết</a>.'
     github_config_warning: 'Máy chủ được cấu hình cho phép đăng ký và đăng nhập với GitHub    (enable_github_logins), tuy nhiên giá trị của client id và client secret thì không được thiết lập. Truy cập <a href="/admin/site_settings">Cấu hình Site</a> và bổ sung các thiết lập đó. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">Xem hướng dẫn này để biết thêm chi tiết</a>.'
-    s3_config_warning: 'Máy chủ được cấu hình để upload file lên s3, tuy nhiên ít nhất một trong các tùy chỉnh sau đây không được thiết lập: s3_access_key_id, s3_secret_access_key hoặc s3_upload_bucket. Truy cập <a href="/admin/site_settings">Thiết lập Site</a> và  bổ sung các thiết lập đó. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Xem bài viết "How to set up image uploads to S3?" để biết thêm chi tiết</a>.'
-    s3_backup_config_warning: 'Máy chủ được cấu hình để upload các bản sao lưu dữ liệu lên s3, tuy nhiên ít nhất một trong các tùy chỉnh sau đây không được thiết lập: s3_access_key_id, s3_secret_access_key hoặc s3_backup_bucket. Truy cập <a href="/admin/site_settings">Thiết lập Site</a> và  bổ sung các thiết lập đó. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Xem bài viết "How to set up image uploads to S3?" để biết thêm chi tiết</a>.'
     image_magick_warning: 'Máy chủ đã cấu hình để tạo hình đại diện nhỏ từ những hình lới, nhưng ImageMagick chưa được cài đặt. Cài ImageMagick sử dụng trình quản lý package yêu thích của bạn hoặc <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">tải về phiên bản mới nhất</a>.'
     failing_emails_warning: 'Có %{num_failed_jobs} email jobs thấ bại. Kiểm tra app.yml và chắc chắn rằng cấu hình máy chủ email đúng. <a href="/sidekiq/retries" target="_blank">Xem jobs thất bại ở Sidekiq</a>.'
     subfolder_ends_in_slash: "Thư mục con của bạn được thiết lập không đúng, DISCOURSE_RELATIVE_URL_ROOT phải được kết thúc bằng dấu gạch chéo."
@@ -694,6 +654,7 @@ vi:
     max_image_width: "Chiều rộng tối đa của ảnh thu nhỏ trong bài viết."
     max_image_height: "Chiều cao tối đa của ảnh thu nhỏ trong bài viết."
     category_featured_topics: "Số chủ đề hiện thị mỗi danh mục trong trang /categories. Sau khi thay đổi giá trị này, nó sẽ mất khoảng 15 phút để trang danh mục cập nhật."
+    show_subcategory_list: "Hiện danh sách chuyên mục con thay vì danh sách chủ đề khi truy cập vào chuyên mục."
     fixed_category_positions: "Nếu được bật, bạn sẽ có thể sắp xếp chuyên mục theo một thứ tự cố định. Nếu không bật, chuyên mục sẽ được sắp xếp theo thứ tử hoạt động."
     fixed_category_positions_on_create: "Nếu chọn, sắp xếp danh mục sẽ được thực hiện trong cửa sổ tạo chủ đề (yêu cầu fixed_category_positions)."
     add_rel_nofollow_to_user_content: "Thêm rel='nofollow' cho tất cả các nội dung mà người dùng gửi, ngoại trừ các liên kết nội bộ (của tên miền chính). Nếu thay đổi, bạn phải thực hiện lại cho tất cả các bài viết với: \"rake posts:rebake\""
@@ -767,8 +728,6 @@ vi:
     invite_passthrough_hours: "Bao lâu người dùng có thể sử dụng mã lời mời trước đó để đăng nhập, theo giờ"
     invite_only: "Đăng ký tự do đã khóa, tất cả người dùng phải được mời bởi những thành viên khác hoặc nhân viên."
     login_required: "Yêu cầu chứng thực để đọc nội dung trên trang web, không cho phép người dùng nặc danh truy cập."
-    min_username_length: "Chiều dài username tối thiểu."
-    max_username_length: "Chiều dài username tối đa."
     reserved_usernames: "Những username không được phép đăng ký."
     min_password_length: "Chiều dài mật khẩu tối thiểu."
     min_admin_password_length: "Chiều dài mật khẩu tối thiểu đối với Admin."
@@ -1168,22 +1127,6 @@ vi:
       Nếu bạn vẫn muốn tiếp tục nhận email cập nhật, xin hãy bỏ qua email này.
   invite_mailer:
     subject_template: "%{invitee_name} mời bạn tham gia chủ đề '%{topic_title}' trên %{site_domain_name}"
-    text_body_template: |
-      %{invitee_name} đã mời bạn tham gia thảo luận
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      tại
-
-      > %{site_title} -- %{site_description}
-
-      Nếu bạn quan tâm, xin hãy click liên kết sau:
-
-      %{invite_link}
-
-      Lời mời này đến từ thành viên tin cậy nên bạn có thể tham gia thảo luận ngay.
   invite_forum_mailer:
     subject_template: "%{invitee_name} đã mời bạn gia nhập %{site_domain_name}"
   invite_password_instructions:
@@ -1254,12 +1197,6 @@ vi:
         ```
     csv_export_succeeded:
       subject_template: "Xuất dữ liệu hoàn tất"
-      text_body_template: |
-        Dữ liệu của bạn đã được export thành công! :dvd:
-
-        <a class="attachment" href="%{download_link}">%{file_name}</a> (%{file_size})
-
-        Liên kết download trên sẽ có hiệu lực trong 48 giờ.
     csv_export_failed:
       subject_template: "Xuất dữ liệu thất bại"
       text_body_template: "Chúng tôi xin lỗi, những dữ liệu bạn xuất bị lỗi. Vui lòng xem log hoặc liên hệ nhân viên."

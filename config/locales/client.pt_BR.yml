@@ -323,11 +323,18 @@ pt_BR:
         other: "%{count} usuários"
     group_histories:
       actions:
+        change_group_setting: "Alterar configurações do grupo"
         add_user_to_group: "Adicionar usuário"
         remove_user_from_group: "Remover usuário"
+        make_user_group_owner: "Tornar proprietário"
+        remove_user_as_group_owner: "Revogar proprietário"
     groups:
       logs:
         title: "Registros"
+        when: "Quando"
+        action: "Ação"
+        acting_user: "Usuário atuando"
+        target_user: "Usuário destino"
         subject: "Assunto"
         details: "Detalhes"
         from: "De"
@@ -337,13 +344,40 @@ pt_BR:
         full_name: 'Nome Completo'
         add_members: "Adicionar Membros"
         delete_member_confirm: "Remover '%{username}' do grupo '%{group}'?"
+      request_membership_pm:
+        title: "Pedido de adesão"
+        body: "Eu gostaria de solicitar a adesão no grupo @%{groupName}."
+      name_placeholder: "Nome do grupo, sem espaços, regras iguais ao nome de usuário"
+      public: "Permitir que usuários entrem e saiam do grupo livremente (Requer que o grupo seja visível)"
+      empty:
+        posts: "Não há publicações de membros deste grupo."
+        members: "Não há membros neste grupo."
+        mentions: "Não há menções a este grupo."
+        messages: "Não há mensagens para este grupo."
+        topics: "Não há tópicos de membros deste grupo."
+        logs: "Não há registros para este grupo."
       add: "Adicionar"
+      join: "Entrar no Grupo"
+      leave: "Sair do Grupo"
+      request: "Pedir para Entrar no Grupo"
+      automatic_group: Grupo Automático
+      closed_group: Grupo Fechado
+      is_group_user: "Você é membro deste grupo"
+      allow_membership_requests: "Permitir que usuários enviem pedidos de adesão a donos do grupo (Requer que todos possam mencionar o grupo)"
+      membership: "Adesão"
+      name: "Nom"
+      user_count: "Número de Membros"
+      bio: "Sobre o Grupo"
       selector_placeholder: "Adicionar membros"
       owner: "proprietário"
       visible: "Grupo é visível para todos os usuários"
+      index:
+        title: "Grupos"
+        empty: "Não há grupos visíveis."
       title:
         one: "grupo"
         other: "grupos"
+      activity: "Atividade"
       members: "Membros"
       topics: "Tópicos"
       posts: "Mensagens"
@@ -375,6 +409,15 @@ pt_BR:
         muted:
           title: "Silenciado"
           description: "Você nunca será notificado sobre novos tópicos nesse grupo."
+      flair_url: "Imagem do Avatar Flair"
+      flair_url_placeholder: "(Opcional) URL da imagem ou classe do Font Awesome"
+      flair_bg_color: "Cor de Fundo do Avatar Flair"
+      flair_bg_color_placeholder: "(Opcional) Valor em hexadecimal da cor"
+      flair_color: "Cor do Avatar Flair"
+      flair_color_placeholder: "(Opcional) Valor em hexadecimal da cor"
+      flair_preview_icon: "Pré-visualizar Ícone"
+      flair_preview_image: "Pré-visualizar Imagem"
+      flair_note: "Nota: o Flair somente será exibido para o grupo primário do usuário."
     user_action_groups:
       '1': "Curtidas dadas"
       '2': "Curtidas recebidas"
@@ -439,6 +482,7 @@ pt_BR:
       download_archive:
         button_text: "Baixar Minhas Publicações"
         confirm: "Você tem certeza de que quer baixar as suas publicações?"
+        success: "Download iniciado, você será notificado por mensagem quando o processo estiver completo."
         rate_limit_error: "Publicações podem ser baixadas somente uma vez por dia, por favor tente novamente amanhã."
       new_private_message: "Nova Mensagem"
       private_message: "Mensagem"
@@ -545,6 +589,8 @@ pt_BR:
         error: "(erro)"
         action: "alterar"
         set_password: "Definir Senha"
+        choose_new: "Escolha uma nova senha"
+        choose: "Escolha uma senha"
       change_about:
         title: "Modificar Sobre Mim"
         error: "Houve um erro ao alterar esse valor."
@@ -579,7 +625,7 @@ pt_BR:
         instructions: "As Imagens de fundo serão centralizadas e deverão ter largura de 590px"
       email:
         title: "Email"
-        instructions: "Nunca mostrar ao público"
+        instructions: "nunca é exibido publicamente"
         ok: "Nós vamos pedir confirmação por email"
         invalid: "Insira um endereço de email"
         authenticated: "Seu email foi autenticado por {{provider}}"
@@ -589,22 +635,19 @@ pt_BR:
           other: "Nós apenas te enviaremos email se não o tivermos visto nos últimos {{count}} minutos."
       name:
         title: "Nome"
-        instructions: "Seu nome completo (opcional)"
+        instructions: "seu nome completo (opcional)"
         instructions_required: "Seu nome completo"
         too_short: "Seu nome é muito curto"
         ok: "Seu nome parece bom"
       username:
         title: "Nome de Usuário"
-        instructions: "Únicos, sem espaços e curto"
+        instructions: "único, sem espaços, curto"
         short_instructions: "As pessoas podem mencionar você usando @{{username}}."
         available: "Seu nome de usuário está disponível"
-        global_match: "O email corresponde ao nome de usuário registrado"
-        global_mismatch: "Já está registado. Tente {{suggestion}}?"
         not_available: "Não está disponível. Tente {{suggestion}}?"
         too_short: "Seu nome de usuário é muito curto"
         too_long: "Seu nome de usuário é muito longo"
         checking: "Verificando disponibilidade do Nome de Usuário..."
-        enter_email: 'Nome de usuário encontrado, insira o email correspondente. '
         prefilled: "Email corresponde a esse nome de usuário registrado"
       locale:
         title: "idioma de interface"
@@ -711,7 +754,7 @@ pt_BR:
         same_as_username: "Sua senha é a mesma que o seu nome de usuário."
         same_as_email: "Sua senha é a mesma que o seu email."
         ok: "A sua senha parece boa."
-        instructions: "Deve ter pelo menos %{count} caracteres."
+        instructions: "pelo menos %{count} caracteres"
       summary:
         title: "Resumo"
         stats: "Estatísticas"
@@ -893,6 +936,7 @@ pt_BR:
       to_continue: "Por favor efetue o login"
       preferences: "Você precisa estar logado para mudar suas preferências de usuário."
       forgot: "Não me recordo dos detalhes da minha conta."
+      not_approved: "Sua conta ainda não foi aprovada. Você será notificado por email quando estiver tudo pronto para realizar seu login."
       google:
         title: "Entrar com Google"
         message: "Autenticando com Google (certifique-se de que os bloqueadores de popup estejam desativados)"
@@ -914,6 +958,8 @@ pt_BR:
       github:
         title: "com GitHub"
         message: "Autenticando com GitHub (certifique-se de que os bloqueadores de popup estejam desativados)"
+    password_reset:
+      continue: "Continuar para %{site_name}"
     emoji_set:
       apple_international: "Apple/Internacional"
       google: "Google"
@@ -968,6 +1014,7 @@ pt_BR:
       title: "Ou pressione Ctrl+Enter"
       users_placeholder: "Adicionar um usuário"
       title_placeholder: "Sobre o que é esta discussão em uma pequena frase?"
+      title_or_link_placeholder: "Digite o título, ou cole um link aqui"
       edit_reason_placeholder: "por que você está editando?"
       show_edit_reason: "(adicione motivo da edição)"
       topic_featured_link_placeholder: "Entre com o link mostrado no título."
@@ -1133,7 +1180,9 @@ pt_BR:
           first: são a primeira publicação
           pinned: está fixado
           unpinned: não está fixado
+          wiki: é uma wiki
         statuses:
+          label: Onde os tópicos
           open: está aberto
           closed: está fechado
           archived: está arquivado
@@ -1282,6 +1331,8 @@ pt_BR:
         go_bottom: "último"
         go: "ir"
         jump_bottom: "ir para a última mensagem"
+        jump_prompt: "pular para..."
+        jump_prompt_of: "de %{count} publicações"
         jump_prompt_long: "Gostaria de ir para qual mensagem?"
         jump_bottom_with_number: "ir para a mensagem %{post_number}"
         total: total de mensagens
@@ -1479,8 +1530,10 @@ pt_BR:
       edit: "Em resposta a {{link}} por {{replyAvatar}} {{username}}"
       edit_reason: "Motivo:"
       post_number: "resposta {{number}}"
+      wiki_last_edited_on: "wiki última vez editada em"
       last_edited_on: "resposta editada pela última vez em"
       reply_as_new_topic: "Responder como um Tópico linkado"
+      reply_as_new_private_message: "Responder como nova mensagem aos mesmos destinatários"
       continue_discussion: "Continuando a discussão do {{postLink}}:"
       follow_quote: "ir para a resposta citada"
       show_full: "Exibir mensagem completa"
@@ -1513,6 +1566,7 @@ pt_BR:
         file_too_large: "Desculpe, o arquivo que você está tentando enviar é muito grande (o tamanho máximo permitido é {{max_size_kb}}kb). Que tal enviar o seu arquivo grande para um serviço de hospedagem na nuvem e depois compartilhar o link?"
         too_many_uploads: "Desculpe, você pode enviar apenas um arquivos por vez."
         too_many_dragged_and_dropped_files: "Desculpe, você só pode subir até 10 arquivos de cada vez."
+        upload_not_authorized: "Desculpe, o arquivo que você está tentando enviar não é permitido (extensões permitidas: {{authorized_extensions}})."
         image_upload_not_allowed_for_new_user: "Desculpe, novos usuário não podem enviar imagens."
         attachment_upload_not_allowed_for_new_user: "Desculpe, usuários novos não podem enviar anexos."
         attachment_download_requires_login: "Desculpe, você precisa estar logado para baixar arquivos anexos."
@@ -1651,17 +1705,19 @@ pt_BR:
           hide: "Esconder revisão"
           show: "Exibir revisão"
           revert: "Reverter para esta revisão"
+          edit_wiki: "Editar Wiki"
+          edit_post: "Editar Postagem"
           comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> <i class='fa fa-arrows-h'></i> <strong>{{current}}</strong> / {{total}}"
         displays:
           inline:
             title: "Exibir a saída renderizada com adições e remoções em linha"
-            button: '<i class="fa fa-square-o"></i> HTML'
+            button: 'HTML'
           side_by_side:
             title: "Exibir as diferentes saídas renderizadas lado a lado"
-            button: '<i class="fa fa-columns"></i> HTML'
+            button: 'HTML'
           side_by_side_markdown:
             title: "Mostrar a diferença da fonte crua lado-a-lado"
-            button: '<i class="fa fa-columns"></i> Cru'
+            button: 'Texto Bruto'
     category:
       can: 'pode&hellip; '
       none: '(sem categoria)'
@@ -1678,6 +1734,7 @@ pt_BR:
       tags_allowed_tag_groups: "Grupos de etiquetas que só podem ser usados nesta categoria:"
       tags_placeholder: "(Opcional) lista de etiquetas permitidas"
       tag_groups_placeholder: "(Opcional) lista de grupos de etiquetas permitidos"
+      topic_featured_link_allowed: "Permitir links em destaque nesta categoria"
       delete: 'Apagar categoria'
       create: 'Nova categoria'
       create_long: 'Criar uma nova categoria'
@@ -1712,6 +1769,7 @@ pt_BR:
       email_in_disabled: "Postar novos tópicos via email está desabilitado nas Configurações do Site. Para habilitar respostas em novos tópicos via email,"
       email_in_disabled_click: 'habilitar a configuração de "email em".'
       suppress_from_homepage: "Suprimir esta categoria da página inicial."
+      all_topics_wiki: "Tornar novos tópicos wikis por padrão."
       sort_order: "Ordenação Padrão:"
       allow_badges_label: "Permitir a concessão de emblemas nessa categoria"
       edit_permissions: "Editar Permissões"
@@ -1757,6 +1815,7 @@ pt_BR:
       notify_action: 'Mensagem'
       official_warning: 'Aviso Oficial'
       delete_spammer: "Apagar Spammer"
+      delete_confirm_MF: "Você está prestes a remover {POSTS, plural, one {<b>1</b> postagem} other {<b>#</b> postagens}} e {TOPICS, plural, one {<b>1</b> tópico} other {<b>#</b> tópicos}} deste usuário, removendo a conta, bloqueando cadastro a partir do endereço IP <b>{ip_address}</b>, e adicionando o email dele <b>{email}</b> em uma lista de bloqueio permanente. Você tem certeza que este usuário é realmente um spammer?"
       yes_delete_spammer: "Sim, Apagar Spammer"
       ip_address_missing: "(N/D)"
       hidden_email_address: "(escondido)"
@@ -1833,6 +1892,9 @@ pt_BR:
       one: "visualizar"
       other: "visualizações"
     replies: "Respostas"
+    views_long:
+      one: "este tópico foi visto uma vez"
+      other: "este tópico foi visto {{number}} vezes"
     activity: "Atividade"
     likes: "Curtidas"
     likes_lowercase:
@@ -2101,6 +2163,8 @@ pt_BR:
       custom_message_placeholder: "Insira a sua mensagem personalizada"
       custom_message_template_forum: "Ei, você devia entrar neste fórum!"
       custom_message_template_topic: "Ei, eu acho que você vai gostar deste tópico!"
+    safe_mode:
+      enabled: "O modo seguro está habilitado. Para sair do modo seguro feche esta janela do navegador"
   admin_js:
     type_to_filter: "escreva para filtrar..."
     admin:
@@ -2135,6 +2199,8 @@ pt_BR:
         backups: "backups"
         traffic_short: "Tráfego"
         traffic: "Solicitações do aplicativo pela web"
+        page_views: "Visualizações"
+        page_views_short: "Visualizações"
         show_traffic_report: "Mostrar Relatório de Tráfego Detalhado"
         reports:
           today: "Hoje"
@@ -2277,6 +2343,7 @@ pt_BR:
         warn_local_payload_url: "Parece que você está tentando configurar um webhook para uma URL local. Eventos entregues a endereços locais podem causar efeitos colaterais ou comportamentos inesperados. Continuar?"
         secret_invalid: "O segredo não deve conter caracteres em branco."
         secret_too_short: "O segredo deve ter pelo menos 12 caracteres."
+        secret_placeholder: "Um texto opcional, usado para gerar assinatura"
         event_type_missing: "Você deve configurar apenas um tipo de evento."
         content_type: "Tipo de Conteúdo"
         secret: "Segredo"
@@ -2292,12 +2359,14 @@ pt_BR:
         groups_filter: "Grupos Desencadeados"
         delete_confirm: "Deletar esse webhook?"
         topic_event:
+          name: "Evento do Tópico"
           details: "Quando existir um tópico novo, revisado, modificado ou deletado."
         post_event:
           name: "Publicar Evento"
           details: "Quando existir uma nova resposta, edição, deleção ou recuperação."
         user_event:
           name: "Evento de Usuário"
+          details: "Quando um usuário é criado, aprovado ou atualizado."
         delivery_status:
           title: "Status de Entrega"
           inactive: "Inativo"
@@ -2522,6 +2591,7 @@ pt_BR:
         html: "html"
         text: "texto"
         last_seen_user: "Último Usuário Visto:"
+        no_result: "Nenhum resultado encontrado."
         reply_key: "Chave de Resposta"
         skipped_reason: "Ignorar Motivo"
         incoming_emails:
@@ -2613,10 +2683,17 @@ pt_BR:
             revoke_admin: "revogar admin"
             grant_moderation: "conceder moderação"
             revoke_moderation: "revogar moderação"
-            backup_operation: "operação de backup"
+            backup_create: "criar backup"
             deleted_tag: "etiqueta removida"
             renamed_tag: "etiqueta renomeada"
             revoke_email: "revogar email"
+            lock_trust_level: "travar nível de confiança"
+            unlock_trust_level: "destravar nível de confiança"
+            activate_user: "ativar usuário"
+            deactivate_user: "desativar usuário"
+            change_readonly_mode: "alterar modo \"somente leitura\""
+            backup_download: "Fazer download do backup"
+            backup_destroy: "destruir backup"
         screened_emails:
           title: "Emails Filtrados"
           description: "Quando alguém tenta cria uma nova conta, os seguintes endereços de email serão verificados e o registro será bloqueado, ou outra ação será executada."
@@ -2917,6 +2994,7 @@ pt_BR:
           user_preferences: "Preferências de Usuário"
           tags: "Marcações"
           search: "Procurar"
+          groups: "Grupos"
       badges:
         title: Emblemas
         new_badge: Novo Emblema

@@ -73,6 +73,8 @@ pt_BR:
       inclusion: não está incluído na lista
       invalid: é inválido
       is_invalid: "parece pouco claro; é uma frase completa?"
+      contains_censored_words: "contém as seguintes palavras censuradas: %{censored_words}"
+      matches_censored_pattern: "contém as seguintes palavras que se encaixam nos padrões de expressões regulares censuradas do site: %{censored_words}"
       less_than: precisa ser menor que %{count}
       less_than_or_equal_to: deve ser menor ou igual à %{count}
       not_a_number: não é um número
@@ -107,9 +109,10 @@ pt_BR:
       default_categories_already_selected: "Você não pode selecionar uma categoria usada noutra lista."
       s3_upload_bucket_is_required: "Você não pode habilitar uploads para o S3 a não ser que tenha provido o 's3_upload_bucket'."
   invite:
-    accept_invite: "Convite aceito"
+    not_found: "O token do seu convite é inválido. Por favor entre em contato com o administrador do site."
   bulk_invite:
     file_should_be_csv: "O arquivo atualizado deve ter o formato csv."
+    error: "Houve um erro ao tentar enviar esse arquivo. Por favor tente novamente mais tarde."
   topic_invite:
     user_exists: "Desculpe, este usuário já foi convidado. Você pode convidar um usuário para um tópico apenas uma única vez."
   backup:
@@ -129,6 +132,7 @@ pt_BR:
   embed:
     start_discussion: "Começar Discussão"
     continue: "Continuar Discussão"
+    error: "Erro na Incorporação"
     more_replies:
       one: "1 resposta a mais"
       other: "%{count} respostas a mais"
@@ -237,39 +241,47 @@ pt_BR:
 
       Para mais, [veja nosso guia da comunidade](/guidelines). Esta mensagem aparecerá somente para o seu primeiro %{education_posts_text}.
     avatar: |
-      ### Que tal uma imagem para a sua conta?
+      ### Que tal usar uma imagem para a sua conta?
 
-      Você postou alguns tópicos e respostas, mas a sua imagem de perfil não é tão original como você é -- é apenas uma carta.
+      Você tem postado alguns tópicos e respostas, mas sua foto de perfil não tão única quando você - é apenas uma carta.
 
-      Você já considerou ** [visitando o seu perfil de usuário](%{profile_path})** e carregar uma imagem que representa você?
+      Já pensou em **[visitar seu perfil de usuário](%{profile_path})** e enviar uma foto que representa você?
 
-      É mais fácil seguir as discussões e encontrar pessoas interessantes em conversas quando todo mundo tem uma imagem de perfil única!
+      É mais fácil manter discussões e encontrar pessoas interessantes durante as conversas quando todos têm uma foto de perfil única!
     sequential_replies: |
-      ### Considere responder a várias mensagens simultaneamente
+      ### Considere responder várias postagem de uma só vez
 
-      No lugar de várias respostas em seguida para um tópico, por favor considere uma única resposta que inclui citações de mensagens anteriores ou referência ao @nome.
+      Em vez de responder um tópico várias vezes em sequência, por favor considere fazer uma única resposta que inclua citações de postagens anteriores ou referencie alguém usando @name.
 
-      Você pode editar sua resposta anterior para adicionar uma citação destacando o texto e selecionando o botão <b>citar resposta</b> que aparece.
+      Você pode editar sua resposta anterior para adicionar uma citação selecionando um texto e clicando no botão <b>responder citação</b> que aparecerá.
 
-      É mais fácil para todos lerem tópicos que tem menos respostas em profundidade contra muitas respostas curtas individuais.
+      Fica mais fácil para todo mundo ler tópicos que possuem poucas respostas com muita informação em vez de muitas respostas individuais com pouca informação cada.
     dominating_topic: |
-      ### Deixe que os outros se juntem à conversa⏎
-      ⏎
-      Este tópico é claramente importante para você &ndash; você postou mais de %{percent}% das respostas aqui.⏎
-      ⏎
-      Tem certeza de que você está fornecendo o tempo adequado para outras pessoas também poderem compartilhar seus pontos de vista?⏎
+      ### Deixe outros entrarem na conversa
+
+      Este tópico claramente é importante para você &ndash; você postou mais de %{percent}% das respostas aqui.
+
+      Tem certeza que você está dando tempo para que outras pessoas também compartilhem seus pontos de vista?
+    get_a_room: |
+      ### Considere responder para mais pessoas
+
+      Você já respondeu %{count} vezes o usuário @%{reply_username} neste tópico em particular.
+
+      Já pensou em responder também *outras* pessoas nesta discussão? Uma boa discussão envolve várias vozes e perspectivas.
+
+      Se quiser continuar estendendo sua conversa com este usuário, [envie uma mensagem pessoal para ele](/users/%{reply_username}).
     too_many_replies: |
-      # # # Você está no limite de resposta para este tópico
+      ### Você atingiu o limite de respostas para este tópico
 
-      Lamentamos, mas novos usuários estão temporariamente limitados a %{newuser_max_replies_per_topic} respostas no mesmo tópico.
+      Sentimos muito, mas novos usuários são temporariamente limitados a %{newuser_max_replies_per_topic} respostas no mesmo tópico.
 
-      Em vez de adicionar outra resposta, por favor, considere editar suas respostas anteriores ou visitar outros tópicos.
+      Em vez de adicionar outra resposta, por favor considere editar suas respostas anteriores, ou visite outros tópicos.
     reviving_old_topic: |
-      # # # Reviver este tópico?
+      ### Reviver este tópico?
 
-      A última resposta a este tópico foi a %{days} atrás. Sua resposta vai levar o tópico para o topo da sua lista e avisar a qualquer um anteriormente envolvido na conversa.
+      A última resposta deste tópico foi feita há **%{days}** dias atrás. Sua resposta jogará o tópico para o topo da sua lista e notificará as pessoas que foram envolvidas na conversa.
 
-      Tem certeza de que quer continuar esta velha conversa?
+      Tem certeza que deseja continuar essa velha conversa?
   activerecord:
     attributes:
       category:
@@ -292,6 +304,7 @@ pt_BR:
               no_user_selected: "Você deve escolher um usuário válido."
             featured_link:
               invalid: "é inválida. A URL deve conter http:// ou https://."
+              invalid_category: "não pode ser editado nesta categoria."
         user:
           attributes:
             password:
@@ -325,6 +338,20 @@ pt_BR:
   assets_topic_body: "Esse é um tópico permanente, visível apenas para a equipe, para arquivar imagens e arquivos usados no design do fórum. Não o delete!\n\n\nAqui está como:\n\n\n1. Responda a esse tópico.\n2. Envie todas as imagens que você deseja para serem usadas como logos, favicons e assim por diante aqui. (Utilize o ícone da barra de upload no editor de post, arraste e solte ou cole imagens.)\n3. Enviar sua resposta para publicá-la.\n4. Clique com o botão direito do mouse nas imagens em sua nova postagem para obter o endereço das imagens enviadas, ou clique no ícone de edição para editar o seu post e recuperar o caminho para as imagens. Copie o endereço da imagem.\n5. Copie o endereço das imagens nas [configurações básicas](/admin/site_settings/category/required).\n\nTambém, se você precisa ativar diferentes tipos de envios de arquivos, edite o `authorized_extensions` em [configurações de arquivo](/admin/site_settings/category/files)."
   discourse_welcome_topic:
     title: "Bem vindo ao Discourse"
+    body: |2
+
+      O primeiro parágrafo deste tópico fixo será visto como uma mensagem de boas vindas a todos os novos visitantes em sua página inicial. É muito importante!
+
+      **Edite isso** em uma breve descrição da sua comunidade:
+
+      - Para quem ela é?
+      - O que será encontrado aqui?
+      - Porque as pessoas deveria vir aqui?
+      - Onde é possível saber mais a respeito (links, fontes, etc)?
+
+      <img src="/images/welcome/discourse-edit-post-animated.gif" width="508" height="106">
+
+      Você pode querer fechar este tópico através do Administrador :wrench: (na parte superior direita e inferior), para que não se acumulem respostas num tópico de boas vindas.
   lounge_welcome:
     title: "Bem-vindo ao Salão"
     body: |2
@@ -485,7 +512,6 @@ pt_BR:
     title: 'Redefinir Senha'
     success: "Sua senha foi modificado com sucesso e você está conectado agora."
     success_unapproved: "Senha modificada com sucesso."
-    continue: "Continuar para %{site_name}"
   change_email:
     confirmed: "O seu email foi atualizado."
     please_continue: "Continuar no %{site_name}"
@@ -752,8 +778,6 @@ pt_BR:
     facebook_config_warning: 'O servidor está configurado para permitir o signup e login com Facebook (enable_facebook_logins), mas os valores do App Id e App Secret não estão configurados. Vá para <a href="/admin/site_settings">as Configurações do Site</a> e atualize as configurações. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Veja este guia e aprenda mais</a>.'
     twitter_config_warning: 'O servidor está configurado para permitir o signup e login com Twitter (enable_twitter_logins), mas os valores de Key e Secret não estão configurados. Vá para <a href="/admin/site_settings">as Configurações do Site</a> e atualize as configurações. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">Veja este guia e aprenda mais</a>.'
     github_config_warning: 'O servidor está configurado para permitir o signup e login com GitHub (enable_twitter_logins), mas os valores de Cliend Id e Secret não estão configurados. Vá para <a href="/admin/site_settings">the Site Settings</a> e atualize as configurações. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">Veja este guia e aprenda mais</a>.'
-    s3_config_warning: 'O servidor está configurado para fazer upload de arquivos para o s3, mas pelo menos uma destas configurações não está definida: s3_access_key_id, s3_secret_access_key ou s3_upload_bucket. Vá até as <a href="/admin/site_settings">Configurações do Site</a> e atualize estas definições. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Veja "How to set up image uploads to S3?" para saber mais</a>.'
-    s3_backup_config_warning: 'O servidor está configurado para fazer upload de arquivos para o s3, mas pelo menos uma destas configurações não está definida: s3_access_key_id, s3_secret_access_key ou s3_backup_bucket. Vá até as <a href="/admin/site_settings">Configurações</a> e atualize estas definições. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Veja "How to set up image uploads to S3?" para saber mais</a>.'
     image_magick_warning: 'O servidor está configurado para criar miniaturas de imagens grandes, mas o ImageMagick não está instalado. Instale o ImageMagick usando seu gerenciador de pacotes preferido ou acesse <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">para fazer download da última versão</a>.'
     failing_emails_warning: 'Existem %{num_failed_jobs} tarefas de email que falharam. Verifique seu app.yml e se assegure que as configurações do servidor de email estão corretas. <a href="/sidekiq/retries" target="_blank">Veja as tarefas que falharam no Sidekiq</a>.'
     subfolder_ends_in_slash: "Sua configuração de subdiretórios está incorreta; DISCOURSE_RELATIVE_URL_ROOT termina com uma barra."
@@ -803,6 +827,7 @@ pt_BR:
     max_image_width: "Largura máxima para imagens em um post"
     max_image_height: "Altura máxima para imagens em um post"
     category_featured_topics: "Número de tópicos exibidos por categoria na página /categories. Depois de alterar este valor, levará até 15 minutos para a página de categorias atualizar-se."
+    show_subcategory_list: "Mostrar lista de subcategorias ao invés de lista de tópicos ao entrar em uma categoria."
     fixed_category_positions: "Se selecionado, você será capaz de organizar as categorias em uma ordem fixa. Se nada for feito, as categorias serão listadas em ordem de atividade."
     fixed_category_positions_on_create: "Se ativado, a ordenação das categorias vai ser mantida no formulário de criação de tópico. (requer fixed_category_positions)"
     add_rel_nofollow_to_user_content: "Adicionar \"nofollow\" para todo conteúdo incluído por um usuário, exceto links internos (incluindo sub domínios). Para que as mudanças façam efeito é necessário rodar \"rake posts:rebake\"."
@@ -893,8 +918,6 @@ pt_BR:
     invite_passthrough_hours: "Quando tempo um usuário pode usar uma chave de convite previamente usada para logar, em horas"
     invite_only: "Cadastro público está desabilitado, todos os novos usuários devem ser explicitamente convidados por outros membros ou equipe."
     login_required: "Exigir autenticação para ler conteúdo neste site, desabilitar acesso anônimo."
-    min_username_length: "Nome de usuário mínimo em caracteres."
-    max_username_length: "Nome de usuário máximo em caracteres."
     reserved_usernames: "Nomes de usuário não permitidos para criação de contas."
     min_password_length: "Comprimento mínimo da senha."
     min_admin_password_length: "Tamanho de senha mínima para Administradores."
@@ -1263,22 +1286,6 @@ pt_BR:
       other: "%{count} sinalizações aguardando a ser controladas"
   invite_mailer:
     subject_template: "%{invitee_name} convidou você para '%{topic_title}' em %{site_domain_name}"
-    text_body_template: |
-      %{invitee_name} convidou você para uma conversa
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      em
-
-      > %{site_title} -- %{site_description}
-
-      Se estiver interessado, clique no link abaixo:
-
-      %{invite_link}
-
-      Este convite é de um usuário de nossa confiança, assim você poderá participar da conversa imediatamente.
   invite_forum_mailer:
     subject_template: "%{invitee_name} convidou você para participar de %{site_domain_name}"
   invite_password_instructions:
@@ -1350,12 +1357,6 @@ pt_BR:
         ```
     csv_export_succeeded:
       subject_template: "Exportação de dados completada"
-      text_body_template: |
-        Sua exportação de dados foi bem-sucedida! :dvd:
-
-        <a class="attachment" href="%{download_link}">%{file_name}</a> (%{file_size})
-
-        O link acima será válido por 48 horas.
     csv_export_failed:
       subject_template: "A exportação de dados falhou"
       text_body_template: "Nos desculpamos, mas sua exportação de dados falhou. Por favor verifique os logs ou entre em contato com um membro da staff."

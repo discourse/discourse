@@ -34,7 +34,6 @@ sq:
   anonymous: "Anonim"
   emails:
     incoming:
-      default_subject: "Incoming email from %{email}"
       show_trimmed_content: "Show trimmed content"
       maximum_staged_user_per_email_reached: "Reached maximum number of staged users created per email."
       errors:
@@ -136,38 +135,6 @@ sq:
       - A i shton diçka diskutimit përgjigja juaj?
 
       Për më shumë, shikoni [udhëzimet e faqes](/guidelines). Ky njoftim do të shfaqet vetëm për %{education_posts_text}.
-    avatar: |
-      ### Pse nuk i vendosni një foto ose avatar llogarisë tuaj?
-
-      Hej, ju keni dërguar disa tema dhe përgjigje në faqe, por nuk keni akoma foto profili.
-      You've posted a few topics and replies, but your profile picture isn't as unique as you are -- it's just a letter.
-
-      A e dini se mund të shkoni tek **[profili juaj](%{profile_path})** dhe të ngarkoni një foto përfaqësuese?
-    sequential_replies: |
-      ### Konsideroni t'i përgjigjeni disa komenteve njëkohësisht
-
-      Është më mirë të postoni një përgjigje me disa citime sesa të dërgoni disa përgjigje njëra pas tjetrës.
-
-      Mund të redaktoni përgjigjet tuaja dhe t'i shtoni citime.
-
-      Kështu do të jetë dhe më e lehtë për të gjithë të lexojnë tema që kanë disa përgjigje të thella në vend të shumë përgjigjeve individuale.
-    dominating_topic: |+
-      ### Lëri edhe të tjerët të marrin pjesë në diskutim
-
-      Duket që kjo temë është e rëndësishme për ju  &ndash;  ju keni postuar mbi %{percent}% të përgjigjeve këtu.
-
-      Ama, a po i lini hapësirë anëtarëve të tjerë të shprehen?
-
-    too_many_replies: |
-      ### Keni arritur limitin e përgjigjeve tek kjo temë
-
-      Na vjen keq, por anëtarët e rinj nuk mund të postojnë më shumë se %{newuser_max_replies_per_topic} përgjigje në një temë.
-    reviving_old_topic: |
-      ### Doni të rizgjoni këtë temë të vjetër?
-
-      Përgjigja e fundit këtu është postuar mbi %{days} ditë më parë. Përgjigja juaj do t'a ngjisë këtë postim në majë të listave dhe do t'ju çojë një njoftim të gjithë pjesëmarrësve në diskutim.
-
-      A jeni të sigurtë që doni të vazhdoni?
   activerecord:
     attributes:
       category:
@@ -335,14 +302,11 @@ sq:
         other: "pothuajse %{count} vite më parë"
   password_reset:
     no_token: "Ndjesë, kjo lidhje për ndryshimin e fjalëkalimit është shumë e vjetër. Kliko butonin 'Identifikohu' dhe përdorni 'Kam harruar fjalëkalimin' për të marrë një lidhje të re."
-    choose_new: "Zgjidhni një fjalëkalim të ri"
-    choose: "Ju lutem, zgjidhni një fjalëkalim"
     update: 'Rifresko Fjalëkalimin'
     save: 'Vendos Fjalëkalim'
     title: 'Rivendos Fjalëkalimin'
     success: "Ndryshimi i fjalëkalimit u krye me sukses dhe tashmë ju jeni futur në faqe."
     success_unapproved: "Ndryshimi i fjalëkalimit u krye me sukses."
-    continue: "Vazhdo tek %{site_name}"
   change_email:
     confirmed: "Adresa e postës u azhornua."
     please_continue: "Vazhdo tek %{site_name}"
@@ -425,6 +389,14 @@ sq:
     stop_watching_topic: "Ndaloni së ndjekuri këtë temë, %{link}"
     unwatch_category: "Ndaloni së ndjekuri të gjitha temat në %{category}"
     all: "Mos më dërgoni më email nga %{sitename}"
+  user_api_key:
+    title: "Lejo këtë aplikimi të ketë akses në faqe"
+    authorize: "Autorizo"
+    description: "\"%{application_name}\" po kërkon këto të drejta në lidhje me llogarinë tuaj:"
+    scopes:
+      notifications: "Leximin dhe pastrimin e njoftimeve"
+      push: "Njoftime \"push\" drejt shërbimeve të jashtme"
+      session_info: "Leximin e informacionit të sesionit të llogarisë"
   reports:
     visits:
       title: "Vizitat e përdoruesit"
@@ -564,8 +536,6 @@ sq:
     facebook_config_warning: 'The server is configured to allow signup and log in with Facebook (enable_facebook_logins), but the app id and app secret values are not set. Go to <a href="/admin/site_settings">the Site Settings</a> and update the settings. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">See this guide to learn more</a>.'
     twitter_config_warning: 'The server is configured to allow signup and log in with Twitter (enable_twitter_logins), but the key and secret values are not set. Go to <a href="/admin/site_settings">the Site Settings</a> and update the settings. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">See this guide to learn more</a>.'
     github_config_warning: 'The server is configured to allow signup and log in with GitHub (enable_github_logins), but the client id and secret values are not set. Go to <a href="/admin/site_settings">the Site Settings</a> and update the settings. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">See this guide to learn more</a>.'
-    s3_config_warning: 'The server is configured to upload files to s3, but at least one the following setting is not set: s3_access_key_id, s3_secret_access_key or s3_upload_bucket. Go to <a href="/admin/site_settings">the Site Settings</a> and update the settings. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">See "How to set up image uploads to S3?" to learn more</a>.'
-    s3_backup_config_warning: 'The server is configured to upload backups to s3, but at least one the following setting is not set: s3_access_key_id, s3_secret_access_key or s3_backup_bucket. Go to <a href="/admin/site_settings">the Site Settings</a> and update the settings. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">See "How to set up image uploads to S3?" to learn more</a>.'
     image_magick_warning: 'The server is configured to create thumbnails of large images, but ImageMagick is not installed. Install ImageMagick using your favorite package manager or <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">download the latest release</a>.'
   site_settings:
     censored_words: "Fjalët do të zhvendosen automatikisht me &#9632;&#9632;&#9632;&#9632;"
@@ -599,6 +569,7 @@ sq:
     max_image_width: "Maximum thumbnail width of images in a post"
     max_image_height: "Maximum thumbnail height of images in a post"
     category_featured_topics: "Number of topics displayed per category on the /categories page. After changing this value, it takes up to 15 minutes for the categories page to update."
+    show_subcategory_list: "Show subcategory list instead of topic list when entering a category."
     fixed_category_positions: "If checked, you will be able to arrange categories into a fixed order. If unchecked, categories are listed in order of activity."
     fixed_category_positions_on_create: "If checked, category ordering will be maintained on topic creation dialog (requires fixed_category_positions)."
     add_rel_nofollow_to_user_content: "Add rel nofollow to all submitted user content, except for internal links (including parent domains). If you change this, you must rebake all posts with: \"rake posts:rebake\""
@@ -981,43 +952,6 @@ sq:
       other: "%{count} sinjalizime në pritje për t'u trajtuar"
   invite_mailer:
     subject_template: "%{invitee_name} ju ftoi tek tema '%{topic_title}' tek %{site_domain_name}"
-    text_body_template: |+
-      %{invitee_name} ju ftoi në një bisedë
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      tek
-
-      > %{site_title} -- %{site_description}
-
-      Nëse jeni i interesuar, klikoni lidhjen e mëposhtme:
-
-      %{invite_link}
-
-      Kjo ftesë vjen nga një përdorues i besuar, ju mund të merrni pjesë në bisedë menjëherë.
-
-  custom_invite_mailer:
-    text_body_template: |+
-      %{invitee_name} ju ftoi në një bisedë
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      tek
-
-      > %{site_title} -- %{site_description}
-
-      Mesazh nga %{invitee_name}:
-
-      %{user_custom_message}
-
-      Nëse jeni i interesuar, klikoni lidhjen e mëposhtme:
-
-      %{invite_link}
-
-      Kjo ftesë vjen nga një përdorues i besuar, ju mund të merrni pjesë në bisedë menjëherë.
-
   invite_forum_mailer:
     subject_template: "%{invitee_name} ju ka ftuar të bëheni pjesë e %{site_domain_name}"
   custom_invite_forum_mailer:
@@ -1108,12 +1042,6 @@ sq:
         ```
     csv_export_succeeded:
       subject_template: "Data export complete"
-      text_body_template: |
-        Your data export was successful! :dvd:
-
-        <a class="attachment" href="%{download_link}">%{file_name}</a> (%{file_size})
-
-        The above download link will be valid for 48 hours.
     csv_export_failed:
       subject_template: "Data export failed"
       text_body_template: "We're sorry, but your data export failed. Please check the logs or contact a staff member."

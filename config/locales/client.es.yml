@@ -589,6 +589,8 @@ es:
         error: "(error)"
         action: "Enviar email para restablecer la contraseña"
         set_password: "Establecer contraseña"
+        choose_new: "Escoge una nueva contraseña"
+        choose: "Escoge una contraseña"
       change_about:
         title: "Cambiar 'Acerca de mí'"
         error: "Hubo un error al cambiar este valor."
@@ -642,13 +644,11 @@ es:
         instructions: "único, sin espacios y corto"
         short_instructions: "Los demás usuarios pueden mencionarte como @{{username}}"
         available: "Tu nombre de usuario está disponible"
-        global_match: "La dirección coincide con la del nombre de usuario registrado"
-        global_mismatch: "Ya está registrado. ¿Prueba {{suggestion}}?"
         not_available: "No disponible. ¿Prueba {{suggestion}}?"
+        not_available_no_suggestion: "No disponible"
         too_short: "Tu nombre de usuario es demasiado corto"
         too_long: "Tu nombre de usuario es demasiado largo"
         checking: "Comprobando la disponibilidad del nombre de usuario..."
-        enter_email: 'Nombre de usuario encontrado; introduce la dirección de correo correspondiente'
         prefilled: "El email coincide con el nombre de usuario registrado"
       locale:
         title: "Idioma de la interfaz"
@@ -746,10 +746,10 @@ es:
         link_generated: "¡Enlace de invitación generado satisfactoriamente!"
         valid_for: "El enlace de invitación sólo es válido para esta dirección: %{email}"
         bulk_invite:
-          none: "Aún no has invitado a nadie aquí. Puedes enviar invitaciones individuales, o invitar varias personas a la vez <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>subiendo un archivo CSV</a>."
+          none: "No has invitado a nadie aún. Puedes enviar invitaciones individuales o invitar a varias personas a la vez <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>subiendo un archivo de invitación en masa</a>."
           text: "Archivo de Invitación en Masa"
           success: "Archivo subido correctamente, se te notificará con un mensaje cuando se complete el proceso."
-          error: "Lo sentimos, el archivo debería tener formato csv."
+          error: "Lo siento, el archivo debe tener formato CSV. "
       password:
         title: "Contraseña"
         too_short: "Tu contraseña es demasiada corta."
@@ -939,6 +939,7 @@ es:
       to_continue: "Por favor, inicia sesión"
       preferences: "Debes tener una sesión iniciada para cambiar tus preferencias de usuario."
       forgot: "No me acuerdo de los detalles de mi cuenta."
+      not_approved: "Tu cuenta aún no ha sido aprobada. Se te notificará por email cuando todo esté listo para iniciar sesión."
       google:
         title: "con Google"
         message: "Autenticando con Google (asegúrate de desactivar cualquier bloqueador de pop ups)"
@@ -960,6 +961,17 @@ es:
       github:
         title: "con GitHub"
         message: "Autenticando con GitHub (asegúrate de desactivar cualquier bloqueador de pop ups)"
+    invites:
+      accept_title: "Invitación"
+      welcome_to: "Bienvenido a %{site_name}!"
+      invited_by: "Has sido invitado por:"
+      social_login_available: "También serás capaz de loguearte usando cualquier red social usando ese email."
+      your_email: "Tu cuenta de correo electrónico es <b>%{email}</b>."
+      accept_invite: "Aceptar invitación"
+      success: "Tu nueva cuenta está confirmada y ahora estás logueado/a."
+      password_label: "Establecer contraseña (opcional)"
+    password_reset:
+      continue: "Continuar a %{site_name}"
     emoji_set:
       apple_international: "Apple/Internacional"
       google: "Google"
@@ -1403,11 +1415,8 @@ es:
         make_banner: "Tema de encabezado"
         remove_banner: "Remover tema de encabezado"
       reply:
-        post:
-          title: 'Respuesta'
-        topic:
-          title: 'Respuesta'
-          help: 'empieza a escribir una respuesta a este tema'
+        title: 'Responder'
+        help: 'comienza a escribir una respuesta a este tema'
       clear_pin:
         title: "Eliminar Destacado"
         help: "Elimina el estado 'Destacado' de este tema para que no aparezca más en lo más alto de tu lista de temas"
@@ -1536,6 +1545,7 @@ es:
       wiki_last_edited_on: "wiki editada por última vez"
       last_edited_on: "post editado por última ven en"
       reply_as_new_topic: "Responder como tema enlazado"
+      reply_as_new_private_message: "Responder como mensaje nuevo a los mismos destinatarios"
       continue_discussion: "Continuando la discusión desde {{postLink}}:"
       follow_quote: "ir al post citado"
       show_full: "Mostrar todo el post"
@@ -1707,7 +1717,8 @@ es:
           hide: "Ocultar revisión."
           show: "Mostrar revisión."
           revert: "Volver a esta revisión"
-          edit_wiki: "Editar wiki"
+          edit_wiki: "Editar Wiki"
+          edit_post: "Editar post"
           comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> <i class='fa fa-arrows-h'></i> <strong>{{current}}</strong> / {{total}}"
         displays:
           inline:

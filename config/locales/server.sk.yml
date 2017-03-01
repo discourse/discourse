@@ -33,7 +33,6 @@ sk:
   anonymous: "Anonymný"
   emails:
     incoming:
-      default_subject: "Prijatý email od %{email}"
       show_trimmed_content: "Ukázať orezaný obsah"
       maximum_staged_user_per_email_reached: "Dosiahnutý maximálny počet dočasných používateľov vytvorených emailom."
       errors:
@@ -227,40 +226,6 @@ sk:
       - Konštruktívna kritika je vítana, avšak kritizujte "nápady", nie ľudí.
 
       Pre viac informácií, [pozri návody](/guidelines). Tento panel sa zobrazí iba raz %{education_posts_text}.
-    avatar: |
-      ### Čo tak pridať fotku k svojmu účtu?
-
-      Už ste pridali zopár tém a odpovedi, ale Váš profil nie je taký jedinečný ako Vy -- Je to len písmeno.
-
-      Zvážili ste  **[pozrieť váš profil](%{profile_path})** a pridať obrázok , ktorý Vás vystihuje?
-
-      Je jednoduchšie sledovať diskusie a nájsť zaujímave osoby v konverzácii pokiaľ ma každý z nich v profile jedinečný obrázok !
-    sequential_replies: |
-      ### Zvážte možnosť odpovedať na viacero príspevkov naraz
-
-      Namiesto množstva postupných odpovedí na tému prosím zvážte použitie jednej odpovede, ktorá bude obsahovať citácie z predchádzajúcich príspevkov, alebo odkazy na @meno
-
-      Ak chcete dať časť svojho vloženého príspevku do úvodzoviek, stačí označiť text a stlačiť  tlačidlo <b>quote reply</b> , ktoré sa následne objaví.
-
-      Pre všetkých je jednoduchšie čítať témy, ktoré majú menšiu hĺbku vnorených odpovedi v porovnaní s množstvom malých individuálnych odpovedí.
-    dominating_topic: |
-      ### Umožnite ostatným nech sa zapoja do debaty
-
-      Táto téma je pre Vás zjavne dôležitá &ndash; prispeli ste do nej viac než %{percent}% odpovedí.
-
-      Ste si istí, že posktujete dostatok času aj ostatným aby prezentovali svoj názor ?
-    too_many_replies: |
-      ### Dosiahli ste limit počtu odpovedí na túto tému
-
-      Ľutujeme, noví používatelia môžu dočasne vložiť len %{newuser_max_replies_per_topic}  odpovedí na jednu tému.
-
-      Namiesto nového príspevku zvážte možnosť úpravy predchádzajúcich odpovedí, alebo skúste inú tému.
-    reviving_old_topic: |
-      ### Oživiť túto tému ?
-
-      Posledná odpoveď k tejto téme je staršia ako  %{days} dní. Vaša odpoveď posunie tému na vrchol tém a upozorní všetkých, ktorí sa zapojili do diskusie.
-
-      Ste si istí, že chcete pokračovať v tejto starej diskusii?
   activerecord:
     attributes:
       category:
@@ -482,14 +447,11 @@ sk:
         other: "pred takmer %{count} rokmi"
   password_reset:
     no_token: "Ľutujeme, tento odkaz na zmenu hesla je už príliš starý. Stlačte tlačidlo Prihlásiť a použite \"Zabudol som heslo\" pre vytvorenie nového odkazu."
-    choose_new: "Prosim zadajte nové heslo"
-    choose: "Prosím zadajte heslo"
     update: 'Aktualizujte heslo'
     save: 'Nastavte heslo'
     title: 'Obnoviť heslo'
     success: "Heslo bolo úspešne zmenené a ste prihlasený do systému. "
     success_unapproved: "Heslo bolo úspešne zmenené."
-    continue: "Pokračujte na %{site_name}"
   change_email:
     confirmed: "Vaša emailova adresa bola aktualizovaná"
     please_continue: "Pokračujte na %{site_name}"
@@ -729,8 +691,6 @@ sk:
     facebook_config_warning: 'Server má nakonfigurovanú podporu registrácie a prihlásenia pomocou Facebooku (enable_facebook_logins), ale údaje "app Id" a tajné hodnoty nie sú nastavené. Navštívte <a href="/admin/site_settings">Nastavenia stránky</a> a aktualizujte nastavenia.  <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Chcete vedieť viac? Pozrite si tento návod</a>.'
     twitter_config_warning: 'Server má nakonfigurovanú podporu registrácie a prihlásenia pomocou Twitteru (enable_twitter_logins), ale kľúč a tajné hodnoty nie sú nastavené. Navštívte  <a href="/admin/site_settings">Nastavenia stránky</a> a aktualizujte nastavenia. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">Chcete vedieť viac? Pozrite si tento návod</a>.'
     github_config_warning: 'Server má nakonfigurovanú podporu registrácie a prihlásenia pomocou GitHub (enable_github_logins), ale identifikačné údaje klienta a jeho tajné hodnoty nie sú nastavené.. Navštívte <a href="/admin/site_settings">Nastavenia stránky</a> a aktualizujte nastavenia.<a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">Chcete vedieť viac? Pozrite si tento návod</a>.'
-    s3_config_warning: 'Server má nakonfigurované nahrávanie súborov na S3, ale minimálne jedna z nasledujúcich hodnôt nie je nastavená: s3_access_key_id, s3_secret_access_key, alebo s3_upload_bucket. Navštívte  <a href="/admin/site_settings">Nastavenia stránky</a> a aktualizujte nastavenia. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Chcete vedieť viac? Pozrite si návod ako nastaviť nahrávanie súborov na S3</a>.'
-    s3_backup_config_warning: 'Server má nakonfigurované nahrávanie záloh na S3, ale minimálne jedna z nasledujúcich hodnôt nie je nastavená: s3_access_key_id, s3_secret_access_key, alebo  s3_backup_bucket. Navštívte  <a href="/admin/site_settings">Nastavenia stránky</a> a aktualizujte nastavenia. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Chcete vedieť viac? Pozrite si návod ako nastaviť nahrávanie súborov na S3</a>.'
     image_magick_warning: 'Server je nakonfigurovaný na vytváranie náhľadov z veľkých obrázkov, ale ImageMagick  nie je nainštalovaný. Nainštalujte ImageMagick pomocou Vášho správcu balíčkov, alebo <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">Stiahnite najnovšiu verziu</a>.'
     failing_emails_warning: 'Existuje %{num_failed_jobs} neuspešných emailých pokusov. Skontrolujte Váš app.yml a uistite sa, že nastavenia email serveru máte správne. <a href="/sidekiq/retries" target="_blank">Pozrieť neúspešné pokusy v Sidekiq</a>.'
     subfolder_ends_in_slash: "Vaše nastavenie podadresára je chybné, DISCOURSE_RELATIVE_URL_ROOT je ukončené lomítkom."
@@ -768,6 +728,7 @@ sk:
     max_image_width: "Maximálna šírka náhľadu obrázkov v príspevku"
     max_image_height: "Maximálna výška náhľadu obrázkov v príspevku"
     category_featured_topics: "Počet zobrazených tém na jednu kategóriu na stránke /katgórie. Zmena hodnoty sa na stránkach prejaví do 15 minút."
+    show_subcategory_list: "Zobraz zoznam podkategórií namiesto zoznamu tém po vstupe do menu kategórií"
     fixed_category_positions: "Ak je to označené, budete môcť zoraďovať kategórie v pevnom poradí. Ak je neoznačené, kategórie budu zoradené podlľa aktivity."
     fixed_category_positions_on_create: "Ak je označené, triedenie kategórií bude spravované v dialógu na vytváranie témy (vyžaduje fixed_category_positions)."
     add_rel_nofollow_to_user_content: "Pridať rel nofollow ku všetkému zaslanému používateľskému kontextu s výnimkou interných odkazov (zahrňuje rodičovskú doménu). Ak to zmeníte, musíte vykonať prípaz rebake na všetky príspevky pomocou: \"rake posts:rebake\""
@@ -841,8 +802,6 @@ sk:
     invite_passthrough_hours: "Ako dlho môže používateľ používať získaný pozývací kľúč na prihlasovanie, v hodinách"
     invite_only: "Verejná registrácia je vypnutá, všetci noví používatelia musia byť explicitne pozvaní ostatnými členmi alebo obsluhou."
     login_required: "Požadovať prihlásenie pre čítanie obshau tejto stránky, zakáž anonymný prístup. "
-    min_username_length: "Minimálna dĺžka používateľského mena v znakoch."
-    max_username_length: "Maximálna dĺžka používateľského mena v znakoch."
     reserved_usernames: "Používateľské mená, ktorých registrácia nie je povolená."
     min_password_length: "Minimálna dĺžka hesla."
     min_admin_password_length: "Minimálna dĺžka hesla pre Administrátora."
@@ -1234,22 +1193,6 @@ sk:
       Ak chcete pokračovať v prijímaní emailových aktualizácií, môžete tento email ignorovať.
   invite_mailer:
     subject_template: "%{invitee_name} Vás pozval '%{topic_title}' na %{site_domain_name}"
-    text_body_template: |
-      %{invitee_name} Vás pozval do diskusie
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      na
-
-      > %{site_title} -- %{site_description}
-
-      Ak Vás to zaujalo, kliknite na odkaz nižšie:
-
-      %{invite_link}
-
-      Táto pozvánka je od dôveryhodného užívateľa, takže môžete okamžite odpovedať na diskusiu .
   invite_forum_mailer:
     subject_template: "%{invitee_name} Vás pozval na %{site_domain_name}"
   invite_password_instructions:

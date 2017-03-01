@@ -35,7 +35,7 @@ de:
   remove_posts_deleted_by_author: "Gelöscht vom Verfasser"
   emails:
     incoming:
-      default_subject: "Eingehende E-Mail von %{email}"
+      default_subject: "Dieses Thema benötigt einen Titel"
       show_trimmed_content: "Zeige gekürzten Inhalt"
       maximum_staged_user_per_email_reached: "Maximale Anzahl vorbereiteter Benutzer erreicht, die automatisch per E-Mail erstellt wurden."
       errors:
@@ -73,8 +73,8 @@ de:
       inclusion: ist nicht in der Liste enthalten
       invalid: ist ungültig
       is_invalid: "scheint unklar, ist das ein ganzer Satz?"
-      contains_censored_words: "Beinhaltet ein oder mehrere verbotene Wörter: %{censored_words}"
-      matches_censored_pattern: "stimmt mit dem folgenden verbotenen regulären Ausdruck überein: %{censored_pattern}"
+      contains_censored_words: "enthält die folgenden nicht erlaubten Wörter: %{censored_words}"
+      matches_censored_pattern: "enthält folgende Wörter, die dem regulären Ausdruck für nicht erlaubte Wörter der Seite entsprechen: %{censored_words}"
       less_than: muss weniger als %{count} sein
       less_than_or_equal_to: muss weniger oder gleich %{count} sein
       not_a_number: ist keine Zahl
@@ -108,6 +108,8 @@ de:
       max_username_length_range: "Das Maximum darf nicht kleiner als das Minimum sein."
       default_categories_already_selected: "Du kannst keine Kategorie auswählen, welche bereits in einer anderen Liste benutzt wird. "
       s3_upload_bucket_is_required: "Uploads auf Amazon S3 können nicht aktiviert werden, bevor der 's3_upload_bucket' eingetragen wurde."
+  invite:
+    not_found: "Dein Einladungsschlüssel ist ungültig. Bitte kontaktiere den Administrator der Seite."
   bulk_invite:
     file_should_be_csv: "Die hochzuladende Datei sollte im CSV-Format vorliegen."
     error: "Es gab einen Fehler beim Hochladen dieser Datei. Bitte versuche es später noch einmal."
@@ -243,39 +245,47 @@ de:
 
       Beachte bitte auch [unsere Richtlinien](/guidelines). Dieser Hilfetext wird nur bei deinen ersten %{education_posts_text} angezeigt.
     avatar: |
-      ### Wie wäre es mit einem Bild für Deinen Account?
+      ### Wie wär’s mit einem Bild für dein Konto?
 
-      Du hast schon einige Themen und Antworten geschrieben, aber Dein Profilbild ist nicht so einzigartig, wie Du es bist -- es ist nur ein Buchstabe.
+      Du hast schon ein paar Themen und Antworten geschrieben, aber dein Profilbild ist noch nicht so einzigartig wie du – es ist nur ein Buchstabe.
 
-      Vielleicht schaust Du mal in **[Dein Benutzerprofil](%{profile_path})** und lädst dort ein Bild hoch, das etwas über Dich aussagt?
+      Hast du schon darüber nachgedacht **[dein Benutzerprofil zu besuchen](%{profile_path})** und ein Bild hochzuladen, das dich repräsentiert?
 
-      Es ist einfacher, Diskussionen zu folgen und interessante Leute zu finden, wenn jeder ein eindeutiges Profilbild hat!
+      Es ist einfacher, Diskussionen zu folgen und in Unterhaltungen interessante Personen zu finden, wenn jeder ein einzigartiges Profilbild hat!
     sequential_replies: |
-      ### Bitte antworte mehreren Beiträge gleichzeitig
+      ### Denke darüber nach, auf mehrere Beiträge gleichzeitig zu antworten
 
-      Anstatt mehrmals hintereinander in einem Thema zu antworten, versuche bitte, einen einzigen Beitrag zu verfassen, der Zitate älterer Antworten enthält oder @Erwähnungen verwendet.
+      Statt mehrere aufeinanderfolgende Antworten zu einem Thema zu schreiben, denke bitte darüber nach, eine einzige Antwort zu schreiben, die Zitate mehrerer vorheriger Beiträge oder mehrere Erwähnungen wie @name enthält.
 
-      Du kannst deine letzte Antwort bearbeiten und ein Zitat hinzufügen, indem Du den jeweiligen Text markierst und dann auf den erscheinenden <b>Antwort zitieren</b> Knopf klickst.
+      Du kannst deine letzte Antwort bearbeiten, um ein Zitat hinzuzufügen, indem du den Text auswählst und auf die erscheinende Schaltfläche <b>Zitat</a> klickst.
 
-      Es ist für jeden einfacher Themen zu lesen, die wenige tiefgründige Antworten enthalten und nicht viele kurze Einzelantworten.
+      Es ist für alle einfacher, Themen zu lesen, die wenige tiefgehende Antworten haben statt vielen kleinen und einzelnen Antworten.
     dominating_topic: |
-      ### Lass auch andere die Konversation mitgestalten
+      ### Lass’ andere am Gespräch teilnehmen
 
-      Dieses Thema ist dir eindeutig wichtig &ndash; du hast mehr als %{percent}% aller Antworten verfasst.
+      Das Thema ist ohne Frage wichtig für dich &ndash; du hast hier mehr als %{percent}% der Antworten geschrieben.
 
-      Bist du sicher, dass du anderen Benutzern genügend Zeit lässt, ihre eigenen Sichtweisen darzulegen?
+      Bist du dir sicher, dass du anderen Leuten angemessen viel Raum lässt, auch ihre eigenen Punkte mitzuteilen?
+    get_a_room: |
+      ### Denke darüber nach, weiteren Personen zu antworten
+
+      Du hast in diesem Thema bereits %{count}-mal auf @%{reply_username} geantwortet.
+
+      Hast du schon darüber nachgedacht, auch *anderen* Personen in in der Diskussion zu antworten? Eine großartige Diskussion bezieht viele Stimmen und Perspektiven ein.
+
+      Wenn du dein Gespräch mit dieser bestimmten Person ausführlich fortsetzen möchtest, [schicke ihr eine persönliche Nachricht](/users/%{reply_username}).
     too_many_replies: |
-      ### Du hast das Antwort-Limit für dieses Thema erreicht.
+      ### Du hast das Antwort-Beschränkung für dieses Thema erreicht
 
-      Es tut uns leid, aber neue Benutzer sind zur Zeit auf  %{newuser_max_replies_per_topic} Antworten im gleichen Thema beschränkt.
+      Entschuldige, aber neue Benutzer sind vorübergehend auf %{newuser_max_replies_per_topic} Antworten im gleichen Thema beschränkt.
 
-      Anstelle einer weiteren Antwort, bitte überlege eine deiner vorherigen Antworten zu editieren oder besuche andere Themen.
+      Anstatt eine weitere Antwort hinzuzufügen, denke darüber nach, deine vorherigen Antworten zu bearbeiten oder andere Themen zu besuchen.
     reviving_old_topic: |
       ### Dieses Thema neu beleben?
 
-      Die letzte Antwort zu diesem Thema ist jetzt über %{days} Tage alt. Deine Antwort wird das Thema an den Anfang der Liste verschieben und alle an der Konversation beteiligten benachrichtigen.
+      Die letzte Antwort auf dieses Thema war vor **%{days}** Tagen. Deine Antwort wird das Thema wieder ans obere Ende der Liste befördern und jeden benachrichtigen, der zuvor in der Unterhaltung beteiligt war.
 
-      Bist du sicher, dass du diese alte Konversation weiterführen willst?
+      Bist du sicher, dass du diese alte Unterhaltung fortsetzen möchtest?
   activerecord:
     attributes:
       category:
@@ -306,6 +316,7 @@ de:
               same_as_username: "ist mit deinem Benutzernamen identisch. Bitte verwende ein sichereres Passwort."
               same_as_email: "ist mit deiner E-Mail-Adresse identisch. Bitte verwende ein sichereres Passwort."
               same_as_current: "entspricht deinem aktuellen Passwort."
+              unique_characters: "hat zu viele sich wiederholende Zeichen. Bitte verwende ein sichereres Passwort."
             ip_address:
               signup_not_allowed: "Eine Registrierung ist von diesem Konto nicht erlaubt."
         color_scheme_color:
@@ -501,14 +512,13 @@ de:
         other: "vor fast %{count} Jahren"
   password_reset:
     no_token: "Entschuldige, aber der Link zum Zurücksetzen des Passworts ist zu alt. Wähle 'Ich habe mein Passwort vergessen' um einen neuen Link zu erhalten."
-    choose_new: "Bitte wähle ein neues Passwort"
-    choose: "Bitte wähle ein Passwort"
+    choose_new: "Wähle ein neues Passwort"
+    choose: "Wähle ein Passwort"
     update: 'Passwort aktualisieren'
     save: 'Passwort festlegen'
     title: 'Passwort zurücksetzen'
     success: "Dein Passwort wurde erfolgreich geändert, und du bist nun angemeldet."
     success_unapproved: "Dein Passwort wurde erfolgreich geändert."
-    continue: "Weiter zu %{site_name}"
   change_email:
     confirmed: "Deine E-Mail-Adresse wurde aktualisiert."
     please_continue: "Weiter zu %{site_name}"
@@ -779,8 +789,6 @@ de:
     facebook_config_warning: 'Der Server erlaubt die Anmeldung mit Facebook (enable_facebook_logins), aber die App ID und der Geheimcode sind nicht gesetzt. Besuche <a href="/admin/site_settings">die Einstellungen</a> um die fehlenden Einträge hinzuzufügen. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-facebook-logins" target="_blank">Besuche den Leitfaden um mehr zu erfahren</a>.'
     twitter_config_warning: 'Der Server erlaubt die Anmeldung mit Twitter (enable_twitter_logins), aber der Schlüssel und der Geheimcode sind nicht gesetzt. Besuche <a href="/admin/site_settings">die Einstellungen</a> um die fehlenden Einträge hinzuzufügen. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-twitter-logins" target="_blank">Besuche den Leitfaden um mehr zu erfahren</a>.'
     github_config_warning: 'Der Server erlaubt die Anmeldung mit Facebook GitHub (enable_github_logins), aber die Kunden-ID und der Geheimcode sind nicht gesetzt. Besuche <a href="/admin/site_settings">die Einstellungen</a> um die fehlenden Einträge hinzuzufügen. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide" target="_blank">Besuche den Leitfaden um mehr zu erfahren</a>.'
-    s3_config_warning: 'Der Server wurde konfiguriert um Dateien nach s3 hochzuladen, aber mindestens der folgenden Einstellungen fehlt: s3_access_key_id, s3_secret_access_key oder s3_upload_bucket. Besuche <a href="/admin/site_settings">die Einstellungen</a> um die fehlenden Einträge hinzuzufügen. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Besuche "How to set up image uploads to S3?" um mehr zu erfahren</a>.'
-    s3_backup_config_warning: 'Der Server ist so konfiguriert, dass Datensicherungen auf S3 geladen werden, aber mindestens eine der folgenden Einstellungen: s3_access_key_id, s3_secret_access_key oder s3_backup_bucket ist nicht festgelegt. Gehe zu <a href="/admin/site_settings">den Siteneinstellungen</a> und aktualisiere die Einstellungen. Um mehr darüber zu erfahren siehe <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">"Wie konfiguriere ich das Hochladen von Bildern zu S3?" (en)</a>.'
     image_magick_warning: 'Der Server wurde konfiguriert um Vorschaubilder von grossen Bildern zu erstellen, aber ImageMagick ist nicht installiertd. Installiere ImageMagick mit deinem bevorzugten Packetmanager oder besuche <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">um das aktuelle Paket herunterzuladen</a>.'
     failing_emails_warning: "%{num_failed_jobs} E-Mails konnten nicht versendet werden. Überprüfe deine app.yml und stelle sicher, dass die E-Mail Servereinstellungen korrekt gesetzt sind. \n<a href=\"/sidekiq/retries\" target=\"_blank\">Sieh dir hier die nicht versendeten E-Mails an.</a>"
     subfolder_ends_in_slash: "Deine Installation in einem Pfad ist nicht korrekt, DISCOURSE_RELATIVE_URL_ROOT endet mit einem Schrägstrich."
@@ -832,6 +840,7 @@ de:
     max_image_width: "Maximale Breite von Thumbnails von Bildern in einem Beitrag."
     max_image_height: "Maximale Höhe von Vorschaubildern in einer Nachricht"
     category_featured_topics: "Anzahl der angezeigten Themen je Kategorie auf der /categories Seite. Nachdem dieser Wert geändert wurde, dauert es bis zu 15 Minuten bis die Kategorieseite aktualisiert ist."
+    show_subcategory_list: "Zeige Liste von Unterkategorien statt einer Liste von Themen wenn eine Kategorie ausgewählt wird."
     fixed_category_positions: "Falls aktiviert können Kategorien in einer fest vorgegebenen Reihenfolge angeordnet werden. Andernfalls werden Kategorien nach Aktivität sortiert aufgelistet."
     fixed_category_positions_on_create: "Wenn aktiviert wird die Kategoriezuordnung beim Erstellen eines Themas erhalten (benötigt fixed_category_positions)."
     add_rel_nofollow_to_user_content: "Füge mit Ausnahme interner Links (schließt übergeordnete Domains ein) allen benutzergenerierten Inhalten 'rel nofollow' hinzu. Die Änderung dieser Einstellung erfordert, dass du sämtliche Markdown-Beiträge aktualisierst: \"rake posts:rebake\""
@@ -926,11 +935,12 @@ de:
     invite_passthrough_hours: "Wie viele Stunden ein Benutzer einen bereits eingelösten Einladungsschlüssel zum Anmelden verwenden kann"
     invite_only: "Deaktiviere die öffentliche Registrierung, neue Benutzer können nur durch eine Einladung von anderen Mitgliedern oder dem Team beitreten."
     login_required: "Nur angemeldete Benutzer dürfen Inhalte der Site lesen, anonyme Zugriffe sind verboten."
-    min_username_length: "Minimale Benutzernamenlänge in Zeichen."
-    max_username_length: "Maximale Benutzernamenlänge in Zeichen."
+    min_username_length: "Minimale Zeichenlänge für Benutzernamen. WARNUNG: Wenn bestehende Benutzer oder Gruppen kürzere Namen haben, wird deine Seite nicht mehr funktionieren!"
+    max_username_length: "Maximale Zeichenlänge für Benutzernamen. WARNUNG: Wenn bestehende Benutzer oder Gruppen längere Namen haben, wird deine Seite nicht mehr funktionieren!"
     reserved_usernames: "Benutzernamen, welche für die Registrierung gesperrt werden sollen."
     min_password_length: "Minimale Länge des Passworts."
     min_admin_password_length: "Minimale Passwortlänge für Administratoren."
+    password_unique_characters: "Minimale Anzahl unterschiedlicher Zeichen, die ein Passwort enthalten muss."
     block_common_passwords: "Erlaube kein Passwort unter den 10000 meist verwendeten Passwörter."
     enable_sso: "Aktiviere Single Sign-on über eine externe Site (WARNUNG: DIE E-MAIL-ADRESSE DES BENUTZERS *MUSS* VON DER EXTERNEN SITE VERIFIZIERT WERDEN)."
     verbose_sso_logging: "Protokolliere ausführliche SSO-bezogene Diagnose in /logs"
@@ -1167,7 +1177,7 @@ de:
     digest_posts: "Die maximale Anzahl von beliebten Beiträgen, die in der E-Mail-Zusammenfassung angezeigt werden sollen."
     digest_other_topics: "Die maximale Anzahl von Themen, die in dem Bereich 'Neues in Themen und Kategorien, denen du folgst' in der E-Mail-Zusammenfassung angezeigt werden sollen."
     digest_min_excerpt_length: "Minimale Zeichenlänge für Auszüge von Beiträgen in der E-Mail-Zusammenfassung."
-    delete_digest_email_after_days: "Unterdrücke E-Mail-Zusammenfassungen für Benutzer, die länger als (n) Tage nicht auf der Site gesehen wurden."
+    suppress_digest_email_after_days: "Unterdrücke E-Mail-Zusammenfassungen für Benutzer, die länger als (n) Tage nicht auf der Seite gesehen wurden."
     digest_suppress_categories: "Unterdrücke diese Kategorien in E-Mail-Zusammenfassungen."
     disable_digest_emails: "Deaktiviere E-Mail-Zusammenfassungen für alle Benutzer."
     email_accent_bg_color: "Die Hervorhebungsfarbe, die als Hintergrund mancher Elemente in HTML-E-Mails verwendet wird. Gib’ einen Namen ('red') oder einen Hex-Wert ('#FF000') der Farbe an."
@@ -1186,6 +1196,7 @@ de:
     user_website_domains_whitelist: "Benutzer-Webseiten werden mit diesen Domains abgeglichen. Mehrere Domains können mit einem Pipe-Symbol „|“ getrennt angegeben werden."
     allow_profile_backgrounds: "Erlaubt es Benutzern, Profilhintergründe hochzuladen."
     sequential_replies_threshold: "Anzahl an Beiträgen die ein Benutzer machen muss, um benachrichtigt zu werden, dass er zu viele aufeinanderfolgende Antworten schreibt."
+    get_a_room_threshold: "Anzahl an Beiträgen, die ein Benutzer im gleichen Thema an die gleiche Person schreiben muss, bevor er gewarnt wird."
     enable_mobile_theme: "Mobilgeräte verwenden eine mobile Darstellung mit der Möglichkeit zur vollständigen Site zu wechseln. Deaktiviere diese Option, wenn du ein eigenes Full-Responsive-Stylesheet verwenden möchtest."
     dominating_topic_minimum_percent: "Anteil der Nachrichten eines Themas in Prozent, die ein einzelner Benutzer verfassen darf, bevor dieser Benutzer darauf hingewiesen wird, dass er dieses Thema dominiert."
     disable_avatar_education_message: "Deaktiviert den Hinweis für Benutzer, dass sie ihr Profilbild ändern können"
@@ -1450,81 +1461,15 @@ de:
   invite_mailer:
     title: "Einladung zu einem Thema"
     subject_template: "%{invitee_name} hat dich zum Thema '%{topic_title}' auf %{site_domain_name} eingeladen"
-    text_body_template: |
-      %{invitee_name} hat dich dazu eingeladen, an einer Diskussion teilzunehmen:
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      > %{site_title} -- %{site_description}
-
-      Falls du Interesse hast, klicke auf den nachfolgenden Link:
-
-      %{invite_link}
-
-      Dies ist eine Einladung von einem vertrauenswürdigen Benutzer. Du kannst deshalb sofort auf die Diskussion antworten.
   custom_invite_mailer:
     title: "Einladung zu einem Thema (mit Nachricht)"
     subject_template: "%{invitee_name} hat dich eingeladen zu '%{topic_title}' auf %{site_domain_name}"
-    text_body_template: |
-      %{invitee_name} hat dich zu einer Diskussion eingeladen
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      bei
-
-      > %{site_title} -- %{site_description}
-
-      Nachricht von %{invitee_name}:
-
-      %{user_custom_message}
-
-      Wenn du interessiert bist, klicke auf den folgenden Link:
-
-      %{invite_link}
-
-      Diese Einladung stammt von einem vertrauenswürdigen Benutzer, daher kannst du direkt auf die Diskussion antworten.
   invite_forum_mailer:
     title: "Einladung zur Teilnahme"
     subject_template: "%{invitee_name} hat dich eingeladen %{site_domain_name} beizutreten"
-    text_body_template: |
-      %{invitee_name} hat dich eingeladen,
-
-      > **%{site_title}**
-      >
-      > %{site_description}
-
-      beizutreten.
-
-      Wenn du interessiert bist, folge dem folgenden Link:
-
-      %{invite_link}
-
-      Die Einladung kommt von einem vertrauenswürdigen Benutzer. Daher wird für dich beim Betreten automatisch ein Benutzerkonto mit dieser E-Mail-Adresse erstellt.
   custom_invite_forum_mailer:
     title: "Einladung zur Teilnahme"
     subject_template: "%{invitee_name} hat dich eingeladen %{site_domain_name} beizutreten"
-    text_body_template: |
-      %{invitee_name} hat dich eingeladen,
-
-      > **%{site_title}**
-      >
-      > %{site_description}
-
-      beizutreten.
-
-      Nachricht von %{invitee_name}:
-
-      %{user_custom_message}
-
-      Wenn du interessiert bist, folge einfach diesem Link:
-
-      %{invite_link}
-
-      Diese Einladung kommt von einem vertrauenswürdigen Benutzer. Daher wird für dich beim Betreten automatisch ein Benutzerkonto mit dieser E-Mail-Adresse erstellt.
   invite_password_instructions:
     title: "Passwort festlegen"
     subject_template: "Lege ein Passwort für dein %{site_name}-Konto fest"
@@ -1756,7 +1701,9 @@ de:
 
         <a class="attachment" href="%{download_link}">%{file_name}</a> (%{file_size})
 
-        Dieser Download-Link ist für die nächsten 48 Stunden gültig.
+        Der obenstehende Download-Link wird 48 Stunden gültig sein.
+
+        Die Daten sind als Gzip-Archiv komprimiert. Wenn sich das Archiv beim Öffnen nicht selbst extrahiert, verwende eines der hier empfohlenen Werkzeuge: http://www.gzip.org/#faq4
     csv_export_failed:
       title: "CSV-Export fehlgeschlagen"
       subject_template: "Datenexport fehlgeschlagen"

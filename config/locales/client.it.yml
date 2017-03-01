@@ -411,13 +411,13 @@ it:
           description: "Non verrai mai avvertito per i nuovi argomenti in questo gruppo."
       flair_url: "Immagine Avatar Flair"
       flair_url_placeholder: "(Facoltativo) URL Immagine o classe Font Awesome"
-      flair_bg_color: "Colore di background Avatar Flair"
+      flair_bg_color: "Colore Sfondo Avatar Flair"
       flair_bg_color_placeholder: "(Facoltativo) Codice esadecimale del colore"
       flair_color: "Colore Avatar Flair"
       flair_color_placeholder: "(Facoltativo) Codice esadecimale del colore"
       flair_preview_icon: "Anteprima Icona"
       flair_preview_image: "Anteprima Immagine"
-      flair_note: "Nota: Flair sarà mostrato solo per i primary group dell'utente."
+      flair_note: "Nota: Flair sarà mostrato solo per i gruppi primari dell'utente."
     user_action_groups:
       '1': "Mi piace - Assegnati"
       '2': "Mi piace - Ricevuti"
@@ -589,6 +589,8 @@ it:
         error: "(errore)"
         action: "Invia l'email per il ripristino della password"
         set_password: "Imposta Password"
+        choose_new: "Scegli una nuova password"
+        choose: "Scegli una password"
       change_about:
         title: "Modifica i dati personali"
         error: "Si è verificato un errore durante la modifica del valore."
@@ -623,7 +625,7 @@ it:
         instructions: "Le immagini di sfondo saranno centrate e per difetto avranno un'ampiezza di 590px."
       email:
         title: "Email"
-        instructions: "mai mostrare al pubblico"
+        instructions: "mai mostrato pubblicamente"
         ok: "Ti invieremo una email di conferma"
         invalid: "Inserisci un indirizzo email valido"
         authenticated: "{{provider}} ha autenticato la tua email"
@@ -639,16 +641,13 @@ it:
         ok: "Il nome sembra adeguato"
       username:
         title: "Nome utente"
-        instructions: "deve essere unico, senza spazi e breve"
+        instructions: "univoco, senza spazi, breve"
         short_instructions: "Gli utenti possono citarti scrivendo @{{username}}"
         available: "Il nome utente è disponibile"
-        global_match: "L'email corrisponde al nome utente registrato"
-        global_mismatch: "Già registrato. Prova {{suggestion}}?"
         not_available: "Non disponibile. Prova {{suggestion}}?"
         too_short: "Il nome utente è troppo corto"
         too_long: "Il nome utente è troppo lungo"
         checking: "Controllo la disponibilità del nome utente..."
-        enter_email: 'Nome utente trovato; inserisci l''email corrispondente'
         prefilled: "L'email corrisponde al nome utente registrato"
       locale:
         title: "Lingua dell'interfaccia"
@@ -746,10 +745,8 @@ it:
         link_generated: "Collegamento di invito generato con successo!"
         valid_for: "Questo collegamento di invito è valido solamente per il seguente indirizzo email: %{email}"
         bulk_invite:
-          none: "Non hai ancora invitato nessuno. Puoi invitare persone singole, o più persone insieme <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>caricando un file CSV</a>."
           text: "Invito di Massa da File"
           success: "Il file è stato caricato con successo, riceverai un messaggio di notifica quando il processo sarà completato."
-          error: "Spiacenti, il file dovrebbe essere in formato CSV."
       password:
         title: "Password"
         too_short: "La password è troppo breve."
@@ -757,7 +754,7 @@ it:
         same_as_username: "La tua password è uguale al tuo nome utente."
         same_as_email: "La password coincide con l'email."
         ok: "La password è adeguata"
-        instructions: "Minimo %{count} caratteri"
+        instructions: "almeno %{count} caratteri"
       summary:
         title: "Riepilogo"
         stats: "Statistiche"
@@ -939,6 +936,7 @@ it:
       to_continue: "Per favore Connettiti"
       preferences: "Devi essere connesso per cambiare le tue impostazioni."
       forgot: "Non ricordo i dettagli del mio account"
+      not_approved: "Il tuo account non è ancora stato approvato. Verrai avvertito via email quando potrai collegarti."
       google:
         title: "con Google"
         message: "Autenticazione tramite Google (assicurati che il blocco pop up non sia attivo)"
@@ -960,6 +958,8 @@ it:
       github:
         title: "con GitHub"
         message: "Autenticazione con GitHub (assicurati che il blocco pop up non sia attivo)"
+    password_reset:
+      continue: "Procedi su %{site_name}"
     emoji_set:
       apple_international: "Apple/Internazionale"
       google: "Google"
@@ -1403,7 +1403,6 @@ it:
         remove_banner: "Rimuovi Argomento Annuncio"
       reply:
         title: 'Rispondi'
-        help: 'inizia a scrivere una risposta a questo argomento'
       clear_pin:
         title: "Spunta"
         help: "Rimuovi la spunta da questo argomento, così non comparirà più in cima alla lista degli argomenti"
@@ -1529,6 +1528,7 @@ it:
       edit: "Modifica in corso {{link}} {{replyAvatar}} {{username}}"
       edit_reason: "Motivo:"
       post_number: "messaggio {{number}}"
+      wiki_last_edited_on: "ultima modifica alla wiki"
       last_edited_on: "ultima modifica al messaggio:"
       reply_as_new_topic: "Rispondi come Argomento collegato"
       continue_discussion: "Continua la discussione da {{postLink}}:"
@@ -1575,7 +1575,7 @@ it:
       via_auto_generated_email: "questo messaggio è arrivato tramite una email auto generata"
       whisper: "questo messaggio è un sussurro privato per i moderatori"
       wiki:
-        about: "questo messaggio è una guida"
+        about: "questo messaggio è una wiki"
       archetypes:
         save: 'Opzioni di salvataggio'
       few_likes_left: "Grazie per aver condiviso l'amore! Hai ancora pochi \"Mi piace\" rimasti per oggi."
@@ -1702,17 +1702,19 @@ it:
           hide: "Nascondi revisione"
           show: "Mostra revisione"
           revert: "Ritorna a questa revisione"
+          edit_wiki: "Modifica Wiki"
+          edit_post: "Modifica Messaggio"
           comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> <i class='fa fa-arrows-h'></i> <strong>{{current}}</strong> / {{total}}"
         displays:
           inline:
             title: "Mostra il risultato con le aggiunte e le rimozioni in linea"
-            button: '<i class="fa fa-square-o"></i> HTML'
+            button: 'HTML'
           side_by_side:
             title: "Mostra le differenze del risultato fianco a fianco"
-            button: '<i class="fa fa-columns"></i> HTML'
+            button: 'HTML'
           side_by_side_markdown:
             title: "Mostra le differenze nei sorgenti fianco-a-fianco"
-            button: '<i class="fa fa-columns"></i> Raw'
+            button: 'Sorgente'
     category:
       can: 'può&hellip;'
       none: '(nessuna categoria)'
@@ -1783,6 +1785,7 @@ it:
           description: "Riceverai una notifica soltanto per il primo messaggio di ogni nuovo argomento in queste categorie."
         tracking:
           title: "Seguendo"
+          description: "Seguirai automaticamente tutti gli argomenti in tali categorie. Ti verrà inviata una notifica se qualcuno menziona il tuo @nome o ti risponde, e apparirà un conteggio delle nuove risposte."
         regular:
           title: "Normale"
           description: "Riceverai una notifica se qualcuno menziona il tuo @nome o ti risponde."
@@ -1879,6 +1882,9 @@ it:
       one: "visita"
       other: "visite"
     replies: "Risposte"
+    views_long:
+      one: "questo argomento è stato visto 1 volta"
+      other: "questo argomento è stato visto {{number}} volte"
     activity: "Attività"
     likes: "Mi piace"
     likes_lowercase:
@@ -2183,6 +2189,8 @@ it:
         backups: "backup"
         traffic_short: "Traffico"
         traffic: "Richieste web dell'applicazione"
+        page_views: "Visualizzazioni di pagina"
+        page_views_short: "Visualizzazioni di pagina"
         show_traffic_report: "Mostra rapporto di traffico dettagliato"
         reports:
           today: "Oggi"
@@ -3068,7 +3076,7 @@ it:
         embed_truncate: "Tronca i messaggi incorporati"
         embed_whitelist_selector: "Selettore CSS per gli elementi da permettere negli embed"
         embed_blacklist_selector: "Selettore CSS per gli elementi da rimuovere dagli embed"
-        embed_classname_whitelist: "Classi CSS autorizzate"
+        embed_classname_whitelist: "Classi CSS permesse"
         feed_polling_enabled: "Importa i messaggi via RSS/ATOM"
         feed_polling_url: "URL del feed RSS/ATOM da recuperare"
         save: "Salva Impostazioni Inclusione"

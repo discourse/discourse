@@ -205,40 +205,6 @@ tr_TR:
       - Yapıcı eleştirici her zaman kabul edilir, ama *fikirleri* eleştirin, insanları değil.
 
       Daha fazlası için, [topluluk yönergelerimize bakın](/guidelines). Bu yazı sadece ilk %{education_posts_text} için görünür.
-    avatar: |
-      ### Hesabının bir resmi olsun istemez misin?
-
-      Birkaç konu ve cevap gönderdin, fakat profil resmin senin kadar eşsiz değil - sadece bir harf.
-
-      Hiç **[kullanıcı profiline girmeyi](%{profile_path})** ve seni ifade eden bir resim yüklemeyi düşündün mü?
-
-      Herkes eşsiz bir profil resmine sahip olduğunda tartışmaları takip etmek ve tartışmalarda ilgi çekici insanlar bulmak daha kolaydır!
-    sequential_replies: |
-      ### Birden fazla gönderiyi aynı anda cevaplayabilirsin
-
-      Aynı konuya ardı ardına cevaplar yazmak yerine, lütfen önceki gönderilerden alıntı veya @isim referansları içeren tek bir cevap yaz.
-
-      Herhangi bir yazıyı seçince çıkan <b>alıntılayarak cevapla</b> düğmesine tıklayarak alıntı ekleyebilir, bir önceki cevabınızı düzenleyebilirsiniz.
-
-      Az sayıda derinlemesine cevaplardan oluşan konuların okunması, çok fazla kısa ve tekil cevaplardan oluşan konulardan herkes için daha kolay oluyor.
-    dominating_topic: |
-      ###Sohbete başkalarının katılmasına izin verin
-
-      Bu konunun sizin için önemli olduğunu görüyoruz &ndash; buradaki cevapların %{percent}% oranından daha fazlasını siz göndermişsiniz.
-
-      Diğerlerinin de kendi fikirlerini paylaşmaları için onlara yeteri kadar zaman tanıdığınıza emin misiniz?
-    too_many_replies: |
-      ### Bu konu için cevap limitinizi doldurdunuz
-
-      Üzgünüz, ancak geçici olarak, yeni kullanıcılar aynı konu içinde en fazla %{newuser_max_replies_per_topic} cevap yazabiliyorlar.
-
-      Yeni bir cevap yazmak yerine, önceki cevaplarınızı düzenlemeyi, ya da başka konulara göz atmayı düşünün.
-    reviving_old_topic: |
-      ### Bu konuyu tekrar canlandırmak mı istediniz?
-
-      Bu başlığa en son %{days} gün önce cevap yazılmış. Cevabınız, bu konuyu listesinin en üstüne taşıyacak ve geçmişte sohbete katılmış olan tüm yazarlara bildirim gönderecek.
-
-      Bu eski sohbeti devam ettirmek istediğinize emin misiniz?
   activerecord:
     attributes:
       category:
@@ -411,14 +377,11 @@ tr_TR:
         other: "neredeyse %{count} yıl önce"
   password_reset:
     no_token: "Üzgünüz, bu parola değiştirme bağlantısı çok eski. Yeni bir bağlantı almak için lütfen 'Giriş Yap' tuşuna basın ve 'Parolamı unuttum'u seçin."
-    choose_new: "Lütfen yeni bir parola seçin"
-    choose: "Lütfen parola seçin"
     update: 'Parolayı Güncelle'
     save: 'Parola Belirle'
     title: 'Parola Sıfırla'
     success: "Parolanızı başarıyla değiştirdiniz ve giriş yaptınız."
     success_unapproved: "Parolanızı başarıyla değiştirdiniz."
-    continue: "%{site_name} adresine devam edin"
   change_email:
     confirmed: "E-posta adresiniz güncellendi."
     please_continue: "%{site_name} adresine devam edin"
@@ -669,8 +632,6 @@ tr_TR:
     facebook_config_warning: 'Sunucu Facebook (enable_facebook_logins) ile üyelik oluşturulması ve giriş yapılmasına izin veriyor, fakat app ID ve gizli app değerleri henüz ayarlanmamış. <a href="/admin/site_settings">Site Ayarları</a> sayfasına gidin ve ayarları güncelleyin. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Daha fazla bilgi için bu yönetmeliğe bakın</a>.'
     twitter_config_warning: 'Sunucu Twitter (enable_twitter_logins) ile üyelik oluşturulması ve giriş yapılmasına izin veriyor, fakat anahtar ve gizli değerler henüz ayarlanmamış. <a href="/admin/site_settings">Site Ayarları</a> sayfasına gidin ve ayarları güncelleyin. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">Daha fazla bilgi için bu yönetmeliğe bakın</a>.'
     github_config_warning: 'Sunucu GitHub (enable_github_logins) ile üyelik oluşturulması ve giriş yapılmasına izin veriyor, fakat kullanıcı IDsi ve gizli değerler henüz ayarlanmamış. <a href="/admin/site_settings">Site Ayarları</a> sayfasına gidin ayarları güncelleyin. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">Daha fazla bilgi için bu yönetmeliğe bakın</a>.'
-    s3_config_warning: 'Sunucu s3''e dosya yüklenebilmesi için yapılandırılmış, fakat şunlardan en az biri henüz ayarlanmamış: s3_access_key_id, s3_secret_access_key or s3_upload_bucket. <a href="/admin/site_settings">Site Ayarları</a> sayfasına gidin ve ayarları güncelleyin. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Daha fazla bilgi için "How to set up image uploads to S3?" konulu gönderiye bakın</a>.'
-    s3_backup_config_warning: 'Sunucu s3''e yedekleme yüklenebilmesi için yapılandırılmış, fakat şunlardan en az biri henüz ayarlanmamış: s3_access_key_id, s3_secret_access_key or s3_backup_bucket. <a href="/admin/site_settings">Site Ayarları</a> sayfasına gidin ve ayarları güncelleyin. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Daha fazla bilgi için "How to set up image uploads to S3?" konulu gönderiye bakın</a>.'
     image_magick_warning: 'Sunucu büyük resimlerin küçük boylarının oluşturulması için yapılandırılmış, fakat ImageMagick henüz kurulmamış. Favori paket yöneticinizi kullanarak ImageMagick kurun veya <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">son sürümünü indirin</a>.'
     failing_emails_warning: 'Başarısızlıkla sonuçlanmış %{num_failed_jobs} e-posta işlemi bulunuyor. app.yml dosyanızı kontrol edin ve e-posta sunucu ayarlarınızın doğru olduğundan emin olun. <a href="/sidekiq/retries" target="_blank">Sidekiq''deki başarısız işlemlere göz atın</a>.'
     subfolder_ends_in_slash: "Alt dizin kurulumunuz hatalı, DISCOURSE_RELATIVE_URL_ROOT sonunda yan çizgi bulunmalı."
@@ -713,6 +674,7 @@ tr_TR:
     max_image_width: "Bir gönderideki küçük resimlerin en fazla genişliği"
     max_image_height: "Bir gönderideki küçük resimlerin en fazla yüksekliği"
     category_featured_topics: "/categories sayfasında yer alan kategori başına düşen konu sayısı. Bu değeri değiştirirseniz, değişikliğin kategoriler sayfasına yansıması 15 dakika kadar sürebilir."
+    show_subcategory_list: "Bir kategoriye girildiğinde konu listesi yerine alt kategori listesini göster."
     fixed_category_positions: "Seçerseniz, kategoriler için sabit bir sıralama belirleyebileceksiniz. Seçmezseniz, kategoriler etkinlik sırasına göre listelenir. "
     fixed_category_positions_on_create: "Seçerseniz, konu oluşturma ekranında da kategori sıralaması korunur (fixed_category_positions gerektirir)."
     add_rel_nofollow_to_user_content: "İç bağlantılar (ana alan adları dahil) hariç, gönderilen tüm kullanıcı içeriklerine rel nofollow ekle. Bu ayarı değiştirirseniz, tüm gönderileri \"rake post:rebake\" ile yeniden işlemeniz gerekir."
@@ -799,8 +761,6 @@ tr_TR:
     invite_passthrough_hours: "Daha önce kabul edilmiş davetiye anahtarının kullanım süresi, saat olarak"
     invite_only: "Herkese açık kayıt sistemi devre dışı bırakıldı, tüm yeni kullanıcıların bir üye ya da görevli tarafından davet edilmesi gerekir. "
     login_required: "Bu sitede içerik görüntülenebilmesi için kimlik doğrulamayı zorunlu kıl, isimsiz girişe izin verme."
-    min_username_length: "Karakter olarak en küçük kullanıcı adı uzunluğu."
-    max_username_length: "Karakter olarak en büyük kullanıcı adı uzunluğu."
     reserved_usernames: "Kayıt için izin verilmeyen kullanıcı adları."
     min_password_length: "Parolanın en az uzunluğu."
     min_admin_password_length: "Yönetici için parolanın en az uzunluğu."
@@ -1217,48 +1177,8 @@ tr_TR:
       Eğer e-posta bildirimlerini almaya devam etmek istiyorsanız, bu e-postayı görmezden gelin.
   invite_mailer:
     subject_template: "%{invitee_name}  sizi %{site_domain_name} sitesindeki '%{topic_title}' adlı konuya davet etti. "
-    text_body_template: |
-      %{invitee_name} sizi
-
-      > %{site_title} -- %{site_description}
-
-      sitesindeki
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      tartışmasına davet ediyor.
-
-      Eğer ilgileniyorsanız, aşağıdaki bağlantıya tıklayın:
-
-      %{invite_link}
-
-      Bu davet güvenilir bir kullanıcı tarafından gönderilmiştir, cevap yazarak tartışmaya hemen katılabilirsiniz.
   custom_invite_mailer:
     subject_template: "%{invitee_name} sizi %{site_domain_name} sitesindeki '%{topic_title}' adlı konuya davet etti "
-    text_body_template: |
-      %{invitee_name} sizi
-
-      > %{site_title} -- %{site_description}
-
-      sitesindeki
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      tartışmasına davet ediyor.
-
-      Ayrıca %{invitee_name} diyor ki:
-
-      %{user_custom_message}
-
-      Eğer ilgileniyorsanız, aşağıdaki bağlantıya tıklayın:
-
-      %{invite_link}
-
-      Bu davet güvenilir bir kullanıcı tarafından gönderilmiştir, cevap yazarak tartışmaya hemen katılabilirsiniz.
   invite_forum_mailer:
     subject_template: "%{invitee_name} sizi %{site_domain_name} sitesine katılmanız için davet etti"
   custom_invite_forum_mailer:
@@ -1397,12 +1317,6 @@ tr_TR:
         ```
     csv_export_succeeded:
       subject_template: "Dışarı veri aktarımı tamamlandı"
-      text_body_template: |
-        Dışarı veri aktarımı başarılı! :dvd:
-
-        <a class="attachment" href="%{download_link}">%{file_name}</a> (%{file_size})
-
-        Bu bağlantı 48 saat boyunca geçerli olacak.
     csv_export_failed:
       subject_template: "Dışarı veri aktarımı başarısız oldu"
       text_body_template: "Üzgünüz, dışarı veri aktarımı başarısız oldu. Lütfen kayıtları inceleyin veya bir görevli ile iletişime geçin."

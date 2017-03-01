@@ -612,13 +612,10 @@ zh_TW:
         instructions: "獨一、無空格、短的"
         short_instructions: "其他人可以輸入 @{{username}} 提到你。"
         available: "你的用戶名稱可以使用。"
-        global_match: "電子郵件地址與註冊的用戶名稱相符。"
-        global_mismatch: "已經註冊過了，請試試看 {{suggestion}}？"
         not_available: "無法使用，請試試看 {{suggestion}}？"
         too_short: "你的用戶名稱太短。"
         too_long: "你的用戶名稱太長。"
         checking: "正在檢查用戶名稱是否已經有人使用..."
-        enter_email: '找到用戶名稱，請輸入相符的電子郵件地址。'
         prefilled: "電子郵件地址與此註冊的用戶名稱相符。"
       locale:
         title: "界面語言"
@@ -715,10 +712,8 @@ zh_TW:
         link_generated: "邀請連結生成成功！"
         valid_for: "邀請連結只對這個郵件地址有效：%{email}"
         bulk_invite:
-          none: "你還沒有邀請過任何人。你可以邀請一個人，或者<a href='https://meta.discourse.org/t/send-bulk-invites/16468'>上傳 CSV 檔案</a>邀請一批人。"
           text: "從檔案大量邀請"
           success: "檔案已上傳成功，處理完畢後將以私人訊息通知你。"
-          error: "抱歉，檔案應該要用 CSV 格式。"
       password:
         title: "密碼"
         too_short: "你的密碼太短。"
@@ -1349,12 +1344,6 @@ zh_TW:
         pin_globally: "全區置頂討論話題"
         make_banner: "討論話題橫幅"
         remove_banner: "移除討論話題橫幅"
-      reply:
-        post:
-          title: '回覆'
-        topic:
-          title: '回覆'
-          help: '開始編寫對此討論話題的回覆'
       clear_pin:
         title: "取消置頂"
         help: "取消討論話題的置頂狀態。"
@@ -1621,7 +1610,6 @@ zh_TW:
           hide: "隱藏修訂紀錄"
           show: "顯示修訂紀錄"
           revert: "還原至該版本"
-          edit_wiki: "編輯共筆"
           comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> <i class='fa fa-arrows-h'></i> <strong>{{current}}</strong> / {{total}}"
         displays:
           inline:

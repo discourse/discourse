@@ -109,7 +109,6 @@ nl:
       default_categories_already_selected: "Je kan geen categorie selecteren die wordt gebruikt in een andere lijst."
       s3_upload_bucket_is_required: "U kunt niet de uploads van de S3 toestaan totdat u de 's3_upload_bucket' hebt verleend."
   invite:
-    accept_invite: "Uitnodiging accepteren"
     not_found: "Uw uitnodigingstoken is ongeldig. Neem contact op met de beheerder van de website."
   bulk_invite:
     file_should_be_csv: "Het geüploade bestand moet in csv-formaat zijn."
@@ -241,40 +240,6 @@ nl:
       - Je mag best kritisch zijn, maar onthoud dat je kritiek moet geven op *ideeën*, niet op mensen.
 
       Voor meer informatie, [bekijk onze regels](/guidelines). Deze tekst zal alleen verschijnen bij je eerste %{education_posts_text}.
-    avatar: |
-      ### Hoe lijkt het je om een foto te gebruiken voor je account?
-
-      Je heb al een aantal topics en reacties geplaatst, maar je profielfoto is nog niet zo uniek als jij zelf -- het is maar een letter.
-
-      Heb je overwogen **[visiting your user profile](%{profile_path})** en een foto die weergeeft wie jij bent te uploaden?
-
-      Het is gemakkelijker om discussies en interessante personen in conversaties te volgen als iedereen een unieke profielfoto heeft!
-    sequential_replies: |
-      ### Overweeg om op meerdere berichten ineens te reageren
-
-      In plaatst van een reactie per bericht te plaatsten, kan je ook meerdere berichten ineens citeren en @namen noemen in je reactie.
-
-      Je kan je vorige reactie wijzigen en er een citaat aan toevoegen door de betreffende tekst te selecteren en op de <b>citeer</b> knop te drukken die dan verschijnt.
-
-      Het is voor iedereen makkelijker om topics te lezen met minder losstaande reacties.
-    dominating_topic: |
-      ### Laat anderen meedoen in de conversatie
-
-      Deze topic is duidelijk belangrijk voor je &ndash; meer dan %{percent}% van de reacties zijn van jou.
-
-      Hou je in de gaten dat anderen ook de ruimte krijgen om hun visie te geven?
-    too_many_replies: |
-      ### Je hebt de reactielimiet voor deze topic bereikt
-
-      Sorry, maar nieuwe gebruikers mogen tijdelijk niet meer dan %{newuser_max_replies_per_topic} reacties plaatsen in het desbetreffende topic.
-
-      Overweeg een eerdere reactie te wijzigen in plaats van nog een nieuwe reactie te plaatsen.
-    reviving_old_topic: |
-      ### Oude topic weer ophalen?
-
-      De laatste reactie op dit bericht was meer dan %{days} dagen geleden. Als je nu een reactie plaatst, zal deze topic weer bovenaan de lijst verschijnen en zal iedereen die meedeed aan deze topic bericht krijgen.
-
-      Weet je zeker dat je verder wil gaan met deze oude topic?
   activerecord:
     attributes:
       category:
@@ -483,14 +448,11 @@ nl:
         other: "bijna %{count} jaren geleden"
   password_reset:
     no_token: "Sorry, die link voor het wijzigen van je wachtwoord is te oud. Selecteer de Inloggen knop en kies 'Ik ben mijn wachtwoord vergeten' om een nieuwe link te krijgen."
-    choose_new: "Kies een nieuw wachtwoord"
-    choose: "Kies een wachtwoord"
     update: 'Wijzig wachtwoord'
     save: 'Bewaar wachtwoord'
     title: 'Herstel wachtwoord'
     success: "Je hebt met succes je wachtwoord aangepast en bent nu ingelogd."
     success_unapproved: "Je hebt met succes je wachtwoord aangepast."
-    continue: "Ga verder naar %{site_name}"
   change_email:
     confirmed: "Je e-mailadres is aangepast."
     please_continue: "Ga verder naar %{site_name}"
@@ -732,8 +694,6 @@ nl:
     facebook_config_warning: 'De server is geconfigureerd om registratie en inloggen via Facebook mogelijk te maken (enable_facebook_logins), maar er zijn geen app id en app secret waarden opgegeven. Ga naar <a href="/admin/site_settings">de Instellingen</a> en vul de waarden in. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-facebook-logins" target="_blank">Zie deze uitleg voor meer informatie</a>.'
     twitter_config_warning: 'De server is geconfigureerd om registratie en inloggen via Twitter mogelijk te maken (enable_twitter_logins), maar er zijn geen key en secret waarden opgegeven. Ga naar <a href="/admin/site_settings">de Instellingen</a> en vul de waarden in. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-twitter-logins" target="_blank">Zie deze uitleg voor meer informatie</a>.'
     github_config_warning: 'De server is geconfigureerd om registratie en inloggen via Github mogelijk te maken (enable_github_logins), maar er zijn geen client id en secret waarden opgegeven. Ga naar <a href="/admin/site_settings">de Instellingen</a> en vul de waarden in. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide" target="_blank">Zie deze uitleg voor meer informatie</a>.'
-    s3_config_warning: 'De server is geconfigureerd om bestanden naar S3 te uploaden, maar tenminste een van de volgende instellingen is niet opgegeven: s3_access_key_id, s3_secret_access_key of s3_upload_bucket. Ga naar <a href="/admin/site_settings">de Instellingen</a> en vul de waarden in. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Zie "How to set up image uploads to S3?" voor meer informatie</a>.'
-    s3_backup_config_warning: 'De server is geconfigureerd om backups naar s3 toe te staan, maar op zijn minst een van de volgende instellingen is niet ingesteld: s3_access_key_id, s3_secret_access_key of s3_backup_bucket. Ga naar <a href="/admin/site_settings">de Site Instellingen</a> en stel deze in. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Bekijk "How to set up image uploads to S3?" voor meer informatie</a>.'
     image_magick_warning: 'De server is geconfigureerd om thumbnails te maken van grote afbeeldingen, maar ImageMagick is niet geïnstalleerd. Installeer ImageMagick met je favoriete package manager of <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">download de laatste release</a>.'
     failing_emails_warning: 'Er zijn %{num_failed_jobs} e-mail jobs mislukt. Controleer in app.yml of de e-mailserver instelling correct zijn. <a href="/sidekiq/retries" target="_blank">Toon de mislukte jobs in Sidekiq</a>.'
     subfolder_ends_in_slash: "Je submap setup is onjuist; de DISCOURSE_RELATIVE_URL_ROOT eindigt in een schuine streep."
@@ -770,6 +730,7 @@ nl:
     max_image_width: "Maximale breedte van een thumbnail van afbeeldingen in een bericht"
     max_image_height: "Maximale hoogte van een thumbnail van afbeeldingen in een bericht"
     category_featured_topics: "Aantal topics dat wordt weergegeven in de categorielijst. An het wijzigen van dit getal kan het tot 15 minuten duren voordat de lijst is bijgewerkt."
+    show_subcategory_list: "Laat subcategorielijst zien in plaats van de topiclijst bij het openen van een categorie."
     fixed_category_positions: "Indien aangevinkt kun je categorieën in een vaste volgorde arrangeren. Indien uitgevinkt zullen de categorieeen gesorteerd worden op activiteit."
     fixed_category_positions_on_create: "Indien aangevinkt wordt de categorie volgorde aangehouden in het menu voor nieuwe topics (vaste-categorie-posities vereist)."
     add_rel_nofollow_to_user_content: "Voeg 'rel nofollow' toe aan alle ingediende gebruikerscontent, behalve voor interne links (inclusief bovenliggende domeinen). Als je dit verandert, moet je ook alle berichten opnieuw renderen met: \"rake posts:rebake\""
@@ -842,8 +803,6 @@ nl:
     invite_passthrough_hours: "Hoe lang een gebruiker een eerder verkregen uitnodigingssleutel kan gebruiken om in te loggen, in uren gespecificeerd"
     invite_only: "Openbare registratie is uitgeschakeld, alle nieuwe gebruikers moeten expliciet worden uitgenodigd door andere leden of personeel."
     login_required: "Authenticatie vereist om inhoud te lezen op deze site, verbied anonieme toegang."
-    min_username_length: "Minimale lengte gebruikersnaam in karakters."
-    max_username_length: "Maximale lengte gebruikersnaam in karakters."
     reserved_usernames: "Gebruikersnamen waarvoor registratie niet is toegestaan."
     min_password_length: "Minimum lengte wachtwoord."
     min_admin_password_length: "Minimale wachtwoordlengte voor de beheerder."
@@ -1207,22 +1166,6 @@ nl:
       Als je deze e-mails wel wil blijven ontvangen, kan je deze e-mail negeren.
   invite_mailer:
     subject_template: "%{invitee_name} nodigt je uit voor '%{topic_title}' op %{site_domain_name}"
-    text_body_template: |
-      %{invitee_name} nodigt je uit voor een discussie
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      op
-
-      > %{site_title} -- %{site_description}
-
-      Ben je geïnteresseerd, klik dan op de onderstaande link:
-
-      %{invite_link}
-
-      Deze uitnodiging komt van een vertrouwde gebruiker, je kunt direct deelnemen aan de discussie.
   invite_forum_mailer:
     subject_template: "%{invitee_name} heeft je uitgenodigd voor %{site_domain_name}"
   invite_password_instructions:
@@ -1291,12 +1234,6 @@ nl:
     csv_export_succeeded:
       title: "CSV Export Geslaagd"
       subject_template: "Export succesvol afgerond."
-      text_body_template: |
-        Data export was succesvol!:dvd:
-
-        <a class="attachment" href="%{download_link}">%{file_name}</a> (%{file_size})
-
-        Bovenstaande download link is 48 uur geldig.
     csv_export_failed:
       title: "CSV Export Mislukt"
       subject_template: "Export mislukt"

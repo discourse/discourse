@@ -32,7 +32,6 @@ ko:
   anonymous: "익명"
   emails:
     incoming:
-      default_subject: "%{email} 으로부터 받은 이메일"
       show_trimmed_content: "일부 내용만 보기"
   errors: &errors
     format: '%{attribute} %{message}'
@@ -176,31 +175,6 @@ ko:
       - 건설적인 비판은 환영입니다만, 사람 말고 *아이디어*를 비판해주세요.
 
       이 도움말은 최초 %{education_posts_text}번 글을 올릴 때까지만 나타납니다. 자세한 내용은 [커뮤니티 가이드라인](/guidelines)를 참조하여 주세요.
-    sequential_replies: |
-      ### 여러 글에 답글 한번에 달아보세요.
-
-      답글을 연속으로 한 글타래에 달기 보다는 지난 글을 인용하거나 @사용자이름 해서 답글 하나로 작성해보세요.
-
-      원하시는 글을 선택하시고 <b>답글을 인용</b> 버튼을 선택함으로써 이전에 쓰셨던 답글에 추가로 인용을 달거나 수정하실 수 있습니다.
-
-      작은 답글을 여러개 다는 것보다 한개의 상세한 답글이 모두에게 글타래를 읽기 편하게 만듭니다.
-    dominating_topic: |
-      ### 다른 유저들도 이 대화에 참여할 수 있도록 해주세요
-
-      이 주제에 %{percent}% 이상의 답글을 다셨군요.
-
-      다른 유저들도 그들의 의견을 나눌 수 있도록 충분한 시간을 기다리고 계신가요?
-    too_many_replies: |
-      ### 댓글 개수 제한에 걸렸습니다.
-
-      죄송합니다. 신규 사용자들은 같은 주제에 %{count}개까지만 댓글을 달 수 있습니다.
-      댓글을 다는 대신 이전 댓글의 내용을 수정하거나, 다른 글타래를 읽어보는 건 어떨까요?
-    reviving_old_topic: |
-      ### 이 글타래를 부활시키겠습니까?
-
-      이 글타래에 달린 마지막 댓글은 이미 %{days}일 이전에 달렸습니다. 댓글을 새로 달면 이 글타래가 글 목록의 최상단으로 올라가게 되고, 글에 참여한 사람들에게 알림이 됩니다.
-
-      이 글타래에 대한 논의를 재개하고 싶으신 게 확실하신가요?
   activerecord:
     attributes:
       category:
@@ -336,14 +310,11 @@ ko:
       almost_x_years:
         other: "약 %{count}년 전"
   password_reset:
-    choose_new: "새로운 비밀번호를 적어주세요."
-    choose: "비밀번호를 선택해 주세요"
     update: '비밀번호 변경'
     save: '비밀번호 설정'
     title: '비밀번호 초기화'
     success: "비밀번호를 성공적으로 변경하고 지금 로그인 되었습니다."
     success_unapproved: "비밀번호를 성공적으로 변경하였습니다."
-    continue: "%{site_name}으로 가기"
   change_email:
     confirmed: "이메일 주소가 변경되었습니다."
     please_continue: "%{site_name}으로 가기"
@@ -563,8 +534,6 @@ ko:
     facebook_config_warning: '당신의 서버는 페이스북을 통한 가입을 설정하였습니다(enable_facebook_logins), 그러나 app id와 app secret 값을 입력하지 않았습니다. <a href="/admin/site_settings">사이트 설정</a> 에서 업데이트 해주세요. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-facebook-logins" target="_blank">가이드 읽어보기</a>.'
     twitter_config_warning: '당신의 서버는 트위터를 통한 가입을 설정하였습니다(enable_twitter_logins), 그러나 key 와 secret 값이 입력하지 않았습니다. <a href="/admin/site_settings">사이트 설정</a> 에서 업데이트 해주세요. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-twitter-logins" target="_blank">가이드 읽어보기</a>.'
     github_config_warning: '당신의 서버는 Github를 통한 가입을 설정하였습니다(enable_github_logins), 그러나 client id 와 secret 값을 입력하지 않았습니다. <a href="/admin/site_settings">사이트 설정</a> 에서 업데이트 해주세요. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide" target="_blank">가이드 읽어보기</a>.'
-    s3_config_warning: '파일을 Amazon S3로 업로드 하도록 설정하였습니다. 하지만 아직 Access key id(s3_access_key_id), Secret access key(s3_secret_access_key) 혹은 S3 bucket(s3_upload_bucketat) 중 하나를 설정하지 않았습니다. <a href="/admin/site_settings">사이트 세팅</a>에서 설정해주세요. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">자세히 알아보기("How to set up image uploads to S3?")</a>.'
-    s3_backup_config_warning: 's3를 이용한 서버 설정이 완료 되지 않았습니다: s3_access_key_id, s3_secret_access_key, s3_secret_access_key 또는 s3_upload_bucket. <a href="/admin/site_settings">사이트 설정</a> 에 가셔서 업데이트 하세요. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">"How to set up image uploads to S3?" 읽어 보세요.</a>'
     image_magick_warning: '큰 이미지의 섬네일 만드는 설정이 있지만, ImageMagick가 설치되지 않았습니다. <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">최신버전 받기</a>.'
   site_settings:
     censored_words: "단어는 자동적으로 `&#9632;&#9632;&#9632;&#9632;` 로 대체 됩니다."
@@ -598,6 +567,7 @@ ko:
     max_image_width: "글에서 사용할 수 있는 썸네일 이미지의 최대 너비"
     max_image_height: "글에서 사용할 수 있는 썸네일 이미지의 최대 높이"
     category_featured_topics: "카테고리 페이지에서 한 카테고리당 보여질 글타래의 수"
+    show_subcategory_list: "카테고리에 들어갈 경우 글타래 리스트 대신 하위카테고리의 리스트를 보여준다."
     fixed_category_positions: "활성화하면 고정된 순서의 카테고리들을 바꿀 수 있다. 활성화 하지 않으면 카테고리는 활동적인 순서에 따라 정렬된다."
     fixed_category_positions_on_create: "선택 시, 카테고리 정렬이 유지됩니다. (fixed_category_positions가 체크돼 있어야 합니다.)"
     add_rel_nofollow_to_user_content: "사용자 생성 컨텐츠에 대해서 rel nofollow 를 설정함. parent domain을 포함한 internal link는 예외임. 이 설정을 바꾸려면 모든 baked markdown을  \"rake posts:rebake\" 명령으로 변경해주서야 함"
@@ -665,8 +635,6 @@ ko:
     invite_passthrough_hours: "사용되어진 방문키를 로그인하는데 재사용할 수 있는 기간, 시간"
     invite_only: "공개 가입은 불가하도록 설정됨. 초대를 받아야만 신규 가입 가능함."
     login_required: "글을 읽으려면 인증(로그인)이 필요함"
-    min_username_length: "아이디 최소길이 (문자 갯수)"
-    max_username_length: "아이디 최대길이 (문자 갯수)"
     reserved_usernames: "회원가입 금지된 아이디 목록"
     min_password_length: "비밀번호 최소 글자수."
     block_common_passwords: "가장 흔히 사용되는 10,000개 비밀번호 목록에 있는 비밀번호를 사용하는 것을 허용하지 않음."
@@ -955,22 +923,6 @@ ko:
       other: "%{count}개의 신고가 접수 대기 중"
   invite_mailer:
     subject_template: "%{invitee_name} 회원님이 %{site_domain_name} 에 '%{topic_title}'에 초대하였습니다."
-    text_body_template: |
-      %{invitee_name}님께서 당신을 토의에 초대했습니다.
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      사이트:
-
-      > %{site_title} -- %{site_description}
-
-      관심이 있으시면 아래 링크로 들어가기:
-
-      %{invite_link}
-
-      신뢰된 사용자에게서 온 초대므로 이 토의에 바로 답글을 달 수 있습니다.
   invite_forum_mailer:
     subject_template: "%{site_domain_name}의 %{invitee_name}님께서 당신을 초대하였습니다."
   invite_password_instructions:
@@ -1034,12 +986,6 @@ ko:
         ```
     csv_export_succeeded:
       subject_template: "데이터 추출이 완료되었습니다."
-      text_body_template: |
-        데이터 내보내기가 성공적으로 끝났습니다! :dvd:
-
-        <a class="attachment" href="%{download_link}">%{file_name}</a> (%{file_size})
-
-        48시간 후에 위의 다운로드 링크는 지워집니다.
     csv_export_failed:
       subject_template: "데이터 추출 실패"
       text_body_template: "죄송합니다. 데이터 추출에 실패하였습니다. 로그를 확인하시거나 관리자에게 문의해주세요."

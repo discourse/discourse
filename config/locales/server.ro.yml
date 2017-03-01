@@ -34,7 +34,6 @@ ro:
   anonymous: "Anonime"
   emails:
     incoming:
-      default_subject: "Email primit de la %{email}"
       show_trimmed_content: "Arată conținut restrâns."
       maximum_staged_user_per_email_reached: "Număr maxim de utilizatori în așteptare, pe email."
       errors:
@@ -251,40 +250,6 @@ ro:
       - Critica constructivă e binevenită, critică *ideea*, nu oamenii.
 
       Pentru detalii, [verifică regulile comune](/reguli). Acest panel va apărea doar pentru prima %{education_posts_text}.
-    avatar: |
-      ### Ce-ai zice să adaugi o poză contului tău?
-
-      Ai postat câteva subiecte și răspunsuri, dar poza ta de profil nu este tot atât de unică pe cât ești tu - e doar o simplă literă.
-
-      Te-ai gândit să îți **[vizitezi profilul utilizator](%{profile_path})** și să încarci o poză care să te reprezinte?
-
-      Subiectele sunt mai ușor de urmărit și oamenii interesanți sunt mai ușor de găsit atunci când fiecare are o poză unică de profil,  în conversații!
-    sequential_replies: |
-      ### Ia în considerare ideea de a răspunde la câteva postări simultan
-
-      În loc să răspunzi secvențial la un subiect, poți să dai un singur răspuns care include citate din postări precedente sau referințe la @nume.
-
-      Îți poți edita răspunsul precedent pentru a adăuga un citat, după cum urmează: selectează textul și - când apare - apasă butonul <b>citează răspuns</b>.
-
-      E mai ușor pentru toată lumea să citească subiecte care au răspunsuri mai puține și de substanță, decât subiecte formate dintr-o grămadă de răspunsuri individuale, micuțe.
-    dominating_topic: |
-      ### Permite și altora să se alăture la conversație
-
-      Acest subiect este important pentru tine și &ndash; Ai postat mai mult de %{percent}% din răspunsuri aici.
-
-      Ești sigur că acorzi destul timp și altora ca să-și exprime punctul de vedere?
-    too_many_replies: |
-      ### Ai atins limita maximă de răspunsuri pentru acest subiect
-
-      Ne pare rău, dar utilizatorii noi au un număr limitat de %{newuser_max_replies_per_topic} răspunsuri într-un subiect.
-
-      Nu adăuga un nou răspuns, încearcă mai bine să editezi un răspuns precedent, sau să vizitează o altă discuție.
-    reviving_old_topic: |
-      ### Reînvii acest subiect?
-
-      Ultimul răspuns la acest subiect a fost dat acum %{days} (de) zile. Răspunsul tău va promova subiectul în vârful listei și va notifica pe toată lumea ce a fost implicată anterior în conversație.
-
-      Ești sigur că dorești să continui această conversație?
   activerecord:
     attributes:
       category:
@@ -519,14 +484,11 @@ ro:
         other: "cu aproape %{count} de ani în urmă"
   password_reset:
     no_token: "Ne pare rău, dar link-ul de schimbare a parolei este prea vechi. Selectează butonul Înregistrare și folosește 'Mi-am uitat parola' pentru a obține un nou link."
-    choose_new: "Alege o parolă nouă"
-    choose: "Alege o parolă"
     update: 'Actualizează parola'
     save: 'Setează parola'
     title: 'Resetează parola'
     success: "Ți-ai schimbat cu succes parola și acum ești autentificat."
     success_unapproved: "Ți-ai schimbat cu succes parola."
-    continue: "Continuă spre %{site_name}"
   change_email:
     confirmed: "Emailul tău a fost actualizat."
     please_continue: "Continuă la %{site_name}"
@@ -797,8 +759,6 @@ ro:
     facebook_config_warning: 'Serverul e configurat să permită înscrierea și autentificarea cu Facebook (enable_facebook_logins), dar app id și valoarea app secret nu sunt setate. Mergi la <a href="/admin/site_settings">Setările site-ului</a> și modifică setările. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">Vizualizează ghidul pentru mai multe informații</a>.'
     twitter_config_warning: 'Serverul e configurat să permită înscrierea și autentificarea cu Twitter (enable_twitter_logins),dar cheia și valoarea secretă nu sunt setate. Mergi la <a href="/admin/site_settings">Setările site-ului</a> și modifică setarea. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">Vizualizează ghidul pentru mai multe informații</a>.'
     github_config_warning: 'Serverul e configurat să permită înscrierea și autentificarea cu GitHub (enable_github_logins), dar id-ul de client și valorile secrete nu sunt setate. Mergi la <a href="/admin/site_settings">Setările site-ului</a> și modifică setarea. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">Vizualizează ghidul pentru mai multe informații</a>.'
-    s3_config_warning: 'Serverul este configurat să încarce fișierele către s3, dar cel puțin una din următoarele setări nu este potrivită: id_cheie_acces_s3, cheia_acces_secret_s3 sau loc_încărcare_s3. Mergi la <a href="/admin/site_settings">Setările site-ului</a> și actualizează setările. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Vezi "Cum se fac încărcările de imagine pe S3?" pentru a afla mai multe</a>.'
-    s3_backup_config_warning: 'Serverul este configurat să încarce backup-urile pe opțiunea s3, dar cel puțin una dintre setările următoare nu este completată: s3_access_key_id, s3_secret_access_key sau s3_backup_bucket. Mergi la <a href="/admin/site_settings">Setările site-ului</a> și actualizează setările. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Pentru mai multe informații, vizualizează "Cum să setezi încărcările de imagini pe opțiunea S3"</a>.'
     image_magick_warning: 'Serverul este configurat să creeze thumbnail-uri din imagini mari, dar ImageMagick nu e instalat. Instalează ImageMagick <a href="http://www.imagemagick.org/script/binary-releases.php" ținta="_blank">descarcă ultima versiune</a>.'
     failing_emails_warning: 'Există %{num_failed_jobs} (de) sarcini email care au eșuat. Verifică app.yml și asigură-te că setările serverului de mail sunt corecte. <a href="/sidekiq/retries" target="_blank">Vizualizează sarcini eșuate în Sidekiq</a>.'
     subfolder_ends_in_slash: "Setările subfolderului sunt incorecte; DISCOURSE_RELATIVE_URL_ROOT se termină cu slash."
@@ -851,6 +811,7 @@ ro:
     max_image_width: "Maximul lățimii unui thumbnail într-o postare"
     max_image_height: "Maximul înălțimii unui thumbnail într-o postare"
     category_featured_topics: "Numărul subiectelor afișate după categorie pe /pagina de categorii. După schimbarea valorii, e nevoie de până la 15 minute până ce pagina de categorii se va actualiza."
+    show_subcategory_list: "Arată lista de sub-categorii în loc de lista de subiecte când se introduce o categorie."
     fixed_category_positions: "Dacă e bifat, veți putea aranja categoriile într-o ordine fixă. Dacă e nebifat, categoriile sunt listate în ordinea activității."
     fixed_category_positions_on_create: "Dacă este bifat, ordonarea categoriilor va fi menținută în dialogul de creare a subiectelor (presupune fixed_category_positions)."
     add_rel_nofollow_to_user_content: "Adaugă atributul rel nofollow la toate conținuturile transmise de către utilizator, cu excepția link-urilor interne (includiv domeniile părinte). Dacă schimbi această setare, postările trebuie refăcute cu: \"rake posts:rebake\""
@@ -945,8 +906,6 @@ ro:
     invite_passthrough_hours: "Cât timp un utilizator poate folosi o cheie de invitație acceptată anterior pentru autentificare, în ore"
     invite_only: "Înregistrarea publică este dezactivată, toți utilizatorii noi trebuie să fie exclusiv invitați de un alt membru sau de personalul site-ului."
     login_required: "Cere autentificare pentru a citi conținutul acestui site, blochează accesul anonim."
-    min_username_length: "Numărul minim de caractere pe care poate să îl aibă un nume de utilizator."
-    max_username_length: "Numărul maxim de caractere pe care poate să îl aibă un nume de utilizator."
     reserved_usernames: "Nume de utilizator pentru care înregistrarea nu este permisă."
     min_password_length: "Lungimea minimă a parolei."
     min_admin_password_length: "Lungimea maximă a parolei pentru Admin."
@@ -1185,7 +1144,6 @@ ro:
     digest_posts: "Numărul maxim de postări notorii care să se afișeze în rezumatul-email."
     digest_other_topics: "Numărul maxim de subiecte care să fie afișate în secțiunea „Noutăți în subiectele și categoriile pe care le urmărești” din rezumatul pe email."
     digest_min_excerpt_length: "Lungimea minimă (în caractere) a extraselor de postări, ce vor fi incluse în emailul-rezumat."
-    delete_digest_email_after_days: "Nu trimite emailuri-rezumat utilizatorilor care nu au fost văzuți pe site de mai mult de (n) zile."
     digest_suppress_categories: "Nu include aceste categorii în emailurile-rezumat."
     disable_digest_emails: "Dezactivează emailurile-rezumat pentru toți utilizatorii."
     email_accent_bg_color: "Culoarea accent care să fie folosită ca fundal pentru unele elemente din emailurile HTML. Introdu numele culorii („roșu”) sau valoarea hex ('#FF000')."
@@ -1470,43 +1428,8 @@ ro:
       Dacă dorești să primești în continuare actualizări pe email, poți ignora acest mesaj.
   invite_mailer:
     subject_template: "%{invitee_name} te-a invitat la subiectul '%{topic_title}' pe %{site_domain_name}"
-    text_body_template: |
-      %{invitee_name} te-a invitat la o discuție
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      la
-
-      > %{site_title} -- %{descriere_site}
-
-      Dacă ești interesat, click pe adresa dedesubt:
-
-      %{invite_link}
-
-      Aceasta invitație este de la un utilizator de încredere, deci poți răspunde discuției de îndată ce dorești.
   custom_invite_mailer:
     subject_template: "%{invitee_name} te-a invitat la subiectul '%{topic_title}' pe  %{site_domain_name}"
-    text_body_template: |
-      %{invitee_name} te-a invitat la o discuție
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      pe
-
-      > %{site_title} -- %{descriere_site}
-
-      Mesaj de la %{invitee_name}:
-
-      %{user_custom_message}
-
-      Dacă te interesează, dă click pe link-ul de mai jos:
-      %{invite_link}
-
-      Această invitație este de la un utilizator verificat, deci poți răspunde de îndată ce dorești.
   invite_forum_mailer:
     subject_template: "%{invitee_name} te-a invitat să te alături pe %{site_domain_name}"
   custom_invite_forum_mailer:
@@ -1707,12 +1630,6 @@ ro:
         ```
     csv_export_succeeded:
       subject_template: "Exportul datelor s-a terminat"
-      text_body_template: |
-        Exportul datelor tale a reușit! :dvd:
-
-        <a class="attachment" href="%{download_link}">%{file_name}</a> (%{file_size})
-
-        Link-ul de deasupra este disponibil 48 de ore.
     csv_export_failed:
       subject_template: "Exportul datelor a eșuat"
       text_body_template: "Ne pare rău, dar exportul datelor tale a eșuat. Te rugăm să verifici rapoartele sau să contactezi un membru al echipei."
