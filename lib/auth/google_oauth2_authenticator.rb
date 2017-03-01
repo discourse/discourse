@@ -54,7 +54,7 @@ class Auth::GoogleOAuth2Authenticator < Auth::Authenticator
 
     h[:email] = hash[:info][:email]
     h[:name] = hash[:info][:name]
-    h[:email_valid] = hash[:extra][:raw_info][:email_verified]
+    h[:email_valid] = extra[:email_verified]
 
     h[:google] = {
       google_user_id: hash[:uid] || extra[:sub],

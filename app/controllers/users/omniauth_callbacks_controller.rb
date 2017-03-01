@@ -111,10 +111,8 @@ class Users::OmniauthCallbacksController < ApplicationController
 
   def user_found(user)
     # automatically activate/unstage any account if a provider marked the email valid
-    if @auth_result.email_valid
-      user.staged = false
-      user.active = true
-      user.save
+    if @auth_result.email_valid && @auth_result.email == user.email
+      user.update!(staged: false, active: true)
     end
 
     if ScreenedIpAddress.should_block?(request.remote_ip)
