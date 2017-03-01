@@ -1763,9 +1763,13 @@ en:
 
   download_backup_mailer:
     title: "Download Backup Mailer"
-    subject_template: "[%{site_name}] Backup Download"
+    subject_template: "[%{site_name}] Site Backup Download"
     text_body_template: |
-      Click this link to download your backup file: %{backup_file_path}
+      Here's the [site backup download](%{backup_file_path}) you requested.
+
+      We sent this download link to your validated email address for security reasons.
+
+      (If you *didn't* request this download, you should be seriously concerned -- someone has admin access to your site.)
     no_token: |
       Sorry, this backup download link has already been used or has expired.
 
