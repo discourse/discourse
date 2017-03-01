@@ -73,7 +73,13 @@ I18n.lookup = function(scope, options) {
     messages = messages[currentScope];
   }
 
-  messages = messages || checkExtras(origScope, this.SEPARATOR, this.extras) || options.defaultValue;
+  if (messages === undefined) {
+    messages = checkExtras(origScope, this.SEPARATOR, this.extras);
+  }
+
+  if (messages === undefined) {
+    messages = options.defaultValue;
+  }
 
   return messages;
 };

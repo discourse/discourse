@@ -27,7 +27,8 @@ module("lib:i18n", {
       "en": {
         "js": {
           "hello": {
-            "world": "Hello World!"
+            "world": "Hello World!",
+            "universe": ""
           },
           "topic": {
             "reply": {
@@ -68,6 +69,7 @@ test("translations", function() {
   equal(I18n.t("topic.reply.title"), "Répondre", "uses locale translations when they exist");
   equal(I18n.t("topic.reply.help"), "begin composing a reply to this topic", "fallbacks to English translations");
   equal(I18n.t("hello.world"), "Hello World!", "doesn't break if a key is overriden in a locale");
+  equal(I18n.t("hello.universe"), "", "allows empty strings");
 });
 
 test("extra translations", function() {
