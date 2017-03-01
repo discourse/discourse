@@ -21,6 +21,7 @@
         {{i18n 'user.messages.archive'}}
       {{/link-to}}
     </li>
+    {{plugin-outlet name="user-messages-nav" connectorTagName='li' args=(hash model=model)}}
     {{#each model.groups as |group|}}
     {{#if group.has_messages}}
     <li>
