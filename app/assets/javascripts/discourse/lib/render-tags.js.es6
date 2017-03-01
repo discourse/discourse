@@ -45,10 +45,12 @@ export default function(topic, params){
       for(var i=0; i<tags.length; i++){
         buffer += renderTag(tags[i]);
       }
-      if (customHtml) {
-        buffer += customHtml;
-      }
     }
+
+    if (customHtml) {
+      buffer += customHtml;
+    }
+
     buffer += "</div>";
   }
   return buffer;
