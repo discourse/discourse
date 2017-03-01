@@ -1,0 +1,36 @@
+el:
+  site_settings:
+    poll_enabled: "Να επιτρέπεται σε χρήστες να δημιουργούν ψηφοφορίες;"
+    poll_maximum_options: "Μέγιστος αριθμός επιλογών σε μια ψηφοφορία."
+    poll_edit_window_mins: "Αριθμός λεπτών μετά την δημιουργία ανάρτησης που οι ψηφοφορίες μπορούν να αλλαχθούν "
+  poll:
+    multiple_polls_without_name: "Υπάρχουν πολλές ψηφοφορίες χωρίς όνομα. Χρησιμοποίησε την ιδιότητα '<code>name</code>' για να κάνεις τις ψηφοφορίες σου μοναδικά αναγνωρίσιμες."
+    multiple_polls_with_same_name: "Υπάρχουν πολλές ψηφοφορίες με το ίδιο όνομα: <strong>%{name}</strong>. Χρησιμοποίησε την ιδιότητα '<code>name</code>' για να κάνεις τις ψηφοφορίες σου μοναδικά αναγνωρίσιμες."
+    default_poll_must_have_at_least_2_options: "Μια ψηφοφορία πρέπει να έχει τουλάχιστον 2 επιλογές."
+    named_poll_must_have_at_least_2_options: "Η ψηφοφορία <strong>%{name}</strong> πρέπει να έχει τουλάχιστον 2 επιλογές."
+    default_poll_must_have_less_options:
+      one: "Η Δημοσκόπηση πρέπει να έχει λιγότερη από 1 επιλογή."
+      other: "Η Δημοσκόπηση πρέπει να έχει λιγότερες από %{count} επιλογές."
+    named_poll_must_have_less_options:
+      one: "Η Ψηφοφορία με το όνομα <strong>%{name}</strong> πρέπει να έχει λιγότερο απο 1 επιλογή. "
+      other: "Η Ψηφοφορία με το όνομα <strong>%{name}</strong> πρέπει να έχει λιγότερες απο %{count} επιλογές. "
+    default_poll_must_have_different_options: "Η ψηφοφορία πρέπει να έχει διαφορετικές επιλογές."
+    named_poll_must_have_different_options: "Η ψηφοφορία <strong>%{name}</strong> πρέπει να έχει διαφορετικές επιλογές."
+    default_poll_with_multiple_choices_has_invalid_parameters: "Δημοσκόπηση με πολλαπλές επιλογές έχει μη έγκυρες παραμέτρους."
+    named_poll_with_multiple_choices_has_invalid_parameters: "Η Ψηφοφορία με το όνομα <strong>%{name}</strong> με πολλαπλές επιλογές έχει μη έγγυρες παραμέτρους"
+    requires_at_least_1_valid_option: "Πρέπει να κάνεις τουλάχιστον 1 έγκυρη επιλογή."
+    default_cannot_be_made_public: "Δημοσκόπηση με ψήφους δεν μπορεί να γίνει δημόσια."
+    named_cannot_be_made_public: "Η Ψηφοφορία με το όνομα <strong>%{name}</strong> κατέχει ψήφους που δεν μπορούν να δημοσιοποιηθούν."
+    edit_window_expired:
+      cannot_change_polls: "Δεν μπορείτε να προσθέσετε, να καταργήσετε ή να μετονομάσετε δημοσκοπήσεις μετά τα πρώτα %{minutes} λεπτά."
+      op_cannot_edit_options: "Δεν μπορείτε να προσθέσετε ή να αφαιρέσετε επιλογές για την δημοσκόπηση μετά τα πρώτα %{minutes} λεπτά. Παρακαλούμε επικοινωνήστε με έναν συντονιστή αν χρειάζεται να επεξεργαστείτε μια επιλογή για την δημοσκόπηση."
+      staff_cannot_add_or_remove_options: "Δεν μπορείτε να προσθέσετε ή να αφαιρέσετε επιλογές για την δημοσκόπηση μετά τα πρώτα %{minutes} λεπτά. Θα πρέπει να κλείσετε αυτό το νήμα και να δημιουργήσετε ένα νέο αντ 'αυτού."
+    no_polls_associated_with_this_post: "Σε αυτή την ανάρτηση δεν υπάρχουν ψηφοφορίες."
+    no_poll_with_this_name: "Σε αυτή την ανάρτηση δεν υπάρχουν ψηφοφορίες με το όνομα <strong>%{name}</strong>."
+    post_is_deleted: "Δεν μπορείτε να ενεργήσετε σε διεγραμένη ανάρτηση."
+    topic_must_be_open_to_vote: "Το νήμα πρέπει να είναι ανοιχτό για ψηφοφορίες."
+    poll_must_be_open_to_vote: "Η ψηφοφορία πρέπει να έχει ξεκινήσει πρώτα."
+    topic_must_be_open_to_toggle_status: "Για να μπορεί να αλλάξει η κατάσταση του νήματος, πρέπει να είναι ανοιχτό."
+    only_staff_or_op_can_toggle_status: "Η κατάσταση της ψηφοφορίας μπορεί να αλλάξει μόνο από συντονιστές ή από τον δημιουργό του νήματος."
+    email:
+      link_to_poll: "Κάντε κλικ για να δείτε την δημοσκόπηση."
