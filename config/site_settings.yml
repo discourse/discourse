@@ -204,10 +204,6 @@ basic:
       - monthly
       - weekly
       - daily
-  category_featured_topics:
-    client: true
-    default: 3
-    min: 1
   fixed_category_positions:
     client: true
     default: false

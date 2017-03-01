@@ -673,8 +673,6 @@ tr_TR:
     delete_removed_posts_after: "Yazar tarafından kaldırılan gönderiler (n) saat sonra otomatik olarak silinecektir. 0 olarak ayarlanırsa, gönderiler beklemeden hemen silinir."
     max_image_width: "Bir gönderideki küçük resimlerin en fazla genişliği"
     max_image_height: "Bir gönderideki küçük resimlerin en fazla yüksekliği"
-    category_featured_topics: "/categories sayfasında yer alan kategori başına düşen konu sayısı. Bu değeri değiştirirseniz, değişikliğin kategoriler sayfasına yansıması 15 dakika kadar sürebilir."
-    show_subcategory_list: "Bir kategoriye girildiğinde konu listesi yerine alt kategori listesini göster."
     fixed_category_positions: "Seçerseniz, kategoriler için sabit bir sıralama belirleyebileceksiniz. Seçmezseniz, kategoriler etkinlik sırasına göre listelenir. "
     fixed_category_positions_on_create: "Seçerseniz, konu oluşturma ekranında da kategori sıralaması korunur (fixed_category_positions gerektirir)."
     add_rel_nofollow_to_user_content: "İç bağlantılar (ana alan adları dahil) hariç, gönderilen tüm kullanıcı içeriklerine rel nofollow ekle. Bu ayarı değiştirirseniz, tüm gönderileri \"rake post:rebake\" ile yeniden işlemeniz gerekir."

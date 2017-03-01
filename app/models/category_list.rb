@@ -131,7 +131,7 @@ class CategoryList
     def sort_unpinned
       if @guardian.current_user && @all_topics.present?
         @categories.each do |c|
-          next if c.displayable_topics.blank? || c.displayable_topics.size <= SiteSetting.category_featured_topics
+          next if c.displayable_topics.blank? || c.displayable_topics.size <= c.num_featured_topics
           unpinned = []
           c.displayable_topics.each do |t|
             unpinned << t if t.pinned_at && PinnedCheck.unpinned?(t, t.user_data)
@@ -146,7 +146,7 @@ class CategoryList
     def trim_results
       @categories.each do |c|
         next if c.displayable_topics.blank?
-        c.displayable_topics = c.displayable_topics[0, SiteSetting.category_featured_topics]
+        c.displayable_topics = c.displayable_topics[0, c.num_featured_topics]
       end
     end
 

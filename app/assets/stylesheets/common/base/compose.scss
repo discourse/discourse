@@ -148,34 +148,6 @@ div.ac-wrap {
   }
 }
 
-.edit-auto-close-modal {
-  .btn.pull-right {
-    margin-right: 10px;
-  }
-  form {
-    margin: 0;
-  }
-  .auto-close-fields {
-    i.fa-clock-o {
-      font-size: 1.143em;
-    }
-    input {
-      margin: 0;
-    }
-  }
-}
-
-.edit-category-modal {
-  .auto-close-fields {
-    input[type=text] {
-      width: 50px;
-    }
-    label {
-      font-size: .929em;
-    }
-  }
-}
-
 #reply-control {
   .composer-loading {
     position: absolute;
