@@ -1,10 +1,20 @@
 import renderTag from 'discourse/lib/render-tag';
 
 let callbacks = null;
+let priorities = null;
 
-export function addTagsHtmlCallback(callback) {
+export function addTagsHtmlCallback(callback, options) {
   callbacks = callbacks || [];
-  callbacks.push(callback);
+  priorities = priorities || [];
+  const priority = (options && options.priority) || 0;
+
+  let i = 0;
+  while(i < priorities.length && priorities[i] > priority) {
+    i += 1;
+  }
+
+  priorities.splice(i, 0, priority);
+  callbacks.splice(i, 0, callback);
 };
 
 export default function(topic, params){

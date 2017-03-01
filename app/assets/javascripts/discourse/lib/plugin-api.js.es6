@@ -392,6 +392,7 @@ class PluginApi {
 
   /**
    * Register a callback to be called every time tags render
+   * highest priority callbacks are called first
    * example:
    *
    * callback = function(topic, params) {
@@ -400,11 +401,11 @@ class PluginApi {
    *    }
    * }
    *
-   * api.addTagsHtmlCallback(callback);
+   * api.addTagsHtmlCallback(callback, {priority: 100});
    *
    **/
-  addTagsHtmlCallback(callback) {
-    addTagsHtmlCallback(callback);
+  addTagsHtmlCallback(callback, options) {
+    addTagsHtmlCallback(callback, options);
   };
 
   /**
