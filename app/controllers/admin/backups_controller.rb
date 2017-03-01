@@ -1,4 +1,5 @@
 require "backup_restore/backup_restore"
+require "email_backup_token"
 
 class Admin::BackupsController < Admin::AdminController
 
@@ -44,14 +45,33 @@ class Admin::BackupsController < Admin::AdminController
     render json: success_json
   end
 
-  # download
-  def show
+  def email
     if backup = Backup[params.fetch(:id)]
+      token = EmailBackupToken.set(current_user.id)
+      download_url = "#{url_for(controller: 'backups', action: 'show')}?token=#{token}"
+      Jobs.enqueue(:download_backup_email, to_address: current_user.email, backup_file_path: download_url)
+      render nothing: true
+    else
+      render nothing: true, status: 404
+    end
+  end
+
+  def show
+
+    if !EmailBackupToken.compare(current_user.id, params.fetch(:token))
+      @error = I18n.t('download_backup_mailer.no_token')
+    end
+    if !@error && backup = Backup[params.fetch(:id)]
+      EmailBackupToken.del(current_user.id)
       StaffActionLogger.new(current_user).log_backup_download(backup)
       headers['Content-Length'] = File.size(backup.path).to_s
       send_file backup.path
     else
-      render nothing: true, status: 404
+      if @error
+        render layout: 'no_ember', status: 422
+      else
+        render nothing: true, status: 404
+      end
     end
   end
 

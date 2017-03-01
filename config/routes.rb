@@ -232,6 +232,7 @@ Discourse::Application.routes.draw do
     resources :backups, only: [:index, :create], constraints: AdminConstraint.new do
       member do
         get "" => "backups#show", constraints: { id: BACKUP_ROUTE_FORMAT }
+        put "" => "backups#email", constraints: { id: BACKUP_ROUTE_FORMAT }
         delete "" => "backups#destroy", constraints: { id: BACKUP_ROUTE_FORMAT }
         post "restore" => "backups#restore", constraints: { id: BACKUP_ROUTE_FORMAT }
       end
