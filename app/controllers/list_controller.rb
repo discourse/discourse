@@ -106,17 +106,37 @@ class ListController < ApplicationController
     end
   end
 
-  [:topics_by, :private_messages, :private_messages_sent, :private_messages_unread, :private_messages_archive, :private_messages_group, :private_messages_group_archive].each do |action|
+  def topics_by
+    list_opts = build_topic_list_options
+    target_user = fetch_user_from_params({ include_inactive: current_user.try(:staff?) }, [:user_stat, :user_option])
+    list = generate_list_for(action.to_s, target_user, list_opts)
+    list.more_topics_url = url_for(construct_url_with(:next, list_opts))
+    list.prev_topics_url = url_for(construct_url_with(:prev, list_opts))
+    respond_with_list(list)
+  end
+
+  def self.generate_message_route(action)
     define_method("#{action}") do
       list_opts = build_topic_list_options
       target_user = fetch_user_from_params({ include_inactive: current_user.try(:staff?) }, [:user_stat, :user_option])
-      guardian.ensure_can_see_private_messages!(target_user.id) unless action == :topics_by
+      guardian.ensure_can_see_private_messages!(target_user.id)
       list = generate_list_for(action.to_s, target_user, list_opts)
-      url_prefix = "topics" unless action == :topics_by
+      url_prefix = "topics"
       list.more_topics_url = url_for(construct_url_with(:next, list_opts, url_prefix))
       list.prev_topics_url = url_for(construct_url_with(:prev, list_opts, url_prefix))
       respond_with_list(list)
     end
+  end
+
+  %i{
+    private_messages
+    private_messages_sent
+    private_messages_unread
+    private_messages_archive
+    private_messages_group
+    private_messages_group_archive
+  }.each do |action|
+    generate_message_route(action)
   end
 
   def latest_feed
