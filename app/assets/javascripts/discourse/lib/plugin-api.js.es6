@@ -15,9 +15,10 @@ import { extraConnectorClass } from 'discourse/lib/plugin-connectors';
 import { addPostSmallActionIcon } from 'discourse/widgets/post-small-action';
 import { addDiscoveryQueryParam } from 'discourse/controllers/discovery-sortable';
 import { addTagsHtmlCallback } from 'discourse/lib/render-tags';
+import { addUserMenuGlyph } from 'discourse/widgets/user-menu';
 
 // If you add any methods to the API ensure you bump up this number
-const PLUGIN_API_VERSION = '0.8.2';
+const PLUGIN_API_VERSION = '0.8.3';
 
 class PluginApi {
   constructor(version, container) {
@@ -399,9 +400,29 @@ class PluginApi {
    *    }
    * }
    *
+   * api.addTagsHtmlCallback(callback);
+   *
    **/
   addTagsHtmlCallback(callback) {
     addTagsHtmlCallback(callback);
+  };
+
+  /**
+   * Adds a glyph to user menu after bookmarks
+   * WARNING: there is limited space there
+   *
+   * example:
+   *
+   * api.addUserMenuGlyph({
+   *    label: 'awesome.label',
+   *    className: 'my-class',
+   *    icon: 'my-icon',
+   *    href: `/some/path`
+   * });
+   *
+   */
+  addUserMenuGlyph(glyph) {
+    addUserMenuGlyph(glyph);
   };
 }
 
