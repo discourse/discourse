@@ -575,7 +575,6 @@ cs:
     min_search_term_length: "Minimální délka hledaného výrazu ve znacích"
     unique_posts_mins: "Kolik minut musí uplynout, než může uživatel zaslat příspěvek se stejným obsahem"
     queue_jobs: "Zařazovat úlohy do fronty v sidekiq, není-li nastaveno, jsou úlohy vyřizovány okamžitě"
-    category_featured_topics: "Počet témat zobrazených v seznamu kategorií"
     apple_touch_icon_url: "Ikona používaná pro doteková zařízení od firmy Apple. Doporučené rozměry jsou 144px krát 144px."
     email_custom_headers: "Seznam vlastních hlaviček emailů, oddělený svislítkem"
     enable_long_polling: "'Message bus' smí používat dlouhé výzvy"

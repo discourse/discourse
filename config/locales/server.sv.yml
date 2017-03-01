@@ -779,8 +779,6 @@ sv:
     delete_removed_posts_after: "Inlägg som tagits bort av författaren kommer automatiskt att raderas efter (n) timmar. Ange 0 för att omedelbart ta bort inlägg."
     max_image_width: "Maxbredd för bildikoner i ett inlägg"
     max_image_height: "Maxhöjd för bildikoner i ett inlägg"
-    category_featured_topics: "Antal ämnen som visas per kategori på /kategorier-sidan. Efter att ha ändrat det här värdet så tar det upp till 15 minuter för kategori-sidan att uppdateras."
-    show_subcategory_list: "Visa listan med underkategorier istället för ämneslistan när en kategori väljs."
     fixed_category_positions: "Om aktiverad, kommer du kunna ordna kategorier i en bestämd ordning. Om inaktiverad, sorteras kategorierna baserat på aktivitet."
     fixed_category_positions_on_create: "Kategoriordningen kommer att upprätthållas vid dialogen för skapandet av ämnen om den här bockas i (kräver fixed_category_positions)."
     add_rel_nofollow_to_user_content: "Lägg till rel nofollow på allt användargenererat innehåll, förutom interna länkar (inklusive förälderdomän). Om du ändrar det här så måste du uppdatera alla inlägg med \"rake posts:rebake\""

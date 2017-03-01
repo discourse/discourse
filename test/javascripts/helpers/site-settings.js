@@ -19,7 +19,6 @@ Discourse.SiteSettingsOriginal = {
   "category_colors":"BF1E2E|F1592A|F7941D|9EB83B|3AB54A|12A89D|25AAE2|0E76BD|652D90|92278F|ED207B|8C6238|231F20|808281|B3B5B4|283890",
   "enable_mobile_theme":true,
   "relative_date_duration":14,
-  "category_featured_topics":4,
   "fixed_category_positions":false,
   "enable_badges":true,
   "invite_only":false,

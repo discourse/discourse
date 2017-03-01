@@ -8,7 +8,7 @@ class CategoryFeaturedTopic < ActiveRecord::Base
     CategoryFeaturedTopic.select(:topic_id, :category_id).order(:rank).each do |f|
       (current[f.category_id] ||= []) << f.topic_id
     end
-    Category.select(:id, :topic_id).find_each do |c|
+    Category.select(:id, :topic_id, :num_featured_topics).find_each do |c|
       CategoryFeaturedTopic.feature_topics_for(c, current[c.id] || [])
     end
   end
@@ -17,7 +17,7 @@ class CategoryFeaturedTopic < ActiveRecord::Base
     return if c.blank?
 
     query_opts = {
-      per_page: SiteSetting.category_featured_topics,
+      per_page: c.num_featured_topics,
       except_topic_ids: [c.topic_id],
       visible: true,
       no_definitions: true

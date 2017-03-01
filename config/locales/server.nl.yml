@@ -729,8 +729,6 @@ nl:
     delete_removed_posts_after: "Berichten verwijderd door de auteur zullen automatisch verwijderd worden na (n) uur. Als dit ingesteld is op 0 zullen berichten direct verwijderd worden."
     max_image_width: "Maximale breedte van een thumbnail van afbeeldingen in een bericht"
     max_image_height: "Maximale hoogte van een thumbnail van afbeeldingen in een bericht"
-    category_featured_topics: "Aantal topics dat wordt weergegeven in de categorielijst. An het wijzigen van dit getal kan het tot 15 minuten duren voordat de lijst is bijgewerkt."
-    show_subcategory_list: "Laat subcategorielijst zien in plaats van de topiclijst bij het openen van een categorie."
     fixed_category_positions: "Indien aangevinkt kun je categorieën in een vaste volgorde arrangeren. Indien uitgevinkt zullen de categorieeen gesorteerd worden op activiteit."
     fixed_category_positions_on_create: "Indien aangevinkt wordt de categorie volgorde aangehouden in het menu voor nieuwe topics (vaste-categorie-posities vereist)."
     add_rel_nofollow_to_user_content: "Voeg 'rel nofollow' toe aan alle ingediende gebruikerscontent, behalve voor interne links (inclusief bovenliggende domeinen). Als je dit verandert, moet je ook alle berichten opnieuw renderen met: \"rake posts:rebake\""

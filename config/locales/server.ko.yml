@@ -566,8 +566,6 @@ ko:
     delete_removed_posts_after: "작성자에 의해 삭제된 글은 (n) 시간 뒤 자동으로 삭제됩니다. 0으로 설정 시, 즉시 삭제됩니다."
     max_image_width: "글에서 사용할 수 있는 썸네일 이미지의 최대 너비"
     max_image_height: "글에서 사용할 수 있는 썸네일 이미지의 최대 높이"
-    category_featured_topics: "카테고리 페이지에서 한 카테고리당 보여질 글타래의 수"
-    show_subcategory_list: "카테고리에 들어갈 경우 글타래 리스트 대신 하위카테고리의 리스트를 보여준다."
     fixed_category_positions: "활성화하면 고정된 순서의 카테고리들을 바꿀 수 있다. 활성화 하지 않으면 카테고리는 활동적인 순서에 따라 정렬된다."
     fixed_category_positions_on_create: "선택 시, 카테고리 정렬이 유지됩니다. (fixed_category_positions가 체크돼 있어야 합니다.)"
     add_rel_nofollow_to_user_content: "사용자 생성 컨텐츠에 대해서 rel nofollow 를 설정함. parent domain을 포함한 internal link는 예외임. 이 설정을 바꾸려면 모든 baked markdown을  \"rake posts:rebake\" 명령으로 변경해주서야 함"
