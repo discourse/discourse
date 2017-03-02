@@ -14,6 +14,7 @@ class TopicQuery
     @public_valid_options ||=
       %i(page
          before
+         bumped_before
          topic_ids
          exclude_category_ids
          category
@@ -597,6 +598,12 @@ class TopicQuery
       if before = options[:before]
         if (before = before.to_i) > 0
           result = result.where('topics.created_at < ?', before.to_i.days.ago)
+        end
+      end
+
+      if bumped_before = options[:bumped_before]
+        if (bumped_before = bumped_before.to_i) > 0
+          result = result.where('topics.bumped_at < ?', bumped_before.to_i.days.ago)
         end
       end
 
