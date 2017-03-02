@@ -13,16 +13,34 @@
 <% if @category %>
   <h1>
     <% if @category.parent_category %>
-    <%= link_to @category.parent_category.url, itemprop: 'item' do %>
-      <span itemprop='name'><%= @category.parent_category.name %></span>
+      <%= link_to @category.parent_category.url, itemprop: 'item' do %>
+        <span itemprop='name'><%= @category.parent_category.name %></span>
+      <% end %>
+      &nbsp;
     <% end %>
-    &nbsp;
-    <% end %>
+
     <%= link_to @category.url, itemprop: 'item' do %>
       <span itemprop='name'><%= @category.name %></span>
     <% end %>
   </h1>
   <br/>
+
+  <% if params[:page].to_i == 0 && @subcategories.present? %>
+    <div itemscope itemtype='http://schema.org/ItemList'>
+      <% @subcategories.each do |subcategory| %>
+        <div itemprop='itemListElement' itemscope itemtype='http://schema.org/ListItem'>
+          <meta itemprop='url' content='<%= subcategory.url %>'>
+          <a href='<%= subcategory.url %>' itemprop='item'>
+            <span itemprop='name'><%= subcategory.name %></span>
+          </a>
+          <% if subcategory.description.present? %>
+            <span itemprop='description'><%= subcategory.description %></span>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+    <br/>
+  <% end %>
 <% end %>
 
 <div class='topic-list' itemscope itemtype='http://schema.org/ItemList'>
@@ -58,7 +76,7 @@
   <% end %>
 <% end %>
 
-<%- end %>
+<%- end %> <!-- include_crawler_content? -->
 
 <% if @rss %>
   <% content_for :head do %>
