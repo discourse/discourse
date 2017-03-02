@@ -91,13 +91,21 @@ class Admin::EmailController < Admin::AdminController
   def incoming_from_bounced
     params.require(:id)
 
-    bounced = EmailLog.find(params[:id].to_i)
-    email_local_part, email_domain = SiteSetting.notification_email.split('@')
-    bounced_to_address = "#{email_local_part}+verp-#{bounced.bounce_key}@#{email_domain}"
+    begin
+      bounced = EmailLog.find_by(id: params[:id].to_i)
+      raise Discourse::InvalidParameters if bounced.nil?
 
-    incoming_email = IncomingEmail.find_by(to_addresses: bounced_to_address)
-    serializer = IncomingEmailDetailsSerializer.new(incoming_email, root: false)
-    render_json_dump(serializer)
+      email_local_part, email_domain = SiteSetting.notification_email.split('@')
+      bounced_to_address = "#{email_local_part}+verp-#{bounced.bounce_key}@#{email_domain}"
+
+      incoming_email = IncomingEmail.find_by(to_addresses: bounced_to_address)
+      raise Discourse::NotFound if incoming_email.nil?
+
+      serializer = IncomingEmailDetailsSerializer.new(incoming_email, root: false)
+      render_json_dump(serializer)
+    rescue => e
+      render json: {errors: [e.message]}, status: 404
+    end
   end
 
   private
