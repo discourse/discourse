@@ -13,6 +13,7 @@ class TopicQuery
   def self.public_valid_options
     @public_valid_options ||=
       %i(page
+         before
          topic_ids
          exclude_category_ids
          category
@@ -592,6 +593,13 @@ class TopicQuery
       end
 
       require_deleted_clause = true
+
+      if before = options[:before]
+        if (before = before.to_i) > 0
+          result = result.where('topics.created_at < ?', before.to_i.days.ago)
+        end
+      end
+
       if status = options[:status]
         case status
         when 'open'
