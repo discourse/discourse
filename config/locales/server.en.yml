@@ -3355,7 +3355,7 @@ en:
             description: "General contact web page for you or your organization. Will be displayed on <a href='/about' target='_blank'>your about page</a>."
           site_contact:
             label: "Automated Messages"
-            description: "All automated Discourse personal messages will be sent from this user. Most importantly, this user will be the designated sender of every welcome message automatically sent to new users."
+            description: "All automated Discourse personal messages will be sent from this user, such as the automatic welcome message sent to new users."
 
       corporate:
         title: "Organization"
