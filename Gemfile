@@ -92,7 +92,7 @@ gem 'pry-rails', require: false
 gem 'r2', '~> 0.2.5', require: false
 gem 'rake'
 
-
+gem 'thor'
 gem 'rest-client'
 gem 'rinku'
 gem 'sanitize'
