@@ -294,6 +294,10 @@ class ListController < ApplicationController
 
     @description_meta = @category.description_text
     raise Discourse::NotFound unless guardian.can_see?(@category)
+
+    if use_crawler_layout?
+      @subcategories = @category.subcategories.select { |c| guardian.can_see?(c) }
+    end
   end
 
   def build_topic_list_options
