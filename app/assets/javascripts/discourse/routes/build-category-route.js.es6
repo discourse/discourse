@@ -6,7 +6,7 @@ import CategoryList from 'discourse/models/category-list';
 import Category from 'discourse/models/category';
 
 // A helper function to create a category route with parameters
-export default (filter, params) => {
+export default (filterArg, params) => {
   return Discourse.Route.extend({
     queryParams,
 
@@ -37,9 +37,13 @@ export default (filter, params) => {
                           this._retrieveTopicList(model.category, transition)]);
     },
 
+    filter(category) {
+      return filterArg === 'default' ? (category.get('default_view') || 'latest') : filterArg;
+    },
+
     _setupNavigation(category) {
       const noSubcategories = params && !!params.no_subcategories,
-            filterMode = `c/${Discourse.Category.slugFor(category)}${noSubcategories ? "/none" : ""}/l/${filter}`;
+            filterMode = `c/${Discourse.Category.slugFor(category)}${noSubcategories ? "/none" : ""}/l/${this.filter(category)}`;
 
       this.controllerFor('navigation/category').setProperties({
         category,
@@ -60,7 +64,7 @@ export default (filter, params) => {
     },
 
     _retrieveTopicList(category, transition) {
-      const listFilter = `c/${Discourse.Category.slugFor(category)}/l/${filter}`,
+      const listFilter = `c/${Discourse.Category.slugFor(category)}/l/${this.filter(category)}`,
             findOpts = filterQueryParams(transition.queryParams, params),
              extras = { cached: this.isPoppedState(transition) };
 
@@ -72,8 +76,8 @@ export default (filter, params) => {
     },
 
     titleToken() {
-      const filterText = I18n.t('filters.' + filter.replace('/', '.') + '.title'),
-            category = this.currentModel.category;
+      const category = this.currentModel.category,
+            filterText = I18n.t('filters.' + this.filter(category).replace('/', '.') + '.title');
 
       return I18n.t('filters.with_category', { filter: filterText, category: category.get('name') });
     },
@@ -82,7 +86,8 @@ export default (filter, params) => {
       const topics = this.get('topics'),
             category = model.category,
             canCreateTopic = topics.get('can_create_topic'),
-            canCreateTopicOnCategory = category.get('permission') === PermissionType.FULL;
+            canCreateTopicOnCategory = category.get('permission') === PermissionType.FULL,
+            filter = this.filter(category);
 
       this.controllerFor('navigation/category').setProperties({
         canCreateTopicOnCategory: canCreateTopicOnCategory,

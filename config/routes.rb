@@ -491,7 +491,7 @@ Discourse::Application.routes.draw do
   get "c/:parent_category_slug/:category_slug/find_by_slug" => "categories#find_by_slug"
   get "c/:category.rss" => "list#category_feed", format: :rss
   get "c/:parent_category/:category.rss" => "list#category_feed", format: :rss
-  get "c/:category" => "list#category_latest"
+  get "c/:category" => "list#category_default", as: "category_default"
   get "c/:category/none" => "list#category_none_latest"
   get "c/:parent_category/:category/(:id)" => "list#parent_category_category_latest", constraints: { id: /\d+/ }
   get "c/:category/l/top" => "list#category_top", as: "category_top"

@@ -104,7 +104,8 @@ const Category = RestModel.extend({
         sort_ascending: this.get('sort_ascending'),
         topic_featured_link_allowed: this.get('topic_featured_link_allowed'),
         show_subcategory_list: this.get('show_subcategory_list'),
-        num_featured_topics: this.get('num_featured_topics')
+        num_featured_topics: this.get('num_featured_topics'),
+        default_view: this.get('default_view')
       },
       type: id ? 'PUT' : 'POST'
     });

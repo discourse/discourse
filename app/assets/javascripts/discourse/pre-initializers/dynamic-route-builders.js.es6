@@ -13,9 +13,9 @@ export default {
     app.DiscoveryCategoryNoneController = DiscoverySortableController.extend();
     app.DiscoveryCategoryWithIDController = DiscoverySortableController.extend();
 
-    app.DiscoveryCategoryRoute = buildCategoryRoute('latest');
-    app.DiscoveryParentCategoryRoute = buildCategoryRoute('latest');
-    app.DiscoveryCategoryNoneRoute = buildCategoryRoute('latest', {no_subcategories: true});
+    app.DiscoveryCategoryRoute = buildCategoryRoute('default');
+    app.DiscoveryParentCategoryRoute = buildCategoryRoute('default');
+    app.DiscoveryCategoryNoneRoute = buildCategoryRoute('default', {no_subcategories: true});
 
     const site = Discourse.Site.current();
     site.get('filters').forEach(filter => {
