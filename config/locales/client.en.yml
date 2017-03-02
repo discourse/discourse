@@ -1971,6 +1971,7 @@ en:
       suppress_from_homepage: "Suppress this category from the homepage."
       show_subcategory_list: "Show subcategory list above topics in this category."
       num_featured_topics: "Number of topics shown on the categories page:"
+      subcategory_num_featured_topics: "Number of featured topics on parent category's page:"
       all_topics_wiki: "Make new topics wikis by default."
       sort_order: "Default Sort:"
       allow_badges_label: "Allow badges to be awarded in this category"

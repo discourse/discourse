@@ -75,14 +75,16 @@
   {{plugin-outlet name="category-email-in" args=(hash category=category)}}
 {{/if}}
 
-{{#unless category.parent_category_id}}
-  <section class="field num-featured-topics-fields">
-    <label>
+<section class="field num-featured-topics-fields">
+  <label>
+    {{#if category.parent_category_id}}
+      {{i18n "category.subcategory_num_featured_topics"}}
+    {{else}}
       {{i18n "category.num_featured_topics"}}
-      {{text-field value=category.num_featured_topics}}
-    </label>
-  </section>
-{{/unless}}
+    {{/if}}
+    {{text-field value=category.num_featured_topics}}
+  </label>
+</section>
 
 {{#if showPositionInput}}
   <section class='field position-fields'>
