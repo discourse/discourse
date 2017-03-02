@@ -56,6 +56,13 @@
   </label>
 </section>
 
+<section class="field default-view-field">
+  <label>
+    {{i18n "category.default_view"}}
+    {{combo-box valueAttribute="value" content=availableViews value=category.default_view}}
+  </label>
+</section>
+
 {{#if emailInEnabled}}
     <section class='field'>
       <label>

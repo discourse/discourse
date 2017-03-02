@@ -21,7 +21,8 @@ class BasicCategorySerializer < ApplicationSerializer
              :sort_order,
              :sort_ascending,
              :show_subcategory_list,
-             :num_featured_topics
+             :num_featured_topics,
+             :default_view
 
   has_one :uploaded_logo, embed: :object, serializer: CategoryUploadSerializer
   has_one :uploaded_background, embed: :object, serializer: CategoryUploadSerializer

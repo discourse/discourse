@@ -141,7 +141,6 @@ describe ListController do
 
           it { is_expected.not_to respond_with(:success) }
         end
-
       end
 
       describe 'feed' do
@@ -149,6 +148,29 @@ describe ListController do
           get :category_feed, category: category.slug, format: :rss
           expect(response).to be_success
           expect(response.content_type).to eq('application/rss+xml')
+        end
+      end
+
+      describe "category default views" do
+        it "top default view" do
+          category.update_attributes!(default_view: 'top')
+          described_class.expects(:best_period_for).returns('yearly')
+          xhr :get, :category_default, category: category.slug
+          expect(response).to be_success
+        end
+
+        it "default view is nil" do
+          category.update_attributes!(default_view: nil)
+          described_class.expects(:best_period_for).never
+          xhr :get, :category_default, category: category.slug
+          expect(response).to be_success
+        end
+
+        it "default view is latest" do
+          category.update_attributes!(default_view: 'latest')
+          described_class.expects(:best_period_for).never
+          xhr :get, :category_default, category: category.slug
+          expect(response).to be_success
         end
       end
     end

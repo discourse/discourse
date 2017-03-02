@@ -6,6 +6,7 @@ class ListController < ApplicationController
   skip_before_filter :check_xhr
 
   before_filter :set_category, only: [
+    :category_default,
     # filtered topics lists
     Discourse.filters.map { |f| :"category_#{f}" },
     Discourse.filters.map { |f| :"category_none_#{f}" },
@@ -29,6 +30,7 @@ class ListController < ApplicationController
     Discourse.anonymous_filters,
     Discourse.anonymous_filters.map { |f| "#{f}_feed" },
     # anonymous categorized filters
+    :category_default,
     Discourse.anonymous_filters.map { |f| :"category_#{f}" },
     Discourse.anonymous_filters.map { |f| :"category_none_#{f}" },
     Discourse.anonymous_filters.map { |f| :"parent_category_category_#{f}" },
@@ -103,6 +105,14 @@ class ListController < ApplicationController
 
     define_method("parent_category_category_none_#{filter}") do
       self.send(filter, category: @category.id)
+    end
+  end
+
+  def category_default
+    if @category.default_view == 'top'
+      top(category: @category.id)
+    else
+      self.send(@category.default_view || 'latest')
     end
   end
 
