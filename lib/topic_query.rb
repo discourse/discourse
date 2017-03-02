@@ -406,6 +406,18 @@ class TopicQuery
       elsif type == :user
         result = result.includes(:allowed_users)
         result = result.where("topics.id IN (SELECT topic_id FROM topic_allowed_users WHERE user_id = #{user.id.to_i})")
+      elsif type == :all
+        result = result.includes(:allowed_users)
+        result = result.where("topics.id IN (
+              SELECT topic_id
+              FROM topic_allowed_users
+              WHERE user_id = #{user.id.to_i}
+              UNION ALL
+              SELECT topic_id FROM topic_allowed_groups
+              WHERE group_id IN (
+                SELECT group_id FROM group_users WHERE user_id = #{user.id.to_i}
+              )
+      )")
       end
 
       result = result.joins("LEFT OUTER JOIN topic_users AS tu ON (topics.id = tu.topic_id AND tu.user_id = #{user.id.to_i})")
