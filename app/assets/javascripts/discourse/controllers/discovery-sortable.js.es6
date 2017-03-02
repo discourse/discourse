@@ -8,7 +8,8 @@ export const queryParams = {
   max_posts: { replace: true, refreshModel: true },
   q: { replace: true, refreshModel: true },
   tags: { replace: true },
-  before: { replace: true, refreshModel: true}
+  before: { replace: true, refreshModel: true},
+  bumped_before: { replace: true, refreshModel: true}
 };
 
 // Basic controller options
