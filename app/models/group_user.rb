@@ -55,11 +55,7 @@ class GroupUser < ActiveRecord::Base
 
   def grant_trust_level
     return if group.grant_trust_level.nil?
-    if user.trust_level < group.grant_trust_level
-      user.change_trust_level!(group.grant_trust_level)
-      user.trust_level_locked = true
-      user.save
-    end
+    TrustLevelGranter.grant(group.grant_trust_level, user)
   end
 end
 
