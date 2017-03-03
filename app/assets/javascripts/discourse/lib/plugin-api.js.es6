@@ -16,9 +16,10 @@ import { addPostSmallActionIcon } from 'discourse/widgets/post-small-action';
 import { addDiscoveryQueryParam } from 'discourse/controllers/discovery-sortable';
 import { addTagsHtmlCallback } from 'discourse/lib/render-tags';
 import { addUserMenuGlyph } from 'discourse/widgets/user-menu';
+import { addPostClassesCallback } from 'discourse/widgets/post';
 
 // If you add any methods to the API ensure you bump up this number
-const PLUGIN_API_VERSION = '0.8.3';
+const PLUGIN_API_VERSION = '0.8.4';
 
 class PluginApi {
   constructor(version, container) {
@@ -425,6 +426,18 @@ class PluginApi {
   addUserMenuGlyph(glyph) {
     addUserMenuGlyph(glyph);
   };
+
+  /**
+   * Adds a callback to be called before rendering any post that
+   * that returns custom classes to add to the post
+   *
+   * Example:
+   *
+   * addPostClassesCallback((atts) => {if (atts.post_number == 1) return ["first"];})
+   **/
+  addPostClassesCallback(callback) {
+    addPostClassesCallback(callback);
+  }
 }
 
 let _pluginv01;
