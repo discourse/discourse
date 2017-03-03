@@ -475,6 +475,22 @@ describe User do
       expect(User.username_available?('DonKey')).to eq(false)
       expect(User.username_available?('test')).to eq(false)
     end
+
+    it 'should not allow usernames matched against an expession' do
+      SiteSetting.reserved_usernames = 'test)|*admin*|foo*|*bar|abc.def'
+
+      expect(User.username_available?('test')).to eq(true)
+      expect(User.username_available?('abc9def')).to eq(true)
+
+      expect(User.username_available?('admin')).to eq(false)
+      expect(User.username_available?('foo')).to eq(false)
+      expect(User.username_available?('bar')).to eq(false)
+
+      expect(User.username_available?('admi')).to eq(true)
+      expect(User.username_available?('bar.foo')).to eq(true)
+      expect(User.username_available?('foo.bar')).to eq(false)
+      expect(User.username_available?('baz.bar')).to eq(false)
+    end
   end
 
   describe 'email_validator' do

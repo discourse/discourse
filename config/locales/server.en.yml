@@ -1039,7 +1039,7 @@ en:
     min_username_length: "Minimum username length in characters. WARNING: if any existing users or groups have names shorter than this, your site will break!"
     max_username_length: "Maximum username length in characters. WARNING: if any existing users or groups have names longer than this, your site will break!"
 
-    reserved_usernames: "Usernames for which signup is not allowed."
+    reserved_usernames: "Usernames for which signup is not allowed. Wildcard symbol * can be used to match any character zero or more times."
 
     min_password_length: "Minimum password length."
     min_admin_password_length: "Minimum password length for Admin."
