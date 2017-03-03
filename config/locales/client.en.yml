@@ -1030,7 +1030,7 @@ en:
       logging_in: "Signing In..."
       or: "Or"
       authenticating: "Authenticating..."
-      awaiting_confirmation: "Your account is awaiting activation, use the forgot password link to issue another activation email."
+      awaiting_activation: "Your account is awaiting activation, use the forgot password link to issue another activation email."
       awaiting_approval: "Your account has not been approved by a staff member yet. You will be sent an email when it is approved."
       requires_invite: "Sorry, access to this forum is by invite only."
       not_activated: "You can't log in yet. We previously sent an activation email to you at <b>{{sentTo}}</b>. Please follow the instructions in that email to activate your account."
