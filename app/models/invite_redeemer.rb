@@ -36,6 +36,12 @@ InviteRedeemer = Struct.new(:invite, :username, :name, :password) do
       user.password = password
     end
 
+    if !SiteSetting.must_approve_users? || (SiteSetting.must_approve_users? && invite.invited_by.staff?)
+      user.approved = true
+      user.approved_by_id = invite.invited_by_id
+      user.approved_at = Time.zone.now
+    end
+
     user.moderator = true if invite.moderator? && invite.invited_by.staff?
     user.save!
 
@@ -49,11 +55,11 @@ InviteRedeemer = Struct.new(:invite, :username, :name, :password) do
   end
 
   def process_invitation
+    approve_account_if_needed
     add_to_private_topics_if_invited
     add_user_to_invited_topics
     add_user_to_groups
     send_welcome_message
-    approve_account_if_needed
     notify_invitee
     send_password_instructions
     delete_duplicate_invites
@@ -109,7 +115,9 @@ InviteRedeemer = Struct.new(:invite, :username, :name, :password) do
   end
 
   def approve_account_if_needed
-    invited_user.approve(invite.invited_by_id, false)
+    if get_existing_user
+      invited_user.approve(invite.invited_by_id, false)
+    end
   end
 
   def send_password_instructions
