@@ -273,6 +273,7 @@ describe Invite do
 
     context 'inviting when must_approve_users? is enabled' do
       it 'correctly activates accounts' do
+        invite.invited_by = Fabricate(:admin)
         SiteSetting.stubs(:must_approve_users).returns(true)
         user = invite.redeem
         expect(user.approved?).to eq(true)
