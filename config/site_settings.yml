@@ -341,11 +341,11 @@ users:
   min_password_length:
     client: true
     default: 10
-    min: 1
+    min: 8
   min_admin_password_length:
     client: true
     default: 15
-    min: 1
+    min: 8
   password_unique_characters:
     default: 6
     min: 1
