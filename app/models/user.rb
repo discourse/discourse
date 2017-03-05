@@ -274,7 +274,7 @@ class User < ActiveRecord::Base
       self.approved_by = approved_by
     end
 
-    self.approved_at = Time.now
+    self.approved_at = Time.zone.now
 
     if result = save
       send_approval_email if send_mail
