@@ -24,9 +24,18 @@ describe PostMover do
     let(:category) { Fabricate(:category, user: user) }
     let!(:topic) { Fabricate(:topic, user: user) }
     let!(:p1) { Fabricate(:post, topic: topic, user: user) }
-    let!(:p2) { Fabricate(:post, topic: topic, user: another_user, raw: "Has a link to [evil trout](http://eviltrout.com) which is a cool site.", reply_to_post_number: p1.post_number)}
-    let!(:p3) { Fabricate(:post, topic: topic, reply_to_post_number: p1.post_number, user: user)}
-    let!(:p4) { Fabricate(:post, topic: topic, reply_to_post_number: p2.post_number, user: user)}
+
+    let!(:p2) do
+      Fabricate(:post,
+        topic: topic,
+        user: another_user,
+        raw: "Has a link to [evil trout](http://eviltrout.com) which is a cool site.",
+        reply_to_post_number: p1.post_number)
+    end
+
+    let!(:p3) { Fabricate(:post, topic: topic, reply_to_post_number: p1.post_number, user: user) }
+    let!(:p4) { Fabricate(:post, topic: topic, reply_to_post_number: p2.post_number, user: user) }
+    let!(:p5) { Fabricate(:post) }
 
     before do
       p1.replies << p3
@@ -190,6 +199,14 @@ describe PostMover do
 
           topic.reload
           expect(topic.closed).to eq(true)
+        end
+
+        it 'does not move posts that do not belong to the existing topic' do
+          new_topic = topic.move_posts(
+            user, [p2.id, p3.id, p5.id], title: 'Logan is a pretty good movie'
+          )
+
+          expect(new_topic.posts.pluck(:id)).to eq([p2.id, p3.id])
         end
       end
 
