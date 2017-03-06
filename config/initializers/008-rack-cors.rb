@@ -29,7 +29,7 @@ if GlobalSetting.enable_cors
         end
 
         headers['Access-Control-Allow-Origin'] = origin || cors_origins[0]
-        headers['Access-Control-Allow-Headers'] = 'X-Requested-With, X-CSRF-Token'
+        headers['Access-Control-Allow-Headers'] = 'X-Requested-With, X-CSRF-Token, Discourse-Visible'
         headers['Access-Control-Allow-Credentials'] = 'true'
       end
 
