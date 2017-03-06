@@ -37,5 +37,5 @@ if GlobalSetting.enable_cors
     end
   end
 
-  Rails.configuration.middleware.use Discourse::Cors
+  Rails.configuration.middleware.insert_before ActionDispatch::Flash, Discourse::Cors
 end
