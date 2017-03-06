@@ -36,7 +36,7 @@ export default createWidget('hamburger-menu', {
     const { currentUser } = this;
 
     const links = [{ route: 'admin', className: 'admin-link', icon: 'wrench', label: 'admin_title' },
-                   { href: '/admin/flags',
+                   { href: '/admin/flags/active',
                      className: 'flagged-posts-link',
                      icon: 'flag',
                      label: 'flags_title',
