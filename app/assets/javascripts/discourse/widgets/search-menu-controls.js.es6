@@ -5,6 +5,13 @@ import { createWidget } from 'discourse/widgets/widget';
 createWidget('search-term', {
   tagName: 'input',
   buildId: () => 'search-term',
+  buildKey: (attrs) => `search-term-${attrs.id}`,
+  KEYCODE_AT_SIGN: 50,
+  KEYCODE_POUND_SIGN: 51,
+
+  defaultState() {
+    return { autocompleteIsOpen: false, shiftKeyEntry: false };
+  },
 
   buildAttributes(attrs) {
     return { type: 'text',
@@ -12,8 +19,21 @@ createWidget('search-term', {
              placeholder: attrs.contextEnabled ? "" : I18n.t('search.title') };
   },
 
+  keyDown(e) {
+    const state = this.state;
+    state.shiftKeyEntry = e.shiftKey &&
+      (e.keyCode === this.KEYCODE_AT_SIGN || e.keyCode === this.KEYCODE_POUND_SIGN);
+
+    if ($(`#${this.buildId()}`).parent().find('.autocomplete').length !== 0) {
+      state.autocompleteIsOpen = true;
+    } else  {
+      state.autocompleteIsOpen = false;
+    }
+  },
+
   keyUp(e) {
-    if (e.which === 13) {
+    const state = this.state;
+    if (e.which === 13 && !state.shiftKeyEntry && !state.autocompleteIsOpen) {
       return this.sendWidgetAction('fullSearch');
     }
 
