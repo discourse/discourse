@@ -132,7 +132,7 @@ module Onebox
       # expect properly encoded url, remove any unsafe chars
       url.gsub!("'", "&apos;")
       url.gsub!('"', "&quot;")
-      url.gsub!(/[^\w\-`.~:\/?#\[\]@!$&'\(\)*+,;=]/, "")
+      url.gsub!(/[^\w\-`.~:\/?#\[\]@!$&'\(\)*+,;=%]/, "")
       url
     end
 
