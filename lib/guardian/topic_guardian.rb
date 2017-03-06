@@ -52,7 +52,7 @@ module TopicGuardian
 
   # Recovery Method
   def can_recover_topic?(topic)
-    is_staff?
+    topic && topic.deleted_at && topic.user && is_staff?
   end
 
   def can_delete_topic?(topic)

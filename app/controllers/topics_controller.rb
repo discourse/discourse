@@ -497,7 +497,7 @@ class TopicsController < ApplicationController
     params.require(:topic_id)
     params.permit(:category_id)
 
-    topic = Topic.find_by(id: params[:topic_id])
+    topic = Topic.with_deleted.find_by(id: params[:topic_id])
     guardian.ensure_can_move_posts!(topic)
 
     dest_topic = move_posts_to_destination(topic)
