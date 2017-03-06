@@ -2,4 +2,6 @@
   {{navigation-item content=navItem filterMode=filterMode}}
 {{/each}}
 {{custom-html name="extraNavItem" tagName="li"}}
-{{plugin-outlet name="extra-nav-item" tagName="li"}}
+{{#each connectors as |c|}}
+{{plugin-connector connector=c class=c.classNames tagName="li" args=(hash category=category filterMode=filterMode)}}
+{{/each}}
