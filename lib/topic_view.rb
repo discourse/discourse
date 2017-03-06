@@ -37,6 +37,27 @@ class TopicView
     wpcf.flatten.uniq
   end
 
+  def self.add_custom_filter(key, &blk)
+    @custom_filters ||= {}
+    @custom_filters[key] = blk
+  end
+
+  def self.remove_custom_filter(key)
+    @custom_filters.delete(key)
+    @custom_filters = nil if @custom_filters.length == 0
+  end
+
+  def self.apply_custom_filters(results, topic_view)
+
+    if @custom_filters
+      @custom_filters.each do |key,filter|
+        results = filter.call(results, topic_view)
+      end
+    end
+    results
+
+  end
+
   def initialize(topic_id, user=nil, options={})
     @user = user
     @guardian = Guardian.new(@user)
@@ -420,6 +441,12 @@ class TopicView
     # Certain filters might leave gaps between posts. If that's true, we can return a gap structure
     @contains_gaps = false
     @filtered_posts = unfiltered_posts
+
+    @filtered_posts = TopicView.apply_custom_filters(@filtered_posts,self)
+
+    if @filtered_posts != unfiltered_posts
+      @contains_gaps = true
+    end
 
     # Filters
     if @filter == 'summary'

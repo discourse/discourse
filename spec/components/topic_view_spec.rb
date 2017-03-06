@@ -310,6 +310,22 @@ describe TopicView do
       end
     end
 
+    context "custom filters" do
+      it "can be applied" do
+        TopicView.add_custom_filter(:only_post_id) do |results, topic_view|
+          results = results.where('posts.id = ?', p5.id)
+          results
+        end
+
+        filtered = TopicView.new(topic.id, coding_horror)
+
+        expect(filtered.posts.map(&:id)).to eq([p5.id])
+        expect(filtered.contains_gaps?).to eq(true)
+
+        TopicView.remove_custom_filter(:only_post_id)
+      end
+    end
+
     it "#restricts to correct topic" do
       t2 = Fabricate(:topic)
 
