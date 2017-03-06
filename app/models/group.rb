@@ -414,6 +414,10 @@ class Group < ActiveRecord::Base
       if self.title.present?
         User.where(id: user_ids).update_all(title: self.title)
       end
+
+      if self.grant_trust_level.present?
+        Jobs.enqueue(:bulk_grant_trust_level, user_ids: user_ids, trust_level: self.grant_trust_level)
+      end
     end
     true
   end

@@ -51,9 +51,9 @@ describe Admin::GroupsController do
 
   context ".bulk" do
     it "can assign users to a group by email or username" do
-      group = Fabricate(:group, name: "test", primary_group: true, title: 'WAT')
-      user = Fabricate(:user)
-      user2 = Fabricate(:user)
+      group = Fabricate(:group, name: "test", primary_group: true, title: 'WAT', grant_trust_level: 3)
+      user = Fabricate(:user, trust_level: 2)
+      user2 = Fabricate(:user, trust_level: 4)
 
       xhr :put, :bulk_perform, group_id: group.id, users: [user.username.upcase, user2.email, 'doesnt_exist']
 
@@ -62,10 +62,12 @@ describe Admin::GroupsController do
       user.reload
       expect(user.primary_group).to eq(group)
       expect(user.title).to eq("WAT")
+      expect(user.trust_level).to eq(3)
 
       user2.reload
       expect(user2.primary_group).to eq(group)
-
+      expect(user2.title).to eq("WAT")
+      expect(user2.trust_level).to eq(4)
     end
   end
 
