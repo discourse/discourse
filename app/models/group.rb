@@ -180,7 +180,7 @@ class Group < ActiveRecord::Base
     validator = UsernameValidator.new(localized_name)
 
     group.name =
-      if !Group.where(name: localized_name).exists? && validator.valid_format?
+      if !Group.where("lower(name) = ?", localized_name).exists? && validator.valid_format?
         localized_name
       else
         name
