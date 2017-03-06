@@ -880,8 +880,30 @@ describe Guardian do
       expect(Guardian.new(user).can_recover_topic?(topic)).to be_falsey
     end
 
-    it "returns true for a moderator" do
-      expect(Guardian.new(moderator).can_recover_topic?(topic)).to be_truthy
+    context 'as a moderator' do
+      before do
+        topic.save!
+        post.save!
+      end
+
+      describe 'when post has been deleted' do
+        it "should return the right value" do
+          expect(Guardian.new(moderator).can_recover_topic?(topic)).to be_falsey
+
+          PostDestroyer.new(moderator, topic.first_post).destroy
+
+          expect(Guardian.new(moderator).can_recover_topic?(topic.reload)).to be_truthy
+        end
+      end
+
+      describe "when post's user has been deleted" do
+        it 'should return the right value' do
+          PostDestroyer.new(moderator, topic.first_post).destroy
+          topic.first_post.user.destroy!
+
+          expect(Guardian.new(moderator).can_recover_topic?(topic.reload)).to be_falsey
+        end
+      end
     end
   end
 
@@ -899,8 +921,32 @@ describe Guardian do
       expect(Guardian.new(user).can_recover_post?(post)).to be_falsey
     end
 
-    it "returns true for a moderator" do
-      expect(Guardian.new(moderator).can_recover_post?(post)).to be_truthy
+    context 'as a moderator' do
+      let(:other_post) { Fabricate(:post, topic: topic, user: topic.user) }
+
+      before do
+        topic.save!
+        post.save!
+      end
+
+      describe 'when post has been deleted' do
+        it "should return the right value" do
+          expect(Guardian.new(moderator).can_recover_post?(post)).to be_falsey
+
+          PostDestroyer.new(moderator, post).destroy
+
+          expect(Guardian.new(moderator).can_recover_post?(post.reload)).to be_truthy
+        end
+
+        describe "when post's user has been deleted" do
+          it 'should return the right value' do
+            PostDestroyer.new(moderator, post).destroy
+            post.user.destroy!
+
+            expect(Guardian.new(moderator).can_recover_post?(post.reload)).to be_falsey
+          end
+        end
+      end
     end
 
   end
