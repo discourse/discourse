@@ -26,8 +26,8 @@ test("Notifications", () => {
 test("Root URL - Viewing Self", () => {
   visit("/users/eviltrout");
   andThen(() => {
-    ok($('body.user-summary-page').length, "has the body class");
-    equal(currentPath(), 'user.summary', "it defaults to summary");
+    ok($('body.user-activity-page').length, "has the body class");
+    equal(currentPath(), 'user.userActivity.index', "it defaults to summary");
     ok(exists('.container.viewing-self'), "has the viewing-self class");
   });
 });
