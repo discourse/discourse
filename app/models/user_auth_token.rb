@@ -34,6 +34,7 @@ class UserAuthToken < ActiveRecord::Base
         user_id: info[:user_id],
         user_agent: info[:user_agent],
         client_ip: info[:client_ip],
+        path: info[:path],
         auth_token: hashed_token)
 
     user_auth_token
@@ -57,6 +58,7 @@ class UserAuthToken < ActiveRecord::Base
           user_id: user_token&.user_id,
           auth_token: token,
           user_agent: opts && opts[:user_agent],
+          path: opts && opts[:path],
           client_ip: opts && opts[:client_ip])
 
       return nil
@@ -64,6 +66,7 @@ class UserAuthToken < ActiveRecord::Base
 
     if user_token.auth_token != token && user_token.prev_auth_token == token && user_token.auth_token_seen
       changed_rows = UserAuthToken
+        .where("rotated_at < ?", 1.minute.ago)
         .where(id: user_token.id, prev_auth_token: token)
         .update_all(auth_token_seen: false)
 
@@ -75,6 +78,7 @@ class UserAuthToken < ActiveRecord::Base
         user_id: user_token.user_id,
         auth_token: user_token.auth_token,
         user_agent: opts && opts[:user_agent],
+        path: opts && opts[:path],
         client_ip: opts && opts[:client_ip]
       )
     end
@@ -96,6 +100,7 @@ class UserAuthToken < ActiveRecord::Base
           user_id: user_token.user_id,
           auth_token: user_token.auth_token,
           user_agent: opts && opts[:user_agent],
+          path: opts && opts[:path],
           client_ip: opts && opts[:client_ip])
     end
 
@@ -153,7 +158,8 @@ class UserAuthToken < ActiveRecord::Base
         user_id: user_id,
         auth_token: auth_token,
         user_agent: user_agent,
-        client_ip: client_ip
+        client_ip: client_ip,
+        path: info && info[:path]
       )
 
       true

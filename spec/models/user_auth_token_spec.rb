@@ -227,13 +227,19 @@ describe UserAuthToken do
     ).count).to eq(1)
 
     fake_token = SecureRandom.hex
-    UserAuthToken.lookup(fake_token, seen: true, user_agent: "bob", client_ip: "127.0.0.1")
+    UserAuthToken.lookup(fake_token,
+                         seen: true,
+                         user_agent: "bob",
+                         client_ip: "127.0.0.1",
+                         path: "/path"
+                        )
 
     expect(UserAuthTokenLog.where(
       action: "miss token",
       auth_token: UserAuthToken.hash_token(fake_token),
       user_agent: "bob",
-      client_ip: "127.0.0.1"
+      client_ip: "127.0.0.1",
+      path: "/path"
     ).count).to eq(1)
 
 
