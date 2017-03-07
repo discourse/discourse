@@ -10,6 +10,12 @@ class UserAuthToken < ActiveRecord::Base
 
   attr_accessor :unhashed_auth_token
 
+  def self.log(info)
+    if SiteSetting.verbose_auth_token_logging
+      UserAuthTokenLog.create!(info)
+    end
+  end
+
   def self.generate!(info)
     token = SecureRandom.hex(16)
     hashed_token = hash_token(token)
@@ -23,16 +29,12 @@ class UserAuthToken < ActiveRecord::Base
     )
     user_auth_token.unhashed_auth_token = token
 
-    if SiteSetting.verbose_auth_token_logging
-      UserAuthTokenLog.create!(
-        action: 'generate',
+    log(action: 'generate',
         user_auth_token_id: user_auth_token.id,
         user_id: info[:user_id],
         user_agent: info[:user_agent],
         client_ip: info[:client_ip],
-        auth_token: hashed_token
-      )
-    end
+        auth_token: hashed_token)
 
     user_auth_token
   end
@@ -51,15 +53,11 @@ class UserAuthToken < ActiveRecord::Base
 
     if !user_token
 
-      if SiteSetting.verbose_auth_token_logging
-        UserAuthTokenLog.create(
-          action: "miss token",
+      log(action: "miss token",
           user_id: user_token&.user_id,
           auth_token: token,
           user_agent: opts && opts[:user_agent],
-          client_ip: opts && opts[:client_ip]
-        )
-      end
+          client_ip: opts && opts[:client_ip])
 
       return nil
     end
@@ -71,7 +69,7 @@ class UserAuthToken < ActiveRecord::Base
 
       # not updating AR model cause we want to give it one more req
       # with wrong cookie
-      UserAuthTokenLog.create(
+      UserAuthToken.log(
         action: changed_rows == 0 ? "prev seen token unchanged" : "prev seen token",
         user_auth_token_id: user_token.id,
         user_id: user_token.user_id,
@@ -93,16 +91,12 @@ class UserAuthToken < ActiveRecord::Base
         user_token.seen_at = Time.zone.now
       end
 
-      if SiteSetting.verbose_auth_token_logging
-        UserAuthTokenLog.create(
-          action: changed_rows == 0 ? "seen wrong token" : "seen token",
+      log(action: changed_rows == 0 ? "seen wrong token" : "seen token",
           user_auth_token_id: user_token.id,
           user_id: user_token.user_id,
           auth_token: user_token.auth_token,
           user_agent: opts && opts[:user_agent],
-          client_ip: opts && opts[:client_ip]
-        )
-      end
+          client_ip: opts && opts[:client_ip])
     end
 
     user_token
@@ -153,16 +147,14 @@ class UserAuthToken < ActiveRecord::Base
       reload
       self.unhashed_auth_token = token
 
-      if SiteSetting.verbose_auth_token_logging
-        UserAuthTokenLog.create(
-          action: "rotate",
-          user_auth_token_id: id,
-          user_id: user_id,
-          auth_token: auth_token,
-          user_agent: user_agent,
-          client_ip: client_ip
-        )
-      end
+      UserAuthToken.log(
+        action: "rotate",
+        user_auth_token_id: id,
+        user_id: user_id,
+        auth_token: auth_token,
+        user_agent: user_agent,
+        client_ip: client_ip
+      )
 
       true
     else
