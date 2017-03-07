@@ -34,6 +34,7 @@ class TopicRetriever
       # It's possible another process or job found the embed already. So if that happened bail out.
       return if TopicEmbed.where(embed_url: @embed_url).exists?
 
+
       # First check RSS if that is enabled
       if SiteSetting.feed_polling_enabled?
         Jobs::PollFeed.new.execute({})
