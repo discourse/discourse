@@ -286,7 +286,7 @@ describe TopicsBulkAction do
         topic_ids = tba.perform!
         expect(topic_ids).to eq([])
         topic.reload
-        expect(topic.tags.map(&:name)).to eq([tag1.name, tag2.name])
+        expect(topic.tags.map(&:name).sort).to eq([tag1.name, tag2.name].sort)
       end
     end
   end
