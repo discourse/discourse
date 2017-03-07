@@ -208,15 +208,7 @@ describe Auth::DefaultCurrentUserProvider do
   end
 
   it "correctly removes invalid cookies" do
-
     cookies = {"_t" => SecureRandom.hex}
-
-    (Auth::DefaultCurrentUserProvider::MAX_COOKIE_MISSES).times do
-      provider('/').refresh_session(nil, {}, cookies)
-    end
-
-    expect(cookies.key?("_t")).to eq(true)
-
     provider('/').refresh_session(nil, {}, cookies)
     expect(cookies.key?("_t")).to eq(false)
   end

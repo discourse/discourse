@@ -12,11 +12,6 @@ class Auth::DefaultCurrentUserProvider
   TOKEN_COOKIE ||= "_t".freeze
   PATH_INFO ||= "PATH_INFO".freeze
   COOKIE_ATTEMPTS_PER_MIN ||= 10
-  # allow up to 10 cookie misses, this may be the case
-  # when requests are delayed in weird ways, for example
-  # on mobile when coming back online
-  MAX_COOKIE_MISSES ||= 10
-  COOKIE_MISS_KEY ||= "cookie_misses"
 
   # do all current user initialization here
   def initialize(env)
@@ -55,6 +50,7 @@ class Auth::DefaultCurrentUserProvider
         @user_token = UserAuthToken.lookup(auth_token,
                                            seen: true,
                                            user_agent: @env['HTTP_USER_AGENT'],
+                                           path: @env['REQUEST_PATH'],
                                            client_ip: @request.ip)
 
         current_user = @user_token.try(:user)
@@ -131,7 +127,8 @@ class Auth::DefaultCurrentUserProvider
 
       if !@user_token.legacy && needs_rotation
         if @user_token.rotate!(user_agent: @env['HTTP_USER_AGENT'],
-                              client_ip: @request.ip)
+                              client_ip: @request.ip,
+                              path: @env['REQUEST_PATH'])
           cookies[TOKEN_COOKIE] = cookie_hash(@user_token.unhashed_auth_token)
         end
       elsif @user_token.legacy
@@ -141,18 +138,14 @@ class Auth::DefaultCurrentUserProvider
     end
 
     if !user && cookies.key?(TOKEN_COOKIE)
-      cookie_miss_key = COOKIE_MISS_KEY + cookies[TOKEN_COOKIE]
-      misses = $redis.get(cookie_miss_key).to_i + 1
-      $redis.setex(cookie_miss_key, 1.hour.to_i, misses)
-      if misses > MAX_COOKIE_MISSES
-        cookies.delete(TOKEN_COOKIE)
-      end
+      cookies.delete(TOKEN_COOKIE)
     end
   end
 
   def log_on_user(user, session, cookies)
     @user_token = UserAuthToken.generate!(user_id: user.id,
                                           user_agent: @env['HTTP_USER_AGENT'],
+                                          path: @env['REQUEST_PATH'],
                                           client_ip: @request.ip)
 
     cookies[TOKEN_COOKIE] = cookie_hash(@user_token.unhashed_auth_token)
