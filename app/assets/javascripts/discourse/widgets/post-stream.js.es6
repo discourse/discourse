@@ -3,6 +3,21 @@ import transformPost from 'discourse/lib/transform-post';
 import { Placeholder } from 'discourse/lib/posts-with-placeholders';
 import { addWidgetCleanCallback } from 'discourse/components/mount-widget';
 
+let transformCallbacks = null;
+function postTransformCallbacks(transformed) {
+  if (transformCallbacks === null) {
+    return;
+  }
+
+  for(let i=0; i < transformCallbacks.length; i++) {
+    transformCallbacks[i].call(this, transformed);
+  }
+}
+export function addPostTransformCallback(callback){
+  transformCallbacks = transformCallbacks || [];
+  transformCallbacks.push(callback);
+};
+
 const CLOAKING_ENABLED = !window.inTestEnv;
 const DAY = 1000 * 60 * 60 * 24;
 
@@ -95,6 +110,8 @@ export default createWidget('post-stream', {
 
       transformed.height = _heights[post.id];
       transformed.cloaked = _cloaked[post.id];
+
+      postTransformCallbacks(transformed);
 
       if (transformed.isSmallAction) {
         result.push(this.attach('post-small-action', transformed, { model: post }));

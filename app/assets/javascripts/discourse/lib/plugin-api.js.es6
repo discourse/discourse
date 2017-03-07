@@ -17,9 +17,10 @@ import { addDiscoveryQueryParam } from 'discourse/controllers/discovery-sortable
 import { addTagsHtmlCallback } from 'discourse/lib/render-tags';
 import { addUserMenuGlyph } from 'discourse/widgets/user-menu';
 import { addPostClassesCallback } from 'discourse/widgets/post';
+import { addPostTransformCallback } from 'discourse/widgets/post-stream';
 
 // If you add any methods to the API ensure you bump up this number
-const PLUGIN_API_VERSION = '0.8.4';
+const PLUGIN_API_VERSION = '0.8.5';
 
 class PluginApi {
   constructor(version, container) {
@@ -437,6 +438,24 @@ class PluginApi {
    **/
   addPostClassesCallback(callback) {
     addPostClassesCallback(callback);
+  }
+
+  /**
+   *
+   * Adds a callback to be executed on the "transformed" post that is passed to the post
+   * widget.
+   *
+   * This allows you to apply transformations on the actual post that is about to be rendered.
+   *
+   * Example:
+   *
+   * addPostTransformCallback((t)=>{
+   *  // post number 7 is overrated, don't show it ever
+   *  if (t.post_number === 7) { t.cooked = ""; }
+   * })
+   */
+  addPostTransformCallback(callback) {
+    addPostTransformCallback(callback);
   }
 }
 
