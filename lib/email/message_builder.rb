@@ -207,7 +207,7 @@ module Email
         SiteSetting.title.blank?
 
       if !@opts[:from_alias].blank?
-        "#{Email.cleanup_alias(@opts[:from_alias])} <#{source}>"
+        "\"#{Email.cleanup_alias(@opts[:from_alias])}\" <#{source}>"
       elsif source == SiteSetting.notification_email || source == SiteSetting.reply_by_email_address
         site_alias_email(source)
       else
@@ -216,7 +216,8 @@ module Email
     end
 
     def site_alias_email(source)
-      "#{Email.cleanup_alias(SiteSetting.email_site_title.presence || SiteSetting.title)} <#{source}>"
+      from_alias = SiteSetting.email_site_title.presence || SiteSetting.title
+      "\"#{Email.cleanup_alias(from_alias)}\" <#{source}>"
     end
 
   end
