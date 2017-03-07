@@ -127,7 +127,7 @@ class TagsController < ::ApplicationController
     category = params[:categoryId] ? Category.find_by_id(params[:categoryId]) : nil
 
     tags_with_counts = DiscourseTagging.filter_allowed_tags(
-      self.class.tags_by_count(guardian, params.slice(:limit)),
+      Tag.tags_by_count_query(params.slice(:limit)),
       guardian,
       {
         for_input: params[:filterForInput],

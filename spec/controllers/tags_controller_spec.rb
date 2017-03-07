@@ -121,6 +121,15 @@ describe TagsController do
         expect(json["results"].map{|j| j["id"]}.sort).to eq([])
         expect(json["forbidden"]).to be_present
       end
+
+      it "can return tags that are in secured categories but are allowed to be used" do
+        c = Fabricate(:private_category, group: Fabricate(:group))
+        Fabricate(:topic, category: c, tags: [Fabricate(:tag, name: "cooltag")])
+        xhr :get, :search, q: "cool"
+        expect(response).to be_success
+        json = ::JSON.parse(response.body)
+        expect(json["results"].map{|j| j["id"]}).to eq(['cooltag'])
+      end
     end
   end
 end
