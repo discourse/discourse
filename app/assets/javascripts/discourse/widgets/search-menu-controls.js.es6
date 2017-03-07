@@ -6,11 +6,13 @@ createWidget('search-term', {
   tagName: 'input',
   buildId: () => 'search-term',
   buildKey: (attrs) => `search-term-${attrs.id}`,
-  KEYCODE_AT_SIGN: 50,
-  KEYCODE_POUND_SIGN: 51,
 
   defaultState() {
-    return { autocompleteIsOpen: false, shiftKeyEntry: false };
+    this.appEvents.on("search-autocomplete:after-complete", () => {
+      this.state.afterAutocomplete = true;
+    });
+
+    return { afterAutocomplete: false };
   },
 
   buildAttributes(attrs) {
@@ -19,22 +21,13 @@ createWidget('search-term', {
              placeholder: attrs.contextEnabled ? "" : I18n.t('search.title') };
   },
 
-  keyDown(e) {
-    const state = this.state;
-    state.shiftKeyEntry = e.shiftKey &&
-      (e.keyCode === this.KEYCODE_AT_SIGN || e.keyCode === this.KEYCODE_POUND_SIGN);
-
-    if ($(`#${this.buildId()}`).parent().find('.autocomplete').length !== 0) {
-      state.autocompleteIsOpen = true;
-    } else  {
-      state.autocompleteIsOpen = false;
-    }
-  },
-
   keyUp(e) {
-    const state = this.state;
-    if (e.which === 13 && !state.shiftKeyEntry && !state.autocompleteIsOpen) {
-      return this.sendWidgetAction('fullSearch');
+    if (e.which === 13) {
+      if (this.state.afterAutocomplete) {
+        this.state.afterAutocomplete = false;
+      } else {
+        return this.sendWidgetAction('fullSearch');
+      }
     }
 
     const val = this.attrs.value;

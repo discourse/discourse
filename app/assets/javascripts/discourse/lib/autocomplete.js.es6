@@ -240,6 +240,7 @@ export default function(options) {
     var pos = null;
     var vOffset = 0;
     var hOffset = 0;
+
     if (isInput) {
       pos = {
         left: 0,
@@ -247,19 +248,14 @@ export default function(options) {
       };
       vOffset = -32;
       hOffset = 0;
-    } if (options.treatAsTextarea) {
-      pos = me.caretPosition({
-        pos: completeStart,
-        key: options.key
-      });
-      hOffset = 27;
-      vOffset = -32;
     } else {
       pos = me.caretPosition({
         pos: completeStart,
         key: options.key
       });
+
       hOffset = 27;
+      if (options.treatAsTextarea) vOffset = -32;
     }
     div.css({
       left: "-1000px"

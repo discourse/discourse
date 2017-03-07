@@ -262,7 +262,7 @@ export default createWidget('header', {
       Ember.run.schedule('afterRender', () => {
         const $searchInput = $('#search-term');
         $searchInput.focus().select();
-        applySearchAutocomplete($searchInput, this.siteSettings);
+        applySearchAutocomplete($searchInput, this.siteSettings, this.appEvents);
       });
     }
   },
