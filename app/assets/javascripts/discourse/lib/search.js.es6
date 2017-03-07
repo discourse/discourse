@@ -130,7 +130,13 @@ export function isValidSearchTerm(searchTerm) {
   }
 };
 
-export function applySearchAutocomplete($input, siteSettings) {
+export function applySearchAutocomplete($input, siteSettings, appEvents) {
+  const afterComplete = function() {
+    if (appEvents) {
+      appEvents.trigger("search-autocomplete:after-complete");
+    }
+  };
+
   $input.autocomplete({
     template: findRawTemplate('category-tag-autocomplete'),
     key: '#',
@@ -145,15 +151,17 @@ export function applySearchAutocomplete($input, siteSettings) {
     },
     dataSource(term) {
       return searchCategoryTag(term, siteSettings);
-    }
+    },
+    afterComplete
   });
 
   $input.autocomplete({
     template: findRawTemplate('user-selector-autocomplete'),
-    dataSource: term => userSearch({ term, undefined, includeGroups: true }),
     key: "@",
     width: '100%',
     treatAsTextarea: true,
-    transformComplete: v => v.username || v.name
+    transformComplete: v => v.username || v.name,
+    dataSource: term => userSearch({ term, includeGroups: true }),
+    afterComplete
   });
 };
