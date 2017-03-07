@@ -15,7 +15,7 @@ export default {
 
     if (currentUser) {
       const username = currentUser.get('username');
-      DiscourseURL.rewrite(new RegExp(`^/users/${username}/?$`, "i"), `/users/${username}/summary`);
+      DiscourseURL.rewrite(new RegExp(`^/users/${username}/?$`, "i"), `/users/${username}/activity`);
     }
 
     DiscourseURL.rewrite(/^\/users\/([^\/]+)\/?$/, "/users/$1/activity");
