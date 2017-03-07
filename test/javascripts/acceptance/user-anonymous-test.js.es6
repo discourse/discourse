@@ -18,7 +18,7 @@ function hasTopicList() {
 test("Root URL", () => {
   visit("/users/eviltrout");
   andThen(() => {
-    equal(currentPath(), 'user.userActivity.index', "it defaults to activity");
+    equal(currentPath(), 'user.summary', "it defaults to summary");
   });
 });
 
