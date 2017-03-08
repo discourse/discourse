@@ -507,6 +507,10 @@ SQL
       self.where(slug: category_slug, parent_category_id: nil).first
     end
   end
+
+  def subcategory_list_includes_topics?
+    subcategory_list_style == 'rows_with_featured_topics'
+  end
 end
 
 # == Schema Information

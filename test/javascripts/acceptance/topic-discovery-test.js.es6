@@ -13,6 +13,7 @@ test("Visit Discovery Pages", () => {
   andThen(() => {
     ok(exists(".topic-list"), "The list of topics was rendered");
     ok(exists('.topic-list .topic-list-item'), "has topics");
+    ok(!exists('.category-list'), "doesn't render subcategories");
     ok($('body.category-bug').length, "has a custom css class for the category id on the body");
   });
 
@@ -28,5 +29,11 @@ test("Visit Discovery Pages", () => {
   andThen(() => {
     ok($('body.categories-list').length === 0, "removes the `categories-list` class");
     ok(exists('.topic-list .topic-list-item'), "has topics");
+  });
+
+  visit("/c/feature");
+  andThen(() => {
+    ok(exists(".topic-list"), "The list of topics was rendered");
+    ok(exists(".category-boxes"), "The list of subcategories were rendered with box style");
   });
 });

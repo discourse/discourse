@@ -16,10 +16,12 @@ class CategoriesController < ApplicationController
 
     @description = SiteSetting.site_description
 
+    parent_category = Category.find_by(slug: params[:parent_category_id]) || Category.find_by(id: params[:parent_category_id].to_i)
+
     category_options = {
       is_homepage: current_homepage == "categories".freeze,
       parent_category_id: params[:parent_category_id],
-      include_topics: include_topics
+      include_topics: include_topics(parent_category)
     }
 
     @category_list = CategoryList.new(guardian, category_options)
@@ -246,6 +248,7 @@ class CategoriesController < ApplicationController
                         :show_subcategory_list,
                         :num_featured_topics,
                         :default_view,
+                        :subcategory_list_style,
                         :custom_fields => [params[:custom_fields].try(:keys)],
                         :permissions => [*p.try(:keys)],
                         :allowed_tags => [],
@@ -261,9 +264,10 @@ class CategoriesController < ApplicationController
       @staff_action_logger = StaffActionLogger.new(current_user)
     end
 
-    def include_topics
+    def include_topics(parent_category=nil)
       view_context.mobile_view? ||
       params[:include_topics] ||
+      (parent_category && parent_category.subcategory_list_includes_topics?) ||
       SiteSetting.desktop_category_page_style == "categories_with_featured_topics".freeze
     end
 end

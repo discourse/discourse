@@ -19,14 +19,51 @@
   </label>
 </section>
 
-{{#unless category.parent_category_id}}
-  <section class="field">
+{{#if isParentCategory}}
+  <section class="field show-subcategory-list-field">
     <label>
       {{input type="checkbox" checked=category.show_subcategory_list}}
       {{i18n "category.show_subcategory_list"}}
     </label>
   </section>
-{{/unless}}
+{{/if}}
+
+{{#if showSubcategoryListStyle}}
+  <section class="field subcategory-list-style-field">
+    <label>
+      {{i18n "category.subcategory_list_style"}}
+      {{combo-box valueAttribute="value" content=availableSubcategoryListStyles value=category.subcategory_list_style}}
+    </label>
+  </section>
+{{/if}}
+
+<section class="field default-view-field">
+  <label>
+    {{i18n "category.default_view"}}
+    {{combo-box valueAttribute="value" content=availableViews value=category.default_view}}
+  </label>
+</section>
+
+<section class="field">
+  <label>
+    {{i18n "category.sort_order"}}
+    {{combo-box valueAttribute="value" content=availableSorts value=category.sort_order none="category.sort_options.default"}}
+    {{#unless isDefaultSortOrder}}
+      {{combo-box valueAttribute="value" content=sortAscendingOptions value=category.sort_ascending none="category.sort_options.default"}}
+    {{/unless}}
+  </label>
+</section>
+
+<section class="field num-featured-topics-fields">
+  <label>
+    {{#if category.parent_category_id}}
+      {{i18n "category.subcategory_num_featured_topics"}}
+    {{else}}
+      {{i18n "category.num_featured_topics"}}
+    {{/if}}
+    {{text-field value=category.num_featured_topics}}
+  </label>
+</section>
 
 <section class="field">
   <label>
@@ -46,23 +83,6 @@
   </section>
 {{/if}}
 
-<section class="field">
-  <label>
-    {{i18n "category.sort_order"}}
-    {{combo-box valueAttribute="value" content=availableSorts value=category.sort_order none="category.sort_options.default"}}
-    {{#unless isDefaultSortOrder}}
-      {{combo-box valueAttribute="value" content=sortAscendingOptions value=category.sort_ascending none="category.sort_options.default"}}
-    {{/unless}}
-  </label>
-</section>
-
-<section class="field default-view-field">
-  <label>
-    {{i18n "category.default_view"}}
-    {{combo-box valueAttribute="value" content=availableViews value=category.default_view}}
-  </label>
-</section>
-
 {{#if emailInEnabled}}
     <section class='field'>
       <label>
@@ -81,17 +101,6 @@
 
   {{plugin-outlet name="category-email-in" args=(hash category=category)}}
 {{/if}}
-
-<section class="field num-featured-topics-fields">
-  <label>
-    {{#if category.parent_category_id}}
-      {{i18n "category.subcategory_num_featured_topics"}}
-    {{else}}
-      {{i18n "category.num_featured_topics"}}
-    {{/if}}
-    {{text-field value=category.num_featured_topics}}
-  </label>
-</section>
 
 {{#if showPositionInput}}
   <section class='field position-fields'>
