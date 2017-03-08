@@ -330,11 +330,133 @@ ur:
       allow_membership_requests: "صارفین کو گروپ کے مالکان کو ممبرشپ کی درخواست بھیجنے کی اجازت دیں (اِس کیلئے گروپ کا سب کی طرف سے قابلِ ذکرہونا ضروی ہے)"
       membership: "ممبرشپ "
       name: "نام"
+      user_count: "ممبران کی تعداد"
+      bio: "گروپ کے بارے میں"
+      selector_placeholder: "ممبران شامل کریں"
       owner: "مالِک"
+      visible: "گروپ تمام صارفین کو دکھائی دے"
+      index:
+        title: "گروپس"
+        empty: "کوئی نظر آنے والے گروپ موجود نہیں ہیں۔"
+      title:
+        one: "گروپ"
+        other: "گروپس"
+      activity: "سرگرمی"
+      members: "ممبران"
+      topics: "ٹاپک"
+      posts: "پوسٹ"
+      mentions: "ذکر"
+      messages: "پیغامات"
+      alias_levels:
+        title: "کون اِس گروپ کو پیغام بھیج سکتا اور@زکر کرسکتا ہے؟"
+        nobody: "کوئی بھی نہیں"
+        only_admins: "صرف منتظمین"
+        mods_and_admins: "صرف ثالث اور منتظمین"
+        members_mods_and_admins: "صرف گروپ کے اراکین، ثالث اور منتظمین"
+        everyone: "ہر کوئی"
+      trust_levels:
+        title: "ممبران کو شامل کرتے وقت خود کار طریقے سے دیا جانے والا ٹرسٹ لیول:"
+        none: "کوئی نہیں"
+      notifications:
+        watching:
+          title: "نظر رکھی ہوئی ہے"
+          description: "آپ کو ہر پیغام میں ہونے والی ہر نئی پوسٹ کے بارے میں مطلع کیا جائے گا، اور نئے جوابات کی گنتی دیکھائی جائے گی۔"
+        watching_first_post:
+          title: "پہلی پوسٹ پر نظر رکھی ہوئی ہے"
+          description: "آپ کو اِس گروپ کے ہر نئے ٹاپک میں صرف پہلی پوسٹ کے بارے میں مطلع کیا جائے گا۔"
+        tracking:
+          description: "اگر کوئی آپ کا @نام زکر کرتا ہے یا کوئی جواب دیتا ہے تو آپ کو مطلع کر دیا جائے گا، اور نئے جوابات کی گنتی دیکھائی جائے گی۔"
+        regular:
+          title: "عمومی"
+          description: "اگر کوئی آپ کا @نام زکر کرتا ہے یا کوئی جواب دیتا ہے تو آپ کو مطلع کر دیا جائے گا۔"
+        muted:
+          title: "خاموش کِیا ہوا"
+          description: "آپ کو اِس گروپ کے نئے ٹاپک کی کسی بھی چیز کے بارے میں کبھی بھی مطلع نہیں کیا جائے گا۔"
+      flair_url: "اوتار فلیر کی تصویر"
+      flair_url_placeholder: "(اختیاری) تصویر کا URL یا فونٹ اَوسم کلاس"
+      flair_bg_color: "اوتار فلیر کے پَسِّ منظر کا رنگ"
+      flair_bg_color_placeholder: "(اختیاری) ہیکس رنگ نمبر"
+      flair_color: "اوتار فلیر کا رنگ"
+      flair_color_placeholder: "(اختیاری) ہیکس رنگ نمبر"
+      flair_preview_icon: "آئکن کا مشاہدہ کریں"
+      flair_preview_image: "تصویر کا مشاہدہ کریں"
+      flair_note: "نوٹ: فلیر صرف ایک صارف کے بنیادی گروپ کے لئے دکھایا جائے گا۔"
     user_action_groups:
+      '1': "لائیکس دیے گئے"
+      '2': "لائیکس موصول ہوے"
       '3': "بُکمارکس"
       '4': "ٹاپکس"
+      '5': "جوابات"
+      '6': "جوابات"
+      '7': "تذکرے"
+      '9': "اقتباسات"
+      '11': "ترامیم"
+      '12': "بھیجی گئی اشیاء"
+      '13': "اِن باکس"
+      '14': "زیرِاِلتوَا"
+    categories:
+      all: "تمام زُمرَہ جات"
+      all_subcategories: "تمام"
+      no_subcategory: "کوئی نہیں"
+      category: "زمرہ"
+      category_list: "زمرہ جات کی فہرست ظاہر کریں"
+      reorder:
+        title: "زمرہ جات کو دوبارہ ترتیب دیں"
+        title_long: "زمرہ جات کی فہرست کو تنظیم نو کریں"
+        fix_order: "پوزیشن درست کریں"
+        fix_order_tooltip: "تمام زمرہ جات کی ایک منفرد پوزیشن نمبر نہیں ہے، جو غیر متوقع نتائج کا سبب بن سکتی ہے۔"
+        save: "محفوظ کردینے کا حکم"
+        apply_all: "لاگو کریں"
+        position: "پوزیشن"
+      posts: "پوسٹ"
+      topics: "ٹاپک"
+      latest: "تازہ ترین"
+      toggle_ordering: "ترتیب کاری کا کنٹرول ٹاگل کریں"
+      subcategories: "ذیلی زمرے"
+      topic_sentence:
+        one: "1 ٹاپک"
+        other: "%{شمار} ٹاپک"
+      topic_stat_sentence:
+        one: "%{شمار} نئے موضوعات پچھلے %{یونٹ} میں۔"
+        other: "%{شمار} نئے موضوعات پچھلے %{یونٹ} میں۔"
+    ip_lookup:
+      title: IP ایڈریس کا سراغ
+      hostname: ہوسٹ کا نام
+      location: محل وقوع
+      location_not_found: (نامعلوم)
+      organisation: ادارہ
+      phone: فون
+      other_accounts: "اسی IP ایڈریس والے دوسرے اکاؤنٹس:"
+      delete_other_accounts: "%{شمار} حذف کریں"
+      username: "صارف کا نام"
+      read_time: " پڑھنے کیلیئے درکار وقت"
+      topics_entered: " داخل ہوئے ٹاپک"
+      post_count: "# پوسٹ"
+      confirm_delete_other_accounts: "کیا آپ واقعی یہ اکاؤنٹس حذف کرنا چاہتے ہیں؟"
+    user_fields:
+      none: "(ایک آپشن منتخب کریں)"
     user:
+      said: "{{صارف کا نام}}:"
+      profile: "پروفائل"
+      mute: "خاموش کردیں"
+      edit: "ترجیحات میں ترمیم کردیں"
+      download_archive:
+        button_text: "میری پوسٹس ڈاؤن لوڈ کریں"
+        confirm: "کیا آپ واقعی اپنی پوسٹس ڈاؤن لوڈ کرنا چاہتے ہیں؟"
+        success: "ڈاؤن لوڈ کا آغاز کر دیا گیا ہے، عمل مکمل ہونے پر آپ کو پیغام کے ذریعے مطلع کر دیا جائے گا۔"
+        rate_limit_error: "پوسٹس فی دن ایک بار ہی ڈاؤن لوڈ کی جا سکتی ہیں،  براہ مہربانی کل دوبارہ کوشش کریں۔"
+      new_private_message: "نیا پیغام"
+      private_message: "پیغام"
+      private_messages: "پیغامات"
+      activity_stream: "سرگرمی"
+      preferences: "ترجیحات"
+      expand_profile: "مزید کھولیں"
+      bookmarks: "بُکمارکس"
+      bio: "سائٹ کے بارے میں"
+      invited_by: "کی طرف سے مدعو کیا گیا:"
+      trust_level: "ٹرسٹ کا درجہ"
+      notifications: "اطلاعات"
+      statistics: "اعدادوشمار"
       desktop_notifications:
         each_browser_note: "نوٹ: آپ کو ہر براؤزر پر اس سیٹنگ کو تبدیل کرنا ہوگا."
       moderator_tooltip: "یہ صارف ایک ماڈریٹر ہے"

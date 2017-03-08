@@ -239,6 +239,32 @@ zh_CN:
       你想过更改你的头像 **[查看你的个人资料](%{profile_path})** 并上传一张代表你自己的照片吗?
 
       如果每个人都有自己独特的头像会让人更加容易参与讨论和发现有趣的人!
+    sequential_replies: |
+      ### 考虑只回复帖子一次
+
+      与其回复主题多次，不如只回复一次，包括引用前面的帖子或者@用户名。
+
+      你可以在你的回复中添加引用。只要选择你想引用的文字，然后点击随后出现的<b>引用回复</b>按钮。
+
+      这样其它人会更容易地看一个长的回复，而不是多个分开的回复。
+    dominating_topic: |
+      ### 让其他人参与讨论
+
+      很明显这个主题对你很重要 &ndash; 你发表了占该主题 %{percent}% 的回复。
+
+      你有让其他人有足够地时间像你一样表达他们的观点了吗？
+    too_many_replies: |
+      ### 你发表的回复数量已经达到了上限。
+
+      非常抱歉，但新用户被限制只能在同一主题中回复 %{newuser_max_replies_per_topic} 次。
+
+      与其添加另一个回复不如考虑编辑你以前的回复，或访问其他主题。
+    reviving_old_topic: |
+      ### 重新激活这个主题？
+
+      这个主题的最后一个回复距今已有 %{days} 天了。你的回复将让主题重新出现在列表的顶端并通知原先参与讨论的人。
+
+      你确定要继续这个老的话题吗？
   activerecord:
     attributes:
       category:
@@ -765,6 +791,7 @@ zh_CN:
     delete_removed_posts_after: "帖子被作者删除，将在(n)小时后被自动删除。"
     max_image_width: "帖子中图片允许的最大缩略图宽度"
     max_image_height: "帖子中图片允许的最大缩略图宽度"
+    category_featured_topics: "在分类 /categories 页面中每个分类显示的主题数目。在修改这个值之后，分类页面需要 15 分钟后完成更新。"
     fixed_category_positions: "如果选择，你将可以设置一个固定的分类顺序。如果不选择，分类将按照活动的顺序显示。"
     fixed_category_positions_on_create: "如果选择了，目录排序将会在话题创建对话框中被包含(要求固定目录位置选项)"
     add_rel_nofollow_to_user_content: "添加 rel nofollow 属性到所有的用户内容，除了内部链接（包括父域名）。如果你更改了这个，你必须重新调制所有帖子，以该命令：“rake posts:rebake”"
@@ -862,6 +889,7 @@ zh_CN:
     reserved_usernames: "注册时不可使用的用户名。"
     min_password_length: "最小密码长度。"
     min_admin_password_length: "管理员最短密码长度"
+    password_unique_characters: "密码中必须包含几个不同的字符。"
     block_common_passwords: "不允许使用 10,000 个最常用的密码。"
     enable_sso: "启用通过外部站点单点登录（警告：用户的邮件地址必须被外部站点验证！）"
     verbose_sso_logging: "将 SSO 日志详情记录至 /logs"
@@ -924,6 +952,8 @@ zh_CN:
     max_private_messages_per_day: "每个用户每天能发消息数量的最大值。"
     max_invites_per_day: "每个用户每天能创建的邀请数量的最大值。"
     max_topic_invitations_per_day: "每个用户每天能创建的邀请至主题数量的最大值。"
+    max_logins_per_ip_per_hour: "一小时内同一个IP（网络）地址能允许最大的登陆次数。"
+    max_logins_per_ip_per_minute: "一分钟内同一个IP（网络）地址能允许最大的登陆次数。"
     alert_admins_if_errors_per_minute: "激活管理员警告的每分钟错误的数量。0 会禁用这个特性。注意：需要重启。"
     alert_admins_if_errors_per_hour: "激活管理员警告的每小时错误的数量。0 会禁用这个特性。注意：需要重启。"
     categories_topics: "/categories 页面中显示的主题数。"
@@ -1098,6 +1128,7 @@ zh_CN:
     digest_posts: "邮件摘要中显示的最流行帖子的数量。"
     digest_other_topics: "邮件摘要中“你关注的主题和分类中的新内容”栏目显示的主题数目上限。"
     digest_min_excerpt_length: "邮件摘要中显示的帖子摘要字符数下限。"
+    suppress_digest_email_after_days: "停止给(n)天未登陆网站的用户发送摘要邮件。"
     digest_suppress_categories: "不在摘要邮件中显示这些分类的内容。"
     disable_digest_emails: "禁用所有用户摘要邮件功能。"
     email_accent_bg_color: "HTML 邮件中某些元素的背景使用的强调颜色。输入色彩名（“red”）或十六进制值（“#FF0000”）。"
@@ -1505,8 +1536,10 @@ zh_CN:
 
         （如果你在新用户级别需要和[管理人员](%{base_url}/about)沟通的话，直接回复这个消息。）
     welcome_invite:
+      title: "欢迎邀请"
       subject_template: "欢迎来到 %{site_name}！"
     backup_succeeded:
+      title: "备份成功"
       subject_template: "备份成功完成"
       text_body_template: |
         备份成功。
@@ -1765,6 +1798,7 @@ zh_CN:
 
         该阈值可以通过站点设置中的 `newuser_spam_host_threshold` 和 `white_listed_spam_host_domains` 更改。
     unblocked:
+      title: "解锁"
       subject_template: "账户已解除封禁"
       text_body_template: |
         你好，
@@ -1780,9 +1814,11 @@ zh_CN:
 
         [请在管理栏目中审核他们](%{base_url}/admin/users/list/pending)。
     download_remote_images_disabled:
+      title: "已被禁止下载远程图片"
       subject_template: "远程图片下载已禁用。"
       text_body_template: "`download_remote_images_to_local` 设定已被禁用，因为已经达到 ``download_remote_images_threshold` 设定中的磁盘空间限制。"
     dashboard_problems:
+      title: "管理面板问题"
       subject_template: "发现问题了"
       text_body_template: |
         系统在管理员面板中报告了发现的问题。
@@ -1990,6 +2026,7 @@ zh_CN:
         点击下面的链接来选择一个新密码：
         %{base_url}/users/password-reset/%{email_token}
     set_password:
+      title: "设置密码"
       subject_template: "[%{site_name}] 设置密码"
       text_body_template: |
         有人请求添加你在 [%{site_name}](%{base_url}) 的密码。除此之外，你可以通过已验证过你邮件地址的在线服务商登录。
@@ -1999,6 +2036,7 @@ zh_CN:
         点击下面的链接来选择一个新密码：
         %{base_url}/users/password-reset/%{email_token}
     admin_login:
+      title: "管理员登陆"
       subject_template: "[%{site_name}]登录"
       text_body_template: |
         有人尝试登录你在[%{site_name}](%{base_url})的账户。
@@ -2008,6 +2046,7 @@ zh_CN:
         点击下面的链接登录：
         %{base_url}/users/admin-login/%{email_token}
     account_created:
+      title: "帐号已创建"
       subject_template: "[%{site_name}] 你的新帐号"
       text_body_template: |
         你在 %{site_name} 上建立了一个新账号
@@ -2015,12 +2054,14 @@ zh_CN:
         点击下面的链接来为新账户设置密码：
         %{base_url}/users/password-reset/%{email_token}
     confirm_new_email:
+      title: "确认新邮箱"
       subject_template: "[%{site_name}] 确认你的新电子邮箱地址"
       text_body_template: |
         点击下面的链接来确认你在%{site_name}上的新电子邮箱地址：
 
         %{base_url}/users/authorize-email/%{email_token}
     confirm_old_email:
+      title: "确认旧邮箱"
       subject_template: "[%{site_name}] 确认你的新电子邮箱地址"
       text_body_template: |
         在我们修改你的邮箱地址前，我们需要你确认你拥有当前的邮件账号。在你完成这步之后，我们将确认你的新邮件地址。
@@ -2029,6 +2070,7 @@ zh_CN:
 
         %{base_url}/users/authorize-email/%{email_token}
     notify_old_email:
+      title: "通知旧邮箱"
       subject_template: "[%{site_name}] 你的邮箱地址已经修改成功"
       text_body_template: |
         这是%{site_name}自动发出的邮件，以告知你的邮箱地址已经被修改了。如果这是一个错误，请联系站点管理人员。
@@ -2037,6 +2079,7 @@ zh_CN:
 
         %{new_email}
     signup_after_approval:
+      title: "在审批之后注册"
       subject_template: "你已经被 %{site_name} 论坛批准加入了！"
       text_body_template: |
         欢迎加入%{site_name}！
@@ -2090,6 +2133,7 @@ zh_CN:
       too_large: "抱歉，你试图上传的文件太大了（最大限制为%{max_size_kb}%KB）。"
     images:
       too_large: "抱歉，你试图上传的图片太大了（最大限制为%{max_size_kb}%KB），请裁剪它并重试。"
+      larger_than_x_megapixels: "对不起，你上传的图片太大(最大支持%{max_image_megapixels}像素)，请缩小图片然后再试一次。"
       size_not_found: "抱歉，我们无法获取图片大小，请检查你的图片是否已损坏。"
   avatar:
     missing: "抱歉，我们没法找到与你邮件地址关联的头像。你能再上传一次试试吗？"
@@ -2720,6 +2764,7 @@ zh_CN:
         fields:
           welcome:
             label: "欢迎主题"
+            description: "<p>你如何向一个在电梯里的陌生人用一分钟时间介绍你的社群？</p> <ul> <li>谁会参与讨论？</li> <li>我在这里能找到些什么？</li> <li>为什么我要来这里？</li> </ul> <p>你的欢迎主题是初来者首先所需要阅读的。 把它当成你的 <b>一句话</b> '电梯游说' 或 ' 使命陈述'。 </p>"
             one_paragraph: "请限制你的欢迎消息至一段话。"
       privacy:
         title: "访问"

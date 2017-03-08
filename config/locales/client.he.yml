@@ -1236,8 +1236,10 @@ he:
         selected:
           one: "בחרתם נושא <b>אחד</b>."
           other: "בחרתם <b>{{count}}</b> נושאים."
-        change_tags: "שנו תגיות"
+        change_tags: "החלפת תגים"
+        append_tags: "הוספת תגים"
         choose_new_tags: "בחרו בתגיות חדשות עבור נושאים אלו:"
+        choose_append_tags: "בחרו תגים חדשים להוסיף לנושאים הללו:"
         changed_tags: "התגיות של נושאים אלו השתנו."
       none:
         unread: "אין לכם נושאים שלא נקראו."
@@ -1783,6 +1785,7 @@ he:
       email_in_disabled: "אפשרות הפרסום של נושאים חדשים דרך דוא\"ל נוטרלה בהגדרות האתר. כדי לאפשר פרסום באמצעות  משלוח דוא\"ל,"
       email_in_disabled_click: 'אפשרו את את ההגדרה "דוא"ל נכנס"'
       suppress_from_homepage: "הרחיקו קטגוריה זו מהעמוד הראשי."
+      show_subcategory_list: "הצגת רשימת קטגוריות משנה מעל נושאים בקטגוריה זו."
       all_topics_wiki: "כברירת מחדל נושאים חדשים יהיו וויקי."
       sort_order: "סידור ברירת מחדל:"
       allow_badges_label: "הרשו לעיטורים להיות מוענקים בקטגוריה זו"
@@ -2817,6 +2820,7 @@ he:
         refresh_browsers_message: "ההודעה נשלחה לכל הלקוחות!"
         show_public_profile: "הצג פרופיל פומבי"
         impersonate: 'התחזה'
+        action_logs: "יומני פעולות"
         ip_lookup: "חיפוש IP"
         log_out: "התנתקות"
         logged_out: "המשתמש/ת התנתקו בכל המכשירים"

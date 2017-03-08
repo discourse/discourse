@@ -236,7 +236,7 @@ ar:
     sign_up: "سجّل حسابا"
     log_in: "تسجيل الدخول "
     age: "العمر"
-    joined: "انضم في"
+    joined: "انضم"
     admin_title: "المدير"
     flags_title: "بلاغات"
     show_more: "أظهر المزيد"
@@ -294,6 +294,7 @@ ar:
       like_count: "الإعجابات"
       topic_count: "المواضيع"
       post_count: "المشاركات"
+      user_count: "المستخدمون"
       active_user_count: "المستخدمون النشطون"
       contact: "اتصل بنا"
       contact_info: "في حال حدوث مشكلة حرجة أو أمر عاجل يؤثّر على الموقع، من فضلك راسلنا على %{contact_info}."
@@ -600,7 +601,7 @@ ar:
         success: "بدأ التحميل, سيتم إعلامك برسالة عند اكتمال العملية."
         rate_limit_error: "المشاركات يمكن تحميلها لمرة واحدة في اليوم , الرجاء المحاولة غدا."
       new_private_message: "رسالة جديدة"
-      private_message: "رسالة"
+      private_message: "رسالة خاصة"
       private_messages: "الرسائل"
       activity_stream: "اخر تحديث"
       preferences: " الإعدادات"
@@ -927,6 +928,13 @@ ar:
           few: "مشاركات مقروءة"
           many: "مشاركة مقروءة"
           other: "مشاركة مقروءة"
+        bookmark_count:
+          zero: "لا المفضلة"
+          one: "المفضلة"
+          two: "المفضلتان"
+          few: "المفضلة"
+          many: "المفضلة"
+          other: "المفضلة"
         top_replies: "أفضل الردود"
         no_replies: "لَم ينشر أي رد بعد."
         more_replies: "المزيد من الردود"
@@ -1432,7 +1440,7 @@ ar:
         few: '{{count}} مواضيع غير مقروءة'
         many: '{{count}} موضوعًا غير مقروء'
         other: '{{count}} موضوع غير مقروء'
-      title: 'موضوع'
+      title: 'الموضوع'
       invalid_access:
         title: "الموضوع خاص"
         description: "لا تملك صلاحيات للوصول لهذا الموضوع"
@@ -1569,6 +1577,8 @@ ar:
         pin_globally: "تثبيت الموضوع على عموم الموقع"
         make_banner: "موضوع دعائي"
         remove_banner: "إزالة موضوع دعائي"
+      reply:
+        title: 'إضافة رد'
       clear_pin:
         title: "إلغاء التثبيت"
         help: "إلغاء تثبيت الموضوع حتى لا يظهر في أعلى القائمة"
@@ -1579,7 +1589,7 @@ ar:
         title: 'طباعة'
       flag_topic:
         title: 'إبلاغ'
-        help: 'قم بمتابعة هذا الموضوع بشكل خاص حيث سيصلك تنبيهات عليها '
+        help: 'بلَغ عن هذا الموضوع او ارسل تنبيه خاص لأدارة الموقع.'
         success_message: 'تم الإشتراك عن الموضوع'
       feature_topic:
         title: "ترشيح هذا الموضوع"
@@ -1717,6 +1727,7 @@ ar:
     post:
       reply: "<i class='fa fa-mail-forward'></i> {{replyAvatar}} {{usernameLink}}"
       reply_topic: "<i class='fa fa-mail-forward'></i> {{link}}"
+      quote_reply: "اقتباس"
       edit: "أنت تعدّل {{link}} {{replyAvatar}} {{username}} ."
       edit_reason: "السبب:"
       post_number: "المشاركة {{number}}"
@@ -1798,7 +1809,7 @@ ar:
         undo_like: "ألغِ الإعجاب"
         edit: "عدّل المشاركة"
         edit_anonymous: "آسفون، عليك الولوج لتعديل المشاركة."
-        flag: "قم بمتابعة هذا الموضوع بشكل خاص حيث سيصلك تنبيهات عليها "
+        flag: "بلَغ عن هذا الموضوع او ارسل تنبيه خاص لأدارة الموقع."
         delete: "احذف المشاركة"
         undelete: "التراجع عن حذف المشاركة"
         share: "شارك رابط هذه المشاركة"
@@ -1994,10 +2005,14 @@ ar:
           hide: "أخفِ المراجعة"
           show: "أظهر المراجعة"
           revert: "اعكس إلى هذه المراجعة"
+          edit_post: "عدل المنشور"
           comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> <i class='fa fa-arrows-h'></i> <strong>{{current}}</strong> / {{total}}"
         displays:
+          inline:
+            button: 'HTML'
           side_by_side:
             title: "أظهر فروقات الخرج المصيّر جنبًا إلى جنب"
+            button: 'HTML'
           side_by_side_markdown:
             title: "أظهر فروقات المصدر الخامّ جنبًا إلى جنب"
     category:
@@ -2099,7 +2114,7 @@ ar:
       submit_tooltip: "إرسال تبليغ"
       take_action_tooltip: "الوصول إلى الحد الأعلى للتبليغات دون انتظار تبليغات أكثر من أعضاء الموقع."
       cant: "المعذرة، لا يمكنك التبليغ عن هذه المشاركة في هذه اللحظة."
-      notify_staff: 'اشعر الطاقم سرياً'
+      notify_staff: 'بلغ احد المراقبين بشكل سري'
       formatted_name:
         off_topic: "خارج عن الموضوع"
         inappropriate: "غير لائق"
@@ -2120,7 +2135,7 @@ ar:
       notify_action: "رسالة"
     topic_map:
       title: "ملخص الموضوع"
-      participants_title: "مشاركين معتادين"
+      participants_title: "المُشاركين بالنقاش:"
       links_title: "روابط ذات علاقة:"
       links_shown: "أظهر روابط أخرى..."
       clicks:
@@ -2208,7 +2223,7 @@ ar:
       with_topics: "المواضيع %{filter}"
       with_category: "المواضيع %{filter} في %{category}"
       latest:
-        title: "الأخيرة"
+        title: "نشطة حالياً"
         title_with_count:
           zero: "الأخيرة ({{count}})"
           one: "الأخيرة ({{count}})"
@@ -2216,7 +2231,7 @@ ar:
           few: "الأخيرة ({{count}})"
           many: "الأخيرة ({{count}})"
           other: "الأخيرة ({{count}})"
-        help: "مواضيع بآخر المشاركات"
+        help: "المواضيع التي أضيفت لها ردود مؤخراً"
       hot:
         title: "نَشط"
         help: "مختارات من مواضيع ساخنة"
@@ -2264,7 +2279,7 @@ ar:
           few: "الجديدة ({{count}})"
           many: "الجديدة ({{count}})"
           other: "الجديدة ({{count}})"
-        help: "مواضيع جديد في الايام السابقة"
+        help: "مواضيع تمت إضافتها مؤخراً"
       posted:
         title: "مشاركاتي"
         help: "مواضيع شاركت بها "
@@ -2282,8 +2297,8 @@ ar:
           other: "{{categoryName}} ({{count}})"
         help: "آخر المواضيع في  {{categoryName}} قسم"
       top:
-        title: "أعلى"
-        help: "أكثر المواضيع نشاطا خلال سنة, شهر, اسبوع او يوم"
+        title: "الأكثر مُشاهدة"
+        help: "أكثر المواضيع نشاطاً خلال الأيام,الأشهر، او السنة الماضية"
         all:
           title: "كل الأوقات"
         yearly:
@@ -2374,6 +2389,13 @@ ar:
         few: "%{count} شارات"
         many: "%{count} شارة"
         other: "%{count} شارة"
+      granted:
+        zero: "%{count} مونحَ."
+        one: "1 مونحَ."
+        two: "%{count} مونحَ."
+        few: "%{count} مونحَ."
+        many: "%{count} مونحَ."
+        other: "%{count} مونحَ."
       select_badge_for_title: حدد وسام لتستخدمه كعنوانك
       none: "لا شئ"
       badge_grouping:
@@ -2473,6 +2495,8 @@ ar:
       custom_message_placeholder: "ادخل رسالتك المخصصة"
       custom_message_template_forum: "مرحبا. عليك الانضمام إلى هذا المنتدى!"
       custom_message_template_topic: "مرحبا. أظن أن هذا الموضوع سيسعدك!"
+    safe_mode:
+      enabled: "الوضع الامن مفعل، لكي تخرج من الوضع الامن أغلق نافذة المتصفح"
   admin_js:
     type_to_filter: "اكتب للتّرشيح..."
     admin:
@@ -2507,6 +2531,8 @@ ar:
         backups: "النسخ الاحتياطية"
         traffic_short: "المرور"
         traffic: "طلبات تطبيقات الويب"
+        page_views: "زيارات الصفحة"
+        page_views_short: "زيارات الصفحة"
         show_traffic_report: "عرض تقرير مرور مفصل"
         reports:
           today: "اليوم"
@@ -2653,10 +2679,37 @@ ar:
         all_users: "جميع المستخدمين"
         note_html: "حافظ على <strong>سرية</strong> هذا المفتاح، اي شخص يحصل عليه يستطيع انشاء مواضيع باسم اي مستخدم اخر"
       web_hooks:
+        create: "أنشئ"
+        save: "حفظ"
+        destroy: "مسح"
+        description: "الوصف"
+        controls: "التحكم"
+        content_type: "نوع المحتوى"
+        secret: "سر"
+        wildcard_event: "ارسل إلى أى شئ."
+        active: "فعل"
+        user_event:
+          name: "أحداث المستخدم"
+          details: "عندما مستخدم ينشئ، يؤكد او يُحدث."
+        delivery_status:
+          title: "حالة التوصيل"
+          inactive: "قيد التفعيل"
+          failed: "فشل"
+          successful: "نجاح"
         events:
+          none: "لا يوجد أحداث مماثلة"
+          request: "طلب"
+          response: "الرد"
+          headers: "الرؤوس"
+          body: "المحتوى"
           go_list: "اذهب إلى القائمة"
           go_events: "اذهب إلى الحدث"
+          ping: "سرعة الاتصال"
+          status: "كود الوضع"
           event_id: "الرقم التعريفي"
+          timestamp: "أنشئ"
+          completion: "وقت الاكتمال"
+          actions: "الإجراءات"
       plugins:
         title: "الإضافات"
         installed: "الإضافات المثبتة"
@@ -2834,10 +2887,14 @@ ar:
         delivery_method: "طريقة التسليم"
         preview_digest_desc: "معاينة محتوى رسائل البريد الإلكتروني الملخص المرسلة للأعضاء الغير متاحين."
         refresh: "تحديث"
+        send_digest_label: "ارسل النتائج إلى:"
+        send_digest: "أرسل"
+        sending_email: "يرسل رسالة إلكترونية..."
         format: "التنسيق"
         html: "html"
         text: "نص"
         last_seen_user: "آخر مستخدم تواجد:"
+        no_result: "لا نتائج وجدت فى الخلاصة."
         reply_key: "مفتاح الرد"
         skipped_reason: "تجاوز السبب"
         incoming_emails:
@@ -2929,9 +2986,17 @@ ar:
             revoke_admin: "سحب الصلاحيات الادارية"
             grant_moderation: "عين كمشرف"
             revoke_moderation: "سحب صلاحيات المشرف"
+            backup_create: "أنشئ نسخة احتياطية"
             deleted_tag: "علامة وصفية محذوفة"
             renamed_tag: "اعادة تسمية العلامة الوصفية"
             revoke_email: "حذف البريد الالكتروني"
+            lock_trust_level: "قفل مستوى الثقة"
+            unlock_trust_level: "فتح مستوى الثقة "
+            activate_user: "نشط امستخدم"
+            deactivate_user: "عطل المستخدم"
+            change_readonly_mode: "غير وضع القراءة فقط"
+            backup_download: "حَمل النسخة الاحتياطية"
+            backup_destroy: "دمر النسخة الاحتياطية"
         screened_emails:
           title: "عناوين بريد إلكتروني محجوبة."
           description: "عندما يحاول أحدهم إنشاء حساب جديد، ستُفحص عناوين البريد الإلكتروني وسيُمنع التسجيل إن تطابق إحداها، أو أن يُتّخذ أي إجراء آخر."
@@ -3056,6 +3121,7 @@ ar:
         refresh_browsers_message: "الرسالة أُرسلت إلى كل الأعضاء!"
         show_public_profile: "عرض الملف العام."
         impersonate: 'انتحال شخصية'
+        action_logs: "سجلات الاجراء"
         ip_lookup: "جدول \"IP\""
         log_out: "تسجيل الخروج"
         logged_out: "أخرجنا العضو من كل أجهزته"
@@ -3254,6 +3320,7 @@ ar:
           user_preferences: "تفضيلات العضو"
           tags: "الوسوم"
           search: "البحث"
+          groups: "مجموعات"
       badges:
         title: الشارات
         new_badge: شعار جديد

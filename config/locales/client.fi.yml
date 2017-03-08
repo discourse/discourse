@@ -423,7 +423,7 @@ fi:
       '2': "Saadut tykkäykset"
       '3': "Kirjanmerkit"
       '4': "Ketjut"
-      '5': "Vastauksia"
+      '5': "Vastaukset"
       '6': "Vastaukset"
       '7': "Maininnat"
       '9': "Lainaukset"
@@ -458,13 +458,13 @@ fi:
         one: "%{count} uusi ketju viimeisen %{unit} aikana."
         other: "%{count} uutta ketjua viimeisen %{unit} aikana."
     ip_lookup:
-      title: IP osoitteen haku
+      title: IP-osoitteen haku
       hostname: Isäntänimi
       location: Sijainti
       location_not_found: (tuntematon)
       organisation: Yritys
       phone: Puhelin
-      other_accounts: "Muut tilit samasta IP osoitteesta:"
+      other_accounts: "Muut tilit samasta IP-osoitteesta:"
       delete_other_accounts: "Poista %{count}"
       username: "käyttäjätunnus"
       trust_level: "LT"
@@ -803,7 +803,7 @@ fi:
       ip_address:
         title: "Viimeinen IP-osoite"
       registration_ip_address:
-        title: "IP osoite rekisteröityessä"
+        title: "IP-osoite rekisteröityessä"
       avatar:
         title: "Profiilikuva"
         header_title: "profiili, viestit, kirjanmerkit ja asetukset"
@@ -1237,8 +1237,10 @@ fi:
         selected:
           one: "Olet valinnut <b>yhden</b> ketjun."
           other: "Olet valinnut <b>{{count}}</b> ketjua."
-        change_tags: "Muuta tunnisteita"
+        change_tags: "Korvaa tunnisteet"
+        append_tags: "Lisää tunnisteita"
         choose_new_tags: "Valitse tunnisteet näille ketjuille:"
+        choose_append_tags: "Valitse ketjuille lisättävät uudet tunnisteet:"
         changed_tags: "Ketjujen tunnisteet muutettiin."
       none:
         unread: "Sinulla ei ole ketjuja lukematta."
@@ -1782,6 +1784,7 @@ fi:
       email_in_disabled: "Uusien ketjujen luominen sähköpostitse on otettu pois käytöstä sivuston asetuksissa. Salliaksesi uusien ketjujen luomisen sähköpostilla, "
       email_in_disabled_click: 'ota käyttöön "email in" asetus.'
       suppress_from_homepage: "Vaimenna alue kotisivulta."
+      show_subcategory_list: "Näytä lista tytäralueista ketjujen yläpuolella tällä alueella."
       all_topics_wiki: "Tee uusista ketjuista wiki-viestejä oletuksena."
       sort_order: "Oletusjärjestys:"
       allow_badges_label: "Salli ansiomerkkien myöntäminen tältä alueelta"
@@ -2662,7 +2665,7 @@ fi:
           description: 'IP-osoitteet joita tarkkaillaan. Valitse "Salli" lisätäksesi osoitteen ohitettavien listalle.'
           delete_confirm: "Oletko varma, että haluat poistaa tämän säännön osoitteelle %{ip_address}?"
           roll_up_confirm: "Oletko varma, että haluat yhdistää seulottavat IP-osoitteet aliverkoiksi?"
-          rolled_up_some_subnets: "Porttikieltojen IP osoitteet käärittiin onnistuneesti näiksi aliverkoiksi: %{subnets}."
+          rolled_up_some_subnets: "Porttikieltojen IP-osoitteet käärittiin onnistuneesti näiksi aliverkoiksi: %{subnets}."
           rolled_up_no_subnet: "Mitään käärittävää ei ollut."
           actions:
             block: "Estä"

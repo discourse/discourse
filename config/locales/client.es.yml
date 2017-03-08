@@ -1237,7 +1237,9 @@ es:
           one: "Has seleccionado <b>1</b> tema."
           other: "Has seleccionado <b>{{count}}</b> temas."
         change_tags: "Cambiar etiquetas"
+        append_tags: "Añadir etiquetas"
         choose_new_tags: "Elige nuevas etiquetas para estos temas:"
+        choose_append_tags: "Elige nuevas etiquetas a añadir para estos temas:"
         changed_tags: "Las etiquetas de esos temas fueron cambiadas."
       none:
         unread: "No hay temas que sigas y que no hayas leído ya."
@@ -1781,6 +1783,7 @@ es:
       email_in_disabled: "La posibilidad de publicar nuevos temas por email está deshabilitada en los ajustes del sitio. Para habilitar la publicación de nuevos temas por email,"
       email_in_disabled_click: 'activa la opción "email in".'
       suppress_from_homepage: "Ocultar categoría de la página de inicio."
+      show_subcategory_list: "Mostrar la lista de subcategorías encima de los temas en esta categoría."
       all_topics_wiki: "Hacer todos los temas wiki por defecto"
       sort_order: "Orden por defecto:"
       allow_badges_label: "Permitir conceder distintivos en esta categoría"
@@ -2815,6 +2818,7 @@ es:
         refresh_browsers_message: "¡Mensaje enviado a todos los clientes!"
         show_public_profile: "Ver perfil público"
         impersonate: 'Impersonar a'
+        action_logs: "Registro de acciones"
         ip_lookup: "Búsqueda de IP"
         log_out: "Cerrar sesión"
         logged_out: "El usuario ha cerrado sesión desde todos los dispositivos"

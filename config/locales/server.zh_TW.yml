@@ -222,15 +222,24 @@ zh_TW:
 
       更多的幫助信息，[請查看我們的社群準則](/guidelines)。此信息面板只在你發佈前 %{education_posts_text}時顯示。
     new-reply: |
-      歡迎來到%{site_name} &mdash; **感謝你的貢獻！**
+      歡迎來到 %{site_name} — **感謝你的參與！**
 
-      - 你的回覆是否以某種方式改善了討論？
+      - 你的回應是否以某些方式改善了討論？
 
-      - 請尊重所有社群成員。
+      - 務必尊重所有社群成員。
 
-      - 歡迎有建設性的評論，但是評論的應該是觀點，而不是人身攻擊。
+      - 歡迎有建設性的評論，但論述時請針對觀點，而別針對個人。
 
-      欲查看更多，[請查看我們的社群守則](/guidelines)。此訊息面板只會在你發表前 %{education_posts_text} 時顯示。
+      [請查看我們的社群守則](/guidelines)以進一步了解。（此訊息只會在你發表 %{education_posts_text} 時顯示）
+    avatar: |
+      ### 來個大頭貼吧！
+
+      你剛參與了幾個討論話題及回覆，不過你的個人頭像不像你一般獨一無二
+      - 因為只有一個字！
+
+      **[造訪個人檔案](%{profile_path})** 並上傳代表你的頭像吧！
+
+      當每個人都有獨特的頭像時，大家能更容易的關注討論內容，以及找到對話中有趣的使用者！
   activerecord:
     attributes:
       category:
@@ -756,6 +765,7 @@ zh_TW:
     delete_removed_posts_after: "帖子被作者刪除，將在 (n) 小時後被自動刪除。如果設置為 0，帖子將被立即刪除。"
     max_image_width: "文章中最大的縮圖寬度"
     max_image_height: "文章中的允許圖片最大的縮圖高度"
+    category_featured_topics: "在分類 /categories 頁面每個分類顯示的討論話題數目。此數值的改變最多需要 15 分鐘才會反應在分類頁面上。"
     fixed_category_positions: "若勾選，你將能調整並固定分類的順序。若不勾選，分類將會依照活躍程度來排序。"
     fixed_category_positions_on_create: "如果選擇了，目錄排序將會在話題創建對話框中被包含(要求固定目錄位置選項)"
     add_rel_nofollow_to_user_content: "添加 rel nofollow 屬性到所有的用戶內容，除了內部鏈接（包括父域名）。如果你更改了這個，你必須重新調制所有帖子，而該命令為：“rake posts:rebake”"
@@ -1037,12 +1047,12 @@ zh_TW:
     alternative_reply_by_email_addresses: "通過郵件回覆的回覆地址模板，例如：%{reply_key}@reply.example.com|replies+%{reply_key}@example.com"
     incoming_email_prefer_html: "對進站郵件優先使用 HTML 而不是純文字檔案。可能導致格式問題。"
     disable_emails: "禁止 Discourse 發送任何郵件"
-    strip_images_from_short_emails: "忽略郵件中小於 2800 位元組的圖片"
+    strip_images_from_short_emails: "郵件小於 2800 位元組時去除圖片"
     short_email_length: "短郵件地址長度（以比特作為單位）"
     display_name_on_email_from: "在郵件的來自欄顯示暱稱"
-    unsubscribe_via_email: "允許用戶在發送的郵件“退訂”來退訂郵件訂閲，“退訂”可在主題或正文中。"
+    unsubscribe_via_email: "允許用戶在發送的郵件「退訂」來退訂郵件訂閲，「退訂」可在主題或正文中。"
     unsubscribe_via_email_footer: "在發出的郵件底部包含退訂連結"
-    delete_email_logs_after_days: "在（N）天后刪除郵件日誌。設置為 0 無限期保留"
+    delete_email_logs_after_days: "在（N）天後刪除郵件日誌。設置為 0 無限期保留"
     max_emails_per_day_per_user: "每日發送給用戶的最大帖子數量。設置為 0 禁止限制"
     enable_staged_users: "處理進站郵件時自動創建暫存用戶。"
     maximum_staged_users_per_email: "處理進站郵件時可創建的最大暫存用戶量。"
@@ -1508,6 +1518,20 @@ zh_TW:
     welcome_invite:
       title: "歡迎邀請"
       subject_template: "歡迎來到 %{site_name}！"
+      text_body_template: |
+        感謝你接受邀請加入 %{site_name} — 歡迎！
+
+        - 我們已為你建立 **%{username}** 帳號。請到 [偏好設定][prefs] 頁面修改帳號名稱或密碼。
+
+        - 請使用與你的邀請信件 **相同的 email 信箱登入**，不然我們就不知道你來了！
+
+        %{new_user_tips}
+
+        我們始終相信[社群參與指南守則](%{base_url}/guidelines) 。好好享受你在論壇的時光！
+
+        （身為新的使用者，如果你需要聯絡[工作人員](%{base_url}/about)，請直接回覆本訊息）
+
+        [prefs]: %{user_preferences_url}
     backup_succeeded:
       title: "備份成功"
       subject_template: "備份成功完成"

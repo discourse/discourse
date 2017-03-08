@@ -536,9 +536,11 @@ et:
       long_form: 'tähistasin selle kui spämmi'
     inappropriate:
       title: 'Ebasobiv'
+      description: 'Selle teema sisu on iga mõistliku inimese hinnangu järgi solvav, ahistav või rikub <a href="/guidelines">meie kommuuni reegleid</a>.'
       long_form: 'tähistasin selle kui sobimatu'
     notify_moderators:
       title: "Miski muu"
+      description: 'See teema vajab saidi meeskonna tähelepanu tulenevalt <a href="/guidelines">juhisest</a>, <a href="%{tos_url}">kasutustingimustest</a> või mõnest muust põhjusest, mida pole siin mainitud.'
       long_form: 'tähistasin selle kui moderaatori tähelepanu vajava'
       email_title: 'Teema "%{title}" nõuab moderaatori tähelepanu'
       email_body: "%{link}\n\n%{message}"

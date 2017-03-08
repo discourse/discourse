@@ -826,6 +826,7 @@ pt_BR:
     delete_removed_posts_after: "Postagens removidas pelo autor serão automaticamente deletadas depois de (n) horas. Se o valor definido for 0, as postagens serão deletadas imediatamente."
     max_image_width: "Largura máxima para imagens em um post"
     max_image_height: "Altura máxima para imagens em um post"
+    category_featured_topics: "Número de tópicos exibidos por categoria na página /categories. Depois de alterar este valor, levará até 15 minutos para a página de categorias atualizar-se."
     fixed_category_positions: "Se selecionado, você será capaz de organizar as categorias em uma ordem fixa. Se nada for feito, as categorias serão listadas em ordem de atividade."
     fixed_category_positions_on_create: "Se ativado, a ordenação das categorias vai ser mantida no formulário de criação de tópico. (requer fixed_category_positions)"
     add_rel_nofollow_to_user_content: "Adicionar \"nofollow\" para todo conteúdo incluído por um usuário, exceto links internos (incluindo sub domínios). Para que as mudanças façam efeito é necessário rodar \"rake posts:rebake\"."

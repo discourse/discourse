@@ -1323,7 +1323,9 @@ pl_PL:
           many: "Zaznaczono <b>{{count}}</b> tematów."
           other: "Zaznaczono <b>{{count}}</b> tematów."
         change_tags: "Zmień tagi"
+        append_tags: "Dodaj tagi"
         choose_new_tags: "Wybierz nowe tagi dla tych tematów:"
+        choose_append_tags: "Wybierz nowe tagi dla tych tematów:"
         changed_tags: "Tagi tych tematów były zmieniane."
       none:
         unread: "Nie masz nieprzeczytanych tematów."
@@ -1947,6 +1949,7 @@ pl_PL:
       email_in_disabled: "Tworzenie nowych tematów emailem jest wyłączone w ustawieniach serwisu. "
       email_in_disabled_click: 'Kliknij tu, aby włączyć.'
       suppress_from_homepage: "Nie wyświetlaj tej kategorii na stronie głównej."
+      show_subcategory_list: "Pokaż listę subkategorii powyżej tematów w tej kategorii."
       all_topics_wiki: "Stwórz nowe tematy domyślnie jako wiki"
       sort_order: "Domyślnie sortuj:"
       allow_badges_label: "Włącz przyznawanie odznak na podstawie aktywności w tej kategorii"
@@ -3034,6 +3037,7 @@ pl_PL:
         refresh_browsers_message: "Wiadomość wysłana do wszystkich klientów!"
         show_public_profile: "Pokaż profil publiczny"
         impersonate: 'Zaloguj się na to konto'
+        action_logs: "Logi akcji"
         ip_lookup: "Wyszukiwanie IP"
         log_out: "Wyloguj"
         logged_out: "Użytkownik został wylogowany na wszystkich urządzeniach."
