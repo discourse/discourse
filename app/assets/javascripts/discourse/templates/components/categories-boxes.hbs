@@ -1,0 +1,16 @@
+{{#if categories}}
+  {{#each categories as |c|}}
+    <div class='category-box'>
+      <a href={{c.url}}>
+        {{cdn-img src=c.uploaded_logo.url class="logo"}}
+
+        <div class='details'>
+          <h3>{{c.name}}</h3>
+          <div class='description'>
+            {{c.description}}
+          </div>
+        </div>
+      </a>
+    </div>
+  {{/each}}
+{{/if}}

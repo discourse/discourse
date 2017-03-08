@@ -92,7 +92,9 @@ export default {
           "permission":1,
           "notification_level":null,
           "logo_url":null,
-          "background_url":null
+          "background_url":null,
+          "show_subcategory_list":false,
+          "default_view":"latest"
         },
         {
           "id":10,
@@ -108,7 +110,9 @@ export default {
           "permission":1,
           "notification_level":null,
           "logo_url":null,
-          "background_url":null
+          "background_url":null,
+          "show_subcategory_list":false,
+          "default_view":"latest"
         },
         {
           "id":26,
@@ -141,7 +145,9 @@ export default {
           "permission":1,
           "notification_level":null,
           "logo_url":null,
-          "background_url":null
+          "background_url":null,
+          "show_subcategory_list":false,
+          "default_view":"latest"
         },
         {
           "id":6,
@@ -157,7 +163,9 @@ export default {
           "permission":1,
           "notification_level":null,
           "logo_url":null,
-          "background_url":null
+          "background_url":null,
+          "show_subcategory_list":false,
+          "default_view":"latest"
         },
         {
           "id":24,
@@ -224,7 +232,9 @@ export default {
           "permission":1,
           "notification_level":null,
           "logo_url":null,
-          "background_url":null
+          "background_url":null,
+          "show_subcategory_list":false,
+          "default_view":"latest"
         },
         {
           "id":14,
@@ -240,7 +250,9 @@ export default {
           "permission":1,
           "notification_level":null,
           "logo_url":null,
-          "background_url":null
+          "background_url":null,
+          "show_subcategory_list":false,
+          "default_view":"latest"
         },
         {
           "id":12,
@@ -256,7 +268,9 @@ export default {
           "permission":1,
           "notification_level":null,
           "logo_url":null,
-          "background_url":null
+          "background_url":null,
+          "show_subcategory_list":false,
+          "default_view":"latest"
         },
         {
           "id":13,
@@ -272,7 +286,9 @@ export default {
           "permission":1,
           "notification_level":null,
           "logo_url":null,
-          "background_url":null
+          "background_url":null,
+          "show_subcategory_list":false,
+          "default_view":"latest"
         },
         {
           "id":5,
@@ -288,7 +304,9 @@ export default {
           "permission":1,
           "notification_level":null,
           "logo_url":null,
-          "background_url":null
+          "background_url":null,
+          "show_subcategory_list":false,
+          "default_view":"latest"
         },
         {
           "id":11,
@@ -304,7 +322,9 @@ export default {
           "permission":1,
           "notification_level":null,
           "logo_url":null,
-          "background_url":null
+          "background_url":null,
+          "show_subcategory_list":false,
+          "default_view":"latest"
         },
         {
           "id":22,
@@ -338,7 +358,9 @@ export default {
           "notification_level":null,
           "logo_url":null,
           "background_url":null,
-          "can_edit":true
+          "can_edit":true,
+          "show_subcategory_list":false,
+          "default_view":"latest"
         },
         {
           "id":17,
@@ -354,7 +376,9 @@ export default {
           "permission":1,
           "notification_level":null,
           "logo_url":"",
-          "background_url":""
+          "background_url":"",
+          "show_subcategory_list":false,
+          "default_view":"latest"
         },
         {
           "id":21,
@@ -387,7 +411,9 @@ export default {
           "permission":1,
           "notification_level":null,
           "logo_url":null,
-          "background_url":null
+          "background_url":null,
+          "show_subcategory_list":false,
+          "default_view":"latest"
         },
         {
           "id":9,
@@ -403,7 +429,9 @@ export default {
           "permission":1,
           "notification_level":null,
           "logo_url":null,
-          "background_url":null
+          "background_url":null,
+          "show_subcategory_list":false,
+          "default_view":"latest"
         },
         {
           "id":2,
@@ -419,7 +447,10 @@ export default {
           "permission":1,
           "notification_level":null,
           "logo_url":null,
-          "background_url":null
+          "background_url":null,
+          "show_subcategory_list":true,
+          "default_view":"latest",
+          "subcategory_list_style":"boxes"
         }
       ],
       "post_action_types":[

@@ -19,7 +19,22 @@ export default DiscoveryController.extend({
 
   @computed("model.parentCategory")
   categoryPageStyle(parentCategory) {
-    const style = this.siteSettings.desktop_category_page_style;
+    let style = this.siteSettings.desktop_category_page_style;
+
+    if (parentCategory) {
+      switch(parentCategory.get('subcategory_list_style')) {
+        case 'rows':
+          style = "categories_only";
+          break;
+        case 'rows_with_featured_topics':
+          style = "categories_with_featured_topics";
+          break;
+        case 'boxes':
+          style = "categories_boxes";
+          break;
+      }
+    }
+
     const componentName = (parentCategory && style === "categories_and_latest_topics") ?
                           "categories_only" :
                           style;

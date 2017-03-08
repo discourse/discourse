@@ -5,8 +5,26 @@ import computed from "ember-addons/ember-computed-decorators";
 export default buildCategoryPanel('settings', {
   emailInEnabled: setting('email_in'),
   showPositionInput: setting('fixed_category_positions'),
-
+  isParentCategory: Em.computed.empty('category.parent_category_id'),
+  showSubcategoryListStyle: Em.computed.and('category.show_subcategory_list', 'isParentCategory'),
   isDefaultSortOrder: Em.computed.empty('category.sort_order'),
+
+  @computed
+  availableSubcategoryListStyles() {
+    return [
+      {name: I18n.t('category.subcategory_list_styles.rows'), value: 'rows'},
+      {name: I18n.t('category.subcategory_list_styles.rows_with_featured_topics'), value: 'rows_with_featured_topics'},
+      {name: I18n.t('category.subcategory_list_styles.boxes'), value: 'boxes'}
+    ];
+  },
+
+  @computed
+  availableViews() {
+    return [
+      {name: I18n.t('filters.latest.title'), value: 'latest'},
+      {name: I18n.t('filters.top.title'),    value: 'top'}
+    ];
+  },
 
   @computed
   availableSorts() {
@@ -20,14 +38,6 @@ export default buildCategoryPanel('settings', {
     return [
       {name: I18n.t('category.sort_ascending'),  value: 'true'},
       {name: I18n.t('category.sort_descending'), value: 'false'}
-    ];
-  },
-
-  @computed
-  availableViews() {
-    return [
-      {name: I18n.t('filters.latest.title'), value: 'latest'},
-      {name: I18n.t('filters.top.title'),    value: 'top'}
     ];
   }
 });
