@@ -1,7 +1,9 @@
 <div itemscope itemtype='http://schema.org/WebPage'>
   <meta itemprop='lastReviewed' content='<%= @topic.first_post.updated_at.to_date.to_formatted_s(:iso_8601) %>'>
   <ul class='nav-pills' role='navigation' itemscope itemtype='http://schema.org/SiteNavigationElement'>
-    <li class="nav-item-about"><%= link_to t('about'), '/about' %></a></li>
+    <% unless SiteSetting.login_required? && current_user.nil? %>
+      <li class="nav-item-about"><%= link_to t('about'), '/about' %></a></li>
+    <% end %>
     <% if @faq_overriden %>
       <li class='nav-item-guidelines'><a class='<%= @page == 'faq' ? 'active' : '' %>' href='<%= guidelines_path %>'><%= t 'guidelines' %></a></li>
       <li class='nav-item-faq'><a href='<%= faq_path %>'><%= t 'js.faq' %></a></li>
