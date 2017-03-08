@@ -36,8 +36,10 @@ class UsersEmailController < ApplicationController
     updater = EmailUpdater.new
     @update_result = updater.confirm(params[:token])
 
-    # Log in the user if the process is complete (and they're not logged in)
-    log_on_user(updater.user) if @update_result == :complete
+    if @update_result == :complete
+      updater.user.user_stat.reset_bounce_score!
+      log_on_user(updater.user)
+    end
 
     render layout: 'no_ember'
   end

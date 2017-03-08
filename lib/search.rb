@@ -308,9 +308,9 @@ class Search
       level = TopicUser.notification_levels[match.to_sym]
       posts.where("posts.topic_id IN (
                     SELECT tu.topic_id FROM topic_users tu
-                    WHERE tu.user_id = #{@guardian.user.id} AND
-                          tu.notification_level >= #{level}
-                   )")
+                    WHERE tu.user_id = :user_id AND
+                          tu.notification_level >= :level
+                   )", user_id: @guardian.user.id, level: level)
 
     end
   end

@@ -165,7 +165,7 @@ en:
 
     topic_admin_menu: "topic admin actions"
 
-    wizard_required: "It's time to configure your forum! <a href='%{url}' data-auto-route='true'>Start the Setup Wizard</a>!"
+    wizard_required: "Welcome to your new Discourse! Let’s get started with <a href='%{url}' data-auto-route='true'>the setup wizard</a> ✨"
     emails_are_disabled: "All outgoing email has been globally disabled by an administrator. No email notifications of any kind will be sent."
 
     bootstrap_mode_enabled: "To make launching your new site easier, you are in bootstrap mode. All new users will be granted trust level 1 and have daily email digest updates enabled. This will be automatically turned off when total user count exceeds %{min_users} users."
@@ -718,13 +718,11 @@ en:
         instructions: "unique, no spaces, short"
         short_instructions: "People can mention you as @{{username}}"
         available: "Your username is available"
-        global_match: "Email matches the registered username"
-        global_mismatch: "Already registered. Try {{suggestion}}?"
         not_available: "Not available. Try {{suggestion}}?"
+        not_available_no_suggestion: "Not available"
         too_short: "Your username is too short"
         too_long: "Your username is too long"
         checking: "Checking username availability..."
-        enter_email: 'Username found; enter matching email'
         prefilled: "Email matches this registered username"
 
       locale:
@@ -832,10 +830,10 @@ en:
         link_generated: "Invite link generated successfully!"
         valid_for: "Invite link is only valid for this email address: %{email}"
         bulk_invite:
-          none: "You haven't invited anyone here yet. You can send individual invites, or invite a bunch of people at once by <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>uploading a CSV file</a>."
+          none: "You haven't invited anyone here yet. Send individual invites, or invite many people at once by <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>uploading a CSV file</a>."
           text: "Bulk Invite from File"
           success: "File uploaded successfully, you will be notified via message when the process is complete."
-          error: "Sorry, file should be of csv format."
+          error: "Sorry, file should be CSV format."
 
       password:
         title: "Password"
@@ -1032,7 +1030,7 @@ en:
       logging_in: "Signing In..."
       or: "Or"
       authenticating: "Authenticating..."
-      awaiting_confirmation: "Your account is awaiting activation, use the forgot password link to issue another activation email."
+      awaiting_activation: "Your account is awaiting activation, use the forgot password link to issue another activation email."
       awaiting_approval: "Your account has not been approved by a staff member yet. You will be sent an email when it is approved."
       requires_invite: "Sorry, access to this forum is by invite only."
       not_activated: "You can't log in yet. We previously sent an activation email to you at <b>{{sentTo}}</b>. Please follow the instructions in that email to activate your account."
@@ -1065,6 +1063,15 @@ en:
       github:
         title: "with GitHub"
         message: "Authenticating with GitHub (make sure pop up blockers are not enabled)"
+    invites:
+      accept_title: "Invitation"
+      welcome_to: "Welcome to %{site_name}!"
+      invited_by: "You were invited by:"
+      social_login_available: "You'll also be able to sign in with any social login using that email."
+      your_email: "Your account email address is <b>%{email}</b>."
+      accept_invite: "Accept Invitation"
+      success: "Your account has been created and you're now logged in."
+      password_label: "Set Password (optional)"
 
     password_reset:
       continue: "Continue to %{site_name}"
@@ -1355,8 +1362,10 @@ en:
         selected:
           one: "You have selected <b>1</b> topic."
           other: "You have selected <b>{{count}}</b> topics."
-        change_tags: "Change Tags"
+        change_tags: "Replace Tags"
+        append_tags: "Append Tags"
         choose_new_tags: "Choose new tags for these topics:"
+        choose_append_tags: "Choose new tags to append for these topics:"
         changed_tags: "The tags of those topics were changed."
 
       none:
@@ -1960,8 +1969,12 @@ en:
       email_in_disabled: "Posting new topics via email is disabled in the Site Settings. To enable posting new topics via email, "
       email_in_disabled_click: 'enable the "email in" setting.'
       suppress_from_homepage: "Suppress this category from the homepage."
+      show_subcategory_list: "Show subcategory list above topics in this category."
+      num_featured_topics: "Number of topics shown on the categories page:"
+      subcategory_num_featured_topics: "Number of featured topics on parent category's page:"
       all_topics_wiki: "Make new topics wikis by default."
       sort_order: "Default Sort:"
+      default_view: "Default View:"
       allow_badges_label: "Allow badges to be awarded in this category"
       edit_permissions: "Edit Permissions"
       add_permission: "Add Permission"
@@ -2679,7 +2692,8 @@ en:
             without_uploads: "Yes (do not include files)"
           download:
             label: "Download"
-            title: "Download the backup"
+            title: "Send email with download link"
+            alert: "A link to download this backup has been emailed to you."
           destroy:
             title: "Remove the backup"
             confirm: "Are you sure you want to destroy this backup?"
@@ -3046,6 +3060,7 @@ en:
         refresh_browsers_message: "Message sent to all clients!"
         show_public_profile: "Show Public Profile"
         impersonate: 'Impersonate'
+        action_logs: "Action Logs"
         ip_lookup: "IP Lookup"
         log_out: "Log Out"
         logged_out: "User was logged out on all devices"

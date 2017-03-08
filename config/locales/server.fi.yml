@@ -109,7 +109,6 @@ fi:
       default_categories_already_selected: "Et voi valita aluetta, joka on käytössä toisella listalla"
       s3_upload_bucket_is_required: "Et voi ottaa s3 latausta käyttöön, jos et ole määrittänyt 's3_upload_bucket'."
   invite:
-    accept_invite: "Hyväksy kutsu"
     not_found: "Kutsusi tunnistusväline ei kelpaa. Ota yhteyttä sivuston ylläpitäjään."
   bulk_invite:
     file_should_be_csv: "Ladattavan tiedoston tulee olla CSV-muodossa."
@@ -246,39 +245,46 @@ fi:
 
       Saadaksesi lisätietoa, [käy tutkimassa palstan säännöt](/guidelines). Tämä ohje näytetään vain kirjoittaessasi %{education_posts_text}.
     avatar: |
-      ### Miltä näyttäisi kuva käyttäjätilillesi?
+      ### Mitäpä jos lisäisit kuvan käyttäjätiliisi?
 
-      Olet luonut muutaman ketjun ja viestin, mutta profiilikuvasi ei ole yhtä uniikki kuin sinä -- se on pelkkä kirjain.
+      Olet luonut ketjuja ja kirjoittanut viestejä, mutta profiilikuvasi ei ole yhtä uniikki kuin sinä olet – se on pelkkä kirjain.
 
-      Oletko ajatellut **[vierailla käyttäjäprofiilissasi](%{profile_path})** ja lisätä itsellesi kuvan?
+      Oletko ajatellut **[käväistä käyttäjäprofiilissasi](%{profile_path})** ja lisätä kuvan edustamaan sinua?
 
       On helpompaa seurata keskusteluita ja löytää niistä kiinnostavia ihmisiä, kun kaikilla on uniikki profiilikuva!
     sequential_replies: |
-      ### Harkitse kaikkiin viesteihin vastaamista kerralla
+      ### Harkitse kaikkiin viesteihin vastaamista yhdellä kertaa
 
-      Usean peräkkäisen viestin sijaan, harkitse yhden vastauksen kirjoittamista, joka sisältää useita lainauksia aiemmista viesteistä tai @nimen mainintoja.
+      Usean perättäisen viestin sijaan, harkitse yhden vastauksen kirjoittamista, joka sisältää useita lainauksia aiemmista viesteistä tai @nimen mainintoja.
 
-      Voit muokata edellistä viestiäsi ja lisätä siihen lainauksen korostamalla osan lainattavan viestin tekstiä ja klikkaamalla näkyviin ilmestyvää <b>lainaa</b>-painiketta.
+      Voit muokata edellistä viestiäsi ja lisätä siihen lainauksen maalaamalla lainattavan viestin tekstiä ja klikkaamalla ilmestyvää <b>lainaa</b>-painiketta.
 
-      On kaikille helpompaa lukea ketjua, jossa on vähemmän pidempiä vastauksia, kuin paljon lyhyitä yksittäisiä vastauksia.
+      On helpompaa lukea ketjua, jossa on vähemmän pidempiä vastauksia kuin sellaista, jossa on paljon lyhyitä yksittäisiä vastauksia.
     dominating_topic: |+
       ### Anna muidenkin osallistua keskusteluun
 
       Tämä ketju on selvästikin tärkeä sinulle &ndash; olet kirjoittanut yli %{percent}% vastauksista.
 
-      Oletko varma, että annat myös muille riittävästi aikaa jakaa omia näkökulmiaan?
+      Oletko varma, että annat muillekin riittävästi aikaa jakaa omia ajatuksiaan?
 
+    get_a_room: |
+      ### Harkitse vastaamista muillekin
 
+      Olet vastannut jo %{count} kertaa käyttäjälle @%{reply_username} tässä ketjussa.
+
+      Oletko harkinnut vastaavasi myös *muille* keskusteluun osallistuville? Parhaissa keskusteluissa on useita ääniä ja näkökantoja.
+
+      Jos haluat jatkaa keskustelua tämän käyttäjän kanssa edelleen, [lähetä hänelle yksityisviesti](/users/%{reply_username}).
     too_many_replies: |
-      ### Olet saavuttanut rajoituksen uusien vastausten määrästä
+      ### Olet kirjoittanut enimmäismäärän vastauksia tähän ketjuun
 
-      Olemme pahoillamme, mutta uusien käyttäjien viestien määrää rajoitetaan %{newuser_max_replies_per_topic} vastaukseen samassa ketjussa.
+      Olemme pahoillamme, mutta uusien käyttäjien viestien määrä on rajoitettu %{newuser_max_replies_per_topic} vastaukseen samassa ketjussa.
 
-      Harkitse edellisten viestiesi muokkaamista uuden viestin kirjoittamisen sijaan tai muiden ketjujen lukemista.
+      Harkitse edellisten viestiesi muokkaamista uuden viestin kirjoittamisen sijaan tai vieraile muissa ketjuissa.
     reviving_old_topic: |
       ### Elvytä tämä ketju?
 
-      Viimeinen vastaus tässä ketjussa on yli %{days} päivää vanha. Vastauksesi nostaa ketjun listauksen kärkeen ja lähettää ilmoituksen kaikille, jotka ovat aiemmin olleet mukana keskustelussa.
+      Viimeisin vastaus tähän ketjuun on %{days} päivän takaa. Vastauksesi nostaa ketjun listauksen kärkeen ja lähettää ilmoituksen kaikille, jotka ovat aiemmin olleet osallistuneet keskusteluun
 
       Oletko varma, että haluat jatkaa tätä vanhaa keskustelua?
   activerecord:
@@ -311,8 +317,9 @@ fi:
               same_as_username: "on sama kuin käyttäjätunnuksesi. Valitse turvallisempi salasana."
               same_as_email: "on sama kuin sähköpostiosoitteesi. Valitse turvallisempi salasana."
               same_as_current: "on sama kuin nykyinen salasanasi."
+              unique_characters: "on liikaa toistuvia merkkejä. Valitse turvallisempi salasana."
             ip_address:
-              signup_not_allowed: "Kirjautuminen ei ole sallittu tälle tilille."
+              signup_not_allowed: "Liittyminen ei ole sallittu tälle tilille."
         color_scheme_color:
           attributes:
             hex:
@@ -388,7 +395,7 @@ fi:
       email_already_used_in_category: "'%{email}' on jo käytössä alueella '%{category_name}'."
     cannot_delete:
       uncategorized: "Alueettomat-aluetta ei voi poistaa"
-      has_subcategories: "Aluetta ei voi poistaa, koska sillä on sisempiä alueita."
+      has_subcategories: "Aluetta ei voi poistaa, koska sillä on tytäralueita."
       topic_exists:
         one: "Aluetta ei voi poistaa, koska siellä on 1 ketju. Linkki ketjuun %{topic_link}."
         other: "Aluetta ei voi poistaa, koska siellä on %{count} ketjua. Vanhin ketju on %{topic_link}."
@@ -513,7 +520,6 @@ fi:
     title: 'Uusi salasana'
     success: "Salasanan vaihto onnistui ja olet nyt kirjautuneena sisään."
     success_unapproved: "Salasana vaihdettu onnistuneesti."
-    continue: "Jatka sivustolle %{site_name}"
   change_email:
     confirmed: "Sähköpostiosoite päivitetty."
     please_continue: "Jatka sivustolle %{site_name}"
@@ -780,12 +786,12 @@ fi:
     sidekiq_warning: 'Sidekiq ei ole käynnissä. Monet tehtävät, kuten sähköpostien lähettäminen, suoritetaan asynkronisesti sidekiqin avulla. Varmista, että vähintään yksi sidekiq prosessi on käynnissä. <a href="https://github.com/mperham/sidekiq" target="_blank">Opiskele lisää Sidekiqista täältä</a>.'
     queue_size_warning: 'Jonossa olevien tehtävien määrä on %{queue_size}, joka on korkea. Tämä voi olla merkki ongelmista Sidekiq prosess(e)issa tai sinun voi täytyä lisätä Sidekiq workerien määrää.'
     memory_warning: 'Palvelimella on alle 1GB muistia. Vähintään 1 GB muistia on suositeltavaa.'
-    google_oauth2_config_warning: 'Palvelin on konfiguroitu hyväksymään kirjautuminen Google OAuth2:n kautta (enable_google_oauth2_logins), mutta client id ja client secret arvoja ei ole asetettu. Päivitä arvot <a href="/admin/site_settings">sivuston asetuksissa</a>.Voit lukea lisätietoja <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">tästä oppaasta</a>.'
-    facebook_config_warning: 'Palvelin on konfiguroitu hyväksymään kirjautuminen Facebookin kautta (enable_facebook_logins), mutta app id ja app secret arvoja ei ole asetettu. Päivitä arvot <a href="/admin/site_settings">sivuston asetuksissa</a>.Voit lukea lisätietoja <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">tästä oppaasta</a>.'
-    twitter_config_warning: 'Palvelin on konfiguroitu hyväksymään kirjautuminen Twitterin kautta (enable_twitter_logins), mutta salaisia arvoja ei ole asetettu. Päivitä arvot <a href="/admin/site_settings">sivuston asetuksissa</a>. Voit lukea lisätietoja <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">tästä oppaasta</a>.'
-    github_config_warning: 'Palvelin on konfiguroitu hyväksymään kirjautuminen Githubin kautta (enable_github_logins), mutta client id ja app secret arvoja ei ole asetettu. Päivitä arvot <a href="/admin/site_settings">sivuston asetuksissa</a>.Voit lukea lisätietoja <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">tästä oppaasta</a>.'
-    s3_config_warning: 'Palvelin on konfiguroitu tallentamaan tiedostot s3:een, mutta vähintään yksi arvoista s3_access_key_id, s3_secret_access_key tai s3_upload_bucket ei ole asetettu. Päivitä arvot <a href="/admin/site_settings">sivuston asetuksissa</a>.Voit lukea lisätietoja oppaasta <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">"How to set up image uploads to S3?"</a>.'
-    s3_backup_config_warning: 'Palvelin on konfiguroitu lataamaan varmuuskopiot s3:een, mutta vähintään yksi arvoista s3_access_key_id, s3_secret_access_key tai s3_backup_bucket ei ole asetettu. Päivitä arvot <a href="/admin/site_settings">sivuston asetuksissa</a>.Voit lukea lisätietoja oppaasta <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">"How to set up image uploads to S3?"</a>.'
+    google_oauth2_config_warning: 'Palvelin on konfiguroitu hyväksymään liittyminen Google OAuth2:n kautta (enable_google_oauth2_logins), mutta client id ja client secret arvoja ei ole asetettu. Päivitä arvot <a href="/admin/site_settings">sivuston asetuksissa</a>.Voit lukea lisätietoja <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">tästä oppaasta</a>.'
+    facebook_config_warning: 'Palvelin on konfiguroitu hyväksymään liittyminen Facebookin kautta (enable_facebook_logins), mutta app id ja app secret arvoja ei ole asetettu. Päivitä arvot <a href="/admin/site_settings">sivuston asetuksissa</a>.Voit lukea lisätietoja <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">tästä oppaasta</a>.'
+    twitter_config_warning: 'Palvelin on konfiguroitu hyväksymään liittyminen Twitterin kautta (enable_twitter_logins), mutta salaisia arvoja ei ole asetettu. Päivitä arvot <a href="/admin/site_settings">sivuston asetuksissa</a>. Voit lukea lisätietoja <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">tästä oppaasta</a>.'
+    github_config_warning: 'Palvelin on konfiguroitu hyväksymään liittyminen Githubin kautta (enable_github_logins), mutta client id ja app secret arvoja ei ole asetettu. Päivitä arvot <a href="/admin/site_settings">sivuston asetuksissa</a>.Voit lukea lisätietoja <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">tästä oppaasta</a>.'
+    s3_config_warning: 'Palvelin on asetettu tallentamaan tiedostot s3:een, mutta vähintään yksi tiedoista s3_access_key_id, s3_secret_access_key tai s3_upload_bucket on asettamatta. Päivitä ne <a href="/admin/site_settings">sivuston asetuksissa</a>. Voit lukea lisätietoja oppaasta <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">"How to set up image uploads to S3?"</a>.'
+    s3_backup_config_warning: 'Palvelin on asetettu tallentamaan varmuuskopiot s3:een, mutta vähintään yksi tiedoista s3_access_key_id, s3_secret_access_key tai s3_upload_bucket on asettamatta. Päivitä ne <a href="/admin/site_settings">sivuston asetuksissa</a>. Voit lukea lisätietoja oppaasta <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">"How to set up image uploads to S3?"</a>.'
     image_magick_warning: 'Palvelin on konfiguroitu luomaan esikatselukuvia suurista kuvista, mutta ImageMagickia ei ole asennettu. Asenna ImageMagick paketinhallinnasta tai <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">lataamalla uusin versio</a>.'
     failing_emails_warning: 'Epäonnistuneiden sähköpostitehtävien määrä on %{num_failed_jobs}. Tarkista app.yml ja varmista, että palvelimen asetukset ovat kunnossa. <a href="/sidekiq/retries" target="_blank">Katsele epäonnistuneita tehtäviä Sidekiqissa</a>.'
     subfolder_ends_in_slash: "Alihakemiston asetuksesi ei kelpaa; DISCOURSE_RELATIVE_URL_ROOT päättyy vinoviivaan."
@@ -813,6 +819,7 @@ fi:
     max_topic_title_length: "Viestin otsikon merkkien maksimimäärä"
     min_private_message_title_length: "Viestin otsikon merkkien minimimäärä viestille"
     min_search_term_length: "Haun merkkien minimimäärä"
+    search_tokenize_chinese_japanese_korean: "Pakota haku käsittelemään kiinaa/japania/koreaa myös muunkielisillä sivustoilla"
     search_prefer_recent_posts: "Jos hakeminen suurelta palstaltasi on hidasta, tämä asetus kokeilee hakemistorakennetta, jossa tuoreimmat viestit ovat ensin"
     search_recent_posts_size: "Kuinka monta tuoretta viestiä pidetään hakemistossa"
     allow_uncategorized_topics: "Salli ketjujen luominen valitsematta aluetta. VAROITUS: Alueettomat ketjut täytyy siirtää jollekin alueelle ennen kuin poistat asetuksen käytöstä."
@@ -836,7 +843,6 @@ fi:
     max_image_width: "Esikatselukuvan suurin sallittu leveys viestissä"
     max_image_height: "Esikatselukuvan suurin sallittu korkeus viestissä"
     category_featured_topics: "Näytettävien ketjujen lukumäärä alueittan Alueet-sivulla. Arvon muuttamisen jälkeen voi kestää jopa 15 minuuttia sivun päivittymiseen."
-    show_subcategory_list: "Näytä lista tytäralueista ketjulistauksen sijaan alueelle saavuttaessa."
     fixed_category_positions: "Jos tämä on valittuna, voit muokata alueiden järjestystä. Jos tätä ei valita, alueet järjetsetään aktiivisuuden mukaan."
     fixed_category_positions_on_create: "Jos tämä on valittuna, alueiden järjestys pysyy samana uuden ketjun luomisen dialogissa (edellyttää fixed_category_positions)"
     add_rel_nofollow_to_user_content: "Lisää rel nofollow kaikkeen käyttäjien lähettämään sisältöön, paitsi sivuston sisäisiin linkkeihin (sisältäen ylemmät verkkotunnukset). Jos muutat asetusta, sinun täytyy rakentaa viestit uudelleen komennolla: \"rake posts:rebake\""
@@ -892,11 +898,12 @@ fi:
     ga_domain_name: "VANHENTUNUT: Google Analytics (ga.js) -verkkotunnus, esim. mysite.com; ks. http://google.com/analytics"
     ga_universal_tracking_code: "Google Universal analytics (analytics.js) seurantakoodi, esim.: UA-12345678-9; katso http://google.com/analytics"
     ga_universal_domain_name: "Google Universal analytics (analytics.js) verkkotunnus, esim.: osoite.fi; katso http://google.com/analytics"
+    gtm_container_id: "Google Tag Manager -säiliön ID. Esim: GTM-ABCDEF"
     enable_escaped_fragments: "Käytä Googlen Ajax-sivustoille tarkoitettua API:a, jos webcrawleria ei tunnisteta. Katso https://developers.google.com/webmasters/ajax-crawling/docs/learn-more"
     enable_noscript_support: "Ota käyttöön noscript-tagi hakukoneiden webcrawlereille"
     allow_moderators_to_create_categories: "Salli valvojien luoda uusia alueita"
     cors_origins: "Salli lähteet CORS-pyynnöille (cross-origin request). Jokaisen lähteen pitää sisältää http:// tai https://. DISCOURSE_ENABLE_CORS asetus pitää olla valittuna ottaaksesi CORSin käyttöön."
-    use_admin_ip_whitelist: "Ylläpitäjät voivat kirjautua vain IP osoitteista, jotka on määritetty Seulottavien IP:iden listassa (Ylläpito > Lokit > Seulottavat IP:t)"
+    use_admin_ip_whitelist: "Ylläpitäjät voivat kirjautua vain IP-osoitteista, jotka on määritetty Seulottavien IP:iden listassa (Ylläpito > Lokit > Seulottavat IP:t)"
     top_menu: "Mitkä painikkeet näytetään kotisivun navigointipalkissa, ja missä järjestyksessä. Esimerkiksi latest|new|unread|categories|top|read|posted|bookmarks"
     post_menu: "Mitkä painikkeet näytetään viestin valikossa, ja missä järjestyksessä. Esimerkiksi like|edit|flag|delete|share|bookmark|reply"
     post_menu_hidden_items: "Piilotettavat painikkeet viestin valikosta, kunnes '...' klikataan."
@@ -930,11 +937,12 @@ fi:
     invite_passthrough_hours: "Kuinka pitkään käyttäjä voi käyttää vastatun kutsun avainta kirjautuakseen sisään, tunneissa"
     invite_only: "Julkinen rekisteröityminen on otettu pois käytöstä, uuden tilin luominen vaatii kutsun muilta käyttäjiltä tai henkilökunnalta."
     login_required: "Vaadi kirjautumista sivuston lukemiseen, epää anonyymi pääsy."
-    min_username_length: "Käyttäjänimen vähimmäispituus merkeissä."
-    max_username_length: "Käyttäjänimen enimmäispituus merkeissä."
+    min_username_length: "Käyttäjänimen vähimmäispituus merkeissä. VAROITUS: Jos olemassa olevalla käyttäjällä tai ryhmällä on tätä lyhyempi nimi, sivustosi hajoaa!"
+    max_username_length: "Käyttäjänimen vähimmäispituus merkeissä. VAROITUS: Jos olemassa olevalla käyttäjällä tai ryhmällä on tätä pidempi nimi, sivustosi hajoaa!"
     reserved_usernames: "Käyttäjänimet, joiden rekisteröintiä ei sallita."
     min_password_length: "Salasanan vähimmäispituus."
     min_admin_password_length: "Ylläpitäjän salasanan vähimmäispituus."
+    password_unique_characters: "Vähimmäismäärä eri merkkejä salasanassa."
     block_common_passwords: "Älä salli salasanoja, jotka ovat 10 000 yleisimmän salasanan joukossa."
     enable_sso: "Ota käyttöön single sign on ulkopuolisen sivuston kautta (VAROITUS: ULKOPUOLISEN SIVUSTON TÄYTYY VALIDOIDA SÄHKÖPOSTIOSOITTEET!)"
     verbose_sso_logging: "Kirjaa runsaat SSO-diagnostiikat /logsiin"
@@ -996,6 +1004,8 @@ fi:
     max_private_messages_per_day: "Viestien päivittäinen maksimimäärä per käyttäjä."
     max_invites_per_day: "Maksimimäärä kutsuja, jonka käyttäjä voi lähettää päivässä."
     max_topic_invitations_per_day: "Maksimimäärä ketjukutsuja, jonka yksittäinen käyttäjä voi lähettää päivässä"
+    max_logins_per_ip_per_hour: "Enimmäismäärä kirjautumisia IP-osoitetta kohden tunnissa"
+    max_logins_per_ip_per_minute: "Enimmäismäärä kirjautumisia IP-osoitetta kohden minuutissa"
     alert_admins_if_errors_per_minute: "Virheiden määrä minuutissa, jonka seurauksena hälytetään ylläpitäjä. 0 ottaa toiminnon pois käytöstä. HUOM: vaatii uudelleenkäynnistyksen."
     alert_admins_if_errors_per_hour: "Virheiden määrä tunnissa, jonka seurauksena hälytetään ylläpitäjä. 0 ottaa toiminnon pois käytöstä. HUOM: vaatii uudelleenkäynnistyksen."
     categories_topics: "Kuinka monta ketjua näytetään /keskustelualueet-sivulla"
@@ -1102,7 +1112,7 @@ fi:
     topic_view_duration_hours: "Laske uusi ketjun katselu kerran per IP/käyttäjä joka N:s tunti"
     user_profile_view_duration_hours: "Laske uusi profiilin katselu kerran per IP/käyttäjä joka N:s tunti"
     levenshtein_distance_spammer_emails: "Verrattaessa sähköpostiosoitteita tunnettuihin roskapostittajiin, näin monen merkin ero saa vielä aikaan löydöksen."
-    max_new_accounts_per_registration_ip: "Jos samasta IP osoitteesta on jo (n) luottamustason 0 käyttäjätiliä (eikä yhtään henkilökunnan tai vähintään LT2), lakkaa hyväksymästä uusia rekisteröitymisiä tästä IP:stä."
+    max_new_accounts_per_registration_ip: "Jos samasta IP-osoitteesta on jo (n) luottamustason 0 käyttäjätiliä (eikä yhtään henkilökunnan tai vähintään LT2), lakkaa hyväksymästä uusia rekisteröitymisiä tästä IP:stä."
     min_ban_entries_for_roll_up: "Kun Kääri-painiketta painetaan, luodaan IP-porttikielloista aliverkon kattavia kieltoja jos kieltoja on asettu vähintään (N) määrä."
     max_age_unmatched_emails: "Poista osumattomat seulotut sähköpostiosoitteet (N) päivän jälkeen."
     max_age_unmatched_ips: "Poista osumattomat seulotut IP-osoitteet (N) päivän jälkeen."
@@ -1169,7 +1179,7 @@ fi:
     digest_posts: "Yläraja sähköpostikoosteessa näytettävien suosittujen viestien määrälle."
     digest_other_topics: "Yläraja sähköpostikoosteen 'Uutta seuraamissasi ketjuissa ja alueissa' -osiossa näytettävien ketjujen määrälle."
     digest_min_excerpt_length: "Vähimmäispituus merkeissä viestin katkelmalle, joka näytetään sähköpostikoosteissa."
-    delete_digest_email_after_days: "Älä lähetä sähköpostikoosteita käyttäjille, joita ei ole nähty sivustolla yli (n) päivään."
+    suppress_digest_email_after_days: "Älä lähetä sähköpostikoostetta käyttäjille, jotka eivät ole vierailleet sivustolla yli (n) päivään."
     digest_suppress_categories: "Älä liitä näiden alueiden viestejä sähköpostikoosteisiin."
     disable_digest_emails: "Poista sähköpostikoosteet kaikilta käyttäjiltä."
     email_accent_bg_color: "Kakkosväri, jota käytetään joidenkin elementtien taustavärinä sähköpostiviesteissä. Anna värin nimi englanniksi ('red') tai sen Hex-arvo ('#FF000')."
@@ -1188,6 +1198,7 @@ fi:
     user_website_domains_whitelist: "Käyttäjän kotisivu voi olla näiden verkkotunnusten alainen. Pystyviivoin erotettu lista."
     allow_profile_backgrounds: "Salli käyttäjien ladata profiilin taustakuva."
     sequential_replies_threshold: "Kuinka monen peräkkäisen viestin jälkeen yhdessä ketjussa käyttäjää muistutetaan peräkkäisistä vastauksista."
+    get_a_room_threshold: "Kuinka monta viestiä tulee kohdistaa samalle käyttäjälle samassa ketjussa, jotta näytetään varoitus."
     enable_mobile_theme: "Mobiililaitteet käyttävät erillistä teemaa ja kahden välillä on mahdollista vaihtaa. Poista asetus käytöstä, jos haluat käyttää omaa tyylitiedostoa, joka on mukautuva eri laitteille."
     dominating_topic_minimum_percent: "Kuinka monta prosenttia ketjun viesteistä käyttäjän täytyy kirjoittaa, ennen kuin tulee muistutetuksi ketjun dominoinnista."
     disable_avatar_education_message: "Piilota opastusviesti, joka näytetään kun profiilikuvaa vaihdetaan."
@@ -1223,7 +1234,6 @@ fi:
     show_create_topics_notice: "Jos palstalla on vähemmän kuin 5 julkista ketjua, huomauta ylläpitäjiä ketjujen luonnista."
     delete_drafts_older_than_n_days: Poista yli (n) päivää vanhat luonnokset.
     bootstrap_mode_min_users: "Vähimmäismäärä käyttäjiä, joka vaaditaan aloitustilan poistamiseen (aseta 0 poistaaksesi käytöstä)"
-    vacuum_db_days: "Aja VACUUM ANALYZE vapauttaaksesi tietokannan viemää tilaa migraatioiden jälkeen (aseta 0 poistaaksesi käytöstä)"
     prevent_anons_from_downloading_files: "Estä kirjautumattomia käyttäjiä lataamasta liitetiedostoja. VAROITUS: tämä estää viestin liitettyjen muiden tiedostojen, kuin kuvien käyttämisen sivustolla."
     slug_generation_method: "Valitse polkulyhenteen luomisen metodi.  'encoded' käyttää prosenttikoodausta, 'none' poistaa polkulyhenteet käytöstä."
     enable_emoji: "Ota emoji käyttöön"
@@ -1396,6 +1406,7 @@ fi:
     something_already_taken: "Jotain meni pieleen. Ehkäpä tämä käyttäjänimi tai sähköpostiosoite on jo rekisteröity. Kokeile salasana unohtui -linkkiä."
     omniauth_error: "Pahoittelut, tilisi tunnistautumisessa tapahtui virhe. Ehkäpä et hyväksynyt valtuutusta?"
     omniauth_error_unknown: "Jotain meni pieleen kirjautumisesti käsittelyssä, ole hyvä ja yritä uudelleen."
+    authenticator_error_no_valid_email: "Mikään tiliin %{account} liittyvistä sähköpostiosoitteista ei ole sallittu. Voit joutua määrittämään käyttäjätilisi eri sähköpostiosoitteella."
     new_registrations_disabled: "Uusien tilien luonti ei ole tällä hetkellä sallittu."
     password_too_long: "Salasanan enimmäispituus on 200 merkkiä."
     email_too_long: "Antamasi sähköpostiosoite on liian pitkä. Mailbox nimi ei saa olla yli 254 merkkiä pitkä, eikä domain nimi yli 253 merkkiä pitkä."
@@ -1435,17 +1446,19 @@ fi:
       one: "Yksi liputus odottaa käsittelyä"
       other: "%{count} liputusta odottaa käsittelyä"
   unsubscribe_mailer:
+    title: "Peru sähköpostimuistukset"
     subject_template: "Vahvista, ettet enää halua, että %{site_title} lähettää sinulle sähköpostimuistutuksia."
     text_body_template: |
-      Joku (mahdollisesti sinä) pyysi, ettei sähköposti-ilmoituksia sivustolta %{site_domain_name} enää lähetettäisi tähän osoitteeseen.
+      Joku (mahdollisesti sinä) pyysi, ettei sivustolta %{site_domain_name} enää lähetettäisi sähköposti-ilmoituksia tähän osoitteeseen.
       Vahvista pyyntö klikkaamalla linkkiä:
 
       %{confirm_unsubscribe_link}
 
       Jos haluat jatkossakin saada sähköposti-ilmoituksia, voit jättää tämän viestin huomiotta.
   invite_mailer:
+    title: "Kutsu keskusteluun"
     subject_template: "%{invitee_name} kutsui sinut ketjuun '%{topic_title}' sivustolla %{site_domain_name}"
-    text_body_template: |
+    text_body_template: |+
       %{invitee_name} kutsui sinut keskusteluun
 
       > **%{topic_title}**
@@ -1460,8 +1473,8 @@ fi:
 
       %{invite_link}
 
-      Tämän kutsun lähetti luotettu käyttäjä, joten voit osallistua keskusteluun välittömästi.
   custom_invite_mailer:
+    title: "Kutsu keskusteluun saatesanoilla"
     subject_template: "%{invitee_name} kutsui sinut ketjuun '%{topic_title}' sivustolla %{site_domain_name}"
     text_body_template: |
       %{invitee_name} kutsui sinut keskusteluun
@@ -1481,9 +1494,8 @@ fi:
       Jos kiinnostuit, klikkaa alla olevaa linkkiä:
 
       %{invite_link}
-
-      Tämän kutsun lähetti luotettu käyttäjä, joten voit osallistua keskusteluun välittömästi.
   invite_forum_mailer:
+    title: "Kutsu palstalle"
     subject_template: "%{invitee_name} kutsui sinut sivustolle %{site_domain_name}"
     text_body_template: |
       %{invitee_name} kutsui sinut liittymään sivustolle
@@ -1495,9 +1507,8 @@ fi:
       Jos kiinnostuit, klikkaa alla olevaa linkkiä:
 
       %{invite_link}
-
-      Tämän kutsun lähetti luotettu käyttäjä, joten kun klikkaat, sinulle luodaan tämän sähköpostiosoitteen alainen käyttäjätili automaattisesti.
   custom_invite_forum_mailer:
+    title: "Kutsu palstalle saatesanoilla"
     subject_template: "%{invitee_name} kutsui sinut sivustolle %{site_domain_name}"
     text_body_template: |
       %{invitee_name} kutsui sinut liittymään sivustolle
@@ -1513,9 +1524,8 @@ fi:
       Jos kiinnostuit, klikkaa alla olevaa linkkiä:
 
       %{invite_link}
-
-      Tämän kutsun lähetti luotettu käyttäjä, joten kun klikkaat, sinulle luodaan tämän sähköpostiosoitteen alainen käyttäjätili automaattisesti.
   invite_password_instructions:
+    title: "Salasanaohjeistus kutsutulle"
     subject_template: "Aseta salasana %{site_name} -tunnuksellesi"
     text_body_template: |
       Kiitos, kun hyväksyit kutsun sivustolle %{site_name} -- tervetuloa!
@@ -1525,6 +1535,7 @@ fi:
 
       (jos yllä oleva linkki on vanhentunut, valitse "unohdin salasanani" kirjautuessasi sisään sähköpostiosoitteellasi)
   test_mailer:
+    title: "Sähköpostipalvelun testaus"
     subject_template: "[%{site_name}] Sähköpostin toimitettavuustesti"
     text_body_template: |
       Tämä on testisähköposti osoitteesta
@@ -1568,6 +1579,7 @@ fi:
       [mj]: https://www.mailjet.com/pricing
       [mt]: http://www.mail-tester.com/
   new_version_mailer:
+    title: "Uusi versio"
     subject_template: "[%{site_name}] Uusi Discourse-versio, päivitys saatavilla"
     text_body_template: |
       Hurraa, uusi versio [Discoursesta](http://www.discourse.org) on saatavilla!
@@ -1581,6 +1593,7 @@ fi:
 
       - Käy osoitteessa [meta.discourse.org](https://meta.discourse.org) lukemassa uutisia ja keskustelua, tai hae apua Discourseen liittyen
   new_version_mailer_with_notes:
+    title: "Uusi versio julkaisumuistiolla"
     subject_template: "[%{site_name}] päivitys saatavilla"
     text_body_template: |
       Hurraa, uusi versio [Discoursesta](http://www.discourse.org) on saatavilla!
@@ -1598,6 +1611,7 @@ fi:
 
       %{notes}
   queued_posts_reminder:
+    title: "Viestejä jonossa"
     subject_template:
       one: "[%{site_name}] 1 viesti odottaa hyväksyntää"
       other: "[%{site_name}] %{count} viestiä odottaa hyväksyntää"
@@ -1890,6 +1904,7 @@ fi:
 
         Järjestelmä havaitsi viestisi olevan tietokoneen automaattisesti luoma, eikä ihmisen kirjoittama, eikä sitä voitu siksi hyväksyä. Jos uskot tämän olevan virhe, ota yhteyttä henkilökuntaan.
     email_error_notification:
+      title: "Ilmoitus sähköpostivirheestä"
       subject_template: "[%{site_name}] Sähköpostiongelma -- POP-autentikoinnin virhe"
       text_body_template: |
         Sähköpostin pollauksessa POP-serveriltä tapahtui autentikointivirhe.
@@ -1903,9 +1918,9 @@ fi:
       text_body_template: |
         Hei,
 
-        Tämä automaattinen viesti on lähetetty sivustolta %{site_name} kertoaksemme, että viestejäsi on piilotettu yhteisön liputusten perusteella.
+        Tämä automaattinen viesti on lähetetty sivustolta %{site_name} kertoaksemme, että viestejäsi on väliakaisesti piilotettu yhteisön liputusten perusteella.
 
-        Varotoimena uudelta tilitäsi on estetty uusien ketjujen ja viestien luonti, kunnes henkilökunnan jäsen tarkastaa tilisi. Pahoittelemme tästä aiheutuvaa vaivaa.
+        Varotoimena uudelta tililtäsi ei voi vastata tai luoda uusia ketjuja ennen kuin henkilökunnan jäsen tarkastaa sen. Pahoittelemme tästä aiheutuvaa vaivaa.
 
         Saadaksesi lisätietoa, tutustu [yhteisön ohjeisiin](%{base_url}/guidelines).
     too_many_tl3_flags:
@@ -1914,22 +1929,24 @@ fi:
       text_body_template: |
         Hei,
 
-        Tämä automaattinen viesti on lähetetty sivustolta %{site_name} kertoaksemme, että tilisi on jäädytetty yhteisön liputusten perusteella.
+        Tämä automaattinen viesti on lähetetty sivustolta %{site_name} kertoaksemme, että tilisi on jäädytetty yhteisön useiden liputusten perusteella.
 
-        Varotoimena uudelta tilitäsi on estetty uusien ketjujen ja viestien luonti, kunnes henkilökunnan jäsen tarkastaa tilisi. Pahoittelemme tästä aiheutuvaa vaivaa.
+        Varotoimena uudelta tililtäsi ei voi vastata tai luoda uusia ketjuja ennen kuin henkilökunnan jäsen tarkastaa sen. Pahoittelemme tästä aiheutuvaa vaivaa.
 
         Saadaksesi lisätietoa, tutustu [yhteisön ohjeisiin](%{base_url}/guidelines).
     blocked_by_staff:
+      title: "Henkilökunta esti"
       subject_template: "Tili on väliaikaisesti estetty"
       text_body_template: |
         Hei,
 
-        Tämä automaattinen viesti on lähetetty sivustolta %{site_name} kertoaksemme, että tilisi on varotoimenpiteenä väliaikaisesti estetty.
+        Tämä automaattinen viesti on lähetetty sivustolta %{site_name} kertoaksemme, että tilisi on jäädytetty väliaikaisesti varotoimenpiteenä.
 
-        Voit jatkaa lukemista, mutta tilitäsi on estetty uusien ketjujen ja viestien luonti, kunnes [henkilökunnan jäsen](%{base_url}/about)  tarkastaa viimeisimmät viestisi. Pahoittelemme tästä aiheutuvaa vaivaa.
+        Voit jatkaa selailua, muttet voi vastata tai luoda uusia ketjuja ennen kuin [henkilökunnan jäsen](%{base_url}/about) tarkastaa viimeisimmät viestisi. Pahoittelemme tästä aiheutuvaa vaivaa.
 
         Saadaksesi lisätietoa, tutustu [yhteisön ohjeisiin](%{base_url}/guidelines).
     user_automatically_blocked:
+      title: "Käyttäjä estetty automaattisesti"
       subject_template: "Uusi käyttäjä %{username} on estetty yhteisön liputusten perusteella"
       text_body_template: |
         Tämä on automaattinen viesti.
@@ -1940,6 +1957,7 @@ fi:
 
         Kynnysarvoa voi muuttaa säätämällä asetuksen `block_new_user` arvoa sivuston asetuksissa.
     spam_post_blocked:
+      title: "Roskapostiviesti estetty"
       subject_template: "Uuden käyttäjän %{username} viestit on estetty toistuvien linkkien vuoksi"
       text_body_template: |
         Tämä on automaattisesti luotu viesti.
@@ -1950,6 +1968,7 @@ fi:
 
         Tätä toimintoa voi muokata vaihtamalla asetuksia `newuser_spam_host_threshold`  `white_listed_spam_host_domains` sivuston asetuksissa.
     unblocked:
+      title: "Ei enää estetty"
       subject_template: "Tili avattu"
       text_body_template: |
         Hei,
@@ -1958,6 +1977,7 @@ fi:
 
         Voit jälleen luoda uusia viestejä ja ketjuja. Kiitos kärsivällisyydestänne.
     pending_users_reminder:
+      title: "Käyttäjiä jonossa"
       subject_template:
         one: "1 käyttäjä odottaa hyväksymistä"
         other: "%{count} käyttäjää odottaa hyväksymistä"
@@ -1966,9 +1986,11 @@ fi:
 
         [Tarkasta hakemukset admin-alueella](%{base_url}/admin/users/list/pending).
     download_remote_images_disabled:
+      title: "Linkattuja kuvia ei ladata"
       subject_template: "Linkattujen kuvien lataaminen on otettu pois käytöstä"
       text_body_template: "Asetus `download_remote_images_to_local` on otettu pois käytöstä, koska vapaan tilan rajoitus `download_remote_images_threshold` saavutettiin."
     dashboard_problems:
+      title: "Hallintapaneelissa ongelmia"
       subject_template: "Ongelmia on löytynyt"
       text_body_template: |
         Ylläpitäjän hallintapaneelissa on raportoitu virheistä.
@@ -2113,6 +2135,7 @@ fi:
 
         %{respond_instructions}
     user_posted:
+      title: "Käyttäjälle kirjoittiin"
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -2123,6 +2146,7 @@ fi:
 
         %{respond_instructions}
     user_watching_first_post:
+      title: "Käyttäjä tarkkailee uusia ketjuja"
       subject_template: "[%{site_name}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -2133,6 +2157,7 @@ fi:
 
         %{respond_instructions}
     user_posted_pm:
+      title: "Käyttäjälle lähetettiin YV"
       subject_template: "[%{site_name}] [YV] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -2143,6 +2168,7 @@ fi:
 
         %{respond_instructions}
     user_posted_pm_staged:
+      title: "Esikäyttäjälle lähetettiin YV"
       subject_template: "%{optional_re}%{topic_title}"
       text_body_template: |2
 
@@ -2160,7 +2186,6 @@ fi:
       follow_topic: "Seuraa tätä ketjua"
       join_the_discussion: "Lue lisää"
       popular_posts: "Suosittuja viestejä"
-      from_topic_label: "Lähettäjä"
       more_new: "Uutta sinulle"
       subject_template: "[%{site_name}] Kooste"
       unsubscribe: "Tämä kooste lähetettiin sivustolta %{site_link}, koska emme ole nähneet sinua vähään aikaan. Jos et halua vastaanottaa näitä viestejä %{unsubscribe_link}."
@@ -2197,6 +2222,7 @@ fi:
         Klikkaa tätä linkkiä valitaksesi salasanan:
         %{base_url}/users/password-reset/%{email_token}
     admin_login:
+      title: "Ylläpitäjäkirjautuminen"
       subject_template: "[%{site_name}] Kirjautuminen"
       text_body_template: |
         Joku pyysi sinua kirjautumaan tilillesi sivustolla [%{site_name}](%{base_url}).
@@ -2206,6 +2232,7 @@ fi:
         Klikkaa tätä linkkiä kirjautuaksesi:
         %{base_url}/users/admin-login/%{email_token}
     account_created:
+      title: "Tili luotu"
       subject_template: "[%{site_name}] Uusi käyttäjätilisi"
       text_body_template: |
         Sinulle luotiin uusi käyttäjätunnus sivustolla %{site_name}
@@ -2213,12 +2240,14 @@ fi:
         Klikkaa seuraavaa linkkiä asettaaksesi salasanan uudelle tunnuksellesi:
         %{base_url}/users/password-reset/%{email_token}
     confirm_new_email:
+      title: "Vahvista uusi sähköpostiosoite"
       subject_template: "[%{site_name}] Vahvista uusi sähköpostiosoite"
       text_body_template: |
         Vahvista uusi sähköpostiosoite sivustolle %{site_name} klikkaamalla alla olevaa linkkiä:
 
         %{base_url}/users/authorize-email/%{email_token}
     confirm_old_email:
+      title: "Vahvista vanha sähköpostiosoite"
       subject_template: "[%{site_name}] Vahvista nykyinen sähköpostiosoiteesi"
       text_body_template: |+
         Ennen kuin voit vaihtaa sähköpostiosoitteesti, meidän täytyy varmistaa, että hallinnoit nykyistä sähköpostiosoitetta. Kun olet suorittanut tämän, varmistamme vielä uuden sähköpostiosoitteenkin.
@@ -2228,6 +2257,7 @@ fi:
         %{base_url}/users/authorize-email/%{email_token}
 
     notify_old_email:
+      title: "Ilmoita vanhaan sähköpostiosoitteeseen"
       subject_template: "[%{site_name}] Sähköpostiosoitteesi on vaihdettu"
       text_body_template: |
         Tämä on automaattinen vahvistus siitä, että sähköpostiosoitteesi sivustolle %{site_name} on vaihdettu. Jos on tapahtunut virhe, ota yhteyttä sivuston ylläpitäjään.
@@ -2236,6 +2266,7 @@ fi:
 
         %{new_email}
     signup_after_approval:
+      title: "Liity hyväksynnän jälkeen"
       subject_template: "Sinut on hyväksytty sivustolle %{site_name}!"
       text_body_template: |
         Tervetuloa sivustolle %{site_name}!
@@ -2255,6 +2286,7 @@ fi:
 
         (Jos haluat keskustella [henkilökunnan jäsenten](%{base_url}/about) kanssa, vastaa vain tähän viestiin)
     signup:
+      title: "Liity"
       subject_template: "[%{site_name}] Vahvista uusi käyttäjätilisi"
       text_body_template: |
         Tervetuloa sivustolle %{site_name}!
@@ -2655,8 +2687,6 @@ fi:
   performance_report:
     initial_post_raw: Tämä ketju sisältää päivittäisiä suorituskykyrapotteja sivustoltasi
     initial_topic_title: Sivuston suorituskykyraportit
-  topic_invite:
-    user_exists: "Pahoittelut, tämä käyttäjä on jo kutsuttu. Voit kutsua toisen käyttäjän ketjuun vain yhden kerran."
   tags:
     title: "Tunnisteet"
     staff_tag_disallowed: "Tunnisteen \"%{tag}\" voi lisätä vain henkilökunta"

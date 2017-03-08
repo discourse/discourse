@@ -21,5 +21,13 @@ export default buildCategoryPanel('settings', {
       {name: I18n.t('category.sort_ascending'),  value: 'true'},
       {name: I18n.t('category.sort_descending'), value: 'false'}
     ];
+  },
+
+  @computed
+  availableViews() {
+    return [
+      {name: I18n.t('filters.latest.title'), value: 'latest'},
+      {name: I18n.t('filters.top.title'),    value: 'top'}
+    ];
   }
 });

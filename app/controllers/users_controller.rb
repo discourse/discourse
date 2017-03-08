@@ -438,11 +438,11 @@ class UsersController < ApplicationController
 
       format.json do
         if request.put?
-          if @error || @user&.errors&.any?
+          if @error || @user.errors&.any?
             render json: {
               success: false,
               message: @error,
-              errors: @user&.errors&.to_hash,
+              errors: @user.errors.to_hash,
               is_developer: UsernameCheckerService.is_developer?(@user.email)
             }
           else

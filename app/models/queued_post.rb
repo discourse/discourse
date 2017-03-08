@@ -78,7 +78,7 @@ class QueuedPost < ActiveRecord::Base
     # Do sidekiq work outside of the transaction
     creator.enqueue_jobs
 
-    DiscourseEvent.trigger(:approved_post, self)
+    DiscourseEvent.trigger(:approved_post, self, created_post)
     created_post
   end
 

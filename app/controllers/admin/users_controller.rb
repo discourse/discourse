@@ -363,7 +363,7 @@ class Admin::UsersController < Admin::AdminController
 
   def reset_bounce_score
     guardian.ensure_can_reset_bounce_score!(@user)
-    @user.user_stat.update_columns(bounce_score: 0, reset_bounce_score_after: nil)
+    @user.user_stat&.reset_bounce_score!
     render json: success_json
   end
 

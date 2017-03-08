@@ -32,13 +32,17 @@ task 'docker:test' do
     @good = run_or_fail("bundle exec rake db:create db:migrate")
     unless ENV["JS_ONLY"]
       @good &&= run_or_fail("bundle exec rspec")
+
+      if ENV["LOAD_PLUGINS"]
+        @good &&= run_or_fail("bundle exec rake plugin:spec")
+      end
     end
     unless ENV["RUBY_ONLY"]
       @good &&= run_or_fail("eslint app/assets/javascripts")
       @good &&= run_or_fail("eslint --ext .es6 app/assets/javascripts")
       @good &&= run_or_fail("eslint --ext .es6 test/javascripts")
       @good &&= run_or_fail("eslint test/javascripts")
-      @good &&= run_or_fail("bundle exec rake qunit:test['200000']")
+      @good &&= run_or_fail("bundle exec rake qunit:test['600000']")
     end
 
   ensure

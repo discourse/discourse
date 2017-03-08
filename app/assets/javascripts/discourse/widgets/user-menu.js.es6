@@ -1,6 +1,13 @@
 import { createWidget } from 'discourse/widgets/widget';
 import { h } from 'virtual-dom';
 
+let extraGlyphs;
+
+export function addUserMenuGlyph(glyph) {
+  extraGlyphs = extraGlyphs || [];
+  extraGlyphs.push(glyph);
+}
+
 createWidget('user-menu-links', {
   tagName: 'div.menu-links-header',
 
@@ -13,10 +20,18 @@ createWidget('user-menu-links', {
                       isAnon;
 
     const path = attrs.path;
-    const glyphs = [{ label: 'user.bookmarks',
+    const glyphs = [];
+
+    if (extraGlyphs) {
+      // yes glyphs.push(...extraGlyphs) is nicer, but pulling in
+      // _toConsumableArray seems totally uneeded here
+      glyphs.push.apply(glyphs, extraGlyphs);
+    }
+
+    glyphs.push({ label: 'user.bookmarks',
                       className: 'user-bookmarks-link',
                       icon: 'bookmark',
-                      href: `${path}/activity/bookmarks` }];
+                      href: `${path}/activity/bookmarks` });
 
     if (siteSettings.enable_private_messages) {
       glyphs.push({ label: 'user.private_messages',

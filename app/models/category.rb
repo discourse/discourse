@@ -37,6 +37,7 @@ class Category < ActiveRecord::Base
                    presence: true,
                    uniqueness: { scope: :parent_category_id, case_sensitive: false },
                    length: { in: 1..50 }
+  validates :num_featured_topics, numericality: { only_integer: true, greater_than: 0 }
   validate :parent_category_validator
 
   validate :email_in_validator

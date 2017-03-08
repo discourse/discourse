@@ -404,12 +404,14 @@ export default Ember.Controller.extend({
   disableSubmit: Ember.computed.or("model.loading", "isUploading"),
 
   save(force) {
-    const composer = this.get('model');
+    if (this.get("disableSubmit")) return;
 
     // Clear the warning state if we're not showing the checkbox anymore
     if (!this.get('showWarning')) {
       this.set('model.isWarning', false);
     }
+
+    const composer = this.get('model');
 
     if (composer.get('cantSubmitPost')) {
       this.set('lastValidatedAt', Date.now());
@@ -561,13 +563,16 @@ export default Ember.Controller.extend({
       return;
     }
 
+    this.setProperties({ showEditReason: false, editReason: null, scopedCategoryId: null });
+
     // If we show the subcategory list, scope the categories drop down to
     // the category we opened the composer with.
-    if (this.siteSettings.show_subcategory_list && opts.draftKey !== 'reply_as_new_topic') {
-      this.set('scopedCategoryId', opts.categoryId);
+    if (opts.categoryId && opts.draftKey !== 'reply_as_new_topic') {
+      const category = this.site.categories.findBy('id', opts.categoryId);
+      if (category && (category.get('show_subcategory_list') || category.get('parentCategory.show_subcategory_list'))) {
+        this.set('scopedCategoryId', opts.categoryId);
+      }
     }
-
-    this.setProperties({ showEditReason: false, editReason: null });
 
     // If we want a different draft than the current composer, close it and clear our model.
     if (composerModel &&

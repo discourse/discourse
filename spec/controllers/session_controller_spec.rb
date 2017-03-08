@@ -659,6 +659,23 @@ describe SessionController do
         end
       end
     end
+
+    context 'rate limited' do
+      it 'rate limits login' do
+        SiteSetting.max_logins_per_ip_per_hour = 2
+        RateLimiter.stubs(:disabled?).returns(false)
+        RateLimiter.clear_all!
+
+        2.times do
+          xhr :post, :create, login: user.username, password: 'myawesomepassword'
+          expect(response).to be_success
+        end
+        xhr :post, :create, login: user.username, password: 'myawesomepassword'
+        expect(response).not_to be_success
+        json = JSON.parse(response.body)
+        expect(json["error_type"]).to eq("rate_limit")
+      end
+    end
   end
 
   describe '.destroy' do

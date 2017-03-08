@@ -184,6 +184,10 @@
       display: block;
       padding: 5px;
       transition: all linear .15s;
+
+      .user-results {
+        color: dark-light-choose(scale-color($primary, $lightness: 30%), scale-color($secondary, $lightness: 70%));
+      }
     }
 
     &:hover a:not(.badge-notification) {

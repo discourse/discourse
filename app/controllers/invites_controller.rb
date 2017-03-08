@@ -2,8 +2,8 @@ require_dependency 'rate_limiter'
 
 class InvitesController < ApplicationController
 
-  # TODO tighten this, why skip check on everything?
-  skip_before_filter :check_xhr, :preload_json
+  skip_before_filter :check_xhr, except: [:perform_accept_invitation]
+  skip_before_filter :preload_json, except: [:show]
   skip_before_filter :redirect_to_login_if_required
 
   before_filter :ensure_logged_in, only: [:destroy, :create, :create_invite_link, :resend_invite, :resend_all_invites, :upload_csv]
@@ -12,31 +12,49 @@ class InvitesController < ApplicationController
 
   def show
     expires_now
-    render layout: 'no_ember'
+
+    invite = Invite.find_by(invite_key: params[:id])
+
+    if invite.present?
+      store_preloaded("invite_info", MultiJson.dump({
+        invited_by: UserNameSerializer.new(invite.invited_by, scope: guardian, root: false),
+        email: invite.email,
+        username: UserNameSuggester.suggest(invite.email)
+      }))
+      render layout: 'application'
+    else
+      flash.now[:error] = I18n.t('invite.not_found')
+      render layout: 'no_ember'
+    end
   end
 
   def perform_accept_invitation
     invite = Invite.find_by(invite_key: params[:id])
 
     if invite.present?
-      user = invite.redeem
-      if user.present?
-        log_on_user(user)
+      begin
+        user = invite.redeem(username: params[:username], password: params[:password])
+        if user.present?
+          log_on_user(user)
 
-        # Send a welcome message if required
-        user.enqueue_welcome_message('welcome_invite') if user.send_welcome_message
-
-        topic = invite.topics.first
-        if topic.present?
-          redirect_to path("#{topic.relative_url}")
-          return
+          # Send a welcome message if required
+          user.enqueue_welcome_message('welcome_invite') if user.send_welcome_message
         end
-      end
 
-      redirect_to path("/")
+        topic = user.present? ? invite.topics.first : nil
+
+        render json: {
+          success: true,
+          redirect_to: topic.present? ? path("#{topic.relative_url}") : path("/")
+        }
+      rescue ActiveRecord::RecordInvalid, ActiveRecord::RecordNotSaved => e
+        render json: {
+          success: false,
+          errors: e.record&.errors&.to_hash || {}
+        }
+      end
     else
-      flash.now[:error] = I18n.t('invite.not_found')
-      render layout: 'no_ember'
+      render json: { success: false, message: I18n.t('invite.not_found') }
     end
   end
 

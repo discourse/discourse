@@ -139,6 +139,10 @@ Spork.prefork do
     datetime = DateTime.parse(now.to_s)
     time = Time.parse(now.to_s)
 
+    if block_given?
+      raise "Don't use a block with freeze_time"
+    end
+
     DateTime.stubs(:now).returns(datetime)
     Time.stubs(:now).returns(time)
   end

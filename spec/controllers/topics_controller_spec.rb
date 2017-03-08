@@ -64,7 +64,7 @@ describe TopicsController do
     end
 
     describe 'moving to a new topic' do
-      let!(:user) { log_in(:moderator) }
+      let(:user) { log_in(:moderator) }
       let(:p1) { Fabricate(:post, user: user) }
       let(:topic) { p1.topic }
 
@@ -79,18 +79,49 @@ describe TopicsController do
       end
 
       context 'success' do
-        let(:p2) { Fabricate(:post, user: user) }
-
-        before do
-          Topic.any_instance.expects(:move_posts).with(user, [p2.id], title: 'blah', category_id: 123).returns(topic)
-          xhr :post, :move_posts, topic_id: topic.id, title: 'blah', post_ids: [p2.id], category_id: 123
-        end
+        let(:user) { log_in(:admin) }
+        let(:p2) { Fabricate(:post, user: user, topic: topic) }
 
         it "returns success" do
+          p2
+
+          expect do
+            xhr :post, :move_posts,
+              topic_id: topic.id,
+              title: 'Logan is a good movie',
+              post_ids: [p2.id],
+              category_id: 123
+          end.to change { Topic.count }.by(1)
+
           expect(response).to be_success
+
           result = ::JSON.parse(response.body)
+
           expect(result['success']).to eq(true)
-          expect(result['url']).to be_present
+          expect(result['url']).to eq(Topic.last.relative_url)
+        end
+
+        describe 'when topic has been deleted' do
+          it 'should still be able to move posts' do
+            PostDestroyer.new(user, topic.first_post).destroy
+
+            expect(topic.reload.deleted_at).to_not be_nil
+
+            expect do
+              xhr :post, :move_posts,
+                topic_id: topic.id,
+                title: 'Logan is a good movie',
+                post_ids: [p2.id],
+                category_id: 123
+            end.to change { Topic.count }.by(1)
+
+            expect(response).to be_success
+
+            result = JSON.parse(response.body)
+
+            expect(result['success']).to eq(true)
+            expect(result['url']).to eq(Topic.last.relative_url)
+          end
         end
       end
 
@@ -130,7 +161,6 @@ describe TopicsController do
       end
 
     end
-
 
     describe 'moving to an existing topic' do
       let!(:user) { log_in(:moderator) }

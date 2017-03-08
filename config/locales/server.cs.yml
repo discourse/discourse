@@ -174,24 +174,6 @@ cs:
       - Konstruktivní kritika je vítaná, ale kritizujte *myšlenky*, ne lidi.
 
       Další doporučení máme v [pravidlech komunity](/guidelines). Tenhle panel se zobrazí pouze pro vaše první %{education_posts_text}.
-    dominating_topic: |
-      ### Let others join the conversation
-
-      This topic is clearly important to you &ndash; you've posted more than %{percent}% of the replies here.
-
-      Are you sure you're providing adequate time for other people to share their points of view, too?
-    too_many_replies: |
-      ### You have reached the reply limit for this topic
-
-      We're sorry, but new users are temporarily limited to %{newuser_max_replies_per_topic} replies in the same topic.
-
-      Instead of adding another reply, please consider editing your previous replies, or visiting other topics.
-    reviving_old_topic: |
-      ### Oživit téma?
-
-      Poslední odpověď na tohle téma je přes %{days} dní stará. Vaše odpověď zvedne toto téma v seznamu nahoru a upozorní všechny diskutující.
-
-      Určitě chcete pokračovat v této staré konverzaci?
   activerecord:
     attributes:
       category:
@@ -221,6 +203,9 @@ cs:
           attributes:
             hex:
               invalid: "není platná barva"
+        post_reply:
+          base:
+            different_topic: "Příspěvek a odpověď musí náležet stejnému topicu"
       <<: *errors
   user_profile:
     no_info_me: "<div class='missing-profile'>Pole 'o mně' je v tuto chvíli prázdné, <a href='/users/%{username_lower}/preferences/about-me'>nechcete si ho vyplnit?</a></div>"
@@ -232,6 +217,8 @@ cs:
   staff_category_name: "Redakce"
   staff_category_description: "Privátní kategorie pro diskuze štábu. Témata jsou viditelná pouze pro moderátory a správce."
   assets_topic_body: "Tohle je permanentí téma, viditelné pouze redaktorům, pro uchovávání obrázků a souborů použitých v designu tohoto webu. Nemažte ho!\n\n\nTady je jak:\n\n1. Odpovězte na toto téma.\n2. Nahrajte sem všechny obrázky které chcete používat pro loga, favicony a podobně. (Použijte ikonku „nahrát“ v panelu nad editorem, nebo obrázky rovnou přetáhněte nebo „vložte“)\n3. Pošlete tuto odpověď\n4. Klikněte pravým tlačítkem na obrázky ve vašem novém příspěvku a zkopírujte si adresy, nebo klikněte na úpravu přípěvku a adresy vykopírujte tam.\n5. Vložte tyto adresy do [základního nastavení](/admin/site_settings/category/required).\n\nPokud potřebujete nahrát jiné soubory, změňte nastavení `authorized_extensions` v [nastavení souborů](/admin/site_settings/category/files)."
+  discourse_welcome_topic:
+    title: "Vítejte v Discourse"
   lounge_welcome:
     title: "Vítejte v Redakci"
   category:
@@ -363,14 +350,12 @@ cs:
         few: "téměř před %{count} roky"
         other: "téměř před %{count} roky"
   password_reset:
-    choose_new: "Zvolte si nové heslo"
-    choose: "Zvolte si prosím heslo"
+    choose: "Vybrat heslo"
     update: 'změnit heslo'
     save: 'Nastavit heslo'
     title: 'Resetovat heslo'
     success: "Heslo bylo úspěšně změněno a nyní jste přihlášeni."
     success_unapproved: "Heslo bylo úšpěšně změněno."
-    continue: "Pokračovat na %{site_name}"
   change_email:
     confirmed: "Vaše emailová adresa bylo změněna."
     please_continue: "Pokračovat na %{site_name}"
@@ -396,6 +381,7 @@ cs:
       title: 'Nevhodné'
       long_form: 'nahlášeno jako nevhodné'
     notify_user:
+      long_form: 'obeslaný uživatel'
       email_title: 'Váš příspěvek v „%{title}“'
       email_body: "%{link}\\\n\\\n%{message}\n"
     notify_moderators:
@@ -413,6 +399,9 @@ cs:
       title: 'Hlasovat'
       description: 'Hlasujte pro tento příspěvek'
       long_form: 'hlasoval pro tento příspěvek'
+  user_activity:
+    no_bookmarks:
+      others: "Žádné záložky."
   topic_flag_types:
     spam:
       title: 'Spam'
@@ -434,6 +423,17 @@ cs:
       message:
         make: "Tento příspěvek je nyní banner. Bude se zobrazovat na vršku každé stránky dokud ho uživatel nezavře."
         remove: "Tento příspěvek už není banner. Nebude se dále zobrazovat na vršku každé stránky."
+  unsubscribed:
+    title: "Odhlášeno!"
+  unsubscribe:
+    title: "Odhlášení"
+    stop_watching_topic: "Přestat sledovat toto téma, %{link}"
+    disable_digest_emails: "Zrušit zasílání souhrnných emailů"
+  user_api_key:
+    scopes:
+      session_info: "Číst user session info"
+      read: "Číst vše"
+      write: "Zapsat vše"
   reports:
     visits:
       title: "Návštěvy uživatelů podle dnů"
@@ -523,6 +523,7 @@ cs:
     page_view_total_reqs:
       title: "Celkem"
       xaxis: "Den"
+      yaxis: "Celkové pageviews"
     page_view_logged_in_mobile_reqs:
       xaxis: "Den"
     page_view_anon_mobile_reqs:
@@ -567,7 +568,6 @@ cs:
     facebook_config_warning: 'Server je nakonfigurován, aby povoloval registraci a přihlášení přes Facebook (enable_facebook_logins), ale nejsou nastaveny hodnoty "app id" a "app secret". Navštivte <a href="/admin/site_settings">nastevení webu</a> a opravte nastavení. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-facebook-logins" target="_blank">Pro více informací si přečtěte tento návod</a>.'
     twitter_config_warning: 'Server je nakonfigurován, aby povoloval registraci a přihlášení přes Twitter (enable_twitter_logins), ale nejsou nastaveny hodnoty "key" a "secret". Navštivte <a href="/admin/site_settings">nastevení webu</a> a opravte nastavení. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-twitter-logins" target="_blank">Pro více informací si přečtěte tento návod</a>.'
     github_config_warning: 'Server je nakonfigurován, aby povoloval registraci a přihlášení přes GitHub (enable_github_logins), ale nejsou nastaveny hodnoty "client id" a "secret". Navštivte <a href="/admin/site_settings">nastevení webu</a> a opravte nastavení. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide" target="_blank">Pro více informací si přečtěte tento návod</a>.'
-    s3_config_warning: 'Server je nakonfigurován, aby nahrával soubory na S3, ale chybí nastavení: s3_access_key_id, s3_secret_access_key nebo s3_upload_bucket. Navštivte <a href="/admin/site_settings">nastavení webu</a> a opravte nastavení. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Přečtěte si "How to set up image uploads to S3?" pro více informací</a>.'
     image_magick_warning: 'Server je nakonfigurován, aby vytvářel náhledy velkých obrázků, ale není nainstalován ImageMagick. Nainstalujte ImageMagick pomocí vašeho oblíbeného balíčkovače, nebo navštivte <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">web ImageMagick pro stažení aktuální verze</a>.'
   site_settings:
     default_locale: "Výchozí jazyk této Discourse instance (kód ve formátu ISO 639-1)"
@@ -592,6 +592,7 @@ cs:
     force_hostname: "Na pevno nastaví hostitele v URL. Nechte prázdné pro výchozí server, užitečné hlavně pro vývoj"
     invite_expiry_days: "Platnost uživatelských pozvánek ve dnech"
     min_password_length: "Minimální povolená délka hesla."
+    min_admin_password_length: "Minimální délka heslo pro administrátora."
     block_common_passwords: "Nepovolit heslo pokud je mezi 10 000 nejběžnějšími."
     enable_yahoo_logins: "Povolit přihlašování přes Yahoo"
     google_oauth2_client_id: "Client ID vaší Google aplikace."
@@ -684,6 +685,9 @@ cs:
       subject_template: "Zálohování bylo úspěšně dokončeno."
     backup_failed:
       subject_template: "Zálohování selhalo."
+    restore_failed:
+      title: "Obnova Neúspěšná"
+      subject_template: "Obnova neúspěšná"
     csv_export_succeeded:
       subject_template: "Exportování dat dokončeno"
     csv_export_failed:

@@ -51,7 +51,7 @@ describe CategoryList do
 
   context "with a category" do
 
-    let!(:topic_category) { Fabricate(:category) }
+    let!(:topic_category) { Fabricate(:category, num_featured_topics: 2) }
 
     context "with a topic in a category" do
       let!(:topic) { Fabricate(:topic, category: topic_category) }
@@ -70,10 +70,6 @@ describe CategoryList do
       let!(:topic3) { Fabricate(:topic, category: topic_category, bumped_at: 2.minutes.ago) }
       let!(:pinned) { Fabricate(:topic, category: topic_category, pinned_at: 10.minutes.ago, bumped_at: 10.minutes.ago) }
       let(:category) { category_list.categories.find{|c| c.id == topic_category.id} }
-
-      before do
-        SiteSetting.stubs(:category_featured_topics).returns(2)
-      end
 
       it "returns pinned topic first" do
         expect(category.displayable_topics.map(&:id)).to eq([pinned.id, topic3.id])

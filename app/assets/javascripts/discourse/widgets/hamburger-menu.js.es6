@@ -36,7 +36,7 @@ export default createWidget('hamburger-menu', {
     const { currentUser } = this;
 
     const links = [{ route: 'admin', className: 'admin-link', icon: 'wrench', label: 'admin_title' },
-                   { route: 'adminFlags',
+                   { href: '/admin/flags/active',
                      className: 'flagged-posts-link',
                      icon: 'flag',
                      label: 'flags_title',
@@ -117,11 +117,10 @@ export default createWidget('hamburger-menu', {
 
   listCategories() {
     const hideUncategorized = !this.siteSettings.allow_uncategorized_topics;
-    const showSubcatList = this.siteSettings.show_subcategory_list;
     const isStaff = Discourse.User.currentProp('staff');
 
     const categories = Discourse.Category.list().reject((c) => {
-      if (showSubcatList && c.get('parent_category_id')) { return true; }
+      if (c.get('parentCategory.show_subcategory_list')) { return true; }
       if (hideUncategorized && c.get('isUncategorizedCategory') && !isStaff) { return true; }
       return false;
     });

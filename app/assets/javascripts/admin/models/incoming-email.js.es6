@@ -19,6 +19,11 @@ IncomingEmail.reopenClass({
     return ajax(`/admin/email/incoming/${id}.json`);
   },
 
+  findByBounced(id) {
+    return ajax(`/admin/email/incoming_from_bounced/${id}.json`);
+  },
+
+
   findAll(filter, offset) {
     filter = filter || {};
     offset = offset || 0;

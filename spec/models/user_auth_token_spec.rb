@@ -85,6 +85,34 @@ describe UserAuthToken do
     expect(user_token.user_agent).to eq("some user agent 2")
   end
 
+  it "expires correctly" do
+
+    user = Fabricate(:user)
+
+    user_token = UserAuthToken.generate!(user_id: user.id,
+                                    user_agent: "some user agent 2",
+                                    client_ip: "1.1.2.3")
+
+    UserAuthToken.lookup(user_token.unhashed_auth_token, seen: true)
+
+    freeze_time (SiteSetting.maximum_session_age.hours - 1).from_now
+
+    user_token.reload
+
+    user_token.rotate!
+    UserAuthToken.lookup(user_token.unhashed_auth_token, seen: true)
+
+    freeze_time (SiteSetting.maximum_session_age.hours - 1).from_now
+
+    still_good = UserAuthToken.lookup(user_token.unhashed_auth_token, seen: true)
+    expect(still_good).not_to eq(nil)
+
+    freeze_time 2.hours.from_now
+
+    not_good = UserAuthToken.lookup(user_token.unhashed_auth_token, seen: true)
+    expect(not_good).to eq(nil)
+  end
+
   it "can properly rotate tokens" do
 
     user = Fabricate(:user)
@@ -110,16 +138,55 @@ describe UserAuthToken do
     expect(user_token.client_ip).to eq("1.1.2.4")
     expect(user_token.user_agent).to eq("a new user agent")
     expect(user_token.auth_token_seen).to eq(false)
+    expect(user_token.seen_at).to eq(nil)
     expect(user_token.prev_auth_token).to eq(prev_auth_token)
 
     # ability to auth using an old token
-    looked_up = UserAuthToken.lookup(unhashed_prev)
+    freeze_time
+
+    looked_up = UserAuthToken.lookup(user_token.unhashed_auth_token, seen: true)
+    expect(looked_up.id).to eq(user_token.id)
+    expect(looked_up.auth_token_seen).to eq(true)
+    expect(looked_up.seen_at).to be_within(1.second).of(Time.zone.now)
+
+    looked_up = UserAuthToken.lookup(unhashed_prev, seen: true)
     expect(looked_up.id).to eq(user_token.id)
 
-    freeze_time(2.minute.from_now) do
-      looked_up = UserAuthToken.lookup(unhashed_prev)
-      expect(looked_up).to eq(nil)
-    end
+    freeze_time(2.minute.from_now)
+
+    looked_up = UserAuthToken.lookup(unhashed_prev)
+    expect(looked_up).not_to eq(nil)
+
+    looked_up.reload
+    expect(looked_up.auth_token_seen).to eq(false)
+
+    rotated = user_token.rotate!(user_agent: "a new user agent", client_ip: "1.1.2.4")
+    expect(rotated).to eq(true)
+    user_token.reload
+    expect(user_token.seen_at).to eq(nil)
+  end
+
+  it "keeps prev token valid for 1 minute after it is confirmed" do
+
+    user = Fabricate(:user)
+
+    token = UserAuthToken.generate!(user_id: user.id,
+                                    user_agent: "some user agent",
+                                    client_ip: "1.1.2.3")
+
+    UserAuthToken.lookup(token.unhashed_auth_token, seen: true)
+
+    freeze_time(10.minutes.from_now)
+
+    prev_token = token.unhashed_auth_token
+
+    token.rotate!(user_agent: "firefox", client_ip: "1.1.1.1")
+
+    freeze_time(10.minutes.from_now)
+
+    expect(UserAuthToken.lookup(token.unhashed_auth_token, seen: true)).not_to eq(nil)
+    expect(UserAuthToken.lookup(prev_token, seen: true)).not_to eq(nil)
+
   end
 
   it "can correctly log auth tokens" do
@@ -160,13 +227,19 @@ describe UserAuthToken do
     ).count).to eq(1)
 
     fake_token = SecureRandom.hex
-    UserAuthToken.lookup(fake_token, seen: true, user_agent: "bob", client_ip: "127.0.0.1")
+    UserAuthToken.lookup(fake_token,
+                         seen: true,
+                         user_agent: "bob",
+                         client_ip: "127.0.0.1",
+                         path: "/path"
+                        )
 
     expect(UserAuthTokenLog.where(
       action: "miss token",
       auth_token: UserAuthToken.hash_token(fake_token),
       user_agent: "bob",
-      client_ip: "127.0.0.1"
+      client_ip: "127.0.0.1",
+      path: "/path"
     ).count).to eq(1)
 
 
@@ -182,6 +255,20 @@ describe UserAuthToken do
       user_auth_token_id: token.id
     ).count).to eq(1)
 
+  end
+
+  it "will not mark token unseen when prev and current are the same" do
+    user = Fabricate(:user)
+
+    token = UserAuthToken.generate!(user_id: user.id,
+                                    user_agent: "some user agent",
+                                    client_ip: "1.1.2.3")
+
+
+    lookup = UserAuthToken.lookup(token.unhashed_auth_token, seen: true)
+    lookup = UserAuthToken.lookup(token.unhashed_auth_token, seen: true)
+    lookup.reload
+    expect(lookup.auth_token_seen).to eq(true)
   end
 
 end

@@ -10,27 +10,30 @@ class EmbeddableHost < ActiveRecord::Base
   def self.record_for_url(uri)
 
     if uri.is_a?(String)
-      uri = URI(uri) rescue nil
+      uri = URI(URI.encode(uri)) rescue nil
     end
     return false unless uri.present?
 
     host = uri.host
     return false unless host.present?
 
-    where("lower(host) = ?", host).first
-  end
-
-  def self.url_allowed?(url)
-    uri = URI(url) rescue nil
-    return false unless uri.present?
+    if uri.port.present? && uri.port != 80 && uri.port != 443
+      host << ":#{uri.port}"
+    end
 
     path = uri.path
     path << "?" << uri.query if uri.query.present?
 
-    host = record_for_url(uri)
+    where("lower(host) = ?", host).each do |eh|
+      return eh if eh.path_whitelist.blank? || !Regexp.new(eh.path_whitelist).match(path).nil?
+    end
 
-    return host.present? &&
-           (host.path_whitelist.blank? || !Regexp.new(host.path_whitelist).match(path).nil?)
+    nil
+  end
+
+  def self.url_allowed?(url)
+    uri = URI(URI.encode(url)) rescue nil
+    uri.present? && record_for_url(uri).present?
   end
 
   private

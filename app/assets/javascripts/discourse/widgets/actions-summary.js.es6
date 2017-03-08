@@ -26,7 +26,11 @@ createWidget('small-user-list', {
         users = users.concat(avatarAtts(currentUser));
       }
 
-      let description = I18n.t(atts.description, { icons: '' });
+      let description = null;
+
+      if (atts.description) {
+        description = I18n.t(atts.description, { icons: '' });
+      }
 
       // oddly post_url is on the user
       let postUrl;
@@ -38,7 +42,13 @@ createWidget('small-user-list', {
       if (postUrl) {
         description = h('a', { attributes: { href: Discourse.getURL(postUrl) } }, description);
       }
-      return [icons, description, '.'];
+
+      let buffer = [icons];
+      if (description) {
+        buffer.push(description);
+        buffer.push(".");
+      }
+      return buffer;
     }
   }
 });

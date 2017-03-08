@@ -8,7 +8,7 @@
 %nav {
   margin-left: 0;
   list-style: none;
-  li > a {
+  li a {
     display: block;
     text-decoration: none;
   }
@@ -56,7 +56,7 @@
     &:last-of-type {
       border-bottom: 0;
     }
-    > a {
+    a {
       margin: 0;
       padding: 13px 13px 13px 30px;
       font-size: 1.143em;

@@ -22,7 +22,7 @@ Enter these values when prompted by `./discourse-setup` per the [install guide](
 
 We recommend creating an [API Key][sg2] instead of using your SendGrid username and password.
 
-#### [Mailgun][gun] &mdash; 10k emails/month
+#### [Mailgun][gun] &mdash; 10k emails/month (with credit card)
 
     SMTP server address? smtp.mailgun.org
     SMTP user name?      [SMTP credentials for your domain under domains tab]

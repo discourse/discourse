@@ -39,8 +39,12 @@ class UploadsController < ApplicationController
       return render_404 if SiteSetting.login_required? && db == "default" && current_user.nil?
 
       if upload = Upload.find_by(sha1: params[:sha]) || Upload.find_by(id: params[:id], url: request.env["PATH_INFO"])
-        opts = { filename: upload.original_filename }
-        opts[:disposition] = 'inline' if params[:inline]
+        opts = {
+          filename: upload.original_filename,
+          content_type: Rack::Mime.mime_type(File.extname(upload.original_filename)),
+        }
+        opts[:disposition]   = "inline" if params[:inline]
+        opts[:disposition] ||= "attachment" unless FileHelper.is_image?(upload.original_filename)
         send_file(Discourse.store.path_for(upload), opts)
       else
         render_404

@@ -190,6 +190,8 @@ describe User do
 
       it "has correct settings" do
         expect(subject.email_tokens).to be_present
+        expect(subject.user_stat).to be_present
+        expect(subject.user_profile).to be_present
         expect(subject.user_option.email_private_messages).to eq(true)
         expect(subject.user_option.email_direct).to eq(true)
       end
@@ -472,6 +474,22 @@ describe User do
       expect(User.username_available?('donkey')).to eq(false)
       expect(User.username_available?('DonKey')).to eq(false)
       expect(User.username_available?('test')).to eq(false)
+    end
+
+    it 'should not allow usernames matched against an expession' do
+      SiteSetting.reserved_usernames = 'test)|*admin*|foo*|*bar|abc.def'
+
+      expect(User.username_available?('test')).to eq(true)
+      expect(User.username_available?('abc9def')).to eq(true)
+
+      expect(User.username_available?('admin')).to eq(false)
+      expect(User.username_available?('foo')).to eq(false)
+      expect(User.username_available?('bar')).to eq(false)
+
+      expect(User.username_available?('admi')).to eq(true)
+      expect(User.username_available?('bar.foo')).to eq(true)
+      expect(User.username_available?('foo.bar')).to eq(false)
+      expect(User.username_available?('baz.bar')).to eq(false)
     end
   end
 
@@ -1398,9 +1416,17 @@ describe User do
       end
     end
 
-    describe 'when user is not trust level 0' do
+    describe 'when user is trust level 1' do
       it 'should return the right value' do
         user.update_attributes!(trust_level: TrustLevel[1])
+
+        expect(user.read_first_notification?).to eq(false)
+      end
+    end
+
+    describe 'when user is trust level 2' do
+      it 'should return the right value' do
+        user.update_attributes!(trust_level: TrustLevel[2])
 
         expect(user.read_first_notification?).to eq(true)
       end

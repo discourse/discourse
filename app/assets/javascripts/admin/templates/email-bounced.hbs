@@ -28,7 +28,7 @@
           {{/if}}
         </td>
         <td><a href='mailto:{{unbound l.to_address}}'>{{l.to_address}}</a></td>
-        <td>{{l.email_type}}</td>
+        <td><a {{action "showIncomingEmail" l.id}}>{{l.email_type}}</a></td>
       </tr>
     {{else}}
       <tr><td colspan="4">{{i18n 'admin.email.logs.none'}}</td></tr>

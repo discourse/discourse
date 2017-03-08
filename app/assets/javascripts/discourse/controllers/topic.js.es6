@@ -313,6 +313,7 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
 
       const quoteState = this.get('quoteState');
       const postStream = this.get('model.postStream');
+      if (!postStream) return;
       const quotedPost = postStream.findLoadedPost(quoteState.postId);
       const quotedText = Quote.build(quotedPost, quoteState.buffer);
 
@@ -912,6 +913,7 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
       if (data.reload_topic) {
         topic.reload().then(() => {
           this.send('postChangedRoute', topic.get('post_number') || 1);
+          this.appEvents.trigger('header:show-topic', topic);
         });
       } else {
         if (topic.get('isPrivateMessage') &&

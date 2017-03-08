@@ -137,7 +137,6 @@ en:
       <<: *errors
 
   invite:
-    accept_invite: "Accept Invitation"
     not_found: "Your invite token is invalid. Please contact the site's administrator."
 
   bulk_invite:
@@ -372,7 +371,7 @@ en:
               same_as_username: "is the same as your username. Please use a more secure password."
               same_as_email: "is the same as your email. Please use a more secure password."
               same_as_current: "is the same as your current password."
-              unique_characters: "has too few unique characters. Please use a more secure password."
+              unique_characters: "has too many repeated characters. Please use a more secure password."
             ip_address:
               signup_not_allowed: "Signup is not allowed from this account."
         color_scheme_color:
@@ -493,7 +492,7 @@ en:
       pms_per_day: "You've reached the maximum number of messages today. Please wait %{time_left} before trying again."
       create_like: "You've reached the maximum number of likes today. Please wait %{time_left} before trying again."
       create_bookmark: "You've reached the maximum number of bookmarks today. Please wait %{time_left} before trying again."
-      edit_post: "You've reached the maximun number of edits today. Please wait %{time_left} before trying again."
+      edit_post: "You've reached the maximum number of edits today. Please wait %{time_left} before trying again."
       live_post_counts: "You're asking for live post counts too quickly. Please wait %{time_left} before trying again."
       unsubscribe_via_email: "You've reached the maximum number of unsubscribe via email today. Please wait %{time_left} before trying again."
       topic_invitations_per_day: "You've reached the maximum number of topic invitations today. Please wait %{time_left} before trying again."
@@ -871,8 +870,8 @@ en:
     facebook_config_warning: 'The server is configured to allow signup and log in with Facebook (enable_facebook_logins), but the app id and app secret values are not set. Go to <a href="/admin/site_settings">the Site Settings</a> and update the settings. <a href="https://meta.discourse.org/t/configuring-facebook-login-for-discourse/13394" target="_blank">See this guide to learn more</a>.'
     twitter_config_warning: 'The server is configured to allow signup and log in with Twitter (enable_twitter_logins), but the key and secret values are not set. Go to <a href="/admin/site_settings">the Site Settings</a> and update the settings. <a href="https://meta.discourse.org/t/configuring-twitter-login-for-discourse/13395" target="_blank">See this guide to learn more</a>.'
     github_config_warning: 'The server is configured to allow signup and log in with GitHub (enable_github_logins), but the client id and secret values are not set. Go to <a href="/admin/site_settings">the Site Settings</a> and update the settings. <a href="https://meta.discourse.org/t/configuring-github-login-for-discourse/13745" target="_blank">See this guide to learn more</a>.'
-    s3_config_warning: 'The server is configured to upload files to s3, but at least one the following setting is not set: s3_access_key_id, s3_secret_access_key or s3_upload_bucket. Go to <a href="/admin/site_settings">the Site Settings</a> and update the settings. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">See "How to set up image uploads to S3?" to learn more</a>.'
-    s3_backup_config_warning: 'The server is configured to upload backups to s3, but at least one the following setting is not set: s3_access_key_id, s3_secret_access_key or s3_backup_bucket. Go to <a href="/admin/site_settings">the Site Settings</a> and update the settings. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">See "How to set up image uploads to S3?" to learn more</a>.'
+    s3_config_warning: 'The server is configured to upload files to s3, but at least one the following setting is not set: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile, or s3_upload_bucket. Go to <a href="/admin/site_settings">the Site Settings</a> and update the settings. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">See "How to set up image uploads to S3?" to learn more</a>.'
+    s3_backup_config_warning: 'The server is configured to upload backups to s3, but at least one the following setting is not set: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile, or s3_backup_bucket. Go to <a href="/admin/site_settings">the Site Settings</a> and update the settings. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">See "How to set up image uploads to S3?" to learn more</a>.'
     image_magick_warning: 'The server is configured to create thumbnails of large images, but ImageMagick is not installed. Install ImageMagick using your favorite package manager or <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">download the latest release</a>.'
     failing_emails_warning: 'There are %{num_failed_jobs} email jobs that failed. Check your app.yml and ensure that the mail server settings are correct. <a href="/sidekiq/retries" target="_blank">See the failed jobs in Sidekiq</a>.'
     subfolder_ends_in_slash: "Your subfolder setup is incorrect; the DISCOURSE_RELATIVE_URL_ROOT ends in a slash."
@@ -924,8 +923,6 @@ en:
     delete_removed_posts_after: "Posts removed by the author will be automatically deleted after (n) hours. If set to 0, posts will be deleted immediately."
     max_image_width: "Maximum thumbnail width of images in a post"
     max_image_height: "Maximum thumbnail height of images in a post"
-    category_featured_topics: "Number of topics displayed per category on the /categories page. After changing this value, it takes up to 15 minutes for the categories page to update."
-    show_subcategory_list: "Show subcategory list instead of topic list when entering a category."
     fixed_category_positions: "If checked, you will be able to arrange categories into a fixed order. If unchecked, categories are listed in order of activity."
     fixed_category_positions_on_create: "If checked, category ordering will be maintained on topic creation dialog (requires fixed_category_positions)."
     add_rel_nofollow_to_user_content: "Add rel nofollow to all submitted user content, except for internal links (including parent domains). If you change this, you must rebake all posts with: \"rake posts:rebake\""
@@ -949,6 +946,7 @@ en:
     email_custom_headers: "A pipe-delimited list of custom email headers"
     email_subject: "Customizable subject format for standard emails. See https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801"
     force_https: "Force your site to use HTTPS only. WARNING: do NOT enable this until you verify HTTPS is fully set up and working absolutely everywhere! Did you check your CDN, all social logins, and any external logos / dependencies to make sure they are all HTTPS compatible, too?"
+    same_site_cookies: "Use same site cookies, they eliminate all vectors Cross Site Request Forgery on supported browsers (Lax or Strict). Warning: Strict will only work on sites that force login and use SSO."
     summary_score_threshold: "The minimum score required for a post to be included in 'Summarize This Topic'"
     summary_posts_required: "Minimum posts in a topic before 'Summarize This Topic' is enabled"
     summary_likes_required: "Minimum likes in a topic before 'Summarize This Topic' is enabled"
@@ -1041,7 +1039,7 @@ en:
     min_username_length: "Minimum username length in characters. WARNING: if any existing users or groups have names shorter than this, your site will break!"
     max_username_length: "Maximum username length in characters. WARNING: if any existing users or groups have names longer than this, your site will break!"
 
-    reserved_usernames: "Usernames for which signup is not allowed."
+    reserved_usernames: "Usernames for which signup is not allowed. Wildcard symbol * can be used to match any character zero or more times."
 
     min_password_length: "Minimum password length."
     min_admin_password_length: "Minimum password length for Admin."
@@ -1121,6 +1119,9 @@ en:
     max_private_messages_per_day: "Maximum number of messages users can create per day."
     max_invites_per_day: "Maximum number of invites a user can send per day."
     max_topic_invitations_per_day: "Maximum number of topic invitations a user can send per day."
+
+    max_logins_per_ip_per_hour: "Maximum number of logins allowed per IP address per hour"
+    max_logins_per_ip_per_minute: "Maximum number of logins allowed per IP address per minute"
 
     alert_admins_if_errors_per_minute: "Number of errors per minute in order to trigger an admin alert. A value of 0 disables this feature. NOTE: requires restart."
     alert_admins_if_errors_per_hour: "Number of errors per hour in order to trigger an admin alert. A value of 0 disables this feature. NOTE: requires restart."
@@ -1425,8 +1426,6 @@ en:
 
     bootstrap_mode_min_users: "Minimum number of users required to disable bootstrap mode (set to 0 to disable)"
 
-    vacuum_db_days: "Run VACUUM ANALYZE to reclaim DB space after migrations (set to 0 to disable)"
-
     prevent_anons_from_downloading_files: "Prevent anonymous users from downloading attachments. WARNING: this will prevent any non-image site assets posted as attachments from working."
 
     slug_generation_method: "Choose a slug generation method. 'encoded' will generate percent encoding string. 'none' will disable slug at all."
@@ -1672,7 +1671,7 @@ en:
     subject_template: "Confirm you no longer want to receive email updates from %{site_title}"
     text_body_template: |
       Someone (possibly you?) requested to no longer send email updates from %{site_domain_name} to this address.
-      If you with to confirm this, please click this link:
+      If you wish to confirm this, please click this link:
 
       %{confirm_unsubscribe_link}
 
@@ -1697,8 +1696,6 @@ en:
 
       %{invite_link}
 
-      This invitation is from a trusted user, so you can reply to the discussion immediately.
-
   custom_invite_mailer:
     title: "Custom Invite Mailer"
     subject_template: "%{invitee_name} invited you to '%{topic_title}' on %{site_domain_name}"
@@ -1721,8 +1718,6 @@ en:
 
       %{invite_link}
 
-      This invitation is from a trusted user, so you can reply to the discussion immediately.
-
   invite_forum_mailer:
     title: "Invite Forum Mailer"
     subject_template: "%{invitee_name} invited you to join %{site_domain_name}"
@@ -1736,8 +1731,6 @@ en:
       If you're interested, click the link below:
 
       %{invite_link}
-
-      This invitation is from a trusted user, so an account will be created for you automatically using this email address.
 
   custom_invite_forum_mailer:
     title: "Invite Forum Mailer"
@@ -1757,8 +1750,6 @@ en:
 
       %{invite_link}
 
-      This invitation is from a trusted user, so an account will be created for you automatically using this email address.
-
   invite_password_instructions:
     title: "Invite Password Instructions"
     subject_template: "Set password for your %{site_name} account"
@@ -1769,6 +1760,18 @@ en:
       %{base_url}/users/password-reset/%{email_token}
 
       (If the link above has expired, choose "I forgot my password" when logging in with your email address.)
+
+  download_backup_mailer:
+    title: "Download Backup Mailer"
+    subject_template: "[%{site_name}] Site Backup Download"
+    text_body_template: |
+      Here's the [site backup download](%{backup_file_path}) you requested.
+
+      We sent this download link to your validated email address for security reasons.
+
+      (If you *didn't* request this download, you should be seriously concerned -- someone has admin access to your site.)
+    no_token: |
+      Sorry, this backup download link has already been used or has expired.
 
   test_mailer:
     title: "Test Mailer"
@@ -2489,7 +2492,6 @@ en:
       follow_topic: "Follow this topic"
       join_the_discussion: "Read More"
       popular_posts: "Popular Posts"
-      from_topic_label: "From"
       more_new: "New for you"
       subject_template: "[%{site_name}] Summary"
       unsubscribe: "This summary is sent from %{site_link} when we haven't seen you in a while. To unsubscribe %{unsubscribe_link}."
@@ -3353,7 +3355,7 @@ en:
             description: "General contact web page for you or your organization. Will be displayed on <a href='/about' target='_blank'>your about page</a>."
           site_contact:
             label: "Automated Messages"
-            description: "All automated Discourse personal messages will be sent from this user. Most importantly, this user will be the designated sender of every welcome message automatically sent to new users."
+            description: "All automated Discourse personal messages will be sent from this user, such as the welcome message sent to each new user."
 
       corporate:
         title: "Organization"

@@ -2,6 +2,21 @@ require 'rails_helper'
 
 describe InvitesController do
 
+  context '.show' do
+    it "shows error if invite not found" do
+      get :show, id: 'nopeNOPEnope'
+      expect(response).to render_template(layout: 'no_ember')
+      expect(flash[:error]).to be_present
+    end
+
+    it "renders the accept invite page if invite exists" do
+      i = Fabricate(:invite)
+      get :show, id: i.invite_key
+      expect(response).to render_template(layout: 'application')
+      expect(flash[:error]).to be_nil
+    end
+  end
+
   context '.destroy' do
 
     it 'requires you to be logged in' do
@@ -127,12 +142,14 @@ describe InvitesController do
 
     context 'with an invalid invite id' do
       before do
-        put :perform_accept_invitation, id: "doesn't exist"
+        xhr :put, :perform_accept_invitation, id: "doesn't exist", format: :json
       end
 
       it "redirects to the root" do
         expect(response).to be_success
-        expect(flash[:error]).to be_present
+        json = JSON.parse(response.body)
+        expect(json["success"]).to eq(false)
+        expect(json["message"]).to eq(I18n.t('invite.not_found'))
       end
 
       it "should not change the session" do
@@ -145,12 +162,14 @@ describe InvitesController do
       let(:invite) { topic.invite_by_email(topic.user, "iceking@adventuretime.ooo") }
       let(:deleted_invite) { invite.destroy; invite }
       before do
-        put :perform_accept_invitation, id: deleted_invite.invite_key
+        xhr :put, :perform_accept_invitation, id: deleted_invite.invite_key, format: :json
       end
 
       it "redirects to the root" do
         expect(response).to be_success
-        expect(flash[:error]).to be_present
+        json = JSON.parse(response.body)
+        expect(json["success"]).to eq(false)
+        expect(json["message"]).to eq(I18n.t('invite.not_found'))
       end
 
       it "should not change the session" do
@@ -164,24 +183,43 @@ describe InvitesController do
 
       it 'redeems the invite' do
         Invite.any_instance.expects(:redeem)
-        put :perform_accept_invitation, id: invite.invite_key
+        xhr :put, :perform_accept_invitation, id: invite.invite_key, format: :json
       end
 
       context 'when redeem returns a user' do
         let(:user) { Fabricate(:coding_horror) }
 
         context 'success' do
+          subject { xhr :put, :perform_accept_invitation, id: invite.invite_key, format: :json }
+
           before do
             Invite.any_instance.expects(:redeem).returns(user)
-            put :perform_accept_invitation, id: invite.invite_key
           end
 
           it 'logs in the user' do
+            subject
             expect(session[:current_user_id]).to eq(user.id)
           end
 
           it 'redirects to the first topic the user was invited to' do
-            expect(response).to redirect_to(topic.relative_url)
+            subject
+            json = JSON.parse(response.body)
+            expect(json["success"]).to eq(true)
+            expect(json["redirect_to"]).to eq(topic.relative_url)
+          end
+        end
+
+        context 'failure' do
+          subject { xhr :put, :perform_accept_invitation, id: invite.invite_key, format: :json }
+
+          it "doesn't log in the user if there's a validation error" do
+            user.errors.add(:password, :common)
+            Invite.any_instance.expects(:redeem).raises(ActiveRecord::RecordInvalid.new(user))
+            subject
+            expect(response).to be_success
+            json = JSON.parse(response.body)
+            expect(json["success"]).to eq(false)
+            expect(json["errors"]["password"]).to be_present
           end
         end
 
@@ -194,12 +232,12 @@ describe InvitesController do
           it 'sends a welcome message if set' do
             user.send_welcome_message = true
             user.expects(:enqueue_welcome_message).with('welcome_invite')
-            put :perform_accept_invitation, id: invite.invite_key
+            xhr :put, :perform_accept_invitation, id: invite.invite_key, format: :json
           end
 
           it "doesn't send a welcome message if not set" do
             user.expects(:enqueue_welcome_message).with('welcome_invite').never
-            put :perform_accept_invitation, id: invite.invite_key
+            xhr :put, :perform_accept_invitation, id: invite.invite_key, format: :json
           end
         end
       end

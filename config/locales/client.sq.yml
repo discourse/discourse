@@ -212,7 +212,7 @@ sq:
       like_count: "Pëlqime"
       topic_count: "Tema"
       post_count: "Postime"
-      user_count: "Përdorues të Rinj"
+      user_count: "Anëtarët"
       active_user_count: "Përdorues Aktivë"
       contact: "Na kontaktoni"
       contact_info: "Në rast të një problemi madhor ose të një çështjeje urgjente që prek faqen, ju lutemi të kontaktoni %{contact_info}."
@@ -319,7 +319,33 @@ sq:
       total_rows:
         one: "1 anëtar"
         other: "%{count} anëtarë"
+    group_histories:
+      actions:
+        change_group_setting: "Ndrysho parametrin e grupit"
+        add_user_to_group: "Shto anëtar"
+        remove_user_from_group: "Hiq anëtar"
+        make_user_group_owner: "Bëje autor"
+        remove_user_as_group_owner: "Hiq autorin"
     groups:
+      logs:
+        title: "Ditari"
+        when: "Kur"
+        action: "Veprimi"
+        acting_user: "Anëtari veprues"
+        target_user: "Anëtari i prekur"
+        subject: "Subjekti"
+        details: "Detaje"
+        from: "Nga"
+        to: "Për"
+      edit:
+        title: 'Redakto Grupin'
+        full_name: 'Emri i plotë'
+        add_members: "Shto anëtarë"
+        delete_member_confirm: "Do të heqësh '%{username}' nga grupi '%{group}'?"
+      request_membership_pm:
+        title: "Kërkesë për anëtarësim"
+        body: "Do të doja të aplikoja për t'u bërë anëtar i grupit @%{groupName}."
+      name_placeholder: "Emri i grupit, pa hapësira, si username-t"
       add: "Shto"
       selector_placeholder: "Shto anëtarë"
       owner: "autori"
@@ -550,7 +576,6 @@ sq:
         instructions: "Sfondi do të vendoset në qendër dhe do të ketë një gjerësi prej 590px."
       email:
         title: "Email"
-        instructions: "Nuk do të shfaqet asnjëherë publikisht"
         ok: "Do ju nisim emailin e konfirmimit"
         invalid: "Ju lutemi të vendosni një email të vlefshëm"
         authenticated: "Emaili juaj është verifikuar nga {{provider}}"
@@ -560,22 +585,17 @@ sq:
           other: "Do t'ju dërgojmë një email vetëm nëse nuk të kemi parë në faqe në {{count}} minutat e fundit."
       name:
         title: "Emri juaj"
-        instructions: "Emri i plotë (fakultativ)"
         instructions_required: "Emri i plotë"
         too_short: "Emri juaj është shumë i shkurtër"
         ok: "Emri duket në rregull"
       username:
         title: "Emri i përdoruesit"
-        instructions: "Unik, pa hapësira, i shkurtër"
         short_instructions: "Anëtarët e tjerë mund t'ju përmendin si @{{username}}"
         available: "Emri është i disponueshëm"
-        global_match: "Email gjendet në emrin e përdoruesit të regjistruar"
-        global_mismatch: "Jeni regjistruar më parë. Provoni {{suggestion}}?"
         not_available: "Nuk është i disponueshëm. Provoni {{suggestion}}?"
         too_short: "Emri juaj është shumë i shkurtër"
         too_long: "Emri juaj është shumë i gjatë"
         checking: "Duke verifikuar disponibilitetin e emrit të përdoruesit...."
-        enter_email: 'Emri i përdoruesit u gjet; vendosni emailin përkatës'
         prefilled: "Emaili u gjet në këtë përdorues të regjistruar"
       locale:
         title: "Gjuha e faqes"
@@ -678,7 +698,6 @@ sq:
         same_as_username: "Fjalëkalimi është i njëjtë me emrin e përdoruesit."
         same_as_email: "Fjalëkalimi është i njëjtë me adresën email."
         ok: "Fjalëkalimi është i pranueshëm."
-        instructions: "Të paktën %{count} shkronja."
       summary:
         title: "Përmbledhja"
         stats: "Statistikat"
@@ -1267,12 +1286,6 @@ sq:
         pin_globally: "Ngjite temën globalisht"
         make_banner: "Temë banderolë"
         remove_banner: "Çaktivizo temën banderolë"
-      reply:
-        post:
-          title: 'Përgjigju'
-        topic:
-          title: 'Përgjigju'
-          help: 'nis shkrimin e një përgjigjeje në këtë temë'
       clear_pin:
         title: "Clear pin"
         help: "Hiqeni statusin \"e ngjitur\" të kësaj teme që të mos afishohet më në majë të listës së temave"
@@ -1427,8 +1440,6 @@ sq:
       via_email: "ky postim u dërgua me email"
       via_auto_generated_email: "ky postim u krijua nga një email automatik"
       whisper: "ky postim është një pëshpëritje private për moderatorët"
-      wiki:
-        about: "kjo temë është wiki"
       archetypes:
         save: 'Ruaj opsionet'
       few_likes_left: "Ju falenderojmë! Ju kanë ngelur edhe disa pëlqime për sot."
@@ -1555,13 +1566,10 @@ sq:
         displays:
           inline:
             title: "Show the rendered output with additions and removals inline"
-            button: '<i class="fa fa-square-o"></i> HTML'
           side_by_side:
             title: "Show the rendered output diffs side-by-side"
-            button: '<i class="fa fa-columns"></i> HTML'
           side_by_side_markdown:
             title: "Show the raw source diffs side-by-side"
-            button: '<i class="fa fa-columns"></i> Raw'
     category:
       can: 'mund&hellip; '
       none: '(pa kategori)'
@@ -2304,25 +2312,70 @@ sq:
             skipped_reason_placeholder: "arsye"
       logs:
         title: "Ditari"
+        action: "Veprimi"
         created_at: "Krijuar"
         ip_address: "IP"
+        topic_id: "ID e temës"
+        post_id: "ID e postimit"
+        category_id: "ID e kategorisë"
         delete: 'Fshij'
         edit: 'Redakto'
         save: 'Ruaj'
         screened_actions:
           block: "blloko"
+          do_nothing: "mos bëj asgjë"
         staff_actions:
           title: "Veprime Stafi"
+          instructions: "Kliko emrat e anëtarëve apo veprimet për të filtruar listën. Kliko foton e profilit për të shkuar tek faqla e anëtarit. "
+          clear_filters: "Trego gjithshka"
+          staff_user: "Anëtari i stafit"
+          target_user: "Anëtari i prekur"
+          subject: "Subjekti"
           when: "Kur"
+          context: "Konteksti"
           details: "Detaje"
+          previous_value: "I kaluar"
           new_value: "I Ri"
+          diff: "Diff"
+          show: "Shfaq"
           modal_title: "Detaje"
+          no_previous: "Nuk ka vlerë të kaluar."
+          deleted: "Nuk ka vlerë të re. E dhëna u fshi."
           actions:
+            delete_user: "fshi anëtarin"
             change_trust_level: "ndrysho nivelin e besimit"
+            change_username: "ndrysho emrin e përdoruesit"
+            change_site_setting: "ndrysho parametrin e faqes"
+            change_site_customization: "ndrysho personalizimin e faqes"
+            delete_site_customization: "fshi personalizimin e faqes"
+            change_site_text: "ndrysho tekstin e faqes"
+            suspend_user: "pezullo anëtarin"
+            unsuspend_user: "çpezullo anëtarin"
             grant_badge: "dhuro stemë"
             revoke_badge: "tërhiq stemë"
+            check_email: "kontrollo emailin"
+            delete_topic: "fshi temën"
+            delete_post: "fshi postimin"
+            impersonate: "personifiko"
+            anonymize_user: "anonimizo përdoruesin"
+            roll_up: "roll up IP blocks"
+            change_category_settings: "ndrysho parametrat e kategorisë"
+            delete_category: "fshi kategorinë"
+            create_category: "krijo një kategori"
+            block_user: "blloko anëtarin"
+            unblock_user: "çblloko anëtarin"
+            grant_admin: "jepi rolin admin"
+            revoke_admin: "hiq rolin admin"
+            grant_moderation: "jepi rolin moderator"
+            revoke_moderation: "hiq rolin moderator"
+            backup_create: "krijo kopje"
             deleted_tag: "etiketë e fshirë"
             renamed_tag: "etiketë e riemëruar"
+            revoke_email: "hiq email"
+            lock_trust_level: "kyç nivelin e besimit"
+            unlock_trust_level: "çkyç nivelin e besimit"
+            activate_user: "aktivizo anëtarin"
+            deactivate_user: "çaktivizo anëtarin"
         screened_emails:
           title: "Kontroll Email-ash"
           actions:
@@ -2395,7 +2448,11 @@ sq:
           title: "Shfaq adresën email të këtij përdoruesi."
           text: "Shfaq"
       user:
+        suspend_failed: "Pati një problem gjatë pezullimit të anëtarit. {{error}}"
+        unsuspend_failed: "Pati një problem gjatë çpezullimit të anëtarit. {{error}}"
+        suspend_duration: "Për sa kohë do të pezullohet anëtari?"
         suspend_duration_units: "(ditë)"
+        suspend_reason_label: "Pse po e pezulloni? Ky tekst <b>do të shfaqet publikisht</b> në profilin e këtij anëtari, dhe do t'i shfaqet vetë anëtarit si mesazh kur ky i fundit do tentojë të futet në faqe. Shkruani shkurt."
         suspend_reason: "Arsye"
         suspended_by: "Përjashtuar nga:"
         delete_all_posts: "Fshi gjithë postimet"
@@ -2450,28 +2507,70 @@ sq:
         deleted: "Anëtari u fshi."
         send_activation_email: "Dërgo Emailin e Aktivizimit"
         activation_email_sent: "Një email aktivizimi u dërgua. "
+        send_activation_email_failed: "Pati një problem gjatë dërgimit të një mesazhi të ri email për aktivizimin e llogarisë. %{error}"
         activate: "Aktivizoni llogarinë"
+        activate_failed: "Pati një problem gjatë aktivizimit të anëtarit."
+        deactivate_account: "Çaktivizo llogarinë"
+        deactivate_failed: "Pati një problem gjatë çaktivizimit të anëtarit."
+        unblock_failed: 'Pati një problem gjatë çbllokimit të anëtarit.'
+        block_failed: 'Pati një problem gjatë bllokimit të anëtarit.'
         block_confirm: 'A jeni të sigurtë që doni të bllokoni këtë anëtar? Anëtari nuk do të ketë më të drejtën të krijojë postime ose tema të reja.'
         block_accept: 'Po, blloko anëtarin'
+        bounce_score: "Rezultati \"bounce\""
         reset_bounce_score:
           label: "Rivendos"
+          title: "Rivendos në 0 rezultatin \"bounce\""
+        deactivate_explanation: "Një anëtar i çaktivizuar duhet të ri-verifikojë adresën email."
+        suspended_explanation: "Një anëtar i pezulluar nuk ka të drejtë të identifikohet. "
+        block_explanation: "Një anëtar i bllokuar nuk mund të përgjigjet apo të hapë tema të reja. "
+        staged_explanation: "Një anëtar \"staged\" mund të postojë vetëm me email në tema të caktuara. "
+        bounce_score_explanation:
+          none: "Nuk ka patur mesazhe email të kthyera për këtë anëtar."
+          some: "Ka patur disa mesazhe emaili të kthyera për këtë adresë. "
+          threshold_reached: "Ka patur shumë mesazhe të kthyera për këtë adresë emaili. "
         trust_level_change_failed: "Nuk e ndryshuam dot nivelin e këtij anëtari. "
+        suspend_modal_title: "Pezullo anëtarin"
+        trust_level_2_users: "Përdorues me Nivel Besimi 2"
+        trust_level_3_requirements: "Kërkesat për përdorues me Nivel Besimi 3"
+        lock_trust_level: "Kyç nivelin e besimit"
+        unlock_trust_level: "Çkyç nivelin e besimit"
         tl3_requirements:
+          title: "Kërkesat për përdorues me Nivel Besimi 3"
+          table_title:
+            one: "gjatë ditës së fundit:"
+            other: "Në %{count} ditët e fundit:"
           value_heading: "Vlera"
+          requirement_heading: "Kërkesë"
           visits: "Vizita"
           days: "ditë"
+          topics_replied_to: "Përgjigje në kaq tema"
+          topics_viewed: "Tema të shikuara"
+          topics_viewed_all_time: "Temat e shikuara (total)"
+          posts_read: "Postimet e lexuara"
+          posts_read_all_time: "Postimet e lexuara (total)"
           flagged_posts: "Postimet e sinjalizuara"
           flagged_by_users: "Përdoruesit që sinjalizuan"
           likes_given: "Pëlqime të dhëna"
           likes_received: "Pëlqime të marra"
           likes_received_days: "Pëlqime të marra: ditë unike"
           likes_received_users: "Pëlqime të Marra: përdorues unikë"
+          qualifies: "I kualifikuar për nivelin e besimit 3"
+          does_not_qualify: "Nuk është i kualifikuar për nivelin e besimit 3"
+          will_be_promoted: "Do të promovohet së shpejti."
+          will_be_demoted: "Do të rikthehet së shpejti."
+          locked_will_not_be_promoted: "Niveli i besimit i kyçur. Nuk do të promovohet kurrë. "
+          locked_will_not_be_demoted: "Niveli i besimit i kyçur. Nuk do të rikthehet kurrë. "
         sso:
           title: "Single Sign On"
+          external_id: "ID i jashtëm"
           external_username: "Emri i përdoruesit"
           external_name: "Emri"
           external_email: "Email"
+          external_avatar_url: "URL e fotos së profilit"
       user_fields:
+        title: "Fushat e përdoruesit"
+        help: "Shto fusha që përdoruesit mund të plotësojnë."
+        create: "Krijo fushë përdoruesi"
         untitled: "Pa Titull"
         save: "Ruaj"
         edit: "Redakto"

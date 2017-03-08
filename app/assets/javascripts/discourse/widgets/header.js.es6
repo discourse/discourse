@@ -3,6 +3,7 @@ import { iconNode } from 'discourse/helpers/fa-icon-node';
 import { avatarImg } from 'discourse/widgets/post';
 import DiscourseURL from 'discourse/lib/url';
 import { wantsNewWindow } from 'discourse/lib/intercept-click';
+import { applySearchAutocomplete } from "discourse/lib/search";
 
 import { h } from 'virtual-dom';
 
@@ -163,6 +164,8 @@ createWidget('header-buttons', {
   }
 });
 
+const forceContextEnabled = ['category', 'user', 'private_messages'];
+
 export default createWidget('header', {
   tagName: 'header.d-header.clearfix',
   buildKey: () => `header`,
@@ -172,7 +175,6 @@ export default createWidget('header', {
       searchVisible: false,
       hamburgerVisible: false,
       userVisible: false,
-      contextEnabled: false,
       ringBackdrop: true
     };
 
@@ -192,6 +194,19 @@ export default createWidget('header', {
                                                   flagCount: attrs.flagCount })];
 
     if (state.searchVisible) {
+      const contextType = this.searchContextType();
+
+      if (state.searchContextType !== contextType) {
+        state.contextEnabled = undefined;
+        state.searchContextType = contextType;
+      }
+
+      if (state.contextEnabled === undefined) {
+        if (forceContextEnabled.includes(contextType)) {
+          state.contextEnabled = true;
+        }
+      }
+
       panels.push(this.attach('search-menu', { contextEnabled: state.contextEnabled }));
     } else if (state.hamburgerVisible) {
       panels.push(this.attach('hamburger-menu'));
@@ -244,7 +259,11 @@ export default createWidget('header', {
     this.updateHighlight();
 
     if (this.state.searchVisible) {
-      Ember.run.schedule('afterRender', () => $('#search-term').focus().select());
+      Ember.run.schedule('afterRender', () => {
+        const $searchInput = $('#search-term');
+        $searchInput.focus().select();
+        applySearchAutocomplete($searchInput, this.siteSettings, this.appEvents);
+      });
     }
   },
 
@@ -289,6 +308,7 @@ export default createWidget('header', {
   },
 
   searchMenuContextChanged(value) {
+    this.state.contextType = this.register.lookup('search-service:main').get('contextType');
     this.state.contextEnabled = value;
   },
 
@@ -317,6 +337,16 @@ export default createWidget('header', {
           msg.event.stopPropagation();
         }
         break;
+    }
+  },
+
+  searchContextType() {
+    const service = this.register.lookup('search-service:main');
+    if (service) {
+      const ctx = service.get('searchContext');
+      if (ctx) {
+        return Ember.get(ctx, 'type');
+      }
     }
   }
 

@@ -82,12 +82,22 @@ describe Auth::DefaultCurrentUserProvider do
     expect(provider("/?api_key=hello&api_username=#{user.username.downcase}").current_user.id).to eq(user.id)
   end
 
-  it "should not update last seen for message bus" do
-    expect(provider("/message-bus/anything/goes", method: "POST").should_update_last_seen?).to eq(false)
-    expect(provider("/message-bus/anything/goes", method: "GET").should_update_last_seen?).to eq(false)
+  it "should not update last seen for ajax calls without Discourse-Visible header" do
+    expect(provider("/topic/anything/goes",
+                    :method => "POST",
+                    "HTTP_X_REQUESTED_WITH" => "XMLHttpRequest"
+          ).should_update_last_seen?).to eq(false)
   end
 
-  it "should update last seen for others" do
+  it "should update ajax reqs with discourse visible" do
+    expect(provider("/topic/anything/goes",
+                    :method => "POST",
+                    "HTTP_X_REQUESTED_WITH" => "XMLHttpRequest",
+                    "HTTP_DISCOURSE_VISIBLE" => "true"
+          ).should_update_last_seen?).to eq(true)
+  end
+
+  it "should update last seen for non ajax" do
     expect(provider("/topic/anything/goes", method: "POST").should_update_last_seen?).to eq(true)
     expect(provider("/topic/anything/goes", method: "GET").should_update_last_seen?).to eq(true)
   end
@@ -143,9 +153,7 @@ describe Auth::DefaultCurrentUserProvider do
     token.reload
     expect(token.auth_token_seen).to eq(false)
 
-
     freeze_time 21.minutes.from_now
-
 
     old_token = token.prev_auth_token
     unverified_token = token.auth_token
@@ -200,10 +208,8 @@ describe Auth::DefaultCurrentUserProvider do
   end
 
   it "correctly removes invalid cookies" do
-
-    cookies = {"_t" => "BAAAD"}
+    cookies = {"_t" => SecureRandom.hex}
     provider('/').refresh_session(nil, {}, cookies)
-
     expect(cookies.key?("_t")).to eq(false)
   end
 
@@ -214,6 +220,29 @@ describe Auth::DefaultCurrentUserProvider do
     provider('/').log_on_user(user, {}, {})
 
     expect(UserAuthToken.where(user_id: user.id).count).to eq(2)
+  end
+
+  it "sets secure, same site lax cookies" do
+    SiteSetting.force_https = false
+    SiteSetting.same_site_cookies = "Lax"
+
+    user = Fabricate(:user)
+    cookies = {}
+    provider('/').log_on_user(user, {}, cookies)
+
+
+    expect(cookies["_t"][:same_site]).to eq("Lax")
+    expect(cookies["_t"][:httponly]).to eq(true)
+    expect(cookies["_t"][:secure]).to eq(false)
+
+    SiteSetting.force_https = true
+    SiteSetting.same_site_cookies = "Disabled"
+
+    cookies = {}
+    provider('/').log_on_user(user, {}, cookies)
+
+    expect(cookies["_t"][:secure]).to eq(true)
+    expect(cookies["_t"].key?(:same_site)).to eq(false)
   end
 
   it "correctly expires session" do

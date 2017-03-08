@@ -282,7 +282,7 @@ nb_NO:
       delete_prompt: "Er du sikker du ønsker å slette <b>%{username}</b>? Dette vil fjerne alle brukerens innlegg og blokkere brukerens epost- og IP-adresse."
       approval:
         title: "Innlegg trenger godkjenning"
-        description: "Vi har mottatt ditt nye innlegg men det krever godkjenning av en moderator før det vises. Ha tolmod."
+        description: "Vi har mottatt ditt nye innlegg men det krever godkjenning av en moderator før det vises. Ha tålmod."
         pending_posts:
           one: "Du har <strong>1</strong> innlegg som venter på godkjenning."
           other: "Du har <strong>{{count}}</strong> innlegg som venter på godkjenning."
@@ -589,6 +589,8 @@ nb_NO:
         error: "(feil)"
         action: "Send e-post for nullstilling av passord"
         set_password: "Sett passord"
+        choose_new: "Velg et nytt passord"
+        choose: "Velg et passord"
       change_about:
         title: "Rediger om meg"
         error: "Det oppstod en feil ved endring av denne verdien."
@@ -642,13 +644,11 @@ nb_NO:
         instructions: "unikt, ingen mellomrom, kort"
         short_instructions: "Folk kan nevne deg som @{{username}}."
         available: "Ditt brukernavn er tilgjengelig."
-        global_match: "E-post stemmer med det registrerte brukernavnet"
-        global_mismatch: "Allerede registrert. Prøv {{suggestion}}?"
         not_available: "Ikke tilgjengelig. Prøv {{suggestion}}?"
+        not_available_no_suggestion: "Ikke tilgjengelig"
         too_short: "Ditt brukernavn er for kort."
         too_long: "Ditt brukernavn er for langt."
         checking: "Sjekker brukernavnets tilgjengelighet…"
-        enter_email: 'Brukernavn funnet; oppgi samsvarende e-post'
         prefilled: "E-post stemmer med dette registrerte brukernavnet"
       locale:
         title: "Språk for grensesnitt"
@@ -657,7 +657,7 @@ nb_NO:
         any: "hvilken som helst"
       password_confirmation:
         title: "Passord igjen"
-      last_posted: "Siste Innlegg"
+      last_posted: "Siste innlegg"
       last_emailed: "Sist kontaktet"
       last_seen: "Sist sett"
       created: "Medlem fra"
@@ -746,10 +746,10 @@ nb_NO:
         link_generated: "Invitasjonslenke har blitt generert!"
         valid_for: "Invitasjonslenke er kun gyldig for denne e-postadressen: %{email}"
         bulk_invite:
-          none: "Du har ikke invitert noen hit enda. Du kan sende individuelle invitasjoner, eller du kan invitere flere personer samtidig ved å <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>laste opp en CSV-fil</a>."
+          none: "Du har ikke invitert noen enda. Sende enkeltsående invitasjoner, eller inviter mange samtidig ved å <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>laste opp ei CSV-fil</a>."
           text: "Masseinvitasjon fra fil"
           success: "Filen er lastet opp, du vil motta en melding når prosessesen er ferdig"
-          error: "Beklager, filen skal være i CSV-format."
+          error: "Beklager, fila må være i CSV-format."
       password:
         title: "Passord"
         too_short: "Passordet ditt er for kort"
@@ -939,6 +939,7 @@ nb_NO:
       to_continue: "Logg inn"
       preferences: "Du må være innlogget for å endre brukerinnstillinger."
       forgot: "I husker ikke mine kontodetaljer"
+      not_approved: "Kontoen din har ikke blitt godkjent enda. Du vil få beskjed via e-post når du er klar til å logge inn."
       google:
         title: "med Google"
         message: "Autentiserer med Google (sørg for at du tillater pop-up vindu)"
@@ -960,6 +961,17 @@ nb_NO:
       github:
         title: "med GitHub"
         message: "Autentiserer med GitHub (sørg for at du tillater pop-up vindu)"
+    invites:
+      accept_title: "Invitasjon"
+      welcome_to: "Velkommen til %{site_name}!"
+      invited_by: "Du ble invitert av:"
+      social_login_available: "Du vil også kunne logge inn med enhver annen sosial innloggingstjeneste ved bruk av den e-posten."
+      your_email: "E-postadressen tilknyttet din konto er <b>%{email}</b>."
+      accept_invite: "Godta invitasjon"
+      success: "Kontoen din har blitt opprettet og du er nå logget inn."
+      password_label: "Sett passord (valgfritt)"
+    password_reset:
+      continue: "Fortsett til %{site_name}"
     emoji_set:
       apple_international: "Apple/Internasjonalt"
       google: "Google"
@@ -1103,7 +1115,7 @@ nb_NO:
         quoted: "Sitert av"
         replied: "Svart"
         posted: "Innlegg av"
-        edited: "Rediger din melding innen"
+        edited: "Rediger ditt innlegg innen"
         liked: "Likte innlegget ditt"
         private_message: "Privat melding fra"
         invited_to_private_message: "Invitert til privat korrespondanse av"
@@ -1333,7 +1345,7 @@ nb_NO:
         jump_bottom: "Hopp til nyeste innlegg"
         jump_prompt: "hopp til…"
         jump_prompt_of: "av %{count} innlegg"
-        jump_prompt_long: "Hvilken melding vil du gå til?"
+        jump_prompt_long: "Hvilket innlegg vil du gå til?"
         jump_bottom_with_number: "hopp til innlegg %{post_number}"
         total: innlegg totalt
         current: gjeldende innlegg
@@ -1403,11 +1415,8 @@ nb_NO:
         make_banner: "Banneremne"
         remove_banner: "Fjern banneremne"
       reply:
-        post:
-          title: 'Svar'
-        topic:
-          title: 'Svar'
-          help: 'begynn å skrive et svar til dette emnet'
+        title: 'Svar'
+        help: 'begynn å forfatte et svar i dette emnet'
       clear_pin:
         title: "Løsne emne"
         help: "Løsne feste-statusen til dette emnet slik at det ikke lenger vises på toppen av din emneliste"
@@ -1536,6 +1545,7 @@ nb_NO:
       wiki_last_edited_on: "wikien sist redigert"
       last_edited_on: "innlegg sist redigert"
       reply_as_new_topic: "Svar med lenket emne"
+      reply_as_new_private_message: "Svar som ny melding til de samme mottakerne"
       continue_discussion: "Fortsetter diskusjonen fra {{postLink}}:"
       follow_quote: "gå til det siterte innlegget"
       show_full: "Vis hele innlegget"
@@ -1598,8 +1608,8 @@ nb_NO:
         more: "Mer"
         delete_replies:
           confirm:
-            one: "Vil du òg slette det direkte svaret til dette innlegget?"
-            other: "Vil du òg slette de {{count}} direkte svarene til dette innlegget?"
+            one: "Vil du også slette det direkte svaret til dette innlegget?"
+            other: "Vil du også slette de {{count}} direkte svarene til dette innlegget?"
           yes_value: "Ja, slett svarene også."
           no_value: "Nei, kun dette innlegget."
         admin: "Innleggsadministrasjon"
@@ -1708,6 +1718,7 @@ nb_NO:
           show: "Vis versjon"
           revert: "Gå tilbake til denne versjonen"
           edit_wiki: "Rediger wiki"
+          edit_post: "Rediger innlegg"
           comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> <i class='fa fa-arrows-h'></i> <strong>{{current}}</strong> / {{total}}"
         displays:
           inline:

@@ -20,7 +20,7 @@ class HighlightJsController < ApplicationController
 
       response.headers["Last-Modified"] = 10.years.ago.httpdate
       response.headers["Content-Length"] = highlight_js.bytesize.to_s
-      expires_in 1.year, public: true
+      immutable_for 1.year
 
       render text: highlight_js, disposition: nil, content_type: 'application/javascript'
     end

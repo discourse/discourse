@@ -8,6 +8,6 @@ export default  Ember.Component.extend({
   }.property('tagRecord.id'),
 
   href: function() {
-    return '/tags/' + this.get('tagRecord.id');
+    return Discourse.getURL('/tags/' + this.get('tagRecord.id'));
   }.property('tagRecord.id'),
 });

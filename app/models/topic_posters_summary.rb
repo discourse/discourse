@@ -1,3 +1,4 @@
+# This is used in topic lists
 class TopicPostersSummary
   attr_reader :topic, :options
 
@@ -16,6 +17,7 @@ class TopicPostersSummary
     TopicPoster.new.tap do |topic_poster|
       topic_poster.user = user
       topic_poster.description = descriptions_for(user)
+      topic_poster.primary_group = primary_group_lookup[user.id]
       if topic.last_post_user_id == user.id
         topic_poster.extras = 'latest'
         topic_poster.extras << ' single' if user_ids.uniq.size == 1
@@ -73,5 +75,9 @@ class TopicPostersSummary
 
   def avatar_lookup
     @avatar_lookup ||= options[:avatar_lookup] || AvatarLookup.new(user_ids)
+  end
+
+  def primary_group_lookup
+    @primary_group_lookup ||= options[:primary_group_lookup] || PrimaryGroupLookup.new(user_ids)
   end
 end

@@ -15,6 +15,7 @@ addBulkButton('showNotificationLevel', 'notification_level');
 addBulkButton('resetRead', 'reset_read');
 addBulkButton('unlistTopics', 'unlist_topics');
 addBulkButton('showTagTopics', 'change_tags');
+addBulkButton('showAppendTagTopics', 'append_tags');
 
 // Modal for performing bulk actions on topics
 export default Ember.Controller.extend(ModalFunctionality, {
@@ -78,11 +79,26 @@ export default Ember.Controller.extend(ModalFunctionality, {
   actions: {
     showTagTopics() {
       this.set('tags', '');
+      this.set('action', 'changeTags');
+      this.set('label', 'change_tags');
+      this.set('title', 'choose_new_tags');
       this.send('changeBulkTemplate', 'bulk-tag');
     },
 
     changeTags() {
       this.performAndRefresh({type: 'change_tags', tags: this.get('tags')});
+    },
+
+    showAppendTagTopics() {
+      this.set('tags', '');
+      this.set('action', 'appendTags');
+      this.set('label', 'append_tags');
+      this.set('title', 'choose_append_tags');
+      this.send('changeBulkTemplate', 'bulk-tag');
+    },
+
+    appendTags() {
+      this.performAndRefresh({type: 'append_tags', tags: this.get('tags')});
     },
 
     showChangeCategory() {

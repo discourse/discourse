@@ -7,7 +7,7 @@ module JsLocaleHelper
       translations = {}
 
       Dir["#{Rails.root}/plugins/*/config/locales/client.#{locale_str}.yml"].each do |file|
-        if plugin_translations = YAML::load(File.open(file))[locale_str]
+        if plugin_translations = YAML.load_file(file)[locale_str]
           translations.deep_merge!(plugin_translations)
         end
       end
@@ -26,7 +26,7 @@ module JsLocaleHelper
       locale_str = locale.to_s
 
       # load default translations
-      translations = YAML::load(File.open("#{Rails.root}/config/locales/client.#{locale_str}.yml"))
+      translations = YAML.load_file("#{Rails.root}/config/locales/client.#{locale_str}.yml")
 
       # merge translations (plugin translations overwrite default translations)
       translations[locale_str]['js'].deep_merge!(plugin_translations(locale_str)['js']) if translations[locale_str] && plugin_translations(locale_str) && plugin_translations(locale_str)['js']
@@ -35,23 +35,22 @@ module JsLocaleHelper
     end
   end
 
-  # purpose-built recursive algorithm ahoy!
-  def self.deep_delete_matches(deleting_from, *checking_hashes)
+  # deeply removes keys from "deleting_from" that are already present in "checking_hashes"
+  def self.deep_delete_matches(deleting_from, checking_hashes)
     checking_hashes.compact!
 
     new_hash = deleting_from.dup
     deleting_from.each do |key, value|
-      if value.is_a? Hash
-        # Recurse
-        new_at_key = deep_delete_matches(deleting_from[key], *(checking_hashes.map {|h| h[key]}))
+      if value.is_a?(Hash)
+        new_at_key = deep_delete_matches(deleting_from[key], checking_hashes.map { |h| h[key] })
         if new_at_key.empty?
-          new_hash.delete key
+          new_hash.delete(key)
         else
           new_hash[key] = new_at_key
         end
       else
-        if checking_hashes.any? {|h| h.include? key}
-          new_hash.delete key
+        if checking_hashes.any? { |h| h.include?(key) }
+          new_hash.delete(key)
         end
       end
     end
@@ -66,8 +65,8 @@ module JsLocaleHelper
       loaded_locales = []
 
       locales.map(&:to_s).each do |locale|
-        all_translations[locale] = JsLocaleHelper.load_translations locale
-        merged_translations[locale] = deep_delete_matches(all_translations[locale][locale], *loaded_locales.map { |l| merged_translations[l] })
+        all_translations[locale] = load_translations(locale)
+        merged_translations[locale] = deep_delete_matches(all_translations[locale][locale], loaded_locales.map { |l| merged_translations[l] })
         loaded_locales << locale
       end
       merged_translations
@@ -75,12 +74,11 @@ module JsLocaleHelper
   end
 
   def self.translations_for(locale_str)
-    locale_sym = locale_str.to_sym
-
     current_locale = I18n.locale
-    I18n.locale = locale_sym
+    locale_sym     = locale_str.to_sym
+    site_locale    = SiteSetting.default_locale.to_sym
 
-    site_locale = SiteSetting.default_locale.to_sym
+    I18n.locale = locale_sym
 
     translations =
       if Rails.env.development?
@@ -100,19 +98,23 @@ module JsLocaleHelper
 
   def self.output_locale(locale)
     locale_str = locale.to_s
-    translations = translations_for(locale_str).dup
+    translations = Marshal.load(Marshal.dump(translations_for(locale_str)))
 
-    translations[locale_str].keys.each do |k|
-      translations[locale_str].delete(k) unless k == "js"
+    translations.keys.each do |locale|
+      translations[locale].keys.each do |k|
+        translations[locale].delete(k) unless k == "js"
+      end
     end
 
     message_formats = strip_out_message_formats!(translations[locale_str]['js'])
-
     result = generate_message_format(message_formats, locale_str)
 
+    # I18n
     result << "I18n.translations = #{translations.to_json};\n"
     result << "I18n.locale = '#{locale_str}';\n"
-    # loading moment here cause we must customize it
+    result << "I18n.pluralizationRules.#{locale_str} = MessageFormat.locale.#{locale_str};\n" if locale_str != "en"
+
+    # moment
     result << File.read("#{Rails.root}/lib/javascripts/moment.js")
     result << moment_locale(locale_str)
     result << moment_formats
@@ -136,33 +138,25 @@ module JsLocaleHelper
   def self.moment_locale(locale_str)
     # moment.js uses a different naming scheme for locale files
     locale_str = locale_str.tr('_', '-').downcase
-    filename = Rails.root + "lib/javascripts/moment_locale/#{locale_str}.js"
+    filename = "#{Rails.root}/lib/javascripts/moment_locale/#{locale_str}.js"
 
-    unless File.exists?(filename)
-      # try the language without the territory
-      locale_str = locale_str.partition('-').first
-      filename = Rails.root + "lib/javascripts/moment_locale/#{locale_str}.js"
-    end
+    # try the language without the territory
+    locale_str = locale_str.split("-")[0]
+    filename = "#{Rails.root}/lib/javascripts/moment_locale/#{locale_str}.js" unless File.exists?(filename)
 
-    if File.exists?(filename)
-      File.read(filename) << "\n"
-    end || ""
+    File.exists?(filename) ? File.read(filename) << "\n" : ""
   end
 
   def self.generate_message_format(message_formats, locale_str)
+    formats = message_formats.map { |k,v| k.inspect << " : " << compile_message_format(locale_str, v) }.join(", ")
+
+    filename = "#{Rails.root}/lib/javascripts/locale/#{locale_str}.js"
+    filename = "#{Rails.root}/lib/javascripts/locale/en.js" unless File.exists?(filename)
 
     result = "MessageFormat = {locale: {}};\n"
-
-    formats = message_formats.map{|k,v| k.inspect << " : " << compile_message_format(locale_str,v)}.join(", ")
-    result << "I18n._compiledMFs = {#{formats}};\n\n"
-
-    filename = Rails.root + "lib/javascripts/locale/#{locale_str}.js"
-    filename = Rails.root + "lib/javascripts/locale/en.js" unless File.exists?(filename)
-    result << File.read(filename) << "\n\n"
-
-    result << File.read("#{Rails.root}/lib/javascripts/messageformat-lookup.js")
-
-    result
+    result << "I18n._compiledMFs = {#{formats}};\n"
+    result << File.read(filename) << "\n"
+    result << File.read("#{Rails.root}/lib/javascripts/messageformat-lookup.js") << "\n"
   end
 
   def self.reset_context
@@ -174,7 +168,7 @@ module JsLocaleHelper
     @mutex.synchronize do
       yield @ctx ||= begin
                ctx = MiniRacer::Context.new
-               ctx.load(Rails.root + 'lib/javascripts/messageformat.js')
+               ctx.load("#{Rails.root}/lib/javascripts/messageformat.js")
                ctx
              end
     end
@@ -182,7 +176,7 @@ module JsLocaleHelper
 
   def self.compile_message_format(locale, format)
     with_context do |ctx|
-      path = Rails.root + "lib/javascripts/locale/#{locale}.js"
+      path = "#{Rails.root}/lib/javascripts/locale/#{locale}.js"
       ctx.load(path) if File.exists?(path)
       ctx.eval("mf = new MessageFormat('#{locale}');")
       ctx.eval("mf.precompile(mf.parse(#{format.inspect}))")

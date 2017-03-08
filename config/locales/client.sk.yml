@@ -228,7 +228,6 @@ sk:
       like_count: "Páči sa mi"
       topic_count: "Témy"
       post_count: "Príspevky"
-      user_count: "Noví používatelia"
       active_user_count: "Aktívni používatelia"
       contact: "Kontaktujte nás"
       contact_info: "V prípade kritickej chyby alebo naliehavej záležitosti nás prosím konaktujte na %{contact_info}."
@@ -574,7 +573,6 @@ sk:
         instructions: "Obrázky pozadia budú vystredené a s predvolenou šírkou 590px."
       email:
         title: "Email"
-        instructions: "Nikdy verejne nezobrazené"
         ok: "Pošleme vám email pre potvrdenie"
         invalid: "Zadajte prosím platný email"
         authenticated: "Váš email bude autentifikovaný pomocou {{provider}}"
@@ -585,22 +583,17 @@ sk:
           other: "Odošleme vám email iba ak sme vás nevideli posledných {{count}} minút"
       name:
         title: "Meno"
-        instructions: "Vaše celé meno (nepovinné)"
         instructions_required: "Vaše celé meno"
         too_short: "Vaše meno je prikrátke"
         ok: "Vaše meno je v poriadku"
       username:
         title: "Používateľské meno"
-        instructions: "Unikátne, bez medzier, krátke"
         short_instructions: "Ostatní vás môžu zmieniť ako @{{username}}"
         available: "Vaše používateľské meno je voľné"
-        global_match: "Email zodpovedá registrovanému používateľskému menu"
-        global_mismatch: "Už zaregistrované. Skúste {{suggestion}}?"
         not_available: "Nie je k dispozícii. Skúste {{suggestion}}?"
         too_short: "Vaše používateľské meno je prikrátke"
         too_long: "Vaše používateľské meno je pridlhé"
         checking: "Kontrolujeme dostupnosť používateľského meno"
-        enter_email: 'Používateľské meno nájdené, zadajte zodpovedajúci email'
         prefilled: "Email zodpovedá tomuto registrovanému používateľskému menu"
       locale:
         title: "Jazyk rozhrania"
@@ -697,7 +690,6 @@ sk:
         same_as_username: "Vaše heslo je rovnaké ako používateľské meno."
         same_as_email: "Vaše heslo je rovnaké ako e-mail."
         ok: "Vaše heslo je v poriadku."
-        instructions: "Minimálne %{count} znakov."
       summary:
         title: "Zhrnutie"
         stats: "Štatistiky"
@@ -1287,9 +1279,6 @@ sk:
         pin_globally: "Pripni tému globálne"
         make_banner: "Banerová téma"
         remove_banner: "Odstrániť banerovú tému"
-      reply:
-        title: 'Odpovedať'
-        help: 'vytvor odpoveď k tejto téme'
       clear_pin:
         title: "Zruš pripnutie"
         help: "Zruší pripnutie tejto témy takže sa už viac nebude objavovať na vrchu Vášho zoznamu tém"
@@ -1464,8 +1453,6 @@ sk:
         yes_value: "Áno, zahodiť."
       via_email: "tento príspevok prišiel emailom"
       whisper: "tento príspevok je súkromným šepotom pre moderátorov"
-      wiki:
-        about: "tento príspevok je wiki"
       archetypes:
         save: 'Uložiť možnosti'
       controls:
@@ -1602,13 +1589,10 @@ sk:
         displays:
           inline:
             title: "Zobraz výstup vrátane pridaného a zmazaného v riadku"
-            button: '<i class="fa fa-square-o"></i> HTML'
           side_by_side:
             title: "Zobraziť rozdiely v generovanom výstupe vedľa seba"
-            button: '<i class="fa fa-columns"></i> HTML'
           side_by_side_markdown:
             title: "Zobraziť rozdiely v pôvodnom zdroji vedľa seba"
-            button: '<i class="fa fa-columns"></i> Neupravený'
     category:
       can: 'môže &hellip; '
       none: '(Bez kategórie)'

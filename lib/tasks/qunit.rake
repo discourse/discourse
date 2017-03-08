@@ -35,7 +35,7 @@ task "qunit:test", [:timeout] => :environment do |_, args|
   begin
     success = true
     test_path = "#{Rails.root}/vendor/assets/javascripts"
-    cmd = "phantomjs #{test_path}/run-qunit.js http://localhost:#{port}/qunit #{args[:timeout]}"
+    cmd = "phantomjs #{test_path}/run-qunit.js http://localhost:#{port}/qunit"
 
     options = {}
 
@@ -45,6 +45,10 @@ task "qunit:test", [:timeout] => :environment do |_, args|
 
     if options.present?
       cmd += "?#{options.to_query.gsub('+', '%20')}"
+    end
+
+    if args[:timeout].present?
+      cmd += " #{args[:timeout]}"
     end
 
     # wait for server to respond, will exception out on failure

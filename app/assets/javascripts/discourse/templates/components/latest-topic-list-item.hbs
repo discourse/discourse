@@ -19,13 +19,7 @@
         </tr>
         <tr>
           {{category-link topic.category}}
-          {{#if topic.tags}}
-            <div class="discourse-tags">
-              {{#each topic.visibleListTags as |tag|}}
-                {{discourse-tag tag}}
-              {{/each}}
-            </div>
-          {{/if}}
+          {{discourse-tags topic mode="list"}}
         </tr>
       </td>
       <td class="topic-stats">

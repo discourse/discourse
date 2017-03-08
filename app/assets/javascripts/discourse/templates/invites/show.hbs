@@ -1,0 +1,55 @@
+<div class="container invites-show clearfix">
+
+  <h2>{{welcomeTitle}}</h2>
+
+  <div class="two-col">
+    <div class="col-image">
+      <img src={{inviteImageUrl}}>
+    </div>
+
+    <div class="col-form">
+      <p>{{i18n 'invites.invited_by'}}</p>
+
+      <p>{{user-info user=invitedBy}}</p>
+
+      {{#if successMessage}}
+        <p>{{successMessage}}</p>
+      {{else}}        
+
+        <p>{{{yourEmailMessage}}} 
+        {{#if externalAuthsEnabled}}
+             {{i18n 'invites.social_login_available'}}
+        {{/if}}
+        </p>
+
+        <form>
+          <label>{{i18n 'user.username.title'}}</label>
+
+          <div class="input username-input">
+            {{input value=accountUsername id="new-account-username" name="username" maxlength=maxUsernameLength autocomplete="off"}}
+            &nbsp;{{input-tip validation=usernameValidation id="username-validation"}}
+          </div>
+
+          <label>{{i18n 'invites.password_label'}}</label>
+
+          <div class="input password-input">
+            {{password-field value=accountPassword type="password" id="new-account-password" capsLockOn=capsLockOn}}
+            &nbsp;{{input-tip validation=passwordValidation}}
+          </div>
+
+          <div class="instructions">
+            <div class="caps-lock-warning {{unless capsLockOn 'invisible'}}"><i class="fa fa-exclamation-triangle"></i> {{i18n 'login.caps_lock_warning'}}</div>
+          </div>         
+
+          <button class='btn btn-primary' {{action "submit"}} disabled={{submitDisabled}}>{{i18n 'invites.accept_invite'}}</button>
+
+          {{#if errorMessage}}
+            <br/><br/>
+            <div class='alert alert-error'>{{errorMessage}}</div>
+          {{/if}}
+
+        </form>
+      {{/if}}
+    </div>
+  </div>
+</div>

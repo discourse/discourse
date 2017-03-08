@@ -4,7 +4,7 @@ export default Discourse.Route.extend({
 
     const { currentUser } = this;
     const viewingMe = (currentUser && currentUser.get('username') === this.modelFor('user').get('username'));
-    const destination = viewingMe ? 'user.summary' : 'userActivity';
+    const destination = viewingMe ? 'userActivity' : 'user.summary';
 
     // HACK: Something with the way the user card intercepts clicks seems to break how the
     // transition into a user's activity works. This makes the back button work on mobile

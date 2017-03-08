@@ -157,7 +157,7 @@ class PostMover
 
   def posts
     @posts ||= begin
-      Post.where(id: post_ids).order(:created_at).tap do |posts|
+      Post.where(topic: @original_topic, id: post_ids).order(:created_at).tap do |posts|
         raise Discourse::InvalidParameters.new(:post_ids) if posts.empty?
       end
     end

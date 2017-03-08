@@ -6,6 +6,7 @@ class ListController < ApplicationController
   skip_before_filter :check_xhr
 
   before_filter :set_category, only: [
+    :category_default,
     # filtered topics lists
     Discourse.filters.map { |f| :"category_#{f}" },
     Discourse.filters.map { |f| :"category_none_#{f}" },
@@ -29,6 +30,7 @@ class ListController < ApplicationController
     Discourse.anonymous_filters,
     Discourse.anonymous_filters.map { |f| "#{f}_feed" },
     # anonymous categorized filters
+    :category_default,
     Discourse.anonymous_filters.map { |f| :"category_#{f}" },
     Discourse.anonymous_filters.map { |f| :"category_none_#{f}" },
     Discourse.anonymous_filters.map { |f| :"parent_category_category_#{f}" },
@@ -106,17 +108,45 @@ class ListController < ApplicationController
     end
   end
 
-  [:topics_by, :private_messages, :private_messages_sent, :private_messages_unread, :private_messages_archive, :private_messages_group, :private_messages_group_archive].each do |action|
+  def category_default
+    if @category.default_view == 'top'
+      top(category: @category.id)
+    else
+      self.send(@category.default_view || 'latest')
+    end
+  end
+
+  def topics_by
+    list_opts = build_topic_list_options
+    target_user = fetch_user_from_params({ include_inactive: current_user.try(:staff?) }, [:user_stat, :user_option])
+    list = generate_list_for("topics_by", target_user, list_opts)
+    list.more_topics_url = url_for(construct_url_with(:next, list_opts))
+    list.prev_topics_url = url_for(construct_url_with(:prev, list_opts))
+    respond_with_list(list)
+  end
+
+  def self.generate_message_route(action)
     define_method("#{action}") do
       list_opts = build_topic_list_options
       target_user = fetch_user_from_params({ include_inactive: current_user.try(:staff?) }, [:user_stat, :user_option])
-      guardian.ensure_can_see_private_messages!(target_user.id) unless action == :topics_by
+      guardian.ensure_can_see_private_messages!(target_user.id)
       list = generate_list_for(action.to_s, target_user, list_opts)
-      url_prefix = "topics" unless action == :topics_by
+      url_prefix = "topics"
       list.more_topics_url = url_for(construct_url_with(:next, list_opts, url_prefix))
       list.prev_topics_url = url_for(construct_url_with(:prev, list_opts, url_prefix))
       respond_with_list(list)
     end
+  end
+
+  %i{
+    private_messages
+    private_messages_sent
+    private_messages_unread
+    private_messages_archive
+    private_messages_group
+    private_messages_group_archive
+  }.each do |action|
+    generate_message_route(action)
   end
 
   def latest_feed
@@ -274,30 +304,22 @@ class ListController < ApplicationController
 
     @description_meta = @category.description_text
     raise Discourse::NotFound unless guardian.can_see?(@category)
+
+    if use_crawler_layout?
+      @subcategories = @category.subcategories.select { |c| guardian.can_see?(c) }
+    end
   end
 
   def build_topic_list_options
-    options = {
-      page: params[:page],
-      topic_ids: param_to_integer_list(:topic_ids),
-      exclude_category_ids: params[:exclude_category_ids],
-      category: params[:category],
-      order: params[:order],
-      ascending: params[:ascending],
-      min_posts: params[:min_posts],
-      max_posts: params[:max_posts],
-      status: params[:status],
-      filter: params[:filter],
-      state: params[:state],
-      search: params[:search],
-      q: params[:q],
-      group_name: params[:group_name],
-      tags: params[:tags],
-      match_all_tags: params[:match_all_tags],
-      no_tags: params[:no_tags]
-    }
-    options[:no_subcategories] = true if params[:no_subcategories] == 'true'
-    options[:slow_platform] = true if slow_platform?
+    options = {}
+    TopicQuery.public_valid_options.each do |key|
+      options[key] = params[key]
+    end
+
+    # hacky columns get special handling
+    options[:topic_ids] = param_to_integer_list(:topic_ids)
+    options[:no_subcategories] = options[:no_subcategories] == 'true'
+    options[:slow_platform] = slow_platform?
 
     options
   end

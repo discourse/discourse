@@ -168,14 +168,13 @@ describe Guardian do
     context "enable_private_messages is false" do
       before { SiteSetting.enable_private_messages = false }
 
-      it "returns false if user is not the contact user" do
-        expect(Guardian.new(user).can_send_private_message?(another_user)).to be_falsey
+      it "returns false if user is not staff member" do
+        expect(Guardian.new(trust_level_4).can_send_private_message?(another_user)).to be_falsey
       end
 
-      it "returns true for the contact user and system user" do
-        SiteSetting.site_contact_username = user.username
-        expect(Guardian.new(user).can_send_private_message?(another_user)).to be_truthy
-        expect(Guardian.new(Discourse.system_user).can_send_private_message?(another_user)).to be_truthy
+      it "returns true for staff member" do
+        expect(Guardian.new(moderator).can_send_private_message?(another_user)).to be_truthy
+        expect(Guardian.new(admin).can_send_private_message?(another_user)).to be_truthy
       end
     end
 
@@ -278,6 +277,20 @@ describe Guardian do
 
       Rails.configuration.stubs(:developer_emails).returns([admin.email])
       expect(Guardian.new(admin).can_impersonate?(another_admin)).to be_truthy
+    end
+  end
+
+  describe "can_view_action_logs?" do
+    it 'is false for non-staff acting user' do
+      expect(Guardian.new(user).can_view_action_logs?(moderator)).to be_falsey
+    end
+
+    it 'is false without a target user' do
+      expect(Guardian.new(moderator).can_view_action_logs?(nil)).to be_falsey
+    end
+
+    it 'is true when target user is present' do
+      expect(Guardian.new(moderator).can_view_action_logs?(user)).to be_truthy
     end
   end
 
@@ -867,8 +880,30 @@ describe Guardian do
       expect(Guardian.new(user).can_recover_topic?(topic)).to be_falsey
     end
 
-    it "returns true for a moderator" do
-      expect(Guardian.new(moderator).can_recover_topic?(topic)).to be_truthy
+    context 'as a moderator' do
+      before do
+        topic.save!
+        post.save!
+      end
+
+      describe 'when post has been deleted' do
+        it "should return the right value" do
+          expect(Guardian.new(moderator).can_recover_topic?(topic)).to be_falsey
+
+          PostDestroyer.new(moderator, topic.first_post).destroy
+
+          expect(Guardian.new(moderator).can_recover_topic?(topic.reload)).to be_truthy
+        end
+      end
+
+      describe "when post's user has been deleted" do
+        it 'should return the right value' do
+          PostDestroyer.new(moderator, topic.first_post).destroy
+          topic.first_post.user.destroy!
+
+          expect(Guardian.new(moderator).can_recover_topic?(topic.reload)).to be_falsey
+        end
+      end
     end
   end
 
@@ -886,8 +921,32 @@ describe Guardian do
       expect(Guardian.new(user).can_recover_post?(post)).to be_falsey
     end
 
-    it "returns true for a moderator" do
-      expect(Guardian.new(moderator).can_recover_post?(post)).to be_truthy
+    context 'as a moderator' do
+      let(:other_post) { Fabricate(:post, topic: topic, user: topic.user) }
+
+      before do
+        topic.save!
+        post.save!
+      end
+
+      describe 'when post has been deleted' do
+        it "should return the right value" do
+          expect(Guardian.new(moderator).can_recover_post?(post)).to be_falsey
+
+          PostDestroyer.new(moderator, post).destroy
+
+          expect(Guardian.new(moderator).can_recover_post?(post.reload)).to be_truthy
+        end
+
+        describe "when post's user has been deleted" do
+          it 'should return the right value' do
+            PostDestroyer.new(moderator, post).destroy
+            post.user.destroy!
+
+            expect(Guardian.new(moderator).can_recover_post?(post.reload)).to be_falsey
+          end
+        end
+      end
     end
 
   end

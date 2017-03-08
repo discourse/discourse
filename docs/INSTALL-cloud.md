@@ -51,7 +51,7 @@ You will need to be root through the rest of the setup and bootstrap process.
 
 - No existing mail server? Check out our [**Recommended Email Providers for Discourse**][mailconfig].
 
-- For proper email deliverability, you must add valid SPF and DKIM TXT records in your DNS. See your email provider instructions for specifics.
+- To ensure mail deliverability, you must add valid [SPF and DKIM records](https://www.google.com/search?q=spf+dkim) in your DNS. See your mail provider instructions for specifics.
 
 ### Edit Discourse Configuration
 

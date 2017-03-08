@@ -188,7 +188,6 @@ ja:
       like_count: "いいね！"
       topic_count: "トピック"
       post_count: "投稿"
-      user_count: "新規ユーザー"
       active_user_count: "アクティブユーザー"
       contact: "お問い合わせ"
       contact_info: "このサイトに影響を与える重要な問題や緊急の問題が発生した場合は、 %{contact_info}までご連絡ください"
@@ -498,7 +497,6 @@ ja:
         instructions: "背景画像は、幅590pxで中央揃えになります"
       email:
         title: "メールアドレス"
-        instructions: "外部に公開されることはありません"
         ok: "確認用メールを送信します"
         invalid: "正しいメールアドレスを入力してください"
         authenticated: "あなたのメールアドレスは {{provider}} によって認証されています"
@@ -506,22 +504,17 @@ ja:
           other: "最後に利用されてから{{count}}分以上経過した場合にメールを送ります。"
       name:
         title: "名前"
-        instructions: "フルネーム(任意)"
         instructions_required: "氏名"
         too_short: "名前が短いです"
         ok: "問題ありません"
       username:
         title: "ユーザー名"
-        instructions: "空白を含まず、被らない名前を入力してください"
         short_instructions: "@{{username}} であなたにメンションを送ることができます"
         available: "ユーザ名は利用可能です"
-        global_match: "メールアドレスが登録済みのユーザ名と一致しました"
-        global_mismatch: "既に利用されています。{{suggestion}} などはどうでしょうか？"
         not_available: "利用出来ない名前です。 {{suggestion}} などはどうでしょうか？"
         too_short: "ユーザ名が短すぎます"
         too_long: "ユーザ名が長すぎます"
         checking: "ユーザ名が利用可能か確認しています..."
-        enter_email: 'ユーザ名が見つかりました; 正しいメールアドレスを入力してください'
         prefilled: "この登録ユーザにマッチするメールアドレスが見つかりました"
       locale:
         title: "表示する言語"
@@ -610,7 +603,6 @@ ja:
         same_as_username: "パスワードがユーザ名と一致しています"
         same_as_email: "パスワードとメールアドレスが一致しています"
         ok: "パスワード OK。"
-        instructions: "%{count} 文字以上の長さにしてください。"
       summary:
         title: "情報"
         stats: "統計"
@@ -1109,9 +1101,6 @@ ja:
         pin_globally: "トピックを全サイト的にピン留めする"
         make_banner: "バナートピック"
         remove_banner: "バナートピックを削除"
-      reply:
-        title: '返信'
-        help: 'このトピックに返信する'
       clear_pin:
         title: "ピンを解除する"
         help: "このトピックのピンを外し、トピックリストの先頭に表示されないようにする"
@@ -1343,13 +1332,10 @@ ja:
         displays:
           inline:
             title: "追加・削除箇所をインラインで表示"
-            button: '<i class="fa fa-square-o"></i> HTML'
           side_by_side:
             title: "差分を横に並べて表示"
-            button: '<i class="fa fa-columns"></i> HTML'
           side_by_side_markdown:
             title: "ソース文書で表示する"
-            button: 'ソース文書'
     category:
       can: 'can&hellip; '
       none: '(カテゴリなし)'

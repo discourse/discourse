@@ -90,25 +90,69 @@ describe Admin::BackupsController do
     describe ".show" do
 
       it "uses send_file to transmit the backup" do
-        path = File.join(Backup.base_directory, backup_filename)
-        File.open(path, "w") { |f| f.write("hello") }
+        begin
+          token = EmailBackupToken.set(@admin.id)
+          path = File.join(Backup.base_directory, backup_filename)
+          File.open(path, "w") { |f| f.write("hello") }
 
-        Backup.create_from_filename(backup_filename)
+          Backup.create_from_filename(backup_filename)
 
-        StaffActionLogger.any_instance.expects(:log_backup_download).once
+          StaffActionLogger.any_instance.expects(:log_backup_download).once
 
-        get :show, id: backup_filename
+          get :show, id: backup_filename, token: token
 
-        File.delete(path) rescue nil
 
-        expect(response.headers['Content-Length']).to eq("5")
-        expect(response.headers['Content-Disposition']).to match(/attachment; filename/)
+          expect(response.headers['Content-Length']).to eq("5")
+          expect(response.headers['Content-Disposition']).to match(/attachment; filename/)
+        ensure
+          File.delete(path)
+          EmailBackupToken.del(@admin.id)
+        end
+      end
+
+      it "returns 422 when token is bad" do
+        begin
+          path = File.join(Backup.base_directory, backup_filename)
+          File.open(path, "w") { |f| f.write("hello") }
+
+          Backup.create_from_filename(backup_filename)
+
+          get :show, id: backup_filename, token: "bad_value"
+
+          expect(response.status).to eq(422)
+        ensure
+          File.delete(path)
+        end
       end
 
       it "returns 404 when the backup does not exist" do
+        token = EmailBackupToken.set(@admin.id)
         Backup.expects(:[]).returns(nil)
 
-        get :show, id: backup_filename
+        get :show, id: backup_filename, token: token
+
+        EmailBackupToken.del(@admin.id)
+
+        expect(response).to be_not_found
+      end
+
+    end
+
+    describe ".email" do
+
+      let(:b) { Backup.new(backup_filename) }
+
+      it "enqueues email job" do
+        Backup.expects(:[]).with(backup_filename).returns(b)
+        Jobs.expects(:enqueue).with(:download_backup_email, has_entries(to_address: @admin.email))
+
+        xhr :put, :email, id: backup_filename
+
+        expect(response).to be_success
+      end
+
+      it "returns 404 when the backup does not exist" do
+        xhr :put, :email, id: backup_filename
 
         expect(response).to be_not_found
       end
@@ -227,23 +271,25 @@ describe Admin::BackupsController do
 
       describe "when filename is valid" do
         it "should upload the file successfully" do
-          described_class.any_instance.expects(:has_enough_space_on_disk?).returns(true)
+          begin
+            described_class.any_instance.expects(:has_enough_space_on_disk?).returns(true)
 
-          filename = 'test_Site-0123456789.tar.gz'
+            filename = 'test_Site-0123456789.tar.gz'
 
-          xhr :post, :upload_backup_chunk,
-            resumableFilename: filename,
-            resumableTotalSize: 1,
-            resumableIdentifier: 'test',
-            resumableChunkNumber: '1',
-            resumableChunkSize: '1',
-            resumableCurrentChunkSize: '1',
-            file: fixture_file_upload(Tempfile.new)
+            xhr :post, :upload_backup_chunk,
+              resumableFilename: filename,
+              resumableTotalSize: 1,
+              resumableIdentifier: 'test',
+              resumableChunkNumber: '1',
+              resumableChunkSize: '1',
+              resumableCurrentChunkSize: '1',
+              file: fixture_file_upload(Tempfile.new)
 
-          expect(response.status).to eq(200)
-          expect(response.body).to eq("")
-
-          File.delete(File.join(Backup.base_directory, filename)) rescue nil
+            expect(response.status).to eq(200)
+            expect(response.body).to eq("")
+          ensure
+            File.delete(File.join(Backup.base_directory, filename))
+          end
         end
       end
     end

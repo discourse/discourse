@@ -40,6 +40,21 @@ describe TopicQuery do
 
   end
 
+  context "custom filters" do
+    it "allows custom filters to be applied" do
+      topic1 = Fabricate(:topic)
+      _topic2 = Fabricate(:topic)
+
+      TopicQuery.add_custom_filter(:only_topic_id) do |results, topic_query|
+        results = results.where('topics.id = ?', topic_query.options[:only_topic_id])
+      end
+
+      expect(TopicQuery.new(nil, {only_topic_id: topic1.id}).list_latest.topics.map(&:id)).to eq([topic1.id])
+
+      TopicQuery.remove_custom_filter(:only_topic_id)
+    end
+  end
+
   context "list_topics_by" do
 
     it "allows users to view their own invisible topics" do

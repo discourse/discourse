@@ -105,7 +105,6 @@ zh_CN:
       default_categories_already_selected: "不能选择一个已经用于另一个列表的分类。"
       s3_upload_bucket_is_required: "你没有填写“s3_upload_bucket”，不能开启上传至 S3。"
   invite:
-    accept_invite: "接受邀请"
     not_found: "你的邀请码不正确。请联系网站管理员。"
   bulk_invite:
     file_should_be_csv: "上传的文件应为 csv 格式。"
@@ -233,35 +232,35 @@ zh_CN:
 
       欲查看更多，[请查看我们的社群准则](/guidelines)。此信息面板只会在你发表前 %{education_posts_text} 时显示。
     avatar: |
-      ### 给你的账户设置头像如何？
+      ### 想更改你的头像吗?
 
-      你已经发表了一些主题和回复，但是你的个人头像并不像你一样独特——只是一些字母而已。
+      你已经发表和回复了几个主题，但你的头像并不像你自己一样独一无二 – 它仅仅是一个字母.
 
-      你考虑过**[访问你的用户页面](%{profile_path})**，再上传一个代表你的图片？
+      你想过更改你的头像 **[查看你的个人资料](%{profile_path})** 并上传一张代表你自己的照片吗?
 
-      当所有人都有独特的头像时，这会让专注讨论和找到有趣的人更加轻松。
+      如果每个人都有自己独特的头像会让人更加容易参与讨论和发现有趣的人!
     sequential_replies: |
-      ### 考虑一次性回复多个帖子
+      ### 考虑只回复帖子一次
 
-      与其接连回复主题几次，不如在一个回复中引用相关内容或者@用户名引用前面的帖子。
+      与其回复主题多次，不如只回复一次，包括引用前面的帖子或者@用户名。
 
-      你可以编辑你之前的回复以添加引用。添加引用需要选择文字并且点击出现的<b>引用回复</b>按钮。
+      你可以在你的回复中添加引用。只要选择你想引用的文字，然后点击随后出现的<b>引用回复</b>按钮。
 
-      当主题中的帖子的内容不是多个小且独立的回复，而是更少的更有深度的帖子时，我们会更认真地阅读这个主题。
+      这样其它人会更容易地看一个长的回复，而不是多个分开的回复。
     dominating_topic: |
-      ### 让其他人加入讨论
+      ### 让其他人参与讨论
 
-      很明显这个主题对你很重要 &ndash; 你已经发表的帖子占该主题 %{percent}% 的回复。
+      很明显这个主题对你很重要 &ndash; 你发表了占该主题 %{percent}% 的回复。
 
-      你有让其他人自由地表达他们的观点了吗？
+      你有让其他人有足够地时间像你一样表达他们的观点了吗？
     too_many_replies: |
-      ### 你发表的回复数量已经达到该主题的回复上限。
+      ### 你发表的回复数量已经达到了上限。
 
-      非常抱歉，但新用户被临时限制，只能在同一主题中回复 %{newuser_max_replies_per_topic} 次。
+      非常抱歉，但新用户被限制只能在同一主题中回复 %{newuser_max_replies_per_topic} 次。
 
-      想要添加另一个回复不如考虑编辑原先的回复或访问其他主题。
+      与其添加另一个回复不如考虑编辑你以前的回复，或访问其他主题。
     reviving_old_topic: |
-      ### 复活这个主题？
+      ### 重新激活这个主题？
 
       这个主题的最后一个回复距今已有 %{days} 天了。你的回复将让主题重新出现在列表的顶端并通知原先参与讨论的人。
 
@@ -296,6 +295,7 @@ zh_CN:
               same_as_username: "与你的用户名相同。请使用一个更安全的密码。"
               same_as_email: "与你的邮件地址相同。请使用一个更安全的密码。"
               same_as_current: "和你当前的密码相同"
+              unique_characters: "包含太多重复的字符。请使用一个更安全的密码。"
             ip_address:
               signup_not_allowed: "不能使用这个账户登录。"
         color_scheme_color:
@@ -472,7 +472,6 @@ zh_CN:
     title: '重置密码'
     success: "你的密码已经修改成功，你现在已经登录。"
     success_unapproved: "你的密码已经修改成功。"
-    continue: "转入到 %{site_name}"
   change_email:
     confirmed: "你的电子邮箱已被更新。"
     please_continue: "转入到%{site_name}"
@@ -743,8 +742,6 @@ zh_CN:
     facebook_config_warning: '服务器允许使用 Facebook 账号登录（enable_facebook_logins），但是 app id 和 app secret 没有被设定。 到<a href="/admin/site_settings">站点设置</a>更新此设定。<a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-facebook-logins" target="_blank">参考设定指南</a>。'
     twitter_config_warning: '服务器允许使用 Twitter 账号登录（enable_twitter_logins），但是 key 和 secret 没有被设定。 到<a href="/admin/site_settings">站点设置</a>更新此设定。<a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-twitter-logins" target="_blank">参考设定指南</a>。'
     github_config_warning: '服务器允许使用 GitHub 账号登录（enable_github_logins），但是 client id 和 secret 没有被设定。 到<a href="/admin/site_settings">站点设置</a>更新此设定。<a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide" target="_blank">参考设定指南</a>。'
-    s3_config_warning: '服务器被配置为上传文件到 s3，但是至少有一个值未被设定： s3_access_key_id, s3_secret_access_key 或 s3_upload_bucket。到<a href="/admin/site_settings">站点设置</a>更新此设定。<a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">参考如何设置图片上传至 S3</a>。'
-    s3_backup_config_warning: '服务器被配置为上传备份到 s3，但是至少有一个值未被设定： s3_access_key_id, s3_secret_access_key 或 s3_upload_bucket。到<a href="/admin/site_settings">站点设置</a>更新此设定。<a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">参考如何设置图片上传至 S3</a>。'
     image_magick_warning: '服务器被设置为给大图片创建缩略图，但是 ImageMagick 没有被安装。用你最喜爱的包管理器安装 ImageMagick 或<a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">下载最新版</a>。'
     failing_emails_warning: '有 %{num_failed_jobs} 个邮件任务失败。请检查 app.yml 文件是否正确配置了邮件服务器。<a href="/sidekiq/retries" target="_blank">查看 Sidekiq 中失败的任务</a>。'
     subfolder_ends_in_slash: "你的子目录设置不正确；DISCOURSE_RELATIVE_URL_ROOT以斜杠结尾。"
@@ -795,7 +792,6 @@ zh_CN:
     max_image_width: "帖子中图片允许的最大缩略图宽度"
     max_image_height: "帖子中图片允许的最大缩略图宽度"
     category_featured_topics: "在分类 /categories 页面中每个分类显示的主题数目。在修改这个值之后，分类页面需要 15 分钟后完成更新。"
-    show_subcategory_list: "进入分类时显示子分类列表而不是主题列表。"
     fixed_category_positions: "如果选择，你将可以设置一个固定的分类顺序。如果不选择，分类将按照活动的顺序显示。"
     fixed_category_positions_on_create: "如果选择了，目录排序将会在话题创建对话框中被包含(要求固定目录位置选项)"
     add_rel_nofollow_to_user_content: "添加 rel nofollow 属性到所有的用户内容，除了内部链接（包括父域名）。如果你更改了这个，你必须重新调制所有帖子，以该命令：“rake posts:rebake”"
@@ -890,11 +886,10 @@ zh_CN:
     invite_passthrough_hours: "用户多久才能使用一个已经使用过的邀请代码，以小时计"
     invite_only: "公开注册已禁用，新用户必须被其他成员或管理人员邀请。"
     login_required: "需要验证才能继续在该站阅读，不允许匿名访问。"
-    min_username_length: "最小用户名长度。"
-    max_username_length: "最大用户名长度。"
     reserved_usernames: "注册时不可使用的用户名。"
     min_password_length: "最小密码长度。"
     min_admin_password_length: "管理员最短密码长度"
+    password_unique_characters: "密码中必须包含几个不同的字符。"
     block_common_passwords: "不允许使用 10,000 个最常用的密码。"
     enable_sso: "启用通过外部站点单点登录（警告：用户的邮件地址必须被外部站点验证！）"
     verbose_sso_logging: "将 SSO 日志详情记录至 /logs"
@@ -957,6 +952,8 @@ zh_CN:
     max_private_messages_per_day: "每个用户每天能发消息数量的最大值。"
     max_invites_per_day: "每个用户每天能创建的邀请数量的最大值。"
     max_topic_invitations_per_day: "每个用户每天能创建的邀请至主题数量的最大值。"
+    max_logins_per_ip_per_hour: "一小时内同一个IP（网络）地址能允许最大的登陆次数。"
+    max_logins_per_ip_per_minute: "一分钟内同一个IP（网络）地址能允许最大的登陆次数。"
     alert_admins_if_errors_per_minute: "激活管理员警告的每分钟错误的数量。0 会禁用这个特性。注意：需要重启。"
     alert_admins_if_errors_per_hour: "激活管理员警告的每小时错误的数量。0 会禁用这个特性。注意：需要重启。"
     categories_topics: "/categories 页面中显示的主题数。"
@@ -1131,7 +1128,7 @@ zh_CN:
     digest_posts: "邮件摘要中显示的最流行帖子的数量。"
     digest_other_topics: "邮件摘要中“你关注的主题和分类中的新内容”栏目显示的主题数目上限。"
     digest_min_excerpt_length: "邮件摘要中显示的帖子摘要字符数下限。"
-    delete_digest_email_after_days: "不发送摘要邮件给超过（n）天没访问的用户。"
+    suppress_digest_email_after_days: "停止给(n)天未登陆网站的用户发送摘要邮件。"
     digest_suppress_categories: "不在摘要邮件中显示这些分类的内容。"
     disable_digest_emails: "禁用所有用户摘要邮件功能。"
     email_accent_bg_color: "HTML 邮件中某些元素的背景使用的强调颜色。输入色彩名（“red”）或十六进制值（“#FF0000”）。"
@@ -1187,7 +1184,6 @@ zh_CN:
     show_create_topics_notice: "如果站点只有少于 5 篇的公开帖子时，显示一条请管理员创建帖子的提示。"
     delete_drafts_older_than_n_days: 删除超过 n 天得草稿。
     bootstrap_mode_min_users: "禁用摘要模式的用户数下限（0 为禁用）。"
-    vacuum_db_days: "在数据库迁移后使用完整扫描回收数据库空间（设置 0 为禁用）"
     prevent_anons_from_downloading_files: "禁止匿名用户下载附件。警告：这将禁止他们访问任何发表在帖子中的非图片资源。"
     slug_generation_method: "选择一个链接生成方式。“encoded”将生成以百分号编码的链接。“none”将禁用自定义链接，只生成默认链接。"
     enable_emoji: "启用绘文字（emoji）"
@@ -1368,7 +1364,7 @@ zh_CN:
       short: "必须超过 %{min} 个字"
       long: "必须不超过 %{max} 个字"
       characters: "必须只包含字母、数字和下划线"
-      unique: "必须是唯一的"
+      unique: "已被使用"
       blank: "必须存在"
       must_begin_with_alphanumeric_or_underscore: "必须以字母、数字或下划线开头"
       must_end_with_alphanumeric: "必须以字母或数字结尾"
@@ -1400,44 +1396,8 @@ zh_CN:
       如果你想要继续接受邮件更新，你可以忽略这封邮件。
   invite_mailer:
     subject_template: "%{invitee_name} 邀请你参与 %{site_domain_name} 主题 '%{topic_title}' "
-    text_body_template: |
-      %{invitee_name} 邀请你参与讨论
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      位于站点
-
-      > %{site_title} -- %{site_description}
-
-      如果你有兴趣，点击下面的链接：
-
-      %{invite_link}
-
-      这封邀请来组于受信任的用户，所以你可以立即回复。
   custom_invite_mailer:
     subject_template: "%{invitee_name}邀请你'%{topic_title}'在%{site_domain_name}"
-    text_body_template: |
-      %{invitee_name}邀请你参与
-
-      > %{site_title} -- %{site_description}
-
-      中的
-
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
-
-      %{invitee_name}的留言：
-
-      %{user_custom_message}
-
-      如果你有兴趣，点击下面的链接：
-
-      %{invite_link}
-
-      这封邀请发自受信任的用户，所以你可以立即回复主题。
   invite_forum_mailer:
     subject_template: "%{invitee_name} 邀请你加入 %{site_domain_name}"
   custom_invite_forum_mailer:
@@ -1576,8 +1536,10 @@ zh_CN:
 
         （如果你在新用户级别需要和[管理人员](%{base_url}/about)沟通的话，直接回复这个消息。）
     welcome_invite:
+      title: "欢迎邀请"
       subject_template: "欢迎来到 %{site_name}！"
     backup_succeeded:
+      title: "备份成功"
       subject_template: "备份成功完成"
       text_body_template: |
         备份成功。
@@ -1836,6 +1798,7 @@ zh_CN:
 
         该阈值可以通过站点设置中的 `newuser_spam_host_threshold` 和 `white_listed_spam_host_domains` 更改。
     unblocked:
+      title: "解锁"
       subject_template: "账户已解除封禁"
       text_body_template: |
         你好，
@@ -1851,9 +1814,11 @@ zh_CN:
 
         [请在管理栏目中审核他们](%{base_url}/admin/users/list/pending)。
     download_remote_images_disabled:
+      title: "已被禁止下载远程图片"
       subject_template: "远程图片下载已禁用。"
       text_body_template: "`download_remote_images_to_local` 设定已被禁用，因为已经达到 ``download_remote_images_threshold` 设定中的磁盘空间限制。"
     dashboard_problems:
+      title: "管理面板问题"
       subject_template: "发现问题了"
       text_body_template: |
         系统在管理员面板中报告了发现的问题。
@@ -2035,7 +2000,6 @@ zh_CN:
       follow_topic: "关注主题"
       join_the_discussion: "阅读更多"
       popular_posts: "流行帖子"
-      from_topic_label: "来自"
       more_new: "你关注的新帖"
       subject_template: "[%{site_name}] 摘要"
       unsubscribe: "这是封来自%{site_link}的摘要邮件，因为你长时间没有访问而发送。%{unsubscribe_link}取消订阅。"
@@ -2062,6 +2026,7 @@ zh_CN:
         点击下面的链接来选择一个新密码：
         %{base_url}/users/password-reset/%{email_token}
     set_password:
+      title: "设置密码"
       subject_template: "[%{site_name}] 设置密码"
       text_body_template: |
         有人请求添加你在 [%{site_name}](%{base_url}) 的密码。除此之外，你可以通过已验证过你邮件地址的在线服务商登录。
@@ -2071,6 +2036,7 @@ zh_CN:
         点击下面的链接来选择一个新密码：
         %{base_url}/users/password-reset/%{email_token}
     admin_login:
+      title: "管理员登陆"
       subject_template: "[%{site_name}]登录"
       text_body_template: |
         有人尝试登录你在[%{site_name}](%{base_url})的账户。
@@ -2080,6 +2046,7 @@ zh_CN:
         点击下面的链接登录：
         %{base_url}/users/admin-login/%{email_token}
     account_created:
+      title: "帐号已创建"
       subject_template: "[%{site_name}] 你的新帐号"
       text_body_template: |
         你在 %{site_name} 上建立了一个新账号
@@ -2087,12 +2054,14 @@ zh_CN:
         点击下面的链接来为新账户设置密码：
         %{base_url}/users/password-reset/%{email_token}
     confirm_new_email:
+      title: "确认新邮箱"
       subject_template: "[%{site_name}] 确认你的新电子邮箱地址"
       text_body_template: |
         点击下面的链接来确认你在%{site_name}上的新电子邮箱地址：
 
         %{base_url}/users/authorize-email/%{email_token}
     confirm_old_email:
+      title: "确认旧邮箱"
       subject_template: "[%{site_name}] 确认你的新电子邮箱地址"
       text_body_template: |
         在我们修改你的邮箱地址前，我们需要你确认你拥有当前的邮件账号。在你完成这步之后，我们将确认你的新邮件地址。
@@ -2101,6 +2070,7 @@ zh_CN:
 
         %{base_url}/users/authorize-email/%{email_token}
     notify_old_email:
+      title: "通知旧邮箱"
       subject_template: "[%{site_name}] 你的邮箱地址已经修改成功"
       text_body_template: |
         这是%{site_name}自动发出的邮件，以告知你的邮箱地址已经被修改了。如果这是一个错误，请联系站点管理人员。
@@ -2109,6 +2079,7 @@ zh_CN:
 
         %{new_email}
     signup_after_approval:
+      title: "在审批之后注册"
       subject_template: "你已经被 %{site_name} 论坛批准加入了！"
       text_body_template: |
         欢迎加入%{site_name}！
@@ -2162,6 +2133,7 @@ zh_CN:
       too_large: "抱歉，你试图上传的文件太大了（最大限制为%{max_size_kb}%KB）。"
     images:
       too_large: "抱歉，你试图上传的图片太大了（最大限制为%{max_size_kb}%KB），请裁剪它并重试。"
+      larger_than_x_megapixels: "对不起，你上传的图片太大(最大支持%{max_image_megapixels}像素)，请缩小图片然后再试一次。"
       size_not_found: "抱歉，我们无法获取图片大小，请检查你的图片是否已损坏。"
   avatar:
     missing: "抱歉，我们没法找到与你邮件地址关联的头像。你能再上传一次试试吗？"
@@ -2744,8 +2716,6 @@ zh_CN:
   performance_report:
     initial_post_raw: 这个主题将用来展示网站每日性能报告。
     initial_topic_title: 网站性能报告
-  topic_invite:
-    user_exists: "抱歉，用户已经被邀请了。你可能只想邀请用户参与主题一次。"
   tags:
     title: "标签"
     staff_tag_disallowed: "“%{tag}”只可由管理人员使用。"
@@ -2794,9 +2764,11 @@ zh_CN:
         fields:
           welcome:
             label: "欢迎主题"
+            description: "<p>你如何向一个在电梯里的陌生人用一分钟时间介绍你的社群？</p> <ul> <li>谁会参与讨论？</li> <li>我在这里能找到些什么？</li> <li>为什么我要来这里？</li> </ul> <p>你的欢迎主题是初来者首先所需要阅读的。 把它当成你的 <b>一句话</b> '电梯游说' 或 ' 使命陈述'。 </p>"
             one_paragraph: "请限制你的欢迎消息至一段话。"
       privacy:
         title: "访问"
+        description: "<p>你的社群是对所有人公开开放吗？还是需要邀请/审批？你可以先做一些设置工作，以后再对所有人开放.</p> <p>你同样也可以从主题或用户个人资料页面来发送邀请。</p>"
         fields:
           privacy:
             choices:
@@ -2836,6 +2808,7 @@ zh_CN:
         title: "主题"
         fields:
           theme_id:
+            description: "你想喜欢白色还是深色的界面？你可以以后在\"管理员/定制”界面更改这个设置。"
             choices:
               default:
                 label: "简洁亮"
@@ -2860,6 +2833,7 @@ zh_CN:
             label: "大图标"
             description: "现代设备中你站点显示的图标，要在大一点尺寸的情况下表现出色。推荐的尺寸至少要达到144px X 144px。"
       homepage:
+        description: "我们建议你在主页显示最后发点的主题，但你也可以选择在主页显示主题分类列表。"
         title: "主页"
         fields:
           homepage_style:
@@ -2870,6 +2844,7 @@ zh_CN:
                 label: "分类"
       emoji:
         title: "Emoji"
+        description: "你想使用哪种样式的表情符号？你可以以后在\"管理员/定制/表情符号（Emoji）\"界面增加更多定制的表情符号。"
       invites:
         title: "邀请管理人员"
         description: "你快做完啦！让我们邀请一些工作人员来帮助你<a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>创建一些讨论主题</a>以方便你发布社群。"

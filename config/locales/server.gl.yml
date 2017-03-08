@@ -206,12 +206,9 @@ gl:
     distance_in_words_verbose:
       half_a_minute: "agora mesmiño"
   password_reset:
-    choose_new: "Selecciona un novo contrasinal"
-    choose: "Selecciona un contrasinal"
     update: 'Actualizar contrasinal'
     save: 'Estabelecer o contrasinal'
     title: 'Contrasinal restabelecido'
-    continue: "Continuar a %{site_name}"
   change_email:
     confirmed: "O teu correo electrónico foi actualizado."
     please_continue: "Continuar a %{site_name}"

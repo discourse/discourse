@@ -5,6 +5,15 @@ import { createWidget } from 'discourse/widgets/widget';
 createWidget('search-term', {
   tagName: 'input',
   buildId: () => 'search-term',
+  buildKey: (attrs) => `search-term-${attrs.id}`,
+
+  defaultState() {
+    this.appEvents.on("search-autocomplete:after-complete", () => {
+      this.state.afterAutocomplete = true;
+    });
+
+    return { afterAutocomplete: false };
+  },
 
   buildAttributes(attrs) {
     return { type: 'text',
@@ -14,7 +23,11 @@ createWidget('search-term', {
 
   keyUp(e) {
     if (e.which === 13) {
-      return this.sendWidgetAction('fullSearch');
+      if (this.state.afterAutocomplete) {
+        this.state.afterAutocomplete = false;
+      } else {
+        return this.sendWidgetAction('fullSearch');
+      }
     }
 
     const val = this.attrs.value;

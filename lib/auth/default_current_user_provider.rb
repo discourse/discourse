@@ -50,6 +50,7 @@ class Auth::DefaultCurrentUserProvider
         @user_token = UserAuthToken.lookup(auth_token,
                                            seen: true,
                                            user_agent: @env['HTTP_USER_AGENT'],
+                                           path: @env['REQUEST_PATH'],
                                            client_ip: @request.ip)
 
         current_user = @user_token.try(:user)
@@ -126,7 +127,8 @@ class Auth::DefaultCurrentUserProvider
 
       if !@user_token.legacy && needs_rotation
         if @user_token.rotate!(user_agent: @env['HTTP_USER_AGENT'],
-                              client_ip: @request.ip)
+                              client_ip: @request.ip,
+                              path: @env['REQUEST_PATH'])
           cookies[TOKEN_COOKIE] = cookie_hash(@user_token.unhashed_auth_token)
         end
       elsif @user_token.legacy
@@ -143,6 +145,7 @@ class Auth::DefaultCurrentUserProvider
   def log_on_user(user, session, cookies)
     @user_token = UserAuthToken.generate!(user_id: user.id,
                                           user_agent: @env['HTTP_USER_AGENT'],
+                                          path: @env['REQUEST_PATH'],
                                           client_ip: @request.ip)
 
     cookies[TOKEN_COOKIE] = cookie_hash(@user_token.unhashed_auth_token)
@@ -152,12 +155,18 @@ class Auth::DefaultCurrentUserProvider
   end
 
   def cookie_hash(unhashed_auth_token)
-    {
+    hash = {
       value: unhashed_auth_token,
       httponly: true,
       expires: SiteSetting.maximum_session_age.hours.from_now,
       secure: SiteSetting.force_https
     }
+
+    if SiteSetting.same_site_cookies != "Disabled"
+      hash[:same_site] = SiteSetting.same_site_cookies
+    end
+
+    hash
   end
 
   def make_developer_admin(user)
@@ -209,7 +218,11 @@ class Auth::DefaultCurrentUserProvider
   end
 
   def should_update_last_seen?
-    !(@request.path =~ /^\/message-bus\//)
+    if @request.xhr?
+      @env["HTTP_DISCOURSE_VISIBLE".freeze] == "true".freeze
+    else
+      true
+    end
   end
 
   protected

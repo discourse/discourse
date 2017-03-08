@@ -148,7 +148,12 @@ export default createWidget('search-menu', {
   },
 
   html(attrs) {
-    searchData.contextEnabled = attrs.contextEnabled;
+    if (searchData.contextEnabled !== attrs.contextEnabled) {
+      searchData.contextEnabled = attrs.contextEnabled;
+      this.triggerSearch();
+    } else {
+      searchData.contextEnabled = attrs.contextEnabled;
+    }
 
     return this.attach('menu-panel', { maxWidth: 500, contents: () => this.panelContents() });
   },
@@ -170,6 +175,7 @@ export default createWidget('search-menu', {
   },
 
   searchContextChanged(enabled) {
+    // This indicates the checkbox has been clicked, NOT that the context has changed.
     searchData.typeFilter = null;
     this.sendWidgetAction('searchMenuContextChanged', enabled);
     searchData.contextEnabled = enabled;

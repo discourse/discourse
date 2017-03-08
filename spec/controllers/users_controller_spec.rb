@@ -255,7 +255,6 @@ describe UsersController do
         user.reload
 
         expect(session["password-#{token}"]).to be_blank
-
         expect(UserAuthToken.where(id: user_auth_token.id).count).to eq(0)
       end
 

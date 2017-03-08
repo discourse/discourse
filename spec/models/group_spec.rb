@@ -182,7 +182,7 @@ describe Group do
         I18n.locale = SiteSetting.default_locale = 'de'
 
         another_group = Fabricate(:group,
-          name: I18n.t('groups.default_names.staff')
+          name: I18n.t('groups.default_names.staff').upcase
         )
 
         group = Group.refresh_automatic_group!(:staff)

@@ -10,6 +10,12 @@ class UserAuthToken < ActiveRecord::Base
 
   attr_accessor :unhashed_auth_token
 
+  def self.log(info)
+    if SiteSetting.verbose_auth_token_logging
+      UserAuthTokenLog.create!(info)
+    end
+  end
+
   def self.generate!(info)
     token = SecureRandom.hex(16)
     hashed_token = hash_token(token)
@@ -23,16 +29,13 @@ class UserAuthToken < ActiveRecord::Base
     )
     user_auth_token.unhashed_auth_token = token
 
-    if SiteSetting.verbose_auth_token_logging
-      UserAuthTokenLog.create!(
-        action: 'generate',
+    log(action: 'generate',
         user_auth_token_id: user_auth_token.id,
         user_id: info[:user_id],
         user_agent: info[:user_agent],
         client_ip: info[:client_ip],
-        auth_token: hashed_token
-      )
-    end
+        path: info[:path],
+        auth_token: hashed_token)
 
     user_auth_token
   end
@@ -46,49 +49,59 @@ class UserAuthToken < ActiveRecord::Base
 
     user_token = find_by("(auth_token = :token OR
                           prev_auth_token = :token OR
-                          (auth_token = :unhashed_token AND legacy)) AND created_at > :expire_before",
+                          (auth_token = :unhashed_token AND legacy)) AND rotated_at > :expire_before",
                           token: token, unhashed_token: unhashed_token, expire_before: expire_before)
 
-    token_expired =
-       user_token &&
-       user_token.auth_token_seen &&
-       user_token.prev_auth_token == token &&
-       user_token.prev_auth_token != user_token.auth_token &&
-       user_token.rotated_at > 1.minute.ago
+    if !user_token
 
-    if token_expired || !user_token
-
-      if SiteSetting.verbose_auth_token_logging
-        UserAuthTokenLog.create(
-          action: "miss token",
+      log(action: "miss token",
           user_id: user_token&.user_id,
           auth_token: token,
           user_agent: opts && opts[:user_agent],
-          client_ip: opts && opts[:client_ip]
-        )
-      end
+          path: opts && opts[:path],
+          client_ip: opts && opts[:client_ip])
 
       return nil
     end
 
+    if user_token.auth_token != token && user_token.prev_auth_token == token && user_token.auth_token_seen
+      changed_rows = UserAuthToken
+        .where("rotated_at < ?", 1.minute.ago)
+        .where(id: user_token.id, prev_auth_token: token)
+        .update_all(auth_token_seen: false)
+
+      # not updating AR model cause we want to give it one more req
+      # with wrong cookie
+      UserAuthToken.log(
+        action: changed_rows == 0 ? "prev seen token unchanged" : "prev seen token",
+        user_auth_token_id: user_token.id,
+        user_id: user_token.user_id,
+        auth_token: user_token.auth_token,
+        user_agent: opts && opts[:user_agent],
+        path: opts && opts[:path],
+        client_ip: opts && opts[:client_ip]
+      )
+    end
+
     if mark_seen && user_token && !user_token.auth_token_seen && user_token.auth_token == token
       # we must protect against concurrency issues here
-      changed_rows = UserAuthToken.where(id: user_token.id, auth_token: token).update_all(auth_token_seen: true)
+      changed_rows = UserAuthToken
+        .where(id: user_token.id, auth_token: token)
+        .update_all(auth_token_seen: true, seen_at: Time.zone.now)
+
       if changed_rows == 1
         # not doing a reload so we don't risk loading a rotated token
         user_token.auth_token_seen = true
+        user_token.seen_at = Time.zone.now
       end
 
-      if SiteSetting.verbose_auth_token_logging
-        UserAuthTokenLog.create(
-          action: changed_rows == 0 ? "seen wrong token" : "seen token",
+      log(action: changed_rows == 0 ? "seen wrong token" : "seen token",
           user_auth_token_id: user_token.id,
           user_id: user_token.user_id,
           auth_token: user_token.auth_token,
           user_agent: opts && opts[:user_agent],
-          client_ip: opts && opts[:client_ip]
-        )
-      end
+          path: opts && opts[:path],
+          client_ip: opts && opts[:client_ip])
     end
 
     user_token
@@ -120,6 +133,7 @@ class UserAuthToken < ActiveRecord::Base
   UPDATE user_auth_tokens
   SET
     auth_token_seen = false,
+    seen_at = null,
     user_agent = :user_agent,
     client_ip = :client_ip,
     prev_auth_token = case when auth_token_seen then auth_token else prev_auth_token end,
@@ -138,16 +152,15 @@ class UserAuthToken < ActiveRecord::Base
       reload
       self.unhashed_auth_token = token
 
-      if SiteSetting.verbose_auth_token_logging
-        UserAuthTokenLog.create(
-          action: "rotate",
-          user_auth_token_id: id,
-          user_id: user_id,
-          auth_token: auth_token,
-          user_agent: user_agent,
-          client_ip: client_ip
-        )
-      end
+      UserAuthToken.log(
+        action: "rotate",
+        user_auth_token_id: id,
+        user_id: user_id,
+        auth_token: auth_token,
+        user_agent: user_agent,
+        client_ip: client_ip,
+        path: info && info[:path]
+      )
 
       true
     else
