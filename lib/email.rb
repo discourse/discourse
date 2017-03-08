@@ -29,4 +29,21 @@ module Email
     name ? name.gsub(/[:<>,"]/, '') : name
   end
 
+  def self.extract_parts(raw)
+    mail = Mail.new(raw)
+    text = nil
+    html = nil
+
+    if mail.multipart?
+      text = mail.text_part
+      html = mail.html_part
+    elsif mail.content_type.to_s["text/html"]
+      html = mail
+    else
+      text = mail
+    end
+
+    [text&.decoded, html&.decoded]
+  end
+
 end

@@ -109,14 +109,15 @@ class PostsController < ApplicationController
   end
 
   def cooked
-    post = find_post_from_params
-    render json: {cooked: post.cooked}
+    render json: { cooked: find_post_from_params.cooked }
   end
 
   def raw_email
+    params.require(:id)
     post = Post.unscoped.find(params[:id].to_i)
     guardian.ensure_can_view_raw_email!(post)
-    render json: { raw_email: post.raw_email }
+    text, html = Email.extract_parts(post.raw_email)
+    render json: { raw_email: post.raw_email, text_part: text, html_part: html }
   end
 
   def short_link
