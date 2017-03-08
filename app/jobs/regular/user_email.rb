@@ -56,7 +56,7 @@ module Jobs
       quoted
     }
 
-    CRITICAL_EMAIL_TYPES = Set.new %i{
+    CRITICAL_EMAIL_TYPES ||= Set.new %w{
       account_created
       admin_login
       confirm_new_email
@@ -135,7 +135,7 @@ module Jobs
         return skip_message(I18n.t('email_log.exceeded_emails_limit'))
       end
 
-      if !CRITICAL_EMAIL_TYPES.include?(type) && user.user_stat.bounce_score >= SiteSetting.bounce_score_threshold
+      if !CRITICAL_EMAIL_TYPES.include?(type.to_s) && user.user_stat.bounce_score >= SiteSetting.bounce_score_threshold
         return skip_message(I18n.t('email_log.exceeded_bounces_limit'))
       end
 
