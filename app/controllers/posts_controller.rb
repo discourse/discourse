@@ -377,17 +377,19 @@ class PostsController < ApplicationController
   end
 
   def bookmark
-    post = find_post_from_params
-
     if params[:bookmarked] == "true"
+      post = find_post_from_params
       PostAction.act(current_user, post, PostActionType.types[:bookmark])
     else
+      post_action = PostAction.find_by(post_id: params[:post_id], user_id: current_user.id)
+      post = post_action.post
+      raise Discourse::InvalidParameters unless post_action
+
       PostAction.remove_act(current_user, post, PostActionType.types[:bookmark])
     end
 
-    tu = TopicUser.get(post.topic, current_user)
-
-    render_json_dump(topic_bookmarked: tu.try(:bookmarked))
+    topic_user = TopicUser.get(post.topic, current_user)
+    render_json_dump(topic_bookmarked: topic_user.try(:bookmarked))
   end
 
   def wiki
