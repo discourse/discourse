@@ -20,7 +20,9 @@ class BasicCategorySerializer < ApplicationSerializer
              :has_children,
              :sort_order,
              :sort_ascending,
-             :show_subcategory_list
+             :show_subcategory_list,
+             :num_featured_topics,
+             :default_view
 
   has_one :uploaded_logo, embed: :object, serializer: CategoryUploadSerializer
   has_one :uploaded_background, embed: :object, serializer: CategoryUploadSerializer

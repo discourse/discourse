@@ -30,7 +30,6 @@ id:
   anonymous: "Anonim"
   emails:
     incoming:
-      default_subject: "Email masuk dari %{email}"
       show_trimmed_content: "Tampilkan konten yang dipersingkat"
       errors:
         empty_email_error: "Terjadi bila surel mentah yang kami terima tidak berisi apapun (kosong)."
@@ -258,12 +257,9 @@ id:
       almost_x_years:
         other: "hampir %{count} tahun yang lalu"
   password_reset:
-    choose_new: "Silahkan memilih password baru"
-    choose: "Mohon pilih kata sandi"
     update: 'Perbaharui Kata Sandi'
     success: "Anda telah mengubah kata sandi dengan sukses dan sekarang telah login."
     success_unapproved: "Anda telah mengubah kata sandi dengan sukses."
-    continue: "Lanjut ke %{site_name}"
   change_email:
     confirmed: "Surel anda telah diperbaharui."
     please_continue: "Lanjut ke %{site_name}"

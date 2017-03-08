@@ -62,7 +62,8 @@ class UserHistory < ActiveRecord::Base
                           change_readonly_mode: 44,
                           backup_download: 45,
                           backup_destroy: 46,
-                          notified_about_get_a_room: 47)
+                          notified_about_get_a_room: 47,
+                          change_name: 48)
   end
 
   # Staff actions is a subset of all actions, used to audit actions taken by staff users.

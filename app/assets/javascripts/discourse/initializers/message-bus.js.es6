@@ -1,4 +1,6 @@
 // Initialize the message bus to receive messages.
+import pageVisible from 'discourse/lib/page-visible';
+
 export default {
   name: "message-bus",
   after: 'inject-objects',
@@ -36,9 +38,21 @@ export default {
       messageBus.ajax = function(opts) {
         opts.headers = opts.headers || {};
         opts.headers['X-Shared-Session-Key'] = $('meta[name=shared_session_key]').attr('content');
+        if (pageVisible()) {
+          opts.headers['Discourse-Visible'] = "true";
+        }
         return $.ajax(opts);
       };
     } else {
+
+      messageBus.ajax = function(opts) {
+        opts.headers = opts.headers || {};
+        if (pageVisible()) {
+          opts.headers['Discourse-Visible'] = "true";
+        }
+        return $.ajax(opts);
+      };
+
       messageBus.baseUrl = Discourse.getURL('/');
     }
 

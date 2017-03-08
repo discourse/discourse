@@ -59,6 +59,7 @@
       </div>
       <meta itemprop='interactionCount' content='UserLikes:<%= post.like_count %>'>
       <meta itemprop='interactionCount' content='UserComments:<%= post.reply_count %>'>
+      <meta itemprop='headline' content='<%= @topic_view.title %>'>
       <hr>
       <% if @topic_view.link_counts[post.id] && @topic_view.link_counts[post.id].length > 0 %>
         <% @topic_view.link_counts[post.id].each do |link| %>

@@ -227,13 +227,19 @@ describe UserAuthToken do
     ).count).to eq(1)
 
     fake_token = SecureRandom.hex
-    UserAuthToken.lookup(fake_token, seen: true, user_agent: "bob", client_ip: "127.0.0.1")
+    UserAuthToken.lookup(fake_token,
+                         seen: true,
+                         user_agent: "bob",
+                         client_ip: "127.0.0.1",
+                         path: "/path"
+                        )
 
     expect(UserAuthTokenLog.where(
       action: "miss token",
       auth_token: UserAuthToken.hash_token(fake_token),
       user_agent: "bob",
-      client_ip: "127.0.0.1"
+      client_ip: "127.0.0.1",
+      path: "/path"
     ).count).to eq(1)
 
 
@@ -249,6 +255,20 @@ describe UserAuthToken do
       user_auth_token_id: token.id
     ).count).to eq(1)
 
+  end
+
+  it "will not mark token unseen when prev and current are the same" do
+    user = Fabricate(:user)
+
+    token = UserAuthToken.generate!(user_id: user.id,
+                                    user_agent: "some user agent",
+                                    client_ip: "1.1.2.3")
+
+
+    lookup = UserAuthToken.lookup(token.unhashed_auth_token, seen: true)
+    lookup = UserAuthToken.lookup(token.unhashed_auth_token, seen: true)
+    lookup.reload
+    expect(lookup.auth_token_seen).to eq(true)
   end
 
 end

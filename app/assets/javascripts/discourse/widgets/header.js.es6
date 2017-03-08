@@ -3,6 +3,7 @@ import { iconNode } from 'discourse/helpers/fa-icon-node';
 import { avatarImg } from 'discourse/widgets/post';
 import DiscourseURL from 'discourse/lib/url';
 import { wantsNewWindow } from 'discourse/lib/intercept-click';
+import { applySearchAutocomplete } from "discourse/lib/search";
 
 import { h } from 'virtual-dom';
 
@@ -197,9 +198,8 @@ export default createWidget('header', {
 
       if (state.searchContextType !== contextType) {
         state.contextEnabled = undefined;
+        state.searchContextType = contextType;
       }
-
-      state.searchContextType = contextType;
 
       if (state.contextEnabled === undefined) {
         if (forceContextEnabled.includes(contextType)) {
@@ -259,7 +259,11 @@ export default createWidget('header', {
     this.updateHighlight();
 
     if (this.state.searchVisible) {
-      Ember.run.schedule('afterRender', () => $('#search-term').focus().select());
+      Ember.run.schedule('afterRender', () => {
+        const $searchInput = $('#search-term');
+        $searchInput.focus().select();
+        applySearchAutocomplete($searchInput, this.siteSettings, this.appEvents);
+      });
     }
   },
 

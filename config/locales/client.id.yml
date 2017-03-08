@@ -191,7 +191,6 @@ id:
       like_count: "Suka"
       topic_count: "Topik"
       post_count: "Pos"
-      user_count: "Pengguna Baru"
       active_user_count: "Pengguna Aktif"
       contact: "Kontak kami"
       contact_info: "Pada kegiatan dari sebuah isu kritikal atau penting terjadi pada situs ini, silahkan kontak kami di %{contact_info}."
@@ -495,7 +494,6 @@ id:
         instructions: "Gambar latar belakang akan ditengahkan dan mempunyai lebar standar 590px"
       email:
         title: "Surel"
-        instructions: "Tidak pernah ditampilkan ke publik"
         ok: "Kami akan mengirimkan surel kepada anda untuk konfirmasi"
         invalid: "Silahkan masukkan alamat email yang valid"
         authenticated: "Email anda sudah dikonfirmasi oleh {{provider}}"
@@ -503,22 +501,17 @@ id:
           other: "Kami akan mengirimkan email kepada anda jika kami tidak melihat anda selama {{count}} menit."
       name:
         title: "Name"
-        instructions: "Nama lengkap anda (pilihan)"
         instructions_required: "Nama lengkap anda"
         too_short: "Nama anda terlalu pendek"
         ok: "Nama anda terlihat bagus"
       username:
         title: "Nama Pengguna"
-        instructions: "Unik, tanpa spasi, pendek"
         short_instructions: "Orang dapat menyebut anda sebagai @{{username}}"
         available: "Nama pengguna anda tersedia"
-        global_match: "Surel cocok dengan nama pengguna yang terdaftar"
-        global_mismatch: "Sudah terdaftar. Coba {{suggestion}}?"
         not_available: "Tidak tersedia. Coba {{suggestion}}?"
         too_short: "Nama pengguna anda terlalu pendek"
         too_long: "Nama pengguna anda terlalu panjang"
         checking: "Memeriksa ketersediaan nama pengguna..."
-        enter_email: 'Nama pengguna ditemukan; masukkan surel yang cocok'
         prefilled: "Surel cocok dengan nama pengguna yang terdaftar"
       locale:
         title: "Bahasa antarmuka"
@@ -591,7 +584,6 @@ id:
         same_as_username: "Password dan nama pengguna kamu sama"
         same_as_email: "Password dan email kamu sama"
         ok: "Kata sandi Anda terlihat baik."
-        instructions: "Setidaknya %{count} karakter."
       summary:
         title: "Ringkasan"
         stats: "Statistik"

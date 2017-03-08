@@ -167,7 +167,6 @@ fa_IR:
       like_count: "لایک ها "
       topic_count: "موضوعات"
       post_count: "پست ها"
-      user_count: "کاربران جدید"
       active_user_count: "کاربران فعال"
       contact: "ارتباط با ما"
       contact_info: "در شرایط حساس و مسائل اضطراری مربوط به سایت٬‌ لطفا با تماس بگیرید از طریق %{contact_info}."
@@ -456,7 +455,6 @@ fa_IR:
         instructions: "تصاویر پس زمینه در مرکز قرار خواهند گرفت و عرض  پیشفرض آن 590 پیکسل است"
       email:
         title: "ایمیل"
-        instructions: "هرگز بصورت عمومی نشان نده"
         ok: "ایمیلی برای تایید برایتان می‌فرستیم"
         invalid: "لطفا یک آدرس ایمیل معتبر وارد کنید"
         authenticated: "ایمیل شما تصدیق شد توسط {{provider}}"
@@ -465,22 +463,17 @@ fa_IR:
           other: "ما فقط در صورتی برای شما ایمیل میفرستیم که شما را در {{count}} دقیقه آخر ندیده باشیم."
       name:
         title: "نام"
-        instructions: "نام کامل (اختیاری)"
         instructions_required: "نام کامل شما"
         too_short: "نام انتخابی شما خیلی کوتاه است"
         ok: "نام انتخابی شما به نطر می رسد خوب است"
       username:
         title: "نام کاربری"
-        instructions: "منحصر به فرد،بدون فاصله،کوتاه"
         short_instructions: "می توانید به کاربران دیگر اشاره کنید با@{{username}}"
         available: "نام کاربری شما موجود است"
-        global_match: "ایمیل منطبق نام کاربری ثبت شد."
-        global_mismatch: "از پیش ثبت شده.این را امتحان کن {{suggestion}} ؟"
         not_available: "فراهم نیست. این را امتحان کن {{suggestion}} ؟"
         too_short: "نام کاربری انتخابی شما خیلی کوتاه است"
         too_long: "نام کاربری انتخابی شما بسیار بلند است"
         checking: "بررسی فراهمی نام‌کاربری..."
-        enter_email: 'نام کاربری پیدا شد; ایمیل منطبق را وارد کن'
         prefilled: "ایمیل منطبق است با این نام کاربری ثبت شده "
       locale:
         title: "زبان رابط کاربر"
@@ -564,7 +557,6 @@ fa_IR:
         same_as_username: "رمز عبورتان با نام کاربری شما برابر است."
         same_as_email: "رمز عبورتان با ایمیل شما برابر است. "
         ok: "گذرواژهٔ خوبی است."
-        instructions: "در آخرین %{count} کاراکتر"
       summary:
         top_badges: "مدال های برتر"
         no_badges: "هنوز مدالی نیست."
@@ -1034,9 +1026,6 @@ fa_IR:
         pin_globally: "سنجاق کردن موضوع در سطح سراسری"
         make_banner: "اعلان موضوع"
         remove_banner: "حذف اعلان موضوع"
-      reply:
-        title: 'پاسخ'
-        help: 'آغاز ارسال یک پاسخ به این موضوع'
       clear_pin:
         title: "برداشتن سنجاق"
         help: "سنجاق استاتوس این موضوع را بردارید که پس از آن دیگر این موضوع در بالای فهرست موضوعات شما دیده نمی‌شود."
@@ -1276,13 +1265,10 @@ fa_IR:
         displays:
           inline:
             title: "نمایش خروجی رندر با اضافات و از بین بردن درون خطی"
-            button: '<i class="fa fa-square-o"></i> HTML'
           side_by_side:
             title: "نمایش تفاوت های خروجی رندر شده سو به سو"
-            button: '<i class="fa fa-columns"></i> HTML'
           side_by_side_markdown:
             title: "نمایش تفاوت های خروجی منبع اولیه سو به سو"
-            button: '<i class="fa fa-columns"></i> Raw'
     category:
       can: 'can&hellip; '
       none: '(بدون دسته)'

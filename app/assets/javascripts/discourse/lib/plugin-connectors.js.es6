@@ -92,6 +92,13 @@ export function connectorsFor(outletName) {
   return _connectorCache[outletName] || [];
 }
 
+export function renderedConnectorsFor(outletName, args, context) {
+  return connectorsFor(outletName).filter(con => {
+    return con.connectorClass.shouldRender(args, context);
+  });
+}
+
+
 export function rawConnectorsFor(outletName) {
   if (!_rawConnectorCache) { buildRawConnectorCache(); }
   return _rawConnectorCache[outletName] || [];

@@ -313,6 +313,7 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
 
       const quoteState = this.get('quoteState');
       const postStream = this.get('model.postStream');
+      if (!postStream) return;
       const quotedPost = postStream.findLoadedPost(quoteState.postId);
       const quotedText = Quote.build(quotedPost, quoteState.buffer);
 

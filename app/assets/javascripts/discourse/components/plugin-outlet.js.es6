@@ -29,7 +29,7 @@
    The list of disabled plugins is returned via the `Site` singleton.
 
 **/
-import { connectorsFor } from 'discourse/lib/plugin-connectors';
+import { renderedConnectorsFor } from 'discourse/lib/plugin-connectors';
 
 export default Ember.Component.extend({
   tagName: 'span',
@@ -38,14 +38,9 @@ export default Ember.Component.extend({
   init() {
     this._super();
     const name = this.get('name');
-
     if (name) {
       const args = this.get('args');
-      const connectors = connectorsFor(name).filter(con => {
-        return con.connectorClass.shouldRender(args, this);
-      });
-
-      this.set('connectors', connectors);
+      this.set('connectors', renderedConnectorsFor(name, args, this));
     }
   }
 });

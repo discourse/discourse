@@ -39,6 +39,7 @@ class UserUpdater
   def initialize(actor, user)
     @user = user
     @guardian = Guardian.new(actor)
+    @actor = actor
   end
 
   def update(attributes = {})
@@ -52,7 +53,9 @@ class UserUpdater
     user_profile.profile_background = attributes.fetch(:profile_background) { user_profile.profile_background }
     user_profile.card_background = attributes.fetch(:card_background) { user_profile.card_background }
 
+    old_user_name = user.name.present? ? user.name : ""
     user.name = attributes.fetch(:name) { user.name }
+
     user.locale = attributes.fetch(:locale) { user.locale }
     user.date_of_birth = attributes.fetch(:date_of_birth) { user.date_of_birth }
 
@@ -99,7 +102,16 @@ class UserUpdater
       end
 
       saved = (!save_options || user.user_option.save) && user_profile.save && user.save
-      DiscourseEvent.trigger(:user_updated, user) if saved
+      if saved
+        DiscourseEvent.trigger(:user_updated, user)
+
+        # log name changes
+        if attributes[:name].present? && old_user_name.downcase != attributes.fetch(:name).downcase
+          StaffActionLogger.new(@actor).log_name_change(user.id, old_user_name, attributes.fetch(:name))
+        elsif attributes[:name].blank? && old_user_name.present?
+          StaffActionLogger.new(@actor).log_name_change(user.id, old_user_name, "")
+        end
+      end
       saved
     end
   end

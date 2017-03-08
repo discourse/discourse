@@ -14,9 +14,13 @@ import { addPopupMenuOptionsCallback } from 'discourse/controllers/composer';
 import { extraConnectorClass } from 'discourse/lib/plugin-connectors';
 import { addPostSmallActionIcon } from 'discourse/widgets/post-small-action';
 import { addDiscoveryQueryParam } from 'discourse/controllers/discovery-sortable';
+import { addTagsHtmlCallback } from 'discourse/lib/render-tags';
+import { addUserMenuGlyph } from 'discourse/widgets/user-menu';
+import { addPostClassesCallback } from 'discourse/widgets/post';
+import { addPostTransformCallback } from 'discourse/widgets/post-stream';
 
 // If you add any methods to the API ensure you bump up this number
-const PLUGIN_API_VERSION = '0.8.1';
+const PLUGIN_API_VERSION = '0.8.5';
 
 class PluginApi {
   constructor(version, container) {
@@ -386,6 +390,72 @@ class PluginApi {
    **/
   addDiscoveryQueryParam(param, options) {
     addDiscoveryQueryParam(param, options);
+  }
+
+  /**
+   * Register a callback to be called every time tags render
+   * highest priority callbacks are called first
+   * example:
+   *
+   * callback = function(topic, params) {
+   *    if (topic.get("created_at") < "2000-00-01") {
+   *      return "<span class='discourse-tag'>ANCIENT</span>"
+   *    }
+   * }
+   *
+   * api.addTagsHtmlCallback(callback, {priority: 100});
+   *
+   **/
+  addTagsHtmlCallback(callback, options) {
+    addTagsHtmlCallback(callback, options);
+  };
+
+  /**
+   * Adds a glyph to user menu after bookmarks
+   * WARNING: there is limited space there
+   *
+   * example:
+   *
+   * api.addUserMenuGlyph({
+   *    label: 'awesome.label',
+   *    className: 'my-class',
+   *    icon: 'my-icon',
+   *    href: `/some/path`
+   * });
+   *
+   */
+  addUserMenuGlyph(glyph) {
+    addUserMenuGlyph(glyph);
+  };
+
+  /**
+   * Adds a callback to be called before rendering any post that
+   * that returns custom classes to add to the post
+   *
+   * Example:
+   *
+   * addPostClassesCallback((atts) => {if (atts.post_number == 1) return ["first"];})
+   **/
+  addPostClassesCallback(callback) {
+    addPostClassesCallback(callback);
+  }
+
+  /**
+   *
+   * Adds a callback to be executed on the "transformed" post that is passed to the post
+   * widget.
+   *
+   * This allows you to apply transformations on the actual post that is about to be rendered.
+   *
+   * Example:
+   *
+   * addPostTransformCallback((t)=>{
+   *  // post number 7 is overrated, don't show it ever
+   *  if (t.post_number === 7) { t.cooked = ""; }
+   * })
+   */
+  addPostTransformCallback(callback) {
+    addPostTransformCallback(callback);
   }
 }
 

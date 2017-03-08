@@ -210,7 +210,6 @@ gl:
       like_count: "Gústames"
       topic_count: "Temas"
       post_count: "Publicacións"
-      user_count: "Novos usuarios"
       active_user_count: "Usuarios activos"
       contact: "Contacta connosco"
       contact_info: "No caso dunha incidencia crítica ou asunto urxente que afecte este sitio, contacta connosco en %{contact_info}."
@@ -512,7 +511,6 @@ gl:
         instructions: "As imaxes dos fondos centraranse e terán unha largura predeterminada de 590px."
       email:
         title: "Correo electrónico"
-        instructions: "Non se verá nunca en público"
         ok: "Enviarémosche un correo electrónico para confirmar"
         invalid: "Introduce un enderezo de correo electrónico correcto"
         authenticated: "O teu enderezo de correo electrónico foi autenticado por {{provider}}"
@@ -522,22 +520,17 @@ gl:
           other: "Só che eviaremos un correo-e se non te vimos nos últimos {{count}} minutos."
       name:
         title: "Nome"
-        instructions: "Nome completo (opcional)"
         instructions_required: "Nome completo"
         too_short: "O nome é curto de mais"
         ok: "O nome parece correcto"
       username:
         title: "Nome do usuario"
-        instructions: "Único, sen espazos, curto"
         short_instructions: "A xente pode mencionarte como @{{username}}"
         available: "O nome de usuario está dispoñíbel"
-        global_match: "O correo electrónico correspóndese co nome do usuario rexistrado"
-        global_mismatch: "Xa rexistrado. Tentar {{suggestion}}?"
         not_available: "Non dispoñíbel. Tentar {{suggestion}}?"
         too_short: "O nome do usuario é curto de máis"
         too_long: "O nome do usuario é longo de máis"
         checking: "Comprobando a dispoñibilidade do nome do usuario..."
-        enter_email: 'Atopouse o nome do usuario; introduce o correo electrónico'
         prefilled: "O correo electrónico coincide co nome do usuario rexistrado"
       locale:
         title: "Idioma da interface"
@@ -636,7 +629,6 @@ gl:
         same_as_username: "O contrasinal é igual ao nome do usuario."
         same_as_email: "O contrasinal é igual ao correo electrónico."
         ok: "O contrasinal semella bo."
-        instructions: "Como mínimo %{count} caracteres."
       summary:
         title: "Resumo"
         stats: "Estatísticas"
@@ -1144,9 +1136,6 @@ gl:
         pin_globally: "Pegar tema globalmente"
         make_banner: "Tema do báner"
         remove_banner: "Eliminar o tema do báner"
-      reply:
-        title: 'Responder'
-        help: 'responder a este tema'
       clear_pin:
         title: "Borrar o estado Pegar"
         help: "Borra o estado Pegado deste tema para que non apareza na banda superior da lista de temas."
@@ -1303,8 +1292,6 @@ gl:
         yes_value: "Si, abandonar"
       via_email: "esta publicación chegou por correo-e"
       whisper: "este é un bisbar privado para moderadores"
-      wiki:
-        about: "esta publicación é unha wiki"
       archetypes:
         save: 'Gardar opcións'
       controls:
@@ -1430,13 +1417,10 @@ gl:
         displays:
           inline:
             title: "Amosar o resultado coas adicións e eliminacións inseridas"
-            button: '<i class="fa fa-square-o"></i> HTML'
           side_by_side:
             title: "Amosar o resultado coas diferenzas comparadas"
-            button: '<i class="fa fa-columns"></i> HTML'
           side_by_side_markdown:
             title: "Amosar a fonte crúa coas diferenzas comparadas"
-            button: '<i class="fa fa-columns"></i> Crúa'
     category:
       can: 'podes&hellip; '
       none: '(sen categoría)'
@@ -2096,7 +2080,6 @@ gl:
             revoke_admin: "revogar administración"
             grant_moderation: "conceder moderación"
             revoke_moderation: "revogar moderación"
-            backup_operation: "operación de copia de seguranza"
         screened_emails:
           title: "Correos-e controlados"
           description: "Cando alguén tente crear unha nova conta, comprobaranse os seguintes enderezos de correo electrónico e bloquearase o rexistro ou se tomará outra medida."

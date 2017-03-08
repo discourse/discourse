@@ -492,7 +492,7 @@ en:
       pms_per_day: "You've reached the maximum number of messages today. Please wait %{time_left} before trying again."
       create_like: "You've reached the maximum number of likes today. Please wait %{time_left} before trying again."
       create_bookmark: "You've reached the maximum number of bookmarks today. Please wait %{time_left} before trying again."
-      edit_post: "You've reached the maximun number of edits today. Please wait %{time_left} before trying again."
+      edit_post: "You've reached the maximum number of edits today. Please wait %{time_left} before trying again."
       live_post_counts: "You're asking for live post counts too quickly. Please wait %{time_left} before trying again."
       unsubscribe_via_email: "You've reached the maximum number of unsubscribe via email today. Please wait %{time_left} before trying again."
       topic_invitations_per_day: "You've reached the maximum number of topic invitations today. Please wait %{time_left} before trying again."
@@ -923,7 +923,6 @@ en:
     delete_removed_posts_after: "Posts removed by the author will be automatically deleted after (n) hours. If set to 0, posts will be deleted immediately."
     max_image_width: "Maximum thumbnail width of images in a post"
     max_image_height: "Maximum thumbnail height of images in a post"
-    category_featured_topics: "Number of topics displayed per category on the /categories page. After changing this value, it takes up to 15 minutes for the categories page to update."
     fixed_category_positions: "If checked, you will be able to arrange categories into a fixed order. If unchecked, categories are listed in order of activity."
     fixed_category_positions_on_create: "If checked, category ordering will be maintained on topic creation dialog (requires fixed_category_positions)."
     add_rel_nofollow_to_user_content: "Add rel nofollow to all submitted user content, except for internal links (including parent domains). If you change this, you must rebake all posts with: \"rake posts:rebake\""
@@ -1040,7 +1039,7 @@ en:
     min_username_length: "Minimum username length in characters. WARNING: if any existing users or groups have names shorter than this, your site will break!"
     max_username_length: "Maximum username length in characters. WARNING: if any existing users or groups have names longer than this, your site will break!"
 
-    reserved_usernames: "Usernames for which signup is not allowed."
+    reserved_usernames: "Usernames for which signup is not allowed. Wildcard symbol * can be used to match any character zero or more times."
 
     min_password_length: "Minimum password length."
     min_admin_password_length: "Minimum password length for Admin."
@@ -1761,6 +1760,18 @@ en:
       %{base_url}/users/password-reset/%{email_token}
 
       (If the link above has expired, choose "I forgot my password" when logging in with your email address.)
+
+  download_backup_mailer:
+    title: "Download Backup Mailer"
+    subject_template: "[%{site_name}] Site Backup Download"
+    text_body_template: |
+      Here's the [site backup download](%{backup_file_path}) you requested.
+
+      We sent this download link to your validated email address for security reasons.
+
+      (If you *didn't* request this download, you should be seriously concerned -- someone has admin access to your site.)
+    no_token: |
+      Sorry, this backup download link has already been used or has expired.
 
   test_mailer:
     title: "Test Mailer"
@@ -3344,7 +3355,7 @@ en:
             description: "General contact web page for you or your organization. Will be displayed on <a href='/about' target='_blank'>your about page</a>."
           site_contact:
             label: "Automated Messages"
-            description: "All automated Discourse personal messages will be sent from this user. Most importantly, this user will be the designated sender of every welcome message automatically sent to new users."
+            description: "All automated Discourse personal messages will be sent from this user, such as the welcome message sent to each new user."
 
       corporate:
         title: "Organization"

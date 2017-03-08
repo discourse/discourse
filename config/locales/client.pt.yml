@@ -214,7 +214,7 @@ pt:
       like_count: "Gostos"
       topic_count: "Tópicos"
       post_count: "Publicações"
-      user_count: "Novos Utilizadores"
+      user_count: "Utilizadores"
       active_user_count: "Utilizadores Activos"
       contact: "Contacte-nos"
       contact_info: "No caso de um problema crítico ou de algum assunto urgente que afecte este sítio, por favor contacte-nos em %{contact_info}."
@@ -348,13 +348,32 @@ pt:
         title: "Pedido de Adesão"
         body: "Eu gostaria de aderir a @%{groupName}."
       name_placeholder: "Nome do grupo, sem espaços, com as mesmas regras do nome de utilizador"
+      empty:
+        posts: "Não existem publicações por membros deste grupo."
+        members: "Não existem membros neste grupo."
+        mentions: "Não há menções deste grupo."
+        messages: "Não existem mensagens para este grupo."
+        topics: "Não existem tópicos por membros deste grupo."
+        logs: "Não existem registos para este grupo."
       add: "Adicionar"
+      join: "Juntar ao Grupo"
+      leave: "Sair do Grupo"
+      request: "Pedir para Entrar no Grupo."
+      closed_group: Grupo fechado
+      is_group_user: "Você é membro deste grupo"
+      name: "Nome"
+      user_count: "Numero de Membros"
+      bio: "Acerca do Grupo"
       selector_placeholder: "Adicionar membros"
       owner: "proprietário"
       visible: "O grupo é visível para todos os utilizadores"
+      index:
+        title: "Grupos"
+        empty: "Não existem grupos visíveis."
       title:
         one: "grupo"
         other: "grupos"
+      activity: "Actividade"
       members: "Membros"
       topics: "Tópicos"
       posts: "Publicações"
@@ -557,6 +576,8 @@ pt:
         error: "(erro)"
         action: "Enviar email de recuperação de palavra-passe"
         set_password: "Definir Palavra-passe"
+        choose_new: "Escolha uma nova palavra-passe"
+        choose: "Escolha uma palavra-passe"
       change_about:
         title: "Modificar Sobre Mim"
         error: "Ocorreu um erro ao modificar este valor."
@@ -591,7 +612,7 @@ pt:
         instructions: "As imagens de fundo serão centradas e terão por defeito uma largura de 590px."
       email:
         title: "Email"
-        instructions: "Nunca mostrado ao público"
+        instructions: "nunca mostrar publicamente"
         ok: "Enviar-lhe-emos um email para confirmar"
         invalid: "Por favor introduza um endereço de email válido"
         authenticated: "O seu email foi autenticado por {{provider}}"
@@ -601,22 +622,19 @@ pt:
           other: "Só iremos enviar-lhe um email se não o tivermos visto nos últimos {{count}} minutos."
       name:
         title: "Nome"
-        instructions: "O seu nome completo (opcional)"
+        instructions: "o seu nome completo (opcional)"
         instructions_required: "O seu nome completo"
         too_short: "O seu nome é demasiado curto"
         ok: "O seu nome parece adequado"
       username:
         title: "Nome de Utilizador"
-        instructions: "Único, sem espaços, curto"
+        instructions: "único, sem espaços, curto"
         short_instructions: "Podem mencioná-lo como @{{username}}"
         available: "O seu nome de utilizador está disponível"
-        global_match: "O email coincide com o nome de utilizador no registo"
-        global_mismatch: "Já está registado. Tente {{suggestion}}?"
         not_available: "Não está disponível. Tente {{suggestion}}?"
         too_short: "O seu nome de utilizador é demasiado curto"
         too_long: "O seu nome de utilizador é demasiado longo"
         checking: "A verificar a disponibilidade do nome de utilizador..."
-        enter_email: 'Nome de utilizador encontrado, introduza o email correspondente'
         prefilled: "Email corresponde com o nome de utilizador registado"
       locale:
         title: "Idioma da Interface"
@@ -714,7 +732,6 @@ pt:
         link_generated: "Ligação de convite gerada com sucesso!"
         valid_for: "Ligação de convite é válida apenas para este endereço de email:  %{email}"
         bulk_invite:
-          none: "Ainda não convidou ninguém. Pode enviar convites individuais, ou convidar um grupo de pessoas de uma única vez <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>carregando um ficheiro CSV</a>."
           text: "Convite em massa a partir de ficheiro"
           success: "Ficheiro carregado corretamente, será notificado via mensagem assim que o processo esteja concluído."
       password:
@@ -724,7 +741,6 @@ pt:
         same_as_username: "A sua palavra-passe é a mesma que o seu nome de utilizador."
         same_as_email: "A sua palavra-passe é a mesma que o seu email."
         ok: "A sua palavra-passe parece correta."
-        instructions: "Pelo menos %{count} caracteres."
       summary:
         title: "Sumário"
         stats: "Estatísticas"
@@ -1297,6 +1313,8 @@ pt:
         go_bottom: "fim"
         go: "ir"
         jump_bottom: "ir para a última publicação"
+        jump_prompt: "saltar para..."
+        jump_prompt_of: "de %{count} publicações"
         jump_prompt_long: "Para que publicação gostaria de ir?"
         jump_bottom_with_number: "ir para a publicação %{post_number}"
         total: total de publicações
@@ -1368,7 +1386,6 @@ pt:
         remove_banner: "Remover Tópico de Faixa"
       reply:
         title: 'Responder'
-        help: 'começa a compor uma resposta a este tópico'
       clear_pin:
         title: "Remover destaque"
         help: "Remover destaque deste tópico para que o mesmo deixe de aparecer no topo da sua lista de tópicos"
@@ -1538,8 +1555,6 @@ pt:
       via_email: "esta publicação chegou por email"
       via_auto_generated_email: "esta publicação chegou via um email gerado automaticamente"
       whisper: "esta publicação é um susurro privado para os moderadores"
-      wiki:
-        about: "esta publicação é uma wiki"
       archetypes:
         save: 'Guardar as Opções'
       few_likes_left: "Obrigado por partilhar o amor! Restam-lhe apenas um gostos para hoje."
@@ -1666,17 +1681,19 @@ pt:
           hide: "Esconder revisão"
           show: "Mostrar revisão"
           revert: "Reverter para esta revisão"
+          edit_wiki: "Editar Wiki"
+          edit_post: "Editar publicação"
           comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> <i class='fa fa-arrows-h'></i> <strong>{{current}}</strong> / {{total}}"
         displays:
           inline:
             title: "Mostrar o resultado renderizado com inserções e remoções em-linha."
-            button: '<i class="fa fa-square-o"></i> HTML'
+            button: 'HTML'
           side_by_side:
             title: "Mostrar o resultado renderizado das diferenças lado-a-lado"
-            button: '<i class="fa fa-columns"></i> HTML'
+            button: 'HTML'
           side_by_side_markdown:
             title: "Mostrar em bruto a fonte das diferenças lado-a-lado"
-            button: '<i class="fa fa-columns"></i> Em bruto'
+            button: 'Em bruto'
     category:
       can: 'pode&hellip; '
       none: '(sem categoria)'
@@ -2633,7 +2650,7 @@ pt:
             revoke_admin: "revogar administração"
             grant_moderation: "conceder moderação"
             revoke_moderation: "revogar moderação"
-            backup_operation: "operação de cópia de segurança"
+            backup_create: "criar cópia de segurança"
             deleted_tag: "etiqueta removida"
             renamed_tag: "etiqueta renomeada"
             revoke_email: "revogar email"

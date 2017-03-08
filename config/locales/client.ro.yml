@@ -234,7 +234,6 @@ ro:
       like_count: "Aprecieri"
       topic_count: "Subiecte"
       post_count: "Postări"
-      user_count: "Utilizatori noi"
       active_user_count: "Utilizatori activi"
       contact: "Contactează-ne"
       contact_info: "În cazul în care o problemă critică sau alt aspect urgent afectează site-ul, contactează-ne la %{contact_info}."
@@ -651,7 +650,6 @@ ro:
         instructions: "Fundalul va fi centrat şi va avea o dimensiune standard de 590px."
       email:
         title: "Email"
-        instructions: "Emailul nu va fi făcut public."
         ok: "Îți vom trimite un email pentru confirmare."
         invalid: "Introduceți o adresă de email validă."
         authenticated: "Emailul a fost autentificat de către {{provider}}."
@@ -662,22 +660,17 @@ ro:
           other: "Vom trimite un email doar dacă nu te-am văzut în ultimele {{count}} de minute."
       name:
         title: "Nume"
-        instructions: "Nume complet (opțional)"
         instructions_required: "Numele tău complet"
         too_short: "Numele este prea scurt."
         ok: "Numele tău este OK."
       username:
         title: "Nume utilizator"
-        instructions: "Unic, fără spații, scurt."
         short_instructions: "Ceilalți te pot menționa ca @{{username}}."
         available: "Numele de utilizator este disponibil."
-        global_match: "Emailul se potrivește numelui de utilizator înregistrat."
-        global_mismatch: "Numele este deja înregistrat. Încerci {{suggestion}}?"
         not_available: "Nu este disponibil. Încerci {{suggestion}}?"
         too_short: "Numele de utilizator este prea scurt."
         too_long: "Numele de utilizator este prea lung."
         checking: "Verifică disponibilitatea numelui de utilizator..."
-        enter_email: 'Nume de utilizator găsit. Introduceți adresa de email corespunzătoare.'
         prefilled: "Emailul se potrivește cu numele de utilizator înregistrat."
       locale:
         title: "Limba interfeței"
@@ -776,7 +769,6 @@ ro:
         link_generated: "Link de invitare generat cu succes!"
         valid_for: "Link-ul de invitare este valid doar pentru următoarele adrese de email:  %{email}"
         bulk_invite:
-          none: "Nu ai invitat încă pe nimeni aici. Poți trimite invitații individuale sau poți invita mai multe persoane odată <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>încărcând un fișier CSV</a>."
           text: "Invitație multiplă din fișier"
           success: "Fișier încărcat cu succes, vei fi înștiințat printr-un mesaj când procesarea este completă."
       password:
@@ -786,7 +778,6 @@ ro:
         same_as_username: "Parolă identică cu numele de utilizator"
         same_as_email: "Parolă identică cu adresa de email"
         ok: "Parola dumneavoastră este OK."
-        instructions: "Trebuie minim %{count} (de) caractere."
       summary:
         title: "Sumar"
         stats: "Statistici"
@@ -1451,9 +1442,6 @@ ro:
         pin_globally: "Promovează discuţia global"
         make_banner: "Adaugă statutul de banner"
         remove_banner: "Șterge statutul de banner"
-      reply:
-        title: 'Răspunde'
-        help: 'începe să scrii un răspuns la acest subiect'
       clear_pin:
         title: "Anulează subiect fixat"
         help: "Elimină  subiectul fixat pentru a nu mai apărea la începutul listei de subiecte."
@@ -1636,8 +1624,6 @@ ro:
       via_email: "această postare a sosit via email"
       via_auto_generated_email: "Această postare a sosit prin intermediul unui email auto-generat"
       whisper: "această postare este doar pentru moderatori (modul discret)"
-      wiki:
-        about: "această postare este un wiki"
       archetypes:
         save: 'Opțiuni de salvare'
       few_likes_left: "Îți mulțumim că împărtășești aprecierea! Mai ai doar câteva aprecieri pentru azi."
@@ -1788,13 +1774,10 @@ ro:
         displays:
           inline:
             title: "Arată output-ul randat, cu adăugiri și ștergeri intercalate"
-            button: '<i class="fa fa-square-o"></i> HTML'
           side_by_side:
             title: "Arată una lângă alta diferențele din output-ul randat"
-            button: '<i class="fa fa-columns"></i> HTML'
           side_by_side_markdown:
             title: "Arată una lângă alta diferențele din sursa brută"
-            button: '<i class="fa fa-columns"></i> Markdown'
     category:
       can: 'can&hellip; '
       none: '(nicio categorie)'
@@ -2779,7 +2762,6 @@ ro:
             revoke_admin: "Revocă titlul de Admin"
             grant_moderation: "Acordă titlul de Moderator"
             revoke_moderation: "Revocă titlul de Moderator"
-            backup_operation: "operație de backup"
             deleted_tag: "etichetă ștearsă"
             renamed_tag: "etichetă redenumită"
             revoke_email: "revoca email"

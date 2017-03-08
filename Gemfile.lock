@@ -470,6 +470,7 @@ DEPENDENCIES
   sinatra
   spork-rails
   stackprof
+  thor
   timecop
   uglifier
   unf
