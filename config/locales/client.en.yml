@@ -1918,6 +1918,18 @@ en:
             title: "Show the raw source diffs side-by-side"
             button: 'Raw'
 
+      raw_email:
+        displays:
+          raw:
+            title: "Show the raw email"
+            button: 'Raw'
+          text_part:
+            title: "Show the text part of the email"
+            button: 'Text'
+          html_part:
+            title: "Show the html part of the email"
+            button: 'HTML'
+
     category:
       can: 'can&hellip; '
       none: '(no category)'
@@ -2123,7 +2135,7 @@ en:
     changed_by: "by {{author}}"
 
     raw_email:
-      title: "Raw Email"
+      title: "Incoming Email"
       not_available: "Not available!"
 
     categories_list: "Categories List"

@@ -73,9 +73,6 @@
   max-width: 710px;
   margin: 0 auto;
   background-color: $secondary;
-  border: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
-
-  box-shadow: 0 3px 7px rgba(0,0,0, .8);
   background-clip: padding-box;
 }
 
@@ -153,9 +150,6 @@
     }
     .warning {
       color: $danger !important;
-    }
-    .raw-email-textarea {
-      height: 300px;
     }
     .json-uploader {
       .jsfu-shade-container {
@@ -327,6 +321,44 @@
 
   .auto-close-fields label {
     font-size: .929em;
+  }
+}
+
+.incoming-email-modal {
+  .btn {
+    transition: none;
+    background-color: transparent;
+    margin-right: 5px;
+    &:hover, &.active {
+      color: $primary;
+    }
+    &.active {
+      font-weight: bold;
+    }
+    &:focus {
+      outline: 2px solid dark-light-diff($primary, $secondary, 90%, -60%);
+    }
+  }
+  .incoming-email-tabs {
+    margin-bottom: 15px;
+  }
+  .incoming-email-content {
+    height: 300px;
+    textarea, .incoming-email-html-part {
+      height: 95%;
+      border: none;
+      border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);
+      padding-top: 10px;
+    }
+    textarea {
+      font-family: monospace;
+      resize: none;
+      border-radius: 0px;
+      box-shadow: none;
+    }
+    .incoming-email-html-part {
+      padding: 10px 4px 4px 4px;
+    }
   }
 }
 
