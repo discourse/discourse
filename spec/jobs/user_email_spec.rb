@@ -35,6 +35,20 @@ describe Jobs::UserEmail do
     Jobs::UserEmail.new.execute(type: :digest, user_id: staged.id)
   end
 
+  context "bounce score" do
+
+    it "always sends critical emails when bounce score threshold has been reached" do
+      email_token = Fabricate(:email_token)
+      user.user_stat.update(bounce_score: SiteSetting.bounce_score_threshold + 1)
+
+      Jobs::CriticalUserEmail.new.execute(type: "signup", user_id: user.id, email_token: email_token.token)
+
+      email_log = EmailLog.where(user_id: user.id).last
+      expect(email_log.email_type).to eq("signup")
+      expect(email_log.skipped).to eq(false)
+    end
+
+  end
 
   context 'to_address' do
     it 'overwrites a to_address when present' do
