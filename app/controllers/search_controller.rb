@@ -12,8 +12,7 @@ class SearchController < ApplicationController
     search_args = {
       type_filter: 'topic',
       guardian: guardian,
-      include_blurbs: true,
-      blurb_length: 300
+      include_blurbs: true
     }
 
     context, type = lookup_search_context

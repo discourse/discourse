@@ -10,9 +10,6 @@ class SimilarTopicsController < ApplicationController
 
     attr_reader :topic
 
-    def blurb
-      Search::GroupedSearchResults.blurb_for(@topic.try(:blurb))
-    end
   end
 
   def index

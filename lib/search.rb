@@ -157,7 +157,6 @@ class Search
     @guardian = @opts[:guardian] || Guardian.new
     @search_context = @opts[:search_context]
     @include_blurbs = @opts[:include_blurbs] || false
-    @blurb_length = @opts[:blurb_length]
     @limit = Search.per_facet
     @valid = true
 
@@ -177,7 +176,7 @@ class Search
       @limit = Search.per_filter
     end
 
-    @results = GroupedSearchResults.new(@opts[:type_filter], term, @search_context, @include_blurbs, @blurb_length)
+    @results = GroupedSearchResults.new(@opts[:type_filter], term, @search_context, @include_blurbs)
   end
 
   def valid?
@@ -752,7 +751,9 @@ class Search
       return [] unless post_sql
 
       Post.includes(:topic => :category)
+        .select("posts.*, COALESCE(ts_headline(#{Search.query_locale}, post_search_data_posts.raw_data,#{ts_query}, 'StartSel=\"<span class=search-highlight>\",StopSel=\"</span>\",MaxWords=15,MinWords=10,MaxFragments=3'), '') AS blurb")
         .includes(:user)
+        .joins(:post_search_data)
         .joins("JOIN (#{post_sql}) x ON x.id = posts.topic_id AND x.post_number = posts.post_number")
         .order('row_number')
     end

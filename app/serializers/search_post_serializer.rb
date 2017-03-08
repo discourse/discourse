@@ -4,6 +4,6 @@ class SearchPostSerializer < BasicPostSerializer
   attributes :like_count, :blurb, :post_number
 
   def blurb
-    options[:result].blurb(object)
+    object.blurb.to_str
   end
 end

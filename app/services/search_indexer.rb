@@ -14,14 +14,14 @@ class SearchIndexer
     HtmlScrubber.scrub(html)
   end
 
-  def self.update_index(table, id, raw_data)
-    raw_data = Search.prepare_data(raw_data)
+  def self.update_index(table, id, search_data, raw_data)
+    search_data = Search.prepare_data(search_data)
 
     table_name = "#{table}_search_data"
     foreign_key = "#{table}_id"
 
     # insert some extra words for I.am.a.word so "word" is tokenized
-    search_data = raw_data.gsub(/\p{L}*\.\p{L}*/) do |with_dot|
+    search_data = search_data.gsub(/\p{L}*\.\p{L}*/) do |with_dot|
       split = with_dot.split(".")
       if split.length > 1
         with_dot + (" " << split[1..-1].join(" "))
@@ -33,7 +33,7 @@ class SearchIndexer
     # for user login and name use "simple" lowercase stemmer
     stemmer = table == "user" ? "simple" : Search.long_locale
 
-    # Would be nice to use AR here but not sure how to execut Postgres functions
+    # Would be nice to use AR here but not sure how to execute Postgres functions
     # when inserting data like this.
     rows = Post.exec_sql_row_count("UPDATE #{table_name}
                                    SET
@@ -59,23 +59,25 @@ class SearchIndexer
   end
 
   def self.update_topics_index(topic_id, title, cooked)
-    search_data = title.dup << " " << scrub_html_for_search(cooked)[0...Topic::MAX_SIMILAR_BODY_LENGTH]
-    update_index('topic', topic_id, search_data)
+    raw_data = scrub_html_for_search(cooked)[0...Topic::MAX_SIMILAR_BODY_LENGTH]
+    search_data = title.dup << " " << raw_data
+    update_index('topic', topic_id, search_data, raw_data)
   end
 
   def self.update_posts_index(post_id, cooked, title, category)
-    search_data = scrub_html_for_search(cooked) << " " << title.dup.force_encoding('UTF-8')
+    raw_data = scrub_html_for_search(cooked)
+    search_data = raw_data << " " << title.dup.force_encoding('UTF-8')
     search_data << " " << category if category
-    update_index('post', post_id, search_data)
+    update_index('post', post_id, search_data, raw_data)
   end
 
   def self.update_users_index(user_id, username, name)
     search_data = username.dup << " " << (name || "")
-    update_index('user', user_id, search_data)
+    update_index('user', user_id, search_data, search_data)
   end
 
   def self.update_categories_index(category_id, name)
-    update_index('category', category_id, name)
+    update_index('category', category_id, name, name)
   end
 
   def self.index(obj)
