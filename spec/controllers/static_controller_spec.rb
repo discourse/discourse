@@ -94,6 +94,38 @@ describe StaticController do
       xhr :get, :show, id: 'login'
       expect(response).to be_success
     end
+
+    context "when login_required is enabled" do
+      before do
+        SiteSetting.login_required = true
+      end
+
+      it 'faq page redirects to login page for anon' do
+        xhr :get, :show, id: 'faq'
+        expect(response).to redirect_to '/login'
+      end
+
+      it 'guidelines page redirects to login page for anon' do
+        xhr :get, :show, id: 'guidelines'
+        expect(response).to redirect_to '/login'
+      end
+
+      it 'faq page loads for logged in user' do
+        log_in
+        xhr :get, :show, id: 'faq'
+        expect(response).to be_success
+        expect(response).to render_template('static/show')
+        expect(assigns(:page)).to eq('faq')
+      end
+
+      it 'guidelines page loads for logged in user' do
+        log_in
+        xhr :get, :show, id: 'guidelines'
+        expect(response).to be_success
+        expect(response).to render_template('static/show')
+        expect(assigns(:page)).to eq('faq')
+      end
+    end
   end
 
   describe '#enter' do
