@@ -261,7 +261,11 @@ export default function(options) {
       left: "-1000px"
     });
 
-    me.parent().append(div);
+    if (options.appendSelector) {
+      me.parents(options.appendSelector).append(div);
+    } else {
+      me.parent().append(div);
+    }
 
     if (!isInput && !options.treatAsTextarea) {
       vOffset = div.height();
