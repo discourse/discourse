@@ -315,6 +315,29 @@ class Search
     end
   end
 
+  advanced_filter(/in:seen/) do |posts|
+    if @guardian.user
+      posts
+        .joins("INNER JOIN post_timings ON
+          post_timings.topic_id = posts.topic_id
+          AND post_timings.post_number = posts.post_number
+          AND post_timings.user_id = #{Post.sanitize(@guardian.user.id)}
+        ")
+    end
+  end
+
+  advanced_filter(/in:unseen/) do |posts|
+    if @guardian.user
+      posts
+        .joins("LEFT JOIN post_timings ON
+          post_timings.topic_id = posts.topic_id
+          AND post_timings.post_number = posts.post_number
+          AND post_timings.user_id = #{Post.sanitize(@guardian.user.id)}
+        ")
+        .where("post_timings.user_id IS NULL")
+    end
+  end
+
   advanced_filter(/category:(.+)/) do |posts,match|
     exact = false
 
@@ -729,10 +752,10 @@ class Search
         if @order == :likes
           # likes are a pain to aggregate so skip
           posts_query(@limit, private_messages: opts[:private_messages])
-            .select('topics.id', "post_number")
+            .select('topics.id', "posts.post_number")
         else
           posts_query(@limit, aggregate_search: true, private_messages: opts[:private_messages])
-            .select('topics.id', "#{min_or_max}(post_number) post_number")
+            .select('topics.id', "#{min_or_max}(posts.post_number) post_number")
             .group('topics.id')
         end
 
@@ -761,6 +784,7 @@ class Search
       post_sql = aggregate_post_sql(opts)
 
       added = 0
+
       aggregate_posts(post_sql[:default]).each do |p|
         @results.add(p)
         added += 1
