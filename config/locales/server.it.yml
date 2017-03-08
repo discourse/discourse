@@ -801,6 +801,7 @@ it:
     delete_removed_posts_after: "I messaggi rimossi dall'autore saranno automaticamente cancellati dopo (n) ore. Se impostato a 0, i messaggi saranno cancellati subito."
     max_image_width: "Larghezza massima delle miniature delle immagini in un messaggio"
     max_image_height: "Altezza massima delle miniature delle immagini in un messaggio"
+    category_featured_topics: "Numero di argomenti mostrati per categoria nella pagina /categories. Dopo il cambiamento di questo valore, la pagina delle categorie impiega fino a 14 minuti per aggiornarsi."
     fixed_category_positions: "Se attivata, potrai ordinare le categorie. Se non attivata, le categorie vengono elencate in ordine di attività."
     fixed_category_positions_on_create: "Se attivata, verrà mantenuto l'ordinamento delle categorie nella finestra di creazione argomenti (richiede fixed_category_positions)."
     add_rel_nofollow_to_user_content: "Aggiungi l'attributo rel nofollow a tutti i contenuti degli utenti, tranne per i link interni (compresi i domini di livello superiore). Se modifichi questa opzione devi aggiornare tutti i messaggi con il comando \"rake posts:rebake\""

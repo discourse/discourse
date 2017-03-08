@@ -94,7 +94,7 @@ ko:
     action_codes:
       public_topic: "이 토픽을 %{when} 에 공개"
       private_topic: "이 토픽을 %{when} 에 비공개"
-      split_topic: "이 주제를 ${when} 분리"
+      split_topic: "이 주제를 ${when}에 분리"
       invited_user: "%{who}이(가) %{when}에 초대됨"
       invited_group: "%{who} 이(가) %{when} 에 초대됨"
       removed_user: "%{who}이(가) %{when}에 삭제됨"
@@ -120,7 +120,7 @@ ko:
     topic_admin_menu: "주제 관리자 기능"
     wizard_required: "포럼을 설정하세요! <a href='%{url}' data-auto-route='true'>설치 마법사를 시작하세요</a>!"
     emails_are_disabled: "관리자가 이메일 송신을 전체 비활성화 했습니다. 어떤 종류의 이메일 알림도 보내지지 않습니다."
-    bootstrap_mode_enabled: "쉬운 시작을 위해 부트스트랩 모드로 구동 되었습니다. 모든 새로운 사용자에게 신뢰 수준 1이 부여되고 매일 이메일 다이제스트가 보내집니다. 이 기능은 총 사용자 수가% {min_users} 를 초과 할 때 자동으로 꺼집니다."
+    bootstrap_mode_enabled: "쉬운 시작을 위해 부트스트랩 모드로 구동 되었습니다. 모든 새로운 사용자에게 신뢰 수준 1이 부여되고 매일 이메일 다이제스트가 보내집니다. 이 기능은 총 사용자 수가 %{min_users}를 초과 할 때 자동으로 꺼집니다."
     bootstrap_mode_disabled: "부트스트랩 모드는 24시간 뒤 비활성화 될 것입니다."
     s3:
       regions:
@@ -194,6 +194,7 @@ ko:
       like_count: "좋아요"
       topic_count: "주제"
       post_count: "게시글"
+      user_count: "사용자"
       active_user_count: "활성화된 사용자"
       contact: "문의"
       contact_info: "사이트 운영과 관련된 사항이나 요청이 있으시다면 이메일 %{contact_info}로 연락주시기 바랍니다."

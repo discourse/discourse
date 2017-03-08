@@ -588,6 +588,8 @@ et:
         error: "(viga)"
         action: "Saada parooli uuendamise meil"
         set_password: "Määra parool"
+        choose_new: "Vali uus parool"
+        choose: "Vali parool"
       change_about:
         title: "Muuda minu andmeid"
         error: "Välja muutmisel tekkis viga."

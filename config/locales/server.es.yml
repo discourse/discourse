@@ -841,6 +841,7 @@ es:
     delete_removed_posts_after: "Los posts borrados por su autor serán automáticamente eliminados después de (n) horas. Si se establece este valor a 0, los posts serán eliminados automáticamente."
     max_image_width: "Ancho máximo de las miniaturas de las imágenes en un post"
     max_image_height: "Alto máximo de las miniaturas de las imágenes en un post"
+    category_featured_topics: "Número de temas mostrados por categoría en la página /categories. Este cambio puede tardar hasta 15 minutos en verse reflejado"
     fixed_category_positions: "Si está marcado, podrás ordenar las categorías en un orden fijado. Si no, las categorías se mostrarán según su actividad reciente."
     fixed_category_positions_on_create: "Al marcar esta opción, el orden de las categorías se mantendrá en el diálogo de creación de temas (requiere fixed_category_positions)."
     add_rel_nofollow_to_user_content: "Añadir la etiqueta rel nofollow a todo el contenido introducido por los usuarios, excepto por los enlaces entrantes (incluyendo dominios padre). Si cambias esto, deberás hacer un rebake de todos los posts con: \"rake posts:rebake\""
@@ -861,6 +862,7 @@ es:
     email_custom_headers: "Lista de emails separados por una barra"
     email_subject: "Formato de asunto personalizable para emails estándar. Mira https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801"
     force_https: "Forzar al sitio a utilizar sólo HTTPS. AVISO: ¡NO actives esta opción a menos que verifiques completamente la configuración y funcione correctamente en todas partes! ¿Has verificado también que el CDN, los inicios de sesión social y cualquier logo externo / dependencia son compatibles con HTTPS?"
+    same_site_cookies: "Utilizar las mismas cookies del sitio, que elimina todos los vectores Cross Site Request Forgery en los navegadores soportados (Lax o Strict). Aviso: Strict solo funcionará en sitios que fuerzan el inicio de sesión y usan SSO."
     summary_score_threshold: "La puntuación mínima requerida para que un post sea incluido en el 'Resumen de este tema\""
     summary_posts_required: "El mínimo número de posts en un tema para habilitar el 'Resumen de este tema'"
     summary_likes_required: "Mínimo de \"me gusta\" en un tema para habilitar 'Resumen de este tema'"
@@ -1003,6 +1005,8 @@ es:
     max_private_messages_per_day: "Máximo número de mensajes por usuario y día."
     max_invites_per_day: "Máximo número de invitaciones que un usuario puede enviar al día."
     max_topic_invitations_per_day: "Máximo número de invitaciones a un tema que un usuario puede enviar por día."
+    max_logins_per_ip_per_hour: "Máximo número de inicios de sesión permitidos por direcciones IP por hora."
+    max_logins_per_ip_per_minute: "Máximo número de inicios de sesión permitidos por direcciones IP por minuto."
     alert_admins_if_errors_per_minute: "Número de errores por minuto que activa la alerta a administración. Un valor de 0 desactiva esta funcionalidad. NOTA: requiere reiniciar la instancia."
     alert_admins_if_errors_per_hour: "Número de errores por hora que activa la alerta a administración. Un valor de 0 desactiva esta funcionalidad. NOTA: requiere reiniciar la instancia."
     categories_topics: "Número de temas a mostrar en la página de /categorías."
@@ -1451,13 +1455,13 @@ es:
     title: "Darse de baja"
     subject_template: "Confirma que no quieres recibir más emails de %{site_title}"
     text_body_template: |
-      Alguien (posiblemente tú?) solicitó no recibir más actualizaciones por email desde %{site_domain_name} a esta dirección de email.
-      Si deseas confirmar esta acción, por favor haz clic en el siguiente enlace:
+      Alguien (¿quizá tú mismo?) ha solicitado darse de baja de los emails de %{site_domain_name} a esta dirección.
+      Si quieres confirmarlo, por favor haz clic en el siguiente enlace:
 
       %{confirm_unsubscribe_link}
 
 
-      Si quieres continuar recibiendo actualizaciones por email, por favor ignora este correo.
+      Si quieres continuar recibiendo emails, puedes ignorar este correo.
   invite_mailer:
     title: "Invitar Usuario"
     subject_template: "%{invitee_name} te invitó a '%{topic_title}' en %{site_domain_name}"

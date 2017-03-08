@@ -35,6 +35,7 @@ fr:
   remove_posts_deleted_by_author: "Supprimé par l'auteur"
   emails:
     incoming:
+      default_subject: "Ce sujet a besoin d'un titre"
       show_trimmed_content: "Montrer le contenu raccourci"
       maximum_staged_user_per_email_reached: "Vous avez atteint le nombre maximal d'utilisateurs qui peuvent être créés par courriel."
       errors:
@@ -73,6 +74,7 @@ fr:
       invalid: est invalide
       is_invalid: "ne semble pas clair, est-ce une phrase complète ?"
       contains_censored_words: "contient les mots censurés suivants : %[censored_words]"
+      matches_censored_pattern: "contient les mots censurés suivants qui correspondent à l'expression régulière : %{censored_words}"
       less_than: doit être inférieure à %{count}
       less_than_or_equal_to: doit être inférieur ou égal à %{count}
       not_a_number: n'est pas un nombre
@@ -106,6 +108,8 @@ fr:
       max_username_length_range: "Il n'est pas possible de définir un maximum plus petit que le minimum."
       default_categories_already_selected: "Vous ne pouvez pas séléctionner une catégorie qui est utilisée dans une autre liste."
       s3_upload_bucket_is_required: "Vous ne pouvez pas activer l'upload sur S3 avant d'avoir renseigné le 's3_upload_bucket'."
+  invite:
+    not_found: "Votre jeton d'invitation est invalide. Veuillez contacter l'administrateur du site."
   bulk_invite:
     file_should_be_csv: "Le fichier envoyé doit être au format CSV."
     error: "Il y a eu une erreur en envoyant ce fichier. Merci de réessayer plus tard."
@@ -270,6 +274,7 @@ fr:
               same_as_username: "est aussi votre pseudo. Veuillez utiliser un mot de passe plus sécurisé."
               same_as_email: "est aussi votre adresse courriel. Veuillez utiliser un mot de passe plus sécurisé."
               same_as_current: "est le même que votre mot de passe actuel."
+              unique_characters: "a trop de caractères répétés. Veuillez utiliser un mot de passe plus sécurisé."
             ip_address:
               signup_not_allowed: "L'inscription n'est pas autorisée à partir de ce compte."
         color_scheme_color:
@@ -792,6 +797,7 @@ fr:
     delete_removed_posts_after: "Les messages retirés par leur auteur seront automatiquement supprimés après (n) heures. Pour une valeur renseignée à 0, les messages seront supprimés immédiatement."
     max_image_width: "Largeur maximale des images dans un message"
     max_image_height: "Hauteur maximale autorisée des images dans un message"
+    category_featured_topics: "Nombre de sujets affichés par catégorie sur la page /categories. Après avoir modifié cette valeur, il faut jusqu'à 15 minutes pour que la page des catégories soit mise à jour."
     fixed_category_positions: "Si coché, vous pourrez modifier l'ordre des catégories. Si décoché, elle seront triées par ordre d'activité."
     fixed_category_positions_on_create: "Si coché, le classement des catégories sera maintenu dans la fenêtre de création de sujet (nécessite fixed_category_positions)."
     add_rel_nofollow_to_user_content: "Ajouter rel nofollow à tous les contenus des utilisateurs, sauf les liens internes (incluant les domaines parents). Si vous modifiez ceci, vous devez exécuter la commande  \"rake posts:rebake\""
@@ -951,6 +957,7 @@ fr:
     max_private_messages_per_day: "Nombre maximum de messages que les utilisateurs peuvent créer chaque jour."
     max_invites_per_day: "Nombre maximum d'invitations qu'un utilisateur peut envoyer par jour."
     max_topic_invitations_per_day: "Nombre maximum d'invitations à un sujet qu'un utilisateur peut envoyer par jour."
+    max_logins_per_ip_per_minute: "Nombre maximum de connexions autorisées par adresse IP, par minute"
     alert_admins_if_errors_per_minute: "Nombre d'erreurs par minute nécessaires pour déclencher une alerte administrateur. Une valeur de 0 désactive cette fonctionnalité. N. B. : nécessite un redémarrage."
     alert_admins_if_errors_per_hour: "Nombre d'erreurs par heure nécessaires pour déclencher une alerte administrateur. Une valeur de 0 désactive cette fonctionnalité. N. B. : nécessite un redémarrage."
     categories_topics: "Nombre de sujets à afficher dans la page /categories."

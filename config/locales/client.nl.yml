@@ -9,8 +9,8 @@ nl:
   js:
     number:
       format:
-        separator: "."
-        delimiter: ","
+        separator: ","
+        delimiter: "."
       human:
         storage_units:
           format: '%n %u'
@@ -817,7 +817,7 @@ nl:
         the_topic: "het topic"
     loading: "Laden..."
     errors:
-      prev_page: "tijdens het laden"
+      prev_page: "tijdens het laden van"
       reasons:
         network: "Netwerkfout"
         server: "Serverfout"
@@ -1236,8 +1236,10 @@ nl:
         selected:
           one: "U hebt <b>1</b> topic geselecteerd."
           other: "U hebt <b>{{count}}</b> topics geselecteerd."
-        change_tags: "Tags wijzigen"
+        change_tags: "Tags vervangen"
+        append_tags: "Tags toevoegen"
         choose_new_tags: "Kies nieuwe tags voor deze topics:"
+        choose_append_tags: "Kies nieuwe tags om voor deze topics toe te voegen:"
         changed_tags: "De tags van deze topics zijn gewijzigd."
       none:
         unread: "U hebt geen ongelezen topics."
@@ -1316,11 +1318,11 @@ nl:
       options: "Topic-opties"
       show_links: "koppelingen binnen dit topic tonen"
       toggle_information: "topicdetails in-/uitschakelen"
-      read_more_in_category: "Wilt u meer lezen? Bekijk dan andere topics in {{catLink}} of {{latestLink}}."
+      read_more_in_category: "Wilt u meer lezen? Blader dan door andere topics in {{catLink}} of {{latestLink}}."
       read_more: "Wilt u meer lezen? {{catLink}} of {{latestLink}}."
       read_more_MF: "Er { UNREAD, plural, =0 {} one { is <a href='/unread'>1 ongelezen</a> } other { zijn <a href='/unread'># ongelezen</a> } } { NEW, plural, =0 {} one { {BOTH, select, true{and } false {is } other{}} <a href='/new'>1 nieuw</a> topic} other { {BOTH, select, true{and } false {zijn } other{}} <a href='/new'># nieuwe</a> topics} } over, of {CATEGORY, select, true {blader door andere topics in {catLink}} false {{latestLink}} other {}}"
       browse_all_categories: Alle categorieën bekijken
-      view_latest_topics: recente topics bekijken
+      view_latest_topics: bekijk recente topics
       suggest_create_topic: Waarom maakt u geen topic aan?
       jump_reply_up: naar eerder antwoord springen
       jump_reply_down: naar later antwoord springen
@@ -1781,6 +1783,7 @@ nl:
       email_in_disabled: "Het plaatsen van nieuwe topics via e-mail is uitgeschakeld in de webite-instellingen. Om het plaatsen van nieuwe topics via e-mail mogelijk te maken, "
       email_in_disabled_click: 'schakelt u de instelling ''e-mail in'' in.'
       suppress_from_homepage: "Deze categorie op de homepage negeren"
+      show_subcategory_list: "Subcategorielijsten boven topics tonen in deze categorie"
       all_topics_wiki: "Standaard wiki's van nieuwe topics maken"
       sort_order: "Standaardsortering:"
       allow_badges_label: "Badges laten toekennen in deze categorie"
@@ -2794,7 +2797,7 @@ nl:
       user:
         suspend_failed: "Er is iets misgegaan bij het schorsen van deze gebruiker: {{error}}"
         unsuspend_failed: "Er is iets misgegaan bij het opheffen van de schorsing van deze gebruiker: {{error}}"
-        suspend_duration: "Hoe lang wilt u deze gebruiker blokkeren?"
+        suspend_duration: "Hoe lang wilt u deze gebruiker schorsen?"
         suspend_duration_units: "(dagen)"
         suspend_reason_label: "Waarom schorst u deze gebruiker? Deze tekst <b>zal voor iedereen zichtbaar zijn</b> op de profielpagina van deze gebruiker, en zal aan de gebruiker worden getoond als deze zich probeert aan te melden. Houd het kort."
         suspend_reason: "Reden"
@@ -2815,6 +2818,7 @@ nl:
         refresh_browsers_message: "Bericht verstuurd aan alle gebruikers!"
         show_public_profile: "Openbaar profiel tonen"
         impersonate: 'Aanmelden als gebruiker'
+        action_logs: "Actielogboeken"
         ip_lookup: "IP-adres zoeken"
         log_out: "Afmelden"
         logged_out: "Gebruiker is op alle apparaten afgemeld"

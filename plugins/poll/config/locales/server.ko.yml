@@ -9,6 +9,7 @@ ko:
   site_settings:
     poll_enabled: "유저에게 설문조사 작성 허용"
     poll_maximum_options: "최대 설문조사 항목이 허용됨."
+    poll_edit_window_mins: "포스트 생성 이후 설문조사가 편집될 수 있는 시간(분)"
   poll:
     multiple_polls_without_name: "이름없는 설문조사가 여러개 있습니다.  '<code>name</code>'  속성을 사용하여 설문조사를 개별적으로 구분해 보세요."
     multiple_polls_with_same_name: "같은 이름 <strong>%{name}</strong> 의 설문조사가 여러개 있습니다. '<code>name</code>' 속성을 사용하여 설문조사를 개별적으로 구분해 보세요."

@@ -310,6 +310,7 @@ uk:
     unique_posts_mins: "How many minutes before a user can make a post with the same content again"
     queue_jobs: "ТІЛЬКИ ДЛЯ РОЗРОБНИКІВ! УВАГА! За замовчуванням, додавати завдання до черги в sidekiq. Якщо вимкнути, Ваш сайт зламається."
     crawl_images: "Отримувати зображення з віддалених адрес, щоб встановити правильні розміри ширини і висоти."
+    category_featured_topics: "Кількість тем на одну категорію, що показуються на сторінці /categories. Після зміни цього значення, оновлення категорій займе до 15 хвилин."
     apple_touch_icon_url: "Піктограма, що використовується для сенсорних пристроїв Apple. Рекмоендований розмір 144px на 144px."
     email_custom_headers: "Список заголовків електронної пошти, розділених вертикальною рискою"
     enable_long_polling: "Message bus used for notification can use long polling"

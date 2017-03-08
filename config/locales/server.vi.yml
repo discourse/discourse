@@ -653,6 +653,7 @@ vi:
     delete_removed_posts_after: "Bài viết đã được xóa bởi tác giả sẽ được tự động xóa sau (n) giờ. Nếu cài là 0, bài viết sẽ được xóa ngay lập tức."
     max_image_width: "Chiều rộng tối đa của ảnh thu nhỏ trong bài viết."
     max_image_height: "Chiều cao tối đa của ảnh thu nhỏ trong bài viết."
+    category_featured_topics: "Số chủ đề hiện thị mỗi danh mục trong trang /categories. Sau khi thay đổi giá trị này, nó sẽ mất khoảng 15 phút để trang danh mục cập nhật."
     fixed_category_positions: "Nếu được bật, bạn sẽ có thể sắp xếp chuyên mục theo một thứ tự cố định. Nếu không bật, chuyên mục sẽ được sắp xếp theo thứ tử hoạt động."
     fixed_category_positions_on_create: "Nếu chọn, sắp xếp danh mục sẽ được thực hiện trong cửa sổ tạo chủ đề (yêu cầu fixed_category_positions)."
     add_rel_nofollow_to_user_content: "Thêm rel='nofollow' cho tất cả các nội dung mà người dùng gửi, ngoại trừ các liên kết nội bộ (của tên miền chính). Nếu thay đổi, bạn phải thực hiện lại cho tất cả các bài viết với: \"rake posts:rebake\""

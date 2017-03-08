@@ -1237,7 +1237,9 @@ fr:
           one: "Vous avez sélectionné <b>1</b> sujet."
           other: "Vous avez sélectionné <b>{{count}}</b> sujets."
         change_tags: "Changer les tags"
+        append_tags: "Ajouter les tags"
         choose_new_tags: "Choisir les nouveaux tags pour ces sujets :"
+        choose_append_tags: "Choisissez de nouveaux tags à ajouter à ces sujets :"
         changed_tags: "Les tags de ces sujets ont été modifiés."
       none:
         unread: "Vous n'avez aucun sujet non lu."
@@ -1781,6 +1783,7 @@ fr:
       email_in_disabled: "La possibilité de créer des nouveaux sujets via courriel est désactivé dans les Paramètres. Pour l'activer,"
       email_in_disabled_click: 'activer le paramètre "email in".'
       suppress_from_homepage: "Retirer cette catégorie de la page d'accueil"
+      show_subcategory_list: "Afficher la liste des sous-catégories au dessus des sujets dans cette catégorie."
       all_topics_wiki: "Faire des nouveaux sujets des Wikis par défaut"
       sort_order: "Tri par défaut :"
       allow_badges_label: "Autoriser les badges à être accordé dans cette catégorie"
@@ -2815,6 +2818,7 @@ fr:
         refresh_browsers_message: "Message envoyé à tous les clients !"
         show_public_profile: "Afficher le profil public"
         impersonate: 'Incarner'
+        action_logs: "Journaux d'actions"
         ip_lookup: "IP de consultation"
         log_out: "Déconnecter l'utilisateur"
         logged_out: "L'utilisateur s'est déconnecté de tous les appareils"

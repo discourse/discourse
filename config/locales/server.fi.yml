@@ -819,6 +819,7 @@ fi:
     max_topic_title_length: "Viestin otsikon merkkien maksimimäärä"
     min_private_message_title_length: "Viestin otsikon merkkien minimimäärä viestille"
     min_search_term_length: "Haun merkkien minimimäärä"
+    search_tokenize_chinese_japanese_korean: "Pakota haku käsittelemään kiinaa/japania/koreaa myös muunkielisillä sivustoilla"
     search_prefer_recent_posts: "Jos hakeminen suurelta palstaltasi on hidasta, tämä asetus kokeilee hakemistorakennetta, jossa tuoreimmat viestit ovat ensin"
     search_recent_posts_size: "Kuinka monta tuoretta viestiä pidetään hakemistossa"
     allow_uncategorized_topics: "Salli ketjujen luominen valitsematta aluetta. VAROITUS: Alueettomat ketjut täytyy siirtää jollekin alueelle ennen kuin poistat asetuksen käytöstä."
@@ -841,6 +842,7 @@ fi:
     delete_removed_posts_after: "Kirjoittajalta poistetut viestit poistetaan automaattisesti (n) tunnin kuluttua. Jos asetetaan 0, viestit poistetaan välittömästi."
     max_image_width: "Esikatselukuvan suurin sallittu leveys viestissä"
     max_image_height: "Esikatselukuvan suurin sallittu korkeus viestissä"
+    category_featured_topics: "Näytettävien ketjujen lukumäärä alueittan Alueet-sivulla. Arvon muuttamisen jälkeen voi kestää jopa 15 minuuttia sivun päivittymiseen."
     fixed_category_positions: "Jos tämä on valittuna, voit muokata alueiden järjestystä. Jos tätä ei valita, alueet järjetsetään aktiivisuuden mukaan."
     fixed_category_positions_on_create: "Jos tämä on valittuna, alueiden järjestys pysyy samana uuden ketjun luomisen dialogissa (edellyttää fixed_category_positions)"
     add_rel_nofollow_to_user_content: "Lisää rel nofollow kaikkeen käyttäjien lähettämään sisältöön, paitsi sivuston sisäisiin linkkeihin (sisältäen ylemmät verkkotunnukset). Jos muutat asetusta, sinun täytyy rakentaa viestit uudelleen komennolla: \"rake posts:rebake\""
@@ -896,11 +898,12 @@ fi:
     ga_domain_name: "VANHENTUNUT: Google Analytics (ga.js) -verkkotunnus, esim. mysite.com; ks. http://google.com/analytics"
     ga_universal_tracking_code: "Google Universal analytics (analytics.js) seurantakoodi, esim.: UA-12345678-9; katso http://google.com/analytics"
     ga_universal_domain_name: "Google Universal analytics (analytics.js) verkkotunnus, esim.: osoite.fi; katso http://google.com/analytics"
+    gtm_container_id: "Google Tag Manager -säiliön ID. Esim: GTM-ABCDEF"
     enable_escaped_fragments: "Käytä Googlen Ajax-sivustoille tarkoitettua API:a, jos webcrawleria ei tunnisteta. Katso https://developers.google.com/webmasters/ajax-crawling/docs/learn-more"
     enable_noscript_support: "Ota käyttöön noscript-tagi hakukoneiden webcrawlereille"
     allow_moderators_to_create_categories: "Salli valvojien luoda uusia alueita"
     cors_origins: "Salli lähteet CORS-pyynnöille (cross-origin request). Jokaisen lähteen pitää sisältää http:// tai https://. DISCOURSE_ENABLE_CORS asetus pitää olla valittuna ottaaksesi CORSin käyttöön."
-    use_admin_ip_whitelist: "Ylläpitäjät voivat kirjautua vain IP osoitteista, jotka on määritetty Seulottavien IP:iden listassa (Ylläpito > Lokit > Seulottavat IP:t)"
+    use_admin_ip_whitelist: "Ylläpitäjät voivat kirjautua vain IP-osoitteista, jotka on määritetty Seulottavien IP:iden listassa (Ylläpito > Lokit > Seulottavat IP:t)"
     top_menu: "Mitkä painikkeet näytetään kotisivun navigointipalkissa, ja missä järjestyksessä. Esimerkiksi latest|new|unread|categories|top|read|posted|bookmarks"
     post_menu: "Mitkä painikkeet näytetään viestin valikossa, ja missä järjestyksessä. Esimerkiksi like|edit|flag|delete|share|bookmark|reply"
     post_menu_hidden_items: "Piilotettavat painikkeet viestin valikosta, kunnes '...' klikataan."
@@ -1001,6 +1004,8 @@ fi:
     max_private_messages_per_day: "Viestien päivittäinen maksimimäärä per käyttäjä."
     max_invites_per_day: "Maksimimäärä kutsuja, jonka käyttäjä voi lähettää päivässä."
     max_topic_invitations_per_day: "Maksimimäärä ketjukutsuja, jonka yksittäinen käyttäjä voi lähettää päivässä"
+    max_logins_per_ip_per_hour: "Enimmäismäärä kirjautumisia IP-osoitetta kohden tunnissa"
+    max_logins_per_ip_per_minute: "Enimmäismäärä kirjautumisia IP-osoitetta kohden minuutissa"
     alert_admins_if_errors_per_minute: "Virheiden määrä minuutissa, jonka seurauksena hälytetään ylläpitäjä. 0 ottaa toiminnon pois käytöstä. HUOM: vaatii uudelleenkäynnistyksen."
     alert_admins_if_errors_per_hour: "Virheiden määrä tunnissa, jonka seurauksena hälytetään ylläpitäjä. 0 ottaa toiminnon pois käytöstä. HUOM: vaatii uudelleenkäynnistyksen."
     categories_topics: "Kuinka monta ketjua näytetään /keskustelualueet-sivulla"
@@ -1107,7 +1112,7 @@ fi:
     topic_view_duration_hours: "Laske uusi ketjun katselu kerran per IP/käyttäjä joka N:s tunti"
     user_profile_view_duration_hours: "Laske uusi profiilin katselu kerran per IP/käyttäjä joka N:s tunti"
     levenshtein_distance_spammer_emails: "Verrattaessa sähköpostiosoitteita tunnettuihin roskapostittajiin, näin monen merkin ero saa vielä aikaan löydöksen."
-    max_new_accounts_per_registration_ip: "Jos samasta IP osoitteesta on jo (n) luottamustason 0 käyttäjätiliä (eikä yhtään henkilökunnan tai vähintään LT2), lakkaa hyväksymästä uusia rekisteröitymisiä tästä IP:stä."
+    max_new_accounts_per_registration_ip: "Jos samasta IP-osoitteesta on jo (n) luottamustason 0 käyttäjätiliä (eikä yhtään henkilökunnan tai vähintään LT2), lakkaa hyväksymästä uusia rekisteröitymisiä tästä IP:stä."
     min_ban_entries_for_roll_up: "Kun Kääri-painiketta painetaan, luodaan IP-porttikielloista aliverkon kattavia kieltoja jos kieltoja on asettu vähintään (N) määrä."
     max_age_unmatched_emails: "Poista osumattomat seulotut sähköpostiosoitteet (N) päivän jälkeen."
     max_age_unmatched_ips: "Poista osumattomat seulotut IP-osoitteet (N) päivän jälkeen."
@@ -1401,6 +1406,7 @@ fi:
     something_already_taken: "Jotain meni pieleen. Ehkäpä tämä käyttäjänimi tai sähköpostiosoite on jo rekisteröity. Kokeile salasana unohtui -linkkiä."
     omniauth_error: "Pahoittelut, tilisi tunnistautumisessa tapahtui virhe. Ehkäpä et hyväksynyt valtuutusta?"
     omniauth_error_unknown: "Jotain meni pieleen kirjautumisesti käsittelyssä, ole hyvä ja yritä uudelleen."
+    authenticator_error_no_valid_email: "Mikään tiliin %{account} liittyvistä sähköpostiosoitteista ei ole sallittu. Voit joutua määrittämään käyttäjätilisi eri sähköpostiosoitteella."
     new_registrations_disabled: "Uusien tilien luonti ei ole tällä hetkellä sallittu."
     password_too_long: "Salasanan enimmäispituus on 200 merkkiä."
     email_too_long: "Antamasi sähköpostiosoite on liian pitkä. Mailbox nimi ei saa olla yli 254 merkkiä pitkä, eikä domain nimi yli 253 merkkiä pitkä."
@@ -1443,7 +1449,7 @@ fi:
     title: "Peru sähköpostimuistukset"
     subject_template: "Vahvista, ettet enää halua, että %{site_title} lähettää sinulle sähköpostimuistutuksia."
     text_body_template: |
-      Joku (mahdollisesti sinä) pyysi, ettei sähköposti-ilmoituksia sivustolta %{site_domain_name} enää lähetettäisi tähän osoitteeseen.
+      Joku (mahdollisesti sinä) pyysi, ettei sivustolta %{site_domain_name} enää lähetettäisi sähköposti-ilmoituksia tähän osoitteeseen.
       Vahvista pyyntö klikkaamalla linkkiä:
 
       %{confirm_unsubscribe_link}

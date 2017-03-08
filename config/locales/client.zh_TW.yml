@@ -560,6 +560,8 @@ zh_TW:
         error: "( 錯誤 )"
         action: "寄出重設密碼的郵件"
         set_password: "設定密碼"
+        choose_new: "選擇一個新密碼"
+        choose: "選擇一個密碼"
       change_about:
         title: "修改關於我"
         error: "修改設定值時發生錯誤"
@@ -613,6 +615,7 @@ zh_TW:
         short_instructions: "其他人可以輸入 @{{username}} 提到你。"
         available: "你的用戶名稱可以使用。"
         not_available: "無法使用，請試試看 {{suggestion}}？"
+        not_available_no_suggestion: "不可使用"
         too_short: "你的用戶名稱太短。"
         too_long: "你的用戶名稱太長。"
         checking: "正在檢查用戶名稱是否已經有人使用..."
@@ -712,8 +715,10 @@ zh_TW:
         link_generated: "邀請連結生成成功！"
         valid_for: "邀請連結只對這個郵件地址有效：%{email}"
         bulk_invite:
+          none: "你尚未邀請任何人。你可以發送個別邀請，或者透過<a href='https://meta.discourse.org/t/send-bulk-invites/16468'>上傳大量邀請檔</a>一次邀請一群人。"
           text: "從檔案大量邀請"
           success: "檔案已上傳成功，處理完畢後將以私人訊息通知你。"
+          error: "上傳的檔案必須是 csv 格式。"
       password:
         title: "密碼"
         too_short: "你的密碼太短。"
@@ -894,6 +899,7 @@ zh_TW:
       to_continue: "請登入"
       preferences: "需要登入後更改設置"
       forgot: "我記不清賬號詳情了"
+      not_approved: "你的帳號尚未獲得批准。一旦你的帳號獲得批准，你會收到一封電子郵件。"
       google:
         title: "使用 Google 帳號"
         message: "使用 Google 帳號認証 (請確定你的網頁瀏覽器未阻擋彈出視窗)"
@@ -915,6 +921,16 @@ zh_TW:
       github:
         title: "使用 GitHub"
         message: "使用 GitHub 認証 (請確定你的網頁瀏覽器未阻擋彈出視窗)"
+    invites:
+      accept_title: "邀請函"
+      welcome_to: "歡迎來到 %{site_name}！"
+      invited_by: "您被邀請，來自："
+      your_email: "您帳號的電郵地址是 <b>%{email}</b>"
+      accept_invite: "接受邀請"
+      success: "你的帳號已被建立，且您已經登入了。"
+      password_label: "設定密碼(選填)"
+    password_reset:
+      continue: "繼續連接至 %{site_name}"
     emoji_set:
       apple_international: "Apple/國際化"
       google: "Google"
@@ -1174,8 +1190,10 @@ zh_TW:
         choose_new_category: "為主題選擇新類別："
         selected:
           other: "你已選擇了 <b>{{count}}</b> 個討論話題。"
-        change_tags: "修改標籤"
+        change_tags: "取代標籤"
+        append_tags: "添加標籤"
         choose_new_tags: "為主題選擇新標籤"
+        choose_append_tags: "為主題選擇新標籤"
         changed_tags: "主題的標籤被修改"
       none:
         unread: "沒有未讀的討論話題。"
@@ -1344,6 +1362,9 @@ zh_TW:
         pin_globally: "全區置頂討論話題"
         make_banner: "討論話題橫幅"
         remove_banner: "移除討論話題橫幅"
+      reply:
+        title: '回覆'
+        help: '開始編寫對此討論話題的回覆'
       clear_pin:
         title: "取消置頂"
         help: "取消討論話題的置頂狀態。"
@@ -1610,6 +1631,8 @@ zh_TW:
           hide: "隱藏修訂紀錄"
           show: "顯示修訂紀錄"
           revert: "還原至該版本"
+          edit_wiki: "編輯共筆"
+          edit_post: "編輯貼文"
           comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> <i class='fa fa-arrows-h'></i> <strong>{{current}}</strong> / {{total}}"
         displays:
           inline:
@@ -1672,6 +1695,7 @@ zh_TW:
       email_in_disabled: "\"用電子郵件張貼新的討論話題\"功能已被關閉。若要使用此功能，"
       email_in_disabled_click: '請啟用"email in"功能'
       suppress_from_homepage: "不在首頁上顯示此分類。"
+      show_subcategory_list: "在此分類中，將子分類顯示在主題上方。"
       all_topics_wiki: "新的主題預設為共筆。"
       sort_order: "預設排序："
       allow_badges_label: "允許授予本分類的徽章"
@@ -2676,6 +2700,7 @@ zh_TW:
         refresh_browsers_message: "訊息已寄出給所有用戶!"
         show_public_profile: "顯示公開的基本資料"
         impersonate: '檢視角度'
+        action_logs: "操作紀錄"
         ip_lookup: "IP 反查"
         log_out: "登出"
         logged_out: "用戶已從所有裝置中登出"

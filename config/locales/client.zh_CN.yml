@@ -923,6 +923,15 @@ zh_CN:
         message: "正在通过 GitHub 帐号验证登录（请确保浏览器没有禁止弹出窗口）"
     invites:
       accept_title: "邀请"
+      welcome_to: "欢迎来到%{site_name}！"
+      invited_by: "邀请你的是："
+      social_login_available: "你也可以通过任何使用这个邮箱的社交网站登陆。"
+      your_email: "你的帐户邮箱地址是<b>%{email}</b>。"
+      accept_invite: "接受邀请"
+      success: "已创建您的帐号，您现在可以登录了。"
+      password_label: "设置密码(可选)"
+    password_reset:
+      continue: "转入到 %{site_name}"
     emoji_set:
       apple_international: "Apple/国际化"
       google: "Google"
@@ -1182,8 +1191,10 @@ zh_CN:
         choose_new_category: "选择新分类："
         selected:
           other: "已选择 <b>{{count}}</b>个主题"
-        change_tags: "修改标签"
+        change_tags: "替换标签"
+        append_tags: "添加标签"
         choose_new_tags: "为主题选择新标签："
+        choose_append_tags: "为这些主题添加新标签："
         changed_tags: "主题的标签被修改"
       none:
         unread: "你没有未读主题。"
@@ -1473,8 +1484,10 @@ zh_CN:
       edit: "编辑 {{replyAvatar}} {{username}}发表的{{link}}"
       edit_reason: "理由："
       post_number: "帖子 {{number}}"
+      wiki_last_edited_on: "维基最后修改于"
       last_edited_on: "最后修改于"
       reply_as_new_topic: "回复为联结主题"
+      reply_as_new_private_message: "向相同的收件人回复新消息"
       continue_discussion: "自 {{postLink}} 继续讨论："
       follow_quote: "转到所引用的帖子"
       show_full: "显示所有帖子"
@@ -1512,6 +1525,8 @@ zh_CN:
       via_email: "通过邮件发表的帖子"
       via_auto_generated_email: "通过自动生成邮件发表的帖子"
       whisper: "设置帖子为密语，只对版主可见"
+      wiki:
+        about: "这个帖子是维基"
       archetypes:
         save: '保存选项'
       few_likes_left: "谢谢你的热情！你今天的赞快用完了。"
@@ -1618,12 +1633,16 @@ zh_CN:
           hide: "隐藏版本历史"
           show: "显示版本历史"
           revert: "还原至该版本"
+          edit_wiki: "编辑维基"
+          edit_post: "编辑帖子"
           comparing_previous_to_current_out_of_total: "<strong>{{previous}}</strong> <i class='fa fa-arrows-h'></i> <strong>{{current}}</strong> / {{total}}"
         displays:
           inline:
             title: "行内显示渲染后的页面，并标示增加和删除的内容"
+            button: 'HTML'
           side_by_side:
             title: "并排显示渲染后的页面，分开标示增加和删除的内容"
+            button: 'HTML'
           side_by_side_markdown:
             title: "并排显示源码，分开标示增加和删除的内容"
     category:
@@ -1677,6 +1696,7 @@ zh_CN:
       email_in_disabled: "站点设置中已经禁用通过邮件发表新主题。欲启用通过邮件发表新主题，"
       email_in_disabled_click: '启用“邮件发表”设置。'
       suppress_from_homepage: "不在主页中显示这个分类。"
+      show_subcategory_list: "在这个分类中把子分类列表显示在主题的上面"
       all_topics_wiki: "默认将新主题设为维基主题"
       sort_order: "默认排序："
       allow_badges_label: "允许在这个分类中授予徽章"
@@ -1794,6 +1814,8 @@ zh_CN:
     views_lowercase:
       other: "浏览"
     replies: "回复"
+    views_long:
+      other: "本主题已经被浏览过 {{number}} 次"
     activity: "活动"
     likes: "赞"
     likes_lowercase:
@@ -2225,6 +2247,7 @@ zh_CN:
         warn_local_payload_url: "你好像将 webhook 指向了一个本地地址。把相关事件发送到本地可能产生副作用或未预期的行为。继续吗？"
         secret_invalid: "密钥不能包含空白字符。"
         secret_too_short: "密钥必须至少有 12 个字符。"
+        secret_placeholder: "可选字符，用于生成签名"
         event_type_missing: "你必须设置一个事件类型。"
         content_type: "内容格式"
         secret: "密钥"
@@ -2562,9 +2585,17 @@ zh_CN:
             revoke_admin: "撤销管理员权限"
             grant_moderation: "授予版主权限"
             revoke_moderation: "撤销版主权限"
+            backup_create: "创建备份"
             deleted_tag: "删除的标签"
             renamed_tag: "重命名的标签"
             revoke_email: "撤销邮件"
+            lock_trust_level: "锁定信任等级"
+            unlock_trust_level: "解锁信任等级"
+            activate_user: "已激活用户"
+            deactivate_user: "停用帐号"
+            change_readonly_mode: "更改只读模式"
+            backup_download: "下载备份文件"
+            backup_destroy: "删除备份"
         screened_emails:
           title: "被屏蔽的邮件地址"
           description: "当有人试图用以下邮件地址注册时，将受到阻止或其它系统操作。"
@@ -2670,6 +2701,7 @@ zh_CN:
         refresh_browsers_message: "消息发送至所有用户！"
         show_public_profile: "显示公开介绍"
         impersonate: '检视角度'
+        action_logs: "操作日志"
         ip_lookup: "IP 查询"
         log_out: "退出"
         logged_out: "用户在所有设备都已退出"

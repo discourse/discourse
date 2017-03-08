@@ -1,9 +1,16 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-org/
+
 el:
   dates:
     short_date_no_year: "D MMM"
     short_date: "D MMM, YYYY"
     long_date: "DD MMMM YYYY, H:mm"
-  datetime_formats:
+  datetime_formats: &datetime_formats
     formats:
       short: "%m-%d-%Y"
       short_no_year: "%B %-d"
@@ -11,9 +18,11 @@ el:
       long: "%B %-d, %Y, %l:%M%P"
   date:
     month_names: [null, Ιανουάριος, Φεβρουάριος, Μάρτιος, Απρίλιος, Μάϊος, Ιούνιος, Ιούλιος, Αύγουστος, Σεπτέμβριος, Οκτώβριος, Νοέμβριος, Δεκέμβριος]
+    <<: *datetime_formats
   time:
     am: "πμ"
     pm: "μμ"
+    <<: *datetime_formats
   title: "Discourse"
   topics: "Νήματα"
   posts: "αναρτήσεις"
@@ -44,7 +53,7 @@ el:
         topic_closed_error: "Συμβαίνει όταν καταχωρηθεί μία απάντηση για θέμα που έχει κλείσει. "
         bounced_email_error: "Το μήνυμα ηλεκτρονικού ταχυδρομείου είναι αναφορά αποτυχίας παράδοσης. "
         screened_email_error: "Συμβαίνει όταν ο αποστολέας της ηλεκτρονικης διεύθηνσης έχει ήδη ελεγχθεί"
-  errors:
+  errors: &errors
     format: '%{attribute} %{message}'
     messages:
       too_long_validation: "επιτρέπονται μέχρι %{max} χαρακτήρες, έχεις εισάγει %{length}."
@@ -321,6 +330,7 @@ el:
           attributes:
             payload_url:
               invalid: "Το URL δεν είναι έγκυρο. To URL πρέπει να συμπεριλαμβάνει http:// ή https://. Και δεν επιτρέπεται κανένα κενό."
+      <<: *errors
   user_profile:
     no_info_me: "<div class='missing-profile'>το πεδίο Σχετικά Με Εμένα είναι κενό, <a href='/users/%{username_lower}/preferences/about-me'>θα ήθελες να το συμπληρώσεις?</a></div>"
     no_info_other: "<div class='missing-profile'>%{name} δεν έχει εισάγει τίποτα στο πεδίο Σχετικά με Εμένα στο προφίλ του</div>"
@@ -3118,3 +3128,6 @@ el:
         description: |
           <p>Αν ποτέ θελήσεις να αλλάξεις αυτές τις ρυθμίσεις, επισκέψου <a href='/admin' target='_blank'>σελίδα διαχείρισης</a>; θα τη βρεις δίπλα στο εικονίδιο του εργαλείου στο μενού ιστοτόπου.</p>
           <p>Καλή διασκέδαση και καλή επιτυχία <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='_blank'>φτιάχνοντας τη νέα σου κοινότητα!</a></p>
+  activemodel:
+    errors:
+      <<: *errors

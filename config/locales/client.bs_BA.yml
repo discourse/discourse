@@ -139,6 +139,7 @@ bs_BA:
         us_east_1: "SAD Istok (Sjeverna Virdžinija)"
         us_west_1: "SAD Zapad (Sjeverna Kalifornija)"
         us_west_2: "SAD Zapad (Oregon)"
+        us_gov_west_1: "AWS GovCloud (US)"
         eu_west_1: "EU (Irska)"
         eu_central_1: "EU (Frankfurt)"
         ap_southeast_1: "Azija Pacifik (Singapur)"
