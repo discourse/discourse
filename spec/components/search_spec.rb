@@ -462,9 +462,49 @@ describe Search do
 
     it 'supports wiki' do
       topic = Fabricate(:topic)
-      Fabricate(:post, raw: 'this is a test 248', wiki: true, topic: topic)
+      topic_2 = Fabricate(:topic)
+      post = Fabricate(:post, raw: 'this is a test 248', wiki: true, topic: topic)
+      Fabricate(:post, raw: 'this is a test 248', wiki: false, topic: topic_2)
 
-      expect(Search.execute('test 248 in:wiki').posts.length).to eq(1)
+      expect(Search.execute('test 248').posts.length).to eq(2)
+      expect(Search.execute('test 248 in:wiki').posts.first).to eq(post)
+    end
+
+    it 'supports searching for posts that the user has seen/unseen' do
+      topic = Fabricate(:topic)
+      topic_2 = Fabricate(:topic)
+      post = Fabricate(:post, raw: 'logan is longan', topic: topic)
+      post_2 = Fabricate(:post, raw: 'longan is logan', topic: topic_2)
+
+      [post.user, topic.user].each do |user|
+        PostTiming.create!(
+          post_number: post.post_number,
+          topic: topic,
+          user: user,
+          msecs: 1
+        )
+      end
+
+      expect(post.seen?(post.user)).to eq(true)
+
+      expect(Search.execute('longan').posts.sort).to eq([post, post_2])
+
+      expect(Search.execute('longan in:seen', guardian: Guardian.new(post.user)).posts)
+        .to eq([post])
+
+      expect(Search.execute('longan in:seen').posts.sort).to eq([post, post_2])
+
+      expect(Search.execute('longan in:seen', guardian: Guardian.new(post_2.user)).posts)
+        .to eq([])
+
+      expect(Search.execute('longan', guardian: Guardian.new(post_2.user)).posts.sort)
+        .to eq([post, post_2])
+
+      expect(Search.execute('longan in:unseen', guardian: Guardian.new(post_2.user)).posts.sort)
+        .to eq([post, post_2])
+
+      expect(Search.execute('longan in:unseen', guardian: Guardian.new(post.user)).posts)
+        .to eq([post_2])
     end
 
     it 'supports before and after, in:first, user:, @username' do
