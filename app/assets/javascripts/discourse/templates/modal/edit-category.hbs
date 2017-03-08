@@ -28,8 +28,14 @@
                  icon="trash-o"
                  label="category.delete"}}
     {{else}}
-      <div class="cannot_delete_reason">
-        {{{model.cannot_delete_reason}}}
+      <div class="disable_info_wrap">
+        {{d-button disabled=deleteDisabled
+                   icon="question-circle"
+                   label="category.delete"}}
+
+        <div class="cannot_delete_reason">
+          {{{model.cannot_delete_reason}}}
+        </div>
       </div>
     {{/if}}
   </div>
