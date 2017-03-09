@@ -11,8 +11,12 @@ task 'assets:precompile:before' do
   puts "Purging temp files"
   `rm -fr #{Rails.root}/tmp/cache`
 
-  if Rails.configuration.assets.js_compressor == :uglifier && !`which uglifyjs`.empty? && !ENV['SKIP_NODE_UGLIFY']
+  if Rails.configuration.assets.js_compressor == :uglifier && !`which uglifyjs`.empty? && ENV['FORCE_NODE_UGLIFY']
     $node_uglify = true
+  end
+
+  unless ENV['USE_SPROCKETS_UGLIFY']
+    $bypass_sprockets_uglify = true
   end
 
   puts "Bundling assets"
@@ -28,7 +32,7 @@ task 'assets:precompile:before' do
   load "#{Rails.root}/lib/global_path.rb"
   include GlobalPath
 
-  if $node_uglify
+  if $bypass_sprockets_uglify
     Rails.configuration.assets.js_compressor = nil
     Rails.configuration.assets.gzip = false
   end
@@ -84,8 +88,10 @@ def compress_ruby(from,to)
 
   uglified, map = Uglifier.new(comments: :none,
                                screw_ie8: true,
-                               source_filename: File.basename(from),
-                               output_filename: File.basename(to)
+                               source_map: {
+                                 filename: File.basename(from),
+                                 output_filename: File.basename(to)
+                               }
                               )
                           .compile_with_map(data)
   dest = "#{assets_path}/#{to}"
@@ -108,7 +114,7 @@ def brotli(path)
 end
 
 def compress(from,to)
-  if @has_uglifyjs ||= !`which uglifyjs`.empty?
+  if $node_uglify
     compress_node(from,to)
   else
     compress_ruby(from,to)
@@ -129,7 +135,7 @@ task 'assets:precompile' => 'assets:precompile:before' do
   # Run after assets:precompile
   Rake::Task["assets:precompile:css"].invoke
 
-  if $node_uglify
+  if $bypass_sprockets_uglify
     puts "Compressing Javascript and Generating Source Maps"
     manifest = Sprockets::Manifest.new(assets_path)
 
