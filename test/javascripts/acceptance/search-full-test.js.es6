@@ -233,15 +233,18 @@ test("update in:private filter through advanced search ui", assert => {
   });
 });
 
-test("update in:wiki filter through advanced search ui", assert => {
+test("update in:seen filter through advanced search ui", assert => {
   visit("/search");
   fillIn('.search input.full-page-search', 'none');
   click('.search-advanced-btn');
-  click('.search-advanced-options .in-wiki');
+  click('.search-advanced-options .in-seen');
 
   andThen(() => {
-    assert.ok(exists('.search-advanced-options .in-wiki:checked'), 'has "are wiki" populated');
-    assert.equal(find('.search input.full-page-search').val(), "none in:wiki", 'has updated search term to "none in:wiki"');
+    assert.ok(exists('.search-advanced-options .in-seen:checked'), 'it should check the right checkbox');
+
+    assert.equal(find('.search input.full-page-search').val(), "none in:seen",
+      'it should update the search term'
+    );
   });
 });
 

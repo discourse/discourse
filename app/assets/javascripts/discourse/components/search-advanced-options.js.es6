@@ -14,11 +14,10 @@ const REGEXP_MIN_POST_COUNT_PREFIX = /^min_post_count:/ig;
 const REGEXP_POST_TIME_PREFIX      = /^(before|after):/ig;
 const REGEXP_TAGS_REPLACE          = /(^(tags?:|#(?=[a-z0-9\-]+::tag))|::tag\s?$)/ig;
 
-
-const REGEXP_IN_MATCH                 = /^in:(posted|watching|tracking|bookmarks|first|pinned|unpinned)/ig;
+const REGEXP_IN_MATCH                 = /^in:(posted|watching|tracking|bookmarks|first|pinned|unpinned|wiki|unseen)/ig;
 const REGEXP_SPECIAL_IN_LIKES_MATCH   = /^in:likes/ig;
 const REGEXP_SPECIAL_IN_PRIVATE_MATCH = /^in:private/ig;
-const REGEXP_SPECIAL_IN_WIKI_MATCH    = /^in:wiki/ig;
+const REGEXP_SPECIAL_IN_SEEN_MATCH    = /^in:seen/ig;
 
 const REGEXP_CATEGORY_SLUG            = /^(\#[a-zA-Z0-9\-:]+)/ig;
 const REGEXP_CATEGORY_ID              = /^(category:[0-9]+)/ig;
@@ -28,6 +27,7 @@ export default Em.Component.extend({
   classNames: ['search-advanced-options'],
 
   inOptions: [
+    {name: I18n.t('search.advanced.filters.unseen'),  value: "unseen"},
     {name: I18n.t('search.advanced.filters.posted'),    value: "posted"},
     {name: I18n.t('search.advanced.filters.watching'),  value: "watching"},
     {name: I18n.t('search.advanced.filters.tracking'),  value: "tracking"},
@@ -35,6 +35,7 @@ export default Em.Component.extend({
     {name: I18n.t('search.advanced.filters.first'),     value: "first"},
     {name: I18n.t('search.advanced.filters.pinned'),    value: "pinned"},
     {name: I18n.t('search.advanced.filters.unpinned'),  value: "unpinned"},
+    {name: I18n.t('search.advanced.filters.wiki'),  value: "wiki"},
   ],
   statusOptions: [
     {name: I18n.t('search.advanced.statuses.open'),        value: "open"},
@@ -75,7 +76,7 @@ export default Em.Component.extend({
           in: {
             likes: false,
             private: false,
-            wiki: false
+            seen: false
           }
         },
         status: '',
@@ -102,7 +103,7 @@ export default Em.Component.extend({
     this.setSearchedTermValue('searchedTerms.in', REGEXP_IN_PREFIX, REGEXP_IN_MATCH);
     this.setSearchedTermSpecialInValue('searchedTerms.special.in.likes', REGEXP_SPECIAL_IN_LIKES_MATCH);
     this.setSearchedTermSpecialInValue('searchedTerms.special.in.private', REGEXP_SPECIAL_IN_PRIVATE_MATCH);
-    this.setSearchedTermSpecialInValue('searchedTerms.special.in.wiki', REGEXP_SPECIAL_IN_WIKI_MATCH);
+    this.setSearchedTermSpecialInValue('searchedTerms.special.in.seen', REGEXP_SPECIAL_IN_SEEN_MATCH);
     this.setSearchedTermValue('searchedTerms.status', REGEXP_STATUS_PREFIX);
     this.setSearchedTermValueForPostTime();
     this.setSearchedTermValue('searchedTerms.min_post_count', REGEXP_MIN_POST_COUNT_PREFIX);
@@ -438,15 +439,15 @@ export default Em.Component.extend({
     }
   },
 
-  @observes('searchedTerms.special.in.wiki')
-  updateSearchTermForSpecialInWiki() {
-    const match = this.filterBlocks(REGEXP_SPECIAL_IN_WIKI_MATCH);
-    const inFilter = this.get('searchedTerms.special.in.wiki');
+  @observes('searchedTerms.special.in.seen')
+  updateSearchTermForSpecialInSeen() {
+    const match = this.filterBlocks(REGEXP_SPECIAL_IN_SEEN_MATCH);
+    const inFilter = this.get('searchedTerms.special.in.seen');
     let searchTerm = this.get('searchTerm') || '';
 
     if (inFilter) {
       if (match.length === 0) {
-        searchTerm += ` in:wiki`;
+        searchTerm += ` in:seen`;
         this.set('searchTerm', searchTerm.trim());
       }
     } else if (match.length !== 0) {
