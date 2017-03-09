@@ -276,7 +276,7 @@ GEM
       ffi (>= 1.0.6)
       msgpack (>= 0.4.3)
       trollop (>= 1.16.2)
-    redis (3.3.1)
+    redis (3.3.3)
     redis-namespace (1.5.2)
       redis (~> 3.0, >= 3.0.4)
     rest-client (1.8.0)
@@ -477,4 +477,4 @@ DEPENDENCIES
   unicorn
 
 BUNDLED WITH
-   1.14.3
+   1.14.4
