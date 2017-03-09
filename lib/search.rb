@@ -750,12 +750,16 @@ class Search
     def aggregate_posts(post_sql)
       return [] unless post_sql
 
-      Post.includes(:topic => :category)
-        .select("posts.*, COALESCE(ts_headline(#{Search.query_locale}, post_search_data_posts.raw_data,#{ts_query}, 'StartSel=\"<span class=search-highlight>\",StopSel=\"</span>\",MaxWords=15,MinWords=10,MaxFragments=3'), '') AS blurb")
-        .includes(:user)
-        .joins(:post_search_data)
-        .joins("JOIN (#{post_sql}) x ON x.id = posts.topic_id AND x.post_number = posts.post_number")
-        .order('row_number')
+      posts = Post.includes(:topic => :category)
+                .includes(:user)
+                .joins("JOIN (#{post_sql}) x ON x.id = posts.topic_id AND x.post_number = posts.post_number")
+                .order('row_number')
+
+      posts = posts.select("posts.*, COALESCE(ts_headline(#{Search.query_locale}, post_search_data_posts.raw_data,#{ts_query}, 'StartSel=\"<span class=search-highlight>\",StopSel=\"</span>\",MaxWords=15,MinWords=10,MaxFragments=3'), '') AS blurb")
+                   .joins(:post_search_data) if @term.present?
+
+      posts
+
     end
 
     def aggregate_search(opts = {})

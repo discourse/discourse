@@ -11,7 +11,7 @@ class SearchIndexer
   end
 
   def self.scrub_html_for_search(html)
-    HtmlScrubber.scrub(html)
+    HtmlScrubber.scrub(html).squish
   end
 
   def self.update_index(table, id, search_data, raw_data)
@@ -66,7 +66,7 @@ class SearchIndexer
 
   def self.update_posts_index(post_id, cooked, title, category)
     raw_data = scrub_html_for_search(cooked)
-    search_data = raw_data << " " << title.dup.force_encoding('UTF-8')
+    search_data = raw_data.dup << " " << title.dup.force_encoding('UTF-8')
     search_data << " " << category if category
     update_index('post', post_id, search_data, raw_data)
   end
