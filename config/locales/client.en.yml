@@ -1316,6 +1316,8 @@ en:
           first: are the very first post
           pinned: are pinned
           unpinned: are not pinned
+          seen: I've read
+          unseen: I've not read
           wiki: are wiki
         statuses:
           label: Where topics
