@@ -11,7 +11,7 @@ task 'assets:precompile:before' do
   puts "Purging temp files"
   `rm -fr #{Rails.root}/tmp/cache`
 
-  if Rails.configuration.assets.js_compressor == :uglifier && !`which uglifyjs`.empty? && ENV['FORCE_NODE_UGLIFY']
+  if Rails.configuration.assets.js_compressor == :uglifier && !`which uglifyjs`.empty? && !ENV['SKIP_NODE_UGLIFY']
     $node_uglify = true
   end
 
