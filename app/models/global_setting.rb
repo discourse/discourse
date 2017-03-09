@@ -39,8 +39,21 @@ class GlobalSetting
     default_provider = FileProvider.from(File.expand_path('../../../config/discourse_defaults.conf', __FILE__))
     default_provider.keys.concat(@provider.keys).uniq.each do |key|
       default = default_provider.lookup(key, nil)
+
+      instance_variable_set("@#{key}_cache", nil)
+
       define_singleton_method(key) do
-        provider.lookup(key, default)
+        val = instance_variable_get("@#{key}_cache")
+        unless val.nil?
+          val == :missing ? nil : val
+        else
+          val = provider.lookup(key, default)
+          if val.nil?
+            val = :missing
+          end
+          instance_variable_set("@#{key}_cache", val)
+          val == :missing ? nil : val
+        end
       end
     end
   end
