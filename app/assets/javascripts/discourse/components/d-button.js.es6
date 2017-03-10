@@ -8,14 +8,14 @@ export default Ember.Component.extend({
   classNameBindings: [':btn', 'noText'],
   attributeBindings: ['disabled', 'translatedTitle:title'],
 
-  noText: Ember.computed.empty('translatedLabel'), //if translatedLable = null/empty then noText = true
+  noText: Ember.computed.empty('translatedLabel'),
 
-  @computed("title") //this.get('title')
+  @computed("title")
   translatedTitle(title) {
     if (title) return I18n.t(title);
   },
 
-  @computed("label")//this.get('label')
+  @computed("label")
   translatedLabel(label) {
     if (label) return I18n.t(label);
   },

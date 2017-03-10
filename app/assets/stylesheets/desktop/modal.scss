@@ -116,36 +116,20 @@
       }
     }
   }
+
   .disable_info_wrap {
-    position: relative;
-    display: inline-block;
-    float: right;
     margin-top: -70px;
     padding-top: 70px;
-    padding-left: 170px;
+    @media all and (min-width: 550px) {
+      padding-left: 170px;
+    }
 
     .cannot_delete_reason {
-      position: absolute;
       top: 4px;
       right: 4px;
       max-width: 380px;
       min-width: 300px;
-      background: dark-light-choose(scale-color($primary, $lightness: 10%), scale-color($secondary, $lightness: 10%));
-      color: dark-light-choose(scale-color($primary, $lightness: 100%), scale-color($secondary, $lightness: 0%));
-      text-align: center;
-      border-radius: 2px;
-      padding: 12px 8px;
       display: none;
-
-      &::after {
-        top: 100%;
-        left: 57%;
-        border: solid transparent;
-        content: " ";
-        position: absolute;
-        border-top-color: dark-light-choose(scale-color($primary, $lightness: 10%), scale-color($secondary, $lightness: 10%));
-        border-width: 8px;
-      }
     }
 
     @include hover {
