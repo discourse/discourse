@@ -696,6 +696,10 @@ section.details {
     width: 100%;
     border-color: dark-light-choose(scale-color($primary, $lightness: 75%), scale-color($secondary, $lightness: 25%));
   }
+
+  .content-list {
+    margin-right: 20px;
+  }
 }
 
 // Customise area
