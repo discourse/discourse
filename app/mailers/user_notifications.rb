@@ -427,6 +427,7 @@ class UserNotifications < ActionMailer::Base
 
     email_opts = {
       topic_title: title,
+      topic_title_url_encoded: URI.encode(title),
       message: message,
       url: post.url,
       post_id: post.id,
@@ -447,6 +448,7 @@ class UserNotifications < ActionMailer::Base
       html_override: html,
       site_description: SiteSetting.site_description,
       site_title: SiteSetting.title,
+      site_title_url_encoded: URI.encode(SiteSetting.title),
       style: :notification,
       locale: locale
     }
