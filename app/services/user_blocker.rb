@@ -20,7 +20,7 @@ class UserBlocker
         message_type = @opts[:message] || :blocked_by_staff
         post = SystemMessage.create(@user, message_type)
         if post && @by_user
-          StaffActionLogger.new(@by_user).log_block_user(@user, {context: "#{message_type}: '#{post.topic&.title rescue ''}'"})
+          StaffActionLogger.new(@by_user).log_block_user(@user, {context: "#{message_type}: '#{post.topic&.title rescue ''}' #{@opts[:reason]}"})
         end
       end
     else
