@@ -1395,6 +1395,8 @@ en:
 
     native_app_install_banner: "Asks recurring visitors to install Discourse native app."
 
+    share_anonymized_statistics: "Share anonymized usage statistics."
+
     max_prints_per_hour_per_user: "Maximum number of /print page impressions (set to 0 to disable)"
 
     full_name_required: "Full name is a required field of a user's profile."

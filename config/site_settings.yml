@@ -1308,6 +1308,8 @@ uncategorized:
 
   native_app_install_banner: false
 
+  share_anonymized_statistics: true
+
 
 user_preferences:
   default_email_digest_frequency:
