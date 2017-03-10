@@ -665,7 +665,8 @@ class Search
           end
 
         elsif @search_context.is_a?(Category)
-          posts = posts.where("topics.category_id = #{@search_context.id}")
+          category_ids = [@search_context.id] + Category.where(parent_category_id: @search_context.id).pluck(:id)
+          posts = posts.where("topics.category_id in (?)", category_ids)
         elsif @search_context.is_a?(Topic)
           posts = posts.where("topics.id = #{@search_context.id}")
                        .order("posts.post_number")
