@@ -2568,6 +2568,8 @@ en:
         add_owners: Add owners
         incoming_email: "Custom incoming email address"
         incoming_email_placeholder: "enter email address"
+        none_selected: "Select a group to get started"
+        no_custom_groups: "Create a new custom group"
 
       api:
         generate_master: "Generate Master API Key"
