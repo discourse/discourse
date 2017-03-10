@@ -36,7 +36,7 @@ module Onebox
         if (main_image = raw.css("#main-image")) && main_image.any?
           attributes = main_image.first.attributes
 
-          return attributes["data-a-hires"] if attributes["data-a-hires"]
+          return attributes["data-a-hires"].to_s if attributes["data-a-hires"]
 
           if attributes["data-a-dynamic-image"]
             return ::JSON.parse(attributes["data-a-dynamic-image"].value).keys.first
@@ -44,7 +44,7 @@ module Onebox
         end
 
         if (landing_image = raw.css("#landingImage")) && landing_image.any?
-          landing_image.first["src"]
+          landing_image.first["src"].to_s
         end
       end
 
