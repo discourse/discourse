@@ -6,20 +6,42 @@ class Sanitize
     ONEBOX ||= freeze_config merge(RELAXED,
       elements: RELAXED[:elements] + %w[audio embed iframe source video],
 
-      attributes: merge(RELAXED[:attributes],
+      attributes: {
+        'a'      => RELAXED[:attributes]['a'] + %w(target),
         'audio'  => %w[controls],
         'embed'  => %w[height src type width],
         'iframe' => %w[allowfullscreen frameborder height scrolling src width],
         'source' => %w[src type],
         'video'  => %w[controls height loop width],
         'div'    => [:data], # any data-* attributes
-      ),
+      },
 
-      protocols: merge(RELAXED[:protocols],
+      add_attributes: {
+        'iframe' => {
+          'seamless' => 'seamless',
+          'sandbox' => 'allow-same-origin allow-scripts allow-forms allow-popups allow-popups-to-escape-sandbox',
+        }
+      },
+
+      transformers: (RELAXED[:transformers] || []) + [
+        lambda do |env|
+          next unless env[:node_name] == 'a'
+          a_tag = env[:node]
+          a_tag['href'] ||= '#'
+          if a_tag['href'] =~ %r{^(?:[a-z]+:)?//}
+            a_tag['target'] = '_blank'
+            a_tag['rel']    = 'nofollow noopener'
+          else
+            a_tag.remove_attribute('target')
+          end
+        end
+      ],
+
+      protocols: {
         'embed'  => { 'src' => HTTP_PROTOCOLS },
         'iframe' => { 'src' => HTTP_PROTOCOLS },
         'source' => { 'src' => HTTP_PROTOCOLS },
-      ),
+      },
     )
   end
 end
