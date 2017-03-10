@@ -6,6 +6,14 @@ require 'mocha/api'
 
 require_relative "support/html_spec_helper"
 
+# Monkey-patch fakeweb to support Ruby 2.4+.
+# See https://github.com/chrisk/fakeweb/pull/59.
+module FakeWeb
+  class StubSocket
+    def close; end
+  end
+end
+
 RSpec.configure do |config|
   config.before(:all) do
     FakeWeb.allow_net_connect = false
@@ -49,6 +57,10 @@ shared_examples_for "an engine" do
 
     it "includes link" do
       expect(data[:link]).not_to be_nil
+    end
+
+    it "is serializable" do
+      expect { Marshal.dump(data) }.to_not raise_error
     end
   end
 end
