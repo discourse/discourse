@@ -77,6 +77,11 @@ before_fork do |server, worker|
 
       Demon::Sidekiq.start(sidekiqs)
 
+      Signal.trap("SIGTSTP") do
+        STDERR.puts "#{Time.now}: Issuing stop to sidekiq"
+        Demon::Sidekiq.stop
+      end
+
       class ::Unicorn::HttpServer
         alias :master_sleep_orig :master_sleep
 
