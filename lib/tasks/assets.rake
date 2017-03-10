@@ -98,6 +98,8 @@ def compress_ruby(from,to)
 
   File.write(dest, uglified << "\n//# sourceMappingURL=#{cdn_path "/assets/#{to}.map"}")
   File.write(dest + ".map", map)
+
+  GC.start
 end
 
 def gzip(path)
