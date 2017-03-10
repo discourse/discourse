@@ -130,14 +130,14 @@ export function isValidSearchTerm(searchTerm) {
   }
 };
 
-export function applySearchAutocomplete($input, siteSettings, appEvents) {
+export function applySearchAutocomplete($input, siteSettings, appEvents, options) {
   const afterComplete = function() {
     if (appEvents) {
       appEvents.trigger("search-autocomplete:after-complete");
     }
   };
 
-  $input.autocomplete({
+  $input.autocomplete(_.merge({
     template: findRawTemplate('category-tag-autocomplete'),
     key: '#',
     width: '100%',
@@ -153,9 +153,9 @@ export function applySearchAutocomplete($input, siteSettings, appEvents) {
       return searchCategoryTag(term, siteSettings);
     },
     afterComplete
-  });
+  }, options));
 
-  $input.autocomplete({
+  $input.autocomplete(_.merge({
     template: findRawTemplate('user-selector-autocomplete'),
     key: "@",
     width: '100%',
@@ -163,5 +163,5 @@ export function applySearchAutocomplete($input, siteSettings, appEvents) {
     transformComplete: v => v.username || v.name,
     dataSource: term => userSearch({ term, includeGroups: true }),
     afterComplete
-  });
+  }, options));
 };
