@@ -357,6 +357,12 @@ class UserNotifications < ActionMailer::Base
     user = opts[:user]
     locale = user_locale(user)
 
+    template = "user_notifications.user_#{notification_type}"
+    if post.topic.private_message?
+      template << "_pm"
+      template << "_staged" if user.staged?
+    end
+
     # category name
     category = Topic.find_by(id: post.topic_id).category
     if opts[:show_category_in_subject] && post.topic_id && category && !category.uncategorized?
@@ -384,10 +390,7 @@ class UserNotifications < ActionMailer::Base
       end
     end
 
-    reached_limit = SiteSetting.max_emails_per_day_per_user > 0
-    reached_limit &&= (EmailLog.where(user_id: user.id, skipped: false)
-                            .where('created_at > ?', 1.day.ago)
-                            .count) >= (SiteSetting.max_emails_per_day_per_user-1)
+    translation_override_exists = TranslationOverride.where(locale: SiteSetting.default_locale, translation_key: "#{template}.text_body_template").exists?
 
     if opts[:use_invite_template]
       if post.topic.private_message?
@@ -397,37 +400,42 @@ class UserNotifications < ActionMailer::Base
       end
       topic_excerpt = post.excerpt.tr("\n", " ") if post.is_first_post? && post.excerpt
       message = I18n.t(invite_template, username: username, topic_title: title, topic_excerpt: topic_excerpt, site_title: SiteSetting.title, site_description: SiteSetting.site_description)
-      html = UserNotificationRenderer.new(Rails.configuration.paths["app/views"]).render(
-        template: 'email/invite',
-        format: :html,
-        locals: { message: PrettyText.cook(message, sanitize: false).html_safe,
-                  classes: RTL.new(user).css_class
-        }
-      )
-    else
-      in_reply_to_post = post.reply_to_post if user.user_option.email_in_reply_to
-      html = UserNotificationRenderer.new(Rails.configuration.paths["app/views"]).render(
-        template: 'email/notification',
-        format: :html,
-        locals: { context_posts: context_posts,
-                  reached_limit: reached_limit,
-                  post: post,
-                  in_reply_to_post: in_reply_to_post,
-                  classes: RTL.new(user).css_class
-        }
-      )
-      message = email_post_markdown(post) + (reached_limit ? "\n\n#{I18n.t "user_notifications.reached_limit", count: SiteSetting.max_emails_per_day_per_user}" : "");
-    end
 
-    template = "user_notifications.user_#{notification_type}"
-    if post.topic.private_message?
-      template << "_pm"
-      template << "_staged" if user.staged?
+      unless translation_override_exists
+        html = UserNotificationRenderer.new(Rails.configuration.paths["app/views"]).render(
+          template: 'email/invite',
+          format: :html,
+          locals: { message: PrettyText.cook(message, sanitize: false).html_safe,
+                    classes: RTL.new(user).css_class
+          }
+        )
+      end
+    else
+      reached_limit = SiteSetting.max_emails_per_day_per_user > 0
+      reached_limit &&= (EmailLog.where(user_id: user.id, skipped: false)
+                              .where('created_at > ?', 1.day.ago)
+                              .count) >= (SiteSetting.max_emails_per_day_per_user-1)
+
+      in_reply_to_post = post.reply_to_post if user.user_option.email_in_reply_to
+      message = email_post_markdown(post) + (reached_limit ? "\n\n#{I18n.t "user_notifications.reached_limit", count: SiteSetting.max_emails_per_day_per_user}" : "");
+
+      unless translation_override_exists
+        html = UserNotificationRenderer.new(Rails.configuration.paths["app/views"]).render(
+          template: 'email/notification',
+          format: :html,
+          locals: { context_posts: context_posts,
+                    reached_limit: reached_limit,
+                    post: post,
+                    in_reply_to_post: in_reply_to_post,
+                    classes: RTL.new(user).css_class
+          }
+        )
+      end
     end
 
     email_opts = {
       topic_title: title,
-      topic_title_url_encoded: URI.encode(title),
+      topic_title_url_encoded: title ? URI.encode(title) : title,
       message: message,
       url: post.url,
       post_id: post.id,
@@ -445,13 +453,16 @@ class UserNotifications < ActionMailer::Base
       private_reply: post.topic.private_message?,
       include_respond_instructions: !(user.suspended? || user.staged?),
       template: template,
-      html_override: html,
       site_description: SiteSetting.site_description,
       site_title: SiteSetting.title,
       site_title_url_encoded: URI.encode(SiteSetting.title),
       style: :notification,
       locale: locale
     }
+
+    unless translation_override_exists
+      email_opts[:html_override] = html
+    end
 
     # If we have a display name, change the from address
     email_opts[:from_alias] = from_alias if from_alias.present?
