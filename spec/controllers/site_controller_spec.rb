@@ -24,4 +24,38 @@ describe SiteController do
       expect(json["mobile_logo_url"]).to eq("https://a.a/a.png")
     end
   end
+
+  describe '.statistics' do
+
+    it 'is visible for sites requiring login' do
+      SiteSetting.login_required = true
+      SiteSetting.share_anonymized_statistics = true
+
+      xhr :get, :statistics
+      json = JSON.parse(response.body)
+
+      expect(response).to be_success
+      expect(json["topic_count"]).to be_present
+      expect(json["post_count"]).to be_present
+      expect(json["user_count"]).to be_present
+      expect(json["topics_7_days"]).to be_present
+      expect(json["topics_30_days"]).to be_present
+      expect(json["posts_7_days"]).to be_present
+      expect(json["posts_30_days"]).to be_present
+      expect(json["users_7_days"]).to be_present
+      expect(json["users_30_days"]).to be_present
+      expect(json["active_users_7_days"]).to be_present
+      expect(json["active_users_30_days"]).to be_present
+      expect(json["like_count"]).to be_present
+      expect(json["likes_7_days"]).to be_present
+      expect(json["likes_30_days"]).to be_present
+    end
+
+    it 'is not visible if site setting share_anonymized_statistics is disabled' do
+      SiteSetting.share_anonymized_statistics = false
+
+      xhr :get, :statistics
+      expect(response).to redirect_to '/'
+    end
+  end
 end

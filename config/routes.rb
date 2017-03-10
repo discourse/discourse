@@ -54,6 +54,7 @@ Discourse::Application.routes.draw do
   end
 
   get "site/basic-info" => 'site#basic_info'
+  get "site/statistics" => 'site#statistics'
 
   get "site_customizations/:key" => "site_customizations#show"
 
