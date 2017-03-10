@@ -3,7 +3,7 @@ require_dependency 'site_serializer'
 class SiteController < ApplicationController
   layout false
   skip_before_filter :preload_json, :check_xhr
-  skip_before_filter :redirect_to_login_if_required, only: ['basic_info']
+  skip_before_filter :redirect_to_login_if_required, only: ['basic_info', 'statistics']
 
   def site
     render json: Site.json_for(guardian)
@@ -41,5 +41,10 @@ class SiteController < ApplicationController
 
     # this info is always available cause it can be scraped from a 404 page
     render json: results
+  end
+
+  def statistics
+    return redirect_to path('/') unless SiteSetting.share_anonymized_statistics?
+    render json: About.fetch_cached_stats
   end
 end
