@@ -57,7 +57,8 @@ class CategoriesController < ApplicationController
 
     topic_options = {
       per_page: SiteSetting.categories_topics,
-      no_definitions: true
+      no_definitions: true,
+      exclude_category_ids: Category.where(suppress_from_homepage: true).pluck(:id)
     }
 
     result = CategoryAndTopicLists.new
