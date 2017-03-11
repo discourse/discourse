@@ -1485,4 +1485,12 @@ describe User do
 
   end
 
+  describe '.human_users' do
+    it 'should only return users with a positive primary key' do
+      Fabricate(:user, id: -2)
+      user = Fabricate(:user)
+
+      expect(User.human_users).to eq([user])
+    end
+  end
 end
