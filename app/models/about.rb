@@ -35,12 +35,12 @@ class About
 
   def moderators
     @moderators ||= User.where(moderator: true, admin: false)
-                        .where("id > 0")
+                        .human_users
                         .order(:username_lower)
   end
 
   def admins
-    @admins ||= User.where(admin: true).where("id > 0").order(:username_lower)
+    @admins ||= User.where(admin: true).human_users.order(:username_lower)
   end
 
   def stats
