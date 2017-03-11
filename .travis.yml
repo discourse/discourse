@@ -56,4 +56,4 @@ install:
   - bash -c "if [ '$RAILS_MASTER' == '1' ]; then bundle update --retry=3 --jobs=3 arel rails seed-fu; fi"
   - bash -c "if [ '$RAILS_MASTER' == '0' ]; then bundle install --without development --deployment --retry=3 --jobs=3; fi"
 
-script: "bundle exec rspec && bundle exec rake plugin:spec && bundle exec rake qunit:test['200000']"
+script: "travis_wait 120 bundle exec rspec --seed 39015 --bisect=verbose && bundle exec rake plugin:spec && bundle exec rake qunit:test['200000']"
