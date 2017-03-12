@@ -20,9 +20,9 @@ Gem::Specification.new do |spec|
 
   spec.add_runtime_dependency 'multi_json', '~> 1.11'
   spec.add_runtime_dependency 'mustache'
-  spec.add_runtime_dependency 'nokogiri', '~> 1.7.0'
+  spec.add_runtime_dependency 'nokogiri', '~> 1.7'
   spec.add_runtime_dependency 'moneta', '~> 1.0'
-  spec.add_runtime_dependency 'htmlentities', '~> 4.3.4'
+  spec.add_runtime_dependency 'htmlentities', '~> 4.3'
   spec.add_runtime_dependency 'fast_blank', '>= 1.0.0'
   spec.add_runtime_dependency 'sanitize'
 
