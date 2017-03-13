@@ -23,6 +23,7 @@ class GlobalSetting
   def self.safe_secret_key_base
 
     if @safe_secret_key_base && @token_in_redis && (@token_last_validated + REDIS_VALIDATE_SECONDS) < Time.now
+      @token_last_validated = Time.now
       token = $redis.without_namespace.get(REDIS_SECRET_KEY)
       if token.nil?
         $redis.without_namespace.set(REDIS_SECRET_KEY, @safe_secret_key_base)
