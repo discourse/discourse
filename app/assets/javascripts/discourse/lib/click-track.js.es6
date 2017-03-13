@@ -51,8 +51,7 @@ export default {
         // don't update counts in category badge nor in oneboxes (except when we force it)
         if (isValidLink($link)) {
           const html = $badge.html();
-          const d = new Date();
-          const key = `${d.getFullYear()}-${d.getMonth()}-${d.getDay()}-${postId}-${href}`;
+          const key = `${new Date().toLocaleDateString()}-${postId}-${href}`;
           if (/^\d+$/.test(html) && !sessionStorage.getItem(key)) {
             sessionStorage.setItem(key, true);
             $badge.html(parseInt(html, 10) + 1);
