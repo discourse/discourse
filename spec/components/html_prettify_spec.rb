@@ -24,6 +24,8 @@ describe HtmlPrettify do
 
     t 'src="test.png"&gt; yay', "src=&ldquo;test.png&rdquo;&gt; yay"
 
+    t '\\\\mnt\\c', "\\\\mnt\\c"
+
     t ERB::Util.html_escape('<img src="test.png"> yay'), "&lt;img src=&ldquo;test.png&rdquo;&gt; yay"
   end
 
