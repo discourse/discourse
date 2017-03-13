@@ -1423,8 +1423,14 @@ describe UsersController do
         it 'should not be valid' do
           user = Fabricate(:user)
           xhr :post, :send_activation_email, username: user.username
-
           expect(response.status).to eq(403)
+        end
+
+        it 'should allow staff regardless' do
+          log_in :admin
+          user = Fabricate(:user, active: false)
+          xhr :post, :send_activation_email, username: user.username
+          expect(response.status).to eq(200)
         end
       end
 
