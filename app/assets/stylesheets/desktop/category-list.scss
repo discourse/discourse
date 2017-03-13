@@ -192,7 +192,6 @@
 
     box-sizing: border-box;
     width: 23%;
-    padding: 1em;
     margin: 0 1% 1.5em 1%;
     border: 2px solid blend-primary-secondary(20%);
 
@@ -202,6 +201,7 @@
 
     a {
       width: 100%;
+      padding: 1em;
     }
 
     .details {
@@ -228,7 +228,7 @@
     .logo {
       display: none;
     }
-    .category-box {
+    .category-box a {
       padding: 3em 1em;
     }
   }
