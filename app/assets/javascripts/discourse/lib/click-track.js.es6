@@ -46,12 +46,17 @@ export default {
 
     // Update badge clicks unless it's our own
     if (!ownLink) {
-      var $badge = $('span.badge', $link);
+      const $badge = $('span.badge', $link);
       if ($badge.length === 1) {
         // don't update counts in category badge nor in oneboxes (except when we force it)
         if (isValidLink($link)) {
-          var html = $badge.html();
-          if (/^\d+$/.test(html)) { $badge.html(parseInt(html, 10) + 1); }
+          const html = $badge.html();
+          const d = new Date();
+          const key = `${d.getFullYear()}-${d.getMonth()}-${d.getDay()}-${postId}-${href}`;
+          if (/^\d+$/.test(html) && !sessionStorage.getItem(key)) {
+            sessionStorage.setItem(key, true);
+            $badge.html(parseInt(html, 10) + 1);
+          }
         }
       }
     }
