@@ -46,6 +46,7 @@ class ListController < ApplicationController
     :parent_category_category_top,
     # top pages (ie. with a period)
     TopTopic.periods.map { |p| :"top_#{p}" },
+    TopTopic.periods.map { |p| :"top_#{p}_feed" },
     TopTopic.periods.map { |p| :"category_top_#{p}" },
     TopTopic.periods.map { |p| :"category_none_top_#{p}" },
     TopTopic.periods.map { |p| :"parent_category_category_top_#{p}" },
@@ -168,7 +169,7 @@ class ListController < ApplicationController
     @link = "#{Discourse.base_url}/top"
     @atom_link = "#{Discourse.base_url}/top.rss"
     @description = I18n.t("rss_description.top")
-    @topic_list = TopicQuery.new(nil).list_top_for("monthly")
+    @topic_list = TopicQuery.new(nil).list_top_for(SiteSetting.top_page_default_timeframe.to_sym)
 
     render 'list', formats: [:rss]
   end
@@ -232,7 +233,7 @@ class ListController < ApplicationController
       list.for_period = period
       list.more_topics_url = construct_url_with(:next, top_options)
       list.prev_topics_url = construct_url_with(:prev, top_options)
-      @rss = "top"
+      @rss = "top_#{period}"
 
       if use_crawler_layout?
         @title = I18n.t("js.filters.top.#{period}.title")
@@ -251,6 +252,19 @@ class ListController < ApplicationController
 
     define_method("parent_category_category_top_#{period}") do
       self.send("top_#{period}", category: @category.id)
+    end
+
+    # rss feed
+    define_method("top_#{period}_feed") do |options = nil|
+      discourse_expires_in 1.minute
+
+      @description = I18n.t("rss_description.top_#{period}")
+      @title = "#{SiteSetting.title} - #{@description}"
+      @link = "#{Discourse.base_url}/top/#{period}"
+      @atom_link = "#{Discourse.base_url}/top/#{period}.rss"
+      @topic_list = TopicQuery.new(nil).list_top_for(period)
+
+      render 'list', formats: [:rss]
     end
   end
 

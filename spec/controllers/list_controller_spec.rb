@@ -49,13 +49,53 @@ describe ListController do
   end
 
   describe 'RSS feeds' do
-
-    it 'renders RSS' do
+    it 'renders latest RSS' do
       get "latest_feed", format: :rss
       expect(response).to be_success
       expect(response.content_type).to eq('application/rss+xml')
     end
 
+    it 'renders top RSS' do
+      get "top_feed", format: :rss
+      expect(response).to be_success
+      expect(response.content_type).to eq('application/rss+xml')
+    end
+
+    it 'renders all time top RSS' do
+      get "top_all_feed", format: :rss
+      expect(response).to be_success
+      expect(response.content_type).to eq('application/rss+xml')
+    end
+
+    it 'renders yearly top RSS' do
+      get "top_yearly_feed", format: :rss
+      expect(response).to be_success
+      expect(response.content_type).to eq('application/rss+xml')
+    end
+
+    it 'renders quarterly top RSS' do
+      get "top_quarterly_feed", format: :rss
+      expect(response).to be_success
+      expect(response.content_type).to eq('application/rss+xml')
+    end
+
+    it 'renders monthly top RSS' do
+      get "top_monthly_feed", format: :rss
+      expect(response).to be_success
+      expect(response.content_type).to eq('application/rss+xml')
+    end
+
+    it 'renders weekly top RSS' do
+      get "top_weekly_feed", format: :rss
+      expect(response).to be_success
+      expect(response.content_type).to eq('application/rss+xml')
+    end
+
+    it 'renders daily top RSS' do
+      get "top_daily_feed", format: :rss
+      expect(response).to be_success
+      expect(response.content_type).to eq('application/rss+xml')
+    end
   end
 
   context 'category' do
