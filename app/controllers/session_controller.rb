@@ -278,7 +278,7 @@ class SessionController < ApplicationController
   end
 
   def not_activated(user)
-    session[ACTIVATE_USER_KEY] = user.username
+    session[ACTIVATE_USER_KEY] = user.id
     render json: {
       error: I18n.t("login.not_activated"),
       reason: 'not_activated',
