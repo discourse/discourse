@@ -581,7 +581,7 @@ class UsersController < ApplicationController
 
     if @user.active
       render_json_error(I18n.t('activation.activated'), status: 409)
-    else @user
+    else
       @email_token = @user.email_tokens.unconfirmed.active.first
       enqueue_activation_email
       render nothing: true
