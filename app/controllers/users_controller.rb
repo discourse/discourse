@@ -567,13 +567,25 @@ class UsersController < ApplicationController
       RateLimiter.new(nil, "activate-min-#{request.remote_ip}", 6, 1.minute).performed!
     end
 
+    if (current_user && !current_user.staff?) ||
+       (params[:username] != session[SessionController::ACTIVATE_USER_KEY])
+
+      raise Discourse::InvalidAccess
+    end
+
     @user = User.find_by_username_or_email(params[:username].to_s)
 
     raise Discourse::NotFound unless @user
 
-    @email_token = @user.email_tokens.unconfirmed.active.first
-    enqueue_activation_email if @user
-    render nothing: true
+    session.delete(SessionController::ACTIVATE_USER_KEY)
+
+    if @user.active
+      render_json_error(I18n.t('activation.activated'), status: 409)
+    elsif @user
+      @email_token = @user.email_tokens.unconfirmed.active.first
+      enqueue_activation_email
+      render nothing: true
+    end
   end
 
   def enqueue_activation_email
