@@ -6,6 +6,8 @@ class SessionController < ApplicationController
   skip_before_filter :redirect_to_login_if_required
   skip_before_filter :preload_json, :check_xhr, only: ['sso', 'sso_login', 'become', 'sso_provider', 'destroy']
 
+  ACTIVATE_USER_KEY = "activate_user"
+
   def csrf
     render json: {csrf: form_authenticity_token }
   end
@@ -276,6 +278,7 @@ class SessionController < ApplicationController
   end
 
   def not_activated(user)
+    session[ACTIVATE_USER_KEY] = user.username
     render json: {
       error: I18n.t("login.not_activated"),
       reason: 'not_activated',
@@ -303,6 +306,7 @@ class SessionController < ApplicationController
   end
 
   def login(user)
+    session.delete(ACTIVATE_USER_KEY)
     log_on_user(user)
 
     if payload = session.delete(:sso_payload)
