@@ -571,7 +571,7 @@ class UsersController < ApplicationController
 
     raise Discourse::NotFound unless @user
 
-    if (current_user && !current_user.staff?) ||
+    if !current_user&.staff? &&
         @user.id != session[SessionController::ACTIVATE_USER_KEY]
 
       raise Discourse::InvalidAccess
