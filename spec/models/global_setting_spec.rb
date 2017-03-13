@@ -1,19 +1,31 @@
 require 'rails_helper'
 require 'tempfile'
 
+class GlobalSetting
+  def self.reset_secret_key_base!
+    @safe_secret_key_base = nil
+  end
+end
+
 describe GlobalSetting do
 
   describe '.safe_secret_key_base' do
     it 'sets redis token if it is somehow flushed after 30 seconds' do
+
+      # we have to reset so we reset all times and test runs consistently
+      GlobalSetting.reset_secret_key_base!
+
+      freeze_time Time.now
+
       token = GlobalSetting.safe_secret_key_base
       $redis.without_namespace.del(GlobalSetting::REDIS_SECRET_KEY)
-      freeze_time 20.seconds.from_now
+      freeze_time Time.now + 20
 
       GlobalSetting.safe_secret_key_base
       new_token = $redis.without_namespace.get(GlobalSetting::REDIS_SECRET_KEY)
       expect(new_token).to eq(nil)
 
-      freeze_time 31.seconds.from_now
+      freeze_time Time.now + 11
 
       GlobalSetting.safe_secret_key_base
 
