@@ -614,6 +614,7 @@ en:
     welcome_to: "Welcome to %{site_name}!"
     approval_required: "A moderator must manually approve your new account before you can access this forum. You'll get an email when your account is approved!"
     missing_session: "We cannot detect if your account was created, please ensure you have cookies enabled."
+    activated: "Sorry, this account has already been activated."
   post_action_types:
     off_topic:
       title: 'Off-Topic'
