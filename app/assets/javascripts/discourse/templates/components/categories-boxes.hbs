@@ -1,18 +1,16 @@
-{{#if categories}}
-  {{#each categories as |c|}}
-    <div class='category-box'>
-      <a href={{c.url}}>
-        {{#if c.uploaded_logo.url}}
-          {{cdn-img src=c.uploaded_logo.url class="logo"}}
-        {{/if}}
+{{#each categories as |c|}}
+  <div class='category-box'>
+    <a href={{c.url}}>
+      {{#if c.uploaded_logo.url}}
+        {{cdn-img src=c.uploaded_logo.url class="logo"}}
+      {{/if}}
 
-        <div class='details'>
-          <h3>{{c.name}}</h3>
-          <div class='description'>
-            {{{c.description_excerpt}}}
-          </div>
+      <div class='details'>
+        <h3>{{c.name}}</h3>
+        <div class='description'>
+          {{{c.description_excerpt}}}
         </div>
-      </a>
-    </div>
-  {{/each}}
-{{/if}}
+      </div>
+    </a>
+  </div>
+{{/each}}
