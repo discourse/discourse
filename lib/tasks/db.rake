@@ -6,6 +6,7 @@ end
 # we need to run seed_fu every time we run rake db:migrate
 task 'db:migrate' => ['environment', 'set_locale'] do
   SeedFu.seed
+  Jobs::Onceoff.enqueue_all
 end
 
 task 'test:prepare' => 'environment' do
