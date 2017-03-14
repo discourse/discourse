@@ -37,4 +37,4 @@ test("Editing group as an anonymous user", () => {
   andThen(() => {
     ok(count('.group-members tr') > 0, "it should redirect to members page for an anonymous user");
   });
-})
+});
