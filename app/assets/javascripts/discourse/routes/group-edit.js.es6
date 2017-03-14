@@ -1,5 +1,3 @@
-import Group from 'discourse/models/group';
-
 export default Ember.Route.extend({
   titleToken() {
     return I18n.t('groups.edit.title');
