@@ -900,7 +900,7 @@ class User < ActiveRecord::Base
   end
 
   def is_singular_admin?
-    User.where(admin: true).where.not(id: id).where.not(id: Discourse::SYSTEM_USER_ID).blank?
+    User.where(admin: true).where.not(id: id).human_users.blank?
   end
 
   def logged_out
@@ -925,7 +925,7 @@ class User < ActiveRecord::Base
   end
 
   def clear_global_notice_if_needed
-    return if id == Discourse::SYSTEM_USER_ID
+    return if id < 0
 
     if admin && SiteSetting.has_login_hint
       SiteSetting.has_login_hint = false

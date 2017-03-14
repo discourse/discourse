@@ -4,7 +4,7 @@ module Jobs
 
     def execute(args)
       return unless SiteSetting.bootstrap_mode_enabled
-      total_users = User.where.not(id: Discourse::SYSTEM_USER_ID).count
+      total_users = User.human_users.count
 
       if SiteSetting.bootstrap_mode_min_users == 0 || total_users > SiteSetting.bootstrap_mode_min_users
         SiteSetting.set_and_log('default_trust_level', TrustLevel[0]) if SiteSetting.send('default_trust_level') == TrustLevel[1]
