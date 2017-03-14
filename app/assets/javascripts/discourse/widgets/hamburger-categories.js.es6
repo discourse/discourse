@@ -6,6 +6,12 @@ createWidget('hamburger-category', {
   tagName: 'li.category-link',
 
   html(c) {
+    if (c.parent_category_id) {
+      this.tagName += '.subcategory';
+    }
+
+    this.tagName += '.category-' + Discourse.Category.slugFor(c, '-');
+
     const results = [ this.attach('category-link', { category: c, allowUncategorized: true }) ];
 
     const unreadTotal = parseInt(c.get('unreadTopics'), 10) + parseInt(c.get('newTopics'), 10);
