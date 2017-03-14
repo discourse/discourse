@@ -146,7 +146,7 @@ const User = RestModel.extend({
     return defaultHomepage() === "latest" ? Discourse.getURL('/?state=watching') : Discourse.getURL('/latest?state=watching');
   },
     
-  @computer()
+  @computed()
   trackingTopicsPath() {
     return defaultHomepage() === "latest" ? Discourse.getURL('/?state=tracking') : Discourse.getURL('/latest?state=tracking');
   },
