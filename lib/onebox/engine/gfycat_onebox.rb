@@ -2,35 +2,59 @@ module Onebox
   module Engine
     class GfycatOnebox
       include Engine
-      include StandardEmbed
+      include JSON
 
       matches_regexp(/^https?:\/\/gfycat\.com\//)
       always_https
 
-      def to_html
-        oembed = get_oembed
-        src = Nokogiri::HTML::fragment(oembed[:html]).at_css("iframe")["src"]
-        escaped_src = ::Onebox::Helpers.normalize_url_for_output(src)
+      def self.priority
+        # This engine should have priority over WhitelistedGenericOnebox.
+        1
+      end
 
+      def url
+        "https://gfycat.com/cajax/get/#{match[:name]}"
+      end
+
+      def to_html
         <<-HTML
-          <iframe src="#{escaped_src}"
-                  width="#{oembed[:width]}"
-                  height="#{oembed[:height]}"
-                  scrolling="no"
-                  frameborder="0"
-                  allowfullscreen>
-          </iframe>
+          <div>
+            <video controls loop autoplay muted poster="#{data[:posterUrl]}" width="#{data[:width]}" height="#{data[:height]}">
+              <source id="webmSource" src="#{data[:webmUrl]}" type="video/webm">
+              <source id="mp4Source" src="#{data[:mp4Url]}" type="video/mp4">
+              <img title="Sorry, your browser doesn't support HTML5 video." src="#{data[:posterUrl]}">
+            </video><br/>
+            <a href="#{data[:url]}">#{data[:name]}</a>
+          </div>
         HTML
       end
 
       def placeholder_html
-        og = get_opengraph
-        escaped_src = ::Onebox::Helpers.normalize_url_for_output(og[:image])
-
         <<-HTML
-          <img src="#{escaped_src}" width="#{og[:image_width]}" height="#{og[:image_height]}">
+          <a href="#{data[:url]}">
+            <img src="#{data[:posterUrl]}" width="#{data[:width]}" height="#{data[:height]}"><br/>
+            #{data[:gfyName]}
+          </a>
         HTML
       end
+
+      private
+
+        def match
+          @match ||= @url.match(/^https?:\/\/gfycat\.com\/(?<name>.+)/)
+        end
+
+        def data
+          {
+            name: raw['gfyItem']['gfyName'],
+            url: @url,
+            posterUrl: raw['gfyItem']['posterUrl'],
+            webmUrl: raw['gfyItem']['webmUrl'],
+            mp4Url: raw['gfyItem']['mp4Url'],
+            width: raw['gfyItem']['width'],
+            height: raw['gfyItem']['height']
+          }
+        end
 
     end
   end
