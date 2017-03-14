@@ -1,6 +1,6 @@
 class Emoji
   # update this to clear the cache
-  EMOJI_VERSION = "v2"
+  EMOJI_VERSION = "v3"
 
   include ActiveModel::SerializerSupport
 
