@@ -120,9 +120,20 @@ export default Ember.Controller.extend({
     return output;
   },
 
-  @computed("pollOptionsCount", "isNumber")
-  disableInsert(count, isNumber) {
-    return isNumber ? false : (count < 2);
+  @computed("pollOptionsCount", "isNumber", "pollMin", "pollMax")
+  disableInsert(count, isNumber, pollMin, pollMax) {
+    return (pollMin >= pollMax) || (isNumber ? false : (count < 2));
+  },
+
+  @computed("pollMin", "pollMax")
+  minMaxValueValidation(pollMin, pollMax) {
+    let options = { ok: true };
+
+    if (pollMin >= pollMax) {
+      options = { failed: true, reason: I18n.t("poll.ui_builder.help.invalid_values") };
+    }
+
+    return InputValidation.create(options);
   },
 
   @computed("disableInsert")
