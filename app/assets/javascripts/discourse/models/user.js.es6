@@ -500,8 +500,11 @@ const User = RestModel.extend({
 
               return summary;
            });
-  }
+  },
 
+  canManageGroup(group) {
+    return group.get('automatic') ? false : (this.get('admin') || group.get('is_group_owner'));
+  }
 });
 
 User.reopenClass(Singleton, {

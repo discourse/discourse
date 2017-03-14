@@ -17,9 +17,10 @@ const Group = RestModel.extend({
     return Em.isEmpty(value) ? "" : value;
   },
 
-  type: function() {
-    return this.get("automatic") ? "automatic" : "custom";
-  }.property("automatic"),
+  @computed('automatic')
+  type(automatic) {
+    return automatic ? "automatic" : "custom";
+  },
 
   @computed('user_count')
   userCountDisplay(userCount) {
@@ -92,6 +93,7 @@ const Group = RestModel.extend({
       self.findMembers();
     });
   },
+
 
   @computed('flair_bg_color')
   flairBackgroundHexColor() {
@@ -224,7 +226,7 @@ Group.reopenClass({
 
   mentionable(name) {
     return ajax(`/groups/${name}/mentionable`, { data: { name } });
-  },
+  }
 });
 
 export default Group;

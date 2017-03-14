@@ -1,4 +1,5 @@
 import { default as computed, observes } from 'ember-addons/ember-computed-decorators';
+import Group from 'discourse/models/group';
 
 var Tab = Em.Object.extend({
   @computed('name')
@@ -53,18 +54,18 @@ export default Ember.Controller.extend({
     this.get('tabs')[0].set('count', this.get('model.user_count'));
   },
 
-  @computed('model.is_group_user', 'model.is_group_owner', 'model.automatic')
-  getTabs(isGroupUser, isGroupOwner, automatic) {
+  @computed('model.is_group_owner', 'model.automatic')
+  getTabs(isGroupOwner, automatic) {
     return this.get('tabs').filter(t => {
-      let display = true;
+      let canSee = true;
 
-      if (this.currentUser && t.get('requiresGroupAdmin')) {
-        display = automatic ? false : (this.currentUser.admin || isGroupOwner);
-      } else if (t.get('requiresGroupAdmin')) {
-        display = false;
+      if (this.currentUser && t.requiresGroupAdmin) {
+        canSee = this.currentUser.canManageGroup(this.get('model'));
+      } else if (t.requiresGroupAdmin) {
+        canSee = false;
       }
 
-      return display;
+      return canSee;
     });
   }
 });
