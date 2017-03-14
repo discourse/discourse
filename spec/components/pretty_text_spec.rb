@@ -432,6 +432,8 @@ HTML
   describe "custom emoji" do
     it "replaces the custom emoji" do
       CustomEmoji.create!(name: 'trout', upload: Fabricate(:upload))
+      Emoji.clear_cache
+      
       expect(PrettyText.cook("hello :trout:")).to match(/<img src[^>]+trout[^>]+>/)
     end
   end
