@@ -1,5 +1,4 @@
 import { default as computed, observes } from 'ember-addons/ember-computed-decorators';
-import Group from 'discourse/models/group';
 
 var Tab = Em.Object.extend({
   @computed('name')
@@ -55,7 +54,7 @@ export default Ember.Controller.extend({
   },
 
   @computed('model.is_group_owner', 'model.automatic')
-  getTabs(isGroupOwner, automatic) {
+  getTabs() {
     return this.get('tabs').filter(t => {
       let canSee = true;
 
