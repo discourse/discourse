@@ -391,6 +391,10 @@ en:
           attributes:
             payload_url:
               invalid: "URL is invalid. URL should includes http:// or https://. And no blank is allowed."
+        custom_emoji:
+          attributes:
+            name:
+              taken: is already in use by another emoji
 
   user_profile:
     no_info_me: "<div class='missing-profile'>the About Me field of your profile is currently blank, <a href='/users/%{username_lower}/preferences/about-me'>would you like to fill it out?</a></div>"
@@ -1573,11 +1577,6 @@ en:
   change_owner:
     post_revision_text: "Ownership transferred from %{old_user} to %{new_user}"
     deleted_user: "a deleted user"
-
-  emoji:
-    errors:
-      name_already_exists: "Sorry, the name '%{name}' is already used by another emoji."
-      error_while_storing_emoji: "Sorry, there has been an error while storing the emoji."
 
   topic_statuses:
     archived_enabled: "This topic is now archived. It is frozen and cannot be changed in any way."

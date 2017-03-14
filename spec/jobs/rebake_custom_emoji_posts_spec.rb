@@ -1,0 +1,19 @@
+require 'rails_helper'
+
+RSpec.describe Jobs::RebakeCustomEmojiPosts do
+  it 'should rebake posts that are using a given custom emoji' do
+    custom_emoji = CustomEmoji.create!(name: 'test', upload: Fabricate(:upload))
+    Emoji.clear_cache
+    post = Fabricate(:post, raw: 'some post with :test: yay')
+
+    expect(post.reload.cooked).to eq(
+      "<p>some post with <img src=\"/uploads/default/0/1234567890123456.png?v=3\" title=\":test:\" class=\"emoji emoji-custom\" alt=\":test:\"> yay</p>"
+    )
+
+    custom_emoji.destroy!
+    Emoji.clear_cache
+    described_class.new.execute(name: 'test')
+
+    expect(post.reload.cooked).to eq('<p>some post with :test: yay</p>')
+  end
+end
