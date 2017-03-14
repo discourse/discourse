@@ -1,3 +1,5 @@
+import Group from 'discourse/models/group';
+
 export default Ember.Route.extend({
   titleToken() {
     return I18n.t('groups.edit.title');
@@ -5,6 +7,12 @@ export default Ember.Route.extend({
 
   model() {
     return this.modelFor('group');
+  },
+
+  afterModel(group) {
+    if (!this.currentUser || !this.currentUser.canManageGroup(group)) {
+      this.transitionTo("group.members", group);
+    }
   },
 
   setupController(controller, model) {

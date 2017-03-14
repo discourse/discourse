@@ -1,10 +1,11 @@
-import { acceptance } from "helpers/qunit-helpers";
+import { acceptance, logIn } from "helpers/qunit-helpers";
 
-acceptance("Editing Group", {
-  loggedIn: true
-});
+acceptance("Editing Group");
 
 test("Editing group", () => {
+  logIn();
+  Discourse.reset();
+
   visit("/groups/discourse/edit");
 
   andThen(() => {
@@ -29,3 +30,11 @@ test("Editing group", () => {
     ok(find('.group-edit-public[disabled]').length === 1, 'it should disable group public input');
   });
 });
+
+test("Editing group as an anonymous user", () => {
+  visit("/groups/discourse/edit");
+
+  andThen(() => {
+    ok(count('.group-members tr') > 0, "it should redirect to members page for an anonymous user");
+  });
+})
