@@ -38,7 +38,7 @@
   width: 95%;
 }
 
-// we need a little extra room on mobile for the 
+// we need a little extra room on mobile for the
 // stuff inside the footer to fit
 .modal-footer {
   padding-right: 0;
@@ -132,6 +132,12 @@
         }
       }
     }
+  }
+
+  .disable_info_wrap .cannot_delete_reason {
+    top: -114px;
+    right: 8px;
+    min-width: 200px;
   }
 }
 

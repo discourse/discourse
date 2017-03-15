@@ -8,6 +8,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
   saving: false,
   deleting: false,
   panels: null,
+  hiddenTooltip: true,
 
   _initPanels: function() {
     this.set('panels', []);
@@ -16,6 +17,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
   onShow() {
     this.changeSize();
     this.titleChanged();
+    this.set('hiddenTooltip', true);
   },
 
   changeSize: function() {
@@ -101,6 +103,13 @@ export default Ember.Controller.extend(ModalFunctionality, {
           self.set('deleting', false);
         }
       });
+    },
+
+    toggleDeleteTooltip() {
+      // check if is touch device
+      if ( $('html').hasClass('discourse-touch') ) {
+        this.toggleProperty('hiddenTooltip');
+      }
     }
   }
 
