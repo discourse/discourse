@@ -2031,6 +2031,7 @@ en:
         rows: "Rows"
         rows_with_featured_topics: "Rows with featured topics"
         boxes: "Boxes"
+        boxes_with_featured_topics: "Boxes with featured topics"
 
     flagging:
       title: 'Thanks for helping to keep our community civil!'

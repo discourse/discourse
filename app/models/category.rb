@@ -509,7 +509,7 @@ SQL
   end
 
   def subcategory_list_includes_topics?
-    subcategory_list_style == 'rows_with_featured_topics'
+    subcategory_list_style.end_with?("with_featured_topics")
   end
 end
 

@@ -36,4 +36,11 @@ test("Visit Discovery Pages", () => {
     ok(exists(".topic-list"), "The list of topics was rendered");
     ok(exists(".category-boxes"), "The list of subcategories were rendered with box style");
   });
+
+  visit("/c/dev");
+  andThen(() => {
+    ok(exists(".topic-list"), "The list of topics was rendered");
+    ok(exists(".category-boxes-with-topics"), "The list of subcategories were rendered with box-with-featured-topics style");
+    ok(exists(".category-boxes-with-topics .featured-topics"), "The featured topics are there too");
+  });
 });
