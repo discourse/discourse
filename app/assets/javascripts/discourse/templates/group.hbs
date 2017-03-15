@@ -29,17 +29,25 @@
     {{/if}}
   </div>
 
-  {{#mobile-nav class='group-nav' desktopClass="nav nav-pills" currentPath=application.currentPath}}
-    {{#each getTabs as |tab|}}
-      <li>
-        {{#link-to tab.location model title=tab.message}}
-          {{#if tab.icon}}{{fa-icon tab.icon}}{{/if}}
-          {{tab.message}}
-          {{#if tab.count}}<span class='count'>({{tab.count}})</span>{{/if}}
-        {{/link-to}}
-      </li>
-    {{/each}}
-  {{/mobile-nav}}
+  <div class="list-controls">
+    <div class="container">
+      {{#mobile-nav class='group-nav' desktopClass="nav nav-pills" currentPath=application.currentPath}}
+        {{#each getTabs as |tab|}}
+          <li>
+            {{#link-to tab.location model title=tab.message}}
+              {{#if tab.icon}}{{fa-icon tab.icon}}{{/if}}
+              {{tab.message}}
+              {{#if tab.count}}<span class='count'>({{tab.count}})</span>{{/if}}
+            {{/link-to}}
+          </li>
+        {{/each}}
+      {{/mobile-nav}}
+
+      {{group-membership-button model=model
+        createNewMessageViaParams='createNewMessageViaParams'
+        showLogin='showLogin'}}
+    </div>
+  </div>
 
   <div class='group-outlet'>
     {{outlet}}
