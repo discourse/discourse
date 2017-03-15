@@ -14,7 +14,8 @@ export default buildCategoryPanel('settings', {
     return [
       {name: I18n.t('category.subcategory_list_styles.rows'), value: 'rows'},
       {name: I18n.t('category.subcategory_list_styles.rows_with_featured_topics'), value: 'rows_with_featured_topics'},
-      {name: I18n.t('category.subcategory_list_styles.boxes'), value: 'boxes'}
+      {name: I18n.t('category.subcategory_list_styles.boxes'), value: 'boxes'},
+      {name: I18n.t('category.subcategory_list_styles.boxes_with_featured_topics'), value: 'boxes_with_featured_topics'}
     ];
   },
 

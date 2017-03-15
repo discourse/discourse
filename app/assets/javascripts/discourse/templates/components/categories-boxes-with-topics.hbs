@@ -1,0 +1,27 @@
+{{#each categories as |c|}}
+  <div class='category-box' style={{border-color c.color}}>
+    <div class='category-box-inner'>
+      <a href={{c.url}}>
+        {{#if c.uploaded_logo.url}}
+          {{cdn-img src=c.uploaded_logo.url class="logo"}}
+        {{/if}}
+
+        <h3>{{c.name}}</h3>
+      </a>
+
+      <div class='featured-topics'>
+        {{#if c.topics}}
+          <ul>
+            {{#each c.topics as |topic|}}
+              <li>
+                <a class='title' href="{{unbound topic.lastUnreadUrl}}">
+                  {{text-overflow class="overflow" text=topic.fancyTitle}}
+                </a>
+              </li>
+            {{/each}}
+          </ul>
+        {{/if}}
+      </div>
+    </div>
+  </div>
+{{/each}}

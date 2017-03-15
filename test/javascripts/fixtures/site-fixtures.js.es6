@@ -146,8 +146,9 @@ export default {
           "notification_level":null,
           "logo_url":null,
           "background_url":null,
-          "show_subcategory_list":false,
-          "default_view":"latest"
+          "show_subcategory_list":true,
+          "default_view":"latest",
+          "subcategory_list_style":"boxes_with_featured_topics"
         },
         {
           "id":6,

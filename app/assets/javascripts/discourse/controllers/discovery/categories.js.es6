@@ -1,6 +1,13 @@
 import computed from 'ember-addons/ember-computed-decorators';
 import DiscoveryController from 'discourse/controllers/discovery';
 
+const subcategoryStyleComponentNames = {
+  'rows': 'categories_only',
+  'rows_with_featured_topics': 'categories_with_featured_topics',
+  'boxes': 'categories_boxes',
+  'boxes_with_featured_topics': 'categories_boxes_with_topics'
+};
+
 export default DiscoveryController.extend({
   discovery: Ember.inject.controller(),
 
@@ -22,17 +29,7 @@ export default DiscoveryController.extend({
     let style = this.siteSettings.desktop_category_page_style;
 
     if (parentCategory) {
-      switch(parentCategory.get('subcategory_list_style')) {
-        case 'rows':
-          style = "categories_only";
-          break;
-        case 'rows_with_featured_topics':
-          style = "categories_with_featured_topics";
-          break;
-        case 'boxes':
-          style = "categories_boxes";
-          break;
-      }
+      style = subcategoryStyleComponentNames[parentCategory.get('subcategory_list_style')] || style;
     }
 
     const componentName = (parentCategory && style === "categories_and_latest_topics") ?
