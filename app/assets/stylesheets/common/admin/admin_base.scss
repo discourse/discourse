@@ -31,8 +31,10 @@ $mobile-breakpoint: 700px;
   width: 100%;
   tr {text-align: left;}
   td, th {padding: 8px;}
-  th {border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);}
+  th {border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -60%); text-align: left;}
   td {border-bottom: 1px solid dark-light-diff($primary, $secondary, 90%, -60%); border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -60%);}
+  th.sortable i.fa-chevron-down,
+  th.sortable i.fa-chevron-up {margin-left: 0.5em;}
   tr:hover { background-color: darken($secondary, 2.5%); }
   tr.selected { background-color: lighten($primary, 80%); }
   .filters input { margin-bottom: 0; }

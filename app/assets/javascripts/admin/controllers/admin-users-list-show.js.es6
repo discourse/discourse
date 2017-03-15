@@ -7,7 +7,7 @@ import { observes } from 'ember-addons/ember-computed-decorators';
 export default Ember.Controller.extend({
   query: null,
   queryParams: ['order', 'ascending'],
-  order: '',
+  order: 'seen',
   ascending: null,
   showEmails: false,
   refreshing: false,
@@ -44,21 +44,12 @@ export default Ember.Controller.extend({
     this._refreshUsers();
   }, 250).observes('listFilter'),
 
+
+  @observes('order', 'ascending')
   _refreshUsers: function() {
     this.set('refreshing', true);
 
-    AdminUser.findAll( { filter: this.get('listFilter'), show_emails: this.get('showEmails') }).then( (result) => {
-      this.set('model', result);
-    }).finally( () => {
-      this.set('refreshing', false);
-    });
-  },
-
-  @observes('order', 'ascending')
-  sortUsers: function() {
-    this.set('refreshing', true);
-
-    AdminUser.findAll(this.get('query'), {order: this.get('order'), ascending: this.get('ascending')} ).then( (result) => {
+    AdminUser.findAll(this.get('query'), { filter: this.get('listFilter'), show_emails: this.get('showEmails'), order: this.get('order'), ascending: this.get('ascending') }).then( (result) => {
       this.set('model', result);
     }).finally( () => {
       this.set('refreshing', false);

@@ -34,7 +34,7 @@
         {{admin-directory-toggle field="topics_viewed" i18nKey="admin.user.topics_entered" order=order ascending=ascending}}
         {{admin-directory-toggle field="posts_read" i18nKey="admin.user.posts_read_count" order=order ascending=ascending}}
         {{admin-directory-toggle field="read_time" i18nKey="admin.user.time_read" order=order ascending=ascending}}
-        <th>{{admin-directory-toggle field="created" i18nKey="created" order=order ascending=ascending}}</th>
+        {{admin-directory-toggle field="created" i18nKey="created" order=order ascending=ascending}}
         {{#if showApproval}}
           <th>{{i18n 'admin.users.approved'}}</th>
         {{/if}}
@@ -92,10 +92,10 @@
             {{/if}}
             <td>
               {{#if user.admin}}
-                <i class="fa fa-shield" title="{{i18n 'admin.title'}}"></i>
+                {{fa-icon "shield" title="admin.title" }}
               {{/if}}
               {{#if user.moderator}}
-                <i class="fa fa-shield" title="{{i18n 'admin.moderator'}}"></i>
+                {{fa-icon "shield" title="admin.moderator" }}
               {{/if}}
             </td>
           </tr>
