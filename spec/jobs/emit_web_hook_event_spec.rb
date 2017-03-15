@@ -10,12 +10,8 @@ describe Jobs::EmitWebHookEvent do
     expect { subject.execute(event_type: 'post') }.to raise_error(Discourse::InvalidParameters)
   end
 
-  it 'raises an error when there is no event name' do
+  it 'raises an error when there is no event type' do
     expect { subject.execute(web_hook_id: 1) }.to raise_error(Discourse::InvalidParameters)
-  end
-
-  it 'raises an error when event name is invalid' do
-    expect { subject.execute(web_hook_id: post_hook.id, event_type: 'post_random') }.to raise_error(Discourse::InvalidParameters)
   end
 
   it "doesn't emit when the hook is inactive" do

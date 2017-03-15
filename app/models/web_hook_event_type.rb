@@ -8,6 +8,36 @@ class WebHookEventType < ActiveRecord::Base
   default_scope { order('id ASC') }
 
   validates :name, presence: true, uniqueness: true
+
+  module TopicType
+    def self.load_record(topic_id)
+      TopicView.new(topic_id.to_i, Discourse.system_user) rescue nil
+    end
+
+    def self.serializer
+      WebHookTopicViewSerializer
+    end
+  end
+
+  module PostType
+    def self.load_record(post_id)
+      Post.find_by(id: post_id.to_i)
+    end
+
+    def self.serializer
+      WebHookPostSerializer
+    end
+  end
+
+  module UserType
+    def self.load_record(user_id)
+      User.find_by(id: user_id.to_i)
+    end
+
+    def self.serializer
+      WebHookUserSerializer
+    end
+  end
 end
 
 # == Schema Information
