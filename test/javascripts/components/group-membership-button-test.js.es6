@@ -58,4 +58,11 @@ test('userIsGroupUser', function() {
   this.subject().set('groupUserIds', undefined);
 
   equal(this.subject().get('userIsGroupUser'), false);
+
+  this.subject().setProperties({
+    groupUserIds: [1, 3],
+    model: { id: 1, is_group_user: false }
+  });
+
+  equal(this.subject().get('userIsGroupUser'), false);
 });
