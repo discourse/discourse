@@ -1065,7 +1065,7 @@ class User < ActiveRecord::Base
   end
 
   def trigger_user_created_event
-    DiscourseEvent.trigger(:user_created, self)
+    DiscourseEvent.trigger(:user_created, self) if self.new_record?
     true
   end
 
