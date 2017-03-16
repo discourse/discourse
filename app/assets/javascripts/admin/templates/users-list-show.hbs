@@ -22,7 +22,7 @@
 {{#conditional-loading-spinner condition=refreshing}}
   {{#if model}}
     <table class='table users-list'>
-      <tr>
+      <thead>
         {{#if showApproval}}
           <th>{{input type="checkbox" checked=selectAll}}</th>
         {{/if}}
@@ -30,54 +30,79 @@
         <th>{{i18n 'username'}}</th>
         <th>{{i18n 'email'}}</th>
         <th>{{i18n 'admin.users.last_emailed'}}</th>
-        <th>{{i18n 'last_seen'}}</th>
-        <th>{{i18n 'admin.user.topics_entered'}}</th>
-        <th>{{i18n 'admin.user.posts_read_count'}}</th>
-        <th>{{i18n 'admin.user.time_read'}}</th>
-        <th>{{i18n 'created'}}</th>
+        {{admin-directory-toggle field="seen" i18nKey='last_seen' order=order ascending=ascending}}
+        {{admin-directory-toggle field="topics_viewed" i18nKey="admin.user.topics_entered" order=order ascending=ascending}}
+        {{admin-directory-toggle field="posts_read" i18nKey="admin.user.posts_read_count" order=order ascending=ascending}}
+        {{admin-directory-toggle field="read_time" i18nKey="admin.user.time_read" order=order ascending=ascending}}
+        {{admin-directory-toggle field="created" i18nKey="created" order=order ascending=ascending}}
         {{#if showApproval}}
           <th>{{i18n 'admin.users.approved'}}</th>
         {{/if}}
         <th>&nbsp;</th>
-      </tr>
-
-      {{#each model as |user|}}
-        <tr class="user {{user.selected}} {{unless user.active 'not-activated'}}">
-          {{#if showApproval}}
+      </thead>
+      <tbody>
+        {{#each model as |user|}}
+          <tr class="user {{user.selected}} {{unless user.active 'not-activated'}}">
+            {{#if showApproval}}
             <td>
               {{#if user.can_approve}}
                 {{input type="checkbox" checked=user.selected}}
               {{/if}}
             </td>
-          {{/if}}
-          <td><a href="{{unbound user.path}}" data-user-card="{{unbound user.username}}">{{avatar user imageSize="small"}}</a></td>
-          <td>{{#link-to 'adminUser' user}}{{unbound user.username}}{{/link-to}}</td>
-          <td class='email'>{{unbound user.email}}</td>
-          <td>{{{unbound user.last_emailed_age}}}</td>
-          <td>{{{unbound user.last_seen_age}}}</td>
-          <td>{{number user.topics_entered}}</td>
-          <td>{{number user.posts_read_count}}</td>
-          <td>{{{unbound user.time_read}}}</td>
-
-          <td>{{{unbound user.created_at_age}}}</td>
-
-          {{#if showApproval}}
-          <td>
-            {{#if user.approved}}
-              {{i18n 'yes_value'}}
-            {{else}}
-              {{i18n 'no_value'}}
             {{/if}}
-          </td>
-          {{/if}}
-          <td>
-            {{#if user.admin}}<i class="fa fa-shield" title="{{i18n 'admin.title'}}"></i>{{/if}}
-            {{#if user.moderator}}<i class="fa fa-shield" title="{{i18n 'admin.moderator'}}"></i>{{/if}}
-          </td>
-        </tr>
-      {{/each}}
+            <td>
+              <a href="{{unbound user.path}}" data-user-card="{{unbound user.username}}">
+                {{avatar user imageSize="small"}}
+              </a>
+            </td>
+            <td>
+              {{#link-to 'adminUser' user}}{{unbound user.username}}{{/link-to}}
+            </td>
+            <td class='email'>
+              {{unbound user.email}}
+            </td>
+            <td>
+              {{{unbound user.last_emailed_age}}}
+            </td>
+            <td>
+              {{{unbound user.last_seen_age}}}
+            </td>
+            <td>
+              {{number user.topics_entered}}
+            </td>
+            <td>
+              {{number user.posts_read_count}}
+            </td>
+            <td>
+              {{{unbound user.time_read}}}
+            </td>
 
+            <td>
+              {{{unbound user.created_at_age}}}
+            </td>
+
+            {{#if showApproval}}
+              <td>
+                {{#if user.approved}}
+                  {{i18n 'yes_value'}}
+                {{else}}
+                  {{i18n 'no_value'}}
+                {{/if}}
+              </td>
+            {{/if}}
+            <td>
+              {{#if user.admin}}
+                {{fa-icon "shield" title="admin.title" }}
+              {{/if}}
+              {{#if user.moderator}}
+                {{fa-icon "shield" title="admin.moderator" }}
+              {{/if}}
+            </td>
+          </tr>
+        {{/each}}
+      </tbody>
     </table>
+
   {{else}}
     <p>{{i18n 'search.no_results'}}</p>
   {{/if}}
