@@ -96,7 +96,6 @@ class User < ActiveRecord::Base
 
   before_save :update_username_lower
   before_save :ensure_password_is_hashed
-  before_save :setup_trigger_user_created_event
 
   after_save :expire_tokens_if_password_changed
   after_save :automatic_group_membership
@@ -105,7 +104,7 @@ class User < ActiveRecord::Base
   after_save :badge_grant
   after_save :expire_old_email_tokens
   after_save :index_search
-  after_save :trigger_user_created_event
+  after_commit :trigger_user_created_event, on: :create
 
   before_destroy do
     # These tables don't have primary keys, so destroying them with activerecord is tricky:
@@ -1078,13 +1077,8 @@ class User < ActiveRecord::Base
     end
   end
 
-  def setup_trigger_user_created_event
-    @trigger_user_created_event = self.new_record?
-    true
-  end
-
   def trigger_user_created_event
-    DiscourseEvent.trigger(:user_created, self) if @trigger_user_created_event
+    DiscourseEvent.trigger(:user_created, self)
     true
   end
 
