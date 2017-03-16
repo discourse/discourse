@@ -62,6 +62,7 @@ InviteRedeemer = Struct.new(:invite, :username, :name, :password) do
     send_welcome_message
     notify_invitee
     send_password_instructions
+    enqueue_activation_mail
     delete_duplicate_invites
   end
 
@@ -123,6 +124,13 @@ InviteRedeemer = Struct.new(:invite, :username, :name, :password) do
   def send_password_instructions
     if !SiteSetting.enable_sso && SiteSetting.enable_local_logins && !invited_user.has_password?
       Jobs.enqueue(:invite_password_instructions_email, username: invited_user.username)
+    end
+  end
+
+  def enqueue_activation_mail
+    if invited_user.has_password?
+      email_token = invited_user.email_tokens.create(email: invited_user.email)
+      Jobs.enqueue(:critical_user_email, type: :signup, user_id: invited_user.id, email_token: email_token.token)
     end
   end
 
