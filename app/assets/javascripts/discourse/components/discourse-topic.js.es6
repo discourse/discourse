@@ -64,6 +64,24 @@ export default Ember.Component.extend(AddArchetypeClass, Scrolling, {
     this.appEvents.on('post:highlight', postNumber => {
       Ember.run.scheduleOnce('afterRender', null, highlight, postNumber);
     });
+
+    this.appEvents.on('header:update-topic', topic => {
+
+      if (topic === null) {
+        this._lastShowTopic = false;
+        this.appEvents.trigger('header:hide-topic');
+        return;
+      }
+
+      const offset = window.pageYOffset || $('html').scrollTop();
+      this._lastShowTopic = this.showTopicInHeader(topic, offset);
+
+      if (this._lastShowTopic) {
+        this.appEvents.trigger('header:show-topic', topic);
+      } else {
+        this.appEvents.trigger('header:hide-topic');
+      }
+    });
   },
 
   willDestroyElement() {
