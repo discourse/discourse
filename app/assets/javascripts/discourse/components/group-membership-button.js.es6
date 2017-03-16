@@ -22,30 +22,25 @@ export default Ember.Component.extend({
     }
   },
 
-  @computed
-  joinGroupAction() {
-    return this.currentUser ? 'joinGroup' : 'showLogin';
-  },
-
-  @computed
-  requestMembershipAction() {
-    return this.currentUser ? 'requestMembership' : 'showLogin';
+  _showLoginModal() {
+    this.sendAction('showLogin');
+    $.cookie('destination_url', window.location.href);
   },
 
   actions: {
-    showLogin() {
-      this.sendAction('showLogin');
-    },
-
     joinGroup() {
-      this.set('updatingMembership', true);
-      const model = this.get('model');
+      if (this.currentUser) {
+        this.set('updatingMembership', true);
+        const model = this.get('model');
 
-      model.addMembers(this.currentUser.get('username')).then(() => {
-        model.set('is_group_user', true);
-      }).catch(popupAjaxError).finally(() => {
-        this.set('updatingMembership', false);
-      });
+        model.addMembers(this.currentUser.get('username')).then(() => {
+          model.set('is_group_user', true);
+        }).catch(popupAjaxError).finally(() => {
+          this.set('updatingMembership', false);
+        });
+      } else {
+        this._showLoginModal();
+      }
     },
 
     leaveGroup() {
@@ -60,14 +55,18 @@ export default Ember.Component.extend({
     },
 
     requestMembership() {
-      const groupName = this.get('model.name');
+      if (this.currentUser) {
+        const groupName = this.get('model.name');
 
-      Group.loadOwners(groupName).then(result => {
-        const names = result.map(owner => owner.username).join(",");
-        const title = I18n.t('groups.request_membership_pm.title');
-        const body = I18n.t('groups.request_membership_pm.body', { groupName });
-        this.sendAction("createNewMessageViaParams", names, title, body);
-      });
+        Group.loadOwners(groupName).then(result => {
+          const names = result.map(owner => owner.username).join(",");
+          const title = I18n.t('groups.request_membership_pm.title');
+          const body = I18n.t('groups.request_membership_pm.body', { groupName });
+          this.sendAction("createNewMessageViaParams", names, title, body);
+        });
+      } else {
+        this._showLoginModal();
+      }
     }
   }
 });
