@@ -61,6 +61,7 @@ class WebHook < ActiveRecord::Base
   %i(post_created
      post_destroyed
      post_recovered).each do |event|
+
     DiscourseEvent.on(event) do |post, _, user|
       WebHook.enqueue_post_hooks(event, post, user)
     end
