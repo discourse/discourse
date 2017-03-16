@@ -96,6 +96,7 @@ class User < ActiveRecord::Base
 
   before_save :update_username_lower
   before_save :ensure_password_is_hashed
+  before_save :setup_trigger_user_created_event
 
   after_save :expire_tokens_if_password_changed
   after_save :automatic_group_membership
@@ -1064,11 +1065,6 @@ class User < ActiveRecord::Base
     end
   end
 
-  def trigger_user_created_event
-    DiscourseEvent.trigger(:user_created, self) if self.new_record?
-    true
-  end
-
   private
 
   def previous_visit_at_update_required?(timestamp)
@@ -1080,6 +1076,16 @@ class User < ActiveRecord::Base
     if previous_visit_at_update_required?(timestamp)
       update_column(:previous_visit_at, last_seen_at)
     end
+  end
+
+  def setup_trigger_user_created_event
+    @trigger_user_created_event = self.new_record?
+    true
+  end
+
+  def trigger_user_created_event
+    DiscourseEvent.trigger(:user_created, self) if @trigger_user_created_event
+    true
   end
 
 end
