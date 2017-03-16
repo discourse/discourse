@@ -191,6 +191,27 @@ describe UsersController do
     end
   end
 
+  describe '#perform_account_activation' do
+    describe 'when cookies contains a destination URL' do
+      let(:token) { 'asdadwewq' }
+      let(:user) { Fabricate(:user) }
+
+      before do
+        UsersController.any_instance.stubs(:honeypot_or_challenge_fails?).returns(false)
+        EmailToken.expects(:confirm).with(token).returns(user)
+      end
+
+      it 'should redirect to the URL' do
+        destination_url = 'http://thisisasite.com/somepath'
+        request.cookies[:destination_url] = destination_url
+
+        put :perform_account_activation, token: token
+
+        expect(response).to redirect_to(destination_url)
+      end
+    end
+  end
+
   describe '.password_reset' do
     let(:user) { Fabricate(:user) }
 
