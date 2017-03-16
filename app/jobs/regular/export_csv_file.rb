@@ -48,8 +48,7 @@ module Jobs
       end
 
       # compress CSV file
-      `gzip -5 #{absolute_path}`
-
+      system('gzip', '-5', absolute_path)
     ensure
       notify_user(file_name, absolute_path)
     end
