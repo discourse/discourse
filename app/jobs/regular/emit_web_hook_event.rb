@@ -20,7 +20,7 @@ module Jobs
           !web_hook.category_ids.include?(args[:category_id]))
 
         event_type = args[:event_type].to_s
-        return unless self.send("setup_#{event_type}")
+        return unless self.send("setup_#{event_type}", args)
       end
 
       web_hook_request(args, web_hook)
@@ -41,13 +41,13 @@ module Jobs
     def setup_topic(args)
       topic_view = (TopicView.new(args[:topic_id], Discourse.system_user) rescue nil)
       return if topic_view.blank?
-      args[:payload] = WebHookTopicViewSerializer.new(post, scope: guardian, root: false).as_json
+      args[:payload] = WebHookTopicViewSerializer.new(topic_view, scope: guardian, root: false).as_json
     end
 
     def setup_user(args)
       user = User.find_by(id: args[:user_id])
       return if user.blank?
-      args[:payload] = WebHookUserSerializer.new(post, scope: guardian, root: false).as_json
+      args[:payload] = WebHookUserSerializer.new(user, scope: guardian, root: false).as_json
     end
 
     def ping_event?(event_type)
