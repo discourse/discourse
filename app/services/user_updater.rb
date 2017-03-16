@@ -96,15 +96,16 @@ class UserUpdater
       user.custom_fields = user.custom_fields.merge(fields)
     end
 
+    saved = nil
+
     User.transaction do
       if attributes.key?(:muted_usernames)
         update_muted_users(attributes[:muted_usernames])
       end
 
       saved = (!save_options || user.user_option.save) && user_profile.save && user.save
-      if saved
-        DiscourseEvent.trigger(:user_updated, user)
 
+      if saved
         # log name changes
         if attributes[:name].present? && old_user_name.downcase != attributes.fetch(:name).downcase
           StaffActionLogger.new(@actor).log_name_change(user.id, old_user_name, attributes.fetch(:name))
@@ -112,8 +113,10 @@ class UserUpdater
           StaffActionLogger.new(@actor).log_name_change(user.id, old_user_name, "")
         end
       end
-      saved
     end
+
+    DiscourseEvent.trigger(:user_updated, user) if saved
+    saved
   end
 
   def update_muted_users(usernames)

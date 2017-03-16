@@ -93,7 +93,6 @@ class User < ActiveRecord::Base
   after_create :create_user_profile
   after_create :ensure_in_trust_level_group
   after_create :set_default_categories_preferences
-  after_create :trigger_user_created_event
 
   before_save :update_username_lower
   before_save :ensure_password_is_hashed
@@ -105,6 +104,7 @@ class User < ActiveRecord::Base
   after_save :badge_grant
   after_save :expire_old_email_tokens
   after_save :index_search
+  after_save :trigger_user_created_event
 
   before_destroy do
     # These tables don't have primary keys, so destroying them with activerecord is tricky:
