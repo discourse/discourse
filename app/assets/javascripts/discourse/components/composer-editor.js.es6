@@ -3,6 +3,7 @@ import { default as computed, on } from 'ember-addons/ember-computed-decorators'
 import { linkSeenMentions, fetchUnseenMentions } from 'discourse/lib/link-mentions';
 import { linkSeenCategoryHashtags, fetchUnseenCategoryHashtags } from 'discourse/lib/link-category-hashtags';
 import { linkSeenTagHashtags, fetchUnseenTagHashtags } from 'discourse/lib/link-tag-hashtag';
+import Composer from 'discourse/models/composer';
 import { load } from 'pretty-text/oneboxer';
 import { ajax } from 'discourse/lib/ajax';
 import InputValidation from 'discourse/models/input-validation';
@@ -138,7 +139,7 @@ export default Ember.Component.extend({
   _renderUnseenMentions($preview, unseen) {
     // 'Create a New Topic' scenario is not supported (per conversation with codinghorror)
     // https://meta.discourse.org/t/taking-another-1-7-release-task/51986/7
-    fetchUnseenMentions(unseen, this.get('topic.id')).then(() => {
+    fetchUnseenMentions(unseen, this.get('composer.topic.id')).then(() => {
       linkSeenMentions($preview, this.siteSettings);
       this._warnMentionedGroups($preview);
       this._warnCannotSeeMention($preview);
@@ -187,13 +188,25 @@ export default Ember.Component.extend({
   },
 
   _warnCannotSeeMention($preview) {
+    const composerDraftKey = this.get('composer.draftKey');
+
+    if (composerDraftKey === Composer.CREATE_TOPIC ||
+        composerDraftKey === Composer.NEW_PRIVATE_MESSAGE_KEY ||
+        composerDraftKey === Composer.REPLY_AS_NEW_TOPIC_KEY ||
+        composerDraftKey === Composer.REPLY_AS_NEW_PRIVATE_MESSAGE_KEY) {
+
+      return;
+    }
+
     Ember.run.scheduleOnce('afterRender', () => {
-      var found = this.get('warnedCannotSeeMentions') || [];
+      let found = this.get('warnedCannotSeeMentions') || [];
+
       $preview.find('.mention.cannot-see').each((idx,e) => {
         const $e = $(e);
-        var name = $e.data('name');
+        let name = $e.data('name');
+
         if (found.indexOf(name) === -1) {
-          this.sendAction('cannotSeeMention', [{name: name}]);
+          this.sendAction('cannotSeeMention', [{ name: name }]);
           found.push(name);
         }
       });

@@ -15,6 +15,7 @@ const CLOSED = 'closed',
       // The actions the composer can take
       CREATE_TOPIC = 'createTopic',
       PRIVATE_MESSAGE = 'privateMessage',
+      NEW_PRIVATE_MESSAGE_KEY = 'new_private_message',
       REPLY = 'reply',
       EDIT = 'edit',
       REPLY_AS_NEW_TOPIC_KEY = "reply_as_new_topic",
@@ -815,6 +816,7 @@ Composer.reopenClass({
   EDIT,
 
   // Draft key
+  NEW_PRIVATE_MESSAGE_KEY,
   REPLY_AS_NEW_TOPIC_KEY,
   REPLY_AS_NEW_PRIVATE_MESSAGE_KEY
 });
