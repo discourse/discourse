@@ -380,7 +380,7 @@ module BackupRestore
           current_db_name = RailsMultisite::ConnectionManagement.current_db
 
           execute_command(
-            'rsync', '-avp', "#{tmp_uploads_path}/", "uploads/#{current_db_name}/",
+            'rsync', '-avp', '--safe-links', "#{tmp_uploads_path}/", "uploads/#{current_db_name}/",
             failure_message: "Failed to restore uploads."
           )
 
