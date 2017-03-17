@@ -15,8 +15,8 @@ class UserDestroyer
   # Returns a frozen instance of the User if the delete succeeded.
   def destroy(user, opts={})
     raise Discourse::InvalidParameters.new('user is nil') unless user and user.is_a?(User)
-    @guardian.ensure_can_delete_user!(user)
     raise PostsExistError if !opts[:delete_posts] && user.posts.count != 0
+    @guardian.ensure_can_delete_user!(user)
 
     User.transaction do
 
