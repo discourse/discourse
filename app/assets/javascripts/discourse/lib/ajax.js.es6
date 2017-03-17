@@ -69,7 +69,7 @@ export function ajax() {
     args.error = (xhr, textStatus, errorThrown) => {
       // note: for bad CSRF we don't loop an extra request right away.
       //  this allows us to eliminate the possibility of having a loop.
-      if (xhr.status === 403 && xhr.responseText === "['BAD CSRF']") {
+      if (xhr.status === 403 && xhr.responseText === "[\"BAD CSRF\"]") {
         Discourse.Session.current().set('csrfToken', null);
       }
 
