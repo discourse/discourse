@@ -1,4 +1,5 @@
 require 'cache'
+require 'open3'
 require_dependency 'plugin/instance'
 require_dependency 'auth/default_current_user_provider'
 require_dependency 'version'
@@ -14,6 +15,23 @@ module Discourse
   require 'sidekiq/exception_handler'
   class SidekiqExceptionHandler
     extend Sidekiq::ExceptionHandler
+  end
+
+  class Utils
+    def self.execute_command(*command, failure_message: "")
+      stdout, stderr, status = Open3.capture3(*command)
+
+      if !status.success?
+        failure_message = "#{failure_message}\n" if !failure_message.blank?
+        raise "#{failure_message}#{stderr}"
+      end
+
+      stdout
+    end
+
+    def self.pretty_logs(logs)
+      logs.join("\n".freeze)
+    end
   end
 
   # Log an exception.

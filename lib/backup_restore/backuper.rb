@@ -1,8 +1,6 @@
 module BackupRestore
 
   class Backuper
-    include BackupRestore::Utils
-
     attr_reader :success
 
     def initialize(user_id, opts={})
@@ -198,7 +196,7 @@ module BackupRestore
     def move_dump_backup
       log "Finalizing database dump file: #{@backup_filename}"
 
-      execute_command(
+      Discourse::Utils.execute_command(
         'mv', @dump_filename, File.join(@archive_directory, @backup_filename),
         failure_message: "Failed to move database dump file."
       )
@@ -212,15 +210,15 @@ module BackupRestore
       tar_filename = "#{@archive_basename}.tar"
 
       log "Making sure archive does not already exist..."
-      execute_command('rm', '-f', tar_filename)
-      execute_command('rm', '-f', "#{tar_filename}.gz")
+      Discourse::Utils.execute_command('rm', '-f', tar_filename)
+      Discourse::Utils.execute_command('rm', '-f', "#{tar_filename}.gz")
 
       log "Creating empty archive..."
-      execute_command('tar', '--create', '--file', tar_filename, '--files-from', '/dev/null')
+      Discourse::Utils.execute_command('tar', '--create', '--file', tar_filename, '--files-from', '/dev/null')
 
       log "Archiving data dump..."
       FileUtils.cd(File.dirname(@dump_filename)) do
-        execute_command(
+        Discourse::Utils.execute_command(
           'tar', '--append', '--dereference', '--file', tar_filename, File.basename(@dump_filename),
           failure_message: "Failed to archive data dump."
         )
@@ -231,7 +229,7 @@ module BackupRestore
       log "Archiving uploads..."
       FileUtils.cd(File.join(Rails.root, "public")) do
         if File.directory?(upload_directory)
-          execute_command(
+          Discourse::Utils.execute_command(
             'tar', '--append', '--dereference', '--file', tar_filename, upload_directory,
             failure_message: "Failed to archive uploads."
           )
@@ -243,7 +241,7 @@ module BackupRestore
       remove_tmp_directory
 
       log "Gzipping archive, this may take a while..."
-      execute_command('gzip', '-5', tar_filename, failure_message: "Failed to gzip archive.")
+      Discourse::Utils.execute_command('gzip', '-5', tar_filename, failure_message: "Failed to gzip archive.")
     end
 
     def after_create_hook
@@ -259,11 +257,11 @@ module BackupRestore
 
     def notify_user
       log "Notifying '#{@user.username}' of the end of the backup..."
-      if @success
-        SystemMessage.create_from_system_user(@user, :backup_succeeded, logs: pretty_logs(@logs))
-      else
-        SystemMessage.create_from_system_user(@user, :backup_failed, logs: pretty_logs(@logs))
-      end
+      status = @success ? :backup_succeeded : :backup_failed
+
+      SystemMessage.create_from_system_user(@user, status,
+        logs: Discouse::Utils.pretty_logs(@logs)
+      )
     end
 
     def clean_up

@@ -6,8 +6,6 @@ module BackupRestore
   class FilenameMissingError < RuntimeError; end
 
   class Restorer
-    include BackupRestore::Utils
-
     attr_reader :success
 
     def initialize(user_id, opts={})
@@ -166,7 +164,7 @@ module BackupRestore
 
     def copy_archive_to_tmp_directory
       log "Copying archive to tmp directory..."
-      execute_command('cp', @source_filename, @archive_filename, failure_message: "Failed to copy archive to tmp directory.")
+      Discourse::Utils.execute_command('cp', @source_filename, @archive_filename, failure_message: "Failed to copy archive to tmp directory.")
     end
 
     def unzip_archive
@@ -175,7 +173,7 @@ module BackupRestore
       log "Unzipping archive, this may take a while..."
 
       FileUtils.cd(@tmp_directory) do
-        execute_command('gzip', '--decompress', @archive_filename, failure_message: "Failed to unzip archive.")
+        Discourse::Utils.execute_command('gzip', '--decompress', @archive_filename, failure_message: "Failed to unzip archive.")
       end
     end
 
@@ -185,7 +183,7 @@ module BackupRestore
       @metadata =
         if system('tar', '--list', '--file', @tar_filename, BackupRestore::METADATA_FILE)
           FileUtils.cd(@tmp_directory) do
-            execute_command(
+            Discourse::Utils.execute_command(
               'tar', '--extract', '--file', @tar_filename, BackupRestore::METADATA_FILE,
               failure_message: "Failed to extract metadata file."
             )
@@ -233,7 +231,7 @@ module BackupRestore
       log "Extracting dump file..."
 
       FileUtils.cd(@tmp_directory) do
-        execute_command(
+        Discourse::Utils.execute_command(
           'tar', '--extract', '--file', @tar_filename, File.basename(@dump_filename),
           failure_message: "Failed to extract dump file."
         )
@@ -364,7 +362,7 @@ module BackupRestore
         log "Extracting uploads..."
 
         FileUtils.cd(@tmp_directory) do
-          execute_command(
+          Discourse::Utils.execute_command(
             'tar', '--extract', '--keep-newer-files', '--file', @tar_filename, 'uploads/',
             failure_message: "Failed to extract uploads."
           )
@@ -379,7 +377,7 @@ module BackupRestore
           previous_db_name = File.basename(tmp_uploads_path)
           current_db_name = RailsMultisite::ConnectionManagement.current_db
 
-          execute_command(
+          Discourse::Utils.execute_command(
             'rsync', '-avp', '--safe-links', "#{tmp_uploads_path}/", "uploads/#{current_db_name}/",
             failure_message: "Failed to restore uploads."
           )
@@ -404,11 +402,11 @@ module BackupRestore
     def notify_user
       if user = User.find_by(email: @user_info[:email])
         log "Notifying '#{user.username}' of the end of the restore..."
-        if @success
-          SystemMessage.create_from_system_user(user, :restore_succeeded, logs: pretty_logs(@logs))
-        else
-          SystemMessage.create_from_system_user(user, :restore_failed, logs: pretty_logs(@logs))
-        end
+        status = @success ? :restore_succeeded : :restore_failed
+
+        SystemMessage.create_from_system_user(user, status,
+          logs: Discourse::Utils.pretty_logs(@logs)
+        )
       else
         log "Could not send notification to '#{@user_info[:username]}' (#{@user_info[:email]}), because the user does not exists..."
       end
