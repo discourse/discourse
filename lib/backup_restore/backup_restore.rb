@@ -1,4 +1,3 @@
-require "backup_restore/utils"
 require "backup_restore/backuper"
 require "backup_restore/restorer"
 

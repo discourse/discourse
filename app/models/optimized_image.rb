@@ -215,8 +215,7 @@ class OptimizedImage < ActiveRecord::Base
   end
 
   def self.convert_with(instructions, to)
-    `#{instructions.join(" ")} &> /dev/null`
-    return false if $?.exitstatus != 0
+    return false unless system(instructions.join(" "), '&> /dev/null')
 
     ImageOptim.new.optimize_image!(to)
     true

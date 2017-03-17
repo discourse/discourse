@@ -253,7 +253,7 @@ class Upload < ActiveRecord::Base
   end
 
   def self.fix_image_orientation(path)
-    `convert #{path} -auto-orient #{path}`
+    Discourse::Utils.execute_command('convert', path, '-auto-orient', path)
   end
 
   def self.migrate_to_new_scheme(limit=nil)
