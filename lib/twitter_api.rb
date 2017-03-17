@@ -4,7 +4,7 @@ class TwitterApi
   class << self
 
     def prettify_tweet(tweet)
-      text = tweet["text"].dup
+      text = tweet["full_text"].dup
       if entities = tweet["entities"] and urls = entities["urls"]
         urls.each do |url|
           text.gsub!(url["url"], "<a target='_blank' href='#{url["expanded_url"]}'>#{url["display_url"]}</a>")
@@ -21,6 +21,10 @@ class TwitterApi
           if m['type'] == 'photo'
             if large = m['sizes']['large']
               result << "<img class='tweet-image' src='#{m['media_url_https']}' width='#{large['w']}' height='#{large['h']}'>"
+            end
+          elsif m['type'] == 'video'
+            if large = m['sizes']['large']
+              result << "<iframe class='tweet-video' src='https://twitter.com/i/videos/#{tweet['id_str']}' width='#{large['w']}' height='#{large['h']}' frameborder='0'></iframe>"
             end
           end
         end
@@ -81,7 +85,7 @@ class TwitterApi
     end
 
     def tweet_uri_for(id)
-      URI.parse "#{BASE_URL}/1.1/statuses/show.json?id=#{id}"
+      URI.parse "#{BASE_URL}/1.1/statuses/show.json?id=#{id}&tweet_mode=extended"
     end
 
     unless defined? BASE_URL
