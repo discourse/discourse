@@ -4,7 +4,7 @@ class TwitterApi
   class << self
 
     def prettify_tweet(tweet)
-      text = tweet["text"].dup
+      text = tweet["full_text"].dup
       if entities = tweet["entities"] and urls = entities["urls"]
         urls.each do |url|
           text.gsub!(url["url"], "<a target='_blank' href='#{url["expanded_url"]}'>#{url["display_url"]}</a>")
@@ -81,7 +81,7 @@ class TwitterApi
     end
 
     def tweet_uri_for(id)
-      URI.parse "#{BASE_URL}/1.1/statuses/show.json?id=#{id}"
+      URI.parse "#{BASE_URL}/1.1/statuses/show.json?id=#{id}&tweet_mode=extended"
     end
 
     unless defined? BASE_URL
