@@ -1,13 +1,15 @@
 {{#each categories as |c|}}
-  <div class='category-box' style={{border-color c.color}}>
+  <div class='category-box category-box-{{unbound c.slug}}' style={{border-color c.color}}>
     <div class='category-box-inner'>
-      <a href={{c.url}}>
-        {{#if c.uploaded_logo.url}}
-          {{cdn-img src=c.uploaded_logo.url class="logo"}}
-        {{/if}}
+      <div class='category-box-heading'>
+        <a href={{c.url}}>
+          {{#if c.uploaded_logo.url}}
+            {{cdn-img src=c.uploaded_logo.url class="logo"}}
+          {{/if}}
 
-        <h3>{{c.name}}</h3>
-      </a>
+          <h3>{{c.name}}</h3>
+        </a>
+      </div>
 
       <div class='featured-topics'>
         {{#if c.topics}}
