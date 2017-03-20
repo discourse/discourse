@@ -50,8 +50,13 @@ describe PostTimestampChanger do
     end
 
     it 'deletes the stats cache' do
-      $redis.expects(:del).twice
+      $redis.set AdminDashboardData.stats_cache_key, "X"
+      $redis.set About.stats_cache_key, "X"
+
       PostTimestampChanger.new(params).change!
+
+      expect($redis.get(AdminDashboardData.stats_cache_key)).to eq(nil)
+      expect($redis.get(About.stats_cache_key)).to eq(nil)
     end
   end
 end
