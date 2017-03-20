@@ -234,6 +234,11 @@
     text-align: center;
     font-size: 1.05em;
     color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 40%));
+    .overflow {
+      max-height: 6em;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
   }
 
   h3 {
