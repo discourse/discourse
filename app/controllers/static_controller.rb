@@ -161,8 +161,6 @@ class StaticController < ApplicationController
           raise
         end
       rescue Errno::ENOENT
-        response.headers["Expires"] = 5.seconds.from_now.httpdate
-        response.headers["Cache-Control"] = 'max-age=5, public'
         expires_in 1.second, public: true, must_revalidate: false
 
         render text: "can not find #{params[:path]}", status: 404
