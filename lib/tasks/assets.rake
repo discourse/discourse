@@ -174,6 +174,12 @@ task 'assets:precompile' => 'assets:precompile:before' do
 
     # protected
     manifest.send :save
+
+    if backup_path=ENV["BACKUP_ASSET_PATH"]
+      FileUtils.cp_r("#{Rails.root}/public/assets/.", backup_path)
+    end
+
+
   end
 
 end
