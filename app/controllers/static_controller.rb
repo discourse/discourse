@@ -127,64 +127,62 @@ class StaticController < ApplicationController
   end
 
   def brotli_asset
-    path = File.expand_path(Rails.root + "public/assets/" + params[:path])
-    path += ".br"
-
-    # SECURITY what if path has /../
-    raise Discourse::NotFound unless path.start_with?(Rails.root.to_s + "/public/assets")
-
-    opts = { disposition: nil }
-    opts[:type] = "application/javascript" if path =~ /\.js.br$/
-
-    begin
-      response.headers["Last-Modified"] = File.ctime(path).httpdate
-      response.headers["Content-Length"] = File.size(path).to_s
-    rescue Errno::ENOENT
-      response.headers["Expires"] = 5.seconds.from_now.httpdate
-      response.headers["Cache-Control"] = 'max-age=5, public'
-      expires_in 5.seconds, public: true, must_revalidate: false
-
-      render text: "missing brotli asset", status: 404
-      return
+    serve_asset(".br") do
+      response.headers["Content-Encoding"] = 'br'
     end
-
-    response.headers["Content-Encoding"] = 'br'
-
-    # disable NGINX mucking with transfer
-    request.env['sendfile.type'] = ''
-    immutable_for 1.year
-    send_file(path, opts)
   end
 
 
   def cdn_asset
-    path = File.expand_path(Rails.root + "public/assets/" + params[:path])
+    serve_asset
+  end
+
+  protected
+
+  def serve_asset(suffix=nil)
+
+    path = File.expand_path(Rails.root + "public/assets/#{params[:path]}#{suffix}")
 
     # SECURITY what if path has /../
     raise Discourse::NotFound unless path.start_with?(Rails.root.to_s + "/public/assets")
 
-    immutable_for 1.year
 
     response.headers["Expires"] = 1.year.from_now.httpdate
     response.headers["Access-Control-Allow-Origin"] = params[:origin] if params[:origin]
 
     begin
       response.headers["Last-Modified"] = File.ctime(path).httpdate
-      response.headers["Content-Length"] = File.size(path).to_s
     rescue Errno::ENOENT
-      raise Discourse::NotFound
+      begin
+        if GlobalSetting.fallback_assets_path.present?
+          path = File.expand_path("#{GlobalSetting.fallback_assets_path}/#{params[:path]}#{suffix}")
+          response.headers["Last-Modified"] = File.ctime(path).httpdate
+        else
+          raise
+        end
+      rescue Errno::ENOENT
+        response.headers["Expires"] = 5.seconds.from_now.httpdate
+        response.headers["Cache-Control"] = 'max-age=5, public'
+        expires_in 1.second, public: true, must_revalidate: false
+
+        render text: "can not find #{params[:path]}", status: 404
+        return
+      end
     end
+
+    response.headers["Content-Length"] = File.size(path).to_s
+
+    yield if block_given?
+
+    immutable_for 1.year
+
+    # disable NGINX mucking with transfer
+    request.env['sendfile.type'] = ''
 
     opts = { disposition: nil }
     opts[:type] = "application/javascript" if path =~ /\.js$/
-
-    immutable_for(1.year)
-
-    # we must disable acceleration otherwise NGINX strips
-    # access control headers
-    request.env['sendfile.type'] = ''
-    # TODO send_file chunks which kills caching, need to render text here
     send_file(path, opts)
+
   end
 
 end
