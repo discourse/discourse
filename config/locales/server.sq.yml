@@ -32,8 +32,10 @@ sq:
   purge_reason: "Automatically deleted as abandoned, deactivated account"
   disable_remote_images_download_reason: "Remote images download was disabled because there wasn't enough disk space available."
   anonymous: "Anonim"
+  remove_posts_deleted_by_author: "Fshirë nga autori"
   emails:
     incoming:
+      default_subject: "Duhet të shkruani titullin"
       show_trimmed_content: "Show trimmed content"
       maximum_staged_user_per_email_reached: "Reached maximum number of staged users created per email."
       errors:
@@ -57,6 +59,7 @@ sq:
       exclusion: është i rezervuar
       invalid: është i pavlefshëm
       not_a_number: nuk është një numër
+      record_invalid: 'Verifikimi dështoj: %{errors}'
     embed:
       load_from_remote: "Postimi nuk mundi të ngarkohet. Riprovoheni!"
     site_settings:

@@ -172,7 +172,7 @@ pl_PL:
         enabled: 'wylistowanie %{when}'
         disabled: 'odlistowanie %{when}'
     topic_admin_menu: "akcje administratora"
-    wizard_required: "Teraz czas na konfigurację twojego forum! <a href='%{url}' data-auto-route='true'>Rozpocznij Kreator Konfiguracji</a>!"
+    wizard_required: "Witaj na Twoim nowym Discourse! Zacznij od <a href='%{url}' data-auto-route='true'>kreatora konfiguracji</a> ✨"
     emails_are_disabled: "Wysyłanie e-maili zostało globalnie wyłączone przez administrację. Powiadomienia e-mail nie będą dostarczane."
     bootstrap_mode_enabled: "Aby ułatwić uruchomienie Twojego nowego serwisu, znajdujesz się w trybie bootstrap. Wszyscy nowi użytkownicy otrzymają 1. poziom zaufania i będą otrzymywać codzienne podsumowania drogą mailową. To się zmieni, gdy liczba użytkowników przekroczy liczbę %{min_users}."
     bootstrap_mode_disabled: "Tryb Bootstrap zostanie wyłączony w ciągu najbliższych 24 godzin."
@@ -1006,7 +1006,7 @@ pl_PL:
       logging_in: "Uwierzytelnianie…"
       or: "Lub"
       authenticating: "Uwierzytelnianie…"
-      awaiting_confirmation: "Twoje konto czeka na aktywację. Użyj odnośnika przypomnienia hasła, aby otrzymać kolejny email aktywujący konta."
+      awaiting_activation: "Twoje konto czeka na aktywację. Użyj linku przypomnienia hasła, aby otrzymać kolejny email aktywujący."
       awaiting_approval: "Twoje konto jeszcze nie zostało zatwierdzone przez osoby z obsługi. Otrzymasz email gdy zostanie zatwierdzone."
       requires_invite: "Przepraszamy, dostęp do tego forum jest tylko za zaproszeniem."
       not_activated: "Nie możesz się jeszcze zalogować. Wysłaliśmy email aktywujący konto na adres <b>{{sentTo}}</b>. W celu aktywacji konta postępuj zgodnie z instrukcjami otrzymanymi w emailu."
@@ -1276,6 +1276,8 @@ pl_PL:
           first: 'tylko najnowsze posty '
           pinned: są przypięte
           unpinned: są nie przypięte
+          seen: Przeczytałem
+          unseen: Nie przeczytałem
           wiki: są postami wiki
         statuses:
           label: Tematy gdzie
@@ -1898,6 +1900,17 @@ pl_PL:
           side_by_side_markdown:
             title: "Pokaż porównanie źródeł w formie tekstowej obok siebie"
             button: 'Źródło'
+      raw_email:
+        displays:
+          raw:
+            title: "Pokaż surowy email"
+            button: 'Surowy'
+          text_part:
+            title: "Pokaż część tekstową emaila"
+            button: 'Tekst'
+          html_part:
+            title: "Pokaż część html emaila"
+            button: 'HTML'
     category:
       can: 'może&hellip; '
       none: '(brak kategorii)'
@@ -1950,8 +1963,10 @@ pl_PL:
       email_in_disabled_click: 'Kliknij tu, aby włączyć.'
       suppress_from_homepage: "Nie wyświetlaj tej kategorii na stronie głównej."
       show_subcategory_list: "Pokaż listę subkategorii powyżej tematów w tej kategorii."
+      num_featured_topics: "Liczba wątków do wyświetlenia na stronie kategorii:"
       all_topics_wiki: "Stwórz nowe tematy domyślnie jako wiki"
       sort_order: "Domyślnie sortuj:"
+      default_view: "Domyślny Widok:"
       allow_badges_label: "Włącz przyznawanie odznak na podstawie aktywności w tej kategorii"
       edit_permissions: "Edytuj uprawnienia"
       add_permission: "Dodaj uprawnienie"
@@ -2103,7 +2118,7 @@ pl_PL:
     history: "Historia"
     changed_by: "przez {{author}}"
     raw_email:
-      title: "Źródło emaila"
+      title: "Email przychodzący"
       not_available: "Niedostępne!"
     categories_list: "Lista Kategorii"
     filters:
@@ -2536,6 +2551,8 @@ pl_PL:
         add_owners: Dodaj właścicieli
         incoming_email: "Niestandardowy adres poczty przychodzącej"
         incoming_email_placeholder: "podaj adres e-mail"
+        none_selected: "Wybierz grupę, aby rozpocząć"
+        no_custom_groups: "Utwórz nową grupę"
       api:
         generate_master: "Generuj Master API Key"
         none: "Nie ma teraz aktywnych kluczy API."
@@ -2673,7 +2690,8 @@ pl_PL:
             without_uploads: "Tak (bez załączników)"
           download:
             label: "Pobierz"
-            title: "Pobierz kopię zapasową"
+            title: "Wyślij email z linkiem do pobrania"
+            alert: "Link do pobrania tej kopii zapasowej został wysłany do ciebie emailem."
           destroy:
             title: "Usuń kopię zapasową"
             confirm: "Czy na pewno chcesz zniszczyć tą kopię zapasową?"

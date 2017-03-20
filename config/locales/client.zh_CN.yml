@@ -919,7 +919,7 @@ zh_CN:
         title: "使用 Yahoo 帐号登录"
         message: "正在通过 Yahoo 帐号验证登录（请确保浏览器没有禁止弹出窗口）"
       github:
-        title: "使用 GitHub 帐号登录"
+        title: "用 GitHub 帐号登录"
         message: "正在通过 GitHub 帐号验证登录（请确保浏览器没有禁止弹出窗口）"
     invites:
       accept_title: "邀请"
@@ -1828,7 +1828,6 @@ zh_CN:
     history: "历史"
     changed_by: "由 {{author}}"
     raw_email:
-      title: "原始邮件"
       not_available: "不可用！"
     categories_list: "分类列表"
     filters:

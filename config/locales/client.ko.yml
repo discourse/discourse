@@ -300,12 +300,16 @@ ko:
         change_group_setting: "그룹 설정 변경"
         add_user_to_group: "사용자 추가"
         remove_user_from_group: "사용자 삭제"
+        make_user_group_owner: "소유자로 지정하기"
+        remove_user_as_group_owner: "소유자 지정 취소하기"
     groups:
       logs:
         title: "로그"
         when: "언제"
         action: "액션"
+        target_user: "대상 사용자"
         subject: "주제"
+        details: "자세한 내용"
         from: "부터"
         to: "까지"
       edit:
@@ -317,12 +321,33 @@ ko:
         title: "멤버십 요청"
         body: "@%{groupName} 에 멤버십을 요청합니다."
       name_placeholder: "그룹 이름, 공백 없이 username 규칙과 동일하게 입력하세요."
+      public: "사용자들이 그룹을 자유롭게 참여/탈퇴 가능하게 합니다. (그룹은 반드시 공개되어야 함)"
+      empty:
+        posts: "이 그룹에는 아직 멤버들이 포스트를 작성하지 않았습니다."
+        members: "이 그룹에는 구성원이 없습니다."
+        mentions: "이 그룹에서는 언급이 없습니다."
+        messages: "이 그룹에 대한 메시지는 없습니다."
+        topics: "이 그룹의 구성원이 작성한 주제글이 없습니다."
+        logs: "이 그룹에 대한 기록이 없습니다."
       add: "추가"
+      join: "그룹 참여하기"
+      leave: "그룹 나가기"
+      request: "그룹 참여 요청하기"
+      closed_group: 닫힌 그룹
+      is_group_user: "당신은 이 그룹의 구성원입니다."
+      allow_membership_requests: "사용자가 그룹 소유자에게 가입 요청을 하는 것을 허용합니다. (모든 유저가 그룹을 맨션할 수 있어야 함)"
+      membership: "회원제"
+      name: "이름"
+      user_count: "멤버 수"
+      bio: "이 그룹에 대하여"
       selector_placeholder: "멤버 추가"
       owner: "소유자"
       visible: "모든 사용자에게 보이는 그룹입니다."
+      index:
+        title: "그룹"
       title:
         other: "그룹"
+      activity: "활동"
       members: "멤버"
       topics: "주제"
       posts: "게시글"
@@ -342,6 +367,8 @@ ko:
         watching:
           title: "알림 : 주시 중"
           description: "이 메시지에 새로운 답글이 있을 때 알림을 받게 되며 새로운 답글의 개수는 표시됩니다."
+        watching_first_post:
+          title: "첫번째 글 보기"
         tracking:
           title: "알림 : 새 글 표시 중"
           description: "누군가 당신의 @아이디 로 언급했거나 당신의 글에 답글이 달릴 때 알림을 받게 됩니다."
@@ -351,6 +378,7 @@ ko:
         muted:
           title: "알림 : 끔"
           description: "이 메시지에 대해 어떠한 알림도 받지 않지 않습니다."
+      flair_url_placeholder: "(선택) 이미지 URL 또는 Font Awesome 아이콘 클래스"
     user_action_groups:
       '1': "선사한 '좋아요'"
       '2': "받은 '좋아요'"

@@ -136,7 +136,7 @@ de:
         enabled: 'sichtbar gemacht, %{when}'
         disabled: 'unsichtbar gemacht, %{when}'
     topic_admin_menu: "Thema administrieren"
-    wizard_required: "Es ist an der Zeit, Dein Forum einzurichten! <a href='%{url}' data-auto-route='true'>Einrichtungs-Assistenten starten</a>!"
+    wizard_required: "Willkommen bei deinem neuen Discourse! Lass uns mit dem <a href='%{url}' data-auto-route='true'>Setup-Assistenten</a> ✨ starten"
     emails_are_disabled: "Die ausgehende E-Mail-Kommunikation wurde von einem Administrator global deaktiviert. Es werden keinerlei Benachrichtigungen per E-Mail verschickt."
     bootstrap_mode_enabled: "Damit du mit deiner Seite einfacher loslegen kannst, befindest du dich im Starthilfe-Modus. Alle neuen Benutzer erhalten die Vertrauensstufe 1 und bekommen eine tägliche E-Mail-Zusammenfassung. Der Modus wird automatisch deaktiviert, sobald sich mindestens %{min_users} Benutzer angemeldet haben."
     bootstrap_mode_disabled: "Der Starthilfe-Modus wird innerhalb der nächsten 24 Stunden deaktiviert."
@@ -928,7 +928,7 @@ de:
       logging_in: "Anmeldung läuft…"
       or: "Oder"
       authenticating: "Authentifiziere…"
-      awaiting_confirmation: "Dein Konto ist noch nicht aktiviert. Verwende den 'Passwort vergessen'-Link, um eine weitere E-Mail mit Anweisungen zur Aktivierung zu erhalten."
+      awaiting_activation: "Dein Konto ist noch nicht aktiviert. Verwende den 'Passwort vergessen'-Link, um eine weitere E-Mail mit Anweisungen zur Aktivierung zu erhalten."
       awaiting_approval: "Dein Konto wurde noch nicht von einem Team-Mitglied genehmigt. Du bekommst eine E-Mail, sobald das geschehen ist."
       requires_invite: "Entschuldige, der Zugriff auf dieses Forum ist nur mit einer Einladung möglich."
       not_activated: "Du kannst dich noch nicht anmelden. Wir haben dir schon eine E-Mail zur Aktivierung an <b>{{sentTo}}</b> geschickt. Bitte folge den Anweisungen in dieser E-Mail, um dein Benutzerkonto zu aktivieren."
@@ -965,6 +965,7 @@ de:
       accept_title: "Einladung"
       welcome_to: "Willkommen bei %{site_name}!"
       invited_by: "Du wurdest eingeladen von: "
+      social_login_available: "Du wirst dich auch über andere sozialen Netzwerken mit dieser E-Mail-Adresse anmelden können."
       your_email: "Die E-Mail-Adresse deines Benutzerkontos ist <b>%{email}</b>"
       accept_invite: "Einladung annehmen"
       success: "Dein Konto wurde erstellt und du bist jetzt angemeldet."
@@ -1191,6 +1192,8 @@ de:
           first: sind die allerersten Beiträge
           pinned: sind angeheftet
           unpinned: sind nicht angeheftet
+          seen: Habe ich gelesen
+          unseen: Habe ich nicht gelesen
           wiki: sind Wiki
         statuses:
           label: Wo Themen
@@ -1235,8 +1238,10 @@ de:
         selected:
           one: "Du hast <b>ein</b> Thema ausgewählt."
           other: "Du hast <b>{{count}}</b> Themen ausgewählt."
-        change_tags: "Schlagwörter ändern"
+        change_tags: "Schlagwörter ersetzen"
+        append_tags: "Schlagwörter hinzufügen"
         choose_new_tags: "Neue Schlagwörter für die gewählten Themen wählen:"
+        choose_append_tags: "Wähle neue Schlagwörter, die diesen Themen hinzugefügt werden sollen:"
         changed_tags: "Die Schlagwörter der gewählten Themen wurden geändert."
       none:
         unread: "Du hast alle Themen gelesen."
@@ -1729,6 +1734,17 @@ de:
           side_by_side_markdown:
             title: "Zeige die Originaltexte zum Vergleich nebeneinander an"
             button: 'Quelltext'
+      raw_email:
+        displays:
+          raw:
+            title: "Zeige den Quelltext der E-Mail"
+            button: 'Quelltext'
+          text_part:
+            title: "Zeige den Text-Teil der E-Mail"
+            button: 'Text'
+          html_part:
+            title: "Zeige den HTML-Teil der E-Mail"
+            button: 'HTML'
     category:
       can: 'kann&hellip; '
       none: '(keine Kategorie)'
@@ -1780,8 +1796,12 @@ de:
       email_in_disabled: "Das Erstellen von neuen Themen per E-Mail ist in den Website-Einstellungen deaktiviert. Um das Erstellen von neuen Themen per E-Mail zu erlauben,"
       email_in_disabled_click: 'aktiviere die Einstellung „email in“.'
       suppress_from_homepage: "Löse diese Kategorie von der Startseite."
+      show_subcategory_list: "Zeige Liste von Unterkategorien oberhalb von Themen in dieser Kategorie"
+      num_featured_topics: "Anzahl der Themen, die auf der Kategorien-Seite angezeigt werden"
+      subcategory_num_featured_topics: "Anzahl beworbener Themen, die auf der Seite der übergeordneten Kategorie angezeigt werden:"
       all_topics_wiki: "Mache neue Themen standardmäßig zu Wikis."
       sort_order: "Standardsortierung:"
+      default_view: "Standardansicht:"
       allow_badges_label: "Erlaube das Verleihen von Abzeichen in dieser Kategorie."
       edit_permissions: "Berechtigungen bearbeiten"
       add_permission: "Berechtigung hinzufügen"
@@ -1916,7 +1936,7 @@ de:
     history: "Verlauf"
     changed_by: "von {{author}}"
     raw_email:
-      title: "Unverarbeitete E-Mail"
+      title: "Eingegangene E-Mail"
       not_available: "Nicht verfügbar!"
     categories_list: "Liste der Kategorien"
     filters:
@@ -2319,6 +2339,8 @@ de:
         add_owners: Eigentümer hinzufügen
         incoming_email: "Benutzerdefinierte Adresse für eingehende E-Mails"
         incoming_email_placeholder: "E-Mail-Adresse eingeben"
+        none_selected: "Wähle eine Gruppe, um loszulegen"
+        no_custom_groups: "Erstelle eine neue benutzerdefinierte Gruppe"
       api:
         generate_master: "Master API Key erzeugen"
         none: "Es gibt momentan keine aktiven API-Keys"
@@ -2454,7 +2476,8 @@ de:
             without_uploads: "Ja (ohne Dateien)"
           download:
             label: "Herunterladen"
-            title: "Backup herunterladen"
+            title: "Sende E-Mail mit Download-Link"
+            alert: "Ein Link zum Download dieses Backups wurde dir per E-Mail geschickt."
           destroy:
             title: "Das Backup löschen"
             confirm: "Möchtest du wirklich das Backup löschen?"
@@ -2810,6 +2833,7 @@ de:
         refresh_browsers_message: "Nachricht wurde an alle Clients gesendet!"
         show_public_profile: "Zeige öffentliches Profil"
         impersonate: 'Nutzersicht'
+        action_logs: "Aktionsprotokoll"
         ip_lookup: "IP-Abfrage"
         log_out: "Abmelden"
         logged_out: "Der Benutzer wurde auf allen Geräten abgemeldet"

@@ -240,6 +240,40 @@ zh_TW:
       **[造訪個人檔案](%{profile_path})** 並上傳代表你的頭像吧！
 
       當每個人都有獨特的頭像時，大家能更容易的關注討論內容，以及找到對話中有趣的使用者！
+    sequential_replies: |
+      ### 請考慮在單一貼文中回覆多則貼文
+
+      與其發好幾篇回應，來回覆各則貼文，不如在同一篇貼文中包含各則貼文的摘錄，並使用 @使用者名稱 來回應。
+
+      你可以編輯你先前的回應訊息，選擇字句後點選 <b>引用</b> 來回應。
+
+      對於大家而言，閱讀包含較多回覆的少量貼文，會比閱讀多篇瑣碎貼文更為輕鬆。
+    dominating_topic: |
+      ### 讓其他人能一起加入討論
+
+      這篇主題真的對你很重要 &ndash; 你在這個討論中已回覆多於 %{percent}% 的回應。
+
+      你有沒有提供其他人充足的時間，以便表達意見呢？
+    get_a_room: |
+      ### 考慮回應更多參與者
+
+      你已經在這個特定主題中，回應了 @%{reply_username} %{count} 次。
+
+      你有考慮回應討論中的 *其他* 人嗎？一個好的討論，需要納入更多人的觀點與意見。
+
+      如果你還是想要與他繼續討論，請考慮透過[個人訊息](/users/%{reply_username})來進行。
+    too_many_replies: |
+      ### 你發表的回應數量已經達到主題的回覆上限
+
+      非常抱歉，新用戶有臨時限制，只能回覆同一主題 %{newuser_max_replies_per_topic} 次。
+
+      除了繼續回覆外，可以考慮修改你先前的回應，或參與其他主題。
+    reviving_old_topic: |
+      ### 討論串考古？
+
+      這個主題中最新的回應已經是 **%{days} 天** 前的事情了。你的回應會讓主題跳到最上方，並且通知所有曾參與過討論的人。
+
+      你確定你想要喚醒這個舊主題嗎？
   activerecord:
     attributes:
       category:
@@ -270,6 +304,7 @@ zh_TW:
               same_as_username: "與你的用戶名稱相同。請使用其他更安全的密碼。"
               same_as_email: "與你的電郵相同。請使用其他更安全的密碼。"
               same_as_current: "與您目前的密碼相同。"
+              unique_characters: "你的密碼有太多重複字元了。請使用其他更安全的密碼。"
             ip_address:
               signup_not_allowed: "不能使用這個帳戶進行登入"
         color_scheme_color:
@@ -716,6 +751,8 @@ zh_TW:
     facebook_config_warning: '伺服器允許使用 Facebook 帳號登入 (enable_facebook_logins), 但未有設定 app id 及 app secret values 。 請在 <a href="/admin/site_settings">網站設定</a> 裡更改設定。 <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-facebook-logins" target="_blank">設定教學指南</a>。'
     twitter_config_warning: '伺服器允許使用 Twitter 帳號登入 (enable_twitter_logins), 但未有設定 key 和 secret values 。 請在 <a href="/admin/site_settings">網站設定</a> 裡更改設定。 <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-twitter-logins" target="_blank">設定教學指南</a>。'
     github_config_warning: '伺服器允許使用 GitHub 帳號登入  (enable_github_logins), 但未有設定 client id 和 secret values。 請在 <a href="/admin/site_settings">網站設定</a> 裡更改設定。 <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide" target="_blank">設定教學指南</a>。'
+    s3_config_warning: '伺服器被設定為上傳文件到 s3，但是至少有一個值未被設定： s3_access_key_id, s3_secret_access_key, s3_use_iam_profile, or s3_upload_bucket。到 <a href="/admin/site_settings">網站設定</a>更新此設定。<a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">請查閱「如何設置圖片上傳至 S3」</a>.'
+    s3_backup_config_warning: '伺服器被設定為上傳備份到 s3，但是至少有一個值未被設定： s3_access_key_id, s3_secret_access_key, s3_use_iam_profile, or s3_upload_bucket。到 <a href="/admin/site_settings">網站設定</a>更新此設定。<a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">請查閱「如何設置圖片上傳至 S3」</a>.'
     image_magick_warning: '伺服器被設置為給大圖片創建縮略圖，但是 ImageMagick 沒有被安裝。使用你喜愛的包裝管理器安裝 ImageMagick 或<a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">下載最新版</a>。'
     failing_emails_warning: '有 %{num_failed_jobs} 個郵件任務失敗。請檢查 app.yml 檔案是否正確配置了郵件伺服器。<a href="/sidekiq/retries" target="_blank">查看 Sidekiq 中失敗的任務</a>。'
     subfolder_ends_in_slash: "你的子目錄設置不正確；DISCOURSE_RELATIVE_URL_ROOT以斜杠結尾。"
@@ -734,7 +771,7 @@ zh_TW:
     set_locale_from_accept_language_header: "為未登錄用戶按照他們的瀏覽器發送的請求頭部設置界面語言。（實驗性，無法和匿名緩存共同使用）"
     min_post_length: "文章允許的最小文字數"
     min_first_post_length: "第一篇文章允許的最少文字數"
-    min_private_message_post_length: "文章允許的最小文字數"
+    min_private_message_post_length: "私訊允許的最小文字數"
     max_post_length: "文章允許的最大文字數"
     topic_featured_link_enabled: "允許發連結帖。"
     show_topic_featured_link_in_digest: "在摘要郵件中顯示主題特色連結。"
@@ -860,7 +897,8 @@ zh_TW:
     invite_passthrough_hours: "邀請號碼如已被使用，用戶仍可使用多少小時"
     invite_only: "已經禁止開放註冊，新的使用者必須取得其他用戶，或是管理員的邀請"
     login_required: "需要登入才能進入網站，不允許匿名操作"
-    reserved_usernames: "註冊時不可使用的用戶名。"
+    min_username_length: "最短用戶名長度。警告：如果任何現有帳號或群組名稱短於此，你的網站會炸掉。"
+    max_username_length: "最長用戶名長度。警告：如果任何現有帳號或群組名稱長於此，你的網站會炸掉。"
     min_password_length: "最小密碼長度"
     min_admin_password_length: "管理員最短密碼長度"
     block_common_passwords: "不允許使用 10,000 個最常用的密碼"
@@ -1095,12 +1133,13 @@ zh_TW:
     allow_animated_thumbnails: "為 gif 動畫生成動態縮略圖。"
     default_avatars: "新用戶將會使用的默認頭像的網址。"
     automatically_download_gravatars: "當用戶註冊或更改EMail時下載 Gravatars 圖片"
-    digest_topics: "郵件摘要中顯示的流行主題的最大數目。"
-    digest_posts: "郵件摘要中顯示的最流行帖子的數量。"
-    digest_other_topics: "郵件摘要中“你關注的主題和分類中的新內容”欄目顯示的主題數目上限。"
-    digest_min_excerpt_length: "郵件摘要中顯示的帖子摘要字元數下限。"
+    digest_topics: "郵件摘要中顯示的熱門主題的數目上限。"
+    digest_posts: "郵件摘要中顯示的熱門貼文數目上限。"
+    digest_other_topics: "郵件摘要中「你關注的主題和分類中的新內容」欄目顯示的主題數目上限。"
+    digest_min_excerpt_length: "郵件摘要中顯示的貼文摘要字元數下限。"
+    suppress_digest_email_after_days: "對於 (n) 日以上未上站的用戶，停止發送摘要郵件。"
     digest_suppress_categories: "不在摘要郵件中顯示這些分類的內容。"
-    disable_digest_emails: "禁用所有用戶摘要郵件功能。"
+    disable_digest_emails: "停用發送摘要郵件給所有用戶的功能。"
     email_accent_bg_color: "HTML 郵件中某些元素的背景使用的強調顏色。輸入色彩名（“red”）或十六進制值（“#FF0000”）。"
     email_accent_fg_color: "HTML 郵件中背景使用的字型顏色。輸入色彩名（“white”）或十六進制值（“#FFFFFF”）。"
     email_link_color: "HTML 郵件中的連結顏色。輸入色彩名字（“blue”）或十六進制值（“#0000FF”）。"
@@ -1167,7 +1206,7 @@ zh_TW:
     auto_close_topics_post_count: "主題中貼子數上限，達到後自動關閉主題 ( 0 為禁用 )"
     code_formatting_style: "編輯器中的代碼格式化按鈕設置的預設格式"
     default_email_digest_frequency: "用戶收到摘要郵件的預設頻率。"
-    default_include_tl0_in_digests: "在摘要郵件中預設包含新用戶帖子。用戶可以自行在參數設置中更改這個設置。"
+    default_include_tl0_in_digests: "在摘要郵件中預設包含新用戶的貼文。用戶可以自行在參數設置中更改這個設定。"
     default_email_private_messages: "預設在有人發消息給用戶時發送一封郵件通知。"
     default_email_direct: "預設在有人引用、回覆、提及或者邀請用戶時發送一封郵件通知。"
     default_email_mailing_list_mode: "預設為每一個新帖子發送一封郵件通知。"
@@ -1306,7 +1345,7 @@ zh_TW:
     incorrect_username_email_or_password: "用戶名、電子郵箱或密碼不正確"
     wait_approval: "謝謝註冊帳號。我們會在你的帳號獲得批准之後通知你。"
     active: "你的帳號已經被啟用，可以使用了。"
-    activate_email: "<p>快完成了！我們發送了一封激活郵件到<b>%{email}</b>。請按照郵件中的步驟來激活你的帳號。</p><p>如果你沒有收到郵件，請檢查你的垃圾郵件收件箱，或者試試再登錄一次，看看能不能收到另一封激活郵件。</p>"
+    activate_email: "<p>快完成了！我們已寄送了一封確認信件到 <b>%{email}</b>，請按照信中的步驟來啟用你的帳號。</p><p>如果你沒有收到郵件，請檢查你的垃圾郵件收件夾，或者試試再登錄一次，以再次發送另一封確認信件。</p>"
     not_activated: "你還不能登入。我們發送了一封啟用郵件給你，請按照郵件中的步驟來啟用你的帳號。"
     not_allowed_from_ip_address: "你無法透過此 IP 登入成為 %{username}。"
     admin_not_allowed_from_ip_address: "你無法透過此 IP 登入成為管理員。"
@@ -1358,35 +1397,90 @@ zh_TW:
     title: "取消訂閱 Mailer"
     subject_template: "確認你不想要收到%{site_title}的電子郵件更新"
     text_body_template: |
-      有人（可能是你？）請求不再接受來自%{site_domain_name}的郵件更新。
-      點擊連結以確認退訂：
+      有人（可能是你？）要求不再接收來自 %{site_domain_name} 的郵件更新。
+      請點擊連結以確認退訂：
 
       %{confirm_unsubscribe_link}
 
-
-      如果你想要繼續接受郵件更新，你可以忽略這封郵件。
+      如果你想要繼續接收郵件更新，你可以直接忽略這封郵件。
   invite_mailer:
     title: "邀請 Mailer"
     subject_template: "%{invitee_name} 邀請你參與在 %{site_domain_name} 討論的話題 '%{topic_title}'"
+    text_body_template: |
+      %{invitee_name} 邀請你參與位於
+
+      > %{site_title} -- %{site_description}
+
+      的以下討論
+
+      > **%{topic_title}**
+      >
+      > %{topic_excerpt}
+
+      如果你有興趣，請點擊下面的連結：
+
+      %{invite_link}
   custom_invite_mailer:
     title: "客製邀請 Mailer"
     subject_template: "%{invitee_name}邀請你'%{topic_title}'在%{site_domain_name}"
+    text_body_template: |
+      %{invitee_name} 留下以下留言
+
+      > %{user_custom_message}
+
+      邀請你參與位於
+
+      > %{site_title} -- %{site_description}
+
+      的討論
+
+      > **%{topic_title}**
+      >
+      > %{topic_excerpt}
+
+      如果你有興趣，請點擊下面的連結：
+
+      %{invite_link}
   invite_forum_mailer:
     title: "邀請論壇 Mailer"
     subject_template: "%{invitee_name} 邀請你加入 %{site_domain_name}"
+    text_body_template: |
+      %{invitee_name} 邀請你加入
+
+      > **%{site_title}**
+      >
+      > %{site_description}
+
+      如果你感興趣，請點擊下面的連結：
+
+      %{invite_link}
   custom_invite_forum_mailer:
     title: "邀請論壇 Mailer"
     subject_template: "%{invitee_name}邀請你加入%{site_domain_name}"
+    text_body_template: |
+      %{invitee_name} 留下以下留言
+
+      > %{user_custom_message}
+
+      邀請你加入
+
+      > **%{site_title}**
+      >
+      > %{site_description}
+
+      如果你感興趣，請點擊下面的連結：
+
+      %{invite_link}
   invite_password_instructions:
     title: "邀請密碼的說明"
     subject_template: "為 %{site_name} 的帳戶設置密碼"
     text_body_template: |
-      感謝你接受來自%{site_name}的邀請——歡迎！
+      感謝你接受來自 %{site_name} 的邀請，歡迎！
 
-      點擊下面的連結立即選擇一個密碼：
+      點擊下面的連結，立即設定你的密碼：
       %{base_url}/users/password-reset/%{email_token}
 
-      （如果連結已經過期，在登錄時用，選擇“我忘記了密碼”，再次輸入你的郵箱即可。）
+      (如果連結已經過期，在登入頁面選擇「我忘了我的密碼」，再次輸入你的 email 即可)
   test_mailer:
     title: "測試 Mailer"
     subject_template: "[%{site_name}] 電子郵件發送測試"
@@ -1596,10 +1690,18 @@ zh_TW:
     csv_export_succeeded:
       title: "CSV 檔匯出成功"
       subject_template: "資料匯出完成"
+      text_body_template: |
+        資料成功匯出了！:dvd:
+
+        <a class="attachment" href="%{download_link}">%{file_name}</a> (%{file_size})
+
+        以上的下載連結將在 48 小時後失效。
+
+        資料以 gzip 格式壓縮，如果你無法開啟壓縮檔，可以使用這裡推薦的工具： http://www.gzip.org/#faq4
     csv_export_failed:
       title: "CSV 檔匯出失敗"
       subject_template: "資料匯出失敗"
-      text_body_template: "我們很抱歉，但是你的數據導出請求失敗了。請檢查日誌或聯繫一位管理人員。"
+      text_body_template: "很抱歉，你的資料匯出失敗了。請檢查日誌，或聯繫管理人員。"
     email_reject_insufficient_trust_level:
       title: "電子郵件拒絕 信任等級不足"
       subject_template: "[%{site_name}] 電子郵件錯誤 -- 信任等級不足"
@@ -1833,13 +1935,13 @@ zh_TW:
 
         [請檢查並修復他們](%{base_url}/admin)。
   unsubscribe_link: |
-    要退訂這些郵件，[點擊這裡](%{unsubscribe_url})。
+    要退訂這些郵件，[請點擊這裡](%{unsubscribe_url})。
   unsubscribe_link_and_mail: |
-    要退訂這些郵件，[點擊這裡](%{unsubscribe_url})。
+    要退訂這些郵件，[請點擊這裡](%{unsubscribe_url})。
   unsubscribe_mailing_list: |
-    你啟用了郵件列表模式，所以收到了這些郵件。
+    你啟用了郵件列表模式，所以收到本郵件。
 
-    要退訂這些郵件，[點擊這裡](%{unsubscribe_url})。
+    要退訂這些郵件，[請點擊這裡](%{unsubscribe_url})。
   subject_re: "回覆："
   subject_pm: "[私訊]"
   user_notifications:
@@ -1853,8 +1955,8 @@ zh_TW:
     reply_by_email: "[訪問主題](%{base_url}%{url})或者發郵件回覆。"
     reply_by_email_pm: "[訪問消息](%{base_url}%{url})或者發郵件回覆。"
     only_reply_by_email: "發郵件回覆。"
-    visit_link_to_respond: "[訪問主題](%{base_url}%{url})以回覆."
-    visit_link_to_respond_pm: "[訪問消息](%{base_url}%{url})以回覆."
+    visit_link_to_respond: "[訪問主題](%{base_url}%{url})以回覆。"
+    visit_link_to_respond_pm: "[訪問\"私訊\"](%{base_url}%{url})以回覆。"
     posted_by: "由 %{username} 張貼於 %{post_date}"
     invited_to_private_message_body: |
       %{username} 邀請你至消息交流：
@@ -2010,18 +2112,18 @@ zh_TW:
         %{message}
     digest:
       why: "在你上一次於 %{last_seen_at} 訪問後，在 %{site_link} 上的摘要。"
-      since_last_visit: "自從你上次訪問"
+      since_last_visit: "自你上次訪問至今"
       new_topics: "新主題"
-      unread_messages: "未讀私信"
+      unread_messages: "未讀私訊"
       unread_notifications: "未讀通知"
       liked_received: "獲得贊"
-      new_posts: "新帖子"
+      new_posts: "新文章"
       new_users: "新用戶"
       popular_topics: "熱門主題"
       follow_topic: "關注主題"
       join_the_discussion: "閲讀更多"
-      popular_posts: "流行帖子"
-      more_new: "新內容"
+      popular_posts: "熱門貼文"
+      more_new: "新內容與你分享"
       subject_template: "[%{site_name}] 摘要"
       unsubscribe: "這是封來自%{site_link}的摘要郵件，因為你長時間沒有訪問而發送。%{unsubscribe_link}取消訂閲。"
       click_here: "點擊此處"
@@ -2103,32 +2205,32 @@ zh_TW:
       title: "在同意之後註冊"
       subject_template: "你已受到 %{site_name} 的認可！"
       text_body_template: |
-        歡迎加入%{site_name}！
+        歡迎加入 %{site_name}！
 
-        一個管理人員批准了你在%{site_name}的賬戶。
+        管理人員已批准了你在 %{site_name} 的帳戶申請。
 
-        點擊下面的連結來確認並激活你在 %{site_name} 上的新賬號：
+        請點擊以下連結，以確認和啟用你的新帳號：
         %{base_url}/users/activate-account/%{email_token}
 
-        如果上面的連結無法點擊，請拷貝該連結並粘貼到你的瀏覽器的地址欄裡。
+        如果上面的連結無法點擊，請複製該連結，並貼到瀏覽器中開啟。
 
         %{new_user_tips}
 
-        我們始終相信[討論應該文明](%{base_url}/guidelines)。
+        我們始終相信[社群守則](%{base_url}/guidelines)。
 
         好好享受你在論壇的時光吧！
 
-        （如果你在新用戶級別需要和[管理人員](%{base_url/about)溝通的話，直接回覆這個消息。）
+        (如果你需要和[管理人員](%{base_url}/about)聯繫的話，請直接回覆這則訊息。)
     signup:
       title: "註冊"
       subject_template: "[%{site_name}] 確認你的新賬戶"
       text_body_template: |
         歡迎來到 %{site_name}！
 
-        點擊以下連結來確認和啟用你的新帳號：
+        請點擊以下連結，以確認和啟用你的新帳號：
         %{base_url}/users/activate-account/%{email_token}
 
-        如果上面的連結無法點擊，請拷貝該連結並粘貼到你的流覽器的地址欄裡。
+        如果上面的連結無法點擊，請複製該連結，並貼到瀏覽器中開啟。
   page_not_found:
     title: "抱歉！這個頁面不存在或者是私密的。"
     popular_topics: "熱門"
@@ -2751,10 +2853,10 @@ zh_TW:
       no_emails: "不幸的是，在嚮導中你沒有設置管理員郵件地址，所以完善配置<a href='https://meta.discourse.org/t/how-to-create-an-administrator-account-after-install/14046'>可能有點困難</a>。"
     confirm_email:
       title: "配置你的郵件"
-      message: "<p>我們發送了一封激活郵件到<b>%{email}</b>。請按照郵件中的步驟來激活你的帳號。</p><p>如果你沒有收到郵件，請檢查你正確設置了 Discourse 郵件配置，然後查看你的垃圾郵件收件箱。</p>"
+      message: "<p>我們已寄送了一封確認信件到 <b>%{email}</b>，請按照信中的步驟來啟用你的帳號。</p><p>如果你沒有收到郵件，請檢查你的 Discourse 郵件設定正確，並檢查你的垃圾郵件收件夾。</p>"
     resend_email:
-      title: "重發激活郵件"
-      message: "<p>我們重發了激活郵件至<b>%{email}</b>"
+      title: "重發啟用信件"
+      message: "<p>我們已重發啟用信件至 <b>%{email}</b>"
   safe_mode:
     title: "進入安全模式"
     description: "安全模式讓你的站點不載入插件或站點自定義設置。"
@@ -2785,9 +2887,11 @@ zh_TW:
         fields:
           welcome:
             label: "歡迎主題"
+            description: "<p>你會如何在一分鐘內向陌生人描述你的社群？</p> <ul> <li>誰會對這些討論感興趣？</li> <li>我能獲得什麼？</li> <li>為什麼我應該參與？</li> </ul> <p>你的歡迎主題，是新訪客將首先看到的訊息。請將它視為<b>一段</b>「電梯宣傳」或者「任務說明」。</p>"
             one_paragraph: "請限制你的歡迎消息至一段話。"
       privacy:
         title: "訪問"
+        description: "<p>你的社群對是否對大眾公開，或僅限於會員使用、邀請制或須審核加入？如果你願意，你可以先在私密模式下準備，稍後再將其設為公開。</p><p>你隨時可以在主題中邀請別人參與，或者從你的用戶頁面發送邀請也行。</p>"
         fields:
           privacy:
             choices:
