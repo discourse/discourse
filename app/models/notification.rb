@@ -13,7 +13,10 @@ class Notification < ActiveRecord::Base
                             .where('topics.id IS NULL OR topics.deleted_at IS NULL') }
 
   after_commit :send_email
-  after_commit :refresh_notification_count
+  # This is super weird because the tests fail if we don't specify `on: :destroy`
+  # TODO: Revert back to default in Rails 5 
+  after_commit :refresh_notification_count, on: :destroy
+  after_commit :refresh_notification_count, on: [:create, :update]
 
   def self.ensure_consistency!
     Notification.exec_sql("
