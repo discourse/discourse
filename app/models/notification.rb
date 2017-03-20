@@ -12,10 +12,8 @@ class Notification < ActiveRecord::Base
   scope :visible , lambda { joins('LEFT JOIN topics ON notifications.topic_id = topics.id')
                             .where('topics.id IS NULL OR topics.deleted_at IS NULL') }
 
-  after_save :refresh_notification_count
-  after_destroy :refresh_notification_count
-
   after_commit :send_email
+  after_commit :refresh_notification_count
 
   def self.ensure_consistency!
     Notification.exec_sql("
