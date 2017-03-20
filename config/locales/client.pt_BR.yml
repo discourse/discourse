@@ -10,7 +10,7 @@ pt_BR:
     number:
       format:
         separator: ","
-        delimiter: ","
+        delimiter: "."
       human:
         storage_units:
           format: '%n %u'
@@ -100,7 +100,7 @@ pt_BR:
           one: "1 ano depois"
           other: "%{count} anos depois"
       previous_month: 'Mês Anterior'
-      next_month: 'Próximo Mês'
+      next_month: 'Mês Seguinte'
     share:
       topic: 'compartilhe o link desse tópico'
       post: 'mensagem #%{postNumber}'
@@ -136,7 +136,7 @@ pt_BR:
         enabled: 'listou %{when}'
         disabled: 'desalistou %{when}'
     topic_admin_menu: "ações administrativas do tópico"
-    wizard_required: "Chegou a hora de configurar seu fórum! <a href='%{url}' data-auto-route='true'>Começar o Assistente de Configuração</a>!"
+    wizard_required: "Bem vindo ao seu novo Discourse! Vamos começar com o <a href='%{url}' data-auto-route='true'>assistente de configuração</a> ✨"
     emails_are_disabled: "Todo o envio de email foi globalmente desabilitado por algum administrador. Nenhum email de notificações de qualquer tipo será enviado."
     bootstrap_mode_enabled: "Para facilitar o lançamento do seu novo site, você esta no modo de inicialização. A todos os novos usuários, será concedido o nível de confiança 1 e eles terão o resumo diário de atualizações por email ativado. Isso será automaticamente desativado quando a contagem total de usuários exceder %{min_users} usuários."
     bootstrap_mode_disabled: "O modo de inicialização será desativado nas próximas 24 horas."
@@ -645,6 +645,7 @@ pt_BR:
         short_instructions: "As pessoas podem mencionar você usando @{{username}}."
         available: "Seu nome de usuário está disponível"
         not_available: "Não está disponível. Tente {{suggestion}}?"
+        not_available_no_suggestion: "Não disponível"
         too_short: "Seu nome de usuário é muito curto"
         too_long: "Seu nome de usuário é muito longo"
         checking: "Verificando disponibilidade do Nome de Usuário..."
@@ -745,8 +746,10 @@ pt_BR:
         link_generated: "Link de convite gerado com sucesso!"
         valid_for: "Link de convite é válido apenas para esse endereço de email: %{email}"
         bulk_invite:
+          none: "Você ainda não convidou ninguém para cá. Envie convites individuais, ou convide várias pessoas de uma só vez, fazendo a <a href='https://meta.discourse.org/t/send-bulk-invites/16468'>importação de um arquivo CSV</a>."
           text: "Convidar em massa a partir de arquivo"
           success: "Arquivo enviado com sucesso, você será notificado por mensagem quando o processo estiver completo."
+          error: "Pedimos desculpas, o arquivo deve estar no formato CSV."
       password:
         title: "Senha"
         too_short: "A sua senha é muito curta."
@@ -925,7 +928,7 @@ pt_BR:
       logging_in: "Entrando..."
       or: "Ou"
       authenticating: "Autenticando..."
-      awaiting_confirmation: "A sua conta está aguardando ativação, utilize o link 'Esqueci a Senha' para pedir um novo link para ativar o email."
+      awaiting_activation: "Sua conta está aguardando ativação, utilize o link \"Esqueci minha senha\" para enviar um novo email de ativação."
       awaiting_approval: "Sua conta ainda não foi aprovada por um membro da equipe. Você receberá um email quando sua conta for aprovada."
       requires_invite: "Desculpe, o acesso a este fórum é permitido somente por convite de outro membro."
       not_activated: "Você não pode entrar ainda. Nós lhe enviamos um email de ativação anteriormente no endereço <b>{{sentTo}}</b>. Por favor siga as instruções contidas neste email para ativar a sua conta."
@@ -958,6 +961,15 @@ pt_BR:
       github:
         title: "com GitHub"
         message: "Autenticando com GitHub (certifique-se de que os bloqueadores de popup estejam desativados)"
+    invites:
+      accept_title: "Convite"
+      welcome_to: "Bem vindo a %{site_name}!"
+      invited_by: "Você foi convidado por:"
+      social_login_available: "Em breve, você poderá entrar com qualquer login de redes sociais usando este email."
+      your_email: "O endereço de email da sua conta é <b>%{email}</b>."
+      accept_invite: "Aceitar Convite"
+      success: "Sua conta foi criada e você já está logado."
+      password_label: "Configurar Senha (opcional)"
     password_reset:
       continue: "Continuar para %{site_name}"
     emoji_set:
@@ -1180,6 +1192,8 @@ pt_BR:
           first: são a primeira publicação
           pinned: está fixado
           unpinned: não está fixado
+          seen: Eu li
+          unseen: Eu não li
           wiki: é uma wiki
         statuses:
           label: Onde os tópicos
@@ -1769,8 +1783,11 @@ pt_BR:
       email_in_disabled: "Postar novos tópicos via email está desabilitado nas Configurações do Site. Para habilitar respostas em novos tópicos via email,"
       email_in_disabled_click: 'habilitar a configuração de "email em".'
       suppress_from_homepage: "Suprimir esta categoria da página inicial."
+      show_subcategory_list: "Exibir lista de subcategorias acima dos tópicos nesta categoria."
+      num_featured_topics: "Número de tópicos exibidos na página de Categorias:"
       all_topics_wiki: "Tornar novos tópicos wikis por padrão."
       sort_order: "Ordenação Padrão:"
+      default_view: "Visualização Padrão:"
       allow_badges_label: "Permitir a concessão de emblemas nessa categoria"
       edit_permissions: "Editar Permissões"
       add_permission: "Adicionar Permissões"
@@ -2312,6 +2329,8 @@ pt_BR:
         add_owners: Adicionar proprietários
         incoming_email: "Endereço de email de entrada personalizado"
         incoming_email_placeholder: "Insira um endereço de email"
+        none_selected: "Selecione um grupo para começar"
+        no_custom_groups: "Crie um novo grupo"
       api:
         generate_master: "Gerar chave Mestra de API"
         none: "Não existem chaves API ativas no momento."
@@ -2447,7 +2466,8 @@ pt_BR:
             without_uploads: "Sim (não inclua arquivos)"
           download:
             label: "Download"
-            title: "Download do backup"
+            title: "Enviar email com link para download"
+            alert: "Um link para fazer o download deste backup foi enviado a você por email."
           destroy:
             title: "Remove o backup"
             confirm: "Tem certeza de que quer destruir este backup?"
@@ -2803,6 +2823,7 @@ pt_BR:
         refresh_browsers_message: "Mensagem enviada para todos os clientes!"
         show_public_profile: "Mostrar Perfil Público"
         impersonate: 'Personificar'
+        action_logs: "Registro de Atividades"
         ip_lookup: "Pesquisa do IP"
         log_out: "Log Out"
         logged_out: "Usuário foi desconectado em todos os dipositivos"

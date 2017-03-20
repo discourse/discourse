@@ -136,7 +136,7 @@ fi:
         enabled: 'listasi %{when}'
         disabled: 'poisti listauksista %{when}'
     topic_admin_menu: "ketjun ylläpitotoimet"
-    wizard_required: "Konfiguroidaan foorumisi! <a href='%{url}' data-auto-route='true'>Aloita ohjattu asennus</a>!"
+    wizard_required: "Tervetuloa uuteen Discourseesi! Aloitetaan <a href='%{url}' data-auto-route='true'>ohjattu asennus</a> ✨"
     emails_are_disabled: "Ylläpitäjä on estänyt kaiken lähtevän sähköpostiliikenteen. Mitään sähköposti-ilmoituksia ei lähetetä."
     bootstrap_mode_enabled: "Jotta uuden palsta käynnistäminen olisi helpompaa, on sivusto asetettu aloitustilaan. Kaikki uudet käyttäjät siirretään automaattisesti luottamustasolle 1 ja heille lähetetään sähköpostitiivistelmät päivittäin. Tämä tila poistetaan automaattisesti, kun käyttäjien määrä ylittää %{min_users}."
     bootstrap_mode_disabled: "Aloitustila poistetaan seuraavan 24 tunnin aikana."
@@ -929,7 +929,7 @@ fi:
       logging_in: "Kirjaudutaan..."
       or: "Tai"
       authenticating: "Autentikoidaan..."
-      awaiting_confirmation: "Käyttäjätilisi odottaa vahvistusta. Käytä salasana unohtui -linkkiä lähettääksesi uuden vahvistusviestin."
+      awaiting_activation: "Tilisi odottaa aktivointia; unohdin salasanani -linkin kautta voit pyytää uuden aktivointisähköpostin."
       awaiting_approval: "Henkilökunta ei ole vielä hyväksynyt käyttäjätiliäsi. Saat sähköpostiviestin, kun tunnuksesi on hyväksytty."
       requires_invite: "Pahoittelut, tämä palsta on vain kutsutuille käyttäjille."
       not_activated: "Et voi vielä kirjautua sisään. Lähetimme aiemmin vahvistusviestin osoitteeseen <b>{{sentTo}}</b>. Seuraa viestin ohjeita ottaaksesi tunnuksen käyttöön."
@@ -1193,6 +1193,8 @@ fi:
           first: jotka ovat ketjun avausviestejä
           pinned: jotka on kiinnitettyjä
           unpinned: jotka eivät ole kiinnitettyjä
+          seen: jotka olen lukenut
+          unseen: joita en ole lukenut
           wiki: ovat wiki-viestejä
         statuses:
           label: Ketju/Ketjuun
@@ -1733,6 +1735,17 @@ fi:
           side_by_side_markdown:
             title: "Näytä viestien lähdekoodit vierekkäin"
             button: 'Raaka'
+      raw_email:
+        displays:
+          raw:
+            title: "Näytä raaka sähköposti"
+            button: 'Raaka'
+          text_part:
+            title: "Näytä sähköpostin tekstiosa"
+            button: 'Teksti'
+          html_part:
+            title: "Näytä sähköpostin HTML-osa"
+            button: 'HTML'
     category:
       can: 'voivat&hellip; '
       none: '(ei aluetta)'
@@ -1785,8 +1798,11 @@ fi:
       email_in_disabled_click: 'ota käyttöön "email in" asetus.'
       suppress_from_homepage: "Vaimenna alue kotisivulta."
       show_subcategory_list: "Näytä lista tytäralueista ketjujen yläpuolella tällä alueella."
+      num_featured_topics: "Kuinka monta ketjua näytetään Keskustelualueet-sivulla:"
+      subcategory_num_featured_topics: "Kuinka monta ketjua näytetään emoalueen sivulla:"
       all_topics_wiki: "Tee uusista ketjuista wiki-viestejä oletuksena."
       sort_order: "Oletusjärjestys:"
+      default_view: "Oletusnäkymä:"
       allow_badges_label: "Salli ansiomerkkien myöntäminen tältä alueelta"
       edit_permissions: "Muokkaa oikeuksia"
       add_permission: "Lisää oikeus"
@@ -1795,7 +1811,7 @@ fi:
       default_position: "Oletuspaikka"
       position_disabled: "Alueet näytetään aktiivisuusjärjestyksessä. Muokataksesi järjestystä,"
       position_disabled_click: 'ota käyttöön "pysyvä aluejärjestys" asetuksista.'
-      parent: "Ylempi alue"
+      parent: "Emoalue"
       notifications:
         watching:
           title: "Tarkkaile"
@@ -1925,7 +1941,7 @@ fi:
     history: "Historia"
     changed_by: "käyttäjältä {{author}}"
     raw_email:
-      title: "Alkuperäinen sähköposti"
+      title: "Saapuva sähköposti"
       not_available: "Ei käytettävissä!"
     categories_list: "Lista alueista"
     filters:
@@ -2144,9 +2160,9 @@ fi:
         about: "Lisää tunnisteita ryhmiin, jotta niitä on helpompi hallita"
         new: "Uusi ryhmä"
         tags_label: "Tunnisteet tässä ryhmässä"
-        parent_tag_label: "Ylempi tunniste:"
+        parent_tag_label: "Emotunniste:"
         parent_tag_placeholder: "Valinnainen"
-        parent_tag_description: "Tämän ryhmän tunnisteita voi käyttää vain, jos ylempi tunniste on asetettu"
+        parent_tag_description: "Tämän ryhmän tunnisteita voi käyttää vain, jos emotunniste on asetettu"
         one_per_topic_label: "Rajoita tästä ryhmästä yhteen tunnisteeseen per ketju"
         new_name: "Uusi ryhmä tunnisteita"
         save: "Tallenna"
@@ -2328,6 +2344,8 @@ fi:
         add_owners: Lisää omistajia
         incoming_email: "Saapuvan sähköpostin osoite"
         incoming_email_placeholder: "aseta sähköpostiosoite"
+        none_selected: "Aloita valitsemalla ryhmä"
+        no_custom_groups: "Luo uusi mukautettu ryhmä"
       api:
         generate_master: "Luo rajapinnan pääavain"
         none: "Aktiivisia API avaimia ei ole määritelty."
@@ -2345,12 +2363,73 @@ fi:
       web_hooks:
         title: "Webhookit"
         none: "Webhookeja ei ole nyt."
+        instruction: "Webhookien kautta Discourse ilmoittaa ulkoiselle palvelulle, kun sivustollasi tapahtuu määrätty tapahtuma. Kun webhook laukeaa, POST-pyyntö lähetetään annettuihin URL:eihin."
+        detailed_instruction: "POST-pyyntö lähetetään annettuun URL:ään, kun valittu tapahtuma tapahtuu."
         new: "Uusi Webhook"
         create: "Luo"
         save: "Tallenna"
         destroy: "Poista"
         description: "Kuvaus"
+        controls: "Hallinta"
         go_back: "Takaisin listaan"
+        payload_url: "Tietosisällön URL"
+        payload_url_placeholder: "https://example.com/postreceive"
+        warn_local_payload_url: "Näyttää, että yrität asettaa webhookin paikalliseen URL:ään. Paikalliseen osoitteeseen toimitetulla tapahtumalla voi olla sivuvaikutuksia tai se voi käyttäytyä odottamattomasti. Jatketaanko?"
+        secret_invalid: "Salausavaimessa ei voi olla tyhjämerkkejä."
+        secret_too_short: "Salausavaimessa tulee olla ainakin 12 merkkiä."
+        secret_placeholder: "Valinnainen merkkijono, käytetään luotaessa allekirjoitusta"
+        event_type_missing: "Ainakin yksi tapahtumatyyppi täytyy asettaa."
+        content_type: "Sisällön tyyppi"
+        secret: "Salausavain"
+        event_chooser: "Minkä tapahtumien haluat laukaisevan tämän webhookin?"
+        wildcard_event: "Lähetä kaikesta."
+        individual_event: "Valitse tietyt tapahtumat."
+        verify_certificate: "Tarkasta tietosisällön URL:in TLS-sertifikaatti"
+        active: "Toiminnassa"
+        active_notice: "Toimitamme tiedot tapahtumasta, kun se tapahtuu."
+        categories_filter_instructions: "Webhookit laukaistaan vain, jos tapahtuma liittyy määrättyihin alueisiin. Jätä tyhjäksi, jos haluat webhookien laukeavan alueesta riippumatta."
+        categories_filter: "Laukaisevat alueet"
+        groups_filter_instructions: "Webhookit laukaistaan vain, jos tapahtuma liittyy määrättyihin ryhmiin. Jätä tyhjäksi, jos haluat webhookien laukeavan ryhmistä riippumatta."
+        groups_filter: "Laukaisevat ryhmät"
+        delete_confirm: "Poista tämä webhook?"
+        topic_event:
+          name: "Ketjutapahtuma"
+          details: "Luodaan uusi ketju, ketju päivitetään, muutetaan tai poistetaan"
+        post_event:
+          name: "Viestitapahtuma"
+          details: "Luodaan uusi vastaus, muokataan, poistetaan tai palautetaan."
+        user_event:
+          name: "Käyttäjätapahtuma"
+          details: "Luodaan uusi käyttäjä, käyttäjä hyväksytään tai päivittyy."
+        delivery_status:
+          title: "Toimituksen tila"
+          inactive: "Ei toiminnassa"
+          failed: "Epäonnistui"
+          successful: "Onnistui"
+        events:
+          none: "Liittyviä tapahtumia ei ole."
+          redeliver: "Toimita uudelleen"
+          incoming:
+            one: "Yksi uusi tapahtuma."
+            other: "{{count}} uutta tapahtumaa."
+          completed_in:
+            one: "Suoritettiin 1 sekunnissa."
+            other: "Suoritettiin {{count}} sekunnissa."
+          request: "Pyyntö"
+          response: "Vastaus"
+          redeliver_confirm: "Oletko varma, että haluat toimittaa uudelleen saman tietosisällön?"
+          headers: "Otsikot"
+          payload: "Tietosisältö"
+          body: "Runko"
+          go_list: "Siirry listaan"
+          go_details: "Muokkaa webhookia"
+          go_events: "Siirry tapahtumiin"
+          ping: "Ping"
+          status: "Tilan koodi"
+          event_id: "ID"
+          timestamp: "Luotu"
+          completion: "Suorituksen kesto"
+          actions: "Toiminnot"
       plugins:
         title: "Lisäosat"
         installed: "Asennetut lisäosat"
@@ -2402,7 +2481,8 @@ fi:
             without_uploads: "Kyllä (älä sisällytä tiedostoja)"
           download:
             label: "Lataa"
-            title: "Lataa varmuuskopio"
+            title: "Lähetä sähköposti, jossa on latauslinkki"
+            alert: "Varmuuskopion latauslinkki on lähetetty sähköpostiisi."
           destroy:
             title: "Poista varmuuskopio"
             confirm: "Oletko varma, että haluat tuhota tämän varmuuskopion?"
@@ -2758,6 +2838,7 @@ fi:
         refresh_browsers_message: "Viesti lähetetty kaikille asiakkaille!"
         show_public_profile: "Näytä julkinen profiili"
         impersonate: 'Esiinny käyttäjänä'
+        action_logs: "Toimintaloki"
         ip_lookup: "IP haku"
         log_out: "Kirjaa ulos"
         logged_out: "Käyttäjä on kirjautunut ulos kaikilla laitteilla"

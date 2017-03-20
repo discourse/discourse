@@ -190,6 +190,12 @@ de:
     latest: "Aktuelle Themen"
     hot: "Beliebte Themen"
     top: "Die besten Themen"
+    top_all: "Top-Themen aller Zeiten"
+    top_yearly: "Top-Themen der letzten 12 Monate"
+    top_quarterly: "Top-Themen der letzten drei Monate"
+    top_monthly: "Top-Themen der letzten 30 Tage"
+    top_weekly: "Top-Themen der letzten Woche"
+    top_daily: "Top-Themen der letzten 24 Stunden"
     posts: "Letzte Beiträge"
     private_posts: "Neueste private Nachricht"
     group_posts: "Letzte Beiträge von %(Gruppen_name)"
@@ -426,7 +432,7 @@ de:
       pms_per_day: "Du hast die maximale Anzahl an Nachrichten für heute erreicht. Bitte warte %{time_left}, bis Du es wieder versuchst."
       create_like: "Du hast die maximale Anzahl an Likes für heute erreicht. Bitte warte %{time_left}, bevor du es wieder versuchst."
       create_bookmark: "Du hast die maximale Anzahl an Lesezeichen für heute erreicht. Bitte warte %{time_left}, bis Du es wieder versuchst."
-      edit_post: "Du hast die maximale Anzahl an Änderungen für heute erreicht. Bitte warte %{time_left}, bis Du es wieder versuchst."
+      edit_post: "Du hast für heute die maximale Anzahl an Bearbeitungen erreicht. Bitte warte %{time_left}, bevor du es erneut versuchst."
       live_post_counts: "Du forderst die Live-Anzahl der Antworten zu schnell neu an. Bitte warte %{time_left}, bis du es wieder versuchst."
       unsubscribe_via_email: "Du hast die maximale Anzahl an Abbestell-E-Mails für heute erreicht. Bitte warte %{time_left}, vor einem neuen Versuch."
       topic_invitations_per_day: "Du hast die maximale Zahl an neuen Thema-Einladungen für heute erreicht. Bitte warte %{time_left}, bis Du es wieder versuchst."
@@ -536,6 +542,7 @@ de:
     welcome_to: "Willkommen bei %{site_name}!"
     approval_required: "Bevor du auf das Forum zugreifen kannst, muss dein neues Konto noch von einem Moderator genehmigt werden. Du erhältst eine E-Mail, sobald dies geschehen ist!"
     missing_session: "We können nicht feststellen, ob dein Konto erstellt wurde, bitte stelle sichere, dass du Cookies aktiviert hast."
+    activated: "Bitte entschuldige, dieses Konto wurde bereits aktiviert."
   post_action_types:
     off_topic:
       title: 'Am Thema vorbei'
@@ -789,6 +796,8 @@ de:
     facebook_config_warning: 'Der Server erlaubt die Anmeldung mit Facebook (enable_facebook_logins), aber die App ID und der Geheimcode sind nicht gesetzt. Besuche <a href="/admin/site_settings">die Einstellungen</a> um die fehlenden Einträge hinzuzufügen. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-facebook-logins" target="_blank">Besuche den Leitfaden um mehr zu erfahren</a>.'
     twitter_config_warning: 'Der Server erlaubt die Anmeldung mit Twitter (enable_twitter_logins), aber der Schlüssel und der Geheimcode sind nicht gesetzt. Besuche <a href="/admin/site_settings">die Einstellungen</a> um die fehlenden Einträge hinzuzufügen. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide#enable-twitter-logins" target="_blank">Besuche den Leitfaden um mehr zu erfahren</a>.'
     github_config_warning: 'Der Server erlaubt die Anmeldung mit Facebook GitHub (enable_github_logins), aber die Kunden-ID und der Geheimcode sind nicht gesetzt. Besuche <a href="/admin/site_settings">die Einstellungen</a> um die fehlenden Einträge hinzuzufügen. <a href="https://github.com/discourse/discourse/wiki/The-Discourse-Admin-Quick-Start-Guide" target="_blank">Besuche den Leitfaden um mehr zu erfahren</a>.'
+    s3_config_warning: 'Der Server ist so eingestellt, dass Dateien auf S3 hochgeladen werden, aber mindestens eine der folgenden Einstellungen ist nicht gesetzt: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile, or s3_upload_bucket. Gehe zu <a href="/admin/site_settings">den Seiten-Einstellungen</a> und aktualisiere die Einstellungen. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Siehe „How to set up image uploads to S3?“ um mehr zu erfahren</a>.'
+    s3_backup_config_warning: 'Der Server ist so eingestellt, dass Backups auf S3 hochgeladen werden, aber mindestens eine der folgenden Einstellungen ist nicht gesetzt: s3_access_key_id, s3_secret_access_key, s3_use_iam_profile, or s3_backup_bucket. Gehe zu <a href="/admin/site_settings">den Seiten-Einstellungen</a> und aktulisiere die Einstellungen. <a href="http://meta.discourse.org/t/how-to-set-up-image-uploads-to-s3/7229" target="_blank">Siehe „How to set up image uploads to S3?“ um mehr zu erfahren</a>.'
     image_magick_warning: 'Der Server wurde konfiguriert um Vorschaubilder von grossen Bildern zu erstellen, aber ImageMagick ist nicht installiertd. Installiere ImageMagick mit deinem bevorzugten Packetmanager oder besuche <a href="http://www.imagemagick.org/script/binary-releases.php" target="_blank">um das aktuelle Paket herunterzuladen</a>.'
     failing_emails_warning: "%{num_failed_jobs} E-Mails konnten nicht versendet werden. Überprüfe deine app.yml und stelle sicher, dass die E-Mail Servereinstellungen korrekt gesetzt sind. \n<a href=\"/sidekiq/retries\" target=\"_blank\">Sieh dir hier die nicht versendeten E-Mails an.</a>"
     subfolder_ends_in_slash: "Deine Installation in einem Pfad ist nicht korrekt, DISCOURSE_RELATIVE_URL_ROOT endet mit einem Schrägstrich."
@@ -860,6 +869,7 @@ de:
     email_custom_headers: "Eine durch senkrechte Striche getrennte Liste von eigenen E-Mail Headerzeilen"
     email_subject: "Format der Betreffzeile in Standard-E-Mails. Siehe https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801"
     force_https: "Erzwinge HTTPS für deine Site. ACHTUNG: Aktiviere dies nicht, bevor HTTPS nicht vollständig eingerichtet ist und auf jeden Fall überall funktioniert! Hast du alle CDN-Netzwerke, alle Logins über Soziale Netzwerke, alle externe Logos / Abhängigkeiten geprüft, um sicherzustellen, dass sie auch alle HTTPS-kompatibel sind?"
+    same_site_cookies: "Verwende Same-Site-Cookies, die alle Angriffsszenarien für Cross-Site-Request-Forgery in unterstützten Browsern (lax oder strict). Warnung: Strict wird nur auf Seiten funktionieren, die Login erzwingen und SSO verwenden."
     summary_score_threshold: "Mindestpunktzahl, die ein Beitrag benötigt, um in der \"Thema zusammenfassen\"-Ansicht zu erscheinen."
     summary_posts_required: "Mindestanzahl an Beiträgen in einem Thema, bevor die \"Thema zusammenfassen\"-Funktion aktiviert wird."
     summary_likes_required: "Mindestanzahl an Likes in einem Thema, bevor die \"Thema zusammenfassen\" Funktion aktiviert wird."
@@ -936,7 +946,7 @@ de:
     login_required: "Nur angemeldete Benutzer dürfen Inhalte der Site lesen, anonyme Zugriffe sind verboten."
     min_username_length: "Minimale Zeichenlänge für Benutzernamen. WARNUNG: Wenn bestehende Benutzer oder Gruppen kürzere Namen haben, wird deine Seite nicht mehr funktionieren!"
     max_username_length: "Maximale Zeichenlänge für Benutzernamen. WARNUNG: Wenn bestehende Benutzer oder Gruppen längere Namen haben, wird deine Seite nicht mehr funktionieren!"
-    reserved_usernames: "Benutzernamen, welche für die Registrierung gesperrt werden sollen."
+    reserved_usernames: "Benutzernamen, die nicht registriert werden dürfen. Das Wildcard-Symbol * kann verwendet werden, um ein beliebige Zeichenfolge zu erlauben."
     min_password_length: "Minimale Länge des Passworts."
     min_admin_password_length: "Minimale Passwortlänge für Administratoren."
     password_unique_characters: "Minimale Anzahl unterschiedlicher Zeichen, die ein Passwort enthalten muss."
@@ -1002,6 +1012,8 @@ de:
     max_private_messages_per_day: "Maximale Zahl Direktnachrichten, die ein Benutzer pro Tag erstellen kann."
     max_invites_per_day: "Maximale Zahl an Einladungen, die ein Benutzer pro Tag verschicken kann."
     max_topic_invitations_per_day: "Maximale Zahl an Thema-Einladungen, die ein Benutzer pro Tag verschicken kann."
+    max_logins_per_ip_per_hour: "Maximale Anzahl der erlaubten Anmeldungen pro IP-Adresse und Stunde"
+    max_logins_per_ip_per_minute: "Maximale Anzahl der erlaubten Anmeldungen pro IP-Adresse und Stunde"
     alert_admins_if_errors_per_minute: "Anzahl der Fehler pro Minute, bei der ein Administrator benachrichtigt werden soll. Ein Wert von 0 deaktiviert diese Funktion. Achtung: Benötigt einen Neustart."
     alert_admins_if_errors_per_hour: "Anzahl der Fehler pro Stunde, bei der ein Administrator benachrichtigt werden soll. Ein Wert von 0 deaktiviert diese Funktion. Achtung: Benötigt einen Neustart."
     categories_topics: "Anzahl der Themen auf der /categories Seite"
@@ -1207,6 +1219,7 @@ de:
     read_time_word_count: "Wörter pro Minute für die Berechnung der geschätzten Lesezeit."
     topic_page_title_includes_category: "Name des Themas enthält den Namen der Kategorie."
     native_app_install_banner: "Wiederkehrende Benutzer dazu einladen, die native Discourse-App herunterzuladen."
+    share_anonymized_statistics: "Anonymisierte Nutzungsdaten teilen."
     max_prints_per_hour_per_user: "Maximale Anzahl von Aufrufen der Druckansicht pro Nutzer pro Stunde (0 zum deaktivieren)"
     full_name_required: "Der voller Name wird für das Benutzerprofil benötigt."
     enable_names: "Zeigt den vollen Namen eines Benutzers auf dem Profil, der Benutzerkarte und in E-Mails an. Wenn deaktiviert wird der volle Name überall ausgeblendet."
@@ -1420,6 +1433,8 @@ de:
     deactivated: "Deaktiviert wegen zu vielen unzustellbaren E-Mails an '%{email}'."
     deactivated_by_staff: "Deaktiviert vom Team"
     activated_by_staff: "Aktiviert vom Team"
+    new_user_typed_too_fast: "Neuer Benutzer hat zu schnell getippt"
+    content_matches_auto_block_regex: "Inhalt stimmt mit regulärem Auto-Block-Ausdruck überein"
     username:
       short: "muss mindestens %{min} Zeichen lang sein"
       long: "darf nicht länger als %{max} Zeichen sein"
@@ -1479,6 +1494,11 @@ de:
       %{base_url}/users/password-reset/%{email_token}
 
       (Wenn der Link abgelaufen ist, wähle "Passwort vergessen" aus, wenn du dich mit deiner E-Mail-Adresse einloggen möchtest.)
+  download_backup_mailer:
+    title: "Backup-Download Mailer"
+    subject_template: "Backup-Download für [%{site_name}]"
+    no_token: |
+      Entschuldige, der Backup-Download-Link wurde schon verwendet oder ist abgelaufen.
   test_mailer:
     title: "Test-E-Mail"
     subject_template: "[%{site_name}] Test der E-Mail-Zustellbarkeit"

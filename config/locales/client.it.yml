@@ -136,7 +136,7 @@ it:
         enabled: 'listato %{when}'
         disabled: 'delistato %{when}'
     topic_admin_menu: "azioni amministrative sull'argomento"
-    wizard_required: "E' il momento di configurare il tuo forum! <a href='%{url}' data-auto-route='true'>Avvia la configurazione guidata</a>!"
+    wizard_required: "Benvenuto al tuo nuovo Discourse! Inizia la <a href='%{url}' data-auto-route='true'>procedura guidata di configurazione</a> ✨"
     emails_are_disabled: "Tutte le email in uscita sono state disabilitate a livello globale da un amministratore. Non sarà inviata nessun tipo di notifica via email."
     bootstrap_mode_enabled: "Per aiutarti ad avviare il tuo nuovo sito, adesso sei in modalità bootstrap. Tutti i nuovi utenti saranno automaticamente promossi al livello 1 e riceveranno il riassunto quotidiano degli aggiornamenti via email. Questa modalità sarà disattivata automaticamente quando avrai più di %{min_users} utenti."
     bootstrap_mode_disabled: "La modalità bootstrap sarà disattivata entro 24 ore."
@@ -645,6 +645,7 @@ it:
         short_instructions: "Gli utenti possono citarti scrivendo @{{username}}"
         available: "Il nome utente è disponibile"
         not_available: "Non disponibile. Prova {{suggestion}}?"
+        not_available_no_suggestion: "Non disponibile"
         too_short: "Il nome utente è troppo corto"
         too_long: "Il nome utente è troppo lungo"
         checking: "Controllo la disponibilità del nome utente..."
@@ -1883,7 +1884,7 @@ it:
       other: "visite"
     replies: "Risposte"
     views_long:
-      one: "questo argomento è stato visto 1 volta"
+      one: "questo argomento è stato visto una volta"
       other: "questo argomento è stato visto {{number}} volte"
     activity: "Attività"
     likes: "Mi piace"
@@ -1985,7 +1986,7 @@ it:
     lightbox:
       download: "scarica"
     keyboard_shortcuts_help:
-      title: 'Scorciatorie Tastiera'
+      title: 'Scorciatoie Tastiera'
       jump_to:
         title: 'Salta A'
         home: '<b>g</b>, <b>h</b> Home'
@@ -2189,8 +2190,8 @@ it:
         backups: "backup"
         traffic_short: "Traffico"
         traffic: "Richieste web dell'applicazione"
-        page_views: "Visualizzazioni di pagina"
-        page_views_short: "Visualizzazioni di pagina"
+        page_views: "Pagine Viste"
+        page_views_short: "Pagine Viste"
         show_traffic_report: "Mostra rapporto di traffico dettagliato"
         reports:
           today: "Oggi"
@@ -2341,7 +2342,7 @@ it:
         individual_event: "Seleziona eventi singoli."
         verify_certificate: "Verifica il certificato TLS della URL payload"
         active: "Attivo"
-        groups_filter: "Gruppi triggered"
+        groups_filter: "Gruppi Innescati"
         delete_confirm: "Eliminare questo webhook?"
         topic_event:
           name: "Evento Argomento"
@@ -2854,7 +2855,7 @@ it:
         deactivate_explanation: "Un utente disattivato deve riconvalidare la propria email."
         suspended_explanation: "Un utente sospeso non può connettersi."
         block_explanation: "Un utente bloccato non può pubblicare messaggi o iniziare argomenti."
-        staged_explanation: "Un utente staged può solo postare via email in specifici topic."
+        staged_explanation: "Un utente temporaneo può pubblicare via email solo in alcuni argomenti."
         bounce_score_explanation:
           none: "L'indirizzo email non ha causato nessun errore di ritorno recentemente."
           some: "Sono stati ricevuti alcuni errori di ritorno per quell'indirizzo email."

@@ -31,8 +31,10 @@ sk:
   purge_reason: "Automaticky zmazaný ako opustený, dezaktivovaný účet"
   disable_remote_images_download_reason: "Sťahovanie vzdialených obrázkov je vypnuté kvôli nedostatku diskového priestoru."
   anonymous: "Anonymný"
+  remove_posts_deleted_by_author: "Zmazané autorom"
   emails:
     incoming:
+      default_subject: "Táto téma musí mať názov"
       show_trimmed_content: "Ukázať orezaný obsah"
       maximum_staged_user_per_email_reached: "Dosiahnutý maximálny počet dočasných používateľov vytvorených emailom."
       errors:
@@ -172,7 +174,7 @@ sk:
   rss_description:
     latest: "Najnovšie témy"
     hot: "Horúce témy"
-    top: "Najvýznamnejšie témy"
+    top: "Top témy"
     posts: "Najnovšie príspevky"
     private_posts: "Najnovšie súkromné správy"
     group_posts: "Najnovšie príspevky od %{group_name}"
@@ -1608,6 +1610,11 @@ sk:
   performance_report:
     initial_post_raw: Táto téma obsahuje denné reporty rýchlosti Vašich stránok.
     initial_topic_title: Reporty rýchlosti stránok
+  wizard:
+    step:
+      invites:
+        title: "Pozvite členov"
+        description: "Už ste takmer hotový(á)! Poďme pozvať nejakých členov, aby pomohli <a href='https://blog.discourse.org/2014/08/building-a-discourse-community/' target='blank'>vytvoriť diskusie</a> na zaujímavé témy a svojimi odpoveďami naštartovali komunitu."
   activemodel:
     errors:
       <<: *errors
