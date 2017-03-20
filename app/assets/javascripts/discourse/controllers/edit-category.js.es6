@@ -106,10 +106,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
     },
 
     toggleDeleteTooltip() {
-      // check if is touch device
-      if ( $('html').hasClass('discourse-touch') ) {
-        this.toggleProperty('hiddenTooltip');
-      }
+      this.toggleProperty('hiddenTooltip');
     }
   }
 
