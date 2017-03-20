@@ -74,15 +74,15 @@ class LetterAvatar
         -size #{FULLSIZE}x#{FULLSIZE}
         xc:#{to_rgb(color)}
         -pointsize #{POINTSIZE}
-        -fill '#FFFFFFCC'
-        -font 'Helvetica'
+        -fill #FFFFFFCC
+        -font Helvetica
         -gravity Center
-        -annotate -0+26 '#{letter}'
+        -annotate -0+26 #{letter}
         -depth 8
-        '#{filename}'
+        #{filename}
       }
 
-      Discourse::Utils.execute_command('convert', instructions.join(" ".freeze)) rescue nil
+      Discourse::Utils.execute_command('convert', *instructions)
 
       ## do not optimize image, it will end up larger than original
       filename
@@ -90,7 +90,7 @@ class LetterAvatar
 
     def to_rgb(color)
       r,g,b = color
-      "'rgb(#{r},#{g},#{b})'"
+      "rgb(#{r},#{g},#{b})"
     end
 
     def image_magick_version
