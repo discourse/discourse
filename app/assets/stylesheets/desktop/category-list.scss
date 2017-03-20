@@ -202,6 +202,10 @@
       height: 40px;
       margin: 0 auto 1em auto;
     }
+
+    h3 .fa {
+      color: $primary;
+    }
   }
 
   &.no-logos {

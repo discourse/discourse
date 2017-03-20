@@ -6,7 +6,12 @@
           {{cdn-img src=c.uploaded_logo.url class="logo"}}
         {{/if}}
 
-        <h3>{{c.name}}</h3>
+        <h3>
+          {{#if c.read_restricted}}
+            {{fa-icon 'lock'}}
+          {{/if}}
+          {{c.name}}
+        </h3>
       </div>
 
       <div class='description'>
