@@ -82,7 +82,7 @@ class LetterAvatar
         '#{filename}'
       }
 
-      Discourse::Utils.execute_command('convert', instructions.join(" ".freeze))
+      Discourse::Utils.execute_command('convert', instructions.join(" ".freeze)) rescue nil
 
       ## do not optimize image, it will end up larger than original
       filename
