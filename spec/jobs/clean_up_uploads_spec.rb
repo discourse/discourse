@@ -140,4 +140,14 @@ describe Jobs::CleanUpUploads do
     expect(Upload.find_by(id: upload.id)).to eq(upload)
   end
 
+  it "does not delete custom emojis" do
+    upload = fabricate_upload
+    CustomEmoji.create!(name: 'test', upload: upload)
+
+    Jobs::CleanUpUploads.new.execute(nil)
+
+    expect(Upload.find_by(id: @upload.id)).to eq(nil)
+    expect(Upload.find_by(id: upload.id)).to eq(upload)
+  end
+
 end

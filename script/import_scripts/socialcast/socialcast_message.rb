@@ -5,6 +5,19 @@ require_relative 'create_title.rb'
 
 class SocialcastMessage
 
+  DEFAULT_CATEGORY = "Socialcast Import"
+  DEFAULT_TAG = "socialcast-import"
+  TAGS_AND_CATEGORIES = {
+    "somegroupname" => {
+      category: "Apple Stems",
+      tags: ["waxy", "tough"]
+    },
+    "someothergroupname" => {
+      category: "Orange Peels",
+      tags: ["oily"]
+    }
+   }
+
    def initialize message_json
      @parsed_json = JSON.parse message_json
    end
@@ -16,7 +29,8 @@ class SocialcastMessage
      topic[:title] = title
      topic[:raw] = @parsed_json['body']
      topic[:created_at] = Time.parse @parsed_json['created_at']
-     topic[:tags] = [group] if group
+     topic[:tags] = tags
+     topic[:category] = category
      topic
    end
 
@@ -24,8 +38,30 @@ class SocialcastMessage
      CreateTitle.from_body @parsed_json['body']
    end
 
+   def tags
+     tags = []
+     if group
+       if TAGS_AND_CATEGORIES[group]
+         tags = TAGS_AND_CATEGORIES[group][:tags]
+       else
+         tags << group
+       end
+     end
+     tags << DEFAULT_TAG
+     tags
+   end
+
+
+   def category
+     category = DEFAULT_CATEGORY
+     if group && TAGS_AND_CATEGORIES[group]
+       category = TAGS_AND_CATEGORIES[group][:category]
+     end
+     category
+   end
+
    def group
-     @parsed_json['group']['groupname'] if @parsed_json['group']
+     @parsed_json['group']['groupname'].downcase if @parsed_json['group'] && @parsed_json['group']['groupname']
    end
 
    def url

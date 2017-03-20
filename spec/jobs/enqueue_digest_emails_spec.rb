@@ -102,6 +102,15 @@ describe Jobs::EnqueueDigestEmails do
       end
     end
 
+    context 'too many bounces' do
+      let!(:bounce_user) { Fabricate(:active_user, last_seen_at: 6.month.ago) }
+
+      it "doesn't return users with too many bounces" do
+        bounce_user.user_stat.update(bounce_score: SiteSetting.bounce_score_threshold + 1)
+        expect(Jobs::EnqueueDigestEmails.new.target_user_ids.include?(bounce_user.id)).to eq(false)
+      end
+    end
+
   end
 
   describe '#execute' do

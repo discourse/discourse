@@ -19,14 +19,14 @@ module("lib:click-track", {
       `<div id="topic" data-topic-id="1337">
         <article data-post-id="42" data-user-id="3141">
           <a href="http://www.google.com">google.com</a>
-          <a class="lightbox back quote-other-topic" href="http://www.google.com">google.com</a>
-          <a id="with-badge" data-user-id="314" href="http://www.google.com">google.com<span class="badge">1</span></a>
-          <a id="with-badge-but-not-mine" href="http://www.google.com">google.com<span class="badge">1</span></a>
+          <a class="lightbox back quote-other-topic" href="http://www.google.fr">google.fr</a>
+          <a id="with-badge" data-user-id="314" href="http://www.google.de">google.de<span class="badge">1</span></a>
+          <a id="with-badge-but-not-mine" href="http://www.google.es">google.es<span class="badge">1</span></a>
           <div class="onebox-result">
-            <a id="inside-onebox" href="http://www.google.com">google.com<span class="badge">1</span></a>
-            <a id="inside-onebox-forced" class="track-link" href="http://www.google.com">google.com<span class="badge">1</span></a>
+            <a id="inside-onebox" href="http://www.google.co.uk">google.co.uk<span class="badge">1</span></a>
+            <a id="inside-onebox-forced" class="track-link" href="http://www.google.at">google.at<span class="badge">1</span></a>
           </div>
-          <a class="no-track-link" href="http://www.google.com">google.com</a>
+          <a class="no-track-link" href="http://www.google.com.br">google.com.br</a>
           <a id="same-site" href="http://discuss.domain.com">forum</a>
           <a class="attachment" href="http://discuss.domain.com/uploads/default/1234/1532357280.txt">log.txt</a>
           <a class="hashtag" href="http://discuss.domain.com">#hashtag</a>

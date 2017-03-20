@@ -93,7 +93,6 @@ class User < ActiveRecord::Base
   after_create :create_user_profile
   after_create :ensure_in_trust_level_group
   after_create :set_default_categories_preferences
-  after_create :trigger_user_created_event
 
   before_save :update_username_lower
   before_save :ensure_password_is_hashed
@@ -105,6 +104,7 @@ class User < ActiveRecord::Base
   after_save :badge_grant
   after_save :expire_old_email_tokens
   after_save :index_search
+  after_commit :trigger_user_created_event, on: :create
 
   before_destroy do
     # These tables don't have primary keys, so destroying them with activerecord is tricky:
@@ -124,8 +124,10 @@ class User < ActiveRecord::Base
   # set to true to optimize creation and save for imports
   attr_accessor :import_mode
 
+  scope :human_users, -> { where('users.id > 0') }
+
   # excluding fake users like the system user or anonymous users
-  scope :real, -> { where('users.id > 0').where('NOT EXISTS(
+  scope :real, -> { human_users.where('NOT EXISTS(
                      SELECT 1
                      FROM user_custom_fields ucf
                      WHERE
@@ -1062,11 +1064,6 @@ class User < ActiveRecord::Base
     end
   end
 
-  def trigger_user_created_event
-    DiscourseEvent.trigger(:user_created, self)
-    true
-  end
-
   private
 
   def previous_visit_at_update_required?(timestamp)
@@ -1078,6 +1075,11 @@ class User < ActiveRecord::Base
     if previous_visit_at_update_required?(timestamp)
       update_column(:previous_visit_at, last_seen_at)
     end
+  end
+
+  def trigger_user_created_event
+    DiscourseEvent.trigger(:user_created, self)
+    true
   end
 
 end

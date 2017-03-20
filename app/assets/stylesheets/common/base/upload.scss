@@ -8,3 +8,9 @@
     background-repeat: no-repeat;
   }
 }
+
+.image-uploader.contain-image {
+  .uploaded-image-preview {
+    background-size: contain;
+  }
+}

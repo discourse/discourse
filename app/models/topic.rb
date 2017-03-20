@@ -833,7 +833,7 @@ SQL
       .update_all(dismissed_banner_key: nil)
 
     self.archetype = Archetype.banner
-    self.add_moderator_post(user, I18n.t("archetypes.banner.message.make"))
+    self.add_small_action(user, "banner.enabled")
     self.save
 
     MessageBus.publish('/site/banner', banner)
@@ -841,7 +841,7 @@ SQL
 
   def remove_banner!(user)
     self.archetype = Archetype.default
-    self.add_moderator_post(user, I18n.t("archetypes.banner.message.remove"))
+    self.add_small_action(user, "banner.disabled")
     self.save
 
     MessageBus.publish('/site/banner', nil)

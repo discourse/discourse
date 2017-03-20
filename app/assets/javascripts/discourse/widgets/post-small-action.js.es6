@@ -16,6 +16,8 @@ const icons = {
   'pinned.disabled': 'thumb-tack unpinned',
   'pinned_globally.enabled': 'thumb-tack',
   'pinned_globally.disabled': 'thumb-tack unpinned',
+  'banner.enabled': 'thumb-tack',
+  'banner.disabled': 'thumb-tack unpinned',
   'visible.enabled': 'eye',
   'visible.disabled': 'eye-slash',
   'split_topic': 'sign-out',

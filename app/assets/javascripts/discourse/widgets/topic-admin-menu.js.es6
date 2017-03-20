@@ -137,10 +137,13 @@ export default createWidget('topic-admin-menu', {
                      icon: 'thumb-tack',
                      label: featured ? 'actions.unpin' : 'actions.pin' });
     }
-    buttons.push({ className: 'topic-admin-change-timestamp',
-                   action: 'showChangeTimestamp',
-                   icon: 'calendar',
-                   label: 'change_timestamp.title' });
+
+    if (this.currentUser.admin) {
+      buttons.push({ className: 'topic-admin-change-timestamp',
+                     action: 'showChangeTimestamp',
+                     icon: 'calendar',
+                     label: 'change_timestamp.title' });
+    }
 
     if (!isPrivateMessage) {
       buttons.push({ className: 'topic-admin-archive',

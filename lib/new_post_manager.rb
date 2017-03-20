@@ -104,8 +104,10 @@ class NewPostManager
 
       result = manager.enqueue('default')
 
-      if is_fast_typer?(manager) || matches_auto_block_regex?(manager)
-        UserBlocker.block(manager.user, Discourse.system_user, keep_posts: true)
+      if is_fast_typer?(manager)
+        UserBlocker.block(manager.user, Discourse.system_user, keep_posts: true, reason: I18n.t("user.new_user_typed_too_fast"))
+      elsif matches_auto_block_regex?(manager)
+        UserBlocker.block(manager.user, Discourse.system_user, keep_posts: true, reason: I18n.t("user.content_matches_auto_block_regex"))
       end
 
       result

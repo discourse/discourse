@@ -59,7 +59,7 @@ module FileStore
     end
 
     def purge_tombstone(grace_period)
-      `find #{tombstone_dir} -mtime +#{grace_period} -type f -delete`
+      Discourse::Utils.execute_command('find', tombstone_dir, '-mtime', "+#{grace_period}", '-type f -delete')
     end
 
     def get_path_for(type, upload_id, sha, extension)

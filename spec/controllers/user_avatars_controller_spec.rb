@@ -10,7 +10,7 @@ describe UserAvatarsController do
     end
 
     it 'returns an avatar if we are allowing the proxy' do
-      response = get :show_proxy_letter, version: 'v2', letter: 'a', color: 'aaaaaa', size: 20
+      response = get :show_proxy_letter, version: 'v2', letter: 'a', color: 'aaaaaa', size: 360
       expect(response.status).to eq(200)
     end
   end

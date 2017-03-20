@@ -190,6 +190,12 @@ fi:
     latest: "Tuoreimmat viestiketjut"
     hot: "Kuumat ketjut"
     top: "Huippuketjut"
+    top_all: "Kaikkien aikojen parhaat ketjut"
+    top_yearly: "Vuoden parhaat ketjut"
+    top_quarterly: "Vuosineljänneksen parhaat ketjut"
+    top_monthly: "Kuukauden parhaat ketjut"
+    top_weekly: "Viikon parhaat ketjut"
+    top_daily: "Päivän parhaat ketjut"
     posts: "Uusimmat viestit"
     private_posts: "Uusimmat yksityisviestit"
     group_posts: "Uusimmat viestit ryhmässä %{group_name}"
@@ -387,8 +393,8 @@ fi:
     replace_paragraph: "(Korvaa tämä kappale lyhyellä kuvauksella uudesta alueesta. Tämä kuvaus näytetään alueen valinnan yhteydessä, joten yritä pitää se alle 200 merkin pituisena. **Aluetta ei näytetä Keskustelualueet-sivulla ennen kuin olet muokannut tätä tekstiä tai luonut viestiketjuja.**)"
     post_template: "%{replace_paragraph}\n\nKäytä seuraavat kappaleet pidempään kuvaukseen tai selvittääksesi alueen säännöt ja ohjeet:\n\n- Miksi käyttäjät valitsisivat tämän alueen? Mitä varten se on?\n\n- Kuinka se tarkkaan ottaen eroaa muista olemassa olevista alueista?\n\n- Minkälaista sisältöä alueen ketjuissa tulisi yleensä olla?\n\n- Tarvitaanko tätä aluetta? Voisiko sen yhdistää toiseen alueeseen tai siirtää toisen alueen alle?\n"
     errors:
-      uncategorized_parent: "Alueettomia ei voi asettaa toisen alueen alle"
-      self_parent: "Alue ei voi olla itsensä ylempi alue."
+      uncategorized_parent: "Alueettomilla ei voi olla emoaluetta"
+      self_parent: "Alue ei voi olla itsensä emoalue"
       depth: "Alue ei voi olla tytäralueen tytäralue"
       invalid_email_in: "'%{email}' ei ole käypä sähköpostiosoite"
       email_already_used_in_group: "'%{email}' on jo käytössä ryhmällä '%{group_name}'."
@@ -537,6 +543,7 @@ fi:
     welcome_to: "Tervetuloa sivustolle %{site_name}!"
     approval_required: "Valvojan täytyy hyväksyä uusi tilisi, jotta pääset palstalle. Saat sähköpostin, kun tilisi on hyväksytty."
     missing_session: "Emme voineet havaita, onnistuiko tilisi luonti. Varmista, että selaimesi sallii evästeiden käytön."
+    activated: "Pahoittelut, tämä tili on jo aktivoitu."
   post_action_types:
     off_topic:
       title: 'Se eksyy aiheesta'
@@ -939,7 +946,7 @@ fi:
     login_required: "Vaadi kirjautumista sivuston lukemiseen, epää anonyymi pääsy."
     min_username_length: "Käyttäjänimen vähimmäispituus merkeissä. VAROITUS: Jos olemassa olevalla käyttäjällä tai ryhmällä on tätä lyhyempi nimi, sivustosi hajoaa!"
     max_username_length: "Käyttäjänimen vähimmäispituus merkeissä. VAROITUS: Jos olemassa olevalla käyttäjällä tai ryhmällä on tätä pidempi nimi, sivustosi hajoaa!"
-    reserved_usernames: "Käyttäjänimet, joiden rekisteröintiä ei sallita."
+    reserved_usernames: "Käyttäjänimet, joita ei voi rekisteröidä. Jokerimerkkiä * voi käyttää korvaamaan merkin nolla kertaa tai useammin."
     min_password_length: "Salasanan vähimmäispituus."
     min_admin_password_length: "Ylläpitäjän salasanan vähimmäispituus."
     password_unique_characters: "Vähimmäismäärä eri merkkejä salasanassa."
@@ -1124,7 +1131,8 @@ fi:
     auto_block_fast_typers_max_trust_level: "Suurin luottamustaso, jolla automaattisesti estetään nopeat kirjoittajat"
     auto_block_first_post_regex: "Merkkikokoriippumaton regex joka aiheuttaa käyttäjän ensimmäisen viestin estämisen ja lisäämisen hyväksymisjonoon. Esimerkiksi raivoaminen|a[bc]a aiheuttaa kaikkien viestien, joissa on sanat raivoava, aba tai aca estämisen. Vaikuttaa vain ensimmäiseen viestiin."
     reply_by_email_enabled: "Ota käyttöön vastaukset sähköpostin avulla."
-    reply_by_email_address: "Saapuvan sähköpostin sapluuna sähköpostivastauksiin, esimerkiksi: %{reply_key}@reply.example.com tai replies+%{reply_key}@example.com"
+    reply_by_email_address: "Saapuvien sähköpostivastausten sähköpostiosoitekaava, esimerkiksi: %{reply_key}@reply.example.com tai replies+%{reply_key}@example.com"
+    alternative_reply_by_email_addresses: "Lista vaihtoehtoisista saapuvien sähköpostivastausten sähköpostiosoitekaavoista, esimerkiksi: %{reply_key}@reply.example.com tai replies+%{reply_key}@example.com"
     incoming_email_prefer_html: "Käytä HTMLää tekstin sijaan saapuville sähköposteille. Voi aiheuttaa odottamattomia ongelmia ulkoasussa!"
     disable_emails: "Estä Discoursea lähettämästä mitään sähköpostia"
     strip_images_from_short_emails: "Poista kuvat sähköposteista, joiden koko on alle 2800 tavua"
@@ -1209,6 +1217,7 @@ fi:
     read_time_word_count: "Sanamäärä minuutissa, jota käytetään lukuajan arviointiin."
     topic_page_title_includes_category: "Ketjusivu sisältää alueen nimen."
     native_app_install_banner: "Tarjoaa toistuvasti vieraileville Discoursen käyttöjärjestelmäkohtaista sovellusta."
+    share_anonymized_statistics: "Julkaise yksilöimättömät käyttötilastot."
     max_prints_per_hour_per_user: "Tulostuspyyntöjen (/print) enimmäismäärä (aseta 0 poistaaksesi käytöstä)"
     full_name_required: "Koko nimi on käyttäjäprofiilin vaadittu kohta"
     enable_names: "Näytä käyttäjän koko nimi profiilissa, käyttäjäkortissa ja sähköposteissa. Poista käytöstä piilottaaksesi koko nimen kaikkialla."
@@ -1419,6 +1428,8 @@ fi:
     deactivated: "Käyttäjätili poistettiin käytöstä osoitteesta '%{email}' palautettujen sähköpostien vuoksi."
     deactivated_by_staff: "Henkilökunta poisti käytöstä"
     activated_by_staff: "Henkilökunta vahvisti"
+    new_user_typed_too_fast: "Uusi käyttäjä näppäili liian nopeasti"
+    content_matches_auto_block_regex: "Sisältö täyttää automaattisesti estettävän säännöllisen lausekkeen"
     username:
       short: "täytyy olla vähintään %{min} merkkiä"
       long: "ei saa olla yli %{max} merkkiä"
@@ -1534,6 +1545,17 @@ fi:
       %{base_url}/users/password-reset/%{email_token}
 
       (jos yllä oleva linkki on vanhentunut, valitse "unohdin salasanani" kirjautuessasi sisään sähköpostiosoitteellasi)
+  download_backup_mailer:
+    title: "Lataa varmuuskopio"
+    subject_template: "[%{site_name}] Varmuuskopion lataus sivustosta"
+    text_body_template: |
+      Tässä [varmuuskopio sivustosta](%{backup_file_path}), jota pyysit.
+
+      Lähetimme tämän latauslinkin varmennettuun sähköpostiosoitteeseesi turvallisuussyistä.
+
+      (Jos *et* pyytänyt varmuuskopiota, on asia otettava vakavissaan -- jollakulla on ylläpitäjän oikeudet sivustoosi.)
+    no_token: |
+      Pahoittelut, tämä varmuuskopion latauslinkki on jo käytetty tai on vanhentunut.
   test_mailer:
     title: "Sähköpostipalvelun testaus"
     subject_template: "[%{site_name}] Sähköpostin toimitettavuustesti"
@@ -2722,7 +2744,7 @@ fi:
             description: "Mikä on yhteisösi oletuskieli?"
       forum_title:
         title: "Nimi"
-        description: "Nimi on merkiitävä asia, sillä se on <i>ensimmäinen</i>asia  jonka potentiaalinen vierailija saa tietää yhteisöstäsi. Mitä valitsemasi nimi kertoo yhteisöstä?"
+        description: "Nimi on merkittävä asia, sillä se on <i>ensimmäinen</i>asia, jonka potentiaalinen vierailija saa tietää yhteisöstäsi. Mitä valitsemasi nimi kertoo yhteisöstä?"
         fields:
           title:
             label: "Yhteisösi nimi"
@@ -2762,7 +2784,7 @@ fi:
             description: "Sinun tai organisaatiosi yleinen yhteydenottosivu. Näytetään <a href='/about' target='_blank'>Tietoja-sivulla</a>."
           site_contact:
             label: "Automaattiset viestit"
-            description: "Tämän käyttäjän nimissä Discourse lähettää kaikki automaattiset yksityisviestit käyttäjälle. Tärkeimpänä, käyttäjä on uudelle käyttäjälle lähetettävän tervetuloviestin lähettäjä."
+            description: "Tämän käyttäjän nimissä Discourse lähettää käyttäjille kaikki automaattiset yksityisviestit, kuten uudelle käyttäjälle lähetettävän tervetulotoivotuksen. "
       corporate:
         title: "Organisaatio"
         description: "Nämä nimet näkyvät <a href='/privacy' target='blank'>rekisteriselosteen</a> ja <a href='/tos' target='blank'>käyttöehtojen</a> yhteydessä, joita voit milloin vain muokata henkilökunta-alueella. Jos taustalla ei ole yritystä, voit hypätä tämän vaiheen yli toistaiseksi."

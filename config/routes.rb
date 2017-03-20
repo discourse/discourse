@@ -54,6 +54,7 @@ Discourse::Application.routes.draw do
   end
 
   get "site/basic-info" => 'site#basic_info'
+  get "site/statistics" => 'site#statistics'
 
   get "site_customizations/:key" => "site_customizations#show"
 
@@ -133,6 +134,7 @@ Discourse::Application.routes.draw do
     get "users/:id.json" => 'users#show', defaults: {format: 'json'}
     get 'users/:id/:username' => 'users#show', constraints: {username: USERNAME_ROUTE_FORMAT}
     get 'users/:id/:username/badges' => 'users#show'
+    get 'users/:id/:username/tl3_requirements' => 'users#show'
 
 
     post "users/sync_sso" => "users#sync_sso", constraints: AdminConstraint.new
@@ -502,6 +504,7 @@ Discourse::Application.routes.draw do
   get "category_hashtags/check" => "category_hashtags#check"
 
   TopTopic.periods.each do |period|
+    get "top/#{period}.rss" => "list#top_#{period}_feed", format: :rss
     get "top/#{period}" => "list#top_#{period}"
     get "c/:category/l/top/#{period}" => "list#category_top_#{period}", as: "category_top_#{period}"
     get "c/:category/none/l/top/#{period}" => "list#category_none_top_#{period}", as: "category_none_top_#{period}"

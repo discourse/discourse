@@ -67,16 +67,13 @@ module Jobs
       signup_after_approval
     }
 
-    def message_for_email(user, post, type, notification,
-                         notification_type=nil, notification_data_hash=nil,
-                         email_token=nil, to_address=nil)
-
+    def message_for_email(user, post, type, notification, notification_type=nil, notification_data_hash=nil, email_token=nil, to_address=nil)
       set_skip_context(type, user.id, to_address || user.email, post.try(:id))
 
       return skip_message(I18n.t("email_log.anonymous_user"))   if user.anonymous?
       return skip_message(I18n.t("email_log.suspended_not_pm")) if user.suspended? && type.to_s != "user_private_message"
 
-      return if user.staged && type == :digest
+      return if user.staged && type.to_s == "digest"
 
       seen_recently = (user.last_seen_at.present? && user.last_seen_at > SiteSetting.email_time_window_mins.minutes.ago)
       seen_recently = false if user.user_option.email_always || user.staged
@@ -87,9 +84,7 @@ module Jobs
         return skip_message(I18n.t('email_log.seen_recently')) if seen_recently && !user.suspended?
       end
 
-      if post
-        email_args[:post] = post
-      end
+      email_args[:post] = post if post
 
       if notification || notification_type
         email_args[:notification_type]      ||= notification_type      || notification.try(:notification_type)
@@ -118,18 +113,13 @@ module Jobs
       end
 
       skip_reason = skip_email_for_post(post, user)
-      return skip_message(skip_reason) if skip_reason
+      return skip_message(skip_reason) if skip_reason.present?
 
       # Make sure that mailer exists
       raise Discourse::InvalidParameters.new("type=#{type}") unless UserNotifications.respond_to?(type)
 
-      if email_token.present?
-        email_args[:email_token] = email_token
-      end
-
-      if type.to_s == "notify_old_email"
-        email_args[:new_email] = user.email
-      end
+      email_args[:email_token] = email_token  if email_token.present?
+      email_args[:new_email]   = user.email   if type.to_s == "notify_old_email"
 
       if EmailLog.reached_max_emails?(user)
         return skip_message(I18n.t('email_log.exceeded_emails_limit'))
@@ -144,9 +134,7 @@ module Jobs
       end
 
       # Update the to address if we have a custom one
-      if message && to_address.present?
-        message.to = to_address
-      end
+      message.to = to_address if message && to_address.present?
 
       [message, nil]
     end
@@ -179,12 +167,10 @@ module Jobs
         return I18n.t('email_log.topic_nil')          if post.topic.blank?
         return I18n.t('email_log.post_user_deleted')  if post.user.blank?
         return I18n.t('email_log.post_deleted')       if post.user_deleted?
-        return I18n.t('email_log.user_suspended')     if (user.suspended? && !post.user.try(:staff?))
+        return I18n.t('email_log.user_suspended')     if user.suspended? && !post.user&.staff?
 
-        if  !user.user_option.email_always? &&
-            PostTiming.where(topic_id: post.topic_id, post_number: post.post_number, user_id: user.id).present?
-          return I18n.t('email_log.already_read')
-        end
+        already_read = !user.user_option.email_always? && PostTiming.exists?(topic_id: post.topic_id, post_number: post.post_number, user_id: user.id)
+        return I18n.t('email_log.already_read') if already_read
       else
         false
       end

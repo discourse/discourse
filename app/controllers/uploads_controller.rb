@@ -81,7 +81,8 @@ class UploadsController < ApplicationController
       if filename == "image.png" && SiteSetting.convert_pasted_images_to_hq_jpg
         jpeg_path = "#{File.dirname(tempfile.path)}/image.jpg"
         OptimizedImage.ensure_safe_paths!(tempfile.path, jpeg_path)
-        `convert #{tempfile.path} -quality #{SiteSetting.convert_pasted_images_quality} #{jpeg_path}`
+
+        Discourse::Utils.execute_command('convert', tempfile.path, '-quality', SiteSetting.convert_pasted_images_quality.to_s, jpeg_path)
         # only change the format of the image when JPG is at least 5% smaller
         if File.size(jpeg_path) < File.size(tempfile.path) * 0.95
           filename = "image.jpg"

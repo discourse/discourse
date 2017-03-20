@@ -57,3 +57,28 @@ test("Error Saving", assert => {
     assert.equal(find('#modal-alert').html(), "duplicate email");
   });
 });
+
+test("Subcategory list settings", () => {
+  visit("/c/bug");
+
+  click('.edit-category');
+  click('.edit-category-settings');
+
+  andThen(() => {
+    ok(!visible(".subcategory-list-style-field"), "subcategory list style isn't visible by default");
+  });
+
+  click(".show-subcategory-list-field input[type=checkbox]");
+  andThen(() => {
+    ok(visible(".subcategory-list-style-field"), "subcategory list style is shown if show subcategory list is checked");
+  });
+
+  click('.edit-category-general');
+  selectDropdown('.edit-category-tab-general .category-combobox', 2);
+
+  click('.edit-category-settings');
+  andThen(() => {
+    ok(!visible(".show-subcategory-list-field"), "show subcategory list isn't visible for child categories");
+    ok(!visible(".subcategory-list-style-field"), "subcategory list style isn't visible for child categories");
+  });
+});

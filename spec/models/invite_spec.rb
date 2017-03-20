@@ -224,6 +224,7 @@ describe Invite do
       it 'does not enqueue an email if the user has already set password' do
         Fabricate(:user, email: invite.email, password_hash: "7af7805c9ee3697ed1a83d5e3cb5a3a431d140933a87fdcdc5a42aeef9337f81")
         Jobs.expects(:enqueue).with(:invite_password_instructions_email, has_key(:username)).never
+        Jobs.expects(:enqueue).with(:critical_user_email, has_entries(type: :signup)) # should enqueue an account activation email
         invite.redeem
       end
 

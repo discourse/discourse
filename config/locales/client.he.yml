@@ -136,7 +136,7 @@ he:
         enabled: 'נכנס לרשימה %{when}'
         disabled: 'הוצא מהרשימה %{when}'
     topic_admin_menu: "פעולות ניהול לנושא"
-    wizard_required: "הגיע הזמן לכוונן את הפורום שלכם! <a href='%{url}' data-auto-route='true'>התחילו את אשף ההקמה</a>!"
+    wizard_required: "ברוכים הבאים לסידקורס החדש שלכם! בואו נתחיל עם <a href='%{url}' data-auto-route='true'>אשף ההתקנה</a> ✨"
     emails_are_disabled: "כל הדוא\"ל היוצא נוטרל באופן גורף על ידי מנהל אתר. שום הודעת דוא\"ל, מכל סוג שהוא, לא תשלח."
     bootstrap_mode_enabled: "כדי להקל על הקמת האתר החדש שלכם, אתם במצב איתחול-ראשוני. כל המשתמשים החדשים יקבלו רמת אמון 1 ויקבלו תמצות יומי במייל. אפשרות זו תכובה אוטומטית כאשר יהיו יותר מ %{min_users} משתמשים."
     bootstrap_mode_disabled: "מצב איתחול-ראשוני יכובה ב 24 השעות הקרובות."
@@ -928,7 +928,7 @@ he:
       logging_in: "מתחבר...."
       or: "או"
       authenticating: "מאשר..."
-      awaiting_confirmation: "החשבון שלך ממתין להפעלה. ניתן להשתמש בקישור \"שכחתי סיסמה\" כדי לשלוח דואר אלקטרוני נוסף."
+      awaiting_activation: "החשבון שלכם ממתין להפעלה, השתמשו בקישור ה\"שכחתי סיסמה\" כדי ליצור עוד מייל הפעלה."
       awaiting_approval: "החשבון שלך עדיין לא אושר על ידי חבר צוות. יישלח אליך דואר אלקטרוני כשהוא יאושר."
       requires_invite: "סליחה, גישה לפורום הזה היא בהזמנה בלבד."
       not_activated: "אינך יכול להתחבר עדיין. שלחנו לך דואר אלקטרוני להפעלת החשבון לכתובת: <b>{{sentTo}}</b>. יש לעקוב אחר ההוראות בדואר כדי להפעיל את החשבון."
@@ -1192,6 +1192,8 @@ he:
           first: הפוסטים הראשונים
           pinned: נעוצים
           unpinned: לא נעוצים
+          seen: קראתי
+          unseen: לא קראתי
           wiki: הם ויקי
         statuses:
           label: כאשר נושאים
@@ -1734,6 +1736,17 @@ he:
           side_by_side_markdown:
             title: "הציגו את ההבדלי המקור הגולמיים זה לצד זה"
             button: 'גולמי'
+      raw_email:
+        displays:
+          raw:
+            title: "הצגת מייל גולמי"
+            button: 'גולמי'
+          text_part:
+            title: "הצגת טקסט כחלק מהמייל"
+            button: 'טקסט'
+          html_part:
+            title: "הצגת חלק ה HTML של המייל"
+            button: 'HTML'
     category:
       can: 'יכול&hellip; '
       none: '(ללא קטגוריה)'
@@ -1786,8 +1799,11 @@ he:
       email_in_disabled_click: 'אפשרו את את ההגדרה "דוא"ל נכנס"'
       suppress_from_homepage: "הרחיקו קטגוריה זו מהעמוד הראשי."
       show_subcategory_list: "הצגת רשימת קטגוריות משנה מעל נושאים בקטגוריה זו."
+      num_featured_topics: "מספר הנושאים המוצגים בדף הקטגוריות:"
+      subcategory_num_featured_topics: "מספר הנושאים המומלצים בדף קטגוריית ההורה:"
       all_topics_wiki: "כברירת מחדל נושאים חדשים יהיו וויקי."
       sort_order: "סידור ברירת מחדל:"
+      default_view: "תצוגת ברירת מחדל:"
       allow_badges_label: "הרשו לעיטורים להיות מוענקים בקטגוריה זו"
       edit_permissions: "ערוך הרשאות"
       add_permission: "הוסף הרשאה"
@@ -1926,7 +1942,7 @@ he:
     history: "היסטוריה"
     changed_by: "מאת {{author}}"
     raw_email:
-      title: "גלם הדוא\"ל"
+      title: "מייל נכנס"
       not_available: "לא זמין!"
     categories_list: "רשימת קטגוריות"
     filters:
@@ -2329,6 +2345,8 @@ he:
         add_owners: הוספת בעלים
         incoming_email: "התאימו אישית כתובת מייל נכנס"
         incoming_email_placeholder: "הכניסו כתובת מייל"
+        none_selected: "בחירת קבוצה כדי להתחיל"
+        no_custom_groups: "יצירת קבוצה מותאמת אישית"
       api:
         generate_master: "ייצר מפתח מאסטר ל-API"
         none: "אין מפתחות API פעילים כרגע."
@@ -2464,7 +2482,8 @@ he:
             without_uploads: "כן (ללא הכללת קבצים)"
           download:
             label: "הורדה"
-            title: "הורד את הגיבוי"
+            title: "שליחת מייל עם לינק להורדה"
+            alert: "קישור להורדת גיבוי זה נשלח אליכם."
           destroy:
             title: "הסר את הגיבוי"
             confirm: "אתם בטוחים שברצונכם להשמיד את הגיבוי הזה?"

@@ -116,7 +116,6 @@ export default Ember.Component.extend(CleansUp, {
 
     const args = { stats: false };
     args.include_post_count_for = this.get('topic.id');
-    args.skip_track_visit = true;
 
     User.findByUsername(username, args).then(user => {
       if (user.topic_post_count) {

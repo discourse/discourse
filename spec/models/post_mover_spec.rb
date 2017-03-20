@@ -206,7 +206,7 @@ describe PostMover do
             user, [p2.id, p3.id, p5.id], title: 'Logan is a pretty good movie'
           )
 
-          expect(new_topic.posts.pluck(:id)).to eq([p2.id, p3.id])
+          expect(new_topic.posts.pluck(:id).sort).to eq([p2.id, p3.id].sort)
         end
       end
 

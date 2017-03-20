@@ -229,6 +229,12 @@ en:
     latest: "Latest topics"
     hot: "Hot topics"
     top: "Top topics"
+    top_all: "All time top topics"
+    top_yearly: "Yearly top topics"
+    top_quarterly: "Quarterly top topics"
+    top_monthly: "Monthly top topics"
+    top_weekly: "Weekly top topics"
+    top_daily: "Daily top topics"
     posts: "Latest posts"
     private_posts: "Latest private messages"
     group_posts: "Latest posts from %{group_name}"
@@ -385,6 +391,10 @@ en:
           attributes:
             payload_url:
               invalid: "URL is invalid. URL should includes http:// or https://. And no blank is allowed."
+        custom_emoji:
+          attributes:
+            name:
+              taken: is already in use by another emoji
 
   user_profile:
     no_info_me: "<div class='missing-profile'>the About Me field of your profile is currently blank, <a href='/users/%{username_lower}/preferences/about-me'>would you like to fill it out?</a></div>"
@@ -1396,6 +1406,8 @@ en:
 
     native_app_install_banner: "Asks recurring visitors to install Discourse native app."
 
+    share_anonymized_statistics: "Share anonymized usage statistics."
+
     max_prints_per_hour_per_user: "Maximum number of /print page impressions (set to 0 to disable)"
 
     full_name_required: "Full name is a required field of a user's profile."
@@ -1566,11 +1578,6 @@ en:
     post_revision_text: "Ownership transferred from %{old_user} to %{new_user}"
     deleted_user: "a deleted user"
 
-  emoji:
-    errors:
-      name_already_exists: "Sorry, the name '%{name}' is already used by another emoji."
-      error_while_storing_emoji: "Sorry, there has been an error while storing the emoji."
-
   topic_statuses:
     archived_enabled: "This topic is now archived. It is frozen and cannot be changed in any way."
     archived_disabled: "This topic is now unarchived. It is no longer frozen, and can be changed."
@@ -1639,6 +1646,8 @@ en:
     deactivated: "Was deactivated due to too many bounced emails to '%{email}'."
     deactivated_by_staff: "Deactivated by staff"
     activated_by_staff: "Activated by staff"
+    new_user_typed_too_fast: "New user typed too fast"
+    content_matches_auto_block_regex: "Content matches auto block regex"
     username:
       short: "must be at least %{min} characters"
       long: "must be no more than %{max} characters"
@@ -2721,7 +2730,7 @@ en:
 
       Please treat this discussion forum with the same respect you would a public park.  We, too, are a shared community resource &mdash; a place to share skills, knowledge and interests through ongoing conversation.
 
-      These are not hard and fast rules, merely aids to the human judgment of our community. Use these guidelines to keep this a clean, well-lighted place for civilized public discourse.
+      These are not hard and fast rules, merely guidelines to aid the human judgment of our community and keep this a clean and well-lighted place for civilized public discourse.
 
       <a name="improve"></a>
 
@@ -2731,18 +2740,18 @@ en:
 
       The topics discussed here matter to us, and we want you to act as if they matter to you, too. Be respectful of the topics and the people discussing them, even if you disagree with some of what is being said.
 
-      One way to improve the discussion is by discovering ones that are already happening. Please spend some time browsing the topics here before replying or starting your own, and you’ll have a better chance of meeting others who share your interests.
+      One way to improve the discussion is by discovering ones that are already happening. Spend time browsing the topics here before replying or starting your own, and you’ll have a better chance of meeting others who share your interests.
 
       <a name="agreeable"></a>
 
       ## [Be Agreeable, Even When You Disagree](#agreeable)
 
-      You may wish to respond to something by disagreeing with it. That’s fine. But, remember to _criticize ideas, not people_. Please avoid:
+      You may wish to respond to something by disagreeing with it. That’s fine. But remember to _criticize ideas, not people_. Please avoid:
 
-      *   Name-calling.
-      *   Ad hominem attacks.
-      *   Responding to a post’s tone instead of its actual content.
-      *   Knee-jerk contradiction.
+      *   Name-calling
+      *   Ad hominem attacks
+      *   Responding to a post’s tone instead of its actual content
+      *   Knee-jerk contradiction
 
       Instead, provide reasoned counter-arguments that improve the conversation.
 
@@ -2750,11 +2759,11 @@ en:
 
       ## [Your Participation Counts](#participate)
 
-      The conversations we have here set the tone for everyone. Help us influence the future of this community by choosing to engage in discussions that make this forum an interesting place to be &mdash; and avoiding those that do not.
+      The conversations we have here set the tone for every new arrival. Help us influence the future of this community by choosing to engage in discussions that make this forum an interesting place to be &mdash; and avoiding those that do not.
 
-      Discourse provides tools that enable the community to collectively identify the best (and worst) contributions: favorites, bookmarks, likes, flags, replies, edits, and so forth. Use these tools to improve your own experience, and everyone else’s, too.
+      Discourse provides tools that enable the community to collectively identify the best (and worst) contributions: bookmarks, likes, flags, replies, edits, and so forth. Use these tools to improve your own experience, and everyone else’s, too.
 
-      Let’s try to leave our park better than we found it.
+      Let’s leave our community better than we found it.
 
       <a name="flag-problems"></a>
 
@@ -2764,7 +2773,7 @@ en:
 
       When you see bad behavior, don’t reply. It encourages the bad behavior by acknowledging it, consumes your energy, and wastes everyone’s time. _Just flag it_. If enough flags accrue, action will be taken, either automatically or by moderator intervention.
 
-      In order to maintain our community, moderators reserve the right to remove any content and any user account for any reason at any time. Moderators do not preview new posts in any way; the moderators and site operators take no responsibility for any content posted by the community.
+      In order to maintain our community, moderators reserve the right to remove any content and any user account for any reason at any time. Moderators do not preview new posts; the moderators and site operators take no responsibility for any content posted by the community.
 
       <a name="be-civil"></a>
 

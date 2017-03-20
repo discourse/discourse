@@ -38,6 +38,12 @@ describe EmbeddableHost do
     expect(eh.host).to eq('localhost:8080')
   end
 
+  it "supports ports for ip addresses" do
+    eh = EmbeddableHost.new(host: '192.168.0.1:3000')
+    expect(eh).to be_valid
+    expect(eh.host).to eq('192.168.0.1:3000')
+  end
+
   it "supports subdomains of localhost" do
     eh = EmbeddableHost.new(host: 'discourse.localhost')
     expect(eh).to be_valid

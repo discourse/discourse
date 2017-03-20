@@ -162,6 +162,9 @@ en:
       visible:
         enabled: 'listed %{when}'
         disabled: 'unlisted %{when}'
+      banner:
+        enabled: 'made this a banner %{when}. It will appear at the top of every page until it is dismissed by the user.'
+        disabled: 'removed this banner %{when}. It will no longer appear at the top of every page.'
 
     topic_admin_menu: "topic admin actions"
 
@@ -1316,6 +1319,8 @@ en:
           first: are the very first post
           pinned: are pinned
           unpinned: are not pinned
+          seen: I've read
+          unseen: I've not read
           wiki: are wiki
         statuses:
           label: Where topics
@@ -1918,6 +1923,18 @@ en:
             title: "Show the raw source diffs side-by-side"
             button: 'Raw'
 
+      raw_email:
+        displays:
+          raw:
+            title: "Show the raw email"
+            button: 'Raw'
+          text_part:
+            title: "Show the text part of the email"
+            button: 'Text'
+          html_part:
+            title: "Show the html part of the email"
+            button: 'HTML'
+
     category:
       can: 'can&hellip; '
       none: '(no category)'
@@ -1973,8 +1990,9 @@ en:
       num_featured_topics: "Number of topics shown on the categories page:"
       subcategory_num_featured_topics: "Number of featured topics on parent category's page:"
       all_topics_wiki: "Make new topics wikis by default."
-      sort_order: "Default Sort:"
-      default_view: "Default View:"
+      subcategory_list_style: "Subcategory List Style:"
+      sort_order: "Topic List Sort By:"
+      default_view: "Default Topic List:"
       allow_badges_label: "Allow badges to be awarded in this category"
       edit_permissions: "Edit Permissions"
       add_permission: "Add Permission"
@@ -2012,6 +2030,11 @@ en:
         created: "Created"
       sort_ascending: 'Ascending'
       sort_descending: 'Descending'
+      subcategory_list_styles:
+        rows: "Rows"
+        rows_with_featured_topics: "Rows with featured topics"
+        boxes: "Boxes"
+        boxes_with_featured_topics: "Boxes with featured topics"
 
     flagging:
       title: 'Thanks for helping to keep our community civil!'
@@ -2123,7 +2146,7 @@ en:
     changed_by: "by {{author}}"
 
     raw_email:
-      title: "Raw Email"
+      title: "Incoming Email"
       not_available: "Not available!"
 
     categories_list: "Categories List"
@@ -2554,6 +2577,8 @@ en:
         add_owners: Add owners
         incoming_email: "Custom incoming email address"
         incoming_email_placeholder: "enter email address"
+        none_selected: "Select a group to get started"
+        no_custom_groups: "Create a new custom group"
 
       api:
         generate_master: "Generate Master API Key"

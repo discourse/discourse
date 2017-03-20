@@ -91,4 +91,8 @@ class AdminDetailedUserSerializer < AdminUserSerializer
     scope.can_view_action_logs?(object)
   end
 
+  def post_count
+    object.posts.count
+  end
+
 end

@@ -14,25 +14,50 @@ class Admin::EmojisController < Admin::AdminController
                  .gsub(/_{2,}/, '_')
                  .downcase
 
-      data = if Emoji.exists?(name)
-        failed_json.merge(errors: [I18n.t("emoji.errors.name_already_exists", name: name)])
-      elsif emoji = Emoji.create_for(file, name)
-        emoji
-      else
-        failed_json.merge(errors: [I18n.t("emoji.errors.error_while_storing_emoji")])
-      end
+      upload = Upload.create_for(
+        current_user.id,
+        file.tempfile,
+        file.original_filename,
+        File.size(file.tempfile.path),
+        image_type: 'custom_emoji'
+      )
+
+      data =
+        if upload.persisted?
+          custom_emoji = CustomEmoji.new(name: name, upload: upload)
+
+          if custom_emoji.save
+            Emoji.clear_cache
+            { name: custom_emoji.name, url: custom_emoji.upload.url }
+          else
+            failed_json.merge(errors: custom_emoji.errors.full_messages)
+          end
+        else
+          failed_json.merge(errors: upload.errors.full_messages)
+        end
 
       MessageBus.publish("/uploads/emoji", data.as_json, user_ids: [current_user.id])
     end
-
 
     render json: success_json
   end
 
   def destroy
     name = params.require(:id)
-    Emoji[name].try(:remove)
-    render nothing: true
+
+    custom_emoji = CustomEmoji.find_by(name: name)
+    raise Discourse::InvalidParameters unless custom_emoji
+
+    CustomEmoji.transaction do
+      custom_emoji.upload.destroy!
+      custom_emoji.destroy!
+    end
+
+    Emoji.clear_cache
+
+    Jobs.enqueue(:rebake_custom_emoji_posts, name: name)
+
+    render json: success_json
   end
 
 end

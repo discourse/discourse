@@ -32,8 +32,10 @@ et:
   purge_reason: "Kustutatud automaatselt kui mahajäetud, deaktiveeritud konto"
   disable_remote_images_download_reason: "Väliste piltide allalaadimine keelati, kuna polnud polnud piisavalt vaba ruumi."
   anonymous: "Anonüümne"
+  remove_posts_deleted_by_author: "Autori poolt kustutatud"
   emails:
     incoming:
+      default_subject: "See teema vajab pealkirja"
       show_trimmed_content: "Näita lühendatud sisu"
       maximum_staged_user_per_email_reached: "Meili teel loodud ettevalmistamisel olevate kasutajate maksimaalne arv on täis."
       errors:
@@ -71,6 +73,7 @@ et:
       inclusion: puudub nimekirjas
       invalid: pole korrektne
       is_invalid: "tundub segane. kas see on terve lause?"
+      contains_censored_words: "sisaldab järgmisi tsenseeritud sõnu: %{censored_words}"
       less_than: peab olema väiksem kui %{count}
       less_than_or_equal_to: peab olema väiksem või võrdne kui %{count}
       not_a_number: ei ole number
@@ -266,6 +269,7 @@ et:
               same_as_username: "on sama mis su kasutajanimi. Palun kasuta turvalisemat parooli."
               same_as_email: "on sama mis su meiliaadress. Palun kasuta turvalisemat parooli."
               same_as_current: "ühtib sinu hetkel kehtiva parooliga."
+              unique_characters: "sisaldab liiga palju korduvaid tähemärke. Palun kasuta turvalisemat parooli."
             ip_address:
               signup_not_allowed: "Sellelt kontolt pole liitumine lubatud."
         color_scheme_color:
@@ -461,6 +465,8 @@ et:
         other: "peaaegu %{count} aastat tagasi"
   password_reset:
     no_token: "Vabandust, see parooli uuendamise link on liiga vana. Vajuta sisselogimise nuppu ja kasuta värske lingi saamiseks 'Unustasin parooli'."
+    choose_new: "Vali uus parool"
+    choose: "Vali parool"
     update: 'Uuenda parooli'
     save: 'Määra Parool'
     title: 'Uuenda Parool'
@@ -556,18 +562,23 @@ et:
     mailing_list_mode: "Lülita postiloendi režiim välja"
     log_out: "Logi välja"
   user_api_key:
+    title: "Autoriseeri rakenduse ligipääs"
+    authorize: "Autoriseeri"
     read: "lugemine"
     read_write: "lugemine ja kirjutamine"
   reports:
     visits:
+      title: "Kasutajakülastused"
       xaxis: "Päev"
       yaxis: "Külastajate arv"
     signups:
       title: "Uued kasutajad"
       xaxis: "Päev"
+      yaxis: "Uute kasutajate arv"
     profile_views:
       title: "Kasutaja profiili vaatamisi"
       xaxis: "Päev"
+      yaxis: "Kasutajaprofiilide vaatamiste arv"
     topics:
       title: "Teemad"
       xaxis: "Päev"
@@ -583,6 +594,7 @@ et:
     flags:
       title: "Tähised"
       xaxis: "Päev"
+      yaxis: "Lippude arv"
     bookmarks:
       title: "Järjehoidjad"
       xaxis: "Päev"
@@ -707,6 +719,8 @@ et:
     min_trust_level_to_tag_topics: "Teemade sildistamiseks on nõutav minimaalne usaldustase"
     suppress_overlapping_tags_in_list: "Ära näita silti, kui see ühtib täpselt sõnaga teema päses"
     remove_muted_tags_from_latest: "Ära näita värskete teemade nimistus teemasid, millel on vaigistatud silt."
+    errors:
+      invalid_integer: "Väärtuseks peab olema täisarv."
   search:
     types:
       category: 'Liigid'
@@ -718,6 +732,8 @@ et:
   login:
     admin_not_allowed_from_ip_address: "Sellelt IP-aadressilt ei saa adminnina sisse logida."
     already_logged_in: "Oih, näib, et üritad vastu võtta võõra kasutaja kutset. Kui Sa ei ole kasutaja %{current_user}, logi palun välja ja proovi uuesti."
+  flags_dispositions:
+    agreed: "Täname, et teada andsite. Tegeleme sellega."
   system_messages:
     backup_failed:
       subject_template: "Varundamine ebaõnnestus"

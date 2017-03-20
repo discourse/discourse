@@ -471,7 +471,7 @@ describe UserNotifications do
                 data: {original_username: username}.to_json )
     end
 
-    describe '.user_mentioned' do
+    describe 'email building' do
       it "has a username" do
         expects_build_with(has_entry(:username, username))
       end
@@ -482,6 +482,10 @@ describe UserNotifications do
 
       it "has a template" do
         expects_build_with(has_entry(:template, "user_notifications.#{mail_type}"))
+      end
+
+      it "overrides the html part" do
+        expects_build_with(has_key(:html_override))
       end
 
       it "has a message" do
@@ -523,6 +527,18 @@ describe UserNotifications do
       it "should not explain how to respond if the user is suspended" do
         User.any_instance.stubs(:suspended?).returns(true)
         expects_build_with(has_entry(:include_respond_instructions, false))
+      end
+
+      context "when customized" do
+        let(:custom_body) { "You are now officially notified." }
+
+        before do
+          TranslationOverride.upsert!("en", "user_notifications.user_#{notification_type}.text_body_template", custom_body)
+        end
+
+        it "shouldn't use the default html_override" do
+          expects_build_with(Not(has_key(:html_override)))
+        end
       end
     end
   end
