@@ -202,6 +202,7 @@
         font-size: 1.5em;
         margin-bottom: 0.5em;
         margin-top: 0.25em;
+        line-height: 1.1em;
       }
       .description {
         font-size: 1.05em;
@@ -227,14 +228,13 @@
   .category-box {
     width: 23%;
     margin: 0 1% 1.5em 1%;
+    > a {
+      width: 100%;
+      padding: 1em;
+    }
   }
   .details {
     text-align: center;
-  }
-
-  a {
-    width: 100%;
-    padding: 1em;
   }
 
   &.no-logos {
