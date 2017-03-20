@@ -162,6 +162,7 @@
     </section>
 
     {{#mobile-nav class='main-nav' desktopClass="nav nav-pills user-nav" currentPath=currentPath}}
+      <li>{{#link-to 'user.summary'}}{{i18n 'user.summary.title'}}{{/link-to}}</li>
       <li>{{#link-to 'userActivity'}}{{i18n 'user.activity_stream'}}{{/link-to}}</li>
       {{#if showNotificationsTab}}
         <li>
@@ -180,7 +181,6 @@
         <li>{{#link-to 'user.badges'}}{{fa-icon "certificate"}}{{i18n 'badges.title'}}{{/link-to}}</li>
       {{/if}}
       {{plugin-outlet name="user-main-nav" connectorTagName='li' args=(hash model=model)}}
-      <li>{{#link-to 'user.summary'}}{{i18n 'user.summary.title'}}{{/link-to}}</li>
       {{#if model.can_edit}}
         <li>{{#link-to 'preferences'}}{{fa-icon "cog"}}{{i18n 'user.preferences'}}{{/link-to}}</li>
       {{/if}}
