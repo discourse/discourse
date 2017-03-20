@@ -1,15 +1,16 @@
 {{#each categories as |c|}}
-  <div class='category-box'>
+  <div class='category-box category-box-{{unbound c.slug}}'>
     <a href={{c.url}}>
-      {{#if c.uploaded_logo.url}}
-        {{cdn-img src=c.uploaded_logo.url class="logo"}}
-      {{/if}}
+      <div class='category-box-heading'>
+        {{#if c.uploaded_logo.url}}
+          {{cdn-img src=c.uploaded_logo.url class="logo"}}
+        {{/if}}
 
-      <div class='details'>
         <h3>{{c.name}}</h3>
-        <div class='description'>
-          {{{c.description_excerpt}}}
-        </div>
+      </div>
+
+      <div class='description'>
+        {{{c.description_excerpt}}}
       </div>
     </a>
   </div>
