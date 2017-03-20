@@ -197,19 +197,6 @@
       width: 100%;
     }
 
-    .details {
-      h3 {
-        font-size: 1.5em;
-        margin-bottom: 0.5em;
-        margin-top: 0.25em;
-        line-height: 1.1em;
-      }
-      .description {
-        font-size: 1.05em;
-        color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 40%));
-      }
-    }
-
     .logo {
       display: block;
       height: 40px;
@@ -230,10 +217,26 @@
     margin: 0 1% 1.5em 1%;
     > a {
       width: 100%;
-      padding: 1em;
+      padding: 0;
     }
   }
-  .details {
+
+  .category-box-heading {
+    padding: 1em 1em 0 1em;
+  }
+
+  .description {
+    padding: 0 1em 1em 1em;
+    text-align: center;
+    font-size: 1.05em;
+    color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 40%));
+  }
+
+  h3 {
+    font-size: 1.5em;
+    margin-bottom: 0.5em;
+    margin-top: 0.25em;
+    line-height: 1.1em;
     text-align: center;
   }
 
