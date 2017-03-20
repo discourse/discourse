@@ -133,7 +133,7 @@ describe Notification do
 
       it 'updates the notification count on destroy' do
         Notification.any_instance.expects(:refresh_notification_count).returns(nil)
-        notification.destroy
+        notification.destroy!
       end
 
     end
