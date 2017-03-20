@@ -178,7 +178,7 @@ class StaticController < ApplicationController
     request.env['sendfile.type'] = ''
 
     opts = { disposition: nil }
-    opts[:type] = "application/javascript" if path =~ /\.js$/
+    opts[:type] = "application/javascript" if params[:path] =~ /\.js$/
     send_file(path, opts)
 
   end
