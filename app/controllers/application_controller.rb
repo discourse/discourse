@@ -230,8 +230,8 @@ class ApplicationController < ActionController::Base
     preload_anonymous_data
 
     if current_user
-      preload_current_user_data
       current_user.sync_notification_channel_position
+      preload_current_user_data
     end
   end
 
