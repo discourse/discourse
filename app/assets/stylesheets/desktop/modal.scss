@@ -129,13 +129,6 @@
       right: 4px;
       max-width: 380px;
       min-width: 300px;
-      display: none;
-    }
-
-    @include hover {
-      .cannot_delete_reason {
-        display: block;
-      }
     }
   }
 }
