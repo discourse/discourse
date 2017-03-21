@@ -53,7 +53,7 @@ export default createWidget('hamburger-menu', {
     }
 
     if (currentUser.admin) {
-      links.push({ route: 'adminSiteSettings',
+      links.push({ href: '/admin/site_settings/category/required',
                    icon: 'gear',
                    label: 'admin.site_settings.title',
                    className: 'settings-link' });
