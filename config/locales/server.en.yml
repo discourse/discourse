@@ -138,6 +138,7 @@ en:
 
   invite:
     not_found: "Your invite token is invalid. Please contact the site's administrator."
+    user_exists: "There's no need to invite <b>%{email}</b>, they <a href='/users/%{username}/summary'>already have an account!</a>"
 
   bulk_invite:
     file_should_be_csv: "The uploaded file should be of csv format."
