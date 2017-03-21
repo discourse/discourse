@@ -27,7 +27,7 @@ test("Root URL - Viewing Self", () => {
   visit("/users/eviltrout");
   andThen(() => {
     ok($('body.user-activity-page').length, "has the body class");
-    equal(currentPath(), 'user.userActivity.index', "it defaults to summary");
+    equal(currentPath(), 'user.userActivity.index', "it defaults to activity");
     ok(exists('.container.viewing-self'), "has the viewing-self class");
   });
 });
