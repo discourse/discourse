@@ -103,7 +103,7 @@ class Invite < ActiveRecord::Base
 
     if user
       extend_permissions(topic, user, invited_by) if topic
-      return nil
+      raise StandardError.new I18n.t("invite.user_exists", email: lower_email, username: user.username)
     end
 
     invite = Invite.with_deleted
