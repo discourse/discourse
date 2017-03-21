@@ -72,23 +72,21 @@ class SessionController < ApplicationController
   end
 
   def sso_login
-    unless SiteSetting.enable_sso
-      return render(nothing: true, status: 404)
-    end
+    raise Discourse::NotFound.new unless SiteSetting.enable_sso
 
     sso = DiscourseSingleSignOn.parse(request.query_string)
     if !sso.nonce_valid?
       if SiteSetting.verbose_sso_logging
         Rails.logger.warn("Verbose SSO log: Nonce has already expired\n\n#{sso.diagnostics}")
       end
-      return render(text: I18n.t("sso.timeout_expired"), status: 419)
+      return render_sso_error(text: I18n.t("sso.timeout_expired"), status: 419)
     end
 
     if ScreenedIpAddress.should_block?(request.remote_ip)
       if SiteSetting.verbose_sso_logging
         Rails.logger.warn("Verbose SSO log: IP address is blocked #{request.remote_ip}\n\n#{sso.diagnostics}")
       end
-      return render(text: I18n.t("sso.unknown_error"), status: 500)
+      return render_sso_error(text: I18n.t("sso.unknown_error"), status: 500)
     end
 
     return_path = sso.return_path
@@ -101,7 +99,7 @@ class SessionController < ApplicationController
           if SiteSetting.sso_not_approved_url.present?
             redirect_to SiteSetting.sso_not_approved_url
           else
-            render text: I18n.t("sso.account_not_approved"), status: 403
+            render_sso_error(text: I18n.t("sso.account_not_approved"), status: 403)
           end
           return
         elsif !user.active?
@@ -128,7 +126,7 @@ class SessionController < ApplicationController
 
         redirect_to return_path
       else
-        render text: I18n.t("sso.not_found"), status: 500
+        render_sso_error(text: I18n.t("sso.not_found"), status: 500)
       end
     rescue ActiveRecord::RecordInvalid => e
       if SiteSetting.verbose_sso_logging
@@ -139,7 +137,7 @@ class SessionController < ApplicationController
           #{sso.diagnostics}
         EOF
       end
-      render text: I18n.t("sso.unknown_error"), status: 500
+      render_sso_error(text: I18n.t("sso.unknown_error"), status: 500)
     rescue => e
       message = "Failed to create or lookup user: #{e}."
       message << "\n\n" << "-" * 100 << "\n\n"
@@ -149,7 +147,7 @@ class SessionController < ApplicationController
 
       Rails.logger.error(message)
 
-      render text: I18n.t("sso.unknown_error"), status: 500
+      render_sso_error(text: I18n.t("sso.unknown_error"), status: 500)
     end
   end
 
@@ -315,4 +313,9 @@ class SessionController < ApplicationController
     render_serialized(user, UserSerializer)
   end
 
+
+  def render_sso_error(status:, text:)
+    @sso_error = text
+    render status: status, layout: 'no_ember'
+  end
 end
