@@ -296,15 +296,15 @@ class UsersController < ApplicationController
       return fail_with("login.new_registrations_disabled")
     end
 
-    if params[:password] && params[:password].length > User.max_password_length
+    if params[:password] && password_too_long?
       return fail_with("login.password_too_long")
     end
 
-    if params[:email] && params[:email].length > 254 + 1 + 253
+    if params[:email] && email_too_long?
       return fail_with("login.email_too_long")
     end
 
-    if SiteSetting.reserved_usernames.split("|").include? params[:username].downcase
+    if reserved_username?
       return fail_with("login.reserved_username")
     end
 
@@ -727,6 +727,18 @@ class UsersController < ApplicationController
   end
 
   private
+
+    def password_too_long?
+      params[:password].length > User.max_password_length
+    end
+
+    def email_too_long?
+      params[:email].length > 254 + 1 + 253
+    end
+
+    def reserved_username?
+      SiteSetting.reserved_usernames.split("|").include? params[:username].downcase
+    end
 
     def honeypot_value
       Digest::SHA1::hexdigest("#{Discourse.current_hostname}:#{GlobalSetting.safe_secret_key_base}")[0,15]
