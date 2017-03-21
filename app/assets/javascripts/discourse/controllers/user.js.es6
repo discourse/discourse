@@ -1,11 +1,9 @@
 import CanCheckEmails from 'discourse/mixins/can-check-emails';
 import computed from 'ember-addons/ember-computed-decorators';
-import UserAction from 'discourse/models/user-action';
 import User from 'discourse/models/user';
 
 export default Ember.Controller.extend(CanCheckEmails, {
   indexStream: false,
-  userActionType: null,
   application: Ember.inject.controller(),
   userNotifications: Ember.inject.controller('user-notifications'),
   currentPath: Ember.computed.alias('application.currentPath'),
@@ -61,18 +59,6 @@ export default Ember.Controller.extend(CanCheckEmails, {
   showBadges(badgeCount) {
     return Discourse.SiteSettings.enable_badges && badgeCount > 0;
   },
-
-  @computed("userActionType")
-  privateMessageView(userActionType) {
-    return (userActionType === UserAction.TYPES.messages_sent) ||
-           (userActionType === UserAction.TYPES.messages_received);
-  },
-
-  @computed("indexStream", "userActionType")
-  showActionTypeSummary(indexStream,userActionType, showPMs) {
-    return (indexStream || userActionType) && !showPMs;
-  },
-
 
   @computed()
   canInviteToForum() {
