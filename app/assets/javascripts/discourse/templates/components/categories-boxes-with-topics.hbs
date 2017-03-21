@@ -20,11 +20,7 @@
         {{#if c.topics}}
           <ul>
             {{#each c.topics as |topic|}}
-              <li>
-                <a class='title' href="{{unbound topic.lastUnreadUrl}}">
-                  {{text-overflow class="overflow" text=topic.fancyTitle}}
-                </a>
-              </li>
+              {{categories-boxes-topic topic=topic}}
             {{/each}}
           </ul>
         {{/if}}

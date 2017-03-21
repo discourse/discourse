@@ -309,5 +309,7 @@
       float: left;
       margin-left: -1.5em;
     }
+    li.topic-pinned:before { content: '\f08d'; }
+    li.topic-closed:before, li.topic-archived:before { content: '\f023'; }
   }
 }
