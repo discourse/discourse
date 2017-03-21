@@ -1773,7 +1773,7 @@ en:
 
   download_backup_mailer:
     title: "Download Backup Mailer"
-    subject_template: "[%{site_name}] Site Backup Download"
+    subject_template: "[%{email_prefix}] Site Backup Download"
     text_body_template: |
       Here's the [site backup download](%{backup_file_path}) you requested.
 
@@ -1785,7 +1785,7 @@ en:
 
   test_mailer:
     title: "Test Mailer"
-    subject_template: "[%{site_name}] Email Deliverability Test"
+    subject_template: "[%{email_prefix}] Email Deliverability Test"
     text_body_template: |
       This is a test email from
 
@@ -1830,7 +1830,7 @@ en:
 
   new_version_mailer:
     title: "New Version Mailer"
-    subject_template: "[%{site_name}] New Discourse version, update available"
+    subject_template: "[%{email_prefix}] New Discourse version, update available"
     text_body_template: |
       Hooray, a new version of [Discourse](http://www.discourse.org) is available!
 
@@ -1845,7 +1845,7 @@ en:
 
   new_version_mailer_with_notes:
     title: "New Version Mailer with Notes"
-    subject_template: "[%{site_name}] update available"
+    subject_template: "[%{email_prefix}] update available"
     text_body_template: |
       Hooray, a new version of [Discourse](http://www.discourse.org) is available!
 
@@ -1865,8 +1865,8 @@ en:
   queued_posts_reminder:
     title: "Queued Posts Reminder"
     subject_template:
-      one: "[%{site_name}] 1 post waiting to be reviewed"
-      other: "[%{site_name}] %{count} posts waiting to be reviewed"
+      one: "[%{email_prefix}] 1 post waiting to be reviewed"
+      other: "[%{email_prefix}] %{count} posts waiting to be reviewed"
     text_body_template: |
       Hello,
 
@@ -2032,7 +2032,7 @@ en:
 
     email_reject_insufficient_trust_level:
       title: "Email Reject insufficient Trust Level"
-      subject_template: "[%{site_name}] Email issue -- Insufficient Trust Level"
+      subject_template: "[%{email_prefix}] Email issue -- Insufficient Trust Level"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
@@ -2040,7 +2040,7 @@ en:
 
     email_reject_user_not_found:
       title: "Email Reject User Not Found"
-      subject_template: "[%{site_name}] Email issue -- User Not Found"
+      subject_template: "[%{email_prefix}] Email issue -- User Not Found"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
@@ -2048,7 +2048,7 @@ en:
 
     email_reject_screened_email:
       title: "Email Reject Screened Email"
-      subject_template: "[%{site_name}] Email issue -- Blocked Email"
+      subject_template: "[%{email_prefix}] Email issue -- Blocked Email"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
@@ -2056,7 +2056,7 @@ en:
 
     email_reject_inactive_user:
       title: "Email Reject Inactive User"
-      subject_template: "[%{site_name}] Email issue -- Inactive User"
+      subject_template: "[%{email_prefix}] Email issue -- Inactive User"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
@@ -2064,7 +2064,7 @@ en:
 
     email_reject_blocked_user:
       title: "Email Reject Blocked User"
-      subject_template: "[%{site_name}] Email issue -- Blocked User"
+      subject_template: "[%{email_prefix}] Email issue -- Blocked User"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
@@ -2072,7 +2072,7 @@ en:
 
     email_reject_reply_user_not_matching:
       title: "Email Reject User Not Matching"
-      subject_template: "[%{site_name}] Email issue -- Unexpected Reply Address"
+      subject_template: "[%{email_prefix}] Email issue -- Unexpected Reply Address"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
@@ -2080,7 +2080,7 @@ en:
 
     email_reject_no_account:
       title: "Email Reject No Account"
-      subject_template: "[%{site_name}] Email issue -- Unknown Account"
+      subject_template: "[%{email_prefix}] Email issue -- Unknown Account"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
@@ -2088,7 +2088,7 @@ en:
 
     email_reject_empty:
       title: "Email Reject Empty"
-      subject_template: "[%{site_name}] Email issue -- No Content"
+      subject_template: "[%{email_prefix}] Email issue -- No Content"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
@@ -2098,7 +2098,7 @@ en:
 
     email_reject_parsing:
       title: "Email Reject Parsing"
-      subject_template: "[%{site_name}] Email issue -- Content Unrecognized"
+      subject_template: "[%{email_prefix}] Email issue -- Content Unrecognized"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
@@ -2106,7 +2106,7 @@ en:
 
     email_reject_invalid_access:
       title: "Email Reject Invalid Access"
-      subject_template: "[%{site_name}] Email issue -- Invalid Access"
+      subject_template: "[%{email_prefix}] Email issue -- Invalid Access"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
@@ -2114,7 +2114,7 @@ en:
 
     email_reject_strangers_not_allowed:
       title: "Email Reject Strangers Not Allowed"
-      subject_template: "[%{site_name}] Email issue -- Invalid Access"
+      subject_template: "[%{email_prefix}] Email issue -- Invalid Access"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
@@ -2122,7 +2122,7 @@ en:
 
     email_reject_invalid_post:
       title: "Email Reject Invalid Post"
-      subject_template: "[%{site_name}] Email issue -- Posting error"
+      subject_template: "[%{email_prefix}] Email issue -- Posting error"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
@@ -2130,7 +2130,7 @@ en:
 
     email_reject_invalid_post_specified:
       title: "Email Reject Invalid Post Specified"
-      subject_template: "[%{site_name}] Email issue -- Posting error"
+      subject_template: "[%{email_prefix}] Email issue -- Posting error"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
@@ -2142,7 +2142,7 @@ en:
 
     email_reject_invalid_post_action:
       title: "Email Reject Invalid Post Action"
-      subject_template: "[%{site_name}] Email issue -- Invalid Post Action"
+      subject_template: "[%{email_prefix}] Email issue -- Invalid Post Action"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
@@ -2151,7 +2151,7 @@ en:
 
     email_reject_reply_key:
       title: "Email Reject Reply Key"
-      subject_template: "[%{site_name}] Email issue -- Unknown Reply Key"
+      subject_template: "[%{email_prefix}] Email issue -- Unknown Reply Key"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
@@ -2159,7 +2159,7 @@ en:
 
     email_reject_bad_destination_address:
       title: "Email Reject Bad Destination Address"
-      subject_template: "[%{site_name}] Email issue -- Unknown To: Address"
+      subject_template: "[%{email_prefix}] Email issue -- Unknown To: Address"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
@@ -2167,7 +2167,7 @@ en:
 
     email_reject_topic_not_found:
       title: "Email Reject Topic Not Found"
-      subject_template: "[%{site_name}] Email issue -- Topic Not Found"
+      subject_template: "[%{email_prefix}] Email issue -- Topic Not Found"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
@@ -2175,7 +2175,7 @@ en:
 
     email_reject_topic_closed:
       title: "Email Reject Topic Closed"
-      subject_template: "[%{site_name}] Email issue -- Topic Closed"
+      subject_template: "[%{email_prefix}] Email issue -- Topic Closed"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
@@ -2183,7 +2183,7 @@ en:
 
     email_reject_auto_generated:
       title: "Email Reject Auto Generated"
-      subject_template: "[%{site_name}] Email issue -- Auto Generated Reply"
+      subject_template: "[%{email_prefix}] Email issue -- Auto Generated Reply"
       text_body_template: |
         We're sorry, but your email message to %{destination} (titled %{former_title}) didn't work.
 
@@ -2191,7 +2191,7 @@ en:
 
     email_error_notification:
       title: "Email Error Notification"
-      subject_template: "[%{site_name}] Email issue -- POP authentication error"
+      subject_template: "[%{email_prefix}] Email issue -- POP authentication error"
       text_body_template: |
         Unfortunately, there was an authentication error while polling mails from the POP server.
 
@@ -2346,7 +2346,7 @@ en:
 
     user_invited_to_private_message_pm:
       title: "User Invited to PM"
-      subject_template: "[%{site_name}] %{username} invited you to a message '%{topic_title}'"
+      subject_template: "[%{email_prefix}] %{username} invited you to a message '%{topic_title}'"
       text_body_template: |
         %{header_instructions}
 
@@ -2356,7 +2356,7 @@ en:
 
     user_invited_to_private_message_pm_staged:
       title: "User Invited to PM Staged"
-      subject_template: "[%{site_name}] %{username} invited you to a message '%{topic_title}'"
+      subject_template: "[%{email_prefix}] %{username} invited you to a message '%{topic_title}'"
       text_body_template: |
         %{header_instructions}
 
@@ -2366,7 +2366,7 @@ en:
 
     user_invited_to_topic:
       title: "User Invited to Topic"
-      subject_template: "[%{site_name}] %{username} invited you to '%{topic_title}'"
+      subject_template: "[%{email_prefix}] %{username} invited you to '%{topic_title}'"
       text_body_template: |
         %{header_instructions}
 
@@ -2376,7 +2376,7 @@ en:
 
     user_replied:
       title: "User Replied"
-      subject_template: "[%{site_name}] %{topic_title}"
+      subject_template: "[%{email_prefix}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -2388,7 +2388,7 @@ en:
 
     user_replied_pm:
       title: "User Replied PM"
-      subject_template: "[%{site_name}] [PM] %{topic_title}"
+      subject_template: "[%{email_prefix}] [PM] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -2400,7 +2400,7 @@ en:
 
     user_quoted:
       title: "User Quoted"
-      subject_template: "[%{site_name}] %{topic_title}"
+      subject_template: "[%{email_prefix}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -2412,7 +2412,7 @@ en:
 
     user_linked:
       title: "User Linked"
-      subject_template: "[%{site_name}] %{topic_title}"
+      subject_template: "[%{email_prefix}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -2424,7 +2424,7 @@ en:
 
     user_mentioned:
       title: "User Mentioned"
-      subject_template: "[%{site_name}] %{topic_title}"
+      subject_template: "[%{email_prefix}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -2436,7 +2436,7 @@ en:
 
     user_group_mentioned:
       title: "User Group Mentioned"
-      subject_template: "[%{site_name}] %{topic_title}"
+      subject_template: "[%{email_prefix}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -2448,7 +2448,7 @@ en:
 
     user_posted:
       title: "User Posted"
-      subject_template: "[%{site_name}] %{topic_title}"
+      subject_template: "[%{email_prefix}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -2460,7 +2460,7 @@ en:
 
     user_watching_first_post:
       title: "User Watching First Post"
-      subject_template: "[%{site_name}] %{topic_title}"
+      subject_template: "[%{email_prefix}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -2472,7 +2472,7 @@ en:
 
     user_posted_pm:
       title: "User Posted PM"
-      subject_template: "[%{site_name}] [PM] %{topic_title}"
+      subject_template: "[%{email_prefix}] [PM] %{topic_title}"
       text_body_template: |
         %{header_instructions}
 
@@ -2503,7 +2503,7 @@ en:
       join_the_discussion: "Read More"
       popular_posts: "Popular Posts"
       more_new: "New for you"
-      subject_template: "[%{site_name}] Summary"
+      subject_template: "[%{email_prefix}] Summary"
       unsubscribe: "This summary is sent from %{site_link} when we haven't seen you in a while. To unsubscribe %{unsubscribe_link}."
       click_here: "click here"
       from: "%{site_name} summary"
@@ -2533,7 +2533,7 @@ en:
 
     mailing_list:
       why: "All activity on %{site_link} for %{date}"
-      subject_template: "[%{site_name}] Summary for %{date}"
+      subject_template: "[%{email_prefix}] Summary for %{date}"
       unsubscribe: "This summary is sent daily due to mailing list mode being enabled. To unsubscribe %{unsubscribe_link}."
       from: "%{site_name} summary"
       new_topics: "New topics"
@@ -2542,7 +2542,7 @@ en:
       back_to_top: "Back to top"
     forgot_password:
       title: "Forgot Password"
-      subject_template: "[%{site_name}] Password reset"
+      subject_template: "[%{email_prefix}] Password reset"
       text_body_template: |
         Somebody asked to reset your password on [%{site_name}](%{base_url}).
 
@@ -2553,7 +2553,7 @@ en:
 
     set_password:
       title: "Set Password"
-      subject_template: "[%{site_name}] Set Password"
+      subject_template: "[%{email_prefix}] Set Password"
       text_body_template: |
         Somebody asked to add a password to your account on [%{site_name}](%{base_url}). Alternatively, you can log in using any supported online service (Google, Facebook, etc) that is associated with this validated email address.
 
@@ -2564,7 +2564,7 @@ en:
 
     admin_login:
       title: "Admin Login"
-      subject_template: "[%{site_name}] Login"
+      subject_template: "[%{email_prefix}] Login"
       text_body_template: |
         Somebody asked to login to your account on [%{site_name}](%{base_url}).
 
@@ -2575,7 +2575,7 @@ en:
 
     account_created:
       title: "Account Created"
-      subject_template: "[%{site_name}] Your New Account"
+      subject_template: "[%{email_prefix}] Your New Account"
       text_body_template: |
         A new account was created for you at %{site_name}
 
@@ -2584,7 +2584,7 @@ en:
 
     confirm_new_email:
       title: "Confirm New Email"
-      subject_template: "[%{site_name}] Confirm your new email address"
+      subject_template: "[%{email_prefix}] Confirm your new email address"
       text_body_template: |
         Confirm your new email address for %{site_name} by clicking on the following link:
 
@@ -2592,7 +2592,7 @@ en:
 
     confirm_old_email:
       title: "Confirm Old Email"
-      subject_template: "[%{site_name}] Confirm your current email address"
+      subject_template: "[%{email_prefix}] Confirm your current email address"
       text_body_template: |
         Before we can change your email address, we need you to confirm that you control
         the current email account. After you complete this step, we will have you confirm
@@ -2604,7 +2604,7 @@ en:
 
     notify_old_email:
       title: "Notify Old Email"
-      subject_template: "[%{site_name}] Your email address has been changed"
+      subject_template: "[%{email_prefix}] Your email address has been changed"
       text_body_template: |
         This is an automated message to let you know that your email address for
         %{site_name} has been changed. If this was done in error, please contact
@@ -2637,7 +2637,7 @@ en:
 
     signup:
       title: "Signup"
-      subject_template: "[%{site_name}] Confirm your new account"
+      subject_template: "[%{email_prefix}] Confirm your new account"
       text_body_template: |
         Welcome to %{site_name}!
 
