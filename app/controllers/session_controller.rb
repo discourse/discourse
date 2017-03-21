@@ -129,6 +129,7 @@ class SessionController < ApplicationController
         render_sso_error(text: I18n.t("sso.not_found"), status: 500)
       end
     rescue ActiveRecord::RecordInvalid => e
+
       if SiteSetting.verbose_sso_logging
         Rails.logger.warn(<<-EOF)
           Verbose SSO log: Record was invalid: #{e.record.class.name} #{e.record.id}\n
@@ -137,7 +138,17 @@ class SessionController < ApplicationController
           #{sso.diagnostics}
         EOF
       end
-      render_sso_error(text: I18n.t("sso.unknown_error"), status: 500)
+
+
+      text = nil
+
+      # If there's a problem with the email we can explain that
+      if (e.record.is_a?(User) && e.record.errors[:email].present?)
+        text = e.record.email.blank? ? I18n.t("sso.no_email") : I18n.t("sso.email_error")
+      end
+
+      render_sso_error(text: text || I18n.t("sso.unknown_error"), status: 500)
+
     rescue => e
       message = "Failed to create or lookup user: #{e}."
       message << "\n\n" << "-" * 100 << "\n\n"
