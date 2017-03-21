@@ -144,7 +144,11 @@ class SessionController < ApplicationController
 
       # If there's a problem with the email we can explain that
       if (e.record.is_a?(User) && e.record.errors[:email].present?)
-        text = e.record.email.blank? ? I18n.t("sso.no_email") : I18n.t("sso.email_error")
+        if e.record.email.blank?
+          text = I18n.t("sso.no_email")
+        else
+          text = I18n.t("sso.email_error", email: ERB::Util.html_escape(e.record.email))
+        end
       end
 
       render_sso_error(text: text || I18n.t("sso.unknown_error"), status: 500)
