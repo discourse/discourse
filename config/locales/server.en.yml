@@ -1544,10 +1544,13 @@ en:
       user: 'Users'
 
   sso:
+    login_error: "Login Error"
     not_found: "Your account couldn't be found. Please contact the site's administrator."
     account_not_approved: "Your account is pending approval. You will receive an email notification when you are approved."
     unknown_error: "There is a problem with your account. Please contact the site's administrator."
     timeout_expired: "Account login timed out, please try logging in again."
+    no_email: "No email address was provided. Please contact the site's administrator."
+    email_error: "An account could not be registered with that email address. Please contact the site's administrator."
 
   original_poster: "Original Poster"
   most_posts: "Most Posts"
