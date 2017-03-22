@@ -1,0 +1,64 @@
+<form>
+  {{#d-modal-body title="topic.topic_status_update.title" autoFocus="false"}}
+    <div class="radios">
+      {{radio-button
+          disabled=disableAutoClose
+          name="auto-close"
+          id="auto-close"
+          value="close"
+          selection=selection}}
+
+      <label class="radio" for="auto-close">
+        {{fa-icon "clock-o"}} {{fa-icon "lock"}} {{i18n 'topic.auto_close.title'}}
+      </label>
+
+      {{radio-button
+          disabled=disableAutoReopen
+          name="auto-reopen"
+          id="auto-reopen"
+          value="open"
+          selection=selection}}
+
+      <label class="radio" for="auto-reopen">
+        {{fa-icon "clock-o"}} {{fa-icon "unlock"}} {{i18n 'topic.auto_reopen.title'}}
+      </label>
+    </div>
+
+    {{#if autoReopen}}
+      {{auto-update-input
+          inputLabelKey='topic.auto_reopen.label'
+          input=updateTime
+          inputValid=updateTimeValid
+          hideBasedOnLastPost=true
+          basedOnLastPost=false}}
+    {{else if autoClose}}
+      {{auto-update-input
+          inputLabelKey='topic.auto_close.label'
+          input=updateTime
+          inputValid=updateTimeValid
+          limited=topicStatusUpdate.based_on_last_post
+          basedOnLastPost=topicStatusUpdate.based_on_last_post}}
+
+      {{#if willCloseImmediately}}
+        <div class="warning">
+          {{fa-icon "warning"}}
+          {{willCloseI18n}}
+        </div>
+      {{/if}}
+    {{/if}}
+  {{/d-modal-body}}
+
+  <div class="modal-footer">
+    {{d-button class="btn-primary"
+        disabled=saveDisabled
+        label="topic.topic_status_update.save"
+        action="saveStatusUpdate"}}
+
+    <a {{action "closeModal"}}>{{i18n 'cancel'}}</a>
+    {{conditional-loading-spinner size="small" condition=loading}}
+
+    {{#if topicStatusUpdate.execute_at}}
+      {{d-button class="pull-right" action="removeStatusUpdate" label=removeStatusUpdateLabel}}
+    {{/if}}
+  </div>
+</form>

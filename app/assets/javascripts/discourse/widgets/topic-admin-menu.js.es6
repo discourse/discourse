@@ -122,11 +122,12 @@ export default createWidget('topic-admin-menu', {
                      action: 'toggleClosed',
                      icon: 'lock',
                      label: 'actions.close' });
-      buttons.push({ className: 'topic-admin-autoclose',
-                     action: 'showAutoClose',
-                     icon: 'clock-o',
-                     label: 'actions.auto_close' });
     }
+
+    buttons.push({ className: 'topic-admin-status-update',
+                   action: 'showTopicStatusUpdate',
+                   icon: 'clock-o',
+                   label: 'actions.timed_update' });
 
     const isPrivateMessage = topic.get('isPrivateMessage');
 

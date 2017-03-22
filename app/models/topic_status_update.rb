@@ -1,116 +1,110 @@
-TopicStatusUpdate = Struct.new(:topic, :user) do
-  def update!(status, enabled, opts={})
-    status = Status.new(status, enabled)
+class TopicStatusUpdate < ActiveRecord::Base
+  include Trashable
 
-    Topic.transaction do
-      change(status, opts)
-      highest_post_number = topic.highest_post_number
-      create_moderator_post_for(status, opts[:message])
-      update_read_state_for(status, highest_post_number)
+  belongs_to :user
+  belongs_to :topic
+
+  validates :user_id, presence: true
+  validates :topic_id, presence: true
+  validates :execute_at, presence: true
+  validates :status_type, presence: true
+
+  validates :status_type, uniqueness: { scope: [:topic_id, :deleted_at] }
+
+  validate :ensure_update_will_happen
+
+  before_save do
+    self.created_at ||= Time.zone.now if execute_at
+
+    if (execute_at_changed? && !execute_at_was.nil?) || user_id_changed?
+      self.send("cancel_auto_#{self.class.types[status_type]}_job")
+    end
+  end
+
+  after_save do
+    if execute_at_changed? || user_id_changed?
+      now = Time.zone.now
+      time = execute_at < now ? now : execute_at
+
+      self.send("schedule_auto_#{self.class.types[status_type]}_job", time)
+    end
+  end
+
+  def self.types
+    @types ||= Enum.new(
+      close: 1,
+      open: 2
+    )
+  end
+
+  def self.ensure_consistency!
+    TopicStatusUpdate.where("execute_at < ?", Time.zone.now).find_each do |topic_status_update|
+      topic_status_update.send(
+        "schedule_auto_#{self.types[topic_status_update.status_type]}_job",
+        topic_status_update.execute_at
+      )
+    end
+  end
+
+  def duration
+    if (self.execute_at && self.created_at)
+      ((self.execute_at - self.created_at) / 1.hour).round(2)
+    else
+      0
     end
   end
 
   private
 
-  def change(status, opts={})
-    if status.pinned? || status.pinned_globally?
-      topic.update_pinned(status.enabled?, status.pinned_globally?, opts[:until])
-    elsif status.autoclosed?
-      topic.update_column('closed', status.enabled?)
-    else
-      topic.update_column(status.name, status.enabled?)
-    end
-
-    if topic.auto_close_at && (status.reopening_topic? || status.manually_closing_topic?)
-      topic.reload.set_auto_close(nil).save
-    end
-
-    # remove featured topics if we close/archive/make them invisible. Previously we used
-    # to run the whole featuring logic but that could be very slow and have concurrency
-    # errors on large sites with many autocloses and topics being created.
-    if ((status.enabled? && (status.autoclosed? || status.closed? || status.archived?)) ||
-        (status.disabled? && status.visible?))
-      CategoryFeaturedTopic.where(topic_id: topic.id).delete_all
-    end
-  end
-
-  def create_moderator_post_for(status, message=nil)
-    topic.add_moderator_post(user, message || message_for(status), options_for(status))
-    topic.reload
-  end
-
-  def update_read_state_for(status, old_highest_read)
-    if status.autoclosed?
-      # let's pretend all the people that read up to the autoclose message
-      # actually read the topic
-      PostTiming.pretend_read(topic.id, old_highest_read, topic.highest_post_number)
-    end
-  end
-
-  def message_for(status)
-    if status.autoclosed?
-      locale_key = status.locale_key
-      locale_key << "_lastpost" if topic.auto_close_based_on_last_post
-      message_for_autoclosed(locale_key)
-    end
-  end
-
-  def message_for_autoclosed(locale_key)
-    num_minutes = ((
-                    if topic.auto_close_based_on_last_post
-                      topic.auto_close_hours.hours
-                    elsif topic.auto_close_started_at
-                      Time.zone.now - topic.auto_close_started_at
-                    else
-                      Time.zone.now - topic.created_at
-                    end
-                  ) / 1.minute).round
-
-    if num_minutes.minutes >= 2.days
-      I18n.t("#{locale_key}_days", count: (num_minutes.minutes / 1.day).round)
-    else
-      num_hours = (num_minutes.minutes / 1.hour).round
-      if num_hours >= 2
-        I18n.t("#{locale_key}_hours", count: num_hours)
-      else
-        I18n.t("#{locale_key}_minutes", count: num_minutes)
+    def ensure_update_will_happen
+      if created_at && (execute_at < created_at)
+        errors.add(:execute_at, I18n.t(
+          'activerecord.errors.models.topic_status_update.attributes.execute_at.in_the_past'
+        ))
       end
     end
-  end
 
-  def options_for(status)
-    { bump: status.reopening_topic?,
-      post_type: Post.types[:small_action],
-      action_code: status.action_code }
-  end
+    def cancel_auto_close_job
+      Jobs.cancel_scheduled_job(:toggle_topic_closed, topic_status_update_id: id)
+    end
+    alias_method :cancel_auto_open_job, :cancel_auto_close_job
 
-  Status = Struct.new(:name, :enabled) do
-    %w(pinned_globally pinned autoclosed closed visible archived).each do |status|
-      define_method("#{status}?") { name == status }
+    def schedule_auto_open_job(time)
+      topic.update_status('closed', true, user) if !topic.closed
+
+      Jobs.enqueue_at(time, :toggle_topic_closed,
+        topic_status_update_id: id,
+        state: false
+      )
     end
 
-    def enabled?
-      enabled
-    end
+    def schedule_auto_close_job(time)
+      topic.update_status('closed', false, user) if topic.closed
 
-    def disabled?
-      !enabled?
+      Jobs.enqueue_at(time, :toggle_topic_closed,
+        topic_status_update_id: id,
+        state: true
+      )
     end
-
-    def action_code
-      "#{name}.#{enabled? ? 'enabled' : 'disabled'}"
-    end
-
-    def locale_key
-      "topic_statuses.#{action_code.tr('.', '_')}"
-    end
-
-    def reopening_topic?
-      (closed? || autoclosed?) && disabled?
-    end
-
-    def manually_closing_topic?
-      closed? && enabled?
-    end
-  end
 end
+
+# == Schema Information
+#
+# Table name: topic_status_updates
+#
+#  id                 :integer          not null, primary key
+#  execute_at         :datetime         not null
+#  status_type        :integer          not null
+#  user_id            :integer          not null
+#  topic_id           :integer          not null
+#  based_on_last_post :boolean          default(FALSE), not null
+#  deleted_at         :datetime
+#  deleted_by_id      :integer
+#  created_at         :datetime
+#  updated_at         :datetime
+#
+# Indexes
+#
+#  idx_topic_id_status_type_deleted_at    (topic_id,status_type) UNIQUE
+#  index_topic_status_updates_on_user_id  (user_id)
+#

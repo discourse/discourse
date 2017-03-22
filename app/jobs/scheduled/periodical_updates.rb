@@ -24,8 +24,8 @@ module Jobs
       args[:max_topic_length] = 500 unless self.class.should_update_long_topics?
       ScoreCalculator.new.calculate(args)
 
-      # Automatically close stuff that we missed
-      Topic.auto_close
+      # Re-run stuff that we missed
+      TopicStatusUpdate.ensure_consistency!
 
       # Forces rebake of old posts where needed, as long as no system avatars need updating
       unless UserAvatar.where("last_gravatar_download_attempt IS NULL").limit(1).first
