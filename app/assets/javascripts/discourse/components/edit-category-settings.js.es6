@@ -28,6 +28,13 @@ export default buildCategoryPanel('settings', {
   },
 
   @computed
+  availableTopPeriods() {
+    return ['all', 'yearly', 'quarterly', 'monthly', 'weekly', 'daily'].map((p) => {
+      return {name: I18n.t(`filters.top.${p}.title`), value: p};
+    });
+  },
+
+  @computed
   availableSorts() {
     return ['likes', 'op_likes', 'views', 'posts', 'activity', 'posters', 'category', 'created']
       .map(s => ({ name: I18n.t('category.sort_options.' + s), value: s }))
