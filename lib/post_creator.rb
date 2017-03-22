@@ -390,8 +390,16 @@ class PostCreator
   end
 
   def update_topic_auto_close
-    if @topic.auto_close_based_on_last_post && @topic.auto_close_hours
-      @topic.set_auto_close(@topic.auto_close_hours).save
+    topic_status_update = @topic.topic_status_update
+
+    if topic_status_update &&
+       topic_status_update.based_on_last_post &&
+       topic_status_update.duration > 0
+
+      @topic.set_or_create_status_update(TopicStatusUpdate.types[:close],
+        topic_status_update.duration,
+        based_on_last_post: topic_status_update.based_on_last_post
+      )
     end
   end
 

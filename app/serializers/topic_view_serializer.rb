@@ -57,16 +57,16 @@ class TopicViewSerializer < ApplicationSerializer
              :bookmarked,
              :message_archived,
              :tags,
-             :featured_link
+             :featured_link,
+             :topic_status_update
 
   # TODO: Split off into proper object / serializer
   def details
+    topic = object.topic
+
     result = {
-      auto_close_at: object.topic.auto_close_at,
-      auto_close_hours: object.topic.auto_close_hours,
-      auto_close_based_on_last_post: object.topic.auto_close_based_on_last_post,
-      created_by: BasicUserSerializer.new(object.topic.user, scope: scope, root: false),
-      last_poster: BasicUserSerializer.new(object.topic.last_poster, scope: scope, root: false)
+      created_by: BasicUserSerializer.new(topic.user, scope: scope, root: false),
+      last_poster: BasicUserSerializer.new(topic.last_poster, scope: scope, root: false)
     }
 
     if object.topic.private_message?
@@ -244,6 +244,12 @@ class TopicViewSerializer < ApplicationSerializer
 
   def include_tags?
     SiteSetting.tagging_enabled
+  end
+
+  def topic_status_update
+    TopicStatusUpdateSerializer.new(
+      object.topic.topic_status_update, root: false
+    )
   end
 
   def tags

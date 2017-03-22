@@ -1,0 +1,25 @@
+<div class="auto-update-input">
+  <div>
+    <label>
+      {{i18n inputLabelKey}}
+      {{text-field value=input}}
+      {{i18n inputUnitsKey}}
+    </label>
+  </div>
+
+  {{#if inputExamplesKey}}
+    <div class="examples">
+      {{i18n inputExamplesKey}}
+    </div>
+  {{/if}}
+
+
+  {{#unless hideBasedOnLastPost}}
+    <div>
+      <label>
+        {{input type="checkbox" checked=basedOnLastPost}}
+        {{i18n 'topic.auto_close.based_on_last_post'}}
+      </label>
+    </div>
+  {{/unless}}
+</div>
