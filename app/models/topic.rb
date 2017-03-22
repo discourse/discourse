@@ -1263,6 +1263,7 @@ end
 #  pinned_until                  :datetime
 #  fancy_title                   :string(400)
 #  highest_staff_post_number     :integer          default(0), not null
+#  featured_link                 :string
 #
 # Indexes
 #
