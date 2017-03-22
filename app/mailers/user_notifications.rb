@@ -87,7 +87,7 @@ class UserNotifications < ActionMailer::Base
     build_summary_for(user)
     opts = {
       from_alias: I18n.t('user_notifications.mailing_list.from', site_name: SiteSetting.title),
-      subject: I18n.t('user_notifications.mailing_list.subject_template', site_name: @site_name, date: @date),
+      subject: I18n.t('user_notifications.mailing_list.subject_template', email_prefix: @email_prefix, date: @date),
       mailing_list_mode: true,
       add_unsubscribe_link: true,
       unsubscribe_url: "#{Discourse.base_url}/email/unsubscribe/#{@unsubscribe_key}",
@@ -167,7 +167,7 @@ class UserNotifications < ActionMailer::Base
 
       opts = {
         from_alias: I18n.t('user_notifications.digest.from', site_name: SiteSetting.title),
-        subject: I18n.t('user_notifications.digest.subject_template', site_name: @site_name, date: short_date(Time.now)),
+        subject: I18n.t('user_notifications.digest.subject_template', email_prefix: @email_prefix, date: short_date(Time.now)),
         add_unsubscribe_link: true,
         unsubscribe_url: "#{Discourse.base_url}/email/unsubscribe/#{@unsubscribe_key}",
       }
@@ -478,7 +478,7 @@ class UserNotifications < ActionMailer::Base
     @user            = user
     @date            = short_date(Time.now)
     @base_url        = Discourse.base_url
-    @site_name       = SiteSetting.email_prefix.presence || SiteSetting.title
+    @email_prefix    = SiteSetting.email_prefix.presence || SiteSetting.title
     @header_color    = ColorScheme.hex_for_name('header_primary')
     @header_bgcolor  = ColorScheme.hex_for_name('header_background')
     @anchor_color    = ColorScheme.hex_for_name('tertiary')
