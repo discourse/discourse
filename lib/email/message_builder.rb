@@ -60,6 +60,7 @@ module Email
     def subject
       if @opts[:use_site_subject]
         subject = String.new(SiteSetting.email_subject)
+        subject.gsub!("%{site_name}", @template_args[:site_name])
         subject.gsub!("%{email_prefix}", @template_args[:email_prefix])
         subject.gsub!("%{optional_re}", @opts[:add_re_to_subject] ? I18n.t('subject_re', @template_args) : '')
         subject.gsub!("%{optional_pm}", @opts[:private_reply] ? I18n.t('subject_pm', @template_args) : '')
