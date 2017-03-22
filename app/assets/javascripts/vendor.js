@@ -18,7 +18,7 @@
 //= require div_resizer
 //= require caret_position
 //= require favcount.js
-//= require jquery.ba-resize.min.js
+//= require jquery.ba-resize.js
 //= require jquery.color.js
 //= require jquery.cookie.js
 //= require jquery.fileupload.js
