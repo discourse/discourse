@@ -161,10 +161,6 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
       return this.send(name, model);
     },
 
-    openAutoClose() {
-      this.send('showAutoClose');
-    },
-
     openFeatureTopic() {
       this.send('showFeatureTopic');
     },

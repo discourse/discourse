@@ -1,56 +1,187 @@
-# encoding: UTF-8
-
 require 'rails_helper'
-require_dependency 'post_destroyer'
 
-# TODO - test pinning, create_moderator_post
+RSpec.describe TopicStatusUpdate, type: :model do
+  let(:topic_status_update) { Fabricate(:topic_status_update) }
+  let(:topic) { Fabricate(:topic) }
 
-describe TopicStatusUpdate do
+  context "validations" do
+    describe '#status_type' do
+      it 'should ensure that only one active topic status update exists' do
+        topic_status_update.update!(topic: topic)
+        Fabricate(:topic_status_update, deleted_at: Time.zone.now, topic: topic)
 
-  let(:user) { Fabricate(:user) }
-  let(:admin) { Fabricate(:admin) }
+        expect { Fabricate(:topic_status_update, topic: topic) }
+          .to raise_error(ActiveRecord::RecordInvalid)
+      end
+    end
 
-  it "avoids notifying on automatically closed topics" do
-    # TODO: TopicStatusUpdate should suppress message bus updates from the users it "pretends to read"
-    post = PostCreator.create(user,
-      raw: "this is a test post 123 this is a test post",
-      title: "hello world title",
-    )
-    # TODO needed so counts sync up, PostCreator really should not give back out-of-date Topic
-    post.topic.set_auto_close('10')
-    post.topic.reload
+    describe '#execute_at' do
+      describe 'when #execute_at is greater than #created_at' do
+        it 'should be valid' do
+          topic_status_update = Fabricate.build(:topic_status_update,
+            execute_at: Time.zone.now + 1.hour,
+            user: Fabricate(:user),
+            topic: Fabricate(:topic)
+          )
 
-    TopicStatusUpdate.new(post.topic, admin).update!("autoclosed", true)
+          expect(topic_status_update).to be_valid
+        end
+      end
 
-    expect(post.topic.posts.count).to eq(2)
+      describe 'when #execute_at is smaller than #created_at' do
+        it 'should not be valid' do
+          topic_status_update = Fabricate.build(:topic_status_update,
+            execute_at: Time.zone.now - 1.hour,
+            created_at: Time.zone.now,
+            user: Fabricate(:user),
+            topic: Fabricate(:topic)
+          )
 
-    tu = TopicUser.find_by(user_id: user.id)
-    expect(tu.last_read_post_number).to eq(2)
+          expect(topic_status_update).to_not be_valid
+        end
+      end
+    end
   end
 
-  it "adds an autoclosed message" do
-    topic = create_topic
-    topic.set_auto_close('10')
+  context 'callbacks' do
+    describe 'when #execute_at and #user_id are not changed' do
+      it 'should not schedule another to update topic' do
+        Jobs.expects(:enqueue_at).with(
+          topic_status_update.execute_at,
+          :toggle_topic_closed,
+          topic_status_update_id: topic_status_update.id,
+          state: true
+        ).once
 
-    TopicStatusUpdate.new(topic, admin).update!("autoclosed", true)
+        topic_status_update
 
-    last_post = topic.posts.last
-    expect(last_post.post_type).to eq(Post.types[:small_action])
-    expect(last_post.action_code).to eq('autoclosed.enabled')
-    expect(last_post.raw).to eq(I18n.t("topic_statuses.autoclosed_enabled_minutes", count: 0))
+        Jobs.expects(:cancel_scheduled_job).never
+
+        topic_status_update.update!(topic: Fabricate(:topic))
+      end
+    end
+
+    describe 'when #execute_at value is changed' do
+      it 'reschedules the job' do
+        Timecop.freeze do
+          topic_status_update
+
+          Jobs.expects(:cancel_scheduled_job).with(
+            :toggle_topic_closed, topic_status_update_id: topic_status_update.id
+          )
+
+          Jobs.expects(:enqueue_at).with(
+            3.days.from_now, :toggle_topic_closed,
+            topic_status_update_id: topic_status_update.id,
+            state: true
+          )
+
+          topic_status_update.update!(execute_at: 3.days.from_now, created_at: Time.zone.now)
+        end
+      end
+
+      describe 'when execute_at is smaller than the current time' do
+        it 'should enqueue the job immediately' do
+          Timecop.freeze do
+            topic_status_update
+
+            Jobs.expects(:enqueue_at).with(
+              Time.zone.now, :toggle_topic_closed,
+              topic_status_update_id: topic_status_update.id,
+              state: true
+            )
+
+            topic_status_update.update!(
+              execute_at: Time.zone.now - 1.hour,
+              created_at: Time.zone.now - 2.hour
+            )
+          end
+        end
+      end
+    end
+
+    describe 'when user is changed' do
+      it 'should update the job' do
+        Timecop.freeze do
+          topic_status_update
+
+          Jobs.expects(:cancel_scheduled_job).with(
+            :toggle_topic_closed, topic_status_update_id: topic_status_update.id
+          )
+
+          admin = Fabricate(:admin)
+
+          Jobs.expects(:enqueue_at).with(
+            topic_status_update.execute_at,
+            :toggle_topic_closed,
+            topic_status_update_id: topic_status_update.id,
+            state: true
+          )
+
+          topic_status_update.update!(user: admin)
+        end
+      end
+    end
   end
 
-  it "adds an autoclosed message based on last post" do
-    topic = create_topic
-    topic.auto_close_based_on_last_post = true
-    topic.set_auto_close('10')
+  describe '.ensure_consistency!' do
+    before do
+      SiteSetting.queue_jobs = true
+      Jobs::ToggleTopicClosed.jobs.clear
+    end
 
-    TopicStatusUpdate.new(topic, admin).update!("autoclosed", true)
+    it 'should enqueue jobs that have been missed' do
+      close_topic_status_update = Fabricate(:topic_status_update,
+        execute_at: Time.zone.now - 1.hour,
+        created_at: Time.zone.now - 2.hour
+      )
 
-    last_post = topic.posts.last
-    expect(last_post.post_type).to eq(Post.types[:small_action])
-    expect(last_post.action_code).to eq('autoclosed.enabled')
-    expect(last_post.raw).to eq(I18n.t("topic_statuses.autoclosed_enabled_lastpost_hours", count: 10))
+      open_topic_status_update = Fabricate(:topic_status_update,
+        status_type: described_class.types[:open],
+        execute_at: Time.zone.now - 1.hour,
+        created_at: Time.zone.now - 2.hour
+      )
+
+      Fabricate(:topic_status_update)
+
+      expect { described_class.ensure_consistency! }
+        .to change { Jobs::ToggleTopicClosed.jobs.count }.by(2)
+
+      job_args = Jobs::ToggleTopicClosed.jobs.first["args"].first
+
+      expect(job_args["topic_status_update_id"]).to eq(close_topic_status_update.id)
+      expect(job_args["state"]).to eq(true)
+
+      job_args = Jobs::ToggleTopicClosed.jobs.last["args"].first
+
+      expect(job_args["topic_status_update_id"]).to eq(open_topic_status_update.id)
+      expect(job_args["state"]).to eq(false)
+    end
   end
 
+  describe 'when a open topic status update is created for an open topic' do
+    it 'should close the topic' do
+      topic = Fabricate(:topic, closed: false)
+
+      Fabricate(:topic_status_update,
+        status_type: described_class.types[:open],
+        topic: topic
+      )
+
+      expect(topic.reload.closed).to eq(true)
+    end
+  end
+
+  describe 'when a close topic status update is created for a closed topic' do
+    it 'should open the topic' do
+      topic = Fabricate(:topic, closed: true)
+
+      Fabricate(:topic_status_update,
+        status_type: described_class.types[:close],
+        topic: topic
+      )
+
+      expect(topic.reload.closed).to eq(false)
+    end
+  end
 end

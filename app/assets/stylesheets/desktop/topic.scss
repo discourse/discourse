@@ -79,7 +79,7 @@
   }
 }
 
-#topic-closing-info {
+#topic-status-info {
   border-top: 1px solid dark-light-diff($primary, $secondary, 90%, -75%);
   padding-top: 10px;
   height: 20px;
@@ -242,4 +242,3 @@ and (max-width : 485px) {
     max-width: 100%;
   }
 }
-

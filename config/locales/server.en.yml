@@ -387,7 +387,7 @@ en:
               invalid: "is not a valid color"
         post_reply:
           base:
-            different_topic: "Post and reply must belong to the same topic."
+            different_topic: "Post and reply must be.long to the same topic."
         web_hook:
           attributes:
             payload_url:
@@ -396,6 +396,10 @@ en:
           attributes:
             name:
               taken: is already in use by another emoji
+        topic_status_update:
+          attributes:
+            execute_at:
+              in_the_past: "must be in the future."
 
   user_profile:
     no_info_me: "<div class='missing-profile'>the About Me field of your profile is currently blank, <a href='/u/%{username_lower}/preferences/about-me'>would you like to fill it out?</a></div>"
@@ -1610,6 +1614,26 @@ en:
     autoclosed_enabled_lastpost_minutes:
       one: "This topic was automatically closed 1 minute after the last reply. New replies are no longer allowed."
       other: "This topic was automatically closed %{count} minutes after the last reply. New replies are no longer allowed."
+
+    autoclosed_disabled_days:
+      one: "This topic was automatically opened after 1 day."
+      other: "This topic was automatically opened after %{count} days."
+    autoclosed_disabled_hours:
+      one: "This topic was automatically opened after 1 hour."
+      other: "This topic was automatically opened after %{count} hours."
+    autoclosed_disabled_minutes:
+      one: "This topic was automatically opened after 1 minute."
+      other: "This topic was automatically opened after %{count} minutes."
+    autoclosed_disabled_lastpost_days:
+      one: "This topic was automatically opened 1 day after the last reply."
+      other: "This topic was automatically opened %{count} days after the last reply."
+    autoclosed_disabled_lastpost_hours:
+      one: "This topic was automatically opened 1 hour after the last reply."
+      other: "This topic was automatically opened %{count} hours after the last reply."
+    autoclosed_disabled_lastpost_minutes:
+      one: "This topic was automatically opened 1 minute after the last reply."
+      other: "This topic was automatically opened %{count} minutes after the last reply."
+
     autoclosed_disabled: "This topic is now opened. New replies are allowed."
     autoclosed_disabled_lastpost: "This topic is now opened. New replies are allowed."
     pinned_enabled: "This topic is now pinned. It will appear at the top of its category until it is unpinned by staff for everyone, or by individual users for themselves."

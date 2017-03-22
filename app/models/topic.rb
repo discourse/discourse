@@ -110,15 +110,14 @@ class Topic < ActiveRecord::Base
   belongs_to :featured_user2, class_name: 'User', foreign_key: :featured_user2_id
   belongs_to :featured_user3, class_name: 'User', foreign_key: :featured_user3_id
   belongs_to :featured_user4, class_name: 'User', foreign_key: :featured_user4_id
-  belongs_to :auto_close_user, class_name: 'User', foreign_key: :auto_close_user_id
 
   has_many :topic_users
   has_many :topic_links
   has_many :topic_invites
   has_many :invites, through: :topic_invites, source: :invite
+  has_many :topic_status_updates, dependent: :destroy
 
   has_one :warning
-
   has_one :first_post, -> {where post_number: 1}, class_name: Post
 
   # When we want to temporarily attach some data to a forum topic (usually before serialization)
@@ -175,7 +174,6 @@ class Topic < ActiveRecord::Base
 
   before_save do
     unless skip_callbacks
-      cancel_auto_close_job
       ensure_topic_has_a_category
     end
     if title_changed?
@@ -184,10 +182,6 @@ class Topic < ActiveRecord::Base
   end
 
   after_save do
-    unless skip_callbacks
-      schedule_auto_close_job
-    end
-
     banner = "banner".freeze
 
     if archetype_was == banner || archetype == banner
@@ -210,9 +204,16 @@ class Topic < ActiveRecord::Base
   end
 
   def inherit_auto_close_from_category
-    if !@ignore_category_auto_close && self.category && self.category.auto_close_hours && self.auto_close_at.nil?
-      self.auto_close_based_on_last_post = self.category.auto_close_based_on_last_post
-      set_auto_close(self.category.auto_close_hours)
+    if !@ignore_category_auto_close &&
+       self.category &&
+       self.category.auto_close_hours &&
+       !topic_status_update&.execute_at
+
+      self.set_or_create_status_update(
+        TopicStatusUpdate.types[:close],
+        self.category.auto_close_hours,
+        based_on_last_post: self.category.auto_close_based_on_last_post
+      )
     end
   end
 
@@ -221,20 +222,6 @@ class Topic < ActiveRecord::Base
       DraftSequence.next!(user, Draft::NEW_PRIVATE_MESSAGE)
     else
       DraftSequence.next!(user, Draft::NEW_TOPIC)
-    end
-  end
-
-  def cancel_auto_close_job
-    if (auto_close_at_changed? && !auto_close_at_was.nil?) || (auto_close_user_id_changed? && auto_close_at)
-      self.auto_close_started_at ||= Time.zone.now if auto_close_at
-      Jobs.cancel_scheduled_job(:close_topic, topic_id: id)
-    end
-  end
-
-  def schedule_auto_close_job
-    if auto_close_at && (auto_close_at_changed? || auto_close_user_id_changed?)
-      options = { topic_id: id, user_id: auto_close_user_id || user_id }
-      Jobs.enqueue_at(auto_close_at, :close_topic, options)
     end
   end
 
@@ -470,7 +457,7 @@ class Topic < ActiveRecord::Base
   end
 
   def update_status(status, enabled, user, opts={})
-    TopicStatusUpdate.new(self, user).update!(status, enabled, opts)
+    TopicStatusUpdater.new(self, user).update!(status, enabled, opts)
     DiscourseEvent.trigger(:topic_status_updated, self.id, status, enabled)
   end
 
@@ -951,91 +938,81 @@ SQL
     Topic.where("pinned_until < now()").update_all(pinned_at: nil, pinned_globally: false, pinned_until: nil)
   end
 
-  def self.auto_close
-    Topic.where("NOT closed AND auto_close_at < ? AND auto_close_user_id IS NOT NULL", 1.minute.ago).each do |t|
-      t.auto_close
-    end
+  def topic_status_update
+    @topic_status_update ||= topic_status_updates.where('deleted_at IS NULL').first
   end
 
-  def auto_close(closer = nil)
-    if auto_close_at && !closed? && !deleted_at && auto_close_at < 5.minutes.from_now
-      closer ||= auto_close_user
-      if Guardian.new(closer).can_moderate?(self)
-        update_status('autoclosed', true, closer)
-      end
-    end
-  end
-
-  # Valid arguments for the auto close time:
-  #  * An integer, which is the number of hours from now to close the topic.
-  #  * A time, like "12:00", which is the time at which the topic will close in the current day
+  # Valid arguments for the time:
+  #  * An integer, which is the number of hours from now to update the topic's status.
+  #  * A time, like "12:00", which is the time at which the topic's status will update in the current day
   #    or the next day if that time has already passed today.
-  #  * A timestamp, like "2013-11-25 13:00", when the topic should close.
+  #  * A timestamp, like "2013-11-25 13:00", when the topic's status should update.
   #  * A timestamp with timezone in JSON format. (e.g., "2013-11-26T21:00:00.000Z")
-  #  * nil, to prevent the topic from automatically closing.
+  #  * `nil` to delete the topic's status update.
   # Options:
-  #  * by_user: User who is setting the auto close time
+  #  * by_user: User who is setting the topic's status update.
   #  * timezone_offset: (Integer) offset from UTC in minutes of the given argument. Default 0.
-  def set_auto_close(arg, opts={})
-    self.auto_close_hours = nil
-    by_user = opts[:by_user]
-    offset_minutes = opts[:timezone_offset]
+  def set_or_create_status_update(status_type, time, by_user: nil, timezone_offset: 0, based_on_last_post: false)
+    topic_status_update = TopicStatusUpdate.find_or_initialize_by(
+      status_type: status_type,
+      topic: self
+    )
 
-    if self.auto_close_based_on_last_post
-      num_hours = arg.to_f
+    if time.blank?
+      topic_status_update.trash!(trashed_by: by_user || Discourse.system_user)
+      return
+    end
+
+    time_now = Time.zone.now
+    topic_status_update.based_on_last_post = !based_on_last_post.blank?
+
+    if topic_status_update.based_on_last_post
+      num_hours = time.to_f
+
       if num_hours > 0
-        last_post_created_at = self.ordered_posts.last.try(:created_at) || Time.zone.now
-        self.auto_close_at = last_post_created_at + num_hours.hours
-        self.auto_close_hours = num_hours
-      else
-        self.auto_close_at = nil
+        last_post_created_at = self.ordered_posts.last.created_at || time_now
+        topic_status_update.execute_at = last_post_created_at + num_hours.hours
+        topic_status_update.created_at = last_post_created_at
       end
     else
       utc = Time.find_zone("UTC")
-      if arg.is_a?(String) && m = /^(\d{1,2}):(\d{2})(?:\s*[AP]M)?$/i.match(arg.strip)
+      is_timestamp = time.is_a?(String)
+      now = utc.now
+
+      if is_timestamp && m = /^(\d{1,2}):(\d{2})(?:\s*[AP]M)?$/i.match(time.strip)
         # a time of day in client's time zone, like "15:00"
-        now = utc.now
-        self.auto_close_at = utc.local(now.year, now.month, now.day, m[1].to_i, m[2].to_i)
-        self.auto_close_at += offset_minutes * 60 if offset_minutes
-        self.auto_close_at += 1.day if self.auto_close_at < now
-        self.auto_close_hours = -1
-      elsif arg.is_a?(String) && arg.include?("-") && timestamp = utc.parse(arg)
+        topic_status_update.execute_at = utc.local(now.year, now.month, now.day, m[1].to_i, m[2].to_i)
+        topic_status_update.execute_at += timezone_offset * 60 if timezone_offset
+        topic_status_update.execute_at += 1.day if topic_status_update.execute_at < now
+      elsif is_timestamp && time.include?("-") && timestamp = utc.parse(time)
         # a timestamp in client's time zone, like "2015-5-27 12:00"
-        self.auto_close_at = timestamp
-        self.auto_close_at += offset_minutes * 60 if offset_minutes
-        self.auto_close_hours = -1
-        self.errors.add(:auto_close_at, :invalid) if timestamp < Time.zone.now
+        topic_status_update.execute_at = timestamp
+        topic_status_update.execute_at += timezone_offset * 60 if timezone_offset
+        topic_status_update.errors.add(:execute_at, :invalid) if timestamp < now
       else
-        num_hours = arg.to_f
+        num_hours = time.to_f
+
         if num_hours > 0
-          self.auto_close_at = num_hours.hours.from_now
-          self.auto_close_hours = num_hours
-        else
-          self.auto_close_at = nil
+          topic_status_update.execute_at = num_hours.hours.from_now
         end
       end
     end
 
-    if self.auto_close_at.nil?
-      self.auto_close_started_at = nil
-    else
-      if self.auto_close_based_on_last_post
-        self.auto_close_started_at = Time.zone.now
+    if topic_status_update.execute_at
+      if by_user&.staff? || by_user&.trust_level == TrustLevel[4]
+        topic_status_update.user = by_user
       else
-        self.auto_close_started_at ||= Time.zone.now
-      end
-      if by_user.try(:staff?) || by_user.try(:trust_level) == TrustLevel[4]
-        self.auto_close_user = by_user
-      else
-        self.auto_close_user ||= (self.user.staff? || self.user.trust_level == TrustLevel[4] ? self.user : Discourse.system_user)
+        topic_status_update.user ||= (self.user.staff? || self.user.trust_level == TrustLevel[4] ? self.user : Discourse.system_user)
       end
 
-      if self.auto_close_at.try(:<, Time.zone.now)
-        auto_close(auto_close_user)
+      if self.persisted?
+        topic_status_update.save!
+      else
+        self.topic_status_updates << topic_status_update
       end
+
+      topic_status_update
     end
-
-    self
   end
 
   def read_restricted_category?
@@ -1214,56 +1191,51 @@ end
 #
 # Table name: topics
 #
-#  id                            :integer          not null, primary key
-#  title                         :string           not null
-#  last_posted_at                :datetime
-#  created_at                    :datetime         not null
-#  updated_at                    :datetime         not null
-#  views                         :integer          default(0), not null
-#  posts_count                   :integer          default(0), not null
-#  user_id                       :integer
-#  last_post_user_id             :integer          not null
-#  reply_count                   :integer          default(0), not null
-#  featured_user1_id             :integer
-#  featured_user2_id             :integer
-#  featured_user3_id             :integer
-#  avg_time                      :integer
-#  deleted_at                    :datetime
-#  highest_post_number           :integer          default(0), not null
-#  image_url                     :string
-#  like_count                    :integer          default(0), not null
-#  incoming_link_count           :integer          default(0), not null
-#  category_id                   :integer
-#  visible                       :boolean          default(TRUE), not null
-#  moderator_posts_count         :integer          default(0), not null
-#  closed                        :boolean          default(FALSE), not null
-#  archived                      :boolean          default(FALSE), not null
-#  bumped_at                     :datetime         not null
-#  has_summary                   :boolean          default(FALSE), not null
-#  vote_count                    :integer          default(0), not null
-#  archetype                     :string           default("regular"), not null
-#  featured_user4_id             :integer
-#  notify_moderators_count       :integer          default(0), not null
-#  spam_count                    :integer          default(0), not null
-#  pinned_at                     :datetime
-#  score                         :float
-#  percent_rank                  :float            default(1.0), not null
-#  subtype                       :string
-#  slug                          :string
-#  auto_close_at                 :datetime
-#  auto_close_user_id            :integer
-#  auto_close_started_at         :datetime
-#  deleted_by_id                 :integer
-#  participant_count             :integer          default(1)
-#  word_count                    :integer
-#  excerpt                       :string(1000)
-#  pinned_globally               :boolean          default(FALSE), not null
-#  auto_close_based_on_last_post :boolean          default(FALSE)
-#  auto_close_hours              :float
-#  pinned_until                  :datetime
-#  fancy_title                   :string(400)
-#  highest_staff_post_number     :integer          default(0), not null
-#  featured_link                 :string
+#  id                        :integer          not null, primary key
+#  title                     :string           not null
+#  last_posted_at            :datetime
+#  created_at                :datetime         not null
+#  updated_at                :datetime         not null
+#  views                     :integer          default(0), not null
+#  posts_count               :integer          default(0), not null
+#  user_id                   :integer
+#  last_post_user_id         :integer          not null
+#  reply_count               :integer          default(0), not null
+#  featured_user1_id         :integer
+#  featured_user2_id         :integer
+#  featured_user3_id         :integer
+#  avg_time                  :integer
+#  deleted_at                :datetime
+#  highest_post_number       :integer          default(0), not null
+#  image_url                 :string
+#  like_count                :integer          default(0), not null
+#  incoming_link_count       :integer          default(0), not null
+#  category_id               :integer
+#  visible                   :boolean          default(TRUE), not null
+#  moderator_posts_count     :integer          default(0), not null
+#  closed                    :boolean          default(FALSE), not null
+#  archived                  :boolean          default(FALSE), not null
+#  bumped_at                 :datetime         not null
+#  has_summary               :boolean          default(FALSE), not null
+#  vote_count                :integer          default(0), not null
+#  archetype                 :string           default("regular"), not null
+#  featured_user4_id         :integer
+#  notify_moderators_count   :integer          default(0), not null
+#  spam_count                :integer          default(0), not null
+#  pinned_at                 :datetime
+#  score                     :float
+#  percent_rank              :float            default(1.0), not null
+#  subtype                   :string
+#  slug                      :string
+#  deleted_by_id             :integer
+#  participant_count         :integer          default(1)
+#  word_count                :integer
+#  excerpt                   :string(1000)
+#  pinned_globally           :boolean          default(FALSE), not null
+#  pinned_until              :datetime
+#  fancy_title               :string(400)
+#  highest_staff_post_number :integer          default(0), not null
+#  featured_link             :string
 #
 # Indexes
 #

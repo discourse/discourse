@@ -578,7 +578,7 @@ Discourse::Application.routes.draw do
   put "t/:topic_id/re-pin" => "topics#re_pin", constraints: {topic_id: /\d+/}
   put "t/:topic_id/mute" => "topics#mute", constraints: {topic_id: /\d+/}
   put "t/:topic_id/unmute" => "topics#unmute", constraints: {topic_id: /\d+/}
-  put "t/:topic_id/autoclose" => "topics#autoclose", constraints: {topic_id: /\d+/}
+  post "t/:topic_id/status_update" => "topics#status_update", constraints: {topic_id: /\d+/}
   put "t/:topic_id/make-banner" => "topics#make_banner", constraints: {topic_id: /\d+/}
   put "t/:topic_id/remove-banner" => "topics#remove_banner", constraints: {topic_id: /\d+/}
   put "t/:topic_id/remove-allowed-user" => "topics#remove_allowed_user", constraints: {topic_id: /\d+/}

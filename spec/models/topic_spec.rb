@@ -742,6 +742,7 @@ describe Topic do
           expect(@topic).to be_closed
           expect(@topic.bumped_at.to_f).to eq(@original_bumped_at)
           expect(@topic.moderator_posts_count).to eq(1)
+          expect(@topic.topic_status_updates.first).to eq(nil)
         end
       end
     end
@@ -766,20 +767,19 @@ describe Topic do
 
       context 'topic was set to close after it was created' do
         it 'puts the autoclose duration in the moderator post' do
-
           freeze_time(Time.new(2000,1,1))
 
           @topic.created_at = 7.days.ago
 
           freeze_time(2.days.ago)
 
-          @topic.set_auto_close(48)
+          @topic.set_or_create_status_update(TopicStatusUpdate.types[:close], 48)
+          @topic.save!
 
           freeze_time(2.days.from_now)
 
           @topic.update_status(status, true, @user)
           expect(@topic.posts.last.raw).to include "closed after 2 days"
-
         end
       end
     end
@@ -1096,297 +1096,173 @@ describe Topic do
     end
   end
 
-  describe 'auto-close' do
-    context 'a new topic' do
-      context 'auto_close_at is set' do
-        it 'queues a job to close the topic' do
-          Timecop.freeze(now) do
-            Jobs.expects(:enqueue_at).with(7.hours.from_now, :close_topic, all_of( has_key(:topic_id), has_key(:user_id) ))
-            topic = Fabricate(:topic, user: Fabricate(:admin))
-            topic.set_auto_close(7).save
-          end
-        end
+  describe '#set_or_create_status_update' do
+    let(:topic) { Fabricate.build(:topic) }
 
-        it 'when auto_close_user_id is nil, it will use the topic creator as the topic closer' do
-          topic_creator = Fabricate(:admin)
-          Jobs.expects(:enqueue_at).with do |datetime, job_name, job_args|
-            job_args[:user_id] == topic_creator.id
-          end
-          topic = Fabricate(:topic, user: topic_creator)
-          topic.set_auto_close(7).save
-        end
-
-        it 'when auto_close_user_id is set, it will use it as the topic closer' do
-          topic_creator = Fabricate(:admin)
-          topic_closer = Fabricate(:user, admin: true)
-          Jobs.expects(:enqueue_at).with do |datetime, job_name, job_args|
-            job_args[:user_id] == topic_closer.id
-          end
-          topic = Fabricate(:topic, user: topic_creator)
-          topic.set_auto_close(7, {by_user: topic_closer}).save
-        end
-
-        it "ignores the category's default auto-close" do
-          Timecop.freeze(now) do
-            Jobs.expects(:enqueue_at).with(7.hours.from_now, :close_topic, all_of( has_key(:topic_id), has_key(:user_id) ))
-            topic = Fabricate(:topic, user: Fabricate(:admin), ignore_category_auto_close: true, category_id: Fabricate(:category, auto_close_hours: 2).id)
-            topic.set_auto_close(7).save
-          end
-        end
-
-        it 'sets the time when auto_close timer starts' do
-          Timecop.freeze(now) do
-            topic = Fabricate(:topic,  user: Fabricate(:admin))
-            topic.set_auto_close(7).save
-            expect(topic.auto_close_started_at).to eq(now)
-          end
-        end
-      end
+    let(:closing_topic) do
+      Fabricate(:topic,
+        topic_status_updates: [Fabricate(:topic_status_update, execute_at: 5.hours.from_now)]
+      )
     end
 
-    context 'an existing topic' do
-      it 'when auto_close_at is set, it queues a job to close the topic' do
-        Timecop.freeze(now) do
-          topic = Fabricate(:topic)
-          Jobs.expects(:enqueue_at).with(12.hours.from_now, :close_topic, has_entries(topic_id: topic.id, user_id: topic.user_id))
-          topic.auto_close_at = 12.hours.from_now
-          expect(topic.save).to eq(true)
-        end
-      end
-
-      it 'when auto_close_at and auto_closer_user_id are set, it queues a job to close the topic' do
-        Timecop.freeze(now) do
-          topic  = Fabricate(:topic)
-          closer = Fabricate(:admin)
-          Jobs.expects(:enqueue_at).with(12.hours.from_now, :close_topic, has_entries(topic_id: topic.id, user_id: closer.id))
-          topic.auto_close_at = 12.hours.from_now
-          topic.auto_close_user = closer
-          expect(topic.save).to eq(true)
-        end
-      end
-
-      it 'when auto_close_at is removed, it cancels the job to close the topic' do
-        Jobs.stubs(:enqueue_at).returns(true)
-        topic = Fabricate(:topic, auto_close_at: 1.day.from_now)
-        Jobs.expects(:cancel_scheduled_job).with(:close_topic, {topic_id: topic.id})
-        topic.auto_close_at = nil
-        expect(topic.save).to eq(true)
-        expect(topic.auto_close_user).to eq(nil)
-      end
-
-      it 'when auto_close_user is removed, it updates the job' do
-        Timecop.freeze(now) do
-          Jobs.stubs(:enqueue_at).with(1.day.from_now, :close_topic, anything).returns(true)
-          topic = Fabricate(:topic, auto_close_at: 1.day.from_now, auto_close_user: Fabricate(:admin))
-          Jobs.expects(:cancel_scheduled_job).with(:close_topic, {topic_id: topic.id})
-          Jobs.expects(:enqueue_at).with(1.day.from_now, :close_topic, has_entries(topic_id: topic.id, user_id: topic.user_id))
-          topic.auto_close_user = nil
-          expect(topic.save).to eq(true)
-        end
-      end
-
-      it 'when auto_close_at value is changed, it reschedules the job' do
-        Timecop.freeze(now) do
-          Jobs.stubs(:enqueue_at).returns(true)
-          topic = Fabricate(:topic, auto_close_at: 1.day.from_now)
-          Jobs.expects(:cancel_scheduled_job).with(:close_topic, {topic_id: topic.id})
-          Jobs.expects(:enqueue_at).with(3.days.from_now, :close_topic, has_entry(topic_id: topic.id))
-          topic.auto_close_at = 3.days.from_now
-          expect(topic.save).to eq(true)
-        end
-      end
-
-      it 'when auto_close_user_id is changed, it updates the job' do
-        Timecop.freeze(now) do
-          admin = Fabricate(:admin)
-          Jobs.stubs(:enqueue_at).returns(true)
-          topic = Fabricate(:topic, auto_close_at: 1.day.from_now)
-          Jobs.expects(:cancel_scheduled_job).with(:close_topic, {topic_id: topic.id})
-          Jobs.expects(:enqueue_at).with(1.day.from_now, :close_topic, has_entries(topic_id: topic.id, user_id: admin.id))
-          topic.auto_close_user = admin
-          expect(topic.save).to eq(true)
-        end
-      end
-
-      it 'when auto_close_at and auto_close_user_id are not changed, it should not schedule another CloseTopic job' do
-        Timecop.freeze(now) do
-          Jobs.expects(:enqueue_at).with(1.day.from_now, :close_topic, has_key(:topic_id)).once.returns(true)
-          Jobs.expects(:cancel_scheduled_job).never
-          topic = Fabricate(:topic, auto_close_at: 1.day.from_now)
-          topic.title = 'A new title that is long enough'
-          expect(topic.save).to eq(true)
-        end
-      end
-
-      it "ignores the category's default auto-close" do
-        Timecop.freeze(now) do
-          mod = Fabricate(:moderator)
-          # NOTE, only moderators can auto-close, if missing system user is used
-          topic = Fabricate(:topic, category: Fabricate(:category, auto_close_hours: 14), user: mod)
-          Jobs.expects(:enqueue_at).with(12.hours.from_now, :close_topic, has_entries(topic_id: topic.id, user_id: topic.user_id))
-          topic.auto_close_at = 12.hours.from_now
-          topic.save
-
-          topic.reload
-          expect(topic.closed).to eq(false)
-
-          Timecop.freeze(24.hours.from_now) do
-            Topic.auto_close
-            topic.reload
-            expect(topic.closed).to eq(true)
-          end
-
-        end
-      end
-    end
-  end
-
-  describe 'set_auto_close' do
-    let(:topic)         { Fabricate.build(:topic) }
-    let(:closing_topic) { Fabricate.build(:topic, auto_close_hours: 5, auto_close_at: 5.hours.from_now, auto_close_started_at: 5.hours.from_now) }
-    let(:admin)         { Fabricate.build(:user, id: 123) }
-    let(:trust_level_4) { Fabricate.build(:trust_level_4) }
+    let(:admin) { Fabricate(:admin) }
+    let(:trust_level_4) { Fabricate(:trust_level_4) }
 
     before { Discourse.stubs(:system_user).returns(admin) }
 
     it 'can take a number of hours as an integer' do
       Timecop.freeze(now) do
-        topic.set_auto_close(72, {by_user: admin})
-        expect(topic.auto_close_at).to eq(3.days.from_now)
+        topic.set_or_create_status_update(TopicStatusUpdate.types[:close], 72, by_user: admin)
+        expect(topic.topic_status_updates.first.execute_at).to eq(3.days.from_now)
       end
     end
 
     it 'can take a number of hours as an integer, with timezone offset' do
       Timecop.freeze(now) do
-        topic.set_auto_close(72, {by_user: admin, timezone_offset: 240})
-        expect(topic.auto_close_at).to eq(3.days.from_now)
+        topic.set_or_create_status_update(TopicStatusUpdate.types[:close], 72, {by_user: admin, timezone_offset: 240})
+        expect(topic.topic_status_updates.first.execute_at).to eq(3.days.from_now)
       end
     end
 
     it 'can take a number of hours as a string' do
       Timecop.freeze(now) do
-        topic.set_auto_close('18', {by_user: admin})
-        expect(topic.auto_close_at).to eq(18.hours.from_now)
+        topic.set_or_create_status_update(TopicStatusUpdate.types[:close], '18', by_user: admin)
+        expect(topic.topic_status_updates.first.execute_at).to eq(18.hours.from_now)
       end
     end
 
     it 'can take a number of hours as a string, with timezone offset' do
       Timecop.freeze(now) do
-        topic.set_auto_close('18', {by_user: admin, timezone_offset: 240})
-        expect(topic.auto_close_at).to eq(18.hours.from_now)
+        topic.set_or_create_status_update(TopicStatusUpdate.types[:close], '18', {by_user: admin, timezone_offset: 240})
+        expect(topic.topic_status_updates.first.execute_at).to eq(18.hours.from_now)
       end
     end
 
     it "can take a time later in the day" do
       Timecop.freeze(now) do
-        topic.set_auto_close('13:00', {by_user: admin})
-        expect(topic.auto_close_at).to eq(Time.zone.local(2013,11,20,13,0))
+        topic.set_or_create_status_update(TopicStatusUpdate.types[:close], '13:00', {by_user: admin})
+        expect(topic.topic_status_updates.first.execute_at).to eq(Time.zone.local(2013,11,20,13,0))
       end
     end
 
     it "can take a time later in the day, with timezone offset" do
       Timecop.freeze(now) do
-        topic.set_auto_close('13:00', {by_user: admin, timezone_offset: 240})
-        expect(topic.auto_close_at).to eq(Time.zone.local(2013,11,20,17,0))
+        topic.set_or_create_status_update(TopicStatusUpdate.types[:close], '13:00', {by_user: admin, timezone_offset: 240})
+        expect(topic.topic_status_updates.first.execute_at).to eq(Time.zone.local(2013,11,20,17,0))
       end
     end
 
     it "can take a time for the next day" do
       Timecop.freeze(now) do
-        topic.set_auto_close('5:00', {by_user: admin})
-        expect(topic.auto_close_at).to eq(Time.zone.local(2013,11,21,5,0))
+        topic.set_or_create_status_update(TopicStatusUpdate.types[:close], '5:00', {by_user: admin})
+        expect(topic.topic_status_updates.first.execute_at).to eq(Time.zone.local(2013,11,21,5,0))
       end
     end
 
     it "can take a time for the next day, with timezone offset" do
       Timecop.freeze(now) do
-        topic.set_auto_close('1:00', {by_user: admin, timezone_offset: 240})
-        expect(topic.auto_close_at).to eq(Time.zone.local(2013,11,21,5,0))
+        topic.set_or_create_status_update(TopicStatusUpdate.types[:close], '1:00', {by_user: admin, timezone_offset: 240})
+        expect(topic.topic_status_updates.first.execute_at).to eq(Time.zone.local(2013,11,21,5,0))
       end
     end
 
     it "can take a timestamp for a future time" do
       Timecop.freeze(now) do
-        topic.set_auto_close('2013-11-22 5:00', {by_user: admin})
-        expect(topic.auto_close_at).to eq(Time.zone.local(2013,11,22,5,0))
+        topic.set_or_create_status_update(TopicStatusUpdate.types[:close], '2013-11-22 5:00', {by_user: admin})
+        expect(topic.topic_status_updates.first.execute_at).to eq(Time.zone.local(2013,11,22,5,0))
       end
     end
 
     it "can take a timestamp for a future time, with timezone offset" do
       Timecop.freeze(now) do
-        topic.set_auto_close('2013-11-22 5:00', {by_user: admin, timezone_offset: 240})
-        expect(topic.auto_close_at).to eq(Time.zone.local(2013,11,22,9,0))
+        topic.set_or_create_status_update(TopicStatusUpdate.types[:close], '2013-11-22 5:00', {by_user: admin, timezone_offset: 240})
+        expect(topic.topic_status_updates.first.execute_at).to eq(Time.zone.local(2013,11,22,9,0))
       end
     end
 
     it "sets a validation error when given a timestamp in the past" do
       Timecop.freeze(now) do
-        topic.set_auto_close('2013-11-19 5:00', {by_user: admin})
-        expect(topic.auto_close_at).to eq(Time.zone.local(2013,11,19,5,0))
-        expect(topic.errors[:auto_close_at]).to be_present
+        topic.set_or_create_status_update(TopicStatusUpdate.types[:close], '2013-11-19 5:00', {by_user: admin})
+
+        expect(topic.topic_status_updates.first.execute_at).to eq(Time.zone.local(2013,11,19,5,0))
+        expect(topic.topic_status_updates.first.errors[:execute_at]).to be_present
       end
     end
 
     it "can take a timestamp with timezone" do
       Timecop.freeze(now) do
-        topic.set_auto_close('2013-11-25T01:35:00-08:00', {by_user: admin})
-        expect(topic.auto_close_at).to eq(Time.utc(2013,11,25,9,35))
+        topic.set_or_create_status_update(TopicStatusUpdate.types[:close], '2013-11-25T01:35:00-08:00', {by_user: admin})
+        expect(topic.topic_status_updates.first.execute_at).to eq(Time.utc(2013,11,25,9,35))
       end
     end
 
-    it 'sets auto_close_user to given user if it is a staff or TL4 user' do
-      topic.set_auto_close(3, {by_user: admin})
-      expect(topic.auto_close_user_id).to eq(admin.id)
+    it 'sets topic status update user to given user if it is a staff or TL4 user' do
+      topic.set_or_create_status_update(TopicStatusUpdate.types[:close], 3, {by_user: admin})
+      expect(topic.topic_status_updates.first.user).to eq(admin)
     end
 
-    it 'sets auto_close_user to given user if it is a TL4 user' do
-      topic.set_auto_close(3, {by_user: trust_level_4})
-      expect(topic.auto_close_user_id).to eq(trust_level_4.id)
+    it 'sets topic status update user to given user if it is a TL4 user' do
+      topic.set_or_create_status_update(TopicStatusUpdate.types[:close], 3, {by_user: trust_level_4})
+      expect(topic.topic_status_updates.first.user).to eq(trust_level_4)
     end
 
-    it 'sets auto_close_user to system user if given user is not staff or a TL4 user' do
-      topic.set_auto_close(3, {by_user: Fabricate.build(:user, id: 444)})
-      expect(topic.auto_close_user_id).to eq(admin.id)
+    it 'sets topic status update user to system user if given user is not staff or a TL4 user' do
+      topic.set_or_create_status_update(TopicStatusUpdate.types[:close], 3, {by_user: Fabricate.build(:user, id: 444)})
+      expect(topic.topic_status_updates.first.user).to eq(admin)
     end
 
-    it 'sets auto_close_user to system user if user is not given and topic creator is not staff nor TL4 user' do
-      topic.set_auto_close(3)
-      expect(topic.auto_close_user_id).to eq(admin.id)
+    it 'sets topic status update user to system user if user is not given and topic creator is not staff nor TL4 user' do
+      topic.set_or_create_status_update(TopicStatusUpdate.types[:close], 3)
+      expect(topic.topic_status_updates.first.user).to eq(admin)
     end
 
-    it 'sets auto_close_user to topic creator if it is a staff user' do
+    it 'sets topic status update user to topic creator if it is a staff user' do
       staff_topic = Fabricate.build(:topic, user: Fabricate.build(:admin, id: 999))
-      staff_topic.set_auto_close(3)
-      expect(staff_topic.auto_close_user_id).to eq(999)
+      staff_topic.set_or_create_status_update(TopicStatusUpdate.types[:close], 3)
+      expect(staff_topic.topic_status_updates.first.user_id).to eq(999)
     end
 
-    it 'sets auto_close_user to topic creator if it is a TL4 user' do
+    it 'sets topic status update user to topic creator if it is a TL4 user' do
       tl4_topic = Fabricate.build(:topic, user: Fabricate.build(:trust_level_4, id: 998))
-      tl4_topic.set_auto_close(3)
-      expect(tl4_topic.auto_close_user_id).to eq(998)
+      tl4_topic.set_or_create_status_update(TopicStatusUpdate.types[:close], 3)
+      expect(tl4_topic.topic_status_updates.first.user_id).to eq(998)
     end
 
-    it 'clears auto_close_at if arg is nil' do
-      closing_topic.set_auto_close(nil)
-      expect(closing_topic.auto_close_at).to be_nil
+    it 'removes close topic status update if arg is nil' do
+      closing_topic.set_or_create_status_update(TopicStatusUpdate.types[:close], nil)
+      closing_topic.reload
+      expect(closing_topic.topic_status_updates.first).to be_nil
     end
 
-    it 'clears auto_close_started_at if arg is nil' do
-      closing_topic.set_auto_close(nil)
-      expect(closing_topic.auto_close_started_at).to be_nil
-    end
-
-    it 'updates auto_close_at if it was already set to close' do
+    it 'updates topic status update execute_at if it was already set to close' do
       Timecop.freeze(now) do
-        closing_topic.set_auto_close(48)
-        expect(closing_topic.auto_close_at).to eq(2.days.from_now)
+        closing_topic.set_or_create_status_update(TopicStatusUpdate.types[:close], 48)
+        expect(closing_topic.reload.topic_status_update.execute_at).to eq(2.days.from_now)
       end
     end
 
-    it 'does not update auto_close_started_at if it was already set to close' do
+    it "does not update topic's topic status created_at it was already set to close" do
       expect{
-        closing_topic.set_auto_close(14)
-      }.to_not change(closing_topic, :auto_close_started_at)
+        closing_topic.set_or_create_status_update(TopicStatusUpdate.types[:close], 14)
+      }.to_not change { closing_topic.topic_status_updates.first.created_at }
+    end
+
+    describe "when category's default auto close is set" do
+      let(:category) { Fabricate(:category, auto_close_hours: 4) }
+      let(:topic) { Fabricate(:topic, category: category) }
+
+      it "should be able to override category's default auto close" do
+        expect(topic.topic_status_updates.first.duration).to eq(4)
+
+        topic.set_or_create_status_update(TopicStatusUpdate.types[:close], 2, by_user: admin)
+
+        expect(topic.reload.closed).to eq(false)
+
+        Timecop.freeze(3.hours.from_now) do
+          TopicStatusUpdate.ensure_consistency!
+          expect(topic.reload.closed).to eq(true)
+        end
+      end
     end
   end
 
