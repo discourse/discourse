@@ -1092,7 +1092,7 @@ end
 #  username                :string(60)       not null
 #  created_at              :datetime         not null
 #  updated_at              :datetime         not null
-#  name                    :string(255)
+#  name                    :string
 #  seen_notification_id    :integer          default(0), not null
 #  last_posted_at          :datetime
 #  email                   :string(513)      not null
@@ -1100,7 +1100,6 @@ end
 #  salt                    :string(32)
 #  active                  :boolean          default(FALSE), not null
 #  username_lower          :string(60)       not null
-#  auth_token              :string(32)
 #  last_seen_at            :datetime
 #  admin                   :boolean          default(FALSE), not null
 #  last_emailed_at         :datetime
@@ -1117,7 +1116,7 @@ end
 #  ip_address              :inet
 #  moderator               :boolean          default(FALSE)
 #  blocked                 :boolean          default(FALSE)
-#  title                   :string(255)
+#  title                   :string
 #  uploaded_avatar_id      :integer
 #  locale                  :string(10)
 #  primary_group_id        :integer
@@ -1125,13 +1124,11 @@ end
 #  trust_level_locked      :boolean          default(FALSE), not null
 #  staged                  :boolean          default(FALSE), not null
 #  first_seen_at           :datetime
-#  auth_token_updated_at   :datetime
 #
 # Indexes
 #
 #  idx_users_admin                    (id)
 #  idx_users_moderator                (id)
-#  index_users_on_auth_token          (auth_token)
 #  index_users_on_last_posted_at      (last_posted_at)
 #  index_users_on_last_seen_at        (last_seen_at)
 #  index_users_on_uploaded_avatar_id  (uploaded_avatar_id)
