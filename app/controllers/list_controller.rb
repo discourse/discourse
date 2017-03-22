@@ -366,8 +366,15 @@ class ListController < ApplicationController
     exclude_category_ids.pluck(:id)
   end
 
-  def self.best_period_with_topics_for(previous_visit_at, category_id=nil)
-    best_periods_for(previous_visit_at).each do |period|
+  def self.best_period_for(previous_visit_at, category_id=nil)
+    default_period = ((category_id && Category.where(id: category_id).pluck(:default_top_period).first) ||
+          SiteSetting.top_page_default_timeframe).to_sym
+
+    best_period_with_topics_for(previous_visit_at, category_id, default_period) || default_period
+  end
+
+  def self.best_period_with_topics_for(previous_visit_at, category_id=nil, default_period=SiteSetting.top_page_default_timeframe)
+    best_periods_for(previous_visit_at, default_period.to_sym).each do |period|
       top_topics = TopTopic.where("#{period}_score > 0")
       top_topics = top_topics.joins(:topic).where("topics.category_id = ?", category_id) if category_id
       top_topics = top_topics.limit(SiteSetting.topics_per_period_in_top_page)
@@ -377,14 +384,8 @@ class ListController < ApplicationController
     false
   end
 
-  def self.best_period_for(previous_visit_at, category_id=nil)
-    best_period_with_topics_for(previous_visit_at, category_id) ||
-      SiteSetting.top_page_default_timeframe.to_sym
-  end
-
-  def self.best_periods_for(date)
+  def self.best_periods_for(date, default_period=:all)
     date ||= 1.year.ago
-    default_period = SiteSetting.top_page_default_timeframe.to_sym
     periods = []
     periods << default_period if :all     != default_period
     periods << :daily         if :daily   != default_period && date >   8.days.ago

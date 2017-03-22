@@ -561,6 +561,7 @@ end
 #  num_featured_topics           :integer          default(3)
 #  default_view                  :string(50)
 #  subcategory_list_style        :string(50)       default("rows_with_featured_topics")
+#  default_top_period            :string(20)       default("all")
 #
 # Indexes
 #

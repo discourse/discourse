@@ -249,6 +249,7 @@ class CategoriesController < ApplicationController
                         :num_featured_topics,
                         :default_view,
                         :subcategory_list_style,
+                        :default_top_period,
                         :custom_fields => [params[:custom_fields].try(:keys)],
                         :permissions => [*p.try(:keys)],
                         :allowed_tags => [],

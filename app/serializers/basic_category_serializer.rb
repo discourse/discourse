@@ -23,7 +23,8 @@ class BasicCategorySerializer < ApplicationSerializer
              :show_subcategory_list,
              :num_featured_topics,
              :default_view,
-             :subcategory_list_style
+             :subcategory_list_style,
+             :default_top_period
 
   has_one :uploaded_logo, embed: :object, serializer: CategoryUploadSerializer
   has_one :uploaded_background, embed: :object, serializer: CategoryUploadSerializer
