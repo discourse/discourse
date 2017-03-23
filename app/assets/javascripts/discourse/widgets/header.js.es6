@@ -214,6 +214,8 @@ export default createWidget('header', {
       panels.push(this.attach('user-menu'));
     }
 
+    this.additionalPanels(attrs, state).map(function(panel) { panels.push(panel) })
+
     const contents = [ this.attach('home-logo', { minimized: !!attrs.topic }),
                        h('div.panel.clearfix', panels) ];
 
@@ -222,6 +224,11 @@ export default createWidget('header', {
     }
 
     return h('div.wrap', h('div.contents.clearfix', contents));
+  },
+
+  // override to allow plugins to append additional panels
+  additionalPanels(attrs, state) {
+    return []
   },
 
   updateHighlight() {
