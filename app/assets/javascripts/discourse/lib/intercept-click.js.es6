@@ -22,6 +22,7 @@ export default function interceptClick(e) {
       $currentTarget.data('auto-route') ||
       $currentTarget.data('share-url') ||
       $currentTarget.hasClass('widget-link') ||
+      $currentTarget.hasClass('raw-link') ||
       $currentTarget.hasClass('mention') ||
       (!$currentTarget.hasClass('d-link') &&
        !$currentTarget.data('user-card') &&
@@ -29,6 +30,7 @@ export default function interceptClick(e) {
       $currentTarget.hasClass('lightbox') ||
       href.indexOf("mailto:") === 0 ||
       (href.match(/^http[s]?:\/\//i) && !href.match(new RegExp("^https?:\\/\\/" + window.location.hostname, "i")))) {
+
     return;
   }
 

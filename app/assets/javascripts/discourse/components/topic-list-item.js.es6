@@ -1,3 +1,4 @@
+import DiscourseURL from 'discourse/lib/url';
 import computed from 'ember-addons/ember-computed-decorators';
 import { bufferedRender } from 'discourse-common/lib/buffered-render';
 import { findRawTemplate } from 'discourse/lib/raw-templates';
@@ -111,13 +112,19 @@ export default Ember.Component.extend(bufferedRender({
     const target = $(e.target);
     if (target.hasClass('bulk-select')) {
       const selected = this.get('selected');
-      const topic = this.get('topic');
 
+      const topic = this.get('topic');
       if (target.is(':checked')) {
         selected.addObject(topic);
       } else {
         selected.removeObject(topic);
       }
+    }
+
+    if (target.hasClass('raw-topic-link')) {
+      this.appEvents.trigger('header:hide-topic');
+      DiscourseURL.routeTo(target.attr('href'));
+      return false;
     }
 
     if (target.closest('a.topic-status').length === 1) {
