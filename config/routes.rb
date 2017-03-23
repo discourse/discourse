@@ -242,8 +242,8 @@ Discourse::Application.routes.draw do
       collection do
         get "logs" => "backups#logs"
         get "status" => "backups#status"
-        get "cancel" => "backups#cancel"
-        get "rollback" => "backups#rollback"
+        delete "cancel" => "backups#cancel"
+        post "rollback" => "backups#rollback"
         put "readonly" => "backups#readonly"
         get "upload" => "backups#check_backup_chunk"
         post "upload" => "backups#upload_backup_chunk"
