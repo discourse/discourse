@@ -12,6 +12,10 @@
 # shadowed_by_global - "Shadow" a site setting with a GlobalSetting. If the GlobalSetting
 #                      exists it will be used instead of the setting and the setting will be hidden.
 #                      Useful for things like API keys on multisite.
+# overrider          - The name of the class that will be used to override the value of the setting.
+#                      Class should implement the following class methods:
+#                        - `.override(current_value)` Returns the value of the site setting based on custom conditions.
+#                        - `.prevent_override` Raise a `Discourse::InvalidParameter` with an error message if the value cannot be override.
 #
 # type: email    - Must be a valid email address.
 # type: username - Must match the username of an existing user.
