@@ -1,0 +1,136 @@
+.category-boxes, .category-boxes-with-topics {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  margin-top: 1em;
+  margin-bottom: 1em;
+  width: 100%;
+
+  .category-box {
+    display: flex;
+    flex-direction: row;
+    align-content: flex-start;
+
+    box-sizing: border-box;
+    border: 2px solid blend-primary-secondary(20%);
+
+    .mobile-view & {
+      width: 100%;
+    }
+
+    .logo {
+      display: block;
+      height: 40px;
+      margin: 0 auto 1em auto;
+    }
+
+    h3 .fa {
+      color: $primary;
+    }
+  }
+
+  &.no-logos {
+    .logo {
+      display: none;
+    }
+  }
+}
+
+.category-boxes {
+  .category-box {
+    width: 23%;
+    margin: 0 1% 1.5em 1%;
+    > a {
+      width: 100%;
+      padding: 0;
+    }
+  }
+
+  .category-box-heading {
+    padding: 1em 1em 0 1em;
+  }
+
+  .description {
+    padding: 0 1em 1em 1em;
+    text-align: center;
+    font-size: 1.05em;
+    color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 40%));
+    .overflow {
+      max-height: 6em;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+
+  h3 {
+    font-size: 1.5em;
+    margin-bottom: 0.5em;
+    margin-top: 0.25em;
+    line-height: 1.1em;
+    text-align: center;
+  }
+
+  &.no-logos {
+    .category-box a {
+      padding: 3em 1em;
+    }
+  }
+}
+
+.category-boxes-with-topics {
+  .category-box {
+    width: 31%;
+    margin: 0 1% 1.5em 1%;
+    padding: 0;
+    border-width: 0 0 0 6px;
+    border-style: solid;
+    border-color: blend-primary-secondary(20%);
+  }
+  .category-box-inner {
+    width: 100%;
+    padding: 0;
+    border-width: 2px 2px 2px 0;
+    border-style: solid;
+    border-color: blend-primary-secondary(20%);
+  }
+
+  h3 {
+    font-size: 1.2em;
+    text-align: center;
+  }
+
+  .category-box-heading {
+    padding: 1em 1em 0.5em 1em;
+    a[href] {
+      width: 100%;
+      color: $primary;
+    }
+  }
+
+  .featured-topics {
+    padding: 0.5em 1em 1em 1em;
+    ul {
+      color: blend-primary-secondary(70%);
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    li {
+      padding: 0;
+      margin-left: 1.5em;
+      .overflow {
+        max-height: 3em;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+    }
+    li:before {
+      content: '\f0f6';
+      font-family: 'FontAwesome';
+      float: left;
+      margin-left: -1.5em;
+    }
+    li.topic-pinned:before { content: '\f08d'; }
+    li.topic-closed:before, li.topic-archived:before { content: '\f023'; }
+  }
+}
