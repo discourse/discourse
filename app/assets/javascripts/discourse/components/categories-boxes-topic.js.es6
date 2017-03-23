@@ -5,10 +5,10 @@ export default Ember.Component.extend({
   classNameBindings: ['topicStatusIcon'],
 
   @computed('topic.pinned', 'topic.closed', 'topic.archived')
-  topicStatusIcon() {
-    if(this.get('topic.pinned'))   { return 'topic-pinned'; }
-    if(this.get('topic.closed'))   { return 'topic-closed'; }
-    if(this.get('topic.archived')) { return 'topic-archived'; }
+  topicStatusIcon(pinned, closed, archived) {
+    if(pinned)   { return 'topic-pinned'; }
+    if(closed)   { return 'topic-closed'; }
+    if(archived) { return 'topic-archived'; }
     return 'topic-open';
   }
 });
