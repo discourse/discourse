@@ -109,11 +109,11 @@ export default Ember.Component.extend(bufferedRender({
     const result = showEntrance.call(this, e);
     if (result === false) { return result; }
 
+    const topic = this.get('topic');
     const target = $(e.target);
     if (target.hasClass('bulk-select')) {
       const selected = this.get('selected');
 
-      const topic = this.get('topic');
       if (target.is(':checked')) {
         selected.addObject(topic);
       } else {
@@ -122,7 +122,7 @@ export default Ember.Component.extend(bufferedRender({
     }
 
     if (target.hasClass('raw-topic-link')) {
-      this.appEvents.trigger('header:hide-topic');
+      this.appEvents.trigger('header:update-topic', topic);
       DiscourseURL.routeTo(target.attr('href'));
       return false;
     }
