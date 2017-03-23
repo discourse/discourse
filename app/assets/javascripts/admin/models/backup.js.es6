@@ -34,15 +34,17 @@ Backup.reopenClass({
   },
 
   cancel() {
-    return ajax("/admin/backups/cancel.json")
-                    .then(result => {
-                      if (!result.success) { bootbox.alert(result.message); }
-                    });
+    return ajax("/admin/backups/cancel.json", {
+      type: 'DELETE'
+    }).then(result => {
+      if (!result.success) { bootbox.alert(result.message); }
+    });
   },
 
   rollback() {
-    return ajax("/admin/backups/rollback.json")
-                    .then(result => {
+    return ajax("/admin/backups/rollback.json", {
+      type: 'POST'
+    }).then(result => {
       if (!result.success) {
         bootbox.alert(result.message);
       } else {
