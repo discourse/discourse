@@ -25,6 +25,7 @@ export default Ember.Component.extend(AddArchetypeClass, Scrolling, {
 
   postStream: Ember.computed.alias('topic.postStream'),
   archetype: Ember.computed.alias('topic.archetype'),
+  dockAt: 0,
 
   _lastShowTopic: null,
 
@@ -109,15 +110,11 @@ export default Ember.Component.extend(AddArchetypeClass, Scrolling, {
   },
 
   resetExamineDockCache() {
-    this.set('docAt', false);
+    this.set('dockAt', 0);
   },
 
   showTopicInHeader(topic, offset) {
-    if (this.get('docAt')) {
-      return offset >= this.get('docAt') || topic.get('postStream.firstPostNotLoaded');
-    } else {
-      return topic.get('postStream.firstPostNotLoaded');
-    }
+    return offset > this.get('dockAt');
   },
 
   // The user has scrolled the window, or it is finished rendering and ready for processing.
@@ -127,10 +124,10 @@ export default Ember.Component.extend(AddArchetypeClass, Scrolling, {
     }
 
     const offset = window.pageYOffset || $('html').scrollTop();
-    if (!this.get('docAt')) {
+    if (this.get('dockAt') === 0) {
       const title = $('#topic-title');
       if (title && title.length === 1) {
-        this.set('docAt', title.offset().top);
+        this.set('dockAt', title.offset().top);
       }
     }
 
