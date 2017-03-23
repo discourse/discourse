@@ -206,6 +206,7 @@ createWidget('timeline-scrollarea', {
         lastRead: position.lastRead,
         showButton
       }));
+      result.push(this.attach('timeline-unread-area', { top: lastReadTop}));
     }
 
     return result;
@@ -239,6 +240,21 @@ createWidget('timeline-scrollarea', {
   goBack() {
     this.sendWidgetAction('jumpToIndex', this.position().lastRead);
   }
+});
+
+createWidget('timeline-unread-area', {
+  tagName: 'div.timeline-unread',
+
+  buildAttributes(attrs) {
+
+    const top = attrs.top + (LAST_READ_HEIGHT / 2);
+    if (top) {
+      return {
+        style: `top: ${top}px; height: ${SCROLLAREA_HEIGHT - top}px`
+      };
+    }
+  }
+
 });
 
 createWidget('topic-timeline-container', {
