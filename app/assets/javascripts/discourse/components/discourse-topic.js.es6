@@ -1,3 +1,4 @@
+import DiscourseURL from 'discourse/lib/url';
 import AddArchetypeClass from 'discourse/mixins/add-archetype-class';
 import ClickTrack from 'discourse/lib/click-track';
 import Scrolling from 'discourse/mixins/scrolling';
@@ -143,7 +144,9 @@ export default Ember.Component.extend(AddArchetypeClass, Scrolling, {
       if (showTopic) {
         this.appEvents.trigger('header:show-topic', topic);
       } else {
-        this.appEvents.trigger('header:hide-topic');
+        if (!DiscourseURL.isJumpScheduled()) {
+          this.appEvents.trigger('header:hide-topic');
+        }
       }
     }
 
