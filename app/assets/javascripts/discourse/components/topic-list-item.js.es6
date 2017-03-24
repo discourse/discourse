@@ -2,6 +2,7 @@ import DiscourseURL from 'discourse/lib/url';
 import computed from 'ember-addons/ember-computed-decorators';
 import { bufferedRender } from 'discourse-common/lib/buffered-render';
 import { findRawTemplate } from 'discourse/lib/raw-templates';
+import { wantsNewWindow } from 'discourse/lib/intercept-click';
 
 export function showEntrance(e) {
   let target = $(e.target);
@@ -122,6 +123,8 @@ export default Ember.Component.extend(bufferedRender({
     }
 
     if (target.hasClass('raw-topic-link')) {
+       if (wantsNewWindow(e)) { return true; }
+
       this.appEvents.trigger('header:update-topic', topic);
       DiscourseURL.routeTo(target.attr('href'));
       return false;
