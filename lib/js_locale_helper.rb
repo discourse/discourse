@@ -100,14 +100,15 @@ module JsLocaleHelper
     locale_str = locale.to_s
     translations = Marshal.load(Marshal.dump(translations_for(locale_str)))
 
+    message_formats = strip_out_message_formats!(translations[locale_str]['js'])
+    message_formats.merge!(strip_out_message_formats!(translations[locale_str]['admin_js']))
+    result = generate_message_format(message_formats, locale_str)
+
     translations.keys.each do |locale|
       translations[locale].keys.each do |k|
         translations[locale].delete(k) unless k == "js"
       end
     end
-
-    message_formats = strip_out_message_formats!(translations[locale_str]['js'])
-    result = generate_message_format(message_formats, locale_str)
 
     # I18n
     result << "I18n.translations = #{translations.to_json};\n"

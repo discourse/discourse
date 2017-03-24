@@ -90,6 +90,9 @@ describe JsLocaleHelper do
             "test_MF" => "{HELLO} {COUNT, plural, one {1 duck} other {# ducks}}",
             "error_MF" => "{{BLA}",
             "simple_MF" => "{COUNT, plural, one {1} other {#}}"
+          },
+          "admin_js" => {
+            "foo_MF" => "{HELLO} {COUNT, plural, one {1 duck} other {# ducks}}"
           }
         }
       })
@@ -105,6 +108,7 @@ describe JsLocaleHelper do
       expect(ctx.eval('I18n.messageFormat("error_MF", { HELLO: "hi", COUNT: 3 })')).to match(/Invalid Format/)
       expect(ctx.eval('I18n.messageFormat("missing", {})')).to match(/missing/)
       expect(ctx.eval('I18n.messageFormat("simple_MF", {})')).to match(/COUNT/) # error
+      expect(ctx.eval('I18n.messageFormat("foo_MF", { HELLO: "hi", COUNT: 4 })')).to eq("hi 4 ducks")
     end
 
     it 'load pluralizations rules before precompile' do
