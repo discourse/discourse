@@ -104,6 +104,8 @@ export function selectedText() {
   $div.find(".clicks").remove();
   // replace emojis
   $div.find("img.emoji").replaceWith(function() { return this.title; });
+  // replace br with newlines
+  $div.find("br").replaceWith(() => "\n")
 
   return String($div.text()).trim();
 }
