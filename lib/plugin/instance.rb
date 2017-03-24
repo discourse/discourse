@@ -15,6 +15,7 @@ class Plugin::CustomEmoji
 
   def self.register(name, url)
     @@cache_key = Digest::SHA1.hexdigest(cache_key + name)[0..10]
+    url = Discourse.base_uri + url if url[/^\/[^\/]/]
     emojis[name] = url
   end
 end
