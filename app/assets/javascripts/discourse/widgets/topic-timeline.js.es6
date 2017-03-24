@@ -199,13 +199,15 @@ createWidget('timeline-scrollarea', {
       this.attach('timeline-padding', { height: after })
     ];
 
-    if (hasBackPosition) {
+    if (position.lastRead > 1 && position.total > 5) {
       const lastReadTop = Math.round(position.lastReadPercentage * SCROLLAREA_HEIGHT);
-      result.push(this.attach('timeline-last-read', {
-        top: lastReadTop,
-        lastRead: position.lastRead,
-        showButton
-      }));
+      if (hasBackPosition) {
+        result.push(this.attach('timeline-last-read', {
+          top: lastReadTop,
+          lastRead: position.lastRead,
+          showButton
+        }));
+      }
       result.push(this.attach('timeline-unread-area', { top: lastReadTop}));
     }
 
