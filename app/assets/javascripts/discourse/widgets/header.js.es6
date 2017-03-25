@@ -187,7 +187,7 @@ export default createWidget('header', {
   },
 
   attachAdditionalPanel(name, toggle, attrFn) {
-    this.additionalPanels.push({ name, toggle, attrFn })
+    this.additionalPanels.push({ name, toggle, attrFn });
   },
 
   html(attrs, state) {
