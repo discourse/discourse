@@ -347,7 +347,7 @@ class PluginApi {
    * and returns a hash of attrs to pass to the widget
    **/
    addHeaderPanel(name, toggle, attrFn) {
-     queryRegistry('header').prototype.attachAdditionalPanel(name, toggle, attrFn)
+     queryRegistry('header').prototype.attachAdditionalPanel(name, toggle, attrFn);
    }
 
   /**
