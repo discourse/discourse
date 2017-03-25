@@ -130,31 +130,8 @@
 
 // Category list
 // --------------------------------------------------
-.categories-list .category-list {
-  margin-left: -10px;
-  margin-bottom: 2em;
-
-  td {
-    padding: 12px 5px;
-    color: dark-light-choose(scale-color($primary, $lightness: 50%), scale-color($secondary, $lightness: 40%));
-    vertical-align: top;
-  }
-
-  td:first-of-type {
-    padding-left: 10px;
-  }
-
-  tbody {
-    tr {
-      border-bottom: 1px solid dark-light-diff($primary, $secondary, 90%, -75%);
-      &:first-of-type {
-        border-top: 3px solid dark-light-diff($primary, $secondary, 90%, -75%);
-      }
-    }
-    .category {
-      border-left: 6px solid;
-    }
-  }
+.categories-list .list-container {
+  margin-left: -10px; // Extend past the .wrap padding to the edge of the window
 }
 
 .category-list-item.category {
@@ -300,11 +277,6 @@ tr.category-topic-link {
   }
 }
 
-.category-box {
-  h3 {
-    margin: 0 0 0.5em 0;
-  }
-}
 
 .topic-list-bottom {
   margin: 20px 0 0 0;
@@ -419,7 +391,6 @@ ol.category-breadcrumb {
 .category-logo {
   display: block;
   max-width: 100%;
-  max-height: 150px;
   padding: 8px 0;
 }
 
@@ -449,6 +420,6 @@ td .main-link {
   }
 }
 
-.category-list.with-topics .category-list-item .category-description {
+.category-list-item .category-description {
   display: none;
 }
