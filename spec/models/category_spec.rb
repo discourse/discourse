@@ -310,6 +310,7 @@ describe Category do
       @category.update_attributes(name: 'Troutfishing')
       @topic.reload
       expect(@topic.title).to match(/Troutfishing/)
+      expect(@topic.fancy_title).to match(/Troutfishing/)
     end
 
     it "doesn't raise an error if there is no definition topic to rename (uncategorized)" do
