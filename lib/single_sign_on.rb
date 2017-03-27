@@ -44,11 +44,7 @@ class SingleSignOn
     end
 
     decoded_hash.each do |k,v|
-      # 1234567
-      # custom.
-      #
-      if k[0..6] == "custom."
-        field = k[7..-1]
+      if field = k[/^custom\.(.+)$/, 1]
         sso.custom_fields[field] = v
       end
     end
@@ -57,9 +53,7 @@ class SingleSignOn
   end
 
   def diagnostics
-    SingleSignOn::ACCESSORS.map do |a|
-      "#{a}: #{send(a)}"
-    end.join("\n")
+    SingleSignOn::ACCESSORS.map { |a| "#{a}: #{send(a)}" }.join("\n")
   end
 
   def sso_secret
@@ -74,11 +68,9 @@ class SingleSignOn
     @custom_fields ||= {}
   end
 
-
   def sign(payload)
     OpenSSL::HMAC.hexdigest("sha256", sso_secret, payload)
   end
-
 
   def to_url(base_url=nil)
     base = "#{base_url || sso_url}"
@@ -92,16 +84,14 @@ class SingleSignOn
 
   def unsigned_payload
     payload = {}
+
     ACCESSORS.each do |k|
      next if (val = send k) == nil
-
      payload[k] = val
     end
 
-    if @custom_fields
-      @custom_fields.each do |k,v|
-        payload["custom.#{k}"] = v.to_s
-      end
+    @custom_fields&.each do |k, v|
+      payload["custom.#{k}"] = v.to_s
     end
 
     Rack::Utils.build_query(payload)
