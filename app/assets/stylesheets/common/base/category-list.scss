@@ -12,7 +12,9 @@
     align-content: flex-start;
 
     box-sizing: border-box;
-    border: 2px solid blend-primary-secondary(20%);
+    border-width: 0 0 0 6px;
+    border-style: solid;
+    border-color: blend-primary-secondary(20%);
 
     .mobile-view & {
       width: 100%;
@@ -27,6 +29,14 @@
     h3 .fa {
       color: $primary;
     }
+  }
+
+  .category-box-inner {
+    width: 100%;
+    padding: 0;
+    border-width: 2px 2px 2px 0;
+    border-style: solid;
+    border-color: blend-primary-secondary(20%);
   }
 
   &.no-logos {
@@ -83,16 +93,6 @@
     width: 31%;
     margin: 0 1% 1.5em 1%;
     padding: 0;
-    border-width: 0 0 0 6px;
-    border-style: solid;
-    border-color: blend-primary-secondary(20%);
-  }
-  .category-box-inner {
-    width: 100%;
-    padding: 0;
-    border-width: 2px 2px 2px 0;
-    border-style: solid;
-    border-color: blend-primary-secondary(20%);
   }
 
   h3 {

@@ -1,22 +1,24 @@
 {{#each categories as |c|}}
-  <div class='category-box category-box-{{unbound c.slug}}'>
-    <a href={{c.url}}>
-      <div class='category-box-heading'>
-        {{#if c.uploaded_logo.url}}
-          {{cdn-img src=c.uploaded_logo.url class="logo"}}
-        {{/if}}
-
-        <h3>
-          {{#if c.read_restricted}}
-            {{fa-icon 'lock'}}
+  <div class='category-box category-box-{{unbound c.slug}}' style={{border-color c.color}}>
+    <div class='category-box-inner'>
+      <a href={{c.url}}>
+        <div class='category-box-heading'>
+          {{#if c.uploaded_logo.url}}
+            {{cdn-img src=c.uploaded_logo.url class="logo"}}
           {{/if}}
-          {{c.name}}
-        </h3>
-      </div>
 
-      <div class='description'>
-        {{{text-overflow class="overflow" text=c.description_excerpt}}}
-      </div>
-    </a>
+          <h3>
+            {{#if c.read_restricted}}
+              {{fa-icon 'lock'}}
+            {{/if}}
+            {{c.name}}
+          </h3>
+        </div>
+
+        <div class='description'>
+          {{{text-overflow class="overflow" text=c.description_excerpt}}}
+        </div>
+      </a>
+    </div>
   </div>
 {{/each}}
