@@ -199,16 +199,13 @@ createWidget('timeline-scrollarea', {
       this.attach('timeline-padding', { height: after })
     ];
 
-    if (position.lastRead > 1 && position.total > 5) {
+    if (hasBackPosition) {
       const lastReadTop = Math.round(position.lastReadPercentage * SCROLLAREA_HEIGHT);
-      if (hasBackPosition) {
-        result.push(this.attach('timeline-last-read', {
-          top: lastReadTop,
-          lastRead: position.lastRead,
-          showButton
-        }));
-      }
-      result.push(this.attach('timeline-unread-area', { top: lastReadTop}));
+      result.push(this.attach('timeline-last-read', {
+        top: lastReadTop,
+        lastRead: position.lastRead,
+        showButton
+      }));
     }
 
     return result;
@@ -242,21 +239,6 @@ createWidget('timeline-scrollarea', {
   goBack() {
     this.sendWidgetAction('jumpToIndex', this.position().lastRead);
   }
-});
-
-createWidget('timeline-unread-area', {
-  tagName: 'div.timeline-unread',
-
-  buildAttributes(attrs) {
-
-    const top = attrs.top + (LAST_READ_HEIGHT / 2);
-    if (top) {
-      return {
-        style: `top: ${top}px; height: ${SCROLLAREA_HEIGHT - top}px`
-      };
-    }
-  }
-
 });
 
 createWidget('topic-timeline-container', {

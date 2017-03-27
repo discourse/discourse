@@ -17,15 +17,6 @@
   position: fixed;
   -webkit-transform: translate3d(0,0,0);
 
-  .timeline-unread {
-    left: -1px;
-    position: absolute;
-    border-left: 3px solid;
-    border-color: $tertiary;
-    width: 10px;
-    z-index: 500;
-  }
-
   &.timeline-docked {
     position: absolute;
   }
@@ -61,9 +52,6 @@
     box-shadow: 0px -2px 4px -1px rgba(0,0,0,.25);
     padding-top: 20px;
     z-index: 100000;
-    .timeline-unread {
-      display: none;
-    }
     .back-button {
       display: none;
     }
