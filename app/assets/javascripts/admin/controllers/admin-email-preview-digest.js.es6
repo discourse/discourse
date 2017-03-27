@@ -8,10 +8,6 @@ export default Ember.Controller.extend({
   showSendEmailForm: Em.computed.notEmpty('model.html_content'),
   htmlEmpty: Em.computed.empty('model.html_content'),
 
-  iframeSrc: function() {
-    return ('data:text/html;charset=utf-8,' + encodeURI(this.get('model.html_content')));
-  }.property('model.html_content'),
-
   actions: {
     refresh() {
       const model = this.get('model');
