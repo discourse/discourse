@@ -49,6 +49,6 @@ test("Restricted Routes", () => {
   visit("/users/eviltrout/preferences");
 
   andThen(() => {
-    equal(currentURL(), '/users/eviltrout/activity', "it redirects from preferences");
+    equal(currentURL(), '/u/eviltrout/activity', "it redirects from preferences");
   });
 });

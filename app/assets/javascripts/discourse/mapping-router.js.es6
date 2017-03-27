@@ -1,4 +1,6 @@
 import { defaultHomepage } from 'discourse/lib/utilities';
+import { rewritePath } from 'discourse/lib/url';
+
 const rootURL = Discourse.BaseUri;
 
 const BareRouter = Ember.Router.extend({
@@ -6,6 +8,7 @@ const BareRouter = Ember.Router.extend({
   location: Ember.testing ? 'none': 'discourse-location',
 
   handleURL(url) {
+    url = rewritePath(url);
     const params = url.split('?');
 
     if (params[0] === "/") {
@@ -14,6 +17,7 @@ const BareRouter = Ember.Router.extend({
         url = `${url}?${params[1]}`;
       }
     }
+    console.log(url);
     return this._super(url);
   }
 });

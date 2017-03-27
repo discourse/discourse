@@ -286,13 +286,6 @@ Discourse::Application.routes.draw do
   get "session/csrf" => "session#csrf"
   get "composer_messages" => "composer_messages#index"
 
-  resources :users, except: [:show, :update, :destroy] do
-    collection do
-      get "check_username"
-      get "is_local_username"
-    end
-  end
-
   resources :static
   post "login" => "static#enter", constraints: { format: /(json|html)/ }
   get "login" => "static#show", id: "login", constraints: { format: /(json|html)/ }
@@ -304,10 +297,90 @@ Discourse::Application.routes.draw do
   get "signup" => "static#show", id: "signup", constraints: { format: /(json|html)/ }
   get "login-preferences" => "static#show", id: "login", constraints: { format: /(json|html)/ }
 
+  get "my/*path", to: 'users#my_redirect'
+  get "user_preferences" => "users#user_preferences_redirect"
+
+  # New /u/ routes
+  get 'u' => 'users#index'
+  get 'u/check_username' => 'users#check_username'
+  get 'u/is_local_username' => 'users#is_local_username'
+  post 'u' => 'users#create'
+
+  get "u/admin-login" => "users#admin_login"
+  put "u/admin-login" => "users#admin_login"
+  get "u/admin-login/:token" => "users#admin_login"
+
+  post "u/toggle-anon" => "users#toggle_anon"
+  post "u/read-faq" => "users#read_faq"
+  get "u/search/users" => "users#search_users"
+  get "u/account-created/" => "users#account_created"
+  get "u/password-reset/:token" => "users#password_reset"
+  get "u/confirm-email-token/:token" => "users#confirm_email_token", constraints: { format: 'json' }
+  put "u/password-reset/:token" => "users#password_reset"
+  get "u/activate-account/:token" => "users#activate_account"
+  put "u/activate-account/:token" => "users#perform_account_activation", as: 'perform_activate_account'
+  get "u/authorize-email/:token" => "users_email#confirm"
+  get "u/hp" => "users#get_honeypot_value"
+
+  get "u/:username/private-messages" => "user_actions#private_messages", constraints: {username: USERNAME_ROUTE_FORMAT}
+  get "u/:username/private-messages/:filter" => "user_actions#private_messages", constraints: {username: USERNAME_ROUTE_FORMAT}
+  get "u/:username/messages" => "user_actions#private_messages", constraints: {username: USERNAME_ROUTE_FORMAT}
+  get "u/:username/messages/:filter" => "user_actions#private_messages", constraints: {username: USERNAME_ROUTE_FORMAT}
+  get "u/:username/messages/group/:group_name" => "user_actions#private_messages", constraints: {username: USERNAME_ROUTE_FORMAT, group_name: USERNAME_ROUTE_FORMAT}
+
+  get "u/:username/messages/group/:group_name/archive" => "user_actions#private_messages", constraints: {username: USERNAME_ROUTE_FORMAT, group_name: USERNAME_ROUTE_FORMAT}
+
+  get "u/:username.json" => "users#show", constraints: {username: USERNAME_ROUTE_FORMAT}, defaults: {format: :json}
+  get "u/:username" => "users#show", as: 'user', constraints: {username: USERNAME_ROUTE_FORMAT, format: /(json|html)/}
+  put "u/:username" => "users#update", constraints: {username: USERNAME_ROUTE_FORMAT}, defaults: { format: :json }
+  get "u/:username/emails" => "users#check_emails", constraints: {username: USERNAME_ROUTE_FORMAT}
+  get "u/:username/preferences" => "users#preferences", constraints: {username: USERNAME_ROUTE_FORMAT}, as: :email_preferences
+  get "u/:username/preferences/email" => "users_email#index", constraints: {username: USERNAME_ROUTE_FORMAT}
+  put "u/:username/preferences/email" => "users_email#update", constraints: {username: USERNAME_ROUTE_FORMAT}
+  get "u/:username/preferences/about-me" => "users#preferences", constraints: {username: USERNAME_ROUTE_FORMAT}
+  get "u/:username/preferences/badge_title" => "users#preferences", constraints: {username: USERNAME_ROUTE_FORMAT}
+  put "u/:username/preferences/badge_title" => "users#badge_title", constraints: {username: USERNAME_ROUTE_FORMAT}
+  get "u/:username/preferences/username" => "users#preferences", constraints: {username: USERNAME_ROUTE_FORMAT}
+  put "u/:username/preferences/username" => "users#username", constraints: {username: USERNAME_ROUTE_FORMAT}
+  delete "u/:username/preferences/user_image" => "users#destroy_user_image", constraints: {username: USERNAME_ROUTE_FORMAT}
+  put "u/:username/preferences/avatar/pick" => "users#pick_avatar", constraints: {username: USERNAME_ROUTE_FORMAT}
+  get "u/:username/preferences/card-badge" => "users#card_badge", constraints: {username: USERNAME_ROUTE_FORMAT}
+  put "u/:username/preferences/card-badge" => "users#update_card_badge", constraints: {username: USERNAME_ROUTE_FORMAT}
+  get "u/:username/staff-info" => "users#staff_info", constraints: {username: USERNAME_ROUTE_FORMAT}
+  get "u/:username/summary" => "users#summary", constraints: {username: USERNAME_ROUTE_FORMAT}
+  get "u/:username/invited" => "users#invited", constraints: {username: USERNAME_ROUTE_FORMAT}
+  get "u/:username/invited_count" => "users#invited_count", constraints: {username: USERNAME_ROUTE_FORMAT}
+  get "u/:username/invited/:filter" => "users#invited", constraints: {username: USERNAME_ROUTE_FORMAT}
+  post "u/action/send_activation_email" => "users#send_activation_email"
+  get "u/:username/summary" => "users#show", constraints: {username: USERNAME_ROUTE_FORMAT}
+
+  # user activity RSS feed
+  get "u/:username/activity/topics.rss" => "list#user_topics_feed", format: :rss, constraints: {username: USERNAME_ROUTE_FORMAT}
+  get "u/:username/activity.rss" => "posts#user_posts_feed", format: :rss, constraints: {username: USERNAME_ROUTE_FORMAT}
+
+  get "u/:username/activity" => "users#show", constraints: {username: USERNAME_ROUTE_FORMAT}
+  get "u/:username/activity/:filter" => "users#show", constraints: {username: USERNAME_ROUTE_FORMAT}
+  get "u/:username/badges" => "users#show", constraints: {username: USERNAME_ROUTE_FORMAT}
+  get "u/:username/notifications" => "users#show", constraints: {username: USERNAME_ROUTE_FORMAT}
+  get "u/:username/notifications/:filter" => "users#show", constraints: {username: USERNAME_ROUTE_FORMAT}
+  get "u/:username/activity/pending" => "users#show", constraints: {username: USERNAME_ROUTE_FORMAT}
+  delete "u/:username" => "users#destroy", constraints: {username: USERNAME_ROUTE_FORMAT}
+  # The external_id constraint is to allow periods to be used in the value without becoming part of the format. ie: foo.bar.json
+  get "u/by-external/:external_id" => "users#show", constraints: {external_id: /[^\/]+/}
+  get "u/:username/flagged-posts" => "users#show", constraints: {username: USERNAME_ROUTE_FORMAT}
+  get "u/:username/deleted-posts" => "users#show", constraints: {username: USERNAME_ROUTE_FORMAT}
+
+  get "u/:username/topic-tracking-state" => "users#topic_tracking_state", constraints: {username: USERNAME_ROUTE_FORMAT}
+
+  # Old User routes, will be removed when /u/ is everywhere
+  get 'users' => 'users#index'
+  get 'users/check_username' => 'users#check_username'
+  get 'users/is_local_username' => 'users#is_local_username'
+  post 'users' => 'users#create'
+
   get "users/admin-login" => "users#admin_login"
   put "users/admin-login" => "users#admin_login"
   get "users/admin-login/:token" => "users#admin_login"
-
   post "users/toggle-anon" => "users#toggle_anon"
   post "users/read-faq" => "users#read_faq"
   get "users/search/users" => "users#search_users"
@@ -316,25 +389,19 @@ Discourse::Application.routes.draw do
   get "users/confirm-email-token/:token" => "users#confirm_email_token", constraints: { format: 'json' }
   put "users/password-reset/:token" => "users#password_reset"
   get "users/activate-account/:token" => "users#activate_account"
-  put "users/activate-account/:token" => "users#perform_account_activation", as: 'perform_activate_account'
+  put "users/activate-account/:token" => "users#perform_account_activation"
   get "users/authorize-email/:token" => "users_email#confirm"
-  get "users/hp" => "users#get_honeypot_value"
-  get "my/*path", to: 'users#my_redirect'
-
-  get "user_preferences" => "users#user_preferences_redirect"
   get "users/:username/private-messages" => "user_actions#private_messages", constraints: {username: USERNAME_ROUTE_FORMAT}
   get "users/:username/private-messages/:filter" => "user_actions#private_messages", constraints: {username: USERNAME_ROUTE_FORMAT}
   get "users/:username/messages" => "user_actions#private_messages", constraints: {username: USERNAME_ROUTE_FORMAT}
   get "users/:username/messages/:filter" => "user_actions#private_messages", constraints: {username: USERNAME_ROUTE_FORMAT}
   get "users/:username/messages/group/:group_name" => "user_actions#private_messages", constraints: {username: USERNAME_ROUTE_FORMAT, group_name: USERNAME_ROUTE_FORMAT}
-
   get "users/:username/messages/group/:group_name/archive" => "user_actions#private_messages", constraints: {username: USERNAME_ROUTE_FORMAT, group_name: USERNAME_ROUTE_FORMAT}
-
   get "users/:username.json" => "users#show", constraints: {username: USERNAME_ROUTE_FORMAT}, defaults: {format: :json}
-  get "users/:username" => "users#show", as: 'user', constraints: {username: USERNAME_ROUTE_FORMAT, format: /(json|html)/}
+  get "users/:username" => "users#show", constraints: {username: USERNAME_ROUTE_FORMAT, format: /(json|html)/}
   put "users/:username" => "users#update", constraints: {username: USERNAME_ROUTE_FORMAT}, defaults: { format: :json }
   get "users/:username/emails" => "users#check_emails", constraints: {username: USERNAME_ROUTE_FORMAT}
-  get "users/:username/preferences" => "users#preferences", constraints: {username: USERNAME_ROUTE_FORMAT}, as: :email_preferences
+  get "users/:username/preferences" => "users#preferences", constraints: {username: USERNAME_ROUTE_FORMAT}
   get "users/:username/preferences/email" => "users_email#index", constraints: {username: USERNAME_ROUTE_FORMAT}
   put "users/:username/preferences/email" => "users_email#update", constraints: {username: USERNAME_ROUTE_FORMAT}
   get "users/:username/preferences/about-me" => "users#preferences", constraints: {username: USERNAME_ROUTE_FORMAT}
@@ -353,11 +420,8 @@ Discourse::Application.routes.draw do
   get "users/:username/invited/:filter" => "users#invited", constraints: {username: USERNAME_ROUTE_FORMAT}
   post "users/action/send_activation_email" => "users#send_activation_email"
   get "users/:username/summary" => "users#show", constraints: {username: USERNAME_ROUTE_FORMAT}
-
-  # user activity RSS feed
   get "users/:username/activity/topics.rss" => "list#user_topics_feed", format: :rss, constraints: {username: USERNAME_ROUTE_FORMAT}
   get "users/:username/activity.rss" => "posts#user_posts_feed", format: :rss, constraints: {username: USERNAME_ROUTE_FORMAT}
-
   get "users/:username/activity" => "users#show", constraints: {username: USERNAME_ROUTE_FORMAT}
   get "users/:username/activity/:filter" => "users#show", constraints: {username: USERNAME_ROUTE_FORMAT}
   get "users/:username/badges" => "users#show", constraints: {username: USERNAME_ROUTE_FORMAT}
@@ -365,12 +429,11 @@ Discourse::Application.routes.draw do
   get "users/:username/notifications/:filter" => "users#show", constraints: {username: USERNAME_ROUTE_FORMAT}
   get "users/:username/activity/pending" => "users#show", constraints: {username: USERNAME_ROUTE_FORMAT}
   delete "users/:username" => "users#destroy", constraints: {username: USERNAME_ROUTE_FORMAT}
-  # The external_id constraint is to allow periods to be used in the value without becoming part of the format. ie: foo.bar.json
   get "users/by-external/:external_id" => "users#show", constraints: {external_id: /[^\/]+/}
   get "users/:username/flagged-posts" => "users#show", constraints: {username: USERNAME_ROUTE_FORMAT}
   get "users/:username/deleted-posts" => "users#show", constraints: {username: USERNAME_ROUTE_FORMAT}
-
   get "users/:username/topic-tracking-state" => "users#topic_tracking_state", constraints: {username: USERNAME_ROUTE_FORMAT}
+  # -- end of old users paths
 
   get "user-badges/:username.json" => "user_badges#username", constraints: {username: USERNAME_ROUTE_FORMAT}, defaults: {format: :json}
   get "user-badges/:username" => "user_badges#username", constraints: {username: USERNAME_ROUTE_FORMAT}

@@ -8,6 +8,7 @@ import { resetPluginApi } from 'discourse/lib/plugin-api';
 import { clearCache as clearOutletCache, resetExtraClasses } from 'discourse/lib/plugin-connectors';
 import { clearHTMLCache } from 'discourse/helpers/custom-html';
 import { flushMap } from 'discourse/models/store';
+import { clearRewrites } from 'discourse/lib/url';
 
 
 function currentUser() {
@@ -88,6 +89,7 @@ function acceptance(name, options) {
       clearOutletCache();
       clearHTMLCache();
       resetPluginApi();
+      clearRewrites();
       Discourse.reset();
     }
   });
