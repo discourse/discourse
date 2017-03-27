@@ -26,7 +26,7 @@ export default DiscoveryController.extend({
 
   @computed("model.parentCategory")
   categoryPageStyle(parentCategory) {
-    let style = this.siteSettings.desktop_category_page_style;
+    let style = this.site.mobileView ? 'categories_with_featured_topics' : this.siteSettings.desktop_category_page_style;
 
     if (parentCategory) {
       style = subcategoryStyleComponentNames[parentCategory.get('subcategory_list_style')] || style;
