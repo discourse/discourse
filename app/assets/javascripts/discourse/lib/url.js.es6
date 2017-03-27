@@ -18,6 +18,23 @@ const SERVER_SIDE_ONLY = [
   /\.json$/,
 ];
 
+export function rewritePath(path) {
+  const params = path.split("?");
+
+  let result = params[0];
+  rewrites.forEach(rw => result = result.replace(rw.regexp, rw.replacement));
+
+  if (params.length > 1) {
+    result += `?${params[1]}`;
+  }
+
+  return result;
+}
+
+export function clearRewrites() {
+  rewrites.length = 0;
+}
+
 let _jumpScheduled = false;
 export function jumpToElement(elementId) {
   if (_jumpScheduled || Ember.isEmpty(elementId)) { return; }
@@ -180,8 +197,7 @@ const DiscourseURL = Ember.Object.extend({
       }
     }
 
-    rewrites.forEach(rw => path = path.replace(rw.regexp, rw.replacement));
-
+    path = rewritePath(path);
     if (this.navigatedToPost(oldPath, path, opts)) { return; }
 
     if (oldPath === path) {

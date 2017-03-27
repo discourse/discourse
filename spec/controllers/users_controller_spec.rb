@@ -100,7 +100,7 @@ describe UsersController do
     it "redirects to their profile when logged in" do
       user = log_in
       get :user_preferences_redirect
-      expect(response).to redirect_to("/users/#{user.username_lower}/preferences")
+      expect(response).to redirect_to("/u/#{user.username_lower}/preferences")
     end
   end
 
