@@ -902,7 +902,6 @@ security:
     regex: '^(Lax|Strict|Disabled)$'
   enable_escaped_fragments: true
   allow_index_in_robots_txt: true
-  enable_noscript_support: true
   allow_moderators_to_create_categories: false
   cors_origins:
     default: ''
