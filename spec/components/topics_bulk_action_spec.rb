@@ -198,7 +198,7 @@ describe TopicsBulkAction do
       topic_ids = tba.perform!
       expect(topic_ids).to eq([topic.id])
       topic.reload
-      expect(topic.tags.map(&:name).sort).to eq(['newtag', tag1.name].sort)
+      expect(topic.tags.map(&:name)).to contain_exactly('newtag', tag1.name)
     end
 
     it "can change the tags but not create new ones" do
@@ -207,7 +207,7 @@ describe TopicsBulkAction do
       topic_ids = tba.perform!
       expect(topic_ids).to eq([topic.id])
       topic.reload
-      expect(topic.tags.map(&:name)).to eq([tag1.name])
+      expect(topic.tags.map(&:name)).to contain_exactly(tag1.name)
     end
 
     it "can remove all tags" do
@@ -251,7 +251,7 @@ describe TopicsBulkAction do
       topic_ids = tba.perform!
       expect(topic_ids).to eq([topic.id])
       topic.reload
-      expect(topic.tags.map(&:name).sort).to eq([tag1.name, tag2.name, tag3.name, 'newtag'].sort)
+      expect(topic.tags.map(&:name)).to contain_exactly(tag1.name, tag2.name, tag3.name, 'newtag')
     end
 
     it "can append empty tags" do
@@ -259,7 +259,7 @@ describe TopicsBulkAction do
       topic_ids = tba.perform!
       expect(topic_ids).to eq([topic.id])
       topic.reload
-      expect(topic.tags.map(&:name).sort).to eq([tag1.name, tag2.name].sort)
+      expect(topic.tags.map(&:name)).to contain_exactly(tag1.name, tag2.name)
     end
 
     context "when the user can't create new topics" do
@@ -272,7 +272,7 @@ describe TopicsBulkAction do
         topic_ids = tba.perform!
         expect(topic_ids).to eq([topic.id])
         topic.reload
-        expect(topic.tags.map(&:name)).to eq([tag1.name, tag2.name, tag3.name])
+        expect(topic.tags.map(&:name)).to contain_exactly(tag1.name, tag2.name, tag3.name)
       end
     end
 
@@ -286,7 +286,7 @@ describe TopicsBulkAction do
         topic_ids = tba.perform!
         expect(topic_ids).to eq([])
         topic.reload
-        expect(topic.tags.map(&:name).sort).to eq([tag1.name, tag2.name].sort)
+        expect(topic.tags.map(&:name)).to contain_exactly(tag1.name, tag2.name)
       end
     end
   end
