@@ -108,7 +108,7 @@ def gzip(path)
 end
 
 def brotli(path)
-  if ENV['COMPRESS_BROTLI']
+  if ENV['COMPRESS_BROTLI']&.to_i == 1
     STDERR.puts "brotli #{path}"
     STDERR.puts `brotli --quality 11 --input #{path} --output #{path}.br`
     STDERR.puts `chmod +r #{path}.br`
