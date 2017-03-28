@@ -12,6 +12,7 @@ import Post from 'discourse/models/post';
 import debounce from 'discourse/lib/debounce';
 import isElementInViewport from "discourse/lib/is-element-in-viewport";
 import QuoteState from 'discourse/lib/quote-state';
+import { userPath } from 'discourse/lib/url';
 
 export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
   composer: Ember.inject.controller(),
@@ -126,7 +127,7 @@ export default Ember.Controller.extend(SelectedPostsCount, BufferedContent, {
   showCategoryChooser: Ember.computed.not("model.isPrivateMessage"),
 
   gotoInbox(name) {
-    var url = '/users/' + this.get('currentUser.username_lower') + '/messages';
+    let url = userPath(this.get('currentUser.username_lower') + '/messages');
     if (name) {
       url = url + '/group/' + name;
     }

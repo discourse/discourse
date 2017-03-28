@@ -1,4 +1,5 @@
 import { CANCELLED_STATUS } from 'discourse/lib/autocomplete';
+import { userPath } from 'discourse/lib/url';
 
 var cache = {},
     cacheTopicId,
@@ -14,7 +15,7 @@ function performSearch(term, topicId, includeGroups, includeMentionableGroups, a
   }
 
   // need to be able to cancel this
-  oldSearch = $.ajax(Discourse.getURL('/users/search/users'), {
+  oldSearch = $.ajax(userPath('search/users'), {
     data: { term: term,
             topic_id: topicId,
             include_groups: includeGroups,

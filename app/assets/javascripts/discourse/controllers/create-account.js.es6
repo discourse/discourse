@@ -6,6 +6,7 @@ import { emailValid } from 'discourse/lib/utilities';
 import InputValidation from 'discourse/models/input-validation';
 import PasswordValidation from "discourse/mixins/password-validation";
 import UsernameValidation from "discourse/mixins/username-validation";
+import { userPath } from 'discourse/lib/url';
 
 export default Ember.Controller.extend(ModalFunctionality, PasswordValidation, UsernameValidation, {
   login: Ember.inject.controller(),
@@ -164,7 +165,7 @@ export default Ember.Controller.extend(ModalFunctionality, PasswordValidation, U
 
   @on('init')
   fetchConfirmationValue() {
-    return ajax('/users/hp.json').then(json => {
+    return ajax(userPath('hp.json')).then(json => {
       this.set('accountPasswordConfirm', json.value);
       this.set('accountChallenge', json.challenge.split("").reverse().join(""));
     });
@@ -196,7 +197,7 @@ export default Ember.Controller.extend(ModalFunctionality, PasswordValidation, U
           const $hidden_login_form = $('#hidden-login-form');
           $hidden_login_form.find('input[name=username]').val(attrs.accountUsername);
           $hidden_login_form.find('input[name=password]').val(attrs.accountPassword);
-          $hidden_login_form.find('input[name=redirect]').val(Discourse.getURL('/users/account-created'));
+          $hidden_login_form.find('input[name=redirect]').val(userPath('account-created'));
           $hidden_login_form.submit();
         } else {
           self.flash(result.message || I18n.t('create_account.failed'), 'error');

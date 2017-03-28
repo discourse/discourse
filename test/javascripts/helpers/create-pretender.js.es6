@@ -63,17 +63,17 @@ export default function() {
       }] });
     });
 
-    this.get(`/users/eviltrout/emails.json`, () => {
+    this.get(`/u/eviltrout/emails.json`, () => {
       return response({ email: 'eviltrout@example.com' });
     });
 
-    this.get('/users/eviltrout.json', () => {
-      const json = fixturesByUrl['/users/eviltrout.json'];
+    this.get('/u/eviltrout.json', () => {
+      const json = fixturesByUrl['/u/eviltrout.json'];
       json.user.can_edit = loggedIn();
       return response(json);
     });
 
-    this.get('/users/eviltrout/summary.json', () => {
+    this.get('/u/eviltrout/summary.json', () => {
       return response({
         user_summary: {
           topics: [],
@@ -85,13 +85,13 @@ export default function() {
       });
     });
 
-    this.get('/users/eviltrout/invited_count.json', () => {
+    this.get('/u/eviltrout/invited_count.json', () => {
       return response({
         "counts": { "pending": 1, "redeemed": 0, "total": 0 }
       });
     });
 
-    this.get('/users/eviltrout/invited.json', () => {
+    this.get('/u/eviltrout/invited.json', () => {
       return response({ "invites": [ {id: 1} ] });
     });
 
@@ -113,7 +113,7 @@ export default function() {
       return response({});
     });
 
-    this.put('/users/eviltrout.json', () => response({ user: {} }));
+    this.put('/u/eviltrout.json', () => response({ user: {} }));
 
     this.get("/t/280.json", () => response(fixturesByUrl['/t/280/1.json']));
     this.get("/t/28830.json", () => response(fixturesByUrl['/t/28830/1.json']));
@@ -134,7 +134,7 @@ export default function() {
     this.delete('/draft.json', success);
     this.post('/draft.json', success);
 
-    this.get('/users/:username/staff-info.json', () => response({}));
+    this.get('/u/:username/staff-info.json', () => response({}));
 
     this.get('/post_action_users', () => {
       return response({
@@ -198,9 +198,9 @@ export default function() {
       return response(400, {error: 'invalid login'});
     });
 
-    this.post('/users/action/send_activation_email', success);
+    this.post('/u/action/send_activation_email', success);
 
-    this.get('/users/hp.json', function() {
+    this.get('/u/hp.json', function() {
       return response({"value":"32faff1b1ef1ac3","challenge":"61a3de0ccf086fb9604b76e884d75801"});
     });
 
@@ -208,14 +208,14 @@ export default function() {
       return response({"csrf":"mgk906YLagHo2gOgM1ddYjAN4hQolBdJCqlY6jYzAYs="});
     });
 
-    this.get('/users/check_username', function(request) {
+    this.get('/u/check_username', function(request) {
       if (request.queryParams.username === 'taken') {
         return response({available: false, suggestion: 'nottaken'});
       }
       return response({available: true});
     });
 
-    this.post('/users', () => response({success: true}));
+    this.post('/u', () => response({success: true}));
 
     this.get('/login.html', () => [200, {}, 'LOGIN PAGE']);
 
