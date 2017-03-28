@@ -1,5 +1,6 @@
 import { ajax } from 'discourse/lib/ajax';
 import { popupAjaxError } from 'discourse/lib/ajax-error';
+import { userPath } from 'discourse/lib/url';
 
 const Invite = Discourse.Model.extend({
 
@@ -41,7 +42,7 @@ Invite.reopenClass({
     if (!Em.isNone(search)) { data.search = search; }
     data.offset = offset || 0;
 
-    return ajax("/users/" + user.get('username_lower') + "/invited.json", {data}).then(function (result) {
+    return ajax(userPath(user.get('username_lower') + "/invited.json"), {data}).then(function (result) {
       result.invites = result.invites.map(function (i) {
         return Invite.create(i);
       });
@@ -52,7 +53,7 @@ Invite.reopenClass({
 
   findInvitedCount(user) {
     if (!user) { return Em.RSVP.resolve(); }
-    return ajax("/users/" + user.get('username_lower') + "/invited_count.json").then(result => Em.Object.create(result.counts));
+    return ajax(userPath(user.get('username_lower') + "/invited_count.json")).then(result => Em.Object.create(result.counts));
   },
 
   reinviteAll() {

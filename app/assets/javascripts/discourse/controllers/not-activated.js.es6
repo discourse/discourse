@@ -1,6 +1,7 @@
 import { ajax } from 'discourse/lib/ajax';
 import { popupAjaxError } from 'discourse/lib/ajax-error';
 import ModalFunctionality from 'discourse/mixins/modal-functionality';
+import { userPath } from 'discourse/lib/url';
 
 export default Ember.Controller.extend(ModalFunctionality, {
   emailSent: false,
@@ -11,7 +12,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
   actions: {
     sendActivationEmail() {
-      ajax('/users/action/send_activation_email', {
+      ajax(userPath('action/send_activation_email'), {
         data: { username: this.get('username') },
         type: 'POST'
       }).then(() => {

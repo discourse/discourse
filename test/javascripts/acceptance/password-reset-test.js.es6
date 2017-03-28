@@ -12,11 +12,11 @@ acceptance("Password Reset", {
       ];
     };
 
-    server.get('/users/confirm-email-token/myvalidtoken.json', () => { //eslint-disable-line
+    server.get('/u/confirm-email-token/myvalidtoken.json', () => { //eslint-disable-line
       return response({success: "OK"});
     });
 
-    server.put('/users/password-reset/myvalidtoken.json', request => { //eslint-disable-line
+    server.put('/u/password-reset/myvalidtoken.json', request => { //eslint-disable-line
       const body = parsePostData(request.requestBody);
       if (body.password === "jonesyAlienSlayer") {
         return response({success: false, errors: {password: ["is the name of your cat"]}});

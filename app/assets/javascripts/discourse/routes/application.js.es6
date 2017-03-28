@@ -7,6 +7,7 @@ import Category from 'discourse/models/category';
 import mobile from 'discourse/lib/mobile';
 import { findAll } from 'discourse/models/login-method';
 import { getOwner } from 'discourse-common/lib/get-owner';
+import { userPath } from 'discourse/lib/url';
 
 function unlessReadOnly(method, message) {
   return function() {
@@ -23,7 +24,7 @@ const ApplicationRoute = Discourse.Route.extend(OpenComposer, {
 
   actions: {
     toggleAnonymous() {
-      ajax("/users/toggle-anon", {method: 'POST'}).then(() => {
+      ajax(userPath("toggle-anon"), {method: 'POST'}).then(() => {
         window.location.reload();
       });
     },

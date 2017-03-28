@@ -1,6 +1,7 @@
 import { ajax } from 'discourse/lib/ajax';
 import CanCheckEmails from 'discourse/mixins/can-check-emails';
 import { propertyNotEqual, setting } from 'discourse/lib/computed';
+import { userPath } from 'discourse/lib/url';
 
 export default Ember.Controller.extend(CanCheckEmails, {
   editingTitle: false,
@@ -62,7 +63,7 @@ export default Ember.Controller.extend(CanCheckEmails, {
     saveTitle() {
       const self = this;
 
-      return ajax(`/users/${this.get('model.username').toLowerCase()}.json`, {
+      return ajax(userPath(`${this.get('model.username').toLowerCase()}.json`), {
         data: {title: this.get('userTitleValue')},
         type: 'PUT'
       }).catch(function(e) {

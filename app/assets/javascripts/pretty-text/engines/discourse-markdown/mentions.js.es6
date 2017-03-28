@@ -38,7 +38,7 @@ export function setup(helper) {
 
       const type = mentionLookup && mentionLookup(name);
       if (type === "user") {
-        return ['a', {'class': 'mention', href: opts.getURL("/users/") + name.toLowerCase()}, mention];
+        return ['a', {'class': 'mention', href: opts.getURL("/u/") + name.toLowerCase()}, mention];
       } else if (type === "group") {
         return ['a', {'class': 'mention-group', href: opts.getURL("/groups/") + name}, mention];
       } else {
